@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "button/basic",
+  "component": "button",
+  "description": "最基础的 Button：默认 type、默认 size、有文字。用于建立最小可用的双侧基线，验证 DOM 契约与视觉基线管线是否打通。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "type": "default"
+  },
+  "content": "Button",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "paths": {
+      "@apollo-design/utils": ["../utils/src"],
+      "@apollo-design/theme": ["../theme/src"],
+      "@apollo-design/icons": ["../icons/src"],
+      "@apollo-design/motion": ["../motion/src"],
+      "@apollo-design/portal": ["../portal/src"],
+      "@apollo-design/trigger": ["../trigger/src"],
+      "@apollo-design/virtual-list": ["../virtual-list/src"],
+      "@apollo-design/form-core": ["../form-core/src"],
+      "@apollo-design/picker": ["../picker/src"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.test-d.ts", "dist", "node_modules"]
+}

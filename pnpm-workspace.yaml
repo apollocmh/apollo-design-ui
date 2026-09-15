@@ -1,0 +1,83 @@
+packages:
+  - 'packages/*'
+# 注意：tests/compat 不是 workspace package。
+# 它的 runner 需要同时依赖 react + antd（参考侧）与 @apollo-design/ui（实现侧），
+# 这类"双实现"依赖关系放在根 devDependencies 中更清晰，也更容易在 E11 检查中
+# 明确界定"React 只允许出现在哪里"。
+
+# ---------------------------------------------------------------------------
+# 允许执行安装脚本的依赖（pnpm 12 默认全部阻止，需要显式放行）。
+# 只放真正需要 native/平台二进制的包 —— 白名单越短，供应链风险越小。
+# 注意：pnpm 12 的键名是 `allowBuilds`（pnpm 10 的 `onlyBuiltDependencies` 已废弃）。
+# ---------------------------------------------------------------------------
+allowBuilds:
+  esbuild: true
+
+# ---------------------------------------------------------------------------
+# Catalogs: single source of truth for dependency versions across the monorepo.
+# Rule: a package must NEVER hardcode a version that is already in a catalog.
+# Add new shared deps here first, then reference as `catalog:` in package.json.
+# ---------------------------------------------------------------------------
+catalog:
+  # --- Runtime (framework) ---
+  vue: ^3.5.42
+
+  # --- Runtime (framework-agnostic reuse from the Ant Design ecosystem) ---
+  # These packages are pure data / pure math with zero framework coupling.
+  # Reusing them is the cheapest possible path to visual + behavioral parity.
+  dayjs: ^1.11.23
+  '@ant-design/icons-svg': ^4.6.0
+  '@ant-design/colors': ^8.0.1
+  '@ant-design/fast-color': ^3.0.1
+  'scroll-into-view-if-needed': ^3.1.0
+
+  # --- Runtime (Vue ecosystem) ---
+  # ⚠️ 刻意不把 @vueuse/core 放进 L0（utils）：
+  #    utils 需要的是「单例 observer 复用」「批监听同一元素」这类与 rc-* 对齐的契约，
+  #    VueUse 的对应 composable 是「每次调用一个 observer」，语义不匹配。
+  #    因此 utils 全部原生实现。catalog 保留此项供 L1/L2 引擎包（trigger / picker）使用。
+  '@vueuse/core': ^14.4.0
+
+  # --- Build ---
+  typescript: ^5.9.2
+  '@types/node': ^22.19.0
+  vite: ^8.3.0
+  '@vitejs/plugin-vue': ^6.0.9
+  unbuild: ^3.6.1
+  vue-tsc: ^3.3.11
+
+  # --- Test ---
+  vitest: ^5.0.1
+  '@vitest/browser': ^5.0.1
+  '@vitest/coverage-v8': ^5.0.1
+  '@vue/test-utils': ^2.5.0
+  '@testing-library/jest-dom': ^6.9.1
+  jsdom: ^30.0.1
+  axe-core: ^4.13.0
+  playwright: ^1.63.0
+  '@axe-core/playwright': ^4.13.0
+
+  # --- Visual regression ---
+  pixelmatch: ^7.2.0
+  pngjs: ^7.0.0
+  sharp: ^0.35.4
+
+  # --- Compat harness (React reference side) ---
+  react: ^19.3.0
+  react-dom: ^19.3.0
+  antd: 6.6.4
+  '@testing-library/react': ^16.3.3
+
+  # --- Quality ---
+  publint: ^0.3.24
+  '@biomejs/biome': ^2.0.0
+
+minimumReleaseAgeExclude:
+  - '@vitest/browser@5.0.1'
+  - '@vitest/coverage-v8@5.0.1'
+  - '@vitest/mocker@5.0.1'
+  - '@vitest/pretty-format@5.0.1'
+  - '@vitest/spy@5.0.1'
+  - '@vitest/ui@5.0.1'
+  - '@vitest/utils@5.0.1'
+  - vitest@5.0.1

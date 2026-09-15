@@ -1,0 +1,46 @@
+{
+  "name": "@apollo-design/overlay",
+  "version": "0.0.0",
+  "description": "锚定浮层的生命周期编排。替代 @rc-component/trigger 的触发时机与生命周期部分。**定位几何在 @apollo-design/position，挂载在 @apollo-design/portal** —— 本包只编排「何时开、何时关、谁在上层」。",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./es/*": {
+      "types": "./es/*.d.ts",
+      "import": "./es/*.mjs"
+    },
+    "./css/*": "./css/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "es",
+    "css"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "lint": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@apollo-design/utils": "workspace:*",
+    "@apollo-design/portal": "workspace:*",
+    "@apollo-design/position": "workspace:*",
+    "@apollo-design/a11y": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@apollo-design/test-utils": "workspace:*"
+  }
+}

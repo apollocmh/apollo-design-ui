@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://apollo-design.dev/schemas/compat-fixture.json",
+  "title": "Compatibility Fixture",
+  "description": "一份 fixture 同时驱动 Ant Design React 参考实现与 @apollo-design/ui 的 Vue 实现，比对 API / DOM / ARIA / Behavior / Screenshot 五个层面。这是本项目持续兼容 Ant Design 的核心机制。",
+  "type": "object",
+  "required": ["component", "id", "props"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$",
+      "description": "fixture 唯一标识，格式 <component>/<case>，例如 button/basic。用于截图与报告的命名。"
+    },
+    "component": {
+      "type": "string",
+      "description": "组件名（kebab-case，与 registry/components.json 的 name 一致）"
+    },
+    "description": {
+      "type": "string",
+      "description": "这个 fixture 想验证什么。必填项，防止写出「不知道为什么存在」的 fixture。"
+    },
+    "antdVersion": {
+      "type": "string",
+      "description": "生成参考基线时的 antd 版本。与 registry 的 antdVersion 不一致时应重新生成基线。"
+    },
+
+    "props": {
+      "type": "object",
+      "description": "传给组件的 props。键名使用 React 侧的 camelCase 命名，两侧共用同一份。",
+      "additionalProperties": true
+    },
+    "variants": {
+      "type": "object",
+      "description": "笛卡尔积展开。每个键是一个 prop 名，值是该 prop 的取值数组。runner 会展开为多个渲染实例，按网格排列后在同一张截图内比对，从而把 type × size 这类矩阵压缩成一次进程启动与一次截图。展开结果会与 props 合并（variants 优先）。",
+      "additionalProperties": {
+        "type": "array",
+        "items": {}
+      }
+    },
+    "content": {
+      "description": "默认插槽 / children 内容。字符串直接渲染；数组表示多个子节点。",
+      "oneOf": [{ "type": "string" }, { "type": "number" }, { "type": "array" }, { "type": "null" }]
+    },
+    "slots": {
+      "type": "object",
+      "description": "具名插槽 / React 的 render prop。值可以是字符串，或 { fixture: '<相对路径>' } 指向另一个 fixture 片段。",
+      "additionalProperties": true
+    },
+    "theme": {
+      "type": "object",
+      "description": "渲染时使用的主题配置，两侧语义一致。",
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "oneOf": [
+            { "enum": ["default", "dark", "compact"] },
+            { "type": "array", "items": { "enum": ["default", "dark", "compact"] } }
+          ]
+        },
+        "token": { "type": "object" },
+        "components": { "type": "object" },
+        "prefixCls": { "type": "string", "default": "apollo" },
+        "direction": { "enum": ["ltr", "rtl"], "default": "ltr" }
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "width": { "type": "integer", "default": 1440 },
+        "height": { "type": "integer", "default": 900 },
+        "deviceScaleFactor": { "type": "number", "default": 1 }
+      }
+    },
+
+    "interactions": {
+      "type": "array",
+      "description": "按顺序执行的真实用户交互。两侧使用相同的语义化指令，由各自的 driver 翻译成具体 API。",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "click",
+              "dblclick",
+              "hover",
+              "focus",
+              "blur",
+              "keyboard",
+              "type",
+              "drag",
+              "scroll",
+              "wait"
+            ]
+          },
+          "target": {
+            "type": "string",
+            "description": "CSS 选择器或语义目标（'root' | 'icon' | 'input' | 'trigger' | 'popup'）。省略时作用于根元素。"
+          },
+          "key": {
+            "type": "string",
+            "description": "keyboard 指令的按键，例如 'Enter' / 'Escape' / 'ArrowDown'。"
+          },
+          "text": { "type": "string", "description": "type 指令要输入的文字。" },
+          "value": { "description": "type 指令的直接赋值（模拟粘贴/程序赋值）。" },
+          "ms": {
+            "type": "integer",
+            "description": "wait 指令的毫秒数。仅用于动画边界，且必须配合 fixture 的确定性设置。"
+          },
+          "repeat": { "type": "integer", "default": 1 }
+        }
+      }
+    },
+
+    "assertions": {
+      "type": "object",
+      "description": "要启用哪些比对层。默认全部启用。",
+      "additionalProperties": false,
+      "properties": {
+        "api": {
+          "type": "boolean",
+          "default": true,
+          "description": "L1：比对最终落到 DOM 上的 props 效果（class/data-* / 属性）"
+        },
+        "dom": {
+          "type": "boolean",
+          "default": true,
+          "description": "L3：比对结构化 DOM 契约（标签 + 类名 + data-* + role/aria-*）"
+        },
+        "aria": {
+          "type": "boolean",
+          "default": true,
+          "description": "L5：比对 role 与全部 aria-* 属性"
+        },
+        "behavior": {
+          "type": "boolean",
+          "default": true,
+          "description": "L2：比对交互过程中触发的事件序列与参数摘要"
+        },
+        "screenshot": {
+          "type": "boolean",
+          "default": true,
+          "description": "L4：比对像素截图"
+        }
+      }
+    },
+
+    "allow": {
+      "type": "object",
+      "description": "各比对层的允许差异白名单。每一项都必须有对应的差异登记（COMPATIBILITY.md §9）。禁止无理由加白。",
+      "additionalProperties": false,
+      "properties": {
+        "dom": { "type": "array", "items": { "type": "string" } },
+        "aria": { "type": "array", "items": { "type": "string" } },
+        "behavior": { "type": "array", "items": { "type": "string" } },
+        "screenshot": { "type": "array", "items": { "type": "string" } },
+        "reason": {
+          "type": "string",
+          "description": "使用 allow 时必须说明理由。CI 会校验：有 allow 无 reason 则失败。"
+        },
+        "deviationId": {
+          "type": "string",
+          "pattern": "^D[0-9]+$",
+          "description": "对应 COMPATIBILITY.md §9 差异登记表的编号。"
+        }
+      }
+    },
+
+    "expect": {
+      "type": "object",
+      "description": "对参考实现行为的显式期望。用于锁定「antd 的实际行为」，避免基线漂移时无人察觉。",
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "type": "array",
+          "description": "交互过程中期望触发的事件（顺序敏感）",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "args": { "type": "array" }
+            }
+          }
+        },
+        "domSnapshot": {
+          "type": "string",
+          "description": "结构化 DOM 契约的基线文件名（由 baseline 命令生成，不手写）"
+        }
+      }
+    },
+
+    "skip": {
+      "oneOf": [
+        { "type": "boolean" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason"],
+          "properties": {
+            "reason": { "type": "string" },
+            "react": { "type": "boolean", "description": "跳过 React 侧" },
+            "vue": { "type": "boolean", "description": "跳过 Vue 侧" }
+          }
+        }
+      ],
+      "description": "跳过该 fixture。对象形式必须写明 reason。禁止用于掩盖失败。"
+    }
+  }
+}

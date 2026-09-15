@@ -1,0 +1,44 @@
+{
+  "name": "@apollo-design/picker",
+  "version": "0.0.0",
+  "description": "日期/时间面板引擎。替代 @rc-component/picker。",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./es/*": {
+      "types": "./es/*.d.ts",
+      "import": "./es/*.mjs"
+    },
+    "./css/*": "./css/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "es",
+    "css"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "lint": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@apollo-design/utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "catalog:",
+    "dayjs": "catalog:"
+  },
+  "devDependencies": {
+    "@apollo-design/test-utils": "workspace:*"
+  }
+}

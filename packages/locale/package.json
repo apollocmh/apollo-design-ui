@@ -1,0 +1,40 @@
+{
+  "name": "@apollo-design/locale",
+  "version": "0.0.0",
+  "description": "国际化数据包：75 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护。",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./es/*": {
+      "types": "./es/*.d.ts",
+      "import": "./es/*.mjs"
+    },
+    "./css/*": "./css/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "es",
+    "css"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "lint": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "dayjs": "catalog:"
+  },
+  "devDependencies": {
+    "@apollo-design/test-utils": "workspace:*"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false,
+    "useUnknownInCatchVariables": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+
+    "types": ["node", "vite/client", "vitest/globals"],
+    "baseUrl": ".",
+    "paths": {
+      "@apollo-design/utils": ["packages/utils/src"],
+      "@apollo-design/theme": ["packages/theme/src"],
+      "@apollo-design/icons": ["packages/icons/src"],
+      "@apollo-design/portal": ["packages/portal/src"],
+      "@apollo-design/motion": ["packages/motion/src"],
+      "@apollo-design/position": ["packages/position/src"],
+      "@apollo-design/overlay": ["packages/overlay/src"],
+      "@apollo-design/a11y": ["packages/a11y/src"],
+      "@apollo-design/locale": ["packages/locale/src"],
+      "@apollo-design/virtual-list": ["packages/virtual-list/src"],
+      "@apollo-design/picker": ["packages/picker/src"],
+      "@apollo-design/form-core": ["packages/form-core/src"],
+      "@apollo-design/test-utils": ["packages/test-utils/src"],
+      "@apollo-design/ui": ["packages/ui/src"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "packages/*/src/**/*.vue",
+    "packages/*/tests/**/*.ts",
+    "packages/*/tests/**/*.tsx",
+    "packages/*/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "registry/tools/**/*.mjs",
+    "*.ts"
+  ],
+  "exclude": ["**/node_modules", "**/dist", "**/es", "**/lib", "**/coverage"]
+}

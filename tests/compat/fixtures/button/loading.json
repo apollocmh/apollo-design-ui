@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "id": "button/loading",
+  "component": "button",
+  "description": "loading 状态：验证 loading 图标出现、交互被阻止、click 不触发。这是「受控状态阻止交互」这一类语义的代表用例。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "type": "primary",
+    "loading": true
+  },
+  "content": "Loading",
+  "interactions": [{ "type": "hover" }, { "type": "click" }],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

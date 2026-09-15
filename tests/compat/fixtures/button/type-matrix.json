@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "button/type-matrix",
+  "component": "button",
+  "description": "type × size 的组合矩阵在单个 fixture 内一次性比对，减少截图与进程启动开销。用于验证 5 种 type 与 3 种 size 的类名与视觉都对齐。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "type": ["primary", "default", "dashed", "text", "link"],
+    "size": ["small", "middle", "large"]
+  },
+  "content": "Button",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  }
+}

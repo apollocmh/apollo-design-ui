@@ -1,0 +1,56 @@
+{
+  "name": "@apollo-design/ui",
+  "version": "0.0.0",
+  "description": "组件库本体：72 个组件 + locale + 全局样式 + ConfigProvider。",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./es/*": {
+      "types": "./es/*.d.ts",
+      "import": "./es/*.mjs"
+    },
+    "./css/*": "./css/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "es",
+    "css"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run",
+    "lint": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@apollo-design/a11y": "workspace:*",
+    "@apollo-design/form-core": "workspace:*",
+    "@apollo-design/icons": "workspace:*",
+    "@apollo-design/locale": "workspace:*",
+    "@apollo-design/motion": "workspace:*",
+    "@apollo-design/overlay": "workspace:*",
+    "@apollo-design/picker": "workspace:*",
+    "@apollo-design/portal": "workspace:*",
+    "@apollo-design/position": "workspace:*",
+    "@apollo-design/theme": "workspace:*",
+    "@apollo-design/utils": "workspace:*",
+    "@apollo-design/virtual-list": "workspace:*",
+    "dayjs": "catalog:",
+    "scroll-into-view-if-needed": "catalog:"
+  },
+  "peerDependencies": {
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@apollo-design/test-utils": "workspace:*"
+  }
+}

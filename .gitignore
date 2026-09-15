@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+es/
+lib/
+coverage/
+*.tsbuildinfo
+
+# Test outputs
+tests/compat/report/
+tests/compat/baselines/**/*.diff.png
+visualRegressionReport/
+playwright-report/
+test-results/
+.vitest/
+
+# Docs site build
+_site/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
+# Local antd reference checkouts (never committed — re-extract with the tool)
+# 注意：antd 的参考产物与源码由 registry/tools/extract-antd-facts.mjs 重新获取，
+# 不纳入版本控制，避免把别人的代码放进我们的仓库。
+antd-reference/
+.antd-cache/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*~
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

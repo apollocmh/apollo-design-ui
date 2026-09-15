@@ -1,0 +1,751 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://apollo-design.dev/schemas/registry.json",
+  "title": "Apollo Design Registry",
+  "description": "registry/ 下三个机器可读文件的 Schema。它们是 Agent 的任务来源与项目事实来源。",
+  "definitions": {
+    "ComponentStatus": {
+      "type": "string",
+      "enum": [
+        "todo",
+        "analyzing",
+        "implementing",
+        "testing",
+        "visual-review",
+        "blocked",
+        "completed"
+      ]
+    },
+    "DimensionStatus": {
+      "type": "string",
+      "enum": ["todo", "analyzing", "in-progress", "done", "blocked", "n/a"]
+    },
+    "Priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3", "P4", "P5"] },
+    "Complexity": { "type": "string", "enum": ["S", "M", "L", "XL"] },
+    "Group": {
+      "type": "string",
+      "enum": ["通用", "布局", "导航", "数据录入", "数据展示", "反馈", "其他"]
+    },
+
+    "Blocker": {
+      "type": "object",
+      "required": ["type", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["dependency", "component", "architecture", "compat-decision", "upstream"],
+          "description": "阻塞类型，见 WORKFLOW.md「阻塞处理」"
+        },
+        "reason": { "type": "string" },
+        "blockedBy": { "type": "string", "description": "阻塞者：组件名 / 包名 / 决策名" },
+        "unblockCondition": { "type": "string", "description": "解除条件" },
+        "since": { "type": "string", "description": "ISO 日期" }
+      }
+    },
+
+    "Component": {
+      "type": "object",
+      "required": [
+        "name",
+        "exportName",
+        "group",
+        "priority",
+        "complexity",
+        "status",
+        "antdVersion",
+        "dependencies",
+        "blockedBy",
+        "apiStatus",
+        "typeStatus",
+        "tokenStatus",
+        "styleStatus",
+        "testStatus",
+        "visualStatus",
+        "docsStatus"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "kebab-case，与 antd 的 components/<name> 目录名一致"
+        },
+        "exportName": { "type": "string", "description": "PascalCase 导出名，如 Button" },
+        "group": { "$ref": "#/definitions/Group" },
+        "priority": { "$ref": "#/definitions/Priority" },
+        "priorityNum": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "complexity": { "$ref": "#/definitions/Complexity" },
+        "status": { "$ref": "#/definitions/ComponentStatus" },
+        "antdVersion": { "type": "string" },
+
+        "derived": {
+          "type": "object",
+          "description": "由 gen-registry.mjs 从 antd 事实推导，禁止手工编辑",
+          "additionalProperties": false,
+          "properties": {
+            "dagLevel": { "type": ["integer", "null"] },
+            "unblocks": {
+              "type": "integer",
+              "description": "完成后能解锁的下游组件数（传递闭包）"
+            },
+            "antdBuildLineCount": { "type": "integer" },
+            "antdFileCount": { "type": "integer" },
+            "rcDepCount": { "type": "integer" },
+            "tokenCount": { "type": "integer" },
+            "tokenGroup": { "type": ["string", "null"] }
+          }
+        },
+
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "components": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "阻塞性依赖：运行时真的 import 了这些组件"
+            },
+            "typeOnly": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "仅类型引用，不阻塞实现"
+            },
+            "leafModules": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "对叶子模块的依赖（如 config-provider/context）。在我们的架构中由 ui/src/_internal/ 承接"
+            },
+            "rcPackages": { "type": "array", "items": { "type": "string" } },
+            "antdEcosystem": { "type": "array", "items": { "type": "string" } },
+            "foundation": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^@apollo-design/" },
+              "description": "该组件需要的 @apollo-design/* 包"
+            }
+          }
+        },
+
+        "blockedBy": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "尚未 completed 的依赖组件。非空时该组件不可被 next-task 选中"
+        },
+        "blockers": { "type": "array", "items": { "$ref": "#/definitions/Blocker" } },
+
+        "apiStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "typeStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "tokenStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "styleStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "testStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "visualStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "docsStatus": { "$ref": "#/definitions/DimensionStatus" },
+
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+
+    "Milestone": {
+      "type": "object",
+      "required": ["id", "label", "description", "criteria"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "components": { "type": "array", "items": { "type": "string" } },
+        "packages": { "type": "array", "items": { "type": "string" } },
+        "criteria": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "ComponentsFile": {
+      "type": "object",
+      "required": ["antdVersion", "generatedAt", "legend", "summary", "milestones", "components"],
+      "additionalProperties": true,
+      "properties": {
+        "antdVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "sourceFacts": { "type": "string" },
+        "legend": { "type": "object" },
+        "summary": {
+          "type": "object",
+          "required": ["total", "byStatus", "byPriority", "byGroup"],
+          "additionalProperties": true,
+          "properties": {
+            "total": { "type": "integer" },
+            "byStatus": { "type": "object" },
+            "byPriority": { "type": "object" },
+            "byGroup": { "type": "object" },
+            "completedCount": { "type": "integer" },
+            "remainingCount": { "type": "integer" }
+          }
+        },
+        "milestones": { "type": "array", "items": { "$ref": "#/definitions/Milestone" } },
+        "components": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Component" },
+          "minItems": 1
+        }
+      }
+    },
+
+    "RcReplacement": {
+      "type": "object",
+      "required": ["pkg", "kind", "capability", "strategy", "target", "rationale", "risk"],
+      "additionalProperties": true,
+      "properties": {
+        "pkg": { "type": "string" },
+        "kind": { "type": "string", "enum": ["rc", "ecosystem", "transitive"] },
+        "capability": { "type": "string" },
+        "strategy": { "type": "string", "enum": ["reuse", "apollo", "in-ui", "drop"] },
+        "target": { "type": "string" },
+        "foundationPkg": { "type": ["string", "null"] },
+        "rationale": { "type": "string" },
+        "risk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "usedBy": { "type": "array", "items": { "type": "string" } },
+        "usedByCount": { "type": "integer" }
+      }
+    },
+
+    "FoundationPackage": {
+      "type": "object",
+      "required": ["name", "layer", "purpose", "replaces", "risk", "readiness"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "layer": { "type": "string", "enum": ["L0", "L1", "L2", "测试"] },
+        "purpose": { "type": "string" },
+        "replaces": { "type": "array", "items": { "type": "string" } },
+        "risk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "readiness": { "type": "string" }
+      }
+    },
+
+    "FoundationStatus": {
+      "type": "string",
+      "enum": ["todo", "analyzing", "implementing", "testing", "verifying", "blocked", "completed"],
+      "description": "foundation 包生命周期。与 ComponentStatus 平行，但多一个 verifying —— foundation 包的验收门槛包含「覆盖率达标 + 契约文档 + 产物构建」三项，缺一不可"
+    },
+
+    "FoundationDimension": {
+      "type": "string",
+      "enum": ["api", "impl", "types", "tests", "docs", "pkg"],
+      "description": "foundation 包的进度维度。比组件的 7 个维度少视觉/Token（L0/L1/L2 不得含视觉语义），多一个 pkg（包配置与构建产物）"
+    },
+
+    "TestLayer": {
+      "type": "string",
+      "enum": [
+        "L1-unit",
+        "L2-interaction",
+        "L3-type",
+        "L4-dom-contract",
+        "L5-a11y",
+        "L6-visual",
+        "L7-build"
+      ],
+      "description": "TESTING.md 的七层测试架构。foundation 包必须显式声明每一层是 done 还是 n/a —— n/a 必须由架构规则支撑（如 L0 无视觉语义 ⇒ L6 不适用），不允许用 n/a 掩盖未做"
+    },
+
+    "FoundationVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "最近一次可复现验证的实测事实。由 foundation-status.mjs --verify 写入，禁止手工编造",
+      "properties": {
+        "verifiedAt": { "type": ["string", "null"], "description": "ISO 日期" },
+        "unit": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "projects": { "type": "array", "items": { "type": "string" } },
+            "files": { "type": "integer" },
+            "tests": { "type": "integer" },
+            "passed": { "type": "integer" },
+            "failed": { "type": "integer" }
+          }
+        },
+        "typecheck": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": { "type": "string", "enum": ["clean", "errors", "not-run"] },
+            "errors": { "type": "integer" }
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "statements": { "type": ["number", "null"] },
+            "branches": { "type": ["number", "null"] },
+            "functions": { "type": ["number", "null"] },
+            "lines": { "type": ["number", "null"] }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "statements": { "type": "number" },
+            "branches": { "type": "number" },
+            "functions": { "type": "number" },
+            "met": {
+              "type": ["boolean", "null"],
+              "description": "三项是否全部达标。null 表示尚未测量"
+            }
+          }
+        },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["passing", "failing", "not-run", "not-applicable"]
+            },
+            "reason": { "type": ["string", "null"] }
+          }
+        },
+        "contract": {
+          "type": ["string", "null"],
+          "description": "契约文档路径，如 docs/foundation/rc-util-contract.md"
+        }
+      }
+    },
+
+    "FoundationDerived": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "由 foundation-status.mjs 推导，禁止手工编辑",
+      "properties": {
+        "implOrder": {
+          "type": ["integer", "null"],
+          "description": "拓扑序（严格尊重 dependsOn）。与 phase2Order 不同：phase2Order 是含 PoC 验证点的推进顺序，implOrder 是「可以开始完整实现」的顺序"
+        },
+        "componentConsumers": { "type": "integer", "description": "有多少个组件依赖本包" },
+        "componentConsumersByPriority": { "type": "object" },
+        "packageConsumers": { "type": "array", "items": { "type": "string" } },
+        "srcFiles": { "type": "integer" },
+        "srcLines": { "type": "integer" },
+        "exportDeclarations": { "type": "integer" }
+      }
+    },
+
+    "FoundationEntry": {
+      "type": "object",
+      "required": [
+        "name",
+        "dir",
+        "layer",
+        "phase2Order",
+        "status",
+        "risk",
+        "purpose",
+        "replaces",
+        "notDo",
+        "readiness",
+        "pocRequired",
+        "pocStatus",
+        "dependsOn",
+        "dependedOnBy",
+        "dimensions",
+        "testLayers",
+        "verification",
+        "derived",
+        "blockedBy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^@apollo-design/" },
+        "dir": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "layer": { "type": "string", "enum": ["L0", "L1", "L2", "测试"] },
+        "phase2Order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Phase 2 推进顺序（含 PoC 验证点）。允许早于依赖包 —— 当且仅当该槽位是 PoC 而非完整实现，此时 pocRequired 必须为 true"
+        },
+        "status": { "$ref": "#/definitions/FoundationStatus" },
+        "risk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "purpose": { "type": "string" },
+        "replaces": { "type": "array", "items": { "type": "string" } },
+        "notDo": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "职责边界。来自 packages/<dir>/README.md 的「明确不做」"
+        },
+        "readiness": { "type": "string", "description": "Phase 1 定义的就绪标准" },
+        "doneWhen": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "可验证的完成判据。status=completed 时必须全部满足，且逐条能指向证据"
+        },
+        "pocRequired": {
+          "type": "boolean",
+          "description": "是否需要先做 PoC 才能开始完整实现（AR1/AR2 等架构风险点）"
+        },
+        "pocStatus": { "$ref": "#/definitions/DimensionStatus" },
+        "pocNote": { "type": ["string", "null"] },
+        "layerNotes": {
+          "type": ["string", "null"],
+          "description": "解释 testLayers 中 n/a 的架构依据。n/a 必须能指向 R3（地基纯净）或 R4（引擎无视觉）这类规则，不允许用它掩盖未做"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "依赖的其他 foundation 包"
+        },
+        "dependedOnBy": { "type": "array", "items": { "type": "string" } },
+        "dimensions": {
+          "type": "object",
+          "required": ["api", "impl", "types", "tests", "docs", "pkg"],
+          "additionalProperties": false,
+          "properties": {
+            "api": { "$ref": "#/definitions/DimensionStatus" },
+            "impl": { "$ref": "#/definitions/DimensionStatus" },
+            "types": { "$ref": "#/definitions/DimensionStatus" },
+            "tests": { "$ref": "#/definitions/DimensionStatus" },
+            "docs": { "$ref": "#/definitions/DimensionStatus" },
+            "pkg": { "$ref": "#/definitions/DimensionStatus" }
+          }
+        },
+        "testLayers": {
+          "type": "object",
+          "required": [
+            "L1-unit",
+            "L2-interaction",
+            "L3-type",
+            "L4-dom-contract",
+            "L5-a11y",
+            "L6-visual",
+            "L7-build"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "L1-unit": { "$ref": "#/definitions/DimensionStatus" },
+            "L2-interaction": { "$ref": "#/definitions/DimensionStatus" },
+            "L3-type": { "$ref": "#/definitions/DimensionStatus" },
+            "L4-dom-contract": { "$ref": "#/definitions/DimensionStatus" },
+            "L5-a11y": { "$ref": "#/definitions/DimensionStatus" },
+            "L6-visual": { "$ref": "#/definitions/DimensionStatus" },
+            "L7-build": { "$ref": "#/definitions/DimensionStatus" }
+          }
+        },
+        "verification": { "$ref": "#/definitions/FoundationVerification" },
+        "derived": { "$ref": "#/definitions/FoundationDerived" },
+        "blockedBy": { "type": "array", "items": { "type": "string" } },
+        "blockers": { "type": "array", "items": { "$ref": "#/definitions/Blocker" } },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+
+    "FoundationFile": {
+      "type": "object",
+      "required": ["antdVersion", "generatedAt", "legend", "summary", "packages"],
+      "additionalProperties": true,
+      "properties": {
+        "antdVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "sourceFacts": { "type": "string" },
+        "legend": { "type": "object" },
+        "phase1Facts": {
+          "type": "object",
+          "description": "Phase 1 分析产出的实测事实（来源 docs/foundation/*.md）。工具只保留、不生成 —— 这些数字无法从当前仓库廉价重新推导。键为包名。",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "openDecisions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/OpenDecision" },
+          "description": "等待用户裁决的跨切面决策。工具只保留、不生成。"
+        },
+        "summary": {
+          "type": "object",
+          "required": ["total", "byStatus", "byLayer", "completedCount", "remainingCount"],
+          "additionalProperties": true,
+          "properties": {
+            "total": { "type": "integer" },
+            "byStatus": { "type": "object" },
+            "byLayer": { "type": "object" },
+            "completedCount": { "type": "integer" },
+            "remainingCount": { "type": "integer" },
+            "nextPackage": {
+              "type": ["string", "null"],
+              "description": "按 phase2Order 排序、blockedBy 为空的第一个包"
+            },
+            "nextImplementable": {
+              "type": ["string", "null"],
+              "description": "按 implOrder 排序、依赖全部 completed 的第一个包 —— 「可以开始完整实现」的答案"
+            }
+          }
+        },
+        "packages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/FoundationEntry" },
+          "minItems": 1
+        }
+      }
+    },
+
+    "OpenDecision": {
+      "type": "object",
+      "required": ["id", "question", "impact", "status"],
+      "additionalProperties": false,
+      "description": "等待用户裁决的跨切面决策。放在注册表里，是因为「项目卡在什么问题上」必须与「项目做到哪了」一样可被机器读取 —— 否则它会散落在对话历史里，每换一个会话就要重新解释一遍。",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "question": { "type": "string" },
+        "context": { "type": "string", "description": "为什么会有这个问题、不决定会怎样" },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "tradeoff"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string" },
+              "tradeoff": { "type": "string" }
+            }
+          }
+        },
+        "recommendation": { "type": ["string", "null"] },
+        "impact": { "type": "string", "description": "阻塞范围的人话描述" },
+        "blocks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "受影响的 foundation 包名。语义是「阻塞这些包达到 completed」，不一定是「阻塞它们开工」"
+        },
+        "hardBlock": {
+          "type": "boolean",
+          "description": "true 表示相关包完全无法开工；false 表示可以开工但无法收口"
+        },
+        "status": { "type": "string", "enum": ["open", "decided", "deferred"] },
+        "raisedAt": { "type": ["string", "null"] },
+        "decidedAt": { "type": ["string", "null"] },
+        "decision": { "type": ["string", "null"] }
+      }
+    },
+
+    "DependenciesFile": {
+      "type": "object",
+      "required": [
+        "antdVersion",
+        "generatedAt",
+        "summary",
+        "foundationPackages",
+        "rcReplacements",
+        "componentDag"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "antdVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "summary": { "type": "object" },
+        "strategyLegend": { "type": "object" },
+        "foundationPackages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/FoundationPackage" }
+        },
+        "rcReplacements": { "type": "array", "items": { "$ref": "#/definitions/RcReplacement" } },
+        "ecosystemReuse": { "type": "array", "items": { "$ref": "#/definitions/RcReplacement" } },
+        "componentDag": {
+          "type": "object",
+          "required": ["nodes", "edges", "layers"],
+          "additionalProperties": false,
+          "properties": {
+            "nodes": { "type": "object" },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["from", "to", "kind"],
+                "additionalProperties": false,
+                "properties": {
+                  "from": { "type": "string" },
+                  "to": { "type": "string" },
+                  "kind": { "type": "string", "enum": ["runtime", "type-only"] }
+                }
+              }
+            },
+            "layers": { "type": "object" }
+          }
+        },
+        "cycleResolutions": { "type": "array" }
+      }
+    },
+
+    "TokensFile": {
+      "type": "object",
+      "required": ["antdVersion", "generatedAt", "cssVar", "summary", "layers", "algorithms"],
+      "additionalProperties": true,
+      "properties": {
+        "antdVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "cssVar": {
+          "type": "object",
+          "required": ["prefix", "naming", "mode"],
+          "additionalProperties": false,
+          "properties": {
+            "prefix": { "type": "string" },
+            "naming": { "type": "string" },
+            "example": { "type": "string" },
+            "mode": { "type": "string", "enum": ["zero-runtime"] },
+            "note": { "type": "string" }
+          }
+        },
+        "summary": { "type": "object" },
+        "layers": { "type": "object" },
+        "algorithms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "status": { "$ref": "#/definitions/DimensionStatus" }
+            }
+          }
+        }
+      }
+    },
+
+    "WorkstreamFile": {
+      "type": "object",
+      "description": "registry/workstreams.json —— 可并行 Work Item 的编排。由 gen-workstreams.mjs 从 components/foundation + source/workstreams.mjs 推导，勿手工编辑 items。",
+      "required": [
+        "antdVersion",
+        "generatedAt",
+        "summary",
+        "conflictSets",
+        "workstreams",
+        "waves",
+        "items",
+        "currentBatch"
+      ],
+      "properties": {
+        "$schema": { "type": "string" },
+        "$comment": { "type": "string" },
+        "antdVersion": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "sourceFacts": { "type": "string" },
+        "legend": { "type": "object" },
+        "summary": { "type": "object" },
+        "conflictSets": { "$ref": "#/definitions/ConflictSets" },
+        "workstreams": { "$ref": "#/definitions/Workstreams" },
+        "waves": { "$ref": "#/definitions/Waves" },
+        "items": { "$ref": "#/definitions/WorkItems" },
+        "currentBatch": {
+          "type": "array",
+          "description": "当前可同时开工的 Item id 集合（无跨泳道 exclusive 冲突 + 遵守并发上限）",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "ConflictSets": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ConflictSet" }
+    },
+    "ConflictSet": {
+      "type": "object",
+      "description": "共享路径的冲突声明。mode=exclusive 开发期互斥；mode=serialized 提交期排序。",
+      "required": ["id", "name", "mode", "paths"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^CF-" },
+        "name": { "type": "string" },
+        "mode": { "type": "string", "enum": ["exclusive", "serialized"] },
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "note": { "type": "string" }
+      }
+    },
+
+    "Workstreams": { "type": "array", "items": { "$ref": "#/definitions/Workstream" } },
+    "Workstream": {
+      "type": "object",
+      "description": "并行泳道。owns 为独占路径；同一泳道内的并发由 maxParallel 限流。",
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^WS-" },
+        "name": { "type": "string" },
+        "kind": { "type": "string", "enum": ["foundation", "component", "crosscut"] },
+        "foundation": { "type": "array", "items": { "type": "string" } },
+        "group": { "$ref": "#/definitions/Group" },
+        "owns": { "type": "array", "items": { "type": "string" } },
+        "shared": { "type": "array", "items": { "type": "string" } },
+        "maxParallel": { "type": "integer", "minimum": 1 },
+        "why": { "type": "string" },
+        "itemCount": { "type": "integer" },
+        "doneCount": { "type": "integer" },
+        "readyCount": { "type": "integer" },
+        "itemIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "Waves": { "type": "array", "items": { "$ref": "#/definitions/Wave" } },
+    "Wave": {
+      "type": "object",
+      "description": "批次。成员由工具推导，这里描述目标、进入条件与退出条件。",
+      "required": ["id", "phase", "name", "goal", "entryCriteria", "exitCriteria"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^W[0-9]+$" },
+        "phase": { "type": "integer", "minimum": 1 },
+        "name": { "type": "string" },
+        "goal": { "type": "string" },
+        "entryCriteria": { "type": "string" },
+        "exitCriteria": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["done", "active", "pending"] },
+        "itemCount": { "type": "integer" },
+        "doneCount": { "type": "integer" },
+        "readyCount": { "type": "integer" },
+        "blockedCount": { "type": "integer" },
+        "waitingCount": { "type": "integer" },
+        "complete": { "type": "boolean" },
+        "itemIds": { "type": "array", "items": { "type": "string" } },
+        "workstreams": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "WorkItems": { "type": "array", "items": { "$ref": "#/definitions/WorkItem" } },
+    "WorkItem": {
+      "type": "object",
+      "description": "被调度的最小单元。kind=poc 是架构风险验证槽位，不是完整实现。",
+      "required": ["id", "kind", "title", "workstream", "wave", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "enum": ["foundation", "poc", "component", "crosscut"] },
+        "ref": { "type": "string" },
+        "title": { "type": "string" },
+        "workstream": { "type": "string" },
+        "wave": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["done", "ready", "blocked", "waiting-decision"],
+          "description": "ready 只表示依赖已满足；cannotFinish=true 表示可以开工但收不了口"
+        },
+        "dependsOn": { "type": "array", "items": { "type": "string" } },
+        "conflicts": { "type": "array", "items": { "type": "string" } },
+        "blockers": { "type": "array", "items": { "type": "object" } },
+        "softBlockers": {
+          "type": "array",
+          "description": "软阻塞的开放决策 id —— 不阻止开工，但阻止置 completed",
+          "items": { "type": "string" }
+        },
+        "cannotFinish": { "type": "boolean" },
+        "decidedBy": { "type": "array", "items": { "type": "string" } },
+        "complexity": { "$ref": "#/definitions/Complexity" },
+        "priority": { "$ref": "#/definitions/Priority" },
+        "unblocks": { "type": "integer" },
+        "why": { "type": "string" },
+        "doneWhen": { "type": "array", "items": { "type": "string" } },
+        "group": { "$ref": "#/definitions/Group" },
+        "dagLevel": { "type": "integer" },
+        "pocOf": { "type": "string" },
+        "registryStatus": { "type": "string" },
+        "dimensions": { "type": "object" }
+      }
+    }
+  }
+}
