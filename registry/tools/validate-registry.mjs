@@ -23,7 +23,8 @@
  *   E13 compat fixture schema 存在
  *   E14 foundation.json 存在，且与 dependencies.json / components.json 一致
  *   E15 foundation 包的顺序约束（phase2Order 唯一、implOrder 拓扑有效、PoC 豁免规则）
- *   E16 foundation 包进度字段合法 + completed 必须真正完成（含覆盖率与构建门禁）
+ *   E16 foundation 包进度字段合法 + completed 必须真正完成（含覆盖率与构建门禁）+
+ *       PoC 收口必须有 pocResult 结论，且其登记的偏差必须真实存在
  *   E17 blockedBy 必须指向已登记的开放决策
  *
  * 用法：
@@ -529,6 +530,20 @@ const FOUNDATION_TEST_LAYERS = [
   }
 }
 
+/**
+ * COMPATIBILITY.md §9.2 里**真实登记过**的偏差编号（D1、D2…）。
+ *
+ * 从 Markdown 表格里刮出来而不是硬编码：硬编码会在新增 D14 时静默过期，
+ * 校验就退化成「长得像 D 编号就行」—— 那还不如不校验。
+ */
+const REGISTERED_DEVIATION_IDS = (() => {
+  const file = path.join(ROOT, 'COMPATIBILITY.md');
+  if (!fs.existsSync(file)) return new Set();
+  const text = fs.readFileSync(file, 'utf8');
+  const section = text.split(/^###\s+9\.2\s/m)[1]?.split(/^###\s+9\.3\s/m)[0] ?? '';
+  return new Set([...section.matchAll(/^\|\s*(D\d+)\s*\|/gm)].map((m) => m[1]));
+})();
+
 // ---------------------------------------------------------------------------
 // E16  foundation 包进度字段合法 + completed 必须真正完成
 // ---------------------------------------------------------------------------
@@ -538,6 +553,40 @@ for (const p of foundationPackages) {
   }
   if (!DIMENSION_VALUES.includes(p.pocStatus)) {
     err('E16', `${p.name}.pocStatus 取值非法: ${p.pocStatus}`);
+  }
+
+  // PoC 收口必须有结论 —— 防止「PoC 已完成」退化成一个无法追溯结论的状态字符串，
+  // 那正是本项目一直在堵的「虚假进度」：状态说 done，但没人知道证明了什么。
+  if (p.pocStatus === 'done') {
+    const r = p.pocResult;
+    if (!r) {
+      err(
+        'E16',
+        `${p.name} pocStatus=done 但缺少 pocResult —— PoC 结论必须可追溯（status / summary / evidence）`,
+      );
+    } else {
+      if (!['pass', 'pass-with-deviations', 'fail'].includes(r.status)) {
+        err('E16', `${p.name}.pocResult.status 取值非法: ${r.status}`);
+      }
+      if (typeof r.summary !== 'string' || !r.summary.trim()) {
+        err('E16', `${p.name}.pocResult.summary 为空 —— 必须写明「证明了什么 / 否证了什么」`);
+      }
+      if (r.status === 'fail' && p.status === 'completed') {
+        err('E16', `${p.name} PoC 结论为 fail 却标记 completed`);
+      }
+      // PoC 里登记的偏差必须能**追到登记处**，否则等于没登记。
+      // 注意不能只校验「长得像 D 编号」—— D99 也长得像，但它并不存在。
+      for (const dev of r.deviations ?? []) {
+        const isRegisteredCompat = REGISTERED_DEVIATION_IDS.has(dev);
+        const isDecisionId = (foundationDoc?.openDecisions ?? []).some((d) => d.id === dev);
+        if (!isRegisteredCompat && !isDecisionId) {
+          err(
+            'E16',
+            `${p.name}.pocResult.deviations 引用了未登记的偏差 "${dev}" —— 必须真实出现在 COMPATIBILITY.md §9.2 的表格里，或是已登记的开放决策 id`,
+          );
+        }
+      }
+    }
   }
   for (const d of FOUNDATION_DIMENSIONS) {
     if (!DIMENSION_VALUES.includes(p.dimensions?.[d])) {

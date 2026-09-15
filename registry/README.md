@@ -127,6 +127,25 @@ source/rc-map.mjs        ──┘
 **硬约束**（E16）：有 `n/a` 层但没有 `layerNotes` → 报错。
 这条规则是为了让 `n/a` 无法被用来掩盖未做 —— 这是「不降低验收标准」的机械保障。
 
+### PoC 收口必须有结论（`pocResult`）
+
+PoC 的作用是在投入之前**证伪或证实一个架构假设**。如果它只留下一句 `pocStatus: "done"`，
+那就退化成一个无法追溯结论的状态字符串 —— 跟没做一样，却会解锁下游任务。
+
+因此 `pocStatus === 'done'` 时**必须**同时填写 `pocResult`（**硬约束** E16）：
+
+| 字段 | 含义 |
+|---|---|
+| `status` | `pass` / `pass-with-deviations` / `fail` |
+| `summary` | 证明了什么，**以及没有证明什么** —— 后者同等重要，它决定风险转移到哪 |
+| `evidence` | 可复现的证据：命令、文件路径、用例规模 |
+| `deviations` | PoC 中发现并登记的偏差（`COMPATIBILITY.md` 的 `D<n>` 或开放决策 id） |
+| `decidedAt` | 结论日期 |
+
+**硬约束**（E16）：`deviations` 里的 `D<n>` 必须**真实出现在** `COMPATIBILITY.md` §9.2 的表格里
+（校验器从 Markdown 刮取，不硬编码），否则「引用一个不存在的偏差」和没登记没有区别。
+同理 `pocResult.status === 'fail'` 的包不得标记 `completed`。
+
 ### 开放决策（`openDecisions`）
 
 项目「卡在什么问题上」与「做到哪了」同等重要。若不记录，它会散落在对话历史里，

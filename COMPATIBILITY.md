@@ -290,6 +290,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D10 | `motion` | `@rc-component/motion` 手写 CSS class 序列 | Vue `<Transition>` + CSS 变量 | PLATFORM | 语义对齐（collapse/slide/zoom/fade/move 五类），实现走 Vue 原生。PoC 由 AR2 验证 |
 | D11 | `overlay` | `@rc-component/portal` 的 Portal 组件 | Vue `<Teleport>` | PLATFORM | `<Teleport>` 是 Vue 原生能力，语义等价 |
 | D12 | `theme` | 运行时改 token → 重新生成样式表 | 运行时改 token → 重写 `--apollo-*` CSS 变量 | INTENDED | 零运行时的必然结果；能力等价，实现路径不同 |
+| D13 | `position` | 相交面积 `Math.max(0, w * h)` | 逐轴先夹到 0 再相乘 `Math.max(0,w) * Math.max(0,h)` | **DEFECT** | antd 的算式在浮层**整体**位于区域外侧时，两个差值同为负数、乘积为正，`Math.max(0,·)` 兜不住 —— 「完全不可见」被算成巨大正面积（实测 17,600,000），翻转判定会据此接受明显更差的位置。部分相交时两式等价。已裁决：`intersection-area-clamp`。证据见 `packages/position/src/__tests__/align.test.ts`（断言「不开夹取分歧 > 0，开夹取分歧 = 0」） |
 
 ### 9.3 待裁决差异（`UNDECIDED`）
 

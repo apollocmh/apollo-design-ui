@@ -292,6 +292,31 @@ export const OPEN_DECISIONS = [
     impact: '确定 foundation 包数量（13 个）与 AR1 的 PoC 方式',
   }),
 
+  decided('intersection-area-clamp', {
+    question:
+      '相交面积计算是否复刻 antd 的 `Math.max(0, w * h)`（含「完全在外侧算出正面积」的缺陷）？',
+    context:
+      'antd `useAlign` 用 `Math.max(0, (visibleR - visibleL) * (visibleB - visibleT))` 度量「翻转后是否更可见」。当浮层**整体**落在区域外侧时，两个差值同为负数，乘积为正，`Math.max(0, ·)` 兜不住 —— 「完全不可见」被算成一个巨大的正面积（实测 17,600,000），翻转判定会据此接受一个明显更差的位置。本项目规则是「antd 自身的缺陷 → 登记差异，不复刻」。',
+    options: [
+      {
+        label: 'A. 逐轴先夹到 0 再相乘（已选）',
+        tradeoff:
+          '数学上正确；与 antd 在所有「部分相交」的常见情形下结果完全一致（两条轴同号时两式等价）。代价是退化情形下与 antd 的翻转结果可能不同。',
+      },
+      {
+        label: 'B. 逐字复刻含缺陷的算式',
+        tradeoff:
+          '与 antd 逐位一致；代价是把一个已知的错误度量固化进本项目，且它只在 antd 自己也会提前返回（`isVisible(target)` 为假）的场景下才起作用 —— 也就是说复刻它换不来任何实际一致性。',
+      },
+    ],
+    recommendation: 'A',
+    decision:
+      'A —— 见 packages/position/src/area.ts。oracle.js 保留 clampIntersection 开关（默认 false = 逐字 antd），差分测试用 true 证明「这是唯一差异」。证据：align.test.ts 断言「不开夹取时分歧数 > 0，开夹取时分歧数 = 0」，把本条登记变成可证伪的断言，而非口头声明。',
+    impact:
+      '影响 position 包的翻转判定；差分测试中的 5000 组用例里确实存在分歧（已用可证伪的断言锁定）',
+    blocks: [],
+  }),
+
   decided('hooks-package-vs-colocated', {
     question: 'Vue 的 composables 是否要抽成独立的 @apollo-design/hooks 包？',
     context:

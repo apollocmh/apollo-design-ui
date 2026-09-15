@@ -83,6 +83,7 @@ const COVERAGE_THRESHOLDS = { statements: 95, branches: 90, functions: 95 };
 const PRESERVED_KEYS = [
   'status',
   'pocStatus',
+  'pocResult',
   'doneWhen',
   'dimensions',
   'testLayers',
@@ -392,6 +393,7 @@ function defaultProgress() {
   return {
     status: 'todo',
     pocStatus: 'todo',
+    pocResult: null,
     doneWhen: [],
     dimensions: Object.fromEntries(DIMENSIONS.map((d) => [d, 'todo'])),
     testLayers: Object.fromEntries(TEST_LAYERS.map((l) => [l, 'todo'])),

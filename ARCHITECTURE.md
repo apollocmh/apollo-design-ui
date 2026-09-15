@@ -408,6 +408,35 @@ Vue 的 composable 与组件实例强耦合，抽成独立包会退化成"什么
 `pocRequired` 字段在 `foundation.json` 中标记这一点，`registry:validate` 的 E15 会检查
 「`pocRequired === false` 的包不得早于其依赖」。
 
+### 9.1 AR1 的 PoC 结论（2026-09-16）
+
+**结论：几何内核通过（`pass-with-deviations`）。** 拆分方案（`position` 纯几何 + `overlay` 生命周期）成立。
+
+做法不是「写几个用例看看像不像」，而是把 `@rc-component/trigger@3.10.1` 的
+`es/hooks/useAlign.js` 第 228–502 行（offset 解析之后的全部数学部分）**机械移植**成
+`packages/position/src/__tests__/oracle.js` —— 保留变量名、求值顺序与可变状态，
+不做任何顺手优化 —— 然后用确定性 PRNG（mulberry32，seed 20260916）生成 5000 组
+「目标 / 浮层 / 视口 / placement / overflow / offset / scale」组合做差分：
+`offsetX` `offsetY` `arrowX` `arrowY` `points` `flip` 六个量**逐位一致**。
+
+这样设计的原因是归因：如果 oracle 是「照着理解重写」，差分通过只能说明「两边都想通了」；
+机械移植则把分歧唯一地归因于「我们有意改了什么」。而确实改了一处 —— antd 的相交面积
+`Math.max(0, w * h)` 在浮层整体位于区域外侧时算出巨大正数（登记为 **D13**，
+决策 `intersection-area-clamp`）。`oracle.js` 保留 `clampIntersection` 开关：
+默认 `false` 逐字复刻 antd，`true` 采用我们的写法，于是「这是唯一差异」本身也成为一个断言。
+
+**没有证明的部分（AR1 的风险重心已转移，不是消失）：**
+
+| 未覆盖 | 归属 |
+|---|---|
+| DOM 测量外壳：`getBoundingClientRect` 采集、滚动容器逐级裁剪的 DOM 侧采集、CSS `scale` 测量、`getPopupContainer` 坐标系解析 | **仍在 `position` 内**（其 purpose 是"纯几何 + 尺寸测量"，测量不是别人的） |
+| 与 antd 参考截图逐像素比对 | 需要真实 DOM 与渲染结果 → 组件层的 L6 视觉回归（`overlay` + `position` 集成后） |
+| 翻转在真实滚动 / resize 序列下的稳定性 | `position` 的 L2 交互测试（需要 jsdom） |
+
+因此 **AR1 分解为「几何内核（已解除）」与「DOM 测量外壳（未解除，仍在 `position` 内）」**。
+注意别把后者误派给 `overlay` —— 按 `dependencies.json` 的职责划分，`overlay` 只管触发时机与
+显隐生命周期，"尺寸测量"明确写在 `position` 的 purpose 里。
+
 ---
 
 ## 10. 已知缺陷与开放决策
