@@ -38,10 +38,23 @@ export interface ImportMetaEnvLike {
   MODE?: string;
 }
 
-/** `process.env` 中我们关心的字段。 */
+/**
+ * `process.env` 中我们关心的字段。
+ *
+ * ⚠️ 索引签名不是装饰，是必需的（2026-09-17 修）。
+ *    `process.env` 的真实类型是 `NodeJS.ProcessEnv extends Dict<string>`，
+ *    即 `{ [key: string]: string | undefined }` —— 它**没有任何具名属性**。
+ *    而本接口只声明了两个可选属性 ⇒ 它是一个 "weak type"，TS 会要求源类型
+ *    至少命中一个同名属性，否则报 TS2559（`Type 'ProcessEnv' has no properties
+ *    in common with type 'ProcessEnvLike'`）。加上同形状的索引签名后，
+ *    结构关系成立，`currentProcessEnv()` 不再需要 `as` 断言。
+ *    具名的两个属性仍然保留：它们是「我们实际读取什么」的文档，
+ *    也让测试注入 `{ NODE_ENV: 'production' }` 这类字面量时得到精确提示。
+ */
 export interface ProcessEnvLike {
   NODE_ENV?: string;
   VITEST?: string;
+  [key: string]: string | undefined;
 }
 
 /**

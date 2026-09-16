@@ -18,24 +18,18 @@ import { defineBuildConfig } from 'unbuild';
 export default defineBuildConfig({
   hooks: {
     'build:done': async () => {
-      const mod = await import('./dist/index.mjs');
-      const {
-        getDesignToken,
-        darkAlgorithm,
-        compactAlgorithm,
-        getCSSVarDeclarations,
-      }: {
-        getDesignToken: (config?: {
-          algorithm?: unknown;
-          token?: Record<string, unknown>;
-        }) => Record<string, unknown>;
-        darkAlgorithm: unknown;
-        compactAlgorithm: unknown;
-        getCSSVarDeclarations: (
-          token: Record<string, unknown>,
-          options?: { selector?: string },
-        ) => string;
-      } = mod;
+      // ⚠️ 这里**不能**给解构加手写类型注解。
+      //    2026-09-17 修：原注解把 getDesignToken 的参数写成
+      //    `{ algorithm?: unknown; token?: Record<string, unknown> }`、返回写成
+      //    `Record<string, unknown>`，而 dist 里的真实签名是
+      //    `(config?: ThemeConfig) => AliasToken`。严格函数参数逆变下
+      //    `Record<string, unknown>` 不能赋给 `ThemeConfig['token']`（后者是
+      //    `Partial<SeedToken & Record<string, string | number | boolean>>`），
+      //    于是 `pnpm run lint:types` 长期红着 —— 而这道门禁恰好是没人校验的那个
+      //    （见 verification.typecheck 的说明）。dist 自带 .d.ts，直接让 TS 推断
+      //    既准确又不会与 src 的真实契约漂移。
+      const { getDesignToken, darkAlgorithm, compactAlgorithm, getCSSVarDeclarations } =
+        await import('./dist/index.mjs');
 
       const out: string[] = [
         '/*!',
