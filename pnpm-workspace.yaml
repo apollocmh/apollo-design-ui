@@ -67,6 +67,10 @@ catalog:
   react-dom: ^19.3.0
   antd: 6.6.4
   '@testing-library/react': ^16.3.3
+  # `antd` 自身依赖 @ant-design/icons，但它的版本范围是 ^6.3.4 且会被 pnpm 解析到
+  # 各自的副本；`tests/compat` 的静态基线必须**固定**这个版本，否则基线会随
+  # 上游小版本静默漂移。所以这里显式入 catalog，不靠传递依赖。
+  '@ant-design/icons': ^6.3.4
 
   # --- Quality ---
   publint: ^0.3.24
