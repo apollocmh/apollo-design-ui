@@ -364,7 +364,22 @@ Vue 的 composable 与组件实例强耦合，抽成独立包会退化成"什么
 | **L7** | 构建 | `tests/build/`（产物契约 + publint） | 全部包 |
 
 覆盖率阈值：**基础设施包 95 / 90 / 95**（语句 / 分支 / 函数），`packages/ui` 90 / 85 / 90。
-`icons` 与 `locale` 是生成物，豁免覆盖率要求。
+
+**「生成物豁免」的确切含义**（2026-09-16 明确）：豁免的是**生成的数据模块**，不是整个包。
+
+- `icons` —— `packages/icons/src/icons/**`（849 个文件，由 `registry/tools/gen-icons.mjs`
+  从 `@ant-design/icons-svg` 生成）在 `vitest.config.ts` 的 `coverage.exclude` 中排除；
+  包内 **9 个手写文件**（`create-icon` / `icon` / `icon-font` / `render` / `style` /
+  `context` / `class-names` / `two-tone-color` / `types`）仍按 95 / 90 / 95 要求，一个不少。
+- `locale` —— 将来的生成 locale 数据同理。
+- 生成物改由另外两条更强的机制保证，不靠覆盖率：`gen-icons.mjs --check`（幂等 +
+  848 个图标与上游逐一对齐）与 L4 DOM 契约（848 个图标全部与 React 基线逐属性比对）。
+
+⚠️ **只在 `coverage.thresholds` 里不列该包是不够的。** `coverage.all` 默认为 `true`，
+被排除在阈值之外的包仍会被插桩并计入 `coverage-summary.json`，而
+`foundation-status.mjs --verify` 是**按目录前缀聚合**的（`packages/icons/src/`），
+于是生成文件照样算进该包 —— 文档说豁免、工具说不达标，两者直接矛盾且谁都无法靠补测试解决。
+必须在 `coverage.exclude` 里**同时排除采集**。排除生成目录顺带也是覆盖率内存占用的主要削减项。
 
 `n/a` 的层必须由架构规则支撑（例如 L0 无视觉语义 ⇒ L6 不适用），
 不允许用 `n/a` 掩盖未做 —— 由 E16 强制要求填写 `layerNotes`。

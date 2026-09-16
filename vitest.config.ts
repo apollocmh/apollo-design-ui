@@ -159,6 +159,32 @@ export default defineConfig({
         '**/*.test-d.ts',
         '**/dist/**',
         '**/node_modules/**',
+
+        // ⚠️ 生成产物目录 —— 必须在**采集层**排除，不能只靠上面 thresholds 不列它。
+        //
+        // 背景（2026-09-16 实测）：`ARCHITECTURE.md` §7 写的是「`icons` 与 `locale` 是
+        // 生成物，豁免覆盖率要求」，上面 thresholds 也刻意没有列 `icons`。但那只关掉了
+        // **阈值校验**，没有关掉**采集**：`coverage.all` 默认为 true，vitest 会把
+        // `packages/icons/src/icons/` 下 849 个生成模块全部插桩并计入报告。
+        //
+        // 后果有两条，都不是小事：
+        //   1. `registry/tools/foundation-status.mjs --verify` 的 `coverageFor('icons')`
+        //      是按 `packages/icons/src/` 前缀聚合的，于是**生成文件被算进 icons 的
+        //      覆盖率**，把 functions 从手写代码的 100% 拉到 91.18%，`met` 永远为 false
+        //      —— 文档说豁免、工具说不达标，两者直接矛盾，且谁都无法靠补测试解决。
+        //   2. 849 个模块的插桩是本仓库覆盖率内存占用的绝对主项。实测同一台机器上
+        //      `--coverage` 反复被 SIGKILL（exit 137），而不带 `--coverage` 时
+        //      icons 的 95 个用例稳定通过。排除后覆盖率跑得又快又稳。
+        //
+        // 为什么这是**收紧**而不是放宽（H8）：
+        //   排除的是**生成的数据模块**，不是手写逻辑。`packages/icons/src/*.ts`
+        //   这 9 个手写文件仍然按 95 / 90 / 95 的 foundation 档位要求，一个都不少。
+        //   生成物本身由另外两条更强的机制保证：
+        //     - `registry/tools/gen-icons.mjs --check`：幂等 + 848 个图标与
+        //       `@ant-design/icons-svg` 逐一对齐
+        //     - L4 DOM 契约：848 个图标全部与 React 基线逐属性比对
+        //   即：生成物靠「与上游逐位一致」保证，手写代码靠覆盖率保证。
+        'packages/icons/src/icons/**',
       ],
     },
   },
