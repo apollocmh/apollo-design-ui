@@ -12,8 +12,14 @@
  *      用模板生成可以保证这些字段不遗漏。
  *
  * 用法：
- *   node registry/tools/scaffold-packages.mjs          # 生成缺失的文件，不覆盖已存在的
- *   node registry/tools/scaffold-packages.mjs --force  # 强制覆盖
+ *   node registry/tools/scaffold-packages.mjs             # 生成缺失的文件，不覆盖已存在的
+ *   node registry/tools/scaffold-packages.mjs --force     # 强制覆盖（会覆盖 src/index.ts，慎用）
+ *   node registry/tools/scaffold-packages.mjs --force-pkg # 只强制覆盖 package.json
+ *
+ * 为什么要有 --force-pkg：
+ *   包契约（exports / files / scripts）改了之后需要回写到全部已存在的包，但 --force 会连带
+ *   覆盖 src/index.ts，把已完成的实现清空。package.json 是纯模板产物、不含手工内容，
+ *   可以安全地单独强制刷新。
  */
 
 import fs from 'node:fs';
@@ -23,6 +29,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
 const force = process.argv.includes('--force');
+const forcePkg = force || process.argv.includes('--force-pkg');
 
 /**
  * 包定义。
@@ -565,8 +572,8 @@ if (isMain) {
   // ---------------------------------------------------------------------------
   // 生成
   // ---------------------------------------------------------------------------
-  function writeIfNeeded(file, content) {
-    if (fs.existsSync(file) && !force) {
+  function writeIfNeeded(file, content, overwrite = force) {
+    if (fs.existsSync(file) && !overwrite) {
       console.log(`  skip   ${path.relative(ROOT, file)}`);
       return;
     }
@@ -587,22 +594,22 @@ if (isMain) {
       main: './dist/index.mjs',
       module: './dist/index.mjs',
       types: './dist/index.d.ts',
+      // 裁决 Q9 = A：只保留 dist/ 单文件产物。
+      // 曾经这里声明了 ./es/* 与 ./css/*，但 scripts.build 是裸 unbuild，只产出 dist/。
+      // 结果是 exports 指向不存在的子路径，unbuild 以退出码 1 失败，pnpm -r build 全仓不可用。
+      // 契约：exports 只允许声明构建后真实存在的路径。新增子路径导出必须同步改本模板与构建脚本。
       exports: {
         '.': {
           types: './dist/index.d.ts',
           import: './dist/index.mjs',
         },
-        './es/*': {
-          types: './es/*.d.ts',
-          import: './es/*.mjs',
-        },
-        './css/*': './css/*',
         './package.json': './package.json',
       },
-      files: ['dist', 'es', 'css'],
+      files: ['dist'],
       scripts: {
+        // unbuild 默认 declaration: true，dist/index.d.ts 由它产出，不再单独跑 vue-tsc
+        // （旧的 build:types 指向不存在的 tsconfig.build.json，属悬空脚本，已移除）。
         build: 'unbuild',
-        'build:types': 'vue-tsc -p tsconfig.build.json --emitDeclarationOnly',
         test: 'vitest run',
         lint: 'vue-tsc --noEmit',
       },
@@ -716,7 +723,7 @@ L0 包的覆盖率下限为 语句 95% / 分支 90% / 函数 95%。
   for (const p of PACKAGES) {
     const dir = path.join(ROOT, 'packages', p.dir);
     console.log(`${p.name}  [${p.layer}]`);
-    writeIfNeeded(path.join(dir, 'package.json'), packageJson(p));
+    writeIfNeeded(path.join(dir, 'package.json'), packageJson(p), forcePkg);
     writeIfNeeded(path.join(dir, 'README.md'), readme(p));
     writeIfNeeded(path.join(dir, 'tsconfig.json'), tsconfig(p));
     writeIfNeeded(

@@ -13,37 +13,29 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
     },
-    "./es/*": {
-      "types": "./es/*.d.ts",
-      "import": "./es/*.mjs"
-    },
-    "./css/*": "./css/*",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist",
-    "es",
-    "css"
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
-    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
     "test": "vitest run",
     "lint": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@apollo-design/a11y": "workspace:*",
-    "@apollo-design/form-core": "workspace:*",
+    "@apollo-design/utils": "workspace:*",
+    "@apollo-design/theme": "workspace:*",
     "@apollo-design/icons": "workspace:*",
-    "@apollo-design/locale": "workspace:*",
     "@apollo-design/motion": "workspace:*",
-    "@apollo-design/overlay": "workspace:*",
-    "@apollo-design/picker": "workspace:*",
     "@apollo-design/portal": "workspace:*",
     "@apollo-design/position": "workspace:*",
-    "@apollo-design/theme": "workspace:*",
-    "@apollo-design/utils": "workspace:*",
+    "@apollo-design/overlay": "workspace:*",
+    "@apollo-design/a11y": "workspace:*",
     "@apollo-design/virtual-list": "workspace:*",
+    "@apollo-design/form-core": "workspace:*",
+    "@apollo-design/picker": "workspace:*",
+    "@apollo-design/locale": "workspace:*",
     "dayjs": "catalog:",
     "scroll-into-view-if-needed": "catalog:"
   },

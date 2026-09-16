@@ -13,21 +13,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
     },
-    "./es/*": {
-      "types": "./es/*.d.ts",
-      "import": "./es/*.mjs"
-    },
-    "./css/*": "./css/*",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist",
-    "es",
-    "css"
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
-    "build:types": "vue-tsc -p tsconfig.build.json --emitDeclarationOnly",
     "test": "vitest run",
     "lint": "vue-tsc --noEmit"
   },
