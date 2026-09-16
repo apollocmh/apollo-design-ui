@@ -119,7 +119,11 @@ const PRESERVED_KEYS = [
   'verification',
 ];
 
-const TEST_PROJECTS = ['unit', 'dom-contract', 'types'];
+// ⚠️ `a11y` 在第一个有 a11y 测试的包（icons）落地前是空 project，所以这里一直只有三个。
+//    icons 的 a11y.test.ts 落地后必须计入，否则 `--verify` 会把 32 个真实通过的用例
+//    漏掉，而 testLayers['L5-a11y'] 却标 done —— 那就是虚假进度。
+//    `theme` 仍为空（无 theme.test.ts），等它落地时同样要加进来。
+const TEST_PROJECTS = ['unit', 'dom-contract', 'types', 'a11y'];
 
 // ---------------------------------------------------------------------------
 // 读取输入
@@ -333,6 +337,15 @@ function runVerify() {
     'vitest',
     'run',
     ...TEST_PROJECTS.flatMap((p) => ['--project', p]),
+    // ⚠️ 必须串行。vitest 5 并发跑多个 project 时，worker 之间会互相干扰：
+    //    实测（2026-09-16）不加这两个标志时，`--reporter=json --outputFile` 只捕获到
+    //    7 个测试文件 / 125 个用例（实际是 35 / 950），覆盖率只采集到 43 个文件
+    //    （theme / icons 是 0 个），于是把 utils 的 98% 写成 10.37%、met 从 true 变 false
+    //    —— **一次 --verify 就把另一个包的达标记录改坏了**，且是静默的。
+    //    同一坑在 `TESTING.md` / 日常手跑里已记录过：并发会触发
+    //    `[vitest-pool]: Timeout waiting for worker to respond` 与假错误。
+    '--maxWorkers=1',
+    '--no-file-parallelism',
     '--coverage',
     '--coverage.reporter=json-summary',
     '--reporter=json',
