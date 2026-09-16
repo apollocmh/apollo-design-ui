@@ -129,23 +129,48 @@ const PACKAGES = [
     layer: 'L0',
     purpose: 'Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 antd 图标像素一致。',
     replaces: ['@ant-design/icons'],
-    deps: { '@ant-design/icons-svg': 'catalog:' },
+    deps: {
+      '@ant-design/icons-svg': 'catalog:',
+      // TwoTone 副色由主色派生，取 10 阶色板第 0 阶。这是 ARCHITECTURE.md 明列的
+      // 「可复用、不要重写」依赖之一（与 theme 共用同一份色板算法）。
+      // 不自己实现 generate()：色板算法是 antd 视觉一致性的地基，
+      // 自研一份等于把「TwoTone 副色是否与 antd 相同」变成不可证伪的假设。
+      '@ant-design/colors': 'catalog:',
+      // 告警复用 utils 的 `warningOnce`，而不是在 icons 内再写一份。
+      // 依据：utils 的 warning 契约文档明确写着「测试会断言告警文本，前缀格式/去重范围
+      // 有偏差会让告警一致性测试假通过」—— 复制一份等于把这条契约分叉。
+      // L0 → L0 同层依赖，不构成环（utils 不依赖 icons）。
+      '@apollo-design/utils': 'workspace:*',
+    },
     peerDeps: { vue: 'catalog:' },
     publicApi: [
       '全部图标组件（PascalCase 命名，与 @ant-design/icons 一致）',
-      '基础组件：Icon / createIcon',
-      '工具：setTwoToneColor / getTwoToneColor',
+      '基础组件：Icon / createIcon / IconProvider',
+      '工具：setTwoToneColor / getTwoToneColor / createFromIconfontCN',
+      '样式：getIconStyle(iconPrefixCls) —— 供 ui 的静态样式层消费',
     ],
-    notDo: ['不手写 SVG path（必须从 @ant-design/icons-svg 生成）'],
+    notDo: [
+      '不手写 SVG path（必须从 @ant-design/icons-svg 生成）',
+      '不做运行时 <style> 注入（图标基础样式由 getIconStyle 交给 ui 的零运行时样式层）',
+    ],
     contracts: [
       '图标名与 @ant-design/icons 完全一致（Outlined / Filled / TwoTone 三种主题）',
       '图标尺寸继承 font-size，颜色继承 currentColor',
-      'TwoTone 图标支持双色定制',
+      'TwoTone 图标支持双色定制；非 TwoTone 图标忽略 twoToneColor（与 antd 一致）',
+      'DOM 契约以 tests/compat/baselines/icons.dom.json（机械 oracle）为准',
     ],
     risk: 'low',
     phase2Order: 3,
+    coverageNote:
+      '**覆盖率豁免**：本包是**生成物**（848 个图标来自 `@ant-design/icons-svg`），对生成代码要求行覆盖率没有意义 —— `vitest.config.ts` 的 `coverage.thresholds` 档位里**不含** `icons`（与 `locale` 同规，依据 `ARCHITECTURE.md` §7）。\n' +
+      '行为测试的落点在 9 个手写文件（`render` / `create-icon` / `icon` / `icon-font` / `two-tone-color` / `context` / `class-names` / `style` / `index`）上。',
     buildNote:
-      '需要 codegen 脚本：scripts/generate-icons.mjs（读 @ant-design/icons-svg → 输出 Vue 组件）',
+      '848 个图标组件由 `registry/tools/gen-icons.mjs` 从 `@ant-design/icons-svg` 生成到 `src/icons/`，**该目录是生成物、不入 review**（与 locale 的 `src/generated/` 同规）。\n\n' +
+      '```bash\n' +
+      'node registry/tools/gen-icons.mjs          # 生成/刷新\n' +
+      'node registry/tools/gen-icons.mjs --check  # 只比对，不写入（门禁用）\n' +
+      '```\n\n' +
+      '要改图标行为，改 `src/create-icon.ts` / `src/render.ts`，**不要改 `src/icons/` 下的任何文件** —— 下次生成会被覆盖。',
   },
   {
     dir: 'motion',
@@ -689,7 +714,7 @@ pnpm --filter ${p.name} lint
 \`\`\`
 
 测试要求见 [\`TESTING.md\`](../../TESTING.md)。
-L0 包的覆盖率下限为 语句 95% / 分支 90% / 函数 95%。
+${p.coverageNote ?? `覆盖率下限为 语句 95% / 分支 90% / 函数 95%（${p.layer} 档位，见 \`vitest.config.ts\` 的 \`coverage.thresholds\`）。`}
 `;
   }
 

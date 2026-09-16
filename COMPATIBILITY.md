@@ -291,6 +291,23 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D11 | `overlay` | `@rc-component/portal` 的 Portal 组件 | Vue `<Teleport>` | PLATFORM | `<Teleport>` 是 Vue 原生能力，语义等价 |
 | D12 | `theme` | 运行时改 token → 重新生成样式表 | 运行时改 token → 重写 `--apollo-*` CSS 变量 | INTENDED | 零运行时的必然结果；能力等价，实现路径不同 |
 | D13 | `position` | 相交面积 `Math.max(0, w * h)` | 逐轴先夹到 0 再相乘 `Math.max(0,w) * Math.max(0,h)` | **DEFECT** | antd 的算式在浮层**整体**位于区域外侧时，两个差值同为负数、乘积为正，`Math.max(0,·)` 兜不住 —— 「完全不可见」被算成巨大正面积（实测 17,600,000），翻转判定会据此接受明显更差的位置。部分相交时两式等价。已裁决：`intersection-area-clamp`。证据见 `packages/position/src/__tests__/align.test.ts`（断言「不开夹取分歧 > 0，开夹取分歧 = 0」） |
+| D14 | `icons` | 图标前缀默认 `anticon` | 默认 `apollo-icon`（`IconProvider` 可覆盖为 `anticon`） | INTENDED | 与 D6 同一条理由（品牌隔离 + 可覆盖）。**注意 `iconPrefixCls` 是独立开关**：实测 `const iconPrefixCls = customIconPrefixCls \|\| parentContext.iconPrefixCls \|\| defaultIconPrefixCls`，**不**由 `prefixCls` 派生，所以 D6 不覆盖它，这是一条独立决策。**已裁决**（2026-09-16）：保持 `apollo-icon`；代价是存量 antd 的 `.anticon` CSS 需改或显式传 `iconPrefixCls="anticon"` |
+| D15 | `icons` | 运行时把 `iconStyles` 注入 `<style>`，并全局 `replace(/anticon/g, prefixCls)` | 不注入任何 `<style>`；导出 `getIconStyle(iconPrefixCls)` 交静态样式层 | INTENDED | 零运行时架构（D7）。能力等价：`getIconStyle('anticon')` 与上游 `renderUtils.iconStyles` **逐字节相同**（L1 断言，897 字符）。注意别抄错源：`components/style/index.tsx` 的 `genIconStyle` 少了 `-webkit-` 前缀，不是图标的实际视觉契约 |
+| D16 | `icons` | `rotate` 产生 `-ms-transform` + `transform` | 只产生 `transform` | PLATFORM | `-ms-` 是 IE9 前缀。React 的 `style` 对象会做厂商前缀补全，Vue 的 `h()` 原样写键、不补。现代目标环境不需要；`dom-contract.ts` 的 `normalizeStyle` 会剔除与无前缀项等价的厂商前缀（对称归一化，见该文件头注释） |
+| D17 | `icons` | `Icon` 声明 `ariaLabel` 但只在 `svgProps` 里透传 → DOM 上是 `ariaLabel="…"` | 映射到 `aria-label` | **DEFECT** | `ariaLabel` 不是合法 HTML 属性，浏览器不认，屏幕阅读器读不到名字 —— 一个**声称提供可访问名却不提供**的 prop。antd 自己都警告 `Invalid ARIA attribute 'ariaLabel'. Did you mean 'aria-label'?`。证据：L4 基线 `props:ariaLabel-prop` 的产物 + L5 `a11y.test.ts` 的 D17 用例。分类为 DEFECT 而非 INTENDED：我们修的是**上游的错**，不是主动选择不同方案 |
+| D18 | `icons` | 图标 SVG 属性名走 `dash-case → camelCase` 归一（`fill-rule` → `fillRule`） | 原样透传（只把 `className` 折成 `class`） | PLATFORM | React 渲染时会把 `fillRule` 转回规范的 `fill-rule`，所以上游的转换**为 React 服务**；Vue 的 `h()` 拿到的键就是最终 `setAttribute` 的属性名，照抄会产出 `fillrule="evenodd"` —— 浏览器不认，**图标形状画错**。实测 icons-svg 全部 848 个定义的属性词表只有 `d`/`viewBox`/`focusable`/`fill`/`fill-rule`/`fill-opacity`，无任何 camelCase 形式。该缺陷能过构建与类型检查，是 L4 逐属性比对抓出来的（`AlipayCircleFilled` 等 5 个图标），回归用例见 `icons.test.ts` |
+
+### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
+
+这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。
+它们不进 `D<n>` 编号（编号只登记差异），但必须有登记处 —— 否则会被后人当成疏漏「顺手修掉」，
+从而与上游漂移、让机械 oracle 的比对失效。
+
+| # | 位置 | 上游行为 | 我们为何跟随 | 钉住它的测试 |
+|---|---|---|---|---|
+| U1 | `LoadingOutlined` / `spin` | 只加 `<prefixCls>-spin` 类，**没有** `aria-live` / `aria-busy` / `role="status"` | 图标的语义应由消费方决定：`Button` 的 loading 该给按钮自己挂 `aria-busy`，`Table` 的 loading 该挂 `aria-live` 区域。图标层擅自加 `role="status"` 会让「一页 20 个 loading 图标」变成 20 个 live region，反而更糟。`TESTING.md` §6.2 的该行在图标层**不可满足**，须由 ui 层承担 | `a11y.test.ts` 的「已知缺口：spin 对屏幕阅读器无反馈」 |
+| U2 | `Icon`（自定义 SVG 路径） | `children`/`component` 形态的 `<span role="img">` **没有** `aria-label`，违反 WCAG 4.1.2 | 这里没有「名字」可推断：生成物（848 个）的名字来自 `IconDefinition.name`，而自定义 SVG 是一坨任意 path。硬填 `aria-label="icon"` 是比无名更糟的**假信息**。落点在消费方（`aria-label` 或 `ariaLabel` prop），L5 有正向用例证明补名后 0 violation | `a11y.test.ts` 的「已知缺口：自定义 SVG 的 Icon 无可访问名」+ 基线 `icon:children` 的证据断言 |
+| U3 | 告警正文 | ``icon should be icon definiton, but got …``（`definiton` 少一个 `i`；`AntdIcon.js`/`IconBase.js`/`IconBaseTwoTone.js` 三处同错） | 照抄错字。改对了会让告警断言与上游漂移，而告警文案是**可被消费方匹配**的契约 | `icons.test.ts` 的 `warning` 用例（断言含 `icon should be icon definiton`） |
 
 ### 9.3 待裁决差异（`UNDECIDED`）
 
@@ -322,6 +339,11 @@ node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by "<
    - 在 §9.3 追加一行
 3. 运行 `pnpm run registry:check` —— E17 会校验引用完整性
 4. 在组件自己的 `README.md` 中复述该差异
+
+**若你发现的是「我们跟随了上游的缺陷」而不是差异**：不要编号，登记到 §9.2.1。
+那里记的是「与 antd 相同，而 antd 有问题」—— 它没有 `D<n>` 编号（编号只登记差异），
+但同样必须有登记处，否则会被后人当成疏漏「顺手修掉」，从而与上游漂移、
+让机械 oracle 的比对失效。登记时**必须**附上钉住它的测试名，让「这是有意的」可被证伪。
 
 > 后续每个组件开发时，在此表追加该组件的差异项。**该表是"我们有意不兼容什么"的权威清单。**
 

@@ -16,7 +16,8 @@
       "!**/registry/workstreams.json",
       "!**/registry/source/antd-*.raw.json",
       "!**/packages/*/src/**/__fixtures__",
-      "!**/tests/compat/baselines"
+      "!**/tests/compat/baselines",
+      "!**/packages/icons/src/icons"
     ]
   },
   "formatter": {

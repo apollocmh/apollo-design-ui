@@ -24,7 +24,9 @@
     "lint": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@ant-design/icons-svg": "catalog:"
+    "@ant-design/icons-svg": "catalog:",
+    "@ant-design/colors": "catalog:",
+    "@apollo-design/utils": "workspace:*"
   },
   "peerDependencies": {
     "vue": "catalog:"
