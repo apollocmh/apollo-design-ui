@@ -148,7 +148,7 @@ Vitest 5｜Playwright + pixelmatch
 | # | 风险 | 状态 |
 |---|---|---|
 | AR1 | 浮层定位几何 | ✅ 几何内核 PoC 通过（5000 组差分与 antd 逐位一致）。**DOM 测量外壳仍在 `position` 包内未完成** |
-| AR2 | motion 五类语义 | ⚠️ **WIP 且当前红灯**（见下） |
+| AR2 | motion 五类语义 | ⚠️ **未开始**（上次的 PoC WIP 已不在工作区，见下） |
 | AR3 | picker 状态机 | 待验证 |
 | AR4 | 零运行时下 `classNames`/`styles` 优先级 | 随 config-provider |
 | AR6 | Vue 泛型对 `Table<T>` 的表达力 | 待验证 |
@@ -166,22 +166,37 @@ Vitest 5｜Playwright + pixelmatch
 ## 兼容性差异
 
 任何 L1-L5 差异必须登记到 `COMPATIBILITY.md` §9（编号 D1、D2…），未登记视为 BUG。
-已登记 13 项（D1-D13）。四类：`INTENDED` / `PLATFORM` / `DEFECT` / `UNDECIDED`。
-**`DEFECT` = antd 自身缺陷，我们有意不复刻**（如 D13 相交面积算式）。
+已登记 18 项（D1-D18）。四类：`INTENDED` / `PLATFORM` / `DEFECT` / `UNDECIDED`。
+**`DEFECT` = antd 自身缺陷，我们有意不复刻**（如 D13 相交面积算式、D17 `ariaLabel` 泄漏）。
 
-校验器从 §9.2 的 Markdown 表格**刮取**真实存在的 `D<n>` —— 引用不存在的编号会报错。
+另有 **§9.2.1「跟随的上游缺陷」（U1-U3）**：不是差异，而是「我们与 antd 相同、而 antd 有问题」。
+**没有 `D<n>` 编号**（编号只登记差异），但同样必须登记，否则会被后人当成疏漏顺手修掉、
+从而与上游漂移让机械 oracle 失效。每条必须附「钉住它的测试名」。
+
+校验器从 §9.2 的 Markdown 表格**刮取**真实存在的 `D<n>` —— 引用不存在的编号会报错；
+§9.2.1 的 `U` 行不会被误认为差异编号。
 
 ---
 
 ## ⚠️ 当前未决事项（下次接手先看这里）
 
-1. **`packages/motion/src/**` 是未提交的上次会话 WIP（AR2 PoC），3 个用例红灯。**
-   已定位根因两条，都指向「Vue `<Transition>` 不能原生满足 antd 类名契约」：
+1. **AR2 motion 的 PoC WIP 已不在工作区** —— `packages/motion/src/` 只剩骨架
+   （`index.ts` 是 `export {}`），无 `__tests__/`，`git status` 干净。
+   ⚠️ **不要再花时间找那份 WIP**（2026-09-16 核实：已不存在，也没有 stash）。
+
+   上次定位的两条根因仍然有效，重做 PoC 时直接用：
    - Vue 的 `onBeforeEnter` 钩子**在添加 from/active 类之前**触发 → 在钩子里读 classList 只能读到 `['box']`
    - Vue 只挂 `from/active/to` 三类，**不会挂裸的 `{name}` 类**（antd 的序列里始终有它）
+
    修正方向：测量点改到 `onEnter`，并由我们的 CSSMotion 包装层显式补上 `{name}` 类。
-   **这属于 AR2 PoC 工作项，不是本轮范围，不要顺手改测试让它变绿。**
+   **不要顺手改测试让它变绿** —— 那属于 AR2 PoC 的工作项。
 
-2. L7 门禁的 B5/B6/B7/B8 仍是 PENDING（只对 `theme` / `ui`），需 CSS 产物与组件落地后才能启用。
+2. L7 门禁只剩 **`@apollo-design/ui` 的 B5/B6/B7/B8** 是 PENDING（需 CSS 产物与组件落地）。
+   其余 12 个包全部 PASS 或按各自 `notDo` 判 n/a。全量跑一次约 6 分钟（13 个包串行 unbuild）。
 
-3. 用户此前要求：**规划完成后等待确认，不要自行进入大规模组件实现。**
+3. **`verification.typecheck` 是无人校验的 Agent 断言** —— `foundation-status.mjs:422`
+   把它初始化为 `{ status: 'not-run', errors: 0 }` 之后**从不计算**，而 E16 会拿它当作
+   `completed` 的依据。实测 `theme` 与 `utils` 都声称 `clean`，实际各有一个类型错误。
+   建议下次给 `--verify` 加一步全仓 `vue-tsc` 并按包归属写回。
+
+4. 用户此前要求：**规划完成后等待确认，不要自行进入大规模组件实现。**
