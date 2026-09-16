@@ -181,8 +181,8 @@ packages/
 ### 3.2 命名空间与导出
 
 - 包名统一 `@apollo-design/<dir>`；组件导出名统一 PascalCase（`Button`、`DatePicker`）。
-- 每个包单一入口（`src/index.ts`）+ 允许深导入。禁止在包内出现跨层相对导入。
-- `@apollo-design/ui` 对外同时提供全量入口与按需深导入（构建产物契约见 §8）。
+- 每个包单一入口（`src/index.ts`）+ 源码层可按目录深导入。禁止在包内出现跨层相对导入。
+- 深导入**只是源码组织约定，不是产物承诺**：产物为 `dist/` 单文件，见 §8.1（裁决 A）。
 
 ---
 
@@ -265,9 +265,17 @@ Seed (34)  ──►  Map (140)  ──►  Alias (82 own / 222 effective)  ─�
 
 全部数字来自 `registry/tokens.json`（由 antd 6.6.4 产物提取），**不是估算**。
 
-### 5.2 关键决策：零运行时 CSS 变量
+### 5.2 关键决策：零运行时 CSS 变量为默认路径（✅ 已裁决：选项 B）
 
-antd 用 `@ant-design/cssinjs` 在运行时生成带 hash 的 class 与样式表。本项目**不用**：
+> **裁决**：`zero-runtime-mode` = **B**，2026-09-16 由用户裁决。
+> 零运行时静态 CSS 是**默认且推荐**的路径，但**不是唯一** —— `theme` 包需同时提供一条
+> 运行时注入路径，用于动态 token。
+>
+> ⚠️ 这不等于引入 `@ant-design/cssinjs`：H6 仍然禁止依赖它，运行时注入由 `theme` 包自研。
+> 代价是 `theme` 包要同时维护两条注入路径，且它们的**变量命名必须完全一致**
+> （否则静态与动态两套主题会分叉）。这条由 `theme` 的 `doneWhen` 约束。
+
+antd 用 `@ant-design/cssinjs` 在运行时生成带 hash 的 class 与样式表。本项目**默认不用**：
 
 | | antd（CSS-in-JS） | 本项目（CSS 变量） |
 |---|---|---|
@@ -278,9 +286,8 @@ antd 用 `@ant-design/cssinjs` 在运行时生成带 hash 的 class 与样式表
 | SSR | 需要样式收集 | 天然支持 |
 
 代价是：**动态 Token 的实现复杂度落在 `theme` 包上**（运行时改 token 需要把变量重写到
-`:root` 或作用域元素）。这个代价被接受，因为"零运行时"是本项目相对 antd 的核心优势之一。
-
-> ⚠️ 该决策的边界（是否**只**支持零运行时模式）由开放决策 `zero-runtime-mode` 待裁决。
+`:root` 或作用域元素）。裁决 B 之后，这个复杂度变成一条显式的运行时注入路径，
+而不是"只支持零运行时"时那种被推迟的欠账。
 
 ### 5.3 三层样式产物
 
@@ -366,27 +373,35 @@ Vue 的 composable 与组件实例强耦合，抽成独立包会退化成"什么
 
 ## 8. 构建与产物契约
 
-### 8.1 现状（⚠️ 存在未裁决的阻断）
+### 8.1 产物契约（✅ 已裁决：选项 A —— 只保留 `dist/`）
 
-`scaffold-packages.mjs` 生成的 `package.json` 在 `exports` 中声明了 `./es/*` 与 `./css/*`，
-`files` 中列出了 `es` 与 `css`，但 `scripts.build` 是裸 `unbuild` —— 默认只产出 `dist/` 单文件包。
-结果是：
+**裁决**：`build-output-contract` = **A**，2026-09-16 由用户裁决。
 
-- `unbuild` 报 `Could not find entrypoint for ./es/*` 并以退出码 1 失败
-- **`pnpm -r build` 当前对全部包不可用**
-- L7 构建门禁事实上不存在
+历史问题：`scaffold-packages.mjs` 生成的 `exports` 声明了 `./es/*` 与 `./css/*`，
+但 `scripts.build` 是裸 `unbuild`（只产出 `dist/`），导致 `unbuild` 报
+`Could not find entrypoint for ./es/*` 并以退出码 1 失败，`pnpm -r build` 全仓不可用、
+L7 构建门禁事实上不存在。
 
-这是**实现与文档不一致**，不是配置小问题。三个选项记录在
-`registry/foundation.json → openDecisions[build-output-contract]`：
+现行契约（已回写到全部 14 个包的 `package.json`）：
 
-| 选项 | 内容 | 代价 |
+| 字段 | 值 | 说明 |
 |---|---|---|
-| A | 只保留 `dist/`（单文件打包） | 失去组件级深导入，与本文档 §3.2 矛盾 |
-| B | `es/`（mkdist 保留模块结构）+ `dist/`（unbuild 单文件）**〔推荐〕** | 每包多一套构建配置与产物 |
-| C | `es/` 用 Vite/Rollup `preserveModules` 自配 | 偏离已锁定的 unbuild 选型，成本最高 |
+| 构建 | `unbuild`（`declaration: true` 默认开） | 产出 `dist/index.mjs` + `dist/index.d.ts` |
+| `exports` | 只有 `.` 与 `./package.json` | **只允许声明构建后真实存在的路径** |
+| `files` | `["dist"]` | |
+| `build:types` | 已移除 | 旧脚本指向不存在的 `tsconfig.build.json`（悬空），且 unbuild 已产出 `.d.ts` |
 
-**在裁决前，任何包的 `pkg` 维度都无法收口**（`@apollo-design/utils` 当前状态 `blocked` 就是这个原因，
-它代码层面已完成：37 个源文件 / 3611 行 / 131 个导出 / 643 个测试 / 98% 语句覆盖率）。
+**代价（明确接受）**：foundation 包失去模块级深导入，tree-shaking 依赖打包器对单文件 ESM 的分析，
+而非模块结构。因此 §3.2 的"允许深导入"**在 foundation 层不成立** —— 它只作为源码层的组织约定，
+不承诺产物层。
+
+**未覆盖的部分**：`@apollo-design/ui` 的按组件按需引入需求不在本次裁决范围内。
+若组件阶段确认需要，可单独给 `ui` 增加 `es/` 产物（mkdist），不影响 13 个 foundation 包。
+届时按同一流程重新登记决策，不要静默改模板。
+
+**模板是唯一来源**：改产物契约必须改 `registry/tools/scaffold-packages.mjs` 的 `packageJson()`，
+再用 `node registry/tools/scaffold-packages.mjs --force-pkg` 回写。
+`--force` 会连带覆盖 `src/index.ts`，**除非明确要重建骨架，否则禁止使用**。
 
 ### 8.2 版本管理
 

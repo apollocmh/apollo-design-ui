@@ -283,9 +283,9 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D3 | 全局 | `children` prop | 默认插槽 | INTENDED | Vue 表达方式 |
 | D4 | 全局 | `useCallback` 稳定引用 | 无对应物 | INTENDED | Vue 无引用稳定性问题 |
 | D5 | 全局 | CSS-in-JS 内联 hash 类 | 静态 CSS + CSS 变量 | INTENDED | 零运行时架构（`ARCHITECTURE.md` §5.2） |
-| D6 | 全局 | `prefixCls` 默认 `ant` | 默认 `apollo` | INTENDED | 品牌隔离，可通过 ConfigProvider 改回（待裁决：`prefix-cls-default`） |
-| D7 | 全局 | `theme.zeroRuntime` 默认 `false` | 恒为 `true` | INTENDED | 本项目唯一模式（待裁决：`zero-runtime-mode`） |
-| D8 | `utils` | `pickAttrs` 输出 React 合成事件键 `onKeyDown` | 输出 Vue 事件键 `onKeydown`（`toVueEventName()`） | PLATFORM | **实测结论**：Vue 的 `runtime-dom` 不规范化 React 合成事件名——绑定 `onKeyDown` 会走 `addEventListener('key-down')` 永不触发；绑原生 `onkeydown` 会走 DOM0 属性（每元素每事件单槽位，静默覆盖，SVG/自定义元素上退化为属性字符串）。正确形式是 `on` + 首字母大写的原生名。当前实现已按此落地，**待裁决追认**：`event-name-rewrite` |
+| D6 | 全局 | `prefixCls` 默认 `ant` | 默认 `apollo` | INTENDED | 品牌隔离，可通过 ConfigProvider 改回。**已裁决 A**（2026-09-16）：默认 `apollo`，允许覆盖为 `ant`。DOM 契约测试必须做前缀归一化，否则 `prefixCls` 这个 API 自身就测不了 |
+| D7 | 全局 | `theme.zeroRuntime` 默认 `false` | 默认 `true`，但**不是唯一模式** | INTENDED | **已裁决 B**（2026-09-16）：零运行时静态 CSS 是默认与推荐路径，`theme` 包同时提供运行时注入路径以支持动态 token。注意这不是引入 `@ant-design/cssinjs`（H6 仍禁止），运行时注入自研 |
+| D8 | `utils` | `pickAttrs` 输出 React 合成事件键 `onKeyDown` | 输出 Vue 事件键 `onKeydown`（`toVueEventName()`） | PLATFORM | **实测结论**：Vue 的 `runtime-dom` 不规范化 React 合成事件名——绑定 `onKeyDown` 会走 `addEventListener('key-down')` 永不触发；绑原生 `onkeydown` 会走 DOM0 属性（每元素每事件单槽位，静默覆盖，SVG/自定义元素上退化为属性字符串）。正确形式是 `on` + 首字母大写的原生名。当前实现已按此落地，**已裁决追认 A**（2026-09-16）：接受该偏差，B（保持 React 原名）会把已知缺陷外推给使用者 |
 | D9 | 全局 | `useId`（React 18） | Vue 3.5 `useId()` | PLATFORM | 值格式不同，但保证"稳定 + 唯一"。DOM 契约测试断言存在性与唯一性，不断言字面值（见 `use-id-test-env`） |
 | D10 | `motion` | `@rc-component/motion` 手写 CSS class 序列 | Vue `<Transition>` + CSS 变量 | PLATFORM | 语义对齐（collapse/slide/zoom/fade/move 五类），实现走 Vue 原生。PoC 由 AR2 验证 |
 | D11 | `overlay` | `@rc-component/portal` 的 Portal 组件 | Vue `<Teleport>` | PLATFORM | `<Teleport>` 是 Vue 原生能力，语义等价 |
@@ -297,12 +297,21 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 这些差异**事实已确定**（不是猜测），但"是否接受"需要用户裁决。
 它们同时登记在 `registry/foundation.json → openDecisions`，由 `registry:validate` E17 追踪。
 
-| 决策 id | 影响的差异项 | 问题 |
-|---|---|---|
-| `prefix-cls-default` | D6 | 前缀默认 `apollo` 还是 `ant` |
-| `zero-runtime-mode` | D7 / D12 | 零运行时是否为唯一模式 |
-| `event-name-rewrite` | D8 | 追认 `pickAttrs` 的事件名重写 |
-| `use-id-test-env` | D9 | 是否在测试中固定 `useId` 输出 |
+| 决策 id | 影响的差异项 | 问题 | 状态 |
+|---|---|---|---|
+| ~~`prefix-cls-default`~~ | D6 | 前缀默认 `apollo` 还是 `ant` | ✅ 2026-09-16 裁决 A —— 默认 `apollo`，允许覆盖 |
+| ~~`zero-runtime-mode`~~ | D7 / D12 | 零运行时是否为唯一模式 | ✅ 2026-09-16 裁决 B —— 默认零运行时，同时提供运行时注入路径 |
+| ~~`event-name-rewrite`~~ | D8 | 追认 `pickAttrs` 的事件名重写 | ✅ 2026-09-16 裁决 A —— 接受偏差 |
+| `use-id-test-env` | D9 | 是否在测试中固定 `useId` 输出 | ⏳ 待裁决（仅影响测试写法，不阻塞实现） |
+
+裁决走命令行（不要手改 JSON）：
+
+```bash
+node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by "<谁>" --note "<理由>"
+```
+
+`--choice` 必须命中 `registry/source/open-decisions.mjs` 里该决策的某个选项，否则拒绝写入 ——
+防止 `decision` 变成与选项无关的自由文本。
 
 ### 9.4 如何登记新差异
 
