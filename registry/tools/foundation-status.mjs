@@ -32,7 +32,16 @@
  *   node registry/tools/foundation-status.mjs --check         # CI：只校验不写入，过期则 exit 1
  *   node registry/tools/foundation-status.mjs --package utils # 查看单个包详情
  *   node registry/tools/foundation-status.mjs --verify        # 跑测试+覆盖率，把实测结果写入 verification
+ *   node registry/tools/foundation-status.mjs --verify-build  # 跑 unbuild + 校验 exports 可解析，写入 build 状态
  *   node registry/tools/foundation-status.mjs --dry-run       # 打印将写入的内容，不落盘
+ *   node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by <who> [--note "..."]
+ *
+ * --decide 为什么存在：
+ *   开放决策的**内容**由 registry/source/open-decisions.mjs 拥有（工具每次覆盖），
+ *   只有 status/decision/decidedAt/decidedBy/note 五个运行时字段是从 foundation.json 反向合入的。
+ *   手工编辑 JSON 很容易漏字段或把 decision 写成与 options 不匹配的自由文本 —— 那样 E17
+ *   会放行，但读的人无法知道选的到底是哪一个选项。所以裁决必须走命令行，且 choice 必须能
+ *   在 options 里找到对应项，否则拒绝写入。
  */
 
 import { execFileSync } from 'node:child_process';
@@ -48,14 +57,30 @@ const REGISTRY = path.join(ROOT, 'registry');
 const OUT_FILE = path.join(REGISTRY, 'foundation.json');
 const COVERAGE_SUMMARY = path.join(ROOT, 'coverage/coverage-summary.json');
 
-const args = { json: false, check: false, verify: false, dryRun: false, pkg: null };
+const args = {
+  json: false,
+  check: false,
+  verify: false,
+  dryRun: false,
+  pkg: null,
+  decide: null,
+  choice: null,
+  by: null,
+  note: null,
+  verifyBuild: false,
+};
 for (let i = 2; i < process.argv.length; i += 1) {
   const a = process.argv[i];
   if (a === '--json') args.json = true;
   else if (a === '--check') args.check = true;
   else if (a === '--verify') args.verify = true;
+  else if (a === '--verify-build') args.verifyBuild = true;
   else if (a === '--dry-run') args.dryRun = true;
   else if (a === '--package') args.pkg = process.argv[++i];
+  else if (a === '--decide') args.decide = process.argv[++i];
+  else if (a === '--choice') args.choice = process.argv[++i];
+  else if (a === '--by') args.by = process.argv[++i];
+  else if (a === '--note') args.note = process.argv[++i];
   else if (a === '--help' || a === '-h') {
     console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('*/')[0]);
     process.exit(0);
@@ -665,6 +690,125 @@ if (args.check) {
   }
   console.log('[foundation] ✅ registry/foundation.json 与源数据一致');
   process.exit(0);
+}
+
+// ---------------------------------------------------------------------------
+// --verify-build：真正跑一遍每个包的构建，并把结果写回 verification.build
+//
+// 为什么必须跑而不是手填：
+//   裁决 A 的核心是「exports 只允许声明构建后真实存在的路径」。这句话如果没有自动校验，
+//   下次改模板会原样再犯一次（上次就是这个 bug 让 pnpm -r build 全仓不可用）。
+//   所以校验器同时做两件事：① 构建退出码 ② 逐个解析 exports 里的路径是否真的存在。
+//   只记录事实，不自动置 completed —— 那是 6 维度 + 7 层测试的门禁决定的。
+// ---------------------------------------------------------------------------
+if (args.verifyBuild) {
+  const bin = path.join(ROOT, 'node_modules/.bin/unbuild');
+  if (!fs.existsSync(bin)) {
+    console.error(`[foundation] 找不到 ${bin}，先跑 pnpm install`);
+    process.exit(1);
+  }
+
+  const results = [];
+  for (const e of doc.packages) {
+    const dir = path.join(ROOT, 'packages', e.dir);
+    let status = 'passing';
+    let reason = null;
+
+    let out = '';
+    let code = 0;
+    try {
+      out = execFileSync(bin, [], { cwd: dir, encoding: 'utf8', stdio: 'pipe' });
+    } catch (err) {
+      code = err.status ?? 1;
+      out = `${err.stdout ?? ''}${err.stderr ?? ''}`;
+    }
+    if (code !== 0) {
+      status = 'failing';
+      reason = `unbuild 退出码 ${code}: ${out.split('\n').filter(Boolean).slice(-3).join(' | ')}`;
+    }
+
+    // exports 解析：'.' 与 './package.json' 之外的子路径，逐个检查文件是否存在
+    if (status === 'passing') {
+      const pkgJson = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
+      const missing = [];
+      for (const [subpath, target] of Object.entries(pkgJson.exports ?? {})) {
+        if (subpath === './package.json') continue;
+        const files = typeof target === 'string' ? [target] : Object.values(target);
+        for (const f of files) {
+          if (f.includes('*')) {
+            missing.push(`${subpath} → ${f}（含通配符，无法静态校验，需人工确认）`);
+            continue;
+          }
+          if (!fs.existsSync(path.join(dir, f))) missing.push(`${subpath} → ${f}`);
+        }
+      }
+      if (missing.length) {
+        status = 'failing';
+        reason = `exports 声明了构建后不存在的路径: ${missing.join(', ')}`;
+      }
+    }
+
+    e.verification.build = {
+      status,
+      reason,
+      verifiedAt: new Date().toISOString().slice(0, 10),
+    };
+    results.push({ name: e.name, status, reason });
+  }
+
+  console.log('\n[foundation] 构建校验（unbuild + exports 解析）');
+  for (const r of results) {
+    console.log(
+      `  ${r.status === 'passing' ? '✅' : '❌'} ${r.name}${r.reason ? ` — ${r.reason}` : ''}`,
+    );
+  }
+  const failed = results.filter((r) => r.status !== 'passing').length;
+  console.log(`\n  合计 ${results.length - failed}/${results.length} 通过\n`);
+}
+
+// ---------------------------------------------------------------------------
+// --decide <id> --choice <A|B|C> --by <who> [--note "..."]
+//
+// 裁决只改 5 个运行时字段（status/decision/decidedAt/decidedBy/note），
+// 决策内容本身由 registry/source/open-decisions.mjs 拥有，改内容要改那个文件。
+// choice 必须能在 options 里找到对应项 —— 否则拒绝写入（防止 decision 变成与
+// options 无关的自由文本，那样 E17 会放行但读的人不知道到底选了哪项）。
+// ---------------------------------------------------------------------------
+if (args.decide) {
+  const d = doc.openDecisions.find((x) => x.id === args.decide);
+  if (!d) {
+    console.error(`[foundation] 没有 id 为 "${args.decide}" 的开放决策`);
+    console.error(`[foundation] 可用: ${doc.openDecisions.map((x) => x.id).join(', ')}`);
+    process.exit(1);
+  }
+  if (!args.choice || !args.by) {
+    console.error('[foundation] --decide 需要同时给 --choice 与 --by');
+    console.error('  例: --decide prefix-cls-default --choice A --by "用户裁决" --note "补充说明"');
+    process.exit(1);
+  }
+
+  const letter = args.choice.trim().toUpperCase().charAt(0);
+  const opt = d.options.find((o) => o.label.trim().toUpperCase().startsWith(`${letter}.`));
+  if (!opt) {
+    console.error(`[foundation] 决策 ${d.id} 没有选项 ${letter}。它的选项：`);
+    for (const o of d.options) console.error(`  ${o.label}`);
+    process.exit(1);
+  }
+
+  const chosen = opt.label.replace(/^\s*[A-Z]\.\s*/, '');
+  d.status = 'decided';
+  d.decision = `${letter} —— ${chosen}`;
+  d.decidedAt = new Date().toISOString().slice(0, 10);
+  d.decidedBy = args.by;
+  if (args.note !== null) d.note = args.note;
+
+  console.log(`[foundation] ✅ 已裁决 ${d.id} → ${letter}`);
+  console.log(`  decision   ${d.decision}`);
+  console.log(`  decidedBy  ${d.decidedBy}  @ ${d.decidedAt}`);
+  if (d.blocks?.length) {
+    console.log(`  解锁        ${d.blocks.length} 个包：${d.blocks.join(', ')}`);
+  }
+  console.log('  ⚠️  若该决策与推荐项不同，需同步修订受影响的文档（ARCHITECTURE.md 等）\n');
 }
 
 if (args.dryRun) {

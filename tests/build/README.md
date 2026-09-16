@@ -1,8 +1,47 @@
 # tests/build — 构建产物校验（L7）
 
-> **Phase 1 交付设计；实现随 Phase 2 的 S1 一起落地。**
+> **状态**：`run.mjs` 已实现（2026-09-16），B1/B2/B3/B4/B9/B10 实测生效并通过反向验证。
+> B5/B6/B7/B8 为 **PENDING**（只对 `theme` / `ui`），不是"已通过"——详见下文 §状态。
 >
 > 设计细节见 [`TESTING.md`](../../TESTING.md) §10。
+
+```bash
+node tests/build/run.mjs                 # 构建全部包并校验
+node tests/build/run.mjs --no-build      # 跳过构建，复用现有 dist
+node tests/build/run.mjs --package utils # 只校验一个包
+node tests/build/run.mjs --strict        # PENDING 也视为失败（等 B5-B8 落地后用于 CI）
+node tests/build/run.mjs --json          # 机器可读
+```
+
+## 状态（2026-09-16）
+
+| 检查 | 状态 | 说明 |
+|---|---|---|
+| B1 全包构建 | ✅ 生效 | 调 `node_modules/.bin/unbuild`，校验退出码 |
+| B2 `exports` 可解析 | ✅ 生效 | **校验 `exports` 只声明构建后真实存在的路径**，含通配符检测 |
+| B3 产物无 React | ✅ 生效 | 扫描 dist 的 ESM/CJS/`d.ts` 说明符 |
+| B4 无 CSS-in-JS 运行时 | ✅ 生效 | 同上 |
+| B9 Node 版本 | ✅ 生效 | 要求 ≥ 22.12 |
+| B10 无 `@rc-component/*` | ✅ 生效 | 同上 |
+| B5 / B7 | ⏳ PENDING | 仅 `theme` / `ui`：需要 CSS 产物。其他包判为 n/a（不产 CSS） |
+| B6 / B8 | ⏳ PENDING | 仅 `ui`：需要体积预算与可 SSR 组件。其他包判为 n/a |
+
+### 为什么 PENDING ≠ 通过
+
+`--strict` 下 PENDING 视为失败并退出 1。这是**显式声明的未覆盖**，
+不是放宽标准 —— 报告会把 PENDING 清单逐项打印出来。
+一刀切把所有包都标 PENDING 会让零 CSS、零组件的包（如 `utils`）永远卡住 L7；
+一刀切标 n/a 又等于用 n/a 掩盖未做（E16 要防的正是这个）。因此逐包按架构事实判定。
+
+### 反向验证（证明它真的会失败）
+
+实现时注入了 3 个故障，3/3 被捕获：
+
+1. `exports` 加回 `./es/*` → B2 FAIL
+2. `dist` 里写入 `import x from "react"` → B3 FAIL
+3. `--strict` 遇到 PENDING → 退出码 1
+
+修改本文件时请重做反向验证 —— 一个永绿的门禁比没有门禁更危险。
 
 ---
 
