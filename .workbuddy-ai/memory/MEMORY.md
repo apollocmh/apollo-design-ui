@@ -144,6 +144,21 @@ node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by "<
    漏改会让拓扑序失真（test-utils 曾因此被算作零依赖，排在 icons 之前）。
    漏声明的直接症状是 L7 的 B1：`unbuild` 报 `Potential implicit dependencies found: <pkg>`
    并退出码 1 —— 报错说的是「隐式依赖」，不是「缺依赖」。
+11. **jsdom 的 computed `border-*-width` 默认是 `"16px"`**（既非 CSS 初始值 `medium`/3px，
+    也非 0）。造测试元素时四条边必须显式归零，否则公式里混进 16，断言无法解释。
+12. **jsdom 里 inline style 会传导到 computed style** —— `overflow` / `overflow-x` /
+    `border-*-width` / `width` / `height` / `position` / `overflow-clip-margin` 都行。
+    ⇒ 不需要 spy `getComputedStyle`，也就不用把假对象断言成 `CSSStyleDeclaration`（H10）。
+    `offsetWidth/offsetHeight/clientWidth/clientHeight` 用 `Object.defineProperty` 覆盖，
+    `getBoundingClientRect` 整个替换成 `new DOMRect(...)`（`DOMRect` 构造器可用）。
+13. **`cloneNode` 不复制挂在实例上的桩**（`getBoundingClientRect` 等）—— 克隆体的 rect
+    退回恒 0，会走早退分支。要造「无父元素」的浮层：先 `stubEle` 再 `remove()`。
+14. **jsdom 的 IDL getter 带 brand 校验** —— `Object.create(Node.prototype)` 会抛
+    `not a valid instance of Node`，造不出「既无 ownerDocument 也不是 Document」的替身。
+15. `pnpm test` 报的用例数是**分 project 的**：1041 = unit（40 文件），另有 dom 60 / a11y 32。
+    43 个 `*.test.ts` 扣掉 `a11y.test.ts` 与 `semantic.test.ts` 共 3 个正好 40 ——
+    核对「有没有文件没被收集」用这个等式，别拿总数跟上次比。
+16. **`docs/` 下的 Markdown 用 Grep 工具搜 `^#` 会静默无结果**（同坑 1），用 `^#{1,3} `。
 
 ---
 
@@ -159,7 +174,7 @@ Vitest 5｜Playwright + pixelmatch
 
 | # | 风险 | 状态 |
 |---|---|---|
-| AR1 | 浮层定位几何 | ✅ 几何内核 PoC 通过（5000 组差分与 antd 逐位一致）。**DOM 测量外壳仍在 `position` 包内未完成** |
+| AR1 | 浮层定位几何 | ✅ **两半都已解除**（2026-09-17）：几何内核 PoC 通过（5000 组差分与 antd 逐位一致）；DOM 测量外壳落地于 `packages/position/src/measure.ts`，`position` 已收口 completed。⚠️ 仍缺 L6「与 antd 参考截图逐像素比对」（需真实浏览器，jsdom 下度量值全是桩替的，见 `docs/foundation/position-contract.md` §9） |
 | AR2 | motion 五类语义 | ⚠️ **未开始**（上次的 PoC WIP 已不在工作区，见下） |
 | AR3 | picker 状态机 | 待验证 |
 | AR4 | 零运行时下 `classNames`/`styles` 优先级 | 随 config-provider |
@@ -203,11 +218,17 @@ Vitest 5｜Playwright + pixelmatch
    修正方向：测量点改到 `onEnter`，并由我们的 CSSMotion 包装层显式补上 `{name}` 类。
    **不要顺手改测试让它变绿** —— 那属于 AR2 PoC 的工作项。
 
-2. L7 门禁只剩 **`@apollo-design/ui` 的 B5/B6/B7/B8** 是 PENDING（需 CSS 产物与组件落地）。
+2. **`next-task.mjs` 现在指向 `@apollo-design/motion`**（按推进顺序）。position 已于
+   2026-09-17 收口 completed，「可开始完整实现」仍是 `locale`。
+   ⚠️ `position` 的 `api` 维度标了 done，但它**尚未被 overlay 真实消费** ——
+   若联调时发现 `measureAlign` 的形状不够用，需回来改并同步
+   `docs/foundation/position-contract.md` §5。这条风险已写进 registry 的 `notes`。
+
+3. L7 门禁只剩 **`@apollo-design/ui` 的 B5/B6/B7/B8** 是 PENDING（需 CSS 产物与组件落地）。
    其余 12 个包全部 PASS 或按各自 `notDo` 判 n/a。全量跑一次约 6 分钟（13 个包串行 unbuild），
    当前 **127 checks / FAIL 0 / PENDING 4 / n/a 50**。
 
-3. **`verification.typecheck` 仍是无人校验的 Agent 断言** —— `foundation-status.mjs:422`
+4. **`verification.typecheck` 仍是无人校验的 Agent 断言** —— `foundation-status.mjs:422`
    把它初始化为 `{ status: 'not-run', errors: 0 }` 之后**从不计算**，而 E16 会拿它当作
    `completed` 的依据。它对应的**两个真实错误已在 2026-09-17 修掉**
    （theme `build.config.ts` 的手写注解、utils `env.ts` 的 weak type），
@@ -215,4 +236,4 @@ Vitest 5｜Playwright + pixelmatch
    建议给 `--verify` 加一步全仓 `vue-tsc` 并按包归属写回（已登记为
    `docs/foundation/test-utils-contract.md` §8 Q3，建议选项 A）。
 
-4. 用户此前要求：**规划完成后等待确认，不要自行进入大规模组件实现。**
+5. 用户此前要求：**规划完成后等待确认，不要自行进入大规模组件实现。**
