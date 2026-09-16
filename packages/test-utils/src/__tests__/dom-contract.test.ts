@@ -22,6 +22,7 @@ import {
   parseFragment,
   projectNode,
 } from '../dom-contract';
+import { need } from './test-first';
 
 // ---------------------------------------------------------------------------
 // normalizeStyle
@@ -77,7 +78,12 @@ describe('parseFragment', () => {
   it('注释与文本节点不进契约（Vue 渲染 null 会产生 <!---->）', () => {
     const roots = parseFragment('<!--x--><div></div>text<!---->');
     expect(roots).toHaveLength(1);
-    expect(roots[0]!.tagName.toLowerCase()).toBe('div');
+    expect(
+      need(
+        roots[0],
+        'parseFragment(<!--x--><div></div>text<!---->) 的首个根节点',
+      ).tagName.toLowerCase(),
+    ).toBe('div');
   });
 
   it('支持多根', () => {
@@ -112,7 +118,7 @@ describe('contractOf · profile: contract（默认，依据 TESTING.md T10）', 
 
   it('id 本身不进契约（自动 ID 两侧必然不同）', () => {
     const [node] = contractOf('<div id="rc-123"></div>');
-    expect(node!.attrs).toEqual([]);
+    expect(need(node, 'contractOf(<div id="rc-123">)').attrs).toEqual([]);
   });
 
   it('style 默认不保留（T10 未列 style）', () => {
@@ -122,7 +128,7 @@ describe('contractOf · profile: contract（默认，依据 TESTING.md T10）', 
 
   it('keepStyle: true 时保留，且走同一套归一化', () => {
     const [node] = contractOf('<div style="color: red"></div>', { keepStyle: true });
-    expect(node!.style).toEqual(['color:red']);
+    expect(need(node, 'contractOf(<div style="color: red">)').style).toEqual(['color:red']);
   });
 
   it('ignoreAttrs 在档位筛选**之后**生效 —— 只能减不能加', () => {
@@ -130,12 +136,16 @@ describe('contractOf · profile: contract（默认，依据 TESTING.md T10）', 
       ignoreAttrs: ['role', 'title'],
     });
     // `title` 本来就不在 contract 档里，忽略它不会把它加回来。
-    expect(node!.attrs).toEqual([['aria-label', 'L']]);
+    expect(need(node, 'contractOf(<div role/aria-label/title>)').attrs).toEqual([
+      ['aria-label', 'L'],
+    ]);
   });
 
   it('子节点递归投影，且顺序保留', () => {
     const [node] = contractOf('<div class="root"><i class="b"></i><b class="a"></b></div>');
-    expect(node!.children.map((child) => child.tag)).toEqual(['i', 'b']);
+    expect(
+      need(node, 'contractOf(<div class="root">…)</div>').children.map((child) => child.tag),
+    ).toEqual(['i', 'b']);
   });
 });
 
@@ -144,7 +154,7 @@ describe('contractOf · profile: full（icons 的登记偏离，见 icons-contra
     const [node] = contractOf('<svg id="my-icon" viewBox="0 0 1 1" data-icon="x"></svg>', {
       profile: 'full',
     });
-    expect(node!.attrs).toEqual([
+    expect(need(node, 'contractOf(<svg id="my-icon">)').attrs).toEqual([
       ['data-icon', 'x'],
       ['id', 'my-icon'],
       ['viewBox', '0 0 1 1'],
@@ -158,15 +168,17 @@ describe('contractOf · profile: full（icons 的登记偏离，见 icons-contra
     const [svg] = contractOf('<svg viewBox="0 0 1 1" preserveAspectRatio="xMidYMid meet"></svg>', {
       profile: 'full',
     });
-    expect(svg!.attrs.map(([name]) => name)).toEqual(['preserveAspectRatio', 'viewBox']);
+    expect(
+      need(svg, 'contractOf(<svg viewBox/preserveAspectRatio>)').attrs.map(([name]) => name),
+    ).toEqual(['preserveAspectRatio', 'viewBox']);
 
     const [div] = contractOf('<div viewBox="0 0 1 1"></div>', { profile: 'full' });
-    expect(div!.attrs).toEqual([['viewbox', '0 0 1 1']]);
+    expect(need(div, 'contractOf(<div viewBox=…>)').attrs).toEqual([['viewbox', '0 0 1 1']]);
   });
 
   it('full 档默认保留 style', () => {
     const [node] = contractOf('<div style="fill:red"></div>', { profile: 'full' });
-    expect(node!.style).toEqual(['fill:red']);
+    expect(need(node, 'contractOf(<div style="fill:red">)').style).toEqual(['fill:red']);
   });
 
   it('full 档下 keepStyle: false 可显式关掉', () => {
@@ -185,7 +197,9 @@ describe('contractOf · profile: full（icons 的登记偏离，见 icons-contra
 describe('id 引用归一化（contract 档）', () => {
   it('按文档序把 id 映射成 {i0} {i1} …', () => {
     const [node] = contractOf('<div aria-labelledby="x"></div><span id="x"></span>');
-    expect(node!.attrs).toEqual([['aria-labelledby', '{i0}']]);
+    expect(need(node, 'contractOf(<div aria-labelledby="x"><span id="x">)').attrs).toEqual([
+      ['aria-labelledby', '{i0}'],
+    ]);
   });
 
   it('⭐ 引用关系而非字面值进契约：两侧 id 完全不同但结构相同 → 无差异', () => {
@@ -202,24 +216,30 @@ describe('id 引用归一化（contract 档）', () => {
 
   it('引用树外元素 → {ext}', () => {
     const [node] = contractOf('<div aria-describedby="outside"></div>');
-    expect(node!.attrs).toEqual([['aria-describedby', '{ext}']]);
+    expect(need(node, 'contractOf(<div aria-describedby="outside">)').attrs).toEqual([
+      ['aria-describedby', '{ext}'],
+    ]);
   });
 
   it('多 token 引用按空白拆分，逐 token 映射', () => {
     const [node] = contractOf('<div aria-labelledby="a b"></div><span id="a"></span>');
-    expect(node!.attrs).toEqual([['aria-labelledby', '{i0} {ext}']]);
+    expect(need(node, 'contractOf(<div aria-labelledby="a b"><span id="a">)').attrs).toEqual([
+      ['aria-labelledby', '{i0} {ext}'],
+    ]);
   });
 
   it('非 aria 的 id 引用属性（for / headers / list）在 contract 档本就被丢弃', () => {
     const [node] = contractOf('<label for="x"></label><td headers="x"></td>');
-    expect(node!.attrs).toEqual([]);
+    expect(need(node, 'contractOf(<label for>/<td headers>)').attrs).toEqual([]);
   });
 
   it('full 档不做 id 映射（原样保留）', () => {
     const [node] = contractOf('<div aria-labelledby="x"></div><span id="x"></span>', {
       profile: 'full',
     });
-    expect(node!.attrs).toEqual([['aria-labelledby', 'x']]);
+    expect(need(node, 'contractOf(<div aria-labelledby="x">) · full 档').attrs).toEqual([
+      ['aria-labelledby', 'x'],
+    ]);
   });
 });
 
@@ -228,13 +248,15 @@ describe('projectNode', () => {
     const [root] = parseFragment(
       '<div aria-labelledby="inner outside"><span id="inner"></span></div>',
     );
-    const node = projectNode(root!);
+    const node = projectNode(need(root, 'parseFragment 的 <div aria-labelledby="inner outside">'));
     expect(node.attrs).toEqual([['aria-labelledby', '{i0} {ext}']]);
   });
 
   it('与 contractOf 在单根场景下结论一致', () => {
     const html = '<div class="a" aria-labelledby="x"><span id="x"></span></div>';
-    expect(projectNode(parseFragment(html)[0]!)).toEqual(contractOf(html)[0]);
+    expect(
+      projectNode(need(parseFragment(html)[0], `parseFragment(${html}) 的首个根节点`)),
+    ).toEqual(contractOf(html)[0]);
   });
 });
 

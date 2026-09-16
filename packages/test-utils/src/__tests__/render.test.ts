@@ -15,6 +15,7 @@ import { defineComponent, h, ref, type VNode } from 'vue';
 
 import { collectRenderCases, mountCase } from '../render';
 import { demoKey, demoModules, PlainBox } from './fixture';
+import { need } from './test-first';
 
 describe('collectRenderCases · render 分支', () => {
   it('render 工厂 → 单用例，id 固定为 (render)', () => {
@@ -24,7 +25,7 @@ describe('collectRenderCases · render 分支', () => {
 
   it('render 工厂产出的 vnode 可被挂载', () => {
     const [item] = collectRenderCases({ render: () => h(PlainBox) }, 'x');
-    const mounted = mountCase(item!.render);
+    const mounted = mountCase(need(item, 'collectRenderCases({ render }) 的首个用例').render);
     expect(mounted.html()).toContain('fixture-box');
     mounted.destroy();
   });
@@ -56,7 +57,9 @@ describe('collectRenderCases · demos 分支', () => {
     // 放一个解析不了的值进去 —— 只要不调用 render，收集阶段就不该炸。
     const cases = collectRenderCases({ demos: { 'bad.vue': 42 } }, 'x');
     expect(cases).toHaveLength(1);
-    expect(() => cases[0]!.render()).toThrow();
+    expect(() =>
+      need(cases[0], "collectRenderCases({ demos: { 'bad.vue': 42 } }) 的首个用例").render(),
+    ).toThrow();
   });
 });
 
@@ -80,7 +83,10 @@ describe('collectRenderCases · 入参校验', () => {
 describe('resolveRenderable（经 collectRenderCases 间接覆盖）', () => {
   const renderOf = (value: unknown): VNode => {
     const cases = collectRenderCases({ demos: { 'k.vue': value } }, 'x');
-    return cases[0]!.render() as VNode;
+    return need(
+      cases[0],
+      `collectRenderCases({ demos: { 'k.vue': ${String(value)} } }) 的首个用例`,
+    ).render() as VNode;
   };
 
   it('形状 1：SFC 模块 { default: Component } —— 生产路径', () => {
