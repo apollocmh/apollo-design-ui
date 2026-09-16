@@ -123,7 +123,9 @@ node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by "<
 ### 坑（实测）
 
 1. **Bash 的 `grep` 对某些文件静默返回空** —— 一律用 Grep 工具。
-2. `biome-ignore` 必须紧贴目标行，reason 同行。
+2. `biome-ignore` 必须紧贴目标行，reason 同行。**多行声明的诊断落在具体那一行**
+   （如 `) => boolean | void;`），写在 `export type` / `export function` 上方会报
+   `suppressions/unused` —— 症状是「明明加了 ignore 却被判未使用」。
 3. 别盲信 lint 自动修复：`noConfusingVoidType` 建议 `() => void | Cleanup` → `undefined | Cleanup` 会破坏 API，先用 `tsc` 验证。
 4. biome 2.x 键名变了：`files.ignore`→`files.includes`、`overrides[].include`→`includes`、`rules.recommended`→`preset`。
 5. `passWithNoTests` 是 vitest **根级**选项，写进 `projects[]` 不生效。
@@ -155,7 +157,18 @@ node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by "<
     退回恒 0，会走早退分支。要造「无父元素」的浮层：先 `stubEle` 再 `remove()`。
 14. **jsdom 的 IDL getter 带 brand 校验** —— `Object.create(Node.prototype)` 会抛
     `not a valid instance of Node`，造不出「既无 ownerDocument 也不是 Document」的替身。
-15. `pnpm test` 报的用例数是**分 project 的**：1041 = unit（40 文件），另有 dom 60 / a11y 32。
+15. `pnpm test` 报的用例数是**分 project 的**：1151 = unit（46 文件），另有 dom 60 / a11y 32。
+    而 `foundation.json` 里某包的 `verification.unit.tests` 是**该包自己的** unit+types 合计
+    （如 motion 154 = 110 unit + 44 test-d），两者不是一回事，别拿来对账。
+16. **`expectTypeOf(SOME_CONST)` 会把常量推断成 `string`**，于是
+    `toEqualTypeOf<'add'>()` 永远失败（报 "Actual string"）。必须写
+    `expectTypeOf<typeof SOME_CONST>()`。
+17. **Edit 工具偶发「报 success 但文件内容没变」**（本轮出现 3 次）。
+    改完一定要回读确认；不放心就用 node 脚本做精确替换再验证。
+18. **组件层测试拿不到注入帧泵的口子**，只能走真实 rAF（jsdom 约 16ms/帧）。
+    motion 的离场要 prepare→start 两帧、start→active 两帧，**active 才注册 deadline**，
+    所以至少等 5 帧 + 30ms 才能看到离场 key 被摘掉。需要确定性时改用
+    `useMotionStatus`（它有 `scheduler` 注入点）而不是挂组件。
     43 个 `*.test.ts` 扣掉 `a11y.test.ts` 与 `semantic.test.ts` 共 3 个正好 40 ——
     核对「有没有文件没被收集」用这个等式，别拿总数跟上次比。
 16. **`docs/` 下的 Markdown 用 Grep 工具搜 `^#` 会静默无结果**（同坑 1），用 `^#{1,3} `。
@@ -175,7 +188,7 @@ Vitest 5｜Playwright + pixelmatch
 | # | 风险 | 状态 |
 |---|---|---|
 | AR1 | 浮层定位几何 | ✅ **两半都已解除**（2026-09-17）：几何内核 PoC 通过（5000 组差分与 antd 逐位一致）；DOM 测量外壳落地于 `packages/position/src/measure.ts`，`position` 已收口 completed。⚠️ 仍缺 L6「与 antd 参考截图逐像素比对」（需真实浏览器，jsdom 下度量值全是桩替的，见 `docs/foundation/position-contract.md` §9） |
-| AR2 | motion 五类语义 | ⚠️ **未开始**（上次的 PoC WIP 已不在工作区，见下） |
+| AR2 | motion 五类语义 | ✅ **已解除**（2026-09-17）：内核零偏差（5000 组差分 / 种子 `20260917`），帧驱动与 Vue 接线落地，`motion` 已收口 completed。⚠️ 三项遗留写在 registry 的 `notes`：`MotionProvider` 未实现；`CSSMotion` 尚未被 ui 层真实消费；「动画看起来对」仍属 L6（见 `docs/foundation/motion-contract.md` §9） |
 | AR3 | picker 状态机 | 待验证 |
 | AR4 | 零运行时下 `classNames`/`styles` 优先级 | 随 config-provider |
 | AR6 | Vue 泛型对 `Table<T>` 的表达力 | 待验证 |
@@ -207,22 +220,21 @@ Vitest 5｜Playwright + pixelmatch
 
 ## ⚠️ 当前未决事项（下次接手先看这里）
 
-1. **AR2 motion 的 PoC WIP 已不在工作区** —— `packages/motion/src/` 只剩骨架
-   （`index.ts` 是 `export {}`），无 `__tests__/`，`git status` 干净。
-   ⚠️ **不要再花时间找那份 WIP**（2026-09-16 核实：已不存在，也没有 stash）。
+1. **AR1 与 AR2 都已解除**（2026-09-17）。motion 的三项遗留写进了 registry 的 `notes`：
+   `MotionProvider` / 全局 `prefers-reduced-motion` 未实现（`motion-contract.md` §8 P2 未裁决）；
+   `CSSMotion` / `useMotionStatus` 尚未被 ui 层真实消费；
+   fade/zoom/slide/move 的 keyframes 属 theme/ui，本包不产出（§4 边界）。
 
-   上次定位的两条根因仍然有效，重做 PoC 时直接用：
-   - Vue 的 `onBeforeEnter` 钩子**在添加 from/active 类之前**触发 → 在钩子里读 classList 只能读到 `['box']`
-   - Vue 只挂 `from/active/to` 三类，**不会挂裸的 `{name}` 类**（antd 的序列里始终有它）
+2. **`next-task.mjs` 现在指向 `@apollo-design/portal`**（按推进顺序）；
+   「可开始完整实现」仍是 `@apollo-design/locale`。
+   ⚠️ `position` 与 `motion` 的 `api` 维度都标了 done，但都**尚未被上层真实消费** ——
+   联调时若发现 API 形状不够用，需回来改并同步各自的 contract 文档。
+   这条风险已写进 registry 的 `notes`，不是静默放过。
 
-   修正方向：测量点改到 `onEnter`，并由我们的 CSSMotion 包装层显式补上 `{name}` 类。
-   **不要顺手改测试让它变绿** —— 那属于 AR2 PoC 的工作项。
-
-2. **`next-task.mjs` 现在指向 `@apollo-design/motion`**（按推进顺序）。position 已于
-   2026-09-17 收口 completed，「可开始完整实现」仍是 `locale`。
-   ⚠️ `position` 的 `api` 维度标了 done，但它**尚未被 overlay 真实消费** ——
-   若联调时发现 `measureAlign` 的形状不够用，需回来改并同步
-   `docs/foundation/position-contract.md` §5。这条风险已写进 registry 的 `notes`。
+3. **教训：别把「没有新增 error」当成「没有 error」。** 上一轮 test-utils 收口时
+   我记成「lint 0 error」，实际 HEAD 上有 19 处 `!` 让 `biome check .` 一直是红的。
+   收口时必须跑**全仓**门禁并对齐 `package.json` 里 `lint` 脚本的真实定义
+   （本项目 = `lint:types` + `lint:format`，后者即 `biome check .`）。
 
 3. L7 门禁只剩 **`@apollo-design/ui` 的 B5/B6/B7/B8** 是 PENDING（需 CSS 产物与组件落地）。
    其余 12 个包全部 PASS 或按各自 `notDo` 判 n/a。全量跑一次约 6 分钟（13 个包串行 unbuild），
