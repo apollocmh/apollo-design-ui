@@ -41,6 +41,8 @@
 
 ### 运行时依赖
 
+| `@apollo-design/theme` | `workspace:*` |
+| `@apollo-design/utils` | `workspace:*` |
 | `@vue/test-utils` | `catalog:` |
 | `axe-core` | `catalog:` |
 | `vitest` | `catalog:` |

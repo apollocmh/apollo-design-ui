@@ -439,6 +439,17 @@ const PACKAGES = [
     purpose: '共享测试契约。复刻 antd 的 tests/shared/ 并新增本项目特有的契约。',
     replaces: ['antd 的 tests/shared/*'],
     deps: {
+      // ⚠️ 2026-09-17 补两个 foundation 依赖。两者都**不是**可选的：
+      //    · theme —— `themeTest` 直接复用 `ThemeProvider` / `getDesignToken` /
+      //      三个 algorithm，与「不重写 theme 的判定」是同一条 T2 原则。
+      //    · utils —— `resetWarned` / `resetDevWarned` 直接复用 utils 的实现。
+      //    漏声明的后果：`node tests/build/run.mjs` 的 B1 会以
+      //    「Potential implicit dependencies found」让 unbuild 退出码 1 失败
+      //    （unbuild 把未声明的 workspace 包当成「要被内联打包」的目标）。
+      //    这构成 utils/theme → test-utils 的 workspace 依赖环（test-utils 同时被
+      //    所有包 devDepend），ARCHITECTURE.md §3 已明文许可。
+      '@apollo-design/theme': 'workspace:*',
+      '@apollo-design/utils': 'workspace:*',
       '@vue/test-utils': 'catalog:',
       'axe-core': 'catalog:',
       vitest: 'catalog:',

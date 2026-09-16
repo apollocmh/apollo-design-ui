@@ -439,6 +439,12 @@ importers:
 
   packages/test-utils:
     dependencies:
+      '@apollo-design/theme':
+        specifier: workspace:*
+        version: link:../theme
+      '@apollo-design/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@vue/test-utils':
         specifier: 'catalog:'
         version: 2.5.0(@vue/compiler-dom@3.5.42)(@vue/server-renderer@3.5.42)(vue@3.5.42(typescript@5.9.3))

@@ -141,7 +141,14 @@ export default defineConfig({
         // foundation 包要求更高。
         // 注意：icons 与 locale 是**生成产物**（分别来自 icons-svg 与 antd locale 源），
         // 对它们要求行覆盖率没有意义，因此不在本档位内。
-        'packages/{utils,theme,motion,portal,position,overlay,a11y,virtual-list,form-core,picker}/src/**':
+        //
+        // ⚠️ `test-utils` 必须在这一档里，而且理由比别的包更强：
+        //    它**不产出任何业务行为**，全部价值就是「判定逻辑对不对」。
+        //    它的一处逻辑错误会同时污染所有下游组件的测试语义
+        //    （例如 `partitionWarnings` 漏判一条告警 → 所有组件的 demoTest 都放过它），
+        //    而且症状会出现在**别人的**测试里。所以必须前置拦住。
+        //    依据见 `docs/foundation/test-utils-contract.md` §6.2。
+        'packages/{utils,theme,motion,portal,position,overlay,a11y,virtual-list,form-core,picker,test-utils}/src/**':
           {
             statements: 95,
             branches: 90,
