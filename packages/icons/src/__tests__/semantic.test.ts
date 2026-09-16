@@ -1,10 +1,10 @@
+import { diffHtml } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import { type Component, createApp, defineComponent, h, type VNode } from 'vue';
 import baseline from '../../../../tests/compat/baselines/icons.dom.json';
 import { DEFAULT_ICON_PREFIX_CLS } from '../context';
 import * as Icons from '../icons';
 import { Icon, IconProvider } from '../index';
-import { diffHtml } from './dom-contract';
 
 /**
  * L4 · DOM 契约（与 React 参考实现的实测 DOM 比对）
@@ -15,10 +15,20 @@ import { diffHtml } from './dom-contract';
  * 产出 —— 是机械 oracle，不是「我们读了源码之后写下的期望值」。
  * 后者的差分通过只能说明两边都想通了，连上游的缺陷都会被一起写进断言。
  *
- * ── 归一化 ───────────────────────────────────────────────────────────────────
- * 两侧的 HTML 都走 `dom-contract.ts` 的 `parse → project` 流水线：
+ * ── 归一化（已提取到共享包，T2）────────────────────────────────────────────────
+ * 两侧的 HTML 都走 `@apollo-design/test-utils` 的 `parse → project` 流水线：
  * 属性按名排序（属性顺序无语义）、`style` 归一化为声明集合（序列化格式不同）、
- * 剔除与无前缀项等价的厂商前缀（D16）。归一化是**对称**的，见该文件头注释。
+ * 剔除与无前缀项等价的厂商前缀（D16）。归一化是**对称**的，见该模块头注释。
+ *
+ * ⚠️ 本包用 **`profile: 'full'`**（投影全部属性），而不是默认的 `'contract'`
+ *    （`TESTING.md` T10 的 class + data-* + role/aria-* 子集）。理由：
+ *    对图标来说 `viewBox` / `d` / `fill` / `width` / `height` **不是**"无关属性"，
+ *    它们就是交付物本身 —— 只投影 class + aria-* 会让「图标画错了」这类最严重的
+ *    回归完全测不出来。这是**登记过的加强**（`docs/foundation/icons-contract.md` §6.1）。
+ *
+ *    `full` 档同时保留 `id` 原样（基线里有 `props:passthrough` 用例专门断言
+ *    `id="my-icon"` 的透传），而 `contract` 档会把 `id` 归一化掉 ——
+ *    用错档位会让那条用例静默失去意义。
  *
  * **类名不做事后归一化**：本文件给两侧传**同一个** `prefixCls`（默认 `'anticon'`），
  * 所以类名可以逐字比对。这比"先渲染成 apollo-icon 再替换成 anticon"更强 ——
@@ -33,6 +43,9 @@ import { diffHtml } from './dom-contract';
  *     与 React 渲染出的 DOM 相同。若 `@ant-design/icons-svg` 本身画错，
  *     这个测试会跟着一起错（这正是"对齐上游"的定义）
  */
+
+/** 投影档。两侧共用同一个对象 —— 归一化必须对称。 */
+const PROJECTION = { profile: 'full' } as const;
 
 /**
  * 按名字动态取图标（848 全量比对用）。
@@ -260,7 +273,7 @@ describe('L4 DOM 契约：与 @ant-design/icons 的机械 oracle 逐条比对', 
 
     it(`用例 ${c.id}`, () => {
       if (spec === undefined) throw new Error(`用例 ${c.id} 缺少 Vue 侧构造`);
-      const diff = diffHtml(c.html, renderToHtml(withProvider(spec)));
+      const diff = diffHtml(c.html, renderToHtml(withProvider(spec)), PROJECTION);
 
       if (expected === undefined) {
         expect(diff).toEqual([]);
@@ -289,6 +302,7 @@ describe('L4 DOM 契约：848 个图标的默认渲染', () => {
       const diff = diffHtml(
         baseline.all[name as keyof typeof baseline.all],
         renderToHtml(withProvider({ prefixCls: ANTICON, render: () => h(component) })),
+        PROJECTION,
       );
       if (diff.length > 0) failures.push(`${name}: ${diff.join(' | ')}`);
       if (failures.length >= 5) break;

@@ -96,7 +96,7 @@ pnpm --filter @apollo-design/icons lint
 | L1 unit | `__tests__/icons.test.ts` | 纯函数、模块级状态、TwoTone 调色板、样式模板逐字节比对 |
 | L2 interaction | `__tests__/icons.test.ts` | `onClick` / `tabIndex` / `rotate` / `IconProvider` 响应性 |
 | L3 type | `__tests__/api.test-d.ts` | 含负例。**负例只声明不调用** —— `*.test-d.ts` 会被真执行 |
-| L4 dom-contract | `__tests__/semantic.test.ts` | 与 React 机械 oracle 逐属性比对，覆盖全部 848 个图标 |
+| L4 dom-contract | `__tests__/semantic.test.ts` | 与 React 机械 oracle 逐属性比对，覆盖全部 848 个图标。投影实现复用 `@apollo-design/test-utils`（`profile: 'full'`），见 `docs/foundation/icons-contract.md` §6.3 |
 | L5 a11y | `__tests__/a11y.test.ts` | axe **分块**扫描（每块 100）：axe 在 jsdom 下对节点数二次方增长 |
 | L6 visual | — | **n/a**，见下 |
 | L7 build | `tests/build/run.mjs --package icons` | FAIL 0 / PENDING 0 |

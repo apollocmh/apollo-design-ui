@@ -257,7 +257,7 @@ const iconPrefixCls = customIconPrefixCls || parentContext.iconPrefixCls || defa
 | L1 unit | `icons.test.ts` | `normalizeAttrs` 的 **`fill-rule` 必须原样保留**是回归用例（F1） |
 | L2 interaction | `icons.test.ts` | `IconProvider` 的响应性（改 `prefixCls` 后 `nextTick` 必须重渲染）钉住 §4 的设计决策 |
 | L3 type | `api.test-d.ts` | 负例**只声明不调用** —— `*.test-d.ts` 会被真执行，真调用会把类型问题伪装成运行时失败 |
-| L4 dom-contract | `semantic.test.ts` | **投影全部属性**（而非 `TESTING.md` T10 的 class+aria 子集）：对图标而言 `viewBox`/`d` 就是交付物本身 |
+| L4 dom-contract | `semantic.test.ts` | **投影全部属性**（而非 `TESTING.md` T10 的 class+aria 子集）：对图标而言 `viewBox`/`d` 就是交付物本身。实现已**提取到 `@apollo-design/test-utils`**，本包传 `profile: 'full'` —— 见 §6.3 |
 | L5 a11y | `a11y.test.ts` | axe **分块扫描**（每块 100）：axe 在 jsdom 下耗时对节点数二次方增长，一次扫 848 个跑不完 |
 | L6 visual | **`n/a`**（用户裁决 2026-09-16） | 本包无视觉语义、无 `demo/`；登记为**项目级缺口**，见 §8 Q2 |
 | L7 build | `tests/build/run.mjs` | 产物必须无 React / `@rc-component` / `@ant-design/cssinjs` |
@@ -282,6 +282,36 @@ const iconPrefixCls = customIconPrefixCls || parentContext.iconPrefixCls || defa
 
 节点翻倍、耗时约 5.7 倍。分块后总耗时 ≈ 6s，且是**全量覆盖**，不是抽样 ——
 图标相关的规则都是逐节点判定的。
+
+### 6.3 L4 实现已提取到 `@apollo-design/test-utils`（2026-09-17）
+
+原先 `packages/icons/src/__tests__/dom-contract.ts` 是一份**包内私有**的 L4 实现，
+提取的理由写在它的文件头：「`ARCHITECTURE.md` 的包边界判据是『消费者 ≥ 2 且无视觉语义』，
+目前消费者只有 icons 一个，等第二个包接入 L4 时再提取」。
+
+现在提取发生了，但触发它的**不是**第二个消费者，而是 `TESTING.md` **T2**：
+
+> `tests/shared/` 提供共享测试契约（见 §7），组件测试必须复用，**不允许各自重写**。
+
+`dom-contract` 是「L4 怎么投影、怎么归一化、差异怎么报」这套规则的实现 ——
+它属于共享契约层，而不是某个组件的测试辅助。所以它必须住在 `test-utils`，
+否则每个组件都会长出一份自己的归一化实现，而「归一化必须对称」这条性质
+会在第二份实现出现的那一刻失守（不对称的归一化看起来完全正常，只是把差异悄悄吃掉）。
+
+**行为等价性**：本包从 `profile` 未参数化（隐式「全部属性」）改为显式 `profile: 'full'`。
+两档的定义是：
+
+| 档 | 保留 | 依据 |
+| --- | --- | --- |
+| `contract`（默认） | 标签 + 类名 + `data-*` + `role`/`aria-*`；`id` 归一化为 `{iN}` 引用 token | `TESTING.md` T10 |
+| `full` | 全部属性；`id` **原样保留** | 本节（登记偏离） |
+
+**本包必须用 `full`**，两个理由缺一不可：
+1. `viewBox` / `d` / `fill` 是交付物本身，不是「无关属性」
+2. 基线里的 `props:passthrough` 用例专门断言 `id="my-icon"` 的透传 ——
+   `contract` 档会把 `id` 归一化掉，那条用例会**静默**失去意义
+
+迁移后的验证：L4 层 43 个用例（含 848 图标全量比对）逐条通过，与提取前**逐位一致**。
 
 ---
 
