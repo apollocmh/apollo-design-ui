@@ -2,8 +2,16 @@
  * position 的类型契约。
  *
  * 这些类型全部是**纯数据**：矩形、区域、点、对齐配置。
- * 不含任何 DOM 类型 —— 测量（getBoundingClientRect / collectScroller）由调用方完成后
- * 以 Rect / Area 传入。这是本包能被纯函数测试覆盖的前提，也是 AR1 能被 PoC 验证的原因。
+ *
+ * ⚠️ 旧注释写的是「不含任何 DOM 类型 —— 测量由调用方完成后以 Rect 传入」，
+ *    **这是错的**（2026-09-17 改正）。它与两处更高优先级的事实来源冲突：
+ *      · `registry/dependencies.json` 里 position 的 `purpose` 是「纯几何 **+ 尺寸测量**」
+ *      · `ARCHITECTURE.md` §9.1 明确要求「别把 DOM 测量外壳误派给 overlay」
+ *    DOM 测量就在本包的 `measure.ts`。本文件保持纯数据是对的 —— 测量的**输出**
+ *    正是这里的 `Rect` / `Area`，测量过程只是不被这些类型描述而已。
+ *
+ * 这样切分正好让 AR1 可以被验证：几何内核（`align.ts`）只认这些纯数据类型，
+ * 能被差分测试穷举；测量外壳（`measure.ts`）单独承担不可纯化的 DOM 副作用。
  */
 
 /** 与 DOMRect 同构的最小矩形。x/y 是视口坐标（等价于 getBoundingClientRect 的 left/top）。 */
