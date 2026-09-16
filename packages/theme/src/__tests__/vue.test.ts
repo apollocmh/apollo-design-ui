@@ -2,8 +2,8 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h } from 'vue';
 import { darkAlgorithm } from '../get-design-token';
-import { createThemeContext, ThemeProvider, useTheme, useToken } from '../vue';
 import type { ThemeContext } from '../vue';
+import { createThemeContext, ThemeProvider, useTheme, useToken } from '../vue';
 
 /**
  * Vue 绑定层的测试。
