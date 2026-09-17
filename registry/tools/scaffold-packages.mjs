@@ -214,7 +214,7 @@ const PACKAGES = [
     ],
     notDo: [
       '不实现浮层定位（那是 @apollo-design/position 的职责）',
-      '不实现焦点陷阱（那是 @apollo-design/a11y 的职责）',
+      '不实现焦点陷阱（实现在 @apollo-design/utils，由 @apollo-design/a11y 再导出）',
       '不实现触发时机与显隐延迟（那是 @apollo-design/overlay 的职责）',
     ],
     contracts: [
@@ -267,16 +267,21 @@ const PACKAGES = [
     deps: { '@apollo-design/utils': 'workspace:*' },
     peerDeps: { vue: 'catalog:' },
     publicApi: [
-      'useFocusTrap / useFocusRestore —— 焦点陷阱与关闭后焦点恢复（Modal / Drawer / Image.Preview）',
-      'useRovingFocus —— roving tabindex 与方向键导航（Menu / Tabs / Radio.Group / Toolbar）',
-      'useActiveDescendant —— aria-activedescendant 管理（Select / Tree / Listbox 类）',
-      'useLiveRegion / announce —— 屏幕阅读器播报（message / notification / upload / transfer）',
-      'useTypeahead —— 键盘字符快速定位（Select / Tree / Menu）',
+      // ⚠️ 焦点陷阱**实现在 utils**（L0），本包只再导出 —— 见 docs/foundation/a11y-contract.md §1.1。
+      //    反向搬运会构成 L0 → L1 的跨层依赖。
+      'lockFocus / useLockFocus / getFocusNodeList / triggerFocus / resetFocusLock —— 焦点陷阱（再导出自 utils）',
+      'useFocusRestore —— 关闭后焦点恢复（Modal / Drawer / Image.Preview）',
+      'useRovingFocus + nextRovingIndex / moveRovingIndex / getRovingOffset / getRovingTabIndex —— roving tabindex 与方向键导航（Menu / Tabs / Radio.Group / Toolbar）',
+      'useActiveDescendant + getListboxId / getOptionId —— aria-activedescendant 的 id 方案（Select / Tree / Listbox 类）',
+      'useLiveRegion / announce / announceValues / formatLiveRegionText —— 屏幕阅读器播报（message / notification / upload / transfer）',
+      'useTypeahead + pushTypeaheadChar / findTypeaheadIndex / isTypeaheadKey —— 键盘字符快速定位（Select / Tree / Menu）',
     ],
     notDo: [
-      '不做视觉样式（本包零 CSS）',
+      '不做视觉样式（本包零 CSS；唯一例外是隐藏 live region 的内联样式，它是可达性语义的一部分）',
       '不做 axe 扫描（那是 @apollo-design/test-utils 的 a11yDemoTest）',
       '不重复实现 useId（在 utils）',
+      '不重写焦点陷阱（已在 utils，本包只再导出）',
+      '不渲染组件（列表 / 菜单 / 浮层的 DOM 结构属 ui 层）',
     ],
     contracts: [
       '所有原语必须可在 jsdom 中用键盘事件断言（不需要真实浏览器）',
@@ -334,7 +339,7 @@ const PACKAGES = [
     notDo: [
       '不实现定位几何（那是 @apollo-design/position）',
       '不实现挂载与容器（那是 @apollo-design/portal）',
-      '不实现焦点陷阱本体（复用 @apollo-design/a11y）',
+      '不实现焦点陷阱本体（@apollo-design/a11y 再导出自 @apollo-design/utils）',
       '不产出任何视觉样式 —— 浮层长什么样是组件层的事',
     ],
     contracts: [
