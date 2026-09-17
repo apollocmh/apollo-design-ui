@@ -138,3 +138,82 @@
     **一个文件都没写出去**（好在 fail-fast，没有半成品）。
     对策：每个文件用 Write 工具单独写，或用 heredoc / `\u0060` 转义。
     这类脚本跑完**必须确认产物真的落盘了**，不能只看脚本没报错。
+46. ⚠️⚠️ **Vue 的 Boolean prop 转换会把「未传」变成 `false`**（2026-09-18，empty 实测）。
+    只要 prop 的**运行时类型**含 `Boolean`，且调用方没传、也没有 `default`，
+    Vue 就把它赋成 `false`。而 `React.ReactNode` 的 Vue 对应物 `VNodeChild` **含 boolean** ——
+    SFC 编译器把它解析成 `[Object, String, Number, Boolean, null, Array]`。
+    症状极隐蔽：组件「能渲染」，只是少了一块（描述整块消失 / 插画变成注释节点 `<!---->`）；
+    不报错、不警告、`vue-tsc` 也过。empty 是被 L4 的逐节点比对抓出来的。
+    **对策**：`withDefaults(defineProps<T>(), { <每个 VNodeChild prop>: undefined })`
+    —— 有 `default`（哪怕是 `undefined`）就跳过转换。
+    **所有 `VNodeChild` prop 都适用**：`title` / `content` / `label` / `extra` / `children` / `footer`。
+    同一根源：antd 的 `!(deprecatedName in props)` 判据在 Vue 下失效
+    （Vue 的 props **恒**包含全部声明键）⇒ 改成 `!== undefined`。登记为 D21。
+
+47. ⚠️⚠️ **`biome check --write` 在 `biome.json` 无法解析时会静默退回默认配置**（默认 tab 缩进），
+    从而**重排全仓**。2026-09-18 实测：给 `biome.json` 加了 `//` 注释（JSON 不允许）后
+    跑一次 `--write`，1344 个文件被改成 tab 缩进。
+    **对策**：`biome.json` 里不能写注释；改完配置先 `biome check .` 看有没有 parse 错。
+    **恢复**：列出「有意修改」的文件清单，其余 `git checkout --`。
+    ⚠️ **`git checkout` 恢复不了未跟踪文件** —— 被重排的未跟踪产物（如 compat 基线）
+    只能重新生成。
+
+48. ⚠️ **unbuild 对 `.vue` 的 `declaration: true` 会静默产出错误的 `.d.ts`**。
+    `rollup-plugin-dts` 不认识 SFC，会把**编译后的 JS** 当声明写进 `dist/index.d.ts`。
+    而 `tests/build/run.mjs` 的 B2 只校验「exports 指向的路径存在」⇒
+    这种错误产物能一路绿灯发出去。
+    **对策**（`packages/ui/build.config.ts`）：`declaration: false` + `build:done` 里跑
+    `vue-tsc`，并在钩子末尾**断言产物里含 `declare` / `export type`**。
+    同时 `vue-tsc` 需要 `--outDir .dts-tmp --rootDir ../..`（仓库根）再裁剪 ——
+    因为 tsconfig 的 `paths` 指向 `../utils/src`，那些文件进了 program，
+    `rootDir` 只能是它们的公共祖先，否则 TS6059。
+
+49. ⚠️ **`pnpm -r run build` 在本仓库永远不可用**：每个包都 devDepend on `test-utils`，
+    而 `test-utils` depend on `theme`/`utils` ⇒ `ERR_PNPM_TASK_CYCLE`。
+    即使加 `ignoreWorkspaceCycles: true`，构建顺序也不再保证拓扑序。
+    ⇒ **`node tests/build/run.mjs` 才是权威构建入口**（已改为按 workspace 依赖拓扑排序）。
+    同类：unbuild 打包 JS 时把 workspace 依赖当 external，但出 `.d.ts`、
+    跑 `build:done` 钩子时都要能解析到依赖的**产物** ⇒ 顺序是正确性问题，不是优化。
+
+50. ⚠️ **`axe-core` 在模块导入期就 `new MutationObserver`**（2026-09-18 实测）。
+    于是只要测试文件从 `@apollo-design/test-utils` 的入口导入任何东西
+    （barrel 会把 `a11y-demo-test` 一起拉进来），
+    `MutationObserver.instances.size === 0` 这条**绝对值**判据恒不成立 ⇒
+    `mountTest` 对**每一个**组件都必然失败，且失败信息指向组件（方向完全错误）。
+    实测：`import 'vue'` → 0；`import '@apollo-design/utils'` → 0；
+    `import '@apollo-design/test-utils'` → 1。
+    **对策**：`mountTest` 改成**增量**判据 —— 挂载前 `snapshotObservers()`，
+    卸载后 `describeObserverLeaks(baseline)`。新增实例仍然会被抓到。
+
+51. ⚠️ **`biome check .` 在本仓库曾经从未真正绿过**：`scaffold-packages.mjs` 生成的
+    `package.json` / `tsconfig.json` 是 **tab** 缩进，而 `biome.json` 的
+    `formatter.indentStyle` 是 space ⇒ 逐文件报 format 错。
+    另外 `.vue` 的 `noUnusedVariables` / `noUnusedImports` 是误报
+    （biome 的 JS 分析器**不解析 `<template>`**），
+    `tests/compat/baseline/*.mjs` 的 `useButtonType` 也是误报（那是 `React.createElement`）。
+    三处都已加 override 并写明理由（`biome.json` 不能写注释，理由记在本文件与组件 README）。
+
+52. ⚠️ **`pnpm install` 会重写根 `package.json` 的缩进为 tab**。
+    `biome check .` 随后会报 format 错。改完依赖后先跑一次 `biome check --write .`
+    （并确认它只改了你改过的文件 —— 见第 47 条）。
+
+53. **`packages/ui` 的 `tsconfig.json` 曾有两处失真**（已修模板 + 手改）：
+    ① 缺 `baseUrl` ⇒ 包内的 `../utils/src` 会按**根 tsconfig** 的 baseUrl 解析成
+    「仓库根的上一级/utils/src」，必然 TS2307（foundation 包没互相 import，所以一直没暴露）；
+    ② 未排除 `**/demo/**` ⇒ `dist/<component>/demo/*.vue.d.ts` 会被打进发布的包。
+    `paths` 清单也是旧的（缺 overlay / a11y / locale）。
+    ⚠️ `scaffold-packages.mjs` 的 `--force` 会**覆盖 `src/index.ts`**（清空实现），
+    只能安全地用 `--force-pkg`（只刷 package.json）——所以 tsconfig 只能手工同步。
+
+54. ⚠️ **Vue 的 SSR 对 `style` 键是「无条件输出」的** —— 值为 `undefined` 时渲染成
+    `style=""`，而 React 在样式为空时**不输出该属性**。
+    客户端 `patchStyle` 会把空样式移除，所以**只有 SSR 产物**有这个差异，
+    本地用 `mount()` 测不出来。
+    ⚠️ L4 的 DOM 投影也**测不出来**（把「没有 style 属性」与 `style=""` 都归一化成空串）。
+    Empty 一层就有 3 个元素中招，是渲染 SSR 预览页时肉眼发现的。
+    **对策**：`styleAttrs(style)` —— 空样式返回 `{}`（连键都没有），非空返回 `{ style }`，
+    然后 `v-bind="styleAttrs(x)"` 而不是 `:style="x"`。
+
+55. ⚠️ **同一个元素上不能有两个裸 `v-bind`**：`v-bind="x" v-bind="$attrs"`
+    会被 Vue 判为 `Duplicate attribute` 而**编译失败**（报在 `vite:vue` 插件里，
+    错误信息只有一行，不看上下文很难定位）。把 `$attrs` 并进同一个对象。

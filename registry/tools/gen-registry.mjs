@@ -307,6 +307,13 @@ const components = COMPONENTS.map((meta) => {
     docsStatus: prev.docsStatus ?? 'todo', // G11 文档
 
     notes: meta.notes ?? null,
+
+    // `layerNotes` 是**保留字段**：某个维度判 `n/a` 时必须在这里写清架构依据
+    // （与 foundation 包的 testLayers.layerNotes 同一约定，见 WORKFLOW.md §1.3
+    // 与 COMPONENT-RULES.md §12.4 的「用 n/a 掩盖未做」一条）。
+    // 它不参与派生，所以只做原样搬运 —— 但必须在生成器的输出里，
+    // 否则每次 `registry:gen` 都会把它抹掉。
+    layerNotes: prev.layerNotes ?? null,
   };
 });
 
@@ -610,7 +617,11 @@ const dependenciesDoc = {
   },
 
   strategyLegend: {
-    reuse: '直接复用 —— 该包与框架无关（纯数据/纯算法），复用是达成一致性最省成本的路径',
+    reuse:
+      '直接复用 —— 该包与框架无关（纯数据/纯算法），**且不属于 Ant Design 生态**，复用是达成一致性最省成本的路径',
+    generate:
+      '构建期固化 —— 来自 Ant Design 生态、内容是数据：只作 gen-*.mjs 的数据源，产出随包发布，运行时零引用（R7）',
+    port: '移植 + 差分验证 —— 来自 Ant Design 生态、内容是算法：移植进 @apollo-design/*，上游降级为 *.oracle.test.ts 的 Oracle（R7）',
     apollo: '由 @apollo-design 独立包承接 —— ≥2 消费者且无视觉语义',
     'in-ui': '由 packages/ui 内部承接 —— 单一消费者，独立成包属过度抽象',
     drop: '不需要 —— Vue 原生已覆盖，或仅服务 React',

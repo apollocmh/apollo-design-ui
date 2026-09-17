@@ -39,6 +39,29 @@ const forcePkg = force || process.argv.includes('--force-pkg');
 const forceReadme = force || process.argv.includes('--force-readme');
 
 /**
+ * ui 的 CSS 子路径导出（裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css）。
+ *
+ * 判据是 `registry/components.json` 里该组件的 `styleStatus === 'done'` —— 那是
+ * 「样式产物真的存在」的机器可读记录。不读文件系统是因为构建产物可能已被 `rm -rf dist`
+ * 清掉，那会让 exports 随着一次清理而缩水；而 progress 字段不会。
+ * 两者不一致时由 `tests/build/run.mjs` 的 B2 报错，而不是静默。
+ *
+ * ⚠️ 必须在模块顶层声明：PACKAGES 在模块求值时就调用它，函数声明虽提升，
+ *    但声明在 `if (isMain)` 块里就出不了那个块。
+ */
+function uiStyleExports() {
+  const file = path.join(ROOT, 'registry/components.json');
+  if (!fs.existsSync(file)) return {};
+  const components = JSON.parse(fs.readFileSync(file, 'utf8')).components ?? [];
+  const out = { './style.css': './dist/index.css' };
+  for (const c of components) {
+    if (c.styleStatus !== 'done') continue;
+    out[`./${c.name}/style.css`] = `./dist/${c.name}/style.css`;
+  }
+  return out;
+}
+
+/**
  * 包定义。
  * layer 决定它可以依赖哪些层（ARCHITECTURE.md §3.1 R1）。
  * deps / peerDeps 中的 `@apollo-design/*` 必须是同层或更低层 —— 脚本会校验。
@@ -546,13 +569,17 @@ const PACKAGES = [
       'scroll-into-view-if-needed': 'catalog:',
     },
     peerDeps: { vue: 'catalog:' },
+    // 裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css。
+    // 由 uiStyleExports() 从 components.json 推导，不手写。
+    extraExports: uiStyleExports(),
     publicApi: [
       '72 个组件（见 registry/components.json）',
       'ConfigProvider —— Token / 主题 / locale / size / disabled / prefixCls 的统一入口',
-      'locale —— 75 个语言包',
+      'locale —— 73 个语言包',
       '静态方法：message / notification / Modal.confirm',
       'composable：useApp / useMessage / useNotification / useModal / useForm / useToken / useBreakpoint',
-      '样式产物：css/base.css / css/components/*.css / css/full.css',
+      '样式产物：dist/index.css（汇总）+ dist/<component>/style.css（按需）',
+      'genComponentStyles(prefixCls) —— 静态样式生成器（自定义 prefixCls 时使用）',
     ],
     notDo: [
       '不重复实现 foundation 包已覆盖的能力（ARCHITECTURE.md R5）',
@@ -712,17 +739,29 @@ if (isMain) {
       // 曾经这里声明了 ./es/* 与 ./css/*，但 scripts.build 是裸 unbuild，只产出 dist/。
       // 结果是 exports 指向不存在的子路径，unbuild 以退出码 1 失败，pnpm -r build 全仓不可用。
       // 契约：exports 只允许声明构建后真实存在的路径。新增子路径导出必须同步改本模板与构建脚本。
+      //
+      // 2026-09-17 扩展（裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css）：
+      //   ui 额外声明 `./style.css`（汇总）与 `./<component>/style.css`（按需）。
+      //   子路径清单**由 components.json 推导**，判据是该组件的 `styleStatus === 'done'`
+      //   —— 即「真的产出了 CSS 产物」，而不是「我们打算做」。这样 exports 永远不可能
+      //   指向不存在的文件（tests/build/run.mjs 的 B2 还会再独立复核一次）。
       exports: {
         '.': {
           types: './dist/index.d.ts',
           import: './dist/index.mjs',
         },
+        ...(p.extraExports ?? {}),
         './package.json': './package.json',
       },
       files: ['dist'],
       scripts: {
         // unbuild 默认 declaration: true，dist/index.d.ts 由它产出，不再单独跑 vue-tsc
         // （旧的 build:types 指向不存在的 tsconfig.build.json，属悬空脚本，已移除）。
+        //
+        // ⚠️ ui 是例外：它含 .vue SFC，而 unbuild 的 rollup-plugin-dts 不认识 SFC
+        //    （实测会把编译后的 JS 当成 .d.ts 写出去，是**静默的错误产物**）。
+        //    所以 ui 在 build.config.ts 里关掉 declaration，改由 `build:done` hook
+        //    调 vue-tsc 出声明。package.json 这边无需变化。
         build: 'unbuild',
         test: 'vitest run',
         lint: 'vue-tsc --noEmit',
@@ -841,10 +880,32 @@ ${p.coverageNote ?? `覆盖率下限为 语句 95% / 分支 90% / 函数 95%（$
           outDir: './dist',
           noEmit: false,
           emitDeclarationOnly: true,
+          // ⚠️ 必须有 baseUrl，否则下面的 `../<pkg>/src` 是错的。
+          //
+          // 根 tsconfig 声明了 `baseUrl: "."`（= 仓库根）。`extends` 会继承它，而相对路径
+          // 按**声明它的那个文件**解析 —— 于是包内的 `../utils/src` 会被解析成
+          // 「仓库根的上一级/utils/src」，即 `/Users/<user>/utils/src`，必然找不到。
+          //
+          // 症状很隐蔽：TS2307 只在**该包真的 import 了兄弟包**时才出现。
+          // foundation 包都还没互相 import，所以这个坑一直没暴露；
+          // packages/ui 第一个组件（empty）引 utils/theme/locale 时才炸出来。
+          //
+          // 在包内重新声明 baseUrl（相对包目录）即可让 `../<pkg>/src` 成立。
+          baseUrl: '.',
           ...(Object.keys(paths).length ? { paths } : {}),
         },
         include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
-        exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.test-d.ts', 'dist', 'node_modules'],
+        // `**/demo/**` 也在排除里：demo 是给文档站用的示例，不参与类型产物
+        // （它们的类型仍由根 tsconfig 的 `lint:types` 全仓检查覆盖）。
+        // 不排除的话 `dist/<component>/demo/*.vue.d.ts` 会被打进发布的包里。
+        exclude: [
+          '**/*.test.ts',
+          '**/*.test.tsx',
+          '**/*.test-d.ts',
+          '**/demo/**',
+          'dist',
+          'node_modules',
+        ],
       },
       null,
       2,

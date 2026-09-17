@@ -5,18 +5,29 @@
     "outDir": "./dist",
     "noEmit": false,
     "emitDeclarationOnly": true,
+    "baseUrl": ".",
     "paths": {
       "@apollo-design/utils": ["../utils/src"],
       "@apollo-design/theme": ["../theme/src"],
       "@apollo-design/icons": ["../icons/src"],
       "@apollo-design/motion": ["../motion/src"],
       "@apollo-design/portal": ["../portal/src"],
-      "@apollo-design/trigger": ["../trigger/src"],
+      "@apollo-design/position": ["../position/src"],
+      "@apollo-design/overlay": ["../overlay/src"],
+      "@apollo-design/a11y": ["../a11y/src"],
       "@apollo-design/virtual-list": ["../virtual-list/src"],
       "@apollo-design/form-core": ["../form-core/src"],
-      "@apollo-design/picker": ["../picker/src"]
+      "@apollo-design/picker": ["../picker/src"],
+      "@apollo-design/locale": ["../locale/src"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.test-d.ts", "dist", "node_modules"]
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.test-d.ts",
+    "**/demo/**",
+    "dist",
+    "node_modules"
+  ]
 }

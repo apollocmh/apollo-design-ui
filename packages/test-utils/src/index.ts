@@ -52,13 +52,21 @@ export {
 } from './dom-contract';
 export type { FocusTestOptions } from './focus-test';
 export { focusTest } from './focus-test';
-export type { MountTestOptions } from './mount-test';
-export { describeObserverLeaks, mountTest } from './mount-test';
+export type { MountTestOptions, ObserverBaseline } from './mount-test';
+export {
+  describeObserverLeaks,
+  mountTest,
+  snapshotObservers,
+} from './mount-test';
 export type { RootPropsTestOptions } from './root-props-test';
 export { ROOT_PROPS_DEFAULTS, rootPropsTest } from './root-props-test';
 export type { RtlTestOptions } from './rtl-test';
 export { rtlTest } from './rtl-test';
-export type { ThemeTestOptions, ThemeTokenOverride, ThemeVariant } from './theme-test';
+export type {
+  ThemeTestOptions,
+  ThemeTokenOverride,
+  ThemeVariant,
+} from './theme-test';
 export { themeTest } from './theme-test';
 // ---------------------------------------------------------------------------
 // 确定性等待

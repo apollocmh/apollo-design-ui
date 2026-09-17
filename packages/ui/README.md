@@ -19,10 +19,11 @@
 
 - 72 个组件（见 registry/components.json）
 - ConfigProvider —— Token / 主题 / locale / size / disabled / prefixCls 的统一入口
-- locale —— 75 个语言包
+- locale —— 73 个语言包
 - 静态方法：message / notification / Modal.confirm
 - composable：useApp / useMessage / useNotification / useModal / useForm / useToken / useBreakpoint
-- 样式产物：css/base.css / css/components/*.css / css/full.css
+- 样式产物：dist/index.css（汇总）+ dist/<component>/style.css（按需）
+- genComponentStyles(prefixCls) —— 静态样式生成器（自定义 prefixCls 时使用）
 
 ## 明确不做（边界）
 

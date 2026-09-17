@@ -429,7 +429,8 @@ export const RC_MAP = [
     strategy: 'in-ui',
     target: 'packages/ui/src/color-picker/engine/',
     foundationPkg: '@apollo-design/ui',
-    rationale: '单消费者。色值数学部分复用 @ant-design/fast-color，面板交互留在 ui 内。',
+    rationale:
+      '单消费者。色值数学部分复用 @apollo-design/utils 的 Color（上游 fast-color 的移植），面板交互留在 ui 内。',
     risk: 'high',
   },
   {
@@ -492,31 +493,40 @@ export const RC_MAP = [
     pkg: '@ant-design/icons-svg',
     kind: 'ecosystem',
     capability: '图标原始 SVG 数据（框架无关）',
-    strategy: 'reuse',
-    target: '直接依赖',
+    // 2026-09-18（ADR 0004 / R7）：从 reuse 改为 generate。
+    // 「框架无关」只回答了能不能复用，没回答该不该进用户的依赖树。
+    strategy: 'generate',
+    target:
+      '构建期数据源（devDependencies）：gen-icons.mjs 求值 848 份定义后固化成 src/icons/*.ts 的字面量，随包发布',
     foundationPkg: '@apollo-design/icons',
     rationale:
-      '纯数据包，peerDependencies 为空、零运行时依赖。复用它是达成图标视觉一致的最省成本路径。',
+      '纯数据包、零依赖，是图标视觉一致的最省成本来源。但按 R7 只能作构建期数据源 —— 直接依赖会让每个 @apollo-design/icons 用户都被装上 antd 的包。固化后生成物与上游逐位一致，对齐效果不变。',
     risk: 'low',
   },
   {
     pkg: '@ant-design/colors',
     kind: 'ecosystem',
     capability: '预设色板生成算法（13 色 × 10 阶梯度）',
-    strategy: 'reuse',
-    target: '直接依赖',
+    // 2026-09-18（ADR 0004 / R7）：从 reuse 改为 port。
+    strategy: 'port',
+    target:
+      '移植为 @apollo-design/utils 的 generatePalette()；上游降级为 devDependencies 里的差分验证 Oracle',
     foundationPkg: '@apollo-design/theme',
-    rationale: '纯算法，无框架耦合。复用可保证色板梯度与 antd 完全一致。',
+    rationale:
+      '纯算法、无框架耦合，但按 R7 不能进运行时依赖。色板梯度是 Token 的像素级判据，不能有两个实现来源 —— 所以是移植 + 差分验证（color.oracle.test.ts 对上游逐位比对），而不是换一个第三方颜色库。',
     risk: 'low',
   },
   {
     pkg: '@ant-design/fast-color',
     kind: 'ecosystem',
     capability: '高性能颜色解析与转换（hex/rgb/hsl/hsv/alpha）',
-    strategy: 'reuse',
-    target: '直接依赖',
+    // 2026-09-18（ADR 0004 / R7）：从 reuse 改为 port。
+    strategy: 'port',
+    target:
+      '移植为 @apollo-design/utils 的 Color 类；上游降级为 devDependencies 里的差分验证 Oracle',
     foundationPkg: '@apollo-design/theme',
-    rationale: '纯算法，零依赖。色值数学不必重写。',
+    rationale:
+      '纯算法、零依赖，但按 R7 不能进运行时依赖。移植范围只含本仓库真实用到的部分（见 utils/src/color/color.ts 文件头），等价性由 color.oracle.test.ts 对上游逐位保证。',
     risk: 'low',
   },
   {
