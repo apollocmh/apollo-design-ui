@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具的所有权、易错判据、未决事项。
 > 规则本体看 `AGENTS.md` / `WORKFLOW.md` / `TESTING.md` / `COMPATIBILITY.md`；
-> 踩过的坑看同目录 **`PITFALLS.md`**（41 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
+> 踩过的坑看同目录 **`PITFALLS.md`**（45 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -97,12 +97,36 @@ git rev-list --left-right --count master...workbuddy/master-1c4ca77a
 git merge --ff-only workbuddy/master-1c4ca77a
 ```
 
+## ⚠️ 每个新会话的第一件事
+
+`/tmp` **不是持久存储**：`/tmp/antd-src/`（产物）与 `/tmp/antd-repo/ant-design-master/`
+（源码+测试+demo）是全项目的**事实来源**，实测会被系统清理。
+**先 `ls` 一下，缺了就恢复**（命令见 `PITFALLS.md` 第 42 条）。
+
+---
+
+## 组件侧（packages/ui）尚未搭起来的三件事
+
+`next-task` 判定 `empty` 可以开始（foundation 依赖全 completed），但组件侧的**流水线**还是空的：
+
+| 缺口 | 现状 |
+|---|---|
+| 样式层 | `packages/ui` 只有骨架：**没有** `build.config.ts`、没有 CSS 汇总方式 |
+| `tests/build/run.mjs` | **不覆盖 `packages/ui`** |
+| `tests/compat/runner/index.mjs` | ⚠️ **文件不存在**（`package.json` 的 `test:compat` 却指向它） |
+| `tests/visual` | 只有 README，基线未入库（决策 `visual-baseline-in-git` 未裁决） |
+
+⇒ `empty` 是「**第一个**组件」不是「一个小组件」。开工前先裁决这三件。
+
+---
+
 ## ⚠️ 未决事项（接手先看）
 
 1. AR1 / AR2 均已解除；motion 的三项遗留见 registry `notes`。
-2. **`next-task` 两个视图分歧**（locale 2026-09-17 收口，foundation **10/13**）：
-   推进顺序指向 `overlay`，「可开始完整实现」指向 `form-core`。
-   剩余 3 个 todo：overlay / form-core / picker。
+2. **`next-task` 的默认视图已切到「组件」**（locale 2026-09-17 收口，foundation 10/13）：
+   下一个任务 = `empty` 组件（P0 / complexity S / 解锁 51 个组件）。
+   foundation 视图仍剩 3 个 todo：overlay / form-core / picker。
+   `empty` 的 **G1 分析产物已完成**（`docs/analysis/empty.md`），**实现未开始**。
 3. **六个包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` / `motion.CSSMotion` /
    `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList` / `locale` 全部。联调时若 API 形状不够用，需回来改并同步 contract 文档。
    这条风险重复出现在四个包的 registry `notes` 里。⚠️ portal 另有：SSR「不建容器」只覆盖了

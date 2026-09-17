@@ -123,3 +123,18 @@
     - 或逐项目跑：`--project types` / `dom-contract` / `a11y` / `theme`
     - 或 `--maxWorkers=1 --no-file-parallelism`
     - 被杀后等 ~20 秒内存会回收（实测 41MB → 1.1GB），别立刻重试
+42. ⚠️⚠️ **`/tmp/antd-src` 与 `/tmp/antd-repo` 会被系统清理** —— 它们是全项目的
+    「事实来源」，但 /tmp 不是持久存储。**每个新会话第一件事：`ls /tmp/antd-src /tmp/antd-repo`**。
+    恢复方法见当日日志第十四节（产物用 `npm pack antd@6.6.4`；
+    源码要用 **node 的 fetch** 拉 codeload，`curl` 会走一个不存在的代理）。
+    ⚠️ `extract-antd-facts.mjs --download` **只重建 raw.json**，不解包到 /tmp。
+43. **`timeout` 命令不一定可用** —— 有的会话 PATH 里没有。
+    别把超时保护写成 `timeout N cmd`，用工具自带的 timeout 参数。
+44. ⚠️ **`package.json` 里引用的脚本可能不存在**：`test:compat` 指向
+    `tests/compat/runner/index.mjs`，但该文件**不存在**。到「要跑门禁」时才会发现。
+    接手新阶段前先 `ls` 一遍 `package.json` 引用的每个脚本。
+45. ⚠️ **用 node 脚本批量写文件时，内容里的反引号会被外层模板串吃掉**。
+    实测：写含反引号的 Vue SFC 的生成脚本直接 `SyntaxError: missing ) after argument list`，
+    **一个文件都没写出去**（好在 fail-fast，没有半成品）。
+    对策：每个文件用 Write 工具单独写，或用 heredoc / `\u0060` 转义。
+    这类脚本跑完**必须确认产物真的落盘了**，不能只看脚本没报错。
