@@ -101,21 +101,36 @@ pnpm 12.4.2（`.npmrc` `hoist=false`）｜TS 锁 5.9.x（unbuild 3.6.1 peer）�
 
 ## 主分支与合并
 
-主分支是 **`master`**，检出在另一个 worktree **`/Users/nanren/Code/apollo-design-ui`**
-（当前工作区是 `workbuddy/master-1c4ca77a`）。阶段性收口后需要合并过去。
+主分支是 **`master`**，检出在另一个 worktree **`/Users/nanren/Code/apollo-design-ui`**。
+阶段性收口后需要合并过去。
 
 ⚠️ **合并前必须先看那边的工作区**：master worktree 里常留着上一轮的未提交内容
 （实测：一份被取代的 motion 早期实现），会让合并或 fast-forward 被拒。
 处置是**先 `git stash push -u`** —— 保留全部（含未跟踪文件）、可恢复 ——
 合并完再告诉用户 stash 在哪。**不要 `checkout` / `clean` 掉别人的东西。**
 
+⚠️ **master 可能已经前进**（别的会话在那边收口）。2026-09-18 实测：master 领先 4 个提交
+（empty 组件 + 组件侧流水线），`--ff-only` **不可行**。正确顺序是**先合 master 进来**：
+
 ```bash
-# 1) 备份并清干净 master worktree
-cd /Users/nanren/Code/apollo-design-ui && git stash push -u -m "合并前自动备份"
-# 2) 快进合并（master 通常是当前分支的祖先，先确认 0 个对方独有提交）
-git rev-list --left-right --count master...workbuddy/master-1c4ca77a
-git merge --ff-only workbuddy/master-1c4ca77a
+cd /Users/nanren/Code/apollo-design-ui && git stash push -u -m "合并前自动备份"   # 仅当有未提交内容
+cd <当前 worktree>
+git merge master --no-edit          # ① 先把 master 合进来，解冲突
+#    registry/*.json 冲突 → git checkout --ours + git add，然后**重跑生成器**
+#    .workbuddy-ai/memory/<日期>.md 的 add/add → 两边内容都保留（它们各写了一段）
+git rev-list --left-right --count master...HEAD   # ② 确认变成 "0 N"
+cd /Users/nanren/Code/apollo-design-ui && git merge --ff-only <当前分支>   # ③ 现在才能 ff
 ```
+
+### 解冲突时最容易踩的两个坑
+
+1. **`registry/dependencies.json` 是生成物**（`$comment` 写明 GENERATED，源是
+   `registry/source/rc-map.mjs` + `gen-registry.mjs` 的 `strategyLegend`）。
+   **不要直接改它** —— 下次 `gen-registry.mjs` 会覆盖。改源文件再重新生成。
+2. **`dist/` 不入库，各 worktree 各有一份**。合并后 master 那边的 `dist` 还是旧的，
+   `registry:validate` 的 E19 会拿旧产物报假阳性。处置：在那边
+   `pnpm install` + 逐包重建（`ui` 的构建要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`，
+   否则 `.dts-tmp` 的 351 个文件会被沙箱安全删除拦截）。
 
 ## ⚠️ 每个新会话的第一件事
 
