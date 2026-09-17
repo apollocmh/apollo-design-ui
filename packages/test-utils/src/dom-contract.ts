@@ -26,6 +26,13 @@
  *    而 `tests/compat/README.md` 是其下位文档）。`contract` 档默认**不含 `style`**；
  *    需要断言 `styles` 覆盖优先级时显式传 `keepStyle: true`。
  *
+ * ── 默认开启的一条归一化：剔除 CSS-in-JS 哈希类名 ───────────────────────────────
+ * 依据是 `tests/compat/README.md` §4 明列的「移除 hash 类名（形如 `css-xxxx`）」，与
+ * `H6`（禁止 `@ant-design/cssinjs`）直接相关：我们走静态 CSS，**不可能**产出这类类名，
+ * 留着它只会让每个用例都多一条无信息量的差异。规则见 {@link CSSINJS_HASH_CLASS}。
+ *
+ * 它是**对称**的（两侧过同一个过滤器），`dropCssInJsClasses: false` 可关掉。
+ *
  * ── id 的处理（两档不同，理由在各自那一档）─────────────────────────────────────
  * `contract` 档：`id` 本身不进契约（随机 ID 不可比），但**引用关系进** ——
  *   按文档序把 `id` 值映射成 `{i0}` `{i1}`…，`aria-*` 引用属性按空白拆 token 查表，
@@ -74,6 +81,11 @@ export interface ContractOptions {
   keepStyle?: boolean;
   /** 逐节点忽略的属性名。在档位筛选**之后**生效（所以它只能减，不能加）。 */
   ignoreAttrs?: readonly string[];
+  /**
+   * 是否剔除 CSS-in-JS 注入的类名（见 {@link CSSINJS_HASH_CLASS}）。
+   * 默认 `true`。两侧共用同一条规则 —— 归一化必须对称。
+   */
+  dropCssInJsClasses?: boolean;
 }
 
 /** 厂商前缀的 transform。与无前缀的 `transform` 语义等价（`COMPATIBILITY.md` D16）。 */
@@ -101,10 +113,40 @@ function isContractAttr(name: string): boolean {
   return name === 'role' || name.startsWith('data-') || name.startsWith('aria-');
 }
 
+/**
+ * antd 的 CSS-in-JS 在根元素上注入的**哈希类名**。
+ *
+ * `tests/compat/README.md` §4 把「移除 hash 类名（形如 `css-xxxx`）」列为 DOM 归一化的
+ * **标准步骤**，理由与本项目 `H6`（禁止 `@ant-design/cssinjs`）直接相关：
+ * 我们走静态 CSS，没有运行时样式注入，因此**不可能**产出这类类名。
+ *
+ * 实测 antd 6.6.4 在 `renderToStaticMarkup` 下的形态（两条都要覆盖）：
+ *   - 开发态：`css-dev-only-do-not-override-19u5a7b`（hash 随构建变化）
+ *   - 生产态：`css-19u5a7b`
+ *   - 另有固定名 `css-var-root`（cssVar 模式的根标记，不在 hash 正则里，单独列出）
+ *
+ * ⚠️ 这条规则**对两侧一视同仁**（都过同一个过滤器），所以不是「只作用于单侧的归一化」。
+ *    它的效果确实只落在 antd 一侧 —— 那正是因为只有 antd 会产生它。
+ *
+ * ⚠️ 它确实会**少测**一件事：「antd 的根元素上有这两个类名」。这是有意的：
+ *    断言它们等于断言我们**没有**实现 cssinjs，没有信息量。
+ *    差异登记见 `COMPATIBILITY.md` 的 D1。
+ */
+const CSSINJS_HASH_CLASS = /^css-(?:dev-only-do-not-override-)?[a-z0-9]+$/;
+
+/** 不含 hash 的固定 CSS-in-JS 类名。 */
+const CSSINJS_EXACT_CLASS = new Set(['css-var-root']);
+
+/** 该 class token 是否来自 CSS-in-JS 运行时。 */
+function isCssInJsClass(token: string): boolean {
+  return CSSINJS_EXACT_CLASS.has(token) || CSSINJS_HASH_CLASS.test(token);
+}
+
 interface ProjectionContext {
   profile: ProjectionProfile;
   keepStyle: boolean;
   ignoreAttrs: ReadonlySet<string>;
+  dropCssInJsClasses: boolean;
   /** `id` 值 → 稳定 token。 */
   ids: ReadonlyMap<string, string>;
 }
@@ -115,6 +157,7 @@ function createContext(options: ContractOptions | undefined): ProjectionContext 
     profile,
     keepStyle: options?.keepStyle ?? profile === 'full',
     ignoreAttrs: new Set(options?.ignoreAttrs ?? []),
+    dropCssInJsClasses: options?.dropCssInJsClasses ?? true,
     ids: new Map(),
   };
 }
@@ -198,7 +241,11 @@ function projectElement(el: Element, ctx: ProjectionContext): DomNode {
     const name = attr.name;
 
     if (name === 'class') {
-      classTokens.push(...attr.value.split(/\s+/).filter((token) => token !== ''));
+      for (const token of attr.value.split(/\s+/)) {
+        if (token === '') continue;
+        if (ctx.dropCssInJsClasses && isCssInJsClass(token)) continue;
+        classTokens.push(token);
+      }
       continue;
     }
 
@@ -371,6 +418,8 @@ export interface DomContractOptions {
   keepStyle?: boolean;
   /** 见 {@link ContractOptions.ignoreAttrs}。 */
   ignoreAttrs?: readonly string[];
+  /** 见 {@link ContractOptions.dropCssInJsClasses}。默认 `true`。 */
+  dropCssInJsClasses?: boolean;
   /**
    * 允许的差异，**按用例 id 逐条列出**。
    *
@@ -434,9 +483,14 @@ export function domContractTest(name: string, options: DomContractOptions): void
     }
   }
 
-  const projection: ContractOptions = { profile: options.profile ?? 'contract' };
+  const projection: ContractOptions = {
+    profile: options.profile ?? 'contract',
+  };
   if (options.keepStyle !== undefined) projection.keepStyle = options.keepStyle;
   if (options.ignoreAttrs !== undefined) projection.ignoreAttrs = options.ignoreAttrs;
+  if (options.dropCssInJsClasses !== undefined) {
+    projection.dropCssInJsClasses = options.dropCssInJsClasses;
+  }
 
   describe(`${name} · DOM 契约`, () => {
     for (const id of selected) {

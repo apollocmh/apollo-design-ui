@@ -61,6 +61,17 @@
   },
   "overrides": [
     {
+      "includes": ["**/*.vue"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/registry/tools/**/*.mjs"],
       "linter": {
         "rules": {
@@ -77,6 +88,16 @@
         "rules": {
           "performance": {
             "noDynamicNamespaceImportAccess": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/tests/compat/**/*.mjs"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useButtonType": "off"
           }
         }
       }

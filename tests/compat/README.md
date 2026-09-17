@@ -211,7 +211,8 @@ antd 6.6.4 vs @apollo-design/ui · 2026-09-15
 
 ## 7. 与 React 的隔离（重要）
 
-React 与 antd **只允许出现在 `runner/drivers/react.mjs` 及其依赖中**。
+React 与 antd **只允许出现在 `baseline/*.mjs` 及其依赖中**（Phase 1 设想的 `runner/drivers/react.mjs` 未被采用，见 §8.1）。
+`registry/tools/gen-empty-artwork.mjs` 是同类取数脚本（它渲染 antd 的插画来生成数据），归在同一条规则下。
 
 - 这两个包是本 workspace 的 `devDependencies`，**绝不允许**进入 `packages/**` 的依赖
 - `registry/tools/validate-registry.mjs` 的 E11 检查会扫描全部构建产物，发现 `react` / `@rc-component` / `@ant-design/cssinjs` 即失败
@@ -219,18 +220,42 @@ React 与 antd **只允许出现在 `runner/drivers/react.mjs` 及其依赖中**
 
 ---
 
-## 8. 当前状态（Phase 1）
+## 8. 当前状态
 
-Phase 1 只交付**机制与格式**，不交付完整 runner：
+### 8.1 实际落地的形态（2026-09-17，随 icons / empty 落地）
+
+Phase 1 设想的「`runner/drivers/react.mjs` + `drivers/vue.mjs` 双运行时进程」**没有采用**。
+实际落地的是更简单也更强的一条路，图标（848 个）与 Empty 都用它：
+
+| 环节 | 落点 |
+|---|---|
+| React 侧取数 | `baseline/<component>.mjs` —— 用 `renderToStaticMarkup` 在 Node 里渲染一次，把**原始 HTML** 落盘成 `baselines/<component>.dom.json` |
+| 基线生成/校验 | `node tests/compat/runner/index.mjs [--baseline] [--component <name>]` |
+| 归一化 | `@apollo-design/test-utils` 的 `parseFragment → projectElement`（**两侧同一条流水线**） |
+| 比对 | 各组件的 `__tests__/semantic.test.ts` 调 `domContractTest`，跑在 vitest 的 `dom-contract` project |
+
+为什么这样更好：
+
+- 基线是**纯数据**，能进 git、能在 diff 里逐字看 —— §1「规格可执行」的要求由此满足；
+- 比对跑在 vitest 里，于是有 `expect`、按用例名定位失败、能被 CI 分层跑；
+- 不需要一个常驻的双运行时进程，也不需要「把 React 与 Vue 挂到同一棵树」这种脆弱做法。
+
+代价：基线**不会**自动跟着 antd 版本更新 —— 所以 `runner/index.mjs` 的存在意义就是
+把「重新生成」与「校验是否过期」变成一条命令。
+
+### 8.2 各组件状态
+
+| 组件 | 基线 | 用例数 | 比对落点 |
+|---|---|---|---|
+| `icons` | ✅ | 36（848 个图标） | `packages/icons/src/__tests__/semantic.test.ts` |
+| `empty` | ✅ | 32 | `packages/ui/src/empty/__tests__/semantic.test.ts` |
+
+### 8.3 仍然待办
 
 | 项 | 状态 |
 |---|---|
-| fixture JSON Schema | ✅ 已完成 |
-| button fixture 示例（3 个） | ✅ 已完成 |
-| DOM 归一化规则设计 | ✅ 已完成（`runner/normalize.mjs` 待实现） |
-| React driver | ⬜ 待实现（Phase 2，随 Button 开发） |
-| Vue driver | ⬜ 待实现（Phase 2，随 Button 开发） |
-| 比对器与报告生成 | ⬜ 待实现（Phase 2） |
-| 基线生成命令 | ⬜ 待实现（Phase 2） |
+| `fixtures/*.json` 那套「手写用例 + `allow`」机制 | 未被 icons / empty 采用（机械 oracle 覆盖得更全）。保留设计，等出现「无法用 antd 产物表达」的用例再用 |
+| 报告生成（§6 的 `report/`） | ⬜ 未实现 —— 失败信息由 vitest 直接给出，够用 |
 
-**Phase 2 的第一个任务之一**：随 Button 的 G10 Gate 一起把 runner 的最小可用版本做出来。在此之前，Button 的 `visualStatus` 不能置为 `done`。
+**规则不变**：报告中的每个 ❌ 都必须被处理（修实现 / 登记差异），不允许留待「以后再说」。
+

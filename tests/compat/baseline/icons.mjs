@@ -19,7 +19,7 @@
  * 见 tests/compat/README.md §7 与 TESTING.md 反模式 A9。
  */
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -274,7 +274,25 @@ const payload = {
   },
 };
 
-writeFileSync(outPath, `${JSON.stringify(payload, null, 2)}\n`);
+const serialized = `${JSON.stringify(payload, null, 2)}\n`;
+
+// `--check`：只校验基线是否最新，**不写盘**。
+//
+// 为什么必须有：`tests/compat/runner/index.mjs` 在「校验模式」下会以 `--check` 调用
+// 每个生成器。如果生成器不支持这个开关，它就会**默默把基线重写一遍** ——
+// 于是「校验」变成了「覆盖」，基线漂移再也发现不了。
+if (process.argv.includes('--check')) {
+  const current = existsSync(outPath) ? readFileSync(outPath, 'utf8') : '';
+  if (current !== serialized) {
+    console.error('[compat:icons] ❌ 基线不是最新的');
+    console.error('  运行: node tests/compat/baseline/icons.mjs');
+    process.exit(1);
+  }
+  console.log(`[compat:icons] ✅ 基线最新（${names.length} 个图标 / ${cases.length} 个用例）`);
+  process.exit(0);
+}
+
+writeFileSync(outPath, serialized);
 
 console.log(`图标总数 ${names.length}`, payload.themed);
 console.log(`用例 ${cases.length} 个`);

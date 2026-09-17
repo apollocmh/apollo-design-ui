@@ -82,7 +82,10 @@ interface ObservableResizeObserver {
 }
 
 /** 取出桩的 `instances`。没有桩（或桩没暴露 `instances`）时返回 null。 */
-function observableInstances(): { resize: Set<unknown>; mutation: Set<unknown> } | null {
+function observableInstances(): {
+  resize: Set<unknown>;
+  mutation: Set<unknown>;
+} | null {
   const resize = (globalThis as { ResizeObserver?: ObservableObserver }).ResizeObserver;
   const mutation = (globalThis as { MutationObserver?: ObservableObserver }).MutationObserver;
   if (!resize?.instances || !mutation?.instances) return null;
@@ -90,26 +93,81 @@ function observableInstances(): { resize: Set<unknown>; mutation: Set<unknown> }
 }
 
 /**
+ * 挂载**之前**的观察者基线。
+ *
+ * ── 为什么需要它（2026-09-17 实测）─────────────────────────────────────────────
+ *
+ * 原判据是「卸载后 `MutationObserver.instances.size === 0`」，也就是**绝对值**。
+ * 它在第一个真实组件（`packages/ui/src/empty`）落地时暴露为误报：
+ *
+ *   `axe-core`（`a11y-demo-test.ts` 的依赖）在**模块导入期**就 `new MutationObserver(...)`
+ *   并一直持有。于是只要一个测试文件从 `@apollo-design/test-utils` 的入口导入任何东西
+ *   （barrel 会把 `a11y-demo-test` 一起拉进来），这个实例就恒在 ——
+ *   `mountTest` 对**每一个**组件都必然失败，且失败信息指向组件，指向完全错误的方向。
+ *
+ * 实测证据（同一台机器）：
+ *   import 'vue'                            → instances.size = 0
+ *   import '@apollo-design/utils'           → 0
+ *   import '@apollo-design/test-utils'      → 1
+ *   import '@apollo-design/test-utils/a11y-demo-test' → 1
+ *
+ * ── 改成的判据 ────────────────────────────────────────────────────────────────
+ *
+ * 「**这次挂载**没有新增未断开的观察者」。这才是 `mountTest` 想表达的契约：
+ * 组件自己不该泄漏。至于别人在导入期留下的长命观察者，不是组件的责任，
+ * 也不该由组件的测试来断言 —— 用绝对值断言只会训练人忽略红灯。
+ *
+ * ⚠️ 这是**收窄到正确的范围**，不是放宽：新增实例仍然会被抓到，而且现在
+ *    失败信息只指向真的由本次挂载产生的泄漏。
+ */
+export interface ObserverBaseline {
+  mutation: ReadonlySet<unknown>;
+  resizeTargets: ReadonlyMap<unknown, number>;
+}
+
+/** 记录当前的观察者状态，供 {@link describeObserverLeaks} 做增量判定。 */
+export function snapshotObservers(): ObserverBaseline | null {
+  const instances = observableInstances();
+  if (instances === null) return null;
+  const resizeTargets = new Map<unknown, number>();
+  for (const instance of instances.resize) {
+    resizeTargets.set(instance, (instance as ObservableResizeObserver).targets?.size ?? 0);
+  }
+  return { mutation: new Set(instances.mutation), resizeTargets };
+}
+
+/**
  * 描述当前的观察者泄漏。空数组 = 无泄漏。
  *
  * 返回**可读描述**而不是布尔值：失败时应当直接看到「哪个 observer 还挂着几个元素」，
  * 而不是一句 `expected true to be false`。
+ *
+ * @param baseline 传 `snapshotObservers()` 的结果时，只统计**新增**的实例与**新增**的
+ *   监听目标（见 {@link ObserverBaseline}）。不传则做绝对值判定。
  */
-export function describeObserverLeaks(): string[] {
+export function describeObserverLeaks(baseline?: ObserverBaseline | null): string[] {
   const instances = observableInstances();
   if (instances === null) return [];
 
   const leaks: string[] = [];
 
-  if (instances.mutation.size > 0) {
-    leaks.push(`MutationObserver 泄漏 ${instances.mutation.size} 个实例（未 disconnect）`);
+  if (baseline === undefined || baseline === null) {
+    if (instances.mutation.size > 0) {
+      leaks.push(`MutationObserver 泄漏 ${instances.mutation.size} 个实例（未 disconnect）`);
+    }
+  } else {
+    const fresh = [...instances.mutation].filter((instance) => !baseline.mutation.has(instance));
+    if (fresh.length > 0) {
+      leaks.push(`MutationObserver 泄漏 ${fresh.length} 个实例（未 disconnect）`);
+    }
   }
 
   for (const [index, instance] of [...instances.resize].entries()) {
-    const targets = (instance as ObservableResizeObserver).targets;
-    const size = targets?.size ?? 0;
-    if (size > 0) {
-      leaks.push(`ResizeObserver[${index}] 仍观察着 ${size} 个元素（未 unobserve）`);
+    const size = (instance as ObservableResizeObserver).targets?.size ?? 0;
+    const before = baseline?.resizeTargets.get(instance) ?? 0;
+    const delta = size - before;
+    if (delta > 0) {
+      leaks.push(`ResizeObserver[${index}] 仍观察着 ${delta} 个元素（未 unobserve）`);
     }
   }
 
@@ -147,6 +205,8 @@ export function mountTest(name: string, options: MountTestOptions): void {
   describe(`${name} · mount / unmount`, () => {
     it('渲染 → 更新 → 卸载：不抛错、不告警、不留观察者', async () => {
       const capture = captureWarnings();
+      // 增量基线：只统计「本次挂载新增」的泄漏。理由见 ObserverBaseline 的注释。
+      const baseline = assertLeak ? snapshotObservers() : null;
       let destroyed = false;
 
       try {
@@ -172,7 +232,7 @@ export function mountTest(name: string, options: MountTestOptions): void {
       assertNoUnexpectedWarnings(capture.records, options.allow, `mountTest('${name}')`);
 
       if (assertLeak) {
-        expect(describeObserverLeaks()).toEqual([]);
+        expect(describeObserverLeaks(baseline)).toEqual([]);
       }
     });
   });

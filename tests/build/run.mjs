@@ -70,15 +70,65 @@ const MIN_NODE_MINOR = 12;
 // 工具
 // ---------------------------------------------------------------------------
 
+/**
+ * 列出要构建的包目录，按**拓扑序**排列（被依赖的在前）。
+ *
+ * ── 为什么不能按目录名字母序（2026-09-17 修）────────────────────────────────
+ *
+ * 原实现是 `readdirSync(...).sort()`，即 a11y → form-core → icons → … → **ui → utils**。
+ * 而 `ui` 依赖 `utils`/`theme`：它的 `build:done` 钩子要 `import('./dist/index.mjs')`，
+ * 那个产物在运行期会 `import '@apollo-design/theme'` —— theme 还没构建时 ui 直接失败。
+ *
+ * 同类问题在 foundation 层也存在（`overlay` 依赖 `portal`/`position`，字母序却排在它们前面），
+ * 只是那些包当时恰好已有 dist 才没暴露。第一个组件落地把它变成了必然失败。
+ *
+ * 拓扑序不是「优化」，是**正确性**：unbuild 打包 JS 时把 workspace 依赖当 external，
+ * 但出 `.d.ts`、跑 `build:done` 钩子时都要能解析到依赖的产物。
+ *
+ * ⚠️ 根 `package.json` 的 `pnpm build` 走不了这条路：`pnpm -r run build` 会因为
+ *    「每个包都 devDepend on test-utils，而 test-utils 又 depend on theme/utils」
+ *    报 `ERR_PNPM_TASK_CYCLE`。所以**本文件才是本仓库的权威构建入口**。
+ */
 function listPackageDirs() {
-  return fs
+  const dirs = fs
     .readdirSync(PACKAGES_DIR, { withFileTypes: true })
     .filter(
       (d) => d.isDirectory() && fs.existsSync(path.join(PACKAGES_DIR, d.name, 'package.json')),
     )
     .map((d) => d.name)
-    .filter((d) => args.pkg === null || d === args.pkg)
     .sort();
+
+  const nameOf = new Map();
+  const depsOf = new Map();
+  for (const dir of dirs) {
+    const pkg = readJson(path.join(PACKAGES_DIR, dir, 'package.json'));
+    nameOf.set(dir, pkg.name);
+    const local = new Set();
+    for (const dep of Object.keys(pkg.dependencies ?? {})) {
+      if (dep.startsWith('@apollo-design/')) local.add(dep);
+    }
+    depsOf.set(dir, local);
+  }
+
+  const ordered = [];
+  const visited = new Set();
+  const visiting = new Set();
+  const visit = (dir) => {
+    // 环保护：真出现环时按访问序输出，让构建去报真实的错，而不是在这里死循环。
+    if (visited.has(dir) || visiting.has(dir)) return;
+    visiting.add(dir);
+    for (const depName of depsOf.get(dir) ?? []) {
+      for (const [otherDir, otherName] of nameOf) {
+        if (otherName === depName) visit(otherDir);
+      }
+    }
+    visiting.delete(dir);
+    visited.add(dir);
+    ordered.push(dir);
+  };
+  for (const dir of dirs) visit(dir);
+
+  return ordered.filter((d) => args.pkg === null || d === args.pkg);
 }
 
 function readJson(file) {
@@ -330,6 +380,150 @@ async function checkDefaultThemeCss(dir, name) {
 }
 
 /**
+ * B7 · ui：组件 CSS 引用的每个 `--apollo-*` 变量都必须真实存在。
+ *
+ * 为什么 ui 的 B7 与 theme 的不是同一件事：
+ *   theme 的 B7 校验「CSS 里声明的默认值 == 运行时算出来的默认值」（防止 CSS 是旧构建）。
+ *   ui 不产出 token 值，它**消费** token。所以它真正的风险是另一类：
+ *   样式里写了 `var(--apollo-margin-xs)`，而 theme 根本没有这个变量 ——
+ *   这不会报错、不会警告，只会**静默失效**（浏览器把未定义的 var() 当作空值）。
+ *
+ *   在 72 个组件 × 每组件十几个变量的规模下，靠人眼查变量名是不可行的，
+ *   所以这条检查是「零运行时 + 静态 CSS」这套架构的必要配套。
+ *
+ * 判据：ui 的全部 `.css` 产物里出现的每个 `var(--apollo-*)`，
+ *      都能在 `packages/theme/dist/tokens.css` 的 `:root` 块里找到声明。
+ */
+function checkUiCssTokens(dir, name) {
+  const themeTokens = path.join(ROOT, 'packages/theme/dist/tokens.css');
+  if (!fs.existsSync(themeTokens)) {
+    add(
+      name,
+      'B7',
+      'FAIL',
+      '找不到 packages/theme/dist/tokens.css（ui 的样式依赖它，先构建 theme）',
+    );
+    return false;
+  }
+
+  const rootBlock = /:root\{([^}]*)\}/.exec(fs.readFileSync(themeTokens, 'utf8'));
+  if (!rootBlock) {
+    add(name, 'B7', 'FAIL', 'theme 的 tokens.css 里没有 :root 块');
+    return false;
+  }
+  const declared = new Set(
+    rootBlock[1]
+      .split(';')
+      .map((decl) => decl.slice(0, decl.indexOf(':')).trim())
+      .filter((v) => v.startsWith('--')),
+  );
+
+  const cssFiles = walk(path.join(dir, 'dist')).filter((f) => f.endsWith('.css'));
+  if (cssFiles.length === 0) {
+    add(name, 'B7', 'FAIL', 'dist/ 下没有 CSS 产物，无从校验变量引用');
+    return false;
+  }
+
+  const unknown = new Map();
+  let referenced = 0;
+  for (const file of cssFiles) {
+    for (const match of fs.readFileSync(file, 'utf8').matchAll(/var\((--[a-z0-9-]+)\)/g)) {
+      const variable = match[1];
+      referenced += 1;
+      if (!declared.has(variable)) {
+        const rel = path.relative(ROOT, file);
+        if (!unknown.has(variable)) unknown.set(variable, rel);
+      }
+    }
+  }
+
+  if (referenced === 0) {
+    add(
+      name,
+      'B7',
+      'FAIL',
+      'CSS 里没有任何 var(--apollo-*) 引用 —— 样式很可能没走 Token 系统（H9）',
+    );
+    return false;
+  }
+  if (unknown.size > 0) {
+    const detail = [...unknown.entries()]
+      .slice(0, 5)
+      .map(([variable, file]) => `${variable}（${file}）`)
+      .join(', ');
+    add(name, 'B7', 'FAIL', `CSS 引用了 theme 未声明的变量（${unknown.size} 个）: ${detail}`);
+    return false;
+  }
+
+  add(
+    name,
+    'B7',
+    'PASS',
+    `${referenced} 处 var(--apollo-*) 引用全部在 theme 的 tokens.css 里有声明`,
+  );
+  return true;
+}
+
+/**
+ * B8 · SSR 冒烟：组件能在没有 `window` / `document` 的环境里渲染出内容。
+ *
+ * 为什么值得单列一条：零运行时 + `Teleport` / `ResizeObserver` 这类 DOM 依赖，
+ * 很容易在浏览器里一切正常、在 SSR 下直接抛 `window is not defined`。
+ * 而这类问题**只有真跑一次**才会暴露 —— 类型检查看不见。
+ *
+ * 判据（两条都要满足）：
+ *   1. `renderToString` 不抛错
+ *   2. 产出非空 —— 空串说明组件「渲染成功了但什么都没渲染」，那同样是坏的
+ */
+async function checkSsr(dir, name) {
+  let mod;
+  try {
+    mod = await import(path.join(dir, 'dist/index.mjs'));
+  } catch (e) {
+    add(name, 'B8', 'FAIL', `无法 import dist/index.mjs: ${e.message}`);
+    return false;
+  }
+
+  const styles = mod.COMPONENT_STYLES;
+  if (!Array.isArray(styles) || styles.length === 0) {
+    add(name, 'B8', 'FAIL', 'dist 里没有导出 COMPONENT_STYLES，无法确定要冒烟哪些组件');
+    return false;
+  }
+
+  let { renderToString } = {};
+  try {
+    ({ renderToString } = await import('vue/server-renderer'));
+    const { createSSRApp, h } = await import('vue');
+    const failures = [];
+    for (const entry of styles) {
+      // 组件目录名 → 导出名（`empty` → `Empty`）。约定来自 COMPONENT-RULES.md §12.3。
+      const exportName = entry.name.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+      const component = mod[exportName];
+      if (!component) {
+        failures.push(`${entry.name}: 包入口没有导出 ${exportName}`);
+        continue;
+      }
+      try {
+        const html = await renderToString(createSSRApp({ render: () => h(component) }));
+        if (html.trim() === '') failures.push(`${entry.name}: SSR 产出为空`);
+      } catch (e) {
+        failures.push(`${entry.name}: ${e.message}`);
+      }
+    }
+    if (failures.length > 0) {
+      add(name, 'B8', 'FAIL', `SSR 冒烟失败: ${failures.slice(0, 3).join(' | ')}`);
+      return false;
+    }
+  } catch (e) {
+    add(name, 'B8', 'FAIL', `SSR 冒烟无法执行: ${e.message}`);
+    return false;
+  }
+
+  add(name, 'B8', 'PASS', `${styles.length} 个组件在无 DOM 环境下渲染出非空内容`);
+  return true;
+}
+
+/**
  * B5~B8 的适用性。
  *
  * 这里必须逐包判断，不能一刀切标 PENDING —— 否则 utils 这种「零 CSS、零组件」的包
@@ -340,8 +534,13 @@ async function checkDefaultThemeCss(dir, name) {
  *   - B8  只适用于含组件的包（ui）
  */
 const CSS_PACKAGES = new Set(['@apollo-design/theme', '@apollo-design/ui']);
-/** 已经真正产出 CSS 的包。`ui` 还差组件样式，所以它仍在 CSS_PACKAGES 里但不在本集合。 */
-const CSS_READY = new Set(['@apollo-design/theme']);
+/**
+ * 已经真正产出 CSS 的包。
+ *
+ * `ui` 在 2026-09-17 第一个组件（empty）落地后加入 —— 裁决 `ui-style-output` = A
+ * 让 ui 产出 `dist/index.css` + `dist/<component>/style.css`，于是 B5 可判、B7 换判据。
+ */
+const CSS_READY = new Set(['@apollo-design/theme', '@apollo-design/ui']);
 const COMPONENT_PACKAGES = new Set(['@apollo-design/ui']);
 
 async function markPending(name, dir) {
@@ -350,10 +549,16 @@ async function markPending(name, dir) {
 
   if (css && CSS_READY.has(name)) {
     const hasCss = checkCssArtifact(dir, name);
-    if (hasCss) await checkDefaultThemeCss(dir, name);
-    else add(name, 'B7', 'SKIP', '没有 CSS 产物，跳过主题一致性校验');
+    if (!hasCss) {
+      add(name, 'B7', 'SKIP', '没有 CSS 产物，跳过主题一致性校验');
+    } else if (name === '@apollo-design/theme') {
+      // theme 产出 token 值，校验「CSS 里的值 == 运行时算出的值」
+      await checkDefaultThemeCss(dir, name);
+    } else {
+      // ui 消费 token，校验「引用的变量真的存在」
+      checkUiCssTokens(dir, name);
+    }
   } else if (css) {
-    // 会产 CSS 但还没产（ui 要等组件落地）—— 这是"未做"，不是"做错了"
     add(name, 'B5', 'PENDING', '本包应当产出 CSS，但组件样式尚未落地');
     add(name, 'B7', 'PENDING', '依赖 B5 的 CSS 产物');
   } else {
@@ -362,8 +567,13 @@ async function markPending(name, dir) {
   }
 
   if (comp) {
-    add(name, 'B6', 'PENDING', '需要 budget.json 体积预算与按组件按需引入入口');
-    add(name, 'B8', 'PENDING', '需要可 SSR 的组件');
+    add(
+      name,
+      'B6',
+      'PENDING',
+      '需要 budget.json 体积预算与按组件按需引入入口（见 docs 的 ui 样式裁决；当前未落地）',
+    );
+    await checkSsr(dir, name);
   } else {
     add(name, 'B6', 'n/a', '裁决 A 下为单文件产物，无按组件按需入口可比对');
     add(name, 'B8', 'n/a', '本包不含组件，无 SSR 冒烟对象');
