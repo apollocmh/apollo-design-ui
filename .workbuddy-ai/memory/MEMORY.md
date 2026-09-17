@@ -159,28 +159,39 @@ cd /Users/nanren/Code/apollo-design-ui && git merge --ff-only <当前分支>   #
 
 ## ⚠️ 未决事项（接手先看）
 
-1. **下一个组件**：`empty` 已推到 `blocked`（只差 L6），`next-task` 会给新目标。
-   建议第二个选**有交互**的组件（如 `button`），把 L2 那层也验一遍。
-2. ⚠️⚠️ **`VNodeChild` 类型的 prop 必须在 `withDefaults` 里显式声明 `undefined` 默认值**
+1. ✅ **`empty` 已 completed（2026-09-18，L6 基建 + 21 组 0.000% exact）** —— `next-task`
+   会给新目标。建议第二个选**有交互**的组件（如 `button`），把 L2 那层也验一遍。
+2. ✅ **L6 视觉回归基建已落地**（`tests/visual/`，三种模式：both / baseline / compare）——
+   见 `tests/visual/README.md` 与 `tests/visual/matrix.mjs` 的 `LIMITATIONS`（dark/compact 待
+   ConfigProvider）。
+3. ⚠️ **下一次 merge components.json 之前必须做两件事**（2026-09-18 教训）：
+   1. **备份进度字段** —— 上次把 `empty` 的 13 个维度从 blocked 重置为 todo（合并冲突取错侧，
+      notes 保留但 status 被冲）。合并前先 `git show 668febb:registry/components.json` 对比目标
+      组件的进度，丢一个都补不回来。
+   2. **重跑 `gen-registry.mjs` 后立刻验证进度** —— `gen-registry.mjs` 头注释声明「状态字段保留」，
+      实测合并会丢，所以写入完成后再跑一次
+      `pnpm run registry:next --component <已收口组件>` 看 status 是否仍是 completed。
+4. ⚠️⚠️ **`VNodeChild` 类型的 prop 必须在 `withDefaults` 里显式声明 `undefined` 默认值**
    —— Vue 的 Boolean prop 转换会把「未传」变成 `false`（PITFALLS 46 / COMPATIBILITY D21）。
    症状极隐蔽：组件能渲染，只是少一块；不报错、不警告、类型检查也过。
-3. **L6 视觉回归基建**是 `empty` 从 `blocked` 到 `completed` 的唯一缺口，也是 G9 的门。
-   裁决已定（`visual-baseline-in-git` = A：入库 git）。
-4. **D24（locale 变更不触发重渲染）** 的正解是给 `@apollo-design/locale` **新增**一个
+5. ⚠️ **macOS 12 机器上 Playwright 1.63 不自带 Chromium**（`playwright install chromium`
+   直接报 `does not support chromium on mac12`）。`tests/visual/stabilize.mjs` 已自动降级
+   到 `channel: 'chrome'`（系统 Chrome）。其他需要 Playwright 的脚本同样要这么写。
+6. **D24（locale 变更不触发重渲染）** 的正解是给 `@apollo-design/locale` **新增**一个
    返回 `ComputedRef` 的变体 —— **不能改 `useLocale` 的签名**（会破坏它已完成的契约）。
-5. **B6（按需引入体积预算）** 仍 PENDING：需要 `budget.json` + 一次 vite lib 构建量体积。
-6. **`biome.json` 不能写注释**，且 `biome check --write` 在配置非法时会**静默重排全仓**
+7. **B6（按需引入体积预算）** 仍 PENDING：需要 `budget.json` + 一次 vite lib 构建量体积。
+8. **`biome.json` 不能写注释**，且 `biome check --write` 在配置非法时会**静默重排全仓**
    （PITFALLS 47）。改完配置先跑一次不带 `--write` 的检查。
-7. **六个 foundation 包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` /
+9. **六个 foundation 包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` /
    `motion.CSSMotion` / `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList` /
    `locale` 全部。`empty` 首次消费了 `locale.useLocale` 与 `theme.token2CSSVar`，
-   **发现 locale 的响应式缺口（第 4 条）** —— 其余仍未联调。
-8. **`verification.typecheck` 是无人校验的 Agent 断言**（`foundation-status.mjs` 从不计算它，
-   而 E16 拿它当 `completed` 依据）。机制缺口未修。
-9. **无上游可对齐的区域要显式标注**：`a11y` 的 typeahead 零命中、live region 的隐藏样式
-   是实践判断。这类结论必须写进 contract §9，不能当已验证。
-10. ⚠️ **全仓 `vitest run --project unit` 在这台 16G 机器上会被 OOM killer 杀掉**（exit 137、
+   **发现 locale 的响应式缺口（第 6 条）** —— 其余仍未联调。
+10. **`verification.typecheck` 是无人校验的 Agent 断言**（`foundation-status.mjs` 从不计算它，
+    而 E16 拿它当 `completed` 依据）。机制缺口未修。
+11. **无上游可对齐的区域要显式标注**：`a11y` 的 typeahead 零命中、live region 的隐藏样式
+    是实践判断。这类结论必须写进 contract §9，不能当已验证。
+12. ⚠️ **全仓 `vitest run --project unit` 在这台 16G 机器上会被 OOM killer 杀掉**（exit 137、
     零输出）。用 `foundation-status.mjs --verify`（按包跑）或**逐项目跑**作为全仓证据。
     连续跑多个 project 也会 OOM —— 跑完一个等内存回收再跑下一个。
-11. **`locale` 最该先确认的一条**：裁决 A 是单文件产物，73 个语言包都在同一个
+13. **`locale` 最该先确认的一条**：裁决 A 是单文件产物，73 个语言包都在同一个
     `dist/index.mjs` 里 —— 未使用的语言包能否被摇掉**没有实测打包体积**。
