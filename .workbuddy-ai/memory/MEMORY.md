@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具的所有权、易错判据、未决事项。
 > 规则本体看 `AGENTS.md` / `WORKFLOW.md` / `TESTING.md` / `COMPATIBILITY.md`；
-> 踩过的坑看同目录 **`PITFALLS.md`**（36 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
+> 踩过的坑看同目录 **`PITFALLS.md`**（41 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -100,10 +100,11 @@ git merge --ff-only workbuddy/master-1c4ca77a
 ## ⚠️ 未决事项（接手先看）
 
 1. AR1 / AR2 均已解除；motion 的三项遗留见 registry `notes`。
-2. **`next-task` 两个视图都指向 `@apollo-design/locale`**（virtual-list 2026-09-17 收口，
-   foundation 9/13）。剩余 4 个 todo：locale / overlay / form-core / picker。
-3. **五个包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` / `motion.CSSMotion` /
-   `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList`。联调时若 API 形状不够用，需回来改并同步 contract 文档。
+2. **`next-task` 两个视图分歧**（locale 2026-09-17 收口，foundation **10/13**）：
+   推进顺序指向 `overlay`，「可开始完整实现」指向 `form-core`。
+   剩余 3 个 todo：overlay / form-core / picker。
+3. **六个包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` / `motion.CSSMotion` /
+   `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList` / `locale` 全部。联调时若 API 形状不够用，需回来改并同步 contract 文档。
    这条风险重复出现在四个包的 registry `notes` 里。⚠️ portal 另有：SSR「不建容器」只覆盖了
    `resolveContainer` 的早退分支。
 4. **`verification.typecheck` 是无人校验的 Agent 断言** —— `foundation-status.mjs` 把它初始化为
@@ -114,3 +115,9 @@ git merge --ff-only workbuddy/master-1c4ca77a
 6. **无上游可对齐的区域要显式标注**：`a11y` 的 typeahead 在 antd + rc-* 里零命中（语义自定义）；
    `a11y` 的 live region 隐藏样式选 1×1+clip 是实践判断。这类结论必须写进 contract §9，不能当已验证。
 7. 用户此前要求：**规划完成后等待确认，不要自行进入大规模组件实现。**
+8. ⚠️ **全仓 `vitest run --project unit` 在这台 16G 机器上会被 OOM killer 杀掉**（exit 137、
+   零输出，症状像「命令写错」）。用 `foundation-status.mjs --verify`（按包跑，覆盖全部 13 个包）
+   或逐项目跑作为全仓证据。细节见 `PITFALLS.md` 第 41 条。
+9. ⚠️ **`locale` 最该先确认的一条**：裁决 A 是单文件产物，73 个语言包都在同一个
+   `dist/index.mjs` 里 —— 未使用的语言包能否被摇掉**没有实测打包体积**
+   （已声明 `sideEffects: false`）。契约文档 §9 第 7 条。

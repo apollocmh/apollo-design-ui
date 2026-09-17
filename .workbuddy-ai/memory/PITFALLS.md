@@ -101,3 +101,25 @@
 36. **`git worktree` 里另一个 worktree 的未提交内容会让合并被拒**。
     合并到主分支前必须先在那边 `git stash push -u`（保留全部，可恢复），
     而不是 `checkout`/`clean` 掉。
+37. **`inject` 只沿父链解析** —— 组件**拿不到自己在同一个 `setup` 里 `provide` 的东西**。
+    测试 helper 必须「父组件 provide + 子组件 inject」。实测代价：locale 的第一版
+    把两者写在同一个 setup 里，5 个用例全绿不了。
+38. **`--check` 类命令不能有任何写操作。** 实测：`gen-locale.mjs` 第一版把「写测试快照」
+    放在了 `if (args.check)` 分支**之前** ⇒ 「检查」会改仓库。
+    写检查命令后要通读一遍它自己的副作用。
+39. **调用外部生成器的测试要显式给 `timeout`。** 建临时树 + 求值 73 个模块要好几秒，
+    远超 vitest 默认的 5s（报错是「Test timed out in 5000ms」）。
+40. **生成物 / 上游原样文件要加进 biome 忽略。** locale 加了两处：
+    `!**/packages/locale/src/locales`（生成物，同 icons）与
+    `!**/registry/source/locale-rc`（上游原样 js，同 `antd-*.raw.json`）。
+    ⚠️ **别用 `JSON.stringify` 改 `biome.json`** —— 它会展开 biome 自己会折叠的短数组，
+    导致 `biome check .` 报「Formatter would have printed the following content」。
+    改完必须 `biome check --write biome.json`。
+41. ⚠️⚠️ **全仓 `vitest run --project unit` 在这台 16G 机器上会被 OOM killer 杀掉
+    （exit 137，且**没有任何输出**）。** 跑完 20+ 个测试文件后只剩 ~40MB 空闲。
+    症状极像「命令写错了」，实际是内存。对策：
+    - 优先用 `registry/tools/foundation-status.mjs --verify`（**按包**跑，内存友好，
+      覆盖全部 13 个包 —— 实测 2254 用例）
+    - 或逐项目跑：`--project types` / `dom-contract` / `a11y` / `theme`
+    - 或 `--maxWorkers=1 --no-file-parallelism`
+    - 被杀后等 ~20 秒内存会回收（实测 41MB → 1.1GB），别立刻重试
