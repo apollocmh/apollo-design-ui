@@ -19,8 +19,8 @@
 
 import { useLocale } from '@apollo-design/locale';
 import { isRenderable, useDevWarning } from '@apollo-design/utils';
-import { computed, ref, useSlots, type VNodeChild } from 'vue';
-import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { computed, ref, useAttrs, useSlots, type VNodeChild } from 'vue';
+import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { EmptyImage as DefaultEmptyImage, SimpleEmptyImage } from './components/Images';
 import { ImageNode, NodeRenderer } from './components/NodeRenderer';
@@ -58,6 +58,7 @@ const props = withDefaults(defineProps<EmptyProps>(), {
   description: undefined,
 });
 const slots = useSlots();
+const attrs = useAttrs();
 defineSlots<{ default?: () => VNodeChild }>();
 
 const {
@@ -146,18 +147,43 @@ const rootClass = computed(() => [
 
 const imageClass = computed(() => [`${prefixCls.value}-image`, mergedClassNames.value.image]);
 
-/** `imageStyle` 与 `styles.image` 合并，后者覆盖前者（与 antd 一致）。 */
-const imageStyle = computed(() => ({
-  ...props.imageStyle,
-  ...mergedStyles.value.image,
-}));
-
 const descriptionClass = computed(() => [
   `${prefixCls.value}-description`,
   mergedClassNames.value.description,
 ]);
 
 const footerClass = computed(() => [`${prefixCls.value}-footer`, mergedClassNames.value.footer]);
+
+// ---------------------------------------------------------------------------
+// 样式
+//
+// ⚠️ 四处都必须过 `nonEmptyStyle`。`mergeStyles()` 的返回值恒是对象（可能是 `{}`），
+//    直接绑 `:style` 会让 Vue 渲染出 `style=""` —— 而 React（antd）在样式为空时
+//    **不输出该属性**。这个差异 L4 **测不出来**（投影把「没有 style 属性」与
+//    `style=""` 都归一化成空串），是被渲染预览页时肉眼发现的。
+//    详见 `_internal/use-merge-semantic.ts` 的 `nonEmptyStyle`。
+// ---------------------------------------------------------------------------
+
+const rootStyleAttrs = computed(() => styleAttrs(mergedStyles.value.root));
+
+/** `imageStyle` 与 `styles.image` 合并，后者覆盖前者（与 antd 一致）。 */
+const imageStyleAttrs = computed(() =>
+  styleAttrs({ ...props.imageStyle, ...mergedStyles.value.image }),
+);
+
+const descriptionStyleAttrs = computed(() => styleAttrs(mergedStyles.value.description));
+
+const footerStyleAttrs = computed(() => styleAttrs(mergedStyles.value.footer));
+
+/**
+ * 根元素的属性对象。
+ *
+ * ⚠️ 不能写成两个裸 `v-bind`（`v-bind="x" v-bind="$attrs"`）—— Vue 会报
+ *    「Duplicate attribute」。所以这里把 `$attrs` 一起并进来。
+ * ⚠️ 样式的处理见 `styleAttrs` 的注释：SSR 对 `style` 键是无条件输出的，
+ *    必须让空样式时**连键都不出现**。
+ */
+const rootAttrs = computed(() => ({ ...attrs, ...rootStyleAttrs.value }));
 
 // ---------------------------------------------------------------------------
 // 暴露
@@ -168,14 +194,14 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" :style="mergedStyles.root" v-bind="$attrs">
-    <div :class="imageClass" :style="imageStyle">
+  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+    <div :class="imageClass" v-bind="imageStyleAttrs">
       <ImageNode :node="mergedImage" :alt="alt" />
     </div>
-    <div v-if="showDescription" :class="descriptionClass" :style="mergedStyles.description">
+    <div v-if="showDescription" :class="descriptionClass" v-bind="descriptionStyleAttrs">
       <NodeRenderer :node="des" />
     </div>
-    <div v-if="showFooter" :class="footerClass" :style="mergedStyles.footer">
+    <div v-if="showFooter" :class="footerClass" v-bind="footerStyleAttrs">
       <slot />
     </div>
   </div>

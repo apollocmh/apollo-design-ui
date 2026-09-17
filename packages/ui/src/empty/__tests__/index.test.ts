@@ -200,6 +200,15 @@ describe('Empty · class / style / 属性透传', () => {
     expect(style).not.toContain('red');
   });
 
+  it('★ 没有样式时**不输出** `style` 属性（antd 也不输出）', () => {
+    // 这条差异 L4 **测不出来**：投影会把「没有 style 属性」与 `style=""` 都归一化成空串。
+    // 所以必须在这里钉住。反例：直接绑 `:style="mergedStyles.root"`（恒是对象）会输出 `style=""`。
+    const w = mountEmpty();
+    expect(w.attributes('style')).toBeUndefined();
+    expect(w.find(`.${P}-image`).attributes('style')).toBeUndefined();
+    expect(w.find(`.${P}-description`).attributes('style')).toBeUndefined();
+  });
+
   it('★ `style` 覆盖 `styles.root`（合并顺序里最反直觉的一条）', () => {
     const w = mountEmpty({
       style: { color: 'green' },

@@ -110,13 +110,8 @@ for (const component of targets) {
       encoding: 'utf8',
       stdio: 'pipe',
     });
-    process.stdout.write(
-      out
-        .split('\n')
-        .filter(Boolean)
-        .map((line) => `  ${line}`)
-        .join('\n') + '\n',
-    );
+    const lines = out.split('\n').filter(Boolean);
+    process.stdout.write(`${lines.map((line) => `  ${line}`).join('\n')}\n`);
   } catch (err) {
     failures.push(component);
     const out = `${err.stdout ?? ''}${err.stderr ?? ''}`.split('\n').filter(Boolean);

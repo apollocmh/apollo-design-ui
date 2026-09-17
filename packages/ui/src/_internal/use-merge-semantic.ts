@@ -138,6 +138,40 @@ export function semanticRootStyle(
   return style ? { [key]: style } : undefined;
 }
 
+/**
+ * 把「可能为空的样式」转成可以直接 `v-bind` 的属性对象。
+ *
+ * 空样式返回 `{}`（**连 `style` 这个键都没有**），非空返回 `{ style }`。
+ *
+ * ── 为什么必须做这一步（2026-09-18，empty 实测）──────────────────────────────
+ *
+ * `mergeStyles()` 的返回值**恒**是对象（可能是 `{}`）。直接绑 `:style` 时：
+ *
+ * | 渲染路径 | 结果 |
+ * |---|---|
+ * | 客户端 | `patchStyle` 会把空样式移除 —— 没有 `style` 属性 ✓ |
+ * | **SSR** | `ssrRenderAttrs` 对 `style` 键是**无条件**输出的 ⇒ 渲染出 `style=""` ✗ |
+ *
+ * React（antd）在样式为空时**不输出该属性**。所以 SSR 产物会与上游有差异，
+ * 而且每个元素多 9 字节 —— 72 个组件 × 多层结构累积起来是可观的体积。
+ *
+ * 实测：Empty 一层就有 3 个元素带 `style=""`；改成 `v-bind="styleAttrs(x)"` 后归零。
+ *
+ * ⚠️ 这个差异 L4 **测不出来** —— 投影会把「没有 style 属性」与 `style=""`
+ *    都归一化成空串（`(node.style ?? []).join(';')` 两边都是 `''`）。
+ *    它是被渲染 SSR 预览页时肉眼发现的，所以既有 L1 断言也有这里。
+ *
+ * ⚠️ 所有用 `useMergeSemantic` 的组件都应该这样绑样式，而不是 `:style="mergedStyles.x"`。
+ */
+export function styleAttrs(style: CSSProperties | undefined): { style?: CSSProperties } {
+  if (!style) return {};
+  const record = style as Record<string, unknown>;
+  for (const key of Object.keys(record)) {
+    if (record[key] !== undefined) return { style };
+  }
+  return {};
+}
+
 export interface UseMergeSemanticResult<CN extends object, ST extends object> {
   classNames: ComputedRef<Partial<CN>>;
   styles: ComputedRef<Partial<ST>>;

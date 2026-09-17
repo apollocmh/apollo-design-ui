@@ -204,3 +204,16 @@
     `paths` 清单也是旧的（缺 overlay / a11y / locale）。
     ⚠️ `scaffold-packages.mjs` 的 `--force` 会**覆盖 `src/index.ts`**（清空实现），
     只能安全地用 `--force-pkg`（只刷 package.json）——所以 tsconfig 只能手工同步。
+
+54. ⚠️ **Vue 的 SSR 对 `style` 键是「无条件输出」的** —— 值为 `undefined` 时渲染成
+    `style=""`，而 React 在样式为空时**不输出该属性**。
+    客户端 `patchStyle` 会把空样式移除，所以**只有 SSR 产物**有这个差异，
+    本地用 `mount()` 测不出来。
+    ⚠️ L4 的 DOM 投影也**测不出来**（把「没有 style 属性」与 `style=""` 都归一化成空串）。
+    Empty 一层就有 3 个元素中招，是渲染 SSR 预览页时肉眼发现的。
+    **对策**：`styleAttrs(style)` —— 空样式返回 `{}`（连键都没有），非空返回 `{ style }`，
+    然后 `v-bind="styleAttrs(x)"` 而不是 `:style="x"`。
+
+55. ⚠️ **同一个元素上不能有两个裸 `v-bind`**：`v-bind="x" v-bind="$attrs"`
+    会被 Vue 判为 `Duplicate attribute` 而**编译失败**（报在 `vite:vue` 插件里，
+    错误信息只有一行，不看上下文很难定位）。把 `$attrs` 并进同一个对象。

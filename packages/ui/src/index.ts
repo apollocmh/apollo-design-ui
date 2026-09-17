@@ -38,6 +38,7 @@ export {
   mergeStyles,
   resolveSemantic,
   semanticRootStyle,
+  styleAttrs,
   useMergeSemantic,
 } from './_internal/use-merge-semantic';
 export type { WithInstall } from './_internal/with-install';

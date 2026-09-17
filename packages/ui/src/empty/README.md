@@ -228,6 +228,27 @@ Vue 的 props 对象**恒**包含全部声明过的键（未传时值为 `undefi
    只校验路径存在 —— 所以必须 `declaration: false` + 用 `vue-tsc` 出真声明，
    并在构建钩子末尾**断言产物里含 `declare` / `export type`**。
 
+### 8.5 样式要用 `styleAttrs()` 绑，不要直接 `:style`
+
+```ts
+// ✗ 会渲染出 style=""
+<div :style="mergedStyles.root">
+// ✓ 空样式时连 style 键都不出现
+<div v-bind="styleAttrs(mergedStyles.root)">
+```
+
+`mergeStyles()` 的返回值**恒**是对象（可能是 `{}`）。客户端 `patchStyle` 会把空样式移除，
+所以本地看起来没问题；但 **Vue 的 SSR（`ssrRenderAttrs`）对 `style` 键是无条件输出的** ——
+`undefined` 会渲染成 `style=""`，而 antd 不输出该属性。
+
+这个差异 **L4 测不出来**（投影把「没有 style 属性」与 `style=""` 都归一化成空串），
+是被 SSR 预览页肉眼发现的。Empty 一层就有 3 个元素中招。
+
+### 8.6 根元素不要写两个裸 `v-bind`
+
+`v-bind="x" v-bind="$attrs"` 会被 Vue 判为 **Duplicate attribute** 而编译失败。
+把 `$attrs` 并进同一个对象（见 `Empty.vue` 的 `rootAttrs`）。
+
 ---
 
 ## 9. 已知缺口
