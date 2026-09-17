@@ -217,3 +217,32 @@
 55. ⚠️ **同一个元素上不能有两个裸 `v-bind`**：`v-bind="x" v-bind="$attrs"`
     会被 Vue 判为 `Duplicate attribute` 而**编译失败**（报在 `vite:vue` 插件里，
     错误信息只有一行，不看上下文很难定位）。把 `$attrs` 并进同一个对象。
+
+## 工具 / 沙箱（续 · 2026-09-18）
+
+56. 🚨 **`registry/dependencies.json` 是生成物，不要直接改**。它的 `$comment` 写明
+    GENERATED，源是 `registry/source/rc-map.mjs`（每条记录）+ `gen-registry.mjs` 的
+    `strategyLegend`。直接改它会被下次 `gen-registry.mjs` **静默覆盖** ——
+    实测：strategy 的改动在跑过一次 `registry:check` 后消失，而**门禁照样全绿**
+    （E19 只看 package.json 与产物，不看 strategy），所以不会有任何红灯提醒。
+    对策：改源文件 → `node registry/tools/gen-registry.mjs` → 验证
+    `summary.strategyBreakdown` 真的变了。
+
+57. **扫描构建产物做「禁用依赖」检查前，必须先剥注释**。unbuild **不剥 JSDoc**，
+    而本仓库注释里大量出现「曾经这样写 `from '@ant-design/…'`」这类示例文本，
+    会被当成真实 import 报出来（E19 首次运行就撞上：报 `icons/dist/index.d.ts`
+    引用了上游类型，实际那 13 处命中全在注释里）。
+    对策：`stripComments()`（块注释 + 行注释），`validate-registry.mjs` 的 E11/E19 已共用。
+
+58. **`@ant-design/icons-svg` 的 `es/*.js` 不能 `import()`**：上游 package.json 没有
+    `"type": "module"`，那些文件虽是 ESM 语法，Node 仍按 CJS 解析 →
+    `SyntaxError: Unexpected token 'export'`。要在构建期**求值**它们，只能
+    `require()` **`lib/asn/*.js`**（CJS 产物）。
+
+59. ⚠️ **master 可能已经前进，`git merge --ff-only` 不一定可行**。2026-09-18 实测
+    master 领先 4 个提交（另一个会话在那边收口 empty）。正确顺序：
+    ① 当前 worktree `git merge master`；② 解冲突（`registry/*.json` 取 ours 后
+    **重跑生成器**；`memory/<日期>.md` 的 add/add 两边内容都留）；
+    ③ 确认 `git rev-list --left-right --count master...HEAD` 变成 `0 N`；
+    ④ 才去 master worktree 做 `--ff-only`。另：那边的 `dist/` 是旧构建，
+    不重建的话 E19 会拿旧产物报假阳性。
