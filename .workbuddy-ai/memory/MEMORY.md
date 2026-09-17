@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具的所有权、易错判据、未决事项。
 > 规则本体看 `AGENTS.md` / `WORKFLOW.md` / `TESTING.md` / `COMPATIBILITY.md`；
-> 踩过的坑看同目录 **`PITFALLS.md`**（27 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
+> 踩过的坑看同目录 **`PITFALLS.md`**（36 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -79,13 +79,31 @@ pnpm 12.4.2（`.npmrc` `hoist=false`）｜TS 锁 5.9.x（unbuild 3.6.1 peer）�
 | AR4 | 零运行时下 `classNames`/`styles` 优先级 | 随 config-provider |
 | AR6 | Vue 泛型对 `Table<T>` 的表达力 | 待验证 |
 
+## 主分支与合并
+
+主分支是 **`master`**，检出在另一个 worktree **`/Users/nanren/Code/apollo-design-ui`**
+（当前工作区是 `workbuddy/master-1c4ca77a`）。阶段性收口后需要合并过去。
+
+⚠️ **合并前必须先看那边的工作区**：master worktree 里常留着上一轮的未提交内容
+（实测：一份被取代的 motion 早期实现），会让合并或 fast-forward 被拒。
+处置是**先 `git stash push -u`** —— 保留全部（含未跟踪文件）、可恢复 ——
+合并完再告诉用户 stash 在哪。**不要 `checkout` / `clean` 掉别人的东西。**
+
+```bash
+# 1) 备份并清干净 master worktree
+cd /Users/nanren/Code/apollo-design-ui && git stash push -u -m "合并前自动备份"
+# 2) 快进合并（master 通常是当前分支的祖先，先确认 0 个对方独有提交）
+git rev-list --left-right --count master...workbuddy/master-1c4ca77a
+git merge --ff-only workbuddy/master-1c4ca77a
+```
+
 ## ⚠️ 未决事项（接手先看）
 
 1. AR1 / AR2 均已解除；motion 的三项遗留见 registry `notes`。
-2. **`next-task` 现指向 `@apollo-design/virtual-list`**（a11y 2026-09-17 收口）；
-   「可开始完整实现」是 `locale`。
-3. **四个包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` / `motion.CSSMotion` /
-   `portal.Portal` / `a11y` 全部组合式。联调时若 API 形状不够用，需回来改并同步 contract 文档。
+2. **`next-task` 两个视图都指向 `@apollo-design/locale`**（virtual-list 2026-09-17 收口，
+   foundation 9/13）。剩余 4 个 todo：locale / overlay / form-core / picker。
+3. **五个包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` / `motion.CSSMotion` /
+   `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList`。联调时若 API 形状不够用，需回来改并同步 contract 文档。
    这条风险重复出现在四个包的 registry `notes` 里。⚠️ portal 另有：SSR「不建容器」只覆盖了
    `resolveContainer` 的早退分支。
 4. **`verification.typecheck` 是无人校验的 Agent 断言** —— `foundation-status.mjs` 把它初始化为

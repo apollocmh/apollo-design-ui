@@ -82,3 +82,22 @@
     而 `foundation.json` 里某包的 `verification.unit.tests` 是**该包自己的** unit + types 合计
     （motion 154 = 110 + 44；a11y 204 = 134 + 70）。两者不是一回事，别拿来对账。
     核对「有没有文件没被收集」用文件数等式：`*.test.ts` 扣掉 `a11y.test.ts` / `semantic.test.ts`。
+32. **Vue 运行时的 `setStyle` 不做 px 补全。** `runtime-dom` 的 `setStyle` 只是
+    `style[prefixed] = val` —— **React 的 `dangerousStyleValue` 会补单位，Vue 只在
+    模板编译期补**。用 `h()` 在 TS 里写样式传裸数字，jsdom 的 cssstyle 与浏览器都会
+    **静默丢掉**这个声明（实测 `el.style.height = 100` → `''`，而 `left: 0` 却是 `0px`）。
+    症状极隐蔽：DOM 结构全对，只有 height/width 是空的。
+    **所有数值样式必须自己拼单位**（`\`${n}px\``）。
+33. **`ResizeObserver` 的注册发生在挂载后的下一拍**（`useResizeObserver` 用
+    `flush: 'post'` 的 watcher）⇒ 挂载后**立刻** `MockResizeObserver.trigger()`
+    是空转，`instances.size` 还是 0。必须先 `await nextTick()` 两次。
+34. **jsdom 量不到高度 ⇒ `scrollTo({index})` 会迭代到 10 次上限**并打 dev 告警
+    （「可见范围内有未测量的项」永远为真）。与上游行为一致（同一个 `MAX_TIMES`）。
+    测试里要么把项桩成可测量让循环收敛，要么静音 spy ——
+    ⚠️ **静音时必须等满 12 拍再 `mockRestore()`**，循环在测试体结束后还在跑。
+35. **vitest 报「no tests」多半是 worker 启动超时**（`Timeout waiting for worker to
+    respond`），不是没有测试文件。跑了几十轮之后会频繁出现。对策：`--maxWorkers=2`。
+    **别把它当成过滤写错**，否则会去翻根本不存在的 glob 问题。
+36. **`git worktree` 里另一个 worktree 的未提交内容会让合并被拒**。
+    合并到主分支前必须先在那边 `git stash push -u`（保留全部，可恢复），
+    而不是 `checkout`/`clean` 掉。
