@@ -17,19 +17,42 @@
 
 ## 公开 API
 
-- List 组件（虚拟列表）
-- composable：useVirtualList() / useHeights() / useScrollTo()
-- 定高模式与动态高度模式
+> ⚠️ 上游（`@rc-component/virtual-list@1.5.1`）把这个组件叫 `List`。
+> 改名 `VirtualList` 是为了不与 **antd 的 List 组件**（数据列表，另一个东西）混淆。
+
+### 组件
+
+- `VirtualList` —— 虚拟列表。默认插槽收 `{ item, index, style, offsetX }`，`extra` 插槽收 `ExtraRenderInfo`。
+  实例成员：`nativeElement` / `scrollTo` / `getScrollInfo`。
+
+### 纯算法（可在无 DOM 环境下穷举）
+
+- `computeRange` / `shouldUseVirtual` / `isInVirtual` / `sumHeights`
+- `keepInRange` / `keepInHorizontalRange`
+- `computeScrollTarget` / `normalizeScrollArg` / `resolveScrollOffset`
+- `createSizeGetter` / `createCacheMap` / `findListDiffIndex`
+
+### 组合式
+
+- `useHeights()` —— 动态高度收集（微任务合并 + 可作废）
+
+### 模式
+
+- 定高模式与动态高度模式（缺 `itemHeight` 即退化为真实滚动）
 
 ## 明确不做（边界）
 
 - ❌ 不含任何视觉语义（行高/间距由消费方传入）
+- ❌ **不做自绘滚动条** —— 上游 `ScrollBar` 里写死了 `borderRadius: 99` 与 `rgba(0, 0, 0, 0.5)`，属视觉语义；改用原生滚动
+- ❌ **不做滚轮 / 触摸拦截** —— 上游拦截是因为 `overflowY: hidden` 让原生滚动失效，原生滚动不需要
+- ❌ 不做 `useScrollTo` / `useVirtualList` 组合式 —— `scrollTo` 的迭代被抽成纯函数 `computeScrollTarget`，Vue 侧循环在组件内
 
 ## 必须遵守的契约
 
 - 支持定高与动态高度两种模式
 - 支持横向虚拟滚动
-- scrollTo(index, align) 的 align 语义（auto/start/center/end）与 antd 一致
+- ⚠️ `scrollTo` 的 `align` 只有 **`'top'` / `'bottom'`**（缺省 = auto：只在目标不在视口内时才滚）——
+  上游 1.5.1 如此，**没有** `start` / `center` / `end`（`List.d.ts` 的 `ScrollAlign` 只有两个取值）
 - 必须能同时服务 Select（下拉选项）/ Tree（树节点）/ Table（虚拟表格）三种形态
 
 ## 依赖
