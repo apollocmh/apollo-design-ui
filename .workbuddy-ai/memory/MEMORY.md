@@ -157,21 +157,31 @@ node registry/tools/foundation-status.mjs --decide <id> --choice <A|B|C> --by "<
     退回恒 0，会走早退分支。要造「无父元素」的浮层：先 `stubEle` 再 `remove()`。
 14. **jsdom 的 IDL getter 带 brand 校验** —— `Object.create(Node.prototype)` 会抛
     `not a valid instance of Node`，造不出「既无 ownerDocument 也不是 Document」的替身。
-15. `pnpm test` 报的用例数是**分 project 的**：1151 = unit（46 文件），另有 dom 60 / a11y 32。
+15. `pnpm test` 报的用例数是**分 project 的**（unit / dom / a11y 各一份）。
     而 `foundation.json` 里某包的 `verification.unit.tests` 是**该包自己的** unit+types 合计
     （如 motion 154 = 110 unit + 44 test-d），两者不是一回事，别拿来对账。
 16. **`expectTypeOf(SOME_CONST)` 会把常量推断成 `string`**，于是
     `toEqualTypeOf<'add'>()` 永远失败（报 "Actual string"）。必须写
     `expectTypeOf<typeof SOME_CONST>()`。
-17. **Edit 工具偶发「报 success 但文件内容没变」**（本轮出现 3 次）。
+17. **Edit 工具偶发「报 success 但文件内容没变」**（出现过 3 次）。
     改完一定要回读确认；不放心就用 node 脚本做精确替换再验证。
 18. **组件层测试拿不到注入帧泵的口子**，只能走真实 rAF（jsdom 约 16ms/帧）。
     motion 的离场要 prepare→start 两帧、start→active 两帧，**active 才注册 deadline**，
     所以至少等 5 帧 + 30ms 才能看到离场 key 被摘掉。需要确定性时改用
     `useMotionStatus`（它有 `scheduler` 注入点）而不是挂组件。
-    43 个 `*.test.ts` 扣掉 `a11y.test.ts` 与 `semantic.test.ts` 共 3 个正好 40 ——
-    核对「有没有文件没被收集」用这个等式，别拿总数跟上次比。
-16. **`docs/` 下的 Markdown 用 Grep 工具搜 `^#` 会静默无结果**（同坑 1），用 `^#{1,3} `。
+19. **`docs/` 下的 Markdown 用 Grep 工具搜 `^#` 会静默无结果**（同坑 1），用 `^#{1,3} `。
+20. **VTU 默认把 `<Teleport>` 打桩成 `<teleport-stub>`**，内容留在原地，
+    「内容到底进没进容器」根本测不出来。必须 `global: { stubs: { teleport: false } }`。
+21. **Vue 的 `<Teleport>` 在 `to` 变化时是「移动」节点，不重新挂载** ⇒
+    「先渲染进默认容器再搬家」用**挂载次数**测不出来（两种实现都是 1 次），
+    判据必须是「内容首次挂载时的父节点」。
+22. **`*.test-d.ts` 会被 vitest 真的执行** —— `@ts-expect-error` 只挡编译期，
+    负例必须包在「永不调用」的函数里，否则运行时照样抛。
+23. **`expectTypeOf<联合类型>()` 会退化成 never**（报错写着 `Actual never`），用 `toExtend` 绕开。
+24. **`const x: Union = 'A'` 后 `expectTypeOf(x)` 被窄化成字面量**，断言联合类型永远失败。
+25. `h(Teleport, props, children)` 有专门重载且 **children 必填**，没有 slot 时传 `[]`。
+26. props 声明成 `[String, Boolean, Function, Object] as PropType<GetContainer>` 是合法的，
+    TS 不会报「转换可能错误」—— 不必退化成 `as unknown as`（H10 只禁 `any` 家族）。
 
 ---
 
@@ -225,11 +235,12 @@ Vitest 5｜Playwright + pixelmatch
    `CSSMotion` / `useMotionStatus` 尚未被 ui 层真实消费；
    fade/zoom/slide/move 的 keyframes 属 theme/ui，本包不产出（§4 边界）。
 
-2. **`next-task.mjs` 现在指向 `@apollo-design/portal`**（按推进顺序）；
-   「可开始完整实现」仍是 `@apollo-design/locale`。
-   ⚠️ `position` 与 `motion` 的 `api` 维度都标了 done，但都**尚未被上层真实消费** ——
-   联调时若发现 API 形状不够用，需回来改并同步各自的 contract 文档。
-   这条风险已写进 registry 的 `notes`，不是静默放过。
+2. **`next-task.mjs` 现在指向 `@apollo-design/a11y`**（按推进顺序，portal 已于
+   2026-09-17 收口 completed）；「可开始完整实现」仍是 `@apollo-design/locale`。
+   ⚠️ `position` / `motion` / `portal` 三个包的 `api` 维度都标了 done，
+   但**全都尚未被上层真实消费** —— 联调时若发现 API 形状不够用，需回来改并同步各自的
+   contract 文档。这条风险重复出现在三个包的 registry `notes` 里，不是静默放过。
+   ⚠️ portal 还多一条：SSR「不建容器」只在 `resolveContainer` 的早退分支被覆盖。
 
 3. **教训：别把「没有新增 error」当成「没有 error」。** 上一轮 test-utils 收口时
    我记成「lint 0 error」，实际 HEAD 上有 19 处 `!` 让 `biome check .` 一直是红的。
