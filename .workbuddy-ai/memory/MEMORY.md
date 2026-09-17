@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具的所有权、易错判据、未决事项。
 > 规则本体看 `AGENTS.md` / `WORKFLOW.md` / `TESTING.md` / `COMPATIBILITY.md`；
-> 踩过的坑看同目录 **`PITFALLS.md`**（26 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
+> 踩过的坑看同目录 **`PITFALLS.md`**（27 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 

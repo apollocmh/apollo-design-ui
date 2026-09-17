@@ -28,53 +28,57 @@
 10. **Edit 工具偶发「报 success 但文件内容没变」**；而且 **biome 会重排 import**，让下一次
     基于旧 import 文本的替换静默失配。对策：改完回读；改 import 前先读回当前内容；
     不放心就用 node 脚本做精确替换再验证。
+11. **`pnpm run registry:check` 开头是 `registry:gen`**（`registry:gen && registry:foundation:check
+    && registry:workstreams:check && registry:validate`），所以**每次跑完它，
+    `components/dependencies/tokens.json` 都会因 `generatedAt` 时间戳而变脏**。
+    这是工具链固有的，不是错误。**别把纯时间戳抖动提交进去** —— `git checkout --` 丢掉即可。
 
 ## jsdom
 
-11. computed `border-*-width` 默认是 **`"16px"`**（既非 CSS 初始值 `medium`/3px，也非 0）。
+12. computed `border-*-width` 默认是 **`"16px"`**（既非 CSS 初始值 `medium`/3px，也非 0）。
     造测试元素时四条边必须显式归零，否则公式里混进 16，断言无法解释。
-12. **inline style 会传导到 computed style** —— `overflow` / `overflow-x` / `border-*-width` /
+13. **inline style 会传导到 computed style** —— `overflow` / `overflow-x` / `border-*-width` /
     `width` / `height` / `position` / `overflow-clip-margin` 都行 ⇒ 不需要 spy `getComputedStyle`，
     也就不用把假对象断言成 `CSSStyleDeclaration`（H10）。
     `offsetWidth/offsetHeight/clientWidth/clientHeight` 用 `Object.defineProperty` 覆盖，
     `getBoundingClientRect` 整个替换成 `new DOMRect(...)`（构造器可用）。
-13. **`element.style.setProperty('whiteSpace', ...)` 被静默丢弃** —— `setProperty` 只认连字符写法。
+14. **`element.style.setProperty('whiteSpace', ...)` 被静默丢弃** —— `setProperty` 只认连字符写法。
     camelCase 键要用**属性赋值**或 `Object.assign(el.style, map)`。
     实测：`setProperty('whiteSpace','nowrap')` → `""`；`el.style.whiteSpace='nowrap'` → `"nowrap"`。
-14. jsdom **会规范化样式值**：`clip: rect(0, 0, 0, 0)` → `rect(0px, 0px, 0px, 0px)`、
+15. jsdom **会规范化样式值**：`clip: rect(0, 0, 0, 0)` → `rect(0px, 0px, 0px, 0px)`、
     `padding: 0` → `0px`、`border: 0` → `0px`。断言时不能逐字符比，要判前缀或判规范化后的值。
-15. **`cloneNode` 不复制挂在实例上的桩**（`getBoundingClientRect` 等）—— 克隆体的 rect 退回恒 0，
+16. **`cloneNode` 不复制挂在实例上的桩**（`getBoundingClientRect` 等）—— 克隆体的 rect 退回恒 0，
     会走早退分支。要造「无父元素」的浮层：先 `stubEle` 再 `remove()`。
-16. **jsdom 的 IDL getter 带 brand 校验** —— `Object.create(Node.prototype)` 会抛
+17. **jsdom 的 IDL getter 带 brand 校验** —— `Object.create(Node.prototype)` 会抛
     `not a valid instance of Node`，造不出「既无 ownerDocument 也不是 Document」的替身。
-17. **组件层测试拿不到注入帧泵的口子**，只能走真实 rAF（jsdom 约 16ms/帧）。
+18. **组件层测试拿不到注入帧泵的口子**，只能走真实 rAF（jsdom 约 16ms/帧）。
     motion 的离场要 prepare→start 两帧、start→active 两帧，**active 才注册 deadline**，
     所以至少等 5 帧 + 30ms 才能看到离场 key 被摘掉。需要确定性时改用
     `useMotionStatus`（它有 `scheduler` 注入点）而不是挂组件。
-18. **VTU 默认把 `<Teleport>` 打桩成 `<teleport-stub>`**，内容留在原地
+19. **VTU 默认把 `<Teleport>` 打桩成 `<teleport-stub>`**，内容留在原地
     ⇒ 「内容到底进没进容器」根本测不出来。必须 `global: { stubs: { teleport: false } }`。
-19. **Vue 的 `<Teleport>` 在 `to` 变化时是「移动」节点，不重新挂载** ⇒
+20. **Vue 的 `<Teleport>` 在 `to` 变化时是「移动」节点，不重新挂载** ⇒
     「先渲染进默认容器再搬家」用**挂载次数**测不出来（两种实现都是 1 次），
     判据必须是「内容首次挂载时的父节点」。
-20. **`vi.stubGlobal('document', undefined)` 能让 `typeof document === 'undefined'`** ——
+21. **`vi.stubGlobal('document', undefined)` 能让 `typeof document === 'undefined'`** ——
     覆盖「SSR 无 document」兜底分支的可行手段。`canUseDom()` 读的是 `window.document`，
     所以 `vi.stubGlobal('window', {})` 也能让它返回 false。
 
 ## 类型测试
 
-21. **`*.test-d.ts` 会被 vitest 真的执行** —— `@ts-expect-error` 只挡编译期，
+22. **`*.test-d.ts` 会被 vitest 真的执行** —— `@ts-expect-error` 只挡编译期，
     负例若含运行时后果（对冻结对象赋值、把数字当字符串用）必须包进 `neverCalled(() => {...})`，
     否则运行时照样抛。
-22. **`expectTypeOf(SOME_CONST)` 会把常量推断成 `string`** ⇒ 必须写
+23. **`expectTypeOf(SOME_CONST)` 会把常量推断成 `string`** ⇒ 必须写
     `expectTypeOf<typeof SOME_CONST>()`，否则 `toEqualTypeOf<'add'>()` 永远失败（报 "Actual string"）。
-23. **`expectTypeOf<联合类型>()` 会退化成 never**（报错写着 `Actual never`），用 `toExtend` 绕开。
-24. **`const x: Union = 'A'` 后 `expectTypeOf(x)` 被窄化成字面量**，断言联合类型永远失败。
-25. **`effectScope.run(fn)` 的返回类型带 `| undefined`** —— 想避免 `!` 就用 `as XxxReturn`
+24. **`expectTypeOf<联合类型>()` 会退化成 never**（报错写着 `Actual never`），用 `toExtend` 绕开。
+25. **`const x: Union = 'A'` 后 `expectTypeOf(x)` 被窄化成字面量**，断言联合类型永远失败。
+26. **`effectScope.run(fn)` 的返回类型带 `| undefined`** —— 想避免 `!` 就用 `as XxxReturn`
     收窄并写清理由。别用 `!`，也别用 `unknown as`。
 
 ## 计数口径
 
-26. `pnpm test` 报的用例数是**分 project** 的（unit / dom / a11y 各一份）。
+27. `pnpm test` 报的用例数是**分 project** 的（unit / dom / a11y 各一份）。
     而 `foundation.json` 里某包的 `verification.unit.tests` 是**该包自己的** unit + types 合计
     （motion 154 = 110 + 44；a11y 204 = 134 + 70）。两者不是一回事，别拿来对账。
     核对「有没有文件没被收集」用文件数等式：`*.test.ts` 扣掉 `a11y.test.ts` / `semantic.test.ts`。
