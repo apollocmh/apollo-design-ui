@@ -35,13 +35,15 @@
 - 观察器：useResizeObserver / useMutationObserver / useOverflow（单例复用）
 - composable：useControlledValue / useDelayState / useUpdateEffect / useId / useSafeState
 - 其他：toList / capitalize
+- 颜色：Color / generatePalette（10 阶色板）—— 由 color.oracle.test.ts 对上游差分验证
 
 ## 明确不做（边界）
 
-- ❌ 不含任何组件视觉语义（无颜色/圆角/尺寸）
+- ❌ 不含任何设计值：无圆角 / 尺寸 / 阴影 / 字号的字面值，也不含任何色值字面量（R3）
 - ❌ 不产出任何 CSS
 - ❌ 不依赖 @apollo-design/* 的任何其他包（L0 是最底层）
 - ❌ 不提供 render/unmount —— 含 Vue 渲染器耦合，归 packages/ui/src/_internal
+- ❌ src/color/ 只放算法（R3 由 barrel.test.ts 的色值字面量扫描强制）；预设色板归 theme
 
 ## 必须遵守的契约
 
@@ -62,6 +64,11 @@
 
 | `vue` | `catalog:` |
 
+### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
+
+| `@ant-design/colors` | `catalog:` |
+| `@ant-design/fast-color` | `catalog:` |
+
 ## 依赖约束（ARCHITECTURE.md §3.1）
 
 - **R1 单向**：只能依赖同层或更低层
@@ -69,6 +76,9 @@
 - **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
 - **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
 - **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
+- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
+  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
+  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
 
 本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
 
@@ -81,4 +91,4 @@ pnpm --filter @apollo-design/utils lint
 ```
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
-L0 包的覆盖率下限为 语句 95% / 分支 90% / 函数 95%。
+覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L0 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。

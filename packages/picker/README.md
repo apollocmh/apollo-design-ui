@@ -1,6 +1,6 @@
 # @apollo-design/picker
 
-> **层**：L2 ｜ **风险**：high ｜ **Phase 2 实施顺序**：10
+> **层**：L2 ｜ **风险**：high ｜ **Phase 2 实施顺序**：13
 >
 > 本文档声明本包的**职责边界**。边界之外的事情不做 —— 如果发现需要做，说明架构需要调整，
 > 应当先修改 `ARCHITECTURE.md` 并记录 ADR。
@@ -45,6 +45,10 @@
 | `vue` | `catalog:` |
 | `dayjs` | `catalog:` |
 
+### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
+
+（无）
+
 ## 依赖约束（ARCHITECTURE.md §3.1）
 
 - **R1 单向**：只能依赖同层或更低层
@@ -52,6 +56,9 @@
 - **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
 - **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
 - **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
+- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
+  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
+  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
 
 本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
 
@@ -67,4 +74,4 @@ pnpm --filter @apollo-design/picker lint
 ```
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
-L0 包的覆盖率下限为 语句 95% / 分支 90% / 函数 95%。
+覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L2 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。

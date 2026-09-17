@@ -9,7 +9,7 @@
 
 ## 职责
 
-国际化数据包：75 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护。
+国际化数据包：73 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护。
 
 ## 替代的 Ant Design 依赖
 
@@ -17,49 +17,37 @@
 
 ## 公开 API
 
-> ⚠️ 数量是 **73 个语言包**，不是早期文档写的 75 —— 实测 antd 6.6.4 的源码与产物都是 73。
-> ⚠️ **没有子路径入口**（本仓库裁决 A 是单文件产物）⇒ 只能具名导入，
-> 不能像 antd 那样 `import zhCN from 'antd/locale/zh_CN'`。
-
-### 数据
-
-- **73 个语言包**：`zh_CN` / `en_US` / `ja_JP` / …（导出名**保留 antd 的下划线原名**，
-  把迁移成本压到「只改包名」）
-- 各组件 locale 分片：DatePicker / Pagination / Table / Form / Upload / …
-
-### 类型
-
-- `Locale`（17 个分片键，只有 `locale` 必填）
-- `LocaleComponentName`（`Exclude<keyof Locale, 'locale'>`）
-- 各分片的类型：`TableLocale` / `ModalLocale` / `PaginationLocale` / `PickerLocale` / …
-
-### 取 locale
-
-- `useLocale(name, defaultLocale?)` —— 返回 `[locale, localeCode]`
-  （**浅合并，context 侧赢**；嵌套对象只能整体给出）
-- `localeContextKey` —— 注入键；`LocaleProvider`（**已废弃**）+ `ANT_MARK`
-- `changeConfirmLocale` / `getConfirmLocale` —— Modal confirm 的模块级 locale 栈
+- Locale 类型（与 antd 的 Locale 结构逐字段一致，含 17 个分片键）
+- 73 个语言包：zh_CN / en_US / ja_JP / ...（导出名保留 antd 的下划线原名，便于只改包名迁移）
+- 各组件 locale 分片：DatePicker / Pagination / Table / Form / Upload / ...
+- useLocale(name, defaultLocale?) —— 取某组件的 locale（**浅合并，context 侧赢**）
+- LocaleProvider（已废弃）+ ANT_MARK —— 上游用它做「官方导出」校验
+- changeConfirmLocale / getConfirmLocale —— Modal confirm 的模块级 locale 栈
 
 ## 明确不做（边界）
 
 - ❌ 不做运行时语言切换（那是 ConfigProvider 的 locale prop）
 - ❌ 不含任何组件实现
 - ❌ 不手工编辑生成产物 —— 改源头或改生成脚本
-- ❌ 不做子路径入口（`antd/locale/zh_CN` 那种）—— 单文件产物，只能具名导入
+- ❌ 不做子路径入口（antd 的 `antd/locale/zh_CN`）—— 本仓库裁决 A 是单文件产物，只能具名导入
 
 ## 必须遵守的契约
 
 - Locale 类型的字段名与 antd 完全一致（用户迁移时 locale 对象可直接沿用）
-- 生成管线必须可重跑且幂等（`node registry/tools/gen-locale.mjs --check` 返回 0）
+- 生成管线必须可重跑且幂等
 - 至少 zh_CN 与 en_US 必须完整覆盖全部组件分片
 
 ## 依赖
 
 ### 运行时依赖
 
-| `dayjs` | `catalog:` |
+（无）
 
 ### peer 依赖
+
+| `vue` | `catalog:` |
+
+### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
 
 （无）
 
@@ -70,12 +58,15 @@
 - **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
 - **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
 - **R6 显式声明**：跨包导入必须在本文件的 `dependencies` 中声明（`.npmrc` 已设 `hoist=false`）
+- **R7 零 Ant Design 运行时依赖**：发布包的 `dependencies` 不得出现任何 `@ant-design/*`。
+  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（`registry/tools/gen-*.mjs`）
+  ② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。由 `registry:validate` 的 **E19** 强制。
 
 本包的依赖已通过 `registry/tools/scaffold-packages.mjs` 的分层校验。
 
 ## 构建说明
 
-本包由 `registry/tools/gen-locale.mjs` 从 antd 源码的 `components/locale/*.ts(x)` 生成到 `src/generated/`。生成目录不入 review（同 icons）。
+本包由 `registry/tools/gen-locale.mjs` 从 antd 6.6.4 的 **ESM 产物**（`es/locale/*.js`）求值后生成到 `src/locales/`。生成目录不入 review（同 icons）。rc 的 locale 数据固化在 `registry/source/locale-rc/`（带 provenance + sha256）。
 
 ## 测试
 
@@ -85,4 +76,4 @@ pnpm --filter @apollo-design/locale lint
 ```
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
-L0 包的覆盖率下限为 语句 95% / 分支 90% / 函数 95%。
+覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L2 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
