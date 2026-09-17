@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "empty/basic",
+  "component": "empty",
+  "description": "Empty 默认渲染：默认插画（PRESENTED_IMAGE_DEFAULT，184×152）+ locale 文案（如 'No data'）。不传任何 props。建立最小 DOM 契约基线 —— L6 视觉回归在此 fixture 上 0.000% exact 通过（21 组里最简单的组）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

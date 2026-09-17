@@ -46,7 +46,10 @@ const v = (token: string): string => `var(${token2CSSVar(token)})`;
  * @param prefixCls 类名前缀（`apollo` 或 `ant`）
  */
 export function genEmptyStyle(prefixCls: string): string {
-  const cls = `.${prefixCls}`;
+  // ⚠️ 必须带 `-empty` 后缀。Empty.vue 算出来的根类名是 `${prefixCls}-empty`（默认 `apollo-empty`），
+  // 选择器若只写 `.${prefixCls}`（即 `.apollo{...}`）会选不中任何元素 —— 视觉回归里
+  // 立刻表现为「antd 居中、我们左对齐」。2026-09-18 由 L6 暴露并修复。
+  const cls = `.${prefixCls}-empty`;
 
   // 内部 token：由 controlHeightLG 派生，与 antd 的 `mergeToken` 逐条对应。
   // 写成 calc() 而不是先算成像素 —— 这样 compact / 自定义 controlHeightLG 时高度会跟着变，
@@ -63,26 +66,28 @@ export function genEmptyStyle(prefixCls: string): string {
     `  text-align:center;`,
     `}`,
     '',
-    // 注意是**后代**选择器（antd 的注释说明了原因：让外层承担 hashId 后改成父子结构）。
-    // 写成 `${cls}-image` 会是同一个元素，DOM 契约对不上。
-    `${cls} ${cls}-image{`,
+    // 注意 antd 的写法：`[componentCls-image]: {...}` 是**对象子键**，编译成 CSS 是一段
+    // **顶级**选择器 `.ant-empty-image{...}`，不是后代。我们之前写成 `${cls} ${cls}-image`
+    // （后代），虽然对当前 DOM 也选得中（image 是 root 的子），但特异性更高、未来 DOM 一变
+    // 就断。L6 暴露后统一改成顶级。
+    `${cls}-image{`,
     `  height:${imgHeight};`,
     `  margin-bottom:${v('marginXS')};`,
     `  opacity:${v('opacityImage')};`,
     `}`,
-    `${cls} ${cls}-image img{`,
+    `${cls}-image img{`,
     `  height:100%;`,
     `}`,
-    `${cls} ${cls}-image svg{`,
+    `${cls}-image svg{`,
     `  max-width:100%;`,
     `  height:100%;`,
     `  margin:auto;`,
     `}`,
     '',
-    `${cls} ${cls}-description{`,
+    `${cls}-description{`,
     `  color:${v('colorTextDescription')};`,
     `}`,
-    `${cls} ${cls}-footer{`,
+    `${cls}-footer{`,
     `  margin-top:${v('margin')};`,
     `}`,
     '',

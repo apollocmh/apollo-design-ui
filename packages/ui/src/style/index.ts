@@ -67,6 +67,32 @@ export function genComponentCss(name: string, prefixCls: string): string {
   return entry.gen(prefixCls);
 }
 
+/**
+ * 全局基础样式（antd `reset.css` 的最小版）。
+ *
+ * ⚠️ 2026-09-18 L6 暴露的**基础设施缺口**：
+ *   `tokens.css` 只声明 `var(--apollo-*)` 变量，**没人**把它应用到 `:root` 或 `body` —
+ *   结果浏览器用默认字体（macOS Chrome = **Times**），所有含描述文字的组件视觉差异
+ *   都被判 block-diff。
+ *
+ * 这一段同时嵌进「汇总 CSS」与「每个组件 CSS」—— 不然只引单个组件 CSS（如
+ * `@apollo-design/ui/empty/style.css`）也会退回 Times。
+ *
+ * 现在只覆盖**L6 必需**的几条（box-sizing、font-family/size、body 基础 reset）。
+ * 完整的全局 reset（h1-h6 重置、列表样式、button 重置等）按 antd 的范围补齐
+ * —— 但那不是 empty 收口的工作，记入未决。
+ */
+export const BASE_CSS = [
+  '*',
+  '*::before',
+  '*::after',
+  '{box-sizing:border-box}',
+  // html + body 同时设：避免任何不一致的 DOM 结构（例如把 `<style>` 挂到 `<html>`）拿到不同字体。
+  'html,body{margin:0;padding:0}',
+  'html{font-family:var(--apollo-font-family)}',
+  'body{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size)}',
+].join('');
+
 /** 生成单个组件在**全部静态前缀**下的 CSS（`dist/<name>/style.css` 的内容）。 */
 export function genComponentStyleSheet(name: string): string {
   const entry = COMPONENT_STYLES.find((item) => item.name === name);
@@ -78,6 +104,8 @@ export function genComponentStyleSheet(name: string): string {
   return [
     `/*! @apollo-design/ui — ${name} 组件样式（自动生成，勿手改） */`,
     `/*! 前缀：${STATIC_PREFIX_CLS.join(' / ')} ｜ 生成方式：packages/ui/build.config.ts */`,
+    '',
+    BASE_CSS,
     '',
     ...STATIC_PREFIX_CLS.map((prefix) => entry.gen(prefix)),
   ].join('\n');
@@ -99,9 +127,11 @@ export function genAllStyles(): string {
     ' * @apollo-design/ui — 全部组件样式（自动生成，勿手改）',
     ` * 组件数：${COMPONENT_STYLES.length} ｜ 前缀：${STATIC_PREFIX_CLS.join(' / ')}`,
     ' * 按需引入请用 `@apollo-design/ui/<component>/style.css`，不要引本文件。',
-    ' * 主题变量不在本文件里 —— 先引入 `@apollo-design/theme/dist/tokens.css`。',
+    ' * 主题变量不在本文件里 —— 先引入 `@apollo-design/theme/tokens.css`。',
     ' */',
     '',
-    ...COMPONENT_STYLES.map((entry) => genComponentStyleSheet(entry.name)),
+    BASE_CSS,
+    '',
+    ...COMPONENT_STYLES.flatMap((entry) => STATIC_PREFIX_CLS.map((prefix) => entry.gen(prefix))),
   ].join('\n');
 }

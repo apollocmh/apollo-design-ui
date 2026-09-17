@@ -55,6 +55,8 @@ describe('Empty · 主题无关性', () => {
 
   it('前缀不同则产物不同（否则 prefixCls 参数是摆设）', () => {
     expect(genEmptyStyle('apollo')).not.toBe(genEmptyStyle('ant'));
-    expect(genEmptyStyle('ant')).toContain('.ant-image');
+    // 2026-09-18 修：原断言写 `.ant-image`，但 Empty 根类名是 `${prefixCls}-empty`，
+    // 子类选择器是 `${prefixCls}-empty-image`（与 antd 的 `ant-empty-image` 对齐）。
+    expect(genEmptyStyle('ant')).toContain('.ant-empty-image');
   });
 });

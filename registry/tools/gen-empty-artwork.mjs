@@ -161,16 +161,24 @@ function serializeAttrs(el, colorMap, pathHint) {
     const value = attr.value;
     if (SKIP_ATTRS.has(name)) continue;
     if (COLOR_ATTRS.has(name) && !NON_COLOR_VALUES.has(value)) {
-      const role = colorMap.get(value.toLowerCase());
-      if (!role) {
+      // ⚠️ 2026-09-18 修复：L6 视觉回归发现，原版把 antd 的合成实色 hex 反查成「token 槽位」
+      // 再写 `ctx.colors.<role>`，而我们 token 本身就是 rgba 透明色 —— 浏览器把
+      // `var(--apollo-color-fill-secondary)` 解析为 `rgba(0,0,0,0.06)`，与 antd 的
+      // `#f0f0f0`（getAsSolidColor 在白底上合成）差出一片色块。
+      //
+      // 与 antd 设计一致的做法：**SVG 的 fill 在 build 期就锁定为 hex 字面量**，
+      // 主题切换不改变插画颜色（antd 6.6.4 也一样 —— 切换到 dark 主题插画颜色不变，
+      // 整图被外层主题背景接管）。这条 trade-off 与 token 化的方向相反，但与「像素一致」同向。
+      //
+      // colorMap 现在仅作「合法颜色来源」的校验（用不到的事实会在下面抛错），不再产出映射。
+      if (!colorMap.has(value.toLowerCase())) {
         throw new Error(
           `${pathHint} 的 ${name}="${value}" 不在 token 反查表里。\n` +
             `  表里有：${[...colorMap.keys()].join(', ')}\n` +
-            '  这说明 antd 的插画用了新的颜色来源 —— 必须先在 ROLE_TOKENS 里补上对应 token，' +
-            '而不是把实色写进生成物（那会让主题切换失效）。',
+            '  这说明 antd 的插画用了新的颜色来源 —— 必须先在 ROLE_TOKENS 里补上对应 token。',
         );
       }
-      parts.push(`${literal(name)}: ctx.colors.${role}`);
+      parts.push(`${literal(name)}: ${literal(value)}`);
       continue;
     }
     parts.push(`${literal(name)}: ${literal(value)}`);
@@ -252,17 +260,24 @@ for (const kind of ['default', 'simple']) {
 // 组装文件
 // ---------------------------------------------------------------------------
 
-const defaultRoles = Object.keys(ROLE_TOKENS.default);
-const simpleRoles = Object.keys(ROLE_TOKENS.simple);
-
 const source = `// 自动生成，请勿手改。
 // 生成器：registry/tools/gen-empty-artwork.mjs
 // 数据源：antd 6.6.4 的 Empty.PRESENTED_IMAGE_DEFAULT / PRESENTED_IMAGE_SIMPLE 的**渲染产物**
 // 重新生成：node registry/tools/gen-empty-artwork.mjs
 //
 // 这是**数据**，不是 antd 的实现代码：只有标签、几何属性与路径，没有一行逻辑。
-// 颜色被替换成 \`ctx.colors.<role>\` 槽位（我们走静态 CSS + var(--apollo-*)，antd 走
-// 运行时 token 合成实色）。替换由 token 反查表机械完成，查不到的颜色会让生成器直接失败。
+//
+// 关于颜色（2026-09-18 由 L6 视觉回归修正）：
+//   SVG 里的 fill / stroke 是 **hex 字面量**，不是 CSS 变量。原因：antd 在 SSR 阶段用
+//   getAsSolidColor(token, colorBgContainer) 把半透明 token 在白底上合成为实色再写进
+//   SVG；我们的 token 是 rgba 透明色，直接用 var() 会得到 \`rgba(0,0,0,0.06)\` ——
+//   视觉回归里立刻表现为色块差异。
+//
+//   主题切换对插画本身不生效（antd 也是如此 —— 切到 dark 时插画颜色不变，靠外层主题背景
+//   接管）。这条 trade-off 与「token 化」方向相反，但与「像素一致」同向。
+//
+//   反查表 ROLE_TOKENS 仍保留作自检用 —— 任何 antd 渲染产物里出现新颜色都会让生成器
+//   抛错，逼着维护者先在表里补上对应 token，再重跑生成。
 //
 // 为什么是 .ts 而不是 .vue：这是 COMPONENT-RULES.md §2 允许的「纯渲染函数型内部件」
 // —— 它没有状态、没有事件、没有插槽，且**必须由脚本生成**（手写等于重画一遍矢量图，
@@ -270,26 +285,9 @@ const source = `// 自动生成，请勿手改。
 
 import { h, type VNode } from 'vue';
 
-/** 插画里由主题决定的颜色槽位。默认插画用前 5 个，简洁插画用后 3 个。 */
-export interface EmptyArtworkColors {
-  /** 默认插画：面板底色（antd 的 \`panelBgColor\`）。 */
-  panelBgColor: string;
-  /** 默认插画：轮廓色（antd 的 \`borderColor\`）。 */
-  borderColor: string;
-  /** 默认插画：细节色（antd 的 \`detailColor\`）。 */
-  detailColor: string;
-  /** 默认插画：投影色（antd 的 \`shadowColor\`）。 */
-  shadowColor: string;
-  /** 默认插画：图标色（antd 的 \`iconColor\`）。 */
-  iconColor: string;
-  /** 简洁插画：内容色（antd 的 \`contentColor\`）。 */
-  contentColor: string;
-}
-
 export interface EmptyArtworkContext {
   /** \`<title>\` 的文本 —— 插画的可访问名，来自 locale。 */
   title: string;
-  colors: EmptyArtworkColors;
 }
 
 /** 默认插画（184×152）。antd 的 \`PRESENTED_IMAGE_DEFAULT\`。 */
@@ -301,12 +299,6 @@ export function renderDefaultEmptyImage(ctx: EmptyArtworkContext): VNode {
 export function renderSimpleEmptyImage(ctx: EmptyArtworkContext): VNode {
   return ${artwork.simple.code.trimStart()};
 }
-
-/** 默认插画用到的槽位（供调用方断言完整性）。 */
-export const DEFAULT_EMPTY_ARTWORK_ROLES = ${JSON.stringify(defaultRoles)} as const;
-
-/** 简洁插画用到的槽位。 */
-export const SIMPLE_EMPTY_ARTWORK_ROLES = ${JSON.stringify(simpleRoles)} as const;
 `;
 
 // ---------------------------------------------------------------------------

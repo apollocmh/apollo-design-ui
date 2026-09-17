@@ -256,6 +256,12 @@ importers:
       '@ant-design/icons':
         specifier: 'catalog:'
         version: 6.3.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@apollo-design/theme':
+        specifier: workspace:*
+        version: link:packages/theme
+      '@apollo-design/ui':
+        specifier: workspace:*
+        version: link:packages/ui
       '@biomejs/biome':
         specifier: 'catalog:'
         version: 2.5.13

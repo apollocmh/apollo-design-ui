@@ -41,6 +41,8 @@
     "dev": "pnpm --filter @apollo-design/docs run dev"
   },
   "devDependencies": {
+    "@apollo-design/theme": "workspace:*",
+    "@apollo-design/ui": "workspace:*",
     "@ant-design/icons": "catalog:",
     "@biomejs/biome": "catalog:",
     "@testing-library/jest-dom": "catalog:",

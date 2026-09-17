@@ -147,6 +147,17 @@ const PACKAGES = [
       '@ant-design/fast-color': 'catalog:',
     },
     peerDeps: { vue: 'catalog:' },
+    // 2026-09-18 补：`dist/tokens.css` 是零运行时架构下**所有组件样式的前置依赖**
+    // （`ui/src/index.ts`、`ui/src/style/index.ts`、各组件文档都写着「先引入它」），
+    // 但 exports 里原本没声明 —— 消费者照文档写会解析失败。
+    // 命名与 ui 的 `./style.css` 同构：**不含 dist 前缀**。
+    //
+    // ⚠️ 声明必须指向构建后真实存在的路径（见 packageJson() 里的契约注释）。
+    //    tokens.css 由 `packages/theme/build.config.ts` 的 hook 产出，非 unbuild 默认产物，
+    //    所以这里不能只靠「unbuild 会生成 dist/」来推断。
+    extraExports: {
+      './tokens.css': './dist/tokens.css',
+    },
     publicApi: [
       '类型：SeedToken / MapToken / AliasToken / ComponentTokenMap / MappingAlgorithm / ThemeConfig',
       '算法：defaultAlgorithm / darkAlgorithm / compactAlgorithm',

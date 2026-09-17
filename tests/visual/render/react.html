@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <!-- 空 favicon：否则浏览器会自动请求 /favicon.ico 并记一条 404 console.error，
+         被 run.mjs 的「渲染错误」捕获成假失败。 -->
+    <link rel="icon" href="data:," />
+    <title>visual · react</title>
+    <!--
+      两侧共用同一份骨架 CSS。
+      #stage 是截图目标：宽度由 viewport 决定，padding 固定 —— 保证两侧容器一致，
+      否则比出来的是「外层留白不同」而不是「组件不同」。
+    -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+      }
+      #stage {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 16px;
+        background: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./react-main.jsx"></script>
+  </body>
+</html>

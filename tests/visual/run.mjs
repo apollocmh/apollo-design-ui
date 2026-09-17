@@ -1,0 +1,272 @@
+#!/usr/bin/env node
+/**
+ * run.mjs — L6 视觉回归入口（`pnpm test:visual`）。
+ *
+ * 流程：打包两侧 → 起静态服务器 → Playwright 截图 → pixelmatch 比对 → HTML 报告。
+ *
+ * ── 三种模式 ────────────────────────────────────────────────────────────────
+ *
+ * | 模式 | 渲染 React | 渲染 Vue | 用途 |
+ * |---|---|---|---|
+ * | `both`（默认） | ✅ | ✅ | 本机验证：两侧同机同时渲染，最可信 |
+ * | `baseline`     | ✅ | — | 生成/更新 React 基线（入库，裁决 `visual-baseline-in-git` = A） |
+ * | `compare`      | — | ✅ | 日常/CI：只渲染 Vue，与入库的 React 基线比对 |
+ *
+ * ── 必须防的假绿 ────────────────────────────────────────────────────────────
+ *
+ * 如果两侧都渲染失败（白屏、JS 报错），两张空白图逐像素**完全一致**，差异率 0% ——
+ * 按阈值会判 PASS。所以这里强制捕获 `pageerror` / `console.error`：任一侧出错，
+ * 该 case 直接判 FAIL（`reason: 'render-error'`），根本不走像素比对。
+ */
+
+import fs from 'node:fs';
+import http from 'node:http';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { buildAll } from './build.mjs';
+import { comparePair, MAX_DIFF_RATIO } from './compare.mjs';
+import { buildCases, COMPONENTS } from './matrix.mjs';
+import { writeReport } from './report.mjs';
+import { launchBrowser, newStablePage, screenshotElement, stabilizePage } from './stabilize.mjs';
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const ARTIFACTS = path.join(HERE, '.artifacts');
+const SNAPSHOTS = path.join(HERE, 'snapshots');
+const BASELINES = path.join(HERE, 'baselines');
+const DIFF_DIR = path.join(HERE, 'diff');
+
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.json': 'application/json',
+  '.woff2': 'font/woff2',
+};
+
+function parseArgs(argv) {
+  const args = {
+    component: null,
+    variant: null,
+    viewport: null,
+    mode: 'both',
+    noBuild: false,
+  };
+  for (let i = 0; i < argv.length; i += 1) {
+    const a = argv[i];
+    if (a === '--component') args.component = argv[++i];
+    else if (a === '--variant') args.variant = argv[++i];
+    else if (a === '--viewport') args.viewport = argv[++i];
+    else if (a === '--mode') args.mode = argv[++i];
+    else if (a === '--no-build') args.noBuild = true;
+    else if (a === '--help' || a === '-h') args.help = true;
+  }
+  return args;
+}
+
+/** 极简静态服务器：ES module 在 file:// 下会被 CORS 拦，必须走 http。 */
+function startServer(root) {
+  const server = http.createServer((req, res) => {
+    let pathname = decodeURIComponent(new URL(req.url, 'http://127.0.0.1').pathname);
+    if (pathname.endsWith('/')) pathname += 'index.html';
+    const file = path.join(root, pathname);
+
+    // 目录穿越防护
+    if (!file.startsWith(root)) {
+      res.writeHead(403);
+      res.end('forbidden');
+      return;
+    }
+    if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+      res.writeHead(404);
+      res.end('not found');
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] ?? 'application/octet-stream' });
+    fs.createReadStream(file).pipe(res);
+  });
+
+  return new Promise((resolve) => {
+    server.listen(0, '127.0.0.1', () => resolve({ server, port: server.address().port }));
+  });
+}
+
+/**
+ * 渲染并截图一侧。
+ * @returns {Promise<{path: string, errors: string[]}>}
+ */
+async function capture(browser, { port, side }, c, outFile) {
+  const { context, page } = await newStablePage(browser, { width: c.width, height: c.height });
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+  page.on('console', (m) => {
+    if (m.type() === 'error') errors.push(`console.error: ${m.text()}`);
+  });
+
+  try {
+    const q = new URLSearchParams({
+      component: c.component,
+      variant: c.variant,
+      theme: c.theme,
+    });
+    const url = `http://127.0.0.1:${port}/${side}/${side}.html?${q.toString()}`;
+
+    await page.goto(url, { waitUntil: 'load' });
+    // 等渲染完成的标志，不用 sleep（TESTING.md A3）
+    await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 20000 });
+    await stabilizePage(page);
+
+    fs.mkdirSync(path.dirname(outFile), { recursive: true });
+    await screenshotElement(page, '#stage', outFile);
+    return { path: outFile, errors };
+  } finally {
+    await context.close();
+  }
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (args.help) {
+    console.log(`用法: node tests/visual/run.mjs [选项]
+
+  --component <name>   只跑某个组件（默认跑 matrix 里登记的全部）
+  --variant <name>     只跑某个用例
+  --viewport <id>      只跑某个 viewport（mobile / tablet / desktop）
+  --mode <mode>        both（默认）| baseline | compare
+  --no-build           跳过 vite 打包，沿用上次的 .artifacts
+`);
+    return 0;
+  }
+
+  if (!['both', 'baseline', 'compare'].includes(args.mode)) {
+    console.error(`未知模式：${args.mode}（可选 both / baseline / compare）`);
+    return 2;
+  }
+
+  if (!args.noBuild) {
+    console.log('▶ 打包两侧渲染入口…');
+    await buildAll(ARTIFACTS);
+    console.log('  ✔ 完成');
+  }
+
+  const cases = buildCases({
+    component: args.component,
+    variants: args.variant ? [args.variant] : undefined,
+  }).filter((c) => !args.viewport || c.viewport === args.viewport);
+
+  if (cases.length === 0) {
+    console.error('没有匹配的 case。');
+    return 2;
+  }
+
+  const sides =
+    args.mode === 'baseline' ? ['react'] : args.mode === 'compare' ? ['vue'] : ['react', 'vue'];
+
+  console.log(`▶ 渲染 ${cases.length} 组 × [${sides.join(', ')}]`);
+  const { server, port } = await startServer(ARTIFACTS);
+  const { browser, channel } = await launchBrowser();
+  console.log(`  浏览器：${channel}`);
+
+  const results = [];
+  try {
+    for (const c of cases) {
+      const file = `${c.variant}__${c.theme}__${c.viewport}.png`;
+      const rel = `${c.component}/${file}`;
+
+      // React 侧：baseline 模式下写入 baselines/（入库），否则写 snapshots/
+      const reactOut =
+        args.mode === 'baseline'
+          ? path.join(BASELINES, 'react', rel)
+          : path.join(SNAPSHOTS, 'react', rel);
+      // Vue 侧始终写 snapshots/
+      const vueOut = path.join(SNAPSHOTS, 'vue', rel);
+      // compare 模式下，React 侧的参照是入库基线
+      const reactRef = args.mode === 'compare' ? path.join(BASELINES, 'react', rel) : reactOut;
+
+      const errors = [];
+
+      if (sides.includes('react')) {
+        const r = await capture(browser, { port, side: 'react' }, c, reactOut);
+        errors.push(...r.errors);
+      }
+      if (sides.includes('vue')) {
+        const r = await capture(browser, { port, side: 'vue' }, c, vueOut);
+        errors.push(...r.errors);
+      }
+
+      const base = {
+        id: c.id,
+        component: c.component,
+        variant: c.variant,
+        viewport: c.viewport,
+        width: c.width,
+        height: c.height,
+        relReact: path.relative(HERE, reactRef).split(path.sep).join('/'),
+        relVue: path.relative(HERE, vueOut).split(path.sep).join('/'),
+        relDiff: path.relative(HERE, path.join(DIFF_DIR, rel)).split(path.sep).join('/'),
+      };
+
+      if (errors.length > 0) {
+        results.push({
+          ...base,
+          verdict: 'FAIL',
+          reason: 'render-error',
+          message: `渲染期报错（${`${sides.join('/')}侧`}）—— 不比像素，因为「两侧都白屏」会得到 0% 差异而假绿：${errors.slice(0, 3).join(' | ')}`,
+        });
+        console.log(`  ✗ ${c.id}  渲染错误`);
+        continue;
+      }
+
+      if (args.mode === 'baseline') {
+        results.push({
+          ...base,
+          verdict: 'BASELINE',
+          reason: 'written',
+          message: '已写入 React 基线。',
+        });
+        console.log(`  • ${c.id}  基线已写入`);
+        continue;
+      }
+
+      const cmp = await comparePair(reactRef, vueOut, path.join(DIFF_DIR, rel));
+      results.push({ ...base, ...cmp });
+      console.log(
+        `  ${cmp.verdict === 'PASS' ? '✔' : '✗'} ${c.id}  ${(cmp.diffRatio * 100).toFixed(3)}%  ${cmp.reason}`,
+      );
+    }
+  } finally {
+    await browser.close();
+    server.close();
+  }
+
+  const compared = results.filter((r) => r.verdict !== 'BASELINE');
+  const failed = compared.filter((r) => r.verdict === 'FAIL');
+
+  const { file: reportFile } = writeReport({
+    outDir: HERE,
+    results,
+    meta: {
+      component: args.component ?? Object.keys(COMPONENTS).join(', '),
+      mode: args.mode,
+      browser: channel,
+      antdVersion: '6.6.4',
+      timestamp: new Date().toISOString(),
+      maxDiffRatio: MAX_DIFF_RATIO,
+    },
+  });
+
+  console.log(`\n报告：${path.relative(process.cwd(), reportFile)}`);
+  console.log(`通过 ${compared.length - failed.length} / ${compared.length}`);
+
+  if (failed.length > 0) {
+    console.log('\n失败项（必须人工分类后记入 COMPATIBILITY.md）：');
+    for (const f of failed) console.log(`  - ${f.id}  [${f.reason}] ${f.message}`);
+    return 1;
+  }
+  return 0;
+}
+
+process.exitCode = await main();

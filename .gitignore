@@ -12,6 +12,13 @@ coverage/
 # Test outputs
 tests/compat/report/
 tests/compat/baselines/**/*.diff.png
+# L6 visual regression (tests/visual/):
+#   - baselines/  is committed (decision visual-baseline-in-git = A)
+#   - .artifacts/ / snapshots/ / diff/ / report.html are ephemeral
+tests/visual/.artifacts/
+tests/visual/snapshots/
+tests/visual/diff/
+tests/visual/report.html
 visualRegressionReport/
 playwright-report/
 test-results/
