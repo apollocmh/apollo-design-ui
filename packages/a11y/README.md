@@ -17,17 +17,38 @@
 
 ## 公开 API
 
-- useFocusTrap / useFocusRestore —— 焦点陷阱与关闭后焦点恢复（Modal / Drawer / Image.Preview）
-- useRovingFocus —— roving tabindex 与方向键导航（Menu / Tabs / Radio.Group / Toolbar）
-- useActiveDescendant —— aria-activedescendant 管理（Select / Tree / Listbox 类）
-- useLiveRegion / announce —— 屏幕阅读器播报（message / notification / upload / transfer）
-- useTypeahead —— 键盘字符快速定位（Select / Tree / Menu）
+> ⚠️ **焦点陷阱实现在 `@apollo-design/utils`（L0）**，本包只再导出 —— 见
+> [`docs/foundation/a11y-contract.md`](../../docs/foundation/a11y-contract.md) §1.1。
+> 不要为了「名实相符」把 `utils/src/dom/focus.ts` 搬过来：那会让 L0 反向依赖 L1。
+
+### 焦点（陷阱再导出 + 恢复自研）
+
+- `lockFocus` / `useLockFocus` / `getFocusNodeList` / `triggerFocus` / `resetFocusLock` —— 焦点陷阱（**再导出自 utils**）
+- `useFocusRestore` —— 关闭后焦点恢复（Modal / Drawer / Image.Preview）
+
+### roving tabindex（Menu / Tabs / Radio.Group / Toolbar）
+
+- `useRovingFocus` —— 组合式：状态 + 方向键 + 真实移动焦点
+- `nextRovingIndex` / `moveRovingIndex` / `getRovingTabIndex` / `getRovingOffset` / `resolveRovingHome` / `resolveRovingEnd` —— 纯算术
+
+### combobox（Select / TreeSelect / AutoComplete）
+
+- `useActiveDescendant` + `getListboxId` / `getOptionId` —— `aria-activedescendant` 的 id 方案
+- `useTypeahead` + `pushTypeaheadChar` / `findTypeaheadIndex` / `isTypeaheadKey` —— 键盘字符快速定位
+
+### live region（message / notification / upload / transfer）
+
+- `useLiveRegion` —— 组件内播报（挂载时建、卸载时销毁）
+- `announce` / `announceValues` —— 模块级单例播报（**复用同一节点**，命令式 API 用）
+- `formatLiveRegionText` / `VISUALLY_HIDDEN_STYLE` / `LIVE_REGION_MAX_COUNT` —— 纯格式化与常量
 
 ## 明确不做（边界）
 
-- ❌ 不做视觉样式（本包零 CSS）
+- ❌ 不做视觉样式（本包零 CSS；唯一例外是隐藏 live region 的内联样式 —— 它是可达性语义的一部分）
 - ❌ 不做 axe 扫描（那是 @apollo-design/test-utils 的 a11yDemoTest）
 - ❌ 不重复实现 useId（在 utils）
+- ❌ **不重写焦点陷阱**（已在 utils，本包只再导出）
+- ❌ 不渲染组件（列表 / 菜单 / 浮层的 DOM 结构属 ui 层）
 
 ## 必须遵守的契约
 
