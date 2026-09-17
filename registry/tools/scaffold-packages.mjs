@@ -363,20 +363,26 @@ const PACKAGES = [
     name: '@apollo-design/locale',
     layer: 'L2',
     purpose:
-      '国际化数据包：75 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护。',
+      '国际化数据包：73 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护。',
     replaces: ['antd/locale/*'],
-    deps: { dayjs: 'catalog:' },
-    peerDeps: {},
+    // ⚠️ 本包**零依赖**：语言包是纯数据，不需要 dayjs（那是 date-picker 组件的依赖）。
+    //    这也是仓库里唯一一个 dependsOn 为空的 foundation 包。
+    deps: {},
+    // 但 useLocale / LocaleProvider 要 vue（inject / provide / defineComponent）—— R6 必须声明
+    peerDeps: { vue: 'catalog:' },
     publicApi: [
-      'Locale 类型（与 antd 的 Locale 结构逐字段一致）',
-      '75 个语言包：zh_CN / en_US / ja_JP / ...（按 antd 现有清单）',
+      'Locale 类型（与 antd 的 Locale 结构逐字段一致，含 17 个分片键）',
+      '73 个语言包：zh_CN / en_US / ja_JP / ...（导出名保留 antd 的下划线原名，便于只改包名迁移）',
       '各组件 locale 分片：DatePicker / Pagination / Table / Form / Upload / ...',
-      '默认导出 zh_CN',
+      'useLocale(name, defaultLocale?) —— 取某组件的 locale（**浅合并，context 侧赢**）',
+      'LocaleProvider（已废弃）+ ANT_MARK —— 上游用它做「官方导出」校验',
+      'changeConfirmLocale / getConfirmLocale —— Modal confirm 的模块级 locale 栈',
     ],
     notDo: [
       '不做运行时语言切换（那是 ConfigProvider 的 locale prop）',
       '不含任何组件实现',
       '不手工编辑生成产物 —— 改源头或改生成脚本',
+      '不做子路径入口（antd 的 `antd/locale/zh_CN`）—— 本仓库裁决 A 是单文件产物，只能具名导入',
     ],
     contracts: [
       'Locale 类型的字段名与 antd 完全一致（用户迁移时 locale 对象可直接沿用）',
@@ -386,7 +392,7 @@ const PACKAGES = [
     risk: 'low',
     phase2Order: 10,
     buildNote:
-      '本包由 `registry/tools/gen-locale.mjs` 从 antd 源码的 `components/locale/*.ts(x)` 生成到 `src/generated/`。生成目录不入 review（同 icons）。',
+      '本包由 `registry/tools/gen-locale.mjs` 从 antd 6.6.4 的 **ESM 产物**（`es/locale/*.js`）求值后生成到 `src/locales/`。生成目录不入 review（同 icons）。rc 的 locale 数据固化在 `registry/source/locale-rc/`（带 provenance + sha256）。',
   },
   {
     dir: 'form-core',
