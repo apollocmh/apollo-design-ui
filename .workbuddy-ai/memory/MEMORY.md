@@ -46,6 +46,22 @@ L0 utils/theme/icons ｜ 测试 test-utils
 - 组件间共享代码放 `packages/ui/src/_internal/` 叶子模块；组件间禁止互相 import。
 - `prefixCls` 默认 **`apollo`**，ConfigProvider 可覆盖为 `ant`。
 
+### 🚨 R7：发布包零 `@ant-design/*` 运行时依赖（2026-09-18 落地）
+
+用户裁决 + ADR 0004。**发布包的 `dependencies` 不得含任何 antd 生态包**，
+它们只允许出现在三处：① 构建期数据源（`registry/tools/gen-*.mjs`）
+② 测试 Oracle（`*.oracle.test.ts`）③ `devDependencies`。
+
+- **门禁**：`registry:validate` 的 **E19** 双扫描（package.json 的 `dependencies` + 产物 import）。
+  `scaffold-packages.mjs` 另有一道更早的校验（模板的 `deps` 里出现 antd 包直接报错）。
+- **`pnpm-workspace.yaml` 的 catalog** 已把这三个包从 Runtime 挪到 Build-time 分组。
+- **两个策略**（`registry/dependencies.json` 的 `strategyLegend` 新增）：
+  `generate` 构建期固化数据（icons-svg → `src/icons/*.ts` 字面量）；
+  `port` 移植算法 + 差分验证（colors / fast-color → `utils/src/color/`）。
+- ⚠️ **不要**把 antd 包从 devDeps 挪回 deps —— 那会让 E19 直接红。
+- ⚠️ **E11/E19 扫描产物前必须 `stripComments()`**：unbuild **不剥 JSDoc**，
+  而注释里大量出现「曾经这样写 `from '@ant-design/...'`」的示例，会被当成真实 import。
+
 ### ⭐ utils 比想象中全 —— 动手前先 grep `packages/utils/src`
 
 - `dom/focus.ts` —— **焦点陷阱全套**：`focusable` / `getFocusNodeList` / `lockFocus` /
@@ -53,6 +69,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
   Tab 两步式环绕）。**`a11y` 只再导出**，不重写（L0 不能依赖 L1）。
 - `dom/is-visible.ts` / `dom/contains.ts` / `hooks/use-id.ts` / `key-code.ts` / `raf.ts` /
   `env.ts`（`isDev`、`canUseDom`）/ `dev-warning.ts`（`devUseWarning(valid, message)` **两参**）
+- `color/` —— **上游两个颜色包的移植落点**：`Color` 类（≈ fast-color）、`generatePalette()`
+  （≈ `@ant-design/colors` 的 generate）。`theme` 与 `icons` 共用，只放算法**不放色值**。
+  暗色的 `backgroundColor` 是**必填**参数（上游硬编码 `#141414`，那是色值字面量，归 theme 持有）。
+  改这里必须跑 `packages/utils/src/__tests__/color.oracle.test.ts`（对上游逐位差分）。
 
 ## 收口流程（每包照做）
 
