@@ -307,6 +307,13 @@ const components = COMPONENTS.map((meta) => {
     docsStatus: prev.docsStatus ?? 'todo', // G11 文档
 
     notes: meta.notes ?? null,
+
+    // `layerNotes` 是**保留字段**：某个维度判 `n/a` 时必须在这里写清架构依据
+    // （与 foundation 包的 testLayers.layerNotes 同一约定，见 WORKFLOW.md §1.3
+    // 与 COMPONENT-RULES.md §12.4 的「用 n/a 掩盖未做」一条）。
+    // 它不参与派生，所以只做原样搬运 —— 但必须在生成器的输出里，
+    // 否则每次 `registry:gen` 都会把它抹掉。
+    layerNotes: prev.layerNotes ?? null,
   };
 });
 

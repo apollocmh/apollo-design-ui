@@ -35,7 +35,12 @@ export const COMPONENTS = [
     group: '数据展示',
     priority: 'P0',
     complexity: 'S',
-    notes: 'config-provider 的 defaultRenderEmpty 依赖它，因此必须先于 config-provider 完成。',
+    notes:
+      'config-provider 的 defaultRenderEmpty 依赖它，因此必须先于 config-provider 完成。' +
+      ' 2026-09-17：G1→G14 走完，10 个维度 done / 2 个 n/a（token / interaction，依据见 layerNotes）' +
+      ' / 1 个 blocked（visualStatus —— L6 视觉回归基建尚未落地，见 blockers）。' +
+      ' 本组件同时是组件侧流水线的第一块试金石：它暴露并修掉了 4 个基础设施缺口' +
+      '（ui 的 SFC 构建与类型产物、compat 基线机制、mountTest 的观察者误报、tests/build 的字母序构建）。',
   },
   {
     name: 'config-provider',

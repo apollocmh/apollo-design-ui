@@ -267,6 +267,59 @@ export const OPEN_DECISIONS = [
     impact: '影响 tests/visual 的基建（Phase 3 中期），不阻塞 foundation 包',
   }),
 
+  open('ui-style-output', {
+    raisedAt: '2026-09-17',
+    question:
+      'packages/ui 的组件样式产物是什么形态？按需引入（`@apollo-design/ui/<component>/style.css`）是否要真正落实？',
+    context:
+      '`build-output-contract` 的裁决 A 把 foundation 层定为**单文件 dist/**，并明确「ui 的按需引入需求留待组件阶段单独裁决」。现在第一个组件（empty）落地，必须定：组件样式是全部汇总成一份 CSS，还是每组件一份 + 汇总。这决定了 ui 的 build.config.ts 形态、L7 的 B5/B6 判据（体积预算 budget.json），以及用户能否只引一个组件的样式。',
+    options: [
+      {
+        label: 'A. 每组件一份 CSS + 汇总 index.css（推荐）',
+        tradeoff:
+          '支持 `import "@apollo-design/ui/empty/style.css"` 按需引入，同时保留整体引入；72 个组件规模下体积可控。代价是构建配置与 L7 的 B6（体积预算）复杂度上升。',
+      },
+      {
+        label: 'B. 只出汇总单文件 dist/index.css',
+        tradeoff:
+          '改动最小、与 foundation 层一致；代价是任何组件都带全量样式，按需引入无从谈起，L7 的 B6 只能判 n/a。',
+      },
+      {
+        label: 'C. 每组件一份 CSS，不出汇总',
+        tradeoff:
+          '最纯粹；代价是用户需手动引 N 份样式，L7 的 B5「dist 下存在 CSS 产物」判据要改写成按组件查找。',
+      },
+    ],
+    recommendation: 'A。这是 72 组件规模下唯一体积可控、且保留整体引入便利的形态。',
+    impact:
+      '决定 packages/ui 的 build.config.ts 形态、tests/build/run.mjs 的 B5/B6/B7 判据，以及全部 72 个组件的样式落地方式',
+    blocks: [],
+  }),
+
+  open('empty-semantic-fn', {
+    raisedAt: '2026-09-17',
+    question:
+      '`classNames` / `styles` 是否支持 antd 的函数式变体（`EmptySemanticAllType` 的 `classNamesAndFn` / `stylesAndFn`）？',
+    context:
+      'antd 6 的语义化 classNames/styles 允许传对象或函数（`(info: { props }) => 对象`）。Empty 是无状态纯展示组件，函数式变体拿不到任何组件内部状态，传函数在语义上等价于传常量。组件分析文档 §9 的 D4 原本倾向不支持。',
+    options: [
+      {
+        label: 'A. 不支持（组件分析文档原推荐）',
+        tradeoff:
+          '少一条用不到的代码路径；代价是 API 面与 antd 出现差异，从 antd 迁移的代码若用了函数式会静默失效。',
+      },
+      {
+        label: 'B. 支持，与 antd 完全对齐（已选）',
+        tradeoff:
+          'API 面零差异、迁移零成本，且 `useMergeSemantic` 的合并语义可以整套复用（对后续 71 个组件同样是基础设施）；代价是这条路径在 Empty 上无法被「真实状态」覆盖测试，只能用「函数被调用且收到 `{props}`」来断言。',
+      },
+    ],
+    recommendation: 'B。语义化合并是横切基础设施，形态统一比单组件省一行代码更重要。',
+    impact:
+      '决定 packages/ui 的语义化合并工具（`useMergeSemantic` 等价物）是否实现函数式分支；影响全部使用 classNames/styles 的组件',
+    blocks: [],
+  }),
+
   // -------------------------------------------------------------------------
   // 已裁决项：不是待办，是**决策记录**。保留在此以便回溯「为什么这么定」。
   // -------------------------------------------------------------------------
