@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具的所有权、易错判据、未决事项。
 > 规则本体看 `AGENTS.md` / `WORKFLOW.md` / `TESTING.md` / `COMPATIBILITY.md`；
-> 踩过的坑看同目录 **`PITFALLS.md`**（45 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
+> 踩过的坑看同目录 **`PITFALLS.md`**（53 条，体积太大不进注入）；日常进展看 `YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -105,43 +105,47 @@ git merge --ff-only workbuddy/master-1c4ca77a
 
 ---
 
-## 组件侧（packages/ui）尚未搭起来的三件事
+## 组件侧（packages/ui）—— 2026-09-18 已搭起来的部分
 
-`next-task` 判定 `empty` 可以开始（foundation 依赖全 completed），但组件侧的**流水线**还是空的：
+第一个组件 `empty` 落地时把流水线补齐了。**新增/改动的件**（细节见 `2026-09-18.md`）：
 
-| 缺口 | 现状 |
+| 件 | 现状 |
 |---|---|
-| 样式层 | `packages/ui` 只有骨架：**没有** `build.config.ts`、没有 CSS 汇总方式 |
-| `tests/build/run.mjs` | **不覆盖 `packages/ui`** |
-| `tests/compat/runner/index.mjs` | ⚠️ **文件不存在**（`package.json` 的 `test:compat` 却指向它） |
-| `tests/visual` | 只有 README，基线未入库（决策 `visual-baseline-in-git` 未裁决） |
+| `packages/ui/build.config.ts` | ✅ SFC 构建（`rollup:options` 塞 `@vitejs/plugin-vue`）+ 每组件 CSS + `dist/index.css` |
+| 类型产物 | ✅ **关掉 unbuild 的 `declaration`**（对 `.vue` 会静默产出错误的 `.d.ts`），改 `vue-tsc` |
+| `tests/build/run.mjs` | ✅ 改为**拓扑序**构建；B5/B7/B8 对 ui 转为真实校验（B6 仍 PENDING） |
+| `tests/compat/runner/index.mjs` | ✅ 已创建（基线生成/校验入口） |
+| `tests/visual` | ⬜ **仍未落地**（只有 README）—— 这是 `empty` 唯一未达的维度 |
 
-⇒ `empty` 是「**第一个**组件」不是「一个小组件」。开工前先裁决这三件。
+⚠️ **`pnpm -r run build` 永远不可用**（`ERR_PNPM_TASK_CYCLE`，见 PITFALLS 49）。
+权威构建入口是 `node tests/build/run.mjs`。
 
 ---
 
 ## ⚠️ 未决事项（接手先看）
 
-1. AR1 / AR2 均已解除；motion 的三项遗留见 registry `notes`。
-2. **`next-task` 的默认视图已切到「组件」**（locale 2026-09-17 收口，foundation 10/13）：
-   下一个任务 = `empty` 组件（P0 / complexity S / 解锁 51 个组件）。
-   foundation 视图仍剩 3 个 todo：overlay / form-core / picker。
-   `empty` 的 **G1 分析产物已完成**（`docs/analysis/empty.md`），**实现未开始**。
-3. **六个包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` / `motion.CSSMotion` /
-   `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList` / `locale` 全部。联调时若 API 形状不够用，需回来改并同步 contract 文档。
-   这条风险重复出现在四个包的 registry `notes` 里。⚠️ portal 另有：SSR「不建容器」只覆盖了
-   `resolveContainer` 的早退分支。
-4. **`verification.typecheck` 是无人校验的 Agent 断言** —— `foundation-status.mjs` 把它初始化为
-   `not-run` 后**从不计算**，而 E16 拿它当 `completed` 依据。对应的两个真实错误已修，但机制缺口没修。
-   建议给 `--verify` 加全仓 `vue-tsc` 并按包归属写回（登记在 `test-utils-contract.md` §8 Q3）。
-5. **别把「没有新增 error」当成「没有 error」** —— 收口必须跑**全仓**门禁并对齐 `lint` 脚本真实定义
-   （= `lint:types` + `biome check .`）。
-6. **无上游可对齐的区域要显式标注**：`a11y` 的 typeahead 在 antd + rc-* 里零命中（语义自定义）；
-   `a11y` 的 live region 隐藏样式选 1×1+clip 是实践判断。这类结论必须写进 contract §9，不能当已验证。
-7. 用户此前要求：**规划完成后等待确认，不要自行进入大规模组件实现。**
-8. ⚠️ **全仓 `vitest run --project unit` 在这台 16G 机器上会被 OOM killer 杀掉**（exit 137、
-   零输出，症状像「命令写错」）。用 `foundation-status.mjs --verify`（按包跑，覆盖全部 13 个包）
-   或逐项目跑作为全仓证据。细节见 `PITFALLS.md` 第 41 条。
-9. ⚠️ **`locale` 最该先确认的一条**：裁决 A 是单文件产物，73 个语言包都在同一个
-   `dist/index.mjs` 里 —— 未使用的语言包能否被摇掉**没有实测打包体积**
-   （已声明 `sideEffects: false`）。契约文档 §9 第 7 条。
+1. **下一个组件**：`empty` 已推到 `blocked`（只差 L6），`next-task` 会给新目标。
+   建议第二个选**有交互**的组件（如 `button`），把 L2 那层也验一遍。
+2. ⚠️⚠️ **`VNodeChild` 类型的 prop 必须在 `withDefaults` 里显式声明 `undefined` 默认值**
+   —— Vue 的 Boolean prop 转换会把「未传」变成 `false`（PITFALLS 46 / COMPATIBILITY D21）。
+   症状极隐蔽：组件能渲染，只是少一块；不报错、不警告、类型检查也过。
+3. **L6 视觉回归基建**是 `empty` 从 `blocked` 到 `completed` 的唯一缺口，也是 G9 的门。
+   裁决已定（`visual-baseline-in-git` = A：入库 git）。
+4. **D24（locale 变更不触发重渲染）** 的正解是给 `@apollo-design/locale` **新增**一个
+   返回 `ComputedRef` 的变体 —— **不能改 `useLocale` 的签名**（会破坏它已完成的契约）。
+5. **B6（按需引入体积预算）** 仍 PENDING：需要 `budget.json` + 一次 vite lib 构建量体积。
+6. **`biome.json` 不能写注释**，且 `biome check --write` 在配置非法时会**静默重排全仓**
+   （PITFALLS 47）。改完配置先跑一次不带 `--write` 的检查。
+7. **六个 foundation 包的 `api` 标了 done 但尚未被上层真实消费**：`position.measureAlign` /
+   `motion.CSSMotion` / `portal.Portal` / `a11y` 全部组合式 / `virtual-list.VirtualList` /
+   `locale` 全部。`empty` 首次消费了 `locale.useLocale` 与 `theme.token2CSSVar`，
+   **发现 locale 的响应式缺口（第 4 条）** —— 其余仍未联调。
+8. **`verification.typecheck` 是无人校验的 Agent 断言**（`foundation-status.mjs` 从不计算它，
+   而 E16 拿它当 `completed` 依据）。机制缺口未修。
+9. **无上游可对齐的区域要显式标注**：`a11y` 的 typeahead 零命中、live region 的隐藏样式
+   是实践判断。这类结论必须写进 contract §9，不能当已验证。
+10. ⚠️ **全仓 `vitest run --project unit` 在这台 16G 机器上会被 OOM killer 杀掉**（exit 137、
+    零输出）。用 `foundation-status.mjs --verify`（按包跑）或**逐项目跑**作为全仓证据。
+    连续跑多个 project 也会 OOM —— 跑完一个等内存回收再跑下一个。
+11. **`locale` 最该先确认的一条**：裁决 A 是单文件产物，73 个语言包都在同一个
+    `dist/index.mjs` 里 —— 未使用的语言包能否被摇掉**没有实测打包体积**。
