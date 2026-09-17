@@ -489,6 +489,9 @@ const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV !== 'produ
 `fillRef` `composeRef` `useComposeRef` `supportRef` `supportNodeRef` `getNodeRef`
 `useControlledValue` `useDelayState` `useUpdateEffect` `useId` `useSafeState`
 
+**新增（颜色数学，2026-09-18，非 rc-util 来源 —— 见 §10）**
+`Color` `generatePalette`
+
 **移除**
 `useEvent` `useMemo` `useMergedState` `findDOMNode` `getScrollBarSize`(降为内部)
 
@@ -507,3 +510,67 @@ const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV !== 'produ
 | Q1 | `prefixCls` 默认值 `apollo` 还是 `ant`？ | 决定 warning 前缀 `[apollo: X]` vs `[ant: X]`，进而决定全部告警断言与快照 |
 | Q7 | 是否接受 §6.1 的「`pickAttrs` 默认转换事件名」这一行为差异？ | 影响 15+ 组件与全部 attrs 透传 |
 | Q8 | `useId` 是否需要在测试环境固定为常量（antd 行为）？ | 影响所有 `aria-*` 关联的 DOM Contract 断言 |
+
+---
+
+## 10. 颜色模块（2026-09-18 新增，**非 rc-util 来源**）
+
+本文件其余部分都在讲「`@rc-component/util` 的哪些符号怎么替代」。颜色模块不一样 ——
+它替代的是 **`@ant-design/colors` 与 `@ant-design/fast-color`**（`ADR 0003` 的 `reuse` 策略
+曾把它们判为「纯算法，可直接复用」）。依据 **ADR 0004 / `ARCHITECTURE.md` R7**，
+它们不能再进用户的依赖树，所以改为**移植 + 差分验证**。
+
+### 为什么放在 `utils` 而不是新开包
+
+依据 `ARCHITECTURE.md` §3.1 **R2 的例外条款**：`utils` 是 L0 的公共底座，
+`icons` / `motion` / `portal` / `position` / `a11y` / `virtual-list` / `form-core` / `picker`
+都已依赖它（这条边在本次改动前就存在，只是当时没写进规则）。
+颜色数学的消费者是 `theme` 与 `icons` 两个包 —— 新开第 14 个包会把
+「只建必要数量」的约束往坏的方向推。
+
+### 落点与范围
+
+| 符号 | 对应上游 | 说明 |
+| --- | --- | --- |
+| `Color` | `@ant-design/fast-color` 的 `FastColor` | 只实现本仓库真实用到的部分：hex / `rgb()` / `hsl()` / `hsv()` 解析，`toRgb` / `toHsv` / `toHsl` / `toHexString` / `toRgbString`，`setAlpha` / `darken` / `lighten` / `mix` |
+| `generatePalette(color, opts)` | `@ant-design/colors` 的 `generate()` | 10 阶色板；`opts.theme === 'dark'` 时走暗色映射表 |
+
+### 三处**有意**差异（都有断言钉住）
+
+1. **不支持 CSS 颜色名**（`red` / `aliceblue` …）。上游 `FastColor` 内置 148 个名字的查表，
+   那是一份**色值数据**，放 L0 违反 R3。本库的色值只可能来自 Token，而 Token 全是
+   hex / `rgb()` 记法，不影响已知路径。断言见 `color.oracle.test.ts`。
+2. **暗色的 `backgroundColor` 必填**。上游把它默认成 `#141414` —— 一个色值字面量。
+   色值归 `theme` 持有（`packages/theme/src/seed.ts` 的 `DARK_PALETTE_BASE`），
+   `utils` 只收参数。用可辨识联合表达，漏传在**编译期**就红。
+3. **不可变**。上游的 `setR/setG/setB/setA` 返回克隆；本类所有方法同样返回新实例，
+   因此 `clone()` 直接返回 `this`，语义等价且少一次分配。
+
+### R3 的判据是「字面值」，不是「名字」
+
+`ARCHITECTURE.md` R3 的原文是「不出现颜色、圆角、间距、字号的**字面值**」。
+本次之前，`__tests__/barrel.test.ts` 用一条**按名字**的正则
+（`/color|colour|radius|shadow|font|theme|token|palette/i`）来守这条规则 ——
+于是 `Color` / `generatePalette` 被误判为违规。
+
+已改为**源码扫描**：遍历 `packages/utils/src/`（排除 `__tests__`），
+剥掉注释后匹配色值字面量（`#abc` / `#aabbcc` / 带数字的 `rgba(...)`）。
+它测的是规格本身，比名字匹配严格 —— 而且真的抓出了一处：
+`generate.ts` 里上游硬编码的 `#141414`（即上面的差异 2）。
+
+⚠️ 名字检查并未全部删除：`radius` / `shadow` / `font` / `theme` / `token`
+这些关键词保留（utils 里没有它们的合法用途），去掉的只有 `color` / `palette`。
+
+### 验证机制（这是本模块唯一的正确性依据）
+
+`packages/utils/src/__tests__/color.oracle.test.ts` 把上游包当 **Oracle**
+（`devDependencies`，R7 允许的三种位置之一），对 90+ 组样本逐位比对：
+13 个预设主色 + 灰阶 + 边界色 + 确定性伪随机 64 色，覆盖亮/暗色板、
+`toRgb` / `toHsv` / `toHsl`、`darken` / `lighten` / `mix` / `setAlpha`、函数式记法解析。
+
+**改 `src/color/` 下任何文件都必须跑这个测试。** 若某天它变红，正确动作是
+「确认上游改动 → 同步移植」，**不是**放宽断言或加容差。
+
+下游的两条独立证据（也在每次收口时跑）：
+`packages/theme/src/__tests__/baseline.test.ts`（对 antd 真实产出的 token 逐字段）
+与 `packages/icons/src/__tests__/semantic.test.ts`（848 个图标对 React 基线逐属性）。
