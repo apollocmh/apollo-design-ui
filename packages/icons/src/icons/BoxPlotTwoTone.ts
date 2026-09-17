@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import BoxPlotTwoToneSvg from '@ant-design/icons-svg/es/asn/BoxPlotTwoTone';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const BoxPlotTwoTone = /*#__PURE__*/ createIcon(BoxPlotTwoToneSvg, 'BoxPlotTwoTone');
+const definition: IconDefinition = {
+  icon: (primaryColor: string, secondaryColor: string) => ({"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M296 368h88v288h-88zm152 0h280v288H448z","fill":secondaryColor}},{"tag":"path","attrs":{"d":"M952 224h-52c-4.4 0-8 3.6-8 8v248h-92V304c0-4.4-3.6-8-8-8H232c-4.4 0-8 3.6-8 8v176h-92V232c0-4.4-3.6-8-8-8H72c-4.4 0-8 3.6-8 8v560c0 4.4 3.6 8 8 8h52c4.4 0 8-3.6 8-8V548h92v172c0 4.4 3.6 8 8 8h560c4.4 0 8-3.6 8-8V548h92v244c0 4.4 3.6 8 8 8h52c4.4 0 8-3.6 8-8V232c0-4.4-3.6-8-8-8zM384 656h-88V368h88v288zm344 0H448V368h280v288z","fill":primaryColor}}]}),
+  name: "box-plot",
+  theme: "twotone",
+};
+
+export const BoxPlotTwoTone = /*#__PURE__*/ createIcon(definition, 'BoxPlotTwoTone');

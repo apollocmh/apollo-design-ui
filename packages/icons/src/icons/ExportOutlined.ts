@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import ExportOutlinedSvg from '@ant-design/icons-svg/es/asn/ExportOutlined';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const ExportOutlined = /*#__PURE__*/ createIcon(ExportOutlinedSvg, 'ExportOutlined');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"fill-rule":"evenodd","viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M880 912H144c-17.7 0-32-14.3-32-32V144c0-17.7 14.3-32 32-32h360c4.4 0 8 3.6 8 8v56c0 4.4-3.6 8-8 8H184v656h656V520c0-4.4 3.6-8 8-8h56c4.4 0 8 3.6 8 8v360c0 17.7-14.3 32-32 32zM770.87 199.13l-52.2-52.2a8.01 8.01 0 014.7-13.6l179.4-21c5.1-.6 9.5 3.7 8.9 8.9l-21 179.4c-.8 6.6-8.9 9.4-13.6 4.7l-52.4-52.4-256.2 256.2a8.03 8.03 0 01-11.3 0l-42.4-42.4a8.03 8.03 0 010-11.3l256.1-256.3z"}}]},
+  name: "export",
+  theme: "outlined",
+};
+
+export const ExportOutlined = /*#__PURE__*/ createIcon(definition, 'ExportOutlined');

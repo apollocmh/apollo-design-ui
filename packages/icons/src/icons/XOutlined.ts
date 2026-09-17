@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import XOutlinedSvg from '@ant-design/icons-svg/es/asn/XOutlined';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const XOutlined = /*#__PURE__*/ createIcon(XOutlinedSvg, 'XOutlined');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"fill-rule":"evenodd","viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M921 912L601.11 445.75l.55.43L890.08 112H793.7L558.74 384 372.15 112H119.37l298.65 435.31-.04-.04L103 912h96.39L460.6 609.38 668.2 912zM333.96 184.73l448.83 654.54H706.4L257.2 184.73z"}}]},
+  name: "x",
+  theme: "outlined",
+};
+
+export const XOutlined = /*#__PURE__*/ createIcon(definition, 'XOutlined');

@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import BlockOutlinedSvg from '@ant-design/icons-svg/es/asn/BlockOutlined';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const BlockOutlined = /*#__PURE__*/ createIcon(BlockOutlinedSvg, 'BlockOutlined');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M856 376H648V168c0-8.8-7.2-16-16-16H168c-8.8 0-16 7.2-16 16v464c0 8.8 7.2 16 16 16h208v208c0 8.8 7.2 16 16 16h464c8.8 0 16-7.2 16-16V392c0-8.8-7.2-16-16-16zm-480 16v188H220V220h360v156H392c-8.8 0-16 7.2-16 16zm204 52v136H444V444h136zm224 360H444V648h188c8.8 0 16-7.2 16-16V444h156v360z"}}]},
+  name: "block",
+  theme: "outlined",
+};
+
+export const BlockOutlined = /*#__PURE__*/ createIcon(definition, 'BlockOutlined');

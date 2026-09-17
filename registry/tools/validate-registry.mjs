@@ -342,6 +342,20 @@ if (hardcodeHits === 0) ok('E10', '已实现的组件样式中无硬编码视觉
 // ---------------------------------------------------------------------------
 // E11  产物中无 React 痕迹
 // ---------------------------------------------------------------------------
+/**
+ * 扫描产物前先剥掉注释。
+ *
+ * 为什么必须剥：unbuild **不**剥离 JSDoc，而本仓库的注释里大量出现
+ * 「曾经这样写」的示例代码，例如 `export type { … } from '@ant-design/icons-svg/es/types'`。
+ * 不剥的话这些**说明文字**会被当成真实 import 报出来 —— E19 首次运行时就撞上了这个假阳性
+ * （报 `dist/index.d.ts` 引用了上游类型，实际那 13 处命中全在注释里）。
+ *
+ * 只会减少假阳性，不会引入假阴性：真实 import 不可能出现在注释里。
+ */
+function stripComments(text) {
+  return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+}
+
 const REACT_MARKERS = ['react', 'react-dom', '@rc-component', '@ant-design/cssinjs'];
 let productScanned = 0;
 for (const pkg of fs.existsSync(path.join(ROOT, 'packages'))
@@ -358,7 +372,7 @@ for (const pkg of fs.existsSync(path.join(ROOT, 'packages'))
         const fp = path.join(cur, e.name);
         if (e.isDirectory()) stack.push(fp);
         else if (/\.(js|mjs|cjs)$/.test(e.name)) {
-          const text = fs.readFileSync(fp, 'utf8');
+          const text = stripComments(fs.readFileSync(fp, 'utf8'));
           for (const marker of REACT_MARKERS) {
             // 匹配 import/require/from 中的模块说明符，避免误判注释或字符串内容
             const escaped = marker.replace(/[/-]/g, '[/-]');
@@ -825,6 +839,89 @@ if (!errors.some((e) => e.code === 'E16')) {
       );
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// E19  R7：发布包零 Ant Design 运行时依赖
+//
+// 两道扫描缺一不可：
+//   ① package.json 的 dependencies —— 决定 `npm install` 会给用户装什么。
+//      只删 import 但留着 dependencies，用户照样会被装上 @ant-design/*。
+//   ② 构建产物的 import 说明符 —— 决定运行时真的去解析谁。
+//      只改 package.json 不改代码，产物会在用户环境里 MODULE_NOT_FOUND。
+//
+// 本检查**不**覆盖（它们不进用户依赖树，是 R7 允许的三种位置）：
+//   - devDependencies（构建期数据源 / 测试 Oracle）
+//   - registry/tools/gen-*.mjs、tests/compat/、*.oracle.test.ts
+// ---------------------------------------------------------------------------
+const ANTD_RUNTIME_FORBIDDEN = [
+  /^@ant-design\//,
+  /^antd$/,
+  /^react(-dom)?$/,
+  /^@rc-component\//,
+  /^rc-/,
+];
+const pkgDir = path.join(ROOT, 'packages');
+let e19Pkgs = 0;
+for (const dir of fs.existsSync(pkgDir) ? fs.readdirSync(pkgDir) : []) {
+  const manifest = path.join(pkgDir, dir, 'package.json');
+  if (!fs.existsSync(manifest)) continue;
+  let json;
+  try {
+    json = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+  } catch {
+    err('E19', `packages/${dir}/package.json 无法解析`);
+    continue;
+  }
+  // private 包（test-utils）不发布，不受约束
+  if (json.private === true) continue;
+  e19Pkgs += 1;
+  for (const dep of Object.keys(json.dependencies ?? {})) {
+    if (ANTD_RUNTIME_FORBIDDEN.some((re) => re.test(dep))) {
+      err(
+        'E19',
+        `packages/${dir} 的 dependencies 含 ${dep} —— 违反 R7。` +
+          `antd 生态包只能作构建期数据源 / 测试 Oracle，请移到 devDependencies`,
+      );
+    }
+  }
+}
+
+let productScannedE19 = 0;
+for (const dir of fs.existsSync(pkgDir) ? fs.readdirSync(pkgDir) : []) {
+  for (const out of ['dist', 'es']) {
+    const target = path.join(pkgDir, dir, out);
+    if (!fs.existsSync(target)) continue;
+    productScannedE19 += 1;
+    const stack = [target];
+    while (stack.length) {
+      const cur = stack.pop();
+      for (const e of fs.readdirSync(cur, { withFileTypes: true })) {
+        const fp = path.join(cur, e.name);
+        if (e.isDirectory()) stack.push(fp);
+        else if (/\.(js|mjs|cjs|d\.ts)$/.test(e.name)) {
+          // 剥注释 + 只认 import/require 的模块说明符，两道都必要：
+          // 只剥注释仍会命中字符串字面量，只认说明符仍会命中注释里的示例。
+          const hit = stripComments(fs.readFileSync(fp, 'utf8')).match(
+            /(?:from|require\s*\(|import\s*\()\s*["'](@ant-design\/[^"']+|antd)["']/,
+          );
+          if (hit) {
+            err(
+              'E19',
+              `产物 ${path.relative(ROOT, fp)} 运行时引用了 ${hit[1]}（违反 R7）—— 数据必须构建期固化`,
+            );
+          }
+        }
+      }
+    }
+  }
+}
+
+if (!errors.some((e) => e.code === 'E19')) {
+  ok(
+    'E19',
+    `发布包零 @ant-design/* 运行时依赖（${e19Pkgs} 个包 + ${productScannedE19} 个产物目录；antd 仅存在于 devDeps / 生成器 / Oracle）`,
+  );
 }
 
 report();

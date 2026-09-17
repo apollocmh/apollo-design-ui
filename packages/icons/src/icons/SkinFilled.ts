@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import SkinFilledSvg from '@ant-design/icons-svg/es/asn/SkinFilled';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const SkinFilled = /*#__PURE__*/ createIcon(SkinFilledSvg, 'SkinFilled');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M870 126H663.8c-17.4 0-32.9 11.9-37 29.3C614.3 208.1 567 246 512 246s-102.3-37.9-114.8-90.7a37.93 37.93 0 00-37-29.3H154a44 44 0 00-44 44v252a44 44 0 0044 44h75v388a44 44 0 0044 44h478a44 44 0 0044-44V466h75a44 44 0 0044-44V170a44 44 0 00-44-44z"}}]},
+  name: "skin",
+  theme: "filled",
+};
+
+export const SkinFilled = /*#__PURE__*/ createIcon(definition, 'SkinFilled');

@@ -24,14 +24,14 @@
     "lint": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@ant-design/icons-svg": "catalog:",
-    "@ant-design/colors": "catalog:",
     "@apollo-design/utils": "workspace:*"
   },
   "peerDependencies": {
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@apollo-design/test-utils": "workspace:*"
+    "@apollo-design/test-utils": "workspace:*",
+    "@ant-design/icons-svg": "catalog:",
+    "@ant-design/colors": "catalog:"
   }
 }

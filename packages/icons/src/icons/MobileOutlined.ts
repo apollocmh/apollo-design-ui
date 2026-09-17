@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import MobileOutlinedSvg from '@ant-design/icons-svg/es/asn/MobileOutlined';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const MobileOutlined = /*#__PURE__*/ createIcon(MobileOutlinedSvg, 'MobileOutlined');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M744 62H280c-35.3 0-64 28.7-64 64v768c0 35.3 28.7 64 64 64h464c35.3 0 64-28.7 64-64V126c0-35.3-28.7-64-64-64zm-8 824H288V134h448v752zM472 784a40 40 0 1080 0 40 40 0 10-80 0z"}}]},
+  name: "mobile",
+  theme: "outlined",
+};
+
+export const MobileOutlined = /*#__PURE__*/ createIcon(definition, 'MobileOutlined');

@@ -54,7 +54,13 @@ try {
 }
 const svgVersion = JSON.parse(fs.readFileSync(path.join(svgDir, 'package.json'), 'utf8')).version;
 
-const ASN_DIR = path.join(svgDir, 'es/asn');
+// ⚠️ 用 `lib/asn`（CommonJS）而不是 `es/asn`：
+//   `@ant-design/icons-svg` 的 package.json **没有** `"type": "module"`，
+//   所以 `es/*.js` 尽管写的是 ESM 语法，Node 仍会按 CJS 解析 —— `import()` 它会
+//   `SyntaxError: Unexpected token 'export'`。本脚本要在构建期**求值**这些定义，
+//   只能走 `require()`。
+//   生成物里不会再出现任何对它的引用（R7），所以 es / lib 的差异不影响产物。
+const ASN_DIR = path.join(svgDir, 'lib/asn');
 if (!fs.existsSync(ASN_DIR)) {
   console.error(`[icons] 找不到 ${ASN_DIR}`);
   process.exit(1);
@@ -96,9 +102,83 @@ if (BAD_SUFFIX.length > 0) {
 // ---------------------------------------------------------------------------
 
 const HEADER = `// 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 `;
+
+// ---------------------------------------------------------------------------
+// 构建期求值 + 序列化
+//
+// 这是 R7 的落点：以前每个文件 `import XxxSvg from '@ant-design/icons-svg/es/asn/Xxx'`，
+// 于是 848 个图标把上游包从「构建期数据源」拖成了「运行时依赖」—— 用户装
+// `@apollo-design/icons` 会被连带装上 `@ant-design/icons-svg`。
+// 现在改为：构建期把定义 **require 进来求值**，序列化成字面量写进生成物，
+// 生成物对上游零引用。
+// ---------------------------------------------------------------------------
+
+/** 求值：拿到 `{ icon, name, theme }`。 */
+function loadDefinition(name) {
+  const mod = pkgRequire(path.join(ASN_DIR, `${name}.js`));
+  const def = mod.default ?? mod;
+  if (!def || typeof def !== 'object' || !('icon' in def)) {
+    console.error(`[icons] ❌ ${name} 的定义不是预期的 IconDefinition 形状`);
+    process.exit(1);
+  }
+  return def;
+}
+
+const PRIMARY_TOKEN = '__APOLLO_PRIMARY__';
+const SECONDARY_TOKEN = '__APOLLO_SECONDARY__';
+
+/**
+ * 把 TwoTone 的 `icon(primaryColor, secondaryColor)` 固化成箭头函数字面量。
+ *
+ * 做法：用两个**哨兵色**调用它 → 把返回的节点 JSON 序列化 → 把带引号的哨兵
+ * 换回标识符 → 包成 `(primaryColor, secondaryColor) => (…)`。
+ *
+ * 为什么不用 `fn.toString()` 直接吐源码：那样生成的函数体会**原样依赖上游的产物格式**
+ * （变量名、闭包引用、压缩后可能引入的外部 helper）。上游一改构建管线，吐出来的
+ * 源码就可能引用一个不存在的变量，而这个错误要等到渲染图标时才炸 —— 最难查的一类。
+ * 哨兵法只依赖一条弱得多的契约：「函数把两个颜色写进了返回值的某个字符串位置」，
+ * 而且这个契约由下面的等价性自检当场验证。
+ */
+function serializeTwoToneIcon(fn, name) {
+  const body = JSON.stringify(fn(PRIMARY_TOKEN, SECONDARY_TOKEN))
+    .split(`"${PRIMARY_TOKEN}"`)
+    .join('primaryColor')
+    .split(`"${SECONDARY_TOKEN}"`)
+    .join('secondaryColor');
+
+  // 自检：用真实颜色求值，确认重建出的函数与原始函数产出完全一致。
+  // 150 个 TwoTone 图标逐个验证，成本可忽略；漏掉一个就是一整类图标画错。
+  const rebuilt = new Function('primaryColor', 'secondaryColor', `return (${body});`);
+  const probe = ['#1677ff', '#e6f4ff'];
+  const a = JSON.stringify(rebuilt(probe[0], probe[1]));
+  const b = JSON.stringify(fn(probe[0], probe[1]));
+  if (a !== b) {
+    console.error(`[icons] ❌ ${name} 的 TwoTone 函数固化后与原始定义不等价`);
+    console.error(`[icons]    rebuilt: ${a.slice(0, 200)}`);
+    console.error(`[icons]    origin : ${b.slice(0, 200)}`);
+    process.exit(1);
+  }
+  return `(primaryColor: string, secondaryColor: string) => (${body})`;
+}
+
+function serializeDefinition(name) {
+  const def = loadDefinition(name);
+  const icon =
+    typeof def.icon === 'function'
+      ? serializeTwoToneIcon(def.icon, name)
+      : JSON.stringify(def.icon);
+  return {
+    icon,
+    name: JSON.stringify(def.name),
+    theme: JSON.stringify(def.theme),
+  };
+}
+
+const serialized = new Map(names.map((n) => [n, serializeDefinition(n)]));
 
 /**
  * 单个图标组件。
@@ -106,13 +186,24 @@ const HEADER = `// 自动生成，请勿手改。
  * `/*#__PURE__*\/` 注解是**必需**的：本包最终会打成单个 `dist/index.mjs`，
  * 消费者能否 tree-shake 掉没用到的 848 个图标，取决于打包器能不能证明
  * `createIcon(...)` 没有副作用。没有这个注解时 Rollup 会保守地保留全部调用。
+ *
+ * 图标定义以**字面量**落在文件里（`icon:` 那一行可能很长）—— 这是 R7 的要求：
+ * 运行时不得 import `@ant-design/icons-svg`。代价是单个文件变大，
+ * 但用户侧的**总**安装体积不变（以前他们也要装上游那份同样的 path 数据）。
  */
 function iconFile(name) {
+  const { icon, name: iconName, theme } = serialized.get(name);
   return `${HEADER}
-import ${name}Svg from '@ant-design/icons-svg/es/asn/${name}';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const ${name} = /*#__PURE__*/ createIcon(${name}Svg, '${name}');
+const definition: IconDefinition = {
+  icon: ${icon},
+  name: ${iconName},
+  theme: ${theme},
+};
+
+export const ${name} = /*#__PURE__*/ createIcon(definition, '${name}');
 `;
 }
 

@@ -5,29 +5,32 @@
  * `components/IconBaseTwoTone.ts`（模块级可变调色板）+ `colorUtils.ts`（副色派生）。
  *
  * 为什么副色是「派生」而不是另一个常量：
- *   `getSecondaryColor(primary)` 取 `@ant-design/colors` 的 10 阶色板第 0 阶（最浅一档）。
+ *   `getSecondaryColor(primary)` 取 10 阶色板第 0 阶（最浅一档）。
  *   `#1677ff` → `#e6f4ff`。这正是 antd 的 TwoTone 图标默认观感的来源，
  *   换成任何"看起来差不多"的浅色都会让图标级像素比对失败。
+ *
+ * 🚨 R7：色板算法来自 `@apollo-design/utils` 的 `generatePalette`
+ * （上游 `@ant-design/colors` 的 `generate()` 的移植，由 `color.oracle.test.ts`
+ * 对上游做逐位差分验证）。本文件运行时不得 import `@ant-design/*`。
  */
 
-import { blue, generate as generateColor } from '@ant-design/colors';
+import { generatePalette } from '@apollo-design/utils';
 
 /** 双色图标的颜色。单值 = 主色（副色派生）；二元组 = `[主色, 副色]`。 */
 export type TwoToneColor = string | [string, string];
 
 /**
- * `@ant-design/colors` 的 `Palette` 类型是 `string[] & { primary?: string }` ——
- * `primary` 在**类型**上可选（为了兼容手工构造的色板），但 `presets` 里的 13 个内置色板
- * 每一项都写入了它。这里收一次口，而不是把 `!` 散到调用点
- * （与 `packages/theme/src/algorithms/palettes.ts` 的 `Colors10` 是同一处理方式）。
+ * 默认主色。
+ *
+ * 这个值等于 `@ant-design/colors` 的 `blue.primary`，但**不是**从它读来的 ——
+ * R7 禁止运行时依赖上游。它是一个被钉住的字面量，钉子在本包的
+ * `__tests__/two-tone-color.oracle.test.ts`：那里用上游包断言
+ * `DEFAULT_TWOTONE_COLOR === blue.primary`。上游若改了这个默认值，那里会红。
  */
-const BLUE_PALETTE = blue as unknown as { primary: string };
-
-/** 默认主色。`@ant-design/colors` 的 `blue.primary`（= `#1677ff`），与 antd 同源。 */
-export const DEFAULT_TWOTONE_COLOR: string = BLUE_PALETTE.primary;
+export const DEFAULT_TWOTONE_COLOR: string = '#1677ff';
 
 /**
- * `@ant-design/colors` 的 `generate()` 恒返回 10 个色值，但它的类型只是 `string[]`，
+ * `generatePalette()` 恒返回 10 个色值，但它的类型只是 `string[]`，
  * 在 `noUncheckedIndexedAccess` 下 `colors[0]` 是 `string | undefined`。
  *
  * 与 `packages/theme/src/algorithms/palettes.ts` 采用同一处理方式：在一处收成定长元组并注明依据，
@@ -52,7 +55,7 @@ type Colors10 = readonly [
  * @example getSecondaryColor('#1677ff') === '#e6f4ff'
  */
 export function getSecondaryColor(primaryColor: string): string {
-  return (generateColor(primaryColor) as unknown as Colors10)[0];
+  return (generatePalette(primaryColor) as unknown as Colors10)[0];
 }
 
 /** {@link setTwoToneColors} 的入参。 */

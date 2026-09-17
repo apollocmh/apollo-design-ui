@@ -1,4 +1,4 @@
-import { FastColor } from '@ant-design/fast-color';
+import { Color } from '@apollo-design/utils';
 
 function isStableColor(color: number): boolean {
   return color >= 0 && color <= 255;
@@ -16,20 +16,20 @@ function isStableColor(color: number): boolean {
  * 短路条件：`originAlpha < 1` 时直接返回原色（已经是半透明，无需再解）。
  */
 export default function getAlphaColor(frontColor: string, backgroundColor: string): string {
-  const { r: fR, g: fG, b: fB, a: originAlpha } = new FastColor(frontColor).toRgb();
+  const { r: fR, g: fG, b: fB, a: originAlpha } = new Color(frontColor).toRgb();
 
   if (originAlpha < 1) {
     return frontColor;
   }
 
-  const { r: bR, g: bG, b: bB } = new FastColor(backgroundColor).toRgb();
+  const { r: bR, g: bG, b: bB } = new Color(backgroundColor).toRgb();
 
   for (let fA = 0.01; fA <= 1; fA += 0.01) {
     const r = Math.round((fR - bR * (1 - fA)) / fA);
     const g = Math.round((fG - bG * (1 - fA)) / fA);
     const b = Math.round((fB - bB * (1 - fA)) / fA);
     if (isStableColor(r) && isStableColor(g) && isStableColor(b)) {
-      return new FastColor({
+      return new Color({
         r,
         g,
         b,
@@ -40,5 +40,5 @@ export default function getAlphaColor(frontColor: string, backgroundColor: strin
 
   // antd 在这里有 `/* istanbul ignore next */`：正常输入下不可达。
   // 我们保留同样的兜底，但不给它写测试断言 —— 断言不可达分支等于断言 nothing。
-  return new FastColor({ r: fR, g: fG, b: fB, a: 1 }).toRgbString();
+  return new Color({ r: fR, g: fG, b: fB, a: 1 }).toRgbString();
 }

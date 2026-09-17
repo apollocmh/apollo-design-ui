@@ -1,24 +1,42 @@
 /**
  * 类型契约。
  *
- * `AbstractNode` / `IconDefinition` / `ThemeType` **直接复用** `@ant-design/icons-svg` 的类型声明，
- * 不在这里重新声明一份。理由：
- *   这两者之间传递的是**数据**（图标路径的抽象节点），类型只是它的结构描述。
- *   自己抄一份会在上游改结构时静默漂移，而结构漂移的表现是「图标画错」——最难发现的一类回归。
- *   `@ant-design/icons` 自己也是这么做的（`import type { IconDefinition } from '@ant-design/icons-svg/lib/types'`）。
+ * 这几个类型**曾经**是 `export type { … } from '@ant-design/icons-svg/es/types'`。
+ * 改成自己声明的依据是 `ARCHITECTURE.md` R7：发布包运行时不得依赖 `@ant-design/*`，
+ * 而类型声明会出现在 `dist/index.d.ts` 里 —— 只要还在 re-export，用户的 TS 就
+ * 必须能解析到上游包，等于把运行时依赖换了个形式留了下来。
  *
- * 我们与 antd 的差别只在深导入路径：用 `es/types` 而不是 `lib/types`，与生成物里
- * `@ant-design/icons-svg/es/asn/*` 的导入保持同一棵目录树。
+ * 声明内容与上游**逐字一致**（已核对 `@ant-design/icons-svg@4.6.0` 的 `es/types.d.ts`），
+ * 结构漂移的风险由两条机制兜住：
+ *   - `registry/tools/gen-icons.mjs` 生成 848 份定义字面量时按这个形状产出，
+ *     上游一改结构，生成物会立刻类型报错；
+ *   - L4 DOM 契约把 848 个图标与 React 基线逐属性比对（`semantic.test.ts`）。
  */
 
 import type { TwoToneColor } from './two-tone-color';
 
-export type {
-  AbstractNode,
-  IconDefinition,
-  ThemeType,
-  ThemeTypeUpperCase,
-} from '@ant-design/icons-svg/es/types';
+/** 图标的抽象节点（SVG 的树形描述，不是 DOM）。 */
+export interface AbstractNode {
+  tag: string;
+  attrs: {
+    [key: string]: string;
+  };
+  children?: AbstractNode[];
+}
+
+export type ThemeType = 'filled' | 'outlined' | 'twotone';
+
+export type ThemeTypeUpperCase = 'Filled' | 'Outlined' | 'TwoTone';
+
+export interface IconDefinition {
+  name: string;
+  theme: ThemeType;
+  /**
+   * TwoTone 图标是**函数**（两种颜色在渲染时才确定），其余是普通节点。
+   * `createIcon` 靠 `typeof icon === 'function'` 分流，与 antd 的两个基组件等价。
+   */
+  icon: ((primaryColor: string, secondaryColor: string) => AbstractNode) | AbstractNode;
+}
 
 /**
  * 图标组件的公共 props。

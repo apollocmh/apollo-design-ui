@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import ThunderboltTwoToneSvg from '@ant-design/icons-svg/es/asn/ThunderboltTwoTone';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const ThunderboltTwoTone = /*#__PURE__*/ createIcon(ThunderboltTwoToneSvg, 'ThunderboltTwoTone');
+const definition: IconDefinition = {
+  icon: (primaryColor: string, secondaryColor: string) => ({"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M695.4 164.1H470.8L281.2 491.5h157.4l-60.3 241 319.8-305.1h-211z","fill":secondaryColor}},{"tag":"path","attrs":{"d":"M848.1 359.3H627.8L825.9 109c4.1-5.3.4-13-6.3-13H436.1c-2.8 0-5.5 1.5-6.9 4L170.1 547.5c-3.1 5.3.7 12 6.9 12h174.4L262 917.1c-1.9 7.8 7.5 13.3 13.3 7.7L853.6 373c5.2-4.9 1.7-13.7-5.5-13.7zM378.3 732.5l60.3-241H281.2l189.6-327.4h224.6L487.1 427.4h211L378.3 732.5z","fill":primaryColor}}]}),
+  name: "thunderbolt",
+  theme: "twotone",
+};
+
+export const ThunderboltTwoTone = /*#__PURE__*/ createIcon(definition, 'ThunderboltTwoTone');

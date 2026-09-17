@@ -22,14 +22,28 @@ catalog:
   # --- Runtime (framework) ---
   vue: ^3.5.42
 
-  # --- Runtime (framework-agnostic reuse from the Ant Design ecosystem) ---
-  # These packages are pure data / pure math with zero framework coupling.
-  # Reusing them is the cheapest possible path to visual + behavioral parity.
+  # --- Runtime (framework-agnostic third-party) ---
+  # 可以进发布包的 dependencies。
   dayjs: ^1.11.23
+  'scroll-into-view-if-needed': ^3.1.0
+
+  # ---------------------------------------------------------------------------
+  # --- Build-time / test-only (Ant Design ecosystem) ---
+  #
+  # 🚨 R7（ARCHITECTURE.md §3.1）：这三个包**只能**出现在 devDependencies，
+  #    用途限三种：① 构建期数据源（registry/tools/gen-*.mjs）
+  #              ② 测试 Oracle（*.oracle.test.ts / tests/compat/）
+  #              ③ 与移植实现做差分验证
+  #    任何发布包的 `dependencies` 出现它们 = `registry:validate` 的 E19 失败。
+  #
+  # 为什么曾经可以直接依赖、现在不行：它们是纯数据 / 纯算法、零框架耦合，
+  # 直接复用确实是最省成本的对齐路径 —— 但那会让每个 @apollo-design/* 用户
+  # 都被装上 antd 的包，与「Vue 原生实现」的定位冲突。
+  # 现在的做法：构建期固化数据（icons）/ 移植算法并差分验证（colors、fast-color）。
+  # ---------------------------------------------------------------------------
   '@ant-design/icons-svg': ^4.6.0
   '@ant-design/colors': ^8.0.1
   '@ant-design/fast-color': ^3.0.1
-  'scroll-into-view-if-needed': ^3.1.0
 
   # --- Runtime (Vue ecosystem) ---
   # ⚠️ 刻意不把 @vueuse/core 放进 L0（utils）：

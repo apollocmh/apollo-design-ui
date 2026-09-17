@@ -76,13 +76,20 @@ function resolveIconNode(
 /**
  * 创建一个图标组件。
  *
- * @param definition `@ant-design/icons-svg` 的图标定义
+ * @param definition 图标定义。由 `gen-icons.mjs` 从 `@ant-design/icons-svg`
+ *   **构建期固化**成字面量传入；自定义图标也可以直接构造（见下方示例）。
  * @param displayName 组件名。省略时取 `definition.name`（kebab-case，与 antd 一致）
  *
  * @example
  * ```ts
- * import HomeOutlinedSvg from '@ant-design/icons-svg/es/asn/HomeOutlined';
- * export const HomeOutlined = createIcon(HomeOutlinedSvg, 'HomeOutlined');
+ * // gen-icons.mjs 生成的图标文件就是下面这个形状（定义是**内联字面量**，
+ * // 不 import 任何 @ant-design/* —— 见 ARCHITECTURE.md R7）
+ * const definition: IconDefinition = {
+ *   icon: { tag: 'svg', attrs: { viewBox: '64 64 896 896' }, children: [] },
+ *   name: 'home',
+ *   theme: 'outlined',
+ * };
+ * export const HomeOutlined = createIcon(definition, 'HomeOutlined');
  * ```
  */
 export function createIcon(definition: IconDefinition, displayName?: string) {

@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import GeminiFilledSvg from '@ant-design/icons-svg/es/asn/GeminiFilled';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const GeminiFilled = /*#__PURE__*/ createIcon(GeminiFilledSvg, 'GeminiFilled');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M476.16 785.28Q512 867.04 512 960q0-92.96 34.72-174.72 35.84-81.76 96.32-142.24t142.24-95.2Q867.04 512 960 512q-92.96 0-174.72-34.72a459.2 459.2 0 01-142.24-96.32 459.2 459.2 0 01-96.32-142.24Q512 156.96 512 64q0 92.96-35.84 174.72-34.72 81.76-95.2 142.24a459.2 459.2 0 01-142.24 96.32Q156.96 512 64 512q92.96 0 174.72 35.84 81.76 34.72 142.24 95.2t95.2 142.24"}}]},
+  name: "gemini",
+  theme: "filled",
+};
+
+export const GeminiFilled = /*#__PURE__*/ createIcon(definition, 'GeminiFilled');

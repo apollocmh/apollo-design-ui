@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import TagTwoToneSvg from '@ant-design/icons-svg/es/asn/TagTwoTone';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const TagTwoTone = /*#__PURE__*/ createIcon(TagTwoToneSvg, 'TagTwoTone');
+const definition: IconDefinition = {
+  icon: (primaryColor: string, secondaryColor: string) => ({"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M589 164.6L189.3 564.3l270.4 270.4L859.4 435 836 188l-247-23.4zM680 432c-48.5 0-88-39.5-88-88s39.5-88 88-88 88 39.5 88 88-39.5 88-88 88z","fill":secondaryColor}},{"tag":"path","attrs":{"d":"M680 256c-48.5 0-88 39.5-88 88s39.5 88 88 88 88-39.5 88-88-39.5-88-88-88zm0 120c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z","fill":primaryColor}},{"tag":"path","attrs":{"d":"M938 458.8l-29.6-312.6c-1.5-16.2-14.4-29-30.6-30.6L565.2 86h-.4c-3.2 0-5.7 1-7.6 2.9L88.9 557.2a9.96 9.96 0 000 14.1l363.8 363.8a9.9 9.9 0 007.1 2.9c2.7 0 5.2-1 7.1-2.9l468.3-468.3c2-2.1 3-5 2.8-8zM459.7 834.7L189.3 564.3 589 164.6 836 188l23.4 247-399.7 399.7z","fill":primaryColor}}]}),
+  name: "tag",
+  theme: "twotone",
+};
+
+export const TagTwoTone = /*#__PURE__*/ createIcon(definition, 'TagTwoTone');

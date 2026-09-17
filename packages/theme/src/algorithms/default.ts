@@ -1,4 +1,4 @@
-import { generate } from '@ant-design/colors';
+import { generatePalette } from '@apollo-design/utils';
 import genColorMapToken from '../shared/color-map-token';
 import { genCommonMapToken } from '../shared/common-map-token';
 import { genControlHeight } from '../shared/control-height';
@@ -21,7 +21,7 @@ import {
 export default function defaultAlgorithm(token: SeedToken): MapToken {
   const colorPalettes = genPresetColorPalettes(
     token as unknown as Record<PresetColorKey, string>,
-    (base) => generate(base),
+    (base) => generatePalette(base),
   );
 
   return {

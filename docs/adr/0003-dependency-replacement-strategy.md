@@ -24,7 +24,9 @@ Ant Design 6.6.4 有 **48 个运行时依赖**，其中 **37 个是 `@rc-compone
 
 | 策略 | 判定条件 | 数量 |
 |---|---|---|
-| **`reuse`** 直接复用 | 该包**框架无关**（纯数据/纯算法），`peerDependencies` 不含 React | 5 |
+| **`reuse`** 直接复用 | 该包**框架无关**（纯数据/纯算法），`peerDependencies` 不含 React，**且不属于 Ant Design 生态**（见 ADR 0004） | 2 |
+| **`generate`** 构建期固化 | 来自 Ant Design 生态、且内容是**数据** → 只能作构建期数据源 | 1 |
+| **`port`** 移植 + 差分验证 | 来自 Ant Design 生态、且内容是**算法** → 移植进 `@apollo-design/*`，上游降级为测试 Oracle | 2 |
 | **`apollo`** 独立包承接 | 满足 ADR 0002 的包边界判据（消费者 ≥2 且无视觉语义） | 13 |
 | **`in-ui`** ui 内部承接 | 消费者 ≤1，或能力与该组件的视觉语义强绑定 | 31 |
 | **`drop`** 不需要 | Vue 原生已覆盖，或仅服务 React/构建工具 | 5 |
@@ -43,17 +45,21 @@ Ant Design 6.6.4 有 **48 个运行时依赖**，其中 **37 个是 `@rc-compone
 
 ## 结果
 
-### `reuse`：直接复用 5 个框架无关包（重要发现）
+### `reuse`：直接复用 2 个框架无关包（重要发现）
 
-| 包 | peer 要求 | 用途 | 验证方式 |
-|---|---|---|---|
-| `@ant-design/icons-svg` | **无** | 800+ 图标的原始 SVG 数据 | 查 npm registry 的 `peerDependencies` 为空 |
-| `@ant-design/colors` | **无** | 预设色板生成算法 | 同上 |
-| `@ant-design/fast-color` | **无** | 颜色解析与转换 | 同上 |
-| `dayjs` | **无** | 日期处理 | 同上 |
-| `scroll-into-view-if-needed` | **无** | 滚动到可视区 | 同上 |
+> ⚠️ **2026-09-18 收紧**（ADR 0004）：本表原有 5 项，其中 3 个 Ant Design 生态包
+> 已改为 `generate` / `port` —— 它们框架无关，但**不能进用户依赖树**。
+> 下面的分析逻辑保留原样，只是判定条件补了一维「发行关系」。
 
-**这是分析过程中最有价值的发现**：antd 生态里混着"框架耦合包"和"框架无关包"。把它们区分开后，可以直接复用 5 个包，从而：
+| 包 | peer 要求 | 用途 | 验证方式 | 现状 |
+|---|---|---|---|---|
+| `dayjs` | **无** | 日期处理 | 查 npm registry 的 `peerDependencies` 为空 | ✅ 直接复用 |
+| `scroll-into-view-if-needed` | **无** | 滚动到可视区 | 同上 | ✅ 直接复用 |
+| `@ant-design/icons-svg` | **无** | 800+ 图标的原始 SVG 数据 | 同上 | 🔄 改为 `generate`（构建期固化） |
+| `@ant-design/colors` | **无** | 预设色板生成算法 | 同上 | 🔄 改为 `port`（移植 + 差分验证） |
+| `@ant-design/fast-color` | **无** | 颜色解析与转换 | 同上 | 🔄 改为 `port`（移植 + 差分验证） |
+
+**这是分析过程中最有价值的发现**：antd 生态里混着"框架耦合包"和"框架无关包"。把它们区分开后，可以复用 5 个包，从而：
 
 - 图标获得**像素级一致**（同一份 SVG 数据）
 - 色板梯度与 antd **完全一致**（同一套算法）
@@ -61,6 +67,12 @@ Ant Design 6.6.4 有 **48 个运行时依赖**，其中 **37 个是 `@rc-compone
 - 省下大量重写与验证成本
 
 复用的**前提**是这些包不含任何 React 代码，因此不违反 `AGENTS.md` H1/H5/H6。
+
+**但这不充分。** 2026-09-18 的复审发现：「框架无关」只回答了「能不能复用」，
+没有回答「该不该出现在用户的依赖树里」。三个 Ant Design 生态包被直接写进了
+`dependencies`，导致 `npm install @apollo-design/icons` 会连带安装 `@ant-design/icons-svg`。
+判定条件因此补上第三维 —— **发行关系**，并落地为 R7 与 E19，详见
+[ADR 0004](./0004-zero-antd-runtime-dependency.md)。
 
 ### `apollo`：13 项升级为独立包
 

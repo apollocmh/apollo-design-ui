@@ -27,6 +27,8 @@
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@apollo-design/test-utils": "workspace:*"
+    "@apollo-design/test-utils": "workspace:*",
+    "@ant-design/colors": "catalog:",
+    "@ant-design/fast-color": "catalog:"
   }
 }

@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import * as domBarrel from '../dom';
 import { getElement, isVisible } from '../dom';
@@ -91,6 +94,8 @@ const EXPECTED_FUNCTIONS = [
   'useMutationObserver',
   'observeMutation',
   'resetMutationObserver',
+  // 颜色（纯数学，theme / icons 共用；不含任何色值字面量，见下面的 R3 扫描）
+  'generatePalette',
   // 类型判断
   'isNonNullable',
   'isRenderable',
@@ -115,6 +120,9 @@ const EXPECTED_FUNCTIONS = [
   'isEmptyVNode',
 ] as const;
 
+/** `src/` 的绝对路径（本文件在 `src/__tests__/` 下）。 */
+const SRC_DIR = resolve(fileURLToPath(import.meta.url), '../..');
+
 /** 应当是值的导出，以及它们的运行期类型。 */
 const EXPECTED_VALUES: Record<string, string> = {
   BRAND: 'string',
@@ -126,6 +134,8 @@ const EXPECTED_VALUES: Record<string, string> = {
   isDev: 'boolean',
   isProd: 'boolean',
   isTest: 'boolean',
+  // class 的运行期类型就是 'function'（构造函数）
+  Color: 'function',
 };
 
 describe('@apollo-design/utils barrel —— 公开函数面', () => {
@@ -188,10 +198,44 @@ describe('@apollo-design/utils barrel —— 架构约束', () => {
     }
   });
 
-  it('★ 不导出任何视觉语义（R3：无颜色 / 圆角 / 尺寸 / 阴影）', () => {
+  it('★ 不导出设计值语义（R3：无圆角 / 尺寸 / 阴影 / 字号）', () => {
+    // ⚠️ 2026-09-18 收窄：原来这条的正则是
+    //    `/color|colour|radius|shadow|font|theme|token|palette/i`，
+    //    把 `Color` / `generatePalette` 也判成了违规 —— 那是**按名字**的启发式，
+    //    而 R3 的规格说的是「不出现颜色、圆角、间距、字号的**字面值**」。
+    //    颜色**算法**（把色值当输入、不内置任何色值）不是设计值，加进 utils 是
+    //    ARCHITECTURE.md R2 例外条款允许的（theme 与 icons 共用）。
+    //    所以这里去掉 color / palette 两个关键词，改用下面那条**源码扫描**来守 R3 ——
+    //    它测的是规格本身，比名字匹配严格。
     const offenders = Object.keys(barrel).filter((name) =>
-      /color|colour|radius|shadow|font|theme|token|palette/i.test(name),
+      /radius|shadow|font|theme|token/i.test(name),
     );
+    expect(offenders).toEqual([]);
+  });
+
+  it('★ src 下不含任何色值字面量（R3 的实质：不出现颜色字面值）', () => {
+    // 色值字面量 = hex（`#abc` / `#aabbcc` / 带 alpha）或带数字的函数式记法（`rgba(0,0,0,.5)`）。
+    // 刻意**不**匹配 `rgba(${...})` 这种模板与 `'rgb'` 这种前缀字符串 —— 它们是格式，不是色值。
+    const COLOR_LITERAL_RE = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hsva?|hsba?)\(\s*[\d.]/g;
+    const offenders: string[] = [];
+
+    const walk = (dir: string) => {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const p = join(dir, entry.name);
+        if (entry.isDirectory()) {
+          // 测试文件不随包发布，允许出现色值（例如 oracle 要写出「上游的默认背景色」）
+          if (entry.name !== '__tests__') walk(p);
+        } else if (/\.tsx?$/.test(entry.name)) {
+          const text = readFileSync(p, 'utf8')
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/^[ \t]*\/\/.*$/gm, '');
+          const hit = text.match(COLOR_LITERAL_RE);
+          if (hit) offenders.push(`${relative(SRC_DIR, p)}: ${hit.join(', ')}`);
+        }
+      }
+    };
+    walk(SRC_DIR);
+
     expect(offenders).toEqual([]);
   });
 });

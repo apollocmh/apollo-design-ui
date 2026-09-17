@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import PerplexityFilledSvg from '@ant-design/icons-svg/es/asn/PerplexityFilled';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const PerplexityFilled = /*#__PURE__*/ createIcon(PerplexityFilledSvg, 'PerplexityFilled');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M900.18 328.68h-86.26V66.52L533.57 303.75V69.89h-43.14v231.34L231.64 64v264.68H123.82v388.18h107.83V960l258.79-237.4v231.48h43.13V728.33l258.8 230.74V716.86h107.82V328.68zM770.8 159.52v169.16H570.87L770.8 159.52zm-496.01 2.52l181.78 166.64H274.78V162.04zM166.95 673.73V371.8h292.98L231.63 600.1v73.63h-64.68zM274.78 861.9V617.96l215.65-215.65v261.75L274.78 861.9zm474.45.93l-215.66-192.3V402.3l215.66 215.66v244.86zm107.83-189.1h-64.7V600.1L564.07 371.8h292.99v301.92z"}}]},
+  name: "perplexity",
+  theme: "filled",
+};
+
+export const PerplexityFilled = /*#__PURE__*/ createIcon(definition, 'PerplexityFilled');

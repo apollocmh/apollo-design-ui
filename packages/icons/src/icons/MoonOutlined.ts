@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import MoonOutlinedSvg from '@ant-design/icons-svg/es/asn/MoonOutlined';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const MoonOutlined = /*#__PURE__*/ createIcon(MoonOutlinedSvg, 'MoonOutlined');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"fill-rule":"evenodd","viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M489.5 111.66c30.65-1.8 45.98 36.44 22.58 56.33A243.35 243.35 0 00426 354c0 134.76 109.24 244 244 244 72.58 0 139.9-31.83 186.01-86.08 19.87-23.38 58.07-8.1 56.34 22.53C900.4 745.82 725.15 912 512.5 912 291.31 912 112 732.69 112 511.5c0-211.39 164.29-386.02 374.2-399.65l.2-.01zm-81.15 79.75l-4.11 1.36C271.1 237.94 176 364.09 176 511.5 176 697.34 326.66 848 512.5 848c148.28 0 274.94-96.2 319.45-230.41l.63-1.93-.11.07a307.06 307.06 0 01-159.73 46.26L670 662c-170.1 0-308-137.9-308-308 0-58.6 16.48-114.54 46.27-162.47z"}}]},
+  name: "moon",
+  theme: "outlined",
+};
+
+export const MoonOutlined = /*#__PURE__*/ createIcon(definition, 'MoonOutlined');

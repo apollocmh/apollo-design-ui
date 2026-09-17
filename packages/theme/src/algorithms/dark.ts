@@ -1,5 +1,5 @@
-import { generate } from '@ant-design/colors';
-import { PresetColors } from '../seed';
+import { generatePalette } from '@apollo-design/utils';
+import { DARK_PALETTE_BASE, PresetColors } from '../seed';
 import genColorMapToken from '../shared/color-map-token';
 import type { MapToken, PresetColorKey, SeedToken } from '../types';
 import defaultAlgorithm from './default';
@@ -23,11 +23,10 @@ import {
  * reduce 的第一步，保证 dark 可以单独使用也能作为链首。
  */
 export default function darkAlgorithm(token: SeedToken, mapToken?: MapToken): MapToken {
-  // 第三个参数 false = 不用 presetPalettes 快路径（见 palettes.ts 的说明）
+  // 暗色预设色没有快路径，一律走 dark 色板（见 palettes.ts 关于「已移除快路径」的说明）
   const colorPalettes = genPresetColorPalettes(
     token as unknown as Record<PresetColorKey, string>,
-    (base) => generate(base, { theme: 'dark' }),
-    false,
+    (base) => generatePalette(base, { theme: 'dark', backgroundColor: DARK_PALETTE_BASE }),
   );
 
   const mergedMapToken = mapToken ?? defaultAlgorithm(token);

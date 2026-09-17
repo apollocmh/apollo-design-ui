@@ -40,6 +40,18 @@ export const defaultPresetColors: PresetColorType = {
 };
 
 /**
+ * 暗色色板生成时与背景混合用的基色。
+ *
+ * 上游 `@ant-design/colors` 的 `generate(x, { theme: 'dark' })` 把它硬编码成这个值。
+ * 我们把它**显式化**并放在 theme 里，因为 `utils` 是 L0 通用工具包、不允许出现色值
+ * 字面量（`ARCHITECTURE.md` R3）—— 色值归 theme 持有，`generatePalette` 只收参数。
+ *
+ * ⚠️ 它**不是** `colorBgBase` 的暗色默认值 `#000`：antd 在两条路径上用了不同的基色，
+ * 改成 `#000` 会让 4 个 dark 用例全部失败（`baseline.test.ts` 会立刻发现）。
+ */
+export const DARK_PALETTE_BASE = '#141414';
+
+/**
  * antd 6.6.4 的 Seed Token 默认值（34 个，不含 13 个预设色）。
  *
  * `colorLink` / `colorTextBase` / `colorBgBase` 默认为空串 —— 空串是**有意义的**：

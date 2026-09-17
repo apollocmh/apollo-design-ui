@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import FileExclamationFilledSvg from '@ant-design/icons-svg/es/asn/FileExclamationFilled';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const FileExclamationFilled = /*#__PURE__*/ createIcon(FileExclamationFilledSvg, 'FileExclamationFilled');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M854.6 288.7c6 6 9.4 14.1 9.4 22.6V928c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32h424.7c8.5 0 16.7 3.4 22.7 9.4l215.2 215.3zM790.2 326L602 137.8V326h188.2zM512 784a40 40 0 100-80 40 40 0 000 80zm32-152V448a8 8 0 00-8-8h-48a8 8 0 00-8 8v184a8 8 0 008 8h48a8 8 0 008-8z"}}]},
+  name: "file-exclamation",
+  theme: "filled",
+};
+
+export const FileExclamationFilled = /*#__PURE__*/ createIcon(definition, 'FileExclamationFilled');

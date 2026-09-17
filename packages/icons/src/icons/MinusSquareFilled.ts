@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import MinusSquareFilledSvg from '@ant-design/icons-svg/es/asn/MinusSquareFilled';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const MinusSquareFilled = /*#__PURE__*/ createIcon(MinusSquareFilledSvg, 'MinusSquareFilled');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM704 536c0 4.4-3.6 8-8 8H328c-4.4 0-8-3.6-8-8v-48c0-4.4 3.6-8 8-8h368c4.4 0 8 3.6 8 8v48z"}}]},
+  name: "minus-square",
+  theme: "filled",
+};
+
+export const MinusSquareFilled = /*#__PURE__*/ createIcon(definition, 'MinusSquareFilled');

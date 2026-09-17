@@ -13,8 +13,14 @@
  *
  * 用法：
  *   node registry/tools/scaffold-packages.mjs             # 生成缺失的文件，不覆盖已存在的
- *   node registry/tools/scaffold-packages.mjs --force     # 强制覆盖（会覆盖 src/index.ts，慎用）
- *   node registry/tools/scaffold-packages.mjs --force-pkg # 只强制覆盖 package.json
+ *   node registry/tools/scaffold-packages.mjs --force           # 强制覆盖（会覆盖 src/index.ts，慎用）
+ *   node registry/tools/scaffold-packages.mjs --force-pkg       # 只强制覆盖 package.json
+ *   node registry/tools/scaffold-packages.mjs --force-readme    # 只强制覆盖 README.md
+ *
+ * 为什么要有 --force-readme：
+ *   README 里的「依赖表」是 `deps` / `devDeps` 的投影。依赖一改（例如把某个包从
+ *   dependencies 移到 devDependencies），README 就失真了 —— 而它是**默认不覆盖**的，
+ *   只能靠人记得手工同步。加这个开关，让「改模板 → 回写 README」变成一条命令。
  *
  * 为什么要有 --force-pkg：
  *   包契约（exports / files / scripts）改了之后需要回写到全部已存在的包，但 --force 会连带
@@ -30,6 +36,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
 const force = process.argv.includes('--force');
 const forcePkg = force || process.argv.includes('--force-pkg');
+const forceReadme = force || process.argv.includes('--force-readme');
 
 /**
  * 包定义。
@@ -66,12 +73,25 @@ const PACKAGES = [
       '观察器：useResizeObserver / useMutationObserver / useOverflow（单例复用）',
       'composable：useControlledValue / useDelayState / useUpdateEffect / useId / useSafeState',
       '其他：toList / capitalize',
+      // 颜色纯数学层：theme 与 icons 共用，依据 ARCHITECTURE.md §3.1 R2 的例外条款
+      // （utils 是 L0 公共底座）。只放算法，不放色值数据（R3）。
+      '颜色：Color / generatePalette（10 阶色板）—— 由 color.oracle.test.ts 对上游差分验证',
     ],
+    // 上游颜色包的**唯一**合法位置：差分验证的 Oracle（R7）。
+    devDeps: {
+      '@ant-design/colors': 'catalog:',
+      '@ant-design/fast-color': 'catalog:',
+    },
     notDo: [
-      '不含任何组件视觉语义（无颜色/圆角/尺寸）',
+      // ⚠️ 措辞要精确：「不含视觉语义」指的是不含**设计值**（色值 / 圆角 / 尺寸 / 阴影 / 字号），
+      //    不是「不能出现 color 这个词」。颜色**算法**（把色值当输入、不内置任何色值）
+      //    是 R2 例外条款允许的 —— theme 与 icons 共用它。判据由
+      //    `__tests__/barrel.test.ts` 的源码扫描执行（查色值字面量，不查名字）。
+      '不含任何设计值：无圆角 / 尺寸 / 阴影 / 字号的字面值，也不含任何色值字面量（R3）',
       '不产出任何 CSS',
       '不依赖 @apollo-design/* 的任何其他包（L0 是最底层）',
       '不提供 render/unmount —— 含 Vue 渲染器耦合，归 packages/ui/src/_internal',
+      'src/color/ 只放算法（R3 由 barrel.test.ts 的色值字面量扫描强制）；预设色板归 theme',
     ],
     contracts: [
       'warning 的输出格式必须与 antd 一致（含组件名前缀），因为测试会断言 warning',
@@ -95,7 +115,11 @@ const PACKAGES = [
       '@ant-design/cssinjs-utils',
       'antd 的 components/theme/',
     ],
-    deps: {
+    // 颜色数学来自 utils（R2 例外条款），本包只保留**色值数据**。
+    deps: { '@apollo-design/utils': 'workspace:*' },
+    // 上游颜色包只剩两个用途：① 生成 `src/generated/preset-palettes.ts` 的构建期数据源
+    // ② 差分验证的 Oracle。两者都不进入用户依赖树（R7）。
+    devDeps: {
       '@ant-design/colors': 'catalog:',
       '@ant-design/fast-color': 'catalog:',
     },
@@ -113,6 +137,7 @@ const PACKAGES = [
       '不做 CSS-in-JS（零运行时，见 ADR 0001）',
       '不产出组件的具体样式（那是 ui 的职责）',
       '不依赖任何组件',
+      '运行时不读 @ant-design/colors —— 预设色板是构建期固化到 src/generated/ 的数据（R7）',
     ],
     contracts: [
       'Token 名称必须与 antd 完全一致（Seed 34 / Map 140 / Alias 82 own / Component 70 组）',
@@ -130,17 +155,19 @@ const PACKAGES = [
     purpose: 'Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 antd 图标像素一致。',
     replaces: ['@ant-design/icons'],
     deps: {
-      '@ant-design/icons-svg': 'catalog:',
-      // TwoTone 副色由主色派生，取 10 阶色板第 0 阶。这是 ARCHITECTURE.md 明列的
-      // 「可复用、不要重写」依赖之一（与 theme 共用同一份色板算法）。
-      // 不自己实现 generate()：色板算法是 antd 视觉一致性的地基，
-      // 自研一份等于把「TwoTone 副色是否与 antd 相同」变成不可证伪的假设。
-      '@ant-design/colors': 'catalog:',
       // 告警复用 utils 的 `warningOnce`，而不是在 icons 内再写一份。
       // 依据：utils 的 warning 契约文档明确写着「测试会断言告警文本，前缀格式/去重范围
       // 有偏差会让告警一致性测试假通过」—— 复制一份等于把这条契约分叉。
-      // L0 → L0 同层依赖，不构成环（utils 不依赖 icons）。
+      // L0 → L0 同层依赖，走 R2 的 utils 例外条款（utils 不依赖 icons，无环）。
       '@apollo-design/utils': 'workspace:*',
+    },
+    // 上游图标包的唯一合法位置：**构建期数据源**（R7）。
+    // gen-icons.mjs 从它求值出 848 份定义，固化成 src/icons/*.ts 的字面量随包发布；
+    // 运行时的 @apollo-design/icons 不含任何对它的 import。
+    devDeps: {
+      '@ant-design/icons-svg': 'catalog:',
+      // 钉住 `DEFAULT_TWOTONE_COLOR`（= 上游 `blue.primary`）的 Oracle。
+      '@ant-design/colors': 'catalog:',
     },
     peerDeps: { vue: 'catalog:' },
     publicApi: [
@@ -150,7 +177,10 @@ const PACKAGES = [
       '样式：getIconStyle(iconPrefixCls) —— 供 ui 的静态样式层消费',
     ],
     notDo: [
-      '不手写 SVG path（必须从 @ant-design/icons-svg 生成）',
+      // ⚠️ 措辞要点：是「从 icons-svg 生成」，不是「依赖 icons-svg」。
+      // 前者是构建期行为，后者是运行时依赖（R7 禁止）。
+      '不手写 SVG path（必须由 gen-icons.mjs 从 @ant-design/icons-svg **固化**成字面量）',
+      '运行时不 import @ant-design/icons-svg —— 图标数据已随包发布（R7）',
       '不做运行时 <style> 注入（图标基础样式由 getIconStyle 交给 ui 的零运行时样式层）',
     ],
     contracts: [
@@ -617,6 +647,36 @@ if (isMain) {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // 校验 3：R7 —— 运行时依赖不得出现 Ant Design 生态包 / React
+  //
+  // 为什么在模板里就拦：package.json 由本文件拥有，只靠 validate-registry 的 E19
+  // 去扫产物，等发现时代码已经写完了。这里拦的是「声明」，是更早的一层。
+  //
+  // 允许的三种用法都不经过 `deps`：
+  //   ① 构建期数据源 → registry/tools/gen-*.mjs（它自己解析 devDeps 里的包）
+  //   ② 测试 Oracle  → *.oracle.test.ts
+  //   ③ 其余一律 devDeps
+  // ---------------------------------------------------------------------------
+  const RUNTIME_FORBIDDEN = [
+    /^@ant-design\//,
+    /^antd$/,
+    /^react(-dom)?$/,
+    /^@rc-component\//,
+    /^rc-/,
+  ];
+  for (const p of PACKAGES) {
+    for (const dep of Object.keys(p.deps)) {
+      if (RUNTIME_FORBIDDEN.some((re) => re.test(dep))) {
+        console.error(
+          `[scaffold] ERROR 违反 R7: ${p.name} 的运行时依赖含 ${dep}。` +
+            `Ant Design 生态包只能作为构建期数据源 / 测试 Oracle，声明到 devDeps 上。`,
+        );
+        violations += 1;
+      }
+    }
+  }
+
   if (violations) {
     console.error(`[scaffold] ${violations} 个分层违规，中止`);
     process.exit(1);
@@ -669,10 +729,17 @@ if (isMain) {
       },
       ...(Object.keys(p.deps).length ? { dependencies: p.deps } : {}),
       ...(Object.keys(p.peerDeps).length ? { peerDependencies: p.peerDeps } : {}),
-      // test-utils 是被依赖方，不能依赖自己（否则 pnpm 报 self-reference）。
-      ...(p.name === '@apollo-design/test-utils'
-        ? {}
-        : { devDependencies: { '@apollo-design/test-utils': 'workspace:*' } }),
+      ...(() => {
+        // test-utils 是被依赖方，不能依赖自己（否则 pnpm 报 self-reference）。
+        const dev =
+          p.name === '@apollo-design/test-utils'
+            ? {}
+            : { '@apollo-design/test-utils': 'workspace:*' };
+        // devDeps：构建期数据源与测试 Oracle（R7）。它们**不会**进入用户的依赖树。
+        return Object.keys(dev).length || Object.keys(p.devDeps ?? {}).length
+          ? { devDependencies: { ...dev, ...(p.devDeps ?? {}) } }
+          : {};
+      })(),
     };
     return `${JSON.stringify(obj, null, 2)}\n`;
   }
@@ -682,6 +749,10 @@ if (isMain) {
       .map(([k, v]) => `| \`${k}\` | \`${v}\` |`)
       .join('\n');
     const peerRows = Object.entries(p.peerDeps)
+      .map(([k, v]) => `| \`${k}\` | \`${v}\` |`)
+      .join('\n');
+    // 只列本包**自己声明**的 devDeps；test-utils 是每个包都有的脚手架依赖，不进表。
+    const devRows = Object.entries(p.devDeps ?? {})
       .map(([k, v]) => `| \`${k}\` | \`${v}\` |`)
       .join('\n');
 
@@ -724,6 +795,10 @@ ${depRows || '（无）'}
 
 ${peerRows || '（无）'}
 
+### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
+
+${devRows || '（无）'}
+
 ## 依赖约束（ARCHITECTURE.md §3.1）
 
 - **R1 单向**：只能依赖同层或更低层
@@ -731,6 +806,9 @@ ${peerRows || '（无）'}
 - **R3 地基纯净**（仅 L0）：不得包含任何组件视觉语义
 - **R4 引擎无视觉**（仅 L2）：不得定义颜色/圆角/阴影，不得产出 CSS
 - **R6 显式声明**：跨包导入必须在本文件的 \`dependencies\` 中声明（\`.npmrc\` 已设 \`hoist=false\`）
+- **R7 零 Ant Design 运行时依赖**：发布包的 \`dependencies\` 不得出现任何 \`@ant-design/*\`。
+  Ant Design 生态包只允许出现在三处 —— ① 构建期数据源（\`registry/tools/gen-*.mjs\`）
+  ② 测试 Oracle（\`*.oracle.test.ts\`）③ \`devDependencies\`。由 \`registry:validate\` 的 **E19** 强制。
 
 本包的依赖已通过 \`registry/tools/scaffold-packages.mjs\` 的分层校验。
 
@@ -778,7 +856,7 @@ ${p.coverageNote ?? `覆盖率下限为 语句 95% / 分支 90% / 函数 95%（$
     const dir = path.join(ROOT, 'packages', p.dir);
     console.log(`${p.name}  [${p.layer}]`);
     writeIfNeeded(path.join(dir, 'package.json'), packageJson(p), forcePkg);
-    writeIfNeeded(path.join(dir, 'README.md'), readme(p));
+    writeIfNeeded(path.join(dir, 'README.md'), readme(p), forceReadme);
     writeIfNeeded(path.join(dir, 'tsconfig.json'), tsconfig(p));
     writeIfNeeded(
       path.join(dir, 'src/index.ts'),

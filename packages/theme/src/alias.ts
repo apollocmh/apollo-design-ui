@@ -1,4 +1,4 @@
-import { FastColor } from '@ant-design/fast-color';
+import { Color } from '@apollo-design/utils';
 import { defaultSeedToken } from './seed';
 import getAlphaColor from './shared/get-alpha-color';
 import type { AliasToken, MapToken } from './types';
@@ -35,12 +35,12 @@ export default function formatToken(derivativeToken: DerivativeTokenWithOverride
   // 类型上仍按「非 Seed 键已补齐」处理，否则下游每个字段都要写一次判空。
   const mergedToken = { ...restToken, ...overrideTokens } as MapToken;
 
-  const shadowBaseColor = new FastColor(mergedToken.colorShadow);
+  const shadowBaseColor = new Color(mergedToken.colorShadow);
   const shadowBaseAlpha = shadowBaseColor.a;
   const getShadowColor = (alpha: number): string =>
     shadowBaseColor
       .clone()
-      .setA(shadowBaseAlpha * alpha)
+      .setAlpha(shadowBaseAlpha * alpha)
       .toRgbString();
 
   const screenXS = 480;

@@ -214,9 +214,12 @@ const iconPrefixCls = customIconPrefixCls || parentContext.iconPrefixCls || defa
 
 ### 5.1 生成器（`registry/tools/gen-icons.mjs`）
 
-- **数据源**：`@ant-design/icons-svg` 的 `es/asn/<Name>.ts`
+- **数据源**：`@ant-design/icons-svg` 的 `lib/asn/<Name>.js`（**构建期**，见 §5.4）
 - **解析方式**：`createRequire(packages/icons/package.json)` —— 因为 `.npmrc` 设了 `hoist=false`，
   从仓库根解析不到
+  - ⚠️ 用 `lib/`（CJS）而不是 `es/`：上游 package.json 没有 `"type": "module"`，
+    `es/*.js` 虽是 ESM 语法却会被 Node 当 CJS 解析，`import()` 直接 `SyntaxError`。
+    我们要在构建期**求值**这些定义，只能 `require()`
 - **自检**：名字必须以 `Filled|Outlined|TwoTone` 结尾，未知后缀直接报错（防上游改名后静默产出垃圾）
 - **tree-shaking**：每个组件带 `/*#__PURE__*/` 注解
 - **幂等**：`--check` 模式比对内容 + 检出多余文件；写入模式会清理过期文件
@@ -247,6 +250,33 @@ const iconPrefixCls = customIconPrefixCls || parentContext.iconPrefixCls || defa
 生成物由 `gen-icons.mjs --check` 与 L4 的 848 图标比对保证。
 
 排除生成目录同时把覆盖率内存占用降到可跑（此前 `--coverage` 反复被 SIGKILL）。
+
+### 5.4 🚨 图标数据必须内联（R7）
+
+生成物**不得**出现任何对 `@ant-design/icons-svg` 的 `import`。
+
+- **曾经的做法**：每个文件 `import XxxSvg from '@ant-design/icons-svg/es/asn/Xxx'`。
+  后果是 848 个图标把「构建期数据源」拖成了**运行时依赖** —— 用户装
+  `@apollo-design/icons` 会被连带装上 `@ant-design/icons-svg`，与 R7 冲突。
+- **现在的做法**：构建期 `require()` 出定义并**求值**，把结果序列化成字面量写进生成物。
+  - 698 个（Filled 251 + Outlined 447）：`icon` 是对象 → `JSON.stringify` 直接内联
+  - 150 个 TwoTone：`icon` 是 `(primaryColor, secondaryColor) => AbstractNode` 函数，
+    JSON 化不了 → 用**哨兵色调用 → 序列化 → 把哨兵换回标识符 → 包成箭头函数**，
+    并对每个图标做一次「重建函数 vs 原始函数」的等价性自检（生成期跑，成本可忽略）
+- **为什么不用 `fn.toString()`**：那样生成的函数体会原样依赖上游的产物格式
+  （变量名、闭包引用、压缩后可能引入的 helper），上游一改构建管线就可能吐出
+  引用了不存在变量的源码，而要等到渲染图标时才炸。哨兵法只依赖一条弱得多的契约。
+- **体积**：`packages/icons/src` 由 ~0.3 MB 增到 **1.24 MB**，`dist/index.mjs` 由
+  174 kB 增到 878 kB。这是把原本由用户另行安装的同一份 path 数据挪进本包，
+  **用户侧总安装量不变**。
+- **兜底**：L4 DOM 契约（848 个图标与 React 基线逐属性比对）保持不变，实测仍全绿。
+
+### 5.5 类型也不再 re-export（同属 R7）
+
+`src/types.ts` 过去是 `export type { … } from '@ant-design/icons-svg/es/types'`。
+类型声明会进 `dist/index.d.ts`，只要还 re-export，用户的 TS 就必须能解析到上游包 ——
+等于把运行时依赖换了个形式留下。现在改为**逐字声明一份**（已核对上游 `es/types.d.ts`），
+结构漂移由「生成器按该形状产出 848 份字面量」+ L4 契约兜住。
 
 ---
 

@@ -1,10 +1,17 @@
-import { generate, presetPalettes, presetPrimaryColors } from '@ant-design/colors';
-import { FastColor } from '@ant-design/fast-color';
-import { defaultPresetColors } from '../seed';
+import { Color, generatePalette } from '@apollo-design/utils';
+import { DARK_PALETTE_BASE, defaultPresetColors } from '../seed';
 import type { ColorNeutralMapToken, ColorPalette, PresetColorKey } from '../types';
 
 /**
- * `@ant-design/colors` 的 `generate()` 恒返回 10 个色值，但它的类型只是 `string[]`，
+ * 🚨 R7：本文件运行时**不得** import `@ant-design/*`。
+ *
+ * 色板算法用 `@apollo-design/utils` 的 `generatePalette`（上游 `generate()` 的移植，
+ * 由 `color.oracle.test.ts` 对上游做逐位差分验证），颜色运算用同包的 `Color`。
+ * 这两个符号是 `theme` 与 `icons` 共用的唯一颜色来源。
+ */
+
+/**
+ * `generatePalette()` 恒返回 10 个色值，但它的类型只是 `string[]`，
  * 在 `noUncheckedIndexedAccess` 下 `colors[0]` 是 `string | undefined`。
  *
  * 这里收成定长元组，让下游的 `colors[6]` 拿到 `string` 而不是 `string | undefined`。
@@ -26,15 +33,15 @@ type Colors10 = readonly [
 
 /** 亮色：baseColor 变暗 brightness 个亮度单位 */
 export const getSolidColor = (baseColor: string, brightness: number): string =>
-  new FastColor(baseColor).darken(brightness).toHexString();
+  new Color(baseColor).darken(brightness).toHexString();
 
 /** 暗色：baseColor 变亮 brightness 个亮度单位 */
 export const getSolidColorDark = (baseColor: string, brightness: number): string =>
-  new FastColor(baseColor).lighten(brightness).toHexString();
+  new Color(baseColor).lighten(brightness).toHexString();
 
 /** 取带 alpha 的 rgb 字符串 */
 export const getAlphaColor = (baseColor: string, alpha: number): string =>
-  new FastColor(baseColor).setA(alpha).toRgbString();
+  new Color(baseColor).setAlpha(alpha).toRgbString();
 
 /**
  * 亮色色板：10 档取 generate() 的前 7 档，8/9/10 复用 4/5/6。
@@ -43,7 +50,7 @@ export const getAlphaColor = (baseColor: string, alpha: number): string =>
  * 这是 antd 的取值（最深的几档不区分 Hover / Active / Text），照抄。
  */
 export const generateColorPalettes = (baseColor: string): ColorPalette => {
-  const colors = generate(baseColor) as unknown as Colors10;
+  const colors = generatePalette(baseColor) as unknown as Colors10;
   return {
     1: colors[0],
     2: colors[1],
@@ -65,7 +72,10 @@ export const generateColorPalettes = (baseColor: string): ColorPalette => {
  * 这个反转是暗色主题的核心：暗背景下「越深」的档位语义对调。
  */
 export const generateColorPalettesDark = (baseColor: string): ColorPalette => {
-  const colors = generate(baseColor, { theme: 'dark' }) as unknown as Colors10;
+  const colors = generatePalette(baseColor, {
+    theme: 'dark',
+    backgroundColor: DARK_PALETTE_BASE,
+  }) as unknown as Colors10;
   return {
     1: colors[0],
     2: colors[1],
@@ -155,37 +165,27 @@ export const generateNeutralColorPalettesDark = (
  *
  * 两套键值相同、都是 antd 的对外契约（历史原因），不能只产一套。
  *
- * ⚠️ `useFastPath` 只在**亮色**下为 true。
- * antd 的 dark 算法在这里**没有**快路径分支，它对每个预设色都直接
- * `generate(base, { theme: 'dark' })`。曾有版本把快路径也套到 dark 上，
- * 结果是暗色下 `gold-10` 拿到亮色值（#faedb5 应为 #613400）——
- * 4 个 dark 用例全部失败才发现。这个开关就是那次事故的护栏。
+ * ⚠️ 上游在这里有一条「预设色快路径」：seed 恰好等于预设主色时直接查
+ * `presetPalettes` 表，跳过 `generate()`。我们**去掉了这条分支**，因为它在 R7 下
+ * 已经没有存在的理由，而且去掉不改变任何取值：
  *
- * 快路径还有一个副作用必须复现：`presetPrimaryColors.pink` 被赋值为 magenta，
- * 因为 @ant-design/colors 不为废弃名 pink 提供条目。不补的话 pink-1..10 全是 undefined。
+ *   1. 实测 13 个预设色，`generate(预设主色)` 与 `presetPalettes[同名]` **逐位相同**
+ *      （0 处差异）—— 快路径省的是一次计算，不是一次近似；
+ *   2. 那张表是 `@ant-design/colors` 的数据，运行时依赖它违反 R7；
+ *   3. 顺带消掉了上游那处 `presetPrimaryColors.pink = magenta` 的**就地赋值**
+ *      （为废弃名 pink 补条目），本函数因此是纯函数，不再污染导入的模块。
+ *
+ * 取而代之的护栏是「亮色/暗色由调用方显式传入 generateFn 决定」——
+ * 旧版曾把快路径误套到 dark 上，导致 `gold-10` 拿到亮色值（#faedb5 而非 #613400）。
+ * 现在这条路径不存在了，对应的回归断言在 `__tests__/palettes.test.ts`。
  */
 export function genPresetColorPalettes(
   seed: Record<PresetColorKey, string>,
   generateFn: (baseColor: string) => string[],
-  useFastPath = true,
 ): Record<string, string> {
-  let presets: Record<PresetColorKey, string> | null = null;
-
-  if (useFastPath) {
-    // 用字面量键的 Record 而不是 `Record<string, T>`：后者在 noUncheckedIndexedAccess
-    // 下取值带 undefined，而 pink / magenta 都是 PresetColorKey 的成员、一定有值。
-    const pc = presetPrimaryColors as unknown as Record<PresetColorKey, string>;
-    pc.pink = pc.magenta;
-    presets = pc;
-    const palettes = presetPalettes as unknown as Record<PresetColorKey, string[]>;
-    palettes.pink = palettes.magenta;
-  }
-
   const out: Record<string, string> = {};
   for (const colorKey of Object.keys(defaultPresetColors) as PresetColorKey[]) {
-    const colors = (useFastPath && presets && seed[colorKey] === presets[colorKey]
-      ? (presetPalettes as unknown as Record<PresetColorKey, string[]>)[colorKey]
-      : generateFn(seed[colorKey])) as unknown as Colors10;
+    const colors = generateFn(seed[colorKey]) as unknown as Colors10;
 
     // 解构成元组再遍历：`colors[i]`（i 是 number）在 noUncheckedIndexedAccess 下带 undefined，
     // 而解构出来的每一项都是确定的 string。

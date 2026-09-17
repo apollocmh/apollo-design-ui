@@ -161,22 +161,23 @@ packages/
 
 | 层 | 成员 | 允许依赖 |
 |---|---|---|
-| **L0** | `utils` `theme` `icons` | 只允许外部生态依赖（dayjs / fast-color / icons-svg…） |
+| **L0** | `utils` `theme` `icons` | 外部依赖受 R7 约束（**禁止 `@ant-design/*` 运行时依赖**）。`theme` / `icons` 可依赖 `utils`；`utils` 零内部依赖。 |
 | **L1** | `motion` `portal` `position` `a11y` `virtual-list` | L0 |
 | **L2** | `overlay` `form-core` `picker` `locale` | L0 + L1 |
 | **L3** | `ui` | L0 + L1 + L2 + 组件间 DAG 上游 |
 | **T** | `test-utils` | 任意（private，不发布） |
 
-### 3.1 依赖规则（R1–R6，违反即 `registry:validate` 失败）
+### 3.1 依赖规则（R1–R7，违反即 `registry:validate` 失败）
 
 | 规则 | 内容 |
 |---|---|
 | **R1** | 依赖只能**向下**，不能向上或同层横向。L1 不能依赖 L2，L2 不能依赖 `ui`。 |
-| **R2** | L0 之间**互不依赖**。`utils` 不得 import `theme`，反之亦然。 |
-| **R3** | L0 不含任何视觉语义：不出现颜色、圆角、间距、字号的**字面值**，不产出任何 CSS。 |
+| **R2** | L0 之间**互不依赖**，唯一例外是 `utils`：任何包都可依赖它，它自身零内部依赖。因此 `utils` 不得 import `theme` / `icons`（这条是本仓库已落地的现状：`icons` / `motion` / `portal` … 均依赖 `utils`）。 |
+| **R3** | L0 不含任何视觉语义：不出现颜色、圆角、间距、字号的**字面值**，不产出任何 CSS。`theme` 例外 —— 它拥有全部设计值，且只允许它拥有。 |
 | **R4** | 只有 `ui` 可以产出组件级 CSS。L0/L1/L2 包不发布组件样式（`@apollo-design/theme` 只发布 Token 与 CSS 变量定义）。 |
 | **R5** | `ui` 内部组件间依赖必须遵守 `registry/dependencies.json` 的 `componentDag`，且**无环**（E4 检查）。 |
 | **R6** | **绝不引入 React 运行时**。`react` / `antd` 只允许出现在根 `devDependencies` 与 `tests/compat/`（参考侧）。产物由 E11 扫描。 |
+| **R7** | **发布包零 `@ant-design/*` 运行时依赖。** Ant Design 生态包只允许出现在三处：① 构建期数据源（`registry/tools/gen-*.mjs`，产出固化进 `src/generated/` 或 `src/icons/`）② 测试 Oracle（`tests/compat/` 与 `*.oracle.test.ts` 的差分比对）③ `devDependencies`。由 E19 同时扫描 `packages/*/package.json` 的 `dependencies` 与构建产物的 import。 |
 
 ### 3.2 命名空间与导出
 
@@ -233,13 +234,18 @@ packages/
                                     └───────────────────────┘
 ```
 
+> **L0 内部的两条边**（上图为简洁未画出）：`theme → utils`、`icons → utils`。
+> 这是 R2 的唯一例外。`utils` 因此承载了 `theme` 与 `icons` 共用的**纯颜色数学**
+> （10 阶色板生成、颜色解析与转换），它自身不含任何设计值字面量（R3）。
+> 三个 L0 包的运行时依赖都只有 `vue`（peer）与彼此，**没有任何 `@ant-design/*`**（R7）。
+
 ### 4.1 每个包的职责、替代对象与明确不做
 
 | 包 | 层 | 替代 antd 的 | 明确不做 |
 |---|---|---|---|
-| `utils` | L0 | `@rc-component/util`、`resize-observer`、`mutate-observer`、`throttle-debounce` | 不含视觉语义；不产 CSS；不依赖任何 `@apollo-design/*`；不提供 `render/unmount`（含 Vue 渲染器耦合，归 `ui/src/_internal`） |
-| `theme` | L0 | `@ant-design/cssinjs` 的 Token 派生部分 | **不做运行时 CSS-in-JS 注入**（见 §5）；不产组件样式 |
-| `icons` | L0 | `@ant-design/icons` | 不手写图标；不做图标以外的组件 |
+| `utils` | L0 | `@rc-component/util`、`resize-observer`、`mutate-observer`、`throttle-debounce`、`@ant-design/fast-color` 的颜色数学部分 | 不含视觉语义；不产 CSS；不依赖任何 `@apollo-design/*`；不提供 `render/unmount`（含 Vue 渲染器耦合，归 `ui/src/_internal`）。**颜色模块只放纯数学，不得出现色值字面量（R3）** |
+| `theme` | L0 | `@ant-design/cssinjs` 的 Token 派生部分 | **不做运行时 CSS-in-JS 注入**（见 §5）；不产组件样式；预设色板是**构建期固化数据**，不得在运行时读 `@ant-design/colors` |
+| `icons` | L0 | `@ant-design/icons` | 不手写图标；不做图标以外的组件；**图标数据是构建期从 `@ant-design/icons-svg` 固化的生成物**，运行时不 import 它（R7） |
 | `motion` | L1 | `@rc-component/motion` | 不做具体组件的动画编排（各组件自己声明）；不做 CSS-in-JS |
 | `portal` | L1 | `@rc-component/portal` | 不做定位；不做焦点管理（归 `a11y`） |
 | `position` | L1 | `@rc-component/trigger` 的几何部分 | **不做触发时机、延迟、关闭行为**（归 `overlay`）；不碰 DOM 生命周期 |

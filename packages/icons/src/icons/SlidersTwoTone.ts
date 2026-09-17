@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import SlidersTwoToneSvg from '@ant-design/icons-svg/es/asn/SlidersTwoTone';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const SlidersTwoTone = /*#__PURE__*/ createIcon(SlidersTwoToneSvg, 'SlidersTwoTone');
+const definition: IconDefinition = {
+  icon: (primaryColor: string, secondaryColor: string) => ({"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M180 292h80v440h-80zm369 180h-74a3 3 0 00-3 3v74a3 3 0 003 3h74a3 3 0 003-3v-74a3 3 0 00-3-3zm215-108h80v296h-80z","fill":secondaryColor}},{"tag":"path","attrs":{"d":"M904 296h-66v-96c0-4.4-3.6-8-8-8h-52c-4.4 0-8 3.6-8 8v96h-66c-4.4 0-8 3.6-8 8v416c0 4.4 3.6 8 8 8h66v96c0 4.4 3.6 8 8 8h52c4.4 0 8-3.6 8-8v-96h66c4.4 0 8-3.6 8-8V304c0-4.4-3.6-8-8-8zm-60 364h-80V364h80v296zM612 404h-66V232c0-4.4-3.6-8-8-8h-52c-4.4 0-8 3.6-8 8v172h-66c-4.4 0-8 3.6-8 8v200c0 4.4 3.6 8 8 8h66v172c0 4.4 3.6 8 8 8h52c4.4 0 8-3.6 8-8V620h66c4.4 0 8-3.6 8-8V412c0-4.4-3.6-8-8-8zm-60 145a3 3 0 01-3 3h-74a3 3 0 01-3-3v-74a3 3 0 013-3h74a3 3 0 013 3v74zM320 224h-66v-56c0-4.4-3.6-8-8-8h-52c-4.4 0-8 3.6-8 8v56h-66c-4.4 0-8 3.6-8 8v560c0 4.4 3.6 8 8 8h66v56c0 4.4 3.6 8 8 8h52c4.4 0 8-3.6 8-8v-56h66c4.4 0 8-3.6 8-8V232c0-4.4-3.6-8-8-8zm-60 508h-80V292h80v440z","fill":primaryColor}}]}),
+  name: "sliders",
+  theme: "twotone",
+};
+
+export const SlidersTwoTone = /*#__PURE__*/ createIcon(definition, 'SlidersTwoTone');

@@ -9,6 +9,8 @@
  *   R1 单向：不依赖任何其它 @apollo-design/* 包
  *   R3 纯净：不含任何组件视觉语义（无颜色 / 圆角 / 尺寸 / 阴影）
  *   R4 无样式：不产出任何 CSS
+ *   R7 自持：运行时不依赖任何 @ant-design/*（`src/color/` 是上游颜色算法的移植，
+ *            由 `color.oracle.test.ts` 对上游做差分验证，不是重新发明）
  *
  * 命名约定：
  *   - 去掉 React 色彩的改名已在 rc-util-contract.md §8 登记（`isReactRenderable` → `isRenderable` 等）
@@ -21,6 +23,19 @@ export type { ChildrenInput, ToArrayOptions } from './children/to-array';
 // 子节点
 // ---------------------------------------------------------------------------
 export { default as toArray } from './children/to-array';
+export type {
+  ColorInput,
+  ColorObject,
+  GenerateOptions,
+  HslColor,
+  HsvColor,
+  Rgba,
+  RgbColor,
+} from './color';
+// ---------------------------------------------------------------------------
+// 颜色（纯数学，供 theme / icons 共用；不得含任何色值字面量）
+// ---------------------------------------------------------------------------
+export { Color, generatePalette } from './color';
 export type { DevWarning, WarningContextValue } from './dev-warning';
 export { devUseWarning, resetDevWarned, useDevWarning, warningContextKey } from './dev-warning';
 export type { InputFocusOptions, ScrollTarget } from './dom';

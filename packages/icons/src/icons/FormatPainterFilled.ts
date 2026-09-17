@@ -1,8 +1,15 @@
 // 自动生成，请勿手改。
-// 生成器：registry/tools/gen-icons.mjs（数据源：@ant-design/icons-svg）
+// 生成器：registry/tools/gen-icons.mjs
+// 构建期数据源：@ant-design/icons-svg（**运行时不依赖它**，定义已内联为本文件的字面量）
 // 重新生成：node registry/tools/gen-icons.mjs
 
-import FormatPainterFilledSvg from '@ant-design/icons-svg/es/asn/FormatPainterFilled';
 import { createIcon } from '../create-icon';
+import type { IconDefinition } from '../types';
 
-export const FormatPainterFilled = /*#__PURE__*/ createIcon(FormatPainterFilledSvg, 'FormatPainterFilled');
+const definition: IconDefinition = {
+  icon: {"tag":"svg","attrs":{"viewBox":"64 64 896 896","focusable":"false"},"children":[{"tag":"path","attrs":{"d":"M840 192h-56v-72c0-13.3-10.7-24-24-24H168c-13.3 0-24 10.7-24 24v272c0 13.3 10.7 24 24 24h592c13.3 0 24-10.7 24-24V256h32v200H465c-22.1 0-40 17.9-40 40v136h-44c-4.4 0-8 3.6-8 8v228c0 1.1.2 2.2.6 3.1-.4 1.6-.6 3.2-.6 4.9 0 46.4 37.6 84 84 84s84-37.6 84-84c0-1.7-.2-3.3-.6-4.9.4-1 .6-2 .6-3.1V640c0-4.4-3.6-8-8-8h-44V520h351c22.1 0 40-17.9 40-40V232c0-22.1-17.9-40-40-40z"}}]},
+  name: "format-painter",
+  theme: "filled",
+};
+
+export const FormatPainterFilled = /*#__PURE__*/ createIcon(definition, 'FormatPainterFilled');

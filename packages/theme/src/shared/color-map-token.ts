@@ -1,4 +1,4 @@
-import { FastColor } from '@ant-design/fast-color';
+import { Color } from '@apollo-design/utils';
 import { PresetColors } from '../seed';
 import type {
   ColorMapToken,
@@ -50,8 +50,8 @@ export default function genColorMapToken(
   const colorLink = seed.colorLink || seed.colorInfo;
   const linkColors = options.generateColorPalettes(colorLink);
 
-  const colorErrorBgFilledHover = new FastColor(errorColors[1])
-    .mix(new FastColor(errorColors[3]), 50)
+  const colorErrorBgFilledHover = new Color(errorColors[1])
+    .mix(new Color(errorColors[3]), 50)
     .toHexString();
 
   // 断言一次性建立空对象：13 个预设色在 defaultSeedToken 里**恒有值**，
@@ -128,7 +128,7 @@ export default function genColorMapToken(
     colorLink: linkColors[6],
     colorLinkActive: linkColors[7],
     ...presetColorTokens,
-    colorBgMask: new FastColor('#000').setA(0.45).toRgbString(),
+    colorBgMask: new Color('#000').setAlpha(0.45).toRgbString(),
     colorWhite: '#fff',
   };
 }
