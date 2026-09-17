@@ -17,21 +17,40 @@
 
 ## 公开 API
 
-- Locale 类型（与 antd 的 Locale 结构逐字段一致）
-- 75 个语言包：zh_CN / en_US / ja_JP / ...（按 antd 现有清单）
-- 各组件 locale 分片：DatePicker / Pagination / Table / Form / Upload / ...
-- 默认导出 zh_CN
+> ⚠️ 数量是 **73 个语言包**，不是早期文档写的 75 —— 实测 antd 6.6.4 的源码与产物都是 73。
+> ⚠️ **没有子路径入口**（本仓库裁决 A 是单文件产物）⇒ 只能具名导入，
+> 不能像 antd 那样 `import zhCN from 'antd/locale/zh_CN'`。
+
+### 数据
+
+- **73 个语言包**：`zh_CN` / `en_US` / `ja_JP` / …（导出名**保留 antd 的下划线原名**，
+  把迁移成本压到「只改包名」）
+- 各组件 locale 分片：DatePicker / Pagination / Table / Form / Upload / …
+
+### 类型
+
+- `Locale`（17 个分片键，只有 `locale` 必填）
+- `LocaleComponentName`（`Exclude<keyof Locale, 'locale'>`）
+- 各分片的类型：`TableLocale` / `ModalLocale` / `PaginationLocale` / `PickerLocale` / …
+
+### 取 locale
+
+- `useLocale(name, defaultLocale?)` —— 返回 `[locale, localeCode]`
+  （**浅合并，context 侧赢**；嵌套对象只能整体给出）
+- `localeContextKey` —— 注入键；`LocaleProvider`（**已废弃**）+ `ANT_MARK`
+- `changeConfirmLocale` / `getConfirmLocale` —— Modal confirm 的模块级 locale 栈
 
 ## 明确不做（边界）
 
 - ❌ 不做运行时语言切换（那是 ConfigProvider 的 locale prop）
 - ❌ 不含任何组件实现
 - ❌ 不手工编辑生成产物 —— 改源头或改生成脚本
+- ❌ 不做子路径入口（`antd/locale/zh_CN` 那种）—— 单文件产物，只能具名导入
 
 ## 必须遵守的契约
 
 - Locale 类型的字段名与 antd 完全一致（用户迁移时 locale 对象可直接沿用）
-- 生成管线必须可重跑且幂等
+- 生成管线必须可重跑且幂等（`node registry/tools/gen-locale.mjs --check` 返回 0）
 - 至少 zh_CN 与 en_US 必须完整覆盖全部组件分片
 
 ## 依赖
