@@ -176,7 +176,9 @@ export const generateNeutralColorPalettesDark = (
  *      （为废弃名 pink 补条目），本函数因此是纯函数，不再污染导入的模块。
  *
  * 取而代之的护栏是「亮色/暗色由调用方显式传入 generateFn 决定」——
- * 旧版曾把快路径误套到 dark 上，导致 `gold-10` 拿到亮色值（#faedb5 而非 #613400）。
+ * 旧版曾把快路径误套到 dark 上：暗色的 `gold-10` 会拿到**亮色**色板的第 10 档 `#613400`，
+ * 而正确值是暗色色板的第 10 档 `#faedb5`（两者恰好互为"最深/最浅"，极易看反 ——
+ * 本注释此前就把这两个值写反过，2026-09-18 修正）。
  * 现在这条路径不存在了，对应的回归断言在 `__tests__/palettes.test.ts`。
  */
 export function genPresetColorPalettes(

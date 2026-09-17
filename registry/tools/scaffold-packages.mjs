@@ -160,7 +160,11 @@ const PACKAGES = [
       '不做 CSS-in-JS（零运行时，见 ADR 0001）',
       '不产出组件的具体样式（那是 ui 的职责）',
       '不依赖任何组件',
-      '运行时不读 @ant-design/colors —— 预设色板是构建期固化到 src/generated/ 的数据（R7）',
+      // ⚠️ 措辞要准确：本包**没有** src/generated/ —— 预设色板不是固化数据，
+      //    而是由 utils 的 generatePalette 现算（实测 13 个预设色与上游
+      //    presetPalettes 逐位相同，所以固化成数据是多余的）。
+      //    曾误写成「构建期固化到 src/generated/ 的数据」，与实现不符。
+      '运行时不读 @ant-design/colors —— 色板由 @apollo-design/utils 的 generatePalette 计算（R7）',
     ],
     contracts: [
       'Token 名称必须与 antd 完全一致（Seed 34 / Map 140 / Alias 82 own / Component 70 组）',
