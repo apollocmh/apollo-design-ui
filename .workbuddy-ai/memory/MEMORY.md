@@ -192,9 +192,29 @@ node registry/tools/gen-registry.mjs && node registry/tools/foundation-status.mj
 
 ## ⚠️ 未决事项（接手先看）
 
-0. ✅ **`overlay` 已 completed（2026-09-18）** —— 13 个 foundation 包只剩 `form-core` /
-   `picker` 是 todo。⚠️ 但 `useOverlay` **零调用方**，且 `config-provider` 被 `form-core`
+0. 🔶 **`form-core` 是 `implementing`（2026-09-18，只完成批次①）** —— 上游约 3600 行，
+   一轮做不完，契约 §3 拆成三批：
+   ① 校验引擎 ✅ ｜ ② 取值工具（valueUtil/NameMap/validateMessages）⬜ ｜
+   ③ 状态机（FormStore/useForm/Field）⬜。
+   ⚠️ **批次③ 开工前必须先有 `ui/src/form` 骨架** —— 否则重复 overlay 的处境。
+   ③ 是 React `forceUpdate` 驱动的 store，必须 Vue 化重写，**没有 Oracle 可用**。
+0b. ✅ **`overlay` 已 completed（2026-09-18）** —— 13 个 foundation 包只剩 `form-core`（批次②③）/
+   `picker`。⚠️ 但 `useOverlay` **零调用方**，且 `config-provider` 被 `form-core`
    挡着；下一个目标听 `node registry/tools/next-task.mjs`（它会先警告依赖未就绪）。
+
+### ⭐ 能不能做 Oracle，判据是「上游有没有框架耦合」
+
+2026-09-18 在 `form-core` 上确立：`@rc-component/async-validator` 是**纯 JS**
+⇒ 两侧同时跑、逐位差分（与 position 的 5000 组几何差分同档）。
+**这在 foundation 包里是第一次。**
+
+判据：**上游零框架耦合 ⇒ 可做 Oracle；绑 React 生命周期 ⇒ 不能**。
+`@rc-component/form` 的 `FormStore` 就是后者 —— 它用 `forceUpdate` 驱动，
+必须 Vue 化重写，**只能靠读源码 + 行为测试**。
+
+⚠️ Oracle 不是万能的：它比的是「最终错误」，中间值在两侧都是 `undefined` 时差异会被抹平
+（实测：`complementError` 的 `fullFields` 分支变异，oracle 抓不到，只有直接调用测试抓到）。
+**oracle 与 units 必须并存。**
 1. ✅ **`empty` 已 completed（2026-09-18，L6 基建 + 21 组 0.000% exact）** —— `next-task`
    会给新目标。建议第二个选**有交互**的组件（如 `button`），把 L2 那层也验一遍。
 2. ✅ **L6 视觉回归基建已落地**（`tests/visual/`，三种模式：both / baseline / compare）——

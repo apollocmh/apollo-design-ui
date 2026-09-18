@@ -313,3 +313,38 @@
     ⚠️ 这个 FAIL **不是合并引入的**，是上一轮改 `extraExports` 时就产生了，
     只是当时只跑了 `pnpm --filter <pkg> run build`，**没跑 `tests/build/run.mjs`**。
     教训：改了 `package.json` 的 exports / 构建配置，必须跑全量构建门禁。
+
+65. 🚨 **`structuredClone` 不能克隆函数** —— 写 oracle / 差分测试时不能用它做深拷贝。
+    2026-09-18 在 form-core 的 oracle 测试里实测：`transform` / `validator` /
+    `asyncValidator` / `message` 全是函数 ⇒ 直接抛 `DataCloneError`，
+    7 个用例炸在**克隆这一步**（看起来像实现有问题，其实不是）。
+    **对策**：手写 `cloneDeep`，对 `function` / `RegExp` / `Date` 分别处理。
+    另：`Schema.validate` 会**改写规则对象**（加 field/fullField/type/validator），
+    `enum` rule 还会把 `rule.enum` 归一成数组 —— 两侧共用一份规则对象会让第二次运行看到脏数据。
+
+66. 🚨 **biome 的 `noConfusingVoidType` 自动修会把 `void` 改成 `undefined`，那是错的**。
+    2026-09-18 实测：`RuleItem['validator']` 的返回类型 `SyncValidateResult | void`
+    被 `biome check --write --unsafe` 改成 `| undefined`，
+    于是**所有 callback 式 validator 编译失败**（TS2322：`void` 不能赋给 `undefined`）。
+    `void` 在**返回位置**表示「返回值被忽略」，因此「返回 void 的函数」可以赋值给它；
+    `undefined` 则要求真的返回 undefined。**必须改回来 + `biome-ignore`**。
+    ⚠️ 教训：`--unsafe` 的自动修不是无脑安全的，改完必须跑 `vue-tsc`。
+
+67. ⚠️ **`Schema` 的 `validate` 失败时是「callback 被调用 _且_ Promise reject」双通道**，
+    且 `asyncMap` 里有 `pending.catch(e => e)` 吞掉 unhandled rejection。
+    ⇒ 调用方 `await schema.validate(...)` 会抛；`.catch()` 也能拿到 `AsyncValidationError`。
+    **只 await 不 catch 会踩 `unhandledRejection`**（因为 callback 那条路已经"处理"过了，
+    但 promise 那条没有）。写调用方时两条路都要接。
+
+68. ⚠️ **直接调用 validator / rule 时必须自己补 `rule.field`**。
+    `shouldValidate` 的判据是 `Boolean(rule.required) || Object.hasOwn(source, rule.field)`，
+    而 `Object.hasOwn(source, undefined)` 恒为 `false` ⇒ **整个校验被静默跳过**，
+    测试会拿到空错误数组而误以为"通过了"。
+    真实调用里 `Schema` 一定会设 `field`，所以这是**测试侧**的坑。
+    2026-09-18 实测：5 个 units 用例因此假绿。
+
+69. ⚠️ **`format(template, ...args)` 的函数参数类型要写 `never[]` 不要写 `unknown[]`**。
+    严格函数参数逆变下，`(a: string, b: string) => string` **不能**赋给
+    `(...args: unknown[]) => string`（`unknown` 不能赋给 `string`），
+    但可以赋给 `(...args: never[]) => string`（`never` 可赋给一切）。
+    上游是 JS，没有这个问题。
