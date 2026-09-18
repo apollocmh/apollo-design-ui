@@ -12,7 +12,7 @@
  * | ① | 校验引擎：`Schema` + util + messages + 7 rule + 17 validator | ✅ 已实现 |
  * | ② | 取值工具：namePath 的 get/set/比较、`NameMap`、`validateMessages` 默认模板 | ✅ 已实现 |
  * | ③a | 状态机内核：`FormStore` + `useForm` + `useWatch` + `WatcherCenter` + 三个 Context | ✅ 已实现 |
- * | ③b | 字段编排：`validateRule`/`validateRules` + `Field`（renderless） | ⬜ 待做 |
+ * | ③b | 字段编排：`validateRule`/`validateRules`（内部）+ `Field`（renderless） | ✅ 已实现 |
  * | ③c | 表单容器：`Form` + `FormProvider` + `List` | ⬜ 待做 |
  *
  * 分批理由见契约 §3。批次 ③ 的子批次拆分（③a/③b/③c）见 §3 的第二张表 ——
@@ -33,6 +33,12 @@
 // ---------------------------------------------------------------------------
 export { allPromiseFinish } from './async-util';
 export { default as delayFrame } from './delay-frame';
+// ---------------------------------------------------------------------------
+// 批次③b 字段编排
+// ---------------------------------------------------------------------------
+// ⚠️ `validateRule` / `validateRules` **不导出** —— 上游 `es/index.d.ts` 也没有它们
+//    （它们是 `Field` 的内部编排，契约 §4.7.8）。测试从 `../validate-util` 直接 import。
+export { Field } from './field';
 export {
   defaultFieldContext,
   defaultFormContext,

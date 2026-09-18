@@ -14,6 +14,7 @@ import type { Component, VNodeChild } from 'vue';
 
 import type {
   ChildProps,
+  FieldEntity,
   FieldMessage,
   FieldProps,
   FieldSlots,
@@ -276,5 +277,23 @@ describe('ValidateMessages（复用批次①）', () => {
   it('⭐ 表单层的 ValidateMessages 与批次① **同一个类型**（不是第二份定义）', () => {
     const messages: ValidateMessages = { required: '${label} 必填' };
     void messages;
+  });
+});
+
+describe('FieldEntity（批次③b 的声明订正）', () => {
+  it('⭐ `isPreserve()` 按运行时写：`boolean | undefined`（不是上游 .d.ts 的 `boolean`）', () => {
+    // 上游 `Field.js:408` 直接返回 `this.props.preserve`，而 `preserve` 未传时是 `undefined`。
+    // 若这里压成 `boolean`，`FormStore.isMergedPreserve` 的 `fieldPreserve !== undefined`
+    // 判据就失效 —— 字段级会覆盖表单级（契约 §4.7.8.1 ⑦）。
+    expectTypeOf<ReturnType<FieldEntity['isPreserve']>>().toEqualTypeOf<boolean | undefined>();
+  });
+
+  it('负例：把 `isPreserve()` 的返回值当成纯 boolean 用会报错', () => {
+    const bad = (entity: FieldEntity) => {
+      // @ts-expect-error `boolean | undefined` 不能赋给 `boolean`
+      const value: boolean = entity.isPreserve();
+      void value;
+    };
+    void bad;
   });
 });

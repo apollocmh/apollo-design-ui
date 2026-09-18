@@ -320,7 +320,15 @@ export interface FieldEntity {
   isFieldValidating: () => boolean;
   isListField: () => boolean;
   isList: () => boolean;
-  isPreserve: () => boolean;
+  /**
+   * ⚠️ **上游声明 `() => boolean`，运行时返回 `this.props.preserve`（可能是 `undefined`）**
+   * ⇒ 按运行时写（`Field.js:408`）。
+   *
+   * 这不是无意义的放宽：`FormStore.isMergedPreserve` 用 `fieldPreserve !== undefined`
+   * 区分「字段级 `preserve`」与「表单级 `preserve`」。若这里把 `undefined` 压成 `false`，
+   * 字段级就会**覆盖**表单级，把表单的 `preserve` 整个关掉（契约 §4.7.7）。
+   */
+  isPreserve: () => boolean | undefined;
   validateRules: (options?: InternalValidateOptions) => Promise<RuleError[]>;
   getMeta: () => Meta;
   getNamePath: () => InternalNamePath;

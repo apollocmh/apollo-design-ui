@@ -67,8 +67,8 @@ ls /tmp/rc-src/form/package/es/useForm.js || {
 | 子批次 | 内容 | 上游对应 | 状态 |
 |---|---|---|---|
 | **③a 状态机内核** | 类型契约 + 三个 Context + `WatcherCenter` + `allPromiseFinish` + `delayFrame` + `FormStore` + `useForm` + `useWatch` | `hooks/useForm.js`(918) + `useNotifyWatch.js`(47) + `useWatch.js`(83) + `utils/asyncUtil.js`(25) + `utils/delayUtil.js`(11) + 三个 Context | ✅ **已收口**（2026-09-18，`--verify` 实测 451 用例 / 0 失败；覆盖率 97.38·92.46·97.22；变异 8·8 抓到） |
-| **③b 字段编排** | `validateRule`/`validateRules` + `Field`（注册/注销、`getControlled`、`shouldUpdate`/`dependencies`、`validateDebounce`/`validateFirst`） | `utils/validateUtil.js`(226) + `Field.js`(603) | ⬜ **未开工** |
-| **③c 表单容器** | `Form`（provider + `nativeElement` + submit/reset）+ `FormProvider` + `List`（增删移 + key 管理） | `Form.js`(138) + `FormContext.js`(64) + `List.js`(143) | ⬜ **未开工** |
+| **③b 字段编排** | `validateRule`/`validateRules` + `Field`（注册/注销、`getControlled`、`shouldUpdate`/`dependencies`、`validateDebounce`/`validateFirst`） | `utils/validateUtil.js`(226) + `Field.js`(603) | ✅ **已收口**（2026-09-19，form-core 实测 434 用例 / 0 失败；覆盖率 97.98·93.26·98.18·98.06；变异 24 组中 23 杀、1 等价） |
+| **③c 表单容器** | `Form`（provider + `nativeElement` + submit/reset）+ `FormProvider` + `List`（增删移 + key 管理） | `Form.js`(138) + `FormContext.js`(64) + `List.js`(143) | ⬜ **未开工**（本轮的 §4.7.11 仍是**未被任何代码验证的文档**） |
 
 ⚠️ **订正（2026-09-18）**：本表初稿把三个子批次**全部**标成「✅ 本轮」—— 那是**开工前的计划**，
 被误写成了状态。实际只完成 ③a；③b/③c **一行代码都没有**。
@@ -635,6 +635,12 @@ if (mergedNameList === true && !mergedFilterFunc) return this.store;   // ⭐ �
 
 #### 4.7.7 `Field` 的契约（`Field.js`）
 
+> ✅ **本节已由 ③b 实现并验证**（2026-09-19）：落点 `packages/form-core/src/field.ts`，
+> 行为测试 `__tests__/batch3b.test.ts`（95 例），覆盖率 99.22·93.25·100·99.59，
+> 变异 14 组（13 杀 + 1 等价）。⚠️ **例外**：与 `Form.List` 相关的两条
+> （`getNamePath` 的 `prefixName`、`isMergedListField` 的 `listContext` 推导）
+> 只被**读**，没有测试真的构造过 List 上下文 —— 留待 ③c。
+
 **实体接口**（`interface.d.ts:64-88`）：`onStoreChange` / `isFieldTouched` / `isFieldDirty` /
 `isFieldValidating` / `isListField` / `isList` / `isPreserve` / `validateRules` / `getMeta` /
 `getNamePath` / `getErrors` / `getWarnings` / `props` / `INVALIDATE_NAME_PATH?`。
@@ -698,6 +704,10 @@ if (mergedNameList === true && !mergedFilterFunc) return this.store;   // ⭐ �
 
 #### 4.7.8 `validateRules` / `validateRule`（`utils/validateUtil.js`）⭐
 
+> ✅ **本节已由 ③b 实现并验证**（2026-09-19）：落点 `packages/form-core/src/validate-util.ts`，
+> 覆盖率 **100·100·100·100**，变异 10 组 **10 杀**。⚠️ **无 Oracle**（上游 import React）——
+> 见 §4.7.8.1 与 §4.7.8.2。
+
 `validateRule(name, value, rule, options, messageVariables)`（`:23-99`）：
 
 1. `cloneRule = {...rule}`，**`delete cloneRule.ruleIndex`**（⚠️ 上游注释说是 async-validator 的 bug）；
@@ -730,6 +740,142 @@ if (mergedNameList === true && !mergedFilterFunc) return this.store;   // ⭐ �
   依赖第 2 步的包装保证每条 `rulePromise` 一定 resolve；
 - `validateRule` 第 7 步的子规则展开**只在 `!result.length` 时发生**（父规则已报错就不递归）。
 
+#### 4.7.8.1 ⭐ ③b 的 Vue 落点（2026-09-18 实现期裁决，回写）
+
+**① `validateUtil.js` 的 React 依赖只有一处，整段删除**（差异 1，§6.4.5）：
+`:71-76` 的 `React.isValidElement(mergedMessage) ? React.cloneElement(..., {key}) : mergedMessage`
+⇒ Vue 渲染 `VNodeChild` 不需要 `key`，**原样返回 `mergedMessage`**。
+其余逐行移植（`replaceMessage` 复用批次② 的 `validate-messages.ts`）。
+
+**② `Field` 用「类式 controller + renderless 组件」两层，不逐行翻译 class 组件。**
+上游 `Field extends React.PureComponent`（603 行）的核心是「字段状态 + 受控 props 注入」，
+与 React 的渲染生命周期只有三处耦合，各有 Vue 对应物：
+
+| 上游 | 我们 | 说明 |
+|---|---|---|
+| `forceUpdate()`（`reRender`） | 组件内 `shallowRef` 版本号 + 渲染函数读它 | 与 ③a 的 `useForm` 不同：**这里版本号有人读**（render 函数），所以成立 |
+| `setState({resetCount})`（`refresh`） | `ref(resetCount)` + 渲染时包一层 **keyed `Fragment`** | Vue 的 key 变化会让 Fragment 整体 unmount/mount，等价于上游改 Fragment 的 `key` 强制子节点重建 |
+| `cloneElement(child, control)` | **scoped slot** `default(control, meta, form)` + 消费方 `v-bind="control"` | 差异 2；`getControlled` **删掉 `childProps` 形参**（见 ③） |
+| `constructor` 里 `initEntityValue(this)` | `setup()` 里调（Vue setup 只跑一次，早于 mount） | 保证 `initialValue` 不被「拿到太晚」 |
+| `componentDidMount` / `componentWillUnmount` | `onMounted` / `onUnmounted` | Vue 的子组件 mounted 同样先于父组件 |
+
+**③ `getControlled` 删掉 `childProps` 形参（有意差异）。** 上游的形参是**子元素原始 props**，
+来自 `cloneElement(child, control)` —— 用途是「子元素自己写的 `onChange` 在 store 更新后再调一次」。
+Vue 侧子元素由消费方渲染，`Field` 看不到它的 props ⇒ 该形参**没有对应物**（保留即死代码）。
+⭐ 而那条语义 Vue **原生就有**：`<Input v-bind="control" @change="mine" />` 被编译器展开成
+`mergeProps(control, { onChange: mine })`，Vue 的 `mergeProps` 对 `onXxx` 做的是**串接**
+（`[].concat(existing, incoming)`，已核对 `@vue/runtime-core@3.5.42` 源码）—— 两个 handler 都会跑。
+`ui` 层若用 `cloneVNode(child, control)` 注入，同样串接。
+
+**④ 不做 `WrapperField` / `Field` 两层**：`WrapperField` 的职责（读两个 Context、把
+`name` 归一成 `namePath`、算 `isMergedListField`、`preserve === false` 的告警）在 Vue 里
+没有「函数组件体每次重跑」的约束，直接放进 `Field` 的 `setup()` 即可。
+
+**⑤ `props` 的 Boolean 转换必须显式给 `default: undefined`**（`PITFALLS.md` 第 46 条）：
+`preserve` / `isListField` / `isList` / `validateTrigger` 的运行时类型含 `Boolean`，
+若不给默认值，Vue 会把「未传」转成 `false` —— 而 `preserve === undefined`（走 store 级）
+与 `preserve === false`（本字段不保留）是**两种语义**。这是 ③b 唯一的新增跨包坑。
+
+**⑥ `onMetaChange` 的去重**用 `@apollo-design/utils` 的 `isEqual`（与上游同源，
+`is-equal.ts` 就是 `@rc-component/util/isEqual` 的移植）。
+
+**⑦ `isPreserve()` 的声明放宽为 `() => boolean | undefined`**（`form-types.ts` 已改）：
+上游 `.d.ts` 写 `() => boolean`，运行时返回 `this.props.preserve`（`Field.js:408`）。
+若把 `undefined` 压成 `false`，`FormStore.isMergedPreserve` 的
+`fieldPreserve !== undefined` 判据就失效 ⇒ **字段级会覆盖表单级**，把表单的 `preserve` 关掉。
+
+**⑧ 一处照抄但无害的边角**：`validateFirst === 'parallel'` 且规则为空时
+`finishOnFirstFailed([])` **永不 resolve**（`count` 永远到不了 0）。上游如此，我们照抄；
+测试里不制造这种挂起（已写进 `validate-util.ts` 的注释）。
+
+#### 4.7.8.2 ⭐ ③b 收口记录（2026-09-19）
+
+**实现落点**（只新增两个文件，不改 ③a 的任何结论）：
+
+| 文件 | 行数 | 对应上游 |
+|---|---|---|
+| `packages/form-core/src/validate-util.ts` | 331 | `utils/validateUtil.js`(226) |
+| `packages/form-core/src/field.ts` | 771 | `Field.js`(603) + `WrapperField.js` |
+| `packages/form-core/src/__tests__/batch3b.test.ts` | 1400+ | 行为测试 95 例 |
+
+⚠️ **本子批次没有 Oracle，不要假装做过差分。** 上游 `validateUtil.js` 第 2 行
+`import * as React from 'react'`，`Field.js` 通篇绑 React 生命周期 ⇒ `tests/oracle/`
+里**没有** ③b 的对拍文件（与 ③a 不同）。期望值全部来自**读上游源码 + 行为测试**，
+每条断言在测试文件里都标了上游行号。
+
+**实测（可复现）**：
+
+```
+node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__tests__
+  → Test Files 7 passed (7) / Tests 434 passed (434)
+
+同命令 + --coverage（--coverage.include='packages/form-core/src/**'）
+  → TOTAL  语句 97.98 / 分支 93.26 / 函数 98.18 / 行 98.06   （阈值 95/90/95/95）
+  → validate-util.ts  100 / 100 / 100 / 100
+  → field.ts          99.22 / 93.25 / 100 / 99.59
+```
+
+**变异验证：24 组，23 杀、1 等价。** 每个变异「应用 → 跑 → 还原 → 校验 sha256」：
+
+`validate-util.ts`（10/10 杀）：
+
+| # | 变异 | 结果 |
+|---|---|---|
+| M1 | `finishOnAllFailed` 不展平（`[].concat(...)` ⇒ `errors`） | 19 failed ✅ |
+| M2 | `warningOnly` 排序方向反转 | 1 failed ✅ |
+| M3 | 串行分支条件失效（`validateFirst === true` 永不进入） | 6 failed ✅ |
+| M4 | `finishOnFirstFailed` 丢弃首个错误（`resolve([])`） | 1 failed ✅ |
+| M5 | `CODE_LOGIC_ERROR` 不替换成 `messages.default` | 2 failed ✅ |
+| M6 | `enum` 不 `join(', ')` | 1 failed ✅ |
+| M7 | 数组子规则递归去掉 `!result.length` 守卫 | ⚠️ **首轮存活** ⇒ 补强用例后 1 failed ✅ |
+| M8 | 不做 `replaceMessage` 变量替换 | 24 failed ✅ |
+| M9 | `messageVariables` 优先级反转 | 2 failed ✅ |
+| M10 | validator 的 promise / callback 优先级反转 | 6 failed ✅ |
+
+`field.ts`（13 杀 / 1 等价）：
+
+| # | 变异 | 结果 |
+|---|---|---|
+| F1 | `requireUpdate` 恒真（`return true`） | ⚠️ **首轮存活** ⇒ 补强用例后 1 failed ✅ |
+| F2 | `onMetaChange` 去重失效（去掉 `isEqual`） | 1 failed ✅ |
+| F3 | `RuleRender` 不求值 | 1 failed ✅ |
+| F4 | `validated` 判据由 `=== null` 改 `=== undefined` | 2 failed ✅ |
+| F5 | `onChange` 值未变也 dispatch | 1 failed ✅ |
+| F6 | `validateTrigger` 包装去掉 `rules && rules.length` 守卫 | ⛔ **存活 ⇒ 等价变异**（见下） |
+| F7 | `reset` 分支忽略 `!namePathList`（全量重置） | 1 failed ✅ |
+| F8 | `isFieldDirty` 忽略 `initialValue` 分支 | ⚠️ **首轮存活** ⇒ 补强用例后 1 failed ✅ |
+| F9 | keyed `Fragment` 的 key 恒为 `0` | 1 failed ✅ |
+| F10 | `isMergedListField` 忽略显式 `props.isListField` | 1 failed ✅ |
+| F11 | 注销时不透传 `preserve` | 2 failed ✅ |
+| F12 | `warningOnly` 的错误/告警不分流 | 2 failed ✅ |
+| F13 | `validateDebounce` 过期不跳过 | 1 failed ✅ |
+| F14 | `setFields` 注入的 `errors` 被丢弃 | ⚠️ **首轮存活** ⇒ 补强用例后 1 failed ✅ |
+
+⭐ **F6 为什么是等价变异（不是测试缺口）**：`Field.getControlled` 的守卫去掉后，
+`dispatch({type:'validateField'})` 仍会被 `form-store.ts:851` 的
+`if (!field.props.rules || !field.props.rules.length) return;` 拦掉 ——
+**两层守卫语义重叠**，公开 API（`meta` / `onFieldsChange` / `validateFields` 返回值）
+上观察不到差异。已补一条「无规则 ⇒ 不产生校验」的行为用例锁住**契约**，
+并在测试注释里写明「这不是某一行守卫的证据」，不谎报击杀。
+
+⭐ **四条首轮存活的变异都是真缺口，已补强（不是靠删断言变绿）**：
+
+1. M7：原用例传 `undefined`，`Array.isArray(undefined)` 直接为假，**根本没走到** `!result.length`
+   ⇒ 改成「父规则与子规则**都会**报错」的非空数组；
+2. F1：`setFieldValue` 走 `setField` 分支早退，`requireUpdate` 从未被求值
+   ⇒ 新增「有 `dependencies` + 自身值未变」的用例，走 `default` 分支真正求值；
+3. F8：`isFieldDirty()` 不在公开 `FormInstance` 上（上游如此），原用例找不到入口
+   ⇒ 改从 `validateFields({dirty:true})` 的**过滤行为**观察，并带一个「无 `initialValue`
+   应被跳过」的对照组（对照组同时暴露了 `validateFields(undefined, {...})` 会落进
+   无参重载把 options 丢掉 —— 调用形式改成单参）；
+4. F14：原 `setFields` 用例只注入 `errors: []`，与 `|| EMPTY_ERRORS` 兜底等价
+   ⇒ 补「注入非空数组 ⇒ 原样进 meta」+「显式空数组 ⇒ 清空」。
+
+**③c 仍未开工**：`Form` / `FormProvider` / `List` 一行代码都没有，§4.7.11 与
+§4.7.7 里 `WrapperField` 关于 `Form.List` 的部分（`prefixName`、`listContext` 推导）
+**只被间接验证**（`field.ts` 读了 `prefixName` / `listContext`，但没有任何测试真的构造过
+`Form.List` 的上下文）—— 留待 ③c 收口时补。
+
 #### 4.7.9 `WatcherCenter`（`hooks/useNotifyWatch.js`）
 
 - `macroTask(fn)` 用 **`MessageChannel`**（`port1.onmessage = fn; port2.postMessage(null)`）；
@@ -750,6 +896,12 @@ if (mergedNameList === true && !mergedFilterFunc) return this.store;   // ⭐ �
 - ⚠️ `flattenDeps = typeof deps === 'function' ? deps : JSON.stringify(deps)`。
 
 #### 4.7.11 `Form`（`Form.js`）与 `List`（`List.js`）
+
+> ⚠️ **本节仍是「未被任何代码验证的文档」（2026-09-19 复核）** —— ③c 未开工，
+> `packages/form-core/src/` 下没有 `Form` / `FormProvider` / `List` 的任何实现，
+> 也没有针对本节的测试。**不要把它当作已收口的契约**。
+> 唯一的间接接触：`field.ts` 会读 `FieldContext.prefixName` 与 `listContextKey`
+> （`getNamePath` / `isMergedListField`），但 ③b 的测试从没构造过 `Form.List` 的上下文。
 
 `Form`：默认 `component = 'form'`，`validateTrigger = 'onChange'`；
 `onSubmit` ⇒ `preventDefault + stopPropagation + submit()`；`onReset` ⇒ `preventDefault + resetFields() + restProps.onReset?.(event)`；
@@ -945,6 +1097,8 @@ function useWatch<Values = any>(
 | 8 | `useWatch` 每次渲染重算 `dependencies`（`flattenDeps`） | `dependencies` 在 `setup()` 期**捕获一次** | **INTENDED**（`setup` 只跑一次；上游那次重算只会「再调一次 `triggerUpdate`」，不重新注册 watcher） |
 | 9 | `isFormInstance` 短路返回 `null` / `0` / `''`（`.d.ts` 却声明 `boolean`） | `Boolean(...)` ⇒ 恒为 `boolean` | **INTENDED**（修声明而非抄实现；调用点只用真值语境，`batch3a.oracle.test.ts` 把差异显式钉住） |
 | 10 | `useWatch` 在实例之外 `useContext`（React 会抛） | `inject` 前先判 `getCurrentInstance()`，无实例时取 `defaultFieldContext` | **INTENDED**（Vue 的 `inject` 在实例外**返回 `undefined` 并告警**，不会给默认值） |
+| 11 | `Field.refresh()` 用 `setState({resetCount})` 改 `Fragment` 的 `key` 强制子节点重建 | 同一个 `resetCount` 包成 **keyed `Fragment`** | **INTENDED**（Vue 的 `key` 变化同样触发 unmount/mount；差异只在实现手段） |
+| 12 | `Field` 的 `preserve` / `isListField` / `isList` 是可选布尔 | 运行时 prop 显式 `default: undefined` | **INTENDED**（`PITFALLS.md` 46：Vue 的 Boolean 转换会把「未传」变 `false`，而这里 `undefined` 与 `false` 语义不同） |
 
 ⭐ 差异 1 的**证据**：`validateUtil.js:71-76` 的 `React.isValidElement(mergedMessage) ?
 React.cloneElement(mergedMessage, { key: `error_${index}` }) : mergedMessage`。
