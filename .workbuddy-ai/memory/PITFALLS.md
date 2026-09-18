@@ -246,3 +246,14 @@
     ③ 确认 `git rev-list --left-right --count master...HEAD` 变成 `0 N`；
     ④ 才去 master worktree 做 `--ff-only`。另：那边的 `dist/` 是旧构建，
     不重建的话 E19 会拿旧产物报假阳性。
+
+60. ⚠️ **oracle 测试不覆盖我们自己的 API 面 —— 新增 L0 导出时必须另写行为测试，
+    并真的跑一次覆盖率门禁**。2026-09-18 实测：`utils/src/color/` 只写了
+    `color.oracle.test.ts`（对上游 90+ 组样本逐位差分，全部通过），
+    但 `color.ts` 的覆盖率是 语句 94.61 / 分支 88.46 / **函数 91.17** / 行 94.47，
+    **不达 L0 的 95/90/95/95**。缺口全是「上游也支持的输入」走不到的路径：
+    `toString` / `clone` / `equals` 三个纯函数方法、`toHexString` 的 alpha 分支、
+    无参构造、非法输入抛错。
+    **对策**：oracle 管「与上游一致」，行为测试管「我们自己的 API 形态与边界」，
+    两者都要；收口时跑 `CODEBUDDY_SAFE_DELETE_ENABLED=0 node registry/tools/foundation-status.mjs --package <dir> --verify`
+    （约 18 分钟/包，但它是唯一会看覆盖率的门禁 —— `pnpm run registry:check` 不看）。

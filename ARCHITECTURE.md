@@ -244,7 +244,7 @@ packages/
 | 包 | 层 | 替代 antd 的 | 明确不做 |
 |---|---|---|---|
 | `utils` | L0 | `@rc-component/util`、`resize-observer`、`mutate-observer`、`throttle-debounce`、`@ant-design/fast-color` 的颜色数学部分 | 不含视觉语义；不产 CSS；不依赖任何 `@apollo-design/*`；不提供 `render/unmount`（含 Vue 渲染器耦合，归 `ui/src/_internal`）。**颜色模块只放纯数学，不得出现色值字面量（R3）** |
-| `theme` | L0 | `@ant-design/cssinjs` 的 Token 派生部分 | **不做运行时 CSS-in-JS 注入**（见 §5）；不产组件样式；预设色板是**构建期固化数据**，不得在运行时读 `@ant-design/colors` |
+| `theme` | L0 | `@ant-design/cssinjs` 的 Token 派生部分 | **不做运行时 CSS-in-JS 注入**（见 §5）；不产组件样式；色板由 `@apollo-design/utils` 的 `generatePalette` **现算**（算法移植 + 差分验证），不得在运行时读 `@ant-design/colors` |
 | `icons` | L0 | `@ant-design/icons` | 不手写图标；不做图标以外的组件；**图标数据是构建期从 `@ant-design/icons-svg` 固化的生成物**，运行时不 import 它（R7） |
 | `motion` | L1 | `@rc-component/motion` | 不做具体组件的动画编排（各组件自己声明）；不做 CSS-in-JS |
 | `portal` | L1 | `@rc-component/portal` | 不做定位；不做焦点管理（归 `a11y`） |

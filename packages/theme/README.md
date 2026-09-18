@@ -32,7 +32,7 @@ Token Runtime：Seed → Map → Alias → Component 的完整派生链，以及
 - ❌ 不做 CSS-in-JS（零运行时，见 ADR 0001）
 - ❌ 不产出组件的具体样式（那是 ui 的职责）
 - ❌ 不依赖任何组件
-- ❌ 运行时不读 @ant-design/colors —— 预设色板是构建期固化到 src/generated/ 的数据（R7）
+- ❌ 运行时不读 @ant-design/colors —— 色板由 @apollo-design/utils 的 generatePalette 计算（R7）
 
 ## 必须遵守的契约
 
