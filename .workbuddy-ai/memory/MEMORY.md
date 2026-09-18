@@ -110,13 +110,22 @@ L0 utils/theme/icons ｜ 测试 test-utils
 含 **13 个组件**（不只 foundation）。不带 `--parallel` 的那个推 `config-provider`，
 并**同时警告「不要开始」**（foundation 未就绪）—— 那条警告必须服从。
 
-- 文件域互斥是硬要求：`packages/ui/src/<component>/**` 天然互斥，
-  共享冲突只有 `ui/src/index.ts`（见「跨包易错判据」4）、`registry/*.json`、memory。
+- 文件域互斥是硬要求：`packages/ui/src/<component>/**` 天然互斥。
+  ⚠️ **手写共享文件有 4 个**（不是 1 个），每个组件流都会碰，**必须预先约定按字母序追加**：
+  `packages/ui/src/index.ts`（见「跨包易错判据」4）、`packages/ui/src/style/index.ts`、
+  `tests/visual/matrix.mjs`、`tests/visual/render/cases/shared.mjs`。
+  其余共享冲突是生成物：`registry/*.json`（实测两个流合并后**只冲突 `generatedAt`**）、memory。
 - 2026-09-18 起的分工：`wt-form-core`（form 骨架 + form-core 批次③）、
   `wt-comp-a`（divider → spin）、`master-15e7f018`（整合：合并/生成器/门禁/registry）。
   交接单在各 worktree 的 `.workbuddy-ai/handoff.md`（已 exclude，不入库）。
 - ⚠️ **并发资源红线**：全仓构建门禁同一时刻**只允许一个会话跑**；
   其余只跑自己包的 `vitest` / `vue-tsc`（16G 机器，全仓 vitest 已知 OOM）。
+  抢锁协议：`while ! mkdir /tmp/apollo-build-gate.lock 2>/dev/null; do sleep 20; done`。
+- ⚠️ 开工前**替各 worktree 串行跑完 `pnpm install`**，别让多个 agent 同时抢 store。
+- ⭐ **复核纪律（2026-09-18 实证有效）**：agent 的汇报要**逐条自己重跑**才算数。
+  本轮抓到 3 处：① 流2 把 warning 说成 error；② 两个 agent 都把 theme B1 误诊为
+  「瞬时竞态」（见 PITFALLS 76，错误根因已跨 3 个会话传播）；③ 流2 的新坑没进
+  `PITFALLS.md` 只进了日志。**新坑一律登记 `PITFALLS.md`**，别只写日志。
 
 ## ⚠️ 未决事项（接手先看）
 
@@ -134,9 +143,12 @@ L0 utils/theme/icons ｜ 测试 test-utils
    ⚠️ 想接 ③b：**不要只加源码不加测试** —— 新增未覆盖代码会把 form-core 的覆盖率
    从 97.38/92.46/97.22 拉到阈值（95/90/95）以下，门禁会红。
 1. **foundation 11/13 completed**；`form-core` 见上（implementing），`picker` 仍 todo。
-   组件 **1/72**（`empty`）。听 `next-task.mjs`（并行时用 `--parallel`）。
+   组件 **2/72**（`empty` + `divider`，均已 `completed`）。听 `next-task.mjs`（并行时用 `--parallel`）。
    第二个组件原建议选**有交互**的（验 L2 层）；2026-09-18 实际先派了 **`divider`(P0, 最小)**
-   把组件侧 G0→G14 走顺，`spin`(P1) 跟上（会走 motion 层）。
+   把组件侧 G0→G14 走顺 —— **`spin`(P1) 还没开工**（流2 在 divider 收口后按约定停下），
+   它才是会走 `motion` 层的那个。
+   ⚠️ `divider` 的 `interactionStatus` 判 `n/a`（纯展示组件），
+   ⇒ **组件侧 L2 交互层其实还没被任何组件真正验证过**。
 2. **`form-core` 挡着 `config-provider`**，后者解锁 50 个组件 —— 这是当前关键路径。
 
 3. `packages/ui/src/config-provider/` 目前**只有 `context.ts` 最小集**（Empty 够用），
