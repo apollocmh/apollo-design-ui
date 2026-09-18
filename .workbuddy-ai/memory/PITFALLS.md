@@ -348,3 +348,20 @@
     `(...args: unknown[]) => string`（`unknown` 不能赋给 `string`），
     但可以赋给 `(...args: never[]) => string`（`never` 可赋给一切）。
     上游是 JS，没有这个问题。
+
+70. 🚨 **`toArray` 同名不同义 —— 复用前先看语义，不要看名字**。
+    `@apollo-design/utils` 的 `toArray(children)` 是**为 Vue children 设计**的
+    （展平 vnode、拆 Fragment、包 Text vnode、返回 `VNode[]`）；
+    而 rc-form 的 `typeUtil.toArray(namePath)` 是**为 namePath 设计**的
+    （`null`/`undefined` ⇒ `[]`，其余包成数组，返回 `(string|number)[]`）。
+    两者只是名字撞了 —— 2026-09-18 在 form-core 批次② 差点直接复用。
+    **对策**：复用一个 L0 导出前，先读它的实现或注释，确认语义而不只是签名。
+    ⚠️ 反例（**可以**复用的）：`get` / `set` —— 上游 `valueUtil.js:1` 本身就是
+    `import { get, set } from '@rc-component/util'`，而 utils 的 `object.ts` 正是那套的移植，
+    **同一个来源**，直接复用正确。
+
+71. ⚠️ **普通字符串里写 `${name}` 会被 biome 的 `noTemplateCurlyInString` 报**，
+    而有些场景**必须**用普通字符串 —— 例如 `validateMessages` 的模板字面量文本
+    （`"'${name}' is required"`），改成反引号会被立即求值、语义全错。
+    **对策**：在文件顶部加 `// biome-ignore-all lint/suspicious/noTemplateCurlyInString: <理由>`，
+    逐行加 `biome-ignore` 会有几十处。理由要写清楚（"这些是给用户的模板文本，不是 JS 模板"）。

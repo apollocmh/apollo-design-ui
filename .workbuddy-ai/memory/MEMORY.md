@@ -98,11 +98,13 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
 ## ⚠️ 未决事项（接手先看）
 
-0. 🔶 **`form-core` 是 `implementing`（2026-09-18，只完成批次①）** —— 上游约 3600 行，
+0. 🔶 **`form-core` 是 `implementing`（2026-09-18，批次①② 完成）** —— 上游约 3600 行，
    一轮做不完，契约 §3 拆成三批：① 校验引擎 ✅ ｜ ② 取值工具（valueUtil/NameMap/
-   validateMessages）⬜ ｜ ③ 状态机（FormStore/useForm/Field）⬜。
+   validateMessages）✅ ｜ ③ 状态机（FormStore/useForm/Field）⬜。
    ⚠️ **批次③ 开工前必须先有 `ui/src/form` 骨架** —— 否则重复 overlay 的处境
    （契约封了但无人消费，API 形状无从校验）。
+   ⚠️ ③ 是**唯一没有 Oracle 的部分**（`validateUtil.js` 依赖 React 的 isValidElement /
+   cloneElement，且 FormStore 是 forceUpdate 驱动）—— 只能读源码 + 行为测试。
 1. **foundation 11/13 completed**；`form-core` 见上（implementing），`picker` 仍 todo。
    组件 **1/72**（`empty`）。听 `next-task.mjs`。建议第二个组件选**有交互**的
    （如 `button`），把 L2 层也验一遍。
@@ -137,3 +139,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ⚠️ Oracle 不是万能的：它比的是「最终错误」，中间值在两侧都是 `undefined` 时差异会被抹平
 （实测：`complementError` 的 `fullFields` 分支变异，oracle 抓不到，只有直接调用测试抓到）。
 **oracle 与 units 必须并存。**
+
+判据细化（2026-09-18 在 form-core 批次② 实测）：
+- **可对拍的前提是「那个文件不 import 框架」** —— rc-form 的
+  `utils/{valueUtil,NameMap,messages}.js` 都不 import react，所以能对拍；
+  同目录的 `utils/validateUtil.js` import 了 react ⇒ **不能**。
+- 深路径 import 的前提：包**没有 `exports` 字段**（有的话会被路径白名单挡住）。
+- peer 缺失（如 react）不影响 —— 只要不 import 那个 peer。
