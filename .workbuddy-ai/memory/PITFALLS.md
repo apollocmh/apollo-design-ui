@@ -365,3 +365,65 @@
     （`"'${name}' is required"`），改成反引号会被立即求值、语义全错。
     **对策**：在文件顶部加 `// biome-ignore-all lint/suspicious/noTemplateCurlyInString: <理由>`，
     逐行加 `biome-ignore` 会有几十处。理由要写清楚（"这些是给用户的模板文本，不是 JS 模板"）。
+
+72. 🚨 **`vitest ... | head -N` / `| grep` 会因 SIGPIPE 提前杀死进程，覆盖率报告静默不写**。
+    2026-09-18 实测：`npx vitest run --coverage ... | grep -E "..." | head -60` 的 exit code 是 **0**、
+    测试结果看起来正常，但 `coverage/coverage-summary.json` **根本不存在** ——
+    `head` 读够行数就关掉管道，vitest 拿到 EPIPE 后**在写覆盖率报告之前**就退出了。
+    ⚠️ 危险之处：它**不报错**，只是「没有报告」，很容易被误读成「覆盖率工具坏了」。
+    **对策**：带 `--coverage` 时把输出**重定向到文件**（`> /tmp/x.log 2>&1`），
+    再从文件里 grep；或直接读 `coverage/coverage-summary.json` 汇总，不要依赖 stdout 表格。
+
+73. 🚨 **`vitest run --project types` 解析不了 `.vue`，会对**既有**文件报 `Unhandled Source Error`**。
+    2026-09-18 实测（`--verify` 跑完才暴露）：报错形如
+
+    ```
+    TypeCheckError: Cannot find module './Empty.vue' or its corresponding type declarations.
+     ❯ packages/ui/src/empty/index.ts:22:28
+    ```
+
+    ⚠️ 关键在于**它不是新引入的**：把 `packages/ui/src/form/` 整个移走再跑，
+    `empty/index.ts` 这一条**照样报** ⇒ 基线 `9326146` 就存在。
+    成因是 `types` project 的 typecheck（`ignoreSourceErrors: false`）不认 SFC 后缀。
+    ⚠️ `vue-tsc --noEmit -p tsconfig.json`（也就是 `lint:types`）**是 0 错误**的 ——
+    两条通道对 `.vue` 的解析能力不同，所以「lint 绿」不代表「types 项目绿」。
+    后果：`--verify` 的 exit code 是 **1**，但 `verification.unit.failed` 仍是 0
+    （Unhandled Source Error 不算 assertion failure）。
+    **判据**：看到这个错先别改自己的代码 —— 先确认报的是不是**基线文件**
+    （`empty` 就是基线文件），再看 `--project types` 是否本来就红。
+    ⚠️ 修它要动 `vitest.config.ts`（不在任何单包的 file domain 里），属于**基建**议题。
+
+74. 🚨 **vitest 的 `types` 项目会「运行时执行」`*.test-d.ts`，`null as unknown as T` 后调方法必炸**。
+    2026-09-18 实测：`const form = null as unknown as FormInstance; form.isFieldsTouched();`
+    ⇒ `TypeError: Cannot read properties of null (reading 'isFieldsTouched')`，
+    **5 条用例全红**，而 `vue-tsc` 完全看不出来（类型是对的）。
+    **对策**：类型断言必须包在**永不调用**的函数里：
+
+    ```ts
+    it('...', () => {
+      const check = (form: FormInstance) => { expectTypeOf(form.foo()).toEqualTypeOf<X>(); };
+      void check;          // 只做类型检查，不执行
+    });
+    ```
+
+    ⚠️ 负例（`@ts-expect-error`）同理 —— 只跑 `vue-tsc` 会得到**假绿**，
+    只有 `--verify`（含 `types` project）才照得出来。
+
+75. ⚠️ **`pnpm run lint` 在基线 `9326146` 就是红的**（不是本批次引入）。
+    2026-09-18 实测：`lint:types`（vue-tsc）**0 错误**，红的是 `lint:format`（`biome check .`）。
+    按文件分清：
+
+    | 文件 | 数量 | 级别 | 归属 |
+    |---|---|---|---|
+    | `packages/theme/build.config.ts` | 1 | **error**（`format`） | **基线既有**，不在 form-core 的文件域 |
+    | `packages/form-core/src/__tests__/batch2.test.ts` | 17 | warning（`noTemplateCurlyInString`） | 基线既有（PITFALLS 71 的 `biome-ignore-all` 对策**没应用到这个文件**） |
+    | `packages/form-core/src/types.ts` | 2 | warning（含 `suppressions/unused`） | 基线既有 |
+
+    ⭐ **只有 error 会让 `lint` 退出码非 0**（24 个 warning 不影响）。
+    ⇒ 看到 `lint` 红，先 `npx biome check . --reporter=json` 按 `location.path` 分组，
+    **再判断是不是自己的文件**；别一上来就改自己的代码。
+    ⚠️ 反过来：自己文件里的 error 必须清掉，否则会把「别人的红」和「自己的红」混在一起，
+    下一个人无法分辨。
+    ⭐ 对**有意为之**的规则违例（如 `Function` 判据、`then` 鸭子类型夹具、上游公开签名里的
+    `any` 默认泛型），正确做法是**逐条 `biome-ignore` + 写清理由**，
+    不是 `--write --unsafe` 全局放宽（PITFALLS 66 就是那个教训）。
