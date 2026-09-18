@@ -44,6 +44,18 @@ export const THEMES = [{ id: 'light', antdTheme: 'default', apolloTokens: 'light
  * 共用 `render/cases/shared.mjs` 里的常量，确保输入一致。
  */
 export const COMPONENTS = {
+  divider: {
+    variants: [
+      'horizontal', // 水平（含 dashed）
+      'with-text', // 标题 center / start / end + styles.content.margin
+      'vertical', // 垂直（orientation 与 vertical 两条路径）
+      'variant', // solid / dotted / dashed
+      'size', // small / medium / large
+      'plain', // 正文样式的标题
+      'customize-style', // style prop 覆盖 borderColor / borderWidth
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
   empty: {
     variants: [
       'default', // 默认：locale 文案 + 默认插画
@@ -70,7 +82,7 @@ export const LIMITATIONS = [
     dimension: 'state',
     missing: ['hover', 'active', 'focus', 'disabled', 'loading'],
     reason:
-      'Empty 是纯展示组件：无事件、无状态、无可交互元素。这些状态对它不适用（与 registry 的 interactionStatus = n/a 同源）。',
+      'Empty 与 Divider 都是纯展示组件：无事件、无状态、无可交互元素。这些状态对它们不适用（与 registry 的 interactionStatus = n/a 同源）。',
     unblockWhen: '不适用。',
   },
 ];

@@ -28,6 +28,7 @@
  * `budget.json` 的体积校验全部自动跟上。
  */
 
+import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 
 /**
@@ -53,6 +54,7 @@ export interface ComponentStyleEntry {
  * 也不会声明对应的子路径（见 `scaffold-packages.mjs` 的 `uiStyleExports`）。
  */
 export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
+  { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
 ];
 

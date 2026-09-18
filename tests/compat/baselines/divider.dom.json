@@ -1,0 +1,221 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/divider.mjs 从 antd 6.6.4 的 Divider 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/divider.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 53,
+  "cases": [
+    {
+      "id": "plain",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "plain:with-text",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "prefix-cls:custom",
+      "html": "<div class=\"custom css-dev-only-do-not-override-19u5a7b css-var-root custom-horizontal custom-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "prefix-cls:no-props",
+      "html": "<div class=\"ant-divider css-dev-only-do-not-override-19u5a7b css-var-root ant-divider-horizontal ant-divider-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "orientation:horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "orientation:vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-vertical apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "vertical:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-vertical apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "vertical:true+orientation:horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "type:vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-vertical apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "type:horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "type:vertical+vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "orientation:vertical+type:horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-vertical apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "orientation:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "orientation:left",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "vertical:true+with-text",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-vertical apollo-with-text apollo-with-text-center\" role=\"separator\"></div>"
+    },
+    {
+      "id": "titlePlacement:center",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "titlePlacement:start",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "titlePlacement:end",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-end\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "titlePlacement:left",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "titlePlacement:right",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-end\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "orientation-margin:number+start",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start apollo-no-default-orientation-margin-start\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\" style=\"margin-inline-start:20px\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "orientation-margin:string+end",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-end apollo-no-default-orientation-margin-end\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\" style=\"margin-inline-end:10px\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "orientation-margin:number+center",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "orientation-margin:non-numeric+start",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start apollo-no-default-orientation-margin-start\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\" style=\"margin-inline-start:2em\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "orientation-margin:zero+start",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start apollo-no-default-orientation-margin-start\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\" style=\"margin-inline-start:0\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "dashed",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-dashed apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "dashed:with-text",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center apollo-dashed\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "variant:dashed",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-dashed apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "variant:dotted",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-dotted apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "variant:dotted:with-text",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center apollo-dotted\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "variant:solid",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "plain:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center apollo-plain\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "size:small",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-sm apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "size:medium",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-md apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "size:middle",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-md apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "size:large",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" role=\"separator\"></div>"
+    },
+    {
+      "id": "class:className",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail my-class\" role=\"separator\"></div>"
+    },
+    {
+      "id": "class:rootClassName",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail root-class\" role=\"separator\"></div>"
+    },
+    {
+      "id": "class:both",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail a b\" role=\"separator\"></div>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" data-testid=\"x\" id=\"my-divider\" role=\"separator\"></div>"
+    },
+    {
+      "id": "semantic:classNames-root",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center cn-root\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "semantic:classNames-all",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center cn-root\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start cn-rail\"></div><span class=\"apollo-inner-text cn-content\">Text</span><div class=\"apollo-rail apollo-rail-end cn-rail\"></div></div>"
+    },
+    {
+      "id": "semantic:classNames-rail-no-children",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail cn-rail cn-root\" role=\"separator\"></div>"
+    },
+    {
+      "id": "semantic:classNames-fn",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-start fn-start-horizontal\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "semantic:styles-all",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" style=\"color:red\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\" style=\"opacity:0.5\"></div><span class=\"apollo-inner-text\" style=\"padding:2px\">Text</span><div class=\"apollo-rail apollo-rail-end\" style=\"opacity:0.5\"></div></div>"
+    },
+    {
+      "id": "semantic:styles-fn",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" style=\"color:blue\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "style:style-over-root",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" style=\"color:green\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "style:root-rail-merge",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" style=\"margin:4px\" role=\"separator\"></div>"
+    },
+    {
+      "id": "style:root-rail-merge-both",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-horizontal apollo-rail\" style=\"color:blue;margin:4px\" role=\"separator\"></div>"
+    },
+    {
+      "id": "config:className",
+      "html": "<div class=\"apollo cfg-class css-dev-only-do-not-override-1v6lqee css-var-root apollo-horizontal apollo-with-text apollo-with-text-center\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "config:classNames",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-horizontal apollo-with-text apollo-with-text-center cfg-root\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    },
+    {
+      "id": "direction:rtl+titlePlacement:left",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-horizontal apollo-with-text apollo-with-text-end apollo-rtl\" role=\"separator\"><div class=\"apollo-rail apollo-rail-start\"></div><span class=\"apollo-inner-text\">Text</span><div class=\"apollo-rail apollo-rail-end\"></div></div>"
+    }
+  ]
+}
