@@ -30,6 +30,7 @@
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@apollo-design/test-utils": "workspace:*"
+    "@apollo-design/test-utils": "workspace:*",
+    "@rc-component/async-validator": "catalog:"
   }
 }

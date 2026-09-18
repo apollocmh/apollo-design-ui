@@ -179,6 +179,9 @@ catalogs:
     '@biomejs/biome':
       specifier: ^2.0.0
       version: 2.5.13
+    '@rc-component/async-validator':
+      specifier: ^6.0.0
+      version: 6.0.0
     '@testing-library/jest-dom':
       specifier: ^6.9.1
       version: 6.10.0
@@ -354,6 +357,9 @@ importers:
       '@apollo-design/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@rc-component/async-validator':
+        specifier: 'catalog:'
+        version: 6.0.0
 
   packages/icons:
     dependencies:

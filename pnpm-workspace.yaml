@@ -45,6 +45,14 @@ catalog:
   '@ant-design/colors': ^8.0.1
   '@ant-design/fast-color': ^3.0.1
 
+  # `@rc-component/*` 不在 E19 的扫描范围（那条规则只针对 `@ant-design/*`），
+  # 但**放这里的原因完全相同**：它们是上游实现，只能进 devDependencies。
+  #
+  # 2026-09-18 加：form-core 的校验引擎是**纯 JS**（无 React 耦合），
+  # 所以可以直接拿上游做 Oracle 逐位差分 —— 这是比读源码更强的验证，
+  # 与 position/motion 同档。见 docs/foundation/form-core-contract.md §9 第 1 条。
+  '@rc-component/async-validator': ^6.0.0
+
   # --- Runtime (Vue ecosystem) ---
   # ⚠️ 刻意不把 @vueuse/core 放进 L0（utils）：
   #    utils 需要的是「单例 observer 复用」「批监听同一元素」这类与 rc-* 对齐的契约，
