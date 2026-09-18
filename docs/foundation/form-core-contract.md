@@ -59,7 +59,7 @@ ls /tmp/rc-src/form/package/es/useForm.js || {
 | 批次 | 内容 | 上游对应 | 规模 | 风险 | 状态 |
 |---|---|---|---|---|---|
 | **①校验引擎** | `Schema` + `format`/`isEmptyValue`/`deepMerge`/`complementError`/`asyncMap` + 7 个 rule + 17 个 validator + messages 模板 | async-validator 全部（1078 行） | 中 | **低**（纯逻辑，可穷举） | 本轮 |
-| **②取值工具** | `getNamePath`/`getValue`/`setValue`/`cloneByNamePathList`/`containsNamePath`/`matchNamePath`/`NameMap` + `validateMessages` 默认模板 | rc-form `utils/valueUtil.js`(114) + `utils/NameMap.js`(75) + `utils/messages.js`(48) | 小 | **低**（纯函数） | 待做 |
+| **②取值工具** | `getNamePath`/`getValue`/`setValue`/`cloneByNamePathList`/`containsNamePath`/`matchNamePath`/`NameMap` + `validateMessages` 默认模板 | rc-form `utils/valueUtil.js`(114) + `utils/NameMap.js`(75) + `utils/messages.js`(48) | 小 | **低**（纯函数） | ✅ 本轮 |
 | **③状态机** | `FormStore` + `useForm` + `Field` 注册/校验/依赖联动 + `useWatch` + 三个 Context | rc-form `hooks/useForm.js`(918) + `Field.js`(603) + `Form.js`(138) + `List.js`(143) | **大** | **高**（React→Vue 响应式重写） | 待做 |
 
 **为什么按这个顺序**：
@@ -69,6 +69,8 @@ ls /tmp/rc-src/form/package/es/useForm.js || {
    `reactive`/`shallowRef` + 显式依赖追踪。**在没有真实 Form 组件消费之前**，
    它的 API 形状无法被验证（与 `position.measureAlign`、`overlay.useOverlay` 同类风险）；
 3. **上游分层就是这么切的** —— 照搬接缝比自创接缝更不容易出错。
+
+> ✅ 批次①② 均已落地（2026-09-18）。**批次③ 是唯一剩下的、也是唯一有风险的。**
 
 ⚠️ **批次 ③ 开工前必须先有 `packages/ui/src/form` 的设计**（或至少 `Form.Item` 的骨架），
 否则会重复 `overlay` 的处境：契约封了但无人消费，API 形状无从校验。
@@ -349,13 +351,98 @@ const x = (rule, value, callback, source, options) => {
 
 ### 4.6 取值工具（批次 ②，`rc-form/es/utils/`）
 
-⚠️ **本节待批次 ② 开工时补全**。已知的职责边界（来自 `useForm.js` 的 import 列表）：
+来源：`valueUtil.js`(114) + `NameMap.js`(75) + `messages.js`(48) + `typeUtil.js`(8)
++ `validateUtil.js:13-21` 的 `replaceMessage`。
 
-- `valueUtil.js`：`getNamePath` / `getValue` / `setValue` / `cloneByNamePathList` /
-  `containsNamePath` / `matchNamePath` / `isSimilar` / `defaultGetValueFromEvent`
-- `NameMap.js`：`NameMap` 类（`set`/`get`/`has`/`delete`/`clear`/`forEach`/`toArray`），
-  内部用 `Map` + `KEY_0 = '__proto__'` 做 namePath 的分层索引
-- `messages.js`：`defaultValidateMessages`（antd `validateMessages` 的默认值）
+#### 4.6.1 ⚠️⚠️ `toArray` 同名不同义 —— 不要复用 `utils` 的那个
+
+| | `@apollo-design/utils` 的 `toArray` | 本包 namePath 版的 `toArray` |
+|---|---|---|
+| 用途 | 展平 **Vue children** | 归一 **namePath** |
+| 返回 | `VNode[]`（拆 Fragment、包 Text vnode） | `(string \| number)[]` |
+| `null` | 跳过（或补 Comment 占位） | ⇒ `[]` |
+
+**必须自己实现**。这是"看名字复用"最容易踩的坑。
+
+#### 4.6.2 `getValue` / `setValue` **可以**复用
+
+上游 `valueUtil.js:1` 就是 `import { get, set } from '@rc-component/util'` ——
+而 `utils` 的 `object.ts` 正是那套的移植。**同一个来源，直接复用**（R6 已声明依赖）。
+
+#### 4.6.3 `valueUtil` 的其余函数
+
+| 函数 | 契约要点 |
+|---|---|
+| `getNamePath(path)` | `undefined`/`null` ⇒ `[]`；⭐ **数组入参原样返回（不拷贝）** |
+| `cloneByNamePathList(store, list)` | 逐个 get 再 set ⇒ **中间层级会被创建** |
+| `containsNamePath(list, path, partial?)` | ⭐⭐ **返回值是三态 `boolean \| null \| undefined`** —— 见下 |
+| `matchNamePath(namePath, subNamePath, partial?)` | 非 partial 时长度必须相等；⭐ 参数顺序是「父, 子」 |
+| `isSimilar(source, target)` | 浅比较但**跳过函数**（两个函数永远相等 —— 避免回调引用变化导致重渲染） |
+| `defaultGetValueFromEvent(prop, ...args)` | 判据是 `prop in event.target`（不是 `!== undefined`）；⚠️ `...args` 只用了 `args[0]` |
+| `move(array, from, to)` | 纯函数；⭐ 越界与相等时返回**原数组引用**（不是副本） |
+
+⭐⭐ **`containsNamePath` 的三态返回是 Oracle 抓出来的**：
+
+```js
+// 上游
+return namePathList && namePathList.some(...);
+//      ↑ 短路时返回 namePathList 本身（null / undefined），不是 false
+```
+
+我原本写成 `!!namePathList && ...`，`containsNamePath(null, ['a'])` 得 `false`，
+上游得 `null`。**两者都是 falsy，手写断言几乎不可能注意到** —— 这是 oracle 的典型价值。
+
+#### 4.6.4 `NameMap` —— 用字符串键代替数组键
+
+`Map` 用引用相等比较键，而 `['a','b'] !== ['a','b']`（每次调用都是新数组）⇒
+必须先编码成字符串：
+
+```
+['a', 1]  ⇒  'string:a__@field_split__number:1'
+```
+
+⭐ 三个要点：
+
+1. **每个单元带 `typeof` 前缀** ⇒ `['a', 1]` 与 `['a', '1']` **不撞键**；
+2. `getAsPrefix` 的前缀判定**必须带 SPLIT**（`itemKey.startsWith(normalizedKey + SPLIT)`）——
+   否则 `['a']` 会错误匹配 `['ab']`（`'string:a'` 是 `'string:ab'` 的前缀）；
+3. `update(key, updater)` 用 **`if (!next)`** 判删除 ⇒ 返回 `0` / `''` / `undefined`
+   都会**删掉该项**（不是"写假值"）。
+
+⚠️ 编码是**有损**的（键字面含 `__@field_split__` 会撞）—— 上游接受，我们不"修"。
+
+⚠️ 上游 `.d.ts` 把 `update` 的 updater 返回声明成 `V | null`，**比运行时窄**
+（运行时判 `!next`）。测试里用断言保留 `undefined` 的用例。
+
+#### 4.6.5 ⚠️⚠️ `defaultValidateMessages` 是**第二套**模板
+
+| | `validate-messages.ts`（antd / rc-form 层） | `messages.ts`（async-validator 层） |
+|---|---|---|
+| 占位符 | `${name}` / `${type}` / `${min}` … | `%s` / `%d` / `%j` |
+| 引号 | **自带**（`"'${name}' is required"`） | 无 |
+| 谁替换 | **我们**（`replaceMessage`） | async-validator 的 `format()` |
+| 来源 | 用户经 ConfigProvider 覆盖 | Schema 内部 |
+
+**两套的桥是 `replaceMessage`**：`Schema` 先用 `%s` 填出带占位符的字符串，
+再由 `replaceMessage` 把 `${name}` 换成实际值。
+
+⚠️ 所以「用户覆盖 validateMessages」这条路**必须经过 `replaceMessage`** ——
+直接把 `defaultValidateMessages` 交给 `Schema.messages()` 是错的（`Schema` 只认 `%s`）。
+
+`replaceMessage(template, kv)` 的两条语义（`validateUtil.js:13-21`）：
+
+- `${name}` ⇒ 取 `kv.name`；**`kv` 里没有的键 ⇒ 字符串 `'undefined'`**（上游行为，不抛错）；
+- ⭐ `\${name}`（带反斜杠）⇒ **去掉反斜杠、原样输出** `${name}`（不替换）；
+- ⚠️ 占位符名必须是 `\w+` ⇒ `${a-b}` / `${a.b}` **不被匹配**。
+
+#### 4.6.6 归属裁决：`validateRule` / `validateRules` 属**批次③**
+
+`validateUtil.js` 的其余部分（`validateRule` 单条校验、`validateRules` 编排、
+`validateFirst` 的串行/并行、`warningOnly` 排序）是 **Field 的校验编排**，
+依赖 store 的 options 与 Field 生命周期 ⇒ 归批次③。
+
+⚠️ 且它 `import * as React from 'react'`（用 `React.isValidElement` / `cloneElement`
+给错误消息加 key）—— Vue 侧没有对应物，**必须重写**（登记为差异，见 §6.3）。
 
 ### 4.7 状态机（批次 ③，`rc-form/es/`）
 
@@ -484,6 +571,10 @@ expect(a).toEqual(b);
 |---|---|---|
 | **Oracle** | 55 个用例 × 逐位差分（16 个 type / required 8 种边界 / range 4×16 值 / pattern / whitespace / enum / message 覆盖 / 多规则多字段 / first / firstFields / keys / transform / 自定义 validator 5 种返回 / 嵌套 fields / defaultField） | ✅ done |
 | L1 | §6.1 全部纯函数 + 7 rule + 17 validator 的直接调用（含四情况矩阵） —— `units.test.ts`（97） | ✅ done |
+| **Oracle②** | 批次② 与 rc-form 的三个纯 JS 文件逐位差分 —— `batch2.oracle.test.ts`（22）：
+getNamePath 12 种输入 / cloneByNamePathList 8 组 / matchNamePath 12 对 × 2 / containsNamePath 20 组 × 2 /
+isSimilar 15 对 / defaultGetValueFromEvent 10 组 / move 11 组 / NameMap 9 项 / defaultValidateMessages 整体 | ✅ done |
+| L1② | `replaceMessage`（**无法 oracle** —— 它在 `validateUtil.js` 里且未导出）+ NameMap 补充分支 —— `batch2.test.ts`（25） | ✅ done |
 | L2 | `Schema.validate` 的异步路径：`first` / `firstFields` / 嵌套 / transform / 校验器抛错与重抛 / `options.error` —— 合并在 oracle 与 units 里 | ✅ done |
 | L3 | 类型契约（含负例） —— `form-core.test-d.ts`（26） | ✅ done |
 | L4 | n/a —— 本包不产 DOM | n/a |
@@ -491,8 +582,8 @@ expect(a).toEqual(b);
 | L6 | n/a —— 无渲染产物 | n/a |
 | L7 | `tests/build/run.mjs` | ⬜ 待收口（批次 ① 单独构建已通过） |
 
-**覆盖率（批次 ①，按 `packages/form-core/src/` 聚合）：语句 97.65 / 分支 90.68 / 函数 98.21**
-（阈值 95/90/95，达标）。合计 **205 个用例**。
+**覆盖率（批次 ①②，按 `packages/form-core/src/` 聚合）：语句 97.68 / 分支 91.93 / 函数 98.79**
+（阈值 95/90/95，达标）。合计 **252 个用例**。
 
 ### 7.2 变异验证（5 个，全部被抓到）
 
@@ -503,6 +594,14 @@ expect(a).toEqual(b);
 | `asyncSerialArray` 不再遇错即停 | 4+（oracle 的 first / firstFields + units 的串行用例） |
 | `complementError` 去掉 `fullFields` 分支 | 2（**只有 units 抓到，oracle 抓不到** —— 嵌套用例的 `fieldValue` 两侧都是 `undefined`，被哨兵值抹平） |
 | `number` validator 不再把 `''` 归一成 `undefined` | 2（oracle） |
+
+### 7.3 批次② 的变异验证（3 个，全部被抓到）
+
+| 变异 | 抓到的用例 |
+|---|---|
+| `containsNamePath` 加 `!!`（把三态压成 boolean） | 1（**oracle** —— 这正是它抓出来的那个真实差异） |
+| `NameMap.getAsPrefix` 的前缀去掉 SPLIT | 3（oracle + units） |
+| `replaceMessage` 去掉转义分支 | 1（units） |
 
 ⚠️ 两条教训：
 
@@ -561,8 +660,8 @@ expect(a).toEqual(b);
 1. **没有与真实 React 运行时对拍**。本仓库禁止引入 React（H1），批次 ① 的结论全部来自读源码。
    ⚠️ 但批次 ① 是纯 JS，可以用**从 npm 安装的 `async-validator` 作为 Oracle** 做逐位差分
    （与 `position`/`motion` 同档强度）—— 这是**下一步该做的**，本契约尚未包含。
-2. **批次 ②③ 的契约尚未分析** —— 本文档对它们只有职责边界，没有逐条契约。
-   **不要把 §4.6/§4.7 当作已验证的契约。**
+2. **批次 ③ 的契约尚未分析** —— 本文档对它只有职责边界，没有逐条契约。
+   **不要把 §4.7 当作已验证的契约。**（批次 ② 已在 §4.6 补齐并验证。）
 3. **没有验证 `ui` 层会怎么消费**。`FormStore` 的 API 形状在真实 `Form.Item` 出现前无法验证
    （与 `position.measureAlign`、`overlay.useOverlay` 同类风险）。
 4. **`url` 正则没有逐字核对**（49 行动态拼接的正则，移植时必须逐段对照，不能凭印象重写）。
