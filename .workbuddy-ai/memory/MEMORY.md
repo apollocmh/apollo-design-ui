@@ -98,6 +98,19 @@ pnpm 12.4.2（`.npmrc` `hoist=false`）｜TS 锁 5.9.x（unbuild 3.6.1 peer）�
 | AR3 | picker 状态机 | 待验证 |
 | AR4 | 零运行时下 `classNames`/`styles` 优先级 | 随 config-provider |
 | AR6 | Vue 泛型对 `Table<T>` 的表达力 | 待验证 |
+| AR5 | 浮层**生命周期**（触发/延迟/关闭/Esc） | ✅ 2026-09-18 解除：`overlay` 已 completed（92 用例、覆盖 99.58/92.51/98.57、5 变异全被抓）。⚠️ **零调用方** —— 与 `position.measureAlign` 同类的「契约已封但无人消费」风险 |
+
+### ⚠️⚠️ Vue 的事件 prop 名必须**全小写**（跨包通用，别写 React 风格）
+
+runtime-dom 的 `parseName` 会 `hyphenate(name.slice(2))`，于是
+`onMouseEnter` → `mouse-enter`（**不存在**）、`onTouchStart` → `touch-start`、
+`onContextMenu` → `context-menu`、`onPointerDownCapture` → `pointer-down`。
+**症状是完全静默**：不报错、不警告、事件永不触发。
+
+正确写法：`onMouseenter` / `onPointerenter` / `onMouseleave` / `onPointerleave` /
+`onTouchstart` / `onContextmenu` / `onPointerdownCapture`。
+只有修饰符后缀（Once / Capture / Passive）保留大写。`onClick` / `onFocus` / `onBlur` 无影响。
+2026-09-18 在 overlay 的 L2 测试里实测踩到（18 个用例全红，改命名后全绿）。
 
 ## 主分支与合并
 
@@ -159,6 +172,9 @@ cd /Users/nanren/Code/apollo-design-ui && git merge --ff-only <当前分支>   #
 
 ## ⚠️ 未决事项（接手先看）
 
+0. ✅ **`overlay` 已 completed（2026-09-18）** —— 13 个 foundation 包只剩 `form-core` /
+   `picker` 是 todo。⚠️ 但 `useOverlay` **零调用方**，且 `config-provider` 被 `form-core`
+   挡着；下一个目标听 `node registry/tools/next-task.mjs`（它会先警告依赖未就绪）。
 1. ✅ **`empty` 已 completed（2026-09-18，L6 基建 + 21 组 0.000% exact）** —— `next-task`
    会给新目标。建议第二个选**有交互**的组件（如 `button`），把 L2 那层也验一遍。
 2. ✅ **L6 视觉回归基建已落地**（`tests/visual/`，三种模式：both / baseline / compare）——
