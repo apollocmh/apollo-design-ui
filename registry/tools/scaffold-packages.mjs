@@ -408,8 +408,14 @@ const PACKAGES = [
       'useOverlay —— 开合状态机（受控 / 非受控双模式）',
       '触发动作：hover / click / focus / contextMenu（与 antd 的 action 语义一致）',
       '延迟：mouseEnterDelay / mouseLeaveDelay / focusDelay / blurDelay',
-      '关闭：外部点击（clickToHide）/ Esc / 失焦，及各自的关闭钩子',
-      '堆叠：与 portal 的 z-index 协调，后开的浮层在上层',
+      '关闭：外部点击（clickToHide，含 contextMenu）/ Esc / 失焦，及各自的关闭钩子',
+      // 2026-09-18 修正：原文写「堆叠：与 portal 的 z-index 协调，后开的浮层在上层」——
+      // 两处都错。① z-index 数值由 portal 的 computeZIndex 负责（本包不做）；
+      // ② antd 的 z-index 是「组件类型偏移 + 嵌套上下文累加」，**不是** LIFO 栈，
+      //    且最外层浮层根本不设 z-index（靠 DOM 顺序决定层叠）。
+      // 本包唯一的「栈」是 Esc 栈（按开启顺序的 LIFO）。依据见
+      // docs/foundation/overlay-contract.md §3.13 与 portal-contract.md §3.4。
+      '层级：只做 Esc 栈（按开启顺序的 LIFO，仅栈顶响应）；z-index 数值归 portal',
     ],
     notDo: [
       '不实现定位几何（那是 @apollo-design/position）',
