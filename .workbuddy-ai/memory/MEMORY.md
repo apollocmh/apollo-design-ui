@@ -127,21 +127,36 @@ L0 utils/theme/icons ｜ 测试 test-utils
   「瞬时竞态」（见 PITFALLS 76，错误根因已跨 3 个会话传播）；③ 流2 的新坑没进
   `PITFALLS.md` 只进了日志。**新坑一律登记 `PITFALLS.md`**，别只写日志。
 
+### 🚨 派 subagent 的两个硬教训（2026-09-19 实测）
+
+1. ⚠️⚠️ **必须明确要求「门禁在前台跑，不许后台化」。**
+   一个 subagent 把 `--verify` 丢到后台后**结束了自己的 turn** ——
+   而 subagent 的进程随 turn 结束一起被杀 ⇒ 验证白跑，且**它的产出全部滞留未提交**
+   （`field.ts` 771 行 + `validate-util.ts` 331 行 + `batch3b.test.ts` 95 例，
+   8 个文件改动一行没提交）。下一个 agent 得先「彻查 WIP 是否可信」才能继续。
+2. ⚠️ **子会话可能被平台限流打断（429）**，且**打断点不保证干净**。
+   实测：第一次派活返回 429，但 subagent **已经被创建并干了一段**（留下 1107 行 WIP）。
+   ⇒ **接手时先 `git status` + `git diff --stat`，别信交接单里的「未开工」。**
+   换模型（`model: "reasoning"`）可以绕过限流。
+3. ⭐ **交接单里的「未开工」是开工前的快照，不是现场。** 接手先看工作区。
+
 ## ⚠️ 未决事项（接手先看）
 
-0. 🔶 **`form-core` 是 `implementing`（2026-09-18，批次①②③a 完成）** —— 上游约 3600 行，
+0. 🔶 **`form-core` 是 `implementing`（2026-09-19，批次①②③a③b 完成）** —— 上游约 3600 行，
    一轮做不完，契约 §3 拆成三批，③ 再切三个子批：① 校验引擎 ✅ ｜ ② 取值工具
    （valueUtil/NameMap/validateMessages）✅ ｜ ③a 状态机内核（FormStore/useForm/useWatch/
-   WatcherCenter/三个 Context）✅ ｜ **③b 字段编排（`Field` + `validateRules`）⬜ 未开工** ｜
-   **③c 表单容器（`Form` + `FormProvider` + `List`）⬜ 未开工**。
+   WatcherCenter/三个 Context）✅ ｜ ③b 字段编排（`validate-util.ts` 331 行 + `field.ts` 771 行
+   + `batch3b.test.ts` 95 例）✅ ｜ **③c 表单容器（`Form` + `FormProvider` + `List`）⬜ 未开工**。
    ✅ **`ui/src/form` 骨架已落地**（`Form.vue`/`FormItem.vue`/`FormList.vue`/`interface.ts`，
    消费契约 §6.4 的类型面）—— 全仓 `vue-tsc --noEmit` 0 错误，这条 doneWhen 已满足。
-   ⚠️ ③ 是**唯一基本没有 Oracle 的部分**（`validateUtil.js` 依赖 React 的 isValidElement /
-   cloneElement，且 FormStore 是 forceUpdate 驱动）—— 只能读源码 + 行为测试。
-   ③a 里只有 `allPromiseFinish` / `isFormInstance` 两个纯函数能真对拍（占体量 <5%）。
-   ⚠️ ③b/③c 一行代码都没有 ⇒ 契约 §4.7.7 / §4.7.8 / §4.7.11 仍是**未被代码验证的文档**。
-   ⚠️ 想接 ③b：**不要只加源码不加测试** —— 新增未覆盖代码会把 form-core 的覆盖率
-   从 97.38/92.46/97.22 拉到阈值（95/90/95）以下，门禁会红。
+   ⚠️ ③ 是**唯一基本没有 Oracle 的部分**（`validateUtil.js` 第 2 行就 `import * as React`，
+   且 `Field.js` 通篇绑 React 生命周期）—— 只能读源码 + 行为测试。
+   ③a 只有 `allPromiseFinish` / `isFormInstance` 能真对拍；③b **一个都没有**。
+   ⇒ 契约 §4.7.7 / §4.7.8 已由 ③b 验证；**§4.7.11（③c）仍是未被代码验证的文档**。
+   ⚠️ 想接 ③c：**不要只加源码不加测试** —— form-core 覆盖率 97.99/93.26/98.19/98.07
+   （阈值 95/90/95），新增未覆盖代码会直接把门禁拉红。
+   ⚠️ ③c 是唯一能构造 `Form.List` 上下文的地方 ⇒ `Field` 的 `prefixName` / `listContext`
+   两条只被「读」过，没有测试真的构造过；`form-store.ts` 文件级分支覆盖也仍偏低。
 1. **foundation 11/13 completed**；`form-core` 见上（implementing），`picker` 仍 todo。
    组件 **2/72**（`empty` + `divider`，均已 `completed`）。听 `next-task.mjs`（并行时用 `--parallel`）。
    第二个组件原建议选**有交互**的（验 L2 层）；2026-09-18 实际先派了 **`divider`(P0, 最小)**
