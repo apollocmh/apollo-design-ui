@@ -81,6 +81,11 @@ L0 utils/theme/icons ｜ 测试 test-utils
 2. **`VNodeChild` 类型的 prop 必须在 `withDefaults` 里显式给 `undefined` 默认值**
    —— Boolean prop 转换会把「未传」变 `false`，组件能渲染只是少一块（PITFALLS 46）。
 3. `biome.json` **不能写注释**；`biome check --write` 在配置非法时会**静默重排全仓**。
+4. 🚨 **`packages/ui/src/index.ts` 是并行雷区**：scaffold 生成，但
+   `writeIfNeeded(file, content, overwrite = force)` 的 `overwrite` 默认 `false`
+   ⇒ **已存在就永不重生成，等于手工维护**。多会话各加一个组件 export 必然冲突，
+   **重跑生成器救不了**（与 `registry/*.json` 相反）。约定：只动自己的 export 块、
+   组件块按字母序追加，让三方合并自动过。
 
 ## 主分支与合并
 
@@ -95,6 +100,23 @@ L0 utils/theme/icons ｜ 测试 test-utils
 - ⭐ **合并前必须导出进度快照**（各包 status/dimensions/met + 非 todo 组件），
   合并后逐项比对 —— 实测过 `components.json` 合并取错侧会把已收口维度冲回 todo。
 - `dist/` 不入库，各 worktree 各一份；合并后要在 master 侧重建，否则 E19 报假阳性。
+- ⚠️ **分支收口后立刻合 master**：`4dfafdb2` 的批次② 提交完滞留了未合，
+  新会话从 master 起会以为没做 → 重做/冲突。`--ff-only` 在「master ⊂ 分支」时可用且零冲突
+  （先 `git rev-list --left-right --count master...<branch>` 判断方向，别凭印象）。
+
+## 并行作业（多会话 + worktree）
+
+**取任务的权威是 `node registry/tools/next-task.mjs --parallel`** —— 它列 18 个可并行项，
+含 **13 个组件**（不只 foundation）。不带 `--parallel` 的那个推 `config-provider`，
+并**同时警告「不要开始」**（foundation 未就绪）—— 那条警告必须服从。
+
+- 文件域互斥是硬要求：`packages/ui/src/<component>/**` 天然互斥，
+  共享冲突只有 `ui/src/index.ts`（见「跨包易错判据」4）、`registry/*.json`、memory。
+- 2026-09-18 起的分工：`wt-form-core`（form 骨架 + form-core 批次③）、
+  `wt-comp-a`（divider → spin）、`master-15e7f018`（整合：合并/生成器/门禁/registry）。
+  交接单在各 worktree 的 `.workbuddy-ai/handoff.md`（已 exclude，不入库）。
+- ⚠️ **并发资源红线**：全仓构建门禁同一时刻**只允许一个会话跑**；
+  其余只跑自己包的 `vitest` / `vue-tsc`（16G 机器，全仓 vitest 已知 OOM）。
 
 ## ⚠️ 未决事项（接手先看）
 
@@ -106,8 +128,9 @@ L0 utils/theme/icons ｜ 测试 test-utils
    ⚠️ ③ 是**唯一没有 Oracle 的部分**（`validateUtil.js` 依赖 React 的 isValidElement /
    cloneElement，且 FormStore 是 forceUpdate 驱动）—— 只能读源码 + 行为测试。
 1. **foundation 11/13 completed**；`form-core` 见上（implementing），`picker` 仍 todo。
-   组件 **1/72**（`empty`）。听 `next-task.mjs`。建议第二个组件选**有交互**的
-   （如 `button`），把 L2 层也验一遍。
+   组件 **1/72**（`empty`）。听 `next-task.mjs`（并行时用 `--parallel`）。
+   第二个组件原建议选**有交互**的（验 L2 层）；2026-09-18 实际先派了 **`divider`(P0, 最小)**
+   把组件侧 G0→G14 走顺，`spin`(P1) 跟上（会走 motion 层）。
 2. **`form-core` 挡着 `config-provider`**，后者解锁 50 个组件 —— 这是当前关键路径。
 
 3. `packages/ui/src/config-provider/` 目前**只有 `context.ts` 最小集**（Empty 够用），
