@@ -1,21 +1,50 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { defineBuildConfig } from 'unbuild';
 
 /**
- * theme 包的构建配置。
+ * ⚠️⚠️ 必须在**配置加载期**先把 `dist/tokens.css` 造出来（占位即可）。
  *
- * 唯一目的：在 unbuild 产出 dist/index.mjs **之后**，用它生成零运行时 CSS 变量表。
+ * unbuild 在解析 `package.json` 的 `exports` 时做存在性检查
+ * （`unbuild@3.6.1` 的 `dist/shared/unbuild.CyYtfvFx.mjs:123-126`）：
  *
- * 为什么用 hook 而不是改 package.json 的 build 脚本：
- *   package.json 由 `registry/tools/scaffold-packages.mjs` 拥有，手工改会在下一次
- *   `--force-pkg` 时被覆盖。hook 住在包自己这边，不跟模板打架。
+ * ```js
+ * if (!input) {                                    // tokens.css 没有源入口 ⇒ input 恒为 undefined
+ *   if (!existsSync(resolve(rootDir || '.', output.file))) {
+ *     warnings.push(`Could not find entrypoint for \`${output.file}\``);
+ *   }
+ *   continue;
+ * }
+ * ```
  *
- * 为什么从 dist/index.mjs 导入而不是从 src：
- *   本配置由 unbuild 用 jiti 加载，让它再去转译 src 的 TS 是多余的绕路；
- *   而且从产物导入顺带验证了「产物能被真实 import」—— 产物坏了这里会直接炸。
+ * 而 `failOnWarn` 默认为 `true`（同文件 `:1192`）⇒ 该告警会让 unbuild `exit(1)`。
+ *
+ * ⚠️ 关键：**这次检查发生在 `clean dist` 与 rollup 构建之前**。
+ * 所以「在 `writeBundle` 里生成 tokens.css」**永远来不及** ——
+ * 旧实现之所以看起来能过，是因为**上一次构建留下的 `dist/tokens.css`** 骗过了检查。
+ * 实测（2026-09-18）：`dist/` 存在 → 连续 3 次 FAIL 0；把 `dist/` 移走 → 必 FAIL 1；
+ * 只放一个空占位 `dist/tokens.css` → 又 FAIL 0。
+ * ⇒ **全新 clone / CI 上 `tests/build/run.mjs` 的 theme B1 必然红。**
+ *
+ * 对策：加载配置时先写占位让检查通过；真实内容仍由下面的 `writeBundle` 覆盖。
+ * 占位随后会被 unbuild 的 `clean dist` 删掉，再由 `writeBundle` 重建为真内容 ——
+ * 顺序已实测确认（占位能过检查、最终产物是真内容）。
  */
+const DIST_DIR = resolve(import.meta.dirname ?? '.', 'dist');
+const TOKENS_CSS = resolve(DIST_DIR, 'tokens.css');
+try {
+  if (!existsSync(TOKENS_CSS)) {
+    mkdirSync(DIST_DIR, { recursive: true });
+    writeFileSync(
+      TOKENS_CSS,
+      '/* 占位：真实内容由 build.config.ts 的 rollup writeBundle 写入 */\n',
+      'utf8',
+    );
+  }
+} catch {
+  // 写不进去就让 unbuild 报它自己的错，这里不吞掉真正的问题
+}
 
 /** 防止 esm 与 dts 两次 rollup 构建各写一遍（写两次本身幂等，但没必要）。 */
 let tokensCssWritten = false;
@@ -51,11 +80,16 @@ export default defineBuildConfig({
      * 不支持按警告类型过滤），会一并放过「潜在隐式依赖」等真实警告 —— 属放宽，不是修复。
      *
      * 为什么 `writeBundle` 可行：它发生在 rollup **写完产物之后**，
-     * 此时 `dist/index.mjs` 已在磁盘上，可以照旧 import 它拿 token；
-     * 同时它又早于主流程的 validatePackage ⇒ 校验能看到文件。
+     * 此时 `dist/index.mjs` 已在磁盘上，可以照旧 import 它拿 token。
      *
-     * 为什么不能挂在 `build:before`：unbuild 的 `clean dist` 在 `build:before`（1281 行）
-     * **之后**（1291 行起）执行，写进去的占位会被清掉。
+     * ⚠️ 订正（2026-09-18）：这里原来还写着「它又早于主流程的 validatePackage
+     * ⇒ 校验能看到文件」—— **那是错的**。`validatePackage` 的存在性检查发生在
+     * **构建开始之前**，`writeBundle` 永远赶不上。真正让检查通过的是文件顶部的
+     * **配置加载期占位写入**。详见文件顶部那段注释。
+     *
+     * 为什么不能只挂在 `build:before`：unbuild 的 `clean dist` 在 `build:before`（1281 行）
+     * **之后**（1291 行起）执行，写进去的东西会被清掉；而且 `build:before` 本身
+     * 也晚于 exports 解析。
      */
     'rollup:options': (_ctx, options) => {
       const tokensCssPlugin = {
