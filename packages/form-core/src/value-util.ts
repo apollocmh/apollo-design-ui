@@ -20,10 +20,24 @@
 
 import { get, set } from '@apollo-design/utils';
 
+import type { DeepNamePath } from './name-path-type';
+
 export { get as getValue, set as setValue };
 
-/** 用户书写的路径：单个键、或键的数组。 */
-export type NamePath = string | number | InternalNamePath;
+/**
+ * 用户书写的路径：单个键、键的数组，**或深推导路径**（`DeepNamePath<T>`）。
+ *
+ * ⭐ 为什么必须把 `DeepNamePath<T>` 并进来：`form-types.ts` 里**公开**的
+ * `NamePath<T>` 就是它，而 `getNamePath` / `toArray` 要能接受那个类型
+ * —— 上游 `utils/valueUtil.d.ts` 正是 `import type { NamePath } from '../interface'`，
+ * 即两边本来就是**同一个**类型。
+ *
+ * ⚠️ 泛型默认值取 **`never`** 而不是 `any`：`DeepNamePath<never>` 化简为 `never`，
+ * 于是**不给泛型参数时**这个别名与批次② 收口时完全一致
+ * （`string | number | InternalNamePath`）—— 既不悄悄放宽已收口的两个函数，
+ * 又让「开放泛型」的调用方可以显式写 `getNamePath<Values>(deepPath)` 通过。
+ */
+export type NamePath<T = never> = string | number | InternalNamePath | DeepNamePath<T>;
 
 /** 内部统一形态：键的数组。 */
 export type InternalNamePath = (string | number)[];
@@ -33,19 +47,23 @@ export type InternalNamePath = (string | number)[];
  *
  * `undefined` / `null` ⇒ `[]`；已经是数组则原样返回（**不拷贝**）；
  * 其余（含 `0` 与 `''`）⇒ `[value]`。
+ *
+ * ⚠️ 形参带 `| null`：运行时本来就把 `null` 当空路径（上游签名
+ * `getNamePath(path: NamePath | null)` 也允许），之前漏写导致测试里要写
+ * `null as never` 才编得过 —— 那是**声明没跟上运行时**，不是运行时的问题。
  */
-export function toArray(value?: NamePath): InternalNamePath {
+export function toArray<T = never>(value?: NamePath<T> | null): InternalNamePath {
   if (value === undefined || value === null) {
     return [];
   }
-  return Array.isArray(value) ? value : [value];
+  return Array.isArray(value) ? (value as InternalNamePath) : ([value] as InternalNamePath);
 }
 
 /**
  * `a` / `123` / `['a', 123]` 都归一成 `['a']` / `[123]` / `['a', 123]`。
  */
-export function getNamePath(path?: NamePath): InternalNamePath {
-  return toArray(path);
+export function getNamePath<T = never>(path?: NamePath<T> | null): InternalNamePath {
+  return toArray<T>(path);
 }
 
 /**
