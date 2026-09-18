@@ -101,9 +101,12 @@ export default defineBuildConfig({
             getCSSVarDeclarations(getDesignToken({ algorithm: compactAlgorithm }), {
               selector: '[data-apollo-theme="compact"]',
             }),
-            getCSSVarDeclarations(getDesignToken({ algorithm: [darkAlgorithm, compactAlgorithm] }), {
-              selector: '[data-apollo-theme="dark-compact"]',
-            }),
+            getCSSVarDeclarations(
+              getDesignToken({ algorithm: [darkAlgorithm, compactAlgorithm] }),
+              {
+                selector: '[data-apollo-theme="dark-compact"]',
+              },
+            ),
             '',
           ];
 
