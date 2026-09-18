@@ -69,6 +69,25 @@ export {
   useConfigContext,
 } from './config-provider/context';
 export type {
+  DividerConfig,
+  DividerProps,
+  DividerRef,
+  DividerSemanticAllType,
+  DividerSemanticClassNames,
+  DividerSemanticStyles,
+  DividerSemanticType,
+  DividerSemanticValue,
+  DividerSize,
+  DividerSlot,
+  DividerVariant,
+  Orientation,
+  TitlePlacement,
+} from './divider';
+// ---------------------------------------------------------------------------
+// 组件
+// ---------------------------------------------------------------------------
+export { Divider } from './divider';
+export type {
   EmptyConfig,
   EmptyImage,
   EmptyProps,
@@ -79,9 +98,6 @@ export type {
   EmptySemanticType,
   EmptySemanticValue,
 } from './empty';
-// ---------------------------------------------------------------------------
-// 组件
-// ---------------------------------------------------------------------------
 export {
   Empty,
   PRESENTED_IMAGE_DEFAULT,

@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "divider/basic",
+  "component": "divider",
+  "description": "最基础的 Divider：不传任何 props。建立最小 DOM 契约基线 —— 根元素是 div、带 role=\"separator\"、方向类名 -horizontal，且**无 children 时根元素上带 -rail 类名**（有 children 时它会移到两个 rail 子元素上）。L6 视觉回归在 divider/horizontal 用例上覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

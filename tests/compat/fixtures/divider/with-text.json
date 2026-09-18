@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "divider/with-text",
+  "component": "divider",
+  "description": "带标题的分割线，用 `variants` 展开 titlePlacement 的四个取值。这一组同时钉住三件事：(1) `-with-text` 与 `-with-text-{placement}` 两个类名只在**有 children** 时出现；(2) `left` / `right` 会按文字方向折成 `start` / `end`；(3) `styles.content.margin` 落在 inner-text 的**内联样式**上，且 `titlePlacement: \"start\"` 配 `margin: 0` 时还会多出 `-no-default-orientation-margin-*` 类名。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "titlePlacement": ["center", "start", "end", "left", "right"]
+  },
+  "content": "Text",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

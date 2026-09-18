@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "id": "divider/orientation",
+  "component": "divider",
+  "description": "方向合并的矩阵 —— 这是本组件**最容易写错**的一条判据。用 `variants` 展开 orientation × vertical × type 的 6 种组合，钉住优先级 `orientation > vertical > type`，以及「`vertical` 的判据是 `typeof === 'boolean'` 而不是真值判断」这一点：`vertical: false` 会压过 `type: \"vertical\"` 得到 horizontal（D21 的 Boolean prop 转换在 Vue 侧的落点）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "orientation": [null, "horizontal", "vertical"],
+    "vertical": [null, false, true],
+    "type": [null, "horizontal", "vertical"]
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}
