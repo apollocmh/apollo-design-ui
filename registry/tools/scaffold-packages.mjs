@@ -481,7 +481,12 @@ const PACKAGES = [
     //    可以直接拿上游逐位差分 —— 比读源码强得多，与 position/motion 同档。
     //    只在 devDependencies（R7：任何发布包的 dependencies 出现上游包 = E19 失败）。
     //    见 docs/foundation/form-core-contract.md §9 第 1 条。
-    devDeps: { '@rc-component/async-validator': 'catalog:' },
+    //   批次② 再加 rc-form 本体 —— 它的 `utils/{valueUtil,NameMap,messages}.js`
+    //   **都不 import react**（已 grep 确认），所以那三个纯 JS 文件也能单独对拍。
+    devDeps: {
+      '@rc-component/async-validator': 'catalog:',
+      '@rc-component/form': 'catalog:',
+    },
     publicApi: [
       'useForm() → [form]',
       'FormStore：字段注册/注销、依赖联动、异步校验、错误状态管理',

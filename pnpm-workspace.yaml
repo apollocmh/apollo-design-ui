@@ -53,6 +53,14 @@ catalog:
   # 与 position/motion 同档。见 docs/foundation/form-core-contract.md §9 第 1 条。
   '@rc-component/async-validator': ^6.0.0
 
+  # 2026-09-18 加（form-core 批次②）：rc-form 的 `utils/valueUtil.js` /
+  # `utils/NameMap.js` / `utils/messages.js` **都不 import react**（已 grep 确认），
+  # 所以这三个文件可以单独拿来做 Oracle 逐位差分。
+  #
+  # ⚠️ 包本身声明了 peerDeps react / react-dom —— pnpm 会警告但不会失败，
+  #    而我们**不 import 那两个 peer**（只 import 那三个纯 JS 文件），所以不需要装 react。
+  '@rc-component/form': ^1.8.6
+
   # --- Runtime (Vue ecosystem) ---
   # ⚠️ 刻意不把 @vueuse/core 放进 L0（utils）：
   #    utils 需要的是「单例 observer 复用」「批监听同一元素」这类与 rc-* 对齐的契约，
