@@ -284,3 +284,32 @@
     ③ 别 `cd packages/x && vitest run`（丢了根配置，实测 25 个用例失败）—— 必须在根跑。
     另外：最后几个分支点靠「删掉不可达分支」比「硬凑测试」划算
     （`!canUseDom` 交给下游自己保证、`?? window` 兜底替掉 `if (!win) return`）。
+
+64. 🚨 **`package.json` 的 `exports` 里声明的路径，必须在 unbuild 的
+    `validatePackage` 执行**之前**就存在**。2026-09-18 实测：给 theme 补
+    `extraExports: { './tokens.css': './dist/tokens.css' }` 后，`tests/build/run.mjs`
+    的 B1 直接 FAIL（unbuild 退出码 1）：
+
+        WARN Build is done with some warnings:
+        - Potential missing package.json files: dist/tokens.css
+
+    根因（unbuild@3.6.1 `dist/shared/unbuild.CyYtfvFx.mjs`）：
+    `validatePackage` 用 **`existsSync`** 校验 exports 的每个路径（329-354 行），
+    而它的调用点在主流程 **1380 行**、`build:done` hook 在 **1381 行** ——
+    **校验先于 hook**。所以「在 `build:done` 里产出该文件」永远来不及。
+    `failOnWarn`（默认 true）⇒ `process.exit(1)`。
+
+    **修法**：把产出挪到 **`rollup:options` 注入的插件的 `writeBundle`** ——
+    它在 rollup 写完产物**之后**（`dist/index.mjs` 已落盘，可照旧 import 它拿数据），
+    又**早于**主流程的 validatePackage。参考实现见 `packages/theme/build.config.ts`。
+
+    **排除过的三条路**（别再试）：
+    - `failOnWarn: false` —— 全局开关（源码就是 `if (ctx.options.failOnWarn)`），
+      不支持按警告类型过滤；会放过「潜在隐式依赖」等真实警告 ⇒ 放宽，违反 H8。
+    - `build:before` 里写占位 —— unbuild 的 `clean dist` 在 `build:before`（1281 行）
+      **之后**（1291 行起）执行，占位会被清掉。
+    - 回退 exports 声明 —— 那会把「消费者按文档 import 必然失败」的包契约缺陷带回来。
+
+    ⚠️ 这个 FAIL **不是合并引入的**，是上一轮改 `extraExports` 时就产生了，
+    只是当时只跑了 `pnpm --filter <pkg> run build`，**没跑 `tests/build/run.mjs`**。
+    教训：改了 `package.json` 的 exports / 构建配置，必须跑全量构建门禁。
