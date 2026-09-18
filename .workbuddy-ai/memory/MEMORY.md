@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具所有权、易错判据、未决事项。
 > 规则本体：`AGENTS.md`/`WORKFLOW.md`/`TESTING.md`/`COMPATIBILITY.md`/`ARCHITECTURE.md`；
-> 坑：同目录 `PITFALLS.md`（64 条）；日常进展：`YYYY-MM-DD.md`。
+> 坑：同目录 `PITFALLS.md`（75 条）；日常进展：`YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -120,13 +120,19 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
 ## ⚠️ 未决事项（接手先看）
 
-0. 🔶 **`form-core` 是 `implementing`（2026-09-18，批次①② 完成）** —— 上游约 3600 行，
-   一轮做不完，契约 §3 拆成三批：① 校验引擎 ✅ ｜ ② 取值工具（valueUtil/NameMap/
-   validateMessages）✅ ｜ ③ 状态机（FormStore/useForm/Field）⬜。
-   ⚠️ **批次③ 开工前必须先有 `ui/src/form` 骨架** —— 否则重复 overlay 的处境
-   （契约封了但无人消费，API 形状无从校验）。
-   ⚠️ ③ 是**唯一没有 Oracle 的部分**（`validateUtil.js` 依赖 React 的 isValidElement /
+0. 🔶 **`form-core` 是 `implementing`（2026-09-18，批次①②③a 完成）** —— 上游约 3600 行，
+   一轮做不完，契约 §3 拆成三批，③ 再切三个子批：① 校验引擎 ✅ ｜ ② 取值工具
+   （valueUtil/NameMap/validateMessages）✅ ｜ ③a 状态机内核（FormStore/useForm/useWatch/
+   WatcherCenter/三个 Context）✅ ｜ **③b 字段编排（`Field` + `validateRules`）⬜ 未开工** ｜
+   **③c 表单容器（`Form` + `FormProvider` + `List`）⬜ 未开工**。
+   ✅ **`ui/src/form` 骨架已落地**（`Form.vue`/`FormItem.vue`/`FormList.vue`/`interface.ts`，
+   消费契约 §6.4 的类型面）—— 全仓 `vue-tsc --noEmit` 0 错误，这条 doneWhen 已满足。
+   ⚠️ ③ 是**唯一基本没有 Oracle 的部分**（`validateUtil.js` 依赖 React 的 isValidElement /
    cloneElement，且 FormStore 是 forceUpdate 驱动）—— 只能读源码 + 行为测试。
+   ③a 里只有 `allPromiseFinish` / `isFormInstance` 两个纯函数能真对拍（占体量 <5%）。
+   ⚠️ ③b/③c 一行代码都没有 ⇒ 契约 §4.7.7 / §4.7.8 / §4.7.11 仍是**未被代码验证的文档**。
+   ⚠️ 想接 ③b：**不要只加源码不加测试** —— 新增未覆盖代码会把 form-core 的覆盖率
+   从 97.38/92.46/97.22 拉到阈值（95/90/95）以下，门禁会红。
 1. **foundation 11/13 completed**；`form-core` 见上（implementing），`picker` 仍 todo。
    组件 **1/72**（`empty`）。听 `next-task.mjs`（并行时用 `--parallel`）。
    第二个组件原建议选**有交互**的（验 L2 层）；2026-09-18 实际先派了 **`divider`(P0, 最小)**
