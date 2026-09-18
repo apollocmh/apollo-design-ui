@@ -145,6 +145,26 @@ cd /Users/nanren/Code/apollo-design-ui && git merge --ff-only <当前分支>   #
    `pnpm install` + 逐包重建（`ui` 的构建要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`，
    否则 `.dts-tmp` 的 351 个文件会被沙箱安全删除拦截）。
 
+### ⭐ 合并前的强制动作：**导出进度快照，合并后逐项比对**
+
+2026-09-18 第二次合并实测（master 领先 3 个提交）：冲突只有两处 ——
+`registry/foundation.json` 的 **`generatedAt`**（生成字段）与
+`.workbuddy-ai/memory/2026-09-18.md` 的 add/add。**进度字段这次零丢失**，
+但那是因为做了比对；不比对就无从知道。
+
+```bash
+# ① 合并前（当前 worktree）
+node -e "…导出 foundation 各包 status/dimensions/met + components 非 todo 项…" \
+  > /tmp/merge-backup/progress.before.json
+# ② 合并 + 解冲突 + **重跑三个生成器**
+node registry/tools/gen-registry.mjs && node registry/tools/foundation-status.mjs \
+  && node registry/tools/gen-workstreams.mjs
+# ③ 比对：status / dimensions / met 三项，任何一处变化都要查清
+```
+
+⚠️ `foundation.json` 的冲突**不要**手工合并 —— 它整个是生成物，解完标记后
+直接重跑 `foundation-status.mjs` 即可（它声明「进度字段跨运行保留」且实测属实）。
+
 ## ⚠️ 每个新会话的第一件事
 
 `/tmp` **不是持久存储**：`/tmp/antd-src/`（产物）与 `/tmp/antd-repo/ant-design-master/`

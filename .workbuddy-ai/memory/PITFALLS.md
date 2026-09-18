@@ -257,3 +257,30 @@
     **对策**：oracle 管「与上游一致」，行为测试管「我们自己的 API 形态与边界」，
     两者都要；收口时跑 `CODEBUDDY_SAFE_DELETE_ENABLED=0 node registry/tools/foundation-status.mjs --package <dir> --verify`
     （约 18 分钟/包，但它是唯一会看覆盖率的门禁 —— `pnpm run registry:check` 不看）。
+
+61. 🚨 **Vue 的事件 prop 名必须全小写**（`onMouseenter` 而非 `onMouseEnter`）。
+    runtime-dom 的 `parseName` 会 `hyphenate(name.slice(2))`，于是 React 风格被解析成
+    **不存在**的事件名：`onMouseEnter`→`mouse-enter`、`onTouchStart`→`touch-start`、
+    `onContextMenu`→`context-menu`、`onPointerDownCapture`→`pointer-down`。
+    正确：`onMouseenter` / `onPointerenter` / `onMouseleave` / `onPointerleave` /
+    `onTouchstart` / `onContextmenu` / `onPointerdownCapture`；只有修饰符后缀
+    （Once / Capture / Passive）保留大写。`onClick` / `onFocus` / `onBlur` 无影响。
+    **症状是完全静默** —— 不报错、不警告、类型检查也过，只是事件永不触发。
+    2026-09-18 在 overlay 的 L2 测试里实测踩到（18 个用例全红，改命名后全绿）。
+
+62. ⚠️ **变异验证脚本一次跑多个变异会 OOM，而且会把结果误报成「漏网」**。
+    2026-09-18 实测：一个脚本里串起 5 个变异 × 3 个测试文件，第二轮就被 SIGKILL
+    （exit 137），输出不完整 ⇒ 判定逻辑读不到 "N failed" ⇒ 打印「❌ 漏网（测试仍全绿）」，
+    而实际上单独跑时该变异被 6 个用例抓到。
+    **对策**：① 一个变异一次 Bash 调用，只跑必要文件；② 判定不要只看字符串，
+    先确认进程退出码与 `Tests N failed` 都拿到了；③ 变异后用 `git diff` 或 `grep`
+    **确认恢复干净** —— 本轮 `cp` 恢复失败过一次，残留的 `continue` 让 2 个用例持续红。
+
+63. ⚠️ **覆盖率的三个测法坑**（2026-09-18 在 overlay 上实测）：
+    ① 测试**别从 `'..'`（index.ts）导入** —— 纯 re-export 文件被 v8 记成 0%，
+    会把整包拉到阈值以下。要从具体模块导入（`../use-overlay`）。
+    ② `coverage.all` 默认为 `true`，在根跑**单包**覆盖率会把其它包的 `src/` 也算进来，
+    `All files` 永远不达标 —— 那是假象，看**按包名聚合的单文件行**才是真实值。
+    ③ 别 `cd packages/x && vitest run`（丢了根配置，实测 25 个用例失败）—— 必须在根跑。
+    另外：最后几个分支点靠「删掉不可达分支」比「硬凑测试」划算
+    （`!canUseDom` 交给下游自己保证、`?? window` 兜底替掉 `if (!win) return`）。
