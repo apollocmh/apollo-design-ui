@@ -479,3 +479,71 @@
 
     ⭐ 通用判据：**unbuild 的 exports 存在性检查发生在「构建之前」，
     任何「构建中生成」的产物都必须先有一个占位文件。**
+
+77. ⚠️ **变异「存活」不等于「测试有缺口」—— 先判「等价变异」再改测试。**（2026-09-19，③b 实测）
+
+    判据只有一条：**这条语句被改掉后，公开 API 上能否观察到差异？**
+
+    - **等价变异**（不该改测试，该写进契约）：
+      F6 去掉 `Field.getControlled` 里的 `if (rules && rules.length)` 守卫 ⇒ 变异存活。
+      根因是 **store 侧有第二层同名守卫**（`form-store.ts:851`
+      `if (!field.props.rules || !field.props.rules.length) return;`），
+      `dispatch({type:'validateField'})` 仍被拦掉 ⇒ `meta` / `onFieldsChange` /
+      `validateFields` 返回值**全部无差异**。
+      ⇒ 处方：补一条锁**行为契约**的用例（「无规则 ⇒ 不产生校验」），
+        并在注释里写明「这不是某一行守卫的证据」，**不谎报击杀**。
+
+    - **真缺口**（该补用例）：
+      F1 把 `requireUpdate` 改成恒真 ⇒ 存活。根因是**测试根本没走到那行**：
+      `setFieldValue` 走 `setField` 分支早退，`requireUpdate` 从未被求值。
+      ⇒ 处方：换一个**必然走到**的入口（有 `dependencies` + 自身值未变 ⇒ `default` 分支）。
+
+    ⭐ 三步定位法：① 在这条语句上加 `console.log` / 断点，跑测试看**是否被求值**；
+    ② 若没被求值 ⇒ 真缺口，换输入让路径到达；③ 若被求值但仍无差异 ⇒ 找第二层守卫，
+    判等价变异。
+
+78. ⚠️⚠️ **覆盖率 ≠ 变异杀灭率：「恰好不触发守卫」的输入也能把那行覆盖掉。**
+
+    实例（③b 的 M7）：`if (!result.length && subRuleField && Array.isArray(value) && value.length > 0)`
+    原用例传 `value = undefined` ⇒ `Array.isArray(undefined)` **直接为假**，
+    后面的 `!result.length` **根本没被求值**，但该行已被记为「覆盖」。
+    ⇒ 变异（去掉 `!result.length`）**存活**，而覆盖率报告看不出任何异常。
+
+    处方：**守卫型分支的用例要让「前后所有条件都为真」，只让目标条件决定结果。**
+    这里改成「父规则（`min:5`）与子规则（`required`）**都会**报错 + 值是非空数组」
+    ⇒ 守卫生效 1 条错误 / 失效 3 条错误。
+
+    ⭐ 同类高危写法：`a && b && c`、`x ?? y`、`p ? q : r`、早退 `return` 前的多重条件。
+    **每加一个 `&&`，就要问一次「这一条有独立的用例让它为假吗」。**
+
+79. ⚠️ **`validateFields(undefined, { dirty: true })` 会静默丢掉 options。**
+
+    `form-store.ts:818-823` 的重载判定是：
+    `Array.isArray(arg1) || typeof arg1 === 'string' || typeof arg2 === 'string'`
+    ⇒ 传 `(undefined, {dirty:true})` 时三个判据全假 ⇒ 走 else 分支 `options = arg1 = undefined`。
+    **症状极隐蔽**：`dirty` 过滤静默失效，所有字段都被校验。
+    （③b 里是靠「对照组：没有 initialValue 的字段**本应被跳过**却也报错」才发现的。）
+
+    ⇒ 无 `nameList` 时必须传**单参**：`form.validateFields({ dirty: true })`。
+
+80. ⚠️ **不要挖 `FieldEntity` 的内部对象做断言，优先走行为观察。**（③b 实测）
+
+    - `isFieldDirty()` **不在公开 `FormInstance` 上**（上游如此），只在 entity 上；
+    - `getInternalHooks().getFields()` 返回的是 **`FieldData[]`**（`{name, value, errors, ...}`），
+      **没有 `getNamePath()`** ⇒ 想按路径找 entity 会直接 `TypeError`；
+    - entity 只能从 `store.getFieldEntities()`（TS `private`）拿。
+
+    ⇒ 处方：用**能观察到的公开行为**替代，例如用 `validateFields({dirty:true})` 的
+    **过滤结果**反推 `isFieldDirty()`，并配一个「应被跳过」的对照组。
+    对照组本身就有价值 —— ③b 就是靠它抓出了 79。
+
+81. ⚠️ **PITFALLS 46 在 form-core 的复现：含 `Boolean` 的 prop 必须显式 `default: undefined`。**
+
+    `preserve` / `isListField` / `isList` / `validateTrigger` 四个的「未传」**有语义**
+    （`undefined` ⇒ 用上层/表单级配置；`false` ⇒ 本字段明确关闭）。
+    Vue 会把未传的 Boolean prop 转成 `false` ⇒ 字段级**静默覆盖**表单级。
+
+    附带一条声明订正（③b）：`isPreserve()` 的返回类型必须放宽为 `boolean | undefined`
+    —— 上游 `.d.ts` 写的是 `boolean`，但运行时返回 `this.props.preserve`。
+    若把 `undefined` 压成 `false`，`FormStore.isMergedPreserve` 的
+    `fieldPreserve !== undefined` 判据失效。
