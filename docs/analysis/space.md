@@ -439,22 +439,47 @@ antd 从 `space/Compact` 导出 `useCompactItemContext` / `NoCompactStyle` /
 追加在扩展名列表末尾）—— 与 antd 的 `space/Compact` 路径一致，下游可以照抄。
 内部引用一律写**显式扩展名**（`./Compact.vue`）以免歧义。
 
-## 9. 差异预判
+## 9. 差异登记
 
-| # | React 行为 | 预计 Vue 行为 | 分类 | 理由 |
-|---|---|---|---|---|
-| D1 | 根元素带 `css-var-root` / `css-xxx` hash 类 | 无 | INTENDED | 零运行时静态 CSS（H6），`dom-contract.ts` 做对称剔除 |
-| D2 | `useOrientation` 来自 `_util/hooks`（共享） | 落在 `space/useOrientation.ts` | INTENDED | 我们没有 `_util/`；Divider 已内联了自己的副本（两份）；第三次出现时提升到 `_internal/` |
-| D3 | `Orientation` 由 `_util/hooks` 导出 | 本地声明，**不**从 barrel 导出 | PLATFORM | barrel 已从 `./divider` 导出 `Orientation`，重复导出会冲突；antd 也不从 `space` 导出它 |
-| D4 | `GenerateSemantic<SpaceSemanticType, SpaceProps>` 条件类型 | 手写的 `SpaceSemanticAllType` 接口 | INTENDED | 与 empty / divider 同形（避免条件类型 + 双重断言） |
-| D5 | `SpaceContext` 是 `React.Context`，配 `Provider` | `spaceContextKey` + `useSpaceContext()` | PLATFORM | Vue 用 `provide`/`inject`；D27 要求返回 `ComputedRef` |
-| D6 | 默认前缀 `ant` | `apollo` | INTENDED | 裁决 `prefix-cls-default` = A |
-| D7 | 组件级 CSS 自定义属性（Addon 的 `--apollo-space-addon-*`） | 直接内联为 `border-color` / `background` | INTENDED | B7 要求每个 `var(--apollo-*)` 都在 theme 的 `tokens.css` 里有声明；这些变量是规则内局部声明的，照抄会判 FAIL。内联需**重排选择器顺序**以保持层叠等价（见 §11 决策 3） |
-| D8 | `useCompactItemContext` 返回裸值 | 返回 `ComputedRef` | PLATFORM | D27：Compact 的 props 变化要传导到下游 |
-| D9 | `separator` / `split` 是 `ReactNode` | `VNodeChild` prop（`default: undefined`） | PLATFORM | PITFALLS 46：SFC 编译出的运行时类型含 `Boolean` |
-| D10 | `SpaceRef.nativeElement` 声明为 `HTMLDivElement` | 声明为 `HTMLDivElement \| null` | INTENDED | 与 empty / divider 同形：首渲染前它真的是 `null` |
-| D11 | `warning.deprecated(!(deprecatedName in props), ...)` | 判据改成 `props.x !== undefined` | PLATFORM | Vue 的 `props` 恒包含全部声明键，`in` 恒为真（与 empty 的 `imageStyle` 同形） |
-| D12 | 无子节点时返回 `null`（零个根节点） | 同样返回 `null` | INTENDED | Vue 支持返回 `null`；`container.children.length === 0` 可逐条比对 |
+> **编号已对齐到 `COMPATIBILITY.md` §9 的全局编号。**
+>
+> 本文件初稿（G1 阶段）用的是**局部**编号 `D1–D12`。收口时发现局部编号会与全局编号
+> 撞名（例如局部 `D1` 指 hash 类名、而全局 `D1` 指 `visible` → `open`），
+> 所以统一改成全局编号，并在末列保留映射。
+>
+> 全部差异已**追加**进 `COMPATIBILITY.md` §9.2（`D34–D40`）与 §9.2.1（`U4–U6`）——
+> 纯追加，未改动任何既有行。
+
+| # | React 行为 | 我们 | 分类 | 理由 | G1 局部编号 |
+|---|---|---|---|---|---|
+| D5 | 根元素带 `css-var-root` / `css-xxx` hash 类 | 无 | INTENDED | 零运行时静态 CSS（H6），`dom-contract.ts` 做对称剔除 | D1 |
+| D6 | 默认前缀 `ant` | `apollo` | INTENDED | 裁决 `prefix-cls-default` = A | D6 |
+| D21 | `separator` / `split` 是 `ReactNode`（Vue 侧 `VNodeChild` 的运行时类型含 `Boolean` ⇒ 未传被转成 `false`）；废弃告警判据是 `!(name in props)` | `VNodeChild` prop + `default: undefined`；判据改成 `!== undefined` | PLATFORM | PITFALLS 46：SFC 编译出的运行时类型含 `Boolean`；Vue 的 `props` 恒含全部声明键 | D9 / D11 |
+| D22 | `SpaceRef.nativeElement` 声明为 `HTMLDivElement` | `HTMLDivElement \| null` | PLATFORM | 与 empty / divider 同形：首渲染前它真的是 `null` | D10 |
+| D27 | context 的解构值是**活的**（Provider 更新时 React 重跑消费者函数体） | 解构是快照 ⇒ 一律用返回 `ComputedRef` 的 composable | PLATFORM | 见 `docs/analysis/config-provider.md` §6.3 | —— |
+| D34 | `useOrientation` 来自 `_util/hooks`（全库共享） | 落在 `space/useOrientation.ts` | INTENDED | 我们没有 `_util/`；Divider 已内联了自己的副本（两份）；第三次出现时提升到 `_internal/` | D2 |
+| D35 | `Orientation` 由 `_util/hooks` 导出 | 本地声明，**不**从 barrel 导出 | PLATFORM | barrel 已从 `./divider` 导出 `Orientation`，重复导出会冲突；antd 也不从 `space` 导出它 | D3 |
+| D36 | `GenerateSemantic<SpaceSemanticType, SpaceProps>` 条件类型 | 手写的 `SpaceSemanticAllType` 接口 | INTENDED | 与 empty / divider 同形（避免条件类型 + 双重断言） | D4 |
+| D37 | `SpaceContext` 是 `React.Context`，配 `Provider`，值是裸对象 | `spaceContextKey` + `useSpaceContext()`，值是 `ComputedRef` | PLATFORM | Vue 用 `provide`/`inject`；`inject` 是 setup 期快照 ⇒ 不注入 `ComputedRef` 时「子节点增删」不传导到 `Item` 的分隔符判据 | D5 |
+| D38 | 组件级 CSS 自定义属性（Addon 的 `--ant-space-addon-*`）；status 段只改写变量、不额外产规则 | 内联为 `border-color` / `background`，并把「status × variant」**展开成复合选择器**（33 条 vs 29 条） | INTENDED | B7 要求每个 `var(--apollo-*)` 都在 theme 的 `tokens.css` 里有声明；这些变量是规则内局部声明的，照抄会判 FAIL。展开后特异性拉平 ⇒ 必须**重排选择器顺序**以保持层叠等价（见 §11 决策 3） | D7 |
+| D39 | `useCompactItemContext` 返回裸值 | 返回 `ComputedRef` | PLATFORM | D27 同一根源：Compact 的 props 变化要传导到下游 10 个组件 | D8 |
+| D40 | `separator={0}` 时 `Item` 的 `{… && separator && <span/>}` 求值成数字 `0`，React 把它渲染成**裸文本节点** ⇒ `<div>a</div>0<div>b</div>` | 真 `if` 走假值分支 ⇒ 不产生任何节点 | **DEFECT** | JSX「`0` 会渲染」的经典陷阱；上游的意图显然是「没有分隔符」。⚠️ 这条差异**进不了 L4**：`dom-contract.ts:204` 的投影只用 `content.children`（只含元素节点）⇒ 两侧投影相同、没有 `ALLOW` 条目。钉住它的是 L1 的 `index.test.ts`，证据是基线 `separator:zero` | （实现期新增） |
+
+### 9.1 被移除的一条：G1 的局部 `D12` **不是差异**
+
+初稿把「无子节点时返回 `null`（零个根节点）」列成了一条差异，理由写的是
+「Vue 支持返回 `null`」。实现期复核发现**两侧行为完全相同**（antd 也是返回 `null`），
+所以它不是差异，只是一条**需要被断言的行为**。它的落点是 L4 的
+`children:none` 用例（断言 `container.children.length === 0`），不进差异表。
+
+### 9.2 跟随的上游缺陷（`COMPATIBILITY.md` §9.2.1 的 `U4–U6`）
+
+| # | 位置 | 上游行为 | 我们为何跟随 |
+|---|---|---|---|
+| U4 | `Space.Addon` | `disabled` 只改颜色，不设 `disabled` / `aria-disabled` | 它只是视觉容器，交互由插槽里的子组件承载。代价：对辅助技术**完全不可见**（真实缺口） |
+| U5 | `Space` / `Space.Compact` | 根是裸 `<div>`，无 `role` / `aria-*`；`-item` 无 `role="listitem"` | 纯布局容器，不是列表语义；挂 `role="list"` 会凭空声明列表结构 |
+| U6 | `Space`（分隔符） | `-item-separator` 是裸 `<span>`，无 `aria-hidden` | 上游可改进项；单方面加会让 L4 的逐节点比对红 |
+
 
 ## 10. 测试矩阵
 
@@ -473,19 +498,23 @@ antd 从 `space/Compact` 导出 `useCompactItemContext` / `NoCompactStyle` /
 | Compact | `block` / `orientation` / `vertical` / `size` / 嵌套 / `rtl` / 空 | 7 |
 | Addon | `variant` ×4 / `status` ×3 / `disabled` / compact item 类名 | 9 |
 
-**7 层测试的覆盖计划**：
+**7 层测试的覆盖计划与实际**（收口时回填）：
 
-| 层 | 文件 | 计划用例数 | 关键断言 |
-|---|---|---|---|
-| L1 Unit | `__tests__/index.test.ts` | ~70 | 方向合并表、size 四路径、latestIndex、空 children、告警文案、gap px 补全 |
-| L2 Interaction | `__tests__/index.test.ts`（`should be keep store` 一节） | ~3 | 子节点更新不重建 `-item`；`nativeElement` 引用稳定 |
-| L3 Type | `__tests__/type.test-d.ts` | ~18 | 见 §3.2 |
-| L4 DOM Contract | `__tests__/semantic.test.ts` | 基线全量（≈60） | 与 `space.dom.json` 逐节点比对 |
-| L5 A11y | `__tests__/a11y.test.ts` | ~16 | axe 扫描 + 「不误加 role」 |
-| L6 Visual | `tests/visual/` | 用例 × 3 viewport | 逐像素 |
-| L7 Build | `tests/build/run.mjs` | — | B5/B7/B8 |
-| 主题矩阵 | `__tests__/theme.test.ts` | ~6 | 变量引用、无硬编码色值 |
-| demo 冒烟 | `__tests__/demo.test.ts` | ~15 | 每个 demo 能挂载 |
+| 层 | 文件 | 计划 | 实际 | 关键断言 |
+|---|---|---|---|---|
+| L1 Unit | `__tests__/index.test.ts` | ~70 | **123** | 方向合并表、size 四路径、latestIndex、空 children、告警文案、gap px 补全 |
+| L2 Interaction | `__tests__/index.test.ts`（`should be keep store` 一节） | ~3 | **n/a** | 见 `README.md` §5.1：三个组件都没有交互面 |
+| L3 Type | `__tests__/type.test-d.ts` | ~18 | **44**（含 20 条负例） | 见 §3.2 |
+| L4 DOM Contract | `__tests__/semantic.test.ts` | 基线全量（≈60） | **127** | 与 `space.dom.json` 逐节点比对 |
+| L5 A11y | `__tests__/a11y.test.ts` | ~16 | **28** | axe 扫描 + 「不误加 role」 |
+| L6 Visual | `tests/visual/` | 用例 × 3 viewport | **27**（9 × 3） | 逐像素：全部 `0.000% exact` |
+| L7 Build | `tests/build/run.mjs` | — | **FAIL 0** | B5/B7/B8 |
+| 主题矩阵 | `__tests__/theme.test.ts` | ~6 | **26** | 变量引用、无硬编码色值、规则条数、顺序契约 |
+| demo 冒烟 | `__tests__/demo.test.ts` | ~15 | **17** | 每个 demo 能挂载 |
+
+**变异验证**：8 个变异全部被捕获（M1–M8，见 `README.md` §5.5）。
+其中 M8（把 Addon 的决胜规则挪到 status 之前）**首轮存活** —— 补了 4 条顺序断言才抓住，
+这是本组件唯一一处「变异验证改动了实现之外的产物」。
 
 ## 11. 实现决策
 
@@ -521,13 +550,30 @@ antd 从 `space/Compact` 导出 `useCompactItemContext` / `NoCompactStyle` /
    传了 `customize` 就直接返回它（不加 `-space`）。Compact 传 `'space-compact'`，
    Addon 传 `'space-addon'`。
 
-## 12. 待验证问题
+7. ⚠️ **`separator={0}` 不复刻上游漏出的裸文本节点**（D40 / DEFECT）。
+   `Item.ts` 用真 `if`（`if (index < latestIndex && separator)`）而不是把
+   `&&` 链交给渲染函数 —— 后者在 Vue 里同样会渲染出 `0`（`h('span', …, 0)`
+   或直接把 `0` 当 child），所以这条「修复」是**写法的自然结果**，不是额外分支。
+   代价：L4 观测不到它（`dom-contract.ts` 的投影只含元素节点）⇒ 判据落在 L1。
 
-- [ ] `--apollo-line-type` / `--apollo-line-width` 是否真的在 `tokens.css` 里有声明
-      （Addon 的 `border-style` / `calc()` 用到）—— 由构建后的 B7 回答。
-- [ ] Vue 侧「空文本 vnode」是否会让 `:empty` 失效（空文本节点的 `data.length === 0`
-      按 CSS 规范不影响 `:empty`）—— 由 L4 的 `children:empty-string` 用例回答。
-- [ ] `space/Compact.ts` 与 `space/Compact.vue` 的同名解析在 `vue-tsc` 下是否稳定
-      —— 由 `lint:types` 回答；若冲突则改名为 `compact-context.ts` 并同步下游。
-- [ ] L6 是否需要为 Compact 提供假的 Button/Input 桩（我们的 Button 尚未落地）
-      —— 由 `tests/visual/render/cases/{react,vue}/space.*` 的用例设计回答。
+## 12. 待验证问题（收口时已全部回答）
+
+- [x] `--apollo-line-type` / `--apollo-line-width` 是否真的在 `tokens.css` 里有声明
+      （Addon 的 `border-style` / `calc()` 用到）？
+      **是。** 构建门禁 `tests/build/run.mjs` 的 B7 对 `packages/ui/dist/index.css`
+      逐个 `var(--apollo-*)` 校验，结果 `FAIL 0`（检查项 127 / PENDING 1 / n/a 50，
+      PENDING 是 ui 的 B6 体积预算，与 space 无关）。
+- [x] Vue 侧「空文本 vnode」是否会让 `:empty` 失效？
+      **不会。** L4 的 `children:empty-string` 用例与 antd 的机械基线逐节点一致
+      （空文本节点的 `data.length === 0` 按 CSS 规范不影响 `:empty`）。
+- [x] `space/Compact.ts` 与 `space/Compact.vue` 的同名解析在 `vue-tsc` 下是否稳定？
+      **稳定。** `lint:types`（`vue-tsc --noEmit -p tsconfig.json`）0 错误。
+      TS 与 Vite 都先解析 `.ts`（`.vue` 由插件追加在扩展名列表末尾）——
+      与 antd 的 `space/Compact` 路径一致，**下游可以照抄 import**，不必改名。
+      内部引用一律写显式扩展名（`./Compact.vue`）以免歧义。
+- [x] L6 是否需要为 Compact 提供假的 Button/Input 桩？
+      **需要，且已落地。** 9 个视觉用例全部用**两侧同一份**原生 `<button>` / `<input>`
+      替身（`tests/visual/render/cases/shared.mjs` 的 `SPACE_*_STYLE`，取值是 antd 6.6.4
+      的默认 Button / Input 实测值）。代价（Compact 的边框合并只验证到替身）已登记为
+      `tests/visual/matrix.mjs` 的 `LIMITATIONS`：`space·standins` / `space·state`。
+      结果：27 组全部 `0.000% exact`。
