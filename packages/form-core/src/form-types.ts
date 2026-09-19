@@ -371,7 +371,12 @@ export interface InternalHooks {
   initEntityValue: (entity: FieldEntity) => void;
   registerField: (entity: FieldEntity) => FieldCancelRegister;
   useSubscribe: (subscribable: boolean) => void;
-  setInitialValues: (values: Store, init: boolean) => void;
+  /**
+   * ⚠️ 形参含 `undefined`（③c 的声明订正）：唯一的调用点 `Form.js:80` 传的是
+   * `props.initialValues`（可缺省），而 `FormStore.setInitialValues` 的第一行就是
+   * `this.initialValues = initialValues || {}` —— 运行时本来就接受 `undefined`。
+   */
+  setInitialValues: (values: Store | undefined, init: boolean) => void;
   destroyForm: (clearOnDestroy?: boolean) => void;
   setCallbacks: (callbacks: Callbacks) => void;
   registerWatch: (callback: WatchCallBack) => () => void;

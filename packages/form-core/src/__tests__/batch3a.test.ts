@@ -149,9 +149,25 @@ function createStore() {
   return { store, form, hooks, forceRootUpdate };
 }
 
-/** 等一个宏任务 —— `WatcherCenter` 用 `MessageChannel` 投递，`setTimeout` 在它之后。 */
-function flushMacroTask(): Promise<void> {
-  return new Promise((resolve) => {
+/**
+ * 等一个宏任务 —— `WatcherCenter` 用 `MessageChannel` 投递。
+ *
+ * ⚠️⚠️ **必须等两个 `setTimeout` 回合**（2026-09-19 实测，见 `PITFALLS.md` 第 82 条）：
+ * 原实现只等一个 `setTimeout(0)`，并假设「`MessageChannel` 一定在它之前投递」。
+ * 在 CPU 繁忙时（同批多文件 + `--coverage`）这个顺序会**翻转** ⇒
+ * `notifyWatch 拿到的是本次变更的路径` 偶发拿到 `[]`。
+ *
+ * 两个回合的依据：`MessageChannel` / `MessagePort` 的回调在事件循环的 **poll 或
+ * check 阶段**投递，而 `setTimeout` 在 **timers 阶段** ⇒ 两个 timer 之间必然经过
+ * 一整轮 poll + check，`MessageChannel` 的回调不可能还没跑。
+ *
+ * ⭐ 这不是放宽断言 —— 断言一个字没改，只是把「等一等」做得可靠。
+ */
+async function flushMacroTask(): Promise<void> {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 0);
+  });
+  await new Promise((resolve) => {
     setTimeout(resolve, 0);
   });
 }

@@ -13,7 +13,7 @@
  * | ② | 取值工具：namePath 的 get/set/比较、`NameMap`、`validateMessages` 默认模板 | ✅ 已实现 |
  * | ③a | 状态机内核：`FormStore` + `useForm` + `useWatch` + `WatcherCenter` + 三个 Context | ✅ 已实现 |
  * | ③b | 字段编排：`validateRule`/`validateRules`（内部）+ `Field`（renderless） | ✅ 已实现 |
- * | ③c | 表单容器：`Form` + `FormProvider` + `List` | ⬜ 待做 |
+ * | ③c | 表单容器：`Form` + `FormProvider` + `List` | ✅ 已实现 |
  *
  * 分批理由见契约 §3。批次 ③ 的子批次拆分（③a/③b/③c）见 §3 的第二张表 ——
  * **每个子批次独立收口**，不合并验收。
@@ -39,6 +39,7 @@ export { default as delayFrame } from './delay-frame';
 // ⚠️ `validateRule` / `validateRules` **不导出** —— 上游 `es/index.d.ts` 也没有它们
 //    （它们是 `Field` 的内部编排，契约 §4.7.8）。测试从 `../validate-util` 直接 import。
 export { Field } from './field';
+export { Form } from './form';
 export {
   defaultFieldContext,
   defaultFormContext,
@@ -47,6 +48,7 @@ export {
   HOOK_MARK,
   listContextKey,
 } from './form-context';
+export { FormProvider } from './form-provider';
 export { FormStore } from './form-store';
 // ---------------------------------------------------------------------------
 // 批次③ 类型契约（上游 `interface.d.ts` + 各组件 `.d.ts` 的逐条映射）
@@ -115,6 +117,7 @@ export type {
   WatchOptions,
 } from './form-types';
 export { isFormInstance } from './form-util';
+export { List } from './list';
 // ---------------------------------------------------------------------------
 // 消息模板
 // ---------------------------------------------------------------------------

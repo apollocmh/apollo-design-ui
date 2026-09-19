@@ -139,11 +139,15 @@ export function matchNamePath(
  * `undefined === undefined`？不 —— `sourceValue`/`targetValue` 取的是同一个 key，
  * 缺失的一侧得到 `undefined`，与另一侧的值比较。所以 `{a: 1}` vs `{a: 1, b: 2}`
  * ⇒ `b` 上 `undefined !== 2` ⇒ `false` ✓
+ *
+ * ⚠️ **形参是 `unknown` 而不是 `Record<string, unknown>`**（③c 的声明订正）：
+ * 上游唯一的调用点 `Form.js:106` 传的是 **`FieldData[]` 数组**
+ * （`isSimilar(prevFieldsRef.current || [], fields || [])`），而数组没有
+ * 字符串索引签名 ⇒ 写 `Record<string, unknown>` 会让 `Form` 编译不过。
+ * 实现里走的是 `Object.keys`，数组完全适用（键是 `'0'` `'1'` …）。
+ * 运行时**零改动**，oracle 差分不受影响。
  */
-export function isSimilar(
-  source: Record<string, unknown> | null | undefined,
-  target: Record<string, unknown> | null | undefined,
-): boolean {
+export function isSimilar(source: unknown, target: unknown): boolean {
   if (source === target) {
     return true;
   }
@@ -155,13 +159,16 @@ export function isSimilar(
     return false;
   }
 
-  const sourceKeys = Object.keys(source);
-  const targetKeys = Object.keys(target);
+  const sourceRecord = source as Record<string, unknown>;
+  const targetRecord = target as Record<string, unknown>;
+
+  const sourceKeys = Object.keys(sourceRecord);
+  const targetKeys = Object.keys(targetRecord);
   const keys = new Set([...sourceKeys, ...targetKeys]);
 
   return [...keys].every((key) => {
-    const sourceValue = source[key];
-    const targetValue = target[key];
+    const sourceValue = sourceRecord[key];
+    const targetValue = targetRecord[key];
     if (typeof sourceValue === 'function' && typeof targetValue === 'function') {
       return true;
     }

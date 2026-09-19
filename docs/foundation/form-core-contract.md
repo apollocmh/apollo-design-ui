@@ -68,11 +68,14 @@ ls /tmp/rc-src/form/package/es/useForm.js || {
 |---|---|---|---|
 | **③a 状态机内核** | 类型契约 + 三个 Context + `WatcherCenter` + `allPromiseFinish` + `delayFrame` + `FormStore` + `useForm` + `useWatch` | `hooks/useForm.js`(918) + `useNotifyWatch.js`(47) + `useWatch.js`(83) + `utils/asyncUtil.js`(25) + `utils/delayUtil.js`(11) + 三个 Context | ✅ **已收口**（2026-09-18，`--verify` 实测 451 用例 / 0 失败；覆盖率 97.38·92.46·97.22；变异 8·8 抓到） |
 | **③b 字段编排** | `validateRule`/`validateRules` + `Field`（注册/注销、`getControlled`、`shouldUpdate`/`dependencies`、`validateDebounce`/`validateFirst`） | `utils/validateUtil.js`(226) + `Field.js`(603) | ✅ **已收口**（2026-09-19，form-core 实测 434 用例 / 0 失败；覆盖率 97.98·93.26·98.18·98.06；变异 24 组中 23 杀、1 等价） |
-| **③c 表单容器** | `Form`（provider + `nativeElement` + submit/reset）+ `FormProvider` + `List`（增删移 + key 管理） | `Form.js`(138) + `FormContext.js`(64) + `List.js`(143) | ⬜ **未开工**（本轮的 §4.7.11 仍是**未被任何代码验证的文档**） |
+| **③c 表单容器** | `Form`（provider + `nativeElement` + submit/reset）+ `FormProvider` + `List`（增删移 + key 管理） | `Form.js`(138) + `FormContext.js`(64) + `List.js`(143) | ✅ **已收口**（2026-09-19，form-core 实测 **515** 用例 / 0 失败；覆盖率 98.74·93.36·99.41·98.84；变异 39 组：34 杀 / 5 等价；见 §4.7.11.2） |
 
 ⚠️ **订正（2026-09-18）**：本表初稿把三个子批次**全部**标成「✅ 本轮」—— 那是**开工前的计划**，
 被误写成了状态。实际只完成 ③a；③b/③c **一行代码都没有**。
-契约 §4.7.7 / §4.7.8 / §4.7.11 因此仍是**未被任何代码验证的文档**（见 §9 第 8 条）。
+
+✅ **三个子批次现已全部收口（2026-09-19）** —— ③b（2026-09-19 上午）与
+③c（2026-09-19 下午）分别落地，`batch3b.test.ts`(95) + `batch3c.test.ts`(79)。
+⚠️ 但**收口不等于有 Oracle**：③b/③c 全部是「读源码 + 行为测试」，结论强度低于批次①②（见 §9）。
 
 **③a 实际落地的文件**（`packages/form-core/src/`）：
 `name-path-type.ts`（`DeepNamePath` 逐字移植）、`form-types.ts`（全部类型契约）、
@@ -637,9 +640,10 @@ if (mergedNameList === true && !mergedFilterFunc) return this.store;   // ⭐ �
 
 > ✅ **本节已由 ③b 实现并验证**（2026-09-19）：落点 `packages/form-core/src/field.ts`，
 > 行为测试 `__tests__/batch3b.test.ts`（95 例），覆盖率 99.22·93.25·100·99.59，
-> 变异 14 组（13 杀 + 1 等价）。⚠️ **例外**：与 `Form.List` 相关的两条
+> 变异 14 组（13 杀 + 1 等价）。
+> ✅ **原例外已消除（③c，2026-09-19）**：与 `Form.List` 相关的两条
 > （`getNamePath` 的 `prefixName`、`isMergedListField` 的 `listContext` 推导）
-> 只被**读**，没有测试真的构造过 List 上下文 —— 留待 ③c。
+> 由 `batch3c.test.ts` 用**真实 `Form.List` 上下文**测到（详见 §4.7.11.2）。
 
 **实体接口**（`interface.d.ts:64-88`）：`onStoreChange` / `isFieldTouched` / `isFieldDirty` /
 `isFieldValidating` / `isListField` / `isList` / `isPreserve` / `validateRules` / `getMeta` /
@@ -871,10 +875,9 @@ node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__
 4. F14：原 `setFields` 用例只注入 `errors: []`，与 `|| EMPTY_ERRORS` 兜底等价
    ⇒ 补「注入非空数组 ⇒ 原样进 meta」+「显式空数组 ⇒ 清空」。
 
-**③c 仍未开工**：`Form` / `FormProvider` / `List` 一行代码都没有，§4.7.11 与
-§4.7.7 里 `WrapperField` 关于 `Form.List` 的部分（`prefixName`、`listContext` 推导）
-**只被间接验证**（`field.ts` 读了 `prefixName` / `listContext`，但没有任何测试真的构造过
-`Form.List` 的上下文）—— 留待 ③c 收口时补。
+✅ **③c 已于 2026-09-19 收口**（见 §4.7.11.2）：`Form` / `FormProvider` / `List` 已落地，
+上面这条「只被间接验证」的缺口已补 —— `batch3c.test.ts` 真的构造了 `Form.List` 上下文，
+`prefixName` 与 `listContext` 两条现在是**被测**的（含「直接挂在 `Form` 下不告警」的对照组）。
 
 #### 4.7.9 `WatcherCenter`（`hooks/useNotifyWatch.js`）
 
@@ -897,29 +900,171 @@ node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__
 
 #### 4.7.11 `Form`（`Form.js`）与 `List`（`List.js`）
 
-> ⚠️ **本节仍是「未被任何代码验证的文档」（2026-09-19 复核）** —— ③c 未开工，
-> `packages/form-core/src/` 下没有 `Form` / `FormProvider` / `List` 的任何实现，
-> 也没有针对本节的测试。**不要把它当作已收口的契约**。
-> 唯一的间接接触：`field.ts` 会读 `FieldContext.prefixName` 与 `listContextKey`
-> （`getNamePath` / `isMergedListField`），但 ③b 的测试从没构造过 `Form.List` 的上下文。
+> ✅ **本节已由 ③c 实现并验证**（2026-09-19）：落点 `packages/form-core/src/form.ts`
+> （`Form`）/ `form-provider.ts`（`FormProvider`）/ `list.ts`（`List`），
+> 行为测试 `__tests__/batch3c.test.ts`（81 例），覆盖率见 §4.7.11.2。
+> ⚠️ **无 Oracle**（上游三个文件都绑 React 生命周期）—— 见 §7.0.1。
+> 实现期对上游的**订正/差异**集中在 §4.7.11.1。
+
+**`Form` 的逐行契约**（`Form.js`）：
+
+| 行 | 语义 |
+|---|---|
+| `:16-25` | 解构 props；`component` 默认 `'form'`，`validateTrigger` 默认 `'onChange'`；其余进 `restProps` |
+| `:26` | `nativeElementRef = useRef(null)` |
+| `:42-45` | `useImperativeHandle` 暴露 `{ ...formInstance, nativeElement: nativeElementRef.current }` |
+| `:48-53` | `useEffect` 里 `formContext.registerForm(name, formInstance)`，卸载 `unregisterForm(name)` |
+| `:56-59` | `setValidateMessages({ ...formContext.validateMessages, ...validateMessages })` |
+| `:60-75` | `setCallbacks`：`onFieldsChange` **先** `formContext.triggerFormChange` 再调用户回调；`onFinish` 同理；`onFinishFailed` 不透传 |
+| `:76` | `setPreserve(preserve)` |
+| `:79-83` | `mountRef` ⇒ `setInitialValues(initialValues, !mountRef.current)` —— **只有首次渲染** `init = true` |
+| `:86-88` | 卸载 `destroyForm(clearOnDestroy)` |
+| `:92-101` | `childrenRenderProps = typeof children === 'function'`；render-props 时 `children(getFieldsValue(true), formInstance)`；`useSubscribe(!childrenRenderProps)` |
+| `:104-110` | `prevFieldsRef` + `isSimilar(prev ?? [], fields ?? [])` ⇒ 不相似才 `setFields(fields ?? [])` |
+| `:113-121` | `formContextValue = { ...formInstance, validateTrigger }`；`ListContext.Provider value={null}` 包在 `FieldContext.Provider` **外面** |
+| `:122-137` | `Component === false` ⇒ 只渲染 wrapper；否则渲染容器，`onSubmit` = `preventDefault + stopPropagation + submit()`，`onReset` = `preventDefault + resetFields() + restProps.onReset?.(event)` |
+
+**`FormProvider` 的逐行契约**（`FormContext.js:8-63`）：
+
+| 行 | 语义 |
+|---|---|
+| `:15` | `formsRef = useRef({})` —— 一个**会被整体替换**的对象（`registerForm` / `unregisterForm` 都重建它） |
+| `:19-22` | `validateMessages` = 父级与自身**逐层合并** |
+| `:26-34` | `triggerFormChange`：**先**调自己的 `onFormChange(name, { changedFields, forms })`，**再**冒泡给父级 |
+| `:35-43` | `triggerFormFinish` 同上，`info = { values, forms }` |
+| `:44-52` | `registerForm`：`if (name)` 才进 `forms`；然后冒泡给父级 |
+| `:53-60` | `unregisterForm`：复制一份 `delete` 掉再冒泡 |
+| ⭐ | `info.forms` 是**调用那一刻**的 `formsRef.current`（快照语义，不是实时视图） |
+
+**`List` 的逐行契约**（`List.js`）：
+
+| 行 | 语义 |
+|---|---|
+| `:17-20` | `keyManager = { keys: [], id: 0 }`（`useRef`，实例级） |
+| `:22-25` | `prefixName = [...(getNamePath(context.prefixName) \|\| []), ...getNamePath(name)]` |
+| `:26-29` | `fieldContext = { ...context, prefixName }` |
+| `:32-38` | `listContext.getKey(namePath) = [keys[namePath[len]], namePath.slice(len + 1)]` |
+| `:41-44` | ⭐ `children` 不是函数 ⇒ 告警并返回 `null` |
+| `:45-52` | `shouldUpdate = (prev, next, { source }) => source === 'internal' ? false : prev !== next` |
+| `:53-63` | 渲染 `ListContext.Provider > FieldContext.Provider > Field(name=[], shouldUpdate, rules, validateTrigger, initialValue, isList=true, isListField = isListField ?? !!wrapperListContext)` |
+| `:72-75` | `getNewValue()` 用**外层** `context.getFieldValue(prefixName)` —— 每次操作都重取（外部 API 可能改过值） |
+| `:80-94` | `add(defaultValue, index)`：`index >= 0 && index <= newValue.length` ⇒ 插中间，否则**追加**；`index` 非法（`index < 0 \|\| index > length`）⇒ dev 告警；每次 `id += 1` |
+| `:95-105` | `remove(index \| index[])`：`indexSet.size <= 0` ⇒ 直接 `return`；同时过滤 `keys` 与 `value` |
+| `:106-120` | `move(from, to)`：`from === to` 或任一越界 ⇒ `return` |
+| `:122-128` | ⭐ `value` 不是数组 ⇒ 置 `[]` 并 dev 告警（`Current value of '<path>' is not an array type.`） |
+| `:129-141` | `fields = listValue.map((__, index) => { key = keys[index] ?? (keys[index] = id++)；return { name: index, key, isListField: true } })` |
 
 `Form`：默认 `component = 'form'`，`validateTrigger = 'onChange'`；
-`onSubmit` ⇒ `preventDefault + stopPropagation + submit()`；`onReset` ⇒ `preventDefault + resetFields() + restProps.onReset?.(event)`；
-`Component === false` ⇒ 只渲染 wrapper（不产 `<form>`）；
-`useSubscribe(!childrenRenderProps)`（渲染 props 时改为整体重渲染）；
-`setInitialValues(initialValues, !mountRef.current)` —— ⭐ **只有首次渲染** `init = true`；
-`fields` prop 变化用 `isSimilar` 比较后 `setFields`；卸载时 `destroyForm(clearOnDestroy)`。
+##### 4.7.11.1 ⭐ ③c 的 Vue 落点（2026-09-19 实现期裁决，回写）
 
-`List`：`prefixName = [...getNamePath(context.prefixName), ...getNamePath(name)]`；
-`keyManager = {keys: [], id: 0}`；
-`listContext.getKey(namePath) = [keys[namePath[len]], namePath.slice(len+1)]`；
-`shouldUpdate = (prev, next, {source}) => source === 'internal' ? false : prev !== next`；
-`add(defaultValue, index)`：`index >= 0 && index <= newValue.length` ⇒ 插到中间，否则**追加**
-（`index` 非法时 dev 告警）；每次 `id += 1`；
-`remove(index | index[])`：`indexSet.size <= 0` ⇒ 直接 return；同时过滤 keys 与 value；
-`move(from, to)`：`from === to` 或任一越界 ⇒ return；
-⭐ `children` 不是函数 ⇒ dev 告警并返回 `null`；
-⭐ `value` 不是数组 ⇒ 置 `[]` 并 dev 告警。
+**① 「渲染体里每次都跑一遍」的处置 —— 本子批次最需要解释的一处。**
+
+React 的函数组件体**每次渲染都重跑**，所以上游把「把 props 灌进 store」写成渲染体里的裸调用
+（`Form.js:56-76`）。Vue 的 `setup()` **一个实例只跑一次** ⇒ 必须逐条找对应物：
+
+| 上游（渲染体里每次跑） | 我们 | 理由 |
+|---|---|---|
+| `setValidateMessages(...)` | `setup()` 一次 + `watch(props.validateMessages)` | 合并源之一是**注入的** `formContext`（普通对象，非响应式）⇒ watch 只需盯 props |
+| `setCallbacks({...})` | `setup()` 一次 + 四个回调的 `watch` | 父组件可能换成新的 inline 闭包 ⇒ **必须** watch，否则拿到旧闭包 |
+| `setPreserve(preserve)` | `setup()` 一次 + `watch` | 同上 |
+| `setInitialValues(v, !mountRef.current)` | `setup()` 里 `init = true` 一次 + `watch` 补 `init = false` | 上游的 `mountRef` 就是「是否首次渲染」 |
+| `isSimilar(prevFields, fields)` ⇒ `setFields` | `onMounted` 跑首次 + `watch(flush: 'post')` | 上游是 `useEffect` ⇒ **挂载后**才跑首次；`flush: 'post'` 对应 effect 的时机 |
+
+**② `useImperativeHandle` ⇒ `expose()`（差异 4）**，且 `nativeElement` 用 **getter** 表达
+「读的时候是当前元素」—— `expose()` 同样只做一次，而 `ref` 是挂载后才填上的。
+
+**③ `FieldContext.Provider value={{...formInstance, validateTrigger}}` ⇒ `provide()` + getter**（`validateTrigger` 是 prop，可能变；getter 保住「读的时候是最新值」）。
+`ListContext.Provider value={null}` ⇒ `provide(listContextKey, null)`（不需要「Provider 组件」）。
+`List` 的 `fieldContext.prefixName` / `FormProvider` 的 `validateMessages` 同理用 getter。
+
+**④ ⭐⭐ render-props 模式**必须**显式声明（差异 13）**。
+
+上游判 `typeof children === 'function'`。Vue 的插槽**永远**是函数，而且**拿不到它声明了几个形参**：
+
+- `normalizeSlot()` 会把**每一个**插槽包成 `(...args) => normalizeSlotValue(rawSlot(...args))`
+  （`@vue/runtime-core@3.5.42` `runtime-core.cjs.js:5340-5354`，已核对源码）；
+- `withCtx()` 的包装体同样是 `(...args) => ...`（同文件 `:696`）。
+
+⇒ `slots.default.length` **恒为 0**，「看形参个数」这条路完全走不通。
+所以 `Form` 新增一个 **`renderProps?: boolean`** prop：`true` ⇒ `useSubscribe(false)`
+（整体重渲染，render-props 模式）；默认 `false` ⇒ `useSubscribe(true)`（逐字段订阅）。
+⭐ 无论哪种模式，插槽**都**会收到 `(values, form)` —— 非 render-props 的插槽忽略多余实参，
+代价为零；反之（只在 render-props 模式传参）会让拿不到形参个数的 SFC `v-slot` 收到 `undefined`。
+
+**⑤ `List` 的「children 不是函数」⇒ 「没有 default 插槽」（差异 14）。**
+上游 `List.js:41-44` 的判据在 Vue 里没有对应物（插槽恒为函数），
+对应物是「`slots.default` 不存在」⇒ 同样告警 + 渲染 `null`。
+
+**⑥ 两处声明订正（声明没跟上运行时，不是放宽类型）：**
+- `InternalHooks.setInitialValues` 的形参放宽为 `Store | undefined`
+  —— 上游唯一的调用点 `Form.js:80` 传的就是可缺省的 `props.initialValues`，
+  而 `FormStore.setInitialValues` 第一行就是 `initialValues || {}`；
+- `isSimilar` 的形参从 `Record<string, unknown>` 放宽为 `unknown`
+  —— 上游唯一的调用点 `Form.js:106` 传的是 **`FieldData[]` 数组**，而数组没有字符串索引签名
+  （实现走 `Object.keys`，数组完全适用）。**运行时零改动**，oracle 差分不受影响。
+
+**⑦ `FormProvider` 的 `forms` 用 `let` + 整体替换**（对应上游 `useRef` + `formsRef.current = {...}`），
+保证回调里读到的是**调用那一刻**的 `forms`（快照语义，与上游一致）。
+
+**⑧ `component` 为自定义组件时 `ref` 拿到的是组件实例而不是 DOM 元素** —— Vue 的固有差异
+（`React` 靠 `forwardRef` 转发到 DOM）。`FormRef.nativeElement` 因此在自定义组件下是
+**组件实例**；仅当 `component` 是字符串标签时才是 `HTMLElement`。登记为 **PLATFORM** 差异。
+
+##### 4.7.11.2 ⭐ ③c 收口记录（2026-09-19）
+
+**实现落点**（只新增三个文件 + 改 `index.ts` / `form-types.ts` / `value-util.ts` 的声明）：
+
+| 文件 | 行数 | 对应上游 |
+|---|---|---|
+| `packages/form-core/src/form.ts` | ~290 | `Form.js`(138) |
+| `packages/form-core/src/form-provider.ts` | ~130 | `FormContext.js`(64) 的 `FormProvider` |
+| `packages/form-core/src/list.ts` | ~280 | `List.js`(143) |
+| `packages/form-core/src/__tests__/batch3c.test.ts` | ~1520 | 行为测试 **81 例** |
+
+⚠️ **本子批次没有 Oracle，不要假装做过差分。** 三个上游文件分别用
+`useRef/useImperativeHandle/useEffect/useMemo/useContext` 与 render props，全部绑 React。
+`tests/oracle/` 里**没有** ③c 的对拍文件。期望值来自**读上游源码 + 行为测试**，每条断言标了行号。
+
+**实测（可复现）**：
+
+```
+node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__tests__
+  → Test Files 8 passed (8) / Tests 515 passed (515)
+
+同命令 + --coverage（--coverage.include='packages/form-core/src/**'）
+  → src 合计  语句 98.74 / 分支 93.36 / 函数 99.41 / 行 98.84   （阈值 95/90/95）
+  → form.ts          100 / 92.85 / 100 / 100
+  → form-provider.ts 100 / 100 / 100 / 100
+  → list.ts          100 / 97.36 / 100 / 100
+```
+
+**变异验证（39 组，一次一个：应用 → 跑 `batch3c.test.ts` → 还原 → `shasum -a 256` 校验）**：
+
+| 组 | 变异体 | 结果 |
+|---|---|---|
+| F01-F05 | `onSubmit`/`onReset` 的 `preventDefault` / `stopPropagation` / `submit()` / `resetFields()` 逐个去掉 | 5·5 杀 |
+| F06-F08 | `component` 默认标签改 `div`；`component === false` 不短路；`formName()` 恒空串 | 3·3 杀 |
+| F09-F11 | `onFieldsChange`/`onFinish` 不广播；初值 `init` 传 `false` | 3·3 杀 |
+| F12-F15 | 不 `onMounted` 应用 `fields`；卸载不 `unregisterForm`；`destroyForm` 恒 `false`；`renderProps` 恒 `false` | 4·4 杀 |
+| F16-F20 | `validateTrigger` 改静态快照；插槽不传 `(values, form)`；三个 `watch` 逐个去掉 | 5·5 杀 |
+| P01-P05 | `if (name)` 守卫去掉；`unregisterForm` 不真删；`triggerFormChange`/`triggerFormFinish` 不冒泡；`validateMessages` 合并顺序反转 | 5·5 杀 |
+| L02-L04 / L08 / L10 / L11 / L14 | `add` 越界告警去掉、`id` 不自增、`remove` 不过滤 keys、`getKey` 的 `len` 取 0、非数组不告警、不补 key、无插槽不告警 | 7·7 杀 |
+| L05 | `remove` 的 `indexSet.size <= 0` 守卫去掉 | ⚠️ **首轮存活** ⇒ 补断言「`onValuesChange` 一次都不调」后杀（见下） |
+| L12 | `isListField` 不用 `wrapperListContext` 兜底 | ⚠️ **首轮存活** ⇒ 补「顶层 List 的 `resetFields` 会回填它自己的 `initialValue`」后杀 |
+| P04 | `triggerFormFinish` 不冒泡 | ⚠️ **首轮存活** ⇒ 补「嵌套 `FormProvider` 的 `onFormFinish` 冒泡」后杀 |
+| L01 | `add` 的 `index <= length` 改成 `<` | **等价**：`index === length` 时两个分支产出完全相同的 `keys` 与 `value` |
+| L06 | `move` 的 `from === to` 守卫去掉 | **等价**：`move()` 在 `diff === 0` 时返回**同一引用**（`value-util.ts:208`），而 `Field` 的 trigger 在 `newValue === curValue` 时不 dispatch（`field.ts:533`）⇒ 没有可观测差异 |
+| L07 | `move` 的越界守卫去掉 | **等价**：同上，`move()` 越界时同样返回同一引用 |
+| L09 | `getNewValue` 改用 `fieldContext` | **等价**：`getFieldValue` 是 FormStore 的箭头属性（`form-store.ts:361`），`this` 与宿主对象无关；实参是显式传入的完整路径 ⇒ 换宿主无差别（**注意**：这正是 `list.ts` 里那条注释原本写错的理由） |
+| L13 | `shouldUpdate` 不再屏蔽 `source === 'internal'` | **等价**：`onStoreChange` 的 `default` 分支先判 `namePathMatch`（List 自己的路径必然命中）就 `return` 了；不命中时 List 自身的值也没变 ⇒ `prevValue !== nextValue` 同样为 `false` |
+
+**合计 39 组：34 杀 / 5 等价（0 个「杀不掉的活性变异体」）**。
+⚠️ 三个首轮存活的（L05 / L12 / P04）**不是**放宽断言糊过去的 —— 是**补了更强的断言**
+（把「值没变」升级成「根本没走 `updateValue` / 根本没进回调」），测试数 79 ⇒ 81。
+
+⭐ **③c 终于把 §4.7.7 里「只被读」的两条变成了被测**：
+`Field.getNamePath()` 的 `prefixName`（由 `List` 注入）与 `isMergedListField` 的 `listContext`
+推导，现在都有真实 `Form.List` 上下文的用例（含「直接挂在 `Form` 下不告警」的对照组）。
 
 ---
 
@@ -1099,6 +1244,10 @@ function useWatch<Values = any>(
 | 10 | `useWatch` 在实例之外 `useContext`（React 会抛） | `inject` 前先判 `getCurrentInstance()`，无实例时取 `defaultFieldContext` | **INTENDED**（Vue 的 `inject` 在实例外**返回 `undefined` 并告警**，不会给默认值） |
 | 11 | `Field.refresh()` 用 `setState({resetCount})` 改 `Fragment` 的 `key` 强制子节点重建 | 同一个 `resetCount` 包成 **keyed `Fragment`** | **INTENDED**（Vue 的 `key` 变化同样触发 unmount/mount；差异只在实现手段） |
 | 12 | `Field` 的 `preserve` / `isListField` / `isList` 是可选布尔 | 运行时 prop 显式 `default: undefined` | **INTENDED**（`PITFALLS.md` 46：Vue 的 Boolean 转换会把「未传」变 `false`，而这里 `undefined` 与 `false` 语义不同） |
+| 13 | `Form` 用 `typeof children === 'function'` 判 render-props | **新增 `renderProps?: boolean` prop**，必须显式声明 | **INTENDED**（Vue 的插槽恒为函数，且 `normalizeSlot`/`withCtx` 会把它包成 `(...args) =>` ⇒ `slot.length` 恒为 0，无法自动判定；见 §4.7.11.1 ④） |
+| 14 | `List` 里 `typeof children !== 'function'` ⇒ 告警 + `null` | **没有 `default` 插槽** ⇒ 告警 + `null` | **INTENDED**（同上：「不是函数」在 Vue 里没有对应物，对应物是「插槽不存在」） |
+| 15 | `Form` 的 render-props 模式下**不**给插槽传参 | 两种模式**都**传 `(values, form)` | **INTENDED**（差异 13 导致无法自动判定；不传会让 SFC 的 `v-slot` 收到 `undefined`） |
+| 16 | `component` 为自定义组件时 `nativeElement` 是 DOM 元素（靠 `forwardRef`） | Vue 的 `ref` 拿到**组件实例** | **PLATFORM**（Vue 无 `forwardRef`；仅当 `component` 是字符串标签时才是 `HTMLElement`） |
 
 ⭐ 差异 1 的**证据**：`validateUtil.js:71-76` 的 `React.isValidElement(mergedMessage) ?
 React.cloneElement(mergedMessage, { key: `error_${index}` }) : mergedMessage`。
@@ -1183,7 +1332,9 @@ expect(a).toEqual(b);
 
 #### 7.0.2 批次 ③ 的测试分层
 
-⚠️ 下表按**子批次**给状态。③a 本轮收口，③b/③c 未开工 —— 不许把 ③a 的绿当成 ③ 的绿。
+⚠️ 下表按**子批次**给状态。✅ **③a / ③b / ③c 三个子批次现已全部收口**（③a 2026-09-18，
+③b/③c 2026-09-19）—— 但收口强度**分档**：只有 ③a 有 Oracle（38 例逐位对拍），
+③b/③c 全部是「读源码 + 行为测试」。不许把行为测试的绿当成差分的绿。
 
 | 子批次 | 层 | 内容 | 状态 |
 |---|---|---|---|
@@ -1194,8 +1345,8 @@ expect(a).toEqual(b);
 | ③a | L3 类型 | `NamePath` 深推导 / `FormRuleType` 14 个 / `FieldMessage` / `FormInstance` 重载 / `RecursivePartial` / `FieldProps`（无 `children`）/ `FormProps.component` / `ListProps.name` 必填 / `WatchDependencies` —— 正例 + 负例（`batch3.test-d.ts`） | ✅ |
 | ③a | L4/L5/L6 | **n/a** —— 本包不产 DOM、无 ARIA、无渲染产物（组件是 renderless） | n/a |
 | ③a | L7 | `tests/build/run.mjs`（整包构建门禁，需抢 `/tmp/apollo-build-gate.lock`） | ✅ 实测通过（`检查项 127 \| FAIL 0 \| PENDING 1`，本包 `✅ @apollo-design/form-core`；唯一 PENDING 是 `ui` 的 B6 体积预算，与本包无关） |
-| ③b | 全部 | `validateRules`/`validateRule` + `Field` renderless 组件 | ⬜ |
-| ③c | 全部 | `Form` + `FormProvider` + `List` | ⬜ |
+| ③b | 全部 | `validateRules`/`validateRule` + `Field` renderless 组件 | ✅ |
+| ③c | 全部 | `Form` + `FormProvider` + `List` | ✅（`batch3c.test.ts` 81 例；覆盖 `form.ts` 100·92.85·100·100 / `form-provider.ts` 100·100·100·100 / `list.ts` 100·97.36·100·100） |
 
 **实测（2026-09-18）** —— 权威数字来自 `registry:foundation:verify`
 （`CODEBUDDY_SAFE_DELETE_ENABLED=0 node registry/tools/foundation-status.mjs --verify`，
@@ -1360,13 +1511,19 @@ isSimilar 15 对 / defaultGetValueFromEvent 10 组 / move 11 组 / NameMap 9 项
 7. **`form-store.ts` 的文件级分支覆盖率只有 86.17%**（聚合值 92.46% 是靠其它文件拉起来的）。
    未覆盖的分支主要是「上游的防御性/告警分支」（如 `getFieldEntitiesForNamePathList` 的
    `includesSubNamePath` 组合、`resetWithFieldInitialValue` 的「多字段同路径 initialValue」
-   告警、`validateFields` 的 `recursive` 组合）。⚠️ **这是真实的覆盖缺口，不是假象** ——
+   告警、`validateFields` 的 `recursive` 组合）。⚠️    **这是真实的覆盖缺口，不是假象** ——
    本轮没有为它们补测试，因为其中几条的**可观测行为**要等 `Field`（③b）才能构造出来。
-8. **③b / ③c 完全没做** ⇒ `Field`、`validateRules`/`validateRule`、`Form`、`FormProvider`、
-   `List` 一行都没有。契约 §4.7.7 / §4.7.8 / §4.7.11 目前是**未被任何代码验证的文档**。
+   ⚠️ ③b/③c 已收口，但这些分支**仍未补**，缺口继续存在（聚合值已由 92.46 升到 93.36，
+   是靠新文件拉起来的，**不等于**这些分支被覆盖了）。
+8. ⚠️ **③b / ③c 已实现但无 Oracle**（2026-09-19 订正：原先是「完全没做」，现均已收口）。
+   `Field`、`validateRules`/`validateRule`、`Form`、`FormProvider`、`List` 都有代码 + 行为测试，
+   但**全部是「读源码 + 行为测试」**，没有任何逐位对拍 —— 上游这五个文件都绑 React
+   生命周期/渲染语义，无法构造 Oracle（判据见 §7.0.1）。⇒ §4.7.7 / §4.7.8 / §4.7.11 的契约
+   现在是「被行为测试覆盖」，**不是**「被差分证明」。
 9. **`FieldEntity` 的替身是按 `Field.js` 的语义手写的**（`batch3a.test.ts` 的 `createField`）。
    它证明的是「`FormStore` 与一个符合契约的实体协作正常」，**不是**「真实 `Field` 也符合」。
-   ⚠️ 替身与真实现之间的偏差要等 ③b 才能暴露。
+   ⚠️ ③b 已用真实 `Field` 落了 95 例，但**没有**回过头把 `createField` 替身换成真实现重跑，
+   所以「替身与真实现是否有偏差」**仍未验证**。
 10. ⚠️⚠️ **L3 类型测试曾经是「假绿」，是 `--verify` 才照出来的**（2026-09-18）。
    `batch3.test-d.ts` 里有 5 条用了 `const form = null as unknown as FormInstance; form.xxx();` ——
    类型上完全正确（`vue-tsc` 0 错误），但 **vitest 的 `types` 项目会「运行时执行」`*.test-d.ts`**，
