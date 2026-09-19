@@ -7,8 +7,28 @@
  * ── 选择器结构是从 antd 的**真实产物**提取的，不是推演的 ─────────────────────────
  *
  * 用 `@ant-design/cssinjs` 的 `extractStyle` 渲染 antd 6.6.4 的 Space / Space.Compact /
- * Space.Addon 并提取 CSS（去掉 CSS-in-JS 的 hash 包裹层后），得到的就是下面这份。
- * 实测得到 **Space 16 条 + Compact 4 条 + Addon 34 条**。
+ * Space.Addon 并提取 CSS（去掉 `:where(.css-dev-only-*)` 与 `@layer` 包裹层后），
+ * 逐条抄下来。实测：
+ *
+ * | 来源 | antd 条数 | 本文件条数 | 差 |
+ * |---|---:|---:|---|
+ * | Space（`genSpaceStyle`） | 16 | 16 | 0 |
+ * | Compact（`style/compact.ts`） | 4 | 4 | 0 |
+ * | Addon（`style/addon.ts`） | 29 | 33 | **+4** |
+ * | 合计 | **49** | **53** | +4 |
+ *
+ * ⚠️ **+4 是 D7 的展开代价，不是漏抄**（见下方 D7 那张表）：
+ *    antd 的 status 只改中间变量（`--addon-border-color-outlined` 等），
+ *    variant 再引用它 —— 所以 status × variant 的组合**不额外产生规则**。
+ *    我们展开成「status+variant」的复合选择器后，每种组合各占一条：
+ *      `-status-error-variant-outlined` / `-status-warning-variant-outlined` /
+ *      `-status-error-variant-filled` / `-status-warning-variant-filled`。
+ *    4 = 2 个 status × 2 个「消费该变量的 variant」。
+ *
+ * ⚠️ 另一个**容易被漏掉的事实**：Space 与 Compact **没有** `genCommonStyle` 的重置规则
+ *    （`[class^="…"]{box-sizing}` 那四条）—— 因为上游 `genStyleHooks(['Space','Compact'], …,
+ *    { resetStyle: false })` 显式关掉了。Addon 走默认值，所以**有**那四条。
+ *    实测产物确认：Space / Compact 的块里一条 `[class^=` 都没有。
  *
  * ⚠️ 三处最容易写错的地方：
  *
