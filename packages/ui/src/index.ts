@@ -44,6 +44,40 @@ export {
 export type { WithInstall } from './_internal/with-install';
 export { withInstall } from './_internal/with-install';
 export type {
+  ComponentConfigLike,
+  ConfigProviderProps,
+  ConfigProviderThemeConfig,
+  CSPConfig,
+  FormConfig,
+  GlobalConfigProps,
+  PopupOverflow,
+  RenderEmptyComponentName,
+  RenderEmptyHandler,
+  SizeType,
+  UseConfigResult,
+  Variant,
+  WaveConfig,
+} from './config-provider';
+// ---------------------------------------------------------------------------
+// ConfigProvider —— 全库的运行时网关（theme / locale / size / disabled / prefixCls）
+//
+// ⚠️ 组件配置 prop 是**渐进式**的：只声明了已落地组件的精确类型，其余走
+//    `components` 弱类型逃生口（`docs/analysis/config-provider.md` §6.1，差异 D25）。
+// ---------------------------------------------------------------------------
+export {
+  ConfigProvider,
+  defaultRenderEmpty,
+  DefaultRenderEmpty,
+  disabledContextKey,
+  globalConfig,
+  setGlobalConfig,
+  sizeContextKey,
+  useConfig,
+  useDirection,
+  useDisabled,
+  useSize,
+} from './config-provider';
+export type {
   ComponentConfig,
   ComponentConfigBase,
   ComponentStyleConfig,
