@@ -1,0 +1,513 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/space.mjs 从 antd 6.6.4 的 Space / Space.Compact / Space.Addon 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/space.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 126,
+  "cases": [
+    {
+      "id": "plain",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "empty:no-children",
+      "html": ""
+    },
+    {
+      "id": "empty:false-child",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"></div>"
+    },
+    {
+      "id": "empty:null-child",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"></div>"
+    },
+    {
+      "id": "children:text",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">text</div></div>"
+    },
+    {
+      "id": "children:text+element",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">text1</div><div class=\"apollo-item\"><span>text2</span></div></div>"
+    },
+    {
+      "id": "children:adjacent-text",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "children:null-component",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"></div></div>"
+    },
+    {
+      "id": "children:fragment",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>text1</span></div><div class=\"apollo-item\"><span>text3</span></div></div>"
+    },
+    {
+      "id": "prefix-cls:custom",
+      "html": "<div class=\"custom css-dev-only-do-not-override-19u5a7b custom-horizontal custom-align-center custom-gap-row-small custom-gap-col-small css-var-root\"><div class=\"custom-item\"><span>1</span></div><div class=\"custom-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "prefix-cls:no-props",
+      "html": "<div class=\"ant-space css-dev-only-do-not-override-19u5a7b ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small css-var-root\"><div class=\"ant-space-item\"><span>1</span></div><div class=\"ant-space-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:unset-unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:unset-vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:vertical-horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:vertical-unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:horizontal-vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "vertical:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "direction:vertical+vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:vertical+vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "orientation:unset+vertical:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:start",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-start apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:end",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-end apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:center",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:baseline",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-baseline apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:unset-horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:unset-vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:unset-vertical-legacy",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "align:center-vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:small",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:medium",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-medium apollo-gap-col-medium css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:middle",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-middle apollo-gap-col-middle css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:large",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-large apollo-gap-col-large css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\" style=\"column-gap:10px;row-gap:10px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:zero",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:nan",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:tuple-numbers",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\" style=\"column-gap:10px;row-gap:20px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:tuple-preset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-large apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:tuple-mixed",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-large css-var-root\" style=\"column-gap:10px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:tuple-reversed",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-large css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:negative",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\" style=\"column-gap:-5px;row-gap:-5px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "size:numeric-string",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "wrap:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" style=\"flex-wrap:wrap\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "wrap:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "wrap:true+size-number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\" style=\"flex-wrap:wrap;column-gap:10px;row-gap:10px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "separator:string",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">b</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">c</div></div>"
+    },
+    {
+      "id": "separator:empty-string",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "separator:zero",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div>0<div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "separator:element",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><span class=\"apollo-item-separator\"><b>|</b></span><div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "separator:three-items",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">b</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">c</div></div>"
+    },
+    {
+      "id": "separator:with-null-child",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">c</div></div>"
+    },
+    {
+      "id": "separator:empty+split",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "split:legacy",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "split:legacy+separator",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\">a</div><span class=\"apollo-item-separator\">-</span><div class=\"apollo-item\">b</div></div>"
+    },
+    {
+      "id": "class:className",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small my-class css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "class:rootClassName",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small root-class css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "class:both",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small a b css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" data-testid=\"x\" id=\"my-space\" title=\"tip\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "semantic:classNames-all",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root cn-root\"><div class=\"apollo-item cn-item\"><span>1</span></div><span class=\"apollo-item-separator cn-sep\">-</span><div class=\"apollo-item cn-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "semantic:classNames-root",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root cn-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "semantic:classNames-fn",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-vertical apollo-gap-row-small apollo-gap-col-small css-var-root fn-vertical-undefined-small\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "semantic:styles-all",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" style=\"color:red\"><div class=\"apollo-item\" style=\"color:green\"><span>1</span></div><span class=\"apollo-item-separator\" style=\"color:blue\">-</span><div class=\"apollo-item\" style=\"color:green\"><span>2</span></div></div>"
+    },
+    {
+      "id": "semantic:styles-fn",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" style=\"color:blue\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "style:style-over-root",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" style=\"color:green\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "style:style-over-gap",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\" style=\"column-gap:3px;row-gap:10px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "style:gap-only",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b apollo-horizontal apollo-align-center css-var-root\" style=\"column-gap:10px;row-gap:10px\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:size",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center apollo-gap-row-large apollo-gap-col-large css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:size-zero",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:size+prop-size",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center apollo-gap-row-medium apollo-gap-col-medium css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:className",
+      "html": "<div class=\"apollo cfg-class css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:classNames",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root cfg-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:styles",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" style=\"color:red\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "config:style+prop-style",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\" style=\"color:green\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "direction:rtl",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee apollo-horizontal apollo-rtl apollo-align-center apollo-gap-row-small apollo-gap-col-small css-var-root\"><div class=\"apollo-item\"><span>1</span></div><div class=\"apollo-item\"><span>2</span></div></div>"
+    },
+    {
+      "id": "compact:plain",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:empty",
+      "html": ""
+    },
+    {
+      "id": "compact:prefix-custom",
+      "html": "<div class=\"custom-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:no-props",
+      "html": "<div class=\"ant-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:block",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-block\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:orientation-vertical",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:direction-vertical",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:vertical-false",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:vertical-true",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:orientation+vertical",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:class:className",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b cc\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:class:rootClassName",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b cc-root\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:style",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\" style=\"color:red\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:attrs",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\" data-testid=\"c\" id=\"my-compact\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:size-small",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-small probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-small probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-small probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:size-large",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-large probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-large probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-large probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:direction-rtl",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-1v6lqee apollo-space-compact-rtl\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:config-component-size",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-1v6lqee\"><i class=\"probe probe-size-large probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-large probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-large probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:config-component-size+size",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-1v6lqee\"><i class=\"probe probe-size-small probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-small probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-small probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:single-item",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:probe-rtl",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item probe-compact-last-item probe-compact-item-rtl\"></i></div>"
+    },
+    {
+      "id": "compact:probe-rtl-vertical",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-first-item probe-compact-vertical-last-item probe-compact-vertical-item-rtl\"></i></div>"
+    },
+    {
+      "id": "compact:false-child",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:null-child",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:only-false-child",
+      "html": ""
+    },
+    {
+      "id": "compact:nested-not-first",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div></div>"
+    },
+    {
+      "id": "compact:nested-is-first",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item\"></i></div><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-last-item\"></i></div>"
+    },
+    {
+      "id": "compact:nested-vertical",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item\"></i><i class=\"probe probe-size-undefined probe-dir-vertical probe-compact-vertical-item probe-compact-vertical-last-item\"></i></div></div>"
+    },
+    {
+      "id": "compact:no-compact-style",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><i class=\"probe probe-size-undefined probe-dir-horizontal probe-compact-item probe-compact-first-item\"></i><i class=\"probe probe-size-undefined probe-dir-undefined\"></i></div>"
+    },
+    {
+      "id": "compact:probe-outside",
+      "html": "<i class=\"probe probe-size-undefined probe-dir-undefined\"></i>"
+    },
+    {
+      "id": "addon:plain",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\">Addon</div>"
+    },
+    {
+      "id": "addon:prefix-custom",
+      "html": "<div class=\"custom-addon css-dev-only-do-not-override-19u5a7b css-var-root custom-addon-variant-outlined\">Addon</div>"
+    },
+    {
+      "id": "addon:no-props",
+      "html": "<div class=\"ant-space-addon css-dev-only-do-not-override-19u5a7b css-var-root ant-space-addon-variant-outlined\">Addon</div>"
+    },
+    {
+      "id": "addon:variant-outlined",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\">Addon</div>"
+    },
+    {
+      "id": "addon:variant-borderless",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-borderless\">Addon</div>"
+    },
+    {
+      "id": "addon:variant-filled",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-filled\">Addon</div>"
+    },
+    {
+      "id": "addon:variant-underlined",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-underlined\">Addon</div>"
+    },
+    {
+      "id": "addon:status-success",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined apollo-space-addon-status-success\">Addon</div>"
+    },
+    {
+      "id": "addon:status-warning",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined apollo-space-addon-status-warning\">Addon</div>"
+    },
+    {
+      "id": "addon:status-error",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined apollo-space-addon-status-error\">Addon</div>"
+    },
+    {
+      "id": "addon:status-validating",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined apollo-space-addon-status-validating\">Addon</div>"
+    },
+    {
+      "id": "addon:status-empty",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\">Addon</div>"
+    },
+    {
+      "id": "addon:disabled",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined apollo-space-addon-disabled\">Addon</div>"
+    },
+    {
+      "id": "addon:disabled+status-error",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined apollo-space-addon-status-error apollo-space-addon-disabled\">Addon</div>"
+    },
+    {
+      "id": "addon:class:className",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined my-addon\">Addon</div>"
+    },
+    {
+      "id": "addon:style",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\" style=\"color:red\">Addon</div>"
+    },
+    {
+      "id": "addon:attrs",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\" data-testid=\"a\" id=\"my-addon\">Addon</div>"
+    },
+    {
+      "id": "addon:children-element",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\"><span>Addon</span></div>"
+    },
+    {
+      "id": "addon:inside-compact",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b apollo-space-addon-compact-item apollo-space-addon-compact-first-item css-var-root apollo-space-addon-variant-outlined\">A0</div><div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b apollo-space-addon-compact-item apollo-space-addon-compact-last-item css-var-root apollo-space-addon-variant-outlined\">A1</div></div>"
+    },
+    {
+      "id": "addon:inside-compact-vertical",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b apollo-space-compact-vertical\"><div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b apollo-space-addon-compact-vertical-item apollo-space-addon-compact-vertical-first-item css-var-root apollo-space-addon-variant-outlined\">A0</div><div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b apollo-space-addon-compact-vertical-item apollo-space-addon-compact-vertical-last-item css-var-root apollo-space-addon-variant-outlined\">A1</div></div>"
+    },
+    {
+      "id": "addon:inside-compact-size",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-19u5a7b\"><div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b apollo-space-addon-compact-item apollo-space-addon-compact-first-item css-var-root apollo-space-addon-variant-outlined apollo-space-addon-small\">A0</div><div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b apollo-space-addon-compact-item apollo-space-addon-compact-last-item css-var-root apollo-space-addon-variant-outlined apollo-space-addon-small\">A1</div></div>"
+    },
+    {
+      "id": "addon:outside-compact",
+      "html": "<div class=\"apollo-space-addon css-dev-only-do-not-override-19u5a7b css-var-root apollo-space-addon-variant-outlined\">Addon</div>"
+    }
+  ]
+}

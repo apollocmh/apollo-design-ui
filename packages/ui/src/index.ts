@@ -137,6 +137,52 @@ export {
   PRESENTED_IMAGE_DEFAULT,
   PRESENTED_IMAGE_SIMPLE,
 } from './empty';
+// ---------------------------------------------------------------------------
+// Space —— 间距容器（`Space.Compact` / `Space.Addon` 是同包的子组件）
+//
+// ⚠️ `useCompactItemContext` / `NoCompactStyle` / `spaceCompactItemContextKey` 是
+//    **跨组件协议**：Button / Input / InputNumber / Select / TreeSelect / Cascader /
+//    DatePicker / Dropdown.Button / ColorPicker 靠它拼自己的 `-compact-item` 类名，
+//    浮层（Modal / Drawer / Tooltip / Dropdown）靠 `NoCompactStyle` 把子树隔离出去。
+// ---------------------------------------------------------------------------
+export type {
+  InputStatus,
+  SpaceAddonProps,
+  SpaceAddonRef,
+  SpaceAlign,
+  SpaceCompactItemContextType,
+  SpaceCompactProps,
+  SpaceCompactRef,
+  SpaceConfig,
+  SpaceContextType,
+  SpaceProps,
+  SpaceRef,
+  SpaceSemanticAllType,
+  SpaceSemanticClassNames,
+  SpaceSemanticStyles,
+  SpaceSemanticType,
+  SpaceSemanticValue,
+  SpaceSize,
+  SpaceSlot,
+} from './space';
+export {
+  CompactItem,
+  genSpaceStyle,
+  getStatusClassNames,
+  isPresetSize,
+  isValidGapNumber,
+  isValidOrientation,
+  NoCompactStyle,
+  prepareSpaceComponentToken,
+  Space,
+  SpaceAddon,
+  SpaceCompact,
+  spaceCompactItemContextKey,
+  spaceContextKey,
+  useCompactItemContext,
+  useOrientation,
+  useSpaceContext,
+} from './space';
 export type {
   SpinComponentToken,
   SpinConfig,

@@ -30,6 +30,7 @@
 
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
+import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
 
 /**
@@ -57,6 +58,7 @@ export interface ComponentStyleEntry {
 export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
+  { name: 'space', gen: genSpaceStyle },
   { name: 'spin', gen: genSpinStyle },
 ];
 
