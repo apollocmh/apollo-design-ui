@@ -160,8 +160,7 @@ export function isSameWeek<DateType>(
     const weekStartDate2 = generateConfig.locale.getWeekFirstDate(locale, v2);
     return (
       isSameYear(generateConfig, weekStartDate1, weekStartDate2) &&
-      generateConfig.locale.getWeek(locale, v1) ===
-        generateConfig.locale.getWeek(locale, v2)
+      generateConfig.locale.getWeek(locale, v1) === generateConfig.locale.getWeek(locale, v2)
     );
   });
 }
@@ -212,10 +211,7 @@ export function isInRange<DateType>(
   if (!startDate || !endDate || !current) {
     return false;
   }
-  return (
-    generateConfig.isAfter(current, startDate) &&
-    generateConfig.isAfter(endDate, current)
-  );
+  return generateConfig.isAfter(current, startDate) && generateConfig.isAfter(endDate, current);
 }
 
 /** 同粒度相等 **或** 严格晚于。粒度是 `type`，不是时刻。 */
@@ -249,10 +245,7 @@ export function getWeekStartDate<DateType>(
   const weekFirstDay = generateConfig.locale.getWeekFirstDay(locale);
   const monthStartDate = generateConfig.setDate(value, 1);
   const startDateWeekDay = generateConfig.getWeekDay(monthStartDate);
-  let alignStartDate = generateConfig.addDate(
-    monthStartDate,
-    weekFirstDay - startDateWeekDay,
-  );
+  let alignStartDate = generateConfig.addDate(monthStartDate, weekFirstDay - startDateWeekDay);
   if (
     generateConfig.getMonth(alignStartDate) === generateConfig.getMonth(value) &&
     generateConfig.getDate(alignStartDate) > 1
@@ -291,22 +284,10 @@ export function fillTime<DateType>(
   time?: DateType,
 ): DateType {
   let tmpDate = date;
-  tmpDate = generateConfig.setHour(
-    tmpDate,
-    time ? generateConfig.getHour(time) : 0,
-  );
-  tmpDate = generateConfig.setMinute(
-    tmpDate,
-    time ? generateConfig.getMinute(time) : 0,
-  );
-  tmpDate = generateConfig.setSecond(
-    tmpDate,
-    time ? generateConfig.getSecond(time) : 0,
-  );
-  tmpDate = generateConfig.setMillisecond(
-    tmpDate,
-    time ? generateConfig.getMillisecond(time) : 0,
-  );
+  tmpDate = generateConfig.setHour(tmpDate, time ? generateConfig.getHour(time) : 0);
+  tmpDate = generateConfig.setMinute(tmpDate, time ? generateConfig.getMinute(time) : 0);
+  tmpDate = generateConfig.setSecond(tmpDate, time ? generateConfig.getSecond(time) : 0);
+  tmpDate = generateConfig.setMillisecond(tmpDate, time ? generateConfig.getMillisecond(time) : 0);
   return tmpDate;
 }
 

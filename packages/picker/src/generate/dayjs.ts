@@ -8,14 +8,14 @@
  * 设计取舍见契约 §9 的 P2：保留 `GenerateConfig` 抽象是为了让 Oracle 能逐位对拍。
  */
 
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
-import weekday from 'dayjs/plugin/weekday';
-import localeData from 'dayjs/plugin/localeData';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
-import weekYear from 'dayjs/plugin/weekYear';
+import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import weekday from 'dayjs/plugin/weekday';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekYear from 'dayjs/plugin/weekYear';
 
 import type { GenerateConfig } from '../types';
 
@@ -116,26 +116,19 @@ export const dayjsGenerateConfig: GenerateConfig<Dayjs> = {
   setHour: (date, hour) => toLocalDayjs(date).hour(hour),
   setMinute: (date, minute) => toLocalDayjs(date).minute(minute),
   setSecond: (date, second) => toLocalDayjs(date).second(second),
-  setMillisecond: (date, millisecond) =>
-    toLocalDayjs(date).millisecond(millisecond),
+  setMillisecond: (date, millisecond) => toLocalDayjs(date).millisecond(millisecond),
 
   // --------------------------------------------------------- compare
   isAfter: (date1, date2) => toLocalDayjs(date1).isAfter(toLocalDayjs(date2)),
   isValidate: (date) => toLocalDayjs(date).isValid(),
 
   locale: {
-    getWeekFirstDay: (locale) =>
-      dayjs().locale(parseLocale(locale)).localeData().firstDayOfWeek(),
-    getWeekFirstDate: (locale, date) =>
-      toLocalDayjs(date).locale(parseLocale(locale)).weekday(0),
-    getWeek: (locale, date) =>
-      toLocalDayjs(date).locale(parseLocale(locale)).week(),
-    getShortWeekDays: (locale) =>
-      dayjs().locale(parseLocale(locale)).localeData().weekdaysMin(),
-    getShortMonths: (locale) =>
-      dayjs().locale(parseLocale(locale)).localeData().monthsShort(),
-    format: (locale, date, format) =>
-      toLocalDayjs(date).locale(parseLocale(locale)).format(format),
+    getWeekFirstDay: (locale) => dayjs().locale(parseLocale(locale)).localeData().firstDayOfWeek(),
+    getWeekFirstDate: (locale, date) => toLocalDayjs(date).locale(parseLocale(locale)).weekday(0),
+    getWeek: (locale, date) => toLocalDayjs(date).locale(parseLocale(locale)).week(),
+    getShortWeekDays: (locale) => dayjs().locale(parseLocale(locale)).localeData().weekdaysMin(),
+    getShortMonths: (locale) => dayjs().locale(parseLocale(locale)).localeData().monthsShort(),
+    format: (locale, date, format) => toLocalDayjs(date).locale(parseLocale(locale)).format(format),
     parse: (locale, text, formats) => {
       const localeStr = parseLocale(locale);
       for (const format of formats) {

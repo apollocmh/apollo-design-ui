@@ -549,13 +549,20 @@ export function findValidateTime<DateType>(
 | `src/keyboard.ts` | 77 | ❌ | ✅ |
 | `src/time-util.ts` | 98 | ✅（4 例） | ✅ |
 | `src/index.ts` | 78 | — | — |
-| `src/__tests__/*.test.ts` × 8 | 1452 | — | — |
+| `src/__tests__/*.test.ts` × 9（含 `index.test.ts`） | 1562 | — | — |
 | `src/__tests__/picker.test-d.ts` | 326 | — | L3 |
 
 **实测**（2026-09-19，本机）：
-`vitest run --project unit packages/picker/src/__tests__` ⇒ **9 文件 / 114 用例 / 0 失败**；
-加 `--project types` 的 `picker.test-d.ts` **25 用例** ⇒ unit + types 合计 **139**。
-覆盖率（单包聚合）**语句 99.29 / 分支 97.00 / 函数 99.08 / 行 99.27**（阈值 95/90/95 ⇒ met）。
+`vitest run --project unit packages/picker/src` ⇒ **10 文件 / 117 用例 / 0 失败**；
+加 `--project types` 的 `picker.test-d.ts` **25 用例** ⇒ unit + types 合计 **142**
+（`foundation-status --verify` 按 project 统计会把 `test-d` 数两次 ⇒ 显示 **167/167**）。
+覆盖率（单包聚合）**语句 99.30 / 分支 97.00 / 函数 99.08 / 行 99.27**（阈值 95/90/95 ⇒ met）。
+
+⭐ 为什么多出一个 `index.test.ts`：它断言「`index.ts` 导出的**运行时符号集合** == §5 声明的集合」
+并且「没有任何导出像 Vue 组件」（R4）。两个理由都不是凑覆盖率 ——
+① `index.ts` 只有 re-export，别的测试都不会 import 它 ⇒ 它既进不了覆盖率报告，
+漏导/改名也没人会红；② `api` 维度（§6.4）要求 API 面**可执行**地钉住。
+加它之前 `index.ts` 根本不在覆盖率报告里，99.30% 是在「少算一个文件」的前提下得到的。
 
 ### 6.2 明确**未**实现（不谎报）
 
@@ -599,15 +606,19 @@ export function findValidateTime<DateType>(
 |---|---|---|
 | L1 单元 | §5 全部纯函数；`getWeekStartDate` 的回退分支（§3.1.1）、`buildPanelCells` 的 7 个状态位 | `src/__tests__/*.test.ts` |
 | L1 Oracle | `date-util` / `misc-util` / `generate-dayjs` / `time-util` 对上游逐位差分 | `src/__tests__/*.oracle.test.ts` |
-| L2 交互 | **n/a** —— 本包无 DOM 产物（R4），交互在 ui 层 | `layerNotes` 写明 |
+| L2 交互 | **todo** —— 见下方说明 | — |
 | L3 类型 | `*.test-d.ts`（含负例） | `src/__tests__/*.test-d.ts` |
-| L4 DOM 契约 | **n/a** —— 无 DOM 产物 | 同上 |
-| L5 无障碍 | **n/a** —— 键盘导航在输入框（ui 层），本包只出数值环绕 | 同上 |
-| L6 视觉 | **n/a**（L2 不产组件样式，R4） | 同上 |
-| L7 构建 | `tests/build/run.mjs` | 门禁 |
+| L4 DOM 契约 | **todo** —— 见下方说明 | — |
+| L5 无障碍 | **todo** —— 见下方说明 | — |
+| L6 视觉 | **n/a**（R4：引擎不产视觉样式，视觉在 ui 的 DatePicker） | `layerNotes` 写明 |
+| L7 构建 | `tests/build/run.mjs`（实测 FAIL 0） | 门禁 |
 
-⚠️ `L2/L4/L5` 的 `n/a` **不是免死金牌**：E16 要求每个 `n/a` 都有 `layerNotes`。
-三条的依据都是 R4（引擎无视觉、无 DOM 产物），已写进 `foundation.json`。
+⚠️ `L2 / L4 / L5` **故意留 `todo` 而不是 `n/a`**，与 `foundation.json` 一致。
+理由：这三层能不能判 `n/a`，取决于「面板 Vue 组件到底属本包还是属 `ui`」——
+而这一条**尚未裁决**（§9 P3）。§6.2 目前**暂定**属 `ui`，若按那个方向走，这三层最终会是
+`n/a`（依据同 `form-core`：本包不产 DOM、无 ARIA 语义、无渲染产物）；
+但在裁决落地前把它们标 `n/a`，等于用「架构依据」的名义**关掉**一个还没讨论过的门禁 ——
+E16 明确禁止用 `n/a` 掩盖未做。所以取最保守的记法：`todo`。
 
 ### 8.1 覆盖率
 
@@ -686,6 +697,18 @@ PageDown / Home / End）与 antd 一致」，但 `@rc-component/picker@1.12.2` �
   坏处：oracle 需要一层 shim，且「本包强绑 dayjs」这个决策被固化进每个签名。
 - **建议**：**A**，理由是可对拍性（这是本包唯一能得到的强证据）。
 
+### P3 · 面板 Vue 组件属本包还是属 `ui`？（决定 L2/L4/L5 的归属）
+
+§6.2 目前**暂定**面板组件属 `ui`（本包只出 `buildPanelCells` 的状态位）。
+但包职责原文里写着「周/月/季/年面板切换、键盘导航」，这两件事本身都很像组件层的事。
+
+- **选项 A**：面板组件留在 `ui`，本包永远是无 DOM 的引擎 ⇒ 与 `form-core` 同形态，
+  `L2/L4/L5` 判 `n/a`，依据写「不产 DOM / 无 ARIA 语义 / 无渲染产物」。
+- **选项 B**：面板组件（renderless 或带 DOM）放本包，`ui` 的 DatePicker 只套样式与浮层
+  ⇒ `L2/L4/L5` 是本包的**硬门禁**，必须在 `completed` 前补齐，键盘导航尤其要能测。
+- **建议**：**B 更贴合包职责原文**，但 B 需要 `config-provider` / `overlay` / `position`
+  先被真实消费过（§6.3），现在不具备条件。**本轮不裁决**，因此三层留 `todo`（§8）。
+
 ---
 
 ## 10. 这个包**没有**证明什么
@@ -719,3 +742,11 @@ PageDown / Home / End）与 antd 一致」，但 `@rc-component/picker@1.12.2` �
    antd 在别处加载。所以「未加载的 locale 静默回退 en」是**上游行为**，
    我们照抄；测试里为了让它可观测，额外加载了 `zh-cn` 与 `fr`。
    「73 个语言包是不是都能被正确解析」没有被验证。
+10. ⭐ **覆盖率是「按包单独测量」的，不是全仓 `--verify` 的产物。**
+    `foundation-status --verify` 会跑全仓四个 project；而全仓跑有 17 个 `packages/theme`
+    的**基线既有**失败（已在基线 commit `ae61cd1` 上复跑确认，与本包无关），
+    vitest **在有测试失败时静默不生成覆盖率报告**，且会先清空 `coverage/` 目录 ——
+    于是 `--verify` 退出码仍是 0，覆盖率却变成「未测量」。
+    所以 §6.1 的 99.30 / 97.00 / 99.08 来自
+    `vitest run --project unit --coverage packages/picker/src`，
+    这一条已同步写进 `foundation.json` 的 `notes`，不是全仓门禁实测出来的。

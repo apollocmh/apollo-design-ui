@@ -5,9 +5,9 @@
  * 下面这些分支**上游没有对应的可测入口**（如 timezone 插件那条），只能单独钉住。
  */
 
-import { afterEach, describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { afterEach, describe, expect, it } from 'vitest';
 import 'dayjs/locale/zh-cn';
 import 'dayjs/locale/fr';
 

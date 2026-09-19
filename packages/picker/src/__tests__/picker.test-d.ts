@@ -12,19 +12,9 @@
  * 本文件只做类型层断言，不重复 L1 已经覆盖的运行期行为。
  */
 
-import { describe, expectTypeOf, it } from 'vitest';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-
-import type {
-  DisabledDate,
-  GenerateConfig,
-  InternalMode,
-  PanelCell,
-  PanelMode,
-  PickerLocale,
-  PickerMode,
-} from '../types';
+import { describe, expectTypeOf, it } from 'vitest';
 import {
   buildPanelCells,
   dayjsGenerateConfig,
@@ -51,6 +41,15 @@ import {
   toArray,
   validateRangeSubmit,
 } from '../index';
+import type {
+  DisabledDate,
+  GenerateConfig,
+  InternalMode,
+  PanelCell,
+  PanelMode,
+  PickerLocale,
+  PickerMode,
+} from '../types';
 
 /** 永不执行 —— 只为了让 TS 检查里面的调用。 */
 function neverCalled(fn: () => void): void {
@@ -107,9 +106,7 @@ describe('模式联合类型', () => {
 describe('日期语义函数的签名', () => {
   it('isSame 收 PickerLocale 对象 + InternalMode', () => {
     const locale: PickerLocale = { locale: 'zh_CN' };
-    expectTypeOf(isSame(dayjsGenerateConfig, locale, null, null, 'date')).toEqualTypeOf<
-      boolean
-    >();
+    expectTypeOf(isSame(dayjsGenerateConfig, locale, null, null, 'date')).toEqualTypeOf<boolean>();
     // 'datetime' 是 InternalMode 才有 ⇒ 能传
     expectTypeOf(
       isSame(dayjsGenerateConfig, locale, null, null, 'datetime'),
@@ -124,9 +121,7 @@ describe('日期语义函数的签名', () => {
   });
 
   it('⭐ isSameWeek 收**裸字符串** locale（与 isSame 的不对称是照抄上游）', () => {
-    expectTypeOf(isSameWeek(dayjsGenerateConfig, 'zh_CN', null, null)).toEqualTypeOf<
-      boolean
-    >();
+    expectTypeOf(isSameWeek(dayjsGenerateConfig, 'zh_CN', null, null)).toEqualTypeOf<boolean>();
     neverCalled(() => {
       // @ts-expect-error 这里要的是 locale 字符串，不是 PickerLocale 对象
       isSameWeek(dayjsGenerateConfig, { locale: 'zh_CN' }, null, null);
@@ -139,9 +134,7 @@ describe('日期语义函数的签名', () => {
   });
 
   it('getWeekStartDate 的参数顺序是 (locale, generateConfig, value)', () => {
-    expectTypeOf(
-      getWeekStartDate('zh_CN', dayjsGenerateConfig, dayjs()),
-    ).toEqualTypeOf<Dayjs>();
+    expectTypeOf(getWeekStartDate('zh_CN', dayjsGenerateConfig, dayjs())).toEqualTypeOf<Dayjs>();
 
     neverCalled(() => {
       // @ts-expect-error 顺序反了
@@ -170,9 +163,7 @@ describe('日期语义函数的签名', () => {
 
   it('getQuarter / getWeekNumber 返回 number', () => {
     expectTypeOf(getQuarter(dayjsGenerateConfig, dayjs())).toEqualTypeOf<number>();
-    expectTypeOf(getWeekNumber(dayjsGenerateConfig, 'zh_CN', dayjs())).toEqualTypeOf<
-      number
-    >();
+    expectTypeOf(getWeekNumber(dayjsGenerateConfig, 'zh_CN', dayjs())).toEqualTypeOf<number>();
   });
 });
 
@@ -209,9 +200,7 @@ describe('misc-util 的签名', () => {
   });
 
   it('getRowFormat 可能返回 undefined（locale 的键全是可选的）', () => {
-    expectTypeOf(getRowFormat('date', { locale: 'zh_CN' })).toEqualTypeOf<
-      string | undefined
-    >();
+    expectTypeOf(getRowFormat('date', { locale: 'zh_CN' })).toEqualTypeOf<string | undefined>();
   });
 });
 
@@ -298,7 +287,9 @@ describe('range / keyboard / time 的签名', () => {
   });
 
   it('getMaskRange 返回可能 undefined；offsetCellValue 返回 string | undefined', () => {
-    expectTypeOf(getMaskRange('MM')).toEqualTypeOf<readonly [number, number, number?] | undefined>();
+    expectTypeOf(getMaskRange('MM')).toEqualTypeOf<
+      readonly [number, number, number?] | undefined
+    >();
     expectTypeOf(offsetCellValue('5', 'MM', 1)).toEqualTypeOf<string | undefined>();
   });
 

@@ -8,9 +8,9 @@
  * 上游副本在 `packages/picker/oracle/upstream/`（sha256 见 `provenance.json`）。
  */
 
-import { describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { describe, expect, it } from 'vitest';
 import 'dayjs/locale/zh-cn';
 
 import * as up from '../../oracle/upstream/dateUtil.js';
@@ -120,9 +120,7 @@ describe('date-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
 
   it('isSameQuarter / getQuarter 逐位一致', () => {
     for (const [a, b] of PAIRS) {
-      expect(isSameQuarter(ourG, a, b)).toBe(
-        up.isSameQuarter(upGenerateConfig, a, b),
-      );
+      expect(isSameQuarter(ourG, a, b)).toBe(up.isSameQuarter(upGenerateConfig, a, b));
     }
     for (const a of POOL) {
       expect(getQuarter(ourG, a)).toBe(up.getQuarter(upGenerateConfig, a));
@@ -138,9 +136,7 @@ describe('date-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
   it('isSameTime / isSameTimestamp 逐位一致', () => {
     for (const [a, b] of PAIRS) {
       expect(isSameTime(ourG, a, b)).toBe(up.isSameTime(upGenerateConfig, a, b));
-      expect(isSameTimestamp(ourG, a, b)).toBe(
-        up.isSameTimestamp(upGenerateConfig, a, b),
-      );
+      expect(isSameTimestamp(ourG, a, b)).toBe(up.isSameTimestamp(upGenerateConfig, a, b));
     }
   });
 
@@ -148,9 +144,7 @@ describe('date-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
     let compared = 0;
     for (const code of LOCALE_CODES) {
       for (const [a, b] of PAIRS) {
-        expect(isSameWeek(ourG, code, a, b)).toBe(
-          up.isSameWeek(upGenerateConfig, code, a, b),
-        );
+        expect(isSameWeek(ourG, code, a, b)).toBe(up.isSameWeek(upGenerateConfig, code, a, b));
         compared += 1;
       }
     }
@@ -284,9 +278,7 @@ describe('date-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
     for (let i = 0; i < POOL.length; i += 1) {
       const a = POOL[i] as Dayjs;
       const t = POOL[(i * 5 + 3) % POOL.length] as Dayjs;
-      expect(
-        fillTime(ourG, a, t).valueOf(),
-      ).toBe(up.fillTime(upGenerateConfig, a, t).valueOf());
+      expect(fillTime(ourG, a, t).valueOf()).toBe(up.fillTime(upGenerateConfig, a, t).valueOf());
       // ⚠️ 无 time ⇒ 四个字段全置 0，不是保留原时间
       const zeroed = fillTime(ourG, a);
       expect(zeroed.valueOf()).toBe(up.fillTime(upGenerateConfig, a).valueOf());

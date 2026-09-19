@@ -62,11 +62,7 @@ export function findValidateTime<DateType>(
   getHourUnits: () => readonly TimeUnit[],
   getMinuteUnits: (hour: number) => readonly TimeUnit[],
   getSecondUnits: (hour: number, minute: number) => readonly TimeUnit[],
-  getMillisecondUnits: (
-    hour: number,
-    minute: number,
-    second: number,
-  ) => readonly TimeUnit[],
+  getMillisecondUnits: (hour: number, minute: number, second: number) => readonly TimeUnit[],
   generateConfig: GenerateConfig<DateType>,
 ): DateType {
   const hour = alignValidate(

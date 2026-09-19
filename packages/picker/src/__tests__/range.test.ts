@@ -5,21 +5,19 @@
  * （契约 §4.1）⇒ 断言来自读源码（§3.6），不是两侧对拍。
  */
 
-import { describe, expect, it, vi } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { describe, expect, it, vi } from 'vitest';
 
 import { dayjsGenerateConfig as g } from '../generate/dayjs';
-import { isSameDates, orderDates, validateRangeSubmit } from '../range';
 import type { RangeSubmitInput } from '../range';
+import { isSameDates, orderDates, validateRangeSubmit } from '../range';
 import type { PickerLocale } from '../types';
 
 const LOCALE: PickerLocale = { locale: 'zh_CN', fieldDateFormat: 'YYYY-MM-DD' };
 const D = (s: string): Dayjs => dayjs(s);
 
-const baseInput = (
-  over: Partial<RangeSubmitInput<Dayjs>> = {},
-): RangeSubmitInput<Dayjs> => ({
+const baseInput = (over: Partial<RangeSubmitInput<Dayjs>> = {}): RangeSubmitInput<Dayjs> => ({
   generateConfig: g,
   locale: LOCALE,
   picker: 'date',
@@ -63,10 +61,7 @@ describe('isSameDates（useRangeValue.js:37-49）', () => {
   const b = D('2026-02-02');
 
   it('完全相同时返回 [true, true]', () => {
-    expect(isSameDates(g, [a, b], [D('2026-01-01'), D('2026-02-02')])).toEqual([
-      true,
-      true,
-    ]);
+    expect(isSameDates(g, [a, b], [D('2026-01-01'), D('2026-02-02')])).toEqual([true, true]);
   });
 
   it('start 变了 ⇒ [false, false]（info.range = "start"）', () => {
@@ -89,10 +84,7 @@ describe('isSameDates（useRangeValue.js:37-49）', () => {
 
   it('diffIndex 停在第一个不同的位置（后面的差异被 break 掉）', () => {
     // 两处都不同 ⇒ diffIndex = 0 ⇒ 第二个返回值是 false
-    expect(isSameDates(g, [a, b], [D('2026-03-03'), D('2026-04-04')])).toEqual([
-      false,
-      false,
-    ]);
+    expect(isSameDates(g, [a, b], [D('2026-03-03'), D('2026-04-04')])).toEqual([false, false]);
     // 第一处相同、第二处不同 ⇒ diffIndex = 1
     expect(isSameDates(g, [a, b], [a, D('2026-04-04')])).toEqual([false, true]);
   });
@@ -100,12 +92,7 @@ describe('isSameDates（useRangeValue.js:37-49）', () => {
 
 describe('validateRangeSubmit（useRangeValue.js:177-208）', () => {
   it('全放行：没有 allowEmpty / order / disabled', () => {
-    const out = validateRangeSubmit(
-      baseInput(),
-      D('2026-01-01'),
-      D('2026-02-02'),
-      neverInvalid,
-    );
+    const out = validateRangeSubmit(baseInput(), D('2026-01-01'), D('2026-02-02'), neverInvalid);
     expect(out).toEqual({ passed: true, emptyOk: true, orderOk: true, datesOk: true });
   });
 
@@ -163,12 +150,7 @@ describe('validateRangeSubmit（useRangeValue.js:177-208）', () => {
 
     // 有一边为空时 order 不生效
     expect(
-      validateRangeSubmit(
-        baseInput({ order: true }),
-        null,
-        D('2026-01-01'),
-        neverInvalid,
-      ).orderOk,
+      validateRangeSubmit(baseInput({ order: true }), null, D('2026-01-01'), neverInvalid).orderOk,
     ).toBe(true);
   });
 
@@ -185,15 +167,10 @@ describe('validateRangeSubmit（useRangeValue.js:177-208）', () => {
 
   it('⭐ 校验 end 时会把 from: start 传进去 —— 这是 info.from 的唯一来源', () => {
     const seen: unknown[] = [];
-    validateRangeSubmit(
-      baseInput(),
-      D('2026-01-01'),
-      D('2026-02-02'),
-      (date, info) => {
-        seen.push({ date: date.format('YYYY-MM-DD'), info });
-        return false;
-      },
-    );
+    validateRangeSubmit(baseInput(), D('2026-01-01'), D('2026-02-02'), (date, info) => {
+      seen.push({ date: date.format('YYYY-MM-DD'), info });
+      return false;
+    });
     expect(seen).toEqual([
       { date: '2026-01-01', info: { activeIndex: 0 } },
       { date: '2026-02-02', info: { from: D('2026-01-01'), activeIndex: 1 } },
@@ -228,12 +205,7 @@ describe('validateRangeSubmit（useRangeValue.js:177-208）', () => {
 
   it('emptyOk 为 false 时仍会算完 orderOk / datesOk（不是短路）', () => {
     const spy = vi.fn(() => false);
-    const out = validateRangeSubmit(
-      baseInput({ allowEmpty: [false, false] }),
-      null,
-      null,
-      spy,
-    );
+    const out = validateRangeSubmit(baseInput({ allowEmpty: [false, false] }), null, null, spy);
     expect(out.emptyOk).toBe(false);
     expect(out.orderOk).toBe(true);
     expect(out.datesOk).toBe(true);

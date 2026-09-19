@@ -7,10 +7,10 @@
  * ⚠️ 上游 `es/generate/dayjs.js` 只 import dayjs 及其插件，**零 React** ⇒ 可对拍。
  */
 
-import { describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import { describe, expect, it } from 'vitest';
 import 'dayjs/locale/zh-cn';
 // ⚠️ 必须再加载一个**不在 localeMap 里**的 locale（fr_FR ⇒ 'fr'）：
 // 否则 `parseLocale` 的 fallback 分支两侧都落到「dayjs 未注册 ⇒ 回退 en」，
@@ -62,53 +62,31 @@ describe('generate/dayjs · Oracle 差分（@rc-component/picker@1.12.2）', () 
 
   it('getFixedDate / getEndDate 逐位一致', () => {
     for (const text of ['2026-09-19', '2026-1-5', '1999-12-31']) {
-      expect(ourG.getFixedDate(text).valueOf()).toBe(
-        upGenerateConfig.getFixedDate(text).valueOf(),
-      );
+      expect(ourG.getFixedDate(text).valueOf()).toBe(upGenerateConfig.getFixedDate(text).valueOf());
     }
     for (const d of POOL) {
-      expect(ourG.getEndDate(d).valueOf()).toBe(
-        upGenerateConfig.getEndDate(d).valueOf(),
-      );
+      expect(ourG.getEndDate(d).valueOf()).toBe(upGenerateConfig.getEndDate(d).valueOf());
     }
   });
 
   it('addYear / addMonth / addDate 逐位一致（含负数）', () => {
     for (const d of POOL) {
       for (const diff of [-400, -13, -1, 0, 1, 7, 30, 400]) {
-        expect(ourG.addYear(d, diff).valueOf()).toBe(
-          upGenerateConfig.addYear(d, diff).valueOf(),
-        );
-        expect(ourG.addMonth(d, diff).valueOf()).toBe(
-          upGenerateConfig.addMonth(d, diff).valueOf(),
-        );
-        expect(ourG.addDate(d, diff).valueOf()).toBe(
-          upGenerateConfig.addDate(d, diff).valueOf(),
-        );
+        expect(ourG.addYear(d, diff).valueOf()).toBe(upGenerateConfig.addYear(d, diff).valueOf());
+        expect(ourG.addMonth(d, diff).valueOf()).toBe(upGenerateConfig.addMonth(d, diff).valueOf());
+        expect(ourG.addDate(d, diff).valueOf()).toBe(upGenerateConfig.addDate(d, diff).valueOf());
       }
     }
   });
 
   it('七个 setter 逐位一致', () => {
     for (const d of POOL.slice(0, 30)) {
-      expect(ourG.setYear(d, 2000).valueOf()).toBe(
-        upGenerateConfig.setYear(d, 2000).valueOf(),
-      );
-      expect(ourG.setMonth(d, 1).valueOf()).toBe(
-        upGenerateConfig.setMonth(d, 1).valueOf(),
-      );
-      expect(ourG.setDate(d, 29).valueOf()).toBe(
-        upGenerateConfig.setDate(d, 29).valueOf(),
-      );
-      expect(ourG.setHour(d, 23).valueOf()).toBe(
-        upGenerateConfig.setHour(d, 23).valueOf(),
-      );
-      expect(ourG.setMinute(d, 59).valueOf()).toBe(
-        upGenerateConfig.setMinute(d, 59).valueOf(),
-      );
-      expect(ourG.setSecond(d, 0).valueOf()).toBe(
-        upGenerateConfig.setSecond(d, 0).valueOf(),
-      );
+      expect(ourG.setYear(d, 2000).valueOf()).toBe(upGenerateConfig.setYear(d, 2000).valueOf());
+      expect(ourG.setMonth(d, 1).valueOf()).toBe(upGenerateConfig.setMonth(d, 1).valueOf());
+      expect(ourG.setDate(d, 29).valueOf()).toBe(upGenerateConfig.setDate(d, 29).valueOf());
+      expect(ourG.setHour(d, 23).valueOf()).toBe(upGenerateConfig.setHour(d, 23).valueOf());
+      expect(ourG.setMinute(d, 59).valueOf()).toBe(upGenerateConfig.setMinute(d, 59).valueOf());
+      expect(ourG.setSecond(d, 0).valueOf()).toBe(upGenerateConfig.setSecond(d, 0).valueOf());
       expect(ourG.setMillisecond(d, 123).valueOf()).toBe(
         upGenerateConfig.setMillisecond(d, 123).valueOf(),
       );
@@ -130,13 +108,9 @@ describe('generate/dayjs · Oracle 差分（@rc-component/picker@1.12.2）', () 
 
   it('locale.getWeekFirstDay / getWeek / getWeekFirstDate 逐位一致', () => {
     for (const code of LOCALE_CODES) {
-      expect(ourG.locale.getWeekFirstDay(code)).toBe(
-        upGenerateConfig.locale.getWeekFirstDay(code),
-      );
+      expect(ourG.locale.getWeekFirstDay(code)).toBe(upGenerateConfig.locale.getWeekFirstDay(code));
       for (const d of POOL) {
-        expect(ourG.locale.getWeek(code, d)).toBe(
-          upGenerateConfig.locale.getWeek(code, d),
-        );
+        expect(ourG.locale.getWeek(code, d)).toBe(upGenerateConfig.locale.getWeek(code, d));
         expect(ourG.locale.getWeekFirstDate(code, d).valueOf()).toBe(
           upGenerateConfig.locale.getWeekFirstDate(code, d).valueOf(),
         );

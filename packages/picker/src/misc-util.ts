@@ -36,10 +36,7 @@ export function fillIndex<T>(ori: readonly T[], index: number, value: T): T[] {
 }
 
 /** 按 `keys` 取值；`keys` 省略 ⇒ 取全部；**过滤掉值为 `undefined` 的键**。 */
-export function pickProps<T extends object>(
-  props: T,
-  keys?: readonly (keyof T)[],
-): Partial<T> {
+export function pickProps<T extends object>(props: T, keys?: readonly (keyof T)[]): Partial<T> {
   const clone: Partial<T> = {};
   const mergedKeys = keys ?? (Object.keys(props) as (keyof T)[]);
   mergedKeys.forEach((key) => {
@@ -95,7 +92,5 @@ export function getFromDate<DateType>(
   if (firstValuedIndex === undefined) {
     return undefined;
   }
-  return activeIndex !== firstValuedIndex
-    ? calendarValues[firstValuedIndex]
-    : undefined;
+  return activeIndex !== firstValuedIndex ? calendarValues[firstValuedIndex] : undefined;
 }

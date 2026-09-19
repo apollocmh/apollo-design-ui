@@ -10,7 +10,6 @@
  */
 
 import {
-  WEEK_DAY_COUNT,
   formatValue,
   getWeekStartDate,
   isInRange,
@@ -19,14 +18,9 @@ import {
   isSameDecade,
   isSameMonth,
   isSameYear,
+  WEEK_DAY_COUNT,
 } from './date-util';
-import type {
-  DisabledDate,
-  GenerateConfig,
-  PanelCell,
-  PanelMode,
-  PickerLocale,
-} from './types';
+import type { DisabledDate, GenerateConfig, PanelCell, PanelMode, PickerLocale } from './types';
 
 /** 一个面板的几何参数。六个面板各有一份，见契约 §3.4.2。 */
 export interface PanelGeometry<DateType> {

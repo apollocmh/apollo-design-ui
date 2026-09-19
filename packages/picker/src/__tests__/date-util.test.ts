@@ -7,13 +7,12 @@
  *   - 这里用**显式属性断言**钉住语义本身 —— 万一两侧一起错，oracle 看不出来。
  */
 
-import { describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { describe, expect, it } from 'vitest';
 import 'dayjs/locale/zh-cn';
 
 import {
-  WEEK_DAY_COUNT,
   fillTime,
   formatValue,
   getQuarter,
@@ -23,6 +22,7 @@ import {
   isSame,
   isSameWeek,
   isWeekMode,
+  WEEK_DAY_COUNT,
 } from '../date-util';
 import { dayjsGenerateConfig as g } from '../generate/dayjs';
 import type { PickerLocale } from '../types';
@@ -84,9 +84,7 @@ describe('语义本身的显式断言（oracle 之外的第二道）', () => {
 
   it('formatValue 空值 ⇒ 空串', () => {
     expect(formatValue(null, { generateConfig: g, locale: LOCALE, format: 'YYYY' })).toBe('');
-    expect(
-      formatValue(undefined, { generateConfig: g, locale: LOCALE, format: 'YYYY' }),
-    ).toBe('');
+    expect(formatValue(undefined, { generateConfig: g, locale: LOCALE, format: 'YYYY' })).toBe('');
   });
 
   it('isSame 的 default 分支走 isSameTimestamp（type = datetime）', () => {

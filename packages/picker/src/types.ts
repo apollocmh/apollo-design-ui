@@ -10,14 +10,7 @@
  */
 
 /** 面板模式。与上游 `PanelMode` 同集。 */
-export type PanelMode =
-  | 'time'
-  | 'date'
-  | 'week'
-  | 'month'
-  | 'quarter'
-  | 'year'
-  | 'decade';
+export type PanelMode = 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year' | 'decade';
 
 /** 上游 `InternalMode`：面板模式加上「日期 + 时间」的组合态。 */
 export type InternalMode = PanelMode | 'datetime';

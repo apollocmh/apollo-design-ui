@@ -8,11 +8,7 @@
  */
 
 import { isSame, isSameTimestamp } from './date-util';
-import type {
-  GenerateConfig,
-  PickerLocale,
-  PickerMode,
-} from './types';
+import type { GenerateConfig, PickerLocale, PickerMode } from './types';
 
 /**
  * 按时间先后排序。
@@ -83,10 +79,7 @@ export function validateRangeSubmit<DateType>(
   input: RangeSubmitInput<DateType>,
   start: DateType | null | undefined,
   end: DateType | null | undefined,
-  isInvalidateDate: (
-    date: DateType,
-    info: { from?: DateType; activeIndex: number },
-  ) => boolean,
+  isInvalidateDate: (date: DateType, info: { from?: DateType; activeIndex: number }) => boolean,
 ): RangeValidateResult {
   const { generateConfig: g, locale, picker, allowEmpty, order, disabled } = input;
 
@@ -106,9 +99,7 @@ export function validateRangeSubmit<DateType>(
 
   const datesOk =
     (disabled[0] || !start || !isInvalidateDate(start, { activeIndex: 0 })) &&
-    (disabled[1] ||
-      !end ||
-      !isInvalidateDate(end, { from: start as DateType, activeIndex: 1 }));
+    (disabled[1] || !end || !isInvalidateDate(end, { from: start as DateType, activeIndex: 1 }));
 
   return {
     passed: input.nullValue || (emptyOk && orderOk && datesOk),

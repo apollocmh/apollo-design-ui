@@ -10,14 +10,7 @@
 import { describe, expect, it } from 'vitest';
 
 import * as up from '../../oracle/upstream/miscUtil.js';
-import {
-  fillIndex,
-  getFromDate,
-  getRowFormat,
-  leftPad,
-  pickProps,
-  toArray,
-} from '../misc-util';
+import { fillIndex, getFromDate, getRowFormat, leftPad, pickProps, toArray } from '../misc-util';
 import type { PickerLocale, PickerMode } from '../types';
 
 describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
@@ -83,14 +76,7 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
       fieldQuarterFormat: 'Q',
       fieldDateTimeFormat: 'DT',
     };
-    const pickers: PickerMode[] = [
-      'date',
-      'time',
-      'month',
-      'year',
-      'quarter',
-      'week',
-    ];
+    const pickers: PickerMode[] = ['date', 'time', 'month', 'year', 'quarter', 'week'];
     for (const picker of pickers) {
       expect(getRowFormat(picker, locale)).toBe(up.getRowFormat(picker, locale));
       // `format` 优先
@@ -108,12 +94,8 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
 
   it('getFromDate 逐位一致（含 activeIndex 命中与 triggeredFields 全空）', () => {
     const values = [null, 'B', 'C'];
-    expect(getFromDate(values, [0, 1, 2], 0)).toBe(
-      up.getFromDate(values, [0, 1, 2], 0),
-    );
-    expect(getFromDate(values, [0, 1, 2], 1)).toBe(
-      up.getFromDate(values, [0, 1, 2], 1),
-    );
+    expect(getFromDate(values, [0, 1, 2], 0)).toBe(up.getFromDate(values, [0, 1, 2], 0));
+    expect(getFromDate(values, [0, 1, 2], 1)).toBe(up.getFromDate(values, [0, 1, 2], 1));
     expect(getFromDate(values, [], 0)).toBe(up.getFromDate(values, [], 0));
     expect(getFromDate([], [0], 0)).toBe(up.getFromDate([], [0], 0));
     // activeIndex 恰好是第一个有值的 ⇒ undefined

@@ -42,3 +42,13 @@ cd packages/picker && shasum -a 256 oracle/upstream/*.js   # 与 provenance.json
 
 恢复命令见 `provenance.json` 的 `restoreCommand`
 （`/tmp` 会被清理，缺了就重跑；`npm pack` 可用，`curl` 拉 codeload 会走不存在的代理）。
+
+## ⚠️ 不要格式化这个目录
+
+这里的 `.js` 必须与上游**逐字节一致**，否则 sha256 对不上，oracle 的前提就没了。
+但根 `biome.json` 的 `files.includes` 里没有豁免它（豁免的是 `registry/source/locale-rc`
+这类老固化目录），于是 `biome check .` 会对它报 19 个 `format` error。
+
+处置是在**本目录**放一个嵌套的 `biome.json`（`files.includes: ["!**"]`，`extends: "//"`）
+把它整目录排除 —— 这样既不动根 `biome.json`（那是 `CF-REGISTRY-TOOLS` 的独占集），
+又保住了逐字节副本。改根 `biome.json` 加豁免同样可行，但要留给整合会话。

@@ -9,14 +9,13 @@
  * 「给定档位表时的对齐算法」，不是「档位表本身」。
  */
 
-import { describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
-
-import { findValidateTime } from '../time-util';
-import { dayjsGenerateConfig as ourG } from '../generate/dayjs';
+import dayjs from 'dayjs';
+import { describe, expect, it } from 'vitest';
 import upGenerateConfig from '../../oracle/upstream/generate-dayjs.js';
 import { findValidateTime as upFindValidateTime } from '../../oracle/upstream/timePanelUtil.js';
+import { dayjsGenerateConfig as ourG } from '../generate/dayjs';
+import { findValidateTime } from '../time-util';
 
 /** 造一份档位表：`disabled` 由谓词决定。 */
 function units(count: number, isDisabled: (value: number) => boolean) {

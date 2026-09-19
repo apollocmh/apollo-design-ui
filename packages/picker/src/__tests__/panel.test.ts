@@ -6,9 +6,9 @@
  * 不是两侧对拍。强度低于 oracle，但每一条都注明了上游行号。
  */
 
-import { describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { describe, expect, it } from 'vitest';
 import 'dayjs/locale/zh-cn';
 
 import { dayjsGenerateConfig as g } from '../generate/dayjs';
@@ -27,10 +27,7 @@ const LOCALE: PickerLocale = {
   cellDateFormat: 'D',
   cellYearFormat: 'YYYY',
   cellQuarterFormat: 'Q',
-  shortMonths: [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ],
+  shortMonths: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   shortWeekDays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 };
 
@@ -183,9 +180,7 @@ describe('getPanelGeometry · locale 缺键时的兜底', () => {
 
   it('没有 shortMonths ⇒ 回落到 generateConfig.locale.getShortMonths', () => {
     const geo = getPanelGeometry('month', bareCtx);
-    expect(geo.getCellText(geo.baseDate)).toBe(
-      g.locale.getShortMonths?.('en_US')?.[0],
-    );
+    expect(geo.getCellText(geo.baseDate)).toBe(g.locale.getShortMonths?.('en_US')?.[0]);
   });
 
   it('shortMonths 比 12 个短 ⇒ 越界的月份给空串', () => {
@@ -253,18 +248,11 @@ describe('buildPanelCells · 状态位（PanelBody.js:56-102）', () => {
   it('range 三态：start / end / in-range（in-range 不含端点）', () => {
     const rows = buildPanelCells(getPanelGeometry('date', ctx), {
       ...cellsCtx,
-      hoverRangeValue: [
-        dayjs(new Date(2026, 8, 5)),
-        dayjs(new Date(2026, 8, 9)),
-      ] as [Dayjs, Dayjs],
+      hoverRangeValue: [dayjs(new Date(2026, 8, 5)), dayjs(new Date(2026, 8, 9))] as [Dayjs, Dayjs],
     });
     const flat = rows.flat();
-    expect(flat.filter((cell) => cell.rangeStart).map((c) => fmt(c.date))).toEqual([
-      '2026-09-05',
-    ]);
-    expect(flat.filter((cell) => cell.rangeEnd).map((c) => fmt(c.date))).toEqual([
-      '2026-09-09',
-    ]);
+    expect(flat.filter((cell) => cell.rangeStart).map((c) => fmt(c.date))).toEqual(['2026-09-05']);
+    expect(flat.filter((cell) => cell.rangeEnd).map((c) => fmt(c.date))).toEqual(['2026-09-09']);
     // 开区间：6/7/8 三天
     expect(flat.filter((cell) => cell.inRange).map((c) => fmt(c.date))).toEqual([
       '2026-09-06',
@@ -278,10 +266,7 @@ describe('buildPanelCells · 状态位（PanelBody.js:56-102）', () => {
     const withRange = buildPanelCells(getPanelGeometry('date', ctx), {
       ...cellsCtx,
       values: [selected],
-      hoverRangeValue: [dayjs(new Date(2026, 8, 5)), dayjs(new Date(2026, 8, 9))] as [
-        Dayjs,
-        Dayjs,
-      ],
+      hoverRangeValue: [dayjs(new Date(2026, 8, 5)), dayjs(new Date(2026, 8, 9))] as [Dayjs, Dayjs],
     });
     // 有 hoverRangeValue ⇒ 一格都不标 selected
     expect(withRange.flat().filter((cell) => cell.selected)).toHaveLength(0);
@@ -306,10 +291,7 @@ describe('buildPanelCells · 状态位（PanelBody.js:56-102）', () => {
     const rows = buildPanelCells(getPanelGeometry('week', ctx), {
       ...cellsCtx,
       mode: 'week',
-      hoverRangeValue: [
-        dayjs(new Date(2026, 8, 5)),
-        dayjs(new Date(2026, 8, 9)),
-      ] as [Dayjs, Dayjs],
+      hoverRangeValue: [dayjs(new Date(2026, 8, 5)), dayjs(new Date(2026, 8, 9))] as [Dayjs, Dayjs],
     });
     const flat = rows.flat();
     expect(flat.filter((c) => c.rangeStart)).toHaveLength(0);
@@ -331,9 +313,7 @@ describe('buildPanelCells · 状态位（PanelBody.js:56-102）', () => {
   it('in-view / today 落到格子上', () => {
     const rows = buildPanelCells(getPanelGeometry('date', ctx), cellsCtx);
     const flat = rows.flat();
-    expect(flat.filter((cell) => cell.today).map((c) => fmt(c.date))).toEqual([
-      '2026-09-19',
-    ]);
+    expect(flat.filter((cell) => cell.today).map((c) => fmt(c.date))).toEqual(['2026-09-19']);
     expect(flat.filter((cell) => cell.inView)).toHaveLength(30); // 9 月有 30 天
   });
 });

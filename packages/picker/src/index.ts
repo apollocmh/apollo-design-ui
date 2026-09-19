@@ -11,68 +11,62 @@
  * 已实现 / 未实现的逐条清单见契约 §6.1 / §6.2。
  */
 
-// ------------------------------------------------------------------ 类型
-export type {
-  PanelMode,
-  InternalMode,
-  PickerMode,
-  GenerateConfig,
-  PickerLocale,
-  DisabledDate,
-  PanelCell,
-} from './types';
-
-// ------------------------------------------------------- 日期库适配层
-export { dayjsGenerateConfig } from './generate/dayjs';
-
 // ------------------------------------------------------------- 日期语义
 export {
-  WEEK_DAY_COUNT,
-  isSameDecade,
-  isSameYear,
+  fillTime,
+  formatValue,
   getQuarter,
-  isSameQuarter,
-  isSameMonth,
+  getWeekNumber,
+  getWeekStartDate,
+  isInRange,
+  isSame,
   isSameDate,
+  isSameDecade,
+  isSameMonth,
+  isSameOrAfter,
+  isSameQuarter,
   isSameTime,
   isSameTimestamp,
   isSameWeek,
-  isSame,
-  isInRange,
-  isSameOrAfter,
-  getWeekStartDate,
-  formatValue,
-  fillTime,
-  getWeekNumber,
+  isSameYear,
   isWeekMode,
+  WEEK_DAY_COUNT,
 } from './date-util';
 
-// ------------------------------------------------------------- 通用工具
-export {
-  leftPad,
-  toArray,
-  fillIndex,
-  pickProps,
-  getRowFormat,
-  getFromDate,
-} from './misc-util';
-
-// ------------------------------------------------------- 面板几何与格子
-export type {
-  PanelGeometry,
-  PanelGeometryContext,
-  PanelCellsContext,
-} from './panel';
-export { getPanelGeometry, getRowStartDate, buildPanelCells } from './panel';
-
-// ----------------------------------------------------- 区间选择的纯判定
-export type { RangeSubmitInput, RangeValidateResult } from './range';
-export { orderDates, isSameDates, validateRangeSubmit } from './range';
-
+// ------------------------------------------------------- 日期库适配层
+export { dayjsGenerateConfig } from './generate/dayjs';
 // ------------------------------------------------- 键盘导航的数值部分
 export type { MaskRange } from './keyboard';
 export { getMaskRange, offsetCellValue } from './keyboard';
-
+// ------------------------------------------------------------- 通用工具
+export {
+  fillIndex,
+  getFromDate,
+  getRowFormat,
+  leftPad,
+  pickProps,
+  toArray,
+} from './misc-util';
+// ------------------------------------------------------- 面板几何与格子
+export type {
+  PanelCellsContext,
+  PanelGeometry,
+  PanelGeometryContext,
+} from './panel';
+export { buildPanelCells, getPanelGeometry, getRowStartDate } from './panel';
+// ----------------------------------------------------- 区间选择的纯判定
+export type { RangeSubmitInput, RangeValidateResult } from './range';
+export { isSameDates, orderDates, validateRangeSubmit } from './range';
 // --------------------------------------------------------- 时间列校验
 export type { TimeUnit } from './time-util';
 export { findValidateTime } from './time-util';
+// ------------------------------------------------------------------ 类型
+export type {
+  DisabledDate,
+  GenerateConfig,
+  InternalMode,
+  PanelCell,
+  PanelMode,
+  PickerLocale,
+  PickerMode,
+} from './types';
