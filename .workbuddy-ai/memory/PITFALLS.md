@@ -665,3 +665,31 @@
     `expectTypeOf<typeof fn>().toEqualTypeOf<(arg: X) => Y>()` 整条函数类型相等断言
     替代，更稳且更完整。`expectTypeOf(Component)` 在 `.vue` 解析不到时退化成 `any`，
     链式调用会再退化；只要断言「属性是否存在」用 `toHaveProperty`，不要链 `toBeFunction`。
+
+---
+
+## ConfigProvider 流（2026-09-19，94-104）
+
+94. ⚠️ **变异验证「存活」可能是假阴性**：必须**确认改动真的落盘**（grep / sed -n / diff 打印改动处），再跑测试。这次 M11（反转 `autoInsertSpace` 合并顺序）第一次跑测试**全过**，但其实 perl 正则用了 `\.\.\(`（两点）而不是 `\.\.\.\(`（三点，源文件是 `...((out.button` 三点）—— 改动没匹配上，原文件原样，测试当然过。**结论：每次 apply 变异后**先 `grep` 改动后的特征串，或 `diff <(git show HEAD:$F) $F` 看实际差异，再跑测试。
+
+95. ⚠️ **`display: contents` 在 Chromium 的 inline 容器里仍可能留 1px 假盒子**：实测 `tests/visual` 的 `#stage` div 是 inline 上下文，ConfigProvider 给 `<Spin>` 包一层 `display: contents` 后，stage 高度从 56 → 55 差 1px。这是跨浏览器的已知行为（Chromium 在 inline formatting context 里把 `display:contents` 元素当成匿名 inline 盒子处理），不是 ConfigProvider 的正确性问题 —— 不修，记为 D32 / matrix LIMITATIONS。
+
+96. ⚠️ **多 context gateway 类的 component 必须用「原地打补丁的 reactive 对象」provide，不能每次 provide 新对象**：ConfigProvider 把 `ConfigContext` provide 给子树，但「父级重设了 prop」「本层 prop 从有值改回 undefined」时下游的 `inject(configContextKey)` 必须能读到新值。Vue 的 `provide` 只在 setup 跑一次，所以**引用恒定的 reactive 对象 + `watchEffect` 内 `Object.assign(config, next)`** 是唯一解（见 `ConfigProvider.ts:236-271`）。每次 `provide({...})` 新对象，下游读到的永远是 setup 那一刻的快照。
+
+   - 附加坑（M4 逼出的）：`Object.assign` 后还要**删掉不在 `next` 里的键**（`Reflect.deleteProperty(config, key)`）。如果「本层曾经设过、现在改回 undefined」要回落到父级值，「键真的从对象上消失」是依赖，不是「键的 value 是 undefined」 —— 后者会让 `key in config` 仍 true，下游 `config[key] ?? 默认值` 的回落失效。
+
+97. ⚠️ **Vue 的 `inject` 解构即快照**：与 React 的 `useContext`（Provider 更新时函数体重跑）不同，`inject` 只在 setup 期解析一次。ConfigProvider 这种「下游会读 `direction` / `theme`」的多 context gateway，**下游必须**走 `useDirection()` / `useThemeConfig()` 这类返回 `ComputedRef` 的 composable，直接 `const { direction } = useComponentConfig()` 拿到的值永远不会更新。D27。Spin 流已经踩过一次（指示器），ConfigProvider 这边 `useThemeConfig` 与 `useDirection` 显式存在并被 probe 用例验证。
+
+98. ⚠️ **零运行时 CSS 变量主题在「运行时切换 token」时需要作用域元素**：ConfigProvider 是 `theme.token.colorPrimary` 之类**运行时**改 token 的入口，但 `tokens.css` 是构建期产物 —— 运行时把 `--apollo-color-primary` 写到 `:root` 会污染整页。方案：渲染一个 `display: contents` 的作用域元素，调用 `createCSSVarScope(el, prefix).apply(token)` 把派生 token 写成该元素下的 inline 变量（D26）。代价见 95。
+
+99. ⚠️ **`components` map 字段必须逐组件名合并**：antd 的 `config = {...parentContext}` 后**逐键**覆盖（`index.tsx:588-594`）。如果把整张 map 整体替换，嵌套 provider 只给一部分组件配置时**父级的其余组件配置会全丢**，50 个下游组件全部受影响 —— 这是 ConfigProvider 影响面最大的不变性。判据 1。Mutation M2 / M3 一加就红。
+
+100. ⚠️ **`componentSize` 用 `||`、`componentDisabled` 用 `??`**（判据 3）：`componentDisabled={false}` 必须能显式关闭父级的 `true`，`||` 会丢。两个判据不能统一。`SizeType` 的字面量都是真值字符串，所以 `||` 与 `??` 在类型域内**等价**（M5 第一次「存活」），需要越界 falsy 输入（`''`）才能钉住 —— 见 M5 的补增用例。
+
+101. ⚠️ **`ConfigProvider` 不持有自己的 CSS 文件**：`packages/ui/src/config-provider/` 下没有 `style/` 子目录。样式副作用只有两个：① `theme` 给出时渲染一个 `display: contents` 的作用域元素（98），由 `createCSSVarScope` 写入变量；② 不持有任何 className —— 组件级样式照旧由各组件的 `style/index.ts` 注入。E10 的「无硬编码视觉值」扫描对 ConfigProvider 自动 n/a（它没有 style 文件可扫）。
+
+102. ⚠️ **视觉回归的差异要分清楚是谁的锅**：`theme-dark` 视觉用例在 `Empty` 上跑出 6.5% block-diff，第一反应是 ConfigProvider 暗色算法有问题，但 diff 图**只**落在 Empty 的 SVG 插画像素上 —— 文字色 `#8c8c8c` 两侧一致。根因是 Empty 插画用硬编码浅色 SVG，**不**跟 `darkAlgorithm` 走。这是 Empty 流的缺口，记 D33（`EMPTY-LIMIT`），不算 ConfigProvider 的视觉失败。**判别手法**：diff PNG 上「红色的像素位置」与「该用例的下游组件 DOM 形态」对照 —— 如果 diff 落在某个下游组件的内部、与 ConfigProvider 的作用域元素无关，那是下游流的缺口。
+
+103. ⚠️ **L4 DOM 契约 fixture 对「不产 DOM 的组件」要走探针路径**：`ConfigProvider` 本体不产 DOM（Context.Provider 不引入元素；Vue 渲染函数直接返回 children）。普通 fixture 模板（断言根元素 className / tag）会让 fixture 写成「断言一个不存在的根」而失去价值。`tests/compat/fixtures/config-provider/README.md` 说明了意图：fixture 仍按 schema 建，但 L4 比对路径改为探针读 context（`packages/ui/src/config-provider/__tests__/semantic.test.ts` 里挂探针）。
+
+104. ⚠️ **biome 全仓 `Found 37 warnings + 1 error` 大多不是你的**：form-core 流在并行改，它的 `__tests__/batch*.ts` 有 30+ 条 `lint/suspicious/noTemplateCurlyInString` warning（占绝对多数）。`biome check .` 把全仓聚合输出了，但「不要把 warnings 当 errors」是纪律（PITFALLS 49 同源）—— 用 `--max-diagnostics` + `grep "^packages/"` 看是哪些文件，**只**对自己范围的文件做修复。本次 ConfigProvider 范围（`packages/ui/src/config-provider/` + `tests/compat/fixtures/config-provider/` + `tests/visual/`）biome 干净。
