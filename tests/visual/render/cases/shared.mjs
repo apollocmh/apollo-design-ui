@@ -68,6 +68,9 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-spin-root { border: 1px dashed #ccc; }
 .demo-spin-indicator { filter: saturate(200%); }
 .demo-spin-description { color: #1890ff; font-weight: bold; }
+.demo-space-root { border: 1px solid #d9d9d9; }
+.demo-space-item { border-radius: 4px; }
+.demo-space-separator { letter-spacing: 2px; }
 
 `;
 
@@ -208,6 +211,182 @@ export const DIVIDER_SEMANTIC_STYLES = {
 
 /** `customize-style` 用例的边框色（antd 官方 demo 用的绿色）。 */
 export const DIVIDER_CUSTOM_BORDER = '#7cb305';
+
+// ===========================================================================
+// Space
+// ===========================================================================
+
+/**
+ * Space 用例里的**上下文文字**一律钉成具体字体。
+ *
+ * 理由与 `DIVIDER_CONTEXT_FONT` / `SPIN_CONTEXT_FONT` 完全同源（2026-09-18 实测）：
+ * React 页来自 antd 的 `reset.css`（`html{font-family:sans-serif}`，泛型），
+ * Vue 页来自 `--apollo-font-family`（具体字体栈）—— 度量接近但字形不同，
+ * 会让整段文字成为噪声。
+ *
+ * ⚠️ Space **自己没有任何文字样式**：上游 `genStyleHooks(['Space','Compact'], …,
+ *    { resetStyle: false })` 显式关掉了 `genCommonStyle`（Space 的注释：
+ *    'Space component don't apply extra font style'）。所以「字体」这件事在
+ *    Space 上**完全由上下文决定** —— 不钉死的话，比出来的差异 100% 是上下文的。
+ *    （`Addon` 是例外：它走默认的 resetStyle，自己带 `font-family` / `font-size`。）
+ */
+const SPACE_CONTEXT_FONT = 'sans-serif';
+
+/** Space 用例共用的文字样式（两侧逐字相同）。 */
+export const SPACE_TEXT_STYLE = {
+  fontFamily: SPACE_CONTEXT_FONT,
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/**
+ * ★ 每个用例的**外层容器**都要套这个。
+ *
+ * ⚠️ 为什么 Space 比 Divider / Spin 更需要它：`Space` 的根上**没有任何文字样式**
+ *    （上游 `genStyleHooks(['Space','Compact'], …, { resetStyle: false })` 显式关掉了
+ *    `genCommonStyle`，注释是 'Space component don't apply extra font style'）。
+ *    于是 `-item` 里的裸文本（比如 `basic` 用例的 `"Space"`）字体**完全继承自页面**：
+ *      React 页 → antd 的 `reset.css`：`html{font-family:sans-serif}`（泛型）
+ *      Vue 页   → 我们的 base：`html{font-family:var(--apollo-font-family)}`（具体栈）
+ *    两者度量接近但字形不同 ⇒ 整段文字成为噪声，看起来像「Space 画错了」。
+ *    套一层显式样式，差异才只可能来自 Space。
+ *
+ * 值与 `SPACE_TEXT_STYLE` 同源（antd 6.6.4 的 fontSize / lineHeight / colorText）。
+ */
+export const SPACE_CONTEXT_STYLE = { ...SPACE_TEXT_STYLE };
+
+/**
+ * 链接样式 —— **必须显式钉死**。
+ *
+ * 同 `SPACE_CONTEXT_STYLE` 的理由：antd 的页面里 `<a>` 被 `genLinkStyle` 全局重置过
+ * （`color: #1677ff`、`text-decoration: none`、hover/active 三态），
+ * 我们的 base 没有这一段。不钉死的话，比出来的差异会是「reset 不同」而不是
+ * 「Space 的分隔符位置不同」—— 那是假阳性。取值取 antd 的默认链接色。
+ */
+export const SPACE_LINK_STYLE = {
+  ...SPACE_TEXT_STYLE,
+  color: '#1677ff',
+  textDecoration: 'none',
+};
+
+/**
+ * 替身按钮的基座。
+ *
+ * ⚠️ 为什么用原生 `<button>` 而不是 antd 的 `<Button>`：
+ *    `Button` 在本仓库**尚未实现**（Space 在 DAG 上先于它）。若 React 侧用 antd 的
+ *    Button、Vue 侧用原生 button，比出来的差异会是「Button 的实现差异」——
+ *    那是假阳性。两侧都用**同一份**替身样式，差异才只可能来自 Space。
+ *    取值是 antd 6.6.4 的默认 Button：高 32px、内边距 4px 15px、圆角 6px、
+ *    边框 `#d9d9d9`、主色 `#1677ff`。
+ */
+export const SPACE_BUTTON_STYLE = {
+  ...SPACE_TEXT_STYLE,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '32px',
+  padding: '4px 15px',
+  border: '1px solid #d9d9d9',
+  borderRadius: '6px',
+  background: '#ffffff',
+  boxSizing: 'border-box',
+  whiteSpace: 'nowrap',
+};
+
+/** 替身主按钮（antd 的 `<Button type="primary">`）。 */
+export const SPACE_BUTTON_PRIMARY_STYLE = {
+  ...SPACE_BUTTON_STYLE,
+  border: '1px solid #1677ff',
+  background: '#1677ff',
+  color: '#ffffff',
+};
+
+/** 替身输入框（antd 的 `<Input>`）。 */
+export const SPACE_INPUT_STYLE = {
+  ...SPACE_TEXT_STYLE,
+  height: '32px',
+  padding: '4px 11px',
+  border: '1px solid #d9d9d9',
+  borderRadius: '6px',
+  background: '#ffffff',
+  boxSizing: 'border-box',
+  width: '100%',
+};
+
+/**
+ * `align` / `vertical` 用例里的「高矮不齐的块」。
+ *
+ * 与 antd 官方 demo 的 `mockBox` 同形：足够高、足够宽，让四种 `align`
+ * 与垂直方向的间距肉眼可比。
+ */
+export const SPACE_MOCK_BOX_STYLE = {
+  ...SPACE_TEXT_STYLE,
+  display: 'inline-block',
+  padding: '24px 16px',
+  background: 'rgba(150, 150, 150, 0.2)',
+};
+
+/** `align` 用例里给每个 Space 套的外框。 */
+export const SPACE_ALIGN_BOX_STYLE = {
+  flex: 'none',
+  margin: '4px',
+  padding: '4px',
+  border: '1px solid #1677ff',
+};
+
+/** 让多个盒子横排（替代 antd 的 `<Flex wrap>` —— Flex 尚未实现）。 */
+export const SPACE_ROW_STYLE = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'flex-start',
+};
+
+/** `vertical` 用例里的卡片（替代 antd 的 `<Card size="small">`）。 */
+export const SPACE_CARD_STYLE = {
+  ...SPACE_TEXT_STYLE,
+  width: '300px',
+  border: '1px solid #f0f0f0',
+  borderRadius: '8px',
+  background: '#ffffff',
+  boxSizing: 'border-box',
+};
+
+export const SPACE_CARD_HEAD_STYLE = {
+  padding: '12px 16px',
+  borderBottom: '1px solid #f0f0f0',
+  fontWeight: '600',
+};
+
+export const SPACE_CARD_BODY_STYLE = { padding: '16px' };
+
+/** 用例共用的文案（两侧逐字相同）。 */
+export const SPACE_TEXT = {
+  base: 'Space',
+  button: 'Button',
+  primary: 'Primary',
+  block: 'Block',
+  card: 'Card',
+  cell: 'Cell',
+  link: 'Link',
+  pipe: '|',
+};
+
+/** 语义化用例：两侧同一组 classNames / styles。 */
+export const SPACE_SEMANTIC_CLASSNAMES = {
+  root: 'demo-space-root',
+  item: 'demo-space-item',
+  separator: 'demo-space-separator',
+};
+
+export const SPACE_SEMANTIC_STYLES = {
+  root: { borderWidth: '2px', borderStyle: 'dashed', padding: '8px' },
+  item: { backgroundColor: '#f0f0f0', padding: '4px' },
+  separator: { color: '#ff4d4f', fontWeight: 'bold' },
+};
+
+/** Space 语义化用例的配套 CSS 已并入上面的 `SEMANTIC_INJECT_CSS`（两侧共用一个注入点）。 */
+
 
 // ===========================================================================
 // Spin

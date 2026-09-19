@@ -76,6 +76,20 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  space: {
+    // 9 个 variant × 3 个 viewport = 27 张
+    variants: [
+      'basic', // 默认：水平 + 默认 size（small）+ 默认 align（center）
+      'size', // small / medium / large + 数字 24 四档
+      'align', // center / start / end / baseline 四档（含高矮不齐的块）
+      'vertical', // orientation="vertical" + size="medium" + 三张卡片
+      'wrap', // size={[8, 16]} + wrap（12 个块，跨行）
+      'separator', // separator 传 Divider（垂直）与传字符串两条路径
+      'compact', // Space.Compact：block / 非 block、两个输入、输入+按钮
+      'compact-vertical', // Space.Compact orientation="vertical" 的边框合并
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
   spin: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [
@@ -136,6 +150,22 @@ export const LIMITATIONS = [
     reason:
       '`auto` 是时间驱动的（每 200ms 渐近推进一跳），截图时刻不确定 ⇒ 视觉层会 flaky。它的语义由 L2 在 `vi.useFakeTimers()` 下钉住（`__tests__/index.test.ts`）。',
     unblockWhen: '需要「视觉上确认 auto 的推进观感」时，用固定推进帧数的受控用例补。',
+  },
+  {
+    dimension: 'space·standins',
+    missing: ['真实 Button / Input / Select / Card 被 Space 驱动'],
+    reason:
+      'antd 的 Space demo 依赖 Button / Input / Select / Card / Typography，但它们在本仓库**尚未实现**（Space 在 DAG 上先于它们）。若 React 侧用 antd 的 Button、Vue 侧用原生 button，比出来的差异会是「Button 的实现差异」—— 那是假阳性。所以 9 个用例全部改用**两侧同一份**原生 `<button>` / `<input>` 替身（`render/cases/shared.mjs` 的 `SPACE_*_STYLE`，取值是 antd 6.6.4 的默认 Button / Input）。代价：`Space.Compact` 的**边框合并**只验证到替身上，没验证到真实 Button / Input 的类名拼接上 —— 而后者才是 `useCompactItemContext` 真正的消费方（10 个下游组件）。',
+    unblockWhen:
+      'Button / Input 落地后，把 `compact` / `compact-vertical` 两个用例换成真实组件（那时比的是「Compact 协议 + Button 实现」的合成结果）。',
+  },
+  {
+    dimension: 'space·state',
+    missing: ['hover', 'active', 'focus', 'disabled'],
+    reason:
+      'Space / Space.Compact / Space.Addon 本身都没有可交互元素（不设 tabindex、不绑事件、没有禁用态），所以这四态对它们不适用 —— 与 Empty / Divider 同源。⚠️ 但 `Space.Compact` 会**改变子元素的 hover 层级**（`genCompactItemStyle` 给 `-compact-item:hover` 设 `z-index: 4`、`[disabled]` 设 `z-index: 0`）。那两条规则作用在**子组件自己的类名**上，而截图是静态的、不会触发 hover ⇒ 视觉层观测不到。它的语义由 `theme.test.ts` 钉住**选择器与顺序**（可判定），层叠结果等真实子组件落地后再补。',
+    unblockWhen:
+      '有真实的可聚焦子组件（Button / Input）后，用 Playwright 的 `hover()` 补一条「紧凑项 hover 时边框不被邻居遮住」的用例。',
   },
 ];
 
