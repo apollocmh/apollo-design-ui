@@ -212,6 +212,90 @@ describe('Space · 样式产物的规则条数（文件头声称的数目必须�
   });
 });
 
+describe('Space · Addon 的「顺序即契约」（变异验证逼出来的用例）', () => {
+  const css = genSpaceStyle('apollo');
+  const addon = groupBySource(css).addon;
+
+  it('★ variant → status → status×variant → filled+disabled 的**相对顺序**逐条钉死', () => {
+    // ── 为什么必须有这条断言 ─────────────────────────────────────────────────
+    //
+    // `style/index.ts` 的文件头把「disabled 那条必须排在 status 之后」写成了一条
+    // 契约，理由是**特异性相同**：
+    //   `.addon-status-error.addon-variant-filled`   → 0,2,0
+    //   `.addon-variant-filled.addon-disabled`       → 0,2,0
+    // 在 antd 那边两者靠的是**不同的中间变量**（一个改 `--bg-filled`、一个直接写
+    // `background`），展开成复合选择器之后特异性拉平，只能靠**声明顺序**决胜。
+    // 顺序写反 ⇒ 「filled + error + disabled」的 Addon 背景会变成 error 色而不是
+    // disabled 色。
+    //
+    // ⚠️ 这条用例是**变异验证逼出来的**：把那条规则挪到 status 之前，
+    //    22 条断言全绿 —— 也就是说文件头声称的契约当时**没有任何断言**。
+    //    顺序类契约必须显式断言「谁在谁前面」，断言条数是抓不住它的。
+    //
+    // ⚠️ 为什么是「断言顺序」而不是「断言计算样式」：jsdom 不加载静态 CSS
+    //    （我们的样式是构建期产物，测试环境不注入），拿不到层叠结果。
+    //    真正的层叠验证在 L6（真实浏览器）；这里退一步钉住**顺序**这个可判定的代理量。
+    const region = addon.filter(
+      (s) =>
+        s.includes('-variant-outlined') ||
+        s.includes('-variant-filled') ||
+        s.includes('-variant-borderless') ||
+        s.includes('-variant-underlined') ||
+        s.includes('-status-error') ||
+        s.includes('-status-warning'),
+    );
+
+    expect(region).toEqual([
+      `.${PA}-variant-outlined`,
+      `.${PA}-variant-filled`,
+      `.${PA}-variant-borderless`,
+      `.${PA}-variant-underlined`,
+      `.${PA}-status-error`,
+      `.${PA}-status-warning`,
+      `.${PA}-status-error.${PA}-variant-outlined`,
+      `.${PA}-status-warning.${PA}-variant-outlined`,
+      `.${PA}-status-error.${PA}-variant-filled`,
+      `.${PA}-status-warning.${PA}-variant-filled`,
+      `.${PA}-variant-filled.${PA}-disabled`,
+    ]);
+  });
+
+  it('★ 那条决胜规则必须排在**所有** status 规则之后（顺序写反 = 视觉缺陷）', () => {
+    const lastStatus = Math.max(
+      addon.indexOf(`.${PA}-status-error.${PA}-variant-filled`),
+      addon.indexOf(`.${PA}-status-warning.${PA}-variant-filled`),
+    );
+    const decisive = addon.indexOf(`.${PA}-variant-filled.${PA}-disabled`);
+    expect(decisive).toBeGreaterThan(lastStatus);
+    // 而且它必须是**变体/状态这一段**的最后一条 —— 后面紧接着就是
+    // `genCompactItemStyle` 产出的紧凑项规则（那些用 `:not(.类名)`，与上面的
+    // `:not(:伪类)` 在字面上可区分）。
+    const firstCompactItemRule = addon.findIndex((s) => s.includes('-compact-item:not(.'));
+    expect(firstCompactItemRule).toBeGreaterThan(decisive);
+    expect(addon.slice(decisive + 1, firstCompactItemRule)).toEqual([]);
+  });
+
+  it('★ 决胜规则把颜色**还原成默认值**（不是设成 status 色）', () => {
+    // 「filled + error + disabled」应当拿到 disabled 背景，而不是 error 背景。
+    // 判据是这条规则的声明内容 —— 它必须回到 `colorBorder` / `colorBgContainerDisabled`
+    // （也就是 `.addon-variant-filled` 的默认值），而不是 `colorErrorBg`。
+    const block = css.slice(css.indexOf(`.${PA}-variant-filled.${PA}-disabled{`));
+    const body = block.slice(0, block.indexOf('}'));
+    expect(body).toContain('border-color:var(--apollo-color-border)');
+    expect(body).toContain('background:var(--apollo-color-bg-container-disabled)');
+    expect(body).not.toContain('color-error');
+  });
+
+  it('★ `genCompactItemStyle` 那一段排在**最后**（它要压过上面的 border-radius）', () => {
+    // antd 的导出顺序是 `genStyleHooks('Addon', (token) => [genSpaceAddonStyle(token),
+    // genCompactItemStyle(token, { focus: false })])` —— 紧凑项那段在后。
+    // 它要压过 `-compact-last-item` / `-compact-first-item` 的圆角设置。
+    const lastBase = addon.indexOf(`.${PA}-compact-item:not(:first-child)`);
+    const firstCompactItem = addon.findIndex((s) => s.includes('-compact-item:not(.'));
+    expect(firstCompactItem).toBeGreaterThan(lastBase);
+  });
+});
+
 describe('Space · Component Token', () => {
   it('★ Component Token 是**空的** —— `prepareComponentToken` 返回 `{}`', () => {
     // antd 6.6.4 `components/space/style/index.ts:7-8`：
