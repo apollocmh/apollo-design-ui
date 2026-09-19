@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/addon",
+  "component": "space",
+  "description": "`Space.Addon`：默认 `variant='outlined'`，所以不传也会带 `-variant-outlined`。类名顺序逐字对齐 antd 的 `Addon.tsx`：`prefixCls` → 紧凑项类名 → `-variant-{variant}` → 状态类 → `-{compactSize}`? → `-disabled`? → `className`。⚠️ 在 `Space.Compact` 里时 Addon 会用**自己的**前缀拼紧凑项类名（`apollo-space-addon-compact-item`），因为 `useCompactItemContext(prefixCls, direction)` 收到的是它自己的 `prefixCls` —— 同一个协议，不同的落点（CSS 选择器因此长在 `-space-addon` 上）。⚠️ `disabled` 只改颜色，**不设** `disabled` / `aria-disabled`（COMPATIBILITY.md §9.2.1 的 U4，跟随的上游缺陷）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "content": "a",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -17,7 +17,7 @@
  * | Addon（`style/addon.ts`） | 29 | 33 | **+4** |
  * | 合计 | **49** | **53** | +4 |
  *
- * ⚠️ **+4 是 D7 的展开代价，不是漏抄**（见下方 D7 那张表）：
+ * ⚠️ **+4 是 D38 的展开代价，不是漏抄**（见下方 D38 那张表）：
  *    antd 的 status 只改中间变量（`--addon-border-color-outlined` 等），
  *    variant 再引用它 —— 所以 status × variant 的组合**不额外产生规则**。
  *    我们展开成「status+variant」的复合选择器后，每种组合各占一条：
@@ -40,7 +40,7 @@
  *      然后 `&-align-center` 等再覆盖 `align-items`。逐字保留。
  *   3. **Addon 的组件级 CSS 自定义属性必须内联**（见下）。
  *
- * ── ⚠️ Addon：`--apollo-space-addon-*` 不能照抄（差异 D7）──────────────────────
+ * ── ⚠️ Addon：`--apollo-space-addon-*` 不能照抄（差异 D38）──────────────────────
  *
  * antd 用 `genCssVar(antCls, 'space-addon')` 在规则**内部**声明了一批组件级自定义属性
  * （`--apollo-space-addon-addon-border-color` 等），再用 `var()` 引用它们 ——
@@ -208,7 +208,7 @@ export function genSpaceStyle(prefixCls: string): string {
     `  box-sizing:border-box;`,
     `}`,
     // ---- 基座（resetComponent 后半段 + 布局 + 边框 + variant/status 的默认值）----
-    // `border-color` / `background` 是展开后的结果（见文件头的 D7 说明）：
+    // `border-color` / `background` 是展开后的结果（见文件头的 D38 说明）：
     //   antd: border-color:var(--addon-border-color) 且 --addon-border-color 默认 = colorBorder
     //   antd: background:var(--addon-background)     且 --addon-background 默认 = colorBgContainerDisabled
     `${addonCls}{`,

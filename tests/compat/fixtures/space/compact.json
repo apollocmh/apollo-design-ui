@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/compact",
+  "component": "space",
+  "description": "`Space.Compact`：根是 `<div class=\"apollo-space-compact\">`，`block` / `orientation=\"vertical\"` / `direction=rtl` 三个开关各加一个类名。⚠️ **Compact 不包裹子节点、也不自己拼 `-compact-item` 类名** —— 它只通过 `useCompactItemContext` 广播 `compactSize` / `compactDirection` / `isFirstItem` / `isLastItem`，由**下游组件用自己的前缀**拼（`apollo-btn-compact-item`）。所以本 fixture 的 DOM 里看不到紧凑项类名，那是消费方的责任面。这条协议被 10 个组件消费，是本组件最重要的对外契约（见 README §1.1）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "block": true
+  },
+  "content": ["a", "b"],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

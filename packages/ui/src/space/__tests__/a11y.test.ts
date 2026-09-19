@@ -103,7 +103,7 @@ describe('Space · 不引入语义（「没有」也是断言）', () => {
     // ⚠️ 一条上游观察：`-item-separator` 是裸 `<span>`，没有 `aria-hidden="true"`。
     //    理想情况下装饰性分隔符应当对读屏隐藏（否则 `•` / `|` 会被逐个读出来）。
     //    但加 `aria-hidden` 会改变 DOM 契约，且上游没有加 —— 我们逐字对齐、不加。
-    //    登记在 `README.md` §7。
+    //    登记在 `COMPATIBILITY.md` §9.2.1 的 U6 与 `README.md` §6.1。
     const w = mount(Space, { props: { separator: '|' }, slots: { default: () => ['a', 'b'] } });
     const separator = w.find(`.${P}-item-separator`);
     expect(separator.exists()).toBe(true);
@@ -140,6 +140,7 @@ describe('Space.Compact / Space.Addon · 不引入语义', () => {
   it('Addon 的根是裸 div，无 role / aria-*（`disabled` 也不加 `aria-disabled`）', () => {
     // ⚠️ 上游行为：`disabled` 只加 `-disabled` 类名（改文字色），不输出 `aria-disabled`。
     //    Addon 不是可交互控件，没有「禁用」的 ARIA 语义 —— 对齐 antd。
+    //    登记在 `COMPATIBILITY.md` §9.2.1 的 U4（跟随的上游缺陷：对辅助技术不可见）。
     const w = mount(SpaceAddon, { props: { disabled: true }, slots: { default: () => 'x' } });
     expect(w.element.tagName).toBe('DIV');
     expect(w.attributes('role')).toBeUndefined();

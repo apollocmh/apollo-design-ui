@@ -121,7 +121,7 @@ const hasChildren = computed(() => childNodes.value.length > 0);
 /**
  * 根类名。顺序逐字对齐 antd 的 `clsx(...)`（`Compact.tsx:109-119`）：
  * `prefixCls` → `-rtl`? → `-block`? → `-vertical`? → `className` → `rootClassName`。
- * （没有 CSS-in-JS 的 hashId —— D1。）
+ * （没有 CSS-in-JS 的 hashId —— D5。）
  */
 const rootClass = computed(() => [
   prefixCls.value,

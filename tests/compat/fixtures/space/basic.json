@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/basic",
+  "component": "space",
+  "description": "最基础的 Space：不传任何 props。建立最小 DOM 契约基线 —— 根元素是 div、类名是 `-horizontal` + `-align-center` + `-gap-row-small` + `-gap-col-small`（四个都来自**默认值**，所以这条用例同时钉住了三条默认判据：方向兜底 horizontal、水平时 align 折成 center、size 兜底 small），每个子节点被包进一个 `-item`。⚠️ 无 children 时**零个根节点**（`container.children.length === 0`），由 children:none 那条用例覆盖。L6 视觉回归在 space/basic 用例上覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "content": ["a", "b"],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

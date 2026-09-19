@@ -20,7 +20,7 @@
  *
  * `style/index.ts` 的文件头声称「antd 实测 49 条、我们 53 条」。声称的数目必须**可执行地**
  * 被验证，否则它会随实现漂移成一句谎话（这条就是踩出来的：初稿写的是
- * 「Addon 34 条」，实测 antd 是 29 条 —— 见 PITFALLS 114）。
+ * 「Addon 34 条」，实测 antd 是 29 条 —— 见 PITFALLS 115）。
  * 所以下面把 16 / 4 / 33 三个数钉死，并把 +4 的**来源**也钉死。
  */
 
@@ -146,7 +146,7 @@ describe('Space · 样式产物的规则条数（文件头声称的数目必须�
     expect(groups.compact).toEqual([`.${PC}`, `.${PC}-block`, `.${PC}-vertical`, `.${PC}-rtl`]);
   });
 
-  it('★ Addon 恰好 33 条 = antd 实测 29 条 + D7 展开的 4 条', () => {
+  it('★ Addon 恰好 33 条 = antd 实测 29 条 + D38 展开的 4 条', () => {
     // antd 是 29 条：genCommonStyle 的 4 条重置 + genSpaceAddonStyle 的 20 条 +
     // genCompactItemStyle({focus:false}) 的 5 条 = 29。
     // 我们多 4 条，因为 status 在 antd 里只改中间变量、不额外产规则，
@@ -326,7 +326,7 @@ describe('Space · Component Token', () => {
     expect(Object.keys(SPACE_GAP_ALIASES).sort()).toEqual(['large', 'middle', 'small']);
   });
 
-  it('★ `Compact` / `Addon` 的 ComponentToken 同样是空的（D7 之外的另一半契约）', () => {
+  it('★ `Compact` / `Addon` 的 ComponentToken 同样是空的（D38 之外的另一半契约）', () => {
     // 本模块只导出一份 `prepareComponentToken`（Space 的）—— 这是**有意的**：
     // antd 的 `style/compact.ts` / `style/addon.ts` 也是空接口 + `genStyleHooks` 默认
     // token 函数，两者都不贡献任何用户可覆盖的字段。所以 registry 的 `tokenCount` 是 0，

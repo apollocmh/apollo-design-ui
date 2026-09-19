@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/size",
+  "component": "space",
+  "description": "`size` 的四条取值路径一次覆盖（笛卡尔积展开）：预设串 `small` / `medium` / `large` 走**类名**（`-gap-row-{size}` / `-gap-col-{size}`，值由 CSS 变量提供），数字 `10` 走**内联** `column-gap:10px;row-gap:10px`（⚠️ React 的 `dangerousStyleValue` 会补 px、Vue 的 `setStyle` 不会 —— 我们自己补，见 PITFALLS 32 与变异 M4）。另两条路径不在本 fixture 里：`size: 0` 与 `size: [a, b]` 的数组形态由 L1/L4 覆盖（前者两条判据都为假 ⇒ 不产生任何 gap；后者按 `[水平, 垂直]` 分别取值）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "size": ["small", "medium", "large", 10]
+  },
+  "content": ["a", "b"],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -16,7 +16,7 @@
  *      静态别名**同时保留**（render 函数 / JSX 用户可以用 `Space.Compact`）。
  *   2. `Orientation` **不从这里导出**：antd 也是从 `_util/hooks` 导出它而不是从
  *      `space`；而我们的 barrel 已经从 `./divider` 导出了同名类型，
- *      再导一次会冲突（见 `interface.ts` 的文件头，差异 D3）。
+ *      再导一次会冲突（见 `interface.ts` 的文件头，差异 D35）。
  */
 
 import { withInstall } from '../_internal/with-install';

@@ -31,7 +31,7 @@
  *
  * ── 与 antd 的差异 ─────────────────────────────────────────────────────────────
  *
- *   - 无 CSS-in-JS 的 hashId / cssVarCls（D1）。
+ *   - 无 CSS-in-JS 的 hashId / cssVarCls（D5）。
  *   - `direction` 走 `useDirection()`（D27）。
  */
 

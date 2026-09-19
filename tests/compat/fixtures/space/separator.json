@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/separator",
+  "component": "space",
+  "description": "`separator` 的两条判据 + 一条上游缺陷。(1) 取值判据是 `separator ?? split`（`??` 而不是 `||`）⇒ `separator: ''` **不**回落到 `split`，两侧都不渲染分隔符 span。(2) **是否渲染** span 的判据是**真值** ⇒ `separator: ''` 与 `separator: 0` 都不渲染。(3) ⚠️ `separator: 0` 是**上游缺陷**（COMPATIBILITY.md §9.2 的 D40）：antd 的 `{… && separator && <span/>}` 求值成数字 `0`，React 把它渲染成一个**裸文本节点** ⇒ `<div>a</div>0<div>b</div>`；我们按上游意图实现、不复刻。⚠️ 这条差异**进不了 L4 的断言**（`dom-contract.ts` 的投影只含元素节点），所以本 fixture 的 `dom` 档看不出来 —— 钉住它的是 L1 的 `index.test.ts`，本文件在这里的作用是**留下可追溯的意图**。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "separator": "-"
+  },
+  "content": ["a", "b", "c"],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

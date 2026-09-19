@@ -13,9 +13,10 @@
  *
  * 所以：本地声明 + **不**从 barrel 导出（antd 也不从 `space` 导出它）。
  * 这与 `divider/interface.ts` 里那份是同构的两个字面量联合，差异登记见
- * `docs/analysis/space.md` §9 D3。等 `_internal/use-orientation.ts` 落地时两份合并。
+ * `docs/analysis/space.md` §9 与 `COMPATIBILITY.md` §9.2 的 D35。
+ * 等 `_internal/use-orientation.ts` 落地时两份合并。
  *
- * ── `GenerateSemantic` 的取舍（D4）─────────────────────────────────────────────
+ * ── `GenerateSemantic` 的取舍（D36）─────────────────────────────────────────────
  *
  * antd 的 `SpaceSemanticAllType = GenerateSemantic<SpaceSemanticType, SpaceProps>`
  * 是一个**条件类型**。条件类型无法被泛型函数体证明，最终必须写 `as unknown as`

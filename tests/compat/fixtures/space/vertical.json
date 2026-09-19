@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/vertical",
+  "component": "space",
+  "description": "`orientation=\"vertical\"`：根类名从 `-horizontal` 换成 `-vertical`，且**不产生** `-align-*` —— 因为 `align` 的判据是 `align === undefined && !vertical`，垂直时不传会保持 `undefined`。这条用例钉住的就是「垂直方向不折出 align-center」这条容易被写成真值判断的判据（变异 M7）。⚠️ `vertical` 的判据是 `typeof vertical === 'boolean'`，所以「未传」与「显式传 false」是两条不同分支：`{ direction: 'vertical' }`（未传 vertical）必须得到 vertical，而 `{ direction: 'vertical', vertical: false }` 必须得到 horizontal。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "orientation": "vertical"
+  },
+  "content": ["a", "b", "c"],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

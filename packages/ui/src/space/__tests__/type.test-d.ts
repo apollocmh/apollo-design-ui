@@ -14,7 +14,7 @@
  *   1. `children` 不在 Props 里（Vue 侧是默认插槽，规则 C19）
  *   2. `SpaceRef.nativeElement` 可空（antd 的 `forwardRef` 类型没体现 `null`）
  *   3. `React.CSSProperties` → Vue `CSSProperties`、`React.ReactNode` → `VNodeChild`
- *   4. `Orientation` **不**从 `space` 导出（与 barrel 里 divider 的同名类型冲突，D3）
+ *   4. `Orientation` **不**从 `space` 导出（与 barrel 里 divider 的同名类型冲突，D35）
  *   5. `Compact` / `Addon` 额外有具名导出（Vue 模板里没有 `<Space.Compact>` 写法）
  */
 

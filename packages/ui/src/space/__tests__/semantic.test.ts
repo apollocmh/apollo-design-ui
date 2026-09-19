@@ -231,7 +231,20 @@ const CASES: Record<string, () => DomRenderResult> = {
   // ---- 6. separator / split ----
   'separator:string': () => space({ separator: '-' }, ['a', 'b', 'c']),
   'separator:empty-string': () => space({ separator: '' }, ['a', 'b']),
-  // ⚠️ `separator={0}`：见 ALLOW 里的 D25 —— 我们**有意不复刻**上游漏出来的 `0` 文本节点
+  // ⚠️ `separator={0}`：我们**有意不复刻**上游漏出来的裸文本节点 `0`（差异 D40 / DEFECT）。
+  //
+  // 上游的 `Item.tsx` 写的是 `{index < latestIndex && separator && <span>…</span>}` ——
+  // React 的 JSX 会把 `0 && …` 的求值结果 `0` **当作文本渲染出来**，于是机械基线里
+  // 两个 `-item` 之间多了一个裸文本节点 `0`（实测基线
+  // `separator:zero` 的 html：`<div …-item>a</div>0<div …-item>b</div>`）。
+  // 我们用的是真 `if`，`0` 走假值分支 ⇒ 不产生任何节点。
+  //
+  // ⚠️ 这条差异**进不了 L4 的断言**：`dom-contract.ts:204` 的投影只用
+  // `template.content.children`（**只含元素节点**，注释与文本都不进契约）⇒
+  // 两侧投影完全相同。所以它**没有** `ALLOW` 条目 —— 不是因为差异不存在，
+  // 而是因为这条通道看不见它。钉住它的判据是 L1 的
+  // `index.test.ts`「`separator` 传 `0` 不渲染分隔符」那条（断言**无** span、
+  // 且 `textContent` 不含 `0`）。
   'separator:zero': () => space({ separator: 0 }, ['a', 'b']),
   'separator:element': () => space({ separator: h('b', null, '|') }, ['a', 'b']),
   'separator:three-items': () => space({ separator: '-' }, ['a', 'b', 'c']),

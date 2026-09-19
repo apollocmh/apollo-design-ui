@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema.json",
+  "id": "space/semantic",
+  "component": "space",
+  "description": "语义化 `classNames` / `styles` 的三个槽位（`root` / `item` / `separator`）。合并优先级（低 → 高）：`ConfigProvider.space.classNames/styles` → 组件的 `classNames` / `styles` → `className` / `rootClassName` / `style`。其中 **`style` 会覆盖 `styles.root`**（antd 的合并顺序如此：`{...gapStyle, ...mergedStyles.root}`，而 `style` 排在 `mergedStyles` **之后**）—— 这是最容易被「顺手改成更合理顺序」的一条。`classNames` 是**拼接**、`styles` 是**覆盖**，两者语义不同。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "classNames": {
+      "root": "cn-root",
+      "item": "cn-item",
+      "separator": "cn-sep"
+    },
+    "styles": {
+      "root": { "color": "red" },
+      "item": { "color": "green" },
+      "separator": { "color": "blue" }
+    },
+    "separator": "-"
+  },
+  "content": ["a", "b"],
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

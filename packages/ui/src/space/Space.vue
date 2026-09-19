@@ -340,7 +340,7 @@ const latestIndex = computed(() =>
 /**
  * 把 `latestIndex` 广播给每个 `Item`。
  *
- * 值是 `ComputedRef`（D5 / D27）—— 裸对象在 Vue 里是 setup 期快照，
+ * 值是 `ComputedRef`（D37 / D27）—— 裸对象在 Vue 里是 setup 期快照，
  * `childNodes` 变化后 Item 会读到过期下标。`ComputedRef` 让「子节点增删」
  * 传导到每个 Item 的分隔符判据上。
  */
