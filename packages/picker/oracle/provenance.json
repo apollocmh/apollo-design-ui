@@ -1,0 +1,25 @@
+{
+  "note": "本目录是 @rc-component/picker@1.12.2 的 es 产物**逐字副本**，仅作测试 Oracle 用（R7 允许的第 ② 类用途）。不要手工编辑；不要 import 进 packages/picker/src 的非测试代码。",
+  "why": "深路径 import 的前提是「包没有 exports 字段」。@rc-component/picker 有 exports 且不含 ./es/utils/*，深路径会被拒。因此固化为仓库内文件，由 Vite 按相对路径加载。",
+  "antdVersion": "6.6.4",
+  "packages": {
+    "upstream": {
+      "name": "@rc-component/picker",
+      "version": "1.12.2",
+      "files": {
+        "dateUtil.js": "865480ad2994690c59431f194cd2c783149254e0f691d38eca580129bb97c8ff",
+        "generate-dayjs.js": "8cb6c8fd644687f4ffa268e57e0c26236d4a62a2928added767fe2fe4f1c2802",
+        "miscUtil.js": "a1fa00ec57f63b49c5b530b489e89774417b5a54f1b645a7479c03a260b919a9",
+        "timePanelUtil.js": "6f514b7abd96baec0d5a4305236f13dcf5e75afb4d309e18d5b008311e30cff6"
+      },
+      "sourcePaths": {
+        "dateUtil.js": "es/utils/dateUtil.js",
+        "generate-dayjs.js": "es/generate/dayjs.js",
+        "miscUtil.js": "es/utils/miscUtil.js",
+        "timePanelUtil.js": "es/PickerPanel/TimePanel/TimePanelBody/util.js"
+      }
+    }
+  },
+  "restoreCommand": "npm pack @rc-component/picker@1.12.2 && tar -xzf rc-component-picker-1.12.2.tgz -C <tmp> && cp <tmp>/package/es/utils/dateUtil.js oracle/upstream/dateUtil.js && cp <tmp>/package/es/utils/miscUtil.js oracle/upstream/miscUtil.js && cp <tmp>/package/es/generate/dayjs.js oracle/upstream/generate-dayjs.js && cp <tmp>/package/es/PickerPanel/TimePanel/TimePanelBody/util.js oracle/upstream/timePanelUtil.js",
+  "verifyCommand": "shasum -a 256 oracle/upstream/*.js"
+}
