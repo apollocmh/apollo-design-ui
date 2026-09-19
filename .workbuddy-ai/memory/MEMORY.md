@@ -140,6 +140,23 @@ L0 utils/theme/icons ｜ 测试 test-utils
    换模型（`model: "reasoning"`）可以绕过限流。
 3. ⭐ **交接单里的「未开工」是开工前的快照，不是现场。** 接手先看工作区。
 
+### 🚨 合并时的两个坑（第八轮首次遇到，老规矩要订正）
+
+4. ⚠️⚠️ **`registry/*.json` 冲突不能用 `checkout --ours` / `--theirs`。**
+   老规矩写的「取 ours + 重跑生成器」**只在两边都没有手写字段时成立**。
+   并行两流各自带着 **Agent 手写的 status/dimensions**：
+   `foundation.json` 的 ours 有 form-core `completed`，`components.json` 的 theirs 有
+   spin `completed` ⇒ 取任一侧都会**冲掉另一边的收口状态**。
+   **正解：按冲突块解析**（扫 `<<<<<<<` / `=======` / `>>>>>>>`，只丢弃 ours 侧），
+   之后重跑生成器。第八轮 5 个文件的 6 个冲突块**内容全都只是 `generatedAt`**，
+   其余 git 已正确自动合并。
+5. 🚨 **并行两流给 PITFALLS 编号会撞车**（流1 加 82-88、流2 加 82-86 ⇒ 重复）。
+   **新约定：按流分段预留号段**（如流1 82-88、流2 从 89 起），或由整合会话统一重排。
+   合并后必须校验「无重复 + 连续」。
+6. ⭐ **越界 ≠ 违规。** 判据是「有没有降低验收标准」（`H8`），不是「有没有改域外文件」。
+   改**检查器的假阳性**（如 E10 把 `${v(...)}` 误判为硬编码）是合法的，要放行并要求写明理由；
+   **放宽真标准**才是必须挡下来的。
+
 ## ⚠️ 未决事项（接手先看）
 
 0. ✅ **`form-core` 已 `completed`（2026-09-19 下午，批次①②③a③b③c 全部收口）**
@@ -158,12 +175,14 @@ L0 utils/theme/icons ｜ 测试 test-utils
    ⚠️ ③c 的两个实现期裁决（写进契约 §4.7.11.1）：React「渲染体每次重跑」⇒ Vue 逐条配
    `watch`；render-props **无法自动判定**（插槽恒为函数、`length` 恒为 0）⇒ 显式 `renderProps` prop。
 1. **foundation 12/13 completed**；`form-core` 见上（completed），`picker` 仍 todo。
-   组件 **2/72**（`empty` + `divider`，均已 `completed`）。听 `next-task.mjs`（并行时用 `--parallel`）。
-   第二个组件原建议选**有交互**的（验 L2 层）；2026-09-18 实际先派了 **`divider`(P0, 最小)**
-   把组件侧 G0→G14 走顺 —— **`spin`(P1) 还没开工**（流2 在 divider 收口后按约定停下），
-   它才是会走 `motion` 层的那个。
-   ⚠️ `divider` 的 `interactionStatus` 判 `n/a`（纯展示组件），
-   ⇒ **组件侧 L2 交互层其实还没被任何组件真正验证过**。
+   组件 **3/72**（`empty` + `divider` + `spin`，均 `completed`）。听 `next-task.mjs`
+   （并行时用 `--parallel`）。
+   ⭐ **`spin`(P1) 已收口，11/11 维度全 done，`interactionStatus` 是全仓第一个 `done`**
+   —— 组件侧 L2 交互层**终于被真正验证过**了（`empty`/`divider` 都是纯展示组件，判 `n/a`）。
+   它同时是**第一个消费 `motion`(L1) 的组件**，首次联调没暴露契约缺口。
+   ⚠️ 它顺带改了两处共享面（已审为合法）：`theme` 加 `borderRadiusCircle`（几何常量，
+   为让组件层不硬编码 `100%`，服务 H9）；`validate-registry` 的 E10 补 `${v(...)}` 豁免
+   （`border-radius:${v('x')}` 运行时即 `var(...)`，原是假阳性）。真硬编码仍被拦。
 2. ✅ **`form-core` 不再挡路**（2026-09-19 收口）⇒ **`config-provider` 已进 `currentBatchIds`**，
    后者解锁 50 个组件 —— 这是当前关键路径。
 
