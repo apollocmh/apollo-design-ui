@@ -72,6 +72,46 @@ export const SEMANTIC_INJECT_CSS = `
 `;
 
 // ===========================================================================
+// ConfigProvider
+// ===========================================================================
+
+/**
+ * ConfigProvider **自己不产 DOM**（它的渲染结果就是子节点，或最多一层
+ * `display: contents` 的主题作用域元素）。所以它的视觉用例比的是
+ * 「它对下游产生了什么效果」—— 三个用例各打一条下游链路：
+ *
+ *   `locale`       → Empty 的描述文案
+ *   `theme-token`  → Spin 的主色（`colorPrimary`）
+ *   `theme-dark`   → Empty 的描述色（`darkAlgorithm` 派生出的 `colorTextDescription`）
+ */
+
+/**
+ * `locale` 用例的语言包片段（两侧逐字相同）。
+ *
+ * ⚠️ 为什么是字面量而不是 `import { en_US } from '@apollo-design/locale'`：
+ *    Vue 侧用例文件在 `tests/visual/render/cases/vue/` 下，模块解析只能走到
+ *    **仓库根** `node_modules`，而那里并没有 `@apollo-design/locale` —— 它只是
+ *    `packages/ui` 的依赖，链接在 `packages/ui/node_modules` 下。
+ *
+ *    何况「语言包的值是否等于 antd」由 locale 包自己的单元测试保证；这里要验的是
+ *    「ConfigProvider 的 `locale` 有没有真的传导到 Empty」。两侧 `useLocale` 都只
+ *    按组件名浅取一段，所以给一个只含 `Empty` 的片段正好只测这一件事。
+ */
+export const CP_LOCALE = { locale: 'fr_FR', Empty: { description: 'Aucune donnée' } };
+
+/** `theme-token` 用例的主色（antd 官方 demo 常用的绿色）。 */
+export const CP_COLOR_PRIMARY = '#00b96b';
+
+/**
+ * `theme-dark` 用例的背景。
+ *
+ * ⚠️ 写死 `#141414`（antd dark 的 `colorBgContainer`）而不是 `var(--apollo-color-bg-container)`：
+ *    antd 侧默认**不**把 token 暴露成 CSS 变量，两侧拿不到同一个变量名；
+ *    写死同一个字面量才能让差异只可能来自「dark 算法派生出的文字色」。
+ */
+export const CP_DARK_BG_STYLE = { background: '#141414', padding: '16px' };
+
+// ===========================================================================
 // Divider
 // ===========================================================================
 

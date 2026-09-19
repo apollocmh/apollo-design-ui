@@ -44,6 +44,15 @@ export const THEMES = [{ id: 'light', antdTheme: 'default', apolloTokens: 'light
  * 共用 `render/cases/shared.mjs` 里的常量，确保输入一致。
  */
 export const COMPONENTS = {
+  'config-provider': {
+    // 组件本身不产 DOM，所以这三条比的是「它对下游产生的效果」。
+    // 具体下游链路见 `render/cases/shared.mjs` 的 ConfigProvider 段。
+    variants: [
+      'locale', // locale → Empty 的描述文案
+      'theme-token', // theme.token.colorPrimary → Spin 的主色
+      'theme-dark', // theme.algorithm = darkAlgorithm → Empty 的描述色
+    ],
+  },
   divider: {
     variants: [
       'horizontal', // 水平（含 dashed）
@@ -88,8 +97,17 @@ export const LIMITATIONS = [
     dimension: 'theme',
     missing: ['dark', 'compact'],
     reason:
-      '零运行时架构下 tokens.css 是构建期产物，运行时切换算法依赖 ConfigProvider，而该组件尚未实现（只有 context.ts）。',
-    unblockWhen: 'ConfigProvider 完成 G0→G14 后，为 dark / compact 各生成一份 token 产物再补矩阵。',
+      '`THEMES` 是**页面级**维度：把 dark / compact 加进去，等于要为 divider / empty / spin 重新生成一整套基线（3 组件 × 8 variant × 3 viewport × 2 主题），而 `baselines/` 是入库的共享资源 —— 并行流里改它会撞车。ConfigProvider 已落地，dark 先以「用例内部的 `theme.algorithm`」形式在 `config-provider/theme-dark` 里覆盖到；compact 同理，尚未有用例。',
+    unblockWhen:
+      '整合期（并行流收敛后）把 dark / compact 并入 THEMES，一次性重生成全部基线。',
+  },
+  {
+    dimension: 'config-provider',
+    missing: ['componentSize', 'componentDisabled', 'direction', 'prefixCls', 'renderEmpty', 'wave', 'virtual'],
+    reason:
+      '这些能力**没有可观测的下游**：已落地的三个组件（divider / empty / spin）都不读 SizeContext / DisabledContext / direction，`prefixCls` 换了反而会让静态 CSS 匹配不上（那是「换前缀 → 丢样式」，不是视觉差异），`renderEmpty` 需要 Table / List / Select 等宿主组件。它们的语义由 L1/L2/L4 钉住（`packages/ui/src/config-provider/__tests__/`），视觉层补不了也不会假称补了。',
+    unblockWhen:
+      '有组件开始消费 SizeContext / DisabledContext / direction（如 Button / Input）后，按消费方逐个补视觉用例。',
   },
   {
     dimension: 'state',

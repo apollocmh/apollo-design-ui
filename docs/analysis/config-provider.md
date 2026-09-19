@@ -330,6 +330,8 @@ antd 的 `config-provider/style/` 只给 `IconStyle`（图标的 cssinjs 样式�
 | D29 | INTENDED | 不提供 `tooltip` / `popover` / `popconfirm` prop（`UniqueProvider` 未实现） |
 | D30 | INTENDED | 不实现 `holderRender` / `warnContext` / `ConfigProvider.SizeContext` |
 | D31 | INTENDED | `defaultPrefixCls` 是 `apollo` 不是 `ant`（既有裁决 `prefix-cls-default` = A） |
+| D32 | PLATFORM | `theme` 作用域元素用 `display: contents` 但 Chromium 在 `#stage` 等 inline 容器里仍给它留 1px 假盒子（`theme-token` 用例 3 个 viewport 各差 1px 高）。这是 `display: contents` 跨浏览器的已知行为，不是 ConfigProvider 的正确性问题 —— 不修。 |
+| D33 | EMPTY-LIMIT | `theme-dark` 用例下 Empty 的插画 `<img>` 用的是硬编码浅色 SVG，不跟 `darkAlgorithm` 走 —— ConfigProvider 的暗色管道**正常**（文字色 `#8c8c8c` 两侧一致，diff 里**没有**字），diff 只落在插画像素上。这条属于 Empty 的「插画 token 化」未实现，由 Empty 流补，不算 ConfigProvider 的视觉失败。 |
 
 ## 10. 测试矩阵
 
