@@ -308,7 +308,10 @@ const HARDCODED_PATTERNS = [
   { re: /#[0-9a-fA-F]{3,8}\b/, what: '十六进制颜色' },
   { re: /\brgba?\(/, what: 'rgb/rgba 颜色' },
   { re: /\bhsla?\(/, what: 'hsl/hsla 颜色' },
-  { re: /\bborder-radius:\s*(?!var\()/, what: '硬编码圆角' },
+  // 模板字符串里的 `border-radius:${v('xxx')}` 在源码里以 `$` 开头（不是 `var(`），
+  // 但运行时展开就是 `var(--apollo-xxx)` / `var(--ant-xxx)` —— 与 `var()` 同源。
+  // 负向先行需要同时豁免这两种情形。
+  { re: /\bborder-radius:\s*(?!var\(|\$\{v\()/, what: '硬编码圆角' },
   { re: /\bbox-shadow:\s*(?!var\()/, what: '硬编码阴影' },
 ];
 
