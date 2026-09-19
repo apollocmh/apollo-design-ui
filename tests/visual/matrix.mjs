@@ -89,6 +89,19 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  typography: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    variants: [
+      'text', // Text：基础 + 四种语义 type + disabled
+      'title', // Title：h1 ~ h5 五级
+      'paragraph', // Paragraph：默认 + 多段（含 `div&` 的 margin-bottom）
+      'decorations', // code / mark / underline / delete / strong / keyboard / italic
+      'link', // Link：默认 / 语义 type / disabled / target=_blank
+      'ellipsis', // 单行 + 多行 + expandable（JS 二分裁剪路径）
+      'copyable', // 复制按钮（未复制态）
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
@@ -136,6 +149,29 @@ export const LIMITATIONS = [
     reason:
       '`auto` 是时间驱动的（每 200ms 渐近推进一跳），截图时刻不确定 ⇒ 视觉层会 flaky。它的语义由 L2 在 `vi.useFakeTimers()` 下钉住（`__tests__/index.test.ts`）。',
     unblockWhen: '需要「视觉上确认 auto 的推进观感」时，用固定推进帧数的受控用例补。',
+  },
+  {
+    dimension: 'typography·state',
+    missing: ['hover', 'active', 'focus-visible', 'copied', 'editing'],
+    reason:
+      'Typography 是第一个**有交互态**的组件：`Link` 与四个操作按钮（expand / collapse / edit / copy）各有 hover / focus / active / disabled 四态，`copyable` 还有 `copied` 态。`run.mjs` 只截**静态帧**（渲染完成即截图，无交互步骤），所以这些状态进不了像素比对。它们的语义由 L1/L2 钉住（`__tests__/index.test.ts` 的 `trigger` / `vi.useFakeTimers` 用例），CSS 规则本身由 `__tests__/theme.test.ts` 断言存在。',
+    unblockWhen:
+      '给 `run.mjs` 加交互步骤（hover / click 后再截）后，补 `link-hover` / `copy-copied` 两个用例。',
+  },
+  {
+    dimension: 'typography·editable',
+    missing: ['编辑态（`editable` 进入后的 textarea）'],
+    reason:
+      'antd 的编辑态渲染 `Input.TextArea`（`ResizableTextArea` 包裹层 + `ant-input` 类 + `ant-typography-edit-content` 上的 `-textarea` 语义槽），而 Input 组件尚未落地。我们用**原生 `<textarea>`** 承载同一套 `-edit-content` CSS（差异 D-typography-3，见 `packages/ui/src/typography/README.md` §7）—— DOM 与视觉都**不**与 antd 一致，拿它进像素比对只会得到一个必然失败的用例。编辑态的**行为**（Enter 确认 / Esc 取消 / blur 确认 / IME 守卫）由 L1/L2 在 `__tests__/` 里钉住，不受此影响。',
+    unblockWhen:
+      'Input / TextArea 落地后，把编辑态换成真 TextArea 并把 `editable` 补进 `variants`。',
+  },
+  {
+    dimension: 'typography·tooltip',
+    missing: ['`ellipsis.tooltip`', '`copyable.tooltips`', '`editable.tooltip` 的悬浮气泡'],
+    reason:
+      'Tooltip 组件尚未落地。antd 的 Tooltip 在**未展开**时不额外产 DOM（只 clone 子元素并挂事件），所以本阶段用例里的 `copyable` / `ellipsis` 与 antd 逐像素一致；缺的是「悬浮后出现气泡」那一半 —— 那需要交互式截图（`run.mjs` 目前只截静态帧）。`ellipsis.tooltip` 对根元素 `aria-label` 的影响由 L4 钉住。',
+    unblockWhen: 'Tooltip 落地后补 hover 态用例（需要给 `run.mjs` 加交互步骤）。',
   },
 ];
 

@@ -68,6 +68,10 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-spin-root { border: 1px dashed #ccc; }
 .demo-spin-indicator { filter: saturate(200%); }
 .demo-spin-description { color: #1890ff; font-weight: bold; }
+.demo-typography-root { border: 1px dashed #ccc; padding: 8px; }
+.demo-typography-actions { letter-spacing: 2px; }
+.demo-typography-action { opacity: 0.5; }
+.demo-typography-textarea { outline: 2px solid #1890ff; }
 
 `;
 
@@ -283,3 +287,67 @@ export const SPIN_SEMANTIC_STYLES = {
 };
 
 /** Spin 语义化用例的配套 CSS 已并入上面的 `SEMANTIC_INJECT_CSS`（两侧共用一个注入点）。 */
+
+// ===========================================================================
+// Typography
+// ===========================================================================
+
+/**
+ * ⚠️ 这里**没有** `TYPOGRAPHY_CONTEXT_FONT`（Divider / Spin 都有）。
+ *
+ * 理由：Typography 是字体驱动的组件，我们逐字保留了 antd `genCommonStyle` 的
+ * `.apollo-typography{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size)}`
+ * （见 `packages/ui/src/typography/style/index.ts` 的「跳过了什么」）。于是**两侧组件根上**
+ * 的字体都是 token 字体栈、字号都是 14px，不存在 Divider/Spin 遇到的那类「上下文字体
+ * 不同导致每个墨点都不同」的噪声。
+ *
+ * 用例里也刻意**不渲染任何 Typography 之外的文字** —— 那部分在两侧确实不同
+ * （React 页 `html{font-family:sans-serif}`，Vue 页是 token 字体栈）。
+ */
+
+/** 用例文案（两侧逐字相同）。 */
+export const TYPOGRAPHY_TEXT = {
+  base: 'Apollo Design Typography',
+  secondary: 'Secondary',
+  success: 'Success',
+  warning: 'Warning',
+  danger: 'Danger',
+  disabled: 'Disabled',
+  /** 五级标题各自的文案 —— 用同一句话让字号差异可辨。 */
+  title: 'Heading',
+  /** 段落用 Lorem ipsum：长度固定，换行位置可比。 */
+  lorem:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista probare, quae sunt a te dicta?',
+  /** 装饰：七个标签各自的内容。 */
+  decoration: 'decorated',
+  /** 链接文案。 */
+  link: 'Apollo Design',
+  /** 省略用例的长文本：足够长以在 220px 宽度下溢出。 */
+  ellipsis:
+    'Ant Design, a design language for background applications, is refined by Ant UED Team. This sentence is intentionally long enough to overflow a 220px wide box, so both sides have to decide where to cut it.',
+  /** 复制按钮的 aria-label 依赖 locale（`Copy`），两侧都取 en_US。 */
+  copyable: 'Copy me to the clipboard',
+};
+
+/** 省略用例的定宽盒子 —— 宽度必须写死，否则两侧的换行位置不可比。 */
+export const TYPOGRAPHY_ELLIPSIS_BOX_STYLE = { width: '220px' };
+
+/** 竖向排布（多个用例并排展示时用）。 */
+export const TYPOGRAPHY_COLUMN_STYLE = { display: 'flex', flexDirection: 'column', gap: '8px' };
+
+/** 横向排布（四个语义色并排）。 */
+export const TYPOGRAPHY_ROW_STYLE = { display: 'flex', flexWrap: 'wrap', gap: '16px' };
+
+/** 语义化用例：两侧同一组 classNames / styles。 */
+export const TYPOGRAPHY_SEMANTIC_CLASSNAMES = {
+  root: 'demo-typography-root',
+  actions: 'demo-typography-actions',
+  action: 'demo-typography-action',
+};
+
+export const TYPOGRAPHY_SEMANTIC_STYLES = {
+  root: { backgroundColor: '#fafafa' },
+  actions: { marginInlineStart: '8px' },
+};
+
+/** Typography 语义化用例的配套 CSS 已并入上面的 `SEMANTIC_INJECT_CSS`。 */
