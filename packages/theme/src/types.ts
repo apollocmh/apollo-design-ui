@@ -67,6 +67,12 @@ export interface SeedToken extends PresetColorType {
 
   // 圆角
   borderRadius: number;
+  /**
+   * 完美圆的圆角值（`'100%'`）。是几何常量，不是视觉设计值 —— `1em × 1em` 的方块
+   * 套这个值会渲染成圆。给 `borderRadiusCircle` 留一个变量是组件层去掉硬编码 `100%`
+   * 的最小代价；它不在 design-system 调色板上，主题切换也不会改它。
+   */
+  borderRadiusCircle: string;
 
   // 尺寸
   sizeUnit: number;
@@ -252,6 +258,7 @@ export interface StyleMapToken {
   borderRadius: number;
   borderRadiusLG: number;
   borderRadiusOuter: number;
+  borderRadiusCircle: string;
 }
 
 export interface CommonMapToken {

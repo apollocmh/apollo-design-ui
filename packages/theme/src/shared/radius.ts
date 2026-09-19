@@ -47,6 +47,7 @@ export function genRadius(radiusBase: number): Omit<StyleMapToken, 'lineWidthBol
 
   return {
     borderRadius: radiusBase,
+    borderRadiusCircle: '100%',
     borderRadiusXS: radiusXS,
     borderRadiusSM: radiusSM,
     borderRadiusLG: radiusLG,

@@ -65,6 +65,10 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-empty-description { color: #1890ff; font-weight: bold; }
 .demo-divider-root { border-color: #7cb305; }
 .demo-divider-content { letter-spacing: 1px; }
+.demo-spin-root { border: 1px dashed #ccc; }
+.demo-spin-indicator { filter: saturate(200%); }
+.demo-spin-description { color: #1890ff; font-weight: bold; }
+
 `;
 
 // ===========================================================================
@@ -164,3 +168,78 @@ export const DIVIDER_SEMANTIC_STYLES = {
 
 /** `customize-style` 用例的边框色（antd 官方 demo 用的绿色）。 */
 export const DIVIDER_CUSTOM_BORDER = '#7cb305';
+
+// ===========================================================================
+// Spin
+// ===========================================================================
+
+/**
+ * Spin 用例里的**上下文文字**一律钉成具体字体。
+ *
+ * 理由与 `DIVIDER_CONTEXT_FONT` 完全同源（2026-09-18 实测）：React 页来自 antd 的
+ * `reset.css`（`html{font-family:sans-serif}`，泛型），Vue 页来自
+ * `--apollo-font-family`（具体字体栈）—— 度量接近但字形不同，会让整段文字成为噪声。
+ * Spin 自己的根上有 `font-family:var(--apollo-font-family)` / antd 的
+ * `resetComponent`，所以组件自身的文字仍被覆盖，这里只钉**上下文**。
+ */
+const SPIN_CONTEXT_FONT = 'sans-serif';
+
+/** 用例文案（两侧逐字相同）。 */
+export const SPIN_TEXT = {
+  description: 'Loading...',
+  title: 'Alert message title',
+  body: 'Further details about the context of this alert.',
+  semantic: 'Semantic classNames / styles',
+};
+
+/** 定长进度值。`'auto'` 是时间驱动的（200ms 一跳），不能进视觉比对 —— 会 flaky。 */
+export const SPIN_PERCENT = 60;
+
+/** 横向排布的容器（三个尺寸并排）。 */
+export const SPIN_ROW_STYLE = { display: 'flex', alignItems: 'center', gap: '32px' };
+
+/** 嵌套用例里被包裹的内容块（与 antd 的 `tip.tsx` 同形，值写死避免 reset 差异）。 */
+export const SPIN_CONTENT_STYLE = {
+  padding: '24px 32px',
+  background: 'rgba(0, 0, 0, 0.05)',
+  borderRadius: '4px',
+  fontFamily: SPIN_CONTEXT_FONT,
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/**
+ * `fullscreen` 用例的容器。
+ *
+ * ⚠️ 为什么必须带 `transform: translateZ(0)`：截图目标是 `#stage`，而
+ *    `.apollo-spin-fullscreen{position:fixed;inset:0}` 会脱离文档流 —— `#stage`
+ *    高度塌成 0，Playwright 截不了图；即使不塌，fixed 相对**视口**定位，
+ *    而两侧页面的 `body` 默认 margin 不同（antd 的 `reset.css` 归零，我们的
+ *    base 没有），裁出来的区域会错开几个像素。
+ *
+ *    `transform` 会给 fixed 后代建立**包含块**，于是遮罩改为相对这个 320×200 的
+ *    盒子铺满 —— 两侧完全同构，比到的确实是 `-fullscreen` 那套规则
+ *    （遮罩色 / 居中 / 白色文案），只是铺满的是盒子而不是视口。
+ *    代价与理由都登记在 `matrix.mjs` 的 `LIMITATIONS`。
+ */
+export const SPIN_FULLSCREEN_BOX_STYLE = {
+  position: 'relative',
+  width: '320px',
+  height: '200px',
+  transform: 'translateZ(0)',
+};
+
+/** 语义化用例：两侧同一组 classNames / styles。 */
+export const SPIN_SEMANTIC_CLASSNAMES = {
+  root: 'demo-spin-root',
+  indicator: 'demo-spin-indicator',
+  description: 'demo-spin-description',
+};
+
+export const SPIN_SEMANTIC_STYLES = {
+  root: { padding: '16px' },
+  indicator: { color: '#00d4ff' },
+};
+
+/** Spin 语义化用例的配套 CSS 已并入上面的 `SEMANTIC_INJECT_CSS`（两侧共用一个注入点）。 */

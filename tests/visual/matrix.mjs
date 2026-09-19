@@ -67,6 +67,19 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  spin: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    variants: [
+      'basic', // 非嵌套：根元素自己就是 section
+      'size', // small / medium / large（dot 尺寸三档）
+      'description', // 三个尺寸 + 文案（嵌套形态）
+      'nested', // 嵌套：转 / 不转 两个状态并排
+      'custom-indicator', // 自定义指示器（indicator > ConfigProvider > setDefaultIndicator）
+      'percent', // 定长进度环（percent=60；'auto' 是时间驱动的，不进视觉比对）
+      'fullscreen', // 遮罩 + 居中（在建立包含块的盒子里，见 shared.mjs）
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
@@ -80,10 +93,24 @@ export const LIMITATIONS = [
   },
   {
     dimension: 'state',
-    missing: ['hover', 'active', 'focus', 'disabled', 'loading'],
+    missing: ['hover', 'active', 'focus', 'disabled'],
     reason:
-      'Empty 与 Divider 都是纯展示组件：无事件、无状态、无可交互元素。这些状态对它们不适用（与 registry 的 interactionStatus = n/a 同源）。',
-    unblockWhen: '不适用。',
+      'Empty 与 Divider 都是纯展示组件：无事件、无状态、无可交互元素（与 registry 的 interactionStatus = n/a 同源）。Spin 的 `loading` 态**已覆盖**（`nested` 用例并排了 spinning 真/假两个状态）。',
+    unblockWhen: 'hover / active / focus / disabled 仍不适用：Spin 没有可聚焦元素与事件。',
+  },
+  {
+    dimension: 'spin·fullscreen',
+    missing: ['viewport-sized overlay'],
+    reason:
+      '`.spin-fullscreen{position:fixed;inset:0}` 铺满**视口**，而本目录的截图目标是 `#stage`（`run.mjs` 固定）—— 高度会塌成 0 无法截图，且两侧 body 默认 margin 不同会让裁剪区域错开。用例改在外层盒子上加 `transform` 建立包含块，遮罩改为铺满该盒子；比到的仍是 `-fullscreen` 那套规则（遮罩色 / 居中 / 白色文案）。',
+    unblockWhen: '截图目标支持「按视口截图」后，补一个真正的全屏用例。',
+  },
+  {
+    dimension: 'spin·percent',
+    missing: ["percent='auto'"],
+    reason:
+      '`auto` 是时间驱动的（每 200ms 渐近推进一跳），截图时刻不确定 ⇒ 视觉层会 flaky。它的语义由 L2 在 `vi.useFakeTimers()` 下钉住（`__tests__/index.test.ts`）。',
+    unblockWhen: '需要「视觉上确认 auto 的推进观感」时，用固定推进帧数的受控用例补。',
   },
 ];
 
