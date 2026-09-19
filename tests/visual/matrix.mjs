@@ -98,12 +98,19 @@ export const LIMITATIONS = [
     missing: ['dark', 'compact'],
     reason:
       '`THEMES` 是**页面级**维度：把 dark / compact 加进去，等于要为 divider / empty / spin 重新生成一整套基线（3 组件 × 8 variant × 3 viewport × 2 主题），而 `baselines/` 是入库的共享资源 —— 并行流里改它会撞车。ConfigProvider 已落地，dark 先以「用例内部的 `theme.algorithm`」形式在 `config-provider/theme-dark` 里覆盖到；compact 同理，尚未有用例。',
-    unblockWhen:
-      '整合期（并行流收敛后）把 dark / compact 并入 THEMES，一次性重生成全部基线。',
+    unblockWhen: '整合期（并行流收敛后）把 dark / compact 并入 THEMES，一次性重生成全部基线。',
   },
   {
     dimension: 'config-provider',
-    missing: ['componentSize', 'componentDisabled', 'direction', 'prefixCls', 'renderEmpty', 'wave', 'virtual'],
+    missing: [
+      'componentSize',
+      'componentDisabled',
+      'direction',
+      'prefixCls',
+      'renderEmpty',
+      'wave',
+      'virtual',
+    ],
     reason:
       '这些能力**没有可观测的下游**：已落地的三个组件（divider / empty / spin）都不读 SizeContext / DisabledContext / direction，`prefixCls` 换了反而会让静态 CSS 匹配不上（那是「换前缀 → 丢样式」，不是视觉差异），`renderEmpty` 需要 Table / List / Select 等宿主组件。它们的语义由 L1/L2/L4 钉住（`packages/ui/src/config-provider/__tests__/`），视觉层补不了也不会假称补了。',
     unblockWhen:

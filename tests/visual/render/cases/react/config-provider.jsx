@@ -10,7 +10,7 @@
  * 这里允许 import antd —— `TESTING.md` A9 的唯一例外是测试目录（`tests/`）。
  */
 
-import { ConfigProvider, Empty, Spin, theme as antdTheme } from 'antd';
+import { theme as antdTheme, ConfigProvider, Empty, Spin } from 'antd';
 
 import { CP_COLOR_PRIMARY, CP_DARK_BG_STYLE, CP_LOCALE } from '../shared.mjs';
 

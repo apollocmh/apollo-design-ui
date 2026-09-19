@@ -15,11 +15,7 @@ export default {
   locale: () => h(ConfigProvider, { locale: CP_LOCALE }, () => h(Empty)),
 
   'theme-token': () =>
-    h(
-      ConfigProvider,
-      { theme: { token: { colorPrimary: CP_COLOR_PRIMARY } } },
-      () => h(Spin),
-    ),
+    h(ConfigProvider, { theme: { token: { colorPrimary: CP_COLOR_PRIMARY } } }, () => h(Spin)),
 
   'theme-dark': () =>
     h(ConfigProvider, { theme: { algorithm: darkAlgorithm } }, () =>
