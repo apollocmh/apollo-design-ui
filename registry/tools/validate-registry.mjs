@@ -311,7 +311,28 @@ const HARDCODED_PATTERNS = [
   // 模板字符串里的 `border-radius:${v('xxx')}` 在源码里以 `$` 开头（不是 `var(`），
   // 但运行时展开就是 `var(--apollo-xxx)` / `var(--ant-xxx)` —— 与 `var()` 同源。
   // 负向先行需要同时豁免这两种情形。
-  { re: /\bborder-radius:\s*(?!var\(|\$\{v\()/, what: '硬编码圆角' },
+  //
+  // ⚠️ 还要豁免**字面量 `0`**（2026-09-20 修，space 流报的假阳性）。
+  //
+  // 判据：这条规则要抓的是「硬编码的**设计值**」（半径/阴影这类应当走 Token 的视觉量）。
+  // `border-radius: 0` 不是设计值，而是**结构性的方形重置** —— 它出现在
+  // `genCompactItemStyle` 的「中间项不要圆角」与长手形式 `border-end-start-radius: 0`
+  // 旁边，语义是「取消圆角」而不是「圆角是 0px」。而且**上游自己就这么写**：
+  // `components/style/compact-item.ts` 的 `compactItemBorderRadius` 里是
+  // `borderRadius: 0`（字面量），`compact-item-vertical.ts` 同样。
+  //
+  // 为什么不能改成走 Token：不存在「0 圆角」的 token（`borderRadius` 的默认值是 6px），
+  // 硬造一个 `--apollo-border-radius-0` 会让 B7 判 FAIL（变量不在 `tokens.css` 里）。
+  // 为什么值得修而不是让组件绕开：`genCompactItemStyle` 会被 Button / Input / Select /
+  // DatePicker / … 共 10 个 Compact 消费方复用，每一个都会撞上这条假阳性。
+  //
+  // `0(?![\d.])` 而不是 `0\b`：后者会让 `0.5em` 也豁免（`0` 与 `.` 之间是词边界）。
+  //
+  // ⚠️ 顺带修掉一处**潜伏的假阳性**：原来是 `border-radius:\s*(?!var\(…)`，
+  //    而 `\s*` 可以匹配**零个**字符 ⇒ 引擎在「冒号之后、空格之前」这个位置求值
+  //    负向先行，`border-radius: var(--x)`（冒号后有空格）会被判成硬编码圆角。
+  //    现在把空白收进先行内部（`(?!\s*(?:…))`），两种写法都正确。
+  { re: /\bborder-radius:(?!\s*(?:var\(|\$\{v\(|0(?![\d.])))/, what: '硬编码圆角' },
   { re: /\bbox-shadow:\s*(?!var\()/, what: '硬编码阴影' },
 ];
 
