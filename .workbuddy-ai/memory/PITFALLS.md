@@ -547,3 +547,43 @@
     —— 上游 `.d.ts` 写的是 `boolean`，但运行时返回 `this.props.preserve`。
     若把 `undefined` 压成 `false`，`FormStore.isMergedPreserve` 的
     `fieldPreserve !== undefined` 判据失效。
+
+82. ⚠️ **`watchEffect` 默认 `flush: 'pre'` 会在 setup 期同步求值**，会破坏与 React
+    `useLayoutEffect` 的「首帧一致」契约 —— 特别是与 `renderToStaticMarkup` 的 SSR 基线
+    对比时，Vue 端首帧就出现 `<svg>` 而 React 端没有，L4 报「子节点数不同」。
+
+    ⇒ React `useLayoutEffect` 等价的 Vue 形态是 **`watchEffect(cb, { flush: 'post' })`**：
+    post watcher 在 mount 同步阶段不入队，下一拍才跑，于是首帧 VNode 树与 React SSR 完全
+    一致。`Progress` 的「首帧不渲染」就是这条 —— 用 `flush: 'post'` 替代 `useState(false)` +
+    `useLayoutEffect` 的「延迟一帧再翻 `render`」组合。
+
+83. ⚠️ **`cloneVNode` 在「Fragment 根的组件」上会丢 `$attrs` 继承** —— React 的
+    `cloneElement` 不依赖目标根是什么，Vue 的 `mergeProps` 对 Fragment 根会发警告并
+    丢弃。`Indicator` 要注入 `class` / `style` / `percent` 三件事到用户的指示器，
+    三件**必须**在内部组件的 `props` 里显式声明，而不是依赖外部传 `$attrs`。
+
+    ⇒ 处方：把要注入的属性**全部声明成 prop**。如果用户组件没用就当作没传。
+
+84. ⚠️ **模块级「全局可改」的单例**（如 `Spin.setDefaultIndicator` 的 `defaultIndicator`）
+    不能写在 `<script setup>` 里 —— `<script setup>` 编译成 `setup()`，**每个实例都会
+    执行一遍**，写在那里的 `let` 变成实例级。`setDefaultIndicator` 改的就只对
+    「某个实例的那一份」生效，极难复现。
+
+    ⇒ 处方：放在独立的 `.ts` 模块里（ESM 模块单例），与 antd 的模块级 `let` 同构。
+    `defaultIndicator.ts` 即为此而存在。
+
+85. ⚠️ **零运行时架构下 `Component Token → CSS 变量` 是有 gap 的**：`tokens.css` 只声明
+    Alias 层（`getDesignToken()` 返回 `AliasToken`），组件层的 `prepareComponentToken`
+    结果**不会**出现在 `:root` 块里。直接写 `--apollo-spin-dot-size` 会让
+    `tests/build/run.mjs` 的 B7（CSS 里引用的每个 `--apollo-*` 都必须在 theme 的
+    `tokens.css` 里声明过）直接失败。
+
+    ⇒ 临时方案：把派生算式（`calc(var(--apollo-control-height-lg) / 2)`）在使用点
+    展开，size 类（`-sm` / `-lg`）各自再展开一份。完整闭环要等 `packages/theme`
+    把 `prepareComponentToken(getDesignToken())` 也落成 `:root` 变量。
+
+86. ⚠️ **`expectTypeOf(value).parameters` / `.returns` 在 expect-type 不同版本下签名
+    不一致**（实测报 `Expected 1 arguments, but got 0`）—— 用
+    `expectTypeOf<typeof fn>().toEqualTypeOf<(arg: X) => Y>()` 整条函数类型相等断言
+    替代，更稳且更完整。`expectTypeOf(Component)` 在 `.vue` 解析不到时退化成 `any`，
+    链式调用会再退化；只要断言「属性是否存在」用 `toHaveProperty`，不要链 `toBeFunction`。
