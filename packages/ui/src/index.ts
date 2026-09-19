@@ -66,8 +66,8 @@ export type {
 // ---------------------------------------------------------------------------
 export {
   ConfigProvider,
-  defaultRenderEmpty,
   DefaultRenderEmpty,
+  defaultRenderEmpty,
   disabledContextKey,
   globalConfig,
   setGlobalConfig,
