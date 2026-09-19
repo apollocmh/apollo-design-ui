@@ -32,14 +32,7 @@
  *    读发生在 `setInterval` 的回调里 —— 那时没有活跃的 effect 在收集依赖，安全。
  */
 
-import {
-  type ComputedRef,
-  type MaybeRefOrGetter,
-  computed,
-  ref,
-  toValue,
-  watchEffect,
-} from 'vue';
+import { type ComputedRef, computed, type MaybeRefOrGetter, ref, toValue, watchEffect } from 'vue';
 import type { SpinPercent } from './interface';
 
 /** 自动推进的间隔（毫秒）。与 antd 的 `AUTO_INTERVAL` 同值。 */

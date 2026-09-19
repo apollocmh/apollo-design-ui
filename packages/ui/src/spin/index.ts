@@ -29,6 +29,7 @@ export const Spin = withInstall(Object.assign(SpinComponent, { setDefaultIndicat
 
 export default Spin;
 
+export { getDefaultIndicator, setDefaultIndicator } from './defaultIndicator';
 export type {
   SpinConfig,
   SpinIndicator,
@@ -44,7 +45,5 @@ export type {
   SpinSlot,
 } from './interface';
 export { genSpinStyle } from './style';
-export { CONTENT_HEIGHT } from './style/token';
 export type { ComponentToken as SpinComponentToken } from './style/token';
-export { prepareComponentToken as prepareSpinComponentToken } from './style/token';
-export { getDefaultIndicator, setDefaultIndicator } from './defaultIndicator';
+export { CONTENT_HEIGHT, prepareComponentToken as prepareSpinComponentToken } from './style/token';

@@ -13,7 +13,7 @@
  * （那里也记录了「为什么不用 `<component :is>`」）。
  */
 
-import { type CSSProperties, type PropType, defineComponent, h } from 'vue';
+import { type CSSProperties, defineComponent, h, type PropType } from 'vue';
 import { Progress } from './Progress';
 
 export const Looper = defineComponent({

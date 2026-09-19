@@ -154,30 +154,46 @@ push('indicator:null', { prefixCls: PREFIX, indicator: null });
 
 // ---- 9. 语义化 classNames / styles -----------------------------------------
 
-push('semantic:classNames-all', {
-  prefixCls: PREFIX,
-  classNames: {
-    root: 'cn-root',
-    section: 'cn-section',
-    indicator: 'cn-indicator',
-    description: 'cn-description',
-    container: 'cn-container',
+push(
+  'semantic:classNames-all',
+  {
+    prefixCls: PREFIX,
+    classNames: {
+      root: 'cn-root',
+      section: 'cn-section',
+      indicator: 'cn-indicator',
+      description: 'cn-description',
+      container: 'cn-container',
+    },
+    description: 'Loading',
   },
-  description: 'Loading',
-}, content);
-push('semantic:classNames-mask', { prefixCls: PREFIX, fullscreen: true, classNames: { mask: 'cn-mask' } });
-push('semantic:classNames-tip', { prefixCls: PREFIX, classNames: { tip: 'cn-tip' }, description: 'Loading' });
-push('semantic:styles-all', {
+  content,
+);
+push('semantic:classNames-mask', {
   prefixCls: PREFIX,
-  styles: {
-    root: { color: 'red' },
-    section: { margin: '4px' },
-    indicator: { opacity: '0.5' },
-    description: { padding: '2px' },
-    container: { border: '1px solid blue' },
-  },
+  fullscreen: true,
+  classNames: { mask: 'cn-mask' },
+});
+push('semantic:classNames-tip', {
+  prefixCls: PREFIX,
+  classNames: { tip: 'cn-tip' },
   description: 'Loading',
-}, content);
+});
+push(
+  'semantic:styles-all',
+  {
+    prefixCls: PREFIX,
+    styles: {
+      root: { color: 'red' },
+      section: { margin: '4px' },
+      indicator: { opacity: '0.5' },
+      description: { padding: '2px' },
+      container: { border: '1px solid blue' },
+    },
+    description: 'Loading',
+  },
+  content,
+);
 push('semantic:styles-mask', {
   prefixCls: PREFIX,
   fullscreen: true,

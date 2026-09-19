@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "spin/basic",
+  "component": "spin",
+  "description": "最基础的 Spin：不传任何 props。建立最小 DOM 契约基线 —— 根元素是 div、带 -spinning 与 -section 类名、aria-live/aria-busy 都在根上、指示器是 dot-holder > dot-spin > 4 个 dot-item。L6 视觉回归在 spin/basic 用例上覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

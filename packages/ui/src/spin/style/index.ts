@@ -206,7 +206,7 @@ export function genSpinStyle(prefixCls: string): string {
     `  width:${itemSize(dotSize)};`,
     `  height:${itemSize(dotSize)};`,
     `  background:currentColor;`,
-    `  border-radius:100%;`,
+    `  border-radius:${v('borderRadiusCircle')};`,
     `  transform:scale(0.75);`,
     `  transform-origin:50% 50%;`,
     `  opacity:0.3;`,

@@ -36,7 +36,7 @@
 import { captureWarnings, flushAll, mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { effectScope, type ComputedRef, defineComponent, h, nextTick, ref } from 'vue';
+import { type ComputedRef, defineComponent, effectScope, h, nextTick, ref } from 'vue';
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { setDefaultIndicator } from '../defaultIndicator';
 import { Spin } from '../index';
@@ -269,13 +269,19 @@ describe('Spin · 指示器', () => {
     setDefaultIndicator(h('em', { class: 'from-default' }));
     expect(mountSpin().find('.from-default').exists()).toBe(true);
     expect(
-      mountWithConfig({ indicator: h('em', { class: 'from-config' }) }).find('.from-config')
+      mountWithConfig({ indicator: h('em', { class: 'from-config' }) })
+        .find('.from-config')
         .exists(),
     ).toBe(true);
     expect(
-      mountWithConfig({ indicator: h('em', { class: 'from-config' }) }, {
-        indicator: h('em', { class: 'from-prop' }),
-      }).find('.from-prop').exists(),
+      mountWithConfig(
+        { indicator: h('em', { class: 'from-config' }) },
+        {
+          indicator: h('em', { class: 'from-prop' }),
+        },
+      )
+        .find('.from-prop')
+        .exists(),
     ).toBe(true);
   });
 

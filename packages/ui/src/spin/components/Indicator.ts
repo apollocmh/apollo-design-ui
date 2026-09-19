@@ -31,11 +31,11 @@
 import { isVNode } from '@apollo-design/utils';
 import {
   type CSSProperties,
-  type PropType,
-  type VNodeChild,
   cloneVNode,
   defineComponent,
   h,
+  type PropType,
+  type VNodeChild,
 } from 'vue';
 import { Looper } from './Looper';
 

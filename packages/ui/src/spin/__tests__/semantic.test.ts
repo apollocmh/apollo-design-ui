@@ -34,14 +34,7 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import {
-  type PropType,
-  type VNodeChild,
-  defineComponent,
-  h,
-  type VNode,
-  provide,
-} from 'vue';
+import { defineComponent, h, type PropType, provide, type VNode, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/spin.dom.json';
 import {
   type ConfigContextValue,
@@ -126,8 +119,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   nested: () => nested({ prefixCls: PREFIX }),
   'nested:spinning-false': () => nested({ prefixCls: PREFIX, spinning: false }),
   'nested:description': () => nested({ prefixCls: PREFIX, description: 'Loading' }),
-  'nested:wrapper-class-name': () =>
-    nested({ prefixCls: PREFIX, wrapperClassName: 'my-wrapper' }),
+  'nested:wrapper-class-name': () => nested({ prefixCls: PREFIX, wrapperClassName: 'my-wrapper' }),
 
   // ---- 6. fullscreen ----
   fullscreen: () => noChildren({ prefixCls: PREFIX, fullscreen: true }),
@@ -204,8 +196,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'class:className': () => noChildren({ prefixCls: PREFIX, className: 'my-class' }),
   'class:rootClassName': () => noChildren({ prefixCls: PREFIX, rootClassName: 'root-class' }),
   'class:both': () => noChildren({ prefixCls: PREFIX, className: 'a', rootClassName: 'b' }),
-  'attrs:passthrough': () =>
-    noChildren({ prefixCls: PREFIX, 'data-testid': 'x', id: 'my-spin' }),
+  'attrs:passthrough': () => noChildren({ prefixCls: PREFIX, 'data-testid': 'x', id: 'my-spin' }),
   'style:style-over-root': () =>
     noChildren({
       prefixCls: PREFIX,
@@ -228,8 +219,7 @@ const CASES: Record<string, () => DomRenderResult> = {
     withConfig({ components: { spin: { classNames: { root: 'cfg-root' } } } }, () =>
       noChildren({ prefixCls: PREFIX }),
     ),
-  'direction:rtl': () =>
-    withConfig({ direction: 'rtl' }, () => noChildren({ prefixCls: PREFIX })),
+  'direction:rtl': () => withConfig({ direction: 'rtl' }, () => noChildren({ prefixCls: PREFIX })),
 };
 
 /**
@@ -253,7 +243,7 @@ const CASES: Record<string, () => DomRenderResult> = {
 const CUSTOM_INDICATOR_REASON = {
   reason:
     '自定义指示器是**组件**时，React 的 `className` 只是 prop（组件不用就不生效），' +
-    '而 Vue 的 `class` 会经属性继承落到该组件的根元素上（于是 `${prefixCls}-dot` 真的生效）。' +
+    '而 Vue 的 `class` 会经属性继承落到该组件的根元素上（于是 `prefixCls + "-dot"` 真的生效）。' +
     '这是 Vue / React 对 `class` 的固有语义差异（PLATFORM），不是我们实现错了；' +
     '且我们的结果更接近 antd 加这个 class 的意图。传原生元素时两侧一致，由同族的两个未豁免用例覆盖。',
   deviationId: 'D22',
@@ -297,9 +287,7 @@ const ALLOW = {
   },
   'indicator:custom+nested': {
     ...CUSTOM_INDICATOR_REASON,
-    diff: [
-      '$/div[0]/div[0]/div[0]: 类名不同 [custom-indicator] vs [apollo-dot custom-indicator]',
-    ],
+    diff: ['$/div[0]/div[0]/div[0]: 类名不同 [custom-indicator] vs [apollo-dot custom-indicator]'],
   },
   'config:indicator': {
     ...CUSTOM_INDICATOR_REASON,

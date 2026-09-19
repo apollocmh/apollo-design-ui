@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "spin/percent",
+  "component": "spin",
+  "description": "percent='auto'：由组件自己按 200ms 一档渐近推进，永远到不了 100。L2 在假定时器下钉住其行为契约（auto / 停止只清定时器不重置 / 再次变真重置为 0），这里负责把 DOM 形态钉住：进度环（svg[role=progressbar]）的 aria-valuenow / min / max 三件套齐全，几何 stroke-dasharray 用 CIRCUMFERENCE * safePtg/100 / 100-safePtg。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "percent": "auto"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Spin } from '../../index';
 import type { SpinProps } from '../../index';
+import { Spin } from '../../index';
 
 /**
  * 语义化 `classNames` / `styles`：对象式与函数式两种形态。

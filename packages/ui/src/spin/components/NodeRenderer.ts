@@ -34,7 +34,7 @@
  */
 
 import { isVNode } from '@apollo-design/utils';
-import { type PropType, type VNodeChild, cloneVNode, defineComponent } from 'vue';
+import { cloneVNode, defineComponent, type PropType, type VNodeChild } from 'vue';
 
 /**
  * 渲染后**不产生任何包裹元素**（render 函数直接返回内容）。

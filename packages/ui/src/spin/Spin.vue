@@ -35,11 +35,11 @@
 import { debounce, useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
-  type VNodeChild,
   computed,
   ref,
   useAttrs,
   useSlots,
+  type VNodeChild,
   watchEffect,
 } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -289,9 +289,7 @@ const rootClass = computed(() => [
   props.fullscreen && mergedClassNames.value.mask,
   // ⚠️ 非嵌套时根元素自己就是 section（同时吃 section 的语义类名）；
   //    嵌套时根元素改吃（已废弃的）`wrapperClassName`，`-section` 下移到内层 div。
-  isNested.value
-    ? props.wrapperClassName
-    : [sectionCls.value, mergedClassNames.value.section],
+  isNested.value ? props.wrapperClassName : [sectionCls.value, mergedClassNames.value.section],
   contextClassName,
   props.className,
 ]);

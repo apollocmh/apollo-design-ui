@@ -87,6 +87,7 @@ export const defaultSeedToken: SeedToken = {
   motionEaseInQuint: 'cubic-bezier(0.755, 0.05, 0.855, 0.06)',
   motionEaseOutQuint: 'cubic-bezier(0.23, 1, 0.32, 1)',
   borderRadius: 6,
+  borderRadiusCircle: '100%',
   sizeUnit: 4,
   sizeStep: 4,
   sizePopupArrow: 16,
