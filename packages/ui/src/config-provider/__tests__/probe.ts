@@ -11,8 +11,8 @@
 
 import { localeContextKey, useLocale } from '@apollo-design/locale';
 import { computed, defineComponent, h, inject, toValue } from 'vue';
-import { useComponentConfig, useConfigContext, useDirection, useThemeConfig } from '../context';
 import type { ConfigContextValue } from '../context';
+import { useComponentConfig, useConfigContext, useDirection, useThemeConfig } from '../context';
 import { useDisabled } from '../disabled-context';
 import type { ConfigProviderThemeConfig } from '../hooks/use-theme';
 import { type SizeType, useSize } from '../size-context';

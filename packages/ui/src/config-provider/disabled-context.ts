@@ -8,10 +8,11 @@
  *    两个 context 的判据不同，别「顺手统一」。
  */
 
-import { computed, type ComputedRef, type InjectionKey, inject } from 'vue';
+import { type ComputedRef, computed, type InjectionKey, inject } from 'vue';
 
 /** 注入键。值是 `ComputedRef`（理由同 `size-context.ts`）。 */
-export const disabledContextKey: InjectionKey<ComputedRef<boolean>> = Symbol('apolloDisabledContext');
+export const disabledContextKey: InjectionKey<ComputedRef<boolean>> =
+  Symbol('apolloDisabledContext');
 
 /** 默认值：未挂 Provider 时不禁用。 */
 const DEFAULT_DISABLED: ComputedRef<boolean> = computed(() => false);

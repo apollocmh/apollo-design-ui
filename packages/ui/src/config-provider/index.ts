@@ -80,31 +80,17 @@ export {
   useDirection,
   useThemeConfig,
 } from './context';
-
-// ---------------------------------------------------------------------------
-// 独立 context：尺寸与全局禁用
-// ---------------------------------------------------------------------------
-export type { SizeType } from './size-context';
-export { sizeContextKey, useSize } from './size-context';
-export { disabledContextKey, useDisabled } from './disabled-context';
-
-// ---------------------------------------------------------------------------
-// 组合式能力
-// ---------------------------------------------------------------------------
-export { useConfig } from './use-config';
-export type { ConfigProviderThemeConfig } from './hooks/use-theme';
-export { useTheme } from './hooks/use-theme';
-
 // ---------------------------------------------------------------------------
 // 空状态兜底
 // ---------------------------------------------------------------------------
-export { defaultRenderEmpty, DefaultRenderEmpty } from './default-render-empty';
-
+export { DefaultRenderEmpty, defaultRenderEmpty } from './default-render-empty';
+export { disabledContextKey, useDisabled } from './disabled-context';
 // ---------------------------------------------------------------------------
 // 全局配置
 // ---------------------------------------------------------------------------
 export { globalConfig, resetGlobalConfig, setGlobalConfig } from './global-config';
-
+export type { ConfigProviderThemeConfig } from './hooks/use-theme';
+export { useTheme } from './hooks/use-theme';
 // ---------------------------------------------------------------------------
 // 类型
 // ---------------------------------------------------------------------------
@@ -115,3 +101,12 @@ export type {
   GlobalConfigProps,
   UseConfigResult,
 } from './interface';
+// ---------------------------------------------------------------------------
+// 独立 context：尺寸与全局禁用
+// ---------------------------------------------------------------------------
+export type { SizeType } from './size-context';
+export { sizeContextKey, useSize } from './size-context';
+// ---------------------------------------------------------------------------
+// 组合式能力
+// ---------------------------------------------------------------------------
+export { useConfig } from './use-config';

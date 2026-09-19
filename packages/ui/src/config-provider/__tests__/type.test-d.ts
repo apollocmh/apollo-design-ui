@@ -15,6 +15,10 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { ComputedRef } from 'vue';
+import type { DividerConfig } from '../../divider/interface';
+import type { EmptyConfig } from '../../empty/interface';
+import type { SpinConfig } from '../../spin/interface';
+import type { ConfigContextValue } from '../context';
 import type {
   ComponentConfigLike,
   ConfigProviderProps,
@@ -28,10 +32,6 @@ import type {
   Variant,
   WaveConfig,
 } from '../index';
-import type { ConfigContextValue } from '../context';
-import type { DividerConfig } from '../../divider/interface';
-import type { EmptyConfig } from '../../empty/interface';
-import type { SpinConfig } from '../../spin/interface';
 
 describe('ConfigProvider · 枚举', () => {
   it('★ `SizeType` 含 `medium` 与 `middle` 两个别名（antd v6 未移除 `middle`）', () => {

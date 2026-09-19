@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema.json",
+  "id": "config-provider/basic",
+  "component": "config-provider",
+  "description": "ConfigProvider 不传任何 prop，children 直接渲染。antd 侧：Context.Provider 不产 DOM；Vue 侧：渲染函数直接返回 children（无包装元素）。两侧均不引入额外 DOM 节点 —— 这是「本体不产 DOM」的契约基线。L4 DOM 契约在 packages/ui/src/config-provider/__tests__/semantic.test.ts 用探针读 context 而非 DOM，比对下游组件形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "content": "probe",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": false,
+    "screenshot": false
+  },
+  "expect": {
+    "events": []
+  }
+}

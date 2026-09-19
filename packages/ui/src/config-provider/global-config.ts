@@ -13,11 +13,7 @@
  */
 
 import type { ThemeConfig } from '@apollo-design/theme';
-import {
-  defaultIconPrefixCls,
-  defaultPrefixCls,
-  globalConfigState,
-} from './context';
+import { defaultIconPrefixCls, defaultPrefixCls, globalConfigState } from './context';
 import type { ConfigProviderThemeConfig } from './hooks/use-theme';
 import type { GlobalConfigProps } from './interface';
 
@@ -68,10 +64,7 @@ function getGlobalIconPrefixCls(): string {
   return globalConfigState.iconPrefixCls || defaultIconPrefixCls;
 }
 
-function defaultGetPrefixClsForGlobal(
-  suffixCls?: string,
-  customizePrefixCls?: string,
-): string {
+function defaultGetPrefixClsForGlobal(suffixCls?: string, customizePrefixCls?: string): string {
   if (customizePrefixCls) return customizePrefixCls;
   const root = getGlobalPrefixCls();
   return suffixCls ? `${root}-${suffixCls}` : root;

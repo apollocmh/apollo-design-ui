@@ -18,12 +18,12 @@
  *    本层只证明「ConfigProvider 把 theme 包的输出正确地落到了 DOM 上」。
  */
 
+import { compactAlgorithm, darkAlgorithm } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { h, nextTick, ref } from 'vue';
-import { compactAlgorithm, darkAlgorithm } from '@apollo-design/theme';
-import { ConfigProvider } from '../index';
 import type { ConfigProviderThemeConfig } from '../index';
+import { ConfigProvider } from '../index';
 
 /** 探针：一个空 `<span>`。ConfigProvider 的作用域元素会包在它外面。 */
 const probe = () => h('span', { class: 'probe' });

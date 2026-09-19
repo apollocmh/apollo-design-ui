@@ -9,8 +9,8 @@ import type { ValidateMessages } from '@apollo-design/form-core';
 import { formContextKey } from '@apollo-design/form-core';
 import { defaultLocale, zh_CN } from '@apollo-design/locale';
 import { mount } from '@vue/test-utils';
-import { defineComponent, h, inject, nextTick, ref, shallowRef } from 'vue';
 import { afterEach, describe, expect, it } from 'vitest';
+import { defineComponent, h, inject, nextTick, ref, shallowRef } from 'vue';
 import { ConfigProvider } from '../ConfigProvider';
 import { defaultGetPrefixCls, defaultIconPrefixCls, defaultPrefixCls } from '../context';
 import { DefaultRenderEmpty } from '../default-render-empty';
@@ -63,9 +63,7 @@ describe('ConfigProvider · prefixCls', () => {
     const { Probe, captured } = createProbe();
     mount({
       render: () =>
-        h(ConfigProvider, { prefixCls: 'bamboo' }, () =>
-          h(ConfigProvider, null, () => h(Probe)),
-        ),
+        h(ConfigProvider, { prefixCls: 'bamboo' }, () => h(ConfigProvider, null, () => h(Probe))),
     });
     expect(captured.config.getPrefixCls('btn')).toBe('bamboo-btn');
   });
@@ -139,10 +137,8 @@ describe('ConfigProvider · components（判据 1：逐组件名合并）', () =
     const { Probe, captured } = createProbe({ componentName: 'empty' });
     mount({
       render: () =>
-        h(
-          ConfigProvider,
-          { empty: { className: 'outer', style: { color: 'red' } } },
-          () => h(ConfigProvider, { empty: { className: 'inner' } }, () => h(Probe)),
+        h(ConfigProvider, { empty: { className: 'outer', style: { color: 'red' } } }, () =>
+          h(ConfigProvider, { empty: { className: 'inner' } }, () => h(Probe)),
         ),
     });
 
@@ -450,15 +446,8 @@ describe('ConfigProvider · theme', () => {
     const { Probe, captured } = createProbe();
     mount({
       render: () =>
-        h(
-          ConfigProvider,
-          { theme: { components: { Button: { colorPrimary: '#f00' } } } },
-          () =>
-            h(
-              ConfigProvider,
-              { theme: { components: { Spin: { dotSize: 20 } } } },
-              () => h(Probe),
-            ),
+        h(ConfigProvider, { theme: { components: { Button: { colorPrimary: '#f00' } } } }, () =>
+          h(ConfigProvider, { theme: { components: { Spin: { dotSize: 20 } } } }, () => h(Probe)),
         ),
     });
     expect(captured.theme?.components).toEqual({
@@ -478,10 +467,8 @@ describe('ConfigProvider · theme', () => {
           ConfigProvider,
           { theme: { components: { Button: { colorPrimary: '#f00', colorError: '#0f0' } } } },
           () =>
-            h(
-              ConfigProvider,
-              { theme: { components: { Button: { colorError: '#00f' } } } },
-              () => h(Probe),
+            h(ConfigProvider, { theme: { components: { Button: { colorError: '#00f' } } } }, () =>
+              h(Probe),
             ),
         ),
     });
@@ -722,7 +709,10 @@ describe('defaultRenderEmpty', () => {
 
   it('prefixCls 会跟着 ConfigProvider 走', () => {
     const wrapper = mount(ConfigProvider, {
-      props: { prefixCls: 'bamboo', renderEmpty: () => h(DefaultRenderEmpty, { componentName: 'Select' }) },
+      props: {
+        prefixCls: 'bamboo',
+        renderEmpty: () => h(DefaultRenderEmpty, { componentName: 'Select' }),
+      },
       slots: { default: () => h('div') },
     });
     void wrapper;

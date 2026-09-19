@@ -25,8 +25,8 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
-import { ConfigProvider } from '../index';
 import { Empty } from '../../empty';
+import { ConfigProvider } from '../index';
 
 const P = 'apollo';
 
@@ -69,9 +69,7 @@ describe('ConfigProvider · 对下游 DOM 的影响', () => {
   it('嵌套：内层没给 prefixCls 时继承外层', () => {
     const w = mount({
       render: () =>
-        h(ConfigProvider, { prefixCls: 'bamboo' }, () =>
-          h(ConfigProvider, null, () => h(Empty)),
-        ),
+        h(ConfigProvider, { prefixCls: 'bamboo' }, () => h(ConfigProvider, null, () => h(Empty))),
     });
     expect(w.find('.bamboo-empty').exists()).toBe(true);
   });
@@ -140,10 +138,8 @@ describe('ConfigProvider · 嵌套合并对 DOM 的影响', () => {
   it('⭐ 内层只给 spin 时，外层的 empty 配置仍然生效', () => {
     const w = mount({
       render: () =>
-        h(
-          ConfigProvider,
-          { empty: { className: 'outer-empty' } },
-          () => h(ConfigProvider, { spin: { className: 'inner-spin' } }, () => h(Empty)),
+        h(ConfigProvider, { empty: { className: 'outer-empty' } }, () =>
+          h(ConfigProvider, { spin: { className: 'inner-spin' } }, () => h(Empty)),
         ),
     });
     expect(w.find(`.${P}-empty`).classes()).toContain('outer-empty');

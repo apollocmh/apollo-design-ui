@@ -28,8 +28,8 @@ import type { DividerConfig } from '../divider/interface';
 import type { EmptyConfig } from '../empty/interface';
 import type { SpinConfig } from '../spin/interface';
 import type {
-  CSPConfig,
   ComponentStyleConfig,
+  CSPConfig,
   DirectionType,
   GetPopupContainer,
   GetTargetContainer,
@@ -42,8 +42,8 @@ import type { ConfigProviderThemeConfig } from './hooks/use-theme';
 import type { SizeType } from './size-context';
 
 export type {
-  CSPConfig,
   ComponentStyleConfig,
+  CSPConfig,
   DirectionType,
   GetPopupContainer,
   GetTargetContainer,

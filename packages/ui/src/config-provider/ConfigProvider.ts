@@ -26,10 +26,9 @@
  */
 
 import { FormProvider } from '@apollo-design/form-core';
-import { ANT_MARK, LocaleProvider, defaultLocale } from '@apollo-design/locale';
 import type { Locale } from '@apollo-design/locale';
-import { createCSSVarScope, getDesignToken } from '@apollo-design/theme';
-import { DEFAULT_CSS_VAR_PREFIX } from '@apollo-design/theme';
+import { ANT_MARK, defaultLocale, LocaleProvider } from '@apollo-design/locale';
+import { createCSSVarScope, DEFAULT_CSS_VAR_PREFIX, getDesignToken } from '@apollo-design/theme';
 import { isPlainObject, useDevWarning, warningContextKey } from '@apollo-design/utils';
 import {
   computed,
@@ -44,33 +43,29 @@ import {
   type VNode,
   watchEffect,
 } from 'vue';
-import {
-  configContextKey,
-  DEFAULT_CONFIG_CONTEXT,
-  defaultIconPrefixCls,
-  type ConfigContextValue,
-  type CSPConfig,
-  type DirectionType,
-  type GetPopupContainer,
-  type GetTargetContainer,
-  type GetPrefixCls,
-  type PopupOverflow,
-  type RenderEmptyHandler,
-  type Variant,
-  type WaveConfig,
-  useConfigContext,
-} from './context';
-import { disabledContextKey } from './disabled-context';
-import type {
-  ConfigProviderProps,
-  ComponentConfigLike,
-  FormConfig,
-} from './interface';
 import type { DividerConfig } from '../divider/interface';
 import type { EmptyConfig } from '../empty/interface';
 import type { SpinConfig } from '../spin/interface';
+import {
+  type ConfigContextValue,
+  type CSPConfig,
+  configContextKey,
+  DEFAULT_CONFIG_CONTEXT,
+  type DirectionType,
+  defaultIconPrefixCls,
+  type GetPopupContainer,
+  type GetPrefixCls,
+  type GetTargetContainer,
+  type PopupOverflow,
+  type RenderEmptyHandler,
+  useConfigContext,
+  type Variant,
+  type WaveConfig,
+} from './context';
+import { disabledContextKey } from './disabled-context';
 import { type ConfigProviderThemeConfig, useTheme } from './hooks/use-theme';
-import { sizeContextKey, type SizeType } from './size-context';
+import type { ComponentConfigLike, ConfigProviderProps, FormConfig } from './interface';
+import { type SizeType, sizeContextKey } from './size-context';
 
 /**
  * 运行时 props。
@@ -112,28 +107,6 @@ const configProviderProps = {
   empty: { type: Object as PropType<EmptyConfig>, default: undefined },
   spin: { type: Object as PropType<SpinConfig>, default: undefined },
 } as const;
-
-/**
- * 需要「本层为 `undefined` 时回落父级」的键。
- *
- * 只列 **非组件配置** 的键 —— `components` / `getPrefixCls` / `iconPrefixCls`
- * 三个各有自己的合并规则（见 `ownConfig` 的构造）。
- */
-const INHERITED_KEYS = [
-  'theme',
-  'direction',
-  'renderEmpty',
-  'getPopupContainer',
-  'getTargetContainer',
-  'csp',
-  'autoInsertSpaceInButton',
-  'variant',
-  'virtual',
-  'popupMatchSelectWidth',
-  'popupOverflow',
-  'wave',
-  'warning',
-] as const;
 
 export const ConfigProvider = defineComponent({
   name: 'AConfigProvider',
@@ -181,7 +154,7 @@ export const ConfigProvider = defineComponent({
       const raw = props.locale;
       if (!raw) return undefined;
 
-      if (isPlainObject(raw) && Object.prototype.hasOwnProperty.call(raw, 'default')) {
+      if (isPlainObject(raw) && Object.hasOwn(raw, 'default')) {
         const inner = (raw as unknown as { default?: { locale?: unknown } }).default;
         if (inner?.locale) return inner as Locale;
       }
@@ -354,7 +327,10 @@ export const ConfigProvider = defineComponent({
         algorithm: mergedTheme.value?.algorithm,
       });
 
-      cssVarScope ??= createCSSVarScope(el, mergedTheme.value?.cssVarPrefix ?? DEFAULT_CSS_VAR_PREFIX);
+      cssVarScope ??= createCSSVarScope(
+        el,
+        mergedTheme.value?.cssVarPrefix ?? DEFAULT_CSS_VAR_PREFIX,
+      );
       cssVarScope.apply(token);
     });
 
@@ -385,11 +361,7 @@ export const ConfigProvider = defineComponent({
         // ⚠️ `_ANT_MARK__` 必须传 upstream 的 `ANT_MARK` —— 否则 LocaleProvider
         //    会认为「用户自己又包了一层」并打废弃告警（那是上游的**有意**行为）。
         const inner = children;
-        children = h(
-          LocaleProvider,
-          { locale: mergedLocale, _ANT_MARK__: ANT_MARK },
-          () => inner,
-        );
+        children = h(LocaleProvider, { locale: mergedLocale, _ANT_MARK__: ANT_MARK }, () => inner);
       }
 
       if (props.theme) {

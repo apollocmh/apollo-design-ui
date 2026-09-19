@@ -12,7 +12,7 @@
  */
 
 import type { ThemeConfig } from '@apollo-design/theme';
-import { type CSSProperties, type ComputedRef, computed, type InjectionKey, inject } from 'vue';
+import { type ComputedRef, type CSSProperties, computed, type InjectionKey, inject } from 'vue';
 
 /**
  * 默认前缀。已裁决（`prefix-cls-default` = A）：默认 `apollo`，可覆盖为 `ant`。

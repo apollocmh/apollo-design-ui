@@ -11,7 +11,7 @@
  * 收窄依赖面。形态上也与 antd 对齐（便于迁移）。
  */
 
-import { computed, type ComputedRef, type InjectionKey, inject } from 'vue';
+import { type ComputedRef, computed, type InjectionKey, inject } from 'vue';
 
 /**
  * 尺寸。

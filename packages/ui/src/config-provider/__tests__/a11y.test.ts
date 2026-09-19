@@ -20,8 +20,8 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
-import { ConfigProvider } from '../index';
 import { Empty } from '../../empty';
+import { ConfigProvider } from '../index';
 
 a11yDemoTest('ConfigProvider', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),

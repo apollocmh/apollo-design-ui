@@ -54,7 +54,7 @@ export function useTheme(
   const inherit = theme.inherit !== false && !!parentTheme;
 
   const base: ConfigProviderThemeConfig = inherit
-    ? parentTheme ?? {}
+    ? (parentTheme ?? {})
     : {
         cssVarPrefix: parentTheme?.cssVarPrefix,
         prefixCls: parentTheme?.prefixCls,
