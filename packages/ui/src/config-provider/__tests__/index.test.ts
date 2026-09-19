@@ -5,17 +5,18 @@
  * 三条最容易写错的判据在文件头注释里各有一条专属用例。
  */
 
+import type { ValidateMessages } from '@apollo-design/form-core';
 import { formContextKey } from '@apollo-design/form-core';
 import { defaultLocale, zh_CN } from '@apollo-design/locale';
 import { mount } from '@vue/test-utils';
-import { defineComponent, h, inject, nextTick, ref } from 'vue';
+import { defineComponent, h, inject, nextTick, ref, shallowRef } from 'vue';
 import { afterEach, describe, expect, it } from 'vitest';
 import { ConfigProvider } from '../ConfigProvider';
 import { defaultGetPrefixCls, defaultIconPrefixCls, defaultPrefixCls } from '../context';
 import { DefaultRenderEmpty } from '../default-render-empty';
 import { globalConfig, resetGlobalConfig, setGlobalConfig } from '../global-config';
 import { useTheme } from '../hooks/use-theme';
-import { useSize } from '../size-context';
+import { type SizeType, useSize } from '../size-context';
 import { useConfig } from '../use-config';
 import { createProbe } from './probe';
 
@@ -226,6 +227,29 @@ describe('ConfigProvider · 非组件配置键的继承（判据 2：undefined �
     expect(captured.config.direction).toBe('rtl');
   });
 
+  // ⭐ 这条用例是**变异验证 M4 逼出来的**：删掉 `ConfigProvider.ts` 里
+  //   「先删掉不在 `next` 里的键」那段清理循环，上面三条嵌套用例**全部照过**——
+  //   因为它们的外层 provider 本身就带着 `direction`，`next` 里恒有这个键。
+  //   只有在**根级** provider 上把 prop 从有值改回 `undefined` 时，`next`
+  //   （= `{...DEFAULT_CONFIG_CONTEXT}`，只有 2 个键）才真的缺这个键，
+  //   缺了清理循环就会残留 `'rtl'`。判据同上：每次都要「从父级重算全量」。
+  it('L2 · 根级 provider 把 prop 改回 undefined ⇒ context 上这个键要消失（不是残留）', async () => {
+    const variant = ref<'filled' | undefined>('filled');
+    const { Probe, captured } = createProbe();
+
+    mount({
+      render: () => h(ConfigProvider, { variant: variant.value }, () => h(Probe)),
+    });
+    expect(captured.config.variant).toBe('filled');
+    expect('variant' in captured.config).toBe(true);
+
+    variant.value = undefined;
+    await nextTick();
+    // 键必须真的消失：下游 `?? 默认值` 的回落依赖「键不存在」而不是「值是 undefined」
+    expect('variant' in captured.config).toBe(false);
+    expect(captured.config.variant).toBeUndefined();
+  });
+
   it('virtual 默认 true，可被显式 false 覆盖', () => {
     const { captured } = mountWithProbe();
     expect(captured.config.virtual).toBe(true);
@@ -274,6 +298,36 @@ describe('ConfigProvider · componentSize / componentDisabled（判据 3：两�
       slots: { default: () => h(ProbeFn) },
     });
     expect(captured.size).toBe('small-fn');
+  });
+
+  // ⭐ 变异验证 M5 逼出来的用例：把 `componentSize` 的判据从 `||` 改成 `??`，
+  //   上面三条用例**全过**（`SizeType` 的四个字面量都是真值字符串，`||` 与 `??`
+  //   在类型域内等价）。只有 falsy 的越界值（`''`）能把两者分开：
+  //   antd `SizeContext.tsx:17` 用的是 `||` ⇒ 空串要**回落父级**，不能被当成
+  //   「显式设了空尺寸」传下去。库会被 JS 消费方直接调用，这条要钉住。
+  it('componentSize 用 || 判据：falsy 的越界值（空串）回落到父级', () => {
+    const { Probe, captured } = createProbe();
+    mount({
+      render: () =>
+        h(ConfigProvider, { componentSize: 'large' }, () =>
+          // @ts-expect-error 故意传越界的 `''`：验证运行时判据不是 `??`
+          h(ConfigProvider, { componentSize: '' }, () => h(Probe)),
+        ),
+    });
+    expect(captured.size).toBe('large');
+  });
+
+  // 变异验证 M13 逼出来的用例：antd `useSize` 的第一条是 **真值判据** `!customSize`
+  // （`hooks/useSize.ts`），不是 `customSize === undefined`。`SizeType` 的字面量
+  // 都是真值字符串 ⇒ 单靠类型域内的输入分不开这两者，必须用一个 falsy 输入钉住：
+  // 组件自己的 `size` 为空串时要**回落 context**，而不是把空串当尺寸传下去。
+  it('useSize 第一条是真值判据：自己的 size 为空串时回落 context', () => {
+    const { Probe, captured } = createProbe({ ownSize: '' as SizeType });
+    mount(ConfigProvider, {
+      props: { componentSize: 'large' },
+      slots: { default: () => h(Probe) },
+    });
+    expect(captured.size).toBe('large');
   });
 
   it('⭐ componentDisabled 用 ?? 判据：false 能显式关闭父级的 true', () => {
@@ -331,7 +385,8 @@ describe('ConfigProvider · locale', () => {
   });
 
   it('L2 · 切换 locale prop 后，context 里的值跟着变', async () => {
-    const localeRef = ref<typeof zh_CN | undefined>(undefined);
+    // ⚠️ `shallowRef` 不是可选的：`ref<Locale>` 的 UnwrapRef 深展开会触发 TS2589（PITFALLS 86）
+    const localeRef = shallowRef<typeof zh_CN | undefined>(undefined);
     const { Probe, captured } = createProbe();
 
     mount({
@@ -409,6 +464,30 @@ describe('ConfigProvider · theme', () => {
     expect(captured.theme?.components).toEqual({
       Button: { colorPrimary: '#f00' },
       Spin: { dotSize: 20 },
+    });
+  });
+
+  // 变异验证 M14 逼出来的用例：上面那条只合了**不同**组件名（Button / Spin），
+  //   `{ ...merged[name], ...componentToken }` 与 `{ ...componentToken }` 结果一样
+  //   ⇒ 同名组件的**逐键**浅合并根本没被验到。这里让两层改同一个组件的不同键。
+  it('同名组件的 component token 逐键浅合并（不是整体替换）', () => {
+    const { Probe, captured } = createProbe();
+    mount({
+      render: () =>
+        h(
+          ConfigProvider,
+          { theme: { components: { Button: { colorPrimary: '#f00', colorError: '#0f0' } } } },
+          () =>
+            h(
+              ConfigProvider,
+              { theme: { components: { Button: { colorError: '#00f' } } } },
+              () => h(Probe),
+            ),
+        ),
+    });
+    expect(captured.theme?.components?.Button).toEqual({
+      colorPrimary: '#f00',
+      colorError: '#00f',
     });
   });
 
@@ -550,7 +629,7 @@ describe('ConfigProvider · form.validateMessages', () => {
     const { Probe, captured: _unused } = createProbe();
     void _unused;
 
-    let seenValidateMessages: Record<string, unknown> | undefined;
+    let seenValidateMessages: ValidateMessages | undefined;
     const FormProbe = defineComponent({
       name: 'AFormCtxProbe',
       setup() {
@@ -573,7 +652,7 @@ describe('ConfigProvider · form.validateMessages', () => {
   });
 
   it('⚠️ 没给 form 时**仍然**会包：兜底消息来自 defaultLocale，长度恒 > 0', () => {
-    let seen: Record<string, unknown> | undefined;
+    let seen: ValidateMessages | undefined;
     const FormProbe = defineComponent({
       name: 'AFormCtxProbe',
       setup() {
@@ -592,7 +671,7 @@ describe('ConfigProvider · form.validateMessages', () => {
   });
 
   it('locale.Form.defaultValidateMessages 会参与合并，且 form.validateMessages 胜', () => {
-    let seen: Record<string, unknown> | undefined;
+    let seen: ValidateMessages | undefined;
     const FormProbe = defineComponent({
       name: 'AFormCtxProbe',
       setup() {
