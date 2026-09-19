@@ -747,3 +747,92 @@
      ⇒ 处方：手写**窄声明**，只覆盖 oracle 实际调用的函数，类型指回本包的 `src/types.ts`。
      另注意 `Nullable<T>` 要写成 `T | null | undefined`（只写 `| null` 会在
      `noUncheckedIndexedAccess` 下让 types project 报 Unhandled Source Error）。
+
+## Space 流（2026-09-20，114-121）
+
+114. ⚠️ **`NonNullable<VNodeChild>` 去不掉 `void`** —— `NonNullable<T> = T & {}`
+     对联合类型**逐支分配**，而 `void & {}` 不是 `never`（`void` 既不是 `null` 也不是
+     `undefined`）⇒ 结果里仍留着 `void`，`h()` 照样报 `TS2769`。
+     **处方**：写 `Exclude<VNodeChild, null | undefined | void>`
+     （见 `packages/ui/src/space/node.ts` 的 `RenderableNode`）。
+     ⚠️ biome 的 `noConfusingVoidType` 会建议把它换成 `undefined`
+     （`Exclude<…, null | undefined | undefined>`）—— 那样 `void` 仍在，**不要采纳**，
+     加 `biome-ignore` 并写清理由。同理 `void` 在 `UnionToIntersection` 这类条件类型里
+     也不是「令人困惑」，而是**精确地**去掉了联合里的一个独立分支。
+
+115. ⚠️ **「文件头声称的规则条数」没有可执行判据时，会随实现漂移成一句谎话**。
+     实测：`space/style/index.ts` 初稿声称「Addon 34 条」，而用
+     `@ant-design/cssinjs` 的 `extractStyle` 提取 antd 6.6.4 的真实产物得到的是
+     **29** 条（16 + 4 + 29 = 49，我们 53，+4 来自 D38 的展开）。
+     **处方**：把条数**钉成断言**（`theme.test.ts` 断言 16 / 4 / 33 / 53 四个数 +
+     +4 的来源逐条列出）。判据：**任何写在注释里的数量都要有一条断言**。
+     ⚠️ 提取 antd CSS 时 `@ant-design/cssinjs` 不是 `tests/compat` 的直接依赖 ——
+     要用 `createRequire` 从 antd 自己的包目录解析（`antd/package.json` 所在目录）。
+
+116. ⚠️ **顺序类契约不能靠「条数」断言**（变异验证逼出来的）。
+     `space` 的 Addon 样式把 antd 的「组件级 CSS 变量」展开成了复合选择器，
+     于是 `.status-error.variant-filled` 与 `.variant-filled.disabled` 的
+     **特异性都是 (0,2,0)** —— 谁赢完全由**声明顺序**决定。
+     把那条决胜规则挪到 status 之前，22 条主题断言**全绿**：文件头声称的
+     「顺序即契约」当时**没有任何断言**。
+     **处方**：显式断言「谁在谁前面」（`expect(region).toEqual([...])` 钉住相对顺序），
+     并**同时**断言决胜规则的**声明内容**（本例：必须回到
+     `var(--apollo-color-border)` / `var(--apollo-color-bg-container-disabled)`，
+     而不是 `color-error`）。判据：**条数不变、顺序写反，是条数断言看不见的**。
+     ⚠️ jsdom 不加载静态 CSS ⇒ 拿不到层叠结果，所以这一层只能钉「顺序」这个可判定的
+     代理量；真正的层叠验证在 L6（真实浏览器）。
+
+117. ⚠️ **变异验证脚本的「统计行」必须能被可靠解析，否则会得到假绿**。
+     首版用 `l.strip().startswith('Tests ')` 判定，而 vitest 的输出以 ANSI 转义开头
+     （`\x1b[2m`）⇒ **每一次变异都「被捕获」**，看起来 8/8 全中，其实是统计行根本没被解析到。
+     **处方**：用子串匹配（`'Tests ' in l and ('passed' in l or 'failed' in l)`），
+     并且**解析不到时按「不可信」处理**、把原始输出的尾部 dump 出来。
+     子进程的环境变量要从 `os.environ` 复制，不要手搓 `env={...}`。
+
+118. ⚠️ **变异被 SIGKILL 会留下「已变异的工作区」** —— `try/finally` 里的还原**不会执行**，
+     于是下一次运行会因为「工作区有未提交改动」而拒绝启动，或者更糟：你以为跑的是原版。
+     **处方**：变异前写 `.mutbak` 备份 + 脚本**启动时**先做 `restore_if_needed()`；
+     还原后用 `shasum -a 256` 对比工作区文件与 `git show HEAD:<path>` 的哈希。
+     另：一次跑 8 个变异会累积内存（16G 机器上实测 exit 137）⇒ 脚本要支持
+     **按参数选择变异子集**，分批跑。
+
+119. ⚠️ **E10 的「硬编码圆角」正则有两处假阳性**（`registry/tools/validate-registry.mjs`）。
+     (a) `\bborder-radius:\s*(?!var\(|\$\{v\()/` 会把 `border-radius:0` 判成硬编码 ——
+     而 `0` 是**结构性的方形重置**（`genCompactItemStyle` 的「中间项不要圆角」），
+     上游自己就写 `borderRadius: 0`（`components/style/compact-item.ts`），
+     而且不存在「0 圆角」的 token 可走（硬造一个会让 B7 判 FAIL）。
+     (b) 更潜伏的一处：`\s*` 能匹配**零个**字符 ⇒ 引擎在「冒号之后、空格之前」求值
+     负向先行，于是 `border-radius: var(--x)`（冒号后有空格）也会被误判。
+     **处方**：把空白收进先行内部 + 豁免字面量 `0`：
+     `/\bborder-radius:(?!\s*(?:var\(|\$\{v\(|0(?![\d.])))/`。
+     ⚠️ 用 `0(?![\d.])` 而不是 `0\b`：后者会让 `0.5em` 也豁免。
+     判据：改完必须逐条验证 `0` / `0.5em` / `6px` / `50%` / `var(…)` / `${v(…)}` 六类，
+     确认**收紧了正确性**而不是放宽标准（H8）。
+
+120. ⚠️ **L4 的 DOM 契约投影只含元素节点**（`packages/test-utils/src/dom-contract.ts:204`
+     的 `template.content.children`）⇒ **文本节点与注释都不进契约**。
+     后果：`space` 的 `separator={0}` 差异（React 的 JSX 把 `0 && …` 的求值结果
+     渲染成一个**裸文本节点**，我们不复刻 —— D40 / DEFECT）在 L4 里**完全不可见**，
+     所以它**没有** `ALLOW` 条目。**别把「没有 ALLOW」当成「没有差异」**。
+     **处方**：这类差异的判据必须落在 L1（本例：断言无 `-item-separator` 且
+     `textContent === 'ab'`），并在 `semantic.test.ts` 的用例旁写清「为什么这里没有 ALLOW」。
+
+121. ⚠️⚠️ **前台命令的默认超时是 120s；被它杀掉时的表现和 OOM 一模一样**
+     （exit 137 / SIGTERM / **零输出**）—— 极易误判成「16G 机器 OOM」。
+     实测（2026-09-20）：`node tests/build/run.mjs` 连续 3 次 exit 137 且
+     `/tmp/space-build-gate.log` 是 **0 行**；带心跳重跑，进程在第 **7** 次
+     15s 心跳（≈105s）后被杀，而 `sleep 90` 的静默命令**能**活下来
+     ⇒ 临界点落在 90–120s，正是 `BASH_DEFAULT_TIMEOUT_MS`。
+     **处方**：**凡是预计超过 2 分钟的门禁，显式传 `timeout`**
+     （构建门禁 ≈3 分钟、L6 视觉 ≈2 分钟、全仓 vitest 更久）。
+     ⚠️ 两个加重误判的因素：
+     (a) `tests/build/run.mjs` **只在最后才打印报告**（前面全是
+     `execFileSync(..., stdio:'pipe')` 的静默构建）⇒ 被杀时日志是空的，
+     看起来就像「进程刚起来就崩了」；
+     (b) 如果在命令里自己起了 `&` 子进程，文档承诺的「超时自动转后台」**不生效**，
+     直接杀进程组 ⇒ 我写的 `while kill -0 $PID` 心跳循环也被一起带走，
+     连 `echo "BUILD_EXIT=$?"` 都没机会执行。
+     **判据**：`exit 137` 之前先问「这个命令跑了多久」。**先加 `timeout` 再谈内存。**
+     真正的 OOM 有别的指纹：例如同一条命令**单独跑能过、跟在重命令后面跑才 137**
+     （本次 `--project a11y` 跟在 `--project dom-contract`（加载 848 图标）后面就 137，
+     单独跑 114 passed —— 那才是内存）。

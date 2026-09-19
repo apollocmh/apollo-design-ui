@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具所有权、易错判据、未决事项。
 > 规则本体：`AGENTS.md`/`WORKFLOW.md`/`TESTING.md`/`COMPATIBILITY.md`/`ARCHITECTURE.md`；
-> 坑：同目录 `PITFALLS.md`（81 条）；日常进展：`YYYY-MM-DD.md`。
+> 坑：同目录 `PITFALLS.md`（121 条）；日常进展：`YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
