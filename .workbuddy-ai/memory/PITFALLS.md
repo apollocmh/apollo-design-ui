@@ -693,3 +693,57 @@
 103. ⚠️ **L4 DOM 契约 fixture 对「不产 DOM 的组件」要走探针路径**：`ConfigProvider` 本体不产 DOM（Context.Provider 不引入元素；Vue 渲染函数直接返回 children）。普通 fixture 模板（断言根元素 className / tag）会让 fixture 写成「断言一个不存在的根」而失去价值。`tests/compat/fixtures/config-provider/README.md` 说明了意图：fixture 仍按 schema 建，但 L4 比对路径改为探针读 context（`packages/ui/src/config-provider/__tests__/semantic.test.ts` 里挂探针）。
 
 104. ⚠️ **biome 全仓 `Found 37 warnings + 1 error` 大多不是你的**：form-core 流在并行改，它的 `__tests__/batch*.ts` 有 30+ 条 `lint/suspicious/noTemplateCurlyInString` warning（占绝对多数）。`biome check .` 把全仓聚合输出了，但「不要把 warnings 当 errors」是纪律（PITFALLS 49 同源）—— 用 `--max-diagnostics` + `grep "^packages/"` 看是哪些文件，**只**对自己范围的文件做修复。本次 ConfigProvider 范围（`packages/ui/src/config-provider/` + `tests/compat/fixtures/config-provider/` + `tests/visual/`）biome 干净。
+
+---
+
+94–104 由**并行工作流 流 1** 预留。以下 **105 起** 是流 2（`picker`）本轮新增。
+
+105. ⚠️⚠️ **vitest 在有测试失败时静默不生成覆盖率报告**，而且会**先清空 `coverage/` 目录**。
+     症状：`foundation-status.mjs --verify` 退出码仍是 0、测试数照常打印，但覆盖率显示
+     「—% … 阈值达标: 未测量」；上一次按包测好的 `coverage-summary.json` 也被一起删掉。
+     实测定位（干净状态二分，不是「重跑就好了」）：同样的 CLI 参数在 picker 单包能产出
+     summary（换两个 project 也能）；换成全仓就整个 `coverage/` 不存在 ——
+     差别只有「全仓有 17 个 `packages/theme` 失败」。加大 `--max-old-space-size` 到 10GB 无效。
+     ⇒ 处方：a) 覆盖率**按包单独测**，不要用全仓 `--verify` 的数字；
+     b) 跑完 `--verify` 别指望 coverage 目录里还有东西；
+     c) `foundation.json` 里手工填覆盖率时，必须在 `notes` 写明是「按包测量」及原因。
+
+106. ⚠️ **只有 re-export 的 `index.ts` 不会进入覆盖率采集**（没有任何测试 import 它）。
+     于是「99.29%」是在**少算一个文件**的前提下得到的，且漏导 / 改名永远没人会红。
+     ⇒ 处方：写一个公开 API 面测试（`import * as pkg from '../index'`，
+     断言 `Object.keys(pkg).sort()` 等于契约声明的集合 + 没有 undefined +
+     没有任何导出带 Vue 组件特征字段）。顺带把 `api` 维度**可执行**地钉住。
+
+107. ⚠️ **`expect(...).toEqual(...)` 忽略值为 `undefined` 的键** ——
+     `{a:1, b:undefined}` 与 `{a:1}` 相等。于是「去掉过滤 undefined」的变异体会**存活**。
+     ⇒ 处方：断言 `Object.keys(result)`，并显式断言 `null` 要保留（null 与 undefined 不等价）。
+
+108. ⚠️ **`getWeekDay` 里的 `+ firstDayOfWeek()` 默认恒等于 `+ 0`** ——
+     它内部强制 `.locale('en')`，而内置 `en` 的 `weekStart = 0`。
+     ⇒ 去掉这一项的变异**首轮必然存活**，这不是断言写得松，是分支本身默认不可观测。
+     处方：用例里 `dayjs.updateLocale('en', { weekStart: 2 })` 后再比对，`finally` 恢复。
+
+109. ⚠️ **`dayjs.updateLocale` 不是开箱可用的**：必须
+     `import updateLocale from 'dayjs/plugin/updateLocale'` + `dayjs.extend(updateLocale)`，
+     否则报 `dayjs.updateLocale is not a function`（`dayjs.extend` 只能一次一个插件或数组）。
+
+110. ⚠️ **macOS 的 `.DS_Store` 会被 v8 coverage 的 rolldown 解析器当源文件扫描**，
+     报 `Failed to parse .../src/.DS_Store` 的 PARSE_ERROR，整个覆盖率跑不出来。
+     它已在 `.gitignore` 里，只是系统生成的残留文件 ⇒ 直接 `rm -f` 即可，不要改配置。
+
+111. ⭐ **根 `biome.json` 是 `CF-REGISTRY-TOOLS` 独占集时，可以在子目录放嵌套 `biome.json`
+     来整目录豁免**：`{ "extends": "//", "files": { "includes": ["!**"] } }`。
+     用处：oracle / 固化副本这类**必须与上游逐字节一致**的目录不能被 `biome format`，
+     否则 sha256 对不上、oracle 前提失效；根配置里已有的豁免是 `!**/registry/source/locale-rc`
+     这种老目录，新目录动不了根配置时用嵌套配置解决。
+
+112. ⚠️ **判据「有没有 React 耦合」要看整条 import 链，不能只 grep `from 'react'`**。
+     `@rc-component/picker` 的 `useOpen` / `useInvalidate` 等文件**没有**直接 import react，
+     但依赖 `@rc-component/util` 的 `useEvent`（React hook）⇒ 仍然不可对拍。
+     全量扫描结论（120 个 `es/**/*.js`）：约 90 个零框架耦合 / 约 30 个绑 React。
+
+113. ⚠️ **固化的上游副本不要复制它的 `.d.ts`** —— `@rc-component/picker` 的
+     `interface.d.ts` 引用 React 类型，照抄会把 React 类型拖进我们自己的类型面。
+     ⇒ 处方：手写**窄声明**，只覆盖 oracle 实际调用的函数，类型指回本包的 `src/types.ts`。
+     另注意 `Nullable<T>` 要写成 `T | null | undefined`（只写 `| null` 会在
+     `noUncheckedIndexedAccess` 下让 types project 报 Unhandled Source Error）。
