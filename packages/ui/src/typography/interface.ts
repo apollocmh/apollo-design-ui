@@ -169,6 +169,20 @@ export interface TypographySemanticClassNames {
   textarea?: string;
 }
 
+/**
+ * Vue 的 class 取值形态（字符串 / 条件对象 / 上述两者的数组）。
+ *
+ * 只在**内部**（`InternalTypography` 的 `className` prop）使用：`Base` 的类名是
+ * 条件拼接出来的，在 `.ts` 渲染函数里用 Vue 原生的 class 数组比手写字符串拼接
+ * 更不容易漏。公开 API 上的 `className` 仍然是 `string`（与 antd 一致）。
+ */
+export type TypographyClassValue =
+  | string
+  | Record<string, boolean>
+  | (string | Record<string, boolean> | null | undefined)[]
+  | null
+  | undefined;
+
 /** 语义化样式的四个槽位。 */
 export interface TypographySemanticStyles {
   root?: CSSProperties;

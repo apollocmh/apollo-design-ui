@@ -30,7 +30,11 @@ import { computed, ref, useAttrs } from 'vue';
 
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import type { DirectionType } from '../config-provider/context';
-import type { TypographySemanticClassNames, TypographySemanticStyles } from './interface';
+import type {
+  TypographyClassValue,
+  TypographySemanticClassNames,
+  TypographySemanticStyles,
+} from './interface';
 
 defineOptions({ name: 'AInternalTypography', inheritAttrs: false });
 
@@ -49,8 +53,12 @@ const props = withDefaults(
      *
      * ⚠️ 刻意**不**叫 `class`：`class` 是 Vue 的保留属性名，声明成 prop 会与
      *    `$attrs.class` 的分发打架。用户直接写的 `class` 走 `$attrs`（见下）。
+     *
+     * ⚠️ 类型允许数组/对象：`Base` 的类名是**条件拼接**的（`-danger` / `-disabled` /
+     *    `-ellipsis` / `-link` …），在 `.ts` 渲染函数里用 Vue 原生的 class 数组表达
+     *    比手写字符串拼接更不容易漏。模板里它会被放进 `:class` 的数组，Vue 会自行展平。
      */
-    className?: string;
+    className?: TypographyClassValue;
     /** 也落在根元素上，在 `className` **之后**。 */
     rootClassName?: string;
     /** 根元素内联样式。会**覆盖** `styles.root`（与 antd 的合并顺序一致）。 */

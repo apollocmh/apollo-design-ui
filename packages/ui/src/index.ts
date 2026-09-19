@@ -192,4 +192,4 @@ export type {
 // ---------------------------------------------------------------------------
 // Typography —— 复合组件（Text / Title / Paragraph / Link + ellipsis / copyable / editable）
 // ---------------------------------------------------------------------------
-export { Typography } from './typography';
+export { Link, Paragraph, Text, Title, Typography } from './typography';
