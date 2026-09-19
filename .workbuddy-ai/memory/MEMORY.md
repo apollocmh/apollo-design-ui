@@ -156,6 +156,20 @@ L0 utils/theme/icons ｜ 测试 test-utils
 6. ⭐ **越界 ≠ 违规。** 判据是「有没有降低验收标准」（`H8`），不是「有没有改域外文件」。
    改**检查器的假阳性**（如 E10 把 `${v(...)}` 误判为硬编码）是合法的，要放行并要求写明理由；
    **放宽真标准**才是必须挡下来的。
+7. ⚠️⚠️ **「绿在本地」≠「绿在仓库」—— 已第 4 次遇到（务必查产物是否在 git 里）。**
+   任何依赖**磁盘产物**才成立的门禁结果，都要确认那个产物**已入库**。
+   | 次 | 现象 | 根因 |
+   |---|---|---|
+   | 1 | theme B1「重跑即绿」 | 残留 `dist/tokens.css` 骗过 `existsSync`（PITFALLS 76） |
+   | 2 | subagent 后台跑门禁后结束 turn | 进程被杀，产出滞留未提交 |
+   | 3 | config-provider 视觉「3/9 exact」 | **React 基线 PNG 从未 commit**（0 张）⇒ 全新 clone 0/9 `missing-baseline` |
+   ⇒ 验证手段：`git ls-files <产物路径>` 或换个干净状态重跑一次。
+   ⚠️ 第 3 次**不是**造假 —— 补跑 `--mode baseline` 后数字与汇报完全吻合，
+   纯粹是产物没入库。**别急着判定虚报，先复现。**
+8. ⚠️ 合并后 `packages/ui/src/index.ts` 的 **export 名排序**可能被破坏
+   （`DefaultRenderEmpty` 应在 `defaultRenderEmpty` 之前）⇒ `lint:format` 报
+   `assist/source/organizeImports` error。biome 标 **Safe fix**，`--write` 即可。
+   每个流都动这个共享文件，合并后必查。
 
 ## ⚠️ 未决事项（接手先看）
 
@@ -174,20 +188,27 @@ L0 utils/theme/icons ｜ 测试 test-utils
    `form-store.ts` 文件级分支覆盖 92.62。
    ⚠️ ③c 的两个实现期裁决（写进契约 §4.7.11.1）：React「渲染体每次重跑」⇒ Vue 逐条配
    `watch`；render-props **无法自动判定**（插槽恒为函数、`length` 恒为 0）⇒ 显式 `renderProps` prop。
-1. **foundation 12/13 completed**；`form-core` 见上（completed），`picker` 仍 todo。
-   组件 **3/72**（`empty` + `divider` + `spin`，均 `completed`）。听 `next-task.mjs`
-   （并行时用 `--parallel`）。
+1. **foundation 12/13 completed**；`form-core`/`config-provider` 见上；
+   **`picker` 是 `implementing`**（契约 + 纯函数层已做，覆盖 99.29/97/99.08/99.27；
+   **面板组件 + 输入框 hooks 未做** ⇒ L2/L4/L5 留 `todo`，不用 `n/a` 掩盖）。
+   组件 **4/72**（`empty` + `config-provider` + `divider` + `spin`，均 `completed`）。
+   听 `next-task.mjs`（并行时用 `--parallel`）。
+   ⭐ **50 个组件的下游依赖已通** —— ConfigProvider 收口后，主体组件可以批量推进了。
    ⭐ **`spin`(P1) 已收口，11/11 维度全 done，`interactionStatus` 是全仓第一个 `done`**
    —— 组件侧 L2 交互层**终于被真正验证过**了（`empty`/`divider` 都是纯展示组件，判 `n/a`）。
    它同时是**第一个消费 `motion`(L1) 的组件**，首次联调没暴露契约缺口。
    ⚠️ 它顺带改了两处共享面（已审为合法）：`theme` 加 `borderRadiusCircle`（几何常量，
    为让组件层不硬编码 `100%`，服务 H9）；`validate-registry` 的 E10 补 `${v(...)}` 豁免
    （`border-radius:${v('x')}` 运行时即 `var(...)`，原是假阳性）。真硬编码仍被拦。
-2. ✅ **`form-core` 不再挡路**（2026-09-19 收口）⇒ **`config-provider` 已进 `currentBatchIds`**，
-   后者解锁 50 个组件 —— 这是当前关键路径。
+2. ✅ **`config-provider` 已 `completed`（2026-09-19）** —— P0/L，**解锁 50 个组件**，
+   全仓运行时网关（theme / locale / size / disabled / prefixCls）+ 零运行时 CSS 变量的落地点。
+   渐进类型决策 D25（3 个精确 prop + `components` 弱类型逃生口）；
+   tooltip/popover/popconfirm **不提供**（`UniqueProvider` 未实现，D29）。
+   ⚠️ L6 是 **3/9 exact + 6/9 已分类差异**（D32 1px size-mismatch / D33 Empty SVG 不跟 dark），
+   不是 9/9。**Empty 的 SVG 不跟 `darkAlgorithm` 是真缺口**，Empty 已 completed 需后续补。
+   ⇒ 下一步按 `next-task.mjs`（不带 `--parallel`）取，主体组件可以批量推进了。
 
-3. `packages/ui/src/config-provider/` 目前**只有 `context.ts` 最小集**（Empty 够用），
-   ConfigProvider 组件本身未实现。
+3. ~~`packages/ui/src/config-provider/` 只有 `context.ts` 最小集~~ **已于 2026-09-19 解决**。
 4. 六个 foundation 包的 API 已 done 但**零上层消费**：`position.measureAlign`/
    `motion.CSSMotion`/`portal.Portal`/`a11y`/`virtual-list`/`overlay.useOverlay`/
    `locale`。首次联调很可能暴露契约缺口（已由 `empty` 暴露过 locale 响应式）。
