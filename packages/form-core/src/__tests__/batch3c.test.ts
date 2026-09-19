@@ -53,10 +53,12 @@ import type {
   FormContextProps,
   FormInstance,
   FormRef,
+  FormRule,
   InternalNamePath,
   ListContextProps,
   ListField,
   ListOperations,
+  ListProps,
   Meta,
   Store,
   StoreValue,
@@ -136,7 +138,7 @@ interface MountFormOptions {
   /** 注入一个自定义 `FormContext`（测 `FormProvider` 之外的兜底）。 */
   formContext?: FormContextProps;
   /** 挂一个内部 `Field`（用于触发 `updateValue` ⇒ `onValuesChange` / `onFieldsChange`）。 */
-  field?: { name: string; rules?: unknown[] };
+  field?: { name: string; rules?: FormRule[] };
 }
 
 function mountForm(
@@ -566,14 +568,20 @@ describe('Form · store 挂钩', () => {
   });
 
   it('fields 变化 ⇒ 重新 setFields（引用相同时不重复）', async () => {
-    const fields = ref<FieldData[]>([{ name: 'a', value: 1 }]);
+    // ⚠️ 用 `shallowRef` 而不是 `ref`：`ref<T>` 会做 `UnwrapRef<T>` 深展开，
+    //    递归进 `NamePath<any>` 后触发 TS2589（类型实例化过深）。这里只整数组替换，
+    //    不需要深层响应式。
+    const fields = shallowRef<FieldData[]>([{ name: 'a', value: 1 }]);
     const exposed = shallowRef<FormRef | null>(null);
     const Host = defineComponent({
       setup() {
         return () =>
           h(
             Form,
-            { fields: fields.value, ref: exposed },
+            // ⚠️ 走宽松重载：写成字面量 `{ fields, ref }` 会让 TS 去实例化 `Form` 的
+            //    精确 props 类型（`component` 的 `Component` 联合 + `fields` 的
+            //    `FieldData[]`），触发 TS2589「类型实例化过深」。
+            { fields: fields.value, ref: exposed } as Record<string, unknown>,
             {
               default: () => [h(Field, { name: 'a' }, { default: () => [h('i')] })],
             },
@@ -1190,7 +1198,7 @@ function mountList(
           { ...(options.formProps ?? {}), ref: exposed },
           {
             default: () => [
-              h(List, listProps, {
+              h(List, listProps as unknown as ListProps, {
                 default: (fields: ListField[], operations: ListOperations, meta: Meta) => {
                   renderCount += 1;
                   capturedFields = fields;

@@ -1038,6 +1038,16 @@ node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__
   → list.ts          100 / 97.36 / 100 / 100
 ```
 
+**权威数字（`registry:foundation:verify`，2026-09-19 实测后写入 `registry/foundation.json`）**：
+
+```
+form-core 在四个 project（unit / dom-contract / types / a11y）下：
+  files 12 | tests 631 | passed 631 | failed 0
+覆盖率（整包聚合）：语句 98.88 / 分支 94.45 / 函数 99.47 / 行 98.97
+  （阈值 95 / 90 / 95 ⇒ thresholds.met = true）
+build: passing（--verify-build 实测，2026-09-19）
+```
+
 **变异验证（39 组，一次一个：应用 → 跑 `batch3c.test.ts` → 还原 → `shasum -a 256` 校验）**：
 
 | 组 | 变异体 | 结果 |
