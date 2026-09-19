@@ -103,6 +103,22 @@ export {
   PRESENTED_IMAGE_DEFAULT,
   PRESENTED_IMAGE_SIMPLE,
 } from './empty';
+export type {
+  SpinComponentToken,
+  SpinConfig,
+  SpinIndicator,
+  SpinPercent,
+  SpinProps,
+  SpinRef,
+  SpinSemanticAllType,
+  SpinSemanticClassNames,
+  SpinSemanticStyles,
+  SpinSemanticType,
+  SpinSemanticValue,
+  SpinSize,
+  SpinSlot,
+} from './spin';
+export { Spin, getDefaultIndicator, setDefaultIndicator } from './spin';
 export type { ComponentStyleEntry } from './style';
 // ---------------------------------------------------------------------------
 // 样式生成（构建期与自定义 prefixCls）
