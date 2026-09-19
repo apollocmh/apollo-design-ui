@@ -142,29 +142,30 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
 ## ⚠️ 未决事项（接手先看）
 
-0. 🔶 **`form-core` 是 `implementing`（2026-09-19，批次①②③a③b 完成）** —— 上游约 3600 行，
-   一轮做不完，契约 §3 拆成三批，③ 再切三个子批：① 校验引擎 ✅ ｜ ② 取值工具
-   （valueUtil/NameMap/validateMessages）✅ ｜ ③a 状态机内核（FormStore/useForm/useWatch/
-   WatcherCenter/三个 Context）✅ ｜ ③b 字段编排（`validate-util.ts` 331 行 + `field.ts` 771 行
-   + `batch3b.test.ts` 95 例）✅ ｜ **③c 表单容器（`Form` + `FormProvider` + `List`）⬜ 未开工**。
-   ✅ **`ui/src/form` 骨架已落地**（`Form.vue`/`FormItem.vue`/`FormList.vue`/`interface.ts`，
-   消费契约 §6.4 的类型面）—— 全仓 `vue-tsc --noEmit` 0 错误，这条 doneWhen 已满足。
-   ⚠️ ③ 是**唯一基本没有 Oracle 的部分**（`validateUtil.js` 第 2 行就 `import * as React`，
-   且 `Field.js` 通篇绑 React 生命周期）—— 只能读源码 + 行为测试。
-   ③a 只有 `allPromiseFinish` / `isFormInstance` 能真对拍；③b **一个都没有**。
-   ⇒ 契约 §4.7.7 / §4.7.8 已由 ③b 验证；**§4.7.11（③c）仍是未被代码验证的文档**。
-   ⚠️ 想接 ③c：**不要只加源码不加测试** —— form-core 覆盖率 97.99/93.26/98.19/98.07
-   （阈值 95/90/95），新增未覆盖代码会直接把门禁拉红。
-   ⚠️ ③c 是唯一能构造 `Form.List` 上下文的地方 ⇒ `Field` 的 `prefixName` / `listContext`
-   两条只被「读」过，没有测试真的构造过；`form-store.ts` 文件级分支覆盖也仍偏低。
-1. **foundation 11/13 completed**；`form-core` 见上（implementing），`picker` 仍 todo。
+0. ✅ **`form-core` 已 `completed`（2026-09-19 下午，批次①②③a③b③c 全部收口）**
+   —— 上游约 3600 行，契约 §3 拆三批、③ 再切三子批，现在**三批五子批全绿**：
+   ① 校验引擎 ✅ ｜ ② 取值工具 ✅ ｜ ③a 状态机内核 ✅ ｜ ③b 字段编排
+   （`validate-util.ts` + `field.ts` + `batch3b.test.ts` 95 例）✅ ｜
+   **③c 表单容器（`form.ts` ~290 行 + `form-provider.ts` ~130 行 + `list.ts` ~280 行
+   + `batch3c.test.ts` 81 例）✅**。
+   ✅ **`ui/src/form` 骨架已落地**（`Form.vue`/`FormItem.vue`/`FormList.vue`/`interface.ts`）。
+   ⚠️ **强度分档**：只有批次①②（78 个 oracle 用例）与 ③a 的两个纯函数是**逐位差分**；
+   ③a 主体 / ③b / ③c 全部是「读源码 + 行为测试」，**没有 Oracle**。
+   ⇒ 契约 §4.7.7 / §4.7.8 / §4.7.11 都是「被行为测试覆盖」，不是「被差分证明」。
+   ③c 变异 39 组：34 杀 + 5 等价（等价原因逐条写在契约 §4.7.11.2）。
+   ⚠️ 已知缺口：③a 的 `createField` 替身**没有**回头换成真实 `Field` 重跑；
+   `form-store.ts` 文件级分支覆盖 92.62。
+   ⚠️ ③c 的两个实现期裁决（写进契约 §4.7.11.1）：React「渲染体每次重跑」⇒ Vue 逐条配
+   `watch`；render-props **无法自动判定**（插槽恒为函数、`length` 恒为 0）⇒ 显式 `renderProps` prop。
+1. **foundation 12/13 completed**；`form-core` 见上（completed），`picker` 仍 todo。
    组件 **2/72**（`empty` + `divider`，均已 `completed`）。听 `next-task.mjs`（并行时用 `--parallel`）。
    第二个组件原建议选**有交互**的（验 L2 层）；2026-09-18 实际先派了 **`divider`(P0, 最小)**
    把组件侧 G0→G14 走顺 —— **`spin`(P1) 还没开工**（流2 在 divider 收口后按约定停下），
    它才是会走 `motion` 层的那个。
    ⚠️ `divider` 的 `interactionStatus` 判 `n/a`（纯展示组件），
    ⇒ **组件侧 L2 交互层其实还没被任何组件真正验证过**。
-2. **`form-core` 挡着 `config-provider`**，后者解锁 50 个组件 —— 这是当前关键路径。
+2. ✅ **`form-core` 不再挡路**（2026-09-19 收口）⇒ **`config-provider` 已进 `currentBatchIds`**，
+   后者解锁 50 个组件 —— 这是当前关键路径。
 
 3. `packages/ui/src/config-provider/` 目前**只有 `context.ts` 最小集**（Empty 够用），
    ConfigProvider 组件本身未实现。

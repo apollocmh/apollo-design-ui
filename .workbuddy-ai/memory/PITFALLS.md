@@ -547,3 +547,81 @@
     —— 上游 `.d.ts` 写的是 `boolean`，但运行时返回 `this.props.preserve`。
     若把 `undefined` 压成 `false`，`FormStore.isMergedPreserve` 的
     `fieldPreserve !== undefined` 判据失效。
+
+82. ⚠️ **等 `MessageChannel` 宏任务时，一个 `setTimeout(0)` 回合不够 —— 必须等两个。**（③a/③c 实测）
+
+    现象：`batch3a.test.ts` 里「⭐ notifyWatch 拿到的是本次变更的路径」在**单独跑**时全绿，
+    带 `--coverage` 跑全包时偶发失败（`expected [] to deeply equal [[['a']]]`）。
+    原实现只 `await new Promise(r => setTimeout(r, 0))` 一次，并假设「MessageChannel
+    一定在它之前投递」—— CPU 繁忙（覆盖率采集开 v8 采样）时投递顺序**翻转**。
+
+    ⇒ 处方：等**两个** `setTimeout(0)` 回合（两个 timers 阶段之间必然经过一次 poll + check，
+      足以让 MessageChannel 的 port 消息先落地）。
+    ⚠️ **不是「重跑就好了」**：这次的可复现条件是「带 `--coverage` + 跑全包」，
+      单独跑文件永远绿 —— 找根因要按**能稳定复现的组合**去证伪，不是靠重跑。
+
+83. ⚠️ **`vi.spyOn(...).mockRestore()` 会清空 `mock.calls`。**（③c 实测，19 个用例白改一轮）
+
+    想捕获 `warning()`（走 `console.error`）时写成
+    `const spy = vi.spyOn(console, 'error'); fn(); spy.mockRestore(); return spy.mock.calls;`
+    ⇒ **`mock.calls` 永远是 `[]`**，所有「应告警」的断言全红，而代码其实是对的。
+
+    ⇒ 处方：**在 `mockRestore()` 之前**把 `spy.mock.calls` 抄进自己的数组。
+      已用 scratch 用例证实（`isDev=true calls=[]`）。
+
+84. ⚠️ **`setFieldsValue` / `setFieldValue` 走的是 `setFields`，不触发 `onValuesChange` / `onFieldsChange`。**（③c 实测）
+
+    `form-store.ts:578-593` 的 `setFields` 只做 `notifyObservers` + `notifyWatch`，
+    不进 `updateValue` 的六步链 ⇒ 回调一个都不跑。
+    要触发必须走 **`Field` 的 `control.onChange(...)`**（`updateValue`，`form-store.ts:713`）。
+
+    ⇒ 测试里想验「表单级回调」必须先挂一个内部 `Field` 拿它的 `control`。
+    反过来也成立：**`updateValue` 无论新旧值是否相等都会触发 `onValuesChange`**
+    （`:722-729` 没有等值判断）⇒ 断言「有没有真的改过 store」要用
+    「回调一次都没调」，不能只看「值没变」。
+
+85. ⚠️ **Vue 的插槽永远是函数，且拿不到形参个数 ⇒ 不能用来自动判 render-props。**（③c 实测）
+
+    `normalizeSlot()` 把**每一个**插槽包成 `(...args) => normalizeSlotValue(rawSlot(...args))`
+    （`@vue/runtime-core@3.5.42` `runtime-core.cjs.js:5340-5354`，已核对），
+    `withCtx()` 的包装体同样是 `(...args) => ...`（同文件 `:696`）
+    ⇒ `slots.default.length` **恒为 0**。
+
+    ⇒ 上游 `typeof children === 'function'` 的对应物只能是**显式 prop**
+    （③c 新增 `renderProps?: boolean`）。
+
+86. ⚠️ **`ref<T>` 的 `UnwrapRef` 深展开碰到递归类型会 TS2589。**（③c 实测）
+
+    `const fields = ref<FieldData[]>([...]); fields.value = [...]` 报
+    `TS2589: Type instantiation is excessively deep`：
+    `FieldData.name` 是 `NamePath<any>` ⇒ `UnwrapRef` 递归进深度推导炸了。
+
+    ⇒ 处方：测试里只做**整数组替换**时用 `shallowRef`（不做深展开）。
+    同类：`h(Component, {字面量 props}, ...)` 走精确 props 重载也可能炸，
+    需要时断言成 `Record<string, unknown>` 走宽松重载。
+
+87. ⚠️ **变异验证里「去掉一个守卫」常常是等价变异体 —— 判等价必须给源码级理由，不许凭感觉。**（③c 实测）
+
+    ③c 的 39 组里有 5 组杀不掉，每一条都有可验证的原因：
+    - `move` 的 `from === to` / 越界守卫：`move()` 在这两种情形下返回**同一个数组引用**
+      （`value-util.ts:206-210`），而 `Field` 的 trigger 在 `newValue === curValue` 时
+      **根本不 dispatch**（`field.ts:533`）⇒ 没有可观测差异；
+    - `add` 的 `index <= length` 改 `<`：`index === length` 时 if / else 两分支产出
+      **完全相同**的 `keys` 与 `value`；
+    - `getNewValue` 换 `fieldContext`：`getFieldValue` 是 FormStore 的**箭头属性**
+      （`form-store.ts:361`），`this` 与宿主对象无关；
+    - `shouldUpdate` 的 `source === 'internal'` 守卫：`onStoreChange` 的 `default` 分支
+      **先判 `namePathMatch`** 就 `return` 了，守卫根本到不了。
+
+    ⇒ 记下来的价值：等价变异体反过来能**抓出写错的注释**（③c 就靠它发现 `list.ts`
+    里「不能用 fieldContext」那条注释是错的，已订正）。
+
+88. ⚠️ **Field 的 `initialValue` 在**挂载期**不看 `isListField`。**（③c 实测）
+
+    挂载期走 `initEntityValue`（`form-store.ts:611-620`）：只要当前值是 `undefined` 就写进去，
+    **不看** `isListField`。只有 `resetFields` ⇒ `resetWithFieldInitialValue`
+    （`:524-525` 的 `!isListField && ...`）才区分。
+
+    ⇒ 想测 `isListField` 的语义（顶层 List = `false` / 嵌套 List = `true`，
+    `List.js:64` 的 `isListField ?? !!wrapperListContext`），
+    **不能只看初始值**（两条路径结果一样），必须走 `resetFields`。
