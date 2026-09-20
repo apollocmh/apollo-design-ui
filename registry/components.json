@@ -1041,8 +1041,8 @@
       "typeStatus": "todo",
       "a11yStatus": "done",
       "visualStatus": "todo",
-      "docsStatus": "todo",
-      "notes": "2026-09-21：L5 a11y 已验证通过 —— vitest --project a11y 全仓 9 files / 175 tests passed（其中 skeleton 新增 15 例）。",
+      "docsStatus": "done",
+      "notes": "2026-09-21：L5 a11y 已验证通过 —— vitest --project a11y 全仓 9 files / 175 tests passed（其中 skeleton 新增 15 例）。\n2026-09-21：文档三件套落地（README.md + index.zh-CN.md + index.en-US.md）。",
       "layerNotes": null
     },
     {
