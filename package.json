@@ -38,7 +38,8 @@
     "test:build": "node tests/build/run.mjs",
     "build": "pnpm -r --filter './packages/**' run build",
     "build:ui": "pnpm --filter @apollo-design/ui run build",
-    "dev": "pnpm --filter @apollo-design/docs run dev"
+    "dev": "pnpm --filter @apollo-design/docs run dev",
+    "verify:changed": "node scripts/verify-changed.mjs"
   },
   "devDependencies": {
     "@apollo-design/theme": "workspace:*",

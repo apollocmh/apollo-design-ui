@@ -48,3 +48,6 @@ Thumbs.db
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# 增量门禁生成的作用域 tsconfig（scripts/verify-changed.mjs）
+tsconfig.scoped.json
