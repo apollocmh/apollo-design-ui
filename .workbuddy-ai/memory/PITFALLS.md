@@ -747,3 +747,104 @@
      ⇒ 处方：手写**窄声明**，只覆盖 oracle 实际调用的函数，类型指回本包的 `src/types.ts`。
      另注意 `Nullable<T>` 要写成 `T | null | undefined`（只写 `| null` 会在
      `noUncheckedIndexedAccess` 下让 types project 报 Unhandled Source Error）。
+
+## Typography 流（2026-09-20，140-152）
+
+> ⚠️ 编号从 **140** 起（跳过 114-139）：并行工作流各自在自己的 worktree 里追加，
+> 按约定给别的流留出区间，避免同一编号被两条流各写一份。
+
+140. ⚠️⚠️ **cssinjs 的 `&` 是「复合」不是「后代」** —— `&${c}-x, &${c}-link${c}-x` 展开后
+     **两条都带根类**（特异性 0,3,0）。省掉第二个分支的 `&` 会掉到 0,2,0，与文档里
+     **更靠后**的规则打平后落败。
+     实测：`<Link type="secondary">` 算出链接蓝而不是次要灰（`colorLink` vs `colorTextDescription`）。
+     **L1/L4 全绿 —— jsdom 看不到层叠**，只有 L6 逐像素比对能抓（`link` variant 三个 viewport 全红）。
+     处方：把 antd 的选择器**原样**抄进 `theme.test.ts` 的断言（含 `&`），并加一条通用不变式钉住
+     「每个含 `-link` 的选择器都以根类开头」。
+
+141. ⚠️⚠️ **`a,b:hover` 陷阱：伪类只作用于逗号列表的最后一个选择器。**
+     `operationUnit` 传进来的选择器是 4 个按钮的逗号列表，直接拼 `${sel}:hover` 得到
+     `a,b,c,d:hover` —— 在 CSS 里那是**两个独立选择器**：`a`/`b`/`c` **无条件**命中，
+     只有 `d` 带状态。
+     表现：前三个操作按钮永远显示 `colorLinkActive`、并且带一圈 `:focus-visible` 焦点环。
+     处方：`each(pseudo)` 把伪类**逐个**加到列表每一条上 —— 这正是 cssinjs `&:hover`
+     的展开语义（`&` = 整个父选择器列表）。
+
+142. ⚠️⚠️ **`display:inline` 的元素 `clientHeight` 恒为 0 —— 这是功能性的，不是外观问题。**
+     antd 的 `MeasureText` 硬编码 6 条内联样式
+     （`position:fixed; display:block; left:0; top:0; pointerEvents:none; backgroundColor:rgba(255,0,0,0.65)`）。
+     少了 `display:block`，二分中点那个容器（只带 `measureStyle`，要量**自然高度**）的
+     `clientHeight` 就是 0 ⇒ `midHeight > ellipsisHeight` 永远为假 ⇒ 二分收敛到 `maxIndex`
+     ⇒ **完全不裁剪**（渲染整段原文）。
+     表现：`size-mismatch`（Vue 294px vs React 184px）。
+     处方：**打桩布局时也把这条真实浏览器行为打进去**
+     （`if (!display || display === 'inline') return 0`）—— 否则桩会把真缺陷放过去。
+
+143. ⚠️⚠️ **jsdom 既没有布局引擎、也看不到 CSS 级联 ⇒ 任何依赖「特异性 / 布局 / 真实排版」的
+     判据只能由 L6 证明。**
+     Typography 收口期抓到 3 个真实缺陷（140/141/142），**L1/L2/L4/L5 五层全绿**，
+     没有一个被 jsdom 层发现。
+     推论：组件「本地全绿」不等于「画对了」；把 L6 当成可选步骤的流程一定会漏这一类缺陷。
+
+144. ⚠️ **`startsWith('.' + P)` 这类前缀断言是空转。**
+     `.apollo-typography-link…` 也满足「以 `.apollo-typography` 开头」，所以删掉 `&` 前缀的
+     变异体照样绿 —— 是**变异验证**（不是人眼）暴露了它。
+     处方：`new RegExp(\`^\\.${P}(?![\\w-])\`)`。
+     ⭐ 一般化：**通用不变式（`for (const x of xs) expect(...)`）最容易写成空转**，
+     必须用变异验证确认它真的会红。
+
+145. ⚠️⚠️ **UA 的 `button{font: 400 13.3333px Arial}` 是 shorthand，会把 `line-height`
+     重置成 `normal`。**
+     antd 靠 `dist/reset.css` 的 `input,button,…{font-size:inherit;font-family:inherit;line-height:inherit}`
+     抵掉它；零运行时架构下我们没有那条 reset。
+     症状**不只是**「按钮字体不对」：`symbolRowEllipsisRef` 在**测量容器**里渲染按钮
+     ⇒ 字体变了 ⇒ 测到的 `ellipsisHeight` 变了 ⇒ 二分裁剪**差一个字符**（56 vs 57）。
+     ⇒ 「字体」在这条链上是一个**功能参数**。
+     处方：`getActionButtonFontReset` 显式补 `font-family/font-size/line-height: inherit`
+     （**故意不补** `margin:0` / `color:inherit` —— 补上会改变 `disabled` 的颜色继承链）。
+
+146. ⚠️ **`validate-registry` 的 E10（无硬编码视觉值）是文本级扫描：注释也算命中。**
+     注释里写 `#ffe58f` 或 `border-radius:3px` 都会让它报错。
+     且它只豁免 `var(` 与 `${v(` —— `${RESET_BORDER_RADIUS}px` 这种「值来自 token 常量」的
+     写法**仍被判为硬编码**。
+     处方：把**整条声明连属性名**放 `style/token.ts`（E10 唯一整文件豁免的真源处），
+     如 `RESET_BORDER_RADIUS_DECL = 'border-radius:3px'`；同时让 `theme.test.ts` 用 `toEqual`
+     钉住产物里的字面值 —— 判据**不放松**，字面量仍有唯一出处。
+
+147. ⚠️ **`--project types` 只覆盖 `*.test-d.ts`；测试代码与 demo 自己的类型错误只有
+     `vue-tsc` 能看到。**
+     实测：typography 收口时 `--project types` 全绿，`vue-tsc --noEmit` 报 **21 处**
+     （helper 的泛型收窄过头、故意传非法值的用例、`info.props` 是 `BaseTypographyProps`
+     不含 `disabled`）。处方：两个都跑；「故意传非法值」用 `as never`
+     （**不要** `as 1` —— 后者假装合法，读代码的人看不出这里在故意破坏契约）。
+
+148. ⚠️ **`pnpm run test:types`（全仓）会因 `.vue` 解析失败 exit 1**：Vitest 的 typecheck
+     模式不走 vue 插件，报 `TypeCheckError: Cannot find module './Divider.vue'`。
+     报错文件包含 Divider / Empty / Spin / Form ⇒ **与具体组件无关**，是仓库级工具链缺口。
+     按组件路径过滤（`vitest run --project types packages/ui/src/<comp>`）时全绿。
+
+149. ⚠️ **`@apollo-design/icons` 的 `getIconStyle(iconPrefixCls)` 导出了但没有任何消费者**
+     （D15 规定「只导出、不注入」）⇒ 图标**没有基础样式**（`.apollo-icon` 缺
+     `display:inline-flex` / `vertical-align:-0.125em`，SVG 退化成 `display:inline`）。
+     症状：L6 里**凡是含图标**的用例都有 0.1%~0.3% 的**成块**差异（散点占比 1.7%），
+     而同一张图里文字部分逐像素一致 —— 这是「差异只落在图标上」的判据。
+     落点：`packages/ui/src/style/index.ts` 的 `BASE_CSS` 接上 `getIconStyle`。
+     ⚠️ 它会影响**所有**渲染图标的组件（spin 的 `LoadingOutlined` 等）的像素输出
+     ⇒ 改之前要确认其他组件已入库的基线。
+
+150. ⚠️ **`registry:check` 里的 `workstreams:check` 会因为某个组件的 `status` 变化而失败**
+     （`workstreams.json 已过期（输入变化）`）。
+     处方：`node registry/tools/gen-workstreams.mjs`（生成物、确定性，diff 只含该组件相关的
+     计数与 `ready`→`done`）。改 `status` 之后必须连带跑它。
+
+151. ⚠️ **`git index.lock: File exists` 在本沙箱会反复出现**（`git` shim 拦下 git 内部的
+     `unlink`，git 自己删不掉锁）。症状是**上一条 `git add`/`commit` 成功、下一条立刻失败**。
+     处方：`/bin/rm -f <repo>/.git/worktrees/<wt>/index.lock` 后重试；稳妥做法是**每次 git
+     命令前都先清一遍**（写成 `rm -f … && git …` 的复合命令）。且必须用真实 `/usr/bin/git`。
+
+152. ⚠️ **L6 的 diff 图是「React 底图 + 差异叠加」，不是「只有差异的空白图」**
+     （`compare.mjs` 把 diff 合成到 rawA 上再落盘）。所以**通过**的用例，diff 图看起来就是
+     React 基线本身 —— 别把它误读成「没有生成 diff」。要看差异落在哪，就看红色区域。
+     另：`compare.mjs` 的通过判据是**两个条件同时成立**（差异率 ≤ 0.1% **且**散点占比 ≥ 90%），
+     所以会出现「差异率 0.0836% 但判 FAIL」的情况 —— 因为散点占比只有 1.7%，差异**成块**。
+     报错信息里的 `block-diff` 正是这个含义。
+
