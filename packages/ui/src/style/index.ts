@@ -32,6 +32,7 @@ import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
+import { genTypographyStyle } from '../typography/style';
 
 /**
  * 静态 CSS 覆盖的前缀。
@@ -60,6 +61,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'empty', gen: genEmptyStyle },
   { name: 'space', gen: genSpaceStyle },
   { name: 'spin', gen: genSpinStyle },
+  { name: 'typography', gen: genTypographyStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

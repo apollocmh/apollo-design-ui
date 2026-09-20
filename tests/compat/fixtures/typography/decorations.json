@@ -1,0 +1,28 @@
+{
+  "$schema": "../schema.json",
+  "id": "typography/decorations",
+  "component": "typography",
+  "description": "七个装饰的**嵌套顺序** —— `strong → u → del → code → mark → kbd → i`（最内层到最外层）。这是本组件最容易写错、且**看起来完全一样**的一条判据：顺序反了屏幕上看不出差别，但 DOM 契约会红，而且它决定了 `mark` 里的 `code` 到底有没有底色。用 `variants` 逐个打开七个开关，再给一组全开（`decorations-all`）把顺序一次钉死。对应基线的 `text:strong` / `text:underline` / `text:delete` / `text:code` / `text:mark` / `text:keyboard` / `text:italic` / `text:decorations-all` / `text:mark+code` / `text:strong+underline` 十条用例。⚠️ 这条契约无法靠 L1 单独保证（jsdom 里两种嵌套都能过），L4 的逐节点比对是唯一能抓到它的层。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "strong": [true],
+    "underline": [true],
+    "delete": [true],
+    "code": [true],
+    "mark": [true],
+    "keyboard": [true],
+    "italic": [true]
+  },
+  "content": "Text",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -211,3 +211,31 @@ export {
   genComponentStyleSheet,
   STATIC_PREFIX_CLS,
 } from './style';
+export type {
+  ActionsConfig,
+  AutoSizeType,
+  BaseType,
+  BaseTypographyProps,
+  BlockProps,
+  CopyConfig,
+  EditConfig,
+  EllipsisConfig,
+  LinkProps,
+  ParagraphProps,
+  TextProps,
+  TitleProps,
+  TypographyConfig,
+  TypographyProps,
+  TypographyRef,
+  TypographySemanticAllType,
+  TypographySemanticClassNames,
+  TypographySemanticStyles,
+  TypographySemanticType,
+  TypographySemanticValue,
+  TypographySlot,
+  TypographyTooltipProps,
+} from './typography';
+// ---------------------------------------------------------------------------
+// Typography —— 复合组件（Text / Title / Paragraph / Link + ellipsis / copyable / editable）
+// ---------------------------------------------------------------------------
+export { Link, Paragraph, Text, Title, Typography } from './typography';

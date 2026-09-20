@@ -103,6 +103,19 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  typography: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    variants: [
+      'text', // Text：基础 + 四种语义 type + disabled
+      'title', // Title：h1 ~ h5 五级
+      'paragraph', // Paragraph：默认 + 多段（含 `div&` 的 margin-bottom）
+      'decorations', // code / mark / underline / delete / strong / keyboard / italic
+      'link', // Link：默认 / 语义 type / disabled / target=_blank
+      'ellipsis', // 单行 + 多行 + expandable（JS 二分裁剪路径）
+      'copyable', // 复制按钮（未复制态）
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
@@ -166,6 +179,40 @@ export const LIMITATIONS = [
       'Space / Space.Compact / Space.Addon 本身都没有可交互元素（不设 tabindex、不绑事件、没有禁用态），所以这四态对它们不适用 —— 与 Empty / Divider 同源。⚠️ 但 `Space.Compact` 会**改变子元素的 hover 层级**（`genCompactItemStyle` 给 `-compact-item:hover` 设 `z-index: 4`、`[disabled]` 设 `z-index: 0`）。那两条规则作用在**子组件自己的类名**上，而截图是静态的、不会触发 hover ⇒ 视觉层观测不到。它的语义由 `theme.test.ts` 钉住**选择器与顺序**（可判定），层叠结果等真实子组件落地后再补。',
     unblockWhen:
       '有真实的可聚焦子组件（Button / Input）后，用 Playwright 的 `hover()` 补一条「紧凑项 hover 时边框不被邻居遮住」的用例。',
+
+---
+
+    dimension: 'typography·state',
+    missing: ['hover', 'active', 'focus-visible', 'copied', 'editing'],
+    reason:
+      'Typography 是第一个**有交互态**的组件：`Link` 与四个操作按钮（expand / collapse / edit / copy）各有 hover / focus / active / disabled 四态，`copyable` 还有 `copied` 态。`run.mjs` 只截**静态帧**（渲染完成即截图，无交互步骤），所以这些状态进不了像素比对。它们的语义由 L1/L2 钉住（`__tests__/index.test.ts` 的 `trigger` / `vi.useFakeTimers` 用例），CSS 规则本身由 `__tests__/theme.test.ts` 断言存在。',
+    unblockWhen:
+      '给 `run.mjs` 加交互步骤（hover / click 后再截）后，补 `link-hover` / `copy-copied` 两个用例。',
+  },
+  {
+    dimension: 'typography·editable',
+    missing: ['编辑态（`editable` 进入后的 textarea）'],
+    reason:
+      'antd 的编辑态渲染 `Input.TextArea`（`ResizableTextArea` 包裹层 + `ant-input` 类 + `ant-typography-edit-content` 上的 `-textarea` 语义槽），而 Input 组件尚未落地。我们用**原生 `<textarea>`** 承载同一套 `-edit-content` CSS（差异 D-typography-3，见 `packages/ui/src/typography/README.md` §7）—— DOM 与视觉都**不**与 antd 一致，拿它进像素比对只会得到一个必然失败的用例。编辑态的**行为**（Enter 确认 / Esc 取消 / blur 确认 / IME 守卫）由 L1/L2 在 `__tests__/` 里钉住，不受此影响。',
+    unblockWhen:
+      'Input / TextArea 落地后，把编辑态换成真 TextArea 并把 `editable` 补进 `variants`。',
+  },
+  {
+    dimension: 'typography·tooltip',
+    missing: ['`ellipsis.tooltip`', '`copyable.tooltips`', '`editable.tooltip` 的悬浮气泡'],
+    reason:
+      'Tooltip 组件尚未落地。antd 的 Tooltip 在**未展开**时不额外产 DOM（只 clone 子元素并挂事件），所以本阶段用例里的 `copyable` / `ellipsis` 与 antd 逐像素一致；缺的是「悬浮后出现气泡」那一半 —— 那需要交互式截图（`run.mjs` 目前只截静态帧）。`ellipsis.tooltip` 对根元素 `aria-label` 的影响由 L4 钉住。',
+    unblockWhen: 'Tooltip 落地后补 hover 态用例（需要给 `run.mjs` 加交互步骤）。',
+  },
+  {
+    // ⚠️ 这一条不是「没做」，而是「做了、红了、并且已经定位到组件外的根因」。
+    //    它必须留在 LIMITATIONS 里，否则后人看到报告里的 21/24 会以为只是没覆盖。
+    dimension: 'typography·visual-residual',
+    missing: ['`typography/copyable__light__{mobile,tablet,desktop}` 的逐像素一致'],
+    reason:
+      '24 组里 21 组 0.000% exact；`copyable` 三组是 `block-diff`（差异率 0.3211% / 0.1568% / 0.0836%，散点占比 1.7% —— 差异**成块**而非抗锯齿散点）。diff 图显示红色区域**只落在复制图标**上（`tests/visual/diff/typography/copyable__light__*.png`），文字部分逐像素一致。根因在组件之外：`@apollo-design/icons` 导出了 `getIconStyle(iconPrefixCls)`（D15：只导出、不注入），但**仓库里没有任何地方消费它** —— 于是图标缺基础样式（`.apollo-icon` 没有 `display:inline-flex`、没有 `vertical-align:-0.125em`），SVG 退化成 `display:inline`，字形基线与 antd 差一点点。⚠️ 为什么不在本组件的收口里修：修法是在全局 `BASE_CSS` 里接上 `getIconStyle`，那会改变**所有**渲染图标的组件（`spin` 的 `LoadingOutlined` 等）的像素输出，属于 foundation 层的接线工作，超出本组件的改动面（`packages/ui/src/typography/**` + registry + memory）。缺口已登记在 `packages/ui/src/typography/README.md` §7 与 registry 的 `layerNotes.visual`。',
+    unblockWhen:
+      '`packages/ui/src/style/index.ts` 的 `BASE_CSS` 接上 `getIconStyle(iconPrefixCls)`（或 `@apollo-design/icons` 提供默认注入路径）后，重跑 `--mode compare`，三组应变 0.000% exact；届时同步复核 `spin` / `empty` 等已入库基线。',
   },
 ];
 
