@@ -188,7 +188,28 @@ L0 utils/theme/icons ｜ 测试 test-utils
    （`DefaultRenderEmpty` 应在 `defaultRenderEmpty` 之前）⇒ `lint:format` 报
    `assist/source/organizeImports` error。biome 标 **Safe fix**，`--write` 即可。
    每个流都动这个共享文件，合并后必查。
-9. 🚨 **`exit 137` + 零日志 ≠ OOM，先怀疑「前台默认 120s 超时」**（PITFALLS 121）。
+9. 🚨🚨 **`BASE_CSS` 缺 antd `reset.css` 的**元素级 margin 重置**（2026-09-20 定位）。
+   `packages/ui/src/style/index.ts` 的 `BASE_CSS` 目前只有：
+   `*{box-sizing}` + `html,body{margin:0;padding:0}` + 字体。而 antd reset.css 还有：
+   ```css
+   h1..h6 { margin-top:0; margin-bottom:0.5em; }
+   ol,ul,dl { margin-top:0; margin-bottom:1em; }
+   p { margin-top:0; margin-bottom:1em; }
+   ```
+   ⚠️ 后果：渲染 `h1~h6` / `ul` / `ol` / `p` 的组件会**保留浏览器默认 `margin-block-end:1em`**
+   ⇒ L6 全是 `size-mismatch` 且**我方偏高**。skeleton 实测 **9/24** 就栽在这。
+   （与 typography 的 G7「`BASE_CSS` 缺 `getIconStyle`」是同一家族的共享层缺口。）
+   ⚠️ **不要在组件内用 `0.5em`/`1em` 自保** —— 那不是 token（违反 H9），
+   且将来补了 reset 会**重复计算**。⇒ 正解是补 `BASE_CSS`，但那会影响**所有**组件
+   ⇒ 需单独决策 + **全量重跑所有视觉基线**。
+10. ⚠️⚠️ **E10 扫描源码时`不剥注释`** ⇒ 注释里出现「圆角属性名 + 冒号 + 数字」
+    （如 `border-radius:100px`）会被判成**硬编码圆角**（假阳性）。
+    ⚠️ 我修注释时**连续踩了两次**（第一次去掉 `100px`，新注释又写成 `border-radius:<数字>`
+    —— 后者同样匹配）。⇒ 注释里举例**只写属性名，别带冒号数字**。
+    （E19 早就要求 `stripComments()`，E10 没有。）
+11. ⚠️ `registry/components.json` 的 `status` **没有 `in_progress`** 这个取值
+    （`COMPONENT_STATUS` 里没有）⇒ 会报 `E2 ... 取值非法`。用 **`implementing`**。
+12. 🚨 **`exit 137` + 零日志 ≠ OOM，先怀疑「前台默认 120s 超时」**（PITFALLS 121）。
    实测：全仓构建门禁（`tests/build/run.mjs` 约 7 分钟）在前台连续被杀，
    一度被当成「16G 机器 OOM」。用 `sleep 90` 存活 + 心跳才定位到是超时。
    ⇒ **判据：先看命令平时要跑多久**；超过 2 分钟的一律后台跑或显式加 `timeout`。
