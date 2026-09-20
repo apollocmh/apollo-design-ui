@@ -23,9 +23,10 @@
   └───────────────────────────┬──────────────────────────────────┘
                               ▼
   ┌──────────────────────────────────────────────────────────────┐
-  │  收口      pnpm verify:full（registry:check + lint + test +      │
-  │            test:build，全仓四道全绿）                            │
-  │            ⚠️ 跑之前先关掉 IDE —— 实测 16 分钟 → 7 分 49 秒        │
+  │  收口      开发期：pnpm typecheck:build（增量，改 ui 约 5 分钟／  │
+  │            无改动 20 秒）+ 自己包的 vitest                        │
+  │            收口/milestone：pnpm verify:full（全仓四道全绿）        │
+  │            ⚠️ 跑重型门禁前先关 IDE —— 实测 16 分钟 → 7 分 49 秒     │
   └───────────────────────────┬──────────────────────────────────┘
                               ▼
                         回到领取（DAG 自动解锁下游）
@@ -257,33 +258,39 @@ pnpm run test:build       # 构建门禁（127 项）
 
 四道全绿才能把维度置 `done`。
 
-#### ⚠️ 关于「增量门禁」：**已验证无效，不要采用**（2026-09-20）
+#### ⚠️ 关于「开发期增量 typecheck」：实测结论（2026-09-20/21）
 
-曾经尝试用「只跑受影响包」来提速（`scripts/verify-changed.mjs`），
-**实测证伪**，结论如下（本机 i7-4770HQ / 4c8t / 16GB）：
+目标：不要再让「实现一个组件 → 全仓 typecheck 8 分钟」阻塞开发。**实测数据**（i7-4770HQ / 4c8t / 16GB，IDE 关闭）：
 
-| 方案 | 实测 | 结论 |
+| 方案 | 耗时 | 结论 |
 |---|---|---|
-| 全仓 vue-tsc（WebStorm 开着、内存吃紧） | 约 **16 分钟** | 基线 |
-| 全仓 vue-tsc（WebStorm 关闭、空闲内存 5.4G） | **7 分 49 秒** | ⭐ **真正的瓶颈是机器负载，不是门禁设计** |
-| 作用域 vue-tsc（只含 `ui` 包） | **> 10 分钟**（未跑完） | ❌ **比全仓还慢** |
-| 作用域 vue-tsc（只含单个组件目录） | **> 4 分钟**（未跑完） | ❌ 同样无效 |
+| 全仓 `vue-tsc --noEmit`（现状，权威） | **7 分 49 秒** | 基线 |
+| 其中 13 个 foundation 包 | **5 分 57 秒** | ⭐ 占 **76%** —— 改 ui 时它们被白白重查 |
+| 作用域 tsconfig（只含 `ui` 包） | > 10 分钟未跑完 | ❌ 证伪（TS 沿 import 传递检查，收窄 `include` 无效） |
+| `--noEmit --incremental` + tsbuildinfo | 8 分 34 秒 → 7 分 22 秒 | ❌ 几乎无效 |
+| **`tsc --build` + project references** | 首次 9 分 28 秒 ／ **无改动 20 秒** ／ **改 ui 一个文件 5 分 10 秒** | ✅ 保留（见下） |
 
-**根因：TypeScript 会沿 `import` 传递地检查文件。**
-收窄 `include` 只减少「根文件」，而 `packages/ui/src/index.ts` → 各组件 → `config-provider`
-→ `utils`/`theme`… 会把**整个依赖图**拉进来 ⇒ 实际工作量几乎没变，
-反而因为「没有全仓那份可复用的模块解析结果」而更慢。
+**保留的是 `pnpm typecheck:build`（可选，不替代 `pnpm lint:types`）：**
 
-⇒ **提速的正确方向是「减少运行次数」与「降低机器负载」，不是「收窄范围」：**
-1. ⭐ **一次收口只跑一次全仓门禁**（把 G13 的四道命令串成一次，别在开发中途反复跑）
-2. ⭐ **跑门禁前先关掉 IDE / 浏览器等吃内存的进程**（实测 16 分钟 → 7 分 49 秒）
-3. 若还要进一步提速，正解是 **`tsc --build` + project references（`composite: true`）**——
-   让 TS 按包增量、并用 `.tsbuildinfo` 缓存。那是**独立的结构性改造**，
-   需要给每个包加 `tsconfig.json`，尚未做。
+```bash
+pnpm typecheck:build     # = gen-tsconfig-refs.mjs && vue-tsc --build tsconfig.check.json
+```
 
-⚠️ `scripts/verify-changed.mjs` 保留在仓库里作为**实验记录**，
-   但**不要**把它当作门禁使用（它的默认行为已改为只跑 typecheck，
-   且实测不比全仓快）。`pnpm verify:full` 是全仓门禁的便捷入口。
+- **收益**：改 `ui` 组件时 **7 分 49 秒 → 5 分 10 秒**（降 34%）；**无改动时 20 秒**（如只改了测试/文档）。
+- **代价**：首次要 9 分 28 秒建立缓存；新增 15 个 `tsconfig.check.json`（由脚本生成，**不手改**）。
+- **零侵入**：只**新增**文件，现有 `tsconfig.json` / `packages/<pkg>/tsconfig.json` **一行未改**；
+  `outDir` 指向 `node_modules/.cache/apollo/`，**不碰 `dist`**。
+- ⚠️ **不降低验收标准**：G13 的 `pnpm lint`（全仓 `vue-tsc --noEmit`）仍是**权威**，
+  `typecheck:build` 只是开发期的更快反馈。收口时仍以 `lint` 为准。
+
+**两条踩过的坑（写进 `scripts/gen-tsconfig-refs.mjs` 的注释）**：
+1. 🚨 references **只能取 `dependencies` + `peerDependencies`，带上 `devDependencies` 会形成环形依赖**
+   （`a11y → test-utils → theme → utils`）⇒ `TS6202: Project references may not form a circular graph`。
+2. 🚨 `paths` **必须重定向到被引用项目的声明产物**（`node_modules/.cache/apollo/dts/<pkg>/src`），
+   若沿用根 tsconfig 里指向源码的 `paths`，TS 会直接读源码 ⇒ **references 形同虚设**。
+
+⚠️ 机器负载是**另一个独立瓶颈**：关掉 IDE 让全仓 typecheck 从约 16 分钟降到 7 分 49 秒。
+⇒ **跑重型门禁前先关 IDE/浏览器。**
 
 ### G14 · COMMIT — 提交
 

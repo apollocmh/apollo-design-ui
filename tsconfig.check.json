@@ -1,0 +1,47 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/a11y/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/form-core/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/icons/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/locale/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/motion/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/overlay/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/picker/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/portal/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/position/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/test-utils/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/theme/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/ui/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/utils/tsconfig.check.json"
+    },
+    {
+      "path": "./packages/virtual-list/tsconfig.check.json"
+    }
+  ]
+}

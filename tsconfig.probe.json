@@ -1,0 +1,115 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": false,
+    "useUnknownInCatchVariables": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "types": [
+      "node",
+      "vite/client",
+      "vitest/globals"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@apollo-design/utils": [
+        "packages/utils/src"
+      ],
+      "@apollo-design/theme": [
+        "packages/theme/src"
+      ],
+      "@apollo-design/icons": [
+        "packages/icons/src"
+      ],
+      "@apollo-design/portal": [
+        "packages/portal/src"
+      ],
+      "@apollo-design/motion": [
+        "packages/motion/src"
+      ],
+      "@apollo-design/position": [
+        "packages/position/src"
+      ],
+      "@apollo-design/overlay": [
+        "packages/overlay/src"
+      ],
+      "@apollo-design/a11y": [
+        "packages/a11y/src"
+      ],
+      "@apollo-design/locale": [
+        "packages/locale/src"
+      ],
+      "@apollo-design/virtual-list": [
+        "packages/virtual-list/src"
+      ],
+      "@apollo-design/picker": [
+        "packages/picker/src"
+      ],
+      "@apollo-design/form-core": [
+        "packages/form-core/src"
+      ],
+      "@apollo-design/test-utils": [
+        "packages/test-utils/src"
+      ],
+      "@apollo-design/ui": [
+        "packages/ui/src"
+      ]
+    }
+  },
+  "include": [
+    "packages/utils/src/**/*.ts",
+    "packages/utils/src/**/*.vue",
+    "packages/theme/src/**/*.ts",
+    "packages/theme/src/**/*.vue",
+    "packages/icons/src/**/*.ts",
+    "packages/icons/src/**/*.vue",
+    "packages/motion/src/**/*.ts",
+    "packages/motion/src/**/*.vue",
+    "packages/portal/src/**/*.ts",
+    "packages/portal/src/**/*.vue",
+    "packages/position/src/**/*.ts",
+    "packages/position/src/**/*.vue",
+    "packages/overlay/src/**/*.ts",
+    "packages/overlay/src/**/*.vue",
+    "packages/a11y/src/**/*.ts",
+    "packages/a11y/src/**/*.vue",
+    "packages/locale/src/**/*.ts",
+    "packages/locale/src/**/*.vue",
+    "packages/virtual-list/src/**/*.ts",
+    "packages/virtual-list/src/**/*.vue",
+    "packages/form-core/src/**/*.ts",
+    "packages/form-core/src/**/*.vue",
+    "packages/picker/src/**/*.ts",
+    "packages/picker/src/**/*.vue",
+    "packages/test-utils/src/**/*.ts",
+    "packages/test-utils/src/**/*.vue"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "**/es",
+    "**/lib",
+    "**/coverage"
+  ]
+}

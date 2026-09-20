@@ -51,3 +51,6 @@ pnpm-debug.log*
 
 # 增量门禁生成的作用域 tsconfig（scripts/verify-changed.mjs）
 tsconfig.scoped.json
+
+# tsc --build 的类型检查缓存与声明产物（scripts/gen-tsconfig-refs.mjs）
+node_modules/.cache/apollo/

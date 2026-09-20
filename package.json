@@ -40,7 +40,9 @@
     "build:ui": "pnpm --filter @apollo-design/ui run build",
     "dev": "pnpm --filter @apollo-design/docs run dev",
     "verify:changed": "node scripts/verify-changed.mjs",
-    "verify:full": "pnpm run registry:check && pnpm run lint && pnpm run test && pnpm run test:build"
+    "verify:full": "pnpm run registry:check && pnpm run lint && pnpm run test && pnpm run test:build",
+    "typecheck:build": "node scripts/gen-tsconfig-refs.mjs && vue-tsc --build tsconfig.check.json",
+    "typecheck:refs": "node scripts/gen-tsconfig-refs.mjs"
   },
   "devDependencies": {
     "@apollo-design/theme": "workspace:*",
