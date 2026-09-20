@@ -3,7 +3,7 @@
   "antdVersion": "6.6.4",
   "renderer": "react-dom/server.renderToStaticMarkup",
   "prefixCls": "apollo",
-  "caseCount": 47,
+  "caseCount": 48,
   "cases": [
     {
       "id": "loading:unset",
@@ -20,6 +20,10 @@
     {
       "id": "loading:false+no-children",
       "html": ""
+    },
+    {
+      "id": "loading:explicit-undefined",
+      "html": "<span>X</span>"
     },
     {
       "id": "blocks:avatar:unset+title:unset+paragraph:unset",

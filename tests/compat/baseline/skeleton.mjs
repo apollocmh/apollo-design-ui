@@ -51,6 +51,11 @@ push('loading:unset', { prefixCls: PREFIX });
 push('loading:true', { prefixCls: PREFIX, loading: true });
 push('loading:false+children', { prefixCls: PREFIX, loading: false }, h('span', null, 'X'));
 push('loading:false+no-children', { prefixCls: PREFIX, loading: false });
+// ⚠️⚠️ 这一条必须与 `loading:unset` **分开测**：React 的判据是 `'loading' in props`，
+//     **显式传 `undefined` 时键存在** ⇒ 上游走 children 分支（与「不传」不同）。
+//     这也是本组件**唯一**与 antd 的行为差异（Vue 的 prop 没有「键存在」概念）。
+//     只测 `loading:unset` 会得出「上游未传就渲染骨架」的**片面**结论。
+push('loading:explicit-undefined', { prefixCls: PREFIX, loading: undefined }, h('span', null, 'X'));
 
 // ---- 2. 三块的互锁推导矩阵（`Skeleton.js:23-62`）—— 8 种存在性组合
 for (const avatar of [undefined, false, true]) {

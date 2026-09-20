@@ -110,29 +110,28 @@ return children ?? null;
 ⇒ `const showSkeleton = props.loading !== false;`
 （PITFALLS 46 / D21 同源，这次受害的是 `in` 判据。）
 
-#### ⚠️ 与脚手架注释的分歧 —— 已由 compat oracle **实证判定**
+#### ✅ 与脚手架注释的关系：**注释是对的**（oracle 四态实测）
 
-`packages/ui/src/index.ts` 预生成的注释写：
-「`loading={undefined}` 是本组件**唯一**与 antd 的行为差异（上游渲染 children、我们渲染骨架）」。
+`packages/ui/src/index.ts` 的注释写：「`loading={undefined}` 是本组件**唯一**与 antd 的
+行为差异（上游渲染 children、我们渲染骨架）」。**经实测，这条注释准确。**
 
-`tests/compat/baseline/skeleton.mjs` 的机械 oracle（`renderToStaticMarkup` 直出）实测：
+`renderToStaticMarkup` 直出 antd 6.6.4 的四态：
 
-```html
-<!-- loading:unset ⇒ 上游**渲染骨架** -->
-<div class="apollo …"><div class="apollo-section">
-  <h3 class="apollo-title" style="width:38%"></h3>
-  <ul class="apollo-paragraph"><li></li><li></li><li style="width:61%"></li></ul>
-</div></div>
+| 情形 | 上游 antd | 我们 | 一致？ |
+|---|---|---|---|
+| ① **不传**（键不存在） | 渲染骨架 | 渲染骨架 | ✅ |
+| ② **显式传 `loading={undefined}`**（键存在、值 undefined） | **渲染 children** | 渲染骨架 | ❌ **唯一差异** |
+| ③ `loading={true}` | 渲染骨架 | 渲染骨架 | ✅ |
+| ④ `loading={false}` | 渲染 children | 渲染 children | ✅ |
 
-<!-- loading:false + children ⇒ 直接就是 children，**无包裹层** -->
-<span>X</span>
-```
+根因：React 的判据是 `'loading' in props` —— **显式传 `undefined` 时键存在**，
+所以走 children 分支；而 **Vue 的 prop 没有「键存在」这个概念**（未传时值同样是 `undefined`），
+两者不可区分 ⇒ 这个差异是 **Vue 平台固有**（PLATFORM），不是实现错误。
 
-⇒ **上游未传 `loading` 时同样渲染骨架** —— 脚手架那条注释**与 antd 源码不符**。
-按 `AGENTS.md` §5（antd 源码 > 仓库文档），取源码语义 `loading !== false`。
-
-⚠️ 修正那条注释涉及 `packages/ui/src/index.ts`（**共享文件**），不在本组件域内，
-已登记为待办，未擅自改动。
+⚠️⚠️ **本文件的第一版在这里写错过一次**：当时只用 oracle 测了 ①（不传），
+就断言「上游未传时同样渲染骨架 ⇒ 脚手架注释与源码不符」。
+**测错了 case** —— ① 与 ② 在 React 里是两条不同的分支，只测 ① 得不出关于 ② 的结论。
+⇒ 教训：**用 oracle 判定争议时，必须把「键不存在」与「键存在但值为 undefined」分开测**。
 
 ### 4.2 三个默认值与外部 props 的合并顺序（`Skeleton.js:112-155`）
 
