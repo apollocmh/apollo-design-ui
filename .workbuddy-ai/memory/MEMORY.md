@@ -245,13 +245,46 @@ L0 utils/theme/icons ｜ 测试 test-utils
     重新实测无法复现。**单次测量不足以推翻一个结构性判断 —— 至少要换条件复测一次。**
     `scripts/verify-changed.mjs` 保留作实验记录，**不要再当门禁用**。
 
-14. 🚨 **`exit 137` + 零日志 ≠ OOM，先怀疑「前台默认 120s 超时」**（PITFALLS 121）。
+14. ⭐ **`tsc --build` + project references 已落地**（2026-09-21），**改 ui 从 7 分 49 秒 → 5 分 10 秒**。
+    ```bash
+    pnpm typecheck:build     # gen-tsconfig-refs.mjs && vue-tsc --build tsconfig.check.json
+    pnpm typecheck:refs      # 只重新生成配置（改了包依赖时要跑）
+    ```
+    实测（IDE 关闭）：
+
+    | 场景 | 耗时 |
+    |---|---|
+    | 全仓 `vue-tsc --noEmit`（**权威，仍是它**） | 7 分 49 秒 |
+    | 其中 13 个 foundation 包 | **5 分 57 秒（占 76%）** ← 改 ui 时白白重查 |
+    | `--build` 首次全量（建缓存） | 9 分 28 秒 |
+    | `--build` **无改动** | **20 秒** |
+    | `--build` **改 ui 一个文件** | **5 分 10 秒** |
+
+    **零侵入**：只新增 15 个 `tsconfig.check.json`（`scripts/gen-tsconfig-refs.mjs` 生成，**不手改**），
+    现有 `tsconfig.json` / `packages/<pkg>/tsconfig.json` **一行未改**；
+    `outDir` 在 `node_modules/.cache/apollo/`，**不碰 `dist`**。
+    ⇒ **收口标准未降**：`pnpm lint`（全仓 vue-tsc）仍是权威。
+
+    🚨 **两个坑（都写进了生成器注释）**：
+    1. references **只能取 `dependencies` + `peerDependencies`**。带上 `devDependencies`
+       会形成**环形依赖**（`a11y → test-utils → theme → utils`）⇒ `TS6202`。
+       （语义上也对：check 项目已排除测试文件，devDeps 不在编译图里。）
+    2. `paths` **必须重定向到被引用项目的声明产物**（`node_modules/.cache/apollo/dts/<pkg>/src`）。
+       若沿用根 tsconfig 里指向源码的 `paths`，TS 会**直接读源码** ⇒ references 形同虚设。
+       ⚠️ 且 `baseUrl` 必须是**仓库根绝对路径**，写 `.` 会静默解析到 `packages/<pkg>/node_modules/...`。
+
+    ⚠️ 另一个独立瓶颈：**机器负载**。关 IDE 让全仓 typecheck 从约 16 分钟 → 7 分 49 秒
+    ⇒ **跑重型门禁前先关 IDE/浏览器**。
+
+    ⚠️ 写脚本时还踩过：注释里写 `packages` + 星号 + `/src` 时，其中的**星号斜杠会提前闭合块注释**。
+
+15. 🚨 **`exit 137` + 零日志 ≠ OOM，先怀疑「前台默认 120s 超时」**（PITFALLS 121）。
     实测：全仓构建门禁（`tests/build/run.mjs` 约 7 分钟）在前台连续被杀，
    一度被当成「16G 机器 OOM」。用 `sleep 90` 存活 + 心跳才定位到是超时。
    ⇒ **判据：先看命令平时要跑多久**；超过 2 分钟的一律后台跑或显式加 `timeout`。
    ⚠️ 这条**修正**了仓库里长期「全仓门禁/全仓 vitest 会 OOM」的判断 ——
    至少构建门禁那次 137 是超时，不是内存。
-15. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；
+16. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；
     而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
 
     ⭐ **真正的根因（2026-09-20 定位）**：本环境里的 `git` 是**垫片版** ——
