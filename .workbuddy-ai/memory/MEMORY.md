@@ -284,23 +284,33 @@ L0 utils/theme/icons ｜ 测试 test-utils
    ⇒ **判据：先看命令平时要跑多久**；超过 2 分钟的一律后台跑或显式加 `timeout`。
    ⚠️ 这条**修正**了仓库里长期「全仓门禁/全仓 vitest 会 OOM」的判断 ——
    至少构建门禁那次 137 是超时，不是内存。
-16. 🚨🚨 **vitest 的 `a11y` / `theme` / `dom-contract` project 只收集到极少数文件**
-    （2026-09-21 发现，**既有缺陷，非某次改动引入**）。
+16. 🚨🚨 **⚠️ 降级运行的 vitest 会「静默少跑」，给出不完整的 `N passed`** ——
+    这是**假绿灯**，比红更危险（2026-09-21 我据此下过一个**错误结论**）。
 
-    实测：`vitest run --project a11y` 全仓有 **9 个** `a11y.test.ts`
-    （`icons` + `ui` 的 button / config-provider / divider / empty / skeleton / space /
-    spin / typography），但**只跑了 2 个**：`empty` 与 `config-provider`。
-    其余全部**未被收集**，且不报错（表现为 `Test Files 2 passed`）。
+    **实测对照**（同一个 `--project a11y`，同一个仓库）：
+    | 命令 | 结果 |
+    |---|---|
+    | `vitest run --project a11y`（默认 threads） | **8 files / 160 tests passed**，1 分 47 秒 ✅ |
+    | `vitest run --project a11y --pool=forks --maxWorkers=1` | **2 files / 21 tests passed**，9 分 34 秒 ⚠️ |
 
-    ⚠️ 直接后果：**button / typography / divider / space / spin 的 L5 很可能是空跑的**
-    —— 它们汇报过「a11y 全绿」，但那 2 个文件里没有它们的用例。
-    ⇒ **复核时看到「a11y N passed」必须先确认 N 覆盖了哪些文件**，别只看总数。
+    ⇒ 后者在内存吃紧时**worker 起不来**，vitest 只报了活下来的那两个文件，
+    **不报错、不警告**，看起来就是一次正常的「全绿」。
 
-    include 是 `packages/*/src/**/__tests__/a11y.test.ts`，按字面**应当全部匹配** ⇒
-    根因未定位（`vitest.config.ts` 里还有一层根级 `exclude: ['**/__tests__/**', …]`，
-    怀疑与它或 `--project` 的解析有关，但 empty/config-provider 又能跑，尚不能解释）。
-    ⚠️ 另：`vitest run <目录>` 的**位置过滤在本仓库不可靠**（常报 `no tests`），
-    要跑单个文件请传**完整文件路径**。
+    ⚠️⚠️ **我据此在 `wt-skeleton` 里断言「a11y project 只收集 2/9 个文件，
+    button/typography/divider/space/spin 的 L5 可能空跑」，并写进了 MEMORY.md ——
+    那是错的。** 用 `vitest list --project a11y` 一查：8 个文件全在；
+    正常跑一次：160 个用例全过。**根本不存在那个缺陷。**
+
+    ⇒ **判据**：`--pool=forks` / `--maxWorkers=1` 只是**应急绕过**，其输出
+    **不能当作门禁证据**。看到「N passed」先确认 **N 覆盖了哪些文件**
+    （用 `vitest list` 或看 `Test Files` 的**分母**），别只看总数。
+
+    ⚠️ 这是**同一个月里第二次**「单次降级测量 → 错误结论」（前一次是把一次
+    44 秒的异常值当成 22 倍提速写进 WORKFLOW.md）。
+    **结构性结论必须换条件复测，且复测要通过「未经降级」的路径。**
+
+    ⚠️ 另：`vitest run <目录>` 的**位置过滤在本仓库不可靠**（常报 `no tests`）；
+    要跑单个文件请传**完整文件路径**，或干脆跑整个 project（`--project a11y` 很快）。
 
     ⚠️ 机器内存吃紧时 vitest 会 `Failed to start threads worker` / `Timeout waiting for
     worker to respond`；`--pool=forks --maxWorkers=1` 可以绕过（**但会慢很多**）。
