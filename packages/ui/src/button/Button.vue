@@ -299,11 +299,17 @@ watch(
       clearTimeout(delayTimer);
       delayTimer = null;
     }
+    // ⚠️ 这里**不能**再判 `cfg.loading`。上游（`Button.js:148-156`）是：
+    //
+    //     if (loadingOrDelay.delay > 0) setInnerLoading(true, { ms: delay });
+    //     else                          setInnerLoading(loadingOrDelay.loading, true);
+    //
+    // 第一支**无条件**把待定值置 `true`，没有「若已 loading 就直接置 true」这一层。
+    // 而且那一层在本仓可证明**不可达**：`loadingOrDelay` 的构造决定了
+    // `loading === true ⇒ delay <= 0`（`:281`），与 `delay > 0` 矛盾。
+    // 曾经多写的那一支是死代码，还让 `Button.vue` 的覆盖率停在 98.13%
+    // （未覆盖行正是它）—— 死代码 + 覆盖率噪音，两样都不要。
     if (cfg.delay > 0) {
-      if (cfg.loading) {
-        innerLoading.value = true;
-        return;
-      }
       delayTimer = setTimeout(() => {
         innerLoading.value = true;
         delayTimer = null;

@@ -950,6 +950,18 @@
      中间变量拼值，优先**内联**成 `${v('token')}` 形式（E10 只豁免紧跟冒号的
      `var(` / `${v(`），别先绑到变量再插值；③ 报错定位看**行号**，别只看「哪个文件」。
 
+     ⚠️ **那条 `box-shadow` 豁免是全局门禁的「放宽」，不是「修好」—— 必须知道它的兜底在哪。**
+     E10 扫的是**源码文本**，看不见插值后的值，所以「值是变量」这条它只能靠
+     「紧跟冒号的是 `var(` / `${…}` / `none`」来近似。放宽后，
+     `` `box-shadow:${随便一个标识符}` `` 就能过 E10（`border-radius` 的
+     `${v(` 更窄，两者的不对称是真实存在的）。**补偿性门禁**是 L1 的
+     `button/__tests__/style.test.ts`：它对 `genButtonStyle()` 的**产物 CSS** 断言
+     「字面色值只允许 `rgba(`，且去重后 ≤ 13 个」⇒ 想用 `#f00` 之类绕过会红；
+     再叠上 B7 的「每个 `var(--apollo-*)` 都必须在 `tokens.css` 声明」。
+     **残留风险**：命名色（`red`）这类既非 `#hex` 也非 `rgba(` 的写法两层都看不见。
+     ⇒ 新增组件若要用 `box-shadow`，请照 button 的写法（值全部由 `v('token')` 拼出），
+     别把这条豁免当成「可以随便内联阴影」。
+
 135. 🚨 **`NodeRenderer` 只挡住「VNode 变量」，挡不住「组件对象」—— 同一个坑已踩两次。**
      `empty/components/NodeRenderer.ts` 的 `normalizeNode()` 只做
      `isVNode(node) ? cloneVNode(node) : node`。注释里写的「平台差异的落点」是对的，
@@ -970,3 +982,24 @@
      ③ 别在归一化处 `cloneVNode`（`NodeRenderer` 已做，VNode 可变，重复克隆丢身份）；
      ④ 每条这样的 prop 至少配一条断言 `expect(w.text()).not.toContain('[object Object]')`
      的 L1 用例 —— 只断言「元素存在」会漏，因为文本节点也能匹配到父元素。
+
+136. ⚠️ **「多写一层兜底」= 死代码 + 覆盖率噪音 + 悄悄偏离上游 —— 覆盖率报告是它的探测器。**
+     实测（2026-09-20 button 收口）：`Button.vue` 的 loading 分支写成
+
+         if (cfg.delay > 0) {
+           if (cfg.loading) { innerLoading.value = true; return; }   // ← 上游没有这一支
+           delayTimer = setTimeout(() => { innerLoading.value = true; }, cfg.delay);
+           return;
+         }
+
+     而上游（`antd/es/button/Button.js:148-156`）是**无条件**
+     `setInnerLoading(true, { ms: delay })`。那一支在本仓**可证明不可达**：
+     `loadingOrDelay` 的构造（`:281`）保证 `loading === true ⇒ delay <= 0`，
+     与 `delay > 0` 矛盾。⇒ 行为上「等价」，但它同时是：
+     ① 一段读起来像有意义的死代码；② 覆盖率上永久红着的 2 行（Lines 98.13%）。
+     ⭐ **判据**：`--coverage` 里出现「从未被任何用例走到的行」，第一反应不是
+     「补个用例把它盖住」，而是先问**「这一支在真实输入域里可达吗？」**。
+     不可达 ⇒ 删掉，别写一条假用例去喂它（那正是反模式 A1：用形式上的用例掩盖）。
+     可达 ⇒ 说明它是真实分支，补用例。
+     **处方**：移植上游逻辑时逐支对照（上游几个 `if` 就写几个），
+     不要凭「防御性编程」的直觉多加分支；`Lines 100%` 是最好的自查信号。
