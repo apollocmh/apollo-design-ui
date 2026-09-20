@@ -251,8 +251,12 @@ describe('Typography · 选择器特异性（L6 抓到的真实缺陷的回归�
     // 反证「这条断言不是空转」：产物里确实有一批 `-link` 选择器
     expect(linkSelectors.length).toBeGreaterThan(0);
 
+    // ⚠️ 判据必须是「根类后面紧跟的不是 `-`」，**不能**只写 `startsWith('.' + P)` ——
+    //    `.apollo-typography-link...` 也满足那个前缀，等于什么都没测。
+    //    （这条是变异验证抓出来的：第一版就是这么写的，把 `&` 前缀删掉它照样绿。）
+    const rootRe = new RegExp(`^\\.${P}(?![\\w-])`);
     for (const sel of linkSelectors) {
-      expect(sel.startsWith(`.${P}`), `选择器 ${sel} 没有以根类 .${P} 开头`).toBe(true);
+      expect(rootRe.test(sel), `选择器 ${sel} 没有以根类 .${P} 开头`).toBe(true);
     }
   });
 
