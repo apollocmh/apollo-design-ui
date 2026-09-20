@@ -836,3 +836,61 @@
      真正的 OOM 有别的指纹：例如同一条命令**单独跑能过、跟在重命令后面跑才 137**
      （本次 `--project a11y` 跟在 `--project dom-contract`（加载 848 图标）后面就 137，
      单独跑 114 passed —— 那才是内存）。
+
+122–124.（本 worktree 未使用；号段留给并行流 typography / config-provider / picker）
+
+125. ⚠️⚠️ **单次 Bash 调用的可用时长撑不住「一个包的 unbuild」**（2026-09-20 实测，
+     button 流）。`sleep 150` 能过，但「`utils` 的 unbuild + `icons` 的 unbuild」串成
+     一条命令就被 exit 137 杀掉 —— 而单独跑 `icons` 的 unbuild **也是** 137。
+     ⇒ 临界点不是 120s 那条老坑（121 已记），而是**即便显式传了 `timeout: 600000`
+     也仍然被 clamp**（实测 `sleep 150` 过、两个 unbuild 不过）。
+     **处方**：长门禁用 `run_in_background: true` 起，然后**在同一个 turn 内**用
+     `TaskOutput(block=true, timeout=600000)` 等结果 —— 这样进程不会因为 turn 结束
+     被带走。⚠️ 只起后台就结束 turn = 白跑（已有 8 个文件改动因此丢过）。
+     ⚠️ `| tail -N` 会让输出**全程为空**（缓冲到最后才吐），期间无法判断进度；
+     判断进度看 `packages/*/dist` 的 mtime。
+
+126. ⚠️ **worktree 的 `index.lock` 会反复出现**，哪怕用的是 `/usr/bin/git`。
+     症状：`fatal: Unable to create '.../.git/worktrees/<name>/index.lock': File exists`
+     ⇒ **每一次** git 写操作（`add` / `commit`）前都要
+     `/bin/rm -f $(find /Users/nanren/Code/apollo-design-ui/.git -name "*.lock")`
+     （注意锁在**主仓库** `.git/worktrees/` 下，不是 worktree 自己的 `.git` 文件）。
+     实测：清完立刻能 `add`；下一次 `commit` 又撞上同一把锁，再清一次才过。
+     副作用：被拦的那次 `git add` 会在 worktree 根留下 0 字节的 `_tmp_<pid>_<hex>`
+     临时文件（untracked）—— 别把它 `git add .` 进去。
+
+127. ⚠️ **antd 用 `genCssVar` 在规则内部声明的组件级变量（`--ant-btn-*`）必须展开，
+     不能照抄**（`button/style/variant.js`、`space/style/addon.ts` 同源，D38 家族）。
+     原因：`tests/build/run.mjs` 的 **B7 · ui** 只认 `packages/theme/dist/tokens.css`
+     的 `:root` 块，组件内局部声明的自定义属性它**看不到**，写错不会报错、只会静默失效。
+     展开成组合选择器后，**层叠变成"顺序即契约"**：
+     (a) 同特异性的两条只能靠声明顺序决胜 ⇒ `disabled` 必须排在 color×variant 之后；
+     (b) `ghost` 的 `bg-*` 覆盖**必须带进组合选择器**（`.btn-color-x.btn-variant-y.btn-background-ghost`）。
+     写成单独的 `.btn-background-ghost:hover`（0,4,0）会被组合的 hover 规则（0,5,0）压过，
+     **幽灵按钮的背景会变回实色** —— 这是本次最容易写错的一处。
+     (c) 展开规模：`color(16) × variant(6) + ghost(16×3)`，靠手写必然出错 ⇒ 用表驱动生成。
+
+128. ⚠️ **biome 的 `organizeImports` 把整个 export 段（含其间的注释）当成一个 chunk，
+     按 module specifier 的字典序排** —— 不是按「组件名在文件里的逻辑顺序」。
+     实测（`packages/ui/src/index.ts`）：把 Button 段插在 `Divider` 段**前面**会被判
+     `Sort these exports`，因为 `'./button'` 必须排在 `'./config-provider'` 之前、
+     `'./_internal/with-install'` 之后。**处方**：追加组件导出时先按 `'./<dir>'`
+     的字典序定位，再插注释块。
+
+129. ⚠️⚠️ **本会话的 shell 里 `NODE_OPTIONS` 被注入了 CLI 的 node shim
+     （`--require=…/node-language-shim.cjs`），它会让 vitest 的 worker 永远启动不起来**
+     （2026-09-20 实测，button 流）。
+     症状：任何 `vitest run` 都在 **60.11s** 后报
+     `[vitest-pool]: Failed to start {threads,forks} worker` /
+     `[vitest-pool-runner]: Timeout waiting for worker to respond`，
+     **且 `Test Files no tests`** —— 看着像「过滤写错」或 OOM（121 / 35 的指纹），
+     实则不然：主线程只用了 ~1.7s CPU（`time` 可证），说明它在**空等**，不是算力不足。
+     判据链：换 `--pool` / `--maxWorkers` / `--environment=node` / 最小 config
+     / 关沙箱**全都复现** ⇒ 排除配置；`worker_threads` 与 `child_process.spawn`
+     裸测**都能通** ⇒ 排除进程能力；最后 `env | grep NODE_OPTIONS` 才现形。
+     **处方**：跑 vitest 一律
+     `env -u NODE_OPTIONS node ./node_modules/vitest/vitest.mjs run …`
+     （`env -u` 比 `export NODE_OPTIONS=` 稳：后者对某些子进程仍可见）。
+     ⚠️ 该 shim 会在**每个**被 spawn 的 worker 里再 `--require` 一次，
+     于是 worker 卡在 boot、主进程卡在 `withTimeout(..., START_TIMEOUT = 6e4)`。
+     顺带：这条坑会让「跑一次测试」固定烧掉 60s，排查时别误判成「测试很慢」。

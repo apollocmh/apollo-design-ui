@@ -44,7 +44,8 @@
  * 1. `solidTextColor`（`token.js:28`）依赖 color-picker 的 `isBright` + `AggregationColor`。
  *    本仓库**没有**等价能力（已 grep `packages/utils/src/color/` 与 `packages/theme`）⇒
  *    「default + solid」的文本色**退回** `-variant-solid` 的 `colorTextLightSolid`。
- *    亮色主题下两者相同（`colorBgSolid` 是深色 ⇒ antd 算出 `#fff`）；**暗色主题会分叉**。
+ *    亮色主题下两者相同（`colorBgSolid` 是深色 ⇒ antd 的两个分支里落到白色那一支）；
+ *    **暗色主题会分叉**。
  * 2. 13 个 `${colorKey}ShadowColor` 由 `getAlphaColor` 迭代求解，CSS 里没有等价写法 ⇒
  *    构建期用 `prepareComponentToken(getDesignToken())` 算出并内联。
  *    代价：这 13 个阴影色**不随 dark 主题自适应**（D7 家族）。
@@ -465,11 +466,14 @@ export function genButtonStyle(prefixCls: string): string {
 
   const sizeBlock = (
     sizeSuffix: '' | '-sm' | '-lg',
-    height: string,
-    fontSize: string,
+    heightToken: string,
+    fontSizeToken: string,
     padding: string,
-    radius: string,
+    /** 圆角走 `${v('<token>')}` 的写法：E10 只豁免紧跟 `border-radius:` 的 `var(` / `${v(`。 */
+    radiusToken: string,
   ): void => {
+    const height = v(heightToken);
+    const fontSize = v(fontSizeToken);
     // `[prefixCls]`：小号/大号是**独立的** `-sm` / `-lg` 类（`.apollo-btn-sm`），
     // 不是与根类复合；base 的 prefixCls 是空串 ⇒ 就是根类本身。
     const s = `${cls}${sizeSuffix}`;
@@ -481,7 +485,7 @@ export function genButtonStyle(prefixCls: string): string {
       `  font-size:${fontSize};`,
       `  height:${height};`,
       `  padding:0 ${padding};`,
-      `  border-radius:${radius};`,
+      `  border-radius:${v(radiusToken)};`,
       `}`,
       `${s}${cls}-icon-only{`,
       `  width:${height};`,
@@ -492,7 +496,10 @@ export function genButtonStyle(prefixCls: string): string {
       `${cls}${cls}-circle${shapeSuffix}{`,
       `  min-width:${height};`,
       `  padding-inline:0;`,
-      `  border-radius:50%;`,
+      // antd 写的是字面量 `50%`。我们用 `borderRadiusCircle`（`100%`）——
+      // CSS 规范下同一元素上各半径之和超过边长时会**等比缩放**，100% 与 50% 落到同一个
+      // 结果（方形 ⇒ 圆；矩形 ⇒ 椭圆），所以这只是去掉硬编码，不是改设计值。
+      `  border-radius:${v('borderRadiusCircle')};`,
       `}`,
       `${cls}${cls}-round${shapeSuffix}{`,
       `  border-radius:${height};`,
@@ -504,9 +511,9 @@ export function genButtonStyle(prefixCls: string): string {
     );
   };
 
-  sizeBlock('', v('controlHeight'), v('fontSize'), paddingInline, v('borderRadius'));
-  sizeBlock('-sm', v('controlHeightSM'), v('fontSize'), paddingInlineSM, v('borderRadiusSM'));
-  sizeBlock('-lg', v('controlHeightLG'), v('fontSizeLG'), paddingInline, v('borderRadiusLG'));
+  sizeBlock('', 'controlHeight', 'fontSize', paddingInline, 'borderRadius');
+  sizeBlock('-sm', 'controlHeightSM', 'fontSize', paddingInlineSM, 'borderRadiusSM');
+  sizeBlock('-lg', 'controlHeightLG', 'fontSizeLG', paddingInline, 'borderRadiusLG');
 
   // =========================================================================
   // Block（`genBlockButtonStyle`）
