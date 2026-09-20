@@ -89,6 +89,19 @@ async function capturedWarnings(run: () => unknown): Promise<string> {
   }
 }
 
+/**
+ * 探针图标：一个**组件对象**（不是 VNode）。
+ *
+ * 用来验证 `ButtonIcon` 的第二支 —— antd 的 `icon={<SearchOutlined />}` 在 Vue 侧
+ * 的对应物是**组件本身**（见 `interface.ts` 的 `ButtonIcon`）。渲染出来必须是一个
+ * 真 `<svg>`，而不是 `[object Object]` 字面量文本。
+ */
+const FakeIcon = defineComponent({
+  name: 'FakeIcon',
+  setup: () => () =>
+    h('svg', { class: 'fake-icon', viewBox: '0 0 1024 1024' }, [h('path', { d: 'M0 0' })]),
+});
+
 mountTest('Button', { render: () => h(Button) });
 
 // ===========================================================================
@@ -407,6 +420,37 @@ describe('Button · loading', () => {
     expect(w.find('.custom-loading').exists()).toBe(true);
   });
 
+  it('★ 自定义 loading.icon 存在时**不**带 `-loading-icon`（该类名只属内置图标）', () => {
+    const custom = mountBtn({ loading: { delay: 0, icon: h('i', { class: 'custom-loading' }) } });
+    expect(custom.find(`.${P}-icon`).classes()).not.toContain(`${P}-loading-icon`);
+
+    const builtin = mountBtn({ loading: true });
+    expect(builtin.find(`.${P}-icon`).classes()).toContain(`${P}-loading-icon`);
+  });
+
+  it('★ loading.icon 传**组件对象** ⇒ 渲染成真 svg，不是 `[object Object]`', () => {
+    const w = mountBtn({ loading: { delay: 0, icon: FakeIcon } });
+    expect(w.find(`.${P}-icon .fake-icon`).exists()).toBe(true);
+    expect(w.text()).not.toContain('[object Object]');
+  });
+
+  it('★ ConfigProvider 的 loadingIcon 同样接受组件对象（`ButtonConfig.loadingIcon`）', () => {
+    const w = mountWithConfig({ components: { button: { loadingIcon: FakeIcon } } }, { loading: true });
+    expect(w.find(`.${P}-icon .fake-icon`).exists()).toBe(true);
+    expect(w.text()).not.toContain('[object Object]');
+    // 上下文提供的加载图标也算「自定义」⇒ 不带 `-loading-icon`
+    expect(w.find(`.${P}-icon`).classes()).not.toContain(`${P}-loading-icon`);
+  });
+
+  it('loading.icon 优先于 ConfigProvider 的 loadingIcon', () => {
+    const w = mountWithConfig(
+      { components: { button: { loadingIcon: FakeIcon } } },
+      { loading: { delay: 0, icon: h('i', { class: 'prop-loading' }) } },
+    );
+    expect(w.find('.prop-loading').exists()).toBe(true);
+    expect(w.find('.fake-icon').exists()).toBe(false);
+  });
+
   it('加载时 `-icon-only` 仍按「有没有内容」判定（有文字就不带）', () => {
     expect(withText({ loading: true }, 'Text').classes()).not.toContain(`${P}-icon-only`);
   });
@@ -661,6 +705,41 @@ describe('Button · icon', () => {
 
   it('无图标无 loading ⇒ 无 `-icon` 元素', () => {
     expect(mountBtn().find(`.${P}-icon`).exists()).toBe(false);
+  });
+
+  // ── 平台差异：`icon` 也可以是**组件**（antd 的 `React.ReactNode` 里那个「元素」）──
+  //
+  // antd 示例写 `icon={<SearchOutlined />}` —— React 里那是**已求值的元素**；
+  // Vue 没有「元素」形态，对应物是**组件对象**（`SearchOutlined`）。`ButtonIcon`
+  // 因此额外接受 `Component`，`asIconNode()` 负责 `h()` 包一层。
+  //
+  // ⚠️ 这两条是**回归防线**：少了 `h()`，`<NodeRenderer>` 会把组件对象原样返回，
+  //    模板再 `toDisplayString` 成字面量文本 `[object Object]`（曾实测复现）。
+
+  it('★ icon 传**组件对象** ⇒ 渲染成真 svg，不是 `[object Object]`', () => {
+    const w = mountBtn({ icon: FakeIcon });
+    expect(w.find(`.${P}-icon .fake-icon`).exists()).toBe(true);
+    expect(w.find(`.${P}-icon svg`).exists()).toBe(true);
+    expect(w.text()).not.toContain('[object Object]');
+  });
+
+  it('icon 传 VNode（`h(FakeIcon)`）与传组件对象**结果一致**', () => {
+    const asComponent = mountBtn({ icon: FakeIcon });
+    const asVNode = mountBtn({ icon: h(FakeIcon) });
+    expect(asVNode.html()).toBe(asComponent.html());
+  });
+
+  it('icon 传字符串 / 数字 / 数组仍按 VNodeChild 原样渲染（归一化不误伤）', () => {
+    expect(mountBtn({ icon: 'x' }).find(`.${P}-icon`).text()).toBe('x');
+    expect(mountBtn({ icon: 7 }).find(`.${P}-icon`).text()).toBe('7');
+    const arr = mountBtn({ icon: [h('i', { class: 'a' }), h('i', { class: 'b' })] });
+    expect(arr.find(`.${P}-icon .a`).exists()).toBe(true);
+    expect(arr.find(`.${P}-icon .b`).exists()).toBe(true);
+  });
+
+  it('icon 插槽返回的 `VNode[]` 不受影响（prop 缺席时走插槽）', () => {
+    const w = mount(Button, { slots: { icon: () => [h('i', { class: 's1' })] } });
+    expect(w.find(`.${P}-icon .s1`).exists()).toBe(true);
   });
 });
 

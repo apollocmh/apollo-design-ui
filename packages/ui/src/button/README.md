@@ -44,8 +44,8 @@ block / href / htmlType / autoInsertSpace / classNames / styles / style`
 
 `Expose`：`{ nativeElement }`（全库统一的形态，差异 D3）
 
-类型导出：`ButtonProps` / `ButtonRef` / `ButtonConfig` / `ButtonType` / `ButtonShape` /
-`ButtonSize` / `ButtonColorType` / `ButtonVariantType` / `ButtonHTMLType` /
+类型导出：`ButtonProps` / `ButtonRef` / `ButtonConfig` / `ButtonIcon` / `ButtonType` /
+`ButtonShape` / `ButtonSize` / `ButtonColorType` / `ButtonVariantType` / `ButtonHTMLType` /
 `ButtonIconPlacement` / `ButtonLoading` / `ButtonSemantic{ClassNames,Styles,Type}` / `ButtonSlot`
 
 工具导出：`genButtonStyle(prefixCls)`、`prepareComponentToken(token)`。
@@ -136,10 +136,15 @@ antd 用 `genCssVar` 在规则内部声明 `--ant-btn-*` 做中间变量。**不
 
 ### 5.2 Component Token
 
-`prepareComponentToken` 返回 **61 个键**，与 antd 6.6.4 的
-`button/style/token.js:20-82` **逐键一致**，只缺 `solidTextColor`（见 §7 缺口 1）。
+`prepareComponentToken` 返回 **57 个键**，antd 6.6.4 的
+`button/style/token.js:20-82` 返回 **58 个键**，**唯一缺 `solidTextColor`**（见 §7 缺口 1）。
 `__tests__/theme.test.ts` 用一条 `toEqual(ANTD_TOKEN_KEYS)` 把它钉住 ——
 多一个少一个都红。
+
+> 两个数字都是**实测**的，不是数的注释：antd 侧
+> `node -e "console.log(Object.keys(require('antd/lib/button/style/token.js').prepareComponentToken({})).length)"`
+> ⇒ `58`；我方 `Object.keys(prepareComponentToken(ALIAS)).length` ⇒ `57`。
+> （2026-09-20 曾在此处写「61」，是错的，已更正。）
 
 ### 5.3 ⚠️ 不能直接运行时覆盖 Component Token（全库缺口）
 
@@ -152,8 +157,8 @@ antd 用 `genCssVar` 在规则内部声明 `--ant-btn-*` 做中间变量。**不
 
 | 层 | 文件 | 用例数 | 覆盖 |
 |---|---|---|---|
-| L1+L2 | `__tests__/index.test.ts` | 86 | 回退表、loading delay、两字中文、点击拦截、告警 |
-| L3 | `__tests__/type.test-d.ts` | 13 | 5 个枚举 + Props + 语义化（含 14 条负例） |
+| L1+L2 | `__tests__/index.test.ts` | 94 | 回退表、loading delay、两字中文、点击拦截、告警、icon 传组件 |
+| L3 | `__tests__/type.test-d.ts` | 16 | 5 个枚举 + Props + 语义化 + `ButtonIcon`（含 15 条负例） |
 | L4 | `__tests__/semantic.test.ts` | 66 | 与 React 基线逐节点比对（65 条 + 1 条 D6 豁免） |
 | L5 | `__tests__/a11y.test.ts` | 27 | axe（12 个 demo）+ 两分支 disabled + 焦点 |
 | L1/L2 主题 | `__tests__/theme.test.ts` | 17 | 四态渲染 + Component Token 逐键 |
@@ -185,6 +190,7 @@ antd 用 `genCssVar` 在规则内部声明 `--ant-btn-*` 做中间变量。**不
 | D5 | 无 `Button.Group`（上游已废弃） | INTENDED | 指向 `Space.Compact`；`groupSize` 因此不参与 size 回退 |
 | D6 | 默认 prefixCls 是 `apollo` 而非 `ant` | INTENDED | 允许 ConfigProvider 覆盖 |
 | D7 | 两个中文字用 `::first-letter` 的 letter-spacing，不是拼空格 | INTENDED | 视觉等价；DOM 文本不同（`确 定` vs `确定`）。由 L6 判定像素 |
+| D8 | `icon` / `loading.icon` 额外接受**组件**（`Component`） | PLATFORM | antd 的 `React.ReactNode` 容得下「React 元素」（`<SearchOutlined />`），Vue 没有这一形态，对应物是组件本身。与 `EmptyImage` 同一裁决。**不做这一层会让图标渲染成字面量 `[object Object]`**（实测，见 §8.2） |
 
 ### 7.1 缺口（没有偷偷补）
 
@@ -212,6 +218,12 @@ antd 用 `genCssVar` 在规则内部声明 `--ant-btn-*` 做中间变量。**不
 2. **模板里没有「渲染一个 `VNodeChild` 变量」的语法**。`{{ vnode }}` 走 `toDisplayString`
    会把节点变成 `[object Object]`；`<component :is>` 只接受组件或标签名。
    用 `NodeRenderer`（目前在 `empty/components/NodeRenderer.ts`，是平台原语，应上移到 `_internal/`）。
+   ⚠️ **`NodeRenderer` 只挡一半**：它的 `normalizeNode()` 只做
+   `isVNode ? cloneVNode : 原样`，所以**组件对象**会被原样返回，一样渲染成
+   `[object Object]`。凡是「可能收到组件」的 prop（`icon` / `image` / …），
+   都要在**进 `NodeRenderer` 之前**用 `h()` 包一层（`Button.vue` 的
+   `asIconNode()`、`NodeRenderer.ts` 的 `ImageNode`）。这是同一个坑的第二次
+   （PITFALLS 135）。
 3. **不要在渲染函数之外调用插槽**。`computed(() => slots.default())` 若在渲染期
    没被读过就求值，会触发 `[Vue warn]: Slot "default" invoked outside of the render function`。
    让模板里的某个表达式（如 `v-if`）先读一遍即可靠 `computed` 缓存避开。

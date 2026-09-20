@@ -41,13 +41,13 @@ ghost / block / icon / shape / color-variant / href / semantic.
 | type | legacy sugar; resolved into `color` + `variant` | `'default' \| 'primary' \| 'dashed' \| 'link' \| 'text'` | `'default'` |
 | color | semantic or preset color (16 values) | `ButtonColorType` | — |
 | variant | visual variant | `'outlined' \| 'dashed' \| 'solid' \| 'filled' \| 'text' \| 'link'` | — |
-| icon | icon (since v6 it is a **node**, not a string name) | `VNodeChild` | — |
+| icon | icon (since v6 it is a **node**, not a string name). A **component** is also accepted (see below) | `ButtonIcon` = `VNodeChild \| Component` | — |
 | iconPlacement | icon position | `'start' \| 'end'` | `'start'` |
 | ~~iconPosition~~ | ⚠️ deprecated, use `iconPlacement` | `'start' \| 'end'` | — |
 | shape | shape | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
 | size | size. `middle` emits **no** class | `'small' \| 'middle' \| 'large'` | ConfigProvider `componentSize` |
 | disabled | disabled. Merged with `??` ⇒ explicit `false` can turn off a parent `true` | `boolean` | — |
-| loading | loading state | `boolean \| { delay?: number; icon?: VNodeChild }` | `false` |
+| loading | loading state | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
 | ghost | ghost button. Degrades a `solid` variant to `outlined` | `boolean` | `false` |
 | danger | danger button | `boolean` | `false` |
 | block | fill the parent width | `boolean` | `false` |
@@ -74,6 +74,22 @@ ghost / block / icon / shape / color-variant / href / semantic.
 | default | button content |
 | icon | icon. The `icon` prop takes precedence over this slot |
 
+> **Passing a component to `icon`** (platform difference, same ruling as `Empty`'s `image`)
+>
+> antd's `icon` is `React.ReactNode`, and its examples write `icon={<SearchOutlined />}` —
+> in React that is an **already-evaluated element**. Vue has no such thing; its counterpart
+> is the **component itself**, so `Component` is accepted here as well:
+>
+> ```vue
+> <!-- ✅ equivalent to the antd example -->
+> <Button type="primary" :icon="SearchOutlined">Search</Button>
+> <!-- ✅ the VNode form works too (identical output) -->
+> <Button type="primary" :icon="h(SearchOutlined)">Search</Button>
+> ```
+>
+> ⚠️ The slot still only accepts `() => VNodeChild`; pass components through the prop:
+> `<template #icon><SearchOutlined /></template>`.
+
 ### Semantic slots
 
 `classNames` / `styles` each have three slots: `root` / `icon` / `content`.
@@ -94,9 +110,9 @@ per open decision `empty-semantic-fn` = B, consistent with divider / empty / spa
 ### Type exports
 
 `ButtonProps`, `ButtonRef`, `ButtonConfig`, `ButtonType`, `ButtonShape`, `ButtonSize`,
-`ButtonColorType`, `ButtonVariantType`, `ButtonHTMLType`, `ButtonIconPlacement`,
-`ButtonLoading`, `ButtonSemanticType`, `ButtonSemanticClassNames`, `ButtonSemanticStyles`,
-`ButtonSlot`.
+`ButtonColorType`, `ButtonVariantType`, `ButtonHTMLType`, `ButtonIcon`,
+`ButtonIconPlacement`, `ButtonLoading`, `ButtonSemanticType`, `ButtonSemanticClassNames`,
+`ButtonSemanticStyles`, `ButtonSlot`.
 
 ### ref
 
@@ -174,7 +190,7 @@ Registered as deviation D7.
 
 ### Component Token
 
-61 tokens, key-by-key identical to antd 6.6.4 (minus `solidTextColor`, see README §7.1).
+57 tokens (antd 6.6.4 returns 58; the only missing one is `solidTextColor`, see README §7.1).
 ⚠️ They **cannot** be overridden at runtime yet (`tokens.css` only declares Alias-level
 variables) — a repo-wide gap; use `styles.root.*` for now.
 

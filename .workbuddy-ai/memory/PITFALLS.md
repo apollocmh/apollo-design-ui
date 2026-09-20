@@ -949,3 +949,24 @@
      **处方**：① 注释里不要写「CSS 属性名 + 冒号」的字面量；② 新增组件样式若用了
      中间变量拼值，优先**内联**成 `${v('token')}` 形式（E10 只豁免紧跟冒号的
      `var(` / `${v(`），别先绑到变量再插值；③ 报错定位看**行号**，别只看「哪个文件」。
+
+135. 🚨 **`NodeRenderer` 只挡住「VNode 变量」，挡不住「组件对象」—— 同一个坑已踩两次。**
+     `empty/components/NodeRenderer.ts` 的 `normalizeNode()` 只做
+     `isVNode(node) ? cloneVNode(node) : node`。注释里写的「平台差异的落点」是对的，
+     但**不完整**：组件对象不是 VNode，会被**原样返回**，模板再 `toDisplayString`
+     成字面量文本 **`[object Object]`**（不是渲染成空，也不是报错 —— 最难发现的那种）。
+     第一次踩：`ImageNode`（已单独有 `h(node as Component)` 分支）；
+     第二次踩（2026-09-20 button 收口）：`icon` / `loading.icon` 传
+     `SearchOutlined`（组件对象）时 `<span class="apollo-btn-icon">[object Object]</span>`。
+     ⭐ **为什么容易漏**：`vue-tsc` 当时是红的（`TS2322: DefineComponent is not assignable
+     to VNodeChild`），修法是**放宽类型**（`ButtonIcon = VNodeChild | Component`）——
+     类型一放宽，编译就绿了，**但运行期缺陷一个字都没修**。
+     ⇒ 「类型放宽」与「渲染归一化」是**两件事，必须同时做**，且只有 L1 用例能证明后者。
+     **处方**：① 任何「可能收到组件」的 prop（`icon` / `image` / `indicator` / `avatar`…）
+     都要在进 `NodeRenderer` **之前** `h()` 包一层；② 判据无歧义：
+     `VNodeChildAtom = VNode | string | number | boolean | null | undefined | void`
+     （`@vue/runtime-core` `runtime-core.d.ts:1226`）**不含函数形态**，所以
+     「非原始值且非 VNode 且非数组」只可能是组件；
+     ③ 别在归一化处 `cloneVNode`（`NodeRenderer` 已做，VNode 可变，重复克隆丢身份）；
+     ④ 每条这样的 prop 至少配一条断言 `expect(w.text()).not.toContain('[object Object]')`
+     的 L1 用例 —— 只断言「元素存在」会漏，因为文本节点也能匹配到父元素。

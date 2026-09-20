@@ -40,13 +40,13 @@ block / icon / shape / color-variant / href / semantic）。
 | type | 旧版类型糖，会被解析成 `color` + `variant` | `'default' \| 'primary' \| 'dashed' \| 'link' \| 'text'` | `'default'` |
 | color | 语义色或预设色（16 个） | `ButtonColorType` | — |
 | variant | 视觉变体 | `'outlined' \| 'dashed' \| 'solid' \| 'filled' \| 'text' \| 'link'` | — |
-| icon | 图标（v6 起是**节点**，不是字符串名） | `VNodeChild` | — |
+| icon | 图标（v6 起是**节点**，不是字符串名）。也可传**组件**（见下方说明） | `ButtonIcon` = `VNodeChild \| Component` | — |
 | iconPlacement | 图标位置 | `'start' \| 'end'` | `'start'` |
 | ~~iconPosition~~ | ⚠️ 已废弃，请用 `iconPlacement` | `'start' \| 'end'` | — |
 | shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
 | size | 尺寸。`middle` **不**产类名 | `'small' \| 'middle' \| 'large'` | 取 ConfigProvider 的 `componentSize` |
 | disabled | 禁用。判据是 `??` ⇒ 显式 `false` 能关闭父级的 `true` | `boolean` | — |
-| loading | 加载态 | `boolean \| { delay?: number; icon?: VNodeChild }` | `false` |
+| loading | 加载态 | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
 | ghost | 幽灵按钮。会把 `solid` 变体退化成 `outlined` | `boolean` | `false` |
 | danger | 危险按钮 | `boolean` | `false` |
 | block | 撑满父容器宽度 | `boolean` | `false` |
@@ -73,6 +73,22 @@ block / icon / shape / color-variant / href / semantic）。
 | default | 按钮内容 |
 | icon | 图标。`icon` prop 优先于插槽 |
 
+> **关于 `icon` 传组件**（平台差异，与 `Empty` 的 `image` 同一裁决）
+>
+> antd 的 `icon` 是 `React.ReactNode`，官方示例写 `icon={<SearchOutlined />}` ——
+> 在 React 里那是**已求值的元素**。Vue 没有「元素」这一形态，对应物是**组件本身**，
+> 所以这里额外接受 `Component`：
+>
+> ```vue
+> <!-- ✅ 与 antd 示例等价的写法 -->
+> <Button type="primary" :icon="SearchOutlined">Search</Button>
+> <!-- ✅ VNode 形态同样支持（两者渲染结果一致） -->
+> <Button type="primary" :icon="h(SearchOutlined)">Search</Button>
+> ```
+>
+> ⚠️ 插槽仍只接受 `() => VNodeChild`，组件请走 prop：
+> `<template #icon><SearchOutlined /></template>`。
+
 ### 语义化槽位
 
 `classNames` / `styles` 各有三个槽位：`root` / `icon` / `content`。
@@ -93,9 +109,9 @@ ConfigProvider.button.classNames/styles
 ### 类型导出
 
 `ButtonProps`、`ButtonRef`、`ButtonConfig`、`ButtonType`、`ButtonShape`、`ButtonSize`、
-`ButtonColorType`、`ButtonVariantType`、`ButtonHTMLType`、`ButtonIconPlacement`、
-`ButtonLoading`、`ButtonSemanticType`、`ButtonSemanticClassNames`、`ButtonSemanticStyles`、
-`ButtonSlot`。
+`ButtonColorType`、`ButtonVariantType`、`ButtonHTMLType`、`ButtonIcon`、
+`ButtonIconPlacement`、`ButtonLoading`、`ButtonSemanticType`、`ButtonSemanticClassNames`、
+`ButtonSemanticStyles`、`ButtonSlot`。
 
 ### ref
 
@@ -170,7 +186,7 @@ ConfigProvider.button.classNames/styles
 
 ### 组件 Token
 
-61 个，与 antd 6.6.4 逐键一致（缺 `solidTextColor`，见 README §7.1）。
+57 个（antd 6.6.4 返回 58 个，唯一缺 `solidTextColor`，见 README §7.1）。
 ⚠️ 目前**不能**在运行时覆盖（`tokens.css` 只声明 Alias 层变量）—— 全库缺口，
 临时手段是 `styles.root.*`。
 

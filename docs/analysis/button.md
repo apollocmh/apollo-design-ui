@@ -223,6 +223,13 @@ primaryColor / defaultColor / defaultBg / defaultBorderColor / dangerColor / def
 | D4 | `icon` 支持 prop 与插槽两种 | INTENDED | 与 divider/empty 一致 |
 | D5 | 无 `Button.Group`（已废弃）指向 `Space.Compact` | INTENDED | 上游自己标 deprecated；`Space.Compact` 已收口 |
 | D6 | 两个中文字判定依赖 `textContent` | PLATFORM | Vue 的插槽渲染时序不同，需在 `onUpdated` 也检测（上游 `useEffect` **无依赖数组**，每次渲染都跑） |
+| D7 | `icon` / `loading.icon` 额外接受**组件**（`ButtonIcon = VNodeChild \| Component`） | PLATFORM | 上游是 `React.ReactNode`，容得下「React 元素」（`icon={<SearchOutlined />}`）；Vue 没有这一形态，对应物是**组件对象**。与 `EmptyImage`（`empty/interface.ts`）同一裁决，与 D23 同源 |
+
+⚠️ D7 的**运行期陷阱**：`NodeRenderer.normalizeNode()` 只做
+`isVNode ? cloneVNode : 原样`，组件对象会被原样返回，模板再 `toDisplayString`
+成字面量 `[object Object]`（**实测复现过**）。所以必须在进 `NodeRenderer` **之前**
+`h()` 包一层（`Button.vue` 的 `asIconNode()`）。这是同一个坑的第二次
+（第一次是 `ImageNode`）—— 见 PITFALLS 135。
 
 ⚠️ D6 是最容易漏的：上游那个 effect **故意不写依赖数组**（`Button.tsx:283` 注释），
 等价于**每次渲染后都跑** ⇒ Vue 侧必须在 `onUpdated` 里同样处理，不能只在 `onMounted` 跑一次。

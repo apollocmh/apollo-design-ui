@@ -7,6 +7,7 @@ export type {
   ButtonColorType,
   ButtonConfig,
   ButtonHTMLType,
+  ButtonIcon,
   ButtonIconPlacement,
   ButtonLoading,
   ButtonProps,

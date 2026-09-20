@@ -13,17 +13,21 @@
  *   1. `children` 不在 Props 里（Vue 侧是默认插槽，规则 C19）
  *   2. `SizeType` 改名为 `ButtonSize`（避免与 config-provider 的 `SizeType` 重名）
  *   3. `React.CSSProperties` → Vue `CSSProperties`、`React.ReactNode` → `VNodeChild`
+ *      —— 例外：`icon` / `loading.icon` 另接 `Component`（Vue 没有「React 元素」
+ *      形态，对应物是组件本身，与 `EmptyImage` 同一裁决）。见下面的
+ *      「icon 的取值」describe。
  *   4. ⚠️ **语义化不支持函数式变体**（`empty-semantic-fn` = B）⇒ 下面有一条
  *      「传函数应当报错」的负例，把它钉成类型层的契约。
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties, VNodeChild } from 'vue';
+import { defineComponent, h, type CSSProperties, type VNodeChild } from 'vue';
 import { Button } from '../index';
 import type {
   ButtonColorType,
   ButtonConfig,
   ButtonHTMLType,
+  ButtonIcon,
   ButtonIconPlacement,
   ButtonLoading,
   ButtonProps,
@@ -109,13 +113,16 @@ describe('Button · Props', () => {
 
   it('★ `loading` 是「布尔 | 对象」两种形态（不是只有布尔）', () => {
     expectTypeOf<ButtonLoading>().toEqualTypeOf<
-      boolean | { delay?: number; icon?: VNodeChild }
+      boolean | { delay?: number; icon?: ButtonIcon }
     >();
     expectTypeOf<ButtonProps['loading']>().toEqualTypeOf<ButtonLoading | undefined>();
   });
 
-  it('`icon` 是 `VNodeChild`（v6 起是节点，不是 v4 的字符串名）', () => {
-    expectTypeOf<ButtonProps['icon']>().toEqualTypeOf<VNodeChild | undefined>();
+  it('`icon` 是 `ButtonIcon`（v6 起是节点，不是 v4 的字符串名；且额外接受组件）', () => {
+    // `ButtonIcon = VNodeChild | Component` —— 后半段是**平台差异**：
+    // antd 的 `React.ReactNode` 容得下「React 元素」（`<SearchOutlined />`），
+    // Vue 没有这一形态，对应物是组件对象。与 `EmptyImage` 同一裁决。
+    expectTypeOf<ButtonProps['icon']>().toEqualTypeOf<ButtonIcon | undefined>();
   });
 
   it('`style` / `styles.root` 是 Vue 的 `CSSProperties`', () => {
@@ -168,8 +175,29 @@ describe('Button · ref / config / slot', () => {
     expectTypeOf<ButtonConfig>().toHaveProperty('autoInsertSpace');
   });
 
-  it('插槽签名都是 `() => VNodeChild`', () => {
-    expectTypeOf<ButtonSlot>().toBeFunction();
+  it('插槽签名都是 `() => VNodeChild`（组件要走 prop，不能当插槽返回）', () => {
+    expectTypeOf<ButtonSlot>().toEqualTypeOf<() => VNodeChild>();
+  });
+});
+
+describe('Button · icon 的取值（平台差异：额外接受**组件**）', () => {
+  it('★ `ButtonConfig.loadingIcon` 与 `ButtonProps.icon` 同一类型（配置面不漏）', () => {
+    expectTypeOf<ButtonConfig['loadingIcon']>().toEqualTypeOf<ButtonIcon | undefined>();
+  });
+
+  it('antd 的 `icon={<SearchOutlined />}` 在 Vue 侧的对应物 —— **组件对象**可以直接传', () => {
+    // React 的 `<Icon />` 求值后是一个「元素」；Vue 没有这个形态，对应物是组件本身。
+    const Icon = defineComponent({ setup: () => () => h('i') });
+    const asComponent: ButtonProps = { icon: Icon };
+    const asVNode: ButtonProps = { icon: h(Icon) };
+    const asText: ButtonProps = { icon: 'x' };
+    const asLoading: ButtonProps = { loading: { delay: 0, icon: Icon } };
+    const viaConfig: ButtonConfig = { loadingIcon: Icon };
+    expectTypeOf(asComponent).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(asVNode).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(asText).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(asLoading).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(viaConfig).toEqualTypeOf<ButtonConfig>();
   });
 });
 

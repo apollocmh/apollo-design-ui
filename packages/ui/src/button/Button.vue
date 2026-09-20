@@ -21,8 +21,9 @@
  */
 
 import { LoadingOutlined } from '@apollo-design/icons';
-import { isNumber, useDevWarning } from '@apollo-design/utils';
+import { isNumber, isVNode, useDevWarning } from '@apollo-design/utils';
 import {
+  type Component,
   type CSSProperties,
   computed,
   h,
@@ -48,6 +49,7 @@ import { useCompactItemContext } from '../space/Compact';
 import type {
   ButtonColorType,
   ButtonConfig,
+  ButtonIcon,
   ButtonProps,
   ButtonSemanticClassNames,
   ButtonSemanticStyles,
@@ -139,8 +141,47 @@ const childNodes = computed(() => (slots.default ? slots.default() : []));
  */
 const hasChildren = computed(() => childNodes.value.length > 0);
 
+/**
+ * 把 `icon` / `loading.icon` 归一化成「Vue 能渲染的东西」。
+ *
+ * ── 为什么需要这一层 ────────────────────────────────────────────────────────
+ *
+ * antd 的 `icon` 是 `React.ReactNode`，文档与示例都写 `<SearchOutlined />` ——
+ * 在 React 里那是个**已求值的元素**。Vue 没有「元素」这个形态，对应物是
+ * **组件本身**（`SearchOutlined` 这个对象）。所以 `ButtonIcon` 额外接受 `Component`
+ * （与 `EmptyImage` 同一裁决，见 `interface.ts`）。
+ *
+ * 但组件对象**不是** VNodeChild —— 直接交给 `<NodeRenderer>` 会被
+ * `normalizeNode()` 原样返回，模板再把它 `toDisplayString` 成
+ * 字面量文本 **`[object Object]`**（实测，见 `__tests__/index.test.ts`
+ * 的「icon 传组件」用例）。所以必须在**进 NodeRenderer 之前** `h()` 包一层。
+ *
+ * ── 判据（与 `ImageNode` 的三分支同源）──────────────────────────────────────
+ *
+ * `VNodeChildAtom = VNode | string | number | boolean | null | undefined | void`
+ * （`@vue/runtime-core` 的 `runtime-core.d.ts:1226`），**不含函数形态** ——
+ * 所以「非原始值且非 VNode」就只可能是组件，判定没有歧义：
+ *
+ *   - `null` / `undefined` / 字符串 / 数字 / 布尔 → 原样（交给 NodeRenderer）
+ *   - VNode / 数组（含插槽返回的 `VNode[]`）      → 原样
+ *   - 其余（组件对象 / 函数式组件）               → `h(v)`
+ *
+ * ⚠️ 不要在这里 `cloneVNode` —— `NodeRenderer` 已经做了（PITFALLS：VNode 可变，
+ *    同一常量 VNode 被两个 Button 渲染时第二次会看到上次留下的 `el`）。
+ */
+function asIconNode(value: ButtonIcon | undefined): VNodeChild {
+  if (value == null) return value as VNodeChild;
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return value;
+  }
+  if (isVNode(value) || Array.isArray(value)) return value as VNodeChild;
+  return h(value as Component);
+}
+
 /** `icon` prop 与 `icon` 插槽都能传图标，**prop 优先**。 */
-const mergedIcon = computed<VNodeChild>(() => props.icon ?? (slots.icon ? slots.icon() : undefined));
+const mergedIcon = computed<VNodeChild>(() =>
+  asIconNode(props.icon ?? (slots.icon ? slots.icon() : undefined)),
+);
 
 // ---------------------------------------------------------------------------
 // color / variant 解析（`:181-221`）
@@ -279,9 +320,11 @@ onUnmounted(() => {
 });
 
 const mergedLoadingIcon = computed<VNodeChild>(() =>
-  props.loading && typeof props.loading === 'object'
-    ? props.loading.icon || contextLoadingIcon
-    : contextLoadingIcon,
+  asIconNode(
+    props.loading && typeof props.loading === 'object'
+      ? props.loading.icon || contextLoadingIcon
+      : contextLoadingIcon,
+  ),
 );
 
 /**

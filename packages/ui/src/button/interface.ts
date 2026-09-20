@@ -12,12 +12,14 @@
  *    这里不重复导出同名类型，避免 `index.ts` 重名导出（与 Divider 同一处置）。
  * 3. `React.CSSProperties` → Vue 的 `CSSProperties`，`React.ReactNode` → `VNodeChild`
  *    （规则 C16 / C18）。
+ *    例外：`icon` / `loading.icon` 另接 `Component` —— Vue 没有「React 元素」这一
+ *    形态，其对应物是组件本身（与 `EmptyImage` 同一裁决）。见 {@link ButtonIcon}。
  * 4. ⚠️ **语义化不支持函数式变体**（`classNamesAndFn` / `stylesAndFn`）。
  *    依据 `empty-semantic-fn` 开放决策的建议 B：形态统一优先。
  *    已完成的 divider / spin / space 同样不支持 —— 见 `docs/analysis/button.md` §1。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { Component, CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 
 // ---------------------------------------------------------------------------
@@ -62,12 +64,30 @@ export type ButtonSize = 'small' | 'middle' | 'large';
 export type ButtonIconPlacement = 'start' | 'end';
 
 /**
+ * `icon` / `loading.icon` 的取值。
+ *
+ * ⚠️ 与 antd 的 `React.ReactNode` 有一处**平台差异**（PLATFORM），与 `EmptyImage`
+ *    （`packages/ui/src/empty/interface.ts:75`）**同一裁决**：antd 允许传「React 元素」
+ *    （`<SearchOutlined />` 的求值结果），Vue 没有等价的「元素」概念 —— 对应物是
+ *    **组件本身**。所以这里额外接受 `Component`。
+ *
+ * 判据（按顺序）：
+ *   - `null` / VNode / 字符串等 → 原样渲染
+ *   - 组件（对象或函数）      → `h(component)` 包一层
+ *
+ * ⚠️ 少了 `h()` 这一步，render 会返回一个**组件对象** —— Vue 只认 vnode，
+ *    结果是模板把对象 `toDisplayString` 成字面量文本 **`[object Object]`**
+ *    （实测，见 `__tests__/index.test.ts` 的「icon 传组件」用例）。
+ */
+export type ButtonIcon = VNodeChild | Component;
+
+/**
  * loading 的两种形态。
  *
  * ⚠️ 对象形态的判据是「`delay` 是否存在且 > 0」，不是「是不是对象」——
  *    见 `docs/analysis/button.md` §4.2（`Button.tsx:100-114`）。
  */
-export type ButtonLoading = boolean | { delay?: number; icon?: VNodeChild };
+export type ButtonLoading = boolean | { delay?: number; icon?: ButtonIcon };
 
 // ---------------------------------------------------------------------------
 // 语义化
@@ -104,8 +124,8 @@ export interface ButtonProps {
   type?: ButtonType;
   color?: ButtonColorType;
   variant?: ButtonVariantType;
-  /** 图标。也支持 `icon` 插槽。 */
-  icon?: VNodeChild;
+  /** 图标。也支持 `icon` 插槽（prop 优先）。可传 VNode，也可传组件（见 {@link ButtonIcon}）。 */
+  icon?: ButtonIcon;
   /** @deprecated 请用 `iconPlacement` */
   iconPosition?: ButtonIconPlacement;
   iconPlacement?: ButtonIconPlacement;
@@ -149,7 +169,7 @@ export type ButtonSlot = () => VNodeChild;
  */
 export type ButtonConfig = ComponentStyleConfig &
   Pick<ButtonProps, 'classNames' | 'styles'> & {
-    loadingIcon?: VNodeChild;
+    loadingIcon?: ButtonIcon;
     shape?: ButtonShape;
     color?: ButtonColorType;
     variant?: ButtonVariantType;
