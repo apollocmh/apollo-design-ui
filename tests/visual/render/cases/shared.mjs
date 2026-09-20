@@ -82,6 +82,16 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-typography-action { opacity: 0.5; }
 .demo-typography-textarea { outline: 2px solid #1890ff; }
 
+/* ⚠️ 下面这一段必须留在**最后**：上面 typography 段之前有一个孤立的「---」行，
+   它会把紧随其后的那条规则的选择器吞掉（变成「--- .demo-typography-root」）。
+   新增组件的类名一律追加在文件末尾，避免被同一个坑影响。 */
+.demo-skeleton-root { border: 1px dashed #ccc; }
+.demo-skeleton-header { outline: 1px solid #7cb305; }
+.demo-skeleton-section { outline: 1px solid #1890ff; }
+.demo-skeleton-avatar { box-shadow: 0 0 0 2px #f5222d; }
+.demo-skeleton-title { box-shadow: 0 0 0 2px #722ed1; }
+.demo-skeleton-paragraph { box-shadow: 0 0 0 2px #13c2c2; }
+
 `;
 
 // ===========================================================================
@@ -287,6 +297,82 @@ export const DIVIDER_SEMANTIC_STYLES = {
 
 /** `customize-style` 用例的边框色（antd 官方 demo 用的绿色）。 */
 export const DIVIDER_CUSTOM_BORDER = '#7cb305';
+
+// ===========================================================================
+// Skeleton
+// ===========================================================================
+
+/**
+ * ⚠️ Skeleton **不渲染任何文字** —— 它是纯几何块（背景色 + 圆角 + 尺寸）。
+ *
+ * 所以 Divider / Spin 那类「上下文字体不同 ⇒ 每个墨点都不同」的噪声在这里**不存在**，
+ * 不需要 `SKELETON_CONTEXT_FONT`。
+ *
+ * 唯一要钉死的是**宽度**：`title` / `paragraph` 的默认宽度是百分比
+ * （38% / 50% / 61%），容器宽度不确定则块宽不可比。`#stage` 是「视口宽 − 32px」、
+ * 两侧同构，所以只要用例不再引入宽度不确定的容器即可。
+ *
+ * ⚠️ `active` 的微光动画被 `STABILIZE_CSS` 的 `animation:none !important` 关掉，
+ *    但 **`background` 那一条线性渐变仍然生效**（只是停在起点位置）——
+ *    所以 `active` 在像素上是**可观测**的，且是确定性的。
+ */
+
+/** 竖向排布：多个骨架屏上下展示。 */
+export const SKELETON_COLUMN_STYLE = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '24px',
+};
+
+/** 横向排布：`element` 用例把子组件并排。 */
+export const SKELETON_ROW_STYLE = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: '16px',
+};
+
+/**
+ * `Skeleton.Node` 插槽里的替身内容样式。
+ *
+ * 用原生 `<span>` 而不是某个组件：Skeleton 的 5 个下游里没有任何一个已经落地，
+ * 引入未落地组件会让两侧的差异变成「那个组件没实现」。
+ */
+export const SKELETON_NODE_CHILD_STYLE = {
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** `Skeleton.Node` 插槽的文案（两侧逐字相同）。 */
+export const SKELETON_NODE_TEXT = 'Custom Content';
+
+/**
+ * `paragraph.width` 数组用例的取值。
+ *
+ * 三项分别覆盖 **字符串 / 数字 / 字符串**；`rows` 给 4 让第 4 行**越界**
+ * （`width[3]` 是 `undefined` ⇒ 该行退回 CSS 的 `width:100%`）——
+ * 这是 `getWidth` 数组分支唯一能被像素观测到的边界。
+ */
+export const SKELETON_PARAGRAPH_WIDTHS = ['10%', 200, '30%'];
+
+/** 语义化用例：两侧同一组 classNames / styles。 */
+export const SKELETON_SEMANTIC_CLASSNAMES = {
+  root: 'demo-skeleton-root',
+  header: 'demo-skeleton-header',
+  section: 'demo-skeleton-section',
+  avatar: 'demo-skeleton-avatar',
+  title: 'demo-skeleton-title',
+  paragraph: 'demo-skeleton-paragraph',
+};
+
+export const SKELETON_SEMANTIC_STYLES = {
+  root: { padding: '8px' },
+  title: { backgroundColor: '#d9d9d9' },
+  paragraph: { backgroundColor: '#f0f0f0' },
+};
+
+/** Skeleton 语义化用例的配套 CSS 已并入上面的 `SEMANTIC_INJECT_CSS`。 */
 
 // ===========================================================================
 // Space

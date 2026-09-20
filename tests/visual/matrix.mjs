@@ -90,6 +90,19 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  skeleton: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    variants: [
+      'basic', // 默认：title（38%）+ 3 行 paragraph（末行 61%）
+      'avatar', // 头像三组合：avatar+title+paragraph / +title:false / +paragraph:false
+      'round', // 胶囊圆角（标题与段落行的 border-radius 换成 100px）
+      'paragraph', // rows / width 数组 / width 数字（含 `-active` 的微光动画）
+      'title', // title 宽度的三张表（38% / 50% / 数字）
+      'element', // Skeleton.Button / Input / Avatar（含 block / size / shape）
+      'node-image', // Skeleton.Node（自定义插槽）与 Skeleton.Image（内置占位图）
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
   space: {
     // 9 个 variant × 3 个 viewport = 27 张
     variants: [
