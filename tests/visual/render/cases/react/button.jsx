@@ -25,6 +25,16 @@ import {
 /** 一行 —— 两侧同形。 */
 const Row = ({ style = BUTTON_ROW_STYLE, children }) => <div style={style}>{children}</div>;
 
+/**
+ * **组件形态**的图标 —— antd 侧的「React 元素」写法（`icon={<SearchIcon />}`）。
+ *
+ * 与 Vue 侧的 `icon: SearchIconComponent` 对应，渲染出的 DOM 完全相同
+ * （都是 `<span class="…-btn-icon"><span>🔍</span></span>`）。
+ * 差异 D42：Vue 没有「元素」形态，对应物是组件对象；这一行就是用来钉住
+ * 「组件形态的 icon 真的渲染出图标，而不是字面量 `[object Object]`」的。
+ */
+const SearchIcon = () => <span>🔍</span>;
+
 export default {
   // ---- 1. type：五种旧版类型糖 -------------------------------------------
   type: () => (
@@ -135,6 +145,10 @@ export default {
       <Button type="primary" icon={<span>🔍</span>} />
       <Button icon={<span>🔍</span>} />
       <Button type="primary" shape="circle" icon={<span>🔍</span>} />
+      {/* 组件形态（差异 D42）：`icon` 收到的是**组件**，不是元素 */}
+      <Button type="primary" icon={<SearchIcon />}>
+        Search
+      </Button>
       <Button type="primary" shape="round">
         Round
       </Button>

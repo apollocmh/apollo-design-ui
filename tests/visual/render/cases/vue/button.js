@@ -25,6 +25,17 @@ const Row = (style, children) => h('div', { style }, children);
 /** 图标 —— 两侧同一份 DOM（`🔍` 的墨迹由同一个 Chromium 渲染，跨平台一致）。 */
 const iconNode = () => h('span', '🔍');
 
+/**
+ * **组件形态**的图标 —— Vue 侧的对应物是**组件对象**（差异 D42）。
+ *
+ * antd 写 `icon={<SearchIcon />}`（React 元素）；Vue 没有「元素」形态，写
+ * `icon: SearchIconComponent`。两者渲染出的 DOM 完全相同
+ * （都是 `<span class="…-btn-icon"><span>🔍</span></span>`）。
+ * 这一行用来钉住「组件形态的 icon 真的渲染出图标，而不是字面量 `[object Object]`」——
+ * 后者是「只放宽类型、不做渲染归一化」时的实际表现（PITFALLS 135）。
+ */
+const SearchIconComponent = { name: 'SearchIcon', setup: () => () => h('span', '🔍') };
+
 export default {
   // ---- 1. type：五种旧版类型糖 -------------------------------------------
   type: () =>
@@ -112,6 +123,8 @@ export default {
       h(Button, { type: 'primary', icon: iconNode() }),
       h(Button, { icon: iconNode() }),
       h(Button, { type: 'primary', shape: 'circle', icon: iconNode() }),
+      // 组件形态（差异 D42）：`icon` 收到的是**组件**，不是 VNode
+      h(Button, { type: 'primary', icon: SearchIconComponent }, { default: () => 'Search' }),
       h(Button, { type: 'primary', shape: 'round' }, { default: () => 'Round' }),
     ]),
 
