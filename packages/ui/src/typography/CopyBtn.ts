@@ -21,10 +21,13 @@
  *   2. **`iconOnly` 只看 children 是否可渲染**（`isReactRenderable`）。它不是
  *      「按钮里没有图标」，而是「文字内容为空、只有图标」⇒ 加 `-copy-icon-only`
  *      让 CSS 用更小的点击热区。判据来自 `Base`，本组件只负责落类名。
- *   3. **`copied` 分支的 `needDom` 是 `true`**：`icon: false` 在「已复制」态下
- *      **仍然渲染默认的 `CheckOutlined`**（`false || (true && <CheckOutlined/>)`），
- *      而在「未复制」态下渲染 `false`（什么都不画）。这是 `getNode` 的既定行为，
- *      不是笔误。
+ *   3. **`copied` / 未复制两个分支的 `needDom` 都是 `true`**：`icon: false` 在两种状态下
+ *      **都仍然渲染默认图标**（`false || (true && <CheckOutlined/>)` ⇒ `CheckOutlined`；
+ *      未复制态同理 ⇒ `CopyOutlined`）。这是 `getNode` 的既定行为，不是笔误 ——
+ *      `icon: false` 在本组件里**不是**「不画图标」的开关。
+ *      （「不画」的语义只在 `needDom` 为假时成立，例如 `tooltips: false`：那里
+ *      `getNode(false, systemStr)` 得到 `false` ⇒ 气泡不弹，而 `aria-label` 退回语言包文案。）
+ *      ⇒ 用例断言的是「仍然渲染默认图标」，防止有人把它「修」成不渲染而偏离上游。
  *
  * ── 与 antd 的一处差异（INTENDED，见 README §7）─────────────────────────────────
  *

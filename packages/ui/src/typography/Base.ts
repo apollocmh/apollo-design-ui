@@ -264,7 +264,7 @@ export const Base = defineComponent({
     onMouseenter: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     onMouseleave: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
   },
-  setup(props, { attrs, slots }) {
+  setup(props, { attrs, slots, expose }) {
     const [textLocale] = useLocale('Text');
 
     const typographyRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
@@ -331,12 +331,21 @@ export const Base = defineComponent({
       setEditing(edit);
     };
 
-    // 退出编辑态后把焦点还给编辑图标
-    watch(editing, (value, oldValue) => {
-      if (!value && oldValue) {
-        editIconRef.value?.focus();
-      }
-    });
+    // 退出编辑态后把焦点还给编辑图标。
+    //
+    // ⚠️ `flush: 'post'` **不是**可省的：默认的 `flush: 'pre'` 会在**组件重渲染之前**跑，
+    //    而那一刻编辑图标还没被 patch 出来（`editIconRef.value` 仍是进入编辑态时被置的
+    //    `null`）—— `focus()` 静默落空，可访问性回归（键盘用户退出编辑后焦点掉回 body）。
+    //    antd 的 `useLayoutEffect` 是 commit 之后跑的，`flush: 'post'` 才是它的等价物。
+    watch(
+      editing,
+      (value, oldValue) => {
+        if (!value && oldValue) {
+          editIconRef.value?.focus();
+        }
+      },
+      { flush: 'post' },
+    );
 
     const onEditClick = (e?: MouseEvent): void => {
       e?.preventDefault();
@@ -513,6 +522,15 @@ export const Base = defineComponent({
     const typographyEl = computed<HTMLElement | null>(
       () => typographyRef.value?.nativeElement ?? null,
     );
+
+    /**
+     * 暴露给父组件的实例。
+     *
+     * ⚠️ antd 的四个子组件都是 `forwardRef`，`ref` 直接落到根 DOM 元素上；Vue 里
+     *    对应物就是 `expose({ nativeElement })`（与 `Divider` / `Empty` / `Spin` 同形）。
+     *    少了它，`<Text ref="x">` 拿不到任何东西 —— 那是**契约缺失**，不是「用不到」。
+     */
+    expose({ nativeElement: typographyEl });
 
     useResizeObserver({
       target: () => typographyEl.value,

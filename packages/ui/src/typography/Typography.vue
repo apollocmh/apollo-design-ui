@@ -29,7 +29,7 @@
  * 与 `clsx(className, rootClassName)` 逐字相同。
  */
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useTypographySemantic } from './hooks/use-typography-semantic';
 import InternalTypography from './InternalTypography.vue';
@@ -56,9 +56,19 @@ const { classNames, styles, prefixCls, direction } = useTypographySemantic(
   () => props.direction,
 );
 
-const rootRef = ref<HTMLElement | null>(null);
+/**
+ * `InternalTypography` 的实例（它 `defineExpose({ nativeElement })`）。
+ *
+ * ⚠️ 这里**不能**声明成 `ref<HTMLElement>`：模板里的 `ref="rootRef"` 落在**组件**上，
+ *    Vue 给的是那个组件的**暴露对象**（`{ nativeElement }`），不是 DOM 元素。
+ *    声明成 `HTMLElement` 会让 `defineExpose` 把 `nativeElement` 暴露成一个
+ *    「装着暴露对象的 ref」—— 类型在撒谎，`<Typography ref="x">` 的
+ *    `x.nativeElement` 拿到的不是元素（实测踩过）。见 `interface.ts` 的 `TypographyRef`。
+ */
+const rootRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
 
-defineExpose({ nativeElement: rootRef });
+/** antd 的 `forwardRef` 直接落到根 DOM 元素；Vue 里对应物就是这个 `nativeElement`。 */
+defineExpose({ nativeElement: computed(() => rootRef.value?.nativeElement ?? null) });
 </script>
 
 <template>

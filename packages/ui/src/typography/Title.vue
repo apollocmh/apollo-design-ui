@@ -23,7 +23,7 @@
  */
 
 import { omit, useDevWarning } from '@apollo-design/utils';
-import { computed, useAttrs, watchEffect } from 'vue';
+import { computed, ref, useAttrs, watchEffect } from 'vue';
 
 import Base from './Base';
 import type { TitleProps } from './interface';
@@ -48,6 +48,16 @@ watchEffect(() => {
 
 const component = computed(() => (TITLE_ELE_LIST.includes(props.level) ? `h${props.level}` : 'h1'));
 
+/**
+ * 转发 `Base` 的 `nativeElement`。
+ *
+ * ⚠️ 必须转发：antd 的 `Title` 是 `forwardRef`，`ref` 落在根 DOM 元素上。
+ *    理由与判据见 `Text.vue` 里同名字段的说明。
+ */
+const baseRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
+
+defineExpose({ nativeElement: computed(() => baseRef.value?.nativeElement ?? null) });
+
 const mergedProps = computed(() => ({
   ...attrs,
   ...omit(props, ['component', 'level']),
@@ -56,7 +66,7 @@ const mergedProps = computed(() => ({
 </script>
 
 <template>
-  <Base v-bind="mergedProps">
+  <Base ref="baseRef" v-bind="mergedProps">
     <slot />
   </Base>
 </template>

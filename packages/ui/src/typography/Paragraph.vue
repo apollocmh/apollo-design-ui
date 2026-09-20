@@ -11,7 +11,7 @@
  */
 
 import { omit } from '@apollo-design/utils';
-import { computed, useAttrs } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
 
 import Base from './Base';
 import type { ParagraphProps } from './interface';
@@ -21,6 +21,16 @@ defineOptions({ name: 'AParagraph', inheritAttrs: false });
 const props = defineProps<ParagraphProps>();
 const attrs = useAttrs();
 
+/**
+ * 转发 `Base` 的 `nativeElement`。
+ *
+ * ⚠️ 必须转发：antd 的 `Paragraph` 是 `forwardRef`，`ref` 落在根 DOM 元素上。
+ *    理由与判据见 `Text.vue` 里同名字段的说明。
+ */
+const baseRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
+
+defineExpose({ nativeElement: computed(() => baseRef.value?.nativeElement ?? null) });
+
 const mergedProps = computed(() => ({
   ...attrs,
   ...omit(props, ['component']),
@@ -29,7 +39,7 @@ const mergedProps = computed(() => ({
 </script>
 
 <template>
-  <Base v-bind="mergedProps">
+  <Base ref="baseRef" v-bind="mergedProps">
     <slot />
   </Base>
 </template>

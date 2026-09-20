@@ -28,7 +28,7 @@
  */
 
 import { isPlainObject, omit, useDevWarning } from '@apollo-design/utils';
-import { computed, useAttrs } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
 
 import Base from './Base';
 import type { EllipsisConfig, TextProps } from './interface';
@@ -37,6 +37,20 @@ defineOptions({ name: 'AText', inheritAttrs: false });
 
 const props = defineProps<TextProps>();
 const attrs = useAttrs();
+
+/**
+ * `Base` 的实例（它 `defineExpose({ nativeElement })`）。
+ *
+ * ⚠️ 必须**转发**，不能省：antd 的 `Text` 是 `forwardRef`，`ref` 直接落到根 DOM
+ *    元素上（`<Base ref={ref} …/>` ⇒ `InternalTypography` 的 `ref`）。Vue 的等价物
+ *    是「在 `Base` 上挂模板 ref，再把它暴露的 `nativeElement` 原样暴露出去」。
+ *    少了这一步 `<Text ref="x">` 拿不到任何东西 —— 那是**契约缺失**（实测踩过）。
+ *    声明成 `{ nativeElement }` 而不是 `HTMLElement`：模板 ref 落在**组件**上，
+ *    Vue 给的是组件的暴露对象，不是元素（见 `Typography.vue` 的同类说明）。
+ */
+const baseRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
+
+defineExpose({ nativeElement: computed(() => baseRef.value?.nativeElement ?? null) });
 
 const warning = useDevWarning('Typography.Text');
 
@@ -64,7 +78,7 @@ const mergedProps = computed(() => ({
 </script>
 
 <template>
-  <Base v-bind="mergedProps">
+  <Base ref="baseRef" v-bind="mergedProps">
     <slot />
   </Base>
 </template>

@@ -22,7 +22,7 @@
  */
 
 import { isPlainObject, omit, useDevWarning } from '@apollo-design/utils';
-import { computed, useAttrs } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
 
 import Base from './Base';
 import type { LinkProps } from './interface';
@@ -31,6 +31,16 @@ defineOptions({ name: 'ALink', inheritAttrs: false });
 
 const props = defineProps<LinkProps>();
 const attrs = useAttrs();
+
+/**
+ * 转发 `Base` 的 `nativeElement`。
+ *
+ * ⚠️ 必须转发：antd 的 `Link` 是 `forwardRef`，`ref` 落在根 DOM 元素（`<a>`）上。
+ *    理由与判据见 `Text.vue` 里同名字段的说明。
+ */
+const baseRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
+
+defineExpose({ nativeElement: computed(() => baseRef.value?.nativeElement ?? null) });
 
 const warning = useDevWarning('Typography.Link');
 
@@ -51,7 +61,7 @@ const mergedProps = computed(() => ({
 </script>
 
 <template>
-  <Base v-bind="mergedProps">
+  <Base ref="baseRef" v-bind="mergedProps">
     <slot />
   </Base>
 </template>
