@@ -894,3 +894,58 @@
      ⚠️ 该 shim 会在**每个**被 spawn 的 worker 里再 `--require` 一次，
      于是 worker 卡在 boot、主进程卡在 `withTimeout(..., START_TIMEOUT = 6e4)`。
      顺带：这条坑会让「跑一次测试」固定烧掉 60s，排查时别误判成「测试很慢」。
+
+130. 🚨🚨 **视觉差异先怀疑「我方缺声明」，不要先归类 PLATFORM。**
+     实测（2026-09-20 button 收口）：上一轮把 27/27 的 0.23%–2.33% 差异登记为
+     「PLATFORM：Chrome glyph hinting 抖动」，还断言「React 侧跑两次也会不同截图」。
+     复核发现**两条依据都假**：`--mode baseline` 重生成 27 张基线后 `git status`
+     **零变化** ⇒ 截图是确定的。真因是我方 `<button>` 没设 `line-height`
+     （见 131）—— **一个 BUG 被写成了 PLATFORM**（`AGENTS.md` §4.3 明令禁止）。
+     **处方**：① 任何「平台抖动」结论必须先用 `--mode baseline` 重跑 + `git status`
+     零变化来**证伪自己**；② 视觉差异的排查顺序是「量几何（`getBoundingClientRect`
+     的 x/y/w/h 到小数）→ 量计算样式（`line-height` / `font-family` / `transform`）
+     → 最后才谈平台」。本次一量就现形：span 高 17px vs 22px、y 差 2.5px。
+
+131. ⚠️⚠️ **`<button>` 不会自动继承 `line-height` —— 组件必须自带。**
+     antd 的 Button **不**调用 `resetComponent`（`antd/es/button/style/index.js` 的
+     `genStyleHooks` 只拼 Shared / Size / Variant / Group），它靠
+     `antd/dist/reset.css` 的 `input,button,…{line-height:inherit}` 从环境继承。
+     本仓 `BASE_CSS`（`packages/ui/src/style/index.ts:93`）**没有**这条表单控件归一化
+     （该文件自己把「button 重置」列为未决缺口）⇒ 我们的 `<button>` 退回 UA 的
+     `line-height:normal`。后果：文字/图标 span 高 17px vs 22px、基线差 ~2.5px，
+     L6 直接全红。
+     **处方**：凡是渲染原生 `<button>` / `<input>` / `<select>` 的组件，都要在**组件根**
+     上显式 `line-height:var(--apollo-line-height)`（divider / empty / space / spin 的
+     既有做法）。⚠️ 该值必须**无单位**（`lineHeight: number`），这样大/小号字号会等比缩放，
+     与 antd「继承无单位行高」的语义一致。
+
+132. ⚠️ **`@apollo-design/icons` 的 `.apollo-icon` 基线样式没有被 ui 的静态样式层消费。**
+     该基线在 `packages/icons/src/style.ts` 的 `getIconStyle()` 里（对应 antd 运行时注入的
+     `.anticon`），注释与 README 都写明「注入交给 ui 的静态样式层」—— 但 `packages/ui`
+     里**从未 import 它**（`getIconStyle` 只有定义与测试，无消费方），且 icons 包
+     `exports` 只有 `"."`、没有独立 `style.css` 出口 ⇒ 消费方**没有任何途径**拿到它。
+     后果：组件里的图标 span 退回继承行高（22px）而 antd 的 `.anticon` 是 `line-height:0`
+     ⇒ svg 高 2px、L6 红（本次 `loading` 三例）。
+     **处方（组件侧自保）**：渲染图标处显式补齐 `display:inline-flex;align-items:center;
+     line-height:0` 与 `> *{line-height:1}`。**根治**：让 ui 样式层把
+     `getIconStyle(iconPrefixCls)` 并进产物（属跨组件基础设施，未做，登记在此）。
+
+133. ⚠️⚠️ **L6 视觉门禁吃的是 `packages/ui/dist`，不是 `src`。**
+     `tests/visual/build.mjs` 打的是 `@apollo-design/ui` 的**已构建产物**。
+     改了 `packages/ui/src/<c>/style/**` 后直接跑 `run.mjs --mode compare`，
+     它用的是**旧 dist** ⇒ 数字与改动前**一字不差**。
+     ⭐ **判据**：compare 的差异率与上次**完全相同**（到小数点后三位）时，
+     第一反应必须是「产物没重建」，而不是「改动无效」。
+     **处方**：`cd packages/ui && CODEBUDDY_SAFE_DELETE_ENABLED=0 ../../node_modules/.bin/unbuild`
+     重建 dist，再跑 compare。（`dist/` 被 gitignore，不入库。）
+
+134. ⚠️ **`registry:validate` 的 E10 会把「注释里的属性名」当成声明来判。**
+     `HARDCODED_PATTERNS` 用 `text.match(re)` 逐文件匹配，**不区分注释与代码**。
+     实测：一条注释里写了字面量 `` `border-radius:` ``（其后不是 `var(` / `${v(` / `0`），
+     就让 `registry:validate` 的 E10 一直红 —— 而代码里的 `border-radius` 全是合法的。
+     同类：`box-shadow` 的负向先行只豁免 `var(`，于是 `box-shadow:none`（antd
+     `variant.js:249` disabled / `:36` ghost 都真实使用）与 `box-shadow:${r.shadow}`
+     都被误判 ⇒ 需要给正则补 `none\b` 与 `\$\{[\w]+` 豁免。
+     **处方**：① 注释里不要写「CSS 属性名 + 冒号」的字面量；② 新增组件样式若用了
+     中间变量拼值，优先**内联**成 `${v('token')}` 形式（E10 只豁免紧跟冒号的
+     `var(` / `${v(`），别先绑到变量再插值；③ 报错定位看**行号**，别只看「哪个文件」。
