@@ -20,10 +20,12 @@
  *   7. `-icon-only` 的判据含 `children !== 0`（`:384`）—— `0` 算有内容。
  */
 
+import { LoadingOutlined } from '@apollo-design/icons';
 import { isNumber, useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
+  h,
   onMounted,
   onUnmounted,
   onUpdated,
@@ -31,10 +33,14 @@ import {
   shallowReactive,
   useAttrs,
   useSlots,
+  type VNodeChild,
   watch,
   watchEffect,
 } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
+// ⚠️ 这个渲染器是**平台原语**（模板里没有「渲染一个 VNodeChild 变量」的语法），
+//    不属于 Empty。等 `_internal/` 有归置位时应上移，不要在 Button 里复制一份。
+import { NodeRenderer } from '../empty/components/NodeRenderer';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
@@ -123,7 +129,8 @@ const childNodes = computed(() => (slots.default ? slots.default() : []));
 /** 是否有内容。判据含 `children !== 0`（`:384`）—— `0` 算有内容。 */
 const hasChildren = computed(() => !!slots.default);
 
-const mergedIcon = computed(() => props.icon ?? (slots.icon ? slots.icon() : undefined));
+/** `icon` prop 与 `icon` 插槽都能传图标，**prop 优先**。 */
+const mergedIcon = computed<VNodeChild>(() => props.icon ?? (slots.icon ? slots.icon() : undefined));
 
 // ---------------------------------------------------------------------------
 // color / variant 解析（`:181-221`）
@@ -198,7 +205,14 @@ const { compactSize, compactItemClassnames } = useCompactItemContext(
   direction.value,
 );
 
-const sizeFullName = useSize(() => props.size ?? compactSize?.value);
+/**
+ * ⚠️ 回调**必须**接住 `ctxSize`：antd 写的是
+ * `useSize((ctxSize) => customizeSize ?? compactSize ?? groupSize ?? ctxSize)`，
+ * 若在回调里丢掉 `ctxSize`（`useSize(() => props.size ?? compactSize)`），
+ * ConfigProvider 的 `componentSize` 会**静默失效** —— DOM 全对，只是尺寸永远是默认。
+ * （`groupSize` 来自已废弃的 `Button.Group`，按 D5 不实现。）
+ */
+const sizeFullName = useSize((ctxSize) => props.size ?? compactSize?.value ?? ctxSize);
 
 // ---------------------------------------------------------------------------
 // loading（`:100-114, 234-236, 261-267`）
@@ -254,10 +268,27 @@ onUnmounted(() => {
   if (delayTimer !== null) clearTimeout(delayTimer);
 });
 
-const mergedLoadingIcon = computed(() =>
+const mergedLoadingIcon = computed<VNodeChild>(() =>
   props.loading && typeof props.loading === 'object'
     ? props.loading.icon || contextLoadingIcon
     : contextLoadingIcon,
+);
+
+/**
+ * 图标区里真正渲染的东西（`:243-256`）。
+ *
+ * ```
+ * icon && !innerLoading   → icon
+ * loading && loadingIcon  → loadingIcon
+ * 其余                     → 内置 LoadingOutlined
+ * ```
+ *
+ * ⚠️ 第三支的判据是「加载态」而不是「有没有图标」：antd 的 `DefaultLoadingIcon` 在
+ *    `visible = !!loading` 且 `removeOnLeave` 下**不渲染**，所以「不加载且无图标」这一支
+ *    由外层 `v-if="iconType"` 挡掉，这里不必再判一次。
+ */
+const iconNode = computed<VNodeChild>(() =>
+  innerLoading.value ? (mergedLoadingIcon.value ?? h(LoadingOutlined)) : mergedIcon.value,
 );
 
 // ---------------------------------------------------------------------------
@@ -373,7 +404,17 @@ const rootStyleAttrs = computed(() => styleAttrs(rootStyle.value));
 const iconStyleAttrs = computed(() => styleAttrs(mergedStyles.value.icon));
 const contentStyleAttrs = computed(() => styleAttrs(mergedStyles.value.content));
 
-const iconClass = computed(() => [`${prefixCls.value}-icon`, mergedClassNames.value.icon]);
+/**
+ * ⚠️ 加载时图标容器上还有 `-loading-icon`（`:InnerLoadingIcon` 的
+ *    `clsx(`${prefixCls}-loading-icon`, className)`）。它不只是装饰 ——
+ *    `-two-chinese-chars` 的 `> *:not(-icon)` 修正依赖图标能被排除，
+ *    而且它是 L4 契约里的一条真实类名。
+ */
+const iconClass = computed(() => [
+  `${prefixCls.value}-icon`,
+  { [`${prefixCls.value}-loading-icon`]: innerLoading.value },
+  mergedClassNames.value.icon,
+]);
 const contentClass = computed(() => [mergedClassNames.value.content]);
 
 // ---------------------------------------------------------------------------
@@ -424,7 +465,7 @@ defineExpose({ nativeElement: rootRef });
     @click="onClick"
   >
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
-      <slot name="icon">{{ mergedLoadingIcon }}</slot>
+      <NodeRenderer :node="iconNode" />
     </span>
     <span v-if="hasChildren" :class="contentClass" v-bind="contentStyleAttrs">
       <slot />
@@ -441,7 +482,7 @@ defineExpose({ nativeElement: rootRef });
     @click="onClick"
   >
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
-      <slot name="icon">{{ mergedLoadingIcon }}</slot>
+      <NodeRenderer :node="iconNode" />
     </span>
     <span v-if="hasChildren" :class="contentClass" v-bind="contentStyleAttrs">
       <slot />
