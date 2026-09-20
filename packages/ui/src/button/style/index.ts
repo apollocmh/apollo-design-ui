@@ -293,6 +293,13 @@ export function genButtonStyle(prefixCls: string): string {
     `[class^="${prefixCls}-btn"],[class*=" ${prefixCls}-btn"]{`,
     `  font-family:${v('fontFamily')};`,
     `  font-size:${v('fontSize')};`,
+    // ⚠️ 行高必须显式给：antd 的 Button **不**调用 `resetComponent`，它靠 `antd/dist/reset.css`
+    //    里的 `button{line-height:inherit}` 从环境继承行高（实测 22px = `lineHeight`×14px）。
+    //    本仓 BASE_CSS 目前**没有**这条表单控件归一化（`packages/ui/src/style/index.ts:90`
+    //    把「button 重置」列为未决缺口），于是 `<button>` 退回 UA 的 `line-height:normal`
+    //    ⇒ span 高 17px vs 22px、文字基线差 ~2.5px ⇒ L6 全 27 例 `block-diff`。
+    //    这里按 divider / empty / space / spin 的既有做法在组件根上显式钉住。
+    `  line-height:${v('lineHeight')};`,
     `  box-sizing:border-box;`,
     `}`,
     `[class^="${prefixCls}-btn"]::before,[class^="${prefixCls}-btn"]::after,[class*=" ${prefixCls}-btn"]::before,[class*=" ${prefixCls}-btn"]::after{`,
@@ -371,7 +378,20 @@ export function genButtonStyle(prefixCls: string): string {
     `  align-items:center;`,
     `}`,
     `${cls}-icon ${ICON_CLS}{`,
+    // antd 的 `.anticon` 基线（`@ant-design/icons` 的 iconStyles）由 antd 在**运行时**注入，
+    // 所以 React 侧一定拿得到 `line-height:0` + `display:inline-flex`。
+    // 本仓该基线在 `@apollo-design/icons` 的 `getIconStyle()` 里，但 ui 的静态样式层
+    // **尚未消费它**（icons 包 exports 只有 "."，也没有单独 style.css 出口）⇒ 图标 span
+    // 退回继承行高（22px），svg 比 antd 高 2px。这里在**按钮范围内**补上同样的基线，
+    // 让按钮自带图标的对齐不依赖「应用是否额外引入了图标基线样式」。
+    // （根因是 ui 样式层的集成缺口，已记入 PITFALLS；此处只是组件侧的自保。）
+    `  display:inline-flex;`,
+    `  align-items:center;`,
+    `  line-height:0;`,
     `  vertical-align:middle;`,
+    `}`,
+    `${cls}-icon ${ICON_CLS} > *{`,
+    `  line-height:1;`,
     `}`,
     // 给 SVG 前面补一个零宽空格，把基线顶到按钮中央
     `${cls}-icon ${ICON_CLS}:before{`,
