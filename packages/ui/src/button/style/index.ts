@@ -533,8 +533,16 @@ export function genButtonStyle(prefixCls: string): string {
   }
 
   // ---- Disabled（`variant.js:242-250`；必须排在 Colors / PresetColors 之后）----
+  //
+  // ⚠️ 选择器特意**重复一遍** `${cls}`（`.apollo-btn.apollo-btn:disabled`）——
+  //    与 antd 的 `.ant-btn:disabled, .ant-btn.ant-btn-disabled` 同处一个
+  //    「color×variant 与 disabled 同特异性」的二难：两边都是 (0,2,0)。我们靠：
+  //      1) 这里有重复类把禁用选择器顶到 (0,3,0)，**稳赢** color×variant；
+  //      2) 同时保留来源顺序作为兜底（disabled 在所有 color×variant 之后）。
+  //    实际效果：`.apollo-btn-color-primary.apollo-btn-variant-solid:disabled`
+  //    也能被命中（[1] 链接分支实测）。
   out.push(
-    `${cls}:disabled,${cls}${cls}-disabled{`,
+    `${cls}${cls}:disabled,${cls}${cls}${cls}-disabled{`,
     `  cursor:not-allowed;`,
     `  border-color:${v('colorBorderDisabled')};`,
     `  background:${v('colorBgContainerDisabled')};`,
@@ -542,7 +550,7 @@ export function genButtonStyle(prefixCls: string): string {
     `  box-shadow:none;`,
     `}`,
     // text / link 变体的 disabled 额外把背景与边框清成透明
-    `${cls}${cls}-variant-text:disabled,${cls}${cls}-variant-text${cls}-disabled,${cls}${cls}-variant-link:disabled,${cls}${cls}-variant-link${cls}-disabled{`,
+    `${cls}${cls}-variant-text${cls}:disabled,${cls}${cls}-variant-text${cls}${cls}-disabled,${cls}${cls}-variant-link${cls}:disabled,${cls}${cls}-variant-link${cls}${cls}-disabled{`,
     `  background:transparent;`,
     `  border-color:transparent;`,
     `}`,

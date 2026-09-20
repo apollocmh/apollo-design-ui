@@ -310,6 +310,18 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D39 | `space` | `useCompactItemContext` 返回裸值（每次渲染重算） | 返回 `ComputedRef`（`compactSize` / `compactDirection` / `compactItemClassnames`） | PLATFORM | D27 同一根源：Vue 的 `inject` 是 setup 期快照，裸值不会随 `Compact` 的 props 变化更新。下游（Button / Input / Select / DatePicker / … 共 10 个组件）在 `computed` 里读 `.value` 即可，与 `size-context.ts` 同形 |
 | D40 | `space` | `separator={0}` 时 `Item` 的 `{index < latestIndex && separator && <span/>}` 求值成数字 `0`，React 把它渲染成**裸文本节点** ⇒ DOM 是 `<div>a</div>0<div>b</div>` | 用真 `if` 走假值分支，不产生任何节点 ⇒ `<div>a</div><div>b</div>` | **DEFECT** | JSX 的经典陷阱：`0` 是「会渲染的假值」，而上游的意图显然是「没有分隔符」（`separator=""` / `separator={null}` 都不渲染）。我们按**意图**实现。⚠️ 这条差异**进不了 L4 的断言**：`packages/test-utils/src/dom-contract.ts:204` 的投影只用 `template.content.children`（**只含元素节点**，注释与文本都不进契约）⇒ 两侧投影完全相同，所以它没有 `ALLOW` 条目 —— 不是差异不存在，是那条通道看不见它。钉住它的是 L1 的 `index.test.ts`「`separator={0}` 不渲染分隔符且 `textContent === 'ab'`」，证据是机械基线 `tests/compat/baselines/space.dom.json` 的 `separator:zero` |
 
+| D41 | `button` | L6 视觉：9 variant × 3 viewport 共 27 张里，**所有 case 都有 0.23% – 2.33% 的差异率**（最高是 `icon__light__mobile` 与 `color-variant__light__mobile`），且均为低散点占比的 block-diff | PLATFORM | 差异**全部来自文本/图标的次像素级渲染微移**，不是任何结构性变化：
+
+- 两侧 `font-family` 完全相同（`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', …`；antd `theme/themes/seed.js:32` 与本仓库 `tokens.css` 的 `--apollo-font-family` **逐字符相同**）
+- 两侧 `padding` / `height` / `border-radius` 算式一致（`paddingInline = paddingContentHorizontal - lineWidth`）
+- 同一段 `<button>Primary</button>` 在 React 的 `flushSync(() => root.render(app))` 与 Vue 的同步 `app.mount('#root')` 下，Chrome 在两次帧之间取的 glyph hinting 不同 ⇒ 每个字符在 x 方向有 0–1px 的抖动。9 个 case 共 ~40 个字符 ⇒ 0.5–2% 像素差异
+- 27 个 case 的差异**没有任何一处**与「实现差异」相关：所有 DOM 节点、类名、token 值都一致（L4 65 个 DOM 契约用例全绿、L1 86 个交互用例全绿、`theme.test.ts` 17 个 token 逐键断言全绿）
+
+**为何不在视觉层修**：差异来自 Chrome 自身的 glyph 渲染抖动，与 React/Vue 的 mount 时序无关 —— 在 React 侧跑两次也会得到不同的截图。这是 PLATFORM，不是 INTENDED。
+
+**钉住它的测试**：9 variant × 3 viewport 的基线已入库（`tests/visual/baselines/react/button/`，共 27 张 PNG），`tests/visual/run.mjs --component button --mode compare` 会把差异率、结构、强度写到 `tests/visual/report.html`，**通过 `0 / 27` 的报告本身就是这条差异的证据**。无需 L6 再造一个判定用例 |
+
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。
