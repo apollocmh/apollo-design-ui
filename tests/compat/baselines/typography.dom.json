@@ -1,0 +1,313 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/typography.mjs 从 antd 6.6.4 的 Typography 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/typography.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 76,
+  "cases": [
+    {
+      "id": "typography:default",
+      "html": "<article class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Text</article>"
+    },
+    {
+      "id": "typography:component-section",
+      "html": "<section class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Text</section>"
+    },
+    {
+      "id": "typography:unsupported-props",
+      "html": "<article type=\"danger\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Text</article>"
+    },
+    {
+      "id": "typography:class-both",
+      "html": "<article class=\"apollo a b css-dev-only-do-not-override-19u5a7b css-var-root\">x</article>"
+    },
+    {
+      "id": "typography:attrs-passthrough",
+      "html": "<article id=\"my-typo\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">x</article>"
+    },
+    {
+      "id": "typography:style-over-root",
+      "html": "<article class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"color:green\">x</article>"
+    },
+    {
+      "id": "typography:no-style",
+      "html": "<article class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">x</article>"
+    },
+    {
+      "id": "text:default",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:type-secondary",
+      "html": "<span class=\"apollo apollo-secondary css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:type-success",
+      "html": "<span class=\"apollo apollo-success css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:type-warning",
+      "html": "<span class=\"apollo apollo-warning css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:type-danger",
+      "html": "<span class=\"apollo apollo-danger css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:disabled",
+      "html": "<span class=\"apollo apollo-disabled css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:disabled+danger",
+      "html": "<span class=\"apollo apollo-danger apollo-disabled css-dev-only-do-not-override-19u5a7b css-var-root\">T</span>"
+    },
+    {
+      "id": "text:component-a",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Text</span>"
+    },
+    {
+      "id": "text:strong",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><strong>x</strong></span>"
+    },
+    {
+      "id": "text:underline",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><u>x</u></span>"
+    },
+    {
+      "id": "text:delete",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><del>x</del></span>"
+    },
+    {
+      "id": "text:code",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><code>x</code></span>"
+    },
+    {
+      "id": "text:mark",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><mark>x</mark></span>"
+    },
+    {
+      "id": "text:keyboard",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><kbd>x</kbd></span>"
+    },
+    {
+      "id": "text:italic",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><i>x</i></span>"
+    },
+    {
+      "id": "text:decorations-all",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><i><kbd><mark><code><del><u><strong>x</strong></u></del></code></mark></kbd></i></span>"
+    },
+    {
+      "id": "text:mark+code",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><mark><code>x</code></mark></span>"
+    },
+    {
+      "id": "text:strong+underline",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><u><strong>x</strong></u></span>"
+    },
+    {
+      "id": "title:default",
+      "html": "<h1 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Title</h1>"
+    },
+    {
+      "id": "title:level-2",
+      "html": "<h2 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h2>"
+    },
+    {
+      "id": "title:level-3",
+      "html": "<h3 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h3>"
+    },
+    {
+      "id": "title:level-4",
+      "html": "<h4 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h4>"
+    },
+    {
+      "id": "title:level-5",
+      "html": "<h5 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h5>"
+    },
+    {
+      "id": "title:level-invalid",
+      "html": "<h1 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h1>"
+    },
+    {
+      "id": "title:level-zero",
+      "html": "<h1 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h1>"
+    },
+    {
+      "id": "title:strong-passthrough",
+      "html": "<h1 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><strong>T</strong></h1>"
+    },
+    {
+      "id": "title:type-danger",
+      "html": "<h1 class=\"apollo apollo-danger css-dev-only-do-not-override-19u5a7b css-var-root\">T</h1>"
+    },
+    {
+      "id": "paragraph:default",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">P</div>"
+    },
+    {
+      "id": "paragraph:type-danger",
+      "html": "<div class=\"apollo apollo-danger css-dev-only-do-not-override-19u5a7b css-var-root\">P</div>"
+    },
+    {
+      "id": "link:default",
+      "html": "<a href=\"https://x\" class=\"apollo apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\">L</a>"
+    },
+    {
+      "id": "link:type-danger",
+      "html": "<a href=\"https://x\" class=\"apollo apollo-danger apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\">L</a>"
+    },
+    {
+      "id": "link:target-blank",
+      "html": "<a href=\"https://x\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"apollo apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\">L</a>"
+    },
+    {
+      "id": "link:rel-explicit",
+      "html": "<a href=\"https://x\" target=\"_blank\" rel=\"me\" class=\"apollo apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\">L</a>"
+    },
+    {
+      "id": "link:rel-empty",
+      "html": "<a href=\"https://x\" target=\"_blank\" rel=\"\" class=\"apollo apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\">L</a>"
+    },
+    {
+      "id": "link:underline",
+      "html": "<a href=\"https://x\" class=\"apollo apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\"><u>L</u></a>"
+    },
+    {
+      "id": "copyable:true",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">copy me<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-copy\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "copyable:icon-false",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">copy me<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-copy\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "copyable:tooltips-false",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">copy me<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-copy\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "copyable:no-content",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-copy apollo-copy-icon-only\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "editable:true",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Edit me<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-edit\" aria-label=\"Edit\"><span role=\"button\" aria-label=\"edit\" class=\"anticon anticon-edit\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"edit\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "editable:trigger-icon",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">E<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-edit\" aria-label=\"Edit\"><span role=\"button\" aria-label=\"edit\" class=\"anticon anticon-edit\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"edit\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "editable:trigger-text",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">E</span>"
+    },
+    {
+      "id": "editable:tab-index",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">E<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-edit\" aria-label=\"Edit\" tabindex=\"3\"><span role=\"button\" aria-label=\"edit\" class=\"anticon anticon-edit\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"edit\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "actions:placement-start",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-actions apollo-actions-start\"><button type=\"button\" class=\"apollo-copy\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span>copy me</span>"
+    },
+    {
+      "id": "actions:placement-end",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">copy me<span class=\"apollo-actions\"><button type=\"button\" class=\"apollo-copy\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "ellipsis:true",
+      "html": "<span class=\"apollo apollo-ellipsis apollo-ellipsis-single-line css-dev-only-do-not-override-19u5a7b css-var-root\">Ant Design, a design language for background applications, is refined by Ant UED Team.</span>"
+    },
+    {
+      "id": "ellipsis:rows-1",
+      "html": "<div class=\"apollo apollo-ellipsis apollo-ellipsis-single-line css-dev-only-do-not-override-19u5a7b css-var-root\">Ant Design, a design language for background applications, is refined by Ant UED Team.</div>"
+    },
+    {
+      "id": "ellipsis:rows-2",
+      "html": "<div class=\"apollo apollo-ellipsis apollo-ellipsis-multiple-line css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"-webkit-line-clamp:2\">Ant Design, a design language for background applications, is refined by Ant UED Team.</div>"
+    },
+    {
+      "id": "ellipsis:rows-3",
+      "html": "<div class=\"apollo apollo-ellipsis apollo-ellipsis-multiple-line css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"-webkit-line-clamp:3\">Ant Design, a design language for background applications, is refined by Ant UED Team.</div>"
+    },
+    {
+      "id": "ellipsis:false",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Ant Design, a design language for background applications, is refined by Ant UED Team.</span>"
+    },
+    {
+      "id": "ellipsis:tooltip",
+      "html": "<span class=\"apollo apollo-ellipsis apollo-ellipsis-single-line css-dev-only-do-not-override-19u5a7b css-var-root\">Ant Design, a design language for background applications, is refined by Ant UED Team.</span>"
+    },
+    {
+      "id": "ellipsis:text-rows-stripped",
+      "html": "<span class=\"apollo apollo-ellipsis apollo-ellipsis-single-line css-dev-only-do-not-override-19u5a7b css-var-root\">Ant Design, a design language for background applications, is refined by Ant UED Team.</span>"
+    },
+    {
+      "id": "class:className",
+      "html": "<span class=\"apollo my-class css-dev-only-do-not-override-19u5a7b css-var-root\">x</span>"
+    },
+    {
+      "id": "class:rootClassName",
+      "html": "<span class=\"apollo root-class css-dev-only-do-not-override-19u5a7b css-var-root\">x</span>"
+    },
+    {
+      "id": "class:both",
+      "html": "<span class=\"apollo a b css-dev-only-do-not-override-19u5a7b css-var-root\">x</span>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<span id=\"my-text\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">x</span>"
+    },
+    {
+      "id": "attrs:title",
+      "html": "<span title=\"hover me\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">x</span>"
+    },
+    {
+      "id": "semantic:classNames-root",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root cn-root\">x</span>"
+    },
+    {
+      "id": "semantic:classNames-all",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root cn-root\">x<span class=\"apollo-actions cn-actions\"><button type=\"button\" class=\"apollo-copy cn-action\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "semantic:classNames-fn",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root fn-apollo-undefined\">x</span>"
+    },
+    {
+      "id": "semantic:styles-all",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"color:red\">x<span class=\"apollo-actions\" style=\"opacity:0.5\"><button type=\"button\" class=\"apollo-copy\" style=\"padding:2px\" aria-label=\"Copy\"><span role=\"img\" aria-label=\"copy\" class=\"anticon anticon-copy\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"copy\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "semantic:styles-fn",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"color:blue\">x</span>"
+    },
+    {
+      "id": "style:style-over-root",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"color:green\">x</span>"
+    },
+    {
+      "id": "style:with-line-clamp",
+      "html": "<div class=\"apollo apollo-ellipsis apollo-ellipsis-multiple-line css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"color:green;-webkit-line-clamp:2\">Ant Design, a design language for background applications, is refined by Ant UED Team.</div>"
+    },
+    {
+      "id": "config:className",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root cfg-class\">x</span>"
+    },
+    {
+      "id": "config:classNames",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root cfg-root\">x</span>"
+    },
+    {
+      "id": "config:style",
+      "html": "<span class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"color:purple\">x</span>"
+    },
+    {
+      "id": "direction:rtl",
+      "html": "<span class=\"apollo apollo-rtl css-dev-only-do-not-override-1v6lqee css-var-root\">x</span>"
+    },
+    {
+      "id": "composite:family",
+      "html": "<h2 class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">T</h2><div class=\"apollo apollo-secondary css-dev-only-do-not-override-19u5a7b css-var-root\">P</div><span class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><mark><strong>S</strong></mark></span><a href=\"https://x\" class=\"apollo apollo-link css-dev-only-do-not-override-19u5a7b css-var-root\">L</a>"
+    }
+  ]
+}

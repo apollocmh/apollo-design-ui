@@ -998,6 +998,10 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
     const expandBtn = w.find(`.${P}-expand`);
     expect(expandBtn.exists()).toBe(true);
     expect(expandBtn.attributes('aria-label')).toBe('Expand');
+    // 键盘可达性：真按钮 + `type="button"`（少了 type 在 `<form>` 里会变成 submit）。
+    // a11y 层没法断言这条 —— 它跑在没有布局桩的环境里，展开按钮根本渲染不出来。
+    expect(expandBtn.element.tagName).toBe('BUTTON');
+    expect(expandBtn.attributes('type')).toBe('button');
     expect(w.text()).not.toBe(LONG_TEXT);
 
     await expandBtn.trigger('click');
