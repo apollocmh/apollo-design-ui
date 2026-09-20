@@ -120,7 +120,11 @@ push('color:danger-only', { prefixCls: PREFIX, color: 'danger', variant: 'solid'
 
 push('color-variant:blue-solid', { prefixCls: PREFIX, color: 'blue', variant: 'solid' }, 'Text');
 push('color-variant:cyan-filled', { prefixCls: PREFIX, color: 'cyan', variant: 'filled' }, 'Text');
-push('color-variant:green-dashed', { prefixCls: PREFIX, color: 'green', variant: 'dashed' }, 'Text');
+push(
+  'color-variant:green-dashed',
+  { prefixCls: PREFIX, color: 'green', variant: 'dashed' },
+  'Text',
+);
 push('color-variant:gold-link', { prefixCls: PREFIX, color: 'gold', variant: 'link' }, 'Text');
 // 只有 variant=solid ⇒ primary + solid
 push('variant:solid-only', { prefixCls: PREFIX, variant: 'solid' }, 'Text');
@@ -163,7 +167,11 @@ push('icon:position-end', { prefixCls: PREFIX, icon: ICON, iconPosition: 'end' }
 
 // ---- 8. loading（自定义图标形态，理由见文件头）-----------------------------
 
-push('loading:custom-icon', { prefixCls: PREFIX, loading: { delay: 0, icon: LOADING_ICON } }, 'Text');
+push(
+  'loading:custom-icon',
+  { prefixCls: PREFIX, loading: { delay: 0, icon: LOADING_ICON } },
+  'Text',
+);
 push('loading:custom-icon-only', {
   prefixCls: PREFIX,
   loading: { delay: 0, icon: LOADING_ICON },

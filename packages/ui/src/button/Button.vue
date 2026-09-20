@@ -39,12 +39,12 @@ import {
   watchEffect,
 } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
-// ⚠️ 这个渲染器是**平台原语**（模板里没有「渲染一个 VNodeChild 变量」的语法），
-//    不属于 Empty。等 `_internal/` 有归置位时应上移，不要在 Button 里复制一份。
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
+// ⚠️ 这个渲染器是**平台原语**（模板里没有「渲染一个 VNodeChild 变量」的语法），
+//    不属于 Empty。等 `_internal/` 有归置位时应上移，不要在 Button 里复制一份。
+import { NodeRenderer } from '../empty/components/NodeRenderer';
 import { useCompactItemContext } from '../space/Compact';
 import type {
   ButtonColorType,

@@ -21,8 +21,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import { defineComponent, h, type CSSProperties, type VNodeChild } from 'vue';
-import { Button } from '../index';
+import { type CSSProperties, defineComponent, h, type VNodeChild } from 'vue';
 import type {
   ButtonColorType,
   ButtonConfig,
@@ -112,9 +111,7 @@ describe('Button · Props', () => {
   });
 
   it('★ `loading` 是「布尔 | 对象」两种形态（不是只有布尔）', () => {
-    expectTypeOf<ButtonLoading>().toEqualTypeOf<
-      boolean | { delay?: number; icon?: ButtonIcon }
-    >();
+    expectTypeOf<ButtonLoading>().toEqualTypeOf<boolean | { delay?: number; icon?: ButtonIcon }>();
     expectTypeOf<ButtonProps['loading']>().toEqualTypeOf<ButtonLoading | undefined>();
   });
 
@@ -153,9 +150,7 @@ describe('Button · 语义化（只支持对象形态）', () => {
   });
 
   it('★ `classNames` / `styles` **不是**「对象 | 函数」的联合（裁决 B）', () => {
-    expectTypeOf<ButtonProps['classNames']>().toEqualTypeOf<
-      ButtonSemanticClassNames | undefined
-    >();
+    expectTypeOf<ButtonProps['classNames']>().toEqualTypeOf<ButtonSemanticClassNames | undefined>();
     expectTypeOf<ButtonProps['styles']>().toEqualTypeOf<ButtonSemanticStyles | undefined>();
   });
 });

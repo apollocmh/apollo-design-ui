@@ -78,7 +78,10 @@ function withSizeContext(size: 'small' | 'middle' | 'large', children: () => VNo
   return defineComponent({
     name: 'AButtonCompatSizeProbe',
     setup() {
-      provide(sizeContextKey, computed(() => size));
+      provide(
+        sizeContextKey,
+        computed(() => size),
+      );
       return () => children();
     },
   });
@@ -88,7 +91,10 @@ function withDisabledContext(disabled: boolean, children: () => VNodeChild) {
   return defineComponent({
     name: 'AButtonCompatDisabledProbe',
     setup() {
-      provide(disabledContextKey, computed(() => disabled));
+      provide(
+        disabledContextKey,
+        computed(() => disabled),
+      );
       return () => children();
     },
   });
@@ -130,7 +136,8 @@ const CASES: Record<string, () => DomRenderResult> = {
   'color:danger-only': () => withText({ prefixCls: PREFIX, color: 'danger', variant: 'solid' }),
 
   // ---- 4. color / variant ----
-  'color-variant:blue-solid': () => withText({ prefixCls: PREFIX, color: 'blue', variant: 'solid' }),
+  'color-variant:blue-solid': () =>
+    withText({ prefixCls: PREFIX, color: 'blue', variant: 'solid' }),
   'color-variant:cyan-filled': () =>
     withText({ prefixCls: PREFIX, color: 'cyan', variant: 'filled' }),
   'color-variant:green-dashed': () =>
@@ -184,7 +191,8 @@ const CASES: Record<string, () => DomRenderResult> = {
   'attrs:passthrough': () => withText({ prefixCls: PREFIX, 'data-testid': 'x', id: 'my-btn' }),
 
   // ---- 11. 语义化 ----
-  'semantic:classNames-root': () => withText({ prefixCls: PREFIX, classNames: { root: 'cn-root' } }),
+  'semantic:classNames-root': () =>
+    withText({ prefixCls: PREFIX, classNames: { root: 'cn-root' } }),
   'semantic:classNames-all': () =>
     withText({
       prefixCls: PREFIX,
@@ -224,17 +232,16 @@ const CASES: Record<string, () => DomRenderResult> = {
       withText({ prefixCls: PREFIX }),
     ),
   'config:shape': () =>
-    withConfig({ components: { button: { shape: 'round' } } }, () => withText({ prefixCls: PREFIX })),
+    withConfig({ components: { button: { shape: 'round' } } }, () =>
+      withText({ prefixCls: PREFIX }),
+    ),
   'config:auto-insert-space-off': () =>
     withConfig({ components: { button: { autoInsertSpace: false } } }, () =>
       withText({ prefixCls: PREFIX }, '确定'),
     ),
-  'direction:rtl': () =>
-    withConfig({ direction: 'rtl' }, () => withText({ prefixCls: PREFIX })),
-  'size-context': () =>
-    withSizeContext('large', () => withText({ prefixCls: PREFIX })),
-  'disabled-context': () =>
-    withDisabledContext(true, () => withText({ prefixCls: PREFIX })),
+  'direction:rtl': () => withConfig({ direction: 'rtl' }, () => withText({ prefixCls: PREFIX })),
+  'size-context': () => withSizeContext('large', () => withText({ prefixCls: PREFIX })),
+  'disabled-context': () => withDisabledContext(true, () => withText({ prefixCls: PREFIX })),
 };
 
 /**

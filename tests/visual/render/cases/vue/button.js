@@ -66,11 +66,7 @@ export default {
   loading: () =>
     Row(BUTTON_ROW_STYLE, [
       h(Button, { type: 'primary', loading: true }, { default: () => BUTTON_TEXT.loading }),
-      h(
-        Button,
-        { type: 'primary', loading: { delay: 0 } },
-        { default: () => BUTTON_TEXT.loading },
-      ),
+      h(Button, { type: 'primary', loading: { delay: 0 } }, { default: () => BUTTON_TEXT.loading }),
       h(Button, { type: 'primary' }, { default: () => BUTTON_TEXT.submit }),
     ]),
 
@@ -133,9 +129,13 @@ export default {
     Row(
       BUTTON_ROW_STYLE,
       BUTTON_COLOR_VARIANTS.map(({ color, variant }) =>
-        h(Button, { key: `${color}-${variant}`, color, variant }, {
-          default: () => `${color} ${variant}`,
-        }),
+        h(
+          Button,
+          { key: `${color}-${variant}`, color, variant },
+          {
+            default: () => `${color} ${variant}`,
+          },
+        ),
       ),
     ),
 

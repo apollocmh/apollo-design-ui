@@ -26,11 +26,8 @@
 import { mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { computed, defineComponent, h, nextTick, provide, ref } from 'vue';
-import {
-  configContextKey,
-  DEFAULT_CONFIG_CONTEXT,
-} from '../../config-provider/context';
+import { computed, defineComponent, h, nextTick, ref } from 'vue';
+import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { disabledContextKey } from '../../config-provider/disabled-context';
 import { sizeContextKey } from '../../config-provider/size-context';
 import { Button } from '../index';
@@ -43,8 +40,7 @@ type Props = Record<string, unknown>;
 const mountBtn = (props: Props = {}, slots?: Record<string, () => unknown>) =>
   mount(Button, { props, ...(slots ? { slots } : {}) });
 
-const withText = (props: Props = {}, text = 'Text') =>
-  mountBtn(props, { default: () => text });
+const withText = (props: Props = {}, text = 'Text') => mountBtn(props, { default: () => text });
 
 const classesOf = (props: Props = {}, text?: string): string[] =>
   (text === undefined ? mountBtn(props) : withText(props, text)).classes();
@@ -168,9 +164,9 @@ describe('Button · 基本结构', () => {
 describe('Button · color / variant 六层回退', () => {
   it('第 1 层：color + variant 同时给出 ⇒ 显式优先（压过 type / danger）', () => {
     expect(colorVariantOf({ color: 'blue', variant: 'filled' })).toEqual(['blue', 'filled']);
-    expect(colorVariantOf({ type: 'primary', danger: true, color: 'blue', variant: 'filled' })).toEqual(
-      ['blue', 'filled'],
-    );
+    expect(
+      colorVariantOf({ type: 'primary', danger: true, color: 'blue', variant: 'filled' }),
+    ).toEqual(['blue', 'filled']);
   });
 
   it('第 2 层：type / danger 糖（ButtonTypeMap）', () => {
@@ -335,16 +331,16 @@ describe('Button · size / shape / disabled 回退', () => {
     const provideDisabled = (value: boolean) => ({
       global: { provide: { [disabledContextKey as unknown as string]: computed(() => value) } },
     });
-    expect(mount(Button, { props: {}, ...provideDisabled(true) }).attributes('disabled')).toBe(
-      '',
-    );
+    expect(mount(Button, { props: {}, ...provideDisabled(true) }).attributes('disabled')).toBe('');
     expect(
       mount(Button, { props: { disabled: false }, ...provideDisabled(true) }).attributes(
         'disabled',
       ),
     ).toBeUndefined();
     expect(
-      mount(Button, { props: { disabled: true }, ...provideDisabled(false) }).attributes('disabled'),
+      mount(Button, { props: { disabled: true }, ...provideDisabled(false) }).attributes(
+        'disabled',
+      ),
     ).toBe('');
   });
 });
@@ -435,7 +431,10 @@ describe('Button · loading', () => {
   });
 
   it('★ ConfigProvider 的 loadingIcon 同样接受组件对象（`ButtonConfig.loadingIcon`）', () => {
-    const w = mountWithConfig({ components: { button: { loadingIcon: FakeIcon } } }, { loading: true });
+    const w = mountWithConfig(
+      { components: { button: { loadingIcon: FakeIcon } } },
+      { loading: true },
+    );
     expect(w.find(`.${P}-icon .fake-icon`).exists()).toBe(true);
     expect(w.text()).not.toContain('[object Object]');
     // 上下文提供的加载图标也算「自定义」⇒ 不带 `-loading-icon`
@@ -491,21 +490,29 @@ describe('Button · 两个中文字自动插空格', () => {
   });
 
   it('autoInsertSpace=false 时不插', () => {
-    expect(
-      withText({ autoInsertSpace: false }, '确定').classes(),
-    ).not.toContain(`${P}-two-chinese-chars`);
+    expect(withText({ autoInsertSpace: false }, '确定').classes()).not.toContain(
+      `${P}-two-chinese-chars`,
+    );
   });
 
   it('ConfigProvider 的 autoInsertSpace=false 生效；组件侧优先', async () => {
-    const w = mountWithConfig({ components: { button: { autoInsertSpace: false } } }, {}, {
-      default: () => '确定',
-    });
+    const w = mountWithConfig(
+      { components: { button: { autoInsertSpace: false } } },
+      {},
+      {
+        default: () => '确定',
+      },
+    );
     await nextTick();
     expect(w.classes()).not.toContain(`${P}-two-chinese-chars`);
 
-    const w2 = mountWithConfig({ components: { button: { autoInsertSpace: false } } }, {
-      autoInsertSpace: true,
-    }, { default: () => '确定' });
+    const w2 = mountWithConfig(
+      { components: { button: { autoInsertSpace: false } } },
+      {
+        autoInsertSpace: true,
+      },
+      { default: () => '确定' },
+    );
     await nextTick();
     expect(w2.classes()).toContain(`${P}-two-chinese-chars`);
   });
@@ -597,9 +604,7 @@ describe('Button · href 分支（<a> vs <button>）', () => {
     expect(
       mount(Button, { props: { href: '#' }, ...provideDisabled(true) }).attributes('href'),
     ).toBeUndefined();
-    expect(
-      mount(Button, { props: {}, ...provideDisabled(true) }).attributes('disabled'),
-    ).toBe('');
+    expect(mount(Button, { props: {}, ...provideDisabled(true) }).attributes('disabled')).toBe('');
   });
 });
 
@@ -698,9 +703,9 @@ describe('Button · icon', () => {
 
   it('★ 已废弃的 iconPosition 仍然生效，且 iconPlacement 优先', () => {
     expect(classesOf({ icon: h('i'), iconPosition: 'end' })).toContain(`${P}-icon-end`);
-    expect(
-      classesOf({ icon: h('i'), iconPosition: 'end', iconPlacement: 'start' }),
-    ).not.toContain(`${P}-icon-end`);
+    expect(classesOf({ icon: h('i'), iconPosition: 'end', iconPlacement: 'start' })).not.toContain(
+      `${P}-icon-end`,
+    );
   });
 
   it('无图标无 loading ⇒ 无 `-icon` 元素', () => {
@@ -864,9 +869,7 @@ describe('Button · 开发期告警', () => {
     expect(await capturedWarnings(() => mountBtn({ variant: 'link', ghost: true }))).not.toContain(
       "can't be a `ghost` button",
     );
-    expect(mountBtn({ variant: 'link', ghost: true }).classes()).toContain(
-      `${P}-variant-outlined`,
-    );
+    expect(mountBtn({ variant: 'link', ghost: true }).classes()).toContain(`${P}-variant-outlined`);
   });
 
   it('ghost + 有边框变体 ⇒ 不告警', async () => {

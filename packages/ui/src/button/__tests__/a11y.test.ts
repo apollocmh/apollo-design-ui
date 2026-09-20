@@ -107,9 +107,7 @@ describe('Button · 键盘与焦点', () => {
     const w = mountAttached({ disabled: true });
     const enabled = mountAttached();
     enabled.element.focus();
-    expect(document.activeElement, '先证明「能聚焦」这条路径在本环境可观测').toBe(
-      enabled.element,
-    );
+    expect(document.activeElement, '先证明「能聚焦」这条路径在本环境可观测').toBe(enabled.element);
     (w.element as HTMLButtonElement).focus();
     // jsdom 忠实实现了「disabled 元素不可聚焦」。
     expect(document.activeElement).not.toBe(w.element);

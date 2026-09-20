@@ -193,9 +193,8 @@ export const LIMITATIONS = [
       'Space / Space.Compact / Space.Addon 本身都没有可交互元素（不设 tabindex、不绑事件、没有禁用态），所以这四态对它们不适用 —— 与 Empty / Divider 同源。⚠️ 但 `Space.Compact` 会**改变子元素的 hover 层级**（`genCompactItemStyle` 给 `-compact-item:hover` 设 `z-index: 4`、`[disabled]` 设 `z-index: 0`）。那两条规则作用在**子组件自己的类名**上，而截图是静态的、不会触发 hover ⇒ 视觉层观测不到。它的语义由 `theme.test.ts` 钉住**选择器与顺序**（可判定），层叠结果等真实子组件落地后再补。',
     unblockWhen:
       '有真实的可聚焦子组件（Button / Input）后，用 Playwright 的 `hover()` 补一条「紧凑项 hover 时边框不被邻居遮住」的用例。',
-
----
-
+  },
+  {
     dimension: 'typography·state',
     missing: ['hover', 'active', 'focus-visible', 'copied', 'editing'],
     reason:
