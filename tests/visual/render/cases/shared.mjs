@@ -63,6 +63,9 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-empty-root { border: 1px dashed #ccc; padding: 16px; }
 .demo-empty-image { filter: grayscale(100%); }
 .demo-empty-description { color: #1890ff; font-weight: bold; }
+.demo-btn-root { border: 1px dashed #7cb305; }
+.demo-btn-icon { color: #7cb305; }
+.demo-btn-content { letter-spacing: 2px; }
 .demo-divider-root { border-color: #7cb305; }
 .demo-divider-content { letter-spacing: 1px; }
 .demo-spin-root { border: 1px dashed #ccc; }
@@ -73,6 +76,72 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-space-separator { letter-spacing: 2px; }
 
 `;
+
+// ===========================================================================
+// Button
+// ===========================================================================
+
+/**
+ * 按钮用例的**上下文字体**必须写死成同一个具体值，理由与 `DIVIDER_CONTEXT_FONT`
+ * 完全一致（2026-09-18 实测：两侧 reset 的 `font-family` 一个是泛型 `sans-serif`、
+ * 一个是 token 字体栈 ⇒ 换行一致但每个墨点都不同）。
+ */
+const BUTTON_CONTEXT_FONT = 'sans-serif';
+
+/** 用例容器：两侧同形，把按钮按 `gap` 排开。 */
+export const BUTTON_ROW_STYLE = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '8px',
+  alignItems: 'center',
+  fontFamily: BUTTON_CONTEXT_FONT,
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** `ghost` 用例的背景 —— 写死一个具体色，让两侧拿到同一个输入。 */
+export const BUTTON_GHOST_BG_STYLE = {
+  ...BUTTON_ROW_STYLE,
+  background: 'rgb(190, 200, 200)',
+  padding: '8px',
+};
+
+/** 用例文案（两侧逐字相同，长度固定）。 */
+export const BUTTON_TEXT = {
+  primary: 'Primary',
+  default: 'Default',
+  dashed: 'Dashed',
+  text: 'Text',
+  link: 'Link',
+  danger: 'Danger',
+  loading: 'Loading',
+  submit: 'Submit',
+  twoCN: '确定',
+  semantic: 'Semantic',
+};
+
+/** `color-variant` 用例的六种组合（与 demo 同集合）。 */
+export const BUTTON_COLOR_VARIANTS = [
+  { color: 'blue', variant: 'solid' },
+  { color: 'purple', variant: 'outlined' },
+  { color: 'cyan', variant: 'filled' },
+  { color: 'green', variant: 'dashed' },
+  { color: 'volcano', variant: 'text' },
+  { color: 'gold', variant: 'link' },
+];
+
+/** 语义化用例：两侧同一组 classNames / styles。 */
+export const BUTTON_SEMANTIC_CLASSNAMES = {
+  root: 'demo-btn-root',
+  icon: 'demo-btn-icon',
+  content: 'demo-btn-content',
+};
+
+export const BUTTON_SEMANTIC_STYLES = {
+  root: { borderRadius: '16px' },
+  content: { fontWeight: 'bold' },
+};
 
 // ===========================================================================
 // ConfigProvider
