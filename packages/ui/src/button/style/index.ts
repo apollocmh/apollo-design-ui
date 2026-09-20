@@ -469,7 +469,10 @@ export function genButtonStyle(prefixCls: string): string {
     heightToken: string,
     fontSizeToken: string,
     padding: string,
-    /** 圆角走 `${v('<token>')}` 的写法：E10 只豁免紧跟 `border-radius:` 的 `var(` / `${v(`。 */
+    /**
+     * 圆角必须写成紧跟冒号的 `${v('<token>')}`（值**内联**，不要先绑到中间变量再插值）：
+     * E10 的负向先行只豁免紧邻冒号的 `var(` / `${v(`，中间变量会被误判成硬编码圆角。
+     */
     radiusToken: string,
   ): void => {
     const height = v(heightToken);
@@ -502,7 +505,8 @@ export function genButtonStyle(prefixCls: string): string {
       `  border-radius:${v('borderRadiusCircle')};`,
       `}`,
       `${cls}${cls}-round${shapeSuffix}{`,
-      `  border-radius:${height};`,
+      // 与上面 `-circle` 同理：值必须**内联**成 `${v(token)}`（走中间变量会被 E10 误判）。
+      `  border-radius:${v(heightToken)};`,
       `}`,
       `${cls}${cls}-round${shapeSuffix}:not(${cls}-icon-only){`,
       `  padding-inline:${padding};`,
