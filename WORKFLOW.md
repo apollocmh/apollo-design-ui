@@ -254,22 +254,29 @@ DOM 结构、class 命名、ARIA 属性、键盘行为、受控/非受控语义�
 #### G13a · 开发期门禁（每次改完代码，必跑）
 
 ```bash
-pnpm verify:changed       # 增量：只跑受本次改动影响的包
+pnpm verify:changed       # 增量：默认只跑「作用域 typecheck」
 ```
 
-它做三件事，全部**只针对受影响的包**：
+**做法**：生成一个**作用域 tsconfig**（只收窄 `include`，`compilerOptions.paths` **全保留**，
+所以跨包 import 仍指向源码而非 `dist`，语义与全仓一致），只对**受本次改动影响的包**跑 `vue-tsc`。
 
-| 步骤 | 全仓做法 | 增量做法 |
-|---|---|---|
-| 类型 | `vue-tsc -p tsconfig.json`（全仓） | 生成**作用域 tsconfig**（只收窄 `include`，`paths` 全保留） |
-| 测试 | `vitest` 四个 project 扫全仓（**会 OOM**） | 按包跑 `vitest --project unit/dom-contract/a11y/theme` |
-| 构建 | `tests/build/run.mjs`（全仓 127 项） | `tests/build/run.mjs --package <pkg>` |
+**⚠️ 实测边界（2026-09-20 端到端，改 `ui` 一个包）—— 别把它当万能：**
 
-⚠️ **它的边界（必须知道）**：其它包的类型/构建错误**它看不到**。
-所以它**不替代** G13b —— 定位是「开发期快速反馈」，不是「收口验收」。
+| 步骤 | 全仓 | `verify:changed` | 结论 |
+|---|---|---|---|
+| vue-tsc | 约 **16 分钟** | **44 秒** | ✅ 真收益（约 22 倍），这是**默认**跑的 |
+| 按包 vitest | 会 OOM | ⚠️ **路径过滤失效**（`no tests`，根因未定位） | ❌ 默认**不跑** |
+| 按包构建门禁 | 7-8 分钟 | ⚠️ **约 20 分钟**（`ui` 的构建本身就慢） | ❌ 默认**不跑**，反而更慢 |
 
-实测（本机 i7-4770HQ / 4c8t / 16GB）：改 `ui` 一个包时作用域 `vue-tsc` **约 44 秒**，
-而全仓是**约 16 分钟**（约 22 倍）；全仓 `vitest` 的 OOM 也一并绕开。
+⇒ 所以 `verify:changed` **默认只做 typecheck**；测试与构建要 `--with-tests` / `--with-build`
+显式开启（**不推荐**放进日常循环）。
+
+⚠️ **它的边界**：其它包的类型错误**它看不到** ⇒ 它**不替代** G13b。
+定位是「改一行类型不用等 16 分钟」，不是「收口验收」。
+
+⚠️ **已知未解决问题**：`vitest run <目录>` 的路径过滤在本仓库不生效
+（`packages/ui/src/button` 也报 `no tests`，但同一条命令在别的 worktree 里正常）——
+根因未定位。在它修好之前，测试靠收口时的全仓 `pnpm test` 兜住。
 
 #### G13b · 收口/milestone 门禁（**合入 master 前必跑**）
 

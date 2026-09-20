@@ -12,33 +12,37 @@
  * 而一次改动通常只碰**一个组件**。全仓门禁里 **99% 的校验与本次改动无关** ——
  * 这就是「一个组件要 45~90 分钟」的主要来源。
  *
- * 本脚本只跑**受本次改动影响的那几个包**：
- *   ① 生成**作用域 tsconfig**：只收窄 `include`，`paths` 全部保留
- *      （跨包 import 仍指向源码，不是 `dist`，语义与全仓一致）
- *   ② 按包跑 vitest（避免全仓 OOM）
- *   ③ 按包跑构建门禁（`tests/build/run.mjs --package <pkg>`，原生支持）
+ * ── ⚠️ 实测边界（**必须知道**，别把它当万能）──────────────────────────────────
+ *
+ * 2026-09-20 端到端实测（改 `ui` 一个包）：
+ *
+ * | 步骤 | 全仓 | 本脚本 | 结论 |
+ * |---|---|---|---|
+ * | vue-tsc | 约 16 分钟 | **44 秒** | ✅ 真收益（约 22 倍） |
+ * | 按包 vitest | 会 OOM | ⚠️ **过滤失效**（`no tests`，见下） | ❌ 未解决 |
+ * | 按包构建门禁 | 7-8 分钟 | ⚠️ **约 20 分钟**（ui 的构建本身就慢） | ❌ 反而更慢 |
+ *
+ * ⇒ **默认只跑「作用域 typecheck」** —— 那是唯一被证实有效的提速。
+ *    测试与构建要用 `--with-tests` / `--with-build` **显式开启**，且**不推荐**放进日常循环。
+ *
+ * ⚠️ **未解决问题（留给后续）**：`vitest run <目录>` 的路径过滤在本仓库不生效
+ *    （`packages/ui/src/button` 也报 `no tests`，但同一条命令在别的 worktree 里正常）
+ *    —— 根因未定位。在它修好之前，**测试请用全仓 `pnpm test`（收口时）或
+ *    直接 `vitest run <具体测试文件>`**。
  *
  * ── ⚠️ 它**没有**降低标准，只是收窄范围 ──────────────────────────────────────
  *
- *   收窄的代价：**其它包**的类型/构建错误**不会被本脚本发现**。
- *   ⇒ 所以本脚本是**开发期**门禁；**合入 master 前 + 每日/milestone** 仍必须跑
+ *   收窄的代价：**其它包**的类型错误**不会被本脚本发现**。
+ *   ⇒ 本脚本是**开发期**门禁；**合入 master 前 + 每日/milestone** 仍必须跑
  *     `pnpm verify:full`（= registry:check + lint + test + test:build，全仓）。
- *   本脚本结束时也会明确提醒这一点。
- *
- * ── 为什么这么改（2026-09-20 实测）────────────────────────────────────────────
- *
- *   本机（i7-4770HQ / 4c8t / 16GB）全仓门禁耗时：vue-tsc 约 **16 分钟**、
- *   构建门禁约 **7-8 分钟**、全仓 vitest 会 **OOM**。
- *   而一次改动通常只碰一个组件 ⇒ 全仓门禁里 **99% 的校验与本次改动无关**。
- *   实测改 `ui` 一个包时，作用域 vue-tsc **44 秒**（约 22 倍）。
  *
  * ── 用法 ──────────────────────────────────────────────────────────────────────
  *
- *   pnpm verify:changed                  # 对比 master（类型 + 测试 + 构建）
+ *   pnpm verify:changed                  # 对比 master，只跑作用域 typecheck（默认，最快）
  *   pnpm verify:changed --base HEAD~3    # 指定基线
- *   pnpm verify:changed --skip-types     # 只跑测试 + 构建
- *   pnpm verify:changed --skip-tests     # 只跑类型 + 构建
- *   pnpm verify:changed --skip-build     # 只跑类型 + 测试
+ *   pnpm verify:changed --with-tests     # 额外按包跑 vitest（⚠️ 过滤当前失效）
+ *   pnpm verify:changed --with-build     # 额外按包跑构建门禁（⚠️ 不更快）
+ *   pnpm verify:changed --skip-types     # 只跑测试/构建
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -59,8 +63,11 @@ const argOf = (name, fallback) => {
 const has = (name) => argv.includes(name);
 
 const BASE = argOf('--base', 'master');
+// ⚠️ 默认只跑作用域 typecheck —— 那是唯一被端到端实测证实的提速（16 分钟 → 44 秒）。
+//    测试的路径过滤当前**失效**、构建门禁**不比全仓快**，所以都要显式开启。
+const WITH_TESTS = has('--with-tests');
+const WITH_BUILD = has('--with-build');
 const SKIP_TYPES = has('--skip-types');
-const SKIP_TESTS = has('--skip-tests');
 
 const git = (args) =>
   execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
@@ -208,18 +215,28 @@ console.log(`\n改动涉及包（基线 ${BASE}）：${pkgs.join(', ')}`);
 
 let ok = true;
 if (!SKIP_TYPES) ok = runScopedTypes(pkgs) && ok;
-if (!SKIP_TESTS) ok = runScopedTests(pkgs) && ok;
-if (!has('--skip-build')) ok = runScopedBuild(pkgs) && ok;
+if (WITH_TESTS) ok = runScopedTests(pkgs) && ok;
+if (WITH_BUILD) ok = runScopedBuild(pkgs) && ok;
 
 console.log('\n' + '='.repeat(64));
 console.log(ok ? '✅ 增量门禁通过' : '❌ 增量门禁失败');
 console.log('='.repeat(64));
 console.log(`
-⚠️ 这是**开发期**门禁，只覆盖了 ${pkgs.length} 个包（${pkgs.join(', ')}）。
-   它**不替代**全仓门禁 —— 其它包的类型/构建错误它看不到。
+本脚本只做了：${[
+  !SKIP_TYPES ? '作用域 typecheck' : null,
+  WITH_TESTS ? '按包 vitest' : null,
+  WITH_BUILD ? '按包构建门禁' : null,
+]
+  .filter(Boolean)
+  .join(' + ')}（覆盖 ${pkgs.length} 个包：${pkgs.join(', ')}）
+
+⚠️ 它**不替代**全仓门禁 —— 其它包的错误它看不到。
    合入 master 前、以及每日/milestone 时仍**必须**跑：
 
-     pnpm verify:full      # lint（全仓 vue-tsc + biome）+ 全仓 test + 全仓构建门禁 + registry:check
+     pnpm verify:full      # registry:check + lint（全仓 vue-tsc + biome）+ test + test:build
+
+⚠️ 当前已知边界：按包 vitest 的路径过滤**失效**（`no tests`，根因未定位），
+   所以测试**不在**默认流程里 —— 收口时靠 verify:full 的全仓 test 兜住。
 `);
 
 process.exit(ok ? 0 : 1);
