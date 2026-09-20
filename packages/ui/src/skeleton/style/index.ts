@@ -15,7 +15,12 @@
  * .ant-skeleton.ant-skeleton-element .ant-skeleton-button.ant-skeleton-button-circle{...}
  * .ant-skeleton.ant-skeleton-element .ant-skeleton-image .ant-skeleton-image-svg.ant-skeleton-image-svg-circle{...}
  * .ant-skeleton.ant-skeleton-element .ant-skeleton-node{width:calc(calc(var(--ant-control-height) * 1.5) * 2);...}
- * .ant-skeleton-round .ant-skeleton-section .ant-skeleton-title,...{border-radius:100px;}
+ * .ant-skeleton-round 会把标题/段落的圆角拉到「胶囊」级别（antd 用的是一个很大的圆角值）。
+ *
+ * ⚠️⚠️ 本文件的注释里**不要出现「圆角属性名 + 冒号 + 数字」**这样的片段：
+ *     `validate-registry` 的 E10 扫描源码时**不剥注释**，注释里的这种片段会被判成
+ *     硬编码圆角（假阳性）。E19 那边早就要求 `stripComments()`，E10 没有 ——
+ *     本轮就是被自己写的注释坑了一次。要举例就只写属性名，别带冒号和数字。
  * ```
  *
  * ⚠️ 前两条**看着像上游的字符串拼接 bug**（源码里写作
