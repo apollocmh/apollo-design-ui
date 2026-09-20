@@ -1051,6 +1051,40 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
     expect(w.findAll('span[aria-hidden="true"]').some((node) => node.text() === cut)).toBe(true);
   });
 
+  it('★ `aria-label` 的候选顺序是 `editable.text` > 正文 > `title` > `ellipsis.tooltip.title`', async () => {
+    // 上游（antd `Base/index.js`）就是 `.find(isValidText)` 扫这四项，**顺序即契约**：
+    // 换顺序不报错、不改结构、不影响任何像素 —— 只影响屏幕阅读器读什么。
+    // 这条用例是变异验证逼出来的：把 `editConfig.text` 从首位挪走，此前**没有任何**用例变红。
+    layout = installLayoutMock();
+
+    // ① `editable.text` 压过正文与 `title`
+    const w1 = mountText(
+      { ellipsis: { onEllipsis: () => {} }, editable: { text: 'EDIT-TEXT' }, title: 'TITLE-ATTR' },
+      LONG_TEXT,
+    );
+    await measureWithWidth(w1, 220);
+    expect(w1.attributes('aria-label')).toBe('EDIT-TEXT');
+
+    // ② 没有 `editable.text` 时正文压过 `title`
+    const w2 = mountText({ ellipsis: { onEllipsis: () => {} }, title: 'TITLE-ATTR' }, LONG_TEXT);
+    await measureWithWidth(w2, 220);
+    expect(w2.attributes('aria-label')).toBe(LONG_TEXT);
+
+    // ③ 正文不是「单独一段文字」时（`childrenText` 为 `undefined`）`title` 顶上。
+    //    多节点正是这个分支的入口 —— 归一化后 `childrenText` 只认「整份孩子就是一段文字」。
+    const w3 = mountText({ ellipsis: { onEllipsis: () => {} }, title: 'TITLE-ATTR' }, ['aa', 'bb']);
+    await measureWithWidth(w3, 220);
+    expect(w3.attributes('aria-label')).toBe('TITLE-ATTR');
+
+    // ④ 连 `title` 都没有时兜到 `ellipsis.tooltip.title`
+    const w4 = mountText(
+      { ellipsis: { onEllipsis: () => {}, tooltip: { title: 'TOOLTIP-TT' } } },
+      ['aa', 'bb'],
+    );
+    await measureWithWidth(w4, 220);
+    expect(w4.attributes('aria-label')).toBe('TOOLTIP-TT');
+  });
+
   it('★ `ellipsis.tooltip` 单独存在**不**触发 JS 测量（它不是 needMeasureEllipsis 的判据）', () => {
     const w = mountText({ ellipsis: { tooltip: true } }, LONG_TEXT);
     expect(w.classes()).toContain(`${P}-ellipsis-single-line`);
