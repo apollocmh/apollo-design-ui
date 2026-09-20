@@ -405,14 +405,20 @@ const iconStyleAttrs = computed(() => styleAttrs(mergedStyles.value.icon));
 const contentStyleAttrs = computed(() => styleAttrs(mergedStyles.value.content));
 
 /**
- * ⚠️ 加载时图标容器上还有 `-loading-icon`（`:InnerLoadingIcon` 的
- *    `clsx(`${prefixCls}-loading-icon`, className)`）。它不只是装饰 ——
- *    `-two-chinese-chars` 的 `> *:not(-icon)` 修正依赖图标能被排除，
- *    而且它是 L4 契约里的一条真实类名。
+ * ★ `-loading-icon` 的条件比「在加载」更窄：它只在**走内置加载图标**时出现。
+ *
+ * ```
+ * loading && mergedLoadingIcon  → `<span class="-icon">{mergedLoadingIcon}</span>`   ← 没有
+ * 其余（加载中且没有自定义加载图标）→ DefaultLoadingIcon → `-icon -loading-icon`     ← 有
+ * ```
+ *
+ * （`Button.tsx:243-256`：只有第三支 `defaultLoadingIconElement` 才会经过
+ * `InnerLoadingIcon`，`-loading-icon` 是它加的。自定义加载图标走的是
+ * `iconWrapperElement`，不带这个类。）L4 的 `loading:custom-icon` 用例钉住这一条。
  */
 const iconClass = computed(() => [
   `${prefixCls.value}-icon`,
-  { [`${prefixCls.value}-loading-icon`]: innerLoading.value },
+  { [`${prefixCls.value}-loading-icon`]: innerLoading.value && !mergedLoadingIcon.value },
   mergedClassNames.value.icon,
 ]);
 const contentClass = computed(() => [mergedClassNames.value.content]);
