@@ -94,8 +94,12 @@ describe('Typography · 语义标签', () => {
       const w = mount(Title, { props: { level }, slots: { default: () => 'T' } });
       expect(w.element.tagName, `level=${level}`).toBe(`H${level}`);
     }
-    // 非法 ⇒ h1：h6 会让标题层级出现空洞（跳级是 axe 的 `heading-order` 关注点）
-    const invalid = mount(Title, { props: { level: 6 }, slots: { default: () => 'T' } });
+    // 非法 ⇒ h1：h6 会让标题层级出现空洞（跳级是 axe 的 `heading-order` 关注点）。
+    // `level: 6` 类型上就非法 —— 断言「非法值被拒绝」只能显式越界。
+    const invalid = mount(Title, {
+      props: { level: 6 as never },
+      slots: { default: () => 'T' },
+    });
     expect(invalid.element.tagName).toBe('H1');
   });
 

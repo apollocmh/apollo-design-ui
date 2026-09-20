@@ -291,8 +291,14 @@ function operationUnitStates(sel: string): string[] {
 
   return [
     rule(each(':focus-visible'), focusOutline()),
-    rule(each(':hover'), `color:${v('colorLinkHover')};text-decoration:${v('linkHoverDecoration')};`),
-    rule(each(':focus'), `color:${v('colorLinkHover')};text-decoration:${v('linkFocusDecoration')};`),
+    rule(
+      each(':hover'),
+      `color:${v('colorLinkHover')};text-decoration:${v('linkHoverDecoration')};`,
+    ),
+    rule(
+      each(':focus'),
+      `color:${v('colorLinkHover')};text-decoration:${v('linkFocusDecoration')};`,
+    ),
     rule(
       each(':active'),
       `color:${v('colorLinkActive')};text-decoration:${v('linkHoverDecoration')};`,

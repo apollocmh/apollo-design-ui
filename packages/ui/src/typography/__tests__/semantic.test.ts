@@ -45,7 +45,7 @@
 
 import { IconProvider } from '@apollo-design/icons';
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import { defineComponent, h, provide, type VNode, type VNodeChild } from 'vue';
+import { type Component, defineComponent, h, provide, type VNode, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/typography.dom.json';
 import {
   type ConfigContextValue,
@@ -87,12 +87,19 @@ function wrap(children: () => VNodeChild, config: Partial<ConfigContextValue> = 
   });
 }
 
-/** 带默认插槽。 */
-const withText = (component: typeof Text, props: Props, text: VNodeChild = 'Text'): VNode =>
+/**
+ * 带默认插槽。
+ *
+ * ⚠️ `component` 的类型是 `Component` 而不是 `typeof Text`：`Link` 的 props 多出
+ *    `rel` / `target`，`Title` 的 `strong` 被 `Omit` 掉 —— 四者本来就**不是**同一个
+ *    props 类型，写 `typeof Text` 会让 `Link` 无法赋值（TS2345）。
+ *    这里真正要保证的不是「props 类型相同」，而是「同一份基线在两侧被同一组 props 驱动」。
+ */
+const withText = (component: Component, props: Props, text: VNodeChild = 'Text'): VNode =>
   h(component, props, { default: () => text });
 
 /** 不带插槽（`slots.default` 必须是 `undefined`，否则 `copyable` 的仅图标模式测不到）。 */
-const noText = (component: typeof Text, props: Props): VNode => h(component, props);
+const noText = (component: Component, props: Props): VNode => h(component, props);
 
 /**
  * 用例 id → Vue 侧构造。**必须覆盖基线里的每一个 id**（少渲染一条会失败）。

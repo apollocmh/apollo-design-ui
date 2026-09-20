@@ -350,8 +350,6 @@ describe('Typography · 零运行时补偿（BASE_CSS 缺口）', () => {
 
   it('★ 标题 / 段落上外边距归零（UA 的 `margin-block-start`）', () => {
     const css = genTypographyStyle('apollo');
-    expect(css).toContain(
-      `h1.${P},h2.${P},h3.${P},h4.${P},h5.${P},p.${P}{margin-top:0;}`,
-    );
+    expect(css).toContain(`h1.${P},h2.${P},h3.${P},h4.${P},h5.${P},p.${P}{margin-top:0;}`);
   });
 });

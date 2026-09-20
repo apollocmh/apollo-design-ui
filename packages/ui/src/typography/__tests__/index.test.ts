@@ -27,7 +27,7 @@
 import { flushAll, mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { type Component, h, nextTick } from 'vue';
 
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { Link, Paragraph, Text, Title, Typography } from '../index';
@@ -55,9 +55,15 @@ const mountText = (props: Record<string, unknown> = {}, text: unknown = 'Text') 
 const mountParagraph = (props: Record<string, unknown> = {}, text: unknown = 'Text') =>
   mount(Paragraph, { props, slots: { default: () => text as never } });
 
+/**
+ * 带 ConfigProvider 上下文的挂载。
+ *
+ * ⚠️ `component` 收 `Component` 而不是 `typeof Text`：`rtl` 那条用例要把五个组件
+ *    （含 `Link` / `Typography`）放进同一个循环，而它们的 props 类型**互不相同**。
+ */
 const mountWithConfig = (
   config: Partial<typeof DEFAULT_CONFIG_CONTEXT>,
-  component: typeof Text,
+  component: Component,
   props: Record<string, unknown> = {},
   slots?: Record<string, () => unknown>,
 ) =>
@@ -165,7 +171,9 @@ describe('Typography · 本体', () => {
   it('★ 四个子组件也暴露 `nativeElement`（antd 的 forwardRef 等价物）', () => {
     // 少了它，`<Text ref="x">` 拿不到任何东西 —— 那是契约缺失。
     // 实测踩过：`Typography` 曾把「子组件的暴露对象」当成元素暴露出去（类型在撒谎）。
-    const cases: Array<[typeof Text, Record<string, unknown>]> = [
+    // ⚠️ 元组类型必须写成 `Component`：写 `typeof Text` 会让 `Link`（props 里多出
+    //    `rel` / `target`）无法赋值 —— 这四者本来就**不是**同一个 props 类型。
+    const cases: Array<[Component, Record<string, unknown>]> = [
       [Text, {}],
       [Title, {}],
       [Paragraph, {}],
@@ -280,14 +288,16 @@ describe('Title · level', () => {
   });
 
   it('★ 非法 level 退回 `h1`（而不是渲染 h6）', () => {
-    const w = mount(Title, { props: { level: 6 }, slots: { default: () => 'H' } });
+    // `level: 6` 在类型上就是非法的 —— 断言「非法值被拒绝」只能显式越界。
+    // 用 `as never` 而不是 `as 1`：后者假装合法，读代码的人看不出这里在故意破坏契约。
+    const w = mount(Title, { props: { level: 6 as never }, slots: { default: () => 'H' } });
     expect(w.element.tagName).toBe('H1');
   });
 
   it('非法 level 会告警，合法 level 不告警', async () => {
     expect(
       await capturedWarnings(() =>
-        mount(Title, { props: { level: 6 }, slots: { default: () => 'H' } }),
+        mount(Title, { props: { level: 6 as never }, slots: { default: () => 'H' } }),
       ),
     ).toContain('Title only accept `1 | 2 | 3 | 4 | 5` as `level` value');
     expect(
@@ -299,7 +309,7 @@ describe('Title · level', () => {
 
   it('告警带 `[apollo: Typography.Title]` 前缀', async () => {
     const out = await capturedWarnings(() =>
-      mount(Title, { props: { level: 9 }, slots: { default: () => 'H' } }),
+      mount(Title, { props: { level: 9 as never }, slots: { default: () => 'H' } }),
     );
     expect(out).toContain('[apollo: Typography.Title]');
   });
@@ -385,13 +395,15 @@ describe('Link · rel 兜底与属性', () => {
   });
 
   it('`ellipsis` 传对象时告警，且仍然按 `!!ellipsis` 处理（启用省略号）', async () => {
+    // `LinkProps['ellipsis']` 是**仅布尔**（上游形状），传对象只能显式越界 ——
+    // 而这条用例断言的就是「对象被拒绝并告警」，越界本身就是被测行为。
     const out = await capturedWarnings(() =>
-      mount(Link, { props: { ellipsis: {} }, slots: { default: () => 'L' } }),
+      mount(Link, { props: { ellipsis: {} as never }, slots: { default: () => 'L' } }),
     );
     expect(out).toContain('`ellipsis` only supports boolean value.');
     // `{}` 为真 ⇒ 启用省略号 ⇒ 根上有 `-ellipsis`
     expect(
-      mount(Link, { props: { ellipsis: {} }, slots: { default: () => 'L' } }).classes(),
+      mount(Link, { props: { ellipsis: {} as never }, slots: { default: () => 'L' } }).classes(),
     ).toContain(`${P}-ellipsis`);
   });
 
@@ -911,7 +923,9 @@ describe('Typography · ellipsis（CSS 路径）', () => {
 });
 
 describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
-  let layout: { state: LayoutState; restore: () => void } | null = null;
+  // ⚠️ 用 `ReturnType<typeof installLayoutMock>` 而不是手写 `{ state; restore }`：
+  //    手写的窄类型会把新增的观察字段（如 `readBoxes`）挡在门外，`vue-tsc` 报 TS2339。
+  let layout: ReturnType<typeof installLayoutMock> | null = null;
 
   afterEach(() => {
     layout?.restore();
@@ -965,8 +979,10 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
     // 2. 每一个被量过的容器都必须在视口外固定定位、且是块级盒子
     for (const box of layout.readBoxes) {
       expect(box.position, `测量容器缺 position:fixed：${JSON.stringify(box)}`).toBe('fixed');
-      expect(box.display, `测量容器是 inline（clientHeight 恒为 0）：${JSON.stringify(box)}`)
-        .not.toBe('inline');
+      expect(
+        box.display,
+        `测量容器是 inline（clientHeight 恒为 0）：${JSON.stringify(box)}`,
+      ).not.toBe('inline');
       expect(box.display).not.toBe('');
     }
 
@@ -975,7 +991,9 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
 
     // 4. 测量结束后容器必须**全部回收**（残留会在截图里留下半透明红块）
     expect(
-      w.findAll('span[aria-hidden="true"]').filter((node) => node.attributes('style')?.includes('position: fixed')).length,
+      w
+        .findAll('span[aria-hidden="true"]')
+        .filter((node) => node.attributes('style')?.includes('position: fixed')).length,
     ).toBe(0);
   });
 
@@ -1077,10 +1095,10 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
     expect(w3.attributes('aria-label')).toBe('TITLE-ATTR');
 
     // ④ 连 `title` 都没有时兜到 `ellipsis.tooltip.title`
-    const w4 = mountText(
-      { ellipsis: { onEllipsis: () => {}, tooltip: { title: 'TOOLTIP-TT' } } },
-      ['aa', 'bb'],
-    );
+    const w4 = mountText({ ellipsis: { onEllipsis: () => {}, tooltip: { title: 'TOOLTIP-TT' } } }, [
+      'aa',
+      'bb',
+    ]);
     await measureWithWidth(w4, 220);
     expect(w4.attributes('aria-label')).toBe('TOOLTIP-TT');
   });
@@ -1192,9 +1210,11 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
   });
 
   it('★ `Text` 会剥掉 `expandable` / `rows` 并告警', async () => {
+    // `TextProps['ellipsis']` 用 `Omit` 排除了 `expandable` / `rows` / `onExpand`，
+    // 所以「传了会被剥掉并告警」这条只能显式越界来测。
     const out = await capturedWarnings(() =>
       mount(Text, {
-        props: { ellipsis: { expandable: true } },
+        props: { ellipsis: { expandable: true } as never },
         slots: { default: () => 'x' },
       }),
     );
@@ -1204,7 +1224,7 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
   it('★ 判据是 `in`：`{ rows: undefined }` 也会告警', async () => {
     const out = await capturedWarnings(() =>
       mount(Text, {
-        props: { ellipsis: { rows: undefined } },
+        props: { ellipsis: { rows: undefined } as never },
         slots: { default: () => 'x' },
       }),
     );
