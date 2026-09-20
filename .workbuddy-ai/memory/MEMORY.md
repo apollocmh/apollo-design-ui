@@ -284,8 +284,27 @@ L0 utils/theme/icons ｜ 测试 test-utils
    ⇒ **判据：先看命令平时要跑多久**；超过 2 分钟的一律后台跑或显式加 `timeout`。
    ⚠️ 这条**修正**了仓库里长期「全仓门禁/全仓 vitest 会 OOM」的判断 ——
    至少构建门禁那次 137 是超时，不是内存。
-16. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；
-    而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
+16. 🚨🚨 **vitest 的 `a11y` / `theme` / `dom-contract` project 只收集到极少数文件**
+    （2026-09-21 发现，**既有缺陷，非某次改动引入**）。
+
+    实测：`vitest run --project a11y` 全仓有 **9 个** `a11y.test.ts`
+    （`icons` + `ui` 的 button / config-provider / divider / empty / skeleton / space /
+    spin / typography），但**只跑了 2 个**：`empty` 与 `config-provider`。
+    其余全部**未被收集**，且不报错（表现为 `Test Files 2 passed`）。
+
+    ⚠️ 直接后果：**button / typography / divider / space / spin 的 L5 很可能是空跑的**
+    —— 它们汇报过「a11y 全绿」，但那 2 个文件里没有它们的用例。
+    ⇒ **复核时看到「a11y N passed」必须先确认 N 覆盖了哪些文件**，别只看总数。
+
+    include 是 `packages/*/src/**/__tests__/a11y.test.ts`，按字面**应当全部匹配** ⇒
+    根因未定位（`vitest.config.ts` 里还有一层根级 `exclude: ['**/__tests__/**', …]`，
+    怀疑与它或 `--project` 的解析有关，但 empty/config-provider 又能跑，尚不能解释）。
+    ⚠️ 另：`vitest run <目录>` 的**位置过滤在本仓库不可靠**（常报 `no tests`），
+    要跑单个文件请传**完整文件路径**。
+
+    ⚠️ 机器内存吃紧时 vitest 会 `Failed to start threads worker` / `Timeout waiting for
+    worker to respond`；`--pool=forks --maxWorkers=1` 可以绕过（**但会慢很多**）。
+17. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；    而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
 
     ⭐ **真正的根因（2026-09-20 定位）**：本环境里的 `git` 是**垫片版** ——
     `.../sandbox/5.5.5/sandbox-cli --config {...,"extraPath":"runtime/git/bin"}`。
