@@ -1039,10 +1039,10 @@
       "unitStatus": "done",
       "interactionStatus": "n/a",
       "typeStatus": "todo",
-      "a11yStatus": "todo",
+      "a11yStatus": "done",
       "visualStatus": "todo",
       "docsStatus": "todo",
-      "notes": null,
+      "notes": "2026-09-21：L5 a11y 已验证通过 —— vitest --project a11y 全仓 9 files / 175 tests passed（其中 skeleton 新增 15 例）。",
       "layerNotes": null
     },
     {
