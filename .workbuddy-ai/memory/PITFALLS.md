@@ -748,7 +748,7 @@
      另注意 `Nullable<T>` 要写成 `T | null | undefined`（只写 `| null` 会在
      `noUncheckedIndexedAccess` 下让 types project 报 Unhandled Source Error）。
 
-## Typography 流（2026-09-20，140-152）
+## Typography 流（2026-09-20，140-153）
 
 > ⚠️ 编号从 **140** 起（跳过 114-139）：并行工作流各自在自己的 worktree 里追加，
 > 按约定给别的流留出区间，避免同一编号被两条流各写一份。
@@ -847,4 +847,15 @@
      另：`compare.mjs` 的通过判据是**两个条件同时成立**（差异率 ≤ 0.1% **且**散点占比 ≥ 90%），
      所以会出现「差异率 0.0836% 但判 FAIL」的情况 —— 因为散点占比只有 1.7%，差异**成块**。
      报错信息里的 `block-diff` 正是这个含义。
+
+153. ⚠️ **`pnpm run registry:check` 不是只读的：即使全绿，它也会把 3 个文件的
+     `generatedAt` 重写成当前时刻**（`registry/components.json`、`dependencies.json`、
+     `tokens.json` —— 都是 `gen-registry.mjs` / 生成器的产物，跑 `--check` 也会落盘）。
+     症状：跑完门禁 `git status` 从干净变成 3 个 M；若顺手 `git add -A` 就会把纯时间戳抖动
+     提交进去（PITFALLS 11 明令禁止）。
+     处方：**每次跑完 `registry:check` 都执行**
+     `git checkout -- registry/components.json registry/dependencies.json registry/tokens.json`，
+     并且提交时**逐路径 `git add`**，不要用 `-A`。
+     ⚠️ 顺序上有个陷阱：这三个文件的抖动是**跑门禁产生的**，不是你的改动 —— 若先提交、
+     后跑门禁，抖动会留到下一次提交里混进别人的 diff。
 
