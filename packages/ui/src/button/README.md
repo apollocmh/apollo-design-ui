@@ -162,8 +162,13 @@ antd 用 `genCssVar` 在规则内部声明 `--ant-btn-*` 做中间变量。**不
 | L4 | `__tests__/semantic.test.ts` | 66 | 与 React 基线逐节点比对（65 条 + 1 条 D6 豁免） |
 | L5 | `__tests__/a11y.test.ts` | 27 | axe（12 个 demo）+ 两分支 disabled + 焦点 |
 | L1/L2 主题 | `__tests__/theme.test.ts` | 17 | 四态渲染 + Component Token 逐键 |
+| L6 | `tests/visual/render/cases/{react,vue}/button.js*` | 27 张 | 9 页 × 3 viewport，与 antd 逐像素比对。**当前通过 24 / 27** |
+| L7 | `tests/build/run.mjs` | — | 全仓构建门禁（**FAIL 0 / PENDING 1**，B6 体积预算为既有未决） |
 | — | `__tests__/demo.test.ts` | 14 | 12 个 demo 渲染/更新/卸载无告警 |
 | — | `__tests__/style.test.ts` | 5 | CSS 静态一致性（变量存在性 / 无 undefined / H9） |
+
+四层（L1/L2 + L4 + L5 + theme）合跑：**223 passed (223)**。
+L6 的 3 张失败是**已登记**的差异 D41（见 §7），不是回归。
 
 ### 6.1 L4 的基线来源
 
