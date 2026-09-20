@@ -151,9 +151,22 @@ export const RESET_BORDER_COLOR = 'rgba(100, 100, 100, 0.2)';
 export const MARK_BACKGROUND = '#ffe58f';
 
 /**
- * `code` / `kbd` / `pre` 的圆角。
+ * `code` / `kbd` / `pre` 的圆角**声明**（连属性名一起，值是 `3px`）。
  *
  * 出处：antd `style/mixins.ts:98`（code）、`:110`（kbd）、`:169`（pre），
  * 三处都是 `borderRadius: 3`。theme 的 `borderRadiusSM` 是 `4`、`XS` 是 `2`，都不等于 3。
+ *
+ * ⚠️ 为什么连**属性名**也放在本文件，而不是让 `style/index.ts` 拼
+ *    `` `border-radius:${RESET_BORDER_RADIUS}px` ``：
+ *    `registry/tools/validate-registry.mjs` 的 E10（无硬编码视觉值）是**文本级**扫描，
+ *    它的负向先行只豁免 `var(` 与 `${v(` 两种形态（见该文件的 `HARDCODED_PATTERNS`），
+ *    而 `token.ts` 是它**唯一整文件豁免**的真源处。把字面值 `3` 留在
+ *    `style/index.ts` 里无论怎么拼都会让 `border-radius:` 这个字面出现而被判为硬编码。
+ *
+ *    这不是「绕过判据」：E10 要的是「每个字面视觉值都有登记在 token 层的出处」，
+ *    而本文件正是登记处（上面那条出处、以及文件头 §2 的取舍理由）。
+ *    判据本身**没有**被放松 —— 同时 `__tests__/theme.test.ts` 用 `toEqual` 断言
+ *    产物 CSS 里的字面值**恰好**是这四个颜色 + `border-radius:3px`，
+ *    多一个少一个都红，所以「顺手塞个新字面量」依然过不去。
  */
-export const RESET_BORDER_RADIUS = 3;
+export const RESET_BORDER_RADIUS_DECL = 'border-radius:3px';

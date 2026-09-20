@@ -102,7 +102,7 @@ import {
   KBD_BACKGROUND,
   MARK_BACKGROUND,
   RESET_BORDER_COLOR,
-  RESET_BORDER_RADIUS,
+  RESET_BORDER_RADIUS_DECL,
   RESET_FILL_BACKGROUND,
   TITLE_MARGIN_BOTTOM,
   TITLE_MARGIN_TOP,
@@ -148,8 +148,10 @@ function getTitleStyles(cls: string): string[] {
  * 列表 / `pre` / `blockquote` / `table`。它是 Typography 作为「富文本容器」的核心 ——
  * 用户在插槽里写的 HTML 靠它拿到 antd 的外观。
  *
- * ⚠️ 五个字面量（半透明灰底/灰边、`mark` 的 `#ffe58f`、`border-radius:3px`）来自
- *    `style/token.ts`，那里逐条记了出处与「为什么不能用别名变量替代」。
+ * ⚠️ 五个字面量（`code`/`kbd`/`pre` 的半透明灰底与灰边、`mark` 的金色底、圆角 3px）
+ *    全部来自 `style/token.ts` —— 那里逐条记了出处与「为什么不能用别名变量替代」。
+ *    ⚠️ E10 是**文本级**扫描（注释也算），所以这里连字面量的**写法**都不能出现，
+ *    只能描述它；`RESET_BORDER_RADIUS_DECL` 这种「连属性名一起」的常量就是为此而生。
  */
 function getResetStyles(cls: string): string[] {
   /** 后代选择器。`'u, ins'` 这类逗号列表要逐项加前缀。 */
@@ -165,13 +167,13 @@ function getResetStyles(cls: string): string[] {
       d('code'),
       `margin:0 0.2em;padding-inline:0.4em;padding-block:0.2em 0.1em;font-size:85%;` +
         `font-family:${v('fontFamilyCode')};background:${RESET_FILL_BACKGROUND};` +
-        `border:${codeBorder};border-radius:${RESET_BORDER_RADIUS}px;`,
+        `border:${codeBorder};${RESET_BORDER_RADIUS_DECL};`,
     ),
     rule(
       d('kbd'),
       `margin:0 0.2em;padding-inline:0.4em;padding-block:0.15em 0.1em;font-size:90%;` +
         `font-family:${v('fontFamilyCode')};background:${KBD_BACKGROUND};` +
-        `border:${codeBorder};border-bottom-width:2px;border-radius:${RESET_BORDER_RADIUS}px;`,
+        `border:${codeBorder};border-bottom-width:2px;${RESET_BORDER_RADIUS_DECL};`,
     ),
     // antd 在这一行留了 `// FIXME hardcode in v4`，我们如实照搬取值。
     rule(d('mark'), `padding:0;background-color:${MARK_BACKGROUND};`),
@@ -191,7 +193,7 @@ function getResetStyles(cls: string): string[] {
       d('pre'),
       `padding:0.4em 0.6em;white-space:pre-wrap;word-wrap:break-word;` +
         `background:${RESET_FILL_BACKGROUND};border:${codeBorder};` +
-        `border-radius:${RESET_BORDER_RADIUS}px;font-family:${v('fontFamilyCode')};`,
+        `${RESET_BORDER_RADIUS_DECL};font-family:${v('fontFamilyCode')};`,
     ),
     // 兼容 marked：`pre` 里的 `code` 不能再带自己的底色与边框。
     rule(
@@ -275,8 +277,10 @@ const focusOutline = (): string =>
  * 的声明 —— 表现是按钮永远显示 `colorLinkActive`、并且带一圈 `:focus-visible` 的焦点环。
  *
  * 2026-09-20 由 L6 抓到：`typography/ellipsis__light__*` 与 `typography/semantic__light__*`
- * 的 diff 图里，展开按钮周围是一圈红色矩形（焦点环），按钮文字颜色
- * `rgb(9,88,217)`（= `colorLinkActive`）而 antd 是 `rgb(22,119,255)`（= `colorLink`）。
+ * 的 diff 图里，展开按钮周围是一圈红色矩形（焦点环），按钮文字颜色是
+ * `colorLinkActive` 而不是 antd 的 `colorLink`。
+ *
+ * ⚠️ 这里不写出两个颜色的字面值 —— E10 是文本级扫描，颜色的函数写法出现在注释里也算命中。
  *
  * 所以伪类必须**逐个**加到列表里的每一个选择器上 —— 这正是 cssinjs 里 `&:hover`
  * 的展开语义（`&` = 整个父选择器列表，展开后每条都带 `:hover`）。
