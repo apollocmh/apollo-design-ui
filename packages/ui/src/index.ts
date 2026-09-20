@@ -43,6 +43,32 @@ export {
 } from './_internal/use-merge-semantic';
 export type { WithInstall } from './_internal/with-install';
 export { withInstall } from './_internal/with-install';
+// ---------------------------------------------------------------------------
+// Button —— 按钮
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/button/style.css` 由构建钩子产出。
+//    两处已知的、如实登记的能力缺口见 `./button/style` 的文件头注释：
+//    `solidTextColor`（依赖 color-picker 的 `isBright`）与 13 个预设阴影色（构建期求解）。
+// ---------------------------------------------------------------------------
+export type {
+  ButtonColorType,
+  ButtonConfig,
+  ButtonHTMLType,
+  ButtonIcon,
+  ButtonIconPlacement,
+  ButtonLoading,
+  ButtonProps,
+  ButtonRef,
+  ButtonSemanticClassNames,
+  ButtonSemanticStyles,
+  ButtonSemanticType,
+  ButtonShape,
+  ButtonSize,
+  ButtonSlot,
+  ButtonType,
+  ButtonVariantType,
+} from './button';
+export { Button } from './button';
 export type {
   ComponentConfigLike,
   ConfigProviderProps,

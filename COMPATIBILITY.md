@@ -310,6 +310,22 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D39 | `space` | `useCompactItemContext` 返回裸值（每次渲染重算） | 返回 `ComputedRef`（`compactSize` / `compactDirection` / `compactItemClassnames`） | PLATFORM | D27 同一根源：Vue 的 `inject` 是 setup 期快照，裸值不会随 `Compact` 的 props 变化更新。下游（Button / Input / Select / DatePicker / … 共 10 个组件）在 `computed` 里读 `.value` 即可，与 `size-context.ts` 同形 |
 | D40 | `space` | `separator={0}` 时 `Item` 的 `{index < latestIndex && separator && <span/>}` 求值成数字 `0`，React 把它渲染成**裸文本节点** ⇒ DOM 是 `<div>a</div>0<div>b</div>` | 用真 `if` 走假值分支，不产生任何节点 ⇒ `<div>a</div><div>b</div>` | **DEFECT** | JSX 的经典陷阱：`0` 是「会渲染的假值」，而上游的意图显然是「没有分隔符」（`separator=""` / `separator={null}` 都不渲染）。我们按**意图**实现。⚠️ 这条差异**进不了 L4 的断言**：`packages/test-utils/src/dom-contract.ts:204` 的投影只用 `template.content.children`（**只含元素节点**，注释与文本都不进契约）⇒ 两侧投影完全相同，所以它没有 `ALLOW` 条目 —— 不是差异不存在，是那条通道看不见它。钉住它的是 L1 的 `index.test.ts`「`separator={0}` 不渲染分隔符且 `textContent === 'ab'`」，证据是机械基线 `tests/compat/baselines/space.dom.json` 的 `separator:zero` |
 
+| D41 | `button` | 恰好两个汉字时，antd 把文本 `join(' ')` 成 `确 定`（**真实空格**，进 `textContent`）；我们用 `-two-chinese-chars` + `::first-letter{letter-spacing:0.34em}` + `> *{margin-inline-end:-0.34em}` 实现同样的视觉间距，`textContent` 保持 `确定` | INTENDED | L6 视觉上**只影响 `type` 这一个用例的第 6 个按钮**（antd 的 `确 定` 宽 63.797px vs 我们的 `确定` 64.781px，差 ~1px）。其余 24/27 张逐像素一致（21 张 0.000% exact + 3 张 antialias-noise ≤0.021%），`type` 三张里除该按钮外无任何差异。**选 CSS 的理由**：`textContent` 就是按钮的**可访问名**（`button.name`），antd 插空格后读屏会念成「确 空格 定」；保持无空格更干净，而视觉间距等效 —— 属 Vue-native 的主动选择，不是做不到 |
+
+> ⚠️⚠️ **本条此前的登记（「PLATFORM：Chrome glyph hinting 抖动，27/27 全部 0.23%–2.33%」）已于 2026-09-20 复核证伪并撤销。** 当时的两条依据都不成立，是一次**把 BUG 归类成 PLATFORM** 的误判（`AGENTS.md` §4.3 明令禁止）：
+>
+> - 「React 侧跑两次也会得到不同截图」→ **假**。`node tests/visual/run.mjs --component button --mode baseline` 重生成 27 张基线后 `git status` **零变化**（逐字节一致）⇒ 截图是确定的，不存在抖动。
+> - 「差异来自 Chrome 自身的 glyph 渲染抖动，与 mount 时序无关」→ **假**。真因是**我方实现缺两条声明**：
+>   1. **`line-height`**：antd 的 Button **不**调用 `resetComponent`（`antd/es/button/style/index.js` 的 `genStyleHooks` 只拼 Shared / Size / Variant / Group），它靠 `antd/dist/reset.css` 的 `button{line-height:inherit}` 从环境继承（实测计算值 22px）。本仓 `BASE_CSS`（`packages/ui/src/style/index.ts:93`）没有这条表单控件归一化 —— 该文件自己就把「button 重置」列为未决缺口 —— 于是我们的 `<button>` 退回 UA `line-height:normal`：图标/文字 span 高 17px vs 22px、文字基线差 ~2.5px ⇒ **27 例全部 block-diff**。**修法**：在 `.apollo-btn` 基线上显式 `line-height:var(--apollo-line-height)`（与 divider / empty / space / spin 的既有做法一致）。
+>   2. **图标基线**：`-icon` 未带 `display:inline-flex;align-items:center;line-height:0`。antd 的 `.anticon` 基线由 antd 在**运行时**注入，React 侧一定拿得到；本仓该基线在 `@apollo-design/icons` 的 `getIconStyle()` 里，但 ui 的静态样式层**尚未消费它**（icons 包 `exports` 只有 `"."`，也没有独立 `style.css` 出口）⇒ 图标 span 继承行高 22px，svg 比 antd 高 2px。**修法**：在按钮范围内补齐同样的基线（`.apollo-btn-icon .apollo-icon`）。
+>
+> 修复后差异率从 0.233%–2.326% 降到 0%–0.149%，`通过 0 / 27` → `通过 24 / 27`。教训（「基线确定性要实测」「视觉差异先怀疑实现再怀疑平台」「`<button>` 不继承 `line-height`」「图标基线未被消费」）记入 `.workbuddy-ai/memory/PITFALLS.md` **130–133**（另有 125/126 两条基建坑：单次 Bash 撑不住 unbuild、worktree 的 `index.lock` 反复残留）。
+
+**钉住它的测试**：`tests/visual/run.mjs --component button --mode compare`（9 variant × 3 viewport = 27 张，React 基线已入库 `tests/visual/baselines/react/button/`），把差异率、结构、强度写到 `tests/visual/report.html`。`type` 三张的 diff 图（`tests/visual/diff/button/type__light__*.png`）里红色**只落在第 6 个按钮**，是这条差异的直接证据；两字中文的类名判定由 L1 `index.test.ts` 的「两个中文字自动插空格」一节（11 条）钉住。 |
+
+| D42 | `button`（实为全局，同 D23/D21） | `icon` 是 `React.ReactNode`，官方示例与 demo 都写 `icon={<SearchOutlined />}` —— React 里那是**已求值的元素** | 类型放宽为 `ButtonIcon = VNodeChild \| Component`，并在渲染前 `h()` 包一层 | PLATFORM | Vue 没有「元素」这一形态，对应物是**组件对象**，与 D23（`empty` 的 `image`）**同一裁决**。⚠️ 这条差异有一个**只有运行期才现形**的陷阱，必须两件事同时做：① **类型**放宽（否则 `vue-tsc` 报 `TS2322: DefineComponent is not assignable to VNodeChild`，button 的 `demo/{icon,shape,semantic}.vue` 共 6 处）；② **渲染归一化**（`NodeRenderer.normalizeNode()` 只做 `isVNode ? cloneVNode : 原样`，组件对象会被原样返回，模板再 `toDisplayString` 成字面量文本 **`[object Object]`**）。⚠️ 只做 ① 会让编译变绿而缺陷**一字未改** —— 实测复现：`<span class="apollo-btn-icon">[object Object]</span>`。**钉住它的测试**：L1 `index.test.ts` 的 3 条用例（`icon` 传组件 / `loading.icon` 传组件 / ConfigProvider 的 `loadingIcon` 传组件），每条都断言 `expect(w.text()).not.toContain('[object Object]')` —— 只断言「元素存在」会漏，文本节点也能匹配到父元素；L3 `type.test-d.ts` 另有一条 `toEqualTypeOf<ButtonIcon \| undefined>()` 与 1 条正例（组件对象可传）。教训记入 PITFALLS 135 |
+
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

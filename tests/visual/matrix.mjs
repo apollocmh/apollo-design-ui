@@ -44,6 +44,20 @@ export const THEMES = [{ id: 'light', antdTheme: 'default', apolloTokens: 'light
  * 共用 `render/cases/shared.mjs` 里的常量，确保输入一致。
  */
 export const COMPONENTS = {
+  button: {
+    // 9 个 variant × 3 个 viewport = 27 张
+    variants: [
+      'type', // 五种旧版类型糖 + 两个中文字（D7 的形态差异在像素层裁决）
+      'size', // small / middle / large
+      'loading', // 布尔与 { delay: 0 } 两条「立刻加载」路径
+      'disabled', // <button> 分支与 <a> 分支的不对称表达
+      'danger', // danger 与五种 type 的组合
+      'ghost', // ghost 把 solid 退化成 outlined（放在有色背景上）
+      'icon', // prop 图标 / icon-only / iconPlacement=end / shape
+      'color-variant', // v6 的 color × variant 六组
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
   'config-provider': {
     // 组件本身不产 DOM，所以这三条比的是「它对下游产生的效果」。
     // 具体下游链路见 `render/cases/shared.mjs` 的 ConfigProvider 段。

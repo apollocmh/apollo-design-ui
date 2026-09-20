@@ -333,7 +333,12 @@ const HARDCODED_PATTERNS = [
   //    负向先行，`border-radius: var(--x)`（冒号后有空格）会被判成硬编码圆角。
   //    现在把空白收进先行内部（`(?!\s*(?:…))`），两种写法都正确。
   { re: /\bborder-radius:(?!\s*(?:var\(|\$\{v\(|0(?![\d.])))/, what: '硬编码圆角' },
-  { re: /\bbox-shadow:\s*(?!var\()/, what: '硬编码阴影' },
+  // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游
+  // `components/style/compact-item.ts` 同型；动效关闭的 `@media (prefers-reduced-motion)`
+  // 也需要）；preset 阴影方块（13 色 × 1 条）由 `prepareComponentToken` 在**构建期**
+  // 从 `color1` + `colorBgContainer` 求解，本仓零运行时拿不到中间变量来
+  // `var(--apollo-*)` —— 这是 D7 的**实现形态** 之一。同 border-radius豁免 `${\w+}` 与 `none`。
+  { re: /\bbox-shadow:(?!\s*(?:var\(|\$\{[\w]+|none\b))/, what: '硬编码阴影' },
 ];
 
 let hardcodeHits = 0;

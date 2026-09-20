@@ -1,0 +1,269 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/button.mjs 从 antd 6.6.4 的 Button 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/button.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 65,
+  "cases": [
+    {
+      "id": "plain",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"></button>"
+    },
+    {
+      "id": "plain:with-text",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "prefix-cls:custom",
+      "html": "<button type=\"button\" class=\"custom css-dev-only-do-not-override-19u5a7b css-var-root custom-default custom-color-default custom-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "prefix-cls:no-props",
+      "html": "<button type=\"button\" class=\"ant-btn css-dev-only-do-not-override-19u5a7b css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "html-type:default",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "html-type:submit",
+      "html": "<button type=\"submit\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "html-type:reset",
+      "html": "<button type=\"reset\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "type:primary",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-primary apollo-color-primary apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "type:default",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "type:dashed",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-dashed apollo-color-default apollo-variant-dashed\"><span>Text</span></button>"
+    },
+    {
+      "id": "type:text",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-text apollo-color-default apollo-variant-text\"><span>Text</span></button>"
+    },
+    {
+      "id": "type:link",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-link apollo-color-link apollo-variant-link\"><span>Text</span></button>"
+    },
+    {
+      "id": "danger:alone",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-dangerous apollo-color-dangerous apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "danger:primary",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-primary apollo-dangerous apollo-color-dangerous apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "danger:dashed",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-dashed apollo-dangerous apollo-color-dangerous apollo-variant-dashed\"><span>Text</span></button>"
+    },
+    {
+      "id": "danger:text",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-text apollo-dangerous apollo-color-dangerous apollo-variant-text\"><span>Text</span></button>"
+    },
+    {
+      "id": "danger:false",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "color:danger-only",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-dangerous apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "color-variant:blue-solid",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-blue apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "color-variant:cyan-filled",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-cyan apollo-variant-filled\"><span>Text</span></button>"
+    },
+    {
+      "id": "color-variant:green-dashed",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-green apollo-variant-dashed\"><span>Text</span></button>"
+    },
+    {
+      "id": "color-variant:gold-link",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-gold apollo-variant-link\"><span>Text</span></button>"
+    },
+    {
+      "id": "variant:solid-only",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-primary apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "variant:filled-only",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "color-variant:over-type",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-primary apollo-dangerous apollo-color-blue apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "ghost:primary",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-primary apollo-color-primary apollo-variant-outlined apollo-background-ghost\"><span>Text</span></button>"
+    },
+    {
+      "id": "ghost:default",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-background-ghost\"><span>Text</span></button>"
+    },
+    {
+      "id": "ghost:dashed",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-dashed apollo-color-default apollo-variant-dashed apollo-background-ghost\"><span>Text</span></button>"
+    },
+    {
+      "id": "ghost:link",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-link apollo-color-link apollo-variant-link\"><span>Text</span></button>"
+    },
+    {
+      "id": "ghost:false",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-primary apollo-color-primary apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "size:small",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-sm\"><span>Text</span></button>"
+    },
+    {
+      "id": "size:middle",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "size:large",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-lg\"><span>Text</span></button>"
+    },
+    {
+      "id": "shape:circle",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-circle apollo-default apollo-color-default apollo-variant-outlined\"><span class=\"apollo-icon\"><i class=\"my-icon\"></i></span><span>Text</span></button>"
+    },
+    {
+      "id": "shape:round",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-round apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "shape:square",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "block",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-block\"><span>Text</span></button>"
+    },
+    {
+      "id": "icon:with-text",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span class=\"apollo-icon\"><i class=\"my-icon\"></i></span><span>Text</span></button>"
+    },
+    {
+      "id": "icon:only",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-icon-only\"><span class=\"apollo-icon\"><i class=\"my-icon\"></i></span></button>"
+    },
+    {
+      "id": "icon:placement-end",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-icon-end\"><span class=\"apollo-icon\"><i class=\"my-icon\"></i></span><span>Text</span></button>"
+    },
+    {
+      "id": "icon:position-end",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-icon-end\"><span class=\"apollo-icon\"><i class=\"my-icon\"></i></span><span>Text</span></button>"
+    },
+    {
+      "id": "loading:custom-icon",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-loading\"><span class=\"apollo-icon\"><i class=\"my-loading-icon\"></i></span><span>Text</span></button>"
+    },
+    {
+      "id": "loading:custom-icon-only",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-icon-only apollo-loading\"><span class=\"apollo-icon\"><i class=\"my-loading-icon\"></i></span></button>"
+    },
+    {
+      "id": "disabled:button",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\" disabled=\"\"><span>Text</span></button>"
+    },
+    {
+      "id": "disabled:button-false",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "href:enabled",
+      "html": "<a href=\"https://example.com\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\" tabindex=\"0\" aria-disabled=\"false\"><span>Text</span></a>"
+    },
+    {
+      "id": "href:disabled",
+      "html": "<a class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-disabled\" tabindex=\"-1\" aria-disabled=\"true\"><span>Text</span></a>"
+    },
+    {
+      "id": "href:target",
+      "html": "<a href=\"#\" target=\"_blank\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\" tabindex=\"0\" aria-disabled=\"false\"><span>Text</span></a>"
+    },
+    {
+      "id": "class:className",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined my-class\"><span>Text</span></button>"
+    },
+    {
+      "id": "class:rootClassName",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined root-class\"><span>Text</span></button>"
+    },
+    {
+      "id": "class:both",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined a b\"><span>Text</span></button>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<button data-testid=\"x\" id=\"my-btn\" type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "semantic:classNames-root",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined cn-root\"><span>Text</span></button>"
+    },
+    {
+      "id": "semantic:classNames-all",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined cn-root\"><span class=\"apollo-icon cn-icon\"><i class=\"my-icon\"></i></span><span class=\"cn-content\">Text</span></button>"
+    },
+    {
+      "id": "semantic:styles-all",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\" style=\"color:red\"><span class=\"apollo-icon\" style=\"opacity:0.5\"><i class=\"my-icon\"></i></span><span style=\"padding:2px\">Text</span></button>"
+    },
+    {
+      "id": "style:style-over-root",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-default apollo-color-default apollo-variant-outlined\" style=\"color:green\"><span>Text</span></button>"
+    },
+    {
+      "id": "config:className",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-default apollo-variant-outlined cfg-class\"><span>Text</span></button>"
+    },
+    {
+      "id": "config:classNames",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-default apollo-variant-outlined cfg-root\"><span>Text</span></button>"
+    },
+    {
+      "id": "config:color-variant",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-cyan apollo-variant-filled\"><span>Text</span></button>"
+    },
+    {
+      "id": "config:variant-solid-only",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-primary apollo-variant-solid\"><span>Text</span></button>"
+    },
+    {
+      "id": "config:shape",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-round apollo-default apollo-color-default apollo-variant-outlined\"><span>Text</span></button>"
+    },
+    {
+      "id": "config:auto-insert-space-off",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-default apollo-variant-outlined\"><span>确定</span></button>"
+    },
+    {
+      "id": "direction:rtl",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-rtl\"><span>Text</span></button>"
+    },
+    {
+      "id": "size-context",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-default apollo-variant-outlined apollo-lg\"><span>Text</span></button>"
+    },
+    {
+      "id": "disabled-context",
+      "html": "<button type=\"button\" class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-default apollo-color-default apollo-variant-outlined\" disabled=\"\"><span>Text</span></button>"
+    }
+  ]
+}

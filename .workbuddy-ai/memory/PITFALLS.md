@@ -950,3 +950,172 @@
      ⚠️ 顺序上有个陷阱：这三个文件的抖动是**跑门禁产生的**，不是你的改动 —— 若先提交、
      后跑门禁，抖动会留到下一次提交里混进别人的 diff。
 
+
+---
+
+122–124.（本 worktree 未使用；号段留给并行流 typography / config-provider / picker）
+
+125. ⚠️⚠️ **单次 Bash 调用的可用时长撑不住「一个包的 unbuild」**（2026-09-20 实测，
+     button 流）。`sleep 150` 能过，但「`utils` 的 unbuild + `icons` 的 unbuild」串成
+     一条命令就被 exit 137 杀掉 —— 而单独跑 `icons` 的 unbuild **也是** 137。
+     ⇒ 临界点不是 120s 那条老坑（121 已记），而是**即便显式传了 `timeout: 600000`
+     也仍然被 clamp**（实测 `sleep 150` 过、两个 unbuild 不过）。
+     **处方**：长门禁用 `run_in_background: true` 起，然后**在同一个 turn 内**用
+     `TaskOutput(block=true, timeout=600000)` 等结果 —— 这样进程不会因为 turn 结束
+     被带走。⚠️ 只起后台就结束 turn = 白跑（已有 8 个文件改动因此丢过）。
+     ⚠️ `| tail -N` 会让输出**全程为空**（缓冲到最后才吐），期间无法判断进度；
+     判断进度看 `packages/*/dist` 的 mtime。
+
+126. ⚠️ **worktree 的 `index.lock` 会反复出现**，哪怕用的是 `/usr/bin/git`。
+     症状：`fatal: Unable to create '.../.git/worktrees/<name>/index.lock': File exists`
+     ⇒ **每一次** git 写操作（`add` / `commit`）前都要
+     `/bin/rm -f $(find /Users/nanren/Code/apollo-design-ui/.git -name "*.lock")`
+     （注意锁在**主仓库** `.git/worktrees/` 下，不是 worktree 自己的 `.git` 文件）。
+     实测：清完立刻能 `add`；下一次 `commit` 又撞上同一把锁，再清一次才过。
+     副作用：被拦的那次 `git add` 会在 worktree 根留下 0 字节的 `_tmp_<pid>_<hex>`
+     临时文件（untracked）—— 别把它 `git add .` 进去。
+
+127. ⚠️ **antd 用 `genCssVar` 在规则内部声明的组件级变量（`--ant-btn-*`）必须展开，
+     不能照抄**（`button/style/variant.js`、`space/style/addon.ts` 同源，D38 家族）。
+     原因：`tests/build/run.mjs` 的 **B7 · ui** 只认 `packages/theme/dist/tokens.css`
+     的 `:root` 块，组件内局部声明的自定义属性它**看不到**，写错不会报错、只会静默失效。
+     展开成组合选择器后，**层叠变成"顺序即契约"**：
+     (a) 同特异性的两条只能靠声明顺序决胜 ⇒ `disabled` 必须排在 color×variant 之后；
+     (b) `ghost` 的 `bg-*` 覆盖**必须带进组合选择器**（`.btn-color-x.btn-variant-y.btn-background-ghost`）。
+     写成单独的 `.btn-background-ghost:hover`（0,4,0）会被组合的 hover 规则（0,5,0）压过，
+     **幽灵按钮的背景会变回实色** —— 这是本次最容易写错的一处。
+     (c) 展开规模：`color(16) × variant(6) + ghost(16×3)`，靠手写必然出错 ⇒ 用表驱动生成。
+
+128. ⚠️ **biome 的 `organizeImports` 把整个 export 段（含其间的注释）当成一个 chunk，
+     按 module specifier 的字典序排** —— 不是按「组件名在文件里的逻辑顺序」。
+     实测（`packages/ui/src/index.ts`）：把 Button 段插在 `Divider` 段**前面**会被判
+     `Sort these exports`，因为 `'./button'` 必须排在 `'./config-provider'` 之前、
+     `'./_internal/with-install'` 之后。**处方**：追加组件导出时先按 `'./<dir>'`
+     的字典序定位，再插注释块。
+
+129. ⚠️⚠️ **本会话的 shell 里 `NODE_OPTIONS` 被注入了 CLI 的 node shim
+     （`--require=…/node-language-shim.cjs`），它会让 vitest 的 worker 永远启动不起来**
+     （2026-09-20 实测，button 流）。
+     症状：任何 `vitest run` 都在 **60.11s** 后报
+     `[vitest-pool]: Failed to start {threads,forks} worker` /
+     `[vitest-pool-runner]: Timeout waiting for worker to respond`，
+     **且 `Test Files no tests`** —— 看着像「过滤写错」或 OOM（121 / 35 的指纹），
+     实则不然：主线程只用了 ~1.7s CPU（`time` 可证），说明它在**空等**，不是算力不足。
+     判据链：换 `--pool` / `--maxWorkers` / `--environment=node` / 最小 config
+     / 关沙箱**全都复现** ⇒ 排除配置；`worker_threads` 与 `child_process.spawn`
+     裸测**都能通** ⇒ 排除进程能力；最后 `env | grep NODE_OPTIONS` 才现形。
+     **处方**：跑 vitest 一律
+     `env -u NODE_OPTIONS node ./node_modules/vitest/vitest.mjs run …`
+     （`env -u` 比 `export NODE_OPTIONS=` 稳：后者对某些子进程仍可见）。
+     ⚠️ 该 shim 会在**每个**被 spawn 的 worker 里再 `--require` 一次，
+     于是 worker 卡在 boot、主进程卡在 `withTimeout(..., START_TIMEOUT = 6e4)`。
+     顺带：这条坑会让「跑一次测试」固定烧掉 60s，排查时别误判成「测试很慢」。
+
+130. 🚨🚨 **视觉差异先怀疑「我方缺声明」，不要先归类 PLATFORM。**
+     实测（2026-09-20 button 收口）：上一轮把 27/27 的 0.23%–2.33% 差异登记为
+     「PLATFORM：Chrome glyph hinting 抖动」，还断言「React 侧跑两次也会不同截图」。
+     复核发现**两条依据都假**：`--mode baseline` 重生成 27 张基线后 `git status`
+     **零变化** ⇒ 截图是确定的。真因是我方 `<button>` 没设 `line-height`
+     （见 131）—— **一个 BUG 被写成了 PLATFORM**（`AGENTS.md` §4.3 明令禁止）。
+     **处方**：① 任何「平台抖动」结论必须先用 `--mode baseline` 重跑 + `git status`
+     零变化来**证伪自己**；② 视觉差异的排查顺序是「量几何（`getBoundingClientRect`
+     的 x/y/w/h 到小数）→ 量计算样式（`line-height` / `font-family` / `transform`）
+     → 最后才谈平台」。本次一量就现形：span 高 17px vs 22px、y 差 2.5px。
+
+131. ⚠️⚠️ **`<button>` 不会自动继承 `line-height` —— 组件必须自带。**
+     antd 的 Button **不**调用 `resetComponent`（`antd/es/button/style/index.js` 的
+     `genStyleHooks` 只拼 Shared / Size / Variant / Group），它靠
+     `antd/dist/reset.css` 的 `input,button,…{line-height:inherit}` 从环境继承。
+     本仓 `BASE_CSS`（`packages/ui/src/style/index.ts:93`）**没有**这条表单控件归一化
+     （该文件自己把「button 重置」列为未决缺口）⇒ 我们的 `<button>` 退回 UA 的
+     `line-height:normal`。后果：文字/图标 span 高 17px vs 22px、基线差 ~2.5px，
+     L6 直接全红。
+     **处方**：凡是渲染原生 `<button>` / `<input>` / `<select>` 的组件，都要在**组件根**
+     上显式 `line-height:var(--apollo-line-height)`（divider / empty / space / spin 的
+     既有做法）。⚠️ 该值必须**无单位**（`lineHeight: number`），这样大/小号字号会等比缩放，
+     与 antd「继承无单位行高」的语义一致。
+
+132. ⚠️ **`@apollo-design/icons` 的 `.apollo-icon` 基线样式没有被 ui 的静态样式层消费。**
+     该基线在 `packages/icons/src/style.ts` 的 `getIconStyle()` 里（对应 antd 运行时注入的
+     `.anticon`），注释与 README 都写明「注入交给 ui 的静态样式层」—— 但 `packages/ui`
+     里**从未 import 它**（`getIconStyle` 只有定义与测试，无消费方），且 icons 包
+     `exports` 只有 `"."`、没有独立 `style.css` 出口 ⇒ 消费方**没有任何途径**拿到它。
+     后果：组件里的图标 span 退回继承行高（22px）而 antd 的 `.anticon` 是 `line-height:0`
+     ⇒ svg 高 2px、L6 红（本次 `loading` 三例）。
+     **处方（组件侧自保）**：渲染图标处显式补齐 `display:inline-flex;align-items:center;
+     line-height:0` 与 `> *{line-height:1}`。**根治**：让 ui 样式层把
+     `getIconStyle(iconPrefixCls)` 并进产物（属跨组件基础设施，未做，登记在此）。
+
+133. ⚠️⚠️ **L6 视觉门禁吃的是 `packages/ui/dist`，不是 `src`。**
+     `tests/visual/build.mjs` 打的是 `@apollo-design/ui` 的**已构建产物**。
+     改了 `packages/ui/src/<c>/style/**` 后直接跑 `run.mjs --mode compare`，
+     它用的是**旧 dist** ⇒ 数字与改动前**一字不差**。
+     ⭐ **判据**：compare 的差异率与上次**完全相同**（到小数点后三位）时，
+     第一反应必须是「产物没重建」，而不是「改动无效」。
+     **处方**：`cd packages/ui && CODEBUDDY_SAFE_DELETE_ENABLED=0 ../../node_modules/.bin/unbuild`
+     重建 dist，再跑 compare。（`dist/` 被 gitignore，不入库。）
+
+134. ⚠️ **`registry:validate` 的 E10 会把「注释里的属性名」当成声明来判。**
+     `HARDCODED_PATTERNS` 用 `text.match(re)` 逐文件匹配，**不区分注释与代码**。
+     实测：一条注释里写了字面量 `` `border-radius:` ``（其后不是 `var(` / `${v(` / `0`），
+     就让 `registry:validate` 的 E10 一直红 —— 而代码里的 `border-radius` 全是合法的。
+     同类：`box-shadow` 的负向先行只豁免 `var(`，于是 `box-shadow:none`（antd
+     `variant.js:249` disabled / `:36` ghost 都真实使用）与 `box-shadow:${r.shadow}`
+     都被误判 ⇒ 需要给正则补 `none\b` 与 `\$\{[\w]+` 豁免。
+     **处方**：① 注释里不要写「CSS 属性名 + 冒号」的字面量；② 新增组件样式若用了
+     中间变量拼值，优先**内联**成 `${v('token')}` 形式（E10 只豁免紧跟冒号的
+     `var(` / `${v(`），别先绑到变量再插值；③ 报错定位看**行号**，别只看「哪个文件」。
+
+     ⚠️ **那条 `box-shadow` 豁免是全局门禁的「放宽」，不是「修好」—— 必须知道它的兜底在哪。**
+     E10 扫的是**源码文本**，看不见插值后的值，所以「值是变量」这条它只能靠
+     「紧跟冒号的是 `var(` / `${…}` / `none`」来近似。放宽后，
+     `` `box-shadow:${随便一个标识符}` `` 就能过 E10（`border-radius` 的
+     `${v(` 更窄，两者的不对称是真实存在的）。**补偿性门禁**是 L1 的
+     `button/__tests__/style.test.ts`：它对 `genButtonStyle()` 的**产物 CSS** 断言
+     「字面色值只允许 `rgba(`，且去重后 ≤ 13 个」⇒ 想用 `#f00` 之类绕过会红；
+     再叠上 B7 的「每个 `var(--apollo-*)` 都必须在 `tokens.css` 声明」。
+     **残留风险**：命名色（`red`）这类既非 `#hex` 也非 `rgba(` 的写法两层都看不见。
+     ⇒ 新增组件若要用 `box-shadow`，请照 button 的写法（值全部由 `v('token')` 拼出），
+     别把这条豁免当成「可以随便内联阴影」。
+
+135. 🚨 **`NodeRenderer` 只挡住「VNode 变量」，挡不住「组件对象」—— 同一个坑已踩两次。**
+     `empty/components/NodeRenderer.ts` 的 `normalizeNode()` 只做
+     `isVNode(node) ? cloneVNode(node) : node`。注释里写的「平台差异的落点」是对的，
+     但**不完整**：组件对象不是 VNode，会被**原样返回**，模板再 `toDisplayString`
+     成字面量文本 **`[object Object]`**（不是渲染成空，也不是报错 —— 最难发现的那种）。
+     第一次踩：`ImageNode`（已单独有 `h(node as Component)` 分支）；
+     第二次踩（2026-09-20 button 收口）：`icon` / `loading.icon` 传
+     `SearchOutlined`（组件对象）时 `<span class="apollo-btn-icon">[object Object]</span>`。
+     ⭐ **为什么容易漏**：`vue-tsc` 当时是红的（`TS2322: DefineComponent is not assignable
+     to VNodeChild`），修法是**放宽类型**（`ButtonIcon = VNodeChild | Component`）——
+     类型一放宽，编译就绿了，**但运行期缺陷一个字都没修**。
+     ⇒ 「类型放宽」与「渲染归一化」是**两件事，必须同时做**，且只有 L1 用例能证明后者。
+     **处方**：① 任何「可能收到组件」的 prop（`icon` / `image` / `indicator` / `avatar`…）
+     都要在进 `NodeRenderer` **之前** `h()` 包一层；② 判据无歧义：
+     `VNodeChildAtom = VNode | string | number | boolean | null | undefined | void`
+     （`@vue/runtime-core` `runtime-core.d.ts:1226`）**不含函数形态**，所以
+     「非原始值且非 VNode 且非数组」只可能是组件；
+     ③ 别在归一化处 `cloneVNode`（`NodeRenderer` 已做，VNode 可变，重复克隆丢身份）；
+     ④ 每条这样的 prop 至少配一条断言 `expect(w.text()).not.toContain('[object Object]')`
+     的 L1 用例 —— 只断言「元素存在」会漏，因为文本节点也能匹配到父元素。
+
+136. ⚠️ **「多写一层兜底」= 死代码 + 覆盖率噪音 + 悄悄偏离上游 —— 覆盖率报告是它的探测器。**
+     实测（2026-09-20 button 收口）：`Button.vue` 的 loading 分支写成
+
+         if (cfg.delay > 0) {
+           if (cfg.loading) { innerLoading.value = true; return; }   // ← 上游没有这一支
+           delayTimer = setTimeout(() => { innerLoading.value = true; }, cfg.delay);
+           return;
+         }
+
+     而上游（`antd/es/button/Button.js:148-156`）是**无条件**
+     `setInnerLoading(true, { ms: delay })`。那一支在本仓**可证明不可达**：
+     `loadingOrDelay` 的构造（`:281`）保证 `loading === true ⇒ delay <= 0`，
+     与 `delay > 0` 矛盾。⇒ 行为上「等价」，但它同时是：
+     ① 一段读起来像有意义的死代码；② 覆盖率上永久红着的 2 行（Lines 98.13%）。
+     ⭐ **判据**：`--coverage` 里出现「从未被任何用例走到的行」，第一反应不是
+     「补个用例把它盖住」，而是先问**「这一支在真实输入域里可达吗？」**。
+     不可达 ⇒ 删掉，别写一条假用例去喂它（那正是反模式 A1：用形式上的用例掩盖）。
+     可达 ⇒ 说明它是真实分支，补用例。
+     **处方**：移植上游逻辑时逐支对照（上游几个 `if` 就写几个），
+     不要凭「防御性编程」的直觉多加分支；`Lines 100%` 是最好的自查信号。
