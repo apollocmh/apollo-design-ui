@@ -122,7 +122,8 @@ export function genSkeletonStyle(prefixCls: string): string {
   const IMAGE_BASE = `calc(${CONTROL} * ${IMAGE_SIZE_BASE_MULTIPLIER})`;
 
   /** `width` + `height` + `line-height` 三件套（antd 的 `genSkeletonElementCommonSize`）。 */
-  const box = (size: string): string => `  width:${size};\n  height:${size};\n  line-height:${size};`;
+  const box = (size: string): string =>
+    `  width:${size};\n  height:${size};\n  line-height:${size};`;
   /** `width` + `min-width` + 三件套（antd 的 `genSkeletonElementButtonSize` / `InputSize`）。 */
   const blockBox = (size: string, times: number): string =>
     [

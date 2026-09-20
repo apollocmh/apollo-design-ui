@@ -351,5 +351,4 @@ export type SkeletonNodeSlot = () => VNodeChild;
  * `ConfigProvider` 的 `skeleton` 配置。与 antd 的
  * `SkeletonConfig = ComponentStyleConfig & Pick<SkeletonProps,'classNames'|'styles'>` 一致。
  */
-export type SkeletonConfig = ComponentStyleConfig &
-  Pick<SkeletonProps, 'classNames' | 'styles'>;
+export type SkeletonConfig = ComponentStyleConfig & Pick<SkeletonProps, 'classNames' | 'styles'>;

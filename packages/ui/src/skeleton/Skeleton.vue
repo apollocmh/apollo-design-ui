@@ -55,8 +55,6 @@ import { computed, ref, type VNodeChild, watchEffect } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import Element from './Element.vue';
-import Paragraph from './Paragraph.vue';
-import Title from './Title.vue';
 import type {
   SkeletonConfig,
   SkeletonElementProps,
@@ -66,6 +64,8 @@ import type {
   SkeletonSemanticStyles,
   SkeletonTitleProps,
 } from './interface';
+import Paragraph from './Paragraph.vue';
+import Title from './Title.vue';
 
 defineOptions({ name: 'ASkeleton', inheritAttrs: false });
 
@@ -171,10 +171,7 @@ function getTitleBasicProps(avatar: boolean, paragraph: boolean): { width?: stri
  *    所以「不传 `rows`」在 `Skeleton` 内部不会发生 —— 与 `Paragraph.vue`
  *    里那个「两个不同默认值」的陷阱无关。
  */
-function getParagraphBasicProps(
-  avatar: boolean,
-  title: boolean,
-): { width?: string; rows: number } {
+function getParagraphBasicProps(avatar: boolean, title: boolean): { width?: string; rows: number } {
   const basicProps: { width?: string; rows: number } = { rows: 2 };
   if (!avatar || !title) basicProps.width = '61%';
   if (!avatar && title) basicProps.rows = 3;

@@ -182,8 +182,45 @@ Component Token 见 `/tmp/antd-src/package/es/skeleton/style/token.d.ts`。
 
 ---
 
-## 8. 待验证 / 未决
+## 8. L6 视觉现状：**9 / 24**（根因已定位到共享层）
 
-- `Title` / `Paragraph` 的内部 DOM（行数与宽度数组的落地形态）需读 `Title.js` / `Paragraph.js` 确认。
+`--mode compare` 实测 **通过 9 / 24**，失败项**全部**是 `size-mismatch`，且**我方一致偏高**
+（basic +55、avatar +19、round +33、paragraph +66、title +66，单位 px）。
+
+### 根因：`BASE_CSS` 缺 antd `reset.css` 的**元素级 margin 重置**
+
+antd 的 skeleton 样式**只设 `margin-block-start`**，end 方向完全依赖全局 reset
+（`/tmp/antd-src/package/es/skeleton/style/index.js:245,258`）：
+
+```css
+/* antd reset.css */
+h1,h2,h3,h4,h5,h6 { margin-top: 0; margin-bottom: 0.5em; }
+ol, ul, dl        { margin-top: 0; margin-bottom: 1em; }
+```
+
+而我们的 `packages/ui/src/style/index.ts` 的 `BASE_CSS` 只有：
+
+```css
+*{box-sizing:border-box} html,body{margin:0;padding:0} /* + 字体 */
+```
+
+⇒ `<h3 class="-title">` 与 `<ul class="-paragraph">` **保留了浏览器默认的 `margin-block-end: 1em`**
+⇒ 每个骨架都偏高。
+
+### 为什么不在组件内自保
+
+antd reset 用的是 `0.5em` / `1em` 这类**非 token 值** —— H9 禁止组件内硬编码间距，
+硬写进 skeleton 样式等于把「全局 reset 缺失」固化进组件层，将来补了 reset 会**重复计算**。
+
+⇒ **登记为共享层缺口**（与 typography 的 G7「`BASE_CSS` 缺口」同一家族）：
+   正解是给 `BASE_CSS` 补上 antd reset.css 的元素级重置（注意要用 `em` 且与 antd 逐条对齐），
+   那会同时影响 **所有**渲染 `h1~h6` / `ul` / `ol` / `p` 的组件 ⇒ 需单独评估与全量重跑视觉基线。
+
+⚠️ **不因为这项缺口就把 `visualStatus` 标 done 或调阈值** —— 24 组里只有 9 组通过，
+   这是真实的可观测差异，`compare.mjs` 的阈值一行未改。
+
+## 9. 待验证 / 未决
+
 - 动画：先确认 `packages/motion` 是否已有可用能力，否则用纯 CSS 并登记。
 - `Skeleton.Node` 的 `children` 语义（`Node.js`）。
+- 剩余层：L2 interaction / L3 type / L5 a11y / 变异验证 / 文档 / registry 全维度。
