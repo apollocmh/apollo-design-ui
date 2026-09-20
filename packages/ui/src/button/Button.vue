@@ -126,8 +126,18 @@ const prefixCls = computed(() => getPrefixCls('btn', props.prefixCls));
 /** 默认插槽的 VNode 列表。上游的 `toArray(children)`（`:160`）。 */
 const childNodes = computed(() => (slots.default ? slots.default() : []));
 
-/** 是否有内容。判据含 `children !== 0`（`:384`）—— `0` 算有内容。 */
-const hasChildren = computed(() => !!slots.default);
+/**
+ * 是否有内容。判据含 `children !== 0`（`:384`）—— `0` 算有内容。
+ *
+ * ⚠️ 必须**经由 `childNodes`** 判定，不能直接 `!!slots.default`。
+ *    Vue 的插槽是**函数**，在渲染函数之外调用它会触发
+ *    `[Vue warn]: Slot "default" invoked outside of the render function`。
+ *    而 `needInserted` 是在 `onMounted` / `onUpdated` 里读的（对应上游那个无依赖数组的
+ *    effect）—— 那条路径上 `childNodes` 若是**首次**求值就会踩到这个警告。
+ *    让 `hasChildren`（模板里的 `v-if`，渲染期必读）先把它读一遍，
+ *    `computed` 的缓存就保证了后续读取不再调用插槽函数。
+ */
+const hasChildren = computed(() => childNodes.value.length > 0);
 
 /** `icon` prop 与 `icon` 插槽都能传图标，**prop 优先**。 */
 const mergedIcon = computed<VNodeChild>(() => props.icon ?? (slots.icon ? slots.icon() : undefined));
