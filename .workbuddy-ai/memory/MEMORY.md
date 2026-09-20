@@ -209,8 +209,21 @@ L0 utils/theme/icons ｜ 测试 test-utils
     （E19 早就要求 `stripComments()`，E10 没有。）
 11. ⚠️ `registry/components.json` 的 `status` **没有 `in_progress`** 这个取值
     （`COMPONENT_STATUS` 里没有）⇒ 会报 `E2 ... 取值非法`。用 **`implementing`**。
+13. 🚨🚨 **用 oracle 判定争议时，必须把「键不存在」与「键存在但值为 `undefined`」分开测**
+    （2026-09-20 我亲自踩的）。
+    React 的 `'loading' in props` 对这两种情形**结论相反**：
+    - **不传** `loading` ⇒ 键不存在 ⇒ `!('loading' in props)` 为真 ⇒ **渲染骨架**
+    - **显式传 `loading={undefined}`** ⇒ 键存在 ⇒ **渲染 children**
+
+    ⚠️ 我只测了前者就断言「上游未传时同样渲染骨架 ⇒ 脚手架注释与源码不符」——
+    **测错了 case**，冤枉了一条本来正确的注释（还差点去「修」它）。
+    真实差异只在第二种情形（Vue 的 prop 没有「键存在」概念 ⇒ PLATFORM 差异）。
+
+    ⇒ **教训**：oracle 的用例设计本身就是结论的一部分。
+    「我测过」不等于「我测对了那一格」—— 下结论前先问：**还有哪些相邻分支没测？**
+
 12. 🚨 **`exit 137` + 零日志 ≠ OOM，先怀疑「前台默认 120s 超时」**（PITFALLS 121）。
-   实测：全仓构建门禁（`tests/build/run.mjs` 约 7 分钟）在前台连续被杀，
+    实测：全仓构建门禁（`tests/build/run.mjs` 约 7 分钟）在前台连续被杀，
    一度被当成「16G 机器 OOM」。用 `sleep 90` 存活 + 心跳才定位到是超时。
    ⇒ **判据：先看命令平时要跑多久**；超过 2 分钟的一律后台跑或显式加 `timeout`。
    ⚠️ 这条**修正**了仓库里长期「全仓门禁/全仓 vitest 会 OOM」的判断 ——
