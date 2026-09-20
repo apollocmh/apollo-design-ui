@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "id": "skeleton/blocks",
+  "component": "skeleton",
+  "description": "三个块（avatar / title / paragraph）存在性组合的**互锁推导矩阵** —— 这是本组件**最容易写错**的一条判据。用 `variants` 展开 `avatar` × `title` × `paragraph` 的 8 种组合，钉住三组推导（`Skeleton.js:23-62`）：① avatar 的 `size` 恒为 `large`、`shape` = `hasTitle && !hasParagraph ? square : circle`；② title 的 `width` 仅在「有 paragraph」时给（`!hasAvatar` ⇒ 38%，`hasAvatar` ⇒ 50%）；③ paragraph 的 `width=61%` 仅在「avatar 与 title 不全在」时给，`rows` = `!hasAvatar && hasTitle ? 3 : 2`。⚠️ 三者**互相依赖**，只测单一组合发现不了推导错误 —— 必须全矩阵。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "avatar": [null, false, true],
+    "title": [null, false, true],
+    "paragraph": [null, false, true]
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -110,6 +110,30 @@ return children ?? null;
 ⇒ `const showSkeleton = props.loading !== false;`
 （PITFALLS 46 / D21 同源，这次受害的是 `in` 判据。）
 
+#### ⚠️ 与脚手架注释的分歧 —— 已由 compat oracle **实证判定**
+
+`packages/ui/src/index.ts` 预生成的注释写：
+「`loading={undefined}` 是本组件**唯一**与 antd 的行为差异（上游渲染 children、我们渲染骨架）」。
+
+`tests/compat/baseline/skeleton.mjs` 的机械 oracle（`renderToStaticMarkup` 直出）实测：
+
+```html
+<!-- loading:unset ⇒ 上游**渲染骨架** -->
+<div class="apollo …"><div class="apollo-section">
+  <h3 class="apollo-title" style="width:38%"></h3>
+  <ul class="apollo-paragraph"><li></li><li></li><li style="width:61%"></li></ul>
+</div></div>
+
+<!-- loading:false + children ⇒ 直接就是 children，**无包裹层** -->
+<span>X</span>
+```
+
+⇒ **上游未传 `loading` 时同样渲染骨架** —— 脚手架那条注释**与 antd 源码不符**。
+按 `AGENTS.md` §5（antd 源码 > 仓库文档），取源码语义 `loading !== false`。
+
+⚠️ 修正那条注释涉及 `packages/ui/src/index.ts`（**共享文件**），不在本组件域内，
+已登记为待办，未擅自改动。
+
 ### 4.2 三个默认值与外部 props 的合并顺序（`Skeleton.js:112-155`）
 
 统一形态：`{ 语义类名, prefixCls, ...基础props(由其它两项推导), ...用户对象, style }`
