@@ -138,6 +138,24 @@ L0 utils/theme/icons ｜ 测试 test-utils
    实测：第一次派活返回 429，但 subagent **已经被创建并干了一段**（留下 1107 行 WIP）。
    ⇒ **接手时先 `git status` + `git diff --stat`，别信交接单里的「未开工」。**
    换模型（`model: "reasoning"`）可以绕过限流。
+
+   🚨🚨 **升级版（2026-09-20 我亲自踩的）**：429 的措辞是
+   `Failed to execute task ... **after subagent was created**` —— 它**很可能已经跑了很久、
+   甚至已经提交了**。实测：`skeleton` 那条线被 429 报错后，实际已提交
+   `e3b7238`（2183 行 / 16 文件：9 个 SFC + Token + 样式）。
+
+   ⚠️⚠️ **我在不知情的情况下用 `Write` 覆盖了它的 `Skeleton.vue` / `interface.ts` /
+   `index.ts`** —— 删掉 556 行、换成我的 304 行，还把 `Avatar.vue` 的类型搞坏，
+   凭空造出 **96 个 vue-tsc 错误**（它原本是 0）。`git checkout --` 才救回来。
+
+   ⇒ **硬规矩：往任何组件目录写文件前，先跑**
+   ```bash
+   git log --oneline <base>..HEAD        # 有没有别人（含被 429 的 agent）的提交
+   git ls-tree -r --name-only <base> -- packages/ui/src/<component>/
+   git status --short
+   ```
+   **`Write` 工具默认 overwrite**，不会提醒你那里已有东西。
+   这条同时适用于「接手子会话」与「整合会话自己动手做组件」两种场景。
 3. ⭐ **交接单里的「未开工」是开工前的快照，不是现场。** 接手先看工作区。
 
 ### 🚨 合并时的两个坑（第八轮首次遇到，老规矩要订正）
