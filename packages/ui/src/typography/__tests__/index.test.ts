@@ -748,20 +748,58 @@ interface LayoutState {
 }
 
 /**
+ * 被桩读取过尺寸的测量容器的**内联样式快照**。
+ *
+ * 为什么要在桩里记录：测量容器只存在一帧（PREPARE / START / 二分中点各一帧），
+ * 用例结束时它们已经从 DOM 上摘掉了 —— 事后 `querySelector` 什么也查不到。
+ * 桩是唯一一个「容器还在 DOM 上时」的观察点，所以在这里快照。
+ */
+interface MeasureBoxSnapshot {
+  width: string;
+  display: string;
+  position: string;
+  top: string;
+  lineClamp: string;
+}
+
+/**
  * 装上布局桩。
  *
  * `clientHeight`：有 `-webkit-line-clamp: N` 的盒子被**裁到** N 行；没有的（二分中点）取自然高度。
  * `scrollHeight`：恒取自然高度（`overflowing` 为假时与 `clientHeight` 相等 ⇒ 不溢出）。
+ *
+ * ⚠️⚠️ 桩里有一条**真实浏览器行为**，不是随手加的：**`display:inline` 的元素
+ *     `clientHeight` 恒为 0**（inline 盒子没有块级高度）。
+ *
+ *     没有这条，桩会把一个真实缺陷放过去：二分中点那个容器只带 `measureStyle`
+ *     （没有 `lineClipStyle`，因为它要量自然高度），若它没被显式设成
+ *     `display:block`，浏览器里 `clientHeight === 0` ⇒ `midHeight > ellipsisHeight`
+ *     永远为假 ⇒ 二分一路收敛到 `maxIndex` ⇒ 裁剪结果是**整段原文**。
+ *     2026-09-20 L6 视觉比对正是这样抓到它的（`ellipsis` / `semantic` 三个 viewport
+ *     全部 `size-mismatch`：Vue 294px vs React 184px）。所以桩必须跟着真实浏览器走。
  */
 function installLayoutMock(state: LayoutState = { overflowing: true }) {
   const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
   const originClient = Object.getOwnPropertyDescriptor(proto, 'clientHeight');
   const originScroll = Object.getOwnPropertyDescriptor(proto, 'scrollHeight');
 
+  /** 被读过尺寸的测量容器（快照，按读取顺序）。 */
+  const readBoxes: MeasureBoxSnapshot[] = [];
+
   Object.defineProperty(proto, 'clientHeight', {
     configurable: true,
     get(this: HTMLElement) {
       if (!isMeasureBox(this)) return 0;
+      readBoxes.push({
+        width: this.style.width,
+        display: this.style.display,
+        position: this.style.position,
+        top: this.style.top,
+        lineClamp: this.style.webkitLineClamp,
+      });
+      // 真实浏览器：`display:inline`（含未声明）的盒子没有块级高度。
+      // `lineClipStyle` 的 `-webkit-box` 与 `MEASURE_TEXT_STYLE` 的 `block` 都不是 inline。
+      if (!this.style.display || this.style.display === 'inline') return 0;
       const clamp = Number(this.style.webkitLineClamp);
       const natural = naturalHeight(this);
       // 有 `-webkit-line-clamp` 的盒子被**裁到** N 行；没有的（二分中点）取自然高度。
@@ -779,6 +817,7 @@ function installLayoutMock(state: LayoutState = { overflowing: true }) {
 
   return {
     state,
+    readBoxes,
     restore() {
       // jsdom 把 `clientHeight` / `scrollHeight` 定义在 `Element.prototype` 上，
       // 所以这里 `HTMLElement.prototype` 上通常**没有**自有描述符 —— `delete` 即可复原。
@@ -908,6 +947,36 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
     // 反证「最大」：再多一个字符就放不下了（会多出一行 ⇒ 超出 ellipsisHeight）
     const oneMore = Math.max(1, Math.ceil((expected + 1 + ELLIPSIS_STR.length) / CHARS_PER_LINE));
     expect(oneMore * LINE_HEIGHT).toBeGreaterThan(MOCK_ELLIPSIS_HEIGHT);
+  });
+
+  it('★ 测量容器必须 `position:fixed` + 非 `inline`（antd `MeasureText` 的六条基础样式）', async () => {
+    // 为什么这条必须单独钉住：测量容器只在测量那一帧存在，事后查不到；
+    // 而它一旦少了 `display:block`，浏览器里 `clientHeight` 恒为 0 ⇒ 二分退化成
+    // 「不裁剪」（见 `installLayoutMock` 的说明）。上一条用例的桩已经会因此变红，
+    // 这一条则把**具体缺了哪几条**钉死，让回归时能一眼看出原因。
+    layout = installLayoutMock();
+    const w = mountText({ ellipsis: { onEllipsis: () => {} } }, LONG_TEXT);
+    await measureWithWidth(w, 220);
+
+    // 1. 二分中点那个容器（唯一带 `top:400px` 的）确实被量过 —— 否则下面的断言是空转
+    const midBoxes = layout.readBoxes.filter((box) => box.top === '400px');
+    expect(midBoxes.length).toBeGreaterThan(0);
+
+    // 2. 每一个被量过的容器都必须在视口外固定定位、且是块级盒子
+    for (const box of layout.readBoxes) {
+      expect(box.position, `测量容器缺 position:fixed：${JSON.stringify(box)}`).toBe('fixed');
+      expect(box.display, `测量容器是 inline（clientHeight 恒为 0）：${JSON.stringify(box)}`)
+        .not.toBe('inline');
+      expect(box.display).not.toBe('');
+    }
+
+    // 3. 二分中点的 `top` 覆盖掉基础样式的 `top:0`（antd 用 `top: 400` 覆盖）
+    expect(midBoxes.every((box) => box.top === '400px')).toBe(true);
+
+    // 4. 测量结束后容器必须**全部回收**（残留会在截图里留下半透明红块）
+    expect(
+      w.findAll('span[aria-hidden="true"]').filter((node) => node.attributes('style')?.includes('position: fixed')).length,
+    ).toBe(0);
   });
 
   it('★ 未溢出时内容完整、没有省略号节点（且**不**上报 —— 初始值就是 false）', async () => {

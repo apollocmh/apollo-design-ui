@@ -88,6 +88,37 @@ const lineClipStyle: CSSProperties = {
   WebkitBoxOrient: 'vertical',
 };
 
+/**
+ * 测量容器的**基础**内联样式 —— antd `Base/Ellipsis.js` 里 `MeasureText` 组件
+ * 硬编码的那六条。
+ *
+ * ⚠️⚠️ 这六条**一条都不能少**，它们不是「调试用的红色背景」那么无关紧要：
+ *
+ *   - `position:fixed` + `left/top`：把测量容器挪出正常流，否则它会把父级撑高，
+ *     而且 `top:400px` 那条（二分的中点）会真的把页面顶开 400px。
+ *   - **`display:block`**：这是**功能性**的一条。二分中点用的容器只带 `measureStyle`
+ *     （没有 `lineClipStyle`，因为它要量「自然高度」），如果 `display` 是默认的
+ *     `inline`，`clientHeight` **恒为 0** ⇒ `midHeight > ellipsisHeight` 永远为假 ⇒
+ *     二分一路收敛到 `maxIndex` ⇒ 裁剪结果是**整段原文**，一个字符都没省。
+ *     2026-09-20 由 L6 视觉比对抓到（`typography/ellipsis__light__*` 与
+ *     `typography/semantic__light__*` 的 `size-mismatch`：Vue 294px vs React 184px）。
+ *   - `pointerEvents:none`：不挡交互。
+ *   - `backgroundColor`：antd 故意留的半透明红块，调试期能一眼看出「这里在测量」。
+ *     保留它 —— 它是与 antd 的可比对面之一，也让我们在截图里能立刻发现
+ *     「测量容器没被回收」这类时序问题。
+ *
+ * ⚠️ 与 antd 的差异（PLATFORM）：antd 写 `left: 0` / `top: 0`（数字），React 补 `px`；
+ *    这里写成字符串，理由见文件头第 2 条（PITFALLS 32）。
+ */
+const MEASURE_TEXT_STYLE: CSSProperties = {
+  position: 'fixed',
+  display: 'block',
+  left: '0',
+  top: '0',
+  pointerEvents: 'none',
+  backgroundColor: 'rgba(255, 0, 0, 0.65)',
+};
+
 /** 传给默认插槽的参数。对应 antd 的 `children(nodeList, canEllipsis)` 渲染属性。 */
 export interface EllipsisSlotProps {
   /** 当前该渲染的节点列表（可能是裁剪后的）。 */
@@ -308,7 +339,12 @@ export const Ellipsis = defineComponent({
             {
               'aria-hidden': true,
               ref: needEllipsisRef,
-              style: { ...measureStyle.value, ...lineClipStyle, WebkitLineClamp: props.rows },
+              style: {
+                ...MEASURE_TEXT_STYLE,
+                ...measureStyle.value,
+                ...lineClipStyle,
+                WebkitLineClamp: props.rows,
+              },
             },
             // ⚠️ 同一份内容会被渲染到多个测量容器里，必须克隆（否则 DOM 会被搬走）
             cloneNodes(fullContent.value),
@@ -319,6 +355,7 @@ export const Ellipsis = defineComponent({
               'aria-hidden': true,
               ref: descRowsEllipsisRef,
               style: {
+                ...MEASURE_TEXT_STYLE,
                 ...measureStyle.value,
                 ...lineClipStyle,
                 WebkitLineClamp: props.rows - 1,
@@ -331,7 +368,12 @@ export const Ellipsis = defineComponent({
             {
               'aria-hidden': true,
               ref: symbolRowEllipsisRef,
-              style: { ...measureStyle.value, ...lineClipStyle, WebkitLineClamp: 1 },
+              style: {
+                ...MEASURE_TEXT_STYLE,
+                ...measureStyle.value,
+                ...lineClipStyle,
+                WebkitLineClamp: 1,
+              },
             },
             renderSlot([], true),
           ),
@@ -350,7 +392,7 @@ export const Ellipsis = defineComponent({
             {
               'aria-hidden': true,
               ref: cutMidRef,
-              style: { ...measureStyle.value, top: '400px' },
+              style: { ...MEASURE_TEXT_STYLE, ...measureStyle.value, top: '400px' },
             },
             renderSlot(sliceNodes(nodeList.value, cutMidIndex.value), true),
           ),

@@ -41,7 +41,9 @@
  *    「Component Token → CSS 变量」这一段（见 `style/token.ts` 的说明），
  *    所以直接内联 `0.5em` / `1.2em`。渲染结果相同，差异 D7 家族。
  * 3. **没有 `genCommonStyle` 与 `getResetStyles` 那两段**（见下面 §「跳过了什么」）。
- * 4. **多一段标题/段落上边距归零的补偿**（见 `getHeadingMarginReset` 的说明）。
+ * 4. **多两段零运行时补偿**：标题/段落上边距归零（`getHeadingMarginReset`）与
+ *    操作按钮的字体继承（`getActionButtonFontReset`）—— 都是为了补 `BASE_CSS`
+ *    尚未覆盖的 antd 全局 reset。两段都只命中组件自己的类名，不外溢。
  *
  * ── 跳过了什么，为什么 ────────────────────────────────────────────────────────
  *
@@ -52,7 +54,18 @@
  * | `genCommonStyle` 的 `box-sizing` 部分 | `.apollo-typography::before,::after` 与 2 条 `[class^=]` 后代规则 | **跳过** |
  * | `genCommonStyle` 的字体部分 | `.apollo-typography{font-family;font-size}` | **保留** |
  * | `getResetStyles` 的 `genLinkStyle` | 7 条**全局** `a{...}` 规则（出现两次） | **跳过** |
- * | `getResetStyles` 的 `genIconStyle` | `.anticon{...}` 图标重置 | **跳过** |
+ *
+ * ⚠️ 这里**没有**「`getResetStyles` 的 `genIconStyle`」这一行 —— 早期版本写过，
+ *    是**错的**：antd 6.6.4 的 `es/typography/style/mixins.js` 的 `getResetStyles`
+ *    里没有任何图标相关规则（grep `anticon` 在 `es/typography/` 下零命中）。
+ *    `.anticon` 的基础样式来自**两个别处**：
+ *      1. `@ant-design/icons` 的 `useInsertStyles`（图标挂载时运行时注入 `<style>`）；
+ *      2. `antd/es/theme/util/useResetIconStyle`（`ConfigProvider` 调 `genIconStyle`）。
+ *    我们的对应物是 `@apollo-design/icons` 的 `getIconStyle(iconPrefixCls)`（D15：
+ *    只导出、不注入），**而它目前没有任何地方消费** ⇒ 图标没有基础样式
+ *    （`display:inline` 而非 `inline-flex`、没有 `vertical-align:-0.125em`）。
+ *    首个暴露它的组件就是 Typography 的 `copyable`：复制按钮比 antd 矮 1px、
+ *    图标下移。缺口登记在 README §7（属于 foundation 层的接线缺口，不在本组件文件内）。
  *
  * 为什么字体那一条**保留**（与 `divider` / `empty` / `spin` 的做法不同）：
  *
@@ -68,13 +81,12 @@
  *   （`divider` / `empty` / `spin` 连字体那一条也跳过了 —— 那是它们的既有取舍，
  *   不是本组件要跟随的约定。）
  *
- * 其余两段跳过的理由：
+ * 全局 `a{...}` 跳过的理由：
  *
- *   - 全局 `a{...}`：antd 是「每个组件都往全局注入一份 `a` 样式」，我们按需引入单组件
- *     CSS 的模型下这是**意外的全局副作用**。`Link` 自己的
- *     `.apollo-typography.apollo-typography-link{...}`（特异性 0,2,0）本来就压过
- *     `a{...}`（0,0,1），所以 `Link` 的渲染不受影响。差异登记在 README §7。
- *   - `.anticon`：图标组件尚未落地，且我们的图标类名前缀是 `apollo-icon`。
+ *   antd 是「每个组件都往全局注入一份 `a` 样式」，我们按需引入单组件
+ *   CSS 的模型下这是**意外的全局副作用**。`Link` 自己的
+ *   `.apollo-typography.apollo-typography-link{...}`（特异性 0,2,0）本来就压过
+ *   `a{...}`（0,0,1），所以 `Link` 的渲染不受影响。差异登记在 README §7。
  *
  * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
  *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
@@ -253,20 +265,36 @@ const focusOutline = (): string =>
   `outline:${v('lineWidthFocus')} solid ${v('colorPrimaryBorder')};` +
   `outline-offset:1px;transition:outline-offset 0s,outline 0s;`;
 
-/** `operationUnit` 的四个交互态。`&` 由调用方拼在选择器里。 */
+/**
+ * `operationUnit` 的四个交互态。`&` 由调用方拼在选择器里。
+ *
+ * ⚠️⚠️ `sel` 允许是**逗号分隔的选择器列表**（操作区传进来的就是
+ * `.apollo-typography-expand,.apollo-typography-collapse,.apollo-typography-edit,.apollo-typography-copy`），
+ * 而 `a,b:hover` 这种写法在 CSS 里是**两个独立选择器**：`a` 是无条件的、只有 `b` 带状态。
+ * 直接拼 `${sel}:hover` 会让前三个按钮**无条件**拿到 `:hover` / `:focus` / `:active`
+ * 的声明 —— 表现是按钮永远显示 `colorLinkActive`、并且带一圈 `:focus-visible` 的焦点环。
+ *
+ * 2026-09-20 由 L6 抓到：`typography/ellipsis__light__*` 与 `typography/semantic__light__*`
+ * 的 diff 图里，展开按钮周围是一圈红色矩形（焦点环），按钮文字颜色
+ * `rgb(9,88,217)`（= `colorLinkActive`）而 antd 是 `rgb(22,119,255)`（= `colorLink`）。
+ *
+ * 所以伪类必须**逐个**加到列表里的每一个选择器上 —— 这正是 cssinjs 里 `&:hover`
+ * 的展开语义（`&` = 整个父选择器列表，展开后每条都带 `:hover`）。
+ */
 function operationUnitStates(sel: string): string[] {
+  /** 给列表里的**每一个**选择器都加上伪类。 */
+  const each = (pseudo: string): string =>
+    sel
+      .split(',')
+      .map((one) => `${one.trim()}${pseudo}`)
+      .join(',');
+
   return [
-    rule(`${sel}:focus-visible`, focusOutline()),
+    rule(each(':focus-visible'), focusOutline()),
+    rule(each(':hover'), `color:${v('colorLinkHover')};text-decoration:${v('linkHoverDecoration')};`),
+    rule(each(':focus'), `color:${v('colorLinkHover')};text-decoration:${v('linkFocusDecoration')};`),
     rule(
-      `${sel}:hover`,
-      `color:${v('colorLinkHover')};text-decoration:${v('linkHoverDecoration')};`,
-    ),
-    rule(
-      `${sel}:focus`,
-      `color:${v('colorLinkHover')};text-decoration:${v('linkFocusDecoration')};`,
-    ),
-    rule(
-      `${sel}:active`,
+      each(':active'),
       `color:${v('colorLinkActive')};text-decoration:${v('linkHoverDecoration')};`,
     ),
   ];
@@ -429,6 +457,58 @@ function getHeadingMarginReset(cls: string): string[] {
 }
 
 /**
+ * 零运行时补偿：操作按钮（expand / collapse / edit / copy）的**字体继承**。
+ *
+ * ── 为什么需要它 ──────────────────────────────────────────────────────────────
+ *
+ * 操作区渲染的是原生 `<button>`。浏览器 UA 样式表对 `<button>` 声明了
+ * `font: 400 13.3333px Arial` —— 这个 **`font` 简写会把 `line-height` 重置成
+ * `normal`**，于是继承链被切断：按钮既不继承 `.apollo-typography` 的 `font-size`
+ * （14px），也不继承它的 `line-height`（1.5714）。
+ *
+ * antd 的浏览器 reset（`antd/dist/reset.css`）里有：
+ *
+ * ```css
+ * input,button,select,optgroup,textarea{margin:0;color:inherit;font-size:inherit;
+ *   font-family:inherit;line-height:inherit;}
+ * ```
+ *
+ * 我们的对应物 `BASE_CSS` 同样**还没覆盖**这一段。缺了它的后果实测：
+ *
+ * | | antd | 我们（补偿前） |
+ * |---|---|---|
+ * | 按钮 `font-size` | `14px` | `13.3333px` |
+ * | 按钮 `line-height` | `22px` | `normal`（≈15px 高） |
+ *
+ * 这不只是「按钮差 7px」：JS 省略号的 `ellipsisHeight` 是量出来的，测量容器里
+ * **就包含这个按钮**（`symbolRowEllipsisRef` 渲染的是 `children([], true)`）。
+ * 按钮矮了 7px ⇒ 量到的行高不同 ⇒ 二分收敛的位置差一个字符
+ * （antd 留 56 字符，我们留 57）。2026-09-20 L6 抓到：
+ * `typography/ellipsis__light__*` 与 `typography/semantic__light__*` 六个 viewport 全红。
+ * 把这三条声明注入 Vue 页后，`cutLen` / `btnH` / `btnFont` / `btnLH` 与 antd **逐项相同**
+ * —— 这就是本段存在的依据。
+ *
+ * ── 为什么放在组件 CSS 里而不是 BASE_CSS ──────────────────────────────────────
+ *
+ * 与 `getHeadingMarginReset` 同一条理由：`BASE_CSS` 是 4 个手写共享文件之一，
+ * 改它会同时影响 `divider` / `empty` / `spin` / `config-provider` 的视觉基线
+ * （`empty` 的 footer 用例专门用 `FOOTER_BUTTON_STYLE` 把按钮样式钉死来回避这个差异）
+ * —— 超出本次改动的范围。所以这里只对**组件自己的**四个操作按钮做等价继承。
+ *
+ * ⚠️ 选择器是 `.apollo-typography-expand` 这类**组件自己的类名**，不会外溢到任何
+ *    其他组件（`button` 元素选择器一条都没有）。
+ * ⚠️ 这是**补偿全局 reset 的缺口**，不是我们发明的视觉值。`BASE_CSS` 补齐后
+ *    这一段可以删掉（删掉后渲染结果不变）。
+ * ⚠️ **故意不抄 `margin:0` 与 `color:inherit`**：antd 的那两条对我们无意义 ——
+ *    按钮的 `margin-inline-start` 由操作区规则管理（`marginXXS`），`color` 由
+ *    `operationUnit` 显式设为 `colorLink`（抄 `color:inherit` 只会让阅读者困惑）。
+ *    只补**真正缺失**的三条字体声明。
+ */
+function getActionButtonFontReset(actionList: string): string[] {
+  return [rule(actionList, 'font-family:inherit;font-size:inherit;line-height:inherit;')];
+}
+
+/**
  * 生成 Typography 的静态 CSS。
  *
  * @param prefixCls 类名前缀（`apollo` 或 `ant`）
@@ -453,28 +533,44 @@ export function genTypographyStyle(prefixCls: string): string {
 
     // ---- 根与语义色 -------------------------------------------------------
     rule(c(''), `color:${v('colorText')};word-break:break-word;line-height:${v('lineHeight')};`),
+    // ⚠️ 每个选择器都必须以 `${c('')}`（即 `&`）**开头**，一个都不能漏。
+    //    antd 的嵌套键是 `` `&${componentCls}-secondary, &${componentCls}-link${componentCls}-secondary` ``，
+    //    两个分支的 `&` 都展开成 `.ant-typography` —— 于是第二个分支是
+    //    `.ant-typography.ant-typography-link.ant-typography-secondary`（特异性 0,3,0）。
+    //    漏掉这个前缀会掉到 0,2,0，与 `getLinkStyles` 的
+    //    `.ant-typography.ant-typography-link`（同为 0,2,0）打平，而后者在本函数里
+    //    **排在后面** ⇒ `Link type="danger"` 会渲染成 `colorLink` 而不是 `colorErrorText`。
+    //    2026-09-20 由 L6 视觉比对抓到（`typography/link__light__*` 三个 viewport 全红），
+    //    修复后逐像素一致。别「顺手简化」成 `${c('-link')}...`。
     rule(
-      `${c('')}${c('-secondary')},${c('-link')}${c('-secondary')}`,
+      `${c('')}${c('-secondary')},${c('')}${c('-link')}${c('-secondary')}`,
       `color:${v('colorTextDescription')};`,
     ),
     rule(
-      `${c('')}${c('-success')},${c('-link')}${c('-success')}`,
+      `${c('')}${c('-success')},${c('')}${c('-link')}${c('-success')}`,
       `color:${v('colorSuccessText')};`,
     ),
     rule(
-      `${c('')}${c('-warning')},${c('-link')}${c('-warning')}`,
+      `${c('')}${c('-warning')},${c('')}${c('-link')}${c('-warning')}`,
       `color:${v('colorWarningText')};`,
     ),
-    rule(`${c('')}${c('-danger')},${c('-link')}${c('-danger')}`, `color:${v('colorErrorText')};`),
-    // ⚠️ 这两条的 `&` 指的是**上面那条规则的整个选择器列表**（cssinjs 的嵌套语义），
-    //    所以每个选择器都要带上 `-danger` 与 `-link` 两个类。逐字来自 antd 产物。
     rule(
-      `${c('')}${c('-danger')}${c('-link')}:active,${c('-link')}${c('-danger')}${c('-link')}:active,` +
-        `${c('')}${c('-danger')}${c('-link')}:focus,${c('-link')}${c('-danger')}${c('-link')}:focus`,
+      `${c('')}${c('-danger')},${c('')}${c('-link')}${c('-danger')}`,
+      `color:${v('colorErrorText')};`,
+    ),
+    // ⚠️ 这两条的 `&` 指的是**上面那条规则的整个选择器列表**（cssinjs 的嵌套语义），
+    //    所以每个选择器都要带上 `-danger` 与 `-link` 两个类，且都以 `${c('')}` 开头。
+    //    逐字来自 antd 产物。
+    rule(
+      `${c('')}${c('-danger')}${c('-link')}:active,` +
+        `${c('')}${c('-link')}${c('-danger')}${c('-link')}:active,` +
+        `${c('')}${c('-danger')}${c('-link')}:focus,` +
+        `${c('')}${c('-link')}${c('-danger')}${c('-link')}:focus`,
       `color:${v('colorErrorTextActive')};`,
     ),
     rule(
-      `${c('')}${c('-danger')}${c('-link')}:hover,${c('-link')}${c('-danger')}${c('-link')}:hover`,
+      `${c('')}${c('-danger')}${c('-link')}:hover,` +
+        `${c('')}${c('-link')}${c('-danger')}${c('-link')}:hover`,
       `color:${v('colorErrorTextHover')};`,
     ),
     rule(c('-disabled'), `color:${v('colorTextDisabled')};cursor:not-allowed;user-select:none;`),
@@ -521,8 +617,9 @@ export function genTypographyStyle(prefixCls: string): string {
     ...getEllipsisStyles(cls),
     rule(c('-rtl'), 'direction:rtl;'),
 
-    // ---- 零运行时补偿（见 getHeadingMarginReset）--------------------------
+    // ---- 零运行时补偿（见 getHeadingMarginReset / getActionButtonFontReset）--
     ...getHeadingMarginReset(cls),
+    ...getActionButtonFontReset(actionList),
     '',
   ].join('\n');
 }

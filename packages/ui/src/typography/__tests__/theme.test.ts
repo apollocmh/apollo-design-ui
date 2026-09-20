@@ -212,3 +212,142 @@ describe('Typography · 语义化类名与主题无关', () => {
     expect(para.classes()).toContain(`${P}-ellipsis-multiple-line`);
   });
 });
+
+/**
+ * 选择器特异性的回归钉。
+ *
+ * ── 为什么需要这一节 ─────────────────────────────────────────────────────────
+ *
+ * 2026-09-20 L6 视觉比对抓到：`Link type="secondary"` / `type="danger"` 在 antd 下是
+ * 语义色（`colorTextDescription` / `colorErrorText`），在我们这里**全是 `colorLink`**。
+ *
+ * 根因是 `genTypographyStyle` 里那四条 type 配色的**第二个选择器少了 `&` 前缀**：
+ * antd 的嵌套键是 `` `&${cls}-secondary, &${cls}-link${cls}-secondary` ``，
+ * 两个分支都带 `&`（= 根类），于是第二个分支是
+ * `.ant-typography.ant-typography-link.ant-typography-secondary`（特异性 0,3,0）；
+ * 我们写成 `.apollo-typography-link.apollo-typography-secondary`（0,2,0），
+ * 与 `getLinkStyles` 的 `.apollo-typography.apollo-typography-link`（0,2,0）打平，
+ * 而后者在产物里**排在后面** ⇒ `-link` 的 `colorLink` 压过了 type 的配色。
+ *
+ * 这类缺陷**只有真实浏览器的层叠**才看得见（jsdom 不算层叠，L1/L2 全绿也照样漏），
+ * 所以这里不去复算特异性（那需要一套 CSS 解析器），而是钉一条**结构不变量**：
+ * 「任何含 `-link` 的选择器都必须以根类开头」。漏掉 `&` 的那一版会直接违反它。
+ */
+describe('Typography · 选择器特异性（L6 抓到的真实缺陷的回归钉）', () => {
+  /** 把产物拆成一条条选择器列表（`rule()` 的产物形态是 `选择器{声明}`）。 */
+  const selectorLists = (css: string): string[] =>
+    [...css.matchAll(/([^{}]+)\{/g)].map((m) => (m[1] ?? '').trim());
+
+  it('★ 每个含 `-link` 的选择器都以根类开头（漏 `&` 就掉特异性）', () => {
+    const css = genTypographyStyle('apollo');
+    const lists = selectorLists(css);
+    expect(lists.length).toBeGreaterThan(0);
+
+    const linkSelectors = lists
+      .flatMap((list) => list.split(','))
+      .map((sel) => sel.trim())
+      .filter((sel) => sel.includes(`.${P}-link`));
+
+    // 反证「这条断言不是空转」：产物里确实有一批 `-link` 选择器
+    expect(linkSelectors.length).toBeGreaterThan(0);
+
+    for (const sel of linkSelectors) {
+      expect(sel.startsWith(`.${P}`), `选择器 ${sel} 没有以根类 .${P} 开头`).toBe(true);
+    }
+  });
+
+  it('★ 四种 `type` 配色都带 `&` 前缀的 `-link` 复合分支', () => {
+    const css = genTypographyStyle('apollo');
+    for (const type of ['secondary', 'success', 'warning', 'danger']) {
+      expect(css).toContain(`.${P}.${P}-${type},.${P}.${P}-link.${P}-${type}`);
+    }
+    // 反证：缺 `&` 前缀的「两段式」分支不能再出现
+    expect(css).not.toContain(`,.${P}-link.${P}-secondary`);
+    expect(css).not.toContain(`,.${P}-link.${P}-danger`);
+  });
+
+  it('★ danger 的 hover / active / focus 三态也带 `&` 前缀（同样逐字来自 antd 产物）', () => {
+    const css = genTypographyStyle('apollo');
+    expect(css).toContain(`.${P}.${P}-link.${P}-danger.${P}-link:hover`);
+    expect(css).toContain(`.${P}.${P}-link.${P}-danger.${P}-link:active`);
+    expect(css).toContain(`.${P}.${P}-link.${P}-danger.${P}-link:focus`);
+    expect(css).not.toContain(`,.${P}-link.${P}-danger.${P}-link:hover`);
+  });
+
+  /**
+   * `a,b:hover` 陷阱：逗号列表里**只有最后一个**带伪类，前几个是无条件命中的。
+   *
+   * 操作区那四个按钮共用一条规则（`actionList` 是逗号拼起来的），若把伪类直接拼到
+   * 整串末尾，`-expand` / `-collapse` / `-edit` 就会**无条件**拿到
+   * `:hover` / `:focus` / `:active` / `:focus-visible` 的声明 ——
+   * 表现是按钮永远显示 `colorLinkActive`，并且永远带一圈焦点环。
+   *
+   * 2026-09-20 L6 抓到的正是这个：`typography/ellipsis__light__*` 与
+   * `typography/semantic__light__*` 的 diff 图里，展开按钮周围是一圈红色矩形。
+   */
+  it('★ 操作按钮的交互态伪类逐个加在每个选择器上（`a,b:hover` 陷阱）', () => {
+    const css = genTypographyStyle('apollo');
+
+    for (const pseudo of [':focus-visible', ':hover', ':focus', ':active']) {
+      expect(css).toContain(
+        `.${P}-expand${pseudo},.${P}-collapse${pseudo},.${P}-edit${pseudo},.${P}-copy${pseudo}`,
+      );
+    }
+
+    // 反证：伪类只挂在最后一个选择器上的写法不能再出现
+    for (const pseudo of [':focus-visible', ':hover', ':focus', ':active']) {
+      expect(css).not.toContain(`.${P}-edit,.${P}-copy${pseudo}`);
+    }
+
+    // 一般不变量：任何「涉及操作按钮**且**含状态伪类」的规则，其涉及的选择器必须
+    // **全部**带伪类。用「类名后面紧跟 `:` 或串尾」来精确匹配，避免误伤
+    // `-copy-success` / `-copy-icon-only` 这类同前缀的别的类。
+    const actionRe = new RegExp(`\\.${P}-(?:expand|collapse|edit|copy)(?::|$)`);
+    const stateRe = /:(?:hover|focus|active|focus-visible)/;
+    for (const list of selectorLists(css)) {
+      const involved = list
+        .split(',')
+        .map((sel) => sel.trim())
+        .filter((sel) => actionRe.test(sel));
+      if (involved.length === 0) continue;
+      if (!involved.some((sel) => stateRe.test(sel))) continue;
+      for (const sel of involved) {
+        expect(
+          stateRe.test(sel),
+          `规则「${list}」里的选择器「${sel}」没有状态伪类，会无条件命中`,
+        ).toBe(true);
+      }
+    }
+  });
+});
+
+/**
+ * 零运行时补偿：`BASE_CSS` 尚未覆盖的 antd 全局 reset。
+ *
+ * 这两段都是**补偿**，不是我们发明的视觉值：`BASE_CSS` 补齐后删掉它们，
+ * 渲染结果不变。它们必须留在产物里，否则 L6 立刻红 —— 所以在这里钉住。
+ *
+ * ⚠️ 为什么不改 `BASE_CSS`：它是 4 个手写共享文件之一，改它会同时影响
+ *    `divider` / `empty` / `spin` / `config-provider` 的视觉基线，超出组件范围。
+ *    补偿只命中组件自己的类名，不外溢。
+ */
+describe('Typography · 零运行时补偿（BASE_CSS 缺口）', () => {
+  it('★ 操作按钮继承字体（UA 的 `font` 简写会把 `line-height` 重置成 `normal`）', () => {
+    const css = genTypographyStyle('apollo');
+    // 三个声明缺一不可：只补 `font-size` 的话，UA `font` 简写里的
+    // `font-family` / `line-height:normal` 仍在，按钮高度依旧不对。
+    expect(css).toContain(
+      `.${P}-expand,.${P}-collapse,.${P}-edit,.${P}-copy` +
+        '{font-family:inherit;font-size:inherit;line-height:inherit;}',
+    );
+    // 反证「没有用 `button` 元素选择器外溢」：产物里不应出现裸 `button{`
+    expect(css).not.toMatch(/(^|[},])button\{/);
+  });
+
+  it('★ 标题 / 段落上外边距归零（UA 的 `margin-block-start`）', () => {
+    const css = genTypographyStyle('apollo');
+    expect(css).toContain(
+      `h1.${P},h2.${P},h3.${P},h4.${P},h5.${P},p.${P}{margin-top:0;}`,
+    );
+  });
+});
