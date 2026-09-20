@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "typography/ellipsis",
+  "component": "typography",
+  "description": "省略号的 **CSS 路径**：`true`（单行 text-overflow）、`{ rows: n }`（多行 -webkit-line-clamp）、`{ tooltip: true }`（只挂 Tooltip，不改类名）。三条判据：(1) `true` / `rows:1` 给 `-ellipsis-single-line`，`rows:2|3` 给 `-ellipsis-multiple-line`，两者互斥；(2) `rows` 同时落成根元素的**内联** `-webkit-line-clamp`；(3) `ellipsis.tooltip` **单独存在不触发 JS 测量**（它不是 `needMeasureEllipsis` 的判据），所以类名与不传 tooltip 时完全相同。对应基线的 `ellipsis:true` / `ellipsis:rows-1|2|3` / `ellipsis:false` / `ellipsis:tooltip` / `ellipsis:text-rows-stripped` 七条用例。⚠️ **JS 二分裁剪路径**（`suffix` / `onEllipsis` / `expandable` / `copyable` / `editable`）**不在**本 fixture 里：基线走 `renderToStaticMarkup`（无 effect），而 JS 路径的类名在 SSR 与挂载后**不同**，写进来只会得到一条永远需要豁免的噪音。那条路径由 L1/L2（打桩布局驱动二分）与 L6（真实浏览器）覆盖。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "variants": {
+    "ellipsis": [true, false, { "rows": 1 }, { "rows": 2 }, { "rows": 3 }, { "tooltip": true }]
+  },
+  "content": "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

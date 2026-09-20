@@ -173,6 +173,16 @@ export const LIMITATIONS = [
       'Tooltip 组件尚未落地。antd 的 Tooltip 在**未展开**时不额外产 DOM（只 clone 子元素并挂事件），所以本阶段用例里的 `copyable` / `ellipsis` 与 antd 逐像素一致；缺的是「悬浮后出现气泡」那一半 —— 那需要交互式截图（`run.mjs` 目前只截静态帧）。`ellipsis.tooltip` 对根元素 `aria-label` 的影响由 L4 钉住。',
     unblockWhen: 'Tooltip 落地后补 hover 态用例（需要给 `run.mjs` 加交互步骤）。',
   },
+  {
+    // ⚠️ 这一条不是「没做」，而是「做了、红了、并且已经定位到组件外的根因」。
+    //    它必须留在 LIMITATIONS 里，否则后人看到报告里的 21/24 会以为只是没覆盖。
+    dimension: 'typography·visual-residual',
+    missing: ['`typography/copyable__light__{mobile,tablet,desktop}` 的逐像素一致'],
+    reason:
+      '24 组里 21 组 0.000% exact；`copyable` 三组是 `block-diff`（差异率 0.3211% / 0.1568% / 0.0836%，散点占比 1.7% —— 差异**成块**而非抗锯齿散点）。diff 图显示红色区域**只落在复制图标**上（`tests/visual/diff/typography/copyable__light__*.png`），文字部分逐像素一致。根因在组件之外：`@apollo-design/icons` 导出了 `getIconStyle(iconPrefixCls)`（D15：只导出、不注入），但**仓库里没有任何地方消费它** —— 于是图标缺基础样式（`.apollo-icon` 没有 `display:inline-flex`、没有 `vertical-align:-0.125em`），SVG 退化成 `display:inline`，字形基线与 antd 差一点点。⚠️ 为什么不在本组件的收口里修：修法是在全局 `BASE_CSS` 里接上 `getIconStyle`，那会改变**所有**渲染图标的组件（`spin` 的 `LoadingOutlined` 等）的像素输出，属于 foundation 层的接线工作，超出本组件的改动面（`packages/ui/src/typography/**` + registry + memory）。缺口已登记在 `packages/ui/src/typography/README.md` §7 与 registry 的 `layerNotes.visual`。',
+    unblockWhen:
+      '`packages/ui/src/style/index.ts` 的 `BASE_CSS` 接上 `getIconStyle(iconPrefixCls)`（或 `@apollo-design/icons` 提供默认注入路径）后，重跑 `--mode compare`，三组应变 0.000% exact；届时同步复核 `spin` / `empty` 等已入库基线。',
+  },
 ];
 
 /** 展开成截图任务列表。 */

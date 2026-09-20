@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "typography/basic",
+  "component": "typography",
+  "description": "Typography 家族的最小形态：本体 `<Typography>`（默认 `<article>`）+ 四个子组件 Text / Title / Paragraph / Link 各一个默认实例。建立最小 DOM 契约基线 —— 钉住 (1) 本体是 `article` 且**不带**任何语义类名，(2) Text 覆盖成 `span`、Title 覆盖成 `h1`、Paragraph 覆盖成 `div`、Link 覆盖成 `a` 且带 `-link`，(3) `-link` 的判据是 `component === 'a'` 而不是「有没有 `type`」。对应基线的 `typography:default` / `text:default` / `title:default` / `paragraph:default` / `link:default` / `composite:family` 六条用例；L6 视觉回归在 `typography/text|title|paragraph|link` 四个 variant 上覆盖同一形态（0.000% exact）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}
