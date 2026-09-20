@@ -16,19 +16,29 @@
  *   ① 生成**作用域 tsconfig**：只收窄 `include`，`paths` 全部保留
  *      （跨包 import 仍指向源码，不是 `dist`，语义与全仓一致）
  *   ② 按包跑 vitest（避免全仓 OOM）
+ *   ③ 按包跑构建门禁（`tests/build/run.mjs --package <pkg>`，原生支持）
  *
  * ── ⚠️ 它**没有**降低标准，只是收窄范围 ──────────────────────────────────────
  *
- *   收窄 `include` 的代价：其它包的类型错误**不会被本脚本发现**。
- *   ⇒ 所以：**合入 master 前仍必须跑一次全仓门禁**（`pnpm lint` + `pnpm test:build`）。
+ *   收窄的代价：**其它包**的类型/构建错误**不会被本脚本发现**。
+ *   ⇒ 所以本脚本是**开发期**门禁；**合入 master 前 + 每日/milestone** 仍必须跑
+ *     `pnpm verify:full`（= registry:check + lint + test + test:build，全仓）。
  *   本脚本结束时也会明确提醒这一点。
+ *
+ * ── 为什么这么改（2026-09-20 实测）────────────────────────────────────────────
+ *
+ *   本机（i7-4770HQ / 4c8t / 16GB）全仓门禁耗时：vue-tsc 约 **16 分钟**、
+ *   构建门禁约 **7-8 分钟**、全仓 vitest 会 **OOM**。
+ *   而一次改动通常只碰一个组件 ⇒ 全仓门禁里 **99% 的校验与本次改动无关**。
+ *   实测改 `ui` 一个包时，作用域 vue-tsc **44 秒**（约 22 倍）。
  *
  * ── 用法 ──────────────────────────────────────────────────────────────────────
  *
- *   node scripts/verify-changed.mjs                  # 对比 master
- *   node scripts/verify-changed.mjs --base HEAD~3    # 指定基线
- *   node scripts/verify-changed.mjs --skip-types     # 只跑测试
- *   node scripts/verify-changed.mjs --skip-tests     # 只跑类型
+ *   pnpm verify:changed                  # 对比 master（类型 + 测试 + 构建）
+ *   pnpm verify:changed --base HEAD~3    # 指定基线
+ *   pnpm verify:changed --skip-types     # 只跑测试 + 构建
+ *   pnpm verify:changed --skip-tests     # 只跑类型 + 构建
+ *   pnpm verify:changed --skip-build     # 只跑类型 + 测试
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -159,6 +169,31 @@ function runScopedTests(pkgs) {
 }
 
 // ---------------------------------------------------------------------------
+// ③ 构建门禁（只跑受影响包 —— `tests/build/run.mjs` 原生支持 `--package`）
+// ---------------------------------------------------------------------------
+
+function runScopedBuild(pkgs) {
+  let ok = true;
+  console.log(`\n▶ 按包构建门禁（${pkgs.join(', ')}）`);
+  for (const p of pkgs) {
+    if (!existsSync(join(ROOT, 'packages', p))) continue;
+    console.log(`\n  ── ${p} ──`);
+    const r = spawnSync(
+      process.execPath,
+      [join(ROOT, 'tests/build/run.mjs'), '--package', p],
+      {
+        cwd: ROOT,
+        encoding: 'utf8',
+        stdio: 'inherit',
+        env: { ...process.env, CODEBUDDY_SAFE_DELETE_ENABLED: '0' },
+      },
+    );
+    if (r.status !== 0) ok = false;
+  }
+  return ok;
+}
+
+// ---------------------------------------------------------------------------
 // main
 // ---------------------------------------------------------------------------
 
@@ -174,16 +209,17 @@ console.log(`\n改动涉及包（基线 ${BASE}）：${pkgs.join(', ')}`);
 let ok = true;
 if (!SKIP_TYPES) ok = runScopedTypes(pkgs) && ok;
 if (!SKIP_TESTS) ok = runScopedTests(pkgs) && ok;
+if (!has('--skip-build')) ok = runScopedBuild(pkgs) && ok;
 
 console.log('\n' + '='.repeat(64));
 console.log(ok ? '✅ 增量门禁通过' : '❌ 增量门禁失败');
 console.log('='.repeat(64));
 console.log(`
-⚠️ 这是**开发期**门禁，只覆盖了 ${pkgs.length} 个包。
-   合入 master 前仍**必须**跑全仓门禁：
-     pnpm lint          （vue-tsc 全仓 + biome）
-     pnpm test:build    （构建门禁）
-     pnpm registry:check
+⚠️ 这是**开发期**门禁，只覆盖了 ${pkgs.length} 个包（${pkgs.join(', ')}）。
+   它**不替代**全仓门禁 —— 其它包的类型/构建错误它看不到。
+   合入 master 前、以及每日/milestone 时仍**必须**跑：
+
+     pnpm verify:full      # lint（全仓 vue-tsc + biome）+ 全仓 test + 全仓构建门禁 + registry:check
 `);
 
 process.exit(ok ? 0 : 1);

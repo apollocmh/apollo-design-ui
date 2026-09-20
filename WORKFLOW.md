@@ -23,8 +23,9 @@
   └───────────────────────────┬──────────────────────────────────┘
                               ▼
   ┌──────────────────────────────────────────────────────────────┐
-  │  收口      更新 registry → registry:check → lint → test         │
-  │            三道全绿才能把维度置 done                            │
+  │  收口      开发期 pnpm verify:changed（增量，44 秒级）           │
+  │            合入前 pnpm verify:full（全仓，G13b）                 │
+  │            全绿才能把维度置 done                                │
   └───────────────────────────┬──────────────────────────────────┘
                               ▼
                         回到领取（DAG 自动解锁下游）
@@ -247,13 +248,51 @@ DOM 结构、class 命名、ARIA 属性、键盘行为、受控/非受控语义�
 
 ### G13 · BUILD — 构建校验
 
+门禁分**两级**。判据是「**范围**」而不是「**标准**」—— 两级跑的是**同一套检查**，
+只是收窄了被检查的包。**没有降低任何验收标准。**
+
+#### G13a · 开发期门禁（每次改完代码，必跑）
+
 ```bash
-pnpm run registry:check   # E1–E18
-pnpm run lint             # vue-tsc + biome
-pnpm run test             # unit / dom-contract / a11y / theme
+pnpm verify:changed       # 增量：只跑受本次改动影响的包
 ```
 
-三道全绿。
+它做三件事，全部**只针对受影响的包**：
+
+| 步骤 | 全仓做法 | 增量做法 |
+|---|---|---|
+| 类型 | `vue-tsc -p tsconfig.json`（全仓） | 生成**作用域 tsconfig**（只收窄 `include`，`paths` 全保留） |
+| 测试 | `vitest` 四个 project 扫全仓（**会 OOM**） | 按包跑 `vitest --project unit/dom-contract/a11y/theme` |
+| 构建 | `tests/build/run.mjs`（全仓 127 项） | `tests/build/run.mjs --package <pkg>` |
+
+⚠️ **它的边界（必须知道）**：其它包的类型/构建错误**它看不到**。
+所以它**不替代** G13b —— 定位是「开发期快速反馈」，不是「收口验收」。
+
+实测（本机 i7-4770HQ / 4c8t / 16GB）：改 `ui` 一个包时作用域 `vue-tsc` **约 44 秒**，
+而全仓是**约 16 分钟**（约 22 倍）；全仓 `vitest` 的 OOM 也一并绕开。
+
+#### G13b · 收口/milestone 门禁（**合入 master 前必跑**）
+
+```bash
+pnpm verify:full
+# = registry:check && lint（全仓 vue-tsc + biome）&& test（四个 project）&& test:build（全仓 127 项）
+```
+
+**触发时机**（任一即须跑）：
+1. **合入 master 前**（整合会话负责）
+2. 每日一次 / 每个 milestone 收口
+3. 改了**共享层**（`packages/{utils,theme,icons,motion,…}/**`、`packages/ui/src/style/**`、
+   `packages/ui/src/_internal/**`、根配置）—— 这种改动的影响面本来就不止一个包
+   ⇒ **必须直接跑 G13b，不许用 G13a 替代**
+
+#### 为什么这么分（2026-09-20 的实测依据）
+
+一次组件改动只碰一个包，而全仓门禁里 **99% 的校验与本次改动无关**。
+此前每个组件要跑 2–3 次全仓 `vue-tsc`（16 分钟/次）⇒ **单组件光等门禁就 30–50 分钟**，
+这是「一天只能写两个组件」的主因。分两级后，开发期反馈从 16 分钟降到 44 秒，
+而**收口标准一分未降**（G13b 仍然全仓、仍然全绿才许合）。
+
+⚠️ **禁止**用 G13a 的绿灯代替 G13b 的绿灯来声称收口 —— 那才是真正的「降低验收标准」（H8）。
 
 ### G14 · COMMIT — 提交
 
