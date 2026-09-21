@@ -363,7 +363,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
     但 `HEAD~1` 恰好就是那个改动提交本身 ⇒ **两次跑的是同一个版本**，
     得出「141/156 → 141/156 没变化」的假结论。
     **判据：回退后用 `grep -c` 数一个只存在于新版的字面量**（本轮数 `ol,ul,dl`，应为 0）。
-    **不要相信「看起来没变化」——先证明回退生效了。**    而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
+    **不要相信「看起来没变化」——先证明回退生效了。**
+
+17. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；
+    而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
 
     ⭐ **真正的根因（2026-09-20 定位）**：本环境里的 `git` 是**垫片版** ——
     `.../sandbox/5.5.5/sandbox-cli --config {...,"extraPath":"runtime/git/bin"}`。
