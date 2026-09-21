@@ -78,29 +78,87 @@ export function genComponentCss(name: string, prefixCls: string): string {
 }
 
 /**
- * 全局基础样式（antd `reset.css` 的最小版）。
+ * 全局基础样式 —— antd `dist/reset.css` 的**完整对齐版**。
  *
- * ⚠️ 2026-09-18 L6 暴露的**基础设施缺口**：
- *   `tokens.css` 只声明 `var(--apollo-*)` 变量，**没人**把它应用到 `:root` 或 `body` —
- *   结果浏览器用默认字体（macOS Chrome = **Times**），所有含描述文字的组件视觉差异
- *   都被判 block-diff。
+ * ── 为什么必须是「完整」而不是「最小」──────────────────────────────────────────
  *
- * 这一段同时嵌进「汇总 CSS」与「每个组件 CSS」—— 不然只引单个组件 CSS（如
- * `@apollo-design/ui/empty/style.css`）也会退回 Times。
+ * ⚠️ L6 的 React 基线页（`tests/visual/render/react-main.jsx:8`）加载的是
+ *    **`import 'antd/dist/reset.css'`（整份）**。像素级比对的对手带着这份 reset，
+ *    所以我们这边只要少一条，那条规则覆盖的元素就会有**残余差异**。
+ *    「最小版」从原理上就无法逐像素对齐 —— 它只能覆盖到当时那个组件碰巧用到的元素。
  *
- * 现在只覆盖**L6 必需**的几条（box-sizing、font-family/size、body 基础 reset）。
- * 完整的全局 reset（h1-h6 重置、列表样式、button 重置等）按 antd 的范围补齐
- * —— 但那不是 empty 收口的工作，记入未决。
+ * 2026-09-18 的第一版只覆盖了 box-sizing / font-family / body 基础 reset，
+ * 注释里也如实写着「完整的全局 reset 按 antd 的范围补齐 —— 记入未决」。
+ * **2026-09-21 补齐**：skeleton 的 L6 只有 9/24，失败项全是 `size-mismatch` 且我方偏高，
+ * 根因就是 `<h3 class="-title">` 与 `<ul class="-paragraph">` 拿到了浏览器默认的
+ * `margin-block-end: 1em`（antd reset 把它设成 `0.5em` / `1em`，但**设过**就不同了）。
+ *
+ * ── 来源与忠实度 ──────────────────────────────────────────────────────────────
+ *
+ * 逐条抄自 `/tmp/antd-src/package/dist/reset.css`（antd 6.6.4，共 49 条规则）。
+ * **只做两处有意的省略**：
+ *   1. `html{line-height:1.15}` / `-ms-*` / `-webkit-tap-highlight-color` —— 这些是
+ *      normalize.css 的历史包袱，且**我们的 `html` 字体走 Token**（见下），
+ *      加进去会与 `--apollo-font-family` 打架。
+ *   2. `html,body{width:100%;height:100%}` —— 视觉页两侧都是 `body` 直接承载内容，
+ *      这条不产生像素差异；且它会改变消费方应用的布局语义（不该由组件库强加）。
+ *
+ * ⚠️ `input,button,select,optgroup,textarea{...font-family:inherit}` 这一条**必须加** ——
+ *    typography 之前用 `getActionButtonFontReset` 在组件内补偿的就是它。
+ *    加了之后那段补偿变成**冗余但无害**（同值），可以后续清理。
+ *
+ * ⚠️ 这一段同时嵌进「汇总 CSS」与「每个组件 CSS」—— 不然只引单个组件 CSS（如
+ *    `@apollo-design/ui/skeleton/style.css`）也会退回 Times。
  */
 export const BASE_CSS = [
-  '*',
-  '*::before',
-  '*::after',
-  '{box-sizing:border-box}',
+  // ---- box-sizing ----
+  '*,*::before,*::after{box-sizing:border-box}',
+  // ---- html / body ----
   // html + body 同时设：避免任何不一致的 DOM 结构（例如把 `<style>` 挂到 `<html>`）拿到不同字体。
   'html,body{margin:0;padding:0}',
   'html{font-family:var(--apollo-font-family)}',
   'body{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size)}',
+  // ---- 标题与段落 ----
+  'h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:0.5em;font-weight:500}',
+  'p{margin-top:0;margin-bottom:1em}',
+  // ---- 列表 ----
+  'ol,ul,dl{margin-top:0;margin-bottom:1em}',
+  'ol ol,ul ul,ol ul,ul ol{margin-bottom:0}',
+  'dt{font-weight:500}',
+  'dd{margin-bottom:0.5em;margin-left:0}',
+  // ---- 引用与代码 ----
+  'blockquote{margin:0 0 1em}',
+  'address{margin-bottom:1em;font-style:normal;line-height:inherit}',
+  "pre,code,kbd,samp{font-size:1em;font-family:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,Courier,monospace}",
+  'pre{margin-top:0;margin-bottom:1em;overflow:auto}',
+  'figure{margin:0 0 1em}',
+  // ---- 行内语义 ----
+  'abbr[title],abbr[data-original-title]{-webkit-text-decoration:underline dotted;text-decoration:underline dotted;border-bottom:0;cursor:help}',
+  'dfn{font-style:italic}',
+  'b,strong{font-weight:bolder}',
+  'small{font-size:80%}',
+  'sub,sup{position:relative;font-size:75%;line-height:0;vertical-align:baseline}',
+  'sub{bottom:-0.25em}',
+  'sup{top:-0.5em}',
+  // ---- 媒体与表格 ----
+  'img{vertical-align:middle;border-style:none}',
+  'table{border-collapse:collapse}',
+  'caption{padding-top:0.75em;padding-bottom:0.3em;text-align:left;caption-side:bottom}',
+  'hr{box-sizing:content-box;height:0;overflow:visible}',
+  // ---- 表单控件归一化（`getActionButtonFontReset` 补偿的就是这一条）----
+  'input,button,select,optgroup,textarea{margin:0;color:inherit;font-size:inherit;font-family:inherit;line-height:inherit}',
+  'button,input{overflow:visible}',
+  'button,select{text-transform:none}',
+  "button,html [type='button'],[type='reset'],[type='submit']{-webkit-appearance:button}",
+  "button::-moz-focus-inner,[type='button']::-moz-focus-inner,[type='reset']::-moz-focus-inner,[type='submit']::-moz-focus-inner{padding:0;border-style:none}",
+  "input[type='radio'],input[type='checkbox']{box-sizing:border-box;padding:0}",
+  "input[type='date'],input[type='time'],input[type='datetime-local'],input[type='month']{-webkit-appearance:listbox}",
+  "input[type='text'],input[type='password'],input[type='number'],textarea{-webkit-appearance:none}",
+  'textarea{overflow:auto;resize:vertical}',
+  'input::-ms-clear,input::-ms-reveal{display:none}',
+  // ---- 触摸与焦点 ----
+  "a,area,button,[role='button'],input:not([type='range']),label,select,summary,textarea{touch-action:manipulation}",
+  "[tabindex='-1']:focus{outline:none}",
 ].join('');
 
 /** 生成单个组件在**全部静态前缀**下的 CSS（`dist/<name>/style.css` 的内容）。 */
