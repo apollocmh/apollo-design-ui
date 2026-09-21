@@ -43,6 +43,13 @@ export {
 } from './_internal/use-merge-semantic';
 export type { WithInstall } from './_internal/with-install';
 export { withInstall } from './_internal/with-install';
+export {
+  Affix,
+  default as AffixDefault,
+  getFixedBottom,
+  getFixedTop,
+  getTargetRect,
+} from './affix';
 // ---------------------------------------------------------------------------
 // Affix —— 固钉
 //
@@ -59,18 +66,9 @@ export type {
   AffixSlot,
   AffixTarget,
 } from './affix/interface';
-export {
-  Affix,
-  default as AffixDefault,
-  getFixedBottom,
-  getFixedTop,
-  getTargetRect,
-} from './affix';
-export type {
-  ComponentToken as AffixComponentToken,
-} from './affix/style/token';
-export { prepareComponentToken as prepareAffixComponentToken } from './affix/style/token';
 export { genAffixStyle } from './affix/style';
+export type { ComponentToken as AffixComponentToken } from './affix/style/token';
+export { prepareComponentToken as prepareAffixComponentToken } from './affix/style/token';
 // ---------------------------------------------------------------------------
 // Button —— 按钮
 //
@@ -191,6 +189,28 @@ export {
   PRESENTED_IMAGE_DEFAULT,
   PRESENTED_IMAGE_SIMPLE,
 } from './empty';
+// ---------------------------------------------------------------------------
+// Flex —— 弹性布局
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/flex/style.css` 由构建钩子产出。
+//    Component Token 为 0 个（与 antd 逐字对齐）；gap 三档来自 padding 别名派生。
+//    `flexWrapValues` 等枚举数组与 antd 同样不进 barrel（见 `./flex/index.ts`）。
+// ---------------------------------------------------------------------------
+export type {
+  FlexAlign,
+  FlexComponent,
+  FlexConfig,
+  FlexJustify,
+  FlexProps,
+  FlexRef,
+  FlexSlot,
+  FlexWrap,
+  // `Orientation` 不从 barrel 导出：space 已导出同名类型（antd 也不从 flex 导出它）。
+} from './flex';
+export { default as FlexDefault, Flex } from './flex';
+export { genFlexStyle } from './flex/style';
+export type { ComponentToken as FlexComponentToken } from './flex/style/token';
+export { prepareComponentToken as prepareFlexComponentToken } from './flex/style/token';
 export type {
   SkeletonAvatarOwnProps,
   SkeletonAvatarProps,
