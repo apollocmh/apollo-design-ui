@@ -19,10 +19,14 @@ export interface AffixProps {
   offsetTop?: number;
   /** 距离窗口（或 `target`）底部达到指定偏移后固钉。**与 `offsetTop` 互斥**：都传时只有 `offsetTop` 生效。 */
   offsetBottom?: number;
-  /** 滚动监听与定位的参照目标。默认取 ConfigProvider 的 `getTargetContainer`，再退回 `window`。 */
+  /**
+   * 滚动监听与定位的参照目标。默认取 ConfigProvider 的 `getTargetContainer`，再退回 `window`。
+   */
   target?: AffixTarget;
-  /** 固钉状态变化回调。**只在状态翻转时触发**，连续固钉不会重复发。 */
-  onChange?: (affixed: boolean) => void;
+  /**
+   * ⚠️ **`onChange` 不在这里**（规则 C19）：Vue 侧由 `emit('change', affixed)` 承担，
+   *    模板上写 `@change`。antd 的 `onChange` prop 不移植成 prop。
+   */
   /** 类名前缀。 */
   prefixCls?: string;
   /** 根元素（占位测量层）类名。 */

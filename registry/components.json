@@ -1348,11 +1348,11 @@
       "styleStatus": "todo",
       "unitStatus": "todo",
       "interactionStatus": "todo",
-      "typeStatus": "todo",
+      "typeStatus": "done",
       "a11yStatus": "todo",
       "visualStatus": "todo",
       "docsStatus": "todo",
-      "notes": null,
+      "notes": "\n2026-09-21：L3 类型测试 14 例通过（types project 44 文件 / 1007 用例全绿）。\n2026-09-21：L3 类型测试 14 例通过（types project 44 文件 / 1007 用例全绿）。",
       "layerNotes": null
     },
     {
