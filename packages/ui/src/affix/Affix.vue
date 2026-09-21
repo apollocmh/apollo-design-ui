@@ -40,6 +40,7 @@ import {
   onMounted,
   ref,
   shallowRef,
+  useAttrs,
   watch,
   type CSSProperties,
   type VNodeChild,
@@ -67,6 +68,14 @@ defineOptions({ name: 'AAffix', inheritAttrs: false });
 const props = defineProps<AffixProps>();
 const emit = defineEmits<{ change: [affixed: boolean] }>();
 defineSlots<{ default?: () => VNodeChild }>();
+
+/**
+ * ⚠️ `inheritAttrs: false` + 显式把 `$attrs` 绑到**外层**（占位测量层）——
+ *    antd 的 `...restProps` 落在外层（`index.js:190-195`），内层不落。
+ *    漏了这一条，`data-*` / `id` / `aria-*` 等透传属性会静默丢失
+ *    （这是我实现里的真 bug，L4 的 `attrs:passthrough` 用例抓出来的）。
+ */
+const attrs = useAttrs();
 
 const { getPrefixCls, className: contextClassName, style: contextStyle } =
   useComponentConfig<AffixConfig>('affix');
@@ -281,6 +290,7 @@ defineExpose<AffixRef>({
     ref="placeholderNode"
     :style="{ ...contextStyle, ...style }"
     :class="[className, contextClassName]"
+    v-bind="attrs"
   >
     <!-- ① 占位层：只在固钉时渲染（antd `:186`） -->
     <div v-if="affixStyle" :style="placeholderStyle" aria-hidden="true"></div>

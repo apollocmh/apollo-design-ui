@@ -1,0 +1,50 @@
+{
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-21T06:40:31.845Z",
+  "cases": [
+    {
+      "id": "basic",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "children:none",
+      "html": "<div class=\"\"><div class=\"\"></div></div>"
+    },
+    {
+      "id": "offset:top",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "offset:bottom",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "offset:both",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "offset:zero",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "class:className",
+      "html": "<div class=\"my-class\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "class:rootClassName",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "style:passthrough",
+      "html": "<div style=\"color:red\" class=\"\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<div class=\"\" data-testid=\"x\" id=\"my-affix\"><div class=\"\"><span>X</span></div></div>"
+    },
+    {
+      "id": "config:className",
+      "html": "<div class=\"\"><div class=\"\"><span>X</span></div></div>"
+    }
+  ]
+}

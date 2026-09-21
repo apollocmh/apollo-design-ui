@@ -1343,7 +1343,7 @@
       "blockers": [],
       "antdApiStatus": "todo",
       "apiStatus": "todo",
-      "compatStatus": "todo",
+      "compatStatus": "done",
       "tokenStatus": "todo",
       "styleStatus": "todo",
       "unitStatus": "todo",
@@ -1352,7 +1352,7 @@
       "a11yStatus": "done",
       "visualStatus": "todo",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-09-21：L4 DOM 契约 11/11 通过（只覆盖未固钉形态——SSR 恒不固钉；含 attrs 透传）。\n2026-09-21：L4 DOM 契约 11/11 通过（只覆盖未固钉形态——SSR 恒不固钉；含 attrs 透传）。",
       "layerNotes": null
     },
     {
