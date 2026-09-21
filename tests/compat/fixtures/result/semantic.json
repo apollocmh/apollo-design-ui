@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema.json",
+  "id": "result/semantic",
+  "component": "result",
+  "description": "语义槽位六槽（root/title/subTitle/body/extra/icon）：classNames 拼接、styles 逐键覆盖；用户 style 折进 styles.root 且**覆盖**之（useSemanticRootStyle 顺序）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "status": "success",
+    "title": "T",
+    "classNames": {
+      "root": "demo-root",
+      "title": "demo-title"
+    },
+    "styles": {
+      "root": {
+        "padding": "16px"
+      },
+      "title": {
+        "color": "red"
+      }
+    }
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

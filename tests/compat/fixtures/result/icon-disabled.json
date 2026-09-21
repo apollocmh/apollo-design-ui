@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "result/icon-disabled",
+  "component": "result",
+  "description": "icon === null / false 显式禁用：连 -icon 容器 div 都不渲染（antd 的 icon || IconMap[status] 短路语义）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "No icon",
+    "icon": null
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -139,6 +139,10 @@ export const COMPONENTS = {
     // 2 个 variant × 3 个 viewport = 6 张（流光动画本身不在比对面，截静态形态）
     variants: ['basic', 'color'],
   },
+  result: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: ['basic', 'exception', 'semantic'],
+  },
   skeleton: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [

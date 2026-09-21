@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "result/basic",
+  "component": "result",
+  "description": "最基础的 Result：status 默认 info，IconMap 默认图标（apollo-icon 类 span > svg）。title/subTitle/extra 均 isRenderable 守卫。extra 是 prop 不是插槽（C19 只映射 children）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Your operation has been executed",
+    "subTitle": "Sub"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

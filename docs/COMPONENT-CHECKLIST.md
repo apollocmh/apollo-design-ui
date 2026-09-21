@@ -60,6 +60,15 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-22（result 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 9 | **`.apollo-icon` 基线（getIconStyle）没进 ui 全局样式层**：icon 高 86.8 vs 72（`line-height:0` 等缺失）——button 期在按钮范围内自保过一次，result 期确认是集成缺口 | L6（icon size-mismatch） | 第三次法则收口：`getIconStyle()` 接进 `BASE_CSS`（每份组件 CSS 自带）。后续组件不再各自补图标基线 |
+| 10 | **ReactNode 类 prop 被写成插槽**：antd 的 `extra` 是 prop，demo 初版写成 `#extra` 插槽 → L6 里 extra 整块消失 | L6（extra 缺失）+ demo 冒烟 | 规则 C19 只把 `children` 映射为插槽；demo 评审时先查 prop 清单 |
+| 11 | **antd 的 `anticon` 前缀不受组件 `prefixCls` 控制**（由 IconContext/ConfigProvider 决定）：L4 基线逐条出 `anticon vs apollo-icon` 噪音 | L4（15 条基线全是同一 diff） | 基线侧用 `ConfigProvider { prefixCls, iconPrefixCls }` 包裹对齐，把 D6 收敛到组件自身一条 |
+| 12 | **机械转换 React 插画时 `createElement` 的变长子节点**：Vue `h` 只收 3 参，直接替换会 TS2554 | L1 构建期（TS2554） | 转换器必须做括号平衡解析，把第 3+ 参数折成数组（camelCase SVG 属性同步转 kebab） |
+
 ### 2026-09-22（badge 会话 —— 全量视觉回归暴露的 5 个跨组件缺陷）
 
 | # | 坑 | 抓到它的层 | 对策 |

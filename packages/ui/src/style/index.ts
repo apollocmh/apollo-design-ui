@@ -28,14 +28,16 @@
  * `budget.json` 的体积校验全部自动跟上。
  */
 
+import { getIconStyle } from '@apollo-design/icons';
 import { genAffixStyle } from '../affix/style';
+import { genBadgeStyle } from '../badge/style';
+import { genBorderBeamStyle } from '../border-beam/style';
 import { genButtonStyle } from '../button/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
-import { genBadgeStyle } from '../badge/style';
-import { genBorderBeamStyle } from '../border-beam/style';
 import { genGridStyle } from '../grid/style';
+import { genResultStyle } from '../result/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
@@ -71,6 +73,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'flex', gen: genFlexStyle },
   { name: 'badge', gen: genBadgeStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },
+  { name: 'result', gen: genResultStyle },
   { name: 'grid', gen: genGridStyle },
   { name: 'skeleton', gen: genSkeletonStyle },
   { name: 'space', gen: genSpaceStyle },
@@ -123,6 +126,18 @@ export function genComponentCss(name: string, prefixCls: string): string {
  *    `@apollo-design/ui/skeleton/style.css`）也会退回 Times。
  */
 export const BASE_CSS = [
+  // ---- 图标基线（2026-09-22 接入，第三次踩到）----
+  // ⚠️ antd 的 `.anticon` 基线由 @ant-design/icons 在运行时注入；本仓 icons 包的
+  //    getIconStyle() 只导出文本、ui 样式层此前**未消费**——button 期在按钮范围内
+  //    自保、result 期（icon 高 86.8 vs 72）确认这是集成缺口，按三次法则收进全局。
+  //    放在 BASE_CSS（而非 COMPONENT_STYLES）里：每份组件 CSS 都自带，单引自足。
+  getIconStyle(),
+  // ---- 图标基线（2026-09-22 接入，第三次踩到）----
+  // ⚠️ antd 的 `.anticon` 基线由 @ant-design/icons 在运行时注入；本仓 icons 包的
+  //    getIconStyle() 只导出文本、ui 样式层此前**未消费**——button 期在按钮范围内
+  //    自保、result 期（icon 高 86.8 vs 72）确认这是集成缺口，按三次法则收进全局。
+  //    放在 BASE_CSS（而非 COMPONENT_STYLES）里：每份组件 CSS 都自带，单引自足。
+  getIconStyle(),
   // ---- box-sizing ----
   '*,*::before,*::after{box-sizing:border-box}',
   // ---- html / body ----

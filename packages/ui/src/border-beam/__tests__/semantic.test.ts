@@ -11,7 +11,7 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import { h } from 'vue';
+import { h, type VNode } from 'vue';
 
 import baseline from '../../../../../tests/compat/baselines/border-beam.dom.json';
 import { BorderBeam } from '../index';
@@ -19,7 +19,7 @@ import { BorderBeam } from '../index';
 const HOST_STYLE = { position: 'relative', border: '2px solid #ddd', padding: '16px' };
 // ⚠️ 元素 vnode 的 children 必须是数组（元素上传函数 children 会被 Vue 静默忽略
 // —— 只有组件 vnode 支持插槽函数；semantic.test.ts 曾因此渲染出空宿主）
-const host = (children: unknown[]) => h('div', { style: HOST_STYLE }, children);
+const host = (children: VNode[]) => h('div', { style: HOST_STYLE }, children);
 
 const specs: Record<string, { render: () => DomRenderResult }> = {
   'border-beam:prefix-cls:no-props': {

@@ -31,9 +31,11 @@ import {
   onScopeDispose,
   type PropType,
   shallowRef,
+  type VNode,
   type VNodeChild,
 } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
+import type { BorderBeamColor, BorderBeamProps } from './interface';
 import { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient, isSameBorderWidth } from './util';
 
 /** 数字 → `-${n}px`；字符串 → `calc(-1 * ${s})`（antd 的 getInset 逐字）。 */

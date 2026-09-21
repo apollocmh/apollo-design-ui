@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "result/exception",
+  "component": "result",
+  "description": "异常插画契约：403/404/500（数字与字符串等价）渲染静态插画（hex 字面量、不随主题），div 带 -icon -image 双类，且**忽略 icon prop**。插画 252×294 由样式层钉 250×295。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "status": "404",
+    "title": "404",
+    "subTitle": "Not Found"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -276,6 +276,25 @@ export { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from './border-be
 export type { ComponentToken as BorderBeamComponentToken } from './border-beam/style/token';
 export { genBorderBeamStyle } from './border-beam/style';
 // ---------------------------------------------------------------------------
+// Result —— 结果页
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 4 个（CSS 变量形态）。
+//    PRESENTED_IMAGE_403/404/500 是静态插画组件（antd 逐字，hex 字面量不随主题）。
+// ---------------------------------------------------------------------------
+export type {
+  ExceptionStatusType,
+  ResultConfig,
+  ResultProps,
+  ResultRef,
+  ResultSemanticClassNames,
+  ResultSemanticStyles,
+  ResultStatusType,
+} from './result';
+export { ExceptionMap, IconMap, Result, PRESENTED_IMAGE_403, PRESENTED_IMAGE_404, PRESENTED_IMAGE_500 } from './result';
+export type { ComponentToken as ResultComponentToken } from './result/style/token';
+export { prepareResultComponentToken } from './result/style/token';
+export { genResultStyle } from './result/style';
+// ---------------------------------------------------------------------------
 export type {
   ColComponentToken as GridColComponentToken,
   RowComponentToken as GridRowComponentToken,
