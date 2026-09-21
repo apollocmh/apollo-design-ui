@@ -365,6 +365,32 @@ L0 utils/theme/icons ｜ 测试 test-utils
     **判据：回退后用 `grep -c` 数一个只存在于新版的字面量**（本轮数 `ol,ul,dl`，应为 0）。
     **不要相信「看起来没变化」——先证明回退生效了。**
 
+20. 🚨 **`git merge --ff-only` 会因「主仓库里的**未跟踪同名文件**」而 abort，
+    且提示极具误导性**（2026-09-21 遇到）。
+
+    现象：在整合分支上跑
+    ```bash
+    git -C /Users/nanren/Code/apollo-design-ui merge --ff-only workbuddy/master-15e7f018
+    ```
+    输出 `Aborting` **和** `Updating 0609af6..600aa0e`（两行同时出现），
+    看起来像成功，但 `git rev-parse master` **纹丝不动**。
+
+    根因：主仓库的工作区里有一个**未跟踪**的 `registry/tools/ask.mjs`，
+    ff 要写同名文件时会覆盖它 ⇒ git 拒绝并 abort。
+
+    ⇒ **判据**：ff 之后**必须 `git rev-parse --short master` 确认**，
+    不要相信 `Updating ...` 那行输出。
+    修法：`rm` 掉主仓库里那个未跟踪的同名文件（内容在提交里，不会丢）再 ff。
+    ⚠️ 另：`git status` 会同时显示 `?? <file>` 与 `(空=干净)` —— 别被自己的 echo 骗了。
+
+21. ⭐ **`node registry/tools/ask.mjs` —— 读 registry 原文的机械化入口**（2026-09-21 落地）。
+    ```bash
+    pnpm ask progress | component <name> | decisions --open | decision <id> | find <关键词>
+    ```
+    **强制**：凡是要说「某个决策/约定/优先级是这样」，先跑它（`AGENTS.md` §5.0）。
+    `decision <id>` 输出**原样 JSON** —— 摘要会把「`status: open` 未裁决」
+    压成「有个决策」，而那正是一次翻车的成因。
+
 17. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；
     而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
 
