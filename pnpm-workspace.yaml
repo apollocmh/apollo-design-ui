@@ -84,7 +84,8 @@ catalog:
   '@testing-library/jest-dom': ^6.9.1
   jsdom: ^30.0.1
   axe-core: ^4.13.0
-  playwright: ^1.63.0
+  # 1.59+ 起不支持 macOS 12 的 chromium 安装（本机环境）；1.58 = 最后可用版
+  playwright: 1.58.0
   '@axe-core/playwright': ^4.13.0
 
   # --- Visual regression ---
