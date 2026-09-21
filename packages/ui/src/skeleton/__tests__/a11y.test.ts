@@ -27,9 +27,9 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
-import Skeleton from '../Skeleton.vue';
 import Image from '../Image.vue';
 import Node from '../Node.vue';
+import Skeleton from '../Skeleton.vue';
 
 const P = 'apollo-skeleton';
 
@@ -96,9 +96,9 @@ describe('Skeleton · 不凭空加 ARIA（上游就是 0）', () => {
 describe('Skeleton · 不进入 Tab 序列', () => {
   it('没有任何可聚焦元素（`tabindex` / `a[href]` / 表单控件）', () => {
     const w = mount(Skeleton, { avatar: true, active: true });
-    expect(w.element.querySelectorAll('[tabindex], a[href], button, input, select, textarea')).toHaveLength(
-      0,
-    );
+    expect(
+      w.element.querySelectorAll('[tabindex], a[href], button, input, select, textarea'),
+    ).toHaveLength(0);
   });
 
   it('根元素自身没有 `tabindex`', () => {
@@ -129,9 +129,9 @@ describe('Skeleton.Image · ⚠️ 超出上游的 aria-hidden（有意，已登
 
   it('根元素本身**不带** ARIA（只有内部的 svg 带）', () => {
     const w = mount(Image);
-    expect(
-      (w.element as Element).getAttributeNames().filter((n) => n.startsWith('aria-')),
-    ).toEqual([]);
+    expect((w.element as Element).getAttributeNames().filter((n) => n.startsWith('aria-'))).toEqual(
+      [],
+    );
   });
 });
 
@@ -144,9 +144,9 @@ describe('Skeleton.Node · 插槽内容原样渲染', () => {
     const w = mount(Node, {
       slots: { default: () => h('span', { class: 'probe' }, 'X') },
     });
-    expect(
-      (w.element as Element).getAttributeNames().filter((n) => n.startsWith('aria-')),
-    ).toEqual([]);
+    expect((w.element as Element).getAttributeNames().filter((n) => n.startsWith('aria-'))).toEqual(
+      [],
+    );
     expect(w.find('.probe').exists()).toBe(true);
   });
 });
