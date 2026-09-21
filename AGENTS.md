@@ -132,6 +132,31 @@ node registry/tools/next-task.mjs
 6. Agent 的先验知识（最低，且必须标注"待验证"）
 ```
 
+### 5.0 ⭐ 读第 3 层（`registry/*.json`）请用 `ask`，不要凭记忆
+
+```bash
+node registry/tools/ask.mjs progress                      # 组件 / foundation 进度
+node registry/tools/ask.mjs component <name>              # 某组件的 11 个维度状态
+node registry/tools/ask.mjs decisions --open              # 还没裁决的开放决策
+node registry/tools/ask.mjs decision <id>                 # 某个决策的**原文全文**
+node registry/tools/ask.mjs find <关键词>                  # 全 registry 搜关键词
+```
+
+**为什么强制**：2026-09-21 一个会话里**连续三次**跳过第 3 层、直接凭记忆下结论，
+三次都错，且每次都把错误结论写进了仓库文档：
+
+| 次 | 凭记忆的结论 | 原文事实 |
+|---|---|---|
+| 1 | 「作用域 typecheck 快 22 倍」 | 单次异常测量，复现不出来 |
+| 2 | 「a11y project 只收集 2/9 个文件」 | 降级运行给的假绿灯，实际 8/8 |
+| 3 | 「skeleton 语义化与决策 B 不一致」 | 该决策 `status: open` **从未裁决**，且 A/B 记反了 |
+
+⚠️ **判据**：凡是要说「**某个决策/约定/优先级是这样**」，**先跑 `ask`**。
+`ask decision <id>` 输出的是 **原样转录**（不是摘要）—— 摘要会把「open 未裁决」
+压成「有个决策」，而那正是第 3 次翻车的成因。
+
+⚠️ `ask find <关键词>` 命中 0 处时，**任何关于该关键词的断言都不能以 registry 为依据**。
+
 ### 5.1 Ant Design 版本锁定
 
 - 兼容目标版本：**antd 6.6.4**（记录在 `registry/components.json` 的 `antdVersion`）
