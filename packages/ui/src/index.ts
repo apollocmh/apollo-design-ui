@@ -44,6 +44,34 @@ export {
 export type { WithInstall } from './_internal/with-install';
 export { withInstall } from './_internal/with-install';
 // ---------------------------------------------------------------------------
+// Affix —— 固钉
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/affix/style.css` 由构建钩子产出。
+//    全库最小的组件样式（一条规则 + 一个组件 token），见 `./affix/style`。
+//    判据纯函数（getFixedTop/Bottom/getTargetRect）从 `./affix/utils` 一并导出，
+//    供 L1 单测直接钉死判据。
+// ---------------------------------------------------------------------------
+export type {
+  AffixConfig,
+  AffixProps,
+  AffixRect,
+  AffixRef,
+  AffixSlot,
+  AffixTarget,
+} from './affix/interface';
+export {
+  Affix,
+  default as AffixDefault,
+  getFixedBottom,
+  getFixedTop,
+  getTargetRect,
+} from './affix';
+export type {
+  ComponentToken as AffixComponentToken,
+} from './affix/style/token';
+export { prepareComponentToken as prepareAffixComponentToken } from './affix/style/token';
+export { genAffixStyle } from './affix/style';
+// ---------------------------------------------------------------------------
 // Button —— 按钮
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/button/style.css` 由构建钩子产出。
