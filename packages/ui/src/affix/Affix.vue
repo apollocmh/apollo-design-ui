@@ -128,6 +128,9 @@ const measure = (): void => {
   const targetNode = targetFunc.value();
   if (!targetNode) return;
 
+  // ⚠️ 量外层（与 antd 一致）。曾试过「已固钉时改量占位层本身」以掐断增长循环——
+  //    实测 style 变体的差异率从 0.013-0.048% 恶化到 0.796-3.68% ⇒ 已回退。
+  //    （React 基线定格的就是「测量时的外层高度」，改量占位层反而偏离。）
   const placeholderRect = getTargetRect(placeholderNode.value);
   // eslint-disable-next-line no-console
   console.log(
