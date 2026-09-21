@@ -36,17 +36,14 @@ const P = 'apollo-skeleton';
 // ---------------------------------------------------------------------------
 // 1. axe 自动扫描
 //
-// Skeleton 没有 `demo/` 目录（它的形态是「三块的真值组合」，用 demo 表达不如
-// 直接用 props 矩阵），所以走 `render` 工厂而不是 `demos`。
-// 这里渲染的是**最完整**的一态（三块都在），节点数最多、最能暴露结构问题。
+// ⚠️ 走标准的 `demos`（`import.meta.glob('../demo/*.vue')`），与其它组件一致 ——
+//    `demo/` 目录落地后就不再需要 `render` 工厂。
+//    ⚠️ `import.meta.glob` 是**编译期**静态分析，模式串必须是字面量，
+//    且相对路径以**包含该调用的文件**为基准（`test-utils` 无法替我们 glob）。
 // ---------------------------------------------------------------------------
 
 a11yDemoTest('Skeleton', {
-  render: () => h(Skeleton, { avatar: true, title: true, paragraph: true }),
-});
-
-a11yDemoTest('Skeleton（仅 paragraph）', {
-  render: () => h(Skeleton, { title: false }),
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
 });
 
 // ---------------------------------------------------------------------------
