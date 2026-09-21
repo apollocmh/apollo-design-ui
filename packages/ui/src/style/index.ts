@@ -34,6 +34,7 @@ import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genBadgeStyle } from '../badge/style';
+import { genBorderBeamStyle } from '../border-beam/style';
 import { genGridStyle } from '../grid/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
@@ -69,6 +70,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },
   { name: 'badge', gen: genBadgeStyle },
+  { name: 'border-beam', gen: genBorderBeamStyle },
   { name: 'grid', gen: genGridStyle },
   { name: 'skeleton', gen: genSkeletonStyle },
   { name: 'space', gen: genSpaceStyle },

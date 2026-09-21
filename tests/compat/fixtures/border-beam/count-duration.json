@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "border-beam/count-duration",
+  "component": "border-beam",
+  "description": "count>1 错相（delay=-duration*index/count）与 duration/lineWidth/size 运行时 CSS 变量（--{root}-border-beam-*，挂在 Effect style 上）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "count": 3,
+    "duration": 9
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

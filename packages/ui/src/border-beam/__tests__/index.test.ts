@@ -1,10 +1,153 @@
 /**
- * L1/L2 测试占位 —— G5/G6 未开始。
+ * L1 · 单元测试（BorderBeam）
  *
- * ⚠️ 刻意使用 describe.todo（报告里显示 todo 而不是 pass）：本项目不允许
- *    「假绿灯」——骨架测试绝不能看起来像通过。
- * 范本见 divider/__tests__/index.test.ts（合并表镜像上游 testCases）。
+ * ── L2 适用面 ────────────────────────────────────────────────────────────────
+ *
+ * 无事件/受控/焦点。流光的 offset-path 动画在 jsdom 无效（@supports 全不过）——
+ * L1 钉的是「结构与样式串」：Effect 挂进宿主 DOM、CSS 变量值、inset-offset 计算、
+ * count/duration 等判据。视觉由 L6（真实浏览器）覆盖。
  */
-import { describe } from 'vitest';
 
-describe.todo('BorderBeam · L1/L2（G5/G6 未开始）');
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import { h, nextTick } from 'vue';
+import { BorderBeam, DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from '../index';
+
+const mountInHost = (props = {}, hostProps = {}) =>
+  mount(
+    {
+      setup() {
+        return () =>
+          h(
+            'div',
+            { 'data-host': true, style: 'border: 2px solid #ddd; padding: 8px', ...hostProps },
+            [
+              h(BorderBeam, props, {
+                default: () => h('div', { class: 'inner', style: 'border: 2px solid #ddd' }, 'x'),
+              }),
+            ],
+          );
+      },
+    },
+    {
+      attachTo: document.body,
+      // VTU 默认把 Teleport 换成不渲染内容的 stub —— 打开 renderStubDefaultSlot
+      // 让 portal 进宿主 DOM 的 Effect 真实出现在查询范围内。
+      global: { renderStubDefaultSlot: true },
+    },
+  );
+
+describe('BorderBeam · 结构', () => {
+  it('Effect（portal）挂进宿主 DOM：aria-hidden + 根类名', async () => {
+    const w = mountInHost();
+    await nextTick();
+    await nextTick();
+    const effect = w.element.querySelector('.apollo-border-beam');
+    expect(effect).not.toBeNull();
+    expect(effect?.getAttribute('aria-hidden')).toBe('true');
+    // Effect 是宿主的**子元素**（portal 语义）
+    expect(w.element.contains(effect)).toBe(true);
+  });
+
+  it('inset-offset：随宿主 border 取负（数字 -2px；0 边写 0px）', async () => {
+    const w = mountInHost();
+    await nextTick();
+    await nextTick();
+    const effect = w.element.querySelector('.apollo-border-beam') as HTMLElement;
+    const style = effect?.getAttribute('style') ?? '';
+    // 宿主 border 2px 全边 → inset: -2px -2px -2px -2px（四值展开）
+    expect(style).toContain('--apollo-border-beam-inset-offset: -2px -2px -2px -2px');
+  });
+
+  it('outset 覆盖四边统一（字符串走 calc）', async () => {
+    const w = mountInHost({ outset: 6 });
+    await nextTick();
+    await nextTick();
+    expect(
+      (w.element.querySelector('.apollo-border-beam') as HTMLElement).getAttribute('style'),
+    ).toContain('--apollo-border-beam-inset-offset: -6px;');
+    const w2 = mountInHost({ outset: '0.5rem' });
+    await nextTick();
+    await nextTick();
+    expect(
+      (w2.element.querySelector('.apollo-border-beam') as HTMLElement).getAttribute('style'),
+    ).toContain('--apollo-border-beam-inset-offset: calc(-1 * 0.5rem);');
+  });
+
+  it('count/duration/lineWidth/size 写运行时 CSS 变量', async () => {
+    const w = mountInHost({ count: 3, duration: 9, lineWidth: 8, size: 160 });
+    await nextTick();
+    await nextTick();
+    const effects = w.element.querySelectorAll('.apollo-border-beam');
+    expect(effects.length).toBe(3);
+    const style = (effects[0] as HTMLElement).getAttribute('style') ?? '';
+    expect(style).toContain('--apollo-border-beam-duration: 9s');
+    expect(style).toContain('--apollo-border-beam-line-width: 8px');
+    expect(style).toContain('--apollo-border-beam-size: 160px');
+    // delay 错相：index=1 → -3s；index=2 → -6s
+    expect((effects[1] as HTMLElement).getAttribute('style')).toContain(
+      '--apollo-border-beam-delay: -3s;',
+    );
+    expect((effects[2] as HTMLElement).getAttribute('style')).toContain(
+      '--apollo-border-beam-delay: -6s;',
+    );
+  });
+
+  it('color 写 beam-gradient 变量', async () => {
+    const w = mountInHost({ color: 'blue' });
+    await nextTick();
+    await nextTick();
+    expect(
+      (w.element.querySelector('.apollo-border-beam') as HTMLElement).getAttribute('style'),
+    ).toContain(
+      // 纯色 → 单 stop 0%，fillGradientEnd 复制一份置 100%（映射到 70%）
+      '--apollo-border-beam-beam-gradient: linear-gradient(to left, blue 0%, blue 70%, transparent);',
+    );
+  });
+
+  it('count 归一：非法值回落 1', async () => {
+    for (const bad of [0, -2, Number.NaN, Number.POSITIVE_INFINITY]) {
+      const w = mountInHost({ count: bad });
+      await nextTick();
+      await nextTick();
+      expect(w.element.querySelectorAll('.apollo-border-beam').length).toBe(1);
+    }
+  });
+
+  it('宿主不可挂 ref（纯文本）→ 无 Effect', () => {
+    const w = mount(
+      { setup: () => () => h('div', [h(BorderBeam, {}, { default: () => 'plain text' })]) },
+      { attachTo: document.body },
+    );
+    expect(w.element.querySelector('.apollo-border-beam')).toBeNull();
+    expect(w.element.textContent).toContain('plain text');
+  });
+
+  it('getBorderBeamGradient 判据（纯函数直测）', () => {
+    // 纯色 → 单 stop 0% + fillGradientEnd 复制置 100%（映射后 0%/70%）
+    expect(getBorderBeamGradient('blue')).toBe(
+      'linear-gradient(to left, blue 0%, blue 70%, transparent)',
+    );
+    // 0-100 线性映射到 0-70
+    expect(
+      getBorderBeamGradient([
+        { color: '#722ed1', percent: 20 },
+        { color: '#2db7f5', percent: 100 },
+      ]),
+    ).toBe('linear-gradient(to left, #722ed1 14%, #2db7f5 70%, transparent)');
+    // 末 stop 非 100 → 复制置 100（30 → 21%，100 → 70%）
+    expect(getBorderBeamGradient([{ color: 'red', percent: 30 }])).toBe(
+      'linear-gradient(to left, red 21%, red 70%, transparent)',
+    );
+    // 越界截断到 0-100 再映射
+    expect(getBorderBeamGradient([{ color: 'red', percent: 150 }])).toBe(
+      'linear-gradient(to left, red 70%, red 70%, transparent)',
+    );
+    // undefined → undefined（回落 CSS 默认渐变）
+    expect(getBorderBeamGradient(undefined)).toBeUndefined();
+  });
+
+  it('默认导出常量', () => {
+    expect(DEFAULT_BORDER_BEAM_DURATION).toBe(6);
+  });
+});

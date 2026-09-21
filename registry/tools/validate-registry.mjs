@@ -305,7 +305,11 @@ if (missingFixtures === 0) ok('E9', 'completed 组件均有 compat fixture');
 // E10  无硬编码视觉值（仅扫描已实现的组件）
 // ---------------------------------------------------------------------------
 const HARDCODED_PATTERNS = [
-  { re: /#[0-9a-fA-F]{3,8}\b/, what: '十六进制颜色' },
+  // 2026-09-22 豁免 `linear-gradient(#fff 0 0)`：border-beam 的 mask 抠边用白色
+  // 做遮罩形状（antd 逐字）—— 它是「全不透明遮罩」的技术常量，与主题无关，
+  // 换成 token 反而会在深色主题下破坏遮罩。
+  // `(?!\s*0\s+0\))`：豁免 `#fff 0 0)` —— mask 抠边渐变（border-beam，antd 逐字）。
+  { re: /#[0-9a-fA-F]{3,8}\b(?!\s*0\s+0\))/, what: '十六进制颜色' },
   { re: /\brgba?\(/, what: 'rgb/rgba 颜色' },
   { re: /\bhsla?\(/, what: 'hsl/hsla 颜色' },
   // 模板字符串里的 `border-radius:${v('xxx')}` 在源码里以 `$` 开头（不是 `var(`），
@@ -334,7 +338,9 @@ const HARDCODED_PATTERNS = [
   //    现在把空白收进先行内部（`(?!\s*(?:…))`），两种写法都正确。
   // 2026-09-22 补 `calc(`：badge 的 `border-radius:calc(var(--badge-indicator-height)/2)`
   // 是 token 的运算式，不是硬编码设计值（与 antd 的 `borderRadius/2` 同构）。
-  { re: /\bborder-radius:(?!\s*(?:var\(|calc\(|\$\{v\(|\d+%|0(?![\d.])))/, what: '硬编码圆角' },
+  // 2026-09-22 补 `inherit`：border-beam 的 `border-radius:inherit`（继承宿主圆角，
+  // antd 逐字）—— 是继承语义，不是设计值。
+  { re: /\bborder-radius:(?!\s*(?:var\(|calc\(|inherit\b|\$\{v\(|\d+%|0(?![\d.])))/, what: '硬编码圆角' },
   // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游
   // `components/style/compact-item.ts` 同型；动效关闭的 `@media (prefers-reduced-motion)`
   // 也需要）；preset 阴影方块（13 色 × 1 条）由 `prepareComponentToken` 在**构建期**

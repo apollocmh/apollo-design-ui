@@ -1,17 +1,15 @@
 ---
 order: 0
 title:
-  zh-CN: 基本
+  zh-CN: 基础用法
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/border-beam/demo/ 抄清单 -->
-```vue
-<script setup lang="ts">
-import { BorderBeam } from '@apollo-design/ui';
-</script>
+包裹任意内容，展示沿边框流动的流光。
 
-<template>
-  <BorderBeam>basic demo 占位</BorderBeam>
-</template>
+```vue
+<div style="position: relative">
+  <BorderBeam />
+  内容
+</div>
 ```

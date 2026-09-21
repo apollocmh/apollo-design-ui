@@ -135,6 +135,10 @@ export const COMPONENTS = {
       'offset-size', // 封顶 + offset + size small
     ],
   },
+  'border-beam': {
+    // 2 个 variant × 3 个 viewport = 6 张（流光动画本身不在比对面，截静态形态）
+    variants: ['basic', 'color'],
+  },
   skeleton: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [

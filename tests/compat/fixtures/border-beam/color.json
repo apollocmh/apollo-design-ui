@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema.json",
+  "id": "border-beam/color",
+  "component": "border-beam",
+  "description": "渐变色契约：纯色 → 单 stop 0% + fillGradientEnd 复制置 100%；色标 0–100 线性映射到 0–70%（MAX_BEAM_COLOR_STOP_PERCENT，保留尾部淡出）；linear-gradient(to left, …, transparent)。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "color": [
+      {
+        "color": "#722ed1",
+        "percent": 20
+      },
+      {
+        "color": "#2db7f5",
+        "percent": 60
+      }
+    ]
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -260,6 +260,22 @@ export type { ComponentToken as BadgeComponentToken } from './badge/style/token'
 export { prepareComponentToken as prepareBadgeComponentToken } from './badge/style/token';
 export { genBadgeStyle } from './badge/style';
 // ---------------------------------------------------------------------------
+// BorderBeam —— 宿主边缘流光
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；无 Component Token（与 antd 逐字一致）。
+//    运行时调参走 `--{root}-border-beam-*` CSS 变量（props 写在 Effect style 上）。
+// ---------------------------------------------------------------------------
+export type {
+  BorderBeamColor,
+  BorderBeamGradient,
+  BorderBeamProps,
+  BorderBeamSlot,
+} from './border-beam';
+export { BorderBeam } from './border-beam';
+export { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from './border-beam';
+export type { ComponentToken as BorderBeamComponentToken } from './border-beam/style/token';
+export { genBorderBeamStyle } from './border-beam/style';
+// ---------------------------------------------------------------------------
 export type {
   ColComponentToken as GridColComponentToken,
   RowComponentToken as GridRowComponentToken,

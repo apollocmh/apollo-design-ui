@@ -1,0 +1,21 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/border-beam.mjs 从 antd 6.6.4 的 BorderBeam 真实渲染生成。机械 oracle，禁止手改。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 3,
+  "cases": [
+    {
+      "id": "border-beam:prefix-cls:no-props",
+      "html": "<div style=\"position:relative;border:2px solid #ddd;padding:16px\"><div>x</div></div>"
+    },
+    {
+      "id": "border-beam:basic",
+      "html": "<div style=\"position:relative;border:2px solid #ddd;padding:16px\"><div>x</div></div>"
+    },
+    {
+      "id": "border-beam:props",
+      "html": "<div style=\"position:relative;border:2px solid #ddd;padding:16px\"><div>x</div></div>"
+    }
+  ]
+}

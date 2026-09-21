@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "border-beam/basic",
+  "component": "border-beam",
+  "description": "最基础的 BorderBeam：包裹宿主子元素（Effect 经 portal/children 注入挂进宿主 DOM，aria-hidden）。SSR 只渲染宿主（Effect 客户端才挂）——L4 基线钉 SSR 形态，L1 钉挂载后结构，L6 钉视觉。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

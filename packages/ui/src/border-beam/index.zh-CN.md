@@ -1,5 +1,32 @@
-# BorderBeam
+---
+category: 反馈
+title: BorderBeam
+subtitle: 边框流光
+---
 
-<!-- TODO(G11): 中文/英文文档骨架。结构对齐 divider/index.zh-CN.md：
-     何时使用 / 代码演示（demo 一一对应）/ API（props/events/slots/expose 表）/ Theme（token 表）。
-     API 表由 interface.ts 的注释生成口径书写；@desc/@descEN 与 antd 同构。 -->
+沿容器边框流动的流光描边。
+
+## 何时使用
+
+- 需要强调某个容器/卡片处于「进行中」或「活跃」状态时。
+
+## 代码演示
+
+见 [`demo/`](./demo)（8 个，与 antd 非 debug demo 一一对应）。
+
+## API
+
+| 参数 | 说明 | 类型 | 默认值 |
+|---|---|---|---|
+| color | 渐变：纯色或色标数组（0–100 映射到 0–70% 保留尾部淡出） | `string \| {color, percent}[]` | 主题色 |
+| count | 流光条数（≥1 取整） | `number` | `1` |
+| duration | 单圈时长（秒） | `number` | `6` |
+| lineWidth | 描边厚度（默认随宿主 border） | `number \| string` | — |
+| outset | 覆盖四边统一 inset 偏移 | `number \| string` | — |
+| size | 流光头部长度 | `number \| string` | `100px` |
+
+## 设计说明
+
+- 子元素即宿主：Effect 注入宿主 DOM 内部（`aria-hidden`，纯装饰）。
+- 宿主的 `border-radius` 会被继承；`border` 宽度决定流光贴合的偏移。
+- `prefers-reduced-motion: reduce` 下自动隐藏。
