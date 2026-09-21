@@ -28,9 +28,7 @@ for (const side of ['react', 'vue']) {
   const page = await ctx.newPage();
   const errs = [];
   page.on('pageerror', (e) => errs.push(e.message));
-  page.on('console', (m) => {
-    if (m.type() === 'error') errs.push(`console.error: ${m.text()}`);
-  });
+  page.on('console', (m) => errs.push(`${m.type()}: ${m.text()}`));
   const url = `http://127.0.0.1:${PORT}/${side}/${side}.html?component=affix&variant=basic&theme=light`;
   await page.goto(url, { waitUntil: 'load' });
   try {
@@ -59,6 +57,7 @@ for (const side of ['react', 'vue']) {
   console.log('占位层:', info.placeholder);
   console.log('stage HTML:', info.stageHTML.slice(0, 420));
   console.log(`${side} 错误:`, errs.length ? errs.join(' | ').slice(0, 260) : '(无)');
+  for (const e of errs.filter((x) => x.includes('affix-probe'))) console.log('  [日志]', e);
   await ctx.close();
 }
 await browser.close();
