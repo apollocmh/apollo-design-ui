@@ -129,6 +129,19 @@ const measure = (): void => {
   if (!targetNode) return;
 
   const placeholderRect = getTargetRect(placeholderNode.value);
+  // eslint-disable-next-line no-console
+  console.log(
+    '[affix-probe] measure h=',
+    placeholderRect.height,
+    'w=',
+    placeholderRect.width,
+    'top=',
+    placeholderRect.top,
+    '| lastAffix=',
+    lastAffix.value,
+    '| 现affixStyle=',
+    JSON.stringify(affixStyle.value),
+  );
   // antd `:48-50`：零矩形 ⇒ 还没量到，放弃本次测量。
   if (
     placeholderRect.top === 0 &&
@@ -154,22 +167,36 @@ const measure = (): void => {
   let nextAffixStyle: CSSProperties | undefined;
   let nextPlaceholderStyle: CSSProperties | undefined;
 
+  // ⚠️⚠️ **数字必须转成带 px 的字符串**（L6 3/15 的根因）：
+  //    Vue 的 patchStyle 直接 `el.style[key] = value`，**不做数字 → px 的转换**
+  //    （React 才有 dangerousStyleValue 的自动补全）。数字赋给 CSSOM 是非法值，
+  //    会被**静默丢弃** —— 实测 `top: 80`、`width: 343` 全丢，只剩字符串的
+  //    `position: 'fixed'`。antd 侧是 React，数字自动转 px，所以两边看起来差一大截。
+  const px = (v: number | undefined): string | undefined =>
+    v === undefined ? undefined : `${v}px`;
+
   if (fixedTop !== undefined) {
     nextAffixStyle = {
       position: 'fixed',
-      top: fixedTop,
-      width: placeholderRect.width,
-      height: placeholderRect.height,
+      top: px(fixedTop),
+      width: px(placeholderRect.width),
+      height: px(placeholderRect.height),
     };
-    nextPlaceholderStyle = { width: placeholderRect.width, height: placeholderRect.height };
+    nextPlaceholderStyle = {
+      width: px(placeholderRect.width),
+      height: px(placeholderRect.height),
+    };
   } else if (fixedBottom !== undefined) {
     nextAffixStyle = {
       position: 'fixed',
-      bottom: fixedBottom,
-      width: placeholderRect.width,
-      height: placeholderRect.height,
+      bottom: px(fixedBottom),
+      width: px(placeholderRect.width),
+      height: px(placeholderRect.height),
     };
-    nextPlaceholderStyle = { width: placeholderRect.width, height: placeholderRect.height };
+    nextPlaceholderStyle = {
+      width: px(placeholderRect.width),
+      height: px(placeholderRect.height),
+    };
   }
 
   const nextLastAffix = !!nextAffixStyle;
@@ -185,8 +212,19 @@ const measure = (): void => {
     '| placeholderStyle=',
     JSON.stringify(nextPlaceholderStyle),
   );
-  affixStyle.value = nextAffixStyle;
-  placeholderStyle.value = nextPlaceholderStyle;
+  // ⚠️ 冻结：如果之后有代码改动这两个对象（外部突变），改动会静默失败——
+  //    以此区分「对象被改」与「绑定没生效」。
+  const frozenAffix = Object.freeze({ ...nextAffixStyle });
+  const frozenPlaceholder = Object.freeze({ ...nextPlaceholderStyle });
+  affixStyle.value = frozenAffix;
+  placeholderStyle.value = frozenPlaceholder;
+  // eslint-disable-next-line no-console
+  console.log(
+    '[affix-probe] 读回 affixStyle=',
+    JSON.stringify(affixStyle.value),
+    '| 读回 placeholderStyle=',
+    JSON.stringify(placeholderStyle.value),
+  );
   lastAffix.value = nextLastAffix;
 };
 

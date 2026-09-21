@@ -29,14 +29,44 @@ for (const side of ['react', 'vue']) {
   const errs = [];
   page.on('pageerror', (e) => errs.push(e.message));
   page.on('console', (m) => errs.push(`${m.type()}: ${m.text()}`));
-  const url = `http://127.0.0.1:${PORT}/${side}/${side}.html?component=affix&variant=basic&theme=light`;
+  const url = `http://127.0.0.1:${PORT}/${side}/${side}.html?component=affix&variant=offset-bottom&theme=light`;
   await page.goto(url, { waitUntil: 'load' });
+  // ⚠️ 在 READY 之前挂 MutationObserver，记录固钉层 style 属性的完整变更历史
+  await page.evaluate(() => {
+    (window).__styleLog = [];
+    const target = document.querySelector('.apollo-affix');
+    if (!target) {
+      // 用 MutationObserver 等它出现
+      const mo = new MutationObserver(() => {
+        const el = document.querySelector('.apollo-affix');
+        if (el && !el.__logged) {
+          el.__logged = true;
+          mo.disconnect();
+          hook(el);
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    } else {
+      hook(target);
+    }
+    function hook(el) {
+      (window).__styleLog.push('初始: ' + el.getAttribute('style'));
+      const mo2 = new MutationObserver((muts) => {
+        for (const m of muts) {
+          (window).__styleLog.push('变更: ' + el.getAttribute('style'));
+        }
+      });
+      mo2.observe(el, { attributes: true, attributeFilter: ['style'] });
+    }
+  });
   try {
     await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 8000 });
   } catch {
     console.log(`${side}: READY 超时`);
   }
   await page.waitForTimeout(1500);
+  const styleLog = await page.evaluate(() => (window).__styleLog ?? []);
+  console.log(`${side} style 变更历史:`, JSON.stringify(styleLog));
   const info = await page.evaluate(() => {
     const stage = document.querySelector('#stage');
     const affix = document.querySelector('.apollo-affix, .ant-affix');
