@@ -325,7 +325,45 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
     ⚠️ 机器内存吃紧时 vitest 会 `Failed to start threads worker` / `Timeout waiting for
     worker to respond`；`--pool=forks --maxWorkers=1` 可以绕过（**但会慢很多**）。
-17. 🚨🚨 **git 报 `update_ref failed ... File exists` ⇒ stale `.lock`；    而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
+18. 🚨🚨 **pnpm 会卡在 corepack 的下载提示上「静默挂起」—— 必须设 `COREPACK_ENABLE_DOWNLOAD_PROMPT=0`**
+    （2026-09-21 定位，**这个坑伪装成「构建很慢」**）。
+
+    症状：`pnpm --filter @apollo-design/ui run build` 跑了 **30 分钟没输出、没报错**，
+    看起来像「ui 的 dts 阶段就是慢」。实际日志只有一行：
+    ```
+    ! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-12.4.2.tgz
+    ? Do you want to continue? [Y/n]
+    ```
+    **它在等交互输入**，而我们把输出重定向到了文件，所以看不到。
+
+    ⇒ 加上 `COREPACK_ENABLE_DOWNLOAD_PROMPT=0`（或 `CI=1`）后，同一个构建 **1 分 24 秒**完成。
+    **20 倍的差距，全是挂起。**
+
+    ⚠️ 判据：**任何 pnpm 命令如果「超过预期时间且无输出」，先去看它是不是卡在提示上**，
+    不要直接归因为「机器慢」或「dts 慢」。
+    ⚠️ 长命令一律写成
+    `COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1 pnpm ... > /tmp/x.log 2>&1`
+    并在跑之前先 `tail` 一次日志确认它真的在动。
+
+    ⭐ 顺带修正一条旧判断：**ui 的完整构建（unbuild + vue-tsc dts）只要约 1 分钟**，
+    不慢。以后验证样式改动不必因为「要等 30 分钟」而放弃。
+
+19. ⭐ **验证「改共享层有没有回归」的标准手法**（2026-09-21 用它证明了 BASE_CSS 零回归）：
+    ```bash
+    # 1. 改后：跑一遍，记下通过数与失败清单
+    node tests/visual/run.mjs --mode compare
+    # 2. 回退到改动前那一版（⚠️ 注意修订号！见下），重建产物，再跑一遍
+    git show <commit>~1:<path> > <path>
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1 pnpm --filter @apollo-design/ui run build
+    node tests/visual/run.mjs --mode compare
+    # 3. 恢复
+    git checkout HEAD -- <path> && （重新 build）
+    ```
+    ⚠️⚠️ **回退时务必验证「真的退回去了」**：本轮我用 `HEAD~1` 取「改动前」，
+    但 `HEAD~1` 恰好就是那个改动提交本身 ⇒ **两次跑的是同一个版本**，
+    得出「141/156 → 141/156 没变化」的假结论。
+    **判据：回退后用 `grep -c` 数一个只存在于新版的字面量**（本轮数 `ol,ul,dl`，应为 0）。
+    **不要相信「看起来没变化」——先证明回退生效了。**    而 `.lock` 删不掉的根因是「git 跑在 sandbox-cli 垫片下」。**
 
     ⭐ **真正的根因（2026-09-20 定位）**：本环境里的 `git` 是**垫片版** ——
     `.../sandbox/5.5.5/sandbox-cli --config {...,"extraPath":"runtime/git/bin"}`。
