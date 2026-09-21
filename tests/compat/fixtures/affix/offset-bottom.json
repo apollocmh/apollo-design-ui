@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "affix/offset:bottom",
+  "component": "affix",
+  "description": "offsetBottom=80（与 offsetTop 互斥）：到达底部阈值后固钉。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "offsetBottom": 80
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -44,11 +44,7 @@ import { DEFAULT_Z_INDEX_POPUP } from './token';
 export function genAffixStyle(prefixCls: string): string {
   const cls = `.${prefixCls}-affix`;
 
-  return [
-    `${cls}{`,
-    `  position:fixed;`,
-    `  z-index:${DEFAULT_Z_INDEX_POPUP};`,
-    `}`,
-    '',
-  ].join('\n');
+  return [`${cls}{`, `  position:fixed;`, `  z-index:${DEFAULT_Z_INDEX_POPUP};`, `}`, ''].join(
+    '\n',
+  );
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Affix } from '../../index';
-import { Button } from '../../index';
+import { Affix, Button } from '../../index';
 </script>
 
 <template>

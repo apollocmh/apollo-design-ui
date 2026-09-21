@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "affix/offset:top",
+  "component": "affix",
+  "description": "offsetTop 固钉契约：滚动超过阈值后内层 position:fixed + 占位层宽度同步（未固钉态 DOM 由 L4 钉死；固钉态需真实滚动，进 L6）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "offsetTop": 80
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

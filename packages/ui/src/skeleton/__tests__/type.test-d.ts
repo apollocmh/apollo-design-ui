@@ -32,7 +32,6 @@ import {
   type SkeletonParagraphProps,
   type SkeletonProps,
   type SkeletonRef,
-  type SkeletonSemanticAllType,
   type SkeletonSemanticClassNames,
   type SkeletonSemanticStyles,
   type SkeletonSemanticType,

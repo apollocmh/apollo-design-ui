@@ -132,8 +132,17 @@ for (const p of pkgDirs) {
       baseUrl: ROOT,
     },
     include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
-    exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.test-d.ts', '**/demo/**', 'dist', 'node_modules'],
-    ...(refs.length ? { references: refs.map((r) => ({ path: `../${r}/tsconfig.check.json` })) } : {}),
+    exclude: [
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/*.test-d.ts',
+      '**/demo/**',
+      'dist',
+      'node_modules',
+    ],
+    ...(refs.length
+      ? { references: refs.map((r) => ({ path: `../${r}/tsconfig.check.json` })) }
+      : {}),
   });
 }
 

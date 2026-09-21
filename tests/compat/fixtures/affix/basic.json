@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "affix/basic",
+  "component": "affix",
+  "description": "最基础的 Affix：offsetTop=80 + 内容。未固钉态（页面在顶部时 top 远大于阈值）：内层无 apollo-affix 类名、无占位层。L6 affix/basic 覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "offsetTop": 80
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

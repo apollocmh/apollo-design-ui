@@ -30,7 +30,7 @@ const check = process.argv.includes('--check');
 const require = createRequire(import.meta.url);
 const antd = require('antd');
 const antdPkg = require('antd/package.json');
-const { Affix, ConfigProvider } = antd;
+const { Affix } = antd;
 
 /** 两侧共用的前缀。⚠️ `getPrefixCls('affix','apollo')` **直接返回** `apollo`（不加后缀）。 */
 const PREFIX = 'apollo';
