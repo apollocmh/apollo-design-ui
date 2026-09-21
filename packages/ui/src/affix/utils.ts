@@ -87,6 +87,17 @@ export function getFixedBottom(
   targetRect: AffixRect,
   offsetBottom: number | undefined,
 ): number | undefined {
+  // eslint-disable-next-line no-console
+  console.log(
+    '[affix-probe] getFixedBottom targetRect.bottom=',
+    targetRect.bottom,
+    '| placeholderRect.bottom=',
+    placeholderRect.bottom,
+    '| innerHeight=',
+    typeof window !== 'undefined' ? window.innerHeight : '(no window)',
+    '| offsetBottom=',
+    offsetBottom,
+  );
   if (
     offsetBottom !== undefined &&
     Math.round(targetRect.bottom) < Math.round(placeholderRect.bottom) + offsetBottom

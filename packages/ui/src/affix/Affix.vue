@@ -212,19 +212,14 @@ const measure = (): void => {
     '| placeholderStyle=',
     JSON.stringify(nextPlaceholderStyle),
   );
-  // ⚠️ 冻结：如果之后有代码改动这两个对象（外部突变），改动会静默失败——
-  //    以此区分「对象被改」与「绑定没生效」。
-  const frozenAffix = Object.freeze({ ...nextAffixStyle });
-  const frozenPlaceholder = Object.freeze({ ...nextPlaceholderStyle });
-  affixStyle.value = frozenAffix;
-  placeholderStyle.value = frozenPlaceholder;
-  // eslint-disable-next-line no-console
-  console.log(
-    '[affix-probe] 读回 affixStyle=',
-    JSON.stringify(affixStyle.value),
-    '| 读回 placeholderStyle=',
-    JSON.stringify(placeholderStyle.value),
-  );
+  // ⚠️⚠️ **直接赋值，不要包一层对象**：
+  //    曾在这里做过 `Object.freeze({ ...nextAffixStyle })` 的「诊断实验」——
+  //    当 nextAffixStyle 为 **undefined** 时，`{ ...undefined }` 的结果是 **`{}`（真值！）**，
+  //    导致 v-if 渲染占位层、`apollo-affix` 类名被套上（CSS 的 position:fixed 生效）⇒
+  //    内容出文档流 ⇒ 外层塌成 0 ⇒ offset-bottom 变体整组 size-mismatch。
+  //    **教训：把「可能为 undefined 的值」展开进新对象，会把 undefined 变成真值空对象。**
+  affixStyle.value = nextAffixStyle;
+  placeholderStyle.value = nextPlaceholderStyle;
   lastAffix.value = nextLastAffix;
 };
 
