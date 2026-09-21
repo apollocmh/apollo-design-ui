@@ -44,6 +44,19 @@ export const THEMES = [{ id: 'light', antdTheme: 'default', apolloTokens: 'light
  * 共用 `render/cases/shared.mjs` 里的常量，确保输入一致。
  */
 export const COMPONENTS = {
+  affix: {
+    // 5 个 variant × 3 个 viewport = 15 张
+    // ⚠️ 只覆盖**未固钉**的静态形态：页面停在顶部时 `getBoundingClientRect` 的
+    //    top 远大于阈值 ⇒ 不固钉（`docs/analysis/affix.md` §8）。
+    //    固钉态（position:fixed）需要真实滚动，不进视觉比对。
+    variants: [
+      'basic', // offsetTop=80 + 内容（未固钉：内层无 apollo-affix 类名、无占位层）
+      'offset-bottom', // offsetBottom=80（与 offsetTop 互斥）
+      'class', // className / rootClassName
+      'style', // style 透传到外层占位测量层
+      'no-children', // 无子内容（SSR 下 React 会警告 ResizeObserver 空子，仍可渲染）
+    ],
+  },
   button: {
     // 9 个 variant × 3 个 viewport = 27 张
     variants: [

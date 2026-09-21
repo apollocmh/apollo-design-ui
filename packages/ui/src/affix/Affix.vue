@@ -272,9 +272,21 @@ watch(
   },
 );
 
-watch([() => props.target, () => props.offsetTop, () => props.offsetBottom], () => {
-  updatePosition();
-});
+watch(
+  [
+    () => props.target,
+    () => props.offsetTop,
+    () => props.offsetBottom,
+  ],
+  () => {
+    updatePosition();
+  },
+  // ⚠️ **必须 `immediate: true`**：antd 的 `useEffect([target, offsetTop, offsetBottom])`
+  //    在**挂载时就会跑一次** `updatePosition()` —— 这是首次测量的唯一入口。
+  //    Vue 的 `watch` 默认不立即执行 ⇒ 永远不测量 ⇒ **永不固钉**（占位层也不渲染）。
+  //    视觉比对抓出来的：React 侧页面比我们高 60px（差的就是那层占位）。
+  { immediate: true },
+);
 
 // ResizeObserver：外层占位 + children（固钉层）两处（antd `:175` / `:200`）。
 useResizeObserver({ target: placeholderNode, onResize: updatePosition });
