@@ -138,6 +138,14 @@ const measure = (): void => {
   ) {
     return;
   }
+  // ⚠️⚠️ **占位塌缩保护**（L6 3/15 的根因，measure 日志实测：60 → 0 → 0 自锁）：
+  //    已固钉时，外层（placeholderNode）的高度就是占位层撑起来的；
+  //    若此时量到高度 0，说明量的是「内容已出文档流之后」的塌缩态——
+  //    把它写回 placeholderStyle 会让占位层变 0 → 外层更塌 → 再触发重测 ⇒ 自锁。
+  //    已固钉 + 高度 0 ⇒ 跳过本次测量，保住第一次的正确占位尺寸。
+  if (lastAffix.value && placeholderRect.height === 0) {
+    return;
+  }
   const targetRect = getTargetRect(targetNode);
   // eslint-disable-next-line no-console
   const fixedTop = getFixedTop(placeholderRect, targetRect, internalOffsetTop.value);
@@ -170,6 +178,13 @@ const measure = (): void => {
   }
   statusRef.value = AFFIX_STATUS_NONE;
   // eslint-disable-next-line no-console
+  // eslint-disable-next-line no-console
+  console.log(
+    '[affix-probe] affixStyle=',
+    JSON.stringify(nextAffixStyle),
+    '| placeholderStyle=',
+    JSON.stringify(nextPlaceholderStyle),
+  );
   affixStyle.value = nextAffixStyle;
   placeholderStyle.value = nextPlaceholderStyle;
   lastAffix.value = nextLastAffix;

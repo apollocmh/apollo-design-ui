@@ -28,6 +28,15 @@ export interface AffixRect {
  * （antd 原样如此，`getFixedTop` 只读 `top`、`getFixedBottom` 只读 `bottom`）。
  */
 export function getTargetRect(target: Window | HTMLElement | null): AffixRect {
+  // eslint-disable-next-line no-console
+  console.log(
+    '[affix-probe] getTargetRect target=',
+    String(target),
+    '| ctor=',
+    (target && target.constructor && target.constructor.name) || String(target),
+    '| hasGBCR=',
+    typeof (target as HTMLElement | undefined && (target as HTMLElement).getBoundingClientRect),
+  );
   if (target && typeof (target as HTMLElement).getBoundingClientRect === 'function') {
     return (target as HTMLElement).getBoundingClientRect();
   }
