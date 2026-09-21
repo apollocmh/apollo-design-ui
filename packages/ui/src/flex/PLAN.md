@@ -19,11 +19,11 @@
 - [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [x] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [x] G8 L5 a11y —— axe + role/键盘断言
-⏳ [ ] G9 L6 视觉（环境阻塞：Playwright 1.63 不支持 macOS 12；用例与 matrix 已备齐） —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [x] G9 L6 视觉 —— 15/15 全 exact（playwright 降至 1.58 后本机可跑；顺带抓出 genFlexStyle 选择器段/属性名混用 BUG 并修复） —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [x] G10 L4/L4 DOM 契约 + compat 比对
 - [x] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-− [ ] G12 REGISTRY（部分完成：10/11 维度 done，visual 待跑 —— 收口被 G9 挡住） —— 11 维度置 done（唯一让进度被承认的方式）
-− [ ] G13 BUILD（进行中） —— pnpm run registry:check && lint && test && test:build 四道全绿
+- [x] G12 REGISTRY —— 11 维度 done，status=completed（组件 8/72 → 9/72） —— 11 维度置 done（唯一让进度被承认的方式）
+- [x] G13 BUILD —— registry:check 18 checks OK；lint:types 过；test:build FAIL 0 —— pnpm run registry:check && lint && test && test:build 四道全绿
 - [ ] G14 COMMIT —— commit message 带 [COMP:flex]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）

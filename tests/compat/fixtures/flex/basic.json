@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "flex/basic",
+  "component": "flex",
+  "description": "最基础的 Flex：不传任何 props。根元素是 div、类名 apollo-flex、display:flex（样式层）。默认水平方向、无 wrap/justify/align 类名。L6 视觉回归在 flex/basic 用例上覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

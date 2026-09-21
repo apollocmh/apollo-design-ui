@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "flex/orientation",
+  "component": "flex",
+  "description": "方向合并契约：orientation > vertical > context.vertical。垂直时加 -vertical 类（flex-direction:column）与 -align-stretch（未传 align 时），且 justify/align 语义类名吃 mergedVertical 而不是裸 prop。L4 用例 orientation:* 与 L1 响应式用例共同覆盖。",
+  "antdVersion": "6.6.4",
+  "props": { "vertical": true },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}
