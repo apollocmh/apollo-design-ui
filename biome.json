@@ -18,6 +18,7 @@
       "!**/registry/tokens.json",
       "!**/registry/foundation.json",
       "!**/registry/workstreams.json",
+      "!**/tsconfig.check.json",
       "!**/registry/source/antd-*.raw.json",
       "!**/packages/*/src/**/__fixtures__",
       "!**/tests/compat/baselines",
