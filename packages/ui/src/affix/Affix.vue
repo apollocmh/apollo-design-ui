@@ -139,6 +139,7 @@ const measure = (): void => {
     return;
   }
   const targetRect = getTargetRect(targetNode);
+  // eslint-disable-next-line no-console
   const fixedTop = getFixedTop(placeholderRect, targetRect, internalOffsetTop.value);
   const fixedBottom = getFixedBottom(placeholderRect, targetRect, props.offsetBottom);
 
@@ -168,6 +169,7 @@ const measure = (): void => {
     emit('change', nextLastAffix);
   }
   statusRef.value = AFFIX_STATUS_NONE;
+  // eslint-disable-next-line no-console
   affixStyle.value = nextAffixStyle;
   placeholderStyle.value = nextPlaceholderStyle;
   lastAffix.value = nextLastAffix;
