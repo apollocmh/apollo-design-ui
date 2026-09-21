@@ -142,7 +142,24 @@ antd 的 skeleton 样式**只设 `margin-block-start`**，end 方向完全依赖
 - `Skeleton.Image` 里有一个 `<title>Image placeholder</title>` —— 与 `aria-hidden` 并存
   在语义上是矛盾的（hidden 之后 title 不会被读出）。
 
-### 7.4 其它缺口
+### 7.4 ⚠️ 语义化**支持函数式**，与 `empty-semantic-fn` 决策的建议 B 不一致
+
+`empty-semantic-fn` 开放决策的建议是 **B（形态统一优先，不支持函数式 `classNames` / `styles`）**，
+divider / button / typography 等已按 B 落地。
+
+但本组件的 `interface.ts` 实现的是 **antd 的原始形状**（实测）：
+
+| 类型 | 实际形状 |
+|---|---|
+| `SkeletonSemanticValue<T>` | `T \| ((info: { props: SkeletonProps }) => T)` —— **含函数分支** |
+| `SkeletonSemanticAllType` | 要求 `classNamesAndFn` / `stylesAndFn` |
+| `SkeletonProps.classNames` | 接受函数（`() => ({ root: 'x' })` 类型通过） |
+
+⇒ **本组件的语义化面比其它组件宽**。`__tests__/type.test-d.ts` 如实钉住**实现**，
+而不是按 B 去写断言 —— 差异本身留待决策方裁决（要么把 skeleton 收到 B，
+要么把 B 改成 A 并回头补其它组件）。
+
+### 7.5 其它缺口
 
 - **`demo/` 目录未落地**（§6.1 要求）⇒ `a11yDemoTest` 目前走 `render` 工厂而非 `demos`。
 - **按需样式子路径缺失**：`packages/ui/package.json` 的 `exports` 未声明
