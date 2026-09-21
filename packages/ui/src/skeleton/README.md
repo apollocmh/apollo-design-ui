@@ -142,22 +142,27 @@ antd 的 skeleton 样式**只设 `margin-block-start`**，end 方向完全依赖
 - `Skeleton.Image` 里有一个 `<title>Image placeholder</title>` —— 与 `aria-hidden` 并存
   在语义上是矛盾的（hidden 之后 title 不会被读出）。
 
-### 7.4 ⚠️ 语义化**支持函数式**，与 `empty-semantic-fn` 决策的建议 B 不一致
+### 7.4 语义化**支持函数式** —— 这是**全库现状**，且对应一个**未裁决**的开放决策
 
-`empty-semantic-fn` 开放决策的建议是 **B（形态统一优先，不支持函数式 `classNames` / `styles`）**，
-divider / button / typography 等已按 B 落地。
+`registry/foundation.json` 里的 `empty-semantic-fn` 决策 **`status: "open"`、`decision: null`
+—— 从来没被裁决过**。它的两个选项是：
 
-但本组件的 `interface.ts` 实现的是 **antd 的原始形状**（实测）：
+- **A. 不支持**函数式变体（组件分析文档原推荐）
+- **B. 支持**（与 antd 对齐）
 
-| 类型 | 实际形状 |
+**实测全库现状：所有组件都走的是 B**（支持函数式）：
+
+| 组件 | `SemanticValue` |
 |---|---|
-| `SkeletonSemanticValue<T>` | `T \| ((info: { props: SkeletonProps }) => T)` —— **含函数分支** |
-| `SkeletonSemanticAllType` | 要求 `classNamesAndFn` / `stylesAndFn` |
-| `SkeletonProps.classNames` | 接受函数（`() => ({ root: 'x' })` 类型通过） |
+| divider / typography / space / spin / empty / **skeleton** | `T \| ((info: { props }) => T)` |
+| button | 有 `classNamesAndFn` / `stylesAndFn` |
 
-⇒ **本组件的语义化面比其它组件宽**。`__tests__/type.test-d.ts` 如实钉住**实现**，
-而不是按 B 去写断言 —— 差异本身留待决策方裁决（要么把 skeleton 收到 B，
-要么把 B 改成 A 并回头补其它组件）。
+⇒ **skeleton 与其它组件一致，不存在「比谁宽」的问题。**
+
+⚠️⚠️ **本节的第一版写错了**：当时我凭记忆认为「决策的建议是 B（不支持函数式）」，
+据此断言「skeleton 支持函数式 ⇒ 与决策不一致」。查原文才发现 **A 才是不支持**，
+且决策根本**没裁决过**。⇒ 已更正。留待裁决的是「要不要把全库统一到 A」，
+而不是「skeleton 特殊」。
 
 ### 7.5 其它缺口
 

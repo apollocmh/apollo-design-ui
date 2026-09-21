@@ -132,15 +132,17 @@ describe('Skeleton · 语义化', () => {
   });
 
   /**
-   * ⚠️⚠️ **本组件支持函数式语义化** —— 与 `empty-semantic-fn` 决策的建议 B
-   *    （「形态统一优先，不支持函数式」）**不一致**。
+   * ⚠️ **函数式语义化是全库现状**（divider / typography / space / spin / empty / skeleton
+   * 的 `SemanticValue` 都是 `T | ((info) => T)`；button 有 `classNamesAndFn`）。
    *
-   * 实测证据：`SkeletonSemanticAllType` 要求 `classNamesAndFn` / `stylesAndFn`，
-   * 且 `SkeletonSemanticValue<T>` 是 `T | ((info) => T)` 的联合 —— 这是 antd 的原始形状。
-   * 本文件**如实钉住实现**（而不是按我以为的决策去写断言），
-   * 差异本身登记在 `README.md` §7，等决策方裁决。
+   * 它对应 `registry/foundation.json` 里 **`status: "open"`、`decision: null`** 的
+   * `empty-semantic-fn` 决策（A = 不支持 / B = 支持，**从未裁决**）。
+   *
+   * ⚠️ 我第一版把这个决策记成了「建议 B = 不支持」，据此把本用例写成**负例**
+   *    （断言 `classNames` 不接受函数），结果 `@ts-expect-error` 变成 unused 而失败。
+   *    **查原文才发现 A 才是不支持，且决策根本没落过。** 现在如实钉住实现。
    */
-  it('★ 函数式形态**可用**（实现如此，与决策 B 不一致，已登记）', () => {
+  it('★ 函数式形态**可用**（全库现状；对应未裁决的 `empty-semantic-fn`）', () => {
     const ok: SkeletonProps = { classNames: () => ({ root: 'x' }) };
     expectTypeOf(ok).toMatchTypeOf<SkeletonProps>();
   });
