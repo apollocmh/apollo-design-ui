@@ -118,7 +118,13 @@ export const BASE_CSS = [
   // ---- box-sizing ----
   '*,*::before,*::after{box-sizing:border-box}',
   // ---- html / body ----
-  // html + body 同时设：避免任何不一致的 DOM 结构（例如把 `<style>` 挂到 `<html>`）拿到不同字体。
+  // ---- html / body ----
+  // ⚠️⚠️ 字体必须用 token（`var(--apollo-font-family)`），**不要改成 antd reset 的
+  //    `sans-serif`**：React 基线页的**继承字体**是 antd cssinjs 注入到 body 的
+  //    **token 字体栈**（不是 reset 里的 `sans-serif`）—— 实测：改成 sans-serif 后
+  //    empty × 15 + config-provider/locale × 3 全部新增失败（affix 的 6 张反而过了，
+  //    净负收益）。继承文本的字形以 token 字体为准。
+  //    ⚠️ body 的 font-size 同理要保留（antd 页也是 token 的 14px）。
   'html,body{margin:0;padding:0}',
   'html{font-family:var(--apollo-font-family)}',
   'body{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size)}',

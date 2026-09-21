@@ -29,7 +29,7 @@ for (const side of ['react', 'vue']) {
   const errs = [];
   page.on('pageerror', (e) => errs.push(e.message));
   page.on('console', (m) => errs.push(`${m.type()}: ${m.text()}`));
-  const url = `http://127.0.0.1:${PORT}/${side}/${side}.html?component=affix&variant=style&theme=light`;
+  const url = `http://127.0.0.1:${PORT}/${side}/${side}.html?component=affix&variant=offset-bottom&theme=light`;
   await page.goto(url, { waitUntil: 'load' });
   // ⚠️ 在 READY 之前挂 MutationObserver，记录固钉层 style 属性的完整变更历史
   await page.evaluate(() => {
@@ -79,10 +79,19 @@ for (const side of ['react', 'vue']) {
         ? '有占位层'
         : '无占位层',
       bodyH: document.body.scrollHeight,
+      contentRect: (() => {
+        const content = [...document.querySelectorAll('div')].find((d) =>
+          (d.getAttribute('style') ?? '').includes('119, 255'),
+        );
+        if (!content) return '(未找到)';
+        const r = content.getBoundingClientRect();
+        return `x=${r.x} y=${r.y} w=${r.width} h=${r.height} font=${getComputedStyle(content).fontFamily.slice(0,60)}`;
+      })(),
     };
   });
   console.log(`\n===== ${side} =====`);
   console.log('stage 高度:', info.stageHeight, '| body scrollHeight:', info.bodyH);
+  console.log('内容盒 rect:', info.contentRect);
   console.log('固钉层类名:', info.affixClass, '| style:', info.affixStyle);
   console.log('占位层:', info.placeholder);
   console.log('stage HTML:', info.stageHTML.slice(0, 420));

@@ -36,7 +36,7 @@ export default {
       { default: CONTENT },
     ),
 
-  style: () => h(Affix, { offsetTop: 80, style: { padding: '8px' } }, { default: CONTENT }),
+  style: () => h(Affix, { offsetTop: 80, style: { background: '#fffbe6' } }, { default: CONTENT }),
 
   'no-children': () => h(Affix, { offsetTop: 80 }),
 };

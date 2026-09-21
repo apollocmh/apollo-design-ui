@@ -39,7 +39,7 @@ export default {
       CONTENT(),
     ),
 
-  style: () => h(Affix, { offsetTop: 80, style: { padding: '8px' } }, CONTENT()),
+  style: () => h(Affix, { offsetTop: 80, style: { background: '#fffbe6' } }, CONTENT()),
 
   // ⚠️ antd 对空 children 会告警（ResizeObserver 空子）—— 这是上游行为，保留。
   'no-children': () => h(Affix, { offsetTop: 80 }),
