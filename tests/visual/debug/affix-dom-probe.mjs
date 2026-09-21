@@ -85,7 +85,8 @@ for (const side of ['react', 'vue']) {
         );
         if (!content) return '(未找到)';
         const r = content.getBoundingClientRect();
-        return `x=${r.x} y=${r.y} w=${r.width} h=${r.height} font=${getComputedStyle(content).fontFamily.slice(0,60)}`;
+        const cs = getComputedStyle(content);
+        return `x=${r.x} y=${r.y} w=${r.width} h=${r.height} | fontSize=${cs.fontSize} | smoothing=${cs.webkitFontSmoothing} | fontFamily=${cs.fontFamily.slice(0, 40)}`;
       })(),
     };
   });

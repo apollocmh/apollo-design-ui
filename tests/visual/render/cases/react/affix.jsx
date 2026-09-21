@@ -19,6 +19,8 @@ const CONTENT_STYLE = {
   width: '200px',
   height: '60px',
   background: '#1677ff',
+  fontFamily: 'sans-serif',
+  fontSize: '16px',
   color: '#fff',
   display: 'flex',
   alignItems: 'center',

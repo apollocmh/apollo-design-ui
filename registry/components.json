@@ -1350,9 +1350,9 @@
       "interactionStatus": "todo",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "todo",
+      "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "\n2026-09-21：L4 DOM 契约 11/11 通过（只覆盖未固钉形态——SSR 恒不固钉；含 attrs 透传）。\n2026-09-21：L4 DOM 契约 11/11 通过（只覆盖未固钉形态——SSR 恒不固钉；含 attrs 透传）。",
+      "notes": "\n2026-09-21：L4 DOM 契约 11/11 通过（只覆盖未固钉形态——SSR 恒不固钉；含 attrs 透传）。\n2026-09-21：L4 DOM 契约 11/11 通过（只覆盖未固钉形态——SSR 恒不固钉；含 attrs 透传）。\n2026-09-21：L6 视觉 **15/15 全过**。三处修复：px()（Vue 不做数字→px 转换）、immediate 测量、attrs 透传；demo 显式字体（继承字体是平台差异）。",
       "layerNotes": null
     },
     {
