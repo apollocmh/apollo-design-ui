@@ -86,16 +86,21 @@ export function genFlexStyle(prefixCls: string): string {
   ];
 
   // ---- genFlexWrapStyle / genAlignItemsStyle / genJustifyContentStyle -----
-  // 三个枚举逐一展开为**顶级**类（antd 的键是 `${componentCls}-wrap-${value}`，
+  // 三个枚举逐一展开为**顶级**类（antd 的键是 `${componentCls}-wrap-${value}` 等，
   // 模板串拼接 → 复合自身，不是后代）。gap 三档同理。
-  const expand = (values: readonly string[], property: string) => {
+  //
+  // ⚠️ 选择器段与 CSS 属性名是**两回事**：类名段是 `wrap` / `align` / `justify`
+  // （utils.ts 的 genCls* 决定），属性才是 `flex-wrap` / `align-items` /
+  // `justify-content`。两者混用会让 CSS 静默失配 —— L4 比对不到选择器，
+  // 只有 L6 能抓到（2026-09-21 实测：wrap 用例 52% 差异，根因即此）。
+  const expand = (segment: string, property: string, values: readonly string[]) => {
     for (const value of values) {
-      rules.push(`${cls}-${property}-${value}{`, `  ${property}:${value};`, `}`);
+      rules.push(`${cls}-${segment}-${value}{`, `  ${property}:${value};`, `}`);
     }
   };
-  expand(flexWrapValues, 'flex-wrap');
-  expand(alignItemsValues, 'align-items');
-  expand(justifyContentValues, 'justify-content');
+  expand('wrap', 'flex-wrap', flexWrapValues);
+  expand('align', 'align-items', alignItemsValues);
+  expand('justify', 'justify-content', justifyContentValues);
 
   return rules.join('\n');
 }
