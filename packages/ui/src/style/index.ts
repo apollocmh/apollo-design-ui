@@ -31,6 +31,7 @@
 import { genButtonStyle } from '../button/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
+import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
 import { genTypographyStyle } from '../typography/style';
@@ -61,6 +62,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'button', gen: genButtonStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
+  { name: 'skeleton', gen: genSkeletonStyle },
   { name: 'space', gen: genSpaceStyle },
   { name: 'spin', gen: genSpinStyle },
   { name: 'typography', gen: genTypographyStyle },

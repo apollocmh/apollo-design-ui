@@ -1,0 +1,201 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/skeleton.mjs 从 antd 6.6.4 的 Skeleton 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/skeleton.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 48,
+  "cases": [
+    {
+      "id": "loading:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "loading:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "loading:false+children",
+      "html": "<span>X</span>"
+    },
+    {
+      "id": "loading:false+no-children",
+      "html": ""
+    },
+    {
+      "id": "loading:explicit-undefined",
+      "html": "<span>X</span>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:unset+paragraph:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:unset+paragraph:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\"></h3></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:unset+paragraph:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:false+paragraph:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:false+paragraph:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:false+paragraph:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:true+paragraph:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:true+paragraph:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\"></h3></div></div>"
+    },
+    {
+      "id": "blocks:avatar:unset+title:true+paragraph:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:unset+paragraph:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:unset+paragraph:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\"></h3></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:unset+paragraph:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:false+paragraph:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:false+paragraph:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:false+paragraph:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:true+paragraph:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:true+paragraph:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\"></h3></div></div>"
+    },
+    {
+      "id": "blocks:avatar:false+title:true+paragraph:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:unset+paragraph:unset",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:50%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:unset+paragraph:false",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-square\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\"></h3></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:unset+paragraph:true",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:50%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:false+paragraph:unset",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:false+paragraph:false",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:false+paragraph:true",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:true+paragraph:unset",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:50%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li></ul></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:true+paragraph:false",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-square\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\"></h3></div></div>"
+    },
+    {
+      "id": "blocks:avatar:true+title:true+paragraph:true",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:50%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li></ul></div></div>"
+    },
+    {
+      "id": "override:avatar-shape",
+      "html": "<div class=\"apollo apollo-with-avatar css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-header\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-square\"></span></div><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:50%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li></ul></div></div>"
+    },
+    {
+      "id": "override:title-width",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:77%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "override:paragraph-rows",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "override:paragraph-width-array",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li style=\"width:10%\"></li><li style=\"width:20%\"></li><li style=\"width:30%\"></li></ul></div></div>"
+    },
+    {
+      "id": "override:paragraph-width-scalar",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:42%\"></li></ul></div></div>"
+    },
+    {
+      "id": "class:active",
+      "html": "<div class=\"apollo apollo-active css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "class:round",
+      "html": "<div class=\"apollo apollo-round css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "class:active+round",
+      "html": "<div class=\"apollo apollo-active apollo-round css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "class:className",
+      "html": "<div class=\"apollo my-class css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "class:rootClassName",
+      "html": "<div class=\"apollo root-class css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "prefix-cls:no-props",
+      "html": "<div class=\"ant-skeleton css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"ant-skeleton-section\"><h3 class=\"ant-skeleton-title\" style=\"width:38%\"></h3><ul class=\"ant-skeleton-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "semantic:classNames-root",
+      "html": "<div class=\"apollo cn-root css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "semantic:classNames-all",
+      "html": "<div class=\"apollo cn-root css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"cn-section apollo-section\"><h3 class=\"apollo-title cn-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph cn-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "semantic:styles-all",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"color:red\"><div class=\"apollo-section\" style=\"margin:2px\"><h3 class=\"apollo-title\" style=\"width:38%;margin:4px\"></h3><ul class=\"apollo-paragraph\" style=\"margin:5px\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    },
+    {
+      "id": "config:className",
+      "html": "<div class=\"apollo cfg-class css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-section\"><h3 class=\"apollo-title\" style=\"width:38%\"></h3><ul class=\"apollo-paragraph\"><li></li><li></li><li style=\"width:61%\"></li></ul></div></div>"
+    }
+  ]
+}

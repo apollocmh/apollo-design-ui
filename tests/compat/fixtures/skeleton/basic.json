@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "skeleton/basic",
+  "component": "skeleton",
+  "description": "最基础的 Skeleton：不传任何 props。建立最小 DOM 契约基线 —— 根元素是 div，类名只有 `apollo-skeleton`（**没有** `-with-avatar` / `-active` / `-round`）；因为 `title` / `paragraph` 默认为 true 而 `avatar` 默认为 false，所以**有 `-section`、`没有 `-header`**；section 内是 `<h3 class=\"-title\">` 与 `<ul class=\"-paragraph\">`，paragraph 默认 3 行。L6 视觉回归的 `skeleton/basic` 用例覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

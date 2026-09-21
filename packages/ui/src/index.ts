@@ -163,6 +163,50 @@ export {
   PRESENTED_IMAGE_DEFAULT,
   PRESENTED_IMAGE_SIMPLE,
 } from './empty';
+export type {
+  SkeletonAvatarOwnProps,
+  SkeletonAvatarProps,
+  SkeletonButtonProps,
+  SkeletonConfig,
+  SkeletonElementProps,
+  SkeletonElementSemanticClassNames,
+  SkeletonElementSemanticStyles,
+  SkeletonElementSemanticType,
+  SkeletonElementSize,
+  SkeletonImageProps,
+  SkeletonInputProps,
+  SkeletonNodeProps,
+  SkeletonNodeSlot,
+  SkeletonParagraphProps,
+  SkeletonProps,
+  SkeletonRef,
+  SkeletonSemanticAllType,
+  SkeletonSemanticClassNames,
+  SkeletonSemanticStyles,
+  SkeletonSemanticType,
+  SkeletonSemanticValue,
+  SkeletonShape,
+  SkeletonSlot,
+  SkeletonTitleProps,
+  SkeletonWidthUnit,
+} from './skeleton';
+// ---------------------------------------------------------------------------
+// Skeleton —— 骨架屏（`Skeleton.Avatar` / `Button` / `Input` / `Image` / `Node`
+// 是同包的子组件）
+//
+// ⚠️ `loading={undefined}` 是本组件**唯一**与 antd 的行为差异（上游渲染 children、
+//    我们渲染骨架）—— 三态表与理由见 `./skeleton/interface.ts`。
+// ---------------------------------------------------------------------------
+export {
+  genSkeletonStyle,
+  prepareSkeletonComponentToken,
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonImage,
+  SkeletonInput,
+  SkeletonNode,
+} from './skeleton';
 // ---------------------------------------------------------------------------
 // Space —— 间距容器（`Space.Compact` / `Space.Addon` 是同包的子组件）
 //
