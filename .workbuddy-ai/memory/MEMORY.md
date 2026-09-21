@@ -188,20 +188,31 @@ L0 utils/theme/icons ｜ 测试 test-utils
    （`DefaultRenderEmpty` 应在 `defaultRenderEmpty` 之前）⇒ `lint:format` 报
    `assist/source/organizeImports` error。biome 标 **Safe fix**，`--write` 即可。
    每个流都动这个共享文件，合并后必查。
-9. 🚨🚨 **`BASE_CSS` 缺 antd `reset.css` 的**元素级 margin 重置**（2026-09-20 定位）。
-   `packages/ui/src/style/index.ts` 的 `BASE_CSS` 目前只有：
-   `*{box-sizing}` + `html,body{margin:0;padding:0}` + 字体。而 antd reset.css 还有：
-   ```css
-   h1..h6 { margin-top:0; margin-bottom:0.5em; }
-   ol,ul,dl { margin-top:0; margin-bottom:1em; }
-   p { margin-top:0; margin-bottom:1em; }
+9. ✅ **`BASE_CSS` 已补齐为 antd `reset.css` 的完整对齐版**（2026-09-21，commit `6f2ec24`）。
+   `packages/ui/src/style/index.ts` 的 `BASE_CSS` 原来是「最小版」（只有 box-sizing + 字体），
+   现已补上 36 条元素级规则（逐条抄自 `/tmp/antd-src/package/dist/reset.css`，共 49 条）。
+
+   ⭐ **论据**：L6 的 React 基线页加载的是**整份** `antd/dist/reset.css`
+   （`tests/visual/render/react-main.jsx:8`）⇒ 我们少一条规则，对应元素就有**残余差异**。
+   **「最小版」从原理上无法逐像素对齐。**
+
+   ⚠️ 这是 skeleton L6 只有 9/24 的根因（`<h3 class="-title">` 与 `<ul class="-paragraph">`
+   拿到浏览器默认的 `margin-block-end: 1em`）。与 typography 的 G7 是同族问题。
+
+   ⚠️ typography 的 `getHeadingMarginReset` / `getActionButtonFontReset`
+   现在变成**冗余但无害**（同值），可后续清理。
+
+   ⚠️⚠️ **尚未跑视觉验证**（ui 的完整构建含 dts，实测约 **30 分钟**，未在本轮预算内跑完）。
+   ```bash
+   pnpm --filter @apollo-design/ui run build     # 约 30 分钟
+   node tests/visual/run.mjs --component skeleton --mode compare
+   # 预期 skeleton 从 9/24 显著上升；且必须复核 typography/button/space/spin/empty 不回归
    ```
-   ⚠️ 后果：渲染 `h1~h6` / `ul` / `ol` / `p` 的组件会**保留浏览器默认 `margin-block-end:1em`**
-   ⇒ L6 全是 `size-mismatch` 且**我方偏高**。skeleton 实测 **9/24** 就栽在这。
-   （与 typography 的 G7「`BASE_CSS` 缺 `getIconStyle`」是同一家族的共享层缺口。）
-   ⚠️ **不要在组件内用 `0.5em`/`1em` 自保** —— 那不是 token（违反 H9），
-   且将来补了 reset 会**重复计算**。⇒ 正解是补 `BASE_CSS`，但那会影响**所有**组件
-   ⇒ 需单独决策 + **全量重跑所有视觉基线**。
+   ⚠️ 视觉页要的是 `packages/ui/dist/index.css`（`exports['./style.css']` 映射到它，
+   **不是** `dist/style.css`），且它是在构建的 `build:done` 钩子**最后**才写的。
+   ⚠️ 试过用 Vite `ssrLoadModule` 直接加载源码走快路径 —— **走不通**：
+   `packages/utils/src/env.ts` 动态访问 `import.meta.env`，SSR module runner 不支持，
+   `define` 也不生效。别再试。
 10. ⚠️⚠️ **E10 扫描源码时`不剥注释`** ⇒ 注释里出现「圆角属性名 + 冒号 + 数字」
     （如 `border-radius:100px`）会被判成**硬编码圆角**（假阳性）。
     ⚠️ 我修注释时**连续踩了两次**（第一次去掉 `100px`，新注释又写成 `border-radius:<数字>`
