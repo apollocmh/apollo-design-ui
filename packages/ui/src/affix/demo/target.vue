@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Affix } from '../../index';
-import { Button } from '../../index';
+import { Affix, Button } from '../../index';
 
 const container = ref<HTMLElement | null>(null);
 const getTarget = () => container.value ?? window;

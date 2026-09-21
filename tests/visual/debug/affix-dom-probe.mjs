@@ -1,5 +1,5 @@
-import http from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { chromium } from 'playwright';
 
@@ -33,7 +33,7 @@ for (const side of ['react', 'vue']) {
   await page.goto(url, { waitUntil: 'load' });
   // ⚠️ 在 READY 之前挂 MutationObserver，记录固钉层 style 属性的完整变更历史
   await page.evaluate(() => {
-    (window).__styleLog = [];
+    window.__styleLog = [];
     const target = document.querySelector('.apollo-affix');
     if (!target) {
       // 用 MutationObserver 等它出现
@@ -50,10 +50,11 @@ for (const side of ['react', 'vue']) {
       hook(target);
     }
     function hook(el) {
-      (window).__styleLog.push('初始: ' + el.getAttribute('style'));
+      const s = el.getAttribute('style');
+      window.__styleLog.push(`初始: ${s}`);
       const mo2 = new MutationObserver((muts) => {
-        for (const m of muts) {
-          (window).__styleLog.push('变更: ' + el.getAttribute('style'));
+        for (const _m of muts) {
+          window.__styleLog.push(`变更: ${el.getAttribute('style')}`);
         }
       });
       mo2.observe(el, { attributes: true, attributeFilter: ['style'] });
@@ -65,7 +66,7 @@ for (const side of ['react', 'vue']) {
     console.log(`${side}: READY 超时`);
   }
   await page.waitForTimeout(1500);
-  const styleLog = await page.evaluate(() => (window).__styleLog ?? []);
+  const styleLog = await page.evaluate(() => window.__styleLog ?? []);
   console.log(`${side} style 变更历史:`, JSON.stringify(styleLog));
   const info = await page.evaluate(() => {
     const stage = document.querySelector('#stage');
@@ -75,9 +76,7 @@ for (const side of ['react', 'vue']) {
       stageHeight: stage ? stage.getBoundingClientRect().height : -1,
       affixClass: affix ? affix.className : '(无固钉层)',
       affixStyle: affix ? affix.getAttribute('style') : '(无)',
-      placeholder: document.querySelector('[aria-hidden="true"]')
-        ? '有占位层'
-        : '无占位层',
+      placeholder: document.querySelector('[aria-hidden="true"]') ? '有占位层' : '无占位层',
       bodyH: document.body.scrollHeight,
       contentRect: (() => {
         const content = [...document.querySelectorAll('div')].find((d) =>

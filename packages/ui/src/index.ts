@@ -43,6 +43,13 @@ export {
 } from './_internal/use-merge-semantic';
 export type { WithInstall } from './_internal/with-install';
 export { withInstall } from './_internal/with-install';
+export {
+  Affix,
+  default as AffixDefault,
+  getFixedBottom,
+  getFixedTop,
+  getTargetRect,
+} from './affix';
 // ---------------------------------------------------------------------------
 // Affix —— 固钉
 //
@@ -59,18 +66,9 @@ export type {
   AffixSlot,
   AffixTarget,
 } from './affix/interface';
-export {
-  Affix,
-  default as AffixDefault,
-  getFixedBottom,
-  getFixedTop,
-  getTargetRect,
-} from './affix';
-export type {
-  ComponentToken as AffixComponentToken,
-} from './affix/style/token';
-export { prepareComponentToken as prepareAffixComponentToken } from './affix/style/token';
 export { genAffixStyle } from './affix/style';
+export type { ComponentToken as AffixComponentToken } from './affix/style/token';
+export { prepareComponentToken as prepareAffixComponentToken } from './affix/style/token';
 // ---------------------------------------------------------------------------
 // Button —— 按钮
 //

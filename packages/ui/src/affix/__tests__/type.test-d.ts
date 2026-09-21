@@ -17,7 +17,6 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
-import { Affix } from '../index';
 import type {
   AffixConfig,
   AffixProps,
@@ -26,6 +25,7 @@ import type {
   AffixSlot,
   AffixTarget,
 } from '../index';
+import { Affix } from '../index';
 
 describe('Affix · Props 可选性', () => {
   it('全部 prop 都是可选的 —— `{}` 是合法入参', () => {
@@ -57,7 +57,7 @@ describe('Affix · Props 可选性', () => {
   it("★ `onChange` 不在 Props 里（Vue 侧是 emit('change')，规则 C19）", () => {
     const _never = () => {
       // @ts-expect-error React 的回调 prop 在 Vue 侧由 emit 承担
-      const bad: AffixProps = { onChange: (affixed: boolean) => {} };
+      const bad: AffixProps = { onChange: (_affixed: boolean) => {} };
       return bad;
     };
     void _never;

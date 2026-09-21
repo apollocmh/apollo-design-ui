@@ -27,7 +27,7 @@ export type {
   AffixSlot,
   AffixTarget,
 } from './interface';
-export { getFixedBottom, getFixedTop, getTargetRect } from './utils';
 export { genAffixStyle } from './style';
 export type { ComponentToken as AffixComponentToken } from './style/token';
 export { prepareComponentToken as prepareAffixComponentToken } from './style/token';
+export { getFixedBottom, getFixedTop, getTargetRect } from './utils';

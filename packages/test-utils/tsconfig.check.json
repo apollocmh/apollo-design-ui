@@ -3,11 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": [
-      "ES2023",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "strict": true,
@@ -26,52 +22,22 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
-    "types": [
-      "node",
-      "vite/client",
-      "vitest/globals"
-    ],
+    "types": ["node", "vite/client", "vitest/globals"],
     "baseUrl": "/Users/nanren/WorkBuddy/Worktrees/apollo-design-ui/master-15e7f018",
     "paths": {
-      "@apollo-design/a11y": [
-        "node_modules/.cache/apollo/dts/a11y/src"
-      ],
-      "@apollo-design/form-core": [
-        "node_modules/.cache/apollo/dts/form-core/src"
-      ],
-      "@apollo-design/icons": [
-        "node_modules/.cache/apollo/dts/icons/src"
-      ],
-      "@apollo-design/locale": [
-        "node_modules/.cache/apollo/dts/locale/src"
-      ],
-      "@apollo-design/motion": [
-        "node_modules/.cache/apollo/dts/motion/src"
-      ],
-      "@apollo-design/overlay": [
-        "node_modules/.cache/apollo/dts/overlay/src"
-      ],
-      "@apollo-design/picker": [
-        "node_modules/.cache/apollo/dts/picker/src"
-      ],
-      "@apollo-design/portal": [
-        "node_modules/.cache/apollo/dts/portal/src"
-      ],
-      "@apollo-design/position": [
-        "node_modules/.cache/apollo/dts/position/src"
-      ],
-      "@apollo-design/theme": [
-        "node_modules/.cache/apollo/dts/theme/src"
-      ],
-      "@apollo-design/ui": [
-        "node_modules/.cache/apollo/dts/ui/src"
-      ],
-      "@apollo-design/utils": [
-        "node_modules/.cache/apollo/dts/utils/src"
-      ],
-      "@apollo-design/virtual-list": [
-        "node_modules/.cache/apollo/dts/virtual-list/src"
-      ]
+      "@apollo-design/a11y": ["node_modules/.cache/apollo/dts/a11y/src"],
+      "@apollo-design/form-core": ["node_modules/.cache/apollo/dts/form-core/src"],
+      "@apollo-design/icons": ["node_modules/.cache/apollo/dts/icons/src"],
+      "@apollo-design/locale": ["node_modules/.cache/apollo/dts/locale/src"],
+      "@apollo-design/motion": ["node_modules/.cache/apollo/dts/motion/src"],
+      "@apollo-design/overlay": ["node_modules/.cache/apollo/dts/overlay/src"],
+      "@apollo-design/picker": ["node_modules/.cache/apollo/dts/picker/src"],
+      "@apollo-design/portal": ["node_modules/.cache/apollo/dts/portal/src"],
+      "@apollo-design/position": ["node_modules/.cache/apollo/dts/position/src"],
+      "@apollo-design/theme": ["node_modules/.cache/apollo/dts/theme/src"],
+      "@apollo-design/ui": ["node_modules/.cache/apollo/dts/ui/src"],
+      "@apollo-design/utils": ["node_modules/.cache/apollo/dts/utils/src"],
+      "@apollo-design/virtual-list": ["node_modules/.cache/apollo/dts/virtual-list/src"]
     },
     "rootDir": "src",
     "outDir": "/Users/nanren/WorkBuddy/Worktrees/apollo-design-ui/master-15e7f018/node_modules/.cache/apollo/dts/test-utils/src",
@@ -79,11 +45,7 @@
     "composite": true,
     "emitDeclarationOnly": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": [
     "**/*.test.ts",
     "**/*.test.tsx",

@@ -12,7 +12,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { getFixedBottom, getFixedTop, getTargetRect } from '../utils';
 
 /** 手造一个矩形（省得每处都写全字段）。 */
-const rect = (top: number, bottom: number, extra: { height?: number; width?: number; left?: number } = {}) => ({
+const rect = (
+  top: number,
+  bottom: number,
+  extra: { height?: number; width?: number; left?: number } = {},
+) => ({
   top,
   bottom,
   ...extra,

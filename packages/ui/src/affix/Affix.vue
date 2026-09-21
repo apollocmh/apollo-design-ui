@@ -35,15 +35,15 @@
 
 import { throttleByAnimationFrame, useResizeObserver } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   onBeforeUnmount,
   onMounted,
   ref,
   shallowRef,
   useAttrs,
-  watch,
-  type CSSProperties,
   type VNodeChild,
+  watch,
 } from 'vue';
 import { useComponentConfig, useConfigContext } from '../config-provider/context';
 import type { AffixConfig, AffixProps, AffixRef, AffixTarget } from './interface';
@@ -77,8 +77,11 @@ defineSlots<{ default?: () => VNodeChild }>();
  */
 const attrs = useAttrs();
 
-const { getPrefixCls, className: contextClassName, style: contextStyle } =
-  useComponentConfig<AffixConfig>('affix');
+const {
+  getPrefixCls,
+  className: contextClassName,
+  style: contextStyle,
+} = useComponentConfig<AffixConfig>('affix');
 // ⚠️ `getTargetContainer` 挂在 context **顶层**，不在 `components.affix` 里
 //    （它是全局的浮层容器配置，不是组件配置）—— 所以单独取。
 const { getTargetContainer } = useConfigContext();
@@ -105,7 +108,9 @@ const internalOffsetTop = computed<number | undefined>(() =>
 
 /** 解析顺序：props.target ?? ConfigProvider.getTargetContainer ?? window（antd `:36`）。 */
 const targetFunc = computed<AffixTarget>(() => {
-  const fn = (props.target ?? getTargetContainer ?? (typeof window !== 'undefined' ? () => window : () => null)) as AffixTarget;
+  const fn = (props.target ??
+    getTargetContainer ??
+    (typeof window !== 'undefined' ? () => window : () => null)) as AffixTarget;
   // ⚠️ `GetTargetContainer` 的返回类型比 `AffixTarget` 宽（还允许 `ShadowRoot`），
   //    而 antd 的 Affix 自己的类型就是 `HTMLElement | Window`（`ShadowRoot` 没有
   //    `getBoundingClientRect`，交给判据会拿到全 0 的矩形 ⇒ 走「零矩形跳过」分支，
@@ -118,11 +123,7 @@ const targetFunc = computed<AffixTarget>(() => {
 // ---------------------------------------------------------------------------
 
 const measure = (): void => {
-  if (
-    statusRef.value !== AFFIX_STATUS_PREPARE ||
-    !fixedNode.value ||
-    !placeholderNode.value
-  ) {
+  if (statusRef.value !== AFFIX_STATUS_PREPARE || !fixedNode.value || !placeholderNode.value) {
     return;
   }
   const targetNode = targetFunc.value();
@@ -313,24 +314,14 @@ onBeforeUnmount(() => {
 
 // 依赖变化 ⇒ 重新绑事件（antd `:104-107`）。⚠️ 固钉状态翻转也会重绑。
 watch(
-  [
-    () => props.target,
-    affixStyle,
-    lastAffix,
-    () => props.offsetTop,
-    () => props.offsetBottom,
-  ],
+  [() => props.target, affixStyle, lastAffix, () => props.offsetTop, () => props.offsetBottom],
   () => {
     addListeners();
   },
 );
 
 watch(
-  [
-    () => props.target,
-    () => props.offsetTop,
-    () => props.offsetBottom,
-  ],
+  [() => props.target, () => props.offsetTop, () => props.offsetBottom],
   () => {
     updatePosition();
   },

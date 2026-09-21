@@ -33,9 +33,9 @@ export function getTargetRect(target: Window | HTMLElement | null): AffixRect {
     '[affix-probe] getTargetRect target=',
     String(target),
     '| ctor=',
-    (target && target.constructor && target.constructor.name) || String(target),
+    target?.constructor?.name || String(target),
     '| hasGBCR=',
-    typeof (target as HTMLElement | undefined && (target as HTMLElement).getBoundingClientRect),
+    typeof ((target as HTMLElement | undefined) && (target as HTMLElement).getBoundingClientRect),
   );
   if (target && typeof (target as HTMLElement).getBoundingClientRect === 'function') {
     return (target as HTMLElement).getBoundingClientRect();
