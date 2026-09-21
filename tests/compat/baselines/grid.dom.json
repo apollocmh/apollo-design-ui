@@ -1,0 +1,105 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/grid.mjs 从 antd 6.6.4 的 Grid（Row/Col）真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/grid.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 24,
+  "cases": [
+    {
+      "id": "row:basic",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:prefix-cls:no-props",
+      "html": "<div class=\"ant-row css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:wrap-false",
+      "html": "<div class=\"apollo apollo-no-wrap css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:justify-center",
+      "html": "<div class=\"apollo apollo-center css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:align-middle",
+      "html": "<div class=\"apollo apollo-middle css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:justify-align",
+      "html": "<div class=\"apollo apollo-space-between apollo-bottom css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:justify-invalid",
+      "html": "<div class=\"apollo apollo-invalid css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "row:gutter-number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"margin-inline:-8px\"><div>x</div></div>"
+    },
+    {
+      "id": "row:gutter-array",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"margin-inline:-8px;row-gap:24px\"><div>x</div></div>"
+    },
+    {
+      "id": "row:gutter-string",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"margin-inline:calc(1rem / -2)\"><div>x</div></div>"
+    },
+    {
+      "id": "row:gutter-zero",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"row-gap:16px\"><div>x</div></div>"
+    },
+    {
+      "id": "col:basic",
+      "html": "<div class=\"apollo-col apollo-col-6 css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:prefix-cls:no-props",
+      "html": "<div class=\"ant-col css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:span-0",
+      "html": "<div class=\"apollo-col apollo-col-0 css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:offset-push-pull-order",
+      "html": "<div class=\"apollo-col apollo-col-6 apollo-col-order-3 apollo-col-offset-4 apollo-col-push-2 apollo-col-pull-1 css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:offset-zero",
+      "html": "<div class=\"apollo-col apollo-col-6 css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:flex-auto",
+      "html": "<div style=\"flex:1 1 auto\" class=\"apollo-col css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:flex-number",
+      "html": "<div style=\"flex:2 2 auto\" class=\"apollo-col css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:flex-length",
+      "html": "<div style=\"flex:0 0 100px\" class=\"apollo-col css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:flex-zero",
+      "html": "<div style=\"flex:0 0 auto\" class=\"apollo-col css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:responsive-number",
+      "html": "<div class=\"apollo-col apollo-col-xs-2 apollo-col-sm-4 apollo-col-md-6 css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:responsive-obj",
+      "html": "<div class=\"apollo-col apollo-col-xs-5 apollo-col-xs-offset-1 apollo-col-lg-6 apollo-col-lg-offset-2 css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "col:responsive-flex",
+      "html": "<div style=\"--ant-col-sm-flex:1 1 auto;--ant-col-md-flex:0 0 100px\" class=\"apollo-col apollo-col-sm-flex apollo-col-md-flex css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div>"
+    },
+    {
+      "id": "grid:row-col-min-width-hack",
+      "html": "<div class=\"rowp rowp-no-wrap css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"margin-inline:-8px\"><div style=\"padding-inline:8px;flex:1 1 auto;min-width:0\" class=\"colp css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></div></div>"
+    }
+  ]
+}

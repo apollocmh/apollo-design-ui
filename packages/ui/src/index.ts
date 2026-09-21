@@ -211,6 +211,40 @@ export { default as FlexDefault, Flex } from './flex';
 export { genFlexStyle } from './flex/style';
 export type { ComponentToken as FlexComponentToken } from './flex/style/token';
 export { prepareComponentToken as prepareFlexComponentToken } from './flex/style/token';
+// ---------------------------------------------------------------------------
+// Grid —— 栅格（Row + Col）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/grid/style.css` 由构建钩子产出。
+//    Row 与 Col 的 Component Token 各 0 个（与 antd 逐字一致）；
+//    `parseFlex` 判据纯函数一并导出，供 L1 单测直接钉死。
+// ---------------------------------------------------------------------------
+export type {
+  Breakpoint as GridBreakpoint,
+  ColConfig,
+  ColProps,
+  ColSize,
+  GridRef,
+  GridSlot,
+  Gutter,
+  GutterValue,
+  ResponsiveValue as GridResponsiveValue,
+  RowAlign,
+  RowConfig,
+  RowContextValue,
+  RowJustify,
+  RowProps,
+} from './grid';
+export { Col, default as GridDefault, gridParseFlex, Row } from './grid';
+export { default as useBreakpoint } from './grid/hooks/use-breakpoint';
+export { genGridStyle } from './grid/style';
+export type {
+  ColComponentToken as GridColComponentToken,
+  RowComponentToken as GridRowComponentToken,
+} from './grid/style/token';
+export {
+  prepareColComponentToken as prepareGridColComponentToken,
+  prepareRowComponentToken as prepareGridRowComponentToken,
+} from './grid/style/token';
 export type {
   SkeletonAvatarOwnProps,
   SkeletonAvatarProps,

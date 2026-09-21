@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "grid/responsive",
+  "component": "grid",
+  "description": "响应式栅格契约：xs/sm/md 等类名全量渲染（xs=2、md=4、xl=6 共存于 DOM），由 CSS media query 裁决生效 —— SSR 无需 screens，天然水合一致。L6 grid/responsive 在三个固定 viewport 验证 media query 生效。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "xs": 2,
+    "md": 4,
+    "xl": 6
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

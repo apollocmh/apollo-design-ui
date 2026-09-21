@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "grid/gutter",
+  "component": "grid",
+  "description": "gutter 双半契约：Row margin-inline=-g/2、Col padding-inline=+g/2；数组第二位走 row-gap（数字补 px，0→0）。keepStyle 场景（L4 keepStyle: true + L1 内联断言）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "gutter": 16
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

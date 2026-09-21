@@ -424,6 +424,15 @@ function checkUiCssTokens(dir, name) {
     return false;
   }
 
+  // 组件自身 CSS 里的声明（如 grid 的运行时变量 --{prefix}-col-*-flex，由 Col.vue
+  // 内联赋值；dist 里 apollo 与 ant 两个前缀各一份）与 theme tokens 一样是合法的
+  // 声明来源 —— 2026-09-21 grid 落地时扩展。
+  for (const file of cssFiles) {
+    for (const match of fs.readFileSync(file, 'utf8').matchAll(/(--[a-z0-9-]+)\s*:/g)) {
+      declared.add(match[1]);
+    }
+  }
+
   const unknown = new Map();
   let referenced = 0;
   for (const file of cssFiles) {
@@ -465,6 +474,14 @@ function checkUiCssTokens(dir, name) {
 }
 
 /**
+ * 多导出组件的 SSR 冒烟别名：目录名 → 实际导出名列表。
+ * （grid 目录导出的是 Row + Col，没有名为 Grid 的组件 —— 与 antd 的导出面一致。）
+ */
+const SSR_EXPORT_ALIASES = {
+  grid: ['Row', 'Col'],
+};
+
+/**
  * B8 · SSR 冒烟：组件能在没有 `window` / `document` 的环境里渲染出内容。
  *
  * 为什么值得单列一条：零运行时 + `Teleport` / `ResizeObserver` 这类 DOM 依赖，
@@ -497,17 +514,22 @@ async function checkSsr(dir, name) {
     const failures = [];
     for (const entry of styles) {
       // 组件目录名 → 导出名（`empty` → `Empty`）。约定来自 COMPONENT-RULES.md §12.3。
-      const exportName = entry.name.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
-      const component = mod[exportName];
-      if (!component) {
-        failures.push(`${entry.name}: 包入口没有导出 ${exportName}`);
-        continue;
-      }
-      try {
-        const html = await renderToString(createSSRApp({ render: () => h(component) }));
-        if (html.trim() === '') failures.push(`${entry.name}: SSR 产出为空`);
-      } catch (e) {
-        failures.push(`${entry.name}: ${e.message}`);
+      // 多导出组件（如 grid = Row + Col）用别名表展开，逐个冒烟。
+      const exportNames = SSR_EXPORT_ALIASES[entry.name] ?? [
+        entry.name.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase()),
+      ];
+      for (const exportName of exportNames) {
+        const component = mod[exportName];
+        if (!component) {
+          failures.push(`${entry.name}: 包入口没有导出 ${exportName}`);
+          continue;
+        }
+        try {
+          const html = await renderToString(createSSRApp({ render: () => h(component) }));
+          if (html.trim() === '') failures.push(`${entry.name}: SSR 产出为空`);
+        } catch (e) {
+          failures.push(`${entry.name}/${exportName}: ${e.message}`);
+        }
       }
     }
     if (failures.length > 0) {

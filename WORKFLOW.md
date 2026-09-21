@@ -32,6 +32,30 @@
                         回到领取（DAG 自动解锁下游）
 ```
 
+### 0.1 开发提效工具（2026-09-21 落地）
+
+| 工具 | 用途 | 时机 |
+|---|---|---|
+| `pnpm gen:component <name>` | 一键生成 17 个交付物骨架（含逐 Gate 的 PLAN.md；测试骨架一律 `describe.todo` 防假绿灯；依赖未就绪默认拒绝） | **领任务后第一步** |
+| `pnpm verify:component <name>` | 单组件 scoped 取证（vitest 五 project 按目录过滤 + biome），分钟级 → 秒级 | **G5–G11 每个 Gate** |
+| `docs/COMPONENT-CHECKLIST.md` | 开工/实现/测试/视觉/收口五段避坑清单 | **每次开工前过一遍** |
+
+边界（不降验收标准）：`verify:component` 只用于开发期反馈；G13 收口与 milestone 仍必须
+`pnpm verify:full` 全仓四道全绿。骨架不更新 registry（H12），11 维度只能由真实完成置 done。
+
+### 0.2 GitHub 同步（2026-09-21 用户约定）
+
+**每完成一个阶段（组件收口 / 基建落地），必须同步到 GitHub：**
+
+```bash
+git -c http.proxy=http://127.0.0.1:7890 push origin master
+```
+
+- 远程：`https://github.com/apollocmh/apollo-design-ui.git`（私有）
+- 凭据：GitHub OAuth token 在 macOS 钥匙串（osxkeychain），走 HTTPS
+- ⚠️ 本机到 GitHub 的批量传输直连会挂起，push/fetch 必须带 `-c http.proxy=…` 代理
+- L6 视觉管线：playwright 固定 1.58（1.59+ 不支持 macOS 12 的 chromium 安装）
+
 ---
 
 ## 1. Definition of Done

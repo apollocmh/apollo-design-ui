@@ -113,6 +113,17 @@ export const COMPONENTS = {
       'justify-align', // justify / align 对齐（含垂直 justify）
     ],
   },
+  grid: {
+    // 6 个 variant × 3 个 viewport = 18 张
+    variants: [
+      'basic', // span 24/12/8/6 阶梯
+      'gutter', // gutter 数字与数组（margin/padding/rowGap 链路）
+      'offset-sort', // offset 与 push/pull
+      'justify-align', // justify 六种 + align 三种
+      'responsive', // xs/sm/md 响应式类（固定 viewport 验证 media query 生效）
+      'flex', // flex 布局填充与响应式 flex 变量
+    ],
+  },
   skeleton: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [
