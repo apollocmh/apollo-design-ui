@@ -103,6 +103,16 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  flex: {
+    // 5 个 variant × 3 个 viewport = 15 张
+    variants: [
+      'basic', // 水平默认 + vertical 切换（gap=medium）
+      'vertical', // vertical 与 orientation 两条路径（含 orientation 压过 vertical）
+      'gap', // 三档预设（token 派生）+ 自定义 '16px'
+      'wrap', // 多行换行（12 块）
+      'justify-align', // justify / align 对齐（含垂直 justify）
+    ],
+  },
   skeleton: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [

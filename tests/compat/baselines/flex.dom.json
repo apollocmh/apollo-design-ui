@@ -1,0 +1,165 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/flex.mjs 从 antd 6.6.4 的 Flex 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/flex.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 39,
+  "cases": [
+    {
+      "id": "basic",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</div>"
+    },
+    {
+      "id": "prefix-cls:custom",
+      "html": "<div class=\"custom css-dev-only-do-not-override-19u5a7b css-var-root\"></div>"
+    },
+    {
+      "id": "prefix-cls:no-props",
+      "html": "<div class=\"ant-flex css-dev-only-do-not-override-19u5a7b css-var-root\"></div>"
+    },
+    {
+      "id": "empty",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\"></div>"
+    },
+    {
+      "id": "vertical:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-stretch apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "orientation:vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-stretch apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "orientation:horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</div>"
+    },
+    {
+      "id": "orientation:vertical+vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-stretch apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "orientation:invalid+vertical:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-stretch apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "orientation:unset",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</div>"
+    },
+    {
+      "id": "wrap:true",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-wrap-wrap\">Content</div>"
+    },
+    {
+      "id": "wrap:nowrap",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-wrap-nowrap\">Content</div>"
+    },
+    {
+      "id": "wrap:wrap-reverse",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-wrap-wrap-reverse\">Content</div>"
+    },
+    {
+      "id": "wrap:invalid",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</div>"
+    },
+    {
+      "id": "justify:center",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-justify-center\">Content</div>"
+    },
+    {
+      "id": "justify:flex-start",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-justify-flex-start\">Content</div>"
+    },
+    {
+      "id": "justify:invalid",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</div>"
+    },
+    {
+      "id": "align:center",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-center\">Content</div>"
+    },
+    {
+      "id": "align:flex-end",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-flex-end\">Content</div>"
+    },
+    {
+      "id": "align:stretch-implicit-vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-stretch apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "align:explicit-align-vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-align-center apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "align:stretch-implicit-horizontal",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</div>"
+    },
+    {
+      "id": "flex:string",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"flex:2 2 100px\">Content</div>"
+    },
+    {
+      "id": "flex:number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"flex:1\">Content</div>"
+    },
+    {
+      "id": "gap:small",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-gap-small\">Content</div>"
+    },
+    {
+      "id": "gap:medium",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-gap-medium\">Content</div>"
+    },
+    {
+      "id": "gap:middle",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-gap-middle\">Content</div>"
+    },
+    {
+      "id": "gap:large",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-gap-large\">Content</div>"
+    },
+    {
+      "id": "gap:number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"gap:16px\">Content</div>"
+    },
+    {
+      "id": "gap:zero",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"gap:0\">Content</div>"
+    },
+    {
+      "id": "gap:string",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"gap:10px\">Content</div>"
+    },
+    {
+      "id": "component:section",
+      "html": "<section class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\">Content</section>"
+    },
+    {
+      "id": "attrs:passthrough",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" id=\"my-flex\" data-testid=\"x\">Content</div>"
+    },
+    {
+      "id": "omit:justify-wrap-align",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root apollo-wrap-wrap apollo-align-center apollo-justify-center\">Content</div>"
+    },
+    {
+      "id": "ctx:className+style",
+      "html": "<div class=\"ctx-cls apollo css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"padding:8px\">Content</div>"
+    },
+    {
+      "id": "ctx:vertical",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-align-stretch apollo-vertical\">Content</div>"
+    },
+    {
+      "id": "ctx:vertical+vertical:false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\">Content</div>"
+    },
+    {
+      "id": "ctx:rtl",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-rtl\">Content</div>"
+    },
+    {
+      "id": "style:ctx+prop-override",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"padding:8px;margin:2px\">Content</div>"
+    }
+  ]
+}
