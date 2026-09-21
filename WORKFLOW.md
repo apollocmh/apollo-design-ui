@@ -48,7 +48,7 @@
 **每完成一个阶段（组件收口 / 基建落地），必须同步到 GitHub：**
 
 ```bash
-git -c http.proxy=http://127.0.0.1:7890 push origin master
+git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master
 ```
 
 - 远程：`https://github.com/apollocmh/apollo-design-ui.git`（私有）
