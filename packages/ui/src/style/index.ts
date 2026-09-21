@@ -33,6 +33,7 @@ import { genButtonStyle } from '../button/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
+import { genBadgeStyle } from '../badge/style';
 import { genGridStyle } from '../grid/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
@@ -67,6 +68,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },
+  { name: 'badge', gen: genBadgeStyle },
   { name: 'grid', gen: genGridStyle },
   { name: 'skeleton', gen: genSkeletonStyle },
   { name: 'space', gen: genSpaceStyle },
@@ -128,10 +130,17 @@ export const BASE_CSS = [
   //    **token 字体栈**（不是 reset 里的 `sans-serif`）—— 实测：改成 sans-serif 后
   //    empty × 15 + config-provider/locale × 3 全部新增失败（affix 的 6 张反而过了，
   //    净负收益）。继承文本的字形以 token 字体为准。
-  //    ⚠️ body 的 font-size 同理要保留（antd 页也是 token 的 14px）。
-  'html,body{margin:0;padding:0}',
-  'html{font-family:var(--apollo-font-family)}',
-  'body{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size)}',
+  //    ⚠️ body 的 font-size **不能设**（2026-09-22 badge 实测修正了 affix 期的结论）：
+  //    antd/dist/reset.css **不设** body 字号 —— React 基线页的继承字号是浏览器
+  //    默认 16px。我们设 14px 会让 inline 元素之间的空白文本节点行高变小
+  //    （badge basic 整页高 75 vs 76）。组件字号一律由组件自身 CSS 的
+  //    var(--apollo-font-size) 提供，与继承字号无关。
+  // ⚠️ html 行高 1.15 必须有（2026-09-22 badge 实测）：antd reset.css（modern-normalize
+  //    系）设 `html{line-height:1.15}`，缺了它 inline 元素之间的空白行高走 normal，
+  //    整页高差 1px（badge basic 75 vs 76）。reset 的镜像规则逐条对齐，不算 H9。
+  'html,body{width:100%;height:100%;margin:0;padding:0}',
+  'html{font-family:var(--apollo-font-family);line-height:1.15;-webkit-text-size-adjust:100%}',
+  'body{font-family:var(--apollo-font-family)}',
   // ---- 标题与段落 ----
   'h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:0.5em;font-weight:500}',
   'p{margin-top:0;margin-bottom:1em}',

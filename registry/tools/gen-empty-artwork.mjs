@@ -161,16 +161,15 @@ function serializeAttrs(el, colorMap, pathHint) {
     const value = attr.value;
     if (SKIP_ATTRS.has(name)) continue;
     if (COLOR_ATTRS.has(name) && !NON_COLOR_VALUES.has(value)) {
-      // ⚠️ 2026-09-18 修复：L6 视觉回归发现，原版把 antd 的合成实色 hex 反查成「token 槽位」
-      // 再写 `ctx.colors.<role>`，而我们 token 本身就是 rgba 透明色 —— 浏览器把
-      // `var(--apollo-color-fill-secondary)` 解析为 `rgba(0,0,0,0.06)`，与 antd 的
-      // `#f0f0f0`（getAsSolidColor 在白底上合成）差出一片色块。
+      // ⚠️ 2026-09-22 修正（修正 2026-09-18 的结论）：视觉 harness 的 ConfigProvider 走
+      // cssVar 模式，antd 的 empty.js 在**运行时**用 getDesignToken(theme) 解析出的
+      // token 值做 getAsSolidColor —— dark 算法下 fill 是 #3e3e3e 等**暗色实色**，
+      // 「主题切换不改变插画颜色」的旧结论对 6.6.4 不成立（theme-dark L6 实测抓出）。
       //
-      // 与 antd 设计一致的做法：**SVG 的 fill 在 build 期就锁定为 hex 字面量**，
-      // 主题切换不改变插画颜色（antd 6.6.4 也一样 —— 切换到 dark 主题插画颜色不变，
-      // 整图被外层主题背景接管）。这条 trade-off 与 token 化的方向相反，但与「像素一致」同向。
-      //
-      // colorMap 现在仅作「合法颜色来源」的校验（用不到的事实会在下面抛错），不再产出映射。
+      // 与 antd 对齐的做法：fill 在**运行时**从 useToken() 的 token 计算实色
+      //（onBackground 合成，同 antd 的 getAsSolidColor），生成器只负责把渲染产物里的
+      // hex 反查成 token 槽位、写出 `ctx.colors.<role>` 引用。颜色值的正确性由
+      // ROLE_TOKENS + assertMappingMatchesRender 双重自检兜底。
       if (!colorMap.has(value.toLowerCase())) {
         throw new Error(
           `${pathHint} 的 ${name}="${value}" 不在 token 反查表里。\n` +
@@ -178,7 +177,7 @@ function serializeAttrs(el, colorMap, pathHint) {
             '  这说明 antd 的插画用了新的颜色来源 —— 必须先在 ROLE_TOKENS 里补上对应 token。',
         );
       }
-      parts.push(`${literal(name)}: ${literal(value)}`);
+      parts.push(`${literal(name)}: ctx.colors.${colorMap.get(value.toLowerCase())}`);
       continue;
     }
     parts.push(`${literal(name)}: ${literal(value)}`);
@@ -273,8 +272,10 @@ const source = `// 自动生成，请勿手改。
 //   SVG；我们的 token 是 rgba 透明色，直接用 var() 会得到 \`rgba(0,0,0,0.06)\` ——
 //   视觉回归里立刻表现为色块差异。
 //
-//   主题切换对插画本身不生效（antd 也是如此 —— 切到 dark 时插画颜色不变，靠外层主题背景
-//   接管）。这条 trade-off 与「token 化」方向相反，但与「像素一致」同向。
+//   主题切换**会**改变插画颜色（2026-09-22 修正 2026-09-18 的结论）：antd 的
+//   empty.js 在运行时用 getDesignToken(theme) 解析 token 再合成实色 —— dark 下
+//   fill 是 #3e3e3e 等。我们的对齐方式：fill 引用 ctx.colors.<role>，由
+//   Images.ts 从 useToken() 实时计算（onBackground 合成，同 antd 的 getAsSolidColor）。
 //
 //   反查表 ROLE_TOKENS 仍保留作自检用 —— 任何 antd 渲染产物里出现新颜色都会让生成器
 //   抛错，逼着维护者先在表里补上对应 token，再重跑生成。
@@ -285,9 +286,16 @@ const source = `// 自动生成，请勿手改。
 
 import { h, type VNode } from 'vue';
 
+export interface EmptyArtworkColors {
+  /** 槽位色（运行时由 useToken() 的 token 经 onBackground 合成，随主题变化）。 */
+  [role: string]: string;
+}
+
 export interface EmptyArtworkContext {
   /** \`<title>\` 的文本 —— 插画的可访问名，来自 locale。 */
   title: string;
+  /** 颜色槽位（键 = ROLE_TOKENS 的角色名）。 */
+  colors: EmptyArtworkColors;
 }
 
 /** 默认插画（184×152）。antd 的 \`PRESENTED_IMAGE_DEFAULT\`。 */

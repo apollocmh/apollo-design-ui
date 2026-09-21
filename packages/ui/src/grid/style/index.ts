@@ -29,6 +29,11 @@ const GRID_COLUMNS = 24;
 function genGridRowStyle(cls: string): string[] {
   return [
     `${cls}{`,
+    // genCommonStyle（genStyleHooks 注入）：字体必须组件级提供 —— 继承字号
+    // 在 React 基线页是 16px（浏览器默认），antd 靠这条把文字钉回 14px
+    //（2026-09-22 badge 全局字号实验后回归 grid 时实测抓出）。
+    `  font-family:var(--apollo-font-family);`,
+    `  font-size:var(--apollo-font-size);`,
     `  display:flex;`,
     `  flex-flow:row wrap;`,
     `  min-width:0;`,
@@ -75,7 +80,16 @@ function genGridRowStyle(cls: string): string[] {
 
 /** Col 基础规则（antd 的 genGridColStyle 逐条）。 */
 function genGridColStyle(cls: string): string[] {
-  return [`${cls}{`, `  position:relative;`, `  max-width:100%;`, `  min-height:1px;`, `}`];
+  return [
+    `${cls}{`,
+    // genCommonStyle 同上（font-family/font-size）
+    `  font-family:var(--apollo-font-family);`,
+    `  font-size:var(--apollo-font-size);`,
+    `  position:relative;`,
+    `  max-width:100%;`,
+    `  min-height:1px;`,
+    `}`,
+  ];
 }
 
 /**

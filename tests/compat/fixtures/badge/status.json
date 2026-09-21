@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "badge/status",
+  "component": "badge",
+  "description": "状态点契约：status=success 无 children → 独立分支（-status/-not-a-wrapper/-status-dot/-status-success，无 scroll-number）。text 受 showZero 控制（text===0 且 !showZero 不渲染）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "status": "success",
+    "text": "Success"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -28,7 +28,13 @@
 import { FormProvider } from '@apollo-design/form-core';
 import type { Locale } from '@apollo-design/locale';
 import { ANT_MARK, defaultLocale, LocaleProvider } from '@apollo-design/locale';
-import { createCSSVarScope, DEFAULT_CSS_VAR_PREFIX, getDesignToken } from '@apollo-design/theme';
+import {
+  createCSSVarScope,
+  DEFAULT_CSS_VAR_PREFIX,
+  getDesignToken,
+  ThemeContextKey,
+  type ThemeContext,
+} from '@apollo-design/theme';
 import { isPlainObject, useDevWarning, warningContextKey } from '@apollo-design/utils';
 import {
   computed,
@@ -244,6 +250,29 @@ export const ConfigProvider = defineComponent({
     });
 
     provide(configContextKey, config);
+
+    // -----------------------------------------------------------------------
+    // 5.5 主题上下文（2026-09-22 补齐的 foundation 缺口）
+    //
+    // antd 的组件从 ThemeContext 读解析后的 token（useToken）。此前我们只 provide
+    // 了 CSS 变量 —— 纯 CSS 消费的组件在 dark 下正确，但任何「从 token 对象计算」
+    // 的逻辑（如 Empty 插画色，antd empty.js 的 getAsSolidColor）拿到的是默认
+    // 浅色 token（theme-dark L6 实测暴露）。
+    //
+    // config 可写（运行时换主题），token 随 config 重算 —— 与 ThemeProvider 的
+    // createThemeContext 同构；config 用 computed 桥接 mergedTheme（嵌套合并已在
+    // mergedTheme 里完成）。
+    // -----------------------------------------------------------------------
+    const themeContext: ThemeContext = {
+      config: computed(() => mergedTheme.value ?? {}) as never,
+      token: computed(() =>
+        getDesignToken({
+          token: mergedTheme.value?.token,
+          algorithm: mergedTheme.value?.algorithm,
+        }),
+      ),
+    };
+    provide(ThemeContextKey, themeContext);
 
     // -----------------------------------------------------------------------
     // 6. 尺寸 / 禁用 / 告警：三条独立的 provide

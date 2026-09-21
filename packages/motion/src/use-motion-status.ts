@@ -95,14 +95,25 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
 
   const elementRef: Ref<Element | null> = shallowRef(null);
 
+  // ── 首帧语义（2026-09-22，badge 实测修复）──────────────────────────────────
+  //
+  // 初始快照必须以 props.visible 为准（rc-motion 的首帧是**同步渲染**的）：
+  //   - visible=true 且不开 appear 动画（或环境不支持）→ 首帧就渲染 children；
+  //     之前的实现 initial mergedVisible=false，首帧渲染 null，直到 onMounted
+  //     的 emit 才补渲染 —— SSR 直接空、L4 契约全挂（badge 实测）。
+  //   - visible=true 且开 appear 动画 → styleReady='NONE'（首帧 null，挂载后
+  //     由驱动接管）—— 与 rc-motion 的首帧行为一致。
+  // driver.mount() 在 onMounted 里会再 emit 一次，快照随后以驱动为准。
+  const initialVisible = visible();
+  const initialSupport = resolve(supportMotion, detectSupportMotion());
   // 快照整体替换而不是逐字段 ref：驱动每次 emit 都是**一组**状态，
   // 分开放会出现「class 已更新但 style 还没」的中间态。
   const snapshot = shallowRef({
     status: STATUS_NONE as MotionStatus,
     step: 'none' as StepStatus,
     style: null as Record<string, string | number> | null,
-    styleReady: true as 'NONE' | boolean,
-    mergedVisible: false,
+    styleReady: !(initialSupport && motionAppear && initialVisible) as 'NONE' | boolean,
+    mergedVisible: initialVisible,
     rendered: false,
   });
 

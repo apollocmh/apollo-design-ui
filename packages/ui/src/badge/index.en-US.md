@@ -1,5 +1,54 @@
-# Badge
+---
+category: Data Display
+title: Badge
+subtitle: Badge
+---
 
-<!-- TODO(G11): 中文/英文文档骨架。结构对齐 divider/index.zh-CN.md：
-     何时使用 / 代码演示（demo 一一对应）/ API（props/events/slots/expose 表）/ Theme（token 表）。
-     API 表由 interface.ts 的注释生成口径书写；@desc/@descEN 与 antd 同构。 -->
+A small status descriptor for UI elements.
+
+## When To Use
+
+- Displayed at the top-right of icons or avatars to indicate messages or items needing attention.
+- The count can be a number, text, or a red dot.
+
+## Examples
+
+See [`demo/`](./demo) (12 demos, one-to-one with antd non-debug demos).
+
+## API
+
+### Badge
+
+| Prop | Description | Type | Default |
+|---|---|---|---|
+| count | Number to display (`null` hides; overflow shows `+`) | `VNodeChild` | `null` |
+| overflowCount | Max count | `number` | `99` |
+| dot | Show red dot only (overrides count) | `boolean` | `false` |
+| showZero | Show when value is 0 | `boolean` | `false` |
+| size | Size (`default` deprecated, equals `medium`) | `'medium' \| 'small'` | `'medium'` |
+| status | Status dot | `'success' \| 'processing' \| 'error' \| 'default' \| 'warning'` | — |
+| color | Custom color | `string` | — |
+| text | Status text | `VNodeChild` | — |
+| title | Native title (`null`/`false` disables; falls back to count) | `string \| null \| false` | — |
+| offset | Offset `[x, y]` | `[number \| string, number \| string]` | — |
+
+### Badge.Ribbon
+
+| Prop | Description | Type | Default |
+|---|---|---|---|
+| text | Ribbon text | `VNodeChild` | — |
+| color | Color | `string` | — |
+| placement | Placement corner | `'start' \| 'end'` | `'end'` |
+
+## Theme
+
+### Component Token
+
+9 tokens: `indicatorZIndex`, `indicatorHeight`, `indicatorHeightSM`, `dotSize`,
+`textFontSize`, `textFontSizeSM`, `textFontWeight`, `statusSize`, `paddingInline`.
+
+## Design Notes
+
+- Count digits are split into per-digit scrolling units only for positive integers
+  (upstream truthiness: count=0 renders as plain text).
+- Illustration-free component; status `processing` triggers a ripple animation via CSS.

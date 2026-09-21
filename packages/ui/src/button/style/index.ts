@@ -411,7 +411,8 @@ export function genButtonStyle(prefixCls: string): string {
     '',
   );
 
-  // ---- 两个中文字（issues/…）----
+  // ---- 两个中文字（6.6.4 同时保留类与 CSS；空格由 spaceChildren 真实插入，
+  //      类仅在「子节点是组件」等 transform 未覆盖的场景出现 —— 见 Button.vue 注释）----
   out.push(
     `${cls}${cls}-two-chinese-chars::first-letter{`,
     `  letter-spacing:0.34em;`,

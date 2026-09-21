@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "badge/basic",
+  "component": "badge",
+  "description": "最基础的 Badge：count=5 包裹内容。根 apollo-badge + sup apollo-scroll-number/apollo-badge-count（整数拆位 bdi + only-unit）。L6 badge/basic 覆盖同一形态。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "count": 5
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

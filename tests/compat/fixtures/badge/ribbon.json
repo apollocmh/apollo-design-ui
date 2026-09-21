@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "badge/ribbon",
+  "component": "badge",
+  "description": "Ribbon 契约：wrapper > ribbon(-placement-end) > content + corner；预设色走 -color-{key}（background+color 双设），自定义色走内联（corner 吃 color 经 brightness(75%) 变暗）。nativeElement 指向 wrapper。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "color": "green",
+    "text": "Hippopotamus"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

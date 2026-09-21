@@ -460,17 +460,19 @@ describe('Button · loading', () => {
 // ===========================================================================
 
 describe('Button · 两个中文字自动插空格', () => {
-  it('★ 恰好两个汉字 ⇒ -two-chinese-chars', async () => {
-    // ⚠️ 必须等一拍：检测在 `onMounted` 里改 ref，类名是**下一次渲染**才带上
-    //    （上游 `useEffect` 里 `setHasTwoCNChar` 同样如此，不是我们多跑一次渲染）。
+  it('★ 恰好两个汉字 ⇒ 内容用真实空格 join（antd 6 的 spaceChildren）', async () => {
     const w = withText({}, '确定');
     await nextTick();
-    expect(w.classes()).toContain(`${P}-two-chinese-chars`);
+    // React 实测（antd 6.6.4 探针）：textContent 是 '确 定'。
+    expect(w.text()).toBe('确 定');
+    // 检测 effect 读的是**变换后**的 textContent（'确 定' 非两字）⇒ 类实际不出现。
+    // 6.6.4 保留了类与 CSS（服务组件子节点场景），但对字符串子节点是自否定的。
+    expect(w.classes()).not.toContain(`${P}-two-chinese-chars`);
   });
 
   it('判据是 `^{2}$`：一个字 / 三个字都不算', () => {
-    expect(withText({}, '确').classes()).not.toContain(`${P}-two-chinese-chars`);
-    expect(withText({}, '确定吧').classes()).not.toContain(`${P}-two-chinese-chars`);
+    expect(withText({}, '确').text()).not.toContain(' ');
+    expect(withText({}, '确定吧').text()).not.toContain(' ');
   });
 
   it('含非汉字（哪怕总共两个字符）不算', () => {
@@ -485,14 +487,12 @@ describe('Button · 两个中文字自动插空格', () => {
 
   it('有图标时不插（needInserted 要求无图标）', () => {
     expect(
-      mount(Button, { props: { icon: h('i') }, slots: { default: () => '确定' } }).classes(),
-    ).not.toContain(`${P}-two-chinese-chars`);
+      mount(Button, { props: { icon: h('i') }, slots: { default: () => '确定' } }).text(),
+    ).not.toContain(' ');
   });
 
   it('autoInsertSpace=false 时不插', () => {
-    expect(withText({ autoInsertSpace: false }, '确定').classes()).not.toContain(
-      `${P}-two-chinese-chars`,
-    );
+    expect(withText({ autoInsertSpace: false }, '确定').text()).not.toContain(' ');
   });
 
   it('ConfigProvider 的 autoInsertSpace=false 生效；组件侧优先', async () => {
@@ -514,10 +514,10 @@ describe('Button · 两个中文字自动插空格', () => {
       { default: () => '确定' },
     );
     await nextTick();
-    expect(w2.classes()).toContain(`${P}-two-chinese-chars`);
+    expect(w2.text()).toBe('确 定');
   });
 
-  it('★ 更新成两字也要命中（onUpdated）—— 只在 onMounted 跑会漏掉这条', async () => {
+  it('★ 更新成两字也要变换（onUpdated）—— 只在 onMounted 跑会漏掉这条', async () => {
     const text = ref('确定');
     const Host = defineComponent({
       setup() {
@@ -526,17 +526,17 @@ describe('Button · 两个中文字自动插空格', () => {
     });
     const w = mount(Host);
     await nextTick();
-    expect(w.find('button').classes()).toContain(`${P}-two-chinese-chars`);
+    expect(w.find('button').text()).toBe('确 定');
     // 先更新成非两字（应当摘掉类名），再更新回两字（应当重新戴上）
     text.value = 'Cancel';
     await nextTick();
     expect(w.find('button').classes()).not.toContain(`${P}-two-chinese-chars`);
     text.value = '取消';
     await nextTick();
-    expect(w.find('button').classes()).toContain(`${P}-two-chinese-chars`);
+    expect(w.find('button').text()).toBe('取 消');
   });
 
-  it('★ 挂载时不是两字、之后变成两字 ⇒ 命中（D6 的正脸）', async () => {
+  it('★ 挂载时不是两字、之后变成两字 ⇒ 变换（D6 的正脸）', async () => {
     const text = ref('Cancel');
     const Host = defineComponent({
       setup() {
@@ -547,9 +547,7 @@ describe('Button · 两个中文字自动插空格', () => {
     expect(w.find('button').classes()).not.toContain(`${P}-two-chinese-chars`);
     text.value = '提交';
     await nextTick();
-    expect(w.find('button').classes(), 'onUpdated 缺失时这条会红').toContain(
-      `${P}-two-chinese-chars`,
-    );
+    expect(w.find('button').text(), 'onUpdated 缺失时这条会红').toBe('提 交');
   });
 
   it('loading 时不插（判据含 `!innerLoading`）', () => {

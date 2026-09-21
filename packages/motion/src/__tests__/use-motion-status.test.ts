@@ -288,11 +288,14 @@ describe('CSSMotion 组件', () => {
     // 等两帧推进到 active
     await waitFrames(2);
 
-    // ⭐ start 步拿不到 element 是 **antd 的真实行为**，不是我们的 bug：
-    //    首帧 styleReady 为 'NONE' ⇒ 组件返回 null ⇒ 那时根本没有 DOM；
-    //    重渲染在下一 tick，而 start 步是在 onMounted 里同步跑的。
-    //    antd 的 collapse 因此只在 **active** 步用 element 测高度，start 步不用。
-    expect(seen[0]).toBeNull();
+    // ⭐ start / active 两步都必须拿到真实元素（2026-09-22 更新）：
+    //    初始快照改为 mergedVisible=props.visible 后，驱动的 start 步
+    //    运行时 DOM 已存在 —— 与 React 的 commit 语义一致（rc-motion 的
+    //    start 回调同样拿到已挂载元素）。旧断言（seen[0]===null）钉的是
+    //    「首帧 mergedVisible=false 导致 start 先于 DOM」的平台差异缺陷，
+    //    badge 的 SSR 契约（L4）证明那不是 antd 的行为。
+    expect(seen[0]).not.toBeNull();
+    expect(seen[0]?.tagName.toLowerCase()).toBe('div');
     expect(seen[1]).not.toBeNull();
     expect(seen[1]?.tagName.toLowerCase()).toBe('div');
     wrapper.unmount();

@@ -237,6 +237,29 @@ export type {
 export { Col, default as GridDefault, gridParseFlex, Row } from './grid';
 export { default as useBreakpoint } from './grid/hooks/use-breakpoint';
 export { genGridStyle } from './grid/style';
+// ---------------------------------------------------------------------------
+// Badge —— 徽标数（Badge + Ribbon）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/badge/style.css` 由构建钩子产出。
+//    Component Token 9 个（antd 逐字一致）；`Badge.Ribbon` 复合用法与 antd 相同。
+// ---------------------------------------------------------------------------
+export type {
+  BadgeProps,
+  BadgeRef,
+  BadgeSemanticClassNames,
+  BadgeSemanticStyles,
+  RibbonProps,
+  RibbonRef,
+  RibbonSemanticClassNames,
+  RibbonSemanticStyles,
+  BadgePresetColorKey,
+  BadgePresetStatusColorType,
+} from './badge';
+export { Badge, Ribbon } from './badge';
+export type { ComponentToken as BadgeComponentToken } from './badge/style/token';
+export { prepareComponentToken as prepareBadgeComponentToken } from './badge/style/token';
+export { genBadgeStyle } from './badge/style';
+// ---------------------------------------------------------------------------
 export type {
   ColComponentToken as GridColComponentToken,
   RowComponentToken as GridRowComponentToken,

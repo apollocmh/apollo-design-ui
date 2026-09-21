@@ -58,6 +58,40 @@
 - [ ] 收口后跑 `node registry/tools/next-task.mjs` 看解锁了谁，**立即生成下一个骨架**：
       `pnpm gen:component <next>`
 
+## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
+
+### 2026-09-22（badge 会话 —— 全量视觉回归暴露的 5 个跨组件缺陷）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 1 | **motion 包首帧 `mergedVisible:false`**：CSSMotion 首帧（含 SSR）渲染 null，到 onMounted 才补渲染 → SSR 空屏。React 的 rc-motion 首帧同步渲染 | L4（badge SSR 契约）+ B8 | 初始快照 `mergedVisible = props.visible()`；appear 动画场景走 styleReady='NONE' 首帧 null（与 rc-motion 一致）。改 motion 包必须同步更新其自测时序断言 |
+| 2 | **ConfigProvider 从未 provide ThemeContext**：`useToken()` 恒返回默认浅色 token —— 纯 CSS 消费的组件看不出问题，首个「从 token 对象计算」的组件（Empty 插画色）直接暴露 | L6（theme-dark 变体） | ConfigProvider 补 `provide(ThemeContextKey, { config, token })`；新组件凡是从 token 对象算颜色/尺寸的，先写一条 dark 主题断言 |
+| 3 | **「主题切换不影响插画色」的旧结论是错的**（antd empty.js 运行时 getDesignToken → getAsSolidColor，dark 下 fill=#3e3e3e）：build 期钉 hex 的 trade-off 对 6.6.4 不成立 | L6 theme-dark | 生成器改为输出 `ctx.colors.<role>` 引用，组件运行时从 useToken 合成；生成器的 ROLE_TOKENS 反查表+自检继续兜底 |
+| 4 | **antd 6 的两字中文插空格是真实空格**（spaceChildren），不是 CSS letter-spacing 技巧 —— 6.6.4 同时保留 `-two-chinese-chars` 类与 first-letter CSS，但对字符串子节点类恒不出现（检测读的是变换后的 textContent，自否定） | L6（button/type 的「确定」ghost） | 实现以运行时探针（React 实测 textContent/className）为准，不猜源码语义 |
+| 5 | **`v-if=false` 的插槽内容是注释 vnode（truthy）**：ScrollNumber 的「children 即 count VNode」分支被空注释劫持，整数拆位整个消失且无报错 | L1（.find 为空） | clone/取首个子节点前必须 `filter(v => v.type !== Comment)`；h(vnode) 不能当 cloneVNode 用（type 位传 VNode 会静默炸子树） |
+| 6 | **genStyleHooks 会给组件根注入 genCommonStyle（font-family/font-size）**——零运行时样式漏掉它，继承字号差异在 inline 文本上变成 1-2px 的 block-diff | L6 全量回归（grid） | 每个组件的 genXxxStyle 根规则都要有 `font-family/font-size: var(--apollo-*)`（对照 antd extractStyle 产物核对） |
+| 7 | **BASE_CSS 的 body font-size:14px 是平台差异源**：antd/dist/reset.css 不设 body 字号（浏览器 16px），但**必须**补 `html{line-height:1.15}`（reset.css 里有） | L6（badge 全局回归） | BASE_CSS 以「与 antd/dist/reset.css 逐条对齐」为唯一判据，历史注释里的「有意省略」要用全量回归复核 |
+| 8 | **demo 文件名双写 `.vue.vue`**（生成脚本 name 已含扩展名又拼接） | demo 冒烟找不到文件 | 批量生成后 `ls` 核对文件清单再跑测试 |
+
+### 2026-09-21/22（flex · grid · badge 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 1 | **样式生成器把选择器段写成属性名**（flex：`-flex-wrap-wrap` ≠ `-wrap-wrap`、`-align-items-*` ≠ `-align-*`） | **L6**（首跑 9/15，wrap 52% 差异）—— L4 只比 DOM，永远比不到 CSS 选择器 | 样式生成器的每条选择器**对照 antd 真实产物**抽查；改完先跑 L6 再收口 |
+| 2 | **组件 `style` prop 没合并进根样式**（grid Row：`{...gutterStyle}` 漏了 `...props.style`） | **L6**（视觉探针量出 Row 高度丢失） | antd 的合并顺序 `offset → contextStyle → style`（style 最后覆盖）；L1 补一条「style prop 覆盖生成样式」断言 |
+| 3 | **setup 期触碰 `window`**（grid useBreakpoint 在 setup 里订阅 matchMedia）→ SSR 直接崩 | **B8**（test:build 的 SSR 冒烟） | 任何浏览器 API 订阅放 `onMounted`（对齐 React `useLayoutEffect` 语义：SSR 不执行）；新增 hook 必过 B8 |
+| 4 | **多导出组件 SSR 冒烟查不到导出**（grid 目录导出 Row+Col，没有 Grid） | B8 | `tests/build/run.mjs` 的 `SSR_EXPORT_ALIASES` 加别名表 |
+| 5 | **CSSOM 序列化伪差异**：`calc(1rem / -2)`→`calc(-0.5rem)`、`min-width:0`→`0px`、flex 数字 unitless | L4（allow 豁免） | 先判断是不是 PLATFORM 类差异再动手——**别把伪差异当 BUG 修** |
+| 6 | **响应式 prop 的 SSR 语义差**：React SSR `screens=null`（useGutter 兜底全命中）vs 我们 jsdom 真实挂载 `screens=全 false` | L4 基线设计时 | 响应式场景**不进 L4 基线**，由 L1 的 matchMedia mock 驱动覆盖；基线脚本文件头写明取舍 |
+| 7 | L3 类型断言语义写反（`toMatchTypeOf` ≠ 「类型相同」） | L3 | 精确断言用 `toEqualTypeOf`；宽用例才用 `toMatchTypeOf` |
+| 8 | `noUncheckedIndexedAccess`：Record 索引访问返回 `T \| undefined` | typecheck | for..of 替代索引循环；`val()` 取值函数带运行时守卫 |
+| 9 | `useAttrs()` 在 computed 里调用 → biome 报错/响应式丢失 | biome | setup **顶层**解构一次 |
+| 10 | `push origin master` 假同步（worktree 分支名 ≠ master） | git ls-remote 核对 | 恒用 `git push origin HEAD:master`（WORKFLOW.md §0.2） |
+| 11 | cssinjs 2.x 的 `extractStyle(cache)` 需要树内 cache 实例（v1 的无参签名已废） | 提取脚本调试 30 分钟 | 树内 `React.useContext(StyleContext).cache` 再调 extractStyle；脚本存 /tmp 会丢，用完把关键产物落到 docs/analysis |
+| 12 | demo 里模板占位符（`${COL_STYLE}`）忘了替换 | demo 冒烟 | 批量生成 demo 后必须复跑 demo.test |
+| 13 | Vue props 恒含全部声明键：`'x' in props` 恒 true → deprecated 告警永不触发 | L1 | 判据改 `props.x !== undefined`（PLATFORM，Empty 已有范本） |
+| 14 | Component Token 走 CSS 变量时：声明可放组件自身 CSS（`.apollo-badge{--apollo-badge-*:…}`），B7 认 | grid 扩展 B7 后 | 9 token 的 badge 即用此形态；派生乘除算成常量（indicatorHeight=20）登记主题覆盖失效 |
+
 ---
 
 ## 提速的真正杠杆（按收益排序）

@@ -5,13 +5,8 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/badge/demo/ 抄清单 -->
-```vue
-<script setup lang="ts">
-import { Badge } from '@apollo-design/ui';
-</script>
+简单的徽标展示，当 `count` 为 `0` 时默认不显示，但是可以使用 `showZero` 修改为显示。
 
-<template>
-  <Badge>basic demo 占位</Badge>
-</template>
+```vue
+<Badge :count="5"><div class="box" /></Badge>
 ```

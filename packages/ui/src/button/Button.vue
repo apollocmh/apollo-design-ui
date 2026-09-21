@@ -24,6 +24,7 @@ import { LoadingOutlined } from '@apollo-design/icons';
 import { isNumber, isVNode, useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
+  Text as TextVNode,
   type CSSProperties,
   computed,
   h,
@@ -369,6 +370,28 @@ const needInserted = computed(
  *    Vue 侧对应 `onMounted` + `onUpdated` **两处**，缺 `onUpdated` 会漏掉
  *    「挂载时合法、之后更新成两字」的情形（D6）。
  */
+/**
+ * antd 6 的 spaceChildren（buttonHelpers.js / button.js:271）：只要
+ * `needInserted && mergedInsertSpace` 就把两字中文用**真实空格** join ——
+ * **不依赖 hasTwoCNChar**（检测 effect 读的是变换后的 textContent，对纯文本
+ * 恒为 false，6.6.4 的 `-two-chinese-chars` 类因此在字符串场景实际不出现 ——
+ * React 实测探针：'确 定' 且无类。类与 first-letter CSS 仍保留（对齐上游），
+ * 服务于「子节点是组件」等 transform 覆盖不到的场景）。
+ */
+const twoCNCharText = computed<string | undefined>(() => {
+  if (!(needInserted.value && mergedInsertSpace.value)) return undefined;
+  const first = childNodes.value[0];
+  // 插槽返回裸字符串，或 Vue 编译出的 Text vnode（`<slot />` 的常见形态）都要处理
+  const text =
+    typeof first === 'string'
+      ? first
+      : isVNode(first) && first.type === TextVNode && typeof first.children === 'string'
+        ? (first.children as string)
+        : undefined;
+  // spaceChildren 内部对每个子节点做 isTwoCNChar 检查 —— 非两字不插
+  return text !== undefined && TWO_CN_CHAR.test(text) ? text.split('').join(' ') : undefined;
+});
+
 function detectTwoCNChar() {
   if (!rootRef.value || !mergedInsertSpace.value) return;
   const text = rootRef.value.textContent || '';
@@ -435,11 +458,11 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-variant-${mergedVariant.value}`]: mergedVariant.value,
     [`${prefixCls.value}-lg`]: sizeFullName.value === 'large',
     [`${prefixCls.value}-sm`]: sizeFullName.value === 'small',
+    [`${prefixCls.value}-two-chinese-chars`]:
+      hasTwoCNChar.value && mergedInsertSpace.value && !innerLoading.value,
     [`${prefixCls.value}-icon-only`]: !hasChildren.value && !!iconType.value,
     [`${prefixCls.value}-background-ghost`]: ghost.value && !isUnBordered.value,
     [`${prefixCls.value}-loading`]: innerLoading.value,
-    [`${prefixCls.value}-two-chinese-chars`]:
-      hasTwoCNChar.value && mergedInsertSpace.value && !innerLoading.value,
     [`${prefixCls.value}-block`]: props.block,
     [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
     [`${prefixCls.value}-icon-end`]: mergedIconPlacement.value === 'end',
@@ -533,7 +556,8 @@ defineExpose({ nativeElement: rootRef });
       <NodeRenderer :node="iconNode" />
     </span>
     <span v-if="hasChildren" :class="contentClass" v-bind="contentStyleAttrs">
-      <slot />
+      <template v-if="twoCNCharText !== undefined">{{ twoCNCharText }}</template>
+      <slot v-else />
     </span>
   </a>
 
@@ -550,7 +574,8 @@ defineExpose({ nativeElement: rootRef });
       <NodeRenderer :node="iconNode" />
     </span>
     <span v-if="hasChildren" :class="contentClass" v-bind="contentStyleAttrs">
-      <slot />
+      <template v-if="twoCNCharText !== undefined">{{ twoCNCharText }}</template>
+      <slot v-else />
     </span>
   </button>
 </template>

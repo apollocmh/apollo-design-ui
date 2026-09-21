@@ -639,10 +639,14 @@ export const Base = defineComponent({
       { [`${prefixCls.value}-ellipsis-multiple-line`]: cssLineClamp.value },
       { [`${prefixCls.value}-link`]: props.component === 'a' },
       props.className,
+      // 语义槽位 root（antd 的 classes 里 mergedClassNames.root 在 className 之后）
+      mergedClassNames.value.root,
     ]);
 
     const rootStyle = computed<CSSProperties>(() => ({
+      // 语义槽位 root 在 style prop 之后（antd 的合并顺序：styles.root 覆盖 style）
       ...props.style,
+      ...mergedStyles.value.root,
       ...(cssLineClamp.value ? { WebkitLineClamp: rows.value } : {}),
     }));
 

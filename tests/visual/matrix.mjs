@@ -124,6 +124,17 @@ export const COMPONENTS = {
       'flex', // flex 布局填充与响应式 flex 变量
     ],
   },
+  badge: {
+    // 6 个 variant × 3 个 viewport = 18 张
+    variants: [
+      'basic', // count wrapper 形态（5 / 99+ / 0+showZero）
+      'status', // 状态点五态 + text（processing 波纹不在比对面）
+      'colorful', // 13 预设色状态点
+      'dot', // 纯点形态
+      'ribbon', // Ribbon 预设色/自定义色/双挂角
+      'offset-size', // 封顶 + offset + size small
+    ],
+  },
   skeleton: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [

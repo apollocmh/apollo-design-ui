@@ -15,15 +15,60 @@
  *
  * ── 颜色 ────────────────────────────────────────────────────────────────────
  *
- * 颜色由生成器在 build 期把 antd 的「半透明 token 在白底上合成实色」直接钉成 hex
- * 字面量写进 `artwork.ts` 的 SVG fill，所以这里**不再**维护 token → CSS 变量的映射。
- * 主题切换不影响插画（切到 dark 时插画颜色不变，靠外层主题背景接管）—— 这是与 antd
- * 一致的行为，不是退让。L6 视觉回归在 2026-09-18 抓出该差异并修正了生成器输出。
+ * 颜色在**运行时**从 useToken() 的 token 计算（onBackground 合成，同 antd
+ * `empty.js` 的 getAsSolidColor）—— 2026-09-22 修正 2026-09-18 的「build 期钉 hex」
+ * 结论：antd 6.6.4 的插画色随主题变化（dark 算法下 fill 是 #3e3e3e 等），theme-dark
+ * 的 L6 视觉比对实测抓出。生成器只负责把渲染产物的 hex 反查成 token 槽位。
  */
 
 import { useLocale } from '@apollo-design/locale';
-import { defineComponent, markRaw } from 'vue';
+import { useToken } from '@apollo-design/theme';
+import { Color } from '@apollo-design/utils';
+import { computed, defineComponent, markRaw } from 'vue';
 import { renderDefaultEmptyImage, renderSimpleEmptyImage } from './artwork';
+
+/**
+ * antd `empty/utils.js` 的 getAsSolidColor：把半透明色合成到背景上的实色。
+ * 任何一方是 CSS var（cssVar 模式的 token）时原样返回 —— 我们与 antd 同构。
+ */
+function onBackground(color: string, background: string): string {
+  if (color.startsWith('var(') || background.startsWith('var(')) return color;
+  const c = new Color(color).toRgb();
+  const b = new Color(background).toRgb();
+  const a = c.a + b.a * (1 - c.a);
+  const mix = (x: number, y: number) => Math.round((x * c.a + y * b.a * (1 - c.a)) / a);
+  const hex = [mix(c.r, b.r), mix(c.g, b.g), mix(c.b, b.b)]
+    .map((v) => v.toString(16).padStart(2, '0'))
+    .join('');
+  const alpha = Math.round(a * 255)
+    .toString(16)
+    .padStart(2, '0');
+  return alpha === 'ff' ? `#${hex}` : `#${hex}${alpha}`;
+}
+
+/**
+ * 插画的五个颜色槽位（antd `empty.js` 的 useMemo 逐字同构：角色 → token → 实色）。
+ */
+function useArtworkColors() {
+  const token = useToken();
+  return computed(() => ({
+    panelBgColor: onBackground(token.value.colorFillTertiary, token.value.colorBgContainer),
+    borderColor: onBackground(token.value.colorTextQuaternary, token.value.colorBgContainer),
+    detailColor: onBackground(token.value.colorFill, token.value.colorBgContainer),
+    shadowColor: onBackground(token.value.colorFillSecondary, token.value.colorBgContainer),
+    iconColor: token.value.colorBgContainer,
+  }));
+}
+
+/** 简洁插画的角色集（antd `simple.js`：borderColor/shadowColor/contentColor）。 */
+function useSimpleArtworkColors() {
+  const token = useToken();
+  return computed(() => ({
+    borderColor: onBackground(token.value.colorFill, token.value.colorBgContainer),
+    shadowColor: onBackground(token.value.colorFillTertiary, token.value.colorBgContainer),
+    contentColor: onBackground(token.value.colorFillQuaternary, token.value.colorBgContainer),
+  }));
+}
 
 /**
  * 插画的 `<title>`。
@@ -55,7 +100,8 @@ export const EmptyImage = markRaw(
     name: 'AEmptyImage',
     setup() {
       const title = useArtworkTitle();
-      return () => renderDefaultEmptyImage({ title });
+      const colors = useArtworkColors();
+      return () => renderDefaultEmptyImage({ title, colors: colors.value });
     },
   }),
 );
@@ -66,7 +112,8 @@ export const SimpleEmptyImage = markRaw(
     name: 'ASimpleEmptyImage',
     setup() {
       const title = useArtworkTitle();
-      return () => renderSimpleEmptyImage({ title });
+      const colors = useSimpleArtworkColors();
+      return () => renderSimpleEmptyImage({ title, colors: colors.value });
     },
   }),
 );

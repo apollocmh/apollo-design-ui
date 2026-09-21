@@ -1,0 +1,113 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/badge.mjs 从 antd 6.6.4 的 Badge 真实渲染生成。机械 oracle，禁止手改。重新生成：node tests/compat/baseline/badge.mjs",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 26,
+  "cases": [
+    {
+      "id": "badge:prefix-cls:no-props",
+      "html": "<span class=\"ant-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></span>"
+    },
+    {
+      "id": "badge:count-basic",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count\" title=\"5\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "badge:count-zero",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></span>"
+    },
+    {
+      "id": "badge:count-zero-show-zero",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count\" title=\"0\">0</sup></span>"
+    },
+    {
+      "id": "badge:no-count",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div></span>"
+    },
+    {
+      "id": "badge:count-string",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count apollo-badge-multiple-words\" title=\"99+\">99+</sup></span>"
+    },
+    {
+      "id": "badge:overflow",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count apollo-badge-multiple-words\" title=\"100\">99+</sup></span>"
+    },
+    {
+      "id": "badge:dot",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-dot\" title=\"5\"></sup></span>"
+    },
+    {
+      "id": "badge:dot-only",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-dot\"></sup></span>"
+    },
+    {
+      "id": "badge:size-small",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count apollo-badge-count-sm\" title=\"5\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "badge:offset",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" style=\"margin-top:10px;inset-inline-end:-10px\" class=\"apollo-scroll-number apollo-badge-count\" title=\"5\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "badge:title-default",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count\" title=\"custom\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "badge:custom-color",
+      "html": "<span class=\"apollo-badge css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><sup data-show=\"true\" style=\"background:#2db7f5\" class=\"apollo-scroll-number apollo-badge-count\" title=\"5\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "badge:standalone-count",
+      "html": "<span class=\"apollo-badge apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count apollo-badge-multiple-words\" title=\"25\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">2</span></span><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "badge:standalone-status",
+      "html": "<span class=\"apollo-badge apollo-badge-status apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-badge-status-dot apollo-badge-status-success\"></span></span>"
+    },
+    {
+      "id": "badge:status-text",
+      "html": "<span class=\"apollo-badge apollo-badge-status apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-badge-status-dot apollo-badge-status-success\"></span><span class=\"apollo-badge-status-text\">Success</span></span>"
+    },
+    {
+      "id": "badge:status-processing",
+      "html": "<span class=\"apollo-badge apollo-badge-status apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-badge-status-dot apollo-badge-status-processing\"></span></span>"
+    },
+    {
+      "id": "badge:status-zero-text-show-zero",
+      "html": "<span class=\"apollo-badge apollo-badge-status apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-badge-status-dot apollo-badge-status-success\"></span><span class=\"apollo-badge-status-text\">0</span></span>"
+    },
+    {
+      "id": "badge:status-preset-color",
+      "html": "<span class=\"apollo-badge apollo-badge-status apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-badge-status-dot apollo-badge-status-success apollo-badge-color-blue\"></span></span>"
+    },
+    {
+      "id": "badge:status-custom-color",
+      "html": "<span class=\"apollo-badge apollo-badge-status apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><span class=\"apollo-badge-status-dot apollo-badge-status-success\" style=\"color:#2db7f5;background:#2db7f5\"></span></span>"
+    },
+    {
+      "id": "badge:count-and-status",
+      "html": "<span class=\"apollo-badge apollo-badge-not-a-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><sup data-show=\"true\" class=\"apollo-scroll-number apollo-badge-count apollo-badge-status-success\" title=\"5\"><bdi><span class=\"apollo-scroll-number-only\" style=\"transition:none\"><span class=\"apollo-scroll-number-only-unit current\">5</span></span></bdi></sup></span>"
+    },
+    {
+      "id": "ribbon:prefix-cls:no-props",
+      "html": "<div class=\"ant-ribbon-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><div class=\"ant-ribbon ant-ribbon-placement-end css-dev-only-do-not-override-19u5a7b\"><span class=\"ant-ribbon-content\"></span><div class=\"ant-ribbon-corner\"></div></div></div>"
+    },
+    {
+      "id": "ribbon:basic",
+      "html": "<div class=\"apollo-ribbon-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><div class=\"apollo-ribbon apollo-ribbon-placement-end css-dev-only-do-not-override-19u5a7b\"><span class=\"apollo-ribbon-content\">Hippopotamus</span><div class=\"apollo-ribbon-corner\"></div></div></div>"
+    },
+    {
+      "id": "ribbon:preset-color",
+      "html": "<div class=\"apollo-ribbon-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><div class=\"apollo-ribbon apollo-ribbon-placement-end apollo-ribbon-color-green css-dev-only-do-not-override-19u5a7b\"><span class=\"apollo-ribbon-content\">t</span><div class=\"apollo-ribbon-corner\"></div></div></div>"
+    },
+    {
+      "id": "ribbon:custom-color",
+      "html": "<div class=\"apollo-ribbon-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><div class=\"apollo-ribbon apollo-ribbon-placement-end css-dev-only-do-not-override-19u5a7b\" style=\"background:#2db7f5\"><span class=\"apollo-ribbon-content\">t</span><div class=\"apollo-ribbon-corner\" style=\"color:#2db7f5\"></div></div></div>"
+    },
+    {
+      "id": "ribbon:placement-start",
+      "html": "<div class=\"apollo-ribbon-wrapper css-dev-only-do-not-override-19u5a7b css-var-root\"><div>x</div><div class=\"apollo-ribbon apollo-ribbon-placement-start css-dev-only-do-not-override-19u5a7b\"><span class=\"apollo-ribbon-content\">t</span><div class=\"apollo-ribbon-corner\"></div></div></div>"
+    }
+  ]
+}
