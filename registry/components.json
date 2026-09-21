@@ -1351,8 +1351,8 @@
       "typeStatus": "done",
       "a11yStatus": "done",
       "visualStatus": "todo",
-      "docsStatus": "todo",
-      "notes": "\n2026-09-21：L3 类型测试 14 例通过（types project 44 文件 / 1007 用例全绿）。\n2026-09-21：L3 类型测试 14 例通过（types project 44 文件 / 1007 用例全绿）。\n2026-09-21：L5 a11y 11 例通过（a11y project 9 文件 / 171 用例全绿）；demo/ 落地 5 对。\n2026-09-21：L5 a11y 11 例通过（a11y project 9 文件 / 171 用例全绿）；demo/ 落地 5 对。",
+      "docsStatus": "done",
+      "notes": "\n2026-09-21：L3 类型测试 14 例通过（types project 44 文件 / 1007 用例全绿）。\n2026-09-21：L3 类型测试 14 例通过（types project 44 文件 / 1007 用例全绿）。\n2026-09-21：L5 a11y 11 例通过（a11y project 9 文件 / 171 用例全绿）；demo/ 落地 5 对。\n2026-09-21：L5 a11y 11 例通过（a11y project 9 文件 / 171 用例全绿）；demo/ 落地 5 对。\n2026-09-21：文档三件套落地（README + zh-CN + en-US）。\n2026-09-21：文档三件套落地（README + zh-CN + en-US）。",
       "layerNotes": null
     },
     {
