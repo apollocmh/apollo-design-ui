@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "tag/closable",
+  "component": "tag",
+  "description": "关闭契约：close-icon 为 role=button + aria-label=Close（locale global.close）+ tabIndex；点击 stopPropagation → onClose → defaultPrevented 中止 → visible=false（DOM 保留，-hidden 类）。closable/closeIcon 三方合并（props > context > fallback）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "closable": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": [
+      "click"
+    ]
+  }
+}

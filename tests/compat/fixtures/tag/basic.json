@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "tag/basic",
+  "component": "tag",
+  "description": "Tag 基本契约：variant 判据链（variant > -inverse→solid > bordered=false→filled > context/filled）；预设/状态色走类名，其它色走动态内联（solid 直铺 / 其它 hsl.l=0.95 浅底 + 原色文字 + outlined 边框）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "color": "blue"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

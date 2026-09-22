@@ -260,6 +260,27 @@ export type { ComponentToken as BadgeComponentToken } from './badge/style/token'
 export { prepareComponentToken as prepareBadgeComponentToken } from './badge/style/token';
 export { genBadgeStyle } from './badge/style';
 // ---------------------------------------------------------------------------
+// Tag —— 标签（Tag / CheckableTag / CheckableTagGroup）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 3 个（CSS 变量形态）。
+//    预设 13 色 × 3 variant 与状态四色 × 3 variant 的规则由生成器循环产出。
+// ---------------------------------------------------------------------------
+export type {
+  CheckableTagGroupProps,
+  CheckableTagOption,
+  CheckableTagProps,
+  TagColor,
+  TagProps,
+  TagRef,
+  TagSemanticClassNames,
+  TagSemanticStyles,
+  TagVariant,
+} from './tag';
+export { CheckableTag, CheckableTagGroup, Tag } from './tag';
+export type { ComponentToken as TagComponentToken } from './tag/style/token';
+export { prepareTagComponentToken } from './tag/style/token';
+export { genTagStyle } from './tag/style';
+// ---------------------------------------------------------------------------
 // BackTop —— 回到顶部（antd 6.x 已 deprecated → FloatButton.BackTop）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 1 个（zIndexPopup）。

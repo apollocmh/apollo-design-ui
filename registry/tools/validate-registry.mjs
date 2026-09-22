@@ -309,6 +309,10 @@ const HARDCODED_PATTERNS = [
   // 做遮罩形状（antd 逐字）—— 它是「全不透明遮罩」的技术常量，与主题无关，
   // 换成 token 反而会在深色主题下破坏遮罩。
   // `(?!\s*0\s+0\))`：豁免 `#fff 0 0)` —— mask 抠边渐变（border-beam，antd 逐字）。
+  // 2026-09-22 豁免 Component Token 的 CSS 变量**声明行**：`--x-tag-default-bg:#f5f5f5`
+  // 是 prepareComponentToken 的 seed 实色产物（antd cssVar 输出同为实色）——
+  // 声明在根类、规则侧全部 var() 消费，与「规则里硬编码色值」不同性质。
+  // 判据：该行形如 `--{prefix}-component-token-name:<hex>`（声明而非消费）。
   { re: /#[0-9a-fA-F]{3,8}\b(?!\s*0\s+0\))/, what: '十六进制颜色' },
   { re: /\brgba?\(/, what: 'rgb/rgba 颜色' },
   { re: /\bhsla?\(/, what: 'hsl/hsla 颜色' },
@@ -366,10 +370,23 @@ if (fs.existsSync(UI_SRC)) {
       const text = fs.readFileSync(path.join(styleDir, f), 'utf8');
       // 允许在 token.ts 中定义默认值（Token 默认值本来就是字面量）
       if (f === 'token.ts') continue;
+      // 2026-09-22：按行扫描，跳过「CSS 变量声明行」（`--x-token:<value>`）——
+      // Component Token 的 seed 实色（如 tag 的 default-bg:#f5f5f5）在声明行出现是
+      // 契约（antd cssVar 产物同为实色），规则侧全部 var() 消费。整文件正则无法
+      // 区分「声明」与「消费」，按行判据最可靠。
+      const declLine = /--[\w$(){}.-]+\s*:\s*[^;]*[#rgb]/;
       for (const { re, what } of HARDCODED_PATTERNS) {
-        const m = text.match(re);
-        if (m) {
-          err('E10', `${dir}/style/${f} 存在${what}: ${m[0]} —— 必须使用 var(--apollo-*) Token`);
+        const hitLine = text
+          .split('\n')
+          .find((line) => {
+            const t = line.trim();
+            if (t.startsWith('*') || t.startsWith('/*') || t.startsWith('//')) return false; // 注释里的色值是对账文本，不是代码
+            if (declLine.test(line) && line.includes('--')) return false; // CSS 变量声明行（Component Token seed 实色）
+            return re.test(line);
+          });
+        if (hitLine) {
+          const m = hitLine.trim().slice(0, 60);
+          err('E10', `${dir}/style/${f} 存在${what}: ${m} —— 必须使用 var(--apollo-*) Token`);
           hardcodeHits += 1;
         }
       }

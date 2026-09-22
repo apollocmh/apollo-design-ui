@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-22（tag 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 16 | **cloneVNode 注入的 `tabindex` 键对组件 vnode 无效**：icons 的 createIcon 对「有 onClick 且无 tabIndex prop」兜底 `tabIndex=-1`，我们传全小写 `tabindex` 只进了 attrs → 禁用态覆盖失效（close-icon 恒 -1） | L1（tabindex 断言） | 键名按 vnode 类型区分：`isComponentVNode(origin) ? 'tabIndex' : 'tabindex'`；cloneVNode 注入组件 props 前先查目标组件的 prop 命名 |
+| 17 | **antd 的 closeIcon 定制是「克隆用户元素本身」而非「包 wrapper」**：replacement span 方案会多一层 DOM（L4 逐字节比对直接红） | L4（标签/子节点数不同） | closeIconRender 用 cloneVNode(origin, {...注入})——role/tabIndex/aria-label/类/事件全部注入原元素，DOM 与 antd 逐字同构 |
+| 18 | **E10 硬编码校验要区分「变量声明行」与「消费行」**：Component Token 的 seed 实色（tag default-bg:#f5f5f5）在声明行是契约（antd cssVar 产物同为实色） | registry validate | validate 按行扫描：跳过注释行与 `--token:<hex>` 声明行，只抓「消费处」的硬编码 |
+
 ### 2026-09-22（back-top 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

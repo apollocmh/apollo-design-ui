@@ -33,6 +33,7 @@ import { genAffixStyle } from '../affix/style';
 import { genBackTopStyle } from '../back-top/style';
 import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
+import { genTagStyle } from '../tag/style';
 import { genButtonStyle } from '../button/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
@@ -75,6 +76,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'badge', gen: genBadgeStyle },
   { name: 'back-top', gen: genBackTopStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },
+  { name: 'tag', gen: genTagStyle },
   { name: 'result', gen: genResultStyle },
   { name: 'grid', gen: genGridStyle },
   { name: 'skeleton', gen: genSkeletonStyle },

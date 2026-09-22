@@ -87,7 +87,7 @@ describe('BackTop · 滚动监听（mock target）', () => {
     // 模拟滚动：改 scrollTop 后触发监听器
     (target as unknown as { scrollTop: number }).scrollTop = 500;
     const handler = (target.addEventListener as ReturnType<typeof vi.fn>).mock
-      .calls[0][1] as EventListener;
+      .calls[0]![1] as EventListener;
     // 真实 scroll 事件的 event.target 就是监听容器本身
     handler({ target } as unknown as Event);
     await new Promise((r) => setTimeout(r, 50));
