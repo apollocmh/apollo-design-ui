@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { resetMutationObserver, resetResizeObserver } from '@apollo-design/utils';
-import { config } from '@vue/test-utils';
+import { config, enableAutoUnmount } from '@vue/test-utils';
 import { afterEach, beforeAll, vi } from 'vitest';
 
 /**
@@ -172,6 +172,12 @@ if (!globalThis.requestAnimationFrame) {
 // ---------------------------------------------------------------------------
 // 4. Vue Test Utils 全局配置
 // ---------------------------------------------------------------------------
+// ⚠️ 每个测试后自动卸载所有已挂载组件（VTU 默认**不**这么做）。
+//    没有它，组件里残留的 timer / observer（例如 border-beam 的 500ms border 轮询）
+//    会在 `document.body.innerHTML = ''` 之后继续跑 → 全量跑时偶发 unhandled error
+//    （单跑却是绿的，因为 worker 立刻退出）。这类红灯不代表真实失败，必须消除。
+enableAutoUnmount(afterEach);
+
 config.global.stubs = {
   // Teleport 在测试中默认渲染到原地，便于用 wrapper.find 断言浮层内容。
   // 需要验证真实挂载位置时，测试可显式覆盖该 stub。

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "watermark/image",
+  "component": "watermark",
+  "description": "图片水印：image 优先于 content；onload 走 Image 绘制、onerror 回落到 contentLines；显式 width/height 覆盖默认 120×64。",
+  "antdVersion": "6.6.4",
+  "props": { "image": "https://test.svg", "width": 130, "height": 30 },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

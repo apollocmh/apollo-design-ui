@@ -291,6 +291,9 @@ describe('L4 DOM 契约：与 @ant-design/icons 的机械 oracle 逐条比对', 
 describe('L4 DOM 契约：848 个图标的默认渲染', () => {
   const names = Object.keys(baseline.all).sort();
 
+  // ⚠️ 848 个图标逐个 SSR + 比对，在 CI 机器上远超 vitest 默认的 5s ——
+  //    「偶发超时」会污染 verify:full 的结论（红灯不是真失败）。给足超时，
+  //    正确性由比对本身保证，不由时间保证。
   it(`全部 ${names.length} 个图标与 React 渲染一致`, () => {
     const failures: string[] = [];
     for (const name of names) {
@@ -308,7 +311,7 @@ describe('L4 DOM 契约：848 个图标的默认渲染', () => {
       if (failures.length >= 5) break;
     }
     expect(failures).toEqual([]);
-  });
+  }, 120_000);
 
   it('导出的图标集合与基线集合完全一致（不多不少）', () => {
     const exported = names.filter((n) => ICON_EXPORTS[n] !== undefined);

@@ -1,0 +1,77 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/watermark.mjs 从 antd 6.6.4 的 Watermark 真实渲染生成。机械 oracle，禁止手改。水印 div 是运行时 append 的，SSR 不产（L1/L6 覆盖）。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 17,
+  "cases": [
+    {
+      "id": "watermark:no-props",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"></div>"
+    },
+    {
+      "id": "watermark:basic",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div style=\"height:500px\"></div></div>"
+    },
+    {
+      "id": "watermark:multi-line",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div style=\"height:500px\"></div></div>"
+    },
+    {
+      "id": "watermark:image",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:class-name",
+      "html": "<div class=\"cn\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:root-class-name",
+      "html": "<div class=\"rcn\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:class-both",
+      "html": "<div class=\"cn rcn\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:style-merge",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden;height:200px;background:red\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:style-override-fixed",
+      "html": "<div class=\"\" style=\"position:absolute;overflow:visible\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:gap",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:offset",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:z-index-rotate",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:inherit-false",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    },
+    {
+      "id": "watermark:children-text",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\">plain text</div>"
+    },
+    {
+      "id": "watermark:children-multi",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><p>a</p><p>b</p></div>"
+    },
+    {
+      "id": "watermark:children-none",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"></div>"
+    },
+    {
+      "id": "watermark:font",
+      "html": "<div class=\"\" style=\"position:relative;overflow:hidden\"><div>x</div></div>"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "watermark/basic",
+  "component": "watermark",
+  "description": "最基础的 Watermark：SSR 只产根 div（水印 div 是运行时 append 的，canvas 绘制）；fixedStyle（position/overflow）在前、用户 style 可覆盖；class 顺序 className → contextClassName → rootClassName。",
+  "antdVersion": "6.6.4",
+  "props": { "content": "Ant Design" },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

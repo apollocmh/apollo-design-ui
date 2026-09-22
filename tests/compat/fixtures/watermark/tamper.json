@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "watermark/tamper",
+  "component": "watermark",
+  "description": "防篡改：MutationObserver（utils 的 observeMutation 全局单例）盯「水印元素被删/属性被改 ⇒ 重绘」与「container style 被改 ⇒ 回写 fixedStyle」；onRemove 在水印换父时触发、卸载不触发；参数不变时命中单例缓存不重绘。",
+  "antdVersion": "6.6.4",
+  "props": { "content": "MutationObserver" },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": false },
+  "expect": { "events": [] }
+}

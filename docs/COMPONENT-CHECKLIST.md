@@ -60,6 +60,20 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
+
+### 2026-09-22（watermark 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 24 | **jsdom 里 `MutationObserver` 是 `MockMutationObserver`**（vitest.setup.ts 主动替换，TESTING.md T5/T6）：防篡改用例"真的改 DOM"永远不触发回调，单跑还绿、全跑才红 | L1 | 用 `utils` 的 `observeMutation`（元素→回调集合的全局单例），测试从 `globalThis.MutationObserver.instances` 取实例显式 `trigger(records)` 驱动 |
+| 25 | **水印元素本身不是观察目标**（它在 container 的 `subtree` 里被看到） | L1（`observerOf(target)` 抛"未找到"） | 用 container 的 observer，`record.target` 才是水印元素（`reRendering` 认 `mutation.target`） |
+| 26 | **`mount(() => h(Comp))` 函数式包装下 `getCurrentComponent().exposed` 恒 undefined** | L1（ref 用例） | 断言 exposed 时必须 `mount(Comp, { props })`；只有需要 `setProps` 时才用包装（那就要放弃 exposed 断言） |
+| 27 | **jsdom 的 CSS 序列化给 `url()` 加单引号** | L1（`url(data:…)` 匹配失败） | 断言写 `url('data:…')`，别按源码字符串硬比 |
+| 28 | **`{...font, ...line.font}` 里 `fontSize: undefined` 会覆盖默认值 ⇒ `NaNpx`** | L1（手写第三行 font 用例才发现） | 这是 antd 同判（不是 bug）—— 不做"修复"，而是在测试里显式钉住 NaN，避免后人"顺手修好"造成与上游分叉 |
+| 29 | **canvas 组件的 L4 基线只有 SSR DOM 可比**（水印 div 运行时 append） | 设计期判断 | 基线只钉根 div 的 class/style 合成；绘制参数交 L1（canvas stub）、像素交 L6（真实浏览器） |
+| 30 | **视觉用例里的外链图片必然漂移**（两侧加载时序不同） | L6（设计期规避） | 图片用内联 SVG data URL（`encodeURIComponent`），与 statistic 的 Timer 同思路 |
+
 ### 2026-09-22（statistic 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "watermark/multi-line",
+  "component": "watermark",
+  "description": "多行水印：数组形态每行可带独立 font（{...font, ...line.font}；fontSize: undefined 会覆盖默认 ⇒ NaN，antd 同判）；行高累加 + FontGap × (行数-1)。",
+  "antdVersion": "6.6.4",
+  "props": { "content": ["Ant Design", { "text": "Happy Working", "font": { "fontSize": 12 } }] },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -544,3 +544,17 @@ export { Alert, AlertErrorBoundary } from './alert';
 export { genAlertStyle } from './alert/style';
 export type { ComponentToken as AlertComponentToken } from './alert/style/token';
 export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';
+// ---------------------------------------------------------------------------
+// Watermark —— 水印
+//
+// ⚠️ 无样式表（全内联 style + canvas）—— 不注册 COMPONENT_STYLES、无 Component
+//    Token；运行时 token（zIndexPopupBase/colorFill/fontSizeLG）经 useToken 取实值。
+// ---------------------------------------------------------------------------
+export type {
+  WatermarkContent,
+  WatermarkFont,
+  WatermarkProps,
+  WatermarkRef,
+  WatermarkText,
+} from './watermark';
+export { Watermark } from './watermark';

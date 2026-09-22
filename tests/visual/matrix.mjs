@@ -175,6 +175,15 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  watermark: {
+    // 4 个 variant × 3 个 viewport = 12 张
+    variants: [
+      'basic', // 单行文本水印（默认 rotate -22 / gap 100）
+      'multi-line', // 多行（第二行独立 fontSize）
+      'image', // 图片水印（内联 SVG data URL，避免网络依赖）
+      'gap-offset', // gap + offset 自定义（交错平铺锚点）
+    ],
+  },
   statistic: {
     // 5 个 variant × 3 个 viewport = 15 张
     variants: [

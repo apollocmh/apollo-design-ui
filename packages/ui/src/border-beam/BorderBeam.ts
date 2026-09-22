@@ -166,15 +166,6 @@ export default defineComponent({
       const raw = slots.default?.() as VNode[] | VNode | undefined;
       const childNodes = Array.isArray(raw) ? raw : raw !== undefined ? [raw] : [];
       const first = childNodes[0];
-      // eslint-disable-next-line no-console
-      console.log(
-        '[BB-DEBUG] raw type:',
-        typeof raw,
-        'isArray:',
-        Array.isArray(raw),
-        'firstType:',
-        typeof first === 'object' && first ? String(first.type) : String(first),
-      );
       // 纯文本等不可挂 ref 的 children：原样透传，无 Effect（antd 的 supportRef 判据）
       if (!first || typeof first.type === 'symbol') {
         return first ?? null;
