@@ -260,6 +260,18 @@ export type { ComponentToken as BadgeComponentToken } from './badge/style/token'
 export { prepareComponentToken as prepareBadgeComponentToken } from './badge/style/token';
 export { genBadgeStyle } from './badge/style';
 // ---------------------------------------------------------------------------
+// BackTop —— 回到顶部（antd 6.x 已 deprecated → FloatButton.BackTop）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 1 个（zIndexPopup）。
+//    fade 动画无 CSS（antd 产物同样没有 `-fade` keyframes，G1 §2.8）。
+// ---------------------------------------------------------------------------
+export type { BackTopProps, BackTopTarget } from './back-top';
+export { BackTop, easeInOutCubic, scrollTo } from './back-top';
+export type { ScrollToOptions } from './back-top';
+export type { ComponentToken as BackTopComponentToken } from './back-top/style/token';
+export { prepareBackTopComponentToken } from './back-top/style/token';
+export { genBackTopStyle } from './back-top/style';
+// ---------------------------------------------------------------------------
 // BorderBeam —— 宿主边缘流光
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；无 Component Token（与 antd 逐字一致）。

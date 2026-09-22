@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "back-top/basic",
+  "component": "back-top",
+  "description": "deprecated 组件契约：visibilityHeight=0 恒显（antd 的 useState(visibilityHeight===0) 判据）；默认元素 -content > -icon > VerticalAlignTopOutlined；根 fixed 定位（Component Token zIndexPopup=zIndexBase+10）。响应式断点（768/480px 字面量 —— media feature 里 var() 非法）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "visibilityHeight": 0
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": [
+      "click"
+    ]
+  }
+}

@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-22（back-top 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 13 | **`@media` 的 media feature 里不能用 CSS 变量**（`max-width: var(--screen-md)` 非法，浏览器整条忽略）→ 响应式断点静默失效，375px 视口没走到 screenXS 档 | L6（按钮水平错位 24px） | 断点用字面量（theme 默认值 768/480），注释登记「不随主题缩放」边界 |
+| 14 | **resetComponent 是完整 reset 而非 genCommonStyle 的子集**：只补 font-family/font-size 会漏 margin/padding/color/line-height/list-style —— back-top 按钮行高 16.1 vs 22 | L6（btn lh 差异，探针量出） | 组件根对齐 antd 的 resetComponent 全套；「组件根必须有 font-family/font-size」的老口诀要升级成「对齐 resetComponent 全套」 |
+| 15 | **React 基线页的 body 继承字体取决于该页组件是否带 cssinjs 的 body 注入**：BackTop 不带 → `<p>` 继承 sans-serif；badge/typography 页带 → token 栈。同一 BASE_CSS 对不同页匹配不同 | L6（个别字符字形 diff 0.155%） | 视觉用例内显式钉正文字体（不动全局 BASE_CSS）；全局裁决等更多页面证据 |
+
 ### 2026-09-22（result 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

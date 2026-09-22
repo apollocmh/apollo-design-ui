@@ -143,6 +143,10 @@ export const COMPONENTS = {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: ['basic', 'exception', 'semantic'],
   },
+  'back-top': {
+    // 1 个 variant × 3 个 viewport = 3 张（fixed 定位；visibilityHeight=0 恒显）
+    variants: ['basic'],
+  },
   skeleton: {
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [

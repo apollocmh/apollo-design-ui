@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "back-top/scroll-visibility",
+  "component": "back-top",
+  "description": "滚动可见性契约：初始 visible=false（rc-motion 首帧渲染 null，SSR 空根 div）；target 容器 scrollTop >= visibilityHeight → CSSMotion 切换渲染。handleScroll 为 raf 节流（一帧一次），卸载 cancel + removeEventListener。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "visibilityHeight": 100
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": [
+      "click"
+    ]
+  }
+}

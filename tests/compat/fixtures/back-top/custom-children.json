@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "back-top/custom-children",
+  "component": "back-top",
+  "description": "children 克隆分支：自定义内容经 cloneVNode 注入 motionClassName（替换默认元素）；fade 无 CSS（antd 产物同样没有 -fade keyframes，G1 §2.8 逐字保留）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "visibilityHeight": 0
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": [
+      "click"
+    ]
+  }
+}
