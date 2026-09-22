@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "statistic/aria-data",
+  "component": "statistic",
+  "description": "pickAttrs({aria,data}) 过滤：data-*/aria-*/role 透传根元素，其余 attrs（含 onClick）不透传（antd 同判）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": false,
+    "screenshot": false
+  },
+  "expect": {
+    "events": []
+  }
+}

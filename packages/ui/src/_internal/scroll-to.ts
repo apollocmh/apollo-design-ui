@@ -8,14 +8,15 @@
 
 import { getScroll, isDocument, isWindow, raf, type ScrollTarget } from '@apollo-design/utils';
 
-/** antd `es/_util/easings.js` 逐字。 */
+/** antd `es/_util/easings.js` 逐字（`t -= 2` 拆成独立语句以满足 noAssignInExpressions，数值不变）。 */
 export function easeInOutCubic(t: number, b: number, c: number, d: number): number {
   const cc = c - b;
   t /= d / 2;
   if (t < 1) {
     return (cc / 2) * t * t * t + b;
   }
-  return (cc / 2) * ((t -= 2) * t * t + 2) + b;
+  t -= 2;
+  return (cc / 2) * (t * t * t + 2) + b;
 }
 
 export interface ScrollToOptions {

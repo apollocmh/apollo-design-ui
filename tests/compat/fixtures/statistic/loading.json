@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "statistic/loading",
+  "component": "statistic",
+  "description": "loading=true 渲染 Skeleton（paragraph:false + active，类名 {prefix}-skeleton 落骨架根），content 消失；valueStyle 并入 content 且被语义化 styles.content 覆盖。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Active Users",
+    "value": 112112,
+    "loading": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

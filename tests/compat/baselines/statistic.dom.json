@@ -1,0 +1,77 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/statistic.mjs 从 antd 6.6.4 的 Statistic 真实渲染生成。机械 oracle，禁止手改。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 17,
+  "cases": [
+    {
+      "id": "statistic:no-props",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">0</span></span></div></div>"
+    },
+    {
+      "id": "statistic:basic",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-header\"><div class=\"apollo-statistic-title\">Active Users</div></div><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">112,893</span><span class=\"apollo-statistic-content-value-decimal\">.00</span></span></div></div>"
+    },
+    {
+      "id": "statistic:prefix-suffix",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-header\"><div class=\"apollo-statistic-title\">Feedback</div></div><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-prefix\"><i class=\"my-icon\"></i></span><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">1,128</span></span><span class=\"apollo-statistic-content-suffix\">/ 100</span></div></div>"
+    },
+    {
+      "id": "statistic:group-separator",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">112__TEST__893</span></span></div></div>"
+    },
+    {
+      "id": "statistic:decimal-separator",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">112,893</span><span class=\"apollo-statistic-content-value-decimal\">,123</span></span></div></div>"
+    },
+    {
+      "id": "statistic:precision-negative",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">-112,893</span></span></div></div>"
+    },
+    {
+      "id": "statistic:illegal-value",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\">bamboo</span></div></div>"
+    },
+    {
+      "id": "statistic:dash-value",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\">-</span></div></div>"
+    },
+    {
+      "id": "statistic:zero-title-prefix-suffix",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-header\"><div class=\"apollo-statistic-title\">0</div></div><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-prefix\">0</span><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">0</span></span><span class=\"apollo-statistic-content-suffix\">0</span></div></div>"
+    },
+    {
+      "id": "statistic:formatter-fn",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\">*1128*</span></div></div>"
+    },
+    {
+      "id": "statistic:aria-data",
+      "html": "<div data-abc=\"1\" aria-label=\"label\" role=\"status\" class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">0</span></span></div></div>"
+    },
+    {
+      "id": "statistic:semantic",
+      "html": "<div class=\"apollo-statistic demo-root css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"padding:8px\"><div class=\"apollo-statistic-header demo-header\"><div class=\"apollo-statistic-title demo-title\">T</div></div><div class=\"apollo-statistic-content demo-content\" style=\"color:red\"><span class=\"apollo-statistic-content-prefix demo-prefix\"><i class=\"my-icon\"></i></span><span class=\"apollo-statistic-content-value demo-value\" style=\"opacity:0.8\"><span class=\"apollo-statistic-content-value-int\">11</span><span class=\"apollo-statistic-content-value-decimal\">.28</span></span><span class=\"apollo-statistic-content-suffix demo-suffix\">%</span></div></div>"
+    },
+    {
+      "id": "statistic:value-style",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-header\"><div class=\"apollo-statistic-title\">T</div></div><div class=\"apollo-statistic-content\" style=\"color:red\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">5</span></span></div></div>"
+    },
+    {
+      "id": "statistic:loading",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-header\"><div class=\"apollo-statistic-title\">Active Users</div></div><div class=\"apollo-skeleton apollo-skeleton-active apollo-statistic-skeleton css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-skeleton-section\"><h3 class=\"apollo-skeleton-title\"></h3></div></div></div>"
+    },
+    {
+      "id": "statistic:rtl",
+      "html": "<div class=\"apollo-statistic apollo-statistic-rtl css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\"><span class=\"apollo-statistic-content-value-int\">0</span></span></div></div>"
+    },
+    {
+      "id": "statistic:timer-ssr",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\">-</span></div></div>"
+    },
+    {
+      "id": "statistic:timer-title",
+      "html": "<div class=\"apollo-statistic css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-statistic-header\"><div class=\"apollo-statistic-title\">Deadline</div></div><div class=\"apollo-statistic-content\"><span class=\"apollo-statistic-content-value\">-</span></div></div>"
+    }
+  ]
+}

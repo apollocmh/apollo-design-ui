@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "statistic/basic",
+  "component": "statistic",
+  "description": "最基础的 Statistic：value 默认 0；isRenderable 判据守卫 title/prefix/suffix（0 渲染、false/'' 不渲染）；内部数字格式化（千分位 + precision padEnd/slice，负 precision 无 decimal span）；Number 的 groupSeparator 兜底空串而 Statistic 默认 ','。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Active Users",
+    "value": 112893,
+    "precision": 2
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -6,21 +6,6 @@
 import { Tag } from '@apollo-design/ui';
 import { h } from 'vue';
 
-const presets = [
-  'magenta',
-  'red',
-  'volcano',
-  'orange',
-  'gold',
-  'lime',
-  'green',
-  'cyan',
-  'blue',
-  'geekblue',
-  'purple',
-];
-const statuses = ['success', 'processing', 'error', 'warning', 'default'];
-
 export default {
   basic: () => [
     h(Tag, null, { default: () => 'Tag 1' }),

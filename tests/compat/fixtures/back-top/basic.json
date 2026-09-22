@@ -15,8 +15,6 @@
     "screenshot": true
   },
   "expect": {
-    "events": [
-      "click"
-    ]
+    "events": ["click"]
   }
 }

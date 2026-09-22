@@ -26,7 +26,6 @@ const check = process.argv.includes('--check');
 const require = createRequire(import.meta.url);
 const antdPkg = require('antd/package.json');
 const { Badge } = antdPkg ? require('antd') : {};
-const antd = require('antd');
 const { version } = antdPkg;
 
 const cases = [];

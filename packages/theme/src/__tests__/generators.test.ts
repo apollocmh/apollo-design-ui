@@ -27,6 +27,8 @@ describe('genRadius —— 断点逐段', () => {
       borderRadiusSM: 4,
       borderRadiusLG: 8,
       borderRadiusOuter: 4,
+      // spin 会话裁决的有意扩展：完美圆几何常量（antd token 集不含，baseline.test.ts 白名单）
+      borderRadiusCircle: '100%',
     });
   });
 

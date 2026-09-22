@@ -32,8 +32,8 @@ import {
   createCSSVarScope,
   DEFAULT_CSS_VAR_PREFIX,
   getDesignToken,
-  ThemeContextKey,
   type ThemeContext,
+  ThemeContextKey,
 } from '@apollo-design/theme';
 import { isPlainObject, useDevWarning, warningContextKey } from '@apollo-design/utils';
 import {

@@ -5,10 +5,7 @@
   "description": "CheckableTag/Group 契约：role=checkbox + aria-checked；空格键触发 onChange（Enter 不触发）；Group multiple 数组增删、单选值或 null；options 归一（原始值→{value,label}）。",
   "antdVersion": "6.6.4",
   "props": {
-    "options": [
-      "a",
-      "b"
-    ],
+    "options": ["a", "b"],
     "value": "a"
   },
   "assertions": {
@@ -19,8 +16,6 @@
     "screenshot": true
   },
   "expect": {
-    "events": [
-      "click"
-    ]
+    "events": ["click"]
   }
 }

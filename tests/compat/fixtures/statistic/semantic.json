@@ -1,0 +1,34 @@
+{
+  "$schema": "../schema.json",
+  "id": "statistic/semantic",
+  "component": "statistic",
+  "description": "语义槽位七槽（root/header/title/content/value/prefix/suffix）：classNames 拼接、styles 逐键覆盖；root 类名顺序 prefixCls→rtl→context→className→rootClassName→语义化 root（与 skeleton 相反）；valueStyle 在语义化 content 之前。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "T",
+    "value": 11.28,
+    "precision": 2,
+    "classNames": {
+      "root": "demo-root",
+      "value": "demo-value"
+    },
+    "styles": {
+      "content": {
+        "color": "red"
+      },
+      "value": {
+        "opacity": 0.8
+      }
+    }
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

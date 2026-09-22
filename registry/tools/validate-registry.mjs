@@ -344,7 +344,10 @@ const HARDCODED_PATTERNS = [
   // 是 token 的运算式，不是硬编码设计值（与 antd 的 `borderRadius/2` 同构）。
   // 2026-09-22 补 `inherit`：border-beam 的 `border-radius:inherit`（继承宿主圆角，
   // antd 逐字）—— 是继承语义，不是设计值。
-  { re: /\bborder-radius:(?!\s*(?:var\(|calc\(|inherit\b|\$\{v\(|\d+%|0(?![\d.])))/, what: '硬编码圆角' },
+  {
+    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|inherit\b|\$\{v\(|\d+%|0(?![\d.])))/,
+    what: '硬编码圆角',
+  },
   // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游
   // `components/style/compact-item.ts` 同型；动效关闭的 `@media (prefers-reduced-motion)`
   // 也需要）；preset 阴影方块（13 色 × 1 条）由 `prepareComponentToken` 在**构建期**
@@ -376,14 +379,12 @@ if (fs.existsSync(UI_SRC)) {
       // 区分「声明」与「消费」，按行判据最可靠。
       const declLine = /--[\w$(){}.-]+\s*:\s*[^;]*[#rgb]/;
       for (const { re, what } of HARDCODED_PATTERNS) {
-        const hitLine = text
-          .split('\n')
-          .find((line) => {
-            const t = line.trim();
-            if (t.startsWith('*') || t.startsWith('/*') || t.startsWith('//')) return false; // 注释里的色值是对账文本，不是代码
-            if (declLine.test(line) && line.includes('--')) return false; // CSS 变量声明行（Component Token seed 实色）
-            return re.test(line);
-          });
+        const hitLine = text.split('\n').find((line) => {
+          const t = line.trim();
+          if (t.startsWith('*') || t.startsWith('/*') || t.startsWith('//')) return false; // 注释里的色值是对账文本，不是代码
+          if (declLine.test(line) && line.includes('--')) return false; // CSS 变量声明行（Component Token seed 实色）
+          return re.test(line);
+        });
         if (hitLine) {
           const m = hitLine.trim().slice(0, 60);
           err('E10', `${dir}/style/${f} 存在${what}: ${m} —— 必须使用 var(--apollo-*) Token`);

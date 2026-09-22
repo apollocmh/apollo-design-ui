@@ -70,6 +70,54 @@ export { genAffixStyle } from './affix/style';
 export type { ComponentToken as AffixComponentToken } from './affix/style/token';
 export { prepareComponentToken as prepareAffixComponentToken } from './affix/style/token';
 // ---------------------------------------------------------------------------
+// BackTop —— 回到顶部（antd 6.x 已 deprecated → FloatButton.BackTop）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 1 个（zIndexPopup）。
+//    fade 动画无 CSS（antd 产物同样没有 `-fade` keyframes，G1 §2.8）。
+// ---------------------------------------------------------------------------
+export type { BackTopProps, BackTopTarget, ScrollToOptions } from './back-top';
+export { BackTop, easeInOutCubic, scrollTo } from './back-top';
+export { genBackTopStyle } from './back-top/style';
+export type { ComponentToken as BackTopComponentToken } from './back-top/style/token';
+export { prepareBackTopComponentToken } from './back-top/style/token';
+// ---------------------------------------------------------------------------
+// Badge —— 徽标数（Badge + Ribbon）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/badge/style.css` 由构建钩子产出。
+//    Component Token 9 个（antd 逐字一致）；`Badge.Ribbon` 复合用法与 antd 相同。
+// ---------------------------------------------------------------------------
+export type {
+  BadgePresetColorKey,
+  BadgePresetStatusColorType,
+  BadgeProps,
+  BadgeRef,
+  BadgeSemanticClassNames,
+  BadgeSemanticStyles,
+  RibbonProps,
+  RibbonRef,
+  RibbonSemanticClassNames,
+  RibbonSemanticStyles,
+} from './badge';
+export { Badge, Ribbon } from './badge';
+export { genBadgeStyle } from './badge/style';
+export type { ComponentToken as BadgeComponentToken } from './badge/style/token';
+export { prepareComponentToken as prepareBadgeComponentToken } from './badge/style/token';
+// ---------------------------------------------------------------------------
+// BorderBeam —— 宿主边缘流光
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；无 Component Token（与 antd 逐字一致）。
+//    运行时调参走 `--{root}-border-beam-*` CSS 变量（props 写在 Effect style 上）。
+// ---------------------------------------------------------------------------
+export type {
+  BorderBeamColor,
+  BorderBeamGradient,
+  BorderBeamProps,
+  BorderBeamSlot,
+} from './border-beam';
+export { BorderBeam, DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from './border-beam';
+export { genBorderBeamStyle } from './border-beam/style';
+export type { ComponentToken as BorderBeamComponentToken } from './border-beam/style/token';
+// ---------------------------------------------------------------------------
 // Button —— 按钮
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/button/style.css` 由构建钩子产出。
@@ -238,76 +286,14 @@ export { Col, default as GridDefault, gridParseFlex, Row } from './grid';
 export { default as useBreakpoint } from './grid/hooks/use-breakpoint';
 export { genGridStyle } from './grid/style';
 // ---------------------------------------------------------------------------
-// Badge —— 徽标数（Badge + Ribbon）
-//
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/badge/style.css` 由构建钩子产出。
-//    Component Token 9 个（antd 逐字一致）；`Badge.Ribbon` 复合用法与 antd 相同。
-// ---------------------------------------------------------------------------
 export type {
-  BadgeProps,
-  BadgeRef,
-  BadgeSemanticClassNames,
-  BadgeSemanticStyles,
-  RibbonProps,
-  RibbonRef,
-  RibbonSemanticClassNames,
-  RibbonSemanticStyles,
-  BadgePresetColorKey,
-  BadgePresetStatusColorType,
-} from './badge';
-export { Badge, Ribbon } from './badge';
-export type { ComponentToken as BadgeComponentToken } from './badge/style/token';
-export { prepareComponentToken as prepareBadgeComponentToken } from './badge/style/token';
-export { genBadgeStyle } from './badge/style';
-// ---------------------------------------------------------------------------
-// Tag —— 标签（Tag / CheckableTag / CheckableTagGroup）
-//
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 3 个（CSS 变量形态）。
-//    预设 13 色 × 3 variant 与状态四色 × 3 variant 的规则由生成器循环产出。
-// ---------------------------------------------------------------------------
-export type {
-  CheckableTagGroupProps,
-  CheckableTagOption,
-  CheckableTagProps,
-  TagColor,
-  TagProps,
-  TagRef,
-  TagSemanticClassNames,
-  TagSemanticStyles,
-  TagVariant,
-} from './tag';
-export { CheckableTag, CheckableTagGroup, Tag } from './tag';
-export type { ComponentToken as TagComponentToken } from './tag/style/token';
-export { prepareTagComponentToken } from './tag/style/token';
-export { genTagStyle } from './tag/style';
-// ---------------------------------------------------------------------------
-// BackTop —— 回到顶部（antd 6.x 已 deprecated → FloatButton.BackTop）
-//
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 1 个（zIndexPopup）。
-//    fade 动画无 CSS（antd 产物同样没有 `-fade` keyframes，G1 §2.8）。
-// ---------------------------------------------------------------------------
-export type { BackTopProps, BackTopTarget } from './back-top';
-export { BackTop, easeInOutCubic, scrollTo } from './back-top';
-export type { ScrollToOptions } from './back-top';
-export type { ComponentToken as BackTopComponentToken } from './back-top/style/token';
-export { prepareBackTopComponentToken } from './back-top/style/token';
-export { genBackTopStyle } from './back-top/style';
-// ---------------------------------------------------------------------------
-// BorderBeam —— 宿主边缘流光
-//
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`；无 Component Token（与 antd 逐字一致）。
-//    运行时调参走 `--{root}-border-beam-*` CSS 变量（props 写在 Effect style 上）。
-// ---------------------------------------------------------------------------
-export type {
-  BorderBeamColor,
-  BorderBeamGradient,
-  BorderBeamProps,
-  BorderBeamSlot,
-} from './border-beam';
-export { BorderBeam } from './border-beam';
-export { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from './border-beam';
-export type { ComponentToken as BorderBeamComponentToken } from './border-beam/style/token';
-export { genBorderBeamStyle } from './border-beam/style';
+  ColComponentToken as GridColComponentToken,
+  RowComponentToken as GridRowComponentToken,
+} from './grid/style/token';
+export {
+  prepareColComponentToken as prepareGridColComponentToken,
+  prepareRowComponentToken as prepareGridRowComponentToken,
+} from './grid/style/token';
 // ---------------------------------------------------------------------------
 // Result —— 结果页
 //
@@ -323,19 +309,17 @@ export type {
   ResultSemanticStyles,
   ResultStatusType,
 } from './result';
-export { ExceptionMap, IconMap, Result, PRESENTED_IMAGE_403, PRESENTED_IMAGE_404, PRESENTED_IMAGE_500 } from './result';
+export {
+  ExceptionMap,
+  IconMap,
+  PRESENTED_IMAGE_403,
+  PRESENTED_IMAGE_404,
+  PRESENTED_IMAGE_500,
+  Result,
+} from './result';
+export { genResultStyle } from './result/style';
 export type { ComponentToken as ResultComponentToken } from './result/style/token';
 export { prepareResultComponentToken } from './result/style/token';
-export { genResultStyle } from './result/style';
-// ---------------------------------------------------------------------------
-export type {
-  ColComponentToken as GridColComponentToken,
-  RowComponentToken as GridRowComponentToken,
-} from './grid/style/token';
-export {
-  prepareColComponentToken as prepareGridColComponentToken,
-  prepareRowComponentToken as prepareGridRowComponentToken,
-} from './grid/style/token';
 export type {
   SkeletonAvatarOwnProps,
   SkeletonAvatarProps,
@@ -442,6 +426,38 @@ export type {
   SpinSlot,
 } from './spin';
 export { getDefaultIndicator, Spin, setDefaultIndicator } from './spin';
+// ---------------------------------------------------------------------------
+// Statistic —— 统计数值（复合组件：Statistic.Timer / Statistic.Countdown）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 2 个
+//    （titleFontSize / contentFontSize，别名派生）。
+//    Countdown 在 antd 6.x 已 @deprecated → `Statistic.Timer type="countdown"`。
+// ---------------------------------------------------------------------------
+export type {
+  CountdownProps,
+  CountdownValueType,
+  StatisticFormatConfig,
+  StatisticFormatter,
+  StatisticProps,
+  StatisticRef,
+  StatisticSemanticAllType,
+  StatisticSemanticClassNames,
+  StatisticSemanticStyles,
+  StatisticSemanticValue,
+  StatisticTimerProps,
+  TimerType,
+  ValueType,
+} from './statistic';
+export {
+  formatCounter,
+  formatTimeStr,
+  Statistic,
+  StatisticCountdown,
+  StatisticTimer,
+} from './statistic';
+export { genStatisticStyle } from './statistic/style';
+export type { ComponentToken as StatisticComponentToken } from './statistic/style/token';
+export { prepareComponentToken as prepareStatisticComponentToken } from './statistic/style/token';
 export type { ComponentStyleEntry } from './style';
 // ---------------------------------------------------------------------------
 // 样式生成（构建期与自定义 prefixCls）
@@ -454,6 +470,27 @@ export {
   genComponentStyleSheet,
   STATIC_PREFIX_CLS,
 } from './style';
+// ---------------------------------------------------------------------------
+// Tag —— 标签（Tag / CheckableTag / CheckableTagGroup）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 3 个（CSS 变量形态）。
+//    预设 13 色 × 3 variant 与状态四色 × 3 variant 的规则由生成器循环产出。
+// ---------------------------------------------------------------------------
+export type {
+  CheckableTagGroupProps,
+  CheckableTagOption,
+  CheckableTagProps,
+  TagColor,
+  TagProps,
+  TagRef,
+  TagSemanticClassNames,
+  TagSemanticStyles,
+  TagVariant,
+} from './tag';
+export { CheckableTag, CheckableTagGroup, Tag } from './tag';
+export { genTagStyle } from './tag/style';
+export type { ComponentToken as TagComponentToken } from './tag/style/token';
+export { prepareTagComponentToken } from './tag/style/token';
 export type {
   ActionsConfig,
   AutoSizeType,

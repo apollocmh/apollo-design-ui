@@ -164,6 +164,16 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  statistic: {
+    // 5 个 variant × 3 个 viewport = 15 张
+    variants: [
+      'basic', // title/value/precision/prefix/suffix（含千分位与小数）
+      'status', // styles.content 染色（涨/跌两态）
+      'loading', // Skeleton 骨架分支
+      'semantic', // classNames / styles 语义化覆盖
+      'timer', // Statistic.Timer（format 只到「天」——秒级截图两侧漂移）
+    ],
+  },
   space: {
     // 9 个 variant × 3 个 viewport = 27 张
     variants: [

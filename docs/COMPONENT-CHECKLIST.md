@@ -60,6 +60,16 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-22（statistic 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 19 | **`h(子组件, { class: … })` 对 `inheritAttrs:false` 的子组件静默丢失**：class 走 attrs，被子组件的 pickAttrs({aria,data}) 过滤掉 → content-value 类名整段消失 | L4（类名不同 []） | 传目标组件**声明的 prop**（`className`）；跨组件 h() 前先查对方 prop 表，attrs 不会自动变成 props |
+| 20 | **语义化 `classNames`/`styles` 的 Vue prop 必须声明 `[Object, Function]`**：只写 `Object` 时函数形态触发 Invalid prop 告警，themeTest 的「0 未豁免告警」直接红 | L7（themeTest） | 两态 prop 一律 `type: [Object, Function] as PropType<X>`；Timer 这类转发组件也要同步改 |
+| 21 | **`h()` 的 children 传 `VNodeChild`（含 null）不匹配重载**：RawChildren 不收 null，vue-tsc 报 TS2769 | lint:types（构建期 dts） | 条件子节点包一层数组 `[x as VNodeChild]`（null 在 VNodeArrayChildren 里合法） |
+| 22 | **fake timers 下 `1000/60` 间隔的末 tick 落在 advance 边界之内**：advance(1000) 后末次渲染仍是 00:30:00（React 的 act flush 语义与 Vue 调度不同） | L1（countup 差 1s） | 计时断言留余量：advance 到「越过整秒」再断言同一契约，不逐帧较劲 |
+| 23 | **视觉层的 Timer 截图两侧秒级必然漂移**（React/Vue 截图时刻不同） | L6（设计期规避） | 视觉用例 format 取最粗稳定粒度（`D 天`）；秒/分行为由 L1 fake timers 钉 |
+
 ### 2026-09-22（tag 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

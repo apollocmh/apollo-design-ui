@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "statistic/timer",
+  "component": "statistic",
+  "description": "Statistic.Timer：interval=1000/60 逐帧；showTime 置位前渲染 '-'（SSR 形态）；onFinish 仅 countdown 且 timestamp<now，只触发一次；valueRender cloneVNode 去 title；formatTimeStr 的 [...] 转义与 X+ 按位数补零。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "type": "countdown",
+    "title": "Deadline"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

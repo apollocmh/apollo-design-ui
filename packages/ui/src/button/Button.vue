@@ -24,7 +24,6 @@ import { LoadingOutlined } from '@apollo-design/icons';
 import { isNumber, isVNode, useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
-  Text as TextVNode,
   type CSSProperties,
   computed,
   h,
@@ -33,6 +32,7 @@ import {
   onUpdated,
   ref,
   shallowReactive,
+  Text as TextVNode,
   useAttrs,
   useSlots,
   type VNodeChild,
