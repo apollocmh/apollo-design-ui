@@ -1,0 +1,93 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/checkbox.mjs 从 antd 6.6.4 的 Checkbox 真实渲染生成。机械 oracle，禁止手改。indeterminate 的 input 副作用与事件行为由 L1 覆盖。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 21,
+  "cases": [
+    {
+      "id": "checkbox:no-props",
+      "html": "<label class=\"apollo-checkbox-wrapper css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\"/></span></label>"
+    },
+    {
+      "id": "checkbox:children",
+      "html": "<label class=\"apollo-checkbox-wrapper css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\"/></span><span class=\"apollo-checkbox-label\">label text</span></label>"
+    },
+    {
+      "id": "checkbox:zero-children",
+      "html": "<label class=\"apollo-checkbox-wrapper css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\"/></span><span class=\"apollo-checkbox-label\">0</span></label>"
+    },
+    {
+      "id": "checkbox:default-checked",
+      "html": "<label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-checked css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-checked\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" checked=\"\"/></span><span class=\"apollo-checkbox-label\">x</span></label>"
+    },
+    {
+      "id": "checkbox:checked",
+      "html": "<label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-checked css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-checked\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" checked=\"\"/></span><span class=\"apollo-checkbox-label\">x</span></label>"
+    },
+    {
+      "id": "checkbox:disabled",
+      "html": "<label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-disabled css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-disabled\"><input class=\"apollo-checkbox-input\" disabled=\"\" type=\"checkbox\"/></span><span class=\"apollo-checkbox-label\">x</span></label>"
+    },
+    {
+      "id": "checkbox:indeterminate",
+      "html": "<label class=\"apollo-checkbox-wrapper css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox apollo-checkbox-indeterminate ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\"/></span><span class=\"apollo-checkbox-label\">x</span></label>"
+    },
+    {
+      "id": "checkbox:checked-disabled",
+      "html": "<label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-checked apollo-checkbox-wrapper-disabled css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-checked apollo-checkbox-disabled\"><input class=\"apollo-checkbox-input\" disabled=\"\" type=\"checkbox\" checked=\"\"/></span><span class=\"apollo-checkbox-label\">x</span></label>"
+    },
+    {
+      "id": "checkbox:attrs",
+      "html": "<label class=\"apollo-checkbox-wrapper css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\" title=\"t\"><input id=\"x\" required=\"\" tabindex=\"3\" autofocus=\"\" class=\"apollo-checkbox-input\" type=\"checkbox\" name=\"n\"/></span><span class=\"apollo-checkbox-label\">x</span></label>"
+    },
+    {
+      "id": "group:options-string",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Apple\"/></span><span class=\"apollo-checkbox-label\">Apple</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Pear\"/></span><span class=\"apollo-checkbox-label\">Pear</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Orange\"/></span><span class=\"apollo-checkbox-label\">Orange</span></label></div>"
+    },
+    {
+      "id": "group:default-value",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-checked apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-checked\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" checked=\"\" value=\"Apple\"/></span><span class=\"apollo-checkbox-label\">Apple</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Pear\"/></span><span class=\"apollo-checkbox-label\">Pear</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Orange\"/></span><span class=\"apollo-checkbox-label\">Orange</span></label></div>"
+    },
+    {
+      "id": "group:value-controlled",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Apple\"/></span><span class=\"apollo-checkbox-label\">Apple</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-checked apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-checked\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" checked=\"\" value=\"Pear\"/></span><span class=\"apollo-checkbox-label\">Pear</span></label></div>"
+    },
+    {
+      "id": "group:options-object",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item label-1 css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Apple\"/></span><span class=\"apollo-checkbox-label\">Apple</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Pear\"/></span><span class=\"apollo-checkbox-label\">Pear</span></label></div>"
+    },
+    {
+      "id": "group:options-disabled",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"Apple\"/></span><span class=\"apollo-checkbox-label\">Apple</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-disabled apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-disabled\"><input class=\"apollo-checkbox-input\" disabled=\"\" type=\"checkbox\" value=\"Pear\"/></span><span class=\"apollo-checkbox-label\">Pear</span></label></div>"
+    },
+    {
+      "id": "group:disabled-all",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-disabled apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-disabled\"><input class=\"apollo-checkbox-input\" disabled=\"\" type=\"checkbox\" value=\"Apple\"/></span><span class=\"apollo-checkbox-label\">Apple</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-disabled apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-disabled\"><input class=\"apollo-checkbox-input\" disabled=\"\" type=\"checkbox\" value=\"Pear\"/></span><span class=\"apollo-checkbox-label\">Pear</span></label></div>"
+    },
+    {
+      "id": "group:number-options",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"1\"/></span><span class=\"apollo-checkbox-label\">1</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-wrapper-checked apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee apollo-checkbox-checked\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" checked=\"\" value=\"2\"/></span><span class=\"apollo-checkbox-label\">2</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"3\"/></span><span class=\"apollo-checkbox-label\">3</span></label></div>"
+    },
+    {
+      "id": "group:name",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\" name=\"cbgroup\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" name=\"cbgroup\" value=\"Yes\"/></span><span class=\"apollo-checkbox-label\">Yes</span></label><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" name=\"cbgroup\" value=\"No\"/></span><span class=\"apollo-checkbox-label\">No</span></label></div>"
+    },
+    {
+      "id": "group:children",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"apollo-checkbox-wrapper css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\"/></span><span class=\"apollo-checkbox-label\">child</span></label></div>"
+    },
+    {
+      "id": "group:custom-role",
+      "html": "<div class=\"apollo-checkbox-group css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"list\"><label class=\"apollo-checkbox-wrapper apollo-checkbox-group-item css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"apollo-checkbox-input\" type=\"checkbox\" value=\"A\"/></span><span class=\"apollo-checkbox-label\">A</span></label></div>"
+    },
+    {
+      "id": "group:custom-prefix",
+      "html": "<div class=\"my-checkbox-group css-var-root my-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" role=\"group\"><label class=\"my-checkbox-wrapper my-checkbox-group-item css-var-root my-checkbox-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"my-checkbox ant-wave-target css-dev-only-do-not-override-1v6lqee\"><input class=\"my-checkbox-input\" type=\"checkbox\" value=\"A\"/></span><span class=\"my-checkbox-label\">A</span></label></div>"
+    },
+    {
+      "id": "checkbox:semantic",
+      "html": "<label class=\"apollo-checkbox-wrapper custom-root css-var-root apollo-checkbox-css-var css-dev-only-do-not-override-1v6lqee\" style=\"padding:10px\"><span class=\"apollo-checkbox custom-icon ant-wave-target css-dev-only-do-not-override-1v6lqee\" style=\"border-radius:2px\"><input class=\"apollo-checkbox-input\" type=\"checkbox\"/></span><span class=\"apollo-checkbox-label custom-label\">x</span></label>"
+    }
+  ]
+}

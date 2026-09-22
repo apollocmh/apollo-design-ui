@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "checkbox/states",
+  "component": "checkbox",
+  "description": "状态类：-wrapper-checked / -wrapper-disabled 落 label；-checked / -disabled / -indeterminate 落 span；disabled 的 input 有 disabled attr 且 pointer-events:none；indeterminate 是运行时副作用（input.indeterminate），SSR 只产 -indeterminate 类。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "checked": true,
+    "disabled": true,
+    "indeterminate": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -1119,3 +1119,23 @@
      可达 ⇒ 说明它是真实分支，补用例。
      **处方**：移植上游逻辑时逐支对照（上游几个 `if` 就写几个），
      不要凭「防御性编程」的直觉多加分支；`Lines 100%` 是最好的自查信号。
+
+## Checkbox 流（2026-09-23，137-139）
+
+137. **Vue runtime prop `type: PropType<unknown>` 会被 vue-tsc 推断成 `undefined`**——
+     SFC 模板与 `h()` 全线误报「Type 'string' is not assignable to type 'undefined'」，
+     测试经 `mount(props)` 传值也炸。⭐ catch-all prop 别用 `unknown` 收口：
+     antd 的 `value` 语义上是原始值选项 ⇒ 声明成
+     `type: [String, Number, Boolean] as PropType<string | number | boolean>`
+     （Checkbox 流实测）；跨组件 `h` 传任意 T 的场景（Group 渲染 options）
+     已有 VNodeProps 放行手法兜底（statistic → Skeleton 同场景）。
+138. **Edit 工具偶发报 success 但内容未落盘**（PITFALLS 10 的批量升级版）：
+     同一文件 6 处编辑只有 3 处落盘，且报错文案与「内容已变」混在一起难以分辨。
+     ⭐ 批量编辑后必须 grep 逐处复核；连续不稳时改用 python 按行号
+     `assert old in lines[i]` 替换（脚本自己的断言也能兜住行号漂移）。
+     另：BSD grep **不支持 BRE 的 `\|` 交替**，多模式要用 `grep -E`，否则静默 0 匹配。
+139. **biome 行级 suppression 注释放在对象字面量内部会报「has no effect」**
+     （diagnostic 锚在属性上时抑制不生效）——别硬刚 suppression，把字面量提成
+     常量绕过（`tabIndex: 3` → `const ATTR_TAB_INDEX = 3`），契约语义不变。
+     另外 biome **warning 不fail 门禁**（只有 error 会），收口前用
+     `--reporter=summary` 区分 error/warning 能省很多无效排查。

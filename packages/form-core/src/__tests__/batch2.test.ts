@@ -54,19 +54,25 @@ describe('toArray（namePath 版）', () => {
 
 describe('replaceMessage', () => {
   it('单个占位符', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage("I'm ${name}", { name: 'bamboo' })).toBe("I'm bamboo");
   });
 
   it('多个占位符（含重复）', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${a} + ${b} = ${a}', { a: 1, b: 2 })).toBe('1 + 2 = 1');
   });
 
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
   it('⭐ `\\${name}` ⇒ 去掉反斜杠、**原样输出**（不替换）', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('\\${name}', { name: 'x' })).toBe('${name}');
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('a \\${n} b', { n: 'x' })).toBe('a ${n} b');
   });
 
   it('⭐ 未知的键 ⇒ 字符串 `undefined`（上游行为，不是抛错）', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${nope}', {})).toBe('undefined');
   });
 
@@ -75,16 +81,21 @@ describe('replaceMessage', () => {
   });
 
   it('⭐ 占位符名必须是 `\\w+` —— 带横线/点的不会被匹配', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${a-b}', { 'a-b': 'x' })).toBe('${a-b}');
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${a.b}', { 'a.b': 'x' })).toBe('${a.b}');
   });
 
   it('数字键也能替换（`\\w` 含数字）', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${0}', { 0: 'zero' })).toBe('zero');
   });
 
   it('值可以是任意类型（会被 String 化）', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${v}', { v: [1, 2] })).toBe('1,2');
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(replaceMessage('${v}', { v: null })).toBe('null');
   });
 
@@ -127,7 +138,9 @@ describe('replaceMessage', () => {
 // ---------------------------------------------------------------------------
 
 describe('defaultValidateMessages 的结构', () => {
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
   it('⭐ 两套模板的差异：这套用 `${name}`，schema 那套用 `%s`', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 占位符语法是有意字面量（replaceMessage 的契约输入）
     expect(defaultValidateMessages.required).toContain('${name}');
     expect(defaultValidateMessages.required).not.toContain('%s');
   });

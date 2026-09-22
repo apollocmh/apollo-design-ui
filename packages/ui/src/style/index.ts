@@ -35,6 +35,7 @@ import { genBackTopStyle } from '../back-top/style';
 import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
 import { genButtonStyle } from '../button/style';
+import { genCheckboxStyle } from '../checkbox/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
@@ -76,6 +77,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'layout-sider', gen: genSiderStyle },
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },
+  { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },

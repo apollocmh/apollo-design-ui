@@ -137,9 +137,14 @@ const CSSINJS_HASH_CLASS = /^css-(?:dev-only-do-not-override-)?[a-z0-9]+$/;
 /** 不含 hash 的固定 CSS-in-JS 类名。 */
 const CSSINJS_EXACT_CLASS = new Set(['css-var-root']);
 
+/** antd 的 `useCSSVarCls` 产物：`${prefixCls}-css-var`（checkbox 基线实测）。 */
+const CSSINJS_VAR_CLS = /^([a-z][a-z0-9-]*)?-css-var$/;
+
 /** 该 class token 是否来自 CSS-in-JS 运行时。 */
 function isCssInJsClass(token: string): boolean {
-  return CSSINJS_EXACT_CLASS.has(token) || CSSINJS_HASH_CLASS.test(token);
+  return (
+    CSSINJS_EXACT_CLASS.has(token) || CSSINJS_HASH_CLASS.test(token) || CSSINJS_VAR_CLS.test(token)
+  );
 }
 
 interface ProjectionContext {

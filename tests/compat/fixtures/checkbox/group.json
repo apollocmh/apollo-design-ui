@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "checkbox/group",
+  "component": "checkbox",
+  "description": "Group：options 归一化（字符串/数字 ⇒ {label,value}；过滤空 value）；受控/非受控 value；name 双写（GroupContext + 根 div）；role 默认 group；-group-item 类与 option.className 拼接；option.disabled 优先于整组 disabled。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": ["Apple", "Pear", "Orange"],
+    "defaultValue": ["Apple"]
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change"]
+  }
+}

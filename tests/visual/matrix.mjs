@@ -175,6 +175,16 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  checkbox: {
+    // 5 个 variant × 3 个 viewport = 15 张
+    variants: [
+      'basic', // 默认态 + checked + disabled
+      'indeterminate', // 半选（含 checked 半选组合）
+      'group', // options 三形态（字符串/对象/对象 disabled）
+      'check-all', // 全选 + 半选 + Divider
+      'semantic', // 语义化 classNames / styles
+    ],
+  },
   layout: {
     // 6 个 variant × 3 个 viewport = 18 张
     variants: [

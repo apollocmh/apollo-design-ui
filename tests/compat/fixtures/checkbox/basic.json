@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "checkbox/basic",
+  "component": "checkbox",
+  "description": "三段 DOM 分配（rc-checkbox 语义）：title 与语义 icon 落 span（含 ant-wave-target 固定类）、id/name/required/tabIndex/autofocus 落 input、hover 事件落 label；children 用 isRenderable 判据（0 渲染、false/'' 不渲染）；checked/disabled 类落 wrapper 与 span 两层。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "children": "Checkbox"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change"]
+  }
+}

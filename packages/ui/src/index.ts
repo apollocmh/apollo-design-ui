@@ -545,6 +545,26 @@ export { genAlertStyle } from './alert/style';
 export type { ComponentToken as AlertComponentToken } from './alert/style/token';
 export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';
 // ---------------------------------------------------------------------------
+// Checkbox —— 复选框（复合组件：Checkbox.Group）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 0 个（全 alias token）。
+// ---------------------------------------------------------------------------
+export type {
+  AbstractCheckboxProps,
+  CheckboxChangeEvent,
+  CheckboxChangeEventTarget,
+  CheckboxGroupProps,
+  CheckboxGroupRef,
+  CheckboxOptionType,
+  CheckboxProps,
+  CheckboxRef,
+  CheckboxSemanticClassNames,
+  CheckboxSemanticStyles,
+} from './checkbox';
+export { Checkbox, CheckboxGroup } from './checkbox';
+export { genCheckboxStyle } from './checkbox/style';
+export type { ComponentToken as CheckboxComponentToken } from './checkbox/style/token';
+// ---------------------------------------------------------------------------
 // Layout —— 布局（复合组件：Layout.Header / Footer / Content / Sider）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`（layout + layout-sider 两份）；

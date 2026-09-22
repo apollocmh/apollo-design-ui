@@ -33,3 +33,14 @@
   demo，用等价原生结构替换并在 demo 文件头 + README §2 登记；组件落地后换回。
 - **收口必查清单**：七层测试 + registry validate 18 检查 + verify:full +
   `next-task.mjs` 确认进度 + COMPONENT-CHECKLIST §六 沉淀 + push。
+
+## 主 checkout 同步（2026-09-22 用户确认后执行）
+
+- 用户主 checkout 在 `/Users/nanren/Code/apollo-design-ui`（分支 master）；此前停在
+  0b59f8d（grid 时代）且有 142 个 staged 同步残留（无独有内容）。
+- 已执行：备份 `scripts/verify-changed.mjs` 到 /tmp → `reset --hard origin/master`
+  + `git clean -fd` → HEAD=a8b735e、工作树干净；`merge workbuddy/master-13b518e4`
+  显示 Already up to date（workbuddy 分支与 master 本就同源）。
+- **约定**：WorkBuddy worktree 的分支（workbuddy/master-13b518e4）经
+  `push origin HEAD:master` 直推远程 master；主 checkout 只需定期
+  `git pull` 同步，不要再在两边并行改代码。
