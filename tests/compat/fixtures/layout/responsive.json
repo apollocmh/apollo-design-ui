@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "layout/responsive",
+  "component": "layout",
+  "description": "响应式：dimensionMaxMap（xs 479.98px … xxxl 1839.98px）；挂载时立即以 mql.matches 调一次 onBreakpoint，且 collapsed !== matches 时以 'responsive' 触发折叠；依赖数组只有 breakpoint。",
+  "antdVersion": "6.6.4",
+  "props": { "breakpoint": "lg" },
+  "assertions": { "api": true, "dom": false, "aria": false, "behavior": true, "screenshot": false },
+  "expect": { "events": [] }
+}

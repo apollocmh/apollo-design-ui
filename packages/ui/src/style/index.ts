@@ -39,6 +39,7 @@ import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
+import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genResultStyle } from '../result/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
@@ -71,6 +72,8 @@ export interface ComponentStyleEntry {
  */
 export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'affix', gen: genAffixStyle },
+  { name: 'layout', gen: genLayoutStyle },
+  { name: 'layout-sider', gen: genSiderStyle },
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },
   { name: 'divider', gen: genDividerStyle },

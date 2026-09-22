@@ -545,6 +545,34 @@ export { genAlertStyle } from './alert/style';
 export type { ComponentToken as AlertComponentToken } from './alert/style/token';
 export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';
 // ---------------------------------------------------------------------------
+// Layout —— 布局（复合组件：Layout.Header / Footer / Content / Sider）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（layout + layout-sider 两份）；
+//    Component Token 19 个（两个字面常量 #001529 / #002140，其余别名派生）。
+// ---------------------------------------------------------------------------
+export type {
+  Breakpoint as LayoutBreakpoint,
+  CollapseType as LayoutCollapseType,
+  LayoutProps,
+  LayoutRef,
+  SiderContextProps as LayoutSiderContextProps,
+  SiderProps as LayoutSiderProps,
+  SiderRef as LayoutSiderRef,
+  SiderSemanticClassNames as LayoutSiderSemanticClassNames,
+  SiderSemanticStyles as LayoutSiderSemanticStyles,
+  SiderTheme as LayoutSiderTheme,
+} from './layout';
+export {
+  Layout,
+  LayoutContent,
+  LayoutFooter,
+  LayoutHeader,
+  LayoutSider,
+} from './layout';
+export { genLayoutStyle, genSiderStyle } from './layout/style';
+export type { ComponentToken as LayoutComponentToken } from './layout/style/token';
+export { prepareComponentToken as prepareLayoutComponentToken } from './layout/style/token';
+// ---------------------------------------------------------------------------
 // Watermark —— 水印
 //
 // ⚠️ 无样式表（全内联 style + canvas）—— 不注册 COMPONENT_STYLES、无 Component

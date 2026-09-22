@@ -62,6 +62,18 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-22（layout 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 31 | **复合组件的「子组件」没从 index.ts 具名导出**：`import { Header } from './layout'` 得到 `undefined`，`h(undefined)` 只发一条 warn，L4 表现为「子节点数 0」而非「导入失败」 | L4（26 例一起红） | 复合组件除静态属性外，也要 `export const Header = LayoutHeader` 等具名别名 |
+| 32 | **漏了 `resetComponent`**（`font-family` / `font-size` / `box-sizing`）：antd 的 genStyleHooks 自动带这一段，手写 CSS 时最容易漏 | L6（12 张 block-diff，文字渲染差 0.04%~0.16%） | 手写样式表时先抄提取产物**第一段**（reset），再看组件自己的规则 |
+| 33 | **`useMergeSemantic` 的第三参是值不是 getter**：传 `semanticProps.value` 会让函数式语义化永远拿到首帧 props | L1（语义化函数用例） | 函数形态要随 props 变化时，直接用 `mergeClassNames` + `resolveSemantic` 包 computed |
+| 34 | **L4 基线里的 `#F96` 会被 jsdom 重序列化成 `rgb(…)`**：React SSR 原样输出、Vue 侧走 jsdom style 解析 ⇒ 必然不等 | L4 | 固件颜色统一写 `rgb(1, 2, 3)` 这种「两种引擎输出一致」的形态 |
+| 35 | **Vue 里 `onXxx` 回调 prop 不能声明 emits**：声明后 Vue 会把它从 attrs 摘掉，组件内 `attrs.onCollapse` 恒 undefined | L1（折叠用例静默不触发） | antd 的「props 形态回调」在 Vue 侧一律走 attrs，不写 emits |
+| 36 | **类型负例不能用「函数参数类型不符」**（TS 函数参数双变，宽类型会被接受）→ `@ts-expect-error` 报「未使用的指令」 | L3 | 直接钉联合类型本身（`const bad: CollapseType = 'hover'`） |
+| 37 | **E10 会遇到「antd 逐字的 alpha 白色遮罩」**（`rgba(255,255,255,0.2)`）：本仓没有带 alpha 的白色 token，换 token 会与上游分叉 | registry validate | 给 HARDCODED_PATTERNS 加 `skip` 字段（逐字豁免 + 理由），与 border-beam 的 `#fff 0 0)` 豁免同理 |
+
 ### 2026-09-22（watermark 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

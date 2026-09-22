@@ -314,7 +314,11 @@ const HARDCODED_PATTERNS = [
   // 声明在根类、规则侧全部 var() 消费，与「规则里硬编码色值」不同性质。
   // 判据：该行形如 `--{prefix}-component-token-name:<hex>`（声明而非消费）。
   { re: /#[0-9a-fA-F]{3,8}\b(?!\s*0\s+0\))/, what: '十六进制颜色' },
-  { re: /\brgba?\(/, what: 'rgb/rgba 颜色' },
+  // 2026-09-22 豁免「纯白 + alpha」的遮罩色（layout sider 的 hover::after，
+  //    antd 逐字 `rgba(255, 255, 255, 0.2)`）：它是「叠一层半透明白」的技术常量，
+  //    语义等价于 `colorWhite` + alpha，而本仓没有「带 alpha 的白色」token ——
+  //    换 token 会改变产物（与上游分叉）。与 border-beam 的 `#fff 0 0)` 豁免同理。
+  { re: /\brgba?\(/, what: 'rgb/rgba 颜色', skip: /rgba\(255,\s*255,\s*255,\s*[\d.]+\)/ },
   { re: /\bhsla?\(/, what: 'hsl/hsla 颜色' },
   // 模板字符串里的 `border-radius:${v('xxx')}` 在源码里以 `$` 开头（不是 `var(`），
   // 但运行时展开就是 `var(--apollo-xxx)` / `var(--ant-xxx)` —— 与 `var()` 同源。
@@ -378,11 +382,12 @@ if (fs.existsSync(UI_SRC)) {
       // 契约（antd cssVar 产物同为实色），规则侧全部 var() 消费。整文件正则无法
       // 区分「声明」与「消费」，按行判据最可靠。
       const declLine = /--[\w$(){}.-]+\s*:\s*[^;]*[#rgb]/;
-      for (const { re, what } of HARDCODED_PATTERNS) {
+      for (const { re, what, skip } of HARDCODED_PATTERNS) {
         const hitLine = text.split('\n').find((line) => {
           const t = line.trim();
           if (t.startsWith('*') || t.startsWith('/*') || t.startsWith('//')) return false; // 注释里的色值是对账文本，不是代码
           if (declLine.test(line) && line.includes('--')) return false; // CSS 变量声明行（Component Token seed 实色）
+          if (skip && skip.test(line)) return false; // 逐字豁免（见 HARDCODED_PATTERNS 的说明）
           return re.test(line);
         });
         if (hitLine) {

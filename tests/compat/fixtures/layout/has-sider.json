@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "layout/has-sider",
+  "component": "layout",
+  "description": "has-sider 三源：显式 boolean 优先 > 已注册 sider 数（运行时 addSider，含嵌套一层 div 的场景）> children 里有 type === Sider（首帧/SSR 也要成立）。多 Sider 逐个移除后类名消失。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

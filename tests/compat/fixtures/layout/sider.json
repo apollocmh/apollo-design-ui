@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "layout/sider",
+  "component": "layout",
+  "description": "Sider 宽度：数字补 px、字符串原样（50% ⇒ width/flex 都是 50%；0% ⇒ -zero-width）；divStyle 的 flex/maxWidth/minWidth/width 四件套覆盖语义 styles.root；默认 dark 主题。",
+  "antdVersion": "6.6.4",
+  "props": { "width": "50%" },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

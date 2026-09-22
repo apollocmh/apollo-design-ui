@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "layout/collapse",
+  "component": "layout",
+  "description": "折叠：collapsed === undefined ⇒ 非受控（click ⇒ onCollapse(true,'clickTrigger') 且类名变化）；受控时 click 只发事件；collapsedWidth 解析为 0 ⇒ 零宽触发器是 <span>（-left/-right）、普通触发器是 <div>；trigger === null ⇒ 无触发器且无 -has-trigger。",
+  "antdVersion": "6.6.4",
+  "props": { "collapsible": true },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": ["click"] }
+}

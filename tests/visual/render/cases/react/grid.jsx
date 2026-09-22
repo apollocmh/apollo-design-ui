@@ -19,7 +19,7 @@ const box = (text = '') => (
   </div>
 );
 
-const boxes = (n) => Array.from({ length: n }, (_, i) => box(`col-${Math.floor(24 / n)}`));
+const boxes = (n) => Array.from({ length: n }, () => box(`col-${Math.floor(24 / n)}`));
 
 export default {
   basic: () => (

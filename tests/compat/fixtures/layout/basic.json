@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "layout/basic",
+  "component": "layout",
+  "description": "四组件的标签名与类名：Layout=div / Header=header / Footer=footer / Content=main；Basic 传了 prefixCls 就不再拼 suffix；Layout 类序 prefixCls → -has-sider → -rtl → context → className → rootClassName。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

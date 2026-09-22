@@ -1,0 +1,137 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/layout.mjs 从 antd 6.6.4 的 Layout 真实渲染生成。机械 oracle，禁止手改。has-sider 的嵌套场景、响应式折叠、onCollapse 回调由 L1 覆盖（SSR 拿不到）。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 32,
+  "cases": [
+    {
+      "id": "layout:no-props",
+      "html": "<div class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "layout:children",
+      "html": "<div class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\">content</div>"
+    },
+    {
+      "id": "layout:has-sider-direct",
+      "html": "<div class=\"apollo-layout apollo-layout-has-sider css-dev-only-do-not-override-1v6lqee css-var-root\"><aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside><main class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\">Content</main></div>"
+    },
+    {
+      "id": "layout:has-sider-false",
+      "html": "<div class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\"><aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside></div>"
+    },
+    {
+      "id": "layout:has-sider-true",
+      "html": "<div class=\"apollo-layout apollo-layout-has-sider css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "layout:class-order",
+      "html": "<div class=\"apollo-layout cn rcn css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "layout:style",
+      "html": "<div class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"height:100vh\"></div>"
+    },
+    {
+      "id": "layout:custom-prefix",
+      "html": "<div class=\"my-layout css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "layout:header",
+      "html": "<header class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\">Header</header>"
+    },
+    {
+      "id": "layout:footer",
+      "html": "<footer class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\">Footer</footer>"
+    },
+    {
+      "id": "layout:content",
+      "html": "<main class=\"apollo-layout css-dev-only-do-not-override-1v6lqee css-var-root\">Content</main>"
+    },
+    {
+      "id": "layout:header-class",
+      "html": "<header class=\"apollo-layout h css-dev-only-do-not-override-1v6lqee css-var-root\"></header>"
+    },
+    {
+      "id": "layout:header-custom-prefix",
+      "html": "<header class=\"my-header css-dev-only-do-not-override-1v6lqee css-var-root\"></header>"
+    },
+    {
+      "id": "sider:no-props",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:theme-light",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-light css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:default-collapsed",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-collapsed css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 80px;max-width:80px;min-width:80px;width:80px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:collapsed",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-collapsed css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 80px;max-width:80px;min-width:80px;width:80px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:width-number",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 120px;max-width:120px;min-width:120px;width:120px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:width-percent",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 50%;max-width:50%;min-width:50%;width:50%\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:width-zero",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-zero-width css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 0%;max-width:0%;min-width:0%;width:0%\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:collapsible",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-has-trigger css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div><div class=\"apollo-layout-sider-trigger\" style=\"width:200px\"><span role=\"img\" aria-label=\"left\" class=\"apollo-icon apollo-icon-left\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"left\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z\"></path></svg></span></div></aside>"
+    },
+    {
+      "id": "sider:trigger-null",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:collapsed-width-zero",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div><span class=\"apollo-layout-sider-zero-width-trigger apollo-layout-sider-zero-width-trigger-left\"><span role=\"img\" aria-label=\"bars\" class=\"apollo-icon apollo-icon-bars\"><svg viewBox=\"0 0 1024 1024\" focusable=\"false\" data-icon=\"bars\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></span></aside>"
+    },
+    {
+      "id": "sider:collapsed-width-zero-collapsed",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-collapsed apollo-layout-sider-zero-width css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 0px;max-width:0px;min-width:0px;width:0px\"><div class=\"apollo-layout-sider-children\">Sider</div><span class=\"apollo-layout-sider-zero-width-trigger apollo-layout-sider-zero-width-trigger-left\"><span role=\"img\" aria-label=\"bars\" class=\"apollo-icon apollo-icon-bars\"><svg viewBox=\"0 0 1024 1024\" focusable=\"false\" data-icon=\"bars\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></span></aside>"
+    },
+    {
+      "id": "sider:zero-width-trigger-style",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div><span class=\"apollo-layout-sider-zero-width-trigger apollo-layout-sider-zero-width-trigger-left\" style=\"background:rgb(1, 2, 3)\"><span role=\"img\" aria-label=\"bars\" class=\"apollo-icon apollo-icon-bars\"><svg viewBox=\"0 0 1024 1024\" focusable=\"false\" data-icon=\"bars\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></span></aside>"
+    },
+    {
+      "id": "sider:reverse-arrow",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-has-trigger css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div><div class=\"apollo-layout-sider-trigger\" style=\"width:200px\"><span role=\"img\" aria-label=\"right\" class=\"apollo-icon apollo-icon-right\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"right\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z\"></path></svg></span></div></aside>"
+    },
+    {
+      "id": "sider:breakpoint",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:class-name",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark my-sider css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:style",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"background:rgb(1, 2, 3);flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:semantic",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark custom-sider-root css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"background-color:rgb(1, 2, 3);flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children custom-sider-body\" style=\"display:flex\">Sider</div></aside>"
+    },
+    {
+      "id": "sider:semantic-fn",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-has-trigger css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children body-expanded\" style=\"opacity:1\">Sider</div><div class=\"apollo-layout-sider-trigger\" style=\"width:200px\"><span role=\"img\" aria-label=\"left\" class=\"apollo-icon apollo-icon-left\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"left\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z\"></path></svg></span></div></aside>"
+    },
+    {
+      "id": "sider:custom-trigger",
+      "html": "<aside class=\"apollo-layout-sider apollo-layout-sider-dark apollo-layout-sider-has-trigger css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"flex:0 0 200px;max-width:200px;min-width:200px;width:200px\"><div class=\"apollo-layout-sider-children\">Sider</div><div class=\"apollo-layout-sider-trigger\" style=\"width:200px\"><span class=\"my-trigger\"></span></div></aside>"
+    }
+  ]
+}

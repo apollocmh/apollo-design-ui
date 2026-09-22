@@ -175,6 +175,17 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  layout: {
+    // 6 个 variant × 3 个 viewport = 18 张
+    variants: [
+      'basic', // Header + Content + Footer（无 Sider）
+      'side', // Layout + Sider(dark) + Content
+      'side-light', // Sider theme=light
+      'collapsible', // Sider collapsible（带 trigger）
+      'collapsed', // Sider collapsed=true（默认图标方向）
+      'zero-width', // collapsedWidth=0（零宽触发器）
+    ],
+  },
   watermark: {
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [

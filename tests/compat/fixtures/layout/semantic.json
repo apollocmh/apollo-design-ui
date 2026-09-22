@@ -1,0 +1,13 @@
+{
+  "$schema": "../schema.json",
+  "id": "layout/semantic",
+  "component": "layout",
+  "description": "Sider 语义槽 { root, body }：classNames 拼接、styles 逐键覆盖；函数形态收 { props }（含合并后的 collapsed），collapsed 变化要反映到下一次渲染。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "classNames": { "root": "custom-sider-root", "body": "custom-sider-body" },
+    "styles": { "root": { "backgroundColor": "rgb(1, 2, 3)" }, "body": { "display": "flex" } }
+  },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}
