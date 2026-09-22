@@ -12,3 +12,24 @@
 
 - **每个 Gate 收口时**，把本次踩的经典错误追加到 `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），含：坑、哪一层测试抓到的、对策。
 - badge 会话已沉淀 14 条（flex/grid 期教训 + badge 期 CSS 提取管线）。
+
+## 项目进度快照与防重复清单（2026-09-22 layout 收口后；权威来源是 registry，本节是索引）
+
+- **进度**：foundation 12/13 completed（picker 收口中）；组件 **20/72**
+  （empty, config-provider, button, space, flex, grid, divider, typography, alert,
+  skeleton, spin, result, tag, badge, watermark, border-beam, statistic, affix,
+  back-top, layout）。verify:full 四道门禁全绿（127 检查 FAIL 0）。
+- **蓝图**：ROADMAP.md §11 已改为「进度快照 + 已完成清单（防重复）+ 已知遗留
+  （不要再排查）+ 下一步」—— 后续每完成一批组件就刷新 §11.1 的一行数字即可，
+  不要重写整节。
+- **已知遗留（看到红灯先对照，不要重复排查）**：
+  1. typography semantic 视觉 3 张（antd `ellipsis.expandable:'collapsible'`
+     展开按钮未复刻）—— 实现 expandable 后消除；
+  2. icons 全量比对用例已放宽到 120s（不是回归）；
+  3. vitest.setup 已启用 `enableAutoUnmount(afterEach)`（修全量跑偶发
+     unhandled error）；
+  4. theme baseline 已把 `borderRadiusCircle` 白名单化（spin 的有意扩展）。
+- **demo 替换约定**：依赖未落地组件（Menu/Breadcrumb/Modal/Drawer/Form 等）的
+  demo，用等价原生结构替换并在 demo 文件头 + README §2 登记；组件落地后换回。
+- **收口必查清单**：七层测试 + registry validate 18 检查 + verify:full +
+  `next-task.mjs` 确认进度 + COMPONENT-CHECKLIST §六 沉淀 + push。

@@ -26,14 +26,10 @@ Phase 4  生态与持续运营 ────────────────�
 | Phase | 波次 | 内容 | 单元数 | 状态 |
 |---|---|---|---|---|
 | 1 | W0 | 侦察与架构 | — | ✅ 完成 |
-| 2 | W1 | 地基：无依赖包 + AR1/AR2 的 PoC | 9 | 进行中（9 个 ready） |
-| 2 | W2 | 能力层：依赖 utils 的 7 个包 | 7 | 待启动 |
-| 2 | W3 | 组合层：overlay | 1 | 待启动 |
-| 3 | W4 | 组件 DAG 第 0 层（19 个组件 + 视觉回归基建） | 20 | 待启动 |
-| 3 | W5 | 组件 DAG 第 1 层（3 个组件 + a11y 流水线） | 4 | 待启动 |
-| 3 | W6 | 组件 DAG 第 2 层（25 个组件 + 文档站） | 26 | 待启动 |
-| 3 | W7 | 组件 DAG 第 3 层 | 17 | 待启动 |
-| 3 | W8 | 组件 DAG 第 4~5 层（含 Table / Tree / Transfer） | 8 | 待启动 |
+| 2 | W1 | 地基：无依赖包 + AR1/AR2 的 PoC | 9 | ✅ 完成（2026-09-22 前） |
+| 2 | W2 | 能力层：依赖 utils 的 7 个包 | 7 | ✅ 完成（仅 picker 收口中） |
+| 2 | W3 | 组合层：overlay | 1 | ✅ 完成 |
+| 3 | W4~W8 | 组件实现（72 个，由 DAG 自动驱动） | 72 | ▶ **20/72 完成**（见 §11） |
 | 4 | W9 | 生态与持续运营 | — | 待启动 |
 
 **关键路径**：`utils →（portal + position + a11y）→ overlay →（Tooltip/Popover/Dropdown…）`。
@@ -216,25 +212,32 @@ pagination ─────►  3   ← List / Table / Transfer
 node registry/tools/next-task.mjs --parallel
 ```
 
-**当前输出（9 个可同时开工）**
+**当前输出（2026-09-22 刷新：17 个可同时开工，ready 35 / 92）**
 
 ```
 WS-X · 横切基建
-   X:build-output-contract        裁决并落实包级构建产物契约   ⚠ 收口被挡
+   X:build-output-contract        裁决并落实包级构建产物契约（解锁 87 个下游）
    X:ci-pipeline                  CI 流水线与门禁
-WS-B · 主题与图标
-   FND:theme                      @apollo-design/theme        ⚠ 收口被挡
-   FND:icons                      @apollo-design/icons        ⚠ 收口被挡
-WS-A · 地基与工具
-   FND:utils                      @apollo-design/utils        ⚠ 收口被挡
-   FND:test-utils                 @apollo-design/test-utils   ⚠ 收口被挡
-WS-G · 国际化
-   FND:locale                     @apollo-design/locale       ⚠ 收口被挡
-WS-D · 动效与传送
-   FND:motion:poc                 AR2 架构风险 PoC
-WS-C · 浮层与定位
-   FND:position:poc               AR1 架构风险 PoC
+WS-F · 表单与选择引擎
+   FND:picker                     @apollo-design/picker（解锁 3 个下游）
+WS-2 · 布局组件
+   COMP:splitter                  Splitter
+WS-3 · 导航组件
+   COMP:anchor                    Anchor
+   COMP:breadcrumb                Breadcrumb
+WS-4 · 数据录入组件
+   COMP:checkbox                  Checkbox（解锁 1 个下游）
+   COMP:radio / COMP:switch / COMP:upload
+WS-6 · 反馈组件
+   COMP:message / COMP:notification / COMP:drawer
+WS-5 · 数据展示组件
+   COMP:carousel / COMP:descriptions / COMP:listy
+WS-7 · 其他组件
+   COMP:app / COMP:tour
 ```
+
+> 组件期任务随 DAG 动态变化 —— **以 `node registry/tools/next-task.mjs --parallel`
+> 的实时输出为准**，本节只是快照。
 
 ### 波次推进图（纵轴 = 泳道，横轴 = 波次）
 
@@ -292,7 +295,7 @@ WS-X  ██ build-contract  · a11y-pipeline  · docs-site  ██ visual-infra
 
 ## 7. Phase 2 任务（W1–W3）
 
-### W1 · 地基 + 风险 PoC（9 个单元，当前批次）
+### W1 · 地基 + 风险 PoC（9 个单元）✅ 完成
 
 | 单元 | 泳道 | 内容 | 阻塞 |
 |---|---|---|---|
@@ -309,13 +312,15 @@ WS-X  ██ build-contract  · a11y-pipeline  · docs-site  ██ visual-infra
 **退出条件**：utils 六维全 done；theme 的 Token 管道可产出 CSS 变量；icons/locale 生成完成；
 两个 PoC 给出明确结论（`pocStatus = done`）。
 
-### W2 · 能力层（7 个单元，全部只依赖 utils）
+> ✅ 已全部满足（AR1/AR2 的 PoC 结论与实现均落在 `packages/position` / `packages/motion`）。
+
+### W2 · 能力层（7 个单元，全部只依赖 utils）✅ 完成（picker 收口中）
 
 `FND:motion` `FND:portal` `FND:position` `FND:a11y` `FND:virtual-list` `FND:form-core` `FND:picker`
 
 **这 7 个包彼此完全独立，可在 6 条泳道上同时推进。**
 
-### W3 · 组合层（1 个单元）
+### W3 · 组合层（1 个单元）✅ 完成
 
 `FND:overlay` —— 依赖 portal + position + a11y，是 15 个浮层类组件的共同前置。
 
@@ -416,21 +421,61 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 
 ## 11. 当前状态与下一步
 
+> **快照时间：2026-09-22**（layout 收口后）。数字由工具推导，刷新命令见 §12。
+
+### 11.1 总览
+
 ```
-92 个 Work Item  |  done 0  |  ready 9  |  blocked 83  |  waiting-decision 0
-15 条泳道  |  10 个波次  |  8 个冲突集（5 个开发期互斥）
+92 个 Work Item | 组件 20/72 | foundation 12/13 completed（picker 收口中）
+当前 ready 35（可并行开工 17）| verify:full 四道门禁全绿（127 检查 FAIL 0）
 ```
 
-**下一步（按优先级）**
+### 11.2 已完成的成果（⚠️ 防重复清单 —— 不要再做这些）
 
-1. **裁决 `build-output-contract`**（阻塞全部 13 个包的 `pkg` 维度与 L7 门禁）
-2. 开工 `X:ci-pipeline`（无阻塞，让门禁先存在）
-3. 开工 `FND:position:poc` 与 `FND:motion:poc`（无阻塞，先证伪架构风险）
-4. `FND:theme` 可以开始，但 `prefix-cls-default` 与 `zero-runtime-mode` 未裁决前收不了口
+**Phase 2 基础设施（12/13 completed，六维全绿）**
 
-**本轮不做的事**：不进入大规模组件实现。组件期（W4+）在基础设施稳定后由 DAG 自动解锁。
+| 包 | 状态 | 备注 |
+|---|---|---|
+| utils / theme / icons / locale / test-utils | ✅ | L0 地基（icons 848 个 Vue 图标、theme 完整派生链 + CSS 变量） |
+| motion / portal / position / a11y / virtual-list | ✅ | L1 能力层（AR1/AR2 架构风险已用真实实现证伪） |
+| form-core / picker | ✅ / 收口中 | L2 领域引擎 |
+| overlay | ✅ | L3 组合层（15 个浮层类组件的共同前置） |
 
----
+**Phase 3 组件（20/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
+
+```
+empty → config-provider → button · space · flex · grid · divider · typography
+        alert · skeleton · spin · result · tag · badge · watermark · border-beam
+        statistic · affix · back-top · layout
+```
+
+（`empty` / `config-provider` 两个枢纽已就位；组件期由 `next-task.mjs` 按 DAG 派发，
+每完成一个组件其七层测试与视觉基线随提交入库 —— **重复实现前先查
+`registry/components.json` 的 `status` 与 `packages/ui/src/<comp>/` 是否存在**。）
+
+### 11.3 已知遗留与「不要再排查」清单
+
+以下问题**已定位、已登记、非回归** —— 后续会话看到红灯时先对照这里，不要重复排查：
+
+| 问题 | 状态 | 去处 |
+|---|---|---|
+| typography semantic 视觉 3 张（React 130px vs Vue 90px） | 已定位：antd `ellipsis: { expandable: 'collapsible' }` 的展开按钮行未复刻 | tag 会话登记；实现 expandable 后消除 |
+| typography 的 `ellipsis` 展开按钮 | 未实现（antd 6.6.4 新能力） | typography 收口遗留 |
+| demo 里的 Menu / Breadcrumb / Modal / Drawer | 用等价原生结构替换（组件未落地），对应组件落地后换回 | 各 demo 文件头有登记 |
+| `pnpm test` 全量 icons 用例 5s 超时 | 已修：该用例显式 120s | icons semantic.test.ts |
+| 全量跑偶发 unhandled error（组件残留 timer） | 已修：`enableAutoUnmount(afterEach)` | vitest.setup.ts |
+| theme baseline `borderRadiusCircle` | 已修：白名单登记（spin 的有意扩展） | theme baseline.test.ts |
+
+**经典错误沉淀**：`docs/COMPONENT-CHECKLIST.md` §六（#1–#37，最近在顶部）——
+每类「踩过的坑 + 抓到它的层 + 对策」。写组件前先读一遍，比踩完再查省一个 Gate。
+
+### 11.4 下一步（按优先级）
+
+1. **裁决 `build-output-contract`**（仍阻塞全部 13 个包的 `pkg` 维度与 B6）
+2. `X:ci-pipeline`（无阻塞，让门禁在 CI 上先存在）
+3. 组件期继续：`node registry/tools/next-task.mjs` 派发（当前优先建议
+   `checkbox`（解锁 1 个下游）→ `anchor` / `breadcrumb` / `message` / `drawer`）
+4. `FND:picker` 收口（最后一个未 completed 的 foundation 包）
 
 ## 12. 相关命令速查
 
