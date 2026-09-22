@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "alert/semantic",
+  "component": "alert",
+  "description": "语义槽位七槽（root/icon/section/title/description/actions/close）：classNames 拼接、styles 逐键覆盖；role 默认 alert 可被用户 role 经 attrs 覆盖。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Info Text",
+    "description": "Info Description",
+    "showIcon": true,
+    "closable": true,
+    "type": "info",
+    "classNames": { "root": "demo-root", "title": "demo-title" },
+    "styles": { "root": { "color": "rgb(255, 0, 0)" }, "close": { "color": "rgb(128, 0, 128)" } }
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

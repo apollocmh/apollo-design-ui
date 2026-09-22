@@ -104,7 +104,10 @@ export const CSSMotion = defineComponent({
 
       // ⭐ 把元素引用注入进 slot 的根 vnode —— 驱动靠它拿 DOM。
       //    `ref` 传 Ref 对象时 Vue 会把元素/实例赋给 `.value`。
-      return cloneVNode(first, { ref: motion.elementRef });
+      //    `mergeRef = true`：用户 ref 与 motion ref **合并成数组**而不是被覆盖
+      //    —— Alert 这类「motion 元素即 expose 元素」的组件，根 vnode 上同时
+      //    要挂 nativeElement 的 ref（Vue 对数组 ref 会逐个调用，行为可加）。
+      return cloneVNode(first, { ref: motion.elementRef }, true);
     };
   },
 });

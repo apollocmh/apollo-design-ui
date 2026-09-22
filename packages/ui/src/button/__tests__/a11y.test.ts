@@ -143,9 +143,11 @@ describe('Button · 图标按钮的可访问名', () => {
     expect(w.attributes('aria-label')).toBe('搜索');
   });
 
-  it('有文字内容时，内容本身就是可访问名（不需要额外的 aria-*）', () => {
+  it('有文字内容时，内容本身就是可访问名（两字中文按 antd 默认插空格；不凭空加 aria-*）', () => {
     const w = mountBtn({}, { default: () => '保存' });
-    expect(w.text()).toBe('保存');
+    // antd 实测（SSR 探针）：两字中文 + 默认 autoInsertSpace ⇒ `保 存`（空格 join），
+    // 且**不**加 aria-label —— 本用例原来期望 `保存`，与上游行为相反（L5 重跑抓到）。
+    expect(w.text()).toBe('保 存');
     expect(w.attributes('aria-label')).toBeUndefined();
   });
 });

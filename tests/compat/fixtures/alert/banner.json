@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "alert/banner",
+  "component": "alert",
+  "description": "banner：type 默认 warning、恒显图标（showIcon 未传）、-banner 类（CSS 清边框圆角 margin）。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "Warning text", "banner": true },
+  "assertions": { "api": true, "dom": true, "aria": false, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

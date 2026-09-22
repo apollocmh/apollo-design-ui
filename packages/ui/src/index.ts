@@ -519,3 +519,28 @@ export type {
 // Typography —— 复合组件（Text / Title / Paragraph / Link + ellipsis / copyable / editable）
 // ---------------------------------------------------------------------------
 export { Link, Paragraph, Text, Title, Typography } from './typography';
+// ---------------------------------------------------------------------------
+// Alert —— 警告提示（复合组件：Alert.ErrorBoundary）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 4 个（borderRadius /
+//    withDescriptionIconSize 别名派生；defaultPadding / withDescriptionPadding
+//    为字符串拼装常量，antd cssVar 产物同为实串）。
+// ---------------------------------------------------------------------------
+
+export type {
+  AlertClosable,
+  AlertConfig,
+  AlertProps,
+  AlertRef,
+  AlertSemanticAllType,
+  AlertSemanticClassNames,
+  AlertSemanticStyles,
+  AlertSemanticValue,
+  AlertType,
+  AlertVariant,
+  ErrorBoundaryProps,
+} from './alert';
+export { Alert, AlertErrorBoundary } from './alert';
+export { genAlertStyle } from './alert/style';
+export type { ComponentToken as AlertComponentToken } from './alert/style/token';
+export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';

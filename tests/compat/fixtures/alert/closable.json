@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "alert/closable",
+  "component": "alert",
+  "description": "closable 判据链：对象恒可关；closeIcon !== false && != null ⇒ 可关（0/'' 也算）；closeIcon null/false ⇒ 不可关；mergedCloseIcon 优先级 closable.closeIcon > closeText > closeIcon > context；closable 对象的 aria-*/data-* 经 pickAttrs 落关闭按钮。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "x", "closable": { "closeIcon": true, "aria-label": "close" } },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["click"] }
+}

@@ -31,9 +31,12 @@ describe('Grid · 主题无关性', () => {
     }
   });
 
-  it('样式里无字面视觉值（flex 百分比是栅格结构值；无颜色/字体）', () => {
+  it('样式里无字面视觉值（flex 百分比是栅格结构值；无颜色/字面字号）', () => {
     const css = genGridStyle('apollo');
     expect(css).not.toMatch(/#[0-9a-f]{3,8}/i);
-    expect(css).not.toContain('font-size');
+    // ⚠️ 断言意图是「无**字面**字号」：`.apollo-row` 的 resetComponent 带
+    //    font-size:var(--apollo-font-size)（token 消费，badge 会话起就在），
+    //    不能按子串误伤 —— 只禁字面 px 值。
+    expect(css).not.toMatch(/font-size:\s*\d/);
   });
 });

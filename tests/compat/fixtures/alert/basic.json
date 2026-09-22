@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "alert/basic",
+  "component": "alert",
+  "description": "最基础的 Alert：type 默认 banner?warning:info、variant 默认 outlined（可被 ConfigProvider 覆盖）；isRenderable 判据守卫 title/description/action（0 渲染）；description 有值 ⇒ -with-description。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "Success Text", "type": "success" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -164,6 +164,17 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  alert: {
+    // 6 个 variant × 3 个 viewport = 18 张
+    variants: [
+      'basic', // 四 type（outlined，无图标）
+      'icon', // showIcon + description（with-description 形态）
+      'banner', // banner 四态（含 no-icon）
+      'closable', // 关闭按钮 + closeText
+      'filled', // filled 形态
+      'semantic', // classNames / styles 语义化覆盖
+    ],
+  },
   statistic: {
     // 5 个 variant × 3 个 viewport = 15 张
     variants: [

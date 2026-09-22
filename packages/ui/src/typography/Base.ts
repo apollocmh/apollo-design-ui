@@ -639,14 +639,17 @@ export const Base = defineComponent({
       { [`${prefixCls.value}-ellipsis-multiple-line`]: cssLineClamp.value },
       { [`${prefixCls.value}-link`]: props.component === 'a' },
       props.className,
-      // 语义槽位 root（antd 的 classes 里 mergedClassNames.root 在 className 之后）
-      mergedClassNames.value.root,
+      // ⚠️ 语义槽位 root **不在这里**：InternalTypography 会追加 `classNames.root`
+      //    （antd 的 Base className 只有 type/disabled/ellipsis/link + 用户 className；
+      //    重复添加会渲染出两份类名 —— L4 实测抓到）。
     ]);
 
     const rootStyle = computed<CSSProperties>(() => ({
-      // 语义槽位 root 在 style prop 之后（antd 的合并顺序：styles.root 覆盖 style）
+      // ⚠️ 语义槽位 root **不在这里**：styles 经 `classNames`/`styles` prop 传给
+      //    InternalTypography，由它做 `{...styles.root, ...style}` 合并 ——
+      //    antd 的用户 `style` **覆盖** `styles.root`（Base 的 style 只补
+      //    WebkitLineClamp）。在这里再合一次会颠倒顺序（L4 实测抓到）。
       ...props.style,
-      ...mergedStyles.value.root,
       ...(cssLineClamp.value ? { WebkitLineClamp: rows.value } : {}),
     }));
 
