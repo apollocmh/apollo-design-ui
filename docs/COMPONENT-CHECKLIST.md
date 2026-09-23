@@ -62,6 +62,17 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（switch 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 46 | **`useSize(props.size)` 非响应式**（同一会话在 radio 与 switch 各犯一次）：`customSize` 只在 setup 期读一次 ⇒ 受控切换 `size` 静默失效 | L1（一条「受控切换 size」用例；静态用例永远发现不了） | 一律用**函数形态** `useSize((ctx) => props.size ?? ctx)`（skeleton 的 Avatar/Button/Input 是本仓范式）；radio 已补回归用例 |
+| 47 | **biome 把「脚本里只出现在类型位置」的图标导入改成 `type` 导入**，而模板里当值用 ⇒ `Property "X" … is not defined on instance` | demo 冒烟 | 类型注解别引用值：用 `import { type Component, h } from 'vue'` |
+| 48 | **`a,b::before` 陷阱**（PITFALLS 141 姊妹）：`genNoMotionStyle()` 的 `&` 指代整个选择器列表，伪元素必须**逐个展开**；且 `handle::before` 走 **raw** 变体（不展开，否则出现 `::before::before`） | 与 extractStyle 产物对拍（唯一一处差异） | 写 reduced-motion 段时先与产物对拍选择器集合 |
+| 49 | **`SwitchProps` 不含 `onKeyDown`**（它是 rc-switch 的 props）⇒ `Pick<SwitchProps, 'onKeyDown'>` 报 TS2344 并让 `callbacks` 退化成 `{}` | dts 构建（`pnpm build:ui`） | attrs 显式写内联类型，别用 `Pick<Props, …>` 抄近路 |
+| 50 | **`pnpm build:ui` 的 dts 步骤要 12 分钟以上**（全仓 vue-tsc，无增量） | — | 挂**后台**跑，期间并行写文档/fixtures/PITFALLS；别用 `head` 截断（退出码会掩盖失败） |
+| 51 | **ui 根 `index.ts` 的 re-export 别名坑重犯**（PITFALLS 158）：`style/index.ts` 导出通用名 `genTokenDecls`、`token.ts` 是 `prepareComponentToken` ⇒ 必须 `as genXTokenDecls` / `as prepareXComponentToken`；**测试文件里的 import 同样要别名** | `pnpm build:ui` + dts | 新增导出后立刻跑一次 `pnpm build:ui` |
+
 ### 2026-09-23（radio 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

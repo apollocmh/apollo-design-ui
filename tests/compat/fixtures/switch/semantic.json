@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema.json",
+  "id": "switch/semantic",
+  "component": "switch",
+  "description": "语义槽三槽（root / content / indicator）：`root` 落 `<button>`、`content` **同时**落 `-inner-checked` 与 `-inner-unchecked` 两个 span、`indicator` 落 `-handle` 的 div。classNames 拼接、styles 逐键覆盖；函数形态收 `{ props }`（含合并后的 `size` / `disabled`）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "checkedChildren": "On",
+    "unCheckedChildren": "Off",
+    "checked": true,
+    "classNames": {
+      "root": "custom-root",
+      "content": "custom-content",
+      "indicator": "custom-indicator"
+    },
+    "styles": {
+      "root": {
+        "margin": "4px"
+      },
+      "content": {
+        "fontStyle": "italic"
+      },
+      "indicator": {
+        "top": "1px"
+      }
+    }
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

@@ -501,6 +501,27 @@ export {
   STATIC_PREFIX_CLS,
 } from './style';
 // ---------------------------------------------------------------------------
+// Switch —— 开关
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **13** 个（构建期算好的解析值，
+//    见 style/token.ts 文件头）。`Switch.__ANT_SWITCH` 与上游同。
+// ---------------------------------------------------------------------------
+export type {
+  SwitchChangeEventHandler,
+  SwitchClickEventHandler,
+  SwitchEvent,
+  SwitchProps,
+  SwitchRef,
+  SwitchSemanticClassNames,
+  SwitchSemanticContext,
+  SwitchSemanticStyles,
+  SwitchSize,
+} from './switch';
+export { Switch } from './switch';
+export { genSwitchStyle, genTokenDecls as genSwitchTokenDecls } from './switch/style';
+export type { ComponentToken as SwitchComponentToken } from './switch/style/token';
+export { prepareComponentToken as prepareSwitchComponentToken } from './switch/style/token';
+// ---------------------------------------------------------------------------
 // Tag —— 标签（Tag / CheckableTag / CheckableTagGroup）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 3 个（CSS 变量形态）。

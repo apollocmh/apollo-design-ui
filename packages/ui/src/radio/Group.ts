@@ -142,8 +142,14 @@ export const GroupComponent = defineComponent({
     const mergedVertical = computed(() => orientationPair.value[1]);
 
     // ============================== Size ===============================
-    /** antd 的 `useSize(customizeSize)` —— ConfigProvider 的 `componentSize` 已落地。 */
-    const mergedSize = useSize(props.size);
+    /**
+     * antd 的 `useSize(customizeSize)` —— ConfigProvider 的 `componentSize` 已落地。
+     *
+     * ⚠️ 必须用**函数形态**：`useSize(props.size)` 只在 setup 期读一次 `props.size`，
+     *    之后 props 变化不会重算（`size` 受控切换会静默失效）。skeleton 的
+     *    Avatar/Button/Input 与 switch 同判。
+     */
+    const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
 
     // ============================ Provide ==============================
     // ⚠️ 必须 reactive（自动解包 ref/computed）：子 Radio 的

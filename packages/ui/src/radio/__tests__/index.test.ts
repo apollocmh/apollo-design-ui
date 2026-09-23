@@ -727,4 +727,22 @@ describe('RadioGroup · size 与 ConfigProvider', () => {
     expect(classes).toContain('apollo-radio-group-small');
     expect(classes).not.toContain('apollo-radio-group-large');
   });
+
+  // 回归：`useSize(props.size)`（非函数形态）只在 setup 期读一次 props.size，
+  // 受控切换 size 会静默失效 —— 由 switch 流发现，radio 同源。
+  it('受控切换 size ⇒ 类名跟随变化（useSize 必须用函数形态）', async () => {
+    const size = ref<'small' | 'large'>('small');
+    const App = defineComponent({
+      setup() {
+        return () => h(RadioGroup, { options: ['A'], size: size.value });
+      },
+    });
+    const w = mount(App);
+    expect(w.find('div').classes()).toContain('apollo-radio-group-small');
+    size.value = 'large';
+    await nextTick();
+    const classes = w.find('div').classes();
+    expect(classes).toContain('apollo-radio-group-large');
+    expect(classes).not.toContain('apollo-radio-group-small');
+  });
 });

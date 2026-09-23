@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "switch/basic",
+  "component": "switch",
+  "description": "三层结构恒存在：`-handle` 的 div 与 `-inner-checked` / `-inner-unchecked` 两个 span 都**无条件**渲染（前者只有 loading 图标是条件渲染，后者靠负 margin 轮换显示）。受控/非受控是**双别名**：`checked ?? value` 与 `defaultChecked ?? defaultValue ?? false`。`loading` 用 `||` 判据**强制** disabled。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "defaultChecked": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change", "click"]
+  }
+}

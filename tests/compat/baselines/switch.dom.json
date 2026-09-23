@@ -1,0 +1,89 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/switch.mjs 从 antd 6.6.4 的 Switch 真实渲染生成。机械 oracle，禁止手改。checked/disabled 等原生属性与键盘/点击行为由 L1 覆盖（contract 档不投影它们）。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 20,
+  "cases": [
+    {
+      "id": "switch:no-props",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:default-checked",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:checked",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:disabled",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" disabled=\"\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-disabled\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:checked-disabled",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" disabled=\"\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked apollo-switch-disabled\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:value-alias",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:default-value-alias",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:loading",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" disabled=\"\" class=\"apollo-switch apollo-switch-loading css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-disabled\"><div class=\"apollo-switch-handle\"><span role=\"img\" aria-label=\"loading\" class=\"apollo-icon apollo-icon-loading apollo-icon-spin apollo-switch-loading-icon\"><svg viewBox=\"0 0 1024 1024\" focusable=\"false\" data-icon=\"loading\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z\"></path></svg></span></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:loading-checked",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" disabled=\"\" class=\"apollo-switch apollo-switch-loading css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked apollo-switch-disabled\"><div class=\"apollo-switch-handle\"><span role=\"img\" aria-label=\"loading\" class=\"apollo-icon apollo-icon-loading apollo-icon-spin apollo-switch-loading-icon\"><svg viewBox=\"0 0 1024 1024\" focusable=\"false\" data-icon=\"loading\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z\"></path></svg></span></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:loading-small",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" disabled=\"\" class=\"apollo-switch apollo-switch-small apollo-switch-loading css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-disabled\"><div class=\"apollo-switch-handle\"><span role=\"img\" aria-label=\"loading\" class=\"apollo-icon apollo-icon-loading apollo-icon-spin apollo-switch-loading-icon\"><svg viewBox=\"0 0 1024 1024\" focusable=\"false\" data-icon=\"loading\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z\"></path></svg></span></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:size-small",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch apollo-switch-small css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:size-medium",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:size-default-deprecated",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:children-string",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\">On</span><span class=\"apollo-switch-inner-unchecked\">Off</span></span></button>"
+    },
+    {
+      "id": "switch:children-string-checked",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\">On</span><span class=\"apollo-switch-inner-unchecked\">Off</span></span></button>"
+    },
+    {
+      "id": "switch:children-number",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\">1</span><span class=\"apollo-switch-inner-unchecked\">0</span></span></button>"
+    },
+    {
+      "id": "switch:children-small",
+      "html": "<button type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch apollo-switch-small css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\">On</span><span class=\"apollo-switch-inner-unchecked\">Off</span></span></button>"
+    },
+    {
+      "id": "switch:attrs",
+      "html": "<button id=\"x\" title=\"t\" tabindex=\"3\" autofocus=\"\" type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:aria-data",
+      "html": "<button aria-label=\"switch\" data-x=\"1\" type=\"button\" role=\"switch\" aria-checked=\"false\" class=\"apollo-switch css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-switch-handle\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked\"></span><span class=\"apollo-switch-inner-unchecked\"></span></span></button>"
+    },
+    {
+      "id": "switch:semantic",
+      "html": "<button style=\"margin:4px\" type=\"button\" role=\"switch\" aria-checked=\"true\" class=\"apollo-switch custom-root css-dev-only-do-not-override-1v6lqee css-var-root apollo-switch-checked\"><div class=\"apollo-switch-handle custom-indicator\" style=\"top:1px\"></div><span class=\"apollo-switch-inner\"><span class=\"apollo-switch-inner-checked custom-content\" style=\"font-style:italic\">On</span><span class=\"apollo-switch-inner-unchecked custom-content\" style=\"font-style:italic\">Off</span></span></button>"
+    }
+  ]
+}

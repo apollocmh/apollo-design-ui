@@ -1199,3 +1199,61 @@
      （其余 21 个已收口组件都没有）⇒ 在它们上 `v-model:xxx` 不生效。
      这是**跨组件的统一缺口**，不是 radio 的问题；后续组件照 C11 做，
      并考虑在某次整合期统一补齐（纯增量，不改 DOM）。
+
+## Switch 流（2026-09-23，163-168）
+
+> ⚠️ 编号从 **163** 起（Radio 流用 154-162）。
+
+163. ⚠️⚠️ **`useSize(props.size)` 是非响应式的**（本会话同一坑犯了两次：radio 的 Group 与 switch）。
+     `useSize` 的 `customSize` 参数只在 **setup 期读一次** —— 传 `props.size` 会把它当常量捕获，
+     之后 props 变化**不会重算** ⇒ 受控切换 `size` 静默失效（类名不跟着变）。
+     ⭐ 处方：一律用**函数形态** `useSize((ctxSize) => props.size ?? ctxSize)`
+     （skeleton 的 Avatar / Button / Input 一直是这么写的，是本仓的正确范式）。
+     抓它的方式：L1 里写一条「受控切换 size ⇒ 类名跟随变化」的用例 —— 静态用例永远发现不了。
+     已在 radio 的 index.test.ts 补回归用例。
+
+164. ⚠️ **biome 会把「脚本里只出现在类型位置」的导入改成 `type` 导入，而模板里当值用**：
+     `import { SmileOutlined } from icons` + 脚本里只写 `typeof SmileOutlined`（类型注解）
+     ⇒ `biome check --write` 改成 `import { type SmileOutlined }` ⇒ 模板里
+     `iconLabel(SmileOutlined, 'Happy')` 运行时报
+     `Property "SmileOutlined" was accessed during render but is not defined on instance`。
+     ⭐ 处方：类型注解别引用值 —— 用 Vue 的 `Component`（`import { type Component, h } from 'vue'`）。
+     抓它的层：demo 冒烟（「不产生告警」是硬约束）。
+
+165. ⚠️ **`a,b::before` 陷阱（PITFALLS 141 的姊妹）**：cssinjs 的 `&` 指代**整个父选择器列表**，
+     所以 `genNoMotionStyle()` 对 `a,b` 会展开成「`a,b` → `a::before,b::before` → `a::after,b::after`」
+     共 6 项。只把 `::before` 拼在列表末尾（`a,b::before`）会让伪元素**只作用于最后一项**。
+     ⭐ 另外要区分 raw 变体：antd 对 `handle::before` 用的是 `genNoMotionRawStyle()`（**不**展开），
+     再展开会得到非法的 `::before::before`。
+     抓它的方式：与 extractStyle 产物的选择器集合对拍（本次是唯一一处差异）。
+
+166. ⚠️ **`SwitchProps` 不含 `onKeyDown`**：antd 的 `SwitchProps` 里没有它（它是 rc-switch 的 props，
+     antd 靠 `{...restProps}` 透传）。写 `Pick<SwitchProps, 'onKeyDown'>` 会 TS2344
+     （`Type '"onKeyDown"' does not satisfy the constraint 'keyof SwitchProps'`），
+     且会让整个 `callbacks` 退化成 `{}`、后续 `callbacks.onKeyDown?.(e)` 报 TS2349。
+     ⭐ 处方：给 attrs 显式写一个内联类型，别用 `Pick<Props, ...>` 抄近路。
+
+167. **`pnpm build:ui` 的 dts 步骤（vue-tsc）要 12 分钟以上**：它是全仓 `-p tsconfig.json`，
+     比 `pnpm lint:types` 还慢（后者有增量缓存）。⭐ 改完类型敏感的代码后，
+     **先把 `pnpm build:ui` 挂后台**再做别的（文档 / fixtures / PITFALLS 都可以并行写），
+     别在前台干等；也**别**用 `head` 截断它的输出（`head` 的退出码会掩盖真实失败）。
+
+168. **`packages/ui/src/index.ts` 的 re-export 别名坑在 switch 流重犯了一次（PITFALLS 158）**：
+     `style/index.ts` 导出的是通用名 `genTokenDecls`、`token.ts` 是 `prepareComponentToken`，
+     所以 ui 根 index 必须写 `genTokenDecls as genSwitchTokenDecls` /
+     `prepareComponentToken as prepareSwitchComponentToken`。
+     ⭐ 更省事的自查：**测试文件里 import 也要用同一个别名**（`genTokenDecls as genXTokenDecls`），
+     否则 dts 阶段会报 `has no exported member named 'genXTokenDecls'`。
+     先跑 `pnpm build:ui`（见 167）比等到 G13 便宜。
+
+169. ⚠️⚠️ **`pnpm run test` 的 `Failed to start threads worker` 是**环境性失败**，不是代码失败**：
+     本次 switch 收口时把 `lint:types`（12 分钟）+ `pnpm run test` 串在同一条命令里跑，
+     测试阶段报了 **138 条** `[vitest-pool]: Failed to start threads worker … Timeout waiting
+     for worker to respond`，报告是 `Test Files no tests / Tests no tests / Errors 138`
+     —— **一个用例都没跑起来**。
+     ⭐ 判据：只要报告里出现 `Test Files no tests`（或 `Tests no tests`）+ `Failed to start
+     threads worker`，就说明是**机器过载**（IDE 打开 + 长任务并发），不是实现问题。
+     ⭐ 处方：**单独重跑** `pnpm run test`（不要与 typecheck / build 串在一起）。
+     🚨 **绝对不能**因为「跑不起来」就换 `--pool=forks --maxWorkers=1` ——
+     降级运行会**静默少跑**并给出假绿灯（PITFALLS 已多次登记，见 MEMORY.md 的环境段）。
+     机器负载与「关 IDE」的量化关系见 WORKFLOW.md §G13（16 分钟 → 7 分 49 秒）。

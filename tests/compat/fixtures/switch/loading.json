@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "switch/loading",
+  "component": "switch",
+  "description": "`loading` 会**强制** disabled（`(props.disabled ?? DisabledContext) || loading`）—— 根元素同时带 `-loading` 与 `-disabled` 两个类，并真的落 `disabled` 属性。loading 时 `-handle` 里出现 `LoadingOutlined`（类名 `{prefixCls}-loading-icon`，图标自身是 `role=\"img\" aria-label=\"loading\"`）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "loading": true,
+    "checked": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

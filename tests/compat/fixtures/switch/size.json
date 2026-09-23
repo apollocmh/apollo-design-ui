@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "switch/size",
+  "component": "switch",
+  "description": "`size` 三档：`'small'` 落 `-small` 类（轨道 16px / 把手 12px），`'medium'` / `'middle'` / 不传都用默认档（22px / 18px），`'default'` 已废弃但仍在类型里（发 deprecation 告警，视觉与 medium 相同）。`size` 走 `useSize` ⇒ ConfigProvider 的 `componentSize` 生效。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "size": "small",
+    "defaultChecked": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}

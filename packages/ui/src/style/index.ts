@@ -47,6 +47,7 @@ import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
 import { genStatisticStyle } from '../statistic/style';
+import { genSwitchStyle } from '../switch/style';
 import { genTagStyle } from '../tag/style';
 import { genTypographyStyle } from '../typography/style';
 
@@ -93,6 +94,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'skeleton', gen: genSkeletonStyle },
   { name: 'space', gen: genSpaceStyle },
   { name: 'spin', gen: genSpinStyle },
+  { name: 'switch', gen: genSwitchStyle },
   { name: 'typography', gen: genTypographyStyle },
 ];
 

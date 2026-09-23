@@ -265,6 +265,16 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  switch: {
+    // 5 个 variant × 3 个 viewport = 15 张
+    variants: [
+      'basic', // 普通 / 选中 / 禁用 / 选中+禁用（把手位移 + 圆点状态）
+      'loading', // loading（强制 disabled）+ size small 的 loading 图标尺寸
+      'size', // 默认 / small（轨道与把手两档）
+      'text', // checkedChildren / unCheckedChildren 四种形态（字符串 / 数字 / 图标 / 图标+文字）
+      'semantic', // 语义化 classNames / styles
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
@@ -378,11 +388,35 @@ export const LIMITATIONS = [
     unblockWhen: 'Wave 基建落地后，用交互式截图（click 后再截）补一条。',
   },
   {
-    dimension: 'radio·dark-compact',
-    missing: ['dark / compact 主题下的 radio 形态'],
+    dimension: 'switch·state',
+    missing: ['hover', 'active（按压反馈）', 'focus-visible', '切换过渡帧'],
     reason:
-      '与全局 `theme` 维度同源（见上方 `theme` 条目）：`THEMES` 目前只有 light，把 dark 加进来要重生成全部组件的整套基线。⚠️ radio 有一条**只在该维度下才会暴露**的风险：16 个 Component Token 里 11 个走 `var(--apollo-*)` 别名派生（随主题自适应），但 `radioSize` / `dotSize` 两个是**常量**（D46）—— dark 主题下二者都不变，所以理论上无差异；这条推断需要 dark 基线来证实。',
-    unblockWhen: '整合期把 dark 并入 THEMES 后，重生成基线并核对这两个常量确实不随主题变。',
+      'Switch 的**核心视觉全在状态里**：`:hover:not(-disabled)` 的轨道色、`:active` 时把手 `::before` 拉长 30% 与内容区让位、`:focus-visible` 焦点环、以及 `transition: all 0.2s` 的把手位移过程。`run.mjs` 只截**静态帧**，所以 5 个用例覆盖的是「未交互时的确定形态」（含选中/禁用/loading/size/children）。⚠️ 其中 `basic` 的选中态已经把「把手位移到 `inset-inline-start: calc(100% - (handleSize + trackPadding))`」与「`-inner` 的负 margin 轮换」这两条最容易写错的几何钉住了。',
+    unblockWhen:
+      '给 `run.mjs` 加交互步骤（hover / mousedown 后再截）后，补 `hover` / `active` 两个用例；过渡帧永远不进像素比对（时刻不确定）。',
+  },
+  {
+    dimension: 'switch·wave',
+    missing: ['点击波纹'],
+    reason:
+      'Wave 基建未落地（与 button / skeleton / checkbox / radio 同判）。⚠️ Switch **本来就没有** `ant-wave-target` 类（antd 的 Wave 在 6.6.4 不往子元素注入该类，实测 SSR 产物确认），所以两侧 DOM 逐字一致，缺的只是运行时注入的波纹元素与动画。',
+    unblockWhen: 'Wave 基建落地后，用交互式截图（click 后再截）补一条。',
+  },
+  {
+    dimension: 'switch·dark-compact',
+    missing: ['dark / compact 主题下的开关形态'],
+    reason:
+      '与全局 `theme` 维度同源：`THEMES` 目前只有 light。⚠️ Switch 有一条**只在该维度下才会暴露**的风险：13 个 Component Token 是**构建期算好的解析值**（`22px` / `44px` / `18px` / `#fff` / `rgba(0,35,11,0.2)` …），其中 `handleBg`（= `colorWhite`）与 `handleShadow`（antd 硬编码 `#00230b`）在 dark 主题下 antd 会重新生成、我们不会 ⇒ **dark 主题下这两个值会与 antd 分叉**。已登记为 D50。',
+    unblockWhen:
+      '整合期把 dark 并入 THEMES 后重生成基线；届时需要决定是否为这两个 token 补 dark 分支（或接受分叉并写入 COMPATIBILITY）。',
+  },
+  {
+    dimension: 'switch·icon-children',
+    missing: ['`checkedChildren` / `unCheckedChildren` 放**真图标组件**（`@apollo-design/icons`）'],
+    reason:
+      '视觉侧的 vue 渲染入口只链接了 `@apollo-design/theme` 与 `@apollo-design/ui` 两个 workspace 包（根 `package.json` 的 devDependencies），**拿不到** `@apollo-design/icons`；而 react 侧经 antd 的依赖可以拿到 `@ant-design/icons`。若只在一侧用真图标，比出来的会是「图标基线差异」而不是「Switch 差异」—— 那是假阳性。所以 `text` 用例改用**两侧逐字相同**的内联结构（`Flex` + `<b>` + 文本）当替身，与 `space·standins` 同思路。图标形态的 children 由 7 个 demo 里的 `text.vue` 与 L1「children 四种形态」覆盖。',
+    unblockWhen:
+      '把 `@apollo-design/icons` 加进根 `package.json` 的 devDependencies（需重生成 pnpm-lock）后，`text` 用例可以换成真图标。',
   },
 ];
 
