@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "radio/basic",
+  "component": "radio",
+  "description": "四层 DOM 分配：title 落 **label**（⚠️ 与 checkbox 不同，checkbox 落 span，上游 issue 46739）、id/name/required/tabIndex/autofocus/value 落 input、hover 事件落 label、children 用 isRenderable 判据；checked 有两个来源 —— wrapper 类读 `mergedChecked`（= checked prop），span/input 读内部态，所以 `defaultChecked` 时 span 有 `-checked` 而 wrapper **没有**（上游不一致，逐字保留）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "children": "Radio"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change"]
+  }
+}

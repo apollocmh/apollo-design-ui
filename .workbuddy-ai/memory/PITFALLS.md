@@ -1139,3 +1139,63 @@
      常量绕过（`tabIndex: 3` → `const ATTR_TAB_INDEX = 3`），契约语义不变。
      另外 biome **warning 不fail 门禁**（只有 error 会），收口前用
      `--reporter=summary` 区分 error/warning 能省很多无效排查。
+
+## Radio 流（2026-09-23，154-162）
+
+> ⚠️ 编号从 **154** 起（Typography 流预留 140-153）。
+
+154. ⚠️ **写入的 import 里 `/` 会被吞**：`@apollo-design/ui` 落盘成 `@apollo-design-ui`。
+     14 个 demo 里 2 个中招（`size.vue` / `radiogroup-with-name.vue`），
+     报错在**跑测试时**才出现（vite: `Failed to resolve import "@apollo-design-ui"`），
+     而错误串看起来像「另一种包名」，极易误判成「包名写错了」。
+     ⭐ 与 138 同源（工具落盘不忠实）⇒ 批量写文件后**必须逐文件回读**；
+     本次用一次全仓正则扫（`/@apollo-design-[a-z]/`）兜住。
+     另：本机 BSD `grep` 对多模式会静默 0 匹配（138 已记），排查优先用 node 脚本。
+
+155. **E10 的「硬编码圆角」启发式按**源码文本**判断 ⇒ 参数化的圆角会被误报**：
+     `border-radius:${radius};`（radius 已经是 `var(--apollo-border-radius)`）仍判红。
+     ⭐ 处方是**改写法**而不是加豁免：让 helper 收 **token 名**，模板写
+     `border-radius:${v(radiusToken)};` —— 源码文本命中放行分支（`${v(`）。
+     重构后必须验证产物**逐字节不变**（本次 dump + diff 确认）。
+
+156. ⚠️ **antd 的 `-wrapper-checked` 不含非受控内部态**：`<Radio defaultChecked />` 时
+     span 有 `-checked`、**wrapper 没有**（wrapper 读 `mergedChecked` = `checked` prop /
+     Group 值；span 与 input 读 rc-checkbox 的内部态）。
+     ⭐ 处方：实现里**分成两个 computed**（`mergedChecked` / `effectiveChecked`），
+     别「顺手统一」。这类不一致只有 L4 机械基线能抓 —— L1 若只断言 span 就会漏。
+
+157. **`RadioGroup` 的 `name` 默认值不是 undefined，而是 `useId` 生成的**：
+     `toNamePathStr(undefined) === ''`，而 `useId('')` 仍走生成分支 ⇒ antd **始终**
+     给整组 input 一个自动 name。分析文档初稿写成「恒 undefined（form 未落地）」是
+     凭直觉的结论，实现期回读 `toNamePathStr` 才修正。
+     ⭐ 凡是「某 prop 的默认值是什么」，读上游实现，别推。
+
+158. ⚠️ **`packages/ui/src/index.ts` 的 re-export 必须用别名**：
+     `export { genTokenDecls as genRadioTokenDecls }` / `prepareComponentToken as prepareRadioComponentToken`。
+     写成 `export { genRadioTokenDecls } from './radio/style'` 时 **vitest 不报错**
+     （主题测试照过），只有 `unbuild` 在构建期报 `"genRadioTokenDecls" is not exported by …`。
+     ⭐ 新增导出后先跑一次 `pnpm build:ui`（约 20 秒），比等到 G13 才发现便宜得多。
+
+159. **跑 `tests/visual` 前必须先 `pnpm build:ui`**：视觉层从
+     `packages/ui/dist/index.mjs` import（**不是源码**），dist 过期时报
+     `[MISSING_EXPORT] "Radio" is not exported by packages/ui/dist/index.mjs`。
+     baseline 与 compare 两种模式都要先构建。
+
+160. **antd 样式的 extractStyle 提取管线要写成 CJS**：cssinjs 的 `es/` 构建用了
+     **无扩展名**的 ESM 导入（`from './extractStyle'`），Node 直接 `import` 会
+     `ERR_MODULE_NOT_FOUND` —— 那套产物只有 bundler 解析得了。
+     ⭐ 用 `createRequire(...).resolve('@ant-design/cssinjs/package.json', { paths: [antd 目录] })`
+     定位 `.pnpm` 真实路径，再 `require(<cssinjs>/lib/index.js)`。
+     脚本必须放在**仓库内**（`node_modules/.cache/` 即可）才能解析 `react` / `antd`；
+     放 `/tmp` 会 `Cannot find package 'react'`。
+     提取要在树内 `useContext(StyleContext).cache` 后调 `extractStyle`（checklist 已有，CJS 同样适用）。
+
+161. **同族组件的「同名字段」落点不能互相照抄**：`title` 在 checkbox 落 **span**、
+     在 radio 落 **label**（上游 issue 46739）。checkbox → radio 是最容易「照着上一版改」
+     的一对，必须逐个回读上游。
+
+162. ⚠️ **全仓 `update:*` 缺口**：`COMPATIBILITY.md` 规则 C11 要求 `update:xxx` 与
+     语义事件**同时**发出，但截至 2026-09-23 **只有 radio 实现了**
+     （其余 21 个已收口组件都没有）⇒ 在它们上 `v-model:xxx` 不生效。
+     这是**跨组件的统一缺口**，不是 radio 的问题；后续组件照 C11 做，
+     并考虑在某次整合期统一补齐（纯增量，不改 DOM）。

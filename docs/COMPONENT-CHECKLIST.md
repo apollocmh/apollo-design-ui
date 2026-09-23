@@ -62,6 +62,19 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（radio 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 38 | **写入的 import 里 `/` 会被吞**：`@apollo-design/ui` 落盘成 `@apollo-design-ui`（14 个 demo 里 2 个中招） | demo 冒烟（vite: `Failed to resolve import "@apollo-design-ui"`） | 批量写文件后**逐文件回读**；本次用一次全仓正则扫（`/@apollo-design-[a-z]/`）兜住。⚠️ 本机 BSD `grep` 对多模式会静默 0 匹配，排查优先用 node 脚本（同 PITFALLS 138/154） |
+| 39 | **E10 的「硬编码圆角」启发式按源码文本判断** ⇒ 参数化的圆角（`border-radius:${radius}`，radius 已是 `var(...)`）被误报 | registry validate E10 | 处方是**改写法**而不是加豁免：helper 收 **token 名**，模板写 `border-radius:${v(radiusToken)};`（源码文本命中 `${v(` 放行分支）。重构后验证产物**逐字节不变**（dump + diff） |
+| 40 | **antd 的 `-wrapper-checked` 不含非受控内部态**：`<Radio defaultChecked />` 时 span 有 `-checked`、wrapper **没有** | L4 机械基线（`radio:default-checked`） | 实现里**分成两个 computed**（`mergedChecked` = checked prop/Group 值；`effectiveChecked` = 内部态），别「顺手统一」。L1 若只断言 span 会漏 |
+| 41 | **`RadioGroup` 的 `name` 默认值是 `useId` 生成的**（`toNamePathStr(undefined) === ''` ⇒ `useId('')` 走生成分支），不是 undefined | 实现期回读上游源码 | 凡是「某 prop 的默认值是什么」读上游实现，别推（分析初稿凭直觉写成「恒 undefined」） |
+| 42 | **`packages/ui/src/index.ts` 的 re-export 必须用别名**（`genTokenDecls as genRadioTokenDecls`）：写错时 **vitest 全绿**，只有 `unbuild` 报 `"X" is not exported by …` | `pnpm build:ui`（L7） | 新增导出后先跑一次 `pnpm build:ui`（约 20 秒），比等到 G13 便宜得多 |
+| 43 | **`tests/visual` 从 `packages/ui/dist/index.mjs` import（不是源码）** ⇒ dist 过期时报 `[MISSING_EXPORT]` | L6 首跑 | baseline 与 compare 两种模式**都要先 `pnpm build:ui`** |
+| 44 | **同族组件的「同名字段」落点不能互相照抄**：`title` 在 checkbox 落 span、在 radio 落 **label**（issue 46739） | L4 | checkbox → radio 是最容易「照上一版改」的一对，必须逐个回读上游 |
+| 45 | **全仓 `update:*` 缺口**：规则 C11 要求 v-model 与语义事件同时发出，但只有 radio 实现了 ⇒ 其余 21 个组件上 `v-model:xxx` 不生效 | 实现期核对 | 后续组件照 C11 做；建议某次整合期统一补齐（纯增量、不改 DOM） |
+
 ### 2026-09-22（layout 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

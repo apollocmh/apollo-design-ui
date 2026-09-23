@@ -67,8 +67,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ## 当前进度（2026-09-23）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **21/72** completed（最新：checkbox，5fad418，四道门禁全绿）。
+- 组件 **22/72** completed（最新：radio，四道门禁全绿）。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
-  SFC 解析噪音（PITFALLS 73，tag/checkbox 同报 64 条 unhandled，非本包引入）；
+  SFC 解析噪音（PITFALLS 73，tag/checkbox/radio 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。
+- **全仓 `update:*` 缺口**（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
+  但截至 radio 只有它实现了 ⇒ 其余 21 个组件上 `v-model:xxx` 不生效，待统一补齐。
 - 共享文件 4 个（index.ts / style/index.ts / matrix.mjs / cases/shared.mjs）按字母序追加。

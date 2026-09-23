@@ -255,6 +255,16 @@ export const COMPONENTS = {
       'semantic', // classNames / styles 语义化覆盖
     ],
   },
+  radio: {
+    // 5 个 variant × 3 个 viewport = 15 张
+    variants: [
+      'basic', // 普通 / 选中 / 禁用 / 选中+禁用（含 `::after` 的 \a0 基线占位）
+      'group', // options 三形态（字符串 / 对象 / 对象 disabled）+ vertical + block
+      'button', // Radio.Button 三态（正常 / 单项禁用 / 整组禁用）+ solid
+      'size', // large / 默认 / small（size 只对 button 形态生效）
+      'semantic', // 语义化 classNames / styles
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
@@ -351,6 +361,28 @@ export const LIMITATIONS = [
       '24 组里 21 组 0.000% exact；`copyable` 三组是 `block-diff`（差异率 0.3211% / 0.1568% / 0.0836%，散点占比 1.7% —— 差异**成块**而非抗锯齿散点）。diff 图显示红色区域**只落在复制图标**上（`tests/visual/diff/typography/copyable__light__*.png`），文字部分逐像素一致。根因在组件之外：`@apollo-design/icons` 导出了 `getIconStyle(iconPrefixCls)`（D15：只导出、不注入），但**仓库里没有任何地方消费它** —— 于是图标缺基础样式（`.apollo-icon` 没有 `display:inline-flex`、没有 `vertical-align:-0.125em`），SVG 退化成 `display:inline`，字形基线与 antd 差一点点。⚠️ 为什么不在本组件的收口里修：修法是在全局 `BASE_CSS` 里接上 `getIconStyle`，那会改变**所有**渲染图标的组件（`spin` 的 `LoadingOutlined` 等）的像素输出，属于 foundation 层的接线工作，超出本组件的改动面（`packages/ui/src/typography/**` + registry + memory）。缺口已登记在 `packages/ui/src/typography/README.md` §7 与 registry 的 `layerNotes.visual`。',
     unblockWhen:
       '`packages/ui/src/style/index.ts` 的 `BASE_CSS` 接上 `getIconStyle(iconPrefixCls)`（或 `@apollo-design/icons` 提供默认注入路径）后，重跑 `--mode compare`，三组应变 0.000% exact；届时同步复核 `spin` / `empty` 等已入库基线。',
+  },
+  {
+    dimension: 'radio·state',
+    missing: ['hover', 'active', 'focus-visible', 'checked 的过渡帧'],
+    reason:
+      'Radio 是第一个**状态几乎全在 CSS 里**的组件：`-wrapper-checked` / `-checked` / `-disabled` 三个类名落 DOM（L4 已钉），但 `:hover` 的边框色、`input:focus-visible` 的焦点环、圆点 `::after` 的 `scale(0)→opacity:1` 过渡帧都只存在于 CSS 状态里，而 `run.mjs` 只截**静态帧**（渲染完成即截图，无交互步骤）。5 个用例覆盖的是「未交互时的确定形态」：默认 / 选中 / 禁用 / button 三态 / 三档尺寸 / 语义化。⚠️ `defaultChecked` 的形态**已被覆盖**（`basic` 用例第 2 个）—— 它同时是上游「wrapper 类名不含非受控内部态」那条不一致的视觉证据。',
+    unblockWhen:
+      '给 `run.mjs` 加交互步骤（hover / focus 后再截）后，补 `hover` / `focus-visible` 两个用例；过渡帧永远不进像素比对（时刻不确定，属 flaky 源）。',
+  },
+  {
+    dimension: 'radio·wave',
+    missing: ['点击波纹（`Wave` 的 `ant-wave-target` 动画）'],
+    reason:
+      'Wave 基建未落地（D43，与 button / skeleton / checkbox 同判）。`ant-wave-target` 类名**已逐字保留**（非 button 形态），所以两侧 DOM 一致；缺的只是「点击后出现的波纹元素与动画」—— 它是运行时 DOM 注入，静态帧里本来就不存在。',
+    unblockWhen: 'Wave 基建落地后，用交互式截图（click 后再截）补一条。',
+  },
+  {
+    dimension: 'radio·dark-compact',
+    missing: ['dark / compact 主题下的 radio 形态'],
+    reason:
+      '与全局 `theme` 维度同源（见上方 `theme` 条目）：`THEMES` 目前只有 light，把 dark 加进来要重生成全部组件的整套基线。⚠️ radio 有一条**只在该维度下才会暴露**的风险：16 个 Component Token 里 11 个走 `var(--apollo-*)` 别名派生（随主题自适应），但 `radioSize` / `dotSize` 两个是**常量**（D46）—— dark 主题下二者都不变，所以理论上无差异；这条推断需要 dark 基线来证实。',
+    unblockWhen: '整合期把 dark 并入 THEMES 后，重生成基线并核对这两个常量确实不随主题变。',
   },
 ];
 

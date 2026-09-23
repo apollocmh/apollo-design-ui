@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema.json",
+  "id": "radio/button",
+  "component": "radio",
+  "description": "button 形态：`optionType='button'`（或 `Radio.Button` 提供的 optionType context）把**整段前缀**换成 `${prefixCls}-button` —— label/span/input/label-span 四层类名全换；`ant-wave-target` 只在非 button 形态出现；`buttonStyle` 落 `-group-outline` / `-group-solid`；`size` 只影响 button 形态的按钮高度。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": ["Apple", "Pear"],
+    "optionType": "button",
+    "buttonStyle": "solid"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change"]
+  }
+}

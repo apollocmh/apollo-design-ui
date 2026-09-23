@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "radio/group",
+  "component": "radio",
+  "description": "Group：value 是**标量**（与 checkbox 组的数组不同），选中判据是子 Radio 的 `value === groupContext.value`；onChange 只在值真的变了才发；options 支持字符串/数字/对象（对象形态 option.disabled 与整组取或）且**没有** `-group-item` 类；name 有 useId 默认值（整组一致）；orientation 压过 vertical；根 div 只收 aria-*/data-*。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": ["Apple", "Pear", "Orange"],
+    "defaultValue": "Apple"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change"]
+  }
+}

@@ -295,6 +295,36 @@ export {
   prepareRowComponentToken as prepareGridRowComponentToken,
 } from './grid/style/token';
 // ---------------------------------------------------------------------------
+// Radio —— 单选框
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **16** 个（CSS 变量形态，
+//    其中 `radioSize` / `dotSize` 是 unitless 常量 —— 见 style/index.ts 文件头）。
+//    复合组件：`Radio`（注册名 `ARadio`）+ 静态属性 `Radio.Group` / `Radio.Button`，
+//    另有具名别名 `RadioGroup` / `RadioButton`；`Radio.__ANT_RADIO` 与上游同。
+// ---------------------------------------------------------------------------
+export type {
+  AbstractRadioProps,
+  RadioChangeEvent,
+  RadioGroupButtonStyle,
+  RadioGroupContextValue,
+  RadioGroupOptionType,
+  RadioGroupProps,
+  RadioGroupRef,
+  RadioOptionItem,
+  RadioOptionLabel,
+  RadioOrientation,
+  RadioProps,
+  RadioRef,
+  RadioSemanticClassNames,
+  RadioSemanticContext,
+  RadioSemanticStyles,
+  RadioValue,
+} from './radio';
+export { Radio, RadioButton, RadioGroup } from './radio';
+export { genRadioStyle, genTokenDecls as genRadioTokenDecls } from './radio/style';
+export type { ComponentToken as RadioComponentToken } from './radio/style/token';
+export { prepareComponentToken as prepareRadioComponentToken } from './radio/style/token';
+// ---------------------------------------------------------------------------
 // Result —— 结果页
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 4 个（CSS 变量形态）。

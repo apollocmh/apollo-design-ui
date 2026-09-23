@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema.json",
+  "id": "radio/semantic",
+  "component": "radio",
+  "description": "语义槽三槽（root/icon/label）：classNames 拼接（root 落 label、icon 落 span、label 落文字 span）、styles 逐键覆盖；函数形态收 `{ props }`（含合并后的 checked/disabled）。⚠️ 语义 `checked` 用的是 `mergedChecked`（= checked prop / Group 值），不含非受控内部态 —— 与 wrapper 类名同源。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "children": "x",
+    "classNames": {
+      "root": "custom-root",
+      "icon": "custom-icon",
+      "label": "custom-label"
+    },
+    "styles": {
+      "root": {
+        "padding": "10px"
+      },
+      "icon": {
+        "borderRadius": "2px"
+      }
+    }
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": false,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  }
+}
