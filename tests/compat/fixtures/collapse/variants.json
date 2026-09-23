@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "collapse/variants",
+  "component": "collapse",
+  "description": "形态组合：borderless（去外框，分隔线保留，panel 用 borderlessContentPadding/Bg）、ghost（全透明 + paddingBlock）、size small/large（headerPadding 档位 + expand-icon marginInlineStart 偏移）、icon-placement-end（order:1 + margin 翻转）。动效：initCollapseMotion（height 0↔scrollHeight，motionDeadline 500）+ leavedClassName={p}-collapse-panel-hidden；destroyOnHidden ⇒ removeOnLeave。deprecated：destroyInactivePanel / expandIconPosition / Panel 的 disabled。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

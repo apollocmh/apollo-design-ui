@@ -275,6 +275,14 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  collapse: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: [
+      'basic', // 默认展开一项 + 箭头旋转
+      'accordion', // role=tablist + 手风琴
+      'borderless', // 无外框 + 两项展开
+    ],
+  },
   'qr-code': {
     // 3 个 variant × 3 个 viewport = 9 张（canvas 绘制两侧矩阵同源 ⇒ 像素一致）
     variants: [

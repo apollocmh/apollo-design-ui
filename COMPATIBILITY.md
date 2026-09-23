@@ -347,6 +347,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D62 | `listy` | **itemHeight（虚拟估算行高）是默认主题的构建期解析值**（fontHeight + (itemPaddingBlock ?? paddingSM)×2）。antd 用 useToken() 主题响应式 | 本仓 token 消费静态（D50 同判）；ThemeConfig 覆盖 Listy.itemPaddingBlock 不反映到估算行高（实测项高仍以 DOM 测量为准） | INTENDED | Listy.ts 文件头差异 4；虚拟路径 L1 覆盖 |
 | D63 | `splitter` | 事件名映射：onResizeStart/onResize/onResizeEnd/onCollapse/onDraggerDoubleClick ⇒ resize-start/resize/resize-end/collapse/dragger-double-click | emit + onXxx prop 双通道（C19 惯例） | INTENDED | L1 事件用例 |
 | D64 | `qr-code` | 事件：onRefresh ⇒ refresh emit | emit + onRefresh prop 双通道（C19 惯例）；⚠️ emits 声明把 onRefresh 从 props 剥离 ⇒ 监听器存在性从 instance.vnode.props 探测（CHECKLIST #68） | INTENDED | L1 refresh 链 |
+| D65 | `collapse` | 事件：onChange ⇒ change emit；deprecated×3（destroyInactivePanel / expandIconPosition / Panel disabled）逐条告警 | emit + onXxx 双通道（C19） | INTENDED | L1 |
 | D60 | `listy` | **direction 不是公开 prop**：antd 的 ListyProps Omit 了 direction（类型 + L4 实测：传入被 ConfigProvider 上下文覆盖） | Vue 侧同样不声明 direction prop，方向恒走 ConfigProvider | — | L4 rtl 用例钉住；docs/analysis/listy.md §2 |
 
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）

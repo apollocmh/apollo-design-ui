@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（collapse 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 71 | **antd 的嵌套样式规则展平后是「后代选择器」不是「直接子代」**：`${componentCls}-arrow` 嵌套在 `> ${componentCls}-header` 里 ⇒ 展平为 `.ant-collapse-header .ant-collapse-arrow`（箭头 span 在 expand-icon div 里，不是 header 直接子代）。写成 `>` 会让箭头的 font-size:12px 不生效（14px 默认）⇒ 图标盒宽 2px、文字右移 | L6（文字/图标整体 1-2px 位移，pixelmatch 0.2-5%） | 移植 cssinjs 嵌套时逐条判断父子关系：`&-xxx` 是后代；只有 `> ${x}` 明确写了的才是直接子代 |
+| 72 | **genFocusStyle 的 `&:focus-visible` 不能内联进基础规则**：内联 ⇒ outline 恒渲染（colorPrimary 蓝框画满全部面板，L6 多出 6000+ 蓝色像素） | L6（像素颜色分布扫描：vue 多出 22,119,255 × 6176） | 嵌套伪类必须拆成独立选择器 `.x:focus-visible{...}`；L6 挂了先做**颜色直方图对比**（哪个颜色多了多少），一眼定位是哪条规则泄漏 |
+| 73 | **disabled 的「吞点击」必须包住全局 toggle**：护栏放在 Panel 的 onItemClick 里而 Collapse 层直接调 toggle ⇒ disabled 面板照常展开 | L1（onChange 被意外调用 ×2） | rc 的 handleItemClick 结构：`if (disabled) return; onItemTrigger(); item.onItemClick?.()` —— 全局回调在护栏**之内** |
+
 ### 2026-09-23（qr-code 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

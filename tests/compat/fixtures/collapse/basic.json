@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "collapse/basic",
+  "component": "collapse",
+  "description": "items 形态：根 div.{p}-collapse[-icon-placement-start]；面板 {p}-collapse-item[-active] > header（role=button + aria-expanded + tabindex，默认 collapsible=undefined ⇒ header 整体可点）+ expand-icon div（内含 RightOutlined，active 旋转 90°，非交互 ⇒ aria-hidden）+ title span。内容区 PanelContent 惰性渲染（isActive||forceRender 固化），-panel-body 包裹。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

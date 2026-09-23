@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "collapse/accordion",
+  "component": "collapse",
+  "description": "accordion：根 role=tablist；header role=tab；内容 role=tabpanel。activeKey 恒单元素（点开项收起 ⇒ []）。key 全部 string 化（String(rawKey ?? index)）。onChange(key: string[])。",
+  "antdVersion": "6.6.4",
+  "props": { "accordion": true },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

@@ -640,6 +640,26 @@ export { Checkbox, CheckboxGroup } from './checkbox';
 export { genCheckboxStyle } from './checkbox/style';
 export type { ComponentToken as CheckboxComponentToken } from './checkbox/style/token';
 // ---------------------------------------------------------------------------
+// Collapse —— 折叠面板（engine/ = @rc-component/collapse 替换落点；动效复用
+// @apollo-design/motion 的 CSSMotion + initCollapseMotion）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **10** 个（别名引用走
+//    var()，padding 组合串构建期解析值）。复合组件 `Collapse.Panel`；
+//    items 首选 / children deprecated；事件 change（C19）。
+// ---------------------------------------------------------------------------
+export type {
+  CollapseItemType,
+  CollapsePanelProps,
+  CollapseProps,
+  CollapseRef,
+  CollapseSemanticClassNames,
+  CollapseSemanticStyles,
+  CollapsibleType,
+  ExpandIconPlacement,
+} from './collapse';
+export { Collapse, CollapsePanel } from './collapse';
+export { genCollapseStyle, genTokenDecls as genCollapseTokenDecls } from './collapse/style';
+// ---------------------------------------------------------------------------
 // Descriptions —— 描述列表（复合组件：Descriptions.Item）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **10** 个（radio D46 同判：
