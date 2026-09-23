@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-24（input-number 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 74 | **h() 的事件键名必须「on+全小写」**：Vue 把 on 后的首个大写 hyphenate 成事件名 —— `onMouseDown` 注册成非标准的 `mouse-down` 事件，监听器**静默失效**（原生 addEventListener 的对照实验会误导：手动 dispatchEvent 走原生通道照常触发） | L1（onStep mousedown 0 调用）+ CSSOM/VEI 探针 | 组件内联事件一律 `onMousedown`/`onMouseup`/`onMouseleave`/`onFocusin`；用户事件经 attrs 原样转发（模板产物本就是 onMousedown） |
+| 75 | **模板串里的 `.${cls}` 展开成双点号**（cls 已含前导点 ⇒ `..apollo-input-number-x`）—— 选择器非法，浏览器**整条静默丢弃**，86 条规则不生效；jsdom 的 L1/L4/L7 全绿（它们不断言 CSS 应用），只有 L6 像素比对暴露 | L6（states 9.6% 散点；CSSOM 列规则一眼定位） | 拼选择器时统一 `${cls}`（含点），复查产物 grep `..apollo`；双点号是「字符串模板拼 CSS」的专属陷阱 |
+| 76 | **子组件自渲染的 ContextProvider 对自身 setup 不可见**：legacy addon 分支在组件内部渲染 Space.Compact 包自己 ⇒ useCompactItemContext 的 setup 期 inject 先于 provide，紧凑类名恒空（React 同构代码没问题，context 是渲染期求值） | L4（addon 用例 -compact-item 缺失） | 按上游结构拆两层组件（wrapper + Internal），Internal 作为 Compact 的**子组件**渲染；antd 源码本就是 forwardRef ×2 |
+
 ### 2026-09-23（collapse 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

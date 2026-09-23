@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "input-number/variants",
+  "component": "input-number",
+  "description": "形态与状态：variant 四形态（outlined/filled/borderless/underlined，filled 的 actions 底色用 filledHandleBg）；bordered=false deprecated ⇒ borderless；status error/warning ⇒ -status-*（getMergedStatus：Form.Item 的 status 被自定义覆盖）；size 三档（-lg/-sm 改 input-padding 变量与字号）；mode=spinner（down 前置/up 后置、input 居中、图标 Plus/Minus）；controls=false 或 disabled/readOnly ⇒ 无 actions + -without-controls/-disabled/-readonly；受控超界 ⇒ -out-of-range 标红不回弹（FAQ：受控值不钳制）；rtl 由 ConfigProvider.direction 注入。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

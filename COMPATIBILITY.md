@@ -348,6 +348,10 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D63 | `splitter` | 事件名映射：onResizeStart/onResize/onResizeEnd/onCollapse/onDraggerDoubleClick ⇒ resize-start/resize/resize-end/collapse/dragger-double-click | emit + onXxx prop 双通道（C19 惯例） | INTENDED | L1 事件用例 |
 | D64 | `qr-code` | 事件：onRefresh ⇒ refresh emit | emit + onRefresh prop 双通道（C19 惯例）；⚠️ emits 声明把 onRefresh 从 props 剥离 ⇒ 监听器存在性从 instance.vnode.props 探测（CHECKLIST #68） | INTENDED | L1 refresh 链 |
 | D65 | `collapse` | 事件：onChange ⇒ change emit；deprecated×3（destroyInactivePanel / expandIconPosition / Panel disabled）逐条告警 | emit + onXxx 双通道（C19） | INTENDED | L1 |
+| D66 | `input-number` | legacy addon 分支把 Internal 升为 Space.Compact 的子级渲染 ⇒ Vue 的 useCompactItemContext 是 setup 期 inject 快照，单层实现永远拿不到紧凑项类名 | 拆两层组件：InputNumber（wrapper：告警/prefixCls/status 合并/addon 分支）+ InputNumberInternal（引擎+状态机），Internal 作为 Compact 的子组件渲染（antd 源码本就是 forwardRef ×2，结构同构） | PLATFORM | L4 addon 用例（-compact-item 缺失实测） |
+| D67 | `input-number` | h() 的事件键名必须「on+全小写」：Vue 把 on 后的驼峰 hyphenate 成事件名 —— `onMouseDown` 注册成非标准 `mouse-down` 事件，监听器静默失效 | 组件内联事件一律 `onMousedown`/`onMouseup`/`onMouseleave`；用户事件经 attrs 原样转发（模板产物本就是 onMousedown） | PLATFORM | L1 onStep mousedown 用例（0 调用实测） |
+| D68 | `input-number` | `_InternalPanelDoNotUseOrYouWillBeFired` 暂不导出（PureInputNumber 依赖 ConfigProvider 组件级 token 覆盖，静态 CSS 无运行时覆盖面） | 等 ConfigProvider token 覆盖落地后补 | INTENDED | analysis §6 I9 |
+| U12 | `input-number` | input 无关联 label（axe label 规则）—— 可访问名依赖使用方提供 | 对齐 antd（上游 a11y 测试同样禁用 label 规则）；L5 豁免登记 | UPSTREAM | L5 a11y 12 demo |
 | D60 | `listy` | **direction 不是公开 prop**：antd 的 ListyProps Omit 了 direction（类型 + L4 实测：传入被 ConfigProvider 上下文覆盖） | Vue 侧同样不声明 direction prop，方向恒走 ConfigProvider | — | L4 rtl 用例钉住；docs/analysis/listy.md §2 |
 
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）

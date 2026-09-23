@@ -684,6 +684,31 @@ export {
 export type { ComponentToken as DescriptionsComponentToken } from './descriptions/style/token';
 export { prepareComponentToken as prepareDescriptionsComponentToken } from './descriptions/style/token';
 // ---------------------------------------------------------------------------
+// InputNumber —— 数字输入框（引擎自建于 engine/：Decimal + StepHandler + cursor）
+//
+// ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 9 个 + input 族基础 10 个
+//    （别名色走 var(--apollo-*)；算式值/色彩合成为构建期解析值，见 style/token.ts）。
+//    v-model:value 与 onChange 双通道（C11）；deprecated ×3（bordered/addon×2）。
+//    form/context、form/hooks/useVariants 为本组件落的最小叶子模块。
+// ---------------------------------------------------------------------------
+export type {
+  InputNumberControls,
+  InputNumberMode,
+  InputNumberProps,
+  InputNumberRef,
+  InputNumberSemanticClassNames,
+  InputNumberSemanticContext,
+  InputNumberSemanticStyles,
+  InputNumberStepInfo,
+} from './input-number';
+export { InputNumber } from './input-number';
+export {
+  genInputNumberStyle,
+  genTokenDecls as genInputNumberTokenDecls,
+} from './input-number/style';
+export type { ComponentToken as InputNumberComponentToken } from './input-number/style/token';
+export { prepareComponentToken as prepareInputNumberComponentToken } from './input-number/style/token';
+// ---------------------------------------------------------------------------
 // Layout —— 布局（复合组件：Layout.Header / Footer / Content / Sider）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`（layout + layout-sider 两份）；

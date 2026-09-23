@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "input-number/semantic",
+  "component": "input-number",
+  "description": "语义化：classNames/styles 五键 root/prefix/suffix/input/actions（对象或函数式）；语义 root 在 antd 产物中出现两次（wrapper 链一次 + rc 的 classNames?.root 一次）；legacy addon（deprecated）根升为 Space.Compact（-compact-item/-compact-first/last-item），addon 落 Space.Addon（{p}-input-number-addon），rootClassName 转移到 Compact 根；wheel：changeOnWheel+focused 时对 input 挂非 passive 监听；changeOnBlur=false 时失焦不触发 change。",
+  "antdVersion": "6.6.4",
+  "props": { "classNames": { "root": "cls-root" } },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

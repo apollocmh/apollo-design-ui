@@ -275,6 +275,14 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  'input-number': {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: [
+      'basic', // 默认 + size 三档
+      'variants', // variant 四形态
+      'states', // disabled / readonly / status / out-of-range / spinner / presuffix
+    ],
+  },
   collapse: {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [

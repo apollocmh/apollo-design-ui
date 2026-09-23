@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "input-number/basic",
+  "component": "input-number",
+  "description": "基础形态：根 div.{p}-input-number -mode-input -{variant}；input role=spinbutton + autoComplete=off + aria-valuemin/max/now + step attr；actions 容器内 up/down 两个 role=button span（aria-label Increase/Decrease Value，unselectable=on，aria-disabled 到边界）。双状态机：decimalValue/inputValue 分离，键入中不格式化不钳制，blur/Enter flush 回正；空输入 flush ⇒ onChange(null)。precision 在非键入时生效；stringMode ⇒ onChange 返回 string。",
+  "antdVersion": "6.6.4",
+  "props": { "defaultValue": 3 },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "press-enter", "step"] }
+}
