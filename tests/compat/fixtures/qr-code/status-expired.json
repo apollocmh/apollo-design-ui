@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "qr-code/status-expired",
+  "component": "qr-code",
+  "description": "status=expired：-cover 绝对覆盖层（z-index:10，背景=Component Token QRCodeCoverBackgroundColor）+ -expired 文案（locale）+ refresh 按钮（type=link + ReloadOutlined；仅 onRefresh 存在时渲染）。⚠️ Vue：emits 声明把 onRefresh 从 props 剥离 ⇒ 监听器存在性要从 vnode.props 探测（CHECKLIST #68）。折叠三状态：expired/loading（Spin）/scanned。",
+  "antdVersion": "6.6.4",
+  "props": { "status": "expired" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["refresh"] }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "qr-code/basic",
+  "component": "qr-code",
+  "description": "canvas 形态：根 div.{p}-qrcode（flex 居中、白底、边框）+ canvas[role=img]（浏览器端绘制：devicePixelRatio 缩放 + Path2D fill）。SSR 里 canvas 是空元素（绘制在客户端 useEffect）。引擎 vendored：Nayuki qrcodegen（MIT，与 antd 链路同源 ⇒ 矩阵一致）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["refresh"] }
+}

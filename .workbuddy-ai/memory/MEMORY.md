@@ -69,7 +69,7 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ## 当前进度（2026-09-23）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **27/72** completed（最新：splitter，hooks 引擎自建）。下一个 `next-task` 权威输出为准。
+- 组件 **28/72** completed（最新：qr-code，引擎 vendored Nayuki qrcodegen）。下一个 `next-task` 权威输出为准。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。

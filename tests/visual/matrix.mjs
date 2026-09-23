@@ -275,6 +275,14 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  'qr-code': {
+    // 3 个 variant × 3 个 viewport = 9 张（canvas 绘制两侧矩阵同源 ⇒ 像素一致）
+    variants: [
+      'basic', // 默认 canvas + 边框
+      'custom', // 自定义前景/背景/尺寸
+      'svg', // svg 形态
+    ],
+  },
   splitter: {
     // 3 个 variant × 3 个 viewport = 9 张（SSR 帧容器未测量 ⇒ dragger 无激活态，稳定）
     variants: [

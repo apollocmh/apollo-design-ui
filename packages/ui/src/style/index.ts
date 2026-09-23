@@ -44,6 +44,7 @@ import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genListyStyle } from '../listy/style';
+import { genQrCodeStyle } from '../qr-code/style';
 import { genRadioStyle } from '../radio/style';
 import { genResultStyle } from '../result/style';
 import { genSkeletonStyle } from '../skeleton/style';
@@ -88,6 +89,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },
   { name: 'listy', gen: genListyStyle },
+  { name: 'qrcode', gen: genQrCodeStyle },
   { name: 'splitter', gen: genSplitterStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },

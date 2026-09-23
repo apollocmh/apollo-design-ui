@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（qr-code 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 68 | **`emits` 声明会把 `onXxx` 从 props 剥离**：`emits: ['refresh']` ⇒ `props.onRefresh` 恒 undefined（即使同时声明了该 prop）⇒ 「是否给了刷新回调」的渲染分支永远走 false（刷新按钮消失） | L4（expired 覆盖层子节点数 2 vs 1） | 渲染层的监听器存在性用 `getCurrentInstance()?.vnode.props?.onRefresh` 探测（vnode 原始 props 不受 emits 剥离）；注意 splitter 的 `onResizeStart`「能用」是 emit 兜底，不是 props 可读 |
+| 69 | **a11y 豁免是按次调用全局匹配的**：不同 demo 触发的 axe 规则不同（canvas ⇒ role-img-alt，svg ⇒ svg-img-alt），混在一组 `a11yDemoTest` 里会互相判「未被命中的豁免」 | L5（4 demo 混跑 4 挂） | 按规则族拆成多个 `a11yDemoTest` 调用（canvas 组 / svg 组），各组带各的 allow |
+| 70 | **vendored 第三方 JS 进 `.ts` 会爆 implicit-any**（qrcodegen 139 个 TS7006） | lint:types | 第三方库保持 `.js` + 手写 `.d.ts` API 面（只声明本仓消费的成员） |
+
 ### 2026-09-23（splitter 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

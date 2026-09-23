@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "qr-code/svg",
+  "component": "qr-code",
+  "description": "svg 形态：svg[viewBox='0 0 numCells numCells'][role=img] + 两条 path（bg 矩形 M0,0 hNvNH0z + fg generatePath）。path `d` 由 QR 矩阵唯一决定 ⇒ L4 byte 级对齐。shapeRendering=crispEdges。⚠️ aria/可访问性：role=img 无 aria-label/title 是上游原样（COMPATIBILITY U11，axe role-img-alt/svg-img-alt 豁免）。",
+  "antdVersion": "6.6.4",
+  "props": { "type": "svg" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

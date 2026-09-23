@@ -718,6 +718,23 @@ export type {
 export { Listy } from './listy';
 export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/style';
 // ---------------------------------------------------------------------------
+// QrCode —— 二维码（引擎 vendored：Nayuki qrcodegen，MIT；strategy=reuse 落定）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **1** 个
+//    （QRCodeCoverBackgroundColor，构建期解析值）。type=canvas|svg 双形态；
+//    status != 'active' ⇒ -cover 覆盖层（expired/loading/scanned）。
+// ---------------------------------------------------------------------------
+export type {
+  QRCodeProps,
+  QRCodeRef,
+  QrCodeSemanticClassNames,
+  QrCodeSemanticStyles,
+  QrcodeLocale,
+  QrcodeStatusType,
+} from './qr-code';
+export { QrCode } from './qr-code';
+export { genQrCodeStyle, genTokenDecls as genQrCodeTokenDecls } from './qr-code/style';
+// ---------------------------------------------------------------------------
 // Splitter —— 分割面板（引擎 hooks 自建于 hooks/；ResizeObserver 复用 utils）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **4** 个（常量默认值，

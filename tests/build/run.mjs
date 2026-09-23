@@ -479,6 +479,8 @@ function checkUiCssTokens(dir, name) {
  */
 const SSR_EXPORT_ALIASES = {
   grid: ['Row', 'Col'],
+  // antd 的组件名是 `QRCode`（驼峰两个大写），目录名 'qrcode' 的机械 pascal 是 `Qrcode`
+  qrcode: ['QrCode'],
 };
 
 /**
