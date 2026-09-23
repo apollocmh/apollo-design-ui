@@ -275,6 +275,15 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  descriptions: {
+    // 4 个 variant × 3 个 viewport = 12 张
+    variants: [
+      'basic', // 默认 3 列 + 行尾补齐（colSpan=3）
+      'bordered', // th/td 分格 + labelBg + 圆角
+      'vertical', // label 行 + content 行
+      'size', // small / medium 两档 padding
+    ],
+  },
   carousel: {
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [

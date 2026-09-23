@@ -341,6 +341,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D56 | `carousel` | `beforeChange` / `afterChange` / `onSwipe` / `onEdge` 是 props 回调；`prevArrow` / `nextArrow` 是 props 传 React 元素（cloneElement 合并） | 四者是 Vue 事件（`before-change` / `after-change` / `swipe` / `edge`，规则 C19）；自定义箭头用 `#prev-arrow` / `#next-arrow` 插槽，`cloneVNode` 合并 `class/style/data-role/onClick` + 作用域 `{ currentSlide, slideCount }` | INTENDED | C19 的 Vue-native 映射。无 value 语义 ⇒ 无 `update:*` 通道（C11 不适用） |
 | D57 | `carousel` | `ref.innerSlider` 是 react-slick 实例；`pauseOnFocus` 的 focus/blur 挂在 `document.querySelectorAll('.slick-slide')`（**全局**，跨实例） | `innerSlider` 是引擎的响应式状态对象（字段名与 slick state 对齐）；focus/blur 只挂**本实例** list 内的 slide | PLATFORM | React 实例对象不可移植；全局挂载是 slick 的实现噪声（多实例互相串扰），收敛到实例内是行为收敛而非差异。expose 形状与本仓惯例一致（D51 同判） |
 | — | `carousel` | fade 当前张的内联 `left:0`（React SSR 对数字 0 渲染 `"0"`） | 经 CSSOM（jsdom / 真实浏览器客户端渲染）规范化为 `left:0px` —— 计算值一致 | PLATFORM | L4 的 `carousel:fade` / `carousel:fade-speed-css` 各一条 allow（CSSOM_LEFT_ZERO）；React 客户端渲染产物同样是 `0px`，差异只在 SSR 原始字符串 |
+| — | `descriptions` | **bordered 的 label 文字色**：实际渲染产物是 `colorTextSecondary`（rgba(0,0,0,0.65)），与缓存 es 源码写的 `labelColor`（=colorTextTertiary，rgba(0,0,0,0.45)）**不一致** | 按**产物**移植（`color:colorTextSecondary`）；主段 `-item-label` 的 color 仍是 labelColor（产物确认） | UPSTREAM | 上游源码与产物的漂移（tarball 版本与安装版本核对一致）。证据：L6 bordered 三张的差异被像素比对揪出 + 浏览器 computed style 实测（react 0.65 / vue 修正前 0.45）。教训：**产物 > 源码**（§5 优先级第 4 层的「产物」高于读源码），登记 CHECKLIST #58 |
 
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "descriptions/bordered",
+  "component": "descriptions",
+  "description": "bordered：label=th.-item-label[colSpan=1]、content=td.-item-content[colSpan=span*2-1]，无 container div；labelStyle/语义 styles 落 cell 上；语义 classNames.label/content 落 cell 类。⚠️ bordered label 文字色实测是 colorTextSecondary（0.65），非缓存源码的 labelColor（0.45）——产物优先（COMPATIBILITY D59）。",
+  "antdVersion": "6.6.4",
+  "props": { "bordered": true },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -640,6 +640,30 @@ export { Checkbox, CheckboxGroup } from './checkbox';
 export { genCheckboxStyle } from './checkbox/style';
 export type { ComponentToken as CheckboxComponentToken } from './checkbox/style/token';
 // ---------------------------------------------------------------------------
+// Descriptions —— 描述列表（复合组件：Descriptions.Item）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **10** 个（radio D46 同判：
+//    别名派生走 var()，titleMarginBottom 乘法派生走构建期解析值）。
+//    三形态渲染分支（plain / bordered / vertical）见 docs/analysis/descriptions.md §3。
+// ---------------------------------------------------------------------------
+export type {
+  DescriptionsColumn,
+  DescriptionsItemSpan,
+  DescriptionsItemType,
+  DescriptionsProps,
+  DescriptionsRef,
+  DescriptionsRowItem,
+  DescriptionsSemanticClassNames,
+  DescriptionsSemanticStyles,
+} from './descriptions';
+export { Descriptions, DescriptionsItem } from './descriptions';
+export {
+  genDescriptionsStyle,
+  genTokenDecls as genDescriptionsTokenDecls,
+} from './descriptions/style';
+export type { ComponentToken as DescriptionsComponentToken } from './descriptions/style/token';
+export { prepareComponentToken as prepareDescriptionsComponentToken } from './descriptions/style/token';
+// ---------------------------------------------------------------------------
 // Layout —— 布局（复合组件：Layout.Header / Footer / Content / Sider）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`（layout + layout-sider 两份）；

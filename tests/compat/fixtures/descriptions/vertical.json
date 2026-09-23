@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "descriptions/vertical",
+  "component": "descriptions",
+  "description": "vertical：label 行（th）+ content 行（td）分开渲染；非 bordered 时 cell 类是 -item（container 里 span 才带 -item-label/-item-content）；label/content 行的 colSpan 相同（=span）。vertical+bordered 走 bordered 结构（th.item-label/td.item-content）。",
+  "antdVersion": "6.6.4",
+  "props": { "layout": "vertical" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

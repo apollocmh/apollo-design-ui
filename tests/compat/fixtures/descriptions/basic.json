@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "descriptions/basic",
+  "component": "descriptions",
+  "description": "plain 形态：label/content 同一个 td（-item 类 + -item-container div 包两个 span）。行尾补齐：行内 span 总和 < column 时末条 colSpan 扩到 column-(sum-lastSpan)。column 兜底链：isNumber → matchScreen(用户 map) → matchScreen(DEFAULT_COLUMN_MAP) → 3。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

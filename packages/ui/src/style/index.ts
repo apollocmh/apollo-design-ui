@@ -37,6 +37,7 @@ import { genBorderBeamStyle } from '../border-beam/style';
 import { genButtonStyle } from '../button/style';
 import { genCarouselStyle } from '../carousel/style';
 import { genCheckboxStyle } from '../checkbox/style';
+import { genDescriptionsStyle } from '../descriptions/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
@@ -83,6 +84,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'button', gen: genButtonStyle },
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
+  { name: 'descriptions', gen: genDescriptionsStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },

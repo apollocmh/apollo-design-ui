@@ -16,10 +16,10 @@
 
 ## 项目进度快照与防重复清单（2026-09-22 layout 收口后；权威来源是 registry，本节是索引）
 
-- **进度**：foundation 12/13 completed（picker 收口中）；组件 **24/72**
+- **进度**：foundation 12/13 completed（picker 收口中）；组件 **25/72**
   （empty, config-provider, button, space, flex, grid, divider, typography, alert,
   skeleton, spin, result, tag, badge, watermark, border-beam, statistic, affix,
-  back-top, layout, checkbox, radio, switch, carousel）。registry:check 18 检查全绿。
+  back-top, layout, checkbox, radio, switch, carousel, descriptions）。registry:check 18 检查全绿。
   ⚠️ 全仓 `update:*` 缺口（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
   但只有 radio / switch 实现了 ⇒ 其余 20 个组件上 `v-model:xxx` 不生效，待统一补齐。
 - **蓝图**：ROADMAP.md §11 已改为「进度快照 + 已完成清单（防重复）+ 已知遗留

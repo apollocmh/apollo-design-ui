@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "descriptions/span-filled",
+  "component": "descriptions",
+  "description": "span:'filled'：条目删除 span、推入当前行后立即收行；行尾补齐公式把 filled 条目的 colSpan 扩到 column-(sum-lastSpan)。超出的数字 span：压成 restSpan=column-count 并发 dev 告警（getCalcRows 的 exceed 分支）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "items": [
+      { "key": "1", "label": "L1", "children": "C1" },
+      { "key": "2", "label": "L2", "children": "C2", "span": "filled" }
+    ]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

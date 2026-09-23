@@ -62,6 +62,15 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（descriptions 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 58 | **缓存 es 源码 ≠ 实际渲染产物**：`/tmp/antd-src` 的 `descriptions/style` 写 `labelColor`（=colorTextTertiary 0.45），但 antd 实际渲染的 bordered label 是 `colorTextSecondary`（0.65）——tarball 与安装版本核对一致，属上游自身的源码/产物漂移 | L6（bordered 三张的 label 文字被像素比对揪红）+ 浏览器 computed style 定位（读 cssinjs 实际规则） | **产物 > 源码**（§5 优先级：`registry/*.json` 与「固定版本产物」高于读源码的印象）；凡样式对拍出颜色/数值分歧，先抓两侧 computed style 再改；判据修正登记 COMPATIBILITY（UPSTREAM） |
+| 59 | **VTU 不接受 `{ default: undefined }` 槽位**（`Invalid slot received`） | L1（首批 15 例全挂） | mount 的 slots 只在有内容时传：`slots ? { props, slots } : { props }` |
+| 60 | **通用 dev 告警走 console.error，deprecated 告警走 console.warn**（utils 的 warning/note 两通道） | L1（exceed 告警断言落空） | 断言前先查 `packages/utils/src/warning.ts` 的输出通道；`@rc-component/util` 的 `isReactRenderable` 等 shims 在 utils 里有对应物 |
+| 61 | **`keyof (A \| B)` = 交集**：语义槽 prop 类型含函数式变体后，`keyof Props['classNames']` 是 never | L3（expectTypeOf actual never） | 对 keyof 断言用语义接口本体（`DescriptionsSemanticClassNames`），不要用 Props 的联合字段 |
+
 ### 2026-09-23（carousel 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

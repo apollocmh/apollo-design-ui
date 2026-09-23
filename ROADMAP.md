@@ -29,7 +29,7 @@ Phase 4  生态与持续运营 ────────────────�
 | 2 | W1 | 地基：无依赖包 + AR1/AR2 的 PoC | 9 | ✅ 完成（2026-09-22 前） |
 | 2 | W2 | 能力层：依赖 utils 的 7 个包 | 7 | ✅ 完成（仅 picker 收口中） |
 | 2 | W3 | 组合层：overlay | 1 | ✅ 完成 |
-| 3 | W4~W8 | 组件实现（72 个，由 DAG 自动驱动） | 72 | ▶ **24/72 完成**（见 §11） |
+| 3 | W4~W8 | 组件实现（72 个，由 DAG 自动驱动） | 72 | ▶ **25/72 完成**（见 §11） |
 | 4 | W9 | 生态与持续运营 | — | 待启动 |
 
 **关键路径**：`utils →（portal + position + a11y）→ overlay →（Tooltip/Popover/Dropdown…）`。
@@ -426,7 +426,7 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 ### 11.1 总览
 
 ```
-92 个 Work Item | 组件 24/72 | foundation 12/13 completed（picker 收口中）
+92 个 Work Item | 组件 25/72 | foundation 12/13 completed（picker 收口中）
 当前 ready 32（可并行开工 17）| registry:check 18 检查全绿
 ```
 
@@ -441,12 +441,12 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 | form-core / picker | ✅ / 收口中 | L2 领域引擎 |
 | overlay | ✅ | L3 组合层（15 个浮层类组件的共同前置） |
 
-**Phase 3 组件（24/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
+**Phase 3 组件（25/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
 
 ```
 empty → config-provider → button · space · flex · grid · divider · typography
         alert · skeleton · spin · result · tag · badge · watermark · border-beam
-        statistic · affix · back-top · layout · checkbox · radio · switch · carousel
+        statistic · affix · back-top · layout · checkbox · radio · switch · carousel · descriptions
 ```
 
 （`empty` / `config-provider` 两个枢纽已就位；组件期由 `next-task.mjs` 按 DAG 派发，
