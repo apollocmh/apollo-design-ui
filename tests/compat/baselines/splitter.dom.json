@@ -1,0 +1,45 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/splitter.mjs 从 antd 6.6.4 的 Splitter 真实渲染生成。机械 oracle，禁止手改。仅覆盖 SSR 路径（容器未测量）；拖拽/折叠行为由 L1 覆盖。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 9,
+  "cases": [
+    {
+      "id": "splitter:basic",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Left</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"vertical\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Right</div></div>"
+    },
+    {
+      "id": "splitter:vertical",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-vertical css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Top</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"horizontal\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Bottom</div></div>"
+    },
+    {
+      "id": "splitter:layout-deprecated",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-vertical css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Top</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"horizontal\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Bottom</div></div>"
+    },
+    {
+      "id": "splitter:collapsible",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:40%;flex-grow:0\">Left</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger apollo-splitter-bar-dragger-disabled\" role=\"separator\" aria-disabled=\"true\" aria-orientation=\"vertical\" aria-valuenow=\"40\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Right</div></div>"
+    },
+    {
+      "id": "splitter:collapsible-icon-custom",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Left</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"vertical\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Right</div></div>"
+    },
+    {
+      "id": "splitter:multiple",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:20%;flex-grow:0\">Left</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger apollo-splitter-bar-dragger-disabled\" role=\"separator\" aria-disabled=\"true\" aria-orientation=\"vertical\" aria-valuenow=\"20\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:40%;flex-grow:0\">Center</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"vertical\" aria-valuenow=\"60\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Right</div></div>"
+    },
+    {
+      "id": "splitter:size-px",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:100px;flex-grow:0\">Left</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"vertical\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Right</div></div>"
+    },
+    {
+      "id": "splitter:rtl",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal apollo-splitter-rtl css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Left</div><div class=\"apollo-splitter-bar\"><div class=\"apollo-splitter-bar-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"vertical\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel\" style=\"flex-basis:auto;flex-grow:1\">Right</div></div>"
+    },
+    {
+      "id": "splitter:semantic",
+      "html": "<div style=\"height:200px\" class=\"apollo-splitter apollo-splitter-horizontal cls-root css-var-root apollo-splitter-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-splitter-panel cls-panel\" style=\"padding:4px;flex-basis:auto;flex-grow:1\">Left</div><div class=\"apollo-splitter-bar\"><div style=\"color:red\" class=\"apollo-splitter-bar-dragger cls-dragger\" role=\"separator\" aria-disabled=\"false\" aria-orientation=\"vertical\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"0\"></div></div><div class=\"apollo-splitter-panel cls-panel\" style=\"padding:4px;flex-basis:auto;flex-grow:1\">Right</div></div>"
+    }
+  ]
+}

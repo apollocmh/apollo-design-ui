@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（splitter 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 65 | **mergeClassNames 的逐键 clsx 会把对象值折叠成键名字符串**：`dragger: {default:'x'}` 经 clsx 变成 `'default'` —— 语义槽里嵌套对象（antd 的 `_default` 展平形态）不能进通用合并 | L4（semantic 用例：dragger 类名缺 cls-dragger） | 嵌套槽位手动合并（joinCls 逐子键）；mergeStyles 的逐键浅合对对象值安全，无需特判 |
+| 66 | **Vue 的 CSSOM 不会给数字补 px**（React 会）：`flexBasis: 100` 输出被静默丢弃 ⇒ 受控 px 尺寸的面板失去宽度 | L4（size-px 用例：flex-basis 缺失） | 组件里数字样式的收口函数统一补 px（与 #52/#53 同族：字符串/数字样式的单位处理必须在组件层完成） |
+| 67 | **`h(Comp, props, () => …)` 的 vnode.children 是槽函数而非数组**：照 React 习惯读 `children` 数组得到函数本体，渲染成 `[object Object]` | L4（面板内容变字符串） | children 归一化助手：function ⇒ 调用；{default: fn} ⇒ 调用；数组 ⇒ 原样（`renderPanelChildren`） |
+
 ### 2026-09-23（listy 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

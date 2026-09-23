@@ -49,6 +49,7 @@ import { genResultStyle } from '../result/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
+import { genSplitterStyle } from '../splitter/style';
 import { genStatisticStyle } from '../statistic/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTagStyle } from '../tag/style';
@@ -87,6 +88,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },
   { name: 'listy', gen: genListyStyle },
+  { name: 'splitter', gen: genSplitterStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "splitter/size-px",
+  "component": "splitter",
+  "description": "受控 size（number px）：SSR 保留开发者原值（containerSize 未测量 ⇒ panelSizes=sizes）；⚠️ 数字 flexBasis 必须补 px（Vue CSSOM 不自动加单位，CHECKLIST #52 同族）。受控/非受控混用且无 onResize ⇒ dev 告警。sizeUtil 归一化：全 undefined 均分 / 全定义缩放 + fitPtgSizes（折叠面板 size=0 忽略 min）/ 贪婪填充受 min/max 约束。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["resize"] }
+}

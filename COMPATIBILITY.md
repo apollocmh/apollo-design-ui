@@ -344,6 +344,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | — | `descriptions` | **bordered 的 label 文字色**：实际渲染产物是 `colorTextSecondary`（rgba(0,0,0,0.65)），与缓存 es 源码写的 `labelColor`（=colorTextTertiary，rgba(0,0,0,0.45)）**不一致** | 按**产物**移植（`color:colorTextSecondary`）；主段 `-item-label` 的 color 仍是 labelColor（产物确认） | UPSTREAM | 上游源码与产物的漂移（tarball 版本与安装版本核对一致）。证据：L6 bordered 三张的差异被像素比对揪出 + 浏览器 computed style 实测（react 0.65 / vue 修正前 0.45）。教训：**产物 > 源码**（§5 优先级第 4 层的「产物」高于读源码），登记 CHECKLIST #58 |
 | — | `listy` | **虚拟模式 DOM 与 rc-virtual-list 不同**：本仓由 `@apollo-design/virtual-list` 提供（原生滚动、无自绘滚动条；无 ScrollBar 节点 ⇒ `-scrollbar` 样式段是无消费者死规则，保留对齐产物选择器集合） | 复用 foundation（completed），DOM 差异随 foundation 契约 §5.1 | PLATFORM | 虚拟路径不进 L4 byte 级 oracle，由 L1 行为测试覆盖（窗口渲染/迭代定位/组头行）。吸顶克隆头渲染在 Filler 内层（inner 坐标 top=scrollTop+push），与 rc 的 Portal-to-holder 视觉等价 |
 | D62 | `listy` | **itemHeight（虚拟估算行高）是默认主题的构建期解析值**（fontHeight + (itemPaddingBlock ?? paddingSM)×2）。antd 用 useToken() 主题响应式 | 本仓 token 消费静态（D50 同判）；ThemeConfig 覆盖 Listy.itemPaddingBlock 不反映到估算行高（实测项高仍以 DOM 测量为准） | INTENDED | Listy.ts 文件头差异 4；虚拟路径 L1 覆盖 |
+| D63 | `splitter` | 事件名映射：onResizeStart/onResize/onResizeEnd/onCollapse/onDraggerDoubleClick ⇒ resize-start/resize/resize-end/collapse/dragger-double-click | emit + onXxx prop 双通道（C19 惯例） | INTENDED | L1 事件用例 |
 | D60 | `listy` | **direction 不是公开 prop**：antd 的 ListyProps Omit 了 direction（类型 + L4 实测：传入被 ConfigProvider 上下文覆盖） | Vue 侧同样不声明 direction prop，方向恒走 ConfigProvider | — | L4 rtl 用例钉住；docs/analysis/listy.md §2 |
 
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）

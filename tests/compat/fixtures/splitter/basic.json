@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "splitter/basic",
+  "component": "splitter",
+  "description": "SSR 契约（容器未测量）：面板 flex-basis:auto + flex-grow:1（SSR 用 auto）；dragger role=separator + aria-orientation（horizontal 布局 ⇒ aria vertical，分割线方向与排布垂直）；aria-valuenow = stack 比例×100（未测量时 ptg 均分 ⇒ 50）。resize-observer 替换：@apollo-design/utils 的 useResizeObserver；containerSize=0 时跳过（隐藏 tab 场景，antd issue #51106）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["resize-start", "resize", "resize-end"] }
+}

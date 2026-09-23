@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "splitter/collapsible",
+  "component": "splitter",
+  "description": "SSR（pxSizes 全 0）：prevSize=0 且有 min ⇒ dragger disabled（aria-disabled=true）；折叠按钮不渲染（prevSize>0 才 startCollapsible）。运行时：折叠走「直接折叠 / 记忆恢复（cacheCollapsedSizeRef）/ 半分」三路；图标 Left/Right/Up/DownOutlined 或 collapsible.icon 自定义；显隐三态 always-visible/always-hidden/hover-only（@media(hover:none) 恒显）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["collapse", "resize", "resize-end"] }
+}

@@ -718,6 +718,28 @@ export type {
 export { Listy } from './listy';
 export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/style';
 // ---------------------------------------------------------------------------
+// Splitter —— 分割面板（引擎 hooks 自建于 hooks/；ResizeObserver 复用 utils）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **4** 个（常量默认值，
+//    构建期解析值，见 style/token.ts 文件头）。复合组件 `Splitter.Panel`；
+//    事件五件套 C19 映射（resize-start/resize/resize-end/collapse/
+//    dragger-double-click）；语义槽 {root,panel,dragger}（dragger 支持 string 展平）。
+// ---------------------------------------------------------------------------
+export type {
+  PanelCollapsible,
+  ShowCollapsibleIconMode,
+  SplitterCollapsibleIcon,
+  SplitterDraggerClassNames,
+  SplitterDraggerStyles,
+  SplitterPanelProps,
+  SplitterProps,
+  SplitterRef,
+  SplitterSemanticClassNames,
+  SplitterSemanticStyles,
+} from './splitter';
+export { Splitter, SplitterPanel } from './splitter';
+export { genSplitterStyle, genTokenDecls as genSplitterTokenDecls } from './splitter/style';
+// ---------------------------------------------------------------------------
 // Watermark —— 水印
 //
 // ⚠️ 无样式表（全内联 style + canvas）—— 不注册 COMPONENT_STYLES、无 Component

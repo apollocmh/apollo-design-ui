@@ -275,6 +275,14 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  splitter: {
+    // 3 个 variant × 3 个 viewport = 9 张（SSR 帧容器未测量 ⇒ dragger 无激活态，稳定）
+    variants: [
+      'basic', // 两面板 + 默认 dragger
+      'vertical', // 纵向布局
+      'multiple', // 3 面板 + min/max
+    ],
+  },
   listy: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ Raw 路径（antd 默认 virtual=false）；虚拟模式像素不稳定（滚动位置依赖时序）不进静态帧
