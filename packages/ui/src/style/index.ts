@@ -35,6 +35,7 @@ import { genBackTopStyle } from '../back-top/style';
 import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
 import { genButtonStyle } from '../button/style';
+import { genCarouselStyle } from '../carousel/style';
 import { genCheckboxStyle } from '../checkbox/style';
 import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
@@ -80,6 +81,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'radio', gen: genRadioStyle },
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },
+  { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },

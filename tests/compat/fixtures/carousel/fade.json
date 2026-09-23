@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "carousel/fade",
+  "component": "carousel",
+  "description": "effect=fade：不渲染 clone；当前张内联 opacity:1/z-index:999，非当前 opacity:0/z-index:998，transition:opacity {speed}ms {cssEase}。slidesToShow/ToScroll 强制 1（slider.js）。⚠️ 当前张 left:0 在 React SSR 是 \"0\"，经 CSSOM 是 \"0px\"（计算值一致，PLATFORM）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "effect": "fade"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["after-change", "before-change"]
+  }
+}

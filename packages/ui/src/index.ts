@@ -596,6 +596,30 @@ export { genAlertStyle } from './alert/style';
 export type { ComponentToken as AlertComponentToken } from './alert/style/token';
 export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';
 // ---------------------------------------------------------------------------
+// Carousel —— 走马灯（决策 B：自建 slick 引擎，见 engine.ts）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **8** 个（构建期解析值，
+//    arrowLength=arrowSize/√2 的无理数几何用 JS 常量，见 style/token.ts 文件头）。
+//    `beforeChange` / `afterChange` / `onSwipe` / `onEdge` 是 Vue 事件（C19）；
+//    prevArrow / nextArrow 用 `#prev-arrow` / `#next-arrow` 插槽。
+// ---------------------------------------------------------------------------
+export type {
+  CarouselAfterChangeEventHandler,
+  CarouselAutoplay,
+  CarouselBeforeChangeEventHandler,
+  CarouselChildren,
+  CarouselDots,
+  CarouselEffect,
+  CarouselProps,
+  CarouselRef,
+  CarouselSwipeDirection,
+  DotPlacement,
+} from './carousel';
+export { Carousel } from './carousel';
+export { genCarouselStyle, genTokenDecls as genCarouselTokenDecls } from './carousel/style';
+export type { ComponentToken as CarouselComponentToken } from './carousel/style/token';
+export { prepareComponentToken as prepareCarouselComponentToken } from './carousel/style/token';
+// ---------------------------------------------------------------------------
 // Checkbox —— 复选框（复合组件：Checkbox.Group）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 0 个（全 alias token）。

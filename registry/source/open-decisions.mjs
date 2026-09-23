@@ -204,6 +204,7 @@ export const OPEN_DECISIONS = [
     impact: '影响 packages/ui 内部结构，不阻塞 foundation 包',
   }),
 
+  // 2026-09-23 用户裁决为 B（自建引擎），运行时状态见 foundation.json（可行性核对：docs/analysis/carousel.md §7）。
   open('carousel-engine', {
     question: 'Carousel 自建引擎还是复用 embla-carousel？',
     context:

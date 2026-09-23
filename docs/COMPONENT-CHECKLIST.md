@@ -62,6 +62,17 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-23（carousel 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 52 | **CSS 字符串里的键必须 kebab-case**：`zIndex:999` 拼进 style 字符串后 CSSOM 解析静默丢弃（`z-index` 才合法）⇒ 箭头/淡入淡出层级消失 | L4（z-index 在契约里） | styleToString 统一 `.replace(/[A-Z]/g,…)` kebab 化；trackStyle 的 `webkitTransform` / `msTransform` 特判 `-webkit-` / `-ms-` |
+| 53 | **Vue 的字符串 style 是整段 cssText，不是「值」**：`style: px(listHeight)` 产出 `"168px"` 是无效声明，被静默丢弃 ⇒ vertical 的 list 高度约束失效（L6 size-mismatch 905 vs 272） | L6（尺寸不一致，人工分类） | 字符串 style 必须写完整声明：`` style: `height:${px(v)}` ``；值形态只属于对象 style（React 语义不同） |
+| 54 | **px() 双重后缀**：`` `top:${px(x)}px` `` → `2.34pxpx` 非法 ⇒ `::after` 几何整块消失（箭头不可见） | L6（diff 集中在箭头）+ 产物 grep（`pxpx` 一眼定位） | px() 返回值不再拼 px；写完样式立刻 grep 产物验证 |
+| 55 | **双精度 1 ulp**：`16 * (1/Math.SQRT2)` 与 `16 / Math.SQRT2` 可能不同 —— antd 用 `.div(Math.SQRT2)` | L7（断言字符串可能失配） | 对齐 antd 的算术形态：一律**除法**；`arrowLength` 常量注释写明 |
+| 56 | **L4 管线在 jsdom 挂载，样式过 CSSOM**：hex 颜色 → `rgb()`、`left:0` → `0px`（React SSR 是原始字符串）⇒ 颜色差异是管线噪声不是实现差异 | L4（19 例首轮全挂） | fixture 的用户内容样式**只留几何属性**；组件自有内联定位的 `left:0` 走 allow（reason + COMPATIBILITY 登记），断言 `toEqual([...allowed])` 恰好匹配 |
+| 57 | **默认值判据是 antd 的解构，不是 slick 的 defaultProps**：dots（slick false → antd **true**）、arrows（slick true → antd **false**）、waitForAnimate（slick true → antd **false**）—— 三处全反 | L1（dots 默认缺失 / arrows 多渲染） | 写默认值前先读 `es/carousel/index.js` 的解构行，slick defaults 只作透传面判据 |
+
 ### 2026-09-23（switch 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

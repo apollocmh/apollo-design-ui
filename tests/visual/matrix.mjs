@@ -275,6 +275,15 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  carousel: {
+    // 4 个 variant × 3 个 viewport = 12 张
+    variants: [
+      'basic', // 默认 3 张 + 底部圆点（slick 轨道 / slide 排布 / 圆点几何）
+      'fade', // effect=fade：当前张可见、其余透明（无 clone）
+      'arrows', // arrows + 默认箭头几何（√2 的 ::after 旋转边框）
+      'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
@@ -417,6 +426,19 @@ export const LIMITATIONS = [
       '视觉侧的 vue 渲染入口只链接了 `@apollo-design/theme` 与 `@apollo-design/ui` 两个 workspace 包（根 `package.json` 的 devDependencies），**拿不到** `@apollo-design/icons`；而 react 侧经 antd 的依赖可以拿到 `@ant-design/icons`。若只在一侧用真图标，比出来的会是「图标基线差异」而不是「Switch 差异」—— 那是假阳性。所以 `text` 用例改用**两侧逐字相同**的内联结构（`Flex` + `<b>` + 文本）当替身，与 `space·standins` 同思路。图标形态的 children 由 7 个 demo 里的 `text.vue` 与 L1「children 四种形态」覆盖。',
     unblockWhen:
       '把 `@apollo-design/icons` 加进根 `package.json` 的 devDependencies（需重生成 pnpm-lock）后，`text` 用例可以换成真图标。',
+  },
+  {
+    dimension: 'carousel·motion',
+    missing: [
+      '切换动画中间帧',
+      '拖拽过程帧',
+      'autoplay 的圆点进度动画帧',
+      '拖到边界的橡皮筋阻尼帧',
+    ],
+    reason:
+      'Carousel 的动画全部是**运行时**行为（track 的 transform transition、opacity 交叉淡化、拖拽位移、`--dot-duration` 进度动画），`run.mjs` 只截**静态帧**—— 时刻不确定的帧不进像素比对。4 个用例覆盖的是「初始定位形态」：轨道 % 公式、fade 的透明度分档、箭头 √2 几何、纵向宽高对调。翻页/拖拽的状态机语义由 L1 钉（29 条）。',
+    unblockWhen:
+      '给 `run.mjs` 加「交互后截帧」能力后补；进度动画帧永远不进像素比对（时刻不确定）。',
   },
 ];
 

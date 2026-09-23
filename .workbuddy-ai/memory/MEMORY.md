@@ -69,13 +69,12 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ## 当前进度（2026-09-23）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **23/72** completed（最新：switch）。下一个 `next-task` 给的是 `carousel` ——
-  ⚠️ 它有开放决策 `carousel-engine`，开工前先 `ask decision carousel-engine` 看是否 hardBlock。
+- 组件 **24/72** completed（最新：carousel，自建引擎 —— `carousel-engine` 已裁决为 B）。下一个 `next-task` 权威输出为准。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。
 - **全仓 `update:*` 缺口**（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
-  但截至 switch 只有 radio / switch 实现了 ⇒ 其余 20 个组件上 `v-model:xxx` 不生效，待统一补齐。
+  但截至 carousel 只有 radio / switch 实现了 ⇒ 其余 20 个组件上 `v-model:xxx` 不生效，待统一补齐。
 - 共享文件 5 个（ui 的 index.ts / style/index.ts、tests/visual/matrix.mjs、cases/shared.mjs、
   root package.json）按字母序追加；⚠️ ui 根 index.ts 的 re-export 必须用别名
   （`genTokenDecls as genXTokenDecls` / `prepareComponentToken as prepareXComponentToken`，

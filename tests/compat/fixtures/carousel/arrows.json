@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "carousel/arrows",
+  "component": "carousel",
+  "description": "arrows：button.slick-arrow.slick-prev/.slick-next（type=button、data-role=none、aria-label 来自 locale，rtl 时互换文案）。⚠️ antd 的 Carousel 把 arrows 默认改成 false（slick 默认 true）；默认箭头无文案（空 ArrowButton）。infinite=false 时边界箭头有 slick-disabled 且 onClick 为 null。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "arrows": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["after-change", "before-change"]
+  }
+}

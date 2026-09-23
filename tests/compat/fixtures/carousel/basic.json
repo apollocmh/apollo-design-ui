@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "carousel/basic",
+  "component": "carousel",
+  "description": "infinite 默认 true ⇒ SSR 就渲染 clone（data-index=-1/n，slick-cloned）。track 定位走 ssrInit 的百分比公式（width:(n+2)/n·100%，left:-100%）。slide 三层结构：.slick-slide（tabindex/aria-hidden/width 内联）> div > div[tabindex=-1,width:100%] > child。dots 非激活 li 的 class 是空字符串。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["after-change", "before-change"]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "carousel/dot-placement-start",
+  "component": "carousel",
+  "description": "dotPlacement=start：根加 {prefix}-vertical、slick-slider 加 slick-vertical、dots 类变 slick-dots-start；mergedVertical = vertical ?? (placement 为 start/end)；isRTL 与 vertical 互斥。deprecated 的 dotPosition=left/right 映射 start/end 并发告警。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "dotPlacement": "start"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["after-change", "before-change"]
+  }
+}
