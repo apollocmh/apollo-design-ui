@@ -60,7 +60,13 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
-## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
+### 2026-09-23（listy 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 62 | **antd 的公开 props 会 Omit 掉内部 prop**：`ListyProps` Omit 了 `direction`（方向只来自 ConfigProvider）——按 rc 源码照搬「支持 direction prop」就错了 | L4（rtl 用例：Vue 侧多出 `-rtl` 类，React 基线没有） | 读 `index.d.ts` 的 **Omit 清单**再定 props 面；SSR 探针钉 DOM 时用 ConfigProvider 注入方向 |
+| 63 | **jsdom 没有 `scrollIntoView`**，`vi.spyOn(el, 'scrollIntoView')` 直接抛「属性不存在」 | L1（spy 建立即挂） | 用 `Object.defineProperty(el, 'scrollIntoView', { value: vi.fn(), configurable: true })` 桩（spyOn 只能 spy 已有属性） |
+| 64 | **虚拟列表在 jsdom 里需要双桩**：`holder.clientHeight`（`computeScrollTarget` 早退）+ 项的 `offsetParent`/`offsetHeight`（高度测量），否则 scrollTo 迭代不动、窗口恒为 0 | L1（virtual scrollTo 断言落空） | 复用 virtual-list 测试的 `makeItemsMeasurable` 范式；项内容必须是**元素**（string 内容在虚拟分支被 dev 告警跳过） |
 
 ### 2026-09-23（descriptions 会话）
 

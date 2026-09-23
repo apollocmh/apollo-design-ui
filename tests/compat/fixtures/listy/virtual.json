@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "listy/virtual",
+  "component": "listy",
+  "description": "虚拟模式（virtual=true + height）：行扁平化（组头行+项行，taggedKey 行键）交给 @apollo-design/virtual-list；吸顶克隆头走 extra 槽（-group-header-holder + -group-header-fixed，坐标 = scrollTop + push）。⚠️ DOM 与 rc-virtual-list 不同（原生滚动、无自绘滚动条）—— foundation PLATFORM（virtual-list 契约 §5.1）；antd 的 itemHeight 由 token 推导（fontHeight + itemPaddingBlock*2）。",
+  "antdVersion": "6.6.4",
+  "props": { "virtual": true, "height": 280 },
+  "assertions": { "api": true, "dom": false, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["scroll"] }
+}

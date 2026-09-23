@@ -275,6 +275,15 @@ export const COMPONENTS = {
       'semantic', // 语义化 classNames / styles
     ],
   },
+  listy: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ Raw 路径（antd 默认 virtual=false）；虚拟模式像素不稳定（滚动位置依赖时序）不进静态帧
+    variants: [
+      'basic', // 数据驱动项 + 分隔线 + hover 通道
+      'groupSticky', // 分组 + CSS sticky 组头 + 渐变底
+      'height', // height ⇒ maxHeight + overflowY:auto（有滚动条空间）
+    ],
+  },
   descriptions: {
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [

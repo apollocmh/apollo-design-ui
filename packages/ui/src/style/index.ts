@@ -43,6 +43,7 @@ import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
+import { genListyStyle } from '../listy/style';
 import { genRadioStyle } from '../radio/style';
 import { genResultStyle } from '../result/style';
 import { genSkeletonStyle } from '../skeleton/style';
@@ -85,6 +86,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },
+  { name: 'listy', gen: genListyStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },

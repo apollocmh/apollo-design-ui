@@ -1,0 +1,37 @@
+{
+  "$comment": "DOM 基线：由 tests/compat/baseline/listy.mjs 从 antd 6.6.4 的 Listy 真实渲染生成。机械 oracle，禁止手改。仅覆盖 Raw 路径（antd 默认 virtual=false）；虚拟模式走 L1 行为测试（foundation PLATFORM，见 docs/analysis/listy.md §4.3）。",
+  "antdVersion": "6.6.4",
+  "renderer": "react-dom/server.renderToStaticMarkup",
+  "prefixCls": "apollo",
+  "caseCount": 7,
+  "cases": [
+    {
+      "id": "listy:basic",
+      "html": "<div class=\"apollo-listy css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" style=\"overflow-anchor:none\"><div class=\"apollo-listy-item\" data-key=\"item:0\">Item 0</div><div class=\"apollo-listy-item\" data-key=\"item:1\">Item 1</div><div class=\"apollo-listy-item\" data-key=\"item:2\">Item 2</div><div class=\"apollo-listy-item\" data-key=\"item:3\">Item 3</div><div class=\"apollo-listy-item\" data-key=\"item:4\">Item 4</div></div>"
+    },
+    {
+      "id": "listy:empty-items",
+      "html": "<div class=\"apollo-listy css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" style=\"overflow-anchor:none\"></div>"
+    },
+    {
+      "id": "listy:group",
+      "html": "<div class=\"apollo-listy css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" style=\"overflow-anchor:none\"><div class=\"apollo-listy-group-section\" data-key=\"group:Group 0\"><div class=\"apollo-listy-group-header\">Group 0 (3)</div><div class=\"apollo-listy-item\" data-key=\"item:0\">Item 0</div><div class=\"apollo-listy-item\" data-key=\"item:2\">Item 2</div><div class=\"apollo-listy-item\" data-key=\"item:4\">Item 4</div></div><div class=\"apollo-listy-group-section\" data-key=\"group:Group 1\"><div class=\"apollo-listy-group-header\">Group 1 (3)</div><div class=\"apollo-listy-item\" data-key=\"item:1\">Item 1</div><div class=\"apollo-listy-item\" data-key=\"item:3\">Item 3</div><div class=\"apollo-listy-item\" data-key=\"item:5\">Item 5</div></div></div>"
+    },
+    {
+      "id": "listy:group-sticky",
+      "html": "<div class=\"apollo-listy css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" style=\"overflow-anchor:none\"><div class=\"apollo-listy-group-section\" data-key=\"group:Group 0\"><div class=\"apollo-listy-group-header apollo-listy-group-header-sticky\">Group 0 (3)</div><div class=\"apollo-listy-item\" data-key=\"item:0\">Item 0</div><div class=\"apollo-listy-item\" data-key=\"item:2\">Item 2</div><div class=\"apollo-listy-item\" data-key=\"item:4\">Item 4</div></div><div class=\"apollo-listy-group-section\" data-key=\"group:Group 1\"><div class=\"apollo-listy-group-header apollo-listy-group-header-sticky\">Group 1 (3)</div><div class=\"apollo-listy-item\" data-key=\"item:1\">Item 1</div><div class=\"apollo-listy-item\" data-key=\"item:3\">Item 3</div><div class=\"apollo-listy-item\" data-key=\"item:5\">Item 5</div></div></div>"
+    },
+    {
+      "id": "listy:rtl",
+      "html": "<div class=\"apollo-listy apollo-listy-rtl css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" dir=\"rtl\" style=\"overflow-anchor:none\"><div class=\"apollo-listy-item\" data-key=\"item:0\">Item 0</div><div class=\"apollo-listy-item\" data-key=\"item:1\">Item 1</div><div class=\"apollo-listy-item\" data-key=\"item:2\">Item 2</div><div class=\"apollo-listy-item\" data-key=\"item:3\">Item 3</div><div class=\"apollo-listy-item\" data-key=\"item:4\">Item 4</div></div>"
+    },
+    {
+      "id": "listy:height",
+      "html": "<div class=\"apollo-listy css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" style=\"max-height:120px;overflow-y:auto;overflow-anchor:none\"><div class=\"apollo-listy-item\" data-key=\"item:0\">Item 0</div><div class=\"apollo-listy-item\" data-key=\"item:1\">Item 1</div><div class=\"apollo-listy-item\" data-key=\"item:2\">Item 2</div><div class=\"apollo-listy-item\" data-key=\"item:3\">Item 3</div><div class=\"apollo-listy-item\" data-key=\"item:4\">Item 4</div></div>"
+    },
+    {
+      "id": "listy:semantic",
+      "html": "<div class=\"apollo-listy cls-root css-dev-only-do-not-override-1v6lqee css-var-root apollo-listy-css-var\" style=\"overflow-anchor:none\"><div class=\"apollo-listy-item cls-item\" style=\"padding:9px\" data-key=\"item:0\">Item 0</div><div class=\"apollo-listy-item cls-item\" style=\"padding:9px\" data-key=\"item:1\">Item 1</div><div class=\"apollo-listy-item cls-item\" style=\"padding:9px\" data-key=\"item:2\">Item 2</div><div class=\"apollo-listy-item cls-item\" style=\"padding:9px\" data-key=\"item:3\">Item 3</div><div class=\"apollo-listy-item cls-item\" style=\"padding:9px\" data-key=\"item:4\">Item 4</div></div>"
+    }
+  ]
+}

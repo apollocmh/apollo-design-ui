@@ -692,6 +692,32 @@ export { genLayoutStyle, genSiderStyle } from './layout/style';
 export type { ComponentToken as LayoutComponentToken } from './layout/style/token';
 export { prepareComponentToken as prepareLayoutComponentToken } from './layout/style/token';
 // ---------------------------------------------------------------------------
+// Listy —— 轻量列表（antd v6 新增；引擎自建于 engine/，虚拟滚动复用
+// @apollo-design/virtual-list）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **2** 个（纯别名引用 ⇒
+//    var() 形态，radio D46 同判）。`itemRender` = default slot（作用域
+//    `{ item, index }`）+ 同名 prop；`ref.scrollTo` 命令式定位（Raw 用
+//    scrollIntoView，Virtual 走 virtual-list 迭代）。
+// ---------------------------------------------------------------------------
+export type {
+  ListyClassNames,
+  ListyGroup,
+  ListyGroupScrollToConfig,
+  ListyKey,
+  ListyKeyScrollToConfig,
+  ListyPositionScrollToConfig,
+  ListyProps,
+  ListyRef,
+  ListyRowKey,
+  ListyScrollAlign,
+  ListyScrollToConfig,
+  ListySemanticName,
+  ListyStyles,
+} from './listy';
+export { Listy } from './listy';
+export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/style';
+// ---------------------------------------------------------------------------
 // Watermark —— 水印
 //
 // ⚠️ 无样式表（全内联 style + canvas）—— 不注册 COMPONENT_STYLES、无 Component

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "listy/basic",
+  "component": "listy",
+  "description": "Raw 路径（antd 默认 virtual=false）：根 div.{p}-listy 带 overflow-anchor:none；每项 div.{p}-item[data-key='item:k']（type-tagged 键，scrollTo 查找用）。⚠️ antd 的 ListyProps Omit 了 direction —— 方向只来自 ConfigProvider。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["scroll"] }
+}

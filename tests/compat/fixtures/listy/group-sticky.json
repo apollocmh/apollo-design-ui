@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "listy/group-sticky",
+  "component": "listy",
+  "description": "分组：div.{p}-group-section[data-key='group:k'] 包组头 + 项；useGroupSegments 按 key 聚合（不要求连续）、保首次出现顺序；组头 title(groupKey, items)。sticky ⇒ 组头带 -sticky（CSS position:sticky; Raw 模式）。",
+  "antdVersion": "6.6.4",
+  "props": { "sticky": true },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["scroll"] }
+}
