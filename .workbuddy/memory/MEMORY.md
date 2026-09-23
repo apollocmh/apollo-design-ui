@@ -7,6 +7,7 @@
 - **网络**：本机到 GitHub 的批量传输（release CDN / git fetch）直连会挂起，必须走用户代理 `http://127.0.0.1:7890`；小 API 请求（api.github.com）直连可用。
 - GitHub MCP 连接器（apollocmh）：可读公开仓库，但**无建仓权限**（403）且**看不到新建私有仓库**（404，授权范围未含）——建仓/私有仓库操作需用户手动或走 git 凭据。
 - 本机工具：gh CLI 2.101.0 在 `~/.local/bin/gh`（brew 已坏：portable-ruby 下载挂起，未修）；known_hosts 已更新为 GitHub 轮换后的新主机密钥（备份 ~/.ssh/known_hosts.bak-20260921）。
+- **pnpm 不在 PATH**（2026-09-23）：只有 corepack（`corepack pnpm` = 12.4.2）；且 `verify:full` 内部再调 `pnpm` ⇒ 直接跑会在内层 127。对策：shim `/tmp/pnpm-shim/pnpm`（exec corepack pnpm），`PATH=/tmp/pnpm-shim:$PATH pnpm run verify:full`。
 
 ## 经典错误沉淀机制（2026-09-22 用户指示）
 
@@ -20,7 +21,7 @@
   skeleton, spin, result, tag, badge, watermark, border-beam, statistic, affix,
   back-top, layout, checkbox, radio, switch）。registry:check 18 检查全绿。
   ⚠️ 全仓 `update:*` 缺口（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
-  但只有 radio 实现了 ⇒ 其余 21 个组件上 `v-model:xxx` 不生效，待统一补齐。
+  但只有 radio / switch 实现了 ⇒ 其余 20 个组件上 `v-model:xxx` 不生效，待统一补齐。
 - **蓝图**：ROADMAP.md §11 已改为「进度快照 + 已完成清单（防重复）+ 已知遗留
   （不要再排查）+ 下一步」—— 后续每完成一批组件就刷新 §11.1 的一行数字即可，
   不要重写整节。

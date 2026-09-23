@@ -22,6 +22,8 @@ status/notes/layerNotes **Agent 写、跨运行保留**。组件收口后要刷 
 
 Node ≥22.12（managed 路径）｜pnpm 12.4.2｜TS 5.9｜Vitest 5｜Playwright（`channel:'chrome'`）。
 - 🚨 `pnpm -r run build` 永远不可用；权威构建门禁 `CODEBUDDY_SAFE_DELETE_ENABLED=0 node tests/build/run.mjs`。
+- 🚨 本机 `pnpm` **不在 PATH**（只有 corepack，`corepack pnpm`=12.4.2）；脚本内部再调 `pnpm` 会 127。
+  对策：`printf '#!/bin/zsh\nexec /Users/nanren/.workbuddy/binaries/node/versions/22.22.2-3/bin/corepack pnpm "$@"\n' > /tmp/pnpm-shim/pnpm && chmod +x` 后 `PATH=/tmp/pnpm-shim:$PATH pnpm run <script>`（2026-09-23 实证）。
 - 🚨 pnpm「超时无输出」先查 corepack 下载提示，长命令一律 `COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1`。
 - ⚠️ `exit 137`+零日志 ≠ OOM，先怀疑前台 120s 超时；>2 分钟的命令后台跑或显式 timeout。
 - ⚠️ 降级运行的 vitest（`--pool=forks --maxWorkers=1`）会**静默少跑**给假绿灯，不能当门禁证据；
