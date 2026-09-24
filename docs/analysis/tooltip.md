@@ -119,3 +119,46 @@ componentToken 定义为准，G3 时逐字对拍）。派生：arrow 背景 = co
 3. `tooltip/use-merged-arrow.ts` + `util.ts`（parseColor）。
 4. `tooltip/Tooltip.vue` + `PurePanel.vue` + style/token。
 5. 七层测试（L4 先生成 SSR oracle 基线再写断言；L6 基线用 `--mode baseline`）。
+
+## 8. 几何对接细则（rc useAlign ↔ position 包的映射，实现时逐条照抄）
+
+Trigger 的每次对齐 = `measureAlign()` + `alignPopup()` + 本地补齐 offsetR/B：
+
+```
+const result = measureAlign({ popupEle, target, htmlRegion: alignInfo.htmlRegion, scrollers });
+// result: { target, popup, mirror, scaleX, scaleY, visible, check }
+const outcome = alignPopup({ target: result.target, popup: result.popup, mirror: result.mirror,
+  scaleX, scaleY, visible: result.visible, check: result.check }, alignInfo, flipMemory);
+// outcome: { offsetX, offsetY, arrowX, arrowY, points, flip }（floor/scale 归一已内置）
+```
+
+**本地补齐 offsetR / offsetB**（rc useAlign 尾部公式，AlignOutcome 不含它们）：
+
+```
+offsetX4Right = mirror.x + mirror.width - popup.x - (offsetX * scaleX + popup.width)
+offsetY4Bottom = mirror.y + mirror.height - popup.y - (offsetY * scaleY + popup.height)
+// rc 用未 floor 的原始 offsetX 参与 offsetR/B 计算（floor 顺序在两者之后）——
+// alignPopup 已 floor，scale≠1 时与 rc 有 <1px 差异（已知，登记 PLATFORM）
+// 最终值：offsetX4Right / scaleX
+```
+
+**样式落点**（useOffsetStyle）：未 ready 或关闭前 `left:-1000vw; top:-1000vh`；
+ready 后按 points[0]（popup 侧）写 `left: offsetX, right: auto`（dynamicInset+r 时反之）
+与 `top: offsetY, bottom: auto`（dynamicInset+b 时反之）。根元素恒
+`box-sizing:border-box; zIndex`，关闭时 `pointer-events:none`。
+
+**箭头定位**（Arrow.js）：`alignStyle.top = (popupTB===targetTB || 非tb) ? y :
+(popupTB==='t' ? 0 : 'bottom:0')`，LR 同理 —— 写进 `{p}-arrow` 的内联 style；
+CSS 侧消费 `--arrow-x/--arrow-y`。autoArrow=false 时 x/y 直接用。
+
+**对齐类名**（util.js getAlignPopupClassName）：按 points 反查 builtinPlacements
+⇒ `.{p}-placement-{placement}`（key 顺序即 getPlacements 的键序）。
+
+**re-align 时机**（useWatch）：滚动（collectScroller(popupEle) 的每个容器，capture）+
+window resize；alignPoint+clickToHide 时滚动即关闭。Promise.resolve().then 合帧。
+**ready 重置**：placement 变化、open→false。
+
+**motion 契约**：CSSMotion `removeOnLeave=false` + `leavedClassName={p}-hidden` +
+`motionAppear/Enter/Leave=true`；`onPrepare`（appear/enter prepare）返回 Promise，
+在 resolve 前 `syncTargetSize + onAlign`（首帧定位先于动画）；`inMotion` 期间
+冻结 re-align。关闭且动画结束 ⇒ autoDestroy 时卸载 portal。
