@@ -553,7 +553,7 @@ class FieldController implements FieldEntity {
 
         // Always use latest rules
         const { rules } = this.opts.props();
-        if (rules && rules.length) {
+        if (rules?.length) {
           // We dispatch validate to root,
           // since it will update related data with other field with same name
           hooks?.dispatch({

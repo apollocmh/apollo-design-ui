@@ -226,6 +226,7 @@ describe('validateRule · 单条规则', () => {
 
   it('options.validateMessages 覆盖默认模板', async () => {
     const errors = await validateRule('a', '', { required: true }, {
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
       validateMessages: { required: 'CUSTOM ${name}' },
     } as InternalValidateOptions);
     expect(errors).toEqual(['CUSTOM a']);
@@ -236,10 +237,12 @@ describe('validateRule · 单条规则', () => {
     expect(errors).toEqual(["'OVERRIDE' is required"]);
   });
 
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
   it('enum 被 join 进 kv（`${enum}` 可用）', async () => {
     const errors = await validateRule(
       'a',
       'z',
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
       { type: 'enum', enum: [1, 2], message: 'got ${enum}' },
       {},
     );
@@ -298,8 +301,11 @@ describe('validateRule · 单条规则', () => {
     expect(errors[0]).toContain('list');
   });
 
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
   it('`\\${name}` 转义：字面输出、不替换（replaceMessage 集成）', async () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
     const errors = await validateRule('a', '', { required: true, message: '\\${name}' }, {});
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
     expect(errors).toEqual(['${name}']);
   });
 
@@ -489,6 +495,7 @@ describe('validateRules · 规则编排', () => {
 
   it('options.validateMessages 透传到 validateRule', async () => {
     const result = await validateRules(['a'], '', [{ required: true }], {
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
       validateMessages: { required: 'REQ ${name}' },
     } as InternalValidateOptions).catch((e) => e);
     expect(result[0].errors).toEqual(['REQ a']);

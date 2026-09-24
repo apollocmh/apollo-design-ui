@@ -42,7 +42,7 @@ const upFile = { uid: '4', name: 'd.txt', status: 'uploading', percent: 50 };
 const cases = [];
 const push = (id, node) => {
   // React 19 会把缩略图 <link rel=preload> 提升到 body 顶（平台产物，非组件 DOM）——剥掉
-  const html = renderToStaticMarkup(node).replace(/^<link rel=\"preload\"[^>]*>/, '');
+  const html = renderToStaticMarkup(node).replace(/^<link rel="preload"[^>]*>/, '');
   cases.push({ id, html });
 };
 
@@ -62,10 +62,15 @@ push('upload:disabled', wrap(h(Upload, { ...BP, action: '/u', disabled: true }, 
 
 // ---- 列表（text）----
 
-push('upload:list-text', wrap(h(Upload, { ...BP, action: '/u', defaultFileList: [doneFile] }, 'x')));
+push(
+  'upload:list-text',
+  wrap(h(Upload, { ...BP, action: '/u', defaultFileList: [doneFile] }, 'x')),
+);
 push(
   'upload:list-text-mixed',
-  wrap(h(Upload, { ...BP, action: '/u', defaultFileList: [doneFile, urlFile, errFile, upFile] }, 'x')),
+  wrap(
+    h(Upload, { ...BP, action: '/u', defaultFileList: [doneFile, urlFile, errFile, upFile] }, 'x'),
+  ),
 );
 push(
   'upload:list-show-false',
@@ -74,36 +79,59 @@ push(
 push(
   'upload:list-err-removed-icon',
   wrap(
-    h(Upload, {
-      ...BP,
-      action: '/u',
-      defaultFileList: [doneFile],
-      showUploadList: { showRemoveIcon: false, showPreviewIcon: false },
-    }, 'x'),
+    h(
+      Upload,
+      {
+        ...BP,
+        action: '/u',
+        defaultFileList: [doneFile],
+        showUploadList: { showRemoveIcon: false, showPreviewIcon: false },
+      },
+      'x',
+    ),
   ),
 );
 push(
   'upload:list-download-icon',
   wrap(
-    h(Upload, {
-      ...BP,
-      action: '/u',
-      defaultFileList: [doneFile],
-      showUploadList: { showDownloadIcon: true },
-    }, 'x'),
+    h(
+      Upload,
+      {
+        ...BP,
+        action: '/u',
+        defaultFileList: [doneFile],
+        showUploadList: { showDownloadIcon: true },
+      },
+      'x',
+    ),
   ),
 );
 
 // ---- picture 族 ----
 
-push('upload:list-picture', wrap(h(Upload, { ...BP, action: '/u', listType: 'picture', defaultFileList: [urlFile] }, 'x')));
+push(
+  'upload:list-picture',
+  wrap(h(Upload, { ...BP, action: '/u', listType: 'picture', defaultFileList: [urlFile] }, 'x')),
+);
 push(
   'upload:picture-card',
-  wrap(h(Upload, { ...BP, action: '/u', listType: 'picture-card', defaultFileList: [urlFile] }, 'card')),
+  wrap(
+    h(
+      Upload,
+      { ...BP, action: '/u', listType: 'picture-card', defaultFileList: [urlFile] },
+      'card',
+    ),
+  ),
 );
 push(
   'upload:picture-circle',
-  wrap(h(Upload, { ...BP, action: '/u', listType: 'picture-circle', defaultFileList: [urlFile] }, 'cir')),
+  wrap(
+    h(
+      Upload,
+      { ...BP, action: '/u', listType: 'picture-circle', defaultFileList: [urlFile] },
+      'cir',
+    ),
+  ),
 );
 push(
   'upload:picture-card-empty',
@@ -113,20 +141,27 @@ push(
 // ---- drag ----
 
 push('upload:drag', wrap(h(Upload, { ...BP, action: '/u', type: 'drag' }, 'drag here')));
-push('upload:drag-disabled', wrap(h(Upload, { ...BP, action: '/u', type: 'drag', disabled: true }, 'drag')));
+push(
+  'upload:drag-disabled',
+  wrap(h(Upload, { ...BP, action: '/u', type: 'drag', disabled: true }, 'drag')),
+);
 
 // ---- 语义化 ----
 
 push(
   'upload:semantic',
   wrap(
-    h(Upload, {
-      ...BP,
-      action: '/u',
-      classNames: { root: 'cls-root', list: 'cls-list', trigger: 'cls-trigger' },
-      styles: { root: { width: 200 } },
-      defaultFileList: [doneFile],
-    }, 'x'),
+    h(
+      Upload,
+      {
+        ...BP,
+        action: '/u',
+        classNames: { root: 'cls-root', list: 'cls-list', trigger: 'cls-trigger' },
+        styles: { root: { width: 200 } },
+        defaultFileList: [doneFile],
+      },
+      'x',
+    ),
   ),
 );
 

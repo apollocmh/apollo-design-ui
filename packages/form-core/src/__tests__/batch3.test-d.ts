@@ -275,6 +275,7 @@ describe('WatchDependencies', () => {
 
 describe('ValidateMessages（复用批次①）', () => {
   it('⭐ 表单层的 ValidateMessages 与批次① **同一个类型**（不是第二份定义）', () => {
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: 此处 ${label} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
     const messages: ValidateMessages = { required: '${label} 必填' };
     void messages;
   });

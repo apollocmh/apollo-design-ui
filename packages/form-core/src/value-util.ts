@@ -102,6 +102,7 @@ export function containsNamePath(
   //
   // 这个差异是 **Oracle 抓出来的**：`containsNamePath(null, ['a'])` 上游得 `null`，
   // 加 `!!` 后我们得 `false`。手写断言几乎不可能注意到（两者都是 falsy）。
+  // biome-ignore lint/complexity/useOptionalChain: ⚠️ 不能改成 ?.—— 上游 `list && list.some()` 在 namePathList 为 **null** 时返回 null、为 undefined 时返回 undefined（三态，Oracle batch2 逐位比对），?. 会把 null 归一成 undefined
   return namePathList && namePathList.some((path) => matchNamePath(namePath, path, partialMatch));
 }
 

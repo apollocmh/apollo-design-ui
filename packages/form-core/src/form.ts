@@ -133,6 +133,7 @@ export const Form = defineComponent({
     // ⚠️ `getInternalHooks` 只在钥匙**不是** `HOOK_MARK` 时返回 `null`（并告警）。
     //    这里传的就是 `HOOK_MARK` ⇒ 非空是**构造保证**，不是假设。
     //    写成 `if (!hooks) throw` 会多出一条永不可达的分支（覆盖率假象），故用 `!`。
+    // biome-ignore lint/style/noNonNullAssertion: HOOK_MARK 钥匙下 getInternalHooks 非空是构造保证（见上注释）；加 if (!hooks) throw 会多出永不可达分支（覆盖率假象）
     const hooks = internalForm.getInternalHooks(HOOK_MARK)!;
 
     /** `useImperativeHandle` 里的 `nativeElementRef.current`（差异 4）。 */

@@ -44,7 +44,6 @@ import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
 import { genInputStyle } from '../input/style';
-import { genUploadStyle } from '../upload/style';
 import { genInputNumberStyle } from '../input-number/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genListyStyle } from '../listy/style';
@@ -59,6 +58,7 @@ import { genStatisticStyle } from '../statistic/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTagStyle } from '../tag/style';
 import { genTypographyStyle } from '../typography/style';
+import { genUploadStyle } from '../upload/style';
 
 /**
  * 静态 CSS 覆盖的前缀。

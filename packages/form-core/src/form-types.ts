@@ -138,6 +138,7 @@ export type FieldValidator = (
   rule: RuleObject,
   value: StoreValue,
   callback: (error?: string) => void,
+  // biome-ignore lint/suspicious/noConfusingVoidType: 上游 interface.d.ts 逐字契约 —— callback 式 validator 返回 void（Field 只判 .then/.catch），换 undefined 会破坏该形态
 ) => Promise<unknown> | void;
 
 export type RuleRender = (form: FormInstance) => RuleObject;

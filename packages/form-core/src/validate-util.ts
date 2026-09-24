@@ -150,7 +150,7 @@ export async function validateRule(
         ),
       ),
     );
-    return subResults.reduce<FieldMessage[]>((prev, errors) => [...prev, ...errors], []);
+    return subResults.flat();
   }
 
   // Replace message with variables

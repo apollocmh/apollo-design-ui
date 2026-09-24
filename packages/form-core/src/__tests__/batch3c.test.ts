@@ -536,6 +536,7 @@ describe('Form · store 挂钩', () => {
       triggerFormFinish: () => {},
       registerForm: () => {},
       unregisterForm: () => {},
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: ${x} 是 replaceMessage 的消息模板占位符，必须保持字面量（转成模板串会插值）
       validateMessages: { required: '来自 Provider 的 ${name} 必填' },
     };
     const h1 = mountForm({}, { formContext, field: { name: 'a', rules: [{ required: true }] } });
@@ -1034,6 +1035,7 @@ describe('FormProvider', () => {
     expect(inner).toHaveBeenCalledTimes(1);
     expect(outer).toHaveBeenCalledTimes(1);
     // ⭐ 内层先调自己的回调，再冒泡给父级
+    // biome-ignore lint/style/noNonNullAssertion: 上一行已断言 toHaveBeenCalledTimes(1) ⇒ [0] 必然存在
     expect(inner.mock.invocationCallOrder[0]).toBeLessThan(outer.mock.invocationCallOrder[0]!);
   });
 
@@ -1082,6 +1084,7 @@ describe('FormProvider', () => {
     expect(outer).toHaveBeenCalledTimes(1);
     expect((outer.mock.calls[0] as [string, { forms: Record<string, FormInstance> }])[0]).toBe('a');
     // ⭐ 与 `triggerFormChange` 同构：先自己，再冒泡
+    // biome-ignore lint/style/noNonNullAssertion: 上一行已断言 toHaveBeenCalledTimes(1) ⇒ [0] 必然存在
     expect(inner.mock.invocationCallOrder[0]).toBeLessThan(outer.mock.invocationCallOrder[0]!);
   });
 

@@ -80,11 +80,11 @@ export interface RuleItem {
     callback: (error?: string | Error) => void,
     source: Values,
     options: ValidateOption,
-    // biome-ignore lint/suspicious/noConfusingVoidType: ⚠️ 这里必须是 `void` 不能是 `undefined`。
-    //   上游 interface.d.ts 就是 `SyncValidateResult | void`；`void` 在返回位置表示
-    //   「返回值被忽略」，因此「返回 void 的 callback 式 validator」可以赋值给它。
-    //   改成 `undefined` 会让所有 callback 式 validator 编译失败（实测：
-    //   schema.oracle.test.ts 的「通过 callback 报错」用例直接报 TS2322）。
+    // ⚠️ 这里必须是 `void` 不能是 `undefined`：上游 interface.d.ts 就是
+    //   `SyncValidateResult | void`；`void` 在返回位置表示「返回值被忽略」，因此
+    //   「返回 void 的 callback 式 validator」可以赋值给它。改成 `undefined` 会让
+    //   所有 callback 式 validator 编译失败（实测 schema.oracle.test.ts 直接 TS2322）。
+    // biome-ignore lint/suspicious/noConfusingVoidType: 见上 —— antd 逐字契约
   ) => SyncValidateResult | void;
 }
 

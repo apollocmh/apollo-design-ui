@@ -848,7 +848,7 @@ export class FormStore {
         namePathList.push(fieldNamePath);
       }
 
-      if (!field.props.rules || !field.props.rules.length) {
+      if (!field.props.rules?.length) {
         return;
       }
       if (dirty && !field.isFieldDirty()) {
@@ -917,7 +917,7 @@ export class FormStore {
         return Promise.reject([]);
       })
       .catch((results: FieldError[]) => {
-        const errorList = results.filter((result) => result && result.errors.length);
+        const errorList = results.filter((result) => result?.errors.length);
         const errorMessage = errorList[0]?.errors?.[0];
         return Promise.reject({
           message: errorMessage,

@@ -830,21 +830,6 @@ export type {
 export { Splitter, SplitterPanel } from './splitter';
 export { genSplitterStyle, genTokenDecls as genSplitterTokenDecls } from './splitter/style';
 // ---------------------------------------------------------------------------
-// Watermark —— 水印
-//
-// ⚠️ 无样式表（全内联 style + canvas）—— 不注册 COMPONENT_STYLES、无 Component
-//    Token；运行时 token（zIndexPopupBase/colorFill/fontSizeLG）经 useToken 取实值。
-// ---------------------------------------------------------------------------
-export type {
-  WatermarkContent,
-  WatermarkFont,
-  WatermarkProps,
-  WatermarkRef,
-  WatermarkText,
-} from './watermark';
-export { Watermark } from './watermark';
-
-// ---------------------------------------------------------------------------
 // Upload —— 上传（引擎自建于 engine/：AjaxUploader + XHR 请求器 + 目录递归）
 //
 // ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 2 个（actions-color /
@@ -867,6 +852,20 @@ export type {
   UploadType,
 } from './upload';
 export { LIST_IGNORE, Upload, UploadDragger } from './upload';
-export { genUploadStyle, genTokenDecls as genUploadTokenDecls } from './upload/style';
+export { genTokenDecls as genUploadTokenDecls, genUploadStyle } from './upload/style';
 export type { ComponentToken as UploadComponentToken } from './upload/style/token';
 export { prepareComponentToken as prepareUploadComponentToken } from './upload/style/token';
+// ---------------------------------------------------------------------------
+// Watermark —— 水印
+//
+// ⚠️ 无样式表（全内联 style + canvas）—— 不注册 COMPONENT_STYLES、无 Component
+//    Token；运行时 token（zIndexPopupBase/colorFill/fontSizeLG）经 useToken 取实值。
+// ---------------------------------------------------------------------------
+export type {
+  WatermarkContent,
+  WatermarkFont,
+  WatermarkProps,
+  WatermarkRef,
+  WatermarkText,
+} from './watermark';
+export { Watermark } from './watermark';
