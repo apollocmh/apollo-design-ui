@@ -2,18 +2,44 @@
  * Menu 的公共导出。
  *
  * 与 antd 的 es/menu/index.js 对齐的对外面。
- * ⚠️ 骨架由 gen-component.mjs 生成 —— G2 完成后补齐类型导出，G4 后补齐样式导出。
  */
 
 import { withInstall } from '../_internal/with-install';
-import MenuComponent from './Menu.vue';
+import MenuComponent from './Menu';
+import MenuDividerComponent from './MenuDivider';
+import MenuItemComponent from './MenuItem';
+import MenuItemGroupComponent from './MenuItemGroup';
+import SubMenuComponent from './SubMenu';
 
 /** Menu 组件。注册名 `AMenu`（COMPONENT-RULES.md 规则 R2）。 */
 export const Menu = withInstall(MenuComponent);
 
-export default Menu;
+/** 静态子组件（Menu.Item / Menu.SubMenu / Menu.Divider / Menu.ItemGroup 同物）。 */
+export const MenuItem = withInstall(MenuItemComponent);
+export const MenuSubMenu = withInstall(SubMenuComponent);
+export const MenuDivider = withInstall(MenuDividerComponent);
+export const MenuItemGroup = withInstall(MenuItemGroupComponent);
 
-// TODO(G2): export type { MenuProps, MenuRef, ... } from './interface';
-// TODO(G4): export { genMenuStyle } from './style';
-// TODO(G4): export type { ComponentToken as MenuComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareMenuComponentToken } from './style/token';
+Menu.Item = MenuItem as never;
+Menu.SubMenu = MenuSubMenu as never;
+Menu.Divider = MenuDivider as never;
+Menu.ItemGroup = MenuItemGroup as never;
+
+export type {
+  ItemType,
+  MenuDividerType,
+  MenuInfo,
+  MenuItemGroupType,
+  MenuItemType,
+  MenuMode,
+  MenuPopupSemanticType,
+  MenuRef,
+  MenuSemanticType,
+  MenuTheme,
+  SelectInfo,
+  SubMenuSemanticType,
+  SubMenuType,
+  TriggerSubMenuAction,
+} from './interface';
+
+export default Menu;

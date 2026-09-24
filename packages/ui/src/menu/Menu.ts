@@ -1,0 +1,394 @@
+/**
+ * Menu —— rc-menu `Menu.js`（440 行）的 Vue 化 + antd `menu.tsx` 壳的合并。
+ *
+ * 核心协议（rc 逐条）：
+ * - **双渲染**：measure 子树（PathRegister 注入，子组件只登记路径渲染 null）
+ *   + 可见子树（PathTracker 注入 keyPath）。provide 在 setup 顶层；
+ *   measure 分支经 `MeasureProvider` 包装组件注入。
+ * - **状态族**：selectedKeys / openKeys / activeKey（useControlledValue）。
+ * - **Overflow 接入**：horizontal && !disabledOverflow ⇒ Overflow（RESPONSIVE），
+ *   其余 INVALIDATE；overflowed 区子项经 context `overflowDisabled` 抑制 hover。
+ * - 选择协议：onClick(info) 永远触发；selectable 时更新 selectedKeys 并
+ *   onSelect/onDeselect；!multiple && 非 inline ⇒ 选择后关闭全部子菜单。
+ *
+ * v1 裁剪（analysis §6）：flushSync 同步批（D87）；children 写法（D89）；
+ * semantic 的 popup/subMenu 槽后续补；inline 模式的 Overflow 恒 INVALIDATE。
+ */
+
+import { useControlledValue } from '@apollo-design/utils';
+import {
+  type ComputedRef,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  ref,
+  shallowRef,
+  type VNodeChild,
+} from 'vue';
+import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
+import {
+  isSubPathKeyKey,
+  type MenuContextData,
+  menuContextKey,
+  pathRegisterKey,
+  pathTrackerKey,
+} from './context';
+import { OVERFLOW_KEY, useKeyRecords } from './engine/key-records';
+import { type ParsedNode, parseItems } from './engine/parse-items';
+import { useAccessibility } from './engine/use-accessibility';
+import type {
+  ItemType,
+  MenuInfo,
+  MenuMode,
+  MenuTheme,
+  SelectInfo,
+  TriggerSubMenuAction,
+} from './interface';
+import MenuDivider from './MenuDivider';
+import MenuItem from './MenuItem';
+import MenuItemGroup from './MenuItemGroup';
+import SubMenu from './SubMenu';
+
+let uuid = 0;
+
+const Menu = defineComponent({
+  name: 'AMenu',
+  props: {
+    prefixCls: { type: String, default: undefined },
+    mode: { type: String as PropType<MenuMode>, default: 'vertical' },
+    theme: { type: String as PropType<MenuTheme>, default: 'light' },
+    items: { type: Array as PropType<ItemType[]>, default: undefined },
+    inlineCollapsed: { type: Boolean, default: undefined },
+    disabled: { type: Boolean, default: false },
+    disabledOverflow: { type: Boolean, default: false },
+    selectable: { type: Boolean, default: true },
+    multiple: { type: Boolean, default: false },
+    selectedKeys: { type: Array as PropType<string[]>, default: undefined },
+    defaultSelectedKeys: { type: Array as PropType<string[]>, default: undefined },
+    openKeys: { type: Array as PropType<string[]>, default: undefined },
+    defaultOpenKeys: { type: Array as PropType<string[]>, default: undefined },
+    activeKey: { type: String, default: undefined },
+    inlineIndent: { type: Number, default: 24 },
+    subMenuOpenDelay: { type: Number, default: 0.1 },
+    subMenuCloseDelay: { type: Number, default: 0.1 },
+    forceSubMenuRender: { type: Boolean, default: false },
+    triggerSubMenuAction: {
+      type: String as PropType<TriggerSubMenuAction>,
+      default: 'hover',
+    },
+    getPopupContainer: {
+      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      default: undefined,
+    },
+    tabIndex: { type: Number, default: 0 },
+    id: { type: String, default: undefined },
+    onClick: { type: Function as PropType<(info: MenuInfo) => void>, default: undefined },
+    onSelect: { type: Function as PropType<(info: SelectInfo) => void>, default: undefined },
+    onDeselect: { type: Function as PropType<(info: SelectInfo) => void>, default: undefined },
+    onOpenChange: {
+      type: Function as PropType<(openKeys: string[]) => void>,
+      default: undefined,
+    },
+    onKeyDown: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
+  },
+  emits: {
+    'update:selectedKeys': (_keys: string[]) => true,
+    'update:openKeys': (_keys: string[]) => true,
+  },
+  setup(props, { emit, expose }) {
+    const prefixCls = props.prefixCls ?? 'apollo-menu';
+    const menuId = props.id ?? `apollo-menu-${uuid++}`;
+    const containerRef = shallowRef<HTMLElement | null>(null);
+
+    const parsedNodes = computed<ParsedNode[]>(() => parseItems(props.items));
+    const mergedMode = computed<MenuMode>(() => (props.inlineCollapsed ? 'vertical' : props.mode));
+
+    // ======================= Path ========================
+    const {
+      registerPath,
+      unregisterPath,
+      refreshOverflowKeys,
+      getKeys,
+      getKeyPath,
+      getSubPathKeys,
+      isSubPathKey,
+    } = useKeyRecords();
+
+    // ====================== Select =======================
+    const [mergedSelectKeys, setSelectKeys] = useControlledValue<string[]>({
+      defaultValue: () => props.defaultSelectedKeys ?? [],
+      getValue: () => props.selectedKeys,
+      onChange: (next: string[]) => {
+        emit('update:selectedKeys', next);
+      },
+    });
+
+    // ======================= Open ========================
+    const [mergedOpenKeysValue, setOpenKeys] = useControlledValue<string[]>({
+      defaultValue: () => props.defaultOpenKeys ?? [],
+      getValue: () => props.openKeys,
+      onChange: (next: string[]) => {
+        emit('update:openKeys', next);
+      },
+    });
+    // rc 的 inlineCacheOpenKeys 仅在折叠切换瞬间注入（v1 不做折叠切换的缓存回放）
+    const mergedOpenKeys = computed<string[]>(() => mergedOpenKeysValue.value ?? []);
+
+    const triggerOpenKeys = (keys: string[]): void => {
+      setOpenKeys(keys);
+      props.onOpenChange?.(keys);
+    };
+
+    // ====================== Active =======================
+    const activeKey = ref<string | undefined>(props.activeKey);
+    const onActive = (key: string): void => {
+      activeKey.value = key;
+    };
+    const onInactive = (key: string): void => {
+      if (activeKey.value === key) activeKey.value = undefined;
+    };
+
+    // ===================== Selection =====================
+    const triggerSelection = (info: MenuInfo): void => {
+      if (props.selectable) {
+        const targetKey = info.key;
+        const exist = mergedSelectKeys.value.includes(targetKey);
+        let newSelectKeys: string[];
+        if (props.multiple) {
+          newSelectKeys = exist
+            ? mergedSelectKeys.value.filter((key) => key !== targetKey)
+            : [...mergedSelectKeys.value, targetKey];
+        } else {
+          newSelectKeys = [targetKey];
+        }
+        setSelectKeys(newSelectKeys);
+        const selectInfo: SelectInfo = { ...info, selectedKeys: newSelectKeys };
+        if (exist) {
+          props.onDeselect?.(selectInfo);
+        } else {
+          props.onSelect?.(selectInfo);
+        }
+      }
+      // Whatever selectable, always close it（非 inline）
+      if (!props.multiple && mergedOpenKeys.value.length && mergedMode.value !== 'inline') {
+        triggerOpenKeys([]);
+      }
+    };
+
+    const onInternalClick = (info: MenuInfo): void => {
+      props.onClick?.(info);
+      triggerSelection(info);
+    };
+
+    const onInternalOpenChange = (key: string, open: boolean): void => {
+      let newOpenKeys = mergedOpenKeys.value.filter((k) => k !== key);
+      if (open) {
+        newOpenKeys.push(key);
+      } else if (mergedMode.value !== 'inline') {
+        // 关闭全部相关 popup 子菜单
+        const subPathKeys = getSubPathKeys(key);
+        newOpenKeys = newOpenKeys.filter((k) => !subPathKeys.has(k));
+      }
+      triggerOpenKeys(newOpenKeys);
+    };
+
+    // =================== Accessibility ===================
+    const triggerAccessibilityOpen = (key: string, open?: boolean): void => {
+      const nextOpen = open ?? !mergedOpenKeys.value.includes(key);
+      onInternalOpenChange(key, nextOpen);
+    };
+    const isRtl = computed(() => false);
+    const onInternalKeyDown = useAccessibility({
+      mode: mergedMode,
+      activeKey: activeKey as ComputedRef<string | undefined>,
+      isRtl,
+      id: computed(() => menuId),
+      containerRef,
+      getKeys,
+      getKeyPath,
+      onActive,
+      triggerOpen: triggerAccessibilityOpen,
+      originOnKeyDown: props.onKeyDown,
+    });
+
+    // ====================== Context ======================
+    const menuContext: MenuContextData = {
+      prefixCls,
+      menuId,
+      mode: mergedMode,
+      disabled: props.disabled,
+      activeKey: activeKey as ComputedRef<string | undefined>,
+      onActive,
+      onInactive,
+      selectedKeys: mergedSelectKeys as ComputedRef<string[]>,
+      inlineIndent: props.inlineIndent,
+      subMenuOpenDelay: props.subMenuOpenDelay,
+      subMenuCloseDelay: props.subMenuCloseDelay,
+      forceSubMenuRender: props.forceSubMenuRender,
+      triggerSubMenuAction: props.triggerSubMenuAction,
+      getPopupContainer: props.getPopupContainer,
+      motion: null,
+      defaultMotions: null,
+      onItemClick: onInternalClick as (info: unknown) => void,
+      onOpenChange: onInternalOpenChange,
+      openKeys: mergedOpenKeys,
+      renderNode: renderNode as unknown as (node: unknown, keyPath: string[]) => unknown,
+      inlineCollapsed: props.inlineCollapsed ?? false,
+      firstLevel: true,
+      theme: props.theme,
+    };
+    provide(menuContextKey, menuContext);
+    provide(isSubPathKeyKey, isSubPathKey);
+    // 可见子树的 keyPath 根
+    provide(
+      pathTrackerKey,
+      computed(() => [] as string[]),
+    );
+
+    /** measure 子树的注入包装（rc PathRegisterContext.Provider 同构）。 */
+    const MeasureProvider = defineComponent({
+      name: 'AMenuMeasureProvider',
+      setup(_, { slots }) {
+        provide(pathRegisterKey, { registerPath, unregisterPath });
+        return () => slots.default?.();
+      },
+    });
+
+    // ======================= Expose ======================
+    expose({
+      list: containerRef,
+      focus: (options?: FocusOptions) => {
+        const first = containerRef.value?.querySelector<HTMLElement>('[role="menuitem"]');
+        first?.focus(options);
+      },
+      findItem: ({ key }: { key: string }) =>
+        containerRef.value?.querySelector<HTMLElement>(`[data-menu-id='${menuId}-${key}']`) ?? null,
+    });
+
+    // ====================== Render =======================
+    /** 规范节点 → vnode（可见/measure 两棵子树共用）。 */
+    function renderNode(
+      node: ParsedNode,
+      keyPath: string[],
+      overflowDisabled: boolean,
+    ): VNodeChild {
+      const eventKey = node.key;
+      const childPath = [...keyPath, eventKey];
+      switch (node.kind) {
+        case 'item':
+          return h(
+            MenuItem,
+            {
+              key: eventKey,
+              eventKey,
+              disabled: node.disabled,
+              danger: node.danger,
+              icon: node.icon,
+              title: node.title as VNodeChild,
+              extra: node.extra,
+              itemData: { ...node, key: eventKey } as Record<string, unknown>,
+              onClick: node.onClick,
+              onMouseEnter: node.onMouseEnter,
+              onMouseLeave: node.onMouseLeave,
+            } as never,
+            { default: () => node.label },
+          );
+        case 'submenu':
+          return h(SubMenu, {
+            key: eventKey,
+            eventKey,
+            disabled: node.disabled,
+            danger: node.danger,
+            icon: node.icon,
+            title: (node.title ?? node.label) as VNodeChild,
+            popupClassName: node.popupClassName,
+            overflowDisabled,
+            childrenNodes: node.children,
+          } as never);
+        case 'group':
+          return h(
+            MenuItemGroup,
+            { key: eventKey, eventKey, label: node.label as VNodeChild },
+            {
+              default: () =>
+                (node.children ?? []).map((c) => renderNode(c, childPath, overflowDisabled)),
+            },
+          );
+        case 'divider':
+          return h(MenuDivider, { key: eventKey, eventKey, dashed: node.dashed });
+        default:
+          return null;
+      }
+    }
+
+    const renderList = (): VNodeChild[] =>
+      parsedNodes.value.map((node) => renderNode(node, [], false));
+
+    return () => {
+      const useOverflow = mergedMode.value === 'horizontal' && !props.disabledOverflow;
+      const maxCount = useOverflow ? RESPONSIVE : INVALIDATE;
+      const overflowIndex = ref<number>(0);
+
+      // ---- 可见子树 ----
+      const visibleList = useOverflow
+        ? [
+            h(Overflow, {
+              key: 'overflow',
+              prefixCls: `${prefixCls}-overflow`,
+              data: parsedNodes.value as unknown[],
+              itemKey: (item: unknown) => (item as ParsedNode).key,
+              maxCount,
+              onVisibleChange: (count: number) => {
+                overflowIndex.value = count;
+                const omitKeys = parsedNodes.value.slice(count + 1).map((n) => n.key);
+                refreshOverflowKeys(omitKeys);
+              },
+              renderRawItem: (item: unknown, index: number) =>
+                renderNode(item as ParsedNode, [], index > overflowIndex.value),
+              renderRest: () =>
+                h(SubMenu, {
+                  key: OVERFLOW_KEY,
+                  eventKey: OVERFLOW_KEY,
+                  title: '…',
+                  internalPopupClose: true,
+                  childrenNodes: [],
+                } as never),
+            }),
+          ]
+        : renderList();
+
+      const container = h(
+        'ul',
+        {
+          ref: containerRef as never,
+          'data-menu-list': true,
+          role: 'menu',
+          tabindex: props.tabIndex,
+          id: props.id,
+          class: [
+            prefixCls,
+            `${prefixCls}-root`,
+            `${prefixCls}-${mergedMode.value}`,
+            `${prefixCls}-${props.theme}`,
+            props.inlineCollapsed ? `${prefixCls}-inline-collapsed` : undefined,
+          ],
+          onKeydown: onInternalKeyDown,
+        },
+        visibleList,
+      );
+
+      // ---- measure 子树（display:none，只登记路径）----
+      const measureTree = h(
+        'div',
+        { style: { display: 'none' }, 'aria-hidden': true },
+        renderList(),
+      );
+
+      return h('div', {}, [container, h(MeasureProvider, null, () => measureTree)]);
+    };
+  },
+});
+
+export default Menu;
