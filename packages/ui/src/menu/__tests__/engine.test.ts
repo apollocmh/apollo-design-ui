@@ -3,7 +3,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { ref } from 'vue';
 import { OVERFLOW_KEY, useKeyRecords } from '../engine/key-records';
 import { parseItems, resolveKey } from '../engine/parse-items';
 import { getMenuId, getOffset, refreshElements } from '../engine/use-accessibility';
@@ -26,13 +25,13 @@ describe('parseItems · rc convertItemsToNodes 同判', () => {
       { label: 'sub', key: 's', children: [{ label: 'in', key: 'i' }] },
       { type: 'group', label: 'g', key: 'g', children: [{ label: 'gi', key: 'gi' }] },
     ]);
-    expect(nodes[0].kind).toBe('submenu');
-    if (nodes[0].kind === 'submenu') {
-      expect(nodes[0].children[0]).toMatchObject({ kind: 'item', key: 'i' });
+    expect(nodes[0]!.kind).toBe('submenu');
+    if (nodes[0]!.kind === 'submenu') {
+      expect(nodes[0]!.children[0]).toMatchObject({ kind: 'item', key: 'i' });
     }
-    expect(nodes[1].kind).toBe('group');
-    if (nodes[1].kind === 'group') {
-      expect(nodes[1].children[0]).toMatchObject({ kind: 'item', key: 'gi' });
+    expect(nodes[1]!.kind).toBe('group');
+    if (nodes[1]!.kind === 'group') {
+      expect(nodes[1]!.children[0]).toMatchObject({ kind: 'item', key: 'gi' });
     }
   });
 
@@ -43,8 +42,8 @@ describe('parseItems · rc convertItemsToNodes 同判', () => {
       { label: 'x', key: 'x', children: [] },
     ]);
     expect(nodes).toHaveLength(2);
-    expect(nodes[0].kind).toBe('divider');
-    expect(nodes[1].kind).toBe('item');
+    expect(nodes[0]!.kind).toBe('divider');
+    expect(nodes[1]!.kind).toBe('item');
   });
 });
 
@@ -130,7 +129,7 @@ describe('refreshElements · data-menu-id 协议', () => {
     const maps = refreshElements(['1', '2', 'missing'], 'm');
     expect(maps.elements.size).toBe(2);
     expect(maps.key2element.get('1')?.getAttribute('data-menu-id')).toBe('m-1');
-    expect(maps.element2key.get(maps.elements.values().next().value)).toBeDefined();
+    expect(maps.element2key.has(maps.elements.values().next().value ?? ({} as Element))).toBe(true);
     expect(maps.key2element.has('missing')).toBe(false);
     expect(getMenuId('m', '1')).toBe('m-1');
   });
