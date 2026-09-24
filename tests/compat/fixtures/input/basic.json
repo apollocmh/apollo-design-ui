@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "input/basic",
+  "component": "input",
+  "description": "基础形态：裸态根就是 input.{p}；prefix/suffix ⇒ affix-wrapper 包裹（prefix 前 suffix 后）；size 三档（裸态落 input、affix 态落 wrapper）；variant 四形态（outlined/filled/borderless/underlined）；status error/warning ⇒ -status-*；disabled/readOnly。双通道 v-model:value + onChange；IME 组合态不裁剪不钳制，compositionend 统一 flush；清空的 change 里 target.value 是空串（rc 判据）。",
+  "antdVersion": "6.6.4",
+  "props": { "placeholder": "basic" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "press-enter", "clear"] }
+}

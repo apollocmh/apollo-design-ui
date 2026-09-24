@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "input/count",
+  "component": "input",
+  "description": "计数：showCount（input 用 -show-count-suffix、textarea 用 -data-count + affixWrapper -textarea-show-count）；count.max / count.strategy / count.exceedFormatter 超长裁剪（组合态让路）；maxLength 原生透传；showCount 可传 { formatter } 定制文本。超出时 -out-of-range 标红（值不回弹，rc 判据）。",
+  "antdVersion": "6.6.4",
+  "props": { "showCount": true, "maxLength": 20, "defaultValue": "abc" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

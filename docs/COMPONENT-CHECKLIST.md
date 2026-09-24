@@ -60,6 +60,12 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-24（input 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 77 | **组件变量声明块必须覆盖每个「根形态」**：antd 用 useCSSVarCls 给裸 input / affix-wrapper / group-wrapper 都挂 -css-var 类再挂声明块；本仓只挂 .{p}-input ⇒ wrapper 为根时 token 变量不可见，`padding:var(...)` **整体失效回退 0**、font-size 回落继承 16px（不是报错，是静默回退） | L6（states 尺寸失配 + computed 探针：wrapPad [0px,0px]） | 声明块等价展开到全部根形态；凡 token 消费点在非根元素上，先确认变量在其祖先链可达 |
+
 ### 2026-09-24（input-number 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

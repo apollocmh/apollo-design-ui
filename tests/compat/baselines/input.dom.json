@@ -1,0 +1,144 @@
+{
+  "$schema": "../schema.json",
+  "component": "input",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-23T23:35:10.808Z",
+  "cases": [
+    {
+      "id": "input:basic",
+      "html": "<input placeholder=\"basic\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:value",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"hello\"/>"
+    },
+    {
+      "id": "input:disabled",
+      "html": "<input disabled=\"\" class=\"apollo-input apollo-input-disabled css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:readonly",
+      "html": "<input readOnly=\"\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:small",
+      "html": "<input class=\"apollo-input apollo-input-sm css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:large",
+      "html": "<input class=\"apollo-input apollo-input-lg css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:filled",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-filled css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:borderless",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-borderless css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:underlined",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-underlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:bordered-false",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-borderless css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:status-error",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined apollo-input-status-error css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:status-warning",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined apollo-input-status-warning css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:prefix",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><span class=\"apollo-input-prefix\">P</span><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"\"/></span>"
+    },
+    {
+      "id": "input:suffix",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"\"/><span class=\"apollo-input-suffix\">S</span></span>"
+    },
+    {
+      "id": "input:presuffix",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><span class=\"apollo-input-prefix\">¥</span><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"\"/><span class=\"apollo-input-suffix\">RMB</span></span>"
+    },
+    {
+      "id": "input:allow-clear",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"clear me\"/><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "input:allow-clear-empty",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"\"/><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon apollo-input-clear-icon-hidden\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "input:allow-clear-disabled",
+      "html": "<span class=\"apollo-input-affix-wrapper apollo-input-disabled apollo-input-affix-wrapper-disabled css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><input disabled=\"\" class=\"apollo-input apollo-input-disabled css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"x\"/><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon apollo-input-clear-icon-hidden\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "input:addon",
+      "html": "<span class=\"apollo-input-group-wrapper apollo-input-group-wrapper-outlined css-dev-only-do-not-override-1v6lqee css-var-root apollo-input-css-var\"><span class=\"apollo-input-wrapper apollo-input-group css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-input-group-addon\">http://</span><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined\" type=\"text\" value=\"\"/><span class=\"apollo-input-group-addon\">.com</span></span></span>"
+    },
+    {
+      "id": "input:addon-before",
+      "html": "<span class=\"apollo-input-group-wrapper apollo-input-group-wrapper-outlined css-dev-only-do-not-override-1v6lqee css-var-root apollo-input-css-var\"><span class=\"apollo-input-wrapper apollo-input-group css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-input-group-addon\">B</span><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined\" type=\"text\" value=\"\"/></span></span>"
+    },
+    {
+      "id": "input:show-count",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><input maxLength=\"20\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"abc\"/><span class=\"apollo-input-suffix\"><span class=\"apollo-input-show-count-suffix\">3 / 20</span></span></span>"
+    },
+    {
+      "id": "input:count-max",
+      "html": "<input class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"abcd\"/>"
+    },
+    {
+      "id": "input:textarea",
+      "html": "<textarea placeholder=\"ta\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"></textarea>"
+    },
+    {
+      "id": "input:textarea-rows",
+      "html": "<textarea rows=\"4\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\">hello</textarea>"
+    },
+    {
+      "id": "input:textarea-show-count",
+      "html": "<span class=\"apollo-input-affix-wrapper apollo-input-textarea-affix-wrapper apollo-input-textarea-show-count css-dev-only-do-not-override-1v6lqee apollo-input-show-count apollo-input-outlined css-var-root apollo-input-css-var\" data-count=\"0 / 50\"><textarea maxLength=\"50\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee\"></textarea><span class=\"apollo-input-suffix\"><span class=\"apollo-input-data-count\">0 / 50</span></span></span>"
+    },
+    {
+      "id": "input:textarea-allow-clear",
+      "html": "<span class=\"apollo-input-affix-wrapper apollo-input-textarea-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-textarea-allow-clear apollo-input-outlined css-var-root apollo-input-css-var\"><textarea class=\"apollo-input css-dev-only-do-not-override-1v6lqee\">x</textarea><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "input:textarea-status",
+      "html": "<textarea class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined apollo-input-status-error css-var-root apollo-input-css-var\"></textarea>"
+    },
+    {
+      "id": "input:password",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined apollo-input css-var-root apollo-input-css-var\"><input placeholder=\"pw\" type=\"password\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" value=\"\"/><span class=\"apollo-input-suffix\"><span role=\"button\" tabindex=\"0\" class=\"apollo-input-icon\" aria-disabled=\"false\" aria-pressed=\"false\" aria-label=\"Show\"><span role=\"img\" aria-label=\"eye-invisible\" class=\"apollo-icon apollo-icon-eye-invisible\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"eye-invisible\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z\"></path><path d=\"M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z\"></path></svg></span></span></span></span>"
+    },
+    {
+      "id": "input:password-visible-toggle",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined apollo-input css-var-root apollo-input-css-var\"><input type=\"password\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" value=\"\"/><span class=\"apollo-input-suffix\"></span></span>"
+    },
+    {
+      "id": "input:password-value",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined apollo-input css-var-root apollo-input-css-var\"><input type=\"password\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" value=\"secret\"/><span class=\"apollo-input-suffix\"><span role=\"button\" tabindex=\"0\" class=\"apollo-input-icon\" aria-disabled=\"false\" aria-pressed=\"false\" aria-label=\"Show\"><span role=\"img\" aria-label=\"eye-invisible\" class=\"apollo-icon apollo-icon-eye-invisible\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"eye-invisible\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z\"></path><path d=\"M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z\"></path></svg></span></span></span></span>"
+    },
+    {
+      "id": "input:group",
+      "html": "<div class=\"apollo-space-compact css-dev-only-do-not-override-1v6lqee apollo-input css-var-root css-dev-only-do-not-override-1v6lqee\"><input style=\"width:50%\" class=\"apollo-input css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var apollo-input-compact-item apollo-input-compact-first-item apollo-input-compact-last-item\" type=\"text\" value=\"\"/></div>"
+    },
+    {
+      "id": "input:rtl",
+      "html": "<input class=\"apollo-input apollo-input-rtl css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\" type=\"text\" value=\"\"/>"
+    },
+    {
+      "id": "input:rtl-affix",
+      "html": "<span class=\"apollo-input-affix-wrapper apollo-input-affix-wrapper-rtl css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var\"><span class=\"apollo-input-prefix\">P</span><input class=\"apollo-input apollo-input-rtl css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"\"/></span>"
+    },
+    {
+      "id": "input:semantic",
+      "html": "<span class=\"apollo-input-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-input-outlined css-var-root apollo-input-css-var cls-root\" style=\"width:120px\"><span class=\"apollo-input-prefix cls-prefix\">P</span><input class=\"apollo-input css-dev-only-do-not-override-1v6lqee\" type=\"text\" value=\"\"/></span>"
+    }
+  ]
+}

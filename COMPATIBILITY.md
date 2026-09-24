@@ -352,6 +352,8 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D67 | `input-number` | h() 的事件键名必须「on+全小写」：Vue 把 on 后的驼峰 hyphenate 成事件名 —— `onMouseDown` 注册成非标准 `mouse-down` 事件，监听器静默失效 | 组件内联事件一律 `onMousedown`/`onMouseup`/`onMouseleave`；用户事件经 attrs 原样转发（模板产物本就是 onMousedown） | PLATFORM | L1 onStep mousedown 用例（0 调用实测） |
 | D68 | `input-number` | `_InternalPanelDoNotUseOrYouWillBeFired` 暂不导出（PureInputNumber 依赖 ConfigProvider 组件级 token 覆盖，静态 CSS 无运行时覆盖面） | 等 ConfigProvider token 覆盖落地后补 | INTENDED | analysis §6 I9 |
 | U12 | `input-number` | input 无关联 label（axe label 规则）—— 可访问名依赖使用方提供 | 对齐 antd（上游 a11y 测试同样禁用 label 规则）；L5 豁免登记 | UPSTREAM | L5 a11y 12 demo |
+| D69 | `input` | 组件变量声明块只挂 `.{p}-input` 时，affix/group wrapper 为根的形态（prefix/suffix/addon/textarea/password）拿不到 token —— antd 用 useCSSVarCls 给每个根挂 -css-var 类 + 声明块 | 声明块等价覆盖三种根形态（input / affix-wrapper / group-wrapper），变量沿树继承到内层 | PLATFORM | L6 states 3 viewport 尺寸失配（wrapper padding 0 / 字号 16 回落实测） |
+| D70 | `input` | antd 的 Password 图标 DOM 类是 `{p}-icon`（CSS 里的 `-password-icon` 规则是死代码）；Group 根类是 `{p}`（customizePrefixCls 整体覆盖 getPrefixCls('input-group', custom)） | 按 DOM oracle 实现；Group 的前缀解析语义与本仓 getPrefixCls 对齐 | PLATFORM | L4 addon/password/group 用例 |
 | D60 | `listy` | **direction 不是公开 prop**：antd 的 ListyProps Omit 了 direction（类型 + L4 实测：传入被 ConfigProvider 上下文覆盖） | Vue 侧同样不声明 direction prop，方向恒走 ConfigProvider | — | L4 rtl 用例钉住；docs/analysis/listy.md §2 |
 
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）

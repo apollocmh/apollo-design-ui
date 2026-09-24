@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "input/family",
+  "component": "input",
+  "description": "家族：TextArea（rows/autoSize 量测 {minRows,maxRows}、无 prefix/addon、语义键 textarea）、Input.Password（visibilityToggle=false 或 {visible,onVisibleChange,tabIndex,action}、iconRender、图标 role=button + aria-label Show/Hide + aria-pressed）、Input.Group（deprecated ⇒ Space.Compact 转发，Form.Item 上下文降级 isFormItemInput=false）、legacy addon（deprecated ⇒ 三层 group-wrapper > group > group-addon，variant 类落 group-wrapper）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

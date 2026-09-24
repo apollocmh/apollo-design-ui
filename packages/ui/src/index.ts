@@ -684,6 +684,34 @@ export {
 export type { ComponentToken as DescriptionsComponentToken } from './descriptions/style/token';
 export { prepareComponentToken as prepareDescriptionsComponentToken } from './descriptions/style/token';
 // ---------------------------------------------------------------------------
+// Input —— 输入框（引擎自建于 engine/：BaseInput 三层包裹 + IME 组合态 + 计数裁剪）
+//
+// ⚠️ 本轮范围：Input / TextArea / Input.Password / Input.Group。
+//    Search 与 OTP 顺延（docs/analysis/input.md §7）。样式层：186 条规则
+//    （产物逐条对拍）+ 18 Component Token（token.ts）。
+// ---------------------------------------------------------------------------
+export type {
+  AllowClearProp as InputAllowClearProp,
+  InputCountProp,
+  InputFocusOptions,
+  InputGroupProps,
+  InputPasswordProps,
+  InputProps,
+  InputRef,
+  InputSemanticClassNames,
+  InputSemanticContext,
+  InputSemanticStyles,
+  PasswordSemanticClassNames,
+  TextAreaProps,
+  TextAreaRef,
+  TextAreaSemanticClassNames,
+  TextAreaSemanticStyles,
+} from './input';
+export { Input, InputGroup, InputPassword, TextArea } from './input';
+export { genInputStyle, genTokenDecls as genInputTokenDecls } from './input/style';
+export type { ComponentToken as InputComponentToken } from './input/style/token';
+export { prepareComponentToken as prepareInputComponentToken } from './input/style/token';
+// ---------------------------------------------------------------------------
 // InputNumber —— 数字输入框（引擎自建于 engine/：Decimal + StepHandler + cursor）
 //
 // ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 9 个 + input 族基础 10 个

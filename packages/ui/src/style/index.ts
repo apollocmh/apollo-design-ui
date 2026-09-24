@@ -43,6 +43,7 @@ import { genDividerStyle } from '../divider/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
+import { genInputStyle } from '../input/style';
 import { genInputNumberStyle } from '../input-number/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genListyStyle } from '../listy/style';
@@ -110,6 +111,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'switch', gen: genSwitchStyle },
   { name: 'typography', gen: genTypographyStyle },
   { name: 'input-number', gen: genInputNumberStyle },
+  { name: 'input', gen: genInputStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */
