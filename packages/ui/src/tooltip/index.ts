@@ -1,19 +1,35 @@
 /**
  * Tooltip 的公共导出。
- *
- * 与 antd 的 es/tooltip/index.js 对齐的对外面。
- * ⚠️ 骨架由 gen-component.mjs 生成 —— G2 完成后补齐类型导出，G4 后补齐样式导出。
  */
 
 import { withInstall } from '../_internal/with-install';
-import TooltipComponent from './Tooltip.vue';
+import PurePanelComponent from './PurePanel';
+import TooltipComponent from './Tooltip';
 
 /** Tooltip 组件。注册名 `ATooltip`（COMPONENT-RULES.md 规则 R2）。 */
 export const Tooltip = withInstall(TooltipComponent);
 
-export default Tooltip;
+/** 静态面板（`Tooltip._InternalPanelDoNotUseOrYouWillBeFired` 的对应物）。 */
+export const TooltipPurePanel = withInstall(PurePanelComponent);
 
-// TODO(G2): export type { TooltipProps, TooltipRef, ... } from './interface';
-// TODO(G4): export { genTooltipStyle } from './style';
-// TODO(G4): export type { ComponentToken as TooltipComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareTooltipComponentToken } from './style/token';
+Tooltip._InternalPanelDoNotUseOrYouWillBeFired = TooltipPurePanel;
+
+export type {
+  AdjustOverflow,
+  TooltipArrow,
+  TooltipClassNames,
+  TooltipContent,
+  TooltipPlacement,
+  TooltipProps,
+  TooltipRef,
+  TooltipSemanticType,
+  TooltipStyles,
+} from './interface';
+export { genTooltipStyle } from './style';
+export type { ComponentToken as TooltipComponentToken } from './style/token';
+export { prepareComponentToken as prepareTooltipComponentToken } from './style/token';
+
+export default Tooltip;
+declare module './Tooltip' {
+  // 静态属性挂载在下方，不重复声明
+}
