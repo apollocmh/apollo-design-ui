@@ -157,9 +157,13 @@ export function collectRenderCases(source: RenderSource, label: string): RenderC
 /** 挂载一个用例。 */
 export function mountCase(
   render: RenderFactory,
-  options: { wrap?: Wrap; attach?: boolean } = {},
+  options: {
+    wrap?: Wrap;
+    attach?: boolean;
+    global?: { stubs?: Record<string, boolean | Component> };
+  } = {},
 ): MountedCase {
-  const { wrap = IDENTITY_WRAP, attach = true } = options;
+  const { wrap = IDENTITY_WRAP, attach = true, global } = options;
 
   const host = document.createElement('div');
   // ⚠️ `attach` 只控制 host **是否进入文档**，不控制 `attachTo`。
@@ -183,7 +187,7 @@ export function mountCase(
     },
   });
 
-  const wrapper = mount(Host, { attachTo: host });
+  const wrapper = mount(Host, { attachTo: host, ...(global ? { global } : {}) });
   let destroyed = false;
 
   // `@vue/test-utils` 的 `mount` 会自建一个容器元素、append 进 host、并把 Vue 应用挂在它上面

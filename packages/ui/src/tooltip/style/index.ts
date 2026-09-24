@@ -11,9 +11,10 @@
  *      apollo-tooltip-fade-in/-out、apollo-tooltip-zoom-big-in/-out（keyframes 在
  *      KEYFRAMES 段内联；SSR 的 extractStyle 不含 @keyframes，内容照抄
  *      components/style/{fade,zoom}.ts 的 Keyframes 定义）。
- *   4. 组件变量声明块：antd 挂在 .css-var-root.ant-tooltip-css-var 上；本仓按
- *      input D69 同判，落在唯一的根形态 .apollo-tooltip 上（PurePanel 根同时带
- *      .apollo-tooltip 类，变量沿树可达）。
+ *   4. 组件变量声明块：antd 挂在 .css-var-root.ant-tooltip-css-var 上（死选择器）；
+ *      本仓按 input D69 同判，落在唯一的根形态 .apollo-tooltip 上（PurePanel 根
+ *      同时带 .apollo-tooltip 类，变量沿树可达）。antd 的该块原样落在规则里会
+ *      违反 E10（字面量 8px），已删除并以 genTooltipTokenDecls 等价替代。
  *   5. unique-container 三条规则保留（UniqueProvider v1 不做，类名永不出现 ——
  *      与 radio U7/U8 的死选择器同判，不修）。
  *   6. 动画名/keyframes 不影响静态像素与 DOM 契约（视觉基线跑动效禁用）。
@@ -35,7 +36,11 @@ export function genTooltipTokenDecls(): string {
     `--apollo-tooltip-arrow-offset-vertical:${t.arrowOffsetVertical}px;` +
     `--apollo-tooltip-arrow-shadow-width:${t.arrowShadowWidth}px;` +
     `--apollo-tooltip-arrow-path:${t.arrowPath};` +
-    `--apollo-tooltip-arrow-polygon:${t.arrowPolygon};`
+    `--apollo-tooltip-arrow-polygon:${t.arrowPolygon};` +
+    '--apollo-tooltip-max-vertical-content-radius:8px;' +
+    // 运行时变量的缺省值：真实值由 Trigger 在对齐时内联写入浮层根
+    //（rc-trigger 与浮层 CSS 的运行时契约，antd 逐字同构）
+    '--arrow-x:0px;--arrow-y:0px;'
   );
 }
 
@@ -58,7 +63,7 @@ const RULES = `
 .apollo-tooltip .apollo-tooltip-container.apollo-fade-leave{animation-timing-function:linear;}
 .apollo-tooltip:has(~ .apollo-tooltip-unique-container) .apollo-tooltip-container{border:none;background:transparent;}
 .apollo-tooltip-placement-topLeft,.apollo-tooltip-placement-topRight,.apollo-tooltip-placement-bottomLeft,.apollo-tooltip-placement-bottomRight{min-width:calc(var(--apollo-border-radius) + var(--apollo-size-popup-arrow) + var(--apollo-tooltip-arrow-offset-horizontal));}
-.apollo-tooltip-placement-left .apollo-tooltip-inner,.apollo-tooltip-placement-leftTop .apollo-tooltip-inner,.apollo-tooltip-placement-leftBottom .apollo-tooltip-inner,.apollo-tooltip-placement-right .apollo-tooltip-inner,.apollo-tooltip-placement-rightTop .apollo-tooltip-inner,.apollo-tooltip-placement-rightBottom .apollo-tooltip-inner{border-radius:min(var(--apollo-border-radius),8px);}
+.apollo-tooltip-placement-left .apollo-tooltip-inner,.apollo-tooltip-placement-leftTop .apollo-tooltip-inner,.apollo-tooltip-placement-leftBottom .apollo-tooltip-inner,.apollo-tooltip-placement-right .apollo-tooltip-inner,.apollo-tooltip-placement-rightTop .apollo-tooltip-inner,.apollo-tooltip-placement-rightBottom .apollo-tooltip-inner{border-radius:min(var(--apollo-border-radius),var(--apollo-tooltip-max-vertical-content-radius));}
 .apollo-tooltip .apollo-tooltip-content{position:relative;}
 .apollo-tooltip.apollo-tooltip-blue .apollo-tooltip-container{background-color:var(--apollo-blue-6);}
 .apollo-tooltip.apollo-tooltip-blue .apollo-tooltip-arrow{--apollo-tooltip-arrow-background-color:var(--apollo-blue-6);}
@@ -122,7 +127,6 @@ const RULES = `
 .apollo-zoom-big-fast-enter,.apollo-zoom-big-fast-appear{transform:scale(0);opacity:0;animation-timing-function:var(--apollo-motion-ease-out-circ);}
 .apollo-zoom-big-fast-enter-prepare,.apollo-zoom-big-fast-appear-prepare{transform:none;}
 .apollo-zoom-big-fast-leave{animation-timing-function:var(--apollo-motion-ease-in-out-circ);}
-.css-var-_R_0_.apollo-tooltip-css-var{--apollo-tooltip-z-index-popup:1070;--apollo-tooltip-max-width:250px;--apollo-tooltip-arrow-offset-horizontal:12px;--apollo-tooltip-arrow-offset-vertical:8px;--apollo-tooltip-arrow-shadow-width:8.970562748477143px;--apollo-tooltip-arrow-path:path('M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z');--apollo-tooltip-arrow-polygon:polygon(1.6568542494923806px 100%, 50% 1.6568542494923806px, 14.34314575050762px 100%, 1.6568542494923806px 100%);}
 `;
 
 /** 生成 Tooltip 全量静态 CSS（keyframes + 组件变量声明块 + 组件规则）。 */

@@ -1,8 +1,13 @@
 <script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
-import { Tooltip } from '../index';
+// 对齐 antd 的 demo/basic.tsx
+
+import { Tooltip } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Tooltip>basic demo 占位</Tooltip>
+  <div style="font-family: sans-serif">
+    <Tooltip title="prompt text">
+      <span>Tooltip will show on mouse enter.</span>
+    </Tooltip>
+  </div>
 </template>

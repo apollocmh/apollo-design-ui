@@ -1,17 +1,24 @@
----
-order: 0
-title:
-  zh-CN: 基本
-  en-US: Basic
----
+## zh-CN
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/tooltip/demo/ 抄清单 -->
+最简单的用法。
+
+## en-US
+
+The simplest usage.
+
 ```vue
 <script setup lang="ts">
+// 对齐 antd 的 demo/basic.tsx
+
 import { Tooltip } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Tooltip>basic demo 占位</Tooltip>
+  <div style="font-family: sans-serif">
+    <Tooltip title="prompt text">
+      <span>Tooltip will show on mouse enter.</span>
+    </Tooltip>
+  </div>
 </template>
+
 ```

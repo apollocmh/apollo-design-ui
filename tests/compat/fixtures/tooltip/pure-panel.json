@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "tooltip/pure-panel",
+  "component": "tooltip",
+  "description": "PurePanel 静态面板：SSR 可达的唯一完整浮层 DOM（root + arrow + container[role=tooltip]）；placement 类与预设色 {p}-{color} 类。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "Hello Pure Panel!" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

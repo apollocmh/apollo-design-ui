@@ -57,6 +57,7 @@ import { genSplitterStyle } from '../splitter/style';
 import { genStatisticStyle } from '../statistic/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTagStyle } from '../tag/style';
+import { genTooltipStyle } from '../tooltip/style';
 import { genTypographyStyle } from '../typography/style';
 import { genUploadStyle } from '../upload/style';
 
@@ -114,6 +115,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'input-number', gen: genInputNumberStyle },
   { name: 'input', gen: genInputStyle },
   { name: 'upload', gen: genUploadStyle },
+  { name: 'tooltip', gen: genTooltipStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

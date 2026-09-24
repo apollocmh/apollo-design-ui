@@ -829,6 +829,21 @@ export type {
 } from './splitter';
 export { Splitter, SplitterPanel } from './splitter';
 export { genSplitterStyle, genTokenDecls as genSplitterTokenDecls } from './splitter/style';
+export type {
+  AdjustOverflow,
+  TooltipArrow,
+  TooltipClassNames,
+  TooltipContent,
+  TooltipPlacement,
+  TooltipProps,
+  TooltipRef,
+  TooltipSemanticType,
+  TooltipStyles,
+} from './tooltip';
+export { Tooltip, TooltipPurePanel } from './tooltip';
+export { genTooltipStyle, genTooltipTokenDecls } from './tooltip/style';
+export type { ComponentToken as TooltipComponentToken } from './tooltip/style/token';
+export { prepareComponentToken as prepareTooltipComponentToken } from './tooltip/style/token';
 // ---------------------------------------------------------------------------
 // Upload —— 上传（引擎自建于 engine/：AjaxUploader + XHR 请求器 + 目录递归）
 //

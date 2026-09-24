@@ -143,10 +143,12 @@ export function a11yDemoTest(name: string, options: A11yDemoTestOptions): void {
       it(
         `${testCase.id} 无 axe violation`,
         async () => {
-          const mounted = mountCase(
-            testCase.render,
-            options.wrap === undefined ? { attach: true } : { wrap: options.wrap, attach: true },
-          );
+          const mounted = mountCase(testCase.render, {
+            ...(options.wrap === undefined
+              ? { attach: true }
+              : { wrap: options.wrap, attach: true }),
+            ...(options.global ? { global: options.global } : {}),
+          });
 
           try {
             // ⚠️ 必须是**已挂载到 document 的**节点：axe 扫描游离节点会得到空结果，

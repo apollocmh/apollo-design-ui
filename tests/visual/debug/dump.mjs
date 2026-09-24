@@ -1,5 +1,5 @@
 /**
- * 临时调试脚本：用 Playwright 打开已构建的视觉页面，打印 #stage 的 HTML 与页面错误。
+ * 临时调试脚本：用 Playwright 打开已构建的视觉页面，打印 #stage 的 HTML 与 body 尾部 与页面错误。
  * 用法：node tests/visual/debug/dump.mjs react upload pictureCard
  */
 import fs from 'node:fs';

@@ -24,6 +24,7 @@ const PurePanel = defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     color: { type: String, default: undefined },
+    placement: { type: String, default: 'top' },
     title: {
       type: [Object, String, Number, Function] as PropType<VNodeChild>,
       default: undefined,
@@ -44,37 +45,43 @@ const PurePanel = defineComponent({
     return () => {
       const prefixCls = props.prefixCls ?? getPrefixCls('tooltip');
       const colorInfo = parseTooltipColor(prefixCls, props.color);
+      const placement = props.placement ?? 'top';
 
       return h(
         'div',
         {
           class: clsx(
             attrs.class as string | undefined,
-            `${prefixCls}-pure`,
             prefixCls,
+            `${prefixCls}-pure`,
+            `${prefixCls}-placement-${placement}`,
             colorInfo.className,
             mergedClassNames.value.root,
             props.className,
           ),
           style: {
+            ...(colorInfo.arrowStyle as StyleLike),
             ...(mergedStyles.value.root ?? {}),
             ...(props.style ?? {}),
             ...((attrs.style as StyleLike | undefined) ?? {}),
           },
           ...stripClassStyle(attrs),
         },
-        h(
-          'div',
-          {
-            class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
-            style: {
-              ...(mergedStyles.value.container ?? {}),
-              ...(colorInfo.overlayStyle as StyleLike),
+        [
+          h('div', { class: `${prefixCls}-arrow` }),
+          h(
+            'div',
+            {
+              class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
+              style: {
+                ...(mergedStyles.value.container ?? {}),
+                ...(colorInfo.overlayStyle as StyleLike),
+              },
+              role: 'tooltip',
             },
-            role: 'tooltip',
-          },
-          [props.title as VNodeChild].filter((c) => c !== null && c !== undefined),
-        ),
+            [props.title as VNodeChild].filter((c) => c !== null && c !== undefined),
+          ),
+        ],
       );
     };
   },

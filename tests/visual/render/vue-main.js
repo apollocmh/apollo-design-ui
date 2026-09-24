@@ -47,4 +47,10 @@ const app = createApp({
 app.mount('#root');
 
 // Vue 的 mount 是同步的；ConfigProvider 落地后若引入异步主题注入，这里要改成 await。
-window.__VISUAL_READY__ = true;
+// 双 rAF：浮层组件（Trigger）的定位走 微任务 + 帧泵，同样等两帧再置 READY
+//（与 react-main.jsx 对称；静态组件多等一帧无副作用）。
+requestAnimationFrame(() =>
+  requestAnimationFrame(() => {
+    window.__VISUAL_READY__ = true;
+  }),
+);

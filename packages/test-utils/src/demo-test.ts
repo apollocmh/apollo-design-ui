@@ -83,10 +83,10 @@ export function demoTest(name: string, options: DemoTestOptions): void {
       it(`渲染 ${testCase.id}`, async () => {
         const capture = captureWarnings();
         try {
-          const mounted = mountCase(
-            testCase.render,
-            options.wrap === undefined ? {} : { wrap: options.wrap },
-          );
+          const mounted = mountCase(testCase.render, {
+            ...(options.wrap === undefined ? {} : { wrap: options.wrap }),
+            ...(options.global ? { global: options.global } : {}),
+          });
           try {
             await mounted.update();
           } finally {

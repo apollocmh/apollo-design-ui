@@ -362,6 +362,13 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D75 | `upload`（实为全局） | 列表项名字是裸 `<a>`，其**链接色**来自 antd 的全局基础样式（`genLinkStyle`，由 cssinjs 随 ConfigProvider 注入）；`<button>` 的表单控件归一化来自 `antd/dist/reset.css` | 本库零运行时、**不注入任何全局基础样式**（D7/D15）⇒ 同样的 `<a>` 落回 UA 蓝、原生 `<button>` 落回 UA 行高 | INTENDED | 这是「不注入全局样式」的必然结果，不是 Upload 的选择：**任何**渲染裸 `<a>`/裸表单控件的组件都同判。L6 的 Upload 用例因此刻意避开这两处（触发区用各自的 `Button` 组件、文件项不传 `url`），让比对只反映 Upload 自身 —— 依据写在 `tests/visual/render/cases/react/upload.jsx` 文件头 |
 | D76 | `upload` | `initCollapseMotion()` 的 9 个 handler 直接摊进 CSSMotionList 的 props（rc-motion 收独立 prop） | 折成单个 `hooks` 对象传入（`CSSMotion`/`MotionList` 的契约就是 `hooks`） | PLATFORM | 本仓 `CSSMotion` 的结构性差异 2（handler 返回值有意义 ⇒ 不能走 emit，只能对象 prop）。⚠️ 踩过的坑：直接摊平会让 Vue 把 `onAppearStart` 当成事件监听器 —— 根节点是 fragment 时既报 `Extraneous non-emits event listeners`，又让 collapse 高度测量**静默失效**（见 `upload/UploadList.ts` 内注释） |
 
+| D77 | `tooltip` | `onOpenChange` 是普通 prop；React 18 的 flushSync 强制同步批 | 只走 prop 回调 + `update:open` emit（C11 双通道）；Vue 响应式同步即等价，无批处理语义 | PLATFORM | flushSync 无对应物（D74 同判）；L1 受控用例 |
+| D78 | `tooltip` | 触发元素为**组件**时靠 forwardRef 拿 DOM（cloneElement 注入 ref/props） | Vue 的 cloneVNode 对组件 vnode 注入 props/ref —— attrs 自动透传到根元素；ref 拿到实例 ⇒ Trigger 内部归一 `instance.$el` | PLATFORM | L6 basicOpen/colorful 逐像素一致（含组件触发元素） |
+| D79 | `tooltip` | 字符串 children 是 React 文本节点，`isValidElement` 为 false ⇒ 包一层 span | Vue 编译字符串插槽为 **Text vnode**（type = Symbol(v-txt)），同样不是元素 ⇒ 包 span。判断条件排除 Text/Comment/Fragment，组件 vnode 视为有效触发元素 | PLATFORM | L4 `tooltip:basic`（span 包装）与 `tooltip:open`（-open 类落到触发元素）钉住 |
+| D80 | `tooltip` | `ActionType` = string（任意字符串） | `OverlayActionInput` 收窄为 5 种动作（hover/click/focus/contextMenu/touch）—— 未知动作在 resolveActions 里静默 no-op | INTENDED | 上游可传的字符串实际也只有这 5 种有行为；类型收窄记录在 Tooltip.ts 的 cast 注释 |
+| D81 | `tooltip` | cssinjs 的 keyframes（antFadeIn/antZoomBigIn 等）由运行时注册 | 静态 CSS 内联 4 个 keyframes，动画名改本仓稳定命名（apollo-tooltip-fade-in 等） | INTENDED | 零运行时的必然结果（D5/D7）；动画名不进 DOM 契约，L6 截图在动画禁用下比对 |
+| D82 | `tooltip`（实为 harness） | —— | 视觉 harness 的 screenshotElement 等待 1100ms：STABILIZE_CSS 的 animation:none 让 rc-motion 的 animationend 永不触发，浮层要等 motionDeadline（1000ms）兜底才显形 | PLATFORM（harness） | L6 basicOpen/colorful 初版全红的根因；见 tests/visual/stabilize.mjs 注释 |
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

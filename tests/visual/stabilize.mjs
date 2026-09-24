@@ -135,6 +135,14 @@ export async function waitForFonts(page) {
  * 截**元素**而不是整页：两侧页面的外层留白不同，整页比对会把留白差异当成组件差异。
  */
 export async function screenshotElement(page, selector, path) {
+  // 浮层类组件（rc-trigger 系）的对齐是「布局效应 → 次帧量测 → 再改样式」的
+  // 多帧过程，且 zoom 动画从 opacity:0 开始 —— 单帧截图会拍到未对齐/未显形的帧
+  // （tooltip 实测）。等待：动画排空（有 1100ms 上限防挂死 —— 覆盖 antd rc-motion 的 motionDeadline（tooltip 为 1000ms）：STABILIZE_CSS 的 animation:none 会让 rc-motion 的 animationend 永不触发，只能等 deadline 兜底）后再多等一帧。
+  // ⚠️ 这里只能按时间等，不能用 document.getAnimations() 判定 ——
+  // STABILIZE_CSS 的 animation:none 让 rc-motion 的 animationend 永不触发，
+  // 运行中的动画数为 0，但其 appear 态样式（opacity:0）要等 motionDeadline
+  // （tooltip 1000ms）兜底后才解除。有 1100ms 上限，静态组件无动画不受影响。
+  await page.waitForTimeout(1100);
   const el = page.locator(selector);
   const count = await el.count();
   if (count === 0) {

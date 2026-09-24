@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "tooltip/basic",
+  "component": "tooltip",
+  "description": "基础形态：触发元素（字符串插槽 ⇒ span 包装，antd 同款）+ SSR 侧仅渲染触发元素（浮层走 portal）；open ⇒ 触发元素带 {p}-open 类与 aria-describedby。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "prompt text" },
+  "content": "target",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["open-change", "update:open"] }
+}

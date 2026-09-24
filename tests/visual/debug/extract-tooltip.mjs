@@ -8,7 +8,10 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const antdPath = require.resolve('antd');
-const antdRoot = antdPath.slice(0, antdPath.indexOf('antd/es') >= 0 ? antdPath.indexOf('antd/es') : antdPath.indexOf('antd/dist'));
+const antdRoot = antdPath.slice(
+  0,
+  antdPath.indexOf('antd/es') >= 0 ? antdPath.indexOf('antd/es') : antdPath.indexOf('antd/dist'),
+);
 const cssinjsPath = require.resolve('@ant-design/cssinjs', { paths: [antdRoot] });
 
 const { createCache, extractStyle, StyleProvider } = require(cssinjsPath);
@@ -24,7 +27,11 @@ const el = React.createElement(
   React.createElement(
     ConfigProvider,
     { theme: { cssVar: true } },
-    React.createElement(Tooltip, { title: 'x', open: true }, React.createElement('button', null, 't')),
+    React.createElement(
+      Tooltip,
+      { title: 'x', open: true },
+      React.createElement('button', null, 't'),
+    ),
   ),
 );
 
@@ -40,20 +47,4 @@ for (const rule of css.split('}')) {
     keep.push(`${rule}}`);
   }
 }
-// keyframes（嵌套块，括号配平提取）
-const kf = [];
-let idx = css.indexOf('@keyframes');
-while (idx >= 0) {
-  let depth = 0, end = idx;
-  for (let i = idx; i < css.length; i++) {
-    if (css[i] === '{') depth++;
-    if (css[i] === '}') { depth--; if (depth === 0) { end = i + 1; break; } }
-  }
-  const block = css.slice(idx, end);
-  if (block.includes('antFade') || block.includes('antZoomBig')) kf.push(block);
-  idx = css.indexOf('@keyframes', end);
-}
-console.log(kf.join('
-'));
-console.log(keep.join('
-'));
+console.log(keep.join('\n'));

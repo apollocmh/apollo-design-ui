@@ -342,6 +342,16 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  tooltip: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 全部 open 受控静态帧（不走 hover 时序）。basicOpen/colorful 的浮层经
+    //    portal 挂 body、由两侧各自的定位几何落位 —— AR1 的逐像素验证点。
+    variants: [
+      'basicOpen', // open + top：触发元素 + portal 浮层（定位几何 + 箭头）
+      'colorful', // 预设色 blue + 自定义色 #f50（内联变量 + 亮度文本色）
+      'purePanel', // PurePanel 静态面板（无 portal，纯 flow 布局）
+    ],
+  },
   upload: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部受控 fileList + 静态状态（done / uploading / error），不发真实请求：

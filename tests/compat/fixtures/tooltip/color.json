@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "tooltip/color",
+  "component": "tooltip",
+  "description": "颜色：预设色 ⇒ {p}-{color} 类；自定义色 ⇒ 容器内联 background + --{root}-tooltip-overlay-color（亮度 < 0.5 ⇒ #FFF）+ 箭头 --{root}-tooltip-arrow-background-color。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "prompt text", "color": "#f50" },
+  "content": "target",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

@@ -58,4 +58,10 @@ flushSync(() => {
   root.render(app);
 });
 
-window.__VISUAL_READY__ = true;
+// 双 rAF：antd（rc-trigger）的定位是「布局效应 → 次帧改样式」的多帧过程，
+// 单帧截图会拍到 left:-1000vw 的未对齐帧（tooltip 实测）。等两帧再置 READY。
+requestAnimationFrame(() =>
+  requestAnimationFrame(() => {
+    window.__VISUAL_READY__ = true;
+  }),
+);

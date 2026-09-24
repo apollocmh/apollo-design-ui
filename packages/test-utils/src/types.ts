@@ -4,7 +4,7 @@
  * 契约依据见 `docs/foundation/test-utils-contract.md` §5.1（统一形状）与 §7（公开 API）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { Component, VNodeChild } from 'vue';
 
 /**
  * 一条**豁免**。
@@ -63,6 +63,13 @@ export interface RenderSource {
   render?: RenderFactory;
   /** Provider 包装。默认恒等。 */
   wrap?: Wrap;
+  /**
+   * 透传给 `mount()` 的 global 配置（stubs 等）。
+   * 浮层类组件必须传 `{ stubs: { teleport: false } }` —— VTU 的 teleport-stub
+   * 会在 props 翻转时重建 slot 内容，把 Portal/CSSMotion 的残骸协议全部破坏
+   * （实测：关闭后子树重挂、触发递归更新）。真实 Teleport 无此问题。
+   */
+  global?: { stubs?: Record<string, boolean | Component> };
 }
 
 /** 带 props 的渲染工厂：`rootPropsTest` 需要往组件里注入 `rootClassName` / `rootStyle` / `prefixCls`。 */

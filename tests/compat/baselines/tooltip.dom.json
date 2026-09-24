@@ -1,0 +1,44 @@
+{
+  "$schema": "../schema.json",
+  "component": "tooltip",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-24T14:17:22.664Z",
+  "cases": [
+    {
+      "id": "tooltip:basic",
+      "html": "<span>target</span>"
+    },
+    {
+      "id": "tooltip:open",
+      "html": "<span class=\"apollo-tooltip-open\" aria-describedby=\"tip-1\">target</span>"
+    },
+    {
+      "id": "tooltip:open-no-title",
+      "html": "<span class=\"apollo-tooltip-open\" aria-describedby=\"tip-3\">target</span>"
+    },
+    {
+      "id": "tooltip:open-zero-title",
+      "html": "<span class=\"apollo-tooltip-open\" aria-describedby=\"tip-4\">target</span>"
+    },
+    {
+      "id": "tooltip:open-existing-describedby",
+      "html": "<span aria-describedby=\"other tip-2\" class=\"apollo-tooltip-open\">target</span>"
+    },
+    {
+      "id": "tooltip:open-class",
+      "html": "<span class=\"apollo-tooltip-open\" aria-describedby=\"tip-5\">target</span>"
+    },
+    {
+      "id": "tooltip:pure-panel",
+      "html": "<div class=\"apollo-tooltip-css-var css-dev-only-do-not-override-1v6lqee css-var-root apollo-tooltip apollo-tooltip-pure apollo-tooltip-placement-top\"><div class=\"apollo-tooltip-arrow\"></div><div class=\"apollo-tooltip-container css-dev-only-do-not-override-1v6lqee\" role=\"tooltip\">Hello Pure Panel!</div></div>"
+    },
+    {
+      "id": "tooltip:pure-panel-color",
+      "html": "<div class=\"apollo-tooltip-css-var css-dev-only-do-not-override-1v6lqee css-var-root apollo-tooltip apollo-tooltip-pure apollo-tooltip-placement-top apollo-tooltip-pink\"><div class=\"apollo-tooltip-arrow\"></div><div class=\"apollo-tooltip-container css-dev-only-do-not-override-1v6lqee\" role=\"tooltip\">Hello Pink!</div></div>"
+    },
+    {
+      "id": "tooltip:pure-panel-custom-color",
+      "html": "<div class=\"apollo-tooltip-css-var css-dev-only-do-not-override-1v6lqee css-var-root apollo-tooltip apollo-tooltip-pure apollo-tooltip-placement-top\" style=\"--apollo-tooltip-arrow-background-color:#f50\"><div class=\"apollo-tooltip-arrow\"></div><div class=\"apollo-tooltip-container css-dev-only-do-not-override-1v6lqee\" style=\"background:#f50;--apollo-tooltip-overlay-color:#FFF\" role=\"tooltip\">Hello Custom!</div></div>"
+    }
+  ]
+}

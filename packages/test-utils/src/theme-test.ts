@@ -144,6 +144,7 @@ export function themeTest(name: string, options: ThemeTestOptions): void {
         try {
           for (const testCase of cases) {
             const mounted = mountCase(testCase.render, {
+              ...(options.global ? { global: options.global } : {}),
               // ThemeProvider 在**外**，调用方的 wrap 在**内**（见文件头）。
               wrap: (slot) =>
                 h(

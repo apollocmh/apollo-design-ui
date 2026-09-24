@@ -4,7 +4,7 @@
 
 ## 状态
 
-- registry status: **analyzing（G1 完成 2026-09-24，实现从 analysis §7 顺序继续）** · priority P3 · complexity L
+- registry status: **completed（G0–G14 全部完成，2026-09-24 收口）** · priority P3 · complexity L
 - 依赖组件: config-provider
 - foundation: @apollo-design/motion, @apollo-design/overlay, @apollo-design/portal, @apollo-design/position, @apollo-design/theme, @apollo-design/utils
 - antd 规模: 586 行 / 14 文件 · token 2
@@ -13,18 +13,18 @@
 
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
 - [x] G1 ANALYZE —— 读 /tmp/antd-src/package/es/tooltip/ 的 .d.ts + demo + 测试，产出 **docs/analysis/tooltip.md**（先于实现！）
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
-- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
-- [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:tooltip]
+- [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
+- [x] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
+- [x] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
+- [x] G7 L3 类型（含负例，负例包在永不调用的闭包里）
+- [x] G8 L5 a11y —— axe + role/键盘断言
+- [x] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [x] G10 L4/L4 DOM 契约 + compat 比对
+- [x] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
+- [x] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [x] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
+- [x] G14 COMMIT —— commit message 带 [COMP:tooltip]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

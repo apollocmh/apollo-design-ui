@@ -17,6 +17,7 @@ import { getPlacements } from '@apollo-design/position';
 import { getDesignToken } from '@apollo-design/theme';
 import { devUseWarning, isDev, useControlledValue } from '@apollo-design/utils';
 import {
+  Comment,
   type CSSProperties,
   cloneVNode,
   computed,
@@ -25,6 +26,7 @@ import {
   isVNode,
   type PropType,
   shallowRef,
+  Text,
   type VNode,
   type VNodeChild,
 } from 'vue';
@@ -39,7 +41,6 @@ import type {
   TooltipSemanticType,
   TooltipStyles,
 } from './interface';
-import PurePanel from './PurePanel';
 import { tooltipTokenValues } from './style/token';
 import { useMergedArrow } from './use-merged-arrow';
 import { clsx, parseTooltipColor } from './util';
@@ -322,23 +323,38 @@ const Tooltip = defineComponent({
       // 触发元素：default slot 首个 vnode；非元素 / fragment 包一层 span（rc 同款）。
       const children = slots.default?.();
       const first = Array.isArray(children) ? children[0] : children;
-      const child =
-        first && isVNode(first) && !isFragmentNode(first)
-          ? (first as VNode)
-          : h(
-              'span',
-              [first as VNodeChild].filter((c) => c !== null && c !== undefined),
-            );
+      // ⚠️ 字符串插槽经 Vue 编译是 **Text vnode**（type = Symbol(v-txt)）——
+      // 必须与 fragment 一样包一层 span（rc 的 isValidElement 判据在 Vue 里是
+      // 「真实元素 vnode」：排除 Text / Comment / Fragment）。
+      const firstType = isVNode(first) ? (first as VNode).type : null;
+      const isRealElement =
+        isVNode(first) && !isFragmentNode(first) && firstType !== Text && firstType !== Comment;
+      const child = isRealElement
+        ? (first as VNode)
+        : h(
+            'span',
+            [first as VNodeChild].filter((c) => c !== null && c !== undefined),
+          );
 
       // -open 类：开（或受控开）时追加（antd 判 `'open' in props` 的口径 ——
       // 受控与否都加，区别只在 noTitle 抑制后的 tempOpen）。
+      console.log(
+        '[tt-debug] first type:',
+        typeof first,
+        'isVNode:',
+        isVNode(first),
+        'child tag:',
+        (child as { type?: unknown }).type,
+      );
       const childProps = (child.props ?? {}) as { class?: unknown; 'aria-describedby'?: string };
       const openCls =
         tempOpen.value || (props.openClassName !== undefined && mergedOpen.value)
           ? (props.openClassName ?? `${prefixCls}-open`)
           : '';
       const childClass =
-        typeof childProps.class === 'string' ? clsx(childProps.class, openCls) : childProps.class;
+        typeof childProps.class === 'string' || childProps.class === undefined
+          ? clsx(childProps.class, openCls)
+          : childProps.class;
       const describedBy = [
         childProps['aria-describedby'],
         tempOpen.value ? (props.id ?? 'apollo-tooltip') : undefined,

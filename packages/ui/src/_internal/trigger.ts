@@ -227,11 +227,21 @@ export const Trigger = defineComponent({
     const isMobile = false; // v1 无 mobile 形态（tooltip / dropdown 都没有）
 
     /** 对齐目标：alignPoint 场景用鼠标位置，否则用触发元素。 */
+    // child 是**组件**时，cloneVNode 的 ref 拿到的是组件实例 ⇒ 归一到根元素
+    // （antd 用 forwardRef 达成同一效果；Vue 的实例有 ``）。
+    const targetElement = computed<HTMLElement | null>(() => {
+      const t = overlay.targetRef.value as HTMLElement | { $el?: HTMLElement } | null;
+      if (!t) return null;
+      if (t instanceof HTMLElement) return t;
+      const el = (t as { $el?: HTMLElement }).$el;
+      return el instanceof HTMLElement ? el : null;
+    });
+
     const alignTarget = computed<HTMLElement | readonly [number, number] | null>(() => {
       if (props.alignPoint && overlay.mousePos.value) {
         return overlay.mousePos.value;
       }
-      return overlay.targetRef.value;
+      return targetElement.value;
     });
 
     const onAlign = (): void => {
@@ -390,7 +400,7 @@ export const Trigger = defineComponent({
           onAlign();
         }
       },
-      nativeElement: () => overlay.targetRef.value,
+      nativeElement: () => targetElement.value,
       popupElement: () => popupEle.value,
     });
 
@@ -474,7 +484,9 @@ export const Trigger = defineComponent({
           lastContent.value = v;
         }
       },
-      { immediate: true, flush: 'sync' },
+      // flush: post —— 改 lastContent 不能发生在渲染期（渲染自身依赖 ⇒ 递归更新），
+      // 开启期间每次渲染后同步一份；关闭后不再更新 ⇒ 冻结
+      { immediate: true, flush: 'post' },
     );
     const renderedContent = computed<VNodeChild>(() =>
       mergedOpen.value || props.fresh ? contentSource.value : lastContent.value,

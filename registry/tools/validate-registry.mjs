@@ -348,8 +348,11 @@ const HARDCODED_PATTERNS = [
   // 是 token 的运算式，不是硬编码设计值（与 antd 的 `borderRadius/2` 同构）。
   // 2026-09-22 补 `inherit`：border-beam 的 `border-radius:inherit`（继承宿主圆角，
   // antd 逐字）—— 是继承语义，不是设计值。
+  // 2026-09-24 补 min(：tooltip 的左右形态圆角是
+  // `border-radius:min(var(--apollo-border-radius),var(--apollo-tooltip-max-vertical-content-radius))`
+  // —— 两个 token 的 min() 运算（antd 的 Math.min(borderRadius, 8) 同构），不是硬编码设计值。
   {
-    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|inherit\b|\$\{v\(|\d+%|0(?![\d.])))/,
+    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|0(?![\d.])))/,
     what: '硬编码圆角',
   },
   // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游
