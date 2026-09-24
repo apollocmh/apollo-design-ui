@@ -369,6 +369,11 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D81 | `tooltip` | cssinjs 的 keyframes（antFadeIn/antZoomBigIn 等）由运行时注册 | 静态 CSS 内联 4 个 keyframes，动画名改本仓稳定命名（apollo-tooltip-fade-in 等） | INTENDED | 零运行时的必然结果（D5/D7）；动画名不进 DOM 契约，L6 截图在动画禁用下比对 |
 | D82 | `tooltip`（实为 harness） | —— | 视觉 harness 的 screenshotElement 等待 1100ms：STABILIZE_CSS 的 animation:none 让 rc-motion 的 animationend 永不触发，浮层要等 motionDeadline（1000ms）兜底才显形 | PLATFORM（harness） | L6 basicOpen/colorful 初版全红的根因；见 tests/visual/stabilize.mjs 注释 |
 
+| D83 | `popover` | ConfigProvider.popover 组件配置（arrow/trigger/延迟） | 不消费（D29 同判：UniqueProvider 未实现，config 不声明，声明了就是静默 no-op） | INTENDED | L1 缺省行为用例（0.1s 延迟、hover 触发） |
+| D84 | `popover` | wireframe 主题态（titlePadding/titleBorderBottom/innerContentPadding 的线框分支） | 不支持：恒取非线框缺省（0 / none / 0）；token 公式逐条保留 | INTENDED | L7 token 判据 |
+| D85 | `popover` | `data-popover-inject` attr（React 注入标记） | 不渲染（Vue 无对应注入语义；Tooltip 的 context 消费由 config 逃生口承担） | INTENDED | L4 契约无该 attr |
+| D86 | `popover`（PurePanel） | `style` 经 `{...props}` 摊进 rc Popup ⇒ 在 **root 与 container 双落点**（覆盖 styles.container） | 逐字对齐该事实契约（root 与 container 都应用 props.style） | UPSTREAM（事实契约） | L6 purePanel 钉住（缺 container 落点时高 16px）；rc Popup 源码 `style: {...styles?.container, ...style}` |
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

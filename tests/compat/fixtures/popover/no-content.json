@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "popover/no-content",
+  "component": "popover",
+  "description": "空内容：非受控 ⇒ onInternalOpenChange 抑制（不开启、不发回调）；受控 open ⇒ 浮层照开（antd 受控不做 noTitle 压制，L4 钉住）。title=0 / content=0 合法（isRenderable 对 0 为真）。",
+  "antdVersion": "6.6.4",
+  "props": { "open": true },
+  "content": "target",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

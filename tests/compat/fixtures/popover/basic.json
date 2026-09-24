@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "popover/basic",
+  "component": "popover",
+  "description": "基础形态：触发元素（字符串插槽 ⇒ span 包装，antd 同款）+ SSR 侧仅渲染触发元素（浮层走 portal）；title/content 双通道，纯标题 ⇒ -title 块 + -content 块。open ⇒ 触发元素带 {p}-open 类与 aria-describedby。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "Title", "content": "Content" },
+  "content": "target",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["open-change", "update:open"] }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "popover/pure-panel",
+  "component": "popover",
+  "description": "PurePanel 静态面板：SSR 可达的唯一完整浮层 DOM（root 带 {p}-placement-{placement} 类 + arrow 空块 + container[role=tooltip] 内 -title/-content 两块）；style 双落点（root + container，antd {...props} 摊入 rc Popup 的事实契约）。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "Title", "content": "Content" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

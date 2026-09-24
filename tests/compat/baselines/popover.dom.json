@@ -1,0 +1,60 @@
+{
+  "$schema": "../schema.json",
+  "component": "popover",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-24T16:25:53.196Z",
+  "cases": [
+    {
+      "id": "popover:basic",
+      "html": "<span>target</span>"
+    },
+    {
+      "id": "popover:open",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-1\">target</span>"
+    },
+    {
+      "id": "popover:open-placement",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-2\">target</span>"
+    },
+    {
+      "id": "popover:open-no-content",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-3\">target</span>"
+    },
+    {
+      "id": "popover:open-no-title",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-4\">target</span>"
+    },
+    {
+      "id": "popover:no-title-no-content",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-5\">target</span>"
+    },
+    {
+      "id": "popover:zero-title",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-6\">target</span>"
+    },
+    {
+      "id": "popover:render-function",
+      "html": "<span class=\"apollo-popover-open\" aria-describedby=\"pop-7\">target</span>"
+    },
+    {
+      "id": "popover:existing-describedby",
+      "html": "<span aria-describedby=\"other pop-8\" class=\"apollo-popover-open\">target</span>"
+    },
+    {
+      "id": "popover:pure-panel",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee apollo-popover apollo-popover-pure apollo-popover-placement-top css-var-root\"><div class=\"apollo-popover-arrow\"></div><div class=\"apollo-popover-container css-dev-only-do-not-override-1v6lqee\" role=\"tooltip\"><div class=\"apollo-popover-title\">Title</div><div class=\"apollo-popover-content\">Content</div></div></div>"
+    },
+    {
+      "id": "popover:pure-panel-placement",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee apollo-popover apollo-popover-pure apollo-popover-placement-bottomLeft css-var-root\"><div class=\"apollo-popover-arrow\"></div><div class=\"apollo-popover-container css-dev-only-do-not-override-1v6lqee\" role=\"tooltip\"><div class=\"apollo-popover-title\">Title</div><div class=\"apollo-popover-content\">Content</div></div></div>"
+    },
+    {
+      "id": "popover:pure-panel-title-only",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee apollo-popover apollo-popover-pure apollo-popover-placement-top css-var-root\"><div class=\"apollo-popover-arrow\"></div><div class=\"apollo-popover-container css-dev-only-do-not-override-1v6lqee\" role=\"tooltip\"><div class=\"apollo-popover-title\">Title</div></div></div>"
+    },
+    {
+      "id": "popover:pure-panel-content-only",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee apollo-popover apollo-popover-pure apollo-popover-placement-top css-var-root\"><div class=\"apollo-popover-arrow\"></div><div class=\"apollo-popover-container css-dev-only-do-not-override-1v6lqee\" role=\"tooltip\"><div class=\"apollo-popover-content\">Content</div></div></div>"
+    }
+  ]
+}

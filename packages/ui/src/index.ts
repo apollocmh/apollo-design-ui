@@ -790,6 +790,17 @@ export type {
 } from './listy';
 export { Listy } from './listy';
 export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/style';
+export type {
+  PopoverClassNames,
+  PopoverProps,
+  PopoverRef,
+  PopoverSemanticType,
+  PopoverStyles,
+} from './popover';
+export { Popover, PopoverPurePanel } from './popover';
+export { genPopoverStyle, genPopoverTokenDecls } from './popover/style';
+export type { ComponentToken as PopoverComponentToken } from './popover/style/token';
+export { prepareComponentToken as preparePopoverComponentToken } from './popover/style/token';
 // ---------------------------------------------------------------------------
 // QrCode —— 二维码（引擎 vendored：Nayuki qrcodegen，MIT；strategy=reuse 落定）
 //

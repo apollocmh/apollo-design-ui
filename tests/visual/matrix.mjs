@@ -342,6 +342,15 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  popover: {
+    // 2 个 variant × 3 个 viewport = 6 张
+    // open 受控静态帧 + placement=bottom + autoAdjustOverflow=false 钉死落点
+    //（tooltip 期结论）。
+    variants: [
+      'basicOpen', // open + bottom：title/content 容器 + portal 浮层（定位几何 + 箭头）
+      'purePanel', // PurePanel 静态面板（-placement 类 + title/content 结构）
+    ],
+  },
   tooltip: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部 open 受控静态帧（不走 hover 时序）。basicOpen/colorful 的浮层经

@@ -302,10 +302,13 @@ const Tooltip = defineComponent({
     }));
 
     // ========================= tempOpen ==============================
-    // rc：受控时不做 noTitle 压制（受控方自己负责）；非受控 + noTitle ⇒ 强制关。
+    // antd（es/tooltip/index.js 逐字）：`let tempOpen = open;
+    //   if (!('open' in props) && noTitle || inTableMeasureRow) tempOpen = false;`
+    // —— 受控时**不做** noTitle 压制（受控方自己负责；Popover 传 open ⇒ 受控），
+    // 只有非受控 + noTitle 才强制关。
     const tempOpen = computed(() => {
       if (props.open !== undefined) {
-        return props.open && !noTitle.value;
+        return props.open;
       }
       return mergedOpen.value && !noTitle.value;
     });
@@ -338,14 +341,6 @@ const Tooltip = defineComponent({
 
       // -open 类：开（或受控开）时追加（antd 判 `'open' in props` 的口径 ——
       // 受控与否都加，区别只在 noTitle 抑制后的 tempOpen）。
-      console.log(
-        '[tt-debug] first type:',
-        typeof first,
-        'isVNode:',
-        isVNode(first),
-        'child tag:',
-        (child as { type?: unknown }).type,
-      );
       const childProps = (child.props ?? {}) as { class?: unknown; 'aria-describedby'?: string };
       const openCls =
         tempOpen.value || (props.openClassName !== undefined && mergedOpen.value)
