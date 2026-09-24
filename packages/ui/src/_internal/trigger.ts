@@ -522,9 +522,6 @@ export const Trigger = defineComponent({
                   className?: string;
                   style?: Record<string, string | number>;
                 }) => {
-                  console.log(
-                    `[mslot] open=${mergedOpen.value} inMotion=${inMotion.value} dOH=${props.destroyOnHidden} cls=${motion.className}`,
-                  );
                   return h(
                     'div',
                     {

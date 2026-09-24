@@ -62,12 +62,10 @@ describe('Trigger · L1 开合与渲染', () => {
     expect(onOpenChange).toHaveBeenCalledWith(true);
 
     // 关闭：mouseleave（delay 0 ⇒ 立即）；removeOnLeave=false ⇒ 残骸带 -hidden
-    console.log('[dbg-open]', document.body.innerHTML.slice(0, 500));
     await triggerEl()!.dispatchEvent(new Event('mouseleave'));
     await vi.runAllTimersAsync();
     await nextTick();
     expect(onOpenChange).toHaveBeenCalledWith(false);
-    if (!popup()) console.log('[dbg]', document.body.innerHTML.slice(0, 700));
     expect(popup()!.className).toContain('apollo-trigger-hidden');
     vi.useRealTimers();
   });
