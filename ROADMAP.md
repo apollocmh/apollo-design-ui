@@ -421,13 +421,13 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 
 ## 11. 当前状态与下一步
 
-> **快照时间：2026-09-23**（switch 收口后）。数字由工具推导，刷新命令见 §12。
+> **快照时间：2026-09-24**（upload 收口后）。数字由工具推导，刷新命令见 §12。
 
 ### 11.1 总览
 
 ```
-92 个 Work Item | 组件 31/72 | foundation 12/13 completed（picker 收口中）
-当前 ready 32（可并行开工 17）| registry:check 18 检查全绿
+92 个 Work Item | 组件 32/72 | foundation 12/13 completed（picker 收口中）
+当前 ready 18（可并行开工 17）| registry:check 18 检查全绿
 ```
 
 ### 11.2 已完成的成果（⚠️ 防重复清单 —— 不要再做这些）
@@ -441,12 +441,13 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 | form-core / picker | ✅ / 收口中 | L2 领域引擎 |
 | overlay | ✅ | L3 组合层（15 个浮层类组件的共同前置） |
 
-**Phase 3 组件（31/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
+**Phase 3 组件（32/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
 
 ```
 empty → config-provider → button · space · flex · grid · divider · typography
         alert · skeleton · spin · result · tag · badge · watermark · border-beam
         statistic · affix · back-top · layout · checkbox · radio · switch · carousel · descriptions · listy · splitter · qr-code · collapse
+        input-number · input · upload
 ```
 
 （`empty` / `config-provider` 两个枢纽已就位；组件期由 `next-task.mjs` 按 DAG 派发，
@@ -466,7 +467,7 @@ empty → config-provider → button · space · flex · grid · divider · typo
 | 全量跑偶发 unhandled error（组件残留 timer） | 已修：`enableAutoUnmount(afterEach)` | vitest.setup.ts |
 | theme baseline `borderRadiusCircle` | 已修：白名单登记（spin 的有意扩展） | theme baseline.test.ts |
 
-**经典错误沉淀**：`docs/COMPONENT-CHECKLIST.md` §六（#1–#37，最近在顶部）——
+**经典错误沉淀**：`docs/COMPONENT-CHECKLIST.md` §六（#1–#83，最近在顶部）——
 每类「踩过的坑 + 抓到它的层 + 对策」。写组件前先读一遍，比踩完再查省一个 Gate。
 
 ### 11.4 下一步（按优先级）

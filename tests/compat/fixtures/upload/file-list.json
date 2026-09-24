@@ -1,0 +1,25 @@
+{
+  "$schema": "../schema.json",
+  "id": "upload/file-list",
+  "component": "upload",
+  "description": "列表四态：done（有 url ⇒ 名字渲染成 `<a target=_blank>`、无 url ⇒ `span[role=button][tabindex=0]`）/ uploading（`-list-item-uploading`，进度条延迟 300ms 出现）/ error（`-list-item-error` + 颜色覆盖）/ removed。操作区 `-list-item-actions`：preview 仅在有 url/thumbUrl 时渲染，download 仅 done 态，remove 跟随 `showUploadList`。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "action": "/upload",
+    "name": "file",
+    "defaultFileList": [
+      { "uid": "1", "name": "done.txt", "status": "done" },
+      {
+        "uid": "2",
+        "name": "linked.txt",
+        "status": "done",
+        "url": "http://example.com/linked.txt"
+      },
+      { "uid": "3", "name": "uploading.txt", "status": "uploading", "percent": 50 },
+      { "uid": "4", "name": "failed.txt", "status": "error" }
+    ]
+  },
+  "content": "upload",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "remove"] }
+}

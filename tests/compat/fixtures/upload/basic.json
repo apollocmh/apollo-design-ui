@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "upload/basic",
+  "component": "upload",
+  "description": "基础形态：根 `span.{p}-wrapper` > `div.{p}-select` > 引擎根 `span.{p}` > 隐藏 `input[type=file]`；触发区内容（default slot / antd children）落在引擎根之内。双通道 `v-model:fileList` + `change`（C11）；`action` 只作为 FormData 的提交地址，fixture 不发真实请求。",
+  "antdVersion": "6.6.4",
+  "props": { "action": "/upload", "name": "file" },
+  "content": "upload",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

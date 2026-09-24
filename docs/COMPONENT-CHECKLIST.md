@@ -60,6 +60,17 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-24（upload 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 78 | **`onXxx` 同时声明为 prop 与 emit ⇒ 回调被触发两次**：Vue 的 `emits` 只影响 attrs 剥离、**不影响 prop 解析**，同一个 `onDrop` 既进 `props.onDrop` 又注册成 emit 监听器 ⇒ `emit('drop') + props.onDrop()` 双触发。其余组件没暴露是因为 antd 回调 prop 走的是 **attrs**（PITFALLS 35）或只走 emit（如 `change`） | L1（`onDrop` 被调 2 次；第一版测试还把 `props.onDrop` 与 `attrs.onDrop` 传成同一个 fn 掩盖了它） | antd 的 `onXxx` prop 在 Vue 侧只保留**一条**通道：要么 emit（`change`/`drop`），要么 attrs；绝不「prop + emit 同名双写」 |
+| 79 | **`.anticon` 是死选择器**：antd 的 `iconCls` 是字面量 `anticon`，运行时把 `iconStyles` **全局 replace** 成 `prefixCls`（D15）；本库零运行时、图标类名恒为 `apollo-icon` ⇒ 抄自 antd 的 `.anticon` 规则**匹配不到任何元素且不报错**，症状是列表图标色/尺寸静默回落继承值（upload 有 61 处） | L6（icon 计算色 `rgb(0,0,0)` vs antd `rgba(0,0,0,.45)`）+ computed-style 探针 | 提取 antd CSS 后一律把 `.anticon*` 改写成 `.apollo-icon*`（button/result/tag 的 `ICON_CLS` 写法）；收口时 `grep -c '\.anticon' style/index.ts` 必须为 0 |
+| 80 | **cssinjs 的 common/reset 规则会被「只留涉及的属性」式提取丢掉**：每个组件第一段都有一条 `.{cls}{box-sizing;margin:0;padding:0;color:var(--*-color-text);font-size;line-height;list-style:none;font-family}`（`genCommonStyle`）。漏掉 `color`/`line-height` ⇒ 文本色从 `colorText`(88% 黑) 掉回继承纯黑、行高回落 ⇒ **整套文字逐像素不同**（basic/drag 6 张 0.36%~1.35%） | L6（basic/drag 9 张全 block-diff，散点占比 25%~51%） | 每段开头补回整条 common 规则；自检 `grep -c 'list-style:none' style/index.ts` 不为 0 |
+| 81 | **`@supports` 块在提取时被整块丢弃**：antd 把 picture-card/circle 列表的 `gap:8px` 放在 `@supports (gap:1px)` 里（另一条 `@supports not (gap:1px)` 给 `> *` 加 margin）⇒ 丢掉后相邻磁贴间距 0，探针显示 `-select` 的 x 从 142 变 134 | L6（pictureCard 三张 0.13%~0.49%，diff 图里 8px 位移） | 提取后 `grep -c '@supports'` 与 antd 产物条数对拍（upload = 2）；条件块必须原样保留，不能展开成无条件规则 |
+| 82 | **默认插槽没传给引擎子组件 = 触发区整体为空**：antd 把触发区内容当 `RcUpload` 的 `props.children` 传（`{...props}` 里带着 children），Vue 侧必须显式 `{ default: () => children }`。漏了 ⇒ select / picture-card 形态的按钮、`+ Upload` 全不见 | L6（basic/pictureCard 明显缺块）⚠️ **L4 抓不到**：`dom-contract.ts` 的投影只吞元素节点，baseline 的 children 全是**文本**（`'upload'`/`'x'`）⇒ 契约里看不见文本节点 | 凡「antd 通过 children/ReactNode prop 传递」的内容，Vue 侧逐个确认落在 slot 上；L1 补 element-child 用例（文本子节点进不了契约） |
+| 83 | **视觉侧吃的是 `packages/ui/dist`，不是 src**：`tests/visual/build.mjs` 明确用已构建产物 ⇒ dist 陈旧时 L6 比的是旧实现（实测 `isImageUrl` 已修好但 dist 里还是旧版，症状是缩略图 `<img>` 变 FileOutlined）。jsdom 侧（L1/L4/L5/L7）走 src，两边**不一致** | L6 与 L1 结论冲突（jsdom 渲染 `<img>`、浏览器渲染图标） | 跑 L6 前先 `pnpm --filter @apollo-design/ui run build`（或直接 `run.mjs` 不带 `--noBuild`）；两侧结论冲突时先怀疑产物陈旧 |
+
 ### 2026-09-24（input 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

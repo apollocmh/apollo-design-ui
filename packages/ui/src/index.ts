@@ -843,3 +843,30 @@ export type {
   WatermarkText,
 } from './watermark';
 export { Watermark } from './watermark';
+
+// ---------------------------------------------------------------------------
+// Upload —— 上传（引擎自建于 engine/：AjaxUploader + XHR 请求器 + 目录递归）
+//
+// ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 2 个（actions-color /
+//    picture-card-size）。v-model:fileList 与 onChange 双通道（C11）；
+//    Progress/Tooltip 未落地 —— ListItem 内联 MiniProgress（P1）+ 原生 title
+//    （P2），progress/tooltip 落地后替换（D 登记）。
+// ---------------------------------------------------------------------------
+export type {
+  HttpRequestHeader,
+  InternalUploadFile,
+  ItemRender,
+  ShowUploadListInterface,
+  UploadChangeParam,
+  UploadFile,
+  UploadFileStatus,
+  UploadListProgressProps,
+  UploadListType,
+  UploadLocale,
+  UploadProps,
+  UploadType,
+} from './upload';
+export { LIST_IGNORE, Upload, UploadDragger } from './upload';
+export { genUploadStyle, genTokenDecls as genUploadTokenDecls } from './upload/style';
+export type { ComponentToken as UploadComponentToken } from './upload/style/token';
+export { prepareComponentToken as prepareUploadComponentToken } from './upload/style/token';

@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "upload/dragger",
+  "component": "upload",
+  "description": "拖拽区：`type='drag'` ⇒ `div.{p}-drag` > 引擎根 `.{p}-btn`（hasControlInside=false ⇒ 引擎根带 `role=button` + `tabindex=0`）> `div.{p}-drag-container` > children；列表里有 uploading ⇒ `-drag-uploading`，dragover ⇒ `-drag-hover`（**只有 DOM 类，没有对应 CSS 规则**，与 antd 一致）。`UploadDragger` 是 `type='drag'` 的别名组件。",
+  "antdVersion": "6.6.4",
+  "props": { "action": "/upload", "name": "file", "type": "drag" },
+  "content": "Click or drag file to this area to upload",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "drop"] }
+}

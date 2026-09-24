@@ -14,14 +14,15 @@
 - **每个 Gate 收口时**，把本次踩的经典错误追加到 `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），含：坑、哪一层测试抓到的、对策。
 - badge 会话已沉淀 14 条（flex/grid 期教训 + badge 期 CSS 提取管线）。
 
-## 项目进度快照与防重复清单（2026-09-22 layout 收口后；权威来源是 registry，本节是索引）
+## 项目进度快照与防重复清单（2026-09-24 upload 收口后；权威来源是 registry，本节是索引）
 
-- **进度**：foundation 12/13 completed（picker 收口中）；组件 **29/72**
+- **进度**：foundation 12/13 completed（picker 收口中）；组件 **32/72**
   （empty, config-provider, button, space, flex, grid, divider, typography, alert,
   skeleton, spin, result, tag, badge, watermark, border-beam, statistic, affix,
-  back-top, layout, checkbox, radio, switch, carousel, descriptions, listy, splitter, qr-code, collapse）。registry:check 18 检查全绿。
+  back-top, layout, checkbox, radio, switch, carousel, descriptions, listy, splitter,
+  qr-code, collapse, input-number, input, upload）。registry:check 18 检查全绿。
   ⚠️ 全仓 `update:*` 缺口（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
-  但只有 radio / switch 实现了 ⇒ 其余 20 个组件上 `v-model:xxx` 不生效，待统一补齐。
+  但只有 radio / switch / upload 实现了 ⇒ 其余 19 个组件上 `v-model:xxx` 不生效，待统一补齐。
 - **蓝图**：ROADMAP.md §11 已改为「进度快照 + 已完成清单（防重复）+ 已知遗留
   （不要再排查）+ 下一步」—— 后续每完成一批组件就刷新 §11.1 的一行数字即可，
   不要重写整节。

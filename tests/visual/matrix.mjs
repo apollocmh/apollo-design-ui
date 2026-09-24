@@ -342,6 +342,16 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  upload: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 全部受控 fileList + 静态状态（done / uploading / error），不发真实请求：
+    //    静态帧截图下任何异步上传都是时序噪声。缩略图用内联 SVG data URI（离线 + 无网络抖动）。
+    variants: [
+      'basic', // text 列表：done / uploading(60%) / error 三项 + select 触发区
+      'pictureCard', // picture-card：缩略图 + 悬浮遮罩 + 上传按钮方格
+      'drag', // Dragger：虚线框 + drag-container + 列表
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */
