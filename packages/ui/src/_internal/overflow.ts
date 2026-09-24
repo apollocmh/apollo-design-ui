@@ -198,7 +198,6 @@ const Overflow = defineComponent({
     const canObserve = typeof ResizeObserver !== 'undefined';
 
     const containerRef = ref<HTMLElement | null>(null);
-    const restRef = ref<HTMLElement | null>(null);
 
     onMounted(() => {
       if (!canObserve) return;
@@ -306,20 +305,20 @@ const Overflow = defineComponent({
             {
               class: `${itemPrefixCls}-rest`,
               style: {
-                opacity: displayRest.value ? 1 : 0,
-                height: displayRest.value ? undefined : 0,
-                overflowY: displayRest.value ? undefined : 'hidden',
-                pointerEvents: displayRest.value ? undefined : 'none',
-                position: displayRest.value ? undefined : 'absolute',
+                opacity: shouldResponsive.value && !displayRest.value ? 0 : 1,
+                height: shouldResponsive.value && !displayRest.value ? 0 : undefined,
+                overflowY: shouldResponsive.value && !displayRest.value ? 'hidden' : undefined,
+                pointerEvents: shouldResponsive.value && !displayRest.value ? 'none' : undefined,
+                position: shouldResponsive.value && !displayRest.value ? 'absolute' : undefined,
               },
-              'aria-hidden': displayRest.value ? undefined : true,
+              'aria-hidden': shouldResponsive.value && !displayRest.value ? true : undefined,
               ref: (el) => {
                 if (el && canObserve) {
                   restWidth.value = (el as HTMLElement).offsetWidth || restWidth.value;
                 }
               },
             },
-            restContent,
+            [restContent].filter((c) => c !== null && c !== undefined),
           ),
         );
       }
