@@ -12,6 +12,7 @@ const MenuItemGroup = defineComponent({
   props: {
     eventKey: { type: String, default: undefined },
     label: { type: [Object, String, Number] as PropType<VNodeChild>, default: undefined },
+    overflowCls: { type: String, default: undefined },
   },
   setup(props, { slots, attrs }) {
     const measure = useMeasure();
@@ -25,7 +26,6 @@ const MenuItemGroup = defineComponent({
 
     const ctx = useMenuContext();
     const groupPrefixCls = `${ctx.prefixCls}-item-group`;
-    const children = slots.default?.();
 
     return () =>
       h(
@@ -34,7 +34,7 @@ const MenuItemGroup = defineComponent({
           ...attrs,
           role: 'presentation',
           onClick: (e: MouseEvent) => e.stopPropagation(),
-          class: [groupPrefixCls, attrs.class],
+          class: [groupPrefixCls, props.overflowCls, attrs.class],
         },
         [
           h(
@@ -44,9 +44,9 @@ const MenuItemGroup = defineComponent({
               class: `${groupPrefixCls}-title`,
               title: typeof props.label === 'string' ? props.label : undefined,
             },
-            props.label ?? children,
+            props.label ?? slots.default?.(),
           ),
-          h('ul', { role: 'group', class: `${groupPrefixCls}-list` }, children),
+          h('ul', { role: 'group', class: `${groupPrefixCls}-list` }, slots.default?.()),
         ],
       );
   },

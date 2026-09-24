@@ -160,3 +160,51 @@ export interface MenuRef {
   list: HTMLUListElement | null;
   findItem: (params: { key: string }) => HTMLElement | null;
 }
+
+// ---------------------------------------------------------------------------
+// MenuProps（rc MenuProps 的本仓子集 + antd 壳扩展）
+// ---------------------------------------------------------------------------
+
+export interface MenuProps {
+  prefixCls?: string;
+  mode?: MenuMode;
+  theme?: MenuTheme;
+  items?: ItemType[];
+  inlineCollapsed?: boolean;
+  disabled?: boolean;
+  disabledOverflow?: boolean;
+  selectable?: boolean;
+  multiple?: boolean;
+  selectedKeys?: string[];
+  defaultSelectedKeys?: string[];
+  openKeys?: string[];
+  defaultOpenKeys?: string[];
+  activeKey?: string;
+  inlineIndent?: number;
+  subMenuOpenDelay?: number;
+  subMenuCloseDelay?: number;
+  forceSubMenuRender?: boolean;
+  triggerSubMenuAction?: TriggerSubMenuAction;
+  getPopupContainer?: (node: HTMLElement) => HTMLElement;
+  tabIndex?: number;
+  id?: string;
+  onClick?: MenuClickEventHandler;
+  onSelect?: SelectEventHandler;
+  onDeselect?: SelectEventHandler;
+  onOpenChange?: (openKeys: string[]) => void;
+  onKeyDown?: (e: KeyboardEvent) => void;
+  /** 折叠态 item 标题的 Tooltip 配置（`false` 关闭）。 */
+  tooltip?: false | Record<string, unknown>;
+  /** expandIcon 覆盖（函数 / 元素 / null 隐藏）。 */
+  expandIcon?: RenderIconType | null;
+  classNames?: MenuSemanticType['classNames'] & {
+    popup?: MenuPopupSemanticType['classNames'];
+    subMenu?: SubMenuSemanticType['classNames'];
+  };
+  styles?: MenuSemanticType['styles'] & {
+    popup?: MenuPopupSemanticType['styles'];
+    subMenu?: SubMenuSemanticType['styles'];
+  };
+  /** ⚠️ deprecated：用 items（children 写法仅告警）。 */
+  children?: VNodeChild;
+}

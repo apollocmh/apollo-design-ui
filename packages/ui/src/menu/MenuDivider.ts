@@ -11,6 +11,7 @@ const MenuDivider = defineComponent({
   props: {
     eventKey: { type: String, default: undefined },
     dashed: { type: Boolean, default: false },
+    overflowCls: { type: String, default: undefined },
   },
   setup(props, { attrs }) {
     const measure = useMeasure();
@@ -23,6 +24,7 @@ const MenuDivider = defineComponent({
         ...attrs,
         role: 'separator',
         class: [
+          props.overflowCls,
           `${ctx.prefixCls}-item-divider`,
           props.dashed ? `${ctx.prefixCls}-item-divider-dashed` : undefined,
           attrs.class,

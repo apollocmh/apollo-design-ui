@@ -15,11 +15,13 @@
  * semantic 的 popup/subMenu 槽后续补；inline 模式的 Overflow 恒 INVALIDATE。
  */
 
+import { EllipsisOutlined } from '@apollo-design/icons';
 import { useControlledValue } from '@apollo-design/utils';
 import {
   type ComputedRef,
   computed,
   defineComponent,
+  Fragment,
   h,
   type PropType,
   provide,
@@ -55,6 +57,7 @@ let uuid = 0;
 
 const Menu = defineComponent({
   name: 'AMenu',
+  inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
     mode: { type: String as PropType<MenuMode>, default: 'vertical' },
@@ -97,7 +100,7 @@ const Menu = defineComponent({
     'update:selectedKeys': (_keys: string[]) => true,
     'update:openKeys': (_keys: string[]) => true,
   },
-  setup(props, { emit, expose }) {
+  setup(props, { emit, expose, attrs }) {
     const prefixCls = props.prefixCls ?? 'apollo-menu';
     const menuId = props.id ?? `apollo-menu-${uuid++}`;
     const containerRef = shallowRef<HTMLElement | null>(null);
@@ -273,6 +276,7 @@ const Menu = defineComponent({
       node: ParsedNode,
       keyPath: string[],
       overflowDisabled: boolean,
+      overflowCls?: string,
     ): VNodeChild {
       const eventKey = node.key;
       const childPath = [...keyPath, eventKey];
@@ -286,7 +290,10 @@ const Menu = defineComponent({
               disabled: node.disabled,
               danger: node.danger,
               icon: node.icon,
-              title: node.title as VNodeChild,
+              title: (node.title ?? node.label) as VNodeChild,
+              labelText: typeof node.label === 'string' ? node.label : undefined,
+              overflowDisabled,
+              overflowCls,
               extra: node.extra,
               itemData: { ...node, key: eventKey } as Record<string, unknown>,
               onClick: node.onClick,
@@ -305,15 +312,20 @@ const Menu = defineComponent({
             title: (node.title ?? node.label) as VNodeChild,
             popupClassName: node.popupClassName,
             overflowDisabled,
+            overflowCls,
             childrenNodes: node.children,
           } as never);
         case 'group':
+          // ⚠️ group 的 li 本体不带 overflow-item 类（rc：Divider/Group 不消费
+          // OverflowContext）；子项经递归携带。
           return h(
             MenuItemGroup,
             { key: eventKey, eventKey, label: node.label as VNodeChild },
             {
               default: () =>
-                (node.children ?? []).map((c) => renderNode(c, childPath, overflowDisabled)),
+                (node.children ?? []).map((c) =>
+                  renderNode(c, childPath, overflowDisabled, overflowCls),
+                ),
             },
           );
         case 'divider':
@@ -332,52 +344,65 @@ const Menu = defineComponent({
       const overflowIndex = ref<number>(0);
 
       // ---- 可见子树 ----
-      const visibleList = useOverflow
-        ? [
-            h(Overflow, {
-              key: 'overflow',
-              prefixCls: `${prefixCls}-overflow`,
-              data: parsedNodes.value as unknown[],
-              itemKey: (item: unknown) => (item as ParsedNode).key,
-              maxCount,
-              onVisibleChange: (count: number) => {
-                overflowIndex.value = count;
-                const omitKeys = parsedNodes.value.slice(count + 1).map((n) => n.key);
-                refreshOverflowKeys(omitKeys);
-              },
-              renderRawItem: (item: unknown, index: number) =>
-                renderNode(item as ParsedNode, [], index > overflowIndex.value),
-              renderRest: () =>
-                h(SubMenu, {
-                  key: OVERFLOW_KEY,
-                  eventKey: OVERFLOW_KEY,
-                  title: '…',
-                  internalPopupClose: true,
-                  childrenNodes: [],
-                } as never),
-            }),
-          ]
-        : renderList();
+      // menu root 的公共 attrs（horizontal 时由 Overflow 直接渲染 root ul ——
+      // rc 的 Overflow component='ul' 同构；ul > div > li 会破坏 menu 的 DOM 语义）
+      const rootAttrs = {
+        ref: containerRef as never,
+        'data-menu-list': true,
+        role: 'menu',
+        tabindex: props.tabIndex,
+        id: props.id,
+        ...(typeof attrs.style === 'object'
+          ? { style: attrs.style as Record<string, string | number> }
+          : {}),
+        class: [
+          prefixCls,
+          `${prefixCls}-root`,
+          `${prefixCls}-${mergedMode.value}`,
+          `${prefixCls}-${props.theme}`,
+          props.inlineCollapsed ? `${prefixCls}-inline-collapsed` : undefined,
+          typeof attrs.class === 'string' ? attrs.class : undefined,
+        ],
+        onKeydown: onInternalKeyDown,
+      };
 
-      const container = h(
-        'ul',
-        {
-          ref: containerRef as never,
-          'data-menu-list': true,
-          role: 'menu',
-          tabindex: props.tabIndex,
-          id: props.id,
-          class: [
-            prefixCls,
-            `${prefixCls}-root`,
-            `${prefixCls}-${mergedMode.value}`,
-            `${prefixCls}-${props.theme}`,
-            props.inlineCollapsed ? `${prefixCls}-inline-collapsed` : undefined,
-          ],
-          onKeydown: onInternalKeyDown,
-        },
-        visibleList,
-      );
+      const container = useOverflow
+        ? h(Overflow, {
+            key: 'overflow',
+            prefixCls: `${prefixCls}-overflow`,
+            component: 'ul',
+            'data-menu-list': true,
+            role: 'menu',
+            tabindex: props.tabIndex,
+            id: props.id,
+            onKeydown: onInternalKeyDown,
+            className: rootAttrs.class,
+            ssr: 'full',
+            data: parsedNodes.value as unknown[],
+            itemKey: (item: unknown) => (item as ParsedNode).key,
+            maxCount,
+            onVisibleChange: (count: number) => {
+              overflowIndex.value = count;
+              const omitKeys = parsedNodes.value.slice(count + 1).map((n) => n.key);
+              refreshOverflowKeys(omitKeys);
+            },
+            renderRawItem: (item: unknown, index: number) =>
+              renderNode(
+                item as ParsedNode,
+                [],
+                index > overflowIndex.value,
+                `${prefixCls}-overflow-item`,
+              ),
+            renderRawRest: () =>
+              h(SubMenu, {
+                key: OVERFLOW_KEY,
+                eventKey: OVERFLOW_KEY,
+                title: h(EllipsisOutlined),
+                internalPopupClose: true,
+                childrenNodes: [],
+              } as never),
+          } as never)
+        : h('ul', rootAttrs, renderList());
 
       // ---- measure 子树（display:none，只登记路径）----
       const measureTree = h(
@@ -386,7 +411,8 @@ const Menu = defineComponent({
         renderList(),
       );
 
-      return h('div', {}, [container, h(MeasureProvider, null, () => measureTree)]);
+      // antd 的 SSR 输出是两个根（ul + measure div）—— Fragment 平铺
+      return h(Fragment, null, [container, h(MeasureProvider, null, () => measureTree)]);
     };
   },
 });

@@ -101,12 +101,22 @@ const Overflow = defineComponent({
       type: [String, Number] as PropType<'responsive' | 'invalidate' | number>,
       default: undefined,
     },
+    /** rc 的 ssr='full'：SSR/无布局环境全渲染 + rest 以 hidden 呈现。 */
+    ssr: { type: String as PropType<'full'>, default: undefined },
+    /** 容器标签（menu 传 'ul'）。 */
+    component: { type: String, default: 'div' },
+    className: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     renderRawItem: {
       type: Function as PropType<(item: unknown, index: number) => VNodeChild>,
       default: undefined,
     },
     renderRest: {
       type: [Function, String] as PropType<((omitted: unknown[]) => VNodeChild) | string>,
+      default: undefined,
+    },
+    /** raw rest：rest 节点本体（li）由调用方渲染 —— clone 注入 overflow 样式。 */
+    renderRawRest: {
+      type: Function as PropType<(omitted: unknown[]) => VNodeChild>,
       default: undefined,
     },
     onVisibleChange: {
@@ -117,7 +127,7 @@ const Overflow = defineComponent({
   emits: {
     'visible-change': (_count: number) => true,
   },
-  setup(props, { emit }) {
+  setup(props, { emit, attrs }) {
     const containerWidth = ref<number | null>(null);
     const itemWidths = ref(new Map<string | number, number>());
     const restWidth = ref(0);
@@ -125,6 +135,7 @@ const Overflow = defineComponent({
     const displayCount = ref<number | null>(null);
     const restReady = ref(false);
 
+    const fullySSR = computed(() => props.ssr === 'full');
     const isResponsive = computed(() => props.maxCount === RESPONSIVE);
     const shouldResponsive = computed(() => props.data.length > 0 && isResponsive.value);
     const invalidate = computed(() => props.maxCount === INVALIDATE);
@@ -134,10 +145,14 @@ const Overflow = defineComponent({
     const mergedData = computed(() => {
       let items = props.data;
       if (shouldResponsive.value) {
-        items = props.data.slice(
-          0,
-          Math.min(props.data.length, (containerWidth.value ?? 0) / props.itemWidth),
-        );
+        if (containerWidth.value === null && fullySSR.value) {
+          items = props.data;
+        } else {
+          items = props.data.slice(
+            0,
+            Math.min(props.data.length, (containerWidth.value ?? 0) / props.itemWidth),
+          );
+        }
       } else if (typeof props.maxCount === 'number') {
         items = props.data.slice(0, props.maxCount);
       }
@@ -160,6 +175,8 @@ const Overflow = defineComponent({
     };
 
     function registerSize(key: string | number, width: number | null): void {
+      // 同值短路：ref 回调每渲染重建 ⇒ 同值写 Map 也会触发依赖更新 ⇒ 递归
+      if (itemWidths.value.get(key) === width) return;
       const clone = new Map(itemWidths.value);
       if (width === null) {
         clone.delete(key);
@@ -195,6 +212,8 @@ const Overflow = defineComponent({
     // ---------------- 测量（jsdom / SSR：ResizeObserver 不可用 ⇒ 不测量） -------------
     let containerObserver: ResizeObserver | null = null;
     const itemObservers = new Map<string | number, ResizeObserver>();
+    /** 已连接观察的元素（ref 回调每次渲染都是新函数 —— 防重复 observe 导致递归）。 */
+    const observedEls = new Map<string | number, HTMLElement>();
     const canObserve = typeof ResizeObserver !== 'undefined';
 
     const containerRef = ref<HTMLElement | null>(null);
@@ -213,16 +232,22 @@ const Overflow = defineComponent({
       containerObserver?.disconnect();
       for (const ob of itemObservers.values()) ob.disconnect();
       itemObservers.clear();
+      observedEls.clear();
     });
 
     const observeItem = (key: string | number, el: HTMLElement | null): void => {
       if (!canObserve) return;
+      // 同 key 且同元素 ⇒ 已连接，跳过（ref 回调每渲染新建，无此守卫会递归更新）
+      if (observedEls.get(key) === el) return;
       const prev = itemObservers.get(key);
       if (prev) {
         prev.disconnect();
         itemObservers.delete(key);
       }
-      if (!el) return;
+      if (!el) {
+        observedEls.delete(key);
+        return;
+      }
       const ob = new ResizeObserver((entries) => {
         const entry = entries[0];
         if (entry) {
@@ -231,12 +256,17 @@ const Overflow = defineComponent({
       });
       ob.observe(el);
       itemObservers.set(key, ob);
+      observedEls.set(key, el);
       // 首次同步测量（RO 异步；首帧宽度已布局好）
       registerSize(key, el.offsetWidth);
     };
 
+    const mergedDisplayCount = computed(() =>
+      displayCount.value === null && fullySSR.value
+        ? Number.MAX_SAFE_INTEGER
+        : (displayCount.value ?? 0),
+    );
     const displayRest = computed(() => restReady.value && omittedItems.value.length > 0);
-    const mergedDisplayCount = computed(() => displayCount.value ?? 0);
 
     return () => {
       const itemPrefixCls = `${props.prefixCls}-item`;
@@ -295,38 +325,70 @@ const Overflow = defineComponent({
         shouldResponsive.value ||
         (typeof props.maxCount === 'number' && props.data.length > props.maxCount)
       ) {
-        const restContent =
-          typeof props.renderRest === 'function'
-            ? props.renderRest(omittedItems.value)
-            : (props.renderRest ?? `+ ${omittedItems.value.length} ...`);
-        nodes.push(
-          h(
-            'div',
-            {
-              class: `${itemPrefixCls}-rest`,
+        const restStyle = {
+          opacity: shouldResponsive.value && !displayRest.value ? 0 : 1,
+          height: shouldResponsive.value && !displayRest.value ? 0 : undefined,
+          overflowY: shouldResponsive.value && !displayRest.value ? 'hidden' : undefined,
+          pointerEvents: shouldResponsive.value && !displayRest.value ? 'none' : undefined,
+          position: shouldResponsive.value && !displayRest.value ? 'absolute' : undefined,
+          order: shouldResponsive.value
+            ? displayRest.value
+              ? mergedDisplayCount.value
+              : Number.MAX_SAFE_INTEGER
+            : undefined,
+        };
+        const restRef = (el: Element | ComponentPublicInstance | null): void => {
+          if (el && canObserve) {
+            restWidth.value = (el as HTMLElement).offsetWidth || restWidth.value;
+          }
+        };
+        if (props.renderRawRest) {
+          // raw rest：rest 本体（li）由调用方渲染 —— clone 注入 overflow 样式
+          const raw = props.renderRawRest(omittedItems.value) as VNode;
+          nodes.push(
+            cloneVNode(raw, {
               style: {
-                opacity: shouldResponsive.value && !displayRest.value ? 0 : 1,
-                height: shouldResponsive.value && !displayRest.value ? 0 : undefined,
-                overflowY: shouldResponsive.value && !displayRest.value ? 'hidden' : undefined,
-                pointerEvents: shouldResponsive.value && !displayRest.value ? 'none' : undefined,
-                position: shouldResponsive.value && !displayRest.value ? 'absolute' : undefined,
+                ...(raw.props?.style as Record<string, unknown> | undefined),
+                ...restStyle,
               },
+              class: [
+                itemPrefixCls,
+                `${itemPrefixCls}-rest`,
+                ...(Array.isArray(raw.props?.class)
+                  ? ((raw.props?.class as string[]) ?? [])
+                  : raw.props?.class
+                    ? [raw.props?.class as string]
+                    : []),
+              ],
               'aria-hidden': shouldResponsive.value && !displayRest.value ? true : undefined,
-              ref: (el) => {
-                if (el && canObserve) {
-                  restWidth.value = (el as HTMLElement).offsetWidth || restWidth.value;
-                }
+              ref: restRef,
+            } as never),
+          );
+        } else {
+          const restContent =
+            typeof props.renderRest === 'function'
+              ? props.renderRest(omittedItems.value)
+              : (props.renderRest ?? `+ ${omittedItems.value.length} ...`);
+          nodes.push(
+            h(
+              'div',
+              {
+                class: `${itemPrefixCls}-rest`,
+                style: restStyle,
+                'aria-hidden': shouldResponsive.value && !displayRest.value ? true : undefined,
+                ref: restRef,
               },
-            },
-            [restContent].filter((c) => c !== null && c !== undefined),
-          ),
-        );
+              [restContent].filter((c) => c !== null && c !== undefined),
+            ),
+          );
+        }
       }
 
       return h(
-        'div',
+        props.component,
         {
-          class: invalidate.value ? undefined : props.prefixCls,
+          ...attrs,
+          class: [!invalidate.value ? props.prefixCls : undefined, props.className],
           ref: containerRef,
         },
         nodes,

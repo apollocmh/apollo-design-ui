@@ -22,6 +22,10 @@ const MenuItem = defineComponent({
       default: undefined,
     },
     title: { type: [String, Object, Number] as PropType<VNodeChild>, default: undefined },
+    /** items 的 string label（collapsed 态 noicon 首字符用；rc 的 label 判定）。 */
+    labelText: { type: String, default: undefined },
+    overflowDisabled: { type: Boolean, default: undefined },
+    overflowCls: { type: String, default: undefined },
     extra: { type: [Object, String, Number] as PropType<VNodeChild>, default: undefined },
     itemData: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     onMouseEnter: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
@@ -95,7 +99,12 @@ const MenuItem = defineComponent({
       };
 
       const mergedItemIcon = props.icon ?? ctx.itemIcon;
-      // collapsed 态的 Tooltip 集成由 Menu 层经 items 数据直接包装（v1）；
+      // rc renderItemChildren：折叠态 + firstLevel + 无 icon + 字符串 label ⇒
+      // 渲染首字符的 {p}-inline-collapsed-noicon 块
+      const collapsedNoIcon =
+        ctx.inlineCollapsed && ctx.firstLevel && !props.icon && props.labelText
+          ? props.labelText.charAt(0)
+          : null;
 
       return h(
         'li',
@@ -104,7 +113,10 @@ const MenuItem = defineComponent({
           role: 'menuitem',
           // rc：tabIndex disabled? null : -1（roving tabindex 的 -1 基线）
           tabindex: mergedDisabled.value ? undefined : -1,
-          'data-menu-id': ctx.overflowDisabled ? undefined : getMenuId(ctx.menuId, eventKey),
+          'data-menu-id':
+            (props.overflowDisabled ?? ctx.overflowDisabled)
+              ? undefined
+              : getMenuId(ctx.menuId, eventKey),
           'aria-disabled': props.disabled ? true : undefined,
           class: [
             itemCls,
@@ -112,6 +124,8 @@ const MenuItem = defineComponent({
             isSelected.value ? `${itemCls}-selected` : undefined,
             mergedDisabled.value ? `${itemCls}-disabled` : undefined,
             props.danger ? `${itemCls}-danger` : undefined,
+            !mergedItemIcon ? `${itemCls}-only-child` : undefined,
+            props.overflowCls,
           ],
           style: attrs.style as Record<string, string | number> | undefined,
           onClick: onInternalClick,
@@ -120,25 +134,27 @@ const MenuItem = defineComponent({
           onMouseenter: onInternalMouseEnter,
           onMouseleave: onInternalMouseLeave,
         },
-        [
-          h('span', { class: `${ctx.prefixCls}-title-content` }, [
-            children,
-            props.extra !== undefined && props.extra !== null
-              ? h('span', { class: `${ctx.prefixCls}-item-extra` }, props.extra)
-              : null,
-          ]),
-          mergedItemIcon
-            ? h(
-                'span',
-                { class: `${ctx.prefixCls}-item-icon` },
-                typeof mergedItemIcon === 'function'
-                  ? [mergedItemIcon({ isSelected: isSelected.value })].filter(
-                      (c) => c !== null && c !== undefined,
-                    )
-                  : [mergedItemIcon].filter((c) => c !== null && c !== undefined),
-              )
-            : null,
-        ].filter((n) => n !== null),
+        collapsedNoIcon !== null
+          ? [h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, collapsedNoIcon)]
+          : [
+              h('span', { class: `${ctx.prefixCls}-title-content` }, [
+                children,
+                props.extra !== undefined && props.extra !== null
+                  ? h('span', { class: `${ctx.prefixCls}-item-extra` }, props.extra)
+                  : null,
+              ]),
+              mergedItemIcon
+                ? h(
+                    'span',
+                    { class: `${ctx.prefixCls}-item-icon` },
+                    typeof mergedItemIcon === 'function'
+                      ? [mergedItemIcon({ isSelected: isSelected.value })].filter(
+                          (c) => c !== null && c !== undefined,
+                        )
+                      : [mergedItemIcon].filter((c) => c !== null && c !== undefined),
+                  )
+                : null,
+            ].filter((n) => n !== null),
       );
     };
   },

@@ -47,6 +47,7 @@ import { genInputStyle } from '../input/style';
 import { genInputNumberStyle } from '../input-number/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genListyStyle } from '../listy/style';
+import { genMenuStyle } from '../menu/style';
 import { genPopoverStyle } from '../popover/style';
 import { genQrCodeStyle } from '../qr-code/style';
 import { genRadioStyle } from '../radio/style';
@@ -118,6 +119,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'upload', gen: genUploadStyle },
   { name: 'tooltip', gen: genTooltipStyle },
   { name: 'popover', gen: genPopoverStyle },
+  { name: 'menu', gen: genMenuStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

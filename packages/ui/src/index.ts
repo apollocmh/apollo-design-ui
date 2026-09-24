@@ -791,6 +791,23 @@ export type {
 export { Listy } from './listy';
 export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/style';
 export type {
+  ItemType,
+  MenuDividerType,
+  MenuInfo,
+  MenuItemGroupType,
+  MenuItemType,
+  MenuMode,
+  MenuProps,
+  MenuRef,
+  MenuTheme,
+  SelectInfo,
+  SubMenuType,
+} from './menu';
+export { Menu, MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from './menu';
+export { genMenuStyle, genMenuTokenDecls } from './menu/style';
+export type { ComponentToken as MenuComponentToken } from './menu/style/token';
+export { prepareComponentToken as prepareMenuComponentToken } from './menu/style/token';
+export type {
   PopoverClassNames,
   PopoverProps,
   PopoverRef,

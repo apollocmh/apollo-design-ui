@@ -99,6 +99,8 @@ const VENDOR_PREFIXED_TRANSFORM = /^-(?:ms|webkit|moz|o)-transform$/;
  */
 const ID_REF_ATTRS = new Set([
   'aria-activedescendant',
+  // menu 的元素级 id（{uuid}-{key}，uuid 两侧不同 ⇒ 归一为 token；menu DOM 契约）
+  'data-menu-id',
   'aria-controls',
   'aria-describedby',
   'aria-details',
@@ -221,6 +223,12 @@ function collectIds(roots: readonly Element[]): Map<string, string> {
     const id = el.getAttribute('id');
     if (id !== null && id !== '' && !table.has(id)) {
       table.set(id, `{i${table.size}}`);
+    }
+    // menu 的 data-menu-id（{uuid}-{key}）：uuid 两侧不同 ⇒ 按文档序归一为 token。
+    // keyPath 语义（同一 key 在两树的映射序一致）由「对称归一」保证。
+    const menuId = el.getAttribute('data-menu-id');
+    if (menuId !== null && menuId !== '' && !table.has(menuId)) {
+      table.set(menuId, `{i${table.size}}`);
     }
     for (const child of Array.from(el.children)) walk(child);
   };

@@ -14,8 +14,10 @@ import {
   defineComponent,
   h,
   inject,
+  isVNode,
   type PropType,
   provide,
+  Teleport,
   type VNode,
   type VNodeChild,
 } from 'vue';
@@ -46,6 +48,7 @@ const SubMenu = defineComponent({
     },
     popupClassName: { type: String, default: undefined },
     overflowDisabled: { type: Boolean, default: false },
+    overflowCls: { type: String, default: undefined },
     internalPopupClose: { type: Boolean, default: false },
     /** items 模式：子节点由 Menu 解析后经 props 下发（Vue 无 cloneElement）。 */
     childrenNodes: { type: Array as PropType<ParsedNode[]>, default: () => [] },
@@ -160,6 +163,7 @@ const SubMenu = defineComponent({
         {
           class: `${subMenuPrefixCls}-title`,
           role: 'menuitem',
+          'data-menu-id': props.overflowDisabled ? undefined : getMenuId(ctx.menuId, eventKey),
           tabindex: mergedDisabled.value ? undefined : -1,
           'aria-expanded': open.value,
           'aria-haspopup': true,
@@ -170,33 +174,47 @@ const SubMenu = defineComponent({
           onMouseleave: onTitleMouseLeave,
         },
         [
-          h(
-            'span',
-            { class: `${ctx.prefixCls}-title-content` },
-            [props.title].filter((c) => c !== null && c !== undefined),
-          ),
-          h('span', { class: `${subMenuPrefixCls}-expand-icon` }),
+          // antd SubMenu titleNode 的三分支：折叠+根级+string ⇒ noicon 首字符；
+          // title 是元素（VNode，如 overflowedIndicator 的 icon）⇒ 直接渲染；
+          // 其余 string ⇒ title-content 包裹。
+          ctx.inlineCollapsed && !props.icon && typeof props.title === 'string'
+            ? h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, props.title.charAt(0))
+            : isVNode(props.title)
+              ? props.title
+              : h(
+                  'span',
+                  { class: `${ctx.prefixCls}-title-content` },
+                  [props.title].filter((c) => c !== null && c !== undefined),
+                ),
+          h('i', { class: `${subMenuPrefixCls}-arrow` }),
         ],
       );
 
+      // popup 走 portal（rc PopupTrigger 的 Trigger 语义）：浮层 DOM 不进 menu 的
+      // ul 子树 —— DOM 契约里 popup 不可见（与 antd SSR 一致）。
       const popupNode =
         !isInline && open.value
           ? h(
-              'div',
-              {
-                class: [`${subMenuPrefixCls}-popup`, props.popupClassName],
-                onMouseenter: onPopupMouseEnter,
-                onMouseleave: onPopupMouseLeave,
-              },
+              Teleport,
+              { to: 'body' },
               h(
-                'ul',
+                'div',
                 {
-                  id: popupId,
-                  class: [ctx.prefixCls, `${ctx.prefixCls}-sub`],
-                  role: 'menu',
-                  'data-menu-list': true,
+                  class: [`${subMenuPrefixCls}-popup`, props.popupClassName],
+                  onMouseenter: onPopupMouseEnter,
+                  onMouseleave: onPopupMouseLeave,
+                  style: { position: 'absolute', visibility: 'hidden' } as Record<string, string>,
                 },
-                renderChildren(),
+                h(
+                  'ul',
+                  {
+                    id: popupId,
+                    class: [ctx.prefixCls, `${ctx.prefixCls}-sub`],
+                    role: 'menu',
+                    'data-menu-list': true,
+                  },
+                  renderChildren(),
+                ),
               ),
             )
           : null;
@@ -220,8 +238,8 @@ const SubMenu = defineComponent({
         {
           ...attrs,
           role: 'none',
-          'data-menu-id': ctx.overflowDisabled ? undefined : getMenuId(ctx.menuId, eventKey),
           class: [
+            props.overflowCls,
             subMenuPrefixCls,
             `${subMenuPrefixCls}-${mode}`,
             open.value ? `${subMenuPrefixCls}-open` : undefined,

@@ -33,6 +33,7 @@ export type {
   MenuItemType,
   MenuMode,
   MenuPopupSemanticType,
+  MenuProps,
   MenuRef,
   MenuSemanticType,
   MenuTheme,
@@ -41,5 +42,8 @@ export type {
   SubMenuType,
   TriggerSubMenuAction,
 } from './interface';
+export { genMenuStyle, genMenuTokenDecls } from './style';
+export type { ComponentToken as MenuComponentToken } from './style/token';
+export { prepareComponentToken as prepareMenuComponentToken } from './style/token';
 
 export default Menu;
