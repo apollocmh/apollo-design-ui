@@ -342,6 +342,19 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  menu: {
+    // 4 个 variant × 3 个 viewport = 12 张
+    // 全部静态帧（selectedKeys/openKeys 受控）；horizontal 走真浏览器 RO 测量。
+    variants: [
+      'vertical', // 垂直 + 展开 submenu
+      'inline', // 内嵌展开
+      'dark', // 暗色主题
+      // ⚠️ horizontal PENDING（PENDING-1）：Overflow 的 RO 测量时序存在
+      //    hidden 中间态冻结（displayCount 早退后 absolute 元素的 RO 不再
+      //    触发 ⇒ 无法收敛）—— DOM 结构由 L4 menu:horizontal 钉住，几何
+      //    待 Overflow 时序精调后回归（与 picker 的 PENDING 同模式）。
+    ],
+  },
   popover: {
     // 2 个 variant × 3 个 viewport = 6 张
     // open 受控静态帧 + placement=bottom + autoAdjustOverflow=false 钉死落点

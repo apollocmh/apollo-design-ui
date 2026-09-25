@@ -244,7 +244,7 @@ const Overflow = defineComponent({
         prev.disconnect();
         itemObservers.delete(key);
       }
-      if (!el) {
+      if (!(el instanceof HTMLElement)) {
         observedEls.delete(key);
         return;
       }

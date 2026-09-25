@@ -374,6 +374,11 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D85 | `popover` | `data-popover-inject` attr（React 注入标记） | 不渲染（Vue 无对应注入语义；Tooltip 的 context 消费由 config 逃生口承担） | INTENDED | L4 契约无该 attr |
 | D86 | `popover`（PurePanel） | `style` 经 `{...props}` 摊进 rc Popup ⇒ 在 **root 与 container 双落点**（覆盖 styles.container） | 逐字对齐该事实契约（root 与 container 都应用 props.style） | UPSTREAM（事实契约） | L6 purePanel 钉住（缺 container 落点时高 16px）；rc Popup 源码 `style: {...styles?.container, ...style}` |
 
+| D87 | `menu` | flushSync 强制同步批选择更新 | Vue 响应式同步即等价（D72/D77 同判） | PLATFORM | L1 选择用例 |
+| D88 | `menu` | rc-overflow 的 RO 测量时序（ResizeObserver 异步首帧） | jsdom/SSR：无 RO ⇒ 不测量 ⇒ responsive 渲染空；真浏览器 measure 后收敛 | PLATFORM | L4 menu:horizontal（SSR 形态）；L6 horizontal PENDING-1 |
+| D89 | `menu` | children 写法（cloneElement 注入 eventKey） | v1 items 为唯一真源（antd 6 推荐 API，children 已 deprecated）；children slot 支持 PENDING | INTENDED | L1 items 解析用例 |
+| D90 | `menu`（keyPath 口径） | keyPath = [...connectedKeys].**reverse()**（antd 注释 legacy reversed —— 子项是 ['3','sub1'] 而非 ['sub1','3']） | 逐字对齐 reverse 口径 | UPSTREAM（事实契约） | L1 keyPath 用例钉住 |
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

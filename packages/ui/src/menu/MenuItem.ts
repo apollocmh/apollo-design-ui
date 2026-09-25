@@ -106,6 +106,18 @@ const MenuItem = defineComponent({
           ? props.labelText.charAt(0)
           : null;
 
+      const __dbgStyle = {
+        ...(ctx.mode.value === 'inline'
+          ? { paddingLeft: `${connectedKeys.length * ctx.inlineIndent}px` }
+          : {}),
+        ...(attrs.style as Record<string, string | number> | undefined),
+      };
+      console.log(
+        '[mi-style]',
+        JSON.stringify(__dbgStyle),
+        'attrsKeys:',
+        Object.keys(attrs).join(','),
+      );
       return h(
         'li',
         {
@@ -127,7 +139,14 @@ const MenuItem = defineComponent({
             !mergedItemIcon ? `${itemCls}-only-child` : undefined,
             props.overflowCls,
           ],
-          style: attrs.style as Record<string, string | number> | undefined,
+          style: {
+            // rc useDirectionStyle：inline 模式的缩进（level × inlineIndent，内联；
+            // ⚠️ Vue 的 style 值必须是带单位字符串 —— 数字会被静默丢弃）
+            ...(ctx.mode.value === 'inline'
+              ? { paddingLeft: `${connectedKeys.length * ctx.inlineIndent}px` }
+              : {}),
+            ...(attrs.style as Record<string, string | number> | undefined),
+          },
           onClick: onInternalClick,
           onKeydown: onInternalKeyDown,
           onFocus: onInternalFocus,

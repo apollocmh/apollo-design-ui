@@ -161,6 +161,11 @@ const SubMenu = defineComponent({
       const titleNode = h(
         'div',
         {
+          // rc useDirectionStyle：仅 inline 模式缩进（vertical 的弹出子菜单无内联缩进）
+          style:
+            ctx.mode.value === 'inline'
+              ? { paddingLeft: `${connectedPath.value.length * ctx.inlineIndent}px` }
+              : undefined,
           class: `${subMenuPrefixCls}-title`,
           role: 'menuitem',
           'data-menu-id': props.overflowDisabled ? undefined : getMenuId(ctx.menuId, eventKey),

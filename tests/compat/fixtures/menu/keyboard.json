@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "menu/keyboard",
+  "component": "menu",
+  "description": "键盘导航：roving tabindex（全部 -1 基线 + active 焦点）、ArrowUp/Down/Left/Right/Home/End 键位矩阵（inline/horizontal/vertical × root/Sub × rtl）、Enter 触发选择（legacy 通道）、Esc 关子菜单。",
+  "antdVersion": "6.6.4",
+  "props": { "mode": "inline" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

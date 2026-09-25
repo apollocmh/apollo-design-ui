@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "menu/horizontal",
+  "component": "menu",
+  "description": "水平菜单：Overflow 溢出折叠基建（ssr=full 全渲染 + rest 隐藏 li，renderRawRest 的 overflowedIndicator=EllipsisOutlined）；per-item overflowDisabled（折叠区无 data-menu-id）。",
+  "antdVersion": "6.6.4",
+  "props": { "mode": "horizontal" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

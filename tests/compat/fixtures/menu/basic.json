@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "menu/basic",
+  "component": "menu",
+  "description": "垂直菜单：items 数据解析（item/divider/group/submenu）、selectedKeys 选中类、data-menu-id={uuid}-{key}、measure 双渲染（可见 ul + 隐藏登记 div）。submenu 的 data-menu-id 落 title div。",
+  "antdVersion": "6.6.4",
+  "props": { "mode": "vertical", "defaultOpenKeys": ["sub1"] },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["click", "select", "update:selectedKeys"] }
+}
