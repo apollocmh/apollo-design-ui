@@ -72,10 +72,14 @@
         "dependencies",
         "blockedBy",
         "apiStatus",
+        "antdApiStatus",
+        "compatStatus",
         "typeStatus",
         "tokenStatus",
         "styleStatus",
-        "testStatus",
+        "unitStatus",
+        "interactionStatus",
+        "a11yStatus",
         "visualStatus",
         "docsStatus"
       ],
@@ -202,6 +206,12 @@
         "apiStatus": {
           "$ref": "#/definitions/DimensionStatus"
         },
+        "antdApiStatus": {
+          "$ref": "#/definitions/DimensionStatus"
+        },
+        "compatStatus": {
+          "$ref": "#/definitions/DimensionStatus"
+        },
         "typeStatus": {
           "$ref": "#/definitions/DimensionStatus"
         },
@@ -211,7 +221,13 @@
         "styleStatus": {
           "$ref": "#/definitions/DimensionStatus"
         },
-        "testStatus": {
+        "unitStatus": {
+          "$ref": "#/definitions/DimensionStatus"
+        },
+        "interactionStatus": {
+          "$ref": "#/definitions/DimensionStatus"
+        },
+        "a11yStatus": {
           "$ref": "#/definitions/DimensionStatus"
         },
         "visualStatus": {
@@ -222,6 +238,10 @@
         },
         "notes": {
           "type": ["string", "null"]
+        },
+        "layerNotes": {
+          "type": ["string", "null"],
+          "description": "分层证据（L4 基线用例数 / L6 张数等）。与 notes 一样是 Agent 写的，生成器跨运行保留"
         }
       }
     },

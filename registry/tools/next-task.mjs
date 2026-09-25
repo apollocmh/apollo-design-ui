@@ -80,6 +80,16 @@ function readJson(name) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
+/**
+ * 组件的维度清单（11 项：antdApi / api / compat / token / style / unit / interaction /
+ * type / a11y / visual / docs）—— 唯一来源是 `registry/schema.json` 的
+ * `Component.required`。工具与文档都不再各写一份。
+ */
+function componentDimensions() {
+  const schema = readJson('schema.json');
+  return schema.definitions.Component.required.filter((k) => k.endsWith('Status'));
+}
+
 const componentsDoc = readJson('components.json');
 // 注意：foundation 包的信息现在读 registry/foundation.json（见下方 --foundation 分支），
 // 不再需要 dependencies.json —— 那里只有包的静态定义，没有进度。
@@ -119,16 +129,12 @@ if (args.component) {
   console.log(`blockedBy   ${c.blockedBy.join(', ') || '（无）'}`);
   console.log(`blockers    ${c.blockers.length ? JSON.stringify(c.blockers, null, 2) : '（无）'}`);
   console.log('\n各维度状态:');
-  for (const f of [
-    'apiStatus',
-    'typeStatus',
-    'tokenStatus',
-    'styleStatus',
-    'testStatus',
-    'visualStatus',
-    'docsStatus',
-  ]) {
-    console.log(`  ${f.padEnd(14)} ${c[f]}`);
+  // ⚠️ 维度清单**从 schema 读**，不在这里手写第二份：2026-09-25 发现工具里硬编码的
+  // 7 项（含根本不存在的 `testStatus`）与 registry 数据的 11 项已经不一致了很久
+  // —— 三方（数据 / schema / 工具）各写一份必然漂移。判据：schema 的
+  // `Component.required` 里以 `Status` 结尾的键就是全部维度。
+  for (const f of componentDimensions()) {
+    console.log(`  ${f.padEnd(16)} ${c[f] ?? '（缺失）'}`);
   }
   if (c.notes) console.log(`\n备注: ${c.notes}`);
   process.exit(0);
