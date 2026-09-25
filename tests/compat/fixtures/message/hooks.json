@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "message/hooks",
+  "component": "message",
+  "description": "hooks 形态：`message.useMessage(config)` 返回 [MessageInstance, contextHolder]，走**组件树**（不是模块级单例）⇒ 能消费 ConfigProvider 的 context。配置支持 getter（本仓扩展）：stack / classNames / styles 等改动实时生效（`stack` demo 依赖它）。",
+  "antdVersion": "6.6.4",
+  "props": { "duration": 0 },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

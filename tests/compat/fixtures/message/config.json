@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "message/config",
+  "component": "message",
+  "description": "全局配置（`message.config`，**合并**语义）：top（number ⇒ 写成 `--notification-top`）/ duration / maxCount（超出保留**最后** N 条）/ rtl（列表根加 {p}-rtl）/ prefixCls（连动 notice 类名与动效名 {prefixCls}-fade）/ getContainer（portal 目标，在调用 config 时求值一次并缓存）/ stack（堆叠折叠，默认 false；threshold 默认 3）/ pauseOnHover（默认 true）。",
+  "antdVersion": "6.6.4",
+  "props": { "top": 100, "maxCount": 2, "rtl": true },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "message/static-methods",
+  "component": "message",
+  "description": "命令式 API：五条类型方法 + open + destroy。notice 结构 = {p}-message-notice（role=alert / data-notification-index / --notification-index）> -notice-wrapper（有 icon 才包）> -notice-icon + -notice-title；⚠️ message 恒 closable=false ⇒ **没有**关闭按钮；className 叠加 {p}-notice-{type}，wrapper 叠加 {p}-{type}，icon 叠加 {p}-notice-icon-{type}。返回的 MessageType 可调用（关闭）且 thenable（**自然关闭**才 resolve true）。命令式路径整体走 portal（getContainer 默认 document.body）⇒ SSR 不可见。",
+  "antdVersion": "6.6.4",
+  "props": { "type": "success", "content": "Hello" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}
