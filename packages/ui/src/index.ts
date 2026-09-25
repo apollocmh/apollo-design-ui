@@ -835,6 +835,26 @@ export { genMenuStyle, genMenuTokenDecls } from './menu/style';
 export type { ComponentToken as MenuComponentToken } from './menu/style/token';
 export { prepareComponentToken as prepareMenuComponentToken } from './menu/style/token';
 export type {
+  ArgsProps as MessageArgsProps,
+  ConfigOptions as MessageConfigOptions,
+  JointContent as MessageJointContent,
+  MessageInstance,
+  MessageSemanticType,
+  MessageType,
+  NoticeType as MessageNoticeType,
+  TypeOpen as MessageTypeOpen,
+} from './message';
+// ---------------------------------------------------------------------------
+// Message —— 全局提示（命令式 API：`message.success(...)`）
+//
+// ⚠️ 导出名是**小写** `message`（与 antd 一致）—— 它是「方法集合」而不是组件，
+//    没有 `<Message />` 这种用法（`_InternalPanel*` 是私有面板，仅供文档/调试）。
+// ---------------------------------------------------------------------------
+export { default as message } from './message';
+export { genMessageStyle, genMessageTokenDecls } from './message/style';
+export type { ComponentToken as MessageComponentToken } from './message/style/token';
+export { prepareComponentToken as prepareMessageComponentToken } from './message/style/token';
+export type {
   PopoverClassNames,
   PopoverProps,
   PopoverRef,
