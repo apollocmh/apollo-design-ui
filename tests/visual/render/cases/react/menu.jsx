@@ -12,10 +12,14 @@ const items = [
   { key: '1', label: 'One' },
   { key: '2', label: 'Two' },
   { type: 'divider', key: 'd1' },
-  { key: 'sub1', label: 'Sub', children: [
-    { key: '3', label: 'Three' },
-    { key: '4', label: 'Four' },
-  ] },
+  {
+    key: 'sub1',
+    label: 'Sub',
+    children: [
+      { key: '3', label: 'Three' },
+      { key: '4', label: 'Four' },
+    ],
+  },
   { type: 'group', key: 'g1', label: 'Group', children: [{ key: '5', label: 'Five' }] },
 ];
 
@@ -60,12 +64,5 @@ export default {
     ),
 
   horizontal: () =>
-    box(
-      <Menu
-        items={items}
-        mode="horizontal"
-        selectedKeys={['1']}
-        style={{ width: 400 }}
-      />,
-    ),
+    box(<Menu items={items} mode="horizontal" selectedKeys={['1']} style={{ width: 400 }} />),
 };
