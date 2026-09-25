@@ -304,6 +304,27 @@ if (missingFixtures === 0) ok('E9', 'completed 组件均有 compat fixture');
 // ---------------------------------------------------------------------------
 // E10  无硬编码视觉值（仅扫描已实现的组件）
 // ---------------------------------------------------------------------------
+/**
+ * 逐字豁免的「antd 硬编码色」清单 —— 判据是**上游自己就是字面量**（或字面量 + alpha 运算），
+ * 本仓没有对应 token：凭空造 token 会与 antd 的 Component Token 组分叉（E12 判不一致），
+ * 换 token 也会改变产物（与上游分叉）。
+ *
+ * ⚠️ 这**不是**「所有 rgba 都放行」—— 只列具体色值，新组件要加必须逐条给出上游出处。
+ *
+ * - `rgba(255, 255, 255, α)`：纯白 + alpha 的遮罩色（layout sider 的 hover::after，
+ *   antd 逐字；2026-09-22 登记）。
+ * - `rgba(0, 0, 0, 0.1 | 0.2)`：image 预览操作按钮底色 —— antd 由 `colorBgMask` 派生
+ *   （`FastColor(colorBgMask).setA(0.1 / 0.2)`）；静态 CSS 无法在规则里做 alpha 运算，
+ *   产物只能是字面量（与上游产物逐字相同；2026-09-25 登记）。
+ * - `rgba(0, 0, 0, 0.3)`：image 的 cover 底色 —— 上游写的是 `FastColor('#000').setA(0.3)`
+ *   （`genImageCoverStyle`；2026-09-25 登记）。
+ * - 进度墨层 / 进度条的 8 个渐变端点色：antd `genImageProgressStyle` 与
+ *   `style/progressAnimation.js` 里就是字面量（AI 生成进度的装饰色，与主题无关；
+ *   2026-09-25 登记）。
+ */
+const ANTD_LITERAL_COLOR_SKIP =
+  /rgba\(255,\s*255,\s*255,\s*[\d.]+\)|rgba\(0,\s*0,\s*0,\s*0\.[123]\)|rgba\((?:100,\s*180,\s*255,\s*0\.98|180,\s*140,\s*255,\s*0\.95|100,\s*220,\s*220,\s*0\.9|255,\s*150,\s*200,\s*0\.88|160,\s*190,\s*255,\s*0\.88|120,\s*170,\s*255,\s*0\.85|160,\s*150,\s*245,\s*0\.85|130,\s*200,\s*220,\s*0\.85)\)/;
+
 const HARDCODED_PATTERNS = [
   // 2026-09-22 豁免 `linear-gradient(#fff 0 0)`：border-beam 的 mask 抠边用白色
   // 做遮罩形状（antd 逐字）—— 它是「全不透明遮罩」的技术常量，与主题无关，
@@ -318,7 +339,8 @@ const HARDCODED_PATTERNS = [
   //    antd 逐字 `rgba(255, 255, 255, 0.2)`）：它是「叠一层半透明白」的技术常量，
   //    语义等价于 `colorWhite` + alpha，而本仓没有「带 alpha 的白色」token ——
   //    换 token 会改变产物（与上游分叉）。与 border-beam 的 `#fff 0 0)` 豁免同理。
-  { re: /\brgba?\(/, what: 'rgb/rgba 颜色', skip: /rgba\(255,\s*255,\s*255,\s*[\d.]+\)/ },
+  // 2026-09-25 把豁免清单提成 `ANTD_LITERAL_COLOR_SKIP`（见上方注释），加 image 的四类。
+  { re: /\brgba?\(/, what: 'rgb/rgba 颜色', skip: ANTD_LITERAL_COLOR_SKIP },
   { re: /\bhsla?\(/, what: 'hsl/hsla 颜色' },
   // 模板字符串里的 `border-radius:${v('xxx')}` 在源码里以 `$` 开头（不是 `var(`），
   // 但运行时展开就是 `var(--apollo-xxx)` / `var(--ant-xxx)` —— 与 `var()` 同源。
@@ -351,8 +373,11 @@ const HARDCODED_PATTERNS = [
   // 2026-09-24 补 min(：tooltip 的左右形态圆角是
   // `border-radius:min(var(--apollo-border-radius),var(--apollo-tooltip-max-vertical-content-radius))`
   // —— 两个 token 的 min() 运算（antd 的 Math.min(borderRadius, 8) 同构），不是硬编码设计值。
+  // 2026-09-25 补 `100px`：image 预览工具栏的 pill 圆角 —— 上游写的是 `borderRadius: 100`
+  // （字面量，不是 token），产物即 `border-radius:100px`；本仓没有「pill 圆角」token，
+  // 换成 `border-radius-lg`(8px) 会与上游产物分叉（视觉上圆角会消失）。
   {
-    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|0(?![\d.])))/,
+    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|100px\b|0(?![\d.])))/,
     what: '硬编码圆角',
   },
   // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游

@@ -307,6 +307,50 @@ function checkCssArtifact(dir, name) {
 }
 
 /**
+ * B11：CSS 产物里不得出现「转换漏网」的痕迹（`NaN` / `Infinity` / `undefined` / `${`）。
+ *
+ * 为什么需要它：本仓的组件样式是**构建期**从 antd 产物机械转换来的（`style/index.ts` 里
+ * 大量字面量 + `var()`），一旦某个值来自「应该算但没算」的表达式（最典型的是 antd 的
+ * `borderRadiusXS / 2` 被原样搬进 CSS 字符串 ⇒ `border-radius:NaNpx`），浏览器会**静默丢弃
+ * 那条声明**：不报错、类型检查也看不见，只有像素比对能发现（2026-09-25 image 实测）。
+ * `${` 同理 —— 它是模板占位没被展开的痕迹（生成器/手写字符串里的漏网）。
+ *
+ * ⚠️ 扫描前要剥掉 `url(...)` 与引号内的字符串：data-URI 的 base64 里**可能**恰好出现
+ * `NaN` 这种子串（`placeholder` 的内联 SVG 就是 base64），那是假阳性。
+ */
+function checkCssSanity(dir, name) {
+  const cssFiles = walk(path.join(dir, 'dist')).filter((f) => f.endsWith('.css'));
+  if (!cssFiles.length) {
+    add(name, 'B11', 'n/a', '没有 CSS 产物，无需扫描');
+    return;
+  }
+  const hits = [];
+  for (const f of cssFiles) {
+    const stripped = fs
+      .readFileSync(f, 'utf8')
+      .replace(/url\([^)]*\)/g, 'url()')
+      .replace(/'[^']*'/g, "''")
+      .replace(/"[^"]*"/g, '""');
+    for (const m of stripped.matchAll(/\$\{|(?:NaN|Infinity)[a-z%]*|\bundefined\b/g)) {
+      const at = Math.max(0, m.index - 40);
+      hits.push(
+        `${path.relative(ROOT, f)}: …${stripped.slice(at, m.index + 24).replace(/\n/g, ' ')}`,
+      );
+    }
+  }
+  if (hits.length) {
+    add(
+      name,
+      'B11',
+      'FAIL',
+      `CSS 里有转换漏网（${hits.length} 处）: ${hits.slice(0, 3).join(' | ')}`,
+    );
+    return;
+  }
+  add(name, 'B11', 'PASS', `${cssFiles.length} 份 CSS 产物无 NaN / undefined / 未展开占位`);
+}
+
+/**
  * B7：默认主题在无 JS 环境下可用。
  *
  * 不启浏览器（那是 L6 的事）。这里做的是**静态一致性**：解析 CSS 里 `:root` 块声明的
@@ -582,12 +626,15 @@ async function markPending(name, dir) {
       // ui 消费 token，校验「引用的变量真的存在」
       checkUiCssTokens(dir, name);
     }
+    checkCssSanity(dir, name);
   } else if (css) {
     add(name, 'B5', 'PENDING', '本包应当产出 CSS，但组件样式尚未落地');
     add(name, 'B7', 'PENDING', '依赖 B5 的 CSS 产物');
+    add(name, 'B11', 'PENDING', '依赖 B5 的 CSS 产物');
   } else {
     add(name, 'B5', 'n/a', '本包不产出 CSS（见 scaffold 的 notDo）');
     add(name, 'B7', 'n/a', '本包不产出 CSS，无主题产物可校验');
+    add(name, 'B11', 'n/a', '本包不产出 CSS，无产物可扫描');
   }
 
   if (comp) {
