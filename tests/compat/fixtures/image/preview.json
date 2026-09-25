@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "image/preview",
+  "component": "image",
+  "description": "预览浮层（portal 到 body，SSR 不可见，L1/L5/L6 承担）：{p}-preview > mask（preview.mask=false ⇒ {p}-preview-mask-hidden；blur 形态加 -mask-blur）+ body > img + footer（actions 工具栏 + 组内计数）+ close + 组内 prev/next。受控 open 走 preview.open（deprecated preview.visible 等价）⇒ onOpenChange(open, prev) 与 update:open 同时发出。⚠️ 组件变量声明块必须覆盖 {p}-preview 根（浮层不在 {p} 子树内），否则关闭按钮 font-size 由 18px 回退成继承的 16px，见 D95。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+    "width": 96,
+    "height": 96,
+    "preview": { "open": true, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" }
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["update:open"] }
+}

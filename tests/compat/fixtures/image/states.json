@@ -1,0 +1,13 @@
+{
+  "$schema": "../schema.json",
+  "id": "image/states",
+  "component": "image",
+  "description": "状态与占位形态：preview=false ⇒ 无 role/tabindex/aria-label 且不挂 cover；cover=false ⇒ 不渲染 {p}-cover（见 cover-false 用例）；placeholder=true ⇒ 仅 loading 时渲染 {p}-placeholder（aria-hidden=true）；placeholder={ progress: { percent } } ⇒ 只渲染 Progress 层（{p}-progress-wrapper，带 width/height；有 percent ⇒ role=progressbar + aria-valuenow 四舍五入夹取 0–100；无 percent ⇒ role=status + aria-busy=true 的 Loading）；加载失败 ⇒ fallback 换 src。",
+  "antdVersion": "6.6.4",
+  "props": { "preview": false, "width": 96 },
+  "variants": {
+    "placeholder": [true, { "progress": { "percent": 50 } }, { "progress": true }]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

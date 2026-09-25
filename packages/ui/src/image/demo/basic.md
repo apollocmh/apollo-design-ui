@@ -1,17 +1,7 @@
----
-order: 0
-title:
-  zh-CN: 基本
-  en-US: Basic
----
+## zh-CN
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/image/demo/ 抄清单 -->
-```vue
-<script setup lang="ts">
-import { Image } from '@apollo-design/ui';
-</script>
+基本用法（点击可预览）。
 
-<template>
-  <Image>basic demo 占位</Image>
-</template>
-```
+## en-US
+
+Basic usage (click to preview).

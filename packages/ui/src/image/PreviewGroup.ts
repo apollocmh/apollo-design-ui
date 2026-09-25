@@ -6,7 +6,6 @@
  * `items` 优先，其次用注册收集到的 Image。
  */
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
-import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import {
   createImageRegistry,
@@ -119,27 +118,34 @@ const PreviewGroup = defineComponent({
       previewConfig.value?.onVisibleChange?.(next, isPreviewOpen.value, current.value);
     };
 
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      PreviewGroupProps,
-      SemanticClassNames,
-      SemanticStyles
-    >(
-      [
-        () => props.classNames,
-        () =>
-          ({
-            popup: {
-              root: previewConfig.value?.rootClassName,
-              mask: previewConfig.value?.maskClassName,
-            },
-            cover: previewConfig.value?.maskClassName,
-          }) as SemanticClassNames,
-      ],
-      [() => props.styles],
-      {} as PreviewGroupProps,
-    );
-
     const currentItem = computed(() => mergedItems.value[current.value]);
+
+    // ⚠️ 这里**不能**用 `useMergeSemantic`：popup 是嵌套语义组，而本仓库的
+    // useMergeSemantic 尚未实现 antd 的 `schema` 分支（见其文件头「没有证明什么」），
+    // `clsx` 会把 popup 的对象值压成 ''。所以 popup 单独手算。
+    // 另：antd 的 PreviewGroup 还会把 `contextClassNames` / `contextStyles` 并入，
+    // 本仓库的 ConfigProvider 目前不提供组件级 classNames/styles（staged），
+    // 所以来源只有 props 与 previewConfig（`preview.rootClassName` / `maskClassName`）。
+    const popupClassNames = computed(() => {
+      const p = props.classNames?.popup;
+      const cfg = previewConfig.value;
+      const mask = cfg?.mask;
+      return {
+        root: [p?.root, cfg?.rootClassName].filter(Boolean).join(' ') || undefined,
+        mask:
+          [
+            p?.mask,
+            cfg?.maskClassName,
+            mask === false ? `${prefixCls}-preview-mask-hidden` : undefined,
+          ]
+            .filter(Boolean)
+            .join(' ') || undefined,
+        body: p?.body,
+        footer: p?.footer,
+        actions: p?.actions,
+        close: p?.close,
+      };
+    });
 
     // rtl：left/right 互换（antd 同款）
     const icons = computed(() => {
@@ -188,8 +194,8 @@ const PreviewGroup = defineComponent({
             mousePosition: mousePosition.value,
             icons: icons.value,
             rootClassName: previewConfig.value.rootClassName,
-            classNames: mergedClassNames.value?.popup as never,
-            styles: mergedStyles.value?.popup as never,
+            classNames: popupClassNames.value,
+            styles: props.styles?.popup,
             onClose: () => setOpen(false),
             afterOpenChange: previewConfig.value.afterOpenChange,
             onActive: (offset: number) => setCurrent(current.value + offset, current.value),

@@ -132,6 +132,10 @@ const Image = defineComponent({
 
     const mousePosition = ref<{ x: number; y: number } | null>(null);
 
+    // ⚠️ previewSrc 必须早于注册块定义（registerData 依赖它 —— TDZ 只在
+    //    组内路径暴露，组外不触发，容易漏）
+    const previewSrc = computed(() => previewConfig.value?.src ?? props.src);
+
     // ======================= PreviewGroup 注册 ========================
     const groupContext = usePreviewGroup();
     const imageId = nextImageId();
@@ -188,7 +192,6 @@ const Image = defineComponent({
       const p = props.placeholder;
       return Boolean(p) && p !== true;
     });
-    const previewSrc = computed(() => previewConfig.value?.src ?? props.src);
     const { status, getImgRef, srcAndOnload } = useStatus({
       src: () => props.src,
       isCustomPlaceholder: () => isCustomPlaceholder.value,
@@ -224,6 +227,24 @@ const Image = defineComponent({
     );
 
     // ============================ Render ==============================
+    // ⚠️ popup 是**嵌套语义组** —— useMergeSemantic 的 mergeClassNames 对每个键
+    // 跑 clsx，会把对象值压成字符串（实测：popup ⇒ ''）。嵌套组必须单独算。
+    const popupClassNames = computed(() => {
+      const p = props.classNames?.popup;
+      const mask = previewConfig.value?.mask;
+      return {
+        root: [p?.root, previewConfig.value?.rootClassName].filter(Boolean).join(' ') || undefined,
+        mask:
+          [p?.mask, mask === false ? `${prefixCls}-preview-mask-hidden` : undefined]
+            .filter(Boolean)
+            .join(' ') || undefined,
+        body: p?.body,
+        footer: p?.footer,
+        actions: p?.actions,
+        close: p?.close,
+      };
+    });
+
     const coverInfo = computed(() => normalizeCover(previewConfig.value?.cover as MaskNode));
 
     const onInternalClick = (e: MouseEvent): void => {
@@ -308,7 +329,10 @@ const Image = defineComponent({
               props.className,
             ],
             style: {
-              height: props.height,
+              // ⚠️ 必须 toCssSize：Vue 的 `style` 数字值**不会**自动补 px（rc 在 React
+              // 里靠这层自动补），`{height: 100}` 会被静默丢弃 ⇒ 落到 CSS 的
+              // `height:auto`，图片按原始比例撑成正方形（L6 才暴露，contract 档丢 style）。
+              height: toCssSize(props.height),
               ...(mergedStyles.value?.image ?? {}),
               ...(props.style ?? {}),
             },
@@ -362,8 +386,8 @@ const Image = defineComponent({
                 mousePosition: mousePosition.value,
                 icons: previewConfig.value?.icons,
                 rootClassName: previewConfig.value?.rootClassName,
-                classNames: mergedClassNames.value?.popup as never,
-                styles: mergedStyles.value?.popup as never,
+                classNames: popupClassNames.value,
+                styles: props.styles?.popup,
                 onClose: () => setPreviewOpen(false),
                 afterOpenChange: previewConfig.value?.afterOpenChange,
               })

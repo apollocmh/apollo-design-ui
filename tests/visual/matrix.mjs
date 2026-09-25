@@ -342,6 +342,15 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  image: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 全部 data URI 图片（外网图片会污染基线）；preview 为 open 受控静态帧。
+    variants: [
+      'basic', // 本体（img + cover）
+      'cover', // cover 层（hover 封面）
+      'preview', // 预览浮层（open 受控，portal + 变换内核的静态帧）
+    ],
+  },
   app: {
     // 1 个 variant × 3 个 viewport = 3 张
     variants: ['basic'],

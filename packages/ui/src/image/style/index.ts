@@ -25,12 +25,11 @@ export function genImageTokenDecls(): string {
 
 /** antd motion 的 @keyframes（稳定命名，原序）。 */
 const KEYFRAMES = `
-}
 @keyframes apollo-image-ink-flow-1{0%{transform:translate(0%, 0%);opacity:0.8;}50%{transform:translate(15%, -20%) scale(1.25);opacity:0.5;}100%{transform:translate(0%, 0%);opacity:0.8;}}
 @keyframes apollo-image-ink-flow-2{0%{transform:translate(0%, 0%) scale(1.1);opacity:0.7;}50%{transform:translate(-18%, 15%) scale(0.85);opacity:0.9;}100%{transform:translate(0%, 0%) scale(1.1);opacity:0.7;}}
 @keyframes apollo-image-ink-flow-3{0%{transform:translate(0%, 0%) scale(0.85);opacity:0.65;}50%{transform:translate(8%, 10%) scale(1.15);opacity:0.8;}100%{transform:translate(0%, 0%) scale(0.85);opacity:0.65;}}
 @keyframes apollo-image-progress-active{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-}`;
+`;
 
 /** antd 产物机械转换段（57 条，原序）。 */
 const RULES = `
@@ -55,7 +54,7 @@ const RULES = `
 .apollo-image-progress-wrapper .apollo-image-progress-ink-2::before{content:"";position:absolute;width:150%;height:150%;left:-25%;top:-25%;animation-timing-function:var(--apollo-motion-ease-in-out);animation-iteration-count:infinite;pointer-events:none;will-change:transform,opacity;background:radial-gradient(ellipse 50% 55% at 20% 75%, rgba(160, 190, 255, 0.88) 0%, transparent 50%);animation-name:apollo-image-ink-flow-1;animation-duration:calc(var(--apollo-image-progress-animation-duration) + 2.5s);animation-delay:-2.5s;filter:blur(35px);}
 .apollo-image-progress-wrapper .apollo-image-progress-content{position:absolute;top:50%;left:0;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;width:100%;padding-inline:var(--apollo-padding-lg);text-align:center;font-size:var(--apollo-font-size);color:var(--apollo-color-text-secondary);z-index:1;}
 .apollo-image-progress-wrapper .apollo-image-progress-rail{width:100%;height:6px;margin-top:var(--apollo-margin-sm);background-color:rgba(255, 255, 255, 0.5);border-radius:var(--apollo-border-radius-xs);overflow:hidden;backdrop-filter:blur(4px);}
-.apollo-image-progress-wrapper .apollo-image-progress-rail::before{content:"";display:block;height:100%;width:var(--progress-percent, 0%);background:linear-gradient(90deg, rgba(120, 170, 255, 0.85) 0%, rgba(160, 150, 245, 0.85) 40%, rgba(130, 200, 220, 0.85) 60%, rgba(120, 170, 255, 0.85) 100%);background-size:200% 100%;border-radius:NaNpx;transition:width var(--apollo-motion-duration-mid) ease;animation-name:apollo-image-progress-active;animation-duration:var(--apollo-image-progress-animation-duration);animation-timing-function:linear;animation-iteration-count:infinite;}
+.apollo-image-progress-wrapper .apollo-image-progress-rail::before{content:"";display:block;height:100%;width:var(--progress-percent, 0%);background:linear-gradient(90deg, rgba(120, 170, 255, 0.85) 0%, rgba(160, 150, 245, 0.85) 40%, rgba(130, 200, 220, 0.85) 60%, rgba(120, 170, 255, 0.85) 100%);background-size:200% 100%;border-radius:calc(var(--apollo-border-radius-xs)/2);transition:width var(--apollo-motion-duration-mid) ease;animation-name:apollo-image-progress-active;animation-duration:var(--apollo-image-progress-animation-duration);animation-timing-function:linear;animation-iteration-count:infinite;}
 .apollo-image-progress-wrapper .apollo-image-progress-indicator{margin-top:var(--apollo-margin-xs);}
 .apollo-image-preview{text-align:center;inset:0;position:fixed;user-select:none;z-index:var(--apollo-image-z-index-popup);}
 .apollo-image-preview .apollo-image-preview-mask{inset:0;position:absolute;background:var(--apollo-color-bg-mask);backdrop-filter:blur(0px);transition:backdrop-filter var(--apollo-motion-duration-slow);}
@@ -98,7 +97,17 @@ export function genImageStyle(prefixCls: string = 'apollo'): string {
     prefixCls === 'apollo'
       ? cssText
       : cssText.split('.apollo-image').join('.' + prefixCls + '-image');
-  const decls = `.apollo-image{${rename('{' + DECLS + '}').slice(1, -1)}}`;
+  // ⚠️ 声明块必须覆盖**两个**根形态（同 input 的 D69）。
+  // antd 把组件变量声明在每个 `-css-var` 根上，而预览浮层的根拿到的是
+  // `mergedRootClassName`（含 cssVarCls）⇒ 它也带 `-css-var` 类；本仓无这个类，
+  // 等价做法是让声明块同时挂在 `.apollo-image` 与 `.apollo-image-preview` 上。
+  // 只挂前者时：预览浮层经 Teleport 挂在 body 上、**不在** `.apollo-image` 子树内，
+  // 于是 `var(--apollo-image-preview-operation-size)` 等全部失效 ⇒ 关闭按钮
+  // font-size 由 18px 回退成继承的 16px（图标 1em ⇒ 16px，antd 18px）。
+  // 抓它的层：L6（`image/preview__light__*` 0.011%–0.043% block-diff，且差异像素
+  // 100% 落在关闭按钮的 40×40 区域内）；L4 的 contract 档看不见（丢 style）。
+  const body = rename('{' + DECLS + '}').slice(1, -1);
+  const decls = [`.apollo-image{${body}}`, `.apollo-image-preview{${body}}`].join('\n');
   return `${KEYFRAMES}
 ${decls}
 ${rename(RULES)}`;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// 对齐 antd demo/basic.tsx —— ⚠️ 图片用 data URI（外网图片会污染 L6 基线）
+// 对齐 antd demo/component-token.tsx —— ⚠️ 组件级 token 覆盖 PENDING
+//（D25/D83 同判：ConfigProvider 主题覆盖未落地，这里以默认主题渲染）
 import { Image } from '@apollo-design/ui';
 
 const src =
@@ -7,5 +8,5 @@ const src =
 </script>
 
 <template>
-  <Image :width="200" alt="basic" :src="src" />
+  <Image alt="demo image" :width="200" :src="src" />
 </template>

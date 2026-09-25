@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd demo/basic.tsx —— ⚠️ 图片用 data URI（外网图片会污染 L6 基线）
+// 对齐 antd demo/nested.tsx —— 浮层挂 portal，不受父容器 overflow 影响
 import { Image } from '@apollo-design/ui';
 
 const src =
@@ -7,5 +7,7 @@ const src =
 </script>
 
 <template>
-  <Image :width="200" alt="basic" :src="src" />
+  <div style="overflow: hidden; width: 200px; height: 120px">
+    <Image alt="demo image" :width="200" :height="120" :src="src" />
+  </div>
 </template>

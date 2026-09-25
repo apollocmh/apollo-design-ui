@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "image/basic",
+  "component": "image",
+  "description": "基础形态：根 div（{p} 类 + role=button + tabindex=0 + aria-label=alt）+ img（{p}-img 类；width/height 既进属性也进 style，**必须归一化成 px 字符串** —— Vue 的 style 数字值会被静默丢弃，见 D94）+ cover（{p}-cover-{center|top|bottom}，默认 center）。preview 为 portal，SSR 不可见。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+    "alt": "a",
+    "width": 200,
+    "height": 100
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "../schema.json",
+  "component": "image",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-25T06:15:31.833Z",
+  "cases": [
+    {
+      "id": "image:basic",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" role=\"button\" tabindex=\"0\" aria-label=\"a\" style=\"width:200px;height:100px\"><img alt=\"a\" class=\"apollo-image-img css-dev-only-do-not-override-1v6lqee\" style=\"height:100px\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"200\" height=\"100\"/><div class=\"apollo-image-cover apollo-image-cover-center\"></div></div>"
+    },
+    {
+      "id": "image:no-preview",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" style=\"width:96px\"><img alt=\"b\" class=\"apollo-image-img css-dev-only-do-not-override-1v6lqee\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"96\"/></div>"
+    },
+    {
+      "id": "image:cover-placement",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" role=\"button\" tabindex=\"0\" style=\"width:96px\"><img class=\"apollo-image-img css-dev-only-do-not-override-1v6lqee\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"96\"/><div class=\"apollo-image-cover apollo-image-cover-top\">top</div></div>"
+    },
+    {
+      "id": "image:cover-false",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" role=\"button\" tabindex=\"0\" style=\"width:96px\"><img class=\"apollo-image-img css-dev-only-do-not-override-1v6lqee\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"96\"/></div>"
+    },
+    {
+      "id": "image:placeholder-true",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" role=\"button\" tabindex=\"0\" style=\"width:96px\"><img class=\"apollo-image-img apollo-image-img-placeholder css-dev-only-do-not-override-1v6lqee\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"96\"/><div class=\"apollo-image-cover apollo-image-cover-center\"></div></div>"
+    },
+    {
+      "id": "image:progress",
+      "html": "<div class=\"apollo-image apollo-image-progress-wrapper css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var css-dev-only-do-not-override-1v6lqee\" style=\"width:200px;height:200px\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"50\" aria-label=\"50%\"><div class=\"apollo-image-progress-ink-1\"></div><div class=\"apollo-image-progress-ink-2\"></div><div class=\"apollo-image-progress-content\"><div class=\"apollo-image-progress-rail\" style=\"--progress-percent:50%\"></div><div class=\"apollo-image-progress-indicator\">50%</div></div></div>"
+    },
+    {
+      "id": "image:progress-busy",
+      "html": "<div class=\"apollo-image apollo-image-progress-wrapper css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var css-dev-only-do-not-override-1v6lqee\" style=\"width:100px\" aria-busy=\"true\"><span role=\"status\" aria-live=\"polite\" style=\"position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0\">Loading</span><div class=\"apollo-image-progress-ink-1\"></div><div class=\"apollo-image-progress-ink-2\"></div><div class=\"apollo-image-progress-content\"></div></div>"
+    },
+    {
+      "id": "image:preview-src",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" role=\"button\" tabindex=\"0\" style=\"width:96px\"><img class=\"apollo-image-img css-dev-only-do-not-override-1v6lqee\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"96\"/><div class=\"apollo-image-cover apollo-image-cover-center\"></div></div>"
+    },
+    {
+      "id": "image:preview-mask",
+      "html": "<div class=\"apollo-image css-dev-only-do-not-override-1v6lqee css-var-root apollo-image-css-var\" role=\"button\" tabindex=\"0\" style=\"width:96px\"><img class=\"apollo-image-img css-dev-only-do-not-override-1v6lqee\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\" width=\"96\"/><div class=\"apollo-image-cover apollo-image-cover-center\"></div></div>"
+    }
+  ]
+}

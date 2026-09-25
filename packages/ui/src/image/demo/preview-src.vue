@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd demo/basic.tsx —— ⚠️ 图片用 data URI（外网图片会污染 L6 基线）
+// 对齐 antd demo/previewSrc.tsx
 import { Image } from '@apollo-design/ui';
 
 const src =
@@ -7,5 +7,5 @@ const src =
 </script>
 
 <template>
-  <Image :width="200" alt="basic" :src="src" />
+  <Image alt="demo image" :width="200" :src="src" :preview="{ src }" />
 </template>
