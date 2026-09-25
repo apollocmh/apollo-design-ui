@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "dropdown/basic",
+  "component": "dropdown",
+  "description": "基础形态：触发元素（-trigger/-open 类 + disabled 透传经 Trigger 的 child-clone）；SSR 侧仅渲染触发元素（浮层走 portal）。overlay = Menu + OverrideProvider（{p}-menu 前缀 / mode=vertical / selectable=false / onMenuClick 关闭）。",
+  "antdVersion": "6.6.4",
+  "props": { "menu": { "items": [{ "key": "1", "label": "One" }] } },
+  "content": "target",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["open-change", "update:open", "menu-click"] }
+}

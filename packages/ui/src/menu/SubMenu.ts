@@ -191,7 +191,12 @@ const SubMenu = defineComponent({
                   { class: `${ctx.prefixCls}-title-content` },
                   [props.title].filter((c) => c !== null && c !== undefined),
                 ),
-          h('i', { class: `${subMenuPrefixCls}-arrow` }),
+          // rc：expandIcon 覆盖（dropdown 的 OverrideProvider 注入 arrow icon）
+          ctx.expandIcon
+            ? h('span', { class: `${subMenuPrefixCls}-expand-icon` }, [
+                ctx.expandIcon as VNodeChild,
+              ])
+            : h('i', { class: `${subMenuPrefixCls}-arrow` }),
         ],
       );
 

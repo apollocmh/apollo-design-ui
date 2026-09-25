@@ -683,6 +683,19 @@ export {
 } from './descriptions/style';
 export type { ComponentToken as DescriptionsComponentToken } from './descriptions/style/token';
 export { prepareComponentToken as prepareDescriptionsComponentToken } from './descriptions/style/token';
+export type {
+  DropdownArrowOptions,
+  DropdownButtonProps,
+  DropdownPlacement,
+  DropdownPopupPlacement,
+  DropdownProps,
+  DropdownSemanticType,
+  DropdownTriggerAction,
+} from './dropdown';
+export { Dropdown, DropdownButton, DropdownPurePanel } from './dropdown';
+export { genDropdownStyle, genDropdownTokenDecls } from './dropdown/style';
+export type { ComponentToken as DropdownComponentToken } from './dropdown/style/token';
+export { prepareComponentToken as prepareDropdownComponentToken } from './dropdown/style/token';
 // ---------------------------------------------------------------------------
 // Input —— 输入框（引擎自建于 engine/：BaseInput 三层包裹 + IME 组合态 + 计数裁剪）
 //

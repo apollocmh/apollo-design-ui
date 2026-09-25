@@ -23,6 +23,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  inject,
   type PropType,
   provide,
   ref,
@@ -33,7 +34,9 @@ import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
 import {
   isSubPathKeyKey,
   type MenuContextData,
+  type MenuOverrideData,
   menuContextKey,
+  menuOverrideKey,
   pathRegisterKey,
   pathTrackerKey,
 } from './context';
@@ -45,6 +48,7 @@ import type {
   MenuInfo,
   MenuMode,
   MenuTheme,
+  RenderIconType,
   SelectInfo,
   TriggerSubMenuAction,
 } from './interface';
@@ -101,12 +105,16 @@ const Menu = defineComponent({
     'update:openKeys': (_keys: string[]) => true,
   },
   setup(props, { emit, expose, attrs }) {
-    const prefixCls = props.prefixCls ?? 'apollo-menu';
+    // rc OverrideProvider（dropdown 等包装者）的覆盖通道
+    const override = inject<MenuOverrideData | null>(menuOverrideKey, null);
+    const prefixCls = override?.prefixCls ?? props.prefixCls ?? 'apollo-menu';
     const menuId = props.id ?? `apollo-menu-${uuid++}`;
     const containerRef = shallowRef<HTMLElement | null>(null);
 
     const parsedNodes = computed<ParsedNode[]>(() => parseItems(props.items));
-    const mergedMode = computed<MenuMode>(() => (props.inlineCollapsed ? 'vertical' : props.mode));
+    const mergedMode = computed<MenuMode>(
+      () => override?.mode ?? (props.inlineCollapsed ? 'vertical' : props.mode),
+    );
 
     // ======================= Path ========================
     const {
@@ -154,8 +162,9 @@ const Menu = defineComponent({
     };
 
     // ===================== Selection =====================
+    const mergedSelectable = override?.selectable ?? props.selectable;
     const triggerSelection = (info: MenuInfo): void => {
-      if (props.selectable) {
+      if (mergedSelectable) {
         const targetKey = info.key;
         const exist = mergedSelectKeys.value.includes(targetKey);
         let newSelectKeys: string[];
@@ -181,6 +190,7 @@ const Menu = defineComponent({
     };
 
     const onInternalClick = (info: MenuInfo): void => {
+      override?.onClick?.();
       props.onClick?.(info);
       triggerSelection(info);
     };
@@ -241,6 +251,7 @@ const Menu = defineComponent({
       inlineCollapsed: props.inlineCollapsed ?? false,
       firstLevel: true,
       theme: props.theme,
+      expandIcon: override?.expandIcon as RenderIconType | undefined,
     };
     provide(menuContextKey, menuContext);
     provide(isSubPathKeyKey, isSubPathKey);

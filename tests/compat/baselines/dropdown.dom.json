@@ -1,0 +1,28 @@
+{
+  "$schema": "../schema.json",
+  "component": "dropdown",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-25T01:01:20.360Z",
+  "cases": [
+    {
+      "id": "dropdown:basic",
+      "html": "<button type=\"button\" class=\"apollo-btn css-dev-only-do-not-override-1v6lqee css-var-root apollo-btn-default apollo-btn-color-default apollo-btn-variant-outlined apollo-dropdown-trigger apollo-dropdown-open\"><span>target</span></button>"
+    },
+    {
+      "id": "dropdown:placement",
+      "html": "<button type=\"button\" class=\"apollo-btn css-dev-only-do-not-override-1v6lqee css-var-root apollo-btn-default apollo-btn-color-default apollo-btn-variant-outlined apollo-dropdown-trigger apollo-dropdown-open\"><span>target</span></button>"
+    },
+    {
+      "id": "dropdown:arrow",
+      "html": "<button type=\"button\" class=\"apollo-btn css-dev-only-do-not-override-1v6lqee css-var-root apollo-btn-default apollo-btn-color-default apollo-btn-variant-outlined apollo-dropdown-trigger apollo-dropdown-open\"><span>target</span></button>"
+    },
+    {
+      "id": "dropdown:disabled",
+      "html": "<button type=\"button\" class=\"apollo-btn css-dev-only-do-not-override-1v6lqee css-var-root apollo-btn-default apollo-btn-color-default apollo-btn-variant-outlined apollo-dropdown-trigger apollo-dropdown-open\" disabled=\"\"><span>target</span></button>"
+    },
+    {
+      "id": "dropdown:closed",
+      "html": "<button type=\"button\" class=\"apollo-btn css-dev-only-do-not-override-1v6lqee css-var-root apollo-btn-default apollo-btn-color-default apollo-btn-variant-outlined apollo-dropdown-trigger\"><span>target</span></button>"
+    }
+  ]
+}

@@ -40,6 +40,7 @@ import { genCheckboxStyle } from '../checkbox/style';
 import { genCollapseStyle } from '../collapse/style';
 import { genDescriptionsStyle } from '../descriptions/style';
 import { genDividerStyle } from '../divider/style';
+import { genDropdownStyle } from '../dropdown/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
@@ -120,6 +121,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'tooltip', gen: genTooltipStyle },
   { name: 'popover', gen: genPopoverStyle },
   { name: 'menu', gen: genMenuStyle },
+  { name: 'dropdown', gen: genDropdownStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

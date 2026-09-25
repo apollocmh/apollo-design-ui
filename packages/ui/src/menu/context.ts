@@ -63,6 +63,16 @@ export interface PathRegister {
 }
 export const pathRegisterKey: InjectionKey<PathRegister> = Symbol('pathRegister');
 /** rc PathUserContext 的 isSubPathKey（Menu 经 keyRecords 提供）。 */
+/** rc OverrideContextProps（dropdown 的 OverrideProvider 对应物）。 */
+export interface MenuOverrideData {
+  prefixCls?: string;
+  expandIcon?: unknown;
+  mode?: 'horizontal' | 'vertical' | 'inline';
+  selectable?: boolean;
+  onClick?: () => void;
+  validator?: (menuProps: { mode?: 'horizontal' | 'vertical' | 'inline' }) => void;
+}
+export const menuOverrideKey: InjectionKey<MenuOverrideData> = Symbol('menuOverride');
 export const isSubPathKeyKey: InjectionKey<(pathKeys: string[], eventKey: string) => boolean> =
   Symbol('isSubPathKey');
 
