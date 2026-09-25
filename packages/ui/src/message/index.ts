@@ -26,7 +26,7 @@
  *   - 不实现 `holderRender`（D30：React 特有的「再包一层」）；
  *   - 不实现 `warnContext` 告警（D30 同源：本仓没有那套 context 告警基建）。
  */
-import { createApp, defineComponent, h, shallowRef } from 'vue';
+import { createApp, defineComponent, shallowRef } from 'vue';
 
 import type {
   ArgsProps,
@@ -313,3 +313,14 @@ export function actDestroy(): void {
 }
 
 export default staticMethods;
+
+export type {
+  ArgsProps,
+  ConfigOptions,
+  JointContent,
+  MessageInstance,
+  MessageSemanticType,
+  MessageType,
+  NoticeType,
+  TypeOpen,
+} from './interface';

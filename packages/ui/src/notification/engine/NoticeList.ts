@@ -15,7 +15,7 @@
  *      `-notice-stack-in-threshold` 类（折叠时它们是被盖住的那几条）。
  */
 import { MotionList } from '@apollo-design/motion';
-import { computed, defineComponent, h, type PropType, ref, watch } from 'vue';
+import { computed, defineComponent, h, nextTick, onMounted, type PropType, ref, watch } from 'vue';
 
 import type {
   NoticeListConfig,
@@ -99,7 +99,19 @@ export default defineComponent({
       const next = Number.parseFloat(rowGap || cssGap) || 0;
       if (next !== gap.value) gap.value = next;
     };
-    watch(() => props.configList.length > 0, measureGap, { flush: 'post' });
+    // ⚠️ 两个触发点都必须有：
+    //   1. **挂载后一次** —— 静态列表（`configList` 一开始就非空，如 PureList）时
+    //      「长度变化」永远不发生，只 watch 长度会一次都不测 ⇒ gap 恒 0
+    //      （实测：4 条消息的 `--notification-y` 变成 0/40/80/120，而 antd 是
+    //      0/56/112/168 —— L6 的 `types` 用例 1.7%–6.5% block-diff）；
+    //   2. **长度变化后一次** —— 列表从空到有（命令式路径的首次 open）时，
+    //      content 元素是这次渲染才出现的，必须等 DOM 提交后再测（`flush: 'post'`）。
+    onMounted(measureGap);
+    watch(
+      () => props.configList.length,
+      () => nextTick(measureGap),
+      { flush: 'post' },
+    );
 
     const { position, setNodeSize, totalHeight, topNoticeHeight, topNoticeWidth } = useListPosition(
       computed(() => props.configList),

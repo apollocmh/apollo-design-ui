@@ -351,6 +351,16 @@ export const COMPONENTS = {
       'preview', // 预览浮层（open 受控，portal + 变换内核的静态帧）
     ],
   },
+  message: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 命令式路径是 portal + 自动消失 ⇒ 用例全部走**静态面板**
+    //    （`_InternalPanel*` / `_InternalList*`，与 L4 同形态）。
+    variants: [
+      'single', // 单条（success 图标 + 文案）
+      'types', // 四种类型的列表（几何 + 图标着色）
+      'custom', // 语义槽样式（root / icon / title 三层）
+    ],
+  },
   app: {
     // 1 个 variant × 3 个 viewport = 3 张
     variants: ['basic'],

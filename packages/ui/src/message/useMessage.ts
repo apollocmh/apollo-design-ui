@@ -137,6 +137,7 @@ export function useInternalMessage(
     if (!instance) {
       // 与上游同判：在 render 期调用拿不到实例 ⇒ 返回一个空壳（不抛错）
       const fakeResult = (() => {}) as MessageType;
+      // biome-ignore lint/suspicious/noThenProperty: 空壳也要满足 MessageType 的 thenable 契约（上游同样给 fakeResult 挂 then）
       fakeResult.then = (() => Promise.resolve(false)) as MessageType['then'];
       fakeResult.promise = Promise.resolve(false);
       return fakeResult;

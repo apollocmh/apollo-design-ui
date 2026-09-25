@@ -32,6 +32,7 @@ export function wrapPromiseFn(openFn: (resolve: VoidFunction) => VoidFunction): 
     closeFn?.();
   }) as MessageType;
 
+  // biome-ignore lint/suspicious/noThenProperty: 这是**有意的 thenable** —— 上游契约就是「可调用 + PromiseLike」（）
   result.then = (filled, rejected) => closePromise.then(filled, rejected);
   result.promise = closePromise;
 
