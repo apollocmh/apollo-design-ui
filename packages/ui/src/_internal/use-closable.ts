@@ -23,7 +23,11 @@ export interface ClosableConfig {
   [key: string]: unknown;
 }
 
-export type ClosableType = boolean | ClosableConfig;
+/**
+ * ⚠️ 含 `null` —— antd 的 `ClosableType = DialogProps['closable'] | null`。
+ * notification 的 `ArgsProps.closable` 就是 `boolean | null | {...}`。
+ */
+export type ClosableType = boolean | ClosableConfig | null;
 
 export interface ClosableCollection {
   closable?: ClosableType;

@@ -16,7 +16,8 @@
  */
 import { MotionList } from '@apollo-design/motion';
 import { computed, defineComponent, h, nextTick, onMounted, type PropType, ref, watch } from 'vue';
-
+import { useListPosition } from './hooks/useListPosition';
+import { useStack } from './hooks/useStack';
 import type {
   NoticeListConfig,
   NoticeListProps,
@@ -24,8 +25,6 @@ import type {
   NotificationClassNames,
   NotificationStyles,
 } from './interface';
-import { useListPosition } from './hooks/useListPosition';
-import { useStack } from './hooks/useStack';
 import Notice from './Notice';
 import NoticeListContent from './NoticeListContent';
 import { useNotificationContext } from './NotificationProvider';

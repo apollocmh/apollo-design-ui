@@ -855,6 +855,29 @@ export { genMessageStyle, genMessageTokenDecls } from './message/style';
 export type { ComponentToken as MessageComponentToken } from './message/style/token';
 export { prepareComponentToken as prepareMessageComponentToken } from './message/style/token';
 export type {
+  ArgsProps as NotificationArgsProps,
+  GlobalConfigProps as NotificationGlobalConfigProps,
+  IconType as NotificationIconType,
+  NotificationConfig,
+  NotificationInstance,
+  NotificationPlacement,
+  NotificationSemanticType,
+} from './notification';
+// ---------------------------------------------------------------------------
+// Notification —— 通知提醒框（命令式 API：`notification.success({ title })`）
+//
+// ⚠️ 与 message 的两处差异：`open()` 返回 **void**（没有 thenable 句柄）、
+//    **默认就堆叠**（`{ offset: 8 }`）。导出名同样是**小写**（与 antd 一致）。
+// ---------------------------------------------------------------------------
+export { default as notification } from './notification';
+export { genNotificationStyle, genNotificationTokenDecls } from './notification/style';
+export type { ComponentToken as NotificationComponentToken } from './notification/style/token';
+export {
+  notificationDerivedValues,
+  prepareComponentToken as prepareNotificationComponentToken,
+  prepareNotificationToken,
+} from './notification/style/token';
+export type {
   PopoverClassNames,
   PopoverProps,
   PopoverRef,

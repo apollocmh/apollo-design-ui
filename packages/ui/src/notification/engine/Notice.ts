@@ -24,10 +24,9 @@
  *      期间强制暂停，此时单条离开不该恢复。
  */
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
-
-import type { NoticeClassNames, NoticeProps, NoticeStyles } from './interface';
 import { useClosable } from './hooks/useClosable';
 import { useNoticeTimer } from './hooks/useNoticeTimer';
+import type { NoticeClassNames, NoticeProps, NoticeStyles } from './interface';
 import DefaultProgress from './Progress';
 import { clsx } from './util';
 
