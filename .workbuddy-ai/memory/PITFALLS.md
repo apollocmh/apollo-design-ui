@@ -1257,3 +1257,42 @@
      🚨 **绝对不能**因为「跑不起来」就换 `--pool=forks --maxWorkers=1` ——
      降级运行会**静默少跑**并给出假绿灯（PITFALLS 已多次登记，见 MEMORY.md 的环境段）。
      机器负载与「关 IDE」的量化关系见 WORKFLOW.md §G13（16 分钟 → 7 分 49 秒）。
+
+## Image 流（2026-09-25，170-173）
+
+> ⚠️ 编号从 **170** 起（Switch 流用 163-169）。
+
+170. ⚠️⚠️ **Vue 3 的 `style` 数字值被静默丢弃**（Vue 2 有自动补 px，Vue 3 **没有** —— 那是 React 的样式补全）。
+     `h('img', { style: { height: 100 } })` ⇒ Vue 逐键 `style[key] = value`，CSSOM 拒收裸数字
+     ⇒ **整条声明消失**（实测 Chrome + Vue 3.5.42：`attr=null`、computed `0px`；`{height:'100px'}` 正常）。
+     ⭐ 处方：所有进 `style` 的尺寸统一走 `toCssSize()`（`packages/ui/src/image/util.ts` 有实现）。
+     🚨 **它的伪装性极强，是本仓最贵的一类坑**：`.{p}-img{height:auto}` 会兜住 ⇒ 图片按原始比例撑高，
+     「有图」但**尺寸错**（实测 200×100 → 200×200）。三层测试都看不见：
+     L1/L7 只断言字面量、L4 的 `contract` 档**丢 `style`**（`dom-contract.ts` 的 `keepStyle` 默认 false）
+     ⇒ 只有 **L6** 能抓。抓到的证据：`image/basic__light__{mobile,tablet,desktop}` 5.106%/9.574%/19.608% block-diff。
+     判别小抄：`z-index` **接受**裸整数（`{zIndex:1080}` 正常），别因为「有一个数字生效了」就排除这条。
+     登记：COMPATIBILITY.md **D94**。
+
+171. ⚠️⚠️ **没有 `-css-var` 类 ⇒ 组件变量声明块必须覆盖「全部根形态」，包括 portal 根**。
+     antd 把组件变量声明在每个 `-css-var` 根上，而**浮层的根也带这个类**（它拿到的是
+     `mergedRootClassName`，里面含 `cssVarCls`）—— 所以 antd 天然覆盖了浮层。
+     本仓无此机制，等价做法是让声明块挂多个根选择器（input 三根见 D69；image 是
+     `.apollo-image` + `.apollo-image-preview`）。漏掉的症状：浮层里的 `var(--{p}-*)` 全部失效、
+     **静默回退到继承值**（实测关闭按钮 `font-size` 18px → 16px，图标 `1em` 随之变小 ⇒
+     3 张 L6 用例 0.011%–0.043% block-diff，差异像素 **100%** 落在关闭按钮 40×40 内）。
+     ⭐ 自查方式：把 `style/index.ts` 里出现的每个 `var(--{p}-` 前缀变量列出来，逐个确认
+     「消费它的元素是否在声明块的某个根子树内」—— Teleport/portal 出来的根最容易漏。
+     登记：COMPATIBILITY.md **D95**。
+
+172. **`node tests/visual/run.mjs` 会被 safe-delete shim 拦死**（与 build 门禁同款，但此前只记了 build）：
+     `Error: [safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] … targets: ["tests/visual/.artifacts/react/assets"]`
+     —— vite 的 `emptyOutDir` 要清 6000+ 个文件，超过 50 的阈值就抛。
+     ⭐ 处方：一律 `CODEBUDDY_SAFE_DELETE_ENABLED=0 node tests/visual/run.mjs --component <name>`。
+     （`tests/build/run.mjs` 同理；这两个是本仓仅有的两个会自己删目录的入口。）
+
+173. ⚠️ **「L7」在本仓有两个口径，别互相印证**：`TESTING.md` §10 的 **L7 = Build Test**
+     （`pnpm test:build`），而**组件测试文件头**把 `__tests__/theme.test.ts` 写成「L7 主题」
+     （实测：`image/__tests__/theme.test.ts` 第 1 行）。所以「L7 12/12」指的是
+     **theme project 的 12 条用例**，不是构建门禁的 127 项。
+     ⭐ 取证时按 **vitest project 名**（unit / dom-contract / types / a11y / theme）报数，
+     不要用「L7」这类数字层号 —— 数字层号只在 `TESTING.md` 里权威。
