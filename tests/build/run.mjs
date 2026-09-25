@@ -424,6 +424,19 @@ async function checkDefaultThemeCss(dir, name) {
 }
 
 /**
+ * 由**组件运行时内联赋值**的 CSS 变量（CSS 里只被消费、不被声明）。
+ *
+ * 判据：赋值点是组件的渲染代码（`style` 对象里的 `--x` 键），不是 CSS —— 门禁静态
+ * 扫描看不到 JS。⚠️ 登记时必须写清赋值点，否则这条会变成「万能后门」。
+ */
+const RUNTIME_ASSIGNED_VARS = {
+  // notification 内核的列表内容：测量结果（最新一条的实测宽高）由 NoticeListContent
+  // 的内联 style 写入，供堆叠折叠的占位条计算。⚠️ 上游拼写就是 `notificiation`（少一个 t）。
+  '--top-notificiation-height': 'notification/engine/NoticeListContent.ts',
+  '--top-notificiation-width': 'notification/engine/NoticeListContent.ts',
+};
+
+/**
  * B7 · ui：组件 CSS 引用的每个 `--apollo-*` 变量都必须真实存在。
  *
  * 为什么 ui 的 B7 与 theme 的不是同一件事：
@@ -477,6 +490,10 @@ function checkUiCssTokens(dir, name) {
     }
   }
 
+  // ⚠️ 由**组件运行时内联赋值**的变量：CSS 里只被消费、不被声明，赋值点在组件的
+  //    渲染代码里（`style` 对象）—— 门禁看不到 JS，所以逐条登记。新增必须给出赋值点。
+  for (const v of Object.keys(RUNTIME_ASSIGNED_VARS)) declared.add(v);
+
   const unknown = new Map();
   let referenced = 0;
   for (const file of cssFiles) {
@@ -525,6 +542,8 @@ const SSR_EXPORT_ALIASES = {
   grid: ['Row', 'Col'],
   // antd 的组件名是 `QRCode`（驼峰两个大写），目录名 'qrcode' 的机械 pascal 是 `Qrcode`
   qrcode: ['QrCode'],
+  // antd 的 message / notification 导出名是**小写**（它们是方法集合，不是组件）
+  message: ['message'],
 };
 
 /**
