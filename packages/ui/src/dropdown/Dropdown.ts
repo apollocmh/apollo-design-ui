@@ -315,6 +315,9 @@ const Dropdown = defineComponent({
           afterOpenChange: props.afterOpenChange,
           disabled: props.disabled,
           alignPoint: triggerActions.value.includes('contextMenu'),
+          // rc-dropdown 的 minOverlayWidthMatchTrigger（默认 !alignPoint）⇒
+          // stretch='minWidth'：浮层不窄于触发元素（L6 的 93.95px 实测来源）。
+          stretch: triggerActions.value.includes('contextMenu') ? undefined : 'minWidth',
           mouseEnterDelay: props.mouseEnterDelay ?? 0.15,
           mouseLeaveDelay: props.mouseLeaveDelay ?? 0.1,
           placement: memoPlacement.value,

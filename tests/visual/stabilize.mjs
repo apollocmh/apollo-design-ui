@@ -143,6 +143,21 @@ export async function screenshotElement(page, selector, path) {
   // 运行中的动画数为 0，但其 appear 态样式（opacity:0）要等 motionDeadline
   // （tooltip 1000ms）兜底后才解除。有 1100ms 上限，静态组件无动画不受影响。
   await page.waitForTimeout(1100);
+  // 再模拟 animationend：剥掉残存的 motion 相位类。antd 部分浮层（dropdown）
+  // 不设 motionDeadline —— STABILIZE_CSS 的 animation:none 下 rc-motion 会
+  // 永远卡在 appear 态（opacity:0），只能在这里手工放行（D92，harness 平台差）。
+  // Vue 侧到截图时刻已 settle（无相位类），此操作对其是 no-op。
+  await page.evaluate(() => {
+    for (const el of document.querySelectorAll(
+      '[class*="-enter"],[class*="-appear"],[class*="-leave"]',
+    )) {
+      el.className = el.className
+        .split(/\s+/)
+        .filter((c) => !/-(enter|appear|leave)(-(active|prepare|start|end))?$/.test(c))
+        .join(' ')
+        .trim();
+    }
+  });
   const el = page.locator(selector);
   const count = await el.count();
   if (count === 0) {

@@ -164,6 +164,11 @@ export const Trigger = defineComponent({
     forceRender: { type: Boolean, default: undefined },
     /** 关闭时不缓存内容（rc 的 `fresh`）。 */
     fresh: { type: Boolean, default: undefined },
+    /**
+     * 拉伸协议（rc 的 `stretch`）：'minWidth' ⇒ 浮层 min-width = 目标宽度
+     * （dropdown 的 minOverlayWidthMatchTrigger 默认真）。对齐时量测并写入。
+     */
+    stretch: { type: String as PropType<'minWidth'>, default: undefined },
     /** 箭头。`undefined` 视为无箭头（rc-tooltip 先算好 mergedArrow 再传入）。 */
     arrow: { type: Object as PropType<TriggerArrow>, default: undefined },
     zIndex: { type: Number, default: undefined },
@@ -222,6 +227,8 @@ export const Trigger = defineComponent({
       align: props.builtinPlacements[props.placement] ?? {},
     });
     const flipMemory = ref<FlipMemory>({});
+    /** stretch='minWidth' 的目标宽度（对齐时量测，rc 的 stretchStyle）。 */
+    const stretchMinWidth = ref('');
     const alignCount = ref(0);
 
     const isMobile = false; // v1 无 mobile 形态（tooltip / dropdown 都没有）
@@ -276,6 +283,13 @@ export const Trigger = defineComponent({
         flipMemory.value,
       );
       flipMemory.value = outcome.flip;
+
+      // ── stretch（rc-trigger 的 stretchStyle：'minWidth' ⇒ 浮层 min-width = 目标宽）──
+      // 用 getBoundingClientRect（rc 同款，**不取整** —— offsetWidth 的整数化会让
+      // 浮层宽 1px 偏移、L6 逐像素红）。
+      if (props.stretch === 'minWidth' && tgt instanceof HTMLElement) {
+        stretchMinWidth.value = `${tgt.getBoundingClientRect().width}px`;
+      }
 
       // ── offsetR/B（rc useAlign 尾部公式，AlignOutcome 不含）──
       // rc 用**未 floor** 的原始 offsetX 参与 offsetR/B；alignPopup 已 floor
@@ -552,6 +566,10 @@ export const Trigger = defineComponent({
                         '--arrow-x': `${info.arrowX || 0}px`,
                         '--arrow-y': `${info.arrowY || 0}px`,
                         ...offsetStyle.value,
+                        // rc 的 stretchStyle：'minWidth' ⇒ 浮层不窄于目标
+                        ...(props.stretch === 'minWidth' && stretchMinWidth.value
+                          ? { minWidth: stretchMinWidth.value }
+                          : {}),
                         // rc miscStyle：关闭时指针穿透（离场动画期间仍占位）
                         ...(mergedOpen.value ? {} : { pointerEvents: 'none' }),
                         boxSizing: 'border-box',

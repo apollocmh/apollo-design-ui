@@ -421,12 +421,12 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 
 ## 11. 当前状态与下一步
 
-> **快照时间：2026-09-25**（menu 收口后）。数字由工具推导，刷新命令见 §12。
+> **快照时间：2026-09-25**（dropdown 收口后）。数字由工具推导，刷新命令见 §12。
 
 ### 11.1 总览
 
 ```
-92 个 Work Item | 组件 35/72 | foundation 12/13 completed（picker 收口中）
+92 个 Work Item | 组件 36/72 | foundation 12/13 completed（picker 收口中）
 当前 ready 18（可并行开工 17）| registry:check 18 检查全绿
 ```
 
@@ -447,7 +447,7 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 empty → config-provider → button · space · flex · grid · divider · typography
         alert · skeleton · spin · result · tag · badge · watermark · border-beam
         statistic · affix · back-top · layout · checkbox · radio · switch · carousel · descriptions · listy · splitter · qr-code · collapse
-        input-number · input · upload · tooltip · popover · menu
+        input-number · input · upload · tooltip · popover · menu · dropdown
 ```
 
 （`empty` / `config-provider` 两个枢纽已就位；组件期由 `next-task.mjs` 按 DAG 派发，

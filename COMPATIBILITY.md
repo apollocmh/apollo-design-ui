@@ -379,6 +379,9 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D89 | `menu` | children 写法（cloneElement 注入 eventKey） | v1 items 为唯一真源（antd 6 推荐 API，children 已 deprecated）；children slot 支持 PENDING | INTENDED | L1 items 解析用例 |
 | D90 | `menu`（keyPath 口径） | keyPath = [...connectedKeys].**reverse()**（antd 注释 legacy reversed —— 子项是 ['3','sub1'] 而非 ['sub1','3']） | 逐字对齐 reverse 口径 | UPSTREAM（事实契约） | L1 keyPath 用例钉住 |
 
+| D91 | `dropdown`（DropdownButton） | 组件整体 deprecated（antd 官方告警：用 Space.Compact + Dropdown + Button 替代） | 保留同款 console.error 告警；split 双钮行为逐字 | UPSTREAM（同步废弃） | L1 deprecated 用例；demoTest/a11yTest/themeTest 的 allow 豁免 |
+| D92 | `dropdown` | rc-dropdown 的 `minOverlayWidthMatchTrigger`（默认 !alignPoint）⇒ rc-trigger `stretch='minWidth'`：浮层不窄于触发元素 | Trigger 增 stretch 协议；minWidth 用 getBoundingClientRect（**不取整** —— offsetWidth 整数化会让浮层宽 1px、popup x 偏 1px，L6 实测红） | PLATFORM | L6 6/6（93.9531px 逐位一致） |
+| D93 | `dropdown`（harness） | rc-dropdown 不设 motionDeadline（antd tooltip 设 1000）—— STABILIZE_CSS 的 animation:none 下 rc-motion 永远卡 appear（opacity:0） | harness 的 screenshotElement 在等待后**剥掉残存 motion 相位类**（模拟 animationend；Vue 侧已 settle ⇒ no-op） | PLATFORM（harness） | L6 react 基线从空浮层 → 6/6；tooltip/popover 回归无破坏 |
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

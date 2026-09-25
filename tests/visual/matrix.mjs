@@ -342,6 +342,14 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  dropdown: {
+    // 2 个 variant × 3 个 viewport = 6 张
+    // open 受控静态帧 + placement=bottom + autoAdjustOverflow=false 钉死落点。
+    variants: [
+      'basicOpen', // open + bottom：Menu 浮层（portal 定位 + item/danger/disabled）
+      'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
+    ],
+  },
   menu: {
     // 4 个 variant × 3 个 viewport = 12 张
     // 全部静态帧（selectedKeys/openKeys 受控）；horizontal 走真浏览器 RO 测量。
