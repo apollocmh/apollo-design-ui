@@ -11,7 +11,7 @@
  *    本包同样不提供 —— 谁需要错峰谁自己给 `style` 加 `animation-delay`。
  */
 
-import { defineComponent, h, type PropType, ref, watch } from 'vue';
+import { type Component, defineComponent, h, type PropType, ref, watch } from 'vue';
 
 import { CSSMotion } from './css-motion';
 import type { KeyEntity } from './diff';
@@ -24,7 +24,10 @@ export const MotionList = defineComponent({
     /** 当前应当存在的 key 列表。顺序有意义（diff 依赖它） */
     keys: { type: Array as PropType<unknown[]>, default: () => [] },
     /** 包裹元素。传 `null` / `false` 表示不包裹，直接返回片段 */
-    component: { type: String, default: 'div' },
+    component: {
+      type: [String, Object, Boolean] as PropType<string | Component | false>,
+      default: 'div',
+    },
     // ---- 透传给每个 CSSMotion ----
     motionName: { type: String, default: undefined },
     motionAppear: { type: Boolean, default: true },

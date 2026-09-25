@@ -16,6 +16,7 @@
  * @see `es/CSSMotion.js:85-155`
  */
 
+import { getElement } from '@apollo-design/utils';
 import { cloneVNode, defineComponent, type PropType, type VNode } from 'vue';
 
 import type { MotionHooks } from './driver';
@@ -107,7 +108,21 @@ export const CSSMotion = defineComponent({
       //    `mergeRef = true`：用户 ref 与 motion ref **合并成数组**而不是被覆盖
       //    —— Alert 这类「motion 元素即 expose 元素」的组件，根 vnode 上同时
       //    要挂 nativeElement 的 ref（Vue 对数组 ref 会逐个调用，行为可加）。
-      return cloneVNode(first, { ref: motion.elementRef }, true);
+      //
+      // ⚠️ 但根 vnode 是**组件**时，ref 拿到的是组件实例（不是元素）—— 驱动要的是
+      //    元素，直接 `attach` 会 `element.addEventListener is not a function`。
+      //    所以这里用函数 ref 过一道 `getElement`（utils 的既定判据：组件 vnode
+      //    一律视为支持 ref，拿到后用 `getElement` 解析，解析失败给 `null` 而不是抛错）。
+      //    实测来源：notification 内核的 notice 就是组件 vnode（2026-09-25）。
+      return cloneVNode(
+        first,
+        {
+          ref: (node: unknown) => {
+            motion.elementRef.value = getElement(node);
+          },
+        },
+        true,
+      );
     };
   },
 });

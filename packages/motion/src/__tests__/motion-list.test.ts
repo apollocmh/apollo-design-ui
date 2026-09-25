@@ -162,3 +162,37 @@ describe('离场与摘除', () => {
     wrapper.unmount();
   });
 });
+
+describe('CSSMotion · 根 vnode 是组件时的元素解析（2026-09-25 实测补）', () => {
+  /**
+   * 为什么需要这条：`CSSMotion` 会把 ref 注入到 slot 的根 vnode 上，驱动靠它 `attach`
+   * 事件监听。根 vnode 是**元素**时 ref 就是元素；是**组件**时 ref 是组件实例 ——
+   * 直接 attach 会 `element.addEventListener is not a function`。
+   * 真实来源：notification 内核的 notice 就是组件 vnode（`Notification` 的 Vue 版）。
+   */
+  it('slot 返回组件 vnode 时，离场仍能走完并摘掉（不抛 addEventListener 错误）', async () => {
+    const Inner = defineComponent({
+      name: 'Inner',
+      setup() {
+        return () => h('div', { 'data-key': 'inner' }, 'x');
+      },
+    });
+
+    const Host = defineComponent({
+      setup() {
+        return () =>
+          h(
+            MotionList,
+            { keys: ['a'], supportMotion: true, motionName: 'apollo-fade', motionDeadline: 1 },
+            { default: () => h(Inner) },
+          );
+      },
+    });
+
+    const wrapper = mount(Host);
+    await nextTick();
+    await settle();
+    expect(wrapper.find('[data-key="inner"]').exists()).toBe(true);
+    wrapper.unmount();
+  });
+});
