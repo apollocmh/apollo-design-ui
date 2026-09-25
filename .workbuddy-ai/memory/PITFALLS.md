@@ -1296,3 +1296,41 @@
      **theme project 的 12 条用例**，不是构建门禁的 127 项。
      ⭐ 取证时按 **vitest project 名**（unit / dom-contract / types / a11y / theme）报数，
      不要用「L7」这类数字层号 —— 数字层号只在 `TESTING.md` 里权威。
+
+## Message 流（2026-09-25，174-177）
+
+> ⚠️ 编号从 **174** 起（Image 流用 170-173）。
+
+174. ⚠️ **组件 vnode 的 `ref` 拿到的是**实例**，不是元素** —— 而动效驱动要的是元素。
+     实测：`MotionList`/`CSSMotion` 把 ref 注入 slot 的根 vnode，根 vnode 是**组件**时
+     Vue 给的是组件实例 ⇒ 驱动 `attach()` 抛
+     `element.addEventListener is not a function`；浏览器里表现为「渲染错误」（两侧都白屏，
+     而 harness 判 render-error 而不是 0% 差异，这点设计得对）。
+     ⭐ 修法（已落 `packages/motion/src/css-motion.ts`）：注入**函数 ref**，过一道
+     `@apollo-design/utils` 的 `getElement`（该文件的既定判据：组件 vnode 一律视为支持
+     ref，拿到后用 getElement 解析，解析失败给 null 而不是抛错）。回归用例在
+     `motion/src/__tests__/motion-list.test.ts`。
+
+175. ⚠️ **「实测值」类状态必须同时覆盖「挂载后」与「变化后」两个触发点。**
+     notification 内核的列表 gap（`getComputedStyle(content).rowGap`）最初只写
+     `watch(() => props.configList.length > 0, …)` —— 只 watch **布尔翻转** ⇒
+     **静态列表**（PureList：`configList` 一开始就非空）**一次都不测**，gap 恒 0
+     ⇒ 四条消息的 `--notification-y` = 0/40/80/120（antd 是 0/56/112/168），
+     L6 `types` 用例 1.7%–6.5% block-diff。⭐ 处方：`onMounted(measure)` +
+     `watch(() => props.configList.length, () => nextTick(measure), { flush: 'post' })`。
+     同类坑的记忆：任何「从 DOM 读回来」的状态都要问一句「**首次渲染就满足条件**时会不会触发」。
+
+176. ⚠️ **改了 foundation 包（`motion` / `portal` / `utils` …）要单独重建它**：
+     视觉 harness 从**产物**解析这些包（`packages/motion/dist`），只
+     `pnpm --filter @apollo-design/ui run build` **不会**带上它们的修复 ——
+     实测先踩出「渲染错误」，重跑 motion 的 build 后立刻 0.000%。
+     ⭐ 判据：`packages/ui/dist/index.mjs` 把 `@apollo-design/*` 当外部依赖，
+     所以「哪个包改了就重建哪个包 + 重建 ui」。CI 的 `test:build` 会全量重建，
+     但**本地开发期的 L6 证据**必须自己记得这步。
+
+177. **命令式组件（`message` / `notification` / `Modal`）的 L4/L6 只能走静态面板。**
+     命令式路径整体是 portal + 自动消失 ⇒ SSR 不可见、静态截图也拿不到
+     ⇒ L4 用 `_InternalPanel*` / `_InternalList*`（`renderToStaticMarkup` 有产物），
+     L6 同样渲染静态面板（`single` / `types` / `custom`）。
+     ⭐ 另：`message.success()` 是**模块级单例** ⇒ 用例之间必须 `actDestroy()` 复位，
+     否则上一条的实例被下一条复用（`config.test` 的隔离就靠它）。

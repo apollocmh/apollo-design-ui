@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具所有权、易错判据、未决事项。
 > 规则本体：`AGENTS.md`/`WORKFLOW.md`/`TESTING.md`/`COMPATIBILITY.md`/`ARCHITECTURE.md`；
-> 坑：同目录 `PITFALLS.md`（173 条，**查坑先去那**）；日常进展：`YYYY-MM-DD.md`。
+> 坑：同目录 `PITFALLS.md`（177 条，**查坑先去那**）；日常进展：`YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -73,10 +73,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
   **往组件目录写文件前先确认没有别人的东西**（Write 默认 overwrite）。
 - 复核纪律：agent 的汇报逐条自己重跑才算数；新坑一律登记 PITFALLS.md（按流分段预留号段防撞车）。
 
-## 当前进度（2026-09-25）
+## 当前进度（2026-09-25 晚）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **38/72** completed（最新：image —— Image/PreviewGroup/Progress，rc 内核自建）。下一个 `next-task` 权威输出为准。
+- 组件 **39/72** completed（最新：**message** —— rc 内核自建 + 命令式 API；**notification 内核已落地**在 `notification/engine/`，notification **本体未做**：剩壳 + 交互按钮 + placement + 它自己的样式层 120 条规则/3 token）。下一个 `next-task` 权威输出为准。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。
