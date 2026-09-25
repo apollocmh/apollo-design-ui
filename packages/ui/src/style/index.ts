@@ -31,6 +31,7 @@
 import { getIconStyle } from '@apollo-design/icons';
 import { genAffixStyle } from '../affix/style';
 import { genAlertStyle } from '../alert/style';
+import { genAppStyle } from '../app/style';
 import { genBackTopStyle } from '../back-top/style';
 import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
@@ -122,6 +123,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'popover', gen: genPopoverStyle },
   { name: 'menu', gen: genMenuStyle },
   { name: 'dropdown', gen: genDropdownStyle },
+  { name: 'app', gen: genAppStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

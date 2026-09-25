@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "app/context",
+  "component": "app",
+  "description": "Context：向子树注入 message/notification/modal 的 HookAPI（useApp()）；AppConfig（message/notification 配置）沿树浅合并（嵌套 App 子覆盖父）。v1：三者未落地 ⇒ stub API（调用即 dev 警告，PENDING-2）。",
+  "antdVersion": "6.6.4",
+  "props": { "message": { "maxCount": 1 } },
+  "content": "inner",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "component": "app",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-25T02:12:27.480Z",
+  "cases": [
+    {
+      "id": "app:basic",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee apollo-app css-var-root\"><span>content</span></div>"
+    },
+    {
+      "id": "app:custom-component",
+      "html": "<section class=\"css-dev-only-do-not-override-1v6lqee apollo-app css-var-root\"><span>x</span></section>"
+    },
+    {
+      "id": "app:nested",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee apollo-app css-var-root\"><div class=\"css-dev-only-do-not-override-1v6lqee apollo-app css-var-root\"><span>inner</span></div></div>"
+    }
+  ]
+}

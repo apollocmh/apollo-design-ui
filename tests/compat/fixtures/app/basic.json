@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "app/basic",
+  "component": "app",
+  "description": "基础包裹：根元素继承 color/fontSize/lineHeight/fontFamily（单规则样式）；component 可为 div/section/main/span/false（false ⇒ 无包裹，带根类 props 时 dev 警告）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "content": "content",
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

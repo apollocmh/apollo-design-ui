@@ -595,6 +595,10 @@ export { Alert, AlertErrorBoundary } from './alert';
 export { genAlertStyle } from './alert/style';
 export type { ComponentToken as AlertComponentToken } from './alert/style/token';
 export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';
+export type { AppComponentType, AppConfig, AppProps, UseAppProps } from './app';
+export { App } from './app';
+export { genAppStyle } from './app/style';
+export { useApp } from './app/useApp';
 // ---------------------------------------------------------------------------
 // Carousel —— 走马灯（决策 B：自建 slick 引擎，见 engine.ts）
 //

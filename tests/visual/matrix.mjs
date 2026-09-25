@@ -342,6 +342,10 @@ export const COMPONENTS = {
       'vertical', // dotPlacement=start：纵向布局 + 左侧圆点（宽高对调）
     ],
   },
+  app: {
+    // 1 个 variant × 3 个 viewport = 3 张
+    variants: ['basic'],
+  },
   dropdown: {
     // 2 个 variant × 3 个 viewport = 6 张
     // open 受控静态帧 + placement=bottom + autoAdjustOverflow=false 钉死落点。
