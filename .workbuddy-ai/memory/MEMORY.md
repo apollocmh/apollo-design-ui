@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具所有权、易错判据、未决事项。
 > 规则本体：`AGENTS.md`/`WORKFLOW.md`/`TESTING.md`/`COMPATIBILITY.md`/`ARCHITECTURE.md`；
-> 坑：同目录 `PITFALLS.md`（139 条，**查坑先去那**）；日常进展：`YYYY-MM-DD.md`。
+> 坑：同目录 `PITFALLS.md`（173 条，**查坑先去那**）；日常进展：`YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -22,6 +22,8 @@ status/notes/layerNotes **Agent 写、跨运行保留**。组件收口后要刷 
 
 Node ≥22.12（managed 路径）｜pnpm 12.4.2｜TS 5.9｜Vitest 5｜Playwright（`channel:'chrome'`）。
 - 🚨 `pnpm -r run build` 永远不可用；权威构建门禁 `CODEBUDDY_SAFE_DELETE_ENABLED=0 node tests/build/run.mjs`。
+- 🚨 会自己删目录的两个入口都要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`：`tests/build/run.mjs`
+  与 **`tests/visual/run.mjs`**（vite 的 emptyOutDir 要清 .artifacts，6000+ 文件超 safe-delete 阈值）。
 - 🚨 本机 `pnpm` **不在 PATH**（只有 corepack，`corepack pnpm`=12.4.2）；脚本内部再调 `pnpm` 会 127。
   对策：`printf '#!/bin/zsh\nexec /Users/nanren/.workbuddy/binaries/node/versions/22.22.2-3/bin/corepack pnpm "$@"\n' > /tmp/pnpm-shim/pnpm && chmod +x` 后 `PATH=/tmp/pnpm-shim:$PATH pnpm run <script>`（2026-09-23 实证）。
 - 🚨 pnpm「超时无输出」先查 corepack 下载提示，长命令一律 `COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1`。
@@ -54,6 +56,11 @@ L0 utils/theme/icons ｜ 测试 test-utils
 6. biome warning 不 fail 门禁（error 才会）；对象字面量内 suppression 注释无效，
    用变量替代字面量绕过（PITFALLS 139）。
 7. Edit 工具批量编辑可能部分落盘且报 success——改完必须 grep 回读（PITFALLS 138）。
+8. 🚨 进 `style` 的尺寸**必须 `toCssSize()`**：Vue 3 不给数字补 px（React 才补），裸数字被
+   静默丢弃、还会被 CSS 兜底伪装成「有图但尺寸错」——只有 L6 能发现（PITFALLS 170 / D94）。
+9. 🚨 组件变量声明块要覆盖**全部根形态**（含 portal/Teleport 出来的浮层根）：本仓无 antd 的
+   `-css-var` 类机制，漏挂 ⇒ 浮层里 `var(--{p}-*)` 静默回退继承值（PITFALLS 171 / D95 / D69）。
+10. 产物 CSS 里的 `NaN`/`undefined`/未展开占位由构建门禁 **B11** 兜（PITFALLS 170 的产物侧）。
 
 ## 主分支 / 合并 / 并行（硬教训浓缩，原文见 PITFALLS）
 
@@ -66,18 +73,25 @@ L0 utils/theme/icons ｜ 测试 test-utils
   **往组件目录写文件前先确认没有别人的东西**（Write 默认 overwrite）。
 - 复核纪律：agent 的汇报逐条自己重跑才算数；新坑一律登记 PITFALLS.md（按流分段预留号段防撞车）。
 
-## 当前进度（2026-09-23）
+## 当前进度（2026-09-25）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **29/72** completed（最新：collapse，动效走 motion 包 CSSMotion）。下一个 `next-task` 权威输出为准。
+- 组件 **38/72** completed（最新：image —— Image/PreviewGroup/Progress，rc 内核自建）。下一个 `next-task` 权威输出为准。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。
 - **全仓 `update:*` 缺口**（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
-  但截至 carousel 只有 radio / switch 实现了 ⇒ 其余 20 个组件上 `v-model:xxx` 不生效，待统一补齐。
+  但截至 carousel 只有 radio / switch 实现了 ⇒ 其余组件上 `v-model:xxx` 不生效，待统一补齐。
+  （image 也是「发 `update:open`/`update:current` 但未写进 `emits`」的状态，README §5 P4。）
 - 共享文件 5 个（ui 的 index.ts / style/index.ts、tests/visual/matrix.mjs、cases/shared.mjs、
   root package.json）按字母序追加；⚠️ ui 根 index.ts 的 re-export 必须用别名
   （`genTokenDecls as genXTokenDecls` / `prepareComponentToken as prepareXComponentToken`，
   PITFALLS 158/168，已两次踩坑）。
-- **视觉层只链接 theme + ui 两个 workspace 包**（root devDeps）⇒ vue 侧的视觉用例
-  **用不了 `@apollo-design/icons`**；需要图标时用「两侧同一份内联结构」替身。
+- **视觉层只链接 theme + ui 两个 workspace 包**（root devDeps）⇒ **用例文件**（在
+  `tests/visual/render/cases/`）里 import `@apollo-design/icons` 解析不到；**组件内部**
+  import 没问题（从 `packages/ui/node_modules` 解析，pnpm 每包依赖）。需要图标时用
+  「两侧同一份内联结构」替身。
+- ⚠️ demo 的 `.md` 有**两派格式**并存：frontmatter（`order`/`title`，carousel/input-number）
+  与 `## zh-CN`/`## en-US`（dropdown/app/menu/image）。新组件跟随后者。
+- ⚠️ 「L7」两个口径：`TESTING.md` §10 = Build Test；组件测试文件头把 theme 层也叫 L7。
+  报数一律用 **vitest project 名**（unit / dom-contract / types / a11y / theme）。
