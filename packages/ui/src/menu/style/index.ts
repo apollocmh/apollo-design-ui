@@ -31,7 +31,6 @@ const KEYFRAMES = `@keyframes apollo-icon-loading-circle{100%{transform:rotate(3
 @keyframes apollo-menu-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}
 @keyframes apollo-menu-zoom-big-in{0%{transform:scale(0.8);opacity:0;}100%{transform:scale(1);opacity:1;}}
 @keyframes apollo-menu-zoom-big-out{0%{transform:scale(1);}100%{transform:scale(0.8);opacity:0;}}
-}
 @keyframes apollo-menu-fade-in{0%{opacity:0;}100%{opacity:1;}}
 @keyframes apollo-menu-fade-out{0%{opacity:1;}100%{opacity:0;}}
 @keyframes loadingCircle{100%{transform:rotate(360deg);}}
