@@ -45,6 +45,7 @@ import { genDropdownStyle } from '../dropdown/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genGridStyle } from '../grid/style';
+import { genImageStyle } from '../image/style';
 import { genInputStyle } from '../input/style';
 import { genInputNumberStyle } from '../input-number/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
@@ -124,6 +125,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'menu', gen: genMenuStyle },
   { name: 'dropdown', gen: genDropdownStyle },
   { name: 'app', gen: genAppStyle },
+  { name: 'image', gen: genImageStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

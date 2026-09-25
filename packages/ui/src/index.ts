@@ -700,6 +700,16 @@ export { Dropdown, DropdownButton, DropdownPurePanel } from './dropdown';
 export { genDropdownStyle, genDropdownTokenDecls } from './dropdown/style';
 export type { ComponentToken as DropdownComponentToken } from './dropdown/style/token';
 export { prepareComponentToken as prepareDropdownComponentToken } from './dropdown/style/token';
+export type {
+  ImageProps,
+  ImageSemanticType,
+  PreviewConfig,
+  PreviewGroupProps,
+} from './image';
+export { Image, ImagePreviewGroup } from './image';
+export { genImageStyle, genImageTokenDecls } from './image/style';
+export type { ComponentToken as ImageComponentToken } from './image/style/token';
+export { prepareComponentToken as prepareImageComponentToken } from './image/style/token';
 // ---------------------------------------------------------------------------
 // Input —— 输入框（引擎自建于 engine/：BaseInput 三层包裹 + IME 组合态 + 计数裁剪）
 //
