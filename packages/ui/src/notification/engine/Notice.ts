@@ -25,7 +25,7 @@
  */
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
 
-import type { NoticeClassNames, NoticeProps, NoticeStyles } from '../interface';
+import type { NoticeClassNames, NoticeProps, NoticeStyles } from './interface';
 import { useClosable } from './hooks/useClosable';
 import { useNoticeTimer } from './hooks/useNoticeTimer';
 import DefaultProgress from './Progress';

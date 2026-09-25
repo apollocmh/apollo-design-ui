@@ -36,7 +36,7 @@ import { useComponentConfig } from '../config-provider/context';
 import { useNotification } from '../notification/engine';
 import { clsx } from '../notification/engine/util';
 import { useStackConfig } from '../notification/hooks/useStackConfig';
-import type { NoticeListConfig } from '../notification/interface';
+import type { NoticeListConfig } from '../notification/engine/interface';
 import { getPlacementOffsetStyle } from '../notification/util';
 import { getMessageIcon } from './icon';
 import type {

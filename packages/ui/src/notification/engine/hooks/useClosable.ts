@@ -14,7 +14,7 @@
 import { pickAttrs } from '@apollo-design/utils';
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import type { NoticeProps } from '../../interface';
+import type { NoticeProps } from '../interface';
 
 export type ClosableType = NoticeProps['closable'];
 

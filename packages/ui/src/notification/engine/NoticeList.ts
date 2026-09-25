@@ -23,7 +23,7 @@ import type {
   NoticeStyles,
   NotificationClassNames,
   NotificationStyles,
-} from '../interface';
+} from './interface';
 import { useListPosition } from './hooks/useListPosition';
 import { useStack } from './hooks/useStack';
 import Notice from './Notice';

@@ -11,7 +11,7 @@
 import { isPlainObject } from '@apollo-design/utils';
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import type { StackConfig } from '../interface';
+import type { StackConfig } from '../engine/interface';
 
 export type StackConfigInput = boolean | StackConfig | undefined;
 

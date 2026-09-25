@@ -12,7 +12,7 @@
  */
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import type { NoticeListConfig, StackConfig } from '../../interface';
+import type { NoticeListConfig, StackConfig } from '../interface';
 import { type NodeSize, useSizes } from './useSizes';
 
 export interface UseListPositionResult {

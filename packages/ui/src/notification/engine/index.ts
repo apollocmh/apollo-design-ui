@@ -19,7 +19,7 @@ export type {
   NotificationsProps,
   Placement,
   StackConfig,
-} from '../interface';
+} from './interface';
 export { useClosable } from './hooks/useClosable';
 export { useListPosition } from './hooks/useListPosition';
 export { useNoticeTimer } from './hooks/useNoticeTimer';

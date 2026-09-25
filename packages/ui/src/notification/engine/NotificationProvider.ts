@@ -18,7 +18,7 @@ import {
   provide,
 } from 'vue';
 
-import type { NotificationClassNames } from '../interface';
+import type { NotificationClassNames } from './interface';
 
 export interface NotificationProviderContext {
   classNames?: NotificationClassNames;

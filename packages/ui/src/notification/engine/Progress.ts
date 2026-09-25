@@ -6,7 +6,7 @@
  */
 import { defineComponent, h, type PropType } from 'vue';
 
-import type { NotificationProgressProps } from '../interface';
+import type { NotificationProgressProps } from './interface';
 
 export default defineComponent({
   name: 'NotificationProgress',

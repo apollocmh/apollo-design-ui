@@ -22,7 +22,7 @@ import type {
   NotificationAPI,
   NotificationConfig,
   NotificationsProps,
-} from '../interface';
+} from './interface';
 import Notifications from './Notifications';
 
 const defaultGetContainer = (): HTMLElement => document.body;

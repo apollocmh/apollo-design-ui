@@ -33,7 +33,7 @@ import type {
   NotificationStyles,
   NotificationsProps,
   Placement,
-} from '../interface';
+} from './interface';
 import NoticeList from './NoticeList';
 
 /** placement → 该组下的 notice 列表。 */
