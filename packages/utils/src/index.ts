@@ -50,11 +50,16 @@ export {
   getElementFromVNode,
   getFocusNodeList,
   getScroll,
+  getTargetScrollBarSize,
+  isBodyOverflowing,
   isStyleSupport,
   isVisible,
   lockFocus,
+  removeCSS,
+  resetCSSCache,
   resetFocusLock,
   triggerFocus,
+  updateCSS,
   useLockFocus,
 } from './dom';
 // ---------------------------------------------------------------------------

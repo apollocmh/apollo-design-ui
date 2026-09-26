@@ -22,6 +22,13 @@
 - 容器管理：getContainer / createContainer / destroyContainer
 - 层级：useZIndex / ZIndexContext / getNextZIndex
 - ContextIsolator（切断 provider 传递）
+- **全局副作用**（2026-09-26 为 drawer 补入，modal 同用）：
+  - `useScrollLocker(lock)` + Portal 的 `autoLock` prop —— 锁 `html body` 滚动，
+    body 本来有滚动条时补 `width: calc(100% - Npx)`；
+  - `useEscKeyDown(open, onEsc)` + Portal 的 `onEsc` prop —— 全局 ESC **层栈**，
+    回调拿到 `{ top, event }`（`top` = 自己是不是最上层），带 IME 保护
+    （`compositionend` 后 200ms 内的 ESC 忽略）。
+  两者都移植自 `@rc-component/portal@2.2.1` 的同名 hook（契约逐条对齐，差异见文件头）。
 
 ## 明确不做（边界）
 

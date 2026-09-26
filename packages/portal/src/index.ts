@@ -54,6 +54,8 @@ export { portalInlineMock, resetPortalInlineMock } from './mock';
 // ---------------------------------------------------------------------------
 
 export { Portal } from './portal';
+export type { EscInfo } from './use-esc-key-down';
+export { escKeyDownTest, useEscKeyDown } from './use-esc-key-down';
 export type {
   PortalContainerRef,
   UsePortalContainerOptions,
@@ -67,3 +69,4 @@ export {
   useZIndex,
   ZINDEX_KEY,
 } from './use-portal';
+export { useScrollLocker } from './use-scroll-locker';

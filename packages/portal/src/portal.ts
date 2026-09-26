@@ -20,7 +20,9 @@ import { computed, defineComponent, h, type PropType, Teleport } from 'vue';
 
 import type { GetContainer } from './container';
 import { portalInlineMock } from './mock';
+import { type EscInfo, useEscKeyDown } from './use-esc-key-down';
 import { usePortalContainer } from './use-portal';
+import { useScrollLocker } from './use-scroll-locker';
 
 export const Portal = defineComponent({
   name: 'Portal',
@@ -42,6 +44,16 @@ export const Portal = defineComponent({
     },
     /** dev 下给默认容器打 `data-debug` */
     debug: { type: String, default: undefined },
+    /**
+     * 锁 body 滚动（`useScrollLocker`）。rc-drawer / rc-dialog 用它：
+     * `autoLock = mask && (open || animatedVisible)`。
+     */
+    autoLock: { type: Boolean, default: false },
+    /**
+     * ESC 回调（全局层栈，`useEscKeyDown`）。
+     * 回调参数带 `top`：自己是不是最上层 —— 多层浮层同时打开时只有最上层该响应。
+     */
+    onEsc: { type: Function as PropType<(info: EscInfo) => void>, default: undefined },
   },
   setup(props, { slots }) {
     if (isDev) {
@@ -51,6 +63,16 @@ export const Portal = defineComponent({
         "Portal only work in client side. Please call 'useEffect' to show Portal instead default render in SSR.",
       );
     }
+
+    // `Portal.js` 的两个全局副作用：滚动锁 + ESC 层栈
+    // ⚠️ `onEsc` 只在传了的时候才挂栈（不传就不参与 ESC 层栈 —— 与上游一致：
+    //    上游把 `onEsc` 直接交给 hook，未传时 `stack[i].onEsc` 会抛，所以上游的调用方
+    //    （rc-drawer）恒传一个函数；本仓这里做**防御性**判空，语义不变）
+    useScrollLocker(() => props.autoLock && props.open);
+    useEscKeyDown(
+      () => props.open && !!props.onEsc,
+      (info) => props.onEsc?.(info),
+    );
 
     const { container, shouldRender } = usePortalContainer({
       open: () => props.open,
