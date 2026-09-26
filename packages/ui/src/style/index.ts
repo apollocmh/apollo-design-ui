@@ -41,6 +41,7 @@ import { genCheckboxStyle } from '../checkbox/style';
 import { genCollapseStyle } from '../collapse/style';
 import { genDescriptionsStyle } from '../descriptions/style';
 import { genDividerStyle } from '../divider/style';
+import { genDrawerStyle } from '../drawer/style';
 import { genDropdownStyle } from '../dropdown/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
@@ -126,6 +127,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'popover', gen: genPopoverStyle },
   { name: 'menu', gen: genMenuStyle },
   { name: 'dropdown', gen: genDropdownStyle },
+  { name: 'drawer', gen: genDrawerStyle },
   { name: 'app', gen: genAppStyle },
   { name: 'image', gen: genImageStyle },
   { name: 'message', gen: genMessageStyle },
