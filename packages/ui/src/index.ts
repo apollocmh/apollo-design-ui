@@ -688,6 +688,27 @@ export {
 export type { ComponentToken as DescriptionsComponentToken } from './descriptions/style/token';
 export { prepareComponentToken as prepareDescriptionsComponentToken } from './descriptions/style/token';
 export type {
+  DrawerPlacement,
+  DrawerProps,
+  DrawerPurePanelProps,
+  DrawerResizableConfig,
+  DrawerSemanticType,
+  DrawerSize,
+  FocusableConfig as DrawerFocusableConfig,
+  MaskType as DrawerMaskType,
+  PushState as DrawerPushState,
+} from './drawer';
+// ---------------------------------------------------------------------------
+// Drawer —— 抽屉（rc-drawer 的 Vue 自建：portal + mask + push + resizable）
+//
+// ⚠️ 尺寸轴随方位切换：`left`/`right` 用 `width`、`top`/`bottom` 用 `height`；
+//    `size` 预设 `'large'` = 736、`'default'` = 378。**默认有 mask**（可点遮罩关闭）。
+// ---------------------------------------------------------------------------
+export { Drawer, DrawerPurePanel } from './drawer';
+export { genDrawerStyle, genDrawerTokenDecls } from './drawer/style';
+export type { ComponentToken as DrawerComponentToken } from './drawer/style/token';
+export { prepareComponentToken as prepareDrawerComponentToken } from './drawer/style/token';
+export type {
   DropdownArrowOptions,
   DropdownButtonProps,
   DropdownPlacement,

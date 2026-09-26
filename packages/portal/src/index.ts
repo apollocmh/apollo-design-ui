@@ -9,8 +9,13 @@
  * 分层约束（ARCHITECTURE.md §3.1）：L1，只依赖 L0 的 `utils`。
  * 因此**不依赖 `theme`** —— `zIndexPopupBase` 由调用方传入。
  *
- * ❌ 不做：浮层定位（position）、焦点陷阱（a11y）、触发时机与显隐延迟（overlay）、
- *    滚动锁定与 Esc（按 Modal 的 rationale 属 ui 交互语义）。
+ * ❌ 不做：浮层定位（position）、焦点陷阱（a11y）、触发时机与显隐延迟（overlay）。
+ *
+ * ⚠️ **边界修订（2026-09-26，drawer 落地时）**：原文写「滚动锁定与 Esc 属 ui 交互语义」，
+ *    实测这条与上游不符 —— `@rc-component/portal` 自己就带 `useScrollLocker` / `useEscKeyDown`，
+ *    且 rc-drawer / rc-dialog 都是**从 portal 拿**的（不是各自实现）。
+ *    ⇒ 改判：两者留在 portal（容器与「谁是顶层」只有 portal 知道），本包导出
+ *    `useScrollLocker` / `useEscKeyDown` 与 Portal 的 `autoLock` / `onEsc` 两个 prop。
  */
 
 // ---------------------------------------------------------------------------
