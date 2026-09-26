@@ -76,10 +76,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ## 当前进度（2026-09-26）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **40/72** completed（最新：**notification**）。⚠️ 命令式组件已成对：`message` 与 `notification` 共用 `notification/engine/` 内核；两者差异（open 返回 void / 4 类型 / 默认堆叠 / zIndex 2050）见 2026-09-26 日志。
+- 组件 **41/72** completed（最新：**drawer** —— rc-drawer 的 Vue 自建）。⚠️ 命令式组件已成对：`message` 与 `notification` 共用 `notification/engine/` 内核；两者差异（open 返回 void / 4 类型 / 默认堆叠 / zIndex 2050）见 2026-09-26 日志。
 - 通知内核 + `_internal/use-closable.ts` + **portal 的 `autoLock`/`onEsc`**（2026-09-26 为 drawer 补入）已就绪。
-- **drawer 进行中**：G0–G4 完成（类型面 / token 4 个 / 样式 91 条），**内核未写** ⇒ 下一轮从
-  `drawer/engine/`（rc-drawer 的 Vue 自建）开始，DrawerPopup 骨架与踩坑见 2026-09-26 日志。
+- portal 的 `autoLock` / `onEsc` 已补齐（drawer 那轮），`_internal/use-closable` 与通知内核都在。
+- ⚠️ 改 foundation 包（utils / portal / motion）后**必须单独重建**，否则 ui 的 dist 带不上（PITFALLS 176）。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。
