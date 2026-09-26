@@ -49,6 +49,7 @@ import { type DrawerContextValue, drawerContextKey } from './context';
 import DrawerSection from './DrawerSection';
 import { useDrag } from './useDrag';
 import { useFocusable } from './useFocusable';
+import { toCssSize } from './util';
 
 export interface DrawerMotion {
   motionName?: string;
@@ -221,8 +222,10 @@ export default defineComponent({
             style.transform = `translateX(${-d}px)`;
         }
       }
-      if (isHorizontal.value) style.width = parseWidthHeight(mergedSize.value);
-      else style.height = parseWidthHeight(mergedSize.value);
+      // ⚠️ **必须过 `toCssSize`**：Vue 的 patchStyle 不给数字补 px（React 才补），
+      //    裸数字会被静默丢弃 ⇒ 面板宽度/高度全丢（PITFALLS 170 / D94 同源）。
+      if (isHorizontal.value) style.width = toCssSize(parseWidthHeight(mergedSize.value));
+      else style.height = toCssSize(parseWidthHeight(mergedSize.value));
       return style;
     });
 
