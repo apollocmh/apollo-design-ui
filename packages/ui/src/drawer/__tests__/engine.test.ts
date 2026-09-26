@@ -24,7 +24,9 @@ const BP = { prefixCls: 'apollo-drawer' };
 
 async function mountDrawer(props: Record<string, unknown> = {}) {
   const wrapper = mount(Drawer, {
-    props: { ...BP, open: true, getContainer: false, ...props },
+    // `getContainer: false`（内联）与 rc 的 prop 类型不同（rc 侧是 React 的联合类型）
+    // ⇒ 按仓库惯例整体断言一次，而不是去放宽组件的 prop 类型
+    props: { ...BP, open: true, getContainer: false, ...props } as never,
     slots: { default: () => 'content' },
     global: { stubs: { teleport: false } },
   });
