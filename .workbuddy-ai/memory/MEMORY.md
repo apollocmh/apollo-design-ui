@@ -73,10 +73,11 @@ L0 utils/theme/icons ｜ 测试 test-utils
   **往组件目录写文件前先确认没有别人的东西**（Write 默认 overwrite）。
 - 复核纪律：agent 的汇报逐条自己重跑才算数；新坑一律登记 PITFALLS.md（按流分段预留号段防撞车）。
 
-## 当前进度（2026-09-25 晚）
+## 当前进度（2026-09-26）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **39/72** completed（最新：**message** —— rc 内核自建 + 命令式 API；**notification 内核已落地**在 `notification/engine/`，notification **本体未做**：剩壳 + 交互按钮 + placement + 它自己的样式层 120 条规则/3 token）。下一个 `next-task` 权威输出为准。
+- 组件 **40/72** completed（最新：**notification**）。⚠️ 命令式组件已成对：`message` 与 `notification` 共用 `notification/engine/` 内核；两者差异（open 返回 void / 4 类型 / 默认堆叠 / zIndex 2050）见 2026-09-26 日志。
+- 通知内核 + `_internal/use-closable.ts` 已就绪 ⇒ 下一批 portal 族组件（drawer / modal）成本更低。下一个 `next-task` 权威输出为准。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
   Empty SVG 不跟 darkAlgorithm 需补；开放决策 7 项（`ask decisions --open`）。
