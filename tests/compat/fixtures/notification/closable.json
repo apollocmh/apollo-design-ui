@@ -1,0 +1,13 @@
+{
+  "$schema": "../schema.json",
+  "id": "notification/closable",
+  "component": "notification",
+  "description": "关闭按钮的三级合并（props → context → fallback）：`closable: false` 与 `closeIcon: null` **都移除整个按钮**（computeClosableConfig 的第一条分支）；`closable: { closeIcon: null }` ⇒ 有按钮无图标；`closable: { disabled: true }` ⇒ 按钮带 disabled；aria-label 取 locale 的 `global.close`（默认 'Close'）。",
+  "antdVersion": "6.6.4",
+  "props": { "title": "Closable" },
+  "variants": {
+    "closable": [false, null, { "closeIcon": null }, { "disabled": true }]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

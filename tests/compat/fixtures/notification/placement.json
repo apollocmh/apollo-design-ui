@@ -1,0 +1,13 @@
+{
+  "$schema": "../schema.json",
+  "id": "notification/placement",
+  "component": "notification",
+  "description": "六个方位：top / topLeft / topRight（默认）/ bottom / bottomLeft / bottomRight。列表根带 {p}-{placement} 类，定位规则在 style 的 placement 段（235 行源）。优先级：单条 ArgsProps.placement > 全局 NotificationConfig.placement > 'topRight'。",
+  "antdVersion": "6.6.4",
+  "props": { "placement": "bottomRight" },
+  "variants": {
+    "placement": ["top", "topRight", "bottom", "bottomLeft"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

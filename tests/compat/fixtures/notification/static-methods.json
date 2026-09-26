@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "notification/static-methods",
+  "component": "notification",
+  "description": "命令式 API：四个类型方法 + open + destroy。notice 结构 = {p}-notification-notice（role=alert 默认 / data-notification-index / --notification-index）> -notice-wrapper（有 icon 才包）> -notice-icon + title/description（两者同时存在才包 -notice-section）；**默认有关闭按钮**（CloseOutlined 带 {p}-notification-notice-close-icon 类，aria-label 取 locale 的 close）。⚠️ 与 message 的两处差异：open() 返回 void（没有 thenable 句柄）、**默认就堆叠**（DEFAULT_STACK_CONFIG = { offset: 8 }）。命令式路径整体走 portal ⇒ SSR 不可见。",
+  "antdVersion": "6.6.4",
+  "props": { "type": "success", "title": "Hello", "description": "Desc" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

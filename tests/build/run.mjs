@@ -544,6 +544,7 @@ const SSR_EXPORT_ALIASES = {
   qrcode: ['QrCode'],
   // antd 的 message / notification 导出名是**小写**（它们是方法集合，不是组件）
   message: ['message'],
+  notification: ['notification'],
 };
 
 /**

@@ -321,9 +321,13 @@ if (missingFixtures === 0) ok('E9', 'completed 组件均有 compat fixture');
  * - 进度墨层 / 进度条的 8 个渐变端点色：antd `genImageProgressStyle` 与
  *   `style/progressAnimation.js` 里就是字面量（AI 生成进度的装饰色，与主题无关；
  *   2026-09-25 登记）。
+ * - `rgba(0, 0, 0, 0.04)`：notification 进度条**轨道**的底色 —— 上游
+ *   `components/notification/style/notification.ts` 里就是字面量
+ *   （`backgroundColor: 'rgba(0, 0, 0, 0.04)'`，2026-09-26 登记）。
+ *   它的值与 `colorFillTertiary` 相同，但**上游没有用 token** ⇒ 换 token 会与产物分叉。
  */
 const ANTD_LITERAL_COLOR_SKIP =
-  /rgba\(255,\s*255,\s*255,\s*[\d.]+\)|rgba\(0,\s*0,\s*0,\s*0\.[123]\)|rgba\((?:100,\s*180,\s*255,\s*0\.98|180,\s*140,\s*255,\s*0\.95|100,\s*220,\s*220,\s*0\.9|255,\s*150,\s*200,\s*0\.88|160,\s*190,\s*255,\s*0\.88|120,\s*170,\s*255,\s*0\.85|160,\s*150,\s*245,\s*0\.85|130,\s*200,\s*220,\s*0\.85)\)/;
+  /rgba\(255,\s*255,\s*255,\s*[\d.]+\)|rgba\(0,\s*0,\s*0,\s*0\.(?:1|2|3|04)\)|rgba\((?:100,\s*180,\s*255,\s*0\.98|180,\s*140,\s*255,\s*0\.95|100,\s*220,\s*220,\s*0\.9|255,\s*150,\s*200,\s*0\.88|160,\s*190,\s*255,\s*0\.88|120,\s*170,\s*255,\s*0\.85|160,\s*150,\s*245,\s*0\.85|130,\s*200,\s*220,\s*0\.85)\)/;
 
 const HARDCODED_PATTERNS = [
   // 2026-09-22 豁免 `linear-gradient(#fff 0 0)`：border-beam 的 mask 抠边用白色
