@@ -97,6 +97,12 @@ export default defineComponent({
           {
             type: 'button',
             onClick: props.onClose,
+            // ⚠️ 按钮自带 `aria-label`：antd 的 `useClosable` 会对**最终**图标做
+            //    `cloneElement(icon, { 'aria-label': closeLabel })` —— 这里「最终图标」
+            //    就是本函数返回的 button ⇒ 标签落在 button 上，内层图标仍是它自己的
+            //    小写 `close`（L4 基线逐属性比对：button=Close / span=close）。
+            //    本仓的 `_internal/use-closable` 把这一步交给消费方（见该文件说明）。
+            'aria-label': 'Close',
             class: clsx(
               `${prefixCls}-close`,
               {

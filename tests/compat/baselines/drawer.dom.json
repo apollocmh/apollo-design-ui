@@ -1,0 +1,24 @@
+{
+  "$schema": "../schema.json",
+  "component": "drawer",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-26T10:14:16.223Z",
+  "cases": [
+    {
+      "id": "drawer:pure-panel",
+      "html": "<div class=\"apollo-drawer apollo-drawer-pure apollo-drawer-right css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-drawer-header\"><div class=\"apollo-drawer-header-title\"><button type=\"button\" class=\"apollo-drawer-close\" aria-label=\"Close\"><span role=\"img\" aria-label=\"close\" class=\"apollo-icon apollo-icon-close\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z\"></path></svg></span></button><div class=\"apollo-drawer-title\">Title</div></div><div class=\"apollo-drawer-extra\">Extra</div></div><div class=\"apollo-drawer-body\">Body</div><div class=\"apollo-drawer-footer\">Footer</div></div>"
+    },
+    {
+      "id": "drawer:pure-panel-right",
+      "html": "<div class=\"apollo-drawer apollo-drawer-pure apollo-drawer-right css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-drawer-header\"><div class=\"apollo-drawer-header-title\"><button type=\"button\" class=\"apollo-drawer-close\" aria-label=\"Close\"><span role=\"img\" aria-label=\"close\" class=\"apollo-icon apollo-icon-close\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z\"></path></svg></span></button><div class=\"apollo-drawer-title\">T</div></div></div><div class=\"apollo-drawer-body\">Body</div></div>"
+    },
+    {
+      "id": "drawer:pure-panel-top",
+      "html": "<div class=\"apollo-drawer apollo-drawer-pure apollo-drawer-top css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-drawer-header\"><div class=\"apollo-drawer-header-title\"><button type=\"button\" class=\"apollo-drawer-close\" aria-label=\"Close\"><span role=\"img\" aria-label=\"close\" class=\"apollo-icon apollo-icon-close\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z\"></path></svg></span></button><div class=\"apollo-drawer-title\">T</div></div></div><div class=\"apollo-drawer-body\">Body</div></div>"
+    },
+    {
+      "id": "drawer:pure-panel-no-close",
+      "html": "<div class=\"apollo-drawer apollo-drawer-pure apollo-drawer-right css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-drawer-header\"><div class=\"apollo-drawer-header-title\"><div class=\"apollo-drawer-title\">T</div></div></div><div class=\"apollo-drawer-body\">B</div></div>"
+    }
+  ]
+}

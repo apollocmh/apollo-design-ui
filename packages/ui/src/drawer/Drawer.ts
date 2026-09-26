@@ -210,7 +210,6 @@ export default defineComponent({
           forceRender: props.forceRender,
           afterOpenChange: props.afterOpenChange,
           destroyOnHidden: props.destroyOnHidden ?? props.destroyOnClose,
-          focusTriggerAfterClose: props.focusTriggerAfterClose,
           onClose: props.onClose,
           panelRef: props.panelRef,
           zIndex: zIndex.value,
@@ -238,6 +237,7 @@ export default defineComponent({
           },
           'aria-labelledby': props['aria-labelledby'] ?? ariaId,
           focusTrap: focusTrapEnabled.value,
+          focusTriggerAfterClose: mergedFocusable.value.focusTriggerAfterClose,
           autoLock: mask.enabled.value,
         } as never,
         {
