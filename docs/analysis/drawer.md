@@ -118,3 +118,81 @@ registry 数据：**4 个** Component Token（具体名与默认值待读 `style
 - **`resizable`**：拖拽属 L2，jsdom 里只能测事件链；几何由 L6 兜。
 - **mask 的合并语义**（`useMergedMask`）容易与 `maskClosable` 的 deprecated 面搞混。
 - **focusTrap**：`focusable` 的完整实现依赖 `@apollo-design/a11y`（已就绪）。
+
+---
+
+# G1 第二遍（补读完成，2026-09-26）
+
+## 9. 已确认的 Token（4 个，`style/index.ts:342`）
+
+```ts
+prepareComponentToken = (token) => ({
+  zIndexPopup: token.zIndexPopupBase,      // = 1000（⚠️ 不是 base + N！drawer 直接用 base）
+  footerPaddingBlock: token.paddingXS,     // = 8
+  footerPaddingInline: token.padding,      // = 16
+  draggerSize: 4,                          // resizable 的拖拽手柄尺寸
+});
+```
+
+## 10. `@rc-component/drawer@1.4.2` 内核结构（449 行 / 7 文件）
+
+| 文件 | 行 | 职责 |
+|---|---|---|
+| `Drawer.js` | 129 | `open` 归一化（`mounted` 后才真开）+ `animatedVisible` 状态 + **焦点还原**（关闭时把焦点还给 `lastActiveRef`，除非焦点已落在面板内）+ `Portal(autoDestroy:false, autoLock, onEsc)` 包裹 |
+| `DrawerPopup.js` | 264 | 真正的 DOM：mask + 面板 + 动效 + `push` 位移 + `resizable` + `inline`（`getContainer === false`） |
+| `DrawerPanel.js` | 33 | rc 侧的 panel 壳（antd 的 DrawerPanel 是另一份） |
+| `util.js` | 18 | `parseWidthHeight`（`'378px'` ⇒ 378，且对「px 字符串」发 dev 告警）+ `warnCheck`（`wrapperClassName` 已移除 / SSR 下 `open` 无效） |
+| `context.js` / `index.js` | 3 / 2 | `RefContext`（把 `panelRef` 透下去） |
+
+关键常量与状态：
+- `open = false` 默认；`placement = 'right'` 默认；`autoFocus = true`；`keyboard = true`；
+  `mask = true`；`maskClosable = true`。
+- **`mergedOpen = mounted ? open : false`** —— 首次渲染**不**开门（避开 SSR/首帧抖动）。
+- **焦点还原**只在 `focusTriggerAfterClose !== false` 且「当前焦点不在面板内」时做。
+- `Portal` 的 `open = mergedOpen || forceRender || animatedVisible`（动效期间 portal 仍在），
+  `autoDestroy: false`、`autoLock: mask && (mergedOpen || animatedVisible)`。
+
+## 11. ⚠️ 新发现的基建缺口（改变实现计划）
+
+`Portal` 在 rc-drawer 里用了两个**本仓 `packages/portal` 还没有**的能力：
+
+| 能力 | rc 侧来源 | 本仓现状 |
+|---|---|---|
+| `autoLock`（body 滚动锁，mask 显示时锁） | `@rc-component/portal` → rc-util 的 scroll locker | ❌ 没有（`packages/portal` 只支持 `open/autoDestroy/getContainer/debug`） |
+| `onEsc`（ESC 关闭 + `top` 表示「是不是最上层」） | `@rc-component/portal` 的 esc 层栈 | ❌ 没有（仓库里搜不到 esc 栈） |
+
+⇒ **P1 的实现计划修正**：先把这两个能力补进 `packages/portal`（modal 也会用），
+再写 drawer 内核。判据：它们属于「portal 的通用能力」，塞进 drawer 会导致 modal 重复实现
+（三次法则：drawer + modal + 可能的 image-preview 都要）。
+
+## 12. antd `Drawer.tsx` 的渲染（已读全）
+
+```
+ContextIsolator(form, space)            // 隔离表单/间距 context
+ └─ zIndexContext.Provider              // useZIndex('Drawer')
+     └─ RcDrawer
+          classNames: mask / section / wrapper / dragger（**4 个语义槽** + root）
+          styles:     同上 + root
+          open / mask / maskClosable / push / size / defaultSize / rootStyle
+          getContainer / afterOpenChange / panelRef / zIndex
+          resizable（**只有传了才透**）
+          aria-labelledby={ariaLabelledby ?? ariaId}
+          destroyOnHidden={destroyOnHidden ?? destroyOnClose}
+          focusTriggerAfterClose / focusTrap
+          └─ DrawerPanel（size / ariaId / onClose / title / footer / extra / closable / loading / children）
+```
+
+**deprecated 共 9 条**（dev 告警）：`headerStyle` / `bodyStyle` / `footerStyle` /
+`contentWrapperStyle` / `maskStyle` / `drawerStyle` / `destroyInactivePanel` / `width` /
+`height`；另有 `classNames.content` / `styles.content` ⇒ `section` 的告警，
+以及 `style.position: absolute` + `getContainer` 组合的 breaking 提示。
+
+`PurePanel`（`_InternalPanelDoNotUseOrYouWillBeFired`）：根类 =
+`{p}-drawer {p}-drawer-pure {p}-drawer-{placement}`（默认 `right`），内部直接渲染 `DrawerPanel`。
+
+## 13. G1 结论
+
+- 本轮 = **portal 的两个能力扩展（autoLock / onEsc）+ rc-drawer 内核自建 + 组件壳 + 样式层**。
+- 可复用：`Portal` / `motion`（CSSMotion）/ `_internal/use-closable.ts` / `skeleton` / `a11y` 的 focus-restore。
+- 动效在 `style/motion.ts`（80 行，四向进出场）；样式 357 行。
+- 风险不变（push 污染容器 / 动效静态帧 / resizable 只能测事件链）。

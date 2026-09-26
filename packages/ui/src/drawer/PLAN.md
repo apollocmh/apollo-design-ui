@@ -4,7 +4,7 @@
 
 ## 状态
 
-- registry status: **analyzing（G1 第一遍完成 2026-09-26）** · priority P3 · complexity M
+- registry status: **analyzing（G1 两遍完成 + G2 完成，2026-09-26）** · priority P3 · complexity M
 - 依赖组件: config-provider, skeleton
 - foundation: @apollo-design/a11y, @apollo-design/motion, @apollo-design/portal, @apollo-design/theme, @apollo-design/utils
 - antd 规模: 733 行 / 12 文件 · token 4
@@ -12,8 +12,8 @@
 ## Gate 检查单
 
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
-- [x] G1 ANALYZE（**第一遍**：已读 Drawer.tsx 前 200 行 / DrawerPanel props / 规模与常量；渲染结构、token 值、rc-drawer 内核在 G2 开工前补读） —— 读 /tmp/antd-src/package/es/drawer/ 的 .d.ts + demo + 测试，产出 **docs/analysis/drawer.md**（先于实现！）
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
+- [x] G1 ANALYZE（**两遍完成**：Drawer.tsx 全文 / DrawerPanel / style token 4 个 / rc-drawer 449 行结构；⭐ 发现新缺口 —— Portal 缺 autoLock 与 onEsc 两个能力，需先补进 packages/portal） —— 读 /tmp/antd-src/package/es/drawer/ 的 .d.ts + demo + 测试，产出 **docs/analysis/drawer.md**（先于实现！）
+- [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
 - [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
 - [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
