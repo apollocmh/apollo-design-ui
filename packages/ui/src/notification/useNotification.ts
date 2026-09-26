@@ -38,7 +38,7 @@ import { useComponentConfig } from '../config-provider/context';
 import { useNotification as useKernelNotification } from './engine';
 import { clsx } from './engine/util';
 import { useStackConfig } from './hooks/useStackConfig';
-import { getCloseIcon, TypeIcon } from './icon';
+import { getCloseIcon, getCloseIconWithLabel, TypeIcon } from './icon';
 import type {
   ArgsProps,
   GlobalConfigProps,
@@ -184,7 +184,8 @@ export function useInternalNotification(
       {
         closable: true,
         closeIcon: realCloseIcon,
-        closeIconRender: (node) => getCloseIcon(noticePrefixCls, node as never),
+        closeIconRender: (node) =>
+          getCloseIconWithLabel(noticePrefixCls, node as never, closeLabel),
         closeLabel,
       },
     );

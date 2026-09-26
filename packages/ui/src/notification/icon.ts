@@ -15,7 +15,7 @@ import {
   InfoCircleFilled,
   LoadingOutlined,
 } from '@apollo-design/icons';
-import { type Component, h, type VNodeChild } from 'vue';
+import { type Component, cloneVNode, h, isVNode, type VNodeChild } from 'vue';
 
 import type { IconType } from './interface';
 
@@ -38,4 +38,21 @@ export function getCloseIcon(prefixCls: string, closeIcon?: VNodeChild): VNodeCh
     return null;
   }
   return closeIcon ?? h(CloseOutlined, { class: `${prefixCls}-close-icon` });
+}
+
+/**
+ * `closeIconRender` 的等价物 —— antd 在 `computeCloseIcon` 里对**最终**图标做
+ * `cloneElement(icon, { 'aria-label': closeLabel })`。
+ *
+ * ⚠️ 这一步必须做：图标自身带的 `aria-label` 是 `'close'`（小写，来自图标定义），
+ *    而可访问名契约要求它是 locale 的 `'Close'`。L4 会逐属性比对
+ *    （实测差异：`aria-label 不同 "Close" vs "close"`）。
+ */
+export function getCloseIconWithLabel(
+  prefixCls: string,
+  closeIcon: VNodeChild,
+  closeLabel: string,
+): VNodeChild {
+  const node = getCloseIcon(prefixCls, closeIcon);
+  return isVNode(node) ? cloneVNode(node, { 'aria-label': closeLabel }) : node;
 }

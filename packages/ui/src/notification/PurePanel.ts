@@ -18,7 +18,7 @@ import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 import { computeClosable, pickClosable } from '../_internal/use-closable';
 import { useComponentConfig } from '../config-provider/context';
 import Notice from './engine/Notice';
-import { getCloseIcon, TypeIcon } from './icon';
+import { getCloseIcon, getCloseIconWithLabel, TypeIcon } from './icon';
 import type { IconType, NotificationSemanticType } from './interface';
 
 export default defineComponent({
@@ -69,7 +69,7 @@ export default defineComponent({
         {
           closable: true,
           closeIcon: h(getCloseIcon(prefixCls, undefined) as never),
-          closeIconRender: (icon) => getCloseIcon(prefixCls, icon as VNodeChild),
+          closeIconRender: (icon) => getCloseIconWithLabel(prefixCls, icon as VNodeChild, 'Close'),
         },
       );
 

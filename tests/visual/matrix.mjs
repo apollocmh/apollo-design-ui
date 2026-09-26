@@ -361,6 +361,15 @@ export const COMPONENTS = {
       'custom', // 语义槽样式（root / icon / title 三层）
     ],
   },
+  notification: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 命令式路径是 portal + 自动消失 ⇒ 用例全部走**静态面板**（与 L4 同形态）。
+    variants: [
+      'basic', // 单条（success 图标 + 标题 + 描述 + 关闭按钮）
+      'placement', // bottomRight 定位（message 没有这个概念）
+      'actions', // actions 区（操作按钮 + 关闭按钮的几何）
+    ],
+  },
   app: {
     // 1 个 variant × 3 个 viewport = 3 张
     variants: ['basic'],
