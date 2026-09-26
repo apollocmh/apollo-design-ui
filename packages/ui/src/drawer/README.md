@@ -23,10 +23,12 @@ drawer/
 │   ├── DrawerPopup.ts   # mask + 面板 + 动效 + push + resizable
 │   ├── DrawerSection.ts # rc 的 panel（{p}-section div，role=dialog aria-modal）
 │   ├── useDrag.ts / useFocusable.ts / context.ts / util.ts
-├── hooks/useMergedMask.ts
 ├── interface.ts / index.ts
 └── style/{token.ts,index.ts}
 ```
+
+> ⚠️ `useMergedMask` 2026-09-26 已按三次法则（drawer 第二个、modal 第三个）从
+> `drawer/hooks/` 提到 `packages/ui/src/_internal/use-merged-mask.ts`；drawer 从那里引用。
 
 - **尺寸轴随方位**：`left/right` 用 width、`top/bottom` 用 height；rc 的 378 兜底只管水平，
   垂直靠 `defaultSize`（antd 默认传 378）。

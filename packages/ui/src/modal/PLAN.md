@@ -4,17 +4,16 @@
 
 ## 状态
 
-- registry status: **analyzing（G1 第一遍完成 2026-09-26）** · priority P3 · complexity L
+- registry status: **analyzing（G1 第二遍完成 2026-09-26）** · priority P3 · complexity L
 - 依赖组件: config-provider, skeleton
 - foundation: @apollo-design/a11y, @apollo-design/icons, @apollo-design/locale, @apollo-design/motion, @apollo-design/portal, @apollo-design/theme, @apollo-design/utils
-- antd 规模: 1596 行 / 36 文件 · token 6
+- antd 规模: 1596 行 / 36 文件 · token 6（⚠️ 实测 ComponentToken **24 键**，收口时修正）
 
 ## Gate 检查单
 
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
-- [x] G1 ANALYZE（**第一遍**：文件规模 / token 面 / 文件角色 / rc-dialog 结构；渲染细节与 confirm 路径待补读） —— 读 /tmp/antd-src/package/es/modal/ 的 .d.ts + demo + 测试，产出 **docs/analysis/modal.md**（先于实现！）
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
+- [x] G1 ANALYZE（**第一遍 + 第二遍补读完成**：antd 10 文件 + rc-dialog 10 文件全文 + token 全默认值 + 渲染树 + confirm 命令式路径 + 焦点三条） —— docs/analysis/modal.md
+- [x] G2 API DESIGN —— interface.ts 全量枚举（ModalProps / ModalFuncProps / 9 语义槽 / ModalInstance / ModalHookAPI / ModalPurePanelProps）；MaskType 与 ClosableType 复用 `_internal` 单一真源- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
 - [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）

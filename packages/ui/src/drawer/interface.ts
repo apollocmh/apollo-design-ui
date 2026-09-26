@@ -17,6 +17,8 @@
 
 import type { CSSProperties, VNodeChild } from 'vue';
 
+import type { MaskType } from '../_internal/use-merged-mask';
+
 /** 四个方位（rc-drawer 的 `Placement`）。 */
 export const DrawerPlacements = ['top', 'right', 'bottom', 'left'] as const;
 
@@ -37,8 +39,13 @@ export interface DrawerResizableConfig {
   onResizeEnd?: () => void;
 }
 
-/** mask 的配置（本仓 `_util/hooks` 的 `MaskType` 对应物）。 */
-export type MaskType = boolean | { enabled?: boolean; blur?: boolean; closable?: boolean };
+/**
+ * mask 的配置。
+ *
+ * ⚠️ 2026-09-26 起**单一真源**在 `_internal/use-merged-mask.ts`（drawer 与 modal 共用，
+ *    三次法则满足后搬家）。这里只做**再导出**，保持 drawer 的公开类型名不变。
+ */
+export type { MaskType };
 
 /** `focusable` 的配置（antd `useFocusable`）。 */
 export interface FocusableConfig {

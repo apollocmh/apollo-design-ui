@@ -2479,7 +2479,7 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "L",
-      "status": "analyzing",
+      "status": "implementing",
       "antdVersion": "6.6.4",
       "derived": {
         "dagLevel": 3,
@@ -2523,8 +2523,8 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "antdApiStatus": "in-progress",
-      "apiStatus": "todo",
+      "antdApiStatus": "done",
+      "apiStatus": "done",
       "compatStatus": "todo",
       "tokenStatus": "todo",
       "styleStatus": "todo",
@@ -2534,7 +2534,7 @@
       "a11yStatus": "todo",
       "visualStatus": "todo",
       "docsStatus": "todo",
-      "notes": "【portal + motion 的第一个消费者】用于验证 AR2。焦点陷阱、Esc 关闭、滚动锁定、焦点归还必须完整实现（a11y 硬要求）。",
+      "notes": "【portal + motion 的第一个消费者】用于验证 AR2。焦点陷阱、Esc 关闭、滚动锁定、焦点归还必须完整实现（a11y 硬要求）。G1 第二遍完成 2026-09-26（docs/analysis/modal.md）：已补读 antd 10 文件 + rc-dialog 10 文件全文。⚠️ 实测 ComponentToken 是 24 键（registry 的 tokenCount=6 不准，收口时按实测修正并重跑生成器）。⚠️ rc-dialog 本地无产物，本轮用 npm pack 解到 /tmp/rc-src/rc-dialog（PITFALLS 42）。",
       "layerNotes": null
     },
     {

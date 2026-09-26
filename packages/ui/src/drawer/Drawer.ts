@@ -24,10 +24,10 @@ import { useZIndex } from '@apollo-design/portal';
 import { isNumber, isRenderable, useId } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
+import { type MaskType, useMergedMask } from '../_internal/use-merged-mask';
 import { useComponentConfig } from '../config-provider/context';
 import DrawerPanel from './DrawerPanel';
 import RcDrawer from './engine/Drawer';
-import { type MaskType, useMergedMask } from './hooks/useMergedMask';
 import type {
   DrawerPlacement,
   DrawerResizableConfig,
