@@ -20,8 +20,9 @@
  *
  * 输出：`/tmp/modal-style.txt`，三段（DECLS / KEYFRAMES / RULES），原序。
  */
-import { createRequire } from 'node:module';
+
 import { writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const antdPath = require.resolve('antd');
@@ -100,13 +101,23 @@ while (idx < css.length) {
 }
 
 // ---------------------------------------------------------------- 筛选
-const KEEP = (sel) =>
-  sel.includes('ant-modal') ||
-  sel.includes('ant-zoom') ||
-  sel.includes('ant-fade') ||
-  sel.includes('@keyframes');
+/**
+ * ⚠️ **`@media` 块也要保留** —— 它的「选择器」是 `@media (max-width: 575px)`，
+ *    不含 `ant-modal`，按旧判据会被整块丢掉，于是**响应式规则全丢**
+ *    （modal 的 `<575px` 断点有 `max-width: calc(100vw - 16px)` 与 `margin: 8px auto`）。
+ *    实测：L6 的 mobile 视口因此整体下移 3px（`margin` 从 0 变 8px 的差）。
+ */
+const KEEP = (block) => {
+  const sel = block.slice(0, block.indexOf('{'));
+  // `@media` / `@supports` 这类 at-rule：判据要看**块体**里有没有 ant-modal
+  if (sel.startsWith('@')) {
+    if (sel.includes('@keyframes')) return true;
+    return block.includes('ant-modal');
+  }
+  return sel.includes('ant-modal') || sel.includes('ant-zoom') || sel.includes('ant-fade');
+};
 
-const selected = blocks.filter((block) => KEEP(block.slice(0, block.indexOf('{'))));
+const selected = blocks.filter(KEEP);
 
 // ---------------------------------------------------------------- 转换
 const HASH = /css-dev-only-do-not-override-[a-z0-9]+/g;

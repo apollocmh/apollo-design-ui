@@ -391,6 +391,16 @@ export const COMPONENTS = {
       'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
     ],
   },
+  modal: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 全部走**内联渲染**（受控 open + getContainer:false）或 PurePanel ——
+    //    portal 出来的浮层会盖住别的组件、动效相位也不稳定（与 drawer 同判，PITFALLS 177）。
+    variants: [
+      'basic', // 内联 + 标题/正文/页脚/关闭按钮
+      'confirm', // PurePanel type=confirm（图标 + 标题 + 正文 + 两按钮）
+      'loading', // 骨架态（footer 强制不渲染）
+    ],
+  },
   menu: {
     // 4 个 variant × 3 个 viewport = 12 张
     // 全部静态帧（selectedKeys/openKeys 受控）；horizontal 走真浏览器 RO 测量。

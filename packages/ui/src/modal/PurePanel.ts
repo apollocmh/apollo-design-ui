@@ -17,7 +17,7 @@ import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { ConfirmContent } from './ConfirmDialog';
 import Panel from './engine/Panel';
-import type { ModalSemanticType, ModalType } from './interface';
+import type { ModalProps, ModalSemanticType, ModalSemanticTypeInput, ModalType } from './interface';
 import ModalPanel, { renderCloseIcon } from './ModalPanel';
 
 export default defineComponent({
@@ -27,20 +27,26 @@ export default defineComponent({
     prefixCls: { type: String, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    closable: { type: [Boolean, Object, null] as unknown as PropType<unknown>, default: undefined },
+    closable: {
+      type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
+      default: undefined,
+    },
     closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     type: { type: String as PropType<ModalType>, default: undefined },
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     footer: {
-      type: [String, Number, Object, Array, Function, null] as unknown as PropType<unknown>,
+      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
       default: undefined,
     },
     content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     classNames: {
-      type: Object as PropType<ModalSemanticType['classNames']>,
+      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['classNames']>,
       default: undefined,
     },
-    styles: { type: Object as PropType<ModalSemanticType['styles']>, default: undefined },
+    styles: {
+      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['styles']>,
+      default: undefined,
+    },
   },
   setup(props, { attrs, slots }) {
     const config = useComponentConfig<{
@@ -55,12 +61,19 @@ export default defineComponent({
       NonNullable<ModalSemanticType['classNames']>,
       NonNullable<ModalSemanticType['styles']>
     >(
-      [() => config.classNames, () => props.classNames],
+      [
+        () => config.classNames,
+        // 见下方说明：函数形态由 `resolveSemantic` 在运行时处理，类型面收敛成对象形态
+        () => props.classNames as unknown as NonNullable<ModalSemanticType['classNames']>,
+      ],
       [
         () => config.styles,
         // `useSemanticRootStyle(style)` 的等价物：把裸 style 当成 `root` 槽
-        () => (props.style ? { root: props.style } : undefined),
-        () => props.styles,
+        () =>
+          props.style
+            ? ({ root: props.style } as unknown as NonNullable<ModalSemanticType['styles']>)
+            : undefined,
+        () => props.styles as unknown as NonNullable<ModalSemanticType['styles']>,
       ],
       props as unknown as Record<string, unknown>,
     );
@@ -73,7 +86,8 @@ export default defineComponent({
       const st = semantic.styles.value as ModalSemanticType['styles'];
 
       const className = [
-        prefixCls,
+        // ⚠️ **不含** `prefixCls` 本身 —— `Panel` 的根类已经会加它（上游同样只在
+        //    PurePanel 这里加 `-pure-panel` 与 confirm 段）
         `${prefixCls}-pure-panel`,
         props.type ? confirmPrefixCls : undefined,
         props.type ? `${confirmPrefixCls}-${props.type}` : undefined,
@@ -92,7 +106,10 @@ export default defineComponent({
             rootPrefixCls,
             type: props.type,
             title: props.title,
-            content: props.content ?? slots.default?.(),
+            // ⚠️ 上游给 ConfirmContent 的 `content` 是 **children**（`content={children}`），
+            //    **不是** `content` prop —— `PurePanel` 的 type 分支里 `content` prop 被忽略。
+            //    L6 抓到：传 `content` 会多出一行正文（confirm 用例差 0.68–1.43%）
+            content: slots.default?.(),
             closable: props.closable ?? false,
           } as never)
         : slots.default?.();

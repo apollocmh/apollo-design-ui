@@ -72,6 +72,7 @@ const RULES = `.apollo-modal-confirm-rtl{direction:rtl;}
 .apollo-modal-root .apollo-modal-centered{text-align:center;}
 .apollo-modal-root .apollo-modal-centered::before{display:inline-block;width:0;height:100%;vertical-align:middle;content:"";}
 .apollo-modal-root .apollo-modal-centered .apollo-modal{top:0;display:inline-block;padding-bottom:0;text-align:start;vertical-align:middle;}
+@media (max-width: 767px){.apollo-modal-root .apollo-modal{max-width:calc(100vw - 16px);margin:var(--apollo-margin-xs) auto;}.apollo-modal-root .apollo-modal-centered .apollo-modal{flex:1;}}
 .apollo-modal{box-sizing:border-box;margin:0 auto;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);pointer-events:none;position:relative;top:100px;width:auto;max-width:calc(100vw - calc(var(--apollo-margin) * 2));}
 .apollo-modal:focus-visible{border-radius:var(--apollo-border-radius-lg);outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}
 .apollo-modal .apollo-modal-title{margin:0;color:var(--apollo-modal-title-color);font-weight:var(--apollo-font-weight-strong);font-size:var(--apollo-modal-title-font-size);line-height:var(--apollo-modal-title-line-height);word-wrap:break-word;}
@@ -112,7 +113,13 @@ const RULES = `.apollo-modal-confirm-rtl{direction:rtl;}
 .apollo-zoom-enter,.apollo-zoom-appear{transform:scale(0);opacity:0;animation-timing-function:var(--apollo-motion-ease-out-circ);}
 .apollo-zoom-enter-prepare,.apollo-zoom-appear-prepare{transform:none;}
 .apollo-zoom-leave{animation-timing-function:var(--apollo-motion-ease-in-out-circ);}
-.apollo-modal-root .apollo-modal{--apollo-modal-sm-width:var(--apollo-modal-xs-width);--apollo-modal-md-width:var(--apollo-modal-sm-width);--apollo-modal-lg-width:var(--apollo-modal-md-width);--apollo-modal-xl-width:var(--apollo-modal-lg-width);--apollo-modal-xxl-width:var(--apollo-modal-xl-width);--apollo-modal-xxxl-width:var(--apollo-modal-xxl-width);width:var(--apollo-modal-xs-width);}`;
+.apollo-modal-root .apollo-modal{--apollo-modal-sm-width:var(--apollo-modal-xs-width);--apollo-modal-md-width:var(--apollo-modal-sm-width);--apollo-modal-lg-width:var(--apollo-modal-md-width);--apollo-modal-xl-width:var(--apollo-modal-lg-width);--apollo-modal-xxl-width:var(--apollo-modal-xl-width);--apollo-modal-xxxl-width:var(--apollo-modal-xxl-width);width:var(--apollo-modal-xs-width);}
+@media (min-width: 576px){.apollo-modal-root .apollo-modal{width:var(--apollo-modal-sm-width);}}
+@media (min-width: 768px){.apollo-modal-root .apollo-modal{width:var(--apollo-modal-md-width);}}
+@media (min-width: 992px){.apollo-modal-root .apollo-modal{width:var(--apollo-modal-lg-width);}}
+@media (min-width: 1200px){.apollo-modal-root .apollo-modal{width:var(--apollo-modal-xl-width);}}
+@media (min-width: 1600px){.apollo-modal-root .apollo-modal{width:var(--apollo-modal-xxl-width);}}
+@media (min-width: 1920px){.apollo-modal-root .apollo-modal{width:var(--apollo-modal-xxxl-width);}}`;
 
 /** 生成单个前缀下的完整样式（约定出口：ant 前缀在出口替换类名段）。 */
 export function genModalStyle(prefixCls: string = 'apollo'): string {

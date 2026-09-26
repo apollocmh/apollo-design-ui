@@ -47,7 +47,7 @@ import ConfirmDialog from './ConfirmDialog';
 import { withConfirm, withError, withInfo, withSuccess, withWarn } from './confirm';
 import destroyFns from './destroyFns';
 import type { ModalFuncProps, ModalHookAPI, ModalInstance } from './interface';
-import { fallbackProp } from './util';
+import { fallbackNode } from './util';
 
 let uuid = 0;
 
@@ -112,7 +112,12 @@ const HookModal = defineComponent({
   },
   setup(props) {
     const open = ref(true);
-    const innerConfig = ref<ModalFuncProps>(props.config);
+    // ⚠️ 用 `shallowRef` 而不是 `ref`：`ref<ModalFuncProps>` 会触发 Vue 的**深解包**
+    //    （`UnwrapRef`），而 `ModalFuncProps` 是个很深的联合类型 ⇒
+    //    读 `innerConfig.value.okText` 直接报 `TS2589: Type instantiation is excessively deep`。
+    //    语义上也该用 shallow：这里**永远整体替换**（`innerConfig.value = {...}`），
+    //    从不改嵌套字段。
+    const innerConfig = shallowRef<ModalFuncProps>(props.config);
     const config = useConfigContext();
 
     const afterClose = (): void => {
@@ -156,6 +161,14 @@ const HookModal = defineComponent({
       const prefixCls = config.getPrefixCls('modal');
       const rootPrefixCls = config.getPrefixCls();
 
+      // ⚠️ 用**非泛型**的 `fallbackNode` —— `fallbackProp<VNodeChild>(...)` 会让 TS
+      //    在深联合上做泛型实例化并报 `TS2589: excessively deep`（见 `util.ts` 的说明）
+      const okTextNode = fallbackNode(
+        innerConfig.value.okText,
+        mergedOkCancel ? contextLocale.okText : contextLocale.justOkText,
+      );
+      const cancelTextNode = fallbackNode(innerConfig.value.cancelText, contextLocale.cancelText);
+
       return h(ConfirmDialog, {
         ...(innerConfig.value as unknown as Record<string, unknown>),
         prefixCls,
@@ -163,11 +176,8 @@ const HookModal = defineComponent({
         close,
         open: open.value,
         afterClose,
-        okText: fallbackProp(
-          innerConfig.value.okText,
-          mergedOkCancel ? contextLocale.okText : contextLocale.justOkText,
-        ),
-        cancelText: fallbackProp(innerConfig.value.cancelText, contextLocale.cancelText),
+        okText: okTextNode,
+        cancelText: cancelTextNode,
         direction: innerConfig.value.direction ?? config.direction,
       } as never);
     };

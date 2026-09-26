@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "modal/basic",
+  "component": "modal",
+  "description": "基础对话框。结构 = {p}-root > ({p}-mask, {p}-wrap[{p}-centered][{p}-wrap-rtl]) > {p}（role=dialog + aria-modal=true + tabindex=-1 + aria-labelledby 指向 {p}-title 的 id）> {p}-container > {p}-close（button aria-label='Close' > {p}-close-x > 图标）+ {p}-header > {p}-title + {p}-body + {p}-footer。⚠️ mask 在 root **内部**、与 wrap 同级（不是兄弟）；关闭后节点仍在、靠 wrap 的 inline display:none 隐藏（destroyOnHidden 才真卸载）。⚠️ 动效类名是 {rootPrefixCls}-zoom / -fade（`apollo-zoom-*`），**不是** {p}-zoom。",
+  "antdVersion": "6.6.4",
+  "props": { "open": true, "title": "Basic Modal", "width": 400 },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

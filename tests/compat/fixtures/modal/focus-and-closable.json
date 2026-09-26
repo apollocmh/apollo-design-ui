@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "modal/focus-and-closable",
+  "component": "modal",
+  "description": "焦点三条（registry 点名的 a11y 硬要求）：① 陷阱 = useLockFocus(visible && isFixedPos && focusTrap !== false) —— 容器 position 必须是 fixed，三个门都真才启用；② 归还 = 关闭后把焦点还给打开前的元素（focusTriggerAfterClose，默认 true），⚠️ 上游把这条额外门控在 mask 上 ⇒ **无遮罩的对话框不归还**；③ autoFocusButton = confirm 的默认聚焦按钮（'ok' / 'cancel' / null）。closable：默认 true；false 不渲染按钮；对象形态可给 disabled / onClose / afterClose。⚠️ confirmLoading 为真时 handleCancel **早退**（点取消不回调也不关）。",
+  "antdVersion": "6.6.4",
+  "props": { "open": true, "closable": { "disabled": false }, "focusable": { "trap": true } },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": false },
+  "expect": {}
+}

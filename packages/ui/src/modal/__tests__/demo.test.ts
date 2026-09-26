@@ -1,9 +1,13 @@
 /**
- * demo 冒烟测试占位 —— G11 未开始。
+ * demo 冒烟 —— 23 个示例（对齐 antd `components/modal/demo/*.md` 的 23 个清单；
+ * 其中 `dark` / `modal-render` 因依赖外部库做了意图等价的简化，各自文件头有登记）。
  *
- * ⚠️ 实现后必须：demos glob + **expectCount**（与 antd 用户可见 demo 一一对应，
- * 防腐断言）；「不产生告警」是 demo 的硬约束。
+ * 「不产生告警」是 demo 的硬约束（`demoTest` 会断言 console 干净）。
  */
-import { describe } from 'vitest';
+import { demoTest } from '@apollo-design/test-utils';
 
-describe.todo('Modal · demo 冒烟（G11 未开始，expectCount 待定）');
+demoTest('Modal', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 23,
+  global: { stubs: { teleport: false } },
+});

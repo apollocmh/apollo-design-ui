@@ -1,17 +1,7 @@
----
-order: 0
-title:
-  zh-CN: 基本
-  en-US: Basic
----
+## zh-CN
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/modal/demo/ 抄清单 -->
-```vue
-<script setup lang="ts">
-import { Modal } from '@apollo-design/ui';
-</script>
+第一个对话框。
 
-<template>
-  <Modal>basic demo 占位</Modal>
-</template>
-```
+## en-US
+
+Basic modal.

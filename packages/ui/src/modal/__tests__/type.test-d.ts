@@ -27,9 +27,12 @@ describe('Modal · 类型', () => {
     expectTypeOf<'cancel'>().toMatchTypeOf<AutoFocusButton>();
   });
 
-  it('ModalOkType 是 5 值联合', () => {
+  it('ModalOkType 含 antd LegacyButtonType 的 5 值 + danger', () => {
     expectTypeOf<'primary'>().toMatchTypeOf<ModalOkType>();
-    expectTypeOf<'danger'>().not.toMatchTypeOf<ModalOkType>();
+    expectTypeOf<'dashed'>().toMatchTypeOf<ModalOkType>();
+    // ⚠️ `danger` 是 `LegacyButtonType = ButtonType | 'danger'` 的一部分
+    expectTypeOf<'danger'>().toMatchTypeOf<ModalOkType>();
+    expectTypeOf<'ghost'>().not.toMatchTypeOf<ModalOkType>();
   });
 
   it('MaskType 复用 _internal 的单一真源', () => {
@@ -105,8 +108,8 @@ describe('Modal · 类型', () => {
       const a: ModalFuncProps = { type: 'danger' };
       // @ts-expect-error autoFocusButton 不接受 'confirm'
       const b: ModalFuncProps = { autoFocusButton: 'confirm' };
-      // @ts-expect-error okType 不接受 'danger'
-      const c: ModalProps = { okType: 'danger' };
+      // @ts-expect-error okType 不接受 'ghost'（它是布尔 prop，不是 LegacyButtonType）
+      const c: ModalProps = { okType: 'ghost' };
       // @ts-expect-error mask 不接受字符串
       const d: ModalProps = { mask: 'blur' };
       return [a, b, c, d];

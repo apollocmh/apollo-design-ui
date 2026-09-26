@@ -44,7 +44,10 @@ import type {
   ModalButtonProps,
   ModalFooterExtra,
   ModalGetContainer,
+  ModalLocale,
+  ModalProps,
   ModalSemanticType,
+  ModalSemanticTypeInput,
   ModalType,
 } from './interface';
 import Modal from './Modal';
@@ -64,18 +67,24 @@ export const ConfirmContent = defineComponent({
     okCancel: { type: Boolean, default: undefined },
     okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    footer: { type: [Function, null] as unknown as PropType<unknown>, default: undefined },
+    footer: {
+      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
+      default: undefined,
+    },
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     locale: {
-      type: Object as PropType<{ okText?: string; cancelText?: string }>,
+      type: Object as PropType<Partial<ModalLocale>>,
       default: undefined,
     },
     autoFocusButton: {
       type: String as unknown as PropType<AutoFocusButton | undefined>,
       default: undefined,
     },
-    focusable: { type: Object as PropType<FocusableConfig>, default: undefined },
+    focusable: {
+      type: Object as PropType<FocusableConfig & { autoFocusButton?: AutoFocusButton }>,
+      default: undefined,
+    },
     contentClassName: { type: String, default: undefined },
     contentStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
@@ -248,10 +257,13 @@ const ConfirmDialog = defineComponent({
     cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     okType: { type: String as PropType<import('./interface').ModalOkType>, default: undefined },
     okCancel: { type: Boolean, default: undefined },
-    footer: { type: [Function, null] as unknown as PropType<unknown>, default: undefined },
+    footer: {
+      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
+      default: undefined,
+    },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     styles: {
-      type: [Object, Function] as unknown as PropType<unknown>,
+      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['styles']>,
       default: undefined,
     },
     className: { type: String, default: undefined },

@@ -1,11 +1,16 @@
 /**
- * L7 主题 —— Modal 的组件变量（DECLS 字面量）+ token 判据。
- *
- * ⚠️ demos 与 `expectCount` 在 G11 补齐（现在还没有 demo 目录）。
+ * L7 主题 —— Modal 的组件变量（DECLS 字面量）+ token 判据 + 四态渲染冒烟。
  */
+import { themeTest } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import { genModalStyle, genModalTokenDecls } from '../style';
 import { modalTokenValues, prepareComponentToken } from '../style/token';
+
+themeTest('Modal', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 23,
+  global: { stubs: { teleport: false } },
+});
 
 describe('Modal · token 契约', () => {
   const css = genModalStyle();
@@ -75,6 +80,18 @@ describe('Modal · token 契约', () => {
     expect(css).toContain('--apollo-modal-sm-width:var(--apollo-modal-xs-width)');
     expect(css).toContain('--apollo-modal-xxxl-width:var(--apollo-modal-xxl-width)');
     expect(css).toContain('width:var(--apollo-modal-xs-width)');
+  });
+
+  it('⚠️ `@media` 断点块必须保留（提取时最容易被整块丢掉）', () => {
+    // 窄屏：`max-width: calc(100vw - 16px)` + `margin: 8px auto`
+    // —— 丢了它 mobile 视口会整体下移 3px（L6 抓到）
+    expect(css).toContain('@media (max-width: 767px)');
+    expect(css).toContain('max-width:calc(100vw - 16px)');
+    expect(css).toContain('margin:var(--apollo-margin-xs) auto');
+    // 宽屏：5 个 min-width 阶梯
+    for (const bp of ['576px', '768px', '992px', '1200px', '1600px']) {
+      expect(css).toContain(`@media (min-width: ${bp})`);
+    }
   });
 
   it('ant 残留三坑核查', () => {

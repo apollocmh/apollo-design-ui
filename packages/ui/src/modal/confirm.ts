@@ -38,6 +38,12 @@ import type { ModalFuncProps, ModalInstance, ModalType } from './interface';
 
 let defaultRootPrefixCls = '';
 
+/** 命令式实例的内部配置（比 `ModalFuncProps` 多两个必填项）。 */
+type InternalConfig = ModalFuncProps & {
+  open?: boolean;
+  close?: (...args: unknown[]) => void;
+};
+
 function getRootPrefixCls(): string {
   return defaultRootPrefixCls;
 }
@@ -87,11 +93,11 @@ const ConfirmDialogWrapper = defineComponent({
 
 export default function confirm(config: ModalFuncProps): ModalInstance {
   const container = document.createElement('div');
-  let currentConfig = {
+  let currentConfig: InternalConfig = {
     ...config,
     close,
     open: true,
-  } as ModalFuncProps & { open: boolean; close: (...args: unknown[]) => void };
+  };
 
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
   let unmountApp: (() => void) | undefined;

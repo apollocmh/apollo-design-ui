@@ -23,7 +23,7 @@ import { disabledContextKey } from '../config-provider/disabled-context';
 import NormalCancelBtn from './components/NormalCancelBtn';
 import NormalOkBtn from './components/NormalOkBtn';
 import { modalContextKey } from './context';
-import type { ModalButtonProps, ModalFooterExtra, ModalOkType } from './interface';
+import type { ModalButtonProps, ModalFooterExtra, ModalOkType, ModalProps } from './interface';
 import { fallbackProp } from './util';
 
 /** `<span class="{p}-close-x">` 包裹关闭图标（上游 `renderCloseIcon`）。 */
@@ -60,7 +60,7 @@ export default defineComponent({
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     cancelButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     footer: {
-      type: [String, Number, Object, Array, Function, null] as unknown as PropType<unknown>,
+      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
       default: undefined,
     },
   },

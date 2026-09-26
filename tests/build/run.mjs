@@ -434,6 +434,22 @@ const RUNTIME_ASSIGNED_VARS = {
   // 的内联 style 写入，供堆叠折叠的占位条计算。⚠️ 上游拼写就是 `notificiation`（少一个 t）。
   '--top-notificiation-height': 'notification/engine/NoticeListContent.ts',
   '--top-notificiation-width': 'notification/engine/NoticeListContent.ts',
+  /**
+   * modal 的响应式宽度阶梯的**叶子变量**。
+   *
+   * 赋值点：`modal/Modal.ts` 的 `responsiveWidthVars` —— `width` 传对象时按断点写
+   * `--{prefixCls}-{bp}-width`（`{ xs: 100 }` ⇒ `--apollo-modal-xs-width: 100px`）。
+   *
+   * ⚠️ 为什么**不能**在 CSS 里补一条声明：上游 antd 6.6.4 同样只**引用**它、从不声明
+   *    （`genResponsiveWidthStyle` 只生成 `--ant-modal-sm-width: var(--ant-modal-xs-width)`
+   *    这条阶梯，值由 cssVar 模式或运行时内联给）。`width` 是数字时真正的宽度来自
+   *    rc-dialog 的**内联** `width: 520px`，CSS 里那条 `width: var(--…-xs-width)` 是无效声明、
+   *    被浏览器丢弃 ⇒ 面板退回 `width: auto`（PurePanel / confirm 的静态面板就是靠这个
+   *    撑满容器）。我们若「顺手补上」520px，`confirm` 的面板会从「撑满」变成 520px 宽，
+   *    **与 antd 不再逐像素一致**（L6 会红）。⇒ 登记为运行时变量，不补声明。
+   *    差异登记：`COMPATIBILITY.md` 的 D105。
+   */
+  '--apollo-modal-xs-width': 'modal/Modal.ts（responsiveWidthVars，width 传对象时）',
 };
 
 /**

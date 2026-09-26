@@ -2,7 +2,7 @@
 
 > 只放**仓库文档里没有的**：工具所有权、易错判据、未决事项。
 > 规则本体：`AGENTS.md`/`WORKFLOW.md`/`TESTING.md`/`COMPATIBILITY.md`/`ARCHITECTURE.md`；
-> 坑：同目录 `PITFALLS.md`（177 条，**查坑先去那**）；日常进展：`YYYY-MM-DD.md`。
+> 坑：同目录 `PITFALLS.md`（185 条，**查坑先去那**）；日常进展：`YYYY-MM-DD.md`。
 
 ## 本质与事实来源
 
@@ -22,8 +22,9 @@ status/notes/layerNotes **Agent 写、跨运行保留**。组件收口后要刷 
 
 Node ≥22.12（managed 路径）｜pnpm 12.4.2｜TS 5.9｜Vitest 5｜Playwright（`channel:'chrome'`）。
 - 🚨 `pnpm -r run build` 永远不可用；权威构建门禁 `CODEBUDDY_SAFE_DELETE_ENABLED=0 node tests/build/run.mjs`。
-- 🚨 会自己删目录的两个入口都要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`：`tests/build/run.mjs`
-  与 **`tests/visual/run.mjs`**（vite 的 emptyOutDir 要清 .artifacts，6000+ 文件超 safe-delete 阈值）。
+- 🚨 会自己删目录的三个入口都要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`：`tests/build/run.mjs`、
+  **`tests/visual/run.mjs`**、**`pnpm build:ui`**（后者删 `packages/ui/.dts-tmp`，3026 个文件，
+  不带时 dts 步骤报 `SAFE_DELETE_BULK_CONFIRM_REQUIRED` 并让整个 build 退出 1 —— 2026-09-26 实测）。
 - 🚨 本机 `pnpm` **不在 PATH**（只有 corepack，`corepack pnpm`=12.4.2）；脚本内部再调 `pnpm` 会 127。
   对策：`printf '#!/bin/zsh\nexec /Users/nanren/.workbuddy/binaries/node/versions/22.22.2-3/bin/corepack pnpm "$@"\n' > /tmp/pnpm-shim/pnpm && chmod +x` 后 `PATH=/tmp/pnpm-shim:$PATH pnpm run <script>`（2026-09-23 实证）。
 - 🚨 pnpm「超时无输出」先查 corepack 下载提示，长命令一律 `COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1`。
@@ -61,6 +62,18 @@ L0 utils/theme/icons ｜ 测试 test-utils
 9. 🚨 组件变量声明块要覆盖**全部根形态**（含 portal/Teleport 出来的浮层根）：本仓无 antd 的
    `-css-var` 类机制，漏挂 ⇒ 浮层里 `var(--{p}-*)` 静默回退继承值（PITFALLS 171 / D95 / D69）。
 10. 产物 CSS 里的 `NaN`/`undefined`/未展开占位由构建门禁 **B11** 兜（PITFALLS 170 的产物侧）。
+11. 🚨 **`setup()` 里不能创建带 `ref` 的 vnode**（owner 是 `currentRenderingInstance`）——
+    要子组件实例就让它 `onReady` 回调；要外部传命令面就把 **`Ref` 当普通 prop 传**。
+    踩中时只有一条 `Missing ref owner context` 的 warn，ref 静默永不赋值（PITFALLS 178）。
+12. 🚨 **浮层的「关闭」是异步的**（离场动效结束才卸载）⇒ 断言卸载必须**轮询**，
+    不能数 tick（PITFALLS 179）。
+13. 🚨 **`as unknown as PropType<unknown>` 会让该 prop 推断成 `undefined`**，
+    模板里所有传值报 "not assignable to type 'undefined'"。用**具体命名类型**
+    （`PropType<XProps['x']>`），运行时类型列表里别写 `null`（PITFALLS 185）。
+    同族：`ref<深联合类型>` 会触发深解包报 `TS2589` ⇒ 换 `shallowRef`。
+14. ⚠️ **动效名的前缀是 `rootPrefixCls`**（`apollo-zoom` / `apollo-fade`），不是组件前缀；
+    写错时动效**静默失效**（PITFALLS 180）。
+15. ⚠️ **`Skeleton` 设了 `inheritAttrs: false`** ⇒ 传 `className` prop，`class` 被静默丢弃（PITFALLS 181）。
 
 ## 主分支 / 合并 / 并行（硬教训浓缩，原文见 PITFALLS）
 
@@ -76,9 +89,11 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ## 当前进度（2026-09-26）
 
 - foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
-- 组件 **41/72** completed（最新：**drawer** —— rc-drawer 的 Vue 自建）。⚠️ 命令式组件已成对：`message` 与 `notification` 共用 `notification/engine/` 内核；两者差异（open 返回 void / 4 类型 / 默认堆叠 / zIndex 2050）见 2026-09-26 日志。
-- 通知内核 + `_internal/use-closable.ts` + **portal 的 `autoLock`/`onEsc`**（2026-09-26 为 drawer 补入）已就绪。
-- portal 的 `autoLock` / `onEsc` 已补齐（drawer 那轮），`_internal/use-closable` 与通知内核都在。
+- 组件 **42/72** completed（最新：**modal** —— rc-dialog 的 Vue 自建 + confirm 命令式路径）。
+  ⚠️ 命令式组件已成三件套：`message` / `notification`（共用 `notification/engine/` 内核）+
+  **`modal`**（自己的 `modal/engine/` = rc-dialog 内核，`confirm.ts` 用游离 `div` + `createApp`）。
+- `App.useApp()` 的 `modal` **仍是 `stubModal`**（`app/App.ts`）—— modal 侧已提供 `useModal`，
+  回填是 `app` 组件自己的事（modal README §5 P1）。
 - ⚠️ 改 foundation 包（utils / portal / motion）后**必须单独重建**，否则 ui 的 dist 带不上（PITFALLS 176）。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`，全库基建议题）；`--project types` 的
   SFC 解析噪音（PITFALLS 73，tag/checkbox/radio/switch 同报 unhandled，非本包引入）；
@@ -86,10 +101,15 @@ L0 utils/theme/icons ｜ 测试 test-utils
 - **全仓 `update:*` 缺口**（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
   但截至 carousel 只有 radio / switch 实现了 ⇒ 其余组件上 `v-model:xxx` 不生效，待统一补齐。
   （image 也是「发 `update:open`/`update:current` 但未写进 `emits`」的状态，README §5 P4。）
-- 共享文件 5 个（ui 的 index.ts / style/index.ts、tests/visual/matrix.mjs、cases/shared.mjs、
-  root package.json）按字母序追加；⚠️ ui 根 index.ts 的 re-export 必须用别名
-  （`genTokenDecls as genXTokenDecls` / `prepareComponentToken as prepareXComponentToken`，
-  PITFALLS 158/168，已两次踩坑）。
+- 共享文件 6 个（ui 的 index.ts / style/index.ts、tests/visual/matrix.mjs、cases/shared.mjs、
+  **tests/compat/baseline/*.mjs**、root package.json）按字母序追加；⚠️ ui 根 index.ts 的 re-export
+  必须用别名（`genTokenDecls as genXTokenDecls` / `prepareComponentToken as prepareXComponentToken`，
+  PITFALLS 158/168，已两次踩坑）。新组件另需：`tests/compat/baseline/<name>.mjs` +
+  `tests/visual/render/cases/{react,vue}/<name>.{jsx,js}` + matrix 里一行。
+- `_internal/` 现有两个「三次法则」收敛物：`use-merged-mask.ts`（drawer+modal）、
+  `to-css-size.ts`（image+drawer+modal，两个旧文件保留为再导出）。
+- ⚠️ `dom-contract` 的 cssinjs 类名过滤器 2026-09-26 补了 `^css-var-[\w-]+$`
+  （`css-var-_R_x_` 是 React `useId` 产物，见 PITFALLS 183）。
 - **视觉层只链接 theme + ui 两个 workspace 包**（root devDeps）⇒ **用例文件**（在
   `tests/visual/render/cases/`）里 import `@apollo-design/icons` 解析不到；**组件内部**
   import 没问题（从 `packages/ui/node_modules` 解析，pnpm 每包依赖）。需要图标时用

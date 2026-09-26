@@ -196,6 +196,10 @@ describe('Modal · closable', () => {
   it('closable 默认 true ⇒ 有按钮；false ⇒ 无按钮', async () => {
     const w1 = await mountModal();
     expect(w1.find('.apollo-modal-close').exists()).toBe(true);
+    // ⚠️ 还要断言**图标真的在** —— 只断言按钮存在时，兜底 closeIcon 写成空 span
+    //    也能过（L6 抓到：desktop 0.008% 的差异 100% 是这个 ×）
+    expect(w1.find('.apollo-modal-close-icon').exists()).toBe(true);
+    expect(w1.find('.apollo-modal-close-icon svg').exists()).toBe(true);
     w1.unmount();
 
     const w2 = await mountModal({ closable: false });
@@ -380,8 +384,11 @@ describe('Modal · PurePanel', () => {
 
   it('type=confirm ⇒ 渲染 ConfirmContent + confirm 类', async () => {
     const PurePanel = Modal._InternalPanelDoNotUseOrYouWillBeFired;
+    // ⚠️ 正文走 **slot** —— 上游的 PurePanel 在 type 分支里把 children 当 content
+    //    （`content={children}`），`content` prop 被忽略
     const wrapper = mount(PurePanel, {
-      props: { prefixCls: 'apollo-modal', type: 'confirm', title: 'PT', content: 'PC' } as never,
+      props: { prefixCls: 'apollo-modal', type: 'confirm', title: 'PT' } as never,
+      slots: { default: () => 'PC' },
     });
     await ticks();
 

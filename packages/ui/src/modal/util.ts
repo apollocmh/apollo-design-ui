@@ -8,7 +8,20 @@
  *   `fallbackProp(null, 'x')` ⇒ `null`（`??` 会得到 `'x'`）。
  *   `Modal.confirm` 的 `okText: null` 正是靠这条把默认文案「显式清空」。
  */
+import type { VNodeChild } from 'vue';
+
 export function fallbackProp<T>(...args: T[]): T | undefined {
+  return args.find((arg) => arg !== undefined);
+}
+
+/**
+ * `fallbackProp` 的 **`VNodeChild` 专用版**（非泛型）。
+ *
+ * ⚠️ 为什么要单列：`fallbackProp<VNodeChild>(a, b)` 会让 TS 在 `VNodeChild` 这个
+ *    很深的联合上做泛型实例化，直接报 `TS2589: Type instantiation is excessively deep`
+ *    （modal 的 `useModal` 实测）。显式签名把类型推理挡在函数边界外。
+ */
+export function fallbackNode(...args: VNodeChild[]): VNodeChild | undefined {
   return args.find((arg) => arg !== undefined);
 }
 

@@ -25,6 +25,7 @@
  *     ⇒ 不产生 `css-var-*` 类，也不注入 hash 类；
  *   - `ContextIsolator`（form / space）本仓未落地（D36 同判）。
  */
+import { CloseOutlined } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
 import { isNumber, isPlainObject, omit, pickAttrs } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
@@ -43,7 +44,9 @@ import type {
   ModalButtonProps,
   ModalGetContainer,
   ModalOkType,
+  ModalProps,
   ModalSemanticType,
+  ModalSemanticTypeInput,
   MousePosition,
 } from './interface';
 import ModalPanel, { renderCloseIcon } from './ModalPanel';
@@ -71,7 +74,7 @@ export default defineComponent({
     height: { type: [String, Number] as PropType<string | number>, default: undefined },
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     footer: {
-      type: [String, Number, Object, Array, Function, null] as unknown as PropType<unknown>,
+      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
       default: undefined,
     },
     okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
@@ -86,7 +89,10 @@ export default defineComponent({
     afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     centered: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: false },
-    closable: { type: [Boolean, Object, null] as unknown as PropType<unknown>, default: undefined },
+    closable: {
+      type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
+      default: undefined,
+    },
     closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     mask: { type: [Boolean, Object] as unknown as PropType<MaskType>, default: undefined },
     maskClosable: { type: Boolean, default: undefined },
@@ -121,11 +127,22 @@ export default defineComponent({
     rootClassName: { type: String, default: undefined },
     rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    /**
+     * 语义槽类名。
+     *
+     * ⚠️ 运行时**同时接受函数形态**（`(info) => classNames`）—— `useMergeSemantic`
+     *    的 `resolveSemantic` 会调用它。类型面按 D36 只声明对象形态，
+     *    所以这里用 `[Object, Function]` 放行（同 `_internal/use-merge-semantic` 的约定）。
+     */
     classNames: {
-      type: Object as PropType<ModalSemanticType['classNames']>,
+      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['classNames']>,
       default: undefined,
     },
-    styles: { type: Object as PropType<ModalSemanticType['styles']>, default: undefined },
+    /** 语义槽样式。⚠️ 同 `classNames`，运行时接受函数形态。 */
+    styles: {
+      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['styles']>,
+      default: undefined,
+    },
     focusable: { type: Object as PropType<FocusableConfig>, default: undefined },
     focusTriggerAfterClose: { type: Boolean, default: undefined },
     panelRef: { type: [Object, Function] as unknown as PropType<unknown>, default: null },
@@ -238,7 +255,10 @@ export default defineComponent({
       ),
       {
         closable: true,
-        closeIcon: h('span', { class: `${prefixCls}-close-icon` }),
+        // ⚠️ 兜底图标必须是**真的图标**（`CloseOutlined`），不是空 span ——
+        //    `renderCloseIcon` 只在**没给** closeIcon 时才补图标，给一个空 span
+        //    会得到一个「有按钮、没有 ×」的面板（L6 抓到：desktop 0.008% 全是这个 ×）
+        closeIcon: h(CloseOutlined, { class: `${prefixCls}-close-icon` }),
         closeIconRender: (icon: unknown) => renderCloseIcon(prefixCls, icon as VNodeChild),
       },
     );
@@ -258,7 +278,9 @@ export default defineComponent({
     const mergedModalRender = computed(() =>
       props.modalRender
         ? (node: VNodeChild) =>
-            h('div', { class: `${prefixCls}-render` }, props.modalRender?.(node))
+            // ⚠️ 必须包成数组：`h` 的 children 重载不收 `null | undefined`
+            //    （而 `VNodeChild` 含它们）—— 上游的 `createElement` 没这个限制
+            h('div', { class: `${prefixCls}-render` }, [props.modalRender?.(node) as never])
         : undefined,
     );
 
@@ -292,8 +314,18 @@ export default defineComponent({
       NonNullable<ModalSemanticType['classNames']>,
       NonNullable<ModalSemanticType['styles']>
     >(
-      [() => config.classNames, () => props.classNames, () => mask.classNames.value],
-      [() => config.styles, () => props.styles],
+      [
+        () => config.classNames,
+        // ⚠️ 收敛成对象形态：函数形态由 `resolveSemantic` 在**运行时**处理，
+        //    而 `useMergeSemantic` 的 `SemanticInput` 对「参数逆变」很挑
+        //    （`ModalSemanticTypeInput` 的入参是 `Record<string, unknown>`，仍不兼容）
+        () => props.classNames as unknown as NonNullable<ModalSemanticType['classNames']>,
+        () => mask.classNames.value,
+      ],
+      [
+        () => config.styles,
+        () => props.styles as unknown as NonNullable<ModalSemanticType['styles']>,
+      ],
       mergedSemanticProps.value,
     );
 

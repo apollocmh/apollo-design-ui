@@ -53,8 +53,30 @@ export type AutoFocusButton = null | 'ok' | 'cancel';
 /** 确认框的类型。`warn` 与 `warning` 同义（上游两者都映射到 `'warning'`）。 */
 export type ModalType = 'info' | 'success' | 'error' | 'warn' | 'warning' | 'confirm';
 
-/** OK 按钮的类型（antd 的 `LegacyButtonType`）。 */
-export type ModalOkType = 'text' | 'link' | 'primary' | 'default' | 'dashed';
+/** OK 按钮的类型（antd 的 `LegacyButtonType` = `ButtonType | 'danger'`）。 */
+export type ModalOkType = 'text' | 'link' | 'primary' | 'default' | 'dashed' | 'danger';
+
+/**
+ * 语义槽的**运行时输入**形态 —— 对象，或函数（`(info) => slots`）。
+ *
+ * ⚠️ 为什么单列一个类型：`useMergeSemantic` 的 `resolveSemantic` **运行时支持函数形态**，
+ *    但 prop 的 `PropType` 若只声明对象形态，vue-tsc 会把模板里的 `:styles="fn"` 判成
+ *    不可赋值（modal 的 `style-class` demo 实测）。
+ *    公开的 `ModalSemanticType` 仍按 D36 只声明对象形态；这个只给 prop 的 `PropType` 用。
+ *
+ * ⚠️ 函数形态的入参用 `Record<string, unknown>` 而不是 `ModalProps` ——
+ *    要能直接喂给 `useMergeSemantic<Record<string, unknown>, …>` 的
+ *    `SemanticInput`（它要求 `(info: SemanticInfo<P>) => …`，P 是调用方选的）。
+ *    传 `ModalProps` 会因为**参数逆变**不可赋值。
+ */
+export interface ModalSemanticTypeInput {
+  classNames?:
+    | ModalSemanticType['classNames']
+    | ((info: { props: Record<string, unknown> }) => ModalSemanticType['classNames']);
+  styles?:
+    | ModalSemanticType['styles']
+    | ((info: { props: Record<string, unknown> }) => ModalSemanticType['styles']);
+}
 
 /**
  * 9 个语义槽。
@@ -268,6 +290,8 @@ export interface ModalFuncProps extends Omit<ModalProps, 'width' | 'children' | 
   /** @deprecated 请用 `focusable.autoFocusButton`。 */
   autoFocusButton?: AutoFocusButton;
   focusable?: FocusableConfig & { autoFocusButton?: AutoFocusButton };
+  /** 文字方向（命令式路径没有组件上下文，靠它显式指定）。 */
+  direction?: 'ltr' | 'rtl';
   onOk?: (...args: unknown[]) => unknown;
   onCancel?: (...args: unknown[]) => unknown;
   footer?: ModalProps['footer'];

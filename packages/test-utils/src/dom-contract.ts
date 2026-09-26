@@ -122,10 +122,15 @@ function isContractAttr(name: string): boolean {
  * **标准步骤**，理由与本项目 `H6`（禁止 `@ant-design/cssinjs`）直接相关：
  * 我们走静态 CSS，没有运行时样式注入，因此**不可能**产出这类类名。
  *
- * 实测 antd 6.6.4 在 `renderToStaticMarkup` 下的形态（两条都要覆盖）：
+ * 实测 antd 6.6.4 在 `renderToStaticMarkup` 下的形态（三条都要覆盖）：
  *   - 开发态：`css-dev-only-do-not-override-19u5a7b`（hash 随构建变化）
  *   - 生产态：`css-19u5a7b`
  *   - 另有固定名 `css-var-root`（cssVar 模式的根标记，不在 hash 正则里，单独列出）
+ *   - ⚠️ 还有**带 React `useId` 的**形态 `css-var-_R_7_` —— 由 `withPureRenderTheme`
+ *     里那层**嵌套的 `ConfigProvider`** 产生（modal 的 PurePanel 实测，2026-09-26）。
+ *     它比 hash 更不稳定（同一个组件树里换位置就会变），必须一并剔除；
+ *     本文件的注释与各组件 semantic 测试的说明一直写的是「`css-var-*`」，
+ *     这里补齐实现（原先只覆盖了 `css-var-root` 与 `{prefixCls}-css-var`）。
  *
  * ⚠️ 这条规则**对两侧一视同仁**（都过同一个过滤器），所以不是「只作用于单侧的归一化」。
  *    它的效果确实只落在 antd 一侧 —— 那正是因为只有 antd 会产生它。
@@ -142,10 +147,16 @@ const CSSINJS_EXACT_CLASS = new Set(['css-var-root']);
 /** antd 的 `useCSSVarCls` 产物：`${prefixCls}-css-var`（checkbox 基线实测）。 */
 const CSSINJS_VAR_CLS = /^([a-z][a-z0-9-]*)?-css-var$/;
 
+/** cssinjs 的 cssVar 键类名：`css-var-root` / `css-var-_R_7_` 等（modal 基线实测）。 */
+const CSSINJS_VAR_KEY_CLS = /^css-var-[\w-]+$/;
+
 /** 该 class token 是否来自 CSS-in-JS 运行时。 */
 function isCssInJsClass(token: string): boolean {
   return (
-    CSSINJS_EXACT_CLASS.has(token) || CSSINJS_HASH_CLASS.test(token) || CSSINJS_VAR_CLS.test(token)
+    CSSINJS_EXACT_CLASS.has(token) ||
+    CSSINJS_HASH_CLASS.test(token) ||
+    CSSINJS_VAR_CLS.test(token) ||
+    CSSINJS_VAR_KEY_CLS.test(token)
   );
 }
 

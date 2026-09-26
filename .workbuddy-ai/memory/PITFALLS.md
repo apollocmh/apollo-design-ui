@@ -1334,3 +1334,84 @@
      L6 同样渲染静态面板（`single` / `types` / `custom`）。
      ⭐ 另：`message.success()` 是**模块级单例** ⇒ 用例之间必须 `actDestroy()` 复位，
      否则上一条的实例被下一条复用（`config.test` 的隔离就靠它）。
+
+## Modal 流（2026-09-26，178-184）
+
+178. 🚨 **`setup()` 里不能创建带 `ref` 的 vnode** —— Vue 的 `normalizeRef` 把
+    `currentRenderingInstance` 当作 ref 的 owner，而 **`setup()` 里它是 `null`**。
+    后果是**双重的**：① 控制台一条 `[Vue warn] Missing ref owner context. ref cannot be
+    used on hoisted vnodes.`；② 那个 ref **永远不会被赋值**（`setRef` 在 owner 缺失时
+    直接 return），于是「组件实例是 null」被误判成「组件没渲染」。
+    实测（modal 的 `useModal`）：`holderRef.value` 恒为 null ⇒ `patchElement` 返回
+    undefined ⇒ 弹窗**一个都不出现**，而 API 对象、`destroy` / `update` 全都正常。
+    **对策**：
+      - 需要子组件的实例时，让子组件在 `setup()` 里**回调**（`onReady` / `onExpose`）；
+      - 需要把「命令面」从外部传进去时，**把 `Ref` 对象当普通 prop 传**
+        （props 是 `shallowReactive`，不会解包 ref），子组件写 `props.xxxRef.value = ...`；
+      - 在事件回调 / `setTimeout` 里 `h(组件, { ref })` 同样会踩（没有渲染上下文）。
+    ⚠️ 与 174（组件 vnode 的 ref 拿到的是实例）**不是一回事**：174 是「拿到了但形态不对」，
+    178 是「压根拿不到、且只有一条 warn」。
+
+179. ⚠️ **浮层组件的「关闭」是异步的** —— `close()` 只把 `open` 置假，真正的卸载发生在
+    **离场动效结束**的 `afterClose` 里。所以：
+      - `destroyAll()` / `instance.destroy()` 之后**DOM 还在**（面板靠 `display:none` 隐藏）；
+      - 测试不能「数几个 tick」就断言卸载，**必须轮询**到条件成立；
+      - jsdom 没有样式表 ⇒ 动效只能靠内核的 `motionDeadline` 兜底（modal 是 500ms）
+        ⇒ 一次关闭断言约 0.5–1.1s。用例里的 `waitFor` 超时给 2.5s。
+    实测：modal 的 `index.test.ts` 第一版用 `await macro(); await ticks();` 断言
+    `querySelector('.apollo-modal-confirm') === null` ⇒ 6 个用例全红，全是时序问题。
+
+180. 🚨 **动效名的前缀是 `rootPrefixCls`（`apollo`），不是组件前缀（`apollo-modal`）。**
+    antd 传 `getTransitionName(rootPrefixCls, 'zoom', transitionName)` ⇒ 类名是
+    `.apollo-zoom-enter` / `.apollo-fade-enter`。产物里那批**裸类**规则
+    （`.apollo-zoom-enter,…`）只有名字对得上才命中。
+    写成 `apollo-modal-zoom` 时**动效静默失效**（不报错、类型也过，只是「打开没有动画」）。
+    本仓的 `modal/util.ts` 有 `getTransitionName`，`Modal.ts` 与 `ConfirmDialog` 都用它。
+
+181. ⚠️ **`Skeleton` 设了 `inheritAttrs: false`** ⇒ `h(Skeleton, { class: 'x' })` 的类名
+    被**静默丢弃**，必须传 `className` **prop**（antd 侧也是这么写的）。
+    症状：L1 用例 `wrapper.find('.apollo-modal-body-skeleton')` 找不到、但 body 确实渲染了
+    Skeleton 的根（只是没有那个类）。
+    同族：任何「`className` 是自己的 prop」的组件（skeleton 全家、部分 rc 移植组件）
+    都不能用 `class` 透传。
+
+182. **`h()` 的 children 重载不收 `null | undefined`**，而 `VNodeChild` **含**它们
+    ⇒ `h('div', props, maybeNull)` 报 `TS2769: No overload matches this call`
+    （最后一条重载的报错是「Argument of type 'VNodeChild' is not assignable to
+    parameter of type 'RawSlots | RawChildren'」，**指向 slots**，很容易误判成插槽问题）。
+    对策：包成数组 `h('div', props, [maybeNull as never])`。
+
+183. ⚠️ **`dom-contract` 的 cssinjs 类名过滤器漏了 `css-var-_R_x_` 形态。**
+    原实现只覆盖 `css-dev-only-do-not-override-*` / `css-*` hash 与
+    `css-var-root` / `{prefixCls}-css-var`；而 antd 的 **`withPureRenderTheme`
+    会再包一层 `ConfigProvider`**，那层产生的 cssVar key 是 **React `useId()`**
+    （`css-var-_R_7_`）—— 同一棵树里换个位置就变，基线完全不可复现。
+    实测：modal 的 L4 基线 9/9 全红，差异全是这一条。
+    对策：`CSSINJS_VAR_KEY_CLS = /^css-var-[\w-]+$/`（过滤器对两侧一视同仁，语义同 D1）。
+    ⚠️ 排查时**别只看第一条 diff** —— 它后面还叠着「`className` 多写了一次 `prefixCls`」
+    这类真问题。
+
+184. ⚠️ **手工编辑 `registry/components.json` 用「行扫描 + 正则替换」会静默改错。**
+    实测：按 `"name": "modal",` 定位后向后找块结束的启发式**判断失败**（`end === start`），
+    于是 9 个字段一个都没改，脚本却打印了 "updated"（因为 `set()` 的返回值被忽略了）。
+    **对策**：`JSON.parse` → 改对象 → `JSON.stringify(data, null, 2)` 写回，
+    然后**再解析一次并逐字段比对**（顶层键 + 逐组件），确认「只有目标组件变了」。
+    这样格式化风险也可控（本仓的 `components.json` 就是 2 空格缩进）。
+
+185. 🚨 **`as unknown as PropType<unknown>` 会让 vue-tsc 把该 prop 推断成 `undefined`** ——
+    于是**模板里任何传值**都报 `TS2322: Type 'X' is not assignable to type 'undefined'`。
+    这是 137 的同族、但更隐蔽的一面：
+      - ✅ **能用**：`type: null as unknown as PropType<VNodeChild>`（目标类型具体）；
+      - ❌ **不能用**：`type: [Boolean, Object, null] as unknown as PropType<unknown>`
+        （`unknown` ⇒ 推断成 `undefined`）；
+      - ✅ **正解**（alert 的既有范式）：`type: [Boolean, Object] as PropType<AlertProps['closable']>`
+        —— 运行时类型列表里**不要**写 `null`，PropType 用**具体命名类型**。
+    ⚠️ **为什么以前没暴露**：这类 prop 的错误只在「有 demo / 用例真的传了该 prop」时才出现
+    —— `lint:types` 会检查 `*.vue` 的模板。drawer 的 `closable` 是同一个写法，
+    只是它的 demo 从不传对象，所以一直绿着。
+    ⚠️ 排查信号：错误信息里的目标类型是 `undefined`（而不是 `unknown` / 某个联合）
+    ⇒ 先去看那个 prop 的 `PropType` 是不是 `unknown`。
+    本轮实测：modal 一次暴露 **9 条**（`closable` / `mask` / `footer` / `styles` / `classNames`）。
+    另一条同族：`PropType` 只声明了对象形态时，模板里的**函数形态**会被判「不可赋值」
+    （`style-class` demo 的 `:styles="fn"`）⇒ 单列一个「运行时输入」类型
+    （`ModalSemanticTypeInput`），公开类型仍按 D36 只留对象形态。

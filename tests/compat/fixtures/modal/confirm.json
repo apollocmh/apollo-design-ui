@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema.json",
+  "id": "modal/confirm",
+  "component": "modal",
+  "description": "命令式确认框（Modal.confirm / info / success / error / warning）。DOM = {p}-confirm {p}-confirm-{type} > {p}-container > {p}-header（CSS 里 display:none）+ {p}-body > {p}-confirm-body-wrapper > {p}-confirm-body[{p}-confirm-body-has-title][{p}-confirm-body-no-icon] > 图标 + {p}-confirm-paragraph > {p}-confirm-title + {p}-confirm-content，最后 {p}-confirm-btns > 两个 ActionButton。判据：mergedOkCancel = okCancel ?? type==='confirm'；autoFocusButton 默认 'ok'（⚠️ 只有 **deprecated 的顶层 autoFocusButton: null** 能表达不聚焦，focusable.autoFocusButton:null 会被上游的 || 吃掉）；mask.closable 默认 **false**（与 Modal 相反）；zIndex 默认 zIndexPopupBase + CONTAINER_MAX_OFFSET；width 默认 416。⚠️ PurePanel 的 type 分支里，ConfirmContent 的 content 来自 **children**，`content` prop 被忽略。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Do you want to delete?",
+    "content": "Some descriptions.",
+    "type": "confirm"
+  },
+  "variants": {
+    "type": ["confirm", "info", "success", "error", "warning"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}
