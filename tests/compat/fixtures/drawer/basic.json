@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "drawer/basic",
+  "component": "drawer",
+  "description": "基础抽屉。结构 = {p}-drawer[{p}-{placement}][{p}-open][{p}-inline][no-mask] > {p}-mask（mask=true 时）+ {p}-content-wrapper[style width/height] > {p}-section（role=dialog + aria-modal=true + aria-labelledby 指向 {p}-title 的 id）> {p}-header[{p}-header-close-only]（{p}-header-title > 关闭 button + {p}-title）/ {p}-extra / {p}-body / {p}-footer。关闭按钮 = <button type=button class='{p}-close[{p}-close-end]' aria-label='Close'>，内层图标 span 自带小写 aria-label='close'。⚠️ getContainer=false ⇒ 内联渲染（不 portal）+ 根类加 {p}-inline（CSS 把 position 从 fixed 改 absolute）。",
+  "antdVersion": "6.6.4",
+  "props": { "open": true, "title": "Title", "footer": "Footer", "extra": "Extra" },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

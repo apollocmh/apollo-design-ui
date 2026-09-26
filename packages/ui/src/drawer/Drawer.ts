@@ -207,6 +207,8 @@ export default defineComponent({
           mask: mask.enabled.value,
           maskClosable: mask.closable.value,
           getContainer: getContainer.value,
+          // ⚠️ rc 的判据就是「容器是 false」⇒ 加 `-inline` 类（CSS 里它把 position 从 fixed 改成 absolute）
+          inline: getContainer.value === false,
           forceRender: props.forceRender,
           afterOpenChange: props.afterOpenChange,
           destroyOnHidden: props.destroyOnHidden ?? props.destroyOnClose,

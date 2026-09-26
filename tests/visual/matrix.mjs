@@ -370,6 +370,15 @@ export const COMPONENTS = {
       'actions', // actions 区（操作按钮 + 关闭按钮的几何）
     ],
   },
+  drawer: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 受控 open + getContainer:false（内联）—— 不 portal、不 push 页面，避免污染其他组件。
+    variants: [
+      'basic', // 右抽屉（默认方位）+ 标题/extra/页脚
+      'size', // 左抽屉 + size='large'（736px）
+      'bottom', // 底部抽屉（垂直高度轴）+ 无遮罩
+    ],
+  },
   app: {
     // 1 个 variant × 3 个 viewport = 3 张
     variants: ['basic'],

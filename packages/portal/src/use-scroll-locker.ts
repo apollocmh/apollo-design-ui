@@ -27,6 +27,8 @@ let uuid = 0;
 
 /** 生成 `html body { ... }` 的锁样式（上游逐字，含那两处缩进）。 */
 function lockStyle(): string {
+  // ⚠️ SSR 守卫：`document.body` 在服务端不存在（求值参数本身就会抛）
+  if (typeof document === 'undefined') return '';
   const scrollbarSize = getTargetScrollBarSize(document.body).width;
   const isOverflow = isBodyOverflowing();
   return `
@@ -44,7 +46,7 @@ export function useScrollLocker(lock: MaybeRefOrGetter<boolean>): void {
   watch(
     mergedLock,
     (locked) => {
-      if (locked) {
+      if (locked && typeof document !== 'undefined') {
         updateCSS(lockStyle(), id);
       } else {
         removeCSS(id);

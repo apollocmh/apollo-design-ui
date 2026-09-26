@@ -27,12 +27,13 @@
  *      `closable && !title && !extra` ⇒ 额外加 `{p}-header-close-only`；
  *   4. `loading` ⇒ 用 `Skeleton`（`active` + `title={false}` + `paragraph={{rows:5}}`）替换 children。
  */
-import { Skeleton } from '@apollo-design/ui';
+// ⚠️ 同包内引用必须走**相对路径**（`@apollo-design/ui` 是包自身，dts 构建期解析不到）
+
 import { isPlainObject, isRenderable } from '@apollo-design/utils';
 import { cloneVNode, defineComponent, h, isVNode, type PropType, type VNodeChild } from 'vue';
-
 import { computeClosable, pickClosable } from '../_internal/use-closable';
 import { useComponentConfig } from '../config-provider/context';
+import { Skeleton } from '../skeleton';
 
 const clsx = (...args: Array<string | false | undefined | Record<string, unknown>>): string => {
   const out: string[] = [];

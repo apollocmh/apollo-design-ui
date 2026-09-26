@@ -57,11 +57,15 @@ const onGlobalCompositionEnd = (): void => {
 };
 
 function attachGlobalEventListeners(): void {
+  // ⚠️ SSR 守卫：`immediate: true` 的 watch 在 setup 期就会跑，此时没有 window
+  //    （tooltip / popover / dropdown 的 SSR 冒烟会直接抛 `window is not defined`）
+  if (typeof window === 'undefined') return;
   window.addEventListener('keydown', onGlobalKeyDown);
   window.addEventListener('compositionend', onGlobalCompositionEnd);
 }
 
 function detachGlobalEventListeners(): void {
+  if (typeof window === 'undefined') return;
   if (stack.length === 0) {
     window.removeEventListener('keydown', onGlobalKeyDown);
     window.removeEventListener('compositionend', onGlobalCompositionEnd);

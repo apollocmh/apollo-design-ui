@@ -1,0 +1,14 @@
+{
+  "$schema": "../schema.json",
+  "id": "drawer/size-and-placement",
+  "component": "drawer",
+  "description": "尺寸轴随方位切换：left/right 写 width、top/bottom 写 height（都过 parseWidthHeight，最后 toCssSize 成 px 字符串）。size 预设：'large' ⇒ 736、'default' ⇒ 378、纯数字字符串 ⇒ Number、其他字符串原样；不传 size 时取 width/height。⚠️ rc 的 378 兜底只对水平方位生效 —— 垂直方位的默认值来自 defaultSize（antd 默认传 378）。placement 决定面板滑出方向与四套动效类（{p}-panel-motion-{placement}-*）。",
+  "antdVersion": "6.6.4",
+  "props": { "open": true, "placement": "left", "size": "large" },
+  "variants": {
+    "placement": ["top", "right", "bottom", "left"],
+    "size": ["default", "large", 500, "50%"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "id": "drawer/nested-push",
+  "component": "drawer",
+  "description": "嵌套推挤链：子抽屉打开时调父级 context 的 push()，父级据此按方位 translate（top 正 Y / bottom 负 Y / left 正 X / right 负 X），距离 = push.distance ?? 父级 ?? 180（DEFAULT_PUSH_STATE.distance）。⚠️ **顶层抽屉自己不会位移** —— pushed 只由子抽屉置真；push prop 只决定距离。父级关闭或卸载时 pull()。",
+  "antdVersion": "6.6.4",
+  "props": { "push": { "distance": 180 } },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {}
+}
