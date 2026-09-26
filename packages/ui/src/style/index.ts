@@ -53,6 +53,7 @@ import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genListyStyle } from '../listy/style';
 import { genMenuStyle } from '../menu/style';
 import { genMessageStyle } from '../message/style';
+import { genModalStyle } from '../modal/style';
 import { genNotificationStyle } from '../notification/style';
 import { genPopoverStyle } from '../popover/style';
 import { genQrCodeStyle } from '../qr-code/style';
@@ -132,6 +133,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'image', gen: genImageStyle },
   { name: 'message', gen: genMessageStyle },
   { name: 'notification', gen: genNotificationStyle },
+  { name: 'modal', gen: genModalStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

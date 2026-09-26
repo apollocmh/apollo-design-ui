@@ -876,6 +876,40 @@ export { genMessageStyle, genMessageTokenDecls } from './message/style';
 export type { ComponentToken as MessageComponentToken } from './message/style/token';
 export { prepareComponentToken as prepareMessageComponentToken } from './message/style/token';
 export type {
+  AutoFocusButton as ModalAutoFocusButton,
+  ClosableConfig as ModalClosableConfig,
+  ClosableType as ModalClosableType,
+  FocusableConfig as ModalFocusableConfig,
+  MaskConfig as ModalMaskConfig,
+  MaskType as ModalMaskType,
+  ModalButtonProps,
+  ModalFuncProps,
+  ModalGetContainer,
+  ModalGlobalConfig,
+  ModalHookAPI,
+  ModalInstance,
+  ModalLocale,
+  ModalOkType,
+  ModalProps,
+  ModalPurePanelProps,
+  ModalSemanticType,
+  ModalType,
+  MousePosition,
+} from './modal';
+// ---------------------------------------------------------------------------
+// Modal —— 对话框（rc-dialog 的 Vue 自建：portal + 焦点陷阱 + 焦点归还）
+//
+// ⚠️ 静态方法：`Modal.confirm/info/success/error/warning/warn` 与 `Modal.destroyAll()`、
+//    `Modal.useModal()`；`_InternalPanelDoNotUseOrYouWillBeFired` 是私有面板（L4/L6 取证用）。
+//    `Modal.config` **已废弃**（请用 `ConfigProvider.config`）。
+// ⚠️ 焦点三条是硬要求：陷阱（`focusTrap`，默认跟 mask 走）、归还（`focusTriggerAfterClose`，
+//    默认 true）、`focusable.autoFocusButton`（confirm 默认 `'ok'`）。
+// ---------------------------------------------------------------------------
+export { default as Modal, ModalPurePanel } from './modal';
+export { genModalStyle, genModalTokenDecls } from './modal/style';
+export type { ComponentToken as ModalComponentToken } from './modal/style/token';
+export { prepareComponentToken as prepareModalComponentToken } from './modal/style/token';
+export type {
   ArgsProps as NotificationArgsProps,
   GlobalConfigProps as NotificationGlobalConfigProps,
   IconType as NotificationIconType,
