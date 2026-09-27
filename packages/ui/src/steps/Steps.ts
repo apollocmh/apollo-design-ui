@@ -1,0 +1,434 @@
+/**
+ * Steps —— 步骤条（G4 产物）。
+ *
+ * 结构：rc-steps 1.2.3 内核（Steps 119 + Step/StepIcon/Rail 见各文件）的 Vue 自建
+ * + antd 6.6.4 壳（index.tsx 493 行）的 12 件事 —— type 推导 / responsive 断点 /
+ * useDisplaySteps 折叠 / internalIconRender / inline Tooltip / panel PanelArrow /
+ * deprecated 告警。分析：docs/analysis/steps.md。
+ *
+ * C8-R2：iconRender / itemRender / itemWrapperRender / progressDot(fn) 一律
+ * scoped slot；items 数据 API 的 VNodeChild 合法。
+ */
+
+import { CheckOutlined, CloseOutlined, EllipsisOutlined } from '@apollo-design/icons';
+import { useDevWarning } from '@apollo-design/utils';
+import {
+  type ComputedRef,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  type VNodeChild,
+} from 'vue';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
+import { useComponentConfig, useDirection } from '../config-provider/context';
+import { type SizeType, useSize } from '../config-provider/size-context';
+import { useBreakpoint } from '../grid/hooks/use-breakpoint';
+import Tooltip from '../tooltip/Tooltip';
+import type {
+  StepItem,
+  StepsProps,
+  StepsSemanticClassNames,
+  StepsSemanticStyles,
+  StepsStatus,
+  StepsType,
+} from './interface';
+import PanelArrow from './PanelArrow';
+import ProgressIcon from './ProgressIcon';
+import Step from './Step';
+import StepIcon, { stepsIconContextKey } from './StepIcon';
+import { useDisplaySteps } from './useDisplaySteps';
+
+export const Steps = defineComponent({
+  name: 'ASteps',
+  inheritAttrs: false,
+  props: {
+    prefixCls: { type: String, default: undefined },
+    className: { type: String, default: undefined },
+    rootClassName: { type: String, default: undefined },
+    classNames: {
+      type: Object as PropType<StepsSemanticClassNames>,
+      default: undefined,
+    },
+    styles: { type: Object as PropType<StepsSemanticStyles>, default: undefined },
+    style: { type: Object as PropType<StepsProps['style']>, default: undefined },
+
+    variant: { type: String as PropType<StepsProps['variant']>, default: 'filled' },
+    size: { type: String as PropType<StepsProps['size']>, default: undefined },
+
+    // ---- 布局 ----
+    type: { type: String as PropType<StepsType>, default: undefined },
+    direction: { type: String as PropType<StepsProps['direction']>, default: undefined },
+    orientation: { type: String as PropType<StepsProps['orientation']>, default: undefined },
+    labelPlacement: { type: String as PropType<StepsProps['labelPlacement']>, default: undefined },
+    titlePlacement: { type: String as PropType<StepsProps['titlePlacement']>, default: undefined },
+    progressDot: { type: Boolean, default: undefined },
+    responsive: { type: Boolean, default: undefined },
+    ellipsis: { type: Boolean, default: undefined },
+    maxCount: { type: Number, default: undefined },
+    offset: { type: Number, default: 0 },
+
+    // ---- 数据 ----
+    current: { type: Number, default: 0 },
+    initial: { type: Number, default: 0 },
+    items: { type: Array as PropType<StepItem[]>, default: undefined },
+    percent: { type: Number, default: undefined },
+    status: { type: String as PropType<StepsStatus>, default: undefined },
+
+    // ---- 事件 ----
+    onChange: {
+      type: Function as PropType<((current: number) => void) | undefined>,
+      default: undefined,
+    },
+  },
+  setup(props, { attrs, slots }) {
+    const { getPrefixCls } = useComponentConfig('steps');
+    const directionCtx = useDirection();
+    const warning = useDevWarning('Steps');
+
+    const rootPrefixCls = getPrefixCls();
+    const prefixCls = computed(() => getPrefixCls('steps', props.prefixCls));
+
+    // ---- deprecated / usage 告警 ----
+    if (props.size === 'default') {
+      warning(false, '`size="default"` is deprecated. Please use `size="medium"` instead.');
+    }
+    if (props.labelPlacement !== undefined) {
+      warning(false, '`labelPlacement` is deprecated. Please use `titlePlacement` instead.');
+    }
+    if (props.progressDot !== undefined) {
+      warning(false, '`progressDot` is deprecated. Please use `type="dot"` instead.');
+    }
+    if (props.direction !== undefined) {
+      warning(false, '`direction` is deprecated. Please use `orientation` instead.');
+    }
+    if ((props.items ?? []).some((item) => item.description !== undefined)) {
+      warning(false, '`items.description` is deprecated. Please use `items.content` instead.');
+    }
+    if (props.maxCount !== undefined && props.maxCount < 3) {
+      warning(false, '`maxCount` should be greater than or equal to 3.');
+    }
+
+    // ---- size ----
+    // size 的 `default` 是 deprecated 别名（运行时告警后按 medium 处理）
+    const mergedSize = useSize<SizeType | undefined>((ctx) => {
+      const raw = props.size;
+      const normalized =
+        raw === 'default' ? ('medium' as const) : ((raw ?? ctx) as SizeType | undefined);
+      return normalized ?? ctx;
+    });
+
+    // ---- items ----
+    const mergedItems = computed<StepItem[]>(() => (props.items ?? []).filter(Boolean));
+
+    // ---- type 推导 ----
+    const mergedType = computed<StepsType | undefined>(() => {
+      if (props.type && props.type !== 'default') {
+        return props.type;
+      }
+      if (props.progressDot) {
+        return 'dot';
+      }
+      return props.type;
+    });
+    const isInline = computed(() => mergedType.value === 'inline');
+    const isDot = computed(() => mergedType.value === 'dot' || isInline.value);
+
+    // ---- orientation / titlePlacement ----
+    // responsive 断点：antd useBreakpoint(responsive).xs；SSR/挂载前恒 false
+    const xs = useBreakpointXs(props.responsive !== false);
+    const mergedOrientation = computed<StepsProps['orientation']>(() => {
+      const nextOrientation = props.orientation ?? props.direction;
+      if (mergedType.value === 'panel') {
+        return 'horizontal';
+      }
+      return (props.responsive !== false && xs.value) || nextOrientation === 'vertical'
+        ? 'vertical'
+        : 'horizontal';
+    });
+    const mergedTitlePlacement = computed<StepsProps['titlePlacement']>(() => {
+      if (isDot.value || mergedOrientation.value === 'vertical') {
+        return mergedOrientation.value === 'vertical' ? 'horizontal' : 'vertical';
+      }
+      if (props.type === 'navigation') {
+        return 'horizontal';
+      }
+      return props.titlePlacement ?? props.labelPlacement ?? 'horizontal';
+    });
+
+    // ---- percent ----
+    const mergedPercent = computed(() => (isInline.value ? undefined : props.percent));
+
+    // ---- maxCount 折叠 ----
+    const { canApplyMaxCount, displaySteps, mappedDisplayCurrent, displayItems } = useDisplaySteps(
+      mergedItems.value,
+      props.current ?? 0,
+      props.initial ?? 0,
+      props.maxCount,
+      prefixCls.value,
+    );
+
+    // ---- semantic merge ----
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+      StepsProps,
+      StepsSemanticClassNames,
+      StepsSemanticStyles
+    >([() => props.classNames], [() => props.styles], {} as never);
+
+    // ---- internalIconRender（render fn → 在 Step 的 #icon slot 内执行）----
+    const iconContentOf = (info: { item: StepItem; mappedIndex: number }): VNodeChild => {
+      const { status, icon } = info.item;
+      const itemIconCls = `${prefixCls.value}-item-icon`;
+
+      let iconContent: VNodeChild = null;
+      if (isDot.value || icon) {
+        iconContent = icon ?? null;
+      } else {
+        switch (status) {
+          case 'finish':
+            iconContent = h(CheckOutlined, { class: `${itemIconCls}-finish` });
+            break;
+          case 'error':
+            iconContent = h(CloseOutlined, { class: `${itemIconCls}-error` });
+            break;
+          default: {
+            const numberNode = h(
+              'span',
+              { class: `${itemIconCls}-number` },
+              String(info.mappedIndex + 1),
+            );
+            if (status === 'process' && mergedPercent.value !== undefined) {
+              // ⚠️ 闭包必须捕获**赋值前**的 numberNode —— 引用变量自身会无限递归
+              //（default: () => numNode 在 numNode 被重赋值为 ProgressIcon 后指向自身）
+              iconContent = h(
+                ProgressIcon,
+                { prefixCls: prefixCls.value, percent: mergedPercent.value },
+                { default: () => numberNode },
+              );
+            } else {
+              iconContent = numberNode;
+            }
+          }
+        }
+      }
+      return iconContent;
+    };
+
+    // ---- maxCount 的 ellipsis 步需要注入 EllipsisOutlined 图标 ----
+    const displayItemsWithEllipsisIcon = computed<StepItem[]>(() =>
+      displayItems.map((item) =>
+        item.className?.includes('-ellipsis') ? { ...item, icon: h(EllipsisOutlined) } : item,
+      ),
+    );
+
+    // ---- statuses 推导（rc Steps 逐字）----
+    // antd 传给 rc 的是 initial=0 + current=mappedDisplayCurrent（display 索引）——
+    // statuses 的比较全部使用 display 索引。
+    const statuses = computed<StepsStatus[]>(() =>
+      displayItemsWithEllipsisIcon.value.map((item, index) => {
+        if (!item.status) {
+          // ⚠️ useDisplaySteps 返回的是**数字**（非 ref）—— 不能 .value
+          if (index === mappedDisplayCurrent) {
+            return props.status ?? 'process';
+          }
+          if (index < mappedDisplayCurrent) {
+            return 'finish';
+          }
+          return 'wait';
+        }
+        return item.status;
+      }),
+    );
+
+    // ---- onChange（display 索引 → origin 索引）----
+    const onStepClick = (displayIndex: number): void => {
+      // 比较基准是 **display 索引的当前步**（mappedDisplayCurrent），不是原始 current
+      if (props.onChange && mappedDisplayCurrent !== displayIndex) {
+        const target = displaySteps[displayIndex];
+        if (target && target.originIndex >= 0) {
+          props.onChange((props.initial ?? 0) + target.originIndex);
+        }
+      }
+    };
+
+    const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
+
+    // ⚠️ 本仓 clsx（notification/engine/util）是简化版：**不支持对象参数**——
+    //    条件类必须自己展开成字符串（CHECKLIST 沉淀：拼类名一律 filter(Boolean).join(' ')）。
+    const stepsClassName = computed(() =>
+      [
+        prefixCls.value,
+        // rc Steps 的 classString：orientation + titlePlacement 两个布局类
+        `${prefixCls.value}-${mergedOrientation.value}`,
+        `${prefixCls.value}-title-${mergedTitlePlacement.value}`,
+        `${prefixCls.value}-${props.variant ?? 'filled'}`,
+        mergedType.value && mergedType.value !== 'dot'
+          ? `${prefixCls.value}-${mergedType.value}`
+          : '',
+        directionCtx.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
+        isDot.value ? `${prefixCls.value}-dot` : '',
+        props.ellipsis ? `${prefixCls.value}-ellipsis` : '',
+        canApplyMaxCount ? `${prefixCls.value}-max-count` : '',
+        mergedPercent.value !== undefined ? `${prefixCls.value}-with-progress` : '',
+        mergedSize.value === 'small' ? `${prefixCls.value}-small` : '',
+        props.className,
+        props.rootClassName,
+        mergedClassNames.value?.root,
+        cssVarCls.value,
+      ]
+        .filter(Boolean)
+        .join(' '),
+    );
+
+    // eslint-disable-next-line no-console
+    console.log(
+      'DBG cls:',
+      JSON.stringify({
+        isDot: isDot.value,
+        mergedType: mergedType.value,
+        isInline: isInline.value,
+        canApply: canApplyMaxCount,
+        pct: mergedPercent.value,
+      }),
+    );
+
+    // ---- root style ----
+    const rootStyle = computed(() => ({
+      ...(props.offset !== 0
+        ? { [`--${rootPrefixCls}-cmp-steps-items-offset`]: String(props.offset) }
+        : {}),
+      ...(props.style ?? {}),
+      ...mergedStyles.value?.root,
+    }));
+
+    provide(stepsIconContextKey, {
+      get prefixCls() {
+        return prefixCls.value;
+      },
+      get classNames() {
+        return mergedClassNames.value;
+      },
+      get styles() {
+        return mergedStyles.value;
+      },
+    } as never);
+
+    return () => {
+      const itemCls = prefixCls.value;
+
+      const renderStep = (item: StepItem, index: number): VNodeChild => {
+        const stepIndex = index;
+        const itemStatus = statuses.value[index];
+        const nextStatus = statuses.value[index + 1];
+        const data: StepItem = { ...item, status: itemStatus };
+        const mappedIndex = displaySteps[index]?.originIndex;
+        const realIndex =
+          mappedIndex !== undefined && mappedIndex >= 0
+            ? (props.initial ?? 0) + mappedIndex
+            : (props.initial ?? 0) + index;
+
+        return h(
+          Step,
+          {
+            key: (item.key as string | number) ?? stepIndex,
+            prefixCls: itemCls,
+            classNames: mergedClassNames.value,
+            styles: mergedStyles.value,
+            data,
+            nextStatus,
+            active: stepIndex === mappedDisplayCurrent,
+            index: stepIndex,
+            last: displayItemsWithEllipsisIcon.value.length - 1 === index,
+            onClick: props.onChange ? onStepClick : undefined,
+          },
+          {
+            icon: () => {
+              const defaultIconNode = h(
+                StepIcon,
+                {},
+                { default: () => iconContentOf({ item: data, mappedIndex: realIndex }) },
+              );
+              let iconNode: VNodeChild = defaultIconNode;
+              if (slots.iconRender) {
+                const replaced = slots.iconRender({
+                  iconNode,
+                  index: realIndex,
+                  active: stepIndex === mappedDisplayCurrent,
+                  item: data,
+                }) as VNodeChild | undefined;
+                iconNode = replaced ?? iconNode;
+              } else if (slots.progressDot && isDot.value) {
+                const replaced = slots.progressDot({
+                  iconNode,
+                  index: realIndex,
+                  status: itemStatus,
+                  title: (data.title ?? null) as VNodeChild,
+                  description: (data.description ?? null) as VNodeChild,
+                  content: (data.content ?? null) as VNodeChild,
+                }) as VNodeChild | undefined;
+                iconNode = replaced ?? iconNode;
+              }
+              return iconNode;
+            },
+            itemRender: slots.itemRender
+              ? (p: { itemNode: VNodeChild }) => {
+                  // antd：inline 且有 content ⇒ 包 Tooltip；外层 Wave（本仓 v1 无 wave 基建，降级）
+                  let content: VNodeChild = p.itemNode;
+                  if (isInline.value && data.content !== undefined && data.content !== null) {
+                    content = h(
+                      Tooltip,
+                      { destroyOnHidden: true, title: data.content as never },
+                      { default: () => content },
+                    );
+                  }
+                  return (slots.itemRender as (p2: never) => unknown)({
+                    itemNode: content,
+                    index: realIndex,
+                    active: stepIndex === mappedDisplayCurrent,
+                    item: data,
+                  } as never);
+                }
+              : undefined,
+            // antd：panel 类型在 wrapper 后追加 PanelArrow（用户 #itemWrapperRender 插槽优先）
+            itemWrapperRender:
+              slots.itemWrapperRender ??
+              (mergedType.value === 'panel'
+                ? (p: { itemNode: VNodeChild }) =>
+                    [
+                      p.itemNode,
+                      h(PanelArrow, { prefixCls: prefixCls.value }),
+                    ] as unknown as VNodeChild
+                : undefined),
+          },
+        );
+      };
+
+      const nodes: VNodeChild[] = displayItemsWithEllipsisIcon.value.map((item, index) =>
+        renderStep(item, index),
+      );
+
+      const { class: _attrsClass, ...restAttrs } = attrs;
+      return h(
+        'div',
+        {
+          class: stepsClassName.value,
+          style: rootStyle.value,
+          ...restAttrs,
+        },
+        nodes,
+      );
+    };
+  },
+});
+
+/** useBreakpoint 的 xs 切片（responsive=false ⇒ 恒 false，不订阅）。 */
+function useBreakpointXs(responsive: boolean): ComputedRef<boolean> {
+  if (!responsive) {
+    return computed(() => false);
+  }
+  const screens = useBreakpoint();
+  return computed(() => Boolean(screens.value?.xs));
+}
+
+export default Steps;

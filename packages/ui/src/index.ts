@@ -1018,6 +1018,29 @@ export type {
 export { Splitter, SplitterPanel } from './splitter';
 export { genSplitterStyle, genTokenDecls as genSplitterTokenDecls } from './splitter/style';
 export type {
+  StepItem,
+  StepsIconRenderSlotProps,
+  StepsItemRenderSlotProps,
+  StepsItemWrapperRenderSlotProps,
+  StepsOrientation,
+  StepsProgressDotSlotProps,
+  StepsProps,
+  StepsRenderInfo,
+  StepsSemanticClassNames,
+  StepsSemanticName,
+  StepsSemanticStyles,
+  StepsSize,
+  StepsStatus,
+  StepsType,
+  StepsVariant,
+} from './steps';
+// ---------------------------------------------------------------------------
+// Steps —— 步骤条（rc-steps 1.2.3 内核自建 + antd 壳；C8-R2：render fn → scoped slot）
+// ---------------------------------------------------------------------------
+export { Steps } from './steps';
+export type { ComponentToken as StepsComponentToken } from './steps/style/token';
+export { prepareStepsComponentToken, stepsTokenValues } from './steps/style/token';
+export type {
   AdjustOverflow,
   TooltipArrow,
   TooltipClassNames,

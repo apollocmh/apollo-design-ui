@@ -1,9 +1,10 @@
 /**
- * demo 冒烟测试占位 —— G11 未开始。
- *
- * ⚠️ 实现后必须：demos glob + **expectCount**（与 antd 用户可见 demo 一一对应，
- * 防腐断言）；「不产生告警」是 demo 的硬约束。
+ * demo 冒烟 —— 20 个示例（对齐 antd 用户可见 demo；_semantic 系列为内部测试固件不对外）。
  */
-import { describe } from 'vitest';
+import { demoTest } from '@apollo-design/test-utils';
 
-describe.todo('Steps · demo 冒烟（G11 未开始，expectCount 待定）');
+demoTest('Steps', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 20,
+  global: { stubs: { teleport: false } },
+});
