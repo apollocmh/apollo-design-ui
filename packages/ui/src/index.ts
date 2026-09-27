@@ -599,6 +599,18 @@ export type { AppComponentType, AppConfig, AppProps, UseAppProps } from './app';
 export { App } from './app';
 export { genAppStyle } from './app/style';
 export { useApp } from './app/useApp';
+export type {
+  AutoCompleteProps,
+  AutoCompleteRef,
+  AutoCompleteSemanticClassNames,
+  AutoCompleteSemanticStyles,
+  DataSourceItemObject,
+  DataSourceItemType,
+} from './auto-complete';
+// ---------------------------------------------------------------------------
+// AutoComplete —— 自动完成（Select 的 combobox 薄包装；C8-R2：popupRender → 插槽）
+// ---------------------------------------------------------------------------
+export { AutoComplete, AutoCompleteOption } from './auto-complete';
 // ---------------------------------------------------------------------------
 // Carousel —— 走马灯（决策 B：自建 slick 引擎，见 engine.ts）
 //

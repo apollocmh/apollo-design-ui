@@ -470,20 +470,24 @@ export const Selector = defineComponent({
               )
             : null,
           props.multiple ? renderMultiple() : renderSingle(),
-          h(
-            'div',
-            {
-              class: [
-                `${prefixCls}-suffix`,
-                props.loading ? `${prefixCls}-suffix-loading` : '',
-                props.classNames?.suffix,
-              ]
-                .filter(Boolean)
-                .join(' '),
-              style: props.styles?.suffix,
-            },
-            [props.suffix as never],
-          ),
+          // rc：`suffixNode && <div class="-suffix">` —— suffixIcon={null}
+          //（AutoComplete）时**不渲染**容器（AutoComplete 期抓出）
+          props.suffix
+            ? h(
+                'div',
+                {
+                  class: [
+                    `${prefixCls}-suffix`,
+                    props.loading ? `${prefixCls}-suffix-loading` : '',
+                    props.classNames?.suffix,
+                  ]
+                    .filter(Boolean)
+                    .join(' '),
+                  style: props.styles?.suffix,
+                },
+                [props.suffix as never],
+              )
+            : null,
           props.clearIcon
             ? h(
                 'button',

@@ -94,15 +94,27 @@ export function resolveSemantic<T, P>(
 export function mergeClassNames<CN extends object>(
   ...sources: readonly (Partial<CN> | undefined)[]
 ): Partial<CN> {
-  const acc: Record<string, string | undefined> = {};
+  const acc: Record<string, unknown> = {};
   for (const source of sources) {
     if (!source) continue;
-    const record = source as Record<string, string | undefined>;
+    const record = source as Record<string, unknown>;
     for (const key of Object.keys(record)) {
-      acc[key] = clsx(acc[key], record[key]);
+      const cur = record[key];
+      const prev = acc[key];
+      // 嵌套语义对象（如 Select 的 classNames.popup.{root,list,listItem}）递归合并；
+      // 叶子值按 clsx 拼接（select 期 AutoComplete 抓出：浅合并在 popup 上丢数据）
+      if (isPlainRecord(cur) || isPlainRecord(prev)) {
+        acc[key] = mergeClassNames((prev ?? {}) as never, (cur ?? {}) as never);
+      } else {
+        acc[key] = clsx(prev as string | undefined, cur as string | undefined);
+      }
     }
   }
   return acc as Partial<CN>;
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 /**

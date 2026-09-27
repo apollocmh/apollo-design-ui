@@ -720,7 +720,9 @@ export const BaseSelect = defineComponent({
                 mode: props.mode,
                 displayValues: props.displayValues as unknown as LabelInValueType[],
                 placeholder: props.placeholder,
-                searchValue: props.searchValue,
+                // ⚠️ merged：combobox 的搜索值来自**回填的选中值**（value ⇒ 输入框
+                //    显示 + -content-has-search-value 类，AutoComplete 期抓出）
+                searchValue: mergedSearchValue.value,
                 activeValue: props.activeValue,
                 activeDescendantId: props.activeDescendantId,
                 prefix: props.prefix,

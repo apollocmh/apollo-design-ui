@@ -90,6 +90,7 @@ export const Select = defineComponent({
   props: {
     id: { type: String, default: undefined },
     prefixCls: { type: String, default: undefined },
+    className: { type: String, default: undefined },
     rootClassName: { type: String, default: undefined },
     value: { type: null as unknown as PropType<SelectValue>, default: undefined },
     defaultValue: { type: null as unknown as PropType<SelectValue>, default: undefined },
@@ -560,7 +561,10 @@ export const Select = defineComponent({
         if (props.mode === 'combobox') {
           triggerChange([{ value: searchText } as LabelInValueType]);
         }
-        props.onSearch?.(searchText);
+        // antd：`showSearch.onSearch`（config 形态）与平铺 `onSearch` 是同一条
+        // 搜索事件的两条通道（resolveSearchConfig 已把 config 并入）——
+        // AutoComplete 的候选驱动全走 config 通道（AutoComplete 期抓出）。
+        (props.onSearch ?? searchConfig.value.onSearch)?.(searchText);
       }
     };
 
@@ -701,10 +705,12 @@ export const Select = defineComponent({
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
           getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
           compactItemClassnames.value,
+          props.className,
           props.rootClassName,
           cssVarCls.value,
           'css-var-root',
-          mergedClassNames.value?.root,
+          // ⚠️ 不含 mergedClassNames.root —— BaseSelect 的根类里已有
+          //    props.classNames?.root，这里再拼会双份（AutoComplete 期抓出）
         ]
           .filter(Boolean)
           .join(' ') || undefined,

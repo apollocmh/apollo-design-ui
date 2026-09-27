@@ -1,0 +1,44 @@
+{
+  "$schema": "../schema.json",
+  "antdVersion": "6.6.4",
+  "component": "auto-complete",
+  "generatedAt": "2026-09-27",
+  "cases": [
+    {
+      "id": "plain",
+      "html": "<div class=\"apollo-select apollo-select-outlined apollo-select-auto-complete css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-show-search\"><div class=\"apollo-select-content\"><div class=\"apollo-select-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "value",
+      "html": "<div class=\"apollo-select apollo-select-outlined apollo-select-auto-complete css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-show-search\"><div class=\"apollo-select-content apollo-select-content-has-value apollo-select-content-has-search-value\" title=\"abc\">abc<input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"abc\"/></div></div>"
+    },
+    {
+      "id": "placeholder",
+      "html": "<div class=\"apollo-select apollo-select-outlined apollo-select-auto-complete css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-show-search\"><div class=\"apollo-select-content\"><div class=\"apollo-select-placeholder\">input here</div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "disabled",
+      "html": "<div class=\"apollo-select apollo-select-outlined apollo-select-auto-complete css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-disabled apollo-select-show-search\"><div class=\"apollo-select-content\"><div class=\"apollo-select-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" disabled=\"\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "size:large",
+      "html": "<div class=\"apollo-select apollo-select-lg apollo-select-outlined apollo-select-auto-complete css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-show-search\"><div class=\"apollo-select-content\"><div class=\"apollo-select-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "status:error",
+      "html": "<div class=\"apollo-select apollo-select-outlined apollo-select-status-error apollo-select-auto-complete css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-show-search\"><div class=\"apollo-select-content\"><div class=\"apollo-select-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "class-name",
+      "html": "<div class=\"apollo-select apollo-select-outlined extra apollo-select-auto-complete extra css-var-root apollo-select-css-var css-dev-only-do-not-override-19u5a7b apollo-select-single apollo-select-show-search\"><div class=\"apollo-select-content\"><div class=\"apollo-select-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"apollo-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "prefix-cls:custom",
+      "html": "<div class=\"custom custom-outlined custom-auto-complete css-var-root custom-css-var css-dev-only-do-not-override-19u5a7b custom-single custom-show-search\"><div class=\"custom-content\"><div class=\"custom-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"custom-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    },
+    {
+      "id": "prefix-cls:no-props",
+      "html": "<div class=\"ant-select ant-select-outlined ant-select-auto-complete css-var-root ant-select-css-var css-dev-only-do-not-override-19u5a7b ant-select-single ant-select-show-search\"><div class=\"ant-select-content\"><div class=\"ant-select-placeholder\"></div><input id=\"_R_7_\" type=\"text\" autoComplete=\"new-password\" class=\"ant-select-input\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\"/></div></div>"
+    }
+  ]
+}

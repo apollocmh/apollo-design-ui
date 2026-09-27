@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "auto-complete/interaction",
+  "component": "auto-complete",
+  "description": "交互契约：showSearch.onSearch（config 通道）驱动候选；选择候选 ⇒ update:value（v-model）+ onChange 双发（C11）；deprecated ×6 告警（dataSource/popupClassName/dropdownClassName/dropdownStyle/dropdownMatchSelectWidth/onDropdownVisibleChange）；自定义输入元素 usage 告警（v1 缺口）。",
+  "antdVersion": "6.6.4",
+  "props": { "options": [{ "value": "a" }], "onChange": true },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

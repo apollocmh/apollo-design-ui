@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "auto-complete/basic",
+  "component": "auto-complete",
+  "description": "Select 的 combobox 薄包装：root 类 {prefix}-select-auto-complete；suffixIcon={null} ⇒ 无箭头（-suffix 容器不渲染）；input role=combobox；options 数据源。",
+  "antdVersion": "6.6.4",
+  "props": { "options": [{ "value": "a" }, { "value": "b" }], "placeholder": "input here" },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}
