@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "float-button/back-top",
+  "component": "float-button",
+  "description": "BackTop：visibilityHeight 可见性（0 ⇒ 恒可见）；showProgress ⇒ -progress 类 + --{prefix}-float-btn-progress CSS 变量（${x}turn）；点击 scrollTo(0) + prefers-reduced-motion duration=0。",
+  "antdVersion": "6.6.4",
+  "props": { "visibilityHeight": 0 },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

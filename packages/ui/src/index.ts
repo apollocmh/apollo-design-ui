@@ -734,6 +734,29 @@ export { genDropdownStyle, genDropdownTokenDecls } from './dropdown/style';
 export type { ComponentToken as DropdownComponentToken } from './dropdown/style/token';
 export { prepareComponentToken as prepareDropdownComponentToken } from './dropdown/style/token';
 export type {
+  FloatButtonBackTopProps,
+  FloatButtonBadgeProps,
+  FloatButtonGroupPlacement,
+  FloatButtonGroupProps,
+  FloatButtonGroupRef,
+  FloatButtonGroupTrigger,
+  FloatButtonProps,
+  FloatButtonRef,
+  FloatButtonShape,
+  FloatButtonType,
+} from './float-button';
+// ---------------------------------------------------------------------------
+// FloatButton —— 浮动按钮（Group/BackTop/PurePanel compound；C8-R2：icon/content
+// → 插槽，tooltip/badge 数据 prop）
+// ---------------------------------------------------------------------------
+export {
+  FloatButton,
+  FloatButtonBackTop,
+  FloatButtonGroup,
+  FloatButtonPurePanel,
+  floatButtonPrefixCls,
+} from './float-button';
+export type {
   ImageProps,
   ImageSemanticType,
   PreviewConfig,

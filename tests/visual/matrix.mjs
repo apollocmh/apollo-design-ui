@@ -391,6 +391,10 @@ export const COMPONENTS = {
       'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
     ],
   },
+  'float-button': {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: ['basic', 'shape-content', 'badge-tooltip'],
+  },
   'auto-complete': {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: ['basic', 'status', 'style-class'],

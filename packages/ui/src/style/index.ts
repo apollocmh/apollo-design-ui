@@ -45,6 +45,7 @@ import { genDrawerStyle } from '../drawer/style';
 import { genDropdownStyle } from '../dropdown/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
+import { genFloatButtonStyle } from '../float-button/style';
 import { genGridStyle } from '../grid/style';
 import { genImageStyle } from '../image/style';
 import { genInputStyle } from '../input/style';
@@ -113,6 +114,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },
+  { name: 'float-button', gen: genFloatButtonStyle },
   { name: 'badge', gen: genBadgeStyle },
   { name: 'back-top', gen: genBackTopStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },

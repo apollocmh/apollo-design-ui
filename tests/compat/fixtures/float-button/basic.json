@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "float-button/basic",
+  "component": "float-button",
+  "description": "Button 薄壳：root 类 apollo-float-btn 与 apollo-btn 共存；type/shape/individual/icon-only 类链；icon-only 时默认 FileTextOutlined；href ⇒ a 形态。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

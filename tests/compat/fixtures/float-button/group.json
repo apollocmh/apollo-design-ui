@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "float-button/group",
+  "component": "float-button",
+  "description": "Group：circle ⇒ Flex 列表（-individual）；square ⇒ Space.Compact；menu 模式 trigger=click/hover + placement；外部点击（document capture）关闭；v-model:open 受控。",
+  "antdVersion": "6.6.4",
+  "props": { "shape": "circle", "trigger": "click" },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -574,3 +574,12 @@ const [api, ContextHolder] = useMessage();
   上游「传 characterRender 会弄坏 tooltips」的坑。
 - **分类**：INTENDED（Vue-native 更合理）。断言：`rate/__tests__/index.test.ts`
   「tooltips 与 #characterRender 组合」。
+
+### D113 · FloatButton：icon-only 类的 React 空子节点计数怪癖（UPSTREAM）
+
+- **antd**：FloatButton 给 Button 传的 children 是 `[content(null), badge(null)]`，
+  `React.Children.count` 把 null 也计为 2 ⇒ Button 的 icon-only 判据
+  （`hasChildren=true`）**不落** `-icon-only` 类（FloatButton 层的 `-icon-only` 正常）。
+- **本仓**：Vue 侧空节点过滤后 Button 正常落 `-icon-only` 类。DOM 差异一个类名，
+  视觉零差异（类无样式规则，仅作状态标记）。
+- **分类**：UPSTREAM（antd 依赖 React children 计数的巧合行为）。L4 以精确 diff 豁免。
