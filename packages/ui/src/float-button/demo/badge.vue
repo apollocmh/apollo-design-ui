@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd demo/badge.tsx（badge 数据 prop）
 import { QuestionCircleOutlined } from '@apollo-design/icons';
-import { FloatButton, FloatButtonGroup } from '@apollo-design/ui';
+import { FloatButton, FloatButtonBackTop, FloatButtonGroup } from '@apollo-design/ui';
 </script>
 
 <template>

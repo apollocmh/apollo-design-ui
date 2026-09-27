@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd demo/shape.tsx
 import { CustomerServiceOutlined } from '@apollo-design/icons';
+import { FloatButton } from '@apollo-design/ui';
 </script>
 
 <template>
