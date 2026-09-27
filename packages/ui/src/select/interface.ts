@@ -102,11 +102,7 @@ export interface SearchConfig<OptionType = DefaultOptionType> {
   autoClearSearchValue?: boolean;
   onSearch?: (value: string) => void;
   filterOption?: boolean | FilterFunc<OptionType>;
-  filterSort?: (
-    optionA: OptionType,
-    optionB: OptionType,
-    info: { searchValue: string },
-  ) => number;
+  filterSort?: (optionA: OptionType, optionB: OptionType, info: { searchValue: string }) => number;
   optionFilterProp?: string | string[];
 }
 

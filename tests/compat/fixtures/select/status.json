@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema.json",
+  "id": "select/status",
+  "component": "select",
+  "description": "状态与变体：status=error ⇒ -status-error 类（getStatusClassNames 固定顺序）；variant=filled/borderless/underlined ⇒ -{variant} 类；allowClear ⇒ -allow-clear + button.apollo-select-clear[aria-label=Clear]。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": [{ "value": "a", "label": "A" }],
+    "status": "error",
+    "allowClear": true,
+    "value": "a",
+    "id": "test-id"
+  },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["clear", "change", "update:value"] }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "../schema.json",
+  "id": "select/basic",
+  "component": "select",
+  "description": "单选基础形态：唯一 <input role=combobox> 承载全部 ARIA（aria-expanded/haspopup/autocomplete）；content > placeholder + input；suffix = DownOutlined；v6 无 -selector 包裹层。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": [{ "value": "a", "label": "A" }, { "value": "b", "label": "B" }],
+    "id": "test-id"
+  },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["open-change", "update:open", "change", "update:value", "select"] }
+}

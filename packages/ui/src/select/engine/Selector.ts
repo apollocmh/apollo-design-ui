@@ -23,7 +23,7 @@
  * `focusin`/`focusout`；Vue 的 `onFocus` 是原生不冒泡的 `focus`。
  */
 
-import type { CSSProperties, ComponentPublicInstance, PropType } from 'vue';
+import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
 import { defineComponent, h, inject, ref, shallowRef } from 'vue';
 import type {
   CustomTagProps,
@@ -74,11 +74,17 @@ export const Selector = defineComponent({
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
     maxTagPlaceholder: { type: null as unknown as PropType<unknown>, default: undefined },
-    tagRender: { type: Function as PropType<((props: CustomTagProps) => unknown) | undefined>, default: undefined },
+    tagRender: {
+      type: Function as PropType<((props: CustomTagProps) => unknown) | undefined>,
+      default: undefined,
+    },
     removeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
     tokenWithEnter: { type: Boolean, default: false },
     autoClearSearchValue: { type: Boolean, default: undefined },
-    classNames: { type: Object as PropType<SelectSemanticClassNames | undefined>, default: undefined },
+    classNames: {
+      type: Object as PropType<SelectSemanticClassNames | undefined>,
+      default: undefined,
+    },
     styles: { type: Object as PropType<SelectSemanticStyles | undefined>, default: undefined },
     // ---- 事件（纯 prop 回调，见 CHECKLIST #78）----
     onToggleOpen: { type: Function as PropType<(next?: boolean) => void>, default: undefined },
@@ -95,7 +101,10 @@ export const Selector = defineComponent({
     },
     onSearchSubmit: { type: Function as PropType<(text: string) => void>, default: undefined },
     onInputBlur: { type: Function as PropType<() => void>, default: undefined },
-    onInputKeyDown: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
+    onInputKeyDown: {
+      type: Function as PropType<(event: KeyboardEvent) => void>,
+      default: undefined,
+    },
     onClear: { type: Function as PropType<() => void>, default: undefined },
     onSelectorRemove: {
       type: Function as PropType<(value: DisplayValueType) => void>,
@@ -187,52 +196,66 @@ export const Selector = defineComponent({
         index,
       };
       if (typeof props.tagRender === 'function') {
-        return h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
-          props.tagRender(tagProps) as never,
+        return h('div', { class: `${props.prefixCls}-content-item`, style: { opacity: '1' } }, [
+          h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
+            props.tagRender(tagProps) as never,
+          ]),
         ]);
       }
       return h(
-        'span',
+        'div',
         {
-          title: getTitle(item as unknown as Record<string, unknown>),
-          class: [
-            `${props.prefixCls}-selection-item`,
-            itemDisabled ? `${props.prefixCls}-selection-item-disabled` : '',
-            props.classNames?.item,
-          ]
-            .filter(Boolean)
-            .join(' '),
-          style: props.styles?.item,
+          class: `${props.prefixCls}-content-item`,
+          style: { opacity: '1' },
         },
         [
           h(
             'span',
             {
-              class: [`${props.prefixCls}-selection-item-content`, props.classNames?.itemContent]
+              title: getTitle(item as unknown as Record<string, unknown>),
+              class: [
+                `${props.prefixCls}-selection-item`,
+                itemDisabled ? `${props.prefixCls}-selection-item-disabled` : '',
+                props.classNames?.item,
+              ]
                 .filter(Boolean)
                 .join(' '),
-              style: props.styles?.itemContent,
+              style: props.styles?.item,
             },
-            [displayLabel as never],
-          ),
-          closable
-            ? h(
-                TransBtn,
+            [
+              h(
+                'span',
                 {
-                  className: [
-                    `${props.prefixCls}-selection-item-remove`,
-                    props.classNames?.itemRemove,
+                  class: [
+                    `${props.prefixCls}-selection-item-content`,
+                    props.classNames?.itemContent,
                   ]
                     .filter(Boolean)
                     .join(' '),
-                  style: props.styles?.itemRemove as Record<string, string> | undefined,
-                  customizeIcon: props.removeIcon,
-                  onMousedown: onPreventMouseDown,
-                  onClick: onClose,
+                  style: props.styles?.itemContent,
                 },
-                () => '×',
-              )
-            : null,
+                [displayLabel as never],
+              ),
+              closable
+                ? h(
+                    TransBtn,
+                    {
+                      className: [
+                        `${props.prefixCls}-selection-item-remove`,
+                        props.classNames?.itemRemove,
+                      ]
+                        .filter(Boolean)
+                        .join(' '),
+                      style: props.styles?.itemRemove as Record<string, string> | undefined,
+                      customizeIcon: props.removeIcon,
+                      onMousedown: onPreventMouseDown,
+                      onClick: onClose,
+                    },
+                    () => '×',
+                  )
+                : null,
+            ],
+          ),
         ],
       );
     };
@@ -244,34 +267,38 @@ export const Selector = defineComponent({
           ? (props.maxTagPlaceholder as (v: DisplayValueType[]) => unknown)(omittedValues)
           : (props.maxTagPlaceholder ?? `+ ${omittedValues.length} ...`);
       if (typeof props.tagRender === 'function') {
-        return h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
-          props.tagRender({
-            label: content,
-            value: undefined,
-            disabled: false,
-            closable: false,
-            onClose: () => {},
-            isMaxTag: true,
-          }) as never,
+        return h('div', { class: `${props.prefixCls}-content-item`, style: { opacity: '1' } }, [
+          h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
+            props.tagRender({
+              label: content,
+              value: undefined,
+              disabled: false,
+              closable: false,
+              onClose: () => {},
+              isMaxTag: true,
+            }) as never,
+          ]),
         ]);
       }
-      return h(
-        'span',
-        {
-          class: [`${props.prefixCls}-selection-item`].join(' '),
-          style: props.styles?.item,
-        },
-        [
-          h(
-            'span',
-            {
-              class: `${props.prefixCls}-selection-item-content`,
-              style: props.styles?.itemContent,
-            },
-            [content as never],
-          ),
-        ],
-      );
+      return h('div', { class: `${props.prefixCls}-content-item`, style: { opacity: '1' } }, [
+        h(
+          'span',
+          {
+            class: [`${props.prefixCls}-selection-item`].join(' '),
+            style: props.styles?.item,
+          },
+          [
+            h(
+              'span',
+              {
+                class: `${props.prefixCls}-selection-item-content`,
+                style: props.styles?.itemContent,
+              },
+              [content as never],
+            ),
+          ],
+        ),
+      ]);
     };
 
     const renderInput = (options: { syncWidth: boolean; value: string; readOnly: boolean }) =>
@@ -291,9 +318,7 @@ export const Selector = defineComponent({
         syncWidth: options.syncWidth,
         tokenWithEnter: props.tokenWithEnter,
         mode: props.mode,
-        inputClass: [`${props.prefixCls}-input`, props.classNames?.input]
-          .filter(Boolean)
-          .join(' '),
+        inputClass: [`${props.prefixCls}-input`, props.classNames?.input].filter(Boolean).join(' '),
         inputStyle: props.styles?.input,
         onSearch: props.onSearch,
         onSearchSubmit: props.onSearchSubmit,
@@ -338,9 +363,7 @@ export const Selector = defineComponent({
             ? h(
                 'div',
                 {
-                  class: [`${prefixCls}-content-value`, optionClassName]
-                    .filter(Boolean)
-                    .join(' '),
+                  class: [`${prefixCls}-content-value`, optionClassName].filter(Boolean).join(' '),
                   style: {
                     ...(mergedSearchValue ? { visibility: 'hidden' } : {}),
                     ...(optionStyle ?? {}),
@@ -369,7 +392,11 @@ export const Selector = defineComponent({
           },
           [
             renderValue,
-            renderInput({ syncWidth: false, value: mergedSearchValue, readOnly: !props.showSearch }),
+            renderInput({
+              syncWidth: false,
+              value: mergedSearchValue,
+              readOnly: !props.showSearch,
+            }),
           ],
         );
       };
@@ -399,11 +426,20 @@ export const Selector = defineComponent({
             !props.displayValues.length && !inputValue ? renderPlaceholder() : null,
             ...items.map(renderItem),
             omitted.length ? renderRest(omitted) : null,
-            renderInput({
-              syncWidth: true,
-              value: inputValue,
-              readOnly: !inputEditable,
-            }),
+            // rc Overflow：suffix（搜索输入）外包一层 `-content-item -content-item-suffix`
+            h(
+              'div',
+              {
+                class: [`${prefixCls}-content-item`, `${prefixCls}-content-item-suffix`].join(' '),
+              },
+              [
+                renderInput({
+                  syncWidth: true,
+                  value: inputValue,
+                  readOnly: !inputEditable,
+                }),
+              ],
+            ),
           ],
         );
       };
@@ -454,9 +490,7 @@ export const Selector = defineComponent({
                 {
                   type: 'button',
                   'aria-label': props.clearLabel,
-                  class: [`${prefixCls}-clear`, props.classNames?.clear]
-                    .filter(Boolean)
-                    .join(' '),
+                  class: [`${prefixCls}-clear`, props.classNames?.clear].filter(Boolean).join(' '),
                   style: props.styles?.clear,
                   onMousedown: (event: MouseEvent) => {
                     event.preventDefault();

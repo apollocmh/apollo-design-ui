@@ -32,7 +32,7 @@ import {
 } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
 import { useControlledValue, useDevWarning, useId } from '@apollo-design/utils';
-import type { CSSProperties, PropType } from 'vue';
+import type { CSSProperties, PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h, provide, type Ref, ref, shallowRef, watch } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
@@ -45,14 +45,16 @@ import { useCompactItemContext } from '../space/Compact';
 import { getStatusClassNames } from '../space/statusUtils';
 import BaseSelect from './engine/BaseSelect';
 import { type SelectContextValue, selectContextKey } from './engine/context';
-import {
-  filterOptions,
-  parseOptions,
-  resolveSearchConfig,
-  useCache,
-} from './engine/useOptions';
+import { filterOptions, parseOptions, resolveSearchConfig, useCache } from './engine/useOptions';
 import type { ResolvedFieldNames } from './engine/valueUtil';
-import { convertChildrenToData, fillFieldNames, flattenOptions, hasValue, isComboNoValue, toArray } from './engine/valueUtil';
+import {
+  convertChildrenToData,
+  fillFieldNames,
+  flattenOptions,
+  hasValue,
+  isComboNoValue,
+  toArray,
+} from './engine/valueUtil';
 import type {
   DefaultOptionType,
   DisplayValueType,
@@ -101,7 +103,13 @@ export const Select = defineComponent({
     listItemHeight: { type: Number, default: undefined },
     virtual: { type: Boolean, default: undefined },
     defaultActiveFirstOption: { type: Boolean, default: undefined },
-    menuItemSelectedIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    menuItemSelectedIcon: {
+      type: null as unknown as PropType<
+        | VNodeChild
+        | ((props: { value?: unknown; disabled?: boolean; isSelected?: boolean }) => VNodeChild)
+      >,
+      default: undefined,
+    },
     showSearch: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
     searchValue: { type: String, default: undefined },
     autoClearSearchValue: { type: Boolean, default: undefined },
@@ -117,20 +125,35 @@ export const Select = defineComponent({
     status: { type: String as PropType<SelectProps['status']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: undefined },
-    placeholder: { type: null as unknown as PropType<unknown>, default: undefined },
-    prefix: { type: null as unknown as PropType<unknown>, default: undefined },
-    suffixIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    placeholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    prefix: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    suffixIcon: {
+      type: null as unknown as PropType<
+        | VNodeChild
+        | ((info: {
+            open: boolean;
+            searchValue: string;
+            focused: boolean;
+            showSearch: boolean;
+            loading?: boolean;
+          }) => VNodeChild)
+      >,
+      default: undefined,
+    },
     showArrow: { type: Boolean, default: undefined },
     allowClear: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
-    clearIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    removeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    loadingIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    notFoundContent: { type: null as unknown as PropType<unknown>, default: undefined },
+    clearIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    loadingIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     maxLength: { type: Number, default: undefined },
     maxCount: { type: Number, default: undefined },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
-    maxTagPlaceholder: { type: null as unknown as PropType<unknown>, default: undefined },
+    maxTagPlaceholder: {
+      type: null as unknown as PropType<VNodeChild | ((omitted: DisplayValueType[]) => VNodeChild)>,
+      default: undefined,
+    },
     tagRender: { type: Function as PropType<SelectProps['tagRender']>, default: undefined },
     tokenSeparators: {
       type: [Array, Function] as PropType<string[] | ((input: string) => string[])>,
@@ -206,21 +229,19 @@ export const Select = defineComponent({
 
     // ------------------------ deprecated 告警 ------------------------
     const warning = useDevWarning('Select');
-    {
-      for (const [oldName, newName] of DEPRECATIONS) {
-        if ((props as unknown as Record<string, unknown>)[oldName] !== undefined) {
-          warning(false, `\`${oldName}\` is deprecated. Please use \`${newName}\` instead.`);
-        }
+    for (const [oldName, newName] of DEPRECATIONS) {
+      if ((props as unknown as Record<string, unknown>)[oldName] !== undefined) {
+        warning(false, `\`${oldName}\` is deprecated. Please use \`${newName}\` instead.`);
       }
-      if (props.showArrow !== undefined) {
-        warning(
-          false,
-          '`showArrow` is deprecated which will be removed in next major version. It will be a default behavior, you can hide it by setting `suffixIcon` to null.',
-        );
-      }
-      if (props.maxCount !== undefined && !multiple.value) {
-        warning(false, '`maxCount` only works with mode `multiple` or `tags`');
-      }
+    }
+    if (props.showArrow !== undefined) {
+      warning(
+        false,
+        '`showArrow` is deprecated which will be removed in next major version. It will be a default behavior, you can hide it by setting `suffixIcon` to null.',
+      );
+    }
+    if (props.maxCount !== undefined && !multiple.value) {
+      warning(false, '`maxCount` only works with mode `multiple` or `tags`');
     }
 
     // --------------------------- 外观 ---------------------------
@@ -242,9 +263,7 @@ export const Select = defineComponent({
     const tokenValues = selectTokenValues();
     const listHeight = computed(() => props.listHeight ?? 256);
     const listItemHeight = computed(
-      () =>
-        props.listItemHeight ??
-        (Number.parseInt(String(tokenValues.optionHeight), 10) || 32),
+      () => props.listItemHeight ?? (Number.parseInt(String(tokenValues.optionHeight), 10) || 32),
     );
 
     const componentConfig = computed(
@@ -255,21 +274,24 @@ export const Select = defineComponent({
     // antd：`showSearch ?? contextShowSearch` 之后才交给 rc 做模式推导。
     const showSearchProp = computed(
       () =>
-        (props.showSearch ??
-          componentConfig.value.showSearch) as
+        (props.showSearch ?? componentConfig.value.showSearch) as
           | boolean
           | (SearchConfig<DefaultOptionType> & { searchIcon?: unknown })
           | undefined,
     );
     const searchTuple = computed(() =>
-      resolveSearchConfig(showSearchProp.value, {
-        filterOption: props.filterOption,
-        searchValue: props.searchValue,
-        optionFilterProp: props.optionFilterProp,
-        filterSort: props.filterSort,
-        onSearch: props.onSearch,
-        autoClearSearchValue: props.autoClearSearchValue,
-      }, props.mode),
+      resolveSearchConfig(
+        showSearchProp.value,
+        {
+          filterOption: props.filterOption,
+          searchValue: props.searchValue,
+          optionFilterProp: props.optionFilterProp,
+          filterSort: props.filterSort,
+          onSearch: props.onSearch,
+          autoClearSearchValue: props.autoClearSearchValue,
+        },
+        props.mode,
+      ),
     );
     const mergedShowSearch = computed(() => searchTuple.value[0]);
     const searchConfig = computed(() => searchTuple.value[1]);
@@ -372,9 +394,7 @@ export const Select = defineComponent({
     const rawValues = computed(
       () =>
         new Set(
-          mergedValues.value
-            .map((v) => v.value)
-            .filter((v): v is RawValueType => v !== undefined),
+          mergedValues.value.map((v) => v.value).filter((v): v is RawValueType => v !== undefined),
         ),
     );
 
@@ -400,10 +420,7 @@ export const Select = defineComponent({
       [...mergedValues.value]
         .sort((a, b) => (String(a.value) < String(b.value) ? -1 : 1))
         .forEach((item) => {
-          if (
-            item.value !== undefined &&
-            !parsed.value.valueOptions.has(item.value)
-          ) {
+          if (item.value !== undefined && !parsed.value.valueOptions.has(item.value)) {
             clone.push(createTagOption(item.value, item.label));
           }
         });
@@ -479,9 +496,7 @@ export const Select = defineComponent({
       const changed =
         labeledValues.length !== mergedValues.value.length ||
         labeledValues.some((newVal, index) => mergedValues.value[index]?.value !== newVal?.value);
-      setInnerValue(
-        (multiple.value ? labeledValues : labeledValues[0]) as unknown as SelectValue,
-      );
+      setInnerValue((multiple.value ? labeledValues : labeledValues[0]) as unknown as SelectValue);
       if (!changed) return;
       const returnValues = props.labelInValue
         ? labeledValues.map(({ label, value }) => ({ label, value }))
@@ -571,15 +586,15 @@ export const Select = defineComponent({
     const onInternalSearchSplit = (words: string[]): void => {
       const patchValues: RawValueType[] =
         props.mode === 'tags'
-          ? (words as RawValueType[]).filter(
-              (val) => !parsed.value.valueOptions.get(val)?.disabled,
-            )
+          ? (words as RawValueType[]).filter((val) => !parsed.value.valueOptions.get(val)?.disabled)
           : words
               .map((word) => parsed.value.labelOptions.get(word)?.value as RawValueType | undefined)
               .filter((val): val is RawValueType => val !== undefined);
       const newRawValues = Array.from(new Set([...rawValues.value, ...patchValues]));
       triggerChange(newRawValues.map((v) => ({ value: v }) as LabelInValueType));
-      newRawValues.forEach((v) => triggerSelect(v, true));
+      newRawValues.forEach((v) => {
+        triggerSelect(v, true);
+      });
     };
 
     // --------------------------- 无障碍 ---------------------------
@@ -597,11 +612,10 @@ export const Select = defineComponent({
       }
       void info;
     };
-    const mergedDefaultActiveFirstOption = computed(
-      () =>
-        props.defaultActiveFirstOption !== undefined
-          ? props.defaultActiveFirstOption
-          : props.mode !== 'combobox',
+    const mergedDefaultActiveFirstOption = computed(() =>
+      props.defaultActiveFirstOption !== undefined
+        ? props.defaultActiveFirstOption
+        : props.mode !== 'combobox',
     );
 
     // ---------------------------- 图标 ----------------------------

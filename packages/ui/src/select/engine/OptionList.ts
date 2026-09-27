@@ -66,7 +66,10 @@ export const OptionList = defineComponent({
       },
     });
 
-    const ctx = (): { select: NonNullable<typeof selectCtx>['value']; base: BaseSelectContextValue } => {
+    const ctx = (): {
+      select: NonNullable<typeof selectCtx>['value'];
+      base: BaseSelectContextValue;
+    } => {
       if (!selectCtx || !baseCtx) {
         throw new Error('[apollo-design] OptionList 必须在 Select 内部使用');
       }
@@ -142,8 +145,7 @@ export const OptionList = defineComponent({
         // ---------------- 分组标题 ----------------
         if (group) {
           const groupTitle =
-            (data.title as string | undefined) ??
-            (isTitleType(label) ? String(label) : undefined);
+            (data.title as string | undefined) ?? (isTitleType(label) ? String(label) : undefined);
           return h(
             'div',
             {
@@ -174,24 +176,19 @@ export const OptionList = defineComponent({
           .join(' ');
 
         // https://github.com/ant-design/ant-design/issues/34145
-        const content =
-          typeof label === 'number' ? label : (label ?? value);
+        const content = typeof label === 'number' ? label : (label ?? value);
         let optionTitle = isTitleType(content) ? String(content) : undefined;
         if (title !== undefined) optionTitle = title as string;
 
         const menuItemSelectedIcon = select.menuItemSelectedIcon;
         const iconVisible =
-          !menuItemSelectedIcon ||
-          typeof menuItemSelectedIcon === 'function' ||
-          selected;
+          !menuItemSelectedIcon || typeof menuItemSelectedIcon === 'function' || selected;
 
         return h(
           'div',
           {
             ...pickDataAttrs(otherProps),
-            ...(select.virtual
-              ? {}
-              : { role: 'option', id: `${id}_list_${itemIndex}` }),
+            ...(select.virtual ? {} : { role: 'option', id: `${id}_list_${itemIndex}` }),
             'aria-selected': select.virtual ? undefined : isAriaSelected(value),
             'aria-disabled': mergedDisabled,
             class: optionClassName,

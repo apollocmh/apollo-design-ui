@@ -28,11 +28,7 @@ export interface ActiveValueInfo {
 export interface SelectContextValue {
   /** 摊平后的选项（含分组行）。 */
   flattenOptions: FlattenItem[];
-  onActiveValue: (
-    active: RawValueType | null,
-    index: number,
-    info?: ActiveValueInfo,
-  ) => void;
+  onActiveValue: (active: RawValueType | null, index: number, info?: ActiveValueInfo) => void;
   defaultActiveFirstOption: boolean;
   /** `(value, { selected })`。 */
   onSelect: (value: RawValueType, info: { selected: boolean }) => void;
@@ -101,7 +97,7 @@ export interface BaseSelectContextValue {
   classNames?: SelectSemanticClassNames;
   styles?: SelectSemanticStyles;
   toggleOpen: (next?: boolean) => void;
-  onSearch: (text: string, fromTyping: boolean, isCompositing: boolean) => boolean | void;
+  onSearch: (text: string, fromTyping: boolean, isCompositing: boolean) => boolean | undefined;
   onSearchSubmit: (text: string) => void;
   onSelectorRemove: (value: DisplayValueType) => void;
   onInputBlur: () => void;

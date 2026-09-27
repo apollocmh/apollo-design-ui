@@ -391,6 +391,15 @@ export const COMPONENTS = {
       'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
     ],
   },
+  select: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // open 受控静态帧钉住下拉（与 dropdown 同判）；basic/multiple 走回填态。
+    variants: [
+      'basic', // 单选回填 + allowClear（清除位与箭头共存）
+      'multiple', // 多选 tag（-selection-item / -content-item 布局）
+      'open', // 展开态（dropdown / list / holder 三层 + active/selected/disabled）
+    ],
+  },
   modal: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部走**内联渲染**（受控 open + getContainer:false）或 PurePanel ——

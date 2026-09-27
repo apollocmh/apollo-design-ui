@@ -5,7 +5,7 @@
  * `commonUtil.js`（31 行）。逐函数对拍，**不搬运实现**（H2/H3）。
  */
 
-import { Comment, type VNode, type VNodeChild, isVNode, Text } from 'vue';
+import { Comment, isVNode, Text, type VNode, type VNodeChild } from 'vue';
 import type { DefaultOptionType, FieldNames, RawValueType } from '../interface';
 
 // ---------------------------------------------------------------------------
@@ -106,8 +106,12 @@ export function flattenOptions(
   config: { fieldNames: FieldNames; childrenAsData: boolean },
 ): FlattenItem[] {
   const flattenList: FlattenItem[] = [];
-  const { label: fieldLabel, value: fieldValue, options: fieldOptions, groupLabel } =
-    fillFieldNames(config.fieldNames, false);
+  const {
+    label: fieldLabel,
+    value: fieldValue,
+    options: fieldOptions,
+    groupLabel,
+  } = fillFieldNames(config.fieldNames, false);
 
   const dig = (list: unknown, isGroupOption: boolean): void => {
     if (!Array.isArray(list)) return;
@@ -153,19 +157,20 @@ export function getSeparatedContent(
   tokens: string[] | undefined,
   end?: number,
 ): string[] | null {
-  if (!tokens || !tokens.length) return null;
+  if (!tokens?.length) return null;
 
   let match = false;
   const separate = (str: string, [token, ...restTokens]: string[]): string[] => {
     if (!token) return [str];
     const list = str.split(token);
     match = match || list.length > 1;
-    return list
-      .reduce<string[]>(
-        (prevList, unitStr) => [...prevList, ...separate(unitStr, restTokens)],
-        [],
-      )
-      .filter(Boolean);
+    const flat: string[] = [];
+    for (const unitStr of list) {
+      for (const part of separate(unitStr, restTokens)) {
+        flat.push(part);
+      }
+    }
+    return flat;
   };
 
   const list = separate(text, tokens);
@@ -225,7 +230,10 @@ function convertNodeToOption(node: VNode): DefaultOptionType {
   const { children, value, ...restProps } = props;
   return {
     key: node.key ?? undefined,
-    value: value !== undefined ? (value as RawValueType) : ((node.key ?? undefined) as RawValueType | undefined),
+    value:
+      value !== undefined
+        ? (value as RawValueType)
+        : ((node.key ?? undefined) as RawValueType | undefined),
     children: slotChildren(node) ?? (children as VNodeChild),
     ...restProps,
   } as DefaultOptionType;

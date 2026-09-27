@@ -11,10 +11,10 @@ import { computed, unref } from 'vue';
 import type {
   DefaultOptionType,
   FilterFunc,
+  LabelInValueType,
   RawValueType,
   SearchConfig,
 } from '../interface';
-import type { LabelInValueType } from '../interface';
 import type { ResolvedFieldNames } from './valueUtil';
 import { convertChildrenToData, isValidCount, toArray } from './valueUtil';
 
@@ -61,7 +61,9 @@ export function parseOptions(
         valueOptions.set((option[fieldNames.value] ?? undefined) as RawValueType | null, option);
         setLabelOptions(labelOptions, option, fieldNames.label);
         // https://github.com/ant-design/ant-design/issues/35304
-        optionFilterProp.forEach((prop) => setLabelOptions(labelOptions, option, prop));
+        optionFilterProp.forEach((prop) => {
+          setLabelOptions(labelOptions, option, prop);
+        });
         setLabelOptions(labelOptions, option, optionLabelProp);
       } else {
         dig((option[fieldNames.options] as DefaultOptionType[]) ?? [], true);
@@ -86,9 +88,7 @@ export function useOptions(input: UseOptionsInput): ComputedRef<ParsedOptions> {
   return computed(() => {
     const options = input.options();
     const childrenAsData = !options;
-    const childrenData = childrenAsData
-      ? convertChildrenToData(input.children() as never)
-      : [];
+    const childrenData = childrenAsData ? convertChildrenToData(input.children() as never) : [];
     return parseOptions(
       options,
       childrenAsData,
@@ -154,7 +154,10 @@ export function useCache(
 // ---------------------------------------------------------------------------
 
 function includes(test: unknown, search: string): boolean {
-  return toArray(test as unknown[]).join('').toUpperCase().includes(search);
+  return toArray(test as unknown[])
+    .join('')
+    .toUpperCase()
+    .includes(search);
 }
 
 /**
@@ -304,8 +307,8 @@ export function resolveAllowClear(params: {
 
   return {
     allowClear: merged,
-    clearIcon: merged ? config.clearIcon ?? clearIcon ?? '×' : null,
-    label: merged ? config.label ?? 'Clear' : '',
+    clearIcon: merged ? (config.clearIcon ?? clearIcon ?? '×') : null,
+    label: merged ? (config.label ?? 'Clear') : '',
   };
 }
 

@@ -20,8 +20,8 @@ describe('getNow', () => {
     // 保险：任何用例都必须把 prototype 上的桩摘掉
     const proto = Object.getPrototypeOf(dayjs()) as Record<string, unknown>;
     if (Object.getOwnPropertyDescriptor(proto, '__tzStub') !== undefined) {
-      delete proto['tz'];
-      delete proto['__tzStub'];
+      delete proto.tz;
+      delete proto.__tzStub;
     }
   });
 

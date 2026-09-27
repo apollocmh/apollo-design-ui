@@ -1,8 +1,18 @@
 <script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
-import { Select } from '../index';
+// 对齐 antd demo/basic.tsx
+import { Select } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+const value = ref<string | undefined>('a1');
+
+const options = [
+  { value: 'a1', label: '杰克' },
+  { value: 'b2', label: '露西' },
+  { value: 'c3', label: '汤姆' },
+  { value: 'd4', label: '杰瑞' },
+];
 </script>
 
 <template>
-  <Select>basic demo 占位</Select>
+  <Select v-model:value="value" :options="options" style="width: 120px" />
 </template>

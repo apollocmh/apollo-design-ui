@@ -396,6 +396,12 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 
 | D105 | `modal`（响应式宽度阶梯的叶子变量） | `genResponsiveWidthStyle` 只生成 `--ant-modal-{sm..xxxl}-width: var(--ant-modal-{prev}-width)` 这条**阶梯**，叶子 `--ant-modal-xs-width` **从不声明** —— 它由 cssVar 模式的组件 token 或运行时内联提供；`width` 是数字时真正的宽度来自 rc-dialog 的**内联** `width: 520px`，CSS 里那条 `width: var(--…-xs-width)` 是无效声明、被浏览器丢弃 ⇒ 面板退回 `width: auto`（PurePanel / confirm 的静态面板正是靠它撑满容器） | 逐字保留同样的「只引用、不声明」。⚠️ **刻意不补声明**：补上 520px 会让 `confirm` 的静态面板从「撑满」变成 520px 宽 ⇒ 与 antd 不再逐像素一致（L6 实测会红） | UPSTREAM（跟随其副作用） | `tests/build/run.mjs` 的 `RUNTIME_ASSIGNED_VARS` 登记了 `--apollo-modal-xs-width`（赋值点 = `Modal.ts` 的 `responsiveWidthVars`，`width` 传对象时）；L6 `modal/confirm__light__*` 钉住「撑满」这一形态 |
 
+| D106 | `select`（下拉宽度拉伸） | `popupMatchSelectWidth: true` ⇒ rc 的 `stretch='width'`（浮层宽度**钳制**为触发器宽度，内容更宽时收窄滚动） | 本仓 Trigger 的 stretch 协议只实现了 `'minWidth'`（`_internal/trigger.ts` §3 v1 范围）⇒ 传 `'minWidth'`：浮层**不窄于**触发器。常态（选项不超宽）两者逐像素一致（L6 9/9 exact） | PLATFORM | 差异仅在「内容比触发器宽」的分支；Trigger 补 `'width'` 后切回（select README §5 P4） |
+| D107 | `select`（Portal 浮层的变量作用域） | 组件 token 声明块挂在 `.ant-select-css-var`，popupClassName 里带 `cssVarCls` ⇒ Portal 出去的浮层也拿得到 `--ant-select-*` | DECLS 落 `.apollo-select,.apollo-select-css-var` 两个类（浮层类名含 `-css-var`，同效） | PLATFORM | L6 `select/open__light__*` 钉住浮层的 option 高亮/禁用配色（变量失效时浮层完全无样式，首跑即红） |
+| D108 | `select`（多选溢出折叠） | `maxTagCount: 'responsive'` 走 rc-overflow 的 ResizeObserver 逐项测量折叠 | 只支持 `number`（直接 slice + `+N ...` rest）；`'responsive'` 待接 `_internal/overflow.ts` | INTENDED（范围裁剪） | 类型面只声明 `number`；demo/responsive 以固定值等价展示并在 md 登记 |
+| D109 | `select`（combobox 的公开面） | `mode='combobox'` 被吞成单选（仅 `SECRET_COMBOBOX_MODE_DO_NOT_USE` 真走 combobox） | 同构：内核实现 combobox 分支（AutoComplete 复用），公开类型只声明 `multiple \| tags` | INTENDED（与 antd 同构） | type.test-d.ts 负例钉住 `mode: 'combobox'` 报错 |
+| D110 | `select`（滚动条） | rc-virtual-list 自绘滚动条（`borderRadius:99` + 半透明黑），`showScrollBar` 控制显隐 | `@apollo-design/virtual-list` 用原生滚动，`showScrollBar` 接受但不生效 | PLATFORM | virtual-list 契约 §5.1 既有差异（listy 同判）；`scrollTo()` 无参为 no-op（OptionList 打开时的 `scrollTo(undefined)` 已判空） |
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

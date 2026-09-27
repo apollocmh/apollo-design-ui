@@ -15,9 +15,9 @@
  * 键盘因此不需要跨组件命令式转发。
  */
 
-import { KeyCode } from '@apollo-design/utils';
 import { getPlacements } from '@apollo-design/position';
-import type { CSSProperties, ComponentPublicInstance, PropType } from 'vue';
+import { KeyCode } from '@apollo-design/utils';
+import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
 import {
   computed,
   defineComponent,
@@ -30,24 +30,24 @@ import {
   shallowRef,
   watch,
 } from 'vue';
+import { Trigger } from '../../_internal/trigger';
 import type {
   CustomTagProps,
+  DisplayValueType,
   InternalSelectMode,
   LabelInValueType,
-  DisplayValueType,
   RawValueType,
   SelectCommonPlacement,
   SelectDirection,
   SelectSemanticClassNames,
   SelectSemanticStyles,
 } from '../interface';
+import { type BaseSelectContextValue, baseSelectContextKey, selectContextKey } from './context';
 import OptionList from './OptionList';
 import Selector from './Selector';
-import { Trigger } from '../../_internal/trigger';
-import { type BaseSelectContextValue, baseSelectContextKey, selectContextKey } from './context';
 import { useLock, useOpen } from './useOpen';
-import { getSeparatedContent, isValidCount } from './valueUtil';
 import { resolveAllowClear } from './useOptions';
+import { getSeparatedContent, isValidCount } from './valueUtil';
 
 export interface SearchSource {
   source: 'typing' | 'effect' | 'submit' | 'blur';
@@ -113,8 +113,14 @@ export const BaseSelect = defineComponent({
     transitionName: { type: String, default: undefined },
     popupClassName: { type: String, default: undefined },
     popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    popupRender: { type: Function as PropType<((node: unknown) => unknown) | undefined>, default: undefined },
-    classNames: { type: Object as PropType<SelectSemanticClassNames | undefined>, default: undefined },
+    popupRender: {
+      type: Function as PropType<((node: unknown) => unknown) | undefined>,
+      default: undefined,
+    },
+    classNames: {
+      type: Object as PropType<SelectSemanticClassNames | undefined>,
+      default: undefined,
+    },
     styles: { type: Object as PropType<SelectSemanticStyles | undefined>, default: undefined },
     // ---- 回调（纯 prop，见 CHECKLIST #78）----
     onSearch: {
@@ -124,13 +130,20 @@ export const BaseSelect = defineComponent({
     onSearchSplit: { type: Function as PropType<(words: string[]) => void>, default: undefined },
     onDisplayValuesChange: {
       type: Function as PropType<
-        (values: DisplayValueType[], info: { type: 'add' | 'remove' | 'clear'; values: DisplayValueType[] }) => void
+        (
+          values: DisplayValueType[],
+          info: { type: 'add' | 'remove' | 'clear'; values: DisplayValueType[] },
+        ) => void
       >,
       default: undefined,
     },
     onActiveValueChange: {
       type: Function as PropType<
-        (value: RawValueType | null, index: number, info?: { source?: 'keyboard' | 'mouse' }) => void
+        (
+          value: RawValueType | null,
+          index: number,
+          info?: { source?: 'keyboard' | 'mouse' },
+        ) => void
       >,
       default: undefined,
     },
@@ -139,7 +152,10 @@ export const BaseSelect = defineComponent({
     onBlur: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
     onClear: { type: Function as PropType<() => void>, default: undefined },
     onPopupScroll: { type: Function as PropType<(event: Event) => void>, default: undefined },
-    onInputKeyDown: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
+    onInputKeyDown: {
+      type: Function as PropType<(event: KeyboardEvent) => void>,
+      default: undefined,
+    },
     onKeyDown: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
     onKeyUp: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
   },
@@ -148,9 +164,9 @@ export const BaseSelect = defineComponent({
     const selectCtx = inject(selectContextKey, null);
 
     const selectorRef = shallowRef<ComponentPublicInstance | null>(null);
-    const optionListRef = shallowRef<{ scrollTo: (arg?: number | { index?: number }) => void } | null>(
-      null,
-    );
+    const optionListRef = shallowRef<{
+      scrollTo: (arg?: number | { index?: number }) => void;
+    } | null>(null);
     const triggerRef = shallowRef<{ popupElement: () => HTMLElement | null } | null>(null);
 
     const focused = ref(false);
@@ -167,8 +183,7 @@ export const BaseSelect = defineComponent({
         props.onOpenChange?.(next);
         emit('update:open', next);
       },
-      postOpen: (next: boolean) =>
-        props.disabled || emptyListContent.value ? false : next,
+      postOpen: (next: boolean) => (props.disabled || emptyListContent.value ? false : next),
     });
 
     // --------------------------- search value ---------------------------
@@ -190,8 +205,7 @@ export const BaseSelect = defineComponent({
       const sep = props.tokenSeparators;
       if (typeof sep === 'function') {
         const tokens = sep(input);
-        const isUnchanged =
-          Array.isArray(tokens) && tokens.length === 1 && tokens[0] === input;
+        const isUnchanged = Array.isArray(tokens) && tokens.length === 1 && tokens[0] === input;
         if (!Array.isArray(tokens) || !tokens.length || isUnchanged) return null;
         return typeof end !== 'undefined' ? tokens.slice(0, end) : tokens;
       }
@@ -234,7 +248,7 @@ export const BaseSelect = defineComponent({
     };
 
     const onInternalSearchSubmit = (searchText: string): void => {
-      if (!searchText || !searchText.trim()) return;
+      if (!searchText?.trim()) return;
       props.onSearch?.(searchText, { source: 'submit' });
     };
 
@@ -448,8 +462,9 @@ export const BaseSelect = defineComponent({
     // --------------------------- 焦点 / 失焦 ---------------------------
     let internalMouseDown = false;
     const selectorEl = (): HTMLElement | null =>
-      ((selectorRef.value as { nativeElement?: () => HTMLElement | null } | null)?.nativeElement?.() ??
-        null) as HTMLElement | null;
+      ((
+        selectorRef.value as { nativeElement?: () => HTMLElement | null } | null
+      )?.nativeElement?.() ?? null) as HTMLElement | null;
     const getSelectElements = (): (HTMLElement | null)[] => [
       selectorEl(),
       triggerRef.value?.popupElement() ?? null,
@@ -508,50 +523,54 @@ export const BaseSelect = defineComponent({
     };
 
     // --------------------------- context ---------------------------
-    provide(baseSelectContextKey, computed<BaseSelectContextValue>(() => ({
-      prefixCls: props.prefixCls,
-      id: props.id,
-      open: mergedOpen.value,
-      triggerOpen: mergedOpen.value,
-      rawOpen: rawOpen.value,
-      showSearch: props.showSearch,
-      multiple: multiple.value,
-      mode: props.mode,
-      disabled: props.disabled,
-      loading: props.loading,
-      searchValue: mergedSearchValue.value,
-      activeValue: props.activeValue,
-      activeDescendantId: props.activeDescendantId,
-      showScrollBar: 'optional',
-      lockOptions: lock.value,
-      notFoundContent: props.notFoundContent,
-      placeholder: props.placeholder,
-      maxLength: props.maxLength,
-      tabIndex: props.tabIndex,
-      title: props.title,
-      removeIcon: props.removeIcon,
-      autoClearSearchValue: props.autoClearSearchValue,
-      maxTagTextLength: props.maxTagTextLength,
-      maxTagCount: props.maxTagCount,
-      maxTagPlaceholder: props.maxTagPlaceholder,
-      tagRender: props.tagRender,
-      displayValues: props.displayValues,
-      classNames: props.classNames,
-      styles: props.styles,
-      toggleOpen: (next?: boolean) => toggleOpen(next),
-      onSearch: (text, fromTyping, isCompositing) => onInternalSearch(text, fromTyping, isCompositing),
-      onSearchSubmit: onInternalSearchSubmit,
-      onSelectorRemove: (value: DisplayValueType) =>
-        props.onDisplayValuesChange?.(
-          props.displayValues.filter((i) => i !== value),
-          { type: 'remove', values: [value] },
-        ),
-      onInputBlur: () => {
-        keyLock.value = false;
-      },
-      onClear: onClearMouseDown,
-      tokenWithEnter: tokenWithEnter.value,
-    })));
+    provide(
+      baseSelectContextKey,
+      computed<BaseSelectContextValue>(() => ({
+        prefixCls: props.prefixCls,
+        id: props.id,
+        open: mergedOpen.value,
+        triggerOpen: mergedOpen.value,
+        rawOpen: rawOpen.value,
+        showSearch: props.showSearch,
+        multiple: multiple.value,
+        mode: props.mode,
+        disabled: props.disabled,
+        loading: props.loading,
+        searchValue: mergedSearchValue.value,
+        activeValue: props.activeValue,
+        activeDescendantId: props.activeDescendantId,
+        showScrollBar: 'optional',
+        lockOptions: lock.value,
+        notFoundContent: props.notFoundContent,
+        placeholder: props.placeholder,
+        maxLength: props.maxLength,
+        tabIndex: props.tabIndex,
+        title: props.title,
+        removeIcon: props.removeIcon,
+        autoClearSearchValue: props.autoClearSearchValue,
+        maxTagTextLength: props.maxTagTextLength,
+        maxTagCount: props.maxTagCount,
+        maxTagPlaceholder: props.maxTagPlaceholder,
+        tagRender: props.tagRender,
+        displayValues: props.displayValues,
+        classNames: props.classNames,
+        styles: props.styles,
+        toggleOpen: (next?: boolean) => toggleOpen(next),
+        onSearch: (text, fromTyping, isCompositing) =>
+          onInternalSearch(text, fromTyping, isCompositing),
+        onSearchSubmit: onInternalSearchSubmit,
+        onSelectorRemove: (value: DisplayValueType) =>
+          props.onDisplayValuesChange?.(
+            props.displayValues.filter((i) => i !== value),
+            { type: 'remove', values: [value] },
+          ),
+        onInputBlur: () => {
+          keyLock.value = false;
+        },
+        onClear: onClearMouseDown,
+        tokenWithEnter: tokenWithEnter.value,
+      })),
+    );
 
     expose({
       focus: () => (selectorRef.value as { focus?: () => void } | null)?.focus?.(),
@@ -600,7 +619,14 @@ export const BaseSelect = defineComponent({
           .join(' ') || undefined,
     );
 
-    const popupElement = () => h(OptionList, { ref: optionListRef, activeIndex: activeIndex.value, onActiveIndexChange: setActive, onSelectValue, onPopupScroll: props.onPopupScroll });
+    const popupElement = () =>
+      h(OptionList, {
+        ref: optionListRef,
+        activeIndex: activeIndex.value,
+        onActiveIndexChange: setActive,
+        onSelectValue,
+        onPopupScroll: props.onPopupScroll,
+      });
 
     return () => {
       const popupPrefixCls = `${props.prefixCls}-dropdown`;
@@ -659,11 +685,15 @@ export const BaseSelect = defineComponent({
               motionName: props.transitionName ?? 'apollo-slide-up',
               motionDeadline: 500,
             },
-            stretch: (props.popupMatchSelectWidth === false ||
-            typeof props.popupMatchSelectWidth === 'number'
-              ? 'minWidth'
-              : 'width') as never,
-            popupClassName: [props.popupClassName, props.emptyOptions ? `${popupPrefixCls}-empty` : '']
+            // ⚠️ rc：popupMatchSelectWidth=true ⇒ stretch='width'（钳制最大宽）。
+            //    本仓 Trigger 的 stretch 协议只实现了 'minWidth'（trigger.ts §3），
+            //    视觉主契约「浮层不窄于触发器」等价；「内容更宽时收窄」的差异
+            //    登记 COMPATIBILITY（待 Trigger 补 'width' 后切回）。
+            stretch: 'minWidth',
+            popupClassName: [
+              props.popupClassName,
+              props.emptyOptions ? `${popupPrefixCls}-empty` : '',
+            ]
               .filter(Boolean)
               .join(' '),
             popupStyle: {
@@ -682,7 +712,9 @@ export const BaseSelect = defineComponent({
                 prefixCls: props.prefixCls,
                 id: props.id,
                 className: mergedClassName.value,
-                style: props.styles?.root,
+                // antd：用户 `style` 经 useSemanticRootStyle 并入 styles.root
+                //（本仓在壳层合并：用户 style 优先级低于 styles.root）
+                style: { ...(props.style ?? {}), ...(props.styles?.root ?? {}) },
                 focused: focused.value,
                 multiple: multiple.value,
                 mode: props.mode,

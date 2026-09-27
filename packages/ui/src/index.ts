@@ -960,6 +960,41 @@ export type {
 } from './qr-code';
 export { QrCode } from './qr-code';
 export { genQrCodeStyle, genTokenDecls as genQrCodeTokenDecls } from './qr-code/style';
+export type {
+  CustomTagProps,
+  DefaultOptionType,
+  DisplayValueType,
+  FieldNames as SelectFieldNames,
+  FlattenOptionData,
+  LabeledValue,
+  LabelInValueType,
+  OptGroupProps,
+  OptionProps as SelectOptionProps,
+  RawValueType,
+  ScrollToArg,
+  SearchConfig as SelectSearchConfig,
+  SelectCommonPlacement,
+  SelectEmits,
+  SelectMode,
+  SelectProps,
+  SelectRef,
+  SelectSemanticClassNames,
+  SelectSemanticStyles,
+  SelectSize,
+  SelectSlots,
+  SelectStatus,
+  SelectValue,
+  SelectVariant,
+} from './select';
+// ---------------------------------------------------------------------------
+// Select —— 下拉选择器（rc-select 1.10.1 内核的 Vue 自建：值语义 + 交互外壳 +
+// 选择器 DOM + 虚拟列表 + Trigger）。`Select.Option` / `Select.OptGroup` deprecated
+// 但导出；`_InternalPanelDoNotUseOrYouWillBeFired` 对应 SelectPurePanel。
+// ---------------------------------------------------------------------------
+export { default as Select, SelectOptGroup, SelectOption, SelectPurePanel } from './select';
+export { genSelectStyle, genSelectTokenDecls } from './select/style';
+export type { ComponentToken as SelectComponentToken } from './select/style/token';
+export { prepareComponentToken as prepareSelectComponentToken } from './select/style/token';
 // ---------------------------------------------------------------------------
 // Splitter —— 分割面板（引擎 hooks 自建于 hooks/；ResizeObserver 复用 utils）
 //

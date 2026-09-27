@@ -2,26 +2,76 @@
  * Select 的静态样式（G4 产物）。
  *
  * 契约来源：antd 6.6.4 的 `components/select/style`（React SSR + `extractStyle`
- * 真实产物逐条机械转换，提取脚本 `tests/visual/debug/extract-select.mjs`
- * —— 括号配平提取，原序）。
+ * 真实产物逐条机械转换，提取脚本 `tests/visual/debug/extract-select.mjs`）。
  *
  * 与 antd 产物的转换规则：
  *   1. 去掉 `:where(.css-dev-only-…)` hash 前缀（静态移植无 hashId）。
  *   2. `.ant-*` → `.apollo-*`；`--ant-*` → `--apollo-*`；`.anticon` → `.apollo-icon`（D15）。
- *   3. 组件变量声明块：antd 挂在 `.ant-select-css-var`（死选择器）；本仓按 D69
- *      同判，落在唯一的根形态 `.apollo-select` 上。
- *   4. ⚠️ at-rule（`@media`）的**选择器**里不含 `ant-select` —— 提取时按**块体**
- *      判据保留（modal 期教训：按选择器过滤会整块丢掉响应式规则）。
+ *   3. 组件变量声明块：antd 挂在 `.css-var-…ant-select-css-var`（死选择器，体以
+ *      `--ant-select-*` 开头）；本仓按 D69 同判落在根形态 `.apollo-select` 上。
+ *      ⚠️ 两个易混块：① `.ant-select-css-var{font-family…}` 是 genCommonStyle 的
+ *      **常规规则**，必须保留；② 根块 `.ant-select` 里内联着内部派生变量 + 实体规则
+ *      （inline-flex / border / height），是规则不是 DECLS（第一版整块当 DECLS
+ *      丢掉了盒子样式）。
+ *   4. 动画名稳定化：`…-antSlideUpIn` → `apollo-slide-up-in`（keyframes 内联；
+ *      Move 系与 `.anticon-spin` 无引用 —— 均删，dropdown 同判）。
+ *      裸 `.ant-slide-up-*` motion 基线段单独成 MOTION_BASE。
+ *   5. at-rule（`@media`）按**块体**判据保留（modal 期教训）。
  */
 
-/** 组件变量声明（对拍 antd 的 `.ant-select-css-var` 块，原序字面量）。 */
+/** 组件变量声明（对拍 antd 的 `.css-var-…ant-select-css-var` 块，原序字面量）。 */
 export function genSelectTokenDecls(): string {
   return DECLS;
 }
 
 const DECLS = `--apollo-select-line-width-focus:1px;--apollo-select-internal_fixed_item_margin:2px;--apollo-select-z-index-popup:1050;--apollo-select-option-selected-color:rgba(0,0,0,0.88);--apollo-select-option-selected-font-weight:600;--apollo-select-option-selected-bg:#e6f4ff;--apollo-select-option-active-bg:rgba(0,0,0,0.04);--apollo-select-option-padding:5px 12px;--apollo-select-option-font-size:14px;--apollo-select-option-line-height:1.5714285714285714;--apollo-select-option-height:32px;--apollo-select-selector-bg:#ffffff;--apollo-select-clear-bg:#ffffff;--apollo-select-single-item-height-lg:40px;--apollo-select-multiple-item-bg:rgba(0,0,0,0.06);--apollo-select-multiple-item-border-color:transparent;--apollo-select-multiple-item-height:24px;--apollo-select-multiple-item-height-sm:16px;--apollo-select-multiple-item-height-lg:32px;--apollo-select-multiple-selector-bg-disabled:rgba(0,0,0,0.04);--apollo-select-multiple-item-color-disabled:rgba(0,0,0,0.25);--apollo-select-multiple-item-border-color-disabled:transparent;--apollo-select-show-arrow-padding-inline-end:18px;--apollo-select-hover-border-color:#4096ff;--apollo-select-active-border-color:#1677ff;--apollo-select-active-outline-color:rgba(5,145,255,0.1);--apollo-select-select-affix-padding:4px;`;
 
+/** antd motion 的 @keyframes（稳定命名，体逐字取自产物）。 */
+const KEYFRAMES = `
+@keyframes apollo-slide-up-in{0%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}100%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}}
+@keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
+@keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
+@keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
+
+/** antd `_util/motion` 的共享基线段（裸 slide-up/down 规则，原序）。 */
+const MOTION_BASE = `
+.apollo-slide-up-enter,.apollo-slide-up-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-up-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-up-enter.apollo-slide-up-enter-active,.apollo-slide-up-appear.apollo-slide-up-appear-active{animation-name:apollo-slide-up-in;animation-play-state:running;}
+.apollo-slide-up-leave.apollo-slide-up-leave-active{animation-name:apollo-slide-up-out;animation-play-state:running;pointer-events:none;}
+.apollo-slide-up-enter,.apollo-slide-up-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
+.apollo-slide-up-enter-prepare,.apollo-slide-up-appear-prepare{transform:scale(1);}
+.apollo-slide-up-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
+.apollo-slide-down-enter,.apollo-slide-down-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-down-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-down-enter.apollo-slide-down-enter-active,.apollo-slide-down-appear.apollo-slide-down-appear-active{animation-name:apollo-slide-down-in;animation-play-state:running;}
+.apollo-slide-down-leave.apollo-slide-down-leave-active{animation-name:apollo-slide-down-out;animation-play-state:running;pointer-events:none;}
+.apollo-slide-down-enter,.apollo-slide-down-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
+.apollo-slide-down-enter-prepare,.apollo-slide-down-appear-prepare{transform:scale(1);}
+.apollo-slide-down-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}`;
+
+/** antd 产物机械转换段（原序）。 */
 const RULES = `
+a{color:var(--apollo-color-link);text-decoration:var(--apollo-link-decoration);background-color:transparent;outline:none;cursor:pointer;transition:color var(--apollo-motion-duration-slow);-webkit-text-decoration-skip:objects;}
+a:hover{color:var(--apollo-color-link-hover);}
+a:active{color:var(--apollo-color-link-active);}
+a:active,a:hover{text-decoration:var(--apollo-link-hover-decoration);outline:0;}
+a:focus{text-decoration:var(--apollo-link-focus-decoration);outline:0;}
+a:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}
+a[disabled]{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
+a{color:var(--apollo-color-link);text-decoration:var(--apollo-link-decoration);background-color:transparent;outline:none;cursor:pointer;transition:color var(--apollo-motion-duration-slow);-webkit-text-decoration-skip:objects;}
+a:hover{color:var(--apollo-color-link-hover);}
+a:active{color:var(--apollo-color-link-active);}
+a:active, a:hover{text-decoration:var(--apollo-link-hover-decoration);outline:0;}
+a:focus{text-decoration:var(--apollo-link-focus-decoration);outline:0;}
+a:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}
+a[disabled]{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
+.apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+.apollo-icon >*{line-height:1;}
+.apollo-icon svg{display:inline-block;vertical-align:inherit;}
+.apollo-icon::before{display:none;}
+.apollo-icon[tabindex]{cursor:pointer;}
+.apollo-icon .apollo-icon-icon{display:block;}
 .apollo-select-css-var{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-select-css-var::before,.apollo-select-css-var::after{box-sizing:border-box;}
 .apollo-select-css-var [class^="apollo-select"],.apollo-select-css-var [class*=" apollo-select"]{box-sizing:border-box;}
@@ -40,10 +90,10 @@ const RULES = `
 .apollo-select:hover.apollo-select-allow-clear:not(.apollo-select-show-arrow):not(.apollo-select-customize) .apollo-select-content{margin-inline-end:var(--apollo-select-show-arrow-padding-inline-end);}
 .apollo-select-status-error.apollo-select-has-feedback .apollo-select-clear,.apollo-select-status-warning.apollo-select-has-feedback .apollo-select-clear,.apollo-select-status-success.apollo-select-has-feedback .apollo-select-clear,.apollo-select-status-validating.apollo-select-has-feedback .apollo-select-clear{inset-inline-end:calc(calc(var(--apollo-padding-sm) - var(--apollo-line-width)) + var(--apollo-font-size) + var(--apollo-padding-xs));}
 .apollo-select-dropdown{box-sizing:border-box;margin:0;padding:var(--apollo-padding-xxs);color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);position:absolute;top:-9999px;z-index:var(--apollo-select-z-index-popup);overflow:hidden;font-variant:initial;background-color:var(--apollo-color-bg-elevated);border-radius:var(--apollo-border-radius-lg);outline:none;box-shadow:var(--apollo-box-shadow-secondary);}
-.apollo-select-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-select-dropdown-placement-bottomLeft,.apollo-select-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-select-dropdown-placement-bottomLeft{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideUpIn;}
-.apollo-select-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-select-dropdown-placement-topLeft,.apollo-select-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-select-dropdown-placement-topLeft,.apollo-select-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-select-dropdown-placement-topRight,.apollo-select-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-select-dropdown-placement-topRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideDownIn;}
-.apollo-select-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-select-dropdown-placement-bottomLeft{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideUpOut;}
-.apollo-select-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-select-dropdown-placement-topLeft,.apollo-select-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-select-dropdown-placement-topRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideDownOut;}
+.apollo-select-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-select-dropdown-placement-bottomLeft,.apollo-select-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-select-dropdown-placement-bottomLeft{animation-name:apollo-slide-up-in;}
+.apollo-select-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-select-dropdown-placement-topLeft,.apollo-select-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-select-dropdown-placement-topLeft,.apollo-select-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-select-dropdown-placement-topRight,.apollo-select-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-select-dropdown-placement-topRight{animation-name:apollo-slide-down-in;}
+.apollo-select-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-select-dropdown-placement-bottomLeft{animation-name:apollo-slide-up-out;}
+.apollo-select-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-select-dropdown-placement-topLeft,.apollo-select-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-select-dropdown-placement-topRight{animation-name:apollo-slide-down-out;}
 .apollo-select-dropdown-hidden{display:none;}
 .apollo-select-dropdown .apollo-select-dropdown-list-scrollbar{cursor:pointer;}
 .apollo-select-dropdown .apollo-select-dropdown-list-scrollbar:hover{background-color:var(--apollo-color-fill-quaternary);}
@@ -63,6 +113,20 @@ const RULES = `
 .apollo-select-dropdown .apollo-select-item-option-selected:has(+ .apollo-select-item-option-selected){border-end-start-radius:0;border-end-end-radius:0;}
 .apollo-select-dropdown .apollo-select-item-option-selected:has(+ .apollo-select-item-option-selected)+.apollo-select-item-option-selected{border-start-start-radius:0;border-start-end-radius:0;}
 .apollo-select-dropdown-rtl{direction:rtl;}
+.apollo-slide-up-enter,.apollo-slide-up-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-up-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-up-enter.apollo-slide-up-enter-active,.apollo-slide-up-appear.apollo-slide-up-appear-active{animation-name:apollo-slide-up-in;animation-play-state:running;}
+.apollo-slide-up-leave.apollo-slide-up-leave-active{animation-name:apollo-slide-up-out;animation-play-state:running;pointer-events:none;}
+.apollo-slide-up-enter,.apollo-slide-up-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
+.apollo-slide-up-enter-prepare,.apollo-slide-up-appear-prepare{transform:scale(1);}
+.apollo-slide-up-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
+.apollo-slide-down-enter,.apollo-slide-down-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-down-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
+.apollo-slide-down-enter.apollo-slide-down-enter-active,.apollo-slide-down-appear.apollo-slide-down-appear-active{animation-name:apollo-slide-down-in;animation-play-state:running;}
+.apollo-slide-down-leave.apollo-slide-down-leave-active{animation-name:apollo-slide-down-out;animation-play-state:running;pointer-events:none;}
+.apollo-slide-down-enter,.apollo-slide-down-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
+.apollo-slide-down-enter-prepare,.apollo-slide-down-appear-prepare{transform:scale(1);}
+.apollo-slide-down-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
 .apollo-select-rtl{direction:rtl;}
 .apollo-select-compact-item:not(.apollo-select-compact-last-item){margin-inline-end:calc(var(--apollo-line-width) * -1);}
 .apollo-select-compact-item:not(.apollo-select-status-success){z-index:2;}
@@ -73,6 +137,7 @@ const RULES = `
 .apollo-select-compact-item:not(.apollo-select-compact-first-item):not(.apollo-select-compact-last-item){border-radius:0;}
 .apollo-select-compact-item:not(.apollo-select-compact-last-item).apollo-select-compact-first-item,.apollo-select-compact-item:not(.apollo-select-compact-last-item).apollo-select-compact-first-item.apollo-select-sm,.apollo-select-compact-item:not(.apollo-select-compact-last-item).apollo-select-compact-first-item.apollo-select-lg{border-start-end-radius:0;border-end-end-radius:0;}
 .apollo-select-compact-item:not(.apollo-select-compact-first-item).apollo-select-compact-last-item,.apollo-select-compact-item:not(.apollo-select-compact-first-item).apollo-select-compact-last-item.apollo-select-sm,.apollo-select-compact-item:not(.apollo-select-compact-first-item).apollo-select-compact-last-item.apollo-select-lg{border-start-start-radius:0;border-end-start-radius:0;}
+.apollo-select{--apollo-select-border-radius:var(--apollo-border-radius);--apollo-select-border-color:#000;--apollo-select-border-size:var(--apollo-line-width);--apollo-select-background-color:var(--apollo-color-bg-container);--apollo-select-font-size:var(--apollo-font-size);--apollo-select-line-height:var(--apollo-line-height);--apollo-select-font-height:var(--apollo-font-height);--apollo-select-color:var(--apollo-color-text);--apollo-select-affix-color:var(--apollo-color-text);--apollo-select-height:var(--apollo-control-height);--apollo-select-padding-horizontal:calc(var(--apollo-padding-sm) - var(--apollo-line-width));--apollo-select-padding-vertical:calc((var(--apollo-select-height) - var(--apollo-select-font-height)) / 2 - var(--apollo-select-border-size));box-sizing:border-box;margin:0;padding:0;color:var(--apollo-select-color);font-size:var(--apollo-select-font-size);line-height:var(--apollo-select-line-height);list-style:none;font-family:var(--apollo-font-family);display:inline-flex;flex-wrap:nowrap;position:relative;transition:all var(--apollo-motion-duration-slow);align-items:flex-start;outline:0;cursor:pointer;border-radius:var(--apollo-select-border-radius);border-width:var(--apollo-select-border-size);border-style:var(--apollo-line-type);border-color:var(--apollo-select-border-color);background:var(--apollo-select-background-color);padding-inline:var(--apollo-select-padding-horizontal);padding-block:var(--apollo-select-padding-vertical);}
 .apollo-select .apollo-select-prefix{color:var(--apollo-select-affix-color);flex:none;line-height:1;}
 .apollo-select .apollo-select-placeholder{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--apollo-color-text-placeholder);pointer-events:none;z-index:1;}
 .apollo-select .apollo-select-content{flex:auto;min-width:0;position:relative;display:flex;margin-inline-end:max(calc(var(--apollo-select-show-arrow-padding-inline-end) - var(--apollo-font-size-icon)),0px);}
@@ -101,6 +166,7 @@ const RULES = `
 .apollo-select-single:not(.apollo-select-customize).apollo-select-open .apollo-select-content-has-search-value{opacity:1;transition:opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out);color:transparent;}
 .apollo-select-single:not(.apollo-select-customize).apollo-select-open .apollo-select-content-has-search-value >*:not(.apollo-select-input){opacity:0;}
 .apollo-select-show-search:not(.apollo-select-customize-input):not(.apollo-select-disabled){cursor:text;}
+.apollo-select-multiple{--apollo-select-multi-item-background:var(--apollo-select-multiple-item-bg);--apollo-select-multi-item-border-color:transparent;--apollo-select-multi-item-border-radius:var(--apollo-border-radius-sm);--apollo-select-multi-item-height:var(--apollo-select-multiple-item-height);--apollo-select-multi-padding-base:calc((var(--apollo-select-height) - var(--apollo-select-multi-item-height)) / 2);--apollo-select-multi-padding-vertical:calc(var(--apollo-select-multi-padding-base) - var(--apollo-select-internal_fixed_item_margin) - var(--apollo-line-width));--apollo-select-multi-item-padding-horizontal:calc(calc(var(--apollo-padding-sm) - var(--apollo-line-width)) - var(--apollo-select-multi-padding-vertical) - var(--apollo-line-width) * 2);padding-block:var(--apollo-select-multi-padding-vertical);padding-inline-start:calc(var(--apollo-select-multi-padding-base) - var(--apollo-line-width));}
 .apollo-select-multiple .apollo-select-prefix{margin-inline-start:var(--apollo-select-multi-item-padding-horizontal);}
 .apollo-select-multiple .apollo-select-prefix+.apollo-select-content .apollo-select-placeholder{inset-inline-start:0;}
 .apollo-select-multiple .apollo-select-prefix+.apollo-select-content .apollo-select-content-item.apollo-select-content-item-suffix{margin-inline-start:0;}
@@ -109,6 +175,7 @@ const RULES = `
 .apollo-select-multiple .apollo-select-content-item-prefix{height:var(--apollo-select-font-size);}
 .apollo-select-multiple .apollo-select-content-item{line-height:1;max-width:calc(100% - 4px);}
 .apollo-select-multiple .apollo-select-content .apollo-select-content-item-prefix+.apollo-select-content-item-suffix,.apollo-select-multiple .apollo-select-content .apollo-select-content-item-suffix:first-child{margin-inline-start:var(--apollo-select-multi-item-padding-horizontal);}
+.apollo-select-multiple .apollo-select-content .apollo-select-selection-item{line-height:calc(var(--apollo-select-multi-item-height) - var(--apollo-line-width) * 2);border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-select-multi-item-border-color);display:flex;margin-block:var(--apollo-select-internal_fixed_item_margin);margin-inline-end:calc(var(--apollo-select-internal_fixed_item_margin) * 2);background:var(--apollo-select-multi-item-background);border-radius:var(--apollo-select-multi-item-border-radius);padding-inline-start:var(--apollo-padding-xs);padding-inline-end:var(--apollo-padding-xxs);transition:height var(--apollo-motion-duration-slow),line-height var(--apollo-motion-duration-slow),padding var(--apollo-motion-duration-slow);}
 .apollo-select-multiple .apollo-select-content .apollo-select-selection-item-content{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-inline-end:var(--apollo-padding-xxs);}
 .apollo-select-multiple .apollo-select-content .apollo-select-selection-item-remove{display:inline-flex;align-items:center;color:var(--apollo-color-icon);font-style:normal;line-height:inherit;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-weight:bold;font-size:10px;cursor:pointer;}
 .apollo-select-multiple .apollo-select-content .apollo-select-selection-item-remove >*{line-height:1;}
@@ -178,17 +245,26 @@ const RULES = `
 .apollo-select.apollo-select-customize.apollo-select-filled .apollo-select-content .apollo-input-filled{background:transparent;}
 .apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >input[disabled],.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >textarea[disabled],.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >.apollo-select-input,.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >.apollo-input-affix-wrapper-disabled,.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content >.apollo-input-search{background:transparent;}
 .apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content input[disabled],.apollo-select.apollo-select-customize.apollo-select-disabled .apollo-select-content textarea[disabled]{background:transparent;}
-.data-ant-cssinjs-cache-path{content:"|ant-design-icons|apollo-icon:mtsb22;css-dev-only-do-not-override-19u5a7b|Shared|ant:2mp7q1;css-dev-only-do-not-override-19u5a7b|Select-Select|apollo-select|apollo-icon:g1pi4i";}
+.apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+.apollo-icon >*{line-height:1;}
+.apollo-icon svg{display:inline-block;vertical-align:inherit;}
+.apollo-icon::before{display:none;}
+.apollo-icon[tabindex]{cursor:pointer;}
+.apollo-icon .apollo-icon-icon{display:block;}
 `;
 
 /** 生成单个前缀下的完整样式。 */
 export function genSelectStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
-    prefixCls === 'apollo'
-      ? cssText
-      : cssText.split('.apollo-select').join('.' + prefixCls + '-select');
+    prefixCls === 'apollo' ? cssText : cssText.split('.apollo-select').join(`.${prefixCls}-select`);
+  // ⚠️ 下拉是 Portal 的（不在 .apollo-select 子树内），antd 靠 popupClassName 里的
+  //    `css-var` 类让浮层也拿到组件变量 —— DECLS 必须同时落在根形态与 css-var 类上。
   const decls =
-    prefixCls === 'apollo' ? `.apollo-select{${DECLS}}` : `.${prefixCls}-select{${DECLS}}`;
-  return `${decls}
+    prefixCls === 'apollo'
+      ? `.apollo-select,.apollo-select-css-var{${DECLS}}`
+      : `.${prefixCls}-select,.${prefixCls}-select-css-var{${DECLS}}`;
+  return `${KEYFRAMES}
+${MOTION_BASE}
+${decls}
 ${rename(RULES)}`;
 }

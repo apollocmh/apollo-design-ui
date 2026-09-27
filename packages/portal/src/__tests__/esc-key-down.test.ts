@@ -41,7 +41,7 @@ describe('useEscKeyDown · 层栈', () => {
 
     pressEscape();
     expect(onEsc).toHaveBeenCalledTimes(1);
-    expect(onEsc.mock.calls[0]![0]).toMatchObject({ top: true });
+    expect(onEsc.mock.calls[0]?.[0]).toMatchObject({ top: true });
 
     scope.stop();
   });
@@ -67,8 +67,8 @@ describe('useEscKeyDown · 层栈', () => {
 
     expect(first).toHaveBeenCalledTimes(1);
     expect(second).toHaveBeenCalledTimes(1);
-    expect(first.mock.calls[0]![0]).toMatchObject({ top: false });
-    expect(second.mock.calls[0]![0]).toMatchObject({ top: true });
+    expect(first.mock.calls[0]?.[0]).toMatchObject({ top: false });
+    expect(second.mock.calls[0]?.[0]).toMatchObject({ top: true });
 
     s1.stop();
     s2.stop();

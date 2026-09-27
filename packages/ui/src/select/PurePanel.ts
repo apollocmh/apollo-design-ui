@@ -27,22 +27,18 @@ export const PurePanel = defineComponent({
   setup(props, { slots, attrs }) {
     const hostRef = ref<HTMLElement | null>(null);
     return () =>
-      h(
-        'div',
-        { ref: hostRef, class: `${props.prefixCls ?? 'apollo-select'}-dropdown-wrapper` },
-        [
-          h(
-            Select,
-            {
-              ...props,
-              ...attrs,
-              open: true,
-              getPopupContainer: () => hostRef.value as HTMLElement,
-            },
-            slots,
-          ),
-        ],
-      );
+      h('div', { ref: hostRef, class: `${props.prefixCls ?? 'apollo-select'}-dropdown-wrapper` }, [
+        h(
+          Select,
+          {
+            ...props,
+            ...attrs,
+            open: true,
+            getPopupContainer: () => hostRef.value as HTMLElement,
+          },
+          slots,
+        ),
+      ]);
   },
 });
 

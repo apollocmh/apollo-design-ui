@@ -186,8 +186,8 @@ rc-select 的两级 Context（`SelectContext` / `BaseSelectContext` / `SelectInp
 - `useSearchConfig`：`mode==='combobox' || 'tags'` ⇒ 强制 `true`；`multiple && showSearch===undefined` ⇒ `true`。
 - 默认过滤（`useFilterOptions`）：`searchValue` 为空或 `filterOption===false`（combobox 默认）⇒ 不过滤；
   否则把 `搜索词` 与 `目标值` 都 `toUpperCase()` 后做 `includes`（**大小写不敏感**）：
-  有 `optionFilterProp` 用之；否则选项里有 `options` 字段（group）时**先匹配 group 自身、再过滤子项**；
-  普通项按 `label`（`childrenAsData` 时 label 字段名是 `children`，会被 hack 回 `label`），没有 `options` 字段时按 `value`。
+  有 `optionFilterProp` 用之（**antd 默认 `value`** —— 官方 FAQ「搜索不到」条目明说，别想当然按 label）；
+  分组项（有 `options` 字段）先匹配 group 自身 label、再过滤子项；叶子项按 `value` 匹配。
 - `filterSort`：`(a, b, {searchValue}) => number`，对 group 递归排序。
 - `defaultActiveFirstOption` 默认：非 combobox 时 `true`。
 - `autoClearSearchValue` 默认 `true`。
@@ -218,7 +218,7 @@ rc-select 的两级 Context（`SelectContext` / `BaseSelectContext` / `SelectInp
 |---|---|
 | `zIndexPopup` | `zIndexPopupBase + 50`（1050） |
 | `optionSelectedColor` / `optionSelectedFontWeight` / `optionSelectedBg` / `optionActiveBg` | `colorText` / `fontWeightStrong` / `controlItemBgActive` / `controlItemBgHover` |
-| `optionPadding` | `${(controlHeight - fontSize*lineHeight)/2}px ${controlPaddingHorizontal}px` |
+| `optionPadding` | `${(controlHeight - fontSize*lineHeight)/2}px ${controlPaddingHorizontal}px`（⚠️ lineHeight=22/14 ⇒ **5px** 12px，不是 5.5px） |
 | `optionFontSize` / `optionLineHeight` / `optionHeight` | `fontSize` / `lineHeight` / `controlHeight` |
 | `selectorBg` / `clearBg` | `colorBgContainer`（`clearBg` 上游**只声明不引用**，同 modal 的 `--ant-modal-xs-width`） |
 | `singleItemHeightLG` | `controlHeightLG` |

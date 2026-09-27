@@ -1,0 +1,16 @@
+{
+  "$schema": "../schema.json",
+  "id": "select/multiple",
+  "component": "select",
+  "description": "多选形态：mode=multiple + 回填数组；tag 结构 -content-item > -selection-item > (-selection-item-content + -selection-item-remove)；input 包在 -content-item-suffix 里；show-search 类由 rc 的 useSearchConfig 推导（multiple 未传 ⇒ true）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "mode": "multiple",
+    "options": [{ "value": "a", "label": "Apple" }],
+    "value": ["a"],
+    "id": "test-id"
+  },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "update:value", "select", "deselect"] }
+}

@@ -14,7 +14,7 @@
  */
 
 import { useControlledValue } from '@apollo-design/utils';
-import { computed, onMounted, ref, type Ref } from 'vue';
+import { computed, onMounted, type Ref, ref } from 'vue';
 
 /** rc 的 `internalMacroTask`：MessageChannel 一次宏任务。 */
 function macroTask(fn: () => void, times = 1): void {
