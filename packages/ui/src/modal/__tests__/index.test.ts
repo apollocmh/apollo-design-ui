@@ -60,10 +60,13 @@ function confirmCount(): number {
   return document.body.querySelectorAll('.apollo-modal-confirm').length;
 }
 
-async function mountModal(props: Record<string, unknown> = {}) {
+async function mountModal(
+  props: Record<string, unknown> = {},
+  slots: Record<string, (...args: unknown[]) => unknown> = {},
+) {
   const wrapper = mount(Modal, {
     props: { ...BP, open: true, getContainer: false, ...props } as never,
-    slots: { default: () => 'body-content' },
+    slots: { default: () => 'body-content', ...slots },
     global: { stubs: { teleport: false } },
   });
   await ticks();
@@ -79,7 +82,7 @@ afterEach(() => {
 
 describe('Modal · 结构与默认值', () => {
   it('root > (mask, wrap > panel > container > header/title/body/footer)', async () => {
-    const wrapper = await mountModal({ title: 'hello', footer: 'F', closable: true });
+    const wrapper = await mountModal({ title: 'hello', closable: true }, { footer: () => 'F' });
     await macro();
 
     expect(wrapper.find('.apollo-modal-root').exists()).toBe(true);
@@ -108,26 +111,21 @@ describe('Modal · 结构与默认值', () => {
     w2.unmount();
   });
 
-  it('footer=null ⇒ 不渲染 footer；footer 函数 ⇒ 收到 (originNode, {OkBtn, CancelBtn})', async () => {
-    const w1 = await mountModal({ footer: null });
+  it('footer slot：空 slot ⇒ 不渲染 footer；自定义 slot ⇒ 渲染内容', async () => {
+    const w1 = await mountModal({}, { footer: () => null });
     expect(w1.find('.apollo-modal-footer').exists()).toBe(false);
     w1.unmount();
 
-    const received: unknown[] = [];
-    const w2 = await mountModal({
-      footer: (origin: unknown, extra: unknown) => {
-        received.push(origin, extra);
-        return h('span', { class: 'custom-footer' }, 'custom');
-      },
-    });
+    const w2 = await mountModal(
+      {},
+      { footer: () => h('span', { class: 'custom-footer' }, 'custom') },
+    );
     expect(w2.find('.custom-footer').exists()).toBe(true);
-    expect(received).toHaveLength(2);
-    expect(Object.keys(received[1] as object)).toEqual(['OkBtn', 'CancelBtn']);
     w2.unmount();
   });
 
   it('loading ⇒ footer 强制不渲染 + body 里是 Skeleton', async () => {
-    const wrapper = await mountModal({ loading: true, footer: 'F' });
+    const wrapper = await mountModal({ loading: true }, { footer: () => 'F' });
     expect(wrapper.find('.apollo-modal-footer').exists()).toBe(false);
     expect(wrapper.find('.apollo-modal-body-skeleton').exists()).toBe(true);
     wrapper.unmount();

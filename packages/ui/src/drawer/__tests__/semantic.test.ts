@@ -18,8 +18,10 @@ const BP = { prefixCls: 'apollo-drawer' };
 const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   'drawer:pure-panel': {
     render: () =>
-      h(PurePanel, { ...BP, title: 'Title', footer: 'Footer', extra: 'Extra' } as never, {
+      h(PurePanel, { ...BP, title: 'Title' } as never, {
         default: () => 'Body',
+        footer: () => 'Footer',
+        extra: () => 'Extra',
       }),
   },
   'drawer:pure-panel-right': {

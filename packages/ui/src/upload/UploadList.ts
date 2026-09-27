@@ -53,6 +53,7 @@ export const UploadList = defineComponent({
       default: undefined,
     },
     locale: { type: Object as PropType<UploadLocale>, required: true },
+    // 内部：由 Upload 的 scoped slot 包装而来（#iconRender）
     iconRender: {
       type: Function as PropType<(file: UploadFile, listType?: UploadListType) => VNodeChild>,
       default: undefined,
@@ -75,18 +76,22 @@ export const UploadList = defineComponent({
       type: [Boolean, Function] as PropType<boolean | ((file: UploadFile) => boolean)>,
       default: false,
     },
+    // 内部：由 Upload 的 scoped slot 包装而来（#removeIcon）
     removeIcon: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
     },
+    // 内部：由 Upload 的 scoped slot 包装而来（#previewIcon）
     previewIcon: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
     },
+    // 内部：由 Upload 的 scoped slot 包装而来（#downloadIcon）
     downloadIcon: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
     },
+    // 内部：由 Upload 的 scoped slot 包装而来（#extra）
     extra: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
@@ -95,6 +100,7 @@ export const UploadList = defineComponent({
       type: Object as PropType<UploadListProgressProps>,
       default: () => ({ size: [-1, 2], showInfo: false }) as UploadListProgressProps,
     },
+    // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（#appendAction slot 或默认上传按钮）
     appendAction: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     appendActionVisible: { type: Boolean, default: true },
     itemRender: { type: Function as PropType<ItemRender>, default: undefined },

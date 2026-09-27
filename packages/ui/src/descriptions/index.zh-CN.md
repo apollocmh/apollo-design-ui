@@ -24,7 +24,8 @@ subtitle: 描述列表
 | column | 列数（数字或响应式映射；未激活断点落 DEFAULT_COLUMN_MAP） | `number \| Partial<Record<Breakpoint, number>>` | `{xs:1, sm:2, md~xxxl:3(4)}` |
 | layout | 布局方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | colon | label 冒号（CSS ::after） | `boolean` | `true` |
-| title / extra | 标题 / 额外内容（仅其一存在时渲染 header 块） | `VNodeChild` | — |
+| title | 标题（文本；富标题走 `#title` slot，slot 优先） | `string` | — |
+| extra | 额外内容（⚠️ 已改为 `#extra` slot，空 slot 等价隐藏） | `slot` | — |
 | items | 条目数组（首选） | `DescriptionsItemType[]` | — |
 | labelStyle / contentStyle | ⚠️ 已废弃：用 `styles.label` / `styles.content` | `CSSProperties` | — |
 | classNames / styles | 语义槽 `{ root, header, title, extra, label, content }`（对象或函数式） | — | — |
@@ -32,7 +33,14 @@ subtitle: 描述列表
 ### DescriptionsItemType
 
 `{ key?, label?, children?, span?, className?, style?, labelStyle?, contentStyle?, styles?, classNames? }`。
-`span`：数字（默认 1）/ `'filled'`（独占一行）/ 响应式映射。
+`span`：数字（默认 1）/ `'filled'`（独占一行）/ 响应式映射。`label` 富内容走 `items` 程序化 API（其 `label` 仍接受 `VNodeChild`）。
+
+### Slots（C8-R2）
+
+| Slot | 说明 | 参数 |
+|---|---|---|
+| title | 富标题（文本 `title` prop 等价，slot 优先） | — |
+| extra | 额外内容（空 slot 等价隐藏） | — |
 
 ### Ref
 

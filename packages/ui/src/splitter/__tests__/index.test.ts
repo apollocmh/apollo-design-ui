@@ -100,7 +100,7 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
     const w = makeSplitter();
     const panels = w.findAll('.apollo-splitter-panel');
     expect(panels).toHaveLength(2);
-    expect(panels[0]!.attributes('style')).toContain('flex-basis: auto');
+    expect(panels[0]?.attributes('style')).toContain('flex-basis: auto');
     const dragger = w.find('.apollo-splitter-bar-dragger');
     expect(dragger.attributes('role')).toBe('separator');
     expect(dragger.attributes('aria-orientation')).toBe('vertical'); // horizontal 布局 ⇒ aria vertical
@@ -138,7 +138,7 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
       h(Splitter.Panel, { size: 100 }, () => 'Left'),
       h(Splitter.Panel, null, () => 'Right'),
     ]);
-    expect(w.findAll('.apollo-splitter-panel')[0]!.attributes('style')).toContain(
+    expect(w.findAll('.apollo-splitter-panel')[0]?.attributes('style')).toContain(
       'flex-basis: 100px;',
     );
   });

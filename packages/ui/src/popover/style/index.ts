@@ -135,9 +135,7 @@ const RULES = `
 // 类名段（keyframes 名不含点号，不受影响）—— upload 同一约定。
 export function genPopoverStyle(prefixCls: string = 'apollo'): string {
   const rules =
-    prefixCls === 'apollo'
-      ? RULES
-      : RULES.split('.apollo-popover').join('.' + prefixCls + '-popover');
+    prefixCls === 'apollo' ? RULES : RULES.split('.apollo-popover').join(`.${prefixCls}-popover`);
   const decls =
     prefixCls === 'apollo'
       ? `.apollo-popover{${genPopoverTokenDecls()}}`

@@ -25,7 +25,13 @@
  */
 
 import { useLocale } from '@apollo-design/locale';
-import { isComponentVNode, isRenderable, isVNode, useDevWarning } from '@apollo-design/utils';
+import {
+  isComponentVNode,
+  isEmptyVNode,
+  isRenderable,
+  isVNode,
+  useDevWarning,
+} from '@apollo-design/utils';
 import {
   cloneVNode,
   computed,
@@ -36,6 +42,7 @@ import {
   ref,
   shallowRef,
   type VNode,
+  type VNodeChild,
 } from 'vue';
 import { useClosable } from '../_internal/use-closable';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -61,9 +68,7 @@ export default defineComponent({
     variant: { type: String as PropType<TagVariant>, default: undefined },
     bordered: { type: Boolean, default: undefined },
     closable: { type: [Boolean, Object] as PropType<TagProps['closable']>, default: undefined },
-    closeIcon: { type: null as unknown as PropType<TagProps['closeIcon']>, default: undefined },
     onClose: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    icon: { type: null as unknown as PropType<TagProps['icon']>, default: undefined },
     href: { type: String, default: undefined },
     target: { type: String, default: undefined },
     disabled: { type: Boolean, default: undefined },
@@ -72,6 +77,21 @@ export default defineComponent({
     styles: { type: Object as PropType<TagSemanticStyles>, default: undefined },
   },
   setup(props, { slots, attrs, expose }) {
+    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+    /**
+     * 「提供了但渲染为空」归一为 null（isEmptyVNode —— comment vnode 判空）。
+     * 单元素数组解包成 vnode 本身 —— closeIcon 走 antd 的 replaceElement 语义
+     * （closeIconRender 要拿到**单个**用户 vnode 来 clone 注入 role/tabIndex/类）。
+     */
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      if (isEmptyVNode(nodes)) return null;
+      if (Array.isArray(nodes) && nodes.length === 1) return nodes[0];
+      return nodes;
+    };
     // TagConfig = ComponentStyleConfig & Pick<TagProps,'variant'|'closeIcon'|'closable'|'classNames'|'styles'>
     const context = useComponentConfig<TagConfig>('tag');
     const { getPrefixCls, direction } = context;
@@ -180,7 +200,7 @@ export default defineComponent({
       () =>
         pickClosableLocal({
           closable: contextClosable as TagProps['closable'],
-          closeIcon: contextCloseIcon as TagProps['closeIcon'],
+          closeIcon: contextCloseIcon as VNodeChild,
         }),
       {
         closable: false,
@@ -241,11 +261,11 @@ export default defineComponent({
 
     const pickClosableLocal = (source?: {
       closable?: TagProps['closable'];
-      closeIcon?: TagProps['closeIcon'];
+      closeIcon?: VNodeChild;
     }) =>
       source ?? {
         closable: props.closable,
-        closeIcon: props.closeIcon,
+        closeIcon: readSlot('closeIcon'),
       };
 
     // ====================== Render ======================
@@ -253,7 +273,7 @@ export default defineComponent({
       const TagWrapper = props.href ? 'a' : 'span';
 
       // icon 克隆注入语义槽位（antd 的 cloneElement 分支）
-      const iconSource = slots.icon?.() ?? (props.icon !== undefined ? [props.icon] : []);
+      const iconSource = slots.icon?.() ?? [];
       const iconFirst = Array.isArray(iconSource) ? iconSource[0] : iconSource;
       const iconNode = isVNode(iconFirst)
         ? cloneVNode(iconFirst, {

@@ -11,6 +11,7 @@
  *   2. `duration` 恒 `null`（静态面板不会自己消失）；
  *   3. `wrapper` / `icon` 槽要叠加类型类：`{p}-{type}` 与 `{p}-notice-icon-{type}`。
  */
+import { isEmptyVNode } from '@apollo-design/utils';
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
 import { useComponentConfig } from '../config-provider/context';
@@ -24,8 +25,8 @@ export interface PurePanelProps {
   className?: string;
   style?: ArgsProps['style'];
   type?: NoticeType;
-  icon?: VNodeChild;
-  content?: VNodeChild;
+  /** @deprecated 已改为 `#icon` slot（空 slot 等价隐藏）。 */
+  content?: string;
   classNames?: MessageSemanticType['classNames'];
   styles?: MessageSemanticType['styles'];
 }
@@ -38,18 +39,31 @@ export default defineComponent({
     className: { type: String, default: undefined },
     style: { type: Object as PropType<ArgsProps['style']>, default: undefined },
     type: { type: String as PropType<NoticeType>, default: undefined },
-    icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // ⚠️ C8-R2：原 `icon` 删除改为 `#icon` slot；`content` 收窄为 String（富内容走
+    //    `#content` slot，slot 优先）。
+    content: { type: String, default: undefined },
     classNames: { type: Object as PropType<MessageSemanticType['classNames']>, default: undefined },
     styles: { type: Object as PropType<MessageSemanticType['styles']>, default: undefined },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
+    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? null : nodes;
+    };
+
     return () => {
       const config = useComponentConfig('message');
       const prefixCls = props.prefixCls || config.getPrefixCls('message');
       const noticePrefixCls = `${prefixCls}-notice`;
 
-      const iconNode = getMessageIcon(props.type, props.icon);
+      const contentSlot = readSlot('content');
+      const mergedContent: unknown = contentSlot !== undefined ? contentSlot : props.content;
+      const iconSlot = readSlot('icon');
+      const iconNode = getMessageIcon(props.type, iconSlot as VNodeChild);
       const typeIconCls = props.type ? `${noticePrefixCls}-icon-${props.type}` : undefined;
 
       return h(
@@ -65,7 +79,7 @@ export default defineComponent({
           style: { ...(config.style as object | undefined), ...(props.style ?? {}) },
           duration: null,
           icon: iconNode,
-          title: props.content,
+          title: mergedContent as never,
           classNames: {
             wrapper: clsx(
               props.type ? `${prefixCls}-${props.type}` : undefined,

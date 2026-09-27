@@ -15,7 +15,8 @@ const showLoading = () => {
 
 <template>
   <Button type="primary" @click="showLoading">Open Modal</Button>
-  <Modal title="Loading Modal" :open="open" :footer="null" loading>
+  <Modal title="Loading Modal" :open="open" loading>
     <p>Some contents...</p>
+    <template #footer></template>
   </Modal>
 </template>

@@ -26,8 +26,8 @@ describe('Popover · 语义断言', () => {
     await nextTick();
     const container = document.querySelector('.apollo-popover-container');
     expect(container).not.toBeNull();
-    expect(container!.getAttribute('role')).toBe('tooltip');
-    expect(container!.id).toBe('pop-a11y');
+    expect(container?.getAttribute('role')).toBe('tooltip');
+    expect(container?.id).toBe('pop-a11y');
     const described = document.querySelector('.tgt')?.getAttribute('aria-describedby');
     expect(described).toBe('pop-a11y');
     void wrapper;

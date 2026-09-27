@@ -52,10 +52,13 @@ export default defineComponent({
     prefixCls: { type: String, required: true },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     ariaId: { type: String, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     closable: { type: [Boolean, Object] as PropType<boolean | ClosableLike>, default: true },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     onClose: { type: Function as PropType<(e: Event) => void>, default: undefined },
     bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },

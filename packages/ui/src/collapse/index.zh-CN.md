@@ -39,7 +39,11 @@ subtitle: 折叠面板
 
 ### Collapse.Panel（children 形态，deprecated）
 
-`header / showArrow / extra / collapsible / forceRender / destroyOnHidden / headerClass`。
+`header / showArrow / collapsible / forceRender / destroyOnHidden / headerClass`。
+
+- `header`：文本主导 prop，收窄为 `string`；富内容走 `#header` 插槽。
+- `extra`：原 VNode prop 已移除，富内容走 `#extra` 插槽。
+- 面板内容：原 `children` React 遗留 prop 已移除，一律走**默认插槽**。
 
 ### Ref
 

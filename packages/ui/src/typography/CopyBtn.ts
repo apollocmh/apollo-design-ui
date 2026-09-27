@@ -63,6 +63,7 @@ export const CopyBtn = defineComponent({
     /** 悬浮提示。`[未复制, 已复制]`。 */
     tooltips: { type: null as unknown as PropType<CopyConfigListNode>, default: undefined },
     /** 图标。`[未复制, 已复制]`。 */
+    // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（源自 copyable.icon）
     icon: { type: null as unknown as PropType<CopyConfigListNode>, default: undefined },
     tabIndex: { type: Number, default: undefined },
     onCopy: { type: Function as PropType<(e?: MouseEvent) => void>, default: undefined },

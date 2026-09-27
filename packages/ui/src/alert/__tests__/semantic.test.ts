@@ -43,7 +43,8 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
   'alert:description-only': { render: () => h(Alert, { description: 'd' }) },
   'alert:zero-title-description-action': {
-    render: () => h(Alert, { title: 0, description: 0, action: 0 }),
+    // C8-R2：0 走 #title / #description / #action 插槽
+    render: () => h(Alert, {}, { title: () => 0, description: () => 0, action: () => 0 }),
   },
   'alert:type-defaults': { render: () => h(Alert, { title: 'x' }) },
   'alert:type-warning': { render: () => h(Alert, { title: 'x', type: 'warning' }) },
@@ -58,7 +59,9 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
   'alert:show-icon': { render: () => h(Alert, { title: 'x', showIcon: true }) },
   'alert:no-icon': { render: () => h(Alert, { title: 'x', showIcon: false }) },
-  'alert:custom-icon': { render: () => h(Alert, { title: 'x', showIcon: true, icon: 'i' }) },
+  'alert:custom-icon': {
+    render: () => h(Alert, { title: 'x', showIcon: true }, { icon: () => 'i' }),
+  },
   'alert:closable': { render: () => h(Alert, { title: 'x', closable: true }) },
   'alert:closable-object': {
     render: () =>
@@ -76,7 +79,11 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'alert:close-icon-null': { render: () => h(Alert, { title: 'x', closeIcon: null }) },
   'alert:action': {
     render: () =>
-      h(Alert, { title: 'x', showIcon: true, action: h('button', { type: 'button' }, 'A') }),
+      h(
+        Alert,
+        { title: 'x', showIcon: true },
+        { action: () => h('button', { type: 'button' }, 'A') },
+      ),
   },
   'alert:aria-data': {
     render: () => h(Alert, { 'data-test': 'test-id', 'aria-describedby': 'some-label' } as never),
@@ -85,32 +92,35 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'alert:id': { render: () => h(Alert, { id: 'test-id' }) },
   'alert:semantic': {
     render: () =>
-      h(Alert, {
-        title: 'Info Text',
-        description: 'Info Description',
-        showIcon: true,
-        closable: true,
-        type: 'info',
-        action: h('div', null, 'A'),
-        classNames: {
-          root: 'demo-root',
-          icon: 'demo-icon',
-          section: 'demo-section',
-          title: 'demo-title',
-          description: 'demo-description',
-          actions: 'demo-actions',
-          close: 'demo-close',
+      h(
+        Alert,
+        {
+          title: 'Info Text',
+          description: 'Info Description',
+          showIcon: true,
+          closable: true,
+          type: 'info',
+          classNames: {
+            root: 'demo-root',
+            icon: 'demo-icon',
+            section: 'demo-section',
+            title: 'demo-title',
+            description: 'demo-description',
+            actions: 'demo-actions',
+            close: 'demo-close',
+          },
+          styles: {
+            root: { color: 'rgb(255, 0, 0)' },
+            icon: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+            section: { padding: '20px' },
+            title: { backgroundColor: 'rgb(0, 0, 255)' },
+            description: { fontSize: '20px' },
+            actions: { color: 'rgb(0, 128, 0)' },
+            close: { color: 'rgb(128, 0, 128)' },
+          },
         },
-        styles: {
-          root: { color: 'rgb(255, 0, 0)' },
-          icon: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          section: { padding: '20px' },
-          title: { backgroundColor: 'rgb(0, 0, 255)' },
-          description: { fontSize: '20px' },
-          actions: { color: 'rgb(0, 128, 0)' },
-          close: { color: 'rgb(128, 0, 128)' },
-        },
-      }),
+        { action: () => h('div', null, 'A') },
+      ),
   },
   'alert:rtl': {
     render: () => withConfig({ direction: 'rtl' }, () => h(Alert)),

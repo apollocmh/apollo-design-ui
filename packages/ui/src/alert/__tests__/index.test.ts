@@ -26,13 +26,16 @@ describe('Alert · 结构', () => {
 
   it('title / description / action 的完整结构（with-description）', () => {
     const w = mount(() =>
-      h(Alert, {
-        title: 'Info Text',
-        description: 'Info Description',
-        showIcon: true,
-        type: 'info',
-        action: h('button', { type: 'button' }, 'A'),
-      }),
+      h(
+        Alert,
+        {
+          title: 'Info Text',
+          description: 'Info Description',
+          showIcon: true,
+          type: 'info',
+        },
+        { action: () => h('button', { type: 'button' }, 'A') },
+      ),
     );
     expect(w.find('.apollo-alert-title').text()).toBe('Info Text');
     expect(w.find('.apollo-alert-description').text()).toBe('Info Description');
@@ -49,7 +52,8 @@ describe('Alert · 结构', () => {
   });
 
   it('title/description/action 传 0 也渲染（isRenderable 判据）', () => {
-    const w = mount(() => h(Alert, { title: 0, description: 0, action: 0 }));
+    // C8-R2：0 经 #title / #description 插槽传入
+    const w = mount(() => h(Alert, {}, { title: () => 0, description: () => 0, action: () => 0 }));
     expect(w.find('.apollo-alert-title').text()).toBe('0');
     expect(w.find('.apollo-alert-description').text()).toBe('0');
     expect(w.find('.apollo-alert-actions').text()).toBe('0');
@@ -179,7 +183,8 @@ describe('Alert · closable / 关闭', () => {
         .text(),
     ).toBe('X');
     expect(
-      mount(() => h(Alert, { closeIcon: 0 }))
+      // C8-R2：closeIcon 走 #closeIcon 插槽（0 为 renderable ⇒ 渲染按钮）
+      mount(() => h(Alert, {}, { closeIcon: () => 0 }))
         .find('button.apollo-alert-close-icon')
         .exists(),
     ).toBe(true);

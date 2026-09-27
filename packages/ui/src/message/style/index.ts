@@ -126,7 +126,7 @@ export function genMessageStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
     prefixCls === 'apollo'
       ? cssText
-      : cssText.split('.apollo-message').join('.' + prefixCls + '-message');
+      : cssText.split('.apollo-message').join(`.${prefixCls}-message`);
   const decls = [`.apollo-message{${DECLS}}`, `.apollo-message-notice-pure-panel{${DECLS}}`].join(
     '\n',
   );

@@ -246,7 +246,8 @@ describe('Switch · DOM 与类名', () => {
     expect(w.find('.apollo-switch-inner-unchecked').text()).toBe('Off');
 
     const w2 = mount(Switch, {
-      props: { checkedChildren: 1, unCheckedChildren: 0, checked: true },
+      props: { checked: true },
+      slots: { checkedChildren: () => 1, unCheckedChildren: () => 0 },
     });
     expect(w2.find('.apollo-switch-inner-checked').text()).toBe('1');
     expect(w2.find('.apollo-switch-inner-unchecked').text()).toBe('0');

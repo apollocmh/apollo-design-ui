@@ -15,18 +15,15 @@ export interface CollapsePanelProps {
   key?: string | number | undefined;
   /** items 形态的面板标题（children 形态用 `header`）。 */
   label?: VNodeChild | undefined;
-  /** children 形态的面板标题。 */
-  header?: VNodeChild | undefined;
+  /** children 形态的面板标题（prop 收窄 string，富内容走 `#header` 插槽）。 */
+  header?: string | undefined;
   className?: string | undefined;
   style?: Record<string, string | number> | undefined;
   showArrow?: boolean | undefined;
   forceRender?: boolean | undefined;
-  extra?: VNodeChild | undefined;
   collapsible?: CollapsibleType | undefined;
   /** @deprecated 用 `collapsible="disabled"`。 */
   disabled?: boolean | undefined;
-  /** children 形态：面板内容（items 形态是 `children` 字段）。 */
-  children?: VNodeChild | undefined;
   destroyOnHidden?: boolean | undefined;
   onItemClick?: ((key: string) => void) | undefined;
   headerClass?: string | undefined;

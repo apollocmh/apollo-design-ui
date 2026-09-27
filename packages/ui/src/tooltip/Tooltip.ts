@@ -15,7 +15,13 @@ import type { OverlayActionInput } from '@apollo-design/overlay';
 import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { getDesignToken } from '@apollo-design/theme';
-import { devUseWarning, isDev, useControlledValue } from '@apollo-design/utils';
+import {
+  devUseWarning,
+  isDev,
+  isEmptyVNode,
+  isRenderable,
+  useControlledValue,
+} from '@apollo-design/utils';
 import {
   Comment,
   type CSSProperties,
@@ -60,14 +66,8 @@ const Tooltip = defineComponent({
     defaultOpen: { type: Boolean, default: undefined },
     onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-    title: {
-      type: [Object, String, Number, Function] as PropType<VNodeChild | (() => VNodeChild)>,
-      default: undefined,
-    },
-    overlay: {
-      type: [Object, String, Number, Function] as PropType<VNodeChild | (() => VNodeChild)>,
-      default: undefined,
-    },
+    // C8-R2：title 收窄 String（富内容 / 0 值走 `#title` 插槽）；deprecated overlay 删除
+    title: { type: String, default: undefined },
     trigger: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     placement: { type: String as PropType<TooltipPlacement>, default: undefined },
     arrow: {
@@ -185,13 +185,23 @@ const Tooltip = defineComponent({
     // destroyTooltipOnHide 的 keepParent 对象形态：antd 只告警不拦截（warning 非
     // boolean 即告警）。这里合并进 mergedDestroyOnHidden 的 !! 已足够。
 
-    // antd：noTitle = !title && !overlay && title !== 0（title=0 合法内容）
-    const noTitle = computed(() => {
-      const t = props.title;
-      if (t === 0) return false;
-      if (t) return false;
-      return !props.overlay;
+    // #title 插槽（C8-R2）：空渲染归一为 undefined ⇒ 视为未提供。
+    const titleSlot = computed<unknown>(() => {
+      const fn = slots.title;
+      if (typeof fn !== 'function') return undefined;
+      const nodes = fn();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? undefined : nodes;
     });
+
+    // antd：noTitle = !title && !overlay && title !== 0（title=0 合法内容）。
+    // C8-R2 后：内容 = `#title` 插槽 ?? title 文本 prop；「有内容」判据是
+    // isRenderable（0 / '0' 有内容，'' / null / false 没有 —— 与 antd 逐字同义）。
+    const mergedContent = computed<VNodeChild>(() => {
+      if (titleSlot.value !== undefined) return titleSlot.value as VNodeChild;
+      return props.title ?? '';
+    });
+    const noTitle = computed(() => !isRenderable(mergedContent.value));
 
     // ============================ Open ===============================
     // ⚠️ noTitle 抑制在 onChange 里：antd 的 onInternalOpenChange 是
@@ -241,13 +251,7 @@ const Tooltip = defineComponent({
     });
 
     // =========================== Content =============================
-    const memoOverlay = computed<VNodeChild>(() => {
-      if (props.title === 0) {
-        return 0;
-      }
-      const overlay = props.overlay ?? props.title ?? '';
-      return typeof overlay === 'function' ? (overlay as () => VNodeChild)() : overlay;
-    });
+    const memoOverlay = computed<VNodeChild>(() => mergedContent.value);
 
     // ======================== Merged Semantic ========================
     const colorInfo = computed(() => parseTooltipColor(prefixCls, props.color));

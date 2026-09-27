@@ -3,15 +3,15 @@
 
 import { SmileOutlined } from '@apollo-design/icons';
 import { Button, Result } from '@apollo-design/ui';
-import { h } from 'vue';
-
-const extraNode = () => h(Button, { type: 'primary' }, () => 'Next');
 </script>
 
 <template>
-  <Result
-    :icon="h(SmileOutlined)"
-    title="Great, we have done all the operations!"
-    :extra="extraNode()"
-  />
+  <Result title="Great, we have done all the operations!">
+    <template #icon>
+      <SmileOutlined />
+    </template>
+    <template #extra>
+      <Button type="primary">Next</Button>
+    </template>
+  </Result>
 </template>

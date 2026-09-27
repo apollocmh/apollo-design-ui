@@ -32,7 +32,7 @@
  *     缺口登记在 `README.md` §7（与 divider 的 `size` 同一条）。
  */
 
-import { debounce, useDevWarning } from '@apollo-design/utils';
+import { debounce, isEmptyVNode, useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -80,7 +80,6 @@ const props = withDefaults(defineProps<SpinProps>(), {
   description: undefined,
   delay: 0,
   wrapperClassName: undefined,
-  indicator: undefined,
   percent: undefined,
   fullscreen: false,
   classNames: undefined,
@@ -89,7 +88,7 @@ const props = withDefaults(defineProps<SpinProps>(), {
 
 const slots = useSlots();
 const attrs = useAttrs();
-defineSlots<{ default?: () => VNodeChild }>();
+defineSlots<{ default?: () => VNodeChild; indicator?: () => VNodeChild }>();
 
 const {
   getPrefixCls,
@@ -212,9 +211,15 @@ const hasDescription = computed(() => !!mergedDescription.value);
  * `getDefaultIndicator()` 是**非响应式**的模块单例读取 —— 与上游一致
  * （见 `defaultIndicator.ts` 的说明）。
  */
-const mergedIndicator = computed<VNodeChild>(
-  () => props.indicator ?? contextIndicator ?? getDefaultIndicator(),
-);
+// C8-R2：`#indicator` 插槽 → ConfigProvider（程序化）→ 默认四点 Looper
+const mergedIndicator = computed<VNodeChild>(() => {
+  const fromSlot = slots.indicator?.();
+  if (fromSlot !== undefined && !isEmptyVNode(fromSlot)) {
+    const first = Array.isArray(fromSlot) ? fromSlot[0] : fromSlot;
+    return first as VNodeChild;
+  }
+  return contextIndicator ?? getDefaultIndicator();
+});
 
 // ---------------------------------------------------------------------------
 // 嵌套判定

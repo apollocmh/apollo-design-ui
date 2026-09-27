@@ -53,18 +53,18 @@ describe('notification · 命令式 API', () => {
   it('title + description ⇒ 包 -notice-section；只有 description ⇒ 直接渲染', async () => {
     notification.open({ title: 'T', description: 'D' });
     await flush();
-    const section = notices()[0]!.querySelector('.apollo-notification-notice-section');
+    const section = notices()[0]?.querySelector('.apollo-notification-notice-section');
     expect(section).not.toBeNull();
-    expect(section!.querySelector('.apollo-notification-notice-title')).not.toBeNull();
-    expect(section!.querySelector('.apollo-notification-notice-description')).not.toBeNull();
+    expect(section?.querySelector('.apollo-notification-notice-title')).not.toBeNull();
+    expect(section?.querySelector('.apollo-notification-notice-description')).not.toBeNull();
 
     notification.destroy();
     await flush();
     notification.open({ description: 'only-desc' });
     await flush();
-    expect(notices()[0]!.querySelector('.apollo-notification-notice-section')).toBeNull();
+    expect(notices()[0]?.querySelector('.apollo-notification-notice-section')).toBeNull();
     expect(
-      notices()[0]!.querySelector('.apollo-notification-notice-description')?.textContent,
+      notices()[0]?.querySelector('.apollo-notification-notice-description')?.textContent,
     ).toBe('only-desc');
   });
 
@@ -84,33 +84,33 @@ describe('notification · 命令式 API', () => {
     notification.info({ title: 'closable' });
     await flush();
 
-    const close = notices()[0]!.querySelector('.apollo-notification-notice-close');
+    const close = notices()[0]?.querySelector('.apollo-notification-notice-close');
     expect(close).not.toBeNull();
-    expect(close!.getAttribute('aria-label')).toBe('Close');
+    expect(close?.getAttribute('aria-label')).toBe('Close');
     // ⚠️ 命令式路径的图标类用 **notice 前缀**（`{p}-notification-notice-close-icon`），
     //    与 PurePanel 路径的 `{p}-notification-close-icon` 不同 —— 上游两处就是这么写的。
-    expect(close!.querySelector('.apollo-notification-notice-close-icon')).not.toBeNull();
+    expect(close?.querySelector('.apollo-notification-notice-close-icon')).not.toBeNull();
   });
 
   it('closable: false / closeIcon: null ⇒ 都没有关闭按钮；closable 对象里给 null ⇒ 有按钮无图标', async () => {
     notification.open({ title: 'a', closable: false });
     await flush();
-    expect(notices()[0]!.querySelector('.apollo-notification-notice-close')).toBeNull();
+    expect(notices()[0]?.querySelector('.apollo-notification-notice-close')).toBeNull();
 
     notification.destroy();
     await flush();
     // ⚠️ 上游语义：`closeIcon: null` 也走「强制关闭」分支（`computeClosableConfig` 的第一条）
     notification.open({ title: 'b', closeIcon: null });
     await flush();
-    expect(notices()[0]!.querySelector('.apollo-notification-notice-close')).toBeNull();
+    expect(notices()[0]?.querySelector('.apollo-notification-notice-close')).toBeNull();
 
     notification.destroy();
     await flush();
     notification.open({ title: 'c', closable: { closeIcon: null } });
     await flush();
-    const close = notices()[0]!.querySelector('.apollo-notification-notice-close');
+    const close = notices()[0]?.querySelector('.apollo-notification-notice-close');
     expect(close).not.toBeNull();
-    expect(close!.querySelector('.apollo-notification-notice-close-icon')).toBeNull();
+    expect(close?.querySelector('.apollo-notification-notice-close-icon')).toBeNull();
   });
 
   it('destroy(key) 只关那一条；destroy() 清空', async () => {
@@ -161,7 +161,7 @@ describe('notification · 命令式 API', () => {
   it('role 可切到 status', async () => {
     notification.open({ title: 'x', role: 'status' });
     await flush();
-    expect(notices()[0]!.getAttribute('role')).toBe('status');
+    expect(notices()[0]?.getAttribute('role')).toBe('status');
   });
 
   it('onClick 落在 notice 根上', async () => {
@@ -169,7 +169,7 @@ describe('notification · 命令式 API', () => {
     notification.open({ title: 'clickable', onClick });
     await flush();
 
-    notices()[0]!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    notices()[0]?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
@@ -181,7 +181,7 @@ describe('notification · placement 与默认堆叠', () => {
 
     const list = document.querySelector('.apollo-notification-list');
     expect(list).not.toBeNull();
-    expect(list!.className).toContain('apollo-notification-topRight');
+    expect(list?.className).toContain('apollo-notification-topRight');
   });
 
   it('单条 placement 覆盖全局', async () => {
@@ -190,7 +190,7 @@ describe('notification · placement 与默认堆叠', () => {
     await flush();
 
     const list = document.querySelector('.apollo-notification-list');
-    expect(list!.className).toContain('apollo-notification-bottomRight');
+    expect(list?.className).toContain('apollo-notification-bottomRight');
   });
 
   it('默认就堆叠（-stack 类存在 —— 与 message 默认 false 的差异）', async () => {

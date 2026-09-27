@@ -89,6 +89,15 @@ root / wrapper / icon / title   // notice level
 
 > ⚠️ Only the **object form** is supported (function form is PENDING, same as D36).
 
+### Slots (C8-R2, only the `_InternalPanelDoNotUseOrYouWillBeFired` static panel)
+
+| Slot | Description | Arguments |
+|---|---|---|
+| content | Rich content (equivalent to the `content` text prop, slot first) | — |
+| icon | Custom icon (empty slot = hidden) | — |
+
+> The imperative input `message.open({ content, icon })` keeps `VNodeChild` (programmatic context, no template).
+
 ### Type exports
 
 `MessageArgsProps`, `MessageConfigOptions`, `MessageInstance`, `MessageType`,

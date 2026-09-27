@@ -45,7 +45,6 @@ import type {
   ModalFooterExtra,
   ModalGetContainer,
   ModalLocale,
-  ModalProps,
   ModalSemanticType,
   ModalSemanticTypeInput,
   ModalType,
@@ -63,15 +62,23 @@ export const ConfirmContent = defineComponent({
     prefixCls: { type: String, required: true },
     confirmPrefixCls: { type: String, required: true },
     type: { type: String as PropType<ModalType>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     okCancel: { type: Boolean, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: {
-      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
+      type: [String, Number, Object, Array, Function] as unknown as PropType<
+        VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild)
+      >,
       default: undefined,
     },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     locale: {
       type: Object as PropType<Partial<ModalLocale>>,
@@ -250,15 +257,23 @@ const ConfirmDialog = defineComponent({
     mask: { type: [Boolean, Object] as unknown as PropType<MaskType>, default: undefined },
     maskClosable: { type: Boolean, default: undefined },
     type: { type: String as PropType<ModalType>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     okType: { type: String as PropType<import('./interface').ModalOkType>, default: undefined },
     okCancel: { type: Boolean, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: {
-      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
+      type: [String, Number, Object, Array, Function] as unknown as PropType<
+        VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild)
+      >,
       default: undefined,
     },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },

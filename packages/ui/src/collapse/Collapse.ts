@@ -224,7 +224,7 @@ export const Collapse = defineComponent({
         panelProps.collapsible === 'header' || panelProps.collapsible === 'icon';
       let icon: VNodeChild;
       if (isFunction(mergedExpandIcon.value)) {
-        icon = mergedExpandIcon.value!(panelProps);
+        icon = mergedExpandIcon.value?.(panelProps);
       } else {
         icon = h(RightOutlined, {
           rotate: panelProps.isActive ? (isRTL.value ? -90 : 90) : undefined,
@@ -265,26 +265,38 @@ export const Collapse = defineComponent({
       }
       // children 形态：从 Collapse.Panel vnode 的 props 读（getNewChild 对拍）
       const children = collectChildren(slots.default?.() ?? []);
-      const items: CollapseItemType[] = children.map((child, index) => {
+      const items: CollapseItemType[] = children.map((rawChild, index) => {
+        // children 数组元素可能是 string/number/null —— 面板载体只可能是 vnode
+        if (!rawChild || typeof rawChild !== 'object') {
+          return { key: index, props: {}, children: [] } as unknown as CollapseItemType;
+        }
+        const child = rawChild as VNode;
         const cProps = ((child as { props?: Record<string, unknown> }).props ??
           {}) as CollapsePanelProps;
+        // 同名 slot（#header / #extra）兜底，prop 优先（规则 #1 文本 prop 收窄 string）
+        const childSlots =
+          child.children && typeof child.children === 'object' && !Array.isArray(child.children)
+            ? (child.children as Record<string, (() => VNodeChild) | undefined>)
+            : undefined;
+        const headerSlot = childSlots?.header
+          ? (childSlots.header as () => VNodeChild)()
+          : undefined;
+        const extraSlot = childSlots?.extra ? (childSlots.extra as () => VNodeChild)() : undefined;
         return {
           key: (child as { key?: string | number | null }).key ?? cProps.key ?? String(index),
-          header: cProps.header,
+          // header：prop（string）优先，#header 插槽兜底
+          header: cProps.header ?? headerSlot,
           className: cProps.className,
           style: cProps.style,
           showArrow: cProps.showArrow,
           forceRender: cProps.forceRender,
-          extra: cProps.extra,
+          // extra：原 VNode prop 已移除，仅由 `#extra` 插槽提供
+          extra: extraSlot,
           collapsible: cProps.collapsible,
           destroyOnHidden: cProps.destroyOnHidden,
           onItemClick: cProps.onItemClick,
           headerClass: cProps.headerClass,
           id: cProps.id,
-          children:
-            typeof cProps.children !== 'object'
-              ? cProps.children
-              : ((child as { children?: unknown }).children as VNodeChild),
         };
       });
       return buildPanelInfos(items, {
@@ -303,7 +315,7 @@ export const Collapse = defineComponent({
       }
       const idx = panelInfos.value.findIndex((p) => p.key === info.key);
       const raw = collectChildren(slots.default?.() ?? [])[idx];
-      const cProps = (raw as { props?: CollapsePanelProps } | undefined)?.props;
+      const _cProps = (raw as { props?: CollapsePanelProps } | undefined)?.props;
       // `h(Panel, null, () => content)` ⇒ children 是槽函数/槽对象
       const c = raw
         ? ((raw as { children?: unknown }).children as
@@ -321,7 +333,8 @@ export const Collapse = defineComponent({
       ) {
         return (c as { default: () => VNodeChild }).default();
       }
-      return (cProps?.children as VNodeChild) ?? (Array.isArray(c) ? (c as VNodeChild) : null);
+      // 面板内容一律走默认插槽；原 `children` prop 已移除
+      return Array.isArray(c) ? (c as VNodeChild) : null;
     };
 
     return () => {

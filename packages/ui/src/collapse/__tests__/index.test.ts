@@ -33,12 +33,12 @@ describe('Collapse · 状态机', () => {
     const onChange = vi.fn();
     const w = makeCollapse({ onChange });
     const headers = w.findAll('.apollo-collapse-header');
-    await headers[0]!.trigger('click');
+    await headers[0]?.trigger('click');
     await nextTick();
     expect(onChange).toHaveBeenCalledWith(['1']);
     expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
     // 再点收起
-    await headers[0]!.trigger('click');
+    await headers[0]?.trigger('click');
     await nextTick();
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
@@ -46,7 +46,7 @@ describe('Collapse · 状态机', () => {
   it('受控 activeKey：不随点击改变内部展示（受控语义）', async () => {
     const w = makeCollapse({ activeKey: ['2'] });
     expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-    await w.findAll('.apollo-collapse-header')[0]!.trigger('click');
+    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
     await nextTick();
     // 受控：activeKey 未变 ⇒ 仍然是 key 2 展开
     expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
@@ -57,7 +57,7 @@ describe('Collapse · 状态机', () => {
     const w = makeCollapse({ accordion: true, defaultActiveKey: '1' });
     const headers = w.findAll('.apollo-collapse-header');
     expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-    await headers[1]!.trigger('click');
+    await headers[1]?.trigger('click');
     await nextTick();
     // ⚠️ motion 离场是异步的 ⇒ 立即断言 aria-expanded 即时态（卸载时间线由 motion 包覆盖）
     const expanded = w.findAll('.apollo-collapse-header').map((n) => n.attributes('aria-expanded'));
@@ -105,7 +105,7 @@ describe('Collapse · 状态机', () => {
   it('PanelContent 惰性渲染：展开过就保留（收起后内容仍在 DOM）', async () => {
     const w = makeCollapse({ defaultActiveKey: '1' });
     expect(w.text()).toContain('Content 1');
-    await w.findAll('.apollo-collapse-header')[0]!.trigger('click');
+    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
     await nextTick();
     // 收起后 forceRender=false 但 rendered 已固化 ⇒ 内容仍渲染（motion 收起）
     expect(w.text()).toContain('Content 1');
@@ -113,9 +113,9 @@ describe('Collapse · 状态机', () => {
 
   it('destroyOnHidden ⇒ CSSMotion removeOnLeave（aria 即时态；卸载时序由 motion 包覆盖）', async () => {
     const w = makeCollapse({ defaultActiveKey: '1', destroyOnHidden: true });
-    await w.findAll('.apollo-collapse-header')[0]!.trigger('click');
+    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
     await nextTick();
-    expect(w.findAll('.apollo-collapse-header')[0]!.attributes('aria-expanded')).toBe('false');
+    expect(w.findAll('.apollo-collapse-header')[0]?.attributes('aria-expanded')).toBe('false');
   });
 
   it('items 覆盖链：item.collapsible 优先于 Collapse.collapsible', () => {

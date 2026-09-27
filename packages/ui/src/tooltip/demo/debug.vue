@@ -2,7 +2,6 @@
 // 对齐 antd 的 demo/debug.tsx
 
 import { Button, Flex, Tooltip } from '@apollo-design/ui';
-import { h } from 'vue';
 </script>
 
 <template>
@@ -17,10 +16,12 @@ import { h } from 'vue';
       >
         <Button>Point at center</Button>
       </Tooltip>
-      <Tooltip open :title="h('div')" placement="topLeft">
+      <Tooltip open placement="topLeft">
+        <template #title><div /></template>
         <Button>Min Width</Button>
       </Tooltip>
-      <Tooltip open :title="h('div')" placement="top">
+      <Tooltip open placement="top">
+        <template #title><div /></template>
         <Button>Min Width</Button>
       </Tooltip>
     </Flex>

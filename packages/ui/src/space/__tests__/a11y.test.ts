@@ -157,13 +157,16 @@ describe('Space.Compact / Space.Addon · 不引入语义', () => {
 });
 
 describe('Space · 语义传递（唯一一条会把语义带进来的路径）', () => {
-  it('★ `separator` 传 `Divider` 时，`role="separator"` 被**保留**在分隔符上', () => {
-    // `Space` 会把 separator 的 vnode `cloneVNode` 后插进 `-item-separator` 里，
+  it('★ `#separator` 插槽传 `Divider` 时，`role="separator"` 被**保留**在分隔符上', () => {
+    // C8-R2：富内容分隔符走插槽。`Space` 会把插槽的 vnode `cloneVNode` 后插进
+    // `-item-separator` 里，
     // 所以 `Divider` 自己的 `role="separator"` 原样保留 —— 这是 Space 里唯一
     // 「外部组件的语义被透传进来」的路径，值得单独钉住（一旦有人改成只取 tagName 就红）。
     const w = mount(Space, {
-      props: { separator: h(Divider, { orientation: 'vertical' }) },
-      slots: { default: () => ['a', 'b'] },
+      slots: {
+        default: () => ['a', 'b'],
+        separator: () => h(Divider, { orientation: 'vertical' }),
+      },
     });
     const separator = w.find(`.${P}-item-separator`);
     expect(separator.exists()).toBe(true);

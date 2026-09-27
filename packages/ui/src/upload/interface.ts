@@ -72,14 +72,14 @@ import type { VNodeChild } from 'vue';
 
 export type { VNodeChild };
 
+// ⚠️ API 架构修正（H2）：原 `extra` / `removeIcon` / `downloadIcon` / `previewIcon`
+// 是 antd 的 React `ReactNode | fn` 透传——属 React 心智，已改为 Upload 的
+// scoped slot（`#extra` / `#removeIcon` / `#downloadIcon` / `#previewIcon`，
+// 均带 `{ file }`）。此处只保留纯 boolean 展示开关。
 export interface ShowUploadListInterface<T = unknown> {
-  extra?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
   showRemoveIcon?: boolean | ((file: UploadFile<T>) => boolean);
   showPreviewIcon?: boolean | ((file: UploadFile<T>) => boolean);
   showDownloadIcon?: boolean | ((file: UploadFile<T>) => boolean);
-  removeIcon?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
-  downloadIcon?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
-  previewIcon?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
 }
 
 export interface UploadLocale {
@@ -172,10 +172,8 @@ export interface UploadProps<T = unknown> {
   locale?: UploadLocale;
   id?: string;
   previewFile?: PreviewFileHandler;
-  iconRender?: (file: UploadFile<T>, listType?: UploadListType) => VNodeChild;
   isImageUrl?: (file: UploadFile<T>) => boolean;
   progress?: UploadListProgressProps;
-  itemRender?: ItemRender<T>;
   /** Config max count of `fileList`. Will replace current one when `maxCount` is 1 */
   maxCount?: number;
   /** 触发区内容（drag 容器 / select 按钮的子节点）—— 默认插槽 */
@@ -201,16 +199,20 @@ export interface UploadListProps<T = unknown> {
   showRemoveIcon?: boolean | ((file: UploadFile<T>) => boolean);
   showDownloadIcon?: boolean | ((file: UploadFile<T>) => boolean);
   showPreviewIcon?: boolean | ((file: UploadFile<T>) => boolean);
+  // 内部：由 Upload 的 scoped slot 包装而来的 fn（removeIcon/downloadIcon/previewIcon/extra）
   removeIcon?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
   downloadIcon?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
   previewIcon?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
   extra?: VNodeChild | ((file: UploadFile<T>) => VNodeChild);
   locale: UploadLocale;
   previewFile?: PreviewFileHandler;
+  // 内部：由 Upload 的 scoped slot 包装而来（iconRender）
   iconRender?: (file: UploadFile<T>, listType?: UploadListType) => VNodeChild;
   isImageUrl?: (file: UploadFile<T>) => boolean;
+  // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（appendAction）
   appendAction?: VNodeChild;
   appendActionVisible?: boolean;
+  // 内部：由 Upload 的 scoped slot 包装而来（itemRender）
   itemRender?: ItemRender<T>;
   disabled?: boolean;
 }

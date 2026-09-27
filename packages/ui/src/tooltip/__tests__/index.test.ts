@@ -92,17 +92,31 @@ describe('Tooltip · L1 开合', () => {
   it('noTitle 抑制：title 为 undefined ⇒ 强制关且 onOpenChange 不触发；title=0 可开', async () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
-    const wrapper = mountTooltip({ title: undefined, onOpenChange }, '');
+    mountTooltip({ title: undefined, onOpenChange }, '');
     await triggerEl()!.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
     await nextTick();
     expect(container()).toBeNull();
     expect(onOpenChange).not.toHaveBeenCalled();
 
-    await wrapper.setProps({ title: 0 });
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    // C8-R2：title=0 走 `#title` 插槽（0 是 renderable ⇒ 有内容）——
+    // setProps 无法改 slot，用第二个实例验证「0 内容可开」。
+    const w3 = mount(
+      () =>
+        h(
+          Tooltip,
+          { mouseLeaveDelay: 0, onOpenChange },
+          {
+            default: () => h('button', { class: 'tooltip-target' }, 'target'),
+            title: () => 0,
+          },
+        ),
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
+    );
+    w3.find('.tooltip-target').element.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
-    expect(container()).not.toBeNull();
+    expect(document.body.querySelector('.apollo-tooltip')).not.toBeNull();
+    w3.unmount();
   });
 
   it('-open 类：openClassName 可覆盖默认 {p}-open', async () => {

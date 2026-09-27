@@ -128,11 +128,18 @@ type Props = Record<string, unknown>;
 const twoSpans = (): VNodeChild[] => [h('span', { key: 'a' }, '1'), h('span', { key: 'b' }, '2')];
 
 /** 有 children 时显式给默认插槽；`children` 为 `undefined` 时给默认的两个 `<span>`。 */
-const space = (props: Props, children?: VNodeChild[]): VNode =>
+const space = (
+  props: Props,
+  children?: VNodeChild[],
+  extraSlots?: Record<string, () => VNodeChild>,
+): VNode =>
   h(
     Space,
     { prefixCls: PREFIX, ...props },
-    { default: () => (children ?? twoSpans()) as VNodeChild },
+    {
+      default: () => (children ?? twoSpans()) as VNodeChild,
+      ...extraSlots,
+    },
   );
 
 /** `Space.Compact` 的默认插槽固定是三个探针。 */
@@ -246,7 +253,8 @@ const CASES: Record<string, () => DomRenderResult> = {
   // `index.test.ts`「`separator` 传 `0` 不渲染分隔符」那条（断言**无** span、
   // 且 `textContent` 不含 `0`）。
   'separator:zero': () => space({ separator: 0 }, ['a', 'b']),
-  'separator:element': () => space({ separator: h('b', null, '|') }, ['a', 'b']),
+  // C8-R2：富内容分隔符走 `#separator` 插槽（DOM 输出与旧 prop 形态逐字节一致）
+  'separator:element': () => space({}, ['a', 'b'], { separator: () => h('b', null, '|') }),
   'separator:three-items': () => space({ separator: '-' }, ['a', 'b', 'c']),
   'separator:with-null-child': () => space({ separator: '-' }, ['a', null, 'c']),
   'separator:empty+split': () => space({ separator: '', split: '-' }, ['a', 'b']),

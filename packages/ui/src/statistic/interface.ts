@@ -18,7 +18,7 @@
  *    保留同样的显式声明（Vue 侧以 `onMouseenter` / `onMouseleave` 触发）。
  */
 
-import type { CSSProperties, VNode, VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 
 // ---------------------------------------------------------------------------
@@ -143,13 +143,16 @@ export interface StatisticProps extends StatisticFormatConfig {
    */
   valueStyle?: CSSProperties;
   /** 包裹 valueNode（Timer 靠它去掉克隆节点上的 title）。 */
-  valueRender?: (node: VNode) => VNodeChild;
+  // ⚠️ C8-R2：`valueRender(node)`（render fn）已删除 → 作用域插槽 `#valueRender="{ node }"`。
   /** 标题。`0` 渲染、`null` / `undefined` / 布尔不渲染（isReactRenderable 判据）。 */
-  title?: VNodeChild;
+  /** 文本标题（富内容用 `#title` 插槽，slot 优先）。 */
+  title?: string;
   /** 前缀（判据同 title）。 */
-  prefix?: VNodeChild;
+  /** 文本前缀（富内容用 `#prefix` 插槽，slot 优先）。 */
+  prefix?: string;
   /** 后缀（判据同 title）。 */
-  suffix?: VNodeChild;
+  /** 文本后缀（富内容用 `#suffix` 插槽，slot 优先）。 */
+  suffix?: string;
   /** 为真时渲染 Skeleton 骨架、content 消失。 */
   loading?: boolean;
   /** 落在根元素上的 mouseenter。 */

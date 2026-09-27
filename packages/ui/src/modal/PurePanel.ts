@@ -12,7 +12,7 @@
  *   3. 包一层 `withPureRenderTheme`（antd 用来把主题变量限定在纯面板内）——
  *      本仓的变量声明块已经在 `.apollo-modal` 上，无需额外包裹（平台差异）。
  */
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { ConfirmContent } from './ConfirmDialog';
@@ -31,14 +31,11 @@ export default defineComponent({
       type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
       default: undefined,
     },
-    closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     type: { type: String as PropType<ModalType>, default: undefined },
-    title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    footer: {
-      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
-      default: undefined,
-    },
-    content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    /** 标题区。同名 `#title` slot 优先。 */
+    title: { type: String, default: undefined },
+    /** confirm 形态正文。同名 `#content` slot 优先。 */
+    content: { type: String, default: undefined },
     classNames: {
       type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['classNames']>,
       default: undefined,
@@ -105,7 +102,7 @@ export default defineComponent({
             confirmPrefixCls,
             rootPrefixCls,
             type: props.type,
-            title: props.title,
+            title: props.title ?? slots.title?.(),
             // ⚠️ 上游给 ConfirmContent 的 `content` 是 **children**（`content={children}`），
             //    **不是** `content` prop —— `PurePanel` 的 type 分支里 `content` prop 被忽略。
             //    L6 抓到：传 `content` 会多出一行正文（confirm 用例差 0.68–1.43%）
@@ -118,14 +115,11 @@ export default defineComponent({
         ? { closable: props.closable ?? false, title: undefined, footer: undefined }
         : {
             closable: props.closable ?? true,
-            title: props.title,
-            footer:
-              props.footer !== null
-                ? h(ModalPanel, {
-                    ...(props as unknown as Record<string, unknown>),
-                    footer: props.footer,
-                  } as never)
-                : undefined,
+            title: props.title ?? slots.title?.(),
+            footer: h(ModalPanel, {
+              ...(props as unknown as Record<string, unknown>),
+              footer: slots.footer?.(),
+            } as never),
           };
 
       return h(
@@ -137,7 +131,7 @@ export default defineComponent({
           style: st?.root,
           classNames: cn,
           styles: st,
-          closeIcon: renderCloseIcon(prefixCls, props.closeIcon),
+          closeIcon: renderCloseIcon(prefixCls, slots.closeIcon?.()),
           ...additionalProps,
         } as never,
         { default: () => children },

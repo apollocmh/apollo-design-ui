@@ -149,8 +149,8 @@ export interface SpinProps {
    * @deprecated Please use `classNames.root` instead
    */
   wrapperClassName?: string;
-  /** 自定义加载指示器。传了它就不渲染默认的四点 Looper。 */
-  indicator?: SpinIndicator | null;
+  // ⚠️ C8-R2：`indicator`（React.ReactElement / VNode prop）已删除 —— 自定义指示器
+  //    用 `#indicator` 插槽；ConfigProvider 的 `SpinConfig.indicator`（程序化上下文）保留。
   /** 进度。数字按 0~100 归一化到圆环；`'auto'` 由组件模拟推进。 */
   percent?: SpinPercent;
   /** 是否全屏遮罩。 */
@@ -184,7 +184,10 @@ export interface SpinRef {
  * 上有非样式配置的组件）。
  */
 export type SpinConfig = ComponentStyleConfig &
-  Pick<SpinProps, 'indicator' | 'classNames' | 'styles'>;
+  Pick<SpinProps, 'classNames' | 'styles'> & {
+    /** 程序化上下文（ConfigProvider）保留 VNode 指示器 —— 模板侧用 `#indicator` 插槽（C8-R2）。 */
+    indicator?: SpinIndicator | null;
+  };
 
 /** 默认插槽的签名。antd 的 `children` 在 Vue 侧即此插槽。 */
 export type SpinSlot = () => VNodeChild;

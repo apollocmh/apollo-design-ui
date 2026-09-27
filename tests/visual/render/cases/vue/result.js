@@ -12,48 +12,45 @@ const extra = () =>
     h(Button, null, () => 'Buy Again'),
   ]);
 
+// C8-R2：extra 走 `#extra` 插槽（React 侧 extra prop 渲染的 DOM 与插槽等价）
+const withExtra = (props, children) => h(Result, props, { ...children, extra: () => extra() });
+
 export default {
   basic: () => [
-    h(Result, {
+    withExtra({
       status: 'success',
       title: 'Success',
       subTitle: 'Order number: 2017182818828182881',
-      extra: extra(),
     }),
-    h(Result, { title: 'Your operation has been executed', extra: extra() }),
+    withExtra({ title: 'Your operation has been executed' }),
   ],
 
   exception: () => [
-    h(Result, {
+    withExtra({
       status: '404',
       title: '404',
       subTitle: 'Sorry, the page you visited does not exist.',
-      extra: extra(),
     }),
-    h(Result, {
+    withExtra({
       status: '403',
       title: '403',
       subTitle: 'Sorry, you are not authorized to access this page.',
-      extra: extra(),
     }),
-    h(Result, {
+    withExtra({
       status: '500',
       title: '500',
       subTitle: 'Sorry, something went wrong on server.',
-      extra: extra(),
     }),
   ],
 
   semantic: () =>
-    h(
-      Result,
+    withExtra(
       {
         status: 'error',
         title: 'Submission Failed',
         subTitle: 'Please check and modify the following information before resubmitting.',
         classNames: { root: 'demo-result-root', title: 'demo-result-title' },
         styles: { root: { borderWidth: '2px', borderStyle: 'dashed', padding: '16px' } },
-        extra: extra(),
       },
       {
         default: () => h('div', null, 'details body'),

@@ -14,6 +14,8 @@
 import { domContractTest } from '@apollo-design/test-utils';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/modal.dom.json';
+import NormalCancelBtn from '../components/NormalCancelBtn';
+import NormalOkBtn from '../components/NormalOkBtn';
 import PurePanel from '../PurePanel';
 
 const BP = { prefixCls: 'apollo-modal' };
@@ -21,8 +23,9 @@ const BP = { prefixCls: 'apollo-modal' };
 const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   'modal:pure-panel': {
     render: () =>
-      h(PurePanel, { ...BP, title: 'Title', footer: 'Footer', closable: true } as never, {
+      h(PurePanel, { ...BP, title: 'Title', closable: true } as never, {
         default: () => 'Body',
+        footer: () => 'Footer',
       }),
   },
   'modal:pure-panel-no-close': {
@@ -49,16 +52,13 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   },
   'modal:pure-panel-footer-fn': {
     render: () =>
-      h(
-        PurePanel,
-        {
-          ...BP,
-          title: 'T',
-          footer: (originNode: unknown) =>
-            h('div', { class: 'custom-footer' }, originNode as never),
-        } as never,
-        { default: () => 'Body' },
-      ),
+      h(PurePanel, { ...BP, title: 'T', closable: true } as never, {
+        default: () => 'Body',
+        // 复现 antd `footer: (originNode) => <div class="custom-footer">{originNode}</div>`：
+        // 原 originNode 即 ModalPanel 默认的 Cancel / OK 按钮，这里用内部组件重建（仍在
+        // ModalPanel 提供的 modalContext 内，文案走 locale）。
+        footer: () => h('div', { class: 'custom-footer' }, [h(NormalCancelBtn), h(NormalOkBtn)]),
+      }),
   },
 };
 

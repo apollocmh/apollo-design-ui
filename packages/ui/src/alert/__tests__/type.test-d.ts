@@ -41,8 +41,9 @@ describe('Alert · Props 类型', () => {
   });
 
   it('AlertProps 关键字段', () => {
-    expectTypeOf<AlertProps['title']>().toEqualTypeOf<VNodeChild | undefined>();
-    expectTypeOf<AlertProps['description']>().toEqualTypeOf<VNodeChild | undefined>();
+    // C8-R2：title / description 收窄 string（富内容走 #title / #description 插槽）
+    expectTypeOf<AlertProps['title']>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<AlertProps['description']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<AlertProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
   });
 

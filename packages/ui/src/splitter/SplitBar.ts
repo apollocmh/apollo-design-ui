@@ -66,6 +66,7 @@ export const SplitBar = defineComponent({
     ariaMin: { type: Number, default: 0 },
     ariaMax: { type: Number, default: 100 },
     resizable: { type: Boolean, default: false },
+    // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（源自 Splitter 的 #draggerIcon slot）
     draggerIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     draggerStyle: { type: Object as PropType<SplitterDraggerStyles>, default: undefined },
     draggerClassName: { type: Object as PropType<SplitterDraggerClassNames>, default: undefined },

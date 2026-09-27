@@ -164,7 +164,7 @@ describe('message · 命令式 API', () => {
     message.open({ content: 'clickable', onClick });
     await flush();
 
-    notices()[0]!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    notices()[0]?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 

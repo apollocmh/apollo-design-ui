@@ -26,12 +26,17 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   },
   'message:pure-panel-icon': {
     render: () =>
-      h(PurePanel, {
-        ...BP,
-        type: 'info',
-        content: 'Custom',
-        icon: h('i', { class: 'my-icon' }),
-      } as never),
+      h(
+        PurePanel,
+        {
+          ...BP,
+          type: 'info',
+          content: 'Custom',
+        } as never,
+        {
+          icon: () => h('i', { class: 'my-icon' }),
+        },
+      ),
   },
   'message:pure-list': {
     render: () =>

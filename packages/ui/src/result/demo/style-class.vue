@@ -1,10 +1,6 @@
 <script setup lang="ts">
-// 对齐 antd 的 style-class demo（语义槽位对象式；函数式由 L1 覆盖）
-
+// 对齐 antd 的 style-class demo（语义槽位对象式；函数式由 L1 覆盖）。C8-R2：extra 走插槽。
 import { Button, Result } from '@apollo-design/ui';
-import { h } from 'vue';
-
-const extraNode = () => h(Button, { type: 'primary' }, () => 'Go Console');
 
 const classNamesObject = {
   root: 'demo-result-root',
@@ -29,6 +25,9 @@ const stylesObject = {
     sub-title="Order number: 2017182818828182881"
     :class-names="classNamesObject"
     :styles="stylesObject"
-    :extra="extraNode()"
-  />
+  >
+    <template #extra>
+      <Button type="primary">Go Console</Button>
+    </template>
+  </Result>
 </template>

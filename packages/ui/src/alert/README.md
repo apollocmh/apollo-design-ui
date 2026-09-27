@@ -13,7 +13,7 @@
 | D6 | 前缀 `apollo-alert`；默认图标走 `.apollo-icon-*`（ConfigProvider iconPrefixCls 对齐） | INTENDED | L4 全部 |
 | D5 | 无 hash 包裹；Component Token 4 变量声明在根类 | INTENDED | L4 全部 |
 | — | 废弃告警（closeText / message）setup 期发一次；antd 每次 render 发 | PLATFORM | L1 告警用例 |
-| — | `title` / `description` / `action` 增加**插槽**通道（prop 优先） | PLATFORM | L1 插槽双通道用例 |
+| — | `title` / `description` 增加**插槽**通道（prop 优先）；`action` / `icon` 由 VNode prop 改为**纯插槽**（`#action` / `#icon`） | PLATFORM | L1 插槽双通道用例 |
 | — | ErrorBoundary 用 `onErrorCaptured`：只捕获后代组件渲染/生命周期错误（React 还捕获事件处理器错误，Vue 事件错误本就不进边界） | PLATFORM | L1 错误切换用例 |
 | — | demo `loop-banner` 用等价 CSS 跑马灯替换 react-fast-marquee | PLATFORM | demo 文件头 |
 

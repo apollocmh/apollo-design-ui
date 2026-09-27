@@ -26,7 +26,16 @@
  *    其余 attrs（aria/data/…）原样转发。
  */
 
-import { cloneVNode, defineComponent, h, onMounted, type PropType, ref, watch } from 'vue';
+import {
+  cloneVNode,
+  defineComponent,
+  h,
+  onMounted,
+  type PropType,
+  ref,
+  type VNode,
+  watch,
+} from 'vue';
 import type { StatisticTimerProps, TimerType } from './interface';
 import Statistic from './Statistic';
 import { formatCounter } from './utils';
@@ -130,33 +139,42 @@ export default defineComponent({
     // ======================== Render ========================
     return () => {
       const { class: attrClass, style: attrStyle, ...restAttrs } = attrs;
-      return h(Statistic, {
-        ...restAttrs,
-        /* --- Statistic 全量 props 逐字转发（antd 的 {...rest}） --- */
-        prefixCls: props.prefixCls,
-        rootClassName: props.rootClassName,
-        title: props.title,
-        prefix: props.prefix,
-        suffix: props.suffix,
-        loading: props.loading,
-        precision: props.precision,
-        decimalSeparator: props.decimalSeparator,
-        groupSeparator: props.groupSeparator,
-        valueStyle: props.valueStyle,
-        classNames: props.classNames,
-        styles: props.styles,
-        onMouseenter: props.onMouseenter,
-        onMouseleave: props.onMouseleave,
-        /* --- className / style：prop 优先，attrs 兜底（见文件头 PLATFORM 条） --- */
-        className: props.className ?? ((attrClass as string | undefined) || undefined),
-        style: (props.style ?? attrStyle) as never,
-        /* --- Timer 注入 --- */
-        value: props.value,
-        valueRender: (node: Parameters<NonNullable<StatisticTimerProps['valueRender']>>[0]) =>
-          // antd：cloneElement(node, {title: undefined})
-          cloneVNode(node, { title: undefined }),
-        formatter: formatter as NonNullable<StatisticTimerProps['formatter']>,
-      } as never);
+      return h(
+        Statistic,
+        {
+          ...restAttrs,
+          /* --- Statistic 全量 props 逐字转发（antd 的 {...rest}） --- */
+          prefixCls: props.prefixCls,
+          rootClassName: props.rootClassName,
+          title: props.title,
+          prefix: props.prefix,
+          suffix: props.suffix,
+          loading: props.loading,
+          precision: props.precision,
+          decimalSeparator: props.decimalSeparator,
+          groupSeparator: props.groupSeparator,
+          valueStyle: props.valueStyle,
+          classNames: props.classNames,
+          styles: props.styles,
+          onMouseenter: props.onMouseenter,
+          onMouseleave: props.onMouseleave,
+          /* --- className / style：prop 优先，attrs 兜底（见文件头 PLATFORM 条） --- */
+          className: props.className ?? ((attrClass as string | undefined) || undefined),
+          style: (props.style ?? attrStyle) as never,
+          /* --- Timer 注入 --- */
+          value: props.value,
+          formatter: formatter as NonNullable<StatisticTimerProps['formatter']>,
+        } as never,
+        {
+          // C8-R2：Statistic 的 valueRender prop 已删 —— 注入改走 `#valueRender`
+          // 作用域插槽：先 clone 去掉 title（antd cloneElement 逐字），再交给
+          // 用户（若传了已废弃的 valueRender fn prop）。
+          valueRender: ({ node }: { node: VNode }) => {
+            const cloned = cloneVNode(node, { title: undefined });
+            return props.valueRender ? props.valueRender(cloned) : cloned;
+          },
+        },
+      );
     };
   },
 });

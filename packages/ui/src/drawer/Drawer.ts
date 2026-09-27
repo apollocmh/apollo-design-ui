@@ -21,8 +21,8 @@
  *      （+ `classNames.content`/`styles.content` ⇒ `section`、`style.position: absolute` 的 breaking 提示）。
  */
 import { useZIndex } from '@apollo-design/portal';
-import { isNumber, isRenderable, useId } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { isEmptyVNode, isNumber, isRenderable, useId } from '@apollo-design/utils';
+import { computed, defineComponent, h, type PropType } from 'vue';
 
 import { type MaskType, useMergedMask } from '../_internal/use-merged-mask';
 import { useComponentConfig } from '../config-provider/context';
@@ -82,11 +82,12 @@ export default defineComponent({
     zIndex: { type: Number, default: undefined },
     'aria-labelledby': { type: String, default: undefined },
     // 面板侧
-    title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    footer: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // ⚠️ C8-R2：原 `footer` / `extra` / `closeIcon` 是 React 式 VNode prop，已删除改为
+    //    同名 slot（`#footer` / `#extra` / `#closeIcon`，slot 在前，空 slot 等价隐藏）；
+    //    `title` 收窄为 String（富标题走 `#title` slot，slot 优先）。内部 `DrawerPanel`
+    //    仍收 VNode prop（见其文件头注释），本组件把 slot / prop 归一后透传。
+    title: { type: String, default: undefined },
     closable: { type: [Boolean, Object, null] as unknown as PropType<unknown>, default: undefined },
-    closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     loading: { type: Boolean, default: false },
     classNames: {
       type: Object as PropType<Record<string, string | undefined>>,
@@ -114,7 +115,35 @@ export default defineComponent({
     const config = useComponentConfig('drawer');
     const prefixCls = props.prefixCls || config.getPrefixCls('drawer');
     const id = useId();
-    const ariaId = isRenderable(props.title) ? id : undefined;
+
+    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+    /**
+     * 读一个 slot；「提供了但渲染为空」归一为 null（语义：隐藏），「未提供」为
+     * undefined。判空必须走 `isEmptyVNode` —— Vue 会把 slot 返回的 null / 空数组
+     * 归一成 comment vnode，不能比 `null` / `length`（is.ts §空渲染判据）。
+     */
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? null : nodes;
+    };
+
+    // title：slot 优先，未提供才回退 String prop
+    const mergedTitle = (): unknown => {
+      const t = readSlot('title');
+      if (t !== undefined) return t;
+      return props.title;
+    };
+    const mergedFooter = (): unknown => readSlot('footer');
+    const mergedExtra = (): unknown => readSlot('extra');
+    const mergedCloseIcon = (): unknown => readSlot('closeIcon');
+
+    // 标题（来自 slot 或 String prop）存在才挂 aria-labelledby
+    const titleSlot = readSlot('title');
+    const hasTitle = titleSlot !== undefined ? titleSlot !== null : isRenderable(props.title);
+    const ariaId = hasTitle ? id : undefined;
 
     const getContainer = computed<unknown>(() =>
       props.getContainer === undefined && config.getPopupContainer
@@ -249,11 +278,11 @@ export default defineComponent({
               {
                 prefixCls,
                 ariaId,
-                title: props.title,
-                footer: props.footer,
-                extra: props.extra,
+                title: mergedTitle() as never,
+                footer: mergedFooter() as never,
+                extra: mergedExtra() as never,
                 closable: props.closable as never,
-                closeIcon: props.closeIcon,
+                closeIcon: mergedCloseIcon() as never,
                 onClose: props.onClose,
                 classNames: cn,
                 styles: st,

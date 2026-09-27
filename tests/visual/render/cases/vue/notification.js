@@ -48,13 +48,16 @@ export default {
       }),
     ]),
 
-  // actions 区（关闭按钮 + 操作按钮的几何）
+  // actions 区（关闭按钮 + 操作按钮的几何）。C8-R2：actions 走 `#actions` 插槽
   actions: () =>
     stage([
-      h(Panel, {
-        title: 'Notification Title',
-        description: 'A function will be called after the notification is closed.',
-        actions: h('button', { type: 'button' }, 'Confirm'),
-      }),
+      h(
+        Panel,
+        {
+          title: 'Notification Title',
+          description: 'A function will be called after the notification is closed.',
+        },
+        { actions: () => h('button', { type: 'button' }, 'Confirm') },
+      ),
     ]),
 };

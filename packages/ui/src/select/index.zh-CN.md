@@ -31,7 +31,7 @@ subtitle: 选择器
 | optionFilterProp | 过滤字段（传 `string[]` 多字段 OR） | `string \| string[]` | `'value'` |
 | filterSort | 过滤结果排序 | `fn` | — |
 | allowClear | 清除按钮（`{ clearIcon, label }` 定制） | `boolean \| object` | `false` |
-| placeholder | 占位内容 | — | — |
+| placeholder | 占位文本（富内容用 `#placeholder` 插槽） | `string` | — |
 | size | 尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | variant | 变体 | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | status | 校验状态 | `'error' \| 'warning' \| 'success' \| 'validating'` | — |
@@ -43,8 +43,6 @@ subtitle: 选择器
 | popupMatchSelectWidth | 浮层宽度跟随触发器 | `boolean \| number` | `true` |
 | placement | 弹出位置 | 4 值 | `'bottomLeft'` |
 | open / defaultOpen | 受控开合（`v-model:open`） | `boolean` | `false` |
-| optionRender / tagRender / labelRender / popupRender | 自定义渲染（同时提供同名作用域插槽，prop 优先） | `fn` | — |
-| notFoundContent | 空列表内容（combobox 默认不渲染） | — | `<Empty>` |
 | fieldNames / optionLabelProp | 字段映射 / 回填字段 | — | `label` |
 | virtual | 虚拟滚动 | `boolean` | `true` |
 | classNames / styles | 语义槽 `root/prefix/suffix/input/placeholder/content/item/itemContent/itemRemove/clear/popup.{root,list,listItem}` | — | — |
@@ -64,9 +62,14 @@ subtitle: 选择器
 
 ### Slots
 
-`prefix` / `suffixIcon` / `clearIcon` / `removeIcon` / `placeholder` / `notFoundContent` /
-`optionRender` / `tagRender` / `labelRender` / `popupRender` / `maxTagPlaceholder` /
+`prefix` / `suffixIcon` / `loadingIcon` / `clearIcon` / `removeIcon` / `placeholder` /
+`notFoundContent` / `optionRender="{ option, index }"` / `tagRender` / `labelRender` /
+`popupRender="{ menu }"` / `maxTagPlaceholder="{ omittedValues }"` /
+`menuItemSelectedIcon="{ value, disabled, isSelected }"` /
 `default`（`Select.Option` / `Select.OptGroup` 子组件形态，deprecated 但支持）。
+
+> ⚠️ antd 的 ReactNode props（`suffixIcon` / `notFoundContent` / `optionRender` /
+> `maxTagPlaceholder` 等）在本仓**一律是作用域插槽**，不保留同名 prop（规则 C8-R2）。
 
 ### Methods
 
@@ -80,5 +83,5 @@ subtitle: 选择器
 ## 设计说明
 
 - **rc-select 1.10.1 内核的 Vue 自建**（engine/ 五层）；DOM 无 `-selector` 包裹层（v6）。
-- **差异**：D106–D110（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §5。
+- **差异**：D106–D110（COMPATIBILITY §9.2）；ReactNode props → slot 全量迁移（C8-R2）；缺口见 [`README.md`](./README.md) §5。
 - ⚠️ 搜索默认按 `value` 匹配 —— 按 label 搜请传 `showSearch: { optionFilterProp: 'label' }`。

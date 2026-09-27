@@ -178,8 +178,6 @@ export interface ModalProps {
   afterClose?: () => void;
   /** 点遮罩 / 右上角 × / 取消按钮 / ESC 都走它。 */
   onCancel?: (e: Event) => void;
-  /** 关闭图标的节点（`closable` 为真时生效）。 */
-  closeIcon?: VNodeChild;
   /** 自定义面板渲染（包一层 `{p}-render`）。 */
   modalRender?: (node: VNodeChild) => VNodeChild;
   /** 打开时从该鼠标位置展开 zoom 动效。 */
@@ -192,17 +190,12 @@ export interface ModalProps {
   focusTrap?: boolean;
 
   // ------------------------------ ② antd 自有 ------------------------------
-  /** 标题区。 */
-  title?: VNodeChild;
-  /**
-   * 底部区。传函数时收到 `(originNode, { OkBtn, CancelBtn })`。
-   * ⚠️ 传 `null` 表示**不渲染 footer**。
-   */
-  footer?: VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild);
-  /** OK 按钮文案（默认取 locale 的 `okText`）。 */
-  okText?: VNodeChild;
-  /** 取消按钮文案（默认取 locale 的 `cancelText`）。 */
-  cancelText?: VNodeChild;
+  /** 标题区。同名 `#title` slot 优先。 */
+  title?: string;
+  /** OK 按钮文案（默认取 locale 的 `okText`）。同名 `#okText` slot 优先。 */
+  okText?: string;
+  /** 取消按钮文案（默认取 locale 的 `cancelText`）。同名 `#cancelText` slot 优先。 */
+  cancelText?: string;
   /** OK 按钮类型。默认 `'primary'`。 */
   okType?: ModalOkType;
   /** OK 按钮 loading。 */
@@ -278,8 +271,13 @@ export interface ModalLocale {
  * ⚠️ 与 `ModalProps` 的差异（上游逐字）：多了 `content` / `icon` / `okCancel` / `type` /
  *    `direction` / `autoFocusButton`，且 `width` 只收 `string | number`（无响应式对象）。
  */
-export interface ModalFuncProps extends Omit<ModalProps, 'width' | 'children' | 'onOk' | 'footer'> {
+export interface ModalFuncProps
+  extends Omit<ModalProps, 'width' | 'children' | 'onOk' | 'footer' | 'title'> {
   width?: string | number;
+  /**
+   * 标题区（命令式上下文允许 `VNodeChild`——程序化里 `h()` 即 React render fn 的等价物）。
+   */
+  title?: VNodeChild;
   /** 正文（对应 `ModalProps` 的 `children`）。 */
   content?: VNodeChild;
   /** 自定义图标。`null` / `false` 显式隐藏默认图标。 */
@@ -294,7 +292,7 @@ export interface ModalFuncProps extends Omit<ModalProps, 'width' | 'children' | 
   direction?: 'ltr' | 'rtl';
   onOk?: (...args: unknown[]) => unknown;
   onCancel?: (...args: unknown[]) => unknown;
-  footer?: ModalProps['footer'];
+  footer?: VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild);
 }
 
 /**
@@ -331,13 +329,12 @@ export interface ModalPurePanelProps {
   className?: string;
   style?: CSSProperties;
   closable?: boolean | (ClosableType & Record<string, unknown>);
-  closeIcon?: VNodeChild;
   type?: ModalType;
-  title?: VNodeChild;
+  /** 标题区。同名 `#title` slot 优先。 */
+  title?: string;
   children?: VNodeChild;
-  footer?: VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild);
   classNames?: ModalSemanticType['classNames'];
   styles?: ModalSemanticType['styles'];
-  /** confirm 形态的正文（`type` 有值时用）。 */
-  content?: VNodeChild;
+  /** confirm 形态的正文（`type` 有值时用）。同名 `#content` slot 优先。 */
+  content?: string;
 }

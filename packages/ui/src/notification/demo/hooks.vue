@@ -13,9 +13,9 @@ const [api, contextHolder] = notification.useNotification();
 
 const openNotification = (placement: NotificationPlacement) => {
   api.info({
-    title: 'Notification ' + placement,
+    title: `Notification ${placement}`,
     // 内容在**调用时**求值（演示「能读到组件树的 context」）
-    description: 'Hello, ' + name + '!',
+    description: `Hello, ${name}!`,
     placement,
   });
 };

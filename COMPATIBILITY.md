@@ -402,6 +402,8 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D109 | `select`（combobox 的公开面） | `mode='combobox'` 被吞成单选（仅 `SECRET_COMBOBOX_MODE_DO_NOT_USE` 真走 combobox） | 同构：内核实现 combobox 分支（AutoComplete 复用），公开类型只声明 `multiple \| tags` | INTENDED（与 antd 同构） | type.test-d.ts 负例钉住 `mode: 'combobox'` 报错 |
 | D110 | `select`（滚动条） | rc-virtual-list 自绘滚动条（`borderRadius:99` + 半透明黑），`showScrollBar` 控制显隐 | `@apollo-design/virtual-list` 用原生滚动，`showScrollBar` 接受但不生效 | PLATFORM | virtual-list 契约 §5.1 既有差异（listy 同判）；`scrollTo()` 无参为 no-op（OptionList 打开时的 `scrollTo(undefined)` 已判空） |
 
+| D111 | **全仓**（ReactNode / render prop → slot，规则 C8-R2） | antd 的自定义 DOM 渲染全部是 `ReactNode` / render-function props（`icon={<Icon/>}`、`footer`、`optionRender(node)`…） | **全部改为 slot / scoped slot**：VNode prop 删除；文本类（placeholder/title/okText 等）保留 `string` prop 且 slot 优先；命令式 config（`Modal.confirm` / `message.open`）、ConfigProvider componentConfig、对象形态子字段（`closable.closeIcon`）与内部组件（engine/Notice/ModalPanel 等）保留 VNode（程序化上下文） | INTENDED（Vue-native API 架构） | 转换规则与三条硬判据见 `COMPONENT-RULES.md` §4.1；涉及 select / modal / drawer / notification / message / popover / alert / collapse / switch / descriptions / menu / result / tag / spin / statistic / space / upload / splitter / typography / tooltip / dropdown 共 21 组件；DOM 输出不变（四层测试 + L4 基线逐字节对拍） |
+
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 
 这些不是「我们与 antd 不同」，而是「我们与 antd 相同，而 antd 在这里有问题」。

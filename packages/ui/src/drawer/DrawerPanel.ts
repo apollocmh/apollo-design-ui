@@ -48,6 +48,9 @@ const clsx = (...args: Array<string | false | undefined | Record<string, unknown
 export default defineComponent({
   name: 'ADrawerPanel',
   inheritAttrs: false,
+  // 内部：由父组件程序化传递/命令式 API 驱动，无模板上下文，VNode prop 合法
+  // ⚠️ C8-R2：本组件是内部面板，`title` / `footer` / `extra` / `closeIcon` 仍保留 VNode prop
+  //    （由 `Drawer` 把同名 slot / String prop 归一后透传），不暴露为公开 slot。
   props: {
     prefixCls: { type: String, required: true },
     ariaId: { type: String, default: undefined },

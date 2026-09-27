@@ -19,7 +19,7 @@ import type { ResultConfig } from '../interface';
 
 const P = 'apollo-result';
 
-const mountResult = (props = {}, slots: { default?: () => unknown } = {}) =>
+const mountResult = (props = {}, slots: Record<string, () => unknown> = {}) =>
   mount(Result, { props: props as never, slots, attachTo: document.body });
 
 describe('Result · 结构', () => {
@@ -50,7 +50,7 @@ describe('Result · 结构', () => {
   });
 
   it('异常状态忽略 icon prop（恒渲染插画）', () => {
-    const w = mountResult({ status: '404', icon: h(SmileOutlined) });
+    const w = mountResult({ status: '404' }, { icon: () => h(SmileOutlined) });
     expect(w.find(`.${P}-icon svg`).exists()).toBe(true);
     expect(w.find(`.${P}-icon .apollo-icon`).exists()).toBe(false);
   });
@@ -63,17 +63,17 @@ describe('Result · 结构', () => {
   });
 
   it('icon 节点覆盖默认图标', () => {
-    const w = mountResult({ title: 'T', status: 'success', icon: h(SmileOutlined) });
+    const w = mountResult({ title: 'T', status: 'success' }, { icon: () => h(SmileOutlined) });
     expect(w.find(`.${P}-icon .apollo-icon`).exists()).toBe(true);
   });
 
   it("title/subTitle/extra 守卫：'' 与 false 不渲染容器", () => {
-    const w = mountResult({ title: '', subTitle: false, extra: '' });
+    const w = mountResult({ title: '' }, { subTitle: () => false, extra: () => '' });
     expect(w.find(`.${P}-title`).exists()).toBe(false);
     expect(w.find(`.${P}-subtitle`).exists()).toBe(false);
     expect(w.find(`.${P}-extra`).exists()).toBe(false);
-    // 0 是 renderable（antd isReactRenderable 语义）
-    const w2 = mountResult({ title: 0 as never, subTitle: 0 as never });
+    // 0 是 renderable（antd isReactRenderable 语义）—— 经 #title/#subTitle slot 传入
+    const w2 = mountResult({}, { title: () => 0, subTitle: () => 0 });
     expect(w2.find(`.${P}-title`).exists()).toBe(true);
     expect(w2.find(`.${P}-subtitle`).exists()).toBe(true);
   });
@@ -95,8 +95,8 @@ describe('Result · 结构', () => {
 
   it('title/subTitle/extra 的类名与文本', () => {
     const w = mountResult(
-      { title: 'Title', subTitle: 'Sub', extra: h('button', 'Go') },
-      { default: () => 'body' },
+      { title: 'Title', subTitle: 'Sub' },
+      { default: () => 'body', extra: () => h('button', 'Go') },
     );
     expect(w.find(`.${P}-title`).text()).toBe('Title');
     expect(w.find(`.${P}-subtitle`).text()).toBe('Sub');

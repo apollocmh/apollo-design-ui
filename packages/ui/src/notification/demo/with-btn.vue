@@ -12,7 +12,7 @@ const close = () => {
 };
 
 const openNotification = () => {
-  const key = 'open' + Date.now();
+  const key = `open${Date.now()}`;
   // ⚠️ SFC 里用 `h()` 而不是 JSX（要写 JSX 得 `lang="tsx"`）
   const btn = h(Space, null, () => [
     h(Button, { type: 'link', size: 'small', onClick: () => api.destroy() }, () => 'Destroy All'),

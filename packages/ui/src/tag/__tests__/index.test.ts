@@ -92,8 +92,11 @@ describe('Tag · closable', () => {
     expect(icon.attributes('aria-label')).toBe('Close');
   });
 
-  it('close-icon 自定义 vnode（单层 span 保留文本 —— antd 的 replaceElement 语义）', () => {
-    const w = mount(Tag, { props: { closable: true, closeIcon: h('em', null, 'x') } });
+  it('close-icon 自定义 vnode（单层 span 保留文本 —— antd 的 replaceElement 语义；C8-R2 后走 #closeIcon 插槽）', () => {
+    const w = mount(Tag, {
+      props: { closable: true },
+      slots: { closeIcon: () => h('em', null, 'x') },
+    });
     const icon = w.find('.apollo-tag-close-icon');
     expect(icon.exists()).toBe(true);
     expect(icon.attributes('role')).toBe('button');
@@ -138,12 +141,10 @@ describe('Tag · closable', () => {
 
 describe('Tag · icon 与语义槽位', () => {
   it('icon 存在 → children 包 content 槽 + icon 克隆注入类', () => {
+    // C8-R2：icon 走 `#icon` 插槽
     const w = mount(Tag, {
-      props: {
-        icon: h('i', { class: 'my-icon' }),
-        classNames: { icon: 'user-icon', content: 'user-content' },
-      },
-      slots: { default: () => 'text' },
+      props: { classNames: { icon: 'user-icon', content: 'user-content' } },
+      slots: { default: () => 'text', icon: () => h('i', { class: 'my-icon' }) },
     });
     expect(w.find('i.my-icon').classes()).toContain('user-icon');
     expect(w.find('.apollo-tag span').classes()).toContain('user-content');

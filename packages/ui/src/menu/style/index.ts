@@ -280,9 +280,7 @@ const RULES = `.apollo-menu-css-var{font-family:var(--apollo-font-family);font-s
 /** 生成单个前缀下的完整样式（upload 同一约定：ant 前缀在出口替换类名段）。 */
 export function genMenuStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
-    prefixCls === 'apollo'
-      ? cssText
-      : cssText.split('.apollo-menu').join('.' + prefixCls + '-menu');
-  const decls = `.apollo-menu{${rename('{' + DECLS + '}').slice(1, -1)}}`;
+    prefixCls === 'apollo' ? cssText : cssText.split('.apollo-menu').join(`.${prefixCls}-menu`);
+  const decls = `.apollo-menu{${rename(`{${DECLS}}`).slice(1, -1)}}`;
   return `${KEYFRAMES}\n${decls}\n${rename(RULES)}`;
 }

@@ -26,11 +26,16 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   },
   'notification:pure-panel-actions': {
     render: () =>
-      h(PurePanel, {
-        ...BP,
-        title: 'With actions',
-        actions: h('button', null, 'OK'),
-      } as never),
+      h(
+        PurePanel,
+        {
+          ...BP,
+          title: 'With actions',
+        } as never,
+        {
+          actions: () => h('button', null, 'OK'),
+        },
+      ),
   },
   'notification:pure-list': {
     render: () =>

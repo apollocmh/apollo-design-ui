@@ -31,8 +31,8 @@ import {
   SearchOutlined,
 } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
-import { useControlledValue, useDevWarning, useId } from '@apollo-design/utils';
-import type { CSSProperties, PropType, VNodeChild } from 'vue';
+import { isEmptyVNode, useControlledValue, useDevWarning, useId } from '@apollo-design/utils';
+import type { CSSProperties, PropType } from 'vue';
 import { computed, defineComponent, h, provide, type Ref, ref, shallowRef, watch } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
@@ -61,6 +61,7 @@ import type {
   FilterFunc,
   InternalSelectMode,
   LabelInValueType,
+  OptionRenderFn,
   RawValueType,
   ScrollToArg,
   SearchConfig,
@@ -79,7 +80,6 @@ const DEPRECATIONS: Array<[string, string]> = [
   ['dropdownStyle', 'styles.popup.root'],
   ['dropdownClassName', 'classNames.popup.root'],
   ['popupClassName', 'classNames.popup.root'],
-  ['dropdownRender', 'popupRender'],
   ['onDropdownVisibleChange', 'onOpenChange'],
   ['bordered', 'variant'],
 ];
@@ -98,18 +98,10 @@ export const Select = defineComponent({
     fieldNames: { type: Object as PropType<SelectProps['fieldNames']>, default: undefined },
     mode: { type: String as PropType<InternalSelectMode | undefined>, default: undefined },
     options: { type: Array as PropType<DefaultOptionType[]>, default: undefined },
-    optionRender: { type: Function as PropType<SelectProps['optionRender']>, default: undefined },
     listHeight: { type: Number, default: undefined },
     listItemHeight: { type: Number, default: undefined },
     virtual: { type: Boolean, default: undefined },
     defaultActiveFirstOption: { type: Boolean, default: undefined },
-    menuItemSelectedIcon: {
-      type: null as unknown as PropType<
-        | VNodeChild
-        | ((props: { value?: unknown; disabled?: boolean; isSelected?: boolean }) => VNodeChild)
-      >,
-      default: undefined,
-    },
     showSearch: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
     searchValue: { type: String, default: undefined },
     autoClearSearchValue: { type: Boolean, default: undefined },
@@ -125,41 +117,17 @@ export const Select = defineComponent({
     status: { type: String as PropType<SelectProps['status']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: undefined },
-    placeholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    prefix: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    suffixIcon: {
-      type: null as unknown as PropType<
-        | VNodeChild
-        | ((info: {
-            open: boolean;
-            searchValue: string;
-            focused: boolean;
-            showSearch: boolean;
-            loading?: boolean;
-          }) => VNodeChild)
-      >,
-      default: undefined,
-    },
+    placeholder: { type: String, default: undefined },
     showArrow: { type: Boolean, default: undefined },
     allowClear: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
-    clearIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    loadingIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     maxLength: { type: Number, default: undefined },
     maxCount: { type: Number, default: undefined },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
-    maxTagPlaceholder: {
-      type: null as unknown as PropType<VNodeChild | ((omitted: DisplayValueType[]) => VNodeChild)>,
-      default: undefined,
-    },
-    tagRender: { type: Function as PropType<SelectProps['tagRender']>, default: undefined },
     tokenSeparators: {
       type: [Array, Function] as PropType<string[] | ((input: string) => string[])>,
       default: undefined,
     },
-    labelRender: { type: Function as PropType<SelectProps['labelRender']>, default: undefined },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
     placement: { type: String as PropType<SelectCommonPlacement>, default: undefined },
@@ -170,11 +138,9 @@ export const Select = defineComponent({
       default: undefined,
     },
     transitionName: { type: String, default: undefined },
-    popupRender: { type: Function as PropType<SelectProps['popupRender']>, default: undefined },
     popupClassName: { type: String, default: undefined },
     dropdownClassName: { type: String, default: undefined },
     dropdownStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    dropdownRender: { type: Function as PropType<SelectProps['popupRender']>, default: undefined },
     dropdownMatchSelectWidth: { type: [Boolean, Number], default: undefined },
     popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     classNames: { type: Object as PropType<SelectSemanticClassNames>, default: undefined },
@@ -237,7 +203,7 @@ export const Select = defineComponent({
     if (props.showArrow !== undefined) {
       warning(
         false,
-        '`showArrow` is deprecated which will be removed in next major version. It will be a default behavior, you can hide it by setting `suffixIcon` to null.',
+        '`showArrow` is deprecated which will be removed in next major version. It will be a default behavior, you can hide it with `showArrow: false` or an empty `#suffixIcon` slot.',
       );
     }
     if (props.maxCount !== undefined && !multiple.value) {
@@ -269,6 +235,20 @@ export const Select = defineComponent({
     const componentConfig = computed(
       () => (config.components?.select ?? {}) as Record<string, unknown>,
     );
+
+    // ---------------- slot：ReactNode / render prop 的唯一入口（规则 C8-R2）----------------
+    /**
+     * 读一个 slot；「提供了但渲染为空」归一为 null（语义：隐藏），「未提供」为
+     * undefined。判空必须走 `isEmptyVNode` —— Vue 会把 slot 返回的 null / 空数组
+     * 归一成 comment vnode，不能比 `null` / `length`（is.ts §空渲染判据）。
+     */
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? null : nodes;
+    };
 
     // --------------------------- 搜索配置 ---------------------------
     // antd：`showSearch ?? contextShowSearch` 之后才交给 rc 做模式推导。
@@ -383,11 +363,12 @@ export const Select = defineComponent({
           return [];
         }
       }
+      const labelRenderFn = slots.labelRender
+        ? (item: DisplayValueType) => (slots.labelRender as (p: DisplayValueType) => unknown)(item)
+        : undefined;
       return mergedValues.value.map((item) => ({
         ...item,
-        label:
-          (typeof props.labelRender === 'function' ? props.labelRender(item) : item.label) ??
-          item.value,
+        label: (labelRenderFn ? labelRenderFn(item) : item.label) ?? item.value,
       })) as DisplayValueType[];
     });
 
@@ -618,14 +599,13 @@ export const Select = defineComponent({
         : props.mode !== 'combobox',
     );
 
-    // ---------------------------- 图标 ----------------------------
-    const showSuffixIcon = computed(() =>
-      props.showArrow !== undefined ? props.showArrow : props.suffixIcon !== null,
-    );
+    // ---------------------------- 图标（slot 优先） ----------------------------
+    const showSuffixIcon = computed(() => (props.showArrow !== undefined ? props.showArrow : true));
     const getSuffixIconNode = (arrowIcon?: unknown): unknown => {
-      if (props.suffixIcon === null && !formItem.value.hasFeedback && !props.showArrow) return null;
       const nodes: unknown[] = [];
-      if (showSuffixIcon.value !== false && arrowIcon !== undefined) nodes.push(arrowIcon);
+      if (showSuffixIcon.value !== false && arrowIcon !== undefined && arrowIcon !== null) {
+        nodes.push(arrowIcon);
+      }
       if (formItem.value.hasFeedback && formItem.value.feedbackIcon) {
         nodes.push(formItem.value.feedbackIcon);
       }
@@ -633,10 +613,9 @@ export const Select = defineComponent({
     };
 
     const mergedSuffixIcon = computed<unknown>(() => {
-      if (props.suffixIcon !== undefined) return getSuffixIconNode(props.suffixIcon);
       if (props.loading) {
         return getSuffixIconNode(
-          props.loadingIcon ??
+          readSlot('loadingIcon') ??
             componentConfig.value.loadingIcon ??
             h(LoadingOutlined, { spin: true }),
         );
@@ -650,22 +629,38 @@ export const Select = defineComponent({
               h(SearchOutlined),
           );
         }
+        if (slots.suffixIcon) {
+          return getSuffixIconNode(
+            readSlot('suffixIcon') !== undefined
+              ? readSlot('suffixIcon')
+              : (slots.suffixIcon as (p: Record<string, unknown>) => unknown)({
+                  open: Boolean(st.open),
+                  showSearch: Boolean(st.showSearch),
+                  searchValue: mergedSearchValue.value,
+                  focused: false,
+                  loading: props.loading,
+                }),
+          );
+        }
         return getSuffixIconNode(componentConfig.value.suffixIcon ?? h(DownOutlined));
       };
     });
 
     const mergedClearIcon = computed<unknown>(
-      () => props.clearIcon ?? componentConfig.value.clearIcon ?? h(CloseCircleFilled),
+      () => readSlot('clearIcon') ?? componentConfig.value.clearIcon ?? h(CloseCircleFilled),
     );
     const mergedRemoveIcon = computed<unknown>(
-      () => props.removeIcon ?? componentConfig.value.removeIcon ?? h(CloseOutlined),
+      () => readSlot('removeIcon') ?? componentConfig.value.removeIcon ?? h(CloseOutlined),
     );
-    const mergedItemIcon = computed<unknown>(
-      () =>
-        props.menuItemSelectedIcon ??
-        componentConfig.value.menuItemSelectedIcon ??
-        (multiple.value ? h(CheckOutlined) : null),
-    );
+    const mergedItemIcon = computed<unknown>(() => {
+      if (slots.menuItemSelectedIcon) {
+        return (info: { value?: unknown; disabled?: boolean; isSelected?: boolean }) =>
+          (slots.menuItemSelectedIcon as (p: typeof info) => unknown)(info);
+      }
+      return (
+        componentConfig.value.menuItemSelectedIcon ?? (multiple.value ? h(CheckOutlined) : null)
+      );
+    });
     const mergedAllowClear = computed(() => {
       const final = props.allowClear ?? (componentConfig.value.allowClear as boolean | undefined);
       return final === true ? { clearIcon: mergedClearIcon.value } : final;
@@ -673,7 +668,8 @@ export const Select = defineComponent({
 
     // ------------------------ notFoundContent ------------------------
     const mergedNotFound = computed<unknown>(() => {
-      if (props.notFoundContent !== undefined) return props.notFoundContent;
+      const fromSlot = readSlot('notFoundContent');
+      if (fromSlot !== undefined) return fromSlot;
       if (props.mode === 'combobox') return null;
       return config.renderEmpty?.('Select') ?? defaultRenderEmpty('Select');
     });
@@ -746,6 +742,8 @@ export const Select = defineComponent({
     provide(
       selectContextKey,
       computed<SelectContextValue>(() => ({
+        // `as never`：optionRender 包装器的 slot 签名与 OptionRenderFn 结构兼容但
+        // 字面参数不同（info 由调用方 OptionList 保证），不做无谓的字段重排。
         flattenOptions: displayOptions.value,
         onActiveValue,
         defaultActiveFirstOption: mergedDefaultActiveFirstOption.value,
@@ -759,7 +757,10 @@ export const Select = defineComponent({
         listItemHeight: listItemHeight.value,
         childrenAsData: childrenAsData.value,
         maxCount: multiple.value ? props.maxCount : undefined,
-        optionRender: props.optionRender,
+        optionRender: slots.optionRender
+          ? (...args: Parameters<OptionRenderFn>) =>
+              (slots.optionRender as (...a: Parameters<OptionRenderFn>) => unknown)(...args)
+          : undefined,
         classNames: mergedClassNames.value,
         styles: mergedStyles.value,
       })),
@@ -803,7 +804,7 @@ export const Select = defineComponent({
           open: props.open,
           defaultOpen: props.defaultOpen,
           notFoundContent: mergedNotFound.value,
-          placeholder: props.placeholder,
+          placeholder: readSlot('placeholder') ?? props.placeholder,
           maxLength: props.maxLength,
           tabIndex: props.tabIndex,
           title: props.title,
@@ -812,14 +813,23 @@ export const Select = defineComponent({
             | { clearIcon?: unknown; label?: string }
             | undefined,
           clearIcon: mergedClearIcon.value,
-          prefix: props.prefix,
+          prefix: readSlot('prefix'),
           suffixIcon: mergedSuffixIcon.value,
           removeIcon: mergedRemoveIcon.value,
           tokenSeparators: props.tokenSeparators,
-          tagRender: multiple.value ? props.tagRender : undefined,
+          tagRender: multiple.value
+            ? slots.tagRender
+              ? (info: never) => (slots.tagRender as (p: never) => unknown)(info)
+              : undefined
+            : undefined,
           maxTagCount: props.maxTagCount,
           maxTagTextLength: props.maxTagTextLength,
-          maxTagPlaceholder: props.maxTagPlaceholder,
+          maxTagPlaceholder: slots.maxTagPlaceholder
+            ? (omitted: DisplayValueType[]) =>
+                (slots.maxTagPlaceholder as (p: { omittedValues: DisplayValueType[] }) => unknown)({
+                  omittedValues: omitted,
+                })
+            : undefined,
           maxCount: multiple.value ? props.maxCount : undefined,
           emptyOptions: displayOptions.value.length === 0,
           zIndex: zIndex.value,
@@ -833,7 +843,9 @@ export const Select = defineComponent({
             ...(mergedStyles.value?.popup?.root ?? {}),
             ...(props.popupStyle ?? props.dropdownStyle ?? {}),
           },
-          popupRender: props.popupRender ?? props.dropdownRender,
+          popupRender: slots.popupRender
+            ? (menu: unknown) => (slots.popupRender as (p: { menu: unknown }) => unknown)({ menu })
+            : undefined,
           classNames: mergedClassNames.value,
           styles: mergedStyles.value,
           onSearch: onInternalSearch,

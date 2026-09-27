@@ -40,7 +40,13 @@ import {
   InfoCircleFilled,
 } from '@apollo-design/icons';
 import { CSSMotion, type MotionHooks } from '@apollo-design/motion';
-import { isPlainObject, isRenderable, pickAttrs, useDevWarning } from '@apollo-design/utils';
+import {
+  isEmptyVNode,
+  isPlainObject,
+  isRenderable,
+  pickAttrs,
+  useDevWarning,
+} from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -73,13 +79,11 @@ export default defineComponent({
       type: [Boolean, Object] as PropType<AlertProps['closable']>,
       default: undefined,
     },
-    closeText: { type: null as unknown as PropType<AlertProps['closeText']>, default: undefined },
-    title: { type: null as unknown as PropType<AlertProps['title']>, default: undefined },
-    message: { type: null as unknown as PropType<AlertProps['message']>, default: undefined },
-    description: {
-      type: null as unknown as PropType<AlertProps['description']>,
-      default: undefined,
-    },
+    // 文本主导 prop（规则 #1）：收窄 string + 同名 slot 优先
+    closeText: { type: String, default: undefined },
+    title: { type: String, default: undefined },
+    message: { type: String, default: undefined },
+    description: { type: String, default: undefined },
     onClose: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     afterClose: { type: Function as PropType<() => void>, default: undefined },
     showIcon: { type: Boolean, default: undefined },
@@ -90,9 +94,12 @@ export default defineComponent({
     rootClassName: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     banner: { type: Boolean, default: undefined },
-    icon: { type: null as unknown as PropType<AlertProps['icon']>, default: undefined },
-    closeIcon: { type: null as unknown as PropType<AlertProps['closeIcon']>, default: undefined },
-    action: { type: null as unknown as PropType<AlertProps['action']>, default: undefined },
+    // ⚠️ icon / action 是 VNode 主导 prop（规则 #2/#3）：彻底删除 prop，改同名 slot
+    //    （#icon / #action）。icon 不再接受 VNode prop，自定义图标走 `#icon` slot。
+    closeIcon: {
+      type: [String, Boolean, Number] as PropType<AlertProps['closeIcon']>,
+      default: undefined,
+    },
     id: { type: String, default: undefined },
     onMouseenter: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     onMouseleave: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
@@ -158,6 +165,15 @@ export default defineComponent({
     );
 
     // ============================ Closable ==============================
+    // #closeIcon 插槽（C8-R2）：空渲染归一为 undefined ⇒ 回落后续链（closable 对象
+    // 子字段 / closeText / prop / ConfigProvider / 默认图标）。
+    const closeIconSlot = computed<VNodeChild | undefined>(() => {
+      const fn = slots.closeIcon;
+      if (typeof fn !== 'function') return undefined;
+      const nodes = fn();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? undefined : nodes;
+    });
     const isClosable = computed<boolean>(() => {
       if (isPlainObject(props.closable)) {
         return true;
@@ -170,6 +186,10 @@ export default defineComponent({
       }
       // should be true when closeIcon is 0 or ''
       if (props.closeIcon !== false && props.closeIcon != null) {
+        return true;
+      }
+      // C8-R2：#closeIcon 插槽非空 ⇒ 可关（与 prop 语义一致）
+      if (closeIconSlot.value !== undefined) {
         return true;
       }
       return !!contextClosable;
@@ -209,6 +229,7 @@ export default defineComponent({
 
     // ========================== Close Icon ==============================
     const mergedCloseIcon = computed<VNodeChild>(() => {
+      if (closeIconSlot.value !== undefined) return closeIconSlot.value;
       if (isPlainObject(props.closable) && (props.closable as AlertClosable).closeIcon) {
         return (props.closable as AlertClosable).closeIcon;
       }
@@ -235,17 +256,18 @@ export default defineComponent({
     // ============================== Render ==============================
     return () => {
       const cls = prefixCls.value;
-      // ReactNode prop 的 Vue 双通道（button/icon 同约定）：**prop 优先，插槽兜底**。
+      // 文本主导 prop 双通道（规则 #1）：prop 优先，同名 slot 兜底。
       const mergedTitle: VNodeChild = props.title ?? props.message ?? slots.title?.();
       const descriptionValue: VNodeChild = props.description ?? slots.description?.();
-      const actionValue: VNodeChild = props.action ?? slots.action?.();
+      // action 已改为 slot（规则 #3）：内容一律走 `#action` slot。
+      const actionValue: VNodeChild = slots.action?.();
 
       const alertCls = [
         cls,
         `${cls}-${type.value}`,
         `${cls}-${mergedVariant.value}`,
         {
-          [`${cls}-with-description`]: isRenderable(props.description),
+          [`${cls}-with-description`]: isRenderable(descriptionValue),
           [`${cls}-no-icon`]: !isShowIcon.value,
           [`${cls}-banner`]: !!props.banner,
           [`${cls}-rtl`]: direction.value === 'rtl',
@@ -320,7 +342,7 @@ export default defineComponent({
                         class: [`${cls}-icon`, mergedClassNames.value.icon],
                         style: mergedStyles.value.icon as never,
                       },
-                      [props.icon ?? iconMapFilled[type.value]],
+                      [slots.icon?.() ?? iconMapFilled[type.value]],
                     )
                   : null,
                 h(

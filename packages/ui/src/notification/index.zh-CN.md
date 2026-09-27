@@ -56,6 +56,20 @@ stack / style-class / update / with-btn / with-icon。
 | onClose / onClick / className / style / classNames / styles / props | 同 antd | — | — |
 | message / btn | ⚠️ 已废弃：用 `title` / `actions` | — | — |
 
+### Slots（C8-R2，仅 `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板）
+
+| Slot | 说明 | 参数 |
+|---|---|---|
+| title | 富标题（文本 `title` prop 等价，slot 优先） | — |
+| message | ⚠️ 废弃别名，同 `title` | — |
+| description | 富描述（文本 `description` prop 等价，slot 优先） | — |
+| icon | 自定义图标（空 slot 等价隐藏） | — |
+| actions | 操作区（空 slot 等价隐藏） | — |
+| btn | ⚠️ 废弃别名，同 `actions` | — |
+| closeIcon | 自定义关闭图标（空 slot 等价隐藏） | — |
+
+> `notification.open({ title, description, icon, actions, closeIcon })` 的命令式入参保持 `VNodeChild`（程序化上下文，无模板）。
+
 ### `GlobalConfigProps`（`config()`）
 
 `top` / `bottom` / `duration` / `showProgress` / `pauseOnHover` / `prefixCls` /

@@ -43,7 +43,9 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
       h(Switch, { ...BP, checkedChildren: 'On', unCheckedChildren: 'Off', checked: true }),
   },
   'switch:children-number': {
-    render: () => h(Switch, { ...BP, checkedChildren: 1, unCheckedChildren: 0, checked: true }),
+    // C8-R2：非 string 内容走 #checkedChildren / #unCheckedChildren 插槽
+    render: () =>
+      h(Switch, { ...BP, checked: true }, { checkedChildren: () => 1, unCheckedChildren: () => 0 }),
   },
   'switch:children-small': {
     render: () =>

@@ -45,9 +45,7 @@ subtitle: 上传
 | disabled | 是否禁用 | `boolean` | — |
 | fileList | **受控**文件列表（与 `v-model:fileList` 等价） | `UploadFile[]` | — |
 | headers | 上传请求头（值为 `null` 的项目会被跳过） | `Record<string, string>` | — |
-| iconRender | 自定义列表项图标 | `(file, listType) => VNodeChild` | — |
 | isImageUrl | 覆盖「是否图片」的判定 | `(file: UploadFile) => boolean` | antd 同款实现 |
-| itemRender | 自定义列表项整体渲染（得到 `originNode` 与 `actions`） | `(originNode, file, fileList, actions) => VNodeChild` | — |
 | listType | 列表形态 | `'text' \| 'picture' \| 'picture-card' \| 'picture-circle'` | `'text'` |
 | maxCount | 最大文件数。`1` 时新文件替换旧文件；超出部分不进列表且**不触发** `change` | `number` | — |
 | method | 请求方法 | `string` | `'post'` |
@@ -57,7 +55,7 @@ subtitle: 上传
 | pastable | 支持从剪贴板粘贴上传（`document` 级 paste 监听） | `boolean` | — |
 | previewFile | 生成 picture 族缩略图的自定义实现 | `(file: File \| Blob) => PromiseLike<string>` | canvas 200×200 居中裁剪 |
 | progress | 进度条配置（透传给 Progress / 内联 MiniProgress） | `UploadListProgressProps` | `{ size: [-1, 2], showInfo: false }` |
-| showUploadList | 是否展示列表，或 `{ showPreviewIcon, showRemoveIcon, showDownloadIcon, removeIcon, previewIcon, downloadIcon, extra }` | `boolean \| ShowUploadListInterface` | `true` |
+| showUploadList | 是否展示列表，或 `{ showPreviewIcon, showRemoveIcon, showDownloadIcon }` | `boolean \| ShowUploadListInterface` | `true` |
 | type | 上传形态。`'drag'` 等价于使用 `UploadDragger` | `'select' \| 'drag'` | `'select'` |
 | withCredentials | 跨域请求是否携带 cookie | `boolean` | `false` |
 | rootClassName / className / style | 根元素类名与内联样式 | — | — |
@@ -76,9 +74,16 @@ subtitle: 上传
 
 ### 插槽
 
-| 名称 | 说明 |
-|---|---|
-| default | 触发区内容。`type="drag"` 时落在 `-drag-container`；`picture-card` / `picture-circle` 时作为列表尾部上传按钮 |
+| 名称 | 作用域 | 说明 |
+|---|---|---|
+| default | — | 触发区内容。`type="drag"` 时落在 `-drag-container`；`picture-card` / `picture-circle` 时作为列表尾部上传按钮 |
+| iconRender | `{ file, listType }` | 自定义列表项图标（原 `iconRender` prop，已改为 slot） |
+| itemRender | `{ originNode, file, fileList, actions }` | 自定义列表项整体渲染（原 `itemRender` prop，已改为 slot） |
+| removeIcon | `{ file }` | 自定义删除图标（原 `showUploadList.removeIcon`） |
+| previewIcon | `{ file }` | 自定义预览图标（原 `showUploadList.previewIcon`） |
+| downloadIcon | `{ file }` | 自定义下载图标（原 `showUploadList.downloadIcon`） |
+| extra | `{ file }` | 自定义列表项附加内容（原 `showUploadList.extra`） |
+| appendAction | — | 列表尾部上传按钮的内容（仅 `picture-card` / `picture-circle` 生效；不传则用默认上传按钮） |
 
 ### Expose
 

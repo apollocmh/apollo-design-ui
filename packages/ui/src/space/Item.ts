@@ -56,9 +56,11 @@ export const Item = defineComponent({
     className: { type: String, required: true },
     /** 在 `childNodes` 里的下标。 */
     index: { type: Number, required: true },
-    /** 子节点。`VNodeChild` 的运行时类型必须是 `null`（见 `empty` 的同形写法）。 */
+    /** 子节点。`VNodeChild` 的运行时类型必须是 `null`（见 `empty` 的同形写法）。
+     *  内部：由 Space 把默认插槽克隆后传入，无模板上下文，VNode prop 合法（C8-R2 §4）。 */
     node: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    /** 分隔符。`null` / `''` / `0` 等假值 ⇒ 不渲染。 */
+    /** 分隔符。`null` / `''` / `0` 等假值 ⇒ 不渲染。
+     *  内部：由 Space 把 `#separator` 插槽 / 文本 prop 归一后传入（C8-R2 §4）。 */
     separator: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** `-item` 的内联样式（= `mergedStyles.item`）。 */
     style: { type: Object as PropType<CSSProperties | undefined>, default: undefined },

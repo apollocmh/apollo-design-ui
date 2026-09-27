@@ -20,6 +20,7 @@
 | D65 | `onChange` ⇒ `change` emit（C19）；deprecated×3（destroyInactivePanel / expandIconPosition / Panel 的 disabled）逐条告警 | INTENDED | L1 |
 | — | `ref` ⇒ `expose({ nativeElement })` | INTENDED | L1 |
 | — | expandIcon 回调参数含 `collapsible`（rc 传完整 panelProps ⇒ aria-label/aria-hidden 分支依赖它） | — | L1/a11y |
+| — | `Collapse.Panel` 的 `header` 收窄 string + `#header` 插槽；`extra` / `children` 由 VNode prop 改为 `#extra` / 默认插槽（children 形态为 deprecated 薄壳） | PLATFORM | L4 children-deprecated 用例 |
 
 ## 3. 引擎（engine/）
 

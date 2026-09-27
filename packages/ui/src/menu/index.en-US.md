@@ -36,6 +36,17 @@ subtitle: Menu
 { key, label, icon?, danger?, disabled?, extra?, children?, type?: 'group' | 'divider' }
 ```
 
+### Slots（C8-R2）
+
+Static sub-components `AMenuItem` / `AMenu.SubMenu` use slots for rich content (aligns with antd's VNode props):
+
+| Component | Slot | Description | Former prop |
+|---|---|---|---|
+| AMenuItem / AMenu.SubMenu | `#title` | Rich title (text may still use `title` prop; slot wins) | `title` |
+| AMenuItem | `#extra` | Right-aligned extra content (rich) | `extra` |
+
+> `title` prop is narrowed to `string` (data carrier); `extra` prop is removed — rich content goes through `items[].extra` or the `#extra` slot.
+
 ### Expose
 
 `focus(options?)`、`list`、`findItem({key})`。

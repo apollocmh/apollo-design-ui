@@ -124,9 +124,7 @@ const RULES = `.apollo-modal-confirm-rtl{direction:rtl;}
 /** 生成单个前缀下的完整样式（约定出口：ant 前缀在出口替换类名段）。 */
 export function genModalStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
-    prefixCls === 'apollo'
-      ? cssText
-      : cssText.split('.apollo-modal').join('.' + prefixCls + '-modal');
+    prefixCls === 'apollo' ? cssText : cssText.split('.apollo-modal').join(`.${prefixCls}-modal`);
   const declsText =
     prefixCls === 'apollo' ? `.apollo-modal{${DECLS}}` : `.${prefixCls}-modal{${DECLS}}`;
   return `${KEYFRAMES}

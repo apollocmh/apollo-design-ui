@@ -33,14 +33,10 @@ const PurePanel = defineComponent({
     prefixCls: { type: String, default: undefined },
     color: { type: String, default: undefined },
     placement: { type: String, default: 'top' },
-    title: {
-      type: [Object, String, Number, Function] as PropType<VNodeChild>,
-      default: undefined,
-    },
-    content: {
-      type: [Object, String, Number, Function] as PropType<VNodeChild>,
-      default: undefined,
-    },
+    // ⚠️ C8-R2：title / content 收窄为 String（富内容走同名 slot，slot 读取见下）；
+    //    公开 `Popover` 本体已同构（title/content 双通道），此处仅收窄 PurePanel 的 prop 类型。
+    title: { type: String, default: undefined },
+    content: { type: String, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: {

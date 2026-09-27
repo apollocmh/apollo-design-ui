@@ -41,6 +41,17 @@ subtitle: 导航菜单
 { key, label, icon?, danger?, disabled?, extra?, children?, type?: 'group' | 'divider' }
 ```
 
+### Slots（C8-R2）
+
+静态子组件 `AMenuItem` / `AMenu.SubMenu` 的富内容改走 slot（与 antd 的 VNode prop 对齐）：
+
+| 组件 | Slot | 说明 | 对应原 prop |
+|---|---|---|---|
+| AMenuItem / AMenu.SubMenu | `#title` | 标题富内容（文本可仍用 `title` prop，slot 优先） | `title` |
+| AMenuItem | `#extra` | 右侧附加内容（富内容） | `extra` |
+
+> `title` prop 已收窄为 `string`（数据载体）；`extra` prop 已删除，富内容统一走 `items[].extra` 或 `#extra` slot。
+
 ### Expose
 
 `focus(options?)`、`list`、`findItem({key})`。

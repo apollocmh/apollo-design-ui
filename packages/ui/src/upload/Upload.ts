@@ -90,10 +90,8 @@ export const UploadComponent = defineComponent({
     locale: { type: Object as PropType<UploadLocale>, default: undefined },
     id: { type: String, default: undefined },
     previewFile: { type: Function as PropType<UploadProps['previewFile']>, default: undefined },
-    iconRender: { type: Function as PropType<UploadProps['iconRender']>, default: undefined },
     isImageUrl: { type: Function as PropType<UploadProps['isImageUrl']>, default: undefined },
     progress: { type: Object as PropType<UploadProps['progress']>, default: undefined },
-    itemRender: { type: Function as PropType<UploadProps['itemRender']>, default: undefined },
     maxCount: { type: Number, default: undefined },
     capture: {
       type: [String, Boolean] as PropType<string | 'user' | 'environment' | boolean | null>,
@@ -439,6 +437,41 @@ export const UploadComponent = defineComponent({
       if (!showUploadListEnabled.value) {
         return button;
       }
+      // API 架构修正（H2）：下列 VNodeChild/fn 渲染入口原本是 React 式 `ReactNode | fn`
+      // prop，已改为 Upload 的 scoped slot（#iconRender / #itemRender / #removeIcon /
+      // #previewIcon / #downloadIcon / #extra），由 Upload 主组件把 slot 内容包装成
+      // fn 传给内部 UploadList（内部 fn prop 合法，见 interface.ts / UploadList.ts）。
+      type ItemRenderActions = {
+        download: () => void;
+        preview: () => void;
+        remove: () => void;
+      };
+      const iconRender = slots.iconRender
+        ? (file: UploadFile, listType?: UploadListType) => slots.iconRender?.({ file, listType })
+        : undefined;
+      const itemRender = slots.itemRender
+        ? (
+            originNode: VNodeChild,
+            file: UploadFile,
+            fileList: UploadFile[],
+            actions: ItemRenderActions,
+          ) => slots.itemRender?.({ originNode, file, fileList, actions })
+        : undefined;
+      const removeIcon = slots.removeIcon
+        ? (file: UploadFile) => slots.removeIcon?.({ file })
+        : undefined;
+      const previewIcon = slots.previewIcon
+        ? (file: UploadFile) => slots.previewIcon?.({ file })
+        : undefined;
+      const downloadIcon = slots.downloadIcon
+        ? (file: UploadFile) => slots.downloadIcon?.({ file })
+        : undefined;
+      const extra = slots.extra ? (file: UploadFile) => slots.extra?.({ file }) : undefined;
+      // appendAction：#appendAction slot 优先，否则默认上传按钮（picture-card/circle 形态）。
+      const appendSlotNodes = slots.appendAction?.();
+      const resolvedAppendAction = appendSlotNodes?.length
+        ? (appendSlotNodes[0] as VNodeLike)
+        : button;
       return h(UploadList, {
         classNames: mergedClassNames.value,
         styles: mergedStyles.value,
@@ -452,20 +485,20 @@ export const UploadComponent = defineComponent({
         showRemoveIcon: realShowRemoveIcon.value as boolean,
         showPreviewIcon: showUploadListResolved.value?.showPreviewIcon ?? true,
         showDownloadIcon: showUploadListResolved.value?.showDownloadIcon ?? false,
-        removeIcon: showUploadListResolved.value?.removeIcon,
-        previewIcon: showUploadListResolved.value?.previewIcon,
-        downloadIcon: showUploadListResolved.value?.downloadIcon,
-        iconRender: props.iconRender,
-        extra: showUploadListResolved.value?.extra,
+        removeIcon,
+        previewIcon,
+        downloadIcon,
+        iconRender,
+        extra,
         locale: {
           ...contextLocale,
           ...props.locale,
         } as UploadLocale,
         isImageUrl: props.isImageUrl,
         progress: mergedProgress.value,
-        appendAction: button,
+        appendAction: resolvedAppendAction,
         appendActionVisible: buttonVisible,
-        itemRender: props.itemRender,
+        itemRender,
         disabled: mergedDisabled.value,
       } as never);
     };

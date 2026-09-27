@@ -36,9 +36,11 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
       }),
   },
   'tooltip:open-zero-title': {
+    // C8-R2：0 走 `#title` 插槽（isRenderable(0) ⇒ 有内容）
     render: () =>
-      h(Tooltip, { ...BP, title: 0, open: true, id: 'tip-4' } as never, {
+      h(Tooltip, { ...BP, open: true, id: 'tip-4' } as never, {
         default: () => 'target',
+        title: () => 0,
       }),
   },
   'tooltip:open-existing-describedby': {

@@ -5,11 +5,31 @@
  * registerPath 并渲染 null；正常模式渲染 li[role=menuitem]。Menu 主体渲染
  * 两棵子树实现（rc 的 measureChildList 同构）。
  */
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+
+import { isEmptyVNode } from '@apollo-design/utils';
+import { computed, defineComponent, h, isVNode, type PropType, Text, type VNodeChild } from 'vue';
 
 import { useFullPath, useMeasure, useMenuContext } from './context';
 import { getMenuId, KeyCode } from './engine/use-accessibility';
 import type { MenuClickEventHandler, MenuHoverEventHandler, RenderIconType } from './interface';
+
+/** 解包 Vue slot 归一结果：单元素数组 ⇒ 元素；Text VNode（string slot 归一产物）⇒ 字符串。 */
+function unwrapSlotResult(nodes: unknown): unknown {
+  let r = nodes;
+  if (Array.isArray(r) && r.length === 1) r = r[0];
+  if (isVNode(r) && r.type === Text) r = (r.children as string) ?? '';
+  return r;
+}
+
+/** 读具名 slot；无 slot 返回 undefined，空 slot 归一成 comment ⇒ 返回 null（隐藏）。 */
+function readSlot(slots: Record<string, unknown>, name: string): unknown {
+  const fn = (slots as Record<string, (() => unknown) | undefined>)[name];
+  if (typeof fn !== 'function') return undefined;
+  const nodes = fn();
+  if (nodes === undefined) return undefined;
+  const resolved = unwrapSlotResult(nodes);
+  return isEmptyVNode(resolved as never) ? null : resolved;
+}
 
 const MenuItem = defineComponent({
   name: 'AMenuItem',
@@ -21,18 +41,21 @@ const MenuItem = defineComponent({
       type: [Object, String, Number, Function] as PropType<RenderIconType>,
       default: undefined,
     },
-    title: { type: [String, Object, Number] as PropType<VNodeChild>, default: undefined },
+    /** 文本主导：收窄 String；富内容走 #title slot（优先于 prop）。 */
+    title: { type: String, default: undefined },
     /** items 的 string label（collapsed 态 noicon 首字符用；rc 的 label 判定）。 */
     labelText: { type: String, default: undefined },
     overflowDisabled: { type: Boolean, default: undefined },
     overflowCls: { type: String, default: undefined },
-    extra: { type: [Object, String, Number] as PropType<VNodeChild>, default: undefined },
+    // extra 为 VNode 主导 —— 已删除 prop，改 #extra slot（见 render 中 readSlot）。
     itemData: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     onMouseEnter: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
     onMouseLeave: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
     onClick: { type: Function as PropType<MenuClickEventHandler>, default: undefined },
   },
   setup(props, { slots, attrs }) {
+    const mergedTitle = (): unknown => readSlot(slots, 'title') ?? props.title;
+    const mergedExtra = (): unknown => readSlot(slots, 'extra');
     const measure = useMeasure();
     const connectedKeyPath = useFullPath(props.eventKey);
 
@@ -60,8 +83,8 @@ const MenuItem = defineComponent({
           key: eventKey,
           label: children,
           itemIcon: props.icon,
-          extra: props.extra,
-          title: props.title,
+          extra: mergedExtra(),
+          title: mergedTitle(),
         };
         return {
           key: eventKey,
@@ -158,9 +181,12 @@ const MenuItem = defineComponent({
           : [
               h('span', { class: `${ctx.prefixCls}-title-content` }, [
                 children,
-                props.extra !== undefined && props.extra !== null
-                  ? h('span', { class: `${ctx.prefixCls}-item-extra` }, props.extra)
-                  : null,
+                (() => {
+                  const extra = mergedExtra();
+                  return extra !== undefined && extra !== null
+                    ? h('span', { class: `${ctx.prefixCls}-item-extra` }, [extra as VNodeChild])
+                    : null;
+                })(),
               ]),
               mergedItemIcon
                 ? h(

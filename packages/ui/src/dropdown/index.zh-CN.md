@@ -30,10 +30,12 @@ subtitle: 下拉菜单
 | autoAdjustOverflow | 溢出自动调整 | `boolean` | `true` |
 | disabled | 禁用（不响应触发） | `boolean` | `false` |
 | destroyOnHidden | 关闭后卸载 portal | `boolean` | `false` |
-| popupRender | 自定义浮层内容 | `(node) => VNodeChild` | — |
 | mouseEnterDelay / mouseLeaveDelay | 延迟（秒） | `number` | `0.15 / 0.1` |
 | classNames / styles | 语义槽 `root/item/itemTitle/itemIcon/itemContent` | — | — |
-| overlayClassName / overlayStyle / dropdownRender / destroyPopupOnHide | ⚠️ 已废弃 | — | — |
+| overlayClassName / overlayStyle / destroyPopupOnHide | ⚠️ 已废弃 | — | — |
+
+> ⚠️ C8-R2：`popupRender(node)` / deprecated `dropdownRender` / `buttonsRender` / `icon` 已删除 ——
+> 分别改用 `#popupRender="{ originNode }"`、`#buttonsRender="{ buttons }"`、`#icon` 插槽。
 
 ### DropdownButton
 

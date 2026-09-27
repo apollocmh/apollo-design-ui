@@ -25,13 +25,13 @@ describe('parseItems · rc convertItemsToNodes 同判', () => {
       { label: 'sub', key: 's', children: [{ label: 'in', key: 'i' }] },
       { type: 'group', label: 'g', key: 'g', children: [{ label: 'gi', key: 'gi' }] },
     ]);
-    expect(nodes[0]!.kind).toBe('submenu');
-    if (nodes[0]!.kind === 'submenu') {
-      expect(nodes[0]!.children[0]).toMatchObject({ kind: 'item', key: 'i' });
+    expect(nodes[0]?.kind).toBe('submenu');
+    if (nodes[0]?.kind === 'submenu') {
+      expect(nodes[0]?.children[0]).toMatchObject({ kind: 'item', key: 'i' });
     }
-    expect(nodes[1]!.kind).toBe('group');
-    if (nodes[1]!.kind === 'group') {
-      expect(nodes[1]!.children[0]).toMatchObject({ kind: 'item', key: 'gi' });
+    expect(nodes[1]?.kind).toBe('group');
+    if (nodes[1]?.kind === 'group') {
+      expect(nodes[1]?.children[0]).toMatchObject({ kind: 'item', key: 'gi' });
     }
   });
 
@@ -42,8 +42,8 @@ describe('parseItems · rc convertItemsToNodes 同判', () => {
       { label: 'x', key: 'x', children: [] },
     ]);
     expect(nodes).toHaveLength(2);
-    expect(nodes[0]!.kind).toBe('divider');
-    expect(nodes[1]!.kind).toBe('item');
+    expect(nodes[0]?.kind).toBe('divider');
+    expect(nodes[1]?.kind).toBe('item');
   });
 });
 

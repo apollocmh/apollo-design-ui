@@ -27,7 +27,7 @@
  * 8. **size 类名只对 medium/middle 与 small**：`-medium` / `-small`；large/default 无类。
  */
 
-import { useDevWarning } from '@apollo-design/utils';
+import { isEmptyVNode, useDevWarning } from '@apollo-design/utils';
 import {
   Comment,
   computed,
@@ -90,8 +90,9 @@ export const DescriptionsComponent = defineComponent({
     id: { type: String, default: undefined },
     bordered: { type: Boolean, default: undefined },
     size: { type: String as PropType<NonNullable<DescriptionsProps['size']>>, default: undefined },
-    title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // ⚠️ C8-R2：原 `extra` 删除改为 `#extra` slot（空 slot 等价隐藏）；`title` 收窄为
+    //    String（富标题走 `#title` slot，slot 优先）。
+    title: { type: String, default: undefined },
     column: {
       type: [Number, Object] as PropType<DescriptionsProps['column']>,
       default: undefined,
@@ -124,6 +125,15 @@ export const DescriptionsComponent = defineComponent({
     const { getPrefixCls } = context;
     const direction = useDirection();
     const devWarning = useDevWarning('Descriptions');
+
+    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? null : nodes;
+    };
 
     // ============================== Warning ==============================
     watchEffect(() => {
@@ -461,8 +471,13 @@ export const DescriptionsComponent = defineComponent({
       const size = mergedSize.value;
 
       // 判据 8：medium/middle → -medium；small → -small；large/default 无类
-      const hasTitle = props.title !== undefined && props.title !== null;
-      const hasExtra = props.extra !== undefined && props.extra !== null;
+      const titleSlot = readSlot('title');
+      const mergedTitle: unknown = titleSlot !== undefined ? titleSlot : props.title;
+      const hasTitle = mergedTitle !== null && mergedTitle !== undefined;
+
+      const extraSlot = readSlot('extra');
+      const mergedExtra: unknown = extraSlot;
+      const hasExtra = mergedExtra !== null && mergedExtra !== undefined;
 
       const {
         class: _attrClass,
@@ -508,7 +523,7 @@ export const DescriptionsComponent = defineComponent({
                       class: [`${cls}-title`, mergedClassNames.value.title],
                       ...styleAttrs(mergedStyles.value.title),
                     },
-                    [props.title],
+                    [mergedTitle as VNodeChild],
                   ),
                 hasExtra &&
                   h(
@@ -517,7 +532,7 @@ export const DescriptionsComponent = defineComponent({
                       class: [`${cls}-extra`, mergedClassNames.value.extra],
                       ...styleAttrs(mergedStyles.value.extra),
                     },
-                    [props.extra],
+                    [mergedExtra as VNodeChild],
                   ),
               ],
             ),

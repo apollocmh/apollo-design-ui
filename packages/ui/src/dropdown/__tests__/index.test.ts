@@ -182,21 +182,19 @@ describe('Dropdown · L1 Override 通道', () => {
     expect(icon).not.toBeNull();
   });
 
-  it('deprecated 告警 ×4（dropdownRender/destroyPopupOnHide/overlayClassName/overlayStyle）', async () => {
+  it('deprecated 告警 ×3（destroyPopupOnHide/overlayClassName/overlayStyle；dropdownRender 已随 C8-R2 删除）', async () => {
     const out: string[] = [];
     const err = vi.spyOn(console, 'error').mockImplementation((...args) => {
       out.push(args.map(String).join(' '));
     });
     mountDropdown({
       open: true,
-      dropdownRender: (n: unknown) => n as never,
       destroyPopupOnHide: true,
       overlayClassName: 'legacy',
       overlayStyle: { color: 'red' },
     });
     await nextTick();
     const messages = out.join('\n');
-    expect(messages).toContain('`dropdownRender` is deprecated');
     expect(messages).toContain('`destroyPopupOnHide` is deprecated');
     expect(messages).toContain('`overlayClassName` is deprecated');
     expect(messages).toContain('`overlayStyle` is deprecated');

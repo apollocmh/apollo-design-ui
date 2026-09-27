@@ -89,6 +89,15 @@ root / wrapper / icon / title   // 单条级
 
 > ⚠️ 本仓只支持**对象形态**（函数式语义槽 PENDING，D36 同判）。
 
+### Slots（C8-R2，仅 `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板）
+
+| Slot | 说明 | 参数 |
+|---|---|---|
+| content | 富内容（文本 `content` prop 等价，slot 优先） | — |
+| icon | 自定义图标（空 slot 等价隐藏） | — |
+
+> `message.open({ content, icon })` 的命令式入参保持 `VNodeChild`（程序化上下文，无模板）。
+
 ### 类型导出
 
 `MessageArgsProps`、`MessageConfigOptions`、`MessageInstance`、`MessageType`、

@@ -142,7 +142,7 @@ describe('notification engine · notice 的 DOM 契约', () => {
     const { wrapper, container, api } = mountHolder();
     api().open({ key: 'k', title: 'T' });
     await flushAll();
-    expect(notices(container)[0]!.querySelector('.apollo-notification-notice-wrapper')).toBeNull();
+    expect(notices(container)[0]?.querySelector('.apollo-notification-notice-wrapper')).toBeNull();
     wrapper.unmount();
   });
 
@@ -160,7 +160,7 @@ describe('notification engine · notice 的 DOM 契约', () => {
     await flushAll();
     const btn = container.querySelector('.apollo-notification-notice-close');
     expect(btn).not.toBeNull();
-    expect(btn!.getAttribute('aria-label')).toBe('Close');
+    expect(btn?.getAttribute('aria-label')).toBe('Close');
     wrapper.unmount();
   });
 });

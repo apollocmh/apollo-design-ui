@@ -5,7 +5,7 @@
  * **逐字段对齐**（规则 R7）。差异：children 不在 Props（规则 C19，默认插槽）。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 
 /** 异常状态（数字与字符串都收 —— antd 的 ExceptionStatusType 逐字）。 */
@@ -36,16 +36,16 @@ export interface ResultSemanticStyles {
 export interface ResultProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-result`。 */
   prefixCls?: string;
-  /** 自定义图标（异常状态 403/404/500 忽略此 prop，恒渲染插画；null/false 显式禁用）。 */
-  icon?: VNodeChild;
+  /** 自定义图标：null/false 显式禁用（undefined 走 IconMap）；富图标改 #icon slot。 */
+  icon?: boolean | null;
   /** 结果状态。 */
   status?: ResultStatusType;
-  /** 标题。 */
-  title?: VNodeChild;
-  /** 副标题。 */
-  subTitle?: VNodeChild;
-  /** 操作区。 */
-  extra?: VNodeChild;
+  /** 标题（文本；富内容走 #title slot，优先于 prop）。 */
+  title?: string;
+  /** 副标题（文本；富内容走 #subTitle slot，优先于 prop）。 */
+  subTitle?: string;
+  /** 操作区：VNode 主导，已删除 prop，改 #extra slot。 */
+  extra?: never;
   /** 透传类名（语义槽位请用 classNames）。 */
   className?: string;
   /** 透传根样式（折进 styles.root，与 antd 的 useSemanticRootStyle 同构）。 */

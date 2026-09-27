@@ -36,7 +36,16 @@
 import { captureWarnings, flushAll, mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { type ComputedRef, defineComponent, effectScope, h, nextTick, ref } from 'vue';
+import {
+  type ComputedRef,
+  defineComponent,
+  effectScope,
+  h,
+  nextTick,
+  ref,
+  shallowRef,
+  type VNodeChild,
+} from 'vue';
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { setDefaultIndicator } from '../defaultIndicator';
 import { Spin } from '../index';
@@ -227,7 +236,8 @@ describe('Spin · 基本结构', () => {
 
 describe('Spin · 指示器', () => {
   it('自定义指示器：VNode 被克隆并追加 `-dot` 与语义化类名', () => {
-    const w = mountSpin({ indicator: h('div', { class: 'custom-indicator' }) });
+    // C8-R2：indicator 走 `#indicator` 插槽
+    const w = mountSpin({}, { indicator: () => h('div', { class: 'custom-indicator' }) });
     const el = w.find('.custom-indicator');
     expect(el.exists()).toBe(true);
     expect(el.classes()).toContain(`${P}-dot`);
@@ -235,8 +245,8 @@ describe('Spin · 指示器', () => {
     expect(w.find(`.${P}-dot-holder`).exists()).toBe(false);
   });
 
-  it('★ indicator=null 回落到默认 Looper（`??` 而不是 `||`，`null` 与 `undefined` 都回落）', () => {
-    const w = mountSpin({ indicator: null });
+  it('★ 空插槽回落到默认 Looper（isEmptyVNode 归一 —— 与 prop 时代 `indicator: null` 的 `??` 回落同义）', () => {
+    const w = mountSpin({}, { indicator: () => null });
     expect(w.findAll(`.${P}-dot-item`)).toHaveLength(4);
   });
 
@@ -248,7 +258,7 @@ describe('Spin · 指示器', () => {
         return () => h('div', { class: 'custom-indicator' }, String(props.percent));
       },
     });
-    const w = mountSpin({ indicator: h(MyIndicator), percent: 23 });
+    const w = mountSpin({ percent: 23 }, { indicator: () => h(MyIndicator) });
     expect(w.find('.custom-indicator').text()).toBe('23');
   });
 
@@ -276,9 +286,10 @@ describe('Spin · 指示器', () => {
     expect(
       mountWithConfig(
         { indicator: h('em', { class: 'from-config' }) },
-        {
-          indicator: h('em', { class: 'from-prop' }),
-        },
+        {},
+        // C8-R2：prop 时代的三级优先 `indicator > ConfigProvider > default`
+        // 变成 `#indicator 插槽 > ConfigProvider > default`
+        { indicator: () => h('em', { class: 'from-prop' }) },
       )
         .find('.from-prop')
         .exists(),
@@ -672,10 +683,12 @@ describe('L2 · 交互 · 其它状态切换', () => {
     expect(w.classes()).toContain(`${P}-lg`);
   });
 
-  it('indicator 从默认切到自定义', async () => {
-    const w = mountSpin();
+  it('indicator 从默认切到自定义（插槽内容的响应式切换）', async () => {
+    const custom = shallowRef<VNodeChild>(undefined);
+    const w = mountSpin({}, { indicator: () => custom.value });
     expect(w.findAll(`.${P}-dot-item`)).toHaveLength(4);
-    await w.setProps({ indicator: h('div', { class: 'custom-indicator' }) });
+    custom.value = h('div', { class: 'custom-indicator' });
+    await nextTick();
     expect(w.findAll(`.${P}-dot-item`)).toHaveLength(0);
     expect(w.find('.custom-indicator').exists()).toBe(true);
   });

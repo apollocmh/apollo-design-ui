@@ -62,15 +62,25 @@ describe('Statistic · 结构', () => {
     expect(w2.find('.apollo-statistic-content-value-decimal').exists()).toBe(false);
   });
 
-  it('title/prefix/suffix 传 0 也渲染（isRenderable 判据）', () => {
-    const w = mount(() => h(Statistic, { title: 0, prefix: 0, suffix: 0 }));
+  it('title/prefix/suffix 经插槽传 0 也渲染（isRenderable 判据；C8-R2 后 0 只能走 slot）', () => {
+    const w = mount(() => h(Statistic, {}, { title: () => 0, prefix: () => 0, suffix: () => 0 }));
     expect(w.find('.apollo-statistic-title').text()).toBe('0');
     expect(w.find('.apollo-statistic-content-prefix').text()).toBe('0');
     expect(w.find('.apollo-statistic-content-suffix').text()).toBe('0');
   });
 
-  it('title/prefix/suffix 传布尔与空串不渲染', () => {
-    const w = mount(() => h(Statistic, { title: false, prefix: '', suffix: null }));
+  it('空插槽与空串都不渲染（空 slot 经 isEmptyVNode / isRenderable 判空）', () => {
+    const w = mount(() =>
+      h(
+        Statistic,
+        { title: '', prefix: '', suffix: '' },
+        {
+          title: () => null,
+          prefix: () => null,
+          suffix: () => null,
+        },
+      ),
+    );
     expect(w.find('.apollo-statistic-header').exists()).toBe(false);
     expect(w.find('.apollo-statistic-content-prefix').exists()).toBe(false);
     expect(w.find('.apollo-statistic-content-suffix').exists()).toBe(false);

@@ -138,8 +138,15 @@ export interface DrawerPanelProps {
  *
  * 前 8 个字段来自 **rc-drawer**（本仓不引 rc 类型，逐条展开）；
  * 其余来自 antd 的 `DrawerProps` 自有字段与 `DrawerPanelProps`。
+ *
+ * ⚠️ C8-R2：`DrawerPanelProps` 的 `footer` / `extra` / `closeIcon` 是 React 式 VNode prop，
+ *    在公开 `DrawerProps` 中已删除，改同名 slot（`#footer` / `#extra` / `#closeIcon`，空 slot
+ *    等价隐藏）；`title` 收窄为 `string`（富标题走 `#title` slot，slot 优先）。
  */
-export interface DrawerProps extends DrawerPanelProps {
+export interface DrawerProps
+  extends Omit<DrawerPanelProps, 'title' | 'footer' | 'extra' | 'closeIcon'> {
+  /** 标题（文本）。富标题走 `#title` slot（slot 优先）。 */
+  title?: string;
   // ---------------------------- rc-drawer 侧 ----------------------------
   /** 是否显示。 */
   open?: boolean;
@@ -197,7 +204,10 @@ export interface DrawerProps extends DrawerPanelProps {
 }
 
 /** `_InternalPanelDoNotUseOrYouWillBeFired` 的 props。 */
-export interface DrawerPurePanelProps extends DrawerPanelProps {
+export interface DrawerPurePanelProps
+  extends Omit<DrawerPanelProps, 'title' | 'footer' | 'extra' | 'closeIcon'> {
+  /** 标题（文本）。富标题走 `#title` slot（slot 优先）。 */
+  title?: string;
   style?: CSSProperties;
   className?: string;
   /** 默认 `'right'`。 */

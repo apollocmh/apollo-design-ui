@@ -58,18 +58,22 @@ export default {
   ],
 
   semantic: () =>
-    h(Alert, {
-      title: 'Info Text',
-      description: 'Info Description',
-      showIcon: true,
-      closable: true,
-      type: 'info',
-      action: h('button', { type: 'button' }, 'A'),
-      classNames: { root: 'demo-alert-root', title: 'demo-alert-title' },
-      styles: {
-        icon: { fontSize: '18px' },
-        section: { fontWeight: 500 },
-        close: { color: 'rgb(128, 0, 128)' },
+    // C8-R2：action 走 `#action` 插槽
+    h(
+      Alert,
+      {
+        title: 'Info Text',
+        description: 'Info Description',
+        showIcon: true,
+        closable: true,
+        type: 'info',
+        classNames: { root: 'demo-alert-root', title: 'demo-alert-title' },
+        styles: {
+          icon: { fontSize: '18px' },
+          section: { fontWeight: 500 },
+          close: { color: 'rgb(128, 0, 128)' },
+        },
       },
-    }),
+      { action: () => h('button', { type: 'button' }, 'A') },
+    ),
 };

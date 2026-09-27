@@ -42,6 +42,9 @@ export default defineComponent({
     classNames: { type: Object as PropType<NoticeClassNames>, default: undefined },
     styles: { type: Object as PropType<NoticeStyles>, default: undefined },
     components: { type: Object as PropType<NoticeProps['components']>, default: undefined },
+    // 内部：由父组件程序化传递/命令式 API 驱动，无模板上下文，VNode prop 合法
+    // ⚠️ C8-R2：`title` / `description` / `icon` / `actions` 是内部 VNode prop（由 message /
+    //    notification 的 PurePanel 把同名 slot / String prop 归一后透传），不暴露为公开 slot。
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     description: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },

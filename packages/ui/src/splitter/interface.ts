@@ -82,8 +82,6 @@ export interface SplitterProps {
   orientation?: Orientation | undefined;
   vertical?: boolean | undefined;
   destroyOnHidden?: boolean | undefined;
-  /** 自定义拖拽手柄图标（替换默认 spinner 样式）。 */
-  draggerIcon?: VNodeChild | undefined;
   /** @deprecated 用 `collapsible.icon`。 */
   collapsibleIcon?: SplitterLegacyCollapsibleIcon | undefined;
   lazy?: boolean | undefined;

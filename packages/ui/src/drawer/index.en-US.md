@@ -24,9 +24,11 @@ See [`demo/`](./demo) (18 demos, one-to-one with antd).
 | placement | Placement | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` |
 | size | Preset or explicit size | `'default' \| 'large' \| number \| string` | `'default'` (378) |
 | defaultSize | Default size (**the source of the vertical default**) | `number` | `378` |
-| title / footer / extra | Title / footer / header-right | `VNodeChild` | — |
+| title | Title (text; rich title via `#title` slot, slot first) | `string` | — |
+| footer | Footer (⚠️ moved to `#footer` slot; empty slot = hidden) | `slot` | — |
+| extra | Header-right area (⚠️ moved to `#extra` slot) | `slot` | — |
 | closable | Close button; `false` removes it; object supports `placement: 'start' \| 'end'` | `boolean \| null \| {...}` | `true` |
-| closeIcon | Custom close icon | `VNodeChild` | — |
+| closeIcon | Custom close icon (⚠️ moved to `#closeIcon` slot) | `slot` | — |
 | loading | Skeleton in the body | `boolean` | `false` |
 | mask | Mask; `false` adds `no-mask` to the root | `boolean \| { enabled?, blur?, closable? }` | `true` |
 | maskClosable | Close on mask click (⚠️ deprecated ⇒ `mask.closable`) | `boolean` | `true` |

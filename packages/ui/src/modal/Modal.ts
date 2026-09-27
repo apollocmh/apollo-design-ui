@@ -12,7 +12,9 @@
  *   4. `focusable = { ...contextFocusable, ...props.focusable }`，
  *      默认 trap = mask 是否渲染，`focusTriggerAfterClose` 默认 true；
  *   5. `handleCancel` **在 `confirmLoading` 时直接 return**（不关、不回调）；
- *   6. `footer !== null && !loading` 才渲染 Footer —— `loading` 时 footer 强制不渲染；
+ *   6. `#footer` slot 非空且 !loading 才渲染 Footer —— `loading` 时 footer 强制不渲染；
+ *      C8-R2：footer / closeIcon / title 的 ReactNode prop 已删除，一律 slot（文本
+ *      title / okText / cancelText 保留 string prop，slot 优先）；
  *   7. `closable` 走 `useClosable`（Tag 建的那套三方合并），
  *      `closeIconRender` 把图标包成 `{p}-close-x`；
  *   8. `modalRender` 非空 ⇒ 面板多包一层 `{p}-render`，且 watermark 的选择器换成它；
@@ -27,7 +29,7 @@
  */
 import { CloseOutlined } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
-import { isNumber, isPlainObject, omit, pickAttrs } from '@apollo-design/utils';
+import { isEmptyVNode, isNumber, isPlainObject, omit, pickAttrs } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
 import { pickClosable, useClosable } from '../_internal/use-closable';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -72,13 +74,9 @@ export default defineComponent({
       default: DEFAULT_WIDTH,
     },
     height: { type: [String, Number] as PropType<string | number>, default: undefined },
-    title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    footer: {
-      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
-      default: undefined,
-    },
-    okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    title: { type: String, default: undefined },
+    okText: { type: String, default: undefined },
+    cancelText: { type: String, default: undefined },
     okType: { type: String as PropType<ModalOkType>, default: undefined },
     confirmLoading: { type: Boolean, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
@@ -93,7 +91,6 @@ export default defineComponent({
       type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
       default: undefined,
     },
-    closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     mask: { type: [Boolean, Object] as unknown as PropType<MaskType>, default: undefined },
     maskClosable: { type: Boolean, default: undefined },
     maskStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
@@ -241,11 +238,25 @@ export default defineComponent({
     //    本仓的 `useZIndex` 默认值就是它（`DEFAULT_Z_INDEX_POPUP_BASE` = 1000）。
     const zIndex = useZIndex('Modal', () => props.zIndex);
 
+    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+    /**
+     * 读一个 slot；「提供了但渲染为空」归一为 null（语义：隐藏），「未提供」为
+     * undefined。判空必须走 `isEmptyVNode` —— Vue 会把 slot 返回的 null / 空数组
+     * 归一成 comment vnode，不能比 `null` / `length`（is.ts §空渲染判据）。
+     */
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? null : nodes;
+    };
+
     // =========================== Closable =============================
     const closableResult = useClosable(
       pickClosable(() => ({
         closable: props.closable as ClosableType,
-        closeIcon: props.closeIcon,
+        closeIcon: readSlot('closeIcon'),
       })),
       pickClosable(
         computed(() => ({
@@ -384,19 +395,28 @@ export default defineComponent({
       return vars;
     });
 
+    // ============================ Title ==============================
+    const mergedTitle = computed<unknown>(() => {
+      const t = readSlot('title');
+      if (t !== undefined) return t;
+      return props.title;
+    });
+
     // ============================ Footer ==============================
     const dialogFooter = computed<VNodeChild>(() => {
-      if (props.footer === null || props.loading) return null;
+      if (props.loading) return null;
+      // 有 `#footer` slot ⇒ 用 slot 内容；空 slot（comment/空数组）等价「隐藏」
+      const footerSlot = readSlot('footer');
+      if (footerSlot !== undefined) return footerSlot as VNodeChild;
       return h(ModalPanel, {
-        okText: props.okText,
+        okText: readSlot('okText') ?? props.okText,
         okType: props.okType,
-        cancelText: props.cancelText,
+        cancelText: readSlot('cancelText') ?? props.cancelText,
         confirmLoading: props.confirmLoading,
         okButtonProps: { ...config.okButtonProps, ...props.okButtonProps },
         cancelButtonProps: { ...config.cancelButtonProps, ...props.cancelButtonProps },
         onOk: handleOk,
         onCancel: handleCancel,
-        footer: props.footer,
       } as never);
     });
 
@@ -468,7 +488,7 @@ export default defineComponent({
           afterClose: props.afterClose,
           afterOpenChange: props.afterOpenChange,
           onClose: handleCancel,
-          title: props.title,
+          title: mergedTitle.value,
           bodyStyle: props.bodyStyle,
           bodyProps: props.bodyProps,
           modalRender: mergedModalRender.value,

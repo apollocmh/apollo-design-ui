@@ -63,7 +63,7 @@ describe('Menu · 语义断言', () => {
     expect(controls).not.toBeNull();
     const sub = wrapper.element.querySelector(`ul[id='${controls}']`);
     expect(sub).not.toBeNull();
-    expect(sub!.getAttribute('role')).toBe('menu');
+    expect(sub?.getAttribute('role')).toBe('menu');
     wrapper.unmount();
   });
 

@@ -23,16 +23,14 @@ subtitle: 对话框
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | open | 是否显示 | `boolean` | `false` |
-| title | 标题 | `VNodeChild` | — |
-| footer | 页脚。`null` ⇒ 不渲染；函数形态收到 `(originNode, { OkBtn, CancelBtn })` | `VNodeChild \| Function` | 默认「取消 + 确定」 |
+| title | 标题（同名 `#title` slot 优先） | `string` | — |
 | width | 宽度（可传响应式断点对象） | `string \| number \| Partial<Record<Breakpoint, string \| number>>` | `520` |
 | height | 高度 | `string \| number` | — |
 | loading | 内容区骨架态（**此时 footer 强制不渲染**） | `boolean` | `false` |
 | centered | 垂直居中 | `boolean` | `false` |
 | closable | 关闭按钮。`false` ⇒ 不渲染；对象可给 `disabled` / `onClose` / `afterClose` | `boolean \| {...}` | `true` |
-| closeIcon | 自定义关闭图标 | `VNodeChild` | `<CloseOutlined />` |
 | mask | 遮罩。`false` ⇒ 无遮罩；对象可给 `enabled` / `blur` / `closable` | `boolean \| { enabled?, blur?, closable? }` | `true` |
-| okText / cancelText | 按钮文案 | `VNodeChild` | locale（OK / Cancel） |
+| okText / cancelText | 按钮文案（同名 `#okText` / `#cancelText` slot 优先） | `string` | locale（OK / Cancel） |
 | okType | 确定按钮类型 | `'text' \| 'link' \| 'primary' \| 'default' \| 'dashed'` | `'primary'` |
 | confirmLoading | 确定按钮 loading（**为真时点取消不关**） | `boolean` | `false` |
 | okButtonProps / cancelButtonProps | 按钮属性 | `ButtonProps` | — |

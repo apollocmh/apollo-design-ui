@@ -41,7 +41,8 @@ export const StepHandler = defineComponent({
     disabled: { type: Boolean, default: false },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    /** 内层图标节点（antd 的 upHandler/downHandler 透传）。 */
+    /** 内层图标节点（antd 的 upHandler/downHandler 透传）。
+     *  内部：由 InputNumber 引擎程序化传递，无模板上下文，VNode prop 合法（C8-R2 §4）。 */
     node: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** 步进回调（引擎的 onInternalStep）。 */
     onStep: {

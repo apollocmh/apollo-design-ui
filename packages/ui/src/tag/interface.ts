@@ -42,11 +42,9 @@ export interface TagProps {
   bordered?: boolean;
   /** Advised to use closeIcon instead. */
   closable?: ClosableType;
-  closeIcon?: VNodeChild;
   onClose?: (e: MouseEvent) => void;
   /** 透传根样式（折进 styles.root，与 antd 的 useSemanticRootStyle 同构）。 */
   style?: CSSProperties;
-  icon?: VNodeChild;
   href?: string;
   target?: string;
   disabled?: boolean;
@@ -63,6 +61,7 @@ export interface TagRef {
 export interface TagConfig extends ComponentStyleConfig {
   variant?: TagVariant;
   closable?: ClosableType;
+  /** 程序化上下文（ConfigProvider），VNode 合法 —— 模板侧用 `#closeIcon` 插槽（C8-R2）。 */
   closeIcon?: VNodeChild;
   classNames?: TagSemanticClassNames;
   styles?: TagSemanticStyles;
@@ -78,7 +77,6 @@ export interface CheckableTagProps {
   onClick?: (e: MouseEvent) => void;
   onKeyDown?: (e: KeyboardEvent) => void;
   style?: CSSProperties;
-  icon?: VNodeChild;
   disabled?: boolean;
 }
 

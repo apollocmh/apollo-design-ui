@@ -9,6 +9,8 @@
  * v1 裁剪：popup 的精确对齐（rc PopupTrigger 的 offset 计算）PENDING ——
  * 定位按「title 正下方」轻量实现；expandIcon 的 CSS 承担；RTL 由 `-rtl` 类。
  */
+
+import { isEmptyVNode } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -18,10 +20,10 @@ import {
   type PropType,
   provide,
   Teleport,
+  Text,
   type VNode,
   type VNodeChild,
 } from 'vue';
-
 import {
   isSubPathKeyKey,
   type MenuContextData,
@@ -39,7 +41,8 @@ const SubMenu = defineComponent({
   name: 'AMenuSubMenu',
   props: {
     eventKey: { type: String, default: undefined },
-    title: { type: [String, Object, Number] as PropType<VNodeChild>, default: undefined },
+    /** 文本主导：收窄 String；富内容走 #title slot（优先于 prop）。 */
+    title: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
     danger: { type: Boolean, default: false },
     icon: {
@@ -59,7 +62,24 @@ const SubMenu = defineComponent({
       default: undefined,
     },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
+    /** 解包 Vue slot 归一结果：单元素数组 ⇒ 元素；Text VNode（string slot 归一产物）⇒ 字符串。 */
+    const unwrapSlotResult = (nodes: unknown): unknown => {
+      let r = nodes;
+      if (Array.isArray(r) && r.length === 1) r = r[0];
+      if (isVNode(r) && r.type === Text) r = (r.children as string) ?? '';
+      return r;
+    };
+    /** 读 #title slot；无 slot 返回 undefined，空 slot 归一成 comment ⇒ 返回 null。
+     *  单元素数组 / Text VNode 解包，便于 typeof 判字符串。 */
+    const readTitleSlot = (): unknown => {
+      const fn = slots.title;
+      if (typeof fn !== 'function') return undefined;
+      const nodes = fn();
+      if (nodes === undefined) return undefined;
+      const resolved = unwrapSlotResult(nodes);
+      return isEmptyVNode(resolved as never) ? null : resolved;
+    };
     const measure = useMeasure();
     const connectedPath = useFullPath(props.eventKey);
 
@@ -180,17 +200,25 @@ const SubMenu = defineComponent({
         },
         [
           // antd SubMenu titleNode 的三分支：折叠+根级+string ⇒ noicon 首字符；
-          // title 是元素（VNode，如 overflowedIndicator 的 icon）⇒ 直接渲染；
+          // title 是元素（VNode，如 overflowedIndicator 的 icon，经 #title slot）⇒ 直接渲染；
           // 其余 string ⇒ title-content 包裹。
-          ctx.inlineCollapsed && !props.icon && typeof props.title === 'string'
-            ? h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, props.title.charAt(0))
-            : isVNode(props.title)
-              ? props.title
-              : h(
-                  'span',
-                  { class: `${ctx.prefixCls}-title-content` },
-                  [props.title].filter((c) => c !== null && c !== undefined),
-                ),
+          // title 收窄 String + #title slot 优先（C8-R2）。
+          (() => {
+            const rawTitle = readTitleSlot() ?? props.title;
+            return ctx.inlineCollapsed && !props.icon && typeof rawTitle === 'string'
+              ? h(
+                  'div',
+                  { class: `${ctx.prefixCls}-inline-collapsed-noicon` },
+                  (rawTitle as string).charAt(0),
+                )
+              : isVNode(rawTitle)
+                ? rawTitle
+                : h(
+                    'span',
+                    { class: `${ctx.prefixCls}-title-content` },
+                    [rawTitle as VNodeChild].filter((c) => c !== null && c !== undefined),
+                  );
+          })(),
           // rc：expandIcon 覆盖（dropdown 的 OverrideProvider 注入 arrow icon）
           ctx.expandIcon
             ? h('span', { class: `${subMenuPrefixCls}-expand-icon` }, [

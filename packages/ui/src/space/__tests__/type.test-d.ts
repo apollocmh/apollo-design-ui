@@ -102,12 +102,12 @@ describe('Space · Props', () => {
     expectTypeOf<SpaceProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
   });
 
-  it('★ `separator` / `split` 是 `VNodeChild`（可空 —— PITFALLS 46 的类型面）', () => {
+  it('★ C8-R2 后 `separator` / `split` 收窄为 `string`（富内容走 `#separator` 插槽）', () => {
     // ⚠️ 这两个 prop 在运行时是 `VNodeChild`，而 `VNodeChild` 的联合里**含 `void`**。
     //    Vue 的 Boolean 强转会把「没传」变成 `false`，所以 `withDefaults` 必须显式给
     //    `undefined`（PITFALLS 46）。类型面上它们仍然接受 `undefined`。
-    expectTypeOf<SpaceProps['separator']>().toEqualTypeOf<VNodeChild | undefined>();
-    expectTypeOf<SpaceProps['split']>().toEqualTypeOf<VNodeChild | undefined>();
+    expectTypeOf<SpaceProps['separator']>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<SpaceProps['split']>().toEqualTypeOf<string | undefined>();
   });
 
   it('`vertical` / `wrap` 是可选布尔（不是 `boolean`）', () => {

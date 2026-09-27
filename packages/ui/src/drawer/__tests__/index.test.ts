@@ -36,7 +36,7 @@ async function mountDrawer(
 
 describe('drawer · 结构', () => {
   it('面板三段：header / body / footer', async () => {
-    const wrapper = await mountDrawer({ title: 'T', footer: 'F', extra: 'E' });
+    const wrapper = await mountDrawer({ title: 'T' }, { footer: () => 'F', extra: () => 'E' });
     expect(wrapper.find('.apollo-drawer-section').exists()).toBe(true);
     expect(wrapper.find('.apollo-drawer-header').exists()).toBe(true);
     expect(wrapper.find('.apollo-drawer-header-title').exists()).toBe(true);
@@ -83,7 +83,10 @@ describe('drawer · 关闭按钮', () => {
   });
 
   it("closable: { placement: 'end' } ⇒ 加 -close-end（且渲染在 extra 之后）", async () => {
-    const wrapper = await mountDrawer({ title: 'T', extra: 'E', closable: { placement: 'end' } });
+    const wrapper = await mountDrawer(
+      { title: 'T', closable: { placement: 'end' } },
+      { extra: () => 'E' },
+    );
     expect(wrapper.find('.apollo-drawer-close').classes()).toContain('apollo-drawer-close-end');
     wrapper.unmount();
   });

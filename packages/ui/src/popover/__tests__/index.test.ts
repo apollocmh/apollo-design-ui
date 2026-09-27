@@ -43,31 +43,31 @@ describe('Popover · L1 开合与内容', () => {
     mountPopover({ onOpenChange });
     expect(popup()).toBeNull();
 
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
     expect(container()).not.toBeNull();
-    expect(title()!.textContent).toBe('Title');
-    expect(content()!.textContent).toBe('content');
+    expect(title()?.textContent).toBe('Title');
+    expect(content()?.textContent).toBe('content');
     expect(onOpenChange).toHaveBeenCalledWith(true);
   });
 
   it('mouseleave ⇒ -hidden 残骸（removeOnLeave=false）', async () => {
     vi.useFakeTimers();
     mountPopover({});
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
 
-    await triggerEl()!.dispatchEvent(new Event('mouseleave'));
+    await triggerEl()?.dispatchEvent(new Event('mouseleave'));
     await vi.runAllTimersAsync();
     await nextTick();
-    expect(popup()!.className).toContain('apollo-popover-hidden');
+    expect(popup()?.className).toContain('apollo-popover-hidden');
   });
 
   it('非受控 + title/content 均为空 ⇒ 不开启且不发回调（onInternalOpenChange 抑制）', async () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
     mountPopover({ title: undefined, content: undefined, onOpenChange }, '');
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
     await nextTick();
     expect(container()).toBeNull();
@@ -78,25 +78,25 @@ describe('Popover · L1 开合与内容', () => {
     mountPopover({ title: undefined, content: undefined, open: true }, '');
     await nextTick();
     expect(container()).not.toBeNull();
-    expect(triggerEl()!.className).toContain('apollo-popover-open');
-    expect(triggerEl()!.getAttribute('aria-describedby')).toBe('apollo-tooltip');
+    expect(triggerEl()?.className).toContain('apollo-popover-open');
+    expect(triggerEl()?.getAttribute('aria-describedby')).toBe('apollo-tooltip');
   });
 
   it('title=0 合法（isRenderable 对 0 为真）', async () => {
     vi.useFakeTimers();
     mountPopover({ title: 0 }, 'c');
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
-    expect(title()!.textContent).toBe('0');
+    expect(title()?.textContent).toBe('0');
   });
 
   it('title/content 可为惰性函数', async () => {
     vi.useFakeTimers();
     mountPopover({ title: () => 'lazy-title', content: () => 'lazy-content' }, '');
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
-    expect(title()!.textContent).toBe('lazy-title');
-    expect(content()!.textContent).toBe('lazy-content');
+    expect(title()?.textContent).toBe('lazy-title');
+    expect(content()?.textContent).toBe('lazy-content');
   });
 
   it('受控 open：跟随 prop；update:open 与 onOpenChange 同时发出（C11）', async () => {
@@ -110,7 +110,7 @@ describe('Popover · L1 开合与内容', () => {
     await vi.runAllTimersAsync();
     expect(container()).not.toBeNull();
 
-    await triggerEl()!.dispatchEvent(new Event('mouseleave'));
+    await triggerEl()?.dispatchEvent(new Event('mouseleave'));
     await vi.runAllTimersAsync();
     expect(onOpenChange).toHaveBeenCalledWith(false);
     expect(wrapper.emitted('update:open')?.at(-1)).toEqual([false]);
@@ -119,11 +119,11 @@ describe('Popover · L1 开合与内容', () => {
   it('trigger=click：点击开启', async () => {
     vi.useFakeTimers();
     mountPopover({ trigger: 'click' });
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
     expect(container()).toBeNull();
 
-    await triggerEl()!.dispatchEvent(new Event('click'));
+    await triggerEl()?.dispatchEvent(new Event('click'));
     await vi.runAllTimersAsync();
     expect(container()).not.toBeNull();
   });
@@ -131,9 +131,9 @@ describe('Popover · L1 开合与内容', () => {
   it('预设色 ⇒ {p}-{color} 类（样式由 popover 样式块消费 arrow-background-color）', async () => {
     vi.useFakeTimers();
     mountPopover({ color: 'blue' });
-    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
-    expect(popup()!.className).toContain('apollo-popover-blue');
+    expect(popup()?.className).toContain('apollo-popover-blue');
   });
 
   it('expose：forceAlign / nativeElement / popupElement 透传', async () => {

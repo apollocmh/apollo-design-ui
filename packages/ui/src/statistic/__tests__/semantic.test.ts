@@ -42,13 +42,13 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
     render: () => h(Statistic, { title: 'Active Users', value: 112893, precision: 2 }),
   },
   'statistic:prefix-suffix': {
+    // C8-R2：富前缀走 `#prefix` 插槽
     render: () =>
-      h(Statistic, {
-        title: 'Feedback',
-        value: 1128,
-        prefix: h('i', { class: 'my-icon' }),
-        suffix: '/ 100',
-      }),
+      h(
+        Statistic,
+        { title: 'Feedback', value: 1128, suffix: '/ 100' },
+        { prefix: () => h('i', { class: 'my-icon' }) },
+      ),
   },
   'statistic:group-separator': {
     render: () => h(Statistic, { value: 112893, groupSeparator: '__TEST__' }),
@@ -61,8 +61,9 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
   'statistic:illegal-value': { render: () => h(Statistic, { value: 'bamboo' }) },
   'statistic:dash-value': { render: () => h(Statistic, { value: '-' }) },
+  // C8-R2：0 不是 string —— 经 slot 传入（isRenderable(0) ⇒ 渲染）
   'statistic:zero-title-prefix-suffix': {
-    render: () => h(Statistic, { title: 0, prefix: 0, suffix: 0 }),
+    render: () => h(Statistic, {}, { title: () => 0, prefix: () => 0, suffix: () => 0 }),
   },
   'statistic:formatter-fn': {
     render: () => h(Statistic, { value: 1128, formatter: (v: number | string) => `*${v}*` }),
@@ -71,28 +72,32 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
     render: () => h(Statistic, { 'data-abc': '1', 'aria-label': 'label', role: 'status' }),
   },
   'statistic:semantic': {
+    // C8-R2：富前缀走 `#prefix` 插槽
     render: () =>
-      h(Statistic, {
-        title: 'T',
-        value: 11.28,
-        precision: 2,
-        prefix: h('i', { class: 'my-icon' }),
-        suffix: '%',
-        classNames: {
-          root: 'demo-root',
-          header: 'demo-header',
-          title: 'demo-title',
-          content: 'demo-content',
-          value: 'demo-value',
-          prefix: 'demo-prefix',
-          suffix: 'demo-suffix',
+      h(
+        Statistic,
+        {
+          title: 'T',
+          value: 11.28,
+          precision: 2,
+          suffix: '%',
+          classNames: {
+            root: 'demo-root',
+            header: 'demo-header',
+            title: 'demo-title',
+            content: 'demo-content',
+            value: 'demo-value',
+            prefix: 'demo-prefix',
+            suffix: 'demo-suffix',
+          },
+          styles: {
+            root: { padding: '8px' },
+            content: { color: 'red' },
+            value: { opacity: 0.8 },
+          },
         },
-        styles: {
-          root: { padding: '8px' },
-          content: { color: 'red' },
-          value: { opacity: 0.8 },
-        },
-      }),
+        { prefix: () => h('i', { class: 'my-icon' }) },
+      ),
   },
   'statistic:value-style': {
     render: () => h(Statistic, { title: 'T', value: 5, valueStyle: { color: 'red' } }),

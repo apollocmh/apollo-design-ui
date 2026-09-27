@@ -58,6 +58,21 @@ stack / style-class / update / with-btn / with-icon.
 | onClose / onClick / className / style / classNames / styles / props | same as antd | — | — |
 | message / btn | ⚠️ Deprecated: use `title` / `actions` | — | — |
 
+### Slots (C8-R2, only the `_InternalPanelDoNotUseOrYouWillBeFired` static panel)
+
+| Slot | Description | Arguments |
+|---|---|---|
+| title | Rich title (equivalent to the `title` text prop, slot first) | — |
+| message | ⚠️ Deprecated alias, same as `title` | — |
+| description | Rich description (equivalent to the `description` text prop, slot first) | — |
+| icon | Custom icon (empty slot = hidden) | — |
+| actions | Action area (empty slot = hidden) | — |
+| btn | ⚠️ Deprecated alias, same as `actions` | — |
+| closeIcon | Custom close icon (empty slot = hidden) | — |
+
+> The imperative input `notification.open({ title, description, icon, actions, closeIcon })` keeps
+> `VNodeChild` (programmatic context, no template).
+
 ### `GlobalConfigProps` (`config()`) and `NotificationConfig` (`useNotification()`)
 
 `top` / `bottom` / `duration` / `showProgress` / `pauseOnHover` / `prefixCls` / `getContainer` /

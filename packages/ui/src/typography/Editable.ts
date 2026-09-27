@@ -85,6 +85,7 @@ export const Editable = defineComponent({
     /** antd 默认 `true`；本阶段只透传，不做高度自适应（D-typography-2）。 */
     autoSize: { type: [Boolean, Object] as PropType<boolean | AutoSizeType>, default: true },
     /** `undefined` = 用默认的 `EnterOutlined`；`null` = 不渲染。 */
+    // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（源自 editable.enterIcon）
     enterIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** 用户传的标签名（`div` / `span` / `h1`…）。用来加 `-{component}` 类名。 */
     component: { type: String, default: undefined },

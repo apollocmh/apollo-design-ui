@@ -41,6 +41,7 @@ import {
   useAttrs,
   useSlots,
   type VNode,
+  type VNodeChild,
   watchEffect,
 } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -98,7 +99,7 @@ const props = withDefaults(defineProps<SpaceProps>(), {
 
 const slots = useSlots();
 const attrs = useAttrs();
-defineSlots<{ default?: SpaceSlot }>();
+defineSlots<{ default?: SpaceSlot; separator?: () => VNodeChild }>();
 
 const {
   getPrefixCls,
@@ -162,8 +163,16 @@ const mergedAlign = computed<SpaceAlign | undefined>(() =>
   props.align === undefined && !mergedVertical.value ? 'center' : props.align,
 );
 
-/** `separator ?? split` —— `??` 而不是 `||`，传 `''` 时不回落（上游：`index.tsx:105`）。 */
-const mergedSeparator = computed(() => props.separator ?? props.split);
+/**
+ * 分隔符合并序：`#separator` 插槽 → `separator` 文本 prop → 已废弃的 `split`。
+ * `??` 而不是 `||`：`separator: ''` 不回落到 `split`；空插槽归一为 `''`（显式隐藏）。
+ */
+const mergedSeparator = computed(() => {
+  const raw = slots.separator?.();
+  const fromSlot = Array.isArray(raw) && raw.length === 0 ? '' : raw;
+  if (fromSlot !== undefined && fromSlot !== null) return fromSlot;
+  return props.separator !== undefined ? props.separator : props.split;
+});
 
 // ---------------------------------------------------------------------------
 // 间距大小
@@ -406,7 +415,7 @@ const itemKey = (child: VNode, index: number): string | number => {
 const warning = useDevWarning('Space');
 watchEffect(() => {
   warning.deprecated(props.direction === undefined, 'direction', 'orientation');
-  warning.deprecated(props.split === undefined, 'split', 'separator');
+  warning.deprecated(props.split === undefined, 'split', '#separator slot');
 });
 
 // ---------------------------------------------------------------------------

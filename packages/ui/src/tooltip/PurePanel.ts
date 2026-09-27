@@ -25,16 +25,14 @@ const PurePanel = defineComponent({
     prefixCls: { type: String, default: undefined },
     color: { type: String, default: undefined },
     placement: { type: String, default: 'top' },
-    title: {
-      type: [Object, String, Number, Function] as PropType<VNodeChild>,
-      default: undefined,
-    },
+    // C8-R2：title 收窄 String（富内容走 `#title` 插槽，slot 优先）
+    title: { type: String, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: { type: Object as PropType<TooltipSemanticType['classNames']>, default: undefined },
     styles: { type: Object as PropType<TooltipSemanticType['styles']>, default: undefined },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
     const { getPrefixCls } = useComponentConfig('tooltip');
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       Record<string, never>,
@@ -79,7 +77,10 @@ const PurePanel = defineComponent({
               },
               role: 'tooltip',
             },
-            [props.title as VNodeChild].filter((c) => c !== null && c !== undefined),
+            [
+              // C8-R2：slot 优先
+              (slots.title?.() ?? props.title) as VNodeChild,
+            ].filter((c) => c !== null && c !== undefined),
           ),
         ],
       );

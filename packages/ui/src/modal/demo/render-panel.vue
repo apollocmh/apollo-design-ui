@@ -1,20 +1,9 @@
 <script setup lang="ts">
 // 对齐 antd demo/render-panel.tsx
 import { Button, Modal, Space } from '@apollo-design/ui';
-import { h } from 'vue';
 
 /** Test usage. Do not use in your production. */
 const InternalPanel = Modal._InternalPanelDoNotUseOrYouWillBeFired;
-
-const customFooterFn = (originNode: unknown, extra: { OkBtn: unknown; CancelBtn: unknown }) =>
-  h(Space, { orientation: 'vertical' }, () => [
-    h(Space, null, () => [originNode as never]),
-    h(Space, null, () => [
-      h(extra.CancelBtn as never),
-      h(Button, { danger: true, type: 'primary' }, () => 'Custom'),
-      h(extra.OkBtn as never),
-    ]),
-  ]);
 </script>
 
 <template>
@@ -31,9 +20,15 @@ const customFooterFn = (originNode: unknown, extra: { OkBtn: unknown; CancelBtn:
     <InternalPanel
       title="Custom Footer Render"
       :style="{ width: '380px', height: '200px' }"
-      :footer="customFooterFn"
     >
       <p>Custom footer content.</p>
+      <template #footer>
+        <Space>
+          <Button>Cancel</Button>
+          <Button danger type="primary">Custom</Button>
+          <Button type="primary">OK</Button>
+        </Space>
+      </template>
     </InternalPanel>
   </div>
 </template>

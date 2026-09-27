@@ -78,9 +78,9 @@ export default {
 
   'custom-indicator': () =>
     row([
-      h(Spin, { indicator, size: 'small' }),
-      h(Spin, { indicator }),
-      h(Spin, { indicator, size: 'large' }),
+      h(Spin, { size: 'small' }, { indicator: () => indicator }),
+      h(Spin, {}, { indicator: () => indicator }),
+      h(Spin, { size: 'large' }, { indicator: () => indicator }),
     ]),
 
   percent: () =>

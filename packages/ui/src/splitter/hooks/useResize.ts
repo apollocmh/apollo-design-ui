@@ -58,7 +58,7 @@ export function useResize(
     // First time trigger move index update is not sync in the state
     let confirmedIndex: number | null = null;
     // We need to know what the real index is.
-    if ((!moving.value || !moving.value.confirmed) && offset !== 0) {
+    if (!moving.value?.confirmed && offset !== 0) {
       // Search for the real index
       if (offset > 0) {
         confirmedIndex = index;

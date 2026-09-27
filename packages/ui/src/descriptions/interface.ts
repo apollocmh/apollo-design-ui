@@ -76,8 +76,9 @@ export interface DescriptionsProps {
    */
   size?: 'large' | 'medium' | 'small' | 'default' | 'middle';
   /** ⚠️ deprecated：用 `items`（`Descriptions.Item` 子节点形态仍支持）。 */
-  title?: VNodeChild;
-  extra?: VNodeChild;
+  title?: string;
+  /** ⚠️ 已改为 `#extra` slot（空 slot 等价隐藏）。 */
+  extra?: never;
   /** 列数（数字或响应式映射）。 */
   column?: DescriptionsColumn;
   /** 布局方向。默认 `'horizontal'`。 */

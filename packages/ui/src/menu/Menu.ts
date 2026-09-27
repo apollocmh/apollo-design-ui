@@ -301,31 +301,47 @@ const Menu = defineComponent({
               disabled: node.disabled,
               danger: node.danger,
               icon: node.icon,
-              title: (node.title ?? node.label) as VNodeChild,
+              // title/extra 经 slot 下发（items 的 VNodeChild 富内容；C8-R2）
+              title: typeof node.title === 'string' ? node.title : undefined,
               labelText: typeof node.label === 'string' ? node.label : undefined,
               overflowDisabled,
               overflowCls,
-              extra: node.extra,
               itemData: { ...node, key: eventKey } as Record<string, unknown>,
               onClick: node.onClick,
               onMouseEnter: node.onMouseEnter,
               onMouseLeave: node.onMouseLeave,
             } as never,
-            { default: () => node.label },
+            {
+              default: () => node.label,
+              // title 解析为 node.title ?? node.label（items 富内容走 slot）
+              title: () => node.title ?? node.label,
+              extra: node.extra !== undefined ? () => node.extra : undefined,
+            },
           );
         case 'submenu':
-          return h(SubMenu, {
-            key: eventKey,
-            eventKey,
-            disabled: node.disabled,
-            danger: node.danger,
-            icon: node.icon,
-            title: (node.title ?? node.label) as VNodeChild,
-            popupClassName: node.popupClassName,
-            overflowDisabled,
-            overflowCls,
-            childrenNodes: node.children,
-          } as never);
+          return h(
+            SubMenu,
+            {
+              key: eventKey,
+              eventKey,
+              disabled: node.disabled,
+              danger: node.danger,
+              icon: node.icon,
+              // title 经 slot 下发（items 的 VNodeChild 富内容；C8-R2）
+              title:
+                typeof (node.title ?? node.label) === 'string'
+                  ? (node.title ?? node.label)
+                  : undefined,
+              popupClassName: node.popupClassName,
+              overflowDisabled,
+              overflowCls,
+              childrenNodes: node.children,
+            } as never,
+            {
+              // title 解析为 node.title ?? node.label（items 富内容走 slot）
+              title: () => node.title ?? node.label,
+            },
+          );
         case 'group':
           // ⚠️ group 的 li 本体不带 overflow-item 类（rc：Divider/Group 不消费
           // OverflowContext）；子项经递归携带。
@@ -405,13 +421,17 @@ const Menu = defineComponent({
                 `${prefixCls}-overflow-item`,
               ),
             renderRawRest: () =>
-              h(SubMenu, {
-                key: OVERFLOW_KEY,
-                eventKey: OVERFLOW_KEY,
-                title: h(EllipsisOutlined),
-                internalPopupClose: true,
-                childrenNodes: [],
-              } as never),
+              h(
+                SubMenu,
+                {
+                  key: OVERFLOW_KEY,
+                  eventKey: OVERFLOW_KEY,
+                  internalPopupClose: true,
+                  childrenNodes: [],
+                } as never,
+                // 溢出「更多」指示：程序化 VNode ⇒ 走 #title slot（C8-R2）
+                { title: () => h(EllipsisOutlined) },
+              ),
           } as never)
         : h('ul', rootAttrs, renderList());
 

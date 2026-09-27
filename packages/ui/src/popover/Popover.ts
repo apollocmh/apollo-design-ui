@@ -266,13 +266,14 @@ const Popover = defineComponent({
           open: mergedOpen.value,
           onOpenChange: settingOpen,
           afterOpenChange: props.afterOpenChange,
-          overlay: overlay.value,
           motion: {
             // antd：getTransitionName(rootPrefixCls, 'zoom-big')（非 fast）
             motionName: props.motion?.motionName ?? 'apollo-zoom-big',
           },
         },
-        { default: () => children },
+        // C8-R2：Tooltip 的内容通道只剩 `#title` 插槽 —— Popover 的 overlay
+        // （title/content 双槽结构）整体经它下发。
+        { default: () => children, title: () => overlay.value },
       );
     };
   },

@@ -15,10 +15,9 @@ Used to feed back the results of a series of operations.
 | Prop | Description | Type | Default |
 |---|---|---|---|
 | status | Result status (exception values render static illustrations) | `'success' \| 'error' \| 'info' \| 'warning' \| '403' \| '404' \| '500'` | `'info'` |
-| icon | Custom icon (ignored for exception status; `null`/`false` disables) | `VNodeChild` | — |
-| title | Title | `VNodeChild` | — |
-| subTitle | Sub title | `VNodeChild` | — |
-| extra | Operation area (a **prop**, not a slot) | `VNodeChild` | — |
+| icon | Custom icon switch: `null`/`false` disables; custom icon via the `#icon` slot (C8-R2) | `boolean \| null` | — |
+| title | Title text (rich content via the `#title` slot; slot wins) | `string` | — |
+| subTitle | Subtitle text (rich content via the `#subTitle` slot; slot wins) | `string` | — |
 
 ### Static Exports
 

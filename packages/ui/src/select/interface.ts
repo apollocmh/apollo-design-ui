@@ -249,8 +249,6 @@ export interface SelectProps<ValueType = SelectValue> {
 
   // ---- 选项 ----
   options?: DefaultOptionType[];
-  /** 自定义单个选项内容（含分组项）。 */
-  optionRender?: OptionRenderFn;
   /** 搜索时列表的最大高度（默认 256）。 */
   listHeight?: number;
   /** 虚拟滚动的估算行高（默认 controlHeight = 32）。 */
@@ -258,9 +256,6 @@ export interface SelectProps<ValueType = SelectValue> {
   virtual?: boolean;
   /** 键盘上下键是否自动激活第一项（默认 true，combobox 为 false）。 */
   defaultActiveFirstOption?: boolean;
-  /** 多选时选中项的勾选图标。 */
-  menuItemSelectedIcon?: unknown;
-
   // ---- 搜索 ----
   showSearch?: boolean | SelectSearchConfig;
   /** @deprecated 用 `showSearch.searchValue` */
@@ -282,26 +277,17 @@ export interface SelectProps<ValueType = SelectValue> {
   status?: SelectStatus;
   disabled?: boolean;
   loading?: boolean;
-  placeholder?: unknown;
-  prefix?: unknown;
-  suffixIcon?: unknown;
-  /** @deprecated 默认显示箭头，隐藏请传 `suffixIcon: null` */
+  placeholder?: string;
+  /** @deprecated 默认显示箭头，隐藏请用空的 `#suffixIcon` 插槽或 `showArrow: false` */
   showArrow?: boolean;
   allowClear?: boolean | { clearIcon?: unknown; label?: string };
-  clearIcon?: unknown;
-  removeIcon?: unknown;
-  loadingIcon?: unknown;
-  notFoundContent?: unknown;
   maxLength?: number;
 
   // ---- 多选 ----
   maxCount?: number;
   maxTagCount?: number;
   maxTagTextLength?: number;
-  maxTagPlaceholder?: unknown | ((omittedValues: DisplayValueType[]) => unknown);
-  tagRender?: TagRenderFn;
   tokenSeparators?: string[] | ((input: string) => string[]);
-  labelRender?: LabelRenderFn;
 
   // ---- 浮层 ----
   open?: boolean;
@@ -311,15 +297,12 @@ export interface SelectProps<ValueType = SelectValue> {
   popupMatchSelectWidth?: boolean | number;
   getPopupContainer?: (node: HTMLElement) => HTMLElement;
   transitionName?: string;
-  popupRender?: PopupRenderFn;
   /** @deprecated 用 `classNames.popup.root` */
   popupClassName?: string;
   /** @deprecated 用 `classNames.popup.root` */
   dropdownClassName?: string;
   /** @deprecated 用 `styles.popup.root` */
   dropdownStyle?: CSSProperties;
-  /** @deprecated 用 `popupRender` */
-  dropdownRender?: PopupRenderFn;
   popupStyle?: CSSProperties;
 
   // ---- 语义槽 ----
@@ -353,7 +336,8 @@ export interface SelectEmits<ValueType = SelectValue> {
 }
 
 // ---------------------------------------------------------------------------
-// Slots（规则 C8：render prop → 作用域插槽，prop 优先）
+// Slots（规则 C8-R2：ReactNode / render prop 一律 slot —— **不**保留同名 prop。
+// 文本类 prop（placeholder）保留 string 便捷形态，slot 优先。）
 // ---------------------------------------------------------------------------
 
 export interface SelectSlots {
@@ -366,8 +350,14 @@ export interface SelectSlots {
     showSearch: boolean;
     loading?: boolean;
   }) => unknown;
+  loadingIcon?: () => unknown;
   clearIcon?: () => unknown;
   removeIcon?: () => unknown;
+  menuItemSelectedIcon?: (props: {
+    value?: unknown;
+    disabled?: boolean;
+    isSelected?: boolean;
+  }) => unknown;
   placeholder?: () => unknown;
   notFoundContent?: () => unknown;
   optionRender?: (props: {

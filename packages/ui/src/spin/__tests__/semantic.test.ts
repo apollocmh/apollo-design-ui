@@ -136,20 +136,25 @@ const CASES: Record<string, () => DomRenderResult> = {
   'percent:over': () => noChildren({ prefixCls: PREFIX, percent: 150 }),
 
   // ---- 8. indicator ----
-  'indicator:custom': () => noChildren({ prefixCls: PREFIX, indicator: h(MyIndicator) }),
+  // C8-R2：indicator 走 `#indicator` 插槽（DOM 与旧 prop 形态逐字节一致）
+  'indicator:custom': () => h(Spin, { prefixCls: PREFIX }, { indicator: () => h(MyIndicator) }),
   'indicator:custom-element': () =>
-    noChildren({ prefixCls: PREFIX, indicator: h('div', { class: 'custom-indicator' }) }),
+    h(Spin, { prefixCls: PREFIX }, { indicator: () => h('div', { class: 'custom-indicator' }) }),
   'indicator:custom-element+semantic': () =>
-    noChildren({
-      prefixCls: PREFIX,
-      indicator: h('div', { class: 'custom-indicator' }),
-      classNames: { indicator: 'cn-indicator' },
-      styles: { indicator: { color: 'red' } },
-    }),
+    h(
+      Spin,
+      {
+        prefixCls: PREFIX,
+        classNames: { indicator: 'cn-indicator' },
+        styles: { indicator: { color: 'red' } },
+      },
+      { indicator: () => h('div', { class: 'custom-indicator' }) },
+    ),
   'indicator:custom+percent': () =>
-    noChildren({ prefixCls: PREFIX, indicator: h(MyIndicator), percent: 23 }),
-  'indicator:custom+nested': () => nested({ prefixCls: PREFIX, indicator: h(MyIndicator) }),
-  'indicator:null': () => noChildren({ prefixCls: PREFIX, indicator: null }),
+    h(Spin, { prefixCls: PREFIX, percent: 23 }, { indicator: () => h(MyIndicator) }),
+  'indicator:custom+nested': () =>
+    h(Spin, { prefixCls: PREFIX }, { default: content, indicator: () => h(MyIndicator) }),
+  'indicator:null': () => h(Spin, { prefixCls: PREFIX }, { indicator: () => null }),
 
   // ---- 9. 语义化 ----
   'semantic:classNames-all': () =>

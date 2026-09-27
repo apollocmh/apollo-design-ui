@@ -40,7 +40,7 @@ export function parseItems(list: ItemType[] | undefined | null): ParsedNode[] {
         const mergedKey = resolveKey(opt, index);
 
         // Group & SubMenu
-        if ((children && children.length) || type === 'group') {
+        if (children?.length || type === 'group') {
           if (type === 'group') {
             return {
               kind: 'group',

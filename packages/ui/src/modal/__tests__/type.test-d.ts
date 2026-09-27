@@ -53,10 +53,12 @@ describe('Modal · 类型', () => {
     expectTypeOf(cn).toHaveProperty('mask');
   });
 
-  it('ModalProps 含 open / width / footer / focusable / destroyOnHidden', () => {
+  it('ModalProps 含 open / width / title / focusable / destroyOnHidden', () => {
     expectTypeOf<ModalProps>().toHaveProperty('open');
     expectTypeOf<ModalProps>().toHaveProperty('width');
-    expectTypeOf<ModalProps>().toHaveProperty('footer');
+    expectTypeOf<ModalProps>().toHaveProperty('title');
+    expectTypeOf<ModalProps>().toHaveProperty('okText');
+    expectTypeOf<ModalProps>().toHaveProperty('cancelText');
     expectTypeOf<ModalProps>().toHaveProperty('focusable');
     expectTypeOf<ModalProps>().toHaveProperty('destroyOnHidden');
     expectTypeOf<ModalProps>().toHaveProperty('maskClosable');
@@ -84,7 +86,6 @@ describe('Modal · 类型', () => {
       open: true,
       width: { xs: 100, md: '50%' },
       title: 't',
-      footer: null,
       mask: { closable: false },
       focusable: { trap: true, focusTriggerAfterClose: false },
       closable: { disabled: false },

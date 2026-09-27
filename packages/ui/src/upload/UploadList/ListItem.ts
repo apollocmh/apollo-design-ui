@@ -87,18 +87,22 @@ export const ListItem = defineComponent({
       type: [Boolean, Function] as PropType<boolean | ((file: UploadFile) => boolean)>,
       default: false,
     },
+    // 内部：由 UploadList 透传（源自 Upload 的 scoped slot #removeIcon）
     removeIcon: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
     },
+    // 内部：由 UploadList 透传（源自 Upload 的 scoped slot #previewIcon）
     previewIcon: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
     },
+    // 内部：由 UploadList 透传（源自 Upload 的 scoped slot #downloadIcon）
     downloadIcon: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,
     },
+    // 内部：由 UploadList 透传（源自 Upload 的 scoped slot #extra）
     extra: {
       type: null as unknown as PropType<VNodeChild | ((file: UploadFile) => VNodeChild)>,
       default: undefined,

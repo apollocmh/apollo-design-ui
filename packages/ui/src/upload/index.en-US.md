@@ -46,9 +46,7 @@ omitted; see [`README.md`](./README.md) §6 for the landing points.
 | disabled | Whether disabled | `boolean` | — |
 | fileList | Controlled file list (same as `v-model:fileList`) | `UploadFile[]` | — |
 | headers | Request headers (`null` values are skipped) | `Record<string, string>` | — |
-| iconRender | Custom list item icon | `(file, listType) => VNodeChild` | — |
 | isImageUrl | Override the "is image" predicate | `(file: UploadFile) => boolean` | antd's implementation |
-| itemRender | Customize the whole list item (receives `originNode` and `actions`) | `(originNode, file, fileList, actions) => VNodeChild` | — |
 | listType | List style | `'text' \| 'picture' \| 'picture-card' \| 'picture-circle'` | `'text'` |
 | maxCount | Max number of files. With `1`, a new file replaces the old one; exceeded files never enter the list and do **not** emit `change` | `number` | — |
 | method | Request method | `string` | `'post'` |
@@ -58,7 +56,7 @@ omitted; see [`README.md`](./README.md) §6 for the landing points.
 | pastable | Paste from clipboard (document-level listener) | `boolean` | — |
 | previewFile | Custom thumbnail generator for the picture family | `(file: File \| Blob) => PromiseLike<string>` | canvas 200×200 center crop |
 | progress | Progress config (passed to Progress / inline MiniProgress) | `UploadListProgressProps` | `{ size: [-1, 2], showInfo: false }` |
-| showUploadList | Show the list, or configure it: `{ showPreviewIcon, showRemoveIcon, showDownloadIcon, removeIcon, previewIcon, downloadIcon, extra }` | `boolean \| ShowUploadListInterface` | `true` |
+| showUploadList | Show the list, or configure it: `{ showPreviewIcon, showRemoveIcon, showDownloadIcon }` | `boolean \| ShowUploadListInterface` | `true` |
 | type | `'drag'` is equivalent to using `UploadDragger` | `'select' \| 'drag'` | `'select'` |
 | withCredentials | Whether to send cookies on cross-origin requests | `boolean` | `false` |
 | rootClassName / className / style | Root class names and inline style | — | — |
@@ -77,9 +75,16 @@ omitted; see [`README.md`](./README.md) §6 for the landing points.
 
 ### Slots
 
-| Name | Description |
-|---|---|
-| default | Trigger content. With `type="drag"` it lands in `-drag-container`; with `picture-card` / `picture-circle` it becomes the trailing upload button |
+| Name | Scope | Description |
+|---|---|---|
+| default | — | Trigger content. With `type="drag"` it lands in `-drag-container`; with `picture-card` / `picture-circle` it becomes the trailing upload button |
+| iconRender | `{ file, listType }` | Custom list item icon (was the `iconRender` prop) |
+| itemRender | `{ originNode, file, fileList, actions }` | Customize the whole list item (was the `itemRender` prop) |
+| removeIcon | `{ file }` | Custom remove icon (was `showUploadList.removeIcon`) |
+| previewIcon | `{ file }` | Custom preview icon (was `showUploadList.previewIcon`) |
+| downloadIcon | `{ file }` | Custom download icon (was `showUploadList.downloadIcon`) |
+| extra | `{ file }` | Custom list item extra content (was `showUploadList.extra`) |
+| appendAction | — | Content of the trailing upload button (only `picture-card` / `picture-circle`; falls back to the default upload button when omitted) |
 
 ### Expose
 

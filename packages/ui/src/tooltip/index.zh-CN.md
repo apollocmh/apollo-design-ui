@@ -23,7 +23,6 @@ subtitle: 文字提示
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | title | 提示内容（`0` 合法） | `VNodeChild \| (() => VNodeChild)` | — |
-| overlay | 旧版内容通道（与 `title` 同物） | 同上 | — |
 | open / defaultOpen | 受控开合（`v-model:open` 等价）/ 非受控初值 | `boolean` | `false` |
 | onOpenChange | 开合回调（与 `update:open` 同时发出） | `(open: boolean) => void` | — |
 | afterOpenChange | 动画结束回调 | `(open: boolean) => void` | — |
@@ -57,5 +56,6 @@ subtitle: 文字提示
 
 - **trigger 基建**：`_internal/trigger.ts` 组装 overlay + position + portal +
   motion（见 [`docs/analysis/tooltip.md`](../../../../docs/analysis/tooltip.md) §8）。
+- **C8-R2**：`overlay` 与 render-fn `title` 已删除 —— 内容走 `#title` 插槽（slot 优先）。
 - **noTitle 抑制**：`title` 与 `overlay` 均未传（`title=0` 除外）⇒ 强制关闭且不发回调。
 - **差异**：D77–D82（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。

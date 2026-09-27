@@ -127,6 +127,40 @@ defineExpose({ focus, blur, nativeElement });
 
 **规则 R6**：`prefixCls` 派生的类名结构必须与 antd 同构。例如 Button：`${prefixCls}-btn`、`${prefixCls}-btn-primary`、`${prefixCls}-btn-icon`。
 
+### 4.1 ReactNode / render prop → slot（规则 C8-R2，2026-09-27 全仓修正）
+
+**本仓是 Vue 3.5+ 原生组件库，禁止让用户通过 prop 传 VNode 来模拟 React 的
+`ReactNode` / JSX API。** antd 的 ReactNode props 与 render props 一律按此表转换：
+
+| antd 形态 | Vue 形态 |
+|---|---|
+| `ReactNode` / JSX（`icon={<Icon />}`、`footer={<CustomFooter />}`） | **同名 slot**（`#icon`、`#footer`），**不**保留同名 prop |
+| `children` | 默认插槽 |
+| render function（`optionRender(info)`、`maxTagPlaceholder(omitted)`） | **scoped slot**（参数进 slot props：`#optionRender="{ option, index }"`） |
+| 文本为主的 ReactNode（`placeholder`、`title`、`okText`、`checkedChildren`…） | 收窄为 **`string` prop** + 同名 slot（**slot 优先**：`slots.x?.() ?? props.x`） |
+| 真正的数据 / 行为回调（`onChange`、`filterOption`、`beforeUpload`） | 保留 function prop（不是渲染 API） |
+
+**豁免（VNode prop 合法，须加注释「内部：程序化 / 命令式驱动，无模板上下文」）**：
+
+1. **命令式 config**：`message.open` / `notification.open` / `Modal.confirm` /
+   `useModal` 的参数对象 —— 程序化上下文里 `h()` 就是 React render fn 的 Vue 等价物；
+2. **ConfigProvider 的 componentConfig 字段**（如 `SpinConfig.indicator`、`TagConfig.closeIcon`）；
+3. **对象形态 prop 的子字段**（如 `closable: { closeIcon }`、`preview: { cover }`）；
+4. **内部组件**（engine / `Notice` / `ModalPanel` / `DrawerPanel` / `NodeRenderer` /
+   `StepHandler` / `space Item` 等）—— 由父组件程序化传递。
+
+**实现要领（三条硬规则）**：
+
+1. **判空必须用 `isEmptyVNode`**（`@apollo-design/utils`）——Vue 会把 slot 返回的
+   `null` / 空数组归一成 **comment vnode**，与 `undefined`（未提供 slot）不可比
+   `null` / `length`，否则「空 slot ⇒ 隐藏」静默失效（modal footer / select
+   notFoundContent 双双踩过）。推荐封装 `readSlot(name)`：未提供 ⇒ `undefined`，
+   提供但空渲染 ⇒ `null`（隐藏），其余返回内容。
+2. **slot 必须真正接线**：`SelectSlots` 这类类型声明不等于实现 —— 类型写了 slot
+   但渲染只读 props 时，slot 静默失效且测试全绿（select 期教训）。
+3. **replaceElement 语义的图标**（closeIcon 等要 clone 注入 role/类名的），
+   `readSlot` 需把单元素数组解包成 vnode 本身再交给克隆逻辑（tag 期教训）。
+
 ---
 
 ## 5. Token 与样式规范

@@ -35,7 +35,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'descriptions:colon-false': { render: () => h(Descriptions, P({ colon: false })) },
 
   'descriptions:title-extra': {
-    render: () => h(Descriptions, P({ title: 'Title', extra: 'Extra' })),
+    render: () => h(Descriptions, P({ title: 'Title' }), { extra: () => 'Extra' }),
   },
   'descriptions:title-only': { render: () => h(Descriptions, P({ title: 'Title' })) },
 

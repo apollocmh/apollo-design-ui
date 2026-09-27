@@ -12,7 +12,7 @@
  *   4. `title` / `message` 合并（`message` deprecated），`actions` / `btn` 同理；
  *   5. `-notice-icon-{type}` 类**只在没有自定义 icon 时**叠加（与 message 的「恒叠加」不同）。
  */
-import { isRenderable } from '@apollo-design/utils';
+import { isEmptyVNode, isRenderable } from '@apollo-design/utils';
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
 import { computeClosable, pickClosable } from '../_internal/use-closable';
@@ -26,17 +26,12 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    /** @deprecated 请用 `title`。 */
-    message: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    description: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    /** @deprecated 请用 `actions`。 */
-    btn: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    actions: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    /** @deprecated 请用 `title`。收窄为 String（富标题走 `#message` slot）。 */
+    message: { type: String, default: undefined },
+    title: { type: String, default: undefined },
+    description: { type: String, default: undefined },
     type: { type: String as PropType<IconType>, default: undefined },
     role: { type: String as PropType<'alert' | 'status'>, default: undefined },
-    closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     closable: {
       type: [Boolean, Object] as PropType<import('./interface').ArgsProps['closable']>,
       default: undefined,
@@ -48,23 +43,53 @@ export default defineComponent({
       default: undefined,
     },
     styles: { type: Object as PropType<NotificationSemanticType['styles']>, default: undefined },
+    // ⚠️ C8-R2：原 `icon` / `btn` / `actions` / `closeIcon` 删除改为同名 slot
+    //    （`#icon` / `#btn` / `#actions` / `#closeIcon`，空 slot 等价隐藏）；
+    //    `title` / `message` / `description` 收窄为 String（富内容走同名 slot，slot 优先）。
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
+    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+    const readSlot = (name: string): unknown => {
+      const fn = (slots as Record<string, unknown>)[name];
+      if (typeof fn !== 'function') return undefined;
+      const nodes = (fn as (...args: unknown[]) => unknown)();
+      if (nodes === undefined) return undefined;
+      return isEmptyVNode(nodes) ? null : nodes;
+    };
+
     return () => {
       const config = useComponentConfig('notification');
       const prefixCls = props.prefixCls || config.getPrefixCls('notification');
       const noticePrefixCls = `${prefixCls}-notice`;
 
-      const mergedTitle = props.title ?? props.message;
+      const titleSlot = readSlot('title');
+      const messageSlot = readSlot('message');
+      const mergedTitle: unknown =
+        titleSlot !== undefined
+          ? titleSlot
+          : messageSlot !== undefined
+            ? messageSlot
+            : (props.title ?? props.message);
       const hasTitle = isRenderable(mergedTitle);
-      const mergedActions = props.actions ?? props.btn;
 
-      const iconNode = props.icon || (props.type ? h(TypeIcon[props.type]) : null);
+      const descriptionSlot = readSlot('description');
+      const mergedDescription: unknown =
+        descriptionSlot !== undefined ? descriptionSlot : props.description;
+
+      const actionsSlot = readSlot('actions');
+      const btnSlot = readSlot('btn');
+      const mergedActions: unknown =
+        actionsSlot !== undefined ? actionsSlot : btnSlot !== undefined ? btnSlot : undefined;
+
+      const iconSlot = readSlot('icon');
+      const iconNode =
+        iconSlot !== undefined ? iconSlot : props.type ? h(TypeIcon[props.type]) : null;
       const typeIconCls =
-        !props.icon && props.type ? `${noticePrefixCls}-icon-${props.type}` : undefined;
+        !iconSlot && props.type ? `${noticePrefixCls}-icon-${props.type}` : undefined;
 
+      const closeIconSlot = readSlot('closeIcon');
       const { closable, closeIconNode, ariaProps } = computeClosable(
-        pickClosable({ closable: props.closable, closeIcon: props.closeIcon }).value,
+        pickClosable({ closable: props.closable, closeIcon: closeIconSlot as VNodeChild }).value,
         undefined,
         {
           closable: true,
@@ -92,9 +117,9 @@ export default defineComponent({
             : false,
           className: config.className as string | undefined,
           title: hasTitle ? mergedTitle : null,
-          description: props.description,
-          icon: iconNode,
-          actions: mergedActions,
+          description: mergedDescription as never,
+          icon: iconNode as never,
+          actions: mergedActions as never,
           role: props.role,
           classNames: {
             ...props.classNames,

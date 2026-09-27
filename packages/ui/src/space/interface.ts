@@ -139,18 +139,19 @@ export interface SpaceProps {
    */
   align?: SpaceAlign;
   /**
-   * @deprecated please use `separator` instead
+   * @deprecated please use the `#separator` slot instead
    *
-   * 保留并输出开发期告警，与 antd 的废弃节奏一致。
+   * 保留并输出开发期告警，与 antd 的废弃节奏一致。仅保留文本语义
+   * （富内容请用 `#separator` 插槽 —— 规则 C8-R2）。
    */
-  split?: VNodeChild;
+  split?: string;
   /**
-   * 分隔符。
+   * 分隔符**文本**（富内容用 `#separator` 插槽，slot 优先）。
    *
-   * `mergedSeparator = separator ?? split`（`??` 而不是 `||` —— 传 `''` 时不回落）。
-   * Item 里的渲染判据是**真值**：`separator` 为 `0` / `''` 时**不渲染**分隔符。
+   * 合并序：`#separator` 插槽 → `separator` → `split`（`??` 语义：`''` 不回落）。
+   * Item 里的渲染判据是**真值**：`0` / `''` 时不渲染分隔符。
    */
-  separator?: VNodeChild;
+  separator?: string;
   /** 是否自动换行。仅 `horizontal` 时有意义。 */
   wrap?: boolean;
   /** 语义化类名（拼接）。 */

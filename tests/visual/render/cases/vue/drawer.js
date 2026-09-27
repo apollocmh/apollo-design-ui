@@ -20,16 +20,19 @@ export default {
   // 右抽屉（默认方位）+ 标题 + extra + 页脚
   basic: () =>
     stage([
+      // C8-R2：extra / footer 走同名插槽（DOM 与 React 侧 prop 形态一致）
       h(
         Drawer,
         {
           open: true,
           getContainer: false,
           title: 'Drawer Title',
-          extra: 'Extra',
-          footer: 'Footer',
         },
-        { default: () => h('p', null, 'Some contents...') },
+        {
+          default: () => h('p', null, 'Some contents...'),
+          extra: () => 'Extra',
+          footer: () => 'Footer',
+        },
       ),
     ]),
 

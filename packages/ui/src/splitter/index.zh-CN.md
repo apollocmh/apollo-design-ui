@@ -25,7 +25,6 @@ subtitle: 分割面板
 | vertical | 等价 `orientation="vertical"` | `boolean` | — |
 | layout | ⚠️ 已废弃：用 `orientation` | `'horizontal' \| 'vertical'` | — |
 | collapsible | 折叠全局配置 `{ motion?: boolean; icon?: { start?, end? } }`（motion 开启折叠过渡动画） | — | — |
-| draggerIcon | 自定义拖拽手柄图标（替换默认 spinner） | `VNodeChild` | — |
 | collapsibleIcon | ⚠️ 已废弃：用 `collapsible.icon` | — | — |
 | lazy | 拖拽时只移动预览线，松手才提交尺寸 | `boolean` | — |
 | destroyOnHidden | 面板折叠后销毁内容（Panel 可覆盖） | `boolean` | — |
@@ -40,6 +39,13 @@ subtitle: 分割面板
 | resize-end | 拖拽结束 | `(sizes: number[])` |
 | collapse | 折叠状态变化 | `(collapsed: boolean[], sizes: number[])` |
 | dragger-double-click | 双击把手 | `(index: number)` |
+
+### 插槽
+
+| 名称 | 说明 |
+|---|---|
+| default | 面板内容（`<Splitter.Panel>` 列表） |
+| draggerIcon | 自定义拖拽手柄图标（替换默认 spinner；原 `draggerIcon` prop，已改为 slot） |
 
 ### Splitter.Panel
 

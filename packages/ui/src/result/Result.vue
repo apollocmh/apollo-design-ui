@@ -18,8 +18,17 @@
  *      连容器 div 都不渲染（不是渲染空 div）。
  */
 
-import { isRenderable, pickAttrs } from '@apollo-design/utils';
-import { computed, ref, useAttrs, useSlots, watchEffect } from 'vue';
+import { isEmptyVNode, isRenderable, pickAttrs } from '@apollo-design/utils';
+import {
+  computed,
+  isVNode,
+  ref,
+  Text,
+  useAttrs,
+  useSlots,
+  type VNodeChild,
+  watchEffect,
+} from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { NodeRenderer } from '../empty/components/NodeRenderer';
@@ -35,12 +44,19 @@ import { ExceptionMap as MapsExceptionMap, IconMap as MapsIconMap } from './maps
 defineOptions({ name: 'AResult', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ResultProps>(), {
-  // VNodeChild 类 prop 的 Boolean 转换坑（Empty.vue 文件头详述）：声明 default 跳过
+  // 自定义图标：null/false 显式禁用（undefined 走 IconMap）；VNode 改 #icon slot
   icon: undefined,
   title: undefined,
   subTitle: undefined,
-  extra: undefined,
 });
+
+defineSlots<{
+  default?: () => unknown;
+  icon?: () => unknown;
+  title?: () => unknown;
+  subTitle?: () => unknown;
+  extra?: () => unknown;
+}>();
 
 const slots = useSlots();
 const attrs = useAttrs();
@@ -120,19 +136,43 @@ const bodyClass = computed(() => [`${prefixCls.value}-body`, mergedClassNames.va
 // 渲染守卫（antd 的 isReactRenderable → 我们的 isRenderable）
 // ---------------------------------------------------------------------------
 
-const showTitle = computed(() => isRenderable(props.title));
-const showSubTitle = computed(() => isRenderable(props.subTitle));
-const showExtra = computed(() => isRenderable(props.extra));
+/**
+ * 读具名 slot；无 slot 返回 undefined，空 slot 归一成 comment ⇒ 返回 null（隐藏）。
+ * 单元素数组 / Text VNode 解包（Vue 把 string slot 归一为 Text VNode），便于判字符串。
+ * slot 优先于同名 prop。
+ */
+function readNamedSlot(name: string): unknown {
+  const fn = slots[name];
+  if (typeof fn !== 'function') return undefined;
+  const nodes = fn();
+  if (nodes === undefined) return undefined;
+  let r: unknown = nodes;
+  if (Array.isArray(r) && r.length === 1) r = (r as unknown[])[0];
+  if (isVNode(r) && r.type === Text) r = (r.children as string) ?? '';
+  return isEmptyVNode(r) ? null : r;
+}
+
+const mergedTitle = computed(() => (readNamedSlot('title') ?? props.title) as VNodeChild | null);
+const mergedSubTitle = computed(
+  () => (readNamedSlot('subTitle') ?? props.subTitle) as VNodeChild | null,
+);
+const mergedExtra = computed(() => readNamedSlot('extra') as VNodeChild | null);
+const iconSlotNode = computed(() => readNamedSlot('icon') as VNodeChild | null);
+
+const showTitle = computed(() => isRenderable(mergedTitle.value));
+const showSubTitle = computed(() => isRenderable(mergedSubTitle.value));
+const showExtra = computed(() => isRenderable(mergedExtra.value));
 const showBody = computed(() => isRenderable(slots.default?.()));
 
 /**
  * 默认图标节点：`icon || IconMap[status]` 逐字 ——
- * `null`/`false` 显式禁用（undefined 走 IconMap），其余用户节点覆盖默认图标。
+ * `null`/`false` 显式禁用（undefined 走 IconMap）；`#icon` slot 优先覆盖默认图标。
  */
-const iconNode = computed(() => {
+const iconNode = computed<VNodeChild | undefined>(() => {
   if (isException.value) return undefined;
   if (props.icon === null || props.icon === false) return undefined;
-  return props.icon ?? IconMap[(props.status ?? 'info') as keyof typeof IconMap];
+  if (iconSlotNode.value !== undefined) return (iconSlotNode.value ?? undefined) as VNodeChild;
+  return IconMap[(props.status ?? 'info') as keyof typeof IconMap] as unknown as VNodeChild;
 });
 
 /** restProps：antd `pickAttrs(rest, { aria: true, data: true })` 的 Vue 等价。 */
@@ -152,21 +192,22 @@ defineExpose({ nativeElement: rootRef });
     <div v-if="isException" :class="iconClass" v-bind="styleAttrs(mergedStyles.icon)">
       <component :is="ExceptionMap[status as unknown as keyof typeof ExceptionMap]" />
     </div>
-    <!-- 普通分支：icon 覆盖或 IconMap 默认图标；null/false 连容器都不渲染 -->
+    <!-- 普通分支：#icon slot 覆盖或 IconMap 默认图标；null/false 连容器都不渲染 -->
     <div v-else-if="iconNode !== undefined" :class="iconClass" v-bind="styleAttrs(mergedStyles.icon)">
-      <component :is="iconNode" />
+      <NodeRenderer v-if="iconSlotNode !== undefined" :node="iconNode" />
+      <component v-else :is="iconNode" />
     </div>
 
     <div v-if="showTitle" :class="titleClass" v-bind="styleAttrs(mergedStyles.title)">
-      <NodeRenderer :node="title" />
+      <NodeRenderer :node="mergedTitle" />
     </div>
 
     <div v-if="showSubTitle" :class="subTitleClass" v-bind="styleAttrs(mergedStyles.subTitle)">
-      <NodeRenderer :node="subTitle" />
+      <NodeRenderer :node="mergedSubTitle" />
     </div>
 
     <div v-if="showExtra" :class="extraClass" v-bind="styleAttrs(mergedStyles.extra)">
-      <NodeRenderer :node="extra" />
+      <NodeRenderer :node="mergedExtra" />
     </div>
 
     <div v-if="showBody" :class="bodyClass" v-bind="styleAttrs(mergedStyles.body)">

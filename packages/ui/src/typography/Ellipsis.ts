@@ -135,6 +135,7 @@ export const Ellipsis = defineComponent({
     /** 容器宽度。来自 `ResizeObserver` 的 `offsetWidth`。`0` 表示还没量到，不启动测量。 */
     width: { type: Number, default: 0 },
     /** 原始 children。 */
+    // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（源自 Base 的 children 内容）
     text: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** 行数。 */
     rows: { type: Number, default: 1 },

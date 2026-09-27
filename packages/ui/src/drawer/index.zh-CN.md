@@ -24,9 +24,11 @@ subtitle: 抽屉
 | placement | 方位 | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` |
 | size | 尺寸预设或数值/字符串 | `'default' \| 'large' \| number \| string` | `'default'`(378) |
 | defaultSize | 默认尺寸（**垂直方位的默认值来源**） | `number` | `378` |
-| title / footer / extra | 标题 / 页脚 / 标题栏右侧 | `VNodeChild` | — |
+| title | 标题（文本；富标题走 `#title` slot，slot 优先） | `string` | — |
+| footer | 页脚（⚠️ 已改为 `#footer` slot，空 slot 等价隐藏） | `slot` | — |
+| extra | 标题栏右侧（⚠️ 已改为 `#extra` slot） | `slot` | — |
 | closable | 关闭按钮。`false` ⇒ 不渲染；对象可给 `placement: 'start' \| 'end'` | `boolean \| null \| {...}` | `true` |
-| closeIcon | 自定义关闭图标 | `VNodeChild` | — |
+| closeIcon | 自定义关闭图标（⚠️ 已改为 `#closeIcon` slot） | `slot` | — |
 | loading | 内容区骨架态 | `boolean` | `false` |
 | mask | 遮罩。`false` ⇒ 无遮罩（根类加 `no-mask`） | `boolean \| { enabled?, blur?, closable? }` | `true` |
 | maskClosable | 点遮罩关闭（⚠️ deprecated ⇒ `mask.closable`） | `boolean` | `true` |
@@ -52,6 +54,15 @@ subtitle: 抽屉
 root / mask / wrapper / section / header / header-title? / title / extra / body / footer / close / dragger
 （+ deprecated 的 content ⇒ section）
 ```
+
+### Slots（C8-R2）
+
+| Slot | 说明 | 参数 |
+|---|---|---|
+| title | 富标题（文本 `title` prop 等价，slot 优先） | — |
+| footer | 页脚（空 slot 等价隐藏） | — |
+| extra | 标题栏右侧额外内容 | — |
+| closeIcon | 自定义关闭图标 | — |
 
 ## Theme（Component Token）
 

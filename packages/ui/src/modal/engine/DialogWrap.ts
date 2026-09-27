@@ -63,8 +63,11 @@ export default defineComponent({
     rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     classNames: { type: Object as PropType<ModalSemanticType['classNames']>, default: undefined },
     styles: { type: Object as PropType<ModalSemanticType['styles']>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     title: { type: null as unknown as PropType<unknown>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: { type: null as unknown as PropType<unknown>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     closeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
     bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     bodyProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },

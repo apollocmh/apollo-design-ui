@@ -115,7 +115,6 @@ export const Splitter = defineComponent({
     },
     vertical: { type: Boolean, default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
-    draggerIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     collapsibleIcon: {
       type: Object as PropType<SplitterProps['collapsibleIcon']>,
       default: undefined,
@@ -352,7 +351,8 @@ export const Splitter = defineComponent({
               resizable: resizableInfo.resizable,
               draggerStyle: mergedStyles.value.dragger ?? {},
               draggerClassName: normalizeDraggerClassNames(mergedClassNames.value.dragger) ?? {},
-              draggerIcon: props.draggerIcon,
+              // 内部：由 Splitter 的 #draggerIcon slot 程序化传递（VNode prop 合法）
+              draggerIcon: slots.draggerIcon?.(),
               collapsibleIcon: props.collapsible?.icon || props.collapsibleIcon || {},
               ariaNow: (stackSizes[idx] ?? 0) * 100,
               ariaMin: Math.max(ariaMinStart, ariaMinEnd) * 100,

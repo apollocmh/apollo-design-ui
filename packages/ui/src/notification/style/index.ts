@@ -163,7 +163,7 @@ export function genNotificationStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
     prefixCls === 'apollo'
       ? cssText
-      : cssText.split('.apollo-notification').join('.' + prefixCls + '-notification');
+      : cssText.split('.apollo-notification').join(`.${prefixCls}-notification`);
   const decls = [
     `.apollo-notification{${DECLS}}`,
     `.apollo-notification-notice-pure-panel{${DECLS}}`,

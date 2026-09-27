@@ -38,6 +38,10 @@ drawer/
 - **`toCssSize`**：`wrapperStyle.width` 必须带 px 字符串，裸数字会被 Vue 静默丢弃
   （PITFALLS 170 / D94）。本包的实现在 `engine/util.ts`（与 `image/util.ts` 同实现，
   第三个消费者出现时提到 `_internal/`）。
+- **C8-R2（VNode prop → slot）**：公开 `Drawer` / `DrawerPurePanel` 的 `footer` / `extra` /
+  `closeIcon` 已删除改为同名 slot（`#footer` / `#extra` / `#closeIcon`，空 slot = 隐藏）；
+  `title` 收窄为 `string`（富标题走 `#title` slot，slot 优先）。内部 `DrawerPanel` 仍保留
+  VNode prop（由父组件透传，无模板上下文，VNode prop 合法）。
 
 ## 3. 与 antd 的差异
 

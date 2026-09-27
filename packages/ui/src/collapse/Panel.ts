@@ -53,6 +53,7 @@ export const CollapsePanelInner = defineComponent({
   props: {
     prefixCls: { type: String, required: true },
     panelKey: { type: String, required: true },
+    // 内部：由 Collapse 主组件程序化传递 / 无模板上下文，VNode prop 合法
     header: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     isActive: { type: Boolean, default: false },
     accordion: { type: Boolean, default: false },
@@ -61,6 +62,7 @@ export const CollapsePanelInner = defineComponent({
       type: Function as PropType<PanelInnerProps['expandIcon']>,
       default: undefined,
     },
+    // 内部：由 Collapse 主组件程序化传递 / 无模板上下文，VNode prop 合法
     children: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     onItemClick: {
       type: Function as PropType<(key: string) => void>,
@@ -69,6 +71,7 @@ export const CollapsePanelInner = defineComponent({
     destroyOnHidden: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     showArrow: { type: Boolean, default: true },
+    // 内部：由 Collapse 主组件程序化传递 / 无模板上下文，VNode prop 合法
     extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     headerClass: { type: String, default: undefined },
     collapsible: {
@@ -271,16 +274,23 @@ export const CollapsePanelInner = defineComponent({
   },
 });
 
-/** antd CollapsePanel（薄壳）：prefixCls + no-arrow 类 + disabled 告警。 */
+/**
+ * antd CollapsePanel（薄壳）：prefixCls + no-arrow 类 + disabled 告警。
+ *
+ * 公开 API（用户在模板里写 `<Collapse.Panel>`）：
+ * - `header`：文本主导 prop，收窄为 `string`；富内容走 `#header` 插槽。
+ * - `extra`：VNode 主导 prop，已移除，**改 `#extra` 插槽**（Collapse 主组件解析面板 vnode 时从 slot 读取）。
+ * - `children`：React 遗留 prop，已移除，面板内容一律走**默认插槽**。
+ */
 export const CollapsePanel = defineComponent({
   name: 'ACollapsePanel',
   props: {
-    header: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 文本主导 prop（规则 #1）：收窄 string + 同名 slot 优先
+    header: { type: String, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     showArrow: { type: Boolean, default: true },
     forceRender: { type: Boolean, default: undefined },
-    extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     collapsible: {
       type: String as PropType<CollapsibleType>,
       default: undefined,

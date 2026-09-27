@@ -52,8 +52,10 @@ export default defineComponent({
     /** 离场动效启动时回调（见文件头的平台差异说明）。 */
     onLeaveStart: { type: Function as PropType<() => void>, default: undefined },
     // 面板侧透传
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     closable: { type: [Boolean, Object] as PropType<unknown>, default: true },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     onClose: { type: Function as PropType<(e: Event) => void>, default: undefined },
     bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },

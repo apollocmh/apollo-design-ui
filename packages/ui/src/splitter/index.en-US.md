@@ -21,7 +21,6 @@ A splitter container with draggable panels.
 | vertical | Same as `orientation="vertical"` | `boolean` | — |
 | layout | ⚠️ Deprecated: use `orientation` | — | — |
 | collapsible | `{ motion?: boolean; icon?: { start?, end? } }` | — | — |
-| draggerIcon | Custom dragger icon | `VNodeChild` | — |
 | lazy | Drag shows a preview line only; commit on release | `boolean` | — |
 | destroyOnHidden | Destroy collapsed panel content | `boolean` | — |
 | classNames / styles | Semantic slots `{ root, panel, dragger }` | — | — |
@@ -30,6 +29,13 @@ A splitter container with draggable panels.
 
 `resize-start` / `resize` / `resize-end` (sizes: number[]), `collapse`
 (collapsed: boolean[], sizes: number[]), `dragger-double-click` (index: number).
+
+### Slots
+
+| Name | Description |
+|---|---|
+| default | Panel content (`<Splitter.Panel>` list) |
+| draggerIcon | Custom dragger icon (was the `draggerIcon` prop) |
 
 ### Splitter.Panel
 

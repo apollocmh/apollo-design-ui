@@ -31,7 +31,7 @@ See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
 | optionFilterProp | Filter fields (array for multi-field OR) | `string \| string[]` | `'value'` |
 | filterSort | Sort the filtered options | `fn` | — |
 | allowClear | Clear button (`{ clearIcon, label }` to customize) | `boolean \| object` | `false` |
-| placeholder | Placeholder | — | — |
+| placeholder | Placeholder text (rich content via the `#placeholder` slot) | `string` | — |
 | size | Size | `'small' \| 'middle' \| 'large'` | `'middle'` |
 | variant | Variant | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | status | Validation status | `'error' \| 'warning' \| 'success' \| 'validating'` | — |
@@ -43,8 +43,6 @@ See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
 | popupMatchSelectWidth | Popup width follows the trigger | `boolean \| number` | `true` |
 | placement | Popup placement | 4 values | `'bottomLeft'` |
 | open / defaultOpen | Controlled open (`v-model:open`) | `boolean` | `false` |
-| optionRender / tagRender / labelRender / popupRender | Custom renderers (same-named scoped slots also provided; prop wins) | `fn` | — |
-| notFoundContent | Empty content (not rendered in combobox) | — | `<Empty>` |
 | fieldNames / optionLabelProp | Field mapping / backfill field | — | `label` |
 | virtual | Virtual scrolling | `boolean` | `true` |
 | classNames / styles | Semantic `root/prefix/suffix/input/placeholder/content/item/itemContent/itemRemove/clear/popup.{root,list,listItem}` | — | — |
@@ -64,9 +62,15 @@ See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
 
 ### Slots
 
-`prefix` / `suffixIcon` / `clearIcon` / `removeIcon` / `placeholder` / `notFoundContent` /
-`optionRender` / `tagRender` / `labelRender` / `popupRender` / `maxTagPlaceholder` /
+`prefix` / `suffixIcon` / `loadingIcon` / `clearIcon` / `removeIcon` / `placeholder` /
+`notFoundContent` / `optionRender="{ option, index }"` / `tagRender` / `labelRender` /
+`popupRender="{ menu }"` / `maxTagPlaceholder="{ omittedValues }"` /
+`menuItemSelectedIcon="{ value, disabled, isSelected }"` /
 `default` (`Select.Option` / `Select.OptGroup` children form, deprecated but supported).
+
+> ⚠️ antd's ReactNode props (`suffixIcon` / `notFoundContent` / `optionRender` /
+> `maxTagPlaceholder` etc.) are **scoped slots only** in this library — no same-named
+> props are kept (rule C8-R2).
 
 ### Methods
 
@@ -81,6 +85,6 @@ See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
 
 - **Vue-native rebuild of the rc-select 1.10.1 core** (engine/, five layers); no
   `-selector` wrapper in the v6 DOM.
-- **Differences**: D106–D110 (COMPATIBILITY §9.2); gaps see [`README.md`](./README.md) §5.
+- **Differences**: D106–D110 (COMPATIBILITY §9.2); ReactNode props fully migrated to slots (C8-R2); gaps see [`README.md`](./README.md) §5.
 - ⚠️ Filtering matches by `value` by default — pass
   `showSearch: { optionFilterProp: 'label' }` to match by label.

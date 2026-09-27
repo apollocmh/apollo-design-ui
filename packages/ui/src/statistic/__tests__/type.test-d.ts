@@ -43,7 +43,8 @@ describe('Statistic · Props 类型', () => {
     expectTypeOf<StatisticProps['decimalSeparator']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<StatisticProps['groupSeparator']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<StatisticProps['precision']>().toEqualTypeOf<number | undefined>();
-    expectTypeOf<StatisticProps['title']>().toEqualTypeOf<VNodeChild | undefined>();
+    // C8-R2：title 收窄 string（富内容走 #title 插槽）
+    expectTypeOf<StatisticProps['title']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<StatisticProps['valueStyle']>().toEqualTypeOf<CSSProperties | undefined>();
   });
 

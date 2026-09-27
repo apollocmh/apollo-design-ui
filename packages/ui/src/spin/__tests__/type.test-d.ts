@@ -66,7 +66,7 @@ describe('Spin · Props', () => {
       description: 'desc',
       delay: 500,
       wrapperClassName: 'w',
-      indicator: h('span'),
+      // indicator prop 已删除（C8-R2）—— 自定义指示器走 `#indicator` 插槽
       percent: 'auto',
       fullscreen: true,
       classNames: { root: 'r' },

@@ -148,7 +148,7 @@ function getNextFocusElement(
   }
   const sameLevelFocusableMenuElementList = getFocusableElements(parentQueryContainer, elements);
   const count = sameLevelFocusableMenuElementList.length;
-  let focusIndex = sameLevelFocusableMenuElementList.findIndex((ele) => focusMenuElement === ele);
+  let focusIndex = sameLevelFocusableMenuElementList.indexOf(focusMenuElement as Element);
   if (offset < 0) {
     focusIndex = focusIndex === -1 ? count - 1 : focusIndex - 1;
   } else if (offset > 0) {

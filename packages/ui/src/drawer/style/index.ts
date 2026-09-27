@@ -126,9 +126,7 @@ const RULES = `
 /** 生成单个前缀下的完整样式（约定出口：ant 前缀在出口替换类名段）。 */
 export function genDrawerStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
-    prefixCls === 'apollo'
-      ? cssText
-      : cssText.split('.apollo-drawer').join('.' + prefixCls + '-drawer');
+    prefixCls === 'apollo' ? cssText : cssText.split('.apollo-drawer').join(`.${prefixCls}-drawer`);
   return `.apollo-drawer{${DECLS}}
 ${rename(RULES)}`;
 }

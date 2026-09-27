@@ -23,7 +23,7 @@ import { disabledContextKey } from '../config-provider/disabled-context';
 import NormalCancelBtn from './components/NormalCancelBtn';
 import NormalOkBtn from './components/NormalOkBtn';
 import { modalContextKey } from './context';
-import type { ModalButtonProps, ModalFooterExtra, ModalOkType, ModalProps } from './interface';
+import type { ModalButtonProps, ModalFooterExtra, ModalOkType } from './interface';
 import { fallbackProp } from './util';
 
 /** `<span class="{p}-close-x">` 包裹关闭图标（上游 `renderCloseIcon`）。 */
@@ -51,16 +51,21 @@ export default defineComponent({
   name: 'AModalFooter',
   inheritAttrs: false,
   props: {
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     okType: { type: String as PropType<ModalOkType>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     confirmLoading: { type: Boolean, default: undefined },
     onOk: { type: Function as PropType<(e: Event) => void>, default: undefined },
     onCancel: { type: Function as PropType<(e: Event) => void>, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     cancelButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
+    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: {
-      type: [String, Number, Object, Array, Function] as unknown as PropType<ModalProps['footer']>,
+      type: [String, Number, Object, Array, Function] as unknown as PropType<
+        VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild)
+      >,
       default: undefined,
     },
   },

@@ -34,14 +34,13 @@
  * ```
  */
 
-import { isFunction, isRenderable, pickAttrs, useDevWarning } from '@apollo-design/utils';
+import { isRenderable, pickAttrs, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
   type PropType,
   shallowRef,
-  type VNode,
   type VNodeChild,
   watchEffect,
 } from 'vue';
@@ -69,10 +68,6 @@ export default defineComponent({
     value: { type: [Number, String] as PropType<ValueType>, default: 0 },
     valueStyle: {
       type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
-    valueRender: {
-      type: Function as PropType<(node: VNode) => VNodeChild>,
       default: undefined,
     },
     title: { type: null as unknown as PropType<StatisticProps['title']>, default: undefined },
@@ -197,10 +192,12 @@ export default defineComponent({
         style: mergedStyles.value.value as never,
       } as never);
 
-      // antd 逐字：isFunction(valueRender) ? valueRender(valueNode) : valueNode
-      const mergedValueNode = isFunction(props.valueRender)
-        ? props.valueRender(valueNode as VNode)
-        : (valueNode as VNodeChild);
+      // C8-R2：render fn（antd `valueRender(node)`）→ 作用域插槽 `#valueRender="{ node }"`
+      const mergedValueNode = (
+        slots.valueRender
+          ? (slots.valueRender as (p: { node: unknown }) => unknown)({ node: valueNode })
+          : valueNode
+      ) as VNodeChild;
 
       const contentNode = h(
         'div',

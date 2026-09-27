@@ -46,14 +46,14 @@ describe('Menu · L1 渲染结构', () => {
 
     const menuItems = ul.querySelectorAll(':scope > li.apollo-menu-item');
     expect(menuItems.length).toBe(2); // One / Two（divider/submenu/group 是别的类）
-    expect(menuItems[0]!.getAttribute('data-menu-id')).toMatch(/-1$/);
-    expect(menuItems[1]!.className).toContain('apollo-menu-item-disabled');
+    expect(menuItems[0]?.getAttribute('data-menu-id')).toMatch(/-1$/);
+    expect(menuItems[1]?.className).toContain('apollo-menu-item-disabled');
 
     expect(ul.querySelector('.apollo-menu-item-divider')).not.toBeNull();
     expect(ul.querySelector('.apollo-menu-submenu')).not.toBeNull();
     const group = ul.querySelector('.apollo-menu-item-group');
     expect(group).not.toBeNull();
-    expect(group!.querySelector('ul[role="group"]')).not.toBeNull();
+    expect(group?.querySelector('ul[role="group"]')).not.toBeNull();
     wrapper.unmount();
   });
 
@@ -63,7 +63,7 @@ describe('Menu · L1 渲染结构', () => {
     const hidden = wrapper.element.querySelector('div[aria-hidden="true"]');
     expect(hidden).not.toBeNull();
     // measure 模式下全部组件渲染 null（只登记路径）—— 与 rc 一致
-    expect(hidden!.querySelectorAll('li').length).toBe(0);
+    expect(hidden?.querySelectorAll('li').length).toBe(0);
     wrapper.unmount();
   });
 
@@ -71,7 +71,7 @@ describe('Menu · L1 渲染结构', () => {
     const wrapper = mountMenu({ id: 'my-menu' });
     await nextTick();
     const visible = wrapper.element.querySelector('ul[data-menu-list] li[data-menu-id]');
-    expect(visible!.getAttribute('data-menu-id')).toContain('my-menu-');
+    expect(visible?.getAttribute('data-menu-id')).toContain('my-menu-');
     wrapper.unmount();
   });
 });
@@ -83,7 +83,7 @@ describe('Menu · L1 选择协议', () => {
     await nextTick();
     (wrapper.element.querySelector('li[data-menu-id$="-1"]') as HTMLElement).click();
     expect(onClick).toHaveBeenCalledTimes(1);
-    const info = onClick.mock.calls[0]![0];
+    const info = onClick.mock.calls[0]?.[0];
     expect(info.key).toBe('1');
     expect(info.keyPath).toEqual(['1']);
     expect(info.itemData.key).toBe('1');
@@ -98,8 +98,8 @@ describe('Menu · L1 选择协议', () => {
     (wrapper.element.querySelector('li[data-menu-id$="-1"]') as HTMLElement).click();
     await nextTick();
     expect(onSelect).toHaveBeenCalledTimes(1);
-    expect(onSelect.mock.calls[0]![0].selectedKeys).toEqual(['1']);
-    expect(wrapper.element.querySelector('li[data-menu-id$="-1"]')!.className).toContain(
+    expect(onSelect.mock.calls[0]?.[0].selectedKeys).toEqual(['1']);
+    expect(wrapper.element.querySelector('li[data-menu-id$="-1"]')?.className).toContain(
       'apollo-menu-item-selected',
     );
     wrapper.unmount();
@@ -111,7 +111,7 @@ describe('Menu · L1 选择协议', () => {
     (wrapper.element.querySelector('li[data-menu-id$="-1"]') as HTMLElement).click();
     await nextTick();
     // 受控：props.selectedKeys 仍指向 '2' ⇒ 选中类仍在 2 上
-    expect(wrapper.element.querySelector('li[data-menu-id$="-2"]')!.className).toContain(
+    expect(wrapper.element.querySelector('li[data-menu-id$="-2"]')?.className).toContain(
       'apollo-menu-item-selected',
     );
     expect(wrapper.emitted('update:selectedKeys')?.[0]).toEqual([['1']]);
@@ -135,7 +135,7 @@ describe('Menu · L1 选择协议', () => {
     subItem.click();
     expect(onClick).toHaveBeenCalledTimes(1);
     // rc：keyPath = [...connectedKeys].reverse()（antd 注释：legacy reversed）
-    expect(onClick.mock.calls[0]![0].keyPath).toEqual(['3', 'sub1']);
+    expect(onClick.mock.calls[0]?.[0].keyPath).toEqual(['3', 'sub1']);
     wrapper.unmount();
   });
 });
@@ -168,7 +168,7 @@ describe('Menu · L1 openKeys 与子菜单', () => {
 
     title.click();
     expect(onOpenChange).toHaveBeenCalledTimes(1);
-    expect(onOpenChange.mock.calls[0]![0]).toEqual(['sub1']);
+    expect(onOpenChange.mock.calls[0]?.[0]).toEqual(['sub1']);
     wrapper.unmount();
   });
 
@@ -228,7 +228,7 @@ describe('Menu · L1 键盘导航（roving tabindex）', () => {
     one.dispatchEvent(ev);
     await nextTick();
     expect(onClick).toHaveBeenCalledTimes(1);
-    expect(onClick.mock.calls[0]![0].key).toBe('1');
+    expect(onClick.mock.calls[0]?.[0].key).toBe('1');
     wrapper.unmount();
   });
 });

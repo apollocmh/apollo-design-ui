@@ -54,10 +54,11 @@ export default defineComponent({
             ]);
 
       if (error.value) {
+        // title 经 slot 传给 Alert（Alert.title 已收窄为 string，slot 才能携带 VNode）
         return h(
           Alert,
-          { id: props.id, type: 'error', title: errorMessage },
-          { description: () => [errorDescription] },
+          { id: props.id, type: 'error' },
+          { title: () => errorMessage, description: () => [errorDescription] },
         );
       }
       return slots.default?.();

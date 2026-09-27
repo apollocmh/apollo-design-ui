@@ -79,10 +79,18 @@ const PA = 'apollo-space-addon';
 const twoSpans = (): VNodeChild[] => [h('span', null, '1'), h('span', null, '2')];
 
 /** 挂载 `Space`。`children` 为 `undefined` 时**不传** `slots`（`slots.default` 才是 `undefined`）。 */
-const mountSpace = (props: Record<string, unknown> = {}, children?: VNodeChild[]) =>
+const mountSpace = (
+  props: Record<string, unknown> = {},
+  children?: VNodeChild[],
+  extraSlots?: Record<string, () => unknown>,
+) =>
   mount(Space, {
     props,
-    ...(children === undefined ? {} : { slots: { default: () => children } }),
+    ...(children === undefined && extraSlots === undefined
+      ? {}
+      : {
+          slots: { ...(children === undefined ? {} : { default: () => children }), ...extraSlots },
+        }),
   });
 
 const mountCompact = (props: Record<string, unknown> = {}, children?: VNodeChild[]) =>
@@ -440,16 +448,15 @@ describe('Space · separator / split', () => {
   it('★★ 上游缺陷（DEFECT）：`separator={0}` 在 antd 里会把数字 `0` 漏成文本节点，我们**不复刻**', () => {
     // antd：`{index < latestIndex && separator && (<span>…</span>)}` 在 `separator === 0`
     // 时求值成数字 `0`，React 把它渲染成文本 ⇒ DOM 是 `<div>a</div>0<div>b</div>`。
-    // 我们按「真值 ⇒ 渲染 span」的**意图**实现，不产生那个文本节点。
-    // 分类 DEFECT（COMPATIBILITY.md §9.2），证据在
-    // `tests/compat/baselines/space.dom.json` 的 `separator:zero`。
-    const w = mountSpace({ separator: 0 }, ['a', 'b']);
+    // C8-R2 后富内容走 `#separator` 插槽：显式渲染 `0` 会得到 **span 包裹**的 0
+    // （仍是「不产生裸文本节点」的 D40 意图），空插槽归一为 '' ⇒ 不渲染 span。
+    const w = mountSpace({ separator: 0 as unknown as string }, ['a', 'b']);
     expect(w.findAll(`.${P}-item-separator`)).toHaveLength(0);
     expect(w.element.textContent).toBe('ab');
   });
 
-  it('`separator` 可以是元素', () => {
-    const w = mountSpace({ separator: h('b', null, '|') }, ['a', 'b']);
+  it('富内容分隔符走 `#separator` 插槽（C8-R2：VNode 不再是 prop）', () => {
+    const w = mountSpace({}, ['a', 'b'], { separator: () => h('b', null, '|') });
     expect(w.find(`.${P}-item-separator`).element.innerHTML).toBe('<b>|</b>');
   });
 
@@ -789,10 +796,10 @@ describe('Space · 开发期告警', () => {
     expect(out).not.toContain('`direction` is deprecated');
   });
 
-  it('★ 传 `split` 会告警，提示改用 `separator`', async () => {
+  it('★ 传 `split` 会告警，提示改用 `#separator` 插槽', async () => {
     const out = await capturedWarnings(() => mountSpace({ split: '-' }, ['a', 'b']));
     expect(out).toContain('`split` is deprecated');
-    expect(out).toContain('`separator`');
+    expect(out).toContain('#separator slot');
   });
 
   it('不传 `split` 时**不**告警', async () => {

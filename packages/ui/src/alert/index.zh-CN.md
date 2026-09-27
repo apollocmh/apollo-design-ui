@@ -36,21 +36,28 @@ subtitle: 警告提示
 |---|---|---|---|
 | type | 提示类型 | `'success' \| 'info' \| 'warning' \| 'error'` | `banner ? 'warning' : 'info'` |
 | variant | 形态（6.4.0+） | `'outlined' \| 'filled'` | `'outlined'` |
-| title | 标题（prop / `#title` 插槽） | `VNodeChild` | — |
-| message | **@deprecated** 请用 `title` | `VNodeChild` | — |
-| description | 辅助描述（prop / `#description` 插槽） | `VNodeChild` | — |
+| title | 标题（prop / `#title` 插槽，prop 优先） | `string` | — |
+| message | **@deprecated** 请用 `title` | `string` | — |
+| description | 辅助描述（prop / `#description` 插槽，prop 优先） | `string` | — |
 | showIcon | 是否显示图标（banner 且未传 ⇒ true） | `boolean` | — |
-| icon | 自定义图标 | `VNodeChild` | — |
 | banner | 顶部通告形态 | `boolean` | `false` |
 | closable | 可关闭（对象形态恒可关，可带 closeIcon/onClose/afterClose 与任意 aria-*/data-*） | `boolean \| AlertClosable` | ConfigProvider |
-| closeIcon | **@deprecated** 请用 `closable.closeIcon`（`null/false` ⇒ 不可关） | `VNodeChild` | — |
-| closeText | **@deprecated** 请用 `closable.closeIcon` | `VNodeChild` | — |
+| closeIcon | **@deprecated** 请用 `closable.closeIcon`（`null/false` ⇒ 不可关） | `string \| boolean \| null` | — |
+| closeText | **@deprecated** 请用 `closable.closeIcon` | `string` | — |
 | onClose | **@deprecated** 请用 `closable.onClose` | `(e: MouseEvent) => void` | — |
 | afterClose | **@deprecated** 请用 `closable.afterClose` | `() => void` | — |
-| action | 操作区（prop / `#action` 插槽） | `VNodeChild` | — |
 | id / role | 根元素属性（role 默认 `'alert'`，可覆盖） | `string` | — |
 | classNames / styles | 语义槽位（root / icon / section / title / description / actions / close），对象或函数 | — | — |
 | onMouseenter / onMouseleave / onClick | 根元素事件 | `(e: MouseEvent) => void` | — |
+
+### 插槽（Slots）
+
+| 插槽 | 说明 |
+|---|---|
+| `#title` | 标题富内容（prop 优先）。 |
+| `#description` | 辅助描述富内容（prop 优先）。 |
+| `#icon` | 自定义图标，**覆盖**默认类型图标（原 `icon` prop，已移除）。 |
+| `#action` | 操作区内容（原 `action` prop，已移除）。 |
 
 ### Alert.ErrorBoundary
 

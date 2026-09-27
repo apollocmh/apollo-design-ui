@@ -8,9 +8,9 @@ const footerEnabled = ref(true);
 
 const classNames = { container: 'modal-custom-container' };
 
-/** 函数形态：按 props 决定样式 */
-const stylesFn = (info: { props: { footer?: unknown } }) => {
-  if (info.props.footer) {
+/** 函数形态：按 footer 开关决定样式 */
+const stylesFn = () => {
+  if (footerEnabled.value) {
     return {
       container: { borderRadius: '14px', border: '1px solid #ccc', padding: 0, overflow: 'hidden' },
       header: { padding: '16px' },
@@ -29,13 +29,13 @@ const stylesFn = (info: { props: { footer?: unknown } }) => {
     :open="open"
     :class-names="classNames"
     :styles="stylesFn"
-    :footer="footerEnabled ? undefined : null"
     @ok="open = false"
     @cancel="open = false"
   >
     <div style="line-height: 28px">🌈 Enterprise-class UI designed for web applications.</div>
     <div style="line-height: 28px">📦 A set of high-quality components out of the box.</div>
     <div style="line-height: 28px">🎨 Powerful theme customization in every detail.</div>
+    <template #footer v-if="!footerEnabled"></template>
   </Modal>
 </template>
 

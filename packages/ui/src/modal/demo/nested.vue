@@ -18,7 +18,6 @@ const onShowStatic = () => {
   <Modal
     title="Basic Modal"
     :open="open"
-    :footer="null"
     destroy-on-hidden
     :mask="{ closable: false }"
     :closable="false"
@@ -26,10 +25,10 @@ const onShowStatic = () => {
     @cancel="open = false"
   >
     <p>Some contents...</p>
+    <template #footer></template>
     <Modal
       title="Nested Modal"
       :open="open"
-      :footer="null"
       destroy-on-hidden
       :mask="false"
       :closable="false"
@@ -40,10 +39,10 @@ const onShowStatic = () => {
       @cancel="open = false"
     >
       <p>Nested contents...</p>
+      <template #footer></template>
       <Modal
         title="Nested Modal"
         :open="open"
-        :footer="null"
         destroy-on-hidden
         :mask="false"
         :closable="false"
@@ -54,6 +53,7 @@ const onShowStatic = () => {
         @cancel="open = false"
       >
         <Button @click="onShowStatic">Static Confirm</Button>
+        <template #footer></template>
       </Modal>
     </Modal>
   </Modal>

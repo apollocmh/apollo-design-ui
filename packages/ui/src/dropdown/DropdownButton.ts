@@ -6,6 +6,7 @@
  */
 
 import { EllipsisOutlined } from '@apollo-design/icons';
+import { isEmptyVNode } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
 
 import Button from '../button';
@@ -27,7 +28,7 @@ const DropdownButton = defineComponent({
     loading: { type: Boolean, default: undefined },
     danger: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: undefined },
-    icon: { type: [Object, String, Function] as PropType<VNodeChild>, default: undefined },
+    // icon：C8-R2 改 `#icon` 插槽（默认 EllipsisOutlined）
     href: { type: String, default: undefined },
     onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     // Dropdown 通道
@@ -47,10 +48,7 @@ const DropdownButton = defineComponent({
       default: undefined,
     },
     split: { type: Boolean, default: undefined },
-    buttonsRender: {
-      type: Function as PropType<(buttons: VNodeChild[]) => VNodeChild[]>,
-      default: undefined,
-    },
+
     autoAdjustOverflow: { type: Boolean, default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
@@ -58,10 +56,7 @@ const DropdownButton = defineComponent({
       type: Function as PropType<(node: HTMLElement) => HTMLElement>,
       default: undefined,
     },
-    popupRender: {
-      type: Function as PropType<(node: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
+
     id: { type: String, default: undefined },
     zIndex: { type: Number, default: undefined },
   },
@@ -83,7 +78,15 @@ const DropdownButton = defineComponent({
       nativeElement: () => dropdownRef.value?.nativeElement() ?? null,
     });
 
-    const defaultIcon = computed<VNodeChild>(() => props.icon ?? h(EllipsisOutlined));
+    // C8-R2：`#icon` 插槽 → 默认 EllipsisOutlined
+    const defaultIcon = computed<VNodeChild>(() => {
+      const fromSlot = slots.icon?.();
+      if (fromSlot !== undefined && !isEmptyVNode(fromSlot)) {
+        const first = Array.isArray(fromSlot) ? fromSlot[0] : fromSlot;
+        return first as VNodeChild;
+      }
+      return h(EllipsisOutlined);
+    });
 
     return () => {
       const children = slots.default?.();
@@ -109,9 +112,12 @@ const DropdownButton = defineComponent({
         icon: defaultIcon.value,
       });
 
-      const buttons =
-        props.buttonsRender?.([leftButton, rightButton] as VNodeChild[]) ??
-        ([leftButton, rightButton] as VNodeChild[]);
+      // C8-R2：`#buttonsRender="{ buttons }"` 作用域插槽（原 buttonsRender fn prop）
+      const buttons = slots.buttonsRender
+        ? ((slots.buttonsRender as (p: { buttons: VNodeChild[] }) => unknown)({
+            buttons: [leftButton, rightButton] as VNodeChild[],
+          }) as VNodeChild[])
+        : ([leftButton, rightButton] as VNodeChild[]);
 
       const dropdownProps = {
         menu: props.menu,
@@ -126,7 +132,12 @@ const DropdownButton = defineComponent({
         autoAdjustOverflow: props.autoAdjustOverflow,
         destroyOnHidden: props.destroyOnHidden,
         forceRender: props.forceRender,
-        popupRender: props.popupRender,
+        popupRender: slots.popupRender
+          ? (node: VNodeChild) =>
+              (slots.popupRender as (p: { originNode: VNodeChild }) => unknown)({
+                originNode: node,
+              })
+          : undefined,
         id: props.id,
         zIndex: props.zIndex,
         open: props.open,

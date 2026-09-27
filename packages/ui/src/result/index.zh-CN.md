@@ -29,11 +29,17 @@ subtitle: 结果页
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | status | 结果状态，决定图标与颜色（异常值渲染静态插画） | `'success' \| 'error' \| 'info' \| 'warning' \| '403' \| '404' \| '500'` | `'info'` |
-| icon | 自定义图标（异常状态忽略；`null`/`false` 显式禁用） | `VNodeChild` | — |
-| title | 标题 | `VNodeChild` | — |
-| subTitle | 副标题 | `VNodeChild` | — |
-| extra | 操作区（**prop**，不是插槽） | `VNodeChild` | — |
+| icon | 自定义图标开关：`null`/`false` 显式禁用；自定义图标用 `#icon` 插槽（C8-R2） | `boolean \| null` | — |
+| title | 标题文本（富内容用 `#title` 插槽，slot 优先） | `string` | — |
+| subTitle | 副标题文本（富内容用 `#subTitle` 插槽，slot 优先） | `string` | — |
 | classNames / styles | 语义槽位（root / title / subTitle / body / extra / icon） | — | — |
+
+### Slots
+
+- `#icon` —— 自定义状态图标（覆盖默认图标）。
+- `#title` / `#subTitle` —— 富文本标题 / 副标题。
+- `#extra` —— 操作区。
+- 默认插槽 —— 正文内容区。
 
 ### 静态导出
 

@@ -25,15 +25,7 @@
 
 import { LoadingOutlined } from '@apollo-design/icons';
 import { KeyCode, useControlledValue, useDevWarning } from '@apollo-design/utils';
-import {
-  computed,
-  defineComponent,
-  h,
-  type PropType,
-  shallowRef,
-  type VNodeChild,
-  watchEffect,
-} from 'vue';
+import { computed, defineComponent, h, type PropType, shallowRef, watchEffect } from 'vue';
 import {
   mergeClassNames,
   mergeStyles,
@@ -65,10 +57,9 @@ export const SwitchComponent = defineComponent({
     defaultChecked: { type: Boolean, default: undefined },
     value: { type: Boolean, default: undefined },
     defaultValue: { type: Boolean, default: undefined },
-    // ⚠️ VNodeChild 必须用 `type: null` + 显式 `default: undefined`（规则 D21 /
-    //    PITFALLS 137）：含 Boolean 的运行时类型会把「未传」转成 false，内容整块消失。
-    checkedChildren: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    unCheckedChildren: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    // 文本主导 prop（规则 #1）：收窄 string + 同名 slot 优先（#checkedChildren / #unCheckedChildren）
+    checkedChildren: { type: String, default: undefined },
+    unCheckedChildren: { type: String, default: undefined },
     disabled: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: false },
     autoFocus: { type: Boolean, default: undefined },
@@ -88,7 +79,7 @@ export const SwitchComponent = defineComponent({
    * 从 attrs 摘掉（PITFALLS 35）。它们与语义事件**同时**发出（规则 C11）。
    */
   emits: ['update:checked', 'update:value'],
-  setup(props, { attrs, emit, expose }) {
+  setup(props, { attrs, emit, expose, slots }) {
     // ⚠️ `onKeyDown` **不在** `SwitchProps` 里（antd 的 `SwitchProps` 也没有它 ——
     //    它是 rc-switch 的 props，antd 靠 `{...restProps}` 透传）。所以这里不能写
     //    `Pick<SwitchProps, 'onKeyDown'>`（会 TS2344），必须显式列一遍。
@@ -258,7 +249,7 @@ export const SwitchComponent = defineComponent({
                 class: [`${cls}-inner-checked`, mergedClassNames.value.content],
                 ...styleAttrs(mergedStyles.value.content),
               },
-              [props.checkedChildren as VNodeChild],
+              [slots.checkedChildren?.() ?? props.checkedChildren],
             ),
             h(
               'span',
@@ -266,7 +257,7 @@ export const SwitchComponent = defineComponent({
                 class: [`${cls}-inner-unchecked`, mergedClassNames.value.content],
                 ...styleAttrs(mergedStyles.value.content),
               },
-              [props.unCheckedChildren as VNodeChild],
+              [slots.unCheckedChildren?.() ?? props.unCheckedChildren],
             ),
           ]),
         ],

@@ -51,6 +51,7 @@ function normalizeNode(node: VNodeChild): VNodeChild {
 export const NodeRenderer = defineComponent({
   name: 'ANodeRenderer',
   props: {
+    // 内部：由 empty 预设程序化传递，无模板上下文，VNode prop 合法（C8-R2 §4）。
     node: { type: null as unknown as PropType<VNodeChild>, default: null },
   },
   setup(props) {

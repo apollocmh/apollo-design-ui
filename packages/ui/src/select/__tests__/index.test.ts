@@ -212,7 +212,9 @@ describe('Select · 打开 / 关闭', () => {
 
   it('notFoundContent 为空且无选项 ⇒ 不允许打开', async () => {
     const wrapper = mount(Select, {
-      props: { options: [], notFoundContent: null as unknown as undefined, open: false, id: 'x' },
+      // notFoundContent 已迁到 slot（规则 C8-R2）：空渲染 ⇒ null ⇒ 不允许打开
+      props: { options: [], open: false, id: 'x' },
+      slots: { notFoundContent: () => [] },
       attachTo: document.body,
     });
     await wrapper.find('.apollo-select').trigger('mousedown');

@@ -4,7 +4,7 @@
  * 真正的条目化由 Descriptions 的 `transChildren2Items` 读 vnode.props 完成。
  */
 
-import { defineComponent, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import type { DescriptionsItemType } from './interface';
 
 /**
@@ -13,8 +13,9 @@ import type { DescriptionsItemType } from './interface';
  */
 export const DescriptionsItemComponent = defineComponent({
   name: 'ADescriptionsItem',
+  // ⚠️ C8-R2：`label` 收窄为 String（富 label 走 `items` 程序化 API，其 `label` 仍接受 VNodeChild）。
   props: {
-    label: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    label: { type: String, default: undefined },
     span: {
       type: [Number, String, Object] as PropType<DescriptionsItemType['span']>,
       default: undefined,

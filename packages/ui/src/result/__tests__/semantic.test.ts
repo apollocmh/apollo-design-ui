@@ -30,7 +30,8 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
       h(Result, { title: 'Your operation has been executed' }, () => h('p', null, 'body')),
   },
   'result:success': {
-    render: () => h(Result, { status: 'success', title: 'Success', subTitle: 'Sub', extra: Btn() }),
+    render: () =>
+      h(Result, { status: 'success', title: 'Success', subTitle: 'Sub' }, { extra: Btn }),
   },
   'result:error': {
     render: () =>
@@ -43,7 +44,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
   'result:info-explicit': { render: () => h(Result, { status: 'info', title: 'Info' }) },
   'result:404': {
-    render: () => h(Result, { status: '404', title: '404', subTitle: 'Not Found', extra: Btn() }),
+    render: () => h(Result, { status: '404', title: '404', subTitle: 'Not Found' }, { extra: Btn }),
   },
   'result:500': {
     render: () => h(Result, { status: '500', title: '500', subTitle: 'Server Error' }),
@@ -52,26 +53,32 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'result:icon-null': { render: () => h(Result, { title: 'No icon', icon: null }) },
   'result:icon-false': { render: () => h(Result, { title: 'No icon', icon: false }) },
   'result:icon-custom': {
-    render: () => h(Result, { title: 'Custom', icon: h('span', { class: 'my-icon' }, 'i') }),
+    render: () =>
+      h(Result, { title: 'Custom' }, { icon: () => h('span', { class: 'my-icon' }, 'i') }),
   },
-  'result:guard-empty-strings': { render: () => h(Result, { title: '', subTitle: '', extra: '' }) },
+  'result:guard-empty-strings': {
+    render: () => h(Result, { title: '', subTitle: '' }, { extra: () => '' }),
+  },
   'result:body-renders': { render: () => h(Result, { title: 'T' }, () => h('p', null, 'body')) },
   'result:semantic': {
     render: () =>
-      h(Result, {
-        status: 'success',
-        title: 'T',
-        subTitle: 'S',
-        extra: Btn(),
-        classNames: {
-          root: 'demo-root',
-          title: 'demo-title',
-          subTitle: 'demo-sub',
-          icon: 'demo-icon',
-          extra: 'demo-extra',
+      h(
+        Result,
+        {
+          status: 'success',
+          title: 'T',
+          subTitle: 'S',
+          classNames: {
+            root: 'demo-root',
+            title: 'demo-title',
+            subTitle: 'demo-sub',
+            icon: 'demo-icon',
+            extra: 'demo-extra',
+          },
+          styles: { root: { padding: '16px' }, title: { color: 'red' }, icon: { opacity: 0.8 } },
         },
-        styles: { root: { padding: '16px' }, title: { color: 'red' }, icon: { opacity: 0.8 } },
-      }),
+        { extra: Btn },
+      ),
   },
 };
 

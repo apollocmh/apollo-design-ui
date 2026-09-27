@@ -45,10 +45,15 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'tag:inverse-color': { render: () => h(Tag, { color: 'blue-inverse' }, () => 'x') },
   'tag:closable': { render: () => h(Tag, { closable: true }, () => 'x') },
   'tag:custom-close-icon': {
-    render: () => h(Tag, { closable: true, closeIcon: h('em', null, 'x') }, () => 'x'),
+    // C8-R2：closeIcon 走 `#closeIcon` 插槽
+    render: () =>
+      h(Tag, { closable: true }, { default: () => 'x', closeIcon: () => h('em', null, 'x') }),
   },
   'tag:closable-disabled': { render: () => h(Tag, { closable: true, disabled: true }, () => 'x') },
-  'tag:icon': { render: () => h(Tag, { icon: h('i', { class: 'my-icon' }) }, () => 'x') },
+  'tag:icon': {
+    // C8-R2：icon 走 `#icon` 插槽
+    render: () => h(Tag, {}, { default: () => 'x', icon: () => h('i', { class: 'my-icon' }) }),
+  },
   'checkable:checked': { render: () => h(CheckableTag, { checked: true }, () => 'Yes') },
   'checkable:unchecked': { render: () => h(CheckableTag, { checked: false }, () => 'No') },
   'checkable:disabled': {

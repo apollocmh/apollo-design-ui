@@ -118,15 +118,15 @@ export interface AlertProps {
   /**
    * @deprecated 请用 `closable.closeIcon`。关闭文案（真值 ⇒ 可关）。
    */
-  closeText?: VNodeChild;
-  /** 标题内容。 */
-  title?: VNodeChild;
+  closeText?: string;
+  /** 标题内容（prop 收窄 string，或通过 `#title` 插槽传入富内容）。 */
+  title?: string;
   /**
    * @deprecated 请用 `title`。
    */
-  message?: VNodeChild;
-  /** 辅助描述（有值 ⇒ `-with-description`）。 */
-  description?: VNodeChild;
+  message?: string;
+  /** 辅助描述（有值 ⇒ `-with-description`；prop 收窄 string，或 `#description` 插槽）。 */
+  description?: string;
   /**
    * @deprecated 请用 `closable.onClose`。
    */
@@ -149,14 +149,10 @@ export interface AlertProps {
   style?: CSSProperties;
   /** 顶部通告形态（边框/圆角清零、默认 warning + 图标）。 */
   banner?: boolean;
-  /** 自定义图标（覆盖默认类型图标）。 */
-  icon?: VNodeChild;
   /**
    * @deprecated 请用 `closable.closeIcon`。`null` / `false` ⇒ **不可关**。
    */
-  closeIcon?: VNodeChild;
-  /** 操作区（`-actions` 区块）。 */
-  action?: VNodeChild;
+  closeIcon?: string | boolean | null;
   /** 根元素 id。 */
   id?: string;
   /** 根元素 mouseenter。 */
@@ -211,7 +207,12 @@ export interface ErrorBoundaryProps {
  */
 export interface AlertConfig
   extends ComponentStyleConfig,
-    Pick<AlertProps, 'variant' | 'closable' | 'closeIcon' | 'classNames' | 'styles'> {
+    Pick<AlertProps, 'variant' | 'closable' | 'classNames' | 'styles'> {
+  /**
+   * 程序化上下文：ConfigProvider 可传入 VNode 关闭图标（规则 #5：保留）。
+   * 注意：公开 prop `AlertProps.closeIcon` 已收窄为非 VNode，此处为内部配置专属类型。
+   */
+  closeIcon?: VNodeChild;
   /** success 类型的默认图标（覆盖 CheckCircleFilled）。 */
   successIcon?: VNodeChild;
   /** info 类型的默认图标（覆盖 InfoCircleFilled）。 */

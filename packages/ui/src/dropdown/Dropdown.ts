@@ -37,7 +37,6 @@ import type { DropdownPopupPlacement, DropdownProps, DropdownTriggerAction } fro
 import { dropdownTokenValues } from './style/token';
 
 const DEPRECATIONS: Array<[keyof DropdownProps, string]> = [
-  ['dropdownRender', 'popupRender'],
   ['destroyPopupOnHide', 'destroyOnHidden'],
   ['overlayClassName', 'classNames.root'],
   ['overlayStyle', 'styles.root'],
@@ -86,14 +85,6 @@ const Dropdown = defineComponent({
     forceRender: { type: Boolean, default: undefined },
     getPopupContainer: {
       type: Function as PropType<(node: HTMLElement) => HTMLElement>,
-      default: undefined,
-    },
-    popupRender: {
-      type: Function as PropType<(node: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
-    dropdownRender: {
-      type: Function as PropType<(node: VNodeChild) => VNodeChild>,
       default: undefined,
     },
     overlayClassName: { type: String, default: undefined },
@@ -200,7 +191,15 @@ const Dropdown = defineComponent({
       NonNullable<DropdownProps['styles']>
     >([() => props.classNames], [() => props.styles], {} as Record<string, never>);
 
-    const mergedPopupRender = props.popupRender ?? props.dropdownRender;
+    // C8-R2：render fn（popupRender(node) / deprecated dropdownRender）已删除 ——
+    // 自定义浮层内容走 `#popupRender="{ originNode }"` 作用域插槽。
+    const popupRenderFn = slots.popupRender
+      ? (node: VNodeChild) =>
+          (slots.popupRender as (p: { originNode: VNodeChild }) => unknown)({
+            originNode: node,
+          })
+      : undefined;
+    const mergedPopupRender = popupRenderFn;
 
     const triggerActions = computed<DropdownTriggerAction[]>(() =>
       props.disabled ? [] : (props.trigger ?? ['hover']),
@@ -232,7 +231,7 @@ const Dropdown = defineComponent({
               } as never)
             : null;
           if (mergedPopupRender) {
-            overlayNode = mergedPopupRender(overlayNode);
+            overlayNode = mergedPopupRender(overlayNode) as VNodeChild;
           }
           if (typeof overlayNode === 'string') {
             overlayNode = h('span', overlayNode);
