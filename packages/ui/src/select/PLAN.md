@@ -35,7 +35,7 @@
 - [x] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [x] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [x] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT（待 test:build 绿后提交） —— commit message 带 [COMP:select]
+- [x] G14 COMMIT —— 三批全落（内核 `63e21a6` / 测试文档 `e843207` / 收口本提交） —— commit message 带 [COMP:select]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
@@ -49,3 +49,12 @@
 8. **凡是要断言「某决策/约定是这样」先跑 node registry/tools/ask.mjs**，不凭记忆。
 9. **跑重型门禁前关 IDE** —— 实测 16 分钟 → 7 分 49 秒。
 10. **改完文件回读** —— Edit 偶发报 success 但内容未变；biome 会重排 import。
+
+
+## 收口证据（2026-09-27 实测）
+
+- registry:check 18/18 · lint 0 类型错误 + biome 0 error · test 四层全绿
+  （unit 190/4224 · dom 45/1064 · a11y 44/613 · theme 41/491）
+- test:build **141 项 · FAIL 0**（1 PENDING = B6 全库既有；本次 1m40s，未复现上次的慢重建）
+- test:visual --component select **9/9 全 0.000% exact**
+- L1/L2 33 + 内核外 demo 35 + L3 5 + L4 10 + L5 36 + L7(theme) 12
