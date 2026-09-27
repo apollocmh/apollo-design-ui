@@ -391,6 +391,14 @@ export const COMPONENTS = {
       'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
     ],
   },
+  rate: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: [
+      'basic', // 默认 + disabled
+      'half', // 半星
+      'character', // 自定义字符
+    ],
+  },
   steps: {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [

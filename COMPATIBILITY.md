@@ -564,3 +564,13 @@ const [api, ContextHolder] = useMessage();
   <button @click="api.success('ok')" />
 </template>
 ```
+
+### D112 · Rate：tooltips × characterRender 组合（INTENDED）
+
+- **antd**：壳的 `characterRender` 包 Tooltip；若用户同时传 `characterRender`，JSX spread
+  顺序使**用户版本覆盖** tooltip 包装 ⇒ tooltips 静默失效。
+- **本仓**：`tooltips`（数据 prop）与 `#characterRender`（插槽）**组合** —— 先 Tooltip
+  包装、再交用户插槽。Vue 插槽没有「覆盖」的传参通道，组合是唯一自然语义，且修掉了
+  上游「传 characterRender 会弄坏 tooltips」的坑。
+- **分类**：INTENDED（Vue-native 更合理）。断言：`rate/__tests__/index.test.ts`
+  「tooltips 与 #characterRender 组合」。

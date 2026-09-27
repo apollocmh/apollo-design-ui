@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "rate/basic",
+  "component": "rate",
+  "description": "默认五颗星：value=3 ⇒ 3 full + 2 zero；DOM 为 ul > li.-star > div[role=radio][aria-checked][aria-posinset][aria-setsize] > div.-first + div.-second；默认字符 StarFilled。",
+  "antdVersion": "6.6.4",
+  "props": { "value": 3 },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

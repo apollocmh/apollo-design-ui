@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "rate/half",
+  "component": "rate",
+  "description": "allowHalf + value=2.5 ⇒ 2 full + 1 half(-active，-first/-second opacity:1) + 2 zero；半星判定 getOffsetLeft(star)+clientWidth/2 与 pageX 比较，rtl 反向。",
+  "antdVersion": "6.6.4",
+  "props": { "allowHalf": true, "value": 2.5 },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

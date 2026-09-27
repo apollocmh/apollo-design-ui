@@ -58,6 +58,7 @@ import { genNotificationStyle } from '../notification/style';
 import { genPopoverStyle } from '../popover/style';
 import { genQrCodeStyle } from '../qr-code/style';
 import { genRadioStyle } from '../radio/style';
+import { genRateStyle } from '../rate/style';
 import { genResultStyle } from '../result/style';
 import { genSelectStyle } from '../select/style';
 import { genSkeletonStyle } from '../skeleton/style';
@@ -98,6 +99,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'affix', gen: genAffixStyle },
   { name: 'layout', gen: genLayoutStyle },
   { name: 'layout-sider', gen: genSiderStyle },
+  { name: 'rate', gen: genRateStyle },
   { name: 'radio', gen: genRadioStyle },
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },

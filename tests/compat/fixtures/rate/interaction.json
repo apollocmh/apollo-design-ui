@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "rate/interaction",
+  "component": "rate",
+  "description": "交互契约：点击第 3 颗 ⇒ onChange(3) + emit update:value（C11 双发）；allowClear 再点同值 ⇒ onChange(0)；键盘 RIGHT/LEFT 增减（allowHalf 0.5 步长、rtl 反向）；Star 上 ENTER ⇒ 点击；disabled 全抑制（tabIndex=-1、事件不触发）。",
+  "antdVersion": "6.6.4",
+  "props": { "value": 1, "onChange": true },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}
