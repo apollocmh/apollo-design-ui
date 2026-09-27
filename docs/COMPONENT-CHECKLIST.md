@@ -60,6 +60,16 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-27（rate 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 79 | **`getPrefixCls(name, custom)` 传「裸根前缀」丢组件后缀**：divider 的 L4 基线传 `prefixCls='apollo'` 能对齐（它的类链只有 `${prefixCls}`）；rate 的类链是 `${prefixCls}-star`，传 `'apollo'` 会让 antd 侧类名变成 `.apollo-star`，与我们的 `.apollo-rate-star` 全线错位 | L4（DOM 契约 14 条全红，diff 全是前缀类名） | 做 L4 基线前先看组件**类链形态**：类链含 `-组件名` 后缀的必须传**完整前缀**（如 `'apollo-rate'`）；在基线脚本与 consumer 双向写注释 |
+| 80 | **React children 不映射 props**：`h(Rate, props, 'A')` 的 children 在 antd 侧被忽略（character 仍是默认 StarFilled），Vue 侧却读成了插槽内容 ⇒ 两侧 DOM 结构性错位 | L4（character:text 用例子节点数 1 vs 0） | antd 的内容类 prop（character/title 等）必须走 **prop/插槽对应通道**，不能借 children；基线用例用 prop 传，consumer 用插槽传 |
+| 81 | **Vue 函数 ref 传入 h() 的 vue-tsc 误报**：`h('li', { ref: fn })` 报 `not assignable to type 'string'`（ref 联合 + vue-tsc 重载解析缺陷） | G13 构建（vue-tsc dts 产出失败） | 元素注册改走 `onMounted/onBeforeUnmount` 生命周期回调（等价、类型诚实）；不要 `as never` 硬压 |
+| 82 | **jsdom 三连击（半星/几何判定）**：`clientWidth=0`、`MouseEventInit` 不认 `pageX`、`getBoundingClientRect` 全 0 —— rc 的 getStarValue 三要素全废 | L1（半星 hover 得 4 而非 3.5） | `Object.defineProperty(el,'clientWidth')` + `defineProperty(evt,'pageX')` + `vi.spyOn(el,'getBoundingClientRect')` 三件套；**mock 目标必须是 starRef 注册的那个元素（li）**，mock 内层 div 无效 |
+| 83 | **内部组件函数 prop 的参数形状漂移**：Star 的 `characterRender(node, { index })` 第二参是对象，Rate 侧闭包却按 `index: number` 解构 ⇒ tooltips 取值恒 undefined、Tooltip 根本没挂载（findAllComponents = 0） | L1（tooltips 三条全红）+ 探针（`console.log` 入参形状） | 内部组件的回调 prop 签名在**两侧文件头都写明参数形状**；怀疑「包装函数没执行」时先探针入参形状再查渲染 |
+
 ### 2026-09-24（upload 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |
