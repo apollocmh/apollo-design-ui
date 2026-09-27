@@ -65,6 +65,7 @@ import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
 import { genSplitterStyle } from '../splitter/style';
 import { genStatisticStyle } from '../statistic/style';
+import { genStepsStyle } from '../steps/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTagStyle } from '../tag/style';
 import { genTooltipStyle } from '../tooltip/style';
@@ -136,6 +137,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'notification', gen: genNotificationStyle },
   { name: 'modal', gen: genModalStyle },
   { name: 'select', gen: genSelectStyle },
+  { name: 'steps', gen: genStepsStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

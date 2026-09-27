@@ -113,19 +113,20 @@ const Step = defineComponent({
       const mergedStatus: StepsStatus = status ?? 'wait';
       const hasTitle = title !== undefined && title !== null;
       const hasSubTitle = subTitle !== undefined && subTitle !== null;
-      const classString = clsx(
+      // ⚠️ 本仓 clsx 是简化版（不支持对象参数）—— 条件类展开成字符串
+      const classString = [
         itemCls,
         `${itemCls}-${mergedStatus}`,
-        {
-          [`${itemCls}-custom`]: icon,
-          [`${itemCls}-active`]: props.active,
-          [`${itemCls}-disabled`]: disabled === true,
-          [`${itemCls}-empty-header`]: !hasTitle && !hasSubTitle,
-        },
-        data.className,
+        icon ? `${itemCls}-custom` : '',
+        props.active ? `${itemCls}-active` : '',
+        disabled === true ? `${itemCls}-disabled` : '',
+        !hasTitle && !hasSubTitle ? `${itemCls}-empty-header` : '',
+        className,
         props.classNames?.item,
         itemClassNames.root,
-      );
+      ]
+        .filter(Boolean)
+        .join(' ');
 
       // ---- icon ----
       // C8-R2：icon 内容由 Steps 的 `#icon` 插槽提供**完整的 StepIcon 节点**
@@ -215,7 +216,9 @@ const Step = defineComponent({
                           ...props.styles?.itemRail,
                           ...itemStyles.rail,
                         } as CSSProperties,
-                        status: mergedStatus,
+                        // rc：rail 的 status = **nextStatus**（railFollowPrevStatus
+                        // 默认 false）—— 连线的语义是「通向下一步」
+                        status: props.nextStatus ?? 'wait',
                       } as never)
                     : null,
                 ],

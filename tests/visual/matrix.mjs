@@ -391,6 +391,14 @@ export const COMPONENTS = {
       'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
     ],
   },
+  steps: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: [
+      'basic', // 状态推导 + rail（filled）
+      'vertical', // 纵向 + 标题横排
+      'dot', // 点状
+    ],
+  },
   select: {
     // 3 个 variant × 3 个 viewport = 9 张
     // open 受控静态帧钉住下拉（与 dropdown 同判）；basic/multiple 走回填态。
