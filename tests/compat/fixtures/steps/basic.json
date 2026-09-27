@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "steps/basic",
+  "component": "steps",
+  "description": "默认（filled）三步：状态推导 current=1 ⇒ finish/process/wait；DOM 为 div（v6 无 li/ol）；-item > -wrapper > (-item-icon + -item-section > (-item-header > -title + -item-rail) + -item-content)；rail 挂 header 内、status 取 nextStatus。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "items": [
+      { "title": "Login", "content": "Enter your credentials" },
+      { "title": "Pay", "content": "Pay the bill" },
+      { "title": "Done", "content": "All finished" }
+    ],
+    "current": 1
+  },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

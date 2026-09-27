@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema.json",
+  "id": "steps/clickable",
+  "component": "steps",
+  "description": "可点击步：传 onChange ⇒ item 得 role=button + tabIndex=0，Enter/Space 触发；disabled 项不可点；点击相同 current 不触发。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "items": [
+      { "title": "Login", "content": "c0" },
+      { "title": "Pay", "content": "c1" },
+      { "title": "Done", "content": "c2" }
+    ],
+    "current": 1,
+    "onChange": true
+  },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

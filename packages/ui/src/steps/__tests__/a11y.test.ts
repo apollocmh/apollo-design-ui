@@ -1,10 +1,13 @@
 /**
- * L5 测试占位 —— G8 未开始。
+ * L5 · 无障碍 —— axe 扫全部 demo（0 violation）。
  *
- * ⚠️ 刻意使用 describe.todo（报告里显示 todo 而不是 pass）：本项目不允许
- *    「假绿灯」——骨架测试绝不能看起来像通过。
- * axe 扫全部 demo（0 violation）+ 显式 role/键盘断言；「架构上不适用」要在 layerNotes 写明。
+ * 可访问性契约：可点击步为 `role="button"` + `tabIndex=0`（rc Step 的
+ * accessibilityProps，L1 已钉住）；非交互步（无 onChange）不承担按钮角色。
  */
-import { describe } from 'vitest';
+import { a11yDemoTest } from '@apollo-design/test-utils';
 
-describe.todo('Steps · L5（G8 未开始）');
+a11yDemoTest('Steps', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 20,
+  global: { stubs: { teleport: false } },
+});
