@@ -105,10 +105,15 @@ describe('Cascader · 主题无关性', () => {
     expect(css).toContain('.apollo-cascader-menu:not(:last-child){');
   });
 
-  it('RTL 与 dropdown 的 padding 清零规则', () => {
+  it('RTL 与浮层 padding 清零规则', () => {
     expect(css).toContain('.apollo-cascader-dropdown-rtl{');
-    // antd 的 `&${antCls}-select-dropdown{padding:0}`（dropdown 与 select-dropdown 同节点）
+    // antd 的 `&${antCls}-select-dropdown{padding:0}`（浮层与 select-dropdown 同节点）。
+    // ⚠️ 本仓浮层根**没有** `-select-dropdown` 那半个类名（差异 D112）⇒ 同一条规则
+    //    必须也落到 cascader 前缀自己身上，否则浮层保留 select 壳的 paddingXXS(4px)
+    //    （L6 实测：浮层 341×188 vs antd 333×180，内部项 x/y 各偏 +4px）。
+    expect(css).toContain(
+      '.apollo-cascader-dropdown,.apollo-cascader-dropdown.apollo-select-dropdown{',
+    );
     expect(css).toContain('padding:0;');
-    expect(css).toContain('.apollo-select-dropdown');
   });
 });

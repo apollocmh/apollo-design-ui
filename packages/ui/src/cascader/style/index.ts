@@ -84,9 +84,15 @@ export function genCascaderStyle(rootPrefixCls: string): string {
     `${root}{`,
     `  width:${cv(p, 'control-width')};`,
     `}`,
-    // =================== Popup（dropdown 与 select-dropdown 同节点）===================
-    // antd：`&${antCls}-select-dropdown{padding:0}`
-    `${dropdown}.${p}-select-dropdown{`,
+    // =================== Popup（浮层与 select-dropdown 同节点）===================
+    // antd：`&${antCls}-select-dropdown{padding:0}` —— 浮层根**同时**挂
+    // `ant-select-dropdown` 与 `ant-cascader-dropdown`，靠那个复合选择器清零 padding。
+    // ⚠️ 本仓浮层根只有 `{p}-cascader-dropdown`（差异 D112：没有 `-select-dropdown`
+    //    那半个类名）⇒ 必须让同一条规则落到 cascader 前缀自己身上，否则浮层会保留
+    //    select 壳的 `padding: var(--apollo-padding-xxs)`(4px)：
+    //    实测浮层 341×188 vs antd 333×180（宽高各 +8px = 2×4px），
+    //    内部所有项的 x/y 各偏 +4px（44→48）。两条都写，保留 antd 那条的字面同构。
+    `${dropdown},${dropdown}.${p}-select-dropdown{`,
     `  padding:0;`,
     `}`,
     // =================== Columns（本仓取顶层块，见文件头差异 #5）===================

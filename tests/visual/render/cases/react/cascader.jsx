@@ -23,8 +23,22 @@ const OPTIONS = [
   { value: 'jiangsu', label: '江苏', children: [{ value: 'nanjing', label: '南京' }] },
 ];
 
+/**
+ * ⚠️ 上下文字体必须与 Vue 侧钉成同一个具体值 —— 理由见 `vue/cascader.js` 的
+ * `CONTEXT_FONT`（cascader 的面板/列在 antd 里没有 font-family，靠继承）。
+ */
+const CONTEXT_FONT = 'sans-serif';
+
 const box = (children) => (
-  <div style={{ minHeight: 260, padding: 24, display: 'flex', alignItems: 'flex-end' }}>
+  <div
+    style={{
+      minHeight: 260,
+      padding: 24,
+      display: 'flex',
+      alignItems: 'flex-end',
+      fontFamily: CONTEXT_FONT,
+    }}
+  >
     {children}
   </div>
 );

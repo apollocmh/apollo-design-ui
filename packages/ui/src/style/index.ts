@@ -203,21 +203,25 @@ export const BASE_CSS = [
   //    自保、result 期（icon 高 86.8 vs 72）确认这是集成缺口，按三次法则收进全局。
   //    放在 BASE_CSS（而非 COMPONENT_STYLES）里：每份组件 CSS 都自带，单引自足。
   getIconStyle(),
-  // ---- 图标基线（2026-09-22 接入，第三次踩到）----
-  // ⚠️ antd 的 `.anticon` 基线由 @ant-design/icons 在运行时注入；本仓 icons 包的
-  //    getIconStyle() 只导出文本、ui 样式层此前**未消费**——button 期在按钮范围内
-  //    自保、result 期（icon 高 86.8 vs 72）确认这是集成缺口，按三次法则收进全局。
-  //    放在 BASE_CSS（而非 COMPONENT_STYLES）里：每份组件 CSS 都自带，单引自足。
-  getIconStyle(),
   // ---- box-sizing ----
   '*,*::before,*::after{box-sizing:border-box}',
   // ---- html / body ----
-  // ---- html / body ----
-  // ⚠️⚠️ 字体必须用 token（`var(--apollo-font-family)`），**不要改成 antd reset 的
-  //    `sans-serif`**：React 基线页的**继承字体**是 antd cssinjs 注入到 body 的
-  //    **token 字体栈**（不是 reset 里的 `sans-serif`）—— 实测：改成 sans-serif 后
-  //    empty × 15 + config-provider/locale × 3 全部新增失败（affix 的 6 张反而过了，
-  //    净负收益）。继承文本的字形以 token 字体为准。
+  // ⚠️⚠️ 字体用 token（`var(--apollo-font-family)`），**不要**照 antd reset 改成
+  //    `sans-serif` —— 2026-09-22 实测：改成 sans-serif 后 empty × 15 +
+  //    config-provider/locale × 3 全部新增失败（affix 的 6 张反而过了，净负收益）。
+  //
+  //    ⚠️ 但这**不等于「两侧一致」**：React 基线页的 body 继承字体**取决于该页组件
+  //    是否带 cssinjs 的 body 注入**（BackTop 不带 ⇒ `<p>` 继承 `sans-serif`；
+  //    badge/typography 页带 ⇒ token 栈）—— 同一份 BASE_CSS 对不同页匹配不同。
+  //    已登记：`docs/COMPONENT-CHECKLIST.md` 第 15 条，裁决 = **在视觉用例内显式钉
+  //    正文字体，不动全局 BASE_CSS**（全局裁决等更多页面证据）。
+  //
+  //    2026-09-28 补充证据（cascader 收尾，见 COMPATIBILITY.md D114）：
+  //    `node tests/visual/debug/rect.mjs empty basic body body` ⇒
+  //    react 侧 `body` 的 computed `font-family` = `sans-serif`，vue 侧 = `-apple-system,…`。
+  //    ⚠️ 凡是**根上不声明 font-family** 的组件都会把这处差异显形 —— cascader 的
+  //    面板与列就是（antd 的 `style/panel.js` + `style/index.js` 都是 `resetFont: false`）
+  //    ⇒ 同样按「用例内钉字体」处理，不要动这里。
   //    ⚠️ body 的 font-size **不能设**（2026-09-22 badge 实测修正了 affix 期的结论）：
   //    antd/dist/reset.css **不设** body 字号 —— React 基线页的继承字号是浏览器
   //    默认 16px。我们设 14px 会让 inline 元素之间的空白文本节点行高变小
