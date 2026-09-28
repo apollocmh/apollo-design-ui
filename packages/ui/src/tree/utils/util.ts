@@ -104,7 +104,11 @@ type AllowDropFn = (options: {
  * `dropLevelOffset`：拖拽点相对落点节点的层级偏移（横向偏移换算）。
  */
 export function calcDropPosition(
-  event: { clientX: number; clientY: number; target: { getBoundingClientRect: () => { top: number; height: number } } },
+  event: {
+    clientX: number;
+    clientY: number;
+    target: { getBoundingClientRect: () => { top: number; height: number } };
+  },
   dragNodeProps: CalcDropDragNodeProps,
   targetNodeProps: CalcDropTargetNodeProps,
   indent: number,

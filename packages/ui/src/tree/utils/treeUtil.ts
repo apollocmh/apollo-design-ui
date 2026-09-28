@@ -24,7 +24,9 @@ export function getKey(key: TreeKey | null | undefined, pos: string): TreeKey {
 }
 
 /** rc `fillFieldNames`：`_title` 是数组形态（tree-select 的内部约定），保留字段。 */
-export function fillFieldNames(fieldNames?: TreeFieldNames & { _title?: string[] }): Required<TreeFieldNames> & {
+export function fillFieldNames(
+  fieldNames?: TreeFieldNames & { _title?: string[] },
+): Required<TreeFieldNames> & {
   _title: string[];
 } {
   const { title, _title, key, children } = fieldNames || {};

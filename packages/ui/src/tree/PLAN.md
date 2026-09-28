@@ -21,7 +21,14 @@
      parseCheckedKeys/conductExpandParent）+ diffUtil（motion diff）。L1 31 用例全绿。
      移植期发现：traverseDataNodes 根层 parent 必须为 undefined（塞 level:-1 种子对象
      会让顶层 level 变 1）——rc 的「隐式默认参」语义已注释钉死。
-  ⬜ 步骤 2 Tree 状态机 / NodeList / TreeNode / DirectoryTree / style
+  ✅ 步骤 2 核心（G4-2，2026-09-29）：Tree.ts（gDSFP 拆分 watch + setUncontrolled +
+     键盘全套 + 拖拽 9 槽 + antd 壳六件事并入）+ TreeContext（reactive getters）+
+     NodeList（VirtualList + motion diff 哨兵 + indent 量测）+ MotionTreeNode +
+     TreeNode（role=treeitem + aria + checkbox 自定义元素 + loadData watch）+
+     Indent / DropIndicator / iconUtil。冒烟 8/8（渲染/选中/展开二连/级联/
+     checkStrictly/defaultExpandAll/键盘/fieldNames）。
+  ⬜ 步骤 3 DirectoryTree（shift/ctrl 多选 + Folder/File 图标）
+  ⬜ 步骤 4 style/index.ts（102 条规则机械提取 + COMPONENT_STYLES 注册）
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言

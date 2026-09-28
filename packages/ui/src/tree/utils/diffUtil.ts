@@ -5,8 +5,6 @@
  * 在平铺数据里挖洞插入 MotionFlattenData 哨兵播放动画（rc 判据：长度差恒为 1）。
  */
 
-import type { FlattenNode } from './treeUtil';
-
 /** 找出展开集变化的那个 key；`add` 表示展开，`false`+null 表示无单键 diff。 */
 export function findExpandedKeys(
   prev: TreeKeyLike[] = [],
