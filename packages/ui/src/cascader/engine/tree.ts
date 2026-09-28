@@ -52,7 +52,7 @@ export interface ConvertConfig {
   /** 用自定义字段解析（Cascader 传 `{ key: value字段, children }`）。 */
   fieldNames?: { key?: string; children?: string };
   /** 包装器扩展（Cascader 用它挂 `pathKeyEntities`）。 */
-  initWrapper?: (wrapper: Wrapper) => Wrapper | void;
+  initWrapper?: (wrapper: Wrapper) => Wrapper | undefined;
   /** 每个实体构造后的钩子（Cascader 用它把 key 覆写成 pathKey）。 */
   processEntity?: (entity: DataEntity, wrapper: Wrapper) => void;
   /** 全部处理完的钩子。 */
@@ -105,10 +105,11 @@ export function traverseDataNodes(
     pathNodes: Record<string, unknown>[],
     level: number,
   ): void {
+    const mergedParent = parent as { pos: string; level: number } | undefined;
     const children = (node ? node[fieldChildren] : dataNodes) as
       | Record<string, unknown>[]
       | undefined;
-    const pos = node ? getPosition(parent!.pos, index) : '0';
+    const pos = node ? getPosition(mergedParent!.pos, index) : '0';
     const connectNodes = node ? [...pathNodes, node] : [];
 
     if (node) {
@@ -117,7 +118,7 @@ export function traverseDataNodes(
         index,
         pos,
         key: getKey(node[fieldKey], pos),
-        parentPos: parent!.pos,
+        parentPos: mergedParent!.pos,
         level,
         nodes: connectNodes,
       });
@@ -147,7 +148,7 @@ export function convertDataToEntities(
   const keyEntities: Record<string, DataEntity> = {};
   let wrapper: Wrapper = { posEntities, keyEntities };
   if (config.initWrapper) {
-    wrapper = config.initWrapper(wrapper) || wrapper;
+    wrapper = config.initWrapper(wrapper) ?? wrapper;
   }
 
   traverseDataNodes(
@@ -209,7 +210,9 @@ function groupByLevel(keyEntities: Record<string, DataEntity>) {
   const levelEntities = new Map<number, Set<DataEntity>>();
   let maxLevel = 0;
   Object.keys(keyEntities).forEach((key) => {
+    // noUncheckedIndexedAccess：索引访问可能 undefined（key 来自 Object.keys，防御式收窄）
     const entity = keyEntities[key];
+    if (!entity) return;
     const { level } = entity;
     if (!levelEntities.has(level)) levelEntities.set(level, new Set());
     levelEntities.get(level)!.add(entity);
@@ -232,24 +235,25 @@ function conductParent(
   for (let level = maxLevel; level >= 0; level -= 1) {
     const entities = levelEntities.get(level) || new Set<DataEntity>();
     entities.forEach((entity) => {
-      const { parent, node } = entity;
-      if (getDisabled(node) || !entity.parent || visitedKeys.has(parent!.key)) return;
-      if (getDisabled(parent!.node)) {
-        visitedKeys.add(parent!.key);
+      const { node } = entity;
+      const parent = entity.parent;
+      if (!parent || getDisabled(node) || visitedKeys.has(parent.key)) return;
+      if (getDisabled(parent.node)) {
+        visitedKeys.add(parent.key);
         return;
       }
       let allChecked = true;
       let partialChecked = false;
-      (parent!.children || [])
+      (parent.children || [])
         .filter((childEntity) => !getDisabled(childEntity.node))
         .forEach(({ key }) => {
           const checked = checkedKeys.has(key);
           if (allChecked && !checked) allChecked = false;
           if (!partialChecked && (checked || halfCheckedKeys.has(key))) partialChecked = true;
         });
-      if (allChecked) onAllChecked(parent!.key);
-      if (partialChecked) onPartialChecked(parent!.key);
-      visitedKeys.add(parent!.key);
+      if (allChecked) onAllChecked(parent.key);
+      if (partialChecked) onPartialChecked(parent.key);
+      visitedKeys.add(parent.key);
     });
   }
 }
