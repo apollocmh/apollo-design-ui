@@ -15,7 +15,13 @@
 - [x] G1 ANALYZE —— docs/analysis/tree.md 完成：rc-tree class 内核（23 state 槽 + gDSFP 八步 + 键盘全套 + 拖拽 9 槽）+ NodeList 虚拟滚动/motion diff + DirectoryTree shift/ctrl 多选；R1–R8 全部闭环
 - [x] G2 API DESIGN —— interface.ts：TreeProps 全量（数据/展开/勾选/选中/加载/外观/拖拽/滚动/焦点 9 组）+ TreeEmits 21 个（C11 四键 v-model 双发）+ 5 语义槽（函数形态）+ TreeRef/TreeScrollConfig + DirectoryTree 同构；TreeNode children 形态不实现（v6 deprecated）
 - [x] G3 TOKEN —— **9 个 ComponentToken**（7 shared + 2 directory；registry 的 tokenCount=2 与产物不符，以 extract-tree-css.mjs 对拍为准）。prepareComponentToken 全部 alias 直引；6 个源值（controlHeightSM/controlItemBgHover/controlItemBgActive/colorText/colorTextLightSolid/colorPrimary）与 antd 产物逐字一致（node 直连 theme dist 验证）
-- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [~] G4 IMPLEMENT —— 按 §7 顺序进行中：
+  ✅ 步骤 1 utils 纯函数层（~876 行移植完毕）：treeUtil（entities/flatten/节点态投影）+
+     conductUtil（fill/clean 两段式级联）+ util（arrAdd/arrDel/calcDropPosition/
+     parseCheckedKeys/conductExpandParent）+ diffUtil（motion diff）。L1 31 用例全绿。
+     移植期发现：traverseDataNodes 根层 parent 必须为 undefined（塞 level:-1 种子对象
+     会让顶层 level 变 1）——rc 的「隐式默认参」语义已注释钉死。
+  ⬜ 步骤 2 Tree 状态机 / NodeList / TreeNode / DirectoryTree / style
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
