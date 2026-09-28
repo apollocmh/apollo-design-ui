@@ -105,6 +105,18 @@ describe('Cascader · 主题无关性', () => {
     expect(css).toContain('.apollo-cascader-menu:not(:last-child){');
   });
 
+  it('checkbox 整套复用（antd `getCheckboxStyle(`${p}-checkbox`)` 同构）', () => {
+    // ⚠️ 防回归：早期是手写「精简对齐版」（只有方框 + 选中 + indeterminate + disabled）
+    // ⇒ L6 的多选形态差 0.008–0.032%、差异像素**全部**落在复选框上。
+    // 现在直接复用 genCheckboxStyle(`${p}-cascader`)。
+    expect(css).toContain('.apollo-cascader-checkbox{');
+    expect(css).toContain('.apollo-cascader-checkbox-wrapper{');
+    expect(css).toContain('.apollo-cascader-checkbox-input{');
+    expect(css).toContain('.apollo-cascader-checkbox-indeterminate:after{');
+    // 精简版漏掉的选中对勾
+    expect(css).toContain('.apollo-cascader-checkbox-checked:after{');
+  });
+
   it('RTL 与浮层 padding 清零规则', () => {
     expect(css).toContain('.apollo-cascader-dropdown-rtl{');
     // antd 的 `&${antCls}-select-dropdown{padding:0}`（浮层与 select-dropdown 同节点）。

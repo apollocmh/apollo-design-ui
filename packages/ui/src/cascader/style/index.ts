@@ -7,9 +7,10 @@
  * 1. 无 hash / `-css-var` 包裹类（D5）；Token 落 var() 派生。
  * 2. `resetFont: false`（上游逐字）—— Cascader **自己的**样式钩子不加 fontFamily 重置；
  *    外壳的 font-family 来自 `useSelectStyle(cascaderPrefixCls)`（差异 #6）。
- * 3. checkbox 视觉：antd 用 `getCheckboxStyle(prefixCls-checkbox)` 整套移植；
- *    本仓 Cascader 的 checkbox 只在多选出现，写**精简对齐版**（方框 + 选中 +
- *    indeterminate + disabled），像素级对齐由 L6 钉。
+ * 3. checkbox 视觉：**与 antd 同构** —— 复用本仓的 `genCheckboxStyle(`${p}-cascader`)`
+ *    （对应 antd `getColumnsStyle` 里的 `getCheckboxStyle(`${prefixCls}-checkbox`, token)`）。
+ *    早期写的是「精简对齐版」（方框 + 选中 + indeterminate + disabled），L6 的多选形态
+ *    因此差 0.008–0.032%、差异像素**全部**落在复选框上；已改回整套复用。
  * 4. genCompactItemStyle（Space Compact）暂不移植 —— 本仓 space/Compact 尚未与
  *    select 联动（analysis §5 S5 记录）。
  * 5. **列规则是顶层块**（antd 把它分别嵌进 `-dropdown` 与 `-panel` 各一份）。
@@ -20,6 +21,7 @@
  */
 
 import { token2CSSVar } from '@apollo-design/theme';
+import { genCheckboxStyle } from '../../checkbox/style';
 import { genSelectStyle } from '../../select/style';
 
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
@@ -100,31 +102,17 @@ export function genCascaderStyle(rootPrefixCls: string): string {
     // `-dropdown` 与 `-panel` 两个块各一份（⇒ `.ant-cascader-dropdown .ant-cascader-menu`
     // 与 `.ant-cascader-panel .ant-cascader-menu`）。本仓只保留一份顶层块：
     // 列只可能出现在这两个容器里，顶层块是它们的超集。
+    // antd 的 `getColumnsStyle` 第一项就是 `getCheckboxStyle(`${prefixCls}-checkbox`, token)`
+    // —— 整套 checkbox 样式按 **cascader 前缀**生成（「按目标前缀重生成」的第三次应用，
+    // 同 select 外壳 D112）。此前这里是手写的「精简对齐版」（只有方框 + 选中 +
+    // indeterminate + disabled）⇒ L6 的 `multiple` 形态差 0.008–0.032%，
+    // 且差异像素**全部**落在复选框上（逐像素分析确认）。
+    genCheckboxStyle(`${p}-cascader`),
+    // antd 的 `&-checkbox` 覆盖（在 getCheckboxStyle **之后**，3 个属性）
     `${checkbox}{`,
     `  top:0;`,
     `  margin-inline-end:${v('paddingXS')};`,
     `  pointer-events:unset;`,
-    `  box-sizing:border-box;`,
-    `  width:16px;`,
-    `  height:16px;`,
-    `  display:inline-block;`,
-    `  position:relative;`,
-    `  border:${v('lineWidth')} ${v('lineType')} ${v('colorBorder')};`,
-    `  border-radius:${v('borderRadiusSM')};`,
-    `  background:${v('colorBgContainer')};`,
-    `  transition:all ${v('motionDurationMid')};`,
-    `}`,
-    `${checkbox}-checked{`,
-    `  background-color:${v('colorPrimary')};`,
-    `  border-color:${v('colorPrimary')};`,
-    `}`,
-    `${checkbox}-indeterminate{`,
-    `  background-color:${v('colorPrimary')};`,
-    `  border-color:${v('colorPrimary')};`,
-    `}`,
-    `${checkbox}-disabled{`,
-    `  border-color:${v('colorBorder')};`,
-    `  background-color:${v('colorBgContainerDisabled')};`,
     `}`,
     `${root}-menus{`,
     `  display:flex;`,
@@ -188,12 +176,15 @@ export function genCascaderStyle(rootPrefixCls: string): string {
     `  text-overflow:ellipsis;`,
     `  white-space:nowrap;`,
     `}`,
+    // antd 原文只有这三条（`getColumnsStyle` 的 iconCls）：
+    //   margin-inline-start / color / font-size。
+    // ⚠️ 不要额外加 `display:flex` + `align-items:center` —— 那会把 `<svg>` 变成
+    //    flex item、改变基线与 line-height 的参与方式，图标描边随之亚像素偏移
+    //    （L6 实测：差异像素的 delta>25 部分**全部**落在展开图标上，x 125-128 / 236-238）。
     `${item}-expand ${item}-expand-icon,${item}-loading-icon{`,
     `  margin-inline-start:${v('paddingXXS')};`,
     `  color:${v('colorIcon')};`,
     `  font-size:${v('fontSizeIcon')};`,
-    `  display:flex;`,
-    `  align-items:center;`,
     `}`,
     `${item}-keyword{`,
     `  color:${v('colorHighlight')};`,
