@@ -1,18 +1,22 @@
 /**
- * Cascader 的样式生成（genBaseStyle + columns）。
+ * Cascader 的样式生成（genBaseStyle + columns + panel）。
  *
- * 契约来源：antd 6.6.4 `es/cascader/style/index.js` + `es/cascader/style/columns.js`。
+ * 契约来源：antd 6.6.4 `es/cascader/style/index.js` + `style/columns.js` + `style/panel.js`。
  *
  * ── 与 antd 产物的有意差异 ──────────────────────────────────────────────────
  * 1. 无 hash / `-css-var` 包裹类（D5）；Token 落 var() 派生。
- * 2. `resetFont: false`（上游逐字）—— 不含 fontFamily 重置；字号由
- *    `.apollo-cascader-dropdown` 继承 select 体系的 reset（本仓 select 的 dropdown
- *    已有 resetComponent 段，Cascader 复用其类名）。
+ * 2. `resetFont: false`（上游逐字）—— Cascader **自己的**样式钩子不加 fontFamily 重置；
+ *    外壳的 font-family 来自 `useSelectStyle(cascaderPrefixCls)`（差异 #6）。
  * 3. checkbox 视觉：antd 用 `getCheckboxStyle(prefixCls-checkbox)` 整套移植；
  *    本仓 Cascader 的 checkbox 只在多选出现，写**精简对齐版**（方框 + 选中 +
  *    indeterminate + disabled），像素级对齐由 L6 钉。
  * 4. genCompactItemStyle（Space Compact）暂不移植 —— 本仓 space/Compact 尚未与
  *    select 联动（analysis §5 S5 记录）。
+ * 5. **列规则是顶层块**（antd 把它分别嵌进 `-dropdown` 与 `-panel` 各一份）。
+ *    antd 的两份内容完全相同、只是作用域不同；顶层块是两者的超集，且列只可能在
+ *    这两个容器里出现 ⇒ 行为等价。好处是 `-panel` 块不必再复制一遍列规则。
+ * 6. 外壳样式 = `genSelectStyle(..., '<prefix>-cascader')`（antd `useSelectStyle`
+ *    同构）—— 见下方 🚨 注释，第二个参数必须是完整 cascader 前缀。
  */
 
 import { token2CSSVar } from '@apollo-design/theme';
@@ -48,15 +52,36 @@ export function genCascaderStyle(rootPrefixCls: string): string {
   const item = `${root}-menu-item`;
   const checkbox = `${root}-checkbox`;
 
-  // ⚠️ 外壳全套样式：antd 的 Cascader 用 `useSelectStyle(cascaderPrefixCls)`
-  //    按 cascader 前缀生成 select 全套规则（外壳边框/高度/背景/input）。
-  const selectShell = genSelectStyle('apollo', p);
+  // 外壳全套样式：Cascader 的触发外壳复用 select 全套规则（边框/高度/背景/input/
+  // dropdown）。⚠️ antd 是 `useSelectStyle(getPrefixCls('select'))` —— 传 **select 前缀**，
+  // DOM 上 Cascader 根同时挂 `ant-select` + `ant-cascader`，外壳元素是 `ant-select-*`。
+  // 本仓没有「一个组件挂两个前缀」的机制（BaseSelect 的类名全由传入 prefixCls 派生），
+  // 故按 `${p}-cascader` 重生成一份 —— 声明相同、只是选择器名不同，渲染等价。
+  // 🚨 第二个参数必须是**完整的 cascader 前缀**（`${p}-cascader`），不是 p 本身：
+  // 传 p（= rootPrefixCls = 'apollo'）会命中 genSelectStyle 里 `prefixCls === target`
+  // 的同一性短路 ⇒ rename 退化成恒等 ⇒ 产物是一份**重复的 `.apollo-select-*`**，
+  // 而 `.apollo-cascader-*` 外壳一条规则都没有（页面级「无样式」的根因，
+  // L6 浏览器 computed style 排查抓出）。
+  const selectShell = genSelectStyle('apollo', `${p}-cascader`);
 
   return [
     selectShell,
-    // =================== Control 宽度 + Token 声明 ===================
-    `${root}{`,
+    // =================== Token 声明（⚠️ 必须覆盖全部根形态）===================
+    // PITFALLS 171 / D69 家族（input 三根 / image 两根 / message 两根同判）：
+    // Cascader 有**三个**根形态，后两个都不在 `.apollo-cascader` 子树内 ——
+    //   · `.apollo-cascader`        触发器根
+    //   · `.apollo-cascader-dropdown` 浮层根（经 Portal 挂到 body，popupClassName 里
+    //     只有 `-dropdown` / `-dropdown-rtl`，**没有** `-css-var` 类）
+    //   · `.apollo-cascader-panel`  面板根（`CascaderPanel` 的根，也没有 `.apollo-cascader`）
+    // 漏挂的后果是**静默**的：`var(--apollo-cascader-*)` 取不到值 ⇒ 该声明在
+    // computed-value 期失效、退回初始值（L6 实测 panel 的列 `min-width` 从 111px
+    // 缩成 43.56px、`height` 180→auto、`padding` 4px/5px 12px→0）。
+    // antd 靠 `cssVarCls`（进 popupClassName 与 Panel 的 className）覆盖，本仓无该机制。
+    `${root},${dropdown},${root}-panel{`,
     ...genTokenDecls(p),
+    `}`,
+    // =================== Control 宽度 ===================
+    `${root}{`,
     `  width:${cv(p, 'control-width')};`,
     `}`,
     // =================== Popup（dropdown 与 select-dropdown 同节点）===================
@@ -64,9 +89,11 @@ export function genCascaderStyle(rootPrefixCls: string): string {
     `${dropdown}.${p}-select-dropdown{`,
     `  padding:0;`,
     `}`,
-    // =================== Columns（⚠️ 顶层块，与 antd getColumnsStyle 同构）===================
-    // antd 的 getColumnsStyle 返回 `[${componentCls}]: {...}` —— 顶层选择器，
-    // **不是** dropdown 的后代（列会渲染在 dropdown 容器之外）。
+    // =================== Columns（本仓取顶层块，见文件头差异 #5）===================
+    // antd 的 getColumnsStyle 返回 `{[componentCls]: {...}}`，被**分别**嵌进
+    // `-dropdown` 与 `-panel` 两个块各一份（⇒ `.ant-cascader-dropdown .ant-cascader-menu`
+    // 与 `.ant-cascader-panel .ant-cascader-menu`）。本仓只保留一份顶层块：
+    // 列只可能出现在这两个容器里，顶层块是它们的超集。
     `${checkbox}{`,
     `  top:0;`,
     `  margin-inline-end:${v('paddingXS')};`,
@@ -165,7 +192,29 @@ export function genCascaderStyle(rootPrefixCls: string): string {
     `${item}-keyword{`,
     `  color:${v('colorHighlight')};`,
     `}`,
+    // =================== Panel（antd `style/panel.js`）===================
+    // `Cascader.Panel`（rc Panel：**只有列**，无 select 外壳）的独立样式钩子。
+    // 列规则在本文件是顶层块（有意差异 #5），所以这里只补 panel 自己的盒子，
+    // 外加对列的覆盖：menus 拉伸 / menu 高度 auto（否则会套用 dropdownHeight=180）。
+    `${root}-panel{`,
+    `  display:inline-flex;`,
+    `  border:${v('lineWidth')} ${v('lineType')} ${v('colorSplit')};`,
+    `  border-radius:${v('borderRadiusLG')};`,
+    `  overflow-x:auto;`,
+    `  max-width:100%;`,
+    `}`,
+    `${root}-panel ${root}-menus{`,
+    `  align-items:stretch;`,
+    `}`,
+    `${root}-panel ${root}-menu{`,
+    `  height:auto;`,
+    `}`,
+    `${root}-panel-empty{`,
+    `  padding:${v('paddingXXS')};`,
+    `}`,
     // =================== RTL ===================
+    // ⚠️ 只对 dropdown 生成 rtl；antd 的 `style/panel.js` **没有** `-panel-rtl` 规则
+    //（rc Panel 会渲染这个类，但上游没给它样式）—— 1:1 同构，不自行发明。
     `${dropdown}-rtl{`,
     `  direction:rtl;`,
     `}`,

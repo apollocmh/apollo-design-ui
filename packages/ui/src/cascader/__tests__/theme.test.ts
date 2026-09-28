@@ -36,13 +36,62 @@ describe('Cascader · 主题无关性', () => {
     expect(css).toContain('.apollo-cascader-menus{');
   });
 
-  it('无双点类名（root 变量自带点，拼接处不得再加点——L6 全样式失效抓出）', () => {
-    expect(css).not.toContain('..apollo-');
-    expect(css).toContain('.apollo-cascader-menus{');
+  it('外壳样式按 cascader 前缀生成（antd `useSelectStyle(cascaderPrefixCls)` 同构）', () => {
+    // 🚨 防回归：`genSelectStyle` 的第二个参数必须是**完整的 `${p}-cascader`**。
+    //    传成 p 本身会命中 `prefixCls === target` 的同一性短路 ⇒ rename 退化成恒等
+    //    ⇒ 产物是一份**重复的 `.apollo-select-*`**，而 `.apollo-cascader-*` 外壳
+    //    一条规则都没有 —— 这就是 cascader 页面级「无样式」的根因
+    //    （L6 浏览器 computed style 排查抓出）。
+    //    注：断言用具体类而非 `.apollo-select`，因为 `${dropdown}.${p}-select-dropdown`
+    //    是 antd 逐字同构的规则，它本来就叫 `.apollo-cascader-dropdown.apollo-select-dropdown`。
+    expect(css).not.toContain('.apollo-select-content');
+    expect(css).not.toContain('.apollo-select-input');
+    expect(css).not.toContain('.apollo-select-suffix');
+    expect(css).toContain('.apollo-cascader-content{');
+    expect(css).toContain('.apollo-cascader-input{');
+    expect(css).toContain('.apollo-cascader-suffix{');
+    expect(css).toContain('.apollo-cascader-clear{');
+    expect(css).toContain('.apollo-cascader-css-var{');
   });
 
-  it('resetFont: false —— 上游没有 fontFamily 重置（逐字保留）', () => {
-    expect(css).not.toContain('font-family');
+  it('声明块覆盖**三个**根形态（浮层根 / 面板根都不在 .apollo-cascader 子树内）', () => {
+    // PITFALLS 171 / D69 家族：漏挂时 `var(--apollo-cascader-*)` 静默失效
+    // （L6 实测：panel 的列 min-width 111px → 43.56px、height 180 → auto、padding → 0）。
+    expect(css).toContain('.apollo-cascader,.apollo-cascader-dropdown,.apollo-cascader-panel{');
+    // 三个根都必须拿到完整 8 个 token（不是只落第一个）
+    for (const decl of decls) {
+      expect(css).toContain(decl.trim());
+    }
+  });
+
+  it('resetFont: false —— Cascader 自己的根块不含 genCommonStyle', () => {
+    // antd `genStyleHooks('Cascader', …, { resetFont: false })` 的**可观测后果**：
+    // cascader 自己的根块只有 width（token 声明单独成块，见上一条）。font-family 是
+    // `useSelectStyle` 那份外壳带进来的（有意差异 #6），整串里必然出现 —— 所以
+    // **不能**写成 `expect(css).not.toContain('font-family')`：那条断言只在
+    // 「rename 恒等」的错误产物下才成立，是条假不变量。
+    const marker = 'width:var(--apollo-cascader-control-width);';
+    const at = css.indexOf(marker);
+    expect(at).toBeGreaterThan(-1);
+    const start = css.lastIndexOf('.apollo-cascader{', at);
+    expect(start).toBeGreaterThan(-1);
+    const ownRoot = css.slice(start, css.indexOf('}', at));
+    expect(ownRoot).not.toContain('font-family');
+    expect(ownRoot).toContain(marker);
+  });
+
+  it('panel 块（antd `style/panel.js`：盒子 + menus 拉伸 + menu 高度 auto + -empty）', () => {
+    expect(css).toContain('.apollo-cascader-panel{');
+    expect(css).toContain('display:inline-flex;');
+    expect(css).toContain('border-radius:var(--apollo-border-radius-lg);');
+    expect(css).toContain('max-width:100%;');
+    expect(css).toContain('.apollo-cascader-panel .apollo-cascader-menus{');
+    expect(css).toContain('align-items:stretch;');
+    expect(css).toContain('.apollo-cascader-panel .apollo-cascader-menu{');
+    expect(css).toContain('height:auto;');
+    expect(css).toContain('.apollo-cascader-panel-empty{');
+    // antd 的 panel 钩子没有 `-panel-rtl` 规则（rc Panel 渲染该类但上游不给样式）
+    expect(css).not.toContain('.apollo-cascader-panel-rtl');
   });
 
   it('columns 规则（menus / menu / menu-item / 选中态 / 关键词）', () => {

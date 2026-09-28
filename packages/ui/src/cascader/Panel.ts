@@ -7,13 +7,14 @@
  * 判据：
  * - 空 options ⇒ 根类 `-empty` + 直接渲染 `notFoundContent`（rc 默认 'Not Found'）；
  * - onChange / update:value 的 payload 与 Cascader 同构（单选一维；多选二维数组）；
- * - `checkable` / `expandIcon`（默认 `'>'`）/ `loadingIcon` 透传给 context；
+ * - `checkable` / `expandIcon`（默认 `RightOutlined`，RTL `LeftOutlined`）/ `loadingIcon`
+ *   （默认 `LoadingOutlined spin`）透传给 context —— 默认值取 antd `useIcons`，
+ *   不是 rc Panel 的字面量 `'>'`；
  * - 多选勾选传导复用 S2 的 createSelectHandler 语义（此处内联以拿最新受控值）。
  */
 
-import { useId } from '@apollo-design/utils';
+import { LeftOutlined, LoadingOutlined, RightOutlined } from '@apollo-design/icons';
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
-import BaseSelect from '../select/engine/BaseSelect';
 
 import { provideCascaderContext } from './context';
 import { createSelectHandler, useOptions, useValues } from './hooks/values';
@@ -90,7 +91,6 @@ const CascaderPanel = defineComponent({
   emits: ['update:value', 'change'],
   setup(props, { emit }) {
     // ========================= Values =========================
-    const panelId = useId(undefined);
     // rc useControlledState：受控优先，否则内部态
     const innerValues = ref<ValueCell[]>(toRawValues(props.defaultValue));
     watch(
@@ -163,8 +163,12 @@ const CascaderPanel = defineComponent({
       popupPrefixCls: undefined,
       loadData: props.loadData,
       expandTrigger: props.expandTrigger,
-      expandIcon: (props.expandIcon ?? '>') as VNodeChild | null,
-      loadingIcon: props.loadingIcon as VNodeChild | null,
+      // ⚠️ antd 的 `Panel.tsx` 把 `useIcons` 解析后的图标传进 rc Panel ⇒ 默认是
+      //    `RightOutlined` / RTL `LeftOutlined` / `LoadingOutlined spin`，
+      //    **不是** rc 的字面量 `'>'`（照抄 rc 会把展开图标渲染成文字 `>`，L6 抓出）。
+      expandIcon: (props.expandIcon ??
+        (props.direction === 'rtl' ? h(LeftOutlined) : h(RightOutlined))) as VNodeChild | null,
+      loadingIcon: (props.loadingIcon ?? h(LoadingOutlined, { spin: true })) as VNodeChild | null,
       popupMenuColumnStyle: undefined,
       optionRender: props.optionRender as
         | ((option: BaseOptionType) => VNodeChild)
@@ -176,9 +180,14 @@ const CascaderPanel = defineComponent({
     const isEmpty = computed(() => !mergedOptions.value.length);
 
     // ========================= Render =========================
-    // antd 的 Panel 是「完整外壳形态」：readonly input（role=combobox，
-    // aria-expanded=false）+ suffix 箭头 + 下方内嵌列（无 Trigger/portal）。
-    // 外壳复用 BaseSelect 的静态形态（L4/L6 基线依赖此结构）。
+    // ⚠️ rc `Panel.js` 同构：**只有列**，没有 select 外壳（readonly input / combobox /
+    //    suffix / clear 一个都没有）。`CascaderPanel` 与
+    //    `Cascader._InternalPanelDoNotUseOrYouWillBeFired` 在 antd 里是**两个不同的东西**：
+    //      · `Cascader.Panel` = rc Panel = `.{p}-panel` + RawOptionList（本文件）
+    //      · `_InternalPanelDoNotUseOrYouWillBeFired` = antd `genPurePanel(Cascader)`
+    //        = **完整 Cascader**（外壳 + 浮层）塞进一个 holder div
+    //    曾经把后者当成「antd Panel 的形态」而给本组件补了 BaseSelect 外壳 —— 那是误判，
+    //    两者不可互换（L6 用例两侧比的就是不同组件）。
     return () => {
       const p = props.prefixCls ?? 'apollo-cascader';
       const panelPrefixCls = `${p}-panel`;
@@ -192,38 +201,20 @@ const CascaderPanel = defineComponent({
         disabled: props.disabled,
       } as never);
 
-      if (isEmpty.value) {
-        return h(
-          'div',
-          {
-            class: [panelPrefixCls, { [`${panelPrefixCls}-empty`]: true }, props.className],
-            style: props.style,
-          },
-          (props.notFoundContent ?? undefined) as never,
-        );
-      }
-
       return h(
         'div',
         {
-          class: [panelPrefixCls, props.className],
-          style: { paddingBottom: 0, position: 'relative', minWidth: 0, ...(props.style ?? {}) },
+          class: [
+            panelPrefixCls,
+            {
+              [`${panelPrefixCls}-rtl`]: props.direction === 'rtl',
+              [`${panelPrefixCls}-empty`]: isEmpty.value,
+            },
+            props.className,
+          ],
+          style: props.style,
         },
-        [
-          h(BaseSelect, {
-            prefixCls: p,
-            id: panelId,
-            open: false,
-            displayValues: [],
-            disabled: props.disabled,
-            tabIndex: -1,
-            style: { margin: 0 },
-            optionListRenderer: () => null,
-          } as never),
-          // ⚠️ 列直接内嵌（rc Panel 同构）：不要包 -dropdown 容器——select 的
-          //    dropdown 样式带定位/边距，会把列挤开（L6 差异抓出）
-          listNode,
-        ],
+        isEmpty.value ? ((props.notFoundContent ?? undefined) as never) : listNode,
       );
     };
   },

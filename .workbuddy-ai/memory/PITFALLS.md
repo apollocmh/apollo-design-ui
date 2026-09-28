@@ -1415,3 +1415,63 @@
     另一条同族：`PropType` 只声明了对象形态时，模板里的**函数形态**会被判「不可赋值」
     （`style-class` demo 的 `:styles="fn"`）⇒ 单列一个「运行时输入」类型
     （`ModalSemanticTypeInput`），公开类型仍按 D36 只留对象形态。
+
+## Cascader 收尾流（2026-09-28，186-191）
+
+186. 🚨 **`genSelectStyle(prefixCls, targetPrefixCls)` 的「同一性短路」会静默吞掉样式复用。**
+    实测：`genSelectStyle('apollo', 'apollo')` 命中 `prefixCls === target` 分支 ⇒ `rename`
+    退化成恒等 ⇒ 调用方（cascader）拿到一份**重复的 `.apollo-select-*`**，
+    `.apollo-cascader-*` 外壳**一条规则都没有**。症状是「页面级无样式」
+    （L6 截图裸 input / `<li>` 带 bullet），而**产物里明明有规则**
+    （重复的那份也是合法 CSS）—— 用 grep 找目标前缀还会命中一堆（来自别的组件），
+    极易误判成「CSS 已加载但没生效」，甚至去怀疑 tokens.css 的加载时序。
+    **正确排查**：读 `getComputedStyle` 的**具体属性值** ——
+    `border: 2px inset rgb(118,118,118)` 就是浏览器默认 input 边框 ⇒ 外壳规则没命中。
+    只数「样式表里有几条规则」是没有信息量的。
+
+187. 🚨 **组件变量声明块必须覆盖全部根形态**（PITFALLS 171 / D69 家族的 cascader 版）。
+    cascader 有**三个**根：`.apollo-cascader`（触发器）/ `.apollo-cascader-dropdown`
+    （Portal 出去，popupClassName 里只有 `-dropdown`、**没有** `-css-var` 类）/
+    `.apollo-cascader-panel`（`CascaderPanel` 的根）。只挂第一个时，后两个根里的
+    `var(--apollo-cascader-*)` 取不到值 ⇒ 声明在 **computed-value 期静默失效**、退回初始值。
+    实测：panel 的列 `min-width` 111px → **43.56px**、`height` 180 → auto、`padding` → 0。
+    ⚠️ 症状与 186 **长得一模一样**（都像「样式没加载」），但根因相反 ——
+    186 是规则没生成，这条是规则在、变量没作用域。判据：该 `var()` 是否只定义在某个根上。
+
+188. ⚠️ **`Cascader.Panel` 与 `Cascader._InternalPanelDoNotUseOrYouWillBeFired` 在 antd 里
+    是两个不同的组件**（D113）：
+      - `Cascader.Panel` = rc `Panel.js` = **只有列**（`{p}-panel` + RawOptionList，无 select 外壳）；
+      - `Cascader._InternalPanelDoNotUseOrYouWillBeFired` = `genPurePanel(Cascader, 'popupAlign')`
+        = **完整 Cascader**（外壳 + 浮层）塞进一个带 `paddingBottom / position / minWidth`
+        （ResizeObserver 量测）的 **holder div**。
+    **L6 用例两侧必须用同一个**，否则比的是两个不同组件。本轮实测：react 侧用 `_Internal*`、
+    vue 侧用 `CascaderPanel` ⇒ 报「尺寸 300 vs 292」，并让人误判「antd 的 Panel 是完整外壳」，
+    据此给本仓 `CascaderPanel` 补了一套 BaseSelect 外壳（**已回退**）。
+    排查信号：react 的 DOM 根是**裸 `div` + 内联 `paddingBottom/minWidth`**、没有 `-panel` 类
+    ⇒ 你拿到的是 PurePanel，不是 Panel。
+
+189. ⚠️ **rc 的形参默认值 ≠ antd 的生效默认值。** rc `Panel.js` 的 `expandIcon = '>'`
+    （且没有默认 loadingIcon）；antd 的 `Panel.tsx` / `cascader/index.js` 用 `hooks/useIcons`
+    覆盖成 `RightOutlined`（RTL `LeftOutlined`）/ `LoadingOutlined spin`。
+    照抄 rc 默认 ⇒ 展开图标渲染成**文字 `>`**（L6 差异抓出）。
+    **判据**：默认值要去 antd 的 `hooks/useIcons.js` 里看，不是 rc 的 defaultProps。
+
+190. ⚠️ **`useSelectStyle` 在 cascader 里传的是 select 前缀，不是 cascader 前缀**（D112）。
+    antd `cascader/index.js`：
+    `const prefixCls = getPrefixCls('select'); const cascaderPrefixCls = getPrefixCls('cascader');
+     const [hashId, cssVarCls] = useSelectStyle(prefixCls); useStyle(cascaderPrefixCls);`
+    ⇒ DOM 上 Cascader 根**同时挂** `ant-select` + `ant-cascader`，外壳元素一律 `ant-select-*`；
+    `ant-cascader` 自己只贡献 `width` / `-dropdown`（padding:0 + 列）/ `-dropdown-rtl` / `-panel`。
+    本仓没有「一个组件挂两个前缀」的机制（BaseSelect 的类名全由传入 prefixCls 派生）⇒
+    走「按目标前缀重生成一份」的等价路径。**别再写成 `useSelectStyle(cascaderPrefixCls)`** ——
+    那是凭记忆推演出来的错误结论（AGENTS §5 明令禁止），本轮从两处注释里删掉并改正。
+
+191. ⚠️ **L6 页面基座字体两侧不对称**（→ 开放决策 `visual-harness-base-font` / D114）。
+    react 侧 harness 不加载 `antd/dist/reset.css` ⇒ `body` 的 `font-family` 是浏览器初始值
+    （Chrome/macOS 实测 = `sans-serif`）；本仓 `ui/dist/index.css` **自带** html/body reset
+    ⇒ vue 侧 `body` = `-apple-system,…`。多数组件无感（根类显式声明 `font-family`，两侧归到
+    同一份 token），**暴露点是「没有 font-family 的根」** —— cascader 的面板与列
+    （antd 那边 `style/panel.js` + `style/index.js` 都是 `resetFont: false`）。
+    残留差异像素全落在文字与 1px 边框上。
+    **排查手法**：`node tests/visual/debug/rect.mjs <comp> <variant> <apolloSel> <antSel>`
+    一次打印两侧 bounding rect + `fontFamily` 首项 —— 比盯截图猜快一个数量级。

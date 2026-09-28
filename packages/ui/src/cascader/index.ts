@@ -1,6 +1,14 @@
 /**
  * Cascader 的公共导出。静态属性：`SHOW_PARENT` / `SHOW_CHILD` / `Panel` /
- * `_InternalPanelDoNotUseOrYouWillBeFired`（对齐 antd）。
+ * `_InternalPanelDoNotUseOrYouWillBeFired`。
+ *
+ * ⚠️ antd 里这两个静态属性是**两个不同的组件**：
+ *   · `Cascader.Panel` = rc Panel = **只有列**（本仓 `./Panel`）
+ *   · `Cascader._InternalPanelDoNotUseOrYouWillBeFired` = `genPurePanel(Cascader)`
+ *     = **完整 Cascader**（外壳 + 浮层）塞进 holder div
+ * 本仓暂把后者也指向 `./Panel`（范围裁剪，登记为 COMPATIBILITY.md **D113**）——
+ * 不要因为「两个名字指同一个组件」而把它当成 antd Panel 的形态去改 `./Panel`
+ * （那是已回退的一次误判）。
  */
 
 import { withInstall } from '../_internal/with-install';
@@ -14,11 +22,12 @@ export const Cascader = withInstall(
     SHOW_PARENT,
     SHOW_CHILD,
     Panel: CascaderPanelComponent,
+    // 见文件头：antd 这里是 PurePanel，本仓暂指向 rc Panel 形态（D113）。
     _InternalPanelDoNotUseOrYouWillBeFired: CascaderPanelComponent,
   }),
 );
 
-/** `Cascader.Panel`（= `_InternalPanelDoNotUseOrYouWillBeFired`）的具名别名。 */
+/** `Cascader.Panel` 的具名别名（= rc Panel，只有列）。 */
 export const CascaderPanel = withInstall(CascaderPanelComponent);
 
 export default Cascader;

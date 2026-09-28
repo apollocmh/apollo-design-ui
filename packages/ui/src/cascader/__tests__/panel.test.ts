@@ -185,14 +185,28 @@ describe('CascaderPanel · loadData', () => {
 });
 
 describe('CascaderPanel · expandIcon', () => {
-  it('非叶子且非 loading ⇒ 显示展开图标（默认 >）', async () => {
+  it('非叶子且非 loading ⇒ 显示展开图标（默认 = antd `useIcons` 的 RightOutlined SVG）', () => {
+    // ⚠️ 原断言是 `.text() === '>'`（rc `Panel.js` 的形参默认值）——**错的**：
+    //    antd 的 `Panel.tsx` 把 `useIcons` 解析后的图标传进 rc Panel，rc 的 `'>'`
+    //    在 antd 层永远轮不到。照抄 rc 默认会让展开图标渲染成文字 `>`（L6 差异抓出）。
     const w = mount(CascaderPanel, { props: { options: OPTIONS } });
-    expect(w.find('.apollo-cascader-menu-item-expand-icon').text()).toBe('>');
+    const icon = w.find('.apollo-cascader-menu-item-expand-icon');
+    expect(icon.find('svg').exists()).toBe(true);
+    expect(icon.text()).not.toContain('>');
   });
 
-  it('自定义 expandIcon', async () => {
+  it('自定义 expandIcon 覆盖默认（含字面量字符串）', async () => {
     const w = mount(CascaderPanel, { props: { options: OPTIONS, expandIcon: '→' } });
     expect(w.find('.apollo-cascader-menu-item-expand-icon').text()).toBe('→');
+  });
+
+  it('RTL ⇒ 默认展开图标换成 LeftOutlined', () => {
+    const ltr = mount(CascaderPanel, { props: { options: OPTIONS } });
+    const rtl = mount(CascaderPanel, { props: { options: OPTIONS, direction: 'rtl' } });
+    const ltrSvg = ltr.find('.apollo-cascader-menu-item-expand-icon svg').attributes('data-icon');
+    const rtlSvg = rtl.find('.apollo-cascader-menu-item-expand-icon svg').attributes('data-icon');
+    expect(ltrSvg).toBe('right');
+    expect(rtlSvg).toBe('left');
   });
 });
 

@@ -413,18 +413,10 @@ export const COMPONENTS = {
   },
   cascader: {
     // 3 个 variant × 3 个 viewport = 9 张
-    // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；
-    //    列结构走 `panel`（CascaderPanel，无 portal）。
-    variants: [
-      'basic', // title + 列展开 + 选中态
-      'multiple', // 多选 checkbox
-      'panel', // 纯面板形态
-    ],
-  },
-  cascader: {
-    // 3 个 variant × 3 个 viewport = 9 张
-    // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；
-    //    列结构走 `panel`（CascaderPanel，无 portal）。
+    // ⚠️ 触发元素用 open 受控静态帧钉住（与 dropdown / select 同判）；
+    //    列结构走 `panel`（两侧同一份：antd `Cascader.Panel` ↔ 本仓 `CascaderPanel`，
+    //    rc Panel = **只有列**，无 select 外壳；不要用
+    //    `_InternalPanelDoNotUseOrYouWillBeFired`，那是完整 Cascader 的 PurePanel）。
     variants: [
       'basic', // title + 列展开 + 选中态
       'multiple', // 多选 checkbox

@@ -255,9 +255,18 @@ a[disabled]{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
 
 /** 生成单个前缀下的完整样式。 */
 export function genSelectStyle(prefixCls: string = 'apollo', targetPrefixCls?: string): string {
-  // targetPrefixCls：**完整目标前缀**（如 'apollo-cascader'）——Cascader 复用 select
-  // 全套外壳样式时，antd 的做法就是 `useSelectStyle(cascaderPrefixCls)`（按传入前缀
-  // 生成全套规则）。不传则沿用旧的 `-select` 后缀模式（向后兼容）。
+  // targetPrefixCls：**完整目标前缀**（如 'apollo-cascader'）—— 本仓的复用方式：
+  // BaseSelect 的所有类名都由传入的 prefixCls 派生（select 传 `apollo-select`，
+  // cascader 传 `apollo-cascader`），所以复用时要按目标前缀重生成一份。
+  //
+  // ⚠️ antd 的对应做法**不是**这个：它调 `useSelectStyle(prefixCls)`（`prefixCls`
+  //    来自 `useBase` 的 `getPrefixCls('select')` = `ant-select`），DOM 里 Cascader 根
+  //    同时挂 `ant-select` 与 `ant-cascader`，外壳元素一律是 `ant-select-*`。
+  //    本仓没有「一个组件挂两个前缀」的机制，故取「按目标前缀重生成」的等价路径
+  //    （渲染结果一致：声明相同、只是选择器名不同）。见 COMPATIBILITY.md 的 cascader 条目。
+  //
+  // 🚨 不传或传成 `prefixCls` 自身会命中下面的同一性短路 ⇒ 调用方拿到一份**重复的
+  //    `.apollo-select-*`**，目标前缀一条规则都没有（cascader 页面级「无样式」的根因）。
   const target = targetPrefixCls ?? `${prefixCls}-select`;
   const rename = (cssText: string): string =>
     prefixCls === target ? cssText : cssText.split('.apollo-select').join(`.${target}`);

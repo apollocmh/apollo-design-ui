@@ -16,6 +16,7 @@
  * 5. 键盘：BaseSelect 的 onInputKeyDown 回调驱动注入的 OptionList（optionListRef）。
  */
 
+import { LeftOutlined, LoadingOutlined, RightOutlined } from '@apollo-design/icons';
 import { useControlledValue, useId } from '@apollo-design/utils';
 import {
   computed,
@@ -213,11 +214,15 @@ const Cascader = defineComponent({
           popupPrefixCls: props.prefixCls ? `${props.prefixCls}` : prefixCls.value,
           loadData: props.loadData,
           expandTrigger: props.expandTrigger,
-          expandIcon: (props.expandIcon ?? contextSemantic.expandIcon ?? '>') as VNodeChild | null,
-          loadingIcon: (props.loadingIcon ?? contextSemantic.loadingIcon) as
-            | VNodeChild
-            | null
-            | undefined,
+          // ⚠️ 默认图标来自 antd `useIcons`（`RightOutlined` / RTL `LeftOutlined` /
+          //    `LoadingOutlined spin`）——**不是** rc 的字面量 `'>'`。rc 的默认值在
+          //    antd 层被覆盖掉了；照抄 rc 会让展开图标渲染成文字 `>`（L6 差异抓出）。
+          expandIcon: (props.expandIcon ??
+            contextSemantic.expandIcon ??
+            (props.direction === 'rtl' ? h(LeftOutlined) : h(RightOutlined))) as VNodeChild | null,
+          loadingIcon: (props.loadingIcon ??
+            contextSemantic.loadingIcon ??
+            h(LoadingOutlined, { spin: true })) as VNodeChild | null | undefined,
           popupMenuColumnStyle: props.popupMenuColumnStyle,
           optionRender: props.optionRender as
             | ((option: BaseOptionType) => VNodeChild)
