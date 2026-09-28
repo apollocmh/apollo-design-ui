@@ -807,7 +807,12 @@ export const BaseSelect = defineComponent({
             //    本仓 Trigger 的 stretch 协议只实现了 'minWidth'（trigger.ts §3），
             //    视觉主契约「浮层不窄于触发器」等价；「内容更宽时收窄」的差异
             //    登记 COMPATIBILITY（待 Trigger 补 'width' 后切回）。
-            stretch: 'minWidth',
+            // 🚨 `popupMatchSelectWidth === false` ⇒ **不拉伸**（浮层宽度由内容决定）。
+            //    此前这里是无条件 `'minWidth'` —— 对 select 恰好等价（它默认 true），
+            //    但 cascader 的 `popupMatchSelectWidth` 默认 false ⇒ 浮层被硬撑到触发器
+            //    宽度。L6 实测（multiple 形态）：浮层 184 vs antd 111；
+            //    basic 形态因内容 333 > 184 被掩盖，所以一直没暴露。
+            stretch: props.popupMatchSelectWidth === false ? undefined : 'minWidth',
             popupClassName: [
               props.popupClassName,
               props.emptyOptions ? `${popupPrefixCls}-empty` : '',
