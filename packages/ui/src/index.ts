@@ -967,6 +967,21 @@ export {
   prepareComponentToken as prepareNotificationComponentToken,
   prepareNotificationToken,
 } from './notification/style/token';
+// ---------------------------------------------------------------------------
+// Popconfirm —— 气泡确认框
+// ---------------------------------------------------------------------------
+export type {
+  PopconfirmButtonProps,
+  PopconfirmClassNames,
+  PopconfirmProps,
+  PopconfirmRef,
+  PopconfirmSemanticType,
+  PopconfirmStyles,
+} from './popconfirm';
+export { Popconfirm, PopconfirmPurePanel } from './popconfirm';
+export { genPopconfirmStyle, genTokenDecls as genPopconfirmTokenDecls } from './popconfirm/style';
+export type { ComponentToken as PopconfirmComponentToken } from './popconfirm/style/token';
+export { prepareComponentToken as preparePopconfirmComponentToken } from './popconfirm/style/token';
 export type {
   PopoverClassNames,
   PopoverProps,

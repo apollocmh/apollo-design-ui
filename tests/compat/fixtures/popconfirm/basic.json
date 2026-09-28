@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "id": "popconfirm/basic",
+  "component": "popconfirm",
+  "description": "Popover 薄壳：Overlay 四层结构（-inner-content → -message → -message-text → -buttons）、默认 icon=ExclamationCircleFilled、okText/cancelText falsy 回退 locale、title 为 0 仍渲染、description 的语义槽是 `content`（上游逐字）、disabled 时不打开且连 onOpenChange 都不发。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Delete the task",
+    "description": "Are you sure to delete this task?",
+    "okText": "Yes",
+    "cancelText": "No"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["confirm", "cancel", "openChange"]
+  }
+}

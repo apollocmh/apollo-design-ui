@@ -411,6 +411,16 @@ export const COMPONENTS = {
       'character', // 自定义字符
     ],
   },
+  popconfirm: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；
+    //    纯面板形态走 `render-panel`（PurePanel，无需 portal）。
+    variants: [
+      'basic', // title + description + 默认 icon + 双按钮
+      'no-cancel', // showCancel=false（只有 OK）
+      'render-panel', // PurePanel 静态面板
+    ],
+  },
   segmented: {
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [

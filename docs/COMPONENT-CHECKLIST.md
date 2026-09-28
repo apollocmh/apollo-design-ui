@@ -60,6 +60,16 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-28（popconfirm 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 96 | **回调包装写成 `{ fn(e); }` 吞掉返回值**：ActionButton 靠返回值判「Promise ⇒ 等 resolve 才关」，吞掉后表现为「点 OK 立刻关闭」 | L1（Promise 用例） | 上游单行箭头 `(e) => props.onXxx?.call(this, e)` 是**隐式返回**；本仓包装回调必须同样返回，或明确注释「返回值有意义」 |
+| 97 | **`useLocale` 返回普通对象不是 ref**：写 `locale.value?.okText` 恒 undefined ⇒ 按钮文案空白 | L1（按钮文案断言） | `const [locale] = useLocale('Xxx')` 直接用 `locale.okText`（empty 同判） |
+| 98 | **VTU 的 teleport-stub 会把浮层渲染在原地** ⇒ 根节点数与 SSR 基线不符（`$: 根节点数不同 1 vs 2`） | L4（DOM 契约） | 浮层类组件测试一律 `global.stubs.teleport = false`（popover 期既有判据） |
+| 99 | **`Popover.PurePanel` 的 `content` prop 按 C8-R2 收窄为 String**：传 VNode 触发 prop 校验告警（L7 demo/theme 红） | L7（demo/theme 告警） | 富内容走同名 **slot**（`{ content: () => vnode }`），不要去放宽已收口组件的 prop 类型 |
+| 100 | **共享件第二次消费即提升**：`ActionButton` 只有 modal 在用，popconfirm 需要它 ⇒ 直接依赖会造成 `popconfirm → modal` 的组件间横向依赖 | 架构（H11） | 实现搬到 `_internal/`，原位置留 re-export 垫片（与 `useOrientation` 提升同一套做法） |
+
 ### 2026-09-28（segmented 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |
