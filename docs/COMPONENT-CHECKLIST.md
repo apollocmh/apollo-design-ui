@@ -60,6 +60,20 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-28（progress 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 86 | **macOS 文件系统大小写不敏感：`engine/circle.ts` 与 `engine/Circle.ts` 是同一个文件**——内核被组件覆盖、import 幽灵解析，错误极难读（`getCircleStyle is not a function` 实为文件互踩） | L1（收集期 TypeError） | 同目录下大小写仅差的单复数/驼峰文件名是禁区；内核文件改用独立名（`kernel.ts`） |
+| 87 | **Vue 没有 React 的「数字 style 自动加 px」**：`el.style.height = 8` 静默失败 ⇒ track/rail 全透明（L6 差异 7%） | L6（视觉回归） | antd CSSProperties 数字值必须 `px()` helper 转字符串再进 style |
+| 88 | **Vue 对 camelCase SVG 键不自动转 kebab**：`strokeWidth` 属性不落 ⇒ 圆环描边细线（L6 block-diff 形状一致仅粗细异） | L6 | SVG 属性统一写 kebab-case（`'stroke-width'`/`'stroke-linecap'`） |
+| 89 | **h() 的 children 不能是 null**（TS 接受 VNodeChild 但运行时/类型报错）——`cond ? vnode : null` 一律 `?? undefined` | 构建（vue-tsc TS2769） | 三元 children 统一 `?? undefined` |
+| 90 | **Vue 不把 `aria-*` 键识别为组件 prop**：声明了也没用，且显式 `undefined` 会覆盖 attrs 透传 ⇒ aria-label 丢失（L4 aria 用例红） | L4 | aria-* 走 attrs 透传（inheritAttrs:false + spread），不声明 prop、不显式置 undefined |
+
+**顺手沉淀（L6 DECLS）**：全局样式的 DECLS 必须是**纯声明体**（无选择器壳）——`genXxxStyle` 里包壳；DECLS 自带壳会双层嵌套成 CSS Nesting（`.a{.a{…}}` ⇒ `.a .a`）不匹配单根。E10（rgb 字面量）在 antd 产物为字面量的位置改归因 token（`var(--apollo-color-text-description)`）。
+
+**遗留提醒**：lint:format 的 error 级 `noNonNullAssertion` 散布在 carousel/collapse/image/listy 等历史文件（基线遗留，非本轮引入），下轮统一清理。
+
 ### 2026-09-27（auto-complete 会话，补）
 
 | # | 坑 | 抓到它的层 | 对策 |

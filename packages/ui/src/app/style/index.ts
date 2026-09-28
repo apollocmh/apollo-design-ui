@@ -13,6 +13,6 @@ const RULES = `.apollo-app{color:var(--apollo-color-text);font-size:var(--apollo
 /** 单前缀产物（约定出口；ant 前缀在出口替换类名段）。 */
 export function genAppStyle(prefixCls: string = 'apollo'): string {
   const rules =
-    prefixCls === 'apollo' ? RULES : RULES.split('.apollo-app').join('.' + prefixCls + '-app');
+    prefixCls === 'apollo' ? RULES : RULES.split('.apollo-app').join(`.${prefixCls}-app`);
   return rules;
 }

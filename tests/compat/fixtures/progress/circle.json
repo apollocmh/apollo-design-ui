@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "progress/circle",
+  "component": "progress",
+  "description": "圆环契约：viewBox 0 0 100 100；r=50-strokeWidth/2；dasharray=`${perimeterWithoutGap}px ${perimeter}`（第二段无 px）；dashoffset=(100-ptg)/100*perimeterWithoutGap+round 修正并 clamp；dashboard gapDegree=75 ⇒ rotate(127.5deg)；gradient ⇒ mask+foreignObject conic；≤20px 经 Tooltip。",
+  "antdVersion": "6.6.4",
+  "props": { "percent": 75, "type": "circle" },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "../schema.json",
+  "id": "progress/basic",
+  "component": "progress",
+  "description": "三形态进度条：line（body>rail>track+indicator）/ circle|dashboard（SVG circle，dasharray/dashoffset 数学自研）；role=progressbar + aria-valuenow/min/max；success 分段与渐变 strokeColor。",
+  "antdVersion": "6.6.4",
+  "props": { "percent": 30 },
+  "content": null,
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -101,7 +101,8 @@ describe('Trigger · L1 开合与渲染', () => {
   it('CSS 变量与 zIndex：--arrow-x/y 恒落位；zIndex 透传', async () => {
     mountTrigger({ open: true, zIndex: 1070 });
     await vi.waitFor(() => expect(popup()).not.toBeNull());
-    const root = popup()!;
+    const root = popup();
+    if (!root) throw new Error('popup not rendered');
     expect(root.style.getPropertyValue('--arrow-x')).toBe('0px');
     expect(root.style.getPropertyValue('--arrow-y')).toBe('0px');
     expect(root.style.zIndex).toBe('1070');

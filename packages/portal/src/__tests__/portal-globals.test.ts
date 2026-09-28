@@ -57,7 +57,7 @@ describe('Portal · onEsc', () => {
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     expect(onEsc).toHaveBeenCalledTimes(1);
-    expect(onEsc.mock.calls[0]![0]).toMatchObject({ top: true });
+    expect(onEsc.mock.calls[0]?.[0]).toMatchObject({ top: true });
 
     wrapper.unmount();
   });

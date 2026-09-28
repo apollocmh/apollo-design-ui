@@ -978,6 +978,25 @@ export { Popover, PopoverPurePanel } from './popover';
 export { genPopoverStyle, genPopoverTokenDecls } from './popover/style';
 export type { ComponentToken as PopoverComponentToken } from './popover/style/token';
 export { prepareComponentToken as preparePopoverComponentToken } from './popover/style/token';
+export type {
+  GapPlacement,
+  GapPosition,
+  PercentPositionType,
+  ProgressGradient,
+  ProgressProps,
+  ProgressSemanticClassNames,
+  ProgressSemanticStyles,
+  ProgressSize,
+  ProgressStatus,
+  ProgressType,
+  StringGradients,
+  SuccessProps,
+} from './progress';
+// ---------------------------------------------------------------------------
+// Progress —— 进度条（line/circle/dashboard/steps；SVG 内核自研，H5 不依赖
+// rc-progress；C8-R2：format/rounding 为 fn prop 数据通道）
+// ---------------------------------------------------------------------------
+export { Progress } from './progress';
 // ---------------------------------------------------------------------------
 // QrCode —— 二维码（引擎 vendored：Nayuki qrcodegen，MIT；strategy=reuse 落定）
 //

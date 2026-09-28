@@ -32,7 +32,7 @@ describe('useScrollLocker', () => {
     await nextTick();
 
     expect(locks()).toHaveLength(1);
-    expect(locks()[0]!.textContent).toContain('overflow-y: hidden');
+    expect(locks()[0]?.textContent).toContain('overflow-y: hidden');
 
     lock.value = false;
     await nextTick();
@@ -85,7 +85,7 @@ describe('useScrollLocker', () => {
     scope.run(() => useScrollLocker(ref(true)));
     await nextTick();
 
-    expect(locks()[0]!.textContent).toContain('width: calc(100% -');
+    expect(locks()[0]?.textContent).toContain('width: calc(100% -');
 
     scope.stop();
     spy.mockRestore();

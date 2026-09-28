@@ -29,7 +29,6 @@ function createStubApi(name: string, methods: string[]): UseAppProps['message'] 
   const api: Record<string, unknown> = {};
   for (const method of methods) {
     api[method] = (..._args: never[]) => {
-      // biome-ignore lint/suspicious/noConsole: dev 警告是本 stub 的语义
       console.error(
         `[Warning] [antd: App] \`${method}\` is not available yet: the \`${name}\` component is not implemented in this build. It will be wired once \`${name}\` lands.`,
       );
@@ -96,7 +95,6 @@ const App = defineComponent({
       props.className || props.rootClassName || props.style || attrs.class || attrs.style,
     );
     if (props.component === false && hasRootProps) {
-      // biome-ignore lint/suspicious/noConsole: antd devWarning 同款（usage）
       console.error(
         '[Warning] [antd: App] When using cssVar, ensure `component` is assigned a valid React component string.',
       );

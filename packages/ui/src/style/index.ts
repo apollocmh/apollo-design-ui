@@ -57,6 +57,7 @@ import { genMessageStyle } from '../message/style';
 import { genModalStyle } from '../modal/style';
 import { genNotificationStyle } from '../notification/style';
 import { genPopoverStyle } from '../popover/style';
+import { genProgressStyle } from '../progress/style';
 import { genQrCodeStyle } from '../qr-code/style';
 import { genRadioStyle } from '../radio/style';
 import { genRateStyle } from '../rate/style';
@@ -115,6 +116,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },
   { name: 'float-button', gen: genFloatButtonStyle },
+  { name: 'progress', gen: genProgressStyle },
   { name: 'badge', gen: genBadgeStyle },
   { name: 'back-top', gen: genBackTopStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },
