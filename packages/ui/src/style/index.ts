@@ -57,6 +57,7 @@ import { genMessageStyle } from '../message/style';
 import { genModalStyle } from '../modal/style';
 import { genNotificationStyle } from '../notification/style';
 import { genPopconfirmStyle } from '../popconfirm/style';
+import { genCascaderStyle } from '../cascader/style';
 import { genPopoverStyle } from '../popover/style';
 import { genProgressStyle } from '../progress/style';
 import { genQrCodeStyle } from '../qr-code/style';
@@ -148,6 +149,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'steps', gen: genStepsStyle },
   { name: 'segmented', gen: genSegmentedStyle },
   { name: 'popconfirm', gen: genPopconfirmStyle },
+  { name: 'cascader', gen: genCascaderStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

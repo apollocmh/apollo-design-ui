@@ -117,6 +117,15 @@ export const BaseSelect = defineComponent({
       type: Function as PropType<((node: unknown) => unknown) | undefined>,
       default: undefined,
     },
+    /**
+     * 下拉列表渲染器（rc 的 `OptionList` prop）—— BaseSelect 只负责外壳协议
+     * （开合 / 输入 / 展示值 / tag / 清除），列表本体由调用方注入。
+     * Cascader 用它注入自己的多列面板。⚠️ 返回值必须是 VNode（不是数组）。
+     */
+    optionListRenderer: {
+      type: Function as PropType<(() => unknown) | undefined>,
+      default: undefined,
+    },
     classNames: {
       type: Object as PropType<SelectSemanticClassNames | undefined>,
       default: undefined,
@@ -619,14 +628,19 @@ export const BaseSelect = defineComponent({
           .join(' ') || undefined,
     );
 
-    const popupElement = () =>
-      h(OptionList, {
+    const popupElement = () => {
+      // 调用方注入了列表渲染器 ⇒ 由它接管（Cascader 等「BaseSelect + 自定义列表」形态）
+      if (props.optionListRenderer) {
+        return props.optionListRenderer() as unknown;
+      }
+      return h(OptionList, {
         ref: optionListRef,
         activeIndex: activeIndex.value,
         onActiveIndexChange: setActive,
         onSelectValue,
         onPopupScroll: props.onPopupScroll,
       });
+    };
 
     return () => {
       const popupPrefixCls = `${props.prefixCls}-dropdown`;
