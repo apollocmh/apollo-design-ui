@@ -426,8 +426,8 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 ### 11.1 总览
 
 ```
-92 个 Work Item | 组件 37/72 | foundation 12/13 completed（picker 收口中）
-当前 ready 18（可并行开工 17）| registry:check 18 检查全绿
+92 个 Work Item | 组件 52/72 | foundation 12/13 completed（picker 剩余工作延后至 DatePicker 前）
+registry:check 18 检查全绿（2026-09-29，tour 收口后）
 ```
 
 ### 11.2 已完成的成果（⚠️ 防重复清单 —— 不要再做这些）
