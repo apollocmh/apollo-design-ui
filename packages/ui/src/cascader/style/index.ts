@@ -54,9 +54,10 @@ export function genCascaderStyle(rootPrefixCls: string): string {
     `  width:${cv(p, 'control-width')};`,
     `}`,
     // ---- Popup ----
-    `${dropdown}.{p}-select-dropdown{`,
+    // antd：`&${antCls}-select-dropdown{padding:0}`（dropdown 与 select-dropdown 同节点）
+    `${dropdown}.${p}-select-dropdown{`,
     `  padding:0;`,
-    `}`.replace('{p}-select-dropdown', `.${p}-select-dropdown`).replace('${dropdown}', dropdown),
+    `}`,
     `${dropdown}{`,
     // ============ checkbox（精简对齐版）============
     `  .${checkbox}{`,

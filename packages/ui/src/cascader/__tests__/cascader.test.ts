@@ -38,7 +38,7 @@ describe('Cascader · 薄壳组装', () => {
     w.unmount();
   });
 
-  it('受控 open ⇒ 浮层出现且第一列渲染 options（点击开合链路在 S5 补测）', async () => {
+  it('受控 open ⇒ 浮层出现且第一列渲染 options', async () => {
     const w = mountCascader({ open: true });
     await nextTick();
     await vi.waitUntil(() => menus().length > 0, { timeout: 2000 }).catch(() => {});
@@ -57,6 +57,14 @@ describe('Cascader · 薄壳组装', () => {
   it('defaultValue 展示', () => {
     const w = mountCascader({ defaultValue: ['js', 'nj'] });
     expect(w.text()).toContain('江苏 / 南京');
+    w.unmount();
+  });
+
+  it('点击触发 ⇒ 打开（openOnTriggerClick）；popup 类名链', async () => {
+    const w = mountCascader();
+    await w.find('.apollo-cascader').trigger('click');
+    await nextTick();
+    expect(menus().length).toBe(1);
     w.unmount();
   });
 

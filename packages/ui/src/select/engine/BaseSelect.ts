@@ -126,6 +126,13 @@ export const BaseSelect = defineComponent({
       type: Function as PropType<(() => unknown) | undefined>,
       default: undefined,
     },
+    /**
+     * ⚠️ 实验开关（2026-09-28，Cascader 期）：点击 selector 切换开合。
+     * rc 的 BaseSelect 有内建的点击开合，本仓 select 收口时**只测了受控 open**
+     * （点击开合交互从未落地）。为不动 select 的既有行为，默认 false，
+     * 由 Cascader 显式开启；select 补全交互时再翻默认值。
+     */
+    openOnTriggerClick: { type: Boolean, default: false },
     classNames: {
       type: Object as PropType<SelectSemanticClassNames | undefined>,
       default: undefined,
@@ -723,6 +730,12 @@ export const BaseSelect = defineComponent({
             default: () =>
               h(Selector, {
                 ref: selectorRef,
+                onClick: props.openOnTriggerClick
+                  ? () => {
+                      if (props.disabled) return;
+                      toggleOpen(!mergedOpen.value);
+                    }
+                  : undefined,
                 prefixCls: props.prefixCls,
                 id: props.id,
                 className: mergedClassName.value,

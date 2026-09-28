@@ -89,6 +89,7 @@ export const Selector = defineComponent({
     // ---- 事件（纯 prop 回调，见 CHECKLIST #78）----
     onToggleOpen: { type: Function as PropType<(next?: boolean) => void>, default: undefined },
     onMousedown: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
+    onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     onKeydown: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
     onKeyup: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
     onFocus: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
@@ -451,6 +452,7 @@ export const Selector = defineComponent({
           class: props.className,
           style: props.style,
           onMousedown: onInternalMouseDown,
+          onClick: props.onClick,
           onKeydown: props.onKeydown,
           onKeyup: props.onKeyup,
           onFocusin: props.onFocus,

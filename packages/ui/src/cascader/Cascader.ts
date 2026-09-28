@@ -531,6 +531,7 @@ const Cascader = defineComponent({
           onInputKeyDown: (event: KeyboardEvent) => {
             optionListRef.value?.onKeyDown(event);
           },
+          openOnTriggerClick: true,
           optionListRenderer: () =>
             h(RawOptionList, {
               ref: optionListRef as never,
