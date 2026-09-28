@@ -60,6 +60,16 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-28（segmented 会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 91 | **闭包捕获变量而非值**：`node = h(Tooltip, …, { default: () => node })` —— slot 求值时 node 已被重新赋值为 Tooltip vnode 本身 ⇒ 无限递归挂载（Maximum call stack） | L1（mount 栈溢出） | 渲染包装元素必须用**不变的局部 const** 承载被包装的 vnode，再在闭包里引用它 |
+| 92 | **resetComponent 漏 `fontSize: token.fontSize`**：根元素继承 body 的 16px（antd 显式 14px），文字逐字累积偏移 —— L6 差异 0.16~3%、重影集中在**每个词内部且越长的词偏移越大** | L6（视觉回归） | resetComponent 是完整 reset（含 fontSize）；「逐词递增偏移」的 block-diff 先查字号继承 |
+| 93 | **jsdom 下 Vue 的 mousedown/mouseup listener 不被派发调用**（裸 `h('div', {onMouseDown})` 复现；click/keydown/mouseenter 正常，原生 addEventListener 能收到） | L2（焦点态断言红） | 依赖 mouse 类 listener 的行为断言降级到 L6 真浏览器；jsdom 里别浪费轮次调「为什么 handler 不执行」 |
+| 94 | **visual run.mjs 会用 packages/ui/dist 的旧产物**：改了 src 的样式不重建 dist，重跑截图数字纹丝不动 —— 误判「修复无效」 | L6 | 改样式后重跑 visual 前先 `rm -rf packages/ui/dist`（或重建），再跑 run.mjs |
+| 95 | **rc/antd 薄壳+内核的类会重复**：antd 薄壳加一次 `-vertical`、rc 内核再判一次 ⇒ 上游产物该类出现**两次** | L4（DOM 契约 diff） | 迁移「薄壳+内核」组件时类名逐字对基线，别把重复类当自己的 bug「顺手修掉」 |
+
 ### 2026-09-28（progress 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

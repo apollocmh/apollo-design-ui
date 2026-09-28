@@ -411,6 +411,15 @@ export const COMPONENTS = {
       'character', // 自定义字符
     ],
   },
+  segmented: {
+    // 4 个 variant × 3 个 viewport = 12 张
+    variants: [
+      'basic', // 原始值 options + 选中第 2 项（thumb 静止态）
+      'shape-round', // shape=round 全圆角
+      'vertical', // 纵向 + thumb 沿纵轴
+      'sizes', // 三档尺寸堆叠
+    ],
+  },
   steps: {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [

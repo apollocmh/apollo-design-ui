@@ -380,8 +380,11 @@ const HARDCODED_PATTERNS = [
   // 2026-09-25 补 `100px`：image 预览工具栏的 pill 圆角 —— 上游写的是 `borderRadius: 100`
   // （字面量，不是 token），产物即 `border-radius:100px`；本仓没有「pill 圆角」token，
   // 换成 `border-radius-lg`(8px) 会与上游产物分叉（视觉上圆角会消失）。
+  // 2026-09-28 补 `9999px`：segmented 的 shape:round 全圆角 —— 上游写的是
+  // `borderRadius: 9999`（components/segmented/style/index.ts 字面量，非 token），
+  // 与 100px 同判：没有「pill 圆角」token，换 token 会与上游产物分叉。
   {
-    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|100px\b|0(?![\d.])))/,
+    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|100px\b|9999px\b|0(?![\d.])))/,
     what: '硬编码圆角',
   },
   // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游

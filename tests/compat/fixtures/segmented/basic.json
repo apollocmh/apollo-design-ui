@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "segmented/basic",
+  "component": "segmented",
+  "description": "rc 内核的 DOM 分配：role=radiogroup + 硬编码 aria-label='segmented control' 落根 div、aria-orientation 由 vertical 合并驱动；每项是 label 包 input[type=radio]（0×0 绝对定位隐藏，样式层）；title 落 -item-label；thumb 动画在 SSR 下不渲染（两侧一致）；受控值不在 options 里时不自动切换（rc 判据）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": ["Daily", "Weekly", "Monthly"],
+    "value": "Weekly"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change"]
+  }
+}

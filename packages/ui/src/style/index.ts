@@ -62,6 +62,7 @@ import { genQrCodeStyle } from '../qr-code/style';
 import { genRadioStyle } from '../radio/style';
 import { genRateStyle } from '../rate/style';
 import { genResultStyle } from '../result/style';
+import { genSegmentedStyle } from '../segmented/style';
 import { genSelectStyle } from '../select/style';
 import { genSkeletonStyle } from '../skeleton/style';
 import { genSpaceStyle } from '../space/style';
@@ -144,6 +145,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'modal', gen: genModalStyle },
   { name: 'select', gen: genSelectStyle },
   { name: 'steps', gen: genStepsStyle },
+  { name: 'segmented', gen: genSegmentedStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

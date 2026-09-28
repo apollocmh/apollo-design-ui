@@ -1019,6 +1019,26 @@ export type { RateComponentToken, RateProps, RateRef, StarRenderInfo } from './r
 // Rate —— 评分（rc-rate 1.0.1 内核自建 + antd 壳；C8-R2：character → #character 插槽）
 // ---------------------------------------------------------------------------
 export { prepareRateComponentToken, Rate } from './rate';
+// ---------------------------------------------------------------------------
+// Segmented —— 分段控制器
+// ---------------------------------------------------------------------------
+export type {
+  SegmentedLabeledOption,
+  SegmentedLabeledOptionWithIcon,
+  SegmentedLabeledOptionWithoutIcon,
+  SegmentedOption,
+  SegmentedOptions,
+  SegmentedProps,
+  SegmentedRawOption,
+  SegmentedRef,
+  SegmentedSemanticClassNames,
+  SegmentedSemanticStyles,
+  SegmentedValue,
+} from './segmented';
+export { Segmented } from './segmented';
+export { genSegmentedStyle, genTokenDecls as genSegmentedTokenDecls } from './segmented/style';
+export type { ComponentToken as SegmentedComponentToken } from './segmented/style/token';
+export { prepareComponentToken as prepareSegmentedComponentToken } from './segmented/style/token';
 export type {
   CustomTagProps,
   DefaultOptionType,
