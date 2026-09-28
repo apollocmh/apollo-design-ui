@@ -60,6 +60,16 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-28（cascader 会话，S1–S5）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 101 | **provide 的 context 在 setup 期解构 = 冻结初值**：Proxy 桥/computed 的值解构后不再更新 ⇒ options 变化后 OptionList 渲染旧数据（React Context 每帧取值，Vue 无此语义） | L1（loadData 用例：loadData 收到旧 options） | context 读取一律走 `getC()` 每次渲染/事件期重新解构；绝不缓存字段引用 |
+| 102 | **watch 依赖某 ref 又在回调里改它 = 递归自触发**（Maximum recursive updates）——rc 的 `useEffect([options, loadingKeys])` 里 setState 同值会 bail out，Vue 没有 | L1（loadData 用例栈溢出） | 迁移 React effect 时，依赖里与「被修改目标」相同的项必须删除（保留语义等价的最小依赖集） |
+| 103 | **豁免必须恰好命中**：a11y allow 的规则在没有对应元素的 demo 上成为「未被命中的豁免」→ 红（panel demo 无 combobox input） | L5（a11y） | 带 allow 的 a11yDemoTest 拆成两组：有豁免场景 / 无豁免场景分别扫 |
+| 104 | **BaseSelect 的点击开合从未实现**（select 测试全用受控 open，交互链路漏测）——cascader 需要 时才发现 | L1（薄壳冒烟） | 加 `openOnTriggerClick`（默认 false 保持 select 行为）+ Selector 显式 onClick prop（inheritAttrs:false 下 attrs 不落根）；下轮 select 补交互时翻默认 |
+| 105 | **h() 模板串里嵌 `{p}` 占位再 .replace 的写法容易挂错元素**（replace 链只作用最后一个字符串字面量）——产物类名悄悄缺失 | L7（theme 断言） | 模板占位一律用 `` `${var}` `` 插值，不用占位符 replace |
+
 ### 2026-09-28（popconfirm 会话）
 
 | # | 坑 | 抓到它的层 | 对策 |
