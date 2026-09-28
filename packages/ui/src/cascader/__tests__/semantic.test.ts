@@ -27,9 +27,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'cascader:open': () => h(Cascader, { ...BP, open: true, id: 'cs-1' }, { default: trigger }),
   'cascader:disabled': () =>
     h(Cascader, { ...BP, open: true, disabled: true, id: 'cs-2' }, { default: trigger }),
-
 };
-
 
 domContractTest('Cascader', {
   baseline,

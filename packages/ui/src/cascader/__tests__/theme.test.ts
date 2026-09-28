@@ -31,6 +31,16 @@ describe('Cascader · 主题无关性', () => {
     expect(css).toContain('--apollo-cascader-option-selected-color:var(--apollo-color-text);');
   });
 
+  it('无双点类名（root 变量自带点，拼接处不得再加点——L6 全样式失效抓出）', () => {
+    expect(css).not.toContain('..apollo-');
+    expect(css).toContain('.apollo-cascader-menus{');
+  });
+
+  it('无双点类名（root 变量自带点，拼接处不得再加点——L6 全样式失效抓出）', () => {
+    expect(css).not.toContain('..apollo-');
+    expect(css).toContain('.apollo-cascader-menus{');
+  });
+
   it('resetFont: false —— 上游没有 fontFamily 重置（逐字保留）', () => {
     expect(css).not.toContain('font-family');
   });

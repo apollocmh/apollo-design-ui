@@ -19,6 +19,7 @@ import { getPlacements } from '@apollo-design/position';
 import { KeyCode } from '@apollo-design/utils';
 import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
 import {
+  cloneVNode,
   computed,
   defineComponent,
   h,
@@ -28,9 +29,8 @@ import {
   provide,
   ref,
   shallowRef,
-  watch,
-  cloneVNode,
   type VNode,
+  watch,
 } from 'vue';
 import { Trigger } from '../../_internal/trigger';
 import type {

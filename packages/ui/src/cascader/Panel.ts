@@ -11,7 +11,9 @@
  * - 多选勾选传导复用 S2 的 createSelectHandler 语义（此处内联以拿最新受控值）。
  */
 
+import { useId } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import BaseSelect from '../select/engine/BaseSelect';
 
 import { provideCascaderContext } from './context';
 import { createSelectHandler, useOptions, useValues } from './hooks/values';
@@ -88,6 +90,7 @@ const CascaderPanel = defineComponent({
   emits: ['update:value', 'change'],
   setup(props, { emit }) {
     // ========================= Values =========================
+    const panelId = useId(undefined);
     // rc useControlledState：受控优先，否则内部态
     const innerValues = ref<ValueCell[]>(toRawValues(props.defaultValue));
     watch(
@@ -172,32 +175,55 @@ const CascaderPanel = defineComponent({
 
     const isEmpty = computed(() => !mergedOptions.value.length);
 
+    // ========================= Render =========================
+    // antd 的 Panel 是「完整外壳形态」：readonly input（role=combobox，
+    // aria-expanded=false）+ suffix 箭头 + 下方内嵌列（无 Trigger/portal）。
+    // 外壳复用 BaseSelect 的静态形态（L4/L6 基线依赖此结构）。
     return () => {
-      const panelPrefixCls = `${props.prefixCls ?? 'apollo-cascader'}-panel`;
+      const p = props.prefixCls ?? 'apollo-cascader';
+      const panelPrefixCls = `${p}-panel`;
+      const listNode = h(RawOptionList, {
+        prefixCls: p,
+        searchValue: '',
+        multiple: props.multiple,
+        toggleOpen: noop,
+        open: true,
+        direction: props.direction,
+        disabled: props.disabled,
+      } as never);
+
+      if (isEmpty.value) {
+        return h(
+          'div',
+          {
+            class: [panelPrefixCls, { [`${panelPrefixCls}-empty`]: true }, props.className],
+            style: props.style,
+          },
+          (props.notFoundContent ?? undefined) as never,
+        );
+      }
+
       return h(
         'div',
         {
-          class: [
-            panelPrefixCls,
-            {
-              [`${panelPrefixCls}-rtl`]: props.direction === 'rtl',
-              [`${panelPrefixCls}-empty`]: isEmpty.value,
-            },
-            props.className,
-          ],
-          style: props.style,
+          class: [panelPrefixCls, props.className],
+          style: { paddingBottom: 0, position: 'relative', minWidth: 0, ...(props.style ?? {}) },
         },
-        (isEmpty.value
-          ? (props.notFoundContent ?? undefined)
-          : (h(RawOptionList, {
-              prefixCls: props.prefixCls ?? 'apollo-cascader',
-              searchValue: '',
-              multiple: props.multiple,
-              toggleOpen: noop,
-              open: true,
-              direction: props.direction,
-              disabled: props.disabled,
-            } as never) as VNodeChild)) as never,
+        [
+          h(BaseSelect, {
+            prefixCls: p,
+            id: panelId,
+            open: false,
+            displayValues: [],
+            disabled: props.disabled,
+            tabIndex: -1,
+            style: { margin: 0 },
+            optionListRenderer: () => null,
+          } as never),
+          // ⚠️ 列直接内嵌（rc Panel 同构）：不要包 -dropdown 容器——select 的
+          //    dropdown 样式带定位/边距，会把列挤开（L6 差异抓出）
+          listNode,
+        ],
       );
     };
   },

@@ -254,15 +254,19 @@ a[disabled]{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
 `;
 
 /** 生成单个前缀下的完整样式。 */
-export function genSelectStyle(prefixCls: string = 'apollo'): string {
+export function genSelectStyle(prefixCls: string = 'apollo', targetPrefixCls?: string): string {
+  // targetPrefixCls：**完整目标前缀**（如 'apollo-cascader'）——Cascader 复用 select
+  // 全套外壳样式时，antd 的做法就是 `useSelectStyle(cascaderPrefixCls)`（按传入前缀
+  // 生成全套规则）。不传则沿用旧的 `-select` 后缀模式（向后兼容）。
+  const target = targetPrefixCls ?? `${prefixCls}-select`;
   const rename = (cssText: string): string =>
-    prefixCls === 'apollo' ? cssText : cssText.split('.apollo-select').join(`.${prefixCls}-select`);
+    prefixCls === target ? cssText : cssText.split('.apollo-select').join(`.${target}`);
   // ⚠️ 下拉是 Portal 的（不在 .apollo-select 子树内），antd 靠 popupClassName 里的
   //    `css-var` 类让浮层也拿到组件变量 —— DECLS 必须同时落在根形态与 css-var 类上。
   const decls =
-    prefixCls === 'apollo'
+    prefixCls === target
       ? `.apollo-select,.apollo-select-css-var{${DECLS}}`
-      : `.${prefixCls}-select,.${prefixCls}-select-css-var{${DECLS}}`;
+      : `.${target},.${target}-css-var{${DECLS}}`;
   return `${KEYFRAMES}
 ${MOTION_BASE}
 ${decls}
