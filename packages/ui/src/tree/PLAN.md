@@ -13,8 +13,8 @@
 
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工（2026-09-29）
 - [x] G1 ANALYZE —— docs/analysis/tree.md 完成：rc-tree class 内核（23 state 槽 + gDSFP 八步 + 键盘全套 + 拖拽 9 槽）+ NodeList 虚拟滚动/motion diff + DirectoryTree shift/ctrl 多选；R1–R8 全部闭环
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
+- [x] G2 API DESIGN —— interface.ts：TreeProps 全量（数据/展开/勾选/选中/加载/外观/拖拽/滚动/焦点 9 组）+ TreeEmits 21 个（C11 四键 v-model 双发）+ 5 语义槽（函数形态）+ TreeRef/TreeScrollConfig + DirectoryTree 同构；TreeNode children 形态不实现（v6 deprecated）
+- [x] G3 TOKEN —— **9 个 ComponentToken**（7 shared + 2 directory；registry 的 tokenCount=2 与产物不符，以 extract-tree-css.mjs 对拍为准）。prepareComponentToken 全部 alias 直引；6 个源值（controlHeightSM/controlItemBgHover/controlItemBgActive/colorText/colorTextLightSolid/colorPrimary）与 antd 产物逐字一致（node 直连 theme dist 验证）
 - [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
