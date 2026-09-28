@@ -5,7 +5,7 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { h, nextTick } from 'vue';
 import Cascader from '../Cascader';
 
 const OPTIONS = [
@@ -88,6 +88,24 @@ describe('Cascader · 薄壳组装', () => {
     const w = mountCascader({ multiple: true, value: [['zj', 'hz']] });
     await nextTick();
     expect(w.text()).toContain('杭州');
+    w.unmount();
+  });
+
+  it('默认渲染后缀箭头（antd `useSelectIcons` 的 `DownOutlined`）', () => {
+    // ⚠️ 防回归：Cascader 曾只透传 `suffixIcon ?? contextSemantic.suffixIcon`，
+    //    缺 antd `useSelectIcons` 的**默认层** ⇒ 触发器完全不渲染箭头
+    //    （L6 实测：antd 侧 `.ant-select-suffix` 12×12 @x=200 存在，
+    //     本仓 `.apollo-cascader-suffix` 一个都没有）。
+    const w = mountCascader({});
+    const suffix = w.find('.apollo-cascader-suffix');
+    expect(suffix.exists()).toBe(true);
+    expect(suffix.find('svg').attributes('data-icon')).toBe('down');
+    w.unmount();
+  });
+
+  it('自定义 suffixIcon 覆盖默认', () => {
+    const w = mountCascader({ suffixIcon: () => h('i', { class: 'my-suffix' }, 'x') });
+    expect(w.find('.apollo-cascader-suffix .my-suffix').exists()).toBe(true);
     w.unmount();
   });
 });

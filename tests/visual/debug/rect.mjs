@@ -40,7 +40,7 @@ for (const [side, sel] of [['react', antSel], ['vue', apolloSel]]) {
     return els.map((el) => {
       const r = el.getBoundingClientRect();
       const cs = getComputedStyle(el);
-      return { cls: el.className, x: +r.x.toFixed(3), y: +r.y.toFixed(3), w: +r.width.toFixed(3), h: +r.height.toFixed(3), lh: cs.lineHeight, fs: cs.fontSize, ff: cs.fontFamily.split(',')[0] };
+      return { cls: el.className, x: +r.x.toFixed(3), y: +r.y.toFixed(3), w: +r.width.toFixed(3), h: +r.height.toFixed(3), lh: cs.lineHeight, fs: cs.fontSize, ff: cs.fontFamily.split(',')[0], bt: cs.borderTopWidth + ' ' + cs.borderTopColor, bb: cs.borderBottomWidth + ' ' + cs.borderBottomColor, bi: cs.borderInlineEndWidth + ' ' + cs.borderInlineEndColor, rad: cs.borderRadius, pad: cs.padding, bg: cs.backgroundColor };
     });
   }, sel).catch(() => []);
   console.log(side, sel, JSON.stringify(info, null, 1));

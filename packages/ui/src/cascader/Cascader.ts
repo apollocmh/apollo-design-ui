@@ -16,7 +16,7 @@
  * 5. 键盘：BaseSelect 的 onInputKeyDown 回调驱动注入的 OptionList（optionListRef）。
  */
 
-import { LeftOutlined, LoadingOutlined, RightOutlined } from '@apollo-design/icons';
+import { DownOutlined, LeftOutlined, LoadingOutlined, RightOutlined } from '@apollo-design/icons';
 import { useControlledValue, useId } from '@apollo-design/utils';
 import {
   computed,
@@ -511,7 +511,14 @@ const Cascader = defineComponent({
           placeholder: (slots.placeholder?.() as VNodeChild) ?? props.placeholder,
           allowClear: mergedAllowClear.value,
           clearIcon: props.clearIcon ?? contextSemantic.clearIcon,
-          suffixIcon: props.suffixIcon ?? contextSemantic.suffixIcon,
+          // ⚠️ antd 把 `suffixIcon ?? contextSuffixIcon` 交给 select 的 `useSelectIcons`，
+          //    由**后者**补默认值（`loading` ⇒ `LoadingOutlined spin`，否则 `DownOutlined`）。
+          //    少了这一层默认，触发器**不会渲染箭头**（L6 实测：antd 侧
+          //    `.ant-select-suffix` 12×12 @x=200 存在，本仓 `.apollo-cascader-suffix` 完全没有）。
+          suffixIcon:
+            props.suffixIcon ??
+            contextSemantic.suffixIcon ??
+            (props.loading ? h(LoadingOutlined, { spin: true }) : h(DownOutlined)),
           removeIcon: props.removeIcon ?? contextSemantic.removeIcon,
           maxTagCount: props.maxTagCount,
           maxTagTextLength: props.maxTagTextLength,
