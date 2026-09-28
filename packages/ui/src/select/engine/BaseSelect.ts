@@ -29,6 +29,8 @@ import {
   ref,
   shallowRef,
   watch,
+  cloneVNode,
+  type VNode,
 } from 'vue';
 import { Trigger } from '../../_internal/trigger';
 import type {
@@ -123,6 +125,16 @@ export const BaseSelect = defineComponent({
      * Cascader 用它注入自己的多列面板。⚠️ 返回值必须是 VNode（不是数组）。
      */
     optionListRenderer: {
+      type: Function as PropType<(() => unknown) | undefined>,
+      default: undefined,
+    },
+    /**
+     * raw trigger 协议（rc 的 `getRawInputElement` 同构）：提供时**不渲染**内建
+     * Selector，改为渲染该函数返回的元素并注入开合/键盘/焦点事件与 aria-*。
+     * React SSR 时 Cascader 只输出裸 children —— DOM 基线依赖此协议。
+     * ⚠️ 必须与 `openOnTriggerClick` 配合使用（注入 onClick 的开关）。
+     */
+    getRawInputElement: {
       type: Function as PropType<(() => unknown) | undefined>,
       default: undefined,
     },
@@ -649,10 +661,95 @@ export const BaseSelect = defineComponent({
       });
     };
 
+    // ====================== raw trigger（getRawInputElement）======================
+    // rc 同构：提供时 Selector 不渲染，raw 元素作为 Trigger 的触发器；
+    // 事件/aria 经 cloneVNode 注入（React 用 cloneElement）。
+    const rawAriaAttrs = computed<Record<string, unknown>>(() => {
+      const out: Record<string, unknown> = {};
+      Object.keys(attrs).forEach((key) => {
+        if (key.startsWith('aria-') || key.startsWith('data-')) {
+          out[key] = (attrs as Record<string, unknown>)[key];
+        }
+      });
+      return out;
+    });
+    const renderRawTrigger = (): unknown => {
+      const raw = props.getRawInputElement?.();
+      if (raw === undefined || raw === null) return null;
+      const node = raw as VNode;
+      return cloneVNode(node, {
+        onClick: props.openOnTriggerClick
+          ? () => {
+              if (props.disabled) return;
+              toggleOpen(!mergedOpen.value);
+            }
+          : (node.props as Record<string, unknown> | undefined)?.onClick,
+        onKeydown: (event: KeyboardEvent) => props.onInputKeyDown?.(event),
+        onFocus: (event: FocusEvent) => props.onFocus?.(event),
+        onBlur: (event: FocusEvent) => props.onBlur?.(event),
+        onMousedown: (event: MouseEvent) => {
+          // 防止 selector 失焦（Selector 内 onInternalMouseDown 的同款判据）
+          event.preventDefault();
+        },
+        tabindex: props.disabled ? undefined : (props.tabIndex ?? 0),
+        ...rawAriaAttrs.value,
+      } as never);
+    };
+
     return () => {
       const popupPrefixCls = `${props.prefixCls}-dropdown`;
       let popupNode: unknown = popupElement();
       if (props.popupRender) popupNode = props.popupRender(popupNode);
+
+      // ---- raw 模式：Trigger child = 注入后的 raw 元素（无 Selector 结构）----
+      if (props.getRawInputElement) {
+        const rawNode = renderRawTrigger();
+        if (rawNode !== null) {
+          return [
+            focused.value && !mergedOpen.value
+              ? h(
+                  'span',
+                  {
+                    'aria-live': 'polite',
+                    style: {
+                      width: '0px',
+                      height: '0px',
+                      position: 'absolute',
+                      overflow: 'hidden',
+                      opacity: '0',
+                    },
+                  },
+                  props.displayValues
+                    .slice(0, 50)
+                    .map(({ label, value }) =>
+                      ['number', 'string'].includes(typeof label) ? String(label) : String(value),
+                    )
+                    .join(', '),
+                )
+              : null,
+            h(
+              Trigger,
+              {
+                ref: triggerRef as never,
+                prefixCls: popupPrefixCls,
+                popup: h('div', { class: popupPrefixCls }, [popupNode as never]),
+                open: mergedOpen.value,
+                onOpenChange: (next: boolean) => toggleOpen(next),
+                disabled: props.disabled ?? false,
+                placement: props.placement ?? 'bottomLeft',
+                builtinPlacements: builtinPlacements.value,
+                getPopupContainer: props.getPopupContainer as never,
+                motion: {
+                  motionName: props.transitionName ?? 'apollo-slide-up',
+                  motionDeadline: 500,
+                },
+                ...attrs,
+              } as never,
+              { default: () => rawNode as never },
+            ),
+          ];
+        }
+      }
 
       // ⚠️ 不能包一层 `<div>`：antd 的 Select 根元素**就是** `.ant-select` 那个 div，
       //    多一层会破坏 DOM 契约（规则 R10）。这里返回多根（Polite + Trigger）。

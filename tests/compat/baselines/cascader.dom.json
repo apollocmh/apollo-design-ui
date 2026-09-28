@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "component": "cascader",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-28T09:59:21.132Z",
+  "cases": [
+    {
+      "id": "cascader:basic",
+      "html": "<button type=\"button\">target</button>"
+    },
+    {
+      "id": "cascader:open",
+      "html": "<button type=\"button\">target</button>"
+    },
+    {
+      "id": "cascader:disabled",
+      "html": "<button type=\"button\">target</button>"
+    }
+  ]
+}

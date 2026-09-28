@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "cascader/basic",
+  "component": "cascader",
+  "description": "raw trigger 协议（SSR 只渲染裸 children）+ BaseSelect 外壳 + OptionList 多列（列结构由 L1 panel.test 钉：role=menu/menuitemcheckbox、aria-checked、data-path-key、fieldNames 映射 key=value 同字段、disabled 不参与、SEARCH_MARK 搜索路径）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": [
+      { "value": "zhejiang", "label": "浙江", "children": [{ "value": "hangzhou", "label": "杭州" }] }
+    ],
+    "placeholder": "请选择地区"
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "search", "openChange"] }
+}

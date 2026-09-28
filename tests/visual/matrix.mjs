@@ -411,6 +411,26 @@ export const COMPONENTS = {
       'character', // 自定义字符
     ],
   },
+  cascader: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；
+    //    列结构走 `panel`（CascaderPanel，无 portal）。
+    variants: [
+      'basic', // title + 列展开 + 选中态
+      'multiple', // 多选 checkbox
+      'panel', // 纯面板形态
+    ],
+  },
+  cascader: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；
+    //    列结构走 `panel`（CascaderPanel，无 portal）。
+    variants: [
+      'basic', // title + 列展开 + 选中态
+      'multiple', // 多选 checkbox
+      'panel', // 纯面板形态
+    ],
+  },
   popconfirm: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；

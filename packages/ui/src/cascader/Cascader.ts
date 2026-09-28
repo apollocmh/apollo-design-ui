@@ -532,6 +532,12 @@ const Cascader = defineComponent({
             optionListRef.value?.onKeyDown(event);
           },
           openOnTriggerClick: true,
+          getRawInputElement: () => {
+            // rc：getRawInputElement = () => children —— raw 元素作为触发器，
+            // SSR/关闭态只渲染它（DOM 基线依赖）；事件由 BaseSelect 注入。
+            const raw = slots.default?.() as VNodeChild;
+            return (Array.isArray(raw) ? raw[0] : raw) as never;
+          },
           optionListRenderer: () =>
             h(RawOptionList, {
               ref: optionListRef as never,

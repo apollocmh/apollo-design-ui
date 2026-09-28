@@ -1194,8 +1194,8 @@ export { Watermark } from './watermark';
 // Cascader —— 级联选择
 // ---------------------------------------------------------------------------
 export type {
-  BaseOptionType,
-  DefaultOptionType,
+  BaseOptionType as CascaderBaseOptionType,
+  DefaultOptionType as CascaderDefaultOptionType,
   FieldNames as CascaderFieldNames,
   RawValue as CascaderRawValue,
   ShowCheckedStrategy,
@@ -1204,4 +1204,4 @@ export type {
 export { Cascader, CascaderPanel, SHOW_CHILD as CASCADER_SHOW_CHILD, SHOW_PARENT as CASCADER_SHOW_PARENT } from './cascader';
 export { genCascaderStyle, genTokenDecls as genCascaderTokenDecls } from './cascader/style';
 export type { ComponentToken as CascaderComponentToken } from './cascader/style/token';
-export { prepareCascaderComponentToken } from './cascader/style/token';
+export { prepareComponentToken as prepareCascaderComponentToken } from './cascader/style/token';

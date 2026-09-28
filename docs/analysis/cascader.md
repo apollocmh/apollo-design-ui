@@ -84,5 +84,5 @@ div.{prefix}-menus [ .-menu-empty? .-rtl? ]
 | S3 | OptionList（List / Column / Checkbox / useActive / useKeyboard）+ Panel | 待做 |
 | S4 | 薄壳 `Cascader.ts`（复用 select BaseSelect）+ 语义合并 + 8 token 样式 | 待做 |
 | S5 | demo + a11y/theme/L1/L2（✅ 107 条全绿）| ✅ 完成 |
-| S5b | L4 DOM 基线 + L6 视觉 —— **被 BaseSelect 的 getRawInputElement 缺口挡住**：React SSR 时 Cascader 只渲染裸 children（raw trigger），本仓 BaseSelect 无该协议（渲染完整 Selector）。⚠️ 基线脚本与 fixture 已实现过一版又撤下（compat runner 要求「脚本存在 = 基线必须最新」），补齐 getRawInputElement 后按本提交历史重写（popconfirm.mjs 同构，9 例设计已验证） | ⏸ 阻塞 |
+| S5b | L4 DOM 基线 ✅（3 例触发元素全绿，getRawInputElement 已实现）；L6 视觉 ⏸：antd 的 Panel 是**完整外壳形态**（readonly input + combobox + 列），本仓 CascaderPanel 是纯列 —— 尺寸差 8px（React 300 vs Vue 292）与外壳条差异待补「CascaderPanel 完整外壳形态」（复用 BaseSelect 静态形态）——原被 BaseSelect 的 getRawInputElement 缺口挡住：React SSR 时 Cascader 只渲染裸 children（raw trigger），本仓 BaseSelect 无该协议（渲染完整 Selector）。⚠️ 基线脚本与 fixture 已实现过一版又撤下（compat runner 要求「脚本存在 = 基线必须最新」），补齐 getRawInputElement 后按本提交历史重写（popconfirm.mjs 同构，9 例设计已验证） | ⏸ 阻塞 |
 | S6 | registry 收口 + 沉淀 + 推送 | 待做 |
