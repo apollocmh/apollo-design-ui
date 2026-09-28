@@ -1475,3 +1475,11 @@
     残留差异像素全落在文字与 1px 边框上。
     **排查手法**：`node tests/visual/debug/rect.mjs <comp> <variant> <apolloSel> <antSel>`
     一次打印两侧 bounding rect + `fontFamily` 首项 —— 比盯截图猜快一个数量级。
+
+192. 🚨 **`registry/components.json` 的 `notes` 会被 `registry:gen` **清空**（实测 2026-09-28）。
+    复现：给 tour 写 `notes` → 跑 `pnpm run registry:check`（内含 `registry:gen`）→ 再读，
+    `notes` 变成 `null`。⚠️ 这与既有认知「status/notes/layerNotes 由 Agent 写、跨运行保留」
+    **不符** —— 至少 components.json 的 `notes` 不保留。
+    ⇒ **跨运行的进度/结论不要只写在 `notes` 里**：分析结论落 `docs/analysis/<name>.md`，
+    进度落 `.workbuddy-ai/memory/YYYY-MM-DD.md`，registry 只当作「机器可读的状态位」。
+    （`status` / 各 `*Status` 维度**确实**保留，实测无误。）
