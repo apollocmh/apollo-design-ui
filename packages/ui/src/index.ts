@@ -636,6 +636,26 @@ export { genCarouselStyle, genTokenDecls as genCarouselTokenDecls } from './caro
 export type { ComponentToken as CarouselComponentToken } from './carousel/style/token';
 export { prepareComponentToken as prepareCarouselComponentToken } from './carousel/style/token';
 // ---------------------------------------------------------------------------
+// Cascader —— 级联选择
+// ---------------------------------------------------------------------------
+export type {
+  BaseOptionType as CascaderBaseOptionType,
+  DefaultOptionType as CascaderDefaultOptionType,
+  FieldNames as CascaderFieldNames,
+  RawValue as CascaderRawValue,
+  ShowCheckedStrategy,
+  ValueCell as CascaderValueCells,
+} from './cascader';
+export {
+  Cascader,
+  CascaderPanel,
+  SHOW_CHILD as CASCADER_SHOW_CHILD,
+  SHOW_PARENT as CASCADER_SHOW_PARENT,
+} from './cascader';
+export { genCascaderStyle, genTokenDecls as genCascaderTokenDecls } from './cascader/style';
+export type { ComponentToken as CascaderComponentToken } from './cascader/style/token';
+export { prepareComponentToken as prepareCascaderComponentToken } from './cascader/style/token';
+// ---------------------------------------------------------------------------
 // Checkbox —— 复选框（复合组件：Checkbox.Group）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 0 个（全 alias token）。
@@ -1150,6 +1170,39 @@ export { genTooltipStyle, genTooltipTokenDecls } from './tooltip/style';
 export type { ComponentToken as TooltipComponentToken } from './tooltip/style/token';
 export { prepareComponentToken as prepareTooltipComponentToken } from './tooltip/style/token';
 // ---------------------------------------------------------------------------
+// Tour —— 引导遮罩（rc-tour 2.4.0 内核自建 + antd 自研 Panel；C8-R2：
+// title/description/cover/按钮文案 slot 优先；v-model:open/current 与
+// change/close/finish 同发（C11））
+// ---------------------------------------------------------------------------
+export type {
+  TourAnimatedConfig,
+  TourArrowConfig,
+  TourButtonProps,
+  TourClosableConfig,
+  TourEmits,
+  TourGap,
+  TourLocale,
+  TourMaskConfig,
+  TourPlacement,
+  TourProps,
+  TourPurePanelProps,
+  TourSemanticAllType,
+  TourSemanticClassNames,
+  TourSemanticStyles,
+  TourSemanticType,
+  TourSemanticValue,
+  TourSlots,
+  TourStepProps,
+  TourType,
+} from './tour';
+export { Tour, TourPurePanel } from './tour';
+export { genTourStyle, genTourTokenDecls } from './tour/style';
+export type { ComponentToken as TourComponentToken } from './tour/style/token';
+export {
+  prepareComponentToken as prepareTourComponentToken,
+  tourTokenValues,
+} from './tour/style/token';
+// ---------------------------------------------------------------------------
 // Upload —— 上传（引擎自建于 engine/：AjaxUploader + XHR 请求器 + 目录递归）
 //
 // ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 2 个（actions-color /
@@ -1189,19 +1242,3 @@ export type {
   WatermarkText,
 } from './watermark';
 export { Watermark } from './watermark';
-
-// ---------------------------------------------------------------------------
-// Cascader —— 级联选择
-// ---------------------------------------------------------------------------
-export type {
-  BaseOptionType as CascaderBaseOptionType,
-  DefaultOptionType as CascaderDefaultOptionType,
-  FieldNames as CascaderFieldNames,
-  RawValue as CascaderRawValue,
-  ShowCheckedStrategy,
-  ValueCell as CascaderValueCells,
-} from './cascader';
-export { Cascader, CascaderPanel, SHOW_CHILD as CASCADER_SHOW_CHILD, SHOW_PARENT as CASCADER_SHOW_PARENT } from './cascader';
-export { genCascaderStyle, genTokenDecls as genCascaderTokenDecls } from './cascader/style';
-export type { ComponentToken as CascaderComponentToken } from './cascader/style/token';
-export { prepareComponentToken as prepareCascaderComponentToken } from './cascader/style/token';

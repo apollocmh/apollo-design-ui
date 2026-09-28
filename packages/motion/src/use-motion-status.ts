@@ -95,6 +95,22 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
 
   const elementRef: Ref<Element | null> = shallowRef(null);
 
+  // ── 「支持动画」的两条判据（2026-09-29，tour 实测修复）───────────────────────
+  //
+  // rc-motion 的 CSSMotion.js：
+  //     function isSupportTransition(props, contextMotion) {
+  //       return !!(props.motionName && transitionSupport && contextMotion !== false);
+  //     }
+  // —— **`motionName` 缺失 ⇒ 完全没有动画**（状态机直接走 NONE，
+  // appear/enter/leave 都同步完成、onVisibleChanged 立即触发）。
+  // 之前只看环境探测 ⇒ Trigger 不传 motion（如 tour）时离场会等一个
+  // jsdom/真实浏览器里都不存在的动画事件，`autoDestroy` 的卸载被无限推迟。
+  const envSupport = resolve(supportMotion, detectSupportMotion());
+  const effectiveSupport = computed(() => {
+    const name = resolve(motionName, undefined as string | undefined);
+    return !!envSupport && !!name;
+  });
+
   // ── 首帧语义（2026-09-22，badge 实测修复）──────────────────────────────────
   //
   // 初始快照必须以 props.visible 为准（rc-motion 的首帧是**同步渲染**的）：
@@ -105,7 +121,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   //     由驱动接管）—— 与 rc-motion 的首帧行为一致。
   // driver.mount() 在 onMounted 里会再 emit 一次，快照随后以驱动为准。
   const initialVisible = visible();
-  const initialSupport = resolve(supportMotion, detectSupportMotion());
+  const initialSupport = effectiveSupport.value;
   // 快照整体替换而不是逐字段 ref：驱动每次 emit 都是**一组**状态，
   // 分开放会出现「class 已更新但 style 还没」的中间态。
   const snapshot = shallowRef({
@@ -118,7 +134,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   });
 
   const driver = createMotionDriver({
-    supportMotion: resolve(supportMotion, detectSupportMotion()),
+    supportMotion: effectiveSupport.value,
     motionAppear,
     motionEnter,
     motionLeave,

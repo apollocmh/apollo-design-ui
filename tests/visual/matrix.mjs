@@ -433,6 +433,16 @@ export const COMPONENTS = {
       'render-panel', // PurePanel 静态面板
     ],
   },
+  tour: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 浮层用 open 受控静态帧钉住（与 popconfirm / dropdown 同判）；
+    //    纯面板形态走 `render-panel`（PurePanel，无需 portal）。
+    variants: [
+      'basic', // 蒙层挖洞 + 面板 bottom + 默认关闭钮
+      'non-modal', // mask=false + type=primary（面板完整可见）
+      'render-panel', // PurePanel 静态面板（default + primary 堆叠）
+    ],
+  },
   segmented: {
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [

@@ -39,6 +39,12 @@ antd `index.js` 只做六件事（逐条对齐）：
 |---|---|---|---|
 | `open` / `defaultOpen` | `boolean` | `false` | 受控 / 非受控 |
 | `current` / `defaultCurrent` | `number` | `0` | 受控 / 非受控 |
+
+> ⚠️ **2026-09-28 源码复核修正（open 默认值）**：rc-tour `Tour.js` 的合并式是
+> `mergedOpen = (mergedCurrent < 0 || mergedCurrent >= steps.length) ? false : internalOpen ?? true`
+> —— **不传 `open` / `defaultOpen` 且 current 合法时默认是打开的**（`?? true`），
+> 不是文档口径的 `false`。antd `index.js` 未覆写 `open`。分类 UPSTREAM（文档 vs 源码），
+> 实现按源码，G5 用例钉住。current 越界 ⇒ 强制关闭，这也是一条行为判据。
 | `onChange` | `(current) => void` | — | 步骤变化 |
 | `onClose` | `(current) => void` | — | 关闭（含 ESC / 蒙层点击） |
 | `onFinish` | `() => void` | — | 最后一步点「完成」 |
@@ -192,12 +198,25 @@ interface ComponentToken extends ArrowOffsetToken, ArrowToken {
 
 | # | 风险 | 核实结论 |
 |---|---|---|
-| R1 | rc-tour 的 `getPlacements`（6 组 placement + 箭头偏移）本仓是否齐备 | ✅ **已具备**：`getPlacements` 由 `@apollo-design/position` 导出，`dropdown/Dropdown.ts:149` 已在用；本仓 Trigger 的 `builtinPlacements` 是**必填** prop（`_internal/trigger.ts:153`） |
-| R2 | `Mask` 的 div 结构与 `disabledInteraction` 的交互拦截 | ⏳ 待读 rc `Mask.js`（G4 前） |
-| R3 | `Placeholder`（`animated.placeholder`）的挖洞动画承载 | ⏳ 待读 rc `Placeholder.js`（G4 前） |
+| R1 | rc-tour 的 `getPlacements`（6 组 placement + 箭头偏移）本仓是否齐备 | ✅ **已具备**：`getPlacements` 由 `@apollo-design/position` 导出，`dropdown/Dropdown.ts:149` 已在用；本仓 Trigger 的 `builtinPlacements` 是**必填** prop（`_internal/trigger.ts:153`）。⚠️ antd 用的是 `_util/placements`（tooltip 同源、带 offset/arrowWidth/borderRadius），**不是** rc-tour 自带的 12 条简表 —— 本仓走 position 包即对齐 antd |
+| R2 | `Mask` 的 div 结构与 `disabledInteraction` 的交互拦截 | ✅ **已核实**（rc `Mask.js`）：独立 **Portal**（不在 Trigger 内），内部是 **SVG 挖洞**——白底 rect（`100vw/100vh`；Safari 用 `100%`）+ `<mask>` 里的黑洞 rect（`pos.left/top/width/height + rx=radius`，动画类 `{p}-placeholder-animated`）+ `fill` 色大 rect 引用 mask；洞外另有 **4 个 `fill:transparent` cover rect**（`pointer-events:auto`）负责拦截交互。wrapper `pointerEvents = pos && !disabledInteraction ? 'none' : 'auto'`——有洞且不拦截时**洞内可点穿**、洞外被 cover 拦；`showMask=false` 时无 SVG 但 wrapper 仍在；`pos=null`（无 target）不挖洞且整体拦截。Esc 走 Portal 的 `onEsc`（自动锁栈） |
+| R3 | `Placeholder`（`animated.placeholder`）的挖洞动画承载 | ✅ **已核实**（rc `Placeholder.js` + `Tour.js`）：rc-tour **确实用 rc-trigger**，其触发元素就是 Placeholder——一个 Portal 出去的 div，样式 `posInfo + position:fixed + pointer-events:none`（inline 模式 absolute）；**无 target 时是 `CENTER_PLACEHOLDER`（left/top 50%、1×1）**。对齐发生在 Trigger 与这个占位 div 之间 ⇒ 本仓 Trigger（对齐 slot 首个 vnode）**协议完全兼容**，把 Placeholder div 作为 Trigger 的 child 即可。⚠️ `animated.placeholder` 才是 `-placeholder-animated` 类的判据（`typeof animated === 'object' ? animated.placeholder : animated`），antd 恒传 `animated: true` ⇒ 默认带动画类 |
 | R4 | 箭头 token 与 tooltip 重复声明（上游 `genCssVar(antCls,'tooltip')` 借了 tooltip 组） | ✅ **已解决**：本仓箭头 token 就是 `../../tooltip/style/token` 的 `getArrowOffsetToken` / `getArrowToken`，`dropdown/style/token.ts:12` 已是同样做法 ⇒ 照抄 |
 | R5 | `onPopupAlign` 从 Trigger 透传 | ✅ **已支持**：`_internal/trigger.ts:177`（prop）+ `:325`（调用点） |
 | R6 | locale 的 `Tour` 组（Next/Previous/Finish） | ✅ **已具备**：`@apollo-design/locale` 已有 `TourLocale`（`types.ts:195`）并在 locale 形态里声明 `Tour?`（`types.ts:331`）+ `index.ts` 已导出 |
-| R7 | `steps[].title` 的 VNode 收窄决策（见 §6） | ⏳ G2 定，登记 COMPATIBILITY |
+| R7 | `steps[].title` 的 VNode 收窄决策（见 §6） | ⏳ G2 定，登记 COMPATIBILITY —— ✅ **G2 已定**：slot 优先、prop 收窄 `string`（见 interface.ts），R7 闭合 |
+
+## 9. G4 前置核实补充（2026-09-28，rc 2.4.0 源码逐条）
+
+| # | 判据 | 源码结论 |
+|---|---|---|
+| V1 | **center placement** | rc `util.js#getPlacement`：`stepPlacement ?? placement ?? (targetElement === null ? 'center' : 'bottom')` —— `'center'` 是**兜底默认值**，不是 placements 配置表条目（rc 简表只有 12 条）。placement='center' 传入 rc-trigger 时查表落空。本仓 Trigger 对未命中 placement 是 `?? {}`（空 align）⇒ **G4 需实测空 align / 或在 builtinPlacements 补一条 `center: { points: ['cc','cc'], offset: [0,0] }`**（占位 div 恒在视口中心，center-to-center 即视口居中；无 target 时箭头恒 `false`）。开工第一件事跑探针 |
+| V2 | **Esc 通道** | Mask 与 Placeholder 各自的 Portal 挂 `onEsc`（Placeholder 还 `autoLock`）——Esc 在 Portal 的栈里处理：`keyboard && mergedClosable !== null` 时 `preventDefault + handleClose`。**本仓 `@apollo-design/portal` 的 Portal 是否支持 onEsc/autoLock 待查**（modal 用的什么通道） |
+| V3 | **closable 合并** | rc `useClosable`：`getClosableConfig` 把 `false`（或 `closeIcon===false` 且无对象 closeIcon）折叠成 `null`；step 层不补默认（`preset=false`）、root 层补（`preset=true`：`closable` 或 `closeIcon` 存在即出 `{closeIcon}`，都没有则 `'empty'`）；step 配置非 `'empty'` 则整段覆盖 root。`null` ⇒ 不渲染关闭钮 **且 Esc 关闭被禁** |
+| V4 | **键盘** | 窗口级 `keydown`（open 时挂）：`←/→` 切步骤，`KeyCode.isEditableTarget` 守卫（输入类元素不抢键）；Esc 由 Portal onEsc 走（见 V2） |
+| V5 | **posInfo** | `getBoundingClientRect()` 视口坐标 + gap 外扩（offset 默认 **6**、radius 默认 **2**；二元组 `[水平, 垂直]`）；不在视口且 open ⇒ `scrollIntoView({block:'center',inline:'center'})`；resize/scroll 监听重算；JSON 串比对去重。坐标是视口系 ⇒ Mask 用 `position:fixed` 直接消费 |
+| V6 | **open 语义** | 见 §2.1 修正块：`internalOpen ?? true`、current 越界强制 false、open 翻 true 时若之前关着 ⇒ `setMergedCurrent(0)` 归零 |
+| V7 | **本仓 Button 面核实（G4 第一文件 panel.ts 的消费判据）** | ① `size`/`type`/`ghost` 是普通 prop，直接传（`ghost` 传**显式布尔**，别依赖未传语义）；② click 是 **emit**（`click: [MouseEvent]`），Button 内部在 loading/disabled 时拦截——panel 按钮无此二态，`prevButtonProps.onClick`/`nextButtonProps.onClick` 接 emit 即可，语义等价 antd 的 onClick；③ `className` 是** prop**（不是 attrs）——`{p}-prev-btn` 与 `prevButtonProps.className` 的拼接必须走 `className` prop，与 antd 的合并路径一致；④ 文案走默认 slot（`children` 收窄为 string，插值即可）；⑤ `htmlType` 默认 `'button'`，无表单副作用；⑥ style 走 `props.style`。**结论：panel 不需要 ActionButton**（那是为了 popconfirm 的异步 close 语义；tour 的 prev/next 是纯点击） |
+| V8 | **antd `builtinPlacements` 是函数形态** | antd 传 `(config) => getPlacements({...})`（rc 支持函数），依赖 `arrowPointAtCenter`（默认 **true**）+ `token.marginXXS/sizePopupArrow/borderRadius`，且 `useLayoutEffect` 在 `arrowPointAtCenter/mergedCurrent` 变化时 `forceAlign`。本仓 Trigger 只收 Record ⇒ Tour 层自己组 Record，并在 `arrowPointAtCenter`/`current` 变化后调 Trigger 的 `forceAlign()`（expose 已有） |
 
 ⚠️ 结论：**没有阻塞项**，G2/G3 可以直接开工。

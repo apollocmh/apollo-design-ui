@@ -37,6 +37,7 @@ import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
 import { genButtonStyle } from '../button/style';
 import { genCarouselStyle } from '../carousel/style';
+import { genCascaderStyle } from '../cascader/style';
 import { genCheckboxStyle } from '../checkbox/style';
 import { genCollapseStyle } from '../collapse/style';
 import { genDescriptionsStyle } from '../descriptions/style';
@@ -57,7 +58,6 @@ import { genMessageStyle } from '../message/style';
 import { genModalStyle } from '../modal/style';
 import { genNotificationStyle } from '../notification/style';
 import { genPopconfirmStyle } from '../popconfirm/style';
-import { genCascaderStyle } from '../cascader/style';
 import { genPopoverStyle } from '../popover/style';
 import { genProgressStyle } from '../progress/style';
 import { genQrCodeStyle } from '../qr-code/style';
@@ -75,6 +75,7 @@ import { genStepsStyle } from '../steps/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTagStyle } from '../tag/style';
 import { genTooltipStyle } from '../tooltip/style';
+import { genTourStyle } from '../tour/style';
 import { genTypographyStyle } from '../typography/style';
 import { genUploadStyle } from '../upload/style';
 
@@ -150,6 +151,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'segmented', gen: genSegmentedStyle },
   { name: 'popconfirm', gen: genPopconfirmStyle },
   { name: 'cascader', gen: genCascaderStyle },
+  { name: 'tour', gen: genTourStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

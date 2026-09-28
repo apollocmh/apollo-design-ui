@@ -60,6 +60,17 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-09-29（tour 会话，G4–G14）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 106 | **rc 解构默认值必须逐个对源码核实，不能凭 G1 分析文档的默认值列**——tour 三个解构默认（`mask=true`/`arrow=true`/`open ?? true`）漏了两个：mask 缺失 ⇒ 蒙层 SVG 不渲染；arrow 缺失 ⇒ 面板无箭头（L1 冒烟抓到 mask、L6 像素 diff 抓到 arrow） | L1 冒烟 + L6 视觉 | G4 实现前把 rc 组件函数的**解构参数行**原文抄进分析文档（§9 的 V 清单从此固定为开工前步骤）；「默认值」列必须注明出处（解构默认 vs 文档默认） |
+| 107 | **CSSMotion 的「支持动画」是两条判据**：rc-motion `isSupportTransition = !!(motionName && transitionSupport)`——只看环境探测，motionName 缺失（Trigger 不传 motion 的组件如 tour）时离场等一个永不来的 animationend ⇒ `autoDestroy` 卸载被无限推迟、浮层 DOM 残留 | L1（basic 用例：Finish 后 popup 应卸载） | motion 包 `use-motion-status` 的 effectiveSupport = envSupport && !!motionName；任何「Trigger 不传 motion」的新组件都会踩，修复在 motion 层而非组件层 |
+| 108 | **PurePanel 的壳结构必须与 antd 产物对拍**，不能按组件自己的 PurePanel 推演——tour 复用 popover 的 RawPurePanel：`-placement-top`（默认值）+ `-pure` 出现**两次**（tour 层与 RawPurePanel 层各一次）+ 内部 `-arrow` + `{p}-container role="tooltip"` 三层包裹 | L4（DOM 契约基线） | PurePanel 落地前先跑基线脚本看 React 真实 HTML，再写 Vue 壳 |
+| 109 | **cloneVNode 的 class 是合并语义**：closeIconRender 里把旧 class 塞进 extraProps 会翻倍（`custom-close custom-close`）；React cloneElement 是覆盖（antd 因此显式拼旧 className） | L4（DOM 契约） | Vue 侧 cloneVNode 只传**新增** class；React→Vue 迁移 cloneElement 时删掉「显式带旧值」的参数 |
+| 110 | **React 19 SSR 会给 `<img src>` 前置 `<link rel="preload">` 伪影**——基线里多出一个根节点（`根节点数不同 2 vs 1`） | L4（DOM 契约） | 基线脚本生成时剥除 preload link（与 cssinjs hash 同判：产物伪影非契约），并注释登记 |
+| 111 | **Vue 里调用 React case 的 hooks 会炸**：visual case 函数在渲染树之外执行，`useRef` 报 `Cannot read properties of null`——case 文件不是组件 | L6（渲染页 timeout） | 需要 hooks 的 React case 定义**内嵌真实组件**再返回 `<App />`；Vue 的 `ref()` 无此限制 |
+
 ### 2026-09-28（cascader 会话，S1–S5）
 
 | # | 坑 | 抓到它的层 | 对策 |

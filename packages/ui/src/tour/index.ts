@@ -1,15 +1,22 @@
 /**
  * Tour 的公共导出。
  *
- * 与 antd 的 es/tour/index.js 对齐的对外面。
- * ⚠️ 骨架由 gen-component.mjs 生成 —— G2 完成后补齐类型导出，G4 后补齐样式导出。
+ * 与 antd 的 es/tour/index.js 对齐的对外面：
+ * `Tour` / `Tour._InternalPanelDoNotUseOrYouWillBeFired`（= TourPurePanel）/
+ * 类型面 / 样式生成（genTourStyle → COMPONENT_STYLES 清单消费）。
  */
 
 import { withInstall } from '../_internal/with-install';
-import TourComponent from './Tour.vue';
+import PurePanelComponent from './PurePanel';
+import TourComponent from './Tour';
 
 /** Tour 组件。注册名 `ATour`（COMPONENT-RULES.md 规则 R2）。 */
 export const Tour = withInstall(TourComponent);
+
+/** 静态面板（`Tour._InternalPanelDoNotUseOrYouWillBeFired` 的对应物）。 */
+export const TourPurePanel = withInstall(PurePanelComponent);
+
+Tour._InternalPanelDoNotUseOrYouWillBeFired = TourPurePanel;
 
 export default Tour;
 
@@ -24,6 +31,7 @@ export type {
   TourMaskConfig,
   TourPlacement,
   TourProps,
+  TourPurePanelProps,
   TourSemanticAllType,
   TourSemanticClassNames,
   TourSemanticStyles,
@@ -33,8 +41,6 @@ export type {
   TourStepProps,
   TourType,
 } from './interface';
-
-// TODO(G4): export { TourPurePanel } from './PurePanel';（+ `Tour._InternalPanelDoNotUseOrYouWillBeFired`）
-// TODO(G4): export { genTourStyle } from './style';
-// TODO(G4): export type { ComponentToken as TourComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareTourComponentToken } from './style/token';
+export { genTourStyle, genTourTokenDecls } from './style';
+export type { ComponentToken as TourComponentToken } from './style/token';
+export { prepareComponentToken as prepareTourComponentToken, tourTokenValues } from './style/token';

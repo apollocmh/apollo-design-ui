@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "tour/basic",
+  "component": "tour",
+  "description": "rc-tour 内核 + antd 自研 Panel：Trigger 对齐 Placeholder（挖洞位/居中占位）、Mask 独立 Portal + SVG 挖洞（4 cover rect 拦交互）、open 未传默认打开（rc ?? true）、重开静默归零 current、center 是 getPlacement 兜底值（无 target）、mask/arrow 默认 true（rc 解构默认）、closable 三层合并（rc useClosable，false ⇒ 不渲染且 Esc 禁用）、PurePanel 走 RawPurePanel 壳（-placement-top + 双 -pure + container role=tooltip，total 默认 6）。Vue 化：v-model:open/current + change/close/finish 同发（C11）；title/description/cover/按钮文案 slot 优先（C8-R2）；closeIcon 保留 VNode（D111）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "open": true,
+    "steps": [{ "title": "Upload File", "description": "Put your files here." }]
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["update:open", "update:current", "change", "close", "finish"]
+  }
+}

@@ -1,39 +1,42 @@
----
-order: 0
-title:
-  zh-CN: 基本
-  en-US: Basic
----
-
-## zh-CN
-
-最简单的用法。
-
-## en-US
-
-The most basic usage.
-
-```vue
 <script setup lang="ts">
+// 对齐 antd demo/mask.tsx：默认蒙层 / 对象形态（style + color）/ 关闭蒙层
 import { EllipsisOutlined } from '@apollo-design/icons';
 import { Button, Divider, Space, Tour } from '@apollo-design/ui';
-import type { ComponentPublicInstance } from 'vue';
 import { ref } from 'vue';
 
 const open = ref(false);
 
-const ref1 = ref<ComponentPublicInstance | null>(null);
-const ref2 = ref<ComponentPublicInstance | null>(null);
-const ref3 = ref<ComponentPublicInstance | null>(null);
+const ref1 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
+const ref2 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
+const ref3 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 
 const target1 = () => (ref1.value?.nativeElement as HTMLElement) ?? null;
 const target2 = () => (ref2.value?.nativeElement as HTMLElement) ?? null;
 const target3 = () => (ref3.value?.nativeElement as HTMLElement) ?? null;
 
 const steps = [
-  { title: 'Upload File', description: 'Put your files here.', target: target1 },
-  { title: 'Save', description: 'Save your changes.', target: target2 },
-  { title: 'Other Actions', description: 'Click to see other actions.', target: target3 },
+  {
+    title: 'Upload File',
+    description: 'Put your files here.',
+    target: target1,
+  },
+  {
+    title: 'Save',
+    description: 'Save your changes.',
+    target: target2,
+    mask: {
+      style: {
+        boxShadow: 'inset 0 0 15px #fff',
+      },
+      color: 'rgba(40, 0, 255, .4)',
+    },
+  },
+  {
+    title: 'Other Actions',
+    description: 'Click to see other actions.',
+    target: target3,
+    mask: false,
+  },
 ];
 </script>
 
@@ -56,4 +59,3 @@ const steps = [
     </template>
   </Tour>
 </template>
-```

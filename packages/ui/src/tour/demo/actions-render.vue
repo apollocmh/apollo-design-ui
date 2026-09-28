@@ -1,30 +1,14 @@
----
-order: 0
-title:
-  zh-CN: 基本
-  en-US: Basic
----
-
-## zh-CN
-
-最简单的用法。
-
-## en-US
-
-The most basic usage.
-
-```vue
 <script setup lang="ts">
-import { EllipsisOutlined } from '@apollo-design/icons';
+// 对齐 antd demo/actions-render.tsx：#actions scoped slot（originNode + Skip 按钮）
 import { Button, Divider, Space, Tour } from '@apollo-design/ui';
-import type { ComponentPublicInstance } from 'vue';
-import { ref } from 'vue';
+import type { ComponentPublicInstance, VNodeChild } from 'vue';
+import { h, ref } from 'vue';
 
 const open = ref(false);
 
-const ref1 = ref<ComponentPublicInstance | null>(null);
-const ref2 = ref<ComponentPublicInstance | null>(null);
-const ref3 = ref<ComponentPublicInstance | null>(null);
+const ref1 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
+const ref2 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
+const ref3 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 
 const target1 = () => (ref1.value?.nativeElement as HTMLElement) ?? null;
 const target2 = () => (ref2.value?.nativeElement as HTMLElement) ?? null;
@@ -43,17 +27,16 @@ const steps = [
   <Space>
     <Button ref="ref1">Upload</Button>
     <Button ref="ref2" type="primary">Save</Button>
-    <Button ref="ref3" :icon="EllipsisOutlined" />
+    <Button ref="ref3">...</Button>
   </Space>
   <Tour :open="open" :steps="steps" @close="open = false">
-    <template #cover="{ current }">
-      <img
-        v-if="current === 0"
-        draggable="false"
-        alt="tour.png"
-        src="https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png"
-      />
+    <template #actions="{ current, total, originNode }">
+      <template v-if="current !== total - 1">
+        <Button size="small" @click="open = false">Skip</Button>
+      </template>
+      <template v-if="originNode !== undefined">
+        <component :is="() => originNode as VNodeChild" />
+      </template>
     </template>
   </Tour>
 </template>
-```
