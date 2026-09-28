@@ -14,12 +14,13 @@
 - **每个 Gate 收口时**，把本次踩的经典错误追加到 `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），含：坑、哪一层测试抓到的、对策。
 - badge 会话已沉淀 14 条（flex/grid 期教训 + badge 期 CSS 提取管线）。
 
-## 项目进度快照与防重复清单（2026-09-28 segmented 收口后；权威来源是 registry，本节是索引）
+## 项目进度快照与防重复清单（2026-09-28 popconfirm 收口后；权威来源是 registry，本节是索引）
 
-- **进度**：foundation 12/13 completed（picker 剩余工作延后到 DatePicker 前）；组件 **49/72**
+- **进度**：foundation 12/13 completed（picker 剩余工作延后到 DatePicker 前）；组件 **50/72**
   （新增 select, auto-complete, float-button, tooltip, popover, menu, dropdown, modal,
-  drawer, message, notification, app, image, rate, steps, progress, segmented 等）。
-  registry:check 18 检查全绿。下一个任务：popconfirm。
+  drawer, message, notification, app, image, rate, steps, progress, segmented, popconfirm 等）。
+  registry:check 18 检查全绿。下一个任务：cascader（P4/L，规模较大）。
+- **共享件位置**：ActionButton 在 `_internal/action-button.ts`（popconfirm 为第二消费者提升），modal 侧是垫片。
 - **test:build B7 既有红灯**：--apollo-btn-bg-color-*（float-button）、
   --apollo-steps-description-max-width（steps）——theme 未声明的变量，待专流处理。
   ⚠️ 全仓 `update:*` 缺口（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
