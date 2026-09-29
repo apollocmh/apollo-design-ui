@@ -14,7 +14,7 @@
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
 - [x] G1 ANALYZE —— 读 /tmp/antd-src/package/es/tabs/ 的 .d.ts + demo + 测试，产出 **docs/analysis/tabs.md**（先于实现！）
 - [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
+- [x] G3 TOKEN —— style/token.ts **26 个自有 token 逐字对拍**（2026-09-30：`extract-tabs-css.mjs --tokens`）+ 6 个内部 token（上游 .d.ts 的第 7 个 `tabsNavWrapPseudoWidth` 是死字段，刻意不实现）+ 3 个 `cardHeight` 覆盖位；主题测试 **15 条**
 - [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
