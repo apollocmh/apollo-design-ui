@@ -426,7 +426,7 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 ### 11.1 总览
 
 ```
-92 个 Work Item | 组件 57/72 | foundation 12/13 completed（picker 剩余工作延后至 DatePicker 前）
+92 个 Work Item | 组件 58/72 | foundation 12/13 completed（picker 剩余工作延后至 DatePicker 前）
 registry:check 18 检查全绿（2026-09-29，pagination 收口后）
 ```
 

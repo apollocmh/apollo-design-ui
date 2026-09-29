@@ -1,8 +1,16 @@
 <script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
-import { Tabs } from '../index';
+// 对齐 antd `basic.tsx`。
+import { Tabs } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+const activeKey = ref('1');
+const items = [
+  { key: '1', label: 'Tab 1', children: 'Content of Tab Pane 1' },
+  { key: '2', label: 'Tab 2', children: 'Content of Tab Pane 2' },
+  { key: '3', label: 'Tab 3', children: 'Content of Tab Pane 3' },
+];
 </script>
 
 <template>
-  <Tabs>basic demo 占位</Tabs>
+  <Tabs v-model:active-key="activeKey" :items="items" />
 </template>

@@ -147,6 +147,27 @@ export const COMPONENTS = {
     // 1 个 variant × 3 个 viewport = 3 张（fixed 定位；visibilityHeight=0 恒显）
     variants: ['basic'],
   },
+  tabs: {
+    // 13 个 variant × 3 个 viewport = 39 张
+    // ⚠️ 只覆盖**静态形态**：溢出下拉展开、键盘焦点移动、面板切换动画都不进像素比对
+    //    （它们的语义由 L2 的 index.test.ts 与 L5 的 a11y.test.ts 钉住）。
+    // ⚠️ `-ink-bar` 的位置来自 DOM 实测 —— 视觉层跑真 Chrome，两侧的测量链一致 ⇒ 可比。
+    variants: [
+      'basic', // 默认（指示条居中）
+      'activeThird', // 激活第三项（指示条移到最右）
+      'card', // 卡片式
+      'editableCard', // 卡片 + 删除按钮 + 「+」
+      'centeredCard', // 卡片居中
+      'vertical', // 纵向（左侧）
+      'bottom', // 底部
+      'small', // 小尺寸
+      'large', // 大尺寸
+      'gutter', // 自定义页签间距
+      'disabledItem', // 含禁用页签
+      'extraContent', // 右侧附加内容
+      'indicatorStart', // 指示条对齐 start
+    ],
+  },
   tag: {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: ['basic', 'checkable', 'semantic'],

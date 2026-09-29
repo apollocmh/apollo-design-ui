@@ -4,8 +4,8 @@
  * 判定值逐字对拍 antd 6.6.4 产物（可复现命令：
  * `node tests/visual/debug/extract-tabs-css.mjs --tokens`）。
  *
- * ⚠️ `themeTest('Tabs', { demos })` 的主题矩阵刻意留到 **G11**（demo 落地后再接）——
- *    现在挂上去只会因为「拿占位 demo 渲染成功」而假绿（与 pagination 同判）。
+ * G11 起 demo 是真的，主题矩阵也接上了：`themeTest('Tabs', { demos })` 会把 13 个 demo
+ * 在 light / dark / compact / token-override 四种主题下各渲染一遍。
  *
  * ── 这个文件证明了什么 / 没证明什么 ────────────────────────────────────────────
  *
@@ -16,6 +16,7 @@
  * 也没证明 ConfigProvider 能覆盖它们（本仓没有那条管线，见 `style/token.ts` 的缺口说明）。
  */
 
+import { themeTest } from '@apollo-design/test-utils';
 import { getDesignToken } from '@apollo-design/theme';
 import { describe, expect, it } from 'vitest';
 import {
@@ -189,4 +190,8 @@ describe('Tabs · 内部 token（mergeToken 的本地复刻）', () => {
     expect(customized.tabsHorizontalItemMargin).toBe('0 0 0 48px');
     expect(customized.tabsHorizontalItemMarginRTL).toBe('0 0 0 48px');
   });
+});
+
+themeTest('Tabs', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
 });

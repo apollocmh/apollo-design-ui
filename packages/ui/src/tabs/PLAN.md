@@ -19,12 +19,12 @@
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [x] G9 L6 视觉 —— **39/39 逐像素 exact**（13 variant × 3 viewport）。⚠️ 第一轮 30 个用例差 0.03%~0.12% —— 根因是**指示条的数值没带单位**（PITFALLS 8 / D94 的第三次复现），修 `getIndicatorStyle` 后一次通过（2026-09-30）
 - [x] G10 L4 compat 基线 —— `tests/compat/baseline/tabs.mjs` + `baselines/tabs.dom.json`（**26 用例**，两侧都显式传 `id`）+ `semantic.test.ts` **27/27**（每例恰好 1 条豁免：差异 **U15**）+ fixture `tabs/basic.json` L4/L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:tabs]
+- [x] G11 DOCS —— 13 个 demo（expectCount 钉死）+ zh/en 文档 + README（差异 8 条 / 实现要点 12 条 / 缺口 5 条 / demo 登记 8 条）；theme 的 demo 矩阵已接；⚠️ **a11y 的 demo 维度刻意不接**（`allow` 语义不允许「部分 demo 命中」，见 a11y.test.ts 的说明与 README §7.5）
+- [x] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [x] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
+- [x] G14 COMMIT —— commit message 带 [COMP:tabs]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

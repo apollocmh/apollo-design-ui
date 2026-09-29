@@ -354,17 +354,17 @@ describe('getIndicatorStyle · align × rtl × size', () => {
 
   it('横向 LTR：三档 align', () => {
     expect(getIndicatorStyle(offset, true, false, { align: 'start' })).toEqual({
-      width: 100,
-      left: 200,
+      width: '100px',
+      left: '200px',
     });
     expect(getIndicatorStyle(offset, true, false, { align: 'center' })).toEqual({
-      width: 100,
-      left: 250,
+      width: '100px',
+      left: '250px',
       transform: 'translateX(-50%)',
     });
     expect(getIndicatorStyle(offset, true, false, { align: 'end' })).toEqual({
-      width: 100,
-      left: 300,
+      width: '100px',
+      left: '300px',
       transform: 'translateX(-100%)',
     });
   });
@@ -372,52 +372,83 @@ describe('getIndicatorStyle · align × rtl × size', () => {
   it('★ 横向 RTL：定位键换成 `right`，但 center 的 transform 翻转、end 的**不翻转**', () => {
     // ⚠️ 换成 `right` 之后取的是 `offset.right`（不是 `offset.left`）
     expect(getIndicatorStyle(offset, true, true, { align: 'center' })).toEqual({
-      width: 100,
-      right: 50, // offset.right(0) + width/2(50)
+      width: '100px',
+      right: '50px', // offset.right(0) + width/2(50)
       transform: 'translateX(50%)',
     });
     // 上游如此：end 恒为 translateX(-100%)
     expect(getIndicatorStyle(offset, true, true, { align: 'end' })).toEqual({
-      width: 100,
-      right: 100, // offset.right(0) + width(100)
+      width: '100px',
+      right: '100px', // offset.right(0) + width(100)
       transform: 'translateX(-100%)',
     });
   });
 
   it('纵向：用 `height` / `top` 与 translateY', () => {
     expect(getIndicatorStyle(offset, false, false, { align: 'center' })).toEqual({
-      height: 40,
-      top: 30,
+      height: '40px',
+      top: '30px',
       transform: 'translateY(-50%)',
     });
     expect(getIndicatorStyle(offset, false, false, { align: 'end' })).toEqual({
-      height: 40,
-      top: 50,
+      height: '40px',
+      top: '50px',
       transform: 'translateY(-100%)',
     });
   });
 
   it('align 缺省 ⇒ center', () => {
-    expect(getIndicatorStyle(offset, true, false, {})).toHaveProperty('left', 250);
-    expect(getIndicatorStyle(offset, true, false, undefined)).toHaveProperty('left', 250);
+    expect(getIndicatorStyle(offset, true, false, {})).toHaveProperty('left', '250px');
+    expect(getIndicatorStyle(offset, true, false, undefined)).toHaveProperty('left', '250px');
   });
 
   it('size 三形态：数字 / 函数 / 缺省', () => {
     expect(getIndicatorLength(100, 20)).toBe(20);
     expect(getIndicatorLength(100, (origin) => origin / 2)).toBe(50);
     expect(getIndicatorLength(100, undefined)).toBe(100);
-    expect(getIndicatorStyle(offset, true, false, { size: 20 })?.width).toBe(20);
+    expect(getIndicatorStyle(offset, true, false, { size: 20 })?.width).toBe('20px');
   });
 
   it('没有激活页签的偏移 ⇒ undefined（不渲染 style）', () => {
     expect(getIndicatorStyle(undefined, true, false, undefined)).toBeUndefined();
   });
 
-  it('isIndicatorStyleEqual：数值取整相等、其余严格相等', () => {
-    expect(isIndicatorStyleEqual({ left: 1.2 }, { left: 1.4 })).toBe(true);
-    expect(isIndicatorStyleEqual({ left: 1.2 }, { left: 1.6 })).toBe(false);
-    expect(isIndicatorStyleEqual({ left: 1 }, { left: 1, width: 2 })).toBe(false);
+  it('isIndicatorStyleEqual：数值取整相等、其余严格相等（px 串也按数值比）', () => {
+    expect(isIndicatorStyleEqual({ left: '1.2px' }, { left: '1.4px' })).toBe(true);
+    expect(isIndicatorStyleEqual({ left: '1.2px' }, { left: '1.6px' })).toBe(false);
+    expect(isIndicatorStyleEqual({ left: '1px' }, { left: '1px', width: '2px' })).toBe(false);
+    // `transform` 这类非数值串走严格相等
+    expect(
+      isIndicatorStyleEqual({ transform: 'translateX(-50%)' }, { transform: 'translateX(50%)' }),
+    ).toBe(false);
+    expect(
+      isIndicatorStyleEqual({ transform: 'translateX(-50%)' }, { transform: 'translateX(-50%)' }),
+    ).toBe(true);
     expect(isIndicatorStyleEqual(undefined, undefined)).toBe(true);
-    expect(isIndicatorStyleEqual(undefined, { left: 1 })).toBe(false);
+    expect(isIndicatorStyleEqual(undefined, { left: '1px' })).toBe(false);
+  });
+
+  it('★ 所有数值字段都**带单位**（PITFALLS 8 / D94：Vue 不给 style 里的裸数字补 px）', () => {
+    // 这条是本轮 L6 视觉抓到的真 bug 的哨兵：不加单位时 `el.style.width = '33.45'`
+    // 是非法值会被浏览器**静默丢弃**，指示条恒 0 宽、贴在容器左上角。
+    const cases: [
+      Parameters<typeof getIndicatorStyle>[1],
+      Parameters<typeof getIndicatorStyle>[2],
+      string,
+    ][] = [
+      [true, false, ''],
+      [true, true, ''],
+      [false, false, ''],
+    ];
+    for (const [horizontal, rtl] of cases) {
+      for (const align of ['start', 'center', 'end'] as const) {
+        const style = getIndicatorStyle(offset, horizontal, rtl, { align });
+        for (const [key, value] of Object.entries(style ?? {})) {
+          if (key === 'transform') continue;
+          expect(typeof value).toBe('string');
+          expect(value as string).toMatch(/^-?\d+(\.\d+)?px$/);
+        }
+      }
+    }
   });
 });

@@ -142,12 +142,14 @@ export default defineComponent({
               'div',
               {
                 'aria-live': 'polite',
+                // ⚠️ 用**字符串**而不是裸数字：React 会把 `0` 序列化成 `0px`，
+                //    Vue 原样写 `0` —— 视觉等价，但 DOM 逐字不同（做对拍时会被抓到）。
                 style: {
-                  width: 0,
-                  height: 0,
+                  width: '0px',
+                  height: '0px',
                   position: 'absolute',
                   overflow: 'hidden',
-                  opacity: 0,
+                  opacity: '0',
                 },
               },
               `Tab ${props.currentPosition} of ${props.tabCount}`,

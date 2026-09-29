@@ -17,6 +17,15 @@
  * ⚠️ 横向的定位键随 RTL 变（`right` / `left`），但 **`align === 'end'` 的 transform 恒为
  *    `translateX(-100%)`**（不随 RTL 翻转）—— 上游如此。
  *
+ * ── 🚨 所有数值必须过 `toCssSize`（PITFALLS 8 / D94，2026-09-30 实测踩到）──────────
+ *
+ * antd 侧是 React：`style={{ width: 33.45 }}` 会被 React **自动补成 `33.45px`**。
+ * 本仓是 Vue：`patchStyle` 把数值**原样**写进 `el.style.width = '33.45'` ⇒ **非法值被浏览器丢弃**。
+ * 于是指示条只剩 `transform`（唯一合法的字符串值），`width` / `left` 全丢 ——
+ * 表现是「指示条恒 0 宽、贴在容器左上角」，**类型检查与单测都看不见**（jsdom 无布局），
+ * 只有 L6 视觉能发现（本次正是 L6 的 0.03% 像素差把它揪出来的）。
+ * ⇒ `width` / `height` / `left` / `top` **一律** `toCssSize(...)`。
+ *
  * ── 为什么需要 rAF + 取整抑制 ────────────────────────────────────────────────
  *
  * 上游的注释（ant-design#53378）：指示条的 `left/width` 来自 DOM 测量，前后两次可能差
@@ -28,6 +37,7 @@
 
 import { cancelRaf, raf } from '@apollo-design/utils';
 import { type CSSProperties, onBeforeUnmount, type Ref, ref, watch } from 'vue';
+import { toCssSize } from '../../_internal/to-css-size';
 import type { TabsIndicator } from '../interface';
 import type { TabOffset } from './use-offsets';
 
@@ -40,6 +50,13 @@ export const getIndicatorLength = (origin: number, size: TabsIndicator['size']):
   if (typeof size === 'number') return size;
   return origin;
 };
+
+/**
+ * 数值 → 带单位的 CSS 串（**唯一的单位出口**）。
+ *
+ * ⚠️ 见文件头的说明：不经这里转一手的数值会被 Vue **静默丢弃**。
+ */
+const px = (value: number): string => toCssSize(value) as string;
 
 /**
  * 指示条样式。**纯函数** —— `undefined` 表示「没有激活页签的偏移」。
@@ -56,30 +73,30 @@ export function getIndicatorStyle(
   if (!activeTabOffset) return undefined;
 
   if (horizontal) {
-    style.width = getIndicatorLength(activeTabOffset.width, size);
+    style.width = px(getIndicatorLength(activeTabOffset.width, size));
     const key = rtl ? 'right' : 'left';
     if (align === 'start') {
-      style[key] = activeTabOffset[key];
+      style[key] = px(activeTabOffset[key]);
     }
     if (align === 'center') {
-      style[key] = activeTabOffset[key] + activeTabOffset.width / 2;
+      style[key] = px(activeTabOffset[key] + activeTabOffset.width / 2);
       style.transform = rtl ? 'translateX(50%)' : 'translateX(-50%)';
     }
     if (align === 'end') {
-      style[key] = activeTabOffset[key] + activeTabOffset.width;
+      style[key] = px(activeTabOffset[key] + activeTabOffset.width);
       style.transform = 'translateX(-100%)';
     }
   } else {
-    style.height = getIndicatorLength(activeTabOffset.height, size);
+    style.height = px(getIndicatorLength(activeTabOffset.height, size));
     if (align === 'start') {
-      style.top = activeTabOffset.top;
+      style.top = px(activeTabOffset.top);
     }
     if (align === 'center') {
-      style.top = activeTabOffset.top + activeTabOffset.height / 2;
+      style.top = px(activeTabOffset.top + activeTabOffset.height / 2);
       style.transform = 'translateY(-50%)';
     }
     if (align === 'end') {
-      style.top = activeTabOffset.top + activeTabOffset.height;
+      style.top = px(activeTabOffset.top + activeTabOffset.height);
       style.transform = 'translateY(-100%)';
     }
   }
@@ -87,16 +104,32 @@ export function getIndicatorStyle(
   return style as CSSProperties;
 }
 
-/** 逐键「取整相等」判据（数值取整比较、其余严格相等）。 */
+/**
+ * 逐键「取整相等」判据。
+ *
+ * ⚠️ 值可能是**带单位的串**（`toCssSize` 的产物，如 `'33.453125px'`），也可能是 `transform`
+ *    这类非数值串 ⇒ 判据是：**两边都能解析出数值**时按取整比较，否则严格相等。
+ *    （上游的样式值在 React 侧是数字，本仓是 px 串 —— 抖动抑制的语义必须一致。）
+ */
 export const isIndicatorStyleEqual = (prev: IndicatorStyle, next: IndicatorStyle): boolean => {
   if (!prev || !next) return prev === next;
-  const nextKeys = Object.keys(next);
-  return nextKeys.every((key) => {
+
+  const numeric = (value: unknown): number | undefined => {
+    if (typeof value === 'number') return value;
+    if (typeof value !== 'string') return undefined;
+    const parsed = Number.parseFloat(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  };
+
+  return Object.keys(next).every((key) => {
     const newValue = (next as Record<string, unknown>)[key];
     const oldValue = (prev as Record<string, unknown>)[key];
-    return typeof newValue === 'number' && typeof oldValue === 'number'
-      ? Math.round(newValue) === Math.round(oldValue)
-      : newValue === oldValue;
+    const newNum = numeric(newValue);
+    const oldNum = numeric(oldValue);
+    if (newNum !== undefined && oldNum !== undefined) {
+      return Math.round(newNum) === Math.round(oldNum);
+    }
+    return newValue === oldValue;
   });
 };
 

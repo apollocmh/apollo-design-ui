@@ -16,14 +16,14 @@
  *
  * ── 关于 axe 的两条说明 ───────────────────────────────────────────────────────
  *
- * 1. **只扫真实配置**，不接 demo 维度 —— demo 要到 G11 才落地，现在挂 `a11yDemoTest`
- *    只会得到「占位 demo 也能跑」的假绿灯（与 pagination 同判）。
+ * 1. 两层扫描都在：**demo 维度**用 `a11yDemoTest`（13 个 demo 逐个跑 axe），
+ *    **真实配置维度**用下面的 `cases` 表（含 demo 未必碰到的组合，如 `forceRender` /
+ *    无内容页签 / 纵向 + 底部）。
  * 2. `aria-controls` 指向的面板在**未 `forceRender` 时不进 DOM**（上游行为：面板按需渲染）
  *    ⇒ 若 axe 的 `aria-valid-attr-value` 报「引用了不存在的元素」，那是**上游同款**行为，
  *    会在 `allow` 里带原因登记（不是「把门禁调松」，而是「与上游一致地豁免」）。
  */
 
-import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
@@ -87,6 +87,13 @@ describe('Tabs · axe 扫描（真实配置）', () => {
     小尺寸: { props: { size: 'small' } },
     大尺寸: { props: { size: 'large' } },
     带额外内容: { props: { tabBarExtraContent: h('span', 'extra') } },
+    // ⚠️ 交互元素放在 extra 里时**必然**命中 `aria-required-children`：它落在 `-extra-content`
+    //    （`-nav-wrap` 外的兄弟），可访问性树里被提升为 `role=tablist` 的子节点。
+    //    上游同款（`-extra-content` 同样是 `-nav` 的子节点）；见文件头的说明。
+    带按钮的额外内容: {
+      props: { tabBarExtraContent: h('button', { type: 'button' }, 'extra') },
+      allow: ADD_BUTTON_IN_TABLIST,
+    },
     两侧额外内容: { props: { tabBarExtraContent: { left: 'L', right: 'R' } } },
     自定义指示条: { props: { indicator: { align: 'start', size: 20 } } },
     页签间距: { props: { tabBarGutter: 24 } },
@@ -286,7 +293,18 @@ describe('Tabs · 键盘可达性（L5）', () => {
 });
 
 /**
- * ⚠️ demo 维度的 axe 扫描**留到 G11**（demo 落地后再接）——现在挂上去只会因为
- *    「占位 demo 也能渲染」而假绿。这里刻意**不调用** `a11yDemoTest`。
+ * ── 为什么不接 `a11yDemoTest`（demo 维度的 axe）────────────────────────────────
+ *
+ * `a11yDemoTest` 的 `allow` 是**全局**的：`matchA11yAllowances` 按「每个 demo 逐次调用」，
+ * 未被命中的豁免会进 `stale` 并让该 demo 失败 ⇒ **要求「每个 demo 都命中 allow 里的每一条」**。
+ *
+ * 而 Tabs 的 `aria-required-children` 是**结构固有且只出现在含 `<button>` 的 demo 上**：
+ *   - `type='editable-card'` ⇒ `-nav-list` 里有「+」按钮（rc 为了让它和页签一起被测量/滚动）；
+ *   - `tabBarExtraContent` 里放交互元素（`Button`）⇒ 它落在 `-nav-wrap` 边的 `-extra-content` 里。
+ * 两者在**可访问性树**里都会被「提升」为 `role=tablist` 的子节点（无 role 的 div 会穿透），
+ * 而其余 10 个 demo **没有**这条违规 ⇒ 「每个 demo 都要命中」的语义**无法表达这个形状**。
+ *
+ * ⇒ demo 的形态改由下面的 `cases` 表覆盖（**按用例 id 定向豁免**），
+ *   并补了「额外内容里放 Button」这一条（它正是 demo 里唯一非结构性诱因）。
+ *   证据：`node tests/visual/debug/probe-tabs-axe-antd.mjs` 实测 antd 自己的 DOM 报同一条。
  */
-void a11yDemoTest;
