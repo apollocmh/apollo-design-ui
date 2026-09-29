@@ -14,13 +14,18 @@
 - **每个 Gate 收口时**，把本次踩的经典错误追加到 `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），含：坑、哪一层测试抓到的、对策。
 - badge 会话已沉淀 14 条（flex/grid 期教训 + badge 期 CSS 提取管线）。
 
-## 项目进度快照与防重复清单（2026-09-29 tree 收口后；权威来源是 registry，本节是索引）
+## 项目进度快照与防重复清单（2026-09-29 tree-select 收口后；权威来源是 registry，本节是索引）
 
-- **进度**：foundation 12/13 completed（picker 剩余工作延后到 DatePicker 前）；组件 **53/72**
+- **进度**：foundation 12/13 completed（picker 剩余工作延后到 DatePicker 前）；组件 **54/72**
   （新增 tree 等）。registry:check 18 检查全绿。
   ⚠️ lint:types 有 25 个预存红（cascader 测试/demo + segmented 测试，归 cascader/segmented 流）；
   lint:format 有 18 个预存红（trigger/carousel/back-top/AutoComplete 测试，非 tree 流）；
   test:build B7 有 5 个预存红（float-button ×4 + steps ×1，待专流）。
+- **tree-select 收口要点（2026-09-29）**：BaseSelect 第二个 optionListRenderer 消费者；
+  conductCheck 在本层算、内嵌树恒 checkStrictly；key===value；样式拼接顺序
+  tree→shell→dropdown（tree reset 会盖壳的 padding）+ dropdown 规则嵌套 -dropdown
+  作用域（写顶层清零触发器圆角）；onDisplayValuesChange clear 用第一参数。
+  详见 CHECKLIST §六 #16 与 tree-select/README §5。
 - **tree 收口要点（2026-09-29，524a82e）**：
   - rc-tree class 内核 Vue 化：gDSFP 拆分 watch + setUncontrolled 逐键受控；MOTION_KEY
     哨兵 motion diff；utils 纯函数层独立 L1。

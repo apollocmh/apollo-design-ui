@@ -1238,6 +1238,16 @@ export { DirectoryTree, Tree } from './tree';
 export { genTreeStyle, genTreeTokenDecls } from './tree/style';
 export type { ComponentToken as TreeComponentToken } from './tree/style/token';
 export { prepareComponentToken as prepareTreeComponentToken } from './tree/style/token';
+// TreeSelect —— 树选择（BaseSelect 外壳 + 树型 OptionList；勾选级联 conductCheck
+// 在本层算，内嵌树恒 checkStrictly；SHOW_* 静态属性；TreeNode children 不实现）
+export type {
+  ChangeEventExtra as TreeSelectChangeEventExtra,
+  LabeledValueType as TreeSelectLabeledValueType,
+  SimpleModeConfig as TreeSelectSimpleModeConfig,
+  TreeSelectDataNode,
+  TreeSelectValue,
+} from './tree-select';
+export { SHOW_ALL, SHOW_CHILD, SHOW_PARENT, TreeSelect } from './tree-select';
 // ---------------------------------------------------------------------------
 // Upload —— 上传（引擎自建于 engine/：AjaxUploader + XHR 请求器 + 目录递归）
 //

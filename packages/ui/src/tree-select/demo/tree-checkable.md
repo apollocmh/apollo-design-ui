@@ -1,0 +1,1 @@
+勾选模式（`treeCheckable`），父子级联勾选，默认 `SHOW_CHILD` 策略展示。\n

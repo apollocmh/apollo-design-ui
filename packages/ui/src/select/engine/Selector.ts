@@ -197,11 +197,19 @@ export const Selector = defineComponent({
         index,
       };
       if (typeof props.tagRender === 'function') {
-        return h('div', { class: `${props.prefixCls}-content-item`, style: { opacity: '1' } }, [
-          h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
-            props.tagRender(tagProps) as never,
-          ]),
-        ]);
+        // rc-overflow：rest 项类 = `${prefixCls}-item-rest`（Overflow.js:239）
+        return h(
+          'div',
+          {
+            class: [`${props.prefixCls}-content-item`, `${props.prefixCls}-content-item-rest`],
+            style: { opacity: '1' },
+          },
+          [
+            h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
+              props.tagRender(tagProps) as never,
+            ]),
+          ],
+        );
       }
       return h(
         'div',
@@ -268,38 +276,55 @@ export const Selector = defineComponent({
           ? (props.maxTagPlaceholder as (v: DisplayValueType[]) => unknown)(omittedValues)
           : (props.maxTagPlaceholder ?? `+ ${omittedValues.length} ...`);
       if (typeof props.tagRender === 'function') {
-        return h('div', { class: `${props.prefixCls}-content-item`, style: { opacity: '1' } }, [
-          h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
-            props.tagRender({
-              label: content,
-              value: undefined,
-              disabled: false,
-              closable: false,
-              onClose: () => {},
-              isMaxTag: true,
-            }) as never,
-          ]),
-        ]);
-      }
-      return h('div', { class: `${props.prefixCls}-content-item`, style: { opacity: '1' } }, [
-        h(
-          'span',
+        // rc-overflow：rest 项类 = `${prefixCls}-item-rest`（Overflow.js:239）
+        return h(
+          'div',
           {
-            class: [`${props.prefixCls}-selection-item`].join(' '),
-            style: props.styles?.item,
+            class: [`${props.prefixCls}-content-item`, `${props.prefixCls}-content-item-rest`],
+            style: { opacity: '1' },
           },
           [
-            h(
-              'span',
-              {
-                class: `${props.prefixCls}-selection-item-content`,
-                style: props.styles?.itemContent,
-              },
-              [content as never],
-            ),
+            h('span', { onMousedown: (e: MouseEvent) => onPreventMouseDown(e) }, [
+              props.tagRender({
+                label: content,
+                value: undefined,
+                disabled: false,
+                closable: false,
+                onClose: () => {},
+                isMaxTag: true,
+              }) as never,
+            ]),
           ],
-        ),
-      ]);
+        );
+      }
+      return h(
+        'div',
+        {
+          class: [`${props.prefixCls}-content-item`, `${props.prefixCls}-content-item-rest`],
+          style: { opacity: '1' },
+        },
+        [
+          h(
+            'span',
+            {
+              class: [`${props.prefixCls}-selection-item`].join(' '),
+              style: props.styles?.item,
+              // rc defaultRenderSelector({title: content}, ...) —— title 透传到 span
+              title: typeof content === 'string' ? content : undefined,
+            },
+            [
+              h(
+                'span',
+                {
+                  class: `${props.prefixCls}-selection-item-content`,
+                  style: props.styles?.itemContent,
+                },
+                [content as never],
+              ),
+            ],
+          ),
+        ],
+      );
     };
 
     const renderInput = (options: { syncWidth: boolean; value: string; readOnly: boolean }) =>

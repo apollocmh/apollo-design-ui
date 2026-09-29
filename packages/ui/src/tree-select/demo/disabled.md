@@ -1,0 +1,1 @@
+禁用：整树（`disabled`）或节点级（data 的 `disabled`）。\n

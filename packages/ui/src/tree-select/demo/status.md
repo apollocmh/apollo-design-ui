@@ -1,0 +1,1 @@
+校验状态（`status`）：error / warning。\n

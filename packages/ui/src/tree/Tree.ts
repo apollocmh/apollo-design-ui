@@ -1177,6 +1177,9 @@ export default defineComponent({
     expose({
       scrollTo,
       keyEntities,
+      // rc Tree ref API 同构：keyboard 事件代理入口（focusable=false 时由
+      // 外层容器转发，TreeSelect 的 OptionList 依赖它）。
+      onKeyDown,
     });
 
     onMounted(() => {

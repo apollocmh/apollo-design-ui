@@ -423,6 +423,14 @@ export const COMPONENTS = {
       'panel', // 纯面板形态
     ],
   },
+  'tree-select': {
+    // 3 个 variant × 3 个 viewport = 9 张
+    variants: [
+      'basic', // 单选 + value 回显
+      'multiple', // 多选 tags + maxTagCount
+      'checkable', // treeCheckable + SHOW_CHILD 回显
+    ],
+  },
   tree: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全展开 + selected/checkable 静态态钉住；目录树走 directory variant。

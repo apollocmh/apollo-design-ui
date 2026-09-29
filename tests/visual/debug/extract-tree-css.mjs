@@ -36,7 +36,12 @@ const el = React.createElement(
     React.createElement(
       'div',
       null,
-      React.createElement(Tree, { treeData, checkable: true, defaultExpandAll: true, showLine: true }),
+      React.createElement(Tree, {
+        treeData,
+        checkable: true,
+        defaultExpandAll: true,
+        showLine: true,
+      }),
       React.createElement(Tree.DirectoryTree, { treeData, defaultExpandAll: true }),
     ),
   ),

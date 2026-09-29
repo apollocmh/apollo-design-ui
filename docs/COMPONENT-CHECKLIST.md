@@ -327,6 +327,11 @@
 ---
 
 ## 提速的真正杠杆（按收益排序）
+16. **TreeSelect 期（2026-09-29）—— 视觉 size-mismatch 的两层根因**
+   - 坑 1：样式拼接顺序。select 壳规则与 tree 规则同前缀（`.apollo-tree-select`）时，tree 的 reset（`padding:0`）若拼在壳的根块（padding-block/inline）**之后**，同特异性后者被覆盖 ⇒ 触发器塌成内容高度（96 vs 88）。
+   - 坑 2：antd 的树压平规则（`[treeCls]{borderRadius:0}`）**嵌套在 `-dropdown` 作用域内**；写成顶层会命中触发器根把圆角清零（diff 图四角红点）。
+   - 抓到的层：L6 视觉对比（size-mismatch → block-diff）；CSS 层面测试全绿。
+   - 对策：①拼接顺序 tree → shell → dropdown；②dropdown 专属规则一律带 `-dropdown` 前缀；③ theme.test 加「not.toMatch 顶层 border-radius:0」反向断言。配套判据：BaseSelect `onDisplayValuesChange` 的 clear 分支用**第一参数**（新值=[]），`info.values` 是被移除的值——用反会把原值发回去（unit 层抓到）。
 
 1. **并行泳道**：`next-task.mjs --parallel` 已能给出当前全部可开工批次（15 条泳道、
    每条 2–3 并发、41 个组件可执行），但实际一直是单人串行。串行时一天 1 个组件；

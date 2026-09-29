@@ -77,6 +77,7 @@ import { genTagStyle } from '../tag/style';
 import { genTooltipStyle } from '../tooltip/style';
 import { genTourStyle } from '../tour/style';
 import { genTreeStyle } from '../tree/style';
+import { genTreeSelectStyle } from '../tree-select/style';
 import { genTypographyStyle } from '../typography/style';
 import { genUploadStyle } from '../upload/style';
 
@@ -154,6 +155,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'cascader', gen: genCascaderStyle },
   { name: 'tour', gen: genTourStyle },
   { name: 'tree', gen: genTreeStyle },
+  { name: 'tree-select', gen: genTreeSelectStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

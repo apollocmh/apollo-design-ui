@@ -1,0 +1,1 @@
+勾选完全受控（`treeCheckStrictly`）：父子不关联，`value` 为 LabeledValue（含 halfChecked）。\n
