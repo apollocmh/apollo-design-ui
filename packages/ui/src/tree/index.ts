@@ -7,13 +7,20 @@
  */
 
 import { withInstall } from '../_internal/with-install';
+import DirectoryTreeComponent from './DirectoryTree';
 import TreeComponent from './Tree';
 
 /** Tree 组件。注册名 `ATree`（COMPONENT-RULES.md 规则 R2）。 */
 export const Tree = withInstall(TreeComponent);
 
+/** DirectoryTree —— 目录树变体（`Tree.DirectoryTree` 的对应物）。 */
+export const DirectoryTree = withInstall(DirectoryTreeComponent);
+
 export default Tree;
 
+Tree.DirectoryTree = DirectoryTree;
+
+export type { DropIndicatorProps } from './DropIndicator';
 export type {
   BasicDataNode,
   DataNode,
@@ -47,6 +54,7 @@ export type {
   TreeSemanticValue,
   TreeSlots,
 } from './interface';
+export { genTreeStyle, genTreeTokenDecls } from './style';
 export type { ComponentToken as TreeComponentToken } from './style/token';
 export { prepareComponentToken as prepareTreeComponentToken } from './style/token';
 export * from './utils';

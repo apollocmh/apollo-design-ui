@@ -82,82 +82,85 @@ type TreeEventData = EventDataNodeLike<BasicDataNodeLike>;
 
 type BasicDataNodeLike = import('./utils/keyUtil').BasicDataNodeLike;
 
+export const treeProps = {
+  treeData: { type: Array as PropType<DataNode[]>, default: undefined },
+  fieldNames: { type: Object as PropType<TreeProps['fieldNames']>, default: undefined },
+
+  expandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
+  defaultExpandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
+  defaultExpandAll: { type: Boolean, default: false },
+  defaultExpandParent: { type: Boolean, default: true },
+  autoExpandParent: { type: Boolean, default: false },
+
+  checkable: { type: [Boolean, Object] as PropType<TreeProps['checkable']>, default: false },
+  checkStrictly: { type: Boolean, default: false },
+  checkedKeys: {
+    type: [Array, Object] as PropType<SafeKey[] | TreeCheckedKeys>,
+    default: undefined,
+  },
+  defaultCheckedKeys: { type: Array as PropType<SafeKey[]>, default: undefined },
+
+  selectable: { type: Boolean, default: true },
+  multiple: { type: Boolean, default: false },
+  selectedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
+  defaultSelectedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
+
+  loadData: { type: Function as PropType<TreeProps['loadData']>, default: undefined },
+  loadedKeys: { type: Array as PropType<SafeKey[]>, default: undefined },
+
+  // ⚠️ default undefined（非 false）：DirectoryTree 需区分「未传」以覆盖 true
+  showIcon: { type: Boolean, default: undefined },
+  showLine: { type: [Boolean, Object] as PropType<TreeProps['showLine']>, default: false },
+  icon: { type: [Object, Function, String] as PropType<TreeProps['icon']>, default: undefined },
+  switcherIcon: {
+    type: [Object, Function, String] as PropType<TreeProps['switcherIcon']>,
+    default: undefined,
+  },
+  switcherLoadingIcon: {
+    type: [Object, Function] as PropType<TreeProps['switcherLoadingIcon']>,
+    default: undefined,
+  },
+  blockNode: { type: Boolean, default: false },
+  expandAction: {
+    type: [Boolean, String] as PropType<TreeProps['expandAction']>,
+    default: false,
+  },
+  titleRender: { type: Function as PropType<TreeProps['titleRender']>, default: undefined },
+
+  disabled: { type: Boolean, default: undefined },
+  draggable: {
+    type: [Boolean, Function, Object] as PropType<TreeProps['draggable']>,
+    default: false,
+  },
+  allowDrop: { type: Function as PropType<TreeProps['allowDrop']>, default: undefined },
+
+  height: { type: Number, default: undefined },
+  itemHeight: { type: Number, default: undefined },
+  scrollWidth: { type: Number, default: undefined },
+  virtual: { type: Boolean, default: undefined },
+  itemScrollOffset: { type: Number, default: 0 },
+
+  focusable: { type: Boolean, default: true },
+  activeKey: { type: [String, Number] as PropType<TreeKey | null>, default: undefined },
+  tabIndex: { type: Number, default: 0 },
+
+  filterTreeNode: { type: Function as PropType<TreeProps['filterTreeNode']>, default: undefined },
+
+  prefixCls: { type: String, default: undefined },
+  className: { type: String, default: undefined },
+  rootClassName: { type: String, default: undefined },
+  style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+  rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+  classNames: {
+    type: [Object, Function] as PropType<TreeProps['classNames']>,
+    default: undefined,
+  },
+  styles: { type: [Object, Function] as PropType<TreeProps['styles']>, default: undefined },
+};
+
 export default defineComponent({
   name: 'ATree',
-  props: {
-    treeData: { type: Array as PropType<DataNode[]>, default: undefined },
-    fieldNames: { type: Object as PropType<TreeProps['fieldNames']>, default: undefined },
-
-    expandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
-    defaultExpandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
-    defaultExpandAll: { type: Boolean, default: false },
-    defaultExpandParent: { type: Boolean, default: true },
-    autoExpandParent: { type: Boolean, default: false },
-
-    checkable: { type: [Boolean, Object] as PropType<TreeProps['checkable']>, default: false },
-    checkStrictly: { type: Boolean, default: false },
-    checkedKeys: {
-      type: [Array, Object] as PropType<SafeKey[] | TreeCheckedKeys>,
-      default: undefined,
-    },
-    defaultCheckedKeys: { type: Array as PropType<SafeKey[]>, default: undefined },
-
-    selectable: { type: Boolean, default: true },
-    multiple: { type: Boolean, default: false },
-    selectedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
-    defaultSelectedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
-
-    loadData: { type: Function as PropType<TreeProps['loadData']>, default: undefined },
-    loadedKeys: { type: Array as PropType<SafeKey[]>, default: undefined },
-
-    showIcon: { type: Boolean, default: false },
-    showLine: { type: [Boolean, Object] as PropType<TreeProps['showLine']>, default: false },
-    icon: { type: [Object, Function, String] as PropType<TreeProps['icon']>, default: undefined },
-    switcherIcon: {
-      type: [Object, Function, String] as PropType<TreeProps['switcherIcon']>,
-      default: undefined,
-    },
-    switcherLoadingIcon: {
-      type: [Object, Function] as PropType<TreeProps['switcherLoadingIcon']>,
-      default: undefined,
-    },
-    blockNode: { type: Boolean, default: false },
-    expandAction: {
-      type: [Boolean, String] as PropType<TreeProps['expandAction']>,
-      default: false,
-    },
-    titleRender: { type: Function as PropType<TreeProps['titleRender']>, default: undefined },
-
-    disabled: { type: Boolean, default: undefined },
-    draggable: {
-      type: [Boolean, Function, Object] as PropType<TreeProps['draggable']>,
-      default: false,
-    },
-    allowDrop: { type: Function as PropType<TreeProps['allowDrop']>, default: undefined },
-
-    height: { type: Number, default: undefined },
-    itemHeight: { type: Number, default: undefined },
-    scrollWidth: { type: Number, default: undefined },
-    virtual: { type: Boolean, default: undefined },
-    itemScrollOffset: { type: Number, default: 0 },
-
-    focusable: { type: Boolean, default: true },
-    activeKey: { type: [String, Number] as PropType<TreeKey | null>, default: undefined },
-    tabIndex: { type: Number, default: 0 },
-
-    filterTreeNode: { type: Function as PropType<TreeProps['filterTreeNode']>, default: undefined },
-
-    prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    classNames: {
-      type: [Object, Function] as PropType<TreeProps['classNames']>,
-      default: undefined,
-    },
-    styles: { type: [Object, Function] as PropType<TreeProps['styles']>, default: undefined },
-  },
+  props: treeProps,
   emits: [
     'update:expandedKeys',
     'update:checkedKeys',
@@ -1331,7 +1334,7 @@ export default defineComponent({
         props.rootClassName,
         {
           [`${prefixCls.value}-show-line`]: !!props.showLine,
-          [`${prefixCls.value}-icon-hide`]: !props.showIcon,
+          [`${prefixCls.value}-icon-hide`]: !(props.showIcon ?? false),
           [`${prefixCls.value}-block-node`]: props.blockNode,
           [`${prefixCls.value}-unselectable`]: !props.selectable,
           [`${prefixCls.value}-rtl`]: direction.value === 'rtl',

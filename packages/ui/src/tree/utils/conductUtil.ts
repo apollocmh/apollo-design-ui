@@ -235,7 +235,7 @@ export function conductCheck(
       .join(', ')}`,
   );
 
-  let result;
+  let result: { checkedKeys: SafeKey[]; halfCheckedKeys: SafeKey[] };
   if (checked === true) {
     result = fillConductCheck(keys, levelEntities, maxLevel, syntheticGetCheckDisabled);
   } else {

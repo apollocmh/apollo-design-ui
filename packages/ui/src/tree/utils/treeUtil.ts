@@ -251,7 +251,7 @@ export function convertDataToEntities<TreeDataType extends BasicDataNodeLike>(
   options?: {
     initWrapper?: (
       wrapper: ConvertDataToEntitiesWrapper<TreeDataType>,
-    ) => ConvertDataToEntitiesWrapper<TreeDataType> | void;
+    ) => ConvertDataToEntitiesWrapper<TreeDataType> | undefined;
     processEntity?: (
       entity: TreeEntity<TreeDataType>,
       wrapper: ConvertDataToEntitiesWrapper<TreeDataType>,
@@ -268,7 +268,7 @@ export function convertDataToEntities<TreeDataType extends BasicDataNodeLike>(
   const keyEntities: Record<SafeKey, TreeEntity<TreeDataType>> = {};
   let wrapper: ConvertDataToEntitiesWrapper<TreeDataType> = { posEntities, keyEntities };
   if (options?.initWrapper) {
-    wrapper = options.initWrapper(wrapper) || wrapper;
+    wrapper = options.initWrapper(wrapper) ?? wrapper;
   }
 
   traverseDataNodes<TreeDataType>(

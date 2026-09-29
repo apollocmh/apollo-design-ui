@@ -27,8 +27,16 @@
      TreeNode（role=treeitem + aria + checkbox 自定义元素 + loadData watch）+
      Indent / DropIndicator / iconUtil。冒烟 8/8（渲染/选中/展开二连/级联/
      checkStrictly/defaultExpandAll/键盘/fieldNames）。
-  ⬜ 步骤 3 DirectoryTree（shift/ctrl 多选 + Folder/File 图标）
-  ⬜ 步骤 4 style/index.ts（102 条规则机械提取 + COMPONENT_STYLES 注册）
+  ✅ 步骤 3 DirectoryTree（G4-3）：utils/dictUtil（calcRangeKeys/
+     convertDirectoryKeysToNodes 逐字移植）+ DirectoryTree.ts（受控包装
+     expanded/selected + shift/ctrl 范围多选 + selectedNodes 反查 + Folder/
+     File 图标 + defaultExpandAll 全 key 语义）。冒烟 4/4。
+     ⚠️ 集成发现：Vue prop default 会把「未传」变具体值 —— showIcon/
+     expandAction 的 default 改为 undefined，由消费侧 `?? false` 兜底，
+     否则 DirectoryTree 的 `?? true` / `?? 'click'` 覆盖失效。
+  ✅ 步骤 4 style/index.ts（G4-4）：100 条规则机械提取（extract-tree-css.mjs，
+     含 -checkbox 视觉与 -motion-collapse 动效类）+ genTreeTokenDecls（9 token）+
+     genTreeStyle(prefixCls) 替换范式；COMPONENT_STYLES 注册 + ui 主入口导出。
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言

@@ -1203,6 +1203,42 @@ export {
   tourTokenValues,
 } from './tour/style/token';
 // ---------------------------------------------------------------------------
+// Tree —— 树形控件（rc-tree 1.4.0 内核自建；四键 v-model 双发 C11；
+// DirectoryTree shift/ctrl 范围多选；TreeNode children 形态 v6 deprecated 不实现）
+// ---------------------------------------------------------------------------
+export type {
+  DirectoryTreeProps,
+  TreeAllowDrop,
+  TreeAllowDropOptions,
+  TreeCheckedKeys,
+  TreeCheckInfo,
+  TreeDataEntity,
+  TreeDragEnterEventInfo,
+  TreeDragEventInfo,
+  TreeDraggable,
+  TreeDraggableConfig,
+  TreeDropEventInfo,
+  TreeEmits,
+  TreeExpandAction,
+  TreeExpandEventInfo,
+  TreeFieldNames,
+  TreeIconType,
+  TreeKey,
+  TreeLoadEventInfo,
+  TreeProps,
+  TreeRef,
+  TreeScrollConfig,
+  TreeSelectEventInfo,
+  TreeSemanticClassNames,
+  TreeSemanticStyles,
+  TreeSemanticValue,
+  TreeSlots,
+} from './tree';
+export { DirectoryTree, Tree } from './tree';
+export { genTreeStyle, genTreeTokenDecls } from './tree/style';
+export type { ComponentToken as TreeComponentToken } from './tree/style/token';
+export { prepareComponentToken as prepareTreeComponentToken } from './tree/style/token';
+// ---------------------------------------------------------------------------
 // Upload —— 上传（引擎自建于 engine/：AjaxUploader + XHR 请求器 + 目录递归）
 //
 // ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 2 个（actions-color /
