@@ -17,6 +17,7 @@ export type {
   GetIndicatorSize,
   TabPlacement,
   TabPosition,
+  TabsAnimatedConfig,
   TabsEditAction,
   TabsEditableConfig,
   TabsEditEvent,
@@ -37,6 +38,7 @@ export type {
   TabsSlots,
   TabsType,
 } from './interface';
-// TODO(G4): export { genTabsStyle } from './style';
-// TODO(G4): export type { ComponentToken as TabsComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareTabsComponentToken } from './style/token';
+export { genTabsStyle, genTokenDecls as genTabsTokenDecls } from './style';
+export type { ComponentToken as TabsComponentToken } from './style/token';
+export { prepareComponentToken as prepareTabsComponentToken } from './style/token';
+export type { TabsConfig } from './Tabs.vue';

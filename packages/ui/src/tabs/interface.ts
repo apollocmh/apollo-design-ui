@@ -150,6 +150,19 @@ export interface TabsIndicator {
   size?: GetIndicatorSize;
 }
 
+/**
+ * `animated` 的对象形态。
+ *
+ * ⚠️ 默认值是 `{ inkBar: true, tabPane: false }`（**面板默认无动画**）；
+ * "`animated === undefined`" 与 "`animated === true`" 的结果**不同**（前者面板无动画）。
+ */
+export interface TabsAnimatedConfig {
+  /** 指示条的位移是否带过渡（默认 `true`）。 */
+  inkBar?: boolean;
+  /** 面板切换是否带动画（默认 `false`）。 */
+  tabPane?: boolean;
+}
+
 /** `tabBarExtraContent` 的两种形态：单个节点（放 right）或分左右。 */
 export type TabsExtraContent = VNodeChild | { left?: VNodeChild; right?: VNodeChild };
 
@@ -242,7 +255,7 @@ export interface TabsProps {
   /** @deprecated 用 `indicator={{ size }}`。 */
   indicatorSize?: GetIndicatorSize;
   /** 面板动画：`false` / `true` / 对象（默认 `{ inkBar: true, tabPane: false }`）。 */
-  animated?: boolean | { inkBar?: boolean; tabPane?: boolean };
+  animated?: boolean | TabsAnimatedConfig;
   tabBarGutter?: number;
   tabBarStyle?: CSSProperties;
   tabBarExtraContent?: TabsExtraContent;

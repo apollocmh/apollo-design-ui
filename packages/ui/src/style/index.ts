@@ -76,6 +76,7 @@ import { genSplitterStyle } from '../splitter/style';
 import { genStatisticStyle } from '../statistic/style';
 import { genStepsStyle } from '../steps/style';
 import { genSwitchStyle } from '../switch/style';
+import { genTabsStyle } from '../tabs/style';
 import { genTagStyle } from '../tag/style';
 import { genTooltipStyle } from '../tooltip/style';
 import { genTourStyle } from '../tour/style';
@@ -129,6 +130,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'badge', gen: genBadgeStyle },
   { name: 'back-top', gen: genBackTopStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },
+  { name: 'tabs', gen: genTabsStyle },
   { name: 'tag', gen: genTagStyle },
   { name: 'result', gen: genResultStyle },
   { name: 'statistic', gen: genStatisticStyle },

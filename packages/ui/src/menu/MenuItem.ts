@@ -129,23 +129,20 @@ const MenuItem = defineComponent({
           ? props.labelText.charAt(0)
           : null;
 
-      const __dbgStyle = {
-        ...(ctx.mode.value === 'inline'
-          ? { paddingLeft: `${connectedKeys.length * ctx.inlineIndent}px` }
-          : {}),
-        ...(attrs.style as Record<string, string | number> | undefined),
-      };
-      console.log(
-        '[mi-style]',
-        JSON.stringify(__dbgStyle),
-        'attrsKeys:',
-        Object.keys(attrs).join(','),
-      );
+      // ⚠️ `role` 可被覆盖（与 rc 的 `role: role === null ? 'none' : role || 'menuitem'` 同判）。
+      //    antd 的 Tabs 溢出下拉把菜单当 listbox 用：`<MenuItem role="option">`，
+      //    并且 rc 在 `role === 'option'` 时**补一个 `aria-selected`**。
+      //    本仓原先硬编码 `'menuitem'`（且写在 `...attrs` **之后**，连 attrs 都盖掉）
+      //    ⇒ 那个用法无法表达、且多出错误的 `aria-selected` 语义（2026-09-30 修）。
+      const { role: roleAttr, ...restAttrs } = attrs as { role?: string | null };
+      const itemRole = roleAttr === null ? 'none' : roleAttr || 'menuitem';
+
       return h(
         'li',
         {
-          ...attrs,
-          role: 'menuitem',
+          ...restAttrs,
+          role: itemRole,
+          ...(itemRole === 'option' ? { 'aria-selected': isSelected.value } : {}),
           // rc：tabIndex disabled? null : -1（roving tabindex 的 -1 基线）
           tabindex: mergedDisabled.value ? undefined : -1,
           'data-menu-id':

@@ -57,6 +57,17 @@ export interface MenuItemType {
   label?: VNodeChild;
   key?: string;
   disabled?: boolean;
+  /**
+   * 节点 `id`（rc 的 `MenuItemType` 继承 HTML 属性 ⇒ 本仓按需补这三个）。
+   *
+   * 用途：antd 的 Tabs 溢出下拉把 `li` 当 **`role="option"`** 用，
+   * 需要 `id` + `aria-controls` 指回对应面板（`aria-activedescendant` 也指向它）。
+   */
+  id?: string;
+  /** `li` 的 role。默认 `'menuitem'`；传 `'option'` 会同时补 `aria-selected`。 */
+  role?: string | null;
+  /** `role="option"` 时指回受控面板的 id。 */
+  'aria-controls'?: string;
   danger?: boolean;
   icon?: RenderIconType;
   itemIcon?: RenderIconType;

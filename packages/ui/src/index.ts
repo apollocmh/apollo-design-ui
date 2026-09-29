@@ -1251,12 +1251,13 @@ export { prepareStepsComponentToken, stepsTokenValues } from './steps/style/toke
 // ---------------------------------------------------------------------------
 // Tabs —— 标签页（rc-tabs 内核的 Vue 等价物）
 //
-// ⚠️ G2 阶段只落**类型面**；样式导出（genTabsStyle / prepareTabsComponentToken）留给 G4 补。
+// G4 起样式导出也在本块内（genTabsStyle / genTabsTokenDecls / prepareTabsComponentToken）。
 // ---------------------------------------------------------------------------
 export type {
   GetIndicatorSize,
   TabPlacement,
   TabPosition,
+  TabsConfig,
   TabsEditAction,
   TabsEditableConfig,
   TabsEditEvent,
@@ -1278,6 +1279,9 @@ export type {
   TabsType,
 } from './tabs';
 export { Tabs } from './tabs';
+export { genTabsStyle, genTokenDecls as genTabsTokenDecls } from './tabs/style';
+export type { ComponentToken as TabsComponentToken } from './tabs/style/token';
+export { prepareComponentToken as prepareTabsComponentToken } from './tabs/style/token';
 export type {
   AdjustOverflow,
   TooltipArrow,

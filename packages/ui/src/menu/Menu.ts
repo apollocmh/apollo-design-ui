@@ -90,6 +90,16 @@ const Menu = defineComponent({
       default: undefined,
     },
     tabIndex: { type: Number, default: 0 },
+    /**
+     * 根 `<ul>` 的 role。默认 `'menu'`。
+     *
+     * ⚠️ 2026-09-30 补：rc-menu 的 `role` 是**可被 restProps 覆盖**的
+     * （源码里 `role: "menu"` 写在 `_extends({...}, restProps)` **之前**），
+     * antd 的 Tabs 溢出下拉就是靠这条把菜单当 **`role="listbox"`** 用
+     * （`<Menu role="listbox" aria-activedescendant=… aria-label=…>`）。
+     * 本仓原先硬编码 `'menu'` 且只放行 `class` / `style` ⇒ 那个用法**无法表达**。
+     */
+    role: { type: String, default: 'menu' },
     id: { type: String, default: undefined },
     onClick: { type: Function as PropType<(info: MenuInfo) => void>, default: undefined },
     onSelect: { type: Function as PropType<(info: SelectInfo) => void>, default: undefined },
@@ -373,12 +383,18 @@ const Menu = defineComponent({
       // ---- 可见子树 ----
       // menu root 的公共 attrs（horizontal 时由 Overflow 直接渲染 root ul ——
       // rc 的 Overflow component='ul' 同构；ul > div > li 会破坏 menu 的 DOM 语义）
+      // `aria-*` 从 attrs 放行（与 rc-menu 的 `...restProps` 同判）：
+      // 溢出下拉要用 `aria-activedescendant` / `aria-label`。
+      const ariaAttrs = Object.fromEntries(
+        Object.entries(attrs).filter(([key]) => key.startsWith('aria-')),
+      );
       const rootAttrs = {
         ref: containerRef as never,
         'data-menu-list': true,
-        role: 'menu',
+        role: props.role,
         tabindex: props.tabIndex,
         id: props.id,
+        ...ariaAttrs,
         ...(typeof attrs.style === 'object'
           ? { style: attrs.style as Record<string, string | number> }
           : {}),
@@ -399,8 +415,9 @@ const Menu = defineComponent({
             prefixCls: `${prefixCls}-overflow`,
             component: 'ul',
             'data-menu-list': true,
-            role: 'menu',
+            role: props.role,
             tabindex: props.tabIndex,
+            ...ariaAttrs,
             id: props.id,
             onKeydown: onInternalKeyDown,
             className: rootAttrs.class,
