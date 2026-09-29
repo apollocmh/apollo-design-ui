@@ -4,10 +4,14 @@
  * 每个 key → `{ width, height, left, top, right }`，其中 `right` 是**相对列表右端的距离**
  * （`rightOffset - left - width`，`rightOffset` 取**第一个**页签的 `left + width`）。
  *
- * ⚠️ 两条容易漏的判据：
+ * ⚠️ 三条容易漏的判据：
  *   1. **缺项复用前一项的尺寸**（`tabSizes.get(tabs[i-1]?.key)`）—— 新插入的页签还没测到时，
  *      用邻居的尺寸占位，避免整排跳一下；
- *   2. `right` 的基准是**第一个页签**的右边界（`lastOffset` 变量名有误导性，它就是 `tabs[0]`），
+ *   2. 🚨 复用**只递一层**：查的是**测量表**里前一项的值，不是「上一轮算出的偏移」。
+ *      所以只有 `a` 被测量时，`b` 复用 `a`，而 `c` **拿到默认 0**（因为测量表里没有 `b`）。
+ *      这是上游的真实行为（`data = tabSizes.get(tabs[i-1]?.key) || DEFAULT_SIZE`），
+ *      照抄不修 —— L1 有一条用例专门钉住它（`c` 与 `b` 不同）；
+ *   3. `right` 的基准是**第一个页签**的右边界（`lastOffset` 变量名有误导性，它就是 `tabs[0]`），
  *      不是列表总宽 —— 所以 RTL 的 `scrollToTab` 用 `right + width` 才是「离右端多远」。
  */
 

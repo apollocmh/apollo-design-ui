@@ -32,6 +32,7 @@
  */
 
 import { defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import { toCssSize } from '../_internal/to-css-size';
 import Dropdown from '../dropdown/Dropdown';
 import type { ItemType, MenuInfo } from '../menu/interface';
 import AddButton from './AddButton';
@@ -234,7 +235,8 @@ export default defineComponent({
       };
 
       const moreStyle: Record<string, unknown> = {};
-      if (tabBarGutter !== undefined) moreStyle.marginInlineStart = tabBarGutter;
+      // 🚨 同 `TabNavList`：裸数字会被静默丢弃（PITFALLS 8 / D94）
+      if (tabBarGutter !== undefined) moreStyle.marginInlineStart = toCssSize(tabBarGutter);
       if (!tabs.length) {
         moreStyle.visibility = 'hidden';
         moreStyle.order = 1;

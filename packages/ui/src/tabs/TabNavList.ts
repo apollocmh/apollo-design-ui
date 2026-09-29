@@ -42,6 +42,7 @@
 
 import { useResizeObserver } from '@apollo-design/utils';
 import { computed, defineComponent, h, onMounted, type PropType, ref, watch } from 'vue';
+import { toCssSize } from '../_internal/to-css-size';
 import AddButton from './AddButton';
 import ExtraContent from './ExtraContent';
 import { useIndicator } from './hooks/use-indicator';
@@ -469,9 +470,11 @@ export default defineComponent({
     // ---- 渲染 ----
     const tabNodeStyle = computed<Record<string, unknown>>(() => {
       if (props.tabBarGutter === undefined) return {};
-      return topOrBottom.value
-        ? { marginInlineStart: props.tabBarGutter }
-        : { marginTop: props.tabBarGutter };
+      // 🚨 必须过 `toCssSize`：Vue 3 不给 `style` 里的裸数字补 `px`，而
+      //    `style.setProperty('margin-inline-start', 24)` 会被**静默丢弃**
+      //    （PITFALLS 8 / D94；L2 的 gutter 用例就是这条的哨兵）。
+      const gutter = toCssSize(props.tabBarGutter);
+      return topOrBottom.value ? { marginInlineStart: gutter } : { marginTop: gutter };
     });
 
     return () => {

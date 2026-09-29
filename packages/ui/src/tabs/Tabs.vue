@@ -124,20 +124,6 @@ export default defineComponent({
       type: Function as PropType<(props: Record<string, unknown>) => VNodeChild>,
       default: undefined,
     },
-    onTabClick: {
-      type: Function as PropType<(key: string, event: TabsEditEvent) => void>,
-      default: undefined,
-    },
-    onTabScroll: {
-      type: Function as PropType<
-        (info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => void
-      >,
-      default: undefined,
-    },
-    onEdit: {
-      type: Function as PropType<(target: TabsEditEvent | string, action: TabsEditAction) => void>,
-      default: undefined,
-    },
     hideAdd: { type: Boolean, default: undefined },
     addIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
@@ -180,6 +166,11 @@ export default defineComponent({
     id: { type: String, default: undefined },
   },
   emits: {
+    // 🚨 **不要**同时把这三个声明成 props（`onTabClick` / `onEdit` / `onTabScroll`）：
+    //    Vue 的 `emit('tabClick')` 会去找 `props.onTabClick` **或** `attrs.onTabClick`
+    //    —— 两边都有时回调会被调**两次**（L2 的 `onTabClick` 用例就是这条的哨兵）。
+    //    本仓约定（C5）：React 的 `onXxx` 回调在 Vue 侧就是 `emit('xxx')`，
+    //    调用方写 `@tab-click` / `:on-tab-click` 都能收到（同一份 handler）。
     'update:activeKey': (_key: string) => true,
     change: (_key: string) => true,
     tabClick: (_key: string, _event: unknown) => true,
@@ -322,7 +313,7 @@ export default defineComponent({
       return {
         onEdit: (editType: TabsEditAction, info: { key?: string; event: TabsEditEvent }) => {
           // ⚠️ 载荷改写：**add 传事件、remove 传 key**
-          props.onEdit?.(editType === 'add' ? info.event : (info.key as string), editType);
+          emit('edit', editType === 'add' ? info.event : (info.key as string), editType);
         },
         removeIcon: props.removeIcon ?? configTabs.removeIcon ?? h(CloseOutlined),
         addIcon: props.addIcon ?? configTabs.addIcon ?? h(PlusOutlined),
@@ -380,7 +371,6 @@ export default defineComponent({
     });
 
     const onInternalTabClick = (key: string, e: TabsEditEvent): void => {
-      props.onTabClick?.(key, e);
       emit('tabClick', key, e);
       const isActiveChanged = key !== mergedActiveKey.value;
       innerActiveKey.value = key;
@@ -416,7 +406,6 @@ export default defineComponent({
       tabBarGutter: props.tabBarGutter,
       onTabClick: onInternalTabClick,
       onTabScroll: (info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => {
-        props.onTabScroll?.(info);
         emit('tabScroll', info);
       },
       extra: mergedExtra.value,
