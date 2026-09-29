@@ -38,32 +38,18 @@ import type {
 } from '@apollo-design/form-core';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { CSSProperties, VNodeChild } from 'vue';
+import type { SizeType, Variant } from '../config-provider';
+import type { ColProps } from '../grid';
+import type { TooltipProps } from '../tooltip';
 
 // ---------------------------------------------------------------------------
-// 占位类型（TODO(dep)：见文件头对照表）
+// 真源类型（G4 收口时替换掉骨架期的占位：grid / config-provider / tooltip 均已落地）
 // ---------------------------------------------------------------------------
 
-/** TODO(dep): 换成 `grid` 的 `ColProps`。 */
-export interface ColProps {
-  span?: number;
-  offset?: number;
-  push?: number;
-  pull?: number;
-  flex?: string | number;
-  order?: number;
-}
+export type { ColProps, SizeType, Variant };
 
-/** TODO(dep): 换成 `config-provider` 的 `SizeType`。 */
-export type SizeType = 'small' | 'middle' | 'large';
-
-/** TODO(dep): 换成 `config-provider` 的 `Variant`。 */
-export type Variant = 'outlined' | 'borderless' | 'filled' | 'underlined';
-
-/** TODO(dep): 换成 `tooltip` 的 `TooltipProps`。 */
-export interface FormTooltipProps {
-  title?: VNodeChild;
-  icon?: VNodeChild;
-}
+/** antd 逐字：`TooltipProps & { icon?: ReactElement }`。 */
+export type FormTooltipProps = TooltipProps & { icon?: VNodeChild };
 
 export type FormItemTooltipType = FormTooltipProps | VNodeChild;
 

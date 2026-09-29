@@ -776,6 +776,38 @@ export {
   FloatButtonPurePanel,
   floatButtonPrefixCls,
 } from './float-button';
+// Form —— 表单（form-core 第一个 UI 消费者；BaseSelect 同源消费协议）
+export type {
+  ColProps as FormColProps,
+  FeedbackIcons as FormFeedbackIcons,
+  FormEmits,
+  FormItemLayout,
+  FormItemProps,
+  FormItemTooltipType,
+  FormLabelAlign,
+  FormLayout,
+  FormListProps,
+  FormListSlots,
+  FormProps,
+  FormSemanticClassNames,
+  FormSemanticStyles,
+  RequiredMark,
+  ScrollFocusOptions as FormScrollFocusOptions,
+  ScrollOptions as FormScrollOptions,
+  ValidateStatus,
+} from './form';
+export {
+  ErrorListComponent as FormErrorList,
+  Form,
+  FormItem,
+  FormList,
+  useForm,
+  useForm as useFormInstance,
+  useWatch,
+} from './form';
+export { genFormStyle, genTokenDecls as genFormTokenDecls } from './form/style';
+export type { ComponentToken as FormComponentToken } from './form/style/token';
+export { prepareComponentToken as prepareFormComponentToken } from './form/style/token';
 export type {
   ImageProps,
   ImageSemanticType,

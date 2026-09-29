@@ -66,6 +66,6 @@ export type {
   ValidateStatus,
   Variant,
 } from './interface';
-export { genFormStyle, genFormTokenDecls } from './style';
+export { genFormStyle, genTokenDecls as genFormTokenDecls } from './style';
 export type { ComponentToken as FormComponentToken } from './style/token';
 export { prepareComponentToken as prepareFormComponentToken } from './style/token';

@@ -1,9 +1,14 @@
 /**
- * Form 的 Component Token（antd `es/form/style/index.js:458` 的 **10 个字段**）。
+ * Form 的 Component Token（antd `es/form/style/index.js` 的 `prepareComponentToken`）。
  *
- * 契约来源：antd 6.6.4 `prepareComponentToken` 逐字对拍
- * （docs/analysis/form.md §7）。取值推导见各字段注释（构建期派生实值写死，
- * 与 cascader 的 optionPadding 同判）。
+ * 契约来源：antd 6.6.4 `prepareComponentToken` **逐字对拍**
+ * （`node -e "…es/form/style/index.js…"`，取值列表见 `docs/analysis/form.md` §7）。
+ * 构建期派生实值写死（cascader 的 optionPadding 同判）。
+ *
+ * ⚠️ **11 个字段**，不是 10 个：`inlineItemMarginBottom` 容易被漏
+ * （它只在 `-inline` 布局规则里被消费）。漏掉时 `genFormStyle` 里那条
+ * `margin-inline-end`/`margin-bottom` 会退化成继承值 —— 静态 CSS 看不出错，
+ * 只有 L6 的 inline 用例能发现（PITFALLS 170 同族）。
  */
 
 import { getDesignToken } from '@apollo-design/theme';
@@ -19,6 +24,7 @@ export interface ComponentToken {
   itemMarginBottom: number;
   verticalLabelPadding: string;
   verticalLabelMargin: number;
+  inlineItemMarginBottom: number;
 }
 
 /** antd prepareComponentToken 逐字（light 主题判定值）。 */
@@ -44,5 +50,6 @@ export function prepareComponentToken(): ComponentToken {
     itemMarginBottom: t.marginLG, // 24
     verticalLabelPadding: `0 0 ${t.paddingXS}px`, // 0 0 8px
     verticalLabelMargin: 0,
+    inlineItemMarginBottom: 0,
   };
 }

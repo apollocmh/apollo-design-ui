@@ -23,6 +23,7 @@ import { Form as CoreForm, type FormInstance, useForm } from '@apollo-design/for
 import { computed, defineComponent, h, type PropType, provide, type Ref, shallowRef } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
+import { sizeContextKey, useSize } from '../config-provider/size-context';
 import {
   type FormContextValue,
   formContextKey,
@@ -60,7 +61,7 @@ export default defineComponent({
     classNames: { type: Object as PropType<FormProps['classNames']>, default: undefined },
     styles: { type: Object as PropType<FormProps['styles']>, default: undefined },
     // ---- form-core FormProps（Form.vue 原骨架声明，转发给 core Form）----
-    form: { type: Object as PropType<FormInstance<never>>, default: undefined },
+    form: { type: Object as PropType<FormInstance>, default: undefined },
     component: { type: [Boolean, String] as PropType<FormProps['component']>, default: 'form' },
     name: { type: String, default: undefined },
     validateMessages: {
@@ -92,6 +93,12 @@ export default defineComponent({
       getPrefixCls: (s?: string, c?: string) => string;
     };
     const contextDisabled = useDisabled(props.disabled);
+    // ⚠️ antd 的 Form 会 **重新提供 SizeContext**（`SizeContext.Provider value={mergedSize}`）：
+    //    Form 的 `size` 必须能传导到所有 input 族控件（-small / -large 类）。
+    //    只 provide DisabledContext 是不够的 —— form 的 L4 契约用例
+    //    `form:size-small/-large` 就是被这条抓出来的。
+    const mergedSize = useSize(props.size);
+    provide(sizeContextKey, mergedSize);
 
     const mergedRequiredMark = (): FormProps['requiredMark'] => {
       if (props.requiredMark !== undefined) return props.requiredMark;
@@ -125,14 +132,6 @@ export default defineComponent({
       return itemRefMap.get(key) as Ref<unknown>;
     };
     // ⚠️ `__INTERNAL__` 非空是 useCoreForm 的构造保证（同 antd 壳的直接访问）
-    if (import.meta.env?.DEV) {
-      console.log(
-        'DBG-FORM-PROP:',
-        props.form !== undefined,
-        props.form === (wrapForm as unknown),
-        Object.keys(props).filter((k) => (props as Record<string, unknown>)[k] !== undefined),
-      );
-    }
     const internal = (wrapForm as unknown as { __INTERNAL__: Record<string, unknown> })
       .__INTERNAL__;
     internal.name = props.name;
@@ -148,7 +147,10 @@ export default defineComponent({
 
     // ── onFinishFailed 包装（scrollToFirstError）──
     const onInternalFinishFailed = (errorInfo: { errorFields: { name: string[] }[] }): void => {
-      props.onFinishFailed?.(errorInfo as never);
+      // ⚠️ `finishFailed` 是**已声明的 emit**（`FormEmits`），所以监听器走 emit 通道 ——
+      //    写成 `props.onFinishFailed?.()` 会拿到 `undefined`（Vue 不把已声明的
+      //    事件监听器放进 props），用户的回调被静默丢弃。
+      emit('finishFailed', errorInfo);
       const firstError = errorInfo.errorFields[0];
       if (firstError) {
         const fieldName = firstError.name;

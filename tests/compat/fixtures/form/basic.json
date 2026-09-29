@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "form/basic",
+  "component": "form",
+  "description": "form-core（store/Field/List 内核）+ antd 展示层。getItemId = namePath.join('_') + form name 前缀；getStatus 决策树（validateStatus > validating > errors > warnings > success）；control 注入（value + aria 三键 + trigger 事件合成 + v-model 桥 onChange→onUpdate:value）；noStyle 错误上抛聚合；ErrorList debounce（0ms/10ms）+ show-help 动效。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "layout": "vertical"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["finish", "finishFailed", "valuesChange", "fieldsChange"]
+  }
+}

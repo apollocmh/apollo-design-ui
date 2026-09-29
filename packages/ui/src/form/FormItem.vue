@@ -80,7 +80,7 @@ const uiProps = {
   label: { type: null as unknown as PropType<VNodeChild>, default: undefined },
   labelAlign: { type: String as PropType<FormItemProps['labelAlign']>, default: undefined },
   labelCol: { type: Object as PropType<FormItemProps['labelCol']>, default: undefined },
-  tooltip: { type: null as unknown as PropType<unknown>, default: undefined },
+  tooltip: { type: null as unknown as PropType<FormItemProps['tooltip']>, default: undefined },
   wrapperCol: { type: Object as PropType<FormItemProps['wrapperCol']>, default: undefined },
   extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
   status: { type: String as PropType<FormItemProps['status']>, default: undefined },
@@ -110,9 +110,6 @@ export default defineComponent({
     const fieldKeyPathRef = shallowRef<string[] | null>(null);
 
     const onMetaChange = (nextMeta: CoreMeta & { destroy?: boolean }): void => {
-      if (import.meta.env?.DEV) {
-        console.log('DBG-META:', JSON.stringify({ errors: nextMeta.errors?.length }));
-      }
       const keyInfo =
         listContext && typeof (listContext as { getKey?: unknown }).getKey === 'function'
           ? (listContext as unknown as { getKey: (name: unknown) => [string, ...string[]] }).getKey(
@@ -205,7 +202,7 @@ export default defineComponent({
           );
         }
         return h(
-          ItemHolder,
+          ItemHolder as never,
           {
             prefixCls: prefixCls.value,
             className: props.className,
@@ -232,6 +229,7 @@ export default defineComponent({
             tooltip: props.tooltip,
             extra: props.extra,
             requiredMark: formContext?.requiredMark as never,
+            name: props.name as never,
           },
           {
             default: () => [baseChildren, slots.help?.(), slots.extra?.()],
@@ -332,31 +330,34 @@ export default defineComponent({
               // 事件合成：trigger + validateTrigger 的 handler（control 先、用户后）。
               // antd 在 React 事件名上合成；Vue 侧 control 的键即触发名（onChange），
               // 子组件的用户 handler 是 props.onXxx。
+              // ⭐ Vue 生态映射：Input 族组件的值更新事件是 `update:value`（v-model），
+              //    对应 React 的 onChange trigger —— 注入键 `onUpdate:${valuePropName}`。
+              const valuePropName = props.valuePropName ?? 'value';
               const triggers = new Set<string>([
                 ...toArray(props.trigger ?? 'onChange'),
                 ...toArray(props.validateTrigger as never),
               ]);
-              triggers.forEach((eventName) => {
+              const makeHandler = (eventName: string) => {
                 const controlHandler = control[eventName] as
                   | ((...args: unknown[]) => void)
                   | undefined;
                 const camel = `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
                 const userHandler = (child.props as Record<string, unknown>)?.[camel];
-                childProps[eventName] = (...args: unknown[]) => {
+                return (...args: unknown[]) => {
                   controlHandler?.(...args);
                   (userHandler as ((...a: unknown[]) => void) | undefined)?.(...args);
                 };
+              };
+              triggers.forEach((eventName) => {
+                childProps[eventName] = makeHandler(eventName);
+                if (eventName === 'onChange') {
+                  // v-model 桥（INTENDED：Vue 组件的值更新走 update:value）
+                  childProps[`onUpdate:${valuePropName}`] = makeHandler(eventName);
+                }
               });
               childNode = cloneVNode(child, childProps as never);
             } else {
               childNode = childNodes;
-            }
-            if (import.meta.env?.DEV) {
-              console.log(
-                'DBG-SLOT-ERRORS:',
-                mergedErrors.value.length,
-                meta.value.errors?.length ?? 0,
-              );
             }
             return renderLayout(childNode, fieldId, isRequired);
           },

@@ -16,8 +16,10 @@
  * ── 与 antd 的有意差异 ────────────────────────────────────────────────────────
  *
  * 1. antd 的 `-{i}` 规则里有 `[gridVarName('display')]: 'block'` + `display: var(...)`
- *    的 Form 覆盖变量机制 —— antd 自身**没有生产者**（计算结果恒为 fallback），
- *    我们直接输出 `display: block`；Form 落地时再补（见 docs/analysis/grid.md §3）。
+ *    的 Form 覆盖变量机制；本文件落地时 antd 侧还没有生产者，当时简化为直接
+ *    `display: block`。**2026-09-29 Form 收口时已按 antd 逐字接线**
+ *    （`--{root}-grid-display:block` + `display:block` + `display:var(...)`，
+ *    Form 的 `-item-control` 把它改写成 flex）。
  * 2. 响应式 flex 的变量名：antd `--ant-col-{size}-flex`（genCssVar 生成），
  *    我们 `--{rootPrefixCls}-col-{size}-flex`（Col.vue 内联消费，命名同构）。
  */
@@ -130,10 +132,15 @@ function genLoopGridColumnsStyle(cls: string, sizeCls: string, rootPrefix: strin
     } else {
       // https://github.com/ant-design/ant-design/issues/44456
       // Form set display:flex on Col which will override display:block.
-      // （antd 用 CSS 变量做覆盖钩子 —— 我们简化为直接 display:block，见文件头差异 1）
+      // ⇒ antd 用 CSS 变量做覆盖钩子：Col 声明 `--ant-grid-display:block` 并消费它，
+      //   Form 的 `-item-control` 把它改写成 flex（Form 落地后已接线，见
+      //   docs/analysis/grid.md §3 的遗留项）。
+      // ⚠️ 两条 display 必须都在：`display:block` 是旧浏览器兜底，语义由变量那条承担。
       rules.push(
         `${cls}${sizeCls}-${i}{`,
+        `  --${rootPrefix}-grid-display:block;`,
         `  display:block;`,
+        `  display:var(--${rootPrefix}-grid-display);`,
         `  flex:0 0 ${percent};`,
         `  max-width:${percent};`,
         `}`,

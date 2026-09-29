@@ -47,6 +47,7 @@ import { genDropdownStyle } from '../dropdown/style';
 import { genEmptyStyle } from '../empty/style';
 import { genFlexStyle } from '../flex/style';
 import { genFloatButtonStyle } from '../float-button/style';
+import { genFormStyle } from '../form/style';
 import { genGridStyle } from '../grid/style';
 import { genImageStyle } from '../image/style';
 import { genInputStyle } from '../input/style';
@@ -156,6 +157,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'tour', gen: genTourStyle },
   { name: 'tree', gen: genTreeStyle },
   { name: 'tree-select', gen: genTreeSelectStyle },
+  { name: 'form', gen: genFormStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

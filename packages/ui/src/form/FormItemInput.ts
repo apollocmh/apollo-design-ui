@@ -37,10 +37,11 @@ const FormItemInput = defineComponent({
     fieldId: { type: String, default: undefined },
     marginBottom: { type: Number, default: null },
     label: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    contentClassName: { type: String, default: undefined },
-    contentStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    extraClassName: { type: String, default: undefined },
-    extraStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    /** ErrorList 的显隐回调（antd ItemHolder → FormItemInput → ErrorList 逐字透传）。 */
+    onVisibleChanged: {
+      type: Function as PropType<(visible: boolean) => void>,
+      default: undefined,
+    },
   },
   setup(props, { slots }) {
     const formContext = useFormContext();
@@ -109,8 +110,10 @@ const FormItemInput = defineComponent({
         h(
           'div',
           {
-            class: `${baseClassName}-control-input-content${props.contentClassName ? ` ${props.contentClassName}` : ''}`,
-            style: props.contentStyle,
+            class: [`${baseClassName}-control-input-content`, formContext.classNames?.content]
+              .filter(Boolean)
+              .join(' '),
+            style: formContext.styles?.content,
           },
           slots.default?.(),
         ),
@@ -126,6 +129,7 @@ const FormItemInput = defineComponent({
             help: props.help,
             helpStatus: props.status,
             className: `${baseClassName}-explain-connected`,
+            onVisibleChanged: props.onVisibleChanged,
           })
         : null;
 
@@ -134,8 +138,10 @@ const FormItemInput = defineComponent({
             'div',
             {
               ...(props.fieldId ? { id: `${props.fieldId}_extra` } : {}),
-              class: [`${baseClassName}-extra`, props.extraClassName].filter(Boolean).join(' '),
-              style: props.extraStyle,
+              class: [`${baseClassName}-extra`, formContext.classNames?.extra]
+                .filter(Boolean)
+                .join(' '),
+              style: formContext.styles?.extra,
               ref: extraRef,
             },
             [props.extra],

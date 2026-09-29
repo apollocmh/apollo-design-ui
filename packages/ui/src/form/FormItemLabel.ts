@@ -13,24 +13,44 @@
  */
 
 import { QuestionCircleOutlined } from '@apollo-design/icons';
+import { useLocale } from '@apollo-design/locale';
 import type { PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h } from 'vue';
 import { Col } from '../grid';
+import Tooltip from '../tooltip';
 import { useFormContext } from './context';
-import type { ColProps, FormLabelAlign, RequiredMark } from './interface';
+import type { ColProps, FormItemProps, FormLabelAlign, RequiredMark } from './interface';
 
-/** antd `convertToTooltipProps`：bool ⇒ {title: bool}；对象原样。 */
+/**
+ * rc-util 的 `isRenderable`（`_util/is` 的语义）：非 `null` / `undefined` / boolean。
+ *
+ * ⚠️ 与 `@apollo-design/utils` 的同名函数**判据不同**（那边把 `''` 也算不可渲染，
+ *    因为 Alert 的 `title={''}` 场景需要它）；这里是 `isReactRenderable` 的语义，
+ *    `''` 与 `0` 都算可渲染。
+ */
+function isRenderableNode(value: unknown): boolean {
+  return value !== null && value !== undefined && typeof value !== 'boolean';
+}
+
+/**
+ * antd `convertToTooltipProps(tooltip, context)` 逐字：
+ *
+ * ⚠️ 判据落在 **Item 级 `tooltip` prop** 上，不是合并后的 context ——
+ *    `tooltip` 不可渲染时直接 `null`（context 只参与「可渲染时」的浅合并）。
+ *    早期实现把判据放在 context 上，而 Form 的 `mergedTooltip()` 恒返回 `{}`（真值）
+ *    ⇒ **每个 label 都多渲染一个问号图标**（L4 契约抓出来的，`form:basic` 用例）。
+ */
 function convertToTooltipProps(
   tooltip: unknown,
   contextTooltip: { title?: unknown; icon?: unknown } | undefined,
-): { title?: unknown; icon?: unknown } | null {
-  if (tooltip === undefined) {
-    return contextTooltip ? { ...contextTooltip } : null;
+): { title?: unknown; icon?: unknown; children?: unknown } | null {
+  if (!isRenderableNode(tooltip)) {
+    return null;
   }
   if (typeof tooltip === 'object' && tooltip !== null) {
     return { ...(contextTooltip ?? {}), ...(tooltip as Record<string, unknown>) };
   }
-  return { title: tooltip };
+  return { ...(contextTooltip ?? {}), title: tooltip };
 }
 
 const FormItemLabel = defineComponent({
@@ -47,19 +67,18 @@ const FormItemLabel = defineComponent({
       type: [Boolean, String, Function] as PropType<RequiredMark>,
       default: undefined,
     },
-    tooltip: { type: null as unknown as PropType<unknown>, default: undefined },
+    tooltip: { type: null as unknown as PropType<FormItemProps['tooltip']>, default: undefined },
     vertical: { type: Boolean, default: false },
-    labelClassName: { type: String, default: undefined },
-    labelStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
   },
   setup(props) {
     const formContext = useFormContext();
-    const isRenderable = computed(
-      () => props.label !== null && props.label !== undefined && props.label !== false,
-    );
+    // antd：`formLocale?.optional || defaultLocale.Form?.optional`
+    // ⚠️ 文案来自 **locale**，不是硬编码 —— 早期实现写死 `'optional'`，
+    //    en 下少了括号、zh 下整段是英文（L6 的 `form/label` 用例抓出来的）。
+    const [formLocale] = useLocale('Form');
+    const isLabelRenderable = computed(() => isRenderableNode(props.label));
     return () => {
-      if (!isRenderable.value) return null;
-      const formLocaleOptional = 'optional';
+      if (!isLabelRenderable.value) return null;
 
       const mergedLabelCol = props.labelCol ?? formContext.labelCol ?? {};
       const mergedLabelAlign = props.labelAlign ?? formContext.labelAlign;
@@ -68,9 +87,8 @@ const FormItemLabel = defineComponent({
         labelClsBasic,
         mergedLabelAlign === 'left' ? `${labelClsBasic}-left` : '',
         (mergedLabelCol as { className?: string }).className ?? '',
-        { [`${labelClsBasic}-wrap`]: !!formContext.labelWrap },
+        formContext.labelWrap ? `${labelClsBasic}-wrap` : '',
       ]
-        .map((c) => (typeof c === 'string' ? c : ''))
         .filter(Boolean)
         .join(' ');
 
@@ -85,20 +103,35 @@ const FormItemLabel = defineComponent({
 
       const tooltipProps = convertToTooltipProps(props.tooltip, formContext.tooltip);
       if (tooltipProps) {
-        const tooltipNode = h(
-          'span',
-          {
-            class: `${props.prefixCls}-item-tooltip`,
-            onClick: (e: MouseEvent) => {
-              e.preventDefault();
-            },
-            tabindex: -1,
-          },
+        // antd 逐字：`tooltipProps.icon || tooltipProps.children || <QuestionCircleOutlined/>`
+        // ⚠️ 用 `children` 不是 `title` —— `title` 是**气泡内容**，拿它当指示器
+        //    会渲染成一个字符串节点（`form:label-tooltip` 契约用例抓出来的）。
+        const indicator =
           (tooltipProps.icon as VNodeChild) ??
-            (tooltipProps.title as VNodeChild) ??
-            h(QuestionCircleOutlined),
-        );
-        labelChildren = [labelChildren, tooltipNode];
+          (tooltipProps.children as VNodeChild) ??
+          h(QuestionCircleOutlined);
+        const { icon: _icon, children: _children, ...tooltipRest } = tooltipProps;
+        labelChildren = [
+          labelChildren,
+          h(
+            Tooltip as never,
+            { ...(tooltipRest as Record<string, unknown>) } as never,
+            {
+              default: () =>
+                h(
+                  'span',
+                  {
+                    class: `${props.prefixCls}-item-tooltip`,
+                    onClick: (e: MouseEvent) => {
+                      e.preventDefault();
+                    },
+                    tabindex: -1,
+                  },
+                  [indicator],
+                ),
+            } as never,
+          ),
+        ];
       }
 
       // Required Mark
@@ -112,7 +145,7 @@ const FormItemLabel = defineComponent({
       } else if (isOptionalMark && !props.required) {
         labelChildren = [
           labelChildren,
-          h('span', { class: `${props.prefixCls}-item-optional` }, formLocaleOptional),
+          h('span', { class: `${props.prefixCls}-item-optional` }, formLocale?.optional),
         ];
       }
 
@@ -124,14 +157,11 @@ const FormItemLabel = defineComponent({
       }
 
       const labelClassName = [
-        props.labelClassName,
-        {
-          [`${props.prefixCls}-item-required`]: props.required,
-          [`${props.prefixCls}-item-required-mark-${markType ?? ''}`]: !!markType,
-          [`${props.prefixCls}-item-no-colon`]: !computedColon,
-        },
+        formContext.classNames?.label,
+        props.required ? `${props.prefixCls}-item-required` : '',
+        markType ? `${props.prefixCls}-item-required-mark-${markType}` : '',
+        !computedColon ? `${props.prefixCls}-item-no-colon` : '',
       ]
-        .map((c) => (typeof c === 'string' ? c : ''))
         .filter(Boolean)
         .join(' ');
 
@@ -148,7 +178,7 @@ const FormItemLabel = defineComponent({
               {
                 for: props.htmlFor,
                 class: labelClassName,
-                style: props.labelStyle,
+                style: formContext.styles?.label,
                 title: typeof props.label === 'string' ? props.label : undefined,
               },
               [labelChildren],

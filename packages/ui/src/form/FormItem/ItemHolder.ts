@@ -19,7 +19,7 @@ import { noStyleItemContextKey, useFormContext } from '../context';
 import FormItemInput from '../FormItemInput';
 import FormItemLabel from '../FormItemLabel';
 import { useDebounce } from '../hooks/use-debounce';
-import type { FormItemLayout, ValidateStatus } from '../interface';
+import type { FormItemLayout, FormItemProps, ValidateStatus } from '../interface';
 import { getStatus } from '../util';
 import StatusProvider from './StatusProvider';
 
@@ -47,19 +47,15 @@ const ItemHolder = defineComponent({
     wrapperCol: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     labelAlign: { type: String, default: undefined },
     colon: { type: Boolean, default: undefined },
-    tooltip: { type: null as unknown as PropType<unknown>, default: undefined },
+    tooltip: { type: null as unknown as PropType<FormItemProps['tooltip']>, default: undefined },
     extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     requiredMark: { type: null as unknown as PropType<unknown>, default: undefined },
     onSubItemMetaChange: {
       type: Function as PropType<(meta: unknown, keys: unknown) => void>,
       required: true,
     },
-    labelClassName: { type: String, default: undefined },
-    labelStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    contentClassName: { type: String, default: undefined },
-    contentStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    extraClassName: { type: String, default: undefined },
-    extraStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    /** `name`（StatusProvider 的 name 通道，antd 逐字透传）。 */
+    name: { type: null as unknown as PropType<unknown>, default: undefined },
   },
   setup(props, { slots }) {
     const formContext = useFormContext();
@@ -84,6 +80,7 @@ const ItemHolder = defineComponent({
     };
     onMounted(measureMargin);
     watch([hasError, () => props.errors, () => props.warnings], measureMargin, { flush: 'post' });
+    /** ErrorList 的显隐回调（antd 逐字）：错误彻底消失后把 margin 占位清掉。 */
     const onErrorVisibleChanged = (nextVisible: boolean): void => {
       if (!nextVisible && !hasError.value) {
         marginBottom.value = null;
@@ -91,15 +88,23 @@ const ItemHolder = defineComponent({
     };
 
     // ── 状态 ──
+    // ⚠️ 状态取 **meta.errors / meta.warnings**（未 debounce 的那一份），
+    //    只有「渲染错误文字」才走 debounce —— antd 的 getValidateState() 默认
+    //    isDebounce=false。用 debounce 值会让 `-has-error` 类跟着延迟，
+    //    与 antd 的状态切换时机错开（L4 契约能发现）。
     const mergedValidateStatus = computed<ValidateStatus>(() =>
       getStatus(
-        debounceErrors.value,
-        debounceWarnings.value,
+        (props.meta.errors ?? []) as unknown[],
+        (props.meta.warnings ?? []) as unknown[],
         props.meta,
         '',
-        props.hasFeedback !== undefined && props.hasFeedback !== false,
+        !!props.hasFeedback,
         props.validateStatus,
       ),
+    );
+
+    const hasWithHelp = computed(
+      () => hasHelp.value || debounceErrors.value.length > 0 || debounceWarnings.value.length > 0,
     );
 
     const itemClassName = computed(() =>
@@ -107,26 +112,18 @@ const ItemHolder = defineComponent({
         itemPrefixCls,
         props.className,
         props.rootClassName,
-        `${itemPrefixCls}-with-help`,
-        `${itemPrefixCls}-has-feedback`,
-        `${itemPrefixCls}-has-${mergedValidateStatus.value || 'none'}`,
-        `${itemPrefixCls}-is-validating`,
-        `${itemPrefixCls}-hidden`,
-        `${itemPrefixCls}-${layout.value}`,
+        hasWithHelp.value ? `${itemPrefixCls}-with-help` : '',
+        // Status
+        mergedValidateStatus.value && props.hasFeedback ? `${itemPrefixCls}-has-feedback` : '',
+        ['success', 'warning', 'error'].includes(mergedValidateStatus.value)
+          ? `${itemPrefixCls}-has-${mergedValidateStatus.value}`
+          : '',
+        mergedValidateStatus.value === 'validating' ? `${itemPrefixCls}-is-validating` : '',
+        props.hidden ? `${itemPrefixCls}-hidden` : '',
+        // Layout
+        layout.value ? `${itemPrefixCls}-${layout.value}` : '',
       ]
-        .filter(
-          (c, i) =>
-            !!c &&
-            // 0/1/2 是无条件基础类；3+ 是条件类，非真值条件时剔除
-            (i < 3 ||
-              (i === 3 &&
-                (hasHelp.value || debounceErrors.value.length || debounceWarnings.value.length)) ||
-              (i === 4 && !!mergedValidateStatus.value && !!props.hasFeedback) ||
-              (i === 5 && ['success', 'warning', 'error'].includes(mergedValidateStatus.value)) ||
-              (i === 6 && mergedValidateStatus.value === 'validating') ||
-              (i === 7 && !!props.hidden) ||
-              (i === 8 && !!layout.value)),
-        )
+        .filter(Boolean)
         .join(' '),
     );
 
@@ -134,16 +131,6 @@ const ItemHolder = defineComponent({
     provide(noStyleItemContextKey, props.onSubItemMetaChange as never);
 
     return () => {
-      if (import.meta.env?.DEV) {
-        console.log(
-          'DBG-HOLDER-ERRORS:',
-          props.errors.length,
-          'debounced:',
-          debounceErrors.value.length,
-          'status:',
-          mergedValidateStatus.value,
-        );
-      }
       const labelNode = h(
         FormItemLabel as never,
         {
@@ -157,8 +144,6 @@ const ItemHolder = defineComponent({
           labelCol: props.labelCol as never,
           colon: props.colon,
           tooltip: props.tooltip,
-          labelClassName: props.labelClassName,
-          labelStyle: props.labelStyle,
         } as never,
       );
 
@@ -176,10 +161,8 @@ const ItemHolder = defineComponent({
           labelCol: props.labelCol as never,
           wrapperCol: props.wrapperCol as never,
           label: props.label,
-          contentClassName: props.contentClassName,
-          contentStyle: props.contentStyle,
-          extraClassName: props.extraClassName,
-          extraStyle: props.extraStyle,
+          // antd 逐字：ErrorList 的显隐回调（margin 占位回收）
+          onVisibleChanged: onErrorVisibleChanged,
         },
         {
           default: () =>
@@ -192,6 +175,7 @@ const ItemHolder = defineComponent({
                 warnings: props.meta.warnings as never[],
                 hasFeedback: props.hasFeedback as never,
                 validateStatus: mergedValidateStatus.value,
+                name: props.name as never,
               },
               { default: () => slots.default?.() },
             ),

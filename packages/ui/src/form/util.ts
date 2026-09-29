@@ -36,16 +36,19 @@ export function getFieldId(namePath: InternalNamePath, formName?: string): strin
 /**
  * 合并校验状态（antd `getStatus` 逐字）：
  * validateStatus prop > validating > errors > warnings > (touched || (hasFeedback && validated)) ⇒ success。
+ *
+ * ⚠️ `defaultValidateStatus` 收 **`null`**：antd 的 StatusProvider 传的就是 `null`
+ *    （表示「默认无状态」），而 `''` 在 `ValidateStatus` 里也合法 —— 两者都要能过。
  */
 export function getStatus(
   errors: unknown[],
   warnings: unknown[],
   meta: Meta,
-  defaultValidateStatus: ValidateStatus | '',
+  defaultValidateStatus: ValidateStatus | null,
   hasFeedback: boolean | undefined,
   validateStatus?: ValidateStatus | '',
 ): ValidateStatus {
-  let status: ValidateStatus = defaultValidateStatus as ValidateStatus;
+  let status: ValidateStatus = (defaultValidateStatus ?? '') as ValidateStatus;
   if (validateStatus !== undefined) {
     status = validateStatus as ValidateStatus;
   } else if (meta.validating) {

@@ -423,6 +423,21 @@ export const COMPONENTS = {
       'panel', // 纯面板形态
     ],
   },
+  form: {
+    // 7 个 variant × 3 个 viewport = 21 张
+    // ⚠️ 只用**参数驱动的静态形态**：校验链是异步的，跑一条 `validateFields` 会让
+    //    截图时刻不确定（错误文案有 debounce 动效）。错误/帮助文案用
+    //    `validateStatus` / `help` / `extra` 显式驱动，反馈图标同理。
+    variants: [
+      'basic', // horizontal + label/required/extra
+      'vertical', // 纵向布局
+      'inline', // 行内布局
+      'label', // requiredMark=optional / requiredMark=false / colon=false / tooltip
+      'status', // help + validateStatus 四态 + hasFeedback 图标
+      'sizes', // small / middle / large 三档
+      'col', // labelCol 8 / wrapperCol 16 栅格布局
+    ],
+  },
   'tree-select': {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [

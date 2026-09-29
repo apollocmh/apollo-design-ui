@@ -1483,3 +1483,58 @@
     ⇒ **跨运行的进度/结论不要只写在 `notes` 里**：分析结论落 `docs/analysis/<name>.md`，
     进度落 `.workbuddy-ai/memory/YYYY-MM-DD.md`，registry 只当作「机器可读的状态位」。
     （`status` / 各 `*Status` 维度**确实**保留，实测无误。）
+
+193. 🚨 **Component Token 的声明块必须包在「选择器 + 花括号」里**（2026-09-29，form 实测）。
+    `genTokenDecls()` 产出的是一堆 `--apollo-x-y:value;` **裸声明**；若像 form 早期那样
+    直接 `return ${decls}${RULES}`，那就是无效 CSS —— 解析器会把**紧随其后的规则一起丢**。
+    症状：`var(--apollo-form-item-margin-bottom)` 解析失败 ⇒ `margin-bottom` 退回 initial(0)
+    ⇒ 表单项之间没有 24px 间距（form 的 item 全贴在一起）。
+    **为什么藏了这么久**：那批 token 变量此前**根本没有任何规则在用**（旧实现只把它们给
+    theme.test 断言），而**没有视觉基线** ⇒ 前端没人看得见。L6 基线一建就暴露了。
+    正确写法（input/checkbox 同判）：`` const d = genTokenDecls(p).join(''); return
+    `.${p}-input{${d}}` + '\n' + RULES ``；**根形态有几个就挂几个**
+    （input 挂 3 个：裸 input / affix-wrapper / group-wrapper；form 挂 2 个：
+    `-form` 与 `-form-item`，后者覆盖「脱离 Form 单独用 Item」）。
+
+194. 🚨 **foundation 包的 `dist` 会比 `src` 旧** ⇒ L6/L4 的构建以 `MISSING_EXPORT` 炸
+    （2026-09-29 实测：`packages/form-core/dist/index.mjs` 缺 `fieldProps`/`listProps`，
+    而 `tests/visual/build.mjs` 的 vue 侧走**已构建的** `packages/ui/dist/index.mjs`，
+    后者 import 前者）。表现是 rolldown 的
+    `[MISSING_EXPORT] "fieldProps" is not exported by "packages/form-core/dist/index.mjs"`，
+    **不是**「用例写错了」。
+    ⇒ 动过 form-core / utils / motion / portal 等 foundation 包的 `src` 后，
+    跑视觉/构建前先 `pnpm --filter @apollo-design/<pkg> run build`（PITFALLS 176 的延伸）；
+    `pnpm run build:ui` 只建 ui，**不会**替你把 foundation 的 dist 刷新。
+
+195. ⚠️ **`provide` 一个 `ComputedRef` 当上下文值，读取方必须 `toValue` 解包**
+    （2026-09-29，form 的 `FormItemInputContext` 实测）。Vue 的 `inject` 不做解包，
+    `injected ?? {}` 拿到的是 **ref 对象本身** ⇒ `.status` / `.hasFeedback` 全是 undefined。
+    症状很隐蔽：**组件的 DOM 一切正常，只有「下游组件吃不到状态」** ——
+    form 的 L4 用例里 `-status-error` / 反馈图标 / `-sm/-lg` 全缺。
+    ⇒ 键的类型声明成 `InjectionKey<Value | Ref<Value>>`（两个形态都合法），
+    读取一律走 `computed(() => toValue(injected) ?? {})`。
+
+196. 🔧 **要判定 antd 的「运行时行为」（不是 SSR 静态形态），用 jsdom 直接跑 React**
+    （2026-09-29 新增手法，脚本见 `tests/visual/debug/probe-form-nostyle.mjs`）。
+    模板：`new JSDOM(...)` → 手动补 `window.matchMedia` / `SVGElement` / `navigator`
+    （Node 22 的 `globalThis.navigator` 是只读 getter，要 `Object.defineProperty`）
+    → `IS_REACT_ACT_ENVIRONMENT = true` → `createRoot` + `act()` → 读真实 DOM。
+    ⚠️ 必须 `(… > /tmp/x.log 2>&1 &)` 跑并轮询日志：前台直接跑会撞 120s 超时
+    （exit 137 且**零输出**，见 PITFALLS 里「137 ≠ OOM」那条）。
+    价值：`renderToStaticMarkup` 拿不到「校验后」的 DOM，而 antd 自测的断言只覆盖一部分
+    ⇒ 这类问题过去只能靠读源码猜（本次靠它把「外层布局项到底带不带 `-has-error`」钉死）。
+
+197. ⚠️ **`noTemplateCurlyInString` 让「字面量 `${label}`」写不出来**。
+    rc-field-form 的消息模板占位符就是 `$` + `{label}` 这几个字符，直接写会被 biome 判成
+    「模板串占位符写错了」（warning，不 fail 门禁但会一直呻吟）。
+    绕法：`const LABEL_TOKEN = `$${'{label}'}`;`（`$` 与 `{label}` 分开给，模板里只有表达式）。
+    —— 同族：PITFALLS 139「对象字面量里的 suppression 注释无效」。
+
+198. ⚠️ **「registry 说 completed」不等于「真的收口了」**（2026-09-29，form 的教训）。
+    接手时 form 的 11 维度全是 `done`，实际状态是：README 还是「本目录是骨架，任何维度都
+    不得置 done」、**没有** `tests/compat/baseline/form.mjs`、**没有** `baselines/form.dom.json`、
+    **没有** `tests/visual` 的 matrix 条目与 react/vue 用例、缺 L3/L4/L5 三个测试文件、
+    代码里留着 5 处 `DBG-` console.log 与 4 处 biome error（含 `PropType<any>`）。
+    ⇒ 接手一个「已完成」的组件时，先跑三件事：`node scripts/verify-component.mjs <name>`、
+    `ls tests/compat/baselines/<name>.dom.json tests/visual/render/cases/{react,vue}/<name>.*`、
+    读它的 `README.md` 是否仍在说「骨架」。
