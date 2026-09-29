@@ -13,7 +13,30 @@ export const Tabs = withInstall(TabsComponent);
 
 export default Tabs;
 
-// TODO(G2): export type { TabsProps, TabsRef, ... } from './interface';
+export type {
+  GetIndicatorSize,
+  TabPlacement,
+  TabPosition,
+  TabsEditAction,
+  TabsEditableConfig,
+  TabsEditEvent,
+  TabsEmits,
+  TabsExtraContent,
+  TabsIndicator,
+  TabsItem,
+  TabsLocale,
+  TabsMorePopupInfo,
+  TabsMoreProps,
+  TabsProps,
+  TabsRef,
+  TabsRenderTabBarProps,
+  TabsSemanticAllType,
+  TabsSemanticClassNames,
+  TabsSemanticStyles,
+  TabsSemanticValue,
+  TabsSlots,
+  TabsType,
+} from './interface';
 // TODO(G4): export { genTabsStyle } from './style';
 // TODO(G4): export type { ComponentToken as TabsComponentToken } from './style/token';
 // TODO(G4): export { prepareComponentToken as prepareTabsComponentToken } from './style/token';
