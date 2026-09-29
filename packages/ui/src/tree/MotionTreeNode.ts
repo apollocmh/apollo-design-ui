@@ -111,6 +111,8 @@ export default defineComponent({
                     data: treeNode.data as Record<string, unknown>,
                     isStart: treeNode.isStart,
                     isEnd: treeNode.isEnd,
+                    // rc `{...restProps}` 判据：data 自有字段透传（isLeaf/disabled/icon…）
+                    ...dataPropsOf(treeNode),
                   } as never);
                 }),
               ),
@@ -119,6 +121,7 @@ export default defineComponent({
       }
 
       // 非动效态：直通 TreeNode
+      // eslint-disable-next-line no-console
       const treeNodeProps = getTreeNodeProps(
         props.node.key as never,
         props.treeNodeRequiredProps as never,
@@ -127,6 +130,8 @@ export default defineComponent({
         className: props.className,
         style: props.style,
         treeId: props.treeId,
+        // rc `{...restProps}` 判据：data 自有字段透传（isLeaf/disabled/icon…）
+        ...dataPropsOf(props.node),
         ...treeNodeProps,
         title: props.node.title,
         pos: props.node.pos,
@@ -139,3 +144,20 @@ export default defineComponent({
     };
   },
 });
+
+/** rc：`delete restProps.children / key` —— data 自有字段（isLeaf/disabled/icon 等）
+ * 原样作为 TreeNode props 透传（rc NodeList 的 `{...restProps}` 判据）。 */
+function dataPropsOf(node: FlattenNode): Record<string, unknown> {
+  const {
+    key: _k,
+    children: _c,
+    title: _t,
+    pos: _p,
+    ...rest
+  } = node.data as Record<string, unknown>;
+  void _k;
+  void _c;
+  void _t;
+  void _p;
+  return rest;
+}

@@ -37,7 +37,7 @@
   ✅ 步骤 4 style/index.ts（G4-4）：100 条规则机械提取（extract-tree-css.mjs，
      含 -checkbox 视觉与 -motion-collapse 动效类）+ genTreeTokenDecls（9 token）+
      genTreeStyle(prefixCls) 替换范式；COMPONENT_STYLES 注册 + ui 主入口导出。
-- [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
+- [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）

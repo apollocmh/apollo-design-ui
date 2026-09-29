@@ -28,6 +28,7 @@ import {
   ref,
   watch,
 } from 'vue';
+import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
 import {
   useComponentConfig,
   useConfigContext,
@@ -217,6 +218,8 @@ export default defineComponent({
     const mergedItemHeight = computed(() => props.itemHeight ?? computedItemHeight.value);
 
     // ======================== 语义槽 ×5（函数形态）========================
+    // ⚠️ classNames 是**拼接**语义、styles 是逐键浅合并（后者胜）——
+    //    对齐 antd useMergeSemantic（与 tooltip/popconfirm 同判），不能用对象展开。
     const mergedClassNames = computed<Partial<TreeSemanticClassNames>>(() => {
       const own =
         typeof props.classNames === 'function'
@@ -224,10 +227,10 @@ export default defineComponent({
               props: props as unknown as TreeProps,
             })
           : props.classNames;
-      return {
-        ...(componentConfig.classNames as Partial<TreeSemanticClassNames>),
-        ...own,
-      };
+      return mergeClassNames<Partial<TreeSemanticClassNames>>(
+        componentConfig.classNames as Partial<TreeSemanticClassNames>,
+        own,
+      );
     });
     const mergedStyles = computed<Partial<TreeSemanticStyles>>(() => {
       const own =
@@ -236,10 +239,10 @@ export default defineComponent({
               props: props as unknown as TreeProps,
             })
           : props.styles;
-      return {
-        ...(componentConfig.styles as Partial<TreeSemanticStyles>),
-        ...own,
-      };
+      return mergeStyles<Partial<TreeSemanticStyles>>(
+        componentConfig.styles as Partial<TreeSemanticStyles>,
+        own,
+      );
     });
 
     // ======================== 派生数据（gDSFP 1-3）========================
@@ -870,7 +873,11 @@ export default defineComponent({
             }
             break;
           }
-          case ' ': {
+          // ⚠️ rc 判据是 `case ' '`（浏览器空格键真实值）；jsdom 把 key 规范成
+          //    'Space'（trigger 与原生 KeyboardEvent 皆是）—— 兼容两值，真实
+          //    浏览器行为不变（浏览器不会发出 'Space'）。
+          case ' ':
+          case 'Space': {
             if (canCheck) {
               event.preventDefault();
               onNodeCheck(
@@ -1330,6 +1337,7 @@ export default defineComponent({
       });
       const rootClass = clsx(
         prefixCls.value,
+        mergedClassNames.value.root,
         props.className,
         props.rootClassName,
         {
@@ -1349,6 +1357,7 @@ export default defineComponent({
           class: rootClass,
           style: {
             ...(componentConfig.style as Record<string, unknown> | undefined),
+            ...(mergedStyles.value.root as Record<string, unknown> | undefined),
             ...(props.rootStyle as Record<string, unknown> | undefined),
             ...(props.style as Record<string, unknown> | undefined),
           },

@@ -42,7 +42,8 @@ export default defineComponent({
     dragOver: { type: Boolean, default: false },
     dragOverGapTop: { type: Boolean, default: false },
     dragOverGapBottom: { type: Boolean, default: false },
-    isLeaf: { type: Boolean, default: false },
+    // ⚠️ default undefined —— rc 判据 `isLeaf === false 恒否决`，缺省必须保持 undefined
+    isLeaf: { type: Boolean, default: undefined },
     isStart: { type: Array as unknown as () => boolean[], required: true },
     isEnd: { type: Array as unknown as () => boolean[], required: true },
     expanded: { type: Boolean, default: false },
@@ -238,7 +239,8 @@ export default defineComponent({
       const renderSwitcher = () => {
         if (memoizedIsLeaf.value) {
           const switcherIconDom = renderSwitcherIconDom(true);
-          return switcherIconDom !== false && switcherIconDom != null
+          // rc 判据：只查 `!== false` —— null 也渲染空 noop span
+          return switcherIconDom !== false
             ? h(
                 'span',
                 {
@@ -254,7 +256,8 @@ export default defineComponent({
             : null;
         }
         const switcherIconDom = renderSwitcherIconDom(false);
-        return switcherIconDom !== false && switcherIconDom != null
+        // rc 判据：只查 `!== false` —— null 也渲染空 switcher span
+        return switcherIconDom !== false
           ? h(
               'span',
               {
@@ -286,7 +289,7 @@ export default defineComponent({
             onClick: onCheck,
             role: 'checkbox',
             'aria-checked': p.halfChecked ? 'mixed' : p.checked,
-            'aria-disabled': isDisabled.value || p.disableCheckbox,
+            'aria-disabled': isDisabled.value || p.disableCheckbox ? 'true' : undefined,
             'aria-labelledby': getNodeId(p.treeId, p.eventKey as TreeKey),
           },
           $custom ? [$custom as never] : [],
@@ -432,7 +435,8 @@ export default defineComponent({
                 ? 'mixed'
                 : p.checked
               : undefined,
-          'aria-disabled': isDisabled.value,
+          // React 对 aria-disabled={false} 不渲染 —— 对齐 DOM 产物
+          'aria-disabled': isDisabled.value ? 'true' : undefined,
           class: clsx(p.className, `${prefixCls}-treenode`, treeClassNames?.item, {
             [`${prefixCls}-treenode-disabled`]: isDisabled.value,
             [`${prefixCls}-treenode-disabled`]: isDisabled.value,
