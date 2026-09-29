@@ -34,6 +34,7 @@
  */
 
 import { Color } from '@apollo-design/utils';
+import { onBackground } from '../../_internal/color-composite';
 
 import { getArrowOffsetToken, getArrowToken } from '../../tooltip/style/token';
 
@@ -68,32 +69,6 @@ export interface TourSeedToken {
   borderRadiusOuter: number;
 }
 
-/**
- * antd `FastColor#onBackground` 的等价物：把**带透明度**的前景叠到背景上。
- *
- * ⚠️ 本仓 `Color` **没有** `onBackground`（只有 `mix`，那是按比例混合、语义不同：
- *    `mix` 会连 alpha 一起插值，得到半透明结果；`onBackground` 是**合成**，
- *    背景不透明时结果也不透明）。
- *
- * 公式逐字取自 FastColor：
- *   `alpha = fg.a + bg.a x (1 - fg.a)`
- *   `channel = round((fg.c x fg.a + bg.c x bg.a x (1 - fg.a)) / alpha)`
- */
-function onBackground(foreground: string, background: string): string {
-  const fg = new Color(foreground);
-  const bg = new Color(background);
-  const alpha = fg.a + bg.a * (1 - fg.a);
-  if (alpha === 0) return 'rgba(0,0,0,0)';
-  const channel = (f: number, b: number): number =>
-    Math.round((f * fg.a + b * bg.a * (1 - fg.a)) / alpha);
-  return new Color({
-    r: channel(fg.r, bg.r),
-    g: channel(fg.g, bg.g),
-    b: channel(fg.b, bg.b),
-    a: alpha,
-  }).toRgbString();
-}
-
 /** antd `prepareComponentToken` 的逐条对齐实现。 */
 export function prepareComponentToken(token: TourSeedToken): ComponentToken {
   const {
@@ -116,7 +91,7 @@ export function prepareComponentToken(token: TourSeedToken): ComponentToken {
     zIndexPopup: zIndexPopupBase + 70,
     closeBtnSize: fontSize * lineHeight,
     primaryPrevBtnBg: new Color(colorTextLightSolid).setAlpha(0.15).toRgbString(),
-    primaryNextBtnHoverBg: onBackground(colorBgTextHover, colorWhite),
+    primaryNextBtnHoverBg: onBackground(colorBgTextHover, colorWhite).toRgbString(),
     arrowOffsetHorizontal: offset.arrowOffsetHorizontal,
     arrowOffsetVertical: offset.arrowOffsetVertical,
     arrowShadowWidth: arrow.arrowShadowWidth,

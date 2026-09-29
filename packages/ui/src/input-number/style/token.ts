@@ -19,7 +19,7 @@
  */
 
 import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
-import { Color } from '@apollo-design/utils';
+import { onBackground } from '../../_internal/color-composite';
 
 /** token 名 → `var(--apollo-*)`。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
@@ -136,7 +136,7 @@ export function prepareComponentToken(
     handleActiveBg: v('colorFillAlter'),
     handleBg: v('colorBgContainer'),
     // FastColor.onBackground：把半透明填充色合成到容器底色上的不透明结果
-    filledHandleBg: compositeOnBackground(token.colorFillSecondary, token.colorBgContainer),
+    filledHandleBg: onBackground(token.colorFillSecondary, token.colorBgContainer).toHexString(),
     handleHoverColor: v('colorPrimary'),
     handleBorderColor: v('colorBorder'),
 
@@ -144,23 +144,6 @@ export function prepareComponentToken(
     handleOpacity: constantHandle ? 1 : 0,
     handleVisibleWidth: px(constantHandle ? handleWidth : 0),
   };
-}
-
-/**
- * FastColor.onBackground 的等价物：把 `front`（可能带 alpha）合成到 `background`
- * 上的不透明色。`out = front*α + bg*(1-α)`。
- */
-function compositeOnBackground(front: string, background: string): string {
-  const f = new Color(front).toRgb();
-  const b = new Color(background).toRgb();
-  const a = f.a;
-  const mix = (x: number, y: number): number => Math.round(x * a + y * (1 - a));
-  return new Color({
-    r: mix(f.r, b.r),
-    g: mix(f.g, b.g),
-    b: mix(f.b, b.b),
-    a: 1,
-  }).toHexString();
 }
 
 let tokenCache: ComponentToken | null = null;
