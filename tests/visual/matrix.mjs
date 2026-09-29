@@ -423,6 +423,15 @@ export const COMPONENTS = {
       'panel', // 纯面板形态
     ],
   },
+  tree: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    // ⚠️ 全展开 + selected/checkable 静态态钉住；目录树走 directory variant。
+    variants: [
+      'basic', // checkable + 展开 + 选中 + 勾选级联
+      'directory', // DirectoryTree（Folder/File 图标 + 选中）
+      'show-line', // 连接线 + 展开态
+    ],
+  },
   popconfirm: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 浮层用 open 受控静态帧钉住（与 dropdown / select 同判）；

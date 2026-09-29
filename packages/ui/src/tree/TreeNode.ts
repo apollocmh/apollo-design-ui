@@ -289,6 +289,7 @@ export default defineComponent({
             onClick: onCheck,
             role: 'checkbox',
             'aria-checked': p.halfChecked ? 'mixed' : p.checked,
+            // rc 值语义：`isDisabled || disableCheckbox` —— falsy ⇒ React 省略属性
             'aria-disabled': isDisabled.value || p.disableCheckbox ? 'true' : undefined,
             'aria-labelledby': getNodeId(p.treeId, p.eventKey as TreeKey),
           },
@@ -435,13 +436,12 @@ export default defineComponent({
                 ? 'mixed'
                 : p.checked
               : undefined,
-          // React 对 aria-disabled={false} 不渲染 —— 对齐 DOM 产物
-          'aria-disabled': isDisabled.value ? 'true' : undefined,
+          // React 对 aria-* 的 false 仍渲染为字符串 "false"（基线逐字）
+          'aria-disabled': String(isDisabled.value),
           class: clsx(p.className, `${prefixCls}-treenode`, treeClassNames?.item, {
             [`${prefixCls}-treenode-disabled`]: isDisabled.value,
-            [`${prefixCls}-treenode-disabled`]: isDisabled.value,
-            [`${prefixCls}-treenode-switcher-${p.expanded ? 'open' : 'close'}`]:
-              !memoizedIsLeaf.value,
+            // rc 判据：`!isLeaf` 用的是 **prop**（undefined ⇒ true ⇒ 叶子也带 close）
+            [`${prefixCls}-treenode-switcher-${p.expanded ? 'open' : 'close'}`]: !p.isLeaf,
             [`${prefixCls}-treenode-checkbox-checked`]: p.checked,
             [`${prefixCls}-treenode-checkbox-indeterminate`]: p.halfChecked,
             [`${prefixCls}-treenode-selected`]: p.selected,

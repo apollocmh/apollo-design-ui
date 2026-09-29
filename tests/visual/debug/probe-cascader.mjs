@@ -55,11 +55,18 @@ page.on('requestfailed', (r) => errs.push(`reqfail: ${r.url()} ${r.failure()?.er
 
 const url = `http://127.0.0.1:${port}/${side}.html?component=${component}&variant=${variant}&theme=light`;
 await page.goto(url, { waitUntil: 'networkidle' });
-await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 10000 }).catch(() => errs.push('__VISUAL_READY__ 未置位'));
+await page
+  .waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 10000 })
+  .catch(() => errs.push('__VISUAL_READY__ 未置位'));
 
 const info = await page.evaluate(() => {
   const stage = document.querySelector('#stage');
-  const out = { html: stage ? stage.outerHTML.slice(0, 4000) : '(no #stage)', sheets: [], computed: [], matched: [] };
+  const out = {
+    html: stage ? stage.outerHTML.slice(0, 4000) : '(no #stage)',
+    sheets: [],
+    computed: [],
+    matched: [],
+  };
 
   // 样式表清单
   for (const s of Array.from(document.styleSheets)) {

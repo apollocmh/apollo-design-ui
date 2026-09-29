@@ -57,4 +57,5 @@ export type {
 export { genTreeStyle, genTreeTokenDecls } from './style';
 export type { ComponentToken as TreeComponentToken } from './style/token';
 export { prepareComponentToken as prepareTreeComponentToken } from './style/token';
+export { useTree } from './use-tree';
 export * from './utils';

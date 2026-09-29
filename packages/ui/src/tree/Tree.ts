@@ -1256,7 +1256,10 @@ export default defineComponent({
           return draggingNodeKey.value;
         },
         get checkable() {
-          return props.checkable;
+          // antd 壳：checkable ⇒ 自定义 `<span class="{p}-checkbox-inner">`（非原生框）
+          return props.checkable
+            ? h('span', { class: `${prefixCls.value}-checkbox-inner` })
+            : props.checkable;
         },
         get checkStrictly() {
           return props.checkStrictly;

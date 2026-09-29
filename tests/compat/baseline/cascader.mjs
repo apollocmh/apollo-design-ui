@@ -28,7 +28,8 @@ const { Cascader, ConfigProvider } = antd;
 const PureCascader = Cascader._InternalPanelDoNotUseOrYouWillBeFired;
 
 const BP = { prefixCls: 'apollo-cascader' };
-const wrap = (node) => h(ConfigProvider, { prefixCls: 'apollo', iconPrefixCls: 'apollo-icon' }, node);
+const wrap = (node) =>
+  h(ConfigProvider, { prefixCls: 'apollo', iconPrefixCls: 'apollo-icon' }, node);
 
 const OPTIONS = [
   {
@@ -48,9 +49,30 @@ const push = (id, node) => {
 };
 
 // ---- 触发元素（raw trigger：SSR 只渲染裸 children）----
-push('cascader:basic', wrap(h(Cascader, { ...BP, options: OPTIONS }, h('button', { type: 'button' }, 'target'))));
-push('cascader:open', wrap(h(Cascader, { ...BP, options: OPTIONS, open: true, id: 'cs-1' }, h('button', { type: 'button' }, 'target'))));
-push('cascader:disabled', wrap(h(Cascader, { ...BP, options: OPTIONS, open: true, disabled: true, id: 'cs-2' }, h('button', { type: 'button' }, 'target'))));
+push(
+  'cascader:basic',
+  wrap(h(Cascader, { ...BP, options: OPTIONS }, h('button', { type: 'button' }, 'target'))),
+);
+push(
+  'cascader:open',
+  wrap(
+    h(
+      Cascader,
+      { ...BP, options: OPTIONS, open: true, id: 'cs-1' },
+      h('button', { type: 'button' }, 'target'),
+    ),
+  ),
+);
+push(
+  'cascader:disabled',
+  wrap(
+    h(
+      Cascader,
+      { ...BP, options: OPTIONS, open: true, disabled: true, id: 'cs-2' },
+      h('button', { type: 'button' }, 'target'),
+    ),
+  ),
+);
 
 // ⚠️ antd 的 `CascaderPanel` SSR 输出**没有列 DOM**（列由 OptionList 运行时渲染，
 // PurePanel 只渲染关闭态外壳）——列结构的契约由 L1（panel.test.ts，15 条语义判据）

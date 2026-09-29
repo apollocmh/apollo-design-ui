@@ -197,7 +197,9 @@ export default defineComponent({
       const treeNodeRequiredProps = props.treeNodeRequiredProps;
       const focusable = props.focusable !== false && !props.disabled;
 
-      return h('div', { style: { display: 'flex', flexDirection: 'column', minHeight: '100%' } }, [
+      // ⚠️ rc 返回 Fragment（量测 div + VirtualList 平铺）—— 不包 wrapper div，
+      //    契约基线钉根 div 子节点数（2 vs 1 差异源自包装层）。
+      return [
         // ---- 隐藏的 indent 量测 div ----
         h(
           'div',
@@ -280,7 +282,7 @@ export default defineComponent({
             },
           },
         ),
-      ]);
+      ];
     };
   },
 });

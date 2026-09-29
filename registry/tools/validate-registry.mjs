@@ -383,8 +383,12 @@ const HARDCODED_PATTERNS = [
   // 2026-09-28 补 `9999px`：segmented 的 shape:round 全圆角 —— 上游写的是
   // `borderRadius: 9999`（components/segmented/style/index.ts 字面量，非 token），
   // 与 100px 同判：没有「pill 圆角」token，换 token 会与上游产物分叉。
+  // 2026-09-29 补 `1px`：tree 拖拽指示线的圆角 —— 上游写的是
+  // `borderRadius: 1`（components/tree/style/index.js initComponentToken 字面量，
+  // 非 token），与 image 100px / segmented 9999px 同判：没有对应 token，
+  // 换 token 会与上游产物分叉。
   {
-    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|100px\b|9999px\b|0(?![\d.])))/,
+    re: /\bborder-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|\d+%|100px\b|9999px\b|1px\b|0(?![\d.])))/,
     what: '硬编码圆角',
   },
   // 与 `border-radius` 同源：`box-shadow:none` 不是设计值（取消阴影的语义重置，与上游

@@ -6,7 +6,11 @@
   "antdVersion": "6.6.4",
   "props": {
     "options": [
-      { "value": "zhejiang", "label": "浙江", "children": [{ "value": "hangzhou", "label": "杭州" }] }
+      {
+        "value": "zhejiang",
+        "label": "浙江",
+        "children": [{ "value": "hangzhou", "label": "杭州" }]
+      }
     ],
     "placeholder": "请选择地区"
   },

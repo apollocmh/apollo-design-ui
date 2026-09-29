@@ -29,7 +29,8 @@ const { Popconfirm, ConfigProvider } = antd;
 const PurePopconfirm = Popconfirm._InternalPanelDoNotUseOrYouWillBeFired;
 
 const BP = { prefixCls: 'apollo-popconfirm' };
-const wrap = (node) => h(ConfigProvider, { prefixCls: 'apollo', iconPrefixCls: 'apollo-icon' }, node);
+const wrap = (node) =>
+  h(ConfigProvider, { prefixCls: 'apollo', iconPrefixCls: 'apollo-icon' }, node);
 
 const cases = [];
 const push = (id, node) => {

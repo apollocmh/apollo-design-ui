@@ -6,11 +6,14 @@
  * 这里覆盖函数形态与槽位全集（icon 槽只在 showIcon + 定制 icon 时可见）。
  */
 
+import type { DomRenderResult } from '@apollo-design/test-utils';
+import { domContractTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h, nextTick } from 'vue';
+import baseline from '../../../../../tests/compat/baselines/tree.dom.json';
 import { ConfigProvider } from '../../config-provider';
-import { Tree } from '../index';
+import { DirectoryTree, Tree } from '../index';
 
 const treeData = [
   {
@@ -86,4 +89,123 @@ describe('Tree · 语义槽（L4）', () => {
     expect(root.attributes('style')).toContain('padding: 9px');
     w.unmount();
   });
+});
+
+// ---------------------------------------------------------------------------
+// domContractTest（与 antd 基线逐用例比对；16 用例全量）
+// ---------------------------------------------------------------------------
+
+const BP = { prefixCls: 'apollo-tree' };
+const TREE_DATA = [
+  {
+    title: 'parent 1',
+    key: '0-0',
+    children: [
+      { title: 'leaf 1', key: '0-0-0' },
+      { title: 'leaf 2', key: '0-0-1' },
+    ],
+  },
+  { title: 'parent 2', key: '0-1' },
+];
+
+const CASES: Record<string, () => DomRenderResult> = {
+  'tree:basic': () => h(Tree, { ...BP, treeData: TREE_DATA }),
+  'tree:expanded': () =>
+    h(Tree, { ...BP, treeData: TREE_DATA, expandedKeys: ['0-0'], defaultExpandParent: false }),
+  'tree:default-expand-all': () => h(Tree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true }),
+  'tree:selected': () =>
+    h(Tree, {
+      ...BP,
+      treeData: TREE_DATA,
+      defaultExpandAll: true,
+      selectedKeys: ['0-0-0'],
+    }),
+  'tree:checkable': () =>
+    h(Tree, {
+      ...BP,
+      treeData: TREE_DATA,
+      defaultExpandAll: true,
+      checkable: true,
+      checkedKeys: ['0-0-0'],
+    }),
+  'tree:check-strictly': () =>
+    h(Tree, {
+      ...BP,
+      treeData: TREE_DATA,
+      defaultExpandAll: true,
+      checkable: true,
+      checkStrictly: true,
+      checkedKeys: { checked: ['0-0-0'], halfChecked: [] },
+    }),
+  'tree:show-line': () =>
+    h(Tree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true, showLine: true }),
+  'tree:show-line-no-leaf-icon': () =>
+    h(Tree, {
+      ...BP,
+      treeData: TREE_DATA,
+      defaultExpandAll: true,
+      showLine: { showLeafIcon: false },
+    }),
+  'tree:show-icon': () =>
+    h(Tree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true, showIcon: true }),
+  'tree:block-node': () =>
+    h(Tree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true, blockNode: true }),
+  'tree:field-names': () =>
+    h(Tree, {
+      ...BP,
+      defaultExpandAll: true,
+      treeData: [{ id: 'a', name: 'A', subs: [{ id: 'a1', name: 'A1' }] }] as never,
+      fieldNames: { key: 'id', title: 'name', children: 'subs' },
+    }),
+  'tree:disabled-node': () =>
+    h(Tree, {
+      ...BP,
+      treeData: [
+        {
+          title: 'p',
+          key: 'p',
+          children: [
+            { title: 'c1', key: 'c1', disabled: true },
+            { title: 'c2', key: 'c2' },
+          ],
+        },
+      ],
+      defaultExpandAll: true,
+    }),
+  'tree:checkable-disabled': () =>
+    h(Tree, {
+      ...BP,
+      treeData: [
+        { title: 'p', key: 'p', children: [{ title: 'c', key: 'c', disableCheckbox: true }] },
+      ],
+      defaultExpandAll: true,
+      checkable: true,
+    }),
+  'tree:directory': () => h(DirectoryTree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true }),
+  'tree:directory-selected': () =>
+    h(DirectoryTree, {
+      ...BP,
+      treeData: TREE_DATA,
+      defaultExpandAll: true,
+      selectedKeys: ['0-0-0'],
+      multiple: true,
+    }),
+  'tree:draggable': () =>
+    h(Tree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true, draggable: true }),
+};
+
+domContractTest('Tree', {
+  baseline,
+  keepStyle: false,
+  allow: {},
+  render: (id) => {
+    const build = CASES[id];
+    if (!build) {
+      throw new Error(
+        `[Tree semantic.test] 基线里有用例 "${id}"，但 CASES 里没有对应构造。\n` +
+          `  基线里的用例：${baseline.cases.map((c) => c.id).join(', ')}`,
+      );
+    }
+    return build();
+  },
 });

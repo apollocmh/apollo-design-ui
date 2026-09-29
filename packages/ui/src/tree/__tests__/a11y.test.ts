@@ -11,6 +11,7 @@
  * axe demo 扫描在 G11 demo 落齐后接入（a11yDemoTest + expectCount）。
  */
 
+import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
@@ -27,6 +28,11 @@ const treeData = [
   },
   { key: '0-1', title: 'standalone', disabled: true },
 ];
+
+a11yDemoTest('Tree', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 18,
+});
 
 describe('Tree · a11y（L5）', () => {
   it('role=tree / role=treeitem / aria-expanded / aria-selected', async () => {
@@ -65,8 +71,8 @@ describe('Tree · a11y（L5）', () => {
     await nextTick();
     const items = w.findAll('[role="treeitem"]');
     expect(items[3]?.attributes('aria-disabled')).toBe('true');
-    // React 对 aria-disabled={false} 不渲染 ⇒ 属性缺省
-    expect(items[0]?.attributes('aria-disabled')).toBeUndefined();
+    // React 对 aria-* 的 false 渲染为字符串 "false"（基线逐字）
+    expect(items[0]?.attributes('aria-disabled')).toBe('false');
     w.unmount();
   });
 

@@ -1,0 +1,28 @@
+{
+  "$schema": "../schema.json",
+  "id": "tree/basic",
+  "component": "tree",
+  "description": "rc-tree class 内核（23 state 槽 + gDSFP 八步 + conductCheck 两段式级联 + NodeList VirtualList+motion diff + DirectoryTree 范围多选）。Vue 化：四键 v-model 与 expand/check/select/load 同发（C11）；title/icon/switcherIcon 三通道（C8-R2/D111）；TreeNode children 形态不实现（v6 deprecated，UPSTREAM）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "treeData": [
+      { "title": "parent 1", "key": "0-0", "children": [
+        { "title": "leaf 1", "key": "0-0-0" },
+        { "title": "leaf 2", "key": "0-0-1" }
+      ] },
+      { "title": "parent 2", "key": "0-1" }
+    ],
+    "checkable": true,
+    "defaultExpandAll": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["update:expandedKeys", "update:checkedKeys", "update:selectedKeys", "update:loadedKeys", "expand", "check", "select", "load"]
+  }
+}

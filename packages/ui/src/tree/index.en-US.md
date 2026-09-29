@@ -1,5 +1,16 @@
+---
+title: Tree
+titleTemplate: '%s - @apollo-design/ui'
+description: Hierarchical data display with selection, check, async load, drag and virtual scroll.
+---
+
 # Tree
 
-<!-- TODO(G11): 中文/英文文档骨架。结构对齐 divider/index.zh-CN.md：
-     何时使用 / 代码演示（demo 一一对应）/ API（props/events/slots/expose 表）/ Theme（token 表）。
-     API 表由 interface.ts 的注释生成口径书写；@desc/@descEN 与 antd 同构。 -->
+Display hierarchical data (folders, org charts) with expand, select, check, async loading, drag-and-drop and virtual scrolling. Use `DirectoryTree` for folder structures.
+
+See `index.zh-CN.md` for the full API tables (TreeProps 9 groups, TreeEmits 21 events, slots, TreeRef, 9 Component Tokens). Key notes:
+
+- `<TreeNode>` children form is deprecated in v6 and **not implemented** — use `treeData`;
+- four controlled keys emit `update:*` **together with** semantic events (expand/check/select/load);
+- `defaultExpandAll` on `Tree` only expands nodes **with children**; on `DirectoryTree` it expands **all** entity keys (rc semantics);
+- keyboard: ↑↓ / Home / End / ←→ / Enter / Space (check ⇒ toggle, else select).

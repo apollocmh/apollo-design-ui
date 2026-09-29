@@ -54,7 +54,10 @@ push('options:primitive', { options: OPTIONS });
 push('options:object', { options: OBJECT_OPTIONS, value: 'b' });
 push('options:empty', { options: [] });
 // 两侧都不传 prefixCls → antd 用 `ant-segmented`、我们用 `apollo-segmented`（消费侧 allow 登记为 D6）。
-cases.push({ id: 'prefix-cls:no-props', html: renderToStaticMarkup(withIconPrefix(h(Segmented, { options: OPTIONS }))) });
+cases.push({
+  id: 'prefix-cls:no-props',
+  html: renderToStaticMarkup(withIconPrefix(h(Segmented, { options: OPTIONS }))),
+});
 push('prefix-cls:custom', { prefixCls: 'custom', options: OPTIONS });
 
 // ---- 2. 选中 ----
@@ -103,7 +106,11 @@ push('icon:string', {
 cases.push({
   id: 'rtl',
   html: renderToStaticMarkup(
-    h(ConfigProvider, { iconPrefixCls: 'apollo-icon', direction: 'rtl' }, h(Segmented, { prefixCls: PREFIX, options: OPTIONS })),
+    h(
+      ConfigProvider,
+      { iconPrefixCls: 'apollo-icon', direction: 'rtl' },
+      h(Segmented, { prefixCls: PREFIX, options: OPTIONS }),
+    ),
   ),
 });
 
@@ -130,7 +137,9 @@ if (check) {
   const next = JSON.stringify(baseline.cases, null, 2);
   const prev = JSON.stringify(current.cases, null, 2);
   if (next !== prev) {
-    console.error('baseline drift detected: run `node tests/compat/baseline/segmented.mjs` to update.');
+    console.error(
+      'baseline drift detected: run `node tests/compat/baseline/segmented.mjs` to update.',
+    );
     process.exit(1);
   }
   console.log('segmented baseline up to date.');

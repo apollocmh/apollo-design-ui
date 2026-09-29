@@ -85,7 +85,11 @@ export default defineComponent({
     );
 
     // ======================== 受控包装的选中态 ========================
-    const selectedKeysRef = ref<TreeKey[]>([...(props.defaultSelectedKeys ?? [])]);
+    // ⚠️ 初值必须含受控 selectedKeys（rc useControlledState(value, props.selectedKeys)
+    //    的受控初值语义）—— 只拷 default 会让受控首挂丢失（实测踩过）
+    const selectedKeysRef = ref<TreeKey[]>([
+      ...(props.selectedKeys ?? props.defaultSelectedKeys ?? []),
+    ]);
     watch(
       () => props.selectedKeys,
       (keys) => {

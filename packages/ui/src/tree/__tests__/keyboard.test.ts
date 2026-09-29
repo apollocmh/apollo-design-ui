@@ -39,11 +39,9 @@ async function setup(props: Record<string, unknown> = {}) {
 //    active 节点会困在哨兵动画容器内（rc 同判：容器内节点不带 active）——
 //    断言 DOM 前需手动派发 animationend 收尾动效。
 function endExpandMotion(): void {
-  document
-    .querySelectorAll('.apollo-tree-treenode-motion')
-    .forEach((el) => {
-      el.dispatchEvent(new Event('animationend', { bubbles: true }));
-    });
+  document.querySelectorAll('.apollo-tree-treenode-motion').forEach((el) => {
+    el.dispatchEvent(new Event('animationend', { bubbles: true }));
+  });
 }
 const press = async (
   w: ReturnType<typeof mount>,

@@ -13,8 +13,7 @@ const OPTIONS = ['Daily', 'Weekly', 'Monthly', 'Quarterly'];
 export default {
   basic: () => box(h(Segmented, { options: OPTIONS, value: 'Weekly' })),
 
-  'shape-round': () =>
-    box(h(Segmented, { options: OPTIONS, value: 'Monthly', shape: 'round' })),
+  'shape-round': () => box(h(Segmented, { options: OPTIONS, value: 'Monthly', shape: 'round' })),
 
   vertical: () =>
     box(
@@ -25,10 +24,21 @@ export default {
 
   sizes: () =>
     box(
-      h('div', { style: { display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' } }, [
-        h(Segmented, { size: 'small', options: OPTIONS, value: 'Weekly' }),
-        h(Segmented, { options: OPTIONS, value: 'Weekly' }),
-        h(Segmented, { size: 'large', options: OPTIONS, value: 'Weekly' }),
-      ]),
+      h(
+        'div',
+        {
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            alignItems: 'flex-start',
+          },
+        },
+        [
+          h(Segmented, { size: 'small', options: OPTIONS, value: 'Weekly' }),
+          h(Segmented, { options: OPTIONS, value: 'Weekly' }),
+          h(Segmented, { size: 'large', options: OPTIONS, value: 'Weekly' }),
+        ],
+      ),
     ),
 };

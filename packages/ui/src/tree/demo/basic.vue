@@ -1,19 +1,25 @@
 <script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo（节点选择/展开/勾选交互演示）
-import { ref } from 'vue';
-import { Tree } from '../index';
-
-const expandedKeys = ref(['0-0-0', '0-0-1']);
-const selectedKeys = ref(['0-1']);
-const checkedKeys = ref(['0-0-0']);
+import { Tree } from '@apollo-design/ui';
 
 const treeData = [
   {
     title: 'parent 1',
     key: '0-0',
     children: [
-      { title: 'parent 1-0', key: '0-0-0', children: [{ title: 'leaf', key: '0-0-0-0' }] },
-      { title: 'parent 1-1', key: '0-0-1', children: [{ title: 'leaf', key: '0-0-1-0' }] },
+      {
+        title: 'parent 1-0',
+        key: '0-0-0',
+        disabled: true,
+        children: [
+          { title: 'leaf', key: '0-0-0-0', disableCheckbox: true },
+          { title: 'leaf', key: '0-0-0-1' },
+        ],
+      },
+      {
+        title: 'parent 1-1',
+        key: '0-0-1',
+        children: [{ title: 'sss', key: '0-0-1-0', style: { color: '#1677ff' } }],
+      },
     ],
   },
 ];
@@ -21,10 +27,10 @@ const treeData = [
 
 <template>
   <Tree
-    v-model:expandedKeys="expandedKeys"
-    v-model:selectedKeys="selectedKeys"
-    v-model:checkedKeys="checkedKeys"
     checkable
+    :default-expanded-keys="['0-0-0', '0-0-1']"
+    :default-selected-keys="['0-0-1']"
+    :default-checked-keys="['0-0-0', '0-0-1']"
     :tree-data="treeData"
   />
 </template>
