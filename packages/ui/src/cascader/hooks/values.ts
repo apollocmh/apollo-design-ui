@@ -172,7 +172,6 @@ export function createSelectHandler(
 ): (valuePath: ValueCell) => void {
   // ⚠️ 参数兜底：调用方（S4 薄壳）在响应式更新竞态下可能传入 undefined 快照
   const checked = checkedValues ?? [];
-  const halfChecked = halfCheckedValues ?? [];
   const missing = missingCheckedValues ?? [];
 
   return (valuePath: ValueCell): void => {

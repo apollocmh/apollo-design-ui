@@ -453,6 +453,38 @@ const RUNTIME_ASSIGNED_VARS = {
 };
 
 /**
+ * **opt-in 容器查询变量**：只被 `@container style(<var>)` 当特性开关用的变量。
+ *
+ * 为什么单列一张表（与 RUNTIME_ASSIGNED_VARS 的区别）：
+ *   那张表的语义是「赋值点在我们的渲染代码里，门禁看不到 JS」；这里的变量**没有赋值点**
+ *   —— 它留给用户（`style="--x: …"`）或未来的 token 覆盖去写。
+ *
+ * 为什么**不能**在 CSS 里补一条声明：`@container style(--x)` 的语义是「`--x` 有值时这段
+ * 规则才生效」。一旦声明了它（哪怕是空值或默认值 ⇒ 会进入 declared），查询就恒真，
+ * 那批规则会无条件应用 —— 这不是修 bug，是**改变行为**。
+ *
+ * 豁免是**可自证**的（见 checkUiCssTokens 里对这张表的强制）：
+ *   ① 该变量在 ui 的全部 CSS 里都不许出现声明（`--x:`）；
+ *   ② 它至少要出现在一个 `@container style(<它>)` 守卫里。
+ *   ⇒ 「写进表」本身不构成豁免，必须同时满足这两条。
+ */
+const CONTAINER_QUERY_OPT_IN_VARS = {
+  /**
+   * steps 的 `descriptionMaxWidth`（antd 的 Component Token，**默认 `undefined`**）。
+   *
+   * 上游证据（`tests/visual/debug` 的 steps dump 实测）：antd 6.6.4 产物里有 `@container`
+   * 但**没有任何 `container-type`**，且 `--ant-steps-description-max-width` **只被引用、
+   * 从不声明**（`steps/style/index.js` 里 `descriptionMaxWidth: undefined` 的注释
+   * 就是「should be `undefined` to create css var」）。
+   *
+   * 语义：默认（未设置）⇒ `@container style(...)` 不匹配 ⇒ 那批「按描述宽度对齐」的规则
+   * 不应用；用户设置后才生效。本仓的移植与上游一致，且**未移植**该 token 的覆盖入口
+   * （登记的缺口，见 `packages/ui/src/steps/README.md`）。
+   */
+  '--apollo-steps-description-max-width': 'steps/style/index.ts（上游同样只引用不声明）',
+};
+
+/**
  * B7 · ui：组件 CSS 引用的每个 `--apollo-*` 变量都必须真实存在。
  *
  * 为什么 ui 的 B7 与 theme 的不是同一件事：
@@ -510,6 +542,16 @@ function checkUiCssTokens(dir, name) {
   //    渲染代码里（`style` 对象）—— 门禁看不到 JS，所以逐条登记。新增必须给出赋值点。
   for (const v of Object.keys(RUNTIME_ASSIGNED_VARS)) declared.add(v);
 
+  // ⚠️ **opt-in 容器查询变量**（2026-09-30 补）：只被 `@container style(<var>)` 当作
+  //    「特性开关」消费的变量 —— **声明它会让查询恒真、改变语义**，所以上游也刻意不声明。
+  //
+  //    这一类与 RUNTIME_ASSIGNED_VARS 的区别是「没有赋值点」：它不是被我们的代码写的，
+  //    而是留给**用户**（`style="--x: …"`）或未来的 token 覆盖去写。所以不能塞进那张表
+  //    （那里的约定是「必须写清赋值点」），需要单列，并且**豁免要可自证**：
+  //    下面会强制检查两条 —— ①它不能在任何 ui CSS 里被声明；②它至少要出现在一个
+  //    `@container style(<它>)` 守卫里。只写进表而不满足这两条 ⇒ 报错。
+  for (const v of Object.keys(CONTAINER_QUERY_OPT_IN_VARS)) declared.add(v);
+
   const unknown = new Map();
   let referenced = 0;
   for (const file of cssFiles) {
@@ -539,6 +581,35 @@ function checkUiCssTokens(dir, name) {
       .join(', ');
     add(name, 'B7', 'FAIL', `CSS 引用了 theme 未声明的变量（${unknown.size} 个）: ${detail}`);
     return false;
+  }
+
+  // opt-in 容器查询变量的**自证**：只写进表不构成豁免，见 CONTAINER_QUERY_OPT_IN_VARS 的说明
+  {
+    const allCss = cssFiles.map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+    for (const [variable, where] of Object.entries(CONTAINER_QUERY_OPT_IN_VARS)) {
+      const declRe = new RegExp(`${variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*:`);
+      if (declRe.test(allCss)) {
+        add(
+          name,
+          'B7',
+          'FAIL',
+          `opt-in 容器查询变量 ${variable} 被声明了 —— 声明会让 @container 查询恒真、改变语义（${where}）`,
+        );
+        return false;
+      }
+      const guardRe = new RegExp(
+        `@container\\s+style\\(\\s*${variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\)`,
+      );
+      if (!guardRe.test(allCss)) {
+        add(
+          name,
+          'B7',
+          'FAIL',
+          `opt-in 容器查询变量 ${variable} 没有出现在任何 \`@container style(...)\` 守卫里 —— 不能这样豁免（${where}）`,
+        );
+        return false;
+      }
+    }
   }
 
   add(

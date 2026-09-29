@@ -22,6 +22,18 @@ afterEach(() => {
 const OPTIONS = ['Daily', 'Weekly', 'Monthly'];
 
 const findInputs = (w: ReturnType<typeof mount>) => w.findAll('input');
+
+/**
+ * 取第 index 项（`noUncheckedIndexedAccess` 下的显式化；越界**抛错**而不是塞 `undefined`
+ * —— 与 pagination 的 `at()` 同判，避免把「取不到」静默变成后续的 TypeError）。
+ */
+const at = <T>(list: T[], index: number): T => {
+  const item = list[index];
+  if (item === undefined) {
+    throw new Error(`期望至少有 ${index + 1} 个元素，实际 ${list.length} 个`);
+  }
+  return item;
+};
 /** findAll 的元素索引可能越界（noUncheckedIndexedAccess）—— helper 统一吃 undefined。 */
 const keydown = (input: DOMWrapper<Element> | undefined, key: string) =>
   input?.trigger('keydown', { key });
@@ -33,7 +45,7 @@ describe('Segmented · 键盘导航', () => {
   it('ArrowRight：选中下一项', async () => {
     const onChange = vi.fn();
     const w = mount(Segmented, { props: { options: OPTIONS }, attrs: { onChange } });
-    await keydown(findInputs(w)[0], 'ArrowRight');
+    await keydown(at(findInputs(w), 0), 'ArrowRight');
     expect(onChange).toHaveBeenCalledWith('Weekly');
   });
 
@@ -41,7 +53,7 @@ describe('Segmented · 键盘导航', () => {
   it('ArrowLeft：第一项环绕到最后一项', async () => {
     const onChange = vi.fn();
     const w = mount(Segmented, { props: { options: OPTIONS }, attrs: { onChange } });
-    await keydown(findInputs(w)[0], 'ArrowLeft');
+    await keydown(at(findInputs(w), 0), 'ArrowLeft');
     expect(onChange).toHaveBeenCalledWith('Monthly');
   });
 
@@ -52,9 +64,9 @@ describe('Segmented · 键盘导航', () => {
       props: { options: OPTIONS, value: 'Weekly' },
       attrs: { onChange },
     });
-    await keydown(findInputs(w)[1], 'ArrowDown');
+    await keydown(at(findInputs(w), 1), 'ArrowDown');
     expect(onChange).toHaveBeenCalledWith('Monthly');
-    await keydown(findInputs(w)[1], 'ArrowUp');
+    await keydown(at(findInputs(w), 1), 'ArrowUp');
     expect(onChange).toHaveBeenCalledWith('Daily');
   });
 
@@ -71,7 +83,7 @@ describe('Segmented · 键盘导航', () => {
       },
       attrs: { onChange },
     });
-    await keydown(findInputs(w)[0], 'ArrowRight');
+    await keydown(at(findInputs(w), 0), 'ArrowRight');
     expect(onChange).toHaveBeenCalledWith('c');
   });
 
@@ -95,7 +107,7 @@ describe('Segmented · 键盘导航', () => {
       attrs: { onChange },
     });
     // 非 disabled 项（B）可以正常导航
-    await keydown(findInputs(w)[1], 'ArrowLeft');
+    await keydown(at(findInputs(w), 1), 'ArrowLeft');
     expect(onChange).toHaveBeenCalledWith('b');
     w.unmount();
   });
@@ -107,7 +119,7 @@ describe('Segmented · 键盘导航', () => {
       props: { options: OPTIONS, value: 'Monthly' },
       attrs: { onChange },
     });
-    await keydown(findInputs(w)[2], 'ArrowRight');
+    await keydown(at(findInputs(w), 2), 'ArrowRight');
     expect(onChange).toHaveBeenCalledWith('Daily');
   });
 
@@ -118,7 +130,7 @@ describe('Segmented · 键盘导航', () => {
       props: { options: OPTIONS, disabled: true },
       attrs: { onChange },
     });
-    await keydown(findInputs(w)[0], 'ArrowRight');
+    await keydown(at(findInputs(w), 0), 'ArrowRight');
     expect(onChange).not.toHaveBeenCalled();
   });
 });
@@ -131,7 +143,7 @@ describe('Segmented · 焦点样式判别', () => {
   //    这里只钉 Tab → focused 出现与 blur → 消失。
   it('Tab 后聚焦：选中项挂 -item-focused', async () => {
     const w = mount(Segmented, { props: { options: OPTIONS }, attachTo: document.body });
-    const input = findInputs(w)[0];
+    const input = at(findInputs(w), 0);
     await input.trigger('focus');
     // 还没按 Tab：无 focused 类
     expect(w.find('label').classes()).not.toContain('apollo-segmented-item-focused');
@@ -144,7 +156,7 @@ describe('Segmented · 焦点样式判别', () => {
   // blur 移除 isFocused
   it('blur 后 -item-focused 消失', async () => {
     const w = mount(Segmented, { props: { options: OPTIONS }, attachTo: document.body });
-    const input = findInputs(w)[0];
+    const input = at(findInputs(w), 0);
     await input.trigger('focus');
     await keyup(input, 'Tab');
     expect(w.find('label').classes()).toContain('apollo-segmented-item-focused');

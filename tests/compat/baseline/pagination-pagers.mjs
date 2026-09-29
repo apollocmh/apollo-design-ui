@@ -44,8 +44,9 @@ function extract(html) {
   const body = optionsAt > 0 ? html.slice(0, optionsAt) : html;
   const items = [];
   const tagRe = /<li\b[^>]*>/g;
-  let m;
-  while ((m = tagRe.exec(body)) !== null) {
+  // ⚠️ 用 for 而不是 `while ((m = re.exec(...)) !== null)` —— 后者是赋值写在表达式里，
+  //    biome 的 `noAssignInExpressions` 会报错（error 级，会让 lint 门禁红）。
+  for (let m = tagRe.exec(body); m !== null; m = tagRe.exec(body)) {
     const tag = m[0];
     const cls = /class="([^"]*)"/.exec(tag)?.[1] ?? '';
     if (cls.includes('-total-text')) continue;

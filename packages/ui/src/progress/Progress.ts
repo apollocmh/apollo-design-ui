@@ -39,7 +39,6 @@ import type {
 import { getSize, getSuccessPercent, isLightColor, validProgress } from './utils';
 
 const ProgressStatuses: readonly ProgressStatus[] = ['normal', 'exception', 'active', 'success'];
-const ProgressTypes: readonly ProgressType[] = ['line', 'circle', 'dashboard'];
 
 const ProgressComponent = defineComponent({
   name: 'AProgress',

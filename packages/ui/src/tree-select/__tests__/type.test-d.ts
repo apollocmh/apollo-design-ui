@@ -3,7 +3,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { TreeSelectDataNode, TreeSelectValue } from '../interface';
+import type { TreeSelectDataNode } from '../interface';
 import type TreeSelect from '../TreeSelect';
 import {
   SHOW_ALL,
@@ -11,10 +11,6 @@ import {
   SHOW_PARENT,
   type ShowCheckedStrategy,
 } from '../utils/strategy-util';
-
-const treeData: TreeSelectDataNode[] = [
-  { title: 'p', value: '0-0', children: [{ title: 'l', value: '0-0-0' }] },
-];
 
 describe('TreeSelect · props 类型', () => {
   it('treeData 节点：value 可选（key 兜底）、children 递归', () => {

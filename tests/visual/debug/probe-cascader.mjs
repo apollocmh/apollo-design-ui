@@ -73,7 +73,7 @@ const info = await page.evaluate(() => {
     let n = 0;
     try {
       n = s.cssRules?.length ?? 0;
-    } catch (e) {
+    } catch {
       n = -1;
     }
     out.sheets.push({ href: s.href, rules: n });
@@ -86,7 +86,7 @@ const info = await page.evaluate(() => {
         const sel = r.selectorText ?? '';
         if (sel.includes('cascader') && out.matched.length < 12) out.matched.push(sel);
       }
-    } catch (e) {
+    } catch {
       /* ignore */
     }
   }

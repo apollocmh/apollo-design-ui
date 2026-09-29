@@ -88,6 +88,29 @@ export interface SegmentedSemanticStyles {
   item?: Record<string, unknown>;
 }
 
+/**
+ * 语义化的**运行时输入**（对象 | 函数两形态）。
+ *
+ * ⚠️ 为什么单列一个类型（照 `ModalSemanticTypeInput` 的范式，PITFALLS 185 的同族）：
+ *   `classNames` / `styles` 的**公开类型**（`SegmentedSemanticClassNames` 等）刻意只有
+ *   **对象形态**；但组件运行时**接受函数形态**（`classNamesAndFn` / `stylesAndFn`，
+ *   裁决 `empty-semantic-fn = B`），`style-class` demo 也在传函数。
+ *   只声明对象形态会让模板里的 `:styles="fn"` 被判「不可赋值」（TS2560），
+ *   而文档注释还写着「支持函数式」—— 类型与文档、与 demo 三方不一致。
+ *
+ * 入参用 `Record<string, unknown>` 而不是 `SegmentedProps`：要能直接喂给
+ * `useMergeSemantic` 的 `SemanticInput`（它要求 `(info: SemanticInfo<P>) => …`，
+ * `P` 由调用方选）；传 `SegmentedProps` 会因**参数逆变**不可赋值。
+ */
+export interface SegmentedSemanticTypeInput {
+  classNames?:
+    | SegmentedSemanticClassNames
+    | ((info: { props: Record<string, unknown> }) => SegmentedSemanticClassNames);
+  styles?:
+    | SegmentedSemanticStyles
+    | ((info: { props: Record<string, unknown> }) => SegmentedSemanticStyles);
+}
+
 /** Segmented 的 ref（antd 是 `HTMLDivElement`）。 */
 export interface SegmentedRef {
   nativeElement: HTMLDivElement | null;
@@ -123,10 +146,10 @@ export interface SegmentedProps {
   orientation?: Orientation;
   /** 形状：`round` 时根与 item / thumb 全圆角。 */
   shape?: 'default' | 'round';
-  /** 语义化类名（root/icon/label/item），支持函数式。 */
-  classNames?: SegmentedSemanticClassNames;
-  /** 语义化样式（root/icon/label/item），支持函数式。 */
-  styles?: SegmentedSemanticStyles;
+  /** 语义化类名（root/icon/label/item），**对象 | 函数**两形态。 */
+  classNames?: SegmentedSemanticTypeInput['classNames'];
+  /** 语义化样式（root/icon/label/item），**对象 | 函数**两形态。 */
+  styles?: SegmentedSemanticTypeInput['styles'];
   /** 内联样式（root）。 */
   style?: Record<string, unknown>;
 }

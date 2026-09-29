@@ -216,8 +216,20 @@ for (const c of componentsDoc.components) {
 }
 
 // —— 横切 ——
+//
+// ⚠️ 横切项的**完成状态跨运行保留**（与组件侧同判，2026-09-30 补）。
+//    此前 `status` 写死成 `'todo'` 且源文件无 `status` 字段 ⇒ 这 5 项永远停在 `ready`，
+//    没有任何地方能声明「我完成了」。取值优先级：
+//      源文件 `status` > 上一次生成结果里的 `status` > `'todo'`
+const prevCrossById = (() => {
+  if (!fs.existsSync(OUT_FILE)) return new Map();
+  const prev = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8'));
+  return new Map((prev.items ?? []).map((i) => [i.id, i]));
+})();
+
 for (const x of CROSS_ITEMS) {
   const ws = wsById.get(x.workstream) ?? wsById.get('WS-X');
+  const prev = prevCrossById.get(x.id);
   items.push({
     id: x.id,
     kind: 'crosscut',
@@ -227,12 +239,18 @@ for (const x of CROSS_ITEMS) {
     wave: x.wave,
     dependsOn: x.dependsOn ?? [],
     conflicts: [...(ws?.shared ?? [])],
-    status: 'todo',
+    // 见上：源文件优先，其次保留上一次生成的值
+    status: x.status ?? prev?.status ?? 'todo',
     decidedBy: x.decidedBy ? [x.decidedBy] : [],
     complexity: 'M',
     unblocks: x.unblocksAll ? items.length : 0,
     why: x.why,
     doneWhen: x.doneWhen ?? [],
+    // 完成证据（`status: 'done'` 时 E18 强制要求，见 registry/source/workstreams.mjs 的说明）
+    ...((x.completedAt ?? prev?.completedAt)
+      ? { completedAt: x.completedAt ?? prev?.completedAt }
+      : {}),
+    ...((x.evidence ?? prev?.evidence) ? { evidence: x.evidence ?? prev?.evidence } : {}),
   });
 }
 

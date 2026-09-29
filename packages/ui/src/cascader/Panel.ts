@@ -43,10 +43,10 @@ export interface CascaderPanelProps {
   showCheckedStrategy?: ShowCheckedStrategy;
   loadData?: (options: BaseOptionType[]) => void;
   expandTrigger?: 'click' | 'hover';
-  expandIcon?: unknown;
-  loadingIcon?: unknown;
+  expandIcon?: VNodeChild;
+  loadingIcon?: VNodeChild;
   direction?: 'ltr' | 'rtl';
-  notFoundContent?: unknown;
+  notFoundContent?: VNodeChild;
   disabled?: boolean;
   optionRender?: (option: BaseOptionType) => unknown;
 }
@@ -78,10 +78,10 @@ const CascaderPanel = defineComponent({
       default: undefined,
     },
     expandTrigger: { type: String as PropType<'click' | 'hover'>, default: undefined },
-    expandIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    loadingIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    expandIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    loadingIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: 'ltr' },
-    notFoundContent: { type: null as unknown as PropType<unknown>, default: 'Not Found' },
+    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: 'Not Found' },
     disabled: { type: Boolean, default: undefined },
     optionRender: {
       type: Function as PropType<(option: BaseOptionType) => unknown>,

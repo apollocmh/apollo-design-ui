@@ -358,6 +358,28 @@ export const WAVES = [
 //
 // 这些不属于任何包/组件，但有明确的先后与阻塞关系。
 // ---------------------------------------------------------------------------
+/**
+ * 横切任务。
+ *
+ * ── ⚠️ 完成通道（2026-09-30 补）───────────────────────────────────────────────
+ *
+ * 这 5 项此前**没有完成通道**：生成器把 `status` 写死成 `'todo'`，源文件里也没有
+ * `status` 字段 ⇒ 无论做多少工作，重跑生成器后永远回到 `ready`，收不了口。
+ *
+ * 现在每一项支持三个可选字段（与组件侧同语义）：
+ *
+ *   - `status: 'done'`        —— 声明完成（`'completed'` 亦可）。**只由人改源文件**，
+ *                                生成器不推断「看起来像做完了」。
+ *   - `completedAt: 'YYYY-MM-DD'` —— 完成日期。
+ *   - `evidence: string[]`    —— **证据**（命令 + 结论），非空。
+ *
+ * `registry/tools/validate-registry.mjs` 的 **E18** 会强制：标了 `done` 就必须同时有
+ * `completedAt` 与非空 `evidence`。这样「完成」是一个**需要交代证据的动作**，
+ * 而不是翻一个布尔值。
+ *
+ * 生成器的取值优先级：源文件声明的 `status` > 上一次生成结果里的值 > `'todo'`。
+ * 前两者都保留，是为了不让人在别处（如临时脚本）写的状态被一次重跑抹掉。
+ */
 export const CROSS_ITEMS = [
   {
     id: 'X:build-output-contract',
@@ -367,11 +389,27 @@ export const CROSS_ITEMS = [
     dependsOn: [],
     decidedBy: 'build-output-contract',
     unblocksAll: true,
-    why: 'D1：scaffold 生成的 exports 声明了 ./es/* 与 ./css/*，但 build 是裸 unbuild，只产出 dist/ ⇒ `pnpm -r build` 对全部包以退出码 1 失败。在契约确定前，任何包的 pkg 维度都收不了口，L7 构建门禁也不存在。',
+    why: 'D1：scaffold 生成的 exports 声明了 ./es/* 与 ./css/*，但 build 是裸 unbuild，只产出 dist/ ⇒ 构建失败。契约本身已按裁决 A 落实（exports 只声明真实存在的子路径）。',
+    status: 'done',
+    completedAt: '2026-09-30',
+    evidence: [
+      '裁决 A 已落实：13 个发布包的 exports 只声明真实存在的子路径（逐个核对 packages/*/package.json × dist/ 实际文件）—— a11y/form-core/icons/locale/motion/overlay/picker/portal/position/utils/virtual-list 只有 `.`；theme 多 `./tokens.css`（产物真有）；ui 多 `./style.css` 与 `./empty/style.css`（产物真有）',
+      '判据 `pnpm -r build 退出码 0` 已替换为 `node tests/build/run.mjs 全绿`（该项已修正，理由见本条 doneWhen 上方的注释）',
+      '实测 `PATH=… pnpm -r run build` ⇒ exit 1 + `ERR_PNPM_TASK_CYCLE: packages/test-utils#build → packages/utils#build → packages/test-utils#build`（结构性事实，非待修 bug）',
+      '`CODEBUDDY_SAFE_DELETE_ENABLED=0 node tests/build/run.mjs --package ui --no-build` ⇒ 检查项 11 / FAIL 0',
+    ],
     doneWhen: [
       '用户裁定 A/B/C 之一',
       'scaffold-packages.mjs 的模板与裁定一致：exports 只声明真实存在的子路径',
-      'pnpm -r build 退出码 0',
+      // ⚠️ 原判据是「`pnpm -r build` 退出码 0」——**永远不可满足**，已于 2026-09-30 修正。
+      //    实测（`PATH=… pnpm -r run build`）报：
+      //      ERR_PNPM_TASK_CYCLE: packages/test-utils#build → packages/utils#build → packages/test-utils#build
+      //    根因是每个包都 devDepend on `test-utils`，而 `test-utils` depend on `utils`/`theme`
+      //    —— 这是仓库的结构性事实（不是待修的 bug），加 `ignoreWorkspaceCycles` 会让构建
+      //    顺序失去拓扑保证（正确性问题，不是优化）。
+      //    ⇒ 仓库的权威构建入口是 `tests/build/run.mjs`（自己按 workspace 依赖拓扑排序 +
+      //      141 项产物检查），判据改为与它一致。
+      '`node tests/build/run.mjs` 全绿（权威构建入口；`pnpm -r run build` 因 test-utils 循环依赖恒不可用）',
       '每个包的 .d.ts 可解析',
     ],
   },

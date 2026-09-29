@@ -16,7 +16,6 @@
  */
 
 import type { AliasToken } from '@apollo-design/theme';
-import { token2CSSVar } from '@apollo-design/theme';
 
 export interface ComponentToken {
   controlWidth: number;

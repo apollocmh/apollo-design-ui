@@ -281,18 +281,6 @@ export const Steps = defineComponent({
         .join(' '),
     );
 
-    // eslint-disable-next-line no-console
-    console.log(
-      'DBG cls:',
-      JSON.stringify({
-        isDot: isDot.value,
-        mergedType: mergedType.value,
-        isInline: isInline.value,
-        canApply: canApplyMaxCount,
-        pct: mergedPercent.value,
-      }),
-    );
-
     // ---- root style ----
     const rootStyle = computed(() => ({
       ...(props.offset !== 0

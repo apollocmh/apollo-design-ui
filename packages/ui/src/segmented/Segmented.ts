@@ -70,6 +70,7 @@ import type {
   SegmentedProps,
   SegmentedSemanticClassNames,
   SegmentedSemanticStyles,
+  SegmentedSemanticTypeInput,
   SegmentedValue,
 } from './interface';
 
@@ -140,11 +141,11 @@ export const SegmentedComponent = defineComponent({
     shape: { type: String as PropType<SegmentedProps['shape']>, default: 'default' },
     // 支持函数式语义（antd 的 classNamesAndFn / stylesAndFn，裁决 empty-semantic-fn = B）
     classNames: {
-      type: [Object, Function] as PropType<SegmentedProps['classNames']>,
+      type: [Object, Function] as unknown as PropType<SegmentedSemanticTypeInput['classNames']>,
       default: undefined,
     },
     styles: {
-      type: [Object, Function] as PropType<SegmentedProps['styles']>,
+      type: [Object, Function] as unknown as PropType<SegmentedSemanticTypeInput['styles']>,
       default: undefined,
     },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
@@ -267,7 +268,10 @@ export const SegmentedComponent = defineComponent({
 
       // ---- semantic classNames / styles（合并顺序 = antd 薄壳）----
       // 函数式输入在此 resolve（与 antd 的 resolveStyleOrClass 同构）
-      const info = { props: props as SegmentedProps };
+      // ⚠️ `props` 收敛成 `Record<string, unknown>`：函数式输入的类型是
+      //    `(info: { props: Record<string, unknown> }) => …`（参数逆变）——
+      //    与 `ModalSemanticTypeInput` 同判，传 `SegmentedProps` 会不可赋值。
+      const info = { props: props as unknown as Record<string, unknown> };
       const contextClassNames = resolveSemantic(
         (context as { classNames?: SegmentedSemanticClassNames }).classNames,
         info,

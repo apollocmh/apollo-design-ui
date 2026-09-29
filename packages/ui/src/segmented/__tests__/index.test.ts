@@ -20,6 +20,18 @@ afterEach(() => {
 
 const OPTIONS = ['Daily', 'Weekly', 'Monthly'];
 
+/**
+ * 取第 index 项（`noUncheckedIndexedAccess` 下的显式化；越界**抛错**而不是塞 `undefined`
+ * —— 与 pagination 的 `at()` 同判，避免把「取不到」静默变成后续的 TypeError）。
+ */
+const at = <T>(list: T[], index: number): T => {
+  const item = list[index];
+  if (item === undefined) {
+    throw new Error(`期望至少有 ${index + 1} 个元素，实际 ${list.length} 个`);
+  }
+  return item;
+};
+
 const findItems = (w: ReturnType<typeof mount>) => w.findAll('label');
 const findInputs = (w: ReturnType<typeof mount>) => w.findAll('input');
 
@@ -29,9 +41,9 @@ describe('Segmented · 基本行为', () => {
     const w = mount(Segmented, { props: { options: OPTIONS } });
     const items = findItems(w);
     expect(items).toHaveLength(3);
-    expect(items[0].classes()).toContain('apollo-segmented-item-selected');
+    expect(at(items, 0).classes()).toContain('apollo-segmented-item-selected');
     // rc 判据：defaultValue ?? options[0]?.value —— 没给 defaultValue 自动选第一项
-    expect(items[0].find('input').element.checked).toBe(true);
+    expect(at(items, 0).find('input').element.checked).toBe(true);
     expect(w.find('.apollo-segmented-item-label').text()).toBe('Daily');
   });
 
@@ -184,8 +196,8 @@ describe('Segmented · 基本行为', () => {
       },
     });
     const labels = w.findAll('.apollo-segmented-item-label');
-    expect(labels[0].attributes('title')).toBe('Option A');
-    expect(labels[1].attributes('title')).toBe('B');
+    expect(at(labels, 0).attributes('title')).toBe('Option A');
+    expect(at(labels, 1).attributes('title')).toBe('B');
   });
 
   // antd 薄壳：tooltip（itemRender 包 Tooltip）—— 非受控浮层由 tooltip 组件自身测试覆盖

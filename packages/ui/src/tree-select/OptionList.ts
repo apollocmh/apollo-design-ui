@@ -19,7 +19,7 @@
 import type { PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h, ref, shallowRef, watch } from 'vue';
 import { Tree } from '../tree';
-import type { BasicDataNode, TreeKey } from '../tree/interface';
+import type { TreeKey } from '../tree/interface';
 import type { TreeSelectDataNode } from './interface';
 import type { FilledFieldNames } from './utils/value-util';
 import { getAllKeys, isCheckDisabled } from './utils/value-util';
@@ -104,7 +104,7 @@ const OptionList = defineComponent({
     treeNodeFilterProp: { type: String, default: 'value' },
     keyEntities: { type: Object as PropType<Record<string, unknown>>, required: true },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const treeRef = shallowRef<{
       scrollTo: (s: unknown) => void;
       onKeyDown: (e: KeyboardEvent) => void;
@@ -315,6 +315,16 @@ const OptionList = defineComponent({
           break;
       }
     };
+
+    // 🚨 曾漏了这段 expose（2026-09-30 修）：外层 `TreeSelect.ts` 有
+    //    `optionListRef` + `onInputKeyDown → optionListRef.value?.onKeyDown(event)`
+    //    的转发链，README 也写了「键盘方向键代理 Tree.onKeyDown」—— 但本组件**从未
+    //    expose** ⇒ `optionListRef.value` 里拿不到 `onKeyDown` ⇒ **弹层里按方向键没反应**
+    //    （转发静默打空）。
+    //    发现路径：`biome check` 报 `onKeyDown` 未被引用 —— 与 tree 的
+    //    `onNodeContextMenu` 漏接线是同一类「定义了但没接线」的问题。
+    //    与 `tree/Tree.ts` 的 expose 同构（rc 的 ref API：`scrollTo` / `keyEntities` / `onKeyDown`）。
+    expose({ onKeyDown });
 
     // ========================= loadData =========================
     // rc：搜索期间停用异步加载（hasLoadDataFn）

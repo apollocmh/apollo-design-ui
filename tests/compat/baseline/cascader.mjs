@@ -25,7 +25,6 @@ const require = createRequire(import.meta.url);
 const antdPkg = require('antd/package.json');
 const antd = require('antd');
 const { Cascader, ConfigProvider } = antd;
-const PureCascader = Cascader._InternalPanelDoNotUseOrYouWillBeFired;
 
 const BP = { prefixCls: 'apollo-cascader' };
 const wrap = (node) =>

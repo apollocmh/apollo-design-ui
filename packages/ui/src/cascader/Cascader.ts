@@ -18,16 +18,7 @@
 
 import { DownOutlined, LeftOutlined, LoadingOutlined, RightOutlined } from '@apollo-design/icons';
 import { useControlledValue, useId } from '@apollo-design/utils';
-import {
-  computed,
-  defineComponent,
-  h,
-  type PropType,
-  ref,
-  shallowRef,
-  type VNodeChild,
-  watch,
-} from 'vue';
+import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
 
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
@@ -83,14 +74,14 @@ const Cascader = defineComponent({
     variant: { type: String as PropType<'outlined' | 'borderless' | 'filled'>, default: undefined },
     bordered: { type: Boolean, default: true },
     allowClear: {
-      type: [Boolean, Object] as PropType<boolean | { clearIcon?: unknown }>,
+      type: [Boolean, Object] as PropType<boolean | { clearIcon?: VNodeChild }>,
       default: true,
     },
-    clearIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    removeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    suffixIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    expandIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    loadingIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    clearIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    suffixIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    expandIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    loadingIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     expandTrigger: { type: String as PropType<'click' | 'hover'>, default: undefined },
     loadData: {
       type: Function as PropType<(options: BaseOptionType[]) => void>,
@@ -102,13 +93,13 @@ const Cascader = defineComponent({
     placement: { type: String as PropType<SelectCommonPlacement>, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: 'ltr' },
     showSearch: {
-      type: [Boolean, Object] as PropType<boolean | (SearchConfig & { searchIcon?: unknown })>,
+      type: [Boolean, Object] as PropType<boolean | (SearchConfig & { searchIcon?: VNodeChild })>,
       default: undefined,
     },
     searchValue: { type: String, default: undefined },
     autoClearSearchValue: { type: Boolean, default: undefined },
-    placeholder: { type: null as unknown as PropType<unknown>, default: undefined },
-    notFoundContent: { type: null as unknown as PropType<unknown>, default: undefined },
+    placeholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     displayRender: {
       type: Function as PropType<
         (labels: unknown[], options: (BaseOptionType | null)[]) => unknown
@@ -140,8 +131,14 @@ const Cascader = defineComponent({
     style: { type: Object as PropType<StyleLike>, default: undefined },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
-    maxTagPlaceholder: { type: null as unknown as PropType<unknown>, default: undefined },
-    placeholder2: { type: null as unknown as PropType<unknown>, default: undefined },
+    // antd 的 maxTagPlaceholder 是 `ReactNode | ((omittedValues) => ReactNode)` ⇒ 两形态
+    maxTagPlaceholder: {
+      type: [String, Number, Object, Array, Function] as unknown as PropType<
+        VNodeChild | ((omittedValues: unknown[]) => VNodeChild)
+      >,
+      default: undefined,
+    },
+    placeholder2: { type: null as unknown as PropType<VNodeChild>, default: undefined },
   },
   emits: ['update:value', 'update:open', 'update:searchValue'],
   setup(props, { attrs, emit, expose, slots }) {
@@ -163,12 +160,12 @@ const Cascader = defineComponent({
     const contextSemantic = context as {
       classNames?: Record<string, unknown>;
       styles?: Record<string, unknown>;
-      expandIcon?: unknown;
-      loadingIcon?: unknown;
-      clearIcon?: unknown;
-      removeIcon?: unknown;
-      suffixIcon?: unknown;
-      searchIcon?: unknown;
+      expandIcon?: VNodeChild;
+      loadingIcon?: VNodeChild;
+      clearIcon?: VNodeChild;
+      removeIcon?: VNodeChild;
+      suffixIcon?: VNodeChild;
+      searchIcon?: VNodeChild;
       className?: string;
       style?: StyleLike;
     };

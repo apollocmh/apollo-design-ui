@@ -845,6 +845,26 @@ if (!errors.some((e) => e.code === 'E16')) {
       }
     }
 
+    // (a2) 横切项标 done 必须交代证据（2026-09-30 补）
+    //
+    // 为什么需要：横切项此前**没有完成通道**（status 写死 'todo'），补上通道之后，
+    // 新的风险是「翻个布尔值就标完成」。所以把「完成」定义成**需要交代证据的动作**：
+    // 必须有 `completedAt` 与非空 `evidence`（每条是「命令/判据 + 结论」）。
+    //
+    // 判据在 `registry/source/workstreams.mjs` 的 CROSS_ITEMS 头部有说明；
+    // 这里只做强制，不推断 —— 生成器不猜「看起来像做完了」。
+    for (const it of wsItems) {
+      if (it.kind !== 'crosscut' || it.status !== 'done') continue;
+      if (typeof it.completedAt !== 'string' || it.completedAt.trim() === '') {
+        err('E18', `${it.id} 标为 done 但缺少 completedAt（完成日期，YYYY-MM-DD）`);
+      }
+      if (!Array.isArray(it.evidence) || it.evidence.length === 0) {
+        err('E18', `${it.id} 标为 done 但 evidence 为空 —— 完成必须交代证据（命令 + 结论）`);
+      } else if (it.evidence.some((e) => typeof e !== 'string' || e.trim() === '')) {
+        err('E18', `${it.id}.evidence 含空条目 —— 每条证据都要能独立读懂`);
+      }
+    }
+
     // (b) 覆盖率：13 个 foundation 包 + 72 个组件都必须有对应 Item，否则会被漏做
     for (const p of foundationPackages) {
       if (!itemById.has(`FND:${p.dir}`)) {

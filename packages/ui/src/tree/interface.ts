@@ -227,14 +227,26 @@ export interface TreeCheckedKeys {
   halfChecked: SafeKey[];
 }
 
-/** `scrollTo` 的参数（rc `TreeScrollConfig`：数字 / {key, autoExpand?} / 对齐配置）。 */
+/**
+ * `scrollTo` 的参数（rc 的 `ScrollTo` 配置：数字 / `{ key, autoExpand? }` / 对齐配置）。
+ *
+ * 🚨 **字段名是 `align`，不是 DOM `scrollIntoView` 的 `block` / `inline`**（2026-09-30 修）：
+ *    原来这里写了 `block` / `inline`，但
+ *      ①文档 `index.zh-CN.md` 的方法表写的是 `scrollTo({ key, autoExpand?, offset?, align? })`；
+ *      ②实现（`Tree.ts` → `NodeList.ts`）把配置**原样透传**给 `@apollo-design/virtual-list`，
+ *        而它的 `ScrollAlign = 'top' | 'bottom'`（对拍 rc-virtual-list）；
+ *    三方只有本接口不一致 ⇒ 调用方按文档写 `align: 'top'` 会被类型系统拒绝
+ *    （demo `scroll-to.vue` 就是这样暴露出来的），按接口写 `block` 则**静默失效**。
+ *
+ * ⚠️ 值域只到 `'top' | 'bottom'`（本仓 virtual-list 的 `ScrollAlign`），没有 `'auto'`。
+ */
 export interface TreeScrollConfig {
   key: TreeKey;
   autoExpand?: boolean;
   /** 距视口顶部的附加偏移（rc `itemScrollOffset`）。 */
   offset?: number;
-  block?: 'start' | 'center' | 'end' | 'nearest';
-  inline?: 'start' | 'center' | 'end' | 'nearest';
+  /** 对齐方式：贴顶 / 贴底。缺省时不滚动（见 virtual-list 的 scroll-target 契约）。 */
+  align?: 'top' | 'bottom';
 }
 
 export interface TreeProps {

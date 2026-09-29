@@ -11,6 +11,21 @@ import { conductCheck, convertDataToEntities } from '../engine/tree';
 
 const VALUE_SPLIT = '__RC_CASCADER_SPLIT__';
 
+/**
+ * 取实体表里的一项（`noUncheckedIndexedAccess` 下索引访问是 `T | undefined`）。
+ *
+ * 越界**抛错**而不是塞 `undefined`：这些断言后面紧跟 `.level` / `.parent`
+ * 这类取值，静默变 `undefined` 会让失败信息变成「Cannot read properties of undefined」，
+ * 而看不出到底缺了哪个 key。与 pagination 的 `at()` 同判。
+ */
+const ent = <T>(map: Record<string, T>, key: string): T => {
+  const entity = map[key];
+  if (entity === undefined) {
+    throw new Error(`实体表里缺少 key=${key}（现有 ${Object.keys(map).length} 项）`);
+  }
+  return entity;
+};
+
 interface CascaderOption {
   value: string;
   label?: string;
@@ -60,22 +75,22 @@ describe('convertDataToEntities', () => {
       '0-1-0',
       '0-1-1',
     ]);
-    expect(keyEntities.zj.level).toBe(0);
-    expect(keyEntities.nb.level).toBe(1);
-    expect(keyEntities.xh.level).toBe(2);
+    expect(ent(keyEntities, 'zj').level).toBe(0);
+    expect(ent(keyEntities, 'nb').level).toBe(1);
+    expect(ent(keyEntities, 'xh').level).toBe(2);
     // parent 链
-    expect(keyEntities.xh.parent?.key).toBe('hz');
-    expect(keyEntities.hz.parent?.key).toBe('zj');
-    expect(keyEntities.zj.parent).toBeUndefined();
+    expect(ent(keyEntities, 'xh').parent?.key).toBe('hz');
+    expect(ent(keyEntities, 'hz').parent?.key).toBe('zj');
+    expect(ent(keyEntities, 'zj').parent).toBeUndefined();
     // children 链
-    expect(keyEntities.zj.children?.map((c) => c.key)).toEqual(['hz', 'nb']);
+    expect(ent(keyEntities, 'zj').children?.map((c) => c.key)).toEqual(['hz', 'nb']);
   });
 
   it('nodes 是从根到当前的路径链（Cascader 靠它拼 pathKey）', () => {
     const { keyEntities } = convertDataToEntities(OPTIONS as unknown as Record<string, unknown>[], {
       fieldNames: { key: 'value', children: 'children' },
     });
-    expect(keyEntities.xh.nodes.map((n) => n.value)).toEqual(['zj', 'hz', 'xh']);
+    expect(ent(keyEntities, 'xh').nodes.map((n) => n.value)).toEqual(['zj', 'hz', 'xh']);
   });
 
   it('pathKeyEntities：key 被覆写成 value 链（useEntities 同构）', () => {
@@ -90,7 +105,7 @@ describe('convertDataToEntities', () => {
       `zj${VALUE_SPLIT}hz${VALUE_SPLIT}xh`,
       `zj${VALUE_SPLIT}nb`,
     ]);
-    expect(entities[`zj${VALUE_SPLIT}hz${VALUE_SPLIT}xh`].level).toBe(2);
+    expect(ent(entities, `zj${VALUE_SPLIT}hz${VALUE_SPLIT}xh`).level).toBe(2);
   });
 });
 

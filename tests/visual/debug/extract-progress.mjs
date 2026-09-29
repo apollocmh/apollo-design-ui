@@ -59,6 +59,7 @@ const el = React.createElement(
   ),
 );
 
-const html = renderToStaticMarkup(el);
+// ⚠️ 只保留**调用**：它的副作用是往 cache 里填规则，`html` 本身用不到
+renderToStaticMarkup(el);
 const style = extractStyle(cache, true);
 process.stdout.write(style);

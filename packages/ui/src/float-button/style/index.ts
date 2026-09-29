@@ -14,20 +14,50 @@
  *   5. Token = 0（ComponentToken 为空对象）—— 全部 alias var() 派生。
  *   6. BackTop 进度环变量 `--apollo-float-btn-progress`（`${x}turn`）由
  *      BackTop.ts rootStyle 注入，conic-gradient 在此消费。
+ *
+ * ── ⚠️ 进度环的 4 个 `--apollo-btn-bg-*`：从「引用」改成「就地声明」（2026-09-30）──────
+ *
+ * antd 的 progress 环写的是 `linear-gradient(var(--ant-btn-bg-color), …)`，而
+ * `--ant-btn-bg-color` 是 **Button 自己在元素上声明**的（`button/style/variant.js` 的
+ * `genCssVar(antCls,'btn')` 变量块），靠「同元素上自定义属性被更具体的选择器覆盖」实现分级。
+ *
+ * 本仓的 Button **刻意展开了那层变量间接**（见 `button/style/index.ts` 头部：把每个
+ * color×variant 组合的最终值直接内联成 `background-color`，不声明 `--apollo-btn-*`）
+ * ⇒ 机械转换过来的 `var(--apollo-btn-bg-color)` **没有任何地方声明它**，
+ *   浏览器把未定义的 `var()` 当空值 ⇒ 线性渐变层整个失效、进度环的**内圈被画成透明**。
+ *
+ * 这是 `tests/build/run.mjs` 的 **B7 · ui**（每个 `var(--apollo-*)` 都必须真实存在）
+ * 抓到的（它同时是这类「静默失效」的唯一防线）。
+ *
+ * 修法：**在进度环自己的规则里就地声明这 4 个变量**，值取自 Button 对相应组合实际输出的
+ * `background-color`（逐条对拍 `packages/ui/dist/button/style.css`）：
+ *
+ * | 状态 | `type="default"`（color-default · variant-outlined） | `type="primary"`（color-primary · variant-solid） |
+ * |---|---|---|
+ * | 常态 | `colorBgContainer` | `colorPrimary` |
+ * | hover | 同常态（Button 未覆盖 bg） | `colorPrimaryHover` |
+ * | active | 同常态 | `colorPrimaryActive` |
+ * | disabled | `colorBgContainerDisabled`（Button 的全局禁用规则） | 同左 |
+ *
+ * ⚠️ B7 自 2026-09-21（grid 落地）起**接受组件 CSS 内部的声明**，所以这种「就地声明」
+ *    是合规的 —— 与 Button 当年必须展开时的约束已经不同。
+ *    这里仍**只声明自己用到的那 4 个**，不重建整套变量层。
  */
 
 /** antd 产物机械转换段（原序）。 */
 const RULES = `
+.apollo-float-btn.apollo-btn.apollo-float-btn-progress{border-width:var(--apollo-line-width-bold);border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color), var(--apollo-btn-bg-color)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);background-origin:border-box;background-clip:padding-box,border-box;}
+.apollo-float-btn.apollo-btn.apollo-float-btn-progress,.apollo-float-btn.apollo-btn.apollo-float-btn-progress.apollo-btn-color-default.apollo-btn-variant-outlined,.apollo-float-btn.apollo-btn.apollo-float-btn-progress.apollo-btn-color-primary.apollo-btn-variant-solid{--apollo-btn-bg-color:var(--apollo-color-bg-container);--apollo-btn-bg-color-hover:var(--apollo-color-bg-container);--apollo-btn-bg-color-active:var(--apollo-color-bg-container);--apollo-btn-bg-color-disabled:var(--apollo-color-bg-container-disabled);}
+.apollo-float-btn.apollo-btn.apollo-float-btn-progress.apollo-btn-color-primary.apollo-btn-variant-solid{--apollo-btn-bg-color:var(--apollo-color-primary);--apollo-btn-bg-color-hover:var(--apollo-color-primary-hover);--apollo-btn-bg-color-active:var(--apollo-color-primary-active);}
+.apollo-float-btn.apollo-btn.apollo-float-btn-progress:not(:disabled):not(.apollo-btn-disabled):hover{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-hover), var(--apollo-btn-bg-color-hover)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
+.apollo-float-btn.apollo-btn.apollo-float-btn-progress:not(:disabled):not(.apollo-btn-disabled):active{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-active), var(--apollo-btn-bg-color-active)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
+.apollo-float-btn.apollo-btn.apollo-float-btn-progress:disabled,.apollo-float-btn.apollo-btn.apollo-float-btn-progress.apollo-btn-disabled{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-disabled), var(--apollo-btn-bg-color-disabled)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
 .apollo-float-btn{--apollo-float-btn-size:var(--apollo-control-height-lg);flex-direction:column;margin:0;padding:var(--apollo-padding-xxs) 0;width:var(--apollo-float-btn-size);min-height:var(--apollo-float-btn-size);height:auto;word-break:break-word;white-space:normal;gap:calc(var(--apollo-padding-xxs) / 2);}
 .apollo-float-btn-rtl{direction:rtl;}
 .apollo-float-btn.apollo-float-btn-individual{position:fixed;z-index:var(--apollo-z-index-popup-base);inset-inline-end:var(--apollo-margin-lg);bottom:var(--apollo-margin-xxl);box-shadow:var(--apollo-box-shadow-secondary);}
 .apollo-float-btn.apollo-float-btn-pure{position:relative;inset:auto;}
 .apollo-float-btn:empty{display:none;}
 .apollo-float-btn .apollo-float-btn-icon{line-height:1;}
-.apollo-float-btn.apollo-btn.apollo-float-btn-progress{border-width:var(--apollo-line-width-bold);border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color), var(--apollo-btn-bg-color)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);background-origin:border-box;background-clip:padding-box,border-box;}
-.apollo-float-btn.apollo-btn.apollo-float-btn-progress:not(:disabled):not(.apollo-btn-disabled):hover{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-hover), var(--apollo-btn-bg-color-hover)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
-.apollo-float-btn.apollo-btn.apollo-float-btn-progress:not(:disabled):not(.apollo-btn-disabled):active{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-active), var(--apollo-btn-bg-color-active)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
-.apollo-float-btn.apollo-btn.apollo-float-btn-progress:disabled,.apollo-float-btn.apollo-btn.apollo-float-btn-progress.apollo-btn-disabled{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-disabled), var(--apollo-btn-bg-color-disabled)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
 .apollo-float-btn.apollo-float-btn-icon-only .apollo-icon{font-size:calc(var(--apollo-font-size-icon) * 1.5);}
 .apollo-float-btn .apollo-float-btn-content{font-size:var(--apollo-font-size-sm);}
 .apollo-float-btn .apollo-float-btn-badge{position:absolute;top:0;inset-inline-end:0;}

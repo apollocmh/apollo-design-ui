@@ -113,7 +113,7 @@ const RawOptionList = defineComponent({
     disabled: { type: Boolean, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: 'ltr' },
     lockOptions: { type: Boolean, default: false },
-    notFoundContent: { type: null as unknown as PropType<unknown>, default: undefined },
+    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     toggleOpen: { type: Function as PropType<(open: boolean) => void>, required: true },
   },
   setup(props, { expose }) {
@@ -440,7 +440,6 @@ const RawOptionList = defineComponent({
       const {
         fieldNames,
         changeOnSelect,
-        expandTrigger,
         expandIcon,
         loadingIcon,
         popupMenuColumnStyle,

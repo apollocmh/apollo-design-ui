@@ -16,7 +16,7 @@ import { h } from 'vue';
 config.global.stubs = { ...config.global.stubs, teleport: false };
 
 import baseline from '../../../../../tests/compat/baselines/cascader.dom.json';
-import { Cascader, CascaderPanel } from '../index';
+import { Cascader } from '../index';
 
 const BP = { prefixCls: 'apollo-cascader' };
 

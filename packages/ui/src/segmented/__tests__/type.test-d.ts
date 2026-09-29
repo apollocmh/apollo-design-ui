@@ -8,7 +8,13 @@
 
 import { expectTypeOf, it } from 'vitest';
 import { Segmented } from '../index';
-import type { SegmentedLabeledOption, SegmentedProps, SegmentedValue } from '../interface';
+import type {
+  SegmentedLabeledOption,
+  SegmentedProps,
+  SegmentedSemanticClassNames,
+  SegmentedSemanticStyles,
+  SegmentedValue,
+} from '../interface';
 
 it('SegmentedProps 的关键字段类型', () => {
   expectTypeOf<SegmentedProps['value']>().toEqualTypeOf<SegmentedValue | undefined>();
@@ -21,11 +27,16 @@ it('SegmentedProps 的关键字段类型', () => {
 });
 
 it('语义化 classNames / styles 的键集合（root/icon/label/item）', () => {
-  expectTypeOf<keyof NonNullable<SegmentedProps['classNames']>>().toEqualTypeOf<
+  // ⚠️ prop 类型是「对象 | 函数」联合（`SegmentedSemanticTypeInput`，运行时两形态都收）
+  //    ⇒ 键集合要取**对象那一支**断言（函数形态的键是 `never`）。
+  expectTypeOf<keyof SegmentedSemanticClassNames>().toEqualTypeOf<
     'root' | 'icon' | 'label' | 'item'
   >();
-  expectTypeOf<keyof NonNullable<SegmentedProps['styles']>>().toEqualTypeOf<
-    'root' | 'icon' | 'label' | 'item'
+  expectTypeOf<keyof SegmentedSemanticStyles>().toEqualTypeOf<'root' | 'icon' | 'label' | 'item'>();
+  // 并钉住「两形态都接受」这条契约本身
+  expectTypeOf<NonNullable<SegmentedProps['classNames']>>().toMatchTypeOf<
+    | SegmentedSemanticClassNames
+    | ((info: { props: Record<string, unknown> }) => SegmentedSemanticClassNames)
   >();
 });
 

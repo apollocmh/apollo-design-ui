@@ -204,7 +204,9 @@ describe('select（createSelectHandler）', () => {
     const changed: (string | number)[][] = [];
     const handler = createSelectHandler(
       true,
-      (next) => changed.push(...next),
+      // ⚠️ `triggerChange` 的声明是 `ValueCell | ValueCell[]`（路径 | 路径数组）——
+      //    多选传的是**路径数组**；这里显式收窄，下面的 `toContainEqual` 钉住形状。
+      (next) => changed.push(...(next as (string | number)[][])),
       checkedValues,
       halfCheckedValues,
       missingCheckedValues,
@@ -218,10 +220,12 @@ describe('select（createSelectHandler）', () => {
   });
 
   it('单选直接透传', () => {
-    const changed: (string | number)[][] = [];
+    // 单选载荷是一维路径 ⇒ 收集器也是一维（下面 `toEqual(['zj','nb'])` 钉住）
+    const changed: (string | number)[] = [];
     const handler = createSelectHandler(
       false,
-      (next) => changed.push(...next),
+      // 单选传的是**一维路径**（`ValueCell`）；下面的 `toEqual` 钉住逐元素形状。
+      (next) => changed.push(...(next as (string | number)[])),
       [],
       [],
       [],

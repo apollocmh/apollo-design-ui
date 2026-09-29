@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { Button, Tree } from '@apollo-design/ui';
+// ⚠️ `TreeRef` 是组件的**公开类型**（`tree/interface.ts` 定义、包根导出），
+//    不是 `use-tree` 的导出 —— 原来从 '../use-tree' import 会报 TS2305。
+import { Button, Tree, type TreeRef } from '@apollo-design/ui';
 import { ref } from 'vue';
-import { type TreeRef, useTree } from '../use-tree';
+import type { DataNode } from '../interface';
+import { useTree } from '../use-tree';
 
 const TARGET_KEY = '0-0-0-1-1';
 const treeRef = ref<TreeRef | null>(null);
 
-const treeData = [
+const treeData: DataNode[] = [
   {
     title: 'parent 0',
     key: '0-0',

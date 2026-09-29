@@ -1320,6 +1320,14 @@ export default defineComponent({
         onNodeLoad,
         onNodeMouseEnter,
         onNodeMouseLeave,
+        // 🚨 曾漏了这一行（2026-09-30 修）：`TreeNode` 的 `onContextmenu` 会调
+        //    `ctx.onNodeContextMenu(...)`，而它不在 context 对象里 ⇒ **右键点击节点抛
+        //    `TypeError: ctx.onNodeContextMenu is not a function`**（不是「事件不触发」）。
+        //    之所以没被类型检查拦住：整个 context 对象被 `as never` 断言了
+        //    （`TreeContext` 里该字段是必填，但断言把它绕过了）。
+        //    发现路径：`biome check` 报 `onNodeContextMenu` 未被引用 ——
+        //    这类「定义了但没接线」的死代码正是门禁要抓的东西。
+        onNodeContextMenu,
         onNodeDragStart,
         onNodeDragEnter,
         onNodeDragOver,

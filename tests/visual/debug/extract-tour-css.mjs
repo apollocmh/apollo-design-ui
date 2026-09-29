@@ -16,18 +16,6 @@ const { ConfigProvider, Tour } = require('antd');
 
 const cache = createCache();
 
-const options = [
-  {
-    value: 'zj',
-    label: '浙江',
-    children: [
-      { value: 'hz', label: '杭州', children: [{ value: 'xh', label: '西湖' }] },
-      { value: 'nb', label: '宁波' },
-    ],
-  },
-  { value: 'js', label: '江苏', children: [{ value: 'nj', label: '南京' }] },
-];
-
 const el = React.createElement(
   StyleProvider,
   { cache },

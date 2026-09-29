@@ -45,7 +45,6 @@ import type {
   InternalLabeledValue,
   LabeledValueType,
   SearchConfig,
-  ShowCheckedStrategy,
   SimpleModeConfig,
   TreeSelectDataNode,
   TreeSelectValue,
@@ -56,7 +55,6 @@ import {
   formatStrategyValues,
   SHOW_ALL,
   SHOW_CHILD,
-  SHOW_PARENT,
   type ShowCheckedStrategy as ShowCheckedStrategyType,
 } from './utils/strategy-util';
 import { type FilledFieldNames, fillFieldNames, isNil, toArray } from './utils/value-util';
