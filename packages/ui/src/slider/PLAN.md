@@ -20,7 +20,7 @@
 - [x] G7 L3 类型（含 4 个负例，负例包在永不调用的闭包里（2026-09-29：15 用例，vue-tsc 类型错误 0））
 - [x] G8 L5 a11y —— axe 扫 7 种真实配置 + role/ARIA 6 + 键盘与焦点 5 + 上游缺口 1 = **19 用例**（demo 维度的扫描留到 G11，占位 demo 不扫）
 - [x] G9 L6 视觉 —— **24/24 逐像素 exact**（8 variant × 3 viewport，一次通过，2026-09-29）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
+- [x] G10 L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿

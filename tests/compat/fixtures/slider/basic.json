@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "slider/basic",
+  "component": "slider",
+  "description": "rc-slider@1.1.1 内核的 Vue 等价物（antd 侧无自研子组件）。DOM：root[.{p}][-horizontal|-vertical][-with-marks][-disabled][-rtl][-lock] > rail / track[-{i+1}][-draggable] / step > dot[-active] / handle[-{i+1}][-dragging][-dragging-delete][-disabled]（role=slider + aria-valuemin/max/now/disabled/orientation，label/labelledby/required/valuetext 逐把手取值）/ mark > mark-text[-active]。值机：formatValue 在 step∪marks∪{min,max} 上吸附；offsetValues 的 unit/dist 两模式 + pushable 四段回推 + 禁用把手当锚点；事件链 beforeChange → update:value+change → changeComplete（keyup 才 complete）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "defaultValue": 30
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["update:value", "change", "changeComplete", "beforeChange"]
+  }
+}
