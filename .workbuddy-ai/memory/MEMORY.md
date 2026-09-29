@@ -106,8 +106,11 @@ L0 utils/theme/icons ｜ 测试 test-utils
   必须用别名（`genTokenDecls as genXTokenDecls` / `prepareComponentToken as prepareXComponentToken`，
   PITFALLS 158/168，已两次踩坑）。新组件另需：`tests/compat/baseline/<name>.mjs` +
   `tests/visual/render/cases/{react,vue}/<name>.{jsx,js}` + matrix 里一行。
-- `_internal/` 现有两个「三次法则」收敛物：`use-merged-mask.ts`（drawer+modal）、
-  `to-css-size.ts`（image+drawer+modal，两个旧文件保留为再导出）。
+- `_internal/` 现有三个「三次法则」收敛物：`use-merged-mask.ts`（drawer+modal）、
+  `to-css-size.ts`（image+drawer+modal，两个旧文件保留为再导出）、
+  **`color-composite.ts`（tour + input-number + slider，2026-09-29；`onBackground`
+  返回 `Color` 实例而不是字符串 —— 因为 tour 要 `toRgbString()`、其余要 `toHexString()`，
+  替调用方决定格式会让某一侧的 L7 断言变红）**。
 - ⚠️ `dom-contract` 的 cssinjs 类名过滤器 2026-09-26 补了 `^css-var-[\w-]+$`
   （`css-var-_R_x_` 是 React `useId` 产物，见 PITFALLS 183）。
 - **视觉层只链接 theme + ui 两个 workspace 包**（root devDeps）⇒ **用例文件**（在
