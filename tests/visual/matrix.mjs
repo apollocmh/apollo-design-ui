@@ -423,6 +423,21 @@ export const COMPONENTS = {
       'panel', // 纯面板形态
     ],
   },
+  slider: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    // ⚠️ 只覆盖**静态形态**：拖拽/键盘过程帧与 tooltip 浮层（portal + 依赖布局定位）
+    //    不进像素比对 —— 它们的语义由 L2（index.test.ts）与 L5（a11y.test.ts）钉住。
+    variants: [
+      'basic', // 单把手 + 已选轨道
+      'range', // 双把手 + 中间段轨道
+      'marks', // 文字标记（含对象形态的 label/style）
+      'dots', // step=10 的刻度点
+      'vertical', // 纵向（位置走 bottom/top + translateY）
+      'reverse', // 反向（rtl 方向）
+      'disabled', // 禁用态
+      'includedOff', // included=false（只有 rail，没有已选轨道）
+    ],
+  },
   form: {
     // 7 个 variant × 3 个 viewport = 21 张
     // ⚠️ 只用**参数驱动的静态形态**：校验链是异步的，跑一条 `validateFields` 会让
