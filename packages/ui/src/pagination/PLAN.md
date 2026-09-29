@@ -13,7 +13,7 @@
 
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
 - [x] G1 ANALYZE —— docs/analysis/pagination.md（2026-09-29：结构判定 + 页码列表算法判据 + 12 token + 8 风险 + Vue 化决策）
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
+- [x] G2 API DESIGN —— interface.ts 全量类型面（18 个类型）+ 根 barrel 块；**无 expose**（上游是 React.FC）
 - [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
 - [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts

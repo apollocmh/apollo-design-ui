@@ -13,7 +13,25 @@ export const Pagination = withInstall(PaginationComponent);
 
 export default Pagination;
 
-// TODO(G2): export type { PaginationProps, PaginationRef, ... } from './interface';
+export type {
+  PaginationAlign,
+  PaginationConfig,
+  PaginationEmits,
+  PaginationItemRender,
+  PaginationItemType,
+  PaginationLocale,
+  PaginationPosition,
+  PaginationProps,
+  PaginationRange,
+  PaginationSemanticAllType,
+  PaginationSemanticClassNames,
+  PaginationSemanticStyles,
+  PaginationSemanticValue,
+  PaginationShowTotal,
+  PaginationSimple,
+  PaginationSizeChangerInfo,
+  PaginationSlots,
+} from './interface';
 // TODO(G4): export { genPaginationStyle } from './style';
 // TODO(G4): export type { ComponentToken as PaginationComponentToken } from './style/token';
 // TODO(G4): export { prepareComponentToken as preparePaginationComponentToken } from './style/token';

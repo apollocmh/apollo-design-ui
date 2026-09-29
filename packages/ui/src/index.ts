@@ -1053,6 +1053,32 @@ export {
   prepareNotificationToken,
 } from './notification/style/token';
 // ---------------------------------------------------------------------------
+// Pagination —— 分页器（rc-pagination 内核的 Vue 等价物）
+//
+// ⚠️ G2 阶段只落**类型面**；样式导出（genPaginationStyle / preparePaginationComponentToken）
+//    留给 G4 补在本块末尾。
+// ---------------------------------------------------------------------------
+export type {
+  PaginationAlign,
+  PaginationConfig,
+  PaginationEmits,
+  PaginationItemRender,
+  PaginationItemType,
+  PaginationLocale,
+  PaginationPosition,
+  PaginationProps,
+  PaginationRange,
+  PaginationSemanticAllType,
+  PaginationSemanticClassNames,
+  PaginationSemanticStyles,
+  PaginationSemanticValue,
+  PaginationShowTotal,
+  PaginationSimple,
+  PaginationSizeChangerInfo,
+  PaginationSlots,
+} from './pagination';
+export { Pagination } from './pagination';
+// ---------------------------------------------------------------------------
 // Popconfirm —— 气泡确认框
 // ---------------------------------------------------------------------------
 export type {
