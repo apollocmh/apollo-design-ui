@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Button } from '@apollo-design/ui';
+import { Button, Tree } from '@apollo-design/ui';
 import { ref } from 'vue';
-import { Tree } from '@apollo-design/ui';
 import { type TreeRef, useTree } from '../use-tree';
 
 const TARGET_KEY = '0-0-0-1-1';

@@ -6,10 +6,11 @@
   "antdVersion": "6.6.4",
   "props": {
     "treeData": [
-      { "title": "parent 1", "key": "0-0", "children": [
-        { "title": "leaf 1", "key": "0-0-0" },
-        { "title": "leaf 2", "key": "0-0-1" }
-      ] },
+      {
+        "title": "parent 1",
+        "key": "0-0",
+        "children": [{ "title": "leaf 1", "key": "0-0-0" }, { "title": "leaf 2", "key": "0-0-1" }]
+      },
       { "title": "parent 2", "key": "0-1" }
     ],
     "checkable": true,
@@ -23,6 +24,15 @@
     "screenshot": true
   },
   "expect": {
-    "events": ["update:expandedKeys", "update:checkedKeys", "update:selectedKeys", "update:loadedKeys", "expand", "check", "select", "load"]
+    "events": [
+      "update:expandedKeys",
+      "update:checkedKeys",
+      "update:selectedKeys",
+      "update:loadedKeys",
+      "expand",
+      "check",
+      "select",
+      "load"
+    ]
   }
 }

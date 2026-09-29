@@ -22,7 +22,12 @@
  * 执行；Vue 用 `watch + nextTick`（flush 后 DOM 已更新），测量时机等价。
  */
 
-import { CSSMotion, type CSSMotionSlotProps, type MotionHooks, type MotionStyle } from '@apollo-design/motion';
+import {
+  CSSMotion,
+  type CSSMotionSlotProps,
+  type MotionHooks,
+  type MotionStyle,
+} from '@apollo-design/motion';
 import {
   computed,
   defineComponent,

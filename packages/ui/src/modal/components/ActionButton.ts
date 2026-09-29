@@ -4,5 +4,5 @@
  * 本文件保留导入路径，modal 的三个 import 点不动。
  */
 
-export { convertLegacyProps, default } from '../../_internal/action-button';
 export type { ActionButtonProps, LegacyButtonType } from '../../_internal/action-button';
+export { convertLegacyProps, default } from '../../_internal/action-button';
