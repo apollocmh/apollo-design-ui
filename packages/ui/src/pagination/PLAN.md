@@ -19,12 +19,12 @@
 - [x] G5 L1 单元 + G6 L2 交互 —— __tests__/{pagers,index}.test.ts（**274 用例**：L1 227 = 224 行页码判定表对拍 antd 产物 + calculatePage + useShowSizeChanger；L2 47 = 结构/值变化/showTotal/itemRender/简化模式/快速跳转/尺寸切换/ConfigProvider 合并）
 - [x] G7 L3 类型（**28 用例**（11 正 + 4 负），Type Errors: no errors）
 - [x] G8 L5 a11y —— axe 扫 10 种真实配置 + role/ARIA 8 + 键盘可达 6 = **24 用例**
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:pagination]
+- [x] G9 L6 视觉 —— **30/30 逐像素 exact**（10 variant × 3 viewport，一次通过，2026-09-29）
+- [x] G10 L4/L4 DOM 契约 + compat 比对
+- [x] G11 DOCS —— 12 个 demo（expectCount 钉死）+ zh/en 文档 + README；theme/a11y 的 demo 维度扫描已接
+- [x] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [x] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
+- [x] G14 COMMIT —— commit message 带 [COMP:pagination]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

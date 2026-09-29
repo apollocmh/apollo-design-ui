@@ -32,7 +32,16 @@ import {
   RightOutlined,
 } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
-import { computed, defineComponent, h, type PropType, ref, useAttrs, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  useAttrs,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
@@ -526,12 +535,17 @@ export default defineComponent({
         );
       };
 
-      const items: unknown[] = [totalText];
+      // ⚠️ 必须是 `VNodeChild[]`（`unknown[]` 不被 `h` 的 children 接受 —— 构建门禁的
+      //    vue-tsc 步骤会报 TS2769；vitest 不做这层检查，所以只有 `build:ui` 能发现）
+      const items: VNodeChild[] = [totalText];
 
+      // ⚠️ rc 的结构是 `<ul>{totalText}{prev}{simple ? simplePager : pagerList}{next}{Options}</ul>`
+      //    —— **prev/next 在两种模式下都渲染**（原来把它们放进 `else` 里 ⇒ simple 模式少两个 li，
+      //    L4 的子节点数对拍直接抓到）。
+      items.push(renderPrevNext('prev'));
       if (props.simple) {
         items.push(...(simplePager ?? []));
       } else {
-        items.push(renderPrevNext('prev'));
         for (const item of pagerList.value) {
           if (item.kind === 'page') {
             items.push(
@@ -581,8 +595,8 @@ export default defineComponent({
             );
           }
         }
-        items.push(renderPrevNext('next'));
       }
+      items.push(renderPrevNext('next'));
 
       items.push(
         h(

@@ -5,13 +5,18 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/pagination/demo/ 抄清单 -->
+最简单的用法：`v-model:current` 绑定当前页。
+
 ```vue
 <script setup lang="ts">
+// 对齐 antd `basic.tsx`。
 import { Pagination } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+const current = ref(1);
 </script>
 
 <template>
-  <Pagination>basic demo 占位</Pagination>
+  <Pagination v-model:current="current" :total="50" />
 </template>
 ```

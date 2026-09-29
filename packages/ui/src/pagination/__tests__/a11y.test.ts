@@ -15,12 +15,12 @@
  *
  * ── 关于 axe 的适用范围 ───────────────────────────────────────────────────────
  *
- * `a11yDemoTest('Pagination', { demos })` 走的是**组件 demo**，而 demo 目前还是 G11 之前的
- * 占位文件 —— 挂上去只会得到「占位 demo 也能跑」的假绿灯。所以本轮**不等 demo**：直接对
- * **真实配置**（常规 / 带总数 / 简化 / 快速跳转 / 尺寸切换 / 禁用 / 大尺寸 / 对齐）逐个跑 axe；
- * G11 落地真 demo 后再补 demo 维度的扫描（与 slider 同判）。
+ * 两层扫描都在：**demo 维度**用 `a11yDemoTest`（12 个 demo 逐个跑 axe），
+ * **真实配置维度**用下面的 `cases` 表（含 demo 未必碰到的参数组合，如 `align` / `disabled`
+ * / `showLessItems` / 快速跳转的 `goButton`）。
  */
 
+import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
@@ -28,6 +28,14 @@ import { h, nextTick } from 'vue';
 import Pagination from '../Pagination.vue';
 
 const P = 'apollo-pagination';
+
+a11yDemoTest('Pagination', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  // 本轮**没有豁免**：demo 里的页码/跳页项都有 title，尺寸切换器的 Select 有
+  // `aria-label={locale.page_size}`（为此修了 Select 的可访问名丢失，见 COMPATIBILITY **U14**），
+  // 快速跳转的 input 有 `aria-label={locale.page}` —— 全部 0 violation。
+  allow: [],
+});
 
 /** 与 test-utils 的 `DEFAULT_TAGS` 同源：WCAG 2.0/2.1/2.2 的 A + AA。 */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];

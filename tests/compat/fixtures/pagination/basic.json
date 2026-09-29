@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "pagination/basic",
+  "component": "pagination",
+  "description": "rc-pagination@1.4.0 内核的 Vue 等价物（antd 侧是中等厚度壳）。DOM：ul.{p}[-start|-center|-end][-simple][-disabled] > li[-total-text] / li[-prev|-next][-disabled] / li[-item-{n}][-active][-disabled][-item-after-jump-prev|-item-before-jump-next] / li[-jump-prev|-jump-next][-custom-icon] > a.{p}-item-link > div.{p}-item-container > svg.{p}-item-link-icon + span.{p}-item-ellipsis / li[-simple-pager]{input|文本} + span.{p}-slash + 总页数 / li.{p}-options{sizeChanger 注入点 + div.{p}-options-quick-jumper}。算法：allPages = floor((total-1)/pageSize)+1；current 三重钳制 clamp(internal,1,allPages)；页码列表 6 处边界（pageBufferSize / current!==1+2 / current!==allPages-2 / !showLessItems 挤位 / 跳页 ±5 或 ±3 / 补类位置）；simple 模式仍渲染 prev/next。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "defaultCurrent": 3,
+    "total": 500
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["update:current", "update:pageSize", "change", "showSizeChange"]
+  }
+}

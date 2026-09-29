@@ -4,10 +4,11 @@
  * 判定值逐字对拍 antd 6.6.4 产物（可复现命令：
  * `node tests/visual/debug/extract-pagination-css.mjs --tokens`）。
  *
- * ⚠️ `themeTest('Pagination', { demos })` 的**主题矩阵**刻意留到 G11（demo 落地后再接）——
- *    现在挂上去只会因为「拿占位 demo 渲染成功」而假绿（与 slider 同判）。
+ * G11 起 demo 是真的，主题矩阵也接上了：`themeTest('Pagination', { demos })` 会把 12 个 demo
+ * 在 light / dark / compact / token-override 四种主题下各渲染一遍。
  */
 
+import { themeTest } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import {
   paginationDerivedToken,
@@ -147,4 +148,8 @@ describe('Pagination · 派生 Token', () => {
     expect(d.itemSizeActual).toBe('var(--apollo-pagination-item-size)');
     expect(d.itemSpacingActual).toBe('var(--apollo-margin-xs)');
   });
+});
+
+themeTest('Pagination', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
 });

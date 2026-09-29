@@ -423,6 +423,23 @@ export const COMPONENTS = {
       'panel', // 纯面板形态
     ],
   },
+  pagination: {
+    // 10 个 variant × 3 个 viewport = 30 张
+    // ⚠️ 只覆盖**静态形态**：下拉展开、输入过程中的帧不进像素比对
+    //    （它们的语义由 L2 的 index.test.ts 与 L5 的 a11y.test.ts 钉住）。
+    variants: [
+      'basic', // 默认（含跳页项）
+      'totalText', // showTotal 的 li
+      'simple', // 简化模式（输入 / 总页数）
+      'quickJumper', // 快速跳转（跳至 __ 页）
+      'quickJumperButton', // 快速跳转 + 确认按钮
+      'sizeChanger', // 尺寸切换器（内部是本仓 Select）
+      'disabled', // 禁用态
+      'large', // 大尺寸 + 快速跳转
+      'alignCenter', // 中对齐 + showTotal
+      'lessItems', // showLessItems（±3、buffer 1）
+    ],
+  },
   slider: {
     // 8 个 variant × 3 个 viewport = 24 张
     // ⚠️ 只覆盖**静态形态**：拖拽/键盘过程帧与 tooltip 浮层（portal + 依赖布局定位）

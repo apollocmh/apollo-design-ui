@@ -129,4 +129,7 @@ if (check) {
 
 fs.writeFileSync(OUT_FILE, `${JSON.stringify(result, null, 2)}\n`);
 console.log(`[baseline] 写入 pagination.pagers.json（${cases.length} 行判定表）`);
-console.log('样例：', JSON.stringify(cases.find((c) => c.total === 500 && c.current === 10)?.items));
+console.log(
+  '样例：',
+  JSON.stringify(cases.find((c) => c.total === 500 && c.current === 10)?.items),
+);
