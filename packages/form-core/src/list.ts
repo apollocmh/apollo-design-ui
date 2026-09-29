@@ -44,7 +44,7 @@ import type {
 } from './form-types';
 import { getNamePath, move } from './value-util';
 
-const listProps = {
+export const listProps = {
   name: {
     type: [String, Number, Array] as PropType<NamePath>,
     required: true,

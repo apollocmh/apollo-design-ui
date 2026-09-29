@@ -590,7 +590,7 @@ class FieldController implements FieldEntity {
  * `preserve` / `isListField` / `isList` / `validateTrigger` 的「未传」是**有语义的**
  * （`undefined` ⇒ 用上层配置）。
  */
-const fieldProps = {
+export const fieldProps = {
   name: { type: [String, Number, Array] as PropType<NamePath>, default: undefined },
   rules: { type: Array as PropType<FormRule[]>, default: undefined },
   dependencies: { type: Array as PropType<NamePath[]>, default: undefined },

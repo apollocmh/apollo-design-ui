@@ -1,117 +1,369 @@
-<script setup lang="ts" generic="Values = unknown">
+<script lang="ts">
 /**
- * Form.Item —— 字段项（**骨架**）。
+ * Form.Item —— 字段项（antd `es/form/FormItem/index.js` 284 行的 Vue 等价物）。
  *
- * 契约来源：antd 6.6.4 `es/form/FormItem/index.js` + `es/form/FormItem/index.d.ts`。
+ * 结构：消费 form-core 的 `Field`（scoped slot `(control, meta, form)`）→
+ * 子节点 control 注入（cloneVNode）→ renderLayout（noStyle ? StatusProvider : ItemHolder）。
  *
- * ⚠️⚠️ **本文件是骨架，不是实现。** 见 `README.md` 的「骨架范围」一节。
- * 它只做两件事：
- *   1. 把 antd 的 props / slots **逐条声明**（类型面，含 `FieldProps` 的继承）；
- *   2. 渲染 `noStyle` 分支的结构外壳。
+ * ── 关键判据（docs/analysis/form.md §3）──────────────────────────────────────
+ * 1. control 注入：单 VNode 子组件时合并 props（value/valuePropName + id +
+ *    aria-describedby/invalid/required）+ trigger/validateTrigger 事件合成
+ *    （control 的先调、用户的后调，两者都保留）；
+ * 2. isRequired：prop.required ?? rules.some(r => r.required && !warningOnly)；
+ * 3. noStyle：错误上抛（NoStyleItemContext）+ 子 Field meta 聚合（NAME_SPLIT key）；
+ * 4. meta 聚合：自身 meta.errors + 子 noStyle Field errors → ItemHolder；
+ * 5. props 里所有 Boolean 形态的字段必须显式 `default: undefined`（Boolean 转换坑，
+ *    骨架注释逐字保留）。
  *
- * ❌ TODO(impl) 清单：
- *   - 用 form-core 的 `Field` 包一层（scoped slot 拿 `control` / `meta` / `form`）
- *   - `meta` → `validateStatus` / `help` / `errors` / `warnings` / `hasFeedback` 的映射
- *   - `label` / `labelCol` / `colon` / `requiredMark` / `tooltip` 的标签布局
- *   - `extra` / `help` 的渲染与 `aria-describedby` / `aria-invalid` / `aria-required`
- *   - `noStyle` 的错误上抛（antd 的 `NoStyleItemContext`）
- *   - `Form.List` 的 `getKey` 与 `fieldKeyPathRef`
- *   - `useItemRef` / `fieldId` 生成（`getFieldId`）
- *   - Token + CSS（G3/G4）、demo、文档、测试
+ * ⚠️ SFC 用普通 `<script>`（defineComponent + 渲染函数）：child control 注入需要
+ *    `cloneVNode` 与 Field 的 scoped slot，模板表达不了。
  */
 
-import { computed } from 'vue';
+import {
+  type Meta as CoreMeta,
+  Field,
+  type FormInstance,
+  fieldProps,
+  listContextKey,
+} from '@apollo-design/form-core';
+import {
+  type ComponentPublicInstance,
+  cloneVNode,
+  computed,
+  defineComponent,
+  h,
+  inject,
+  type PropType,
+  reactive,
+  shallowRef,
+  type VNode,
+  type VNodeChild,
+} from 'vue';
 import { useComponentConfig } from '../config-provider/context';
-import type { FormItemProps, FormItemSlots } from './interface';
+import { formContextKey, type NoStyleItemNotify, noStyleItemContextKey } from './context';
+import ItemHolder from './FormItem/ItemHolder';
+import StatusProvider from './FormItem/StatusProvider';
+import type { FormItemProps } from './interface';
+import { getFieldId, toArray } from './util';
 
-defineOptions({ name: 'AFormItem', inheritAttrs: false });
+const NAME_SPLIT = '__SPLIT__';
 
-/**
- * ⚠️⚠️ **下面这些 `undefined` 默认值不是冗余的，删掉会静默改变行为。**
- *
- * 两条独立的平台机制（`PITFALLS.md` 第 46 条 / `COMPATIBILITY.md` D21）：
- *
- * 1. **Boolean prop 转换**：只要 prop 的运行时类型含 `Boolean` 且调用方没传、
- *    又没有 `default`，Vue 就把它赋成 `false`。本组件里有 **11 个**这样的 prop
- *    （`required` / `shouldUpdate` / `validateFirst` / `validateTrigger` /
- *    `preserve` / `isListField` / `isList` / `hasFeedback` / `colon` / `name` / `tooltip`）。
- *    症状：`required` 由 `undefined` 变 `false` ⇒ 「从 rules 自动推断必填」整条失效；
- *    `preserve` 变 `false` ⇒ 卸载时字段值被清空。
- * 2. **`VNodeChild` 含 `boolean`**：`label` / `extra` / `help` / `tooltip` 的运行时类型
- *    经 SFC 编译器解析后含 `Boolean` ⇒ 同上。
- *
- * 声明 `default`（哪怕值是 `undefined`）会让 Vue 走 `hasDefault` 分支、跳过转换。
- */
-const props = withDefaults(defineProps<FormItemProps<Values>>(), {
-  // ---- ui 层 ----
-  noStyle: false,
-  hidden: false,
-  hasFeedback: undefined,
-  validateStatus: undefined,
-  // ⭐ `required` 必须保持 `undefined`：antd 的判据是
-  //    `required !== undefined ? required : rules?.some(r => r.required)`。
-  required: undefined,
-  initialValue: undefined,
-  layout: undefined,
-  colon: undefined,
-  label: undefined,
-  labelAlign: undefined,
-  labelCol: undefined,
-  tooltip: undefined,
-  wrapperCol: undefined,
-  extra: undefined,
-  status: undefined,
-  help: undefined,
-  fieldId: undefined,
-  id: undefined,
-  prefixCls: undefined,
-  rootClassName: undefined,
-  className: undefined,
-  style: undefined,
-  // ---- 继承自 form-core 的 FieldProps（含 Boolean 的都要显式 undefined）----
-  name: undefined,
-  dependencies: undefined,
-  shouldUpdate: undefined,
-  validateTrigger: undefined,
-  validateFirst: undefined,
-  validateDebounce: undefined,
-  preserve: undefined,
-  isListField: undefined,
-  isList: undefined,
-  rules: undefined,
-  trigger: undefined,
-  valuePropName: undefined,
-  getValueProps: undefined,
-  getValueFromEvent: undefined,
-  normalize: undefined,
-  messageVariables: undefined,
-  onReset: undefined,
-  onMetaChange: undefined,
+function genEmptyMeta(): CoreMeta & { destroy?: boolean } {
+  return {
+    errors: [],
+    warnings: [],
+    touched: false,
+    validating: false,
+    name: [],
+    validated: false,
+  };
+}
+
+/** antd FormItem 的展示层 props（FieldProps 之外的部分）。 */
+const uiProps = {
+  prefixCls: { type: String, default: undefined },
+  noStyle: { type: Boolean, default: undefined },
+  style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+  className: { type: String, default: undefined },
+  rootClassName: { type: String, default: undefined },
+  hasFeedback: {
+    type: [Boolean, Object] as PropType<boolean | { icons: unknown }>,
+    default: undefined,
+  },
+  validateStatus: { type: String as PropType<FormItemProps['validateStatus']>, default: undefined },
+  required: { type: Boolean, default: undefined },
+  hidden: { type: Boolean, default: undefined },
+  messageVariables: { type: Object as PropType<Record<string, string>>, default: undefined },
+  layout: { type: String as PropType<FormItemProps['layout']>, default: undefined },
+  colon: { type: Boolean, default: undefined },
+  htmlFor: { type: String, default: undefined },
+  label: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+  labelAlign: { type: String as PropType<FormItemProps['labelAlign']>, default: undefined },
+  labelCol: { type: Object as PropType<FormItemProps['labelCol']>, default: undefined },
+  tooltip: { type: null as unknown as PropType<unknown>, default: undefined },
+  wrapperCol: { type: Object as PropType<FormItemProps['wrapperCol']>, default: undefined },
+  extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+  status: { type: String as PropType<FormItemProps['status']>, default: undefined },
+  help: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+  id: { type: String, default: undefined },
+};
+
+export default defineComponent({
+  name: 'AFormItem',
+  props: {
+    ...fieldProps,
+    ...uiProps,
+  },
+  setup(props, { slots }) {
+    const { getPrefixCls } = useComponentConfig('form');
+    const formContext = inject(formContextKey, undefined);
+    const notifyParentMetaChange = inject<NoStyleItemNotify | null>(noStyleItemContextKey, null);
+    const listContext = inject(listContextKey, null);
+
+    const prefixCls = computed(() => getPrefixCls('form', props.prefixCls));
+    const hasName = computed(() => props.name !== undefined && props.name !== null);
+    const isRenderProps = computed(() => typeof props.shouldUpdate !== 'undefined');
+
+    // ── 子 Field 错误聚合（noStyle 链）──
+    const subFieldErrors = reactive<Record<string, CoreMeta & { destroy?: boolean }>>({});
+    const meta = shallowRef<CoreMeta & { destroy?: boolean }>(genEmptyMeta());
+    const fieldKeyPathRef = shallowRef<string[] | null>(null);
+
+    const onMetaChange = (nextMeta: CoreMeta & { destroy?: boolean }): void => {
+      if (import.meta.env?.DEV) {
+        console.log('DBG-META:', JSON.stringify({ errors: nextMeta.errors?.length }));
+      }
+      const keyInfo =
+        listContext && typeof (listContext as { getKey?: unknown }).getKey === 'function'
+          ? (listContext as unknown as { getKey: (name: unknown) => [string, ...string[]] }).getKey(
+              nextMeta.name,
+            )
+          : undefined;
+      meta.value = nextMeta.destroy ? genEmptyMeta() : nextMeta;
+      props.onMetaChange?.(nextMeta as never);
+      // Bump to parent since noStyle
+      if (props.noStyle && props.help !== false && notifyParentMetaChange) {
+        let namePath = [...(nextMeta.name ?? [])] as string[];
+        if (!nextMeta.destroy) {
+          if (keyInfo !== undefined) {
+            const [fieldKey, ...restPath] = keyInfo;
+            namePath = [fieldKey, ...restPath];
+            fieldKeyPathRef.value = namePath;
+          }
+        } else {
+          // Use origin cache data
+          namePath = fieldKeyPathRef.value ?? namePath;
+        }
+        notifyParentMetaChange(nextMeta, namePath as never);
+      }
+    };
+
+    /** noStyle 子 Field 的 meta 上抛聚合（antd onSubItemMetaChange 逐字）。 */
+    const onSubItemMetaChange = (
+      subMeta: CoreMeta & { destroy?: boolean },
+      uniqueKeys: unknown,
+    ): void => {
+      const mergedNamePath = [
+        ...(subMeta.name.slice(0, -1) as (string | number)[]),
+        ...(Array.isArray(uniqueKeys) ? uniqueKeys : [uniqueKeys]),
+      ] as (string | number)[];
+      const mergedNameKey = mergedNamePath.join(NAME_SPLIT);
+      if (subMeta.destroy) {
+        delete subFieldErrors[mergedNameKey];
+      } else {
+        subFieldErrors[mergedNameKey] = subMeta;
+      }
+    };
+
+    const mergedErrors = computed<VNodeChild[]>(() => {
+      const errorList: VNodeChild[] = [...(meta.value.errors ?? [])];
+      Object.values(subFieldErrors).forEach((subFieldError) => {
+        errorList.push(...((subFieldError.errors ?? []) as VNodeChild[]));
+      });
+      return errorList;
+    });
+    const mergedWarnings = computed<VNodeChild[]>(() => {
+      const warningList: VNodeChild[] = [...(meta.value.warnings ?? [])];
+      Object.values(subFieldErrors).forEach((subFieldError) => {
+        warningList.push(...((subFieldError.warnings ?? []) as VNodeChild[]));
+      });
+      return warningList;
+    });
+
+    // ── ref 收集（useItemRef：form.scrollToField / focus 用）──
+    const itemRefMap = new Map<string, ComponentPublicInstance | HTMLElement | null>();
+    const getItemRef = (name: (string | number)[]): ((el: unknown) => void) | undefined => {
+      const key = (getFieldId(name) ?? name.join('_')) as string;
+      if (!itemRefMap.has(key)) {
+        itemRefMap.set(key, null);
+      }
+      return (el: unknown) => {
+        const element = (el as ComponentPublicInstance | null)?.$el ?? (el as HTMLElement | null);
+        itemRefMap.set(key, element);
+      };
+    };
+
+    return () => {
+      function renderLayout(
+        baseChildren: VNodeChild,
+        fieldId: string | undefined,
+        isRequired: boolean,
+      ): VNodeChild {
+        if (props.noStyle && !props.hidden) {
+          return h(
+            StatusProvider,
+            {
+              prefixCls: prefixCls.value,
+              hasFeedback: props.hasFeedback as never,
+              validateStatus: props.validateStatus as never,
+              meta: meta.value,
+              errors: mergedErrors.value,
+              warnings: mergedWarnings.value,
+              noStyle: true,
+            },
+            { default: () => [baseChildren] },
+          );
+        }
+        return h(
+          ItemHolder,
+          {
+            prefixCls: prefixCls.value,
+            className: props.className,
+            rootClassName: props.rootClassName,
+            style: props.style,
+            help: props.help,
+            errors: mergedErrors.value,
+            warnings: mergedWarnings.value,
+            validateStatus: props.validateStatus as never,
+            meta: meta.value,
+            hasFeedback: props.hasFeedback as never,
+            hidden: props.hidden,
+            fieldId,
+            required: props.required,
+            isRequired,
+            onSubItemMetaChange: onSubItemMetaChange as never,
+            layout: props.layout as never,
+            htmlFor: props.htmlFor,
+            label: props.label,
+            labelAlign: props.labelAlign,
+            labelCol: props.labelCol as never,
+            wrapperCol: props.wrapperCol as never,
+            colon: props.colon,
+            tooltip: props.tooltip,
+            extra: props.extra,
+            requiredMark: formContext?.requiredMark as never,
+          },
+          {
+            default: () => [baseChildren, slots.help?.(), slots.extra?.()],
+          },
+        );
+      }
+
+      // 纯布局 Item：无 name / 非 render-props / 无 dependencies
+      if (!hasName.value && !isRenderProps.value && !props.dependencies) {
+        return renderLayout(slots.default?.(), undefined, false);
+      }
+
+      const variables: Record<string, string> = {};
+      if (typeof props.label === 'string') {
+        variables.label = props.label;
+      } else if (props.name) {
+        variables.label = String(props.name);
+      }
+      if (props.messageVariables) {
+        Object.assign(variables, props.messageVariables);
+      }
+
+      // ── With Field ──
+      return h(
+        Field,
+        {
+          ...(props as Record<string, unknown>),
+          messageVariables: variables,
+          trigger: props.trigger,
+          validateTrigger: props.validateTrigger,
+          onMetaChange: onMetaChange as never,
+        },
+        {
+          default: (
+            control: Record<string, unknown>,
+            renderMeta: CoreMeta,
+            context: FormInstance,
+          ) => {
+            const mergedName =
+              toArray(props.name as never).length && renderMeta ? renderMeta.name : [];
+            const fieldId = getFieldId(mergedName, formContext?.name) ?? props.id;
+            const isRequired =
+              props.required !== undefined
+                ? props.required
+                : (props.rules ?? []).some((rule) => {
+                    if (typeof rule === 'object' && rule !== null && 'required' in rule) {
+                      const r = rule as { required?: boolean; warningOnly?: boolean };
+                      return !!r.required && !r.warningOnly;
+                    }
+                    if (typeof rule === 'function') {
+                      const ruleEntity = (
+                        rule as (f: FormInstance) => { required?: boolean; warningOnly?: boolean }
+                      )(context);
+                      return ruleEntity?.required && !ruleEntity?.warningOnly;
+                    }
+                    return false;
+                  });
+
+            // ── Children ──
+            const childNodes = (slots.default?.(control as never, renderMeta as never, context) ??
+              []) as VNodeChild[];
+            const list = Array.isArray(childNodes) ? childNodes : [childNodes];
+            const single = list.filter(
+              (n): n is VNode => !!n && typeof n === 'object' && 'type' in (n as object),
+            );
+            let childNode: VNodeChild;
+            if (list.length > 1 && hasName.value) {
+              // 多子节点带 name：antd 告警后原样渲染
+              childNode = childNodes;
+            } else if (single.length === 1 && hasName.value && !isRenderProps.value) {
+              const child = single[0] as VNode;
+              const childProps: Record<string, unknown> = {
+                ...(child.props ?? {}),
+                ...control,
+              };
+              if (!childProps.id && fieldId) {
+                childProps.id = fieldId;
+              }
+              const describedbyArr: string[] = [];
+              if (props.help || mergedErrors.value.length > 0) {
+                describedbyArr.push(`${fieldId}_help`);
+              }
+              if (props.extra) {
+                describedbyArr.push(`${fieldId}_extra`);
+              }
+              if (describedbyArr.length) {
+                childProps['aria-describedby'] = describedbyArr.join(' ');
+              }
+              if (mergedErrors.value.length > 0) {
+                childProps['aria-invalid'] = 'true';
+              }
+              if (isRequired) {
+                childProps['aria-required'] = 'true';
+              }
+              // ref 收集（scrollToField / focus）
+              childProps.ref = getItemRef(mergedName as string[]);
+
+              // 事件合成：trigger + validateTrigger 的 handler（control 先、用户后）。
+              // antd 在 React 事件名上合成；Vue 侧 control 的键即触发名（onChange），
+              // 子组件的用户 handler 是 props.onXxx。
+              const triggers = new Set<string>([
+                ...toArray(props.trigger ?? 'onChange'),
+                ...toArray(props.validateTrigger as never),
+              ]);
+              triggers.forEach((eventName) => {
+                const controlHandler = control[eventName] as
+                  | ((...args: unknown[]) => void)
+                  | undefined;
+                const camel = `on${eventName.charAt(0).toUpperCase()}${eventName.slice(1)}`;
+                const userHandler = (child.props as Record<string, unknown>)?.[camel];
+                childProps[eventName] = (...args: unknown[]) => {
+                  controlHandler?.(...args);
+                  (userHandler as ((...a: unknown[]) => void) | undefined)?.(...args);
+                };
+              });
+              childNode = cloneVNode(child, childProps as never);
+            } else {
+              childNode = childNodes;
+            }
+            if (import.meta.env?.DEV) {
+              console.log(
+                'DBG-SLOT-ERRORS:',
+                mergedErrors.value.length,
+                meta.value.errors?.length ?? 0,
+              );
+            }
+            return renderLayout(childNode, fieldId, isRequired);
+          },
+        },
+      );
+    };
+  },
 });
-
-defineSlots<FormItemSlots>();
-
-const { getPrefixCls } = useComponentConfig('form');
-
-const prefixCls = computed(() => getPrefixCls('form', props.prefixCls));
-
-/**
- * 类名（规则 R6）。
- *
- * ⚠️ TODO(impl)：antd 的 FormItem 类名由 `ItemHolder` 产出
- * （`${prefixCls}-item` / `-item-with-help` / `-item-control` / `-item-control-input` …），
- * 且与 `hasFeedback` / `validateStatus` / `layout` / `noStyle` 联动。
- * 骨架只落根类名，**不猜**完整结构。
- */
-const itemClassName = computed(() => `${prefixCls.value}-item`);
 </script>
 
-<template>
-  <!-- ⚠️ TODO(impl)：`noStyle` 分支目前**丢弃 `$attrs`**（多根 + 无宿主元素时
-       必须显式决定落点，见规则 R3）。antd 的 `noStyle` 会把 attrs 交给
-       `StatusProvider` 包裹的子节点 —— 落地时按它的真实行为决定。 -->
-  <slot v-if="noStyle" />
-  <div v-else :class="itemClassName" :style="style" v-bind="$attrs">
-    <slot />
-  </div>
-</template>

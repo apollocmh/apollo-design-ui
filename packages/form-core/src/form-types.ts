@@ -419,6 +419,21 @@ export interface FormInstance<Values = any> {
   setFieldsValue: (values: RecursivePartial<Values> | Partial<Values>) => void;
   validateFields: ValidateFields<Values>;
   submit: () => void;
+  /**
+   * ⭐ antd 壳层补丁（`es/form/hooks/useForm.js`）：rc 无、antd 在 useForm 里加。
+   * 由 `@apollo-design/ui` 的 `useForm` 注入实现；form-core 的裸 store 未实现
+   * （调用即告警桩），保持接口完整以便消费方按 antd 形状编程。
+   */
+  scrollToField?: (name: NamePath<Values>, options?: ScrollOptions) => void;
+  focusField?: (name: NamePath<Values>) => void;
+  getFieldInstance?: (name: NamePath<Values>) => { focus?: () => void } | undefined;
+}
+
+/** antd `ScrollFocusOptions` 的最小面（scroll-into-view-if-needed 的 options + focus）。 */
+export interface ScrollOptions {
+  focus?: boolean;
+  block?: 'start' | 'center' | 'end' | 'nearest';
+  [key: string]: unknown;
 }
 
 export type FormRef<Values = any> = FormInstance<Values> & {

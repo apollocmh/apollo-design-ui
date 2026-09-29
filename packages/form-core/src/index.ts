@@ -38,7 +38,7 @@ export { default as delayFrame } from './delay-frame';
 // ---------------------------------------------------------------------------
 // ⚠️ `validateRule` / `validateRules` **不导出** —— 上游 `es/index.d.ts` 也没有它们
 //    （它们是 `Field` 的内部编排，契约 §4.7.8）。测试从 `../validate-util` 直接 import。
-export { Field } from './field';
+export { Field, fieldProps } from './field';
 export { Form } from './form';
 export {
   defaultFieldContext,
@@ -117,7 +117,7 @@ export type {
   WatchOptions,
 } from './form-types';
 export { isFormInstance } from './form-util';
-export { List } from './list';
+export { List, listProps } from './list';
 // ---------------------------------------------------------------------------
 // 消息模板
 // ---------------------------------------------------------------------------

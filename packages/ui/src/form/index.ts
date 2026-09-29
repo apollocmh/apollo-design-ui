@@ -1,19 +1,17 @@
 /**
- * `Form` / `Form.Item` / `Form.List` 的公共导出（**骨架阶段**）。
+ * `Form` / `Form.Item` / `Form.List` 的公共导出（G5 实现落地）。
  *
- * ⚠️⚠️ **本目录是骨架，不是实现** —— 见 `README.md`。
- *
- * ⚠️ 因此本模块**暂不接入 `packages/ui/src/index.ts` 的 barrel**。
- * 理由：barrel 的语义是「这些组件可用」，而骨架的内部是 TODO
- * （不产校验状态、不渲染 label/help/error）。提前导出会让
- * 「`import { Form } from '@apollo-design/ui'` 能用」变成一句假话。
- * 落地（G1→G14）后连同 export 段一起加进 barrel。
+ * 静态属性：`Form.Item` / `Form.List` / `Form.useForm` / `Form.useWatch` /
+ * `Form.ErrorList`（antd 复合组件对齐）。
  */
 
 import { withInstall } from '../_internal/with-install';
+import ErrorListComponent from './ErrorList';
 import FormComponent from './Form.vue';
 import FormItemComponent from './FormItem.vue';
 import FormListComponent from './FormList.vue';
+import { useForm as useFormHook } from './hooks/use-form';
+import { useWatch as useWatchHook } from './hooks/use-watch';
 
 /** `Form.Item`。 */
 export const FormItem = withInstall(FormItemComponent);
@@ -32,11 +30,18 @@ export const Form = withInstall(
   Object.assign(FormComponent, {
     Item: FormItem,
     List: FormList,
+    useForm: useFormHook,
+    useWatch: useWatchHook,
+    ErrorList: ErrorListComponent,
   }),
 );
 
 export default Form;
 
+export { ErrorList as ErrorListComponent } from './ErrorList';
+// ── 静态属性与 hooks（antd Form 复合面）──
+export { useForm, useForm as useFormInstance } from './hooks/use-form';
+export { stringify, useWatch, useWatch as useFormWatch } from './hooks/use-watch';
 export type {
   ColProps,
   FeedbackIcons,
@@ -61,3 +66,6 @@ export type {
   ValidateStatus,
   Variant,
 } from './interface';
+export { genFormStyle, genFormTokenDecls } from './style';
+export type { ComponentToken as FormComponentToken } from './style/token';
+export { prepareComponentToken as prepareFormComponentToken } from './style/token';
