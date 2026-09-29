@@ -21,10 +21,10 @@
 - [x] G8 L5 a11y —— axe 扫 7 种真实配置 + role/ARIA 6 + 键盘与焦点 5 + 上游缺口 1 = **19 用例**（demo 维度的扫描留到 G11，占位 demo 不扫）
 - [x] G9 L6 视觉 —— **24/24 逐像素 exact**（8 variant × 3 viewport，一次通过，2026-09-29）
 - [x] G10 L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [x] G11 DOCS —— 13 个 demo（expectCount 钉死）+ zh/en 文档 + README；theme/a11y 的 demo 维度扫描已接
+- [x] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:slider]
+- [x] G14 COMMIT —— commit message 带 [COMP:slider]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

@@ -14,15 +14,15 @@
  *
  * ── 关于 axe 的适用范围 ───────────────────────────────────────────────────────
  *
- * `a11yDemoTest('Slider', { demos })` 走的是**组件 demo**，而 demo 目前还是 G11 之前的占位文件 ——
- * 挂上去只会得到「占位 demo 也能跑」的假绿灯。所以本轮**不等 demo**：直接对**真实配置**
- * （单把手 / range / 纵向 / 带 marks / 禁用 / tooltip 常开）逐个跑 axe，覆盖面比扫一个占位
- * demo 更大；G11 落地真 demo 后再补 demo 维度的扫描。
+ * 两层扫描都在：**demo 维度**用 `a11yDemoTest`（13 个 demo 逐个跑 axe），
+ * **真实配置维度**用下面的 `cases` 表（单把手 / range / 纵向 / marks / 禁用 / tooltip 常开）——
+ * 后者覆盖的是 demo 未必碰到的参数组合。
  *
  * ⚠️ axe 在 jsdom 下不做布局与绘制：`color-contrast` 会落到 `incomplete` 而非 `violation`
  * （对比度由 L7 的 token 断言 + L6 像素比对兜底）。
  */
 
+import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
@@ -30,6 +30,33 @@ import { h, nextTick } from 'vue';
 import Slider from '../Slider.vue';
 
 const P = 'apollo-slider';
+
+/**
+ * 取第 `index` 项（`noUncheckedIndexedAccess` 下的显式化）。
+ *
+ * ⚠️ 不用 `!`（本仓 `noNonNullAssertion` 会报警）；这里**主动抛错**而不是塞 `undefined`，
+ *    这样「用例少建了一个节点」会以清晰的消息失败，而不是在后面某行以 `undefined` 报错。
+ */
+const at = <T>(list: T[], index: number): T => {
+  const item = list[index];
+  if (item === undefined) {
+    throw new Error(`期望至少有 ${index + 1} 个元素，实际 ${list.length} 个`);
+  }
+  return item;
+};
+
+a11yDemoTest('Slider', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  // ⚠️ demo 里的 `<Slider />` 不传 `ariaLabelForHandle` ⇒ `aria-input-field-name`。
+  //    与 antd 逐字一致（上游同样不给默认名），见 COMPATIBILITY 的 **U13**。
+  allow: [
+    {
+      rule: 'aria-input-field-name',
+      reason:
+        'demo 未给把手取名，`role="slider"` 因此没有可访问名 —— 与 antd 6.6.4 一致（上游也不编默认名，见 U13）。组件提供 ariaLabelForHandle / ariaLabelledByForHandle 由使用方按语义命名。',
+    },
+  ],
+});
 
 /** 与 test-utils 的 `DEFAULT_TAGS` 同源：WCAG 2.0/2.1/2.2 的 A + AA。 */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
@@ -103,7 +130,8 @@ describe('Slider · role / ARIA 契约（L5）', () => {
       ariaRequired: true,
       ariaValueTextFormatterForHandle: [(v: number) => `起 ${v}`, (v: number) => `止 ${v}`],
     });
-    const [first, second] = w.findAll(`.${P}-handle`);
+    const first = at(w.findAll(`.${P}-handle`), 0);
+    const second = at(w.findAll(`.${P}-handle`), 1);
     expect(first.attributes('aria-label')).toBe('起始');
     expect(second.attributes('aria-label')).toBe('结束');
     expect(first.attributes('aria-required')).toBe('true');
@@ -117,7 +145,8 @@ describe('Slider · role / ARIA 契约（L5）', () => {
       defaultValue: [20, 60],
       ariaLabelledByForHandle: ['label-a', 'label-b'],
     });
-    const [first, second] = w.findAll(`.${P}-handle`);
+    const first = at(w.findAll(`.${P}-handle`), 0);
+    const second = at(w.findAll(`.${P}-handle`), 1);
     expect(first.attributes('aria-labelledby')).toBe('label-a');
     expect(second.attributes('aria-labelledby')).toBe('label-b');
     w.unmount();
@@ -125,7 +154,8 @@ describe('Slider · role / ARIA 契约（L5）', () => {
 
   it('禁用把手 aria-disabled=true 且不可聚焦', () => {
     const w = mountA11y({ range: true, defaultValue: [20, 60], disabled: [true, false] });
-    const [first, second] = w.findAll(`.${P}-handle`);
+    const first = at(w.findAll(`.${P}-handle`), 0);
+    const second = at(w.findAll(`.${P}-handle`), 1);
     expect(first.attributes('aria-disabled')).toBe('true');
     expect(first.attributes('tabindex')).toBeUndefined();
     expect(second.attributes('aria-disabled')).toBe('false');
@@ -135,7 +165,8 @@ describe('Slider · role / ARIA 契约（L5）', () => {
 
   it('tabIndex 数组形态逐把手生效（可只留一个 Tab 入口）', () => {
     const w = mountA11y({ range: true, defaultValue: [20, 60], tabIndex: [0, -1] });
-    const [first, second] = w.findAll(`.${P}-handle`);
+    const first = at(w.findAll(`.${P}-handle`), 0);
+    const second = at(w.findAll(`.${P}-handle`), 1);
     expect(first.attributes('tabindex')).toBe('0');
     expect(second.attributes('tabindex')).toBe('-1');
     w.unmount();
@@ -161,7 +192,7 @@ describe('Slider · 键盘与焦点管理（L5）', () => {
 
   it('range：键盘改的是「当前聚焦的那个把手」', async () => {
     const w = mountA11y({ range: true, defaultValue: [20, 60] });
-    const second = w.findAll(`.${P}-handle`)[1].element as HTMLElement;
+    const second = at(w.findAll(`.${P}-handle`), 1).element as HTMLElement;
     second.focus();
     fireKey(second, 39);
     await nextTick();

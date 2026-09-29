@@ -39,6 +39,20 @@ import { getDirectionStyle, getIndex, getOffset } from '../util';
 
 const P = 'apollo-slider';
 
+/**
+ * 取第 `index` 项（`noUncheckedIndexedAccess` 下的显式化）。
+ *
+ * ⚠️ 不用 `!`（本仓 `noNonNullAssertion` 会报警）；这里**主动抛错**而不是塞 `undefined`，
+ *    这样「用例少建了一个节点」会以清晰的消息失败，而不是在后面某行以 `undefined` 报错。
+ */
+const at = <T>(list: T[], index: number): T => {
+  const item = list[index];
+  if (item === undefined) {
+    throw new Error(`期望至少有 ${index + 1} 个元素，实际 ${list.length} 个`);
+  }
+  return item;
+};
+
 /** 标准 rect 替身（jsdom 不做布局，`getBoundingClientRect` 恒为 0）。 */
 const RECT = {
   left: 0,
@@ -67,7 +81,8 @@ const fireKey = (el: Element, keyCode: number, type: 'keydown' | 'keyup' = 'keyd
 };
 
 /** 第 index 个把手（`findAll` 的元素）。 */
-const handle = (w: ReturnType<typeof mountSlider>, index = 0) => w.findAll(`.${P}-handle`)[index];
+const handle = (w: ReturnType<typeof mountSlider>, index = 0) =>
+  at(w.findAll(`.${P}-handle`), index);
 
 // ---------------------------------------------------------------------------
 // L1 · util
@@ -545,7 +560,7 @@ describe('Slider 点击轨道（L2）', () => {
   it('点 mark：beforeChange + change + changeComplete 都发（与拖拽的区别只是「不开始拖拽」）', async () => {
     const w = mountSlider({ defaultValue: 0, marks: { 0: 'a', 50: 'b' } });
     await nextTick();
-    w.findAll(`.${P}-mark-text`)[1].trigger('click');
+    at(w.findAll(`.${P}-mark-text`), 1).trigger('click');
     await nextTick();
     expect(w.emitted('beforeChange')?.[0]).toEqual([50]);
     expect(w.emitted('change')?.[0]).toEqual([50]);

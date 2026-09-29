@@ -5,13 +5,28 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/slider/demo/ 抄清单 -->
+最简单的用法：`v-model:value` 绑定值，`range` 切双把手，`disabled` 整体禁用。
+
 ```vue
 <script setup lang="ts">
-import { Slider } from '@apollo-design/ui';
+// 对齐 antd `basic.tsx`：单把手 + range，外加一个禁用开关（用本仓 Switch）。
+import { ref } from 'vue';
+import { Slider, Switch } from '@apollo-design/ui';
+
+const disabled = ref(false);
+const single = ref(30);
+const rangeValue = ref<number[]>([20, 50]);
 </script>
 
 <template>
-  <Slider>basic demo 占位</Slider>
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <Slider v-model:value="single" :disabled="disabled" />
+    <Slider v-model:value="rangeValue" range :disabled="disabled" />
+    <div>
+      Disabled:
+      <!-- ⚠️ 可切换控件必须自带可访问名（axe 的 button-name），旁边的文字不算 -->
+      <Switch v-model:checked="disabled" size="small" aria-label="Disabled" />
+    </div>
+  </div>
 </template>
 ```

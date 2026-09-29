@@ -4,13 +4,17 @@
  * 判定值逐字对拍 antd 6.6.4 产物（可复现命令：
  * `node tests/visual/debug/extract-slider-css.mjs --tokens`）。
  *
- * ⚠️ 主题矩阵（`themeTest('Slider', { demos })`）**刻意还没接**：demo 目前是占位
- *    （G11 才落地），现在挂上去只会因为「拿占位 demo 渲染成功」而假绿。
- *    G4/G11 完成后接上 —— 这条 TODO 本身就是证据，别提前删。
+ * G11 起 demo 是真的，主题矩阵也接上了：`themeTest('Slider', { demos })` 会把 13 个 demo
+ * 在 light / dark / compact / token-override 四种主题下各渲染一遍。
  */
 
+import { themeTest } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import { prepareComponentToken, sliderTokenValues } from '../style/token';
+
+themeTest('Slider', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+});
 
 describe('Slider · Component Token 判定值（antd 产物逐字对拍）', () => {
   const t = sliderTokenValues();
