@@ -14,16 +14,30 @@
 - **每个 Gate 收口时**，把本次踩的经典错误追加到 `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），含：坑、哪一层测试抓到的、对策。
 - badge 会话已沉淀 14 条（flex/grid 期教训 + badge 期 CSS 提取管线）。
 
-## 项目进度快照与防重复清单（2026-09-28 popconfirm 收口后；权威来源是 registry，本节是索引）
+## 项目进度快照与防重复清单（2026-09-29 tree 收口后；权威来源是 registry，本节是索引）
 
-- **进度**：foundation 12/13 completed（picker 剩余工作延后到 DatePicker 前）；组件 **50/72**
-  （新增 select, auto-complete, float-button, tooltip, popover, menu, dropdown, modal,
-  drawer, message, notification, app, image, rate, steps, progress, segmented, popconfirm 等）。
-  registry:check 18 检查全绿。下一个任务：cascader（P4/L，规模较大）。
+- **进度**：foundation 12/13 completed（picker 剩余工作延后到 DatePicker 前）；组件 **53/72**
+  （新增 tree 等）。registry:check 18 检查全绿。
+  ⚠️ lint:types 有 25 个预存红（cascader 测试/demo + segmented 测试，归 cascader/segmented 流）；
+  lint:format 有 18 个预存红（trigger/carousel/back-top/AutoComplete 测试，非 tree 流）；
+  test:build B7 有 5 个预存红（float-button ×4 + steps ×1，待专流）。
+- **tree 收口要点（2026-09-29，524a82e）**：
+  - rc-tree class 内核 Vue 化：gDSFP 拆分 watch + setUncontrolled 逐键受控；MOTION_KEY
+    哨兵 motion diff；utils 纯函数层独立 L1。
+  - 基线对拍修正 5 处（NodeList Fragment / switcher 类 !isLeaf prop / aria-* false
+    渲染 "false" 但 checkbox 值语义 / checkable 内层 span / DirectoryTree 受控初值）。
+  - 测试环境怪癖：jsdom 空格键 key='Space'（Tree 兼容两值）；animationend 永不派发
+    ⇒ active DOM 断言走事件契约。详见 README §5 十条要点。
+- **tour 收口要点（2026-09-29，a58c160）**：
+  - 实现期修复 motion 包 isSupportTransition 缺 motionName 判据（rc-motion 逐字；motionName
+    缺失 ⇒ 无动画 ⇒ 离场同步完成）——所有「Trigger 不传 motion」的组件都受益。
+  - rc 解构默认值（mask=true / arrow=true / open??true）必须逐条对源码，分析文档 §9 的
+    V 清单流程从此固定；教训沉淀 COMPONENT-CHECKLIST §六 106–111。
+  - PurePanel 壳 = RawPurePanel 结构（-placement-top + 双 -pure + container role=tooltip，
+    total 默认 6）；closeIcon 注入 aria-label=locale.global.close。
+  - 视觉 React case 需要 hooks 时必须包内嵌组件（case 函数在渲染树外执行）。
 - **共享件位置**：ActionButton 在 `_internal/action-button.ts`（popconfirm 为第二消费者提升），modal 侧是垫片。
-- **test:build B7 既有红灯**：--apollo-btn-bg-color-*（float-button）、
-  --apollo-steps-description-max-width（steps）——theme 未声明的变量，待专流处理。
-  ⚠️ 全仓 `update:*` 缺口（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
+- ⚠️ 全仓 `update:*` 缺口（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
   但只有 radio / switch / upload 实现了 ⇒ 其余 19 个组件上 `v-model:xxx` 不生效，待统一补齐。
 - **蓝图**：ROADMAP.md §11 已改为「进度快照 + 已完成清单（防重复）+ 已知遗留
   （不要再排查）+ 下一步」—— 后续每完成一批组件就刷新 §11.1 的一行数字即可，
