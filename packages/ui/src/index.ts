@@ -1055,8 +1055,8 @@ export {
 // ---------------------------------------------------------------------------
 // Pagination —— 分页器（rc-pagination 内核的 Vue 等价物）
 //
-// ⚠️ G2 阶段只落**类型面**；样式导出（genPaginationStyle / preparePaginationComponentToken）
-//    留给 G4 补在本块末尾。
+// G4 起样式导出也在本块内（genPaginationStyle / genPaginationTokenDecls /
+// preparePaginationComponentToken）。
 // ---------------------------------------------------------------------------
 export type {
   PaginationAlign,
@@ -1078,6 +1078,9 @@ export type {
   PaginationSlots,
 } from './pagination';
 export { Pagination } from './pagination';
+export { genPaginationStyle, genTokenDecls as genPaginationTokenDecls } from './pagination/style';
+export type { ComponentToken as PaginationComponentToken } from './pagination/style/token';
+export { prepareComponentToken as preparePaginationComponentToken } from './pagination/style/token';
 // ---------------------------------------------------------------------------
 // Popconfirm —— 气泡确认框
 // ---------------------------------------------------------------------------

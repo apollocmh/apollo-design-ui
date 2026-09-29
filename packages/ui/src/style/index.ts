@@ -58,6 +58,7 @@ import { genMenuStyle } from '../menu/style';
 import { genMessageStyle } from '../message/style';
 import { genModalStyle } from '../modal/style';
 import { genNotificationStyle } from '../notification/style';
+import { genPaginationStyle } from '../pagination/style';
 import { genPopconfirmStyle } from '../popconfirm/style';
 import { genPopoverStyle } from '../popover/style';
 import { genProgressStyle } from '../progress/style';
@@ -159,6 +160,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'tree', gen: genTreeStyle },
   { name: 'tree-select', gen: genTreeSelectStyle },
   { name: 'form', gen: genFormStyle },
+  { name: 'pagination', gen: genPaginationStyle },
   { name: 'slider', gen: genSliderStyle },
 ];
 

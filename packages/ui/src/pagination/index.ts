@@ -32,6 +32,6 @@ export type {
   PaginationSizeChangerInfo,
   PaginationSlots,
 } from './interface';
-// TODO(G4): export { genPaginationStyle } from './style';
-// TODO(G4): export type { ComponentToken as PaginationComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as preparePaginationComponentToken } from './style/token';
+export { genPaginationStyle, genTokenDecls as genPaginationTokenDecls } from './style';
+export type { ComponentToken as PaginationComponentToken } from './style/token';
+export { prepareComponentToken as preparePaginationComponentToken } from './style/token';
