@@ -355,6 +355,7 @@ export default defineComponent({
 
     const {
       draggingIndex,
+      draggingValue: draggingValueRef,
       draggingDelete,
       cacheValues,
       onStartMove,
@@ -499,6 +500,15 @@ export default defineComponent({
         if (valueIndex >= 0) handlesRef.value?.focus?.(valueIndex);
       }
       keyboardFocus.value = null;
+    });
+
+    // ⚠️ 拖拽结束把焦点交给「被拖的那个把手」（rc 在 `useEffect(…, [dragging])` 里做这件事）：
+    //    少这一步的后果是「拖完指针在把手 A 上、焦点却在别处」，键盘接着按时改的是另一个把手。
+    watch(draggingIndex, (index, prev) => {
+      if (index === -1 && prev !== -1) {
+        const valueIndex = rawValues.value.lastIndexOf(draggingValueRef.value ?? Number.NaN);
+        handlesRef.value?.focus?.(valueIndex);
+      }
     });
 
     /** 拖拽删除（`range.editable` + `minCount` 下限）。 */

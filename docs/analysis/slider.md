@@ -79,8 +79,9 @@ onChangeComplete(最终值)              ← finishChange：拖拽结束 / 键�
 ⚠️ 三个易错点：
 1. `onChange` 单值模式发 **number**、range 模式发 **number[]**（`getTriggerValue`）；
 2. `triggerChange` **先排序再比较**（`[...next].sort()`），乱序输入不会漏发；
-3. 点击路径（`changeToCloseValue` 无 `e`）**不发 onBeforeChange**，只发 onChange + onChangeComplete
-   （`onAfterChange`/`onChangeComplete` 两条都在，且带 deprecated 告警）。
+3. `onBeforeChange` 的载荷是**新值**（`changeToCloseValue` 里是 `nextValue`，拖拽开始路径里才是当前值），
+   且**三条路径都发**（拖拽开始 / 点击 / 键盘）。点击 mark 走的是「无 `e`」分支：**不开始拖拽**、
+   同步发 `onChangeComplete`，其余一致 —— ⚠️ G5 实测确认（最初的推断「mark 不发 beforeChange」是错的）。
 
 ---
 
@@ -101,11 +102,13 @@ onChangeComplete(最终值)              ← finishChange：拖拽结束 / 键�
 
 ```
 value 为 null ⇒ []（空把手）
-value 是数组 ⇒ 取前 count+1 个（count 给了才截断），不足时用**最后一个值**补齐，
-              最后统一 sort 升序
+value 是数组 ⇒ **只有 `count` 给了、或 value 是 undefined 时**才截断/补齐：
+              取前 count+1 个，不足用最后一个值补齐；最后统一 sort 升序
 每个值过 formatValue（见 §4.1）
 ```
-⇒ 受控传 `[50]` 的 range 会补成 `[50, 50]`；传 `[]` 则**一个把手都不渲染**。
+⇒ ⚠️ G5 实测：受控传 `{ range: true, value: [50] }` **只有 1 个把手**（rc 的判据是
+`if (count || mergedValue === undefined)`）；`{ range: true }` 未传 value 才补到 2 个；
+传 `[]` 则一个把手都不渲染。
 
 ### 3.3 disabled 两态（`useDisabled`）
 
