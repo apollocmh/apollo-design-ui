@@ -32,6 +32,15 @@ import Tabs from '../Tabs.vue';
 
 const P = 'apollo-tabs';
 
+/** 取第 index 项（`noUncheckedIndexedAccess` 下的显式化；越界**抛错**而不是塞 `undefined`）。 */
+const at = <T>(list: T[], index: number): T => {
+  const item = list[index];
+  if (item === undefined) {
+    throw new Error(`期望至少有 ${index + 1} 个元素，实际 ${list.length} 个`);
+  }
+  return item;
+};
+
 /** 与 test-utils 的 `DEFAULT_TAGS` 同源：WCAG 2.0/2.1/2.2 的 A + AA。 */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
@@ -129,13 +138,13 @@ describe('Tabs · role / ARIA 契约（L5）', () => {
     const w = mountA11y();
     const tabs = w.findAll('[role="tab"]');
     expect(tabs.length).toBe(3);
-    expect(tabs[0]?.attributes('aria-selected')).toBe('true');
-    expect(tabs[0]?.attributes('tabindex')).toBe('0');
-    expect(tabs[1]?.attributes('aria-selected')).toBe('false');
-    expect(tabs[1]?.attributes('tabindex')).toBe('-1');
+    expect(at(tabs, 0).attributes('aria-selected')).toBe('true');
+    expect(at(tabs, 0).attributes('tabindex')).toBe('0');
+    expect(at(tabs, 1).attributes('aria-selected')).toBe('false');
+    expect(at(tabs, 1).attributes('tabindex')).toBe('-1');
     // disabled ⇒ **属性被移除**（不是 -1）
-    expect(tabs[2]?.attributes('tabindex')).toBeUndefined();
-    expect(tabs[2]?.attributes('aria-disabled')).toBe('true');
+    expect(at(tabs, 2).attributes('tabindex')).toBeUndefined();
+    expect(at(tabs, 2).attributes('aria-disabled')).toBe('true');
     w.unmount();
   });
 
@@ -162,7 +171,7 @@ describe('Tabs · role / ARIA 契约（L5）', () => {
   it('「+」与删除按钮都有可访问名（默认文案 + locale 可覆盖）', () => {
     const w = mountA11y({ type: 'editable-card' });
     expect(w.find(`.${P}-nav-add`).attributes('aria-label')).toBe('Add tab');
-    expect(w.findAll(`.${P}-tab-remove`)[0]?.attributes('aria-label')).toBe('remove');
+    expect(at(w.findAll(`.${P}-tab-remove`), 0).attributes('aria-label')).toBe('remove');
     w.unmount();
 
     const localized = mountA11y({
@@ -170,15 +179,15 @@ describe('Tabs · role / ARIA 契约（L5）', () => {
       locale: { addAriaLabel: '添加页签', removeAriaLabel: '删除页签' },
     });
     expect(localized.find(`.${P}-nav-add`).attributes('aria-label')).toBe('添加页签');
-    expect(localized.findAll(`.${P}-tab-remove`)[0]?.attributes('aria-label')).toBe('删除页签');
+    expect(at(localized.findAll(`.${P}-tab-remove`), 0).attributes('aria-label')).toBe('删除页签');
     localized.unmount();
   });
 
   it('focus 时才有 `aria-live` 播报（`Tab i of n`，n 是**启用**页签数）', async () => {
     const w = mountA11y();
     expect(w.find('[aria-live]').exists()).toBe(false);
-    const second = w.findAll('[role="tab"]')[1];
-    (second?.element as HTMLElement).focus();
+    const second = at(w.findAll('[role="tab"]'), 1);
+    (second.element as HTMLElement).focus();
     await nextTick();
     const live = w.find('[aria-live="polite"]');
     // ⚠️ 本组 items 里第 3 个是 disabled ⇒ **启用数只有 2**
@@ -207,62 +216,62 @@ const fireWhichKey = (el: Element, which: number): void => {
 describe('Tabs · 键盘可达性（L5）', () => {
   it('★ 焦点只在**启用**的页签间移动（disabled 的 tabIndex 被移除）', async () => {
     const w = mountA11y();
-    const first = w.findAll('[role="tab"]')[0];
-    (first?.element as HTMLElement).focus();
+    const first = at(w.findAll('[role="tab"]'), 0);
+    (first.element as HTMLElement).focus();
     await nextTick();
 
     // '2' 是最后一个启用项 ⇒ ArrowRight 环形回到 '1'
     fireKey(first?.element as Element, 'ArrowRight');
     await nextTick();
-    expect(document.activeElement).toBe(w.findAll('[role="tab"]')[1]?.element);
+    expect(document.activeElement).toBe(at(w.findAll('[role="tab"]'), 1)?.element);
 
-    fireKey(w.findAll('[role="tab"]')[1]?.element as Element, 'ArrowRight');
+    fireKey(at(w.findAll('[role="tab"]'), 1)?.element as Element, 'ArrowRight');
     await nextTick();
     // 跳过 disabled 的 '3'，环形回到 '1'
-    expect(document.activeElement).toBe(w.findAll('[role="tab"]')[0]?.element);
+    expect(document.activeElement).toBe(at(w.findAll('[role="tab"]'), 0)?.element);
     w.unmount();
   });
 
   it('Home / End 把焦点送到第一个 / 最后一个启用页签', async () => {
     const w = mountA11y();
-    const first = w.findAll('[role="tab"]')[0];
-    (first?.element as HTMLElement).focus();
+    const first = at(w.findAll('[role="tab"]'), 0);
+    (first.element as HTMLElement).focus();
     await nextTick();
 
     fireKey(first?.element as Element, 'End');
     await nextTick();
     // '3' 是 disabled ⇒ End 落到 '2'
-    expect(document.activeElement).toBe(w.findAll('[role="tab"]')[1]?.element);
+    expect(document.activeElement).toBe(at(w.findAll('[role="tab"]'), 1)?.element);
 
-    fireKey(w.findAll('[role="tab"]')[1]?.element as Element, 'Home');
+    fireKey(at(w.findAll('[role="tab"]'), 1)?.element as Element, 'Home');
     await nextTick();
-    expect(document.activeElement).toBe(w.findAll('[role="tab"]')[0]?.element);
+    expect(document.activeElement).toBe(at(w.findAll('[role="tab"]'), 0)?.element);
     w.unmount();
   });
 
   it('Enter / Space 触发激活（焦点页签）', async () => {
     const w = mountA11y();
-    const first = w.findAll('[role="tab"]')[0];
-    (first?.element as HTMLElement).focus();
+    const first = at(w.findAll('[role="tab"]'), 0);
+    (first.element as HTMLElement).focus();
     await nextTick();
     fireKey(first?.element as Element, 'ArrowRight');
     await nextTick();
-    fireKey(w.findAll('[role="tab"]')[1]?.element as Element, 'Enter');
+    fireKey(at(w.findAll('[role="tab"]'), 1)?.element as Element, 'Enter');
     await nextTick();
     expect(w.emitted('change')?.[0]).toEqual(['2']);
     // ⚠️ 不要用 `[aria-selected=true]` 的 text 断言：`aria-live` 的播报也在同一个子树里
-    expect(w.findAll(`.${P}-tab`)[1]?.classes()).toContain(`${P}-tab-active`);
+    expect(at(w.findAll(`.${P}-tab`), 1)?.classes()).toContain(`${P}-tab-active`);
     w.unmount();
   });
 
   it('纵向：↑ ↓ 才移动焦点', async () => {
     const w = mountA11y({ tabPlacement: 'left' });
-    const first = w.findAll('[role="tab"]')[0];
-    (first?.element as HTMLElement).focus();
+    const first = at(w.findAll('[role="tab"]'), 0);
+    (first.element as HTMLElement).focus();
     await nextTick();
     fireKey(first?.element as Element, 'ArrowDown');
     await nextTick();
-    expect(document.activeElement).toBe(w.findAll('[role="tab"]')[1]?.element);
+    expect(document.activeElement).toBe(at(w.findAll('[role="tab"]'), 1)?.element);
     w.unmount();
   });
 

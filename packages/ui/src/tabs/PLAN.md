@@ -20,7 +20,7 @@
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
+- [x] G10 L4 compat 基线 —— `tests/compat/baseline/tabs.mjs` + `baselines/tabs.dom.json`（**26 用例**，两侧都显式传 `id`）+ `semantic.test.ts` **27/27**（每例恰好 1 条豁免：差异 **U15**）+ fixture `tabs/basic.json` L4/L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿

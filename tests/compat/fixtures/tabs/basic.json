@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema.json",
+  "id": "tabs/basic",
+  "component": "tabs",
+  "description": "rc-tabs@1.13.0 内核的 Vue 等价物（antd 侧是 169 行薄壳）。DOM：div.{p}[-{placement}][-card][-editable-card][-centered][-small|-large][-mobile][-rtl] > div.{p}-nav[role=tablist][aria-orientation] > (ExtraContent(left) + div.{p}-nav-wrap[-ping-*] > div.{p}-nav-list[style=translate] > ({tab 节点} + AddButton + div.{p}-ink-bar[-animated]) + OperationNode(div.{p}-nav-operations[-hidden]) + ExtraContent(right)) + div.{p}-body-holder > div.{p}-body[-{placement}][-animated] > CSSMotion > div.{p}-content[-active]。每个页签：div.{p}-tab[data-node-key][-with-remove][-active][-disabled][-focus] > div.{p}-tab-btn[role=tab][aria-selected][id][aria-controls][tabindex 三态] + button.{p}-tab-remove[aria-label][tabindex=active?0:-1]。状态机：activeKey 受控 + 自动重置（旧索引夹到新长度）；id 异步生成（首帧 null）；change 只在真变时发、tabClick 每次都发；键盘读 e.code（纵向 ArrowLeft/Right 不动且不 preventDefault）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "id": "tabs-test",
+    "defaultActiveKey": "1",
+    "items": [
+      { "key": "1", "label": "Tab 1", "children": "Pane 1" },
+      { "key": "2", "label": "Tab 2", "children": "Pane 2" },
+      { "key": "3", "label": "Tab 3", "children": "Pane 3", "disabled": true }
+    ]
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["update:activeKey", "change", "tabClick", "tabScroll", "edit"]
+  }
+}
