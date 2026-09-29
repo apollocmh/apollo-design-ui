@@ -77,6 +77,57 @@ const el = React.createElement(
 renderToStaticMarkup(el);
 const raw = extractStyle(cache);
 
+// ── --emit-static：机械转换成静态 CSS（与 form 的 extract-form-css.mjs 同一套转换）──
+// ⚠️ 必须放在 `!tokensOnly` 那个「原始产物」出口**之前**，否则 --emit-static 会被它吞掉
+//    （实测踩过：先打印了原始 CSS 就 process.exit）。
+if (process.argv.includes('--emit-static')) {
+  const splitRules = (css) => {
+    const out = [];
+    let depth = 0;
+    let start = 0;
+    let at = 0;
+    for (let i = 0; i < css.length; i += 1) {
+      const ch = css[i];
+      if (ch === '{') {
+        if (depth === 0) at = i;
+        depth += 1;
+      } else if (ch === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          out.push([css.slice(start, at).trim(), css.slice(at + 1, i)]);
+          start = i + 1;
+        }
+      }
+    }
+    return out;
+  };
+  const stripScope = (s) =>
+    s
+      .replace(/<\/?style[^>]*>/g, '')
+      .replace(/:where\([^)]*\)/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  // ⚠️ 属性选择器里的字面量（[class^="ant-slider"]）也要改名，否则静态 CSS 里残留 ant-
+  const rename = (s) =>
+    s
+      .replace(/--ant-/g, '--apollo-')
+      .replace(/\.ant-/g, '.apollo-')
+      .replace(/"ant-/g, '"apollo-')
+      .replace(/'ant-/g, "'apollo-")
+      .replace(/" ant-/g, '" apollo-');
+  const clean = (s) => rename(stripScope(s)).replace(/\.anticon/g, '.apollo-icon');
+  const rules = splitRules(raw)
+    .map(([head, body]) => [clean(head), clean(body)])
+    .filter(([head]) => !head.includes('-css-var'))
+    .filter(
+      ([head, body]) =>
+        head.includes('slider') || (head.startsWith('@media') && body.includes('slider')),
+    );
+  console.error(`[extract-slider] 规则 ${rules.length} 条`);
+  console.log(rules.map(([h, b]) => `${h}{${b}}`).join('\n'));
+  process.exit(0);
+}
+
 if (!tokensOnly) {
   console.log(raw);
   process.exit(0);

@@ -37,6 +37,6 @@ export type {
   SliderValue,
 } from './interface';
 
-// TODO(G4): export { genSliderStyle } from './style';
-// TODO(G4): export type { ComponentToken as SliderComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareSliderComponentToken } from './style/token';
+export { genSliderStyle, genTokenDecls as genSliderTokenDecls } from './style';
+export type { ComponentToken as SliderComponentToken } from './style/token';
+export { prepareComponentToken as prepareSliderComponentToken } from './style/token';

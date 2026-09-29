@@ -233,8 +233,9 @@ div.{p}[-disabled][-vertical|-horizontal][-with-marks](+ rtl/lock 由 antd 壳�
 ├─ Steps  → div.{p}-step > div.{p}-dot[-active][-reverse]   （dots / marks）
 ├─ Handles → div.{p}-handle[-{i+1}][-dragging][-dragging-delete][-disabled]
 │              （style 位置 + role=slider + aria-* 全套）
-└─ Marks  → div.{p}-mark-wrapper > div.{p}-mark[-active]
-               > div.{p}-mark-text[-active] > span.{p}-mark-text-label
+└─ Marks  → div.{p}-mark > span.{p}-mark-text[-active]
+               ⚠️ G4 按 **rc 源码**修正：只有 `-mark` > `-mark-text` 两层，
+               **没有** `-mark-wrapper` / `-mark-text-label`（那是 antd 早期版本的形态）
 ```
 - `-with-marks` 只在 `markList.length` 为真时加；
 - `-handle-{i+1}` 只在 **range** 模式加（单把手没有序号类）；

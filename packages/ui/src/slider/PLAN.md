@@ -15,7 +15,7 @@
 - [x] G1 ANALYZE —— docs/analysis/slider.md（2026-09-29：结构判定 + 3344 行 rc 内核判据 + 18 token + 7 条风险 + Vue 化决策）
 - [x] G2 API DESIGN —— interface.ts 全量类型面（21 个类型：值域/range 配置/marks/5 语义槽/tooltip/把手 slot/emits/slots/ref）+ 根 barrel 块（2026-09-29）
 - [x] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（**18 个**，2026-09-29 与产物逐字对拍：10/10/12/4/8/2/2.5 + 9 个颜色；两处构建期算式 setA(0.2) 与 onBackground）
-- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [x] G4 IMPLEMENT —— Slider.vue + Handles/Tracks/Steps/Marks + hooks（useOffset/useDrag/useRange）+ context/util；样式 54 条规则从 extract-slider-css.mjs --emit-static 机械移植（2026-09-29）
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言

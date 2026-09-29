@@ -68,6 +68,7 @@ import { genResultStyle } from '../result/style';
 import { genSegmentedStyle } from '../segmented/style';
 import { genSelectStyle } from '../select/style';
 import { genSkeletonStyle } from '../skeleton/style';
+import { genSliderStyle } from '../slider/style';
 import { genSpaceStyle } from '../space/style';
 import { genSpinStyle } from '../spin/style';
 import { genSplitterStyle } from '../splitter/style';
@@ -158,6 +159,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'tree', gen: genTreeStyle },
   { name: 'tree-select', gen: genTreeSelectStyle },
   { name: 'form', gen: genFormStyle },
+  { name: 'slider', gen: genSliderStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

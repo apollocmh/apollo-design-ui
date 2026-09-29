@@ -397,8 +397,8 @@ export {
 // ---------------------------------------------------------------------------
 // Slider —— 滑动输入条（rc-slider 内核的 Vue 等价物）
 //
-// ⚠️ G2 阶段只落**类型面**；样式导出（genSliderStyle / prepareSliderComponentToken）
-//    留给 G4 补在本块末尾。
+// G4 起样式导出也在本块内（genSliderStyle / genSliderTokenDecls /
+// prepareSliderComponentToken），与其它组件同构。
 // ---------------------------------------------------------------------------
 export type {
   SliderAriaValueFormat,
@@ -424,6 +424,9 @@ export type {
   SliderValue,
 } from './slider';
 export { Slider } from './slider';
+export { genSliderStyle, genTokenDecls as genSliderTokenDecls } from './slider/style';
+export type { ComponentToken as SliderComponentToken } from './slider/style/token';
+export { prepareComponentToken as prepareSliderComponentToken } from './slider/style/token';
 // ---------------------------------------------------------------------------
 // Space —— 间距容器（`Space.Compact` / `Space.Addon` 是同包的子组件）
 //
