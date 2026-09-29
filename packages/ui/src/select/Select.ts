@@ -186,6 +186,14 @@ export const Select = defineComponent({
    */
   emits: ['update:value', 'update:open'],
   setup(props, { slots, emit, attrs, expose }) {
+    // aria-label / aria-labelledby 单独走 props（见下面 h(BaseSelect) 处的说明）
+    const {
+      'aria-label': ariaLabelAttr,
+      'aria-labelledby': ariaLabelledbyAttr,
+      ...restAttrs
+    } = attrs as Record<string, unknown>;
+    void ariaLabelAttr;
+    void ariaLabelledbyAttr;
     const { getPrefixCls } = useComponentConfig('select');
     const config = useConfigContext();
     const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('select'));
@@ -878,7 +886,14 @@ export const Select = defineComponent({
           onInputKeyDown: (event: KeyboardEvent) => {
             props.onInputKeyDown?.(event);
           },
-          ...attrs,
+          // ⚠️ 可访问名**不随 attrs 扩散**：antd 只把它放在 combobox input 上
+          //    （实测 antd 6.6.4 SSR）。所以这里把它从 attrs 里摘出来单独传，
+          //    其余 attrs 照旧（pagination 的尺寸切换器需要它，见 SearchInput 的说明）。
+          ariaLabel: (attrs as Record<string, unknown>)['aria-label'] as string | undefined,
+          ariaLabelledby: (attrs as Record<string, unknown>)['aria-labelledby'] as
+            | string
+            | undefined,
+          ...restAttrs,
         } as never,
         {},
       );

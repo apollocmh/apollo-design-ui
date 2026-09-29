@@ -69,6 +69,9 @@ export const Selector = defineComponent({
     tabIndex: { type: Number, default: undefined },
     title: { type: String, default: undefined },
     role: { type: String, default: undefined },
+    /** 可访问名（原样转发给 combobox input，见 SearchInput 的说明）。 */
+    ariaLabel: { type: String, default: undefined },
+    ariaLabelledby: { type: String, default: undefined },
     maxLength: { type: Number, default: undefined },
     autoFocus: { type: Boolean, default: false },
     maxTagCount: { type: Number, default: undefined },
@@ -338,6 +341,8 @@ export const Selector = defineComponent({
         open: props.open,
         activeDescendantId: props.activeDescendantId,
         role: props.role ?? 'combobox',
+        ariaLabel: props.ariaLabel,
+        ariaLabelledby: props.ariaLabelledby,
         tabIndex: props.tabIndex,
         maxLength: props.mode === 'combobox' ? props.maxLength : undefined,
         autoFocus: props.autoFocus,

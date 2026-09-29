@@ -64,6 +64,12 @@ export const BaseSelect = defineComponent({
   props: {
     prefixCls: { type: String, required: true },
     id: { type: String, required: true },
+    /**
+     * 可访问名（2026-09-29 补）。必须在这里**声明**：Vue 只把已声明的键放进 `props`，
+     * 未声明的会落进 `attrs`（`props.ariaLabel` 恒为 `undefined`，链就断了 —— 第一版实测）。
+     */
+    ariaLabel: { type: String, default: undefined },
+    ariaLabelledby: { type: String, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<CSSProperties>, default: undefined },
     mode: { type: String as PropType<InternalSelectMode | undefined>, default: undefined },
@@ -832,6 +838,9 @@ export const BaseSelect = defineComponent({
             default: () =>
               h(Selector, {
                 ref: selectorRef,
+                // 可访问名（转发到 combobox input；见 Select 的 attrs 处理）
+                ariaLabel: props.ariaLabel,
+                ariaLabelledby: props.ariaLabelledby,
                 onClick: props.openOnTriggerClick
                   ? () => {
                       if (props.disabled) return;

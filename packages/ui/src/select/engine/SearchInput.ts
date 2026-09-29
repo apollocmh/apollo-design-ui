@@ -31,6 +31,14 @@ export const SearchInput = defineComponent({
     open: { type: Boolean, default: false },
     activeDescendantId: { type: String, default: undefined },
     role: { type: String, default: 'combobox' },
+    /**
+     * ⚠️ 可访问名（2026-09-29 补）：antd 把调用方给的 `aria-label` / `aria-labelledby`
+     * **放在 combobox 这个 input 上**（实测 antd 6.6.4 SSR：`<input role="combobox" aria-label="Rows per page">`）。
+     * 本仓原先完全没有这条链 ⇒ 任何「没有 label/占位文字」的 Select 都会触发 axe 的
+     * `label: Form elements must have labels`（pagination 的尺寸切换器就是这么发现的）。
+     */
+    ariaLabel: { type: String, default: undefined },
+    ariaLabelledby: { type: String, default: undefined },
     tabIndex: { type: Number, default: undefined },
     maxLength: { type: Number, default: undefined },
     autoFocus: { type: Boolean, default: false },
@@ -127,6 +135,8 @@ export const SearchInput = defineComponent({
         autoFocus: props.autoFocus || undefined,
         autoComplete: 'new-password',
         role: props.role,
+        'aria-label': props.ariaLabel,
+        'aria-labelledby': props.ariaLabelledby,
         'aria-expanded': props.open || false,
         'aria-haspopup': 'listbox',
         'aria-autocomplete': 'list',
