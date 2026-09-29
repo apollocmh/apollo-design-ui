@@ -1,0 +1,6081 @@
+{
+  "$schema": "../schema.json",
+  "component": "pagination",
+  "what": "页码列表算法的判定表（机械 oracle：antd 6.6.4 SSR 产物摘要）",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-09-29T15:33:17.883Z",
+  "cases": [
+    {
+      "total": 0,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 0,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 0,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "disabled": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 2,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 3,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 4,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 5,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 6,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 10,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 10,
+      "current": 50,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 1,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 4,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 4,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 4,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 4,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 5,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 5,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 5,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 5,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 6,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 6,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 6,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 6,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 10,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 10,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 10,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 10,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 50,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 50,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 50,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 30,
+      "current": 50,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 3,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 6,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 6,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 6,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 6,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 10,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 10,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 10,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 10,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 50,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 50,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 50,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 50,
+      "current": 50,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 5,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 8,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 50,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 50,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 50,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 100,
+      "current": 50,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 10,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 8,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11
+        },
+        {
+          "kind": "page",
+          "page": 12
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 9,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 9,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 50
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 46
+        },
+        {
+          "kind": "page",
+          "page": 47
+        },
+        {
+          "kind": "page",
+          "page": 48
+        },
+        {
+          "kind": "page",
+          "page": 49
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 46,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 47
+        },
+        {
+          "kind": "page",
+          "page": 48
+        },
+        {
+          "kind": "page",
+          "page": 49
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 48
+        },
+        {
+          "kind": "page",
+          "page": 49
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 500,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 50,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 48,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 49
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 1,
+      "effectiveCurrent": 1,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 2,
+      "effectiveCurrent": 2,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 3,
+      "effectiveCurrent": 3,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 2
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 4,
+      "effectiveCurrent": 4,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 3,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 3
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 5,
+      "effectiveCurrent": 5,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 4,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 4
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 5
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 6,
+      "effectiveCurrent": 6,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 5,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 6,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 7,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 8
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11
+        },
+        {
+          "kind": "page",
+          "page": 12
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 9,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 9
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 10,
+      "effectiveCurrent": 10,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 9,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 10,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 11,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": false,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 48
+        },
+        {
+          "kind": "page",
+          "page": 49
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 51
+        },
+        {
+          "kind": "page",
+          "page": 52
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": false,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 49,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 51,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": true,
+      "showPrevNextJumpers": false,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "page",
+          "page": 49
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 51
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    },
+    {
+      "total": 1000,
+      "current": 50,
+      "effectiveCurrent": 50,
+      "showLessItems": true,
+      "showPrevNextJumpers": true,
+      "allPages": 100,
+      "items": [
+        {
+          "kind": "page",
+          "page": 1
+        },
+        {
+          "kind": "jump-prev"
+        },
+        {
+          "kind": "page",
+          "page": 49,
+          "afterJumpPrev": true
+        },
+        {
+          "kind": "page",
+          "page": 50,
+          "active": true
+        },
+        {
+          "kind": "page",
+          "page": 51,
+          "beforeJumpNext": true
+        },
+        {
+          "kind": "jump-next"
+        },
+        {
+          "kind": "page",
+          "page": 100
+        }
+      ]
+    }
+  ]
+}

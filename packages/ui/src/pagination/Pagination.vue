@@ -32,7 +32,7 @@ import {
   RightOutlined,
 } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
-import { computed, defineComponent, h, type PropType, ref, toRef, useAttrs, watch } from 'vue';
+import { computed, defineComponent, h, type PropType, ref, useAttrs, watch } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
@@ -146,7 +146,9 @@ export default defineComponent({
     }));
 
     // ---- size / variant / responsive ----
-    const mergedSize = useSize(toRef(props, 'size'));
+    // ⚠️ 必须用**函数形态**：`useSize(props.size)` / `toRef(...)` 都**非响应式**
+    //    （本仓 PITFALLS 163 / CHECKLIST #46，input-number / radio / switch 各踩过一次）
+    const mergedSize = useSize((ctx) => props.size ?? ctx);
     // ⚠️ 本仓的 `useBreakpoint` 返回 `Ref<Screens | null>`（antd 返回 screens 对象本体）
     const screens = useBreakpoint(!!props.responsive);
     const isSmall = computed(
@@ -216,13 +218,19 @@ export default defineComponent({
     };
 
     const changePageSize = (size: number): void => {
+      // 🚨 **必须在改 pageSize 之前**把当前页取出来：Vue 的 `computed` 是惰性求值，
+      //    一旦 `innerPageSize` 变了，`mergedCurrent`（= clamp(current, 1, allPages)）
+      //    会**立刻**按新的 allPages 重新钳制 —— 直接在下面 emit `mergedCurrent.value`
+      //    会把 `showSizeChange` 的 current 报成**已经回退后的新页**（rc 报的是旧页）。
+      //    （React 那边 `current` 是本次渲染的常量，所以 rc 怎么写都对。）
+      const previousCurrent = mergedCurrent.value;
       const newCurrent = calculatePage(size, props.total ?? 0);
       const nextCurrent =
-        mergedCurrent.value > newCurrent && newCurrent !== 0 ? newCurrent : mergedCurrent.value;
+        previousCurrent > newCurrent && newCurrent !== 0 ? newCurrent : previousCurrent;
       innerPageSize.value = size;
       inputValue.value = nextCurrent;
       emit('update:pageSize', size);
-      emit('showSizeChange', mergedCurrent.value, size);
+      emit('showSizeChange', previousCurrent, size);
       innerCurrent.value = nextCurrent;
       emit('update:current', nextCurrent);
       emit('change', nextCurrent, size);
@@ -373,7 +381,7 @@ export default defineComponent({
             ]
               .filter(Boolean)
               .join(' '),
-            onChange: (next: number) => info.onChange?.(Number(next)),
+            onChange: (next: number) => (info.onSizeChange ?? info.onChange)?.(Number(next)),
           } as never,
         );
       };
@@ -489,8 +497,13 @@ export default defineComponent({
           tabIndex = disabledFlag ? undefined : 0;
         }
 
-        const activate = (): void =>
+        // ⚠️ rc 的 `prevHandle` / `nextHandle` **有守卫**（`if (hasPrev|hasNext)`）：
+        //    没守卫时点「已禁用的上一页」会把 0 传进 `changeCurrent` —— `isValid(0)` 会通过
+        //    （0 是整数、≠ current、total>0），钳回 1 后仍**发出一次多余的同值事件**（实测）。
+        const activate = (): void => {
+          if (isPrev ? !hasPrev.value : !hasNext.value) return;
           changeCurrent(isPrev ? mergedCurrent.value - 1 : mergedCurrent.value + 1);
+        };
 
         return h(
           'li',
@@ -529,7 +542,9 @@ export default defineComponent({
                 active: item.active,
                 itemClassName: classNames.item,
                 itemStyle: styles.item,
-                extraClass: item.extraClass,
+                // ⚠️ 三选一：`allPages === 0` 的占位项（`-item-disabled`，rc 由外层传入）
+                //    或跳页项相邻的补类
+                extraClass: item.disabled ? 'item-disabled' : item.extraClass,
                 showTitle: props.showTitle,
                 itemRender: itemRenderer.value as never,
                 onClick: (page: number) => changeCurrent(page),

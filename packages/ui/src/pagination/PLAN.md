@@ -16,7 +16,7 @@
 - [x] G2 API DESIGN —— interface.ts 全量类型面（18 个类型）+ 根 barrel 块；**无 expose**（上游是 React.FC）
 - [x] G3 TOKEN —— style/token.ts **12 个**自有 token 与产物逐字对拍（2026-09-29）+ 输入框族 19 个**本地复刻**（不跨组件 import，与 input-number 先例一致）+ 3 个派生 token
 - [x] G4 IMPLEMENT —— Pagination.vue + Pager/Options/getPagerList（纯函数）/useShowSizeChanger；样式 108 条规则 + 32 条 token 声明从 extract-pagination-css.mjs --emit-static 机械移植（2026-09-29）
-- [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
+- [x] G5 L1 单元 + G6 L2 交互 —— __tests__/{pagers,index}.test.ts（**274 用例**：L1 227 = 224 行页码判定表对拍 antd 产物 + calculatePage + useShowSizeChanger；L2 47 = 结构/值变化/showTotal/itemRender/简化模式/快速跳转/尺寸切换/ConfigProvider 合并）
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）

@@ -79,11 +79,20 @@ export interface PaginationSemanticAllType {
 // 尺寸切换器（antd 的 `components.sizeChanger` / rc 的 `sizeChangerRender`）
 // ---------------------------------------------------------------------------
 
-/** 自定义尺寸切换器拿到的信息（逐字段对齐 rc `Options.js` 的实参）。 */
+/**
+ * 自定义尺寸切换器拿到的信息。
+ *
+ * ⚠️ **两个上游通道、两个字段名**，本仓同时给出（同一个函数）：
+ *   - rc `Options.js` 的 `sizeChangerRender` 实参叫 **`onSizeChange`**；
+ *   - antd `components.sizeChanger` 的实参叫 **`onChange`**。
+ *   只给一个会让另一侧静默失效（G4 实测：写成 `onChange` 时 rc 口径的调用点全部拿到 `undefined`）。
+ */
 export interface PaginationSizeChangerInfo {
   /** 当前 pageSize。 */
   value: number;
-  /** 切换 pageSize（内部会走 `changePageSize` 的完整链路）。 */
+  /** 切换 pageSize（内部会走 `changePageSize` 的完整链路）。rc 口径。 */
+  onSizeChange: (value: number) => void;
+  /** 同上。antd 的 `components.sizeChanger` 口径（别名）。 */
   onChange: (value: number) => void;
   disabled: boolean;
   /** rc 传进来的类名（`{p}-options-size-changer`）。 */

@@ -52,11 +52,11 @@ export default defineComponent({
   setup(props) {
     const goInputText = ref('');
 
-    const validValue = computed<number | undefined>(() =>
-      !goInputText.value || Number.isNaN(Number(goInputText.value))
-        ? undefined
-        : Number(goInputText.value),
-    );
+    /** 输入文本 → 合法页号（空 / 非数字 ⇒ `undefined`）。 */
+    const readValid = (text: string): number | undefined =>
+      !text || Number.isNaN(Number(text)) ? undefined : Number(text);
+
+    const validValue = computed<number | undefined>(() => readValid(goInputText.value));
 
     const buildOptionText = (value: number): string => `${value} ${props.locale.items_per_page}`;
 
@@ -73,21 +73,31 @@ export default defineComponent({
       if (goInputText.value === '') return;
       const isEnter = 'keyCode' in e && e.keyCode === 13;
       if (isEnter || e.type === 'click') {
+        // ⚠️ **必须先取值再清空**：Vue 的 `ref` 是**同步**的，清空之后 `validValue` 立刻变
+        //    `undefined`（rc 能这么写是因为 React 的 setState 是异步的，事件处理器内读到的
+        //    仍是旧值）—— 顺序反了会导致「点确认按钮没反应」且**没有任何报错**。
+        const next = validValue.value;
         goInputText.value = '';
-        props.quickGo?.(validValue.value as number);
+        props.quickGo?.(next as number);
       }
     };
 
     const handleChange = (e: Event): void => {
-      const value = (e.target as HTMLInputElement).value;
+      const target = e.target as HTMLInputElement;
+      const value = target.value;
       if (/^\d*$/.test(value)) {
         goInputText.value = value;
+        return;
       }
+      // ⚠️ 非法字符要把 DOM 值**按回去**：React 对受控 input 有 restoreControlledState，
+      //    Vue 没有 —— 状态不变 ⇒ 不会 patch ⇒ 用户敲的 `a` 会**留在框里**（实测）。
+      target.value = goInputText.value;
     };
 
     const handleBlur = (e: FocusEvent): void => {
       if (props.goButton || goInputText.value === '') return;
-      const next = goInputText.value;
+      // 同 `go`：先取值再清空（Vue 的 ref 是同步的）
+      const pending = readValid(goInputText.value);
       goInputText.value = '';
       const related = e.relatedTarget as HTMLElement | null;
       const relatedClass = related?.className ?? '';
@@ -98,8 +108,7 @@ export default defineComponent({
       ) {
         return;
       }
-      void next;
-      props.quickGo?.(validValue.value as number);
+      props.quickGo?.(pending as number);
     };
 
     return () => {
@@ -109,10 +118,14 @@ export default defineComponent({
 
       let changeSelect: VNodeChild = null;
       if (props.showSizeChanger && props.sizeChangerRender) {
+        // ⚠️ 两个键给同一个函数：rc 口径 `onSizeChange` + antd `components.sizeChanger` 口径 `onChange`
+        const commitSize = (nextValue: number | string): void =>
+          props.onChangeSize?.(Number(nextValue));
         changeSelect = props.sizeChangerRender({
           disabled: props.disabled,
           value: props.pageSize,
-          onSizeChange: (nextValue) => props.onChangeSize?.(Number(nextValue)),
+          onSizeChange: commitSize,
+          onChange: commitSize,
           'aria-label': props.locale.page_size,
           className: `${prefixCls}-size-changer`,
           options: mergedPageSizeOptions.value.map((opt) => ({
