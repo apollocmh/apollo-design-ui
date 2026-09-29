@@ -233,6 +233,14 @@ export interface TabsProps {
   /** 受控激活页签（`v-model:activeKey`）。 */
   activeKey?: string;
   defaultActiveKey?: string;
+  /**
+   * 根节点的 `id`，同时被用作 aria 关联的前缀（`{id}-tab-{key}` / `{id}-panel-{key}`）。
+   *
+   * ⚠️ **不传时是异步生成的**（首帧 `null` ⇒ 首帧没有 `aria-controls` / `aria-labelledby`），
+   *    这是上游的刻意行为（避免 SSR 与客户端 id 不匹配）。做 DOM 对拍（L4）时要**显式传**
+   *    它，否则两侧的首帧对不上。
+   */
+  id?: string;
   items?: TabsItem[];
   /** ⚠️ 兼容形态：只发 deprecated 告警，**不实现**（用 `items`）。 */
   children?: VNodeChild;
