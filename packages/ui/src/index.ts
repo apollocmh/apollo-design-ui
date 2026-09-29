@@ -395,6 +395,36 @@ export {
   SkeletonNode,
 } from './skeleton';
 // ---------------------------------------------------------------------------
+// Slider —— 滑动输入条（rc-slider 内核的 Vue 等价物）
+//
+// ⚠️ G2 阶段只落**类型面**；样式导出（genSliderStyle / prepareSliderComponentToken）
+//    留给 G4 补在本块末尾。
+// ---------------------------------------------------------------------------
+export type {
+  SliderAriaValueFormat,
+  SliderBaseProps,
+  SliderDirection,
+  SliderDotStyle,
+  SliderEmits,
+  SliderFormatter,
+  SliderHandleInfo,
+  SliderMarkObject,
+  SliderMarks,
+  SliderOrientation,
+  SliderProps,
+  SliderRange,
+  SliderRangeConfig,
+  SliderRangeProps,
+  SliderRef,
+  SliderSemanticClassNames,
+  SliderSemanticStyles,
+  SliderSingleProps,
+  SliderSlots,
+  SliderTooltipProps,
+  SliderValue,
+} from './slider';
+export { Slider } from './slider';
+// ---------------------------------------------------------------------------
 // Space —— 间距容器（`Space.Compact` / `Space.Addon` 是同包的子组件）
 //
 // ⚠️ `useCompactItemContext` / `NoCompactStyle` / `spaceCompactItemContextKey` 是
