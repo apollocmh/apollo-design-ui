@@ -17,8 +17,8 @@
 - [x] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（**18 个**，2026-09-29 与产物逐字对拍：10/10/12/4/8/2/2.5 + 9 个颜色；两处构建期算式 setA(0.2) 与 onBackground）
 - [x] G4 IMPLEMENT —— Slider.vue + Handles/Tracks/Steps/Marks + hooks（useOffset/useDrag/useRange）+ context/util；样式 54 条规则从 extract-slider-css.mjs --emit-static 机械移植（2026-09-29）
 - [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts（**64 用例**：util 3 / useOffset 量化 11 / useRange 1 / 渲染 13 / 值域与事件链 6 / 键盘表 9 / 点击 4 / 拖拽 4 / 禁用 2 / tooltip 4 / expose 1 / 告警 3 / 自定义把手 1）
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
+- [x] G7 L3 类型（含 4 个负例，负例包在永不调用的闭包里（2026-09-29：15 用例，vue-tsc 类型错误 0））
+- [x] G8 L5 a11y —— axe 扫 7 种真实配置 + role/ARIA 6 + 键盘与焦点 5 + 上游缺口 1 = **19 用例**（demo 维度的扫描留到 G11，占位 demo 不扫）
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
