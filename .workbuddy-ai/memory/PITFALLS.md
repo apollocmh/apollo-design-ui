@@ -1538,3 +1538,72 @@
     ⇒ 接手一个「已完成」的组件时，先跑三件事：`node scripts/verify-component.mjs <name>`、
     `ls tests/compat/baselines/<name>.dom.json tests/visual/render/cases/{react,vue}/<name>.*`、
     读它的 `README.md` 是否仍在说「骨架」。
+
+## Picker 面板流（2026-09-30，199-206）
+
+199. 🚨🚨 **jsdom 冷缓存会让 vitest 的 worker 启动超时（60s 硬上限）—— 与代码无关**
+    （2026-09-30 实测，本机）。症状：`vitest run` 对**任何**文件都报
+    `[vitest-pool-runner]: Timeout waiting for worker to respond`，日志里
+    `Test Files no tests / Errors 1 error / Duration 60.15s`；
+    换 `--pool=forks`、换 `--maxWorkers=1`、删 `node_modules/.vite` **都无效**。
+    判据三步（缺一不可）：
+      ① `node -e "const t=Date.now();require('jsdom');console.log(Date.now()-t)"`
+         —— 冷缓存实测 **25 秒**，热缓存 ~8 秒；
+      ② 同一份最小配置把 `environment` 从 `jsdom` 换成 `node` ⇒ **11 秒通过**；
+      ③ 抛掉仓配置、用 `--root <子目录>` 的最小 jsdom 配置 ⇒ 仍超时（排除本仓配置）。
+    ⇒ **不是仓里的问题**：等 OS 的 page cache 变热（跑几次、或先 `node -e "require('jsdom')"`
+    预热）即可恢复。**别急着改代码或改测试配置** —— 本轮为此白排查了近一小时。
+    ⚠️ 与 PITFALLS 41（`exit 137` 先怀疑超时）同族：**先怀疑环境，再怀疑代码**。
+
+200. 🚨 **`packages/*` 的 `defineComponent` props 里 `required: true` 必须写 `as const`**
+    （2026-09-30，picker 面板实测）。不写时 TS 把 `required` 推成 `boolean`，
+    `ExtractPropTypes` 判不出「必填」⇒ 该 prop 在组件内变成 `X | undefined`。
+    对 `locale` / `generateConfig` / `pickerValue` 这类「处处都在用」的 prop 来说，
+    后果是全包几十处 `| undefined` 报错（本轮 11 个文件全中）。
+    ⚠️ **不要**用 `as const` 加在整个 props **对象字面量**上 —— 那会把
+    `default: () => []` 的返回推成 `never[]`。逐个 prop 写 `required: true as const`。
+
+201. ⚠️ **`h(tag, props, child)` 的第三个参数不能直传 `VNodeChild`**
+    （`VNodeChild` 含 `null` / `boolean`，不满足 `RawChildren`）⇒ TS2769。
+    对策：**包成数组** `h(tag, props, [child])` —— 比 `as never` 更干净，
+    且数组会被 Vue 正常展平（SSR 与挂载产物都不变）。
+    `h(Component, props as never)` 那类组件签名问题仍用仓内惯例的 `as never`。
+
+202. 🚨 **收窄一个入参会静默丢掉 oracle 的一条覆盖**（2026-09-30，picker 实测）。
+    `getRowFormat` 的上游有一条 `case 'datetime'` 分支，而本包在「纯函数层」时期把入参
+    收窄成了 `PickerMode`（`'datetime'` 不可达）⇒ 那条分支被**静默删除**，
+    连 oracle 用例的注释都写着「不在本包语义里」（那是收窄期的自证，不是上游的事实）。
+    面板层落地后 `DateTimePanel` / `fillShowTimeConfig` 会真的传 `'datetime'` ⇒ 必须补回。
+    ⇒ **凡是要把入参收窄，先核对上游的 switch/case 全表**；
+    类型收紧是「让编译器拦错」，但它同时会**让对拍少跑一条而不报警**。
+
+203. 🔧 **antd 的 `DatePicker` 在 SSR 下不渲染面板** ⇒ 面板 DOM 的基线只能打 rc 层
+    （2026-09-30 实测）。`renderToStaticMarkup(<DatePicker open />)` 输出 **889 字节**、
+    `inline('picker-panel') === false`，控制台还会打
+    `Portal only work in client side`（浮层走 Portal，只在客户端挂）。
+    ⇒ 把 `@rc-component/picker` 加进**根 devDependencies**（catalog 精确锁 `1.12.2`），
+    直接渲染它的 `PickerPanel`。⚠️ 它的 `exports` 里**没有** `./package.json`
+    ⇒ `require('@rc-component/picker/package.json')` 会 `ERR_PACKAGE_PATH_NOT_EXPORTED`，
+    要 `require.resolve` 之后读磁盘。⚠️ 它 `main` 指 `lib/`（CJS）而 `import` 指 `es/`，
+    Node 直连 `es/index.js` 会因 `es` 里无扩展名的深路径 import 而 `ERR_MODULE_NOT_FOUND`
+    ⇒ **用 `createRequire` 走 CJS 入口**。
+
+204. 🚨 **基线的「当前时间」必须冻结，否则跨日静默失效**（2026-09-30，picker）。
+    `-cell-today` 取 `generateConfig.getNow()`。做法：把 `getNow` 换成常量
+    （`{ ...dayjsGenerateConfig, getNow: () => dayjs('2026-09-30 10:20:30') }`），
+    **两侧用同一份覆盖后的对象**。忘了这条，基线会在第二天开始报差异。
+
+205. ⚠️ Vue 的 `provide` / `inject` 与 `defineComponent` 的 props **都无法携带类型参数**
+    ⇒ `InjectionKey<T>` 的 `T` 必须在 `provide` 那一刻确定。
+    本包的处理：**组件层直接落在 `Dayjs` 上**（纯函数层仍保持 `GenerateConfig<DateType>` 泛型）。
+    🚨 **不要用 `never` 占位**：`PropType<never>` 解出来的 prop 值类型是 `never`，
+    调用方**一个参数都传不进来**（本轮先试了 `never`，全包报错后改 `Dayjs`）。
+    跨 `provide`/`inject` 的日期值同理：`InjectionKey<ComputedRef<PanelInfo<Dayjs>>>`。
+
+206. ⚠️ **「上游某个面板的 `getStart` / `getEnd`」不能互相类推**（2026-09-30，picker）。
+    day 面板的 `getStart` 是 `setDate(date, 1)`（对齐到 1 号），
+    而 month / quarter 面板的是裸的 `setMonth(date, 0)` / `setMonth(date, 11)` —— **不动日**。
+    ⇒ 9/30 进 month 面板得到 `1/30` 与 `12/30`，不是 `1/1` / `12/1`。
+    影响 `minDate` / `maxDate` 的越界判定（本轮写 L1 用例时按 day 面板类推，错了两条）。
+    ⇒ 四个上层面板的 `offset` / `superOffset` / `getStart` / `getEnd` 必须**逐面板抄**，
+    已收进 `panel-header-limit.ts` 的 `getPanelHeaderLimits`（一处一表，便于对拍）。

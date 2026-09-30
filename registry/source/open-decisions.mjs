@@ -418,6 +418,33 @@ export const OPEN_DECISIONS = [
       '决定 cascader 的 `visual` 维度能否收口（未裁决前不得置 done）；选项 A 还会影响全部 L6 用例的 react 基线',
     blocks: ['cascader'],
   }),
+  decided('picker-panel-ownership', {
+    raisedAt: '2026-09-19',
+    decidedAt: '2026-09-30',
+    decidedBy: '用户裁决 2026-09-30',
+    question:
+      '面板 Vue 组件（PickerPanel / PanelHeader / DatePanel…YearPanel / TimePanelBody）属 @apollo-design/picker 还是 packages/ui/date-picker？这一条决定 picker 的 L2 / L4 / L5 是硬门禁还是 n/a。',
+    context:
+      '契约 docs/foundation/picker-contract.md §9 P3 提出：包职责原文与 README 的「公开 API」都写着「面板：DatePanel / WeekPanel / MonthPanel / QuarterPanel / YearPanel / TimePanel」与「面板切换 / 键盘导航」，但 §6.2 当时**暂定**面板属 ui（本包只出 buildPanelCells 的状态位），于是 L2/L4/L5 只能取最保守的 todo（E16 禁止用 n/a 掩盖未做）。当时不裁决的理由是「B 需要 config-provider / overlay / position 先被真实消费过」，而截至 2026-09-30 这三者都已被多个组件真实消费（tabs 用 dropdown 的溢出下拉、dropdown 用 overlay+position、全部组件用 config-provider 的 Size/Direction/Locale）。另核到一条新证据：antd 侧 rc-picker 的面板有 3 个消费者 —— date-picker / time-picker / **calendar**（antd 6.6.4 es/calendar/generateCalendar.js:4 直接 import RCPickerPanel），符合本仓「消费者 ≥2 且无视觉语义才独立成包」的包边界规则。',
+    options: [
+      {
+        label: 'A. 面板留在 ui 层',
+        tradeoff:
+          'picker 保持「无 DOM 的纯函数引擎」，面板写在 packages/ui/date-picker 里、三个消费者共享 _internal/；picker 的 L2/L4/L5 判 n/a（依据同 form-core），impl 维度即可收口、foundation 立刻 13/13。代价：要改 README 的公开 API，把 replaces 的语义收窄到「只替代 rc-picker 的纯函数与状态机层」，并与本仓「消费者 ≥2 就独立成包」的自有规则相抵。',
+      },
+      {
+        label: 'B. 面板进 picker 包（★ 已选）',
+        tradeoff:
+          '面板组件落在 packages/picker（defineComponent 写在 .ts，先例为 motion 的 CSSMotion / portal 的 Portal），只出 DOM 与 ARIA、**不产 CSS**（R4 允许），ui 只负责输入框、浮层与样式；L2/L4/L5 成为本包硬门禁。代价：约 1800 行上游面板代码的 Vue 化 + 本包自己的一套三层测试。',
+      },
+    ],
+    recommendation: 'B —— 与 README 的公开 API、包边界规则、replaces 的语义三者一致。',
+    decision:
+      'B —— 面板组件（PickerPanel / PanelHeader / DatePanel…YearPanel / TimePanelBody）落在 @apollo-design/picker；ui 的 DatePicker / TimePicker / Calendar 只负责输入框、浮层与样式。L2/L4/L5 自本决策起是 picker 的**硬门禁**（不再是 todo，也不判 n/a）。',
+    impact:
+      '决定 @apollo-design/picker 能否置 completed（L2/L4/L5 必须在收口前补齐），并决定 date-picker / time-picker / calendar 三个组件的代码分工。未裁决期间 picker 已按最保守记法持 todo。',
+    blocks: ['@apollo-design/picker'],
+  }),
 ];
 
 export default OPEN_DECISIONS;

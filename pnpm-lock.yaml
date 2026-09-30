@@ -185,6 +185,9 @@ catalogs:
     '@rc-component/form':
       specifier: ^1.8.6
       version: 1.8.6
+    '@rc-component/picker':
+      specifier: 1.12.2
+      version: 1.12.2
     '@testing-library/jest-dom':
       specifier: ^6.9.1
       version: 6.10.0
@@ -271,6 +274,9 @@ importers:
       '@biomejs/biome':
         specifier: 'catalog:'
         version: 2.5.13
+      '@rc-component/picker':
+        specifier: 'catalog:'
+        version: 1.12.2(dayjs@1.11.23)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 6.10.0(@testing-library/dom@10.4.2)

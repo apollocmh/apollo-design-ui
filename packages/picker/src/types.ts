@@ -88,6 +88,10 @@ export interface PickerLocale {
   cellDateFormat?: string;
   cellYearFormat?: string;
   cellQuarterFormat?: string;
+  /** 日格子的原始写法 —— `cellDateFormat` 的回退来源（上游 `Locale.dayFormat`） */
+  dayFormat?: string;
+  /** AM / PM 列的文字，如 `'上午'` / `'下午'`；不传则用 `AM` / `PM` */
+  cellMeridiemFormat?: string;
 
   yearFormat?: string;
   monthFormat?: string;
@@ -99,6 +103,19 @@ export interface PickerLocale {
 
   /** 周号列的列头文案 */
   week?: string;
+
+  // ------------------------------------------------- 表头按钮的可访问名
+  //
+  // 4 个方向键的 `aria-label`（上游 `PanelHeader` 逐字读取）。缺省文案由
+  // `@apollo-design/locale` 提供，本包不内置默认值 —— 与 `week` 同判。
+  previousYear?: string;
+  previousMonth?: string;
+  nextMonth?: string;
+  nextYear?: string;
+  /** 切到年 / 月 / 十年面板的三个「标题按钮」的可访问名 */
+  yearSelect?: string;
+  monthSelect?: string;
+  decadeSelect?: string;
 }
 
 /** 禁用判定。`info.from` 只在区间选择校验「结束」时出现（契约 §3.6）。 */

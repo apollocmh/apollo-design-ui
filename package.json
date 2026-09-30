@@ -52,6 +52,7 @@
     "@apollo-design/ui": "workspace:*",
     "@ant-design/icons": "catalog:",
     "@biomejs/biome": "catalog:",
+    "@rc-component/picker": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@types/node": "catalog:",
     "@vitejs/plugin-vue": "catalog:",

@@ -61,6 +61,21 @@ catalog:
   #    而我们**不 import 那两个 peer**（只 import 那三个纯 JS 文件），所以不需要装 react。
   '@rc-component/form': ^1.8.6
 
+  # 2026-09-30 加（picker 面板批次）：`@rc-component/picker` 的 **PickerPanel**
+  # 是 `@apollo-design/picker` 面板层的**直接上游**，也是它 L4 DOM 契约的取数源
+  # （`tests/compat/baseline/picker.mjs` 用 `renderToStaticMarkup` 渲染它）。
+  #
+  # 为什么不沿用「固化 es/ 产物」那条路（`packages/picker/oracle/upstream/`）：
+  # 那条路只适用于**零 React 耦合**的文件，而面板组件全都 `import * as React`。
+  # 而 antd 自己的 `DatePicker` 在 SSR 下**不渲染面板**（浮层走 Portal，
+  # 2026-09-30 实测：`renderToStaticMarkup(<DatePicker open />)` 只有 889 字节、
+  # 无 `picker-panel`）⇒ 只能直接渲染上游的 `PickerPanel`。
+  #
+  # ⚠️ 精确锁版本（同 antd）：基线是**静态数据**，小版本漂移会让基线静默失真。
+  #    它只在 `tests/compat/baseline/` 与 `packages/picker/oracle/` 里被 import，
+  #    不进入任何发布包（R7 允许的第 ② 类用途）。
+  '@rc-component/picker': 1.12.2
+
   # --- Runtime (Vue ecosystem) ---
   # ⚠️ 刻意不把 @vueuse/core 放进 L0（utils）：
   #    utils 需要的是「单例 observer 复用」「批监听同一元素」这类与 rc-* 对齐的契约，

@@ -3,15 +3,20 @@
  *
  * 上游该文件 **零 import** ⇒ 可对拍。
  *
- * ⚠️ `getRowFormat` 只比对 `PickerMode` 能取到的值：上游的 `case 'datetime'` 走的是
- * `InternalMode`，本包按 `PickerMode` 收窄（契约 §5.4），那条分支**不在**本包语义里。
+ * 🚨 2026-09-30 修正：`getRowFormat` 的用例**曾经漏了 `'datetime'`**。
+ * 当时的理由是「本包按 `PickerMode` 收窄，`'datetime'` 不在本包语义里」（契约 §5.4）——
+ * 那是「只有纯函数层」时期的判断。面板层落地后（裁决 `picker-panel-ownership` = B）
+ * `DateTimePanel` / `fillShowTimeConfig` 会真的传 `'datetime'`，而上游那条分支
+ * 返回 `fieldDateTimeFormat`（**不是** `default` 的 `fieldDateFormat`）。
+ * ⇒ 本期把入参放宽到 `InternalMode`、补回 `case 'datetime'`，并**把这个值加进用例**。
+ * 这是「收窄入参 ⇒ oracle 覆盖出现空洞」的一个真实案例：类型收紧会让对拍悄悄少跑一条。
  */
 
 import { describe, expect, it } from 'vitest';
 
 import * as up from '../../oracle/upstream/miscUtil.js';
 import { fillIndex, getFromDate, getRowFormat, leftPad, pickProps, toArray } from '../misc-util';
-import type { PickerLocale, PickerMode } from '../types';
+import type { InternalMode, PickerLocale } from '../types';
 
 describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
   it('leftPad 逐位一致（含超过 length 不截断的那条）', () => {
@@ -65,7 +70,7 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
     expect(pickProps(props).d).toBeNull();
   });
 
-  it('getRowFormat 逐位一致（format 优先 + 六种 picker）', () => {
+  it('getRowFormat 逐位一致（format 优先 + 七种 picker，含 `datetime`）', () => {
     const locale: PickerLocale = {
       locale: 'zh_CN',
       fieldDateFormat: 'D',
@@ -76,7 +81,15 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
       fieldQuarterFormat: 'Q',
       fieldDateTimeFormat: 'DT',
     };
-    const pickers: PickerMode[] = ['date', 'time', 'month', 'year', 'quarter', 'week'];
+    const pickers: InternalMode[] = [
+      'date',
+      'time',
+      'datetime',
+      'month',
+      'year',
+      'quarter',
+      'week',
+    ];
     for (const picker of pickers) {
       expect(getRowFormat(picker, locale)).toBe(up.getRowFormat(picker, locale));
       // `format` 优先
@@ -86,7 +99,15 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
 
   it('getRowFormat 在 locale 缺键时两侧同为 undefined', () => {
     const empty: PickerLocale = { locale: 'zh_CN' };
-    for (const picker of ['time', 'month', 'year', 'quarter', 'week', 'date'] as PickerMode[]) {
+    for (const picker of [
+      'time',
+      'datetime',
+      'month',
+      'year',
+      'quarter',
+      'week',
+      'date',
+    ] as InternalMode[]) {
       expect(getRowFormat(picker, empty)).toBe(up.getRowFormat(picker, empty));
       expect(getRowFormat(picker, empty)).toBeUndefined();
     }

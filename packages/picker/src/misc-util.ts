@@ -9,7 +9,7 @@
  * 不要互相复用（PITFALLS 70 的同源教训）。
  */
 
-import type { PickerLocale, PickerMode } from './types';
+import type { InternalMode, PickerLocale } from './types';
 
 /** 补到 `length`；**超过 length 不截断**。 */
 export function leftPad(str: string | number, length: number, fill = '0'): string {
@@ -52,9 +52,17 @@ export function pickProps<T extends object>(props: T, keys?: readonly (keyof T)[
  *
  * `format` 优先；否则按 picker 取 `locale.fieldXxxFormat`。
  * ⚠️ 返回 `undefined` 是**合法结果** —— locale 里这些键全是可选的。
+ *
+ * 🚨 **`'datetime'` 是一条独立分支**（返回 `fieldDateTimeFormat`），不是 `default`。
+ * 这一点容易被漏掉：`InternalMode` 里的 `'datetime'` 只在 `picker === 'date' && showTime`
+ * 时出现，而本包在「只有纯函数层」的时期把入参收窄成了 `PickerMode`（`'datetime'` 不可达）
+ * ⇒ 那条分支**曾经被静默丢掉**。2026-09-30 面板层落地后 `DateTimePanel` /
+ * `fillShowTimeConfig` 会真的传 `'datetime'`，必须补回来
+ * （oracle 用例同步补了 `'datetime'` 一行 —— 原用例的注释写着「不在本包语义里」，那是
+ * 收窄期的判断，不是上游的事实）。
  */
 export function getRowFormat(
-  picker: PickerMode,
+  picker: InternalMode,
   locale: PickerLocale,
   format?: string,
 ): string | undefined {
@@ -64,6 +72,9 @@ export function getRowFormat(
   switch (picker) {
     case 'time':
       return locale.fieldTimeFormat;
+    // ⚠️ 上游有一条独立分支；`default` 只兜 `date`
+    case 'datetime':
+      return locale.fieldDateTimeFormat;
     case 'month':
       return locale.fieldMonthFormat;
     case 'year':
