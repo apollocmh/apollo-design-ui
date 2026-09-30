@@ -23,7 +23,8 @@
 - [ ] G4 IMPLEMENT —— 分 S1–S5 五阶段（见下方「G4 的架构分叉」）
       - [x] S1 值 / 开合 / 面板接线 —— **功能面完成**（`DatePicker.vue` + 7 个 hooks +
         4 个组件模块；测试 **64 条**全绿）。`needConfirm` 默认值与 zIndex 已收口。
-      - [ ] S1 剩余：**样式**（方案见下节）
+      - [x] S1 剩余：**样式** —— `style/index.ts`（**257 条规则** + `genTokenDecls` 的
+        **45 条**声明 + `genDatePickerStyle`），B7 **双向**比对 8 条用例。
       - [ ] S1 值 / 开合 / 面板接线 —— **进行中**。已落地（可验证部分，**40/40 通过**）：
         - `hooks/{picker-types,picker-locale,picker-value,picker-format,picker-suffix}.ts`
         - `components/picker-shared.ts` —— 组件层共用纯归一（`isRenderable` / `getInputSize` /
@@ -114,7 +115,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 166 条既有测试全绿。**PITFALLS 222 里记的「无法验证」已解除。**
 
 ⚠️ 仍**未**验证的：`.vue` 壳（尚未落地）⇒ L2 / L4 / L5 / theme 与视觉基线都还没有对象。
-## ⏭ 下一步：G4 的样式（方案已确定，探针已打通）
+## G4 的样式 —— **已落地**（257 条规则 / 45 条 token 声明）
 
 `node tests/visual/debug/extract-date-picker-css.mjs --emit-static` ⇒ **257 条规则 / 52.8 KB**。
 
@@ -132,12 +133,25 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 2. **`ant-picker` 前缀被 date-picker 与 time-picker 共用** ⇒ 产物含 time-picker 的规则。
    那是**对的**（同一组件族），但移植时要知道。
 
-**移植清单**（照 tabs / form / slider / pagination 的同一套）：
+**移植清单**（照 tabs / form / slider / pagination 的同一套）—— ✅ 已全部完成：
 
 1. `style/index.ts`：`genTokenDecls(rootPrefixCls)` 产出 **45 条**声明
    （值来自 `datePickerTokenValues()`）+ 257 条规则（去 `:where()` 作用域壳、`.ant-` → `.apollo-`）。
 2. B7 校验：规则里引用的**其它变量**（`--apollo-color-*` 等）必须在 theme 的 tokens.css 声明。
 3. 断言规则条数（257）与 token 条数（45），防止静默漂移。
+
+🚨 **落地时抓到并修正两个静默 bug**（详见 PITFALLS 228 / 229）：
+
+1. **驼峰转 kebab 写错**：`/[A-Z]/g` 会给每个大写插连字符 ⇒ `paddingBlockSM` 变成
+   `padding-block-s-m`（规则引用的是 `-sm`）⇒ **8 个变量名拼错、静默回退**。
+   修成 `/([a-z0-9])([A-Z])/g`。
+2. **`INTERNAL_FIXED_ITEM_MARGIN` 其实落变量**（G3 的结论错了）：产物里是
+   `--ant-date-picker-internal_fixed_item_margin: 2px`（名字**带下划线**、值**补了 px**），
+   且被 multiple 规则引用。漏掉它是因为探针正则的字符类不含下划线。
+   ⇒ `genTokenDecls` **不排除任何键**（45 条）；变量总数 **46**。
+
+⇒ **B7 必须是双向的**（声明 ↔ 引用）：单向往检查会把两边都当「自有」放过，
+抓不到上面第 1 条。已落成 `theme.test.ts` 的 8 条用例（含反向哨兵）。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
