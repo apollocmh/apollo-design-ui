@@ -21,11 +21,11 @@
 
 import type { PickerLocale as LocalePickerLocale } from '@apollo-design/locale';
 import { describe, expect, it } from 'vitest';
+import { getMergedStatus } from '../../form/context';
 import { getStatusClassNames } from '../../space/statusUtils';
 import {
   getInputSize,
   getMergedNeedConfirm,
-  getMergedPickerStatus,
   getRangeShowClear,
   getSingleShowClear,
   isPairDisabled,
@@ -357,28 +357,28 @@ describe('date-picker · 状态类名（复用 space/statusUtils，判据来自�
 });
 
 /**
- * ⚠️ 这组同时是**既有不一致的上报**：
+ * 状态合并：**与 input / select / input-number 共用 `form/context` 的实现**。
  *
- *   上游 `_util/statusUtils.js`：`customStatus || contextStatus`
- *   本仓 `form/context.ts` 的 `getMergedStatus`：`customStatus ?? contextStatus`  ❌
- *   本文件（`getMergedPickerStatus`）：`||`                                    ✅
+ * ⚠️ 本组用例原先打在 date-picker 自带的 `getMergedPickerStatus` 上（那时
+ * `form/context.ts` 还是 `??`，与上游 `||` 不一致）。
+ * **2026-09-30 已把 `form/context.ts` 统一为 `||`**（PITFALLS 223）⇒
+ * 改名版已删除，本组改为直接测共用实现 —— 这样「同名不同义」的隐患一并消除。
  *
- * 两者只在 `customStatus === ''` 时不同。date-picker 按**规格**实现并改名，
- * 不擅自改既有组件（跨组件回归要单独过门禁）⇒ 差异登记在 README §5。
+ * ⚠️ 判据是 `||`（不是 `??`）：两者**只在 `customStatus === ''` 时不同**
+ * （`''` 是 `InputStatus` 的合法取值）。
  */
-describe('date-picker · getMergedPickerStatus（按上游 ||，非本仓既有的 ??）', () => {
+describe('date-picker · getMergedStatus（共用 form/context，按上游 ||）', () => {
   it('空串会回落到 context（这正是 || 与 ?? 的唯一分歧点）', () => {
-    expect(getMergedPickerStatus('warning', '')).toBe('warning');
+    expect(getMergedStatus('warning', '')).toBe('warning');
   });
 
   it('其余情形与 ?? 一致', () => {
-    expect(getMergedPickerStatus('warning', undefined)).toBe('warning');
-    expect(getMergedPickerStatus('warning', 'error')).toBe('error');
-    expect(getMergedPickerStatus(undefined, undefined)).toBeUndefined();
-    expect(getMergedPickerStatus(undefined, 'error')).toBe('error');
+    expect(getMergedStatus('warning', undefined)).toBe('warning');
+    expect(getMergedStatus('warning', 'error')).toBe('error');
+    expect(getMergedStatus(undefined, undefined)).toBeUndefined();
+    expect(getMergedStatus(undefined, 'error')).toBe('error');
   });
 });
-
 describe('date-picker · isPairDisabled（S1）', () => {
   it('**两端都禁**才算整体禁用（上游 disabled.every）', () => {
     expect(isPairDisabled(true)).toBe(true);

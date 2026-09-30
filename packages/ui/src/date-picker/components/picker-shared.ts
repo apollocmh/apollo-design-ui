@@ -11,7 +11,6 @@
  */
 
 import type { VNodeChild } from 'vue';
-import type { InputStatus } from '../../space/statusUtils';
 
 // ---------------------------------------------------------------------------
 // 渲染性判定
@@ -104,34 +103,17 @@ export function isPairDisabled(disabled: boolean | [boolean, boolean] | undefine
 }
 
 // ---------------------------------------------------------------------------
-// 状态合并（类名不在这里，见文件头）
+// 状态合并
 // ---------------------------------------------------------------------------
-
-/**
- * 合并 Form.Item 的 status 与组件自己的 status（上游 `getMergedStatus`）。
- *
- * 🚨 **为什么另起名字，而不是复用 `form/context.ts` 的同名导出**：
- *
- * | 位置 | 实现 | 与上游 |
- * |---|---|---|
- * | antd `es/_util/statusUtils.js` | `customStatus \|\| contextStatus` | —— 规格 |
- * | 本仓 `form/context.ts` 的 `getMergedStatus` | `customStatus ?? contextStatus` | ❌ **不一致** |
- * | 本文件 | `customStatus \|\| contextStatus` | ✅ 按规格 |
- *
- * 两者只在 **`customStatus === ''`** 时不同（`''` 是 `InputStatus` 的合法取值）：
- * 上游回落到 context，本仓既有实现**不回落**。
- *
- * ⇒ 若此处直接复用 `form/context.ts` 的版本，就会出现「同名函数、两处不同语义」——
- * 那正是本仓最容易埋雷的形态（同 `picker-types.ts` 里两个 `PickerLocale` 的教训）。
- * 所以**改名**为 `getMergedPickerStatus`，并把既有那处的不一致登记到
- * `README §5`（待统一），不擅自改既有组件的行为（跨组件回归要单独过门禁）。
- */
-export function getMergedPickerStatus(
-  contextStatus: InputStatus | undefined,
-  customStatus: InputStatus | undefined,
-): InputStatus | undefined {
-  return customStatus || contextStatus;
-}
+//
+// ⚠️ **本文件不再自带状态合并** —— 2026-09-30 已把 `form/context.ts` 的
+// `getMergedStatus` 从 `??` 统一成 **`||`**（与上游 `_util/statusUtils.js` 逐字一致），
+// 因此 date-picker 与 input / select / input-number **共用同一个函数**。
+//
+// 此前本文件曾另起名 `getMergedPickerStatus` 以避开「同名不同义」（PITFALLS 223 记的
+// 那次既有不一致）—— 现在不一致已消除，改名版**已删除**，避免留下两份语义相同的实现。
+//
+// 消费方直接 `import { getMergedStatus } from '../../form/context'`。
 
 // ---------------------------------------------------------------------------
 // `needConfirm` 的默认值

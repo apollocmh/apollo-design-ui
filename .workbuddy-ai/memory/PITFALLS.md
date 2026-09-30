@@ -1892,3 +1892,31 @@
     - ⇒ 教训：**数出来的数量要与「应该有多少」对上**；对不上时先怀疑**扫描方式**
       （正则的字符类、过滤条件），再怀疑事实。本轮的真实变量数是 **46**
       （45 个 `prepareComponentToken` 的键 + 1 个规则内声明的 `affix-color`）。
+
+230. ⚠️ **BSD grep 的 `\|` alternation 会静默失败**（2026-09-30 实测，PITFALLS 217 的同族）。
+    在 macOS 的 `/usr/bin/grep` 上跑
+    `grep -n "formItemContext\|useFormItemInputContext\|form/context" file.vue`
+    **返回空**（退出码 1），而文件里这三个词都在 —— 于是我会得出「代码里没有这段」的
+    **错误结论**（本轮差点据此去补一个已存在的 import）。
+    ⇒ **多关键词搜索一律用 Grep 工具（ripgrep）**，不要用 shell 的 `grep`。
+      单关键词的 `grep -c` / `grep -n` 是可靠的（本轮多次用它核对数量都对）。
+
+231. 🚨 **jsdom 的冷加载可以慢到 3 分 15 秒**（2026-09-30 22:00 实测，补 199 / 221 的数据）。
+    ```bash
+    $ time node -e "require('jsdom')"
+    jsdom 已预热
+    node -e ...  1.34s user 0.31s system 0% cpu 3:15.41 total
+    ```
+    - **CPU 只用了 1.34s** ⇒ 又是 I/O 阻塞（不是计算）。隔了 8.5 小时没跑 jsdom
+      ⇒ page cache 被换出。
+    - **致命后果**：vitest 的 worker **启动**超时是 **60s 硬上限** ⇒
+      **所有 jsdom 测试一个都跑不起来**（报
+      `[vitest-pool-runner]: Timeout waiting for worker to respond`，
+      退出码 1、`Test Files no tests`、`Errors 10 errors`）。
+    - ⚠️ **在「当前进程」里 `require('jsdom')` 预热是没用的** —— vitest 的 worker 是
+      **新进程**，要各自重新加载。实测：预热后重跑仍全超时（240s）。
+    - ⚠️ **换 `--pool=forks` 也没用**（实测同样超时）。
+    - ⇒ 这不是代码问题，是**环境状态**。判读时看「`--project unit` 是否过」
+      （`@vitest-environment node` 的用例**不需要 jsdom**，所以它们照常能跑）。
+    - ⚠️ 相关的：**macOS 没有 `timeout` 命令**（只有 `gtimeout`）⇒ 用它包命令会
+      `exit=127`（`command not found`），而报错藏在 stderr 里、看起来像「测试失败」。

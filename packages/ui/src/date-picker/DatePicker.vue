@@ -46,10 +46,10 @@ import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
-import { useFormItemInputContext } from '../form/context';
+import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
-import { getMergedNeedConfirm, getMergedPickerStatus } from './components/picker-shared';
+import { getMergedNeedConfirm } from './components/picker-shared';
 import { getRootClassNames } from './components/root-class';
 import { Selector } from './components/Selector';
 import {
@@ -196,9 +196,7 @@ const { variant, enableVariantCls } = useVariant({
 
 const mergedDisabled = computed(() => props.disabled ?? contextDisabled.value);
 const hasFeedback = computed(() => formItemContext.value.hasFeedback === true);
-const mergedStatus = computed(() =>
-  getMergedPickerStatus(formItemContext.value.status, props.status),
-);
+const mergedStatus = computed(() => getMergedStatus(formItemContext.value.status, props.status));
 
 // ============================== picker / format ==============================
 const mergedPicker = computed(() => props.picker ?? 'date');

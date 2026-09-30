@@ -68,14 +68,33 @@ export function useFormItemInputContext(): ComputedRef<FormItemInputContextValue
 }
 
 /**
- * 校验状态合并：自定义 status 优先，否则用 Form.Item 的（antd 的
- * `getMergedStatus(contextStatus, customStatus)` —— `customStatus ?? contextStatus`）。
+ * 校验状态合并：自定义 status 优先，否则用 Form.Item 的。
+ *
+ * 契约来源：antd 6.6.4 `es/_util/statusUtils.js`（**逐字**）：
+ *
+ * ```js
+ * export function getMergedStatus(contextStatus, customStatus) {
+ *   return customStatus || contextStatus;
+ * }
+ * ```
+ *
+ * 🚨 判据是 **`||`**（不是 `??`）—— 两者**只在 `customStatus === ''` 时不同**
+ * （`''` 是 `InputStatus` 的**合法**取值）：上游**回落**到 context，`??` 不回落。
+ *
+ * ⚠️ **本仓曾在 2026-09-30 之前一直写成 `??`** —— 一处与上游不一致，由
+ * `date-picker` 的 G4 读源码时发现（PITFALLS 223）。现已按规格统一为 `||`。
+ *
+ * 改动前已核实的风险面：
+ *   - 4 个消费者：`Input` / `TextArea` / `InputNumber` / `Select`
+ *   - **没有任何测试钉住 `status: ''` 这个分歧点**（全仓只有 `space/__tests__` 用了
+ *     空串，但那打的是 `getStatusClassNames`，与本文无关）
+ *   - 因此这是一次**行为对齐**而不是回归
  */
 export function getMergedStatus(
   contextStatus: InputStatus | undefined,
   customStatus: InputStatus | undefined,
 ): InputStatus | undefined {
-  return customStatus ?? contextStatus;
+  return customStatus || contextStatus;
 }
 
 // ---------------------------------------------------------------------------

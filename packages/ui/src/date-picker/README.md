@@ -91,21 +91,36 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
    `interface.ts` 的 `CustomFormat` 已按上游声明，避免「类型说支持、实现不做」。
 2. `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs）—— INTENDED。
 
-### 5.3 🚨 上报：一处**既有的跨组件不一致**（`getMergedStatus` 的 `??` vs `||`）
+### 5.3 ✅ **已解决**：一处跨组件的 `getMergedStatus` 不一致（`??` → `||`）
 
-| 位置 | 实现 | 与上游 |
+**发现（2026-09-30，读上游源码时）**：
+
+| 位置 | 改动前 | 与上游 |
 |---|---|---|
 | antd 6.6.4 `es/_util/statusUtils.js` | `customStatus \|\| contextStatus` | —— 规格 |
 | 本仓 `packages/ui/src/form/context.ts` | `customStatus ?? contextStatus` | ❌ **不一致** |
-| 本组件 `components/picker-shared.ts` | `customStatus \|\| contextStatus` | ✅ 按规格 |
 
-**分歧点只有一个**：`customStatus === ''`（空串，`InputStatus` 的**合法**取值）。
-上游会**回落到** Form.Item 的 status，本仓既有实现**不回落**。
+**分歧点只有一个**：`customStatus === ''`（空串是 `InputStatus` 的**合法**取值）。
+上游**回落**到 Form.Item 的 status，改动前本仓**不回落**。
 
-⇒ 本组件的处理：**按规格实现并改名** `getMergedPickerStatus`（不复用既有同名函数，
-避免「同名不同义」——那是本仓最容易埋雷的形态），**不擅自改既有组件**
-（input / form 的运行时行为变化要单独过它们的门禁与回归）。
-⏳ **待用户裁决**：是否把 `form/context.ts` 的 `??` 统一成 `||`（已查：无测试钉住该分歧点）。
+**处理（已落地）**：把 `form/context.ts` **统一为 `||`**（逐字对齐上游），
+于是 `date-picker` 与 `input` / `textarea` / `input-number` / `select`
+**共用同一个函数**；本组件此前为避开「同名不同义」而另起的
+`getMergedPickerStatus` **已删除**（不再需要两份语义相同的实现）。
+
+**改动前核实的风险面**：
+   - 4 个消费者：`Input` / `TextArea` / `InputNumber` / `Select`
+   - **全仓没有任何测试钉住 `status: ''` 这个分歧点**
+     （只有 `space/__tests__` 用了空串，但那打的是 `getStatusClassNames`，与本文无关）
+   - ⇒ 这是一次**行为对齐**，不是回归
+
+⚠️ **验证缺口（环境阻塞，非代码问题）**：这 4 个消费者的 jsdom 回归**本轮没跑成** ——
+当时 jsdom 的冷加载是 **3 分 15 秒**（远超 vitest 的 60s worker 启动上限），
+所有 jsdom 测试都报 `Timeout waiting for worker to respond`（详见 PITFALLS 231）。
+已跑通的是：`--project unit`（`@vitest-environment node`，**54 passed**）、
+根 `vue-tsc`（**0 error**）、`biome`（**error 0**）。
+**下次环境恢复后应补跑**：`input` / `input-number` / `select` / `form` / `space` 的
+`index.test.ts` + `semantic.test.ts`。
 
 ### 5.4 G1 阶段实测出来的、G4 必须处理的坑
 

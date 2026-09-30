@@ -78,7 +78,8 @@ export interface RootClassOptions {
   /** `enableVariantCls`：变体在枚举内才加 `-{variant}` 类。 */
   enableVariantCls?: boolean;
   /**
-   * 已合并的 status（`getMergedPickerStatus` 的产物）。
+   * 已合并的 status（`form/context` 的 `getMergedStatus` 的产物 —— 2026-09-30 起
+   * 本组件与 input / select / input-number **共用同一个函数**，不再各持一份）。
    *
    * ⚠️ 类型用 `space/statusUtils` 的 `InputStatus`（`'warning' | 'error' | '' | 'success' | 'validating'`）
    * —— 即上游 `ValidateStatus` 的字面量集。本组件的 `DatePickerStatus` 只是它的**子集**
