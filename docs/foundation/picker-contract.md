@@ -699,7 +699,26 @@ PageDown / Home / End）与 antd 一致」，但 `@rc-component/picker@1.12.2` �
 
 ### P3 · 面板 Vue 组件属本包还是属 `ui`？（决定 L2/L4/L5 的归属）
 
-§6.2 目前**暂定**面板组件属 `ui`（本包只出 `buildPanelCells` 的状态位）。
+> ## ✅ 2026-09-30 已裁决：**B**（面板组件落在本包）
+>
+> 见 `registry/foundation.json` 的 `openDecisions` 条目 **`picker-panel-ownership`**
+> （`node registry/tools/ask.mjs decision picker-panel-ownership` 看原文）。
+>
+> 裁决时补齐的两条前提（提出 P3 时不具备）：
+>  1. `config-provider` / `overlay` / `position` 都已被多个组件真实消费过
+>     （tabs 用 dropdown 的溢出下拉、dropdown 用 overlay+position、全部组件用
+>     config-provider 的 Size/Direction/Locale）；
+>  2. **rc 的面板有 3 个消费者** —— date-picker / time-picker / **calendar**
+>     （antd 6.6.4 `es/calendar/generateCalendar.js:4` 直接 `import { PickerPanel }`）
+>     ⇒ 符合本仓「消费者 ≥2 且无视觉语义才独立成包」的包边界规则。
+>
+> ⇒ **`L2` / `L4` / `L5` 自本裁决起是 picker 的硬门禁**，且已全部补齐（§6.5）。
+> ⚠️ 但 R4（引擎无视觉）的约束**不变**：面板只出 DOM 与 ARIA，**不产 CSS**；
+> class 名结构与上游逐字一致（由 L4 钉住），样式仍由 `ui` 层负责。
+>
+> 下面保留裁决前的原文与两个选项，作为决策记录。
+
+§6.2 当初**暂定**面板组件属 `ui`（本包只出 `buildPanelCells` 的状态位）。
 但包职责原文里写着「周/月/季/年面板切换、键盘导航」，这两件事本身都很像组件层的事。
 
 - **选项 A**：面板组件留在 `ui`，本包永远是无 DOM 的引擎 ⇒ 与 `form-core` 同形态，
@@ -707,7 +726,21 @@ PageDown / Home / End）与 antd 一致」，但 `@rc-component/picker@1.12.2` �
 - **选项 B**：面板组件（renderless 或带 DOM）放本包，`ui` 的 DatePicker 只套样式与浮层
   ⇒ `L2/L4/L5` 是本包的**硬门禁**，必须在 `completed` 前补齐，键盘导航尤其要能测。
 - **建议**：**B 更贴合包职责原文**，但 B 需要 `config-provider` / `overlay` / `position`
-  先被真实消费过（§6.3），现在不具备条件。**本轮不裁决**，因此三层留 `todo`（§8）。
+  先被真实消费过（§6.3）⇒ 本轮未裁决，三层当时留 `todo`（§8）。**2026-09-30 补齐条件后裁决为 B。**
+
+### P4 · ✅ 2026-09-30 已修正：`getRowFormat` 缺少 `'datetime'` 分支
+
+（本条不在原「待裁决」清单里，是收口时**新发现**的事实错误，记在此处以便回查。）
+
+`§5.4` 把 `getRowFormat` 的入参从上游的 `InternalMode` 收窄成了 `PickerMode`
+（理由是「面板组件未落地 ⇒ `'datetime'` 不可达」）⇒ 上游的 `case 'datetime'`
+（返回 `fieldDateTimeFormat`，**不是** `default` 的 `fieldDateFormat`）被**静默删除**，
+连 oracle 用例的注释都写着「不在本包语义里」。
+
+面板层落地后 `DateTimePanel` / `fillShowTimeConfig` 会真的传 `'datetime'`
+⇒ 入参放宽回 `InternalMode`、补回 `case 'datetime'`、oracle 用例补上该值。
+⚠️ **这是一条方法论的教训**：类型收窄是「让编译器拦错」，但它同时会让
+**oracle 少跑一条而不报警**。见 `PITFALLS.md` 202。
 
 ---
 

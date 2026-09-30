@@ -27,9 +27,9 @@ Phase 4  生态与持续运营 ────────────────�
 |---|---|---|---|---|
 | 1 | W0 | 侦察与架构 | — | ✅ 完成 |
 | 2 | W1 | 地基：无依赖包 + AR1/AR2 的 PoC | 9 | ✅ 完成（2026-09-22 前） |
-| 2 | W2 | 能力层：依赖 utils 的 7 个包 | 7 | ✅ 完成（仅 picker 收口中） |
+| 2 | W2 | 能力层：依赖 utils 的 7 个包 | 7 | ✅ 完成（2026-09-30，picker 收口后） |
 | 2 | W3 | 组合层：overlay | 1 | ✅ 完成 |
-| 3 | W4~W8 | 组件实现（72 个，由 DAG 自动驱动） | 72 | ▶ **31/72 完成**（见 §11） |
+| 3 | W4~W8 | 组件实现（72 个，由 DAG 自动驱动） | 72 | ▶ **58/72 完成**（见 §11） |
 | 4 | W9 | 生态与持续运营 | — | 待启动 |
 
 **关键路径**：`utils →（portal + position + a11y）→ overlay →（Tooltip/Popover/Dropdown…）`。
@@ -421,27 +421,27 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 
 ## 11. 当前状态与下一步
 
-> **快照时间：2026-09-25**（app 收口后）。数字由工具推导，刷新命令见 §12。
+> **快照时间：2026-09-30**（picker 收口后）。数字由工具推导，刷新命令见 §12。
 
 ### 11.1 总览
 
 ```
-92 个 Work Item | 组件 58/72 | foundation 12/13 completed（picker 剩余工作延后至 DatePicker 前）
-registry:check 18 检查全绿（2026-09-29，pagination 收口后）
+92 个 Work Item | 组件 58/72 | foundation **13/13 completed**（2026-09-30 全部收口）
+registry:check 18 检查全绿（2026-09-30，picker 收口后）
 ```
 
 ### 11.2 已完成的成果（⚠️ 防重复清单 —— 不要再做这些）
 
-**Phase 2 基础设施（12/13 completed，六维全绿）**
+**Phase 2 基础设施（13/13 completed，六维全绿 —— 2026-09-30 全部收口）**
 
 | 包 | 状态 | 备注 |
 |---|---|---|
 | utils / theme / icons / locale / test-utils | ✅ | L0 地基（icons 848 个 Vue 图标、theme 完整派生链 + CSS 变量） |
 | motion / portal / position / a11y / virtual-list | ✅ | L1 能力层（AR1/AR2 架构风险已用真实实现证伪） |
-| form-core / picker | ✅ / 收口中 | L2 领域引擎 |
+| form-core / picker | ✅ / ✅ | L2 领域引擎（⚠️ picker 自 2026-09-30 起**含面板组件**：裁决 `picker-panel-ownership` = B，仍有 R4「不产 CSS」的约束） |
 | overlay | ✅ | L3 组合层（15 个浮层类组件的共同前置） |
 
-**Phase 3 组件（32/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
+**Phase 3 组件（58/72，每组件 G0→G14 全流程 + 七层测试 + verify:full 四道全绿）**
 
 ```
 empty → config-provider → button · space · flex · grid · divider · typography

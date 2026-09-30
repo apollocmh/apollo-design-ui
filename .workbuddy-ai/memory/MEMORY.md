@@ -42,6 +42,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
 ```
 
 - 包边界：消费者 ≥2 且无视觉语义才独立成包，共 13 包；组件间共享代码放 `packages/ui/src/_internal/`。
+- ⚠️ **`picker` 是「引擎 + 面板」**（裁决 B）：面板组件（`PickerPanel` / `PanelHeader` /
+  七个面板 / `TimeColumn`）在**本包**，`ui` 的 DatePicker/TimePicker/Calendar 只做
+  输入框 + 浮层 + 样式。⇒ 它的 L2/L4/L5 是**硬门禁**（不是 n/a）。
+  L4 的基线打的是 **rc 的 `PickerPanel`**（antd 的 DatePicker 在 SSR 下不渲染面板）。
 - `prefixCls` 默认 `apollo`。动手前先 grep `packages/utils/src`（focus 陷阱/is-visible/raf/dev-warning 两参/color 等）。
 - 🚨 R7（ADR 0004）：发布包零 `@ant-design/*` 运行时依赖，门禁 E19 双扫描（产物扫描前必须 stripComments）。
 - Oracle 判据：上游零框架耦合 ⇒ 可对拍；绑 React 生命周期 ⇒ 只能读源码+行为测试。oracle 与 units 并存。
@@ -74,6 +78,15 @@ L0 utils/theme/icons ｜ 测试 test-utils
 14. ⚠️ **动效名的前缀是 `rootPrefixCls`**（`apollo-zoom` / `apollo-fade`），不是组件前缀；
     写错时动效**静默失效**（PITFALLS 180）。
 15. ⚠️ **`Skeleton` 设了 `inheritAttrs: false`** ⇒ 传 `className` prop，`class` 被静默丢弃（PITFALLS 181）。
+16. 🚨 **React 的「值」是快照，Vue 的响应式值是活引用**：上游「写状态 → 立刻比较状态」的
+    写法搬到 Vue 会**恒为假**（`computed` 写完就返回新值）⇒ 状态更新永不上报。
+    对策：**先取快照再写**（PITFALLS 207，picker 实测）。
+17. 🚨 **`watch(…, { immediate: true })` 在 `setup()` 就同步跑一次**（不受 `flush` 影响），
+    那时 `ref` 还是 `null`、**DOM 渲染后不会再补跑**。要「DOM 就绪后那一次」必须另找触发点（PITFALLS 211）。
+18. 🚨 **jsdom 冷缓存会让 vitest 的 worker 启动超时**（60s 硬上限，与代码无关）：
+    `node -e "require('jsdom')"` 冷缓存实测 25s、热 ~8s。先怀疑环境再怀疑代码（PITFALLS 199）。
+19. ⚠️ **`defineComponent` 的 props 里 `required: true` 要写 `as const`**，否则被推成
+    `boolean`、`ExtractPropTypes` 判不出必填 ⇒ 该 prop 变成 `X | undefined`（PITFALLS 200）。
 
 ## 主分支 / 合并 / 并行（硬教训浓缩，原文见 PITFALLS）
 
@@ -86,9 +99,13 @@ L0 utils/theme/icons ｜ 测试 test-utils
   **往组件目录写文件前先确认没有别人的东西**（Write 默认 overwrite）。
 - 复核纪律：agent 的汇报逐条自己重跑才算数；新坑一律登记 PITFALLS.md（按流分段预留号段防撞车）。
 
-## 当前进度（2026-09-26）
+## 当前进度（2026-09-30）
 
-- foundation **12/13** completed；`picker` implementing（面板组件+输入框 hooks 未做）。
+- foundation **13/13 全部 completed**（2026-09-30 收口最后一个 pkg：`picker`）。
+  ⚠️ `picker` 自 2026-09-30 起**含面板 Vue 组件**（裁决 `picker-panel-ownership` = B，
+  见 MEMORY 的「架构要点」）—— 但它仍**不产 CSS**（R4 的约束没变）。
+- ⚠️ foundation 变化后 `registry/workstreams.json` 会过期 ⇒ 必须重跑
+  `node registry/tools/gen-workstreams.mjs`，否则 `--check` 报「已过期」。
 - 组件 **42/72** completed（最新：**modal** —— rc-dialog 的 Vue 自建 + confirm 命令式路径）。
   ⚠️ 命令式组件已成三件套：`message` / `notification`（共用 `notification/engine/` 内核）+
   **`modal`**（自己的 `modal/engine/` = rc-dialog 内核，`confirm.ts` 用游离 `div` + `createApp`）。
@@ -101,8 +118,8 @@ L0 utils/theme/icons ｜ 测试 test-utils
 - **全仓 `update:*` 缺口**（PITFALLS 162）：C11 要求 v-model 与语义事件同时发出，
   但截至 carousel 只有 radio / switch 实现了 ⇒ 其余组件上 `v-model:xxx` 不生效，待统一补齐。
   （image 也是「发 `update:open`/`update:current` 但未写进 `emits`」的状态，README §5 P4。）
-- 共享文件 6 个（ui 的 index.ts / style/index.ts、tests/visual/matrix.mjs、cases/shared.mjs、
-  **tests/compat/baseline/*.mjs**、root package.json）按字母序追加；⚠️ ui 根 index.ts 的 re-export
+- 共享文件 7 个（ui 的 index.ts / style/index.ts、tests/visual/matrix.mjs、cases/shared.mjs、
+  **tests/compat/baseline/*.mjs**、**registry/source/open-decisions.mjs**、root package.json）按字母序追加；⚠️ ui 根 index.ts 的 re-export
   必须用别名（`genTokenDecls as genXTokenDecls` / `prepareComponentToken as prepareXComponentToken`，
   PITFALLS 158/168，已两次踩坑）。新组件另需：`tests/compat/baseline/<name>.mjs` +
   `tests/visual/render/cases/{react,vue}/<name>.{jsx,js}` + matrix 里一行。

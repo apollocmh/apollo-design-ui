@@ -1641,3 +1641,27 @@
     **对外**通知模式变化走 **`onPanelChange(viewDate, mode)` 的第二参**。
     ⇒ 写这类「两级 API」的测试/消费方时，先 `grep 'index.d.ts'` 确认那一层到底声明了什么；
     未声明的 prop 会被 Vue 归进 `attrs`，回调**永远不触发**（静默）。
+
+210. ⚠️ **季 / 月 / 年面板的格子日期是 `pickerValue` 的「月首 + 保留日」**（2026-09-30，picker 实测）。
+    季格 = `setMonth(pickerValue, 0)` 再 `addMonth(offset * 3)` ⇒ **保留 `pickerValue` 的「日」**
+    ⇒ `pickerValue` 是 9/30 时季格是 `1/30、4/30、7/30、10/30`，**不是** 1/1、4/1……
+    ⇒ 写 `disabledDate` 的测试时判 `getDate(date) === 1` **永远不命中**（本轮实测踩到）。
+    月格同理（月面板的 `getStart` 是裸 `setMonth(date, 0)`，见 PITFALLS 206）。
+    写这类判据一律优先看**月份**，不要假设日期被对齐到 1 号。
+
+211. 🚨 **`watch(…, { immediate: true })` 在 `setup()` 阶段就同步跑一次，那时 ref 还是 `null`**
+    （2026-09-30，picker 的 `TimeColumn` 实测）。
+    `TimeColumn` 用 `watch([value, units], …, { immediate: true, flush: 'post' })` 触发滚动对齐；
+    `immediate` 的那一次是**立即同步**执行的（不受 `flush` 影响）—— 此时 `ulRef.value` 是 `null`
+    ⇒ `startScroll()` 直接 return。**DOM 渲染后不会再补跑一次**（依赖没变）。
+    - 后果：想用「挂载后内部状态已就绪」做测试前提时会永远不成立
+      （本轮「滚动期间不提交」那条测试就因为假设 `scrolling` 已被置真而失败）。
+    - 对策：需要「DOM 就绪后的那一次」时，**挂载后再改一次值**去触发 `flush: 'post'` 的 watcher。
+    - 也适用于实现侧：如果逻辑必须依赖 DOM，`immediate` 是**错的选择**。
+
+212. ⚠️ **mock `requestAnimationFrame` 时，若只 `return` 不执行回调，等于把整段逻辑跳过**
+    （2026-09-30，picker 实测）。`wrapperRaf(cb)` 内部是 `raf(() => cb())` ——
+    mock 不执行 ⇒ `cb` 一次都不跑 ⇒ 被测的「内部状态机」停在初始值，
+    断言反而测成了**另一条**路径（本轮把「滚动中不提交」测成了「正常提交」）。
+    ⇒ 需要「跑几帧然后停住」时，用**计数 + 同步执行**（`if (n <= 3) cb(...)`），
+    不要用「永不执行的队列」去表达「停住」—— 那表达的是「一帧都没跑」。
