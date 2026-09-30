@@ -54,7 +54,7 @@
       后缀图标 `role=img` + `aria-label=calendar` + `aria-hidden=true` · `disabled` 时不渲染清除按钮。
       ⚠️ 范围版（含上游两条专门的 **separator a11y 测试**：默认带 `aria-hidden`、自定义**去掉**它）
       留到 **S5**；浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [ ] G9 L6 视觉 —— **未开始**。方案与前置发现见下节「G9 L6 的落地方案」。
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
       `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
       （16 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
@@ -192,6 +192,53 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 
 ⇒ 数量完全相同 ⇒ 是**既有的** SFC 解析噪音（PITFALLS 73），与本组件无关。
 **判读门禁时看「Tests passed」与「含本包的错误数」，不要只看退出码。**
+
+## G9 L6 的落地方案（含前置发现，尚未开始）
+
+### 用例文件（照 `cascader` 的两侧配对写法）
+
+| 文件 | 内容 |
+|---|---|
+| `tests/visual/render/cases/vue/date-picker.js` | Vue 侧（`@apollo-design/ui`） |
+| `tests/visual/render/cases/react/date-picker.jsx` | React 侧（antd 6.6.4），**逐条对应** |
+
+### 🚨 浮层怎么办 —— 与 cascader 同一套解法
+
+浮层走 Portal ⇒ 渲染到 `document.body`，**不在用例的截图区域内**。
+`cascader.jsx` 的解法是「用 `Cascader.Panel` **直接渲染面板**」（不打开浮层）。
+本组件的对应物是：
+
+| 侧 | 组件 | 出处 |
+|---|---|---|
+| React | `DatePicker._InternalPanelDoNotUseOrYouWillBeFired` | antd 的 PurePanel（**名字带「别用」⇒ 保留原名**） |
+| Vue | `PickerPanel` | `@apollo-design/picker`（裁决 `picker-panel-ownership` = B） |
+
+⚠️ **前置发现（2026-09-30）**：`PickerPanel` **不在 `packages/ui/src/index.ts` 的导出面里**。
+⇒ 视觉用例要么从 `@apollo-design/picker` 直接 import（需确认 `tests/visual` 的构建能解析它），
+要么把 `PickerPanel` 从 ui 再导出一次（**那是对外 API 面的变更，要先确认是否该导**）。
+**下一轮开工第一件事就是定这一条。**
+
+⚠️ 另一条已记录的坑（`cascader.jsx` 的注释）：**不要用 `_Internal*Panel*` 当作「面板」的
+React 侧对照** —— 它是 `genPurePanel(Component)`（**完整外壳 + 浮层塞进 holder div**），
+与 Vue 侧的裸面板不是同一个东西，会比出结构性差异。
+**但 date-picker 的情况相反**：我们**没有**一个「只有面板」的 antd 公开出口，
+`_InternalPanelDoNotUseOrYouWillBeFired` 就是唯一选择 ⇒ 要逐条核对它的 DOM 是否与
+`PickerPanel` 同构（这是 L6 第一轮的主要风险）。
+
+### 字体必须钉具体值
+
+date-picker 的**触发器**在 antd 里有 `font-family`（`input` 族），但**面板**是 `resetFont: false`
+⇒ 靠继承。照 `cascader.js` 的做法在用例内钉 `CONTEXT_FONT`，**不动全局 BASE_CSS**
+（裁决见 `docs/COMPONENT-CHECKLIST.md` 第 15 条 / COMPATIBILITY.md D114）。
+
+### 预期用例（~15 个 × 3 viewport）
+
+触发器：basic / value / size-small / size-large / variant-filled / variant-borderless /
+variant-underlined / status-error / status-warning / disabled / allow-clear-false / prefix。
+面板：date / time / datetime（`showTime`）/ month / year / multiple。
+
+⚠️ 比对不过时**先怀疑实现**（PITFALLS 170 / D94：`style` 里的裸数字被 Vue 静默丢弃、
+以及 `toCssSize()` 漏用）—— tabs 的第一次 L6 就是「指示条数值没带单位」差 0.03%~0.12%。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
