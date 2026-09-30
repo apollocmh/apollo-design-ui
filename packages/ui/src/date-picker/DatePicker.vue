@@ -425,13 +425,15 @@ const panelPickerValue = computed<DatePickerDate>(
 );
 
 /**
- * 面板粒度（**本地跟踪**）。
+ * 面板粒度（**受控**给面板）。
  *
- * ⚠️ 上游是**受控**的（`useControlledState(picker, mode)`，再把 `mode: mergedMode`
- * 传给面板）。本仓让面板自管（`panelProps.mode` 只透传 `props.mode`），
- * 这里只**跟随**面板上报的 `onPanelChange` 记一份 —— 它只被 `panelFinished` 用
- * （`panel-final` 与 `panel-intermediate` 的分界）。
- * 「面板 mode 的受控化」登记在 README §5.5。
+ * 上游是 `useControlledState(picker, mode)`：`props.mode` 有值就用它，否则用内部状态；
+ * 面板**每次**粒度变化都通过 `onPanelChange` 报回来（`triggerModeChange`）。
+ * 本仓照此实现 —— 面板收到的是**已确定**的 `mode`，它自己的内部状态不再生效
+ * （`picker-panel.ts` 的 `setMergedMode` 在 `props.mode !== undefined` 时是 no-op）。
+ *
+ * ⚠️ 反馈是**下一 tick** 生效（我们更新 `innerMode` → `mergedMode` → 面板 prop）。
+ * 下钻链（年→月→日）每一步都读面板**当时**的 `mergedMode`，所以链式推进正常。
  */
 const innerMode = ref<DatePickerPanelMode>(props.mode ?? mergedPicker.value);
 watch(
@@ -500,15 +502,26 @@ const valueChange = useRangeValueChange({
 });
 
 /**
- * 浮层**关闭** ⇒ `popupClose`（上游 `SinglePicker.js:187-191` 的 `useLayoutEffect`）。
+ * 浮层开合的两个副作用（上游 `SinglePicker.js:187-191` + `:451-456`）。
  *
- * ⚠️ 上游有 `firstMount` 守卫 ⇒ 本仓用**不带 `immediate`** 的 `watch`（首次不触发）。
+ * **开** ⇒ 把面板粒度重置回 `picker`（`Reset for every active`）。
+ *   ⚠️ 上游那段的 `triggerEvent = false` ⇒ **不**发 `onPanelChange`；
+ *   受控的 `props.mode` 不重置（`setMode` 在受控时不写内部状态）。
+ *   🚨 不做这一步的后果：用户下钻到年面板后关闭、再打开会**仍停在年面板**
+ *   （浮层关闭**不卸载** —— `Trigger` 的 `removeOnLeave: false`）。
+ *
+ * **关** ⇒ `popupClose`（见上）。
+ *
  * ⚠️ 关浮层是**异步**的（离场动效结束才卸载）⇒ 断言卸载必须**轮询**（PITFALLS 179）。
  */
 watch(mergedOpen, (next) => {
-  if (!next) {
-    valueChange.triggerChange(0, 'popupClose');
+  if (next) {
+    if (props.mode === undefined) {
+      innerMode.value = mergedPicker.value;
+    }
+    return;
   }
+  valueChange.triggerChange(0, 'popupClose');
 });
 
 // ============================== 键入（S2） ==============================
@@ -807,7 +820,14 @@ const panelProps = computed(() => ({
   locale: filledLang.value,
   generateConfig: dayjsConfig,
   picker: mergedPicker.value,
-  mode: props.mode,
+  /**
+   * 面板粒度（**受控**）。
+   *
+   * ⚠️ 传的是 `mergedMode`（已确定的值）而不是 `props.mode` —— 与上游
+   * `SinglePicker.js:366` 的 `mode: mergedMode` 一致。面板的内部状态因此不再生效，
+   * 全部粒度变化都走 `onPanelChange` 回灌（见 `mergedMode` 的说明）。
+   */
+  mode: mergedMode.value,
   value: inner.calendarValue.value as never,
   multiple: props.multiple,
   onSelect: (date: PanelDateType) => {

@@ -2283,3 +2283,30 @@
     - 🚨 **教训**：移植「失焦关浮层」这类逻辑时，先问「**失焦之后焦点去哪了**」，
       再决定判据。上游的 `relatedTarget` 判据是**配着** `tabindex` 一起设计的，
       拆开用必错。
+
+244. 🚨 **浮层「关闭不卸载」⇒ 面板状态会跨开合保留，上游靠一段 `useLayoutEffect` 重置**（2026-10-01，S5）。
+
+    上游 `SinglePicker.js:451-456`：
+    ```js
+    useLayoutEffect(() => {
+      if (mergedOpen && activeIndex !== undefined) { triggerModeChange(null, picker, false); }
+    }, [mergedOpen, activeIndex, picker]);
+    ```
+    注释 `Reset for every active` ⇒ **每次打开浮层都把面板粒度重置回 `picker`**。
+
+    **为什么本仓必须有这一步**：本仓的浮层关闭**不卸载**
+    （`Trigger` 的 `CSSMotion` 用 `removeOnLeave: false`，与 antd 一致）⇒ 面板组件
+    一直活着 ⇒ 它的内部粒度状态**跨开合保留**。少了这段重置，用户下钻到年面板后
+    关闭、再打开会**仍停在年面板**。
+
+    - ⚠️ 两个容易抄错的细节：
+      1. `triggerEvent = false` ⇒ 重置**不发** `onPanelChange`（本仓用
+         `if (props.mode === undefined) innerMode = mergedPicker` 表达，也不 emit）；
+      2. 受控的 `props.mode` **不重置**（`setMode` 在受控时不写内部状态）。
+      两条都写了反向哨兵用例（`s5-mode.test.ts`）。
+    - 同批还做了**面板粒度的受控化**：`panelProps.mode` 从 `props.mode` 改成 `mergedMode`
+      （上游 `:366` 的 `mode: mergedMode`）。⚠️ 反馈是**下一 tick** 生效，但下钻链
+      （年→月→日）每一步读的都是面板**当时**的粒度，所以链式推进正常。
+    - 🚨 **教训**：「浮层关闭不卸载」是 antd 的**默认**（`destroyPopupOnHide` 未开）
+      ⇒ 任何「打开时要重置」的面板状态（粒度 / 浏览值 / 悬停值）都要显式重置。
+      移植面板行为时先问一句：**这个状态在关闭后还活着吗？**

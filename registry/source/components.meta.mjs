@@ -326,7 +326,10 @@ export const COMPONENTS = [
       '`components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；' +
       '**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层' +
       '（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，' +
-      '随 S5 的 RangePicker 一起做。剩 S5（`multiple` / 预设 / 范围两端 / 面板 mode 受控化）。',
+      '随 S5 的 RangePicker 一起做。' +
+      '**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）。' +
+      'S5 剩余：`multiple` 的选择器渲染（⚠️ 前置：`_internal/overflow` 缺 `renderItem`）、' +
+      '范围两端（`RangePicker`）、`presets` / footer。',
   },
   {
     name: 'time-picker',

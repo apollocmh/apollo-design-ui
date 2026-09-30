@@ -91,7 +91,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | S2 | 键入解析 + `format` 补齐层 + `format` 函数形态 + **提交时机状态机** | ✅ |
 | S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
 | S4 | 键盘字段导航与 `-input-active` 分段 | 🟡 **单值部分完成**：调度（随 S2）+ `-focused` + 确认离开才关浮层。`-input-active` 与 `useFocusLock` 是**范围专属**（上游 `SinglePicker` 不传 `activeIndex`；单值下 `forceFocus` 恒 false）⇒ 随 S5 的 RangePicker 一起做 |
-| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | ⏳ |
+| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置**已落地；`multiple` 的**值侧**已就绪、缺选择器的多选渲染（前置：`_internal/overflow` 缺 `renderItem`）；范围与 presets/footer 未开始 |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 
@@ -201,23 +201,25 @@ const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.for
 S4 只剩**渲染**（`-input-active` 分段高亮 + 焦点跟随）。
 用例：L1 **36 条** + L2 **12 条**；四条「想当然」判据见 `PLAN.md` 的同名小节。
 
-#### (d) 面板 `mode` 尚未**受控化**
+#### (d) ✅ **已解决**（2026-10-01 同日）：面板 `mode` 的受控化 + 「打开即重置」
 
 上游把 `mergedMode`（`useControlledState(picker, mode)` 的产物）**受控地**喂给面板
-（`mode: mergedMode` + `onPanelChange: triggerModeChange`）。本仓目前让面板自管
-（`panelProps.mode` 只透传 `props.mode`），只在 `onPanelChange` 里**跟随**记一份
-（`innerMode`），供 `panelFinished` 用。
+（`SinglePicker.js:366` 的 `mode: mergedMode` + `onPanelChange: triggerModeChange`），
+并在每次打开浮层时把粒度重置回 `picker`：
 
-⚠️ **一条可观测的后果（2026-10-01 查明）**：上游 `SinglePicker.js:451-456` 有一段
 ```js
 useLayoutEffect(() => {
   if (mergedOpen && activeIndex !== undefined) { triggerModeChange(null, picker, false); }
 }, [mergedOpen, activeIndex, picker]);
 ```
-—— **每次打开浮层都把面板粒度重置回 `picker`**（注释：`Reset for every active`）。
-本仓的面板自管 mode，且浮层关闭时**不卸载**（`Trigger` 的 `removeOnLeave: false`）
-⇒ 用户下钻到年面板后关闭、再打开，**仍停在年面板**，与 antd 不一致。
-⇒ 修它要先做受控化，故与 `presets` / `renderExtraFooter` 同批（S5）。
+（注释：`Reset for every active`；`triggerEvent = false` ⇒ **不**发 `onPanelChange`。）
+
+**为什么必须做**：本仓浮层关闭**不卸载**（`Trigger` 的 `removeOnLeave: false`，与 antd 一致）
+⇒ 面板粒度会**跨开合保留** ⇒ 下钻到年面板后关闭、再打开会**仍停在年面板**。
+
+已落地：`panelProps.mode` 改传 `mergedMode`；`mergedOpen` 变真时（且 `props.mode` 未给）
+`innerMode = mergedPicker`。用例 `s5-mode.test.ts` **5 条**（含「重置不发事件」与
+「受控 `mode` 不重置」两条反向哨兵）。
 
 #### (e) 浮层侧的焦点事件未接
 

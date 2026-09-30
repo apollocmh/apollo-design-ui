@@ -67,7 +67,30 @@
             （所以「分段高亮」本质是范围特性）；
           - **`useFocusLock` 的强切换聚焦**：`forceFocus` 在单值下**恒为 `false`**
             （`submitField` 一定 `allFieldsTriggered` ⇒ `reset()` 把它抹掉）。
-      - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
+      - [~] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换、`presets` / footer ——
+        **已落地一部分**（2026-10-01）：
+        - ✅ **面板粒度的受控化 + 「打开即重置」**（README §5.5(d) 的收口）：
+          `panelProps.mode` 改传 `mergedMode`（上游 `SinglePicker.js:366`），
+          并在 `mergedOpen` 变真时把粒度重置回 `picker`
+          （上游 `:451-456` 的 `Reset for every active`，`triggerEvent = false` ⇒ 不发事件）。
+          用例 `s5-mode.test.ts` **5 条**。
+        - ⏳ **`multiple`**：`DatePicker.vue` 的**值侧**已就绪（`valueTexts` 的数组分支、
+          `onChange` 的 `multiple` 分支、`onSelect` 的 `toggleDates`），
+          缺的是 **`Selector` 的多选渲染**（上游 `MultipleDates.js` 77 行：
+          `-selector` / `-selection-item` / `-selection-item-remove` / `-selection-placeholder`
+          + 一个 readonly 的 `-multiple-input`）。
+          🚨 **前置阻塞**：上游用 `@rc-component/overflow` 的 **`renderItem` / `renderRest` /
+          `itemKey`** 三个 prop，而本仓 `_internal/overflow.ts`（menu 的横向折叠在用）
+          只暴露 `renderRawItem` / `renderRest` / `renderRawRest` —— **缺 `renderItem`**。
+          ⇒ 要么给 `_internal/overflow` 补 `renderItem`（会碰到 menu 的既有门禁），
+          要么先落 `multiple` 的**无折叠**形态（`maxTagCount` 留缺口）。**需先裁决**。
+        - ⏳ **范围两端（`RangePicker`）**：要新开 `RangePicker.vue` + 范围的 Selector
+          （`-input-start` / `-input-end` / `-range-separator` / `-active-bar`）
+          + `fieldCount = 2` 的状态机接线（调度已在，S4 的 `-input-active` /
+          `useFocusLock` 也归这一批）。
+        - ⏳ **`presets` / footer**：上游在 **Popup 层**（`PickerInput/Popup/PresetPanel.js`
+          + `Footer.js`），本仓的 `panelVNode` 只渲染面板 ⇒ 要先有一个「浮层内容容器」
+          组件。`showNow` / `showToday` / `renderExtraFooter` / `panelRender` 同批。
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [x] G7 L3 类型 —— `__tests__/type.test-d.ts`，**42 条**（运行时 42 + 类型检查 42）。
       覆盖：值域 / `SingleValue` 与 `RangeValue` 的 `null` vs `undefined` / `format` 四写法 /
