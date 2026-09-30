@@ -42,7 +42,12 @@
       - [ ] S4 键盘字段导航与分段（`-input-active`）
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
+- [x] G7 L3 类型 —— `__tests__/type.test-d.ts`，**42 条**（运行时 42 + 类型检查 42）。
+      覆盖：值域 / `SingleValue` 与 `RangeValue` 的 `null` vs `undefined` / `format` 四写法 /
+      语义槽 **4 平铺 + 7 嵌套**（且 `popup` **允许 string**，与 tabs 相反）/ emits 载荷
+      （`calendarChange` 三参、`keydown` 两参）/ 两个 expose 的 `focus` 签名差异 /
+      单值与范围的差异面（`showTime` / `presets` / `placeholder` / `disabled` / `separator`）/
+      **8 条负例**（`'datetime'` 不是 `picker`/`mode`、`status` 只有两档、单值不接受元组 …）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
@@ -152,6 +157,31 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 
 ⇒ **B7 必须是双向的**（声明 ↔ 引用）：单向往检查会把两边都当「自有」放过，
 抓不到上面第 1 条。已落成 `theme.test.ts` 的 8 条用例（含反向哨兵）。
+
+## ✅ 已收口的 Gate
+
+| Gate | 状态 | 证据 |
+|---|---|---|
+| G0–G2 | ✅ | `docs/analysis/date-picker.md` + `interface.ts` |
+| G3 TOKEN | ✅ | `style/token.ts` 45 键 + theme 22 条 |
+| G4 S1（功能 + 样式） | ✅ | `DatePicker.vue` + 257 条规则 + 45 条声明 |
+| G5/G6 L1+L2（S1 范围） | ⏳ 部分 | `picker-pure` 51 条 + `s1-smoke` 10 条 |
+| G7 L3 | ✅ | `type.test-d.ts` 42 条 |
+
+## ⚠️ `--project types` 的既有 SFC 解析噪音（对照实验确认，非本包引入）
+
+`vitest run --project types` 会报 **55 条** `Unhandled Source Error`
+（`Cannot find module '../button/Button.vue'` 等），并让**退出码为 1**。
+
+**对照实验**（2026-09-30）：
+
+| 跑什么 | 结果 | unhandled 数 | 含 date-picker 的 |
+|---|---|---|---|
+| `date-picker/__tests__/type.test-d.ts` | **84 passed** / exit 1 | **55** | **0** |
+| `tabs/__tests__/type.test-d.ts`（对照） | **36 passed** / exit 1 | **55** | 0 |
+
+⇒ 数量完全相同 ⇒ 是**既有的** SFC 解析噪音（PITFALLS 73），与本组件无关。
+**判读门禁时看「Tests passed」与「含本包的错误数」，不要只看退出码。**
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
