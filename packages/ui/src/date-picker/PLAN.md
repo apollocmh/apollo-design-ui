@@ -61,7 +61,10 @@
       ⚠️ 只覆盖**触发元素**（与 cascader 同判）：SSR 下浮层走 Portal 不渲染 ⇒
       面板侧的结构契约由 `@apollo-design/picker` 的 L4 负责，不在两层各钉一份。
       ⚠️ 范围版留到 **S5**（`RangePicker.vue` 同批落地，届时补 5 个 range 用例）。
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
+- [x] G11 DOCS —— `index.zh-CN.md` / `index.en-US.md`（**完整**：何时使用 / 引入 /
+      代码演示 / API 四表 / Theme 45 个 token（**实测值**）/ 设计说明）。
+      ⚠️ 代码演示**只写了 `basic`**（demo 目录里只有它），其余用 TODO 注明；
+      **不写不存在的 demo 引用**（坏链比缺一节更糟）。 —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
 - [ ] G14 COMMIT —— commit message 带 [COMP:date-picker]
