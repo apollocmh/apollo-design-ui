@@ -48,7 +48,12 @@
       （`calendarChange` 三参、`keydown` 两参）/ 两个 expose 的 `focus` 签名差异 /
       单值与范围的差异面（`showTime` / `presets` / `placeholder` / `disabled` / `separator`）/
       **8 条负例**（`'datetime'` 不是 `picker`/`mode`、`status` 只有两档、单值不接受元组 …）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
+- [x] G8 L5 a11y —— `__tests__/a11y.test.ts`，**24 条**（7 条 role/ARIA 契约 + 17 组 axe 扫描），
+      **零 axe violation、零豁免**。判据：根无 role · `input[aria-invalid="false"]`
+      （🚨 `status=error` 也**不改**）· 清除按钮 `aria-label` 取 **`locale.clear`**（en_US 是 `Clear`）·
+      后缀图标 `role=img` + `aria-label=calendar` + `aria-hidden=true` · `disabled` 时不渲染清除按钮。
+      ⚠️ 范围版（含上游两条专门的 **separator a11y 测试**：默认带 `aria-hidden`、自定义**去掉**它）
+      留到 **S5**；浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
       `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
