@@ -37,8 +37,13 @@
         ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
         ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
         status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`（见 README §5 的既有不一致）。
-      - [~] S2 键入解析与 `format` 的函数 / 数组形态 —— **跨包欠账已还清**（见下），
-        键入解析本身未开始。
+      - [~] S2 键入解析 —— **跨包欠账已还清** + **解析与接线的一半已落地**，
+        但发现一个**阻塞级缺口**（见下节「🚨 S2 的阻塞项」）：
+        - ✅ 纯函数：`hooks/picker-typing.ts`（`parseTextWithFormat` / `validateFormat`）
+        - ✅ 接线：`.vue` 的 `invalid` 状态 + `onInput`（解析）+ `onInputKeydown`（Escape/Enter）
+        - ✅ `Selector` 的 `invalid` prop → `input[aria-invalid]` + 根类名 `-invalid`
+        - ⏳ 未接：落值 + **提交时机**（依赖 `useRangeValue` 的 `triggerChange` 语义）
+        - 🚨 **阻塞**：默认 `format` 的推导层未实现 ⇒ `formatList` 恒空 ⇒ 键入永远判非法
       - [ ] S3 掩码模式（`format.type: "mask"`）
       - [ ] S4 键盘字段导航与分段（`-input-active`）
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
@@ -288,6 +293,33 @@ export type PickerFormat<DateType = PanelDateType> =
 
 ⚠️ 验证方式：这批必须用 **jsdom**（真实键入 + 焦点）⇒ 需要环境不卡
 （本轮实测 jsdom 冷加载 3:39，所有 jsdom 测试报 worker 超时，详见 PITFALLS 231）。
+
+## 🚨 S2 的阻塞项：默认 `format` 的推导层（已定位，未修）
+
+**症状**：键入**任何**内容都被判非法（`aria-invalid` 恒 `true`）。
+
+**根因链**（2026-09-30 实测，详见 PITFALLS 234）：
+
+1. `mergeFormat` → `getRowFormat(picker, locale, format)` 读 **`locale.fieldDateFormat`**；
+2. 本仓的 `en_US` 的 `DatePicker.lang` **没有**这个字段；
+3. **antd 的 `locale.lang` 也没有**（`Object.keys(...).filter(k => k.startsWith('field'))` ⇒ `[]`）；
+4. 上游的 `getRowFormat` 与本仓**逐字一致**（`miscUtil.js:46-67`）；
+5. ⇒ **上游的 `format` 不是从 locale 来的**，而是 `useFilledProps` 里经 `showTime` /
+   `getTimeProps` **推导**出来的那一层 —— **本仓缺这一层**。
+
+**为什么 S1 的 L4 没抓到**：`valueTexts` 用 `firstFormat ?? ''` 兜底，`formatValue` 对空格式串
+有默认 ⇒ **显示正常**（`2026-09-30` 照样渲染）⇒ 16 个 L4 用例全绿。
+⇒ **「显示对」不等于「功能对」**，`formatList` 空只有**键入**才暴露。
+
+**当前处理**：`s2-typing.test.ts` **显式传 `format`** 验证接线本身是对的（12 条全绿），
+并**单独一条用例钉住这个缺口**（「不传 `format` 时连合法日期也判非法」）。
+⚠️ 缺口补上后那条会红 —— 那时应把它改成「合法日期 ⇒ false」并更新文件头。
+
+**下一步（S2 剩余）**：
+1. 补 `useFilledProps` 的 `format` 推导层（`showTime` / `getTimeProps` 那条路径）；
+2. 接**落值 + 提交时机**（`useRangeValue` 的 `triggerChange`：`needConfirm` /
+   `changeOnBlur` / `preserveInvalidOnBlur` 三者交互）；
+3. `preserveInvalidOnBlur` 的语义（blur 时是否保留非法文本）。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

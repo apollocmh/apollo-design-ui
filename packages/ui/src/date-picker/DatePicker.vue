@@ -62,6 +62,7 @@ import { dayjsConfig } from './hooks/dayjs-config';
 import { mergeFormat, toInternalMode } from './hooks/picker-format';
 import { getPlaceholder, mergePickerLocale } from './hooks/picker-locale';
 import { useSuffixIcon } from './hooks/picker-suffix';
+import { validateFormat } from './hooks/picker-typing';
 import { toDateArray, useInnerValue, useRangeValue, type ValueSlot } from './hooks/picker-value';
 import { useMergedPickerSemantic } from './hooks/use-picker-semantic';
 import type {
@@ -279,6 +280,83 @@ const rangeValue = useRangeValue({
 });
 
 // ============================== 开合 / 浏览值 ==============================
+// ============================== 键入（S2） ==============================
+
+/**
+ * **键入的值非法**（rc 的 `invalid` 通道 —— 与 antd 的 `status` 是两回事）。
+ *
+ * ⚠️ 上游 `useInputProps.js:122-134` 的判据逐字：
+ * ```js
+ * onChange: text => {
+ *   onInputChange();
+ *   const parsed = validateFormat(text);
+ *   if (parsed) { onInvalid(false, index); onChange(parsed, index); return; }
+ *   onInvalid(!!text, index);   // ← 空串算**合法**
+ * }
+ * ```
+ * ⇒ `invalid` 只在「非空且解析不出」时为真。
+ */
+const invalid = ref(false);
+
+/** 解析上下文（`locale` + 已归一的 `formatList` + 日期库适配层）。 */
+const parseContext = computed(() => ({
+  locale: mergedLocale.value.lang.locale,
+  formatList: mergedFormat.value.formatList,
+  generateConfig: dayjsConfig,
+}));
+
+/**
+ * 键入的**解析部分**（S2 的一半）。
+ *
+ * ⚠️ 另一半（落值 + **提交时机**）依赖 `useRangeValue` 的 `triggerChange` 语义 ——
+ * 它受 `needConfirm` / `changeOnBlur` / `preserveInvalidOnBlur` 三者交互影响
+ * ⇒ **留到 S2 的下一轮**。接一个「时机半对」的实现比不接更糟：
+ * 它会产生「看着能用、时机不对」的静默 bug。
+ */
+const onInput = (_index: number, event: Event): void => {
+  const text = (event.target as HTMLInputElement).value;
+  const parsed = validateFormat(text, parseContext.value);
+  if (parsed) {
+    invalid.value = false;
+    emit('invalid', false);
+    return;
+  }
+  // ⚠️ 空串算合法（上游 `onInvalid(!!text)`）
+  const nextInvalid = text !== '';
+  invalid.value = nextInvalid;
+  emit('invalid', nextInvalid);
+};
+
+/**
+ * 按键（上游 `useInputProps.js:140-162` 逐字）。
+ *
+ * 🚨 **`Enter` 不提交** —— 它只在**浮层关闭时**打开浮层。提交走 blur / 面板的「确定」。
+ * 这条很容易想当然（「回车提交」是多数输入框的习惯），所以单独钉住。
+ */
+const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
+  let prevented = false;
+  // deprecated 的 `onKeyDown` 通道（第二参是 `preventDefault`，见 emits 的 keydown）
+  emit('keydown', event, () => {
+    prevented = true;
+  });
+  if (event.defaultPrevented || prevented) {
+    return;
+  }
+  switch (event.key) {
+    case 'Escape':
+      onOpenChange(false);
+      break;
+    case 'Enter':
+      // ⚠️ **只在关闭时开**（不是提交）
+      if (!mergedOpen.value) {
+        onOpenChange(true);
+      }
+      break;
+    default:
+      break;
+  }
+};
+
 const innerOpen = ref(props.defaultOpen === true);
 const mergedOpen = computed(() => props.open ?? innerOpen.value);
 
@@ -332,6 +410,8 @@ const rootClass = computed(() =>
     // 🚨 rc 的 `Selector` 状态类：`disabled` 时根类名是
     //    `apollo-picker apollo-picker-disabled apollo-picker-outlined`（L4 实测）
     disabled: mergedDisabled.value,
+    // rc 的 `-invalid` 类（**键入非法**，与 antd 的 `-status-error` 是两回事）
+    invalid: invalid.value,
     rtl: rtl.value,
     size: mergedSize.value as string | undefined,
     variant: variant.value,
@@ -478,6 +558,9 @@ const selectorProps = computed(() => ({
   rootStyle: props.style,
   classNames: semantic.classNames.value,
   styles: semantic.styles.value,
+  invalid: invalid.value,
+  onInput,
+  onInputKeydown,
   onClear: () => rangeValue.triggerSubmit(null),
   onSelectorClick: () => onOpenChange(!mergedOpen.value),
 }));

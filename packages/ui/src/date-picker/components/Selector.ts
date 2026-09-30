@@ -161,6 +161,22 @@ export const Selector = defineComponent({
     },
     styles: { type: Object as PropType<SelectorSemanticStyles>, default: () => ({}) },
 
+    /**
+     * **键入的值非法**（rc 的 `invalid` 通道，**不是** antd 的 `status`）。
+     *
+     * 🚨 两者容易混，判据完全不同：
+     *
+     * | 来源 | 含义 | 影响 |
+     * |---|---|---|
+     * | `props.status`（antd） | 表单校验状态 | 只加根类名 `-status-*`；**不动** `aria-invalid` |
+     * | `props.invalid`（rc） | **用户键入的内容解析不出日期** | `aria-invalid` 变 `'true'` + 根类名 `-invalid` |
+     *
+     * ⚠️ 上游是 `"aria-invalid": invalid`（**直接传布尔**，React 渲染成 `"true"`/`"false"`）。
+     * 本仓传的是**显式字符串** —— Vue 对 `false` 的属性处理与 React 不同，
+     * 显式化可以保证输出恒为 `"true"` / `"false"`（S1 已实测空态是 `"false"`）。
+     */
+    invalid: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+
     // ---------------------------------------------------------- 事件
     onInput: {
       type: Function as PropType<(index: number, event: Event) => void>,
@@ -271,8 +287,10 @@ export const Selector = defineComponent({
       const active = isRange && props.activeIndex === index;
 
       const inputNode = h('input', {
-        // ⚠️ 实测：`status="error"` 也**不改**这里（恒 "false"）
-        'aria-invalid': 'false',
+        // 🚨 两个通道别混（见 `invalid` prop 的说明）：
+        //   - `props.status`（antd）**不改**这里 —— 实测 `status="error"` 时它仍是 `"false"`；
+        //   - `props.invalid`（rc，**键入解析不出日期**）才把它变 `"true"`。
+        'aria-invalid': props.invalid ? 'true' : 'false',
         autoComplete: 'off',
         size: inputSize.value,
         ...(isRange ? { 'date-range': index === 0 ? 'start' : 'end' } : {}),

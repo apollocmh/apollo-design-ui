@@ -1997,3 +1997,36 @@
       解释性注释同样会被后人当依据 ⇒ 写「为什么」之前也要跑一遍。
     - 已把正确版本写进 `picker-typing.ts` 的注释（含实测代码与推翻过程），
       并在测试里**如实钉住两条事实**（不匹配 ⇒ `null`；`isValidate` 挡 Invalid Date）。
+
+234. 🚨 **`formatList` 恒空 —— 一个「UI 看着正常、功能全废」的静默缺口**（2026-09-30 实测）。
+
+    **症状**：S2 接上键入解析后，**任何输入都被判非法**（`aria-invalid` 恒 `true`）。
+
+    **定位过程**（值得记的是「怎么找到的」，不是结论）：
+    1. 先怀疑 locale 名 —— 实测 `dayjsGenerateConfig.locale.parse('en_US', …)` **能**解析
+       ⇒ **不是** locale 名的问题（本仓的 `lang.locale` 是 `'en_US'`，dayjs 也认）。
+    2. 插桩打印 `.vue` 的 `parseContext` ⇒ 真相：
+       ```
+       [TMP-DBG] mergedFormat={"formatList":[],"maskFormat":null}   ← 空！
+       ```
+    3. 顺着 `mergeFormat` → `getRowFormat(picker, locale, format)` → 它读
+       **`locale.fieldDateFormat`**。
+    4. 查本仓的 `en_US` 的 `DatePicker.lang` ⇒ **没有** `fieldDateFormat`。
+    5. **关键一步**：查 **antd 的** `locale.lang` —— 也**没有**
+       （`Object.keys(require('antd/lib/date-picker/locale/en_US').default.lang).filter(k => k.startsWith('field'))` ⇒ `[]`）。
+       而上游的 `getRowFormat` 与本仓**逐字一致**（`miscUtil.js:46-67`）。
+    6. ⇒ **结论**：上游的 `format` **不是从 locale 来的**，而是 `useFilledProps` 里经
+       `showTime` / `getTimeProps` **推导**出来的那一层 —— **本仓的 `mergeFormat` 缺了这一层**。
+
+    **为什么 S1 的 L4 没抓到**：`valueTexts` 里写的是
+    `format: mergedFormat.value.firstFormat ?? ''`，而 `formatValue` 对空格式串有兜底
+    ⇒ **显示正常**（`2026-09-30` 照样渲染出来）⇒ L4 的 16 个用例全绿。
+    ⇒ **「显示对」不等于「功能对」**；`formatList` 空这件事**只有键入才暴露**。
+
+    **处理**：本轮**没有**顺手补那层推导（它属于 `useFilledProps` 的完整移植，是 S2 的下一步）。
+    改为：
+    - 在 `s2-typing.test.ts` 里**显式传 `format`** 来验证接线本身是对的（12 条全绿）；
+    - **单独一条用例钉住这个缺口**（「不传 `format` 时连合法日期也判非法」），
+      并在文件头写清根因与证据 —— 让缺口**留在明处**而不是藏在绿里。
+    - ⚠️ 缺口补上后那条用例**会红**，那时应把它改成「合法日期 ⇒ false」并更新文件头
+      （这是「故意留一条会红的用例」的用法，与「假绿灯」相反）。
