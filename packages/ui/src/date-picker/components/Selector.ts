@@ -316,11 +316,21 @@ export const Selector = defineComponent({
     };
 
     return () => {
-      const rootClass = [
-        props.prefixCls,
-        ...(props.range ? [`${props.prefixCls}-range`] : []),
-        props.rootClass,
-      ];
+      /**
+       * 根类名。
+       *
+       * 🚨 **优先用调用方组装好的 `rootClass`**（`getRootClassNames` 的产物，
+       * 它的**第一项就是 `prefixCls`**）—— 若这里再拼一次 `props.prefixCls`，
+       * 类名里会出现**两个** `apollo-picker`（L4 实测抓到：
+       * `[apollo-picker apollo-picker-outlined]` vs `[apollo-picker apollo-picker apollo-picker-outlined]`）。
+       *
+       * ⇒ 只有**单独使用** `Selector`（没传 `rootClass`）时才回退到最小集。
+       * 范围的 `-range` 由 `getRootClassNames` 的 `range` 选项负责（与其余类名同一处组装），
+       * 不在两处各拼一半。
+       */
+      const rootClass = props.rootClass
+        ? props.rootClass
+        : [props.prefixCls, ...(props.range ? [`${props.prefixCls}-range`] : [])];
 
       if (!props.range) {
         return h(

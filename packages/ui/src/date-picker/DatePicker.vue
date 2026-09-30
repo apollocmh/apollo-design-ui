@@ -331,6 +331,10 @@ const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =
 const rootClass = computed(() =>
   getRootClassNames({
     prefixCls: prefixCls.value,
+    // 🚨 rc 的 `Selector` 状态类：`disabled` 时根类名是
+    //    `apollo-picker apollo-picker-disabled apollo-picker-outlined`（L4 实测）
+    disabled: mergedDisabled.value,
+    rtl: rtl.value,
     size: mergedSize.value as string | undefined,
     variant: variant.value,
     enableVariantCls: enableVariantCls.value,

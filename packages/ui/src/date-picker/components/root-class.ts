@@ -44,6 +44,33 @@ import { getStatusClassNames, type InputStatus } from '../../space/statusUtils';
 /** 根类名的组装选项（全部是**已归一**的值）。 */
 export interface RootClassOptions {
   prefixCls: string;
+  /**
+   * 🚨 **rc 的 `Selector` 状态类**（`SingleSelector/index.js:167-172` /
+   * `RangeSelector.js:167-170`）—— 顺序与内容都要逐字对齐：
+   *
+   * ```js
+   * clsx(prefixCls, {
+   *   [`${prefixCls}-multiple`]: multiple,
+   *   [`${prefixCls}-focused`]:  focused,
+   *   [`${prefixCls}-disabled`]: disabled,
+   *   [`${prefixCls}-invalid`]:  invalid,
+   *   [`${prefixCls}-rtl`]:      rtl,
+   * }, className)
+   * ```
+   *
+   * ⚠️ 实测（L4）：`disabled` 时 antd 的根类名是
+   * **`apollo-picker apollo-picker-disabled apollo-picker-outlined`** ——
+   * `-disabled` 在 **`prefixCls` 之后、`-{variant}` 之前**。
+   * 漏掉它会让 L4 红（本轮实测）。
+   *
+   * ⚠️ `-focused` / `-invalid` 是**运行时状态**（交互或键入才置位）⇒ SSR 下恒 false；
+   * 留选项是为了 S2–S5 落地时不必再改签名。
+   */
+  disabled?: boolean;
+  multiple?: boolean;
+  focused?: boolean;
+  invalid?: boolean;
+  rtl?: boolean;
   /** 已归一的尺寸（`'small' | 'medium' | 'middle' | 'large'`）。 */
   size?: string | undefined;
   /** 已归一的变体（默认 `'outlined'`）。 */
@@ -78,6 +105,24 @@ export interface RootClassOptions {
 export function getRootClassNames(options: RootClassOptions): string[] {
   const { prefixCls } = options;
   const classes: string[] = [prefixCls];
+
+  // 🚨 rc 的 5 个状态类（**顺序逐字**：multiple → focused → disabled → invalid → rtl）
+  //    实测 `disabled` 时是 `apollo-picker apollo-picker-disabled apollo-picker-outlined`
+  if (options.multiple) {
+    classes.push(`${prefixCls}-multiple`);
+  }
+  if (options.focused) {
+    classes.push(`${prefixCls}-focused`);
+  }
+  if (options.disabled) {
+    classes.push(`${prefixCls}-disabled`);
+  }
+  if (options.invalid) {
+    classes.push(`${prefixCls}-invalid`);
+  }
+  if (options.rtl) {
+    classes.push(`${prefixCls}-rtl`);
+  }
 
   if (options.size === 'large') {
     classes.push(`${prefixCls}-large`);

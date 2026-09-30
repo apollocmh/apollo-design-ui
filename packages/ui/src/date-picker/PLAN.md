@@ -50,7 +50,12 @@
       **8 条负例**（`'datetime'` 不是 `picker`/`mode`、`status` 只有两档、单值不接受元组 …）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
+- [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
+      `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
+      （16 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
+      ⚠️ 只覆盖**触发元素**（与 cascader 同判）：SSR 下浮层走 Portal 不渲染 ⇒
+      面板侧的结构契约由 `@apollo-design/picker` 的 L4 负责，不在两层各钉一份。
+      ⚠️ 范围版留到 **S5**（`RangePicker.vue` 同批落地，届时补 5 个 range 用例）。
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
