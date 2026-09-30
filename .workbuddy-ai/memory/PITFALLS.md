@@ -1971,3 +1971,29 @@
       解释性注释同样会被后人当依据 ⇒ 写「为什么」之前也要跑一遍。
     - 已把正确版本写进 `picker-typing.ts` 的注释（含实测代码与推翻过程），
       并在测试里**如实钉住两条事实**（不匹配 ⇒ `null`；`isValidate` 挡 Invalid Date）。
+
+233. 🚨 **注释里的「为什么」也是断言，也要跑一遍再写**（2026-09-30 实测，S2 键入解析）。
+
+    写 `parseTextWithFormat` 时我断言：
+    > 「dayjs 的 `locale.parse` 在格式不匹配时会返回**当前时间**（而不是 `null`），
+    > 所以 `isValidate` 那一步不可省。」
+
+    **实测直接推翻**：
+    ```js
+    dayjsGenerateConfig.locale.parse('en', '乱写的东西', ['YYYY-MM-DD'])  // ⇒ null
+    ```
+    即**不匹配时本来就返回 `null`** ⇒ 我编的那个「为什么」是错的。
+
+    那 `isValidate` 到底挡什么？挡的是 **Invalid Date** —— dayjs 对某些输入
+    （如 `'not-a-date'`）给的是 `Invalid Date` 实例而**不是** `null`
+    （`generate-dayjs.oracle.test.ts` 里就有 `dayjs('not-a-date')` 的用例）。
+
+    - ⇒ 结论：这一步是**双保险**；在「`locale.parse` 已返回 `null`」的路径上冗余，
+      但**与上游逐字一致**，且对「返回 Invalid Date」的路径必需 ⇒ 保留。
+    - 🚨 **教训**：这一路我已经被实测纠正过很多次（`hasFeedback` 不是 status 的开关、
+      `getMergedStatus` 是 `||`、`top*` 的 `adjustX` 是 0、驼峰转 kebab 的 8 个变量名、
+      `INTERNAL_FIXED_ITEM_MARGIN` 落变量、token 默认值几乎全错…）——
+      **但那些至少是「代码里的断言」。这次错的是「注释里的解释」。**
+      解释性注释同样会被后人当依据 ⇒ 写「为什么」之前也要跑一遍。
+    - 已把正确版本写进 `picker-typing.ts` 的注释（含实测代码与推翻过程），
+      并在测试里**如实钉住两条事实**（不匹配 ⇒ `null`；`isValidate` 挡 Invalid Date）。
