@@ -188,7 +188,7 @@ if (emitStatic) {
 // ── --tokens：抓 `--ant-date-picker-*` 的声明值 ──
 if (tokensOnly) {
   const decls = new Map();
-  for (const m of raw.matchAll(/--ant-date-picker-([a-z0-9-]+)\s*:\s*([^;}"]+)/g)) {
+  for (const m of raw.matchAll(/--ant-date-picker-([a-z0-9_-]+)\s*:\s*([^;}"]+)/g)) {
     if (!decls.has(m[1])) decls.set(m[1], m[2].trim());
   }
   const sorted = [...decls.entries()].sort();

@@ -1858,3 +1858,37 @@
       实测产出 **257 条规则 / 52.8 KB**。
     - ⚠️ `ant-picker` 前缀被 **date-picker 与 time-picker 共用** ⇒ 产物含 time-picker 的规则，
       那是**对的**（同一组件族），移植时不要当成 bug 过滤掉。
+
+228. 🚨🚨 **驼峰 → kebab 转换：不能给每个大写字母都插连字符**（2026-09-30 实测，**静默 bug**）。
+
+    ```js
+    // ❌ 错：每个大写都插 ⇒ paddingBlockSM → padding-block-s-m
+    key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
+    // ✅ 对：只在小写/数字与紧跟的大写之间插 ⇒ padding-block-sm
+    key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+    ```
+
+    - 影响面：`paddingBlockSM` / `paddingInlineSM` / `paddingBlockLG` / `paddingInlineLG` /
+      `inputFontSizeLG` / `inputFontSizeSM` / `multipleItemHeightSM` / `multipleItemHeightLG`
+      —— **8 个变量名全拼错** ⇒ 声明了 `-s-m`、规则引用 `-sm` ⇒ `var()` 解析不到、
+      **静默回退到继承值/初始值**（`-sm`/`-lg` 系的尺寸全失效，只有 L6 逐像素能看出来）。
+    - 🚨 **单向检查抓不到它**：B7 若只做「外部变量是否在 theme 声明」，两边都是
+      `--apollo-date-picker-*` ⇒ 都被当成「自有」放过。**必须做双向比对**
+      （声明清单 ↔ 引用清单，两个方向都查）。
+    - 已落成 vitest 用例（`theme.test.ts` 的「B7 双向比对」8 条），含
+      `declared.has('-padding-block-s-m') === false` 的反向哨兵。
+
+229. 🚨 **变量名里可能有下划线 —— 正则的字符类要写 `[a-z0-9_-]` 而不是 `[a-z0-9-]`**
+    （2026-09-30 实测，我因此漏了一个变量并得出错误结论）。
+
+    - 上游的 `INTERNAL_FIXED_ITEM_MARGIN`（全大写 + 下划线）转 kebab 后是
+      **`internal_fixed_item_margin`**（保留下划线），产物里是
+      `--ant-date-picker-internal_fixed_item_margin: 2px`
+      （**值补了 px，且被 multiple 规则引用** —— 所以它**确实落变量**）。
+    - 我先前用 `/--ant-date-picker-([a-z0-9-]+)/` 扫 ⇒ **这个变量压根没被扫出来** ⇒
+      把「45 个变量」误读成「44 个 + 规则内声明的 affix-color」，
+      还据此写下「`INTERNAL_FIXED_ITEM_MARGIN` 是内部量、不落变量」的**错误结论**
+      （已改正：它**落变量**，`genTokenDecls` 必须包含它 ⇒ 声明是 **45 条**不是 44 条）。
+    - ⇒ 教训：**数出来的数量要与「应该有多少」对上**；对不上时先怀疑**扫描方式**
+      （正则的字符类、过滤条件），再怀疑事实。本轮的真实变量数是 **46**
+      （45 个 `prepareComponentToken` 的键 + 1 个规则内声明的 `affix-color`）。

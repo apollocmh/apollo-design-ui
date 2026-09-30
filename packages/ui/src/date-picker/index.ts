@@ -62,6 +62,7 @@ export type {
   ValueDate,
 } from './interface';
 
-// TODO(G4): export { genDatePickerStyle } from './style';
-// TODO(G4): export type { ComponentToken as DatePickerComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareDatePickerComponentToken } from './style/token';
+// ---------------------------------------------------------------- 样式（G4 产物）
+export { genDatePickerStyle, genTokenDecls as genDatePickerTokenDecls } from './style';
+export type { ComponentToken as DatePickerComponentToken } from './style/token';
+export { prepareComponentToken as prepareDatePickerComponentToken } from './style/token';

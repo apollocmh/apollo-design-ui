@@ -30,6 +30,7 @@
 
 import { getDesignToken } from '@apollo-design/theme';
 import { describe, expect, it } from 'vitest';
+import { DATE_PICKER_RULES, genTokenDecls } from '../style';
 import {
   type DatePickerSeedToken,
   datePickerPanelTokenValues,
@@ -295,5 +296,118 @@ describe('DatePicker · 纯函数性质', () => {
     const snapshot = JSON.stringify(s);
     initPanelComponentToken(s);
     expect(JSON.stringify(s)).toBe(snapshot);
+  });
+});
+
+/**
+ * B7 的**双向**比对（这是 `tests/build/run.mjs` 的 B7 在组件侧的前置防线）。
+ *
+ * ── 为什么必须是双向 ─────────────────────────────────────────────────────────
+ *
+ * 只做「外部变量是否在 theme 声明」是**单向**的，会漏掉一整类 bug：
+ * **自有变量名拼错**（声明了 `-s-m`、规则引用 `-sm`）⇒ `var()` 解析不到、
+ * **静默回退**。本轮实测踩到 **8 个**（`paddingBlockSM` / `inputFontSizeLG` /
+ * `multipleItemHeightSM` … 全被逐大写插连字符）。
+ *
+ * ── 三个方向 ─────────────────────────────────────────────────────────────────
+ *
+ * | 方向 | 判据 | 不合格的含义 |
+ * |---|---|---|
+ * | A 声明 → 引用 | `genTokenDecls` 的**每条**都被规则引用 | 死变量（**允许**，与 tabs 的空值 token 同类，但数量要对） |
+ * | B 引用 → 声明 | 规则引用的自有变量**都在** `genTokenDecls` 里 | **静默失效**（名字拼错） |
+ * | C 数量 | 声明恰好 **45** 条、规则恰好 **257** 条 | 防静默漂移 |
+ *
+ * ⚠️ `--apollo-date-picker-affix-color` 是**规则内声明**的（不在 `genTokenDecls` 里，
+ * 见 `README §4`）⇒ 方向 B 要把它白名单掉。
+ */
+describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () => {
+  const decls = genTokenDecls('apollo');
+  /** 声明清单（`--apollo-date-picker-xxx`）。 */
+  const declared = new Set(decls.map((d) => d.trim().replace(/:.*$/, '')));
+  /** 规则里引用的自有变量。 */
+  const used = new Set(
+    [...DATE_PICKER_RULES.matchAll(/var\((--apollo-date-picker-[a-z0-9_-]+)/g)]
+      // ⚠️ 捕获组的下标访问在 `noUncheckedIndexedAccess` 下是 `string | undefined`
+      //    ⇒ 显式过滤（不写 `as string` 掩盖）。
+      .map((m) => m[1])
+      .filter((v): v is string => v !== undefined),
+  );
+  /** 规则内声明的那个（不在 genTokenDecls 里）。 */
+  const RULE_SCOPED = '--apollo-date-picker-affix-color';
+
+  it('方向 C：声明恰好 45 条（= prepareComponentToken 的全部键）', () => {
+    // 🚨 45 而不是 44 —— `INTERNAL_FIXED_ITEM_MARGIN` **也落变量**
+    //（实测 `--ant-date-picker-internal_fixed_item_margin: 2px`，名字带下划线）
+    expect(decls).toHaveLength(45);
+  });
+
+  it('方向 C：规则恰好 257 条', () => {
+    expect(DATE_PICKER_RULES.split('\n').filter((l) => l.trim())).toHaveLength(257);
+  });
+
+  it('方向 B：规则引用的自有变量**全部**在声明清单里（拼错会在这里红）', () => {
+    const missing = [...used].filter((v) => v !== RULE_SCOPED && !declared.has(v)).sort();
+    expect(missing).toEqual([]);
+  });
+
+  it('方向 B：`affix-color` 确实**不在**声明清单里（它是规则内声明的）', () => {
+    expect(used.has(RULE_SCOPED)).toBe(true);
+    expect(declared.has(RULE_SCOPED)).toBe(false);
+  });
+
+  /**
+   * 方向 A：死变量**恰好 4 个**。
+   *
+   * ⚠️ 「死变量」在这里是**允许**的（与 tabs 的两个空值 token 同类）—— 上游
+   * `prepareComponentToken` 返回的键里，有一部分的值是**构建期算好后直接内联进规则**
+   * 的（`lighten` 的结果、`colorFillAlter` 的别名在 date-picker 里没用到），
+   * 声明出来只为「45 个逐字对齐」这条判据。
+   *
+   * | 变量 | 为什么没被引用 |
+   * |---|---|
+   * | `addon-bg` | 来自 input 的 `SharedComponentToken`；**date-picker 没有 addon** |
+   * | `cell-hover-with-range-bg` | 构建期 `lighten(colorPrimary, 35%)` 的结果被内联进规则 |
+   * | `cell-range-border-color` | 同上（`lighten(colorPrimary, 20%)`） |
+   * | `multiple-selector-bg-disabled` | `multiple` 禁用态的标签背景（上游规则用的是别的变量） |
+   */
+  it('方向 A：死变量恰好 4 个（构建期值被内联 / date-picker 用不到的继承面）', () => {
+    const dead = [...declared].filter((v) => !used.has(v)).sort();
+    expect(dead).toEqual([
+      '--apollo-date-picker-addon-bg',
+      '--apollo-date-picker-cell-hover-with-range-bg',
+      '--apollo-date-picker-cell-range-border-color',
+      '--apollo-date-picker-multiple-selector-bg-disabled',
+    ]);
+  });
+
+  it('数值字段补了 px，唯一例外是 z-index-popup', () => {
+    const byName = new Map(
+      decls.map((d) => [
+        d.trim().replace(/:.*$/, ''),
+        d.trim().replace(/^.*?:/, '').replace(/;$/, ''),
+      ]),
+    );
+    expect(byName.get('--apollo-date-picker-padding-block')).toBe('4px');
+    expect(byName.get('--apollo-date-picker-padding-block-sm')).toBe('0px');
+    expect(byName.get('--apollo-date-picker-padding-block-lg')).toBe('7px');
+    expect(byName.get('--apollo-date-picker-input-font-size')).toBe('14px');
+    expect(byName.get('--apollo-date-picker-internal_fixed_item_margin')).toBe('2px');
+    // ⚠️ z-index-popup 是层叠序号，**不能**带 px
+    expect(byName.get('--apollo-date-picker-z-index-popup')).toBe('1050');
+  });
+
+  it('kebab 转换：连续大写只占一个词（`SM` → `-sm`，不是 `-s-m`）', () => {
+    // 这条钉住本轮踩到的 8 个拼错（若回退成逐大写插连字符，上面方向 B 也会红）
+    expect(declared.has('--apollo-date-picker-padding-block-sm')).toBe(true);
+    expect(declared.has('--apollo-date-picker-padding-block-s-m')).toBe(false);
+    expect(declared.has('--apollo-date-picker-input-font-size-lg')).toBe(true);
+    expect(declared.has('--apollo-date-picker-input-font-size-l-g')).toBe(false);
+    expect(declared.has('--apollo-date-picker-multiple-item-height-sm')).toBe(true);
+    expect(declared.has('--apollo-date-picker-multiple-item-height-s-m')).toBe(false);
+  });
+
+  it('`internal_fixed_item_margin` 保留下划线（不是 `internal-fixed-item-margin`）', () => {
+    expect(declared.has('--apollo-date-picker-internal_fixed_item_margin')).toBe(true);
+    expect(declared.has('--apollo-date-picker-internal-fixed-item-margin')).toBe(false);
   });
 });
