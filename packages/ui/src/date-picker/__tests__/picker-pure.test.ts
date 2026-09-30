@@ -42,6 +42,12 @@ import { mergeFormat } from '../hooks/picker-format';
 import { getPlaceholder, getRangePlaceholder, mergePickerLocale } from '../hooks/picker-locale';
 import type { RcPickerLocale } from '../hooks/picker-types';
 import { toDateArray } from '../hooks/picker-value';
+import {
+  fillPopupClassName,
+  fillPopupStyle,
+  normalizePopupClassNames,
+  normalizePopupStyles,
+} from '../hooks/use-picker-semantic';
 import type { MaskFormatConfig } from '../interface';
 
 /** 一个字段尽量齐的 locale（测优先序用）。 */
@@ -503,5 +509,109 @@ describe('date-picker · 浮层接线配置（S1，判据来自 rc PickerTrigger
     //    写成 apollo-picker-slide-up 会让动效静默失效（PITFALLS 180 同族）
     expect(getTransitionName('apollo', undefined)).toBe('apollo-slide-up');
     expect(getTransitionName('apollo', 'my-motion')).toBe('my-motion');
+  });
+});
+
+/**
+ * 语义槽是「**4 个平铺 + 7 个嵌套**」—— 本仓第一次出现的两层（tabs 是「8 平铺 + 1 嵌套」）。
+ * 且 `classNames.popup` 允许 **string**（旧写法 = `popup.root`）或对象（新写法）。
+ *
+ * 上游靠 `useMergeSemantic` 的 `{ popup: { _default: 'root' } }` 声明这件事；
+ * 本仓的 `mergeClassNames` **没有**这个机制 ⇒ 在归一阶段先转（本组用例钉住）。
+ */
+describe('date-picker · 语义槽归一（S1，4 平铺 + 7 嵌套）', () => {
+  it('normalizePopupClassNames：string popup 归一成 { root }（旧写法）', () => {
+    expect(normalizePopupClassNames({ popup: 'c-popup', root: 'c-root' })).toEqual({
+      root: 'c-root',
+      popup: { root: 'c-popup' },
+    });
+  });
+
+  it('normalizePopupClassNames：对象 popup 原样保留（新写法）', () => {
+    expect(normalizePopupClassNames({ popup: { root: 'r', header: 'h', footer: 'f' } })).toEqual({
+      popup: { root: 'r', header: 'h', footer: 'f' },
+    });
+  });
+
+  it('normalizePopupClassNames：空串也归一（判据是 typeof string，不是真值）', () => {
+    expect(normalizePopupClassNames({ popup: '' })).toEqual({ popup: { root: '' } });
+  });
+
+  it('normalizePopupClassNames：无 popup / 无入参 ⇒ 不产生 popup 键', () => {
+    expect(normalizePopupClassNames({ root: 'r' })).toEqual({ root: 'r' });
+    expect(normalizePopupClassNames(undefined)).toEqual({});
+  });
+
+  it('normalizePopupStyles：popup 只有对象形态，原样保留', () => {
+    expect(normalizePopupStyles({ popup: { root: { color: 'red' } }, root: { top: 1 } })).toEqual({
+      root: { top: 1 },
+      popup: { root: { color: 'red' } },
+    });
+    expect(normalizePopupStyles(undefined)).toEqual({});
+  });
+
+  it('fillPopupClassName：deprecated popupClassName 拼在**已合并值之后**', () => {
+    const merged = { popup: { root: 'merged' } };
+    expect(fillPopupClassName(merged, 'deprecated')).toEqual({
+      popup: { root: 'merged deprecated' },
+    });
+  });
+
+  it('fillPopupClassName：无已合并值时只有 deprecated（不留多余空格）', () => {
+    expect(fillPopupClassName({}, 'deprecated')).toEqual({ popup: { root: 'deprecated' } });
+    expect(fillPopupClassName({ popup: {} }, 'deprecated')).toEqual({
+      popup: { root: 'deprecated' },
+    });
+  });
+
+  it('fillPopupClassName：deprecated 为空 ⇒ 原样返回（不产生空 root）', () => {
+    const merged = { popup: { root: 'merged' } };
+    expect(fillPopupClassName(merged, undefined)).toBe(merged);
+    expect(fillPopupClassName(merged, '')).toBe(merged);
+  });
+
+  it('fillPopupStyle：deprecated popupStyle **覆盖**已合并值', () => {
+    const merged = { popup: { root: { color: 'red', top: '1px' } } };
+    expect(fillPopupStyle(merged, { top: '2px' })).toEqual({
+      popup: { root: { color: 'red', top: '2px' } },
+    });
+  });
+
+  it('fillPopupStyle：无 deprecated ⇒ 原样返回', () => {
+    const merged = { popup: { root: { color: 'red' } } };
+    expect(fillPopupStyle(merged, undefined)).toBe(merged);
+  });
+
+  it('两层嵌套：popup 的 7 个子槽互不干扰（不是把 7 个拍平成 1 个）', () => {
+    const got = normalizePopupClassNames({
+      root: 'r',
+      prefix: 'p',
+      input: 'i',
+      suffix: 's',
+      popup: {
+        root: 'pr',
+        header: 'ph',
+        body: 'pb',
+        content: 'pc',
+        item: 'pi',
+        footer: 'pf',
+        container: 'pct',
+      },
+    });
+    // 4 个平铺
+    expect(got.root).toBe('r');
+    expect(got.prefix).toBe('p');
+    expect(got.input).toBe('i');
+    expect(got.suffix).toBe('s');
+    // 7 个嵌套，逐键保留
+    expect(got.popup).toEqual({
+      root: 'pr',
+      header: 'ph',
+      body: 'pb',
+      content: 'pc',
+      item: 'pi',
+      footer: 'pf',
+      container: 'pct',
+    });
   });
 });
