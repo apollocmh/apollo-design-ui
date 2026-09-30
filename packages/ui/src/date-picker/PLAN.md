@@ -90,23 +90,27 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 | S4 | 键盘字段导航与分段（`-input-active`） | S2 |
 | S5 | `multiple` + `tagRender` / `maxTagCount`、范围的两端切换 | S4 |
 
-## ⏳ S1 遗留的**验证缺口**（环境导致，必须在环境恢复后补）
+## S1 的验证缺口 —— **已闭合**（2026-09-30 环境恢复后补跑）
 
-2026-09-30 本机 `jsdom` 的加载退化到 **2 分 51 秒**（墙钟 / CPU 仅 1.34s ⇒ I/O 阻塞；
+2026-09-30 本机 `jsdom` 的加载一度退化到 **2 分 51 秒**（墙钟 / CPU 仅 1.34s ⇒ I/O 阻塞；
 二次加载同样慢 ⇒ 不是 page cache），导致 **jsdom 的 vitest worker 一律 60s 超时**
-（PITFALLS 221）。本轮因此：
+（PITFALLS 221）。当时的绕行是给纯函数用例加 `// @vitest-environment node`，
+代价是 `vitest.setup.ts` 的两处 DOM 依赖要加存在性护栏。
 
-| 项 | 状态 |
+**环境恢复后已补跑，缺口全部闭合：**
+
+| 项 | 结果 |
 |---|---|
-| `pin/*` 纯函数 L1（`--project unit`，加了 `@vitest-environment node`） | ✅ **22/22 通过** |
-| 根 `vue-tsc --noEmit -p tsconfig.json` | ⏳ **未跑完**（10 分钟未出结果，受同一 I/O 问题拖累） |
-| `vitest.setup.ts` 的两处 DOM 护栏对 **jsdom 用例**的回归 | ⏳ **未验证**（worker 起不来） |
-| 其余 L2 / L4 / L5 / theme | ⏳ 未跑（需要 jsdom） |
+| `picker-pure.test.ts`（`--project unit`，`@vitest-environment node`） | ✅ **40 passed** |
+| 根 `vue-tsc --noEmit -p tsconfig.json` | ✅ **0 error**（2m7s） |
+| `biome check .` | ✅ **error 0** |
+| **jsdom 回归**：`tag/__tests__/index.test.ts` + `space/__tests__` | ✅ **3 files / 166 tests passed** |
 
-⚠️ 护栏本身在 jsdom 下是**恒真条件**（`globalThis.document !== undefined`），
-可推理证明行为不变；但**推理不等于验证** ⇒ 环境恢复后必须补跑一次全仓回归，
-并确认 `packages/ui/src/date-picker` 的其余层。**在此之前不得把 S1 标为完成。**
+⇒ `vitest.setup.ts` 的两处护栏（`Element.prototype.scrollTo` 与 `afterEach` 的
+`document.body`，都加了 `globalThis.X !== undefined`）**对 jsdom 用例无破坏**，
+166 条既有测试全绿。**PITFALLS 222 里记的「无法验证」已解除。**
 
+⚠️ 仍**未**验证的：`.vue` 壳（尚未落地）⇒ L2 / L4 / L5 / theme 与视觉基线都还没有对象。
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
 1. **内联 style 的数字必须转 px 字符串** —— Vue patchStyle 不做转换（React 才有），裸数字被静默丢弃。
