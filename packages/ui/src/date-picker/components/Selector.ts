@@ -74,9 +74,9 @@ import {
   defineComponent,
   h,
   type PropType,
-  ref,
   type VNodeChild,
 } from 'vue';
+import { useMaskInput } from './mask-input';
 import {
   getInputSize,
   getRangeShowClear,
@@ -150,6 +150,36 @@ export const Selector = defineComponent({
     readOnly: { type: Boolean, default: false },
     /** 范围：当前活动端（`0` / `1` / `null`）。 */
     activeIndex: { type: Number as PropType<number | null | undefined>, default: undefined },
+
+    // ---------------------------------------------------- 掩码模式（S3）
+    /**
+     * 掩码格式串（`format.type === 'mask'` 时由 `.vue` 传下来）。
+     *
+     * 非空 ⇒ 输入框切到掩码行为（见 `mask-input.ts`）；空 / 未传 ⇒ 普通输入框。
+     */
+    maskFormat: { type: String as PropType<string | undefined>, default: undefined },
+    /** 键入非法时，失焦后是否**保留**文本（上游 `preserveInvalidOnBlur`）。 */
+    preserveInvalidOnBlur: { type: Boolean, default: false },
+    /** 文本是否可解析（掩码模式下 `Enter` 提交与 `paste` 都要用它）。 */
+    validateFormat: {
+      type: Function as PropType<((text: string) => boolean) | undefined>,
+      default: undefined,
+    },
+    /** 掩码模式：文本 ≠ 模板且 ≠ 受控值 ⇒ 通知外层打开浮层（上游 `onHelp`）。 */
+    onInputHelp: {
+      type: Function as PropType<((index: number) => void) | undefined>,
+      default: undefined,
+    },
+    /** 掩码模式：`Enter` + 文本合法 ⇒ 提交（上游 `Input.onSharedKeyDown`）。 */
+    onInputSubmit: {
+      type: Function as PropType<((index: number) => void) | undefined>,
+      default: undefined,
+    },
+    /** 掩码模式：文本合法时把文本交给外层（上游 `useInputProps` 的 `onChange`）。 */
+    onInputText: {
+      type: Function as PropType<((index: number, text: string) => void) | undefined>,
+      default: undefined,
+    },
     /** 根节点额外类名（尺寸 / 变体 / 状态 / 语义槽由调用方拼好）。 */
     rootClass: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     /**
@@ -207,15 +237,50 @@ export const Selector = defineComponent({
   setup(props, { expose }) {
     const disabledPair = computed(() => toDisabledPair(props.disabled));
 
-    /** 输入框元素（`expose` 的 `focus` 用 —— 上游 `Selector` 的命令面）。 */
-    const inputRef = ref<HTMLInputElement | null>(null);
+    /**
+     * 掩码模式（S3）—— 全部逻辑在 `mask-input.ts`，这里只做**转接**。
+     *
+     * ⚠️ 之所以把逻辑放在本组件而不是另开一个组件：上游的掩码**不改 DOM**
+     * （还是一个 `<input>`，「分段」只体现在 `setSelectionRange` 上）——
+     * 另开组件会让 `<div class="-input">` 的结构出现两份定义，容易漂移。
+     */
+    const maskInput = useMaskInput({
+      maskFormat: () => props.maskFormat,
+      valueTexts: () => props.valueTexts,
+      active: (index) => props.activeIndex === index,
+      preserveInvalidOnBlur: () => props.preserveInvalidOnBlur,
+      validateFormat: (text) => props.validateFormat?.(text) ?? false,
+      onChange: (index, text) => props.onInputText?.(index, text),
+      onHelp: (index) => props.onInputHelp?.(index),
+      onSubmit: (index) => props.onInputSubmit?.(index),
+      onKeyDown: (index, event) => props.onInputKeydown?.(index, event),
+      onFocus: (index, event) => props.onInputFocus?.(index, event),
+      onBlur: (index, event) => props.onInputBlur?.(index, event),
+    });
+
+    /** 两个 field 的输入框元素（`expose.focus` 与掩码的选择同步都要它）。 */
+    const inputEls: (HTMLInputElement | null)[] = [null, null];
+    /**
+     * 稳定的 `ref` 回调。
+     *
+     * ⚠️ 每次渲染新建闭包会让 Vue 反复「解绑 → 重绑」（旧 ref 收 `null`、新 ref 收元素）
+     * ⇒ 掩码的 `elements[index]` 会在一帧里被写成 `null` 再写回来。
+     */
+    const inputElRefs = [0, 1].map(
+      (index) => (el: Element | { $el?: Element } | null | undefined) => {
+        const next = ((el as HTMLInputElement | null) ?? null) as HTMLInputElement | null;
+        inputEls[index] = next;
+        maskInput.setElement(index, next);
+      },
+    );
+
     /**
      * 上游 `SinglePicker` 的 `selectorRef.current.focus()`。
      *
      * 两个调用点：点根节点时（`onSelectorClick`）与点清除后（`onSelectorClear`）。
      * 后者是**真的有用**的：点击落在清除按钮上，不还原焦点的话焦点会留在按钮上。
      */
-    expose({ focus: () => inputRef.value?.focus() });
+    expose({ focus: () => inputEls[0]?.focus() });
 
     /** 两端的值长度（范围判 `showClear` 用）。 */
     const valueLengths = computed<[number, number]>(() => [
@@ -303,10 +368,12 @@ export const Selector = defineComponent({
       const disabled = disabledPair.value[index];
       const active = isRange && props.activeIndex === index;
 
+      /** 掩码模式专属绑定（值 + 六个事件）；非掩码时为 `undefined`。 */
+      const maskBind = maskInput.enabled.value ? maskInput.bind(index) : undefined;
+
       const inputNode = h('input', {
-        // ⚠️ `ref` 必须给**单值**那个（`index === 0`）—— 范围版的 `expose.focus`
-        //    上游落在 start 端（`SingleSelector` 的 `focus` 只 focus 一个 input）。
-        ...(index === 0 ? { ref: inputRef } : {}),
+        // `ref`：两个 field 各一个（`expose.focus` 用 `[0]`，掩码的选择同步用各自的）
+        ref: inputElRefs[index],
         // 🚨 两个通道别混（见 `invalid` prop 的说明）：
         //   - `props.status`（antd）**不改**这里 —— 实测 `status="error"` 时它仍是 `"false"`；
         //   - `props.invalid`（rc，**键入解析不出日期**）才把它变 `"true"`。
@@ -317,11 +384,15 @@ export const Selector = defineComponent({
         placeholder: ph,
         disabled: disabled || undefined,
         readonly: props.readOnly || undefined,
-        value: props.valueTexts[index] ?? '',
-        onInput: (e: Event) => props.onInput?.(index, e),
-        onFocus: (e: FocusEvent) => props.onInputFocus?.(index, e),
-        onBlur: (e: FocusEvent) => props.onInputBlur?.(index, e),
-        onKeydown: (e: KeyboardEvent) => props.onInputKeydown?.(index, e),
+        // 🚨 掩码模式与普通模式**互斥**（上游 `Input.js` 里 `inputProps` 覆盖 `restProps`）：
+        //    掩码下原生 `input` 事件是**空实现**，值与四个事件都来自本地状态。
+        ...(maskBind ?? {
+          value: props.valueTexts[index] ?? '',
+          onInput: (e: Event) => props.onInput?.(index, e),
+          onFocus: (e: FocusEvent) => props.onInputFocus?.(index, e),
+          onBlur: (e: FocusEvent) => props.onInputBlur?.(index, e),
+          onKeydown: (e: KeyboardEvent) => props.onInputKeydown?.(index, e),
+        }),
       });
 
       if (!isRange) {

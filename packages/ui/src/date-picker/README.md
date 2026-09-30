@@ -20,6 +20,7 @@
 | 4 | `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs） | **INTENDED** | G2 的决策；`interface.ts` 里已写明 |
 | 5 | 复用既有 `space/statusUtils.getStatusClassNames`（返回**空格拼接字符串**，非数组）；`root-class.ts` 整体 `push` | **PLATFORM** | 本仓既有实现的选择；`push(...str)` 会把字符串按字符展开，已加注释与断言防回归 |
 | 6 | 两处 `FastColor(<cssvar 引用>).setA(α)` 派生色在产物里是 `#00000080` / `#00000033`（**不是** `#ffffff80` / `#e6f4ff33`） | **UPSTREAM** | 上游 `style/panel.js:389,471`；cssVar 模式下 token 值是**变量引用字符串**，`FastColor` 解析不了 ⇒ 回落 `#000000`。证据：同规则块内 `panel.js:392` 的**直接**使用输出成 `var(--apollo-color-text-light-solid)`；`theme.getDesignToken().colorTextLightSolid` ⇒ `#fff`（非 undefined）⇒ 排除「token 缺失」。**逐字对齐产物**，已在 E10 逐值豁免（2026-10-01） |
+| 7 | 掩码模式下原生 `input` 事件**不改状态**，但本仓会在它里面主动「打一拍」把 DOM 值写回去 | **PLATFORM** | 上游 `Input.js:117-124`（有 `format` 时跳过 `onChange`）靠 **React 的 `restoreControlledState`** 把 DOM 值强制还原；**Vue 没有这个机制** ⇒ 不主动重渲染的话，浏览器在 `keydown` **之后**落进 DOM 的原生字符会留在输入框里。见 `components/mask-input.ts` 的 `onInput`（2026-10-01） |
 
 ## 3. .vue / .tsx 选择
 
@@ -81,6 +82,16 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 **用户裁决 = A（完整对齐，分阶段落地）**，登记在 `registry/source/open-decisions.mjs` 的
 `date-picker-input-kernel`。⇒ 本组件**不留**输入框相关的 `DEFERRED`；
 键入解析 / 掩码 / 键盘字段导航 / 分段 全部要落地（分 S1–S5 五阶段，见 `PLAN.md`）。
+
+**当前进度（2026-10-01）**：
+
+| 阶段 | 内容 | 状态 |
+|---|---|---|
+| S1 | 值 / 开合 / 面板接线 + 样式（257 规则 / 45 声明） | ✅ |
+| S2 | 键入解析 + `format` 补齐层 + `format` 函数形态 + **提交时机状态机** | ✅ |
+| S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
+| S4 | 键盘字段导航与 `-input-active` **分段渲染** | ⏳ 调度已随 S2 落地，只剩渲染 |
+| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | ⏳ |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 

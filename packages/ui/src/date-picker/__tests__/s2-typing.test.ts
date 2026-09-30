@@ -9,7 +9,7 @@
  * | invalid | 解析得出 ⇒ 回 `"false"` + 发 `invalid(false)` | 同上 |
  * | invalid | 🚨 **空串算合法**（`onInvalid(!!text)`）⇒ 清空后回 `"false"` | 同上 |
  * | invalid | 🚨 **与 `status` 无关** —— `status="error"` 时 `aria-invalid` 仍是 `"false"` | S1 实测 |
- * | 键盘 | `Escape` ⇒ 关浮层；`Enter` 浮层**关闭**时开、**已开时不变**（**不提交**） | `useInputProps.js:140-162` |
+ * | 键盘 | `Escape` ⇒ 关浮层；`Enter` **文本合法 ⇒ 提交并关浮层**、空/非法 ⇒ 只在关闭时开浮层 | `Input.js:182-187` + `useInputProps.js:140-162` |
  *
  * ── ✅ 曾经的「已知缺口」已闭合（2026-10-01）────────────────────────────────
  *
@@ -29,9 +29,10 @@
  *
  * ── 这个文件**没有**证明什么 ──────────────────────────────────────────────────
  *
- * **落值 + 提交时机**（`onChange` 那一半）**不在本轮**：它依赖 `useRangeValue` 的
- * `triggerChange` 语义（`needConfirm` / `changeOnBlur` / `preserveInvalidOnBlur` 三者交互）
- * ⇒ 留到 S2 的下一轮。所以这里**不断言**「键入合法后值变了」。
+ * **落值 + 提交时机**（`onChange` 那一半）不在这里 —— 那是
+ * `s2-commit.test.ts`（关浮层 / Tab / Enter / 面板点选）与
+ * `picker-value-change.test.ts`（状态机本身）的事。
+ * 本文件只钉「解析 → `invalid` 状态」与「按键 → 浮层」这两条**局部**契约。
  */
 
 import { mount } from '@vue/test-utils';
@@ -177,12 +178,29 @@ describe('DatePicker · 键入接线（S2 · 键盘）', () => {
     w.unmount();
   });
 
-  it('🚨 `Enter`（浮层**已开**）⇒ **不变**（不提交、不发 openChange）', async () => {
-    // 上游只在 `!open` 时开浮层；「回车提交」是多数输入框的习惯，这里**不是**那样
+  it('🚨 `Enter`（**空文本**、浮层已开）⇒ 不动 —— 合法文本才提交（见下一条）', async () => {
+    // ⚠️ 这条**只**对空/非法文本成立：`Input.onSharedKeyDown` 的判据是
+    //    `key === 'Enter' && validateFormat(inputValue)`，空串解析不出 ⇒ 不提交。
     const w = mount(DatePicker, { props: { open: true } });
     await input(w).trigger('keydown', { key: 'Enter' });
 
     expect(w.emitted('openChange')).toBeUndefined();
+    expect(w.emitted('change')).toBeUndefined();
+    w.unmount();
+  });
+
+  it('🚨 **`Enter` + 合法文本 ⇒ 提交**（`keyboard-submit`）并关浮层', async () => {
+    // 出处：`Input.js:182-183` 的 `onSharedKeyDown` ——
+    //   `if (event.key === 'Enter' && validateFormat(inputValue)) onSubmit();`
+    // 而 `onSubmit` 一路接到 `SinglePicker` 的 `triggerConfirm('keyboard-submit')`。
+    // ⚠️ 这条**推翻了**本仓 2026-10-01 之前「Enter 一律不提交」的注释。
+    const w = mount(DatePicker, { props: { open: true } });
+    await input(w).setValue('2026-09-30');
+
+    await input(w).trigger('keydown', { key: 'Enter' });
+
+    expect(w.emitted('change')).toBeTruthy();
+    expect(w.emitted('openChange')?.at(-1)).toEqual([false]);
     w.unmount();
   });
 

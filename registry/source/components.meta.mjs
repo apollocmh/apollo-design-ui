@@ -322,7 +322,9 @@ export const COMPONENTS = [
       '**提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，' +
       '`hooks/picker-value-change.ts`）。' +
       '⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；' +
-      'S3 = 掩码模式，S5 = `multiple` / 预设 / 范围两端。',
+      '**S3 掩码模式已落地（2026-10-01）**（`components/mask-format.ts` + ' +
+      '`components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；' +
+      '剩 S4（渲染）与 S5（`multiple` / 预设 / 范围两端）。',
   },
   {
     name: 'time-picker',

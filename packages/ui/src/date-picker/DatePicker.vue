@@ -502,9 +502,7 @@ const parseContext = computed(() => ({
 }));
 
 /**
- * 键入 → 解析 → **提交**（S2 的完整链）。
- *
- * 逐字对齐上游 `useInputProps.js:114-135` + `SingleSelector.js:94-96`：
+ * 键入文本的**完整处理**（上游 `useInputProps.js:114-135` 的 `onChange`）。
  *
  * ```
  * onInputChange()                      // = triggerSingleValueChange(0, 'input')，**不带值**
@@ -517,10 +515,11 @@ const parseContext = computed(() => ({
  *
  * ⚠️ **`onInputChange()` 在前**：它先把 `currentIndex` 建起来并把该 field 标成
  * `modified`；随后的带值调用才走 `modify` 把值写进临时日历值。
- * 顺序反过来在「第一次输入」时行为相同，但 `modified` 的语义会错。
+ *
+ * ⚠️ 两个入口共用它：**普通模式的 DOM `input` 事件** 与 **掩码模式的 `keydown`**
+ * （掩码下原生 `input` 是空实现 —— 上游 `Input.js` 的 `onInternalChange`）。
  */
-const onInput = (_index: number, event: Event): void => {
-  const text = (event.target as HTMLInputElement).value;
+const applyInputText = (text: string): void => {
   // ① 上游 `useInputProps.js:115`
   valueChange.triggerChange(0, 'input');
   const parsed = validateFormat(text, parseContext.value);
@@ -535,6 +534,11 @@ const onInput = (_index: number, event: Event): void => {
   const nextInvalid = text !== '';
   invalid.value = nextInvalid;
   emit('invalid', nextInvalid);
+};
+
+/** 普通模式的 DOM `input` 事件（掩码模式下**不**绑它）。 */
+const onInput = (_index: number, event: Event): void => {
+  applyInputText((event.target as HTMLInputElement).value);
 };
 
 /**
@@ -556,20 +560,33 @@ const onInputBlur = (_index: number, _event: FocusEvent): void => {
 };
 
 /**
- * 按键 —— **一个**处理器，但内部是上游**两段**的顺序（`useInputProps.js:140-162`
- * 把 `SinglePicker.onSelectorKeyDown` 当 DOM 处理器调，所以两段合并在同一处）：
+ * 按键 —— **一个**处理器，但内部是上游**四段**的顺序：
  *
  * ```
+ * ⓪ Input.onSharedKeyDown：Enter **且文本合法** ⇒ onSubmit（= keyboard-submit ⇒ 提交）
  * ① SinglePicker.onSelectorKeyDown：Tab ⇒ keyboard-submit-weak；Escape ⇒ esc + 关浮层
  * ② 用户的 deprecated onKeyDown（第二参是 preventDefault 的兼容 shim）
  * ③ useInputProps 自己：Escape ⇒ 关浮层；Enter ⇒ **只在关闭时**开浮层
  * ```
  *
- * 🚨 **`Enter` 不提交** —— 它只在**浮层关闭时**打开浮层。提交走 `confirm` /
- * `keyboard-submit`（面板的「确定」/ 原生 submit）。
- * 这条很容易想当然（「回车提交」是多数输入框的习惯），所以单独钉住。
+ * 出处：`Input.js:182-187`（`onSharedKeyDown`）→ `useInputProps.js:140-162`。
+ *
+ * 🚨 **`Enter` 不是「不提交」**（这一点我先前写错了，2026-10-01 更正）：
+ *   - **文本合法** ⇒ `onSubmit()` ⇒ `triggerConfirm('keyboard-submit')` ⇒ `switchNext`
+ *     ⇒ **提交并关浮层**；
+ *   - **文本非法 / 为空** ⇒ 不提交，落到 ③ 的「只在关闭时开浮层」。
+ * 之前的注释与用例把它写成「Enter 一律不提交」——那只对**空文本**成立。
+ * ⚠️ 顺序也重要：⓪ 在 ① 之前，所以「Enter 提交」不会被 Tab/Escape 的分支影响。
  */
 const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
+  // ⓪ 上游 `Input.js:182-183`
+  if (event.key === 'Enter') {
+    const text = (event.target as HTMLInputElement).value;
+    if (validateFormat(text, parseContext.value)) {
+      valueChange.triggerChange(0, 'keyboard-submit');
+    }
+  }
+
   // ① 上游 `SinglePicker.js:426-433`
   if (event.key === 'Tab') {
     valueChange.triggerChange(0, 'keyboard-submit-weak');
@@ -593,7 +610,7 @@ const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
       onOpenChange(false);
       break;
     case 'Enter':
-      // ⚠️ **只在关闭时开**（不是提交）
+      // ⚠️ **只在关闭时开** —— 走到这里说明文本不合法（合法的已在 ⓪ 提交）
       if (!mergedOpen.value) {
         onOpenChange(true);
       }
@@ -809,6 +826,18 @@ const selectorProps = computed(() => ({
   classNames: semantic.classNames.value,
   styles: semantic.styles.value,
   invalid: invalid.value,
+  // ---------------------------------------------------------- 掩码模式（S3）
+  /** 归一后的掩码格式串（`format.type === 'mask'` 时非空）。 */
+  maskFormat: mergedFormat.value.maskFormat ?? undefined,
+  preserveInvalidOnBlur: props.preserveInvalidOnBlur === true,
+  /** 掩码模式下 `Enter` 提交与 `paste` 都要「文本能否解析」。 */
+  validateFormat: (text: string) => Boolean(validateFormat(text, parseContext.value)),
+  /** 掩码：文本 ≠ 模板且 ≠ 受控值 ⇒ 打开浮层（上游 `onHelp` ⇒ `onOpenChange(true)`）。 */
+  onInputHelp: () => onOpenChange(true),
+  /** 掩码：`Enter` + 文本合法 ⇒ 提交（上游 `Input.onSharedKeyDown`）。 */
+  onInputSubmit: () => valueChange.triggerChange(0, 'keyboard-submit'),
+  /** 掩码：合法文本从 `keydown` 路径进来（原生 `input` 是空实现）。 */
+  onInputText: (_index: number, text: string) => applyInputText(text),
   onInput,
   onInputFocus,
   onInputBlur,

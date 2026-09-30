@@ -2201,3 +2201,60 @@
     🚨 **教训**：移植这类「闭包状态机」时，把 `useRef` 分成三类再逐类决定：
     **参与渲染的**（→ `ref`/`computed`）、**只在事件里读写的**（→ 普通变量）、
     **被就地改对象的**（→ 改不可变更新）。三类混着搬必错。
+
+241. 🚨 **`Enter` 提交 —— 我把上游的 keydown 链读成了「两段」，漏掉最前面那一段**（2026-10-01，S3 起手时发现）。
+
+    S2 收口时我在 `DatePicker.vue` 与 PLAN 里都写了「**`Enter` 不提交**，只在浮层关闭时
+    打开浮层」。**错**。真实的链是**四段**：
+
+    ```
+    Input 的 DOM keydown = Input.onSharedKeyDown            ← 🚨 我漏掉的就是这一段
+      ⓪ if (key === 'Enter' && validateFormat(inputValue)) onSubmit();   // ⇒ 提交 + 关浮层
+      ① onKeyDown?.(event) = useInputProps 的处理器
+           a. onSelectorKeyDown：Tab ⇒ keyboard-submit-weak；Escape ⇒ esc + 关浮层
+           b. 用户的 deprecated onKeyDown
+           c. Escape ⇒ 关浮层；Enter ⇒ if (!open) 开浮层
+    ```
+
+    出处：`Selector/Input.js:182-183`（⓪）→ `hooks/useInputProps.js:140-162`（①）。
+    `onSubmit` 一路接到 `SinglePicker.js:494` 的 `triggerConfirm('keyboard-submit')`。
+
+    - 为什么**现有的用例没抓到**：两条 Enter 用例用的都是**空输入框**，
+      `validateFormat('')` 为假 ⇒ 走不到 ⓪ 的提交分支。**测试是绿的，注释是错的** ——
+      这正是「绿 ≠ 对」的又一例。
+    - 已修：`.vue` 的 `onInputKeydown` 补 ⓪；`s2-typing` 的用例改名并新增
+      「Enter + 合法文本 ⇒ 提交 + 关浮层」；PLAN / README 的表述同步更正。
+    - 🚨 **教训**：读「事件处理链」时**从 DOM 元素往外读**，不要从「我认识的那个 hook」
+      往里读。`Input.js` 的 `onSharedKeyDown` 是链条的**起点**，而它调用的
+      `onKeyDown` 才是 `useInputProps` 的处理器 —— 顺序反了就会漏掉最前面那一段。
+      （与 PITFALLS 234/235 同族：**少读一层**。）
+
+242. 🚨 **掩码模式：Vue 没有 React 的 `restoreControlledState`**（2026-10-01，S3）。
+
+    上游 `Input.js` 的受控 `<input>` 在掩码模式下把原生 `input` 事件做成**空实现**
+    （`onInternalChange` 的 `if (!format)`），靠 **React 的 `restoreControlledState`**
+    在事件后把 DOM 值强制还原成 props 的 `value`。
+
+    **Vue 没有这个机制**：`:value` 只在 vnode 重新 patch 时才写回 DOM
+    （好消息：Vue 的 `patchProps` 对 `value` 是**无条件** patch 的，
+    `else if (key === 'value') hostPatchProp(...)` —— 所以「重新渲染」就一定写回）。
+
+    ⇒ 在 Vue 里必须**主动**制造那次渲染，否则：
+
+    ```
+    keydown（我们的处理器跑完、patch 一次）
+      → 浏览器执行默认动作，把原生字符**插入 DOM**
+      → input 事件（空实现）
+      → 没有任何后续渲染 ⇒ 那个字符**留在输入框里**
+    ```
+
+    - 处理：掩码模式的 `onInput` 里 `syncTick.value += 1`（打一拍）。
+      **不是**「空实现」的偷懒版，而是 Vue 侧的等价物。
+    - 同族：`keydown` 里「按了不生效的键」（字母）也要打一拍 ——
+      否则连 keydown 那次 patch 都不会发生（`internalText` 没变 ⇒ 渲染函数不重跑）。
+      ⚠️ 打拍要打在**渲染函数读得到的地方**（`bind()` 里 `void syncTick.value`），
+      否则计数变了也不会重渲染。
+    - 分类 **PLATFORM**（框架差异），已登记 `README.md` §2 第 7 条。
+    - 🚨 **教训**：「上游这里是空实现」不等于「本仓也该是空实现」。
+      React 的**受控组件**隐含了一批框架级副作用（值还原、批处理、合成事件），
+      照抄函数体而丢掉这些副作用，症状会出现在**别的**地方（这里是「字符不消失」）。

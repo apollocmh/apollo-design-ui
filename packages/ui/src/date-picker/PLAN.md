@@ -53,7 +53,10 @@
           `SinglePicker.js` 接线：键入 / Tab / Esc / 焦点 / 清除 / 关浮层 / 面板点选。
         - ✅ 用例：`picker-value-change.test.ts` **36 条**（L1，node）+
           `s2-commit.test.ts` **12 条**（L2，jsdom）
-      - [ ] S3 掩码模式（`format.type: "mask"`）
+      - [x] S3 掩码模式（`format.type: "mask"`）—— **已落地**（2026-10-01）：
+        `components/mask-format.ts`（上游 `MaskFormat.js` 81 行，工厂 + 接口形态）+
+        `components/mask-input.ts`（上游 `Input.js` 的 `format` 分支）+ `Selector` 转接。
+        用例：`mask-format.test.ts` **18 条**（L1，node）+ `s3-mask.test.ts` **11 条**（L2，jsdom）。
       - [ ] S4 键盘字段导航与分段（`-input-active`）—— ⚠️ **调度逻辑已随 S2 落地**
             （`field-switch` 分支 + `forceFocus`），S4 只剩**渲染**（分段高亮 + 焦点跟随）
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
@@ -307,7 +310,7 @@ source × needConfirm × allowEmpty × index  ──resolveAction──▶  acti
 | 聚焦 | `field-switch` | `SinglePicker.js:417-423` |
 | `Tab` | `keyboard-submit-weak`（局部提交，**不**关浮层） | `SinglePicker.js:428-429` |
 | `Escape` | `esc` + 关浮层 | 同上 `:431-432` |
-| `Enter` | **不提交**，只在关闭时开浮层 | `useInputProps.js:152-158` |
+| `Enter` | **文本合法 ⇒ `keyboard-submit`（提交 + 关浮层）**；空/非法 ⇒ 只在关闭时开浮层 | `Input.js:182-183` + `useInputProps.js:152-158` |
 | 关浮层 | `popupClose` | `SinglePicker.js:187-191` |
 | 清除 | `reset()` + 提交 `null` + 关浮层 + 焦点回输入框 + `clear` | `SinglePicker.js:242-249` |
 | 点面板格 | `panel-final`（无确认制**且**面板粒度 = 组件粒度）否则 `panel-intermediate` | `SinglePicker.js:322-328` |
@@ -318,7 +321,12 @@ source × needConfirm × allowEmpty × index  ──resolveAction──▶  acti
    （关浮层 / Tab / 确定）。这与「多数输入框改完即提交」的直觉相反。
    （上游被废弃的 `changeOnBlur` 注释「Value will always be update if user type correct
    date type」说的是**用户视角**，机制上仍是「关浮层时提交」。）
-2. **`Enter` 不提交**，只在浮层关闭时打开它。
+2. 🚨 **`Enter` 的判据不是「不提交」**（这一条 2026-10-01 被**更正**）：
+   `Input.onSharedKeyDown` 是 `key === 'Enter' && validateFormat(inputValue)` ⇒ `onSubmit()`
+   ⇒ `triggerConfirm('keyboard-submit')` ⇒ **提交并关浮层**。
+   只有**空 / 非法**文本才落到「只在关闭时开浮层」那一支。
+   ⇒ 我先前把上游的 keydown 读成「两段」（`onSelectorKeyDown` + `useInputProps`），
+   漏掉了 `Input.js` **最前面**那一段 —— 与 234/235 是同一类错误（少读一层）。
 3. **`popupClose` ≠ 一定提交**：有确认制且还有 field 没参与过 ⇒ `resetAll`（丢弃）；
    整轮没改过 ⇒ `finish`（什么都不做）。
 4. **`isLastInput` 只被「非 `popupClose`」的事件写**（上游注释：`popupClose`
@@ -363,6 +371,32 @@ source × needConfirm × allowEmpty × index  ──resolveAction──▶  acti
 `triggerChange` 状态机，已逐字移植（见上面「✅ 落值 + 提交时机」一节）。
 ⚠️ 它与 **S4 的字段导航是同一个状态机** —— 本轮把**调度逻辑**（`field-switch` 分支 +
 `forceFocus`）一并做掉了，S4 只剩**渲染**（`-input-active` 分段高亮 + 焦点跟随）。
+
+## ✅ S3 掩码模式 —— **已落地**（2026-10-01）
+
+`format={{ format: 'YYYY-MM-DD', type: 'mask' }}` 时输入框切成**分段掩码**。
+
+| 文件 | 对应上游 | 内容 |
+|---|---|---|
+| `components/mask-format.ts` | `MaskFormat.js`（81 行） | 工厂 + 接口形态：模板 / 分段 / `getSelection` / `match` / `size` / `getMaskCellIndex` |
+| `components/mask-input.ts` | `Input.js` 的 `format` 分支 | 本地文本 / 字段选择区间 / keydown（Backspace·方向键·数字）/ paste / 失焦还原 |
+| `components/Selector.ts` | `Input.js` 的 `inputProps` 覆盖 | 6 个新 prop 转接 + 两个元素 ref |
+| `DatePicker.vue` | `useInputProps` 的 `onChange` | `applyInputText` 抽出（普通 `input` 与掩码 `keydown` 共用） |
+
+**🚨 四条「写错也不会报错」的判据**：
+
+1. **DOM 不变**：还是**一个 `<input>`**，「分段」只体现在 `setSelectionRange` 上。
+2. **原生 `input` 事件在掩码模式不改状态**（上游 `if (!format)`）—— 键入全走 `keydown`。
+3. **键值判据是 `!isNaN(Number(key))`**：空格（`Number(' ') === 0`）**不被过滤**，
+   且 `leftPad(' ', 4)` 会补成 `'000 '`（空格留在文本里）。
+4. **`Backspace` / `Delete` 一样**（清空字段 + 回填字段模板），没有「删一个字符」的语义。
+
+**🚨 一处 PLATFORM 差异（→ PITFALLS 242）**：上游靠 **React 的 `restoreControlledState`**
+在事件后把 DOM 值强制还原；**Vue 没有这个机制** ⇒ 本仓必须在 `onInput` 里**主动打一拍**
+（`syncTick += 1`）触发重渲染，否则浏览器在 `keydown` **之后**落进 DOM 的原生字符会留在框里。
+⚠️ 打拍必须打在**渲染函数读得到的地方**（`bind()` 里 `void syncTick.value`）。
+
+用例：`mask-format.test.ts` **18 条**（L1，node）+ `s3-mask.test.ts` **11 条**（L2，jsdom）。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
