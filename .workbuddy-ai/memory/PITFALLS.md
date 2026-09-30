@@ -1836,3 +1836,25 @@
     引用 `packages/ui/src/<x>` 下的既有模块要写 **`../../<x>`**（不是 `../<x>`）。
     本轮把 `space/statusUtils` 写成 `../space/statusUtils` ⇒ vitest 报
     `Cannot find module`（**收集期就失败**，0 test），一眼看不出是路径问题。
+
+226. 🚨 **`node -e "…"` 里的反引号会被 zsh 做命令替换**（即使在双引号内）——
+    2026-09-30 本轮实测：一个含 markdown 反引号的脚本把 `DatePicker.vue` 当成命令执行，
+    还意外调起了 macOS 的 `open`。症状是「一堆 `command not found` + 脚本没生效」。
+    ⇒ **凡是脚本内容含反引号 / 单引号 / `$`，一律写脚本文件**（Write 工具不转义），
+      不要用 `node -e`。（与 217 条同族：都是 shell 层的静默坑。）
+
+227. 🚨 **antd 的 `PurePanel` 两个出口名字不同，且都在 `DatePicker` 上**
+    （2026-09-30 实测 `Object.keys(DatePicker)`）：
+    ```
+    _InternalPanelDoNotUseOrYouWillBeFired        ← 单值面板
+    _InternalRangePanelDoNotUseOrYouWillBeFired   ← 范围面板（中间有 Range！）
+    ```
+    - 写成 `RangePicker._InternalPanelDoNotUseOrYouWillBeFired` ⇒ `undefined`
+      ⇒ 渲染时报 **「Element type is invalid … but got: undefined」**
+      （React 的报错不告诉你是哪个组件，只能自己排查）。
+    - **为什么要用 `PurePanel`**：SSR 下浮层走 Portal ⇒ **面板规则不进 cssinjs cache**
+      （实测 `open: true` 的 SSR 只有 889 B，与不传 `open` 字节相同）⇒
+      要 dump 面板 CSS 必须**直渲 PurePanel**（`extract-cascader-css.mjs` 同路）。
+      实测产出 **257 条规则 / 52.8 KB**。
+    - ⚠️ `ant-picker` 前缀被 **date-picker 与 time-picker 共用** ⇒ 产物含 time-picker 的规则，
+      那是**对的**（同一组件族），移植时不要当成 bug 过滤掉。
