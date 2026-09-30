@@ -75,9 +75,9 @@ export interface RootClassOptions {
  * 顺序对齐上游 `clsx(...)` 的参数序：
  * 尺寸 / 变体 → 状态（+ `-has-feedback`）→ compact → context → `className` → `rootClassName`。
  */
-export function getRootClassNames(options: RootClassOptions): (string | undefined)[] {
+export function getRootClassNames(options: RootClassOptions): string[] {
   const { prefixCls } = options;
-  const classes: (string | undefined)[] = [prefixCls];
+  const classes: string[] = [prefixCls];
 
   if (options.size === 'large') {
     classes.push(`${prefixCls}-large`);
@@ -110,5 +110,8 @@ export function getRootClassNames(options: RootClassOptions): (string | undefine
     classes.push(options.rootClassName);
   }
 
-  return classes;
+  // ⚠️ 返回 **string[]**（不是 `(string | undefined)[]`）—— 空值在出口处滤掉，
+  //    调用方（Selector 的 `rootClass`）要的是 `string | string[]`，
+  //    带 undefined 的数组不可赋值（TS 会报索引签名不匹配）。
+  return classes.filter((c) => c.length > 0);
 }

@@ -68,7 +68,14 @@
  */
 
 import { isNonNullable } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  type VNodeChild,
+} from 'vue';
 import {
   getInputSize,
   getRangeShowClear,
@@ -84,9 +91,9 @@ export interface SelectorSemanticClassNames {
 }
 
 export interface SelectorSemanticStyles {
-  prefix?: Record<string, string | number>;
-  input?: Record<string, string | number>;
-  suffix?: Record<string, string | number>;
+  prefix?: CSSProperties;
+  input?: CSSProperties;
+  suffix?: CSSProperties;
 }
 
 /** 输入框选择器（单值 / 范围共用）。 */
@@ -138,10 +145,14 @@ export const Selector = defineComponent({
     activeIndex: { type: Number as PropType<number | null | undefined>, default: undefined },
     /** 根节点额外类名（尺寸 / 变体 / 状态 / 语义槽由调用方拼好）。 */
     rootClass: { type: [String, Array] as PropType<string | string[]>, default: undefined },
-    rootStyle: {
-      type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
+    /**
+     * 根节点 style。
+     *
+     * ⚠️ 类型是 Vue 的 `CSSProperties`（**不是** `Record<string, string | number>`）——
+     * 调用方传的是 `props.style`（`CSSProperties`）。用 `Record<…>` 会因索引签名不匹配
+     * 而报错（`CSSProperties` 是接口，没有索引签名）。
+     */
+    rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
 
     // ---------------------------------------------------------- 语义槽
     classNames: {

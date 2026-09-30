@@ -103,13 +103,15 @@ export function getDropdownClassName(options: {
   range: boolean;
   rtl: boolean;
   popupClassName?: string;
-}): (string | undefined)[] {
+}): string[] {
   const dropdownPrefixCls = `${options.prefixCls}-dropdown`;
+  // ⚠️ 返回 **string[]**（空值在出口滤掉）—— Trigger 的 `popupClassName` 类型是
+  //    `string | string[]`，带 `undefined` 的数组不可赋值（同 `getRootClassNames`）。
   return [
     options.popupClassName,
     options.range ? `${dropdownPrefixCls}-range` : undefined,
     options.rtl ? `${dropdownPrefixCls}-rtl` : undefined,
-  ];
+  ].filter((c): c is string => Boolean(c));
 }
 
 /**

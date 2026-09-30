@@ -489,17 +489,13 @@ describe('date-picker · 浮层接线配置（S1，判据来自 rc PickerTrigger
 
   it('getDropdownClassName：range / rtl 各加一个类，顺序在自定义之后', () => {
     const p = 'apollo-picker';
-    expect(getDropdownClassName({ prefixCls: p, range: false, rtl: false })).toEqual([
-      undefined,
-      undefined,
-      undefined,
-    ]);
+    // ⚠️ 返回 **string[]**（空值在出口滤掉）—— Trigger 的 `popupClassName` 类型是
+    //    `string | string[]`，带 `undefined` 的数组不可赋值（与 `getRootClassNames` 同判）。
+    expect(getDropdownClassName({ prefixCls: p, range: false, rtl: false })).toEqual([]);
     expect(
       getDropdownClassName({ prefixCls: p, range: true, rtl: false, popupClassName: 'c-own' }),
-    ).toEqual(['c-own', `${p}-dropdown-range`, undefined]);
+    ).toEqual(['c-own', `${p}-dropdown-range`]);
     expect(getDropdownClassName({ prefixCls: p, range: false, rtl: true })).toEqual([
-      undefined,
-      undefined,
       `${p}-dropdown-rtl`,
     ]);
   });

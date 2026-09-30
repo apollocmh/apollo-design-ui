@@ -52,7 +52,8 @@
  */
 
 import type { PickerLocale } from '@apollo-design/locale';
-import type { GenerateConfig, PanelDateType, PanelMode, PickerMode } from '@apollo-design/picker';
+import type { GenerateConfig, PanelMode, PickerMode } from '@apollo-design/picker';
+import type { Dayjs } from 'dayjs';
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider';
 
@@ -60,8 +61,16 @@ import type { SizeType } from '../config-provider';
 // 基础联合（枚举值必须与 antd 一致 —— COMPONENT-RULES.md §4）
 // ---------------------------------------------------------------------------
 
-/** 日期值 = dayjs 实例（`picker` 包已把日期库收窄到 dayjs）。 */
-export type DatePickerDate = PanelDateType;
+/**
+ * 日期值 = dayjs 实例。
+ *
+ * ⚠️ **刻意用 ui 自己的 `Dayjs`**（不是 `@apollo-design/picker` 的 `PanelDateType`）——
+ * pnpm 的严格 `node_modules` 让两个包各有一份 dayjs 声明；若本类型指向 picker 的那份，
+ * 只要它出现在 `.vue` 的 `setup()` 返回值里（template 要用），`vue-tsc` 就会报 **TS2742**
+ * （`cannot be named without a reference to packages/picker/node_modules/dayjs`）。
+ * 两者是同一版本（`catalog:`）的无私有成员结构类型 ⇒ **结构等价**，互换不报错。
+ */
+export type DatePickerDate = Dayjs;
 
 /**
  * 尺寸。
@@ -432,6 +441,16 @@ export interface PickerCommonProps {
   /** @deprecated 用 `allowClear={{ clearIcon }}`。 */
   clearIcon?: VNodeChild;
 
+  // ============================================================ locale
+  /**
+   * 语言包（与 `ConfigProvider` 的 `locale.DatePicker` 深合并）。
+   *
+   * ⚠️ 类型是 `@apollo-design/locale` 的 `PickerLocale`（`{ lang, timePickerLocale }`），
+   * **不是** `@apollo-design/picker` 的同名类型（面板要的是 `locale.lang`）——
+   * 见 `hooks/picker-types.ts` 的说明。
+   */
+  locale?: PickerLocale;
+
   // ============================================================ 状态
   size?: DatePickerSize;
   status?: DatePickerStatus;
@@ -481,6 +500,42 @@ export interface PickerCommonProps {
   superNextIcon?: VNodeChild;
   /** 面板浏览值的非受控初值（**优先级高于 `value`**，上游注释逐字）。 */
   defaultPickerValue?: DatePickerDate | null;
+
+  // ============================================================ 输入框原生面
+  //
+  // 🚨 这 5 个键在 rc 的 `useInputProps` 里被**显式解构**（不是走 `...restProps`）：
+  //
+  //   const { required, 'aria-required': ariaRequired, onSubmit, name, autoComplete,
+  //           id, onInvalid, ... } = props;
+  //
+  // ⇒ 在 Vue 里**必须声明**，否则会落进 `attrs` 而 rc 那套取值拿不到（静默失效）。
+  // G2 初稿只声明了 `id`，漏了下面这 5 个（2026-09-30 补齐）。
+  // ----------------------------------------------------------------
+  /** 原生 `required`（会透传成 `input[required]` 与 `aria-required`）。 */
+  required?: boolean;
+  /** 原生 `name`。 */
+  name?: string;
+  /** 原生 `autoComplete`。⚠️ 实测默认渲染成 `autocomplete="off"`（大写 O 的 React 写法在 DOM 里被规范化）。 */
+  autoComplete?: string;
+  /** 表单提交（原生 `submit` 事件）。 */
+  onSubmit?: (event: Event) => void;
+  /** 键入非法值时触发（`input[aria-invalid]` 的同步通道）。 */
+  onInvalid?: (invalid: boolean) => void;
+
+  // ============================================================ legacy / 回调
+  /**
+   * @deprecated 用 `onCalendarChange`。
+   *
+   * ⚠️ 上游只在 **`picker === 'time' && !multiple`** 时把它接到 `onCalendarChange` 上
+   * （`generateSinglePicker.js`：`const hasLegacyOnSelect = onSelect && picker === 'time' && !multiple`）。
+   * 本仓同样只在那一支生效 —— 别无条件转发。
+   */
+  onSelect?: (date: DatePickerDate | DatePickerDate[]) => void;
+  /**
+   * @deprecated 用 `onKeyDown`（原生）。上游的 `LegacyOnKeyDown` 第二参是 `preventDefault`。
+   * 本仓在 emits 里给 `keydown`（载荷 `(event, preventDefault)`）。
+   */
+  onKeyDown?: (event: KeyboardEvent, preventDefault: () => void) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -500,6 +555,13 @@ export interface DatePickerProps extends PickerCommonProps {
   maxTagCount?: number | 'responsive';
   /** 仅 `multiple` 生效：自定义标签渲染。 */
   tagRender?: (props: CustomTagProps) => VNodeChild;
+  /**
+   * 仅 `multiple` 生效：标签的删除图标（rc 的 `BasePickerProps.removeIcon`）。
+   *
+   * ⚠️ antd 经 **Select 的 `useIcons`** 算它：`removeIcon` → context 的 → 默认
+   * `CloseOutlined`。本仓复用 `_internal/use-allow-clear` 的同族回退链。
+   */
+  removeIcon?: VNodeChild;
 
   // ---------------------------------------------------------------- 标识
   /** 输入框的 `id`（与 `htmlFor` 配对）。 */
@@ -520,6 +582,13 @@ export interface DatePickerProps extends PickerCommonProps {
   // ---------------------------------------------------------------- 装饰
   /** 输入框占位符（范围版是元组，见 `RangePickerProps`）。 */
   placeholder?: string;
+  /**
+   * 是否禁用。
+   *
+   * ⚠️ **单值版是 `boolean`，范围版是 `boolean | [boolean, boolean]`**
+   * （`RangePickerProps` 自己覆盖了它）⇒ 不能在 `PickerCommonProps` 里声明。
+   */
+  disabled?: boolean;
 
   // ---------------------------------------------------------------- 回调
   /** 面板浏览值变化（每次开浮层 / 点面板都会发）。 */
@@ -653,6 +722,15 @@ export interface DatePickerEmits {
   blur: (event: FocusEvent, info: { range?: 'start' | 'end' }) => void;
   /** 键入值非法。 */
   invalid: (invalid: boolean) => void;
+  /** 表单提交。 */
+  submit: (event: Event) => void;
+  /**
+   * 按键（deprecated 的 `onKeyDown` 通道）。
+   *
+   * ⚠️ 第二参 `preventDefault` 是上游 `LegacyOnKeyDown` 的签名，**必须给** ——
+   * 调用方常写成 `(e, preventDefault) => preventDefault()`，缺了它会在运行时炸。
+   */
+  keydown: (event: KeyboardEvent, preventDefault: () => void) => void;
 }
 
 /** 范围的事件面。 */
