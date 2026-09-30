@@ -44,13 +44,20 @@
 
 import type { GenerateConfig } from '@apollo-design/picker';
 import type { DatePickerDate } from '../interface';
+import type { MergedFormatEntry } from './picker-format';
 
 /** 解析所需的上下文（与 `MergedFormat` / locale 的产物对齐）。 */
 export interface ParseContext {
   /** 语言包的 `locale` 字段（dayjs 的 locale 名，如 `'en'` / `'zh-cn'`）。 */
   locale: string;
-  /** 已归一的格式列表（**每个元素都是字符串**，见 `MergedFormat.formatList`）。 */
-  formatList: readonly string[];
+  /**
+   * 已归一的格式列表。
+   *
+   * ⚠️ **可能含非字符串项**（函数形态 / 掩码对象）—— 它们**不参与解析**
+   * （下面的 `typeof !== 'string'` 检查跳过它们，与上游逐字一致）。
+   * 类型与 `MergedFormat.formatList` 同源（`MergedFormatEntry`）。
+   */
+  formatList: readonly MergedFormatEntry[];
   /** 日期库适配层。 */
   generateConfig: GenerateConfig<DatePickerDate>;
 }
@@ -94,10 +101,10 @@ export function parseTextWithFormat(
  * 调用方用真值判断即可（日期对象恒为真、`false` 恒为假）。
  *
  * ⚠️ `typeof singleFormat === 'string'` 这个检查**保留**：
- * 本仓的 `MergedFormat.formatList` 虽然已归一成 `string[]`，但
+ * 本仓的 `MergedFormat.formatList` **确实可能含非字符串项**（函数形态的
+ * `format` 会原样保留 —— 2026-10-01 起支持），而它们**不能**进 `locale.parse`：
  *   - 上游此处**逐字**有这个检查（对着源码读的人不该看到差异），
- *   - 且它是**防御性的**（将来若 `formatList` 的类型放宽，这里不会静默把
- *     函数当格式串传下去 —— 那会让 `locale.parse` 收到非字符串而抛错）。
+ *   - 且它是**必需的**（函数/对象传给 `locale.parse` 会抛错或静默错解）。
  */
 export function validateFormat(text: string, context: ParseContext): DatePickerDate | false {
   for (const singleFormat of context.formatList) {

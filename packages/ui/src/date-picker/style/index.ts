@@ -36,6 +36,26 @@
  *    那是**对的**（同一组件族），不要当 bug 过滤掉。
  * 3. **浮层走 Portal** ⇒ 这些规则挂在 `.apollo-picker-dropdown` 下，但 DOM 里它在
  *    `document.body` 上（`Trigger` 的 Portal）—— **不是** `.apollo-picker` 的后代。
+ *
+ * ── 🚨 两处**上游产物本身就是黑色字面量**的颜色（2026-10-01 查明，**不是**本仓的 bug）──
+ *
+ * | 本文件 | 值 | 上游出处 |
+ * |---|---|---|
+ * | `.apollo-picker-cell-week` 的 `color` | `#00000080` | `style/panel.js:389` `new FastColor(colorTextLightSolid).setA(0.5).toHexString()` |
+ * | `.apollo-picker-time-panel-column-active` 的 `background` | `#00000033` | `style/panel.js:471` `new FastColor(controlItemBgActive).setA(0.2).toHexString()` |
+ *
+ * **为什么是黑的**：cssVar 模式下 `token.colorTextLightSolid` 的值是**变量引用字符串**
+ * （`var(--ant-color-text-light-solid)`），`FastColor` 解析不了 ⇒ 回落 `#000000`。
+ *
+ * **决定性证据（就在本文件里）**：同一条规则块内，上游 `panel.js:392` 的**直接**使用
+ * 被输出成 `color:var(--apollo-color-text-light-solid)` —— 同一个 token
+ * 一处是 `var(...)`、一处被算成黑色，只能解释为「值是变量引用」。
+ * 另：`theme.getDesignToken().colorTextLightSolid` ⇒ `#fff`（**不是** undefined）
+ * ⇒ 排除「token 缺失」这一解释。
+ *
+ * ⇒ 分类 **UPSTREAM**（antd 在 cssVar 模式下的 `FastColor` 降级）。
+ * **保留字面量**：改成 `#ffffff80` / `#e6f4ff33` 会与 antd 的**真实渲染**分叉（L6 会红）。
+ * 已在 E10 的 `skip` 里逐值豁免（`registry/tools/validate-registry.mjs`）。
  */
 
 import { datePickerTokenValues } from './token';

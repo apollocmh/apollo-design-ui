@@ -341,7 +341,34 @@ const HARDCODED_PATTERNS = [
   // 是 prepareComponentToken 的 seed 实色产物（antd cssVar 输出同为实色）——
   // 声明在根类、规则侧全部 var() 消费，与「规则里硬编码色值」不同性质。
   // 判据：该行形如 `--{prefix}-component-token-name:<hex>`（声明而非消费）。
-  { re: /#[0-9a-fA-F]{3,8}\b(?!\s*0\s+0\))/, what: '十六进制颜色' },
+  //
+  // 2026-10-01 加 `skip: /#000000(?:80|33)\b/` —— date-picker 的**上游产物本身就是
+  // 这两个值**，逐条给出出处：
+  //
+  //   上游 `components/date-picker/style/panel.js`：
+  //   - `:389`  `color: new FastColor(colorTextLightSolid).setA(0.5).toHexString()`
+  //   - `:471`  `background: new FastColor(controlItemBgActive).setA(0.2).toHexString()`
+  //
+  //   🚨 这两个 token 在本仓的对齐口径（antd 6.6.4 + `cssVar: true`，与
+  //   `tests/visual/debug/extract-date-picker-css.mjs:133` 一致）下，
+  //   `token.colorTextLightSolid` 的值是**变量引用字符串**
+  //   （`var(--ant-color-text-light-solid)`），`FastColor` 解析不了它 ⇒ 回落 `#000000`。
+  //
+  //   **决定性证据就在本仓产物里**：同一条规则的另一行是
+  //   `color:var(--apollo-color-text-light-solid)`（来自上游 `:392` 的**直接**使用）
+  //   —— 同一个 token 一处被输出成 `var(...)`、一处被 `FastColor` 算成黑色，
+  //   只能解释为「值是变量引用」。实测 `new FastColor(undefined).setA(0.5).toHexString()`
+  //   ⇒ `#00000080`；而 `theme.getDesignToken().colorTextLightSolid` ⇒ `#fff`
+  //   （**不是** undefined）⇒ 排除「token 缺失」这一解释。
+  //
+  //   ⇒ 改成 `#ffffff80` / `#e6f4ff33` 是「看起来更对」，但会与 antd 的**真实渲染**分叉
+  //   （L6 会因此判红）⇒ 保留字面量。分类 **UPSTREAM**（antd 在 cssVar 模式下的
+  //   `FastColor` 降级），已登记 `packages/ui/src/date-picker/README.md` §2。
+  {
+    re: /#[0-9a-fA-F]{3,8}\b(?!\s*0\s+0\))/,
+    what: '十六进制颜色',
+    skip: /#000000(?:80|33)\b/,
+  },
   // 2026-09-22 豁免「纯白 + alpha」的遮罩色（layout sider 的 hover::after，
   //    antd 逐字 `rgba(255, 255, 255, 0.2)`）：它是「叠一层半透明白」的技术常量，
   //    语义等价于 `colorWhite` + alpha，而本仓没有「带 alpha 的白色」token ——

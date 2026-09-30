@@ -20,10 +20,12 @@
  */
 
 import type { PickerLocale as LocalePickerLocale } from '@apollo-design/locale';
+import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { getMergedStatus } from '../../form/context';
 import { getStatusClassNames } from '../../space/statusUtils';
 import {
+  getFormatLength,
   getInputSize,
   getMergedNeedConfirm,
   getRangeShowClear,
@@ -39,6 +41,7 @@ import {
   getRealPlacement,
   getTransitionName,
 } from '../components/trigger-config';
+import { fillPickerLocale } from '../hooks/picker-filled';
 import { mergeFormat } from '../hooks/picker-format';
 import { getPlaceholder, getRangePlaceholder, mergePickerLocale } from '../hooks/picker-locale';
 import type { RcPickerLocale } from '../hooks/picker-types';
@@ -49,7 +52,7 @@ import {
   normalizePopupClassNames,
   normalizePopupStyles,
 } from '../hooks/use-picker-semantic';
-import type { MaskFormatConfig } from '../interface';
+import type { DatePickerDate, MaskFormatConfig } from '../interface';
 
 /** 一个字段尽量齐的 locale（测优先序用）。 */
 const fullLocale = {
@@ -243,21 +246,72 @@ describe('date-picker · format 归一（S1）', () => {
     expect(got.firstFormat).toBeUndefined();
     expect(got.maskFormat).toBeNull();
   });
+
+  /**
+   * 🚨 **函数形态**（`CustomFormat`）—— 2026-10-01（S2）补齐。
+   *
+   * 上游 `useFieldFormat.js:11` 的 map 回调是
+   * `typeof config === 'string' || typeof config === 'function' ? config : config.format`。
+   * 本仓此前**漏了 `function` 那一支** ⇒ 函数被读成 `undefined`
+   * （函数没有 `.format`）⇒ 输入框显示空、`input[size]` 退化。
+   */
+  it('🚨 函数形态：**原样保留**在 `formatList` / `firstFormat`（不是读成 undefined）', () => {
+    const fn = (date: DatePickerDate) => date.format('YYYY/MM/DD');
+    const got = mergeFormat('date', fullLocale, fn);
+    expect(got.formatList).toHaveLength(1);
+    expect(got.formatList[0]).toBe(fn);
+    // 引用相等：**不是**被包装/复制过的
+    expect(got.firstFormat).toBe(fn);
+    expect(got.maskFormat).toBeNull();
+  });
+
+  it('🚨 数组里混函数：逐项保留（顺序也不变）', () => {
+    const fn = (date: DatePickerDate) => String(date);
+    const got = mergeFormat('date', fullLocale, ['YYYY-MM-DD', fn]);
+    expect(got.formatList).toHaveLength(2);
+    expect(got.formatList[0]).toBe('YYYY-MM-DD');
+    expect(got.formatList[1]).toBe(fn);
+    expect(got.firstFormat).toBe('YYYY-MM-DD');
+  });
+
+  it('⚠️ 函数**不**被当成 mask（`typeof fn === "function"`，不是 `"object"`）', () => {
+    // mask 的判据是 `typeof firstFormat === 'object' && firstFormat.type === 'mask'`
+    // ⇒ 函数天然跳过。这条是反向哨兵：防止「把函数也当对象读 `.type`」。
+    const fn = Object.assign((date: DatePickerDate) => String(date), { type: 'mask' });
+    const got = mergeFormat('date', fullLocale, fn as never);
+    expect(got.maskFormat).toBeNull();
+    expect(got.formatList[0]).toBe(fn);
+  });
 });
 
 describe('date-picker · Selector 的纯判据（S1）', () => {
   it('getInputSize：日期 12 / 带时间 21（SSR 实测判定值）', () => {
-    expect(getInputSize('date', 'YYYY-MM-DD')).toBe(12); // max(10, 10) + 2
-    expect(getInputSize('date', 'YYYY-MM-DD HH:mm:ss')).toBe(21); // max(10, 19) + 2
+    // ⚠️ 第二参是**已求值的字符数**（`getFormatLength` 的产物），不是格式串本身
+    expect(getInputSize('date', 10)).toBe(12); // max(10, 10) + 2
+    expect(getInputSize('date', 19)).toBe(21); // max(10, 19) + 2
     // time 的 defaultSize 是 8
-    expect(getInputSize('time', 'HH:mm:ss')).toBe(10); // max(8, 8) + 2
+    expect(getInputSize('time', 8)).toBe(10); // max(8, 8) + 2
     // format 比 defaultSize 短 ⇒ 用 defaultSize
-    expect(getInputSize('time', 'HH')).toBe(10); // max(8, 2) + 2
+    expect(getInputSize('time', 2)).toBe(10); // max(8, 2) + 2
   });
 
-  it('getInputSize：无 format 时退化成 defaultSize + 2', () => {
-    expect(getInputSize('date', undefined)).toBe(12);
-    expect(getInputSize('time', undefined)).toBe(10);
+  it('getInputSize：无 format（长度 0）时退化成 defaultSize + 2', () => {
+    expect(getInputSize('date', 0)).toBe(12);
+    expect(getInputSize('time', 0)).toBe(10);
+  });
+
+  it('⭐ getFormatLength：字符串取 `.length`，**函数形态先求值**', () => {
+    // 上游 `useInputProps.js`：`typeof firstFormat === 'function'
+    //   ? firstFormat(getNow()).length : firstFormat.length`
+    const now = dayjs('2026-10-01');
+    expect(getFormatLength('YYYY-MM-DD', now)).toBe(10);
+
+    // 🚨 函数形态：`.length` 是**形参个数**（1），必须先求值才拿到真实长度
+    const fn = (date: DatePickerDate) => date.format('YYYY/MM/DD');
+    expect(fn.length).toBe(1); // ← 这正是「不能直接用 .length」的证据
+    expect(getFormatLength(fn, now)).toBe(10);
+
+    expect(getFormatLength(undefined, now)).toBe(0);
   });
 
   it('toDisabledPair：布尔铺开成两端；数组原样', () => {
@@ -651,5 +705,80 @@ describe('date-picker · getMergedNeedConfirm（S1，判据来自 useFilledProps
     // 若误传 `props.picker`（'date'），带 showTime 的选择器会得到 false ⇒ 点一下就提交
     expect(getMergedNeedConfirm(undefined, 'date')).toBe(false);
     expect(getMergedNeedConfirm(undefined, 'datetime')).toBe(true);
+  });
+});
+
+describe('date-picker · fillPickerLocale（S2，判据来自 rc 的 `useLocale.js:31-83`）', () => {
+  /** 语言包**缺**全部 `field*` 键（= 本仓与 antd 的真实形态，实测）。 */
+  const bare = { locale: 'en' } as RcPickerLocale;
+
+  it('语言包缺 `fieldXxxFormat` 时补上 rc 的硬编码兜底', () => {
+    // 上游 `useLocale.js:56-69` 的 11 个 `||` 兜底，逐个钉住
+    const filled = fillPickerLocale(bare, { showHour: true, showMinute: true, showSecond: true });
+    expect(filled.fieldDateFormat).toBe('YYYY-MM-DD');
+    expect(filled.fieldDateTimeFormat).toBe('YYYY-MM-DD HH:mm:ss');
+    expect(filled.fieldTimeFormat).toBe('HH:mm:ss');
+    expect(filled.fieldMonthFormat).toBe('YYYY-MM');
+    expect(filled.fieldYearFormat).toBe('YYYY');
+    expect(filled.fieldWeekFormat).toBe('gggg-wo');
+    expect(filled.fieldQuarterFormat).toBe('YYYY-[Q]Q');
+    expect(filled.yearFormat).toBe('YYYY');
+    expect(filled.cellYearFormat).toBe('YYYY');
+    expect(filled.cellQuarterFormat).toBe('[Q]Q');
+    expect(filled.cellDateFormat).toBe('D');
+  });
+
+  it('🚨 补齐用的时间格式**从 show 标志推出来**，不是 `showTime.format`', () => {
+    // 上游 `useLocale.js:55`：`fillTimeFormat(showHour, showMinute, showSecond, showMillisecond, use12Hours)`
+    expect(fillPickerLocale(bare, { showHour: true }).fieldTimeFormat).toBe('HH');
+    expect(fillPickerLocale(bare, { showHour: true, showMinute: true }).fieldTimeFormat).toBe(
+      'HH:mm',
+    );
+    // 12 小时制 ⇒ 小时用 `hh`，且**追加** ` A`（前导空格保留）
+    expect(
+      fillPickerLocale(bare, { showHour: true, showMinute: true, use12Hours: true })
+        .fieldTimeFormat,
+    ).toBe('hh:mm A');
+    // 毫秒是**追加** `.SSS`
+    expect(fillPickerLocale(bare, { showHour: true, showMillisecond: true }).fieldTimeFormat).toBe(
+      'HH.SSS',
+    );
+  });
+
+  it('⚠️ 边界：一个 show 都不给 ⇒ 时间格式是空串（`fillTimeFormat` 的全 false 分支）', () => {
+    // ⚠️ 真实调用链上不会这样：`getTimeProps` 已经把三段填成 `true`（`fillShowConfig`）。
+    //    这条钉的是**本函数自己的边界**，免得后人以为它会自己兜底。
+    expect(fillPickerLocale(bare, {}).fieldTimeFormat).toBe('');
+    expect(fillPickerLocale(bare, {}).fieldDateTimeFormat).toBe('YYYY-MM-DD ');
+  });
+
+  it('已给的键**不被覆盖**（判据是 `||`）', () => {
+    const zh = { locale: 'zh-cn', fieldDateFormat: 'YYYY/MM/DD' } as RcPickerLocale;
+    const filled = fillPickerLocale(zh, { showHour: true });
+    expect(filled.fieldDateFormat).toBe('YYYY/MM/DD');
+    expect(filled.fieldTimeFormat).toBe('HH');
+    // 未被语言包覆盖的键仍然补齐
+    expect(filled.fieldMonthFormat).toBe('YYYY-MM');
+  });
+
+  it('🚨 `monthFormat` 与 `cellMeridiemFormat` **刻意不补**（补了会改月格渲染分支）', () => {
+    const filled = fillPickerLocale(bare, { showHour: true }) as unknown as Record<string, unknown>;
+    expect(filled.monthFormat).toBeUndefined();
+    expect(filled.cellMeridiemFormat).toBeUndefined();
+  });
+
+  it('⭐ 与 `mergeFormat` 的衔接：补齐前 `formatList` 为空，补齐后有默认格式', () => {
+    // 这条是 S2 阻塞项的**回归哨兵**：缺口若被改回去，两半会同时红。
+    expect(mergeFormat('date', bare, undefined).formatList).toEqual([]);
+    expect(mergeFormat('date', bare, undefined).firstFormat).toBeUndefined();
+
+    const merged = mergeFormat('date', fillPickerLocale(bare, {}), undefined);
+    expect(merged.formatList).toEqual(['YYYY-MM-DD']);
+    expect(merged.firstFormat).toBe('YYYY-MM-DD');
+
+    // `datetime` 走另一支（`fieldDateTimeFormat`）
+    expect(
+      mergeFormat('datetime', fillPickerLocale(bare, { showHour: true }), undefined).firstFormat,
+    ).toBe('YYYY-MM-DD HH');
   });
 });

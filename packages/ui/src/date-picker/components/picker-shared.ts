@@ -11,6 +11,8 @@
  */
 
 import type { VNodeChild } from 'vue';
+import type { MergedFormatEntry } from '../hooks/picker-format';
+import type { DatePickerDate } from '../interface';
 
 // ---------------------------------------------------------------------------
 // 渲染性判定
@@ -38,24 +40,47 @@ export function isRenderable(node: VNodeChild): boolean {
 // ---------------------------------------------------------------------------
 
 /**
- * 算 `input[size]`（上游 `PickerInput/Selector/hooks/useInputProps.js` 的 `size` 分支，逐字）。
+ * 归一后的 `firstFormat` → 用于 `input[size]` 的字符数（上游 `useInputProps.js` 的 `length` 分支）。
+ *
+ * ```js
+ * const length = typeof firstFormat === 'function'
+ *   ? firstFormat(generateConfig.getNow()).length   // ← 函数形态要**先求值**
+ *   : firstFormat.length;
+ * ```
+ *
+ * ⚠️ 函数形态（`CustomFormat`）没有 `.length` 的语义（那是**形参个数**）
+ * ⇒ 必须先拿 `now` 求值。2026-10-01 起支持（`mergeFormat` 会保留函数）。
+ *
+ * ⚠️ 上游是在 `useMemo([firstFormat, picker, generateConfig])` 里算的 ⇒ 每次
+ * `getNow()` 都是**当时**的值。本仓由调用方放进 `computed` 即可（缓存语义等价）。
+ */
+export function getFormatLength(
+  firstFormat: MergedFormatEntry | undefined,
+  now: DatePickerDate,
+): number {
+  if (!firstFormat) {
+    return 0;
+  }
+  return typeof firstFormat === 'function' ? firstFormat(now).length : firstFormat.length;
+}
+
+/**
+ * 算 `input[size]`（上游 `useInputProps.js` 的 `size` 分支，逐字）。
  *
  * ```js
  * const defaultSize = picker === 'time' ? 8 : 10;
- * const length = typeof firstFormat === 'function' ? firstFormat(getNow()).length : firstFormat.length;
  * return Math.max(defaultSize, length) + 2;
  * ```
  *
  * ⇒ 判定值（SSR 实测）：日期 `'YYYY-MM-DD'`（10 字符）⇒ **12**；
  * 带时间 `'YYYY-MM-DD HH:mm:ss'`（19 字符）⇒ **21**。
  *
- * ⚠️ 函数形态的 `format` 要拿 `getNow()` 求值 —— 本仓暂不支持函数形态
- * （跨包欠账，README §5.2），S2 落地时补这条。
+ * ⚠️ 第二参是**已求值的字符数**（由 {@link getFormatLength} 给出）——
+ * 本函数保持纯数值运算，不碰日期库（函数形态的求值在上一环）。
  */
-export function getInputSize(picker: string | undefined, firstFormat: string | undefined): number {
+export function getInputSize(picker: string | undefined, formatLength: number): number {
   const defaultSize = picker === 'time' ? 8 : 10;
-  const length = firstFormat ? firstFormat.length : 0;
-  return Math.max(defaultSize, length) + 2;
+  return Math.max(defaultSize, formatLength) + 2;
 }
 
 // ---------------------------------------------------------------------------

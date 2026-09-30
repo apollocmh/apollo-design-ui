@@ -14,11 +14,12 @@
 
 | # | 差异 | 分类 | 依据 |
 |---|---|---|---|
-| 1 | locale 缺 `fieldXxxFormat` 时：上游 `.map(c => c.format)` 在 `undefined.format` 上**抛 TypeError**；本仓 `toArray(null\|undefined)` ⇒ `[]`，得到 `formatList: []` / `firstFormat: undefined`，**降级不抛** | **INTENDED** | rc `miscUtil.toArray` 是 `Array.isArray(v) ? v : [v]`；本仓 `@apollo-design/picker` 的 `toArray` 明确「`null`/`undefined` ⇒ `[]`」。L1 有一条用例钉住 |
+| 1 | locale 缺 `fieldXxxFormat` 时：上游 `.map(c => c.format)` 在 `undefined.format` 上**抛 TypeError**；本仓 `toArray(null\|undefined)` ⇒ `[]`，得到 `formatList: []` / `firstFormat: undefined`，**降级不抛**。⚠️ 2026-10-01 起 `.vue` 会先把 locale 补齐（`hooks/picker-filled.ts`）⇒ 这条**从组件路径上已走不到**；`mergeFormat` 自身仍保留该降级（可被直接以未补齐的 locale 调用），L1 仍有用例钉住 | **INTENDED** | rc `miscUtil.toArray` 是 `Array.isArray(v) ? v : [v]`；本仓 `@apollo-design/picker` 的 `toArray` 明确「`null`/`undefined` ⇒ `[]`」。L1 有一条用例钉住 |
 | 2 | 范围的两端输入框：上游把 `-input` 拼在 `Input` 组件内部（调用处只传 `-input-start`）；本仓没有独立的 `Input` 组件，直接拼成 `-input -input-active? -input-start\|-end` | **PLATFORM** | 结果与 SSR 实测一致（`ant-picker-input ant-picker-input-start`）；上游结构见 `Input.js:64,344` |
 | 3 | 构建期常量（padding 算式 / `lighten` 结果 / `28*8`）在静态 CSS 里**内联成字面值**，不随主色或主题变化（上游 cssinjs 运行时重算） | **PLATFORM** | 本仓「静态 CSS + CSS 变量」架构的固有差异，非 bug；影响面由 L6 的 dark / compact / token-override 矩阵钉住 |
 | 4 | `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs） | **INTENDED** | G2 的决策；`interface.ts` 里已写明 |
 | 5 | 复用既有 `space/statusUtils.getStatusClassNames`（返回**空格拼接字符串**，非数组）；`root-class.ts` 整体 `push` | **PLATFORM** | 本仓既有实现的选择；`push(...str)` 会把字符串按字符展开，已加注释与断言防回归 |
+| 6 | 两处 `FastColor(<cssvar 引用>).setA(α)` 派生色在产物里是 `#00000080` / `#00000033`（**不是** `#ffffff80` / `#e6f4ff33`） | **UPSTREAM** | 上游 `style/panel.js:389,471`；cssVar 模式下 token 值是**变量引用字符串**，`FastColor` 解析不了 ⇒ 回落 `#000000`。证据：同规则块内 `panel.js:392` 的**直接**使用输出成 `var(--apollo-color-text-light-solid)`；`theme.getDesignToken().colorTextLightSolid` ⇒ `#fff`（非 undefined）⇒ 排除「token 缺失」。**逐字对齐产物**，已在 E10 逐值豁免（2026-10-01） |
 
 ## 3. .vue / .tsx 选择
 
@@ -81,15 +82,24 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 `date-picker-input-kernel`。⇒ 本组件**不留**输入框相关的 `DEFERRED`；
 键入解析 / 掩码 / 键盘字段导航 / 分段 全部要落地（分 S1–S5 五阶段，见 `PLAN.md`）。
 
-### 5.2 已知的跨包欠账（类型面已按上游写全，实现面待补）
+### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 
-1. 🚨 **`format` 的函数形态**：上游 `FormatType<DateType> = string | CustomFormat<DateType>`，
-   即 `format` 可以是 `(value) => string`（`DatePicker.test.tsx` 有
-   `showTime should work correctly when format is custom function` 为证）。
-   本仓 `@apollo-design/picker` 的 `PickerFormat` 目前**无泛型**、只到 `{ format: string }`
-   ⇒ 要**跨包**加回 `DateType` 泛型 + `CustomFormat<DateType>`（PITFALLS 214）。
-   `interface.ts` 的 `CustomFormat` 已按上游声明，避免「类型说支持、实现不做」。
-2. `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs）—— INTENDED。
+上游 `FormatType<DateType> = string | CustomFormat<DateType>`，即 `format` 可以是
+`(value) => string`（`DatePicker.test.tsx` 有 `showTime should work correctly when
+format is custom function` 为证）。跨包欠账（`PickerFormat` 的泛型 + `CustomFormat`）
+已在 **2026-09-30** 还清（PITFALLS 214），**ui 侧的归一**在 **2026-10-01** 补上：
+
+| 位置 | 改动前 | 改动后 |
+|---|---|---|
+| `hooks/picker-format.ts` 的 `.map` | `typeof c === 'string' ? c : c.format` ⇒ 函数读成 `undefined` | `typeof c === 'string' \|\| typeof c === 'function' ? c : c.format`（上游逐字） |
+| `MergedFormat.formatList` / `firstFormat` | `string[]` / `string` | `MergedFormatEntry[]` / `MergedFormatEntry`（含函数） |
+| `components/picker-shared.ts` | 无 | 新增 `getFormatLength(firstFormat, now)`（函数形态**先求值**再取 `.length`） |
+| `components/Selector.ts` | prop `firstFormat: string` | prop `firstFormatLength: number`（哑组件不持有日期库，求值在 `.vue` 侧） |
+
+判据：函数**只参与格式化**（`formatValue` 直接调用它）、**不参与解析**
+（`picker-typing.ts` 的 `typeof === 'string'` 检查跳过它）—— 上游如此。
+
+### 5.2b `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs）—— INTENDED。
 
 ### 5.3 ✅ **已解决**：一处跨组件的 `getMergedStatus` 不一致（`??` → `||`）
 
@@ -135,3 +145,55 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
    `preserves a custom separator accessible name`），必须进 L5。
 6. **`prefixCls` 传下去会变成 `apollo-picker`**（上游 `getPrefixCls('picker', …)` 传的是
    字面量 `'picker'`）⇒ 面板类名整体换前缀，基线要按「类名替换后的同构」比对。
+
+### 5.5 2026-10-01 新发现（**未修**，逐条记在案）
+
+#### (a) 🚨 `picker-panel.ts:244` 的 `fillLocale` 第二参**用错了值**（**潜在**分歧，当前不可观测）
+
+```ts
+// packages/picker/src/picker-panel.ts:244
+const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.format ?? ''));
+```
+
+上游 `useLocale(locale, localeTimeProps)` 传的是 **4 个 show 标志**，由
+`fillLocale` 内部调 `fillTimeFormat(...)` 推出时间格式（`useLocale.js:55`）；
+**不是** `localeTimeProps.format`（那是 `showTime.format` / `props.format`，只在
+`picker === 'time'` 时才被写进 `timeConfig`）。
+
+⇒ 症状（`datetime` / `time` 面板）：`fieldDateTimeFormat` 得到 `'YYYY-MM-DD '`（尾部空格）
+而不是 `'YYYY-MM-DD HH:mm:ss'`。
+
+⚠️ **为什么至今没人发现**：`filledLocale` 只被 `fillShowTimeConfig` 的 `getRowFormat`
+读一次，而那一次的结果只用于**反推 show 标志**；实测两条路径（补成空串 / 补成
+`HH:mm:ss`）在 `fillShowConfig` 之后**落到同一组 show 标志** ⇒ 面板渲染逐位一致。
+⇒ 这是**潜在**分歧，不是当前可见 bug。**修正它需要单独过 picker 包的门禁**
+（跨包改动，AGENTS.md §7），故本轮只登记、不改。
+
+#### (b) `showNow` / `showToday` **不生效**（面板没有 footer）
+
+`showNow` 在 `interface.ts` 里声明了、`DatePicker.vue` 的 `withDefaults` 也给了
+`undefined`，但**整条链上没有消费者**：`showTimeKeys` 会把它挑进 `timeProps`，
+而 `@apollo-design/picker` 里除了那一行 `showTimeKeys` **没有任何 `showNow` 的引用**。
+上游的「此刻 / 今天」按钮渲染在 `PickerInput/Popup/Footer.js`（**浮层**层，不是面板层）
+—— 而裁决 `picker-panel-ownership` = B 只把**面板** Vue 化了 ⇒ footer 属未移植面。
+⇒ 与 `renderExtraFooter` / `panelRender` 同批（S5 或单独一轮）。
+
+#### (c) S2 剩余的「落值 + 提交时机」= 上游 405 行状态机
+
+`PickerInput/hooks/useRangeValueChange.js`（405 行，含完整中英注释）是提交时机的
+唯一权威：`triggerChange(index, source, value)` 先按
+`source × needConfirm × allowEmpty × index` 解析出 7 种 action
+（`modify` / `submitCurrent` / `switchNext` / `finish` / `resetCurrent` /
+`resetCurrentAndSwitchNext` / `resetAll` / `abort`），再统一执行。
+
+- 单值场景可达子集较小（`fieldCount = 1`、`allowEmpty = [false]`），但
+  `source` 有 9 种（`input` / `panel-intermediate` / `panel-final` / `popupClose` /
+  `field-switch` / `keyboard-submit` / `keyboard-submit-weak` / `confirm` / `remove` / `esc`）。
+- ⇒ 它与 **S4 的字段导航是同一个状态机**，不该拆两轮做（拆开必然「时机半对」）。
+- 本轮**刻意不接**：`DatePicker.vue` 的 `onInput` 只做到 `invalid` 上报（S1 已定的边界），
+  落值仍走 `rangeValue.triggerSubmit`。**接一个时机半对的实现比不接更糟**（PLAN 原话）。
+
+#### (d) `theme.test.ts` 实际 **30 条**（README §4 与 PLAN G3 写的是 22 条）
+
+`pnpm vitest run --project theme <date-picker>` 实测 `30 tests`。
+§4 / PLAN 里的「22 条」是 G3 当时的数字，后续扩过但文档没跟。以**实测**为准。

@@ -2030,3 +2030,118 @@
       并在文件头写清根因与证据 —— 让缺口**留在明处**而不是藏在绿里。
     - ⚠️ 缺口补上后那条用例**会红**，那时应把它改成「合法日期 ⇒ false」并更新文件头
       （这是「故意留一条会红的用例」的用法，与「假绿灯」相反）。
+
+235. 🚨 **定位到「哪一行」不等于定位到「哪一层」—— 234 的根因说反了一半**（2026-10-01 修正）。
+
+    234 写的根因是：「上游的 `format` **不是**从 locale 来的，而是 `useFilledProps` 里经
+    `showTime` / `getTimeProps` **推导**出来的那一层。」
+
+    **对的一半**：默认 `format` 确实不是从语言包来的。
+    **错的一半**：「推导层」说反了 —— 真正缺的是 **rc 的硬编码兜底层**：
+
+    | 层 | 内容 | 出处 | 2026-10-01 之前 |
+    |---|---|---|---|
+    | ① 用户 `props.format` | 直接用 | `getRowFormat` 第一支 | ✅ |
+    | ② 语言包 `locale.fieldXxxFormat` | `getRowFormat` 读它 | `miscUtil.js:46-67` | ✅（但两边语言包**都没有**这些键） |
+    | ③ **rc 硬编码兜底** | `fieldDateFormat \|\| 'YYYY-MM-DD'` 等 **11** 个键 | **`es/hooks/useLocale.js:56-69`** | ❌ **缺的是这一层** |
+
+    - ③ 在 `useLocale`（`fillLocale`）里，**不在** `getTimeProps` / `showTime` 那条路径上。
+      `showTime` / `getTimeProps` 只决定**时间格式串怎么拼**（`HH:mm:ss`），
+      它产出的是 `fieldDateTimeFormat` 的**后半段**，不是「有没有兜底」。
+    - ⇒ 修复 = 逐字移植 `useFilledProps.js:72-76` 的两段：
+      `getTimeProps` → `fillLocale(locale, fillTimeFormat(...))` → `fillShowTimeConfig`。
+    - 🚨 **教训**：234 那轮我找到了「读 `locale.fieldDateFormat`」这一**行**，
+      但把「为什么读不到」归因成了「少了另一条**推导路径**」，而真相是
+      「**同一条路径上少了一层兜底**」。定位时先问「这一层的上游是谁」，
+      再问「是不是还有一层」，比顺着调用栈猜「另一条路」快得多。
+    - 已修：`packages/ui/src/date-picker/hooks/picker-filled.ts`（+ 6 条 L1、4 条 L2 用例）。
+
+236. 🚨 **`.map` 少写一支 `|| typeof c === 'function'` ⇒ 函数形态的 `format` 被静默读成 `undefined`**（2026-10-01）。
+
+    上游 `useFieldFormat.js:11`：
+    ```js
+    formatList.map(config =>
+      typeof config === 'string' || typeof config === 'function' ? config : config.format)
+    ```
+    本仓只写了 `typeof config === 'string' ? config : config.format`
+    ⇒ 函数没有 `.format` ⇒ 得到 `undefined` ⇒ **输入框显示空串**、
+    `input[size]` 退化到默认值（`firstFormat.length` 也不对了）。
+
+    - 触发条件很窄（只有 `format={(d) => ...}` 才走得到），**但类型面早就允许**
+      （`PickerFormat` 的 `FormatType` 含 `CustomFormat`，`interface.ts` 也声明了）
+      ⇒ 「类型说支持、实现不做」正是 README §5.2 当时登记的欠账。
+    - 附带：函数形态的 `input[size]` 要**先求值**再取 `.length`
+      （`fn.length` 是**形参个数** = 1，不是格式串长度）——
+      新增 `getFormatLength(firstFormat, now)`，并把 `Selector` 的 prop 从
+      `firstFormat: string` 换成 `firstFormatLength: number`（哑组件不持有日期库）。
+    - 🚨 **教训**：照抄 `.map` 回调时，**逐字符**比对三元表达式，
+      别「读懂大意就写」。少一个 `||` 分支在正常输入下完全看不出来。
+
+237. ⚠️ **`picker-panel.ts:244` 的 `fillLocale` 第二参用错了值 —— 一处「潜在但当前不可观测」的分歧**（2026-10-01 发现，**未修**）。
+
+    ```ts
+    // packages/picker/src/picker-panel.ts:244
+    const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.format ?? ''));
+    ```
+
+    上游 `useLocale(locale, localeTimeProps)` 收的是**整个 `localeTimeProps`**，
+    由 `fillLocale` 内部用 **4 个 show 标志**调 `fillTimeFormat(...)` 推出时间格式
+    （`useLocale.js:55`）；**不是** `localeTimeProps.format`（那是 `showTime.format`，
+    只在 `picker === 'time'` 时才被写进 `timeConfig`）。
+
+    ⇒ `datetime` / `time` 下 `fieldDateTimeFormat` 得到 `'YYYY-MM-DD '`（尾部空格）
+    而不是 `'YYYY-MM-DD HH:mm:ss'`。
+
+    **为什么至今不可观测**：`filledLocale` 只被 `fillShowTimeConfig` 的 `getRowFormat`
+    读一次，而那一次的结果只用于**反推 show 标志**；两条路径（补成空串 / 补成
+    `HH:mm:ss`）经 `fillShowConfig` 之后**落到同一组 show 标志** ⇒ 面板渲染逐位一致。
+
+    - ⇒ **潜在**分歧，不是当前可见 bug。修它要**单独过 picker 包的门禁**
+      （跨包改动，AGENTS.md §7）⇒ 本轮只登记。
+    - 🚨 **教训**：本仓把 `fillLocale(locale, timeFormat: string)` 的第二参从
+      上游的「5 个布尔」重构成了「一个格式串」—— 重构是好的，但**调用点必须跟着换**。
+      这类「签名变了、调用点没换」的错**类型检查抓不到**（都是 string），
+      只能靠逐点核对上游调用式。
+
+238. 🚨 **`registry:check` 在 S1 之后就已经是红的 —— E10 抓到 date-picker 的两处十六进制色；但它们是「上游产物本身就是黑的」**（2026-10-01）。
+
+    **症状**：`node registry/tools/validate-registry.mjs` ⇒
+    ```
+    ❌ E10  date-picker/style/index.ts 存在十六进制颜色: .apollo-picker-dropdown .apollo-picker-week-panel-row-… —— 必须使用 var(--apollo-*) Token
+    registry validate: 1 error(s)
+    ```
+    ⚠️ 这两处色值**不是本轮引入的**（`style/index.ts` 自 S1 落地后没动过）
+    ⇒ **仓库在 S1 收口时就已经红了**，只是没跑 `registry:check`。
+
+    **两处**（`packages/ui/src/date-picker/style/index.ts`）：
+
+    | 行 | 值 | 上游出处 |
+    |---|---|---|
+    | 213 | `color:#00000080` | `style/panel.js:389` `new FastColor(colorTextLightSolid).setA(0.5).toHexString()` |
+    | 231 | `background:#00000033` | `style/panel.js:471` `new FastColor(controlItemBgActive).setA(0.2).toHexString()` |
+
+    **排查链（**每一环都有实测**）**：
+    1. 直觉是「移植时抄错了」⇒ 重跑 `extract-date-picker-css.mjs --emit-static`，
+       产物**仍然是** `#00000080` / `#00000033` ⇒ 移植是**逐字**的。
+    2. 那是不是 token 没解析？`theme.getDesignToken().colorTextLightSolid` ⇒ `#fff`、
+       `controlItemBgActive` ⇒ `#e6f4ff` ⇒ **token 存在**，排除「缺失」。
+    3. `new FastColor(undefined).setA(0.5).toHexString()` ⇒ `#00000080` ⇒
+       说明传进 `FastColor` 的**不是实色**。
+    4. **决定性证据就在本仓产物里**：同一条规则块的**另一行**是
+       `color:var(--apollo-color-text-light-solid)`（上游 `panel.js:392` 的**直接**使用）
+       —— 同一个 `token.colorTextLightSolid`，一处输出成 `var(...)`、一处被算成黑色
+       ⇒ 只能是「值是**变量引用字符串**」。
+    5. 补一个排除实验：`ConfigProvider theme={{ cssVar: false }}` 重渲 ⇒ **仍是**
+       `#00000080`（antd 6 的 cssVar 关不掉）⇒ 无法用「关掉 cssVar 拿实色」绕开。
+
+    **结论与处理**：
+    - 分类 **UPSTREAM**（antd 在 cssVar 模式下的 `FastColor` 降级），**逐字对齐产物**。
+    - 🚨 **不要**「顺手改成 `#ffffff80` / `#e6f4ff33`」—— 那看着更对，
+      但会与 antd 的**真实渲染**分叉，L6 会因此判红。**antd 是判据，不是直觉。**
+    - 在 E10 的 `HARDCODED_PATTERNS` 里**逐值**加 `skip: /#000000(?:80|33)\b/`
+      （该工具自己的政策：只列具体色值、必须给出上游出处）。
+    - 同步登记 `README.md §2` 第 6 条 + `style/index.ts` 文件头。
+
+    🚨 **教训**：「产物里有硬编码色」有**两种**成因 ——
+    「我们移植错了」与「上游本来就是字面量」。**先重跑提取器**再决定改哪一边；
+    直接改色值是「用直觉覆盖判据」，正是 AGENTS.md §5 要防的事。

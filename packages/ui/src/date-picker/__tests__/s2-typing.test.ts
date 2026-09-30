@@ -1,5 +1,5 @@
 /**
- * L2 —— **键入接线**（S2 的一半：解析 → `invalid` 状态）。
+ * L2 —— **键入接线**（S2：解析 → `invalid` 状态）。
  *
  * ── 覆盖的判据（全部来自 rc 源码，不是推测）──────────────────────────────────
  *
@@ -11,23 +11,21 @@
  * | invalid | 🚨 **与 `status` 无关** —— `status="error"` 时 `aria-invalid` 仍是 `"false"` | S1 实测 |
  * | 键盘 | `Escape` ⇒ 关浮层；`Enter` 浮层**关闭**时开、**已开时不变**（**不提交**） | `useInputProps.js:140-162` |
  *
- * ── 🚨 这些用例**必须显式传 `format`** —— 原因是一个**已知缺口** ────────────────
+ * ── ✅ 曾经的「已知缺口」已闭合（2026-10-01）────────────────────────────────
  *
- * 本仓的 `mergeFormat` 只从 **locale** 取默认格式（`getRowFormat` 读 `locale.fieldDateFormat`），
- * 而实测（2026-09-30）：
+ * 此前 `props.format` 未传时 `formatList` 恒为 `[]` ⇒ **键入任何内容都判非法**。
+ * 根因不是「locale 缺字段」本身，而是**缺了 rc 的补齐层**：
  *
- * | 事实 | 证据 |
- * |---|---|
- * | 本仓 `en_US` 的 `DatePicker.lang` **没有** `fieldDateFormat` | `packages/locale/src/locales/en_US.ts` |
- * | **antd 的 `locale.lang` 也没有**（`field*` 键为空） | `Object.keys(require('antd/lib/date-picker/locale/en_US').default.lang).filter(k => k.startsWith('field'))` ⇒ `[]` |
- * | 上游 `getRowFormat` 与本仓**逐字一致**（同样读 `fieldDateFormat`） | `@rc-component/picker/lib/utils/miscUtil.js:46-67` |
+ * | 层 | 内容 | 本轮之前 |
+ * |---|---|---|
+ * | ① 用户 `props.format` | 直接用 | ✅ |
+ * | ② 语言包 `locale.fieldXxxFormat` | `getRowFormat` 读它 | ✅（但**本仓与 antd 的语言包都没有这些键**） |
+ * | ③ **rc 的硬编码兜底** | `useLocale` → `fillLocale`（`fieldDateFormat \|\| 'YYYY-MM-DD'`） | ❌ **缺这一层** |
  *
- * ⇒ 上游的 `format` **不是从 locale 来的**，而是 `useFilledProps` 里经 `showTime` /
- * `getTimeProps` 推导出来的那一层（本仓尚未实现）。
- * **后果**：`props.format` 未传时 `formatList` 恒为 `[]` ⇒ **键入永远解析不出** ⇒ `invalid` 恒 `true`。
- *
- * 所以本文件**显式传 `format`** 来验证「接线本身是对的」，
- * 并单独用一条用例**钉住这个缺口**（诚实记录，而不是让它藏在绿里）。
+ * 已按上游 `useFilledProps.js:72-76` 补上（`hooks/picker-filled.ts`）⇒
+ * 现在**不传 `format` 也能解析**（见本文件最后两条用例）。
+ * 证据：`es/hooks/useLocale.js:59`；本仓 `en_US.lang` 与 antd `en_US.lang`
+ * 的 `field*` 键实测都为空 ⇒ 默认格式**不可能**来自语言包。
  *
  * ── 这个文件**没有**证明什么 ──────────────────────────────────────────────────
  *
@@ -43,7 +41,7 @@ import DatePicker from '../DatePicker.vue';
 
 const P = 'apollo-picker';
 
-/** 显式格式 —— 见文件头「已知缺口」。 */
+/** 显式格式 —— 用来验证「用户给了 format 时它**优先于**补齐的默认值」。 */
 const F = { format: 'YYYY-MM-DD' };
 
 const input = (w: ReturnType<typeof mount>) => w.find(`.${P}-input input`);
@@ -115,13 +113,45 @@ describe('DatePicker · 键入接线（S2 · invalid 状态）', () => {
     w.unmount();
   });
 
-  it('🚨 **已知缺口**：不传 `format` 时 `formatList` 为空 ⇒ 连合法日期也判非法', async () => {
-    // ⚠️ 这条**不是**在断言「正确行为」，而是在**钉住一个缺口**（避免它藏在绿里）。
-    //    根因见文件头：默认 `format` 的推导（上游 `useFilledProps` 那一层）本仓未实现。
-    //    ⚠️ 缺口补上后**这条会红** —— 那时应当把它改成「合法日期 ⇒ false」并更新文件头。
+  it('✅ **不传 `format` 也能解析**（默认格式由补齐层给出 `YYYY-MM-DD`）', async () => {
+    // ⚠️ 这条在 2026-10-01 之前断言的是**相反**的行为（`'true'`）——
+    //    当时它钉的是一个已知缺口。补齐层落地后它按计划翻了过来（见文件头）。
     const w = mount(DatePicker);
     await input(w).setValue('2026-09-30');
+    expect(input(w).attributes('aria-invalid')).toBe('false');
+    w.unmount();
+  });
+
+  it('✅ **不传 `format` 时非法值仍判非法**（补齐的是默认值，不是「永不非法」）', async () => {
+    // 反向哨兵：防止「补齐层」被误改成「恒不非法」
+    const w = mount(DatePicker);
+    await input(w).setValue('完全不是日期');
     expect(input(w).attributes('aria-invalid')).toBe('true');
+    w.unmount();
+  });
+
+  it('`showTime` 时默认字段串是 `YYYY-MM-DD HH:mm:ss`（补齐层按 show 标志推时间格式）', async () => {
+    // ⚠️ 补齐用的时间格式是 `fillTimeFormat(showHour, showMinute, showSecond, …)`
+    //    **推出来的**，**不是** `showTime.format` —— 上游 `useLocale.js:55`。
+    //    这里 `showTime` 是 `true`（无 format）⇒ 默认三段全开。
+    const w = mount(DatePicker, { props: { showTime: true } });
+    await input(w).setValue('2026-09-30 12:34:56');
+    expect(input(w).attributes('aria-invalid')).toBe('false');
+    w.unmount();
+  });
+
+  it('`showTime={{ format }}` 只决定面板列，**不**改字段串（字段串按 show 标志推）', async () => {
+    // 上游判据 1（见 `hooks/picker-filled.ts` 文件头）：补齐用的是
+    // `fillTimeFormat(showHour, showMinute, showSecond, …)` **推出来的**串，
+    // **不是** `showTime.format`。
+    //
+    // 判别式：`showTime.format` 是 `'HH:mm'`（**没有日期部分**）。
+    //   - 若字段串取了 `showTime.format` ⇒ 带日期的输入**解析不出**；
+    //   - 实际字段串是 `YYYY-MM-DD HH:mm:ss` ⇒ 带日期的输入**解析得出**。
+    // ⇒ 「带日期的完整输入能过」这一条就足以证伪「字段串 = showTime.format」。
+    const w = mount(DatePicker, { props: { showTime: { format: 'HH:mm' } } });
+    await input(w).setValue('2026-09-30 12:34:56');
+    expect(input(w).attributes('aria-invalid')).toBe('false');
     w.unmount();
   });
 });

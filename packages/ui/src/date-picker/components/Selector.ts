@@ -106,8 +106,14 @@ export const Selector = defineComponent({
     range: { type: Boolean, default: false },
     /** 面板粒度（决定默认 `input[size]`）。 */
     picker: { type: String as PropType<string | undefined>, default: undefined },
-    /** 归一后的第一个格式（算 `input[size]`）。 */
-    firstFormat: { type: String as PropType<string | undefined>, default: undefined },
+    /**
+     * 归一后的第一个格式**求值后的字符数**（算 `input[size]`）。
+     *
+     * ⚠️ 传的是**数值**而不是格式串本身：`format` 可能是**函数形态**
+     * （`CustomFormat`），而 `Selector` 是个「哑组件」——它不持有日期库
+     * ⇒ 求值（`firstFormat(getNow())`）由 `.vue` 侧用 `getFormatLength` 完成。
+     */
+    firstFormatLength: { type: Number as PropType<number | undefined>, default: undefined },
 
     // ---------------------------------------------------------- 值 / 文本
     /** 已格式化的值文本（单值 1 项；范围 2 项）。 */
@@ -216,7 +222,7 @@ export const Selector = defineComponent({
       return getSingleShowClear(props.clearIcon, valueLengths.value[0], disabledPair.value[0]);
     });
 
-    const inputSize = computed(() => getInputSize(props.picker, props.firstFormat));
+    const inputSize = computed(() => getInputSize(props.picker, props.firstFormatLength ?? 0));
 
     /** `-suffix`：仅当图标可渲染（上游 `Icon.js`）。 */
     const renderSuffix = (): VNodeChild => {

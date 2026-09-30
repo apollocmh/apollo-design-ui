@@ -49,7 +49,7 @@ import { useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
-import { getMergedNeedConfirm } from './components/picker-shared';
+import { getFormatLength, getMergedNeedConfirm } from './components/picker-shared';
 import { getRootClassNames } from './components/root-class';
 import { Selector } from './components/Selector';
 import {
@@ -59,6 +59,7 @@ import {
   getTransitionName,
 } from './components/trigger-config';
 import { dayjsConfig } from './hooks/dayjs-config';
+import { useFilledLocale } from './hooks/picker-filled';
 import { mergeFormat, toInternalMode } from './hooks/picker-format';
 import { getPlaceholder, mergePickerLocale } from './hooks/picker-locale';
 import { useSuffixIcon } from './hooks/picker-suffix';
@@ -204,8 +205,43 @@ const mergedPicker = computed(() => props.picker ?? 'date');
 /** 内部模式：`'date' + showTime` ⇒ `'datetime'`（`'datetime'` 是**独立分支**）。 */
 const internalMode = computed(() => toInternalMode(props.picker, props.showTime));
 
+/**
+ * locale 的**补齐**（上游 `useFilledProps.js:72-76` 的 `Locale` + `ShowTime` 两段）。
+ *
+ * 🚨 **这不是可选项**：语言包（本仓的与 antd 的**都一样**）**没有**
+ * `fieldDateFormat` / `fieldDateTimeFormat` 这些键，默认格式串来自 rc 的
+ * `fillLocale` 硬编码兜底。不补 ⇒ `formatList` 恒空 ⇒ **键入永远判非法**。
+ * 详见 `hooks/picker-filled.ts` 的文件头（含两轮实测证据）。
+ *
+ * ⚠️ 三处用法必须都用**补齐后**的 locale：
+ *   `mergeFormat`（字段格式串）/ `formatValue`（`dateString`）/
+ *   `PickerPanel`（表头标题走 `locale.fieldDateFormat`）。
+ */
+const filled = useFilledLocale({
+  source: computed(() => ({
+    picker: props.picker,
+    showTime: props.showTime,
+    format: props.format,
+  })),
+  locale: computed(() => mergedLocale.value.lang),
+  internalMode,
+});
+/** 补齐后的 rc locale —— 下游一律用它，不再直接用 `mergedLocale.value.lang`。 */
+const filledLang = computed(() => filled.filledLocale.value);
+
 const mergedFormat = computed(() =>
-  mergeFormat(internalMode.value, mergedLocale.value.lang, props.format),
+  mergeFormat(internalMode.value, filledLang.value, props.format),
+);
+
+/**
+ * `input[size]` 用的格式字符数。
+ *
+ * ⚠️ `firstFormat` 可能是**函数形态**（`CustomFormat`）—— 那种情况下
+ * `.length` 是**形参个数**，必须先拿 `getNow()` 求值（上游 `useInputProps.js` 逐字）。
+ * 求值放在这里而不是 `Selector`：那是个哑组件，不持有日期库。
+ */
+const firstFormatLength = computed(() =>
+  getFormatLength(mergedFormat.value.firstFormat, dayjsConfig.getNow()),
 );
 
 // ============================== 语义槽 ==============================
@@ -225,9 +261,10 @@ const getDateTexts = (dates: ValueSlot[]): string[] =>
   dates.map((date) =>
     formatValue(date, {
       generateConfig: dayjsConfig,
-      locale: mergedLocale.value.lang,
-      // ⚠️ locale 缺 `fieldDateFormat` 时 `firstFormat` 是 `undefined` ——
-      //    上游此时会抛错，本仓降级成空串（README §2 第 1 条，INTENDED）。
+      // ⚠️ 用**补齐后**的 locale（`filledLang`）。补齐前 `fieldDateFormat` 是
+      //    `undefined` ⇒ `firstFormat` 也 `undefined`，只是被 `?? ''` 兜住 ⇒
+      //    「显示对但功能不对」—— 见 `hooks/picker-filled.ts` 文件头。
+      locale: filledLang.value,
       format: mergedFormat.value.firstFormat ?? '',
     }),
   );
@@ -263,7 +300,8 @@ const isInvalidateDate = (
 
 const rangeValue = useRangeValue({
   generateConfig: computed(() => dayjsConfig),
-  locale: computed(() => mergedLocale.value.lang),
+  // ⚠️ 补齐后的 locale（解析 / 格式化都要它，见 `hooks/picker-filled.ts`）
+  locale: computed(() => filledLang.value),
   picker: computed(() => mergedPicker.value),
   allowEmpty: computed(() => undefined),
   order: computed(() => props.order === true),
@@ -300,7 +338,7 @@ const invalid = ref(false);
 
 /** 解析上下文（`locale` + 已归一的 `formatList` + 日期库适配层）。 */
 const parseContext = computed(() => ({
-  locale: mergedLocale.value.lang.locale,
+  locale: filledLang.value.locale,
   formatList: mergedFormat.value.formatList,
   generateConfig: dayjsConfig,
 }));
@@ -496,7 +534,9 @@ const clearIcon = computed(() =>
 const panelProps = computed(() => ({
   prefixCls: prefixCls.value,
   direction: direction.value,
-  locale: mergedLocale.value.lang,
+  // ⚠️ 传**补齐后**的 rc locale。面板自己也会补一次（`||` 判据），
+  //    但表头标题读 `locale.fieldDateFormat` ⇒ 传补齐的才对。
+  locale: filledLang.value,
   generateConfig: dayjsConfig,
   picker: mergedPicker.value,
   mode: props.mode,
@@ -543,7 +583,7 @@ const panelProps = computed(() => ({
 const selectorProps = computed(() => ({
   prefixCls: prefixCls.value,
   picker: mergedPicker.value,
-  firstFormat: mergedFormat.value.firstFormat,
+  firstFormatLength: firstFormatLength.value,
   valueTexts: valueTexts.value,
   placeholder: placeholder.value,
   prefix: props.prefix,

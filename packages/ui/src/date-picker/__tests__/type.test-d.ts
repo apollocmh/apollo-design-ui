@@ -113,7 +113,11 @@ describe('DatePicker · L3 format 的三形态', () => {
   });
 
   it('`DatePickerFormat` = 单值 | 数组 | 掩码对象', () => {
-    expectTypeOf<DatePickerFormat>().toEqualTypeOf<FormatType | FormatType[] | MaskFormatConfig>();
+    // ⚠️ 数组那一支是 **`readonly`**（上游 `PickerFormat` 就是 `readonly FormatType[]`）——
+    //    写成 `FormatType[]` 会让 `toEqualTypeOf` 判不相等（2026-10-01 修正）。
+    expectTypeOf<DatePickerFormat>().toEqualTypeOf<
+      FormatType | readonly FormatType[] | MaskFormatConfig
+    >();
     expectTypeOf<MaskFormatConfig>().toEqualTypeOf<{ format: string; type?: 'mask' }>();
   });
 

@@ -37,13 +37,19 @@
         ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
         ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
         status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`（见 README §5 的既有不一致）。
-      - [~] S2 键入解析 —— **跨包欠账已还清** + **解析与接线的一半已落地**，
-        但发现一个**阻塞级缺口**（见下节「🚨 S2 的阻塞项」）：
+      - [~] S2 键入解析 —— **阻塞项已闭合**（2026-10-01），**函数形态已落地**；
+        剩「落值 + 提交时机」（= 上游 405 行状态机，与 S4 同源，见 README §5.5(c)）：
         - ✅ 纯函数：`hooks/picker-typing.ts`（`parseTextWithFormat` / `validateFormat`）
+        - ✅ **默认 `format` 的推导层**（2026-10-01）—— `hooks/picker-filled.ts`：
+          上游 `useFilledProps.js:72-76` 的 `locale` 补齐 + `showTime` 归一。
+          **根因更正**：不是「缺 `showTime` 推导」，而是缺 **rc `useLocale` → `fillLocale`
+          的硬编码兜底**（`fieldDateFormat || 'YYYY-MM-DD'` 等 11 个键）——
+          本仓与 antd 的语言包**都没有**这些键（实测）。
+        - ✅ **`format` 的函数形态**（2026-10-01）—— `mergeFormat` 的 `.map` 补上
+          `typeof c === 'function'` 那一支；`getFormatLength` 处理 `input[size]` 的求值。
         - ✅ 接线：`.vue` 的 `invalid` 状态 + `onInput`（解析）+ `onInputKeydown`（Escape/Enter）
         - ✅ `Selector` 的 `invalid` prop → `input[aria-invalid]` + 根类名 `-invalid`
         - ⏳ 未接：落值 + **提交时机**（依赖 `useRangeValue` 的 `triggerChange` 语义）
-        - 🚨 **阻塞**：默认 `format` 的推导层未实现 ⇒ `formatList` 恒空 ⇒ 键入永远判非法
       - [ ] S3 掩码模式（`format.type: "mask"`）
       - [ ] S4 键盘字段导航与分段（`-input-active`）
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
@@ -184,7 +190,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 | G0–G2 | ✅ | `docs/analysis/date-picker.md` + `interface.ts` |
 | G3 TOKEN | ✅ | `style/token.ts` 45 键 + theme 22 条 |
 | G4 S1（功能 + 样式） | ✅ | `DatePicker.vue` + 257 条规则 + 45 条声明 |
-| G5/G6 L1+L2（S1 范围） | ⏳ 部分 | `picker-pure` 51 条 + `s1-smoke` 10 条 |
+| G5/G6 L1+L2（S1–S2 范围） | ⏳ 部分 | `picker-pure` **64 条** + `picker-typing` **11 条** + `s1-smoke` 10 条 + `s2-typing` **15 条** |
 | G7 L3 | ✅ | `type.test-d.ts` 42 条 |
 
 ## ⚠️ `--project types` 的既有 SFC 解析噪音（对照实验确认，非本包引入）
@@ -274,52 +280,76 @@ export type PickerFormat<DateType = PanelDateType> =
 键入时无法从函数反推日期 ⇒ `pickPropFormat` 遇到函数返回 `null`（「没有静态格式串」），
 解析退回 `formatList` 的字符串项。这与上游一致。
 
-### ⏳ 待做：键入解析
+### ⏳ 待做：落值 + 提交时机（**唯一剩余**，且必须与 S4 同批）
 
-现状：`DatePicker.vue` 里传给 `Selector` 的四个事件是**空实现**（`() => {}`）——
-`onInput` / `onInputFocus` / `onInputBlur` / `onInputKeydown`。
+现状：`DatePicker.vue` 的 `onInput` 只做到 **`invalid` 上报**（S1 定的边界）；
+解析出日期后**不落值**（`onInput` 里 `if (parsed)` 那一支直接 `return`）。
+落值仍只有面板点选一条路径（`rangeValue.triggerSubmit`）。
 
-上游流程（`@rc-component/picker` 的 `PickerInput/Selector/hooks/useInputProps.js`）：
+上游流程（`@rc-component/picker` 的 `PickerInput/hooks/useRangeValueChange.js`，**405 行**）：
 
-1. **输入** → `onInternalInputChange` → `parseValue(text, { locale, formatList })`
-   ⇒ 得到日期或 `null`（**按 `formatList` 逐个尝试**，这是「`format` 传数组」的意义）；
-2. **提交时机**由三个 prop 交互决定：`needConfirm`（S1 已落地默认值）、
-   `changeOnBlur`（默认 `true`）、`preserveInvalidOnBlur`（默认 `false`）；
-3. **非法值**要发 `invalid` 事件并置 `input[aria-invalid]` ——
-   ⚠️ 注意与 `status` **无关**：S1 实测「`status="error"` 也不改 `aria-invalid`」，
-   而**键入非法**会改（那是 rc 的 `invalid` 通道，不是 antd 的 `status`）；
-4. **焦点**：`-focused` 根类名（`getRootClassNames` 已留 `focused` 选项）、
-   `-input-active` 的分段高亮（属 S4）。
+```
+Input onChange(text)
+  → onInputChange()                       // = triggerSingleValueChange(0, 'input')
+  → validateFormat(text)
+      命中 → onInvalid(false, index) + onChange(parsed, index)   // (0, 'input', parsed)
+      未中 → onInvalid(!!text, index)
+  ↓
+triggerChange(index, source, value)
+  → resolveAction(currentIndex, index, source, value)   // 7 种 action
+  → 执行：modify / submitCurrent / switchNext / finish / resetCurrent /
+          resetCurrentAndSwitchNext / resetAll / abort
+```
 
-⚠️ 验证方式：这批必须用 **jsdom**（真实键入 + 焦点）⇒ 需要环境不卡
-（本轮实测 jsdom 冷加载 3:39，所有 jsdom 测试报 worker 超时，详见 PITFALLS 231）。
+⚠️ **关键判据（容易想当然的地方）**：
 
-## 🚨 S2 的阻塞项：默认 `format` 的推导层（已定位，未修）
+1. **`Enter` 不提交**（已在 S1/S2 的键盘用例里钉住）—— 它只在**浮层关闭时**打开浮层。
+   真正的提交走 `popupClose` / `confirm` / `keyboard-submit`。
+2. **`popupClose` 会「消费」上一次的更新来源**（`isLastInputRef`）而不覆盖它 ——
+   `source !== 'popupClose'` 时才写 `isLastInputRef`。这决定了关浮层时的 focus 行为。
+3. **`needConfirm` 下「关浮层」不等于「提交」**：要求 `allFieldsTriggered`，
+   否则 `resetAll`（丢弃临时值）。单值时 `fieldCount = 1` ⇒ 一旦 `modified` 过就满足。
+4. ⇒ **不能只做「input → 落值」这一小段**：`source` 有 9 种、action 有 8 种，
+   且 `currentIndex` / `triggeredFields` / `confirmedIndex` 三份簿记是跨事件的。
+   它与 **S4 的字段导航**共用同一个状态机 —— 分两轮做必然产生「时机半对」的静默 bug。
 
-**症状**：键入**任何**内容都被判非法（`aria-invalid` 恒 `true`）。
+⚠️ 验证方式：这批必须用 **jsdom**（真实键入 + 焦点 + 关浮层的异步卸载 ——
+关浮层是**异步**的，断言卸载必须轮询，PITFALLS 179）。
 
-**根因链**（2026-09-30 实测，详见 PITFALLS 234）：
+## ✅ S2 的阻塞项 —— **已闭合**（2026-10-01）
 
-1. `mergeFormat` → `getRowFormat(picker, locale, format)` 读 **`locale.fieldDateFormat`**；
-2. 本仓的 `en_US` 的 `DatePicker.lang` **没有**这个字段；
-3. **antd 的 `locale.lang` 也没有**（`Object.keys(...).filter(k => k.startsWith('field'))` ⇒ `[]`）；
-4. 上游的 `getRowFormat` 与本仓**逐字一致**（`miscUtil.js:46-67`）；
-5. ⇒ **上游的 `format` 不是从 locale 来的**，而是 `useFilledProps` 里经 `showTime` /
-   `getTimeProps` **推导**出来的那一层 —— **本仓缺这一层**。
+**原症状**：键入**任何**内容都被判非法（`aria-invalid` 恒 `true`）。
+
+**根因（2026-10-01 更正 —— 2026-09-30 那版定位错了一半）**：
+
+原判据链里「上游的 `format` 不是从 locale 来的，而是 `useFilledProps` 里经 `showTime` /
+`getTimeProps` **推导**出来的」—— **对**；但**推导的形式说反了**：
+
+| 层 | 内容 | 2026-10-01 之前 |
+|---|---|---|
+| ① 用户 `props.format` | 直接用 | ✅ |
+| ② 语言包 `locale.fieldXxxFormat` | `getRowFormat` 读它 | ✅（但本仓与 antd 的语言包**都没有**这些键） |
+| ③ **rc 的硬编码兜底** | `useLocale` → `fillLocale`（`fieldDateFormat \|\| 'YYYY-MM-DD'` 等 **11** 个键） | ❌ **缺的是这一层** |
+
+- ③ 的判据在 `es/hooks/useLocale.js:56-69`（11 个 `||` 兜底），
+  **不是** `showTime` / `getTimeProps` 那条（那条只决定**时间格式串**怎么拼）。
+- ⇒ 修复：`hooks/picker-filled.ts` 逐字移植 `useFilledProps.js:72-76` 的两段
+  （`fillPickerLocale` = 上游 `useLocale`；`useFilledLocale` = 两者的响应式包装），
+  并让 `.vue` 的 **4 处**消费点（`mergeFormat` / `formatValue` / `rangeValue.locale` /
+  `panelProps.locale`）全部改用**补齐后**的 locale。
 
 **为什么 S1 的 L4 没抓到**：`valueTexts` 用 `firstFormat ?? ''` 兜底，`formatValue` 对空格式串
 有默认 ⇒ **显示正常**（`2026-09-30` 照样渲染）⇒ 16 个 L4 用例全绿。
 ⇒ **「显示对」不等于「功能对」**，`formatList` 空只有**键入**才暴露。
 
-**当前处理**：`s2-typing.test.ts` **显式传 `format`** 验证接线本身是对的（12 条全绿），
-并**单独一条用例钉住这个缺口**（「不传 `format` 时连合法日期也判非法」）。
-⚠️ 缺口补上后那条会红 —— 那时应把它改成「合法日期 ⇒ false」并更新文件头。
+**回归哨兵**（三处，缺口若被改回去会同时红）：
+1. `s2-typing.test.ts`「不传 `format` 也能解析」（2026-10-01 前它断言的正是**相反**的行为）；
+2. `picker-pure.test.ts`「补齐前 `formatList` 为空，补齐后有默认格式」；
+3. `picker-pure.test.ts`「补齐用的时间格式**从 show 标志推出来**，不是 `showTime.format`」。
 
-**下一步（S2 剩余）**：
-1. 补 `useFilledProps` 的 `format` 推导层（`showTime` / `getTimeProps` 那条路径）；
-2. 接**落值 + 提交时机**（`useRangeValue` 的 `triggerChange`：`needConfirm` /
-   `changeOnBlur` / `preserveInvalidOnBlur` 三者交互）；
-3. `preserveInvalidOnBlur` 的语义（blur 时是否保留非法文本）。
+**S2 剩余（唯一）**：落值 + **提交时机** —— 上游 `useRangeValueChange.js`（405 行）的
+`triggerChange` 状态机。⚠️ **它与 S4 的字段导航是同一个状态机**，必须同批做，
+否则必然「时机半对」。详见 README §5.5(c)。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
