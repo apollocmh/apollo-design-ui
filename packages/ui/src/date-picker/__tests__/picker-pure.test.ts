@@ -24,6 +24,7 @@ import { describe, expect, it } from 'vitest';
 import { getStatusClassNames } from '../../space/statusUtils';
 import {
   getInputSize,
+  getMergedNeedConfirm,
   getMergedPickerStatus,
   getRangeShowClear,
   getSingleShowClear,
@@ -609,5 +610,46 @@ describe('date-picker · 语义槽归一（S1，4 平铺 + 7 嵌套）', () => {
       footer: 'pf',
       container: 'pct',
     });
+  });
+});
+
+/**
+ * `needConfirm` 的默认值取决于**内部模式**（上游 `useFilledProps.js:74-76`）：
+ *
+ * ```js
+ * const multipleInteractivePicker = internalPicker === 'time' || internalPicker === 'datetime';
+ * const mergedNeedConfirm = needConfirm ?? multipleInteractivePicker;
+ * ```
+ *
+ * ⚠️ 这条写错的症状很隐蔽：带 `showTime` 的日期选择器会**点一下就提交**，
+ * 而用户期望点「确定」—— 因为没有单测盯住「默认值」，只有手动点才发现。
+ */
+describe('date-picker · getMergedNeedConfirm（S1，判据来自 useFilledProps.js:74-76）', () => {
+  it('未给 `needConfirm` 时：time / datetime 默认 **true**，其余默认 **false**', () => {
+    // 需要确认的两种（交互是多步的：先选日期再选时间）
+    expect(getMergedNeedConfirm(undefined, 'time')).toBe(true);
+    expect(getMergedNeedConfirm(undefined, 'datetime')).toBe(true);
+    // 其余都是「点一下即定」
+    expect(getMergedNeedConfirm(undefined, 'date')).toBe(false);
+    expect(getMergedNeedConfirm(undefined, 'week')).toBe(false);
+    expect(getMergedNeedConfirm(undefined, 'month')).toBe(false);
+    expect(getMergedNeedConfirm(undefined, 'quarter')).toBe(false);
+    expect(getMergedNeedConfirm(undefined, 'year')).toBe(false);
+  });
+
+  it('显式给值一律生效（判据是 `??` 不是 `||`）', () => {
+    // ⚠️ `false` 是「显式关闭」⇒ 必须压过默认的 true（用 `||` 会漏掉这条）
+    expect(getMergedNeedConfirm(false, 'time')).toBe(false);
+    expect(getMergedNeedConfirm(false, 'datetime')).toBe(false);
+    // 反向：纯日期也能显式要求确认
+    expect(getMergedNeedConfirm(true, 'date')).toBe(true);
+    expect(getMergedNeedConfirm(true, 'month')).toBe(true);
+  });
+
+  it("`'datetime'` 不在 `PickerMode` 里 —— 传 `props.picker` 会漏掉它", () => {
+    // 这条钉住「调用方必须传 toInternalMode 的结果」：
+    // 若误传 `props.picker`（'date'），带 showTime 的选择器会得到 false ⇒ 点一下就提交
+    expect(getMergedNeedConfirm(undefined, 'date')).toBe(false);
+    expect(getMergedNeedConfirm(undefined, 'datetime')).toBe(true);
   });
 });

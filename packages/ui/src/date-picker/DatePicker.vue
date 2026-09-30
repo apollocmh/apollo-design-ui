@@ -40,6 +40,7 @@
 import { CloseCircleFilled } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { formatValue, type PanelDateType, PickerPanel } from '@apollo-design/picker';
+import { useZIndex } from '@apollo-design/portal';
 import { type Component, type CSSProperties, computed, h, ref, type VNodeChild } from 'vue';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -48,7 +49,7 @@ import { useSize } from '../config-provider/size-context';
 import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
-import { getMergedPickerStatus } from './components/picker-shared';
+import { getMergedNeedConfirm, getMergedPickerStatus } from './components/picker-shared';
 import { getRootClassNames } from './components/root-class';
 import { Selector } from './components/Selector';
 import {
@@ -342,6 +343,28 @@ const rootClass = computed(() =>
   }),
 );
 
+/**
+ * `needConfirm` 的合并值（上游 `useFilledProps.js:74-76`）。
+ *
+ * ⚠️ 传的是 `internalMode`（`InternalMode`）而**不是** `props.picker` ——
+ * `'datetime'` 只在 `InternalMode` 里（`date` + `showTime`），
+ * 传错会让带时间的日期选择器「点一下就提交」。
+ */
+const mergedNeedConfirm = computed(() =>
+  getMergedNeedConfirm(props.needConfirm, internalMode.value),
+);
+
+/**
+ * 浮层 z-index（上游 `useZIndex('DatePicker', mergedStyles?.popup?.root?.zIndex)`）。
+ *
+ * `DatePicker` 在 `ZIndexConsumer` 里（offset 50）—— 与 Select/Dropdown/Menu 同档。
+ * 用户可在 `styles.popup.root.zIndex` 覆盖。
+ */
+const zIndex = useZIndex('DatePicker', () => {
+  const rootStyle = semantic.styles.value.popup?.root;
+  return rootStyle?.zIndex as number | undefined;
+});
+
 const popupClassNames = computed(() =>
   getDropdownClassName({
     prefixCls: prefixCls.value,
@@ -401,8 +424,10 @@ const panelProps = computed(() => ({
     const next = [...inner.calendarValue.value];
     next[0] = date;
     inner.triggerCalendarChange(next);
-    // ⚠️ S1 只做「非 needConfirm 时点选即提交」；确认制的完整语义在 S2/S5。
-    if (props.needConfirm !== true) {
+    // ⚠️ 判据是**合并后**的 `needConfirm`（默认值取决于内部模式：
+    //    `time` / `datetime` 默认 `true` ⇒ 点选**不**提交，要点「确定」）。
+    //    S1 只做「不需要确认时点选即提交」；「确定」按钮的接线在 S2/S5。
+    if (!mergedNeedConfirm.value) {
       rangeValue.triggerSubmit(next);
     }
   },
@@ -489,6 +514,7 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
     :popup-align="popupAlign"
     :popup-class-name="popupClassNames"
     :get-popup-container="props.getPopupContainer"
+    :z-index="zIndex"
     :motion="popupMotion"
     stretch="minWidth"
   >

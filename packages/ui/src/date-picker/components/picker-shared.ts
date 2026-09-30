@@ -134,6 +134,41 @@ export function getMergedPickerStatus(
 }
 
 // ---------------------------------------------------------------------------
+// `needConfirm` 的默认值
+// ---------------------------------------------------------------------------
+
+/**
+ * `needConfirm` 的合并值（上游 `useFilledProps.js:74-76`，逐字）。
+ *
+ * ```js
+ * const multipleInteractivePicker = internalPicker === 'time' || internalPicker === 'datetime';
+ * const complexPicker = multipleInteractivePicker || multiple;
+ * const mergedNeedConfirm = needConfirm ?? multipleInteractivePicker;
+ * ```
+ *
+ * ⇒ **默认值取决于内部模式**：
+ *
+ * | 内部模式 | 默认 `needConfirm` | 行为 |
+ * |---|---|---|
+ * | `date` / `week` / `month` / `quarter` / `year` | `false` | 点面板格子**立即提交** |
+ * | `time` | `true` | 必须点「确定」 |
+ * | `datetime`（= `date` + `showTime`） | `true` | 必须点「确定」 |
+ *
+ * ⚠️ `'datetime'` **不是** `PickerMode` 的成员（它是 `InternalMode` 独有的组合态）
+ * ⇒ 调用方必须传 `toInternalMode(picker, showTime)` 的结果，不能传 `props.picker`。
+ * 传错会让 `showTime` 的日期选择器**点一下就提交**（与上游不一致）。
+ *
+ * ⚠️ 判据是 **`??`**（不是 `||`）—— `needConfirm: false` 是「显式关闭」，必须生效。
+ */
+export function getMergedNeedConfirm(
+  needConfirm: boolean | undefined,
+  internalPicker: string,
+): boolean {
+  const multipleInteractivePicker = internalPicker === 'time' || internalPicker === 'datetime';
+  return needConfirm ?? multipleInteractivePicker;
+}
+
+// ---------------------------------------------------------------------------
 // `showClear`（两个形态的判据不同）
 // ---------------------------------------------------------------------------
 
