@@ -327,9 +327,10 @@ export const COMPONENTS = [
       '**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层' +
       '（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，' +
       '随 S5 的 RangePicker 一起做。' +
-      '**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）。' +
-      'S5 剩余：`multiple` 的选择器渲染（⚠️ 前置：`_internal/overflow` 缺 `renderItem`）、' +
-      '范围两端（`RangePicker`）、`presets` / footer。',
+      '**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；' +
+      '**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；' +
+      '顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。' +
+      'S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。',
   },
   {
     name: 'time-picker',

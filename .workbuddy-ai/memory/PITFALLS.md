@@ -2310,3 +2310,27 @@
     - 🚨 **教训**：「浮层关闭不卸载」是 antd 的**默认**（`destroyPopupOnHide` 未开）
       ⇒ 任何「打开时要重置」的面板状态（粒度 / 浏览值 / 悬停值）都要显式重置。
       移植面板行为时先问一句：**这个状态在关闭后还活着吗？**
+
+245. ⚠️ **`_internal/overflow.ts` 只有 raw 路径 —— 补 `renderItem` 时别把两条路径混了**（2026-10-01，S5 的 `multiple`）。
+
+    rc 的 `@rc-component/overflow` 有**两条互斥**的项渲染路径：
+
+    | prop | 调用方返回 | overflow 做什么 | 谁在用 |
+    |---|---|---|---|
+    | `renderRawItem(item, index)` | **整项**（menu 的 `li`） | **clone** 它并注入样式/ref（`ul > li` 必须直接相邻） | menu 的横向折叠 |
+    | `renderItem(item, { index })` | **内容** | 自己包一层 `<div class="${prefixCls}-item">` | date-picker 的 `multiple` 标签 |
+
+    🚨 **两处签名不同**：`renderRawItem` 的第二参是**数字** `index`，
+    而 `renderItem` 的第二参是**对象** `{ index }`（rc `Item.js:39` 逐字
+    `renderItem(item, { index: order })`）。混用不会报错，只会静默拿到 `undefined`。
+
+    - 本仓 2026-10-01 前**只有 raw 路径** ⇒ `multiple` 无法落地（那是当时的「前置阻塞」）。
+      补 `renderItem` 是**纯增量**（新 prop + 非 raw 分支），menu 全层回归
+      **110 passed / 0 变化**。
+    - 顺带修掉一处与 rc 不等的默认：非 raw 分支原本渲染 `String(item ?? '')`，
+      而 rc 的默认是**恒等**（`item => item`）。该分支此前**无消费者**，改动无可观测影响。
+    - 🚨 **教训**：「`_internal` 里已经有一个同名组件」≠「它能直接用」。
+      先比对**两条路径的 prop 名与参数形状**，再决定是复用还是补 API。
+      这次的症状是 `h(undefined, …)` —— 因为 `Overflow` 是 **default export**，
+      我写成了 `import { Overflow }`（TypeScript 本该报错，但那一步我跳过了 typecheck 直接跑测试，
+      表现为「`-selector` 在、但一个标签都没有」）。

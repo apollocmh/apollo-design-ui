@@ -74,16 +74,13 @@
           并在 `mergedOpen` 变真时把粒度重置回 `picker`
           （上游 `:451-456` 的 `Reset for every active`，`triggerEvent = false` ⇒ 不发事件）。
           用例 `s5-mode.test.ts` **5 条**。
-        - ⏳ **`multiple`**：`DatePicker.vue` 的**值侧**已就绪（`valueTexts` 的数组分支、
-          `onChange` 的 `multiple` 分支、`onSelect` 的 `toggleDates`），
-          缺的是 **`Selector` 的多选渲染**（上游 `MultipleDates.js` 77 行：
-          `-selector` / `-selection-item` / `-selection-item-remove` / `-selection-placeholder`
-          + 一个 readonly 的 `-multiple-input`）。
-          🚨 **前置阻塞**：上游用 `@rc-component/overflow` 的 **`renderItem` / `renderRest` /
-          `itemKey`** 三个 prop，而本仓 `_internal/overflow.ts`（menu 的横向折叠在用）
-          只暴露 `renderRawItem` / `renderRest` / `renderRawRest` —— **缺 `renderItem`**。
-          ⇒ 要么给 `_internal/overflow` 补 `renderItem`（会碰到 menu 的既有门禁），
-          要么先落 `multiple` 的**无折叠**形态（`maxTagCount` 留缺口）。**需先裁决**。
+        - ✅ **`multiple`**（2026-10-01 同日）—— 值侧本就就绪（`valueTexts` 的数组分支、
+          `onChange` 的 `multiple` 分支、`onSelect` 的 `toggleDates`），本轮补齐
+          **选择器渲染**：`Selector.renderMultiple`（上游 `MultipleDates.js` 77 行）+
+          `renderMultipleInput` + `-multiple` 根类名 + `onMultipleRemove`。
+          🚨 前置欠账**已还**：`_internal/overflow.ts` 补了 **`renderItem`**
+          （rc 的非 raw 路径；此前只有 `renderRawItem`）—— menu 全层回归 **110 passed** 无变化。
+          用例 `s5-multiple.test.ts` **9 条**。
         - ⏳ **范围两端（`RangePicker`）**：要新开 `RangePicker.vue` + 范围的 Selector
           （`-input-start` / `-input-end` / `-range-separator` / `-active-bar`）
           + `fieldCount = 2` 的状态机接线（调度已在，S4 的 `-input-active` /

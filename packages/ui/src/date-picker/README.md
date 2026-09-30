@@ -91,7 +91,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | S2 | 键入解析 + `format` 补齐层 + `format` 函数形态 + **提交时机状态机** | ✅ |
 | S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
 | S4 | 键盘字段导航与 `-input-active` 分段 | 🟡 **单值部分完成**：调度（随 S2）+ `-focused` + 确认离开才关浮层。`-input-active` 与 `useFocusLock` 是**范围专属**（上游 `SinglePicker` 不传 `activeIndex`；单值下 `forceFocus` 恒 false）⇒ 随 S5 的 RangePicker 一起做 |
-| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置**已落地；`multiple` 的**值侧**已就绪、缺选择器的多选渲染（前置：`_internal/overflow` 缺 `renderItem`）；范围与 presets/footer 未开始 |
+| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置** ✅、**`multiple` 全链路** ✅（含 `tagRender` / `maxTagCount` / 删除 / `-multiple-input`）；范围与 presets/footer 未开始 |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 

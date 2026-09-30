@@ -76,6 +76,8 @@ import {
   type PropType,
   type VNodeChild,
 } from 'vue';
+import Overflow from '../../_internal/overflow';
+import type { CustomTagProps } from '../interface';
 import { useMaskInput } from './mask-input';
 import {
   getInputSize,
@@ -233,6 +235,35 @@ export const Selector = defineComponent({
     },
     onClear: { type: Function as PropType<() => void>, default: undefined },
     onSelectorClick: { type: Function as PropType<() => void>, default: undefined },
+
+    // ---------------------------------------------------- 多选模式（S5）
+    /**
+     * 多选（上游 `SingleSelector` 的 `multiple`）⇒ 触发元素从「输入框」换成
+     * **标签列表 + 一个 readonly 输入**（`MultipleDates.js`）。
+     *
+     * ⚠️ 多选时**不渲染 `-input` 包裹层** —— 结构变成
+     * `-selector` + `-multiple-input` + `-suffix` + `-clear` 直接挂在根下。
+     */
+    multiple: { type: Boolean, default: false },
+    /** 原始值（标签要拿它去删；`valueTexts` 只有文本）。仅多选用。 */
+    values: { type: Array as PropType<unknown[]>, default: undefined },
+    /** 自定义标签渲染（上游 `tagRender`）。 */
+    tagRender: {
+      type: Function as PropType<((props: CustomTagProps) => VNodeChild) | undefined>,
+      default: undefined,
+    },
+    /** 最多显示几个标签（`'responsive'` = 按宽度自适应）。 */
+    maxTagCount: {
+      type: [Number, String] as PropType<number | 'responsive' | undefined>,
+      default: undefined,
+    },
+    /** 标签的删除图标（默认 `×`，由调用方给已算好的节点）。 */
+    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    /** 删除一个标签（上游 `onMultipleRemove`；**是否走 `remove` 来源由调用方决定**）。 */
+    onMultipleRemove: {
+      type: Function as PropType<((value: unknown) => void) | undefined>,
+      default: undefined,
+    },
   },
   setup(props, { expose }) {
     const disabledPair = computed(() => toDisabledPair(props.disabled));
@@ -374,6 +405,96 @@ export const Selector = defineComponent({
       );
     };
 
+    /**
+     * 多选：标签列表 + readonly 输入（上游 `SingleSelector/MultipleDates.js` 77 行）。
+     *
+     * 结构（逐字）：
+     * ```
+     * <div class="${p}-selector">
+     *   <Overflow prefixCls="${p}-selection-overflow" data maxCount itemKey renderItem renderRest />
+     *   {!values.length && <span class="${p}-selection-placeholder">{placeholder}</span>}
+     * </div>
+     * <input class="${p}-multiple-input" value={texts.join(',')} readonly />
+     * ```
+     *
+     * ⚠️ 三处容易漏：
+     *   1. **标签的删除图标要 `onMouseDown: e => e.preventDefault()`** —— 否则点删除会让
+     *      输入框失焦（`MultipleDates.js:26-30`）；
+     *   2. **`title` 只在内容是字符串时给**（`typeof content === 'string' ? content : null`）；
+     *   3. `renderRest` 的文案是 **`+ N ...`**（带空格与省略号，rc 的 `defaultRenderRest`）。
+     */
+    const renderMultiple = (): VNodeChild => {
+      const selectionCls = `${props.prefixCls}-selection`;
+      const values = props.values ?? [];
+      const disabled = disabledPair.value[0];
+
+      const renderSelectionItem = (content: VNodeChild, onClose?: () => void): VNodeChild =>
+        h(
+          'span',
+          {
+            class: `${selectionCls}-item`,
+            // ⚠️ 上游只在内容是字符串时给 `title`（不是所有情况都给）
+            title: typeof content === 'string' ? content : null,
+          },
+          [
+            h('span', { class: `${selectionCls}-item-content` }, [content]),
+            !disabled && onClose
+              ? h(
+                  'span',
+                  {
+                    class: `${selectionCls}-item-remove`,
+                    onMousedown: (event: MouseEvent) => event.preventDefault(),
+                    onClick: onClose,
+                  },
+                  [props.removeIcon ?? '×'],
+                )
+              : null,
+          ],
+        );
+
+      const renderItem = (value: unknown, index: number): VNodeChild => {
+        const label = props.valueTexts[index] ?? '';
+        const closable = !disabled;
+        const onClose = (): void => {
+          if (!disabled) {
+            props.onMultipleRemove?.(value);
+          }
+        };
+        if (props.tagRender) {
+          return props.tagRender({
+            label,
+            value: value as never,
+            disabled: disabled === true,
+            closable,
+            onClose,
+          } as never);
+        }
+        return renderSelectionItem(label, onClose);
+      };
+
+      return h('div', { class: `${props.prefixCls}-selector` }, [
+        h(Overflow, {
+          prefixCls: `${selectionCls}-overflow`,
+          data: values,
+          itemKey: (_item: unknown, index: number) => index,
+          maxCount: props.maxTagCount,
+          renderItem: (item: unknown, info: { index: number }) => renderItem(item, info.index),
+          renderRest: (omitted: unknown[]) => `+ ${omitted.length} ...`,
+        }),
+        values.length === 0
+          ? h('span', { class: `${selectionCls}-placeholder` }, [props.placeholder as VNodeChild])
+          : null,
+      ]);
+    };
+
+    /** 多选：只读输入（只为表单 / 无障碍保留，视觉上由标签承担）。 */
+    const renderMultipleInput = (): VNodeChild =>
+      h('input', {
+        class: `${props.prefixCls}-multiple-input`,
+        value: props.valueTexts.join(','),
+        readOnly: true,
+      });
+
     const renderInput = (index: number): VNodeChild => {
       const isRange = props.range;
       const ph = Array.isArray(props.placeholder) ? props.placeholder[index] : props.placeholder;
@@ -462,7 +583,16 @@ export const Selector = defineComponent({
             style: props.rootStyle,
             onClick: () => props.onSelectorClick?.(),
           },
-          [renderPrefix(), renderInput(0)],
+          // 🚨 多选**不渲染 `-input` 包裹层**（上游 `SingleSelector` 的 `selectorNode` 分支）
+          props.multiple
+            ? [
+                renderPrefix(),
+                renderMultiple(),
+                renderMultipleInput(),
+                renderSuffix(),
+                renderClear(),
+              ]
+            : [renderPrefix(), renderInput(0)],
         );
       }
 

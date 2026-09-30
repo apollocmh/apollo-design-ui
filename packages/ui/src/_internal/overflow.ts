@@ -110,6 +110,25 @@ const Overflow = defineComponent({
       type: Function as PropType<(item: unknown, index: number) => VNodeChild>,
       default: undefined,
     },
+    /**
+     * **非 raw** 路径的项渲染（rc `Overflow.js` 的 `renderItem`）。
+     *
+     * ⚠️ 与 `renderRawItem` 的区别（rc 的两条路径，别混）：
+     *   - `renderRawItem`：调用方返回**整项**（menu 的 `li`），overflow **clone** 它并注入
+     *     样式/ref（`ul > li` 必须直接相邻）；
+     *   - `renderItem`：overflow 自己包一层 `<div class="${prefixCls}-item">`，
+     *     调用方只返回**内容**。
+     *
+     * 🚨 **第二参是对象 `{ index }`，不是数字**（rc `Item.js:39` 逐字：
+     * `renderItem(item, { index: order })`）—— 与 `renderRawItem(item, index)` 不同。
+     *
+     * 默认（不传）时 rc 是**恒等**（`item => item`）；本仓照抄。
+     * 2026-10-01 为 date-picker 的 `multiple` 标签补上（此前只有 raw 路径）。
+     */
+    renderItem: {
+      type: Function as PropType<(item: unknown, info: { index: number }) => VNodeChild>,
+      default: undefined,
+    },
     renderRest: {
       type: [Function, String] as PropType<((omitted: unknown[]) => VNodeChild) | string>,
       default: undefined,
@@ -314,7 +333,14 @@ const Overflow = defineComponent({
                 observeItem(key, el as HTMLElement | null);
               },
             },
-            String(item ?? ''),
+            // rc `Item.js:39`：`renderItem(item, { index: order })`（**对象**，不是数字）；
+            // 不传 `renderItem` 时 rc 的默认是**恒等**（`item => item`）。
+            // ⚠️ 2026-10-01 前这里写的是 `String(item ?? '')` —— 与 rc 的默认不等价
+            //    （对象 item 会被字符串化成 `[object Object]`）；该分支此前**无消费者**，
+            //    故改动无可观测影响。
+            [props.renderItem ? props.renderItem(item, { index }) : (item as VNodeChild)].filter(
+              (child) => child !== null && child !== undefined,
+            ),
           );
         }
         nodes.push(node);

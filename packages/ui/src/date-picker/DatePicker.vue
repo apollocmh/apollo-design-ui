@@ -49,11 +49,12 @@
  * - **`onSelectorFocus` 的 `inherit: true`**（`triggerOpen(true, { inherit: true })`）
  *   在本仓的 `Trigger` 上没有对应选项 ⇒ 当前等价于普通打开。
  */
-import { CloseCircleFilled } from '@apollo-design/icons';
+import { CloseCircleFilled, CloseOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import {
   formatValue,
   type InternalMode,
+  isSame,
   type PanelDateType,
   PickerPanel,
   toggleDates,
@@ -738,6 +739,8 @@ const rootClass = computed(() =>
     // 🚨 rc 的 `Selector` 状态类：`disabled` 时根类名是
     //    `apollo-picker apollo-picker-disabled apollo-picker-outlined`（L4 实测）
     disabled: mergedDisabled.value,
+    // S5：多选（`-multiple`，rc 的 5 个状态类里**排第 1**）
+    multiple: props.multiple === true,
     // rc 的 `-invalid` 类（**键入非法**，与 antd 的 `-status-error` 是两回事）
     invalid: invalid.value,
     // S4：`-focused`（上游 `useFocusEvents` 的 `focusedIndex !== null`）
@@ -860,8 +863,8 @@ const panelProps = computed(() => ({
   /**
    * 面板粒度变化（上游 `SinglePicker.js:214-222` 的 `triggerModeChange`）。
    *
-   * ⚠️ 本仓只**跟随**（`props.mode` 仍是面板自管），见 `mergedMode` 的说明。
-   * 记录它是为了让 `panelFinished` 判得准 —— 在年/十年面板里点一格**不该**提交。
+   * 面板收到的是**受控**的 `mode`（`mergedMode`）⇒ 面板自己的内部状态不生效，
+   * 粒度变化**必须**从这里回灌（见 `mergedMode` 的说明）。
    */
   onPanelChange: (viewDate: PanelDateType | undefined, mode: DatePickerPanelMode) => {
     if (props.mode === undefined) {
@@ -904,6 +907,41 @@ const selectorProps = computed(() => ({
   classNames: semantic.classNames.value,
   styles: semantic.styles.value,
   invalid: invalid.value,
+  // ---------------------------------------------------------- 多选（S5）
+  multiple: props.multiple === true,
+  /** 原始值（标签要拿它去删；`valueTexts` 只有文本）。 */
+  values: inner.calendarValue.value as unknown[],
+  tagRender: props.tagRender,
+  maxTagCount: props.maxTagCount,
+  /**
+   * 标签的删除图标。
+   *
+   * ⚠️ 上游 `MultipleDates.js` 自己的兜底是字符串 `'×'`，但 **antd 总会传一个** ——
+   * `Select` 的 `useIcons` 的默认是 **`CloseOutlined`** ⇒ 有效默认是图标而不是 `'×'`。
+   * 本仓照 antd 的有效默认。
+   */
+  removeIcon: props.removeIcon ?? h(CloseOutlined),
+  /**
+   * 删除一个标签（上游 `SingleSelector.onMultipleRemove`，逐字）。
+   *
+   * ```js
+   * const nextValues = value.filter(ori => ori && !isSame(generateConfig, locale, ori, date, internalPicker));
+   * onChange(nextValues, open ? 'input' : 'remove');
+   * ```
+   *
+   * 🚨 **来源随浮层开合而不同**：开着 ⇒ `'input'`（只是临时改动，等确认）；
+   * 关着 ⇒ `'remove'`（**最终**提交）。这直接改变状态机解析出的 action
+   * （`'remove'` 是唯一「即使不允许为空也要提交」的来源）。
+   * ⚠️ 判等粒度是 **`internalMode`**（组件粒度），不是面板当前粒度。
+   */
+  onMultipleRemove: (value: unknown) => {
+    const nextValues = inner.calendarValue.value.filter(
+      (date) =>
+        date &&
+        !isSame(dayjsConfig, filledLang.value, date, value as DatePickerDate, internalMode.value),
+    );
+    valueChange.triggerChange(0, mergedOpen.value ? 'input' : 'remove', nextValues);
+  },
   // ---------------------------------------------------------- 掩码模式（S3）
   /** 归一后的掩码格式串（`format.type === 'mask'` 时非空）。 */
   maskFormat: mergedFormat.value.maskFormat ?? undefined,
