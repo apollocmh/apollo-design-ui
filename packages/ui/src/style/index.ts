@@ -40,6 +40,7 @@ import { genCarouselStyle } from '../carousel/style';
 import { genCascaderStyle } from '../cascader/style';
 import { genCheckboxStyle } from '../checkbox/style';
 import { genCollapseStyle } from '../collapse/style';
+import { genDatePickerStyle } from '../date-picker/style';
 import { genDescriptionsStyle } from '../descriptions/style';
 import { genDividerStyle } from '../divider/style';
 import { genDrawerStyle } from '../drawer/style';
@@ -116,6 +117,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },
   { name: 'collapse', gen: genCollapseStyle },
+  { name: 'date-picker', gen: genDatePickerStyle },
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },

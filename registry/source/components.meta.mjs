@@ -334,7 +334,12 @@ export const COMPONENTS = [
       '**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。' +
       '⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）' +
       '+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。' +
-      '剩 **G9 L6 视觉**（未开始）与 G12/G13/G14。',
+      '剩 **G9 L6 视觉**（**已跑通，未全绿**：`variants` 3/3 exact、其余 18 组 0.12%~0.57%；' +
+      '首轮 18 红 3.51% 的根因 `-css-var` 漏挂**已修** —— PITFALLS 248；' +
+      '剩「缺 `Today` 页脚」= S5 的 presets/footer + 「面板导航图标偏细」= `@apollo-design/picker` 侧）' +
+      '与 G12/G13/G14。' +
+      '⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、' +
+      '`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。',
   },
   {
     name: 'time-picker',

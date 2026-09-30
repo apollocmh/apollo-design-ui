@@ -8,6 +8,7 @@
  * `@apollo-design/ui` 走的是已构建好的 `dist/index.mjs`。
  */
 
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +16,26 @@ import { build } from 'vite';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const RENDER_DIR = path.join(HERE, 'render');
+const ROOT = path.resolve(HERE, '../..');
+
+const require = createRequire(import.meta.url);
+
+/**
+ * `dayjs` 的解析别名。
+ *
+ * 🚨 **根 `node_modules` 里没有 `dayjs`** —— pnpm 只把它放在 `.pnpm/node_modules` 下
+ * （它是 `antd` 与 `packages/*` 的依赖，没有被提升到根）。而**用例文件**在
+ * `tests/visual/render/cases/` 下，Node 的解析会一路走到根 `node_modules/dayjs`（不存在）
+ * ⇒ `import dayjs from 'dayjs'` 直接构建失败。
+ *
+ * ⚠️ 与 `shared.mjs` 里 `@apollo-design/locale` 那条注释同源的问题
+ * （用例文件解析不到 workspace 包的依赖）。这里从 **`packages/ui`** 的位置解析
+ * —— 它一定依赖 `dayjs`（`picker` 包的 peer），且两侧用**同一份** dayjs，
+ * 让「日期字面量」这件事在两侧完全一致。
+ */
+const DAYJS_DIR = path.dirname(
+  require.resolve('dayjs/package.json', { paths: [path.join(ROOT, 'packages/ui')] }),
+);
 
 /**
  * 打包一侧。
@@ -31,6 +52,8 @@ export async function buildSide(side, outDir) {
     // 必须是相对 base：产物放在 `.artifacts/<side>/` 子目录下由静态服务器 serve，
     // 绝对路径 `/assets/x.js` 会被解析到服务器根，直接 404。
     base: './',
+    // 见 `DAYJS_DIR` 的说明：用例文件从根 `node_modules` 解析不到 dayjs
+    resolve: { alias: { dayjs: DAYJS_DIR } },
     // React 侧用 JSX automatic runtime（React 19 不再需要手写 import React）
     esbuild: side === 'react' ? { jsx: 'automatic' } : undefined,
     build: {

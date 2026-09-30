@@ -771,6 +771,23 @@ const placeholder = computed(() =>
 const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =>
   typeof limit === 'function' ? (limit({}) as PanelDateType) : (limit as PanelDateType | undefined);
 
+/**
+ * `-css-var` 类（+ 字面量 `css-var-root`）。
+ *
+ * 🚨 **顺序对齐 antd 的实测基线**（`tests/compat/baselines/date-picker.dom.json`）：
+ * ```
+ * apollo-picker apollo-picker-outlined css-dev-only-do-not-override-1v6lqee css-var-root apollo-picker-css-var
+ * ```
+ * ⇒ `css-var-root` 在 **前**、`{prefixCls}-css-var` 在 **后**
+ * （本仓没有 hashId，那一段按「无 cssinjs」的既定差异省略）。
+ *
+ * 🚨 **两个出口都要挂**（根 + 浮层）：浮层走 Portal，不在根的子树里 ⇒
+ * 只挂根的话浮层里 `var(--apollo-date-picker-*)` 全部静默回退
+ * （症状：面板宽度 calc 非法 ⇒ 宽度被丢弃 ⇒ 面板铺满容器）。
+ * 见 `style/index.ts` 的 `genDatePickerStyle` 与 PITFALLS 9 / D95。
+ */
+const cssVarClassName = computed(() => `css-var-root ${prefixCls.value}-css-var`);
+
 const rootClass = computed(() =>
   getRootClassNames({
     prefixCls: prefixCls.value,
@@ -792,6 +809,8 @@ const rootClass = computed(() =>
     compactItemClassnames: compactItemClassnames.value,
     contextClassName: pickerContext.className,
     className: props.className,
+    // 🚨 在 `className` 之后、`rootClassName` 之前（上游 `clsx(hashId, cssVarCls, rootCls, rootClassName)`）
+    cssVarClassName: cssVarClassName.value,
     rootClassName: props.rootClassName,
   }),
 );
@@ -807,14 +826,16 @@ const zIndex = useZIndex('DatePicker', () => {
   return rootStyle?.zIndex as number | undefined;
 });
 
-const popupClassNames = computed(() =>
-  getDropdownClassName({
+const popupClassNames = computed(() => [
+  ...getDropdownClassName({
     prefixCls: prefixCls.value,
     range: false,
     rtl: rtl.value,
     popupClassName: props.popupClassName ?? props.dropdownClassName,
   }),
-);
+  // 🚨 浮层也要拿组件变量（Portal 到 body ⇒ 不在根的子树里），见 `cssVarClassName`
+  cssVarClassName.value,
+]);
 
 const transitionName = computed(() => getTransitionName(rootPrefixCls.value, props.transitionName));
 

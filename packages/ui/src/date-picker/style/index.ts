@@ -392,6 +392,13 @@ export const DATE_PICKER_RULES = `
 /** 生成完整样式：token 声明块 + 规则体。 */
 export function genDatePickerStyle(rootPrefixCls: string): string {
   const decls = genTokenDecls(rootPrefixCls).join('');
-  // ⚠️ 根类是 `{rootPrefixCls}-picker`（**不是** `-date-picker`），见文件头第 1 条
-  return `.${rootPrefixCls}-picker{${decls}}\n\n${DATE_PICKER_RULES}`;
+  // ⚠️ 根类是 `{rootPrefixCls}-picker`（**不是** `-date-picker`），见文件头第 1 条。
+  //
+  // 🚨 **声明块必须同时落在「根」与「`-css-var` 类」上**（2026-10-01 L6 抓到的真 bug）：
+  //    浮层（`.apollo-picker-dropdown`）走 Portal，**不在** `.apollo-picker` 子树里
+  //    ⇒ 只挂根的话，浮层里的 `var(--apollo-date-picker-*)` 全部**静默回退**。
+  //    症状：面板宽度 `width: calc(var(--apollo-date-picker-cell-width) * 7 + …)`
+  //    的 calc 非法 ⇒ `width` 整条被丢弃 ⇒ **面板铺满容器**（L6 的 21 组里 18 组红）。
+  //    与 `select` 的 `.apollo-select,.apollo-select-css-var{…}` 同判。
+  return `.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${DATE_PICKER_RULES}`;
 }

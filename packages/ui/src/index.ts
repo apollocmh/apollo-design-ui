@@ -728,6 +728,73 @@ export type {
 } from './collapse';
 export { Collapse, CollapsePanel } from './collapse';
 export { genCollapseStyle, genTokenDecls as genCollapseTokenDecls } from './collapse/style';
+// ⚠️ **刻意不导出 `CustomTagProps`**：
+//   1. **名字与 `select` 撞车**（本文件已有 `export type { CustomTagProps } from './select'`）
+//      —— 两者是**不同的类型**（date-picker 的是 rc-picker 的 `{label: VNodeChild; value:
+//      DatePickerDate; …}`，select 的是 rc-select 的 `{label?: unknown; isMaxTag; …}`），
+//      同时导出会让 `vue-tsc` 报 `TS2300 Duplicate identifier`（2026-10-01 实测）。
+//   2. **与上游一致**：antd 的 `es/date-picker/index.d.ts` **不导出**它
+//      （它只是 rc-picker `SinglePicker.d.ts` 的内部类型）。
+//   消费方要从 `DatePickerProps['tagRender']` 的形参推断，或从 `date-picker` 子模块取。
+export type {
+  CellRender,
+  CellRenderInfo,
+  CustomFormat,
+  DatePickerDate,
+  DatePickerDirection,
+  DatePickerEmits,
+  DatePickerExpose,
+  DatePickerFormat,
+  DatePickerGenerateConfig,
+  DatePickerMode,
+  DatePickerPanelMode,
+  DatePickerPlacement,
+  DatePickerProps,
+  DatePickerSemanticClassNames,
+  DatePickerSemanticStyles,
+  DatePickerSemanticValue,
+  DatePickerSize,
+  DatePickerSlots,
+  DatePickerStatus,
+  DatePickerVariant,
+  DisabledDate,
+  DisabledTimes,
+  FormatType,
+  LimitDate,
+  MaskFormatConfig,
+  NoUndefinedRangeValue,
+  OpenConfig,
+  PickerCommonProps,
+  PickerPopupSemanticClassNames,
+  PickerPopupSemanticStyles,
+  PurePanelProps,
+  PureRangePanelProps,
+  RangePickerEmits,
+  RangePickerExpose,
+  RangePickerProps,
+  RangeTimeProps,
+  RangeValue,
+  RangeValueDate,
+  SharedTimeProps,
+  SingleValue,
+  ValueDate,
+} from './date-picker';
+// ---------------------------------------------------------------------------
+// DatePicker —— 日期选择器（单值壳；RangePicker / WeekPicker 属 S5，尚未落地）
+//
+// ⚠️ 类名前缀是 **`apollo-picker`**（上游 `getPrefixCls('picker', …)` 传的是字面量
+//    `'picker'`），而 CSS 变量是 `--apollo-date-picker-*` —— **两者不同名**，
+//    见 `date-picker/README.md` 的文件头。
+// ⚠️ `DatePicker.RangePicker` / `.WeekPicker` 这两个**静态成员**还没有
+//    （范围版未实现）⇒ 目前只有单值形态。
+// ---------------------------------------------------------------------------
+export { DatePicker } from './date-picker';
+export {
+  genDatePickerStyle,
+  genTokenDecls as genDatePickerTokenDecls,
+} from './date-picker/style';
+export type { ComponentToken as DatePickerComponentToken } from './date-picker/style/token';
+export { prepareComponentToken as prepareDatePickerComponentToken } from './date-picker/style/token';
 // ---------------------------------------------------------------------------
 // Descriptions —— 描述列表（复合组件：Descriptions.Item）
 //

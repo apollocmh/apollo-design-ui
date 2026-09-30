@@ -92,6 +92,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
 | S4 | 键盘字段导航与 `-input-active` 分段 | 🟡 **单值部分完成**：调度（随 S2）+ `-focused` + 确认离开才关浮层。`-input-active` 与 `useFocusLock` 是**范围专属**（上游 `SinglePicker` 不传 `activeIndex`；单值下 `forceFocus` 恒 false）⇒ 随 S5 的 RangePicker 一起做 |
 | S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置** ✅、**`multiple` 全链路** ✅（含 `tagRender` / `maxTagCount` / 删除 / `-multiple-input`）；范围与 presets/footer 未开始 |
+| **G9 L6 视觉** | **已跑通，未全绿**：`variants` **3/3 exact**；其余 18 组 **0.12%~0.57%**（首轮 18 红 3.51% 的根因 `-css-var` 漏挂**已修**）。剩两项见 §5.5(f) —— **修完之前 G9 不能判 done** |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 
@@ -221,7 +222,31 @@ useLayoutEffect(() => {
 `innerMode = mergedPicker`。用例 `s5-mode.test.ts` **5 条**（含「重置不发事件」与
 「受控 `mode` 不重置」两条反向哨兵）。
 
-#### (e) 浮层侧的焦点事件未接
+#### (e) ✅ **已解决**（2026-10-01，G9 L6 首轮抓到）：组件变量声明块**漏挂浮层根**
+
+**症状**：L6 的 21 组里 **18 组红**（0.42%~3.51%）；两侧源图对比 —— React 面板 ~250px、
+**Vue 面板铺满 1440px**。
+
+**根因**：面板宽度规则 `.apollo-picker-dropdown .apollo-picker-date-panel{width:calc(var(--apollo-date-picker-cell-width) * 7 + …)}`
+里的变量声明块**只挂在 `.apollo-picker`**，而浮层走 **Portal 到 body**、**不在它的子树里**
+⇒ `var()` 取不到值 ⇒ `calc` **语法非法** ⇒ 整条 `width` 被**静默丢弃** ⇒ 面板铺满容器。
+
+**修法**（与 `select` 同判）：声明块挂 `.apollo-picker,.apollo-picker-css-var` 两个选择器 +
+`.vue` 把 `css-var-root` / `-css-var` 同时加到**根**与**浮层**（类序对齐 antd 实测基线）。
+⇒ 差异率 3.51% → **0.25%**。→ PITFALLS **248**（含「为什么前三层都抓不到」）
+
+#### (f) ⏳ G9 L6 剩余的两项差异（**已定位，未修**）
+
+| # | 现象 | 归属 |
+|---|---|---|
+| 1 | 面板**缺 `Today` 页脚** | **S5 的 presets/footer** —— 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里没有 `showToday`/`-footer`）⇒ 属「先要有浮层内容容器」那一批。**不是 bug** |
+| 2 | 面板表头的**导航图标偏细偏浅** | **`@apollo-design/picker`（面板侧）** —— 放大对拍：React 是 2px 描边、Vue 约 1px 且更浅 ⇒ 面板的 DOM/规则匹配问题，不在本组件的职责面 |
+
+⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确不得放宽，
+**没有豁免机制**）⇒ 这两项修完之前 **G9 不能判 done**。
+⚠️ `test:visual` **不在** `verify:full` 里 ⇒ 它红了不会让日常门禁红，必须显式跑。
+
+#### (g) 浮层侧的焦点事件未接
 
 上游把 `onFocus`/`onBlur` 挂在**浮层容器**上（`SinglePicker.js:355-361` 的
 `onPanelFocus` / `onBlur`），用于两支行为：
@@ -235,7 +260,7 @@ useLayoutEffect(() => {
 `relatedTarget` 在浮层里 ⇒ 我们不清理 `focusedIndex`。但若焦点是**从外部**进入面板的
 （如 Tab 进面板），`-focused` 就不会置位 —— 属边角，登记待补。
 
-#### (d) `theme.test.ts` 实际 **30 条**（README §4 与 PLAN G3 写的是 22 条）
+#### (h) `theme.test.ts` 实际 **30 条**（README §4 与 PLAN G3 写的是 22 条）
 
 `pnpm vitest run --project theme <date-picker>` 实测 `30 tests`。
 §4 / PLAN 里的「22 条」是 G3 当时的数字，后续扩过但文档没跟。以**实测**为准。

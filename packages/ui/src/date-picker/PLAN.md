@@ -111,7 +111,9 @@
       后缀图标 `role=img` + `aria-label=calendar` + `aria-hidden=true` · `disabled` 时不渲染清除按钮。
       ⚠️ 范围版（含上游两条专门的 **separator a11y 测试**：默认带 `aria-hidden`、自定义**去掉**它）
       留到 **S5**；浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
-- [ ] G9 L6 视觉 —— **未开始**。方案与前置发现见下节「G9 L6 的落地方案」。
+- [~] G9 L6 视觉 —— **已跑通、抓到并修掉一个真 bug**，但**尚未全绿**（详见下节）。
+      当前：**3 / 21 exact**（`variants` 三档全 0.000%），其余 18 组 **0.12%~0.57%**（block-diff）。
+      🚨 首轮 18 组是 0.42%~3.51%（**面板铺满容器**）⇒ 修掉 `-css-var` 漏挂后降到 0.12%~0.57%。
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
       `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
       （16 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
@@ -253,52 +255,71 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 ⇒ 数量完全相同 ⇒ 是**既有的** SFC 解析噪音（PITFALLS 73），与本组件无关。
 **判读门禁时看「Tests passed」与「含本包的错误数」，不要只看退出码。**
 
-## G9 L6 的落地方案（含前置发现，尚未开始）
+## G9 L6 的落地方案（**已落地，未全绿** —— 2026-10-01）
 
-### 用例文件（照 `cascader` 的两侧配对写法）
+### 已完成
 
-| 文件 | 内容 |
+| 项 | 内容 |
 |---|---|
-| `tests/visual/render/cases/vue/date-picker.js` | Vue 侧（`@apollo-design/ui`） |
-| `tests/visual/render/cases/react/date-picker.jsx` | React 侧（antd 6.6.4），**逐条对应** |
+| 用例文件 | `tests/visual/render/cases/vue/date-picker.js` + `react/date-picker.jsx`（**逐条对应**，7 个 variant） |
+| matrix | `date-picker` 条目（7 × 3 viewport = **21 张**） |
+| 共享常量 | `cases/shared.mjs` 的 DatePicker 段（固定日期字面量 / 容器样式 / `variants` 列表） |
+| harness | `tests/visual/build.mjs` 加了 **`dayjs` 解析别名**（根 `node_modules` 里没有它，见那边的注释） |
+| React 基线 | 21 张已生成（`baselines/react/date-picker/`） |
 
-### 🚨 浮层怎么办 —— 与 cascader 同一套解法
+### 🚨 浮层怎么进截图区域 —— 与 cascader 的解法**不同**
 
-浮层走 Portal ⇒ 渲染到 `document.body`，**不在用例的截图区域内**。
-`cascader.jsx` 的解法是「用 `Cascader.Panel` **直接渲染面板**」（不打开浮层）。
-本组件的对应物是：
+`#stage` 是截图目标，而浮层默认 **portal 到 `document.body`** ⇒ 拍不到。
+cascader 的解法是「用公开的 `Cascader.Panel` 直渲面板」；**date-picker 没有这样的公开出口**，
+所以这里换成：**两侧都传 `getPopupContainer` 指向用例自己的盒子**（盒子 `position: relative`）。
 
-| 侧 | 组件 | 出处 |
-|---|---|---|
-| React | `DatePicker._InternalPanelDoNotUseOrYouWillBeFired` | antd 的 PurePanel（**名字带「别用」⇒ 保留原名**） |
-| Vue | `PickerPanel` | `@apollo-design/picker`（裁决 `picker-panel-ownership` = B） |
+⚠️ **不用**上游的 `DatePicker._InternalPanelDoNotUseOrYouWillBeFired`（`genPurePanel`）：
+它的 holder 用 **`paddingBottom: <实测浮层高>`** 撑高（`_util/PurePanel.js:78-82`），
+Vue 侧撑不出同一个高度 ⇒ 两侧 `#stage` 尺寸不等 ⇒ pixelmatch 直接判尺寸不匹配。
+两侧**手写同一个 holder** 才能让输入完全对称（与 cascader「把浮层进画面这件事在用例层解决」同思路）。
 
-⚠️ **前置发现（2026-09-30）**：`PickerPanel` **不在 `packages/ui/src/index.ts` 的导出面里**。
-⇒ 视觉用例要么从 `@apollo-design/picker` 直接 import（需确认 `tests/visual` 的构建能解析它），
-要么把 `PickerPanel` 从 ui 再导出一次（**那是对外 API 面的变更，要先确认是否该导**）。
-**下一轮开工第一件事就是定这一条。**
+### 首轮结果与**修掉的真 bug**
 
-⚠️ 另一条已记录的坑（`cascader.jsx` 的注释）：**不要用 `_Internal*Panel*` 当作「面板」的
-React 侧对照** —— 它是 `genPurePanel(Component)`（**完整外壳 + 浮层塞进 holder div**），
-与 Vue 侧的裸面板不是同一个东西，会比出结构性差异。
-**但 date-picker 的情况相反**：我们**没有**一个「只有面板」的 antd 公开出口，
-`_InternalPanelDoNotUseOrYouWillBeFired` 就是唯一选择 ⇒ 要逐条核对它的 DOM 是否与
-`PickerPanel` 同构（这是 L6 第一轮的主要风险）。
+首轮 **18 / 21 红**（0.42%~3.51%），两侧源图对比：React 面板 ~250px、**Vue 面板铺满 1440px**。
 
-### 字体必须钉具体值
+根因：`--apollo-date-picker-*` 的声明块只挂在 `.apollo-picker`，而浮层走 Portal **不在它的子树里**
+⇒ `calc(var(--apollo-date-picker-cell-width) * 7 + …)` **非法** ⇒ `width` 整条被丢弃 ⇒ 面板铺满。
+（就是 PITFALLS 9 / D95 那件事，具体后果比「回退」更隐蔽。）→ PITFALLS **248**
 
-date-picker 的**触发器**在 antd 里有 `font-family`（`input` 族），但**面板**是 `resetFont: false`
-⇒ 靠继承。照 `cascader.js` 的做法在用例内钉 `CONTEXT_FONT`，**不动全局 BASE_CSS**
+修法（与 `select` 同判）：声明块挂 `.apollo-picker,.apollo-picker-css-var` 两个选择器 +
+`.vue` 把 `css-var-root` / `-css-var` 同时加到**根**与**浮层**。
+⇒ 差异率 3.51% → **0.25%**。
+
+### ⏳ 剩余 18 组的差异（已定位到两类，**都还没修**）
+
+| # | 现象 | 归属 | 说明 |
+|---|---|---|---|
+| 1 | **缺 `Today` 页脚** | **S5 的 presets/footer** | 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里**没有** `showToday`/`-footer`）⇒ 属「先要有浮层内容容器」那一批。**不是 bug，是已知范围** |
+| 2 | **面板表头的导航图标偏细偏浅** | **`@apollo-design/picker`（面板侧）** | 已放大对拍到：React 是 2px 描边、Vue 约 1px 且更浅 ⇒ 面板的 DOM/规则匹配问题，**不在 date-picker 的职责面** |
+
+⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确「不得放宽」，
+**没有豁免机制**）⇒ 这两项修完之前 **G9 不能判 done**，组件也不能 `completed`。
+
+⚠️ **与 G12 的关系**：`test:visual` **不在** `verify:full`（= registry:check && lint && test && test:build）
+⇒ L6 的红**不会**让日常门禁红，必须显式跑 `node tests/visual/run.mjs --component date-picker`。
+
+### 两条仍然有效的约定
+
+**字体必须钉具体值**：date-picker 的**触发器**在 antd 里有 `font-family`（`input` 族），
+但**面板**是 `resetFont: false` ⇒ 靠继承。照 `cascader.js` 的做法在用例内钉
+`DATE_PICKER_CONTEXT_FONT`，**不动全局 BASE_CSS**
 （裁决见 `docs/COMPONENT-CHECKLIST.md` 第 15 条 / COMPATIBILITY.md D114）。
-
-### 预期用例（~15 个 × 3 viewport）
-
-触发器：basic / value / size-small / size-large / variant-filled / variant-borderless /
-variant-underlined / status-error / status-warning / disabled / allow-clear-false / prefix。
-面板：date / time / datetime（`showTime`）/ month / year / multiple。
 
 ⚠️ 比对不过时**先怀疑实现**（PITFALLS 170 / D94：`style` 里的裸数字被 Vue 静默丢弃、
 以及 `toCssSize()` 漏用）—— tabs 的第一次 L6 就是「指示条数值没带单位」差 0.03%~0.12%。
+**本轮的首轮 18 红也是实现问题**（`-css-var` 漏挂），不是夹具问题 —— 这条经验再次成立。
+
+⚠️ **已废弃的两条旧方案**（2026-09-30 写的，实测后推翻，留作记录）：
+1. 原计划 React 侧用 `DatePicker._InternalPanelDoNotUseOrYouWillBeFired`、
+   Vue 侧用 `PickerPanel` 直渲 —— **行不通**：前者的 holder 用实测高度撑高，
+   两侧 `#stage` 尺寸不等（详见上面的「浮层怎么进截图区域」）。
+2. 原计划把 `PickerPanel` 从 `ui` 再导出 —— **不需要**：改用 `getPopupContainer` 后
+   根本不必单独渲染面板。
 
 ## S2 的落地方案（跨包欠账已还清，键入解析待做）
 

@@ -93,6 +93,13 @@ export interface RootClassOptions {
   contextClassName?: string;
   /** 组件自己的 `className` prop。 */
   className?: string;
+  /**
+   * `-css-var` 类（**必须**，见 `style/index.ts` 的 `genDatePickerStyle` 说明）。
+   *
+   * 上游是 `clsx(hashId, cssVarCls, rootCls, rootClassName)` ⇒ 位置在
+   * **`className` 之后、`rootClassName` 之前**。本仓没有 hashId，取 `cssVarCls` + `rootCls`。
+   */
+  cssVarClassName?: string;
   /** `rootClassName`（与 `className` 并列，上游有两个入口）。 */
   rootClassName?: string;
 }
@@ -151,6 +158,12 @@ export function getRootClassNames(options: RootClassOptions): string[] {
   }
   if (options.className) {
     classes.push(options.className);
+  }
+  // 🚨 `-css-var` 类在 `className` 之后、`rootClassName` 之前（上游 `clsx(hashId, cssVarCls,
+  //    rootCls, rootClassName)`）。**不是装饰**：浮层里 `var(--apollo-date-picker-*)`
+  //    靠它才拿得到值（见 `style/index.ts` 的说明）。
+  if (options.cssVarClassName) {
+    classes.push(options.cssVarClassName);
   }
   if (options.rootClassName) {
     classes.push(options.rootClassName);

@@ -606,6 +606,28 @@ export const COMPONENTS = {
       'drag', // Dragger：虚线框 + drag-container + 列表
     ],
   },
+  'date-picker': {
+    // 7 个 variant × 3 个 viewport = 21 张
+    //
+    // ⚠️ 与其它浮层组件的**关键差异**：这里把浮层**放进截图区域**
+    //    （两侧都传 `getPopupContainer` 指向用例盒子 + 盒子 `position: relative`），
+    //    因为 date-picker 的核心视觉面就是面板 —— 只拍触发器等于没测。
+    //    为什么不用 antd 的 `_InternalPanelDoNotUseOrYouWillBeFired` 见
+    //    `cases/vue/date-picker.js` 的文件头（它的 holder 用实测高度撑高，
+    //    Vue 侧撑不出同一个高度 ⇒ 两侧 `#stage` 尺寸不等）。
+    //
+    // ⚠️ 日期一律用**固定字面量** + `defaultPickerValue` 锚定月份
+    //    （用 `dayjs()` 会让截图随运行日变化）。
+    variants: [
+      'basic', // 空值：触发框 + 日期面板（含「今天」/选中态）
+      'value', // 有值：格式化后的字段文本 + 面板选中态
+      'datetime', // showTime：日期 + 三段时间列 + 确定按钮（needConfirm）
+      'month', // picker="month"：月面板
+      'year', // picker="year"：年面板
+      'multiple', // 多选：标签列表（Overflow）+ 多选面板
+      'variants', // 变体 / 尺寸 / 状态 / 禁用 / 前后缀（**不开浮层**）
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */

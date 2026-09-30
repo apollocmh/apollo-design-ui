@@ -687,3 +687,98 @@ export const TYPOGRAPHY_SEMANTIC_STYLES = {
 };
 
 /** Typography 语义化用例的配套 CSS 已并入上面的 `SEMANTIC_INJECT_CSS`。 */
+
+// ===========================================================================
+// DatePicker
+// ===========================================================================
+
+/**
+ * ⚠️ 上下文的字体必须钉成具体值 —— 理由与 `DIVIDER_CONTEXT_FONT` 完全同源。
+ *
+ * date-picker 的**触发器**根上有 `font-family`（上游 `resetComponent`，本仓照搬了），
+ * 但**面板**是 `resetFont: false`（`style/panel.js`）⇒ 面板里的文字**继承页面**：
+ *
+ *   React 页（`antd/dist/reset.css`）→ `html{font-family:sans-serif}`（泛型）
+ *   Vue 页（本仓 base）              → `html{font-family:var(--apollo-font-family)}`（具体栈）
+ *
+ * 两者度量接近但字形不同 ⇒ 不钉的话差异全落在面板文字上，看起来像「面板画错了」。
+ * 裁决同 `docs/COMPONENT-CHECKLIST.md` 第 15 条：**用例内钉字体，不动全局 BASE_CSS**。
+ */
+const DATE_PICKER_CONTEXT_FONT = 'sans-serif';
+
+/**
+ * 用例容器。
+ *
+ * 🚨 **`position: relative` 是必须的**：浮层走 `getPopupContainer` 落进这个盒子
+ * （见两侧用例的说明）—— 没有它浮层会以更外层为包含块，坐标跑飞。
+ * `minHeight` 由各用例通过第二参覆盖（面板要占位）。
+ */
+export const DATE_PICKER_BOX_STYLE = {
+  position: 'relative',
+  padding: '24px',
+  fontFamily: DATE_PICKER_CONTEXT_FONT,
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/**
+ * 两侧共用的**固定**日期字面量。
+ *
+ * ⚠️ 一律用字面量、**不用 `dayjs()`** —— 否则截图随运行日变化，基线第二天就红。
+ */
+export const DATE_PICKER_VALUE = '2026-09-30';
+export const DATE_PICKER_MULTIPLE = ['2026-09-30', '2026-10-01'];
+
+/** 面板锚定的日期（`defaultPickerValue`）—— 让面板显示的月份与运行时刻无关。 */
+export const DATE_PICKER_PANEL_ANCHOR = '2026-09-30';
+
+/** 默认字段格式（= 语言包补齐层的兜底值，见 `hooks/picker-filled.ts`）。 */
+export const DATE_PICKER_FORMAT = 'YYYY-MM-DD';
+
+/** `showTime` 用例的字段格式（三段全开）。 */
+export const DATE_PICKER_DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+/**
+ * `variants` 用例：一排触发器的说明文字 + props（两侧逐字相同）。
+ *
+ * ⚠️ **竖排**（`DATE_PICKER_VARIANTS_STYLE` 用 `flex-direction: column`）而不是横排：
+ * 横排在窄视口会换行，而两侧的**换行位置**取决于每个触发器算出来的宽度 ——
+ * 一旦有细微差异就会连锁改变布局，让「一个组件错了」变成「整页都错」。
+ */
+export const DATE_PICKER_VARIANTS = [
+  { label: 'outlined', props: {} },
+  { label: 'filled', props: { variant: 'filled' } },
+  { label: 'borderless', props: { variant: 'borderless' } },
+  { label: 'underlined', props: { variant: 'underlined' } },
+  { label: 'small', props: { size: 'small' } },
+  { label: 'large', props: { size: 'large' } },
+  { label: 'status-error', props: { status: 'error' } },
+  { label: 'status-warning', props: { status: 'warning' } },
+  { label: 'disabled', props: { disabled: true } },
+  { label: 'allow-clear-false', props: { allowClear: false } },
+  { label: 'prefix', props: { prefix: '¥' } },
+  { label: 'no-suffix', props: { suffixIcon: false } },
+];
+
+/** `variants` 用例的竖排容器。 */
+export const DATE_PICKER_VARIANTS_STYLE = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  alignItems: 'flex-start',
+};
+
+/** `variants` 用例每一行的容器（标签 + 触发器）。 */
+export const DATE_PICKER_VARIANT_ROW_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+};
+
+/** `variants` 用例的标签样式 —— 宽度写死，否则两侧的文字度量差异会挪动触发器的位置。 */
+export const DATE_PICKER_VARIANT_LABEL_STYLE = {
+  width: '140px',
+  flex: 'none',
+  color: 'rgba(0, 0, 0, 0.65)',
+};

@@ -9,7 +9,7 @@
 
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import updateLocale from 'dayjs/plugin/updateLocale.js';
 import { describe, expect, it } from 'vitest';
 import 'dayjs/locale/zh-cn';
 // ⚠️ 必须再加载一个**不在 localeMap 里**的 locale（fr_FR ⇒ 'fr'）：

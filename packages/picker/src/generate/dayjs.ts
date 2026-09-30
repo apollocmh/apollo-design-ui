@@ -10,12 +10,19 @@
 
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import advancedFormat from 'dayjs/plugin/advancedFormat';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import localeData from 'dayjs/plugin/localeData';
-import weekday from 'dayjs/plugin/weekday';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
-import weekYear from 'dayjs/plugin/weekYear';
+// 🚨 **必须带 `.js` 后缀**（2026-10-01 由 `tests/build` 的 B8 抓到）：
+//    dayjs 1.11.23 的 `package.json` **没有 `exports` 字段** ⇒ Node ESM 解析子路径时
+//    **必须给完整文件名**。写 `'dayjs/plugin/advancedFormat'` 在 Vite/vitest 下能解析
+//    （它们会补后缀），但在 **Node ESM** 下报
+//    `Cannot find module '…/dayjs/plugin/advancedFormat'`。
+//    ⚠️ 这个 bug 一直潜伏：`picker` 自己的 B8 是 `n/a`（「本包不含组件」）⇒ 从不 import 它的 dist；
+//    直到 `ui` 导出 `DatePicker`（它 import 了 picker）后，`ui` 的 B8 才把它暴露出来。
+import advancedFormat from 'dayjs/plugin/advancedFormat.js';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import localeData from 'dayjs/plugin/localeData.js';
+import weekday from 'dayjs/plugin/weekday.js';
+import weekOfYear from 'dayjs/plugin/weekOfYear.js';
+import weekYear from 'dayjs/plugin/weekYear.js';
 
 import type { GenerateConfig } from '../types';
 

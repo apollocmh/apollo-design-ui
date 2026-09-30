@@ -2376,3 +2376,55 @@
     - 🚨 **教训**：「算出来了」≠「用上了」。语义槽这类**多层合并**的产物，
       收口时要逐项核对「**每一个出口都绑了吗**」—— 建议把「语义槽的 4 个出口
       （root / prefix / input / suffix + popup）逐个绑上」当成 G4 的收口清单。
+
+248. 🚨 **L6 第一次跑就抓到「面板铺满容器」—— 组件变量声明块漏挂浮层根**（2026-10-01，G9 起手）。
+
+    **症状**：L6 的 21 组里 **18 组红**（差异率 0.42%~3.51%，block-diff）。
+    两侧源图一对比：React 的面板是紧凑的 ~250px，**Vue 的面板铺满整个 1440px 舞台**。
+
+    **根因链**（三步，每步都有实证）：
+    1. 面板宽度规则是 `.apollo-picker-dropdown .apollo-picker-date-panel{width:calc(var(--apollo-date-picker-cell-width) * 7 + …)}`
+       （`style/index.ts`，从 antd 产物机械移植）；
+    2. `--apollo-date-picker-*` 的**声明块只挂在 `.apollo-picker`**（`genDatePickerStyle`）；
+    3. 而浮层 `.apollo-picker-dropdown` 走 **Portal 到 body**，**不在** `.apollo-picker` 子树里
+       ⇒ `var()` **取不到值** ⇒ `calc( * 7 + …)` **语法非法** ⇒ 整条 `width` 被**静默丢弃**
+       ⇒ `display:flex` 的面板铺满父容器。
+
+    **这就是 PITFALLS 9 / D95 说的那件事** —— 当时记的是「漏挂 ⇒ 浮层里 `var()` 静默回退继承值」，
+    而这次的具体后果是「**calc 非法 ⇒ 宽度整条消失**」，比「回退」更隐蔽（回退至少还有个值）。
+
+    - **修法（与 `select` 同判）**：
+      1. `genDatePickerStyle` 的声明块挂**两个**选择器：`.apollo-picker,.apollo-picker-css-var{…}`；
+      2. `.vue` 里把 **`css-var-root` + `apollo-picker-css-var`** 同时加到**根**与**浮层**的类名上
+         （类序对齐 antd 实测基线：`… css-var-root apollo-picker-css-var`）。
+      ⇒ 差异率立刻从 3.51% 掉到 0.25%（其余是页脚/图标，见下）。
+    - 🚨 **为什么前三层都抓不到**：L4 的 DOM 契约**只覆盖触发元素**（浮层走 Portal，SSR 下不渲染）；
+      L5/a11y 不看像素；`theme.test.ts` 断言的是**声明存在**（它确实存在，只是挂错了地方）。
+      ⇒ **只有 L6 能发现**。这条本身就是「L6 不可省」的最强论据。
+    - ⚠️ 附带发现：`apollo-picker-css-var` **本来就在 L4 的 antd 基线里**（`… css-var-root apollo-picker-css-var`），
+      而我们**从没加过这个类** —— L4 没红说明它的类名比对是**宽松的**（不是逐字符相等）。
+      这不算 L4 的 bug（基线含 cssinjs hash 段，逐字符比本就不可能），但要知道**别指望 L4 抓类名缺失**。
+
+249. 🚨 **`dayjs/plugin/xxx` 少了 `.js` —— Vite 能解析、Node ESM 不能**（2026-10-01，由 `tests/build` 的 B8 抓到）。
+
+    `packages/picker/src/generate/dayjs.ts` 原本写的是
+    ```ts
+    import advancedFormat from 'dayjs/plugin/advancedFormat';   // ❌
+    ```
+    **dayjs 1.11.23 的 `package.json` 没有 `exports` 字段** ⇒ 在 Node ESM 下子路径导入
+    **必须给完整文件名**（`dayjs/plugin/advancedFormat.js`）。Vite / vitest 会补后缀，
+    所以**开发与测试全程绿灯**；只有真在 Node 里 `import()` 产物时才炸。
+
+    - **怎么发现的**：`node tests/build/run.mjs` 的 **B8**（SSR 冒烟 = 真 `import()` dist）。
+      修 `DatePicker` 的 `ui` 导出后，`ui/dist/index.mjs` 开始 import
+      `@apollo-design/picker/dist/index.mjs` ⇒ 撞上。
+    - 🚨 **为什么一直潜伏**：`picker` **自己的 B8 是 `n/a`**（`tests/build` 的判据是
+      「本包不含组件，无 SSR 冒烟对象」）⇒ 它的 dist **从来没人 import**。
+      直到 `ui` 里出现第一个消费 `picker` 的组件，这条才暴露。
+      ⇒ **`tests/build` 对「不被任何人 import 的 foundation 包」有盲区**：
+      它的产物只要没人用，就永远不会被 B8 检查。
+    - 修法：6 处导入补 `.js`（`advancedFormat` / `customParseFormat` / `localeData` /
+      `weekday` / `weekOfYear` / `weekYear`）+ 测试文件里的 `updateLocale` 同步。
+      **改 foundation 包后必须单独重建**（PITFALLS 176）。
+    - 🚨 **教训**：「Vite 能跑」≠「Node 能跑」。凡是**产物要被 Node 直接 import** 的包，
+      子路径导入一律带扩展名；而**唯一的验证方式是真跑 B8**（不是跑 vitest）。
