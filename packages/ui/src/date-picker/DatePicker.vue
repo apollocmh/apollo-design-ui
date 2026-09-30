@@ -205,11 +205,46 @@ const rtl = computed(() => direction.value === 'rtl');
 /**
  * `Selector` 的命令面（上游 `SinglePicker` 的 `selectorRef`）。
  *
- * 只有 `focus()` 一个方法 —— 上游 `SingleSelector` 的 `useImperativeHandle`
- * 还暴露 `nativeElement` / `blur`，本仓按需加（S4/S5 若要用再说）。
- * 两个调用点：点根节点、点清除后（见 `onClear`）。
+ * - `focus()` —— 点根节点 / 点清除后把焦点还给输入框；
+ * - `nativeElement()` —— S4 的 `isInternalElement` 要它（判断新焦点是否还在 Picker 里）。
+ *
+ * ⚠️ 上游 `SingleSelector` 的 `useImperativeHandle` 还暴露 `nativeElement` / `blur`，
+ * 本仓按需加（S5 再说）。
  */
-const selectorRef = ref<{ focus: () => void } | null>(null);
+const selectorRef = ref<{
+  focus: () => void;
+  nativeElement: () => HTMLElement | null;
+} | null>(null);
+
+/** 触发器的命令面（`popupElement()` 用于 `isInternalElement`）。 */
+const triggerRef = ref<{ popupElement: () => HTMLElement | null } | null>(null);
+
+/**
+ * 当前获得焦点的 field（`null` = 焦点不在 Picker 里）。
+ *
+ * 上游 `useFocusEvents` 的 `focusedIndex`：它的**唯一**用途是产出 `-focused` 根类名
+ * （`SingleSelector` 的 `focused` prop）。
+ */
+const focusedIndex = ref<number | null>(null);
+
+/**
+ * 新焦点是否仍落在 Picker 内（上游 `isTargetInContainers([selectorRoot, popup])`）。
+ *
+ * 🚨 **这是「点面板格子不会把浮层关掉」的关键**：面板根是 `tabindex="0"` 的 div
+ * （`picker-panel.ts` 的 `tabIndex` 默认 0）⇒ 点格子时焦点移到**面板**上，
+ * `relatedTarget` 在浮层里 ⇒ 不算「确认离开」。
+ * ⚠️ 若哪天面板根丢了 `tabindex`，这条会**静默失效**（浮层在第一次点格子时就关）。
+ */
+const isInternalElement = (target: EventTarget | null): boolean => {
+  const node = target as Node | null;
+  const containers = [
+    selectorRef.value?.nativeElement() ?? null,
+    triggerRef.value?.popupElement() ?? null,
+  ];
+  return containers.some(
+    (container) => !!container && (container === node || container.contains(node)),
+  );
+};
 
 // ============================== locale / 尺寸 / 变体 / 状态 ==============================
 const [contextLocale] = useLocale('DatePicker');
@@ -542,21 +577,42 @@ const onInput = (_index: number, event: Event): void => {
 };
 
 /**
- * 聚焦（上游 `SinglePicker.js:417-423`）。
+ * 聚焦（上游 `SinglePicker.js:417-423` + `useFocusEvents` 的 `onFieldFocus`）。
  *
- * `field-switch` + 开浮层（`inherit: true`）。⚠️ `field-switch` 在单值下
- * （`index === currentIndex`）会解析成 `abort` —— 但它**仍然**会把
- * `currentIndex` 建起来（`triggerChange` 的入口那一支），这正是上游的意图。
+ * `field-switch` + 开浮层（`inherit: true`）+ 记 `focusedIndex`。
+ * ⚠️ `field-switch` 在单值下（`index === currentIndex`）会解析成 `abort` —— 但它**仍然**
+ * 会把 `currentIndex` 建起来（`triggerChange` 的入口那一支），这正是上游的意图。
  */
-const onInputFocus = (_index: number, _event: FocusEvent): void => {
+const onInputFocus = (_index: number, event: FocusEvent): void => {
+  focusedIndex.value = 0;
   valueChange.triggerChange(0, 'field-switch');
   onOpenChange(true);
+  emit('focus', event, {});
 };
 
-/** 失焦（上游只转发给 `useFocusEvents` 的簿记；关浮层由触发器负责）。 */
-const onInputBlur = (_index: number, _event: FocusEvent): void => {
-  // 上游 `onFieldBlur(0, 'input', event)` 只更新焦点簿记 + 调用户的 onBlur。
-  // 本仓的焦点簿记（`-focused` 类名）属 S4，见 README §5.5。
+/**
+ * 失焦（上游 `useFocusEvents` 的 `onFieldBlur`，逐字）。
+ *
+ * ```js
+ * if (!isInternalElement(event.relatedTarget)) { setFocusedIndex(null); onConfirmedBlur?.(); }
+ * ```
+ *
+ * 🚨 **只有「确认离开 Picker」才清焦点 + 关浮层**：
+ *   - 点面板格子 ⇒ 焦点落到面板根（`tabindex="0"`）⇒ 在浮层里 ⇒ **不**关；
+ *   - `Tab` 到 Picker 外面 ⇒ `relatedTarget` 不在选择器根也不在浮层 ⇒ 关。
+ * 写成「一 blur 就关」会让「点日期格子」直接关掉浮层（`showTime` 的确认制就废了）。
+ *
+ * ⚠️ 上游还有一支「面板里获得焦点的控件变成 disabled ⇒ 把焦点抢回输入框」
+ * （`source === 'panel' && target.hasAttribute('disabled')`）—— 那属于**面板侧**的
+ * focus 事件（`onPanelFocus`/`onBlur` 挂在浮层容器上），本仓尚未接，见 README §5.5。
+ */
+const onInputBlur = (_index: number, event: FocusEvent): void => {
+  if (!isInternalElement(event.relatedTarget)) {
+    focusedIndex.value = null;
+    // 上游 `useFocusEvents` 的第四参：`onConfirmedBlur` = `() => triggerOpen(false)`
+    onOpenChange(false);
+  }
+  emit('blur', event, {});
 };
 
 /**
@@ -671,6 +727,8 @@ const rootClass = computed(() =>
     disabled: mergedDisabled.value,
     // rc 的 `-invalid` 类（**键入非法**，与 antd 的 `-status-error` 是两回事）
     invalid: invalid.value,
+    // S4：`-focused`（上游 `useFocusEvents` 的 `focusedIndex !== null`）
+    focused: focusedIndex.value !== null,
     rtl: rtl.value,
     size: mergedSize.value as string | undefined,
     variant: variant.value,
@@ -881,6 +939,7 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
 
 <template>
   <Trigger
+    ref="triggerRef"
     :prefix-cls="dropdownPrefixCls"
     :popup="panelVNode"
     :show-action="[]"

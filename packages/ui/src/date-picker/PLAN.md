@@ -57,8 +57,16 @@
         `components/mask-format.ts`（上游 `MaskFormat.js` 81 行，工厂 + 接口形态）+
         `components/mask-input.ts`（上游 `Input.js` 的 `format` 分支）+ `Selector` 转接。
         用例：`mask-format.test.ts` **18 条**（L1，node）+ `s3-mask.test.ts` **11 条**（L2，jsdom）。
-      - [ ] S4 键盘字段导航与分段（`-input-active`）—— ⚠️ **调度逻辑已随 S2 落地**
-            （`field-switch` 分支 + `forceFocus`），S4 只剩**渲染**（分段高亮 + 焦点跟随）
+      - [~] S4 键盘字段导航与分段（`-input-active`）—— **单值可达的部分已落地**（2026-10-01）：
+        - ✅ 调度（`field-switch` 分支 + `forceFocus`）随 S2 落地；
+        - ✅ **`-focused` 根类名** + `focus`/`blur` 事件 + **确认离开才关浮层**
+          （上游 `useFocusEvents.js` 55 行）；用例 `s4-focus.test.ts` **5 条**。
+        - ⏳ **范围专属**、本仓尚不可达的两项（随 S5 的 RangePicker 一起做）：
+          - **`-input-active`**：上游 `Input.js` 的 `active = activeIndex === index`，
+            而 `SinglePicker` **不传** `activeIndex` 给 `SingleSelector` ⇒ **单值恒不加**
+            （所以「分段高亮」本质是范围特性）；
+          - **`useFocusLock` 的强切换聚焦**：`forceFocus` 在单值下**恒为 `false`**
+            （`submitField` 一定 `allFieldsTriggered` ⇒ `reset()` 把它抹掉）。
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [x] G7 L3 类型 —— `__tests__/type.test-d.ts`，**42 条**（运行时 42 + 类型检查 42）。

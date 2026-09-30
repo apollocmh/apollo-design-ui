@@ -90,7 +90,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | S1 | 值 / 开合 / 面板接线 + 样式（257 规则 / 45 声明） | ✅ |
 | S2 | 键入解析 + `format` 补齐层 + `format` 函数形态 + **提交时机状态机** | ✅ |
 | S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
-| S4 | 键盘字段导航与 `-input-active` **分段渲染** | ⏳ 调度已随 S2 落地，只剩渲染 |
+| S4 | 键盘字段导航与 `-input-active` 分段 | 🟡 **单值部分完成**：调度（随 S2）+ `-focused` + 确认离开才关浮层。`-input-active` 与 `useFocusLock` 是**范围专属**（上游 `SinglePicker` 不传 `activeIndex`；单值下 `forceFocus` 恒 false）⇒ 随 S5 的 RangePicker 一起做 |
 | S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | ⏳ |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
@@ -208,8 +208,30 @@ S4 只剩**渲染**（`-input-active` 分段高亮 + 焦点跟随）。
 （`panelProps.mode` 只透传 `props.mode`），只在 `onPanelChange` 里**跟随**记一份
 （`innerMode`），供 `panelFinished` 用。
 
-⇒ 行为上目前等价（面板每次粒度变化都会上报），但**两份真值来源**是漂移风险。
-登记为待收口（S5 与 `presets` / `renderExtraFooter` 同批）。
+⚠️ **一条可观测的后果（2026-10-01 查明）**：上游 `SinglePicker.js:451-456` 有一段
+```js
+useLayoutEffect(() => {
+  if (mergedOpen && activeIndex !== undefined) { triggerModeChange(null, picker, false); }
+}, [mergedOpen, activeIndex, picker]);
+```
+—— **每次打开浮层都把面板粒度重置回 `picker`**（注释：`Reset for every active`）。
+本仓的面板自管 mode，且浮层关闭时**不卸载**（`Trigger` 的 `removeOnLeave: false`）
+⇒ 用户下钻到年面板后关闭、再打开，**仍停在年面板**，与 antd 不一致。
+⇒ 修它要先做受控化，故与 `presets` / `renderExtraFooter` 同批（S5）。
+
+#### (e) 浮层侧的焦点事件未接
+
+上游把 `onFocus`/`onBlur` 挂在**浮层容器**上（`SinglePicker.js:355-361` 的
+`onPanelFocus` / `onBlur`），用于两支行为：
+1. 焦点进入面板 ⇒ `onFieldFocus(0,'panel',event)` ⇒ `focusedIndex` 保持 ⇒ `-focused` 不丢；
+2. 面板里获得焦点的控件变 `disabled` ⇒ 把焦点抢回输入框
+   （`useFocusEvents` 的 `isDisabledTarget` 那一支）。
+
+本仓的 `Trigger` 的浮层 div 没有透传 focus/blur 的位置（`popupProps` 里只有
+`onMouseenter` 一类），故这两支**未接**。⚠️ 第 1 支在当前实现下**恰好不影响**
+`-focused`：点格子时焦点落到**面板根**（`tabindex="0"`）⇒ 输入的 blur 的
+`relatedTarget` 在浮层里 ⇒ 我们不清理 `focusedIndex`。但若焦点是**从外部**进入面板的
+（如 Tab 进面板），`-focused` 就不会置位 —— 属边角，登记待补。
 
 #### (d) `theme.test.ts` 实际 **30 条**（README §4 与 PLAN G3 写的是 22 条）
 

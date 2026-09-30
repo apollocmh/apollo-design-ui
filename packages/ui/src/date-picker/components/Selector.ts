@@ -274,13 +274,25 @@ export const Selector = defineComponent({
       },
     );
 
+    /** 根元素（上游 `SingleSelector` 的 `rootRef`）。`isInternalElement` 要它。 */
+    let rootEl: HTMLElement | null = null;
+    const rootElRef = (el: Element | { $el?: Element } | null | undefined): void => {
+      rootEl = ((el as HTMLElement | null) ?? null) as HTMLElement | null;
+    };
+
     /**
-     * 上游 `SinglePicker` 的 `selectorRef.current.focus()`。
+     * 上游 `SingleSelector` 的命令面（`useImperativeHandle`）。
      *
-     * 两个调用点：点根节点时（`onSelectorClick`）与点清除后（`onSelectorClear`）。
-     * 后者是**真的有用**的：点击落在清除按钮上，不还原焦点的话焦点会留在按钮上。
+     * - `focus()` —— 点根节点 / 点清除后把焦点还给输入框（`SinglePicker` 的两个调用点）；
+     * - `nativeElement` —— `useFocusEvents` 的 `isInternalElement` 要用它判断
+     *   「新焦点是不是还在 Picker 里」（`SingleSelector/index.js:150` 的 `ref: rootRef`）。
+     *
+     * ⚠️ 上游还暴露 `blur` / 范围版的 `startInput` / `endInput`，本仓按需加（S5 再说）。
      */
-    expose({ focus: () => inputEls[0]?.focus() });
+    expose({
+      focus: () => inputEls[0]?.focus(),
+      nativeElement: () => rootEl,
+    });
 
     /** 两端的值长度（范围判 `showClear` 用）。 */
     const valueLengths = computed<[number, number]>(() => [
@@ -445,6 +457,7 @@ export const Selector = defineComponent({
         return h(
           'div',
           {
+            ref: rootElRef,
             class: rootClass,
             style: props.rootStyle,
             onClick: () => props.onSelectorClick?.(),
@@ -456,6 +469,7 @@ export const Selector = defineComponent({
       return h(
         'div',
         {
+          ref: rootElRef,
           class: rootClass,
           style: props.rootStyle,
           onClick: () => props.onSelectorClick?.(),

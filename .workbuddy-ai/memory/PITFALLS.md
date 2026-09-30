@@ -2258,3 +2258,28 @@
     - 🚨 **教训**：「上游这里是空实现」不等于「本仓也该是空实现」。
       React 的**受控组件**隐含了一批框架级副作用（值还原、批处理、合成事件），
       照抄函数体而丢掉这些副作用，症状会出现在**别的**地方（这里是「字符不消失」）。
+
+243. 🚨 **「失焦就关浮层」会让「点格子」直接关掉面板 —— 前提是面板根有 `tabindex`**（2026-10-01，S4）。
+
+    上游 `useFocusEvents.js` 的 `onFieldBlur` 判据是
+    `if (!isInternalElement(event.relatedTarget)) { setFocusedIndex(null); onConfirmedBlur?.(); }`
+    —— 只有「新焦点**既不在选择器根、也不在浮层里**」才算**确认离开**。
+
+    **为什么这条不能写成「一 blur 就关」**：点面板格子时输入框必然失焦
+    （格子是 `<td>`，不可聚焦 ⇒ 焦点掉到 body）⇒ 若照字面写「blur 就关」，
+    **第一次点日期就把浮层关了** —— `showTime` 的确认制（选日期 → 点确定）直接废掉。
+
+    上游靠两件事兜住：
+    1. **面板根是 `tabindex="0"` 的 div**（`PickerPanel/index.js:40,247` 的
+       `tabIndex = 0`）⇒ 点格子时焦点落到**面板**上，`relatedTarget` 在浮层里；
+    2. `isTargetInContainers(target, [selectorRoot, popup])` 的包含判定。
+
+    ⇒ 本仓实现时**必须**同时满足：面板根带 `tabindex`（本仓 `picker-panel.ts` 已有，
+    默认 0）+ 用 `Selector` 的 `nativeElement` 与 `Trigger` 的 `popupElement()` 做包含判定。
+    - 🚨 **静默失效点**：若哪天面板根丢了 `tabindex`，这条会**静默失效**
+      （症状是「点第一个日期浮层就关」，而单值 + 无 `showTime` 时**看起来是对的**，
+      只有 `showTime` / 范围才会暴露）。已在代码注释里点名。
+    - 已钉住：`s4-focus.test.ts` 的「失焦到**浮层里的元素**（面板根）⇒ 不关浮层」。
+    - 🚨 **教训**：移植「失焦关浮层」这类逻辑时，先问「**失焦之后焦点去哪了**」，
+      再决定判据。上游的 `relatedTarget` 判据是**配着** `tabindex` 一起设计的，
+      拆开用必错。

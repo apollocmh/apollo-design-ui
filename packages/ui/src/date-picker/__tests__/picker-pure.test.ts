@@ -461,6 +461,30 @@ describe('date-picker · getRootClassNames（S1，顺序对齐上游 clsx 参数
     expect(getRootClassNames({ prefixCls: p, size: 'medium' })).toEqual([p]);
   });
 
+  it('S4：rc 的 5 个状态类顺序 **multiple → focused → disabled → invalid → rtl**（在尺寸/变体之前）', () => {
+    // 出处：`SingleSelector/index.js:167-172` 的 `clsx(prefixCls, {...}, className)`
+    expect(
+      getRootClassNames({
+        prefixCls: p,
+        multiple: true,
+        focused: true,
+        disabled: true,
+        invalid: true,
+        rtl: true,
+        variant: 'outlined',
+        enableVariantCls: true,
+      }),
+    ).toEqual([
+      p,
+      `${p}-multiple`,
+      `${p}-focused`,
+      `${p}-disabled`,
+      `${p}-invalid`,
+      `${p}-rtl`,
+      `${p}-outlined`,
+    ]);
+  });
+
   it('complete 顺序：尺寸 → 变体 → 状态 → compact → context → className → rootClassName', () => {
     expect(
       getRootClassNames({
