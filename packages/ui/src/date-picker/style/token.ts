@@ -21,10 +21,15 @@
  * | `getArrowToken` | 3 | `arrowShadowWidth` / `arrowPath` / `arrowPolygon` |
  * | 规则内声明（**不属于上面任何一个**） | 1 | `affixColor`（默认 `inherit`） |
  *
- * ⚠️ 计数要对上：`prepareComponentToken` 实际返回 **45** 个键，其中
- * `INTERNAL_FIXED_ITEM_MARGIN` 是**内部量、不落变量** ⇒ **44 个变量**，
- * 再加规则内声明的 `affixColor` ⇒ 观测到的 **45 个变量**。
- * 两边的 45 是巧合，含义不同（一个是「对象键数」，一个是「CSS 变量数」）。
+ * ⚠️ 计数要对上（**2026-09-30 实测纠正**）：`prepareComponentToken` 返回 **45** 个键，
+ * 而这 **45 个键全部落成 CSS 变量** —— 包括 `INTERNAL_FIXED_ITEM_MARGIN`
+ * （变量名是 **`internal_fixed_item_margin`**，带**下划线**，值 `2px`），
+ * 它**被 `multiple` 的规则引用**（`margin-block:var(…)`）。
+ * 再加规则内声明的 `affixColor` ⇒ 观测到的 **46 个变量**。
+ *
+ * 🚨 这里**曾经写错**（「`INTERNAL_FIXED_ITEM_MARGIN` 是内部量、不落变量 ⇒ 44 个变量」）——
+ * 那次错误的根因是**探针正则的字符类不含下划线**（`[a-z0-9-]`），这个变量压根没被扫出来，
+ * 于是把 45 误读成 44。正则已修为 `[a-z0-9_-]`（PITFALLS 229）。
  *
  * ⚠️ **`affixColor` 的来源**（读产物确认，不是推测）：它**不在** `prepareComponentToken`
  * 的返回值里，而是被声明在 **`.ant-picker` 规则内部**（不是 `-css-var` 块）：
@@ -470,8 +475,10 @@ export function prepareComponentToken(token: DatePickerSeedToken): PreparedToken
  *
  * ⚠️ 上游第 4 个键的注释写着 `// 18 in normal`，算式是 `padding + paddingXXS/2`。
  *
- * ⚠️ **本组 token 大概率不会进 CSS 变量声明块**：G4 的静态 CSS 是逐字移植，
- * 选择器与尺寸都会在构建期内联（tabs 的 6 个内部 token 同判）。
+ * ⚠️ **`INTERNAL_FIXED_ITEM_MARGIN` 会进 CSS 变量声明块**（2026-09-30 实测纠正）——
+ * 它落成 `--apollo-date-picker-internal_fixed_item_margin: 2px`，且被 `multiple` 的
+ * 规则引用。本文件此前写的「本组 token 大概率不会进声明块」是**错的**。
+ * 其余 9 个键（`pickerCellCls` 等拼出来的类名与几何常量）确实只用于构建期算式。
  * 它存在的意义是「10 个键的判定值可对拍」+「G4 移植时不必反推算式」。
  */
 export function initPickerPanelToken(
