@@ -54,7 +54,6 @@ export type {
   RangePickerEmits,
   RangePickerExpose,
   RangePickerProps,
-  RangeShowTimeConfig,
   RangeTimeProps,
   RangeValue,
   RangeValueDate,

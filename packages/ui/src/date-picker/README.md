@@ -20,14 +20,46 @@
 
 ## 4. Component Token 清单
 
-<!-- registry 数据：token 数 = 3 -->
+registry 数据：该组件 `tokenCount = 3` —— 即**它自己声明的**三个用户面 token
+（`presetsWidth` / `presetsMaxWidth` / `zIndexPopup`）。完整面是三处继承 + 3 自有：
+
+| 来源 | 键数 | 内容 |
+|---|---|---|
+| 自有 | 3 | `presetsWidth`(120) · `presetsMaxWidth`(200) · `zIndexPopup`(`zIndexPopupBase + 50` = 1050) |
+| `input` 的 `initComponentToken` | **18** | `lineWidthFocus` + `paddingBlock/SM/LG` + `paddingInline/SM/LG` + `addonBg` + `activeBorderColor` / `hoverBorderColor` + 3 个 `activeShadow` + `hoverBg` / `activeBg` + `inputFontSize/LG/SM` |
+| `initPanelComponentToken` | 21 | 12 自有（`cell*` / `time*` / `cellWidth` / `textHeight` / `withoutTimeCellHeight`）+ 8 个 `MultipleSelectorToken`（与 Select 同源）+ 1 内部量 |
+| `getArrowToken` | 3 | `arrowShadowWidth` / `arrowPath` / `arrowPolygon` |
+| **合计（对象键数）** | **45** | 其中 `INTERNAL_FIXED_ITEM_MARGIN` **不落变量** ⇒ **44 个变量** |
+| 内部 token `initPickerPanelToken` | 10 | 不落变量，G4 会内联进规则（判定值由 theme.test 钉住） |
+
+⚠️ 产物里还有一个 **`--ant-date-picker-affix-color`** —— 它**不在** `prepareComponentToken`
+的返回值里，而是被声明在 **`.ant-picker` 规则内部**（状态变体用）：
+```css
+.ant-picker                  { --ant-date-picker-affix-color: inherit; }
+.ant-picker-status-error     { --ant-date-picker-affix-color: var(--ant-color-error-affix); }
+.ant-picker-status-warning   { --ant-date-picker-affix-color: var(--ant-color-warning-affix); }
+```
+⇒ 所以「对象 45 键 / 变量 45 个」是**巧合**，含义不同，别当交叉验证。
+
+取证 / 判定值：`node tests/visual/debug/extract-date-picker-css.mjs --tokens`（45 个变量全打印）；
+断言：`__tests__/theme.test.ts`（22 条）。
+
+⚠️ **`cellHoverWithRangeBg` / `cellRangeBorderColor` 用的是 `Color#lighten`，
+不是 `_internal/color-composite.ts` 的 `onBackground`** —— 两个是不同的颜色运算
+（后者是「半透明前景合成到背景」，tour / input-number / slider 用）。
+实测逐位一致：`lighten(35)` → `#cbe0fd`、`lighten(20)` → `#82b4f9`
+
+⚠️ **`note`**：本组里的构建期常量（padding 算式、`lighten` 结果、`28*8`）
+在静态 CSS 里会被**内联成字面值** ⇒ **不随主色 / 主题变化**。
+这是本仓「静态 CSS + CSS 变量」架构的**已知固有差异**（上游 cssinjs 会在运行时重算），
+不是 bug；影响面由 L6 的 dark / compact / token-override 矩阵钉住。
 <!-- G3 补齐：presetsWidth / presetsMaxWidth / zIndexPopup 三个自有 token，
      另并入 input（SharedComponentToken 去掉 addonBg）、select（MultipleSelectorToken）、
      roundedArrow（ArrowToken）三处继承面。默认值推导见 docs/analysis/date-picker.md §7。 -->
 
 ## 5. 已知缺口
 
-### 5.1 G4 前必须先裁决的架构分叉（未裁决）
+### 5.1 输入框内核 —— 已裁决「完整对齐」（2026-09-30）
 
 rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 （`useState` + `useEvent`），而 `picker` foundation 只 Vue 化了**面板**。
@@ -38,8 +70,9 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | **A. 完整重写** | 逐块对齐 `PickerInput`；`inputReadOnly` / `preserveInvalidOnBlur` / `previewValue` / `format.type: 'mask'` / 键入解析 全部落地 | 最大；但 11 维度可全 `done`、无缺口 |
 | **B. 核心 + 明确缺口** | 值 / 开合 / 面板 / 格式化 / 约束 / 状态 / 语义槽 全落地；键入解析与掩码标 `DEFERRED` | 缺口**可枚举、可测** |
 
-判据：`cascader` 带着 1 条 `DEFERRED` 仍判 `completed`，但那条是**样式集成**；
-**键入解析是主交互**，量级不同 ⇒ 按 `AGENTS.md` §7，**这条要用户拍板**（尚未裁决）。
+**用户裁决 = A（完整对齐，分阶段落地）**，登记在 `registry/source/open-decisions.mjs` 的
+`date-picker-input-kernel`。⇒ 本组件**不留**输入框相关的 `DEFERRED`；
+键入解析 / 掩码 / 键盘字段导航 / 分段 全部要落地（分 S1–S5 五阶段，见 `PLAN.md`）。
 
 ### 5.2 已知的跨包欠账（类型面已按上游写全，实现面待补）
 

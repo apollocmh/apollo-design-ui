@@ -1752,3 +1752,22 @@
       **删掉**（LTR 下与 `start`/`end` 冗余，且用的是未声明的值，留着等于把「只在 LTR
       侥幸正确」的写法固化成规格）；`demo/placement.vue` 与
       `tests/visual/render/cases/{vue,react}/tabs.{js,jsx}` 的 `vertical` 一律改 `start`。
+
+220. 🚨🚨 **`registry/components.json` 的 `notes` 是「派生字段」，不是保留字段** ——
+    写进去会被下一次 `gen-registry.mjs` **静默抹掉**（2026-09-30 实测，本仓真踩）。
+    判据（读生成器源码，不是猜）：`registry/tools/gen-registry.mjs` 第 309 行
+    ```js
+    notes: meta.notes ?? null,        // ← 来自 registry/source/components.meta.mjs
+    layerNotes: prev.layerNotes ?? null,   // ← 这个才是保留的
+    ```
+    ⇒ **跨运行保留的字段只有**：`status`、11 个维度状态（`antdApiStatus` / `apiStatus` /
+    `compatStatus` / `tokenStatus` / `styleStatus` / `unitStatus` / `interactionStatus` /
+    `typeStatus` / `a11yStatus` / `visualStatus` / `docsStatus`）、`blockers`、`layerNotes`。
+    - 要写「跨运行的注记」只有两个地方：**`registry/source/components.meta.mjs` 的 `notes`**
+      （覆盖式，是人工种子的真源）或**`layerNotes`**（保留字段，约定是「某维度判 n/a 时写架构依据」）。
+    - ⚠️ 文件头的 `$comment` 写的是「Progress fields are preserved across runs」——
+      **它没说 `notes` 属于 progress fields**，是本会话把它误读了（MEMORY.md 里
+      「status/notes/layerNotes Agent 写、跨运行保留」这句也**是错的**，已改）。
+    - 顺带教训：本轮先写 `components.json` 的 `notes`、跑了一次 `registry:gen`、
+      又**只核对了 `status`/`apiStatus` 就断言「进度字段跨运行保留，已验证」**——
+      验证面小于断言面。**核对保留性时要逐字段比对，不要只挑一个字段验。**

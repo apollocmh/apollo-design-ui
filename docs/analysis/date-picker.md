@@ -449,12 +449,24 @@ token 面必须并入 Select 那一套（本仓 `select` 已收口）。
 
 ## 11. 风险预登记（动手前逐条核实）
 
-1. 🚨 **输入框侧的键盘逻辑没有现成的 Vue 实现。** `picker` foundation 只 Vue 化了**面板**；
+1. ✅ **输入框内核已裁决（2026-09-30，用户）= 完整对齐、分阶段落地。**
+   决策 id `date-picker-input-kernel`（`registry/source/open-decisions.mjs`，
+   原文用 `node registry/tools/ask.mjs decision date-picker-input-kernel` 看）。
+
    rc 的 `PickerInput`（方向键改值 / Enter / Tab 跨段 / 输入解析 / 通过 `-input-active` 切换活动段）
-   全在 `@rc-component/picker/lib/PickerInput/` 里，**绑 React**（`useState` + `useEvent`）。
-   ⇒ 这是本组件**最大的一块自研量**。动手前必须先决定：**重写** vs **只做受控展示 + 键盘最小集**。
-   建议做法：先读 `PickerInput/hooks/useInputProps.js` 与 `useFieldFormat.js`，用**行为测试**钉，
-   不追求逐位对拍（它没有 SSR 可锚定的确定性输出 —— 输入框内容取决于交互历史）。
+   全在 `@rc-component/picker/lib/PickerInput/` 里，**绑 React**（`useState` + `useEvent`），
+   是本组件**最大的一块自研量**。裁决要求全部落地，**不留 `DEFERRED`**，分五阶段：
+
+   | 阶段 | 内容 |
+   |---|---|
+   | S1 | 值 / 开合 / 面板接线（受控 + 非受控、v-model 的 C11 双发） |
+   | S2 | 键入解析与 `format` 的函数 / 数组形态（含跨包欠账） |
+   | S3 | 掩码模式（`format.type: "mask"`） |
+   | S4 | 键盘字段导航与分段（`-input-active`） |
+   | S5 | `multiple` + `tagRender` / `maxTagCount`、范围的两端切换 |
+
+   ⚠️ 取证方式：**用行为测试钉，不追求逐位对拍** —— 输入框内容取决于交互历史，
+   没有 SSR 可锚定的确定性输出（与面板侧相反，那边有 37 条逐字基线）。
 2. 🚨 **`format` 要支持函数/数组**（上游测试标题为证）⇒ 必须把
    `picker` 包的 `PickerFormat` **加回 `DateType` 泛型 + `CustomFormat<DateType>`**
    （现在是无泛型的 `string | readonly string[] | { format }`，见 PITFALLS 214 的欠账）。
@@ -516,7 +528,7 @@ token 面必须并入 Select 那一套（本仓 `select` 已收口）。
 
 ## 14. 待验证问题
 
-- [ ] rc 的 `PickerInput` 键盘/输入逻辑到底有多少行、能否用「最小集」覆盖（`lib/PickerInput/` 实测行数）
+- [x] ~~rc 的 `PickerInput` 键盘/输入逻辑到底有多少行~~ ⇒ **实测 37 个 `.js` / 4290 行**，已裁决完整对齐（细节见 §11.1）
 - [ ] `DatePicker.WeekPicker` 的 legacy 告警判据 `picker !== 'quarter'` 是不是上游 bug（≈ UPSTREAM）
 - [ ] `MonthPickerProps<ValueType = Dayjs | Dayjs>` 这个 `Dayjs | Dayjs` 的意图
 - [ ] `select/useIcons` 在本仓的落位；是否要提升到 `_internal/`

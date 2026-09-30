@@ -445,6 +445,39 @@ export const OPEN_DECISIONS = [
       '决定 @apollo-design/picker 能否置 completed（L2/L4/L5 必须在收口前补齐），并决定 date-picker / time-picker / calendar 三个组件的代码分工。未裁决期间 picker 已按最保守记法持 todo。',
     blocks: ['@apollo-design/picker'],
   }),
+  decided('date-picker-input-kernel', {
+    raisedAt: '2026-09-30',
+    decidedAt: '2026-09-30',
+    decidedBy: '用户裁决 2026-09-30',
+    question:
+      'date-picker 的输入框内核（rc 的 `PickerInput`）怎么落地？它是 37 个 .js / 4290 行、绑 React（useState + useEvent），而 @apollo-design/picker 已明确不做输入框（README 的 notDo）。这一条决定 G4 的工作量与「11 维度能否全 done」。',
+    context:
+      'G1 实测（docs/analysis/date-picker.md §1.0）：antd 侧是薄壳（非 locale 2650 行），真正的大头在 rc 的 `lib/PickerInput`（4290 行）。逐文件拆解：两个壳 1121（SinglePicker 538 / RangePicker 583）、值管理 hooks 878（useRangeValueChange 412 / useRangeValue 254 / useRangePickerValue 166 / useDelayState 46）、Selector+Input 层约 1200（Input 368 / RangeSelector 218 / SingleSelector 196 / useInputProps 177 / MaskFormat 88 / MultipleDates 86 / ClearIcon 37）、Popup 层 403（可用本仓 overlay/position/portal 大幅替代）、辅助 hooks 约 450。列出的全部是**真行为**（解析格式数组、算 size、掩码、字段导航），不是 React 样板。判据：H8「禁止降低验收标准以换取进度」；先例 `cascader` 带 1 条 DEFERRED 仍判 completed，但那条是**样式集成**，与「键入解析是主交互」量级不同。',
+    options: [
+      {
+        label: 'A. 完整对齐（分阶段落地）（★ 已选）',
+        tradeoff:
+          '逐块重写 PickerInput：键入解析、format 的函数/数组形态、掩码模式（format.type: "mask"）、键盘字段导航、分段（-input-active）、inputReadOnly / preserveInvalidOnBlur / previewValue 全部落地。11 维度可全 done、无缺口，符合 H8。代价：估计新增约 2500 行 Vue（Popup 403 行可由本仓 overlay/position/portal 替代、Selector 部分可参照 select 的 engine）+ 对应 7 层测试，是本仓迄今最大的单组件工作量。分阶段落地：每阶段自成绿灯，先「值/开合/面板接线」再「键入与掩码」再「键盘与分段」。',
+      },
+      {
+        label: 'B. 核心功能 + 明确缺口',
+        tradeoff:
+          '值 / 开合 / 面板 / 格式化 / 约束 / 状态 / 语义槽 / 预设 / 无障碍 全落地；「键入解析 + 掩码模式」标 DEFERRED（登 README §5 + registry 的 layerNotes + COMPATIBILITY），输入框只读展示 + 点击选择。代价：`completed` 时带一个**主交互**级别的缺口 —— 用户无法键入日期，这与 H8 的精神相抵，且 L2 的键入用例整组缺席。',
+      },
+      {
+        label: 'C. 先做与分叉无关的部分，G4 前再裁决',
+        tradeoff:
+          '先做 G3（style/token.ts：3 个自有 token presetsWidth / presetsMaxWidth / zIndexPopup + input/select/roundedArrow 三处继承面）与 L4 的输入框 DOM 契约基线 —— 这两步与内核怎么实现无关。代价：把最贵的裁决往后推，G4 开始时仍要停一次。',
+      },
+    ],
+    recommendation:
+      'A —— H8 禁止用降低标准换进度，且键入是日期选择器的主交互；分阶段落地可让每阶段自成绿灯。',
+    decision:
+      'A —— 完整对齐，分阶段落地。G4 必须实现：① 值/开合/面板接线（受控 + 非受控，含多处 v-model 的 C11 双发）；② 键入解析与 format 的函数/数组形态；③ 掩码模式（format.type: "mask"）；④ 键盘字段导航与分段（-input-active）；⑤ inputReadOnly / preserveInvalidOnBlur / previewValue / order / needConfirm / maxTagCount / tagRender / multiple。分阶段顺序：接线 → 键入与格式化 → 掩码 → 键盘与分段；⑥ 不得以「先跳过、回头补」的方式落 DEFERRED。',
+    impact:
+      '决定 date-picker 的 11 维度能否全 done（A 下无缺口），并顺带清偿跨包欠账：@apollo-design/picker 的 PickerFormat 要加回 DateType 泛型 + CustomFormat<DateType>（PITFALLS 214）。另决定 time-picker（唯一被 date-picker 阻塞的下游）能拿到一个**完整**的可复用输入框内核。',
+    blocks: ['date-picker'],
+  }),
 ];
 
 export default OPEN_DECISIONS;

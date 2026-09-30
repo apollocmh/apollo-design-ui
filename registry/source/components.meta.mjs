@@ -308,7 +308,14 @@ export const COMPONENTS = [
     group: '数据录入',
     priority: 'P5',
     complexity: 'XL',
-    notes: '【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。',
+    // ⚠️ 本字段是**派生**的（`gen-registry.mjs` 里是 `notes: meta.notes ?? null`）——
+    //    改 components.json 的 notes 会被下一次 registry:gen 抹掉。
+    //    想写「跨运行保留」的注记只有两个地方：`layerNotes`（保留字段）或本文件。
+    notes:
+      '【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。' +
+      '核心成本在 rc 的 PickerInput（4290 行、未 Vue 化），不是 antd 薄壳（非 locale 2650 行）。' +
+      'G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，' +
+      '决策 id `date-picker-input-kernel`。',
   },
   {
     name: 'time-picker',

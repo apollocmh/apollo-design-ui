@@ -16,7 +16,10 @@ Vue 3 + TS 重写 Ant Design（兼容规格，非代码来源），目标 **6.6.
 `node registry/tools/next-task.mjs`（唯一权威；并行用 `--parallel`；一轮一包，G0→G14）。
 派生字段（手改被覆盖）：`notDo`/`publicApi`/包 package.json ← `scaffold-packages.mjs`；
 `foundation.json` ← `foundation-status.mjs`；components/dependencies/tokens/workstreams ← 各 `gen-*.mjs`；
-status/notes/layerNotes **Agent 写、跨运行保留**。组件收口后要刷 foundation-status + gen-workstreams（registry:check 会催）。
+🚨 **跨运行保留的只有**：`status` + 11 个维度状态 + `blockers` + `layerNotes`。
+⚠️ **`notes` 不是保留字段**（生成器是 `notes: meta.notes ?? null`）—— 改 `components.json` 的
+notes 会被下次 `registry:gen` **静默抹掉**；要写注记就改 `registry/source/components.meta.mjs`（PITFALLS 220）。
+组件收口后要刷 foundation-status + gen-workstreams（registry:check 会催）。
 
 ## 环境
 

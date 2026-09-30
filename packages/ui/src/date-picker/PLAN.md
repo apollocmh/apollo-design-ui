@@ -14,7 +14,12 @@
 - [x] G0 CLAIM —— 由 `next-task.mjs` 授权开工（foundation 13/13 之后的下一个；8 个依赖包全部 completed）
 - [x] G1 ANALYZE —— `docs/analysis/date-picker.md`（14 节，全部来自实测）。新增探针 `tests/visual/debug/dump-datepicker-antd.mjs`（23 用例 SSR dump）
 - [x] G2 API DESIGN —— `interface.ts`（props/emits/slots/expose/子入口全量枚举；v-model 与语义事件按 **C11 双发**）。见下方「G2 的三条关键判据」
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
+- [x] G3 TOKEN —— `style/token.ts` 对齐 antd ComponentToken。**实测口径（可复现）**：
+      `node tests/visual/debug/extract-date-picker-css.mjs --tokens` ⇒
+      `prepareComponentToken` 返回 **45 键**（18 input + 21 panel + 3 arrow + 3 自有）、
+      落成 **44 个 CSS 变量**（减 `INTERNAL_FIXED_ITEM_MARGIN`）、产物里实见 **45 个**
+      `--ant-date-picker-*`（44 + 规则内声明的 `affixColor`）；另有 `initPickerPanelToken` 的
+      **10 个内部 token**。主题测试 **22 条**（`__tests__/theme.test.ts`）
 - [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
@@ -40,7 +45,7 @@
    （`DateType | number | string`，时间列传数字、上下午列传 'am' / 'pm'），
    **不要收窄成 `DatePickerDate`**。
 
-## G4 开工前必须先裁决的一件事（架构分叉，尚未裁决）
+## G4 的架构分叉 —— 已裁决 = A（完整对齐，分阶段落地）
 
 rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useState` + `useEvent`），
 而 `picker` foundation **只 Vue 化了面板**（裁决 `picker-panel-ownership` = B）。
@@ -51,9 +56,23 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 | **A. 完整重写** | 逐块对齐 `PickerInput`；`inputReadOnly` / `preserveInvalidOnBlur` / `previewValue` / 掩码模式 / 键入解析 全部落地 | 最大；但 11 维度可全 `done`、无缺口 |
 | **B. 核心 + 明确缺口** | 值 / 开合 / 面板 / 格式化 / 约束 / 状态 / 语义槽 全落地；键入解析与掩码标 `DEFERRED`（`layerNotes` + README §5 登记） | 有缺口，但缺口**可枚举、可测** |
 
-判据（不是「哪个省事」）：`cascader` 带着 1 条 `DEFERRED` 仍判 `completed`
-（那条是**样式集成**）。但**键入解析是主交互**，量级不同 ⇒ 按 `AGENTS.md` §7
-「遇到架构决策分叉必须停下问用户」，**这条要用户拍板**。
+**用户裁决（2026-09-30）= A。** 登记在 `registry/source/open-decisions.mjs` 的
+`date-picker-input-kernel`，裁决原文可 `node registry/tools/ask.mjs decision date-picker-input-kernel`。
+
+⇒ G4 **必须**实现（裁决原文里的 ①–⑥）：值/开合/面板接线、键入解析与 `format` 的
+函数/数组形态、掩码模式、键盘字段导航与分段、`inputReadOnly` / `preserveInvalidOnBlur` /
+`previewValue` / `order` / `needConfirm` / `maxTagCount` / `tagRender` / `multiple`；
+**⑥ 不得以「先跳过、回头补」的方式落 `DEFERRED`**。
+
+**分阶段落地顺序**（每阶段自成绿灯，便于中途取证）：
+
+| 阶段 | 内容 | 依赖 |
+|---|---|---|
+| S1 | 值 / 开合 / 面板接线 —— 受控 + 非受控、多个 v-model 的 C11 双发、`PickerPanel` 挂载 | G3 之后即可 |
+| S2 | 键入解析与 `format` 的函数 / 数组形态（**含跨包欠账**：`PickerFormat` 加回泛型 + `CustomFormat`） | S1 |
+| S3 | 掩码模式（`format.type: "mask"`） | S2 |
+| S4 | 键盘字段导航与分段（`-input-active`） | S2 |
+| S5 | `multiple` + `tagRender` / `maxTagCount`、范围的两端切换 | S4 |
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
