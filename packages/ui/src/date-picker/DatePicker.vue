@@ -60,6 +60,7 @@ import {
   toggleDates,
 } from '@apollo-design/picker';
 import { useZIndex } from '@apollo-design/portal';
+import { useDevWarning } from '@apollo-design/utils';
 import { type Component, type CSSProperties, computed, h, ref, type VNodeChild, watch } from 'vue';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -171,6 +172,43 @@ const emit = defineEmits<{
   submit: [event: Event];
   keydown: [event: KeyboardEvent, preventDefault: () => void];
 }>();
+
+// ============================== 废弃 prop 告警 ==============================
+/**
+ * 上游 `generateSinglePicker.js` 的 `deprecatedProps` 表（**逐字**）：
+ *
+ * ```js
+ * const deprecatedProps = {
+ *   dropdownClassName: 'classNames.popup.root',
+ *   popupClassName:    'classNames.popup.root',
+ *   popupStyle:        'styles.popup.root',
+ *   bordered:          'variant',
+ *   onSelect:          'onCalendarChange',
+ * };
+ * Object.entries(deprecatedProps).forEach(([oldProp, newProp]) => {
+ *   warning.deprecated(!(oldProp in props), oldProp, newProp);
+ * });
+ * ```
+ *
+ * 🚨 **判据必须从 `!(oldProp in props)` 改成 `props.x === undefined`**：
+ * React 的 `props` 只含**实际传过**的键，而 Vue 的 `props` 对象**恒含所有声明过的键**
+ * （未传时是 `undefined`）⇒ 照抄 `in` 会让**每一条告警每次都触发** ——
+ * 恒假告警比没有告警更糟（会淹掉真告警，也会让「告警一致性」测试假红）。
+ * 全仓同判：`input` / `input-number` / `text-area` 的 `bordered` 都是 `=== undefined`。
+ *
+ * ⚠️ 仅 dev 生效（`useDevWarning` 内部走 `isDev()`）。
+ */
+const devWarning = useDevWarning('DatePicker');
+const DEPRECATED_PROPS: Record<string, string> = {
+  dropdownClassName: 'classNames.popup.root',
+  popupClassName: 'classNames.popup.root',
+  popupStyle: 'styles.popup.root',
+  bordered: 'variant',
+  onSelect: 'onCalendarChange',
+};
+for (const [oldProp, newProp] of Object.entries(DEPRECATED_PROPS)) {
+  devWarning.deprecated(props[oldProp as keyof DatePickerProps] === undefined, oldProp, newProp);
+}
 
 // ============================== 上下文归一 ==============================
 const context = useComponentConfig('datePicker');
@@ -780,6 +818,20 @@ const popupClassNames = computed(() =>
 
 const transitionName = computed(() => getTransitionName(rootPrefixCls.value, props.transitionName));
 
+/**
+ * 浮层根的**内联样式**（`styles.popup.root`；deprecated 的 `popupStyle` 已被
+ * `useMergedPickerSemantic` 合并进同一处 —— 见 `fillPopupStyle`）。
+ *
+ * 🚨 2026-10-01 补齐：此前 `semantic.styles` 算出来了却**从没绑到 `Trigger`** ⇒
+ * `popupStyle` / `styles.popup.root` 静默无效（移植上游 `legacy popupStyle` 用例时抓到）。
+ *
+ * ⚠️ `Trigger` 的 `popupStyle` 类型是 `Record<string, string | number>`（有索引签名），
+ * 而 `CSSProperties` 是**接口**（没有索引签名）⇒ 必须显式收窄，不能直接传。
+ */
+const popupStyle = computed(
+  () => semantic.styles.value.popup?.root as Record<string, string | number> | undefined,
+);
+
 const realPlacement = computed(() => getRealPlacement(props.placement, rtl.value));
 
 /**
@@ -1008,6 +1060,7 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
     :builtin-placements="builtinPlacements"
     :popup-align="popupAlign"
     :popup-class-name="popupClassNames"
+    :popup-style="popupStyle"
     :get-popup-container="props.getPopupContainer"
     :z-index="zIndex"
     :motion="popupMotion"

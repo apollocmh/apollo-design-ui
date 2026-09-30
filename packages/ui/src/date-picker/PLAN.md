@@ -88,7 +88,17 @@
         - ⏳ **`presets` / footer**：上游在 **Popup 层**（`PickerInput/Popup/PresetPanel.js`
           + `Footer.js`），本仓的 `panelVNode` 只渲染面板 ⇒ 要先有一个「浮层内容容器」
           组件。`showNow` / `showToday` / `renderExtraFooter` / `panelRender` 同批。
-- [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
+- [x] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts`（**上游 testCases 的镜像**）。
+      覆盖：locale 三态（prop / 默认 / 深合并）· `disabledDate` · `showTime` 的
+      **列数与项数**（8 条上游用例合并成一张表 + `{}` 空参 + 12/24 小时）·
+      `format` 的函数 / 数组 / `kk:mm` · `multiple` 的 `tagRender` 自定义删除 ·
+      `suffixIcon` 五态 + ConfigProvider 优先序 · `allowClear` 四态 + `clearIcon` 优先序 +
+      `onClear` · **legacy prop 的告警与落点**（`dropdownClassName` / `popupClassName` /
+      `popupStyle` / `bordered` / `onSelect` + 一条「不传则无告警」的反向哨兵）。
+      ⚠️ **未移植清单与逐条理由写在文件头**（`generatePicker` / 范围版 / `focusTest` /
+      affix token 的 CSS 计算值 / 快照）。
+      🚨 移植过程中抓到并修掉两个**真缺口**：**废弃告警一条都没有**（→ PITFALLS 246）+
+      **`popupStyle` 算出来却从没绑到 `Trigger`**（→ PITFALLS 247）。
 - [x] G7 L3 类型 —— `__tests__/type.test-d.ts`，**42 条**（运行时 42 + 类型检查 42）。
       覆盖：值域 / `SingleValue` 与 `RangeValue` 的 `null` vs `undefined` / `format` 四写法 /
       语义槽 **4 平铺 + 7 嵌套**（且 `popup` **允许 string**，与 tabs 相反）/ emits 载荷
@@ -225,7 +235,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 | G0–G2 | ✅ | `docs/analysis/date-picker.md` + `interface.ts` |
 | G3 TOKEN | ✅ | `style/token.ts` 45 键 + theme 22 条 |
 | G4 S1（功能 + 样式） | ✅ | `DatePicker.vue` + 257 条规则 + 45 条声明 |
-| G5/G6 L1+L2（S1–S2 范围） | ⏳ 部分 | `picker-pure` **64** + `picker-typing` **11** + `picker-value-change` **36** + `s1-smoke` **10** + `s2-typing` **15** + `s2-commit` **12** |
+| G5/G6 L1+L2 | ✅ | `index.test.ts` **29**（上游 testCases 镜像）+ `picker-pure` **65** + `picker-typing` **11** + `picker-value-change` **36** + `mask-format` **18** + `s1-smoke` **10** + `s2-typing` **16** + `s2-commit` **12** + `s3-mask` **11** + `s4-focus` **5** + `s5-mode` **5** + `s5-multiple` **9** |
 | G7 L3 | ✅ | `type.test-d.ts` 42 条 |
 
 ## ⚠️ `--project types` 的既有 SFC 解析噪音（对照实验确认，非本包引入）

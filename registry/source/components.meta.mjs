@@ -330,7 +330,11 @@ export const COMPONENTS = [
       '**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；' +
       '**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；' +
       '顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。' +
-      'S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。',
+      'S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。' +
+      '**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。' +
+      '⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）' +
+      '+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。' +
+      '剩 **G9 L6 视觉**（未开始）与 G12/G13/G14。',
   },
   {
     name: 'time-picker',

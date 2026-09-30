@@ -2334,3 +2334,45 @@
       这次的症状是 `h(undefined, …)` —— 因为 `Overflow` 是 **default export**，
       我写成了 `import { Overflow }`（TypeScript 本该报错，但那一步我跳过了 typecheck 直接跑测试，
       表现为「`-selector` 在、但一个标签都没有」）。
+
+246. 🚨 **废弃告警的判据：React 的 `!(x in props)` 在 Vue 里**恒真**（2026-10-01，G5/G6 移植上游用例时）**。
+
+    上游 `generateSinglePicker.js`：
+    ```js
+    Object.entries(deprecatedProps).forEach(([oldProp, newProp]) => {
+      warning.deprecated(!(oldProp in props), oldProp, newProp);
+    });
+    ```
+
+    **React 的 `props` 只含「实际传过」的键**，而 **Vue 的 `props` 对象恒含所有声明过的键**
+    （未传时是 `undefined`）⇒ 照抄 `in` 会让**每一条告警每次都触发**。
+    恒假告警比没有告警更糟：它会淹掉真告警，也会让「告警一致性」测试假红。
+
+    - 正确判据：**`props.x === undefined`**（全仓同判：`input` / `input-number` /
+      `text-area` 的 `bordered`、`spin` 的 `size` 都是这个写法）。
+    - 语义差异只有一处：React 对「显式传 `undefined`」也告警，Vue 侧不告警 —— 可接受。
+    - **本仓 date-picker 此前一条废弃告警都没有**（`useDevWarning` 在全仓 40+ 处用过，
+      只有它漏了）⇒ 本轮补齐 5 条（`dropdownClassName` / `popupClassName` /
+      `popupStyle` / `bordered` / `onSelect`，与上游表逐字一致）。
+    - 已钉住：`index.test.ts` 的「**不传**这些 prop ⇒ 一条告警都没有」反向哨兵。
+    - 🚨 **教训**：「把上游那几行照抄过来」在**跨框架**移植里是最危险的写法。
+      凡是用到 `props` 的**键存在性**、**枚举**、**顺序**的地方，都要先问
+      「这个语言里 `props` 的形态一样吗」。
+
+247. 🚨 **`semantic.styles` 算出来了却从没绑到组件上 —— `popupStyle` 静默无效**（2026-10-01）。
+
+    `DatePicker.vue` 里 `useMergedPickerSemantic({ popupStyle: () => props.popupStyle, … })`
+    一直在算，`fillPopupStyle` 也把 deprecated 的 `popupStyle` 正确合并进了
+    `styles.popup.root` —— 但模板上的 `<Trigger>` **只绑了 `:popup-class-name`，
+    没绑 `:popup-style`** ⇒ `popupStyle` / `styles.popup.root` 全都静默无效。
+
+    - 发现方式：移植上游 `legacy popupStyle` 用例（断言
+      `container.querySelector('.ant-picker-dropdown')` 的 `toHaveStyle`）时**第一次就红**。
+      ⇒ 这是「**上游用例的价值**」的直接证据：L4 的 DOM 契约只覆盖**触发元素**
+      （`baseline` 里不含浮层），theme/a11y 也不看内联样式 ⇒ 三层都抓不到。
+    - 已修：新增 `popupStyle` computed（⚠️ 必须显式收窄成
+      `Record<string, string | number>` —— `Trigger` 的 prop 有索引签名，
+      而 `CSSProperties` 是**接口**没有 ⇒ 直接传会 TS 报错）并绑到 `<Trigger>`。
+    - 🚨 **教训**：「算出来了」≠「用上了」。语义槽这类**多层合并**的产物，
+      收口时要逐项核对「**每一个出口都绑了吗**」—— 建议把「语义槽的 4 个出口
+      （root / prefix / input / suffix + popup）逐个绑上」当成 G4 的收口清单。
