@@ -103,7 +103,20 @@ export interface UseFilledLocaleOptions {
 export interface FilledLocaleResult {
   /** 已补齐的 rc locale（面板 / `getRowFormat` / `formatValue` 都该用它）。 */
   filledLocale: ComputedRef<RcPickerLocale>;
-  /** 归一的 `showTime`；非 `datetime` / `time` 时为 `null`。 */
+  /**
+   * 归一的 `showTime`；非 `datetime` / `time` 时为 `null`。
+   *
+   * ⚠️ **当前没有消费者**（2026-10-01）—— 刻意保留，不是漏接：
+   *   - 上游把它塞进 `filledProps.showTime` 交给**同一个包**里的 `PickerInput`；
+   *   - 本仓的面板在 `@apollo-design/picker` 里（裁决 `picker-panel-ownership` = B），
+   *     它**自己**会跑一遍 `getTimeProps` + `fillShowTimeConfig`（`picker-panel.ts:239-260`）
+   *     ⇒ 再把本函数的产物传下去是**重复归一**，两份真值来源反而更容易漂移。
+   *   - 保留它的理由是**顺序**：`filledLocale` 是这条链的中间产物，
+   *     而 `mergedShowTime` 正是「顺序不可颠倒」的那一步（见文件头判据 2）——
+   *     留着它，S4（字段导航）与 S5（`multiple` / `presets`）要接
+   *     `showTime` 时不必重新推一遍依赖关系。
+   *   - 若到 S5 收口时仍无消费者，应当**删掉**它（而不是留着当摆设）。
+   */
   mergedShowTime: ComputedRef<TimePanelConfig<PanelDateType> | null>;
 }
 
