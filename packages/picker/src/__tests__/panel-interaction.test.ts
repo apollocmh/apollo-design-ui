@@ -61,6 +61,21 @@ const fmt = (d: PanelDateType | null | undefined, f = 'YYYY-MM-DD HH:mm:ss'): st
 const P = 'apollo-picker';
 
 /**
+ * 显式的最小 wrapper 面。
+ *
+ * 🚨 `mount(PickerPanel as never, …)` 会让 `mount` 的泛型推成 `never`
+ * ⇒ `w.element` 也是 `never` ⇒ 在 `--project types` 的 vue-tsc 下报
+ * 「Property 'querySelector' does not exist on type 'never'」（本轮实测：161 处）。
+ * 断言成一个**明确的小接口**即可，比在每处 `as never` 干净。
+ */
+interface PanelWrapper {
+  element: HTMLElement;
+  vm: unknown;
+  unmount: () => void;
+  setProps: (props: Record<string, unknown>) => Promise<void>;
+}
+
+/**
  * 🚨 **受控 vs 非受控**是本文件最容易写错的地方，所以拆成两个 helper。
  *
  * - `mountPanel` 传 `pickerValue` + `value` ⇒ **全受控**（L4 基线用的是这一档，
@@ -87,7 +102,7 @@ const mountPanel = (props: Record<string, unknown> = {}) =>
       } as never,
       attachTo: document.body,
     } as never,
-  );
+  ) as unknown as PanelWrapper;
 
 /** 非受控（`pickerValue` / `value` 都不传 ⇒ 内部 `ref` 生效）。 */
 const mountPanelLoose = (props: Record<string, unknown> = {}) =>
@@ -106,9 +121,9 @@ const mountPanelLoose = (props: Record<string, unknown> = {}) =>
       } as never,
       attachTo: document.body,
     } as never,
-  );
+  ) as unknown as PanelWrapper;
 
-type Wrapper = ReturnType<typeof mountPanel>;
+type Wrapper = PanelWrapper;
 
 const click = (el: Element | null | undefined): void => {
   if (!el) {

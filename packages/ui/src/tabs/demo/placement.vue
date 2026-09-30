@@ -12,7 +12,7 @@ const items = [
   <div style="display: flex; flex-direction: column; gap: 12px">
     <Tabs default-active-key="1" tab-placement="top" :items="items" />
     <Tabs default-active-key="1" tab-placement="bottom" :items="items" />
-    <Tabs default-active-key="1" tab-placement="left" :items="items" />
-    <Tabs default-active-key="1" tab-placement="right" :items="items" />
+    <Tabs default-active-key="1" tab-placement="start" :items="items" />
+    <Tabs default-active-key="1" tab-placement="end" :items="items" />
   </div>
 </template>

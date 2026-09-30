@@ -65,7 +65,7 @@ export const TimePanelBody = defineComponent({
     return () => {
       const ctx = usePanelInfo().value;
       const hack = usePanelHack();
-      const { prefixCls, classNames, styles, values, generateConfig: g, locale, onSelect } = ctx;
+      const { prefixCls, classNames, styles, values, generateConfig: g, locale } = ctx;
       const onHover = ctx.onHover ?? (() => undefined);
       const { pickerValue } = ctx;
 

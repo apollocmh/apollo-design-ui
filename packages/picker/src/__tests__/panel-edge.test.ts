@@ -67,6 +67,21 @@ const panelBase = () => ({
   pickerValue: now,
 });
 
+/**
+ * 显式的最小 wrapper 面。
+ *
+ * 🚨 `mount(PickerPanel as never, …)` 会让 `mount` 的泛型推成 `never`
+ * ⇒ `w.element` 也是 `never` ⇒ 在 `--project types` 的 vue-tsc 下报
+ * 「Property 'querySelector' does not exist on type 'never'」（本轮实测：161 处）。
+ * 断言成一个**明确的小接口**即可，比在每处 `as never` 干净。
+ */
+interface PanelWrapper {
+  element: HTMLElement;
+  vm: unknown;
+  unmount: () => void;
+  setProps: (props: Record<string, unknown>) => Promise<void>;
+}
+
 const mountPanel = (props: Record<string, unknown> = {}) =>
   mount(
     PickerPanel as never,
@@ -82,7 +97,7 @@ const mountPanel = (props: Record<string, unknown> = {}) =>
       } as never,
       attachTo: document.body,
     } as never,
-  );
+  ) as unknown as PanelWrapper;
 
 const click = (el: Element | null | undefined): void => {
   if (!el) {
@@ -122,7 +137,7 @@ describe('逃生通道（`PickerHackContext`）', () => {
         },
         attachTo: document.body,
       } as never,
-    );
+    ) as unknown as PanelWrapper;
 
     const prev = w.element.querySelector<HTMLElement>(`.${P}-header-prev-btn`);
     const superPrev = w.element.querySelector<HTMLElement>(`.${P}-header-super-prev-btn`);
@@ -146,7 +161,7 @@ describe('逃生通道（`PickerHackContext`）', () => {
         slots: { default: () => h(DatePanel as never, panelBase() as never) },
         attachTo: document.body,
       } as never,
-    );
+    ) as unknown as PanelWrapper;
     expect(w.element.querySelector<HTMLElement>(`.${P}-header-next-btn`)?.style.visibility).toBe(
       'hidden',
     );
@@ -168,7 +183,7 @@ describe('逃生通道（`PickerHackContext`）', () => {
         slots: { default: () => h(DatePanel as never, panelBase() as never) },
         attachTo: document.body,
       } as never,
-    );
+    ) as unknown as PanelWrapper;
 
     const cell = w.element.querySelector<HTMLElement>(`.${P}-cell-in-view`);
     cell?.dispatchEvent(new MouseEvent('dblclick'));
@@ -194,7 +209,7 @@ describe('逃生通道（`PickerHackContext`）', () => {
         },
         attachTo: document.body,
       } as never,
-    );
+    ) as unknown as PanelWrapper;
     const cell = w.element.querySelector<HTMLElement>(`.${P}-cell-disabled`);
     cell?.dispatchEvent(new MouseEvent('dblclick'));
     expect(onCellDblClick).not.toHaveBeenCalled();
@@ -220,7 +235,7 @@ describe('逃生通道（`PickerHackContext`）', () => {
         },
         attachTo: document.body,
       } as never,
-    );
+    ) as unknown as PanelWrapper;
     const cell = w.element.querySelector<HTMLElement>(
       `.${P}-time-panel-column[data-type="hour"] .${P}-time-panel-cell`,
     );
@@ -243,7 +258,7 @@ describe('防御性契约', () => {
     const w = mount(
       DatePanel as never,
       { props: panelBase() as never, attachTo: document.body } as never,
-    );
+    ) as unknown as PanelWrapper;
     // 面板在没有 `values` / `onSelect` 时也要能渲染（两者的默认值分别走到）
     click(w.element.querySelector(`.${P}-cell-in-view`));
     expect(w.element.querySelector(`.${P}-cell`)).not.toBeNull();
@@ -254,7 +269,7 @@ describe('防御性契约', () => {
     const w = mount(
       DatePanel as never,
       { props: panelBase() as never, attachTo: document.body } as never,
-    );
+    ) as unknown as PanelWrapper;
     expect(w.element.querySelectorAll(`.${P}-cell-selected`)).toHaveLength(0);
     w.unmount();
   });
@@ -263,7 +278,7 @@ describe('防御性契约', () => {
     const w = mount(
       TimePanel as never,
       { props: { ...panelBase(), values: [now] } as never, attachTo: document.body } as never,
-    );
+    ) as unknown as PanelWrapper;
     // ⚠️ 根元素要用 `w.element` 自己判 —— `w.element.querySelector` 只在**子树**里找，
     //    拿不到根（本条最初就是这么写错的）。
     expect(w.element.classList.contains(`${P}-time-panel`)).toBe(true);
@@ -634,7 +649,10 @@ describe('时间列的滚动（自己造布局）', () => {
       vi.advanceTimersByTime(400);
 
       expect(onSelect).toHaveBeenCalledTimes(1);
-      expect((onSelect.mock.calls[0]?.[0] as dayjs.Dayjs).hour()).toBe(1);
+      // ⚠️ 先取出来再断言：写 `(calls[0]?.[0] as X).hour()` 会被 biome 判
+      //    `noUnsafeOptionalChaining`（`?.` 之后紧跟非可选成员访问，短路成 undefined 就抛）。
+      const selected = onSelect.mock.calls[0]?.[0] as dayjs.Dayjs | undefined;
+      expect(selected?.hour()).toBe(1);
       w.unmount();
     } finally {
       vi.useRealTimers();
@@ -663,7 +681,8 @@ describe('时间列的滚动（自己造布局）', () => {
       vi.advanceTimersByTime(400);
 
       // 第 1 格被禁用（差值换成 MAX_SAFE_INTEGER）⇒ 选第 2 格
-      expect((onSelect.mock.calls[0]?.[0] as dayjs.Dayjs).hour()).toBe(2);
+      const selected = onSelect.mock.calls[0]?.[0] as dayjs.Dayjs | undefined;
+      expect(selected?.hour()).toBe(2);
       w.unmount();
     } finally {
       vi.useRealTimers();
@@ -776,7 +795,8 @@ describe('时间面板的其余分支', () => {
     expect(cells).toHaveLength(4);
     expect(cells[0]?.textContent).toBe('000');
     click(cells[2]);
-    expect((onSelect.mock.calls[0]?.[0] as dayjs.Dayjs).millisecond()).toBe(500);
+    const selected = onSelect.mock.calls[0]?.[0] as dayjs.Dayjs | undefined;
+    expect(selected?.millisecond()).toBe(500);
     w.unmount();
   });
 
@@ -934,7 +954,7 @@ describe('WeekPanel 直接挂载（不经过 PickerPanel）', () => {
         } as never,
         attachTo: document.body,
       } as never,
-    );
+    ) as unknown as PanelWrapper;
     expect(w.element.classList.contains(`${P}-week-panel`)).toBe(true);
     expect(w.element.querySelectorAll(`.${P}-week-panel-row-range-start`)).toHaveLength(1);
     w.unmount();

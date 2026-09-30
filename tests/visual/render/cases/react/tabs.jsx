@@ -40,7 +40,8 @@ export default {
 
   centeredCard: () => box(<Tabs defaultActiveKey="1" type="card" centered items={items} />),
 
-  vertical: () => box(<Tabs defaultActiveKey="1" tabPlacement="left" items={items} />),
+  // ⚠️ 用 `start` 不用 `left`（同 vue 侧：`left` 在 antd 里走 `default:` 直通，LTR 侥幸等价）。
+  vertical: () => box(<Tabs defaultActiveKey="1" tabPlacement="start" items={items} />),
 
   bottom: () => box(<Tabs defaultActiveKey="1" tabPlacement="bottom" items={items} />),
 

@@ -27,7 +27,6 @@ import type { Dayjs } from 'dayjs';
 import {
   type ComputedRef,
   computed,
-  getCurrentInstance,
   type InjectionKey,
   inject,
   provide,
@@ -145,10 +144,6 @@ export const DEFAULT_PANEL_SHARED: PanelSharedContext = { classNames: {}, styles
 
 /** `provide` 一个面板的 `info`（由**面板组件自己**在 `setup()` 里调用）。 */
 export function providePanelInfo(info: ComputedRef<PanelInfo>): void {
-  // [TMP-DBG]
-  process.stderr.write(
-    `PROVIDE key=${String(PANEL_INFO_KEY)} inst=${String(getCurrentInstance() !== null)}\n`,
-  );
   provide(PANEL_INFO_KEY, info);
 }
 
@@ -160,10 +155,6 @@ export function providePanelInfo(info: ComputedRef<PanelInfo>): void {
  * 是同步的 —— 找不到时**留到渲染期**再抛，报错信息才能带上组件栈。
  */
 export function usePanelInfo(): ComputedRef<PanelInfo> {
-  // [TMP-DBG]
-  process.stderr.write(
-    `INJECT key=${String(PANEL_INFO_KEY)} comp=${(getCurrentInstance()?.type as { name?: string } | undefined)?.name ?? 'no-inst'}\n`,
-  );
   const info = inject(PANEL_INFO_KEY, undefined);
   if (info) {
     return info;

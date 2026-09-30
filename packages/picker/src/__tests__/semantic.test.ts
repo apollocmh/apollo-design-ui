@@ -58,22 +58,15 @@ const generateConfig: GenerateConfig<PanelDateType> = {
 
 /** rc `en_US` 的等值手写版（键与内容逐条对应）。 */
 const locale: PickerLocale = {
+  // ⚠️ 只列出 `PickerLocale` **真正声明**的键。
+  //    rc 的 `en_US` 还有 `today` / `now` / `ok` / `clear` / `year` / `month` 等，
+  //    但那些是**输入框与页脚**的文案，面板不读 ⇒ 本包的类型刻意不收（契约 §5.1）。
   locale: 'en_US',
   yearFormat: 'YYYY',
   dayFormat: 'D',
   cellMeridiemFormat: 'A',
   monthBeforeYear: true,
   week: 'Week',
-  month: 'Month',
-  year: 'Year',
-  today: 'Today',
-  now: 'Now',
-  backToToday: 'Back to today',
-  ok: 'OK',
-  clear: 'Clear',
-  timeSelect: 'select time',
-  dateSelect: 'select date',
-  weekSelect: 'Choose a week',
   monthSelect: 'Choose a month',
   yearSelect: 'Choose a year',
   decadeSelect: 'Choose a decade',
@@ -81,10 +74,6 @@ const locale: PickerLocale = {
   nextMonth: 'Next month',
   previousYear: 'Last year',
   nextYear: 'Next year',
-  previousDecade: 'Last decade',
-  nextDecade: 'Next decade',
-  previousCentury: 'Last century',
-  nextCentury: 'Next century',
 };
 
 const now = generateConfig.getNow();
@@ -101,6 +90,18 @@ const base = () => ({
 });
 
 type PickerPanelProps = Record<string, unknown>;
+/**
+ * 本文件只走 `h(...)`（不 `mount`），所以面板 props 用 `Record<string, unknown>` 就够。
+ *
+ * 🚨 `mount(X as never, …)` 会让 `mount` 的泛型推成 `never` ⇒ `w.element` 也是 `never`
+ * ⇒ 在根 `tsconfig.json`（`--project types`）下报「Property 'querySelector' does not
+ * exist on type 'never'」。**本文件没有这个问题**（不 mount）；需要 `mount` 的用例在
+ * `panel-interaction.test.ts`，那边有显式的 wrapper 面。
+ *
+ * ⚠️ `packages/picker/tsconfig.check.json` **排除了 `__tests__`**
+ * ⇒ 单包 `vue-tsc -p packages/picker/tsconfig.check.json` 看不到这些错误，
+ * 必须用**根** `tsconfig.json` 验证测试文件的类型。
+ */
 const render = (props: PickerPanelProps): DomRenderResult =>
   h(PickerPanel as never, { ...base(), ...props } as never);
 

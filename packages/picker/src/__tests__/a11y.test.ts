@@ -65,6 +65,21 @@ const P = 'apollo-picker';
 /** 与 test-utils 的 `DEFAULT_TAGS` 同源：WCAG 2.0/2.1/2.2 的 A + AA。 */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
+/**
+ * 显式的最小 wrapper 面。
+ *
+ * 🚨 `mount(PickerPanel as never, …)` 会让 `mount` 的泛型推成 `never`
+ * ⇒ `w.element` 也是 `never` ⇒ 在 `--project types` 的 vue-tsc 下报
+ * 「Property 'querySelector' does not exist on type 'never'」（本轮实测：161 处）。
+ * 断言成一个**明确的小接口**即可，比在每处 `as never` 干净。
+ */
+interface PanelWrapper {
+  element: HTMLElement;
+  vm: unknown;
+  unmount: () => void;
+  setProps: (props: Record<string, unknown>) => Promise<void>;
+}
+
 const mountPanel = (props: Record<string, unknown> = {}) =>
   mount(
     PickerPanel as never,
@@ -79,7 +94,7 @@ const mountPanel = (props: Record<string, unknown> = {}) =>
       } as never,
       attachTo: document.body,
     } as never,
-  );
+  ) as unknown as PanelWrapper;
 
 describe('PickerPanel · axe 扫描（真实配置）', () => {
   /**

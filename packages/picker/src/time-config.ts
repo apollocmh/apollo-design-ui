@@ -64,14 +64,46 @@ export interface TimePanelConfig<DateType> {
   defaultOpenValue?: DateType;
 }
 
-/** 组件 `format` prop 的可能形态（上游 `format` 的类型面）。 */
-export type PickerFormat<DateType> = string | readonly string[] | { format: string };
+/**
+ * 组件 `format` prop 的可能形态。
+ *
+ * 上游 `@rc-component/picker` 的 `es/interface.d.ts` 第 237 行是
+ * ```
+ * format?: FormatType<DateType> | FormatType<DateType>[] | { format: string; type?: 'mask' };
+ * ```
+ * 其中 `FormatType<DateType> = string | CustomFormat<DateType>`（第 205 行）——
+ * 也就是说上游的 `format` **还带一个「拿日期算格式串」的函数形态**。
+ *
+ * ⚠️ 本仓目前只落到 **字符串 / 字符串数组 / `{ format }`** 三种形态，
+ * **尚未支持 `CustomFormat`（函数）**，所以这里**不挂 `DateType` 泛型**：
+ * 挂了它也无人使用（会成为 biome 的 `noUnusedVariables`），更糟的是会让人误以为
+ * 函数形态已经支持。等 `date-picker` 真做函数式 format 时，随实现一起把泛型加回来。
+ */
+export type PickerFormat = string | readonly string[] | { format: string };
 
-/** `getTimeProps` 的输入：既含顶层时间 props，也含 `showTime` 与 `format` / `picker`。 */
-export interface TimeConfigSource<DateType> extends Omit<TimePanelConfig<DateType>, 'format'> {
+/**
+ * `getTimeProps` 的输入：既含顶层时间 props，也含 `showTime` / `format` / `picker`。
+ *
+ * 🚨 三处**故意与 `TimePanelConfig` 不同**，因为「真实组件的 props」与「时间面板的配置」
+ * 是两个不同的东西，只是有一批键同名：
+ *
+ *  1. `locale` —— 放行但**不读**（`PickerPanel` 传的是它自己的整个 props）；
+ *  2. `format` —— 组件层可以是数组 / 对象形态（`PickerFormat`），
+ *     而 `TimePanelConfig.format` 是已归一的单个格式串；
+ *  3. `defaultValue` —— **同名不同义**：组件层是「面板的值」（`DateType[]`），
+ *     时间层的 `defaultValue` 是「时间列的默认值」（`DateType`）。
+ *     上游把两者 spread 在一起（后者被前者覆盖），本仓在 `getTimeProps` 里**丢弃**它
+ *     （时间侧只认 `defaultOpenValue`，而 `defaultOpenValue ?? defaultValue` 的兼容
+ *     已经在 `getTimeProps` 内做完了）。
+ */
+export interface TimeConfigSource<DateType>
+  extends Omit<TimePanelConfig<DateType>, 'format' | 'defaultValue'> {
   picker?: PickerMode;
   showTime?: boolean | TimePanelConfig<DateType>;
-  format?: PickerFormat<DateType>;
+  format?: PickerFormat;
+  locale?: PickerLocale;
+  /** 见上面的第 3 条：结构兼容用，本函数不读它。 */
+  defaultValue?: unknown;
 }
 
 /**
@@ -168,7 +200,7 @@ function fillShowConfig(
 }
 
 /** `props.format` → 单个格式串（数组取第一个、对象取 `.format`）。 */
-function pickPropFormat<DateType>(format: PickerFormat<DateType> | undefined): string | null {
+function pickPropFormat(format: PickerFormat | undefined): string | null {
   if (!format) {
     return null;
   }
@@ -196,10 +228,14 @@ function pickPropFormat<DateType>(format: PickerFormat<DateType> | undefined): s
 export function getTimeProps<DateType>(
   componentProps: TimeConfigSource<DateType>,
 ): [TimePanelConfig<DateType>, TimePanelConfig<DateType>, string | undefined, string | null] {
-  const timeProps = pickProps(
+  const picked = pickProps(
     componentProps,
     showTimeKeys as unknown as (keyof typeof componentProps)[],
-  ) as TimePanelConfig<DateType>;
+  ) as Record<string, unknown>;
+  // ⚠️ 丢掉组件层的 `defaultValue`（面板的值 = 数组），见 `TimeConfigSource` 的第 3 条。
+  //    时间侧只认 `defaultOpenValue`，而它已经在下面被 `showTime.defaultValue` 兜底过。
+  delete picked.defaultValue;
+  const timeProps = picked as TimePanelConfig<DateType>;
   const propFormat = pickPropFormat(componentProps.format);
 
   if (componentProps.picker === 'time' && propFormat !== null) {

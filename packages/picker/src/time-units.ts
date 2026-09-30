@@ -110,7 +110,7 @@ function getDisabledTimes<DateType>(
  * 小时是**一次性**算好的（`rowHourUnits`）；分/秒/毫秒是**函数**，因为
  * 「哪些分钟被禁用」取决于当前的小时 —— 这是上游把后三档做成闭包的原因。
  */
-function getAllUnits<DateType>(
+function getAllUnits(
   getDisabledHours: () => number[],
   getDisabledMinutes: (hour: number) => number[],
   getDisabledSeconds: (hour: number, minute: number) => number[],

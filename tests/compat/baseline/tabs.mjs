@@ -6,7 +6,26 @@
  *
  *   - 值：`items` 的 key / label（含 icon 的**包 span** 分支）/ disabled / closable
  *   - 模式：`type`（line / card / editable-card）/ `centered` / `size` 三档
- *   - 方位：`tabPlacement` 四值（含 RTL 的 `start`/`end` 映射）
+ *   - 方位：`tabPlacement` 四值 `top` / `bottom` / `start` / `end`
+ *     ⚠️ 只认这四个 —— 上游 `TabPlacement = 'top' | 'end' | 'bottom' | 'start'`
+ *     （`es/tabs/index.d.ts:10`）。
+ *     本轮修正：原先的 `tabs:left` / `tabs:right` 两个用例已删除，改成只留
+ *     `start` / `end`。**判据（读上游源码确认，不是推测）** —— `es/tabs/index.js:101-114`：
+ *     ```js
+ *     const placement = tabPlacement ?? tabPosition ?? undefined;
+ *     const isRTL = direction === 'rtl';
+ *     switch (placement) {
+ *       case 'start': return isRTL ? 'right' : 'left';
+ *       case 'end':   return isRTL ? 'left'  : 'right';
+ *       default:      return placement;   // ← 'left' / 'right' 原样直通
+ *     }
+ *     ```
+ *     ⇒ `'left'` / `'right'` 走的是 **`default` 直通分支**，在 **LTR 下与
+ *     `start` / `end` 渲染完全相同**（rc-tabs 的 `tabPosition` 本来就收这两个值），
+ *     所以那两个用例是**冗余的**、而且用的是**未声明的值**。
+ *     在 **RTL 下**它们才是真的不一样：`start`/`end` 会镜像，`left`/`right` 不会
+ *     —— 这正是必须换掉的第二个理由（本仓的基线与 L6 用例都只跑 LTR，
+ *     留着它们等于把「只在 LTR 侥幸正确」的写法固化成规格）。
  *   - 装饰：`tabBarGutter` / `tabBarExtraContent`（单节点与 `{left,right}`）/
  *     `indicator`（align / size）/ `animated`（`tabPane` 开时的 `-animated` 类）
  *   - 面板：`forceRender` / `destroyOnHidden` / 无 `children`
@@ -114,11 +133,6 @@ push(
 push(
   'tabs:bottom',
   h(Tabs, { id: ID, defaultActiveKey: '1', tabPlacement: 'bottom', items: items() }),
-);
-push('tabs:left', h(Tabs, { id: ID, defaultActiveKey: '1', tabPlacement: 'left', items: items() }));
-push(
-  'tabs:right',
-  h(Tabs, { id: ID, defaultActiveKey: '1', tabPlacement: 'right', items: items() }),
 );
 push(
   'tabs:start',

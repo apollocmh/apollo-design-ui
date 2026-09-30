@@ -1665,3 +1665,90 @@
     断言反而测成了**另一条**路径（本轮把「滚动中不提交」测成了「正常提交」）。
     ⇒ 需要「跑几帧然后停住」时，用**计数 + 同步执行**（`if (n <= 3) cb(...)`），
     不要用「永不执行的队列」去表达「停住」—— 那表达的是「一帧都没跑」。
+
+## Picker 收口流（2026-09-30，213-218）
+
+213. 🚨🚨 **`biome check` 用 shell 展开的 glob 会给出「0 error」的假绿灯**（2026-09-30 实测，本仓真踩）。
+    症状：`pnpm exec biome check packages/picker/src/**/*.ts` 报 **0 error**，而 `biome check .`
+    对同一批文件报 **21 个 error**。
+    - 根因：**zsh 默认不递归展开 `**`**（没 `setopt globstar`）⇒ `**/*.ts` 只匹配**一层**子目录，
+      `src/*.ts`（顶层文件）**全部漏检**；而 biome 对「显式传入的路径」**不会**再按自己的
+      `files.includes` 补扫。
+    - 判据：两边都加 `--reporter=json`，数 `severity === 'error'` 的条数；
+      或干脆跑 `pnpm run lint:format`（= `biome check .`，唯一权威）。
+    - 教训：**门禁命令不许自己手写 glob**，一律用 `package.json` 的 script。
+      ⚠️ 上一轮我在日志里写的「biome 0 error」就是这么来的 —— **假绿灯比红灯更贵**，
+      它会让人把错误结论写进仓库文档（本轮已回改）。
+
+214. 🚨 **biome 2 的 `noUnusedVariables` 会报「没人用的 TS 类型参数」**（2026-09-30，picker 实测）。
+    `export type PickerFormat<DateType> = string | readonly string[] | { format: string }` 里
+    `DateType` 没被用到 ⇒ 报 `lint/correctness/noUnusedVariables`（`noUnusedImports` 只管 import）。
+    - ⚠️ 与 `vue-tsc` **互补但不重叠**：`vue-tsc` 不看未使用的 import / 类型参数
+      ⇒ **类型检查全绿 ≠ lint 全绿**，收口时两个都要跑。
+    - 修的时候别顺手删泛型了事：先确认上游那个参数是不是「真的会用上」。本轮查了
+      `@rc-component/picker/es/interface.d.ts`（第 205 行 `FormatType<DateType> = string |
+      CustomFormat<DateType>`、第 237 行 `format?: FormatType<DateType> | FormatType<DateType>[] |
+      { format: string; type?: 'mask' }`）才发现上游**有函数形态**，我们没做 ⇒
+      删掉泛型 + 在注释里写明「为什么现在不挂泛型、什么时候加回来」（写了会说谎的 API 更糟）。
+
+215. 🚨 **`[TMP-DBG]` 插桩会一路打进 `dist/`**（2026-09-30，picker 实测）。
+    为定位「面板自己 provide 的东西自己 inject 不到」，我在 `panel-context.ts` 的
+    `providePanelInfo` / `usePanelInfo` 里加了 `process.stderr.write`，**顺手就提交了**；
+    构建后还进了 `packages/picker/dist/index.mjs` ⇒ 任何消费者跑测试都会在 stderr 刷
+    `INJECT key=Symbol(apolloPickerPanelInfo) comp=...`。
+    - 对策：插桩**必须**带 `[TMP-DBG]` 标记（`grep -rn "TMP-DBG" packages/` 一次清光），
+      收口前用 **Grep 工具**扫 `process.stderr.write` / `console.log`。
+    - 🚨 `dist/` 是 **gitignore** 的 ⇒ 它脏了**不会被 `git status` 提醒**，只有消费者
+      （或 `tests/build/run.mjs` 的产物扫描）会发现。这是「本地绿、下游脏」的典型形态。
+
+216. ⚠️ **`Edit` 工具的批量编辑会「部分落盘但报 success」—— PITFALLS 138 的复现**（2026-09-30）。
+    一次发 3–4 个 `Edit`，其中约 1/3 静默没落盘（例：`date-panel.ts` 的 import 行没改、
+    `upper-panels.ts` 的 `let titleNode` 没加类型、`panel-body.ts` 的 call-site 没跟上新签名），
+    而工具逐条回的都是 `Successfully edited file`。
+    - 后果很凶：**签名改了、调用处没改**会让仓库进入**编译不过**的状态
+      （本轮 `renderCell` 就是这样把 `tsc` 直接弄红的）。
+    - 对策：**多文件 / 多点的机械改动一律写 Node 脚本**（`readFileSync` → 逐条
+      `split` 计数断言「恰好命中 1 次」→ `replace` → `writeFileSync`），脚本逐条打印
+      `OK / SKIP(未找到) / SKIP(命中 N 次，不唯一)`。比 `Edit` 可靠得多，而且自带回执。
+      一次性脚本写到 `/tmp` 不算污染仓库。
+    - 只改 1–2 处时仍可用 `Edit`，但**必须**用 Grep 工具回读确认。
+
+217. ⚠️ **BSD `grep` 不支持 `\|` 交替，会静默返回空**（2026-09-30 实测，本机 macOS/zsh）。
+    `grep -n "usePanelHack\|panel-context" f.ts` 输出**空**，让人误判「文件里没有这个标识符」；
+    实际那一行就在文件里。⇒ 一律用 **Grep 工具**（ripgrep），别用 bash 的 `grep`。
+    （与本机 user-level MEMORY 里「`rg` 不在 PATH，别用 bash 版」同族。）
+
+218. ⚠️ **`registry:check` 的顺序不能反**：`gen-registry.mjs` 会重写
+    `components/dependencies/tokens.json` 的 `generatedAt` ⇒ 紧接着
+    `foundation-status.mjs --check` 会报 **「registry/foundation.json 已过期」**
+    （它的 digest 输入变了，不是真过期）。
+    正确流程：`gen-registry.mjs` → `foundation-status.mjs`（**不带 `--check`，写一次**）
+    → `gen-workstreams.mjs --check` → `validate-registry.mjs`。
+    刷新 `foundation.json` 只会动 `generatedAt` 与 `srcLines`（`status`/`dimensions`/
+    `testLayers`/`verification` 等进度字段跨运行保留）—— 刷新后 `git diff` 应当**只有这两类行**。
+
+219. 🚨 **`tabPlacement` 的 `'left'` / `'right'` 不是「无效值」—— 它们走上游的 `default:` 直通分支**
+    （2026-09-30，读 `antd/es/tabs/index.js:101-114` 确认）。**这条是更正**：本轮早先我在日志里
+    写成「`left`/`right` 渲染出的是**未识别的 placement**」，那是**错的**。
+    上游真实逻辑：
+    ```js
+    const placement = tabPlacement ?? tabPosition ?? undefined;
+    const isRTL = direction === 'rtl';
+    switch (placement) {
+      case 'start': return isRTL ? 'right' : 'left';
+      case 'end':   return isRTL ? 'left'  : 'right';
+      default:      return placement;   // ← 未知值**原样透传**给 rc-tabs
+    }
+    ```
+    ⇒ ① 类型面只声明 `TabPlacement = 'top' | 'end' | 'bottom' | 'start'`（`es/tabs/index.d.ts:10`）；
+      ② 但运行时 `'left'`/`'right'` **能跑**，因为 rc-tabs 的 `tabPosition` 本来就收这两个值
+      ⇒ **LTR 下与 `start`/`end` 渲染逐字节相同**（本轮实测：把 tabs 视觉用例的
+      `vertical` 从 `'left'` 改成 `'start'` 后，重生成的 React 基线 PNG **字节不变**）；
+      ③ 差别在 **RTL**：`start`/`end` 会镜像，`left`/`right` 不会。
+    - 判据手法（值得复用）：**别靠「读文档觉得它无效」下结论** —— 先 `switch` 有没有 `default`
+      直通分支，再用「改值 → 重生成基线 → `git status` 看有没有变」做**行为级证伪**。
+      本轮正是靠「重生成后 `git status` 干净 ⇒ 两者等价」才推翻了早先的解释。
+    - 处置：`tests/compat/baseline/tabs.mjs` 里的 `tabs:left` / `tabs:right` 两个用例
+      **删掉**（LTR 下与 `start`/`end` 冗余，且用的是未声明的值，留着等于把「只在 LTR
+      侥幸正确」的写法固化成规格）；`demo/placement.vue` 与
+      `tests/visual/render/cases/{vue,react}/tabs.{js,jsx}` 的 `vertical` 一律改 `start`。

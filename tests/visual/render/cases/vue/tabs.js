@@ -33,7 +33,9 @@ export default {
 
   centeredCard: () => box(h(Tabs, { defaultActiveKey: '1', type: 'card', centered: true, items })),
 
-  vertical: () => box(h(Tabs, { defaultActiveKey: '1', tabPlacement: 'left', items })),
+  // ⚠️ 用 `start` 不用 `left`：上游 `TabPlacement = 'top'|'end'|'bottom'|'start'`；
+  //    `'left'` 会走 antd 的 `default:` 直通分支（LTR 下侥幸等价、RTL 下不镜像）。
+  vertical: () => box(h(Tabs, { defaultActiveKey: '1', tabPlacement: 'start', items })),
 
   bottom: () => box(h(Tabs, { defaultActiveKey: '1', tabPlacement: 'bottom', items })),
 

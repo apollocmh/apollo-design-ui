@@ -89,11 +89,7 @@ export const PanelBody = defineComponent({
         disabledDate: mergedDisabledDate,
       } as Parameters<typeof buildPanelCells<PanelDateType>>[1]);
 
-      const renderCell = (
-        cell: (typeof rows)[number][number],
-        rowStartDate: PanelDateType,
-        col: number,
-      ): VNodeChild => {
+      const renderCell = (cell: (typeof rows)[number][number], col: number): VNodeChild => {
         const inner = h('div', { class: `${cellPrefixCls}-inner` }, [cell.text]);
 
         return h(
@@ -166,7 +162,9 @@ export const PanelBody = defineComponent({
         if (props.prefixColumn) {
           tds.push(props.prefixColumn(rowStartDate));
         }
-        rowCells.forEach((cell, col) => tds.push(renderCell(cell, rowStartDate, col)));
+        rowCells.forEach((cell, col) => {
+          tds.push(renderCell(cell, col));
+        });
 
         return h('tr', { key: row, class: props.rowClassName?.(rowStartDate) }, tds);
       });

@@ -32,9 +32,12 @@ for (const side of ['react', 'vue']) {
   page.on('console', (m) => {
     if (m.text().includes('[ind]')) console.log(side.toUpperCase(), 'CONSOLE', m.text());
   });
-  await page.goto(`http://127.0.0.1:${PORT}/${side}/${side}.html?component=tabs&variant=basic&theme=light`, {
-    waitUntil: 'load',
-  });
+  await page.goto(
+    `http://127.0.0.1:${PORT}/${side}/${side}.html?component=tabs&variant=basic&theme=light`,
+    {
+      waitUntil: 'load',
+    },
+  );
   await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 15000 });
   const info = await page.evaluate(() => {
     const bar = document.querySelector('.apollo-tabs-ink-bar');

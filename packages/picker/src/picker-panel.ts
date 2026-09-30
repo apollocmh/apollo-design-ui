@@ -42,6 +42,7 @@ import {
 } from './panel-context';
 import { providePanelHack } from './panel-props';
 import {
+  type DisabledTimes,
   fillShowTimeConfig,
   getTimeProps,
   type PickerFormat,
@@ -81,21 +82,19 @@ function toInternalMode(picker: PickerMode | undefined, showTime: unknown): Inte
 }
 
 /** 从「年/月/十年」面板选完之后该退到哪一级。 */
-const DEcade_QUEUE: PanelMode[] = ['decade', 'year'];
-const DECADE_YEAR_MONTH_QUEUE: PanelMode[] = [...DEcade_QUEUE, 'month'];
+const DECADE_YEAR_QUEUE: PanelMode[] = ['decade', 'year'];
+const DECADE_YEAR_MONTH_QUEUE: PanelMode[] = [...DECADE_YEAR_QUEUE, 'month'];
 
 function getModeQueue(picker: PickerMode): PanelMode[] {
-  const decadeYearQueue: PanelMode[] = ['decade', 'year'];
-  const decadeYearMonthQueue: PanelMode[] = [...decadeYearQueue, 'month'];
   switch (picker) {
     case 'quarter':
-      return [...decadeYearQueue, 'quarter'];
+      return [...DECADE_YEAR_QUEUE, 'quarter'];
     case 'week':
-      return [...decadeYearMonthQueue, 'week'];
+      return [...DECADE_YEAR_MONTH_QUEUE, 'week'];
     case 'date':
-      return [...decadeYearMonthQueue, 'date'];
+      return [...DECADE_YEAR_MONTH_QUEUE, 'date'];
     default:
-      return decadeYearMonthQueue;
+      return DECADE_YEAR_MONTH_QUEUE;
   }
 }
 
@@ -176,7 +175,7 @@ export const PickerPanel = defineComponent({
       default: undefined,
     },
     format: {
-      type: null as unknown as PropType<PickerFormat<PanelDateType> | undefined>,
+      type: null as unknown as PropType<PickerFormat | undefined>,
       default: undefined,
     },
 
@@ -212,7 +211,7 @@ export const PickerPanel = defineComponent({
       default: undefined,
     },
     disabledTime: {
-      type: Function as PropType<((date: PanelDateType) => Record<string, unknown>) | undefined>,
+      type: Function as PropType<((date: PanelDateType) => DisabledTimes) | undefined>,
       default: undefined,
     },
 
@@ -238,7 +237,7 @@ export const PickerPanel = defineComponent({
     // ========================= Time =========================
     // ⚠️ 入参是「组件 props 的超集」，含顶层的时间 props（`hourStep` 等）。
     const [timeProps, localeTimeProps, showTimeFormat, propFormat] = computed(() =>
-      getTimeProps(props as never),
+      getTimeProps(props),
     ).value;
 
     // ========================= Locale =========================

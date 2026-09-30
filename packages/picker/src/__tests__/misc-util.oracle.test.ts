@@ -91,9 +91,15 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
       'week',
     ];
     for (const picker of pickers) {
-      expect(getRowFormat(picker, locale)).toBe(up.getRowFormat(picker, locale));
+      // 🚨 两侧签名**故意不同**：上游 `miscUtil.d.ts` 把它声明成 `PanelMode`
+      //    （不含 `'datetime'`），而 `miscUtil.js` 的 switch **有** `case 'datetime'`
+      //    ⇒ 上游自己的 d.ts 落后于实现（UPSTREAM 类差异）。
+      //    本仓按**实现**收 `InternalMode`（更宽、更正确），因此对 oracle 那一侧
+      //    需要一次显式断言绕过它过时的声明。见 README §3.2。
+      const upPicker = picker as never;
+      expect(getRowFormat(picker, locale)).toBe(up.getRowFormat(upPicker, locale));
       // `format` 优先
-      expect(getRowFormat(picker, locale, 'X')).toBe(up.getRowFormat(picker, locale, 'X'));
+      expect(getRowFormat(picker, locale, 'X')).toBe(up.getRowFormat(upPicker, locale, 'X'));
     }
   });
 
@@ -108,7 +114,7 @@ describe('misc-util · Oracle 差分（@rc-component/picker@1.12.2）', () => {
       'week',
       'date',
     ] as InternalMode[]) {
-      expect(getRowFormat(picker, empty)).toBe(up.getRowFormat(picker, empty));
+      expect(getRowFormat(picker, empty)).toBe(up.getRowFormat(picker as never, empty));
       expect(getRowFormat(picker, empty)).toBeUndefined();
     }
   });

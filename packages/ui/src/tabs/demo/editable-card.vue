@@ -11,7 +11,10 @@ const items = ref([
 ]);
 const activeKey = ref('1');
 
-const onEdit = (target: unknown, action: 'add' | 'remove'): void => {
+// ⚠️ 第二个形参的类型必须是 **`string`**（与 `Tabs` 的 emits 声明 `(_target, _action: string)`
+//    一致）—— 写成 `'add' | 'remove'` 会因「参数逆变」被判为不可赋值（`string` 不能赋给
+//    那个更窄的联合）。收窄发生在**函数体内**，不在签名上。
+const onEdit = (target: unknown, action: string): void => {
   if (action === 'remove') {
     items.value = items.value.filter((item) => item.key !== target);
     return;

@@ -61,9 +61,12 @@ const CASES: Record<string, () => DomRenderResult> = {
     }),
   'tabs:centered-card': () =>
     cmp({ defaultActiveKey: '1', type: 'card', centered: true, items: items() }),
+  // ⚠️ 只认 `top` / `bottom` / `start` / `end` —— 上游
+  //    `TabPlacement = 'top' | 'end' | 'bottom' | 'start'`；`left` / `right` 是
+  //    deprecated 的 `tabPosition` 的值域，**不是** `tabPlacement` 的。
+  //    本轮修正：原先这四条是 `bottom`/`left`/`right`/`start`/`end` 五条（多了一条
+  //    且 `left`/`right` 名不副实）⇒ 现与基线一致的四条。
   'tabs:bottom': () => cmp({ defaultActiveKey: '1', tabPlacement: 'bottom', items: items() }),
-  'tabs:left': () => cmp({ defaultActiveKey: '1', tabPlacement: 'left', items: items() }),
-  'tabs:right': () => cmp({ defaultActiveKey: '1', tabPlacement: 'right', items: items() }),
   'tabs:start': () => cmp({ defaultActiveKey: '1', tabPlacement: 'start', items: items() }),
   'tabs:end': () => cmp({ defaultActiveKey: '1', tabPlacement: 'end', items: items() }),
   'tabs:small': () => cmp({ defaultActiveKey: '1', size: 'small', items: items() }),
@@ -194,22 +197,6 @@ domContractTest('Tabs', {
       ],
     },
     'tabs:bottom': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:left': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:right': {
       reason:
         '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
       deviationId: 'U15',

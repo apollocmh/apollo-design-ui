@@ -22,7 +22,7 @@
 
 import { cancelRaf, raf } from '@apollo-design/utils';
 import { defineComponent, h, onBeforeUnmount, type PropType, ref, watch } from 'vue';
-import { type PanelDateType, usePanelHack, usePanelInfo } from './panel-context';
+import { type PanelDateType, usePanelInfo } from './panel-context';
 import { getNearestUnitIndex, type MeridiemUnit } from './time-tmpl';
 import type { TimeColumnUnit } from './time-units';
 
@@ -215,7 +215,6 @@ export const TimeColumn = defineComponent({
 
     return () => {
       const ctx = usePanelInfo().value;
-      const hack = usePanelHack();
       const { prefixCls, classNames, styles, cellRender, now, locale } = ctx;
 
       const panelPrefixCls = `${prefixCls}-time-panel`;
@@ -281,6 +280,3 @@ export const TimeColumn = defineComponent({
     };
   },
 });
-
-/** 逃生通道里的 `onCellDblClick` 供上层读取（`TimePanelBody` 会透传）。 */
-export { usePanelHack };

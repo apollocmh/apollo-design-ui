@@ -17,10 +17,10 @@
  * 所以「先点日期再调时间」时，点日期那一刻继承的是**浏览值**的时刻。
  */
 
-import { computed, defineComponent, h, type PropType } from 'vue';
+import { defineComponent, h, type PropType } from 'vue';
 import { DatePanel } from './date-panel';
 import { fillTime } from './date-util';
-import { type PanelDateType, usePanelInfo } from './panel-context';
+import type { PanelDateType } from './panel-context';
 import { PanelHeader } from './panel-header';
 import { formatWith, providePanelInfoFromProps, sharedPanelProps } from './panel-props';
 import type { TimePanelConfig } from './time-config';
@@ -46,7 +46,6 @@ export const TimePanel = defineComponent({
     return () => {
       const ctx = info.value;
       const { prefixCls, locale, generateConfig: g, values } = ctx;
-      const showTime = props.showTime;
 
       const value = values[0] ?? null;
       const panelPrefixCls = `${prefixCls}-time-panel`;

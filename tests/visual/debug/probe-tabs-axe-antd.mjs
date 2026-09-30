@@ -5,9 +5,8 @@
  * 用法：`node tests/visual/debug/probe-tabs-axe-antd.mjs`
  */
 import { createRequire } from 'node:module';
+
 const require = createRequire(import.meta.url);
-const antdPath = require.resolve('antd');
-const antdRoot = antdPath.slice(0, antdPath.indexOf('antd/es'));
 const { JSDOM } = require(require.resolve('jsdom', { paths: [process.cwd()] }));
 const axe = require(require.resolve('axe-core', { paths: [process.cwd()] }));
 const React = require('react');

@@ -26,10 +26,10 @@
  *  - decade：起始世纪 **− 10 年**。
  */
 
-import { defineComponent, h, type PropType } from 'vue';
+import { defineComponent, h, type VNodeChild } from 'vue';
 import { getPanelGeometry } from './panel';
 import { PanelBody } from './panel-body';
-import { type PanelDateType, usePanelInfo } from './panel-context';
+import type { PanelDateType } from './panel-context';
 import { PanelHeader } from './panel-header';
 import { getPanelHeaderLimits } from './panel-header-limit';
 import { formatWith, providePanelInfoFromProps, sharedPanelProps } from './panel-props';
@@ -129,7 +129,7 @@ function defineUpperPanel(
           mode === 'quarter' ? ctx.disabledDate : mergeDisabledToBlock(ctx.disabledDate, mode, g);
 
         // ==================== 标题槽 ====================
-        let titleNode;
+        let titleNode: VNodeChild;
         if (titleKind === 'year') {
           // month / quarter：一个「年」按钮，点了切到年面板（⚠️ 不传 viewDate）
           titleNode = h(

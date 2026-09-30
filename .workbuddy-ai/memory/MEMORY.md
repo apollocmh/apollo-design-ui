@@ -32,6 +32,18 @@ Node ≥22.12（managed 路径）｜pnpm 12.4.2｜TS 5.9｜Vitest 5｜Playwright
 - ⚠️ 降级运行的 vitest（`--pool=forks --maxWorkers=1`）会**静默少跑**给假绿灯，不能当门禁证据；
   看「N passed」先核分母。`vitest run <目录>` 位置过滤不可靠，跑单文件传完整路径。
 - 收口只跑一次全仓门禁；跑重型门禁前关 IDE。`tsc --build` 已落地（`pnpm typecheck:build`）。
+- 🚨 **收口必须跑「两个」lint**：`pnpm run lint:types`（`vue-tsc -p tsconfig.json`）**和**
+  `pnpm run lint:format`（`biome check .`）。二者**互补不重叠** —— `vue-tsc` 不看未使用的
+  import / 未使用的 TS **类型参数**（后者 biome 会报 `noUnusedVariables`）。
+  ⚠️ **门禁命令不许自己手写 glob**：zsh 不递归展开 `**` ⇒ `biome check src/**/*.ts` 会漏掉
+  顶层 `src/*.ts`，给出「0 error」**假绿灯**（2026-09-30 真踩，PITFALLS 213）。
+  biome error 基线：**0**（2026-09-30 清算，此前 21 个）；warnings ≈187 不 fail 门禁。
+- 🚨 `registry:check` 的**顺序**：`gen-registry.mjs` → `foundation-status.mjs`（**不带 `--check`**，
+  否则误报「foundation.json 已过期」）→ `gen-workstreams.mjs --check` → `validate-registry.mjs`。
+- ⚠️ 多文件/多点机械改动**别用 `Edit` 批量**（会「部分落盘但报 success」，连签名带 call-site
+  半改会让 `tsc` 直接红）⇒ 写 Node 脚本逐条断言「恰好命中 1 次」并打印 `OK/SKIP`。
+- ⚠️ 临时插桩一律标 `[TMP-DBG]` 并**收口前 grep 清光**：`dist/` 是 gitignore ⇒ 插桩进了产物
+  **不会被 `git status` 提醒**。
 - 并发红线：全仓构建门禁同一时刻只允许一个会话，锁 `/tmp/apollo-build-gate.lock`（mkdir 抢/rmdir 放）。
 
 ## 架构要点
@@ -46,6 +58,9 @@ L0 utils/theme/icons ｜ 测试 test-utils
   七个面板 / `TimeColumn`）在**本包**，`ui` 的 DatePicker/TimePicker/Calendar 只做
   输入框 + 浮层 + 样式。⇒ 它的 L2/L4/L5 是**硬门禁**（不是 n/a）。
   L4 的基线打的是 **rc 的 `PickerPanel`**（antd 的 DatePicker 在 SSR 下不渲染面板）。
+  ⚠️ `PickerFormat` **没有泛型参数**（`string | readonly string[] | { format: string }`）——
+  上游 `@rc-component/picker` 的 `format` 还含 `CustomFormat<DateType>` **函数形态**，本仓未实现，
+  故不挂泛型；做 `date-picker` 时若要支持函数式 format，**随实现一起加回来**（PITFALLS 214）。
 - `prefixCls` 默认 `apollo`。动手前先 grep `packages/utils/src`（focus 陷阱/is-visible/raf/dev-warning 两参/color 等）。
 - 🚨 R7（ADR 0004）：发布包零 `@ant-design/*` 运行时依赖，门禁 E19 双扫描（产物扫描前必须 stripComments）。
 - Oracle 判据：上游零框架耦合 ⇒ 可对拍；绑 React 生命周期 ⇒ 只能读源码+行为测试。oracle 与 units 并存。

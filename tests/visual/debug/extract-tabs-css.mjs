@@ -83,7 +83,13 @@ const cases = [
     items,
     tabPlacement: 'end',
   }),
-  React.createElement(Tabs, { key: 't7', defaultActiveKey: '1', items, centered: true, type: 'card' }),
+  React.createElement(Tabs, {
+    key: 't7',
+    defaultActiveKey: '1',
+    items,
+    centered: true,
+    type: 'card',
+  }),
   React.createElement(Tabs, { key: 't8', defaultActiveKey: '1', items, size: 'small' }),
   React.createElement(Tabs, { key: 't9', defaultActiveKey: '1', items, size: 'large' }),
   React.createElement(Tabs, {

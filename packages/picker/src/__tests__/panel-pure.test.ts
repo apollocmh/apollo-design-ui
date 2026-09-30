@@ -100,6 +100,8 @@ describe('locale-fill · 补齐', () => {
   });
 
   it('⭐ fillLocale：`cellDateFormat` 回退到 `dayFormat`（在那之前才是 `D`）', () => {
+    // ⚠️ 这里的 `locale` 是 `PickerLocale` 的**字符串字段**（如 `'en_US'`），不是对象。
+    //    （本轮一次全局替换把它误改成了对象，tsc 抓到后改回。）
     expect(fillLocale({ locale: 'x', dayFormat: 'DD' }, 'HH').cellDateFormat).toBe('DD');
     expect(fillLocale({ locale: 'x' }, 'HH').cellDateFormat).toBe('D');
   });
@@ -116,13 +118,17 @@ describe('locale-fill · 补齐', () => {
 
 describe('time-config · getTimeProps 的合并优先级', () => {
   it('`showTime` 对象覆盖同名的顶层 props', () => {
-    const [, merged] = getTimeProps({ locale: 'x', hourStep: 2, showTime: { hourStep: 3 } });
+    const [, merged] = getTimeProps({
+      locale: { locale: 'x' },
+      hourStep: 2,
+      showTime: { hourStep: 3 },
+    });
     expect(merged.hourStep).toBe(3);
   });
 
   it('`showTime.defaultValue` 会被写成 `defaultOpenValue`（同时保留原键）', () => {
     const [timeConfig, merged] = getTimeProps({
-      locale: 'x',
+      locale: { locale: 'x' },
       showTime: { defaultValue: 'D' as never },
     });
     expect(timeConfig.defaultOpenValue).toBe('D');
@@ -132,30 +138,40 @@ describe('time-config · getTimeProps 的合并优先级', () => {
 
   it('`showTime.defaultOpenValue` 优先于 `showTime.defaultValue`', () => {
     const [timeConfig] = getTimeProps({
-      locale: 'x',
+      locale: { locale: 'x' },
       showTime: { defaultOpenValue: 'O', defaultValue: 'D' as never },
     });
     expect(timeConfig.defaultOpenValue).toBe('O');
   });
 
   it('🚨 `picker === "time"` 时 `props.format` 被**写进** timeProps；其余 picker 不写', () => {
-    const [, mergedTime] = getTimeProps({ locale: 'x', picker: 'time', format: 'HH:mm' });
+    const [, mergedTime] = getTimeProps({
+      locale: { locale: 'x' },
+      picker: 'time',
+      format: 'HH:mm',
+    });
     expect(mergedTime.format).toBe('HH:mm');
 
-    const [, mergedDate] = getTimeProps({ locale: 'x', picker: 'date', format: 'HH:mm' });
+    const [, mergedDate] = getTimeProps({
+      locale: { locale: 'x' },
+      picker: 'date',
+      format: 'HH:mm',
+    });
     expect(mergedDate.format).toBeUndefined();
   });
 
   it('`format` 的三种形态都能取到 propFormat（串 / 数组取首项 / 对象取 .format）', () => {
-    expect(getTimeProps({ locale: 'x', format: 'A' })[3]).toBe('A');
-    expect(getTimeProps({ locale: 'x', format: ['B', 'C'] as never })[3]).toBe('B');
-    expect(getTimeProps({ locale: 'x', format: { format: 'D' } as never })[3]).toBe('D');
+    expect(getTimeProps({ locale: { locale: 'x' }, format: 'A' })[3]).toBe('A');
+    expect(getTimeProps({ locale: { locale: 'x' }, format: ['B', 'C'] as never })[3]).toBe('B');
+    expect(getTimeProps({ locale: { locale: 'x' }, format: { format: 'D' } as never })[3]).toBe(
+      'D',
+    );
     // 非串（如数字）⇒ 不算 propFormat
-    expect(getTimeProps({ locale: 'x', format: 12 as never })[3]).toBe(null);
+    expect(getTimeProps({ locale: { locale: 'x' }, format: 12 as never })[3]).toBe(null);
   });
 
   it('`fillShowConfig`：全 undefined ⇒ 时/分/秒全 true（毫秒不动）', () => {
-    const [, merged] = getTimeProps({ locale: 'x' });
+    const [, merged] = getTimeProps({ locale: { locale: 'x' } });
     expect(merged.showHour).toBe(true);
     expect(merged.showMinute).toBe(true);
     expect(merged.showSecond).toBe(true);
@@ -164,16 +180,16 @@ describe('time-config · getTimeProps 的合并优先级', () => {
 
   it('`fillShowConfig`：有显式值时，缺省的按「有 false ⇒ true，全是 true ⇒ false」补', () => {
     // 有 false ⇒ 其余缺省 true
-    expect(getTimeProps({ locale: 'x', showHour: false })[1].showMinute).toBe(true);
-    expect(getTimeProps({ locale: 'x', showHour: false })[1].showSecond).toBe(true);
+    expect(getTimeProps({ locale: { locale: 'x' }, showHour: false })[1].showMinute).toBe(true);
+    expect(getTimeProps({ locale: { locale: 'x' }, showHour: false })[1].showSecond).toBe(true);
     // 全是 true（无 false）⇒ 缺省 false
-    expect(getTimeProps({ locale: 'x', showHour: true })[1].showMinute).toBe(false);
-    expect(getTimeProps({ locale: 'x', showHour: true })[1].showSecond).toBe(false);
+    expect(getTimeProps({ locale: { locale: 'x' }, showHour: true })[1].showMinute).toBe(false);
+    expect(getTimeProps({ locale: { locale: 'x' }, showHour: true })[1].showSecond).toBe(false);
   });
 
   it('⚠️ `showMillisecond` 不参与「有没有显式配置」的判定，也不被兜底', () => {
     // 只给 showMillisecond ⇒ hasShowConfig 为 false ⇒ 走第一个分支（时/分/秒全 true）
-    const [, merged] = getTimeProps({ locale: 'x', showMillisecond: true });
+    const [, merged] = getTimeProps({ locale: { locale: 'x' }, showMillisecond: true });
     expect(merged.showHour).toBe(true);
     expect(merged.showMinute).toBe(true);
     expect(merged.showSecond).toBe(true);
@@ -360,8 +376,10 @@ describe('time-units · getTimeInfo', () => {
     const info = getTimeInfo(
       g,
       {
-        disabledTime: (date: never) =>
-          (date as ReturnType<typeof dayjs>).date() === 1 ? { disabledHours: () => [5] } : {},
+        // ⚠️ 参数类型是 `Dayjs`（`GenerateConfig<Dayjs>` 推出来的），不要写 `never`
+        //    —— 那会让整个 `TimePanelConfig` 被推成 `TimePanelConfig<never>`，
+        //    于是 `g` 与 `dayjs(...)` 两处都报「不能赋给 never」。
+        disabledTime: (date) => (date.date() === 1 ? { disabledHours: () => [5] } : {}),
       },
       dayjs('2026-09-30'),
     );

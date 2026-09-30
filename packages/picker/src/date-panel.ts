@@ -17,11 +17,11 @@
  *    但**日面板的标题按钮**走的是同一个分支 —— 忘了会得到「Jan 而不是 1月」。
  */
 
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 import { formatValue, getWeekStartDate, isInRange, isSameWeek, WEEK_DAY_COUNT } from './date-util';
 import { getPanelGeometry, getRowStartDate } from './panel';
 import { PanelBody } from './panel-body';
-import { type PanelDateType, usePanelInfo } from './panel-context';
+import type { PanelDateType } from './panel-context';
 import { PanelHeader } from './panel-header';
 import { getPanelHeaderLimits } from './panel-header-limit';
 import { formatWith, providePanelInfoFromProps, sharedPanelProps } from './panel-props';
