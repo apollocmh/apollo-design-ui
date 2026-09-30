@@ -74,6 +74,7 @@ import {
   defineComponent,
   h,
   type PropType,
+  ref,
   type VNodeChild,
 } from 'vue';
 import {
@@ -203,8 +204,18 @@ export const Selector = defineComponent({
     onClear: { type: Function as PropType<() => void>, default: undefined },
     onSelectorClick: { type: Function as PropType<() => void>, default: undefined },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const disabledPair = computed(() => toDisabledPair(props.disabled));
+
+    /** 输入框元素（`expose` 的 `focus` 用 —— 上游 `Selector` 的命令面）。 */
+    const inputRef = ref<HTMLInputElement | null>(null);
+    /**
+     * 上游 `SinglePicker` 的 `selectorRef.current.focus()`。
+     *
+     * 两个调用点：点根节点时（`onSelectorClick`）与点清除后（`onSelectorClear`）。
+     * 后者是**真的有用**的：点击落在清除按钮上，不还原焦点的话焦点会留在按钮上。
+     */
+    expose({ focus: () => inputRef.value?.focus() });
 
     /** 两端的值长度（范围判 `showClear` 用）。 */
     const valueLengths = computed<[number, number]>(() => [
@@ -293,6 +304,9 @@ export const Selector = defineComponent({
       const active = isRange && props.activeIndex === index;
 
       const inputNode = h('input', {
+        // ⚠️ `ref` 必须给**单值**那个（`index === 0`）—— 范围版的 `expose.focus`
+        //    上游落在 start 端（`SingleSelector` 的 `focus` 只 focus 一个 input）。
+        ...(index === 0 ? { ref: inputRef } : {}),
         // 🚨 两个通道别混（见 `invalid` prop 的说明）：
         //   - `props.status`（antd）**不改**这里 —— 实测 `status="error"` 时它仍是 `"false"`；
         //   - `props.invalid`（rc，**键入解析不出日期**）才把它变 `"true"`。

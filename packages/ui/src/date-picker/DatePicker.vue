@@ -13,7 +13,12 @@
  *   └─ popup: PickerPanel（@apollo-design/picker）        ← 面板（引擎包的 Vue 组件）
  * ```
  *
- * 值 / 开合 / 浏览值三个状态机在 `hooks/picker-value.ts`（S1 已落地并测过 51 条）。
+ * 四个状态机：
+ *   1. **值 / 日历值** —— `hooks/picker-value.ts`（`useInnerValue` + `useRangeValue`）；
+ *   2. **提交时机** —— `hooks/picker-value-change.ts`（上游 405 行状态机：把每种交互
+ *      来源解析成唯一 action）。S2 收口时落地；**S4 的字段导航与它同源**；
+ *   3. **开合** —— 本文件（`innerOpen` / `mergedOpen` / `onOpenChange`）；
+ *   4. **浏览值** —— 本文件（`innerPickerValue` / `panelPickerValue`）。
  *
  * ── 🚨 四处「读源码才知道」的接线判据 ────────────────────────────────────────
  *
@@ -22,26 +27,39 @@
  *    **不同名**（变量是 `--apollo-date-picker-*`）—— 见 `interface.ts` 文件头。
  * 2. **4 个面板导航图标是空 `<span>`**（`${prefixCls}-prev-icon` 等），图形由 CSS 画。
  *    不传会让面板渲染它自己的默认图标 ⇒ DOM 与上游不一致。
- * 3. **传给面板的 `locale` 是 `mergedLocale.lang`**（antd 的 `locale: locale.lang`）——
- *    antd 的完整语言包分片 `{lang, timePickerLocale}` 与面板要的 locale 是**两个类型**
- *    （`hooks/picker-types.ts` 的 `RcPickerLocale`）。
+ * 3. **传给面板的 `locale` 是 `locale.lang` 且必须**补齐**（antd 的 `locale: locale.lang`）
+ *    —— antd 的完整语言包分片 `{lang, timePickerLocale}` 与面板要的 locale 是**两个类型**
+ *    （`hooks/picker-types.ts` 的 `RcPickerLocale`）；而 `fieldDateFormat` 这些键
+ *    两边语言包都没有，靠 `hooks/picker-filled.ts` 补（见那儿的文件头）。
  * 4. **`trigger` 的开合是 `showAction: []` + `hideAction: ['click']`**（rc
  *    `PickerTrigger/index.js`）—— 没有 showAction ⇒ 只能靠点击输入框开（由 Selector
  *    的 `onSelectorClick` 显式触发），关则是「点击外部」。
  *
- * ── S1 的已知欠账（登记在 README §5）────────────────────────────────────────
+ * ── 已知欠账（登记在 README §5）─────────────────────────────────────────────
  *
- * - **zIndex** 未接（上游 `useZIndex('DatePicker', …)`）⇒ 影响 L6 的浮层层级。
  * - **`minDate` / `maxDate` 的函数形态**在本地求值（`resolveLimit`），求值时机与
- *   上游 `useDisabledBoundary` 可能有别 ⇒ S2 核对。
- * - **键入 / 掩码 / 键盘分段**整体在 S2–S4；S1 只做「点击开 + 面板选择 + 受控值」。
- * - **`needConfirm` 的完整语义**（确认制）只做了「非 needConfirm 时点选即提交」。
+ *   上游 `useDisabledBoundary` 可能有别 ⇒ 待核对。
+ * - **掩码模式（`format.type: 'mask'`）= S3**；**`-input-active` 分段渲染 = S4**；
+ *   **`multiple` + `tagRender` / `maxTagCount`、范围两端切换 = S5**。
+ * - **面板 `mode` 的受控化**：上游把 `mergedMode` 受控地喂给面板，本仓让面板自管、
+ *   只**跟随** `onPanelChange` 记一份（`panelFinished` 要用）。见 README §5.5。
+ * - **`preserveInvalidOnBlur` / `previewValue` / `inputReadOnly` 的交互**尚未接。
+ * - **原生 `submit`**（上游 `Selector` 的 `onSubmit` ⇒ `triggerConfirm('keyboard-submit')`）
+ *   未接 —— `<input>` 不派发 `submit`，属边角。
+ * - **`onSelectorFocus` 的 `inherit: true`**（`triggerOpen(true, { inherit: true })`）
+ *   在本仓的 `Trigger` 上没有对应选项 ⇒ 当前等价于普通打开。
  */
 import { CloseCircleFilled } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
-import { formatValue, type PanelDateType, PickerPanel } from '@apollo-design/picker';
+import {
+  formatValue,
+  type InternalMode,
+  type PanelDateType,
+  PickerPanel,
+  toggleDates,
+} from '@apollo-design/picker';
 import { useZIndex } from '@apollo-design/portal';
-import { type Component, type CSSProperties, computed, h, ref, type VNodeChild } from 'vue';
+import { type Component, type CSSProperties, computed, h, ref, type VNodeChild, watch } from 'vue';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
@@ -65,6 +83,7 @@ import { getPlaceholder, mergePickerLocale } from './hooks/picker-locale';
 import { useSuffixIcon } from './hooks/picker-suffix';
 import { validateFormat } from './hooks/picker-typing';
 import { toDateArray, useInnerValue, useRangeValue, type ValueSlot } from './hooks/picker-value';
+import { useRangeValueChange } from './hooks/picker-value-change';
 import { useMergedPickerSemantic } from './hooks/use-picker-semantic';
 import type {
   DatePickerDate,
@@ -183,6 +202,15 @@ const prefixCls = computed(() => getPrefixCls('picker', props.prefixCls));
 const rootPrefixCls = computed(() => getPrefixCls());
 const rtl = computed(() => direction.value === 'rtl');
 
+/**
+ * `Selector` 的命令面（上游 `SinglePicker` 的 `selectorRef`）。
+ *
+ * 只有 `focus()` 一个方法 —— 上游 `SingleSelector` 的 `useImperativeHandle`
+ * 还暴露 `nativeElement` / `blur`，本仓按需加（S4/S5 若要用再说）。
+ * 两个调用点：点根节点、点清除后（见 `onClear`）。
+ */
+const selectorRef = ref<{ focus: () => void } | null>(null);
+
 // ============================== locale / 尺寸 / 变体 / 状态 ==============================
 const [contextLocale] = useLocale('DatePicker');
 const mergedLocale = computed(() => mergePickerLocale(contextLocale, props.locale));
@@ -231,6 +259,19 @@ const filledLang = computed(() => filled.filledLocale.value);
 
 const mergedFormat = computed(() =>
   mergeFormat(internalMode.value, filledLang.value, props.format),
+);
+
+/**
+ * `needConfirm` 的合并值（上游 `useFilledProps.js:74-76`）。
+ *
+ * ⚠️ 传的是 `internalMode`（`InternalMode`）而**不是** `props.picker` ——
+ * `'datetime'` 只在 `InternalMode` 里（`date` + `showTime`），
+ * 传错会让带时间的日期选择器「点一下就提交」。
+ *
+ * ⚠️ 它同时是**提交时机状态机**的入参（`needConfirm`），所以在状态机之前定义。
+ */
+const mergedNeedConfirm = computed(() =>
+  getMergedNeedConfirm(props.needConfirm, internalMode.value),
 );
 
 /**
@@ -318,6 +359,123 @@ const rangeValue = useRangeValue({
 });
 
 // ============================== 开合 / 浏览值 ==============================
+const innerOpen = ref(props.defaultOpen === true);
+const mergedOpen = computed(() => props.open ?? innerOpen.value);
+
+/**
+ * 开合的唯一出口。
+ *
+ * ⚠️ 上游是 `triggerOpen(open, { force })`，`force` 只用于**绕过 `disabled` 守卫**
+ * （`useOpen.js`）。本仓的 `onOpenChange` 没有那个守卫 ⇒ 各调用处的
+ * `{ force: true }` 在语义上是**空操作**（已在调用点注明）。
+ */
+const onOpenChange = (next: boolean): void => {
+  if (props.open === undefined) {
+    innerOpen.value = next;
+  }
+  emit('openChange', next);
+  emit('update:open', next);
+};
+
+const innerPickerValue = ref<DatePickerDate | null>(props.defaultPickerValue ?? null);
+const mergedPickerValue = computed<DatePickerDate | null>(
+  () => props.pickerValue ?? innerPickerValue.value,
+);
+/** 未给浏览值时用「第一个有值的槽位」兜底，再不行用今天。 */
+const panelPickerValue = computed<DatePickerDate>(
+  () =>
+    mergedPickerValue.value ??
+    (inner.calendarValue.value[0] as DatePickerDate | null) ??
+    dayjsConfig.getNow(),
+);
+
+/**
+ * 面板粒度（**本地跟踪**）。
+ *
+ * ⚠️ 上游是**受控**的（`useControlledState(picker, mode)`，再把 `mode: mergedMode`
+ * 传给面板）。本仓让面板自管（`panelProps.mode` 只透传 `props.mode`），
+ * 这里只**跟随**面板上报的 `onPanelChange` 记一份 —— 它只被 `panelFinished` 用
+ * （`panel-final` 与 `panel-intermediate` 的分界）。
+ * 「面板 mode 的受控化」登记在 README §5.5。
+ */
+const innerMode = ref<DatePickerPanelMode>(props.mode ?? mergedPicker.value);
+watch(
+  () => props.mode,
+  (next) => {
+    if (next !== undefined) {
+      innerMode.value = next;
+    }
+  },
+);
+const mergedMode = computed<DatePickerPanelMode>(() => props.mode ?? innerMode.value);
+
+/**
+ * 面板粒度对应的内部模式（上游 `SinglePicker` 的 `internalMode`）。
+ *
+ * 🚨 与上面的 `internalMode`（= 上游的 **`internalPicker`**）**不是一回事**：
+ *   - `internalMode`：从 **`props.picker`** 推 ⇒ 恒定的「组件粒度」；
+ *   - `panelInternalMode`：从 **面板当前 mode** 推 ⇒ 随用户下钻 / 回退变化。
+ *
+ * `panelFinished` 正是用「两者是否相等」判断「面板这一下走完了吗」：
+ * 在年 / 十年面板里点一格**不该**提交（那时两者不等）。
+ */
+const panelInternalMode = computed<InternalMode>(() =>
+  mergedMode.value === 'date' && props.showTime ? 'datetime' : mergedMode.value,
+);
+
+/** 上游 `multipleInteractivePicker` / `complexPicker`（`useFilledProps.js:65-66`）。 */
+const multipleInteractivePicker = computed(
+  () => internalMode.value === 'time' || internalMode.value === 'datetime',
+);
+const complexPicker = computed(() => multipleInteractivePicker.value || props.multiple === true);
+
+// ============================== 提交时机状态机（S2 剩余 / S4 内核）=============
+/**
+ * 上游 `SinglePicker.js:170-190` 的四件套接线。
+ *
+ * ```
+ * getFieldCalendarValue()          → [values.length ? values : null]  ← **整组值**或 null
+ * triggerFieldCalendarChange(_, v) → triggerCalendarChange(v)         ← `_index` 被丢弃
+ * flushFieldSubmit(_, need)        → need 时 triggerSubmit + 关浮层
+ * resetFieldValue()                → resetValue()                     ← **丢弃 index**
+ * ```
+ *
+ * 🚨 上游的 `getCalendarValue` 给状态机的不是「单个日期」而是**整组值**：
+ * 单值时空是 `null`、非空是 `[date]`（`multiple` 时是整组）。`currentEmpty`
+ * 的判定完全依赖这个形状 —— 传单个日期会让「空值」永远判不出来。
+ */
+const valueChange = useRangeValueChange({
+  fieldCount: 1,
+  needConfirm: () => mergedNeedConfirm.value,
+  allowEmpty: () => [false],
+  getCalendarValue: () =>
+    [inner.calendarValue.value.length ? inner.calendarValue.value : null] as const,
+  triggerCalendarChange: (_index, value) => {
+    inner.triggerCalendarChange(value as ValueSlot[]);
+  },
+  flushSubmit: (_index, needTriggerChange) => {
+    if (needTriggerChange) {
+      rangeValue.triggerSubmit(inner.calendarValue.value);
+      // 上游 `triggerOpen(false, { force: true })` —— `force` 在本仓无对应物
+      onOpenChange(false);
+    }
+  },
+  // ⚠️ 单值上游**丢弃 index**（`resetFieldValue = () => { resetValue(); }`）⇒ 恒为全量回滚
+  resetValue: () => rangeValue.resetValue(),
+});
+
+/**
+ * 浮层**关闭** ⇒ `popupClose`（上游 `SinglePicker.js:187-191` 的 `useLayoutEffect`）。
+ *
+ * ⚠️ 上游有 `firstMount` 守卫 ⇒ 本仓用**不带 `immediate`** 的 `watch`（首次不触发）。
+ * ⚠️ 关浮层是**异步**的（离场动效结束才卸载）⇒ 断言卸载必须**轮询**（PITFALLS 179）。
+ */
+watch(mergedOpen, (next) => {
+  if (!next) {
+    valueChange.triggerChange(0, 'popupClose');
+  }
+});
+
 // ============================== 键入（S2） ==============================
 
 /**
@@ -344,19 +502,33 @@ const parseContext = computed(() => ({
 }));
 
 /**
- * 键入的**解析部分**（S2 的一半）。
+ * 键入 → 解析 → **提交**（S2 的完整链）。
  *
- * ⚠️ 另一半（落值 + **提交时机**）依赖 `useRangeValue` 的 `triggerChange` 语义 ——
- * 它受 `needConfirm` / `changeOnBlur` / `preserveInvalidOnBlur` 三者交互影响
- * ⇒ **留到 S2 的下一轮**。接一个「时机半对」的实现比不接更糟：
- * 它会产生「看着能用、时机不对」的静默 bug。
+ * 逐字对齐上游 `useInputProps.js:114-135` + `SingleSelector.js:94-96`：
+ *
+ * ```
+ * onInputChange()                      // = triggerSingleValueChange(0, 'input')，**不带值**
+ *   ↓                                  //   只为「建立本轮交互」
+ * validateFormat(text)
+ *   命中 → onInvalid(false, index)
+ *        → onChange(parsed, index)     //   SingleSelector 包一层：onChange([date], 'input')
+ *   未中 → onInvalid(!!text, index)
+ * ```
+ *
+ * ⚠️ **`onInputChange()` 在前**：它先把 `currentIndex` 建起来并把该 field 标成
+ * `modified`；随后的带值调用才走 `modify` 把值写进临时日历值。
+ * 顺序反过来在「第一次输入」时行为相同，但 `modified` 的语义会错。
  */
 const onInput = (_index: number, event: Event): void => {
   const text = (event.target as HTMLInputElement).value;
+  // ① 上游 `useInputProps.js:115`
+  valueChange.triggerChange(0, 'input');
   const parsed = validateFormat(text, parseContext.value);
   if (parsed) {
     invalid.value = false;
     emit('invalid', false);
+    // ② `SingleSelector.onSingleChange`：**包成数组**再交给状态机
+    valueChange.triggerChange(0, 'input', [parsed]);
     return;
   }
   // ⚠️ 空串算合法（上游 `onInvalid(!!text)`）
@@ -366,17 +538,53 @@ const onInput = (_index: number, event: Event): void => {
 };
 
 /**
- * 按键（上游 `useInputProps.js:140-162` 逐字）。
+ * 聚焦（上游 `SinglePicker.js:417-423`）。
  *
- * 🚨 **`Enter` 不提交** —— 它只在**浮层关闭时**打开浮层。提交走 blur / 面板的「确定」。
+ * `field-switch` + 开浮层（`inherit: true`）。⚠️ `field-switch` 在单值下
+ * （`index === currentIndex`）会解析成 `abort` —— 但它**仍然**会把
+ * `currentIndex` 建起来（`triggerChange` 的入口那一支），这正是上游的意图。
+ */
+const onInputFocus = (_index: number, _event: FocusEvent): void => {
+  valueChange.triggerChange(0, 'field-switch');
+  onOpenChange(true);
+};
+
+/** 失焦（上游只转发给 `useFocusEvents` 的簿记；关浮层由触发器负责）。 */
+const onInputBlur = (_index: number, _event: FocusEvent): void => {
+  // 上游 `onFieldBlur(0, 'input', event)` 只更新焦点簿记 + 调用户的 onBlur。
+  // 本仓的焦点簿记（`-focused` 类名）属 S4，见 README §5.5。
+};
+
+/**
+ * 按键 —— **一个**处理器，但内部是上游**两段**的顺序（`useInputProps.js:140-162`
+ * 把 `SinglePicker.onSelectorKeyDown` 当 DOM 处理器调，所以两段合并在同一处）：
+ *
+ * ```
+ * ① SinglePicker.onSelectorKeyDown：Tab ⇒ keyboard-submit-weak；Escape ⇒ esc + 关浮层
+ * ② 用户的 deprecated onKeyDown（第二参是 preventDefault 的兼容 shim）
+ * ③ useInputProps 自己：Escape ⇒ 关浮层；Enter ⇒ **只在关闭时**开浮层
+ * ```
+ *
+ * 🚨 **`Enter` 不提交** —— 它只在**浮层关闭时**打开浮层。提交走 `confirm` /
+ * `keyboard-submit`（面板的「确定」/ 原生 submit）。
  * 这条很容易想当然（「回车提交」是多数输入框的习惯），所以单独钉住。
  */
 const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
+  // ① 上游 `SinglePicker.js:426-433`
+  if (event.key === 'Tab') {
+    valueChange.triggerChange(0, 'keyboard-submit-weak');
+  } else if (event.key === 'Escape') {
+    valueChange.triggerChange(0, 'esc');
+    onOpenChange(false);
+  }
+
+  // ② deprecated 的 `onKeyDown` 通道（第二参是 `preventDefault` 的兼容 shim）
   let prevented = false;
-  // deprecated 的 `onKeyDown` 通道（第二参是 `preventDefault`，见 emits 的 keydown）
   emit('keydown', event, () => {
     prevented = true;
   });
+
+  // ③ 上游 `useInputProps.js:144-158`
   if (event.defaultPrevented || prevented) {
     return;
   }
@@ -395,28 +603,24 @@ const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
   }
 };
 
-const innerOpen = ref(props.defaultOpen === true);
-const mergedOpen = computed(() => props.open ?? innerOpen.value);
-
-const onOpenChange = (next: boolean): void => {
-  if (props.open === undefined) {
-    innerOpen.value = next;
-  }
-  emit('openChange', next);
-  emit('update:open', next);
+/**
+ * 清除（上游 `SinglePicker.js:242-249`，逐字）。
+ *
+ * ```js
+ * resetSingleValueChange();      // 先结束本轮交互的簿记（**不动值**）
+ * triggerSubmitChange(null);     // 再提交空值
+ * triggerOpen(false, { force }); // 关浮层
+ * selectorRef.current.focus();   // 焦点还给输入框（点的是清除按钮）
+ * onClear?.();
+ * ```
+ */
+const onClear = (): void => {
+  valueChange.reset();
+  rangeValue.triggerSubmit(null);
+  onOpenChange(false);
+  selectorRef.value?.focus();
+  emit('clear');
 };
-
-const innerPickerValue = ref<DatePickerDate | null>(props.defaultPickerValue ?? null);
-const mergedPickerValue = computed<DatePickerDate | null>(
-  () => props.pickerValue ?? innerPickerValue.value,
-);
-/** 未给浏览值时用「第一个有值的槽位」兜底，再不行用今天。 */
-const panelPickerValue = computed<DatePickerDate>(
-  () =>
-    mergedPickerValue.value ??
-    (inner.calendarValue.value[0] as DatePickerDate | null) ??
-    dayjsConfig.getNow(),
-);
 
 // ============================== 展示面 ==============================
 const valueTexts = computed<string[]>(() => {
@@ -461,17 +665,6 @@ const rootClass = computed(() =>
     className: props.className,
     rootClassName: props.rootClassName,
   }),
-);
-
-/**
- * `needConfirm` 的合并值（上游 `useFilledProps.js:74-76`）。
- *
- * ⚠️ 传的是 `internalMode`（`InternalMode`）而**不是** `props.picker` ——
- * `'datetime'` 只在 `InternalMode` 里（`date` + `showTime`），
- * 传错会让带时间的日期选择器「点一下就提交」。
- */
-const mergedNeedConfirm = computed(() =>
-  getMergedNeedConfirm(props.needConfirm, internalMode.value),
 );
 
 /**
@@ -543,15 +736,22 @@ const panelProps = computed(() => ({
   value: inner.calendarValue.value as never,
   multiple: props.multiple,
   onSelect: (date: PanelDateType) => {
-    const next = [...inner.calendarValue.value];
-    next[0] = date;
-    inner.triggerCalendarChange(next);
-    // ⚠️ 判据是**合并后**的 `needConfirm`（默认值取决于内部模式：
-    //    `time` / `datetime` 默认 `true` ⇒ 点选**不**提交，要点「确定」）。
-    //    S1 只做「不需要确认时点选即提交」；「确定」按钮的接线在 S2/S5。
-    if (!mergedNeedConfirm.value) {
-      rangeValue.triggerSubmit(next);
+    // 上游 `SinglePicker.js:322-328`（逐字）
+    if (props.multiple && panelInternalMode.value !== mergedPicker.value) {
+      return;
     }
+    const nextValues = props.multiple
+      ? toggleDates(
+          dayjsConfig,
+          filledLang.value,
+          mergedMode.value,
+          inner.calendarValue.value,
+          date as DatePickerDate,
+        )
+      : [date];
+    // 「面板这一下走完了吗」= 不是复杂选择器 **且** 面板粒度就是组件的粒度
+    const panelFinished = !complexPicker.value && internalMode.value === panelInternalMode.value;
+    valueChange.triggerChange(0, panelFinished ? 'panel-final' : 'panel-intermediate', nextValues);
   },
   onPickerValueChange: (next: PanelDateType) => {
     if (props.pickerValue === undefined) {
@@ -562,8 +762,18 @@ const panelProps = computed(() => ({
   },
   pickerValue: panelPickerValue.value,
   defaultPickerValue: props.defaultPickerValue ?? undefined,
-  onPanelChange: (viewDate: PanelDateType | undefined, mode: never) =>
-    emit('panelChange', viewDate as never, mode),
+  /**
+   * 面板粒度变化（上游 `SinglePicker.js:214-222` 的 `triggerModeChange`）。
+   *
+   * ⚠️ 本仓只**跟随**（`props.mode` 仍是面板自管），见 `mergedMode` 的说明。
+   * 记录它是为了让 `panelFinished` 判得准 —— 在年/十年面板里点一格**不该**提交。
+   */
+  onPanelChange: (viewDate: PanelDateType | undefined, mode: DatePickerPanelMode) => {
+    if (props.mode === undefined) {
+      innerMode.value = mode;
+    }
+    emit('panelChange', viewDate as never, mode);
+  },
   disabledDate: props.disabledDate as never,
   minDate: resolveLimit(props.minDate),
   maxDate: resolveLimit(props.maxDate),
@@ -600,9 +810,23 @@ const selectorProps = computed(() => ({
   styles: semantic.styles.value,
   invalid: invalid.value,
   onInput,
+  onInputFocus,
+  onInputBlur,
   onInputKeydown,
-  onClear: () => rangeValue.triggerSubmit(null),
-  onSelectorClick: () => onOpenChange(!mergedOpen.value),
+  onClear,
+  /**
+   * 上游 `SinglePicker.js:234-240`：先把焦点还给输入框，再**无条件打开**。
+   *
+   * ⚠️ **不是 toggle** —— 关闭靠「点击外部」（`hideAction: ['click']`）。
+   * 写成 `onOpenChange(!mergedOpen)` 会让「点一下输入框」把已开的浮层关掉，
+   * 与 antd 不一致。
+   */
+  onSelectorClick: () => {
+    if (!mergedDisabled.value) {
+      selectorRef.value?.focus();
+    }
+    onOpenChange(true);
+  },
 }));
 
 // ============================== Trigger 的接线值 ==============================
@@ -643,6 +867,6 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
     :motion="popupMotion"
     stretch="minWidth"
   >
-    <Selector v-bind="selectorProps" />
+    <Selector ref="selectorRef" v-bind="selectorProps" />
   </Trigger>
 </template>

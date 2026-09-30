@@ -317,10 +317,12 @@ export const COMPONENTS = [
       'G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，' +
       '决策 id `date-picker-input-kernel`。' +
       'S1 功能 + 样式已落地（257 规则 / 45 声明）。' +
-      'S2 键入解析（2026-10-01）：默认 `format` 的**补齐层**（rc `useLocale`→`fillLocale`，' +
-      'PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）已落地；' +
-      '剩「落值 + 提交时机」= 上游 `useRangeValueChange`（405 行）状态机，' +
-      '**须与 S4 字段导航同批做**（拆开必然「时机半对」）。',
+      '**S2 全部落地（2026-10-01）**：`format` 的**补齐层**（rc `useLocale`→`fillLocale`，' +
+      'PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）+ ' +
+      '**提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，' +
+      '`hooks/picker-value-change.ts`）。' +
+      '⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；' +
+      'S3 = 掩码模式，S5 = `multiple` / 预设 / 范围两端。',
   },
   {
     name: 'time-picker',

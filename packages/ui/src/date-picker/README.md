@@ -178,20 +178,27 @@ const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.for
 —— 而裁决 `picker-panel-ownership` = B 只把**面板** Vue 化了 ⇒ footer 属未移植面。
 ⇒ 与 `renderExtraFooter` / `panelRender` 同批（S5 或单独一轮）。
 
-#### (c) S2 剩余的「落值 + 提交时机」= 上游 405 行状态机
+#### (c) ✅ **已解决**（2026-10-01 同日）：S2 的「落值 + 提交时机」
 
-`PickerInput/hooks/useRangeValueChange.js`（405 行，含完整中英注释）是提交时机的
-唯一权威：`triggerChange(index, source, value)` 先按
-`source × needConfirm × allowEmpty × index` 解析出 7 种 action
-（`modify` / `submitCurrent` / `switchNext` / `finish` / `resetCurrent` /
-`resetCurrentAndSwitchNext` / `resetAll` / `abort`），再统一执行。
+`hooks/picker-value-change.ts` 是上游 `PickerInput/hooks/useRangeValueChange.js`
+（405 行）的逐字移植：`triggerChange(index, source, value)` 先按
+`source × needConfirm × allowEmpty × index` 解析出唯一 action（8 种），再统一执行。
+`DatePicker.vue` 按 `SinglePicker.js` 接线（键入 / 聚焦 / `Tab` / `Esc` / 关浮层 /
+清除 / 面板点选）。
 
-- 单值场景可达子集较小（`fieldCount = 1`、`allowEmpty = [false]`），但
-  `source` 有 9 种（`input` / `panel-intermediate` / `panel-final` / `popupClose` /
-  `field-switch` / `keyboard-submit` / `keyboard-submit-weak` / `confirm` / `remove` / `esc`）。
-- ⇒ 它与 **S4 的字段导航是同一个状态机**，不该拆两轮做（拆开必然「时机半对」）。
-- 本轮**刻意不接**：`DatePicker.vue` 的 `onInput` 只做到 `invalid` 上报（S1 已定的边界），
-  落值仍走 `rangeValue.triggerSubmit`。**接一个时机半对的实现比不接更糟**（PLAN 原话）。
+⇒ **S4 的字段导航调度**（`field-switch` 分支 + `forceFocus` 强弱）已随之落地；
+S4 只剩**渲染**（`-input-active` 分段高亮 + 焦点跟随）。
+用例：L1 **36 条** + L2 **12 条**；四条「想当然」判据见 `PLAN.md` 的同名小节。
+
+#### (d) 面板 `mode` 尚未**受控化**
+
+上游把 `mergedMode`（`useControlledState(picker, mode)` 的产物）**受控地**喂给面板
+（`mode: mergedMode` + `onPanelChange: triggerModeChange`）。本仓目前让面板自管
+（`panelProps.mode` 只透传 `props.mode`），只在 `onPanelChange` 里**跟随**记一份
+（`innerMode`），供 `panelFinished` 用。
+
+⇒ 行为上目前等价（面板每次粒度变化都会上报），但**两份真值来源**是漂移风险。
+登记为待收口（S5 与 `presets` / `renderExtraFooter` 同批）。
 
 #### (d) `theme.test.ts` 实际 **30 条**（README §4 与 PLAN G3 写的是 22 条）
 

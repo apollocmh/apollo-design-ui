@@ -2145,3 +2145,59 @@
     🚨 **教训**：「产物里有硬编码色」有**两种**成因 ——
     「我们移植错了」与「上游本来就是字面量」。**先重跑提取器**再决定改哪一边；
     直接改色值是「用直觉覆盖判据」，正是 AGENTS.md §5 要防的事。
+
+239. 🚨 **「键入即提交」是错的 —— `input` 只写临时值，提交在**后续事件**上**（2026-10-01，S2 收口）。
+
+    移植上游 `PickerInput/hooks/useRangeValueChange.js`（405 行的提交时机状态机）时，
+    我最先想当然的是「`onChange(text)` 解析成功 ⇒ 值就提交了」。**不是**：
+
+    ```
+    source = 'input'  ──resolveAction──▶  'modify'  ──▶  只 triggerCalendarChange（临时值）
+    ```
+
+    `modify` **不发 `change`**。真正的提交只在 `submitField` 里发生，而它只被
+    `submitCurrent`（`Tab` = `keyboard-submit-weak`）与 `switchNext`
+    （`popupClose` / `confirm` / `keyboard-submit` / `panel-final` / `remove`）触发。
+
+    ⇒ 用户视角是「敲完离开时值就更新了」，机制上是**关浮层时提交**
+    （焦点离开 ⇒ `useFocusEvents` 关浮层 ⇒ `popupClose`）。
+    上游那条被废弃的 `changeOnBlur` 注释「Value will always be update if user type
+    correct date type」说的是**用户视角**，读成「机制上 input 就提交」会写错。
+
+    - 🚨 **连带**：`popupClose` 也不是「一定提交」——
+      有确认制（`needConfirm`）且还有 field 没参与过 ⇒ `resetAll`（**丢弃**）；
+      整轮没改过 ⇒ `finish`（什么都不做）。
+    - **对测试的影响**：jsdom 里「键入后断言 `change`」会**永远失败**。
+      本仓改用两条可驱动的路径：① `Tab`（`keyboard-submit-weak`）；
+      ② **受控 `open` 从 true 变 false**（与「焦点离开后关浮层」走**同一条**
+      `mergedOpen` watch）。后者比模拟焦点转移稳得多。
+    - 已钉住：`s2-commit.test.ts` 的「键入本身不提交」+「关浮层 ⇒ 提交」。
+
+240. 🚨 **移植「闭包 + `useRef`」的状态机到 Vue 时的两个语义翻转**（2026-10-01，同 239）。
+
+    上游 `useRangeValueChange` 用 `useRef` + `useSyncState` 存三份簿记。
+    照字面搬到 Vue 会踩两处（都属于 PITFALLS 207 的家族）：
+
+    1. **`currentIndex` 必须在入口取快照**。上游：
+       ```js
+       let currentIndex = getCurrentIndex();
+       if (currentIndex === null && ...) { currentIndex = index; setCurrentIndex(index); }
+       const action = resolveAction(currentIndex, ...);   // ← 用的是**改过之后**的局部变量
+       ```
+       Vue 里 `currentIndex` 是 `ref`（**活读**）⇒ 写成
+       `resolveAction(currentIndex.value, ...)` 会在 `setCurrentIndex` 之后读到新值，
+       分支全错。必须 `let snapshotIndex = currentIndex.value` 并一路用局部变量。
+    2. **`isLastInput` 只被「非 `popupClose`」的事件写**。上游注释：
+       *`popupClose` consumes the previous update type instead of replacing it*。
+       写成无条件 `isLastInput = source === 'input'` 会让
+       `popupClose` 的 focus 强弱判定（`... || (source === 'popupClose' && !isLastInput)`）
+       **恒为假**，且**没有任何测试会红**（`forceFocus` 只影响焦点跟随，jsdom 无布局）。
+
+    另：`useRef` 里**就地改对象**（`field.modified = modified`）在 Vue 里**不触发渲染**
+    ⇒ 改成不可变更新（`triggered.value = list.map(...)`）。
+    `triggeredFields` 是**渲染用**的（面板/选择器读它），必须响应式；
+    `confirmedIndex` / `isLastInput` 不参与渲染，保持普通闭包变量即可。
+
+    🚨 **教训**：移植这类「闭包状态机」时，把 `useRef` 分成三类再逐类决定：
+    **参与渲染的**（→ `ref`/`computed`）、**只在事件里读写的**（→ 普通变量）、
+    **被就地改对象的**（→ 改不可变更新）。三类混着搬必错。

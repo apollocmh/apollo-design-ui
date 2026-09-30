@@ -37,21 +37,25 @@
         ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
         ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
         status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`（见 README §5 的既有不一致）。
-      - [~] S2 键入解析 —— **阻塞项已闭合**（2026-10-01），**函数形态已落地**；
-        剩「落值 + 提交时机」（= 上游 405 行状态机，与 S4 同源，见 README §5.5(c)）：
+      - [x] S2 键入解析 + **提交时机** —— **全部落地**（2026-10-01）：
         - ✅ 纯函数：`hooks/picker-typing.ts`（`parseTextWithFormat` / `validateFormat`）
-        - ✅ **默认 `format` 的推导层**（2026-10-01）—— `hooks/picker-filled.ts`：
+        - ✅ **默认 `format` 的补齐层** —— `hooks/picker-filled.ts`：
           上游 `useFilledProps.js:72-76` 的 `locale` 补齐 + `showTime` 归一。
           **根因更正**：不是「缺 `showTime` 推导」，而是缺 **rc `useLocale` → `fillLocale`
           的硬编码兜底**（`fieldDateFormat || 'YYYY-MM-DD'` 等 11 个键）——
           本仓与 antd 的语言包**都没有**这些键（实测）。
-        - ✅ **`format` 的函数形态**（2026-10-01）—— `mergeFormat` 的 `.map` 补上
+        - ✅ **`format` 的函数形态** —— `mergeFormat` 的 `.map` 补上
           `typeof c === 'function'` 那一支；`getFormatLength` 处理 `input[size]` 的求值。
-        - ✅ 接线：`.vue` 的 `invalid` 状态 + `onInput`（解析）+ `onInputKeydown`（Escape/Enter）
-        - ✅ `Selector` 的 `invalid` prop → `input[aria-invalid]` + 根类名 `-invalid`
-        - ⏳ 未接：落值 + **提交时机**（依赖 `useRangeValue` 的 `triggerChange` 语义）
+        - ✅ 解析接线：`invalid` 状态 + `onInput` + `Selector` 的 `aria-invalid` / `-invalid`
+        - ✅ **提交时机** —— `hooks/picker-value-change.ts`（上游 `useRangeValueChange.js`
+          **405 行**的逐字移植：7 种 action × 10 种 source 的 `resolveAction` +
+          统一执行的 `triggerChange` + 三份簿记）。`DatePicker.vue` 按
+          `SinglePicker.js` 接线：键入 / Tab / Esc / 焦点 / 清除 / 关浮层 / 面板点选。
+        - ✅ 用例：`picker-value-change.test.ts` **36 条**（L1，node）+
+          `s2-commit.test.ts` **12 条**（L2，jsdom）
       - [ ] S3 掩码模式（`format.type: "mask"`）
-      - [ ] S4 键盘字段导航与分段（`-input-active`）
+      - [ ] S4 键盘字段导航与分段（`-input-active`）—— ⚠️ **调度逻辑已随 S2 落地**
+            （`field-switch` 分支 + `forceFocus`），S4 只剩**渲染**（分段高亮 + 焦点跟随）
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [x] G7 L3 类型 —— `__tests__/type.test-d.ts`，**42 条**（运行时 42 + 类型检查 42）。
@@ -190,7 +194,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 | G0–G2 | ✅ | `docs/analysis/date-picker.md` + `interface.ts` |
 | G3 TOKEN | ✅ | `style/token.ts` 45 键 + theme 22 条 |
 | G4 S1（功能 + 样式） | ✅ | `DatePicker.vue` + 257 条规则 + 45 条声明 |
-| G5/G6 L1+L2（S1–S2 范围） | ⏳ 部分 | `picker-pure` **64 条** + `picker-typing` **11 条** + `s1-smoke` 10 条 + `s2-typing` **15 条** |
+| G5/G6 L1+L2（S1–S2 范围） | ⏳ 部分 | `picker-pure` **64** + `picker-typing` **11** + `picker-value-change` **36** + `s1-smoke` **10** + `s2-typing` **15** + `s2-commit` **12** |
 | G7 L3 | ✅ | `type.test-d.ts` 42 条 |
 
 ## ⚠️ `--project types` 的既有 SFC 解析噪音（对照实验确认，非本包引入）
@@ -280,41 +284,49 @@ export type PickerFormat<DateType = PanelDateType> =
 键入时无法从函数反推日期 ⇒ `pickPropFormat` 遇到函数返回 `null`（「没有静态格式串」），
 解析退回 `formatList` 的字符串项。这与上游一致。
 
-### ⏳ 待做：落值 + 提交时机（**唯一剩余**，且必须与 S4 同批）
+### ✅ 落值 + 提交时机 —— **已落地**（2026-10-01）
 
-现状：`DatePicker.vue` 的 `onInput` 只做到 **`invalid` 上报**（S1 定的边界）；
-解析出日期后**不落值**（`onInput` 里 `if (parsed)` 那一支直接 `return`）。
-落值仍只有面板点选一条路径（`rangeValue.triggerSubmit`）。
-
-上游流程（`@rc-component/picker` 的 `PickerInput/hooks/useRangeValueChange.js`，**405 行**）：
+`hooks/picker-value-change.ts` 是上游 `useRangeValueChange.js`（**405 行**）的逐字移植：
 
 ```
-Input onChange(text)
-  → onInputChange()                       // = triggerSingleValueChange(0, 'input')
-  → validateFormat(text)
-      命中 → onInvalid(false, index) + onChange(parsed, index)   // (0, 'input', parsed)
-      未中 → onInvalid(!!text, index)
-  ↓
-triggerChange(index, source, value)
-  → resolveAction(currentIndex, index, source, value)   // 7 种 action
-  → 执行：modify / submitCurrent / switchNext / finish / resetCurrent /
-          resetCurrentAndSwitchNext / resetAll / abort
+source × needConfirm × allowEmpty × index  ──resolveAction──▶  action  ──▶  统一执行
 ```
 
-⚠️ **关键判据（容易想当然的地方）**：
+- **8 种 action**：`modify` / `submitCurrent` / `switchNext` / `finish` / `abort` /
+  `resetCurrent` / `resetCurrentAndSwitchNext` / `resetAll`。
+- **10 种 source**：`input` / `remove` / `keyboard-submit` / `keyboard-submit-weak` /
+  `esc` / `panel-intermediate` / `panel-final` / `popupClose` / `field-switch` / `confirm`。
+- **三份簿记**：`triggeredFields`（参与过 + 改过）、`confirmedIndex`（显式确认过）、
+  `isLastInput`（最近一次是不是 input ⇒ 决定 `popupClose` 的 focus 强弱）。
 
-1. **`Enter` 不提交**（已在 S1/S2 的键盘用例里钉住）—— 它只在**浮层关闭时**打开浮层。
-   真正的提交走 `popupClose` / `confirm` / `keyboard-submit`。
-2. **`popupClose` 会「消费」上一次的更新来源**（`isLastInputRef`）而不覆盖它 ——
-   `source !== 'popupClose'` 时才写 `isLastInputRef`。这决定了关浮层时的 focus 行为。
-3. **`needConfirm` 下「关浮层」不等于「提交」**：要求 `allFieldsTriggered`，
-   否则 `resetAll`（丢弃临时值）。单值时 `fieldCount = 1` ⇒ 一旦 `modified` 过就满足。
-4. ⇒ **不能只做「input → 落值」这一小段**：`source` 有 9 种、action 有 8 种，
-   且 `currentIndex` / `triggeredFields` / `confirmedIndex` 三份簿记是跨事件的。
-   它与 **S4 的字段导航**共用同一个状态机 —— 分两轮做必然产生「时机半对」的静默 bug。
+**接线点**（全部对齐 `SinglePicker.js`）：
 
-⚠️ 验证方式：这批必须用 **jsdom**（真实键入 + 焦点 + 关浮层的异步卸载 ——
-关浮层是**异步**的，断言卸载必须轮询，PITFALLS 179）。
+| 交互 | source | 出处 |
+|---|---|---|
+| 键入 | 先 `input`（**不带值**）+ 再 `input`（带 `[date]`） | `useInputProps.js:114-135` + `SingleSelector.js:94-96` |
+| 聚焦 | `field-switch` | `SinglePicker.js:417-423` |
+| `Tab` | `keyboard-submit-weak`（局部提交，**不**关浮层） | `SinglePicker.js:428-429` |
+| `Escape` | `esc` + 关浮层 | 同上 `:431-432` |
+| `Enter` | **不提交**，只在关闭时开浮层 | `useInputProps.js:152-158` |
+| 关浮层 | `popupClose` | `SinglePicker.js:187-191` |
+| 清除 | `reset()` + 提交 `null` + 关浮层 + 焦点回输入框 + `clear` | `SinglePicker.js:242-249` |
+| 点面板格 | `panel-final`（无确认制**且**面板粒度 = 组件粒度）否则 `panel-intermediate` | `SinglePicker.js:322-328` |
+
+🚨 **四条最容易想当然、已被用例钉住的判据**：
+
+1. **键入本身不提交** —— `input` 只走 `modify`（写临时日历值）。提交在**后续事件**
+   （关浮层 / Tab / 确定）。这与「多数输入框改完即提交」的直觉相反。
+   （上游被废弃的 `changeOnBlur` 注释「Value will always be update if user type correct
+   date type」说的是**用户视角**，机制上仍是「关浮层时提交」。）
+2. **`Enter` 不提交**，只在浮层关闭时打开它。
+3. **`popupClose` ≠ 一定提交**：有确认制且还有 field 没参与过 ⇒ `resetAll`（丢弃）；
+   整轮没改过 ⇒ `finish`（什么都不做）。
+4. **`isLastInput` 只被「非 `popupClose`」的事件写**（上游注释：`popupClose`
+   *consumes* the previous update type instead of replacing it）⇒ 无条件赋值会让
+   `popupClose` 的 focus 强弱判定恒假。
+
+⚠️ 用例：L1 `picker-value-change.test.ts` **36 条**（node 环境，纯 `resolveAction` +
+簿记）+ L2 `s2-commit.test.ts` **12 条**（jsdom，真实键入 / Tab / Esc / 关浮层 / 面板点选）。
 
 ## ✅ S2 的阻塞项 —— **已闭合**（2026-10-01）
 
@@ -347,9 +359,10 @@ triggerChange(index, source, value)
 2. `picker-pure.test.ts`「补齐前 `formatList` 为空，补齐后有默认格式」；
 3. `picker-pure.test.ts`「补齐用的时间格式**从 show 标志推出来**，不是 `showTime.format`」。
 
-**S2 剩余（唯一）**：落值 + **提交时机** —— 上游 `useRangeValueChange.js`（405 行）的
-`triggerChange` 状态机。⚠️ **它与 S4 的字段导航是同一个状态机**，必须同批做，
-否则必然「时机半对」。详见 README §5.5(c)。
+**S2 的收尾（同日）**：落值 + **提交时机** —— 上游 `useRangeValueChange.js`（405 行）的
+`triggerChange` 状态机，已逐字移植（见上面「✅ 落值 + 提交时机」一节）。
+⚠️ 它与 **S4 的字段导航是同一个状态机** —— 本轮把**调度逻辑**（`field-switch` 分支 +
+`forceFocus`）一并做掉了，S4 只剩**渲染**（`-input-active` 分段高亮 + 焦点跟随）。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
