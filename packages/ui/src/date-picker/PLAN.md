@@ -1,0 +1,69 @@
+# DatePicker · 开发计划（G0–G14）
+
+> 由 gen-component.mjs 生成。每次开工先过一遍「开工避坑清单」，Gate 完成一个勾一个。
+
+## 状态
+
+- registry status: **analyzing** · priority P5 · complexity XL
+- 依赖组件: 无
+- foundation: @apollo-design/icons, @apollo-design/locale, @apollo-design/overlay, @apollo-design/picker, @apollo-design/portal, @apollo-design/position, @apollo-design/theme, @apollo-design/utils
+- antd 规模: 3675 行 / 172 文件 · token 3
+
+## Gate 检查单
+
+- [x] G0 CLAIM —— 由 `next-task.mjs` 授权开工（foundation 13/13 之后的下一个；8 个依赖包全部 completed）
+- [x] G1 ANALYZE —— `docs/analysis/date-picker.md`（14 节，全部来自实测）。新增探针 `tests/visual/debug/dump-datepicker-antd.mjs`（23 用例 SSR dump）
+- [x] G2 API DESIGN —— `interface.ts`（props/emits/slots/expose/子入口全量枚举；v-model 与语义事件按 **C11 双发**）。见下方「G2 的三条关键判据」
+- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
+- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
+- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
+- [ ] G8 L5 a11y —— axe + role/键盘断言
+- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [ ] G10 L4/L4 DOM 契约 + compat 比对
+- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
+- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
+- [ ] G14 COMMIT —— commit message 带 [COMP:date-picker]
+
+## G2 的三条关键判据（写 interface.ts 时定的，G4 必须遵守）
+
+1. **所有 antd prop 都要声明，一个都不能少** —— 未声明的会被 Vue 归进 `attrs`，
+   而 rc 那套「解构 + `...restProps`」的取值方式在 Vue 里取不到 ⇒ **静默失效**
+   （PITFALLS 跨包判据 1；`picker` 面板流已经踩过一次，见分析文档 §11.1）。
+2. **单值与范围的事件载荷形状是分开定的** —— `value` / `onChange` / `onCalendarChange` /
+   `onOk` / `mode` / `presets` / `id` / `placeholder` / `disabled` **形状都不同**
+   （范围全是「数组化」或「两端元组」）⇒ 共用部分放 `PickerCommonProps`，
+   差异**下沉到各自的 interface**，不要用联合糊过去。
+3. **函数 prop 一律配同名 scoped slot**（C8 双通道）—— 见 `DatePickerSlots`。
+   另：`CellRender` 的第一个参数是上游的 `CurrentType` **联合**
+   （`DateType | number | string`，时间列传数字、上下午列传 'am' / 'pm'），
+   **不要收窄成 `DatePickerDate`**。
+
+## G4 开工前必须先裁决的一件事（架构分叉，尚未裁决）
+
+rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useState` + `useEvent`），
+而 `picker` foundation **只 Vue 化了面板**（裁决 `picker-panel-ownership` = B）。
+⇒ 输入框的**解析 / 掩码 / 键盘字段导航 / 分段（`-input-active`）** 要自研。两条路：
+
+| 选项 | 内容 | 代价 |
+|---|---|---|
+| **A. 完整重写** | 逐块对齐 `PickerInput`；`inputReadOnly` / `preserveInvalidOnBlur` / `previewValue` / 掩码模式 / 键入解析 全部落地 | 最大；但 11 维度可全 `done`、无缺口 |
+| **B. 核心 + 明确缺口** | 值 / 开合 / 面板 / 格式化 / 约束 / 状态 / 语义槽 全落地；键入解析与掩码标 `DEFERRED`（`layerNotes` + README §5 登记） | 有缺口，但缺口**可枚举、可测** |
+
+判据（不是「哪个省事」）：`cascader` 带着 1 条 `DEFERRED` 仍判 `completed`
+（那条是**样式集成**）。但**键入解析是主交互**，量级不同 ⇒ 按 `AGENTS.md` §7
+「遇到架构决策分叉必须停下问用户」，**这条要用户拍板**。
+
+## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
+
+1. **内联 style 的数字必须转 px 字符串** —— Vue patchStyle 不做转换（React 才有），裸数字被静默丢弃。
+2. **L3 负例必须包在永不调用的闭包里** —— *.test-d.ts 会被 vitest 真执行。
+3. **vitest 必须从仓库根跑** —— 在 packages/<x>/ 下跑不应用根 config，大面积假失败。
+4. **demo 显式指定字体** —— 继承字体差异是平台差异，会让 L6 全红。
+5. **Boolean prop 未传 ≠ false** —— withDefaults 里给 undefined，否则布尔语义静默失效。
+6. **cssinjs 嵌套语义**：`&` 是复合选择器、普通键是后代 —— 搞反会让样式作用到所有形态。
+7. **var(--apollo-*) 必须在 theme tokens.css 有声明** —— 写错不报错，由 test:build B7 兜底。
+8. **凡是要断言「某决策/约定是这样」先跑 node registry/tools/ask.mjs**，不凭记忆。
+9. **跑重型门禁前关 IDE** —— 实测 16 分钟 → 7 分 49 秒。
+10. **改完文件回读** —— Edit 偶发报 success 但内容未变；biome 会重排 import。
