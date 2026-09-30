@@ -1807,3 +1807,32 @@
     - ⚠️ 这两条判断在 jsdom 下是**恒真**的 ⇒ 对既有测试**行为不变**（可推理证明）。
       但本轮**无法用 jsdom 回归验证**（worker 起不来）⇒ 验证缺口已如实登记在
       `packages/ui/src/date-picker/PLAN.md` 的待验证项，等环境恢复后补跑一次。
+
+223. 🚨 **`getMergedStatus` 在本仓是 `??`、上游是 `||`** —— 一处**既有的跨组件不一致**
+    （2026-09-30 读源码时发现，非本轮引入）。
+    | 位置 | 实现 |
+    |---|---|
+    | antd 6.6.4 `es/_util/statusUtils.js` | `customStatus \|\| contextStatus` ← **规格** |
+    | 本仓 `packages/ui/src/form/context.ts` | `customStatus ?? contextStatus` ← ❌ 不一致 |
+    - **分歧点只有一个**：`customStatus === ''`（`InputStatus` 的合法取值）。
+      上游**回落**到 Form.Item 的 status，本仓**不回落**。
+    - ⚠️ 已查：**无测试钉住这个分歧点**（`grep getMergedStatus` 只命中新写的 date-picker 用例）
+      ⇒ 修它是低风险的，但它改的是 **input / form 的运行时行为** ⇒ 要单独过那两个组件的回归。
+    - date-picker 的处理：**按规格实现并改名** `getMergedPickerStatus`（见
+      `date-picker/components/picker-shared.ts`），**不复用同名函数** ——
+      否则会出现「同名函数、两处不同语义」，那正是本仓最容易埋雷的形态
+      （同 219 条两个 `PickerLocale` 的教训）。
+    - ⏳ 待用户裁决是否统一。登记在 `date-picker/README.md §5.3`。
+
+224. ⚠️ **`space/statusUtils.getStatusClassNames` 返回的是「空格拼接的字符串」，不是数组**
+    —— 它的签名是 `(prefixCls, status?, hasFeedback?) => string`。
+    🚨 写 `classes.push(...getStatusClassNames(...))` 会把字符串**按字符展开**，
+    产出一堆单字母类名（**静默**，只在 L4 / L6 才暴露）。
+    ⇒ 必须整体 `push`（date-picker 的 `root-class.ts` 已加注释 + 断言防回归）。
+    - 同族判据：**复用既有实现前先读它的返回值形状**，不要凭名字猜
+      （本轮先按「返回数组」写，跑到测试才因 `Cannot find module` 之外的原因暴露）。
+
+225. ⚠️ **`date-picker` 组件层的 import 层级是两级**：`components/` 与 `hooks/` 下的文件
+    引用 `packages/ui/src/<x>` 下的既有模块要写 **`../../<x>`**（不是 `../<x>`）。
+    本轮把 `space/statusUtils` 写成 `../space/statusUtils` ⇒ vitest 报
+    `Cannot find module`（**收集期就失败**，0 test），一眼看不出是路径问题。

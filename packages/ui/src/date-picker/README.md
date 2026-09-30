@@ -18,6 +18,7 @@
 | 2 | 范围的两端输入框：上游把 `-input` 拼在 `Input` 组件内部（调用处只传 `-input-start`）；本仓没有独立的 `Input` 组件，直接拼成 `-input -input-active? -input-start\|-end` | **PLATFORM** | 结果与 SSR 实测一致（`ant-picker-input ant-picker-input-start`）；上游结构见 `Input.js:64,344` |
 | 3 | 构建期常量（padding 算式 / `lighten` 结果 / `28*8`）在静态 CSS 里**内联成字面值**，不随主色或主题变化（上游 cssinjs 运行时重算） | **PLATFORM** | 本仓「静态 CSS + CSS 变量」架构的固有差异，非 bug；影响面由 L6 的 dark / compact / token-override 矩阵钉住 |
 | 4 | `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs） | **INTENDED** | G2 的决策；`interface.ts` 里已写明 |
+| 5 | 复用既有 `space/statusUtils.getStatusClassNames`（返回**空格拼接字符串**，非数组）；`root-class.ts` 整体 `push` | **PLATFORM** | 本仓既有实现的选择；`push(...str)` 会把字符串按字符展开，已加注释与断言防回归 |
 
 ## 3. .vue / .tsx 选择
 
@@ -90,7 +91,23 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
    `interface.ts` 的 `CustomFormat` 已按上游声明，避免「类型说支持、实现不做」。
 2. `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs）—— INTENDED。
 
-### 5.3 G1 阶段实测出来的、G4 必须处理的坑
+### 5.3 🚨 上报：一处**既有的跨组件不一致**（`getMergedStatus` 的 `??` vs `||`）
+
+| 位置 | 实现 | 与上游 |
+|---|---|---|
+| antd 6.6.4 `es/_util/statusUtils.js` | `customStatus \|\| contextStatus` | —— 规格 |
+| 本仓 `packages/ui/src/form/context.ts` | `customStatus ?? contextStatus` | ❌ **不一致** |
+| 本组件 `components/picker-shared.ts` | `customStatus \|\| contextStatus` | ✅ 按规格 |
+
+**分歧点只有一个**：`customStatus === ''`（空串，`InputStatus` 的**合法**取值）。
+上游会**回落到** Form.Item 的 status，本仓既有实现**不回落**。
+
+⇒ 本组件的处理：**按规格实现并改名** `getMergedPickerStatus`（不复用既有同名函数，
+避免「同名不同义」——那是本仓最容易埋雷的形态），**不擅自改既有组件**
+（input / form 的运行时行为变化要单独过它们的门禁与回归）。
+⏳ **待用户裁决**：是否把 `form/context.ts` 的 `??` 统一成 `||`（已查：无测试钉住该分歧点）。
+
+### 5.4 G1 阶段实测出来的、G4 必须处理的坑
 
 1. **`value` / `defaultValue` 必须是 dayjs 实例**：传 ISO 字符串会在 rc 的 `isValidate`
    抛 `getUDayjs(…).isValid is not a function`（写 SSR 探针时直接踩到）。

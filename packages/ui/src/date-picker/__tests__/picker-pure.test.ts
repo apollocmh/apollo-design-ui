@@ -21,13 +21,23 @@
 
 import type { PickerLocale as LocalePickerLocale } from '@apollo-design/locale';
 import { describe, expect, it } from 'vitest';
+import { getStatusClassNames } from '../../space/statusUtils';
 import {
   getInputSize,
+  getMergedPickerStatus,
   getRangeShowClear,
   getSingleShowClear,
+  isPairDisabled,
   isRenderable,
   toDisabledPair,
-} from '../components/Selector';
+} from '../components/picker-shared';
+import { getRootClassNames } from '../components/root-class';
+import {
+  BUILT_IN_PLACEMENTS,
+  getDropdownClassName,
+  getRealPlacement,
+  getTransitionName,
+} from '../components/trigger-config';
 import { mergeFormat } from '../hooks/picker-format';
 import { getPlaceholder, getRangePlaceholder, mergePickerLocale } from '../hooks/picker-locale';
 import type { RcPickerLocale } from '../hooks/picker-types';
@@ -308,5 +318,190 @@ describe('date-picker · toDateArray 归一（S1）', () => {
     expect(out).toEqual(['D1', 'D2']);
     // ⚠️ 必须是拷贝：共享引用会让下游 `push` 污染受控值
     expect(out).not.toBe(src);
+  });
+});
+
+/**
+ * 状态类名**复用** `space/statusUtils.ts` 的既有实现（逐字对齐上游）——
+ * 注意它返回的是**空格拼接的字符串**，不是数组（`root-class.ts` 整体 push）。
+ */
+describe('date-picker · 状态类名（复用 space/statusUtils，判据来自上游 _util/statusUtils.js）', () => {
+  it('四个 status **互斥**，且与 hasFeedback 无关', () => {
+    const p = 'apollo-picker';
+    expect(getStatusClassNames(p, 'error', false)).toBe(`${p}-status-error`);
+    expect(getStatusClassNames(p, 'warning', false)).toBe(`${p}-status-warning`);
+    expect(getStatusClassNames(p, 'success', false)).toBe(`${p}-status-success`);
+    expect(getStatusClassNames(p, 'validating', false)).toBe(`${p}-status-validating`);
+    // ⚠️ 这四条是初稿写错的地方：无 hasFeedback 时**仍然**加 status 类
+    //    （实测 `status="error"` 无 Form 也有 `ant-picker-status-error`）
+  });
+
+  it('hasFeedback 只额外加 **-has-feedback** 一个类（不是 status 的开关）', () => {
+    const p = 'apollo-picker';
+    expect(getStatusClassNames(p, undefined, true)).toBe(`${p}-has-feedback`);
+    expect(getStatusClassNames(p, 'error', true)).toBe(`${p}-status-error ${p}-has-feedback`);
+  });
+
+  it('未知 / 空 status ⇒ 空串（不产生任何类名）', () => {
+    const p = 'apollo-picker';
+    expect(getStatusClassNames(p, undefined, false)).toBe('');
+    expect(getStatusClassNames(p, '', false)).toBe('');
+  });
+});
+
+/**
+ * ⚠️ 这组同时是**既有不一致的上报**：
+ *
+ *   上游 `_util/statusUtils.js`：`customStatus || contextStatus`
+ *   本仓 `form/context.ts` 的 `getMergedStatus`：`customStatus ?? contextStatus`  ❌
+ *   本文件（`getMergedPickerStatus`）：`||`                                    ✅
+ *
+ * 两者只在 `customStatus === ''` 时不同。date-picker 按**规格**实现并改名，
+ * 不擅自改既有组件（跨组件回归要单独过门禁）⇒ 差异登记在 README §5。
+ */
+describe('date-picker · getMergedPickerStatus（按上游 ||，非本仓既有的 ??）', () => {
+  it('空串会回落到 context（这正是 || 与 ?? 的唯一分歧点）', () => {
+    expect(getMergedPickerStatus('warning', '')).toBe('warning');
+  });
+
+  it('其余情形与 ?? 一致', () => {
+    expect(getMergedPickerStatus('warning', undefined)).toBe('warning');
+    expect(getMergedPickerStatus('warning', 'error')).toBe('error');
+    expect(getMergedPickerStatus(undefined, undefined)).toBeUndefined();
+    expect(getMergedPickerStatus(undefined, 'error')).toBe('error');
+  });
+});
+
+describe('date-picker · isPairDisabled（S1）', () => {
+  it('**两端都禁**才算整体禁用（上游 disabled.every）', () => {
+    expect(isPairDisabled(true)).toBe(true);
+    expect(isPairDisabled([true, true])).toBe(true);
+    // ⚠️ 只禁一端 ⇒ 整体**不**算禁用（根类名不加 -disabled）
+    expect(isPairDisabled([true, false])).toBe(false);
+    expect(isPairDisabled([false, true])).toBe(false);
+    expect(isPairDisabled(false)).toBe(false);
+    expect(isPairDisabled(undefined)).toBe(false);
+  });
+});
+
+describe('date-picker · getRootClassNames（S1，顺序对齐上游 clsx 参数序）', () => {
+  const p = 'apollo-picker';
+
+  it('默认就有 -outlined（**不是**只有 prefixCls）', () => {
+    expect(
+      getRootClassNames({ prefixCls: p, variant: 'outlined', enableVariantCls: true }),
+    ).toEqual([p, `${p}-outlined`]);
+  });
+
+  it('尺寸：small / large 各加一个；middle / medium **不加**', () => {
+    expect(getRootClassNames({ prefixCls: p, size: 'small' })).toEqual([p, `${p}-small`]);
+    expect(getRootClassNames({ prefixCls: p, size: 'large' })).toEqual([p, `${p}-large`]);
+    expect(getRootClassNames({ prefixCls: p, size: 'middle' })).toEqual([p]);
+    expect(getRootClassNames({ prefixCls: p, size: 'medium' })).toEqual([p]);
+  });
+
+  it('complete 顺序：尺寸 → 变体 → 状态 → compact → context → className → rootClassName', () => {
+    expect(
+      getRootClassNames({
+        prefixCls: p,
+        size: 'large',
+        variant: 'filled',
+        enableVariantCls: true,
+        status: 'error',
+        compactItemClassnames: 'c-compact',
+        contextClassName: 'c-ctx',
+        className: 'c-own',
+        rootClassName: 'c-root',
+      }),
+    ).toEqual([
+      p,
+      `${p}-large`,
+      `${p}-filled`,
+      `${p}-status-error`,
+      'c-compact',
+      'c-ctx',
+      'c-own',
+      'c-root',
+    ]);
+  });
+
+  it('enableVariantCls === false ⇒ 不加变体类（但尺寸/状态照加）', () => {
+    expect(
+      getRootClassNames({
+        prefixCls: p,
+        size: 'small',
+        variant: 'weird',
+        enableVariantCls: false,
+        status: 'warning',
+      }),
+    ).toEqual([p, `${p}-small`, `${p}-status-warning`]);
+  });
+
+  it('空串类名被跳过（不产生空项）', () => {
+    const out = getRootClassNames({
+      prefixCls: p,
+      compactItemClassnames: '',
+      contextClassName: '',
+      className: '',
+      rootClassName: '',
+    });
+    expect(out).toEqual([p]);
+    expect(out.every((c) => typeof c === 'string' && c.length > 0)).toBe(true);
+  });
+});
+
+describe('date-picker · 浮层接线配置（S1，判据来自 rc PickerTrigger）', () => {
+  it('BUILT_IN_PLACEMENTS 四个落点的 points / offset 逐字（读 rc 源码得到）', () => {
+    expect(BUILT_IN_PLACEMENTS.bottomLeft.points).toEqual(['tl', 'bl']);
+    expect(BUILT_IN_PLACEMENTS.bottomRight.points).toEqual(['tr', 'br']);
+    expect(BUILT_IN_PLACEMENTS.topLeft.points).toEqual(['bl', 'tl']);
+    expect(BUILT_IN_PLACEMENTS.topRight.points).toEqual(['br', 'tr']);
+
+    expect(BUILT_IN_PLACEMENTS.bottomLeft.offset).toEqual([0, 4]);
+    expect(BUILT_IN_PLACEMENTS.bottomRight.offset).toEqual([0, 4]);
+    expect(BUILT_IN_PLACEMENTS.topLeft.offset).toEqual([0, -4]);
+    expect(BUILT_IN_PLACEMENTS.topRight.offset).toEqual([0, -4]);
+  });
+
+  it('top* 的 overflow.adjustX 是 0、bottom* 是 1（最容易顺手写错的四位）', () => {
+    expect(BUILT_IN_PLACEMENTS.bottomLeft.overflow).toEqual({ adjustX: 1, adjustY: 1 });
+    expect(BUILT_IN_PLACEMENTS.bottomRight.overflow).toEqual({ adjustX: 1, adjustY: 1 });
+    expect(BUILT_IN_PLACEMENTS.topLeft.overflow).toEqual({ adjustX: 0, adjustY: 1 });
+    expect(BUILT_IN_PLACEMENTS.topRight.overflow).toEqual({ adjustX: 0, adjustY: 1 });
+  });
+
+  it('getRealPlacement：显式 placement 原样返回（不做 RTL 镜像）', () => {
+    expect(getRealPlacement('topLeft', false)).toBe('topLeft');
+    expect(getRealPlacement('topLeft', true)).toBe('topLeft');
+    expect(getRealPlacement('bottomRight', false)).toBe('bottomRight');
+  });
+
+  it('getRealPlacement：未给时按方向取默认（LTR bottomLeft / RTL bottomRight）', () => {
+    expect(getRealPlacement(undefined, false)).toBe('bottomLeft');
+    expect(getRealPlacement(undefined, true)).toBe('bottomRight');
+  });
+
+  it('getDropdownClassName：range / rtl 各加一个类，顺序在自定义之后', () => {
+    const p = 'apollo-picker';
+    expect(getDropdownClassName({ prefixCls: p, range: false, rtl: false })).toEqual([
+      undefined,
+      undefined,
+      undefined,
+    ]);
+    expect(
+      getDropdownClassName({ prefixCls: p, range: true, rtl: false, popupClassName: 'c-own' }),
+    ).toEqual(['c-own', `${p}-dropdown-range`, undefined]);
+    expect(getDropdownClassName({ prefixCls: p, range: false, rtl: true })).toEqual([
+      undefined,
+      undefined,
+      `${p}-dropdown-rtl`,
+    ]);
+  });
+
+  it('getTransitionName：默认是 rootPrefixCls-slide-up（**不是** 组件前缀）', () => {
+    // 🚨 前缀是 rootPrefixCls（apollo）⇒ apollo-slide-up；
+    //    写成 apollo-picker-slide-up 会让动效静默失效（PITFALLS 180 同族）
+    expect(getTransitionName('apollo', undefined)).toBe('apollo-slide-up');
+    expect(getTransitionName('apollo', 'my-motion')).toBe('my-motion');
   });
 });

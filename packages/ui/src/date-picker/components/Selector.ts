@@ -69,58 +69,13 @@
 
 import { isNonNullable } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
-
-/** `isReactRenderable` —— 上游用 `@rc-component/util` 的同名函数。 */
-export function isRenderable(node: VNodeChild): boolean {
-  if (node === null || node === undefined || typeof node === 'boolean') {
-    return false;
-  }
-  if (Array.isArray(node)) {
-    return node.some((n) => isRenderable(n));
-  }
-  // 空字符串在 Vue 里会渲染成空节点；上游的 `isReactRenderable('')` 是 **true**
-  // （只排除 null/undefined/bool/空数组）⇒ 这里保持 true。
-  return true;
-}
-
-/** 算 `input[size]`（上游 `useInputProps` 的 `size` 分支，逐字）。 */
-export function getInputSize(picker: string | undefined, firstFormat: string | undefined): number {
-  const defaultSize = picker === 'time' ? 8 : 10;
-  const length = firstFormat ? firstFormat.length : 0;
-  return Math.max(defaultSize, length) + 2;
-}
-
-/** 归一 `disabled` 成两端形态（`boolean | [boolean, boolean]`）。 */
-export function toDisabledPair(
-  disabled: boolean | [boolean, boolean] | undefined,
-): [boolean, boolean] {
-  if (Array.isArray(disabled)) {
-    return [Boolean(disabled[0]), Boolean(disabled[1])];
-  }
-  const d = disabled === true;
-  return [d, d];
-}
-
-/** 单值的 `showClear`（上游 `SingleSelector.js:127`）。 */
-export function getSingleShowClear(
-  clearIcon: VNodeChild,
-  valueLength: number,
-  disabled: boolean,
-): boolean {
-  return isRenderable(clearIcon) && valueLength > 0 && !disabled;
-}
-
-/** 范围的 `showClear`（上游 `RangeSelector.js:156`）。 */
-export function getRangeShowClear(
-  clearIcon: VNodeChild,
-  valueLengths: readonly [number, number],
-  disabled: readonly [boolean, boolean],
-): boolean {
-  return (
-    isRenderable(clearIcon) &&
-    ((valueLengths[0] > 0 && !disabled[0]) || (valueLengths[1] > 0 && !disabled[1]))
-  );
-}
+import {
+  getInputSize,
+  getRangeShowClear,
+  getSingleShowClear,
+  isRenderable,
+  toDisabledPair,
+} from './picker-shared';
 
 export interface SelectorSemanticClassNames {
   prefix?: string;

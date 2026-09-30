@@ -21,11 +21,18 @@
       `--ant-date-picker-*`（44 + 规则内声明的 `affixColor`）；另有 `initPickerPanelToken` 的
       **10 个内部 token**。主题测试 **22 条**（`__tests__/theme.test.ts`）
 - [ ] G4 IMPLEMENT —— 分 S1–S5 五阶段（见下方「G4 的架构分叉」）
-      - [ ] S1 值 / 开合 / 面板接线 —— **进行中**。已落地（可验证部分）：
-        `hooks/{picker-types,picker-locale,picker-value,picker-format,picker-suffix}.ts` +
-        `components/Selector.ts`（单值 / 范围共用的输入框选择器，DOM 结构逐字对齐 SSR 实测）
-        + `__tests__/picker-pure.test.ts`（**22/22 通过**）。
+      - [ ] S1 值 / 开合 / 面板接线 —— **进行中**。已落地（可验证部分，**40/40 通过**）：
+        - `hooks/{picker-types,picker-locale,picker-value,picker-format,picker-suffix}.ts`
+        - `components/picker-shared.ts` —— 组件层共用纯归一（`isRenderable` / `getInputSize` /
+          `toDisabledPair` / `isPairDisabled` / `getMergedPickerStatus` / 两个 `showClear`）
+        - `components/Selector.ts` —— 单值 / 范围共用的输入框选择器，DOM 逐字对齐 SSR 实测
+        - `components/root-class.ts` —— 根类名组装（顺序对齐上游 `clsx` 参数序）
+        - `components/trigger-config.ts` —— `BUILT_IN_PLACEMENTS`（4 落点 × points/offset/overflow）
+          + `getRealPlacement` + `getDropdownClassName` + `getTransitionName`
+        - `__tests__/picker-pure.test.ts` —— **40 条**
         ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
+        ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
+        status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`（见 README §5 的既有不一致）。
       - [ ] S2 键入解析与 `format` 的函数 / 数组形态（含跨包欠账：`PickerFormat` 加泛型）
       - [ ] S3 掩码模式（`format.type: "mask"`）
       - [ ] S4 键盘字段导航与分段（`-input-active`）
