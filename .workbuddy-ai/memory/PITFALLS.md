@@ -1607,3 +1607,37 @@
     影响 `minDate` / `maxDate` 的越界判定（本轮写 L1 用例时按 day 面板类推，错了两条）。
     ⇒ 四个上层面板的 `offset` / `superOffset` / `getStart` / `getEnd` 必须**逐面板抄**，
     已收进 `panel-header-limit.ts` 的 `getPanelHeaderLimits`（一处一表，便于对拍）。
+
+207. 🚨🚨 **React 的「闭包快照」换成 Vue 的 `computed` 会让「值变了吗」的比较恒为假**
+    （2026-09-30，picker 的 `triggerChange` 实测，**由 L2 抓到**）。
+    上游：
+    ```js
+    const triggerChange = (nextValue) => {
+      setMergedValue(nextValue);
+      if (onChange && mergedValue.length !== nextValue.length || ...) onChange(...);
+    };
+    ```
+    React 里 `mergedValue` 是**本次渲染的闭包常量**，`setMergedValue` 只是排队更新
+    ⇒ 比较用的是**旧**值。Vue 里若把 `mergedValue` 写成 `computed`（这是最自然的写法），
+    它**活读**内部 `ref` ⇒ `setMergedValue` 之后立刻返回新值 ⇒
+    `length` 与 `isSame` 全部为假 ⇒ **`onChange` 永不触发**。
+    - 症状：**受控用法完全正常**（那时 `setMergedValue` 是空操作），只有
+      `defaultValue` 的**非受控**路径全哑。
+    - 对策：**先取快照再写** —— `const current = mergedValue.value; setMergedValue(next);`。
+    - 同类检查点：任何「写状态 → 立刻比较状态」的 React 移植都要过一遍。
+    ⚠️ 这条与 PITFALLS 195（`provide` 的 `ComputedRef` 要 `toValue` 解包）同族：
+    **React 的「值」是快照，Vue 的「响应式值」是活引用** —— 移植时语义会翻。
+
+208. 🚨 **同步连点（不 `nextTick`）不只是「读到旧 DOM」**（2026-09-30，picker L2 实测）。
+    面板的翻页是从 `info.pickerValue` **现算** `offset(distance, pickerValue)` 的
+    ⇒ 两次点击之间不 flush 时，第二次仍基于**第一次之前**的值，
+    「prevs 的结果」会一起错（不是差一个，是差两个粒度）。
+    ⇒ 断言序列（点 → 读 → 点 → 读）时，每次 `click` 之后都要 `await nextTick()`，
+    并把这些用例写成 `async`。**测试里省掉 nextTick 是「写错测试」的常见形态**，
+    别急着去改实现。
+
+209. ⚠️ **上游 `PickerPanel` 没有 `onModeChange` 这个对外 prop**（2026-09-30 实测）。
+    面板**内部**传给面板组件的 `onModeChange` 由 `PickerPanel` 自己提供；
+    **对外**通知模式变化走 **`onPanelChange(viewDate, mode)` 的第二参**。
+    ⇒ 写这类「两级 API」的测试/消费方时，先 `grep 'index.d.ts'` 确认那一层到底声明了什么；
+    未声明的 prop 会被 Vue 归进 `attrs`，回调**永远不触发**（静默）。

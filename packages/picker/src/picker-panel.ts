@@ -310,8 +310,17 @@ export const PickerPanel = defineComponent({
     const generator = (): GenerateConfig<PanelDateType> => props.generateConfig;
 
     const triggerChange = (nextValue: PanelDateType[]): void => {
-      setMergedValue(nextValue);
+      // 🚨 **必须先取快照再写**（2026-09-30 由 L2 抓到的一个真 bug）。
+      //
+      // 上游是 React：`mergedValue` 是**本次渲染的闭包常量**，`setMergedValue(next)` 是
+      // 排队的 state 更新 ⇒ 比较用的是**旧**值。本仓的 `mergedValue` 是 Vue 的 `computed`
+      // ⇒ 一旦 `setMergedValue` 改了内部 `ref`，它**立刻**返回新值，于是
+      //   `current.length !== nextValue.length` 与 `isSame(...)` 全部为假
+      //   ⇒ `changed` 恒为 `false` ⇒ **非受控模式下 `onChange` 永远不触发**。
+      // 症状：受控用法（`value` 从外部传）一切正常，因为那时 `setMergedValue` 是空操作；
+      // 只有**非受控**才暴露 —— 而它是 `defaultValue` 用户的默认路径。
       const current = mergedValue.value;
+      setMergedValue(nextValue);
       const changed =
         current.length !== nextValue.length ||
         current.some(
