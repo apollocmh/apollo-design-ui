@@ -47,6 +47,17 @@ const CASES = {
   'range-basic': React.createElement(RangePicker, {}),
   'range-open': React.createElement(RangePicker, { open: true }),
   'range-show-time': React.createElement(RangePicker, { showTime: true }),
+  'range-value': React.createElement(RangePicker, {
+    defaultValue: [dayjs('2026-09-28'), dayjs('2026-09-30')],
+  }),
+  'range-active': React.createElement(RangePicker, {
+    open: true,
+    defaultValue: [dayjs('2026-09-28'), null],
+  }),
+  'date-value-no-clear': React.createElement(DatePicker, {
+    defaultValue: dayjs('2026-09-30'),
+    allowClear: false,
+  }),
   'range-separator': React.createElement(RangePicker, { separator: '→' }),
   'range-presets': React.createElement(RangePicker, {
     presets: [{ label: 'Week', value: [dayjs('2026-09-28'), dayjs('2026-09-30')] }],

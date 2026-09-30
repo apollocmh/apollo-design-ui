@@ -158,7 +158,11 @@ if (!globalThis.matchMedia) {
   })) as unknown as typeof globalThis.matchMedia;
 }
 
-if (!Element.prototype.scrollTo) {
+// ⚠️ 这些 shim 只对 **DOM 环境**有意义。
+//    `@vitest-environment node` 的测试文件（例如只测纯函数的用例）跑在 node 环境里，
+//    那时 `Element` 根本不存在 —— 直接访问会 ReferenceError 让**整个文件**收集失败
+//    （而不是跳过这几行）。所以这里必须先判「有没有 DOM」。
+if (globalThis.Element !== undefined && !Element.prototype.scrollTo) {
   Element.prototype.scrollTo = function scrollTo() {};
 }
 
@@ -201,7 +205,12 @@ afterEach(() => {
   MockResizeObserver.instances.clear();
   for (const instance of [...MockMutationObserver.instances]) instance.disconnect();
   MockMutationObserver.instances.clear();
-  document.body.innerHTML = '';
+  // ⚠️ 只对 DOM 环境有意义（'@vitest-environment node' 的文件里没有 document）。
+  //    不加这一判会让**纯函数用例**在 node 环境下于此处抛 ReferenceError，
+  //    从而把 afterEach 变成「每个用例都失败」。
+  if (globalThis.document !== undefined) {
+    document.body.innerHTML = '';
+  }
 });
 
 beforeAll(() => {

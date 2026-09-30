@@ -1771,3 +1771,39 @@
     - 顺带教训：本轮先写 `components.json` 的 `notes`、跑了一次 `registry:gen`、
       又**只核对了 `status`/`apiStatus` 就断言「进度字段跨运行保留，已验证」**——
       验证面小于断言面。**核对保留性时要逐字段比对，不要只挑一个字段验。**
+
+221. 🚨🚨 **`jsdom` 的加载会退化到 3 分钟量级 ⇒ 所有 jsdom 测试的 worker 都起不来**
+    （2026-09-30 本机实测，**不是** PITFALLS 199 的「冷缓存」，是持续性的）。
+    症状：`vitest run` 对**任何**文件都报 `[vitest-pool-runner]: Timeout waiting for worker
+    to respond`、`Test Files no tests / Errors 1 error / Duration 60.15s`；
+    `require('antd')` / `require('jsdom')` 这类命令直接 `exit 137`（看起来像被杀）。
+    判据（三步，缺一不可）：
+      ① `time node -e "require('jsdom')"` ⇒ **墙钟 2 分 51 秒 / CPU 仅 1.34s**
+         ⇒ 是 **I/O 阻塞**，不是内存（`vm_stat` 空闲 1 GB+，无 swap）。
+         ⚠️ 第二次加载**同样慢**（2 分 48 秒）⇒ **不是 page cache 冷**，别指望「预热」。
+      ② 对照组：`time node -e "require('vue')"` ⇒ **4.3 秒**；`require('react')` 更快
+         ⇒ 只有 jsdom 那条依赖链慢，本仓代码没问题。
+      ③ 用 `dangerouslyDisableSandbox` 重跑同样的命令 ⇒ **一样**被 137
+         ⇒ **不是沙箱**，是机器/文件系统层面。
+    - ⇒ **结论：环境问题**。`exit 137` 在这里的真实含义是「前台超时/被守卫杀掉」，
+      不是 OOM（与 PITFALLS 41 同族：先怀疑环境，再怀疑代码）。
+    - **可用的绕行**（本轮实证有效）：给**纯函数**用例加文件头指令
+      ```ts
+      // @vitest-environment node
+      ```
+      该文件的 worker 就不加载 jsdom ⇒ 能跑（本轮 22/22 通过，总耗时 ~83s）。
+      ⚠️ 代价：`vitest.setup.ts` 里有 DOM 依赖，必须加护栏（见 PITFALLS 222）。
+    - ⚠️ **无法绕行**的场景：任何需要 jsdom 的用例（L2/DOM 契约/a11y/theme）本轮**跑不了**。
+      碰上这种情况要**如实报告「未验证」**，不要用别的绿灯顶替。
+
+222. ⚠️ **`vitest.setup.ts` 有两处 DOM 依赖必须加存在性护栏**（2026-09-30，为配合 PITFALLS 221）。
+    只有两处（`Element` 在 52–103 行只是**类型注解**，无运行时访问）：
+      1. `Element.prototype.scrollTo` 的 shim；
+      2. `afterEach` 里的 `document.body.innerHTML = ''`。
+    不加护栏时，`// @vitest-environment node` 的文件会在 setup 阶段抛
+    `ReferenceError: Element is not defined` / `document is not defined`
+    ⇒ 表现为「**该文件的所有用例全红**」（本轮 22 条一起红，看着像实现全错，实际是环境）。
+    - 护栏写法：`if (globalThis.Element !== undefined && …)` / `if (globalThis.document !== undefined) {…}`。
+    - ⚠️ 这两条判断在 jsdom 下是**恒真**的 ⇒ 对既有测试**行为不变**（可推理证明）。
+      但本轮**无法用 jsdom 回归验证**（worker 起不来）⇒ 验证缺口已如实登记在
+      `packages/ui/src/date-picker/PLAN.md` 的待验证项，等环境恢复后补跑一次。

@@ -11,7 +11,13 @@
 ## 2. 与 antd 的行为差异清单
 
 <!-- 同步到 COMPATIBILITY.md §9；分类只能是 BUG / INTENDED / PLATFORM / UPSTREAM（AGENTS.md §4.3） -->
-<!-- G4 起逐条登记。 -->
+
+| # | 差异 | 分类 | 依据 |
+|---|---|---|---|
+| 1 | locale 缺 `fieldXxxFormat` 时：上游 `.map(c => c.format)` 在 `undefined.format` 上**抛 TypeError**；本仓 `toArray(null\|undefined)` ⇒ `[]`，得到 `formatList: []` / `firstFormat: undefined`，**降级不抛** | **INTENDED** | rc `miscUtil.toArray` 是 `Array.isArray(v) ? v : [v]`；本仓 `@apollo-design/picker` 的 `toArray` 明确「`null`/`undefined` ⇒ `[]`」。L1 有一条用例钉住 |
+| 2 | 范围的两端输入框：上游把 `-input` 拼在 `Input` 组件内部（调用处只传 `-input-start`）；本仓没有独立的 `Input` 组件，直接拼成 `-input -input-active? -input-start\|-end` | **PLATFORM** | 结果与 SSR 实测一致（`ant-picker-input ant-picker-input-start`）；上游结构见 `Input.js:64,344` |
+| 3 | 构建期常量（padding 算式 / `lighten` 结果 / `28*8`）在静态 CSS 里**内联成字面值**，不随主色或主题变化（上游 cssinjs 运行时重算） | **PLATFORM** | 本仓「静态 CSS + CSS 变量」架构的固有差异，非 bug；影响面由 L6 的 dark / compact / token-override 矩阵钉住 |
+| 4 | `DatePicker.generatePicker(customGenerateConfig)` **不实现**（本仓只支持 dayjs） | **INTENDED** | G2 的决策；`interface.ts` 里已写明 |
 
 ## 3. .vue / .tsx 选择
 

@@ -20,7 +20,16 @@
       落成 **44 个 CSS 变量**（减 `INTERNAL_FIXED_ITEM_MARGIN`）、产物里实见 **45 个**
       `--ant-date-picker-*`（44 + 规则内声明的 `affixColor`）；另有 `initPickerPanelToken` 的
       **10 个内部 token**。主题测试 **22 条**（`__tests__/theme.test.ts`）
-- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [ ] G4 IMPLEMENT —— 分 S1–S5 五阶段（见下方「G4 的架构分叉」）
+      - [ ] S1 值 / 开合 / 面板接线 —— **进行中**。已落地（可验证部分）：
+        `hooks/{picker-types,picker-locale,picker-value,picker-format,picker-suffix}.ts` +
+        `components/Selector.ts`（单值 / 范围共用的输入框选择器，DOM 结构逐字对齐 SSR 实测）
+        + `__tests__/picker-pure.test.ts`（**22/22 通过**）。
+        ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
+      - [ ] S2 键入解析与 `format` 的函数 / 数组形态（含跨包欠账：`PickerFormat` 加泛型）
+      - [ ] S3 掩码模式（`format.type: "mask"`）
+      - [ ] S4 键盘字段导航与分段（`-input-active`）
+      - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
@@ -73,6 +82,23 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 | S3 | 掩码模式（`format.type: "mask"`） | S2 |
 | S4 | 键盘字段导航与分段（`-input-active`） | S2 |
 | S5 | `multiple` + `tagRender` / `maxTagCount`、范围的两端切换 | S4 |
+
+## ⏳ S1 遗留的**验证缺口**（环境导致，必须在环境恢复后补）
+
+2026-09-30 本机 `jsdom` 的加载退化到 **2 分 51 秒**（墙钟 / CPU 仅 1.34s ⇒ I/O 阻塞；
+二次加载同样慢 ⇒ 不是 page cache），导致 **jsdom 的 vitest worker 一律 60s 超时**
+（PITFALLS 221）。本轮因此：
+
+| 项 | 状态 |
+|---|---|
+| `pin/*` 纯函数 L1（`--project unit`，加了 `@vitest-environment node`） | ✅ **22/22 通过** |
+| 根 `vue-tsc --noEmit -p tsconfig.json` | ⏳ **未跑完**（10 分钟未出结果，受同一 I/O 问题拖累） |
+| `vitest.setup.ts` 的两处 DOM 护栏对 **jsdom 用例**的回归 | ⏳ **未验证**（worker 起不来） |
+| 其余 L2 / L4 / L5 / theme | ⏳ 未跑（需要 jsdom） |
+
+⚠️ 护栏本身在 jsdom 下是**恒真条件**（`globalThis.document !== undefined`），
+可推理证明行为不变；但**推理不等于验证** ⇒ 环境恢复后必须补跑一次全仓回归，
+并确认 `packages/ui/src/date-picker` 的其余层。**在此之前不得把 S1 标为完成。**
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
