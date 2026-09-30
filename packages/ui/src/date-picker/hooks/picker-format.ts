@@ -105,7 +105,18 @@ export function mergeFormat(
   ) as unknown as DatePickerFormat | undefined;
 
   // ② 列表化（本仓 `toArray`：null / undefined ⇒ []）
-  const rawList = toArray(rawFormat);
+  //
+  // 🚨 **必须显式给 `toArray` 的类型参数**。不写时 TS 会去推断 `T`，而在
+  // `DatePickerFormat`（= `PickerFormat<ui 的 Dayjs>`）与 picker 自己的
+  // `PickerFormat<picker 的 Dayjs>` 之间**推断失败**：
+  //
+  //   `CustomFormat<DateType> = (value: DateType) => string` 的参数在**逆变**位置，
+  //   而 pnpm 的严格 `node_modules` 让两个包**各有一份 dayjs 声明**
+  //   ⇒ 即使 `Dayjs` 结构等价，逆变位置也**不兼容**（比 TS2742 那条可移植性警告更硬）。
+  //
+  // 运行时两边是同一个对象（见 `hooks/dayjs-config.ts` 的同款说明）⇒
+  // 这里用**显式泛型实参**（不是断言）把类型钉成 ui 侧的形态，最干净。
+  const rawList = toArray<DatePickerFormat>(rawFormat);
 
   // ③④ mask 只看**原始**第一个条目（可能是对象）
   const firstRaw = rawList[0] as string | MaskFormatConfig | undefined;

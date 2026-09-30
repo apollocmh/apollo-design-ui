@@ -52,7 +52,14 @@
  */
 
 import type { PickerLocale } from '@apollo-design/locale';
-import type { GenerateConfig, PanelMode, PickerMode } from '@apollo-design/picker';
+import type {
+  GenerateConfig,
+  PanelMode,
+  CustomFormat as PickerCustomFormat,
+  PickerFormat,
+  FormatType as PickerFormatType,
+  PickerMode,
+} from '@apollo-design/picker';
 import type { Dayjs } from 'dayjs';
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider';
@@ -324,27 +331,31 @@ export interface RangeTimeProps
 // ---------------------------------------------------------------------------
 
 /**
- * 自定义格式化函数。
+ * 自定义格式化函数（= picker 的 `CustomFormat` 在 `DatePickerDate` 上的**特化**）。
  *
- * ⚠️ 上游 `FormatType<DateType> = string | CustomFormat<DateType>`，
- * 其中 `CustomFormat = (value: DateType) => string` —— **支持函数**。
- *
- * 🚨 本仓当前**没有**函数形态：`@apollo-design/picker` 的 `PickerFormat` 无泛型、
- * 只到 `{ format: string }`。这是 G4 的已知欠账（登记在 README §5 与 PITFALLS 214）；
- * 类型面**现在就按上游写全**，避免出现「类型说支持、实现不做」的静默坑。
+ * ⚠️ **2026-09-30 起改为复用 picker 的定义**（此前 ui 侧自己写了一遍，两处同义
+ * ⇒ 有漂移风险）。`@apollo-design/picker` 的 `PickerFormat` 也已在同一天加回泛型与
+ * 函数形态（PITFALLS 214 的欠账还清）—— 所以这里能直接特化，不再需要「类型说支持、
+ * 实现不做」的妥协。
  */
-export type CustomFormat = (value: DatePickerDate) => string;
+export type CustomFormat = PickerCustomFormat<DatePickerDate>;
 
-export type FormatType = string | CustomFormat;
+/** `string | CustomFormat`（上游 `FormatType<DateType>` 的特化）。 */
+export type FormatType = PickerFormatType<DatePickerDate>;
 
-/** 掩码模式：`format` 写成对象并给 `type: 'mask'`。 */
+/** 掩码模式：`format` 写成对象并给 `type: 'mask'`。与 `PickerFormat` 的第三支同构。 */
 export interface MaskFormatConfig {
   format: string;
   type?: 'mask';
 }
 
-/** `format` 的完整三形态。 */
-export type DatePickerFormat = FormatType | FormatType[] | MaskFormatConfig;
+/**
+ * `format` 的完整形态 —— **直接复用** picker 的 `PickerFormat<DatePickerDate>`。
+ *
+ * ⇒ 「字符串 / 字符串数组 / `{ format, type: 'mask' }` / **函数**」四种形态由
+ * picker 一处定义，ui 侧不再复刻。
+ */
+export type DatePickerFormat = PickerFormat<DatePickerDate>;
 
 // ---------------------------------------------------------------------------
 // 共用 props（单值 / 范围**完全一致**的那一批）

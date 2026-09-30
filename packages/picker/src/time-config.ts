@@ -22,6 +22,7 @@
 
 import { fillTimeFormat } from './locale-fill';
 import { getRowFormat, pickProps, toArray } from './misc-util';
+import type { PanelDateType } from './panel-context';
 import type { InternalMode, PickerLocale, PickerMode } from './types';
 
 /** `disabledTime` 返回的四档禁用集合（`useTimeInfo` 的消费形态）。 */
@@ -65,21 +66,42 @@ export interface TimePanelConfig<DateType> {
 }
 
 /**
- * 组件 `format` prop 的可能形态。
+ * 日期值 → 格式串的**函数形态**。上游 `interface.d.ts:204` 逐字：
  *
- * 上游 `@rc-component/picker` 的 `es/interface.d.ts` 第 237 行是
+ * ```ts
+ * export type CustomFormat<DateType> = (value: DateType) => string;
+ * ```
+ *
+ * ⚠️ 它**只参与格式化，不参与解析** —— 键入时无法从一个函数反推出日期，
+ * 所以 `pickPropFormat` 遇到它会返回 `null`（「没有静态格式串」），
+ * 解析退回 `formatList` 的字符串项。这与上游一致。
+ */
+export type CustomFormat<DateType> = (value: DateType) => string;
+
+/** 上游 `interface.d.ts:205`：`string | CustomFormat<DateType>`。 */
+export type FormatType<DateType = PanelDateType> = string | CustomFormat<DateType>;
+
+/**
+ * 组件 `format` prop 的可能形态（**2026-09-30 加回泛型与函数形态**）。
+ *
+ * 上游 `@rc-component/picker` 的 `es/interface.d.ts` 第 237 行：
  * ```
  * format?: FormatType<DateType> | FormatType<DateType>[] | { format: string; type?: 'mask' };
  * ```
- * 其中 `FormatType<DateType> = string | CustomFormat<DateType>`（第 205 行）——
- * 也就是说上游的 `format` **还带一个「拿日期算格式串」的函数形态**。
  *
- * ⚠️ 本仓目前只落到 **字符串 / 字符串数组 / `{ format }`** 三种形态，
- * **尚未支持 `CustomFormat`（函数）**，所以这里**不挂 `DateType` 泛型**：
- * 挂了它也无人使用（会成为 biome 的 `noUnusedVariables`），更糟的是会让人误以为
- * 函数形态已经支持。等 `date-picker` 真做函数式 format 时，随实现一起把泛型加回来。
+ * ── 与「本仓曾经不挂泛型」的关系 ──────────────────────────────────────────────
+ *
+ * 本仓此前只落到「字符串 / 字符串数组 / `{ format }`」三形态，于是**刻意不挂
+ * `DateType` 泛型**（挂了无人使用 ⇒ biome 的 `noUnusedVariables`，更糟的是会让人
+ * 误以为函数形态已支持）。`date-picker` 的 **S2** 真做函数式 `format` 时按约定
+ * 「随实现一起把泛型加回来」—— 本文件即那一步（PITFALLS 214）。
+ *
+ * ⚠️ 第三支的 `type?: 'mask'` 是上游有的（掩码模式），本仓此前也漏了，一并补上。
  */
-export type PickerFormat = string | readonly string[] | { format: string };
+export type PickerFormat<DateType = PanelDateType> =
+  | FormatType<DateType>
+  | readonly FormatType<DateType>[]
+  | { format: string; type?: 'mask' };
 
 /**
  * `getTimeProps` 的输入：既含顶层时间 props，也含 `showTime` / `format` / `picker`。
@@ -100,7 +122,7 @@ export interface TimeConfigSource<DateType>
   extends Omit<TimePanelConfig<DateType>, 'format' | 'defaultValue'> {
   picker?: PickerMode;
   showTime?: boolean | TimePanelConfig<DateType>;
-  format?: PickerFormat;
+  format?: PickerFormat<DateType>;
   locale?: PickerLocale;
   /** 见上面的第 3 条：结构兼容用，本函数不读它。 */
   defaultValue?: unknown;
@@ -199,8 +221,17 @@ function fillShowConfig(
   return [parsedShowHour, parsedShowMinute, parsedShowSecond, showMillisecond];
 }
 
-/** `props.format` → 单个格式串（数组取第一个、对象取 `.format`）。 */
-function pickPropFormat(format: PickerFormat | undefined): string | null {
+/**
+ * `props.format` → 单个格式串（数组取第一个、对象取 `.format`）。
+ *
+ * ⚠️ **泛型**（2026-09-30 随 `PickerFormat` 的泛型化一起改）：`TimeConfigSource<DateType>`
+ * 的 `format` 是 `PickerFormat<DateType>`，若本函数固定收 `PickerFormat<PanelDateType>`
+ * 会在 `DateType ≠ PanelDateType` 时报 TS2345。
+ *
+ * ⚠️ 函数形态（`CustomFormat`）在这里**返回 `null`** —— 它只参与格式化、不参与解析，
+ * 键入时无法从函数反推日期（与上游一致）。
+ */
+function pickPropFormat<DateType>(format: PickerFormat<DateType> | undefined): string | null {
   if (!format) {
     return null;
   }

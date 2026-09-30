@@ -37,7 +37,8 @@
         ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
         ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
         status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`（见 README §5 的既有不一致）。
-      - [ ] S2 键入解析与 `format` 的函数 / 数组形态（含跨包欠账：`PickerFormat` 加泛型）
+      - [~] S2 键入解析与 `format` 的函数 / 数组形态 —— **跨包欠账已还清**（见下），
+        键入解析本身未开始。
       - [ ] S3 掩码模式（`format.type: "mask"`）
       - [ ] S4 键盘字段导航与分段（`-input-active`）
       - [ ] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换
@@ -242,6 +243,51 @@ variant-underlined / status-error / status-warning / disabled / allow-clear-fals
 
 ⚠️ 比对不过时**先怀疑实现**（PITFALLS 170 / D94：`style` 里的裸数字被 Vue 静默丢弃、
 以及 `toCssSize()` 漏用）—— tabs 的第一次 L6 就是「指示条数值没带单位」差 0.03%~0.12%。
+
+## S2 的落地方案（跨包欠账已还清，键入解析待做）
+
+### ✅ 已还清：`PickerFormat` 的泛型与函数形态（PITFALLS 214 的欠账）
+
+`@apollo-design/picker` 的 `time-config.ts` 此前刻意**不挂泛型**（因为本仓只到
+「字符串 / 数组 / `{ format }`」三形态，挂了泛型也无人使用）。S2 真做函数式 `format`
+时按约定「随实现一起加回来」—— 已落地：
+
+```ts
+export type CustomFormat<DateType> = (value: DateType) => string;
+export type FormatType<DateType = PanelDateType> = string | CustomFormat<DateType>;
+export type PickerFormat<DateType = PanelDateType> =
+  | FormatType<DateType> | readonly FormatType<DateType>[] | { format: string; type?: 'mask' };
+```
+
+⚠️ 三处**顺带修正**：
+1. 第三支补上上游有的 **`type?: 'mask'`**（本仓此前漏了）；
+2. 默认泛型参数 `= PanelDateType` ⇒ **不传泛型的既有用法不受影响**；
+3. ui 侧（`date-picker/interface.ts`）原本**又写了一遍** `CustomFormat` / `FormatType`
+   ⇒ 改为 picker 定义的**特化别名**（`CustomFormat<DatePickerDate>` 等），消除两处同义。
+
+⚠️ 一个必须记住的判据：**函数形态只参与格式化，不参与解析** ——
+键入时无法从函数反推日期 ⇒ `pickPropFormat` 遇到函数返回 `null`（「没有静态格式串」），
+解析退回 `formatList` 的字符串项。这与上游一致。
+
+### ⏳ 待做：键入解析
+
+现状：`DatePicker.vue` 里传给 `Selector` 的四个事件是**空实现**（`() => {}`）——
+`onInput` / `onInputFocus` / `onInputBlur` / `onInputKeydown`。
+
+上游流程（`@rc-component/picker` 的 `PickerInput/Selector/hooks/useInputProps.js`）：
+
+1. **输入** → `onInternalInputChange` → `parseValue(text, { locale, formatList })`
+   ⇒ 得到日期或 `null`（**按 `formatList` 逐个尝试**，这是「`format` 传数组」的意义）；
+2. **提交时机**由三个 prop 交互决定：`needConfirm`（S1 已落地默认值）、
+   `changeOnBlur`（默认 `true`）、`preserveInvalidOnBlur`（默认 `false`）；
+3. **非法值**要发 `invalid` 事件并置 `input[aria-invalid]` ——
+   ⚠️ 注意与 `status` **无关**：S1 实测「`status="error"` 也不改 `aria-invalid`」，
+   而**键入非法**会改（那是 rc 的 `invalid` 通道，不是 antd 的 `status`）；
+4. **焦点**：`-focused` 根类名（`getRootClassNames` 已留 `focused` 选项）、
+   `-input-active` 的分段高亮（属 S4）。
+
+⚠️ 验证方式：这批必须用 **jsdom**（真实键入 + 焦点）⇒ 需要环境不卡
+（本轮实测 jsdom 冷加载 3:39，所有 jsdom 测试报 worker 超时，详见 PITFALLS 231）。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

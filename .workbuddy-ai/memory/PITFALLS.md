@@ -1920,3 +1920,28 @@
       （`@vitest-environment node` 的用例**不需要 jsdom**，所以它们照常能跑）。
     - ⚠️ 相关的：**macOS 没有 `timeout` 命令**（只有 `gtimeout`）⇒ 用它包命令会
       `exit=127`（`command not found`），而报错藏在 stderr 里、看起来像「测试失败」。
+
+232. 🚨 **泛型化会把「TS2742 可移植性警告」升级成「真实的类型不兼容」** —— 因为
+    **函数参数的逆变**（2026-09-30 实测，`PickerFormat` 泛型化时踩到）。
+
+    ```ts
+    export type CustomFormat<DateType> = (value: DateType) => string;
+    export type PickerFormat<DateType> = FormatType<DateType> | ... ;
+    ```
+
+    - 背景：pnpm 的严格 `node_modules` 让 `packages/ui` 与 `packages/picker`
+      **各有一份 dayjs 声明**。此前 `PickerFormat` **没有泛型** ⇒ 两份声明只是
+      「同一个非泛型类型」，结构等价 ⇒ 只在 `.vue` 的 `__VLS_export` 上触发
+      **TS2742**（可移植性警告，已由 `hooks/dayjs-config.ts` 的「统一到 ui 的 Dayjs」解决）。
+    - 加了泛型之后：`PickerFormat<ui 的 Dayjs>` 与 `PickerFormat<picker 的 Dayjs>` 里
+      含 **`CustomFormat<DateType>`**，而**函数参数在逆变位置** ⇒ 两个「结构等价但不同声明」
+      的 `Dayjs` 在逆变位置**不兼容**（TS2345）。这比 TS2742 硬得多 ——
+      TS2742 只是「类型没法命名」，这个是「类型真的不匹配」。
+    - 实测两处报错：`picker/src/time-config.ts`（包内泛型传递）+
+      `ui/src/date-picker/hooks/picker-format.ts`（跨包边界）。
+    - ✅ **修法（两处都干净，不用 `as any` / `as never`）**：
+      1. 包内：把 `pickPropFormat` 改成**泛型函数** `pickPropFormat<DateType>(...)`；
+      2. 跨包：给 `toArray` **显式泛型实参** —— `toArray<DatePickerFormat>(rawFormat)`。
+         不写实参时 TS 会去推断 `T`，就在两份 `Dayjs` 之间推断失败。
+    - ⇒ **判据**：凡是「跨包的类型里含函数参数（回调）」的泛型化，都要预判这一条；
+      「结构等价」在**逆变位置**不成立。

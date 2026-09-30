@@ -175,7 +175,7 @@ export const PickerPanel = defineComponent({
       default: undefined,
     },
     format: {
-      type: null as unknown as PropType<PickerFormat | undefined>,
+      type: null as unknown as PropType<PickerFormat<PanelDateType> | undefined>,
       default: undefined,
     },
 

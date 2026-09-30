@@ -112,7 +112,14 @@ export { DEFAULT_PANEL_COMPONENTS, PickerPanel } from './picker-panel';
 export type { TimeColumnType } from './time-column';
 export { flattenUnits, TimeColumn } from './time-column';
 // ------------------------------------------------ 时间面板的纯函数内核
-export type { DisabledTimes, PickerFormat, TimeConfigSource, TimePanelConfig } from './time-config';
+export type {
+  CustomFormat,
+  DisabledTimes,
+  FormatType,
+  PickerFormat,
+  TimeConfigSource,
+  TimePanelConfig,
+} from './time-config';
 export { fillShowTimeConfig, getTimeProps } from './time-config';
 export { DateTimePanel, TimePanel } from './time-panel';
 export { TimePanelBody } from './time-panel-body';
