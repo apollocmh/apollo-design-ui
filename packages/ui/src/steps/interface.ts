@@ -126,8 +126,21 @@ export interface StepsProps {
   prefixCls?: string;
   className?: string;
   rootClassName?: string;
-  classNames?: StepsSemanticClassNames;
-  styles?: StepsSemanticStyles;
+  /**
+   * 语义化类名（十个槽）。
+   *
+   * ⚠️ **支持函数形态**（antd 的 `StepsSemanticAllType['classNamesAndFn']`）——
+   * 函数式变体拿到的 `info.props` 是**解析后**的 props（`orientation` / `titlePlacement` /
+   * `type` / `size` / `variant` / `percent` 都已是合并后的值）。
+   * 2026-10-01 修正：原先只声明了静态对象形态（运行时早已支持函数形态）⇒
+   * 补 L4 契约时被 `lint:types` 抓到。
+   */
+  classNames?:
+    | StepsSemanticClassNames
+    | ((info: { props: StepsProps }) => StepsSemanticClassNames)
+    | undefined;
+  /** 语义化样式（十个槽）。⚠️ 同样支持函数形态（见上）。 */
+  styles?: StepsSemanticStyles | ((info: { props: StepsProps }) => StepsSemanticStyles) | undefined;
   style?: CSSProperties;
 
   variant?: StepsVariant;

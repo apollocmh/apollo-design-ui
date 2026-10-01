@@ -5,13 +5,26 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/date-picker/demo/ 抄清单 -->
+五种选择粒度（日 / 周 / 月 / 季 / 年）由 `picker` 控制。
+
 ```vue
 <script setup lang="ts">
-import { DatePicker } from '@apollo-design/ui';
+// 对齐 antd 的 basic demo（5 个 picker 形态：date / week / month / quarter / year）。
+import { DatePicker, Flex } from '@apollo-design/ui';
+import type { SingleValue } from '@apollo-design/ui';
+
+const onChange = (date: SingleValue, dateString: string | string[] | null) => {
+  console.log(date, dateString);
+};
 </script>
 
 <template>
-  <DatePicker>basic demo 占位</DatePicker>
+  <Flex gap="small" vertical align="flex-start">
+    <DatePicker @change="onChange" />
+    <DatePicker picker="week" @change="onChange" />
+    <DatePicker picker="month" @change="onChange" />
+    <DatePicker picker="quarter" @change="onChange" />
+    <DatePicker picker="year" @change="onChange" />
+  </Flex>
 </template>
 ```

@@ -11,7 +11,7 @@ const box = (children) =>
   h('div', { style: { padding: '16px', background: '#fff', width: '640px' } }, children);
 
 export default {
-  basic: () => box(h(Pagination, { defaultCurrent: 3, total: 500 })),
+  basic: () => box(h(Pagination, { defaultCurrent: 3, total: 50 })),
 
   totalText: () =>
     box(

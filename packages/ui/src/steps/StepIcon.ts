@@ -20,6 +20,19 @@ export const stepsIconContextKey = Symbol('stepsIconContext');
 
 export const stepIconSemanticContextKey = Symbol('stepIconSemanticContext');
 
+/**
+ * 波纹目标类（**固定常量**，不随 `prefixCls` 变）。
+ *
+ * 契约：antd 的 `<Wave component="div">` 会给图标加 `ant-wave-target`（**恒定**，
+ * 三个 item 全有 —— 与 status / type / disabled 无关，已由 L4 基线逐条确认）。
+ * 本仓 **不实现波纹**（Wave 基建未落地，与 radio / checkbox / button / skeleton 同判，
+ * 见 `COMPATIBILITY.md` 的 **D43**），但**类名逐字保留** —— 它是 L4 产物对齐的一部分。
+ *
+ * ⚠️ 与 `radio/Radio.ts` / `checkbox/Checkbox.ts` 一样**本地定义**（那两处也是各自定义的，
+ * 不跨组件 import）。
+ */
+export const WAVE_TARGET_CLS = 'ant-wave-target';
+
 /** item 级 icon 语义（Step provide，StepIcon inject）。 */
 export type StepIconSemantic = { className?: string; style?: CSSProperties };
 
@@ -50,7 +63,14 @@ export const StepIcon = defineComponent({
         'div',
         {
           ...attrs,
-          class: [`${itemCls}-icon`, ctx.classNames?.itemIcon, itemClassName, props.className]
+          class: [
+            `${itemCls}-icon`,
+            // ⚠️ 恒定加上（D43：不实现波纹，但类名逐字保留 —— L4 产物对齐）
+            WAVE_TARGET_CLS,
+            ctx.classNames?.itemIcon,
+            itemClassName,
+            props.className,
+          ]
             .filter(Boolean)
             .join(' '),
           style: { ...ctx.styles?.itemIcon, ...itemStyle, ...props.style },

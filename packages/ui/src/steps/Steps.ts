@@ -14,14 +14,16 @@ import { CheckOutlined, CloseOutlined, EllipsisOutlined } from '@apollo-design/i
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type ComputedRef,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
   type PropType,
   provide,
   type VNodeChild,
+  watchEffect,
 } from 'vue';
-import { useMergeSemantic } from '../_internal/use-merge-semantic';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { type SizeType, useSize } from '../config-provider/size-context';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
@@ -83,7 +85,20 @@ export const Steps = defineComponent({
     },
   },
   setup(props, { attrs, slots }) {
-    const { getPrefixCls } = useComponentConfig('steps');
+    const {
+      getPrefixCls,
+      // ⚠️ 组件级配置的**全部**四项 —— 原先只取了 `getPrefixCls`
+      //    ⇒ ConfigProvider 的 `components.steps.className/style/classNames/styles` 被静默忽略。
+      className: contextClassName,
+      style: contextStyle,
+      classNames: contextClassNames,
+      styles: contextStyles,
+    } = useComponentConfig<{
+      className?: string;
+      style?: CSSProperties;
+      classNames?: StepsSemanticClassNames;
+      styles?: StepsSemanticStyles;
+    }>('steps');
     const directionCtx = useDirection();
     const warning = useDevWarning('Steps');
 
@@ -170,11 +185,39 @@ export const Steps = defineComponent({
     );
 
     // ---- semantic merge ----
+    /**
+     * 🚨 函数式语义槽读到的 `props` 必须是**解析后**的值（antd 传 `mergedProps`）。
+     *
+     * 原先这里传的是 `{} as never` ⇒ `classNames: ({ props }) => \`dir-${props.orientation}\``
+     * 恒拿到 `undefined`（实测渲染出 `dir-undefined`）。**是 L4 契约抓到的**。
+     */
+    const semanticProps = { ...props } as StepsProps;
+    watchEffect(() => {
+      Object.assign(semanticProps, props, {
+        size: mergedSize.value as StepsProps['size'],
+        type: mergedType.value,
+        orientation: mergedOrientation.value,
+        titlePlacement: mergedTitlePlacement.value,
+        percent: mergedPercent.value,
+        variant: props.variant ?? 'filled',
+      });
+    });
+
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       StepsProps,
       StepsSemanticClassNames,
       StepsSemanticStyles
-    >([() => props.classNames], [() => props.styles], {} as never);
+    >(
+      // ⚠️ 顺序 = 优先级（后者拼接在前者之后）：ConfigProvider → 组件自身
+      [() => contextClassNames, () => props.classNames],
+      [
+        () => contextStyles,
+        () => semanticRootStyle(contextStyle),
+        () => props.styles,
+        () => semanticRootStyle(props.style),
+      ],
+      semanticProps,
+    );
 
     // ---- internalIconRender（render fn → 在 Step 的 #icon slot 内执行）----
     const iconContentOf = (info: { item: StepItem; mappedIndex: number }): VNodeChild => {
@@ -272,6 +315,7 @@ export const Steps = defineComponent({
         canApplyMaxCount ? `${prefixCls.value}-max-count` : '',
         mergedPercent.value !== undefined ? `${prefixCls.value}-with-progress` : '',
         mergedSize.value === 'small' ? `${prefixCls.value}-small` : '',
+        contextClassName,
         props.className,
         props.rootClassName,
         mergedClassNames.value?.root,
@@ -283,9 +327,10 @@ export const Steps = defineComponent({
 
     // ---- root style ----
     const rootStyle = computed(() => ({
-      ...(props.offset !== 0
-        ? { [`--${rootPrefixCls}-cmp-steps-items-offset`]: String(props.offset) }
-        : {}),
+      // ⚠️ **恒写**（含 `offset: 0`）—— 上游 SSR 产物在 offset=0 时也有
+      //    `style="--ant-cmp-steps-items-offset:0"`（L4 基线逐条确认）。
+      //    原先只在 `offset !== 0` 时写 ⇒ 37 条契约用例全部差这一条。
+      [`--${rootPrefixCls}-cmp-steps-items-offset`]: String(props.offset),
       ...(props.style ?? {}),
       ...mergedStyles.value?.root,
     }));

@@ -12,7 +12,7 @@ const box = (children) => (
 );
 
 export default {
-  basic: () => box(<Pagination defaultCurrent={3} total={500} />),
+  basic: () => box(<Pagination defaultCurrent={3} total={50} />),
 
   totalText: () =>
     box(<Pagination defaultCurrent={3} total={500} showTotal={(t) => `共 ${t} 条`} />),

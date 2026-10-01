@@ -19,6 +19,7 @@
  * 该 case 直接判 FAIL（`reason: 'render-error'`），根本不走像素比对。
  */
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
@@ -29,6 +30,82 @@ import { comparePair, MAX_DIFF_RATIO } from './compare.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
 import { writeReport } from './report.mjs';
 import { launchBrowser, newStablePage, screenshotElement, stabilizePage } from './stabilize.mjs';
+
+/**
+ * 🚨 基线自检：**同一组件的两个变体不得逐字节相同**（除非在 `matrix.mjs` 里显式登记）。
+ *
+ * ── 为什么需要它 ──────────────────────────────────────────────────────────────
+ *
+ * 「变体空转」是本仓最容易悄悄发生的假绿：状态没被触发 / CSS 被压掉 /
+ * 差异只存在于**属性**里（截图上不可见）时，两张 PNG 会**逐字节相同**，
+ * 而 `compare` 照样给出 `exact` —— 看起来「测到了」，实际一格没测。
+ *
+ * 2026-10-01 实测：
+ *   - `breadcrumb` 的 `with-params` 与 `basic` 同哈希（只差 `href`，而 href 是属性）；
+ *   - 另有 **8 个组件 15 组**重复（多数是「静态帧天生测不到」，少数是用例构造问题）。
+ *
+ * ── 怎么登记「确实该相同」的 ──────────────────────────────────────────────────
+ *
+ * 在 `matrix.mjs` 的组件条目里加：
+ *
+ *   duplicateAllow: [{ variants: ['a', 'b'], reason: '为什么它们必然相同' }]
+ *
+ * ⚠️ 允许项必须**恰好命中**（多一条都不行）—— 与 L4 契约的 `allow` 同判，
+ * 否则「允许」会变成永久的遮羞布。
+ */
+function checkBaselineDuplicates(names) {
+  const problems = [];
+  let checked = 0;
+  for (const name of names) {
+    const def = COMPONENTS[name];
+    if (!def) continue;
+    const dir = path.join(BASELINES, 'react', name);
+    if (!fs.existsSync(dir)) continue;
+    const files = fs.readdirSync(dir).filter((f) => f.endsWith('.png'));
+    // variant → 该 variant 全部 PNG 的哈希（按 viewport 分组比对，避免跨视口误判）
+    const byViewport = new Map();
+    for (const f of files) {
+      const [variant, , viewport] = f.replace('.png', '').split('__');
+      if (!def.variants.includes(variant)) continue;
+      const key = `${viewport}`;
+      if (!byViewport.has(key)) byViewport.set(key, new Map());
+      const hash = crypto
+        .createHash('md5')
+        .update(fs.readFileSync(path.join(dir, f)))
+        .digest('hex');
+      const group = byViewport.get(key);
+      if (!group.has(hash)) group.set(hash, new Set());
+      group.get(hash).add(variant);
+    }
+    const allow = def.duplicateAllow ?? [];
+    const used = new Set();
+    for (const [viewport, group] of byViewport) {
+      for (const [, variants] of group) {
+        if (variants.size < 2) continue;
+        checked += 1;
+        const sorted = [...variants].sort();
+        const idx = allow.findIndex((a) => [...a.variants].sort().join('|') === sorted.join('|'));
+        if (idx < 0) {
+          problems.push(
+            `${name}/${viewport}：${sorted.join(' == ')} 逐字节相同（未登记）` +
+              ' —— 变体是空转的？要么让它产生可见差异，要么在 matrix.mjs 里登记 duplicateAllow',
+          );
+        } else {
+          used.add(idx);
+        }
+      }
+    }
+    allow.forEach((a, i) => {
+      if (!used.has(i)) {
+        problems.push(
+          `${name}：duplicateAllow 里的 [${a.variants.join(', ')}] **没有命中**任何重复` +
+            ' —— 该豁免已失效（变体已产生差异或基线已更新），请删掉它',
+        );
+      }
+    });
+  }
+  return { problems, checked };
+}
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ARTIFACTS = path.join(HERE, '.artifacts');
@@ -54,10 +131,12 @@ function parseArgs(argv) {
     viewport: null,
     mode: 'both',
     noBuild: false,
+    checkBaselines: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
-    if (a === '--component') args.component = argv[++i];
+    if (a === '--check-baselines') args.checkBaselines = true;
+    else if (a === '--component') args.component = argv[++i];
     else if (a === '--variant') args.variant = argv[++i];
     else if (a === '--viewport') args.viewport = argv[++i];
     else if (a === '--mode') args.mode = argv[++i];
@@ -132,12 +211,26 @@ async function main() {
   if (args.help) {
     console.log(`用法: node tests/visual/run.mjs [选项]
 
+  --check-baselines    只跑「基线重复自检」（不开浏览器，秒级；CI 可用）
   --component <name>   只跑某个组件（默认跑 matrix 里登记的全部）
   --variant <name>     只跑某个用例
   --viewport <id>      只跑某个 viewport（mobile / tablet / desktop）
   --mode <mode>        both（默认）| baseline | compare
   --no-build           跳过 vite 打包，沿用上次的 .artifacts
 `);
+    return 0;
+  }
+
+  // `--check-baselines`：只跑基线自检（不开浏览器、不构建）—— CI 可单独跑，秒级。
+  if (args.checkBaselines) {
+    const names = args.component ? [args.component] : Object.keys(COMPONENTS);
+    const dup = checkBaselineDuplicates(names);
+    if (dup.problems.length > 0) {
+      console.log('🚨 基线自检失败：');
+      for (const p of dup.problems) console.log(`  - ${p}`);
+      return 1;
+    }
+    console.log(`✅ 基线自检通过（${names.length} 个组件 / ${dup.checked} 组重复，均有登记）`);
     return 0;
   }
 
@@ -242,6 +335,15 @@ async function main() {
     server.close();
   }
 
+  // ---- 基线自检（不需要浏览器，两种模式都跑）----
+  const dup = checkBaselineDuplicates(args.component ? [args.component] : Object.keys(COMPONENTS));
+  if (dup.problems.length > 0) {
+    console.log('\n🚨 基线自检失败：');
+    for (const p of dup.problems) console.log(`  - ${p}`);
+  } else {
+    console.log(`\n✅ 基线自检通过（${dup.checked} 组重复，均有登记）`);
+  }
+
   const compared = results.filter((r) => r.verdict !== 'BASELINE');
   const failed = compared.filter((r) => r.verdict === 'FAIL');
 
@@ -266,6 +368,7 @@ async function main() {
     for (const f of failed) console.log(`  - ${f.id}  [${f.reason}] ${f.message}`);
     return 1;
   }
+  if (dup.problems.length > 0) return 1;
   return 0;
 }
 

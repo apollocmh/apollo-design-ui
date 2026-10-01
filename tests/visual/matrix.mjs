@@ -45,6 +45,15 @@ export const THEMES = [{ id: 'light', antdTheme: 'default', apolloTokens: 'light
  */
 export const COMPONENTS = {
   affix: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['basic', 'class'],
+        reason:
+          '`class` 变体只传 `className` / `rootClassName` —— 差异**只在类名上**（那是 L4 的事）。⚠️ 已实测：给它注入可见样式会让**两侧的类名落在不同元素上**（1.2~1.5% block-diff），说明这条差异不该由 L6 承担。',
+      },
+    ],
     // 5 个 variant × 3 个 viewport = 15 张
     // ⚠️ 只覆盖**未固钉**的静态形态：页面停在顶部时 `getBoundingClientRect` 的
     //    top 远大于阈值 ⇒ 不固钉（`docs/analysis/affix.md` §8）。
@@ -148,6 +157,15 @@ export const COMPONENTS = {
     variants: ['basic'],
   },
   tabs: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['basic', 'extraContent'],
+        reason:
+          '用例容器**固定 640px 宽**（> 移动视口 375px）⇒ 右侧的 `tabBarExtraContent` 落在可视区之外**被裁掉**（探针实测 `scrollWidth 656 > 375`）。只在 mobile 下重复。要测它需让容器自适应宽度。',
+      },
+    ],
     // 13 个 variant × 3 个 viewport = 39 张
     // ⚠️ 只覆盖**静态形态**：溢出下拉展开、键盘焦点移动、面板切换动画都不进像素比对
     //    （它们的语义由 L2 的 index.test.ts 与 L5 的 a11y.test.ts 钉住）。
@@ -207,6 +225,15 @@ export const COMPONENTS = {
     ],
   },
   layout: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['side', 'collapsible'],
+        reason:
+          '`-sider-trigger` 是 **`position: fixed; bottom: 0`**（相对**视口**定位，antd 如此）⇒ 在「只截 `#stage`」的视觉用例里**恒定落在截图区之外**（探针实测：stage 高 252px、trigger 在 y=852）。三个视口都重复。要测它必须让 stage 占满视口高度或改截全页。',
+      },
+    ],
     // 6 个 variant × 3 个 viewport = 18 张
     variants: [
       'basic', // Header + Content + Footer（无 Sider）
@@ -313,6 +340,15 @@ export const COMPONENTS = {
     ],
   },
   collapse: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['basic', 'accordion'],
+        reason:
+          '`accordion` 只约束**后续交互**（初始 `defaultActiveKey` 在两种模式下都展开）⇒ 静态帧逐字节相同。⚠️ 已实测验证：把 `accordion` 用例的 `defaultActiveKey` 改成两个键后**仍然相同**。差异只能在点击时出现 ⇒ 归 L2/L6-交互。',
+      },
+    ],
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [
       'basic', // 默认展开一项 + 箭头旋转
@@ -355,6 +391,15 @@ export const COMPONENTS = {
     ],
   },
   carousel: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['basic', 'fade'],
+        reason:
+          '`effect="fade"` 的差异只在**切换动画进行中**可见 —— 静态帧两侧都停在第一张。要测它需要交互（`goTo`）。',
+      },
+    ],
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [
       'basic', // 默认 3 张 + 底部圆点（slick 轨道 / slide 排布 / 圆点几何）
@@ -445,6 +490,15 @@ export const COMPONENTS = {
     ],
   },
   pagination: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['quickJumper', 'quickJumperButton', 'sizeChanger'],
+        reason:
+          '同 tabs：用例容器固定 **640px** 宽（> 移动视口 375px）⇒ 右侧的 sizeChanger / quickJumper 被裁（探针实测 `scrollWidth 656 > 375`）。只在 mobile 下重复。',
+      },
+    ],
     // 10 个 variant × 3 个 viewport = 30 张
     // ⚠️ 只覆盖**静态形态**：下拉展开、输入过程中的帧不进像素比对
     //    （它们的语义由 L2 的 index.test.ts 与 L5 的 a11y.test.ts 钉住）。
@@ -492,6 +546,15 @@ export const COMPONENTS = {
     ],
   },
   'tree-select': {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['checkable', 'multiple'],
+        reason:
+          '`treeCheckable` 的**勾选框在未展开的下拉里** ⇒ 静态帧（下拉关闭）与 `multiple` 逐字节相同。要测它必须 `open` 受控展开浮层。',
+      },
+    ],
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [
       'basic', // 单选 + value 回显
@@ -632,6 +695,15 @@ export const COMPONENTS = {
     ],
   },
   anchor: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['active', 'rtl-active'],
+        reason:
+          '**预期相同**：antd 对 Anchor **零 RTL CSS**（`-rtl` 类不影响任何几何或颜色）⇒ 两侧的 `rtl-active` 本就应与 `active` 逐字节相同。',
+      },
+    ],
     // 8 个 variant × 3 个 viewport = 24 张
     //
     // ⚠️ Anchor **没有浮层** ⇒ 不需要 `getPopupContainer`。它的视觉面是
@@ -684,6 +756,20 @@ export const COMPONENTS = {
     ],
   },
   masonry: {
+    // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
+    // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
+    duplicateAllow: [
+      {
+        variants: ['basic', 'fresh'],
+        reason:
+          '`fresh` 只改**每个条目各挂 ResizeObserver**、不改 DOM 结构（用例注释自陈「应与 basic 一致」）⇒ 天生测不到；它的意图归 L4/L2。',
+      },
+      {
+        variants: ['basic', 'fresh', 'responsive'],
+        reason:
+          '① `fresh` 同上的原因；② `responsive` 在 **desktop/tablet** 下解析出的列数与 `basic` 相同（都是 3 列，只有 mobile 会变 1 列）⇒ 预期相同。',
+      },
+    ],
     // 7 个 variant × 3 个 viewport = 21 张
     //
     // ⚠️ **没有浮层**（不 portal）⇒ 不需要 `getPopupContainer`，比其它组件简单。

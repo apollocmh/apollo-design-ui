@@ -26,6 +26,9 @@
  *   E16 foundation 包进度字段合法 + completed 必须真正完成（含覆盖率与构建门禁）+
  *       PoC 收口必须有 pocResult 结论，且其登记的偏差必须真实存在
  *   E17 blockedBy 必须指向已登记的开放决策
+ *   E18 workstreams.json 与 components.json 一致（无环、无跨泳道冲突、未超并发）
+ *   E19 发布包零 Ant Design 运行时依赖（R7）
+ *   E20 completed 的组件不得残留生成器占位（TODO(G*) / describe.todo）
  *
  * 用法：
  *   node registry/tools/validate-registry.mjs
@@ -1073,6 +1076,65 @@ if (!errors.some((e) => e.code === 'E19')) {
     'E19',
     `发布包零 @ant-design/* 运行时依赖（${e19Pkgs} 个包 + ${productScannedE19} 个产物目录；antd 仅存在于 devDeps / 生成器 / Oracle）`,
   );
+}
+
+// ---------------------------------------------------------------------------
+// E20  「completed」的组件不得残留**生成器占位**
+//
+// 为什么需要它：`status` 与 11 个维度都是**手写**在 components.json 里的，而生成器
+// （`gen-component.mjs`）留下的骨架带着 `TODO(G3)` / `TODO(G4)` / `TODO(G11)` 与
+// `describe.todo(...)` 标记。两者一旦不一致，就会出现「组件判 completed、
+// 但某一层根本没做」—— 2026-10-01 实测出 **11 处**：
+//   - `app` / `float-button` 的 `style/token.ts`（`TODO(G3)`）
+//   - `auto-complete` 的 `style/index.ts`（`TODO(G4)`，而它本来就没有 `style/` 目录）
+//   - **8 个 `describe.todo` 骨架测试**：anchor / auto-complete / float-button /
+//     masonry / progress 的 `theme.test.ts`、date-picker 的 `demo.test.ts`、
+//     steps 的 `semantic.test.ts`、upload 的 `type.test-d.ts`
+//
+// ⇒ 与 E3 互补：**E3 管「声明」（维度必须 done），E20 管「证据」（文件里不能还是骨架）**。
+//
+// ⚠️ 扫描前**剥注释**：骨架文件的文件头注释里就写着「刻意使用 describe.todo」，
+//    而 `s1-smoke.test.ts` 这类文件在**正文注释里讨论**这个约定 —— 不剥会全是假阳性。
+//    （`.md` 不扫：文档里讨论这个约定是正当的。）
+// ---------------------------------------------------------------------------
+// ⚠️ `TODO(G*)` 必须匹配**行首注释**（生成器写的 `// TODO(G3): …` / `<!-- TODO(G4): … -->`），
+//    不能匹配裸文本 —— 否则「测试里断言 `expect(src).not.toContain('TODO(G3)')`」
+//    这种**防腐烂断言**自己会被判为占位（2026-10-01 实测踩到）。
+const PLACEHOLDER_TODO = /^[ \t]*(?:\/\/|<!--)[ \t]*TODO\(G\d+\)/m;
+const PLACEHOLDER_DESCRIBE_TODO = /describe\.todo\(/;
+let e20Components = 0;
+let e20Files = 0;
+for (const c of componentsDoc?.components ?? []) {
+  if (c.status !== 'completed') continue;
+  const dir = path.join(UI_SRC, c.name);
+  if (!fs.existsSync(dir)) continue;
+  e20Components += 1;
+  const stack = [dir];
+  while (stack.length) {
+    const cur = stack.pop();
+    for (const e of fs.readdirSync(cur, { withFileTypes: true })) {
+      const fp = path.join(cur, e.name);
+      if (e.isDirectory()) {
+        if (['node_modules', 'dist'].includes(e.name)) continue;
+        stack.push(fp);
+        continue;
+      }
+      if (!/\.(ts|vue)$/.test(e.name)) continue;
+      e20Files += 1;
+      const raw = fs.readFileSync(fp, 'utf8');
+      const rel = path.relative(ROOT, fp);
+      if (PLACEHOLDER_TODO.test(raw)) {
+        err('E20', `${rel} 残留生成器 TODO 占位（行首注释）—— 但 ${c.name} 的 status 是 completed`);
+      }
+      // `describe.todo(` 要**剥注释**后匹配：文件头注释里就写着这个约定
+      if (PLACEHOLDER_DESCRIBE_TODO.test(stripComments(raw))) {
+        err('E20', `${rel} 残留 \`describe.todo\` 骨架测试 —— 但 ${c.name} 的 status 是 completed`);
+      }
+    }
+  }
+}
+if (!errors.some((e) => e.code === 'E20')) {
+  ok('E20', `completed 组件无占位残留（${e20Components} 个组件目录 / ${e20Files} 个文件）`);
 }
 
 report();

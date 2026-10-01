@@ -7,6 +7,9 @@
  *
  * 转换规则（与 rate/steps 同管线）：
  *   1. 去掉 `:where(.css-dev-only-…)` hash 前缀与 `css-var-root` 标记（D5）。
+ *   1b. `.data-ant-cssinjs-cache-path` 是 cssinjs **调试**产物 —— 不复制
+ *       （2026-10-01 修正：原先误抄进来，它随共享 chunk 进了 6 个组件的产物 CSS、
+ *       `dist/index.css` 里共 **30 处**）。
  *   2. `.ant-*` → `.apollo-*`；`--ant-*` → `--apollo-*`；`.anticon` → `.apollo-icon`（D15）。
  *   3. `.ant-float-btn-css-var`（死选择器，resetComponent 字体声明）不复制 ——
  *      Button 基线的 reset 已覆盖。
@@ -86,7 +89,6 @@ const RULES = `
 .apollo-float-btn-group-left .apollo-float-btn-group-list::after{left:100%;right:calc(var(--apollo-padding) * -1);}
 .apollo-float-btn-group-right .apollo-float-btn-group-list{--apollo-float-btn-list-transform-start:translate(calc(var(--apollo-control-height-lg) * -1), 0);left:var(--apollo-float-btn-list-trigger-offset);}
 .apollo-float-btn-group-right .apollo-float-btn-group-list::after{left:calc(var(--apollo-padding) * -1);right:100%;}
-.data-ant-cssinjs-cache-path{content:"|apollo-design-icons|apollo-icon:mtsb22;css-dev-only-do-not-override-19u5a7b|Shared|ant:2mp7q1;css-dev-only-do-not-override-19u5a7b|FloatButton-FloatButton|apollo-float-btn|apollo-icon:1823t8q;css-dev-only-do-not-override-19u5a7b|Button-Button|apollo-btn|apollo-icon:1uiealc;css-dev-only-do-not-override-19u5a7b|Wave-Wave|apollo-wave|apollo-icon:fl2o3w;css-dev-only-do-not-override-19u5a7b|Tooltip-Tooltip|apollo-tooltip|apollo-icon:1w521wl;css-dev-only-do-not-override-19u5a7b|Flex-Flex|apollo-flex|apollo-icon:1u9gvz6;css-dev-only-do-not-override-19u5a7b|Space-Compact|apollo-space-compact|apollo-icon:1rj444g;css-dev-only-do-not-override-19u5a7b|Button-compact|apollo-btn|apollo-icon:1npan6y";}
 `;
 
 /** 生成单个前缀下的完整样式。 */

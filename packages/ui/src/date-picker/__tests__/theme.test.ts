@@ -329,7 +329,7 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
     [...DATE_PICKER_RULES.matchAll(/var\((--apollo-date-picker-[a-z0-9_-]+)/g)]
       // ⚠️ 捕获组的下标访问在 `noUncheckedIndexedAccess` 下是 `string | undefined`
       //    ⇒ 显式过滤（不写 `as string` 掩盖）。
-      .map((m) => m[1])
+      .map((m) => m[1] as string)
       .filter((v): v is string => v !== undefined),
   );
   /** 规则内声明的那个（不在 genTokenDecls 里）。 */

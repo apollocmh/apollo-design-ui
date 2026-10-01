@@ -44,9 +44,10 @@ export function prepareProgressComponentToken(token: ProgressAliasToken): Partia
 /** 默认主题下的组件变量声明值。 */
 export function progressTokenValues(): Partial<ComponentToken> {
   return prepareProgressComponentToken({
-    colorText: 'rgba(0, 0, 0, 0.88)',
+    // ⚠️ 与 `DECLS`（antd 产物逐字）**完全一致** —— 不能写成 `rgba(0, 0, 0, 0.88)`（多空格）
+    colorText: 'rgba(0,0,0,0.88)',
     colorInfo: '#1677ff',
-    colorFillSecondary: 'rgba(0, 0, 0, 0.06)',
+    colorFillSecondary: 'rgba(0,0,0,0.06)',
     fontSize: 14,
     fontSizeSM: 12,
   });

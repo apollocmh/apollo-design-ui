@@ -20,7 +20,7 @@ export default {
   accordion: () =>
     box(
       h('div', { style: { width: '480px' } }, [
-        h(Collapse, { items, accordion: true, defaultActiveKey: '1' }),
+        h(Collapse, { items, accordion: true, defaultActiveKey: ['1', '2'] }),
       ]),
     ),
 

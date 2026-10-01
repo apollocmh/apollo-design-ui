@@ -1,8 +1,20 @@
 <script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
-import { DatePicker } from '../index';
+// 对齐 antd 的 basic demo（5 个 picker 形态：date / week / month / quarter / year）。
+
+import type { SingleValue } from '@apollo-design/ui';
+import { DatePicker, Flex } from '@apollo-design/ui';
+
+const onChange = (date: SingleValue, dateString: string | string[] | null) => {
+  console.log(date, dateString);
+};
 </script>
 
 <template>
-  <DatePicker>basic demo 占位</DatePicker>
+  <Flex gap="small" vertical align="flex-start">
+    <DatePicker @change="onChange" />
+    <DatePicker picker="week" @change="onChange" />
+    <DatePicker picker="month" @change="onChange" />
+    <DatePicker picker="quarter" @change="onChange" />
+    <DatePicker picker="year" @change="onChange" />
+  </Flex>
 </template>

@@ -415,6 +415,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | D115 | `form`（事件形态） | `onValuesChange` / `onFieldsChange` / `onFinish` / `onFinishFailed` 走 **props** | 同上四个回调是 **emits**（`FormEmits`），`FormProps` 里 `Omit` 掉 | INTENDED | 规则 C5（Vue 事件模型）。⚠️ `Omit` 是必需的：留着会与 `defineEmits` 生成的 `onXxx` 监听 prop 撞键，Vue 把监听器从 `` 摘走 ⇒ props 里那个键永远拿不到值（`finishFailed` 曾因此被静默丢弃） |
 | D116 | `form`（control 注入） | 只合成 `trigger` / `validateTrigger` 指定的**一个**事件键（默认 `onChange`） | 额外注入 `onUpdate:${valuePropName}`（默认 `onUpdate:value`） | INTENDED | Vue 生态里 Input 族的「值更新」事件是 `update:value`（v-model）；React 的 `onChange` 语义在本仓对应两个键。两个都注入 ⇒ `v-model:value` 与 `@change` 并存，且合成顺序（control 先、用户后）一致 |
 | D117 | `form`（FormItemInputContext） | 每次渲染重建上下文对象（`useMemo` 包裹） | 值是 **`ComputedRef`**（读取方经 `useFormItemInputContext()` 的 `toValue` 解包） | PLATFORM | Vue 的 `provide/inject` 传 ref 才能保住响应式（antd 靠重渲染）。⚠️ 消费者直接 `injected ?? {}` 会读到 ref 本身 ⇒ 状态/反馈图标全丢（form 的 L4 用例抓出来的） |
+| D118 | `steps` | `Wave` 包裹 item 图标，点击产生波纹 | 不实现波纹；`ant-wave-target` 类**恒定**保留在 `.{p}-steps-item-icon` 上 | PLATFORM | Wave 基建未落地（与 radio / checkbox / button / skeleton / switch 同判，见 D43 / D49）。⚠️ Steps 与它们不同的一点：`ant-wave-target` 在**所有** item 图标上恒定存在（与 `status` / `type` / `disabled` 无关）—— 已由 L4 基线 37 条逐条确认。⚠️ **2026-10-01 修正**：原先 `steps` **漏了**这个类，而它的 `semantic.test.ts` 一直是 `describe.todo` 占位 ⇒ 谁都没发现；补齐后 37 条契约才全绿（同一个原因还修了 `--{root}-cmp-steps-items-offset` 的内联变量恒写） |
 
 ### 9.2.1 跟随的上游缺陷（**无差异**，但必须知悉）
 

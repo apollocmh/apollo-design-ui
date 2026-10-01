@@ -23,7 +23,7 @@ export default {
   accordion: () =>
     box(
       <div style={{ width: 480 }}>
-        <Collapse items={items} accordion defaultActiveKey="1" />
+        <Collapse items={items} accordion defaultActiveKey={['1', '2']} />
       </div>,
     ),
 

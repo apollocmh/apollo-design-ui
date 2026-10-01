@@ -33,6 +33,7 @@
     "test:a11y": "vitest run --project a11y --passWithNoTests",
     "test:theme": "vitest run --project theme --passWithNoTests",
     "test:types": "vitest run --project types",
+    "test:visual:check": "node tests/visual/run.mjs --check-baselines",
     "test:visual": "node tests/visual/run.mjs",
     "test:compat": "node tests/compat/runner/index.mjs",
     "test:compat:baseline": "node tests/compat/runner/index.mjs --baseline",
