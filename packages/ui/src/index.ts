@@ -118,6 +118,43 @@ export { BorderBeam, DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from 
 export { genBorderBeamStyle } from './border-beam/style';
 export type { ComponentToken as BorderBeamComponentToken } from './border-beam/style/token';
 // ---------------------------------------------------------------------------
+// Breadcrumb —— 面包屑导航（复合组件：`Breadcrumb.Item` / `Breadcrumb.Separator`，都已废弃）
+//
+// ⚠️ 类名前缀 `apollo-breadcrumb`；**7 个 Component Token**（全部别名派生，无派生值）。
+// ⚠️ **没有 `emits`** —— 根 `<nav>` 不挂组件事件；item 的 `onClick` 随 `items` 传入、
+//    落到链接元素上（数据字段，不是组件事件）。
+// ⚠️ `ref` 暴露的是 `{ nativeElement }`（**不是**元素本身，上游走 `useImperativeHandle`）。
+// ⚠️ `Breadcrumb.Separator` 的 `prefixCls` 取自 **ConfigContext**（不接 prop）⇒
+//    L4 / L6 的用例要包一层 `ConfigProvider`（PITFALLS 272 同族）。
+// ---------------------------------------------------------------------------
+export type {
+  BreadcrumbExpose,
+  BreadcrumbItemInput,
+  BreadcrumbItemMenu,
+  BreadcrumbItemProps,
+  BreadcrumbItemSlots,
+  BreadcrumbItemType,
+  BreadcrumbKey,
+  BreadcrumbMenuItem,
+  BreadcrumbParams,
+  BreadcrumbProps,
+  BreadcrumbRef,
+  BreadcrumbSemanticClassNames,
+  BreadcrumbSemanticStyles,
+  BreadcrumbSeparatorSlots,
+  BreadcrumbSeparatorType,
+  BreadcrumbSlots,
+} from './breadcrumb';
+export {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbSeparator,
+  BreadcrumbWithSub,
+} from './breadcrumb';
+export { genBreadcrumbStyle, genTokenDecls as genBreadcrumbTokenDecls } from './breadcrumb/style';
+export type { ComponentToken as BreadcrumbComponentToken } from './breadcrumb/style/token';
+export { prepareComponentToken as prepareBreadcrumbComponentToken } from './breadcrumb/style/token';
+// ---------------------------------------------------------------------------
 // Button —— 按钮
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/button/style.css` 由构建钩子产出。

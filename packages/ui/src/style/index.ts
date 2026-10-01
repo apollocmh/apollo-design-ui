@@ -36,6 +36,7 @@ import { genAppStyle } from '../app/style';
 import { genBackTopStyle } from '../back-top/style';
 import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
+import { genBreadcrumbStyle } from '../breadcrumb/style';
 import { genButtonStyle } from '../button/style';
 import { genCarouselStyle } from '../carousel/style';
 import { genCascaderStyle } from '../cascader/style';
@@ -170,6 +171,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'slider', gen: genSliderStyle },
   { name: 'masonry', gen: genMasonryStyle },
   { name: 'anchor', gen: genAnchorStyle },
+  { name: 'breadcrumb', gen: genBreadcrumbStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */
