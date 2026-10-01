@@ -2780,3 +2780,29 @@
       本轮就是靠它发现「改了但产物没变」的。
     - 注意 bundle 里 `vue-<hash>.js` 是 **vendor chunk**（Vue 运行时），
       它的 hash 不变是正常的，不能据此判断自己的代码有没有进去。
+
+267. 🚨 **`emit('x')` 会连带调用同名的 `onX` prop ⇒ 手写 `props.onX?.(…)` 就是「回调两次」**（2026-10-01，splitter 实测修掉）。
+
+    Vue 的 `emit(event, ...args)` 自己会去找处理器：
+
+    ```js
+    const handler = props[toHandlerKey(event)] || props[toHandlerKey(camelize(event))];
+    if (handler) callWithAsyncErrorHandling(handler, instance, 6, args);
+    ```
+    其中 `props` 读的是 **`instance.vnode.props`**（父组件传进来的原始 props）。
+
+    ⇒ 只要父组件写了 `:on-resize="fn"` 或 `@resize="fn"`，`emit('resize', x)` **就会调 `fn`**。
+    ⇒ 「为了两种写法都支持」而额外写一行 `props.onResize?.(x)` ⇒ **每次都调两次**。
+
+    - **实测**（一次性探针，`props.onResize?.(x); emit('resize', x)`）：
+      `onResize` 调用次数 = **2**。
+    - ⚠️ **为什么长期没被发现**：既有测试写的是
+      `expect(onResizeStart).toHaveBeenCalledWith([0, 0])` —— **两次调用的参数一样**，
+      这条断言照样绿。要抓它必须断言 **`toHaveBeenCalledTimes(1)`**。
+    - **本仓踩到的地方**：`splitter/Splitter.ts` 的 5 个回调
+      （`onResizeStart` / `onResize` / `onResizeEnd` / `onCollapse` / `onDraggerDoubleClick`）
+      全是这个形态；masonry 的 `onLayoutChange` 一开始也照抄了 splitter 的写法。
+    - **正确写法**：**只 `emit`**。一条 emit 同时满足 `<X @resize>` 与 `:on-resize`。
+    - **判据（可推广）**：凡是「既有 `onXxx` prop 又有 `xxx` emit」的地方，
+      **写 `props.onXxx?.(…)` 之前先问「emit 是不是已经调了它」**。
+      例外：`v-model`（`update:xxx`）与「事件名与 prop 名不构成 toHandlerKey 映射」时才需要手写。

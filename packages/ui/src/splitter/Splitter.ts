@@ -212,36 +212,42 @@ export const Splitter = defineComponent({
     );
 
     // ======================== Events ========================
+    /**
+     * 🚨 **只 `emit`，不要再手写 `props.onX?.(...)`。**
+     *
+     * Vue 的 `emit('resize')` 自己就会去找 `props.onResize` 并调用它
+     * （`toHandlerKey(event)` 的映射，读的是 `instance.vnode.props`）——
+     * 再手写一遍就是**每次回调都调两次**。
+     *
+     * 2026-10-01 实测（一次性探针：`props.onResize?.(x); emit('resize', x)` ⇒
+     * `onResize` 被调 **2** 次）。本文件原先 5 个回调全是这个形态。
+     * → PITFALLS 267
+     *
+     * 这一条 emit 同时满足两种写法：`<Splitter @resize>` 与 `:on-resize`。
+     */
     const onInternalResizeStart = (index: number): void => {
       resize.onOffsetStart(index);
-      props.onResizeStart?.(pxSizes.value);
       emit('resize-start', pxSizes.value);
     };
     const onInternalResizeUpdate = (index: number, offset: number, lazyEnd?: boolean): void => {
       const nextSizes = resize.onOffsetUpdate(index, offset);
       if (lazyEnd) {
-        props.onResizeEnd?.(nextSizes);
         emit('resize-end', nextSizes);
       } else {
-        props.onResize?.(nextSizes);
         emit('resize', nextSizes);
       }
     };
     const onInternalResizeEnd = (lazyEnd?: boolean): void => {
       resize.onOffsetEnd();
       if (!lazyEnd) {
-        props.onResizeEnd?.(pxSizes.value);
         emit('resize-end', pxSizes.value);
       }
     };
     const onInternalCollapse = (index: number, type: 'start' | 'end'): void => {
       const nextSizes = resize.onCollapse(index, type);
-      props.onResize?.(nextSizes);
       emit('resize', nextSizes);
-      props.onResizeEnd?.(nextSizes);
       emit('resize-end', nextSizes);
       const collapsed = nextSizes.map((size) => Math.abs(size) < Number.EPSILON);
-      props.onCollapse?.(collapsed, nextSizes);
       emit('collapse', collapsed, nextSizes);
     };
 
@@ -362,7 +368,7 @@ export const Splitter = defineComponent({
               showStartCollapsibleIcon: resizableInfo.showStartCollapsibleIcon,
               showEndCollapsibleIcon: resizableInfo.showEndCollapsibleIcon,
               onDraggerDoubleClick: (index: number) => {
-                props.onDraggerDoubleClick?.(index);
+                // 同上：只 emit（`emit` 会连带调 `props.onDraggerDoubleClick`）
                 emit('dragger-double-click', index);
               },
               onOffsetStart: onInternalResizeStart,

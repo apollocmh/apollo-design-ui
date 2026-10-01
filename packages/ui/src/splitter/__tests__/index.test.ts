@@ -180,7 +180,7 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
     expect(exposed).toBeInstanceOf(HTMLElement);
   });
 
-  it('onDraggerDoubleClick 事件经 emit 透传', async () => {
+  it('onDraggerDoubleClick 事件经 emit 透传（🚨 **只一次**）', async () => {
     const onDraggerDoubleClick = vi.fn();
     const w = mount(Splitter, {
       props: { onDraggerDoubleClick },
@@ -190,6 +190,9 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
     });
     await w.find('.apollo-splitter-bar-dragger').trigger('dblclick');
     expect(onDraggerDoubleClick).toHaveBeenCalledWith(0);
+    // 🚨 回归哨兵：`emit('dragger-double-click')` **本身就会调**
+    //    `props.onDraggerDoubleClick`，再手写一遍就是两次。→ PITFALLS 267
+    expect(onDraggerDoubleClick).toHaveBeenCalledTimes(1);
   });
 
   it('attrs 透传到根节点（id / data-*）', () => {
@@ -197,7 +200,7 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
     expect(w.find('.apollo-splitter').attributes('id')).toBe('x');
   });
 
-  it('onResizeStart / onResize / onResizeEnd 通过 emit 可达（拖拽起点）', async () => {
+  it('onResizeStart / onResize / onResizeEnd 通过 emit 可达（拖拽起点，🚨 **各只一次**）', async () => {
     const onResizeStart = vi.fn();
     const w = mount(Splitter, {
       props: { onResizeStart },
@@ -210,6 +213,9 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
     await w.find('.apollo-splitter-bar-dragger').trigger('mousedown', { pageX: 0, pageY: 0 });
     await nextTick();
     expect(onResizeStart).toHaveBeenCalledWith([0, 0]);
+    // 🚨 回归哨兵（同 `onDraggerDoubleClick` 那条）：`emit` 会连带调同名 prop，
+    //    手写 `props.onResizeStart?.()` 会让它变两次。→ PITFALLS 267
+    expect(onResizeStart).toHaveBeenCalledTimes(1);
     // 清理：mouseup 释放
     window.dispatchEvent(new MouseEvent('mouseup'));
     await nextTick();

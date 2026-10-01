@@ -81,7 +81,7 @@ export const MotionList = defineComponent({
     }
 
     return () => {
-      const children = entities.value.map((entity) => {
+      const children = entities.value.map((entity, entityIndex) => {
         const userHooks = props.hooks;
         const hooks: MotionHooks = {
           ...userHooks,
@@ -90,6 +90,28 @@ export const MotionList = defineComponent({
             if (!visible) markRemoved(entity.key);
           },
         };
+
+        /**
+         * 上游 `CSSMotionList` 是 `keyEntities.map(({ status, ...eventProps }, index) => …)`
+         * —— 它把 key 对象的**其余字段**当作 `eventProps` 交给 `CSSMotion`，
+         * 而 `CSSMotion` 再把它们铺进给 children 的载荷里：
+         *
+         * ```js
+         * const mergedProps = { ...eventProps, visible };
+         * children({ ...mergedProps, [className], [style] }, nodeRef)
+         * ```
+         *
+         * ⇒ 槽载荷 = **`{...key对象(去掉 status), visible, [className], [style], index}`**。
+         *
+         * ⚠️ 这里必须同样透传，否则「按 key 携带业务数据」的用法（masonry 就是）
+         * 拿不到数据；更要命的是**离场中的 key 只在 `diffKeys` 的实体里**——
+         * 列表里已经删掉了，只有这条通路还能拿到它的内容
+         * （上游 `Masonry` 正是靠它让「被移除的 item 播完淡出」而不是瞬间变空）。
+         *
+         * 合并顺序与上游一致：**key 对象先铺、motion 字段覆盖同名键**
+         * （`visible` / `className` / `style` 永远以 motion 为准）。
+         */
+        const { status: _diffStatus, ...eventProps } = entity;
 
         return h(
           CSSMotion,
@@ -111,7 +133,14 @@ export const MotionList = defineComponent({
           slots.default
             ? {
                 default: (slotProps: Record<string, unknown>) =>
-                  slots.default?.({ ...slotProps, itemKey: entity.key }),
+                  slots.default?.({
+                    ...eventProps,
+                    ...slotProps,
+                    // 本仓既有契约（upload / form / notification 在用）：`itemKey` = `String(key)`
+                    itemKey: entity.key,
+                    // 上游同名：`keyEntities` 里的下标
+                    index: entityIndex,
+                  }),
               }
             : undefined,
         );
