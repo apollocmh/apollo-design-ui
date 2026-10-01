@@ -3085,3 +3085,25 @@
       要么给 `run.mjs` 加交互步骤，要么登记进 `matrix.mjs` 的 `LIMITATIONS`。
     🚨 与 anchor 的形态（**DOM 不同、状态却根本没触发**，且**本可以用 `bounds` 触发**）
     区别在于「能不能在静态帧里触发」—— 能触发就必须触发。
+
+281. ⚠️ **`theme.test.ts` 里的 `describe.todo` 是**骨架占位**，不是覆盖** —— 但它**不会**让门禁红。
+
+    `gen-component.mjs` 生成的测试骨架一律 `describe.todo`（刻意如此，报告里显示 `todo`
+    而不是 `pass`）。作者要在 G5–G11 期间**自己把它替换成真实断言** ——
+    `TESTING.md` §34/§111/§214 明确要求 theme 层覆盖「默认主题 Token 生效」+ token override，
+    `date-picker` 的 `theme.test.ts` 有 **413 行**（逐字对拍 antd 产物的 token 判定值）。
+
+    **为什么不会红**：`test:theme` 带 `--passWithNoTests`，而 vitest 把 `describe.todo`
+    报成 `↓ 0 test`（**skip**，不是 fail）。全量 `pnpm run test` 的收尾行只写
+    `Test Files 54 passed | 5 skipped (59)` —— **`skipped` 里就藏着这些占位**。
+
+    **判据**：看到 `↓ ... (0 test)` 就去读那个文件。当前有 **5 个**组件仍是占位
+    （2026-10-01 实测）：`anchor` / `auto-complete` / `float-button` / `masonry` / `progress`
+    —— 正好是最近几轮开出来的组件，**而且它们都已被判 `completed`**
+    （registry 的 11 个维度里**没有** `theme`，所以 `validate-registry` 查不到）。
+
+    ⚠️ 与「假绿灯」的区别：`todo` 是**诚实的**（报告里看得见）；真正的风险是
+    **收口时只读 `Test Files ... passed` 就签字**，把 `5 skipped` 当成「本来就该跳」。
+    补的时候照 `date-picker/__tests__/theme.test.ts` 的口径写（先读它的
+    「这个文件证明什么 / 不证明什么」段），不要写「token 值等于某个字面量」这种
+    自证式断言 —— 要**逐字对拍 antd 产物**（用 `tests/visual/debug/extract-*-css.mjs`）。
