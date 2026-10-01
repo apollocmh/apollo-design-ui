@@ -3162,3 +3162,73 @@
     - 修法：在**边界处** `String(key ?? index)` 归一。**DOM 等价** ——
       React 本来就会把数字 key 串化。⚠️ 别为此放宽本仓的 `MenuItemType`：
       收窄是刻意的（`menu` 自己的内部比较用 `===`）。
+
+287. 🚨 **`genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则** —— 漏了它 = 整片样式静默失效，
+    而 `lint:types` / L1 / L3 / L5 **全绿**（2026-10-01，breadcrumb 实测，**本轮最大的坑**）。
+
+    - **本仓约定**（anchor / cascader / input-number / segmented / date-picker 一致）：
+      Component Token 的声明块**内联在组件根规则里**：
+
+      ```ts
+      return [
+        `${cls}{`,
+        ...genTokenDecls(p),      // ← 少了这一行，7 个 --apollo-xxx-* 全部未声明
+        `  margin:0;`,
+        …
+      ]
+      ```
+
+    - **症状**：`margin-inline: var(--apollo-breadcrumb-separator-margin)` 里的变量不存在
+      ⇒ 该声明**整条失效**（CSS 对未定义 var 的处理是「invalid at computed-value time」，
+      不是回退到某个默认值）⇒ L6 的 **24 个变体全部 block-diff**（分隔符两侧少了 8px）。
+      ⚠️ 它**不会**让任何单元测试红：`getComputedStyle` 在 jsdom 里读不到 var 链，
+      L1/L3/L5 也都不碰 CSS。
+    - **两道防线**（都要有）：
+      ① **L6** —— 变体的像素差是唯一会自然暴露它的地方；
+      ② **`theme.test.ts` 的「声明 ↔ 引用」双向检查** ——
+      「规则引用的自有变量都在 `genTokenDecls` 里」+「声明块必须在根规则内部」。
+      后者**直接钉住这条坑**（`css.indexOf(`${cls}{`)` 到下一个 `}` 之间必须含全部声明）。
+    - **判据**：新组件的 `style/index.ts` 写完，先跑一遍
+      `grep -o "\-\-apollo-<name>-[a-z-]*" packages/ui/dist/<name>/style.css` ——
+      **声明**与**引用**都要出现（只有引用没有声明 = 本坑）。
+
+288. ⚠️ **Vue 的 `expose` 不反映到 `InstanceType` 的类型上**（2026-10-01，breadcrumb 的 L3 实测）。
+
+    ```ts
+    // ❌ 必然编译失败：`InstanceType` 只给 `$xxx` 与 props
+    expectTypeOf<InstanceType<typeof Breadcrumb>>().toHaveProperty('nativeElement');
+    ```
+
+    `defineExpose` / `expose()` 是**运行时**行为，Vue 的组件类型里没有它的位置。
+    ⇒ L3 只断言 `XxxRef` / `XxxExpose` 这两个**类型**；「实例上真的有 `nativeElement`」
+    由 L1 的运行时断言钉住（`expect((w.vm as {nativeElement}).nativeElement).toBe(w.element)`）。
+
+289. ⚠️ **`demoTest` 的 `allow`：演示 deprecated API 的 demo 要登记告警豁免**（2026-10-01，breadcrumb 实测）。
+
+    ```ts
+    demoTest('Breadcrumb', {
+      demos: import.meta.glob('../demo/*.vue', { eager: true }),
+      expectCount: 7,
+      allow: [
+        {
+          match: '`routes` is deprecated',
+          reason: 'demo/debug-routes.vue 演示 deprecated 的 `routes` 通道（对齐 antd 的同名 demo）。',
+        },
+      ],
+    });
+    ```
+
+    - `demoTest` 默认断言「**零意外告警**」⇒ 任何 deprecated demo 都会红。
+      `allow` 条目**必须带 `reason`**，且**未被命中的豁免会让测试失败**（防腐烂）。
+    - 同族先例：`dropdown/demo/dropdown-button.vue`（D91，组件整体 deprecated）。
+
+290. 🚨 **视觉变体「只有属性不同」= 空转**（PITFALLS 276 的一个**具体形态**）（2026-10-01，breadcrumb 实测）。
+
+    - 本仓的 `with-params` 变体第一版只让 `href` 不同（`title` 都是 `'List'`）⇒
+      **与 `basic` 逐字节相同**（`href` 是**属性**，截图上看不见）。
+      修法：让差异落在**像素**上（`title: 'List :id'` → 渲染出 `List 7`）。
+    - **判据（写变体时先问一句）**：这个变体的差异，**在截图上看得见吗**？
+      看不见的差异（`href` / `title` 属性 / `aria-*` / `disabled` 但外观不变 / 只在
+      交互或动画中出现的状态）**归 L4 的 DOM 契约**，不要放进 L6。
+    - ⚠️ 反向也成立：**看得见的差异必须有**（否则就是「没测到」）——
+      写完用例先 `md5 tests/visual/baselines/react/<c>/*.png | sort` 查同哈希。
