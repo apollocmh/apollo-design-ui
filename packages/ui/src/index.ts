@@ -1030,6 +1030,30 @@ export type {
 } from './listy';
 export { Listy } from './listy';
 export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/style';
+// ---------------------------------------------------------------------------
+// Masonry —— 瀑布流
+//
+// ⚠️ 类名前缀 `apollo-masonry`；**没有 Component Token**（上游 `ComponentToken` 是空接口）。
+// ⚠️ 它消费 grid 的两个 hook（`useBreakpoint` / `useGutter`），但**不依赖 Grid 组件**
+//    （registry 的 `dependencies.components` 为空、`typeOnly` 是 `grid`）。
+// ⚠️ `inheritAttrs: false`：上游不透传 `...restProps`（见组件文件头）。
+// ---------------------------------------------------------------------------
+export type {
+  MasonryEmits,
+  MasonryExpose,
+  MasonryItemRenderInfo,
+  MasonryItemType,
+  MasonryKey,
+  MasonryLayoutItem,
+  MasonryProps,
+  MasonryRef,
+  MasonrySemanticClassNames,
+  MasonrySemanticStyles,
+} from './masonry';
+export { Masonry } from './masonry';
+export { genMasonryStyle } from './masonry/style';
+export type { ComponentToken as MasonryComponentToken } from './masonry/style/token';
+export { prepareComponentToken as prepareMasonryComponentToken } from './masonry/style/token';
 export type {
   ItemType,
   MenuDividerType,
