@@ -3310,3 +3310,25 @@
        `components.steps.className/style/classNames/styles` 被**静默忽略**。
     ⇒ 教训：**L4 是唯一会同时检查「结构 / 类名 / 内联变量 / 语义槽」的层**，
       它一旦是占位，这四类问题会一起潜伏。
+
+297. 🚨 **并行跑多个重型 vitest / 构建 ⇒ worker 启动超时（假红）**（2026-10-01 实测）。
+
+    症状（`pnpm run test` 的收尾）：
+
+    ```
+    Vitest caught 119 unhandled errors during the test run.
+    Error: [vitest-pool]: Failed to start threads worker for test files …/badge/__tests__/semantic.test.ts.
+    Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+    Test Files 145 passed (145)   Tests 3423 passed (3423)   Errors 119 errors
+    ```
+
+    ⇒ **测试全过、只有 `Errors N`** ⇒ 这不是断言失败，而是 **worker 起不来**。
+    ⚠️ 与 PITFALLS 199/221/231（jsdom 冷缓存）**同族但成因不同**：这次是
+    **CPU 被自己的并行任务抢光**（我同时跑了 2 个完整门禁 + 1 个 `test:dom`）。
+
+    **判据**：`Errors` 的数字随并行度变化（同一份代码 116 → 119 → 3）；单独跑就归零。
+    **对策**：
+    ① **同一时刻只跑一个重型任务**（这条与「构建门禁并发红线」同一精神，只是范围更广：
+       vitest / build / visual 都算）；
+    ② 跑前仍要 `node -e "require('jsdom')"` 预热；
+    ③ 看到「全过 + Errors N」**先怀疑环境**，别去改测试。
