@@ -1,0 +1,16 @@
+{
+  "$schema": "../schema.json",
+  "id": "breadcrumb/basic",
+  "component": "breadcrumb",
+  "description": "面包屑的**结构**契约：`nav.{p}` > `ol` > (`li.{p}-item` > `a|span.{p}-link`) 与 `li.{p}-separator[aria-hidden=true]` 交替。判据（详见 `docs/analysis/breadcrumb.md`）：① 🚨 **最后一项后面没有分隔符** —— 上游把它的 `separator` 置为 `''`，而 `isRenderable('')` 为假（读了 `@rc-component/util@1.13.0` 的 `es/is.js` 确认）；② 🚨 **`BreadcrumbSeparator` 的类名前缀取自 ConfigProvider 的根前缀**（`getPrefixCls('breadcrumb')`），与 `prefixCls` prop **无关** ⇒ 基线生成器每个用例都包了一层 ConfigProvider，且同一份 DOM 里 item 是 `-item` 而分隔符是 `-breadcrumb-separator`；③ `path` 通道下 `href` 是**累加**的（`#/` + 前 n 个 path）；④ ⚠️ `item.style` **落不到 DOM**（UPSTREAM quirk，已由 L4 机械 oracle 实测确认）；⑤ `item.className` 落在**链接元素**上，不是 `<li>`。⚠️ **不覆盖** `menu` 的**浮层内容**（Dropdown 默认不展开 ⇒ SSR 产物里没有 popup）。⚠️ 语义由**原生 `nav` / `ol` / `li` / `a`** 承担，组件唯一的 `aria-*` 是分隔符上的 `aria-hidden=\"true\"`。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "items": [
+      { "title": "Home", "href": "#/home" },
+      { "title": "List", "href": "#/list" },
+      { "title": "Detail" }
+    ]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

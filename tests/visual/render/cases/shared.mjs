@@ -91,6 +91,9 @@ export const SEMANTIC_INJECT_CSS = `
 .demo-skeleton-avatar { box-shadow: 0 0 0 2px #f5222d; }
 .demo-skeleton-title { box-shadow: 0 0 0 2px #722ed1; }
 .demo-skeleton-paragraph { box-shadow: 0 0 0 2px #13c2c2; }
+.demo-breadcrumb-root { border: 1px dashed #ccc; padding: 4px; }
+.demo-breadcrumb-item { letter-spacing: 1px; }
+.demo-breadcrumb-separator { color: #7cb305; }
 
 `;
 
@@ -926,4 +929,104 @@ export const ANCHOR_NESTED_ITEMS = [
     ],
   },
   { key: 'b', href: '#section-b', title: 'Section B' },
+];
+
+// ---------------------------------------------------------------------------
+// Breadcrumb
+// ---------------------------------------------------------------------------
+
+/**
+ * 用例容器。
+ *
+ * ⚠️ **必须钉字体**：`.{p}-link` 是文字，而 React 页（`antd/dist/reset.css`）与
+ * Vue 页（本仓 base）的 `html` 字体栈不同 —— 不钉的话差异全落在文字上。
+ * 裁决同 `docs/COMPONENT-CHECKLIST.md` 第 15 条：**用例内钉字体，不动全局 BASE_CSS**。
+ *
+ * ⚠️ 宽度 **320px**：比最小视口（375px）窄 ⇒ 三个视口下容器宽度一致；
+ * 同时内容**不会换行**（`ol` 是 `flex-wrap: wrap`，而换行位置取决于文字度量 ⇒
+ * 一旦换行，差异会从「一个字」放大成「整段错位」）。
+ */
+export const BREADCRUMB_BOX_STYLE = {
+  width: '320px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** `items`（两侧逐字相同）。最后一项**没有 `href`** ⇒ 渲染成 `<span>`（不是 `<a>`）。 */
+export const BREADCRUMB_ITEMS = [
+  { title: 'Home', href: '#/home' },
+  { title: 'List', href: '#/list' },
+  { title: 'Detail' },
+];
+
+/** `params` 用例的路径参数。 */
+export const BREADCRUMB_PARAMS = { id: '7' };
+
+/**
+ * `:param` 替换用例（**标题里带 `:id`，让替换在像素上可见**）。
+ *
+ * 🚨 这里刻意**不**把「`href` 累加」当视觉断言：`href` 是**属性**，截图上根本看不见 ——
+ * 第一版用 `title: 'List'` 时本变体与 `basic` **逐字节相同**（实测 `md5` 同哈希），
+ * 是空转的。`href` 的累加归 **L4 的 DOM 契约**（`breadcrumb.dom.json`）。
+ *
+ * ⇒ 视觉上真正要钉的是：**`title` 里的 `:param` 会被替换成实际值**（`List :id` → `List 7`）。
+ */
+export const BREADCRUMB_PATH_ITEMS = [
+  { title: 'Home', path: 'home' },
+  { title: 'List :id', path: 'list/:id' },
+  { title: 'Detail' },
+];
+
+/** `type: 'separator'` 的显式分隔符用例（与「注入的分隔符」并存）。 */
+export const BREADCRUMB_SEPARATOR_ITEMS = [
+  { title: 'Home', href: '#/home' },
+  { type: 'separator', separator: '|' },
+  { title: 'Detail' },
+];
+
+/**
+ * 带 `menu` 的项 ⇒ 会被 `Dropdown` 包一层 `.{p}-overlay-link`，
+ * 并渲染 `dropdownIcon`（默认 `DownOutlined`）。
+ *
+ * ⚠️ 这是**唯一**会渲染图标并命中 `.{p}-overlay-link > .apollo-icon` 的用例。
+ */
+export const BREADCRUMB_MENU_ITEMS = [
+  { title: 'Home', href: '#/home' },
+  {
+    title: 'Group',
+    menu: {
+      items: [
+        { key: 'a', label: 'A' },
+        { key: 'b', label: 'B' },
+      ],
+    },
+  },
+  { title: 'Detail' },
+];
+
+/**
+ * 图标用例：**两侧同一份内联 `<svg>` 替身**。
+ *
+ * ⚠️ 为什么不用 `@apollo-design/icons`：视觉层只链接 `theme` + `ui` 两个 workspace 包
+ * ⇒ **用例文件**里 import `@apollo-design/icons` 解析不到（组件内部 import 没问题）。
+ * 用裸 `<svg>` 正好命中 `.{p}-link > svg` 那条「第三方图标」规则。
+ */
+export const BREADCRUMB_ICON_PATH = 'M512 64 960 512 512 960 64 512z';
+export const BREADCRUMB_ICON_SVG_PROPS = {
+  viewBox: '0 0 1024 1024',
+  width: '1em',
+  height: '1em',
+  fill: 'currentColor',
+};
+// ⚠️ 装饰性图标的 `aria-hidden="true"` **在两侧用例里字面量写**，不放这个常量里 ——
+//    biome 的 `a11y/noSvgWithoutTitle` **看不穿对象 spread**，放常量里会报
+//    「Alternative text title element cannot be empty」（实测）。
+
+/** 图标用例的 `items`（每一项是「图标 + 文字」）。 */
+export const BREADCRUMB_ICON_ITEMS = [
+  { title: 'Home', href: '#/home' },
+  { title: 'List', href: '#/list' },
+  { title: 'Detail' },
 ];

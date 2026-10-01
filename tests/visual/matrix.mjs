@@ -660,6 +660,29 @@ export const COMPONENTS = {
       'rtl-active',
     ],
   },
+  breadcrumb: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    //
+    // ⚠️ Breadcrumb **没有浮层**（`menu` 项虽然用 Dropdown，但静态帧里浮层不展开、
+    //    不 portal）⇒ 不需要 `getPopupContainer`。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/breadcrumb.*` 的文件头）：
+    //    **字体在用例内钉住** + **容器宽度 320px**（比最小视口窄 ⇒ 三个视口宽度一致、
+    //    且内容不换行 —— 换行位置依赖文字度量，一旦换行差异会被放大）。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完后先
+    //    `md5 tests/visual/baselines/react/breadcrumb/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basic', // 3 项（末项无 href ⇒ `<span>`）+ 默认分隔符 `/`
+      'with-icon', // 每项「裸 svg + span」⇒ 命中 `-link > svg` 与 `> svg + span` 两条规则
+      'separator', // `separator=">"`（prop 覆盖默认值）
+      'separator-item', // `type: 'separator'` 的显式分隔符（与注入的分隔符并存）
+      'with-params', // `params` + `path` ⇒ href **累加**（`#/home/list/7`）+ `:id` 替换
+      'overlay', // 带 `menu` 的项 ⇒ Dropdown + `-overlay-link` 样式 + `DownOutlined`
+      'semantic', // classNames / styles 三槽
+      'rtl', // direction: rtl ⇒ 根上的 `-rtl` + `direction:rtl`（**有真实 CSS**，与 anchor 不同）
+    ],
+  },
   masonry: {
     // 7 个 variant × 3 个 viewport = 21 张
     //

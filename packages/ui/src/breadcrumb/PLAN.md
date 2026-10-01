@@ -58,15 +58,55 @@
       `#/a/b`）；显式 `type:'separator'` 排在**注入分隔符之后**；自定义 `itemRender`
       **不走** `renderItem` ⇒ 没有 `-link` 元素。
       ⚠️ rc-util 的 `warning()` 走 **`console.error`**（不是 `warn`）。
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
-- [ ] G9 L6 视觉 —— 先建基线再 compare；**首跑全绿 ≠ 测到了**：
-      `md5 tests/visual/baselines/react/breadcrumb/*.png | sort` 查同哈希（PITFALLS 276）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对 —— 🚨 必须定论分析 §6.2 的 `item.style` / `item.className` 落点
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:breadcrumb]
+- [x] G7 L3 类型 —— `type.test-d.ts` **36 条**。六类判据：props 形态 / `params` 是
+      `Record<string, unknown>` / **`itemRender` 只收 4 个实参** / 语义化三槽支持函数形态 /
+      `BreadcrumbItemInput` 的三处形状（`type:'separator'`、`children` 是 `Omit` 掉的自身数组、
+      `aria-*`/`data-*` 索引签名）/ 可安装 + 复合挂载。
+      ⚠️ **一条踩过的坑**：**不要**断言 `InstanceType<typeof Breadcrumb>` 上有 `nativeElement`
+      —— Vue 的 `expose` **不反映到组件实例的类型**（`InstanceType` 只给 `$xxx` 与 props），
+      那条断言必然编译失败；运行时形状由 L1 钉住。
+- [x] G8 L5 a11y —— `a11y.test.ts` **18 条**（7 条 role/ARIA 契约 + 9 组 axe 扫描 +
+      children 通道 + RTL），**零 axe violation、零豁免**。
+      判据：根是**原生 `<nav>`** 且**不加 `role`/`aria-label`** · `ol`/`li` 是原生列表语义 ·
+      有 `href` 的项是**真 `<a href>`**、没有的是 `<span>`（都不加 `role`/`tabindex`）·
+      🚨 **组件唯一的 `aria-*` 是分隔符上的 `aria-hidden="true"`**（全树断言）。
+      ⚠️ 数分隔符时注意：**3 个 item ⇒ 2 个分隔符**（最后一项没有）—— 第一版数错了。
+- [x] G9 L6 视觉 —— ✅ **24 / 24 exact**（8 variant × 3 viewport，React 基线 24 张入库）。
+      变体：`basic` / `with-icon` / `separator` / `separator-item` / `with-params` /
+      `overlay` / `semantic` / `rtl`。**24 张基线逐字节互不相同**（`md5` 查过）。
+      🚨 **本轮最大的一个坑**：第一版 `genBreadcrumbStyle` **忘了把 `genTokenDecls(p)`
+      spread 进根规则**（本仓约定：声明块内联在组件根规则里）⇒ 7 个
+      `--apollo-breadcrumb-*` 全部未声明 ⇒ `margin-inline: var(...)` 静默失效 ⇒
+      **24 个变体全部 block-diff**（分隔符两侧少了 8px 间距）。
+      `lint:types` / L1 / L3 / L5 **全绿**，只有 L6 与 `theme.test.ts` 的
+      「声明块必须在根规则内部」能发现它。
+      ⚠️ 另一条：`with-params` 第一版用 `title: 'List'`（只有 `href` 不同）⇒ 与 `basic`
+      **逐字节相同**（`href` 是属性、截图上看不见）⇒ 改成 `title: 'List :id'` 让替换**可见**。
+      ⚠️ 用例里钉住**字体** + **容器宽度 320px**（比最小视口窄 ⇒ 三个视口宽度一致、内容不换行）。
+- [x] G10 L4 DOM 契约 —— `tests/compat/baseline/breadcrumb.mjs` + `baselines/breadcrumb.dom.json`
+      （**30 用例**）+ `semantic.test.ts` **30 条**，**只有 2 条豁免**：
+      **D1**（`bare` 用例的默认根前缀，9 层带前缀元素）+ **D114**（CSSOM 把 `#fafafa`
+      规范成 `rgb(250,250,250)`）。
+      🚨 **四条实测结论**（都写回 `docs/analysis/breadcrumb.md` §6.2–6.4）：
+      ① **`item.style` 确实落不到 DOM**（`<a class="apollo-link item-cls">`，没有 style 属性）
+      —— 分析阶段的读码结论得到证实，归属 UPSTREAM quirk；
+      ② 分隔符的类名是 **`-breadcrumb-separator`**（取根前缀），而 item/link 是
+      `-item` / `-link`（用传进来的 `prefixCls`）—— 同一份 DOM 里两种前缀并存；
+      ③ `separator: ''` ⇒ **完全没有**分隔符 `<li>`；
+      ④ `type:'separator'` + `separator: ''` ⇒ 渲染一个**空** `<li>`（那条分支可达）。
+      ⚠️ 基线生成器**每个用例都要包 `ConfigProvider`**（同 anchor，PITFALLS 272 同族）。
+- [x] G11 DOCS —— `demo/` **7 个**（basic / separator / separator-component / with-icon /
+      with-params / overlay / debug-routes，`demo.test.ts` 的 `expectCount: 7` 钉死）
+      + `index.zh-CN.md` / `index.en-US.md`（何时使用 / demo 表 / API 三表 / 三个必须知道的细节 /
+      语义化 DOM / `itemRender` 配合 / token 表）+ `README.md`（差异表 / `.ts` 选型 / token / 缺口）
+      + `tests/compat/fixtures/breadcrumb/basic.json`（E9）。
+      ⚠️ 与 antd 的 9 个用户可见 demo 差 **2** 个（`style-class` / `component-token`），
+      理由登记 README §5。⚠️ `debug-routes` 会发 `routes` 废弃告警 ⇒ `demoTest` 的 `allow` 里登记。
+      ⚠️ demo 的 `.md` 用**主流的前 frontmatter 格式**（`order` + `title.zh-CN/en-US`）。
+- [x] G12 REGISTRY —— 11 维度置 done，`status: completed`
+- [x] G13 BUILD —— `registry:check` · `lint:types` · `lint:format` · `test` · L7 构建
+      · `test:types` · `test:visual --component breadcrumb --mode compare` 全绿
+- [x] G14 COMMIT —— commit message 带 [COMP:breadcrumb]
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 

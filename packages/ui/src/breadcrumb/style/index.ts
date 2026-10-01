@@ -85,6 +85,11 @@ export function genBreadcrumbStyle(rootPrefixCls: string): string {
   return [
     // ---- resetComponent 展开（box-sizing 块不产出：BASE_CSS 已覆盖）----
     `${cls}{`,
+    // 🚨 **Component Token 的声明块必须内联在根规则里**（anchor / cascader /
+    //    input-number / segmented / date-picker 同一写法）。漏了它 = 7 个
+    //    `--apollo-breadcrumb-*` **全部未声明** ⇒ `margin-inline: var(...)` 静默失效
+    //    （实测：L6 的 24 个变体**全部** block-diff，分隔符两侧没有 8px 间距）。
+    ...genTokenDecls(p),
     `  margin:0;`,
     `  padding:0;`,
     `  color:${tv('item-color')};`,

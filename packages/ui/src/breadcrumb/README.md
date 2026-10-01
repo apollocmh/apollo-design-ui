@@ -73,8 +73,18 @@
 
 <!-- 未支持的能力 + 落点（范本见 divider/README.md §7） -->
 
-1. **`ConfigProvider` 的 `BreadcrumbConfig` 类型未提升**：上游有
+1. **2 个 antd demo 未移植**（`demo.test.ts` 的 `expectCount: 7` 钉住的是**已落地**的那批）：
+   - `style-class`（`antd-style` 的 `createStaticStyles`）—— 本仓没有 `antd-style`，
+     语义化能力已由 `semantic` 视觉用例与 L4 的 `class-names` / `styles` 用例覆盖；
+   - `component-token`（`theme.components.Breadcrumb` 调试）—— 零运行时架构下 token 是构建期产物，
+     已由 `theme.test.ts` 的「判定值逐条对拍 + 声明↔引用双向检查」覆盖。
+2. **`ConfigProvider` 的 `BreadcrumbConfig` 类型未提升**：上游有
    `BreadcrumbConfig = ComponentStyleConfig & Pick<BreadcrumbProps, 'classNames' | 'styles' |
    'separator' | 'dropdownIcon'>`，本仓走 (B) 通道（`components?: Record<string, ComponentConfigLike>`）
    —— **运行时可用，只是类型宽**。⚠️ `anchor` / `masonry` 也没提升（与最近几轮一致）。
-2. **`item.style` 落不到 DOM**（疑似上游 quirk，读码结论，待 G10 的机械 oracle 定论）。
+3. ✅ **`item.style` 落不到 DOM —— 已由 G10 的机械 oracle 实测确认**（不再是读码结论）：
+   `breadcrumb:item-class-style` 的 SSR 产物是
+   `<li class="apollo-item"><a class="apollo-link item-cls" href="#/a">A</a></li>`，
+   **没有 style 属性**。归属 **UPSTREAM quirk**（照抄）。
+4. **`menu` 的浮层内容不在 L4 契约里**：Dropdown 默认不展开 ⇒ SSR 产物里没有 popup
+   （触发层 `.{p}-overlay-link` 在，由 L4 的 `breadcrumb:menu` 覆盖；浮层本体归 L6 / Dropdown 自己）。

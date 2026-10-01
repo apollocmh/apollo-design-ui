@@ -1,0 +1,128 @@
+{
+  "$schema": "../schema.json",
+  "component": "breadcrumb",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-01T12:21:52.815Z",
+  "cases": [
+    {
+      "id": "breadcrumb:basic",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:prefix-cls:no-props",
+      "html": "<nav class=\"ant-breadcrumb css-dev-only-do-not-override-19u5a7b css-var-root\"><ol><li class=\"ant-breadcrumb-item\"><a class=\"ant-breadcrumb-link\" href=\"#/home\">Home</a></li><li class=\"ant-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"ant-breadcrumb-item\"><a class=\"ant-breadcrumb-link\" href=\"#/list\">List</a></li><li class=\"ant-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"ant-breadcrumb-item\"><span class=\"ant-breadcrumb-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:prefix-cls:custom",
+      "html": "<nav class=\"custom css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"custom-item\"><a class=\"custom-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"custom-item\"><a class=\"custom-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"custom-item\"><span class=\"custom-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:rtl",
+      "html": "<nav class=\"apollo apollo-rtl css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:items-empty",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:separator-default",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:separator-custom",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">&gt;</li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">&gt;</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:separator-empty",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:separator-item",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">|</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:separator-item-empty",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\"></li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:path",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home/list/7\">List 7</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:path-slash",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/a\">A</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">B</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:params-empty",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"apollo-link\">x:y:z</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:params-falsy",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"apollo-link\">a-:id-b-:name</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:href-direct",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"https://x.dev\">A</a></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:title-vnode",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"apollo-link\"><span class=\"title-span\">:id</span></span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:title-empty",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"apollo-link\">B</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:routes",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"apollo-link\">parent-title</span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-dropdown-trigger apollo-overlay-link\"><span class=\"apollo-link\">child</span><span role=\"img\" aria-label=\"down\" class=\"apollo-icon apollo-icon-down\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"down\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z\"></path></svg></span></span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:items-over-routes",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:children",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-breadcrumb-item\"><span class=\"apollo-breadcrumb-link\">A</span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">|</li><li class=\"apollo-breadcrumb-item\"><span class=\"apollo-breadcrumb-link\">B</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:children-separator",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-breadcrumb-item\"><span class=\"apollo-breadcrumb-link\">A</span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">&gt;</li><li class=\"apollo-breadcrumb-item\"><span class=\"apollo-breadcrumb-link\">B</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:item-render",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"custom-render\">Home|0|3|</span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"custom-render\">List|0|3|</span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"custom-render\">Detail|0|3|</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:item-class-style",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link item-cls\" href=\"#/a\">A</a></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:item-data-aria",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a data-testid=\"x\" aria-label=\"A 项\" class=\"apollo-link\" href=\"#/a\">A</a></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:key-number",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><span class=\"apollo-link\">A</span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">B</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:menu",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-dropdown-trigger apollo-overlay-link\"><span class=\"apollo-link\">Group</span><span role=\"img\" aria-label=\"down\" class=\"apollo-icon apollo-icon-down\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"down\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z\"></path></svg></span></span></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:dropdown-icon",
+      "html": "<nav class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item\"><span class=\"apollo-dropdown-trigger apollo-overlay-link\"><span class=\"apollo-link\">Group</span><span class=\"my-icon\">v</span></span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:class-names",
+      "html": "<nav class=\"apollo custom-root css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item custom-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator custom-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item custom-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator custom-separator\" aria-hidden=\"true\">/</li><li class=\"apollo-item custom-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:styles",
+      "html": "<nav class=\"apollo custom-root css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"background:#fafafa\"><ol><li class=\"apollo-item\" style=\"opacity:0.8\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" style=\"color:red\" aria-hidden=\"true\">/</li><li class=\"apollo-item\" style=\"opacity:0.8\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" style=\"color:red\" aria-hidden=\"true\">/</li><li class=\"apollo-item\" style=\"opacity:0.8\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    },
+    {
+      "id": "breadcrumb:class-names-fn",
+      "html": "<nav class=\"apollo sep-&gt; css-dev-only-do-not-override-1v6lqee css-var-root\"><ol><li class=\"apollo-item fn-item\"><a class=\"apollo-link\" href=\"#/home\">Home</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">&gt;</li><li class=\"apollo-item fn-item\"><a class=\"apollo-link\" href=\"#/list\">List</a></li><li class=\"apollo-breadcrumb-separator\" aria-hidden=\"true\">&gt;</li><li class=\"apollo-item fn-item\"><span class=\"apollo-link\">Detail</span></li></ol></nav>"
+    }
+  ]
+}

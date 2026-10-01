@@ -232,18 +232,47 @@ export function isReactRenderable(value) {
 （`BreadcrumbSeparator` 里的 `children === '' ? children : …` 分支因此只在
 「直接使用 `<Breadcrumb.Separator>''</…>`」或 `items` 里 `type:'separator'` + `separator:''` 时才可达。）
 
-### 6.2 ⚠️ `item.style` 疑似**被静默丢弃**，`item.className` 只落到 `<a>` / `<span>`
+### 6.2 ✅ `item.style` **确实落不到 DOM**，`item.className` 只落到 `<a>` / `<span>`
 
-读代码得出：`InternalBreadcrumbItem` 的解构是
-`{ prefixCls, separator, children, menu, dropdownProps, href, dropdownIcon }` ——
-**没有 `className` / `style`**，且 `<li>` 的 class/style 用的是 `semantic.item`。
-而 `renderItem` 里 `const { className, onClick, ...restItem } = item` ⇒
-`className` 被拼进 `<a>`/`<span>` 的 `clsx(\`${p}-link\`, className)`，
-`style` 既不进 `pickAttrs({data,aria})` 也不进 `<li>`。
+**G10 已用机械 oracle 实测确认**（`tests/compat/baselines/breadcrumb.dom.json` 的
+`breadcrumb:item-class-style`）：
 
-⇒ **`item.style` 在两条路径下都落不到 DOM**；`item.className` 落在链接元素上。
-⚠️ 上游测试**没有**覆盖这一点（`Breadcrumb.test.tsx` 里只有 `styles` 语义化的用例）。
-**归属**：UPSTREAM quirk（照抄），但**必须由 G10 的机械 oracle 实测确认**，不能只凭读码。
+```html
+<li class="apollo-item">
+  <a class="apollo-link item-cls" href="#/a">A</a>   <!-- ⚠️ 没有 style 属性 -->
+</li>
+```
+
+`item.style: { color: 'red' }` **完全没有出现**；`item.className` 落到了 `<a>` 的
+`class` 上。机制：`InternalBreadcrumbItem` 的解构里**没有 `className` / `style`**，
+而 `renderItem` 把 `className` 拼进链接元素的 `class`、把 `style` 丢掉
+（`pickAttrs({data,aria})` 也不收它）。
+
+**归属**：UPSTREAM quirk（照抄）。⚠️ 上游测试**没有**覆盖这一点
+（`Breadcrumb.test.tsx` 里只有 `styles` 语义化的用例）—— 是本仓的 L4 契约先发现的。
+
+### 6.3 ✅ 分隔符的**类名与前缀**：`-breadcrumb-separator` vs `-item` / `-link`
+
+同一份基线还确认了一条容易看漏的结构：
+
+```html
+<li class="apollo-item">        <!-- 用传进来的 prefixCls（`apollo`） -->
+<li class="apollo-breadcrumb-separator" aria-hidden="true">/</li>   <!-- 用根前缀！ -->
+```
+
+`BreadcrumbSeparator` 取的是 `getPrefixCls('breadcrumb')` —— **ConfigProvider 的根前缀**，
+与 `Breadcrumb` 的 `prefixCls` prop **无关**（它连 prop 都没有）。
+⇒ 传 `prefixCls: 'apollo'` 时，item/link 是 `apollo-item` / `apollo-link`，
+而分隔符是 `apollo-breadcrumb-separator`。**两侧行为一致**（PITFALLS 272 同族）。
+⇒ 这也是 L4 基线生成器**每个用例都要包 `ConfigProvider`** 的原因。
+
+### 6.4 ✅ 另外三条实测结论
+
+| 输入 | 实测 DOM |
+|---|---|
+| `separator: ''` | **完全没有**分隔符 `<li>`（`isRenderable('')` 为假） |
+| `items: [{title: ''}]` | **整项不渲染**（`renderItem` 的 `isRenderable(children)` 拦下） |
+| `type:'separator'` + `separator: ''` | 渲染一个**空**的 `<li class="-separator" aria-hidden="true"></li>`（那条分支**可达**） |
 
 ## 7. 本分析没有证明什么
 
