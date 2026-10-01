@@ -125,6 +125,13 @@ L0 utils/theme/icons ｜ 测试 test-utils
   L3 26 passed / demo 6 个（`expectCount: 6`）。
   开工先读 `packages/ui/src/masonry/PLAN.md`（Gate 清单已全部勾掉）。
 - 下一条任务用 `node registry/tools/next-task.mjs` 取。
+- **进行中：`anchor`**（P5 / M / 526 行产物）—— **3/11 维度 done**（antdApi · api · token），
+  `status: analyzing`。G1 分析在 `docs/analysis/anchor.md`（**无 foundation 缺口**；
+  `scroll-into-view-if-needed` 已是 `packages/ui` 依赖）。
+  剩 **G4 实现**（`Anchor.vue` + `AnchorLink.vue` + `context.ts` + `style/index.ts`，
+  上游 `Anchor.test.tsx` 有 49 条）· G5–G11 · G12–G14。
+  ⚠️ 两处易错：`onClick` 是**自定义签名的 prop**（不能声明成 `emits:['click']`，
+  否则组件上的 `@click` 不再挂到根元素）；`Anchor` **没有** `ref`/`expose`（上游是 `React.FC`）。
 - ⚠️ **`test:visual` 不在 `verify:full`**、`test:types` 也不在 ⇒ 两条都要显式跑。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`）；`--project types` 的 SFC 解析噪音（PITFALLS 73）；
   Empty SVG 不跟 darkAlgorithm；开放决策见 `ask decisions --open`。
