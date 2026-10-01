@@ -3,7 +3,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import { Splitter } from '../index';
+import { Splitter, SplitterPanel } from '../index';
 import type {
   PanelCollapsible,
   ShowCollapsibleIconMode,
@@ -16,6 +16,16 @@ describe('Splitter · 类型', () => {
   it('Splitter 是组件，nativeElement ref 可达', () => {
     expectTypeOf(Splitter).toBeObject();
     expectTypeOf<SplitterRef['nativeElement']>().toEqualTypeOf<HTMLDivElement | null>();
+  });
+
+  /**
+   * 🚨 回归哨兵（2026-10-01 补）：本仓的「可安装」断言是**逐组件写在各自主 L3 类型测试**里的，
+   * 而 splitter **漏了这条** ⇒ `withInstall` 一直没套上、`app.use(Splitter)` 静默失效。
+   * 复合组件与具名面板都要能全局注册。
+   */
+  it('★ `Splitter` / `SplitterPanel` 都是可安装的组件（`withInstall` 的产物）', () => {
+    expectTypeOf(Splitter).toHaveProperty('install');
+    expectTypeOf(SplitterPanel).toHaveProperty('install');
   });
 
   it('Splitter.Panel 存在（复合组件）', () => {

@@ -628,6 +628,36 @@ export { Alert, AlertErrorBoundary } from './alert';
 export { genAlertStyle } from './alert/style';
 export type { ComponentToken as AlertComponentToken } from './alert/style/token';
 export { prepareComponentToken as prepareAlertComponentToken } from './alert/style/token';
+// ---------------------------------------------------------------------------
+// Anchor —— 锚点导航（复合组件：`Anchor.Link`）
+//
+// ⚠️ 类名前缀 `apollo-anchor`；**2 个 Component Token**（`linkPaddingBlock` /
+//    `linkPaddingInlineStart`，都是别名派生）+ 4 个 `mergeToken` 派生值（见 style/token.ts）。
+// ⚠️ **没有 `ref`/`expose`**（上游 `Anchor` 是 `React.FC`，无 forwardRef）。
+// ⚠️ `onClick` 是**自定义签名**的 prop（不是 DOM 事件）⇒ 不声明 `click` 事件
+//    （否则组件上的 `@click` 不再挂到根元素）。`onChange` 走 `emit('change')`。
+// ⚠️ 组件实现是 `.ts` 渲染函数（COMPONENT-RULES §2 条件 2：递归 + 两分支共享内容）。
+// ---------------------------------------------------------------------------
+export type {
+  AnchorAffixConfig,
+  AnchorContainer,
+  AnchorDirection,
+  AnchorEmits,
+  AnchorKey,
+  AnchorLinkBaseProps,
+  AnchorLinkInfo,
+  AnchorLinkItemProps,
+  AnchorLinkProps,
+  AnchorLinkSlots,
+  AnchorProps,
+  AnchorSemanticClassNames,
+  AnchorSemanticStyles,
+  AnchorSlots,
+} from './anchor';
+export { Anchor, AnchorLink, AnchorWithLink } from './anchor';
+export { genAnchorStyle, genTokenDecls as genAnchorTokenDecls } from './anchor/style';
+export type { ComponentToken as AnchorComponentToken } from './anchor/style/token';
+export { prepareComponentToken as prepareAnchorComponentToken } from './anchor/style/token';
 export type { AppComponentType, AppConfig, AppProps, UseAppProps } from './app';
 export { App } from './app';
 export { genAppStyle } from './app/style';

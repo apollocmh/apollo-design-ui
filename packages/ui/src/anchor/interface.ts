@@ -120,8 +120,12 @@ export interface AnchorProps {
   // ---------------------------------------------------------------- 数据
   /** 数据源（推荐）。 */
   items?: AnchorLinkItemProps[] | undefined;
-  /** @deprecated 用 `items`。⚠️ 传了会发废弃告警。 */
-  children?: VNodeChild;
+  /**
+   * ⚠️ **本仓没有 `children` prop**（规则 C19）：上游的 `children` 在 Vue 侧是
+   * **默认插槽**（`AnchorSlots.default`），塞进 `AnchorProps` 等于声明一个永远
+   * `undefined` 的键（`spin/Spin.vue` 同判）。
+   * 它仍然**已废弃** —— 传了插槽内容会发废弃告警，用 `items` 代替。
+   */
 
   // ---------------------------------------------------------------- 行为
   /** 方向。@default 'vertical' */
