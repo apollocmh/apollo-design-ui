@@ -334,9 +334,15 @@ export const COMPONENTS = [
       '**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。' +
       '⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）' +
       '+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。' +
-      '剩 **G9 L6 视觉**（**已跑通，未全绿**：`variants` 3/3 exact、其余 18 组 0.12%~0.57%；' +
-      '首轮 18 红 3.51% 的根因 `-css-var` 漏挂**已修** —— PITFALLS 248；' +
-      '剩「缺 `Today` 页脚」= S5 的 presets/footer + 「面板导航图标偏细」= `@apollo-design/picker` 侧）' +
+      '**G9 L6 二轮（2026-10-01）**：从 **3/21 → 12/21 exact**。' +
+      '修掉三处（都是真 bug，不是调阈值）：① 表头导航图标 —— `PickerPanel` **少声明 4 个图标 props**' +
+      '（PITFALLS 250，属 picker 包）；② 🚨 浮层**缺 `-panel-container` / `-panel-layout` 两层**' +
+      '⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 ' +
+      '+ `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**' +
+      '（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。' +
+      '`month`/`year`/`multiple`/`variants` 已 **0.000% exact**。' +
+      '剩 **唯一**一项：「缺 `Today` 页脚」= S5 的 presets/footer（容器高 309 vs antd 348，差的就是它）' +
+      '⇒ 补完 `basic`/`value`/`datetime` 三组（9 张）应一并转绿。' +
       '与 G12/G13/G14。' +
       '⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、' +
       '`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。',

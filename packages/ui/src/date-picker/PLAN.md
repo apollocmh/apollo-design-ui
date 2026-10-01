@@ -111,9 +111,11 @@
       后缀图标 `role=img` + `aria-label=calendar` + `aria-hidden=true` · `disabled` 时不渲染清除按钮。
       ⚠️ 范围版（含上游两条专门的 **separator a11y 测试**：默认带 `aria-hidden`、自定义**去掉**它）
       留到 **S5**；浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
-- [~] G9 L6 视觉 —— **已跑通、抓到并修掉一个真 bug**，但**尚未全绿**（详见下节）。
-      当前：**3 / 21 exact**（`variants` 三档全 0.000%），其余 18 组 **0.12%~0.57%**（block-diff）。
-      🚨 首轮 18 组是 0.42%~3.51%（**面板铺满容器**）⇒ 修掉 `-css-var` 漏挂后降到 0.12%~0.57%。
+- [~] G9 L6 视觉 —— **已跑通、抓到并修掉三个真 bug**，但**尚未全绿**（详见下节）。
+      当前：**12 / 21 exact**（`month` / `year` / `multiple` / `variants` 全 **0.000%**），
+      其余 9 组 **0.22%~0.83%**（block-diff）。
+      🚨 首轮 18 组是 0.42%~3.51%（**面板铺满容器**）⇒ 修掉 `-css-var` 漏挂后降到 0.12%~0.57%；
+      二轮修掉「表头图标」「缺 `-panel-container`」「`popup.root` 新 API 死」后 → **12/21 exact**。
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
       `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
       （16 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
@@ -255,7 +257,7 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**且**绑 React**（`useS
 ⇒ 数量完全相同 ⇒ 是**既有的** SFC 解析噪音（PITFALLS 73），与本组件无关。
 **判读门禁时看「Tests passed」与「含本包的错误数」，不要只看退出码。**
 
-## G9 L6 的落地方案（**已落地，未全绿** —— 2026-10-01）
+## G9 L6 的落地方案（**已落地，未全绿** —— 2026-10-01，二轮）
 
 ### 已完成
 
@@ -290,15 +292,33 @@ Vue 侧撑不出同一个高度 ⇒ 两侧 `#stage` 尺寸不等 ⇒ pixelmatch 
 `.vue` 把 `css-var-root` / `-css-var` 同时加到**根**与**浮层**。
 ⇒ 差异率 3.51% → **0.25%**。
 
-### ⏳ 剩余 18 组的差异（已定位到两类，**都还没修**）
+### ✅ 二轮（2026-10-01）：3/21 → **12/21 exact**
+
+修掉三处（**都是真 bug**，不是调阈值 —— 阈值本来就没动）：
+
+| # | 症状 | 根因 | 归属 |
+|---|---|---|---|
+| 1 | 表头四个导航箭头是**细字形 Unicode 字符**（`‹` `«`） | `PickerPanel` **少声明 4 个图标 props** ⇒ 被归进 `attrs` ⇒ `pickProps` 取不到 ⇒ `PanelHeader` 回退字符兜底 | `@apollo-design/picker`（PITFALLS 250） |
+| 2 | 🚨 面板在真实浏览器里**完全点不动** + 无阴影 + `popup.container` 语义槽无宿主 | 浮层**缺 `-panel-container` / `-panel-layout` 两层**（浮层根是 `pointer-events: none`，**只有 container 重置成 `auto`**） | `ui`（PITFALLS 251） |
+| 3 | `classNames.popup.root`（**新 API**）静默失效 | 传的是原始 deprecated prop，而不是上游那种**合并后**的 `popup.root` | `ui`（PITFALLS 252） |
+
+`month` / `year` / `multiple` / `variants` 已 **0.000% exact**。
+新增 `__tests__/popup-shell.test.ts`（4 条）把「外壳三层」钉在 L4，不必每次都等 L6。
+
+### ⏳ 剩余（**只剩一项**）
 
 | # | 现象 | 归属 | 说明 |
 |---|---|---|---|
-| 1 | **缺 `Today` 页脚** | **S5 的 presets/footer** | 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里**没有** `showToday`/`-footer`）⇒ 属「先要有浮层内容容器」那一批。**不是 bug，是已知范围** |
-| 2 | **面板表头的导航图标偏细偏浅** | **`@apollo-design/picker`（面板侧）** | 已放大对拍到：React 是 2px 描边、Vue 约 1px 且更浅 ⇒ 面板的 DOM/规则匹配问题，**不在 date-picker 的职责面** |
+| 1 | **缺 `Today` 页脚**（容器高 **309** vs antd **348**，差的 39px 就是它） | **S5 的 presets/footer** | 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里**没有** `showToday`/`-footer`）。⚠️ 宿主层 `-panel-layout` 已就位 ⇒ 只差接线 + 用例。**不是 bug，是已知范围** |
+
+⚠️ `basic` / `value` / `datetime` 的差异率比一轮**变大**（0.13%→0.22% 等）**不是回归**：
+它们 antd 侧**有页脚**，Vue 侧没有；此前 Vue 连阴影都没有 ⇒ 「缺阴影」与「缺页脚」两块差异
+**恰好抵消了一部分**。现在阴影对齐了，剩下的差异**纯粹**是缺页脚。
+（`month`/`year`/`multiple` 掉到精确 0 恰好反证：它们 antd 侧**没有页脚**，
+此前的差异**全部**来自缺阴影。）
 
 ⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确「不得放宽」，
-**没有豁免机制**）⇒ 这两项修完之前 **G9 不能判 done**，组件也不能 `completed`。
+**没有豁免机制**）⇒ 这一项修完之前 **G9 不能判 done**，组件也不能 `completed`。
 
 ⚠️ **与 G12 的关系**：`test:visual` **不在** `verify:full`（= registry:check && lint && test && test:build）
 ⇒ L6 的红**不会**让日常门禁红，必须显式跑 `node tests/visual/run.mjs --component date-picker`。

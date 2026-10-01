@@ -2428,3 +2428,101 @@
       **改 foundation 包后必须单独重建**（PITFALLS 176）。
     - 🚨 **教训**：「Vite 能跑」≠「Node 能跑」。凡是**产物要被 Node 直接 import** 的包，
       子路径导入一律带扩展名；而**唯一的验证方式是真跑 B8**（不是跑 vitest）。
+
+250. 🚨 **`PickerPanel` 少声明 4 个导航图标 props ⇒ 表头箭头静默退化成 Unicode 字符**（2026-10-01，由 L6 像素差 + 表头探针定位）。
+
+    `packages/picker/src/picker-panel.ts` 的 `props` 里**有** `showWeek`、`disabledDate`、
+    `minDate`、`maxDate`，**却没有** `prevIcon` / `nextIcon` / `superPrevIcon` / `superNextIcon`
+    （虽然第 458-468 行的 `pickProps(props, ['prevIcon', …])` 一直在取它们）。
+
+    - 后果链：`ui` 的 `DatePicker.vue:958-961` 传进来的「空 `<span class="…-prev-icon">`」
+      vnode 被 Vue 归进 **`attrs`**（不是 props）⇒ `pickProps` 取到 `undefined` 并被过滤
+      ⇒ `DatePanel` 的上下文里没有图标 ⇒ `PanelHeader` 回退到
+      `DEFAULT_HEADER_ICONS`（`'\u2039'` / `'\u00AB'` 等**字符**）。
+    - **探针对拍**（`tests/visual/debug/probe-datepicker-header.mjs`）：
+
+      | 侧 | 表头按钮的 innerHTML |
+      |---|---|
+      | React | `<button …><span class="ant-picker-super-prev-icon"></span></button>` |
+      | Vue（修前） | `<button …>«</button>` |
+
+    - 🚨 **为什么 L1–L5 全绿也抓不到**：`aria-label` 才是可访问名（`panel-header.ts` 文件头
+      第 3 条写明了「粒度由哪个按钮决定，不由箭头形状决定」）⇒ L4 的 ARIA 比对照样过；
+      而 `ui` 的 `date-picker/style/index.ts` 里 `.apollo-picker-*-icon::before` 那几条规则
+      **确实存在、也确实是 1.5px**，只是**永远匹配不到元素** ⇒ `theme.test.ts` 的
+      「声明存在」断言也过。
+    - 归属：**`picker` 包**。修法：补 4 个 prop 声明（`type: null as unknown as PropType<VNodeChild>`
+      + `default: undefined`，与 `sharedPanelProps` 同形）。
+    - ⚠️ **这是「Vue 未声明 prop ⇒ 归进 `attrs` ⇒ 静默失效」家族的第三例**
+      （前两例：`PickerPanel` 的顶层时间 props、`onModeChange`）。
+      **判据**：凡是「从 `props` 上按 key 取值」的代码，对应 key **必须**在 `defineComponent`
+      的 props 里声明过 —— `pickProps(props, keys)` 这种写法尤其危险，取不到只会静默跳过。
+
+251. 🚨 **浮层缺 `-panel-container` 一层 ⇒ 面板在真实浏览器里「完全点不动」**（2026-10-01，L6 + 探针 + 真点击三重定位）。
+
+    `ui` 的 `DatePicker.vue` 把 `PickerPanel` 直接当 `Trigger` 的 `popup`，**少了上游
+    `@rc-component/picker` 的 `es/PickerInput/Popup/index.js:120-163` 那两层**：
+
+    ```
+    div.{p}-panel-container.{p}-{internalMode}-panel-container   ← 缺
+      └─ div.{p}-panel-layout                                    ← 缺
+          └─ div → PickerPanel                                   ← 只有这层
+    ```
+
+    三处后果（**都不是「样式差一点」**）：
+
+    1. 🚨 **面板完全点不动**。浮层根 `.apollo-picker-dropdown` 是 `pointer-events: none`
+       （有意为之：让浮层的外接矩形不挡后面内容），**全库只有 `-panel-container`
+       把它重置成 `auto`**。缺了它整条链继承 `none`。
+       实测：Playwright 点 `td.…-cell` 超时并报 `<div>…</div> intercepts pointer events`；
+       antd 侧点同一天会把值写进输入框（`"" → "2026-08-30"`）。
+    2. **没有 `box-shadow` / 圆角 / `overflow: hidden`** —— 这三条规则都挂在 container 上
+       （`ui` 的 `style/index.ts` 里 `.apollo-picker-dropdown .apollo-picker-panel-container{…}`），
+       DOM 里没这个元素 ⇒ 规则永不匹配。
+    3. **`classNames.popup.container` / `styles.popup.container` 两个语义槽从没生效**
+       （类型面 `PickerPopupSemanticClassNames` 里早就有，只是**没有宿主元素**）。
+
+    - 🚨 **为什么 L1–L5 全绿也抓不到**：jsdom 的 `trigger()` / `dispatchEvent`
+      **完全绕过 `pointer-events`** ⇒ 所有交互用例照过；L5 不看像素。
+      **只有 L6（真浏览器）能发现**。这条本身就是「L6 不可省」的第二个论据
+      （第一个见 248）。
+    - ⚠️ 连带发现：`month` / `year` / `multiple` 三个变体在 L6 里从 0.13% 直接掉到
+      **精确 0.000%** —— 因为它们 antd 侧**没有页脚**，此前的差异**全部**来自缺阴影。
+    - 修法：`DatePicker.vue` 的 `popupVNode` 补两层（container 带
+      `${p}-panel-container` + `${p}-${internalMode}-panel-container` + `popup.container` 类，
+      `style: { marginLeft: 0, marginRight: 'auto', ...popup.container }`，`tabIndex: -1`）。
+    - ⚠️ 上游在这两层上还挂了 `onMouseDown`（保焦点）/ `onFocus` / `onBlur`；
+      本仓焦点模型是自建的（`s4-focus`），**本轮没搬**，已登记为待对齐项。
+
+252. ⚠️ **`classNames.popup.root`（新 API）静默失效 —— 传了「原始 deprecated prop」而不是「合并值」**（2026-10-01）。
+
+    `DatePicker.vue` 的 `popupClassNames` 原本传
+    `getDropdownClassName({ popupClassName: props.popupClassName ?? props.dropdownClassName })`。
+    而上游（`SinglePicker.js:464`）传的是
+    `clsx(rootClassName, mergedClassNames.popup.root)` ——
+    **合并后的** `popup.root`（`useMergedPickerSemantic` 已把两个 deprecated 别名
+    `fillPopupClassName` 并进去）才是落点。
+
+    - 后果：`classNames={{ popup: 'c' }}` / `classNames={{ popup: { root: 'c' } }}`
+      **一律不生效**；只有 `popupClassName` / `dropdownClassName` 生效。
+    - 🚨 **为什么测试没红**：`index.test.ts:427` 那条只覆盖了 **deprecated** 两个 prop
+      （断言「有告警 + 类名落到 `-dropdown`」）—— **新 API 一条用例都没有**。
+      「旧写法有测试、新写法没有」是最容易长期潜伏的形态：旧写法红不了，新写法没人测。
+    - 修法：改传 `semantic.classNames.value.popup?.root`（合并值同时覆盖新旧两套）。
+      新增 `__tests__/popup-shell.test.ts` 钉住新 API 的两种形态。
+
+253. 🚨 **测量浮层几何时，必须先剥 motion 相位类 —— 否则量到的是「入场动效的暂停首帧」**（2026-10-01，探针自身踩到）。
+
+    antd 的 motion 规则是 `animation-duration` + **`animation-fill-mode: both`** +
+    **`animation-play-state: paused`**，而 `STABILIZE_CSS` 的 `animation: none !important`
+    让 `animationend` **永不触发** ⇒ 元素一直停在首帧（`slide-up` 是
+    `transform: scale(0)` / `opacity: 0`）。
+
+    - **指纹**：`getBoundingClientRect()` 全 `0×0`，而 **`offsetWidth` 仍是真实值**（如 288）。
+      原因：`getBoundingClientRect` **含变换**、`offsetWidth` 不含。
+      ⇒ **「这两个数不一致」就是本坑的判据**，别当成浏览器的怪癖。
+    - 连带的假结论：整条浮层链 rect 全 0 ⇒ 命中测试 / 元素尺寸 / 「谁挡了谁」全部无意义，
+      很容易得出「React 也点不动」这种**错误对照**（本轮真踩过）。
+    - 修法：把 `screenshotElement` 里那段剥类逻辑抽成
+      **`stabilize.mjs` 的 `stripMotionPhaseClasses(page)`**（已导出），
+      **任何「截图前」的测量都必须调它**；`screenshotElement` 也改为复用它。

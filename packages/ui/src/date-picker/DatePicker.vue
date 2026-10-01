@@ -831,7 +831,19 @@ const popupClassNames = computed(() => [
     prefixCls: prefixCls.value,
     range: false,
     rtl: rtl.value,
-    popupClassName: props.popupClassName ?? props.dropdownClassName,
+    /**
+     * 🚨 传**合并后的** `classNames.popup.root`，不是原始 deprecated prop。
+     *
+     * 上游：`SinglePicker.js:464` 的 `popupClassName: clsx(rootClassName, mergedClassNames.popup.root)`。
+     * `useMergedPickerSemantic` 已经把 deprecated 的 `popupClassName` / `dropdownClassName`
+     * **并进** `popup.root`（`fillPopupClassName`）⇒ 取合并值即可同时覆盖新旧两套 API。
+     *
+     * ⚠️ 2026-10-01 修正：此前传的是 `props.popupClassName ?? props.dropdownClassName`
+     * ⇒ **新 API `classNames={{ popup: 'c' }}` / `popup: { root: 'c' }` 静默无效**，
+     * 只有 deprecated 写法生效。既有用例（`index.test.ts:427`）只覆盖了 deprecated 那条，
+     * 所以一直没红。→ PITFALLS 251
+     */
+    popupClassName: semantic.classNames.value.popup?.root,
   }),
   // 🚨 浮层也要拿组件变量（Portal 到 body ⇒ 不在根的子树里），见 `cssVarClassName`
   cssVarClassName.value,
@@ -1051,6 +1063,8 @@ const selectorProps = computed(() => ({
 // ⚠️ Vue 的 **template 不支持 TS 断言**（`as X`）⇒ 所有需要收窄/断言的量
 // 都必须在 `<script setup>` 里准备好再绑。
 const dropdownPrefixCls = computed(() => `${prefixCls.value}-dropdown`);
+/** 面板前缀（上游 `PickerInput/Popup` 的 `panelPrefixCls = `${prefixCls}-panel``）。 */
+const panelPrefixCls = computed(() => `${prefixCls.value}-panel`);
 /**
  * 面板 vnode。
  *
@@ -1063,6 +1077,61 @@ const dropdownPrefixCls = computed(() => `${prefixCls.value}-dropdown`);
 const panelVNode = computed(() =>
   h(PickerPanel as Component, panelProps.value as unknown as Record<string, unknown>),
 );
+
+/**
+ * 浮层内容 —— 面板外面**再套两层**（上游 `@rc-component/picker@1.12.2` 的
+ * `es/PickerInput/Popup/index.js:120-163`）：
+ *
+ * ```
+ * div.{panelPrefixCls}-container.{prefixCls}-{internalMode}-panel-container  ← 语义槽 popup.container
+ *   └─ div.{panelPrefixCls}-layout
+ *       └─ div                        ← 上游这一层里同时放 `PopupPanel` 与 `Footer`
+ *           └─ PickerPanel
+ * ```
+ *
+ * 🚨 **这两层不是装饰**（2026-10-01 由 L6 像素差 + 表头探针定位，三处后果）：
+ *
+ * 1. 🚨 **面板在真实浏览器里完全点不动**。浮层根 `.apollo-picker-dropdown` 是
+ *    `pointer-events: none`（有意为之：让浮层的外接矩形不挡住后面的内容），
+ *    **全库只有 `-panel-container` 把它重置成 `auto`**。缺了它 ⇒ 整条链继承 `none`
+ *    ⇒ Playwright 真点击报 `<div>…</div> intercepts pointer events` 并超时。
+ *    ⚠️ 为什么 L1–L5 全绿也抓不到：jsdom 里 `trigger()` / `dispatchEvent` 直接派发事件，
+ *    **完全绕过 `pointer-events`**；只有真浏览器 + 真指针事件才暴露。
+ *    （对照：antd 侧点同一天会把值写进输入框。）
+ * 2. **没有 `box-shadow` / 圆角 / `overflow: hidden`** —— 这三条规则都挂在 container 上
+ *    （`style/index.ts` 里 `.apollo-picker-dropdown .apollo-picker-panel-container{…}`），
+ *    DOM 里没有这个元素 ⇒ 规则永不匹配 ⇒ 面板是一块**没有阴影的平板**。
+ * 3. **两个语义槽从没生效**：`classNames.popup.container` / `styles.popup.container`
+ *    在类型面里早就有（`interface.ts` 的 `PickerPopupSemanticClassNames`），
+ *    但**没有宿主元素**。
+ *
+ * ⚠️ 上游在这两层上还挂了 `onMouseDown`（`onPanelMouseDown`，保焦点）/ `onFocus` /
+ * `onBlur`；本仓的焦点模型是自建的（见 `s4-focus`），**本轮不搬**，
+ * 已登记为待对齐项（README §5）。
+ */
+const popupVNode = computed(() => {
+  const popupClassNames = semantic.classNames.value.popup;
+  const popupStyles = semantic.styles.value.popup;
+  return h(
+    'div',
+    {
+      class: [
+        `${panelPrefixCls.value}-container`,
+        // 上游：`${prefixCls}-${internalMode}-panel-container`
+        // （注释写着 "Used for Today Button style, safe to remove if no need"，
+        //  但 DOM 对拍要一致，且 `Today` 页脚落地后会用上）
+        `${prefixCls.value}-${internalMode.value}-panel-container`,
+        popupClassNames?.container,
+      ],
+      // 上游：`{ marginLeft: containerOffset, marginRight: 'auto', ...styles.popup.container }`
+      // ⚠️ `containerOffset` 只在对齐 range 的箭头时才非 0（`Popup/index.js:82-88`），
+      //    单值选择器恒为 0。
+      style: { marginLeft: 0, marginRight: 'auto', ...popupStyles?.container },
+      tabIndex: -1,
+    },
+    h('div', { class: `${panelPrefixCls.value}-layout` }, [h('div', null, [panelVNode.value])]),
+  );
+});
 const builtinPlacements = computed(() => BUILT_IN_PLACEMENTS as Record<string, TriggerAlign>);
 const popupAlign = computed(() => props.popupAlign as TriggerAlign | undefined);
 const popupMotion = computed(() => ({ motionName: transitionName.value, motionDeadline: 1000 }));
@@ -1072,7 +1141,7 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
   <Trigger
     ref="triggerRef"
     :prefix-cls="dropdownPrefixCls"
-    :popup="panelVNode"
+    :popup="popupVNode"
     :show-action="[]"
     :hide-action="['click']"
     :open="mergedOpen"

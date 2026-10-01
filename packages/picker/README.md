@@ -206,9 +206,15 @@ renderToStaticMarkup(<DatePicker open />)  ⇒  889 字节，inline('picker-pane
 
 1. **`provide` 的上下文，提供者自己 `inject` 不到**（`inject` 读 `parent.provides`）
    ⇒ 面板用 `providePanelInfoFromProps` 的**返回值**，不用 `usePanelInfo()`。
-2. 🚨 **`PickerPanel` 的顶层时间 props 必须显式声明**（`use12Hours` / `hourStep` /
-   `disabledHours` / `hideDisabledOptions` / `showMillisecond` …）—— 否则被 Vue 归进
-   `attrs`，而 `getTimeProps` 走 `pickProps(props, …)` ⇒ **静默失效**。
+2. 🚨 **`PickerPanel` 的顶层 props 必须显式声明** —— 否则被 Vue 归进 `attrs`，
+   而消费方走 `pickProps(props, …)` ⇒ **静默失效**。目前踩到两批：
+   - **顶层时间 props**（`use12Hours` / `hourStep` / `disabledHours` / `hideDisabledOptions` /
+     `showMillisecond` …）⇒ `getTimeProps` 取不到（2026-09-30）；
+   - 🚨 **4 个导航图标**（`prevIcon` / `nextIcon` / `superPrevIcon` / `superNextIcon`）
+     ⇒ `PanelHeader` 回退到 `DEFAULT_HEADER_ICONS` 的**字符**（`‹` / `«`），
+     `ui` 层传的「空 `<span>` + CSS 画箭头」**永远碰不到面**（2026-10-01）。
+   **判据**：凡「从 `props` 上按 key 取值」的键，`defineComponent` 的 props 里必须有；
+   `pickProps` 取不到只会**静默跳过**，不报错。
 3. 🚨 **`triggerChange` 要先取快照再写**：`mergedValue` 是 `computed`（活读），
    写完再比较会让「变了吗」恒为假 ⇒ **非受控路径 `onChange` 永不触发**。
    （React 里 `mergedValue` 是闭包常量，所以上游那样写是对的。）
@@ -248,6 +254,7 @@ renderToStaticMarkup(<DatePicker open />)  ⇒  889 字节，inline('picker-pane
 | 3 | 周面板多一个 `-show-week` 类 | 类名开关写成了 `showPrefixColumn`（上游用**原始 `showWeek`**） |
 | 4 | **非受控模式下 `onChange` 永不触发**（受控一切正常） | `triggerChange` 的 `mergedValue` 是 `computed` 活读，写完立刻返回新值 ⇒ 「变了吗」恒为假。上游是 React 闭包快照 |
 | 5 | `getRowFormat('datetime')` 走上游的 `default` 分支 | 纯函数层把入参收窄成 `PickerMode` 时，把上游的 `case 'datetime'` **静默删除**了 |
+| 6 | **表头四个导航箭头变成细字形的 Unicode 字符**（`‹` `«` `›` `»`），而不是 CSS 画的 1.5px 折线 | `PickerPanel` **少声明 4 个图标 props** ⇒ 被归进 `attrs` ⇒ `pickProps` 取不到 ⇒ `PanelHeader` 回退字符兜底（2026-10-01，由 L6 像素差 + 表头探针定位）。→ PITFALLS 250 |
 
 另修 `__tests__/index.test.ts` 的两条**过时断言**：原断言「本包不导出任何 Vue 组件」
 依赖「面板属 `ui`」这个**当时未裁决的暂定方向**（`AGENTS.md` §4.2 第 3 条：测试本身写错）

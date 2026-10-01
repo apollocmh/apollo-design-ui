@@ -28,7 +28,16 @@
  *    且**取 `queue[index + 1]`，取不到就什么都不做**（不会停在中间态）。
  */
 
-import { computed, defineComponent, h, type PropType, provide, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  ref,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { DatePanel, WeekPanel } from './date-panel';
 import { isSame } from './date-util';
 import { fillLocale } from './locale-fill';
@@ -168,6 +177,33 @@ export const PickerPanel = defineComponent({
       default: undefined,
     },
     showWeek: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+
+    /**
+     * 🚨 4 个导航图标**必须显式声明**（与下面那批时间 props 同一条判据）。
+     *
+     * 不声明 ⇒ `ui` 传进来的 vnode 被 Vue 归进 **`attrs`**（不是 props）
+     * ⇒ 上面 `pickProps(props, ['prevIcon', …])` 取到 `undefined` 并被过滤
+     * ⇒ `DatePanel` 的上下文里没有图标 ⇒ `PanelHeader` 回退到
+     * `DEFAULT_HEADER_ICONS` 的**字符**兜底（`‹` / `«` / `›` / `»`）。
+     *
+     * 症状（2026-10-01 由 L6 像素差异 + 表头探针定位）：表头箭头变成**细字形文字**，
+     * 而不是 antd 的「空 `<span>` + CSS 画的 1.5px 折线」——
+     * `ui` 侧 `DatePicker.vue` 明明传了 `<span class="…-prev-icon">`，
+     * `packages/ui/src/date-picker/style/index.ts` 的 `::before` 规则也明明在，
+     * 但**两者永远碰不到面**。探针对拍：
+     *
+     * | 侧 | 表头按钮的 innerHTML |
+     * |---|---|
+     * | React | `<button …><span class="ant-picker-super-prev-icon"></span></button>` |
+     * | Vue（修前） | `<button …>«</button>` |
+     *
+     * ⚠️ 这是**纯属性声明缺口**，L1–L5 全绿也能过：L4 的 ARIA 比对看的是
+     * `aria-label`（本来就不由箭头形状决定，见 `panel-header.ts` 文件头第 3 条）。
+     */
+    prevIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    nextIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    superPrevIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    superNextIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
 
     // ------------------------------------------------------ 时间配置
     showTime: {

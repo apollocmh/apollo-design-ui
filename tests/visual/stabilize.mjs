@@ -131,6 +131,33 @@ export async function waitForFonts(page) {
 }
 
 /**
+ * 剥掉残存的 motion 相位类（`-enter` / `-appear` / `-leave` 及其 `-active` 等）。
+ *
+ * ⚠️ **任何「截图前」的测量都必须先调它**，否则量到的是「入场动效的暂停首帧」：
+ * antd 的 motion 规则是 `animation-fill-mode: both` + `animation-play-state: paused`，
+ * 而 `STABILIZE_CSS` 的 `animation: none` 让 `animationend` **永不触发** ⇒ 元素一直停在
+ * 首帧（`slide-up` 是 `transform: scale(0)` / `opacity: 0`）。
+ * 症状：`getBoundingClientRect()` 全 `0×0`，而 `offsetWidth` 仍是真实值（如 288）——
+ * 因为 `getBoundingClientRect` 含变换、`offsetWidth` 不含。**这两个数不一致就是本坑的指纹**。
+ *
+ * （D92，harness 平台差：antd 部分浮层不设 `motionDeadline`，只能在这里手工放行。
+ * Vue 侧到此刻已 settle、没有相位类，此操作对其是 no-op。）
+ */
+export async function stripMotionPhaseClasses(page) {
+  await page.evaluate(() => {
+    for (const el of document.querySelectorAll(
+      '[class*="-enter"],[class*="-appear"],[class*="-leave"]',
+    )) {
+      el.className = el.className
+        .split(/\s+/)
+        .filter((c) => !/-(enter|appear|leave)(-(active|prepare|start|end))?$/.test(c))
+        .join(' ')
+        .trim();
+    }
+  });
+}
+
+/**
  * 截图一个元素（找不到元素时抛出带上下文的错误）。
  * 截**元素**而不是整页：两侧页面的外层留白不同，整页比对会把留白差异当成组件差异。
  */
@@ -143,21 +170,8 @@ export async function screenshotElement(page, selector, path) {
   // 运行中的动画数为 0，但其 appear 态样式（opacity:0）要等 motionDeadline
   // （tooltip 1000ms）兜底后才解除。有 1100ms 上限，静态组件无动画不受影响。
   await page.waitForTimeout(1100);
-  // 再模拟 animationend：剥掉残存的 motion 相位类。antd 部分浮层（dropdown）
-  // 不设 motionDeadline —— STABILIZE_CSS 的 animation:none 下 rc-motion 会
-  // 永远卡在 appear 态（opacity:0），只能在这里手工放行（D92，harness 平台差）。
-  // Vue 侧到截图时刻已 settle（无相位类），此操作对其是 no-op。
-  await page.evaluate(() => {
-    for (const el of document.querySelectorAll(
-      '[class*="-enter"],[class*="-appear"],[class*="-leave"]',
-    )) {
-      el.className = el.className
-        .split(/\s+/)
-        .filter((c) => !/-(enter|appear|leave)(-(active|prepare|start|end))?$/.test(c))
-        .join(' ')
-        .trim();
-    }
-  });
+  // 再模拟 animationend：剥掉残存的 motion 相位类（见该函数的注释）。
+  await stripMotionPhaseClasses(page);
   const el = page.locator(selector);
   const count = await el.count();
   if (count === 0) {

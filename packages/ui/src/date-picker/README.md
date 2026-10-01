@@ -91,8 +91,8 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | S2 | 键入解析 + `format` 补齐层 + `format` 函数形态 + **提交时机状态机** | ✅ |
 | S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
 | S4 | 键盘字段导航与 `-input-active` 分段 | 🟡 **单值部分完成**：调度（随 S2）+ `-focused` + 确认离开才关浮层。`-input-active` 与 `useFocusLock` 是**范围专属**（上游 `SinglePicker` 不传 `activeIndex`；单值下 `forceFocus` 恒 false）⇒ 随 S5 的 RangePicker 一起做 |
-| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置** ✅、**`multiple` 全链路** ✅（含 `tagRender` / `maxTagCount` / 删除 / `-multiple-input`）；范围与 presets/footer 未开始 |
-| **G9 L6 视觉** | **已跑通，未全绿**：`variants` **3/3 exact**；其余 18 组 **0.12%~0.57%**（首轮 18 红 3.51% 的根因 `-css-var` 漏挂**已修**）。剩两项见 §5.5(f) —— **修完之前 G9 不能判 done** |
+| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置** ✅、**`multiple` 全链路** ✅（含 `tagRender` / `maxTagCount` / 删除 / `-multiple-input`）；范围与 presets/footer 未开始（**footer 的宿主层已就位**，见 §5.5(b)） |
+| **G9 L6 视觉** | **12 / 21 exact**（`month`/`year`/`multiple`/`variants` **0.000%**；`basic`/`value`/`datetime` 0.22%~0.83%）。首轮 3.51% 的根因（`-css-var` 漏挂）与二轮的两处（表头图标、缺 `-panel-container`）**均已修**。剩 **唯一**一项：缺 `Today` 页脚（S5）—— 见 §5.5(f′) —— **修完之前 G9 不能判 done** |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 
@@ -190,6 +190,11 @@ const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.for
 —— 而裁决 `picker-panel-ownership` = B 只把**面板** Vue 化了 ⇒ footer 属未移植面。
 ⇒ 与 `renderExtraFooter` / `panelRender` 同批（S5 或单独一轮）。
 
+⚠️ **2026-10-01 更新**：footer 的**宿主层已就位** —— `-panel-layout` 里那个无类名的
+`div` 就是上游同时放 `PopupPanel` 与 `Footer` 的地方（`Popup/index.js:127-133`），
+本轮已补（§5.5 (f-2)）。`panelRender` 的**挂载点**也正好是 `-panel-layout`
+（上游 `panelRender(mergedNodes)` 包的就是它）⇒ 两者现在都只差「接线 + 用例」。
+
 #### (c) ✅ **已解决**（2026-10-01 同日）：S2 的「落值 + 提交时机」
 
 `hooks/picker-value-change.ts` 是上游 `PickerInput/hooks/useRangeValueChange.js`
@@ -235,15 +240,58 @@ useLayoutEffect(() => {
 `.vue` 把 `css-var-root` / `-css-var` 同时加到**根**与**浮层**（类序对齐 antd 实测基线）。
 ⇒ 差异率 3.51% → **0.25%**。→ PITFALLS **248**（含「为什么前三层都抓不到」）
 
-#### (f) ⏳ G9 L6 剩余的两项差异（**已定位，未修**）
+#### (f) ✅ **已解决**（2026-10-01，G9 L6 二轮）：表头图标 + 浮层缺两层容器
+
+**(f-1) 表头导航图标「偏细偏浅」** —— 归属 **`@apollo-design/picker`**（不在本组件职责面）。
+真相与「1px vs 2px 描边」无关：`PickerPanel` **少声明 4 个图标 props** ⇒ `ui` 传的
+「空 `<span class="…-prev-icon">`」被归进 `attrs` ⇒ `pickProps` 取不到 ⇒ `PanelHeader`
+回退到**字符兜底**（`‹` `«`）⇒ 表头画的是**字形**而不是 CSS 折线。
+⇒ 已在 picker 包修复。探针对拍表见 PITFALLS **250**。
+
+**(f-2) 🚨 浮层缺 `-panel-container` / `-panel-layout` 两层**（**功能 bug，不只是像素**）
+
+上游 `@rc-component/picker` 的 `PickerInput/Popup/index.js:120-163` 里，面板外面还有两层；
+本仓此前把 `PickerPanel` **直接**当 `Trigger` 的 `popup`。三处后果：
+
+| # | 后果 |
+|---|---|
+| 1 | 🚨 **面板在真实浏览器里完全点不动** —— 浮层根 `.apollo-picker-dropdown` 是 `pointer-events: none`，**只有 container 把它重置成 `auto`**。Playwright 真点击报 `<div>…</div> intercepts pointer events` 并超时（antd 侧同一点击会把值写进输入框） |
+| 2 | 没有 `box-shadow` / 圆角 / `overflow: hidden`（三条规则都挂在 container 上，元素不在 ⇒ 永不匹配） |
+| 3 | 语义槽 `classNames.popup.container` / `styles.popup.container` **从没生效**（类型面里早就有，只是没有宿主元素） |
+
+⚠️ **为什么 L1–L5 全绿也抓不到**：jsdom 的 `trigger()` / `dispatchEvent` **绕过
+`pointer-events`** ⇒ 交互用例照过；L5 不看像素。→ PITFALLS **251**
+
+**(f-3) `classNames.popup.root`（新 API）静默失效** —— 落点应是**合并后**的
+`popup.root`（上游 `SinglePicker.js:464`），此前传的是原始 deprecated prop。
+既有用例只覆盖了 deprecated 那两个 ⇒ 新 API 一条都没有。→ PITFALLS **252**
+新增 `__tests__/popup-shell.test.ts`（4 条）钉住：层级、`internalMode` 后缀、
+`popup.container` 两个语义槽、`popup.root` 新旧两种写法。
+
+**L6 实测（`node tests/visual/run.mjs --component date-picker --mode compare`）**：
+
+| | 修前 | 修后 |
+|---|---|---|
+| exact | **3 / 21** | **12 / 21** |
+| `month` / `year` / `multiple` / `variants` | 0.11%~0.51% | ✅ **0.000% exact** |
+| `basic` / `value` | 0.13%~0.52% | 0.22%~0.83% |
+| `datetime` | 0.24%~0.47% | 0.33%~0.77% |
+
+⚠️ `basic` / `value` / `datetime` 的差异率**变大**不是回归：它们 antd 侧**有页脚**，
+Vue 侧没有；此前 Vue 连阴影都没有 ⇒ 「缺阴影」与「缺页脚」两块差异**恰好抵消了一部分**。
+现在阴影对齐了，剩下的差异**纯粹**是缺页脚（+ 阴影绕着一个矮 39px 的盒子）。
+⚠️ `month` / `year` / `multiple` 掉到**精确 0** 恰好反证了这一点：它们 antd 侧**没有页脚**，
+此前的差异**全部**来自缺阴影。
+
+#### (f′) ⏳ G9 L6 剩余的唯一差异（**已定位，未修**）
 
 | # | 现象 | 归属 |
 |---|---|---|
-| 1 | 面板**缺 `Today` 页脚** | **S5 的 presets/footer** —— 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里没有 `showToday`/`-footer`）⇒ 属「先要有浮层内容容器」那一批。**不是 bug** |
-| 2 | 面板表头的**导航图标偏细偏浅** | **`@apollo-design/picker`（面板侧）** —— 放大对拍：React 是 2px 描边、Vue 约 1px 且更浅 ⇒ 面板的 DOM/规则匹配问题，不在本组件的职责面 |
+| 1 | 面板**缺 `Today` 页脚**（容器高 309 vs antd 的 **348**，差的 39px 就是它） | **S5 的 presets/footer** —— 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里没有 `showToday`/`-footer`）。见 §5.5 (b)。**不是 bug，是已知范围** |
 
+⇒ 补完 footer 后 `basic` / `value` / `datetime` 三组（9 张）应能一并转绿。
 ⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确不得放宽，
-**没有豁免机制**）⇒ 这两项修完之前 **G9 不能判 done**。
+**没有豁免机制**）⇒ 这一项修完之前 **G9 不能判 done**。
 ⚠️ `test:visual` **不在** `verify:full` 里 ⇒ 它红了不会让日常门禁红，必须显式跑。
 
 #### (g) 浮层侧的焦点事件未接
@@ -254,7 +302,12 @@ useLayoutEffect(() => {
 2. 面板里获得焦点的控件变 `disabled` ⇒ 把焦点抢回输入框
    （`useFocusEvents` 的 `isDisabledTarget` 那一支）。
 
-本仓的 `Trigger` 的浮层 div 没有透传 focus/blur 的位置（`popupProps` 里只有
+⚠️ **2026-10-01 更新**：本组件现在**有了** `-panel-container` 这一层（§5.5 (f-2)），
+它正是上游挂 `onMouseDown`（`onPanelMouseDown`，保焦点）/ `onFocus` / `onBlur` 的地方
+⇒ **宿主元素已就位，只差接线**。本轮**有意没搬**：焦点模型是自建的（`s4-focus`），
+接线属行为变更、要单独过门禁，不能混在「补外壳」里。
+
+当前状态：`Trigger` 的浮层 div 没有透传 focus/blur 的位置（`popupProps` 里只有
 `onMouseenter` 一类），故这两支**未接**。⚠️ 第 1 支在当前实现下**恰好不影响**
 `-focused`：点格子时焦点落到**面板根**（`tabindex="0"`）⇒ 输入的 blur 的
 `relatedTarget` 在浮层里 ⇒ 我们不清理 `focusedIndex`。但若焦点是**从外部**进入面板的
