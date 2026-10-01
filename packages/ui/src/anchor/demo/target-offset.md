@@ -1,11 +1,10 @@
 ## zh-CN
 
-最简单的用法。
+锚点目标滚动到屏幕正中间（`targetOffset` 优先于 `offsetTop`）。
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `<div>` 做锚点目标 + 固定高度容器；
-// 本仓同样用原生元素（demo 不引入未落地的组件）。
+// 对齐 antd 的 targetOffset demo：滚动落点的偏移（优先于 `offsetTop`）。
 import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
 
 const items: AnchorLinkItemProps[] = [
@@ -17,7 +16,7 @@ const items: AnchorLinkItemProps[] = [
 
 <template>
   <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" />
+    <Anchor :items="items" :affix="false" :target-offset="60" />
     <div style="flex: 1; height: 240px; overflow: auto">
       <div
         v-for="id in ['a', 'b', 'c']"
@@ -34,12 +33,11 @@ const items: AnchorLinkItemProps[] = [
 
 ## en-US
 
-The simplest usage.
+Anchor target scroll to screen center (`targetOffset` takes precedence over `offsetTop`).
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `<div>` 做锚点目标 + 固定高度容器；
-// 本仓同样用原生元素（demo 不引入未落地的组件）。
+// 对齐 antd 的 targetOffset demo：滚动落点的偏移（优先于 `offsetTop`）。
 import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
 
 const items: AnchorLinkItemProps[] = [
@@ -51,7 +49,7 @@ const items: AnchorLinkItemProps[] = [
 
 <template>
   <div style="display: flex; gap: 16px">
-    <Anchor :items="items" :affix="false" />
+    <Anchor :items="items" :affix="false" :target-offset="60" />
     <div style="flex: 1; height: 240px; overflow: auto">
       <div
         v-for="id in ['a', 'b', 'c']"

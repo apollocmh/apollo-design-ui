@@ -1,17 +1,17 @@
 ## zh-CN
 
-最简单的用法。
+为每条链接单独设置 `targetOffset`（优先级高于全局的 `targetOffset`）。
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `<div>` 做锚点目标 + 固定高度容器；
-// 本仓同样用原生元素（demo 不引入未落地的组件）。
+// 对齐 antd 的 targetOffset-per-link demo：**每条链接**自己的滚动偏移
+// （优先级高于 `Anchor` 的全局 `targetOffset`）。
 import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
 
 const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
+  { key: 'a', href: '#anchor-demo-a', title: 'Section A', targetOffset: 0 },
+  { key: 'b', href: '#anchor-demo-b', title: 'Section B', targetOffset: 120 },
+  { key: 'c', href: '#anchor-demo-c', title: 'Section C', targetOffset: 60 },
 ];
 </script>
 
@@ -34,18 +34,18 @@ const items: AnchorLinkItemProps[] = [
 
 ## en-US
 
-The simplest usage.
+Set `targetOffset` for each link; the link-level value takes precedence over the global prop.
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `<div>` 做锚点目标 + 固定高度容器；
-// 本仓同样用原生元素（demo 不引入未落地的组件）。
+// 对齐 antd 的 targetOffset-per-link demo：**每条链接**自己的滚动偏移
+// （优先级高于 `Anchor` 的全局 `targetOffset`）。
 import { Anchor, type AnchorLinkItemProps } from '@apollo-design/ui';
 
 const items: AnchorLinkItemProps[] = [
-  { key: 'a', href: '#anchor-demo-a', title: 'Section A' },
-  { key: 'b', href: '#anchor-demo-b', title: 'Section B' },
-  { key: 'c', href: '#anchor-demo-c', title: 'Section C' },
+  { key: 'a', href: '#anchor-demo-a', title: 'Section A', targetOffset: 0 },
+  { key: 'b', href: '#anchor-demo-b', title: 'Section B', targetOffset: 120 },
+  { key: 'c', href: '#anchor-demo-c', title: 'Section C', targetOffset: 60 },
 ];
 </script>
 

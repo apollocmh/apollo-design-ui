@@ -58,4 +58,15 @@
 
 ## 5. 已知缺口
 
-<!-- G11 补齐 -->
+1. **4 个 antd demo 未移植**（`demo.test.ts` 的 `expectCount: 8` 钉住的是**已落地**的那批）：
+   - `static`（`affix={false}` + 状态不随滚动变化）—— 与 `basic` 的差别**只在滚动行为**，
+     而 jsdom 测不到滚动 ⇒ 归 L6；
+   - `legacy-anchor`（废弃的 `children` 路径）—— 本仓用**默认插槽**表达，
+     已由 L4 的 `anchor:children` 用例覆盖；
+   - `style-class`（`antd-style` 的 `createStaticStyles`）—— 本仓没有 `antd-style`，
+     语义化能力已由 `semantic` 视觉用例与 L4 的 `class-names` / `styles` 用例覆盖；
+   - `component-token`（`theme.components.Anchor` 调试）—— 零运行时架构下 token 是构建期产物。
+2. **上游 `Anchor.test.tsx` 有 49 条用例**，本仓镜像了其中**最容易写错的那批**（18 条）。
+   剩余的主要是「滚动位置 → 当前锚点」的穷举与 `Affix` 交互细节，
+   在 L6（真浏览器）与 L4（机械 oracle）里各有覆盖 ⇒ 未逐条镜像，登记在此。
+3. **`anchorBallSize` 没有消费者**（上游 6.6.4 也没有）—— 保留计算只为逐条对齐。

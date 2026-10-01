@@ -1,0 +1,100 @@
+{
+  "$schema": "../schema.json",
+  "component": "anchor",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-01T08:37:42.038Z",
+  "cases": [
+    {
+      "id": "anchor:basic",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:affix-false",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo apollo-fixed\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div>"
+    },
+    {
+      "id": "anchor:affix-config",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:prefix-cls:no-props",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-19u5a7b css-var-root ant-anchor-css-var ant-anchor-wrapper\" style=\"max-height:100vh\"><div class=\"ant-anchor\"><span class=\"ant-anchor-ink\"></span><div class=\"ant-anchor-link\"><a class=\"ant-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"ant-anchor-link\"><a class=\"ant-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"ant-anchor-link\"><a class=\"ant-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:prefix-cls:custom",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root custom-css-var custom-wrapper\" style=\"max-height:100vh\"><div class=\"custom\"><span class=\"custom-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:fixed-ink",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div>"
+    },
+    {
+      "id": "anchor:fixed-default",
+      "html": "<div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo apollo-fixed\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div>"
+    },
+    {
+      "id": "anchor:horizontal",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper apollo-wrapper-horizontal\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:rtl",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper apollo-rtl\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:offset-top",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:calc(100vh - 80px)\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:target-offset",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:bounds",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:replace",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:items-nested",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a1\" title=\"Section A1\">Section A1</a></div></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:items-nested-horizontal",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper apollo-wrapper-horizontal\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:items-empty",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span></div></div></div></div>"
+    },
+    {
+      "id": "anchor:key-number",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"A\">A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"B\">B</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:title-vnode",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\"><span class=\"title-span\">A</span></a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:link-props",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link link-cls\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"A\" target=\"_blank\">A</a></div><div class=\"apollo-anchor-link\"><a class=\"apollo-anchor-link-title\" href=\"https://example.com\" title=\"B\">B</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:children",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"legacy-child\">legacy</div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:class-names",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper custom-root\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink custom-indicator\"></span><div class=\"apollo-anchor-link custom-item\"><a class=\"apollo-anchor-link-title custom-item-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link custom-item\"><a class=\"apollo-anchor-link-title custom-item-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link custom-item\"><a class=\"apollo-anchor-link-title custom-item-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:styles",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper custom-root\" style=\"max-height:100vh;background:#fafafa\"><div class=\"apollo\"><span class=\"apollo-ink\" style=\"background-color:red\"></span><div class=\"apollo-anchor-link\" style=\"opacity:0.8\"><a class=\"apollo-anchor-link-title\" style=\"font-weight:bold\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link\" style=\"opacity:0.8\"><a class=\"apollo-anchor-link-title\" style=\"font-weight:bold\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link\" style=\"opacity:0.8\"><a class=\"apollo-anchor-link-title\" style=\"font-weight:bold\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    },
+    {
+      "id": "anchor:class-names-fn",
+      "html": "<div class=\"\"><div class=\"\"><div class=\"css-dev-only-do-not-override-1v6lqee css-var-root apollo-css-var apollo-wrapper apollo-wrapper-horizontal dir-horizontal\" style=\"max-height:100vh\"><div class=\"apollo\"><span class=\"apollo-ink\"></span><div class=\"apollo-anchor-link fn-item\"><a class=\"apollo-anchor-link-title\" href=\"#section-a\" title=\"Section A\">Section A</a></div><div class=\"apollo-anchor-link fn-item\"><a class=\"apollo-anchor-link-title\" href=\"#section-b\" title=\"Section B\">Section B</a></div><div class=\"apollo-anchor-link fn-item\"><a class=\"apollo-anchor-link-title\" href=\"#section-c\" title=\"Section C\">Section C</a></div></div></div></div></div>"
+    }
+  ]
+}

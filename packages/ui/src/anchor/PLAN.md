@@ -52,11 +52,45 @@
       全出界 / 监听挂摘各一次）+ ink 1 条 + `Anchor.Link` 独立使用 1 条。
       ⚠️ jsdom 无布局 ⇒ 靠 **mock `getBoundingClientRect` + `getClientRects`** 与
       **手动派发 `scroll`**；真滚动归 L6。上游 `Anchor.test.tsx` 有 **49** 条 —— 其余在 G13 前补齐。
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
-- [ ] G9 L6 视觉 —— 先建基线再 compare；⚠️ 滚动相关行为 jsdom 测不了，归 L6
-- [ ] G10 L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（**12 个**用户可见 demo，`expectCount` 钉死数量）
+- [x] G7 L3 类型 —— `__tests__/type.test-d.ts` **17 条**：props 形态 / `onClick` 的自定义签名 /
+  `AnchorContainer` / `affix` 三态 + `AnchorAffixConfig` 的 `Omit` / 四个语义槽 /
+  **本组件「没有」的东西**（`children` prop、`value`、`click` 事件、`nativeElement`）/
+  链接类型的递归形状 / 可安装（`install`）+ **3 条负例**。
+  ⚠️ `toEqualTypeOf<unknown>()` 在 vitest 里会因 `unknown` 约束退化成 `never` 而失败 ⇒
+  `VNodeChild` 这类字段要用 **`toBeUnknown()`**。
+- [x] G8 L5 a11y —— `__tests__/a11y.test.ts` **15 条**（5 条 role/ARIA 契约 + 9 组 axe 扫描
+      + 1 条 RTL 扫描），**零 axe violation、零豁免**。判据：wrapper 与 `.{p}` 都是 `div`
+      且**无 `role`** · 🚨 链接是**真 `<a href>`**（语义靠原生元素，不靠 role 模拟）·
+      ink 是 `span` 且**无 `aria-*`** · **组件不产生任何 `aria-*`** ·
+      `title` 属性只在 title 是字符串时出现。
+      ⚠️ 带 active 的形态（`-link-active` / `-ink-visible`）来自滚动侦测 ⇒ jsdom 里要 mock
+      rect + 手动派发 scroll，**留给 L6**（`active` 视觉用例已覆盖）。
+      🚨 对象字面量的键**含空格要加引号**（`'显示 ink'`）—— 否则 oxc 报
+      `Expected ',' or '}' but found Identifier`，而 vitest 的错误片段带 ANSI 颜色，
+      看起来像是「文件里有转义字符」（实际没有，别被误导）。
+- [x] G9 L6 视觉 —— ✅ **21 / 21 exact**（7 variant × 3 viewport，**首跑即全绿**）。
+      变体：`basic` / `affix` / `horizontal` / `nested` / `active` / `semantic` / `rtl`。
+      React 基线已入库（`tests/visual/baselines/react/anchor/`，21 张）。
+      🚨 **`active` 用例必须把锚点目标一起渲染**（`<div id="section-a">`…）——
+      `getInternalCurrentAnchor` 靠 `document.getElementById` 找目标再量 `top`，
+      没有目标就永远没有 active、ink 也永远不显示（等于没测到核心视觉面）。
+      ⚠️ 两条硬约定：**字体在用例内钉住** + **锚点目标高度固定**（它决定 ink 的位置）。
+- [x] G10 L4 DOM 契约 —— `tests/compat/baseline/anchor.mjs` + `baselines/anchor.dom.json`
+      （**23 用例**）+ `semantic.test.ts` **23 条**，**只有 2 条豁免**：
+      **D1**（`bare` 用例的默认根前缀 `ant` vs `apollo`，5 层带前缀元素）+
+      **D114**（CSSOM 把 `#fafafa` 规范成 `rgb(250,250,250)`，语义等价）。
+      🚨 **两条必须记住的判据**：
+      ① **`AnchorLink` 的类名前缀取自 ConfigProvider 的根前缀**，与 `Anchor` 的 `prefixCls` prop
+      **无关** ⇒ 基线生成器**每个用例都要包一层 `ConfigProvider`**，否则链接会是 `ant-anchor-link`
+      而 `Anchor` 自己是 `apollo`（对不上）。`bare` 出口专门用来钉 D1。
+      ② 契约**不覆盖** `-link-active` / `-ink-visible` / ink 的内联几何 ——
+      它们来自滚动侦测，而 SSR 不跑 effect ⇒ `activeLink` 恒 `null`（真滚动归 **L6**）。
+- [x] G11 DOCS —— `demo/` **8 个**（basic / horizontal / onChange / onClick / replace /
+      targetOffset / targetOffset-per-link / customizeHighlight，`demo.test.ts` 的
+      `expectCount: 8` 钉死）+ `index.zh-CN.md` / `index.en-US.md`（何时使用 / demo 表 /
+      API 四表 / Theme / 设计说明）+ `README.md`（差异表 D1–D9 / `.ts` 选型理由 / token 清单 /
+      已知缺口）。⚠️ 与 antd 的 12 个用户可见 demo 差 4 个（`static` / `legacy-anchor` /
+      `style-class` / `component-token`），理由逐条登记在 README §5。
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
 - [ ] G14 COMMIT —— commit message 带 [COMP:anchor]

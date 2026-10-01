@@ -631,6 +631,26 @@ export const COMPONENTS = {
       'range-value', // 范围有值（**跨月**）：两端文本 + 两个面板各自的区间态
     ],
   },
+  anchor: {
+    // 7 个 variant × 3 个 viewport = 21 张
+    //
+    // ⚠️ Anchor **没有浮层** ⇒ 不需要 `getPopupContainer`。它的视觉面是
+    //    **链接列表 + ink 指示条**，而 ink 的位置来自「当前锚点」（滚动侦测的结果）。
+    //    🚨 `active` 用例**必须把锚点目标一起渲染**（`<div id="section-a">`…）——
+    //    没有目标就永远没有 active、ink 也永远不显示。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/anchor.*` 的文件头）：
+    //    **字体在用例内钉住** + **锚点目标高度固定**（它决定 ink 的位置）。
+    variants: [
+      'basic', // `affix: false`：结构最干净
+      'affix', // 默认固钉（包一层 Affix；静态帧里不固钉）
+      'horizontal', // 水平：ink 是底部横条
+      'nested', // 嵌套 items（垂直才展开）
+      'active', // 连目标一起渲染 ⇒ `-link-active` / `-ink-visible` / ink 几何都出现
+      'semantic', // classNames / styles
+      'rtl', // direction: rtl ⇒ wrapper 上的 `-rtl`
+    ],
+  },
   masonry: {
     // 7 个 variant × 3 个 viewport = 21 张
     //

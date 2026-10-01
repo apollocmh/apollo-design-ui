@@ -833,3 +833,56 @@ export const MASONRY_CARD_STYLE = {
   border: '1px solid #91caff',
   boxSizing: 'border-box',
 };
+
+// ---------------------------------------------------------------------------
+// Anchor
+// ---------------------------------------------------------------------------
+
+/**
+ * 用例容器。
+ *
+ * ⚠️ **必须钉字体**：`.{p}-link-title` 是文字，而 React 页（`antd/dist/reset.css`）
+ * 与 Vue 页（本仓 base）的 `html` 字体栈不同 —— 不钉的话差异全落在文字上。
+ * 裁决同 `docs/COMPONENT-CHECKLIST.md` 第 15 条：**用例内钉字体，不动全局 BASE_CSS**。
+ *
+ * ⚠️ `position: relative` 不是给浮层用的（Anchor 没有浮层），而是让用例里的
+ * **锚点目标**能正常参与文档流；`height` 由各用例通过参数覆盖。
+ */
+export const ANCHOR_BOX_STYLE = {
+  position: 'relative',
+  width: '360px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 锚点目标块的样式（`active` 用例里给 `#section-*` 用，固定高度 ⇒ 布局确定）。 */
+export const ANCHOR_TARGET_STYLE = {
+  height: '120px',
+  margin: '0 0 16px',
+  background: '#f5f5f5',
+  border: '1px solid #e8e8e8',
+  boxSizing: 'border-box',
+};
+
+/** `items`（两侧逐字相同）。 */
+export const ANCHOR_ITEMS = [
+  { key: 'a', href: '#section-a', title: 'Section A' },
+  { key: 'b', href: '#section-b', title: 'Section B' },
+  { key: 'c', href: '#section-c', title: 'Section C' },
+];
+
+/** 嵌套 `items`（垂直时才展开）。 */
+export const ANCHOR_NESTED_ITEMS = [
+  {
+    key: 'a',
+    href: '#section-a',
+    title: 'Section A',
+    children: [
+      { key: 'a1', href: '#section-a1', title: 'Section A1' },
+      { key: 'a2', href: '#section-a2', title: 'Section A2' },
+    ],
+  },
+  { key: 'b', href: '#section-b', title: 'Section B' },
+];

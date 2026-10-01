@@ -1,0 +1,16 @@
+{
+  "$schema": "../schema.json",
+  "id": "anchor/basic",
+  "component": "anchor",
+  "description": "锚点导航的**结构**契约：`-wrapper` > `.{p}` > `.{p}-ink` + 链接（`div.{p}-link` > `a.{p}-link-title`）。判据（详见 `docs/analysis/anchor.md`）：① 🚨 **`AnchorLink` 的类名前缀取自 ConfigProvider 的根前缀**，与 `Anchor` 的 `prefixCls` prop **无关** ⇒ 基线生成器每个用例都包了一层 ConfigProvider；② `-fixed` 的判据是 **`!affix && !showInkInFixed`**（两个都假才加）；③ `-rtl` 落在 **wrapper** 上；④ `affix` 默认 **true** ⇒ 外面包一层 Affix（SSR 下不固钉，但占位层结构在）。⚠️ **不覆盖** `-link-active` / `-ink-visible` / ink 的内联几何 —— 它们来自滚动侦测，而 SSR 不跑 effect ⇒ `activeLink` 恒 `null`（真滚动归 L6）。⚠️ 语义完全由**原生 `<a href>`** 承担，组件零 ARIA。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "affix": false,
+    "items": [
+      { "key": "a", "href": "#section-a", "title": "Section A" },
+      { "key": "b", "href": "#section-b", "title": "Section B" }
+    ]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}
