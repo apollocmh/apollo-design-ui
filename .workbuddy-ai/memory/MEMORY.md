@@ -117,7 +117,7 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
 ## 当前进度（2026-10-01）
 
-- foundation **13/13 completed**；组件 **60/72 completed**；可执行 13 / 被阻塞 1。
+- foundation **13/13 completed**；组件 **61/72 completed**；可执行 12 / 被阻塞 1。
 - **`date-picker` 已 `completed`**（11 维度全 done，S1–S5 落地；L6 **27/27 exact**）。
 - **`masonry` 已 `completed`（2026-10-01）** —— 11 维度全 done。
   **无 foundation 缺口**（14 处依赖全部可复用，对照表见 `docs/analysis/masonry.md` §0）；
@@ -125,16 +125,23 @@ L0 utils/theme/icons ｜ 测试 test-utils
   L3 26 passed / demo 6 个（`expectCount: 6`）。
   开工先读 `packages/ui/src/masonry/PLAN.md`（Gate 清单已全部勾掉）。
 - 下一条任务用 `node registry/tools/next-task.mjs` 取。
-- **进行中：`anchor`**（P5 / M / 526 行产物）—— **6/11 维度 done**
-  （antdApi · api · token · style · unit · interaction），`status: analyzing`。
-  已落地：`docs/analysis/anchor.md`（G1）· `interface.ts` · `style/token.ts` ·
-  **`Anchor.ts` + `AnchorLink.ts` + `context.ts` + `style/index.ts`**（都是 `.ts` 渲染函数，
-  理由见 README §3）· 用例 **18 条**。
-  剩 **G7 type · G8 a11y · G9 visual · G10 compat · G11 docs** → 然后 G12–G14。
-  ⚠️ 上游 `Anchor.test.tsx` 有 **49** 条，目前只镜像了 18 条（收口前要补）。
-  ⚠️ 三处易错：`onClick` 是**自定义签名的 prop**（不能声明成 `emits:['click']`，
-  否则组件上的 `@click` 不再挂到根元素）；`Anchor` **没有** `ref`/`expose`（上游是 `React.FC`）；
-  `children` 在 Vue 侧是**插槽** ⇒ spread item 前要摘掉（PITFALLS 271）。
+- **`anchor` 已 `completed`（2026-10-01）** —— 11 维度全 done。
+  实现是**两个 `.ts` 渲染函数**（`Anchor.ts` / `AnchorLink.ts`，理由见 README §3 —— §2 条件 2 + 条件 1）；
+  L4 契约 **23 用例**（只 2 条豁免：D1 默认前缀 / D114 CSSOM 颜色）· L5 **15 条**（零 violation）·
+  L6 **21/21 exact**（含 `active` 变体的 ink 几何）· L3 **17 条** · L1/L2 **18 条** ·
+  demo **8 个**（`expectCount: 8`）。
+  ⚠️ **`AnchorLink` 的类名前缀取自 ConfigProvider 的根前缀**，与 `Anchor` 的 `prefixCls` prop 无关
+  ⇒ **L4 基线生成器每个用例都要包一层 ConfigProvider**（否则链接是 `ant-anchor-link` 而组件是 `apollo`）。
+  ⚠️ L6 的 `active` 用例要出效果必须**同时**满足：① 目标的**视口 top ≤ offsetTop + bounds**
+  （默认 0/5，视觉用例不滚动页面 ⇒ 要用 `bounds` 抬阈值 + 零高度夹具）；
+  ② `affix` 不能是 `false`（`-fixed` 上的 `display:none` 是 3 个类，压过 `-ink-visible` 的 2 个类）。
+  旧写法两条都漏 ⇒ `active`/`affix`/`rtl` 三张基线与 `basic` **逐字节相同**（PITFALLS 276）。
+  🚨 改视觉用例前先 `md5 tests/visual/baselines/react/<comp>/*.png | sort` 查重复。
+  ⚠️ `rtl-active` 与 `active` **预期**逐字节相同（antd 对 Anchor 零 RTL CSS），**别当重复删掉**。
+  🚨 **BSD `grep` 不支持 `\|` 交替、会静默返回空**（PITFALLS 277）—— 搜代码用 Grep 工具。
+  ⚠️ 上游 `Anchor.test.tsx` 有 49 条，本仓镜像 18 条（其余在 L4/L6 各有覆盖，登记 README §5）。
+  ⚠️ 三处易错：`onClick` 是**自定义签名的 prop**（不能声明成 `emits:['click']`）；
+  `Anchor` **没有** `ref`/`expose`；`children` 在 Vue 侧是**插槽** ⇒ spread item 前要摘掉（271）。
 - ⚠️ **`test:visual` 不在 `verify:full`**、`test:types` 也不在 ⇒ 两条都要显式跑。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`）；`--project types` 的 SFC 解析噪音（PITFALLS 73）；
   Empty SVG 不跟 darkAlgorithm；开放决策见 `ask decisions --open`。

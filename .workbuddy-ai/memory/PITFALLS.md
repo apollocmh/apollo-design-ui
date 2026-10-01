@@ -2911,3 +2911,177 @@
       + 「依赖键」去重避免比上游多跑（若回调里有 `scrollIntoView` 这类**副作用**）。
     - **判据（可推广）**：**凡「读渲染结果」的 effect（querySelector / 量几何 / 读 ref 指向的 DOM），
       都不要只用 `watch(..., {flush:'post'})`** —— 优先 `onMounted` + `onUpdated`。
+
+273. ⚠️ **`expect-type` 的 `toBeUnknown` 是「属性断言」而不是方法调用** —— 对**联合类型**会报 `has no call signatures`（2026-10-01，anchor 的 L3 实测）。
+
+    `expect-type@1.4.0` 的声明（`dist/index.d.ts`）：
+
+    ```ts
+    toBeUnknown: Scolder<ExpectUnknown<Actual>, Options>;   // ← 属性，不是方法
+    ```
+
+    `Scolder<T, O>` 在**断言通过**时退化成可调用的类型（所以 `toBeUnknown()` 看起来能用），
+    **失败**时退化成不可调用的类型 ⇒ 报 `Type 'ExpectUnknown<X>' has no call signatures`。
+
+    - **本仓踩到的形态**：`expectTypeOf<AnchorLinkBaseProps['title']>().toBeUnknown()`，
+      而 `title` 是 **`VNodeChild`**（一个联合，不是 `unknown`）⇒ 断言失败 ⇒ 上面那个报错。
+    - **修法**：断言**具体类型**而不是 `unknown`：`toEqualTypeOf<VNodeChild>()` ✓。
+    - ⚠️ 同理别写 `toEqualTypeOf<unknown>()` —— vitest 的 `unknown` 约束会退化成 `never`
+      （报 `Expected unknown, Actual never`）。
+    - **判据**：`toBeAny` / `toBeUnknown` / `toBeNever` 这类「全称断言」**只对真正的
+      `any` / `unknown` / `never` 成立**；面对联合类型一律用 `toEqualTypeOf<T>()`。
+
+274. ⚠️ **vitest 的报错片段带 ANSI 颜色 —— 别把它的残留当成「源文件里有转义字符」**（2026-10-01，anchor 的 L5 实测）。
+
+    症状：oxc 的 `PARSE_ERROR` 片段被写进日志再读出来，看起来像
+
+    ```
+    130 │   const cases: Record<string, { props: Record;5;249m<string, unknown>; allow?: string[] }> = {
+    133 │     ;249m显示 ink: { props: { affix: false, showInkInFixed: true } },
+    ```
+
+    —— `;5;249m` 像是被啃掉 `\x1b[38` 的 ANSI 序列 ⇒ 很容易误判成「文件被写坏了」。
+
+    - **实测**：`open(p,'rb').read().count(b'\x1b')` 是 **0** ⇒ 文件**干净**。
+      那些片段是 **vitest 自己给错误上下文加的颜色**，不是文件内容。
+    - **真正的报错原因**是同一行里的：**对象字面量的键含空格却没加引号**
+      （`显示 ink: {...}` 是非法 JS）⇒ `Expected ',' or '}' but found Identifier`。
+    - **判据**：看到「像转义残留」的字符时，先 `python3 -c "print(open(f,'rb').read().count(b'\x1b'))"` 确认；
+      **然后用 `python3` 读原始字节**看那一行的真实内容，不要相信日志里的片段。
+    - ⚠️ 顺带一条：**中文键 + 空格**最容易踩（`显示 ink` / `废弃 children`）；
+      写成 `'显示 ink'` 或去掉空格即可。
+
+275. ⚠️ **`packages/locale/src/__tests__/generator.test.ts` 的「漂移检测」用例在满载时会偶发失败**（2026-10-01，anchor 收口时实测一次）。
+
+    - **症状**：全量 `pnpm run test` 时该文件报 1 failed（`5720 passed / 1 failed`），
+      单独重跑 **7 passed**（85s）✓；直接跑 `node registry/tools/gen-locale.mjs --check`
+      也 **exit 0**（「73 个语言包与源一致」）✓。
+    - **原因**：那条用例会**改写** `packages/locale/src/locales/zh_CN.ts`、跑一次 `--check`、
+      再在 `finally` 里还原。它每次要**建临时树 + 求值 73 个模块**（单条约 30s），
+      机器满载（并行跑别的门禁）时容易踩到超时/竞态。
+    - **判据**：**先单独重跑该文件**再判断是不是真回归（PITFALLS 39 已经记过「这类用例要显式 timeout」）。
+    - ⚠️ 注意它**会写仓库文件**（虽然会还原）⇒ 别在「只读巡检」里跑它。
+
+276. 🚨 **视觉用例「看起来在测核心视觉面、其实空转」——先查基线是不是逐字节重复**（2026-10-01，anchor 的 L6 实测）。
+
+    **判据（先做这一步，别读用例）**：
+
+    ```sh
+    md5 tests/visual/baselines/react/<comp>/*.png | sort
+    ```
+
+    同哈希 = 那几个变体**没有任何视觉差别**。anchor 的 21 张里有 6 张重复：
+    `basic` / `affix` / `rtl` 三个变体 × 3 视口**完全同哈希**。
+
+    ⚠️ **同哈希有三种情形，处理方式不同**（别一看到重复就删）：
+    ① **状态根本没触发** ⇒ 真空转，必须修（下面的形态 A）；
+    ② **冗余**：别的变体已经覆盖了同样的视觉面 ⇒ 删（`affix` 就是：默认 affix 的路径
+       已被 `active` / `active-last` / `horizontal-active` 覆盖，它自己只多一层不可见的
+       Affix 包装 ⇒ 删）；
+    ③ **预期同哈希的「等式守卫」** ⇒ 留，但要在用例里把「为什么预期相同」写死。
+       例：anchor 的 `rtl-active` 与 `active` 逐字节相同 —— antd 对 Anchor **零 RTL CSS**
+       （`style/index.ts` 里没有任何 `direction: 'rtl'` 规则），所以像素必然是 no-op；
+       但它是 L6 里**唯一**渲染 `-rtl` 态的用例，守的是「不许擅自加 antd 没有的 RTL CSS」
+       （L4 只钉类名、钉不住 CSS）⇒ 留，并在用例注释里写明「别当重复删掉」。
+
+    **两种典型成因**：
+
+    - **形态 A：状态根本没被触发。** Anchor 的 `active` 判据是
+      `目标的视口 top <= offsetTop + bounds`（默认 `0 / 5`，`getOffsetTop` 对 `window`
+      返回的就是**视口相对** top），而视觉用例**不滚动页面** ⇒ 把目标放在锚点**下方**时
+      它的 top 恒 > 阈值 ⇒ 没有任何链接 active、ink 也不显示。
+      **对策**：用 `bounds` 抬阈值 + **零高度夹具**
+      （`{height:0, overflow:'hidden'}` 容器 + `position:absolute` 的目标，把 top 拉开 600px
+      ⇒ 截图里没有目标、阈值余量巨大、布局小漂移不会换人）。见 `shared.mjs` 的 `ANCHOR_TARGET_*`。
+    - **形态 B：CSS 被更高优先级压掉。** `.{p}-fixed .{p}-ink.{p}-ink { display: none }`
+      是 **3 个类**，压得过 `.{p}-ink-visible`（**2 个类**）⇒ `affix:false`
+      （即 `!affix && !showInkInFixed`）时 ink **恒被隐藏**，`-ink-visible` 加了也没用。
+      **对策**：`active` 用例用 `affix` 的**默认值 `true`**（或给 `showInkInFixed`）。
+
+    ⚠️ **通用手法**：改完用例先写一个 **Playwright 探针**把「类名 / computed display /
+    `getBoundingClientRect`」两侧打出来，**确认状态真的出现了**再写基线。
+    `tests/visual/debug/*.mjs` 是现成模板，但两处要注意：
+    ① 静态服务器的 root 是 `.artifacts`（URL 里带 `react/`、`vue/` 前缀），不是 `.artifacts/<side>`；
+    ② 入口是 `<side>.html`（不是 `index.html`）。
+    🚨 探针**必须注入 `STABILIZE_CSS`**（`stabilize.mjs`）—— 否则 `-link-title` 的
+    `transition: all` 会让 `getComputedStyle().color` 取到**过渡中间值**
+    （实测两侧分别是 `rgba(3,15,32,0.89)` 与 `rgba(1,5,11,0.882)`，看起来像「两侧颜色不一致」，
+    其实是探针的锅，不是组件的）。
+
+277. 🚨 **macOS 的 BSD `grep` 不支持 `\|` 交替 —— 会静默返回空**（2026-10-01 实测）。
+
+    `grep -n "rtl\|direction\|prefixCls}" packages/ui/src/anchor/Anchor.ts` 输出**空**，
+    而文件里明明有这些字符串（BSD grep 把 `\|` 当字面量）。
+    后果：**误判「文件里没有这段代码」**，进而去错的地方找 bug。
+
+    **对策**：用 **Grep 工具**（ripgrep），或 `grep -E`，或 `grep -e a -e b`。
+    ⚠️ 与「`rg` 不在 PATH、bash 版会静默返回空」是**同一族**坑（见本文件里那条）。
+
+278. 🚨 **「依赖键去重」的提交时机错了 ⇒ 副作用永久被跳过**（2026-10-01，anchor 的 ink 实测）。
+
+    本仓把上游 `useEffect` 的「逐项比对依赖」改成了「算一个键、相同就 `return`」的优化
+    （`syncInk` 的 `lastInkDeps`）。**只要在副作用真正生效之前提交这个键，它就再也不会跑。**
+
+    - **anchor 的形态**：`onMounted(syncInk)` 与「设 `activeLink` 的那个 `onMounted`」
+      （`syncScrollListener` → `handleScroll`）在**同一批 mounted 钩子**里，而前者注册得更晚
+      ⇒ 它跑的时候 `activeLink` 已经是 `#section-a`，但**渲染还没 commit**、
+      DOM 里没有 `-link-title-active` ⇒ `querySelector` 找不到 ⇒ 若此时把键记下，
+      紧随其后的 `onUpdated` 会因为「键没变」直接 `return` ⇒
+      **ink 的内联样式永远写不进去**。
+    - **症状（真浏览器）**：`ink` 的 rect 是 `[16,16,2,0]`，而 React 侧是 `[16,20,2,22]`。
+    - **修法**：让 `updateInk()` 返回「是否处理完毕」，**只在 `true` 时提交依赖键**；
+      「有 active 但查不到节点」返回 `false` ⇒ 下一次 `onUpdated` 重试。
+      （「没有 active 链接」是合法状态，算处理完毕 ⇒ 返回 `true`。）
+    - **判据**：凡是「去重键 + DOM 查询」组合的副作用，都要问一句
+      **「查询失败时，键提交了吗」**。
+
+279. ⚠️ **用「绕开 bug」的写法写测试，会让 bug 长期潜伏**（2026-10-01，anchor 的 ink 用例）。
+
+    `index.test.ts` 那条 ink 用例的注释原本写着：
+    「🚨 让 `#a` 出界、`#b` 进界 ⇒ 派发 scroll 触发一次**真正的状态切换**
+    （否则「值没变 ⇒ 不重渲染 ⇒ 不写 ink」，测的是空转）」
+    —— 作者**已经撞上**了「挂载路径写不进 ink」这个 bug，却用「挂载后再制造一次状态切换」
+    把它绕过去了 ⇒ 那条用例一直绿，bug 留到 L6（真浏览器）才暴露。
+
+    **判据**：测试里出现「**必须先做 X 才能让被测行为生效**」这类注释时，
+    先确认那是**产品的固有约束**还是 **bug**。是 bug 就修，**不要把它写进注释当成规矩**。
+    修完还要**补一条不绕路的用例**钉住挂载路径（本例：只 `await nextTick()`、不派发 scroll）。
+
+280. ⚠️ **全仓 L6 基线重复扫描的结果**（2026-10-01，anchor 收口后顺带扫的；**尚未处理，别当成已解决**）。
+
+    ```sh
+    # 逐组件比对基线哈希（同哈希 = 变体之间没有视觉差别）
+    cd tests/visual/baselines/react && python3 - <<'PY'
+    import os, hashlib, collections
+    for comp in sorted(os.listdir('.')):
+        if not os.path.isdir(comp): continue
+        h2f = collections.defaultdict(list)
+        for f in sorted(os.listdir(comp)):
+            if f.endswith('.png'):
+                h2f[hashlib.md5(open(os.path.join(comp,f),'rb').read()).hexdigest()].append(f)
+        dup = {h: fs for h, fs in h2f.items() if len(fs) > 1}
+        if dup: print(comp, [sorted(x.replace('.png','') for x in fs) for fs in dup.values()])
+    PY
+    ```
+
+    **12 个组件有重复**（59 个组件里）：`affix`(3) `anchor`(3，预期) `carousel`(3) `collapse`(3)
+    `layout`(3) `masonry`(5) `pagination`(5) `tabs`(1) `tree-select`(3)。
+    ⚠️ 用探针（`#stage` 的 `innerHTML` 长度 + `textContent` + 关键元素计数）分类过一批，
+    **多数不是 bug，而是「静态帧天生测不到」**：
+
+    | 对 | DOM 是否相同 | 判断 |
+    |---|---|---|
+    | `pagination` `basic` / `sizeChanger` | **完全相同**（两侧都是） | 用例构造问题：两个变体渲染出的是同一棵 DOM（`10 / page` 两边都在）⇒ **冗余变体** |
+    | `tree-select` `checkable` / `multiple` | **完全相同** | 区分点在**未展开的下拉**里 ⇒ 静态帧测不到 |
+    | `masonry` `basic` / `fresh` / `responsive` | 三者相同（desktop/tablet） | `fresh` 是**真空转**；`responsive` 在 desktop/tablet 恰好等于 `basic` 的列数（mobile 有差异，所以只有 2 个视口重复） |
+    | `carousel` `basic` / `fade` | **不同**（`2181` vs `1801`）但**像素相同** | `fade` 只在切换动画中可见 ⇒ 静态帧天生无差别 |
+    | `collapse` `basic` / `accordion` | 略不同但像素相同 | accordion 的差别要**交互**（展开第二项）才可见 |
+    | `layout` `side` / `collapsible` | 不同（多一个 svg）但像素相同 | 触发器在静态帧里不可见 |
+    | `affix` `basic` / `class` | 不同（多一个 class 属性） | `className` 无配套 CSS ⇒ 视觉上必然相同（该断言属 **L4**，不属 L6） |
+
+    **判据**：重复本身**不是** bug 的充分条件 —— 先跑探针看 DOM 是否相同：
+    - DOM **相同** ⇒ 用例构造问题（冗余变体 / 区分点没被触发）⇒ 删变体或改用能触发的 prop；
+    - DOM **不同但像素相同** ⇒ 区分点只在**交互 / 动画**中可见 ⇒ 属「静态帧测不到」，
+      要么给 `run.mjs` 加交互步骤，要么登记进 `matrix.mjs` 的 `LIMITATIONS`。
+    🚨 与 anchor 的形态（**DOM 不同、状态却根本没触发**，且**本可以用 `bounds` 触发**）
+    区别在于「能不能在静态帧里触发」—— 能触发就必须触发。
