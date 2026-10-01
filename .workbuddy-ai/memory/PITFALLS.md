@@ -2858,3 +2858,56 @@
       （用户 `styles.root` 排在 `height` **之后**）改由 **L2** 钉。
     - 反过来：date-picker 的 `keepStyle: false` 是因为**浮层在 SSR 不渲染**（面板的样式根本不在场），
       与这里「声明恒为常量」是**两条不同的理由**，别互相套用。
+
+271. 🚨 **把 item 对象整体 spread 进子组件时，要先把「Vue 侧是插槽」的字段摘出来**（2026-10-01，anchor 实测）。
+
+    ```js
+    // 上游（React）：`children` 是 props 的一部分，spread 进去就被 AnchorLink 消费 ✓
+    options.map((item) => <AnchorLink replace={replace} {...item} key={item.key}>…</AnchorLink>)
+    ```
+    ```ts
+    // 本仓（Vue）：`AnchorLink` 的 `children` 是**插槽**（规则 C19），props 里没有这个键
+    h(AnchorLink, { ...item })   // ← children 落进 attrs ⇒ 被绑到根 div ✗
+    ```
+
+    实测报：`[Vue warn]: Failed setting prop "children" on <div>: value [object Object] is invalid.
+    TypeError: Cannot set property children of [object Element] which has only a getter`
+    —— 而且**破坏整棵子树**（后续渲染全乱）。
+
+    - **判据**：`{...item}` 之前先看 `item` 上有没有「在 Vue 侧已经变成插槽」的字段
+      （`children` 最常见，还有 `label` / `title` / `icon` 这类**可能**被做成插槽的）。
+      正确写法：`const { children: nested, ...rest } = item; h(Child, {...rest}, { default: () => … })`
+    - 与 **PITFALLS 3**（未声明的 prop ⇒ 归进 attrs ⇒ 静默失效）同族，但这条**不静默** ——
+      它会报错并炸掉渲染。⚠️ 反过来说：**报了 `Failed setting prop` 就要立刻查 attrs**。
+    - 本仓同类先例：`splitter` 的 `InternalPanel`、`descriptions` 的 item。
+
+272. 🚨 **`watch(..., { immediate: true })` 在 `setup` 期**同步**跑，`flush` 管不到它**；且「post flush 期间改状态」的 watcher 会排进同一批 post 任务（2026-10-01，anchor 实测两条）。
+
+    ### 272a `immediate` 无视 `flush`
+
+    Vue 的 `watch` 实现：
+    ```js
+    if (cb) { if (immediate) { job() } else { oldValue = effect.run() } }
+    ```
+    ⇒ `immediate: true` 的首次调用**就在 setup 里同步执行**，即使写了 `flush: 'post'`。
+    - **症状**：依赖「子组件在 setup 期注册进来的东西」的 effect 会在**还没有任何注册**时跑一次，
+      之后注册完成再跑一次 ⇒ **挂两次**（anchor 的 scroll 监听实测 `addEventListener` 被调 2 次）。
+    - **上游为什么没这问题**：React 的 `useEffect` 在**子组件的 effect 之后**跑
+      （子 effect 先于父 effect）⇒ 首次执行时数据已就绪。
+    - **修法**：用 `onMounted(cb)` 复刻「首次在 commit 之后」+ `watch(cb, { flush: 'post' })` 管后续，
+      并让 `cb` **幂等**（同一容器不重复挂）。
+
+    ### 272b post flush 期间改状态 ⇒ watcher 的 post 任务会「插队」
+
+    ```
+    onMounted → handleScroll() → activeLink.value = 'x'   ← 这一步发生在 **post flush 期间**
+      ⇒ watch(activeLink, …, {flush:'post'}) 的 job 被排进**同一批** post 队列
+      ⇒ 它跑在**下一次渲染之前**
+      ⇒ 那时依赖「渲染结果」的逻辑（querySelector 找新加的类名）**找不到目标**
+    ```
+    - **实测**：anchor 的 `updateInk` 探针两次都打印 `hasActiveTitle: false` 而 `activeLink` 已是 `#a`
+      ⇒ ink 的内联样式**永远写不进去**（jsdom 与真浏览器都会错，只是 jsdom 下不易察觉）。
+    - **修法**：改用 **`onUpdated`**（每次 commit 之后跑，与 React `useEffect` 同一时机）
+      + 「依赖键」去重避免比上游多跑（若回调里有 `scrollIntoView` 这类**副作用**）。
+    - **判据（可推广）**：**凡「读渲染结果」的 effect（querySelector / 量几何 / 读 ref 指向的 DOM），
+      都不要只用 `watch(..., {flush:'post'})`** —— 优先 `onMounted` + `onUpdated`。
