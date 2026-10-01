@@ -3107,3 +3107,58 @@
     补的时候照 `date-picker/__tests__/theme.test.ts` 的口径写（先读它的
     「这个文件证明什么 / 不证明什么」段），不要写「token 值等于某个字面量」这种
     自证式断言 —— 要**逐字对拍 antd 产物**（用 `tests/visual/debug/extract-*-css.mjs`）。
+
+282. 🚨 **Vue 的插槽函数只能在「渲染期」调用** —— 在 `watchEffect` / `watch` 里读 children 会打
+    `Slot "default" invoked outside of the render function: this will not track dependencies used in the slot`
+    的 dev 告警（2026-10-01，breadcrumb G4 实测）。
+
+    - **为什么会踩**：上游是 **React 函数组件** —— 函数体每次渲染都跑，「读 `children` 做校验」
+      天然等于渲染期。本仓若把同一段逻辑放进 `watchEffect`，就变成「render 之外」。
+    - **症状**：真正的告警（如 usage 提示）**被这条 Vue 告警淹掉** ——
+      测试里断言 `console.error` 内容时拿到的是 Vue 的那条，看不出真正的失败原因。
+    - **对策**：把这类「读 children」的逻辑搬进 **render 函数**；并且**惰性缓存**插槽结果
+      （`let cache = null; const get = () => (cache ??= slots.default ? toArray(slots.default()) : [])`），
+      保证一次渲染只调一次插槽（调两次会白跑用户的插槽函数、可能重复副作用）。
+
+283. 🚨 **Vue 的插槽把 `null` 归一成 `Comment` vnode** ⇒ `isNonNullable(slots.default?.())` **恒为真**
+    （2026-10-01，breadcrumb G4 实测）。
+
+    - 机制：`normalizeObjectSlots` 的 `normalizeSlotValue` 是
+      `isArray(value) ? value.map(normalizeVNode) : [normalizeVNode(value)]`
+      ⇒ 插槽返回 `null` 时拿到的是 **`[Comment]`**（长度 1 的数组），不是 `null`。
+    - **后果**：上游 `if (isNonNullable(children))` 的判据在 Vue 侧**永远成立** ⇒
+      「空项不渲染」的契约静默失效（breadcrumb 的 `title: ''` 项会渲染出一个空 `<li>`）。
+    - **对策**：还原成上游语义时**只认 `Comment`**：
+      `nodes.every((n) => isVNode(n) && n.type === Comment) ? null : nodes`。
+      ⚠️ **不要**把 `[Text('')]` 也算空 —— 上游的 `''` 是**有值**的（`isNonNullable('')` 为真），
+      只是被 `isRenderable` 拦下；两者语义不同。
+
+284. 🚨 **多根组件收到「未声明的 prop」⇒ Vue 报 `Extraneous non-props attributes` 并整批丢弃**
+    （2026-10-01，breadcrumb G4 实测）。
+
+    ```
+    [Vue warn]: Extraneous non-props attributes (className, style) were passed to component
+    but could not be automatically inherited because component renders fragment or text or
+    teleport root nodes.
+    ```
+
+    - **为什么会踩**：上游把一批 prop（`className` / `style` / `onClick` / `pickAttrs(item)`）
+      spread 给一个**内部件**，而那个内部件**根本没声明、也没用**它们（React 里是无声的）。
+      本仓照抄 ⇒ 这些键落进 `attrs`，而内部件是**多根**（`<li>` + 分隔符）
+      ⇒ Vue 无法决定挂到谁身上 ⇒ **报警告 + 整批丢弃**（还会让 `a11y` / `demo` 的
+      「零告警」断言变红）。
+    - **对策**：**只传对方声明过的键**。⚠️ 这与 `PITFALLS 3`（未声明 prop ⇒ 静默失效）是
+      **一体两面**：单根组件是**静默失效**，多根组件是**报错丢弃**。改之前先看根数。
+
+285. ⚠️ **rc-util 的 `warning()` 走 `console.error`（不是 `console.warn`）**（2026-10-01 实测）。
+
+    断言「组件发了某个告警」时要 `vi.spyOn(console, 'error')`；spy `warn` 会拿到空数组，
+    看起来像「告警根本没发」。本仓的 `useDevWarning` 只加组件名前缀、**不改通道**
+    （输出形如 `Warning: [apollo: Breadcrumb] xxx is deprecated. Please use yyy instead.`）。
+
+286. ⚠️ **本仓 `MenuItemType.key` 是 `string`（上游是 `React.Key`）** ⇒ 往 `menu.items` 里塞
+    数字 key 会编译失败（2026-10-01，breadcrumb 的 `menu` 分支实测）。
+
+    - 修法：在**边界处** `String(key ?? index)` 归一。**DOM 等价** ——
+      React 本来就会把数字 key 串化。⚠️ 别为此放宽本仓的 `MenuItemType`：
+      收窄是刻意的（`menu` 自己的内部比较用 `===`）。
