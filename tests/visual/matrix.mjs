@@ -631,6 +631,28 @@ export const COMPONENTS = {
       'range-value', // 范围有值（**跨月**）：两端文本 + 两个面板各自的区间态
     ],
   },
+  masonry: {
+    // 7 个 variant × 3 个 viewport = 21 张
+    //
+    // ⚠️ **没有浮层**（不 portal）⇒ 不需要 `getPopupContainer`，比其它组件简单。
+    //    它的视觉面就是**几何**：容器高度、条目宽高与列偏移。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/masonry.*` 的文件头）：
+    //    ① **字体必须在用例内钉住**（条目内容是用户渲染的，两侧页面字体栈不同）；
+    //    ② **高度必须是字面量** —— 排布完全由实测高度决定，随机值 = 每天红。
+    //
+    // ⚠️ 容器宽度固定 320px（窄于最小视口 375px）⇒ 三视口下容器一致，
+    //    唯一的差异来源就是 `columns` 的**响应式解析**（`responsive` 用例专测这个）。
+    variants: [
+      'basic', // 默认 3 列 + gutter 16
+      'gutter', // 非对称间距 [水平, 纵向]
+      'columns', // 4 列（列宽与偏移都变）
+      'responsive', // 响应式列数：mobile 1 / tablet 2 / desktop 3
+      'fresh', // 每个条目各挂 ResizeObserver（**不改 DOM 结构** ⇒ 应与 basic 一致）
+      'semantic', // classNames / styles 两个语义槽
+      'rtl', // direction: rtl ⇒ 根 `-rtl` 类 + inset-inline-start 反向
+    ],
+  },
 };
 
 /** 本阶段明确不覆盖的维度 —— 出现在报告里，避免「没做」被误读为「做了」。 */

@@ -1,0 +1,18 @@
+{
+  "$schema": "../schema.json",
+  "id": "masonry/basic",
+  "component": "masonry",
+  "description": "瀑布流的**结构**契约：根 `div`（无 `role`、不透传 attrs）+ 条目的类名与**三源定序**合并的内联样式（`{...motionStyle, ...styles.item, ...itemStyle}`）。⚠️ SSR 下**一个条目都没有** —— `mergedItems` 的「一拍延迟」（`useState([]) + useEffect`）在服务端不跑 ⇒ 服务端永远渲染空容器（上游实测：`<div class=\"…\" style=\"height:0\"></div>`）。条目的结构契约由 L2（jsdom，`index.test.ts`）负责；**排布结果**由 L1 纯函数（`computeItemPositions`，用上游同一组输入）与 L6 真浏览器负责。⚠️ `height` 是数字，React 对数字 0 **不补 px**（`dangerousStyleValue`）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "columns": 3,
+    "gutter": 16,
+    "items": [
+      { "key": "item-0", "data": 150 },
+      { "key": "item-1", "data": 30 },
+      { "key": "item-2", "data": 90 }
+    ]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["layoutChange"] }
+}

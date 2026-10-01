@@ -791,3 +791,45 @@ export const DATE_PICKER_VARIANT_LABEL_STYLE = {
   flex: 'none',
   color: 'rgba(0, 0, 0, 0.65)',
 };
+
+// ---------------------------------------------------------------------------
+// Masonry
+// ---------------------------------------------------------------------------
+
+/**
+ * Masonry 用例的**固定**高度。
+ *
+ * ⚠️ 必须固定：Masonry 的排布完全由**实测高度**决定 ⇒ 用随机值 / `Math.random`
+ * 会让截图随运行变化（基线第二天就红）。
+ * 这组值刻意「高低交错」，好让三个列的累计高度互不相同（能测出「选最矮列」）。
+ */
+export const MASONRY_HEIGHTS = [150, 30, 90, 70, 110, 130];
+
+/**
+ * 用例容器。
+ *
+ * 🚨 **必须钉字体**：masonry 的条目内容是用户自己渲染的（`itemRender`），
+ * 而 React 页（`antd/dist/reset.css`）与 Vue 页（本仓 base）的 `html` 字体栈不同 ——
+ * 不钉的话差异全落在条目文字上，看起来像「排布错了」。
+ * 裁决同 `docs/COMPONENT-CHECKLIST.md` 第 15 条：**用例内钉字体，不动全局 BASE_CSS**。
+ *
+ * ⚠️ 宽度固定 320px：比最小视口（375px）窄 ⇒ 三个视口下容器宽度一致，
+ * 排布差异只会来自 `columns` 的响应式解析（那正是 `responsive` 用例要测的）。
+ */
+export const MASONRY_BOX_STYLE = {
+  width: '320px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 条目内容的样式（两侧逐字相同）。背景/边框都写死，避免依赖主题变量。 */
+export const MASONRY_CARD_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: '#e6f4ff',
+  border: '1px solid #91caff',
+  boxSizing: 'border-box',
+};

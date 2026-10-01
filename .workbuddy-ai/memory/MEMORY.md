@@ -117,18 +117,15 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
 ## 当前进度（2026-10-01）
 
-- foundation **13/13 completed**；组件 **59/72 completed**；可执行 13 / 被阻塞 1。
+- foundation **13/13 completed**；组件 **60/72 completed**；可执行 13 / 被阻塞 1。
 - **`date-picker` 已 `completed`**（11 维度全 done，S1–S5 落地；L6 **27/27 exact**）。
-- **进行中：`masonry`**（P5 / M / 349 行）—— **6/11 维度 done**
-  （antdApi · api · token · style · unit · interaction），`status: analyzing`。
-  已落地：`docs/analysis/masonry.md`（G1，**无 foundation 缺口**）· `interface.ts` ·
-  `style/token.ts`（**无 Component Token**）· `Masonry.vue` + `components/MasonryItem.ts`
-  + `hooks/{use-delay,positions,column-count}.ts` + `style/index.ts` · 用例 **20 条**。
-  剩 **G7 type · G8 a11y · G9 visual · G10 compat · G11 docs** → 然后 G12–G14。
-  开工先读 `packages/ui/src/masonry/PLAN.md`（Gate 清单已勾到 G6）。
-- `pnpm run registry:check` ⇒ **18 checks passed / 0 warnings**；
-  `pnpm run test`（unit+dom+a11y+theme）/ `lint:types` / `lint:format` / L7 构建门禁全绿。
+- **`masonry` 已 `completed`（2026-10-01）** —— 11 维度全 done。
+  **无 foundation 缺口**（14 处依赖全部可复用，对照表见 `docs/analysis/masonry.md` §0）；
+  L4 20 用例（**只 1 条豁免**）/ L5 15 条（零 axe violation）/ L6 **21/21 exact** /
+  L3 26 passed / demo 6 个（`expectCount: 6`）。
+  开工先读 `packages/ui/src/masonry/PLAN.md`（Gate 清单已全部勾掉）。
 - 下一条任务用 `node registry/tools/next-task.mjs` 取。
+- ⚠️ **`test:visual` 不在 `verify:full`**、`test:types` 也不在 ⇒ 两条都要显式跑。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`）；`--project types` 的 SFC 解析噪音（PITFALLS 73）；
   Empty SVG 不跟 darkAlgorithm；开放决策见 `ask decisions --open`。
 - ⚠️ **必读判据**（PITFALLS 256–267）：

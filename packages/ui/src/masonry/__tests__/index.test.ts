@@ -347,4 +347,35 @@ describe('Masonry（L2）', () => {
     expect(w.findAll(`.${P}-item`)).toHaveLength(HEIGHTS.length);
     w.unmount();
   });
+
+  /**
+   * 🚨 这条**替代了 L4 的 `keepStyle`**（那里关掉了内联样式比对，见 `semantic.test.ts` 的说明）。
+   *
+   * 上游的根样式是 `{ height: totalHeight, ...mergedStyles.root }` ——
+   * **`height` 在前、用户的 `styles.root` 在后**（用户的能覆盖高度）。
+   * 顺序反了不会有任何报错，只是「用户设的高度不生效」。
+   */
+  it('根样式顺序：`height` 在前、用户 `styles.root` 在后（后者可覆盖）', async () => {
+    const w = await mountMasonry({
+      styles: { root: { height: '999px', border: '1px solid red' } },
+    });
+    const style = w.find(`.${P}`).attributes('style') ?? '';
+
+    expect(style).toContain('height: 999px');
+    expect(style).not.toContain('height: 0px');
+    // 用户的两条都在，且 `height` 只出现一次（没有被拼成两条冲突声明）
+    expect(style.match(/height/g)).toHaveLength(1);
+    w.unmount();
+  });
+
+  it('语义化 classNames：`root` / `item` 两个槽都落到 DOM 上', async () => {
+    const w = await mountMasonry({
+      classNames: { root: 'my-root', item: 'my-item' },
+      items: buildItems([10]),
+    });
+
+    expect(w.find(`.${P}`).classes()).toContain('my-root');
+    expect(w.find(`.${P}-item`).classes()).toContain('my-item');
+    w.unmount();
+  });
 });

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-// 对齐 antd 的 basic demo。⚠️ antd 用 `Card` 渲染条目 —— 本仓 Card 尚未落地，
-// 用**原生 div + 等价内联样式**替换（缺口登记在 README §7）。
+// 对齐 antd 的 responsive demo：列数与间距都按断点给。
 import { Masonry, type MasonryItemRenderInfo } from '@apollo-design/ui';
 import { h } from 'vue';
 
-const heights = [150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 60, 50, 80];
+const heights = [120, 55, 85, 160, 95, 140, 75, 110, 65, 130, 90, 145, 55, 100, 80];
 
 const items = heights.map((height, index) => ({ key: `item-${index}`, data: height }));
 
@@ -26,5 +25,10 @@ const renderItem = ({ data, index }: MasonryItemRenderInfo<unknown>) =>
 </script>
 
 <template>
-  <Masonry :columns="4" :gutter="16" :items="items" :item-render="renderItem" />
+  <Masonry
+    :columns="{ xs: 1, sm: 2, md: 3, lg: 4 }"
+    :gutter="{ xs: 8, sm: 12, md: 16 }"
+    :items="items"
+    :item-render="renderItem"
+  />
 </template>

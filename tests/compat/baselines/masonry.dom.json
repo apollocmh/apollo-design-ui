@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema.json",
+  "component": "masonry",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-01T07:06:19.399Z",
+  "cases": [
+    {
+      "id": "masonry:basic",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:prefix-cls:no-props",
+      "html": "<div class=\"ant-masonry css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:prefix-cls:custom",
+      "html": "<div class=\"custom css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:empty",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:columns-1",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:columns-4",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:columns-0",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:columns-responsive",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:columns-responsive-no-xs",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:gutter-number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:gutter-array",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:gutter-responsive",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:item-children",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:item-no-content",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:class-names",
+      "html": "<div class=\"apollo custom-root css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:styles",
+      "html": "<div class=\"apollo custom-root css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0;border:2px solid red\"></div>"
+    },
+    {
+      "id": "masonry:class-names-fn",
+      "html": "<div class=\"apollo cols-4 css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:rtl",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root apollo-rtl\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:key-number",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    },
+    {
+      "id": "masonry:key-fallback-index",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-19u5a7b css-var-root\" style=\"height:0\"></div>"
+    }
+  ]
+}

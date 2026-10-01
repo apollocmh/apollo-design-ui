@@ -1,20 +1,18 @@
 ---
-order: 0
+order: 1
 title:
-  zh-CN: 基本
-  en-US: Basic
+  zh-CN: 响应式
+  en-US: Responsive
 ---
 
-瀑布流布局：条目按「当前最矮的一列」依次落位。
-
-⚠️ antd 的 demo 用 `Card` 渲染条目，本仓 Card 尚未落地 ⇒ 用**原生 div + 等价内联样式**替换。
+列数与间距都支持按断点配置 —— 命中规则是「从大到小取第一个已配置的断点」。
 
 ```vue
 <script setup lang="ts">
 import { Masonry, type MasonryItemRenderInfo } from '@apollo-design/ui';
 import { h } from 'vue';
 
-const heights = [150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 60, 50, 80];
+const heights = [120, 55, 85, 160, 95, 140, 75, 110, 65, 130, 90, 145, 55, 100, 80];
 
 const items = heights.map((height, index) => ({ key: `item-${index}`, data: height }));
 
@@ -23,6 +21,11 @@ const renderItem = ({ data, index }: MasonryItemRenderInfo<unknown>) =>
 </script>
 
 <template>
-  <Masonry :columns="4" :gutter="16" :items="items" :item-render="renderItem" />
+  <Masonry
+    :columns="{ xs: 1, sm: 2, md: 3, lg: 4 }"
+    :gutter="{ xs: 8, sm: 12, md: 16 }"
+    :items="items"
+    :item-render="renderItem"
+  />
 </template>
 ```

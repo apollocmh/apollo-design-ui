@@ -2806,3 +2806,55 @@
     - **判据（可推广）**：凡是「既有 `onXxx` prop 又有 `xxx` emit」的地方，
       **写 `props.onXxx?.(…)` 之前先问「emit 是不是已经调了它」**。
       例外：`v-model`（`update:xxx`）与「事件名与 prop 名不构成 toHandlerKey 映射」时才需要手写。
+
+268. 🚨 **`axe.run()` 不能与 `vi.useFakeTimers()` 共存** —— 否则报「Axe is already running」（2026-10-01，masonry 的 L5 实测）。
+
+    axe-core 内部靠 `setTimeout` / `requestAnimationFrame` 推进扫描。定时器被 mock 之后
+    它**永不完成**，于是下一次 `axe.run()` 抛：
+
+    ```
+    Error: Axe is already running. Use `await axe.run()` to wait for the previous run to finish
+    ```
+
+    - **症状**：a11y 文件里**第一条**用例可能过，后面全红；错误指向 `axe.run` 那一行，
+      看起来像「并发调用」，其实是「上一次没结束」。
+    - **实测**：masonry 的 11 条 axe 用例带假定时器**全红**，去掉即绿。
+    - **修法**：a11y 测试**只用 `await nextTick()`**。若组件确实需要跑 raf 去抖才有内容，
+      说明「内容依赖定时器」——那时应该重新审视被测形态（masonry 的条目由 `mergedItems`
+      驱动渲染，**不依赖** raf 去抖的量测 ⇒ 两拍就够）。
+    - **判据**：`*.test.ts` 里凡是出现 `axe.run`，就不该出现 `useFakeTimers`。
+
+269. ⚠️ **「一拍延迟」的 state 在 SSR 下永远是初始值 ⇒ 上游可能整块渲染为空**（2026-10-01，masonry 的 L4 实测）。
+
+    上游 `Masonry.tsx`：
+
+    ```js
+    const [mergedItems, setMergedItems] = useState([]);
+    useEffect(() => { setMergedItems(items || []); }, [items]);
+    ```
+
+    `useEffect` **在服务端不跑** ⇒ SSR 产物是 `<div class="…" style="height:0"></div>`，
+    **一个条目都没有**。这不是 bug，是 React 的服务端语义。
+
+    - **对 L4 的后果**：契约**几乎是空的**（只钉根类名 / 语义槽 / RTL）。
+      这时**不要**为了「让契约更饱满」而擅自改成 `useState(items)` —— 那会与上游分叉。
+      正确做法是**复刻同一时机**（本仓 `onMounted` + `watch(flush:'post')`），
+      并把「条目结构」与「排布结果」分别交给 L2 与 L1/L6。
+    - **推广**：凡是上游用 `useState(初始) + useEffect(同步 prop)` 的写法，都要问一句
+      「SSR 下它是什么」。它可能是**有意的**（首帧不渲染），也可能只是 React 的顺手写法 ——
+      判据是看**它有没有别的可观测后果**（masonry 有：`MotionList` 的首次入场）。
+
+270. ⚠️ **L4 的 `keepStyle` 取舍：先问「这条声明在契约里有没有信息量」**（2026-10-01，masonry）。
+
+    现象：React 的 `dangerousStyleValue` 对**数字 0 不补 px**（`height:0`），
+    而 Vue 侧经 jsdom 的真实 DOM 读回时 CSSOM 会序列化成 `height:0px`
+    ⇒ 20 个用例各多一条 `[height:0] vs [height:0px]`。
+
+    - 那条差异**能对齐**（本仓 `rootHeight` 让 SSR 产物与上游逐字一致），但 L4 比的是
+      「React **字符串** vs Vue **真实 DOM**」⇒ 差异仍在（与 flex 的 `gap:0 → gap:0px` 同一现象）。
+    - **不要**为它登记 20 条豁免 —— 那等于把「可对齐的东西」伪装成平台限制。
+    - **判据**：先问「这条声明在**本契约**里有没有信息量」。masonry 的根高在 SSR 下**恒为 0**
+      ⇒ 零信息量 ⇒ 用 `keepStyle: false`（date-picker 同判），把真正有意义的那部分
+      （用户 `styles.root` 排在 `height` **之后**）改由 **L2** 钉。
+    - 反过来：date-picker 的 `keepStyle: false` 是因为**浮层在 SSR 不渲染**（面板的样式根本不在场），
+      与这里「声明恒为常量」是**两条不同的理由**，别互相套用。

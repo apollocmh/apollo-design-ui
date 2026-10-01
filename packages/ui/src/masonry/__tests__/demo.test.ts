@@ -1,9 +1,16 @@
 /**
- * demo 冒烟测试占位 —— G11 未开始。
+ * demo 冒烟测试：每个 demo 都能渲染、更新、卸载，且**不产生任何告警**。
  *
- * ⚠️ 实现后必须：demos glob + **expectCount**（与 antd 用户可见 demo 一一对应，
- * 防腐断言）；「不产生告警」是 demo 的硬约束。
+ * `expectCount` 与 antd 6.6.4 的 `components/masonry/demo/` 的**用户可见** demo 一一对应
+ * （basic / responsive / dynamic / fresh / image / style-class），共 **6** 个。
+ * antd 的 demo 依赖 `Card` / `Flex` / `Divider` / `Typography` / `antd-style`，
+ * 其中未落地的用**原生元素等价替换**（缺口登记在 `README.md` §5）；
+ * 「不产生告警」对替换后的 demo 依然是硬约束。
  */
-import { describe } from 'vitest';
 
-describe.todo('Masonry · demo 冒烟（G11 未开始，expectCount 待定）');
+import { demoTest } from '@apollo-design/test-utils';
+
+demoTest('Masonry', {
+  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 6,
+});

@@ -362,9 +362,22 @@ const rootClassNames = computed(() => [
   direction.value === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
 ]);
 
+/**
+ * 根高度。
+ *
+ * 🚨 **`0` 要单独处理**：React 的 `dangerousStyleValue` 是
+ * `typeof value === 'number' && value !== 0 ? value + 'px' : …` ——
+ * 即**数字 0 不补 `px`**（上游 SSR 产物实测是 `style="height:0"`）。
+ * 本仓的 `toCssSize()` 一律补 `px`（`0px`），CSS 语义完全等价，
+ * 但 L4 是**逐字**比对 ⇒ 20 个用例会全部多出一条 `height:0 vs height:0px`。
+ *
+ * ⇒ 这里显式对齐上游的序列化（而不是登记 19 条 PLATFORM 豁免 —— 那会把
+ *   一个「我们自己能对齐的差异」伪装成平台限制）。
+ */
+const rootHeight = computed(() => (totalHeight.value === 0 ? '0' : toCssSize(totalHeight.value)));
+
 const rootStyle = computed(() => ({
-  // 🚨 数字必须过 toCssSize（Vue 的 patchStyle 不补 px）
-  height: toCssSize(totalHeight.value),
+  height: rootHeight.value,
   ...mergedStyles.value.root,
 }));
 

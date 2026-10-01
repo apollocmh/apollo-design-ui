@@ -41,14 +41,48 @@
       `layoutChange` 双通道各一次 · 不传回调则不发 · 空列表不崩 · rtl · fresh）。
       ⚠️ jsdom 无布局 ⇒ L2 用 `getBoundingClientRect` mock（判据照抄上游：
       读 `.bamboo` 的 `data-height`）；真布局归 **L6**。
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:masonry]
+- [x] G7 L3 类型 —— `__tests__/type.test-d.ts` **13 条**（props 形态 / 两个「展开」类型的
+      `column` 是**非可选 number** / 泛型 `ItemDataType` 的流向 / `emits` / `expose` +
+      **3 条负例**包在永不调用的闭包里）。实测 `--project types`：**26 passed / Type Errors no errors**。
+- [x] G8 L5 a11y —— `__tests__/a11y.test.ts` **15 条**（4 条 role/ARIA 契约 + 11 组 axe 扫描），
+      **零 axe violation、零豁免**。判据：根与条目都是 `div` 且**无 `role`**、**无 `tabindex`**、
+      **不产生任何 `aria-*`** —— 上游零 ARIA 是**有意**的（纯布局组件），钉住它防止后来者
+      「顺手加个 `role="list"`」。
+      🚨 **本文件不能用 `vi.useFakeTimers()`**：`axe.run()` 内部靠 `setTimeout`/rAF 推进，
+      定时器被 mock 后它**永不完成** ⇒ 下一次 `axe.run()` 抛「Axe is already running」
+      （实测：带假定时器 11 条全红，去掉即绿）。条目由 `mergedItems` 驱动渲染，**不依赖** raf 去抖。
+- [x] G9 L6 视觉 —— ✅ **21 / 21 exact**（7 variant × 3 viewport）。
+      变体：`basic` / `gutter`（非对称间距）/ `columns`（4 列）/ `responsive`（按视口 1/2/3 列）/
+      `fresh` / `semantic` / `rtl`。**首跑即全绿**（布局、`-item-fade` 类、响应式列数、
+      RTL 的 `inset-inline-start`、`fresh` 的观察者路径全部逐像素一致）。
+      React 基线已入库（`tests/visual/baselines/react/masonry/`，21 张）。
+      ⚠️ 两条硬约定写在用例文件头：**字体必须在用例内钉住**（条目内容是用户渲染的，
+      两侧页面字体栈不同）+ **高度必须是字面量**（排布由实测高度决定，随机值 = 每天红）。
+- [x] G10 L4 DOM 契约 —— `tests/compat/baseline/masonry.mjs` + `baselines/masonry.dom.json`
+      （**20 用例**）+ `semantic.test.ts` **20 条**，**只有 1 条豁免**（D1 默认前缀）。
+      🚨 **这个契约几乎是空的，而那正是上游的真实行为**：antd 的 SSR 产物是
+      `<div class="apollo …" style="height:0"></div>` —— **一个条目都没有**
+      （`mergedItems` 的一拍延迟在服务端不跑）。⇒ 本契约钉的是**结构**
+      （根类名 / 语义槽 / RTL），条目结构归 L2、排布归 L1 + L6。
+      ⚠️ `keepStyle: false`（与 date-picker 同判）：SSR 的根高**恒为 0** ⇒ 这条声明零信息量；
+      保留它只会引入一条纯序列化差异（React 字符串 `height:0` vs Vue 经 CSSOM 读回 `height:0px`）。
+      真正有意义的「用户 `styles.root` 排在 `height` 之后」改由 **L2** 钉。
+- [x] G11 DOCS —— `demo/` **6 个**（basic / responsive / dynamic / fresh / image / style-class，
+      与 antd 用户可见 demo 一一对应，`demo.test.ts` 的 `expectCount: 6` 钉死）+
+      `index.zh-CN.md` / `index.en-US.md`（何时使用 / demo 表 / API 四表 / Theme / 设计说明）+
+      `README.md`（差异清单 D1–D12 / `.ts` 选型理由 / token 清单 / 已知缺口）。
+      ⚠️ demo 用**原生元素**替换了未落地的 `Card` / `Flex` / `Divider` / `Typography` /
+      `antd-style`（缺口登记 README §5）；随机高度改成**确定值**（否则 demo 冒烟不可复现）。
+- [x] G12 REGISTRY —— 11 维度全部 done + `status: completed`（2026-10-01，60/72）。
+      ⚠️ 组件完成数变了要**依次刷新**两个派生文件（`--check` 会先红）：
+      `node registry/tools/foundation-status.mjs`（**不带 `--check`**）→
+      `node registry/tools/gen-workstreams.mjs`（**不带 `--check`**）→ 再 `registry:check`。
+      新增 `tests/compat/fixtures/masonry/basic.json`（E9 要求）。
+- [x] G13 BUILD —— `registry:check` **18 checks / 0 warnings** · `lint:types` / `lint:format`
+      **0 error** · `test`（unit + dom-contract + a11y + theme）**全过** · `test:build`（L7）
+      **141 项 / FAIL 0** · `test:types` **26 passed / Type Errors no errors** ·
+      `test:visual --component masonry --mode compare` **21 / 21 exact**。
+- [x] G14 COMMIT —— commit message 带 `[COMP:masonry]`（2026-10-01）。
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
