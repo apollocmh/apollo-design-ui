@@ -25,7 +25,7 @@
  *    用 `dayjs()` 会让截图随运行日变化。
  */
 
-import { DatePicker } from '@apollo-design/ui';
+import { DatePicker, RangePicker } from '@apollo-design/ui';
 import dayjs from 'dayjs';
 import { h } from 'vue';
 import {
@@ -33,6 +33,7 @@ import {
   DATE_PICKER_DATETIME_FORMAT,
   DATE_PICKER_MULTIPLE,
   DATE_PICKER_PANEL_ANCHOR,
+  DATE_PICKER_RANGE,
   DATE_PICKER_VALUE,
   DATE_PICKER_VARIANT_LABEL_STYLE,
   DATE_PICKER_VARIANT_ROW_STYLE,
@@ -114,5 +115,29 @@ export default {
         ),
       ),
       560,
+    ),
+
+  // ---------------------------------------------------------------- 范围（S5）
+  /** 范围：两个输入框 + 分隔符 + **并排两个面板**（`-range-wrapper` / `-range-arrow`）。 */
+  range: () =>
+    box(
+      h(RangePicker, {
+        open: true,
+        defaultPickerValue: ANCHOR,
+        getPopupContainer: () => holderEl,
+      }),
+      520,
+    ),
+
+  /** 范围有值：两端字段文本 + 两个面板各自的「选中 / 区间内 / 端点」格子态。 */
+  'range-value': () =>
+    box(
+      h(RangePicker, {
+        open: true,
+        defaultValue: DATE_PICKER_RANGE.map((value) => dayjs(value)),
+        defaultPickerValue: ANCHOR,
+        getPopupContainer: () => holderEl,
+      }),
+      520,
     ),
 };

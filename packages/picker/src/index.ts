@@ -56,7 +56,14 @@ export type { PanelCellsContext, PanelGeometry, PanelGeometryContext } from './p
 export { buildPanelCells, getPanelGeometry, getRowStartDate } from './panel';
 // ----------------------------------------------------- 区间选择的纯判定
 export type { RangeSubmitInput, RangeValidateResult } from './range';
-export { isSameDates, orderDates, validateRangeSubmit } from './range';
+export {
+  getEndDatePickerValue,
+  isSameDates,
+  isSamePanel,
+  offsetPanelDate,
+  orderDates,
+  validateRangeSubmit,
+} from './range';
 // --------------------------------------------------------- 时间列校验
 export type { TimeUnit } from './time-util';
 export { findValidateTime } from './time-util';
@@ -117,6 +124,7 @@ export type {
   DisabledTimes,
   FormatType,
   PickerFormat,
+  TimeConfigShowTime,
   TimeConfigSource,
   TimePanelConfig,
 } from './time-config';

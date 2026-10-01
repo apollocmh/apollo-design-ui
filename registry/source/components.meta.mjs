@@ -349,7 +349,34 @@ export const COMPONENTS = [
       '`isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。' +
       '与 G12/G13/G14。' +
       '⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、' +
-      '`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。',
+      '`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。' +
+      '**✅ S5 全部落地（2026-10-01 下午）—— 组件判 completed。**' +
+      '范围两端：`RangePicker.vue`（≈1150 行）= 上游 `generateRangePicker.js`(234) + ' +
+      '`PickerInput/RangePicker.js`(574) + `RangeSelector.js`(209) + `Popup/*` 的 Vue 化；' +
+      '`presets` 全链路（`hooks/picker-presets.ts` + `components/PresetPanel.ts`，单值另接' +
+      '**悬停即预览**：`hoverValue` / `selectorValues` / `Selector` 的 `-input-placeholder`）。' +
+      '🚨 **架构差异（PITFALLS 256）**：本仓 `PickerPanel` **自己** `providePanelHack`' +
+      '⇒ 外层注入被「最近的赢」遮蔽 ⇒ 双面板的 `hidePrev` / `hideNext` / `onCellDblClick`' +
+      '改走 **props**（已加回归哨兵）。' +
+      '同批关闭三条欠账（README §5.5(b′) #1/#3/#4）：`useInvalidate` 全量（`isValidate` + ' +
+      '`showTime.disabledTime` / legacy 三兄弟）、`onCellDblClick`、`hideHeader`；' +
+      '面板与页脚改拿**合并了 min/max 的** `disabledDate`。' +
+      '🚨 **编译期根因修复（PITFALLS 257/258/261/262/263）**：`picker` 包新增 ' +
+      '`TimeConfigShowTime`（范围的 `showTime.disabledTime` 是**三参**，单值一参）；' +
+      '`Selector.onSelectorClick` 放宽成收事件；`toDateArray` 收范围元组（元素 `undefined → null`）；' +
+      '`fieldCount` 范围下改传 getter；`RangePickerProps` 上**没有** `multiple` / `removeIcon`。' +
+      '🚨 **L6 抓到的两个真 bug（PITFALLS 264/265）**：① 浮层 vnode 在**渲染期之外**创建 ⇒ ' +
+      '`ref:` 的 owner 是 `null` ⇒ 生产构建抛 `Cannot read properties of null (reading refs)`' +
+      '（dev 只 `warn`，jsdom 与 dev 页面全绿）⇒ 改用 vnode 钩子；② `hoverValues` / ' +
+      '`showWeakHover` / `activeHoverValue` **算了但从没传给面板** ⇒ `-cell-in-range` 的浅蓝底' +
+      '永远不出现（`range` 空值三视口 0.000% exact、一有值就 block-diff，正是它）。' +
+      '**G9 L6：21/21 → 27/27 exact**（新增 `range` / `range-value` 两个变体 × 3 视口，' +
+      'React 基线已入库）。' +
+      'L4 契约 16 → **21 用例**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态），' +
+      'L5 a11y 24 → **36 条**（含上游两条 separator 的 `aria-hidden` 测试），' +
+      '新增 `__tests__/s5-presets.test.ts` **15 条**。' +
+      '⚠️ 仍未做：`panelRender` / 浮层焦点事件（README §5.5(g)）/ ' +
+      '`BASE_CSS` 的 `a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。',
   },
   {
     name: 'time-picker',

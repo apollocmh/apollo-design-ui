@@ -730,6 +730,15 @@ export const DATE_PICKER_BOX_STYLE = {
 export const DATE_PICKER_VALUE = '2026-09-30';
 export const DATE_PICKER_MULTIPLE = ['2026-09-30', '2026-10-01'];
 
+/**
+ * 范围用例的区间。
+ *
+ * ⚠️ **刻意跨月**（9/10 → 10/5）：双面板下左面板是 9 月、右面板是 10 月，
+ * 两个面板各自都能看到「选中 / 区间内 / 区间端点」三种格子态 ——
+ * 同月区间会让右面板一格都不选中，等于少测一半。
+ */
+export const DATE_PICKER_RANGE = ['2026-09-10', '2026-10-05'];
+
 /** 面板锚定的日期（`defaultPickerValue`）—— 让面板显示的月份与运行时刻无关。 */
 export const DATE_PICKER_PANEL_ANCHOR = '2026-09-30';
 

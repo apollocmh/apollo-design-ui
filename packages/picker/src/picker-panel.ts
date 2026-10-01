@@ -252,7 +252,31 @@ export const PickerPanel = defineComponent({
     },
 
     // ---------------------------------------------------------- 逃生
+    //
+    // 🚨 这四个键**必须显式声明**（同「时间 props」那条判据）：不声明 ⇒ `ui` 传进来的值
+    //    被 Vue 归进 `attrs` ⇒ `props.hideNext` 恒 `undefined` ⇒ 双面板的中间箭头
+    //    **静默不隐藏**。
+    //
+    // ⚠️ 上游把这四个值放在**外层** `PickerHackContext.Provider`（`Popup/PopupPanel.js:62-75`），
+    //    而本仓 `PickerPanel` **自己**也 provide 了一份（下面 `providePanelHack`）——
+    //    Vue 的 `provide` 同样「最近的赢」⇒ 外层注入会被**遮蔽**。
+    //    所以这里必须把它们收成 props 再合并进自己那份 provide，
+    //    不能靠 ui 层在外面 provide。
     hideHeader: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+    /** 藏掉 prev 侧两个按钮（双面板的**右**面板用） */
+    hidePrev: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+    /** 藏掉 next 侧两个按钮（双面板的**左**面板用） */
+    hideNext: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+    /**
+     * 双击格子的回调（上游 `PopupPanel.js:36-42`）。
+     *
+     * ⚠️ 上游**无条件**挂在 hack 上，由 `PopupPanel` 决定「`needConfirm` 时才提交」——
+     * 本仓照此：传进来的回调自己判 `needConfirm`。
+     */
+    onCellDblClick: {
+      type: Function as PropType<(() => void) | undefined>,
+      default: undefined,
+    },
 
     // ---------------------------------------------------------- 语义
     classNames: {
@@ -481,7 +505,12 @@ export const PickerPanel = defineComponent({
       classNames: props.classNames ?? {},
       styles: props.styles ?? {},
     });
-    providePanelHack({ hideHeader: props.hideHeader });
+    providePanelHack({
+      hideHeader: props.hideHeader,
+      hidePrev: props.hidePrev,
+      hideNext: props.hideNext,
+      onCellDblClick: props.onCellDblClick,
+    });
 
     // ========================= Render =========================
     return () => {

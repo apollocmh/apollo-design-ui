@@ -104,6 +104,35 @@ export type PickerFormat<DateType = PanelDateType> =
   | { format: string; type?: 'mask' };
 
 /**
+ * **组件层**的 `showTime` 对象形态。
+ *
+ * 🚨 与 `TimePanelConfig` 有两处**真实差异** —— 因为两者描述的是两个不同的东西：
+ * `TimePanelConfig` 是「**时间面板**的配置」，本接口是「**组件 props** 里的 `showTime`」。
+ *
+ *  1. `disabledTime` 还要收**范围**的三参形态
+ *     （rc `RangeTimeProps`：`(date, range, info) => DisabledTimes`）；
+ *  2. `defaultValue` / `defaultOpenValue` 在范围下是**两端**的数组（`[start, end]`），
+ *     不是单个日期。
+ *
+ * ⚠️ 放宽这两处**不改变任何运行期行为**：`getTimeProps` 从不调用 `disabledTime`
+ *    （只是把它抄进 `timeConfig`），也从不去读 `defaultValue`（见 `TimeConfigSource`
+ *    的第 3 条，组件层的 `defaultValue` 已被丢弃）。真正调用 `disabledTime` 的是
+ *    `useTimeInfo` / `useInvalidate`，它们拿到的是**面板形态** —— 范围的原始三参函数
+ *    在 `RangePicker` 里被代理成一面参之后才下发（rc `RangePicker.js` 的
+ *    `proxyDisabledTime`），这是上游的架构，不是这里的妥协。
+ */
+export interface TimeConfigShowTime<DateType>
+  extends Omit<TimePanelConfig<DateType>, 'disabledTime' | 'defaultValue' | 'defaultOpenValue'> {
+  disabledTime?: (
+    date: DateType,
+    range: 'start' | 'end',
+    info: { from?: DateType },
+  ) => DisabledTimes;
+  defaultValue?: DateType | DateType[];
+  defaultOpenValue?: DateType | DateType[];
+}
+
+/**
  * `getTimeProps` 的输入：既含顶层时间 props，也含 `showTime` / `format` / `picker`。
  *
  * 🚨 三处**故意与 `TimePanelConfig` 不同**，因为「真实组件的 props」与「时间面板的配置」
@@ -119,13 +148,27 @@ export type PickerFormat<DateType = PanelDateType> =
  *     已经在 `getTimeProps` 内做完了）。
  */
 export interface TimeConfigSource<DateType>
-  extends Omit<TimePanelConfig<DateType>, 'format' | 'defaultValue'> {
+  extends Omit<TimePanelConfig<DateType>, 'format' | 'defaultValue' | 'disabledTime'> {
   picker?: PickerMode;
-  showTime?: boolean | TimePanelConfig<DateType>;
+  /** 🚨 组件层的 `showTime`（含范围的数组默认值与三参 `disabledTime`），见 `TimeConfigShowTime`。 */
+  showTime?: boolean | TimeConfigShowTime<DateType>;
   format?: PickerFormat<DateType>;
   locale?: PickerLocale;
   /** 见上面的第 3 条：结构兼容用，本函数不读它。 */
   defaultValue?: unknown;
+  /**
+   * 🚨 **组件层**的 `disabledTime` —— 与 `TimePanelConfig` 的同名键**不同形**。
+   *
+   * `disabledTime` 在 `showTimeKeys` 里（所以顶层也会被 `pickProps` 挑走），
+   * 而范围组件的顶层 `disabledTime` 是三参的（rc 的 `RangePickerProps`
+   * 就是 `extends Omit<RangeTimeProps, …>`）⇒ 这里必须收下两个形态。
+   * 同 `TimeConfigShowTime`：**只搬运，不调用**。
+   */
+  disabledTime?: (
+    date: DateType,
+    range: 'start' | 'end',
+    info: { from?: DateType },
+  ) => DisabledTimes;
 }
 
 /**
@@ -258,7 +301,7 @@ function pickPropFormat<DateType>(format: PickerFormat<DateType> | undefined): s
  */
 export function getTimeProps<DateType>(
   componentProps: TimeConfigSource<DateType>,
-): [TimePanelConfig<DateType>, TimePanelConfig<DateType>, string | undefined, string | null] {
+): [TimeConfigShowTime<DateType>, TimeConfigShowTime<DateType>, string | undefined, string | null] {
   const picked = pickProps(
     componentProps,
     showTimeKeys as unknown as (keyof typeof componentProps)[],
@@ -274,9 +317,9 @@ export function getTimeProps<DateType>(
   }
 
   const { showTime } = componentProps;
-  const showTimeConfig: TimePanelConfig<DateType> =
+  const showTimeConfig: TimeConfigShowTime<DateType> =
     showTime && typeof showTime === 'object' ? showTime : {};
-  const timeConfig: TimePanelConfig<DateType> = {
+  const timeConfig: TimeConfigShowTime<DateType> = {
     defaultOpenValue: showTimeConfig.defaultOpenValue ?? showTimeConfig.defaultValue,
     ...timeProps,
     ...showTimeConfig,
@@ -306,6 +349,12 @@ export function getTimeProps<DateType>(
  *
  * 只有 `picker` 是 `'datetime'` / `'time'` 时才有结果（其余模式返回 `null`）。
  *
+ * 🚨 入参与出参都是 `TimeConfigShowTime`（**组件层**形态）而不是 `TimePanelConfig`：
+ * 上游这里是 `{...pickedProps, format, showHour, …}`，`pickedProps` 就是
+ * `getTimeProps` 的第一个产物 ⇒ 组件层多出来的键（范围的数组 `defaultValue`、
+ * 三参 `disabledTime`）会**原样穿过**。真正把它们收成面板形态的是调用方
+ * （范围下由 `RangePicker` 的 `proxyDisabledTime` 负责，rc 原样）。
+ *
  * ⚠️ 两处必须照抄的细节：
  *  - 基准格式的优先级是 `showTime.format` > `props.format` > `locale.fieldXxxFormat`，
  *    且**只有字符串形态**才被采纳（`toArray(...)[0]` 之后再过 `isStringFormat`）；
@@ -317,9 +366,9 @@ export function fillShowTimeConfig<DateType>(
   picker: InternalMode,
   showTimeFormat: string | undefined,
   propFormat: string | null,
-  timeConfig: TimePanelConfig<DateType>,
+  timeConfig: TimeConfigShowTime<DateType>,
   locale: PickerLocale,
-): TimePanelConfig<DateType> | null {
+): TimeConfigShowTime<DateType> | null {
   if (picker !== 'datetime' && picker !== 'time') {
     return null;
   }

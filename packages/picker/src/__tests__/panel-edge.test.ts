@@ -960,3 +960,91 @@ describe('WeekPanel 直接挂载（不经过 PickerPanel）', () => {
     w.unmount();
   });
 });
+
+// ---------------------------------------------------------------------------
+// 🚨 2026-10-01 新增（RangePicker 的 S5 前置）：逃生通道的**第二条入口**。
+//
+// 上游把 `hideNext` / `hidePrev` / `onCellDblClick` 放在**外层** `PickerHackContext.Provider`
+// （`Popup/PopupPanel.js:62-75`）。本仓 `PickerPanel` **自己**也 provide 了一份
+// （`providePanelHack`，为了 `hideHeader`）—— Vue 的 `provide` 同样「**最近的赢**」
+// ⇒ 外层注入会被**遮蔽**。
+//
+// ⇒ 修法：把这三个值也收成 `PickerPanel` 的 props（与 `hideHeader` 同判）。
+// 下面第一条用例就是这条判据的**回归哨兵**：它断言「外层 provide 不生效」，
+// 若哪天有人「优化」成只靠外层注入，它会立刻红。
+// ---------------------------------------------------------------------------
+describe('逃生通道 · `PickerPanel` 的 props 入口（RangePicker 走这条）', () => {
+  it('🚨 外层 `provide` 会被 `PickerPanel` 自己那份**遮蔽**（所以必须走 props）', () => {
+    const w = mount(
+      HackProvider as never,
+      {
+        props: { hack: { hideNext: true } } as never,
+        slots: {
+          default: () =>
+            h(
+              PickerPanel as never,
+              {
+                ...panelBase(),
+                value: [now],
+                defaultPickerValue: now,
+                defaultValue: [now],
+                picker: 'date',
+                mode: 'date',
+              } as never,
+            ),
+        },
+        attachTo: document.body,
+      } as never,
+    ) as unknown as PanelWrapper;
+
+    // 外层说要藏 next 侧 —— 但 PickerPanel 自己 provide 了 `{hideHeader: undefined}`
+    // ⇒ 内层赢 ⇒ next 按钮**不该**被隐藏。
+    expect(w.element.querySelector<HTMLElement>(`.${P}-header-next-btn`)?.style.visibility).toBe(
+      '',
+    );
+    w.unmount();
+  });
+
+  it('⭐ `hideNext` 走 props ⇒ 左面板的 next 侧按钮隐藏（`hidePrev` 反之）', () => {
+    const left = mountPanel({ hideNext: true });
+    expect(left.element.querySelector<HTMLElement>(`.${P}-header-next-btn`)?.style.visibility).toBe(
+      'hidden',
+    );
+    expect(
+      left.element.querySelector<HTMLElement>(`.${P}-header-super-next-btn`)?.style.visibility,
+    ).toBe('hidden');
+    expect(left.element.querySelector<HTMLElement>(`.${P}-header-prev-btn`)?.style.visibility).toBe(
+      '',
+    );
+    left.unmount();
+
+    const right = mountPanel({ hidePrev: true });
+    expect(
+      right.element.querySelector<HTMLElement>(`.${P}-header-prev-btn`)?.style.visibility,
+    ).toBe('hidden');
+    expect(
+      right.element.querySelector<HTMLElement>(`.${P}-header-super-prev-btn`)?.style.visibility,
+    ).toBe('hidden');
+    expect(
+      right.element.querySelector<HTMLElement>(`.${P}-header-next-btn`)?.style.visibility,
+    ).toBe('');
+    right.unmount();
+  });
+
+  it('⭐ `onCellDblClick` 走 props ⇒ 双击日期格触发（且 `hideHeader` 不受影响）', () => {
+    const onCellDblClick = vi.fn();
+    const w = mountPanel({ onCellDblClick });
+    const cell = w.element.querySelector<HTMLElement>(`.${P}-cell-in-view`);
+    cell?.dispatchEvent(new MouseEvent('dblclick'));
+    expect(onCellDblClick).toHaveBeenCalledTimes(1);
+    // 反向哨兵：没传 `hideHeader` ⇒ 表头仍在
+    expect(w.element.querySelector(`.${P}-header`)).not.toBeNull();
+    w.unmount();
+  });
+
+  it('`hideHeader` 与 `hideNext` 可以同时生效（双面板 + 藏表头的组合）', () => {
+    const w = mountPanel({ hideHeader: true, hideNext: true });
+    expect(w.element.querySelector(`.${P}-header`)).toBeNull();
+    w.unmount();
+  });
+});

@@ -51,7 +51,7 @@
 
 import { isSameDates, orderDates, validateRangeSubmit } from '@apollo-design/picker';
 import { type ComputedRef, computed, type Ref, ref, watch } from 'vue';
-import type { DatePickerDate, DatePickerMode } from '../interface';
+import type { DatePickerDate, DatePickerMode, RangeValue } from '../interface';
 import type { GenerateConfig, RcPickerLocale } from './picker-types';
 
 /** 上游 `EMPTY_VALUE`：空值时共享的同一个数组（冻结，防下游污染受控值）。 */
@@ -59,14 +59,33 @@ export const EMPTY_VALUE: readonly DatePickerDate[] = Object.freeze(
   [],
 ) as readonly DatePickerDate[];
 
-/** 把「对外值」归一成内部的数组形态（`null` / `undefined` ⇒ 空数组）。 */
+/**
+ * 把「对外值」归一成内部的数组形态（`null` / `undefined` ⇒ 空数组）。
+ *
+ * 🚨 **元素级**的 `null` / `undefined` 一律收成 `null`（`?? null`）。
+ *
+ * 为什么需要这一步：范围的对外值 `RangeValue` 允许元素是 `undefined`
+ * （「该端尚未选择」，与 `null`「用户清空了该端」语义不同，见 `interface.ts`），
+ * 而**内部槽位**只有 `ValueSlot = DatePickerDate | null`。
+ *
+ * ⚠️ 这不是行为变更 —— 内部本来就区分不了它们，上游两处都把它们归一：
+ *  - `isSameDates` 用 `prev = source[i] || null` 比较；
+ *  - `triggerCalendarChange` 做 `clone[i] = clone[i] || null`。
+ * 且上游 `onChange` 的**声明类型**就是 `NoUndefinedRangeValue`（不许 `undefined`）
+ * ⇒ 这里只是把「运行时与声明一致」这件事在边界上说清楚。
+ *
+ * ⚠️ 单值路径不受影响：`SingleValue` 的元素本来就没有 `null` / `undefined`。
+ */
 export function toDateArray(
-  value: DatePickerDate | DatePickerDate[] | null | undefined,
-): DatePickerDate[] {
+  value: DatePickerDate | DatePickerDate[] | RangeValue | null | undefined,
+): ValueSlot[] {
   if (value === null || value === undefined) {
     return [];
   }
-  return Array.isArray(value) ? [...value] : [value];
+  const list: readonly (DatePickerDate | null | undefined)[] = Array.isArray(value)
+    ? value
+    : [value];
+  return list.map((item) => item ?? null);
 }
 
 /** 一个槽位的值（`null` = 该槽位空）。 */
@@ -80,10 +99,10 @@ export interface UseInnerValueOptions {
   rangeValue: boolean;
   /** 仅 `multiple` 用：变化时按时间排序。 */
   order: ComputedRef<boolean>;
-  /** 非受控初值（已归一成数组）。 */
-  defaultValue: DatePickerDate[];
+  /** 非受控初值（已归一成数组）。⚠️ `ValueSlot[]` 而不是 `DatePickerDate[]` —— 范围的空端是 `null`。 */
+  defaultValue: ValueSlot[];
   /** 受控值；`undefined` ⇒ 非受控（**`null` 是「受控且为空」**）。 */
-  getValue: () => DatePickerDate[] | undefined;
+  getValue: () => ValueSlot[] | undefined;
   onCalendarChange?: (
     dates: ValueSlot[],
     texts: string[],
@@ -218,8 +237,15 @@ export interface RangeValueResult {
   submitValue: Ref<ValueSlot[]>;
   /** 把某个槽位从 `calendarValue` 落进 `submitValue`（`needTriggerChange` 时顺带提交）。 */
   flushSubmit: (index: number, needTriggerChange: boolean) => void;
-  /** 提交：四道校验通过则写根值 + 发 `onChange`。返回值 = 是否通过。 */
-  triggerSubmit: (nextValue?: ValueSlot[] | null) => boolean;
+  /**
+   * 提交：四道校验通过则写根值 + 发 `onChange`。返回值 = 是否通过。
+   *
+   * ⚠️ 入参允许槽位是 `undefined` —— `toggleDates`（上游 `useToggleDates`）的返回
+   * 类型就是 `(DateType | null | undefined)[]`，而 `presets` / 「此刻」那条路径
+   * 正是把它的产物直接喂进来（上游 `onPresetSubmit`）。入口统一收成 `null`
+   * （同 `toDateArray` 的元素级归一）。
+   */
+  triggerSubmit: (nextValue?: readonly (DatePickerDate | null | undefined)[] | null) => boolean;
   /** 回滚到根值（`index` 未给 ⇒ 全量回滚）。 */
   resetValue: (index?: number) => void;
 }
@@ -234,13 +260,16 @@ export function useRangeValue(options: UseRangeValueOptions): RangeValueResult {
     submitValue.value = [...next];
   });
 
-  const triggerSubmit = (nextValue?: ValueSlot[] | null): boolean => {
+  const triggerSubmit = (
+    nextValue?: readonly (DatePickerDate | null | undefined)[] | null,
+  ): boolean => {
     // 🚨 入口快照：入口时 `mergedValue` 就是「本次变更之前的值」
     //    （上游读的是闭包常量，语义相同）。**写在任何 setInnerValue 之前。**
     const prevMerged = [...inner.mergedValue.value];
 
     const isNullValue = nextValue === null;
-    let clone: ValueSlot[] = [...(nextValue ?? submitValue.value)];
+    // 元素级归一：`undefined` ⇒ `null`（见 `triggerSubmit` 的说明）
+    let clone: ValueSlot[] = [...(nextValue ?? submitValue.value)].map((date) => date ?? null);
 
     // 清除时把「非 disabled」的槽位补成 null
     if (isNullValue) {

@@ -43,7 +43,10 @@
  *   **`multiple` + `tagRender` / `maxTagCount`、范围两端切换 = S5**。
  * - **面板 `mode` 的受控化**：上游把 `mergedMode` 受控地喂给面板，本仓让面板自管、
  *   只**跟随** `onPanelChange` 记一份（`panelFinished` 要用）。见 README §5.5。
- * - **`preserveInvalidOnBlur` / `previewValue` / `inputReadOnly` 的交互**尚未接。
+ * - **`preserveInvalidOnBlur` / `inputReadOnly` 的交互**尚未接。
+ * - ✅ **`previewValue` 的悬停预览**（S5，2026-10-01 接上）：`presets` 面板 +
+ *   「悬停即预览」全链路已落地（`internalHoverValue` / `hoverSource` /
+ *   `selectorValues` / `Selector` 的 `-input-placeholder`）。
  * - **原生 `submit`**（上游 `Selector` 的 `onSubmit` ⇒ `triggerConfirm('keyboard-submit')`）
  *   未接 —— `<input>` 不派发 `submit`，属边角。
  * - **`onSelectorFocus` 的 `inherit: true`**（`triggerOpen(true, { inherit: true })`）
@@ -70,6 +73,7 @@ import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
 import { Footer } from './components/Footer';
+import { PresetPanel } from './components/PresetPanel';
 import { getFormatLength, getMergedNeedConfirm, getShowNow } from './components/picker-shared';
 import { getRootClassNames } from './components/root-class';
 import { Selector } from './components/Selector';
@@ -82,7 +86,9 @@ import {
 import { dayjsConfig } from './hooks/dayjs-config';
 import { useFilledLocale } from './hooks/picker-filled';
 import { mergeFormat, toInternalMode } from './hooks/picker-format';
+import { useDisabledBoundary, useInvalidate } from './hooks/picker-invalidate';
 import { getPlaceholder, mergePickerLocale } from './hooks/picker-locale';
+import { usePresets } from './hooks/picker-presets';
 import { useSuffixIcon } from './hooks/picker-suffix';
 import { validateFormat } from './hooks/picker-typing';
 import { toDateArray, useInnerValue, useRangeValue, type ValueSlot } from './hooks/picker-value';
@@ -402,17 +408,50 @@ const inner = useInnerValue({
   onOk: (dates) => emit('ok', dates.filter((d): d is DatePickerDate => Boolean(d)) as never),
 });
 
-const isInvalidateDate = (
-  date: DatePickerDate,
-  info: { from?: DatePickerDate; activeIndex: number },
-): boolean =>
-  props.disabledDate?.(date, {
-    // ⚠️ 上游的**类型面**写的是 `info.type: PanelMode`，但运行时传的是
-    //    `internalPicker`（`InternalMode`，含 `'datetime'`）—— 两者不一致，
-    //    JS 不检查所以没人发现。这里如实 cast 并注明（S2 核对该差异是否可观测）。
-    type: internalMode.value as unknown as DatePickerPanelMode,
-    ...(info.from ? { from: info.from } : {}),
-  }) === true;
+/** `minDate` / `maxDate` 的函数形态在本地求值（⚠️ S1 欠账，见文件头）。 */
+const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =>
+  typeof limit === 'function' ? (limit({}) as PanelDateType) : (limit as PanelDateType | undefined);
+
+/**
+ * ① 「禁用」的合并判定（上游 `useFilledProps.js:115` 的 `useDisabledBoundary`）。
+ *
+ * 🚨 **合并了 `minDate` / `maxDate`** —— 上游把它的产物同时用作
+ * `mergedProps.disabledDate`（`:125`）⇒ 面板拿到的也不是用户裸的函数。
+ * 本仓此前给面板传的是**裸 `props.disabledDate`**（欠账，见 README §5.5）。
+ */
+const boundaryDisabledDate = useDisabledBoundary({
+  generateConfig: dayjsConfig,
+  locale: () => filledLang.value,
+  disabledDate: () => props.disabledDate,
+  minDate: () => resolveLimit(props.minDate) as DatePickerDate | undefined,
+  maxDate: () => resolveLimit(props.maxDate) as DatePickerDate | undefined,
+});
+
+/**
+ * ② 「这个值无效」的判定（上游 `useFilledProps.js:118` 的 `useInvalidate`）。
+ *
+ * 🚨 **2026-10-01 修正两处既有欠账**（README §5.5 (b′) #1）：
+ *
+ * 1. **`type` 传的是 `mergedPicker`（原始 `picker`），不是 `internalMode`**。
+ *    上游 `useInvalidate(generateConfig, picker, …)` 里的 `picker` 是 `props.picker`
+ *    （`useFilledProps.js:118` 传的是解构出来的那个）⇒ `date + showTime` 时
+ *    用户收到的是 **`'date'`** 而**不是** `'datetime'`。
+ *    此前本仓传 `internalMode`（含 `'datetime'`）—— 与上游不一致。
+ *    ⚠️ 注意它与「面板路径传面板粒度」并不冲突：两条路径本来就不一样
+ *    （面板路径见 `useRangeDisabledDate`）。
+ * 2. **补上 `isValidate` 与 `showTime.disabledTime` / legacy 三兄弟两支** ——
+ *    此前只查 `disabledDate`。
+ */
+const isInvalidateDate = useInvalidate({
+  generateConfig: dayjsConfig,
+  locale: () => filledLang.value,
+  picker: () => mergedPicker.value,
+  disabledDate: () => props.disabledDate,
+  minDate: () => resolveLimit(props.minDate) as DatePickerDate | undefined,
+  maxDate: () => resolveLimit(props.maxDate) as DatePickerDate | undefined,
+  showTime: () => props.showTime as unknown as Record<string, unknown> | undefined,
+  boundaryDate: boundaryDisabledDate,
+});
 
 const rangeValue = useRangeValue({
   generateConfig: computed(() => dayjsConfig),
@@ -450,6 +489,107 @@ const onOpenChange = (next: boolean): void => {
   }
   emit('openChange', next);
   emit('update:open', next);
+};
+
+// ============================== 悬停预览 / 预设（S5） ==============================
+/**
+ * 悬停预览的宿主（上游 `SinglePicker.js:264-289`）。
+ *
+ * `previewValue` 的**有效默认值是 `'hover'`**（`useFilledProps.js` 的解构默认）
+ * ⇒ 显式传 `false` 才会把整条悬停预览关掉（`onSetHover` 直接返回）。
+ */
+const mergedPreviewValue = computed(() => props.previewValue ?? 'hover');
+const internalHoverValue = ref<DatePickerDate | null>(null);
+const hoverSource = ref<'cell' | 'preset' | null>(null);
+
+const onSetHover = (date: DatePickerDate | null, source: 'cell' | 'preset'): void => {
+  if (mergedPreviewValue.value !== 'hover') {
+    return;
+  }
+  internalHoverValue.value = date;
+  hoverSource.value = source;
+};
+
+/** 关闭浮层时清掉悬停值（上游 `SinglePicker.js:288-292` 的 effect）。 */
+watch(mergedOpen, (next) => {
+  if (!next) {
+    internalHoverValue.value = null;
+  }
+});
+
+/**
+ * 面板的 `hoverValue`（上游 `SinglePicker.js:268-273` 的 `hoverValues`）。
+ *
+ * ```js
+ * const values = [internalHoverValue, ...calendarValue].filter(date => date);
+ * return multiple ? values : values.slice(0, 1);
+ * ```
+ * ⇒ 单值只保留**第一个**（悬停值优先）。
+ */
+const hoverValues = computed(() => {
+  const values = [internalHoverValue.value, ...inner.calendarValue.value].filter(
+    (date): date is DatePickerDate => Boolean(date),
+  );
+  return props.multiple === true ? values : values.slice(0, 1);
+});
+
+/**
+ * 选择器显示的值（上游 `SinglePicker.js:275-284` 的 `selectorValues`）。
+ *
+ * 🚨 与面板的 `hoverValues` **判据不同**：非 `multiple` 且有悬停值时，
+ * 输入框显示的**就是悬停值本身**（不含已选值）；否则是已选值过滤掉空槽。
+ */
+const selectorValues = computed(() => {
+  if (props.multiple !== true && internalHoverValue.value) {
+    return [internalHoverValue.value];
+  }
+  return inner.calendarValue.value.filter((date): date is DatePickerDate => Boolean(date));
+});
+
+/**
+ * 归一后的预设列表（上游 `SinglePicker.js:295` 的 `usePresets(presets)`）。
+ *
+ * ⚠️ **单值没有 `ranges`** —— 那是范围的 deprecated 通道
+ * （rc 的 `BaseRangePickerProps` 才有 `ranges`）⇒ 第二参恒 `undefined`。
+ */
+const presetList = usePresets(
+  () => props.presets,
+  () => undefined,
+);
+
+/** 悬停一个预设（上游 `onPresetHover` ⇒ `onSetHover(nextValue, 'preset')`）。 */
+const onPresetHover = (nextValue: unknown): void => {
+  onSetHover(nextValue as DatePickerDate | null, 'preset');
+};
+
+/**
+ * 点一个预设（上游 `SinglePicker.js:296-303` 的 `onPresetSubmit`）。
+ *
+ * ```js
+ * const nextCalendarValues = multiple ? toggleDates(getCalendarValue(), nextValue) : [nextValue];
+ * const passed = triggerSubmitChange(nextCalendarValues);
+ * if (passed && !multiple) triggerOpen(false, { force: true });
+ * ```
+ *
+ * ⚠️ `triggerSubmitChange` **绕过**交互状态机直接提交整组值；返回 `false`
+ * 表示被 `isInvalidateDate` 拦下 ⇒ **不关浮层**。
+ */
+const onPresetSubmit = (nextValue: unknown): void => {
+  const target = nextValue as DatePickerDate;
+  const nextValues =
+    props.multiple === true
+      ? toggleDates(
+          dayjsConfig,
+          filledLang.value,
+          mergedMode.value,
+          inner.calendarValue.value,
+          target,
+        )
+      : [target];
+  const passed = rangeValue.triggerSubmit(nextValues);
+  if (passed && props.multiple !== true) {
+    onOpenChange(false);
+  }
 };
 
 const innerPickerValue = ref<DatePickerDate | null>(props.defaultPickerValue ?? null);
@@ -750,7 +890,15 @@ const onClear = (): void => {
 
 // ============================== 展示面 ==============================
 const valueTexts = computed<string[]>(() => {
-  const texts = getDateTexts(inner.calendarValue.value);
+  /**
+   * 🚨 文本来自 **`selectorValues`**（上游 `SingleSelector` 收到的是
+   * `value: selectorValues`，`useInputProps` 再由它格式化出 `valueTexts`）。
+   *
+   * ⇒ 悬停预览时输入框显示的是**悬停值**，而不是已选值 —— 这正是
+   * `previewValue: 'hover'` 的可观察效果。此前传的是裸 `calendarValue`，
+   * 悬停永远看不到反馈。
+   */
+  const texts = getDateTexts(selectorValues.value);
   return props.multiple ? texts : [texts[0] ?? ''];
 });
 
@@ -767,10 +915,6 @@ const mergedSuffixIcon = useSuffixIcon({
 const placeholder = computed(() =>
   getPlaceholder(mergedLocale.value, mergedPicker.value, props.placeholder as string | undefined),
 );
-
-/** `minDate` / `maxDate` 的函数形态在本地求值（⚠️ S1 欠账，见文件头）。 */
-const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =>
-  typeof limit === 'function' ? (limit({}) as PanelDateType) : (limit as PanelDateType | undefined);
 
 /**
  * `-css-var` 类（+ 字面量 `css-var-root`）。
@@ -919,6 +1063,17 @@ const panelProps = computed(() => ({
   mode: mergedMode.value,
   value: inner.calendarValue.value as never,
   multiple: props.multiple,
+  /**
+   * 悬停预览（上游 `SinglePicker.js:308` 的 `hoverValue: hoverValues` /
+   * `onHover: onPanelHover`）。
+   *
+   * ⚠️ 面板拿的是**已过滤**的列表（`hoverValues`），且单值只保留第一个 ——
+   * 面板用它给格子加 `-hover` 类（周面板还会整行高亮）。
+   */
+  hoverValue: hoverValues.value as never,
+  onHover: (date: PanelDateType | null) => {
+    onSetHover(date as DatePickerDate | null, 'cell');
+  },
   onSelect: (date: PanelDateType) => {
     // 上游 `SinglePicker.js:322-328`（逐字）
     if (props.multiple && panelInternalMode.value !== mergedPicker.value) {
@@ -958,10 +1113,35 @@ const panelProps = computed(() => ({
     }
     emit('panelChange', viewDate as never, mode);
   },
-  disabledDate: props.disabledDate as never,
+  // 🚨 传的是**合并了 min/max 的**判定（上游 `mergedProps.disabledDate = disabledBoundaryDate`，
+  //    `useFilledProps.js:125`），不是用户裸的 `props.disabledDate`。
+  disabledDate: boundaryDisabledDate as never,
   minDate: resolveLimit(props.minDate),
   maxDate: resolveLimit(props.maxDate),
   cellRender: props.cellRender as never,
+  /**
+   * 🚨 时间面板**没有表头**（上游 `Popup/PopupPanel.js:44` 的 `hideHeader = picker === 'time'`）。
+   *
+   * ⚠️ 判据是**组件粒度**的 `picker`，不是面板当前粒度 —— 下钻到月 / 年面板时
+   * 表头照旧渲染（它是「上一年 / 下一年」的导航条）。
+   * 关闭 README §5.5(b′) #4（此前**根本没传** ⇒ 纯 `picker: 'time'` 会多一个表头）。
+   */
+  hideHeader: mergedPicker.value === 'time',
+  /**
+   * **双击格子 = 提交**（上游 `Popup/PopupPanel.js:34-38` 的 `sharedContext.onCellDblClick`）。
+   *
+   * ```js
+   * onCellDblClick: () => { if (needConfirm) { onSubmit(); } }
+   * ```
+   *
+   * ⚠️ `needConfirm` 为假时双击**什么都不做** —— 那时单击就已经提交了。
+   * 关闭 README §5.5(b′) #3。
+   */
+  onCellDblClick: () => {
+    if (mergedNeedConfirm.value) {
+      valueChange.triggerChange(0, 'confirm');
+    }
+  },
   showTime: props.showTime as never,
   showWeek: props.showWeek,
   format: mergedFormat.value.firstFormat,
@@ -997,6 +1177,17 @@ const selectorProps = computed(() => ({
   multiple: props.multiple === true,
   /** 原始值（标签要拿它去删；`valueTexts` 只有文本）。 */
   values: inner.calendarValue.value as unknown[],
+  /**
+   * 悬停预览的两个标志（上游 `SinglePicker.js:436-437`）。
+   *
+   * - `activeHelp`：**有没有**悬停预览 —— 单值下单独不生效（见 `Selector` 的说明）；
+   * - `allHelp`：悬停来自**预设列表** ⇒ 输入框整块转成 `-input-placeholder` 态。
+   *
+   * ⚠️ 输入框里**显示什么文本**由 `valueTexts` 决定（见 `selectorValues` 的说明），
+   * 这两个标志只负责「样子」。
+   */
+  activeHelp: internalHoverValue.value !== null,
+  allHelp: internalHoverValue.value !== null && hoverSource.value === 'preset',
   tagRender: props.tagRender,
   maxTagCount: props.maxTagCount,
   /**
@@ -1172,31 +1363,39 @@ const footerVNode = computed(() =>
       needConfirm: mergedNeedConfirm.value,
       invalid: disableSubmit.value,
       generateConfig: dayjsConfig,
-      disabledDate: props.disabledDate,
+      // ⚠️ 同上：上游 Footer 拿到的也是**合并后**的 `disabledDate`
+      disabledDate: boundaryDisabledDate,
       /** ⚠️ `today` / `now` / `ok` 在**完整**语言包上，不在 `PickerLocale` 里 */
       locale: mergedLocale.value.lang,
       classNames: semantic.classNames.value.popup,
       styles: semantic.styles.value.popup,
       /**
-       * 点「此刻 / 今天」（上游 `SinglePicker.onNow` → `onPresetSubmit`）。
+       * 点「此刻 / 今天」（上游 `SinglePicker.js:304` 的 `onNow` ⇒ `onPresetSubmit(now)`）。
        *
-       * ⚠️ 走的是 `triggerSubmit`（上游 `triggerSubmitChange`）—— 它**绕过**
-       * `disabledDate` 之外的交互状态机，直接提交整组值；`!multiple` 时再关浮层。
-       * ⚠️ 上游的 `triggerOpen(false, { force: true })` 里 `force` 在本仓无对应物
-       * （见 `onOpenChange` 的注释）。
+       * ⚠️ 与点预设**完全同一条路径** —— 上游就是这么写的（`const onNow = now => { onPresetSubmit(now); }`）。
+       * 所以这里直接复用，不再自己拼一遍 `triggerSubmit`（`multiple` 的分支因此也一致）。
        */
-      onNow: (date: PanelDateType) => {
-        const passed = rangeValue.triggerSubmit([date]);
-        if (passed && props.multiple !== true) {
-          onOpenChange(false);
-        }
-      },
+      onNow: (date: PanelDateType) => onPresetSubmit(date),
       /** 点 `OK`（上游 `onSubmit: () => triggerConfirm('confirm')`） */
       onSubmit: () => valueChange.triggerChange(0, 'confirm'),
     } as unknown as Record<string, unknown>,
   ),
 );
 
+/**
+ * 浮层内容（上游 `Popup/index.js` 的 `-panel-container` + `-panel-layout`）。
+ *
+ * 🚨 **这个 vnode 是在渲染函数之外创建的**（computed，且 `Trigger` 的
+ * `contentSource` 在它自己的 setup 期就被 `watch({immediate:true})` 求值）
+ * ⇒ 里面**绝不能出现 `ref:`** —— Vue 的 `setRef` 需要 vnode 的 owner，
+ * 而这里 `rawRef.i` 是 `null` ⇒ 生产构建抛
+ * `Cannot read properties of null (reading 'refs')`（dev 只 `warn`，所以看不出来）。
+ * 需要绑元素时用 vnode 钩子（`onVnodeMounted`），见 `RangePicker.vue` 的 `bindEl`
+ * 与 PITFALLS 264。
+ *
+ * ⚠️ 单值这一层当前**没有** ref（要测量的都在 `Selector` 里，那是渲染期创建的），
+ * 所以「碰巧能用」—— 别据此以为这种写法安全。
+ */
 const popupVNode = computed(() => {
   const popupClassNames = semantic.classNames.value.popup;
   const popupStyles = semantic.styles.value.popup;
@@ -1218,6 +1417,20 @@ const popupVNode = computed(() => {
       tabIndex: -1,
     },
     h('div', { class: `${panelPrefixCls.value}-layout` }, [
+      /**
+       * 🚨 预设列表是 `-panel-layout` 的**第一个**子节点（上游 `Popup/index.js:124-131`），
+       * 与「面板 + 页脚」那一层**并列**。空列表时 `PresetPanel` 返回 `null`
+       * ⇒ 连 `-presets` 这个类名都不出现，面板宽度不受影响。
+       */
+      h(
+        PresetPanel as Component,
+        {
+          prefixCls: prefixCls.value,
+          presets: presetList.value,
+          onClick: onPresetSubmit,
+          onHover: onPresetHover,
+        } as unknown as Record<string, unknown>,
+      ),
       // 🚨 上游 `Popup/index.js:127-133`：这一层同时装 `PopupPanel` 与 `Footer`
       h('div', null, [panelVNode.value, footerVNode.value]),
     ]),

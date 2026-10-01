@@ -202,8 +202,16 @@ export function resolveAction(input: ResolveActionInput): RangeValueChangeAction
 }
 
 export interface UseRangeValueChangeOptions {
-  /** field 数：单值 `1`，范围 `2`。 */
-  fieldCount: number;
+  /**
+   * field 数：单值 `1`，范围 `2`。
+   *
+   * 🚨 **范围要传 getter，不能传值**（上游每次渲染都重新调 hook，值会跟着
+   * `enabledFieldCount` 变）。范围下这个数是 **`disabled.filter(d => !d).length`**
+   * —— 用户动态改 `disabled` 时会变。传固化值会让「字段导航的环长度」过期
+   * （两端都禁用时长度为 0 ⇒ `(i + 1) % 0` 是 `NaN`）。
+   * 单值恒为 `1`，传值即可。
+   */
+  fieldCount: number | (() => number);
   /**
    * 是否需要「确定」才提交。
    *
@@ -249,6 +257,14 @@ export interface RangeValueChangeResult {
 
 /** 上游 `useRangeValueChange`。 */
 export function useRangeValueChange(options: UseRangeValueChangeOptions): RangeValueChangeResult {
+  /**
+   * 解析 field 数（见 `fieldCount` 的说明）。
+   *
+   * ⚠️ **每次读都重新解析**，不缓存 —— 范围下它随 `disabled` 变化。
+   */
+  const resolveFieldCount = (): number =>
+    typeof options.fieldCount === 'function' ? options.fieldCount() : options.fieldCount;
+
   // ============================= State =============================
   /** 本轮参与过的 field + 是否被改过（上游 `triggeredFieldsRef`）。 */
   const triggered = ref<TriggeredField[]>([]);
@@ -308,7 +324,7 @@ export function useRangeValueChange(options: UseRangeValueChangeOptions): RangeV
   /** 提交一个 field，返回「本轮是否已完成」（= 所有 field 都参与过）。 */
   const submitField = (index: number): boolean => {
     recordTriggeredField(index);
-    const allFieldsTriggered = triggered.value.length >= options.fieldCount;
+    const allFieldsTriggered = triggered.value.length >= resolveFieldCount();
     options.flushSubmit(index, allFieldsTriggered);
     if (allFieldsTriggered) {
       reset();
@@ -335,7 +351,7 @@ export function useRangeValueChange(options: UseRangeValueChangeOptions): RangeV
     }
 
     const action = resolveAction({
-      fieldCount: options.fieldCount,
+      fieldCount: resolveFieldCount(),
       needConfirm: options.needConfirm(),
       allowEmpty: options.allowEmpty(),
       // `snapshotIndex === null` 时 `resolveAction` 会在用到它之前就返回
@@ -395,7 +411,7 @@ export function useRangeValueChange(options: UseRangeValueChangeOptions): RangeV
           setCurrentIndex(index);
           forceFocus.value = false;
         } else if (!allFieldsTriggered) {
-          setCurrentIndex((actionIndex + 1) % options.fieldCount);
+          setCurrentIndex((actionIndex + 1) % resolveFieldCount());
           forceFocus.value = forceFocusNext;
         }
         if (source === 'field-switch') {

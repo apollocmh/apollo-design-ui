@@ -780,15 +780,20 @@ export type {
   ValueDate,
 } from './date-picker';
 // ---------------------------------------------------------------------------
-// DatePicker —— 日期选择器（单值壳；RangePicker / WeekPicker 属 S5，尚未落地）
+// DatePicker —— 日期选择器（单值壳 + 范围壳）
 //
 // ⚠️ 类名前缀是 **`apollo-picker`**（上游 `getPrefixCls('picker', …)` 传的是字面量
 //    `'picker'`），而 CSS 变量是 `--apollo-date-picker-*` —— **两者不同名**，
 //    见 `date-picker/README.md` 的文件头。
-// ⚠️ `DatePicker.RangePicker` / `.WeekPicker` 这两个**静态成员**还没有
-//    （范围版未实现）⇒ 目前只有单值形态。
+// ⚠️ **两个组件共用同一份样式**（`genDatePickerStyle` / `COMPONENT_STYLES` 里
+//    只有 `date-picker` 一项）—— 范围的面板样式与单值完全同源，不另注册。
+// ⚠️ 上游的 `DatePicker.RangePicker` 静态成员由 `date-picker/index.ts` 的
+//    `Object.assign` 原地挂上（`DatePickerWithRange`），所以**顶层导出里
+//    `RangePicker` 与 `DatePicker.RangePicker` 都可用**。
+//    ⚠️ `.WeekPicker` / `.QuarterPicker` 仍未实现（antd 侧它们是薄包装，
+//    与本仓 `picker: 'week'` 的用法等价）。
 // ---------------------------------------------------------------------------
-export { DatePicker } from './date-picker';
+export { DatePicker, DatePickerWithRange, RangePicker } from './date-picker';
 export {
   genDatePickerStyle,
   genTokenDecls as genDatePickerTokenDecls,

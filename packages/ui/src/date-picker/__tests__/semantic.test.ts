@@ -1,8 +1,8 @@
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— DatePicker
  *
- * 基准：`tests/compat/baselines/date-picker.dom.json`（机械 oracle，**16 用例**，单值）。
- * `keepStyle: false`。
+ * 基准：`tests/compat/baselines/date-picker.dom.json`（机械 oracle，**21 用例**：
+ * 16 单值 + 5 范围）。`keepStyle: false`。
  *
  * ── 覆盖范围：**只覆盖触发元素**（与 `cascader.mjs` 同判）──────────────────────
  *
@@ -11,10 +11,14 @@
  * ⇒ **面板侧的结构契约由 `@apollo-design/picker` 的 L4 负责**（它自己的 rc 基线与用例），
  * 本文件不重复钉 —— 避免同一件事在两层各钉一份、日后漂移。
  *
- * ── 范围版留到 S5 ─────────────────────────────────────────────────────────────
+ * ── 范围版（S5 已补）─────────────────────────────────────────────────────────
  *
- * `RangePicker.vue` 与「范围两端切换」同批落地（S5）。届时 baseline 补 5 个 range 用例，
- * 这里同步补 `CASES`。
+ * 5 条范围用例钉的是**范围与单值的 DOM 差异**：
+ *   - 根上多 `-range`（紧贴 `prefixCls`）、两个输入框 `-input-start` / `-input-end`；
+ *   - 两框之间多 `-range-separator`（默认图标带 `aria-hidden`，**自定义文本时去掉**）；
+ *   - 🚨 `-disabled` 的判据是 **`disabled.every()`** ⇒ `disabled: [true, false]`
+ *     那一端**不该**在根上加 `-disabled`（`range-disabled-one` 就是这条的反向哨兵）；
+ *   - 范围**没有** `-multiple`（`multiple` 不是范围的 prop）。
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
@@ -27,7 +31,7 @@ import { h } from 'vue';
 config.global.stubs = { ...config.global.stubs, teleport: false };
 
 import baseline from '../../../../../tests/compat/baselines/date-picker.dom.json';
-import { DatePicker } from '../index';
+import { DatePicker, RangePicker } from '../index';
 
 const D = (s: string) => dayjs(s);
 
@@ -52,6 +56,22 @@ const CASES: Record<string, () => DomRenderResult> = {
   'date-picker:no-suffix': () => h(DatePicker, { ...BP, suffixIcon: null }),
   'date-picker:picker-month': () => h(DatePicker, { ...BP, picker: 'month' }),
   'date-picker:placeholder': () => h(DatePicker, { ...BP, placeholder: '自定义' }),
+
+  // ---------------------------------------------------------------- 范围（S5）
+  'date-picker:range-basic': () => h(RangePicker, BP),
+  'date-picker:range-value': () =>
+    h(RangePicker, { ...BP, defaultValue: [D('2026-09-01'), D('2026-09-30')] }),
+  /** 自定义分隔符 ⇒ 去掉 `aria-hidden`（默认图标那个 span 是带 `aria-hidden` 的）。 */
+  'date-picker:range-separator': () => h(RangePicker, { ...BP, separator: '→' }),
+  /** 两端都禁用 ⇒ 根上**有** `-disabled`。 */
+  'date-picker:range-disabled': () => h(RangePicker, { ...BP, disabled: true }),
+  /** 🚨 只禁用**一端** ⇒ 根上**不该**有 `-disabled`（判据是 `every`）。 */
+  'date-picker:range-disabled-one': () =>
+    h(RangePicker, {
+      ...BP,
+      disabled: [true, false],
+      defaultValue: [D('2026-09-01'), D('2026-09-30')],
+    }),
 };
 
 domContractTest('DatePicker', {

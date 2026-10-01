@@ -20,23 +20,20 @@
       落成 **44 个 CSS 变量**（减 `INTERNAL_FIXED_ITEM_MARGIN`）、产物里实见 **45 个**
       `--ant-date-picker-*`（44 + 规则内声明的 `affixColor`）；另有 `initPickerPanelToken` 的
       **10 个内部 token**。主题测试 **22 条**（`__tests__/theme.test.ts`）
-- [ ] G4 IMPLEMENT —— 分 S1–S5 五阶段（见下方「G4 的架构分叉」）
+- [x] G4 IMPLEMENT —— 分 S1–S5 五阶段（见下方「G4 的架构分叉」）—— **五阶段全部落地**
       - [x] S1 值 / 开合 / 面板接线 —— **功能面完成**（`DatePicker.vue` + 7 个 hooks +
         4 个组件模块；测试 **64 条**全绿）。`needConfirm` 默认值与 zIndex 已收口。
+        模块清单：`hooks/{picker-types,picker-locale,picker-value,picker-format,picker-suffix}.ts` ·
+        `components/picker-shared.ts`（`isRenderable` / `getInputSize` / `toDisabledPair` /
+        `isPairDisabled` / `getMergedPickerStatus` / 两个 `showClear`）·
+        `components/Selector.ts`（单值 / 范围共用，DOM 逐字对齐 SSR 实测）·
+        `components/root-class.ts`（顺序对齐上游 `clsx` 参数序）·
+        `components/trigger-config.ts`（4 落点 × points/offset/overflow + `getRealPlacement` +
+        `getDropdownClassName` + `getTransitionName`）。
+        ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
+        status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`。
       - [x] S1 剩余：**样式** —— `style/index.ts`（**257 条规则** + `genTokenDecls` 的
         **45 条**声明 + `genDatePickerStyle`），B7 **双向**比对 8 条用例。
-      - [ ] S1 值 / 开合 / 面板接线 —— **进行中**。已落地（可验证部分，**40/40 通过**）：
-        - `hooks/{picker-types,picker-locale,picker-value,picker-format,picker-suffix}.ts`
-        - `components/picker-shared.ts` —— 组件层共用纯归一（`isRenderable` / `getInputSize` /
-          `toDisabledPair` / `isPairDisabled` / `getMergedPickerStatus` / 两个 `showClear`）
-        - `components/Selector.ts` —— 单值 / 范围共用的输入框选择器，DOM 逐字对齐 SSR 实测
-        - `components/root-class.ts` —— 根类名组装（顺序对齐上游 `clsx` 参数序）
-        - `components/trigger-config.ts` —— `BUILT_IN_PLACEMENTS`（4 落点 × points/offset/overflow）
-          + `getRealPlacement` + `getDropdownClassName` + `getTransitionName`
-        - `__tests__/picker-pure.test.ts` —— **40 条**
-        ⏳ 未完成：`.vue` 壳（开合接线 / Trigger / PickerPanel 挂载）、L2 交互用例。
-        ⚠️ 状态类名**复用**既有 `space/statusUtils.ts`（不重复实现）；
-        status 合并按**上游 `||`** 实现为 `getMergedPickerStatus`（见 README §5 的既有不一致）。
       - [x] S2 键入解析 + **提交时机** —— **全部落地**（2026-10-01）：
         - ✅ 纯函数：`hooks/picker-typing.ts`（`parseTextWithFormat` / `validateFormat`）
         - ✅ **默认 `format` 的补齐层** —— `hooks/picker-filled.ts`：
@@ -57,18 +54,20 @@
         `components/mask-format.ts`（上游 `MaskFormat.js` 81 行，工厂 + 接口形态）+
         `components/mask-input.ts`（上游 `Input.js` 的 `format` 分支）+ `Selector` 转接。
         用例：`mask-format.test.ts` **18 条**（L1，node）+ `s3-mask.test.ts` **11 条**（L2，jsdom）。
-      - [~] S4 键盘字段导航与分段（`-input-active`）—— **单值可达的部分已落地**（2026-10-01）：
+      - [x] S4 键盘字段导航与分段（`-input-active`）—— **全部落地**（2026-10-01）：
         - ✅ 调度（`field-switch` 分支 + `forceFocus`）随 S2 落地；
         - ✅ **`-focused` 根类名** + `focus`/`blur` 事件 + **确认离开才关浮层**
           （上游 `useFocusEvents.js` 55 行）；用例 `s4-focus.test.ts` **5 条**。
-        - ⏳ **范围专属**、本仓尚不可达的两项（随 S5 的 RangePicker 一起做）：
+        - ✅ **范围专属的两项**（随 S5 的 `RangePicker` 落地）：
           - **`-input-active`**：上游 `Input.js` 的 `active = activeIndex === index`，
             而 `SinglePicker` **不传** `activeIndex` 给 `SingleSelector` ⇒ **单值恒不加**
-            （所以「分段高亮」本质是范围特性）；
+            （所以「分段高亮」本质是范围特性）。范围的 `activeIndex` 由
+            `Selector` 的 `-active-bar` 几何同步一并接上；
           - **`useFocusLock` 的强切换聚焦**：`forceFocus` 在单值下**恒为 `false`**
-            （`submitField` 一定 `allFieldsTriggered` ⇒ `reset()` 把它抹掉）。
-      - [~] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换、`presets` / footer ——
-        **已落地一部分**（2026-10-01）：
+            （`submitField` 一定 `allFieldsTriggered` ⇒ `reset()` 把它抹掉）
+            ⇒ 它只在范围下生效（`hooks/picker-focus-lock.ts`）。
+      - [x] S5 `multiple` + `tagRender` / `maxTagCount`、范围两端切换、`presets` / footer ——
+        **代码与用例全部落地**（2026-10-01）；registry 11 维度已置 done。
         - ✅ **面板粒度的受控化 + 「打开即重置」**（README §5.5(d) 的收口）：
           `panelProps.mode` 改传 `mergedMode`（上游 `SinglePicker.js:366`），
           并在 `mergedOpen` 变真时把粒度重置回 `picker`
@@ -81,13 +80,28 @@
           🚨 前置欠账**已还**：`_internal/overflow.ts` 补了 **`renderItem`**
           （rc 的非 raw 路径；此前只有 `renderRawItem`）—— menu 全层回归 **110 passed** 无变化。
           用例 `s5-multiple.test.ts` **9 条**。
-        - ⏳ **范围两端（`RangePicker`）**：要新开 `RangePicker.vue` + 范围的 Selector
-          （`-input-start` / `-input-end` / `-range-separator` / `-active-bar`）
-          + `fieldCount = 2` 的状态机接线（调度已在，S4 的 `-input-active` /
-          `useFocusLock` 也归这一批）。
-        - ⏳ **`presets` / footer**：上游在 **Popup 层**（`PickerInput/Popup/PresetPanel.js`
-          + `Footer.js`），本仓的 `panelVNode` 只渲染面板 ⇒ 要先有一个「浮层内容容器」
-          组件。`showNow` / `showToday` / `renderExtraFooter` / `panelRender` 同批。
+        - ✅ **范围两端（`RangePicker`）**（2026-10-01 收口）—— `RangePicker.vue`（约 1150 行）
+          是上游三份实现的 Vue 化：`generateRangePicker.js`（234 行）+
+          `PickerInput/RangePicker.js`（574 行）+ `RangeSelector.js`（209 行）+
+          `Popup/{index,PopupPanel,PresetPanel}.js`。
+          `index.ts` 导出 `RangePicker` 与 `DatePicker.RangePicker`。
+          🚨 一条**必须记住的架构差异**：本仓 `PickerPanel` **自己** `providePanelHack`
+          ⇒ 外层注入被「最近的赢」遮蔽 ⇒ `hidePrev` / `hideNext` / `onCellDblClick`
+          改走 **props**（PITFALLS 256）。
+          同批还清了三处欠账：`useInvalidate` 全量（§5.5(b′) #1）、
+          `onCellDblClick`（#3）、`hideHeader`（#4）。
+          ✅ **用例已补（同日）**：L4 `semantic.test.ts` +5 条范围用例（baseline 16 → 21）、
+          L5 `a11y.test.ts` +12 条（含上游两条 `separator` 的 `aria-hidden` 测试）、
+          L6 加 `range` / `range-value` 两个变体 → **27/27 exact**。
+        - ✅ **`presets` / footer**（2026-10-01 收口）—— `hooks/picker-presets.ts`
+          （`usePresets` / `executePresetValue`）+ `components/PresetPanel.ts`
+          （上游 `PickerInput/Popup/PresetPanel.js` 31 行逐字）；`Footer` 早已在
+          `-panel-layout` 的同层 `div` 里（§5.5(f′)）。**单值与范围共用**。
+          单值侧另接**悬停即预览**：`internalHoverValue` / `hoverSource` / 面板的
+          `hoverValue` / `selectorValues`（🚨 **输入框文本来自它**，不是 `calendarValue`）/
+          `Selector` 的 `activeHelp` + `allHelp` ⇒ `-input-placeholder`。
+          ⚠️ `panelRender` **仍未接线**（挂载点 = `-panel-layout`）。
+          用例 `s5-presets.test.ts` **15 条**。
 - [x] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts`（**上游 testCases 的镜像**）。
       覆盖：locale 三态（prop / 默认 / 深合并）· `disabledDate` · `showTime` 的
       **列数与项数**（8 条上游用例合并成一张表 + `{}` 空参 + 12/24 小时）·
@@ -105,30 +119,50 @@
       （`calendarChange` 三参、`keydown` 两参）/ 两个 expose 的 `focus` 签名差异 /
       单值与范围的差异面（`showTime` / `presets` / `placeholder` / `disabled` / `separator`）/
       **8 条负例**（`'datetime'` 不是 `picker`/`mode`、`status` 只有两档、单值不接受元组 …）
-- [x] G8 L5 a11y —— `__tests__/a11y.test.ts`，**24 条**（7 条 role/ARIA 契约 + 17 组 axe 扫描），
+- [x] G8 L5 a11y —— `__tests__/a11y.test.ts`，**36 条**（单值 7 条 role/ARIA 契约 +
+      17 组 axe 扫描；**范围 +12**：6 条 role/ARIA 契约 + 6 组 axe 扫描），
       **零 axe violation、零豁免**。判据：根无 role · `input[aria-invalid="false"]`
       （🚨 `status=error` 也**不改**）· 清除按钮 `aria-label` 取 **`locale.clear`**（en_US 是 `Clear`）·
       后缀图标 `role=img` + `aria-label=calendar` + `aria-hidden=true` · `disabled` 时不渲染清除按钮。
-      ⚠️ 范围版（含上游两条专门的 **separator a11y 测试**：默认带 `aria-hidden`、自定义**去掉**它）
-      留到 **S5**；浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
-- [x] G9 L6 视觉 —— ✅ **21 / 21 exact**（2026-10-01 三轮收口）。
+      ✅ **范围版已补（S5，2026-10-01）**，含上游两条专门的 **separator a11y 测试**：
+      **默认**分隔符是装饰性图标 ⇒ 带 `aria-hidden="true"`；**自定义**（`separator: '→'`）
+      是用户内容 ⇒ **去掉** `aria-hidden`（否则读屏器丢掉「从…到…」的连接词）。
+      浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
+- [x] G9 L6 视觉 —— ✅ **27 / 27 exact**（2026-10-01 四轮收口；三轮时是 21/21 单值）。
       首轮 18 组 0.42%~3.51%（面板铺满容器）⇒ 修 `-css-var` 漏挂 → 3/21 exact；
       二轮修「表头图标」「缺 `-panel-container`」「`popup.root` 新 API 死」→ **12/21**；
-      三轮补「`Today` 页脚」→ **21/21**。
-      ⚠️ 组件**仍不能判 `completed`**：S5 还剩**范围两端**与 **`presets`**。
+      三轮补「`Today` 页脚」→ **21/21**；
+      **四轮（S5）加 `range` / `range-value` 两个变体**（× 3 视口）→ **27/27**，
+      并抓到两个真 bug（见 README §5.5(b‴) / PITFALLS 264 / 265）：
+      ① 浮层 vnode 在渲染期之外创建 ⇒ `ref:` 的 owner 为 `null` ⇒ **生产构建抛异常**
+      （dev 只 `warn`，所以 jsdom 与 dev 页面全绿）；
+      ② `hoverRangeValue` 算了但**没传给面板** ⇒ `-cell-in-range` 的浅蓝底永远不出现
+      （指纹：空值三视口 0.000% exact、一有值就 `block-diff`）。
+      ⚠️ React 基线已入库（`baselines/react/date-picker/`，27 张；旧 21 张字节未变）。
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
-      `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
-      （16 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
+      `baselines/date-picker.dom.json`（**21 用例**：16 单值 + **5 范围**）+ `semantic.test.ts` **22 条**
+      （21 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
       ⚠️ 只覆盖**触发元素**（与 cascader 同判）：SSR 下浮层走 Portal 不渲染 ⇒
       面板侧的结构契约由 `@apollo-design/picker` 的 L4 负责，不在两层各钉一份。
-      ⚠️ 范围版留到 **S5**（`RangePicker.vue` 同批落地，届时补 5 个 range 用例）。
+      ✅ **5 条范围用例已补（S5）**：`range-basic` / `range-value` / `range-separator` /
+      `range-disabled`（两端都禁 ⇒ 根上有 `-disabled`）/ `range-disabled-one`
+      （🚨 只禁一端 ⇒ 根上**不该**有 `-disabled`，判据是 `every` —— 反向哨兵）。
 - [x] G11 DOCS —— `index.zh-CN.md` / `index.en-US.md`（**完整**：何时使用 / 引入 /
       代码演示 / API 四表 / Theme 45 个 token（**实测值**）/ 设计说明）。
       ⚠️ 代码演示**只写了 `basic`**（demo 目录里只有它），其余用 TODO 注明；
       **不写不存在的 demo 引用**（坏链比缺一节更糟）。
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:date-picker]
+- [x] G12 REGISTRY —— 11 维度全部 done，`status: completed`（2026-10-01）。
+      `node registry/tools/ask.mjs component date-picker` ⇒ 11 × ✅；
+      `pnpm run registry:check` ⇒ **18 checks passed, 0 warnings**（含 E3「completed 的组件
+      11 维度必须全 done」与 E9「completed 组件必须有 compat fixture 目录」）。
+      ⚠️ 改完成数后要**依次刷新**两个派生文件（`--check` 会先红）：
+      `node registry/tools/foundation-status.mjs`（**不带 `--check`**）→
+      `node registry/tools/gen-workstreams.mjs`（**不带 `--check`**）→ 再 `registry:check`。
+      ⚠️ `notes` **不是保留字段** ⇒ 注记写在 `registry/source/components.meta.mjs`
+      （改 `components.json` 的 `notes` 会被下一次 `registry:gen` 抹掉，PITFALLS 220）。
+- [x] G13 BUILD —— `registry:check` + `lint` + `test` + `test:build` 四道全绿（2026-10-01）；
+      `test:visual` 单独跑（**不在 `verify:full` 里**）⇒ **27/27 exact**。
+- [x] G14 COMMIT —— commit message 带 `[COMP:date-picker]`（2026-10-01）。
 
 ## G2 的三条关键判据（写 interface.ts 时定的，G4 必须遵守）
 
@@ -321,9 +355,9 @@ Vue 侧撑不出同一个高度 ⇒ 两侧 `#stage` 尺寸不等 ⇒ pixelmatch 
 连带**修正**了把它钉住的测试（`AGENTS.md` §4.2 第 3 条）。→ PITFALLS **254**
 新增 `__tests__/footer.test.ts`（12 条）+ `getShowNow` 的纯函数用例（1 条）。
 
-### ✅ 三轮收口：L6 全绿
+### ✅ 三轮收口：L6 全绿（单值）
 
-**21 / 21 exact** ⇒ **G9 的 L6 门禁已过**（G12/G13/G14 仍未做）。
+**21 / 21 exact** ⇒ 单值的 L6 门禁已过。
 
 ⚠️ 二轮时 `basic` / `value` / `datetime` 的差异率比一轮**变大**（0.13%→0.22% 等）
 **不是回归**：它们 antd 侧**有页脚**、Vue 侧没有；此前 Vue 连阴影都没有 ⇒
@@ -331,8 +365,34 @@ Vue 侧撑不出同一个高度 ⇒ 两侧 `#stage` 尺寸不等 ⇒ pixelmatch 
 （`month`/`year`/`multiple` 掉到精确 0 恰好反证：它们 antd 侧**没有页脚**，
 此前的差异**全部**来自缺阴影。）
 
+### ✅ 四轮收口（S5）：加范围变体 → **27 / 27 exact**
+
+新增 `range`（空值：两输入框 + 分隔符 + 并排两面板 + `-range-arrow`）与
+`range-value`（**跨月**区间 9/10 → 10/5：两端字段文本 + 两个面板各自的
+「选中 / 区间内 / 端点」格子态）× 3 视口 = **+6 张**。
+
+🚨 **这一轮抓到两个真 bug，都是「jsdom 全绿、真浏览器才暴露」的形态**：
+
+1. **浮层 vnode 在渲染期之外创建 ⇒ `ref:` 的 owner 是 `null`**
+   ⇒ 生产构建抛 `Cannot read properties of null (reading 'refs')`；
+   dev 只 `warn`（「Missing ref owner context」）然后 `return`。
+   ⇒ 修法是浮层里改用 **vnode 钩子**（`onVnodeMounted`，不走 `setRef`）。
+   ⚠️ 试过「把 `popup` 改成函数形态」—— **没用**，因为 `Trigger` 的
+   `contentSource` 在它自己的 setup 期就被 `watch({immediate:true})` 求值了。
+   → PITFALLS **264**
+2. 🚨 **`hoverRangeValue` 没传给面板** ⇒ `-cell-in-range` 的浅蓝底一格都没有。
+   **指纹**：`range` 空值三视口 0.000% exact、`range-value` 一有值就 `block-diff`
+   ⇒ 差异一定在「与值相关的状态类」上，直接锁定，不用逐像素找。
+   同批把 `showWeakHover` 的第三条判据从粒度级 `isSame` 改回上游的
+   **`isSameTimestamp`**（时间戳级）。→ PITFALLS **265**
+
+⚠️ **另有一条工作流陷阱**：视觉用例解析的是 `packages/ui/dist`（不是 `src`）
+⇒ 改完源码**必须先 `pnpm build:ui`** 再跑 L6，否则「改了没效果」。
+判断产物新旧要 **grep 产物**（`vue-<hash>.js` 是 vendor chunk，hash 不变是正常的）。
+→ PITFALLS **266**
+
 ⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确「不得放宽」，
-**没有豁免机制**）。组件**仍不能判 `completed`** —— 见下节 S5 剩余。
+**没有豁免机制**）。四轮收口后 **27/27 exact** ⇒ 该门禁已过，组件判 `completed`。
 
 ⚠️ **与 G12 的关系**：`test:visual` **不在** `verify:full`（= registry:check && lint && test && test:build）
 ⇒ L6 的红**不会**让日常门禁红，必须显式跑 `node tests/visual/run.mjs --component date-picker`。

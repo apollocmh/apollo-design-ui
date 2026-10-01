@@ -1,0 +1,12 @@
+{
+  "$schema": "../schema.json",
+  "id": "date-picker/range",
+  "component": "date-picker",
+  "description": "范围（RangePicker）的触发元素契约 —— **范围与单值的 DOM 差异全在这几条**：① 根上多 `-range`（紧贴 `prefixCls`）；② 两个输入框 `-input-start` / `-input-end`，各自带 `date-range=start|end`；③ 两框之间多 `-range-separator`（默认是图标 ⇒ 带 `aria-hidden=true`；自定义文本时**去掉**它）；④ 🚨 `-disabled` 的判据是 `disabled.every()`（**两端都禁用**），`-invalid` 是 `invalid.some()` —— 与单值的单布尔判据**不同**；⑤ 范围**没有** `-multiple`（`multiple` 不是范围的 prop，只有 `SinglePickerProps` 才有）。⚠️ `defaultValue` 用 ISO-8601 字符串，由消费侧转成日期对象（两侧同一份 props，键名用 React 侧 camelCase）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "defaultValue": ["2026-09-10", "2026-10-05"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "update:value", "calendarChange", "openChange"] }
+}

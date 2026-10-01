@@ -16,12 +16,20 @@ import {
   DATE_PICKER_DATETIME_FORMAT,
   DATE_PICKER_MULTIPLE,
   DATE_PICKER_PANEL_ANCHOR,
+  DATE_PICKER_RANGE,
   DATE_PICKER_VALUE,
   DATE_PICKER_VARIANT_LABEL_STYLE,
   DATE_PICKER_VARIANT_ROW_STYLE,
   DATE_PICKER_VARIANTS,
   DATE_PICKER_VARIANTS_STYLE,
 } from '../shared.mjs';
+
+/**
+ * 🚨 `RangePicker` **不是 antd 的顶层导出** —— 写成 `import { RangePicker } from 'antd'`
+ * 会拿到 `undefined`，渲染时报「Element type is invalid … but got: undefined」。
+ * 必须走静态成员 `DatePicker.RangePicker`。
+ */
+const { RangePicker } = DatePicker;
 
 /** `getPopupContainer` 的落点（见文件头）。 */
 let holderEl = null;
@@ -85,5 +93,22 @@ export default {
         ))}
       </div>,
       560,
+    ),
+
+  // ---------------------------------------------------------------- 范围（S5）
+  /** 范围：两个输入框 + 分隔符 + **并排两个面板**（`-range-wrapper` / `-range-arrow`）。 */
+  range: () =>
+    box(<RangePicker open defaultPickerValue={ANCHOR} getPopupContainer={() => holderEl} />, 520),
+
+  /** 范围有值：两端字段文本 + 两个面板各自的「选中 / 区间内 / 端点」格子态。 */
+  'range-value': () =>
+    box(
+      <RangePicker
+        open
+        defaultValue={DATE_PICKER_RANGE.map((value) => dayjs(value))}
+        defaultPickerValue={ANCHOR}
+        getPopupContainer={() => holderEl}
+      />,
+      520,
     ),
 };

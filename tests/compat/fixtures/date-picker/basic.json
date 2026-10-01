@@ -1,0 +1,12 @@
+{
+  "$schema": "../schema.json",
+  "id": "date-picker/basic",
+  "component": "date-picker",
+  "description": "单值触发器的 DOM 契约：根类名（`apollo-picker` + 变体类，注意前缀是 `picker` 而不是 `date-picker`）+ `-input` 语义槽 + `input[aria-invalid=false]`（🚨 `status=\"error\"` 也不改它）+ `autocomplete=off` + 后缀图标（`role=img` + `aria-label=calendar` + `aria-hidden=true`）+ 清除按钮（`button[type=button]`，`aria-label` 取 `locale.clear`）。⚠️ SSR 下浮层走 Portal ⇒ 不渲染，面板侧的结构契约由 `@apollo-design/picker` 的基线负责。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "defaultValue": "2026-09-30"
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "update:value", "openChange", "update:open", "clear"] }
+}

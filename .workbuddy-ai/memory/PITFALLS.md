@@ -2583,3 +2583,200 @@
       见 254）。
     - ⚠️ **页脚样式（`-footer` / `-ranges` / `-now-btn-disabled` / `-ok`）早在 257 条规则里**
       （机械转换时就带上了）—— 缺的从来只是**组件 + 接线**，不是 CSS。先 `grep` 规则再动手。
+
+---
+
+## 流：date-picker S5（范围两端 + `presets`）—— 2026-10-01
+
+> 号段 **256–263**。这一段全部来自「范围 + 预设」的移植：`RangePicker.vue`、
+> `PresetPanel`、以及为了让它编译通过而做的三处类型/接线修正。
+
+256. 🚨 **`PickerPanel` **自己** `provide` 了 `PanelHackContext` ⇒ 外层注入被「最近的赢」遮蔽，hack 面必须走 **props**（2026-10-01，date-picker 双面板）。
+
+    上游把 `PickerHackContext.Provider` 放在**外层** `Popup/PopupPanel.js` 里，
+    `PickerPanel` 只是 `useContext` 的消费者 ⇒ 上游想给「左面板藏 next / 右面板藏 prev」
+    只要在 Provider 上换 value。
+
+    **本仓不是**：`packages/picker/src/picker-panel.ts` 的 `setup()` 里自己调
+    `providePanelHack({...})`（因为 `PickerPanel` 也要能被单独使用）。Vue 的 `provide`
+    与 React 的 context 同语义（**最近的一层赢**）⇒ 外层再 provide 一份**完全不生效**。
+
+    - **症状**：双面板两个面板都显示四个导航按钮；`onCellDblClick` 永远不被调用。
+    - **修法**：给 `PickerPanel` 补三个 **props**（`hidePrev` / `hideNext` / `onCellDblClick`），
+      并在它自己的 `providePanelHack` 里合并进去 —— 即「props 优先于内部默认」。
+    - **回归哨兵**：`packages/picker/src/__tests__/panel-edge.test.ts` 里专门有一条断言
+      「**外层** provide 会被 `PickerPanel` 自己那份遮蔽」，把这条语义钉死。
+    - **判据（可推广）**：本仓凡「上游在**外层** Provider 里下发、而本仓把 Provider 挪进了
+      组件内部」的地方，注入面都要改走 props。**先 grep `provide` 再动手。**
+
+257. 🚨 **`TimeConfigSource.showTime` 只声明了「时间面板形态」，而范围组件的 `showTime.disabledTime` 是**三参**（2026-10-01，date-picker / picker 包）。
+
+    两个真实形态（rc 自己的类型就是这样分的）：
+    - 单值 / 时间：`SharedTimeProps.disabledTime?: (date) => DisabledTimes`（1 参）；
+    - **范围**：`RangeTimeProps.disabledTime?: (date, range, info) => DisabledTimes`（**3 参**）。
+
+    上游 `useFilledProps.js` 把**整个 props** 丢给 `getTimeProps(props)`（JS 无类型）⇒
+    它天然同时收两个形态。本仓把入参收窄成 `TimeConfigSource`，而它的
+    `showTime?: boolean | TimePanelConfig` 只有 1 参形态 ⇒ **`RangePicker.vue` 编译不过**。
+
+    - ⚠️ **函数参数是逆变的**：3 参的函数**不能**赋给 1 参的签名（调用方可能只给 1 个实参）。
+      把参数写成可选（`range?`）也救不了 —— 目标说「可以不传」，源说「必须传」。
+    - **修法**：`picker` 包新增 `TimeConfigShowTime<DateType>`（组件层形态：
+      `disabledTime` 收 3 参、`defaultValue` / `defaultOpenValue` 允许数组），
+      `TimeConfigSource.showTime` 与 `getTimeProps` / `fillShowTimeConfig` 的签名都换成它。
+      **只放宽「入参」，不改任何运行期行为** —— `getTimeProps` 从不调用 `disabledTime`
+      （`showTimeKeys` 只是把它抄进 `timeConfig`），真正调用它的是 `useTimeInfo` /
+      `useInvalidate`，而范围的原始三参函数在 `RangePicker` 里被 `proxyDisabledTime`
+      代理成 1 参之后才下发（rc `RangePicker.js:174-192`）。
+    - **判据**：遇到「本仓类型比上游窄」的编译错，**先问「上游是不是 JS 所以没这个问题」**，
+      再决定是「补类型」还是「改实现」。这里答案是**补类型**。
+
+258. ⚠️ **`Selector.onSelectorClick` 的签名过窄，把事件丢了**（2026-10-01，date-picker）。
+
+    本仓 `Selector` 声明的是 `PropType<() => void>`，且两处 `onClick` 都写成
+    `() => props.onSelectorClick?.()`。而上游 `onClick: onClick` 原样透传 ——
+    `RangePicker.onSelectorClick` **真的要用 `event.target`**：
+
+    ```js
+    const rootNode = event.target.getRootNode();          // ← 找 Shadow DOM 的 activeElement
+    const activeEl = rootNode.activeElement ?? document.activeElement;
+    if (!native.contains(activeEl)) { selector.focus({ index: enabledIndex }); }
+    ```
+
+    ⇒ 丢掉事件等于「点输入框旁边的空白时不会把焦点拉回可用的一端」。
+    **修法**：签名放宽成 `(event: MouseEvent) => void`，两处调用点把 `event` 传下去
+    （0 参的回调仍然兼容，是加宽不是破坏）。
+
+259. ⚠️ **`PresetPanel` 的 `onMouseLeave` **不**调 `executeValue`**（2026-10-01，date-picker）。
+
+    「函数形态的 `value` 每次用都重新求值」这句**只覆盖两处**：
+    ```js
+    onClick:      () => { onClick(executeValue(value)); }
+    onMouseEnter: () => { onHover(executeValue(value)); }
+    onMouseLeave: () => { onHover(null); }        // ← 不调 executeValue
+    ```
+    ⇒ 写测试时别断言「悬停 + 离开 + 点击 = 3 次求值」，**是 2 次**。
+    （`packages/ui/src/date-picker/__tests__/s5-presets.test.ts` 有一条专门钉它。）
+
+260. 🚨 **`needConfirm` 下「双击格子提交」的测试必须照实派发 `click` ×2 + `dblclick`**（2026-10-01，date-picker）。
+
+    真实浏览器里一次双击 = 两个 `click` + 一个 `dblclick`。只派发 `dblclick` 会得到
+    **假绿灯/假红灯**：`onCellDblClick` → `confirm` → `flushSubmit` → `triggerSubmit(calendarValue)`，
+    而此时 `calendarValue` **等于**已提交值 ⇒ `isSameMergedDates` 为真 ⇒ **`onChange` 不发**。
+
+    - 正确写法：先 `trigger('click')` 两次（走 `onSelect` → `panel-final` + `needConfirm` ⇒
+      `modify`，只改临时值），再 `trigger('dblclick')`。
+    - 反向用例（无 `needConfirm`）只派发 `dblclick` 是**对的** —— 那时唯一可能命中的就是
+      `onCellDblClick`，它内部先判 `needConfirm` ⇒ 应当是**完全空操作**（连浮层都不关）。
+    - **判据（可推广）**：凡「合成事件才触发」的行为（dblclick / contextmenu / 组合键），
+      测试要么照实派发**前置事件序列**，要么在断言旁写清「这里刻意不派发前置事件」。
+
+261. 🚨 **`RangePickerProps` 上**没有** `multiple` / `removeIcon`**（2026-10-01，date-picker）。
+
+    rc 的类型分家很干净：`SharedPickerProps`（两者的基类）**不含** `multiple`，
+    只有 `SinglePickerProps` 才有 `multiple` / `removeIcon` / `maxTagCount` / `tagRender`。
+    ⇒ 上游 `useFilledProps` 里 `complexPicker = multipleInteractivePicker || multiple`
+    的那一 `|| multiple`，**对范围恒为 `undefined`**（等价于只有前半）。
+
+    - ⚠️ 照抄时写成 `props.multiple` 会**编译不过**；写对了也不该「顺手保留」——
+      Vue 里未声明的 prop 会落到 `attrs`（PITFALLS 3），是个静默失效的陷阱。
+    - 同理 `removeIcon`：`Selector` 只在**多选标签分支**读它（`Selector.ts:570`），
+      范围恒 `multiple: false` ⇒ **根本不该传**。
+
+262. ⚠️ **`fieldCount` 在范围下必须传 **getter**，不能传值**（2026-10-01，date-picker）。
+
+    范围下这个数是 `disabled.filter(d => !d).length`（上游 `enabledFieldCount`），
+    用户动态改 `disabled` 时会变。上游每次渲染都重新调 hook ⇒ 拿的是新值；
+    Vue 里若传 `enabledFieldCount.value`（固化值），「字段导航的环长度」会过期 ——
+    **两端都禁用时长度为 0 ⇒ `(actionIndex + 1) % 0` 是 `NaN`**。
+
+    - 修法：`UseRangeValueChangeOptions.fieldCount: number | (() => number)`，
+      内部 `resolveFieldCount()` **每次读都重新解析**（不能缓存）。
+    - **判据（可推广）**：凡是「上游每次渲染重新调 hook 才能拿到的值」，Vue 里都要
+      **传 getter**（同族的还有 `needConfirm` / `allowEmpty` / `disabledDate`）。
+
+263. ⚠️ **`toDateArray` 要接受范围元组，并把元素级 `undefined` 收成 `null`**（2026-10-01，date-picker）。
+
+    `RangeValue = [start, end]` 的元素允许是 `undefined`（「该端尚未选择」），
+    而内部槽位 `ValueSlot = DatePickerDate | null`。直接 `toDateArray(props.value)`
+    在范围下**编译不过**（`undefined` 不在联合里）。
+
+    - 修法：入参加上 `RangeValue`，返回 `ValueSlot[]`，内部 `.map((d) => d ?? null)`。
+    - ⚠️ 这**不是行为变更**：上游 `isSameDates` 用 `source[i] || null` 比较、
+      `triggerCalendarChange` 做 `clone[i] = clone[i] || null` ⇒ 内部本来区分不了
+      两者；且上游 `onChange` 的**声明类型**就是 `NoUndefinedRangeValue`。
+    - 连带：`UseInnerValueOptions.defaultValue` / `getValue` 从 `DatePickerDate[]`
+      放宽到 `ValueSlot[]`（**加宽**，单值调用点不受影响）。
+    - 同一族的还有 `triggerSubmit`：入参放宽到 `readonly (DatePickerDate | null | undefined)[]`，
+      入口 `.map((d) => d ?? null)` —— 因为 `toggleDates` 的返回类型就带 `undefined`
+      （`presets` / 「此刻」那条路径直接喂它，上游 `onPresetSubmit` 逐字如此）。
+
+264. 🚨 **浮层 vnode 若在「渲染函数之外」创建，里面**不能**出现 `ref:` —— 生产构建直接抛 `Cannot read properties of null (reading 'refs')`**（2026-10-01，date-picker RangePicker）。
+
+    Vue 的 `setRef` 会读 `rawRef.i`（vnode 的 **owner** = 创建它时的
+    `currentRenderingInstance`）：
+
+    ```js
+    const { i: owner, r: ref } = rawRef;
+    if (!owner) { warn('Missing ref owner context. ref cannot be used on hoisted vnodes.'); return; }  // ← dev 才有
+    const refs = owner.refs === EMPTY_OBJ ? owner.refs = {} : owner.refs;   // ← prod 直接炸
+    ```
+    ⇒ **dev 构建只 `warn` 然后 `return`**（ref 静默不绑），**生产构建抛异常**。
+    ⇒ jsdom 用例、`pnpm dev` 页面、甚至 `--mode compare` 都可能全绿，只有
+    **生产构建 + 真浏览器**才炸。
+
+    - **本仓踩到的形态**：`RangePicker.vue` 的 `popupVNode` 是 **computed**，
+      而 `Trigger` 的 `contentSource` 在它**自己的 setup 期**就被
+      `watch(contentSource, …, { immediate: true })` 求值了（`trigger.ts:494-504`）
+      ⇒ 创建 vnode 时没有渲染上下文。
+    - ⚠️ **「把 `popup` 改成函数形态」救不了** —— 那个 computed 照样在 setup 期求值。
+      试过，没用。
+    - **修法**：用 **vnode 钩子**（`onVnodeMounted` / `onVnodeUnmounted`）——
+      它们由 `invokeVNodeHook` 调用，**完全不经过 `setRef`**，不需要 owner。
+      见 `RangePicker.vue` 的 `bindEl`。
+    - **判据（可推广）**：凡是「computed / watch / setup 里创建的 vnode」，
+      **一律不许带 `ref:`**；要绑元素就走 vnode 钩子。
+      ⚠️ 单值 `DatePicker.vue` 的浮层**当前没有 ref** ⇒ 直接传 vnode「碰巧能用」——
+      那是个一加 ref 就炸的陷阱，已在文件头写明。
+
+265. 🚨 **`hoverValues` / `showWeakHover` / `activeHoverValue` 算了但没传给面板 ⇒ `-cell-in-range` 的浅蓝底永远不出现**（2026-10-01，date-picker RangePicker）。
+
+    上游 `RangePicker.js:274-296` 有**三个**要下发给面板的悬停载荷：
+
+    ```js
+    const hoverValues = useMemo(() => internalHoverValues || calendarValue, …);
+    const showWeakHover = hoverSource === 'cell' && !calendarValue[(activeIndex+1)%2]
+                       && !isSameTimestamp(generateConfig, calendarValue[activeIndex], mergedValue[activeIndex]);
+    const activeHoverValue = internalHoverValues?.[activeIndex];
+    // ↓ PopupPanel 的 props
+    hoverValue:      showWeakHover && activeHoverValue ? [activeHoverValue] : null,
+    hoverRangeValue: showWeakHover ? null : hoverValues,
+    ```
+
+    - 🚨 **`hoverRangeValue` 是 `-cell-in-range` 的**唯一**来源**：
+      `buildPanelCells` 只在 `cellSelection && hoverRangeValue` 时才计算 `inRange`
+      （`panel.ts:256-264`）⇒ 不传 ⇒ 区间内的浅蓝底**一格都没有**。
+    - ⚠️ 讽刺的是本仓**算对了** `hoverValues` / `showWeakHover` / `activeHoverValue`
+      （`activeHoverValue` 甚至因为没人用而成了死变量），只是**没接线** ——
+      典型的「移植时只搬了计算、漏了出口」。
+    - **怎么抓到的**：L6 新增 `range` / `range-value` 两个变体 ——
+      **空值三视口 0.000% exact**（所以面板外壳、双面板、箭头、分隔符全对），
+      **一有值就 `block-diff`**。这个「空值精确、有值才差」的指纹直接指向
+      「与值相关的状态类」，比逐像素找差异快得多。
+    - ⚠️ 同批修正 `showWeakHover` 的第三条判据：上游是 **`isSameTimestamp`（时间戳级）**，
+      本仓此前写成了 `isSame(…, internalMode)`（粒度级）—— 只在 `showTime` 下分叉。
+
+266. ⚠️ **L6 视觉用例走的是 `packages/ui/dist`，改源码后必须先重建包**（2026-10-01）。
+
+    `tests/visual/build.mjs` 只打包**用例入口**；`@apollo-design/ui` 由 Vite 解析到
+    **`packages/ui/dist/index.mjs`**（包的 `exports`），不是 `src`。
+    ⇒ 改完 `.vue` 直接跑 `node tests/visual/run.mjs` 会**用旧产物**，
+    得到「改了没效果」甚至「`MISSING_EXPORT: X is not exported by packages/ui/dist/index.mjs`」。
+
+    - **顺序**：改源码 → `CODEBUDDY_SAFE_DELETE_ENABLED=0 pnpm build:ui`（≈2 min）
+      → `node tests/visual/run.mjs`。整仓重建用 `node tests/build/run.mjs`（≈8 min）。
+    - ⚠️ **判断「产物是不是新的」**：直接 grep 产物，别靠时间戳 ——
+      `grep -c <刚删掉的标识符> packages/ui/dist/index.mjs` 应为 0。
+      本轮就是靠它发现「改了但产物没变」的。
+    - 注意 bundle 里 `vue-<hash>.js` 是 **vendor chunk**（Vue 运行时），
+      它的 hash 不变是正常的，不能据此判断自己的代码有没有进去。

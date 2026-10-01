@@ -82,6 +82,13 @@ L0 utils/theme/icons ｜ 测试 test-utils
     指纹：`getBoundingClientRect()` 全 0 而 `offsetWidth` 正常（253）。
 18. ⚠️ **「旧写法有测试、新写法没有」最易长期潜伏**：旧写法红不了，新写法没人测（252）。
 19. ⚠️ `Skeleton` 设了 `inheritAttrs:false` ⇒ 传 `className`，`class` 被丢弃（181）。
+20. 🚨 **本仓把上游的「外层 Provider」挪进了组件内部** ⇒ 外层再 `provide` **完全不生效**
+    （最近的赢）。`PickerPanel` 自己 `providePanelHack`，所以双面板的
+    `hidePrev` / `hideNext` / `onCellDblClick` 只能走 **props**（256）。
+    凡「上游在外层 Context 下发」的地方，先 grep `provide` 再动手。
+21. 🚨 **类型比上游窄时先问「上游是不是 JS」**：rc 的 `showTime.disabledTime` 单值 1 参、
+    **范围 3 参**；本仓收窄成一种形态 ⇒ 范围编译不过。修法是**补类型**
+    （`TimeConfigShowTime`），不是改实现（257）。函数参数**逆变**，可选参数救不了。
 
 ## 主分支 / 合并 / 并行（硬教训）
 
@@ -110,12 +117,21 @@ L0 utils/theme/icons ｜ 测试 test-utils
 
 ## 当前进度（2026-10-01）
 
-- foundation **13/13 completed**；组件 **58/72 completed**；可执行 13 / 被阻塞 1。
-- **进行中：`date-picker`**（status=analyzing；P5/XL）。S1–S5 大部分已落地（含 `multiple` 全链路、
-  掩码模式、提交时机状态机）；**只剩 S5 的 RangePicker 与 presets/footer**。
-- **G9 L6 视觉 12/21 exact**：`month`/`year`/`multiple`/`variants` 精确 **0.000%**；
-  剩 `basic`/`value`/`datetime` 的**唯一**差异 = **缺 `Today` 页脚**（S5，容器高 309 vs antd 348）
-  ⇒ **修完前 G9 不能判 done**。⚠️ `test:visual` **不在** `verify:full` ⇒ 必须显式跑。
-- 开工先读 `packages/ui/src/date-picker/PLAN.md` + `README.md §5.5`。
+- foundation **13/13 completed**；组件 **59/72 completed**；可执行 13 / 被阻塞 1。
+- **`date-picker` 已 `completed`（2026-10-01）** —— 11 维度全 done，S1–S5 五阶段落地。
+  `pnpm run registry:check` ⇒ **18 checks passed / 0 warnings**。
+  下一条任务用 `node registry/tools/next-task.mjs` 取（`time-picker` 是它的直接后继）。
+- **G9 L6 视觉 27/27 exact**（21 单值 + **6 范围**：`range` / `range-value` × 3 视口；
+  React 基线已入库）。⚠️ 加变体要动**四处**：`matrix.mjs` + 两侧 `render/cases/*`（+ `shared.mjs`）。
+  ⚠️ `test:visual` **不在** `verify:full` ⇒ 必须显式跑。
+- 开工先读 `packages/ui/src/date-picker/PLAN.md` + `README.md §5.5`（(b″)/(b‴)/(b⁗) 是最新几段）。
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`）；`--project types` 的 SFC 解析噪音（PITFALLS 73）；
   Empty SVG 不跟 darkAlgorithm；开放决策见 `ask decisions --open`。
+- ⚠️ **S5 新增的必读判据**（PITFALLS 256–266）：
+  `PickerPanel` 自己 provide ⇒ hack 面走 props（256）；
+  `TimeConfigSource.showTime` 只是「面板形态」，范围是三参 ⇒ 用 `TimeConfigShowTime`（257）；
+  `Selector.onSelectorClick` 要收事件（258）；范围**没有** `multiple` / `removeIcon`（261）；
+  `fieldCount` 传 getter（262）；`toDateArray` 收范围元组（263）；
+  🚨 **渲染期之外创建的 vnode 不许带 `ref:`**（264）；
+  🚨 **`hoverRangeValue` 是 `-cell-in-range` 的唯一来源**（265）；
+  🚨 **L6 走 `packages/ui/dist`，改源码要先 `pnpm build:ui`**（266）。

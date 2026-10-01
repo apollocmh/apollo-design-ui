@@ -67,14 +67,17 @@
  * （dump 到的是 `ant-picker-input ant-picker-input-start` / `… -input-active`）。
  */
 
-import { isNonNullable, isRenderable } from '@apollo-design/utils';
+import { isNonNullable, isRenderable, observeResize } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
   defineComponent,
   h,
+  onScopeDispose,
   type PropType,
+  ref,
   type VNodeChild,
+  watch,
 } from 'vue';
 import Overflow from '../../_internal/overflow';
 import type { CustomTagProps } from '../interface';
@@ -151,6 +154,22 @@ export const Selector = defineComponent({
     readOnly: { type: Boolean, default: false },
     /** 范围：当前活动端（`0` / `1` / `null`）。 */
     activeIndex: { type: Number as PropType<number | null | undefined>, default: undefined },
+    /**
+     * 有没有「悬停预览」（上游 `SinglePicker.js:436` 的 `activeHelp: !!internalHoverValue`）。
+     *
+     * ⚠️ 单值下它**单独不起作用** —— 上游 `useInputProps.js` 的判据是
+     * `helped = allHelp || (activeHelp && activeIndex === index)`，而单值的
+     * `activeIndex` 是 `undefined` ⇒ `undefined === 0` 恒假。真正让输入框进入
+     * 「placeholder 态」的是 `allHelp`（悬停的是**预设**）。
+     */
+    activeHelp: { type: Boolean, default: false },
+    /**
+     * 悬停来自**预设列表**（上游 `allHelp: !!internalHoverValue && hoverSource === 'preset'`）。
+     *
+     * 为真 ⇒ 输入框整块加 `-input-placeholder`（文字变成 placeholder 的灰色），
+     * 表示「现在输入框里显示的是预览值，不是你选中的值」。
+     */
+    allHelp: { type: Boolean, default: false },
 
     // ---------------------------------------------------- 掩码模式（S3）
     /**
@@ -233,7 +252,33 @@ export const Selector = defineComponent({
       default: undefined,
     },
     onClear: { type: Function as PropType<() => void>, default: undefined },
-    onSelectorClick: { type: Function as PropType<() => void>, default: undefined },
+    onSelectorClick: {
+      type: Function as PropType<((event: MouseEvent) => void) | undefined>,
+      default: undefined,
+    },
+    /**
+     * 根节点 `mousedown`（上游 `RangeSelector.js:168-176` 的 `onMouseDown`）。
+     *
+     * 🚨 **它默认会 `preventDefault()`** —— 除非目标是两个输入框本身。
+     * 这是「点面板 / 点前缀图标时**不丢输入框焦点**」的机制：不阻止的话浏览器会把焦点
+     * 移到 `body`，随后 `useFocusEvents` 的 blur 分支会把浮层关掉。
+     * 上游把这个 `preventDefault` 写死在组件里、只把**回调**透出去
+     * （`onMouseDown?.(e)`），本仓照此 —— 不做成「可覆盖的默认行为」。
+     */
+    onSelectorMouseDown: {
+      type: Function as PropType<((event: MouseEvent) => void) | undefined>,
+      default: undefined,
+    },
+    /**
+     * 活动端的几何信息（上游 `RangeSelector.js:139` 的 `onActiveInfo`）。
+     *
+     * 载荷 `[inputRect.left, inputRect.right, parentRect.width]` —— 浮层用它算
+     * `-range-arrow` 的 `left` 与容器偏移（`Popup/index.js:60,78-88`）。
+     */
+    onActiveInfo: {
+      type: Function as PropType<((info: [number, number, number]) => void) | undefined>,
+      default: undefined,
+    },
 
     // ---------------------------------------------------- 多选模式（S5）
     /**
@@ -311,17 +356,113 @@ export const Selector = defineComponent({
     };
 
     /**
-     * 上游 `SingleSelector` 的命令面（`useImperativeHandle`）。
+     * 取某个 field 的原生输入框。
      *
-     * - `focus()` —— 点根节点 / 点清除后把焦点还给输入框（`SinglePicker` 的两个调用点）；
+     * ⚠️ 上游这一层是 `Input` **组件实例**（`.focus()` / `.nativeElement` / `.inputElement`），
+     * 本仓没有那个组件（`Selector` 直接渲染 `<input>`）⇒ 命令面直接落在
+     * `HTMLInputElement` 上。`inputElement` / `nativeElement` 在上游是两个名字指同一个
+     * DOM 节点，这里也一样。
+     */
+    const getInput = (index: number | null | undefined): HTMLInputElement | null =>
+      inputEls[index ?? 0] ?? null;
+
+    /**
+     * 上游 `SingleSelector` / `RangeSelector` 的命令面（`useImperativeHandle`）。
+     *
+     * - `focus()` —— 点根节点 / 点清除后把焦点还给输入框（两个 Picker 都有这个调用点）；
+     * - `focus(options)` —— **范围独有**：`{index}` 指定把焦点给哪一端
+     *   （`RangePicker.onSelectorClick` 会挑「第一个未禁用的端」）；
      * - `nativeElement` —— `useFocusEvents` 的 `isInternalElement` 要用它判断
-     *   「新焦点是不是还在 Picker 里」（`SingleSelector/index.js:150` 的 `ref: rootRef`）。
+     *   「新焦点是不是还在 Picker 里」；
+     * - `blur()` —— 上游暴露但内部没人调，给消费者用；
+     * - `startInput` / `endInput` —— 上游 `RangeSelectorRef` 独有（暴露两个原生 input）。
      *
-     * ⚠️ 上游还暴露 `blur` / 范围版的 `startInput` / `endInput`，本仓按需加（S5 再说）。
+     * ⚠️ 一律做成**函数**而不是取值：`rootEl` / `inputEls` 是 `let` 变量，
+     * 在 `expose` 那一刻还是 `null`（`expose` 在 `setup()` 同步阶段跑）。
      */
     expose({
-      focus: () => inputEls[0]?.focus(),
+      focus: (options?: number | { index?: number; preventScroll?: boolean }) => {
+        if (typeof options === 'object' && options !== null) {
+          const { index = 0, ...rest } = options;
+          getInput(index)?.focus(rest);
+          return;
+        }
+        getInput(options ?? 0)?.focus();
+      },
+      blur: () => {
+        getInput(0)?.blur();
+        getInput(1)?.blur();
+      },
       nativeElement: () => rootEl,
+      startInput: () => getInput(0),
+      endInput: () => getInput(1),
+    });
+
+    /**
+     * `-active-bar` 的几何（上游 `RangeSelector.js:124-144`）。
+     *
+     * 上游是 `useState({ position: 'absolute', width: 0 })`，随 `activeIndex`
+     * 与根尺寸变化重算：把**活动输入框**的 `left` / `width` 抄到这条 bar 上
+     * （那条 bar 就是「当前在编辑哪一端」的下划线）。
+     *
+     * 🚨 **`width` / `left` 必须写成字符串**：Vue 的 `patchStyle` 不给数字补单位
+     * （PITFALLS 8 / D94），写数字会被**静默丢弃** ⇒ bar 恒为 0 宽。
+     * 上游是 React（有单位补全 + cssinjs 序列化），所以它写数字没事。
+     *
+     * ⚠️ 初值 `width: '0'` 与上游的 `width: 0` 等价（`'0'` 不需要单位），
+     * 且**未聚焦时（`activeIndex == null`）不同步** ⇒ 停在 0 宽，与上游一致。
+     */
+    const activeBarStyle = ref<Record<string, string>>({ position: 'absolute', width: '0' });
+
+    /**
+     * 把活动端的几何同步到 `-active-bar` 与 `onActiveInfo`。
+     *
+     * ⚠️ 上游用 `useEvent`（恒定的引用）包着，因为它同时被
+     * `useEffect(…, [activeIndex])` 与 `<ResizeObserver onResize>` 使用 ——
+     * 引用不稳会让 ResizeObserver 反复解绑重绑。本仓用普通函数 + `watch`，
+     * 注册点在下面的 `observeResize`（只在根元素变化时重注册）。
+     */
+    const syncActiveOffset = (): void => {
+      const index = props.activeIndex;
+      // 未聚焦（`null`）/ 未传 ⇒ 不动（上游 `getInput(activeIndex)` 取到 undefined 就返回）
+      if (index === null || index === undefined) {
+        return;
+      }
+      const input = inputEls[index];
+      if (!input || !rootEl) {
+        return;
+      }
+      const inputRect = input.getBoundingClientRect();
+      const parentRect = rootEl.getBoundingClientRect();
+      activeBarStyle.value = {
+        ...activeBarStyle.value,
+        width: `${inputRect.width}px`,
+        left: `${inputRect.left - parentRect.left}px`,
+      };
+      props.onActiveInfo?.([inputRect.left, inputRect.right, parentRect.width]);
+    };
+
+    watch(() => props.activeIndex, syncActiveOffset, { flush: 'post' });
+
+    /**
+     * 根元素尺寸变化 ⇒ 重算 active-bar（上游把整棵树包在 `<ResizeObserver onResize>` 里）。
+     *
+     * ⚠️ `observeResize` 是 `@apollo-design/utils` 的**单例**观察器（不是每次 new 一个），
+     * 返回注销函数 —— 必须在 `onScopeDispose` 里调，否则会持续持有元素。
+     * ⚠️ 无 `ResizeObserver` 的环境（SSR / 老浏览器）静默降级，不抛。
+     */
+    let disposeResize: (() => void) | null = null;
+    const rootElRefWithResize = (el: Element | { $el?: Element } | null | undefined): void => {
+      rootElRef(el);
+      disposeResize?.();
+      disposeResize = null;
+      if (rootEl) {
+        disposeResize = observeResize(rootEl, () => syncActiveOffset());
+      }
+    };
+    onScopeDispose(() => {
+      disposeResize?.();
+      disposeResize = null;
     });
 
     /** 两端的值长度（范围判 `showClear` 用）。 */
@@ -499,6 +640,14 @@ export const Selector = defineComponent({
       const ph = Array.isArray(props.placeholder) ? props.placeholder[index] : props.placeholder;
       const disabled = disabledPair.value[index];
       const active = isRange && props.activeIndex === index;
+      /**
+       * 🚨 上游 `useInputProps.js`：`helped = allHelp || (activeHelp && activeIndex === index)`。
+       * 为真 ⇒ `-input` 上多一个 `-placeholder` 类（`Input.js:344-347`），
+       * 且掩码的选择区被强制成 `[0, 0]`（`Input.js` 的 `selectionStart/End`）。
+       *
+       * ⚠️ 单值下 `activeIndex` 是 `undefined` ⇒ 第二个分句恒假，只有 `allHelp` 生效。
+       */
+      const helped = props.allHelp || (props.activeHelp && props.activeIndex === index);
 
       /** 掩码模式专属绑定（值 + 六个事件）；非掩码时为 `undefined`。 */
       const maskBind = maskInput.enabled.value ? maskInput.bind(index) : undefined;
@@ -532,7 +681,12 @@ export const Selector = defineComponent({
         return h(
           'div',
           {
-            class: [`${props.prefixCls}-input`, props.classNames.input],
+            class: [
+              `${props.prefixCls}-input`,
+              // ⚠️ `-input-placeholder` = `-input` + `-placeholder`（上游 `Input.js:344-347`）
+              ...(helped ? [`${props.prefixCls}-input-placeholder`] : []),
+              props.classNames.input,
+            ],
             style: props.styles.input,
           },
           [inputNode, renderSuffix(), renderClear()],
@@ -547,6 +701,7 @@ export const Selector = defineComponent({
             `${props.prefixCls}-input`,
             // ⚠️ `-input-active` = `-input` + `-active`（上游 `Input.js:344`）
             ...(active ? [`${props.prefixCls}-input-active`] : []),
+            ...(helped ? [`${props.prefixCls}-input-placeholder`] : []),
             `${props.prefixCls}-input-${index === 0 ? 'start' : 'end'}`,
             props.classNames.input,
           ],
@@ -580,7 +735,7 @@ export const Selector = defineComponent({
             ref: rootElRef,
             class: rootClass,
             style: props.rootStyle,
-            onClick: () => props.onSelectorClick?.(),
+            onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
           },
           // 🚨 多选**不渲染 `-input` 包裹层**（上游 `SingleSelector` 的 `selectorNode` 分支）
           props.multiple
@@ -598,10 +753,27 @@ export const Selector = defineComponent({
       return h(
         'div',
         {
-          ref: rootElRef,
+          ref: rootElRefWithResize,
           class: rootClass,
           style: props.rootStyle,
-          onClick: () => props.onSelectorClick?.(),
+          onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
+          /**
+           * 🚨 保焦点（上游 `RangeSelector.js:168-176`）：目标是**两个输入框之外**的
+           * 任何地方（面板容器、前缀、后缀、active-bar、分隔条…）时 `preventDefault`。
+           *
+           * 不做的后果：点一下输入框旁边的空白，浏览器把焦点移到 `body`
+           * ⇒ 输入框 blur ⇒ `useFocusEvents` 判定「确认离开」⇒ **浮层被关掉**。
+           *
+           * ⚠️ 只在**范围**下绑（上游 `SingleSelector` 没有这一层 —— 单值的根节点
+           * 只有输入框自己，没有「旁边的空白」）。
+           */
+          onMousedown: (event: MouseEvent) => {
+            const target = event.target as Node | null;
+            if (target !== inputEls[0] && target !== inputEls[1]) {
+              event.preventDefault();
+            }
+            props.onSelectorMouseDown?.(event);
+          },
         },
         [
           renderPrefix(),
@@ -620,9 +792,8 @@ export const Selector = defineComponent({
           renderInput(1),
           h('div', {
             class: `${props.prefixCls}-active-bar`,
-            // ⚠️ `width` 必须是**字符串** `'0'`（Vue 的 patchStyle 不给数字补单位，
-            //    写数字会被静默丢弃 —— PITFALLS 8 / D94）
-            style: { position: 'absolute', width: '0' },
+            // ⚠️ 全部是**字符串**（Vue 的 patchStyle 不给数字补单位 —— PITFALLS 8 / D94）
+            style: activeBarStyle.value,
           }),
           renderSuffix(),
           renderClear(),

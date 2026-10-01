@@ -21,6 +21,8 @@
 | 5 | 复用既有 `space/statusUtils.getStatusClassNames`（返回**空格拼接字符串**，非数组）；`root-class.ts` 整体 `push` | **PLATFORM** | 本仓既有实现的选择；`push(...str)` 会把字符串按字符展开，已加注释与断言防回归 |
 | 6 | 两处 `FastColor(<cssvar 引用>).setA(α)` 派生色在产物里是 `#00000080` / `#00000033`（**不是** `#ffffff80` / `#e6f4ff33`） | **UPSTREAM** | 上游 `style/panel.js:389,471`；cssVar 模式下 token 值是**变量引用字符串**，`FastColor` 解析不了 ⇒ 回落 `#000000`。证据：同规则块内 `panel.js:392` 的**直接**使用输出成 `var(--apollo-color-text-light-solid)`；`theme.getDesignToken().colorTextLightSolid` ⇒ `#fff`（非 undefined）⇒ 排除「token 缺失」。**逐字对齐产物**，已在 E10 逐值豁免（2026-10-01） |
 | 7 | 掩码模式下原生 `input` 事件**不改状态**，但本仓会在它里面主动「打一拍」把 DOM 值写回去 | **PLATFORM** | 上游 `Input.js:117-124`（有 `format` 时跳过 `onChange`）靠 **React 的 `restoreControlledState`** 把 DOM 值强制还原；**Vue 没有这个机制** ⇒ 不主动重渲染的话，浏览器在 `keydown` **之后**落进 DOM 的原生字符会留在输入框里。见 `components/mask-input.ts` 的 `onInput`（2026-10-01） |
+| 8 | `toDateArray` 把**元素级**的 `undefined` 收成 `null`（范围的 `RangeValue` 允许元素是 `undefined`，内部槽位 `ValueSlot` 只有 `DatePickerDate \| null`） | **INTENDED** | 上游 `isSameDates` 用 `source[i] \|\| null`、`triggerCalendarChange` 做 `clone[i] = clone[i] \|\| null` ⇒ **内部本来就区分不了**；且上游 `onChange` 的**声明类型**是 `NoUndefinedRangeValue`（不许 `undefined`）⇒ 本仓让运行时与声明一致。见 `hooks/picker-value.ts`（2026-10-01） |
+| 9 | 单值 `usePresets(presets)` 的**第二参恒 `undefined`**（单值没有 `ranges` 这条 deprecated 通道） | **PLATFORM** | rc 的 `ranges` 只在 `BaseRangePickerProps` 上（`RangePicker.d.ts`），`BasePickerProps` 只有 `presets`（`SinglePicker.d.ts`）⇒ 单值传 `ranges` 是**上游也不存在**的用法。见 `DatePicker.vue` 的 `presetList`（2026-10-01） |
 
 ## 3. .vue / .tsx 选择
 
@@ -197,13 +199,66 @@ const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.for
 
 #### (b′) ⏳ 本轮**新登记**的缺口（逐条有出处，都不是「已知范围」而是真欠账）
 
-| # | 缺口 | 上游出处 | 影响 |
-|---|---|---|---|
-| 1 | `isInvalidateDate` **只覆盖 `disabledDate`** —— 缺 `generateConfig.isValidate(date)` 与 `showTime.disabledTime` / legacy `disabledHours`… 两支 | `useInvalidate.js`（全 50 行） | `OK` 按钮的禁用态、以及 `useRangeValue` 的提交校验，在「配了 `showTime.disabledTime`」时会与 antd 不一致 |
-| 2 | 浮层的 `a` 链接色**靠 `select` 的 CSS 蹭到** —— `DATE_PICKER_RULES`（257 条，机械转换自 antd 产物）里**没有** `a{color:var(--apollo-color-link);…}` 那 7 条 | antd `getResetStyles`（`theme/util/genStyleUtils.js:36`，由 `resetComponent` 注入） | 页面里恰好有 `select` 时**看不出来**（L6 就是这样）；只引 `@apollo-design/ui/date-picker/style.css` 时 `Today` / `Now` **不是蓝色**。⚠️ 归口是 **`BASE_CSS`**（全局规则），不是本组件；改它要重跑全仓 L6 |
-| 3 | `PopupPanel` 的 `onCellDblClick`（**双击格子 = 提交**，仅 `needConfirm` 时）未接 | `Popup/PopupPanel.js:38-42` | 双击不会提交 |
-| 4 | `hideHeader` 由 `picker === 'time'` 决定（时间面板无表头） | `Popup/PopupPanel.js:44` | 纯 `picker: 'time'` 时本仓会多一个表头；L6 矩阵里没有 `time` 变体 ⇒ 未暴露 |
-| 5 | `disableSubmit` 的 `isTimePickerEmptyValue` 分支（`defaultOpenValue` 兜底）未实现 | `Popup/index.js:97-104` | 只影响纯 `picker: 'time'`（本组件的 `picker` 不含 `'time'`） |
+> ⚠️ **2026-10-01（S5）更新**：#1 / #3 / #4 已解决，见 (b″)。
+
+| # | 缺口 | 上游出处 | 影响 | 状态 |
+|---|---|---|---|---|
+| 1 | `isInvalidateDate` **只覆盖 `disabledDate`** —— 缺 `generateConfig.isValidate(date)` 与 `showTime.disabledTime` / legacy `disabledHours`… 两支 | `useInvalidate.js`（全 50 行） | `OK` 按钮的禁用态、以及 `useRangeValue` 的提交校验，在「配了 `showTime.disabledTime`」时会与 antd 不一致 | ✅ 已修（`hooks/picker-invalidate.ts`） |
+| 2 | 浮层的 `a` 链接色**靠 `select` 的 CSS 蹭到** —— `DATE_PICKER_RULES`（257 条，机械转换自 antd 产物）里**没有** `a{color:var(--apollo-color-link);…}` 那 7 条 | antd `getResetStyles`（`theme/util/genStyleUtils.js:36`，由 `resetComponent` 注入） | 页面里恰好有 `select` 时**看不出来**（L6 就是这样）；只引 `@apollo-design/ui/date-picker/style.css` 时 `Today` / `Now` **不是蓝色**。⚠️ 归口是 **`BASE_CSS`**（全局规则），不是本组件；改它要重跑全仓 L6 | ⏳ 未修 |
+| 3 | `PopupPanel` 的 `onCellDblClick`（**双击格子 = 提交**，仅 `needConfirm` 时）未接 | `Popup/PopupPanel.js:38-42` | 双击不会提交 | ✅ 已修（单值 + 范围都接上） |
+| 4 | `hideHeader` 由 `picker === 'time'` 决定（时间面板无表头） | `Popup/PopupPanel.js:44` | 纯 `picker: 'time'` 时本仓会多一个表头；L6 矩阵里没有 `time` 变体 ⇒ 未暴露 | ✅ 已修 |
+| 5 | `disableSubmit` 的 `isTimePickerEmptyValue` 分支（`defaultOpenValue` 兜底）未实现 | `Popup/index.js:97-104` | 只影响纯 `picker: 'time'`（本组件的 `picker` 不含 `'time'`） | ⏳ 未修 |
+
+#### (b″) ✅ **已解决**（2026-10-01，S5 收口）：范围两端 + `presets` + 三条欠账
+
+**范围两端（`RangePicker`）** —— `RangePicker.vue` 是上游三份实现的 Vue 化：
+`generateRangePicker.js`（234 行）+ `PickerInput/RangePicker.js`（574 行）+
+`RangeSelector.js`（209 行）+ `Popup/{index,PopupPanel,PresetPanel}.js`。
+
+**`presets`** —— `hooks/picker-presets.ts`（`usePresets`）+ `components/PresetPanel.ts`
+是上游的逐字移植，**单值与范围共用**；单值侧另接「悬停即预览」
+（`internalHoverValue` / `hoverSource` / `selectorValues` / `Selector` 的 `-input-placeholder`）。
+
+⚠️ **一个必须记住的架构差异**：本仓的 `PickerPanel` **自己** `providePanelHack`
+（`picker-panel.ts`），而上游是在**外层** `PopupPanel` 里 provide
+⇒ Vue 的 provide「最近的赢」会把外层注入**遮蔽**。所以 `PickerPanel` 补了
+`hidePrev` / `hideNext` / `onCellDblClick` 三个 **props 入口**（双面板走这条），
+并加了回归哨兵（`packages/picker/src/__tests__/panel-edge.test.ts`）。
+
+**同时关闭的三条欠账**（见上表 #1 / #3 / #4）：
+- `hooks/picker-invalidate.ts`：`useDisabledBoundary`（19 行）+ `useInvalidate`（57 行）。
+  🚨 两条判据：① min/max 判定带 `isSame` 例外（`minDate` 那天**本身可选**）；
+  ② `type` 传的是**原始 `picker`**（`useFilledProps.js:118`），不是 `internalMode`
+  ⇒ `date + showTime` 下用户收到的是 `'date'`。
+- 面板与页脚现在拿到的是**合并了 min/max 的** `disabledDate`（上游
+  `mergedProps.disabledDate = disabledBoundaryDate`）—— 此前传的是用户裸的函数。
+- `hideHeader: picker === 'time'` + `onCellDblClick`（`needConfirm` 时提交）。
+
+##### (b‴) 🚨 L6 抓到的**两个真 bug**（2026-10-01，范围变体首次覆盖）
+
+1. **浮层 vnode 在渲染期之外创建 ⇒ `ref:` 的 owner 是 `null` ⇒ 生产构建抛异常**
+   （`Cannot read properties of null (reading 'refs')`）。dev 只 `warn`，
+   ⇒ jsdom / dev 页面 / `--mode compare` **全绿**，只有生产构建 + 真浏览器才炸。
+   修法：浮层里绑元素改用 **vnode 钩子**（`onVnodeMounted`），见 `RangePicker.vue` 的
+   `bindEl`。→ **PITFALLS 264**
+2. 🚨 **`hoverValues` / `showWeakHover` / `activeHoverValue` 算了但没传给面板**
+   ⇒ `-cell-in-range` 的浅蓝底**一格都没有**（`buildPanelCells` 只在
+   `cellSelection && hoverRangeValue` 时才算 `inRange`）。
+   指纹很干净：**空值三视口 0.000% exact、一有值就 `block-diff`**。
+   同批修正 `showWeakHover` 的第三条判据（上游是 `isSameTimestamp` 而非粒度级 `isSame`）。
+   → **PITFALLS 265**
+
+##### (b⁗) 本轮的**覆盖增量**
+
+| 层 | 之前 | 现在 |
+|---|---|---|
+| L4 DOM 契约 | 16 用例（单值） | **21**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态） |
+| L5 a11y | 24 条 | **36**（+12：范围 role/ARIA + **上游两条 separator 的 `aria-hidden` 测试** + 6 个 axe 配置） |
+| L6 视觉 | 21/21 exact | **27/27 exact**（+`range` / `range-value` × 3 视口，React 基线已入库） |
+| L1/L2 | — | `__tests__/s5-presets.test.ts` **15 条** |
+
+⚠️ **仍未做**：`panelRender` / 浮层焦点事件（§5.5(g)）/ `BASE_CSS` 的
+`a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。
 
 #### (c) ✅ **已解决**（2026-10-01 同日）：S2 的「落值 + 提交时机」
 

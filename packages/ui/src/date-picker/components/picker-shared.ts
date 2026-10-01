@@ -251,3 +251,37 @@ export function getRangeShowClear(
     ((valueLengths[0] > 0 && !disabled[0]) || (valueLengths[1] > 0 && !disabled[1]))
   );
 }
+
+// ---------------------------------------------------------------------------
+// 焦点归属判定（`isInternalElement` / `isTargetInContainers`）
+// ---------------------------------------------------------------------------
+
+/**
+ * 某个节点是否落在给定的任一容器内（上游 `PickerInput/hooks/useFocusEvents.js` 的
+ * `isTargetInContainers`，逐字）。
+ *
+ * ```js
+ * containers.some(container => container && (container === target || container.contains(target)))
+ * ```
+ *
+ * 🚨 **它是「点面板格子不会把浮层关掉」的判据**：面板根是 `tabindex="0"` 的 div
+ * ⇒ 点格子时 `relatedTarget` 是**面板**，落在浮层的容器里 ⇒ 不算「确认离开」。
+ *
+ * ⚠️ `target` 可能是 `null`（`blur` 时 `relatedTarget` 为空）⇒ `contains(null)` 会抛，
+ * 所以 `container === target` 那一支之外还必须保证 `target` 是真节点。
+ * 上游靠 `container && …` 只守了容器，没守 `target` —— 而 `Node.contains(null)`
+ * 在浏览器里返回 `false`（不抛），所以上游侥幸没炸。本仓显式守 `target`，
+ * 语义相同但不会依赖那个未文档化的行为。
+ */
+export function isTargetInContainers(
+  target: EventTarget | Node | null | undefined,
+  containers: readonly (HTMLElement | null | undefined)[],
+): boolean {
+  if (!target) {
+    return false;
+  }
+  const node = target as Node;
+  return containers.some(
+    (container) => !!container && (container === node || container.contains(node)),
+  );
+}

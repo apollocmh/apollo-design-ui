@@ -61,8 +61,8 @@ import {
   type InternalMode,
   type PanelDateType,
   type PickerLocale as RcPickerLocale,
+  type TimeConfigShowTime,
   type TimeConfigSource,
-  type TimePanelConfig,
 } from '@apollo-design/picker';
 import { type ComputedRef, computed } from 'vue';
 
@@ -71,10 +71,15 @@ import { type ComputedRef, computed } from 'vue';
  *
  * 第二参是 `getTimeProps` 的**第二项**（`localeTimeProps`）——
  * 它带着收敛后的 4 个 show 标志，补齐用的时间格式由它们推出（见文件头判据 1）。
+ *
+ * ⚠️ 类型是 `TimeConfigShowTime`（**组件层**形态）而不是 `TimePanelConfig`：
+ * `getTimeProps` 的产物会把组件层多出来的键原样穿过（范围的数组 `defaultValue`、
+ * 三参 `disabledTime`），见 `TimeConfigShowTime` 的说明。本函数只读 4 个 show
+ * 标志 + `use12Hours`，两个形态下这些键同义。
  */
 export function fillPickerLocale(
   locale: RcPickerLocale,
-  localeTimeProps: TimePanelConfig<PanelDateType>,
+  localeTimeProps: TimeConfigShowTime<PanelDateType>,
 ): RcPickerLocale {
   const { showHour, showMinute, showSecond, showMillisecond, use12Hours } = localeTimeProps;
   return fillLocale(
@@ -117,7 +122,7 @@ export interface FilledLocaleResult {
    *     `showTime` 时不必重新推一遍依赖关系。
    *   - 若到 S5 收口时仍无消费者，应当**删掉**它（而不是留着当摆设）。
    */
-  mergedShowTime: ComputedRef<TimePanelConfig<PanelDateType> | null>;
+  mergedShowTime: ComputedRef<TimeConfigShowTime<PanelDateType> | null>;
 }
 
 /**

@@ -43,10 +43,8 @@ const { DatePicker, ConfigProvider } = antd;
  * ⚠️ `RangePicker` **不是 antd 的顶层导出** —— 它是 `DatePicker.RangePicker`
  * （写成 `const { RangePicker } = antd` 会拿到 `undefined`，渲染时报
  * 「Element type is invalid … but got: undefined」，React 不说是哪个组件）。
- *
- * S1 只覆盖单值 ⇒ 这里**暂不取用**（S5 补范围用例时用）。
  */
-void DatePicker.RangePicker;
+const { RangePicker } = DatePicker;
 const dayjs = require(
   require.resolve('dayjs', {
     paths: [
@@ -99,11 +97,29 @@ push('date-picker:no-suffix', h(DatePicker, { suffixIcon: null }));
 push('date-picker:picker-month', h(DatePicker, { picker: 'month' }));
 push('date-picker:placeholder', h(DatePicker, { placeholder: '自定义' }));
 
-// ---- 范围：**留到 S5**（`RangePicker.vue` 与「范围两端切换」同批落地）----
+// ---- 范围（S5）----
 //
-// ⚠️ 本文件当前**只覆盖单值**。范围版的 5 个用例（两端 / 分隔符 / 禁用的两端形态）
-//    与 `RangePicker.vue` 一起在 **S5** 补 —— 在那之前放进来会让 `semantic.test.ts`
-//    找不到对应实现（`domContractTest` 会直接抛「基线里有用例但 CASES 里没有」）。
+// 判据（**范围与单值的 DOM 差异就这几处**，所以这 5 条就是全部）：
+//   1. 根上多 `-range`（紧贴 `prefixCls`），两个输入框 `-input-start` / `-input-end`；
+//   2. 两框之间多 `-range-separator`（默认是 `SwapRightOutlined` 图标，
+//      自定义文本时**去掉** `aria-hidden`）；
+//   3. `-disabled` 的判据是 **`disabled.every()`**（两端都禁用），
+//      `-invalid` 是 **`invalid.some()`** —— 与单值的单布尔判据**不同**；
+//   4. 范围**没有** `-multiple`（`multiple` 不是范围的 prop）。
+push('date-picker:range-basic', h(RangePicker));
+push(
+  'date-picker:range-value',
+  h(RangePicker, { defaultValue: [D('2026-09-01'), D('2026-09-30')] }),
+);
+push('date-picker:range-separator', h(RangePicker, { separator: '→' }));
+// 两端都禁用 ⇒ 根上**有** `-disabled`
+push('date-picker:range-disabled', h(RangePicker, { disabled: true }));
+// 🚨 只禁用**一端** ⇒ 根上**不该**有 `-disabled`（判据是 `every`）——
+//    这条是「范围与单值判据不同」的反向哨兵。
+push(
+  'date-picker:range-disabled-one',
+  h(RangePicker, { disabled: [true, false], defaultValue: [D('2026-09-01'), D('2026-09-30')] }),
+);
 
 const result = {
   $schema: '../schema.json',

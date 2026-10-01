@@ -7,9 +7,23 @@
 
 import { withInstall } from '../_internal/with-install';
 import DatePickerComponent from './DatePicker.vue';
+import RangePickerComponent from './RangePicker.vue';
 
 /** DatePicker 组件。注册名 `ADatePicker`（COMPONENT-RULES.md 规则 R2）。 */
 export const DatePicker = withInstall(DatePickerComponent);
+/** RangePicker 组件（S5）。注册名 `ARangePicker`。 */
+export const RangePicker = withInstall(RangePickerComponent);
+
+/**
+ * 上游的静态别名 `DatePicker.RangePicker`（`es/date-picker/index.js` 的
+ * `Object.assign` 挂载）—— Vue 侧没有「函数组件带静态属性」的等价物，
+ * 但**消费习惯**要兼容（antd 用户写 `<DatePicker.RangePicker />`）。
+ *
+ * ⚠️ `Object.assign` 是**原地**修改 ⇒ `DatePicker` 自己也带上了 `RangePicker`；
+ * 返回值额外把类型带上（直接赋值需要 `as any`，H10 禁止）。
+ * ⇒ 两种用法都成立：`DatePicker.RangePicker`（类型可见）与具名 `RangePicker`。
+ */
+export const DatePickerWithRange = Object.assign(DatePicker, { RangePicker });
 
 export default DatePicker;
 

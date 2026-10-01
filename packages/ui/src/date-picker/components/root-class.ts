@@ -68,6 +68,27 @@ export interface RootClassOptions {
    */
   disabled?: boolean;
   multiple?: boolean;
+  /**
+   * 范围形态 ⇒ 在 `prefixCls` **紧后**加 `${prefixCls}-range`。
+   *
+   * 上游 `RangeSelector.js:157`：
+   * ```js
+   * clsx(prefixCls, `${prefixCls}-range`, { '-focused': …, '-disabled': …, '-invalid': …, '-rtl': … }, className)
+   * ```
+   * ⚠️ 位置是**第二个**（紧贴 `prefixCls`），不是塞在状态类那一组里 ——
+   * L4 的类名序列是逐项比的。
+   *
+   * 🚨 **范围与单值的两个状态类判据不同**（读上游确认）：
+   * | 类 | 单值（`SingleSelector:167-172`） | 范围（`RangeSelector:157-162`） |
+   * |---|---|---|
+   * | `-multiple` | 有 | **没有**（范围无多选） |
+   * | `-disabled` | `disabled`（单布尔） | `disabled.every(i => i)` —— **两端都禁用**才加 |
+   * | `-invalid` | `invalid`（单布尔） | `invalid.some(i => i)` —— **任一端**非法就加 |
+   * ⇒ 调用方传进来的 `disabled` / `invalid` 必须**已经按范围语义归一**
+   *   （`disabled` 传 `every` 的结果、`invalid` 传 `some` 的结果）。
+   *   本函数只管拼类名，不替调用方做归一 —— 否则单值路径的语义会被带偏。
+   */
+  range?: boolean;
   focused?: boolean;
   invalid?: boolean;
   rtl?: boolean;
@@ -113,6 +134,11 @@ export interface RootClassOptions {
 export function getRootClassNames(options: RootClassOptions): string[] {
   const { prefixCls } = options;
   const classes: string[] = [prefixCls];
+
+  // 🚨 `-range` 紧贴 `prefixCls`（上游 `clsx(prefixCls, `${prefixCls}-range`, …)`）
+  if (options.range) {
+    classes.push(`${prefixCls}-range`);
+  }
 
   // 🚨 rc 的 5 个状态类（**顺序逐字**：multiple → focused → disabled → invalid → rtl）
   //    实测 `disabled` 时是 `apollo-picker apollo-picker-disabled apollo-picker-outlined`
