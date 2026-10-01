@@ -632,23 +632,32 @@ export const COMPONENTS = {
     ],
   },
   anchor: {
-    // 7 个 variant × 3 个 viewport = 21 张
+    // 8 个 variant × 3 个 viewport = 24 张
     //
     // ⚠️ Anchor **没有浮层** ⇒ 不需要 `getPopupContainer`。它的视觉面是
     //    **链接列表 + ink 指示条**，而 ink 的位置来自「当前锚点」（滚动侦测的结果）。
-    //    🚨 `active` 用例**必须把锚点目标一起渲染**（`<div id="section-a">`…）——
-    //    没有目标就永远没有 active、ink 也永远不显示。
     //
-    // ⚠️ 两条硬约定（见 `cases/{react,vue}/anchor.*` 的文件头）：
-    //    **字体在用例内钉住** + **锚点目标高度固定**（它决定 ink 的位置）。
+    // 🚨 `active` 用例要出效果必须**同时**满足两条（细节见 `cases/react/anchor.jsx` 的文件头）：
+    //    ① 目标元素的**视口 top** 要 `<= offsetTop + bounds`（默认 0 / 5）—— 视觉用例
+    //       不滚动页面，所以用 `bounds` 抬阈值，目标由零高度夹具提供；
+    //    ② `affix` 不能是 `false`（除非给 `showInkInFixed`）—— `-fixed` 上的
+    //       `display: none`（3 个类）压过 `-ink-visible`（2 个类），ink 恒被隐藏。
+    //    2026-10-01 实测：旧写法漏了 ② 和 ①，`active` / `affix` / `rtl` 三张基线与
+    //    `basic` **逐字节相同** —— 用例是空转的。
+    //
+    // ⚠️ 一条硬约定（见 `cases/{react,vue}/anchor.*` 的文件头）：
+    //    **字体在用例内钉住**（两侧页面的 `html` 字体栈不同）。
     variants: [
-      'basic', // `affix: false`：结构最干净
-      'affix', // 默认固钉（包一层 Affix；静态帧里不固钉）
-      'horizontal', // 水平：ink 是底部横条
+      'basic', // `affix: false`：结构最干净（含 `-fixed` 类）
+      'active', // 第 1 条 active（默认 affix）⇒ `-link-active` / `-link-title-active` / ink 竖条
+      'active-last', // 第 3 条 active ⇒ 验证 ink 的 `top` 跟着链接走
+      'horizontal', // 水平：`-wrapper-horizontal`，ink 是底部横条
+      'horizontal-active', // 水平 + active ⇒ ink 走另一条路径（`left` / `width` 由 JS 实测）
       'nested', // 嵌套 items（垂直才展开）
-      'active', // 连目标一起渲染 ⇒ `-link-active` / `-ink-visible` / ink 几何都出现
       'semantic', // classNames / styles
-      'rtl', // direction: rtl ⇒ wrapper 上的 `-rtl`
+      // RTL + active。⚠️ 与 `active` **逐字节相同是预期的**（antd 对 Anchor 零 RTL CSS）——
+      // 留着它是为了守「不许擅自加 antd 没有的 RTL CSS」，别当重复删掉（PITFALLS 276 第三种情形）。
+      'rtl-active',
     ],
   },
   masonry: {

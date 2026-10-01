@@ -275,6 +275,33 @@ describe('Anchor · 滚动侦测（L2，mock rect）', () => {
 });
 
 describe('Anchor · ink（L2，mock 几何）', () => {
+  /**
+   * 🚨 **挂载路径**：`activeLink` 由挂载期的 `handleScroll()` 设，而那时渲染还没
+   * commit ⇒ `updateInk` 找不到 `-link-title-active`。这条用例**只等一拍、不派发
+   * 任何 scroll**，专门钉「依赖键不能提前提交、要等 `onUpdated` 重试」。
+   *
+   * 2026-10-01 实测：修之前这条是红的（`style.top` 是 `''`），而下面那条「切换」
+   * 用例照样绿 —— 因为它额外派发了一次 scroll 制造状态切换，把 bug 绕过去了。
+   */
+  it('🚨 挂载期就命中 active 时也要写 ink（不靠后续状态切换）', async () => {
+    mountTarget('a', 0);
+    const w = mountAnchor({
+      items: buildItems('#a'),
+      offsetTop: 10,
+      getContainer: () => window,
+    });
+
+    await nextTick();
+    expect(w.find(`.${P}-link-title-active`).text()).toBe('T0');
+
+    const ink = w.find(`.${P}-ink`);
+    expect(ink.classes()).toContain(`${P}-ink-visible`);
+    // jsdom 的 offsetTop / clientHeight 恒 0 ⇒ 断言「写进去了」而不是具体数值
+    expect((ink.element as HTMLElement).style.top).toBe('0px');
+    expect((ink.element as HTMLElement).style.height).toBe('0px');
+    w.unmount();
+  });
+
   it('垂直：切换 active 后把该链接的几何写进 ink 的**内联样式**，并加 `-ink-visible`', async () => {
     const elA = mountTarget('a', 0);
     mountTarget('b', 999);
@@ -290,7 +317,8 @@ describe('Anchor · ink（L2，mock 几何）', () => {
     expect(w.find(`.${P}-link-title-active`).text()).toBe('T0');
 
     // 🚨 让 `#a` 出界、`#b` 进界 ⇒ 派发 scroll 触发一次**真正的状态切换**
-    //    （否则「值没变 ⇒ 不重渲染 ⇒ 不写 ink」，测的是空转）
+    //    （这条用例要测的就是「切换后 ink 跟着走」，所以必须换人；
+    //     「挂载时就能写」由上面那条钉住）
     mockRect(elA, 999);
     mockRect(document.getElementById('b') as HTMLElement, 0);
     window.dispatchEvent(new Event('scroll'));

@@ -66,7 +66,14 @@
    - `style-class`（`antd-style` 的 `createStaticStyles`）—— 本仓没有 `antd-style`，
      语义化能力已由 `semantic` 视觉用例与 L4 的 `class-names` / `styles` 用例覆盖；
    - `component-token`（`theme.components.Anchor` 调试）—— 零运行时架构下 token 是构建期产物。
-2. **上游 `Anchor.test.tsx` 有 49 条用例**，本仓镜像了其中**最容易写错的那批**（18 条）。
+2. **上游 `Anchor.test.tsx` 有 49 条用例**，本仓镜像了其中**最容易写错的那批**（19 条）。
    剩余的主要是「滚动位置 → 当前锚点」的穷举与 `Affix` 交互细节，
    在 L6（真浏览器）与 L4（机械 oracle）里各有覆盖 ⇒ 未逐条镜像，登记在此。
 3. **`anchorBallSize` 没有消费者**（上游 6.6.4 也没有）—— 保留计算只为逐条对齐。
+4. **「目标进入视口 → 当前锚点」的真实滚动路径不进像素比对**：`run.mjs` 只截**静态帧**
+   （渲染完成即截图、不滚动页面）⇒ L6 的 active 状态是用 `bounds` 阈值**钉**出来的
+   （见 `tests/visual/render/cases/react/anchor.jsx` 的文件头）。
+   「滚动时切换 active」由 L1 的 mock-rect 用例覆盖。
+5. **RTL 在像素上是 no-op**（antd 对 Anchor 零 RTL CSS，只有 wrapper 上的 `-rtl` 类）
+   ⇒ `rtl-active` 视觉用例与 `active` **逐字节相同**。留着它是为了守
+   「不许擅自加 antd 没有的 RTL CSS」；**别当重复删掉**（`PITFALLS 276` 第三种情形）。

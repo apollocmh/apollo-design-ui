@@ -320,23 +320,36 @@ export const Anchor = defineComponent({
     };
 
     // ======================= ink =======================
-    const updateInk = (): void => {
+    /**
+     * 把当前锚点的几何写进 ink 的内联样式。
+     *
+     * @returns 是否**处理完毕**。`false` 只有一种情形：`activeLink` 已经有值，
+     *   但 DOM 里还查不到 `-link-title-active`（渲染还没 commit）⇒ 调用方必须
+     *   **重试**（见 `syncInk` 的说明）。
+     */
+    const updateInk = (): boolean => {
       const linkNode = wrapperRef.value?.querySelector<HTMLElement>(
         `.${prefixCls.value}-link-title-active`,
       );
-      if (linkNode && spanLinkNodeRef.value) {
-        const inkStyle = spanLinkNodeRef.value.style;
-        const horizontalAnchor = anchorDirection.value === 'horizontal';
-        inkStyle.top = horizontalAnchor
-          ? ''
-          : `${linkNode.offsetTop + linkNode.clientHeight / 2}px`;
-        inkStyle.height = horizontalAnchor ? '' : `${linkNode.clientHeight}px`;
-        inkStyle.left = horizontalAnchor ? `${linkNode.offsetLeft}px` : '';
-        inkStyle.width = horizontalAnchor ? `${linkNode.clientWidth}px` : '';
-        if (horizontalAnchor) {
-          scrollIntoView(linkNode, { scrollMode: 'if-needed', block: 'nearest' });
-        }
+      if (!linkNode) {
+        // 没有 active 链接是**合法**状态（`activeLink` 为空）⇒ 算处理完；
+        // 有 active 却查不到节点 ⇒ 渲染没 commit ⇒ 交给调用方重试。
+        return !activeLink.value;
       }
+      const inkNode = spanLinkNodeRef.value;
+      if (!inkNode) {
+        return false;
+      }
+      const inkStyle = inkNode.style;
+      const horizontalAnchor = anchorDirection.value === 'horizontal';
+      inkStyle.top = horizontalAnchor ? '' : `${linkNode.offsetTop + linkNode.clientHeight / 2}px`;
+      inkStyle.height = horizontalAnchor ? '' : `${linkNode.clientHeight}px`;
+      inkStyle.left = horizontalAnchor ? `${linkNode.offsetLeft}px` : '';
+      inkStyle.width = horizontalAnchor ? `${linkNode.clientWidth}px` : '';
+      if (horizontalAnchor) {
+        scrollIntoView(linkNode, { scrollMode: 'if-needed', block: 'nearest' });
+      }
+      return true;
     };
 
     // ======================= 语义化 =======================
@@ -498,6 +511,14 @@ export const Anchor = defineComponent({
      *
      * `onUpdated` 在**每次 commit 之后**跑 —— 与 React 的 `useEffect` 同一时机 ✓。
      * 用「依赖键」去重，避免比上游多跑（`updateInk` 里还有 `scrollIntoView` 这个副作用）。
+     *
+     * 🚨 **依赖键只在 `updateInk()` 真的写成功时才提交**（2026-10-01 探针实测的坑）：
+     * `onMounted(syncInk)` 与「设置 `activeLink` 的那个 `onMounted`」（`syncScrollListener`）
+     * 在**同一批 mounted 钩子**里，而前者注册得更晚 ⇒ 它跑的时候 `activeLink` 已经是
+     * `#section-a`，但**渲染还没 commit**、DOM 里没有 `-link-title-active`。
+     * 若这时就把依赖记下，紧随其后的 `onUpdated` 会因为「依赖没变」直接 return
+     * ⇒ ink 的内联样式**永远写不进去**（症状：ink 的 rect 是 `[16,16,2,0]`，
+     * 而 React 侧是 `[16,20,2,22]`）。
      */
     let lastInkDeps = {
       dir: '',
@@ -520,8 +541,10 @@ export const Anchor = defineComponent({
       ) {
         return;
       }
-      lastInkDeps = next;
-      updateInk();
+      // ⚠️ 失败（DOM 还没 commit）时**不提交**依赖键 ⇒ 下一次 `onUpdated` 会重试。
+      if (updateInk()) {
+        lastInkDeps = next;
+      }
     };
     onMounted(syncInk);
     onUpdated(syncInk);

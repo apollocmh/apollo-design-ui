@@ -857,14 +857,55 @@ export const ANCHOR_BOX_STYLE = {
   color: 'rgba(0, 0, 0, 0.88)',
 };
 
-/** 锚点目标块的样式（`active` 用例里给 `#section-*` 用，固定高度 ⇒ 布局确定）。 */
-export const ANCHOR_TARGET_STYLE = {
-  height: '120px',
-  margin: '0 0 16px',
-  background: '#f5f5f5',
-  border: '1px solid #e8e8e8',
-  boxSizing: 'border-box',
+/**
+ * 锚点目标的**零高度夹具**。
+ *
+ * 🚨 为什么不是「几个可见的灰色方块」（2026-10-01 改）：
+ *    `getInternalCurrentAnchor` 的判据是 `目标的视口 top <= offsetTop + bounds`
+ *    （默认 0 / 5），而视觉用例**不滚动页面** —— 把目标放在锚点**下方**时它们的 top
+ *    全都大于阈值，**永远没有任何链接是 active**、ink 也永远不显示。
+ *    旧写法就是这样：用例看起来在测核心视觉面，实际只多渲染了几个灰色方块
+ *    （证据：旧 `active` / `affix` / `rtl` 三张基线与 `basic` **逐字节相同**）。
+ *
+ * 现在改成：目标放进一个 `height: 0; overflow: hidden` 的**零高度**容器，用
+ * `position: absolute` + `top` 把它们拉开 600px。这样
+ *   1. 容器不占高度、目标被裁掉 ⇒ 截图里只有 Anchor 自己，噪声为零；
+ *   2. 三个目标的 top ≈ 106 / 706 / 1306，间隔远大于布局漂移 ⇒
+ *      「哪条链接 active」由 `bounds` 唯一决定（见下面两个常量）。
+ */
+export const ANCHOR_TARGET_FIXTURE_STYLE = { height: 0, overflow: 'hidden' };
+
+/**
+ * 单个目标的绝对定位样式（`top` 由 `ANCHOR_TARGET_OFFSETS` 给）。
+ *
+ * ⚠️ `left` / `right` 必须给 —— `getOffsetTop` 里有 `if (rect.width || rect.height)`
+ * 分支，宽高都为 0 时它直接返回 `rect.top`（走的是另一条路径）。
+ */
+export const ANCHOR_TARGET_ABS_STYLE = {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  height: '1px',
 };
+
+/** 目标 id（对应 `ANCHOR_ITEMS` 的 `href`）与它们的 `top` 偏移。 */
+export const ANCHOR_TARGET_OFFSETS = [
+  ['a', 0],
+  ['b', 600],
+  ['c', 1200],
+];
+
+/**
+ * `bounds`：阈值，只有 `目标视口 top <= offsetTop + bounds` 的链接才算候选，
+ * 命中多个时取 top **最大**的那个（`getInternalCurrentAnchor` 的 `reduce`）。
+ *
+ * - `ANCHOR_BOUNDS_FIRST`（400）：只命中 a（top≈106），b（≈706）不命中 ⇒ 第 1 条 active。
+ * - `ANCHOR_BOUNDS_LAST`（2000）：三条全命中 ⇒ 取 top 最大的 c ⇒ 第 3 条 active。
+ *
+ * ⚠️ 这两个值与实测 top 差 294px / 694px，布局小漂移不会让「谁 active」悄悄换人。
+ */
+export const ANCHOR_BOUNDS_FIRST = 400;
+export const ANCHOR_BOUNDS_LAST = 2000;
 
 /** `items`（两侧逐字相同）。 */
 export const ANCHOR_ITEMS = [

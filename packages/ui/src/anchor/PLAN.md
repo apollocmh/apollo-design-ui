@@ -68,13 +68,25 @@
       🚨 对象字面量的键**含空格要加引号**（`'显示 ink'`）—— 否则 oxc 报
       `Expected ',' or '}' but found Identifier`，而 vitest 的错误片段带 ANSI 颜色，
       看起来像是「文件里有转义字符」（实际没有，别被误导）。
-- [x] G9 L6 视觉 —— ✅ **21 / 21 exact**（7 variant × 3 viewport，**首跑即全绿**）。
-      变体：`basic` / `affix` / `horizontal` / `nested` / `active` / `semantic` / `rtl`。
-      React 基线已入库（`tests/visual/baselines/react/anchor/`，21 张）。
-      🚨 **`active` 用例必须把锚点目标一起渲染**（`<div id="section-a">`…）——
-      `getInternalCurrentAnchor` 靠 `document.getElementById` 找目标再量 `top`，
-      没有目标就永远没有 active、ink 也永远不显示（等于没测到核心视觉面）。
-      ⚠️ 两条硬约定：**字体在用例内钉住** + **锚点目标高度固定**（它决定 ink 的位置）。
+- [x] G9 L6 视觉 —— ✅ **24 / 24 exact**（8 variant × 3 viewport）。
+      变体：`basic` / `active` / `active-last` / `horizontal` / `horizontal-active` /
+      `nested` / `semantic` / `rtl-active`。React 基线已入库
+      （`tests/visual/baselines/react/anchor/`，24 张）。
+      ⚠️ **字体在用例内钉住**（两侧页面的 `html` 字体栈不同）。
+      🚨 **`active` 要出效果必须同时满足两条**（2026-10-01 用 Playwright 探针实测后重做）：
+      ① 目标的**视口** `top` 要 `<= offsetTop + bounds`（默认 0 / 5）—— 视觉用例不滚动页面
+      ⇒ 旧写法（把可见目标放在锚点下方）**永远没有 active**；
+      ② `affix` 不能是 `false`（除非给 `showInkInFixed`）—— `.{p}-fixed .{p}-ink.{p}-ink`
+      的 `display: none`（3 个类）压过 `-ink-visible`（2 个类）⇒ ink 恒被隐藏。
+      **旧写法两条都漏了** ⇒ `active` / `affix` / `rtl` 三张基线与 `basic` **逐字节相同**，
+      用例是空转的。修法：`bounds` 抬阈值 + **零高度夹具**
+      （`{height:0, overflow:hidden}` 容器 + 绝对定位目标，拉开 600px；见 `shared.mjs`），
+      `active` 系列改用 `affix` 默认值。
+      ⚠️ `affix` 变体已**删**（它与 `basic` 只差一层不可见的 Affix 包装，而默认 affix 路径
+      已被 `active` / `active-last` / `horizontal-active` 覆盖 ⇒ 冗余）；
+      `rtl` 改名为 `rtl-active` 并保留（见下面的等式守卫）。
+      ⚠️ 改完用例的**通用手法**：先写 Playwright 探针把「类名 / computed display /
+      `getBoundingClientRect`」两侧打出来，**确认状态真的出现了**再写基线（`PITFALLS 276`）。
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/anchor.mjs` + `baselines/anchor.dom.json`
       （**23 用例**）+ `semantic.test.ts` **23 条**，**只有 2 条豁免**：
       **D1**（`bare` 用例的默认根前缀 `ant` vs `apollo`，5 层带前缀元素）+
@@ -91,9 +103,13 @@
       API 四表 / Theme / 设计说明）+ `README.md`（差异表 D1–D9 / `.ts` 选型理由 / token 清单 /
       已知缺口）。⚠️ 与 antd 的 12 个用户可见 demo 差 4 个（`static` / `legacy-anchor` /
       `style-class` / `component-token`），理由逐条登记在 README §5。
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:anchor]
+- [x] G12 REGISTRY —— 11 维度置 done，`status: completed`（唯一让进度被承认的方式）
+- [x] G13 BUILD —— `registry:check` **18 checks / 0 warnings** · `lint:types` / `lint:format`
+      **0 error** · `test`（unit / dom-contract / a11y / theme）全过 · L7 构建 **FAIL 0**
+      （仅 `PENDING 1` = B6 按需样式子路径，全仓既有缺口）· `test:types` **1795 passed /
+      Type Errors: no errors**（72 条是 `PITFALLS 73` 的 `.vue` 解析噪音）·
+      `test:visual --component anchor --mode compare` **24 / 24 exact**。
+- [x] G14 COMMIT —— `feat(anchor): G7–G14 收口 —— 11 维度全 done，组件判 completed [COMP:anchor]`
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
