@@ -2526,3 +2526,60 @@
     - 修法：把 `screenshotElement` 里那段剥类逻辑抽成
       **`stabilize.mjs` 的 `stripMotionPhaseClasses(page)`**（已导出），
       **任何「截图前」的测量都必须调它**；`screenshotElement` 也改为复用它。
+
+254. 🚨 **`isRenderable` 被本地复制了一份、且**语义写反**（`''` 判真、`true` 判假、数组递归）**（2026-10-01，做 date-picker footer 时发现）。
+
+    上游 `@rc-component/util` 的 `isReactRenderable`（`es/is.js`）逐字是：
+    ```js
+    // Returns `false` only for `null`, `undefined`, `false`, and `''`;
+    // all other values, including `0` and `true`, are treated as renderable.
+    export function isReactRenderable(value) {
+      return isNonNullable(value) && value !== false && value !== '';
+    }
+    ```
+    而 `packages/ui/src/date-picker/components/picker-shared.ts` 里那份**本地副本**写的是
+    「只排除 `null` / `undefined` / boolean / **空数组**」+「**空字符串算可渲染**」
+    —— **三条全错**：`''` 该假却判真、`true` 该真却判假、数组不该递归。
+
+    - 本仓的**权威实现**一直在 `@apollo-design/utils` 的 `isRenderable`（`is.ts:40`，与上游逐字相同），
+      全库 **20+ 处**在用（badge / empty / statistic / radio / result / tooltip / tag / alert /
+      notification / drawer / modal / popconfirm / popover / form…）。date-picker 是**唯一**
+      另起一份的。
+    - **为什么一直没暴露**：它只被 `getSingleShowClear` / `getRangeShowClear`（`clearIcon`）
+      与 `Selector` 的 `suffixIcon` / `prefix` 用，那些入参**从来不是 `''` 或数组**
+      ⇒ 判据分歧不可观测。
+    - 🚨 **是「测试把错的规格钉住了」**：`picker-pure.test.ts` 有一条
+      `expect(isRenderable('')).toBe(true)` / `expect(isRenderable([])).toBe(false)`
+      —— 照抄本地副本写的。**照 `AGENTS.md` §4.2 第 3 条修正测试**（不是放宽），
+      并在断言旁注明「原断言错在哪」。
+    - **判据（可推广）**：本仓凡遇到「与 `@rc-component/util` 同名的小工具」，先
+      `grep` 一下 `packages/utils/src` —— **很可能已经有一份**，再起一份就会漂移。
+      ⚠️ 更隐蔽的是「起了一份且**注释写得很自信**」——注释里的「上游是 X」必须**回源码核对**，
+      不能凭印象（这条坑的注释就是错的，还带着 ⚠️ 强调）。
+
+255. ⚠️ **「浮层页脚」不是面板的一部分 —— 它与 `PickerPanel` **同层**，且 `useShowNow` 的第二参是**面板当前粒度****（2026-10-01，date-picker footer）。
+
+    上游 `PickerInput/Popup/index.js:120-163` 的结构里，那个**无类名的 `div`** 同时装
+    `PopupPanel`（= `PickerPanel`）与 `Footer`：
+    ```
+    div.{p}-panel-container.{p}-{internalMode}-panel-container
+      └─ div.{p}-panel-layout
+          └─ div            ← 无类名；panel 与 footer 是**兄弟**
+              ├─ PickerPanel
+              └─ Footer
+    ```
+    ⇒ 把 footer 当面板子节点挂，`-panel-layout` 的 `align-items:stretch` 与
+    `-ranges` 的 `justify-content:center` 都会错位（L6 立刻红）。
+
+    - 🚨 **`useShowNow(picker, mode, showNow, showToday)` 的第二参是 `mergedMode`
+      （面板当前粒度），不是 `picker`** ⇒ 下钻到月/年面板会让页脚**消失**；
+      再叠上游 `Popup/index.js:130` 的 `showNow={multiple ? false : showNow}`。
+      **这就是 antd 基线里 `basic` 容器高 348、而 `month`/`year`/`multiple` 是 309 的全部原因。**
+      ⇒ 判据：**页脚的「有没有」比「长什么样」更容易写错**，先钉「什么时候返回 `null`」。
+    - 文案判据是 **`internalMode`**（组件粒度）：`date + showTime` 的 `internalMode` 是
+      `'datetime'` ⇒ 显示 **`Now`** 而不是 `Today`（判据**不是**面板粒度 `mode`）。
+    - ⚠️ 上游 `Footer` 在「`extra` 与 `ranges` 都不可渲染」时**返回 `null`**（不是空 div）
+      ⇒ `renderExtraFooter: () => ''` 不该把页脚凭空撑出来（依赖 `isRenderable('') === false`，
+      见 254）。
+    - ⚠️ **页脚样式（`-footer` / `-ranges` / `-now-btn-disabled` / `-ok`）早在 257 条规则里**
+      （机械转换时就带上了）—— 缺的从来只是**组件 + 接线**，不是 CSS。先 `grep` 规则再动手。

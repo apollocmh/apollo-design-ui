@@ -10,6 +10,7 @@
  * `getStatusClassNames`（逐字对齐上游），`root-class.ts` 直接复用。
  */
 
+import { isRenderable } from '@apollo-design/utils';
 import type { VNodeChild } from 'vue';
 import type { MergedFormatEntry } from '../hooks/picker-format';
 import type { DatePickerDate } from '../interface';
@@ -17,23 +18,28 @@ import type { DatePickerDate } from '../interface';
 // ---------------------------------------------------------------------------
 // 渲染性判定
 // ---------------------------------------------------------------------------
-
-/**
- * `isReactRenderable` —— 上游用 `@rc-component/util` 的同名函数。
- *
- * 判据：只排除 `null` / `undefined` / boolean / **空数组**。
- * ⚠️ **空字符串算「可渲染」**（上游不是 truthy 判据）——
- * 写成 `if (!node) return false` 会把 `''` 与 `0` 也误判成不可渲染。
- */
-export function isRenderable(node: VNodeChild): boolean {
-  if (node === null || node === undefined || typeof node === 'boolean') {
-    return false;
-  }
-  if (Array.isArray(node)) {
-    return node.some((n) => isRenderable(n));
-  }
-  return true;
-}
+//
+// 🚨 **2026-10-01 修正：本文件不再自带 `isRenderable`。**
+//
+// 此前这里有一份**本地副本**，注释写着「只排除 `null` / `undefined` / boolean /
+// **空数组**」且「**空字符串算可渲染**」—— **两条都与上游不符**。
+// 上游 `@rc-component/util` 的 `isReactRenderable`（`es/is.js`）是：
+//
+// ```js
+// // Returns `false` only for `null`, `undefined`, `false`, and `''`;
+// // all other values, including `0` and `true`, are treated as renderable.
+// export function isReactRenderable(value) {
+//   return isNonNullable(value) && value !== false && value !== '';
+// }
+// ```
+//
+// ⇒ ① `''` **不可**渲染（`renderExtraFooter: () => ''` 不该把页脚凭空撑出来）；
+//    ② 数组是普通值，**不**做递归判空（`[]` ⇒ `true`）；
+//    ③ `true` **算**可渲染（本地副本的 `typeof === 'boolean'` 一刀切是错的）。
+//
+// 本仓的权威实现在 `@apollo-design/utils` 的 `isRenderable`（`is.ts:40`，逐字同上游），
+// 全库 20+ 处用它 —— 收敛到那一份，**不要**在这里再起一份。
+// 消费方直接 `import { isRenderable } from '@apollo-design/utils'`。
 
 // ---------------------------------------------------------------------------
 // 尺寸与 `input[size]`
@@ -173,6 +179,52 @@ export function getMergedNeedConfirm(
 ): boolean {
   const multipleInteractivePicker = internalPicker === 'time' || internalPicker === 'datetime';
   return needConfirm ?? multipleInteractivePicker;
+}
+
+// ---------------------------------------------------------------------------
+// `showNow`（页脚的「此刻 / 今天」按钮）
+// ---------------------------------------------------------------------------
+
+/**
+ * 「此刻 / 今天」按钮是否显示（上游 `PickerInput/hooks/useShowNow.js`，逐字）。
+ *
+ * ```js
+ * export default function useShowNow(picker, mode, showNow, showToday, rangePicker) {
+ *   if (mode !== 'date' && mode !== 'time') { return false; }
+ *   if (showNow !== undefined) { return showNow; }
+ *   // Compatible with old version `showToday`
+ *   if (showToday !== undefined) { return showToday; }
+ *   return !rangePicker && (picker === 'date' || picker === 'time');
+ * }
+ * ```
+ *
+ * ⚠️ 第二参是 **`mergedMode`（面板当前粒度）**，不是 `picker` —— 所以
+ * 「下钻到月 / 年面板」会让页脚**消失**（`month` / `year` 变体在 antd 基线里
+ * 根本没有页脚，容器高 309 而不是 348）。
+ *
+ * ⚠️ 调用方还要再叠一层上游 `Popup/index.js:130` 的覆盖：
+ * `showNow={multiple ? false : showNow}`（`multiple` 恒为 false）。
+ *
+ * ⚠️ `showNow` / `showToday` 的判据是 **`!== undefined`**（不是 truthy）——
+ * `showToday: false` 是「显式关闭」，必须生效。
+ */
+export function getShowNow(
+  picker: string | undefined,
+  mode: string | undefined,
+  showNow: boolean | undefined,
+  showToday: boolean | undefined,
+  rangePicker?: boolean,
+): boolean {
+  if (mode !== 'date' && mode !== 'time') {
+    return false;
+  }
+  if (showNow !== undefined) {
+    return showNow;
+  }
+  if (showToday !== undefined) {
+    return showToday;
+  }
+  return !rangePicker && (picker === 'date' || picker === 'time');
 }
 
 // ---------------------------------------------------------------------------

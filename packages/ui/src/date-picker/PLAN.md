@@ -111,11 +111,11 @@
       后缀图标 `role=img` + `aria-label=calendar` + `aria-hidden=true` · `disabled` 时不渲染清除按钮。
       ⚠️ 范围版（含上游两条专门的 **separator a11y 测试**：默认带 `aria-hidden`、自定义**去掉**它）
       留到 **S5**；浮层内（面板）的 role/ARIA 由 `@apollo-design/picker` 的 L5 负责。
-- [~] G9 L6 视觉 —— **已跑通、抓到并修掉三个真 bug**，但**尚未全绿**（详见下节）。
-      当前：**12 / 21 exact**（`month` / `year` / `multiple` / `variants` 全 **0.000%**），
-      其余 9 组 **0.22%~0.83%**（block-diff）。
-      🚨 首轮 18 组是 0.42%~3.51%（**面板铺满容器**）⇒ 修掉 `-css-var` 漏挂后降到 0.12%~0.57%；
-      二轮修掉「表头图标」「缺 `-panel-container`」「`popup.root` 新 API 死」后 → **12/21 exact**。
+- [x] G9 L6 视觉 —— ✅ **21 / 21 exact**（2026-10-01 三轮收口）。
+      首轮 18 组 0.42%~3.51%（面板铺满容器）⇒ 修 `-css-var` 漏挂 → 3/21 exact；
+      二轮修「表头图标」「缺 `-panel-container`」「`popup.root` 新 API 死」→ **12/21**；
+      三轮补「`Today` 页脚」→ **21/21**。
+      ⚠️ 组件**仍不能判 `completed`**：S5 还剩**范围两端**与 **`presets`**。
 - [x] G10 L4 DOM 契约 —— `tests/compat/baseline/date-picker.mjs` +
       `baselines/date-picker.dom.json`（**16 用例**，单值）+ `semantic.test.ts` **17 条**
       （16 契约 + 1 覆盖检查），**零豁免**（`allow: {}`）。
@@ -305,20 +305,34 @@ Vue 侧撑不出同一个高度 ⇒ 两侧 `#stage` 尺寸不等 ⇒ pixelmatch 
 `month` / `year` / `multiple` / `variants` 已 **0.000% exact**。
 新增 `__tests__/popup-shell.test.ts`（4 条）把「外壳三层」钉在 L4，不必每次都等 L6。
 
-### ⏳ 剩余（**只剩一项**）
+### ✅ 三轮（2026-10-01）：12/21 → **21/21 exact**
 
-| # | 现象 | 归属 | 说明 |
-|---|---|---|---|
-| 1 | **缺 `Today` 页脚**（容器高 **309** vs antd **348**，差的 39px 就是它） | **S5 的 presets/footer** | 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里**没有** `showToday`/`-footer`）。⚠️ 宿主层 `-panel-layout` 已就位 ⇒ 只差接线 + 用例。**不是 bug，是已知范围** |
+补上**浮层页脚**（唯一剩下的差异）。新增 `components/Footer.ts`（上游 `Footer.js` 78 行逐字移植）
++ `picker-shared.ts` 的 `getShowNow`（上游 `useShowNow.js`）+ `DatePicker.vue` 接线，
+`renderExtraFooter` 一并生效。
 
-⚠️ `basic` / `value` / `datetime` 的差异率比一轮**变大**（0.13%→0.22% 等）**不是回归**：
-它们 antd 侧**有页脚**，Vue 侧没有；此前 Vue 连阴影都没有 ⇒ 「缺阴影」与「缺页脚」两块差异
-**恰好抵消了一部分**。现在阴影对齐了，剩下的差异**纯粹**是缺页脚。
+⚠️ **页脚样式早就在 257 条规则里**（机械转换时就带上了）—— 缺的从来只是**组件 + 接线**。
+⚠️ 页脚与 `PickerPanel` **同层**（都在 `-panel-layout` 里那个无类名的 `div` 里）；
+⚠️ `useShowNow` 第二参是**面板当前粒度** ⇒ `month` / `year` 会**没有页脚**，
+再叠 `multiple ? false : showNow` ⇒ `multiple` 也**没有**。→ PITFALLS **255**
+
+顺带修掉一个**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**
+（`''` 判真、`true` 判假、数组递归），而权威实现一直在 `@apollo-design/utils`。
+连带**修正**了把它钉住的测试（`AGENTS.md` §4.2 第 3 条）。→ PITFALLS **254**
+新增 `__tests__/footer.test.ts`（12 条）+ `getShowNow` 的纯函数用例（1 条）。
+
+### ✅ 三轮收口：L6 全绿
+
+**21 / 21 exact** ⇒ **G9 的 L6 门禁已过**（G12/G13/G14 仍未做）。
+
+⚠️ 二轮时 `basic` / `value` / `datetime` 的差异率比一轮**变大**（0.13%→0.22% 等）
+**不是回归**：它们 antd 侧**有页脚**、Vue 侧没有；此前 Vue 连阴影都没有 ⇒
+「缺阴影」与「缺页脚」两块差异**恰好互相抵消**。阴影对齐后剩下的差异**纯粹**是缺页脚。
 （`month`/`year`/`multiple` 掉到精确 0 恰好反证：它们 antd 侧**没有页脚**，
 此前的差异**全部**来自缺阴影。）
 
 ⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确「不得放宽」，
-**没有豁免机制**）⇒ 这一项修完之前 **G9 不能判 done**，组件也不能 `completed`。
+**没有豁免机制**）。组件**仍不能判 `completed`** —— 见下节 S5 剩余。
 
 ⚠️ **与 G12 的关系**：`test:visual` **不在** `verify:full`（= registry:check && lint && test && test:build）
 ⇒ L6 的红**不会**让日常门禁红，必须显式跑 `node tests/visual/run.mjs --component date-picker`。

@@ -91,8 +91,8 @@ rc 的 `lib/PickerInput` 是 **37 个 `.js` / 4290 行**、且**绑 React**
 | S2 | 键入解析 + `format` 补齐层 + `format` 函数形态 + **提交时机状态机** | ✅ |
 | S3 | **掩码模式**（`format.type: 'mask'`） | ✅ |
 | S4 | 键盘字段导航与 `-input-active` 分段 | 🟡 **单值部分完成**：调度（随 S2）+ `-focused` + 确认离开才关浮层。`-input-active` 与 `useFocusLock` 是**范围专属**（上游 `SinglePicker` 不传 `activeIndex`；单值下 `forceFocus` 恒 false）⇒ 随 S5 的 RangePicker 一起做 |
-| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置** ✅、**`multiple` 全链路** ✅（含 `tagRender` / `maxTagCount` / 删除 / `-multiple-input`）；范围与 presets/footer 未开始（**footer 的宿主层已就位**，见 §5.5(b)） |
-| **G9 L6 视觉** | **12 / 21 exact**（`month`/`year`/`multiple`/`variants` **0.000%**；`basic`/`value`/`datetime` 0.22%~0.83%）。首轮 3.51% 的根因（`-css-var` 漏挂）与二轮的两处（表头图标、缺 `-panel-container`）**均已修**。剩 **唯一**一项：缺 `Today` 页脚（S5）—— 见 §5.5(f′) —— **修完之前 G9 不能判 done** |
+| S5 | `multiple` + `tagRender` / `maxTagCount`、范围两端、`presets` / footer | 🟡 **部分**：面板粒度**受控化 + 打开即重置** ✅、**`multiple` 全链路** ✅（含 `tagRender` / `maxTagCount` / 删除 / `-multiple-input`）、**footer ✅（2026-10-01，含 `renderExtraFooter`）**；剩**范围两端**与 **`presets`**（两者都需要新组件/新 API） |
+| **G9 L6 视觉** | ✅ **21 / 21 exact**（2026-10-01 三轮）。首轮 3.51% 的根因（`-css-var` 漏挂）、二轮两处（表头图标、缺 `-panel-container`）、三轮一处（**缺 `Today` 页脚**）**全部已修** —— 见 §5.5(e)(f)(f′)。**G9 的 L6 门禁已过**（其余 G12/G13/G14 未做） |
 
 ### 5.2 ✅ **已解决**（2026-10-01）：`format` 的函数形态
 
@@ -181,19 +181,29 @@ const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.for
 ⇒ 这是**潜在**分歧，不是当前可见 bug。**修正它需要单独过 picker 包的门禁**
 （跨包改动，AGENTS.md §7），故本轮只登记、不改。
 
-#### (b) `showNow` / `showToday` **不生效**（面板没有 footer）
+#### (b) ✅ **已解决**（2026-10-01）：`showNow` / `showToday` / `renderExtraFooter`
 
 `showNow` 在 `interface.ts` 里声明了、`DatePicker.vue` 的 `withDefaults` 也给了
 `undefined`，但**整条链上没有消费者**：`showTimeKeys` 会把它挑进 `timeProps`，
 而 `@apollo-design/picker` 里除了那一行 `showTimeKeys` **没有任何 `showNow` 的引用**。
 上游的「此刻 / 今天」按钮渲染在 `PickerInput/Popup/Footer.js`（**浮层**层，不是面板层）
 —— 而裁决 `picker-panel-ownership` = B 只把**面板** Vue 化了 ⇒ footer 属未移植面。
-⇒ 与 `renderExtraFooter` / `panelRender` 同批（S5 或单独一轮）。
 
-⚠️ **2026-10-01 更新**：footer 的**宿主层已就位** —— `-panel-layout` 里那个无类名的
-`div` 就是上游同时放 `PopupPanel` 与 `Footer` 的地方（`Popup/index.js:127-133`），
-本轮已补（§5.5 (f-2)）。`panelRender` 的**挂载点**也正好是 `-panel-layout`
-（上游 `panelRender(mergedNodes)` 包的就是它）⇒ 两者现在都只差「接线 + 用例」。
+⇒ **2026-10-01 已落地**：新增 `components/Footer.ts`（上游 `Footer.js` 78 行的逐字移植）+
+`components/picker-shared.ts` 的 `getShowNow`（上游 `useShowNow.js`），
+并在 `DatePicker.vue` 接线。`renderExtraFooter` 一并生效（它是 footer 的 `-footer-extra` 槽）。
+⚠️ **`panelRender` 仍未接线** —— 它的挂载点就是 `-panel-layout`
+（上游 `panelRender(mergedNodes)` 包的是那一层），属待补项。
+
+#### (b′) ⏳ 本轮**新登记**的缺口（逐条有出处，都不是「已知范围」而是真欠账）
+
+| # | 缺口 | 上游出处 | 影响 |
+|---|---|---|---|
+| 1 | `isInvalidateDate` **只覆盖 `disabledDate`** —— 缺 `generateConfig.isValidate(date)` 与 `showTime.disabledTime` / legacy `disabledHours`… 两支 | `useInvalidate.js`（全 50 行） | `OK` 按钮的禁用态、以及 `useRangeValue` 的提交校验，在「配了 `showTime.disabledTime`」时会与 antd 不一致 |
+| 2 | 浮层的 `a` 链接色**靠 `select` 的 CSS 蹭到** —— `DATE_PICKER_RULES`（257 条，机械转换自 antd 产物）里**没有** `a{color:var(--apollo-color-link);…}` 那 7 条 | antd `getResetStyles`（`theme/util/genStyleUtils.js:36`，由 `resetComponent` 注入） | 页面里恰好有 `select` 时**看不出来**（L6 就是这样）；只引 `@apollo-design/ui/date-picker/style.css` 时 `Today` / `Now` **不是蓝色**。⚠️ 归口是 **`BASE_CSS`**（全局规则），不是本组件；改它要重跑全仓 L6 |
+| 3 | `PopupPanel` 的 `onCellDblClick`（**双击格子 = 提交**，仅 `needConfirm` 时）未接 | `Popup/PopupPanel.js:38-42` | 双击不会提交 |
+| 4 | `hideHeader` 由 `picker === 'time'` 决定（时间面板无表头） | `Popup/PopupPanel.js:44` | 纯 `picker: 'time'` 时本仓会多一个表头；L6 矩阵里没有 `time` 变体 ⇒ 未暴露 |
+| 5 | `disableSubmit` 的 `isTimePickerEmptyValue` 分支（`defaultOpenValue` 兜底）未实现 | `Popup/index.js:97-104` | 只影响纯 `picker: 'time'`（本组件的 `picker` 不含 `'time'`） |
 
 #### (c) ✅ **已解决**（2026-10-01 同日）：S2 的「落值 + 提交时机」
 
@@ -283,16 +293,27 @@ Vue 侧没有；此前 Vue 连阴影都没有 ⇒ 「缺阴影」与「缺页脚
 ⚠️ `month` / `year` / `multiple` 掉到**精确 0** 恰好反证了这一点：它们 antd 侧**没有页脚**，
 此前的差异**全部**来自缺阴影。
 
-#### (f′) ⏳ G9 L6 剩余的唯一差异（**已定位，未修**）
+#### (f′) ✅ **已解决**（2026-10-01，G9 L6 三轮）：补上 `Today` 页脚 ⇒ **21 / 21 exact**
 
-| # | 现象 | 归属 |
+二轮结束后唯一剩下的差异是**面板缺 `Today` 页脚**（容器高 **309** vs antd **348**，差的 39px 就是它）。
+归属 **Popup 层**（rc-picker 的 `PickerPanel` 里没有 `showToday` / `-footer`）。
+
+⇒ 新增 `components/Footer.ts` + `getShowNow` + `DatePicker.vue` 接线（见 §5.5 (b)）。
+**实测：`node tests/visual/run.mjs --component date-picker --mode compare` ⇒ 21 / 21 exact**。
+
+探针对拍（`tests/visual/debug/probe-datepicker-header.mjs basic`，两侧逐项一致）：
+
+| 项 | React | Vue |
 |---|---|---|
-| 1 | 面板**缺 `Today` 页脚**（容器高 309 vs antd 的 **348**，差的 39px 就是它） | **S5 的 presets/footer** —— 页脚由 **Popup 层**渲染（rc-picker 的 `PickerPanel` 里没有 `showToday`/`-footer`）。见 §5.5 (b)。**不是 bug，是已知范围** |
+| `-footer` 尺寸 | 288×39 | 288×39 |
+| `border-top` | `1px solid rgba(5,5,5,0.06)` | 同 |
+| 页脚 HTML | `<div class="ant-picker-footer"><ul class="ant-picker-ranges"><li class="ant-picker-now"><a class="ant-picker-now-btn" aria-disabled="false">Today</a></li></ul></div>` | 同构（前缀 `apollo`；Vue 会在 `null` 子节点处留 `<!---->` 注释，**像素无关**） |
+| `-now-btn` 色 | `rgb(22, 119, 255)` | 同 |
+| `-panel-container` 高 | 348 | 348 |
 
-⇒ 补完 footer 后 `basic` / `value` / `datetime` 三组（9 张）应能一并转绿。
 ⚠️ L6 是**硬门禁**（`compare.mjs` 的阈值 0.1% + 邻域判据，`TESTING.md` §9.3 / T17 明确不得放宽，
-**没有豁免机制**）⇒ 这一项修完之前 **G9 不能判 done**。
-⚠️ `test:visual` **不在** `verify:full` 里 ⇒ 它红了不会让日常门禁红，必须显式跑。
+**没有豁免机制**）⇒ **G9 的 L6 门禁已过**（G12/G13/G14 仍未做）。
+⚠️ `test:visual` **不在** `verify:full` 里 ⇒ 它红了不会让日常门禁红，**必须显式跑**。
 
 #### (g) 浮层侧的焦点事件未接
 

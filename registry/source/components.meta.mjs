@@ -340,9 +340,13 @@ export const COMPONENTS = [
       '⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 ' +
       '+ `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**' +
       '（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。' +
-      '`month`/`year`/`multiple`/`variants` 已 **0.000% exact**。' +
-      '剩 **唯一**一项：「缺 `Today` 页脚」= S5 的 presets/footer（容器高 309 vs antd 348，差的就是它）' +
-      '⇒ 补完 `basic`/`value`/`datetime` 三组（9 张）应一并转绿。' +
+      '**G9 L6 三轮（同日）：→ 21/21 exact**。补上浮层**页脚**（`components/Footer.ts` = 上游' +
+      '`Popup/Footer.js` 逐字移植 + `getShowNow` = `useShowNow.js` + 接线），`renderExtraFooter` 一并生效' +
+      '（PITFALLS 255；⚠️ 页脚样式早在 257 条规则里，缺的只是组件 + 接线）。' +
+      '顺带修掉**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**，' +
+      '收敛回 `@apollo-design/utils`（PITFALLS 254，含「修正把错规格钉住的测试」）。' +
+      '**S5 剩余：范围两端（`RangePicker`）与 `presets`**；`panelRender` / 浮层焦点事件 / ' +
+      '`isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。' +
       '与 G12/G13/G14。' +
       '⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、' +
       '`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。',

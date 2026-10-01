@@ -129,6 +129,46 @@ const PROBE = () => {
     };
   }
 
+  // 页脚（`-footer` / `-ranges` / `-now` / `-ok`）—— 两侧逐项对拍
+  const pick = (el, keys) => {
+    if (!el) return null;
+    const cs = getComputedStyle(el);
+    const out = {};
+    for (const k of keys) out[k] = cs[k];
+    return out;
+  };
+  const footer = document.querySelector('[class*="-picker-footer"]');
+  out.footer = {
+    exists: !!footer,
+    rect: footer
+      ? `${Math.round(footer.getBoundingClientRect().width)}×${Math.round(footer.getBoundingClientRect().height)}`
+      : null,
+    borderTop: footer ? getComputedStyle(footer).borderTop : null,
+    html: footer?.outerHTML?.replace(/\s+/g, ' ').slice(0, 600) ?? null,
+  };
+  const ranges = document.querySelector('[class*="-picker-ranges"]');
+  out.ranges = pick(ranges, [
+    'display',
+    'justifyContent',
+    'alignItems',
+    'paddingInline',
+    'marginBlock',
+  ]);
+  // 🚨 链接色：React 侧的 `Today` / `Now` 是**蓝色**。查它到底由哪条规则给。
+  const nowBtn = document.querySelector('[class*="-picker-now-btn"]');
+  out.nowBtn = pick(nowBtn, ['color', 'textDecorationLine', 'cursor', 'fontSize', 'lineHeight']);
+  const okBtn = document.querySelector('[class*="-picker-ok"] button');
+  out.okBtn = pick(okBtn, [
+    'color',
+    'backgroundColor',
+    'borderRadius',
+    'height',
+    'paddingInline',
+    'fontSize',
+    'lineHeight',
+    'borderWidth',
+  ]);
+
   // 逐个候选选择器找图标
   for (const key of ['prev-icon', 'super-prev-icon', 'next-icon']) {
     const el = panel.querySelector(`[class*="${key}"]`);
@@ -182,6 +222,10 @@ try {
       console.log('chain:', JSON.stringify(result.chain, null, 2));
       console.log('panelMatches:', JSON.stringify(result.panelMatches, null, 2));
       console.log('cellCount:', result.cellCount, '/ total', result.cellTotal);
+      console.log('footer:', JSON.stringify(result.footer, null, 2));
+      console.log('ranges:', JSON.stringify(result.ranges, null, 2));
+      console.log('nowBtn:', JSON.stringify(result.nowBtn, null, 2));
+      console.log('okBtn:', JSON.stringify(result.okBtn, null, 2));
       console.log('cellChain:', JSON.stringify(result.cellChain, null, 2));
       console.log('hitTest:', JSON.stringify(result.hitTest, null, 2));
 

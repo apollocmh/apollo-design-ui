@@ -20,6 +20,7 @@
  */
 
 import type { PickerLocale as LocalePickerLocale } from '@apollo-design/locale';
+import { isRenderable } from '@apollo-design/utils';
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { getMergedStatus } from '../../form/context';
@@ -29,9 +30,9 @@ import {
   getInputSize,
   getMergedNeedConfirm,
   getRangeShowClear,
+  getShowNow,
   getSingleShowClear,
   isPairDisabled,
-  isRenderable,
   toDisabledPair,
 } from '../components/picker-shared';
 import { getRootClassNames } from '../components/root-class';
@@ -350,17 +351,44 @@ describe('date-picker · Selector 的纯判据（S1）', () => {
     expect(getRangeShowClear(icon, [1, 1], [true, false])).toBe(true);
   });
 
-  it('isRenderable：只排除 null / undefined / boolean / 空数组（空串**算**可渲染）', () => {
+  it('isRenderable：只排除 null / undefined / false / 空串（`0` 与数组**算**可渲染）', () => {
+    // 上游 `@rc-component/util` 的 `isReactRenderable`（`es/is.js`，逐字）：
+    //   `return isNonNullable(value) && value !== false && value !== '';`
+    // 权威实现在 `@apollo-design/utils` 的 `isRenderable`（全库共用同一份）。
     expect(isRenderable('x')).toBe(true);
     expect(isRenderable(0)).toBe(true);
-    // ⚠️ 上游 `isReactRenderable('')` 是 **true**（不是 truthy 判据）
-    expect(isRenderable('')).toBe(true);
+    // ⚠️ `true` **算**可渲染（上游注释：*"all other values, including `0` and `true`"*）
+    //    本地副本曾用 `typeof node === 'boolean'` 一刀切 ⇒ 误判成 `false`。
+    expect(isRenderable(true)).toBe(true);
     expect(isRenderable(null)).toBe(false);
     expect(isRenderable(undefined)).toBe(false);
-    expect(isRenderable(true)).toBe(false);
     expect(isRenderable(false)).toBe(false);
-    expect(isRenderable([])).toBe(false);
+    // 🚨 `''` **不可**渲染 —— 2026-10-01 修正：本文件此前断言的是 `true`，
+    //    依据是 `picker-shared.ts` 里一份**与上游不符**的本地副本
+    //    （注释写「空字符串算可渲染」）。上游明确排除 `''`。
+    expect(isRenderable('')).toBe(false);
+    // 🚨 数组是**普通值**，不做递归判空 —— 上游不递归，`[]` 判真。
+    //    （`Empty` 组件正是靠这条渲染「空 footer」，见 `empty/__tests__/semantic.test.ts:105`。）
+    expect(isRenderable([])).toBe(true);
     expect(isRenderable([''])).toBe(true);
+  });
+
+  it('getShowNow：`mode` 先于一切，再 `showNow` → `showToday` → 默认（上游 `useShowNow` 逐字）', () => {
+    // ① `mode` 不是 date/time ⇒ **恒 false**（哪怕显式 `showNow: true`）
+    expect(getShowNow('date', 'month', true, undefined)).toBe(false);
+    expect(getShowNow('date', 'year', undefined, true)).toBe(false);
+    // ② `showNow !== undefined` ⇒ 以它为准（`false` 是显式关闭）
+    expect(getShowNow('date', 'date', false, true)).toBe(false);
+    expect(getShowNow('date', 'date', true, false)).toBe(true);
+    // ③ 否则看兼容旧版的 `showToday`
+    expect(getShowNow('date', 'date', undefined, false)).toBe(false);
+    expect(getShowNow('date', 'date', undefined, true)).toBe(true);
+    // ④ 都没有 ⇒ `!rangePicker && (picker === 'date' || picker === 'time')`
+    expect(getShowNow('date', 'date', undefined, undefined)).toBe(true);
+    expect(getShowNow('time', 'time', undefined, undefined)).toBe(true);
+    expect(getShowNow('month', 'month', undefined, undefined)).toBe(false);
+    // 范围版恒 false（`DatePicker` 不传，留作 RangePicker 用）
+    expect(getShowNow('date', 'date', undefined, undefined, true)).toBe(false);
   });
 });
 

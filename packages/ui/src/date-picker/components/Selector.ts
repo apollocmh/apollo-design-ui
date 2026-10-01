@@ -67,7 +67,7 @@
  * （dump 到的是 `ant-picker-input ant-picker-input-start` / `… -input-active`）。
  */
 
-import { isNonNullable } from '@apollo-design/utils';
+import { isNonNullable, isRenderable } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -83,7 +83,6 @@ import {
   getInputSize,
   getRangeShowClear,
   getSingleShowClear,
-  isRenderable,
   toDisabledPair,
 } from './picker-shared';
 

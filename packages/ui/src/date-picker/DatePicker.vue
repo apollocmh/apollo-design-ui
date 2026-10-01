@@ -69,7 +69,8 @@ import { useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
-import { getFormatLength, getMergedNeedConfirm } from './components/picker-shared';
+import { Footer } from './components/Footer';
+import { getFormatLength, getMergedNeedConfirm, getShowNow } from './components/picker-shared';
 import { getRootClassNames } from './components/root-class';
 import { Selector } from './components/Selector';
 import {
@@ -1109,6 +1110,93 @@ const panelVNode = computed(() =>
  * `onBlur`；本仓的焦点模型是自建的（见 `s4-focus`），**本轮不搬**，
  * 已登记为待对齐项（README §5）。
  */
+/**
+ * 「此刻 / 今天」按钮是否显示（上游 `useShowNow` + `Popup/index.js:130` 的 `multiple` 覆盖）。
+ *
+ * ⚠️ 第二参传的是 **`mergedMode`（面板当前粒度）** ⇒ 下钻到月 / 年面板后页脚**消失**。
+ * 这正是 `month` / `year` 两个变体在 antd 基线里**没有页脚**的原因
+ * （容器高 309，而 `basic` 是 348）。
+ */
+const mergedShowNow = computed(() =>
+  props.multiple === true
+    ? false
+    : getShowNow(mergedPicker.value, mergedMode.value, props.showNow, props.showToday),
+);
+
+/**
+ * `OK` 按钮是否禁用（上游 `Popup/index.js:98-111` 的 `disableSubmit`，逐字）。
+ *
+ * ```js
+ * const valueList = filterEmpty(toArray(value));
+ * const isTimePickerEmptyValue = picker === 'time' && !valueList.length;
+ * const footerSubmitValue = isTimePickerEmptyValue ? filterEmpty([defaultOpenValue]) : valueList;
+ * const disableSubmit = !footerSubmitValue.length || footerSubmitValue.some(val => isInvalid(val));
+ * ```
+ * ⇒ **空值** 或 **任一值非法** ⇒ 禁用。
+ *
+ * ⚠️ `isInvalid` 就是本组件的 `isInvalidateDate` —— 它目前**只覆盖 `disabledDate`**
+ * （上游 `useInvalidate` 还查 `isValidate` 与 `showTime.disabledTime` 两支，
+ * 本仓未实现）。对「没有 `showTime.disabledTime`」的常见输入等价。
+ * 已登记为待补项（README §5.5）。
+ *
+ * ⚠️ `isTimePickerEmptyValue` 那一支（纯 `picker: 'time'` 且无值时拿 `defaultOpenValue`
+ * 兜底）本仓**未实现** —— 单值 `DatePicker` 的 `picker` 不含 `'time'`
+ * （`TimePicker` 是另一个组件，S5 之后）。
+ */
+const disableSubmit = computed(() => {
+  const valueList = inner.calendarValue.value.filter((v): v is DatePickerDate => Boolean(v));
+  if (valueList.length === 0) {
+    return true;
+  }
+  return valueList.some((v) => isInvalidateDate(v, { activeIndex: 0 }));
+});
+
+/**
+ * 页脚（`-footer`）—— 「此刻 / 今天」+ `OK` + `renderExtraFooter`。
+ *
+ * 🚨 它必须与 `PickerPanel` **同层**（上游 `Popup/index.js:127-133` 的那个无类名 `div`），
+ * **不是**面板的子节点。
+ */
+const footerVNode = computed(() =>
+  h(
+    Footer as Component,
+    {
+      prefixCls: prefixCls.value,
+      /** 面板当前粒度 —— 只用于 `renderExtraFooter(mode)` */
+      mode: mergedMode.value,
+      /** 组件粒度 —— 决定文案是 `Today` 还是 `Now` */
+      internalMode: internalMode.value,
+      renderExtraFooter: props.renderExtraFooter,
+      showNow: mergedShowNow.value,
+      showTime: props.showTime,
+      needConfirm: mergedNeedConfirm.value,
+      invalid: disableSubmit.value,
+      generateConfig: dayjsConfig,
+      disabledDate: props.disabledDate,
+      /** ⚠️ `today` / `now` / `ok` 在**完整**语言包上，不在 `PickerLocale` 里 */
+      locale: mergedLocale.value.lang,
+      classNames: semantic.classNames.value.popup,
+      styles: semantic.styles.value.popup,
+      /**
+       * 点「此刻 / 今天」（上游 `SinglePicker.onNow` → `onPresetSubmit`）。
+       *
+       * ⚠️ 走的是 `triggerSubmit`（上游 `triggerSubmitChange`）—— 它**绕过**
+       * `disabledDate` 之外的交互状态机，直接提交整组值；`!multiple` 时再关浮层。
+       * ⚠️ 上游的 `triggerOpen(false, { force: true })` 里 `force` 在本仓无对应物
+       * （见 `onOpenChange` 的注释）。
+       */
+      onNow: (date: PanelDateType) => {
+        const passed = rangeValue.triggerSubmit([date]);
+        if (passed && props.multiple !== true) {
+          onOpenChange(false);
+        }
+      },
+      /** 点 `OK`（上游 `onSubmit: () => triggerConfirm('confirm')`） */
+      onSubmit: () => valueChange.triggerChange(0, 'confirm'),
+    } as unknown as Record<string, unknown>,
+  ),
+);
+
 const popupVNode = computed(() => {
   const popupClassNames = semantic.classNames.value.popup;
   const popupStyles = semantic.styles.value.popup;
@@ -1129,7 +1217,10 @@ const popupVNode = computed(() => {
       style: { marginLeft: 0, marginRight: 'auto', ...popupStyles?.container },
       tabIndex: -1,
     },
-    h('div', { class: `${panelPrefixCls.value}-layout` }, [h('div', null, [panelVNode.value])]),
+    h('div', { class: `${panelPrefixCls.value}-layout` }, [
+      // 🚨 上游 `Popup/index.js:127-133`：这一层同时装 `PopupPanel` 与 `Footer`
+      h('div', null, [panelVNode.value, footerVNode.value]),
+    ]),
   );
 });
 const builtinPlacements = computed(() => BUILT_IN_PLACEMENTS as Record<string, TriggerAlign>);
