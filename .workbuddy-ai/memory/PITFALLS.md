@@ -3232,3 +3232,81 @@
       交互或动画中出现的状态）**归 L4 的 DOM 契约**，不要放进 L6。
     - ⚠️ 反向也成立：**看得见的差异必须有**（否则就是「没测到」）——
       写完用例先 `md5 tests/visual/baselines/react/<c>/*.png | sort` 查同哈希。
+
+291. 🚨 **`status: completed` 的组件里可能残留生成器占位** —— 手写的 `status` / 11 个维度与
+    **文件里的证据**会不一致（2026-10-01 实测出 **11 处**）。
+
+    | 组件 | 残留 |
+    |---|---|
+    | `app` / `float-button` | `style/token.ts` 还是 `TODO(G3)` 占位 |
+    | `auto-complete` | `style/index.ts` 还是 `TODO(G4)` 占位（而它**本来就没有** `style/` 目录） |
+    | `grid` / `border-beam` / `progress` | `.vue` 是**死骨架**（真实现在 `.ts` / Row+Col，没人 import 那个 `.vue`） |
+    | 5 个 | `theme.test.ts` 是 `describe.todo`：anchor / auto-complete / float-button / masonry / progress |
+    | `date-picker` | `demo/basic.vue` 是占位（⇒ 它其实**一个真 demo 都没有**）；`demo.test.ts` 是 `describe.todo` |
+    | `steps` | `semantic.test.ts`（L4）是 `describe.todo` ⇒ **L4 从未跑过** |
+    | `upload` | `type.test-d.ts`（L3）是 `describe.todo` |
+
+    ⇒ **新增门禁 E20**（`registry:check`）：`completed` 组件里不得出现
+    ① 行首注释形式的 `TODO(G\d+)`；② 剥注释后的 `describe.todo(`。
+    ⚠️ **E3 管「声明」（维度必须 done），E20 管「证据」（文件不能还是骨架）** —— 两者互补。
+    ⚠️ 补 `steps` 的 L4 时**当场抓到 4 个真 bug**（见 PITFALLS 296）——
+    这正说明「占位测试」的代价：**那一层从来没被验证过**。
+
+292. 🚨 **组件级 token 变量不随主题切换**（2026-10-01 实测，**待裁决**）。
+
+    - `packages/theme/dist/tokens.css` 有 **4 个主题块**（`:root` / `[data-apollo-theme="dark"]` /
+      `compact` / `dark-compact`）—— 但那是**全局 alias**；
+    - **组件级**变量（`--apollo-breadcrumb-item-color` 等）只声明在**各组件自己的 `style.css`** 里，
+      且是**浅色主题的解析字面量**（`rgba(0,0,0,0.45)`），**没有主题作用域**；
+    - 运行时注入（`createCSSVarScope.apply(token)`）也只写全局 alias（`transformToken` 不含组件 token）。
+    ⇒ **暗色模式下组件 token 仍是浅色值**。
+    - ⚠️ 规则与实现**不一致**：`style/token.ts` 的骨架注释写着
+      「别名派生的 token 落 `var(--apollo-*)`（B7 可校验、**随主题自适应**）」，
+      而实现分两派：`segmented` / `cascader`（部分）用 `var(--apollo-*)` ✓，
+      `input-number` / `date-picker` / `progress` / `breadcrumb` 用**字面量**（与 antd 产物逐字对齐）。
+    - 裁决要点：antd 的 cssinjs 会给**每个主题**各产一份 css-var 块 ⇒ 它用字面量没问题；
+      本仓零运行时只产一份 ⇒ **要用 `var(--apollo-*)` 才能随主题自适应**。
+      改法：`genTokenDecls` 里把「别名派生」的 token 写成 `v('colorTextDescription')` 而不是解析值。
+
+293. ⚠️ **E20 的 `TODO(G*)` 只能匹配「行首注释」**，不能匹配裸文本（2026-10-01 实测）。
+
+    - 反例：`theme.test.ts` 里的**防腐烂断言** `expect(src).not.toContain('TODO(G3)')`
+      —— 它含 `TODO(G3)` 这个**字符串字面量** ⇒ 用裸正则扫会被判成「占位残留」。
+    - 对策：`TODO(G*)` 用 `/^[ \t]*(?:\/\/|<!--)[ \t]*TODO\(G\d+\)/m`（生成器写的是行首注释）；
+      `describe.todo(` 仍用**剥注释后**的文本匹配（文件头注释里就在讨论这个约定）。
+
+294. 🚨 **视觉变体「空转」有三种成因，处理方式完全不同**（2026-10-01 实测 20 组）。
+
+    | 成因 | 例子 | 归哪一层 |
+    |---|---|---|
+    | 差异只在**属性**里（截图上不可见） | `href` 不同（breadcrumb 的 `with-params`） | **L4** |
+    | 差异只在**交互/动画中**出现 | `accordion`（初始键两种模式都展开）/ `effect="fade"`（静态帧都停第一张）/ `treeCheckable`（勾选框在下拉里） | **L2 / L6-交互** |
+    | 差异**落在截图区之外** | `position: fixed` 的 `-sider-trigger`（实测 stage 高 252px、trigger 在 y=852）；容器固定 640px > 移动视口 375px ⇒ 右侧控件被裁 | **用例构造**（可修） |
+
+    ⇒ 新增 `node tests/visual/run.mjs --check-baselines`（秒级、不需浏览器）：
+    同一组件的两个变体**逐字节相同**即失败，除非在 `matrix.mjs` 里登记
+    `duplicateAllow: [{ variants: [...], reason }]`。⚠️ 豁免必须**恰好命中**（未命中即失败）。
+    ⚠️ 它同时跑在 `--mode baseline` / `--mode compare` 的收尾（所以 CI 也拦得住）。
+    **三种修法**：① 让差异可见（affix 的 `class` 变体注入一条 CSS；pagination 的 `basic` 改 `total: 50`
+    让 sizeChanger 真的出现）；② 改用例让差异落在可视区（容器自适应宽度 / stage 占满视口）；
+    ③ 确实测不到 ⇒ **登记**并写清「要测它需要什么」。
+
+295. ⚠️ **`cases/shared.mjs` 里加注释不能出现反引号**（2026-10-01 实测，构建直接 `PARSE_ERROR`）。
+
+    那个文件的 `SEMANTIC_INJECT_CSS` 是**整段 JS 模板字符串** —— 注释里写 `` `basic` ``
+    会**提前终止模板**，报错却指向注释行（"Expected a semicolon..."），很难一眼看出。
+    ⇒ 该文件里的注释一律不用反引号（用「」或直接写名字）。
+
+296. 🚨 **补齐 `steps` 的 L4 契约（37 条）当场抓到 4 个真 bug** —— 全因它的 `semantic.test.ts`
+    一直是 `describe.todo`（PITFALLS 291）。**「占位测试」的真实代价是「那一层从未被验证」**：
+
+    1. **`--{root}-cmp-steps-items-offset` 只在 `offset !== 0` 时才写**（上游**恒写**）⇒ 37 条全差这一条；
+    2. **图标缺 `ant-wave-target`**（D43 的判据是「不实现波纹但**类名逐字保留**」，
+       `radio` / `checkbox` 都有，`steps` 漏了）；
+    3. **函数式语义槽拿到的是空 props**（`useMergeSemantic(..., {} as never)`）⇒
+       `classNames: ({props}) => \`dir-${props.orientation}\`` 渲染出 **`dir-undefined`**
+       （上游传的是**解析后**的 `mergedProps` —— 与 breadcrumb 同一个坑）；
+    4. **组件级配置只读了 `getPrefixCls`** ⇒ ConfigProvider 的
+       `components.steps.className/style/classNames/styles` 被**静默忽略**。
+    ⇒ 教训：**L4 是唯一会同时检查「结构 / 类名 / 内联变量 / 语义槽」的层**，
+      它一旦是占位，这四类问题会一起潜伏。
