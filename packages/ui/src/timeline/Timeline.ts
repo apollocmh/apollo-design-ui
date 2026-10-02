@@ -219,7 +219,12 @@ const Timeline = defineComponent({
         ...attrs,
         ref: stepsRef,
         // 判据 8：restProps 透传（`attrs` 承载未声明的 prop）
-        class: classString,
+        //
+        // 🚨 **必须传 `className` 而不是 `class`** —— 本仓 `Steps.ts` 的渲染是
+        //    `const { class: _attrsClass, ...restAttrs } = attrs;`，即它**主动剥掉**
+        //    落到 attrs 里的 `class`（自己的根类名由 `stepsClassName` 算），
+        //    只把 **`className` prop** 并进去。传 `class` 会被**静默丢弃**。
+        className: classString,
         style: { ...contextStyle, ...stepStyle },
         // 判据 5：八键映射 + 上下文 / 用户的语义化槽
         classNames: { ...stepsClassNames, ...contextClassNames, ...props.classNames },
