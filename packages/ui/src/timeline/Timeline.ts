@@ -100,7 +100,8 @@ const Timeline = defineComponent({
       default: undefined,
     },
     styles: { type: Object as PropType<TimelineProps['styles']>, default: undefined },
-    variant: { type: String as PropType<TimelineProps['variant']>, default: undefined },
+    // ⚠️ 上游解构默认 `variant = 'outlined'`（**不是** Steps 自己的 `'filled'`）
+    variant: { type: String as PropType<TimelineProps['variant']>, default: 'outlined' },
     mode: { type: String as PropType<TimelineMode>, default: undefined },
     orientation: { type: String as PropType<TimelineProps['orientation']>, default: 'vertical' },
     titleSpan: {

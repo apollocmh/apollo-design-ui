@@ -1176,3 +1176,39 @@ export const LIST_AVATAR_STYLE = {
   background: '#999',
   borderRadius: '50%',
 };
+
+/**
+ * Timeline 用例的容器。
+ *
+ * ⚠️ 与 list / avatar / card 同判的两条硬约定：**字体在用例内钉住** + **容器宽度 320px**。
+ * ⚠️ Timeline **没有自己的 DOM**（是 `Steps` 的薄壳）⇒ 它的用例会连带渲染 Steps 的产物，
+ *    所以两条 media 与 Steps 的断点行为也会被一起拍到。
+ */
+export const TIMELINE_BOX_STYLE = {
+  width: '320px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 用例数据。⚠️ **固定值**（不用 `Math.random`，否则冒烟与基线都不可复现）。 */
+export const TIMELINE_ITEMS = [
+  { key: 'a', title: 'Create a services site', content: '2015-09-01' },
+  { key: 'b', title: 'Solve initial network problems', content: '2015-09-01' },
+  { key: 'c', title: 'Technical testing', content: '2015-09-01' },
+];
+
+/** 无 title 的项（用来钉「纵向但**不**交错」）。 */
+export const TIMELINE_ITEMS_NO_TITLE = [
+  { key: 'a', content: 'no title A' },
+  { key: 'b', content: 'no title B' },
+];
+
+/** 交错模式的项（4 条，奇偶各半）。 */
+export const TIMELINE_ITEMS_ALTERNATE = [
+  { key: 'a', title: 'A', content: 'content A' },
+  { key: 'b', title: 'B', content: 'content B' },
+  { key: 'c', title: 'C', content: 'content C' },
+  { key: 'd', title: 'D', content: 'content D' },
+];

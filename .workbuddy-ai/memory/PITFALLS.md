@@ -3673,6 +3673,25 @@
     凡是用脚本生成测试代码，脚本里就显式写上 `(m: string)` / `(c: unknown[])` 之类的标注，
     **别指望推断**。
 
+312. 🚨 **跑 L6 对拍前**必须**重建 `ui`（`pnpm build:ui`）—— 否则拿到的是**过期 dist**，
+    症状是「**0/N 全红 + 大量 `size-mismatch`**」，极具误导性（2026-10-02 实测，timeline）。
+
+    **实测形态**：改完 `Timeline.ts`（`class` → `className`）后**直接**跑
+    `run.mjs --mode baseline` + `--mode compare` ⇒ **0/36**，全部是
+    `size-mismatch`（Vue 比 React 高 12–60px）+ 小比例 `block-diff`。
+    看上去像「实现大面积写错」，实际是 **dist 里还是旧组件** ——
+    根上**根本没有 `apollo-timeline` 类** ⇒ Timeline 那 38 条样式一条都没生效。
+
+    **判据（30 秒自证）**：`node tests/visual/debug/dump.mjs vue <comp> <variant>`，
+    看根元素上有没有**本组件的类名**。没有 ⇒ 先重建。
+
+    ⚠️ **`--mode both` 也一样中招**（它渲染的是 dist 里的组件，不是源码）⇒
+    「`both` 也红 ⇒ 是真差异」这个推论**只在 dist 是新的**时才成立。
+
+    ⚠️ 这条**本来就在** skill `apollo-visual-diff-triage` 的「第 0 步：先重建包，再跑对拍」里
+    —— 本次是**没照做**，不是不知道。⇒ 教训：**`baseline` / `compare` / `both` 三个模式
+    都吃 dist**，任何源码改动之后都要先 `build:ui`。
+
 307. ⚠️ **`split` 默认 `true` 必须 `withDefaults`**；且 **`withDefaults` 是编译器宏、不能 `import`**
     （2026-10-02 实测，list）。
 

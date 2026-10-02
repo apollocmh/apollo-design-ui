@@ -678,6 +678,33 @@ export const COMPONENTS = {
       'purePanel', // PurePanel 静态面板（-placement 类 + title/content 结构）
     ],
   },
+  timeline: {
+    // 12 个 variant × 3 个 viewport = 36 张
+    //
+    // ⚠️ Timeline **没有浮层** ⇒ 不需要 `getPopupContainer`。
+    // ⚠️ 它**也没有自己的 DOM** —— 是 `Steps` 的薄壳 ⇒ 用例同时拍到 Steps 的产物
+    //    （**有意**：Timeline 的视觉面就是「Steps 的 DOM + Timeline 的样式覆盖」）。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/timeline.*` 的文件头）：
+    //    字体在用例内钉住 + 容器宽度 320px。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完后先
+    //    `md5 tests/visual/baselines/react/timeline/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basic', // 纵向 + 有 title ⇒ **交错**（head-span-ptg 分栏）
+      'verticalSingle', // 纵向 + **无** title ⇒ 不交错（layoutAlternate 的第二条判据为假）
+      'alternate', // 显式 mode=alternate（奇偶交替）
+      'horizontal', // 一整套绝对定位（left:50% + translateX(-50%)）
+      'titleSpanNumber', // 内联 --{root}-timeline-head-span（24 栅格制）
+      'titleSpanString', // 内联 -head-span-ptg（百分比）
+      'colors', // 预设色的**三连类** + 任意色值的内联变量
+      'loading', // status: process + LoadingOutlined
+      'pending', // 追加项的 status: process + 默认加载图标
+      'reverse', // 项顺序反转 + rail 的 status 跟当前项
+      'variantFilled', // variant 透传给 Steps
+      'rtl', // 逻辑属性翻转（走 ConfigProvider）
+    ],
+  },
   tooltip: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部 open 受控静态帧（不走 hover 时序）。basicOpen/colorful 的浮层经
