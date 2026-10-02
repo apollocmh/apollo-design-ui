@@ -18,6 +18,7 @@ import {
   computed,
   defineComponent,
   h,
+  inject,
   type PropType,
   provide,
   type VNodeChild,
@@ -28,6 +29,7 @@ import { useComponentConfig, useDirection } from '../config-provider/context';
 import { type SizeType, useSize } from '../config-provider/size-context';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
 import Tooltip from '../tooltip/Tooltip';
+import { stepsInternalContextKey, stepsUnstableContextKey } from './context';
 import type {
   StepItem,
   StepsProps,
@@ -335,6 +337,12 @@ export const Steps = defineComponent({
       ...mergedStyles.value?.root,
     }));
 
+    // 🚨 **内部上下文**（Timeline 用）：必须由 Steps **接住并转发** ——
+    //    因为 Steps 自己也 provide 同族的键，外层 provide 会被「最近的赢」遮蔽
+    //    （PITFALLS 256 的形态）。见 `steps/context.ts` 的文件头。
+    const internalContext = inject(stepsInternalContextKey, undefined);
+    const unstableContext = inject(stepsUnstableContextKey, undefined);
+
     provide(stepsIconContextKey, {
       get prefixCls() {
         return prefixCls.value;
@@ -344,6 +352,10 @@ export const Steps = defineComponent({
       },
       get styles() {
         return mergedStyles.value;
+      },
+      // `Step` 读它作项标签（缺省 `'div'`）；Timeline 传 `'li'`
+      get ItemComponent() {
+        return internalContext?.itemComponent;
       },
     } as never);
 
@@ -370,6 +382,8 @@ export const Steps = defineComponent({
             styles: mergedStyles.value,
             data,
             nextStatus,
+            // rc-steps 的 `UnstableContext.railFollowPrevStatus`：缺省 `false` ⇒ 恒取 nextStatus
+            railFollowPrevStatus: unstableContext?.railFollowPrevStatus,
             active: stepIndex === mappedDisplayCurrent,
             index: stepIndex,
             last: displayItemsWithEllipsisIcon.value.length - 1 === index,
@@ -442,8 +456,9 @@ export const Steps = defineComponent({
       );
 
       const { class: _attrsClass, ...restAttrs } = attrs;
+      // ⚠️ 根标签可由内部上下文覆盖（Timeline 传 `'ol'`）；缺省仍是 `'div'`
       return h(
-        'div',
+        internalContext?.rootComponent ?? 'div',
         {
           class: stepsClassName.value,
           style: rootStyle.value,

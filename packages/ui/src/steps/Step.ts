@@ -23,6 +23,8 @@ export interface StepProps {
   data: StepItem;
   last: boolean;
   nextStatus?: StepsStatus;
+  /** rc-steps `UnstableContext.railFollowPrevStatus`（由 `Steps` 转发）。 */
+  railFollowPrevStatus?: boolean;
   active: boolean;
   index: number;
   onClick?: (next: number) => void;
@@ -43,6 +45,8 @@ const Step = defineComponent({
     data: { type: Object as PropType<StepItem>, required: true },
     last: { type: Boolean, default: false },
     nextStatus: { type: String as PropType<StepsStatus | undefined>, default: undefined },
+    /** rc-steps `UnstableContext.railFollowPrevStatus`（由 `Steps` 转发）。 */
+    railFollowPrevStatus: { type: Boolean, default: false },
     active: { type: Boolean, default: false },
     index: { type: Number, required: true },
     onClick: {
@@ -216,9 +220,12 @@ const Step = defineComponent({
                           ...props.styles?.itemRail,
                           ...itemStyles.rail,
                         } as CSSProperties,
-                        // rc：rail 的 status = **nextStatus**（railFollowPrevStatus
-                        // 默认 false）—— 连线的语义是「通向下一步」
-                        status: props.nextStatus ?? 'wait',
+                        // rc-steps `Step.js:147`：`railFollowPrevStatus ? status : nextStatus`。
+                        // 缺省（false）⇒ 取 nextStatus，「连线通向下一步」；Timeline 的
+                        // `reverse` 会传 `true` ⇒ 连线跟**当前项**。
+                        status: props.railFollowPrevStatus
+                          ? mergedStatus
+                          : (props.nextStatus ?? 'wait'),
                       } as never)
                     : null,
                 ],
