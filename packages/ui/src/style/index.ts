@@ -85,6 +85,7 @@ import { genStepsStyle } from '../steps/style';
 import { genSwitchStyle } from '../switch/style';
 import { genTabsStyle } from '../tabs/style';
 import { genTagStyle } from '../tag/style';
+import { genTimelineStyle } from '../timeline/style';
 import { genTooltipStyle } from '../tooltip/style';
 import { genTourStyle } from '../tour/style';
 import { genTreeStyle } from '../tree/style';
@@ -141,6 +142,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'border-beam', gen: genBorderBeamStyle },
   { name: 'tabs', gen: genTabsStyle },
   { name: 'tag', gen: genTagStyle },
+  { name: 'timeline', gen: genTimelineStyle },
   { name: 'result', gen: genResultStyle },
   { name: 'statistic', gen: genStatisticStyle },
   { name: 'grid', gen: genGridStyle },

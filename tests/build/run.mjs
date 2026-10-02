@@ -487,6 +487,43 @@ const RUNTIME_ASSIGNED_VARS = {
  *   ② 它至少要出现在一个 `@container style(<它>)` 守卫里。
  *   ⇒ 「写进表」本身不构成豁免，必须同时满足这两条。
  */
+/**
+ * **上游 Component Token 默认 `undefined` ⇒ 刻意不声明的变量**（`var()` **间接**回退链形态）。
+ *
+ * 与 `CONTAINER_QUERY_OPT_IN_VARS` 的**区别**：那张表的变量被 `@container style(<var>)`
+ * 当特性开关消费；这里的变量参与的是**两层**的 token 间接层：
+ *
+ * ```css
+ * .ant-timeline .ant-timeline-item{
+ *   --ant-cmp-steps-icon-dot-size-custom: var(--ant-timeline-dot-size);      ① 赋值给另一个自定义属性
+ *   --ant-cmp-steps-icon-size: var(--ant-cmp-steps-icon-dot-size-custom,
+ *                                var(--ant-cmp-steps-icon-dot-size-origin));  ② 回退链在这里
+ * }
+ * ```
+ *
+ * ⇒ 未声明时 ① 的右侧无效 ⇒ ② 回退到 Steps 的 `-origin`；用户覆盖后 ① 生效。
+ *   **补一条声明会改变行为**（`-custom` 恒有效 ⇒ 永远盖掉 origin）。
+ *
+ * 豁免**可自证**（见下方强制检查）：① 该变量在 ui 的全部 CSS 里都不许被声明；
+ * ② 它的**每一次** `var(<它>)` 出现都必须位于「`--某自定义属性:` 的右侧」
+ *   （即只参与 token 间接层，不被直接用于真实 CSS 属性）。
+ */
+const UPSTREAM_UNDECLARED_TOKEN_VARS = {
+  /**
+   * timeline 的 `dotSize` / `dotBg`：`prepareComponentToken` **显式返回 `undefined`**
+   * （上游注释是「should be `undefined` to create css var」）⇒ 产物 css-var 块只有 4 条。
+   *
+   * ⚠️ 两个前缀各登记一次：**组件 token 的声明与引用都随前缀变**
+   * （`genTokenDecls(p)` / `tv()` 都用 `--${p}-timeline-*`）⇒ `ant` 变体会引用
+   * `--ant-timeline-dot-size`。⚠️ 与 `--apollo-cmp-steps-*`（Steps 的内部变量，
+   * **前缀固定 `apollo`**，见 `genStepsStyle`）不是同一回事。
+   */
+  '--apollo-timeline-dot-size': 'timeline/style/token.ts（prepareComponentToken 返回 undefined）',
+  '--apollo-timeline-dot-bg': 'timeline/style/token.ts（prepareComponentToken 返回 undefined）',
+  '--ant-timeline-dot-size': 'timeline/style/token.ts（同上；ant 变体）',
+  '--ant-timeline-dot-bg': 'timeline/style/token.ts（同上；ant 变体）',
+};
+
 const CONTAINER_QUERY_OPT_IN_VARS = {
   /**
    * steps 的 `descriptionMaxWidth`（antd 的 Component Token，**默认 `undefined`**）。
@@ -571,6 +608,9 @@ function checkUiCssTokens(dir, name) {
   //    `@container style(<它>)` 守卫里。只写进表而不满足这两条 ⇒ 报错。
   for (const v of Object.keys(CONTAINER_QUERY_OPT_IN_VARS)) declared.add(v);
 
+  // 上游 token 默认 undefined ⇒ 刻意不声明（见 UPSTREAM_UNDECLARED_TOKEN_VARS 的说明）
+  for (const v of Object.keys(UPSTREAM_UNDECLARED_TOKEN_VARS)) declared.add(v);
+
   const unknown = new Map();
   let referenced = 0;
   for (const file of cssFiles) {
@@ -626,6 +666,45 @@ function checkUiCssTokens(dir, name) {
           'FAIL',
           `opt-in 容器查询变量 ${variable} 没有出现在任何 \`@container style(...)\` 守卫里 —— 不能这样豁免（${where}）`,
         );
+        return false;
+      }
+    }
+  }
+
+  // 上游 token 默认 undefined 的**自证**：只写进表不构成豁免
+  {
+    const allCss = cssFiles.map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+    for (const [variable, where] of Object.entries(UPSTREAM_UNDECLARED_TOKEN_VARS)) {
+      const esc = variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if (new RegExp(`${esc}\\s*:`).test(allCss)) {
+        add(
+          name,
+          'B7',
+          'FAIL',
+          `${variable} 被声明了 —— 上游刻意不声明（补上会改变 var() 回退链的语义）（${where}）`,
+        );
+        return false;
+      }
+      // 每一次 `var(<它>)` 都必须落在「--某自定义属性: …」的右侧
+      const usage = new RegExp(`([^;{}]*?)\\bvar\\(\\s*${esc}\\s*\\)`, 'g');
+      let found = 0;
+      for (const m of allCss.matchAll(usage)) {
+        found += 1;
+        const lhs = m[1];
+        const colon = lhs.lastIndexOf(':');
+        const prop = colon >= 0 ? lhs.slice(0, colon).trim() : '';
+        if (!prop.startsWith('--')) {
+          add(
+            name,
+            'B7',
+            'FAIL',
+            `${variable} 被直接用在真实 CSS 属性上（${prop || '(无属性)'}）—— 它只应参与 token 间接层（${where}）`,
+          );
+          return false;
+        }
+      }
+      if (found === 0) {
+        add(name, 'B7', 'FAIL', `${variable} 没有任何 var() 引用 —— 陈旧豁免（${where}）`);
         return false;
       }
     }

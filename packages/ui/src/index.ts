@@ -1556,6 +1556,33 @@ export { Tabs } from './tabs';
 export { genTabsStyle, genTokenDecls as genTabsTokenDecls } from './tabs/style';
 export type { ComponentToken as TabsComponentToken } from './tabs/style/token';
 export { prepareComponentToken as prepareTabsComponentToken } from './tabs/style/token';
+// ---------------------------------------------------------------------------
+// Timeline —— 时间轴（🚨 它是 `Steps` 的**薄壳**：没有自己的 DOM）
+//
+// ⚠️ 类名前缀 `apollo-timeline`；**6 个 Component Token**，但产物 css-var 块只有 **4 条**
+//    —— `dotSize` / `dotBg` 上游刻意不声明（`prepareComponentToken` 返回 `undefined`，
+//    保住 `var(custom, origin)` 的两层回退链）。
+//    ⚠️ 组件实现是 **`.ts`**（不是 `.vue`）：它没有自己的 DOM，模板价值为零。
+//    ⚠️ `Timeline.Item` 是**空壳**（上游同判）—— 只为「用了就发废弃告警」而存在。
+// ---------------------------------------------------------------------------
+export type {
+  ItemPlacement,
+  ItemPosition,
+  TimelineColor,
+  TimelineConfig,
+  TimelineItemType,
+  TimelineMode,
+  TimelineProps,
+  TimelineRef,
+  TimelineSemanticClassNames,
+  TimelineSemanticStyles,
+  TimelineSlot,
+  UseItemsContext,
+} from './timeline';
+export { Timeline, TimelineItemComponent, useItems } from './timeline';
+export { genTimelineStyle, genTokenDecls as genTimelineTokenDecls } from './timeline/style';
+export type { ComponentToken as TimelineComponentToken } from './timeline/style/token';
+export { prepareComponentToken as prepareTimelineComponentToken } from './timeline/style/token';
 export type {
   AdjustOverflow,
   TooltipArrow,
