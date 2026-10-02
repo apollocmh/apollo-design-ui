@@ -1341,3 +1341,97 @@ export const CALENDAR_SEMANTIC_STYLES = {
   item: { background: '#fff1f0' },
   itemContent: { color: '#cf1322' },
 };
+
+// ---------------------------------------------------------------------------
+// ColorPicker
+// ---------------------------------------------------------------------------
+
+/**
+ * ColorPicker 用例的容器。
+ *
+ * ⚠️ **必须钉字体**：触发器上的 `-trigger-text` 与面板里的**全是文字**
+ * （hex / rgb / hsb 数字、格式下拉、预设分组标题、`Transparent` 文案），
+ * 而 React 页（`antd/dist/reset.css`）与 Vue 页（本仓 base）的 `html` 字体栈不同 ——
+ * 不钉的话差异全落在文字上，看起来像「面板画错了」。
+ * 裁决同 `docs/COMPONENT-CHECKLIST.md` 第 15 条：**用例内钉字体，不动全局 BASE_CSS**。
+ *
+ * ⚠️ **宽度不固定**：面板是固定 `234px`（`colorPickerWidth`），但触发器随 `size` 变；
+ * 三视口下容器宽度天然不同 —— 那是要测的面（面板在窄视口下是否被裁）。
+ */
+export const COLOR_PICKER_BOX_STYLE = {
+  padding: '16px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 单色用例的固定值（不用随机 / 不用当前色，否则基线不可复现）。 */
+export const COLOR_PICKER_VALUE = '#1677ff';
+
+/**
+ * 渐变用例的固定值（与 `demo/line-gradient.vue` 逐字相同）。
+ *
+ * ⚠️ 两端**颜色必须不同**：同色渐变会让渐变条退化成纯色 ⇒ 该变体测不到渐变。
+ */
+export const COLOR_PICKER_GRADIENT = [
+  { color: 'rgb(16, 142, 233)', percent: 0 },
+  { color: 'rgb(135, 208, 104)', percent: 100 },
+];
+
+/**
+ * `generate('#1677ff')`（默认主题 `colorPrimary` 的 10 档色板）。
+ * 值取自 `@ant-design/colors@8.0.1`，与 `demo/presets.vue` 的固化字面量逐位一致。
+ */
+const CP_PALETTE_PRIMARY = [
+  '#e6f4ff',
+  '#bae0ff',
+  '#91caff',
+  '#69b1ff',
+  '#4096ff',
+  '#1677ff',
+  '#0958d9',
+  '#003eb3',
+  '#002c8c',
+  '#001d66',
+];
+
+/** `@ant-design/colors` 的 `red`。 */
+const CP_PALETTE_RED = [
+  '#fff1f0',
+  '#ffccc7',
+  '#ffa39e',
+  '#ff7875',
+  '#ff4d4f',
+  '#f5222d',
+  '#cf1322',
+  '#a8071a',
+  '#820014',
+  '#5c0011',
+];
+
+/** `@ant-design/colors` 的 `green`。 */
+const CP_PALETTE_GREEN = [
+  '#f6ffed',
+  '#d9f7be',
+  '#b7eb8f',
+  '#95de64',
+  '#73d13d',
+  '#52c41a',
+  '#389e0d',
+  '#237804',
+  '#135200',
+  '#092b00',
+];
+
+/**
+ * `presets`（三组预设色，两侧逐字相同）。
+ *
+ * ⚠️ 组数刻意给 **3**：`ColorPresets` 用 `Collapse` 渲染，组标题 + 色块网格 +
+ * 组间的间距都是要测的面；一组会让 `Collapse` 的结构测不全。
+ */
+export const COLOR_PICKER_PRESETS = [
+  { label: 'primary', colors: CP_PALETTE_PRIMARY, key: 'primary' },
+  { label: 'red', colors: CP_PALETTE_RED, key: 'red' },
+  { label: 'green', colors: CP_PALETTE_GREEN, key: 'green' },
+];

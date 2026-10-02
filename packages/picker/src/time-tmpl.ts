@@ -164,7 +164,11 @@ export function getNearestUnitIndex(
   });
 
   const minDist = Math.min(...liDistList);
-  return liDistList.findIndex((dist) => dist === minDist);
+  // ⚠️ `indexOf` 与 `findIndex((d) => d === minDist)` **语义等价**（都是严格相等；
+  //    `NaN` 时两者都返回 -1）—— 这里是 biome `lint/complexity/useIndexOf` 的等价修法。
+  //    📌 该错误是 **master 上既有的**（本文件此前未被任何改动触碰），
+  //    它会让 `verify:full` 的 `lint:format` 直接红 ⇒ color-picker 收口时顺手修掉。
+  return liDistList.indexOf(minDist);
 }
 
 /**

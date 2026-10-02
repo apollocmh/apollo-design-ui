@@ -18,6 +18,9 @@
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **事件名**：🚨 `h()` 里写 `onMouseDown`（大写 D）会被 Vue 规范化成 `mouse-down` ⇒ **永不触发且不报错**；必须写 `onMousedown` / `onTouchstart`（323）
 - **测试/jsdom**：🚨 jsdom 的 cssstyle 把 `hsl()`/hex **规范化成** `rgb()`/`rgba()` ⇒ 断言内联样式要按规范化形态写（324）
+- **流程**：🚨 **L6 视觉层解析的是 `packages/ui/dist` 产物** —— 改**组件源码**（不只样式）后必须先 `pnpm build:ui`，否则 `--mode compare` 的差异率**逐位不变**（327）
+- **Vue 化**：🚨 **`React.useEffect` ↔ Vue `watch` 不等价** —— effect 挂载必跑、watch 只在变化时跑⇒ 「初始值就命中该分支」时**静默失效**，必须补 `{ immediate: true }`（328）
+- **流程**：🚨 registry 生成器有**顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`；乱序会让 `registry:check` 报「已过期」（329）
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
 - **浮层/滚动**：🚨 「滚动到选中项」在首次 post-flush 时**没有布局盒** ⇒ rAF 5 帧后放弃且**不再重试** ⇒ `scrollTop` 恒 0；`date-picker` 因时间值恒 `00`（`targetLi === firstLi` 提前 return）而**长期潜伏**（318）。
@@ -4102,3 +4105,58 @@
     声明了就写 `:class-name="…"`（prop），不要写 `:class="…"`（attrs）。
     ⚠️ 反向也成立：**原生元素**（`<div>`）用 `:class` 是对的，两者别混。
     **实测**：`Select` / `Input` / `InputNumber` 三个都要 prop 形态。
+
+### ColorPicker 收口流（2026-10-02，327-329）
+
+327. 🚨 **L6 视觉层解析的是 `packages/ui/dist` 产物 —— 改组件源码后必须 `pnpm build:ui`**
+    （2026-10-02 实测，color-picker 为此白跑一轮）。
+
+    **症状**：改完 `hooks/use-mode-color.ts` 的组件逻辑，重跑
+    `node tests/visual/run.mjs --mode compare --component color-picker`，
+    差异率 **5.7922 / 2.8290 / 1.5088** 与上一轮**逐位相同**。
+
+    **判据**：`run.mjs` 每次都会打印「▶ 打包两侧渲染入口… ✔ 完成」（**不是**缓存问题），
+    但 `@apollo-design/ui` 在视觉用例里解析到的是**构建产物** ⇒ 源码改动不生效。
+    ⇒ `pnpm run build:ui`（带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`）之后立刻 **27/27 exact**。
+
+    ⚠️ **PITFALLS 20 只说了「CSS 取自 dist」**（改 `style/` 要重建）—— 这条把范围扩大到
+    **组件源码（`.vue` / `.ts`）**。**判据**：视觉差异率与上一轮逐位相同 ⇒ 先重建再怀疑实现。
+
+328. 🚨 **`React.useEffect` 与 Vue `watch` 不等价：effect 挂载必跑、watch 只在变化时跑**
+    （2026-10-02 实测，**L6 抓到的真 bug**）。
+
+    上游 `useModeColor` 有一条「颜色形态是模式的事实来源」的 effect：
+
+    ```ts
+    React.useEffect(() => { setModeState(postColor.isGradient() ? 'gradient' : 'single'); }, [postColor]);
+    ```
+
+    直译成 `watch(postColor, (next) => { modeState.value = … })` 后：**初始值就是渐变**时
+    `postColor` 挂载后不再变化 ⇒ watch 一次都不跑 ⇒ `modeState` 停在 `'single'`
+    ⇒ ① 渐变条（`-gradient-slider`）**整条不渲染**；② 操作条 `Segmented` 选中项错。
+
+    **症状**：L6 的 `gradientOpen` 三个视口 block-diff **1.51%~5.79%**，且差异率与**视口宽反比**
+    （= 固定尺寸面 ⇒ 面板整体上移一条渐变条的高度）。修复（补 `{ immediate: true }`）后 27/27 exact。
+
+    **判据**：翻译任何 `useEffect` 时问一句「**挂载时需不需要跑一次**」——需要就补 `immediate: true`。
+    ⚠️ 这类 bug 在 jsdom 里**测不出来**（L1 的用例通常传的是单色初值）⇒ **必须真浏览器**。
+
+329. 🚨 **registry 生成器有顺序：`gen-registry` → `foundation-status` → `gen-workstreams`**
+    （2026-10-02 实测，color-picker 为此白跑两轮）。
+
+    `registry:check` 的内部顺序是
+    `registry:gen && foundation:check && workstreams:check && validate`。
+    我手动刷 `foundation-status` / `gen-workstreams` 时**在 `registry:gen` 之前**跑，
+    于是 `registry:gen` 之后那两个产物又过期了 ⇒ `registry:check` 报
+    `❌ registry/foundation.json 已过期（源数据变化后未刷新）` /
+    `[workstreams] registry/workstreams.json 已过期（输入变化）`。
+
+    **正确做法**（一条链）：
+
+    ```sh
+    node registry/tools/gen-registry.mjs
+    node registry/tools/foundation-status.mjs   # 不带 --check
+    node registry/tools/gen-workstreams.mjs     # 不带 --check
+    pnpm run registry:check                     # 现在才会绿
+    ```
+

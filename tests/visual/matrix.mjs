@@ -928,6 +928,37 @@ export const COMPONENTS = {
       'rtl', // `-rtl` + `direction: rtl`
     ],
   },
+  'color-picker': {
+    // 9 个 variant × 3 个 viewport = 27 张
+    //
+    // ⚠️ **有浮层**：`open` 受控静态帧 + `placement="bottomLeft"` +
+    //    `autoAdjustOverflow={false}` 钉死落点（tooltip / popover 期结论）。
+    //    面板经 Portal 挂 `body`，但落点就在触发器下方、落在 `#stage` 的包围盒里
+    //    ⇒ `screenshotElement('#stage')` 拍得到（盒子 `minHeight` 撑开高度）。
+    //
+    // 🚨 **面板会引入整套 `Slider` 的 CSS**：`ColorSlider` 复用本仓 `Slider`，且
+    //    **不给它传 `prefixCls`** ⇒ 面板里的滑块带 `apollo-slider` 的类名 +
+    //    `apollo-color-picker-slider` 的附加类。这是**跨组件视觉面**，正是 L6 要覆盖的。
+    //
+    // ⚠️ **不测 `children`（自定义触发器）**：本仓 `children` 走默认插槽 ⇒
+    //    Popover 的 `#default` 拿到**数组** ⇒ Trigger 会多包一层 `<span>`
+    //    （上游是单个元素、无包装）。这是**已知的 DOM 差异**（L4 的
+    //    `color-picker:children` 已如实登记，归 D79）⇒ 不为它造一条注定红的变体。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完后先
+    //    `md5 tests/visual/baselines/react/color-picker/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basicOpen', // 触发器 + 面板（取色区 / 两条滑块 / 色块 / 输入区三段）
+      'gradientOpen', // mode 两档 + 渐变值 ⇒ 操作条 Segmented + **渐变条**
+      'presetsOpen', // presets ⇒ Divider + 预设面板（Collapse + 色块网格）
+      'allowClearOpen', // allowClear ⇒ 操作条里的清空按钮
+      'disabledAlphaOpen', // disabledAlpha ⇒ alpha 滑块与 alpha 输入**都消失**
+      'showText', // showText ⇒ 触发器文本（**不开浮层**）
+      'sizeLarge', // size=large 触发器
+      'sizeSmall', // size=small 触发器
+      'disabled', // 禁用态触发器
+    ],
+  },
   masonry: {
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
@@ -1119,6 +1150,16 @@ export const LIMITATIONS = [
       'Carousel 的动画全部是**运行时**行为（track 的 transform transition、opacity 交叉淡化、拖拽位移、`--dot-duration` 进度动画），`run.mjs` 只截**静态帧**—— 时刻不确定的帧不进像素比对。4 个用例覆盖的是「初始定位形态」：轨道 % 公式、fade 的透明度分档、箭头 √2 几何、纵向宽高对调。翻页/拖拽的状态机语义由 L1 钉（29 条）。',
     unblockWhen:
       '给 `run.mjs` 加「交互后截帧」能力后补；进度动画帧永远不进像素比对（时刻不确定）。',
+  },
+  {
+    // ⚠️ 这一条不是「没做」，而是「做了、红了、并且已经用探针定位到组件内的根因」。
+    //    它必须留在 LIMITATIONS 里，否则后人看到报告里的 24/27 会以为只是没覆盖。
+    dimension: 'color-picker·visual-residual',
+    missing: ['`color-picker/gradientOpen__light__{mobile,tablet,desktop}` 的逐像素一致'],
+    reason:
+      "27 组里 24 组 0.000% exact；`gradientOpen` 三组是 `block-diff`（5.7922% / 2.8290% / 1.5088%，散点占比 1.6% —— 差异**成块**；差异率与视口宽度**反比** ⇒ 来自固定尺寸的面，不是布局）。**探针实测**（复用 `.artifacts`，读两侧 DOM + 计算样式）定位到唯一根因在**组件内**：`packages/ui/src/color-picker/hooks/use-mode-color.ts:112` 的 `watch(postColor, (next) => { modeState.value = … })` **缺 `{ immediate: true }`**。上游是 `React.useEffect(…, [postColor])` —— **effect 在挂载时必跑一次**，而 `watch` 默认**不跑**；`postColor` 挂载后不再变化 ⇒ 初始值就是渐变时 `modeState` 停在 `'single'`。后果（探针实测）：① `GradientColorBar` 因 `mode !== 'gradient'` 返回 `null` ⇒ **渐变条整条不渲染**（React 侧 y=120 h=8）；② `Segmented` 选中项错（React 选 `Gradient` / Vue 选 `Single`）；③ 其下所有元素整体上移 16px（渐变条 8px + `marginSM` 8px）。两侧的 hex 输入值（`108ee9`）与饱和度面板**逐项一致** ⇒ 差异**全部**由这一条引起，不是用例问题。",
+    unblockWhen:
+      '给该 `watch` 加 `{ immediate: true }`（或在 setup 期显式同步一次 `modeState`）后重跑 `--mode compare`，三组应变 0.000% exact。⚠️ 本任务的改动面**不含组件实现**（`packages/ui/src/color-picker/**`）⇒ 本轮如实登记、未修。',
   },
 ];
 

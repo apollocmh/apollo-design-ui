@@ -1,0 +1,100 @@
+{
+  "$schema": "../schema.json",
+  "component": "color-picker",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-02T15:29:04.936Z",
+  "cases": [
+    {
+      "id": "color-picker:basic",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:cleared",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div role=\"button\" aria-label=\"Clear color\" tabindex=\"0\" class=\"apollo-clear\"></div></div>"
+    },
+    {
+      "id": "color-picker:default-value-null",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div role=\"button\" aria-label=\"Clear color\" tabindex=\"0\" class=\"apollo-clear\"></div></div>"
+    },
+    {
+      "id": "color-picker:prefix-cls:no-props",
+      "html": "<div class=\"ant-color-picker-trigger css-var-root ant-color-picker-css-var css-dev-only-do-not-override-19u5a7b\"><div role=\"button\" aria-label=\"Clear color\" tabindex=\"0\" class=\"ant-color-picker-clear\"></div></div>"
+    },
+    {
+      "id": "color-picker:prefix-cls:custom",
+      "html": "<div class=\"custom-trigger css-var-root custom-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"custom-color-block\"><div class=\"custom-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:rtl",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var apollo-rtl css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:disabled",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee apollo-trigger-disabled\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:disabled-cleared",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee apollo-trigger-disabled\"><div role=\"button\" aria-label=\"Clear color\" aria-disabled=\"true\" tabindex=\"-1\" class=\"apollo-clear apollo-clear-disabled\"></div></div>"
+    },
+    {
+      "id": "color-picker:size-small",
+      "html": "<div class=\"apollo-trigger apollo-sm css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:size-large",
+      "html": "<div class=\"apollo-trigger apollo-lg css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:show-text",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div><div class=\"apollo-trigger-text\">#1677FF</div></div>"
+    },
+    {
+      "id": "color-picker:show-text-cleared",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div role=\"button\" aria-label=\"Clear color\" tabindex=\"0\" class=\"apollo-clear\"></div><div class=\"apollo-trigger-text\">Transparent</div></div>"
+    },
+    {
+      "id": "color-picker:show-text-fn",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div><div class=\"apollo-trigger-text\">#1677FF</div></div>"
+    },
+    {
+      "id": "color-picker:show-text-format-rgb",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div><div class=\"apollo-trigger-text\">rgb(22,119,255)</div></div>"
+    },
+    {
+      "id": "color-picker:show-text-format-hsb",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div><div class=\"apollo-trigger-text\">hsb(215, 91%, 100%)</div></div>"
+    },
+    {
+      "id": "color-picker:show-text-alpha",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgba(22,119,255,0.5)\"></div></div><div class=\"apollo-trigger-text\">#1677FF,50%</div></div>"
+    },
+    {
+      "id": "color-picker:className",
+      "html": "<div class=\"apollo-trigger my-root css-var-root apollo-css-var my-cls css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:attrs",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee\" data-testid=\"cp\" aria-label=\"颜色\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:children",
+      "html": "<div class=\"my-trigger\">T</div>"
+    },
+    {
+      "id": "color-picker:open-no-portal",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee apollo-popover-open apollo-trigger-active\" aria-describedby=\"_R_7_\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:class-names",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee cn-root\"><div class=\"apollo-color-block cn-body\"><div class=\"apollo-color-block-inner cn-content\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:class-names-popup",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee cn-root\"><div class=\"apollo-color-block\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    },
+    {
+      "id": "color-picker:styles",
+      "html": "<div class=\"apollo-trigger css-var-root apollo-css-var css-dev-only-do-not-override-1v6lqee cn-root\" style=\"background:#fafafa\"><div class=\"apollo-color-block\" style=\"opacity:0.8\"><div class=\"apollo-color-block-inner\" style=\"background:rgb(22,119,255)\"></div></div></div>"
+    }
+  ]
+}

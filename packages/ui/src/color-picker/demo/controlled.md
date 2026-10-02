@@ -1,0 +1,39 @@
+---
+order: 2
+title:
+  zh-CN: 受控模式
+  en-US: Controlled
+---
+
+`value` + `@change` 让组件受控；换成 `@changeComplete` 则**拖拽结束**才同步，展示色会被「锁住」。
+
+```vue
+<script setup lang="ts">
+// 对齐 antd 的 controlled demo：两个受控 ColorPicker 共享同一份颜色状态。
+// 第一个由 `onChange` 驱动（拖拽中实时同步），第二个由 `onChangeComplete` 驱动
+// （拖拽结束才同步 ⇒ 视觉上「锁住」展示色）。
+import type { ColorPickerEmits, ColorValueType } from '@apollo-design/ui';
+import { ColorPicker, Space } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+/** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
+type Color = Parameters<ColorPickerEmits['change']>[0];
+
+const color = ref<ColorValueType>('#1677ff');
+
+const onChange = (c: Color) => {
+  color.value = c;
+};
+
+const onChangeComplete = (c: Color) => {
+  color.value = c;
+};
+</script>
+
+<template>
+  <Space>
+    <ColorPicker :value="color" @change="onChange" />
+    <ColorPicker :value="color" @change-complete="onChangeComplete" />
+  </Space>
+</template>
+```

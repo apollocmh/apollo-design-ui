@@ -109,9 +109,18 @@ export default function useModeColor(
 
   // ======================= Effect =======================
   // 判据 3：颜色形态变化 ⇒ 覆盖模式
-  watch(postColor, (next) => {
-    modeState.value = next.isGradient() ? 'gradient' : 'single';
-  });
+  // 🚨 **必须 `immediate: true`** —— 上游是 `React.useEffect`，**挂载时必跑一次**；
+  //    Vue 的 `watch` 默认只在**变化时**跑 ⇒ 初始值就是渐变时 `modeState` 会停在 `'single'`
+  //    ⇒ ① `GradientColorBar` 因 `mode !== 'gradient'` 整条不渲染；② `Segmented` 选中项错。
+  //    这条是 **L6 抓到的真 bug**（`gradientOpen` 三个视口 block-diff 1.5%~5.8%，差异率与
+  //    视口宽**反比** = 固定尺寸面 ⇒ 定位到「面板整体上移 16px」= 少了一条渐变条）。
+  watch(
+    postColor,
+    (next) => {
+      modeState.value = next.isGradient() ? 'gradient' : 'single';
+    },
+    { immediate: true },
+  );
 
   const setModeState = (next: ModeType): void => {
     modeState.value = next;

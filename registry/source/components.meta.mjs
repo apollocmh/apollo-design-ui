@@ -301,6 +301,13 @@ export const COMPONENTS = [
     group: '数据录入',
     priority: 'P5',
     complexity: 'L',
+    notes:
+      '颜色引擎在 packages/ui/src/color-picker/engine/（rc 判 in-ui）：Color 子类 + 纯几何。' +
+      'L4 只覆盖触发器 —— 面板在 Popover 的 Portal 里、SSR 不渲染（上游告警 Portal only work in client side），' +
+      'PurePanel 在 SSR 下也不渲染面板 ⇒ 面板的 DOM 契约由 L6（真浏览器，27/27 exact）承担，这是有意的分工。' +
+      '已知差异：① 传自定义 children 时本仓多包一层 span（模板插槽转交 ⇒ Trigger 拿到数组，D79 家族，待修）；' +
+      '② 9 个 mergeToken 派生值本仓声明成 --apollo-color-picker-*（上游内联字面量，有意差异，计算值逐位相同）。' +
+      'L6 抓到的真 bug：use-mode-color 的 watch 漏 immediate ⇒ 初始为渐变时渐变条不渲染（已修，回归哨兵在 fixtures/color-picker/gradient.json）。',
   },
   {
     name: 'date-picker',

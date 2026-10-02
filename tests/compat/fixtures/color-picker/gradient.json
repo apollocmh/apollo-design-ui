@@ -1,0 +1,30 @@
+{
+  "$schema": "../schema.json",
+  "component": "color-picker",
+  "antdVersion": "6.6.4",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  },
+  "id": "color-picker/gradient",
+  "description": "渐变形态的契约（**L6 抓到的真 bug 的回归哨兵**）：初始值就是渐变数组 + `mode: ['single','gradient']` 时，`useModeColor` 的「颜色形态是模式的事实来源」那条 effect **必须在挂载时跑一次** —— 上游是 `React.useEffect`（挂载必跑），本仓是 `watch`（默认只在变化时跑）⇒ 漏了 `immediate: true` 会让 `modeState` 停在 `'single'`，后果是 ① 渐变条（`-gradient-slider`）**整条不渲染**、② 操作条里 `Segmented` 的选中项错（应为 `Gradient`）。实测：L6 的 `gradientOpen` 三个视口 block-diff **1.51%~5.79%**，且差异率与视口宽**反比**（= 固定尺寸面 ⇒ 面板整体上移一条渐变条的高度）。修复后 27/27 exact。",
+  "props": {
+    "mode": ["single", "gradient"],
+    "defaultValue": [
+      {
+        "color": "#108ee9",
+        "percent": 0
+      },
+      {
+        "color": "#108ee9",
+        "percent": 100
+      }
+    ]
+  }
+}

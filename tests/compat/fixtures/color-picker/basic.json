@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "component": "color-picker",
+  "antdVersion": "6.6.4",
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": []
+  },
+  "id": "color-picker/basic",
+  "description": "颜色选择器的**触发器**结构契约：`.{p}-trigger[.css-var-root][.{p}-css-var]` > （`color.cleared` ? `.{p}-clear[role=button][aria-label=\"Clear color\"][tabindex]` : `.{p}-color-block` > `.{p}-color-block-inner[style=background:rgb(…)]`）+ 可选 `.{p}-trigger-text`。判据（详见 `docs/analysis/color-picker.md`）：① 🚨 **不传 `value`/`defaultValue` ⇒ 「已清空」态**（上游文档的 `defaultValue` 默认值是 `-`，不是 `#1677ff`）⇒ `generateColor('')` 得到 `cleared=true`、alpha=0 的颜色，触发器渲染 `-clear` 而不是 `-color-block`；② 🚨 **`-css-var` 类恒挂在触发器与浮层根上**（与 `genColorPickerStyle` 的声明块选择器对应）；③ 🚨 **`-trigger-text` 有六种分支**：默认 hex（大写）→ `format=rgb` → `format=hsb` → alpha<100 时 `#RRGGBB,NN%` → `cleared` 时 locale 的 `Transparent` → `showText` 是函数时用其返回值；④ 禁用时触发器加 `-trigger-disabled`，且清空按钮加 `-clear-disabled` + `aria-disabled=true` + `tabindex=-1`；⑤ `size` 走 `-sm`/`-lg` 类（不是内联尺寸）。⚠️ **不覆盖面板**：面板在 `Popover` 的 Portal 里，**SSR 不渲染**（上游告警 `Portal only work in client side…`）⇒ 面板的 DOM 契约由 **L6 视觉层**（真浏览器）承担，这是**有意的分工**（见 `semantic.test.ts` 文件头）。",
+  "props": {
+    "defaultValue": "#1677ff"
+  }
+}

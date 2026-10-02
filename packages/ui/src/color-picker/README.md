@@ -1,7 +1,7 @@
 # ColorPicker 实现说明
 
-> 规则 R1：本文件必须记录（G11 前补齐）。**当前为 G4 未完成状态** ——
-> 下面 §2 / §5 是「已落地」与「已知缺口」的**如实**记录，不是最终版。
+> 规则 R1：本文件记录实现结论、偏离项与决策。**G4 已落地**（组件与引擎可渲染），
+> G11（demo + 文档）已完成 —— 见 §5.1 的 demo 级替换登记。
 
 ## 1. 对应 antd 组件
 
@@ -91,7 +91,25 @@ color-picker/
 
 | # | 缺口 | 落点 / 状态 |
 |---|---|---|
-| 1 | **G4 未开始**（全部组件与引擎内部件） | 下一步；硬约束见 `PLAN.md` §「G4 的硬约束」 |
-| 2 | `ColorSlider` 的 `#handle` 槽能否覆盖 `onFocus` / `onKeyDown` **未验证** | G4 必验；若不能则「键盘删点」与「focus 激活」需登记 INTENDED 并给等价路径 |
-| 3 | 16 个 demo 未建（其中 3 个依赖 `PurePanel` / 面板直出） | G11 |
-| 4 | 未加 `ANTD_LITERAL_COLOR_SKIP` 的 `rgba(0, 0, 0, 0.45)` 豁免 | ⚠️ **G4 前必须加**：`style/index.ts` 用了它（上游 `style/presets.ts` 的字面量）⇒ 否则 `registry:validate` 的 **E10 会红** |
+| 1 | `ColorSlider` 的 `#handle` 槽能否覆盖 `onFocus` / `onKeyDown` **未验证** | 待验证；若不能则「键盘删点」与「focus 激活」需登记 INTENDED 并给等价路径 |
+| 2 | 未加 `ANTD_LITERAL_COLOR_SKIP` 的 `rgba(0, 0, 0, 0.45)` 豁免 | ⚠️ `style/index.ts` 用了它（上游 `style/presets.ts` 的字面量）⇒ 否则 `registry:validate` 的 **E10 会红** |
+| 3 | G5–G10 / G12–G14 未完成（L1/L2 完整覆盖、L3/L5/L6、registry、build、commit） | 见 `PLAN.md` 的 Gate 检查单 |
+
+### 5.1 demo 级替换（G11）
+
+16 个用户可见 demo 已全部落地（`__tests__/demo.test.ts` 的 `expectCount = 16`）。
+上游 demo 用到本仓没有的东西时做了**等值替换**，逐条如下：
+
+| demo | 上游用了什么 | 本仓怎么替 |
+|---|---|---|
+| `style-class` | `antd-style` 的 `createStyles` 生成 `borderRadius: token.borderRadius` 的类名 | SFC `<style>` 块定义 `.demo-color-picker-root { border-radius: 6px }`（`borderRadius` 的默认解析值）；`classNames.root` 指向它 |
+| `presets` / `panel-render` | `theme.useToken()` 取 `token.colorPrimary` | 等值字面量 `#1677ff`（默认主题 `colorPrimary` 的解析值） |
+| `presets` / `panel-render` | `@ant-design/colors` 的 `generate()` / `presetPalettes`（red / green / cyan） | 把对应 10 档色板**固化成字面量**（值取自 `@ant-design/colors@8.0.1`，逐位一致） |
+| `panel-render` | `panelRender` 返回 JSX，内部渲染 `components.Picker` / `components.Presets` | 函数 prop 返回 `h()`（模板无「渲染 VNode 变量」的语法），`Picker` / `Presets` 同样用 `h()` 渲染 |
+| `pure-panel` | `ColorPicker._InternalPanelDoNotUseOrYouWillBeFired`，props 摊平传 `value` / `onChange` | 用 `ColorPickerPurePanel`（`ColorPicker` 上仍挂同名静态别名），`value` / `onChange` 放进 `colorPickerProps` 对象 |
+| `text-render` | `@ant-design/icons` 的 `DownOutlined` | `@apollo-design/icons` 的同名图标（`rotate` / `style` 均支持） |
+| `trigger` | `children` 覆盖触发器 + `value` / `onChange` | 默认插槽 + `:value` / `@change`（C11） |
+| `controlled` / `allowClear` / `format` | `value` + `onChange` / `onFormatChange` 受控 | `v-model:value` / `v-model:format`（或 `:value` + `@change`），C11 双发 |
+| `line-gradient` | `onChangeComplete` 里 `console.log(color.toCssString())` | 同（保留 `console.log`） |
+| `allowClear` / `controlled` / `format` / `line-gradient` / `pure-panel` / `text-render` / `trigger` | 从 `antd` `import type { Color }`（`AggregationColor` 别名） | ui barrel **未导出** `Color`（`color-picker/index.ts` 导出了，但未再导出到根）⇒ 从已导出的 `ColorPickerEmits['change']` 载荷反推：`type Color = Parameters<ColorPickerEmits['change']>[0]` |
+| `_semantic`（上游内部 demo） | 「语义化 DOM」示意（`simplify` 专用，不在文档正文） | **不落地**；语义槽覆盖由 `semantic.test.ts` 承担 |
