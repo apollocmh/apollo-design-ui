@@ -3,6 +3,17 @@
 > 与 `MEMORY.md` 同目录，但**不进会话注入**（体积太大）。接手时按需读。
 > 每条都真的踩过一次以上；带「实测」的都是当轮验证过的。
 
+## 0. 索引 —— 跨包易错判据（按主题，括号里是编号）
+
+> 这是**入口**：先在这里按主题定位编号，再往下读全文。新增坑时**同时**补这里一行。
+
+- **props/attrs**：事件名全小写(1) · `VNodeChild` 显式 `undefined` 默认值(2) · 🚨未声明 prop 归 `attrs` 静默失效(3,250) · catch-all 别用 `PropType<unknown>`(5,137,185) · `required:true` 要 `as const`(15,200)
+- **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
+- **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
+- **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
+- **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
+- **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
+
 ## 工具 / 沙箱
 
 1. **Bash `grep` 对某些文件静默返回空**（`docs/*.md` 尤甚）—— 一律用 Grep 工具；搜标题用 `^#{1,3} `。
