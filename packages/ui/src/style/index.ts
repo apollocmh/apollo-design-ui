@@ -99,6 +99,23 @@ import { genUploadStyle } from '../upload/style';
  *
  * 顺序即产物顺序：第一个是默认前缀（`prefix-cls-default` 裁决的 `apollo`）。
  * 新增前缀只要加进这个数组 —— 它同时决定 `dist/<component>/style.css` 的内容。
+ *
+ * 🚨 **每个 `entry.gen(p)` 都必须对 `p` 产出对应前缀的选择器**。
+ * 用户把 `ConfigProvider prefixCls="ant"` 打开时，组件渲染出 `.ant-*` 类名
+ * ⇒ 只有本数组里 `'ant'` 那一份能命中；`gen` 若忽略 `p`（比如把 `.apollo-` 写死
+ * 在静态串里），那个组件的 `ant` 样式就是**空的**。
+ *
+ * 两条替换的规则**不同**（判据同 `date-picker/style/index.ts` 的 `genDatePickerRules`）：
+ *   - **类名** `.apollo-*` ⇒ 跟着前缀走（含跨组件的 `.apollo-icon` / `.apollo-tag-blue`
+ *     与动效名 `.apollo-slide-up-*`）；
+ *   - **全局别名变量** `--apollo-*` ⇒ **不动**（`theme/dist/tokens.css` 只声明 `--apollo-*`，
+ *     实测 382 个、0 个 `--ant-*`）；
+ *   - **组件自有变量** `--apollo-<component>-*` ⇒ 跟着换。
+ *
+ * ⚠️ **当前仍有缺口**：2026-10-02 修好 `date-picker` / `calendar` 后全仓扫描，
+ * 另有 **22 个组件**的 `ant` 版类名数少于 `apollo` 版（其中 7 个是「规则体完全静态」
+ * ⇒ `ant` 版几乎为空）。**权威清单 + 双向校验**（修一个删一条、漏登记会红）
+ * 在 `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS`。
  */
 export const STATIC_PREFIX_CLS = ['apollo', 'ant'] as const;
 

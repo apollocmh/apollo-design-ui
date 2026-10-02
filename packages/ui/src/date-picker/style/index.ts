@@ -459,6 +459,37 @@ export function genPanelRules(scopeCls: string, tokenNs = '--apollo-date-picker'
 /** 257 条规则（由 `--emit-static` 产出，逐字搬运、只改前缀）。**顺序与产物一致**。 */
 export const DATE_PICKER_RULES = `${RULES_BEFORE_PANEL}${PANEL_RULES}${RULES_AFTER_PANEL}`;
 
+/**
+ * 按前缀生成规则体。
+ *
+ * 🚨 **两处替换，规则不同**（与 `--emit-static` 的 `rename()` 互为逆运算）：
+ *
+ * | 目标 | 替换 | 为什么 |
+ * |---|---|---|
+ * | **所有类名** `.apollo-*` | → `.${p}-*` | 类名前缀 = `prefixCls`。⚠️ 包含**跨组件引用**的 `.apollo-icon`（icons 包，D15）与 `.apollo-tag-blue`（tag 组件），以及**动效名** `.apollo-slide-up-*`（它的前缀是 **rootPrefixCls**，见 `DatePicker.vue` 的 `transitionName` 说明）。判据同 `card/style/index.ts:104` 的 `const icon = \`.${p}-icon\`` |
+ * | **组件自有变量** `--apollo-date-picker-*`（42 个） | → `--${p}-date-picker-*` | `genStyleHooks('DatePicker')` 的命名空间 |
+ * | **全局别名变量**（60 个，`--apollo-color-*` / `--apollo-padding-*` …） | **不动** | `theme/dist/tokens.css` **只声明 `--apollo-*`**（实测 382 个，0 个 `--ant-*`）⇒ 换成 `--ant-` 会**全部解析不到** |
+ *
+ * ⚠️ `rootPrefixCls === 'apollo'` 时**直接返回原文**（不做字符串替换）——
+ * 这样默认前缀的产物**逐字节不变**，L6 的 27 组基线不受影响。
+ *
+ * 🚨 **本轮之前这里是缺口**：规则体是机器搬运的静态串、前缀写死 `.apollo-`，
+ * 而 `STATIC_PREFIX_CLS = ['apollo', 'ant']` 会调 `gen('ant')` 两次
+ * ⇒ `dist/date-picker/style.css` 里 `.ant-picker-*` 规则 **0 条**、
+ * 只有 45 条**没人用**的 `--ant-date-picker-*` 声明 ⇒ `ConfigProvider prefixCls="ant"`
+ * 下 DatePicker 的样式**完全不生效**（实测：card / alert / breadcrumb / select 的
+ * `.ant-X` 与 `.apollo-X` 规则数**相等**，只有 date-picker 是 0）。
+ */
+export function genDatePickerRules(rootPrefixCls: string): string {
+  if (rootPrefixCls === 'apollo') {
+    return DATE_PICKER_RULES;
+  }
+  return DATE_PICKER_RULES.replace(/\.apollo-/g, `.${rootPrefixCls}-`).replace(
+    /--apollo-date-picker-/g,
+    `--${rootPrefixCls}-date-picker-`,
+  );
+}
+
 /** 生成完整样式：token 声明块 + 规则体。 */
 export function genDatePickerStyle(rootPrefixCls: string): string {
   const decls = genTokenDecls(rootPrefixCls).join('');
@@ -470,7 +501,7 @@ export function genDatePickerStyle(rootPrefixCls: string): string {
   //    症状：面板宽度 `width: calc(var(--apollo-date-picker-cell-width) * 7 + …)`
   //    的 calc 非法 ⇒ `width` 整条被丢弃 ⇒ **面板铺满容器**（L6 的 21 组里 18 组红）。
   //    与 `select` 的 `.apollo-select,.apollo-select-css-var{…}` 同判。
-  return `.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${DATE_PICKER_RULES}`;
+  return `.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${genDatePickerRules(rootPrefixCls)}`;
 }
 
 // ---------------------------------------------------------------------------

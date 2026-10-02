@@ -32,6 +32,8 @@ import { getDesignToken } from '@apollo-design/theme';
 import { describe, expect, it } from 'vitest';
 import {
   DATE_PICKER_RULES,
+  genDatePickerRules,
+  genDatePickerStyle,
   genPanelRules,
   genTokenDecls,
   PANEL_RULES,
@@ -509,5 +511,72 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）
     expect(swapped.replace(/--apollo-calendar-/g, '--apollo-date-picker-')).toBe(
       genPanelRules('.apollo-picker-calendar'),
     );
+  });
+});
+
+/**
+ * ── 🚨 前缀参数化（2026-10-02 修的缺口）──────────────────────────────────────
+ *
+ * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS = ['apollo', 'ant']`
+ * ⇒ `entry.gen(prefixCls)` 会被**两个前缀各调一次**，每次都必须产出**对应前缀**的选择器。
+ *
+ * 本文件此前是**机器搬运的静态串**（前缀写死 `.apollo-`）⇒
+ * `dist/date-picker/style.css` 里 `.ant-picker-*` 规则 **0 条**、只有 45 条没人用的
+ * `--ant-date-picker-*` 声明 ⇒ `ConfigProvider prefixCls="ant"` 下样式**完全不生效**。
+ * 对照：card / alert / breadcrumb / select 的 `.ant-X` 与 `.apollo-X` 规则数**相等**。
+ */
+describe('DatePicker · 前缀参数化（`gen(p)` 对每个前缀都要产出对应选择器）', () => {
+  const APOLLO = genDatePickerStyle('apollo');
+  const ANT = genDatePickerStyle('ant');
+
+  it('🚨 `genDatePickerRules("apollo")` 是**恒等变换**（默认前缀产物逐字节不变）', () => {
+    expect(genDatePickerRules('apollo')).toBe(DATE_PICKER_RULES);
+    // ⇒ L6 的 27 组基线不受影响（它们跑的是默认前缀）
+    expect(APOLLO.endsWith(DATE_PICKER_RULES)).toBe(true);
+  });
+
+  it('🚨 `genDatePickerRules("ant")`：类名**一个 `.apollo-` 都不剩**', () => {
+    const rules = genDatePickerRules('ant');
+    expect(rules.includes('.apollo-')).toBe(false);
+    // 反向哨兵：换名前确实有 `.apollo-`（否则这条是空转）
+    expect(DATE_PICKER_RULES.includes('.apollo-')).toBe(true);
+  });
+
+  it('规则条数与选择器数**守恒**（只换前缀，不增不减）', () => {
+    const count = (text: string, re: RegExp) => (text.match(re) ?? []).length;
+    expect(count(ANT, /\.ant-picker/g)).toBe(count(APOLLO, /\.apollo-picker/g));
+    expect(count(ANT, /\.ant-icon/g)).toBe(count(APOLLO, /\.apollo-icon/g));
+    expect(count(ANT, /\.ant-slide-up/g)).toBe(count(APOLLO, /\.apollo-slide-up/g));
+    expect(count(ANT, /\.ant-tag-blue/g)).toBe(count(APOLLO, /\.apollo-tag-blue/g));
+    // 规则行数也必须一致
+    // ⚠️ 用 `genDatePickerRules` 而不是整个 `genDatePickerStyle` ——
+    //    后者前面还有一行**声明块**（`.ant-picker,.ant-picker-css-var{…}`）⇒ 会数成 258
+    expect(
+      genDatePickerRules('ant')
+        .split('\n')
+        .filter((l) => l.trim()),
+    ).toHaveLength(257);
+  });
+
+  it('🚨 **全局别名变量不动**（`tokens.css` 只声明 `--apollo-*`）', () => {
+    // 换成 `--ant-` 会让 60 个全局别名全部解析不到 ⇒ 尺寸/颜色全塌
+    expect(ANT.includes('--apollo-color-text')).toBe(true);
+    expect(ANT.includes('--apollo-padding-sm')).toBe(true);
+    expect(ANT.includes('--ant-color-text')).toBe(false);
+    expect(ANT.includes('--ant-padding-sm')).toBe(false);
+  });
+
+  it('**组件自有变量跟着换名**（`--ant-date-picker-*`）', () => {
+    expect(ANT.includes('--apollo-date-picker-')).toBe(false);
+    expect(ANT.includes('--ant-date-picker-')).toBe(true);
+    // 声明块也换了（`genTokenDecls('ant')`）
+    expect(ANT.includes('--ant-date-picker-padding-block:')).toBe(true);
+  });
+
+  it('两个前缀各产出一份，选择器数相等', () => {
+    const apolloRules = (APOLLO.match(/\.apollo-picker[^\s,{:>+~)]*/g) ?? []).length;
+    const antRules = (ANT.match(/\.ant-picker[^\s,{:>+~)]*/g) ?? []).length;
+    expect(apolloRules).toBeGreaterThan(200);
+    expect(antRules).toBe(apolloRules);
   });
 });
