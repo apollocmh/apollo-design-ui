@@ -96,8 +96,21 @@ export default defineComponent({
     className: { type: String, default: undefined },
     rootClassName: { type: String, default: undefined },
     style: { type: Object as PropType<CalendarProps['style']>, default: undefined },
-    classNames: { type: Object as PropType<CalendarProps['classNames']>, default: undefined },
-    styles: { type: Object as PropType<CalendarProps['styles']>, default: undefined },
+    /**
+     * 🚨 **运行时类型必须是 `[Object, Function]`** —— `classNames` / `styles` 支持
+     * **函数形态**（`(info: { props }) => 对象`）。只写 `Object` 时 Vue 会对函数报
+     * `Invalid prop: type check failed for prop "classNames". Expected Object, got Function`
+     * （本轮实测：L1 的「函数形态」用例把它打出来了 —— 用例**仍然通过**，
+     * 因为告警不 fail；这正是「只有告警没有红灯」的典型假绿）。
+     */
+    classNames: {
+      type: [Object, Function] as PropType<CalendarProps['classNames']>,
+      default: undefined,
+    },
+    styles: {
+      type: [Object, Function] as PropType<CalendarProps['styles']>,
+      default: undefined,
+    },
     locale: { type: Object as PropType<CalendarProps['locale']>, default: undefined },
 
     validRange: {
@@ -251,16 +264,22 @@ export default defineComponent({
     // ============================== 语义槽 ==============================
     /**
      * 传给函数式 `classNames` / `styles` 的 `info.props`。
-     * 上游是 `{...props, mode, fullscreen, showWeek}` —— 后三者是**解析后**的值。
+     *
+     * 上游：`const mergedProps = { ...props, mode, fullscreen, showWeek }` ——
+     * 这里的 `mode` / `fullscreen` / `showWeek` 是**解构出来的 props**，其中
+     *   - `fullscreen` 有解构默认值 `= true` ⇒ 是**解析后**的（未传 ⇒ `true`）；
+     *   - `mode` **没有**默认值 ⇒ 未传时是 **`undefined`**（**不是** `'month'`！）；
+     *   - `showWeek` 同理是原始值。
+     *
+     * 🚨 这条是 L4 抓到的**真 bug**：我最初写的是 `mode: mergedMode.value`（`'month'`），
+     * 于是 `calendar:semantic-fn` 用例里上游产出 `m-undefined`、我们产出 `m-month`。
+     * ⇒ **只有 `fullscreen` 需要补默认值，`mode` 必须保持原始 prop**。
      */
     const semanticProps = { ...props } as CalendarProps;
     watch(
-      () => [props.mode, props.fullscreen, props.showWeek],
+      () => props.fullscreen,
       () => {
-        Object.assign(semanticProps, props, {
-          mode: mergedMode.value,
-          fullscreen: mergedFullscreen.value,
-        });
+        Object.assign(semanticProps, props, { fullscreen: mergedFullscreen.value });
       },
       { immediate: true },
     );
@@ -552,9 +571,24 @@ export default defineComponent({
         showWeek: props.showWeek,
       });
 
+      /**
+       * 🚨 **根节点不透传 `attrs`** —— 上游 `generateCalendar.js` 的根节点是
+       * `className={clsx(…)} style={rootStyle}`，**没有 `{...restProps}`**
+       * （实测该文件里 `restProps` 出现 **0** 次）⇒ `id` / `data-*` / `aria-*`
+       * 在 antd 那边会被**丢弃**。L4 的 `calendar:attrs` 用例钉的就是这条
+       * （首轮红：`我们多出属性 aria-label="日历"` / `data-testid="cal"`）。
+       *
+       * ⚠️ 但 **Vue 的 `class` / `style` 落的是 `attrs`**（React 是 `className` / `style`
+       * **prop**）⇒ 必须**显式并入**，否则 `<Calendar class="x">` 会被一起丢掉，
+       * 反而与上游不一致（上游的 `className` 是会合并的）。
+       */
       return h(
         'div',
-        { ...attrs, ref: nativeElementRef, class: rootClass, style: rootStyle.value },
+        {
+          ref: nativeElementRef,
+          class: [...rootClass, attrs.class],
+          style: [rootStyle.value, attrs.style],
+        },
         [headerVNode, panelVNode],
       );
     };

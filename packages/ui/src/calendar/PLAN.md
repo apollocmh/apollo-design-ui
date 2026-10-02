@@ -66,7 +66,29 @@
       ⚠️ 判据：**「多一个字符」类错误类型与结构断言都抓不到** —— 只有括号配平能抓。
       ⚠️ 另一条：`.artifacts` 的 CSS 取自 `packages/ui/dist` ⇒ **改了 style 必须先
       `pnpm run build:ui`**，否则视觉层跑的还是旧 CSS（本轮白跑了一轮）。
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
+- [x] G10 L4 DOM 契约 + compat 比对 —— **28/28，零豁免**。
+      机械 oracle：`tests/compat/baseline/calendar.mjs`（React SSR）→
+      `tests/compat/baselines/calendar.dom.json`（**28 用例**）→
+      `__tests__/semantic.test.ts` 逐属性比对。
+      🚨 **首轮 25/28，抓到两个真 bug + 一条取舍**：
+      ① **`semanticProps.mode` 用错了值** —— 上游 `{...props, mode, fullscreen, showWeek}`
+         里的 `mode` 是**原始 prop**（未传 ⇒ `undefined`），只有 `fullscreen` 有解构默认值
+         `true`；我写成 `mergedMode.value`（`'month'`）⇒ `calendar:semantic-fn` 上游产
+         `m-undefined`、我们产 `m-month`。
+      ② 🚨 **上游 Calendar 的根节点没有 `{...restProps}`**（实测 `generateCalendar.js` 里
+         `restProps` 出现 **0** 次）⇒ `id` / `data-*` / `aria-*` 会被**丢弃**。
+         我们此前 `{...attrs}` 全透传 ⇒ 多出 `aria-label` / `data-testid`。
+         ⇒ 改成**不透传**，但把 Vue 的 `class` / `style`（它们落 `attrs`，而 React 那边是
+         `className` / `style` **prop**）**显式并入**根节点 —— 否则反而与上游不一致。
+      ③ **bare 用例的取舍**：`bare: true` 下两侧根前缀回落成 `ant` / `apollo` ⇒
+         日历**每一层带前缀的元素**都不同（实测 **193** 条 diff）—— D1 的同一个事实重复
+         193 遍。⇒ 换成 `calendar:prefix-cls:default`（**包 Provider 但不传 `prefixCls`**，
+         两侧都算出 `apollo-picker-calendar` ⇒ 0 条 diff），把「默认前缀派生 =
+         `{根前缀}-picker-calendar`」钉死而不制造噪声。D1 由 card/steps/... 逐个钉住。
+      ⚠️ 顺带修掉一条**只有告警没有红灯**的假绿：`classNames` / `styles` 的运行时类型写成
+      `Object`，而它们支持**函数形态** ⇒ Vue 报
+      `Invalid prop: type check failed … Expected Object, got Function`，
+      **用例仍然通过**。改成 `[Object, Function]` ⇒ 告警 0 条。
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
