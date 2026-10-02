@@ -19,7 +19,7 @@
  */
 
 import { Color as EngineColor } from './engine/color';
-import type { ColorGenInput } from './interface';
+import type { ColorGenInput } from './engine/interface';
 
 /**
  * 只留 hex 字符并截断。
@@ -47,11 +47,25 @@ export type Colors<T> = {
 }[];
 
 export class AggregationColor {
-  /** 底层颜色对象。 */
-  private metaColor: EngineColor;
+  /**
+   * 底层颜色对象。
+   *
+   * 🚨 **必须是 `public`（不能用 `private`）** —— 2026-10-02 实测：
+   * Vue 模板里读一个 `ComputedRef<AggregationColor>` 时，模板类型工具会过一遍
+   * `UnwrapRef`，而它是**映射类型**（`{ [K in keyof T]: … }`）⇒ **只保留公开成员**
+   * ⇒ 得到的是一个**结构类型**、丢掉了 `private` 字段 ⇒ 不再可赋值给 `AggregationColor`
+   * （`TS2345: … is missing the following properties: metaColor, colors`）。
+   * 于是「模板里把颜色传给 `getColorAlpha(color)` / 传给 `<ColorClear :value>`」全部报错。
+   *
+   * 换成公开字段后，结构类型与类**双向可赋值**，模板侧自然通过。
+   * 语义上这两个字段仍是**内部实现**（外部只该用方法），用 `@internal` 标注。
+   *
+   * @internal
+   */
+  public metaColor: EngineColor;
 
-  /** 渐变段；单色时为 `undefined`。 */
-  private colors: GradientColor | undefined;
+  /** 渐变段；单色时为 `undefined`。 @internal */
+  public colors: GradientColor | undefined;
 
   /** 是否已被「清空」（alpha 强制 0）。 */
   public cleared = false;

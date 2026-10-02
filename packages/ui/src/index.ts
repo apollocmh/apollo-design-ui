@@ -906,6 +906,47 @@ export type {
 } from './collapse';
 export { Collapse, CollapsePanel } from './collapse';
 export { genCollapseStyle, genTokenDecls as genCollapseTokenDecls } from './collapse/style';
+export type {
+  ColorFormatType,
+  ColorPickerEmits,
+  ColorPickerPanelRenderExtra,
+  ColorPickerProps,
+  ColorPickerSemanticClassNames,
+  ColorPickerSemanticStyles,
+  ColorPickerSemanticType,
+  ColorPickerSemanticValue,
+  ColorPickerSlots,
+  ColorValueType,
+  LineGradientType,
+  PresetsItem,
+  SingleValueType,
+  TriggerPlacement,
+  TriggerType,
+} from './color-picker';
+// ---------------------------------------------------------------------------
+// ColorPicker —— 颜色选择器（面板在 Popover 里；颜色引擎在 `color-picker/engine/`）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（2026-10-02）；**Component Token 0 个**
+//    （上游 `export interface ComponentToken {}`，实测产物里 `--ant-color-picker-*` 声明 0 条），
+//    但 9 个 `mergeToken` 派生值在本仓**声明成** `--apollo-color-picker-*`
+//    （有意差异：H9 + E10 的 `box-shadow:inset` 前缀 + 主题自适应；计算值逐位相同）。
+// ⚠️ 上游 `ColorPicker` **没有 ref 转发**（`ColorPicker.d.ts` 是裸 `React.FC`，
+//    `ColorPicker.js` 里 `forwardRef` 出现 **0** 次）⇒ 本仓**不 expose**。
+// ⚠️ 静态面板：`ColorPicker._InternalPanelDoNotUseOrYouWillBeFired` = `ColorPickerPurePanel`。
+// ⚠️ 面板里的滑块**复用** `Slider`（`#handle` scoped slot 定制把手，见 PITFALLS 319）
+//    ⇒ color-picker 的面板会引入整套 Slider 的 CSS（跨组件视觉面）。
+// ---------------------------------------------------------------------------
+export {
+  ColorPicker,
+  ColorPickerPanel,
+  ColorPickerPurePanel,
+  FORMAT_HEX,
+  FORMAT_HSB,
+  FORMAT_RGB,
+} from './color-picker';
+export { genColorPickerStyle, genColorPickerTokenDecls } from './color-picker/style';
+export type { ComponentToken as ColorPickerComponentToken } from './color-picker/style/token';
+export { prepareComponentToken as prepareColorPickerComponentToken } from './color-picker/style/token';
 // ⚠️ **刻意不导出 `CustomTagProps`**：
 //   1. **名字与 `select` 撞车**（本文件已有 `export type { CustomTagProps } from './select'`）
 //      —— 两者是**不同的类型**（date-picker 的是 rc-picker 的 `{label: VNodeChild; value:

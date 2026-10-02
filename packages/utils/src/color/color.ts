@@ -216,13 +216,32 @@ export class Color {
   readonly b: number;
   readonly a: number;
 
-  private hueCache?: number;
-  private hslSaturationCache?: number;
-  private hsvSaturationCache?: number;
-  private lightnessCache?: number;
-  private valueCache?: number;
-  private maxCache?: number;
-  private minCache?: number;
+  /**
+   * 惰性派生值的缓存。
+   *
+   * 🚨 **必须是 `public`（不能用 `private`）** —— 2026-10-02 实测（color-picker 开工）：
+   * Vue 的 `UnwrapRef` 是**映射类型**（`{ [K in keyof T]: … }`）⇒ 只保留公开成员。
+   * 当 `Color` 的实例被放进 `ref()` / `computed()` / 组件 prop 时，类型会被映射一遍，
+   * `private` 字段与 `private` 方法会**整个消失** ⇒ 映射后的类型不再可赋值给 `Color`
+   * （症状：`TS2345 … is missing the following properties from type 'Color': getMax, getMin`）。
+   *
+   * 语义上它们仍是**内部实现**（外部只该用 `toRgb()` / `getHue()` 等方法），用 `@internal` 标注。
+   *
+   * @internal
+   */
+  public hueCache?: number;
+  /** @internal */
+  public hslSaturationCache?: number;
+  /** @internal */
+  public hsvSaturationCache?: number;
+  /** @internal */
+  public lightnessCache?: number;
+  /** @internal */
+  public valueCache?: number;
+  /** @internal */
+  public maxCache?: number;
+  /** @internal */
+  public minCache?: number;
 
   constructor(input?: ColorInput) {
     if (input === undefined || input === null) {
@@ -437,14 +456,16 @@ export class Color {
 
   // ====================== 惰性派生值 ======================
 
-  private getMax(): number {
+  /** @internal */
+  public getMax(): number {
     if (this.maxCache === undefined) {
       this.maxCache = Math.max(this.r, this.g, this.b);
     }
     return this.maxCache;
   }
 
-  private getMin(): number {
+  /** @internal */
+  public getMin(): number {
     if (this.minCache === undefined) {
       this.minCache = Math.min(this.r, this.g, this.b);
     }

@@ -12,6 +12,8 @@
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
 - **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
+- **Vue 化**：🚨 **值对象的字段一律 `public`** —— 类的 `private`/`protected` 成员会被 Vue 的 `UnwrapRef`（**映射类型**）丢掉 ⇒ 实例进 `ref()` / 组件 prop / 模板后**不再可赋值给原类**（`TS2345 … is missing …: getMax, getMin`）；对策：字段 `public` + `@internal` 标注，且类实例用 `shallowRef`（325）
+- **Vue 化**：🚨 复用组件的类名要传 **`className` prop**，`:class` 会被静默丢弃（本仓 Select/Input/InputNumber 都剥 `attrs.class`）（326，PITFALLS 309 的复发）
 - **Vue 化**：🚨 **继承一个「方法返回自身类型」的基类时，子类必须覆写该方法** —— `utils.Color` 的 `clone()`/`setAlpha()` 里 `new Color(...)` 是**词法基类** ⇒ 子类不覆写会掉回基类（`clone` 只错在**类型**、`setAlpha` **运行时也错**）（320）
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **事件名**：🚨 `h()` 里写 `onMouseDown`（大写 D）会被 Vue 规范化成 `mouse-down` ⇒ **永不触发且不报错**；必须写 `onMousedown` / `onTouchstart`（323）
@@ -4061,3 +4063,42 @@
     **对策**：断言用**正则接受两种形态**（`/(?:hsl\(215,\s*100%,\s*50%\)|rgb\(0,\s*106,\s*255\))/`），
     或干脆断言**语义**（「底色由色相驱动」→ 换一个色相再断言底色跟着变）。
     ⚠️ 不要为了让断言通过而改**实现**里的颜色记法 —— 那是把 jsdom 的规范化当成规格。
+
+### ColorPicker G4 收口流（2026-10-02，325-326）
+
+325. 🚨 **值对象的字段一律 `public` —— 类的 `private` 成员会被 Vue 的 `UnwrapRef` 丢掉**
+    （2026-10-02 实测，color-picker；**改动了 L0 的 `utils.Color`**）。
+
+    **机制**：Vue 的 `UnwrapRef` / `UnwrapRefSimple`（`@vue/reactivity`）是**映射类型**
+    （`T extends {} ? { [K in keyof T]: UnwrapRefSimple<T[K]> } : never`）—— **映射类型只保留公开成员**
+    ⇒ 一个带 `private` 字段/方法的类实例，被映射后**丢掉了那些 private 成员** ⇒ 得到的是
+    「结构类型」而**不再是那个类** ⇒ 再传回要求该类的函数/组件 prop 就报
+    `TS2345 … is missing the following properties from type 'Color': getMax, getMin`。
+
+    **三个触发点**（都会碰到）：
+    1. **`ref<T>()`**：`ref()` 的签名是 `ref<T>(v: T): Ref<UnwrapRef<T>>` ⇒ 类型参数**被映射**。
+       对策：**`shallowRef<T>()`**（`ShallowRef<T>` 不映射）。
+    2. **模板里读 `ComputedRef<X>`**：模板绑定会过一遍 unwrap ⇒ 同样被映射。
+       对策：① 组件写成渲染函数；② 在 setup 里先算成标量（`computed(() => getColorAlpha(c.value))`）；
+       ③ 或者（本例的做法）**让类没有 private 成员**。
+    3. **`props`**：`defineProps<{ v?: X }>()` 的模板侧类型同样被映射。
+
+    ⇒ **最省事、最彻底的对策：值对象（`Color` / `AggregationColor` / 引擎 `Color`）的字段全部
+    `public`**（语义上仍是内部实现，用 `/** @internal */` 标注）。本仓为此把
+    `packages/utils/src/color/color.ts` 的 7 个缓存字段与 `getMax` / `getMin` 改成 public
+    —— **这是一次 L0 变更**（要单独重建 `utils`），理由与 `EngineColor` 子类化同源。
+
+    ⚠️ **`private` 的代价远大于收益**：本仓的值对象都是「不可变 + 方法返回新实例」，
+    外部改字段本来就不是合法用法，`@internal` 足以表达意图。
+
+326. ⚠️ **复用本仓组件时，类名必须走 `className` **prop**，`:class` 会被静默丢弃**
+    （2026-10-02 实测，color-picker 一次踩了 **3 个**调用点：`Select` / `Input` / `InputNumber`）。
+
+    这是 **PITFALLS 309 的复发**（「组件主动剥掉 `attrs.class`」）。症状：
+    `expect(w.find('.apollo-color-picker-format-select').exists()).toBe(false)`
+    —— 类名不在 DOM 上，**不报错、类型也过**。
+
+    **判据**：给本仓组件传类名时先 `grep -n "className" <组件>/interface.ts`；
+    声明了就写 `:class-name="…"`（prop），不要写 `:class="…"`（attrs）。
+    ⚠️ 反向也成立：**原生元素**（`<div>`）用 `:class` 是对的，两者别混。
+    **实测**：`Select` / `Input` / `InputNumber` 三个都要 prop 形态。

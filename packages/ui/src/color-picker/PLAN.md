@@ -20,7 +20,9 @@
 | G3 TOKEN | ✅ | `style/token.ts`（9 条派生）+ `style/index.ts`（92 条规则，前缀参数化）；**L7 21/21 绿** |
 | G3.5 引擎纯逻辑 | ✅ | `engine/{interface,color,util}.ts` + `color.ts` + `util.ts`；**L1 25/25 绿** |
 | G4a 引擎渲染件 | ✅ | `engine/{use-color-drag,use-color-state}.ts` + `engine/components/{color-block,handler,palette,picker}.ts`；**L1/L2 15/15 绿** |
-| G4b antd 层 | ⬜ **下一步** | 见下方「G4 的硬约束」 |
+| G4b antd 层 | ✅ | 17 个文件（`ColorPicker.vue` / `ColorPickerPanel` / `ColorTrigger` / `PanelPicker` / `GradientColorBar` / `ColorSlider` / `ColorPresets` / `ColorInput` 家族 / `PurePanel` / `context` / `hooks`）；`lint:types` **0 错** |
+| G4c 接线 | ✅ | `COMPONENT_STYLES` 注册 + `packages/ui/src/index.ts` 导出 |
+| G4d 组件级 L1/L2 | ⚠️ 首版 | `index.test.ts` 16 条（冒烟 + 清空态 + 面板骨架 + 事件链）；**完整七层覆盖待补** |
 | G5–G14 | ⬜ | — |
 
 ## Gate 检查单
@@ -30,7 +32,7 @@
 - [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
 - [x] G3 TOKEN —— style/token.ts 对齐 antd 的 9 个 mergeToken 派生（规则 R7）
 - [x] G4a 引擎渲染件（`useColorDrag` / `useColorState` / `ColorBlock` / `Handler` / `Palette` / `Picker`）
-- [ ] G4b antd 层（`ColorPicker.vue` / `ColorPickerPanel` / `ColorTrigger` / `PanelPicker` / `GradientColorBar` / `ColorSlider` / `ColorPresets` / `ColorInput` 家族 / `PurePanel`）
+- [x] G4b antd 层（`ColorPicker.vue` / `ColorPickerPanel` / `ColorTrigger` / `PanelPicker` / `GradientColorBar` / `ColorSlider` / `ColorPresets` / `ColorInput` 家族 / `PurePanel`）
 - [ ] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts`（纯逻辑部分已落在 `color.test.ts`）
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言

@@ -42,6 +42,9 @@
 import { token2CSSVar } from '@apollo-design/theme';
 import { colorPickerDerived, genColorPickerTokenDecls } from './token';
 
+// 与 calendar 同判：`genXxxTokenDecls` 从 `./style` 统一出口（消费方少记一个路径）。
+export { genColorPickerTokenDecls } from './token';
+
 /** token 名 → `var(--apollo-*)`（全局别名变量**不随前缀变**）。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 

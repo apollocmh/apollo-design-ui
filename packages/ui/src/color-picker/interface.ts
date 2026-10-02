@@ -276,8 +276,13 @@ export interface ColorPickerEmits {
   'update:open': (open: boolean) => void;
   /** 开合变化。 */
   openChange: (open: boolean) => void;
-  /** `v-model:format`。 */
-  'update:format': (format: ColorFormatType) => void;
+  /**
+   * `v-model:format`。
+   *
+   * ⚠️ 允许 `undefined`：上游 `triggerFormatChange(newFormat?)` 会把「无格式」写回状态
+   * （`useControlledState(defaultFormat, format)`，`defaultFormat` 缺省是 `undefined`）。
+   */
+  'update:format': (format: ColorFormatType | undefined) => void;
   /** 格式变化（⚠️ 同值不发）。 */
   formatChange: (format: ColorFormatType | undefined) => void;
 }

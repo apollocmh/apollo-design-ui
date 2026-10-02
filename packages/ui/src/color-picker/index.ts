@@ -1,19 +1,58 @@
 /**
  * ColorPicker 的公共导出。
  *
- * 与 antd 的 es/color-picker/index.js 对齐的对外面。
- * ⚠️ 骨架由 gen-component.mjs 生成 —— G2 完成后补齐类型导出，G4 后补齐样式导出。
+ * 与 antd 的 `es/color-picker/index.js` 对齐的对外面。
+ * ⚠️ 上游的 `index.js` 只导出 `ColorPicker`（default）+ 两个**类型**
+ * （`AggregationColor as Color`、`ColorPickerProps`）；本仓按仓内约定多导出
+ * 样式生成器与 `prepareComponentToken`（与 popover / calendar 同判）。
  */
 
 import { withInstall } from '../_internal/with-install';
 import ColorPickerComponent from './ColorPicker.vue';
+import PurePanelComponent from './PurePanel';
 
 /** ColorPicker 组件。注册名 `AColorPicker`（COMPONENT-RULES.md 规则 R2）。 */
 export const ColorPicker = withInstall(ColorPickerComponent);
 
-export default ColorPicker;
+/** 静态面板（`ColorPicker._InternalPanelDoNotUseOrYouWillBeFired` 的对应物）。 */
+export const ColorPickerPurePanel = withInstall(PurePanelComponent);
 
-// TODO(G2): export type { ColorPickerProps, ColorPickerRef, ... } from './interface';
-// TODO(G4): export { genColorPickerStyle } from './style';
-// TODO(G4): export type { ComponentToken as ColorPickerComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareColorPickerComponentToken } from './style/token';
+ColorPicker._InternalPanelDoNotUseOrYouWillBeFired = ColorPickerPurePanel;
+
+export { ColorPickerPanel } from './ColorPickerPanel';
+/**
+ * `AggregationColor` 的**类型**导出（上游 `export type { AggregationColor as Color }`）。
+ *
+ * ⚠️ 只导类型、不导值 —— 上游 `index.js` 里也是 `export type`。
+ * 需要**值**（构造颜色）的消费方走 `@apollo-design/utils` 的 `Color`。
+ */
+export type { AggregationColor as Color } from './color';
+export type {
+  ColorFormatType,
+  ColorGenInput,
+  ColorPickerEmits,
+  ColorPickerPanelRenderExtra,
+  ColorPickerProps,
+  ColorPickerSemanticClassNames,
+  ColorPickerSemanticStyles,
+  ColorPickerSemanticType,
+  ColorPickerSemanticValue,
+  ColorPickerSlots,
+  ColorValueType,
+  LineGradientType,
+  ModeType,
+  PresetsItem,
+  SingleValueType,
+  TriggerPlacement,
+  TriggerType,
+} from './interface';
+export { FORMAT_HEX, FORMAT_HSB, FORMAT_RGB } from './interface';
+export { genColorPickerStyle, genColorPickerTokenDecls } from './style';
+export type { ComponentToken as ColorPickerComponentToken } from './style/token';
+export {
+  COLOR_PICKER_DERIVED_KEYS,
+  colorPickerDerived,
+  prepareComponentToken as prepareColorPickerComponentToken,
+} from './style/token';
+
+export default ColorPicker;

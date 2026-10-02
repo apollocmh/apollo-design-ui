@@ -45,6 +45,7 @@ import { genCarouselStyle } from '../carousel/style';
 import { genCascaderStyle } from '../cascader/style';
 import { genCheckboxStyle } from '../checkbox/style';
 import { genCollapseStyle } from '../collapse/style';
+import { genColorPickerStyle } from '../color-picker/style';
 import { genDatePickerStyle } from '../date-picker/style';
 import { genDescriptionsStyle } from '../descriptions/style';
 import { genDividerStyle } from '../divider/style';
@@ -204,6 +205,11 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'breadcrumb', gen: genBreadcrumbStyle },
   { name: 'card', gen: genCardStyle },
   { name: 'avatar', gen: genAvatarStyle },
+  // ⚠️ **必须排在 `slider` / `input-number` / `select` / `input` / `collapse` 之后** ——
+  //    color-picker 的规则要**覆盖**这些被复用组件的同特异性声明
+  //    （如 `.apollo-color-picker-slider{height:8px}` 压过 `.apollo-slider`，
+  //    两者特异性同为 0,1,0 ⇒ 靠 CSS 顺序决胜，同 PITFALLS 313）。
+  { name: 'color-picker', gen: genColorPickerStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */
