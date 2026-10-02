@@ -166,7 +166,9 @@ domContractTest('ColorPicker', {
     //    `Popover` 的 `#default`，编译后是**数组**；而 `Trigger` 的归一化（D79 家族）
     //    只把「单个元素 vnode」当有效触发元素 ⇒ **数组/Fragment 会被包一层 `<span>`**。
     //    上游 `ColorPicker.tsx` 是 `{children || <ColorTrigger/>}`（单个元素）⇒ 无包装。
-    //    ⇒ 修法：让 `ColorPicker` 用**渲染函数**把 `children` 作为单个 vnode 传给 Popover。
+    //    ⇒ 精确机制（已定位到行）：`trigger.ts:606` 的 `children[0]` 只认元素，
+    //    而模板里的 `<slot/>` 编译成 `[renderSlot(...)]` = **嵌套数组** `[[vnode]]`。
+    //    修法：`ColorPicker` 改成**渲染函数**（`default: () => singleVNode`）。见 PITFALLS 330。
     //    本轮**如实登记**（不静默放过）：只影响「传自定义 children」这条路。
     'color-picker:children': {
       reason:

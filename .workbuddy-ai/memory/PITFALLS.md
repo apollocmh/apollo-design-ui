@@ -19,6 +19,7 @@
 - **事件名**：🚨 `h()` 里写 `onMouseDown`（大写 D）会被 Vue 规范化成 `mouse-down` ⇒ **永不触发且不报错**；必须写 `onMousedown` / `onTouchstart`（323）
 - **测试/jsdom**：🚨 jsdom 的 cssstyle 把 `hsl()`/hex **规范化成** `rgb()`/`rgba()` ⇒ 断言内联样式要按规范化形态写（324）
 - **流程**：🚨 **L6 视觉层解析的是 `packages/ui/dist` 产物** —— 改**组件源码**（不只样式）后必须先 `pnpm build:ui`，否则 `--mode compare` 的差异率**逐位不变**（327）
+- **浮层**：🚨 **模板里的 `<slot/>` 产出的是嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到**数组**而不是元素 ⇒ 走「包一层 `<span>`」分支（D79）。要传单个元素只能**用渲染函数**（330）
 - **Vue 化**：🚨 **`React.useEffect` ↔ Vue `watch` 不等价** —— effect 挂载必跑、watch 只在变化时跑⇒ 「初始值就命中该分支」时**静默失效**，必须补 `{ immediate: true }`（328）
 - **流程**：🚨 registry 生成器有**顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`；乱序会让 `registry:check` 报「已过期」（329）
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
@@ -4159,4 +4160,27 @@
     node registry/tools/gen-workstreams.mjs     # 不带 --check
     pnpm run registry:check                     # 现在才会绿
     ```
+
+330. 🚨 **模板里的 `<slot/>` 产出的是「嵌套数组」，会让 Trigger 包一层多余的 `<span>`**
+    （2026-10-02 实测，color-picker 的 `children` 通道；**PITFALLS 3/309 的同族**）。
+
+    **机制**（三段可复现）：
+
+    1. `packages/ui/src/_internal/trigger.ts:606` 的归一化是
+       `const first = Array.isArray(children) ? children[0] : children;`
+       —— 只取**第一个元素**，且要求它是「元素 vnode」（Text/Comment/Fragment 会被判无效，
+       见 D79）。
+    2. 组件模板里的 `<template #default><slot v-if="slots.default" /></template>` 编译成
+       `default: () => [ slots.default ? renderSlot($slots, 'default') : createVNode(...) ]`
+       —— `renderSlot` 返回**数组** ⇒ 最终是 **`[[vnode]]`（嵌套数组）**。
+    3. 于是 `children[0]` 拿到的是 `[vnode]`（数组）而不是元素 ⇒ 走「包 span」分支
+       ⇒ 渲染成 `<span><div class="my-trigger">…</div></span>`（上游是裸 `<div>`）。
+
+    **症状**：L4 差异三行 ——
+    `$/div[0]: 标签不同 <div> vs <span>` / `类名不同 [my-trigger] vs []` / `子节点数不同 0 vs 1`。
+    ⚠️ **不报错、类型全过**；只有 L4 的机械 oracle 能抓。
+
+    **修法**：把那个组件改成**渲染函数**（`default: () => singleVNode`），
+    或在 setup 里把插槽结果**摊平后取单元素**再交给 Trigger。
+    **不要**去改 `Trigger` 的归一化（那是全仓共享的协议，且 `children[0]` 的语义与 rc 一致）。
 
