@@ -162,24 +162,9 @@ domContractTest('ColorPicker', {
         '$/div[0]/div[0]: 类名不同 [ant-color-picker-clear] vs [apollo-color-picker-clear]',
       ],
     },
-    // 🚨 **真差异（待修）**：本仓 `ColorPicker.vue` 用**模板插槽**把用户的默认插槽转交给
-    //    `Popover` 的 `#default`，编译后是**数组**；而 `Trigger` 的归一化（D79 家族）
-    //    只把「单个元素 vnode」当有效触发元素 ⇒ **数组/Fragment 会被包一层 `<span>`**。
-    //    上游 `ColorPicker.tsx` 是 `{children || <ColorTrigger/>}`（单个元素）⇒ 无包装。
-    //    ⇒ 精确机制（已定位到行）：`trigger.ts:606` 的 `children[0]` 只认元素，
-    //    而模板里的 `<slot/>` 编译成 `[renderSlot(...)]` = **嵌套数组** `[[vnode]]`。
-    //    修法：`ColorPicker` 改成**渲染函数**（`default: () => singleVNode`）。见 PITFALLS 330。
-    //    本轮**如实登记**（不静默放过）：只影响「传自定义 children」这条路。
-    'color-picker:children': {
-      reason:
-        '本仓用模板插槽转交 children ⇒ Popover 的 #default 拿到**数组** ⇒ Trigger 按 D79 的规则包一层 `<span>`（上游直接传单个元素，无包装）。**待修**：ColorPicker 改用渲染函数传单个 vnode。',
-      deviationId: 'D79',
-      diff: [
-        '$/div[0]: 标签不同 <div> vs <span>',
-        '$/div[0]: 类名不同 [my-trigger] vs []',
-        '$/div[0]: 子节点数不同 0 vs 1',
-      ],
-    },
+    // ✅ `children` 通道的差异**已修**（2026-10-02）：改为经一个渲染函数宿主组件转交
+    //    ⇒ `Trigger` 的 `children[0]` 拿到**元素**而不是数组 ⇒ 不再多包一层 `<span>`。
+    //    机制与修法见 `ColorPicker.vue` 的 `TriggerHost` 注释与 PITFALLS 330。
     // React 侧是 **SSR**（Portal 不渲染 ⇒ 只有触发器），Vue 侧在 **jsdom 里挂载**
     // ⇒ 浮层真的渲染出来。这条用例的**唯一目的**是钉「面板不在 React 的 SSR 产物里」
     // 这个事实（面板的 DOM 契约归 L6）。两侧渲染方式不同 ⇒ 根节点数必然不同。

@@ -53,11 +53,15 @@ import { useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
+  defineComponent,
+  h,
+  type PropType,
   ref,
   shallowReactive,
   shallowRef,
   useAttrs,
   useSlots,
+  type VNodeChild,
   watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -393,6 +397,42 @@ watch(
   { immediate: true },
 );
 
+// ================== 触发器宿主（`children` 通道）==================
+/**
+ * 🚨 **为什么需要一个宿主组件**（2026-10-02 实测，PITFALLS 330）：
+ *
+ * `Trigger` 的归一化是 `children[0]`（只认**元素** vnode）；而**模板**里的 `<slot/>`
+ * 编译成 `[renderSlot(...)]` ⇒ 最终是**嵌套数组** `[[vnode]]` ⇒ `children[0]` 拿到数组
+ * ⇒ 走「包一层 `<span>`」分支（D79）⇒ DOM 比上游多一个 `<span>`。
+ *
+ * 宿主组件把插槽结果**摊平后取单元素**再渲染 ⇒ `Trigger` 看到的是**一个组件 vnode**
+ * （D79 明确「组件 vnode 视为有效触发元素」）⇒ 不再包 span，`attrs` 继续透传到用户
+ * 那个根元素上（`ref` 由 Trigger 按 D78 归一 `$el`）。
+ *
+ * ⚠️ 传的是**函数**而不是 vnode：vnode 只在渲染期创建，跨渲染复用同一个 vnode 会让
+ *    Vue 的 patch 出错。
+ */
+const TriggerHost = defineComponent({
+  name: 'AColorPickerTriggerHost',
+  props: {
+    render: { type: Function as PropType<() => VNodeChild>, required: true },
+  },
+  setup(props) {
+    return () => props.render();
+  },
+});
+
+/**
+ * 摊平插槽结果：恰好一个元素时返回它本身，否则原样返回数组
+ * （多子节点仍会被包 span —— 上游的 `children` 是单个 ReactNode，无对应物）。
+ */
+const renderChildren = (): VNodeChild => {
+  const nodes = (slots.default?.() ?? []).filter(
+    (node) => node !== null && node !== undefined && typeof node !== 'boolean',
+  );
+  return nodes.length === 1 ? nodes[0] : nodes;
+};
+
 // ===================== Emits 桥接 =====================
 const onClearInternal = (): void => {
   emit('clear');
@@ -438,7 +478,7 @@ const onClearInternal = (): void => {
       />
     </template>
     <template #default>
-      <slot v-if="slots.default" />
+      <TriggerHost v-if="slots.default" :render="renderChildren" />
       <ColorTrigger
         v-else
         v-bind="triggerAttrs"

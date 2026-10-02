@@ -12,6 +12,7 @@
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
 - **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
+- **模板**：🚨 **`v-if` 与 `v-else` 之间**不能插 HTML 注释 —— 会让 `v-else` 失去配对（症状是**整条分支静默渲染错**，本轮一次红了 **28** 条用例）（331）
 - **Vue 化**：🚨 **值对象的字段一律 `public`** —— 类的 `private`/`protected` 成员会被 Vue 的 `UnwrapRef`（**映射类型**）丢掉 ⇒ 实例进 `ref()` / 组件 prop / 模板后**不再可赋值给原类**（`TS2345 … is missing …: getMax, getMin`）；对策：字段 `public` + `@internal` 标注，且类实例用 `shallowRef`（325）
 - **Vue 化**：🚨 复用组件的类名要传 **`className` prop**，`:class` 会被静默丢弃（本仓 Select/Input/InputNumber 都剥 `attrs.class`）（326，PITFALLS 309 的复发）
 - **Vue 化**：🚨 **继承一个「方法返回自身类型」的基类时，子类必须覆写该方法** —— `utils.Color` 的 `clone()`/`setAlpha()` 里 `new Color(...)` 是**词法基类** ⇒ 子类不覆写会掉回基类（`clone` 只错在**类型**、`setAlpha` **运行时也错**）（320）
@@ -4107,7 +4108,7 @@
     ⚠️ 反向也成立：**原生元素**（`<div>`）用 `:class` 是对的，两者别混。
     **实测**：`Select` / `Input` / `InputNumber` 三个都要 prop 形态。
 
-### ColorPicker 收口流（2026-10-02，327-329）
+### ColorPicker 收口流（2026-10-02，327-331）
 
 327. 🚨 **L6 视觉层解析的是 `packages/ui/dist` 产物 —— 改组件源码后必须 `pnpm build:ui`**
     （2026-10-02 实测，color-picker 为此白跑一轮）。
@@ -4161,7 +4162,7 @@
     pnpm run registry:check                     # 现在才会绿
     ```
 
-330. 🚨 **模板里的 `<slot/>` 产出的是「嵌套数组」，会让 Trigger 包一层多余的 `<span>`**
+330. ✅ **已修**（同日）：模板里的 `<slot/>` 产出的是「嵌套数组」，会让 Trigger 包一层多余的 `<span>`
     （2026-10-02 实测，color-picker 的 `children` 通道；**PITFALLS 3/309 的同族**）。
 
     **机制**（三段可复现）：
@@ -4184,3 +4185,24 @@
     或在 setup 里把插槽结果**摊平后取单元素**再交给 Trigger。
     **不要**去改 `Trigger` 的归一化（那是全仓共享的协议，且 `children[0]` 的语义与 rc 一致）。
 
+331. 🚨 **`v-if` 与 `v-else` 之间**不能插 HTML 注释 —— 会让 `v-else` 失去配对**
+    （2026-10-02 实测，color-picker 修 `children` 差异时一次红了 **28** 条用例）。
+
+    ```vue
+    <!-- ❌ 中间插了注释：`v-else` 找不到它的 `v-if` 兄弟 -->
+    <TriggerHost v-if="slots.default" :render="renderChildren" />
+    <!-- 说明文字 -->
+    <ColorTrigger v-else … />
+
+    <!-- ✅ 注释放到外面（或改写成 v-if / v-if="!x" 两条独立分支） -->
+    <!-- 说明文字 -->
+    <TriggerHost v-if="slots.default" :render="renderChildren" />
+    <ColorTrigger v-else … />
+    ```
+
+    **症状**：`v-else` 那一支的行为**静默改变**（本轮表现为默认触发器整条渲染不出来 ⇒
+    `$/div[0]: 子节点数不同 1 vs 0`），**28 条** L4/L1 用例一起红。
+    ⚠️ 编译期**没有告警**（`vue-tsc` 也全绿）⇒ 只有测试能抓。
+
+    **判据**：`v-if` / `v-else-if` / `v-else` 三兄弟之间**只允许空白**。
+    要写说明就写在**整组之前**，或用 `{/* … */}` 之外的普通注释放在外面。

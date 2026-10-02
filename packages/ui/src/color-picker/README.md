@@ -53,7 +53,8 @@ color-picker/
 | 1 | 9 个 `mergeToken` 派生值**声明成 CSS 变量**（上游内联字面量） | INTENDED | H9 + E10（`box-shadow:inset` 前缀）+ 主题自适应；计算值逐位相同，见 `style/token.ts` 文件头 |
 | 2 | 引擎 `Color` 的构造器额外接受 `{h,s,v,a}` | PLATFORM | rc 的 `setHue` 把 `toHsv()` 结果直接回传构造器，上游靠 `FastColor` 的运行时分支兜底（PITFALLS 321） |
 | 3 | **没有 `ContextIsolator` 等价物** | PLATFORM | 本仓无此物；面板侧无任何子件读 `useFormItemInputContext` ⇒ 行为等价（§7.3） |
-| 4 | `ColorSlider` 走 `#handle` scoped slot 而非 `handleRender` context | PLATFORM（**待 G4 验证**） | 本仓 `Slider` 不消费 `sliderInternalContextKey`（PITFALLS 319） |
+| 4 | `ColorSlider` 走 `#handle` scoped slot 而非 `handleRender` context | PLATFORM（**已验**） | 本仓 `Slider` 不消费 `sliderInternalContextKey`（PITFALLS 319）；`#handle` 槽的 `nodeProps` 足够复刻 `handleRender` 的三件事，L6 27/27 exact |
+| 7 | ✅ **已修**：`children` 通道不再多包一层 `<span>` | — | 改为经渲染函数宿主组件转交（PITFALLS 330）；L4 的 `color-picker:children` 已**零差异** |
 | 5 | `getGradientPercentColor` 对空数组返回 `''`（上游抛 `TypeError`） | PLATFORM | 防御性差异；空数组不是可达路径（见 `util.ts` 的注记） |
 | 6 | **无 `expose`**（上游无 ref 转发） | — | `ColorPicker.d.ts` 是裸 `React.FC`，`ColorPicker.js` 里 `forwardRef` 出现 **0** 次 |
 
