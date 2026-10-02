@@ -76,6 +76,26 @@ describe('List · L1 结构与类名（判据 1 / 2 / 7 / 10）', () => {
     expect(placeholder.attributes('style')).toContain('min-height: 53px');
   });
 
+  it('🚨 判据 3 的顺序：`loading` + 有 `dataSource` ⇒ 渲染**列表本身**（不是 53px 占位块）', () => {
+    // 上游是 `let childrenContent = isLoading && <div style={{minHeight:53}} />`，
+    // **随后被 `if (splitDataSource.length > 0)` 覆盖** ⇒ 占位块只在
+    // 「isLoading 且 splitDataSource 为空」时可见。
+    // ⚠️ 这条是 L4 契约抓出的真 bug 的**回归哨兵**（写成「先判 isLoading 就 return」会挂）。
+    const withData = mountList({
+      loading: true,
+      dataSource: ['A', 'B'],
+      renderItem: (item: string) => h(ListItem, null, () => item),
+    });
+    expect(withData.findAll('.apollo-list-items > li')).toHaveLength(2);
+    expect(withData.find('.apollo-spin-container > div[style]').exists()).toBe(false);
+
+    // 无 dataSource 时才轮到占位块
+    const noData = mountList({ loading: true, dataSource: [] });
+    expect(noData.find('.apollo-spin-container > div').attributes('style')).toContain(
+      'min-height: 53px',
+    );
+  });
+
   it('判据 2：`loading` 为对象时读 `spinning`', () => {
     expect(mountList({ loading: { spinning: true } }).classes()).toContain('apollo-list-loading');
     expect(mountList({ loading: { spinning: false } }).classes()).not.toContain(

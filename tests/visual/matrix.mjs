@@ -372,6 +372,35 @@ export const COMPONENTS = {
       'multiple', // 3 面板 + min/max
     ],
   },
+  list: {
+    // 11 个 variant × 3 个 viewport = 33 张
+    //
+    // ⚠️ List **没有浮层**（分页不带下拉时不开浮层；`-item-action` 是行内 `<ul>`）
+    //    ⇒ 不需要 `getPopupContainer`。它的视觉面是**结构 + 间距**：
+    //    `-items` / `-item` / `-item-meta` / `-item-action` 的 padding、分割线、`-bordered` 的内圆角。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/list.*` 的文件头）：
+    //    字体在用例内钉住 + 容器宽度 320px。
+    //
+    // 🚨 **本组件在 antd 6.6.4 里整体 deprecated** ⇒ 两侧渲染都会发一条 `console.error`
+    //    （上游行为，不是本仓引入的噪音）。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完后先
+    //    `md5 tests/visual/baselines/react/list/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basic', // `-split` 分割线 + item padding
+      'meta', // Item.Meta 三段 + `h4` 标题
+      'actions', // `-item-action` 的 ul/li + `-item-action-split`
+      'bordered', // `-bordered` 外框 + header/footer 的 calc 内圆角
+      'vertical', // `-vertical` + `-item-main` / `-item-extra` 两段式
+      'grid', // `-grid .{antCls}-col > -item`（用的是 antCls！）
+      'pagination', // `-pagination` margin + `-something-after-last-item`
+      'loading', // Spin 嵌套容器 + 53px 占位块
+      'empty', // `-empty-text` 默认空态
+      'size', // `-lg` / `-sm` 的 item padding
+      'rtl', // 根 `-rtl`（逻辑属性翻转）
+    ],
+  },
   listy: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ Raw 路径（antd 默认 virtual=false）；虚拟模式像素不稳定（滚动位置依赖时序）不进静态帧

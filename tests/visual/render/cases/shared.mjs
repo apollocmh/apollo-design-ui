@@ -1149,3 +1149,30 @@ export const AVATAR_RESPONSIVE_SIZE = {
   xl: 80,
   xxl: 100,
 };
+
+/**
+ * List 用例的容器。
+ *
+ * ⚠️ 与 avatar / card 同判的两条硬约定：**字体在用例内钉住** + **容器宽度 320px**
+ * （窄于最小视口 ⇒ 三视口一致、正文不换行；唯一该变的是 grid 的列数）。
+ */
+export const LIST_BOX_STYLE = {
+  width: '320px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 列表数据。⚠️ **固定值**（不用 `Math.random`，否则冒烟与基线都不可复现）。 */
+export const LIST_DATA = ['Alpha', 'Beta', 'Gamma'];
+export const LIST_DATA_LONG = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
+export const LIST_DESC = 'description text';
+/** `Item.Meta` 头像的替身（纯色方块 —— 不引入第二个组件的样式面）。 */
+export const LIST_AVATAR_STYLE = {
+  display: 'inline-block',
+  width: '32px',
+  height: '32px',
+  background: '#999',
+  borderRadius: '50%',
+};

@@ -292,11 +292,21 @@ function emptyNode(): VNodeChild {
   );
 }
 
+/**
+ * 内容（判据 3 / 9）。
+ *
+ * 🚨 **赋值的顺序就是判据**（L4 契约抓出的真 bug）：上游是
+ * `let childrenContent = isLoading && <div style={{minHeight:53}} />`，
+ * **随后**被 `if (splitDataSource.length > 0)` **覆盖** ⇒
+ * **有数据 + loading 时渲染的是列表本身**，不是那个 53px 占位块！
+ * 占位块只在「`isLoading` 且 `splitDataSource` 为空」时才可见。
+ * ⚠️ 写成「先判 isLoading 就 return」会让 `loading` + `dataSource` 的形态整个跑偏。
+ */
 function childrenContent(): VNodeChild {
-  if (isLoading.value) {
-    // ⚠️ 数字必须转字符串（Vue 的 patchStyle 不补 px）
-    return h('div', { style: { minHeight: '53px' } });
-  }
+  let content: VNodeChild = isLoading.value
+    ? // ⚠️ 数字必须转字符串（Vue 的 patchStyle 不补 px）
+      h('div', { style: { minHeight: '53px' } })
+    : null;
 
   const source = splitDataSource.value;
   if (source.length > 0) {
@@ -305,7 +315,7 @@ function childrenContent(): VNodeChild {
       .filter((node): node is VNode => node !== null);
 
     if (props.grid) {
-      return h(
+      content = h(
         Row,
         { class: [containerCls.value, cssVarCls.value], gutter: props.grid.gutter },
         // ⚠️ 必须写成**显式插槽函数** —— `h(Row, props, 数组)` 会被 Vue 判成
@@ -318,18 +328,18 @@ function childrenContent(): VNodeChild {
             ),
         },
       );
+    } else {
+      content = h(
+        'ul',
+        { class: [`${prefixCls.value}-items`, containerCls.value, cssVarCls.value] },
+        items,
+      );
     }
-    return h(
-      'ul',
-      { class: [`${prefixCls.value}-items`, containerCls.value, cssVarCls.value] },
-      items,
-    );
+  } else if (!slots.default && !isLoading.value) {
+    content = h('div', { class: `${prefixCls.value}-empty-text` }, [emptyNode()]);
   }
 
-  if (!slots.default && !isLoading.value) {
-    return h('div', { class: `${prefixCls.value}-empty-text` }, [emptyNode()]);
-  }
-  return null;
+  return content;
 }
 
 // ---------------------------------------------------------------------------
