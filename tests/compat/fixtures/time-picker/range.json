@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schema.json",
+  "component": "time-picker",
+  "case": "range-basic",
+  "note": "范围空值 —— 根多 `-range`、两个输入框、中间的分隔符（默认带 aria-hidden）。",
+  "props": {},
+  "expect": {
+    "rootClass": "apollo-picker apollo-picker-range apollo-picker-outlined css-var-root apollo-picker-css-var",
+    "inputs": [
+      {
+        "wrapper": "apollo-picker-input-start",
+        "date-range": "start",
+        "placeholder": "Start time"
+      },
+      {
+        "wrapper": "apollo-picker-input-end",
+        "date-range": "end",
+        "placeholder": "End time"
+      }
+    ],
+    "separatorAriaHidden": "true"
+  }
+}

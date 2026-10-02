@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schema.json",
+  "component": "time-picker",
+  "case": "basic",
+  "note": "单值空值 —— 薄壳的触发元素结构（与 date-picker:basic 同构，差别只有后缀图标的 aria-label）。",
+  "props": {},
+  "expect": {
+    "rootClass": "apollo-picker apollo-picker-outlined css-var-root apollo-picker-css-var",
+    "input": {
+      "aria-invalid": "false",
+      "autocomplete": "off",
+      "size": "10",
+      "value": ""
+    },
+    "suffixAriaLabel": "clock-circle"
+  }
+}
