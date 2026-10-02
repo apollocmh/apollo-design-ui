@@ -38,7 +38,7 @@ node tests/visual/debug/extract-card-css.mjs > /tmp/card-antd.css   # 60 条 ant
 | 6 | `title` / `extra` / `cover` / `actions` / children 都经 **`NodeRenderer`** 渲染：`.vue` 模板没有「渲染一个 VNode 变量」的语法（见 `empty/components/NodeRenderer.ts` 的实测结论）。 | PLATFORM |
 | 7 | 本仓无 `hashId`（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D5）。 | PLATFORM |
 | 8 | **两条「死选择器」照抄**（UPSTREAM quirk，产物里就长这样）：`.{p}-head-title > .{p}-typography`（上游把 Typography 的前缀写成了 `${componentCls}-typography`，应为 `.{p}-typography`）与 `a:not(.{p}-btn)`（Card 里没有 `-btn`）。改掉会让「与产物逐条对拍」出现无法解释的差异。 | UPSTREAM |
-| 9 | 透传 `tabProps` 到内部 `Tabs` 时有一次 **`as unknown as TabsRuntimeProps`** 断言。原因：`TabsProps`（公开类型）与 `Tabs.vue` 的**运行时 prop 声明**在**回调参数类型**上系统性不一致（`Tabs.vue` 一律声明成 `(_key: string, _event: unknown) => any`、`renderTabBar` 的参数是 `Record<string, unknown>`、`locale` 是 `Record<string, unknown>`；而 `TabsProps` 那边是 `TabsEditEvent` / `TabsRenderTabBarProps` / `TabsLocale`）。函数参数**逆变** ⇒ 两组函数类型**双向都不可赋值**。**运行时是逐字段原样透传**，没有任何字段被转换或丢弃。 | PLATFORM |
+| 9 | ✅ **已修（2026-10-03）**：`Tabs.vue` 的运行时声明已统一到公开类型 ⇒ `Card` 改用 `satisfies`，**cast 已删除**。原缺口：透传 `tabProps` 到内部 `Tabs` 时有一次 **`as unknown as TabsRuntimeProps`** 断言。原因：`TabsProps`（公开类型）与 `Tabs.vue` 的**运行时 prop 声明**在**回调参数类型**上系统性不一致（`Tabs.vue` 一律声明成 `(_key: string, _event: unknown) => any`、`renderTabBar` 的参数是 `Record<string, unknown>`、`locale` 是 `Record<string, unknown>`；而 `TabsProps` 那边是 `TabsEditEvent` / `TabsRenderTabBarProps` / `TabsLocale`）。函数参数**逆变** ⇒ 两组函数类型**双向都不可赋值**。**运行时是逐字段原样透传**，没有任何字段被转换或丢弃。 | PLATFORM |
 | 10 | `tabSize` 需要一次 `as TabsProps['size']`：上游的类型面是 `SizeType`，本仓 `TabsProps['size']` 收窄为 `'small' \| 'default' \| 'large'`（tabs 只认 `-large` / `-small` 两个类名）。运行时行为与上游一致（`'medium'` 不落任何尺寸类名）。 | PLATFORM |
 
 ## 3. `.vue` / `.tsx` 选择
@@ -113,7 +113,7 @@ Card 的**段**是固定的，不涉及这个问题。
    本仓未做这次搬迁（会牵动 `empty` / `spin` / `button` / `result` 四个组件的门禁）。
 6. **`TabsProps` 与 `Tabs.vue` 运行时声明的类型不一致**（见 §2 第 9 条）：
    建议后续把 `Tabs.vue` 的 `locale` / `renderTabBar` / `onTabClick` 等声明与 `TabsProps` 对齐，
-   然后删掉 Card 里的 `as unknown as TabsRuntimeProps`。
+   ✅ **2026-10-03 已完成**：Card 里的 `as unknown as TabsRuntimeProps` 已换成 `satisfies`（`Tabs.vue` 的运行时声明已统一）。
 7. **`Card.Grid` 的 vnode 身份是 `-contain-grid` 的唯一判据**：`Card.vue` 比的是
    `child.type === CardGrid`（`index.ts` 里 `withInstall` 包装的**同一个对象**）。
    用户自己包一层组件再传进来会**静默**失去 `-contain-grid` —— 与上游 `child.type === CardGrid` 同判。

@@ -280,16 +280,20 @@ const tabsItems = computed<TabsItem[]>(() =>
 /**
  * `Tabs` 的**运行时** props 类型（= 模板里 `v-bind` 的校验目标，与 `$props` 同源）。
  *
- * 🚨 它与公开类型 `TabsProps` 在**回调 prop 的参数类型**上系统性地不一致 ——
- * `Tabs.vue` 一律声明成 `(_key: string, _event: unknown) => any`，
- * `renderTabBar` 的参数是 `Record<string, unknown>`，`locale` 是 `Record<string, unknown>`；
+ * ✅ **2026-10-03：已统一（本 cast 已删除）**。
+ *
+ * 此前它与公开类型 `TabsProps` 在**回调 prop 的参数类型**上系统性地不一致 ——
+ * `Tabs.vue` 一律声明成 `(_key: string, _event: unknown) => any`、
+ * `renderTabBar` 的参数是 `Record<string, unknown>`、`locale` 是 `Record<string, unknown>`；
  * 而 `TabsProps` 那边是 `(key: string, event: TabsEditEvent) => void` /
  * `(props: TabsRenderTabBarProps) => VNodeChild` / `TabsLocale`。
- * 函数参数**逆变** ⇒ 两组函数类型**双向都不可赋值**（不是「谁更宽」的问题）。
+ * 函数参数**逆变** ⇒ 两组函数类型**双向都不可赋值**（不是「谁更宽」的问题）
+ * ⇒ 整体透传 `tabProps` 必须过一次 `unknown`。
  *
- * ⇒ 整体透传 `tabProps` 必须过一次 `unknown`。**运行时是逐字段原样透传**
- * （与上游 `{...tabProps}` 完全一致），没有任何字段被转换或丢弃。
- * 已登记在 README §5（跨组件的类型不一致，建议后续统一 `Tabs.vue` 的声明）。
+ * 现在 `Tabs.vue` 的运行时声明一律改用**公开类型**（`TabsProps['renderTabBar']` /
+ * `['locale']` / `['more']` / `['classNames'|'styles']`，三个事件的载荷也用
+ * `TabsEditEvent` / `TabsEditAction` / 方向联合）⇒ 这里可以直接 `satisfies`，
+ * **不再需要 cast**（`lint:types` 0 错就是证据）。
  */
 type TabsRuntimeProps = InstanceType<typeof Tabs>['$props'];
 
@@ -307,7 +311,7 @@ const tabsBind = computed(
         ? { activeKey: props.activeTabKey }
         : { defaultActiveKey: props.defaultActiveTabKey }),
       tabBarExtraContent: props.tabBarExtraContent,
-    }) as unknown as TabsRuntimeProps,
+    }) satisfies TabsRuntimeProps,
 );
 
 /** 上游 `onTabChange` 只做一件事：把 key 交给 `props.onTabChange`。 */

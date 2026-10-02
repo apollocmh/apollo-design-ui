@@ -15,6 +15,7 @@
 - **模板**：🚨 **HTML 注释不能插在「标签的属性列表里」**（`<Comp\n <!-- … -->\n :a="1" />`）—— 报一串 `TS1005: ':' expected`（本轮连踩两次：ColorSteppers 与 card/demo/tabs.vue）（332）
 - **模板**：🚨 **`v-if` 与 `v-else` 之间**不能插 HTML 注释 —— 会让 `v-else` 失去配对（症状是**整条分支静默渲染错**，本轮一次红了 **28** 条用例）（331）
 - **Vue 化**：🚨 **值对象的字段一律 `public`** —— 类的 `private`/`protected` 成员会被 Vue 的 `UnwrapRef`（**映射类型**）丢掉 ⇒ 实例进 `ref()` / 组件 prop / 模板后**不再可赋值给原类**（`TS2345 … is missing …: getMax, getMin`）；对策：字段 `public` + `@internal` 标注，且类实例用 `shallowRef`（325）
+- **类型**：🚨 **运行时 prop 声明必须与公开类型「同源」** —— 写成宽松版（`(_e: unknown) => any` / `Record<string, unknown>`）会让「公开类型 → `$props`」因**函数参数逆变**失败 ⇒ 消费方转发时被迫 `as unknown as`。判据：`satisfies` 能过就说明同源（333）
 - **Vue 化**：🚨 复用组件的类名要传 **`className` prop**，`:class` 会被静默丢弃（本仓 Select/Input/InputNumber 都剥 `attrs.class`）（326，PITFALLS 309 的复发）
 - **Vue 化**：🚨 **继承一个「方法返回自身类型」的基类时，子类必须覆写该方法** —— `utils.Color` 的 `clone()`/`setAlpha()` 里 `new Color(...)` 是**词法基类** ⇒ 子类不覆写会掉回基类（`clone` 只错在**类型**、`setAlpha` **运行时也错**）（320）
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
@@ -4226,3 +4227,41 @@
     **不在开始标签的属性列表里**。同类：`v-if`/`v-else` 之间（见 331）。
     ⚠️ 两次都是我想「就地写说明」造成的 —— **说明一律写在标签上方**。
 
+333. 🚨 **运行时 prop 声明必须与公开类型「同源」—— 否则消费方转发时被迫 `as unknown as`**
+    （2026-10-03 实测，修 `tabs` ↔ `card` 的跨组件类型不一致）。
+
+    **症状**：`card/Card.vue` 把 `tabProps` 整体透传给内部 `Tabs` 时，
+    `{...tabProps, …}` **不能**赋给 `InstanceType<typeof Tabs>['$props']` ⇒ 必须
+    `as unknown as TabsRuntimeProps`（一个「我知道它们是同一批 prop」的手工断言）。
+
+    **根因**：`$props` 的类型由**运行时 `props` 声明 + `emits` 校验器**派生。
+    `Tabs.vue` 把它们写成**宽松版**，而公开 `TabsProps` 是**精确版**：
+
+    | 字段 | 运行时（宽松） | 公开 `TabsProps`（精确） |
+    |---|---|---|
+    | `onTabClick`（emits） | `(_key: string, _event: unknown) => any` | `(key: string, event: TabsEditEvent) => void` |
+    | `onEdit`（emits） | `(_target: unknown, _action: string) => true` | `(target: TabsEditEvent \| string, action: TabsEditAction) => void` |
+    | `renderTabBar` | `(props: Record<string, unknown>) => VNodeChild` | `(props: TabsRenderTabBarProps) => VNodeChild` |
+    | `locale` / `more` | `Record<string, unknown>` | `TabsLocale` / `TabsMoreProps` |
+    | `classNames` / `styles` | 只有对象形态 | `\| ((info) => 对象)`（函数形态） |
+
+    **函数参数逆变** ⇒ `unknown` **不能**赋给 `TabsEditEvent` ⇒ **双向都不可赋值**
+    （不是「谁更宽」的问题）。报错长得像谜语：
+    `Types of property 'onTabClick' are incompatible … Type 'unknown' is not assignable to type 'TabsEditEvent'`。
+
+    **修法**：运行时声明一律引用**公开类型**，别手写第二份：
+
+    ```ts
+    renderTabBar: { type: Function as PropType<TabsProps['renderTabBar']> },
+    locale:      { type: Object   as PropType<TabsProps['locale']> },
+    more:        { type: Object   as PropType<TabsProps['more']> },
+    classNames:  { type: [Object, Function] as unknown as PropType<TabsProps['classNames']> },
+    // emits 的校验器同理：载荷用 TabsEditEvent / TabsEditAction，不要写 unknown
+    tabClick: (_key: string, _event: TabsEditEvent) => true,
+    ```
+
+    ✅ **判据（可自证）**：把消费方的 `as unknown as X` 换成 **`satisfies X`** ——
+    能过就说明两侧真的同源了。**这一步必须做**，否则「修好了」只是口头结论。
+
+    ⚠️ `classNames` / `styles` 那条容易漏：运行时的 `[Object, Function]` 本来是对的
+    （PITFALLS 21），但 `PropType` 若只写对象形态，函数形态就**进不了 `$props`**。

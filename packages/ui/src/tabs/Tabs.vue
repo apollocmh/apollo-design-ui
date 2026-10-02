@@ -68,6 +68,7 @@ import type {
   TabsExtraContent,
   TabsIndicator,
   TabsItem,
+  TabsProps,
   TabsSemanticClassNames,
   TabsSemanticStyles,
   TabsType,
@@ -121,8 +122,14 @@ export default defineComponent({
     items: { type: Array as PropType<TabsItem[]>, default: undefined },
     /** ⚠️ 兼容形态：只发 deprecated 告警，**不实现**（用 `items`）。 */
     children: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    /**
+     * ⚠️ 用**公开类型**（`TabsProps['renderTabBar']`）而不是宽松的
+     * `(props: Record<string, unknown>) => VNodeChild` —— 后者会让
+     * `InstanceType<typeof Tabs>['$props']` 与 `TabsProps` 因**函数参数逆变**而**双向不可赋值**
+     * ⇒ 消费方（card 的 `tabProps`）转发时必须过一次 `unknown`（2026-10-03 修正）。
+     */
     renderTabBar: {
-      type: Function as PropType<(props: Record<string, unknown>) => VNodeChild>,
+      type: Function as PropType<TabsProps['renderTabBar']>,
       default: undefined,
     },
     hideAdd: { type: Boolean, default: undefined },
@@ -130,7 +137,8 @@ export default defineComponent({
     removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** @deprecated 用 `more.icon`。 */
     moreIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    more: { type: Object as PropType<Record<string, unknown> | undefined>, default: undefined },
+    // ⚠️ 同上：用公开类型（`TabsMoreProps`），不要写 `Record<string, unknown>`。
+    more: { type: Object as PropType<TabsProps['more']>, default: undefined },
     /** @deprecated 用 `classNames.popup`。 */
     popupClassName: { type: String, default: undefined },
     indicator: { type: Object as PropType<TabsIndicator | undefined>, default: undefined },
@@ -151,17 +159,22 @@ export default defineComponent({
     destroyOnHidden: { type: Boolean, default: undefined },
     /** @deprecated 用 `destroyOnHidden`。 */
     destroyInactiveTabPane: { type: Boolean, default: undefined },
-    locale: { type: Object as PropType<Record<string, unknown> | undefined>, default: undefined },
+    // ⚠️ 同上：用公开类型（`TabsLocale`）。
+    locale: { type: Object as PropType<TabsProps['locale']>, default: undefined },
     getPopupContainer: {
       type: Function as PropType<(node: HTMLElement) => HTMLElement>,
       default: undefined,
     },
+    // ⚠️ `PropType` 必须用**公开类型**（含**函数形态** `(info) => 对象`）——
+    //    写成 `TabsSemanticClassNames` 会让 `TabsProps` 的函数形态**无法赋给** `$props`
+    //    ⇒ 消费方转发时被迫过一次 `unknown`。运行时的 `[Object, Function]` 本来就对
+    //    （PITFALLS 21），这里只是把**类型面**补齐。
     classNames: {
-      type: [Object, Function] as unknown as PropType<TabsSemanticClassNames | undefined>,
+      type: [Object, Function] as unknown as PropType<TabsProps['classNames']>,
       default: undefined,
     },
     styles: {
-      type: [Object, Function] as unknown as PropType<TabsSemanticStyles | undefined>,
+      type: [Object, Function] as unknown as PropType<TabsProps['styles']>,
       default: undefined,
     },
     id: { type: String, default: undefined },
@@ -174,9 +187,13 @@ export default defineComponent({
     //    调用方写 `@tab-click` / `:on-tab-click` 都能收到（同一份 handler）。
     'update:activeKey': (_key: string) => true,
     change: (_key: string) => true,
-    tabClick: (_key: string, _event: unknown) => true,
-    tabScroll: (_info: unknown) => true,
-    edit: (_target: unknown, _action: string) => true,
+    // ⚠️ **载荷类型必须用公开类型**（`TabsEditEvent` / `TabsEditAction` / 方向联合），
+    //    不能图省事写 `unknown` —— `$props` 的事件处理器类型由这里派生，写成 `unknown`
+    //    会让「`TabsProps` → `$props`」因**参数逆变**失败（`unknown` 不可赋给 `TabsEditEvent`）
+    //    ⇒ 消费方（card 的 `tabProps`）转发时被迫过一次 `unknown`（2026-10-03 修正）。
+    tabClick: (_key: string, _event: TabsEditEvent) => true,
+    tabScroll: (_info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => true,
+    edit: (_target: TabsEditEvent | string, _action: TabsEditAction) => true,
   },
   setup(props, { slots, emit, attrs, expose }) {
     const {
