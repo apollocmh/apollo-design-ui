@@ -3332,3 +3332,140 @@
        vitest / build / visual 都算）；
     ② 跑前仍要 `node -e "require('jsdom')"` 预热；
     ③ 看到「全过 + Errors N」**先怀疑环境**，别去改测试。
+
+298. 🚨 **本机 vitest 慢 7 倍的真凶：WorkBuddy 沙箱的 `node-brokered-fs-shim` 把每次 `open()` 走 IPC 代理**
+    （2026-10-01 实测。**不是仓库问题，也不是深信服**）。
+
+    **症状**：`pnpm test:unit` 全量 **2121s（35 分钟）**，报告里 `environment` 相位占 **71%**；
+    连 `packages/utils/src/__tests__/is.test.ts`（纯函数、23 条）都要 **12s**，其中 94% 与测试本体无关。
+
+    **指纹表**（同一台机器，200 次调用）：
+
+    | 操作 | 带 hook（默认） | 关掉 hook |
+    |---|---|---|
+    | `readFileSync`（同一文件 ×200） | **2100 ms** | **6 ms** |
+    | `open+close` ×200 | 1215 ms | — |
+    | `statSync` ×200 | 1 ms | — |
+    | `readdirSync` ×200 | 17 ms | — |
+
+    ⇒ **只有 `open()` 被拦截**（≈6–10 ms/次），且与文件大小、路径、卷**无关**
+    （连读**同一个文件** 200 次也一样慢 ⇒ 排除页缓存/磁盘/jsdom 本身）；
+    对照 `require('typescript')`（单文件 ~9 MB）只要 260 ms ⇒ **成本按「文件数」计，不按「字节数」计**。
+
+    **因果链**：`NODE_OPTIONS=--require=…/cli/vendor/shim/node-language-shim.cjs`
+    → 当 `CODEBUDDY_BROKERED_FS_HOOK_ENABLED==='1' || CODEBUDDY_SAFE_DELETE_SANDBOX==='1'` 时加载
+    `node-brokered-fs-shim.cjs`（hook 了 `open/openSync/readFile/readFileSync/writeFile/…`，
+    转发到 `$CODEBUDDY_SANDBOX_BROKER_IPC_ADDRESS` 的 unix socket）。
+    **jsdom 一个包就 652 个 `.js`** ⇒ 652 × ~9 ms ≈ **5.9 s**，
+    与实测「每文件 `environment` 相位 ≈ 5.8 s」几乎完全吻合（261 文件 × 5.8 s ≈ 1506 s ≈ 2121 s 的 71%）。
+
+    ⚠️ **两个开关是「或」关系，且本机两个都 = `1`** ⇒ **只关一个无效**。
+    实测 `SANDBOX=0` 后 worker 里 `__CODEBUDDY_NODE_BROKERED_FS_SHIM_LOADED__` 仍为 `true`、耗时不变。
+    判据：写一个临时用例打印 `process.env` + 该 global 标志（收口前删掉）。
+
+    **对策**（在 WorkBuddy 会话里跑测试/构建时**前置**）：
+
+    ```sh
+    CODEBUDDY_BROKERED_FS_HOOK_ENABLED=0 CODEBUDDY_SAFE_DELETE_SANDBOX=0 \
+      PATH=/tmp/pnpm-shim:$PATH COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1 \
+      pnpm vitest run --project unit
+    ```
+
+    实测收益（四个 vitest project 的 `Test Files` 数与用例数**逐项一致** ⇒ 不是降级少跑）：
+
+    | 范围 | 基线（带 hook） | 关闭 hook | 倍数 |
+    |---|---|---|---|
+    | 单文件 `is.test.ts`（23 条纯函数） | 12.06 s | **1.75 s** | 6.9× |
+    | `--project unit`（261 文件 / 5756 用例） | 2121 s | **280 s** | 7.6× |
+    | `--project dom-contract`（66 文件） | 492 s | **63 s** | 7.8× |
+    | `--project a11y`（65 文件） | 650 s | **131 s** | 5.0× |
+    | `--project theme`（61 文件） | 656 s | **120 s** | 5.5× |
+    | `pnpm run lint:types`（`vue-tsc`） | 124.1 s | **83.4 s** | 1.5× |
+    | `test:build`（`tests/build/run.mjs`） | 478.6 s | **148.4 s** | 3.2× |
+    | `test:visual --component anchor`（Playwright） | 52.8 s | 47.7 s | **1.1×（无收益）** |
+    | **`pnpm test` 四层合计** | **3919 s ≈ 65 min** | **594 s ≈ 10 min** | **6.6×** |
+
+    **判据：收益 ∝「加载的小文件数」** —— 不是无差别拖慢：
+    vitest 每文件都重载 jsdom 的 652 个 `.js` ⇒ 5–8×；构建门禁要读大量小模块 ⇒ 3.2×
+    （`user` 252 s vs 244 s 几乎不变 ⇒ 纯 I/O 等待被消掉）；`vue-tsc` CPU 密集 ⇒ 1.5×；
+    **Playwright 视觉层只读几个大文件（baseline PNG）⇒ 1.1×、无收益**（这一条是反例，
+    说明关掉钩子**不会**动摇视觉层结论的可信度）。
+    ⚠️ `a11y` / `theme` 倍数偏低（5×）另有一个原因：它们**测试本体**（axe 扫描、主题矩阵渲染）
+    本来就重 —— 去掉 I/O 噪音后 `tests` 相位占比从 1–3% 升到 22–29%，那才是它们的真实成本。
+
+    ⚠️ 代价：node 进程失去沙箱的**文件访问代理**（`CODEBUDDY_SAFE_DELETE_ENABLED` 未关，
+    **safe-delete 仍在**）⇒ 只用于「跑测试」这类只读为主的任务；**不要**写进仓库脚本或 CI
+    —— 用户自己的终端没有这些变量，本来就不受影响。等价但更彻底的做法是 `env -u NODE_OPTIONS`
+    （连 safe-delete 一起丢，不推荐）。
+    ⇒ 连带解释：PITFALLS 199/221/231（jsdom 冷缓存超时）与 297（worker 起不来）在这台机器上会被**放大**，
+    因为单文件固定开销就有 12 s、worker 启动的 60 s 硬上限余量被吃掉大半。
+
+## Card 收口流（2026-10-02，299-301）
+
+299. 🚨 **biome 的 `lint/style/useImportType` 会把「只在模板里用、且在类型位置也出现」的组件
+    import 改写成 `import type` ⇒ 模板解析不到组件，静默渲染成原生标签**（2026-10-02 实测）。
+
+    **触发条件**（三条同时满足）：① 组件在**模板**里以 `<Tabs />` 形式使用；
+    ② 它**同时**出现在某个**类型位置**（`InstanceType<typeof Tabs>['$props']`、
+    `ComponentProps<typeof X>` 等）；③ 在 `<script setup>` 里**没有别的值级用法**。
+
+    **因果链**：biome 的 `useImportType` 只看 `.ts` 可见的用法，**它看不到模板**。
+    条件 ① 让它找不到值级用法，条件 ② 让它找到「唯一的用法是类型」⇒ 判定 type-only ⇒
+    执行 `import type` 改写。`noUnusedImports` 在本仓对 `*.vue` 是 **off**，所以「完全没被用到」
+    反而**不会**被改写 —— 只有「只在类型位置被用到」才会中招。
+
+    **症状**（最坑的地方）：**没有报错**。dev 下一条 `[Vue warn]: Failed to resolve component: Tabs`，
+    然后渲染出 `<tabs size="large" ...>` 这样的**原生未知元素**；生产构建**连 warn 都没有**。
+    vue-tsc 也不会报（`import type` 对类型位置完全合法）。
+
+    **实测证据**（card 的 L1 用例）：
+    ```
+    [Vue warn]: Failed to resolve component: Tabs
+    <tabs size="large" class-name="apollo-card-head-tabs" items="[object Object]"></tabs>
+    ```
+    （`items` 甚至被序列化成 `[object Object]` —— 原生元素的属性语义。）
+
+    **对策**：`// biome-ignore lint/style/useImportType: <理由>` 紧贴 import 行。
+    ⚠️ 不要靠「随便加一个值级引用」绕过 —— 那会引入死代码，且下一个人删掉它就复发。
+
+    **判据**：只要一个 `.vue` 里出现 `typeof SomeComponent`，就检查那条 import 有没有被 biome
+    改写成 `import type`。`grep -rn "^import type .* from '.*\.vue'"` 一条命令扫全仓。
+
+300. 🚨 **跨组件的 prop 名「形近」是类型检查的盲区**（2026-10-02 实测，card 的真 bug）。
+
+    card 把上游的 `defaultActiveTabKey`（**Card** 的 prop）透传给内部 `Tabs` 时，
+    写成了 `{ defaultActiveTabKey: props.defaultActiveTabKey }` —— 而 **Tabs** 的 prop 名是
+    `defaultActiveKey`（没有 `Tab`）。两个名字**都合法**（前者是 CardProps 的键、后者是 TabsProps 的键），
+    所以 `vue-tsc` 完全无感（那次断言是 `as unknown as TabsRuntimeProps`，本来就绕过了检查）。
+
+    **后果**：`defaultActiveTabKey` 不是 Tabs 声明的 prop ⇒ 落进 `attrs`（Tabs 又 spread 到根元素）
+    ⇒ **非受控页签静默失效**（永远停在第一个页签），DOM 上多一个 `defaultactivetabkey="b"` 属性
+    （jsdom 会把 HTML 属性名小写化，所以肉眼还能认出来）。
+
+    **只有行为用例能抓**：card 的 L1 用例「非受控：`defaultActiveTabKey` 生效」断言的是
+    **哪个页签是 active**，而不是「prop 有没有传过去」。⇒ **透传类代码的用例必须断言「效果」**，
+    不能只断言「调用/传递」。
+
+301. 🚨 **`Tabs.vue` 的运行时 prop 声明与公开 `TabsProps` 在「回调参数类型」上系统性不一致
+    ⇒ 模板里 `v-bind="tabProps"` 必须过一次 `unknown`**（2026-10-02 实测，card 透传时暴露）。
+
+    `Tabs.vue` 是 `defineComponent({ props: {...} })` 的**运行时声明**，它把回调一律写成宽松版：
+    `onTabClick: Function as PropType<(_key: string, _event: unknown) => any>`、
+    `renderTabBar: Function as PropType<(props: Record<string, unknown>) => VNodeChild>`、
+    `locale: Object as PropType<Record<string, unknown> | undefined>`；
+    而 `TabsProps` 那边是 `(key: string, event: TabsEditEvent) => void` /
+    `(props: TabsRenderTabBarProps) => VNodeChild` / `TabsLocale`。
+
+    **函数参数逆变** ⇒ 两组函数类型**双向都不可赋值**（不是「谁更宽」的问题）⇒ 连
+    `as ((props: Record<string, unknown>) => VNodeChild)` 这种单字段断言都会被 TS 拒。
+    模板里 `v-bind="obj"` 的校验目标正是**运行时声明的展开类型**（`InstanceType<typeof X>['$props']`），
+    所以 `v-bind="props.tabProps"` 直接报 `TS2345`（提示的字段依次是 `locale` → `renderTabBar` →
+    `onTabClick`，一次只报一个 ⇒ 容易误以为「修完这个就好」）。
+
+    **对策**（card 采用）：`as unknown as InstanceType<typeof Tabs>['$props']`，**一次**断言，
+    并写清「运行时逐字段原样透传、没有任何转换」。**根因**在 tabs 侧的声明不一致，
+    已登记在 `card/README.md` §5 与 §2 第 9 条，建议后续统一。
+
+    ⚠️ 同类风险的判据：任何组件要**整体透传另一个组件的 props**（`tabProps` / `triggerProps`…）时，
+    先确认目标组件的运行时声明与它的公开类型是否同构；不同构就只能断言，
+    而**不能**用「逐个字段拆开传」绕过（回调字段拆开同样不可赋值）。
