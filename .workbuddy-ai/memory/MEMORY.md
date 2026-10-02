@@ -128,3 +128,6 @@ L0 utils/theme/icons ｜ 测试 test-utils
 foundation **13/13 completed**；组件 **64/72 completed**。下一条用 `next-task.mjs` 取。
 已 completed：`date-picker` / `masonry` / `anchor` / `breadcrumb` / `card` / `avatar`
 （各自的判据与坑见 `PITFALLS.md` 与组件 `README §5`，不在此重复）。
+进行中：**list**（`status: analyzing`，G0–G3 已完）。
+🚨 **`list` 在 antd 6.6.4 里整体 deprecated**（指向 `Listy`，而 `listy` 已 completed）
+⇒ 处置 = 照实现 + 保留同款「每次渲染都发」的 `console.error`（先例 `DropdownButton` D91）。
