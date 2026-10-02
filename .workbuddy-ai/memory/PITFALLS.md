@@ -3614,6 +3614,65 @@
     的地方，本仓都要换成 vnode 层判定（`isTextVNode` / `isElementVNode` / `isComponentVNode`）。
     **别**试图「先取原始值再判」——`slots.default()` 返回的就是 vnode（VTU 与真实模板一致）。
 
+## Timeline 开工流（2026-10-02，309-311）
+
+309. 🚨 **组件「主动剥掉 `attrs.class`」时，传 `class` 会被静默丢弃 —— 只能传 `className` prop**
+    （2026-10-02 实测，timeline 包 `steps`）。
+
+    **触发**：`Steps.ts` 的渲染体里写着
+
+    ```ts
+    const { class: _attrsClass, ...restAttrs } = attrs;   // ← 把 class 摘掉
+    return h(tag, { class: stepsClassName.value, ...restAttrs }, nodes);
+    ```
+
+    即：**根类名由组件自己算**，落到 `attrs` 里的 `class` 被**主动丢弃**。
+    `Steps` 声明了 `className` prop 并把它并进 `stepsClassName` ⇒ 只有 `className` 生效。
+
+    **症状**：`Timeline` 传 `class: 'apollo-timeline …'` ⇒ 根上是 `apollo-steps`，
+    **`apollo-timeline` 一个类都没有**（L1 的 6 条用例一次全红），
+    而 `lint:types` / biome **全绿**（`class` 是合法 vnode prop，类型不报）。
+
+    **判据**：跨组件传类名时，**先确认目标组件是「合并 className」还是「剥掉 class」**——
+    `grep -n "class: _attrsClass\|attrs.class" <目标>.ts`。同族：任何 `inheritAttrs` 相关的手工
+    attrs 处理都可能这样。⚠️ 与 PITFALLS 3（未声明 prop 落进 attrs）**一体两面**：
+    这里是「落进去了，但组件自己不要」。
+
+310. 🚨 **`--apollo-cmp-steps-*` 这些「内部变量」的前缀是**固定 `apollo`**，不随类前缀变**
+    （2026-10-02 实测，timeline 引用 steps 的变量）。
+
+    **判据**：`steps/style/index.ts:172-179` 的 `genStepsStyle(prefixCls)` 只做
+
+    ```ts
+    cssText.split('.apollo-steps').join(`.${prefixCls}-steps`)   // ← 只重命名**选择器**
+    ```
+
+    —— **变量名 `--apollo-cmp-steps-*` 一律不重命名**。所以两个前缀的产物里，
+    这些变量名都是 `--apollo-`。
+
+    **症状**：跨组件（timeline）用 `--${p}-cmp-steps-*` 引用时，`ant` 变体会产出
+    `--ant-cmp-steps-icon-size-active` 这类**引用得到、声明不存在**的名字 ⇒
+    `var()` 全部失效（视觉全错）+ **B7 报「引用了未声明的变量」**（实测 3 个）。
+
+    **对策**：引用 Steps 的内部变量时写**固定** `--apollo-cmp-steps-*`。
+    ⚠️ **别**推广到组件 token（`--{p}-timeline-*`）—— 那些**随前缀变**
+    （`genTokenDecls(p)` 与 `tv()` 同源），两者规则不同。
+    **判据**：`grep -n "export function genXxxStyle" -A 8 <包>/style/index.ts` 看它的 `rename`
+    到底重命名了什么。
+
+311. ⚠️ **用脚本生成 / 替换测试代码时，回调参数的类型标注会丢 ⇒ 隐式 `any` ⇒ `lint:types` 红**
+    （2026-10-02，本会话**连续三次**犯：list 的 G8、list 的 L4、timeline 的 L1）。
+
+    **形态**：`errorSpy.mock.calls` 的类型是 `any`（`ReturnType<typeof vi.spyOn>` 不是泛型实例）
+    ⇒ `.map(...)` / `.filter(...)` / `.some(...)` 的回调**拿不到上下文类型** ⇒ TS7006。
+
+    **代价**：三次都是「测试全绿 + biome 全绿」但 `lint:types` 红着提交 ——
+    而 `verify:full` 才会把它揪出来（那时已经多了一个坏提交）。
+
+    **对策（硬规则）**：**收口前必须单独跑 `pnpm run lint:types`，红了不许提交**；
+    凡是用脚本生成测试代码，脚本里就显式写上 `(m: string)` / `(c: unknown[])` 之类的标注，
+    **别指望推断**。
+
 307. ⚠️ **`split` 默认 `true` 必须 `withDefaults`**；且 **`withDefaults` 是编译器宏、不能 `import`**
     （2026-10-02 实测，list）。
 

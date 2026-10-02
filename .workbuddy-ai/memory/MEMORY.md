@@ -131,11 +131,14 @@ L0 utils/theme/icons ｜ 测试 test-utils
 foundation **13/13 completed**；组件 **65/72 completed**。下一条用 `next-task.mjs` 取。
 已 completed：`date-picker` / `masonry` / `anchor` / `breadcrumb` / `card` / `avatar` / `list`
 （各自的判据与坑见 `PITFALLS.md` 与组件 `README §5`，不在此重复）。
-进行中：**timeline**（G0–G1 已完；🚨 它是 **`Steps` 的薄壳** —— 没有自己的 DOM）。
+进行中：**timeline**（G0–G6 已完；🚨 它是 **`Steps` 的薄壳** —— 没有自己的 DOM，
+实现是 **`.ts` 渲染函数**，样式靠**覆盖 Steps 的内部变量**）。
 ⚠️ 已按用户裁决**扩展了 `steps`**（`ef6cc7e`）：新增 `steps/context.ts` 的
 `stepsInternalContextKey`（`rootComponent`/`itemComponent`）+ `stepsUnstableContextKey`
 （`railFollowPrevStatus`）。🚨 必须由 `Steps` **接住并转发**（它自己 provide 同族键 ⇒
 外层会被「最近的赢」遮蔽，**PITFALLS 256**）。
+🚨 两条 timeline 实测判据：**`Steps` 主动剥掉 `attrs.class`** ⇒ 传类名只能用 **`className` prop**(309)；
+**`--apollo-cmp-steps-*` 前缀固定 `apollo`**（`genStepsStyle` 只重命名选择器、不重命名变量名）(310)。
 ⚠️ **既有事实**：9 个组件「completed + `visualStatus: done` 但零入库 L6 基线」
 （select / auto-complete / cascader / popconfirm / float-button / rate / segmented /
 **steps** / progress）⇒ 它们的 L6 在 **`--mode compare` 下不可用**，只能跑 `--mode both`。
