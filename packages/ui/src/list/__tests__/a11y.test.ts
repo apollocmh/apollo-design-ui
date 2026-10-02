@@ -64,7 +64,7 @@ describe('List · role / ARIA 契约（L5）', () => {
     expect(root.tagName).toBe('DIV');
     expect(root.getAttribute('role')).toBeNull();
     // ⚠️ `w.element` 是 DOM 元素 ⇒ `attributes` 是 NamedNodeMap **属性**，不是函数
-    expect(root.getAttributeNames().filter((n) => n.startsWith('aria-'))).toEqual([]);
+    expect(root.getAttributeNames().filter((n: string) => n.startsWith('aria-'))).toEqual([]);
   });
 
   it('非 grid：`-items` 是**真 `<ul>`**，子项是**真 `<li>`**', async () => {
@@ -136,13 +136,16 @@ describe('List · role / ARIA 契约（L5）', () => {
     );
     // ⚠️ **不能断言「全树零 aria-*」** —— 内层 `<Spin>`（依赖组件）自带
     //    `aria-live="polite" aria-busy="false"`。这里只钉 **List 自己产出的元素**。
-    const own = [w.element, ...Array.from(w.element.querySelectorAll('*'))].filter((el) =>
-      Array.from(el.classList).some((c) => c.startsWith('apollo-list')),
-    );
+    const rootEl = w.element as HTMLElement;
+    // ⚠️ `Array.from` 的元素类型必须显式给（`w.element` 是 `any` ⇒ 元素退化成 `unknown`）
+    const own: HTMLElement[] = [
+      rootEl,
+      ...Array.from(rootEl.querySelectorAll<HTMLElement>('*')),
+    ].filter((el) => Array.from(el.classList).some((c) => c.startsWith('apollo-list')));
     expect(own.length).toBeGreaterThan(3);
     for (const el of own) {
       expect(
-        el.getAttributeNames().filter((n) => n.startsWith('aria-')),
+        el.getAttributeNames().filter((n: string) => n.startsWith('aria-')),
         `List 自己的元素不应带 aria-*：${el.className}`,
       ).toEqual([]);
     }
