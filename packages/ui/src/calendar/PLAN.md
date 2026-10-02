@@ -49,7 +49,13 @@
       ⑤ `CalendarCellRenderInfo` **就是** picker 的 `PanelCellRenderInfo`（别名不重定义）；
       ⑥ 三个渲染 prop 的签名。**7 组负例**（`mode: 'week'` / `value: []` / `validRange` 非二元组 /
       `source: 'panel'` / `Expose.focus` / `classNames.root: 1` / `headerRender` 返回对象字面量）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
+- [x] G8 L5 a11y —— `__tests__/a11y.test.ts` **14/14**（axe 8 形态 0 violation + 6 条结构语义）。
+      🚨 三条判据：① 根节点**不加 `role`**（上游如此）；② 面板根有 `tabindex="0"`；
+      ③ **`hideHeader` ⇒ 面板的 4 个导航按钮与它们的 `aria-label` 确实不在**
+      （否则以后误开 header 会静默多出一批可 Tab 到的按钮）。
+      ⚠️ **唯一豁免 `label` 规则** —— header 的两个 `Select` 是 combobox，其可访问名由
+      `role="combobox"` + `aria-*` 承担，**antd 同款不绑 `<label>`**
+      （`select/__tests__/a11y.test.ts` 有同一条放行原文）。R13 的判据是「不低于 antd」。
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
