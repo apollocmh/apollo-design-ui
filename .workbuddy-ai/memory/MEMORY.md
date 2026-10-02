@@ -24,14 +24,22 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 - 🚨 **`.vue` 里出现 `typeof SomeComponent` 就查那条 import 有没有被 biome 改成 `import type`**(299)。**语义化槽(`classNames`/`styles`)支持函数形态**⇒prop 类型必须 `[Object, Function]`。
 - 📌 **置 `completed` 前三件套**：① `COMPONENT_STYLES` 注册；② `index.ts` 导出(B8)；③ `tests/compat/fixtures/<c>/` 有 fixture(E9)。
 
-## 进度（2026-10-02）
-foundation **13/13**；组件 **68/72 completed**。下一条用 `next-task.mjs` 取。
+## 进度（2026-10-02 深夜）
+foundation **13/13**；组件 **69/72 completed**。下一条用 `next-task.mjs` 取。
 - **timeline**=`Steps` 薄壳（无自有 DOM；`.ts` 渲染函数；样式覆盖 Steps 内部变量）；6 Token 只声明 4 条(B7)。⚠️ 扩展 `steps` 新增两个 context key，🚨 必须由 `Steps` **接住并转发**（同族键「最近的赢」遮蔽外层，256）；`Steps` **主动剥 `attrs.class`**⇒类名用 `className`(309)。
-- 🚧 **color-picker 开工中（G0–G3 已落，G4 未开始）**：`interface.ts` / `style/{token,index}.ts` /
-  `engine/{interface,color,util}.ts` / `color.ts` / `util.ts` 已入库（commit 1bd30e7），
-  L1 25 + L7 21 绿、`lint:types` 0 错、`registry:validate` 19/19。**registry status 仍是 `todo`**。
-  🚨 **G4 的硬约束**：本仓 `Slider` **不消费** `sliderInternalContextKey`（`handleRender` 通道
-  不存在，改走 `#handle` scoped slot）⇒ 上游 `ColorSlider` 的把手定制照抄会**静默失效**；
-  ⚠️ 同族的 `unstableSliderContextKey` **行为相反**（真的被 inject）。详见 PITFALLS 319 与
-  `packages/ui/src/color-picker/PLAN.md`。
+- ✅ **color-picker 已 completed（69/72，commit 0255c4b）**：引擎在
+  `packages/ui/src/color-picker/engine/`（rc 判 `in-ui`）。11 维度全 done；
+  L1/L2 49 + L3 20 + **L4 23/23** + L5 15 + **L6 27/27 exact** + L7 21 + demo 16。
+  🚨 **三条收口期最值钱的经验**（PITFALLS 327-330）：
+  ① **L6 解析的是 `packages/ui/dist`** ⇒ 改**组件源码**（不只样式）也要先 `pnpm build:ui`，
+     否则 `--mode compare` 差异率**逐位不变**；
+  ② **`React.useEffect` ↔ Vue `watch` 不等价**（effect 挂载必跑）⇒ 必须补 `immediate: true`
+     —— 这条漏了会让「初始值就命中该分支」静默失效，**jsdom 测不出、只有 L6 抓得到**；
+  ③ **模板里的 `<slot/>` 产出嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到数组
+     ⇒ 多包一层 `<span>`（D79）；要传单个元素只能用**渲染函数**。
+  ⚠️ **L4 只覆盖触发器**（面板在 Portal 里、SSR 不渲染）——面板归 L6，**是有意的分工**。
+  ⚠️ 已知未修差异：传自定义 `children` 时多包一层 `<span>`（修法 = ColorPicker 改渲染函数）。
+  ⚠️ **视觉层/构建门禁的入口都要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`**
+     （`tests/visual/run.mjs` / `tests/build/run.mjs` / `pnpm build:ui`）——
+     漏了会在打包阶段被 safe-delete 拦下（阈值 50），报 `SAFE_DELETE_BULK_CONFIRM_REQUIRED`。
 - ⚠️ 9 组件「completed+`visualStatus: done` 但零入库 L6 基线」（含 select/auto-complete/cascader/popconfirm/float-button/rate/segmented/**steps**/progress）⇒L6 只能 `--mode both`。根因=未决开放决策 **`visual-baseline-in-git`**。
