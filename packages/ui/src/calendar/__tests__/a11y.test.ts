@@ -16,6 +16,7 @@
  * ⚠️ **`axe.run()` 不能与 `vi.useFakeTimers()` 共存**（PITFALLS 268）—— 本文件不用假时钟。
  */
 
+import { zh_CN } from '@apollo-design/locale';
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import dayjs from 'dayjs';
@@ -178,9 +179,11 @@ describe('Calendar · axe（WCAG 2.0/2.1/2.2 A+AA，0 violation）', () => {
   });
 
   it('中文语言包（`ConfigProvider` 的 `locale`）', async () => {
-    const zhCN = (await import('@apollo-design/locale/locales/zh_CN')).default as unknown;
+    // ⚠️ **具名导入**，不能深导入 `@apollo-design/locale/locales/zh_CN` ——
+    //    locale 包的 `exports` 只有 `.` 一个子路径（`vue-tsc` 会报 TS2307）。
+    //    导出名保留下划线原名（`zh_CN`），与上游 `antd/locale/zh_CN` 只差包名。
     const w = mount(ConfigProvider, {
-      props: { locale: zhCN, prefixCls: 'apollo' },
+      props: { locale: zh_CN, prefixCls: 'apollo' },
       slots: { default: () => h(Calendar, { value: V }) },
       attachTo: document.body,
     });
