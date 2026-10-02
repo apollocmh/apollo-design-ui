@@ -251,23 +251,37 @@ const FORWARDED_SLOTS = [
   'presetRender',
 ] as const;
 
-const forwardSlots = computed(() => {
-  const result: Record<string, unknown> = {};
-  for (const name of FORWARDED_SLOTS) {
-    const slot = slots[name];
-    if (slot) result[name] = slot;
-  }
-  return result;
-});
+/**
+ * 实际提供了的插槽名（用于模板里的动态具名插槽转发）。
+ *
+ * 🚨 **不能用 `v-slots`** —— 它是 **JSX-only 的指令**，Vue 的模板编译器不认识它，
+ * 会把它当成**未知指令**并连发两条告警（实测 demo 冒烟抓到）：
+ *
+ * ```
+ * [Vue warn]: Failed to resolve directive: slots
+ * [Vue warn]: Runtime directive used on component with non-element root node.
+ * ```
+ *
+ * ⇒ 模板里改用 `<template v-for #[name]>` 动态具名插槽（Vue 3.3+ 支持）。
+ */
+const forwardedSlotNames = computed(() => FORWARDED_SLOTS.filter((name) => Boolean(slots[name])));
 </script>
 
 <template>
   <DatePicker
     v-bind="forwardProps"
-    v-slots="forwardSlots"
     :variant="mergedVariant"
     :class-names="mergedClassNames"
     :styles="mergedStyles"
     :render-extra-footer="internalRenderExtraFooter"
-  />
+  >
+    <!--
+      🚨 插槽转发**必须**用动态具名插槽（`#[name]`）—— 见 `forwardedSlotNames` 的说明。
+      `<component :is="fn" v-bind="slotProps">` 把「插槽函数」当成**函数式组件**渲染，
+      正好等价于「把内层组件给的 slot props 原样交给用户的插槽」。
+    -->
+    <template v-for="name in forwardedSlotNames" :key="name" #[name]="slotProps">
+      <component :is="slots[name]" v-bind="slotProps ?? {}" />
+    </template>
+  </DatePicker>
 </template>

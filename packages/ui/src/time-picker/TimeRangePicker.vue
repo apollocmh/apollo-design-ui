@@ -118,16 +118,14 @@ const FORWARDED_SLOTS = [
   'presetRender',
 ] as const;
 
-const forwardSlots = computed(() => {
-  const result: Record<string, unknown> = {};
-  for (const name of FORWARDED_SLOTS) {
-    const slot = slots[name];
-    if (slot) result[name] = slot;
-  }
-  return result;
-});
+/** 实际提供了的插槽名（见 `TimePicker.vue` 的同名说明：`v-slots` 是 JSX-only 的）。 */
+const forwardedSlotNames = computed(() => FORWARDED_SLOTS.filter((name) => Boolean(slots[name])));
 </script>
 
 <template>
-  <RangePicker v-bind="forwardProps" v-slots="forwardSlots" />
+  <RangePicker v-bind="forwardProps">
+    <template v-for="name in forwardedSlotNames" :key="name" #[name]="slotProps">
+      <component :is="slots[name]" v-bind="slotProps ?? {}" />
+    </template>
+  </RangePicker>
 </template>

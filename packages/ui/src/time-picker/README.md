@@ -1,22 +1,71 @@
 # TimePicker 实现说明
 
-> 规则 R1：本文件必须记录（G11 前补齐）：
+> 规则 R1：本文件记录「仓库文档里没有的」—— 差异、选型理由、Token 落点、已知缺口。
 
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 · `es/time-picker/`（只读参照，H2）
+- 规模 **412 行产物 / 138 文件**；Component Token **0 个**（本组件**没有样式表**）
+- 分析产物：`docs/analysis/time-picker.md`（G1，先于实现存在）
+
+| 上游文件 | 行数 | 本仓 | 形态 |
+|---|---|---|---|
+| `time-picker/index.tsx` | 174 | `TimePicker.vue` + `TimeRangePicker.vue` | `.vue`（有完整 props/emits/slots 对外面） |
+| `time-picker/index.d.ts` | 68 | `interface.ts` | 类型（从 `DatePickerProps` 派生） |
+| `date-picker/generatePicker/*` | ~530 | **已有**：`date-picker/DatePicker.vue` / `RangePicker.vue` | 复用 |
+| `date-picker/hooks/useMergedPickerSemantic.ts` | 58 | **已有**：`date-picker/hooks/use-picker-semantic.ts` | 复用 |
+| `form/hooks/useVariants.ts` | 45 | **已有** | 复用 |
+| `_util/PurePanel.tsx` | — | ❌ **无对应物** | 缺口，见 §5 |
+| `time-picker/locale/*`（68 个语言） | — | **已有**：`packages/locale` | 复用 |
+| **样式** | 0 | **无 `style/`** | 见 §4 |
+
+### 🚨 本组件是 `DatePicker` 的**薄壳**（零自有样式）
+
+`TimePicker` 只做四件事：`variant` 合并 → 语义槽合并 → `addon`→`renderExtraFooter`
+→ `mode={undefined}`，然后把一切交给 `DatePicker.TimePicker`（`pickerType = 'timePicker'`）。
+`TimePicker.RangePicker` 更薄 —— 上游只有 3 行（`{...props} picker="time" mode={undefined}`）。
+
+⇒ **`tokenCount = 0` 是对的**：`es/time-picker/` 里没有一句样式代码，
+138 个「文件」里 136 个是 dayjs 语言包。
 
 ## 2. 与 antd 的行为差异清单
 
 <!-- 同步到 COMPATIBILITY.md §9；分类只能是 BUG / INTENDED / PLATFORM / UPSTREAM（AGENTS.md §4.3） -->
 
-## 3. .vue / .tsx 选择
+| # | 差异 | 分类 |
+|---|---|---|
+| 1 | 🚨 **它读的 `ConfigProvider` 配置是 `timePicker`，不是 `datePicker`**（内层 `pickerType` 由**入口组件名**决定，不是由 `picker` 模式决定）；且**内外两层各读一次** ⇒ `timePicker.classNames.root` 在最终类名里出现**两次** | 与上游一致 |
+| 2 | 🚨 **告警矩阵不对称**：`popupClassName` / `popupStyle` / `bordered` 在**单个** TimePicker 上**不发**废弃告警（外层解构掉了），在 `TimePicker.RangePicker` 上**发**（外层 `{...props}` 原样透传）。三个 prop 的 `.d.ts` 都标着 `@deprecated`，**只有跑一遍才知道谁真发**（探针 `probe-time-picker-antd.mjs`） | 与上游一致 |
+| 3 | `TimeRangePicker` 的 `variant` 走 `rangePicker` 那份配置、`separator` 读 `rangePicker.separator`（**不是** `timePicker`） | 与上游一致 |
+| 4 | **`ref` 未暴露命令式句柄**（继承 date-picker 的缺口） | 缺口，见 §5 |
+| 5 | **`mode` 被强制丢弃**（上游 `mode={undefined}`） | 与上游一致 |
+| 6 | 语义槽是「4 平铺 + `popup` 嵌套」，与 `DatePickerSemanticType` **逐字段相同** ⇒ 本仓**别名复用**（上游声明了两份） | PLATFORM（等价简化） |
+| 7 | `TimePicker.RangePicker` 的静态成员用 `Object.assign` 表达（Vue 无「函数组件带静态属性」） | PLATFORM |
+| 8 | `addon` / `renderExtraFooter` 是**函数 prop**（不是插槽）—— 本仓额外提供了插槽等价物 | PLATFORM（本仓扩展） |
+| 9 | 无 `hashId`（D2）；`-css-var` 直接拼（D5 家族） | PLATFORM |
 
-- 默认 .vue。若用 .tsx，在此写明理由（COMPONENT-RULES.md §2 的三条件之一）。
+## 3. `.vue` / `.ts` 选择
+
+**`.vue`**（与 `date-picker` 一致）：本组件有完整的 props / emits / slots / expose 对外面，
+且渲染体是一棵固定结构的子树 ⇒ 不触发 `COMPONENT-RULES.md` §2 的三个例外条件。
+
+⚠️ **插槽转发不能用 `v-slots`** —— 它是 **JSX-only 的指令**，模板编译器不认识它，
+会连发两条告警（`Failed to resolve directive: slots` + `Runtime directive used on
+component with non-element root node`）。改用 `<template v-for #[name]>` 动态具名插槽。
 
 ## 4. Component Token 清单
 
 <!-- registry 数据：token 数 = 0 -->
+
+**0 个**，且**没有 `style/` 目录** —— 判据：
+
+```sh
+ls /tmp/antd-src/package/es/time-picker/          # → index.js / index.d.ts / locale/
+ls /tmp/antd-repo/ant-design-master/components/time-picker/   # → 没有 style/ 目录
+```
+
+⇒ registry 里 `tokenStatus` / `styleStatus` 置 **`n/a`** + `layerNotes` 写依据
+（照 `watermark` 先例），`COMPONENT_STYLES` **不加行**。
 
 ## 5. 已知缺口
 
@@ -110,3 +159,30 @@
    `isTimePickerEmptyValue` 分支），但它把影响限定为「本组件的 `picker` 不含 `'time'`」
    —— 而本组件**正是**那个消费者。
 8. **`children` 形态不支持**（上游 `TimePicker` 也没有）。
+
+## 6. 本轮实测结果（G4–G11）
+
+| 层 | 命令 | 结果 |
+|---|---|---|
+| L1/L2 | `--project unit …/timeline/__tests__/index.test.ts` | **22/22** |
+| L3 | `--project types …/type.test-d.ts` | **36/36**，`Type Errors no errors` |
+| L4 | `--project dom-contract …/semantic.test.ts` | **22/22**（21 用例机械 oracle + 覆盖检查） |
+| L5 | `--project a11y …/a11y.test.ts` | **16/16**（axe 5 形态 0 violation） |
+| L6 | `run.mjs --component time-picker --mode compare` | **15/15 `exact`（0.000%）** |
+| demo | `--project unit …/demo.test.ts` | **16/16**（14 demo + 计数 + 告警） |
+
+**本轮抓到的真 bug（4 个）**：
+
+1. 🚨 **`picker: 'time'` 没传下去** ⇒ `<TimePicker>` 渲染出**日期面板**。
+   `TimePickerProps` 按上游剔除了 `picker` ⇒ `{...rest}` 带不上、内层用了默认 `'date'`。
+   `lint:types` 与 L4 都看不出来，只有「断言**面板类型**」的 L1 能抓（**PITFALLS 315**）。
+2. 🚨 **Boolean prop 被 Vue 强制成 `false`** ⇒ `bordered` 变 `false` ⇒ 默认渲染 `-borderless`
+   （应为 `-outlined`）。补 `withDefaults(..., { bordered: undefined, … })`（PITFALLS 46 同族）。
+3. **`defaultValue: null` 无法转发**（上游含 `null`，本仓 `DatePickerProps` 不含）⇒ 归一成 `undefined`。
+4. 🚨 **`v-slots` 是 JSX-only 指令** ⇒ 模板里用它会连发两条告警（demo 冒烟抓到）。
+
+**一处**跨组件**修复**（不是本组件的 bug，但本组件是第一个撞上它的消费者）：
+🚨 **`picker` 包的时间列从不滚动到选中值** —— `watch(..., { immediate: true, flush: 'post' })`
+的首次回调跑在**本组件自己的渲染之前** ⇒ `ulRef === null` ⇒ 早退且永不重跑。
+**PITFALLS 318** 有完整现场（含两次误判）；`picker` 包回归 **372/372**、
+`date-picker` **434/434**。
