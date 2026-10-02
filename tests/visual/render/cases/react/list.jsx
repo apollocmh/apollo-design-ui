@@ -53,7 +53,17 @@ const metaItem = (item) => (
 
 /** 带 actions 的项（`<ul>` + 每项 `<li>` + 项间 `-item-action-split`）。 */
 const actionItem = (item) => (
-  <List.Item key={item} actions={[<a key="edit">edit</a>, <a key="more">more</a>]}>
+  <List.Item
+    key={item}
+    actions={[
+      <a key="edit" href="#edit">
+        edit
+      </a>,
+      <a key="more" href="#more">
+        more
+      </a>,
+    ]}
+  >
     {item}
   </List.Item>
 );
@@ -127,7 +137,15 @@ export default {
           itemLayout="vertical"
           dataSource={LIST_DATA}
           renderItem={(item) => (
-            <List.Item key={item} actions={[<a key="edit">edit</a>]} extra={<span>extra</span>}>
+            <List.Item
+              key={item}
+              actions={[
+                <a key="edit" href="#edit">
+                  edit
+                </a>,
+              ]}
+              extra={<span>extra</span>}
+            >
               {item}
             </List.Item>
           )}

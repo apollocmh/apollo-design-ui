@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema.json",
+  "id": "list/item",
+  "component": "list",
+  "description": "`List.Item` 的**内容分支**契约。判据（详见 `docs/analysis/list.md` §2）：① 🚨 **`-item-no-flex` 是「两个条件同时成立」**：`toArray(children).some(isString) && childNodes.length > 1`。⚠️ **Vue 侧拿不到原始字符串**（模板编译成 `createTextVNode`；本仓 `toArray` 也把原始值归一成 Text vnode）⇒ 本仓判的是 **`isTextVNode`**（PLATFORM；唯一可观测分歧是**数字**子节点）。② 🚨 **根标签随 `grid` 变**：`Element = grid ? 'div' : 'li'`；grid 时外面再包 `<Col flex={1} style={colStyle}>`（⚠️ grid 模式另有 `Row > div[style] > Col`，那个 `div` **不是** `Col`）。③ 🚨 **内容分支**：`itemLayout === 'vertical' && extra` ⇒ **两个 div**（`-item-main` 包 children + actions，`-item-extra` 包 extra）；**否则** `[children, actions, extra]` **三者平级**。④ **`actions`**：`actions && actions.length > 0` ⇒ `<ul class=\"{p}-list-item-action\">`，每项一个 `<li>`，**除最后一项外**追加 `<em class=\"{p}-list-item-action-split\">`。⑤ **`Item.Meta` 的三个判据各自独立**：`avatar` ⇒ `-item-meta-avatar`；`(title || description)` ⇒ `-item-meta-content`；里层 `title` ⇒ `<h4 class=\"{p}-list-item-meta-title\">`、`description` ⇒ `<div class=\"{p}-list-item-meta-description\">`。⑥ **语义化槽只在 `Item` 上**（`actions` / `extra`）：ConfigProvider 的 `list.item.classNames` / `.styles` 是**底座**，用户 prop 覆盖（classNames 用 `clsx` **拼接**、styles 用浅合并 —— 两者语义不同）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "actions": ["<a href=\"#edit\">edit</a>", "<a href=\"#more\">more</a>"],
+    "extra": "<span>extra</span>"
+  },
+  "content": ["text child", "-more"],
+  "variants": {
+    "itemLayout": ["horizontal", "vertical"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

@@ -92,7 +92,13 @@ const metaItem = (item) =>
 const actionItem = (item) =>
   h(
     List.Item,
-    { key: item, actions: [h('a', { key: 'e' }, 'edit'), h('a', { key: 'm' }, 'more')] },
+    {
+      key: item,
+      actions: [
+        h('a', { key: 'e', href: '#edit' }, 'edit'),
+        h('a', { key: 'm', href: '#more' }, 'more'),
+      ],
+    },
     item,
   );
 

@@ -47,7 +47,10 @@ const actionItem = (item) =>
     ListItem,
     {
       key: item,
-      actions: [h('a', { key: 'edit' }, 'edit'), h('a', { key: 'more' }, 'more')],
+      actions: [
+        h('a', { key: 'edit', href: '#edit' }, 'edit'),
+        h('a', { key: 'more', href: '#more' }, 'more'),
+      ],
     },
     { default: () => item },
   );
@@ -140,7 +143,7 @@ export default {
                   ListItem,
                   {
                     key: item,
-                    actions: [h('a', { key: 'edit' }, 'edit')],
+                    actions: [h('a', { key: 'edit', href: '#edit' }, 'edit')],
                     extra: h('span', 'extra'),
                   },
                   { default: () => item },

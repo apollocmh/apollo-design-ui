@@ -5,13 +5,4 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/list/demo/ 抄清单 -->
-```vue
-<script setup lang="ts">
-import { List } from '@apollo-design/ui';
-</script>
-
-<template>
-  <List>basic demo 占位</List>
-</template>
-```
+基础列表。`List.Item.Meta` 承载头像 / 标题 / 描述三段。

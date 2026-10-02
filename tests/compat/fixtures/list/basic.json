@@ -1,0 +1,13 @@
+{
+  "$schema": "../schema.json",
+  "id": "list/basic",
+  "component": "list",
+  "description": "列表的**两层结构**契约：根 `<div class=\"{p}-list\">` > `<Spin>` 包裹层 > `<ul class=\"{p}-list-items {p}-list-container {p}-list-css-var\">` > 若干个 `<li class=\"{p}-list-item\">`。判据（详见 `docs/analysis/list.md` §2）：① 🚨 **类名条件是八条**：`-vertical`（`itemLayout`）/ `-{lg,sm}`（`size`，⚠️ `'default'` / `'medium'` **都不落类**）/ `-split`（默认 **`true`**，必须 `withDefaults`）/ `-bordered` / `-loading` / `-grid` / `-something-after-last-item`（`loadMore || pagination || footer` 三者**任一**）/ `-rtl`。② 🚨 **`childrenContent` 的赋值顺序就是判据**：上游是 `let childrenContent = isLoading && <div minHeight:53/>`，**随后被 `if (splitDataSource.length > 0)` 覆盖** ⇒ **有数据 + `loading` 时渲染的是列表本身**，53px 占位块只在「`isLoading` 且 `splitDataSource` 为空」时才可见。③ **空态判据是三级回退** `locale?.emptyText || renderEmpty?.('List') || <DefaultRenderEmpty/>`（`||` 不是 `??` ⇒ `''` 会走下一级），且条件是「`splitDataSource.length === 0` **且** 无默认插槽 **且** 非 loading」。④ **`renderItem` 未传时返回 `null`** —— 但 `<ul>` 仍然渲染（上游同判）。⑤ `rowKey` 的解析链 `isFunction(rowKey) ? rowKey(item) : rowKey ? item[rowKey] : item.key`，再 `??= \\`list-item-${index}\\``（⚠️ `0` / `''` 是**有效 key**）。⚠️ **不覆盖**：分页的交互（切页 / 改 pageSize 归 L1）、响应式断点（SSR 里 `useBreakpoint` 不订阅 ⇒ `currentBreakpoint` 恒 `undefined` ⇒ `colStyle` 走 `grid.column`）、视觉（归 L6）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "dataSource": ["Alpha", "Beta", "Gamma"],
+    "renderItem": "(item) => <List.Item>{item}</List.Item>"
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

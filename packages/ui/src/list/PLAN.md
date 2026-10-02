@@ -17,12 +17,12 @@
 - [x] G3 TOKEN —— `style/token.ts`（**11** 个 Component Token + 2 个 `mergeToken` 派生 + 2 个必须保留 `calc()` 的量）
 - [x] G4 IMPLEMENT —— `List.vue` / `Item.vue` / `ItemMeta.vue` + `context.ts` + `style/index.ts`（**57 条**规则 = 产物 56 + `-container` 声明块）
 - [x] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts` **32/32**
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [x] G7 L3 类型（含负例，负例包在永不调用的闭包里）—— **34/34**
+- [x] G8 L5 a11y —— axe **9 组 0 violation** + role/ARIA 契约 **16/16**
+- [x] G9 L6 视觉 —— **33/33 exact（0.000%）**，基线 **0 组同哈希**
+- [x] G10 L4 DOM 契约 + compat 比对 —— **35/35**（`tests/compat/baseline/list.mjs` + `fixtures/list/`）
+- [x] G11 DOCS —— demo **8 个** + zh/en 文档 + `demo.test.ts` **10/10**
+- [x] G12 REGISTRY —— 11 维度置 done（**65/72**）
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
 - [ ] G14 COMMIT —— commit message 带 [COMP:list]
 

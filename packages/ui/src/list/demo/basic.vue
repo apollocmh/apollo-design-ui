@@ -1,8 +1,40 @@
 <script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
-import { List } from '../index';
+// 对齐 antd 的 `basic` demo。
+import { List, ListItem, ListItemMeta } from '@apollo-design/ui';
+import { h } from 'vue';
+
+const avatar = () =>
+  h('span', {
+    style: {
+      display: 'inline-block',
+      width: '32px',
+      height: '32px',
+      background: '#999',
+      borderRadius: '50%',
+    },
+  });
+
+const data = [
+  { title: 'Ant Design Title 1' },
+  { title: 'Ant Design Title 2' },
+  { title: 'Ant Design Title 3' },
+  { title: 'Ant Design Title 4' },
+];
+
+const renderItem = (item: unknown) => {
+  // ⚠️ 参数必须收 `unknown`（`renderItem` 的签名如此，函数参数**逆变**）
+  const { title } = item as { title: string };
+  return h(ListItem, null, {
+    default: () =>
+      h(ListItemMeta, {
+        avatar: avatar(),
+        title: h('a', { href: '#title' }, title),
+        description: 'Ant Design, a design language for background applications.',
+      }),
+  });
+};
 </script>
 
 <template>
-  <List>basic demo 占位</List>
+  <List item-layout="horizontal" :data-source="data" :render-item="renderItem" />
 </template>

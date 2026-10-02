@@ -48,30 +48,36 @@ function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeCh
 const DATA = ['Alpha', 'Beta', 'Gamma'];
 const DATA6 = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
 
-const textItem = (item: string) => h(ListItem, { key: item }, { default: () => item });
+// ⚠️ 参数必须收 `unknown` —— `renderItem` 的签名是 `(item: unknown, index: number) => VNodeChild`，
+//    函数参数**逆变** ⇒ 写成 `(item: string)` 会 TS2322（与 button 的 `itemRender` 同判）。
+const textItem = (item: unknown) =>
+  h(ListItem, { key: String(item) }, { default: () => String(item) });
 
-const metaItem = (item: string) =>
+const metaItem = (item: unknown) =>
   h(
     ListItem,
-    { key: item },
+    { key: String(item) },
     {
       default: () =>
         h(ListItemMeta, {
           avatar: h('span', { class: 'my-avatar' }),
-          title: item,
+          title: String(item),
           description: 'desc',
         }),
     },
   );
 
-const actionItem = (item: string) =>
+const actionItem = (item: unknown) =>
   h(
     ListItem,
     {
-      key: item,
-      actions: [h('a', { key: 'e' }, 'edit'), h('a', { key: 'm' }, 'more')],
+      key: String(item),
+      actions: [
+        h('a', { key: 'e', href: '#edit' }, 'edit'),
+        h('a', { key: 'm', href: '#more' }, 'more'),
+      ],
     },
-    { default: () => item },
+    { default: () => String(item) },
   );
 
 /** 用例规格表：id → Vue 侧的 props / slots / ctx。 */
@@ -139,15 +145,16 @@ const specs: Record<
   'list:item-no-flex': {
     props: {
       dataSource: DATA,
-      renderItem: (item: string) => h(ListItem, { key: item }, { default: () => [item, '-more'] }),
+      renderItem: (item: unknown) =>
+        h(ListItem, { key: String(item) }, { default: () => [String(item), '-more'] }),
     },
   },
   'list:item-extra': {
     props: {
       dataSource: DATA,
-      renderItem: (item: string) =>
-        h(ListItem, { key: item, extra: h('span', 'E') } as ListItemProps, {
-          default: () => item,
+      renderItem: (item: unknown) =>
+        h(ListItem, { key: String(item), extra: h('span', 'E') } as ListItemProps, {
+          default: () => String(item),
         }),
     },
   },
@@ -156,9 +163,9 @@ const specs: Record<
     props: {
       itemLayout: 'vertical',
       dataSource: DATA,
-      renderItem: (item: string) =>
-        h(ListItem, { key: item, extra: h('span', 'E') } as ListItemProps, {
-          default: () => h(ListItemMeta, { title: item, description: 'desc' }),
+      renderItem: (item: unknown) =>
+        h(ListItem, { key: String(item), extra: h('span', 'E') } as ListItemProps, {
+          default: () => h(ListItemMeta, { title: String(item), description: 'desc' }),
         }),
     },
   },
