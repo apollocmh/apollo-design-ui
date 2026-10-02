@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "timeline/basic",
+  "component": "timeline",
+  "description": "时间轴的**结构**契约：🚨 **根是 `<ol>`、项是 `<li>`**（由 `steps/context.ts` 的 `stepsInternalContextKey` 覆盖 `Steps` 的 `div`）—— 列表语义由原生元素承担，组件自己零 `role` / `aria-*`。判据（详见 `docs/analysis/timeline.md` §2）：① 🚨 **本组件没有自己的 DOM** —— 渲染体是 `<Steps type=\"dot\" />`，所以产物里**同时**有 `-steps-*` 与 `-timeline-*` 两组类名，这不是噪音而是真实契约；② **`layoutAlternate`** = `mode === 'alternate' || (orientation === 'vertical' && items.some(i => i.title))` ⇒ 根加 `-layout-alternate`；③ **`mergedMode`** 的归一：`left→start` / `right→end`，否则 `['alternate','start','end'].includes(mode) ? mode : 'start'`；④ **`current = items.length - 1`**（最后一项 active）；⑤ **`classNames` 的八键映射**（`item` / `itemTitle` / `itemIcon` / `itemContent` / `itemRail` / `itemWrapper` / `itemSection` / `itemHeader`）全部指向 `timeline` 前缀，且是**拼接**不是替换；⑥ **`variant` 默认 `'outlined'`**（上游解构默认，**不是** Steps 自己的 `'filled'`）；⑦ **`reverse`** ⇒ `[...items].reverse()` 且 `railFollowPrevStatus: reverse`（rail 的 status 跟当前项）。⚠️ **不覆盖**：视觉（归 L6）、`Steps` 自己的契约（归它的 L4）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "items": [
+      { "key": "a", "title": "Create a services site", "content": "2015-09-01" },
+      { "key": "b", "title": "Solve initial network problems", "content": "2015-09-01" },
+      { "key": "c", "title": "Technical testing", "content": "2015-09-01" }
+    ]
+  },
+  "variants": {
+    "orientation": ["vertical", "horizontal"],
+    "mode": ["start", "end", "alternate"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

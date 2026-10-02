@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "id": "timeline/item",
+  "component": "timeline",
+  "description": "`Timeline` 的**项转换**契约（对应上游 `useItems.tsx`，99 行）。判据：① **字段别名链**：`title ?? label`、`content ?? children`、`icon ?? dot`（`??` 不是 `||`）；② **`placement` 的推导链**：`placement ?? position ?? (mode === 'alternate' ? (index % 2 === 0 ? 'start' : 'end') : mode)`，且推导出的值**也落** `-item-placement-{x}` 类；③ 🚨 **`color` 的两条分支**：命中 `['blue','red','green','gray']` ⇒ 加 `${itemCls}-color-${color}` 类（CSS 里是**三连类** `.item.item.item-color-x`，特异性 0,3,0 用来压过 Steps 自己的 dot 颜色规则）；**否则**把色值写进内联 CSS 变量 `--{rootPrefixCls}-cmp-steps-item-icon-dot-color`，且**保留用户自己的 `style`**（`{...新增, ...style}`，style 在后）；④ **`status: loading ? 'process' : 'finish'`** —— 每项**恒有** status；⑤ **`loading` 且无 `icon`/`dot`** ⇒ 默认 `LoadingOutlined`；⑥ 废弃的 `pending` ⇒ **push** 一项 `{ icon: pendingDot ?? LoadingOutlined, content: pending, status: 'process' }`，⚠️ 这一项**没有** `className` / `placement`。⚠️ **平台差异**：上游的 `children` 形态是 `toArray(children).map(ele => ({...ele.props}))` —— 读的是 **React 元素的 props**；Vue 的插槽给的是 vnode（语义不同）⇒ 本仓**只支持 `items`**（`Timeline.Item` 上游本就是空壳）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "items": [
+      {
+        "key": "a",
+        "title": "preset blue",
+        "content": "content A",
+        "color": "blue",
+        "loading": true
+      },
+      { "key": "b", "label": "legacy label", "children": "legacy child", "position": "end" },
+      { "key": "c", "title": "custom color", "color": "#00f", "style": { "color": "#333" } }
+    ],
+    "pending": "Recording..."
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

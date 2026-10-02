@@ -57,11 +57,19 @@ import {
   shallowRef,
   type VNodeChild,
 } from 'vue';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { Steps } from '../steps';
 import { stepsInternalContextKey, stepsUnstableContextKey } from '../steps/context';
 import type { StepItem } from '../steps/interface';
-import type { TimelineConfig, TimelineItemType, TimelineMode, TimelineProps } from './interface';
+import type {
+  TimelineConfig,
+  TimelineItemType,
+  TimelineMode,
+  TimelineProps,
+  TimelineSemanticClassNames,
+  TimelineSemanticStyles,
+} from './interface';
 import { useItems } from './use-items';
 
 /** 两个内部的 Steps Context 值（与上游逐字一致）。 */
@@ -205,6 +213,27 @@ const Timeline = defineComponent({
 
     const stepsClassNames = stepsClassNamesOf(prefixCls);
 
+    // ---- 语义化槽的三路合并（判据 5）----
+    //
+    // 🚨 两处**必须**照上游：
+    //   1. `classNames` 是**拼接**不是替换（上游 `useMergeSemantic` 的 `mergeClassNames`
+    //      内部是 `clsx(prev, cur)`）⇒ 写成 `{...base, ...user}` 会让用户的 `classNames.item`
+    //      **盖掉** `apollo-timeline-item`（L4 契约实测：8 条差异）。
+    //   2. **用户的 `style` 不走 `style` prop，而是走 `styles.root` 语义槽**
+    //      （上游 `useSemanticRootStyle(style)`）⇒ 本仓对应 `semanticRootStyle`。
+    //      直接塞进 `style` 会被 Steps 的 `rootStyle` 覆盖（L4 实测：整条 style 丢失）。
+    const styleRoot = semanticRootStyle(props.style);
+    const contextStyleRoot = semanticRootStyle(contextStyle);
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+      TimelineProps,
+      TimelineSemanticClassNames,
+      TimelineSemanticStyles
+    >(
+      [stepsClassNames, () => contextClassNames, () => props.classNames],
+      [() => contextStyles, contextStyleRoot, () => props.styles, styleRoot],
+      props,
+    );
+
     // ---- ref：Steps 的根元素（本组件没有自己的根）----
     // ⚠️ vnode 在**渲染函数内**创建 ⇒ 带 `ref` 是安全的（PITFALLS 264 说的是
     //    「渲染期之外创建的 vnode 带 ref」会炸）。
@@ -226,10 +255,11 @@ const Timeline = defineComponent({
         //    落到 attrs 里的 `class`（自己的根类名由 `stepsClassName` 算），
         //    只把 **`className` prop** 并进去。传 `class` 会被**静默丢弃**。
         className: classString,
-        style: { ...contextStyle, ...stepStyle },
-        // 判据 5：八键映射 + 上下文 / 用户的语义化槽
-        classNames: { ...stepsClassNames, ...contextClassNames, ...props.classNames },
-        styles: { ...contextStyles, ...props.styles },
+        // ⚠️ 只放 `titleSpan` 的内联变量 —— **用户的 `style` 走 `styles.root`**（见上）
+        style: stepStyle,
+        // 判据 5：八键映射 + 上下文 / 用户的语义化槽（**三路合并**）
+        classNames: mergedClassNames.value,
+        styles: mergedStyles.value,
         variant: props.variant,
         orientation,
         // 判据 3 / 4
