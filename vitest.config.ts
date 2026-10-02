@@ -124,6 +124,16 @@ export default defineConfig({
           include: ['packages/*/src/**/__tests__/*.test-d.ts'],
           typecheck: {
             enabled: true,
+            /**
+             * 🚨 **必须显式指定 `vue-tsc`**（2026-10-03 修）——
+             * vitest 的 `typecheck.checker` 默认是 **`tsc`**，而 `tsc` **解析不了 `.vue`**
+             * ⇒ 本仓每个 `.vue` 的 import 都报 `Cannot find module '…vue'`。
+             * 实测：这一层此前**恒定 exit=1**，报 **96 条**「源错误」，而其中
+             * `Type Errors` 是 **no errors**、`Tests` **全过** ⇒ 门禁的**红是假的**，
+             * 但它照样把 `pnpm run test:types` 判成失败（`ignoreSourceErrors: false`）。
+             * ⇒ 换成 `vue-tsc` 后那 96 条消失，这一层才是真的能红能绿。
+             */
+            checker: 'vue-tsc',
             include: ['packages/*/src/**/__tests__/*.test-d.ts'],
             // 类型测试必须包含负例（TESTING.md T7）：
             // 负例通过 @ts-expect-error 断言「此处应当报错」。
