@@ -796,6 +796,52 @@ export const DATE_PICKER_VARIANT_LABEL_STYLE = {
 };
 
 // ---------------------------------------------------------------------------
+// TimePicker
+// ---------------------------------------------------------------------------
+
+/**
+ * 两侧共用的**固定**时间字面量。
+ *
+ * ⚠️ 与 `DATE_PICKER_*` 同一判据：一律字面量、**不用 `dayjs()`** —— 否则截图随运行时刻变化。
+ */
+export const TIME_PICKER_VALUE = '12:30:45';
+export const TIME_PICKER_RANGE = ['09:00:00', '18:30:00'];
+
+/**
+ * 面板锚定（`defaultOpenValue`）。
+ *
+ * 🚨 **时间面板的「选中格」完全由它决定** —— 空值时若不给，三列会滚到 `00:00:00`
+ * 且一格都不选中 ⇒ 面板的核心视觉面（选中态 + 滚动位置）**一格没测**。
+ * 日期面板靠 `defaultPickerValue` 锚定，这里靠 `defaultOpenValue`（同一个道理）。
+ */
+export const TIME_PICKER_OPEN_VALUE = '12:30:45';
+
+/** 字段格式（三段全开）。 */
+export const TIME_PICKER_FORMAT = 'HH:mm:ss';
+
+/**
+ * `variants` 用例：一排触发器的说明文字 + props（两侧逐字相同）。
+ *
+ * ⚠️ **不含 `use12Hours` / `hourStep` / `minuteStep`** —— 顶层时间 props 在本仓静默失效
+ * （`README.md` §5 第 5 条 / PITFALLS 317）。写进来会得到一个**两侧都不生效**的空转变体
+ * （「同哈希 = 空转」正是 L6 最容易悄悄发生的假绿）。
+ */
+export const TIME_PICKER_VARIANTS = [
+  { label: 'outlined', props: {} },
+  { label: 'filled', props: { variant: 'filled' } },
+  { label: 'borderless', props: { variant: 'borderless' } },
+  { label: 'underlined', props: { variant: 'underlined' } },
+  { label: 'small', props: { size: 'small' } },
+  { label: 'large', props: { size: 'large' } },
+  { label: 'status-error', props: { status: 'error' } },
+  { label: 'status-warning', props: { status: 'warning' } },
+  { label: 'disabled', props: { disabled: true } },
+  { label: 'allow-clear-false', props: { allowClear: false } },
+  { label: 'prefix', props: { prefix: '¥' } },
+  { label: 'no-suffix', props: { suffixIcon: false } },
+];
+
+// ---------------------------------------------------------------------------
 // Masonry
 // ---------------------------------------------------------------------------
 

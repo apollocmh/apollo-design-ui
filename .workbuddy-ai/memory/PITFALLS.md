@@ -14,6 +14,7 @@
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
+- **浮层/滚动**：🚨 「滚动到选中项」在首次 post-flush 时**没有布局盒** ⇒ rAF 5 帧后放弃且**不再重试** ⇒ `scrollTop` 恒 0；`date-picker` 因时间值恒 `00`（`targetLi === firstLi` 提前 return）而**长期潜伏**（318）。
 - **上游判据**：🚨 rc 的 `PickerProps` **本身 extends `Omit<SharedTimeProps,'format'|'defaultValue'>`** ⇒ 顶层时间 props（`use12Hours`/`hourStep`…）**不是**只属于 `showTime`；只看 `SharedTimeProps` 的定义会得出相反结论（317）。
 - **薄壳/转发**：🚨 **被 `Omit` 掉的 prop 必须在转发时显式补回**（内层有默认值就会静默用错，315） · ⚠️ VTU `mount(C, options, slots)` 的**第三参被静默忽略**，插槽要写进 `options.slots`（316）。
 
@@ -3852,3 +3853,42 @@
     `Portal only work in client side`，面板根本不在输出里 ⇒ 「列数=0」是假象）。
     要么用 `--project unit` 的 jsdom 探针（`mount(..., { attachTo: document.body })` 后数
     `.apollo-picker-time-panel-column`），要么用 L6 的真浏览器。
+
+318. 🚨 **浮层里的「滚动到选中项」在首次 post-flush 时**拿不到布局盒** ⇒ rAF 循环 5 帧后放弃，
+    而此后没有「值变化」再触发它 ⇒ **永久停在 0**（2026-10-02 实测，time-picker 的 L6）。
+
+    **形态**：`packages/picker/src/time-column.ts` 的
+
+    ```ts
+    watch([() => props.value, () => props.optionalValue, () => flattenUnits(props.units)],
+      () => { startScroll(); clearDelayCheck(); },
+      { immediate: true, flush: 'post' });
+    ```
+
+    `startScroll()` 里有一段「等目标格上屏（最多 5 帧）」：
+
+    ```ts
+    if (targetLiTop === 0 && targetLi !== firstLi) {
+      if (retryTimes <= MAX_SCROLL_RETRY) { scrollRafId = raf(doScroll); }
+      return;                                  // ← 超过重试上限就**放弃**
+    }
+    ```
+
+    浮层首次挂载时，列**还没有布局盒**（`offsetTop` 全 0）⇒ 走这条分支 ⇒ 5 帧后放弃。
+    此后 `props.value` 不再变化 ⇒ watch 不再触发 ⇒ **`scrollTop` 永远是 0**。
+
+    **实测**（`tests/visual/debug/probe-timepicker-scroll.mjs`，真浏览器）：
+    两侧的 `scrollHeight` / `clientHeight` / `offsetTop` / 选中类**完全一致**，
+    只有 `scrollTop` 不同（react 336/840/1260 vs vue **0/0/0**），且 **+2.6s 后仍是 0**
+    ⇒ **不是「截图早于动画收敛」**。
+
+    **⚠️ 为什么潜伏很久**：`date-picker` 的 `datetime` 变体时间值是 `00`
+    ⇒ `targetLi === firstLi` ⇒ 在守卫处就 return（**不需要滚**）⇒ 恒不触发。
+    ⇒ 任何「时间值非零」的消费者都会撞上它。
+
+    **判据手法**：`scrollTop` 类问题**必须用真浏览器探针**，且要**读两次**
+    （`+1.1s` 与 `+2.6s`）—— 只读一次分不清「从未滚动」与「没收敛」。
+    jsdom 里 `scrollTop` 写不进去、`offsetTop` 恒 0 ⇒ **探针会给假绿灯**。
+
+    **候选修法**（未实施）：放弃后改为「观察可见性 / 在 `onMounted` 后再排一次 rAF」，
+    而不是「数满 5 帧就永久放弃」。

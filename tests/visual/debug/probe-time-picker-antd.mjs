@@ -34,10 +34,6 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const antdPath = require.resolve('antd');
-const antdRoot = antdPath.slice(
-  0,
-  antdPath.indexOf('antd/es') >= 0 ? antdPath.indexOf('antd/es') : antdPath.indexOf('antd/dist'),
-);
 
 const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');

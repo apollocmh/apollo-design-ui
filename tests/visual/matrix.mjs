@@ -560,7 +560,7 @@ export const COMPONENTS = {
     ],
   },
   form: {
-    // 7 个 variant × 3 个 viewport = 21 张
+    // 5 个 variant × 3 个 viewport = 15 张
     // ⚠️ 只用**参数驱动的静态形态**：校验链是异步的，跑一条 `validateFields` 会让
     //    截图时刻不确定（错误文案有 debounce 动效）。错误/帮助文案用
     //    `validateStatus` / `help` / `extra` 显式驱动，反馈图标同理。
@@ -705,6 +705,34 @@ export const COMPONENTS = {
       'rtl', // 逻辑属性翻转（走 ConfigProvider）
     ],
   },
+  'time-picker': {
+    // 5 个 variant × 3 个 viewport = 15 张
+    //
+    // ⚠️ 与 `date-picker` **同一套做法**：把浮层**放进截图区域**
+    //    （两侧都传 `getPopupContainer` 指向用例盒子 + 盒子 `position: relative`），
+    //    因为时间轴的核心视觉面**就是时间面板**（三列 + 选中态 + 滚动位置），
+    //    只拍触发器等于没测。
+    //
+    // 🚨 **面板必须由 `value` / `defaultValue` 驱动，不能用 `defaultOpenValue`** ——
+    //    本仓的 `date-picker` **忽略** `defaultOpenValue`（README §5 第 7 条）⇒
+    //    用它会让 Vue 侧停在 `00:00:00` 且一格不选中（首轮 L6 3/21 的根因）。
+    //    ⚠️ 也**不能**干脆不给值：rc 的 openValue 会回退到 `getNow()`
+    //    ⇒ 基线随运行时刻变化（flaky）。
+    //
+    // 🚨 **不写 `use12Hours` / `minuteStep` / `hourStep` 变体** ——
+    //    本仓的顶层时间 props **静默失效**（README §5 第 5 条 / PITFALLS 317）
+    //    ⇒ 那是**必然空转**的变体（同哈希）。改用 `no-seconds`（`format: 'HH:mm'`
+    //    ⇒ 三列变两列）作可测差异。
+    //
+    // ⚠️ 写完后先 `md5 tests/visual/baselines/react/time-picker/*.png | sort` 查同哈希。
+    variants: [
+      'value', // 单值有值：字段文本 + 三列面板的选中态与滚动位置
+      'no-seconds', // `format: 'HH:mm'` ⇒ **两列**（与 value 的可测差异）
+      'footer', // `renderExtraFooter`：面板底部多一条
+      'range', // 范围有值：两个输入框 + 分隔符 + **两个独立的时间面板**
+      'variants', // 变体 / 尺寸 / 状态 / 禁用 / 前后缀（**不开浮层**）
+    ],
+  },
   tooltip: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部 open 受控静态帧（不走 hover 时序）。basicOpen/colorful 的浮层经
@@ -726,7 +754,7 @@ export const COMPONENTS = {
     ],
   },
   'date-picker': {
-    // 7 个 variant × 3 个 viewport = 21 张
+    // 5 个 variant × 3 个 viewport = 15 张
     //
     // ⚠️ 与其它浮层组件的**关键差异**：这里把浮层**放进截图区域**
     //    （两侧都传 `getPopupContainer` 指向用例盒子 + 盒子 `position: relative`），
@@ -883,7 +911,7 @@ export const COMPONENTS = {
           '① `fresh` 同上的原因；② `responsive` 在 **desktop/tablet** 下解析出的列数与 `basic` 相同（都是 3 列，只有 mobile 会变 1 列）⇒ 预期相同。',
       },
     ],
-    // 7 个 variant × 3 个 viewport = 21 张
+    // 5 个 variant × 3 个 viewport = 15 张
     //
     // ⚠️ **没有浮层**（不 portal）⇒ 不需要 `getPopupContainer`，比其它组件简单。
     //    它的视觉面就是**几何**：容器高度、条目宽高与列偏移。
