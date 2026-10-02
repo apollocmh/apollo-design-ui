@@ -20,18 +20,29 @@ color-picker/
 ├── engine/
 │   ├── interface.ts        # rc 的类型面 + ColorConstructorInput（见 PITFALLS 321）
 │   ├── color.ts            # Color extends utils.Color（+ toHsb / toHsbString / setHue）
-│   └── util.ts             # 纯几何：calculateColor / calcOffset / HUE_COLORS / defaultColor
+│   ├── util.ts             # 纯几何：calculateColor / calcOffset / HUE_COLORS / defaultColor
+│   ├── use-color-drag.ts   # 拖拽内核（读矩形 + 挂/摘 document 监听）
+│   ├── use-color-state.ts  # 受控/非受控归一
+│   └── components/         # ColorBlock / Handler / Palette / Picker（.ts 纯渲染函数）
 ├── style/
 │   ├── token.ts            # G3：9 个 mergeToken 派生（声明成 --{p}-color-picker-*）
 │   └── index.ts            # G4：92 条规则，全部前缀参数化
 └── __tests__/
     ├── color.test.ts       # L1 纯逻辑 25 条（含几何边界）
+    ├── engine.test.ts      # L1/L2 引擎 15 条（拖拽链 + 渲染件 + 事件名哨兵）
     └── theme.test.ts       # L7 token/规则 21 条（含 B7 双向 + 前缀参数化 + 括号配平）
 ```
 
-**尚未落地**（G4）：`ColorPicker.vue` / `ColorPickerPanel` / `ColorTrigger` / `PanelPicker` /
-`GradientColorBar` / `ColorSlider` / `ColorPresets` / `ColorInput` 家族 / 引擎的
-`use-color-drag` / `use-color-state` / `Picker` / `Slider` / `PurePanel`。
+**尚未落地**（G4b）：`ColorPicker.vue` / `ColorPickerPanel` / `ColorTrigger` / `PanelPicker` /
+`GradientColorBar` / `ColorSlider` / `ColorPresets` / `ColorInput` 家族 / `PurePanel`。
+
+**有意不移植**（引擎里上游有、本仓不需要）：
+
+| 上游 | 理由 |
+|---|---|
+| `engine/components/Slider.js`（rc 的滑块） | antd 的 `PanelPicker` **永远**传 `components={{ slider: ColorSlider }}` ⇒ 这条分支是死代码；本仓连 `ColorSlider` 都还没写，先不搬 |
+| `engine/components/Gradient.js` | 只被上面那个死滑块用 |
+| `engine/components/Transform.js` | **内联进 `Picker`** —— 它存在的唯一意义是承载 `forwardRef`，Vue 里模板 ref 直接挂 `div` 更简单（**DOM 产物逐字节相同**） |
 
 ## 2. 与 antd 的行为差异清单
 

@@ -14,6 +14,8 @@
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
 - **Vue 化**：🚨 **继承一个「方法返回自身类型」的基类时，子类必须覆写该方法** —— `utils.Color` 的 `clone()`/`setAlpha()` 里 `new Color(...)` 是**词法基类** ⇒ 子类不覆写会掉回基类（`clone` 只错在**类型**、`setAlpha` **运行时也错**）（320）
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
+- **事件名**：🚨 `h()` 里写 `onMouseDown`（大写 D）会被 Vue 规范化成 `mouse-down` ⇒ **永不触发且不报错**；必须写 `onMousedown` / `onTouchstart`（323）
+- **测试/jsdom**：🚨 jsdom 的 cssstyle 把 `hsl()`/hex **规范化成** `rgb()`/`rgba()` ⇒ 断言内联样式要按规范化形态写（324）
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
 - **浮层/滚动**：🚨 「滚动到选中项」在首次 post-flush 时**没有布局盒** ⇒ rAF 5 帧后放弃且**不再重试** ⇒ `scrollTop` 恒 0；`date-picker` 因时间值恒 `00`（`targetLi === firstLi` 提前 return）而**长期潜伏**（318）。
@@ -4019,3 +4021,43 @@
        ⚠️ 只有「这条阴影确实是 token 拼出来的」才可以用，别拿它兜硬编码。
     **别**去放宽 E10 的正则（PITFALLS 304 的同一条纪律）。
 
+### ColorPicker 开工流（续）
+
+323. 🚨 **`h()` 里的事件名必须写 `onMousedown`（小写 `d`）—— 写成 `onMouseDown` 会得到事件名
+    `mouse-down`，永不触发、且不报错**（2026-10-02 实测）。
+
+    **根因**：Vue 的 `parseName`（`runtime-dom/src/modules/events.ts`）对 `on` 之后的部分做
+    **`hyphenate`**：
+
+    ```js
+    const event = name[2] === ':' ? name.slice(3) : hyphenate(name.slice(2))
+    // hyphenate('Mousedown') → 'mousedown'   ✓
+    // hyphenate('MouseDown') → 'mouse-down'  ✗ 永远没有这个事件
+    ```
+
+    ⇒ 只有「首字母大写、其余全小写」的写法才对：`onMousedown` / `onTouchstart` / `onMouseup` /
+    `onKeydown`。**单段名不受影响**（`onClick` → `click` ✓），所以这个坑只在**复合词**上出现。
+
+    **实测哨兵**（`color-picker/__tests__/engine.test.ts` 末节）：
+    `h('div', { onMousedown })` 收到事件；`h('div', { onMouseDown })` **收不到**。
+
+    🚨 **同时更正一处已有的误诊**：`packages/ui/src/segmented/README.md:41` 写着
+    「jsdom 下 Vue 的 mousedown/mouseup listener **不被派发调用**（裸 `h('div', {onMouseDown})`
+    即可复现；click/keydown/mouseenter 正常）」—— 那是**事件名大小写**造成的，不是 jsdom 的锅。
+    证据：同文件 `Segmented.ts:353` 用的就是 `onMouseDown`；而它说「正常」的
+    `click` / `keydown` / `mouseenter` 恰好都是**单段名**（不受 `hyphenate` 影响）。
+    ⇒ 若要让 jsdom 真的派发，把那个键名改成 `onMousedown` 即可（本条**只登记，未改** segmented）。
+
+324. 🚨 **jsdom 的 cssstyle 会把 `hsl()` / hex 规范化成 `rgb()` / `rgba()`** ⇒
+    断言内联样式时必须按**规范化后**的形态写（2026-10-02 实测，color-picker 引擎）。
+
+    | 你写的（真浏览器保留） | jsdom 读回的 |
+    |---|---|
+    | `background-color: hsl(215,100%, 50%)` | `background-color: rgb(0, 106, 255)` |
+    | `background: #000` | `background: rgb(0, 0, 0)` |
+    | `hsla(0, 0%, 100%, 0)` | `rgba(255, 255, 255, 0)` |
+    | `rgb(22,119,255)` | `rgb(22, 119, 255)`（**补空格**） |
+
+    **对策**：断言用**正则接受两种形态**（`/(?:hsl\(215,\s*100%,\s*50%\)|rgb\(0,\s*106,\s*255\))/`），
+    或干脆断言**语义**（「底色由色相驱动」→ 换一个色相再断言底色跟着变）。
+    ⚠️ 不要为了让断言通过而改**实现**里的颜色记法 —— 那是把 jsdom 的规范化当成规格。

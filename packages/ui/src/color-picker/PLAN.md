@@ -19,7 +19,8 @@
 | G2 API DESIGN | ✅ | `interface.ts`（props/emits/slots/expose 全量）；`lint:types` 0 错 |
 | G3 TOKEN | ✅ | `style/token.ts`（9 条派生）+ `style/index.ts`（92 条规则，前缀参数化）；**L7 21/21 绿** |
 | G3.5 引擎纯逻辑 | ✅ | `engine/{interface,color,util}.ts` + `color.ts` + `util.ts`；**L1 25/25 绿** |
-| G4 IMPLEMENT | ⬜ **下一步** | 见下方「G4 的硬约束」 |
+| G4a 引擎渲染件 | ✅ | `engine/{use-color-drag,use-color-state}.ts` + `engine/components/{color-block,handler,palette,picker}.ts`；**L1/L2 15/15 绿** |
+| G4b antd 层 | ⬜ **下一步** | 见下方「G4 的硬约束」 |
 | G5–G14 | ⬜ | — |
 
 ## Gate 检查单
@@ -28,7 +29,8 @@
 - [x] G1 ANALYZE —— 产出 `docs/analysis/color-picker.md`（先于实现）
 - [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
 - [x] G3 TOKEN —— style/token.ts 对齐 antd 的 9 个 mergeToken 派生（规则 R7）
-- [ ] G4 IMPLEMENT —— 见「G4 的硬约束」
+- [x] G4a 引擎渲染件（`useColorDrag` / `useColorState` / `ColorBlock` / `Handler` / `Palette` / `Picker`）
+- [ ] G4b antd 层（`ColorPicker.vue` / `ColorPickerPanel` / `ColorTrigger` / `PanelPicker` / `GradientColorBar` / `ColorSlider` / `ColorPresets` / `ColorInput` 家族 / `PurePanel`）
 - [ ] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts`（纯逻辑部分已落在 `color.test.ts`）
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
@@ -78,3 +80,7 @@
     `engine/color.ts` 的 `if (!input) { /* 保持初始值 */ }`）。
 12. **继承「方法返回自身类型」的基类时必须覆写该方法**（PITFALLS 320）。
 13. **E10 的 `box-shadow` 正则不认 `inset` 前缀**（PITFALLS 322）。
+14. 🚨 **`h()` 里的事件名写 `onMousedown`（小写 `d`）** —— `onMouseDown` 会变成 `mouse-down`，
+    **永不触发且不报错**（PITFALLS 323）。本仓 `Segmented.ts:353` 就中招了。
+15. 🚨 **jsdom 会把 `hsl()`/hex 规范化成 `rgb()`/`rgba()`** ⇒ 内联样式的断言要按规范化形态写
+    （PITFALLS 324）。
