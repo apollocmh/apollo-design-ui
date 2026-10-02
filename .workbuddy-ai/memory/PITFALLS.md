@@ -14,6 +14,7 @@
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
+- **上游判据**：🚨 rc 的 `PickerProps` **本身 extends `Omit<SharedTimeProps,'format'|'defaultValue'>`** ⇒ 顶层时间 props（`use12Hours`/`hourStep`…）**不是**只属于 `showTime`；只看 `SharedTimeProps` 的定义会得出相反结论（317）。
 - **薄壳/转发**：🚨 **被 `Omit` 掉的 prop 必须在转发时显式补回**（内层有默认值就会静默用错，315） · ⚠️ VTU `mount(C, options, slots)` 的**第三参被静默忽略**，插槽要写进 `options.slots`（316）。
 
 ## 工具 / 沙箱
@@ -3822,3 +3823,32 @@
 
     **判据**：`mount` 的所有可选项（`props` / `slots` / `global` / `attachTo`）都在**第二个参数**里；
     写第三个参数前先看返回值里有没有渲染出东西 —— `w.html()` 一行就能证伪。
+
+317. 🚨 **`@rc-component/picker` 的 `PickerProps` **本身继承 `SharedTimeProps`** ——
+    顶层时间 props 不是「只属于 `showTime`」**（2026-10-02 实测，time-picker 的 G11 前置核查）。
+
+    **形态**：本仓 `date-picker/hooks/picker-filled.ts` 的注释断言
+
+    > 顶层的时间 props（`showHour` / `hourStep` / `use12Hours` …）**不在** `DatePickerProps` 上
+    > —— antd 的 `DatePicker` 也不声明它们（`InjectDefaultProps<RcPickerProps>` 不含 `SharedTimeProps`）
+
+    **这条判据是错的**。判据原文在 `@rc-component/picker/es/PickerInput/SinglePicker.d.ts`：
+
+    ```ts
+    export interface PickerProps<DateType> extends BasePickerProps<DateType>,
+        Omit<SharedTimeProps<DateType>, 'format' | 'defaultValue'> {}
+    ```
+
+    ⇒ `PickerProps` **有** `use12Hours` / `hourStep` / `minuteStep` / `secondStep` /
+    `millisecondStep` / `hideDisabledOptions` / `showHour` / … ⇒ antd 的 `TimePickerProps`
+    与 `DatePickerProps` **都接受**顶层形态。
+    ⚠️ 只看 `SharedTimeProps` 的定义会得出相反结论 —— **必须看谁 extends 它**。
+
+    **实测（本仓的后果）**：顶层 `use12Hours` 被静默忽略（3 列 24 格，应为 4 列 12 格），
+    而 `showTime={{ use12Hours: true }}` **生效**（4 列）。
+    根因：这些键不在 `PickerCommonProps` 上 ⇒ 落进 `attrs` ⇒ 内层 `inheritAttrs: false` ⇒ 丢弃。
+
+    **⚠️ 判据手法**：浮层类的行为**不能用 SSR 探针**（rc 的 Portal 在 SSR 下
+    `Portal only work in client side`，面板根本不在输出里 ⇒ 「列数=0」是假象）。
+    要么用 `--project unit` 的 jsdom 探针（`mount(..., { attachTo: document.body })` 后数
+    `.apollo-picker-time-panel-column`），要么用 L6 的真浏览器。
