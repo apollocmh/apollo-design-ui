@@ -1,6 +1,22 @@
 # MEMORY.md — 项目长期约定
 > 只放仓库文档里没有的。规则本体见 `AGENTS.md` 等 5 份文档。坑全文+索引：`PITFALLS.md`（先看 §0）；**环境与命令**：`environment.md`（跑测试/构建前必读）。
 
+## 📌 欠账台账：`docs/KNOWN-ISSUES.md`（2026-10-03 新建）
+
+**接手时先扫这一份**。它不在 `AGENTS.md` §5 的 5 份文档清单里（AGENTS.md 只能由用户改），
+所以**必须从这里找到它**。两段：
+- **§1 已发现、未修**（有可复现证据、本次没修）：L6 的 84 条 `missing-baseline`
+  （根因 = 未决开放决策 **`visual-baseline-in-git`**，**需用户裁决**）·
+  `typography/semantic` 3 条 size-mismatch（非本次引入）·
+  **`Segmented.ts:353` 的 `onMouseDown` 永不触发**（+ 更正 `segmented/README.md:41` 的误诊）·
+  `Trigger` 的 `children[0]` 归一化未全仓扫描 · `ContextIsolator` 缺失的风险面。
+- **§2 已修但有残留**：`children` 只修单子节点 · `TabsProps` 未全量审计 ·
+  `tabs` 运行时声明只统一了 card 用到的字段 · 日期依赖用例未全仓扫描 ·
+  `utils.Color` 只改了已发现的 private 成员 · `color-picker` 面板只有像素级覆盖。
+
+⚠️ **`test:types` 已修**（`vitest.config.ts` 的 `types` project 指定 `checker: 'vue-tsc'`）——
+此前它**恒定 exit=1**（`tsc` 解析不了 `.vue` ⇒ 96 条假源错误），现在 **exit=0**。
+
 ## 事实来源 / 任务 / registry
 Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**。优先级：用户指令>仓库规范>`registry/*.json`>antd 产物/源码>文档>先验。
 - 取任务唯一权威 `node registry/tools/next-task.mjs`（一轮一包）。🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（缺了按 PITFALLS 42 恢复）；说「某决策是这样」前先 `ask.mjs decision <id>`（出原文）。
