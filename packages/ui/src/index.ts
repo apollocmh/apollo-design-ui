@@ -744,6 +744,40 @@ export { Avatar, AvatarGroup } from './avatar';
 export { genAvatarStyle, genTokenDecls as genAvatarTokenDecls } from './avatar/style';
 export type { ComponentToken as AvatarComponentToken } from './avatar/style/token';
 export { prepareComponentToken as prepareAvatarComponentToken } from './avatar/style/token';
+export type {
+  CalendarCellRender,
+  CalendarCellRenderInfo,
+  CalendarDate,
+  CalendarEmits,
+  CalendarExpose,
+  CalendarFullCellRender,
+  CalendarHeaderRender,
+  CalendarHeaderRenderConfig,
+  CalendarMode,
+  CalendarProps,
+  CalendarSemanticClassNames,
+  CalendarSemanticStyles,
+  CalendarSemanticValue,
+  CalendarSlots,
+  // ⚠️ `menu` 也导出了一个 `SelectInfo`（同名不同义）⇒ 本仓约定「重名用别名」（PITFALLS 6/158/168）
+  SelectInfo as CalendarSelectInfo,
+} from './calendar';
+// ---------------------------------------------------------------------------
+// Calendar —— 日历（面板**内联**，没有浮层）
+//
+// ⚠️ 样式已注册进 `COMPONENT_STYLES`（2026-10-02）；Component Token **6** 个，
+//    但 `prepareComponentToken` 里 `...initPanelComponentToken(token)` 带进 **21** 个面板 token
+//    ⇒ 实测 **27** 条 `--apollo-calendar-*` 声明。
+// 🚨 **类名前缀是 `apollo-picker-calendar`**（上游 `getPrefixCls('picker')`），
+//    而 CSS 变量是 `--apollo-calendar-*` —— **类名与变量名的命名空间不同**，
+//    见 `calendar/style/index.ts` 的文件头。
+// ⚠️ 上游 `Calendar` 上**没有**静态成员（不像 `DatePicker` 有 `RangePicker`）；
+//    `ref` 也只暴露 `nativeElement`（上游 `CalendarRef` 没有 `focus` / `blur`）。
+// ---------------------------------------------------------------------------
+export { Calendar } from './calendar';
+export { genCalendarStyle, genCalendarTokenDecls } from './calendar/style';
+export type { ComponentToken as CalendarComponentToken } from './calendar/style/token';
+export { prepareComponentToken as prepareCalendarComponentToken } from './calendar/style/token';
 // ---------------------------------------------------------------------------
 // Card —— 通用卡片容器（复合组件：`Card.Grid` / `Card.Meta`）
 //

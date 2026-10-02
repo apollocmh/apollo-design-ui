@@ -32,18 +32,22 @@
  * 2. 别名 token 落 `var(--apollo-*)` 而不是产物的**解析后字面量**
  *    （`#ffffff` / `rgba(0,0,0,0.04)`）—— 见 `./token.ts` 文件头的说明。
  *
- * ── ⚠️ 前缀参数化（与 `date-picker` 的一处**已知差异**）──────────────────────────
+ * ── 前缀参数化（`STATIC_PREFIX_CLS = ['apollo', 'ant']`）────────────────────────
  *
- * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS = ['apollo', 'ant']`
- * ⇒ `gen(prefixCls)` 会被**两个**前缀各调一次，**每次都必须产出对应前缀的选择器**。
+ * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS` 有两个前缀
+ * ⇒ `gen(prefixCls)` 会被**各调一次**，**每次都必须产出对应前缀的选择器**。
  * 本文件是**参数化**的（`.${p}-picker-calendar` / `--${p}-calendar-*`），
  * 与 card / alert / breadcrumb / select 同判。
  *
- * 🚨 而 `date-picker` 的 `DATE_PICKER_RULES` 是**机器搬运的静态串**（前缀写死 `.apollo-`）
- * ⇒ `genDatePickerStyle('ant')` 只产出「没用的 `--ant-date-picker-*` 声明块 +
- * 仍然是 `.apollo-` 的规则」。实测 `dist/date-picker/style.css` 里
- * `.ant-picker-*` 规则 **0 条**、`--ant-date-picker-*` 声明 **45 条**。
- * 这是 date-picker 的**已登记缺口**（见其 `README §5`），**不要在本组件复刻**。
+ * 🚨 **两类替换的规则不同**（照 `date-picker` 的 `genDatePickerRules` 同判）：
+ *   - **类名**（`.apollo-*`，含跨组件的 `.apollo-icon` / `.apollo-tag-blue` 与动效名
+ *     `.apollo-slide-up-*`）⇒ **跟着前缀走**；
+ *   - **全局别名变量**（`--apollo-color-*` 等）⇒ **不动** ——
+ *     `theme/dist/tokens.css` 只声明 `--apollo-*`（382 个，0 个 `--ant-*`）；
+ *   - **组件自有变量**（`--apollo-calendar-*` / 面板的 `--apollo-date-picker-*`）⇒ 跟着换。
+ *
+ * ⚠️ 这条曾经是**全仓 22 个组件**的缺口（date-picker 与 calendar 已于 2026-10-02 修好），
+ * 剩余清单与双向校验见 `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS`。
  */
 
 import { genPanelRules } from '../../date-picker/style';
@@ -130,6 +134,27 @@ const CALENDAR_RULES_TAIL = (p: string): string => `
 `;
 
 /**
+ * 面板规则换到 calendar 的作用域 —— **两步都要做**。
+ *
+ * 1. `genPanelRules(cls, tokenNs)` 换**作用域类**（`.apollo-picker-dropdown ` → `cls`）
+ *    与**组件自有变量的命名空间**（`--apollo-date-picker-*` → `--${p}-calendar-*`）；
+ * 2. 再把**其余所有类名** `.apollo-*` 换成 `.${p}-*`。
+ *
+ * 🚨 **第 2 步不能省**（2026-10-02 由「全仓前缀扫描」抓到）：`genPanelRules` 只替换
+ * **每个选择器的开头那个作用域类**，选择器**其余部分**的面板类名（`.apollo-picker-panel`
+ * / `-header` / `-cell` …）原样留着 ⇒ `ant` 版会产出
+ * `.ant-picker-calendar .apollo-picker-panel{…}` —— **面板样式完全不生效**
+ * （实测 `apollo` 517 处 `.apollo-` vs `ant` 只有 264 处，缺口 253）。
+ *
+ * ⚠️ 顺序不能反：先换作用域（得到 `cls`），再全局换 `.apollo-` ——
+ * 若反过来，`cls` 里的 `.apollo-picker-calendar` 会被一起换掉（那是我们要的结果，
+ * 但 `genPanelRules` 收到的 `cls` 就已经是错的了）。
+ */
+function genCalendarPanelRules(p: string, cls: string): string {
+  return genPanelRules(cls, `--${p}-calendar`).replace(/\.apollo-/g, `.${p}-`);
+}
+
+/**
  * 生成完整样式：token 声明块 + 根规则 + 面板规则（换作用域）+ 自有规则。
  *
  * 🚨 **声明块必须同时落在「根」与「`-css-var` 类」上**（2026-10-01 date-picker 的 L6
@@ -145,7 +170,7 @@ export function genCalendarStyle(rootPrefixCls: string): string {
     `${cls},${cls}-css-var{${decls}}`,
     '',
     CALENDAR_RULES_HEAD(p),
-    genPanelRules(cls, `--${p}-calendar`),
+    genCalendarPanelRules(p, cls),
     CALENDAR_RULES_TAIL(p),
   ].join('\n');
 }

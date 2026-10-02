@@ -146,6 +146,30 @@ describe('Calendar · L7 规则体（前缀参数化 + 面板复用）', () => {
     expect(ant.includes('--apollo-calendar-full-bg:')).toBe(false);
   });
 
+  it('🚨 `ant` 版**一个 `.apollo-` 类名都不剩**（含面板规则的其余类名）', () => {
+    // ⚠️ 这条是本文件最初漏掉的判据：只断言了 `.apollo-picker-calendar` 不在，
+    //    而面板规则的其余类名（`.apollo-picker-panel` / `-header` / `-cell` …）没换，
+    //    实测 `apollo` 517 处 vs `ant` 264 处 ⇒ `ant` 下面板样式完全不生效。
+    const ant = genCalendarStyle('ant');
+    expect(ant.includes('.apollo-')).toBe(false);
+    // 反向哨兵：`apollo` 版确实有（否则是空转）
+    expect(CSS.includes('.apollo-')).toBe(true);
+    // 类名总数守恒（只换前缀，不增不减）
+    const count = (text: string, re: RegExp) => (text.match(re) ?? []).length;
+    expect(count(ant, /\.ant-/g)).toBe(count(CSS, /\.apollo-/g));
+  });
+
+  it('🚨 **全局别名变量不动**（`tokens.css` 只声明 `--apollo-*`）', () => {
+    const ant = genCalendarStyle('ant');
+    expect(ant.includes('--apollo-color-text')).toBe(true);
+    expect(ant.includes('--ant-color-text')).toBe(false);
+    // 而组件自有变量跟着换
+    expect(ant.includes('--ant-calendar-cell-width')).toBe(true);
+    expect(ant.includes('--apollo-calendar-cell-width')).toBe(false);
+    // ⚠️ 面板规则里引用的 `--apollo-date-picker-*` 也必须换成 `--ant-calendar-*`
+    expect(ant.includes('--apollo-date-picker-')).toBe(false);
+  });
+
   it('🚨 面板规则换过 token 命名空间：`--apollo-date-picker-*` 一个不剩', () => {
     expect(CSS.includes('--apollo-date-picker-')).toBe(false);
     // 而面板规则确实被复用了（否则是空转）—— 抽查两条面板独有的

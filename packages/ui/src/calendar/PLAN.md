@@ -43,7 +43,12 @@
       产物 83/83 逐条一致；**前缀参数化**，与 card/alert/breadcrumb 同判）
       ⏳ `Calendar.vue` + `components/CalendarHeader.ts` **未开始**（G5 的前置）
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
+- [x] G7 L3 类型（含负例）—— `__tests__/type.test-d.ts` **42 条**，`Type Errors no errors`。
+      六类判据：① `CalendarProps` 的**键集**（21 个，多一个少一个都算）；② `CalendarExpose`
+      **只有** `nativeElement`；③ emits 载荷（C11 双发）；④ 6 个语义槽**平铺**无嵌套；
+      ⑤ `CalendarCellRenderInfo` **就是** picker 的 `PanelCellRenderInfo`（别名不重定义）；
+      ⑥ 三个渲染 prop 的签名。**7 组负例**（`mode: 'week'` / `value: []` / `validRange` 非二元组 /
+      `source: 'panel'` / `Expose.focus` / `classNames.root: 1` / `headerRender` 返回对象字面量）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
