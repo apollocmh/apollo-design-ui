@@ -33,6 +33,7 @@ import { genAffixStyle } from '../affix/style';
 import { genAlertStyle } from '../alert/style';
 import { genAnchorStyle } from '../anchor/style';
 import { genAppStyle } from '../app/style';
+import { genAvatarStyle } from '../avatar/style';
 import { genBackTopStyle } from '../back-top/style';
 import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
@@ -174,6 +175,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'anchor', gen: genAnchorStyle },
   { name: 'breadcrumb', gen: genBreadcrumbStyle },
   { name: 'card', gen: genCardStyle },
+  { name: 'avatar', gen: genAvatarStyle },
 ];
 
 /** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */

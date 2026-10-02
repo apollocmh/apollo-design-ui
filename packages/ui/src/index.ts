@@ -712,6 +712,39 @@ export type {
 // ---------------------------------------------------------------------------
 export { AutoComplete, AutoCompleteOption } from './auto-complete';
 // ---------------------------------------------------------------------------
+// Avatar —— 头像（复合组件：`Avatar.Group`）
+//
+// ⚠️ 类名前缀 `apollo-avatar`；**12 个 Component Token** + 2 个 `mergeToken` 派生
+//    （`avatarBg`=colorTextPlaceholder / `avatarColor`=colorTextLightSolid —— 落**全局** token，
+//    见 style/token.ts）。⚠️ 上游的 `AvatarToken.avatarBgColor` 是**死键**（mergeToken 里从没赋值）
+//    ⇒ 本仓不引入。
+// ⚠️ **没有 `classNames` / `styles` 语义化槽**（与 card / empty 不同）⇒ `AvatarConfig`
+//    只有 `className` / `style`。
+// ⚠️ `ref` 暴露的是 `{ nativeElement }`（上游 `Avatar` 是 `forwardRef<HTMLSpanElement>`，
+//    本仓统一成对象）。
+// ⚠️ **数字尺寸必须走 `toCssSize()`** —— Vue 的 `patchStyle` 不补 px，裸数字被静默丢弃
+//    （PITFALLS 170）⇒ `size={40}` / 响应式尺寸会整个失效。
+// ⚠️ `onError` 是**有返回值语义**的 prop（返回 `false` ⇒ 阻止内置回退）。
+// ---------------------------------------------------------------------------
+export type {
+  AvatarConfig,
+  AvatarContextType,
+  AvatarGroupMax,
+  AvatarGroupProps,
+  AvatarGroupRef,
+  AvatarGroupSlot,
+  AvatarProps,
+  AvatarRef,
+  AvatarShape,
+  AvatarSize,
+  AvatarSlot,
+  ScreenSizeMap,
+} from './avatar';
+export { Avatar, AvatarGroup } from './avatar';
+export { genAvatarStyle, genTokenDecls as genAvatarTokenDecls } from './avatar/style';
+export type { ComponentToken as AvatarComponentToken } from './avatar/style/token';
+export { prepareComponentToken as prepareAvatarComponentToken } from './avatar/style/token';
+// ---------------------------------------------------------------------------
 // Card —— 通用卡片容器（复合组件：`Card.Grid` / `Card.Meta`）
 //
 // ⚠️ 类名前缀 `apollo-card`；**13 个 Component Token** + 4 个 `mergeToken` 派生

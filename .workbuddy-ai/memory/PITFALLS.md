@@ -3469,3 +3469,40 @@
     ⚠️ 同类风险的判据：任何组件要**整体透传另一个组件的 props**（`tabProps` / `triggerProps`…）时，
     先确认目标组件的运行时声明与它的公开类型是否同构；不同构就只能断言，
     而**不能**用「逐个字段拆开传」绕过（回调字段拆开同样不可赋值）。
+
+## Avatar 开工流（2026-10-02，302-303）
+
+302. 🚨 **`.vue` 模板**顶层**的 HTML 注释会让组件变成「多根（fragment）」**（2026-10-02 实测）。
+
+    **触发**：`<template>` 的第一行是 `<!-- 说明 -->`，第二行才是真正的根元素：
+
+    ```vue
+    <template>
+      <!-- ⚠️ 五路互斥分支…… -->   ← 这一行让组件变成 fragment
+      <span ref="rootRef" :class="classString" v-bind="rootAttrs()">…</span>
+    </template>
+    ```
+
+    **症状**（一次全红，且报错**指不到根因**）：`mount()` 的 `w.element.tagName` 变成 `DIV`
+    （vue-test-utils 退回到 `attachTo` 的容器）、`w.html()` 以 `<!--` 开头、
+    所有 `:class` / `:style` 断言全挂（avatar 一次挂 16 条），
+    而 `lint:types` / biome **全绿**。
+
+    **判据**：`<template>` 下**第一个节点**如果是注释，就把它挪进根元素**里面**，
+    或干脆写进 `<script>` 的文档注释里。同理，根上写 `v-if` 而没有 `v-else`
+    也会让「假」分支渲染成 `<!--v-if-->` ⇒ 同样退化成 fragment。
+
+    ⚠️ 这条与 PITFALLS 3（未声明的 prop 落进 attrs）**一体两面**：
+    单根 = attrs 静默落到根元素；**多根 = attrs 直接丢弃**（`Extraneous non-props attributes`）。
+    所以「根元素突然不接收 attrs / class」时，先看模板的第一个节点是不是注释。
+
+303. ⚠️ **`watch(() => props.x, fn)` 对「相同的原始值」不触发** —— 造几何后再
+    `setProps({ gap: 4 })`（与挂载时同值）**不会**重跑测量（2026-10-02 实测，avatar）。
+
+    **症状**：用例「看起来测了测量路径」，实际 `setScaleParam` 根本没跑，
+    断言恰好因为 `scale` 初值就是 1 而**通过**（**空转的假绿**）。
+
+    **对策**：造完几何后传一个**真的不同**的值（`setProps({ gap: 5 })`），
+    或显式 `await nextTick()` 后断言「值确实变了」。同族：`watch(..., { immediate: true })`
+    与 React `useEffect(fn, [dep])` 的**挂载时也会跑一次**不是一回事 ——
+    React 那边挂载时跑，Vue 的 `watch` 默认不跑（avatar 因此在 `onMounted` 里手动补跑了一次测量）。
