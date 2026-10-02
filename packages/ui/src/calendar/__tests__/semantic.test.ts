@@ -176,7 +176,9 @@ const specs: Record<
   'calendar:prefix-cls:custom': { props: { ...BP, prefixCls: 'custom' } },
 
   'calendar:default-value': { props: { prefixCls: PREFIX, defaultValue: V } },
-  'calendar:no-value': { props: { prefixCls: PREFIX } },
+  // 🚨 刻意**没有** `calendar:no-value` —— 不传值时上游取 `getNow()`，产物随运行日变化
+  //    ⇒ 在字节精确的 L4 里不可测（见 `tests/compat/baseline/calendar.mjs` 的说明与 PITFALLS 334）。
+  //    该行为由 `index.test.ts` 用语义断言覆盖。
 };
 
 domContractTest('Calendar', {

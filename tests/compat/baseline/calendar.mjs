@@ -205,7 +205,13 @@ push('calendar:prefix-cls:custom', { ...BP, prefixCls: 'custom' });
 // ---- 8. locale / 受控形态 --------------------------------------------------
 
 push('calendar:default-value', { prefixCls: PREFIX, defaultValue: V });
-push('calendar:no-value', { prefixCls: PREFIX });
+// 🚨 **刻意不生成 `calendar:no-value`**（2026-10-03 移除）：
+//    不传 `value`/`defaultValue` 时上游取 **`getNow()`** ⇒ 产物**随运行日变化**
+//    ⇒ 它在「字节精确」的 oracle 里**本质上不可测**（基线 10-02 生成、10-03 跑就红：
+//    `-today` 那一格从 `td[5]` 挪到 `td[6]`）。
+//    ⚠️ 「不传值时默认是今天」这条**行为**仍被 `calendar/__tests__/index.test.ts` 用
+//    **语义断言**覆盖（「`-date-today` 恰好落在今天那一格」——不比对字节，故与日期无关）。
+//    ⇒ 这不是「为了绿灯删断言」，是把**度量不了的用例**从错误的层里拿走（见 PITFALLS 334）。
 
 const result = {
   $schema: '../schema.json',

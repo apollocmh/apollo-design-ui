@@ -24,6 +24,7 @@
 - **流程**：🚨 **L6 视觉层解析的是 `packages/ui/dist` 产物** —— 改**组件源码**（不只样式）后必须先 `pnpm build:ui`，否则 `--mode compare` 的差异率**逐位不变**（327）
 - **浮层**：🚨 **模板里的 `<slot/>` 产出的是嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到**数组**而不是元素 ⇒ 走「包一层 `<span>`」分支（D79）。要传单个元素只能**用渲染函数**（330）
 - **Vue 化**：🚨 **`React.useEffect` ↔ Vue `watch` 不等价** —— effect 挂载必跑、watch 只在变化时跑⇒ 「初始值就命中该分支」时**静默失效**，必须补 `{ immediate: true }`（328）
+- **测试/jsdom**：🚨 **「输出随运行日变化」的用例不能进字节精确的 L4** —— 不传 `value` 的 `Calendar` 取 `getNow()` ⇒ `-today` 格子每天挪位，基线隔夜必红。正确做法：**从 L4 移除**（该行为由 L1 的**语义断言**覆盖），不是放宽比对（334）
 - **流程**：🚨 registry 生成器有**顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`；乱序会让 `registry:check` 报「已过期」（329）
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
@@ -4265,3 +4266,24 @@
 
     ⚠️ `classNames` / `styles` 那条容易漏：运行时的 `[Object, Function]` 本来是对的
     （PITFALLS 21），但 `PropType` 若只写对象形态，函数形态就**进不了 `$props`**。
+
+334. 🚨 **「输出随运行日变化」的用例不能进字节精确的 L4 —— 该拿掉的拿掉，别放宽比对**
+    （2026-10-03 实测：`calendar:no-value` 让 `verify:full` **每天跨过午夜就红**）。
+
+    **症状**：`verify:full` 的 `dom-contract` 红，差异是
+    `$/…/td[5]: 类名不同 [apollo-cell … apollo-cell-selected apollo-cell-today] vs [apollo-cell …]`
+    （`-today` 从一格挪到另一格）。**代码一行没改**，只是**时钟跨了午夜**。
+
+    **根因**：`Calendar` 不传 `value` / `defaultValue` 时上游取 **`getNow()`** ⇒
+    渲染产物**随运行日变化** ⇒ 它在「与 antd 产物逐字节比对」的 oracle 里
+    **本质上不可测**（基线 10-02 生成、10-03 跑就红）。
+
+    **修法**（三层各归其位）：
+    1. **从 L4 移除**该用例 —— `tests/compat/baseline/calendar.mjs` 不再 `push` 它，
+       消费侧 `semantic.test.ts` 的 `specs` 同步删掉（两侧必须一起动，否则会「用例缺规格」）。
+    2. **行为仍要有人钉** —— `calendar/__tests__/index.test.ts` 用**语义断言**覆盖
+       （「`-date-today` 恰好落在今天那一格」）：它**不比对字节**，所以与日期无关。
+    3. 在**两处**都写下「为什么刻意没有这条用例」，否则后人会当成疏漏补回来。
+
+    ⚠️ 这不是「为了绿灯删断言」（`AGENTS.md` H7）—— 是把**度量不了的用例**从**错误的层**
+    里拿走。**判据**：删掉的用例，其行为必须在**别的层**有等价覆盖，且**能说出是哪一条**。
