@@ -499,6 +499,23 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）
     expect(bodies(swapped)).toEqual(bodies(PANEL_RULES));
   });
 
+  it('🚨 每条规则的**圆括号必须配平**（2026-10-02 在 calendar 那边漏过一个多余的 `)`）', () => {
+    // 那条错误的症状：`height: calc(... + var(--apollo-line-width-bold)))` 多一个右括号
+    // ⇒ `calc()` 非法 ⇒ 浏览器**丢弃整条 `height`** ⇒ 回退到别的规则的值
+    // ⇒ L6 只有 `week` 变体 block-diff（0.03%~0.12%），其余 27 张 exact。
+    // ⚠️ 类型检查与结构断言都抓不到「多一个字符」—— 只有括号配平能抓。
+    // ⚠️ 注意 `var(--x))` 里的 `))` 是**合法**的（一个闭 `var(`、一个闭 `calc(`）。
+    for (const line of DATE_PICKER_RULES.split('\n')) {
+      const open = line.indexOf('{');
+      const close = line.lastIndexOf('}');
+      if (open < 0 || close <= open) continue;
+      const body = line.slice(open + 1, close);
+      const l = (body.match(/\(/g) ?? []).length;
+      const r = (body.match(/\)/g) ?? []).length;
+      expect(l, `${line.slice(0, 70)} … 括号不配平（${l} vs ${r}）`).toBe(r);
+    }
+  });
+
   it('`genPanelRules(scope, tokenNs)` 换 token 命名空间：`--apollo-date-picker-*` 一个不剩', () => {
     // 🚨 这条是 `calendar` 复用的**真前提**：面板规则引用的自有变量必须跟着换名，
     //    否则「声明了 --apollo-calendar-*、引用了 --apollo-date-picker-*」⇒ 静默回退。

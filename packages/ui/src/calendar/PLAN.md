@@ -56,7 +56,16 @@
       ⚠️ **唯一豁免 `label` 规则** —— header 的两个 `Select` 是 combobox，其可访问名由
       `role="combobox"` + `aria-*` 承担，**antd 同款不绑 `<label>`**
       （`select/__tests__/a11y.test.ts` 有同一条放行原文）。R13 的判据是「不低于 antd」。
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [x] G9 L6 视觉 —— **30/30 exact（0.000%）**。10 个变体 × 3 视口，React 基线 30 张入库。
+      🚨 **首轮 27/30**：只有 `week`（`showWeek`）三张 block-diff（0.03%~0.12%）。
+      根因是**我自己写的规则里多了一个 `)`** ——
+      `height: calc(... + var(--apollo-line-width-bold)))` ⇒ `calc()` 非法
+      ⇒ 浏览器**丢弃整条 `height`** ⇒ 周号内层回退成 24px（antd 是 116px）
+      ⇒ 周号数字在 Vue 侧落到行中间、React 侧贴行顶。
+      ✅ 修法：删掉多余的 `)`；并加**括号配平守卫**（本组件 + date-picker 各一条）。
+      ⚠️ 判据：**「多一个字符」类错误类型与结构断言都抓不到** —— 只有括号配平能抓。
+      ⚠️ 另一条：`.artifacts` 的 CSS 取自 `packages/ui/dist` ⇒ **改了 style 必须先
+      `pnpm run build:ui`**，否则视觉层跑的还是旧 CSS（本轮白跑了一轮）。
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）

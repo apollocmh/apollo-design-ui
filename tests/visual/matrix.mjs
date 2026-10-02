@@ -896,6 +896,38 @@ export const COMPONENTS = {
       'rtl', // direction: rtl ⇒ 根 `-rtl`（**有真实 CSS**，与 anchor 不同）
     ],
   },
+  calendar: {
+    // 10 个 variant × 3 个 viewport = 30 张
+    //
+    // ⚠️ Calendar **没有浮层**（面板是**内联**的 `<CalendarHeader/> + <PickerPanel hideHeader/>`）
+    //    ⇒ 不需要 `getPopupContainer`，也不需要像 date-picker 那样把浮层搬进截图区域。
+    //    整块日历（header + 面板）就是视觉面。
+    //
+    // 🚨 **`value` 必须落在「过去」**（`CALENDAR_VALUE = '2025-06-15'`）——
+    //    `-date-today` 由 `getNow()` 决定：只要「今天」落在当前渲染的**月份网格**
+    //    （**含上/下月的补位格**）或**年模式的那一年**里，就会有一格随运行日漂移 ⇒ flaky。
+    //    2025-06 的网格是 `2025-05-25 … 2025-07-05`（整段在过去），
+    //    年模式渲染 2025 年而今天是 2026 ⇒ **两条都避开**（实测推导，见 shared.mjs）。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/calendar.*` 的文件头）：
+    //    **字体在用例内钉住**；**容器宽度不固定**（`-full` 是 `width: 100%`，
+    //    三个视口下宽度不同正是要测的面 —— `table-layout: fixed` 的 7 列分配）。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完先
+    //    `md5 tests/visual/baselines/react/calendar/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basic', // 全屏（默认）：`-full` + 面板 width:100% + body padding
+      'mini', // fullscreen:false ⇒ `-mini`（圆角 / 内容高度 / 控件降 small）
+      'year', // mode="year" ⇒ 面板退化成月网格 + header 多一个 month-select
+      'week', // showWeek ⇒ 周号列 + body padding 变宽
+      'disabled', // validRange ⇒ 越界格子禁用（**端点不禁用**）
+      'cell', // cellRender ⇒ 只换格子**内容**
+      'full', // fullCellRender ⇒ **整格**换掉（`-date-value` 不再产出）
+      'header', // headerRender ⇒ 整块 header 换掉
+      'semantic', // 6 个语义槽的 styles（两段式归属）
+      'rtl', // `-rtl` + `direction: rtl`
+    ],
+  },
   masonry: {
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。

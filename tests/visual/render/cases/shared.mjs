@@ -1258,3 +1258,86 @@ export const TIMELINE_ITEMS_ALTERNATE = [
   { key: 'c', title: 'C', content: 'content C' },
   { key: 'd', title: 'D', content: 'content D' },
 ];
+
+// ---------------------------------------------------------------------------
+// Calendar
+// ---------------------------------------------------------------------------
+
+/**
+ * Calendar 用例的容器。
+ *
+ * ⚠️ **刻意不固定宽度**（与 `CARD_BOX_STYLE` 相反）：`-full` 的日历是
+ * `width: 100%`（`.{p}-calendar-full .{p}-panel { width: 100% }`）⇒ 三个视口下宽度
+ * 天然不同，而那正是要测的面（`table-layout: fixed` 的 7 列分配 + `th` 的行高）。
+ * 两侧在同一视口里渲染 ⇒ 逐像素可比。
+ *
+ * ⚠️ **字体必须在用例内钉住**：两侧页面的 `html` 字体栈不同，而日历里**全是文字**
+ * （日期数字 / 月份缩写 / 星期缩写 / 年下拉里的年份 / 模式切换的 Month·Year）。
+ */
+export const CALENDAR_BOX_STYLE = {
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/**
+ * 🚨 **所有变体共用同一个 `value`，且它必须在「过去」** —— 否则基线会随运行日漂移。
+ *
+ * 判据：`-date-today` 由 `generateConfig.getNow()` 决定，只要「今天」落在
+ * ①**当前渲染的月份网格**（**含上/下月的补位格**）或 ②**年模式的那一年**里，
+ * 就会有一格随运行日变化 ⇒ flaky。
+ *
+ * `2025-06-15` 同时避开两条：
+ *   - 月历网格是 `2025-05-25 … 2025-07-05`（含补位格），**整段都在过去**；
+ *   - 年模式渲染的是 **2025** 年，而今天是 2026 ⇒ 12 个月格没有一个命中。
+ * ⇒ **永远**不会出现 `-date-today`（这条是 2026-10-02 实测推出来的，不是猜的）。
+ */
+export const CALENDAR_VALUE = '2025-06-15';
+
+/** `validRange`：6/10 … 6/20 之外的格子全部禁用（颜色差肉眼可见）。 */
+export const CALENDAR_VALID_RANGE = ['2025-06-10', '2025-06-20'];
+
+/**
+ * `cellRender` 的可见内容 —— 命中 `.{p}-calendar-date-content`。
+ *
+ * ⚠️ 必须**肉眼可见**，否则该变体与 `basic` 逐字节相同 ⇒ 空转变体
+ * （`run.mjs --check-baselines` 的重复自检会抓）。
+ */
+export const CALENDAR_CELL_STYLE = {
+  display: 'block',
+  width: '100%',
+  height: '3px',
+  marginTop: '2px',
+  background: '#1677ff',
+};
+
+/** `fullCellRender` 的可见内容 —— 整格换掉（`-date-value` 不再产出）。 */
+export const CALENDAR_FULL_CELL_STYLE = {
+  padding: '2px 4px',
+  background: '#f0f5ff',
+  border: '1px solid #adc6ff',
+  borderRadius: '4px',
+};
+
+/** `headerRender` 的可见内容（自定义整块 header）。 */
+export const CALENDAR_CUSTOM_HEADER_STYLE = {
+  padding: '8px 12px',
+  background: '#e6f4ff',
+  borderBottom: '1px solid #91caff',
+  fontWeight: 'bold',
+};
+
+/**
+ * 6 个语义槽的 `styles` —— **必须肉眼可见**，否则 `semantic` 变体与 `basic`
+ * 逐字节相同（空转）。六个槽覆盖两个归属面：
+ * `root` / `header` 归 Calendar，`body` / `content` / `item` / `itemContent` 转交面板。
+ */
+export const CALENDAR_SEMANTIC_STYLES = {
+  root: { border: '2px solid #1677ff' },
+  header: { background: '#fffbe6' },
+  body: { background: '#f6ffed' },
+  content: { outline: '2px dashed #faad14' },
+  item: { background: '#fff1f0' },
+  itemContent: { color: '#cf1322' },
+};

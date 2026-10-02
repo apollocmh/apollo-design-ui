@@ -195,6 +195,23 @@ describe('Calendar · L7 规则体（前缀参数化 + 面板复用）', () => {
     expect(CSS.includes(`height:${CALENDAR_DERIVED.dateContentHeight};`)).toBe(true);
   });
 
+  it('🚨 每条规则的**圆括号必须配平**（本轮漏过一个多余的 `)`）', () => {
+    // 2026-10-02 实测踩到：`-full .-cell-week .-cell-inner` 的
+    // `height: calc(... + var(--apollo-line-width-bold)))` 多了一个右括号
+    // ⇒ `calc()` 非法 ⇒ 浏览器**丢弃整条 `height`** ⇒ 回退到面板的 24px
+    // ⇒ `calendar/week` 三张基线 block-diff（0.03%~0.12%）。
+    // ⚠️ 这类「多一个字符」的错误**类型与结构断言都抓不到**，只有括号配平能抓。
+    for (const line of CSS.split('\n')) {
+      const open = line.indexOf('{');
+      const close = line.lastIndexOf('}');
+      if (open < 0 || close <= open) continue;
+      const body = line.slice(open + 1, close);
+      const l = (body.match(/\(/g) ?? []).length;
+      const r = (body.match(/\)/g) ?? []).length;
+      expect(l, `${line.slice(0, 70)} … 括号不配平（${l} vs ${r}）`).toBe(r);
+    }
+  });
+
   it('媒体查询在产物里（`max-width: 480px`，与 antd 同值）', () => {
     expect(CSS).toContain('@media only screen and (max-width: 480px)');
     expect(CSS).toContain('.apollo-picker-calendar .apollo-picker-calendar-header{display:block;}');

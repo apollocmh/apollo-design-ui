@@ -113,7 +113,7 @@ const CALENDAR_RULES_TAIL = (p: string): string => `
   .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-panel{display:block;width:100%;text-align:end;background:var(--${p}-calendar-full-bg);border:0;}
   .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-panel .${p}-picker-body th,.${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-panel .${p}-picker-body td{padding:0;}
   .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-panel .${p}-picker-body th{height:auto;padding-inline-end:var(--apollo-padding-sm);padding-bottom:var(--apollo-padding-xxs);line-height:${D.weekHeight};}
-  .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-cell-week .${p}-picker-cell-inner{display:block;border-radius:0;border-top:var(--apollo-line-width-bold) var(--apollo-line-type) var(--apollo-color-split);width:100%;height:calc(${D.dateValueHeight} + ${D.dateContentHeight} + var(--apollo-padding-xs) / 2 + var(--apollo-line-width-bold)));}
+  .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-cell-week .${p}-picker-cell-inner{display:block;border-radius:0;border-top:var(--apollo-line-width-bold) var(--apollo-line-type) var(--apollo-color-split);width:100%;height:calc(${D.dateValueHeight} + ${D.dateContentHeight} + var(--apollo-padding-xs) / 2 + var(--apollo-line-width-bold));}
   .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-cell::before{display:none;}
   .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-cell:hover .${p}-picker-calendar-date{background:var(--apollo-control-item-bg-hover);}
   .${p}-picker-calendar.${p}-picker-calendar-full .${p}-picker-cell .${p}-picker-calendar-date-today::before{display:none;}
