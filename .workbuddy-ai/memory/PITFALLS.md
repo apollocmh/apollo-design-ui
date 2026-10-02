@@ -3590,3 +3590,55 @@
     调用点做**连续三次 `Edit`**，其中**两处没落盘却报 success** —— 与既有那条「多文件机械
     改动别用 `Edit` 批量」同源，只是这次是**同一文件内的多处替换**。
     ⇒ **同一文件的多处机械替换一律改用脚本 + 「断言恰好命中 N 次」，改完再 `grep` 复核**。
+
+## List 开工流（2026-10-02，306-308）
+
+306. 🚨 **本仓的 `toArray` 会把原始值**归一成 Text vnode** ⇒ 上游 `isString(childNodes[i])`
+    这类判据在 Vue 侧**恒假**（2026-10-02 实测，list 的 `-item-no-flex`）。
+
+    **上游判据**（`Item.tsx:104-108`）：
+    `toArray(children).some(isString) && childNodes.length > 1`。
+
+    **本仓为什么恒假**：`packages/utils/src/children/to-array.ts` 的 `collect` 对原始值做
+    `createTextVNode(String(child))`（它自己的文件头就写着「原始值会被包成 Text vnode」）。
+    而 Vue 的**模板**同样不保留字符串：`<ListItem>a b</ListItem>` 编译成
+    `createTextVNode('a')`。⇒ 两条路径都拿不到「原始字符串」。
+    **症状**：`-item-no-flex` 永不出现（`isFlexMode()` 恒真），jsdom / 类型检查都不报。
+
+    **对策**：用 **`isTextVNode`**（`@apollo-design/utils` 导出）判「是不是文本节点」——
+    那正是上游 `isString` 的**意图**。⚠️ 唯一可观测分歧是**数字**子节点：
+    `{{ 0 }}` 在模板里被 `toDisplayString` 变成 `'0'`，上游 `isString(0)` 判假而本仓判真
+    （登记为 PLATFORM）。
+
+    ⚠️ **同族判据**：凡是上游写 `React.Children.toArray(children).some(isString / typeof === 'string')`
+    的地方，本仓都要换成 vnode 层判定（`isTextVNode` / `isElementVNode` / `isComponentVNode`）。
+    **别**试图「先取原始值再判」——`slots.default()` 返回的就是 vnode（VTU 与真实模板一致）。
+
+307. ⚠️ **`split` 默认 `true` 必须 `withDefaults`**；且 **`withDefaults` 是编译器宏、不能 `import`**
+    （2026-10-02 实测，list）。
+
+    - 漏了默认值 ⇒ 默认渲染**没有** `-split` 类（上游解构默认 `split = true`）。
+      只声明 `defineProps` 时未传的布尔 prop 是 `undefined`（falsy）⇒ 与「显式传 false」不可区分。
+    - ⚠️ 顺手 import 它会被 `vue-tsc` 判 **TS2440 `Import declaration conflicts with local
+      declaration of 'withDefaults'`**（`defineProps` / `withDefaults` / `defineExpose` 同族，
+      都是编译器宏）。
+    - 判据：**默认值为 `true` 的布尔 prop 才需要 `withDefaults`**；默认 `false` 的不用声明
+      （声明了反而失去「未传 vs 显式 false」的区分）。
+
+308. ⚠️ **`h(Component, props, 数组)` 会被 Vue 判成「非函数插槽」并告警**
+    （2026-10-02 实测，list 的 grid 分支）：
+
+    ```
+    [Vue warn]: Non-function value encountered for default slot. Prefer function slots for better performance.
+      at <ARow class="…" gutter=16 >
+    ```
+
+    **对策**：给**组件**传 children 时写成**显式插槽函数**：
+
+    ```ts
+    h(Row, { class, gutter }, { default: () => items.map((c) => h('div', …, [c])) })
+    ```
+
+    ⚠️ **元素**（`h('ul', props, items)`）不受影响 —— 数组是合法的元素 children。
+    判据：`h()` 的第三参是「children 或 slots」，**组件**走 slots 路径。
+    （本仓的 `NodeRenderer` 是组件 ⇒ 一律用 `{ node }` prop 传，不传 children。）

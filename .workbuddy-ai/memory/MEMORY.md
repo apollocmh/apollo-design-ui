@@ -81,7 +81,10 @@ L0 utils/theme/icons ｜ 测试 test-utils
   类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) ·
   `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) ·
   🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) ·
-  透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267)
+  透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) ·
+  🚨 上游 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）
+  ⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) ·
+  🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308)
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**
   (277) —— 搜代码用 Grep 工具。
 
