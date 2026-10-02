@@ -39,9 +39,10 @@
       （🚨 修掉了 `picker` 包的时间列滚动，PITFALLS 318）
 - [x] G10 L4 DOM 契约 —— **22/22**（21 用例机械 oracle + 覆盖检查）；fixtures 已建
 - [x] G11 DOCS —— **14 个 demo**（`expectCount: 14`）+ README/zh/en；3 个未移植已登记 §5
-- [ ] G12 REGISTRY —— 11 维度置 done（token/style 为 n/a + layerNotes）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:time-picker]
+- [x] G12 REGISTRY —— 9 维度 done + `token`/`style` **n/a** + `layerNotes`（照 watermark 先例）
+- [x] G13 BUILD —— 四道全绿（registry 19/0 · lint 0 error · test 5977+1634+1080+813 · build 141 FAIL 0）
+      ＋ 显式补跑 `test:types`（2017，no errors）与 `test:visual`（15/15）
+- [x] G14 COMMIT —— `[COMP:time-picker]`
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
