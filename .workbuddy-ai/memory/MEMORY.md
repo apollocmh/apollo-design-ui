@@ -27,4 +27,11 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 ## 进度（2026-10-02）
 foundation **13/13**；组件 **68/72 completed**。下一条用 `next-task.mjs` 取。
 - **timeline**=`Steps` 薄壳（无自有 DOM；`.ts` 渲染函数；样式覆盖 Steps 内部变量）；6 Token 只声明 4 条(B7)。⚠️ 扩展 `steps` 新增两个 context key，🚨 必须由 `Steps` **接住并转发**（同族键「最近的赢」遮蔽外层，256）；`Steps` **主动剥 `attrs.class`**⇒类名用 `className`(309)。
+- 🚧 **color-picker 开工中（G0–G3 已落，G4 未开始）**：`interface.ts` / `style/{token,index}.ts` /
+  `engine/{interface,color,util}.ts` / `color.ts` / `util.ts` 已入库（commit 1bd30e7），
+  L1 25 + L7 21 绿、`lint:types` 0 错、`registry:validate` 19/19。**registry status 仍是 `todo`**。
+  🚨 **G4 的硬约束**：本仓 `Slider` **不消费** `sliderInternalContextKey`（`handleRender` 通道
+  不存在，改走 `#handle` scoped slot）⇒ 上游 `ColorSlider` 的把手定制照抄会**静默失效**；
+  ⚠️ 同族的 `unstableSliderContextKey` **行为相反**（真的被 inject）。详见 PITFALLS 319 与
+  `packages/ui/src/color-picker/PLAN.md`。
 - ⚠️ 9 组件「completed+`visualStatus: done` 但零入库 L6 基线」（含 select/auto-complete/cascader/popconfirm/float-button/rate/segmented/**steps**/progress）⇒L6 只能 `--mode both`。根因=未决开放决策 **`visual-baseline-in-git`**。
