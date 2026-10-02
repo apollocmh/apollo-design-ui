@@ -112,7 +112,10 @@
 16. **废弃告警**（`index.tsx:304-311`）：**非生产环境**无条件发
     `The \`List\` component is deprecated and will be removed in the next major version. If you're using version 6.6.0 or later, please use \`Listy\` instead.`
     ⚠️ `devUseWarning('List')` 的 `warning(false, 'deprecated', msg)` ⇒ 走 `console.error`。
-    ⚠️ **不是**「传了某 prop 才告警」，是**每次渲染都告警**。
+    ⚠️ **不是**「传了某 prop 才告警」，是**每次渲染都告警**（已核对
+    `@rc-component/util/es/warning.js` 的 `warning` **不去重**）。
+    🚨 **本仓按 D91 先例收成「每个实例一次」**（`DropdownButton` 也是 setup 期发一次）
+    ⇒ 这是 dev-only 的**提示频率**差异，不影响 DOM / 行为，已登记为 PLATFORM（README §2）。
 17. **`rest` 透传**：`{...rest}` 落在根 `<div>`（`id` / `data-*` / 事件等）。
     ⚠️ `Item` 的 `{...others}` 落在 `Element` 上（`div` 或 `li`）。
 

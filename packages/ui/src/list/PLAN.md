@@ -15,8 +15,8 @@
 - [x] G1 ANALYZE —— `docs/analysis/list.md` 已落地（产物 **62 条** `ant-list` 规则，可复现命令在文档 §3）
 - [x] G2 API DESIGN —— `interface.ts`（⚠️ 内容类 prop 保持 `VNodeChild`，与 card 一致；D111 字面不一致已登记）
 - [x] G3 TOKEN —— `style/token.ts`（**11** 个 Component Token + 2 个 `mergeToken` 派生 + 2 个必须保留 `calc()` 的量）
-- [ ] G4 IMPLEMENT —— `List.vue` / `Item.vue` / `ItemMeta.vue` + `style/index.ts`；选择器从产物提取，不推演
-- [ ] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts`
+- [x] G4 IMPLEMENT —— `List.vue` / `Item.vue` / `ItemMeta.vue` + `context.ts` + `style/index.ts`（**57 条**规则 = 产物 56 + `-container` 声明块）
+- [x] G5 L1 单元 + G6 L2 交互 —— `__tests__/index.test.ts` **32/32**
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
@@ -33,6 +33,15 @@
 - 🚨 **css-var 声明块覆盖两个根**：`.apollo-list` + `.apollo-list-container`
   （上游 `extraCssVarPrefixCls`）—— D95 家族判据。
 - 🚨 **`-action` 是死选择器**（真类名 `-item-action`）⇒ 逐字保留（radio U7/U8 同类）。
+- 🚨 **`-spin-nested-loading` 也是死选择器**（产物第 42 条写的是 `.ant-list-spin-nested-loading`，
+  真类名是 `.ant-spin-nested-loading`）⇒ 逐字保留。**共两条死选择器。**
+- 🚨 **`Item` 的 `-item-no-flex` 判据**：上游是 `toArray(children).some(isString) && length > 1`，
+  但 Vue 侧**拿不到原始字符串**（模板编译成 Text vnode、`toArray` 也归一化）
+  ⇒ 本仓用 **`isTextVNode`**（平台差异，见 `Item.vue` 的注释与 README §2）。
+- 🚨 **`split` 默认 `true`** ⇒ 必须 `withDefaults(defineProps(), { split: true })`
+  （漏了它默认渲染就没有 `-split` 类）。⚠️ `withDefaults` 是**编译器宏，不能 import**。
+- 🚨 `h(Row, props, 数组)` 会被 Vue 判成「Non-function value encountered for default slot」
+  ⇒ 组件 children 一律写成**显式插槽函数**（元素不受影响）。
 - 🚨 **两条 media 的冒号后空格不同**：`(max-width:768px)` vs `(max-width: 576px)` —— 逐字保留。
 - 🚨 `Item` 的 `-item-no-flex` 判据是**两个条件同时成立**：`some(isString) && length > 1`。
 - 🚨 `Element = grid ? 'div' : 'li'`；grid 时 `ref` 落 `Col`、否则落 `li`。

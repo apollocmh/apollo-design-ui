@@ -58,6 +58,7 @@ import { genImageStyle } from '../image/style';
 import { genInputStyle } from '../input/style';
 import { genInputNumberStyle } from '../input-number/style';
 import { genLayoutStyle, genSiderStyle } from '../layout/style';
+import { genListStyle } from '../list/style';
 import { genListyStyle } from '../listy/style';
 import { genMasonryStyle } from '../masonry/style';
 import { genMenuStyle } from '../menu/style';
@@ -126,6 +127,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },
+  { name: 'list', gen: genListStyle },
   { name: 'listy', gen: genListyStyle },
   { name: 'qrcode', gen: genQrCodeStyle },
   { name: 'splitter', gen: genSplitterStyle },

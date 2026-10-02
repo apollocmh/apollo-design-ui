@@ -1149,6 +1149,40 @@ export { genLayoutStyle, genSiderStyle } from './layout/style';
 export type { ComponentToken as LayoutComponentToken } from './layout/style/token';
 export { prepareComponentToken as prepareLayoutComponentToken } from './layout/style/token';
 // ---------------------------------------------------------------------------
+// List —— 列表（⚠️ antd 6.6.4 已整体 deprecated，保留同款 console.error；
+// 替代品是 Listy）
+//
+// ⚠️ 类名前缀 `apollo-list`；**11 个 Component Token** + 2 个 `mergeToken` 派生
+//    （`listBorderedCls` / `minHeight`）。⚠️ css-var 声明块覆盖**两个根**：
+//    `.apollo-list` + `.apollo-list-container`（上游 extraCssVarPrefixCls，D95 家族）。
+//    复合组件：`List.Item` / `List.Item.Meta`。
+// ---------------------------------------------------------------------------
+export type {
+  ColumnCount,
+  ColumnType,
+  ListConfig,
+  ListConsumerProps,
+  ListGridType,
+  ListItemLayout,
+  ListItemMetaProps,
+  ListItemMetaRef,
+  ListItemMetaSlot,
+  ListItemProps,
+  ListItemSemanticClassNames,
+  ListItemSemanticName,
+  ListItemSemanticStyles,
+  ListItemSlot,
+  ListLocale,
+  ListProps,
+  ListRef,
+  ListSize,
+  ListSlot,
+} from './list';
+export { List, ListItem, ListItemMeta } from './list';
+export { genListStyle, genTokenDecls as genListTokenDecls } from './list/style';
+export type { ComponentToken as ListComponentToken } from './list/style/token';
+export { prepareComponentToken as prepareListComponentToken } from './list/style/token';
+// ---------------------------------------------------------------------------
 // Listy —— 轻量列表（antd v6 新增；引擎自建于 engine/，虚拟滚动复用
 // @apollo-design/virtual-list）
 //
