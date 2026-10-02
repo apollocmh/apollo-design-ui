@@ -101,11 +101,87 @@ try {
   for (const side of ['react', 'vue']) {
     const { context, page } = await newStablePage(browser, { width: 1440, height: 900 });
     try {
+      // ── 🚨 插桩：包住 `scrollTop` 的 setter，记录**每一次**赋值 ──────────────
+      // 这是回答「`doScroll` 到底跑没跑」最便宜的办法 —— 不用改源码、不用重建包。
+      // 空数组 ⇒ `doScroll` 从未执行（`startScroll` 早退 / 没被调用）；
+      // 非空 ⇒ 循环跑了但被别的东西重置。
+      await page.addInitScript(() => {
+        window.__SCROLL_SETS__ = [];
+        const desc = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollTop');
+        if (!desc?.get || !desc?.set) return;
+        Object.defineProperty(Element.prototype, 'scrollTop', {
+          configurable: true,
+          get() {
+            return desc.get.call(this);
+          },
+          set(v) {
+            if (this.tagName === 'UL' && /time-panel-column/.test(this.className)) {
+              window.__SCROLL_SETS__.push(Math.round(Number(v)));
+            }
+            desc.set.call(this, v);
+          },
+        });
+      });
+
+      // [TMP-DBG] 捕获页面 console（插桩日志）
+      // 🚨 **必须在 `goto` 之前挂** —— 应用在 `goto`（waitUntil:'load'）期间就挂载了，
+      //    之后再挂监听会**丢掉挂载期的全部日志**（本轮实测踩到，白白多绕两轮）。
+      const dbg = [];
+      page.on('console', (msg) => {
+        const t = msg.text();
+        if (t.includes('[TMP-DBG]')) dbg.push(t);
+      });
+
       const q = new URLSearchParams({ component: 'time-picker', variant: VARIANT, theme: 'light' });
       await page.goto(`http://127.0.0.1:${port}/${side}/${side}.html?${q.toString()}`, {
         waitUntil: 'load',
       });
       await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 20000 });
+
+      // ── 🚨 早期轮询：`stabilizePage()` **之前**就开始采样 ──────────────────
+      // 目的：验证「首次 post-flush 时列没有布局盒」这个假设。
+      // 判据：`offsetParent === null`（或 `display:none`）⇒ 那一刻 `offsetTop` 恒 0
+      // ⇒ `startScroll` 会走「等目标格上屏（最多 5 帧）」⇒ 5 帧后放弃。
+      const early = await page.evaluate(async () => {
+        const samples = [];
+        const t0 = performance.now();
+        for (let i = 0; i < 24; i += 1) {
+          const ul = document.querySelector('[class*="-time-panel-column"]');
+          const li = ul?.querySelector('li');
+          const sel = ul?.querySelector('[class*="-cell-selected"]');
+          samples.push({
+            t: Math.round(performance.now() - t0),
+            hasUl: !!ul,
+            display: ul ? getComputedStyle(ul).display : null,
+            offsetParentNull: ul ? ul.offsetParent === null : null,
+            clientHeight: ul?.clientHeight ?? null,
+            firstOffsetTop: li?.offsetTop ?? null,
+            selectedOffsetTop: sel?.offsetTop ?? null,
+            scrollTop: ul ? Math.round(ul.scrollTop) : null,
+          });
+          await new Promise((r) => setTimeout(r, 50));
+        }
+        return samples;
+      });
+      // [TMP-DBG] 自检：listener 到底有没有在工作
+      await page.evaluate(() => console.log('[TMP-DBG] hello-from-probe'));
+
+      console.log(`\n================= ${side} · [TMP-DBG] console =================`);
+      console.log(`共 ${dbg.length} 条；前 20 条：`);
+      for (const line of dbg.slice(0, 20)) console.log(' ', line);
+
+      console.log(`\n================= ${side} · scrollTop 赋值次数 =================`);
+      console.log(
+        JSON.stringify(await page.evaluate(() => window.__SCROLL_SETS__?.length ?? 'NO_HOOK')),
+      );
+      console.log(
+        '前 12 次:',
+        JSON.stringify(await page.evaluate(() => (window.__SCROLL_SETS__ ?? []).slice(0, 12))),
+      );
+
+      console.log(`\n================= ${side} · 早期轮询（每 50ms）=================`);
+      console.log(JSON.stringify(early, null, 1));
+
       await stabilizePage(page);
 
       await page.waitForTimeout(1100);

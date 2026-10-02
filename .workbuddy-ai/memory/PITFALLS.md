@@ -3854,8 +3854,56 @@
     要么用 `--project unit` 的 jsdom 探针（`mount(..., { attachTo: document.body })` 后数
     `.apollo-picker-time-panel-column`），要么用 L6 的真浏览器。
 
-318. 🚨 **浮层里的「滚动到选中项」在首次 post-flush 时**拿不到布局盒** ⇒ rAF 循环 5 帧后放弃，
-    而此后没有「值变化」再触发它 ⇒ **永久停在 0**（2026-10-02 实测，time-picker 的 L6）。
+318. 🚨 **`watch(..., { immediate: true, flush: 'post' })` 的首次回调跑在**本组件自己的渲染之前**
+    ⇒ 那时模板 `ref` 还是 `null`**（2026-10-02 实测并修复，time-picker 的 L6）。
+
+    **真正的原因**（第一版猜测「拿不到布局盒」是**错的**，见下「两次误判」）：
+    时间列 `TimeColumn` 用
+
+    ```ts
+    watch([() => props.value, ...], () => startScroll(), { immediate: true, flush: 'post' });
+    ```
+
+    而 `startScroll()` 第一件事就是读 `ulRef.value`。真浏览器插桩实测的日志顺序是
+
+    ```
+    [TMP-DBG] TimeColumn setup 入口 {type: hour, value: 12}
+    [TMP-DBG] startScroll {type: hour, hasUl: false, ...}    ← ref 还是 null
+    [TMP-DBG] 早退 ulRef
+    [TMP-DBG] watch 已注册 {type: hour}
+    ```
+
+    ⇒ `immediate` 的回调**同步**跑在 setup 里（早于本组件的渲染）⇒ `ulRef === null`
+    ⇒ 早退；而 `value` / `optionalValue` / `units` 此后都不再变化 ⇒ **watch 永不重跑**
+    ⇒ 时间列**永远停在 `scrollTop = 0`**。
+
+    **实测**（`tests/visual/debug/probe-timepicker-scroll.mjs`，真浏览器）：
+    两侧 `scrollHeight` / `clientHeight` / `offsetTop` / 选中类**完全一致**，
+    只有 `scrollTop` 不同（react 336/840/1260 vs vue **0/0/0**），且 **+2.6s 后仍是 0**
+    ⇒ 不是「截图早于动画收敛」。
+
+    **⚠️ 为什么潜伏很久**：`date-picker` 的 `datetime` 变体时间值是 `00`
+    ⇒ `targetLi === firstLi` ⇒ 在下一个守卫处就 return（**不需要滚**）⇒ 恒不触发。
+    任何「时间值非零」的消费者都会撞上它。
+
+    **修法**（已实施）：`startScroll` 里 `!ul` 时**重排一 tick**（`nextTick`，有上限）。
+    ⚠️ **用 `nextTick` 而不是 `raf`** —— 语义是「等这次渲染 flush 结束」，而且用 `raf`
+    会污染 `panel-edge.test.ts` 里被 mock 的帧队列（实测多出 1 帧就红了）。
+    ⚠️ 顺带修正了 `panel-edge.test.ts` 的 3 条用例：它们**预设了「挂载不滚」**
+    （原断言 `frames.run() === 0` / `readTop() === 0` / `calls[0]` 是用户那次），
+    而那正是被修掉的 bug ⇒ 改成「先排空挂载期」+「断言**无位移**」，
+    并**新增一条哨兵**「挂载时就会滚到当前值」。
+
+    **🚨 两次误判（都值得记）**：
+
+    1. **只看 `SharedTimeProps` 的定义就下结论**（那是 317 的教训）。
+    2. **探针自身的缺陷被当成被测对象的问题**：
+       `page.on('console')` **挂在 `page.goto()` 之后** ⇒ 应用在 `goto` 期间就挂载了
+       ⇒ **挂载期的日志全部丢失** ⇒ 我据此得出「`startScroll` 从未被调用」的**错误结论**，
+       白绕两轮。判据：**先在页面里 `console.log` 一句自检**，确认 listener 真的在工作。
+       ⚠️ 还有一层：探针复用 `tests/visual/.artifacts`，**只重建包不会刷新它**
+       —— 必须先跑一次 `run.mjs`（`buildAll`），否则量的是旧产物。
+
 
     **形态**：`packages/picker/src/time-column.ts` 的
 

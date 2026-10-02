@@ -70,8 +70,12 @@
    **未擅自修改已 completed 的 `date-picker`** —— 修法是把这 14 个键补进 `PickerCommonProps`
    并传进面板（面板侧 `getTimeProps(props)` 已支持顶层时间 props，缺的只是「组件层声明 + 转发」），
    需要一次跨组件的独立修复 + 它的 7 层回归。
-6. 🚨 **时间列从不滚动到选中值**（**阻断 L6**）—— 根因在 **`packages/picker` 的 `TimeColumn`**，
-   不是本组件。
+6. ✅ **已修（2026-10-02）**：时间列从不滚动到选中值 —— 根因在 **`packages/picker` 的
+   `TimeColumn`**（`watch(..., { immediate: true, flush: 'post' })` 的首次回调跑在
+   本组件渲染**之前** ⇒ `ulRef === null` ⇒ 早退且永不重跑），**不是本组件**。
+   修法与实测见 **PITFALLS 318**；`picker` 包回归 **372/372**、`date-picker` **434/434**、
+   本组件 L6 **15/15 `exact`（0.000%）**。
+   ⚠️ 下面保留的是**当时的现场记录**（含探针与误判），供以后排查同类问题参考。
 
    **实测**（`tests/visual/debug/probe-timepicker-scroll.mjs`，真浏览器，两侧同一用例）：
 

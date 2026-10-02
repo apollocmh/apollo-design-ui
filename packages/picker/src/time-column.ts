@@ -21,7 +21,7 @@
  */
 
 import { cancelRaf, raf } from '@apollo-design/utils';
-import { defineComponent, h, onBeforeUnmount, type PropType, ref, watch } from 'vue';
+import { defineComponent, h, nextTick, onBeforeUnmount, type PropType, ref, watch } from 'vue';
 import { type PanelDateType, usePanelInfo } from './panel-context';
 import { getNearestUnitIndex, type MeridiemUnit } from './time-tmpl';
 import type { TimeColumnUnit } from './time-units';
@@ -109,10 +109,38 @@ export const TimeColumn = defineComponent({
     const startScroll = (): void => {
       const ul = ulRef.value;
       lastDist = null;
-      retryTimes = 0;
+
+      /**
+       * 🚨 **`ulRef` 为空时必须重排一帧**（PITFALLS 318，2026-10-02 真浏览器实测）。
+       *
+       * 上面那个 `watch` 的 `immediate` 回调**跑在本组件自己的渲染之前** ——
+       * 实测日志顺序是「setup 入口 → startScroll(hasUl=false) → watch 已注册」。
+       * 也就是说它调 `startScroll()` 时 `ulRef.value` 还是 `null`；
+       * 而 `value` / `optionalValue` / `units` 此后都不再变化 ⇒ **watch 永不重跑**
+       * ⇒ 时间列**永远停在 `scrollTop = 0`**。
+       *
+       * 实测（`tests/visual/debug/probe-timepicker-scroll.mjs`）：
+       * react 的 `scrollTop` 是 336/840/1260，vue 是 **0/0/0**，且 +2.6s 后仍是 0
+       * ⇒ 不是「截图早于动画收敛」，是**从未滚动**。
+       *
+       * ⚠️ 为什么这个 bug 潜伏了很久：`date-picker` 的 `datetime` 变体时间值是 `00`
+       * ⇒ `targetLi === firstLi` ⇒ 在下一个守卫处就 return（**根本不需要滚**）⇒ 恒不触发。
+       * 任何「时间值非零」的消费者都会撞上它。
+       *
+       * ⚠️ 用 **`nextTick`** 而不是 `raf`：这里的语义是「等这次渲染 flush 结束」
+       * （`nextTick` 恰好是这个含义），**不是**「等一帧动画」。
+       * 用 `raf` 还会污染测试里被 mock 的帧队列
+       * （`panel-edge.test.ts` 用 `captureRaf()` 数帧，多出来的这一帧会打乱计数）。
+       * ⚠️ 重试有上限 —— 隐藏的列不该空转。
+       */
       if (!ul) {
+        if (retryTimes < MAX_SCROLL_RETRY) {
+          retryTimes += 1;
+          void nextTick(startScroll);
+        }
         return;
       }
+      retryTimes = 0;
 
       const targetValue = props.value ?? props.optionalValue;
       const targetLi = ul.querySelector<HTMLElement>(`[data-value="${String(targetValue)}"]`);

@@ -35,7 +35,8 @@
 - [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts **22/22**（接线 / 告警矩阵 / 上下文路由 / 默认形态）
 - [x] G7 L3 类型 —— `type.test-d.ts` **36/36**，`Type Errors no errors`（5 组负例闭包）
 - [x] G8 L5 a11y —— `a11y.test.ts` **16/16**（axe 5 形态 0 violation + 与直用 date-picker **逐属性相同**）
-- [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
+- [x] G9 L6 视觉 —— **15/15 `exact`（0.000%）**，基线 15 张入库、0 组同哈希
+      （🚨 修掉了 `picker` 包的时间列滚动，PITFALLS 318）
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
 - [ ] G12 REGISTRY —— 11 维度置 done（token/style 为 n/a + layerNotes）

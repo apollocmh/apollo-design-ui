@@ -575,11 +575,49 @@ describe('时间列的滚动（自己造布局）', () => {
       const ul = w.element.querySelector<HTMLElement>(`.${P}-time-panel-column`);
       const { readTop } = installLayout(ul as HTMLElement);
 
+      // 🚨 **先把「挂载期」的帧排空**（2026-10-02 修正，PITFALLS 318）：
+      //    修好「`ulRef` 为空时重排一 tick」之后，挂载期**会**滚到当前值
+      //    （`mountTime()` 的值是 `now`）⇒ 排一串收敛帧。
+      //    ⚠️ 本用例测的是**改值那一次**的守卫，不是「挂载不滚」——
+      //    原断言 `frames.run() === 0` 之所以曾经通过，是因为挂载期的 `startScroll`
+      //    在 `ulRef === null` 处就早退了（**那正是被修掉的 bug**）。
+      await nextTick();
+      frames.run();
+      // ⚠️ 挂载期已经滚到 `now` 那一格（PITFALLS 318 修好后才有）⇒
+      //    本用例的判据改成「**改值到首格不产生任何位移**」，
+      //    而不是原来的 `readTop() === 0`（那条同样预设了「挂载不滚」）。
+      const topAfterMount = readTop();
+
       // 值改成 0 点 ⇒ `targetLi === firstLi` ⇒ 直接 return
       await w.setProps({ value: [generateConfig.setHour(now, 0)] } as never);
       await nextTick();
       expect(frames.run()).toBe(0);
-      expect(readTop()).toBe(0);
+      expect(readTop()).toBe(topAfterMount);
+      w.unmount();
+    } finally {
+      frames.raf.mockRestore();
+    }
+  });
+
+  it('🚨 挂载时就会滚到当前值（PITFALLS 318 的回归哨兵）', async () => {
+    const frames = captureRaf();
+    try {
+      const w = mountPanel({
+        picker: 'time',
+        mode: 'time',
+        showHour: true,
+        showMinute: false,
+        showSecond: false,
+        value: [generateConfig.setHour(now, 5)],
+      });
+      const ul = w.element.querySelector<HTMLElement>(`.${P}-time-panel-column`) as HTMLElement;
+      const { readTop } = installLayout(ul);
+
+      // 挂载期的 `startScroll` 跑在 `ulRef` 还是 `null` 的时候 ⇒ 它会重排一 tick
+      // ⇒ 那一 tick 之后布局已装好 ⇒ 正常收敛到 #5（offsetTop = 150）。
+      await nextTick();
+      frames.run();
+      expect(readTop()).toBe(150);
       w.unmount();
     } finally {
       frames.raf.mockRestore();
@@ -613,6 +651,12 @@ describe('时间列的滚动（自己造布局）', () => {
         configurable: true,
       });
 
+      // 🚨 先排空「挂载期」的收敛帧，并**重置读计数**（2026-10-02 修正，PITFALLS 318）：
+      //    挂载期也会走一次 `startScroll`，会消耗掉 `reads` 的前两次。
+      await nextTick();
+      frames.run();
+      reads = 0;
+
       await w.setProps({ value: [generateConfig.setHour(now, 5)] } as never);
       await nextTick();
       // 帧 1：dist=100，记 lastDist；帧 2 读到 10000 ⇒ dist 变大 ⇒ stopScroll、不再排帧。
@@ -642,6 +686,16 @@ describe('时间列的滚动（自己造布局）', () => {
       const ul = w.element.querySelector<HTMLElement>(`.${P}-time-panel-column`) as HTMLElement;
       const { items } = installLayout(ul);
       expect(items).toHaveLength(24);
+
+      // 🚨 **挂载期程序化滚动也会提交一次** `changeOnScroll`（上游同判）——
+      //    先把挂载期排空再清 mock，本用例测的是**用户滚动**那一次（PITFALLS 318）。
+      //    ⚠️ 窗口要给足：挂载期要先跑完 ~14 帧收敛（≈224ms）**再**等 300ms 的
+      //       `SCROLL_DELAY` ⇒ 400ms 不够，得 ~2000ms。
+      // ⚠️ 先 `await nextTick()` 把挂载期的 `nextTick` 重试链推起来（它走微任务，
+      //    假时钟推不动），再 `advanceTimersByTime` 驱动它的 rAF 收敛。
+      await nextTick();
+      vi.advanceTimersByTime(2000);
+      onSelect.mockClear();
 
       // 停在 35 ⇒ 离第 1 格（30）最近
       Object.defineProperty(ul, 'scrollTop', { value: 35, configurable: true, writable: true });
@@ -675,6 +729,13 @@ describe('时间列的滚动（自己造布局）', () => {
       });
       const ul = w.element.querySelector<HTMLElement>(`.${P}-time-panel-column`) as HTMLElement;
       installLayout(ul);
+
+      // 🚨 同上一用例：先排空挂载期那一次提交（窗口要够长，见那边的说明）。
+      // ⚠️ 先 `await nextTick()` 把挂载期的 `nextTick` 重试链推起来（它走微任务，
+      //    假时钟推不动），再 `advanceTimersByTime` 驱动它的 rAF 收敛。
+      await nextTick();
+      vi.advanceTimersByTime(2000);
+      onSelect.mockClear();
 
       Object.defineProperty(ul, 'scrollTop', { value: 35, configurable: true, writable: true });
       await ul.dispatchEvent(new Event('scroll'));
