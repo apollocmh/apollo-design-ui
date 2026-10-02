@@ -54,6 +54,7 @@ import {
   type Component,
   computed,
   h,
+  inject,
   onScopeDispose,
   type Ref,
   ref,
@@ -61,6 +62,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
@@ -173,12 +175,22 @@ const emit = defineEmits<{
   keydown: [event: KeyboardEvent, preventDefault: () => void];
 }>();
 
+// ============================== 宿主上下文（薄壳改道） ==============================
+/**
+ * `TimePicker` 之类的**薄壳**需要把「配置键」与「告警命名空间」改道 —— 见
+ * `_internal/picker-host-context.ts` 的文件头（含实测表）。
+ *
+ * ⚠️ 默认值就是本组件自己的语义（`datePicker` / `DatePicker`）⇒ **本组件自身行为不变**；
+ * 只有被 `TimePicker.vue` 包住时才会拿到覆盖值。
+ */
+const host = inject(pickerHostContextKey, {});
+
 // ============================== 废弃 prop 告警 ==============================
 /**
  * 与单值同一张表（上游 `generateRangePicker.js:77-83` 逐字），
  * 但**告警名是 `DatePicker.RangePicker`**（`:76`）。
  */
-const devWarning = useDevWarning('DatePicker.RangePicker');
+const devWarning = useDevWarning(host.warningName ?? 'DatePicker.RangePicker');
 const DEPRECATED_PROPS: Record<string, string> = {
   dropdownClassName: 'classNames.popup.root',
   popupClassName: 'classNames.popup.root',
@@ -191,7 +203,7 @@ for (const [oldProp, newProp] of Object.entries(DEPRECATED_PROPS)) {
 }
 
 // ============================== 上下文归一 ==============================
-const context = useComponentConfig('datePicker');
+const context = useComponentConfig(host.configKey ?? 'datePicker');
 /** 🚨 范围还有一份 `rangePicker` 配置（`className` / `style` / `separator`）。 */
 const rangePickerContext = useComponentConfig('rangePicker');
 const { getPrefixCls } = context;

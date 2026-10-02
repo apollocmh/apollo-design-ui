@@ -64,7 +64,17 @@ import {
 } from '@apollo-design/picker';
 import { useZIndex } from '@apollo-design/portal';
 import { useDevWarning } from '@apollo-design/utils';
-import { type Component, type CSSProperties, computed, h, ref, type VNodeChild, watch } from 'vue';
+import {
+  type Component,
+  type CSSProperties,
+  computed,
+  h,
+  inject,
+  ref,
+  type VNodeChild,
+  watch,
+} from 'vue';
+import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
@@ -180,6 +190,16 @@ const emit = defineEmits<{
   keydown: [event: KeyboardEvent, preventDefault: () => void];
 }>();
 
+// ============================== 宿主上下文（薄壳改道） ==============================
+/**
+ * `TimePicker` 之类的**薄壳**需要把「配置键」与「告警命名空间」改道 —— 见
+ * `_internal/picker-host-context.ts` 的文件头（含实测表）。
+ *
+ * ⚠️ 默认值就是本组件自己的语义（`datePicker` / `DatePicker`）⇒ **本组件自身行为不变**；
+ * 只有被 `TimePicker.vue` 包住时才会拿到覆盖值。
+ */
+const host = inject(pickerHostContextKey, {});
+
 // ============================== 废弃 prop 告警 ==============================
 /**
  * 上游 `generateSinglePicker.js` 的 `deprecatedProps` 表（**逐字**）：
@@ -205,7 +225,7 @@ const emit = defineEmits<{
  *
  * ⚠️ 仅 dev 生效（`useDevWarning` 内部走 `isDev()`）。
  */
-const devWarning = useDevWarning('DatePicker');
+const devWarning = useDevWarning(host.warningName ?? 'DatePicker');
 const DEPRECATED_PROPS: Record<string, string> = {
   dropdownClassName: 'classNames.popup.root',
   popupClassName: 'classNames.popup.root',
@@ -218,7 +238,7 @@ for (const [oldProp, newProp] of Object.entries(DEPRECATED_PROPS)) {
 }
 
 // ============================== 上下文归一 ==============================
-const context = useComponentConfig('datePicker');
+const context = useComponentConfig(host.configKey ?? 'datePicker');
 const { getPrefixCls } = context;
 /**
  * `ConfigProvider` 里 `components.datePicker` 的配置。

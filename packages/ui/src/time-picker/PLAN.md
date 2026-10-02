@@ -30,8 +30,9 @@
 - [x] G1 ANALYZE —— 产出 **docs/analysis/time-picker.md**（+ 探针 `tests/visual/debug/probe-time-picker-antd.mjs`）
 - [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
 - [x] G3 TOKEN —— **n/a**（零 Component Token / 零样式，见上「特判 1」）
-- [ ] G4 IMPLEMENT —— TimePicker.vue + TimeRangePicker.vue + index.ts；**无 style/index.ts**
-- [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
+- [x] G4 IMPLEMENT —— TimePicker.vue + TimeRangePicker.vue + index.ts；**无 style/index.ts**
+      （+ `_internal/picker-host-context.ts` 的注入改道；`date-picker` 回归 434/434 绿）
+- [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts **22/22**（接线 / 告警矩阵 / 上下文路由 / 默认形态）
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）

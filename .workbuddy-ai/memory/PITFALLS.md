@@ -14,6 +14,7 @@
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
+- **薄壳/转发**：🚨 **被 `Omit` 掉的 prop 必须在转发时显式补回**（内层有默认值就会静默用错，315） · ⚠️ VTU `mount(C, options, slots)` 的**第三参被静默忽略**，插槽要写进 `options.slots`（316）。
 
 ## 工具 / 沙箱
 
@@ -3786,3 +3787,38 @@
       用 `grep -n '/\*' <file>` 数一下 `/*` 与 `*/` 是否配平（而不是逐条读报错）。
     - 判据：`tsc` 的报错**行号密集且集中在文件尾部**，而病灶在文件头部 —— 这类
       「行号漂移」几乎都是**注释/字符串未闭合**导致的解析起点错位。
+
+315. 🚨 **「薄壳」把某个 prop 从自己的类型里剔除了，就必须在转发时**显式补回**它**
+    （2026-10-02 实测，time-picker 的 G4/G5）。
+
+    **形态**：上游 `TimePickerProps = Omit<PickerTimeProps, 'picker' | …>` —— `picker` 被剔除
+    （本组件恒 `picker='time'`）。本仓照抄了类型，于是 `props` 里**根本没有 `picker` 这个键**
+    ⇒ `{ ...rest }` 转发时自然带不上 ⇒ 内层 `DatePicker.vue` 用了它的默认值 `'date'`
+    ⇒ **`<TimePicker>` 渲染出一整块日期面板**。
+
+    **为什么难发现**：
+    - `lint:types` **全绿**（`picker` 确实不在 `TimePickerProps` 里，类型上无懈可击）；
+    - L4 的 DOM 契约也看不出来（DOM 结构几乎一样，只有面板内部不同）；
+    - **只有 L1 断言「面板类型」**（`.apollo-picker-time-panel` 存在 / `-date-panel` 不存在）
+      才抓得到 —— 而这条断言正是 PITFALLS 300 说的「**断言效果而不是断言 props 传过去了**」。
+
+    **判据**：写薄壳时，对**每一个** `Omit` 掉的键问一句「内层有没有自己的默认值？」——
+    有的话（`picker` / `variant` / `mode`）就必须**显式写死**，且放在 `...rest` **之后**。
+
+316. ⚠️ **`@vue/test-utils` 的 `mount(Component, options, slots)` 第三个参数会被静默忽略**
+    （2026-10-02 实测，time-picker 的 L1）。
+
+    **形态**：想给 `ConfigProvider` 传默认插槽，写成
+
+    ```ts
+    mount(ConfigProvider, { props: { components: {…} }, attachTo: document.body },
+          { default: () => h(DatePicker) });        // ❌ 第三个参数不存在
+    ```
+
+    VTU 的签名是 `mount(component, options?)`，插槽是 **`options.slots`**。
+    第三个参数既不报错也不告警，结果**什么都没渲染** ⇒ `document.querySelector('.apollo-picker')`
+    返回 `null` ⇒ 断言 `toContain('dp-root')` 拿到空串 ⇒
+    **看起来像「`ConfigProvider` 的组件级配置没生效」**（会白白去查配置链路）。
+
+    **判据**：`mount` 的所有可选项（`props` / `slots` / `global` / `attachTo`）都在**第二个参数**里；
+    写第三个参数前先看返回值里有没有渲染出东西 —— `w.html()` 一行就能证伪。

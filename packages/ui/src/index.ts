@@ -1557,6 +1557,39 @@ export { genTabsStyle, genTokenDecls as genTabsTokenDecls } from './tabs/style';
 export type { ComponentToken as TabsComponentToken } from './tabs/style/token';
 export { prepareComponentToken as prepareTabsComponentToken } from './tabs/style/token';
 // ---------------------------------------------------------------------------
+// TimePicker —— 时间选择（🚨 它是 `DatePicker` 的**薄壳**：零自有样式）
+//
+// ⚠️ 类名前缀与 DOM 全部来自 `date-picker`（`apollo-picker`）—— 本组件**没有** `style/`，
+//    也**没有** Component Token（`tokenStatus` / `styleStatus` 在 registry 里是 `n/a`）。
+//    🚨 它读的 `ConfigProvider` 配置是 **`timePicker`**（不是 `datePicker`）——
+//    判据是内层的 `pickerType` 由**入口组件名**决定，不是由 `picker` 模式决定。
+//    ⚠️ `TimePicker.RangePicker` 的废弃告警**比单个多**（`bordered` / `popupClassName` /
+//    `popupStyle` 在单个上被外层吞掉、在范围上原样透传）。
+// ---------------------------------------------------------------------------
+export type {
+  TimeNoUndefinedRangeValue,
+  TimePickerCellRenderInfo,
+  TimePickerEmits,
+  TimePickerExpose,
+  TimePickerLocale,
+  TimePickerPopupSemanticClassNames,
+  TimePickerPopupSemanticStyles,
+  TimePickerProps,
+  TimePickerSemanticClassNames,
+  TimePickerSemanticStyles,
+  TimePickerSemanticValue,
+  TimePickerSlots,
+  TimePickerValue,
+  TimePickerValueDate,
+  TimeRangePickerEmits,
+  TimeRangePickerExpose,
+  TimeRangePickerProps,
+  TimeRangePickerSlots,
+  TimeRangeValue,
+  TimeRangeValueDate,
+} from './time-picker';
+export { TimePicker, TimePickerWithRange, TimeRangePicker } from './time-picker';
+// ---------------------------------------------------------------------------
 // Timeline —— 时间轴（🚨 它是 `Steps` 的**薄壳**：没有自己的 DOM）
 //
 // ⚠️ 类名前缀 `apollo-timeline`；**6 个 Component Token**，但产物 css-var 块只有 **4 条**
