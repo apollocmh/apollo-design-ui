@@ -35,12 +35,7 @@ const el = h(
       h(Avatar, { src: 'x.png' }),
       h(Avatar, { src: h('img', { src: 'x.png', alt: 'a' }) }),
       h(Avatar.Group, null, h(Avatar, null, 'A'), h(Avatar, null, 'B')),
-      h(
-        Avatar.Group,
-        { max: { count: 1 } },
-        h(Avatar, null, 'A'),
-        h(Avatar, null, 'B'),
-      ),
+      h(Avatar.Group, { max: { count: 1 } }, h(Avatar, null, 'A'), h(Avatar, null, 'B')),
     ),
   ),
 );

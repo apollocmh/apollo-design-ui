@@ -755,6 +755,34 @@ export const COMPONENTS = {
       'rtl', // direction: rtl ⇒ 根上的 `-rtl` + `direction:rtl`（**有真实 CSS**，与 anchor 不同）
     ],
   },
+  avatar: {
+    // 12 个 variant × 3 个 viewport = 36 张
+    //
+    // ⚠️ Avatar **没有浮层**（`group-max` 的溢出 Popover 在静态帧里不展开）
+    //    ⇒ 不需要 `getPopupContainer`。它的视觉面是**几何**：宽高、圆角、字号、字符缩放。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/avatar.*` 的文件头）：
+    //    字体在用例内钉住 + 容器宽度 320px。⚠️ `text` / `overflow` 变体里的字符头像
+    //    走 `setScaleParam`（真浏览器里 offsetWidth 有效）⇒ **字体一变 scale 就变**，
+    //    所以字体必须钉死。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完后先
+    //    `md5 tests/visual/baselines/react/avatar/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basic', // 五种尺寸（含数字 14）× circle + icon
+      'square', // 五种尺寸 × square（圆角走 `-square` 分支）
+      'text', // 字符头像（单字符 / 多字符）
+      'overflow', // 长文本 + 默认 gap ⇒ 触发**字符缩放**（`scale` 内联 transform）
+      'icon', // 只有 icon（`-icon` 的字号分支）
+      'src', // 图片头像（data URI）+ `src` 是 vnode 的形态
+      'numeric', // 数字尺寸（内联 width/height/fontSize）
+      'badge', // 带徽标的头像（`Badge` 包裹）
+      'group', // Avatar.Group 四个子头像（重叠 + 边框色）
+      'group-max', // `max.count` 截断 + `+N`（溢出项）
+      'responsive', // 响应式尺寸（**三个视口下尺寸不同**）
+      'rtl', // direction: rtl ⇒ group 根上的 `-group-rtl`
+    ],
+  },
   card: {
     // 11 个 variant × 3 个 viewport = 33 张
     //

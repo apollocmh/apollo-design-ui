@@ -1,0 +1,132 @@
+{
+  "$schema": "../schema.json",
+  "component": "avatar",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-02T00:42:25.955Z",
+  "cases": [
+    {
+      "id": "avatar:basic",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:prefix-cls:no-props",
+      "html": "<span class=\"ant-avatar ant-avatar-circle css-var-root ant-avatar-css-var css-dev-only-do-not-override-19u5a7b\"><span class=\"ant-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:prefix-cls:custom",
+      "html": "<span class=\"custom custom-circle css-var-root custom-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"custom-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:empty",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\"></span></span>"
+    },
+    {
+      "id": "avatar:shape-square",
+      "html": "<span class=\"apollo-avatar apollo-avatar-square css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:shape-circle",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:size-large",
+      "html": "<span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:size-small",
+      "html": "<span class=\"apollo-avatar apollo-avatar-sm apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:size-medium",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:size-number",
+      "html": "<span style=\"width:40px;height:40px;font-size:18px\" class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:size-number-icon",
+      "html": "<span style=\"width:40px;height:40px;font-size:20px\" class=\"apollo-avatar apollo-avatar-circle apollo-avatar-icon css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"my-icon\">i</span></span>"
+    },
+    {
+      "id": "avatar:size-responsive",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:size-number-square",
+      "html": "<span style=\"width:40px;height:40px;font-size:18px\" class=\"apollo-avatar apollo-avatar-square css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:icon",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-icon css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"my-icon\">i</span></span>"
+    },
+    {
+      "id": "avatar:src-string",
+      "html": "<link rel=\"preload\" as=\"image\" href=\"x.png\"/><span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-image css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><img src=\"x.png\"/></span>"
+    },
+    {
+      "id": "avatar:src-string-attrs",
+      "html": "<link rel=\"preload\" as=\"image\" imageSrcSet=\"x.png 2x\" crossorigin=\"\"/><span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-image css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><img src=\"x.png\" draggable=\"false\" srcSet=\"x.png 2x\" alt=\"a\" crossorigin=\"anonymous\"/></span>"
+    },
+    {
+      "id": "avatar:src-vnode",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-image css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"my-src\">S</span></span>"
+    },
+    {
+      "id": "avatar:src-and-icon",
+      "html": "<link rel=\"preload\" as=\"image\" href=\"x.png\"/><span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-image apollo-avatar-icon css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><img src=\"x.png\"/></span>"
+    },
+    {
+      "id": "avatar:draggable-string",
+      "html": "<link rel=\"preload\" as=\"image\" href=\"x.png\"/><span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-image css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><img src=\"x.png\" draggable=\"false\"/></span>"
+    },
+    {
+      "id": "avatar:className",
+      "html": "<span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var user-cls root-cls css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:style",
+      "html": "<span style=\"background-color:#fde3cf;color:#f56a00\" class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:attrs",
+      "html": "<span data-testid=\"av\" aria-label=\"头像\" class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">U</span></span>"
+    },
+    {
+      "id": "avatar:group",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">B</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">C</span></span></div>"
+    },
+    {
+      "id": "avatar:group-empty",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"></div>"
+    },
+    {
+      "id": "avatar:group-max",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">+2</span></span></div>"
+    },
+    {
+      "id": "avatar:group-max-style",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span style=\"color:#f56a00\" class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">+2</span></span></div>"
+    },
+    {
+      "id": "avatar:group-max-count-deprecated",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">+2</span></span></div>"
+    },
+    {
+      "id": "avatar:group-max-no-truncate",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">B</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">C</span></span></div>"
+    },
+    {
+      "id": "avatar:group-size-shape",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-square css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-lg apollo-avatar-square css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">B</span></span></div>"
+    },
+    {
+      "id": "avatar:group-rtl",
+      "html": "<div class=\"apollo-avatar-group apollo-avatar-group-rtl css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">B</span></span></div>"
+    },
+    {
+      "id": "avatar:group-className",
+      "html": "<div class=\"apollo-avatar-group css-var-root apollo-avatar-css-var g-cls g-root css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">A</span></span><span class=\"apollo-avatar apollo-avatar-circle css-var-root apollo-avatar-css-var css-dev-only-do-not-override-1v6lqee\"><span class=\"apollo-avatar-string\" style=\"opacity:0\">B</span></span></div>"
+    }
+  ]
+}

@@ -1099,3 +1099,53 @@ export const CARD_SEMANTIC_STYLES = {
   header: { background: '#bae7ff' },
   body: { padding: '8px' },
 };
+
+// ---------------------------------------------------------------------------
+// Avatar
+// ---------------------------------------------------------------------------
+
+/**
+ * Avatar 用例的容器。
+ *
+ * ⚠️ 容器宽度固定 320px（**窄于最小视口 375px**）⇒ 三个视口下容器一致。
+ * ⚠️ 字体在用例内钉住（头像的文字是**被测量**的对象，字体一变 scale 就变）。
+ */
+export const AVATAR_BOX_STYLE = {
+  width: '320px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 行内间距（每个用例把头像排成一行）。 */
+export const AVATAR_ROW_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  flexWrap: 'wrap',
+};
+
+/**
+ * 图片头像的替身：**data URI**（1×1 PNG）。
+ *
+ * ⚠️ 刻意**不用外链图片** —— 加载时序会让截图不稳定（与 `image` / `avatar` 的 demo 同判）。
+ */
+export const AVATAR_SRC =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+
+/** 字符头像的文案（`USER` 用于测「自动缩字」；`A` 是单字符）。 */
+export const AVATAR_TEXT_SHORT = 'U';
+export const AVATAR_TEXT_LONG = 'USER';
+/** 需要缩放的长文本（`gap` 默认 4 ⇒ 触发 `setScaleParam` 的缩放分支）。 */
+export const AVATAR_TEXT_OVERFLOW = 'Edward King 3';
+
+/** 响应式尺寸表（对齐 antd 的 responsive demo）。 */
+export const AVATAR_RESPONSIVE_SIZE = {
+  xs: 24,
+  sm: 32,
+  md: 40,
+  lg: 64,
+  xl: 80,
+  xxl: 100,
+};
