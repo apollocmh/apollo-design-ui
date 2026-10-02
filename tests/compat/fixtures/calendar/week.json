@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "calendar/week",
+  "component": "calendar",
+  "description": "周号列（`showWeek: true`）的 DOM 契约：每行第一个 `<td>` 是 `.{p}-cell-week`（内容是 `getWeek` 的返回值），`<thead>` 第一个 `<th>` 里是一个 **零尺寸** 的 `<span>`（承载 `locale.week` 文案，`opacity:0` + `position:absolute`）。🚨 全屏下 `.{p}-calendar-full .{p}-cell-week .{p}-cell-inner` 的 `height` 是一条**长 `calc()`**（`controlHeightSM + dateContentHeight + paddingXS/2 + lineWidthBold` ≈ 116px）——2026-10-02 实测：那条 `calc()` 多写一个 `)` 会让浏览器**丢弃整条声明**，周号内层退回 24px ⇒ 数字落到行中间（L6 只有这一个变体 block-diff）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "value": "2025-06-15",
+    "showWeek": true
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change", "panelChange", "select"]
+  }
+}

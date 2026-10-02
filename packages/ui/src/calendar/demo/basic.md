@@ -5,13 +5,23 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/calendar/demo/ 抄清单 -->
+一个通用的日历面板，支持年/月切换。
+
 ```vue
 <script setup lang="ts">
+// 对齐 antd 的 basic demo。
+//
+// ⚠️ 上游的 `Calendar` 不传 `value` ⇒ 内部取 `getNow()`（默认「今天」）。
+//    demo 是给人看的，保持这个行为；**视觉/契约用例**则必须显式传 `value`（否则会 flaky）。
+import type { CalendarEmits } from '@apollo-design/ui';
 import { Calendar } from '@apollo-design/ui';
+
+const onPanelChange: CalendarEmits['panelChange'] = (value, mode) => {
+  console.log(value.format('YYYY-MM-DD'), mode);
+};
 </script>
 
 <template>
-  <Calendar>basic demo 占位</Calendar>
+  <Calendar @panel-change="onPanelChange" />
 </template>
 ```

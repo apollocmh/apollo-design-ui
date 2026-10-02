@@ -1,0 +1,21 @@
+{
+  "$schema": "../schema.json",
+  "id": "calendar/mini",
+  "component": "calendar",
+  "description": "迷你日历（`fullscreen: false`）的 DOM 契约：根上 `-full` 与 `-mini` **互斥且必有其一**；header 的两个 `Select` 与 `Radio.Group` 降为 `size=\"small\"`；面板的 `-content` 高度由 `miniContentHeight`（默认 256px）驱动。⚠️ `fullscreen` 是**布尔 prop 且默认 `true`** ⇒ 不传就是全屏；显式传 `false` 才走这一支（Vue 会把未传的 Boolean prop 赋成 `false` ⇒ 本仓用 `undefined` 默认值兜住，PITFALLS 46）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "value": "2025-06-15",
+    "fullscreen": false
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change", "panelChange", "select"]
+  }
+}

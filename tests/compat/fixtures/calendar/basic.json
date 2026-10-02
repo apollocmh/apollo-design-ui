@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema.json",
+  "id": "calendar/basic",
+  "component": "calendar",
+  "description": "全屏日历（默认 `fullscreen`）的 DOM 契约：🚨 根类名是 **`apollo-picker-calendar`**（`getPrefixCls('picker')`）而 CSS 变量是 `--apollo-calendar-*` —— **类名与变量名的命名空间不同**；但 `prefixCls` 作为 **prop** 传时会整体覆盖（传 `'apollo'` ⇒ `apollo-calendar`）。面板**内联**（没有浮层）⇒ SSR 能拿到全量 DOM：`.apollo-picker-panel` 带 `tabindex=0`，且因为传了 `hideHeader`，面板内**没有** `.apollo-picker-header`（4 个导航按钮与其 `aria-label` 都不在）。header 三段 = 年下拉 + 月下拉（**仅 `mode='month'`**）+ `Radio.Group` 模式切换。⚠️ 根节点**不透传 `attrs`**（上游 `generateCalendar.js` 里 `restProps` 出现 0 次）⇒ `id` / `data-*` / `aria-*` 不会落到根元素上。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "value": "2025-06-15"
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change", "update:value", "panelChange", "update:mode", "select"]
+  }
+}

@@ -89,10 +89,17 @@
       `Object`，而它们支持**函数形态** ⇒ Vue 报
       `Invalid prop: type check failed … Expected Object, got Function`，
       **用例仍然通过**。改成 `[Object, Function]` ⇒ 告警 0 条。
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
-- [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
-- [ ] G14 COMMIT —— commit message 带 [COMP:calendar]
+- [x] G11 DOCS —— **8 个 demo**（`expectCount: 8`）+ README / index.zh-CN / index.en-US。
+      ⚠️ 2 个未移植已登记 README §5：`lunar`（需要第三方 `lunar-typescript`）、
+      `component-token`（与全仓 10+ 组件同判）。
+      ⚠️ **5 处 demo 级替换**已逐条登记（`antd-style` ×3 / `theme.useToken()` ×2 /
+      函数式 `styles` 的 `return undefined` 类型收窄 ×1）—— 都是 demo 级，不是能力缺口。
+      🚨 抓到一条**我自己的误判**：曾给 `notice-calendar` 写了两条废弃告警豁免 ——
+      但那两个名字只是**局部函数**（真正传的只有 `cellRender`）⇒ **一条告警都不发**；
+      harness 的「未被命中的豁免会让测试失败（防腐烂）」把它抓了出来。
+- [x] G12 REGISTRY —— 11 维度全 done + `status: completed` + `layerNotes` 逐层写依据
+- [x] G13 BUILD —— 四道全绿（另显式补跑 `test:types` 与 `test:visual`，两者都不在 `verify:full` 里）
+- [x] G14 COMMIT —— `[COMP:calendar]`
 
 ## 开工避坑清单（全部真实踩过，详见 .workbuddy-ai/memory/PITFALLS.md）
 
