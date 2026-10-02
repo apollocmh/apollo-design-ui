@@ -30,7 +30,13 @@
 
 import { getDesignToken } from '@apollo-design/theme';
 import { describe, expect, it } from 'vitest';
-import { DATE_PICKER_RULES, genTokenDecls } from '../style';
+import {
+  DATE_PICKER_RULES,
+  genPanelRules,
+  genTokenDecls,
+  PANEL_RULES,
+  TRIGGER_RULES,
+} from '../style';
 import {
   type DatePickerSeedToken,
   datePickerPanelTokenValues,
@@ -409,5 +415,99 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
   it('`internal_fixed_item_margin` 保留下划线（不是 `internal-fixed-item-margin`）', () => {
     expect(declared.has('--apollo-date-picker-internal_fixed_item_margin')).toBe(true);
     expect(declared.has('--apollo-date-picker-internal-fixed-item-margin')).toBe(false);
+  });
+});
+
+/**
+ * ── 拆分不变量（2026-10-02 为 `calendar` 拆出 `PANEL_RULES`）─────────────────────
+ *
+ * `calendar` 复用面板规则的前提是「`PANEL_RULES` + `TRIGGER_RULES` **恰好划分**
+ * `DATE_PICKER_RULES`」—— 一条不多、一条不少、不重不漏、**顺序不变**。
+ * 这组用例把那条契约钉死：任何一侧被改动而另一侧没跟上，这里立刻红。
+ *
+ * ⚠️ 拆分的**判据**（可复现的双向 oracle）在
+ * `tests/visual/debug/classify-date-picker-rules.mjs`：取
+ * 「date-picker 产物里 `.ant-picker-dropdown <X>`」∩「calendar 产物里
+ * `.ant-picker-calendar <X>`」⇒ 83 条规则 / 119 个选择器。这里只钉**结果**。
+ */
+describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）', () => {
+  const lines = (s: string) => s.split('\n').filter((l) => l.trim());
+  const all = lines(DATE_PICKER_RULES);
+  const trigger = lines(TRIGGER_RULES);
+  const panel = lines(PANEL_RULES);
+
+  it('两侧计数：TRIGGER 174 · PANEL 83', () => {
+    expect(trigger).toHaveLength(174);
+    expect(panel).toHaveLength(83);
+  });
+
+  it('恰好划分：并集 == 原 257 条，且**不重**（没有一条同时属于两侧）', () => {
+    // 原 257 条无重复行（实测去重后仍是 257）⇒ 并集大小必须**恰好** 257
+    const union = new Set([...trigger, ...panel]);
+    expect(union.size).toBe(257);
+    expect([...union].sort()).toEqual([...new Set(all)].sort());
+    // 两侧不相交
+    const overlap = trigger.filter((l) => panel.includes(l));
+    expect(overlap).toEqual([]);
+  });
+
+  it('面板块在原文里**连续**且起始于第 43 条（下标 42）', () => {
+    const first = panel[0] ?? '';
+    expect(all.indexOf(first)).toBe(42);
+    expect(all.slice(42, 42 + panel.length)).toEqual(panel);
+  });
+
+  it('`DATE_PICKER_RULES` 的**顺序与条数**都不变（层叠顺序不能动）', () => {
+    expect(all).toHaveLength(257);
+    // 首尾各取一条钉住顺序没被重排
+    expect(all[0]).toContain('.apollo-picker-footer{border-top');
+    expect(all[256]).toContain('.apollo-picker-compact-last-item');
+  });
+
+  it('`PANEL_RULES` 的每个逗号段都以 `.apollo-picker-dropdown ` 开头（换作用域安全的判据）', () => {
+    for (const line of panel) {
+      const selPart = line.slice(0, line.indexOf('{'));
+      const parts = selPart
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      expect(parts.length).toBeGreaterThan(0);
+      for (const p of parts) expect(p.startsWith('.apollo-picker-dropdown ')).toBe(true);
+    }
+    // 反向：整块里 `.apollo-picker-dropdown` 的出现次数 == 逗号段总数（不发生在选择器中部）
+    const totalSegments = panel.reduce(
+      (n, l) =>
+        n +
+        l
+          .slice(0, l.indexOf('{'))
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean).length,
+      0,
+    );
+    expect(panel.join('\n').split('.apollo-picker-dropdown').length - 1).toBe(totalSegments);
+  });
+
+  it('`genPanelRules()` 单参 = 只换作用域：行数不变、换净、body 逐字不变', () => {
+    const swapped = genPanelRules('.apollo-picker-calendar');
+    expect(lines(swapped)).toHaveLength(83);
+    expect(swapped.includes('.apollo-picker-dropdown')).toBe(false);
+    // ⚠️ 单参调用是**恒等变换**（token 命名空间不动）⇒ body 逐字不变
+    const bodies = (s: string) => lines(s).map((l) => l.slice(l.indexOf('{')));
+    expect(bodies(swapped)).toEqual(bodies(PANEL_RULES));
+  });
+
+  it('`genPanelRules(scope, tokenNs)` 换 token 命名空间：`--apollo-date-picker-*` 一个不剩', () => {
+    // 🚨 这条是 `calendar` 复用的**真前提**：面板规则引用的自有变量必须跟着换名，
+    //    否则「声明了 --apollo-calendar-*、引用了 --apollo-date-picker-*」⇒ 静默回退。
+    const swapped = genPanelRules('.apollo-picker-calendar', '--apollo-calendar');
+    expect(swapped.includes('--apollo-date-picker-')).toBe(false);
+    expect(lines(swapped)).toHaveLength(83);
+    // 换名前后面板规则确实**引用了**自有变量（否则这条用例是空转）
+    expect(PANEL_RULES.includes('--apollo-date-picker-')).toBe(true);
+    // 换名只动变量前缀，选择器与其余文本逐字不变
+    expect(swapped.replace(/--apollo-calendar-/g, '--apollo-date-picker-')).toBe(
+      genPanelRules('.apollo-picker-calendar'),
+    );
   });
 });

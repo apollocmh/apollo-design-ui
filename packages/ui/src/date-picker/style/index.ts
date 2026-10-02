@@ -128,8 +128,39 @@ function toKebab(key: string): string {
   return key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
-/** 257 条规则（由 `--emit-static` 产出，逐字搬运、只改前缀）。 */
-export const DATE_PICKER_RULES = `
+/**
+ * ── 规则的三段结构（2026-10-02 为 `calendar` 拆出 `PANEL_RULES`）──────────────
+ *
+ * 上游 `date-picker/style/panel.ts` 的 **`genPanelStyle`** 被两个组件复用：
+ *
+ *   date-picker：`index.ts` 的 `'&-dropdown': { ...genPanelStyle(token) }`
+ *                ⇒ 面板规则降级为 `.ant-picker-dropdown <X>`
+ *   calendar   ：`style/index.ts` 的 `[calendarCls]: { ...genPanelStyle(token) }`
+ *                ⇒ 面板规则降级为 `.ant-picker-calendar <X>`
+ *
+ * ⇒ 面板那 83 条必须能被 `calendar` **单独**拿走，于是拆成
+ * `TRIGGER_RULES`（174 条）+ `PANEL_RULES`（83 条）。
+ *
+ * 🚨 **为什么是三段而不是两段**：面板块在 `--emit-static` 的产物里是**连续**的
+ * 第 43–125 条，触发/外壳规则分列它前后 ⇒ 要保持 `DATE_PICKER_RULES` 的
+ * **字节与层叠顺序不变**，只能按「前段 + 面板 + 后段」拼回去。
+ * （实测触发区与面板区的**选择器集合交集为 0**，所以顺序大概率不影响渲染；
+ *   但「同特异性不同选择器命中同一元素」这类风险不值得为省一行注释去赌。）
+ *
+ * **拆分判据是可复现的双向 oracle，不是手写前缀表**：
+ * `tests/visual/debug/classify-date-picker-rules.mjs` 取
+ * 「date-picker 产物里 `.ant-picker-dropdown <X>`」∩「calendar 产物里 `.ant-picker-calendar <X>`」
+ * ⇒ 交集 **119 个选择器 / 83 条规则**；反向检查 `dpSet \ calSet` 的 28 条逐条可证来自
+ * `genPickerPanelStyle`（footer/ranges/ok）或 `index.ts` 的 `&-dropdown` 段
+ * （panel-container / range-arrow / presets / panel>time-panel）。
+ *
+ * ⚠️ **不要把 `PANEL_RULES` 当成「date-picker 的面板样式」直接搬进别的组件**：
+ * 它是 `genPanelStyle` 的**逐字产物**，作用域是 `.apollo-picker-dropdown`。
+ * 换作用域请用下面的 `genPanelRules()`。
+ */
+
+/** 前段（42 条）：浮层 footer/ranges/ok（`genPickerPanelStyle`）+ 触发器（`index.ts`）。 */
+const RULES_BEFORE_PANEL = `
   .apollo-picker-dropdown .apollo-picker-footer{border-top:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-split);}
   .apollo-picker-dropdown .apollo-picker-footer-extra{padding:0 var(--apollo-padding-sm);line-height:calc(var(--apollo-date-picker-text-height) - var(--apollo-line-width) * 2);text-align:start;}
   .apollo-picker-dropdown .apollo-picker-footer-extra:not(:last-child){border-bottom:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-split);}
@@ -171,7 +202,10 @@ export const DATE_PICKER_RULES = `
   .apollo-picker-range .apollo-picker-range-separator{align-items:center;padding:0 var(--apollo-padding-xs);line-height:1;}
   .apollo-picker-range .apollo-picker-clear,.apollo-picker-multiple .apollo-picker-clear{inset-inline-end:var(--apollo-date-picker-padding-inline);}
   .apollo-picker-range.apollo-picker-small .apollo-picker-clear,.apollo-picker-multiple.apollo-picker-small .apollo-picker-clear{inset-inline-end:var(--apollo-date-picker-padding-inline-sm);}
-  .apollo-picker-dropdown{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);pointer-events:none;position:absolute;top:-9999px;left:-9999px;z-index:var(--apollo-date-picker-z-index-popup);}
+  .apollo-picker-dropdown{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);pointer-events:none;position:absolute;top:-9999px;left:-9999px;z-index:var(--apollo-date-picker-z-index-popup);}`;
+
+/** 面板（83 条）：`genPanelStyle` 的产物 —— `calendar` 换作用域复用这一块。 */
+export const PANEL_RULES = `
   .apollo-picker-dropdown .apollo-picker-panel{display:inline-flex;flex-direction:column;text-align:center;background:var(--apollo-color-bg-container);border-radius:var(--apollo-border-radius-lg);outline:none;}
   .apollo-picker-dropdown .apollo-picker-panel-focused{border-color:var(--apollo-color-primary);}
   .apollo-picker-dropdown .apollo-picker-panel-rtl .apollo-picker-prev-icon,.apollo-picker-dropdown .apollo-picker-panel-rtl .apollo-picker-super-prev-icon{transform:rotate(45deg);}
@@ -254,7 +288,10 @@ export const DATE_PICKER_RULES = `
   .apollo-picker-dropdown .apollo-picker-time-panel-column >li.apollo-picker-time-panel-cell .apollo-picker-time-panel-cell-inner{display:block;width:calc(var(--apollo-date-picker-time-column-width) - var(--apollo-margin-xxs) * 2);height:var(--apollo-date-picker-time-cell-height);margin:0;padding-block:0;padding-inline-end:0;padding-inline-start:calc((var(--apollo-date-picker-time-column-width) - var(--apollo-date-picker-time-cell-height)) / 2);color:var(--apollo-color-text);line-height:var(--apollo-date-picker-time-cell-height);border-radius:var(--apollo-border-radius-sm);cursor:pointer;transition:background-color var(--apollo-motion-duration-mid);}
   .apollo-picker-dropdown .apollo-picker-time-panel-column >li.apollo-picker-time-panel-cell .apollo-picker-time-panel-cell-inner:hover{background:var(--apollo-date-picker-cell-hover-bg);}
   .apollo-picker-dropdown .apollo-picker-time-panel-column >li.apollo-picker-time-panel-cell-selected .apollo-picker-time-panel-cell-inner{background:var(--apollo-control-item-bg-active);}
-  .apollo-picker-dropdown .apollo-picker-time-panel-column >li.apollo-picker-time-panel-cell-disabled .apollo-picker-time-panel-cell-inner{color:var(--apollo-color-text-disabled);background:transparent;cursor:not-allowed;}
+  .apollo-picker-dropdown .apollo-picker-time-panel-column >li.apollo-picker-time-panel-cell-disabled .apollo-picker-time-panel-cell-inner{color:var(--apollo-color-text-disabled);background:transparent;cursor:not-allowed;}`;
+
+/** 后段（132 条）：浮层外壳（`panel-container` / `range-arrow` / `presets` / `compact-*`）。 */
+const RULES_AFTER_PANEL = `
   .apollo-picker-dropdown.apollo-picker-dropdown-hidden{display:none;}
   .apollo-picker-dropdown-rtl{direction:rtl;}
   .apollo-picker-dropdown.apollo-picker-dropdown-placement-bottomLeft .apollo-picker-range-arrow,.apollo-picker-dropdown.apollo-picker-dropdown-placement-bottomRight .apollo-picker-range-arrow{top:0;display:block;transform:translateY(-100%);}
@@ -389,6 +426,39 @@ export const DATE_PICKER_RULES = `
   .apollo-picker-compact-item:not(.apollo-picker-compact-first-item).apollo-picker-compact-last-item,.apollo-picker-compact-item:not(.apollo-picker-compact-first-item).apollo-picker-compact-last-item.apollo-picker-sm,.apollo-picker-compact-item:not(.apollo-picker-compact-first-item).apollo-picker-compact-last-item.apollo-picker-lg{border-start-start-radius:0;border-end-start-radius:0;}
 `;
 
+/** 触发区 + 浮层外壳（174 条 = 42 + 132）。`Calendar` 不用这一块。 */
+export const TRIGGER_RULES = `${RULES_BEFORE_PANEL}${RULES_AFTER_PANEL}`;
+
+/**
+ * 把面板规则换到别的作用域 —— `calendar` 用。
+ *
+ * **两处替换都是必需的**：
+ *
+ * 1. **作用域类**：`.apollo-picker-dropdown ` → `scopeCls`（如 `.apollo-picker-calendar `）。
+ *    ⚠️ 全局替换是安全的：83 条里**每个逗号段**都以 `.apollo-picker-dropdown ` 开头
+ *    （实测 134 处），且该串**从不**出现在选择器中部（有断言钉住）。
+ *
+ * 2. **token 命名空间**：面板规则引用的是 `--apollo-date-picker-*`
+ *    （`text-height` / `cell-width` / `cell-height` / `internal_fixed_item_margin` …），
+ *    而 `Calendar` 的声明块是 **`--apollo-calendar-*`**（`genStyleHooks('Calendar')`
+ *    的命名空间）⇒ 不换就会出现「**声明了 A、引用了 B**」⇒ 规则里的 `var()`
+ *    **静默回退**（B7 的「声明 ↔ 引用」双向比对正是为这类问题设的）。
+ *
+ * ⚠️ 默认值 `'--apollo-date-picker'` 是**恒等变换**（供「只换作用域」的调用与测试）。
+ *
+ * 实测（2026-10-02）：`genPanelRules('.apollo-picker-calendar', '--apollo-calendar')`
+ * 与 calendar 产物里的对应规则 **83/83 逐条逐字节一致**。
+ */
+export function genPanelRules(scopeCls: string, tokenNs = '--apollo-date-picker'): string {
+  return PANEL_RULES.replace(/\.apollo-picker-dropdown /g, `${scopeCls} `).replace(
+    /--apollo-date-picker-/g,
+    `${tokenNs}-`,
+  );
+}
+
+/** 257 条规则（由 `--emit-static` 产出，逐字搬运、只改前缀）。**顺序与产物一致**。 */
+export const DATE_PICKER_RULES = `${RULES_BEFORE_PANEL}${PANEL_RULES}${RULES_AFTER_PANEL}`;
+
 /** 生成完整样式：token 声明块 + 规则体。 */
 export function genDatePickerStyle(rootPrefixCls: string): string {
   const decls = genTokenDecls(rootPrefixCls).join('');
@@ -402,3 +472,28 @@ export function genDatePickerStyle(rootPrefixCls: string): string {
   //    与 `select` 的 `.apollo-select,.apollo-select-css-var{…}` 同判。
   return `.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${DATE_PICKER_RULES}`;
 }
+
+// ---------------------------------------------------------------------------
+// 对上游导出的对齐（antd `es/date-picker/style/index.js` 第 25–26 行）
+// ---------------------------------------------------------------------------
+
+export type {
+  ComponentToken as DatePickerComponentToken,
+  DatePickerSeedToken,
+  PanelComponentToken,
+  PanelInternalToken,
+  PickerPanelToken,
+} from './token';
+/**
+ * 🚨 **上游在这里 `export` 了三个东西给 `calendar` 用**（`calendar/style/index.ts`
+ * 的第一句就是 `import { genPanelStyle, initPanelComponentToken, initPickerPanelToken }
+ * from '../../date-picker/style'`）—— 本仓照抄这条对外面。
+ *
+ * - `genPanelStyle` 的对应物 = **`PANEL_RULES` + `genPanelRules()`**（本文件的上面）
+ * - `initPanelComponentToken` / `initPickerPanelToken` 在 `./token` 里
+ */
+export {
+  initPanelComponentToken,
+  initPickerPanelToken,
+  prepareComponentToken as prepareDatePickerComponentToken,
+} from './token';
