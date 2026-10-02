@@ -1,0 +1,16 @@
+{
+  "$schema": "../schema.json",
+  "id": "card/basic",
+  "component": "card",
+  "description": "卡片的**四段结构**契约：`div.{p}` > `div.{p}-head`（> `div.{p}-head-wrapper` > `div.{p}-head-title` / `div.{p}-extra`）/ `div.{p}-cover` / `div.{p}-body` / `ul.{p}-actions`。判据（详见 `docs/analysis/card.md`）：① 🚨 **四段各自独立判据** —— head 是 `isRenderable(title) || isRenderable(extra) || tabList`（**三者任一**）；body 是 `loading || childNodes.length`；cover / actions 各自 `isRenderable` / `length`；② 🚨 **`-bordered` 的判据是「`variant !== 'borderless'`」**，不是「`variant === 'outlined'`」（`bordered={false}` 也走这一支）；③ 🚨 **`actions` 每个 `li` 的宽度是内联百分比**（`100 / n`），必须转成字符串（裸数字会被 Vue 静默丢弃）；④ 🚨 **`headStyle` / `bodyStyle`（deprecated）是「底座」** —— 语义化槽按 `{...headStyle, ...mergedStyles.header}` 的顺序**覆盖**它；⑤ 🚨 **`isRenderable` 三态**：`''` / `false` 判假（不渲染 head），`0` 判**真**；⑥ `-css-var` 与上游 `useCSSVarCls` 同名（D5，投影对称剔除）；本仓无 `hashId`（D2）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Card title",
+    "extra": { "type": "text", "value": "More" },
+    "actions": [{ "type": "text", "value": "A" }, { "type": "text", "value": "B" }],
+    "variant": "outlined"
+  },
+  "content": ["Card content", "Card content"],
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

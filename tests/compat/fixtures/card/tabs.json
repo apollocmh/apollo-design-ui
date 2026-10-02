@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "card/tabs",
+  "component": "card",
+  "description": "`tabList` 的**两个不同判据**（本组件最易搞错的一条）：① 🚨 **head 的判据是 `tabList` 的「真值」** —— `tabList ? <Tabs/> : null`，**空数组也是真值** ⇒ 仍然渲染 head 与 Tabs；② 🚨 **`-contain-tabs` 类名的判据是 `tabList?.length`** ⇒ 空数组**不加**类名。两条判据不同源，必须分别钉。其余判据：③ `tabList` 的归一化是 `{ label: tab, ...item }` ⇒ item 里若还有 `label`，**它赢**；④ **受控/非受控二选一** —— `activeTabKey !== undefined` 时传 `activeKey`，否则传 `defaultActiveKey`（**不会同时传**）；⑤ `tabSize = mergedSize !== 'small' ? 'large' : mergedSize`（非 small 一律 `'large'`）；⑥ Tabs 在 `head` **里面**、`head-wrapper` **外面**；⑦ `onTabChange` 是**上游的 prop**（无 value/onChange 对 ⇒ 规则 C11 的双发不适用）；⑧ ⚠️ **继承自 Tabs 的已知差异 U15**：本仓溢出触发器走本仓 Dropdown（补 `-trigger` 类），上游用 rc 级 dropdown（只加 `-open`）—— 与 Card 的实现无关。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "title": "Card title",
+    "tabList": [{ "key": "tab1", "tab": "Tab 1" }, { "key": "tab2", "tab": "Tab 2" }],
+    "defaultActiveTabKey": "tab1"
+  },
+  "content": ["Card content"],
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change"] }
+}

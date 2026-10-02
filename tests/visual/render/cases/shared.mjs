@@ -1030,3 +1030,72 @@ export const BREADCRUMB_ICON_ITEMS = [
   { title: 'List', href: '#/list' },
   { title: 'Detail' },
 ];
+
+// ---------------------------------------------------------------------------
+// Card
+// ---------------------------------------------------------------------------
+
+/**
+ * Card 用例的容器。
+ *
+ * ⚠️ 宽度固定 320px（**窄于最小视口 375px**）⇒ 三个视口下容器宽度一致；
+ * 且正文**不换行**（换行位置依赖文字度量，一旦换行差异会从「一行」放大成「整段错位」）。
+ */
+export const CARD_BOX_STYLE = {
+  width: '320px',
+  fontFamily: 'sans-serif',
+  fontSize: '14px',
+  lineHeight: '1.5714285714285714',
+  color: 'rgba(0, 0, 0, 0.88)',
+};
+
+/** 卡片正文段落（两侧逐字相同，含 margin —— 默认 `p` 的 margin 会污染像素）。 */
+export const CARD_PARAGRAPH_STYLE = { margin: '0 0 8px' };
+
+/**
+ * 封面 / 头像的替身：**纯色块**。
+ *
+ * ⚠️ 刻意**不用外链图片** —— 图片加载时序会让截图不稳定（antd 的 demo 用的是
+ * alipayobjects 的外链）。纯色块同样命中 `.{p}-cover > *` 与 `-meta-avatar` 两条规则。
+ */
+export const CARD_COVER_STYLE = { height: '60px', background: '#d9d9d9' };
+export const CARD_AVATAR_STYLE = {
+  width: '32px',
+  height: '32px',
+  borderRadius: '50%',
+  background: '#d9d9d9',
+};
+
+/** `Card.Grid` 的样式（对齐 antd 的 grid-card demo：25% + 居中）。 */
+export const CARD_GRID_STYLE = { width: '25%', textAlign: 'center' };
+
+/** `tabList`（走 **`tab` 通道** —— 与 antd 的 tabs demo 一致）。 */
+export const CARD_TAB_LIST = [
+  { key: 'tab1', tab: 'Tab 1' },
+  { key: 'tab2', tab: 'Tab 2' },
+];
+
+/** `Card.Meta` 的文案。 */
+export const CARD_META_TITLE = 'Card title';
+export const CARD_META_DESCRIPTION = 'This is the description';
+
+/**
+ * 语义化变体的槽位类名与样式。
+ *
+ * 🚨 `styles` 必须是**肉眼可见**的值 —— 只给 `classNames` 的话本变体与 `basic`
+ * **逐字节相同**（类名是属性，截图上不可见）⇒ 空转（PITFALLS 276）。
+ */
+export const CARD_SEMANTIC_CLASS_NAMES = {
+  root: 'demo-card-root',
+  header: 'demo-card-header',
+  body: 'demo-card-body',
+  extra: 'demo-card-extra',
+  title: 'demo-card-title',
+  actions: 'demo-card-actions',
+  cover: 'demo-card-cover',
+};
+export const CARD_SEMANTIC_STYLES = {
+  root: { background: '#ffe7ba' },
+  header: { background: '#bae7ff' },
+  body: { padding: '8px' },
+};

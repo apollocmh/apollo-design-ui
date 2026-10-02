@@ -1,0 +1,212 @@
+{
+  "$schema": "../schema.json",
+  "component": "card",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-01T19:00:12.806Z",
+  "cases": [
+    {
+      "id": "card:empty",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "card:body-only",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:title-only",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">Card title</div></div></div></div>"
+    },
+    {
+      "id": "card:extra-only",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-extra\"><a href=\"#more\">More</a></div></div></div></div>"
+    },
+    {
+      "id": "card:title-extra",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">Card title</div><div class=\"apollo-extra\"><a href=\"#more\">More</a></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:cover",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">Card title</div></div></div><div class=\"apollo-cover\"><img alt=\"c\"/></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:title-empty",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "card:title-false",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "card:title-zero",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">0</div></div></div></div>"
+    },
+    {
+      "id": "card:extra-empty",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"></div>"
+    },
+    {
+      "id": "card:prefix-cls:no-props",
+      "html": "<div class=\"ant-card ant-card-bordered css-dev-only-do-not-override-19u5a7b css-var-root\"><div class=\"ant-card-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:prefix-cls:custom",
+      "html": "<div class=\"custom custom-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"custom-head\"><div class=\"custom-head-wrapper\"><div class=\"custom-head-title\">T</div></div></div><div class=\"custom-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:rtl",
+      "html": "<div class=\"apollo apollo-bordered apollo-rtl css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:small",
+      "html": "<div class=\"apollo apollo-bordered apollo-small css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div><div class=\"apollo-extra\"><a href=\"#more\">More</a></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:medium",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:borderless",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:bordered-false",
+      "html": "<div class=\"apollo css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:hoverable",
+      "html": "<div class=\"apollo apollo-bordered apollo-hoverable css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:type-inner",
+      "html": "<div class=\"apollo apollo-bordered apollo-type-inner css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div><div class=\"apollo-extra\"><a href=\"#more\">More</a></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:loading",
+      "html": "<div class=\"apollo apollo-loading apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><div class=\"apollo-skeleton apollo-skeleton-active css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-skeleton-section\"><ul class=\"apollo-skeleton-paragraph\"><li></li><li></li><li></li><li style=\"width:61%\"></li></ul></div></div></div></div>"
+    },
+    {
+      "id": "card:loading-no-title",
+      "html": "<div class=\"apollo apollo-loading apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"apollo-skeleton apollo-skeleton-active css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-skeleton-section\"><ul class=\"apollo-skeleton-paragraph\"><li></li><li></li><li></li><li style=\"width:61%\"></li></ul></div></div></div></div>"
+    },
+    {
+      "id": "card:head-style",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\" style=\"color:red\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:body-style",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\" style=\"padding:1px\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:actions",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div><ul class=\"apollo-actions\"><li style=\"width:33.333333333333336%\"><span><span>A</span></span></li><li style=\"width:33.333333333333336%\"><span><span>B</span></span></li><li style=\"width:33.333333333333336%\"><span><span>C</span></span></li></ul></div>"
+    },
+    {
+      "id": "card:actions-one",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div><ul class=\"apollo-actions\"><li style=\"width:100%\"><span><span>A</span></span></li></ul></div>"
+    },
+    {
+      "id": "card:actions-empty",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:grid",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-grid css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">Card Title</div></div></div><div class=\"apollo-body\"><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div></div></div>"
+    },
+    {
+      "id": "card:grid-hoverable-false",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-grid css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid\">G</div></div></div>"
+    },
+    {
+      "id": "card:grid-no-head",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-grid css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div><div style=\"width:25%;text-align:center\" class=\"apollo-card-grid apollo-card-grid-hoverable\">Content</div></div></div>"
+    },
+    {
+      "id": "card:tabs",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div><div class=\"apollo-extra\"><a href=\"#more\">More</a></div></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"tab1\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">Tab 1</div></div><div data-node-key=\"tab2\" class=\"apollo-tabs-tab\"><div role=\"tab\" aria-selected=\"false\" class=\"apollo-tabs-tab-btn\" tabindex=\"-1\">Tab 2</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-empty",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-active-key",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"tab1\" class=\"apollo-tabs-tab\"><div role=\"tab\" aria-selected=\"false\" class=\"apollo-tabs-tab-btn\" tabindex=\"-1\">Tab 1</div></div><div data-node-key=\"tab2\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">Tab 2</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-default-active-key",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"tab1\" class=\"apollo-tabs-tab\"><div role=\"tab\" aria-selected=\"false\" class=\"apollo-tabs-tab-btn\" tabindex=\"-1\">Tab 1</div></div><div data-node-key=\"tab2\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">Tab 2</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-extra",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"tab1\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">Tab 1</div></div><div data-node-key=\"tab2\" class=\"apollo-tabs-tab\"><div role=\"tab\" aria-selected=\"false\" class=\"apollo-tabs-tab-btn\" tabindex=\"-1\">Tab 2</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div><div class=\"apollo-tabs-extra-content\"><a href=\"#more\">More</a></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-tab-props",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-tabs-centered apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"tab1\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">Tab 1</div></div><div data-node-key=\"tab2\" class=\"apollo-tabs-tab\"><div role=\"tab\" aria-selected=\"false\" class=\"apollo-tabs-tab-btn\" tabindex=\"-1\">Tab 2</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-label",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-large apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"a\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">from-label</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:tabs-small",
+      "html": "<div class=\"apollo apollo-bordered apollo-contain-tabs apollo-small css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"></div><div class=\"apollo-tabs apollo-tabs-top apollo-tabs-small apollo-head-tabs css-dev-only-do-not-override-1v6lqee css-var-root apollo-tabs-css-var\"><div role=\"tablist\" aria-orientation=\"horizontal\" class=\"apollo-tabs-nav\"><div class=\"apollo-tabs-nav-wrap\"><div class=\"apollo-tabs-nav-list\" style=\"transform:translate(0px, 0px)\"><div data-node-key=\"tab1\" class=\"apollo-tabs-tab apollo-tabs-tab-active\"><div role=\"tab\" aria-selected=\"true\" class=\"apollo-tabs-tab-btn\" tabindex=\"0\">Tab 1</div></div><div data-node-key=\"tab2\" class=\"apollo-tabs-tab\"><div role=\"tab\" aria-selected=\"false\" class=\"apollo-tabs-tab-btn\" tabindex=\"-1\">Tab 2</div></div><div class=\"apollo-tabs-ink-bar apollo-tabs-ink-bar-animated\"></div></div></div><div class=\"apollo-tabs-nav-operations apollo-tabs-nav-operations-hidden\"><button type=\"button\" class=\"apollo-tabs-nav-more\" style=\"visibility:hidden;order:1\" aria-haspopup=\"listbox\" aria-controls=\"null-more-popup\" id=\"null-more\" aria-expanded=\"false\"><span role=\"img\" aria-label=\"ellipsis\" class=\"apollo-icon apollo-icon-ellipsis\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"ellipsis\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z\"></path></svg></span></button></div></div><div class=\"apollo-tabs-body-holder\"><div class=\"apollo-tabs-body apollo-tabs-body-top\"><div role=\"tabpanel\" tabindex=\"-1\" aria-hidden=\"false\" class=\"apollo-tabs-content apollo-tabs-content-active\"></div></div></div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:meta",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-cover\"><img alt=\"c\"/></div><div class=\"apollo-body\"><div class=\"apollo-card-meta\"><div class=\"apollo-card-meta-avatar\"><span class=\"av\">AV</span></div><div class=\"apollo-card-meta-section\"><div class=\"apollo-card-meta-title\">Card title</div><div class=\"apollo-card-meta-description\">This is the description</div></div></div></div></div>"
+    },
+    {
+      "id": "card:meta-avatar-only",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"apollo-card-meta\"><div class=\"apollo-card-meta-avatar\"><span class=\"av\">AV</span></div></div></div></div>"
+    },
+    {
+      "id": "card:meta-title-only",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"apollo-card-meta\"><div class=\"apollo-card-meta-section\"><div class=\"apollo-card-meta-title\">Card title</div></div></div></div></div>"
+    },
+    {
+      "id": "card:meta-description-only",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"apollo-card-meta\"><div class=\"apollo-card-meta-section\"><div class=\"apollo-card-meta-description\">This is the description</div></div></div></div></div>"
+    },
+    {
+      "id": "card:meta-prefix-cls",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"custom-meta\"><div class=\"custom-meta-section\"><div class=\"custom-meta-title\">T</div></div></div></div></div>"
+    },
+    {
+      "id": "card:meta-class-style",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div data-testid=\"meta\" class=\"apollo-card-meta meta-cls\" style=\"color:red\"><div class=\"apollo-card-meta-section\"><div class=\"apollo-card-meta-title\">T</div></div></div></div></div>"
+    },
+    {
+      "id": "card:meta-rtl",
+      "html": "<div class=\"apollo apollo-bordered apollo-rtl css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"apollo-card-meta\"><div class=\"apollo-card-meta-section\"><div class=\"apollo-card-meta-title\">T</div></div></div></div></div>"
+    },
+    {
+      "id": "card:class-names",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root c-root\"><div class=\"apollo-head c-header\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title c-title\">T</div><div class=\"apollo-extra c-extra\"><a href=\"#more\">More</a></div></div></div><div class=\"apollo-cover c-cover\"><img alt=\"c\"/></div><div class=\"apollo-body c-body\"><p>Card content</p><p>Card content</p></div><ul class=\"apollo-actions c-actions\"><li style=\"width:100%\"><span><span>A</span></span></li></ul></div>"
+    },
+    {
+      "id": "card:styles",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\" style=\"background:#fafafa\"><div class=\"apollo-head\" style=\"opacity:0.9\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\" style=\"color:blue\">T</div><div class=\"apollo-extra\" style=\"color:red\"><a href=\"#more\">More</a></div></div></div><div class=\"apollo-cover\" style=\"height:1px\"><img alt=\"c\"/></div><div class=\"apollo-body\" style=\"padding:1px\"><p>Card content</p><p>Card content</p></div><ul class=\"apollo-actions\" style=\"margin:1px\"><li style=\"width:100%\"><span><span>A</span></span></li></ul></div>"
+    },
+    {
+      "id": "card:class-names-fn",
+      "html": "<div class=\"apollo apollo-small css-dev-only-do-not-override-1v6lqee css-var-root sz-small-vr-borderless\"><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:meta-class-names",
+      "html": "<div class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><div class=\"apollo-card-meta m-root\"><div class=\"apollo-card-meta-avatar m-avatar\"><span class=\"av\">AV</span></div><div class=\"apollo-card-meta-section m-section\"><div class=\"apollo-card-meta-title m-title\">T</div><div class=\"apollo-card-meta-description m-description\">D</div></div></div></div></div>"
+    },
+    {
+      "id": "card:id",
+      "html": "<div id=\"card-1\" class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:attrs",
+      "html": "<div data-testid=\"card\" aria-label=\"卡片\" class=\"apollo apollo-bordered css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-head\"><div class=\"apollo-head-wrapper\"><div class=\"apollo-head-title\">T</div></div></div><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    },
+    {
+      "id": "card:className",
+      "html": "<div class=\"apollo apollo-bordered user-cls root-cls css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-body\"><p>Card content</p><p>Card content</p></div></div>"
+    }
+  ]
+}

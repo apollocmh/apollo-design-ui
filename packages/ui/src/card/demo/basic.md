@@ -5,13 +5,31 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/card/demo/ 抄清单 -->
+包含标题、内容、操作区域。
+
+`size` 支持 `medium`（默认）与 `small`。
+
 ```vue
 <script setup lang="ts">
-import { Card } from '@apollo-design/ui';
+// 对齐 antd 的 basic demo。
+import { Card, Space } from '@apollo-design/ui';
+import { h } from 'vue';
+
+const more = () => h('a', { href: '#' }, 'More');
 </script>
 
 <template>
-  <Card>basic demo 占位</Card>
+  <Space vertical :size="16">
+    <Card title="Default size card" :extra="more()" :style="{ width: '300px' }">
+      <p>Card content</p>
+      <p>Card content</p>
+      <p>Card content</p>
+    </Card>
+    <Card size="small" title="Small size card" :extra="more()" :style="{ width: '300px' }">
+      <p>Card content</p>
+      <p>Card content</p>
+      <p>Card content</p>
+    </Card>
+  </Space>
 </template>
 ```

@@ -712,6 +712,50 @@ export type {
 // ---------------------------------------------------------------------------
 export { AutoComplete, AutoCompleteOption } from './auto-complete';
 // ---------------------------------------------------------------------------
+// Card —— 通用卡片容器（复合组件：`Card.Grid` / `Card.Meta`）
+//
+// ⚠️ 类名前缀 `apollo-card`；**13 个 Component Token** + 4 个 `mergeToken` 派生
+//    （派生值落 `--apollo-box-shadow-card` / `--apollo-padding` / `--apollo-padding-lg`
+//    / `--apollo-font-size` 这些**全局** token，见 style/token.ts）。
+// ⚠️ **没有 `emits`** —— `onTabChange` 是上游的 **prop**（无 value/onChange 对，
+//    C11 的双发不适用），所以按 prop 形态保留。
+// ⚠️ `ref` 暴露的是 `{ nativeElement }`（**不是**元素本身；上游 `Card` 是
+//    `forwardRef<HTMLDivElement>`，本仓按 badge/Ribbon 的既有约定统一成对象）。
+// ⚠️ **同一组件族两个 ConfigProvider 键**：`components.card` 与 `components.cardMeta`
+//    （`Card.Meta` 自己读后者）—— 都走 (B) 通道，类型未提升。
+// ⚠️ `Card.Grid` 的 vnode 身份是 `-contain-grid` 的判据 ⇒ 别自己包一层新组件再传进来。
+// ---------------------------------------------------------------------------
+export type {
+  CardConfig,
+  CardGridProps,
+  CardGridRef,
+  CardGridSlot,
+  CardMetaConfig,
+  CardMetaProps,
+  CardMetaRef,
+  CardMetaSemanticAllType,
+  CardMetaSemanticClassNames,
+  CardMetaSemanticStyles,
+  CardMetaSemanticType,
+  CardMetaSemanticValue,
+  CardMetaSlot,
+  CardProps,
+  CardRef,
+  CardSemanticAllType,
+  CardSemanticClassNames,
+  CardSemanticStyles,
+  CardSemanticType,
+  CardSemanticValue,
+  CardSize,
+  CardSlot,
+  CardTabListType,
+  CardType,
+} from './card';
+export { Card, CardGrid, CardMeta } from './card';
+export { genCardStyle, genTokenDecls as genCardTokenDecls } from './card/style';
+export type { ComponentToken as CardComponentToken } from './card/style/token';
+export { prepareComponentToken as prepareCardComponentToken } from './card/style/token';
+// ---------------------------------------------------------------------------
 // Carousel —— 走马灯（决策 B：自建 slick 引擎，见 engine.ts）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **8** 个（构建期解析值，

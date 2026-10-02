@@ -755,6 +755,35 @@ export const COMPONENTS = {
       'rtl', // direction: rtl ⇒ 根上的 `-rtl` + `direction:rtl`（**有真实 CSS**，与 anchor 不同）
     ],
   },
+  card: {
+    // 11 个 variant × 3 个 viewport = 33 张
+    //
+    // ⚠️ Card **没有浮层**（`tabs` 变体的页签浮层在静态帧里不展开、不 portal）
+    //    ⇒ 不需要 `getPopupContainer`。它的视觉面是四段结构：
+    //    head（含 tabs）/ cover / body / actions。
+    //
+    // ⚠️ 两条硬约定（见 `cases/{react,vue}/card.*` 的文件头）：
+    //    字体在用例内钉住 + 容器宽度 320px（窄于最小视口 ⇒ 三视口一致、正文不换行）。
+    //
+    // ⚠️ `-hoverable` **没有独立变体**：`:hover` 在静态帧里不触发，可见面只有
+    //    `cursor` / `transition`（截图上不可见）⇒ 必然空转。它归 L1 的类名断言与 L4。
+    //
+    // ⚠️ 每个变体都必须**非空转**：写完后先
+    //    `md5 tests/visual/baselines/react/card/*.png | sort` 查同哈希（PITFALLS 276）。
+    variants: [
+      'basic', // head（title + extra）+ body
+      'actions', // `<ul>` + 每项 `<li><span>` + 内联百分比宽度 + 竖分隔线
+      'small', // `-small` 的三条 head 覆盖 + body padding
+      'borderless', // `:not(-bordered)` 的 boxShadowTertiary
+      'inner', // `-type-inner` 的 head 背景与字号
+      'loading', // Skeleton 4 行段落（title={false}）
+      'grid', // `-contain-grid` + 五段 box-shadow
+      'meta', // cover + Card.Meta（avatar / title / description）
+      'tabs', // head 里的全局 `.apollo-tabs-top` + `-contain-tabs`
+      'semantic', // classNames / styles 七槽
+      'rtl', // direction: rtl ⇒ 根 `-rtl`（**有真实 CSS**，与 anchor 不同）
+    ],
+  },
   masonry: {
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
