@@ -28,8 +28,8 @@
 
 - [x] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
 - [x] G1 ANALYZE —— 产出 **docs/analysis/time-picker.md**（+ 探针 `tests/visual/debug/probe-time-picker-antd.mjs`）
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [~] G3 TOKEN —— **n/a**（零 Component Token / 零样式，见上「特判 1」）
+- [x] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
+- [x] G3 TOKEN —— **n/a**（零 Component Token / 零样式，见上「特判 1」）
 - [ ] G4 IMPLEMENT —— TimePicker.vue + TimeRangePicker.vue + index.ts；**无 style/index.ts**
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）

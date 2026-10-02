@@ -13,6 +13,7 @@
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
+- **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
 
 ## 工具 / 沙箱
 
@@ -3760,3 +3761,28 @@
     ⚠️ **元素**（`h('ul', props, items)`）不受影响 —— 数组是合法的元素 children。
     判据：`h()` 的第三参是「children 或 slots」，**组件**走 slots 路径。
     （本仓的 `NodeRenderer` 是组件 ⇒ 一律用 `{ node }` prop 传，不传 children。）
+
+314. 🚨 **JSDoc 里写「带 `/* */` 的代码示例」会把块注释提前终止**（2026-10-02 实测，time-picker 的 G2）。
+
+    **形态**：为了让「上游类型构造链」看得清楚，在 `interface.ts` 的文件头 JSDoc 里写了
+
+    ```
+    *   //   & { multiple?: IsMultiple /* = false */; defaultValue?; value?; ... }
+    ```
+
+    `/* = false */` 里的 `*/` **提前闭合了外层 `/** … */`** ⇒ 后面所有内容都变成代码。
+
+    **症状（迷惑性极强）**：`vue-tsc` 报的不是「注释没闭合」，而是**一串离谱的语法错**：
+    `TS1443 Module declaration names may only use ' or " quoted strings`、
+    `TS1005 ']' expected`、`TS1127 Invalid character`、`TS1109 Expression expected` ——
+    报的行号（209/218/228）**离真正的病灶（第 16 行）有 200 行**。
+    biome 也一样：`Expected an expression, or an assignment but instead found ';'` 指在
+    **注释内部**的那一行，而 `--write` 会报「Some errors were emitted while applying fixes」
+    —— **看起来像 biome 的 bug，其实是文件本身语法就不合法**。
+
+    **对策**：
+    - JSDoc 里**禁止**出现 `/*`；要举例就写 `(默认 false)` 或 `// 注释`；
+    - ⚠️ 报「一堆互不相关的语法错 + 行号跨度大」时，**先怀疑块注释被提前闭合**，
+      用 `grep -n '/\*' <file>` 数一下 `/*` 与 `*/` 是否配平（而不是逐条读报错）。
+    - 判据：`tsc` 的报错**行号密集且集中在文件尾部**，而病灶在文件头部 —— 这类
+      「行号漂移」几乎都是**注释/字符串未闭合**导致的解析起点错位。
