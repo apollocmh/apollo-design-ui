@@ -180,20 +180,20 @@ describe('Timeline · L2 复合组件与告警', () => {
     const hits = () =>
       errorSpy.mock.calls
         .map((c: unknown[]) => String(c[0]))
-        .filter((m) => m.includes('deprecated'));
+        .filter((m: string) => m.includes('deprecated'));
     mountTimeline();
     expect(hits().length).toBeGreaterThan(0);
 
     errorSpy.mockClear();
     mountTimeline({ mode: 'left' });
-    expect(hits().some((m) => m.includes('mode=left|right'))).toBe(true);
+    expect(hits().some((m: string) => m.includes('mode=left|right'))).toBe(true);
   });
 
   it('🚨 逐项四项的判据是 `every(item => !item[oldProp])` —— **用了才告警**', () => {
     const hits = () =>
       errorSpy.mock.calls
         .map((c: unknown[]) => String(c[0]))
-        .filter((m) => m.includes('items.label'));
+        .filter((m: string) => m.includes('items.label'));
     // ⚠️ 判据是 `warning.deprecated(warnItems.every(item => !item[oldProp]), …)`
     //    ⇒ **有任一项用了 `label` ⇒ `valid = false` ⇒ 告警**；
     //    全部项都没用 ⇒ `valid = true` ⇒ 静默。
