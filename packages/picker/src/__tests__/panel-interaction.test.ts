@@ -876,3 +876,49 @@ describe('PickerPanel · 杂项', () => {
     w.unmount();
   });
 });
+
+// ---------------------------------------------------------------------------
+// 🚨 未声明的 prop 不许漏到 DOM（2026-10-02 由 calendar 的探针发现）
+// ---------------------------------------------------------------------------
+
+/**
+ * `PickerPanel` 把 `value: mergedValue[0]` 传给面板组件（上游 `PickerPanel/index.js:277`
+ * 同样如此），而 8 个面板**没有一个读它**。
+ *
+ * - React 会**丢弃**未声明的 prop ⇒ 上游 DOM 里没有这个属性；
+ * - Vue 不会丢：未声明 ⇒ 落进 `attrs` ⇒ 自动透传到根元素 ⇒
+ *   实测渲染出 `<div class="apollo-picker-date-panel" value="Tue, 29 Sep 2026 16:00:00 GMT">`
+ *   （`div` 没有 `value` 属性 ⇒ 非法 HTML，且与 React 的 DOM 契约不一致）。
+ *
+ * ⚠️ **为什么 L4 一直没抓到**：它的投影只留 `role` / `aria-*` / `data-*`（D45），
+ * `value` 被投影掉 ⇒ 基线 37/37 绿。所以这条哨兵必须落在**直接读属性**的这一层。
+ */
+describe('PickerPanel · 未声明的 prop 不许漏到 DOM', () => {
+  it('🚨 日期面板的根元素**没有** `value` 属性', () => {
+    const w = mountPanel();
+    const panel = w.element.querySelector(`.${P}-date-panel`);
+    expect(panel).toBeTruthy();
+    expect(panel?.hasAttribute('value')).toBe(false);
+    // 反向哨兵：属性列表里也不该出现（`hasAttribute` 只查精确名）
+    expect(Array.from(panel?.attributes ?? []).map((a) => a.name)).not.toContain('value');
+    w.unmount();
+  });
+
+  it('🚨 时间面板同样不带（同一份 `sharedPanelProps`）', () => {
+    const w = mountPanel({ picker: 'time', mode: 'time' });
+    const panel = w.element.querySelector(`.${P}-time-panel`);
+    expect(panel).toBeTruthy();
+    expect(panel?.hasAttribute('value')).toBe(false);
+    w.unmount();
+  });
+
+  it('上层面板（年 / 月 / 十年）同样不带', () => {
+    for (const mode of ['month', 'year', 'decade'] as const) {
+      const w = mountPanel({ picker: mode, mode });
+      const panel = w.element.querySelector(`.${P}-${mode}-panel`);
+      expect(panel, `${mode}-panel 未找到`).toBeTruthy();
+      expect(panel?.hasAttribute('value')).toBe(false);
+      w.unmount();
+    }
+  });
+});

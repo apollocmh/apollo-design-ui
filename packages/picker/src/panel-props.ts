@@ -36,6 +36,11 @@ export interface SharedPanelProps {
   /** hover 了某个值（`null` = 离开） */
   onHover?: (date: PanelDateType | null) => void;
   values: PanelDateType[];
+  /**
+   * ⚠️ **上游传了、面板不读**（见 `sharedPanelProps.value` 的说明）。
+   * 声明在接口里是为了让「props 形状」与「实际声明的 props」一致，不是为了使用它。
+   */
+  value?: PanelDateType;
   hoverValue?: PanelDateType[];
   hoverRangeValue?: PanelDateType[];
   cellRender?: PanelCellRender;
@@ -91,6 +96,26 @@ export const sharedPanelProps = {
     type: Function as PropType<((date: PanelDateType | null) => void) | undefined>,
     default: undefined,
   },
+  /**
+   * 🚨 **上游 `PickerPanel` 会传它，但 8 个面板一个都不读** —— 这里声明只为「别让它漏到 DOM」。
+   *
+   * 上游 `PickerPanel/index.js:277` 的 props 里有 `value: mergedValue[0]`（与 `values`
+   * 并列），而 `DatePanel` / `WeekPanel` / `MonthPanel` / `YearPanel` / `QuarterPanel` /
+   * `DecadePanel` / `TimePanel` / `DateTimePanel` **全部只读 `values`**
+   * （实测：8 个文件的 `props.value` 出现次数都是 **0**）。
+   * React 会**丢弃**未声明的 prop ⇒ 上游 DOM 里没有这个属性。
+   *
+   * Vue 不会丢：未声明的 prop 落进 **`attrs`** ⇒ 自动透传到根元素 ⇒ 实测渲染出
+   * `<div class="apollo-picker-date-panel" value="Tue, 29 Sep 2026 16:00:00 GMT">`
+   * （`div` 没有 `value` 属性 ⇒ 非法 HTML，且与 React 的 DOM 契约不一致）。
+   *
+   * ⚠️ **为什么门禁一直没抓到**：L4 的投影只留 `role` / `aria-*` / `data-*`（D45），
+   * `value` 被投影掉了 —— `picker` 的 L4 是 37/37 绿。
+   *
+   * ⇒ 修法就是**声明它**（`default: undefined` 时 Vue 不渲染该属性）。
+   * ⚠️ 不要用 `inheritAttrs: false`：那会把合法的 `data-*` 透传一起挡掉。
+   */
+  value: { type: null as unknown as PropType<PanelDateType | undefined>, default: undefined },
   values: { type: Array as PropType<PanelDateType[]>, default: () => [] },
   hoverValue: { type: Array as PropType<PanelDateType[] | undefined>, default: undefined },
   hoverRangeValue: {
