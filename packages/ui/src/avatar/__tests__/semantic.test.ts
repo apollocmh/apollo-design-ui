@@ -37,9 +37,6 @@ import {
 import { Avatar, AvatarGroup } from '../index';
 import type { AvatarGroupProps, AvatarProps } from '../interface';
 
-/** 两侧共用的前缀。与 `tests/compat/baseline/avatar.mjs` 里的 `PREFIX` 必须一致。 */
-const PREFIX = 'apollo';
-
 /** 在指定的 ConfigProvider 上下文下渲染（Vue 侧对应物是 `provide`）。 */
 function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeChild) {
   return defineComponent({

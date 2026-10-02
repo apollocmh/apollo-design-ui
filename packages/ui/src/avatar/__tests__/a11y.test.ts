@@ -22,7 +22,7 @@
  * （后者用精确断言写清，而不是放宽阈值）。
  */
 
-import { mount } from '@vue/test-utils';
+import { mount, type VueWrapper } from '@vue/test-utils';
 import axe from 'axe-core';
 import { afterEach, describe, expect, it } from 'vitest';
 import { h, nextTick } from 'vue';
@@ -45,7 +45,7 @@ async function runAxe(): Promise<axe.Result[]> {
 const mountA11y = async (
   props: Record<string, unknown> = {},
   slots?: Record<string, () => unknown>,
-) => {
+): Promise<VueWrapper> => {
   const wrapper = mount(Avatar, { props, slots, attachTo: document.body });
   await nextTick();
   return wrapper;
@@ -108,19 +108,28 @@ describe('Avatar · role / ARIA 契约（L5）', () => {
   });
 });
 
+/** 扫描用例。⚠️ 必须**显式标注类型** —— 各元素的 `props` 形状不同，`it.each([...])` 直接推断会得到 TS7023（`'default' implicitly has return type 'any'`）。 */
+interface A11yScanCase {
+  name: string;
+  props: Record<string, unknown>;
+  slots?: Record<string, () => unknown>;
+}
+
+const SCAN_CASES: A11yScanCase[] = [
+  { name: 'text', props: {}, slots: { default: () => 'U' } },
+  { name: 'icon', props: { icon: h('span', { class: 'my-icon' }, 'i') } },
+  // ⚠️ 图片头像**必须**传 `alt`，否则 axe 的 `image-alt` 会红（见文件头）
+  { name: 'image', props: { src: 'x.png', alt: '用户头像' } },
+  {
+    name: 'square-large',
+    props: { shape: 'square', size: 'large' },
+    slots: { default: () => 'U' },
+  },
+  { name: 'numeric', props: { size: 40 }, slots: { default: () => 'U' } },
+];
+
 describe('Avatar · axe 扫描（L5）', () => {
-  it.each([
-    { name: 'text', props: {}, slots: { default: () => 'U' } },
-    { name: 'icon', props: { icon: h('span', { class: 'my-icon' }, 'i') } },
-    // ⚠️ 图片头像**必须**传 `alt`，否则 axe 的 `image-alt` 会红（见文件头）
-    { name: 'image', props: { src: 'x.png', alt: '用户头像' } },
-    {
-      name: 'square-large',
-      props: { shape: 'square', size: 'large' },
-      slots: { default: () => 'U' },
-    },
-    { name: 'numeric', props: { size: 40 }, slots: { default: () => 'U' } },
-  ])('$name 无 axe violation', async ({ props, slots }) => {
+  it.each(SCAN_CASES)('$name 无 axe violation', async ({ props, slots }) => {
     const w = await mountA11y(props, slots);
 
     const violations = await runAxe();

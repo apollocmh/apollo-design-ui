@@ -5,13 +5,23 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/avatar/demo/ 抄清单 -->
+头像有三种尺寸，两种形状可选。
+
 ```vue
 <script setup lang="ts">
-import { Avatar } from '@apollo-design/ui';
+// 对齐 antd 的 basic demo。
+import { Avatar, Space } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Avatar>basic demo 占位</Avatar>
+  <Space vertical :size="16">
+    <Space wrap :size="16">
+      <Avatar :size="64" :icon="icon()" />
+      <Avatar size="large" :icon="icon()" />
+      <Avatar :icon="icon()" />
+      <Avatar size="small" :icon="icon()" />
+      <Avatar :size="14" :icon="icon()" />
+    </Space>
+  </Space>
 </template>
 ```

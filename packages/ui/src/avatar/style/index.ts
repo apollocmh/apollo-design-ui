@@ -114,9 +114,14 @@ export function genAvatarStyle(rootPrefixCls: string): string {
    *    与 `.{p}-avatar-lg.{p}-avatar-square`。`selector` 由调用方给（base 是 `cls`，
    *    `-lg` / `-sm` 是 `${cls}-lg` / `${cls}-sm`）。
    */
-  const sizeVariants = (selector: string, radius: string, iconFontSize: string): string[] => [
+  const sizeVariants = (selector: string, radiusToken: string, iconFontSize: string): string[] => [
     `${selector}.${p}-avatar-square{`,
-    `  border-radius:${radius};`,
+    // ⚠️ 这里**内联** `v(...)` 而不是先算成变量再插值：E10 的静态扫描认的豁免形态是
+    //    源码里出现 `${v(`。先算成 `const radius = v('borderRadius')` 再插值
+    //    `${radius}` 会被判成「硬编码圆角」—— 那是**假阳性**（产物是
+    //    `border-radius:var(--apollo-border-radius)`），但与其放宽规则，
+    //    不如让源码形态与**已登记**的豁免形式一致。产物逐字节不变。
+    `  border-radius:${v(radiusToken)};`,
     `}`,
     `${selector}.${p}-avatar-icon{`,
     `  font-size:${iconFontSize};`,
@@ -167,19 +172,19 @@ export function genAvatarStyle(rootPrefixCls: string): string {
     `}`,
 
     // ---- base 的两条尺寸附属（复合选择器）----
-    ...sizeVariants(cls, v('borderRadius'), tv('icon-font-size')),
+    ...sizeVariants(cls, 'borderRadius', tv('icon-font-size')),
 
     // ---- size=large ----
     `${cls}-lg{`,
     ...sizeStyle(tv('container-size-lg'), tv('text-font-size-lg')),
     `}`,
-    ...sizeVariants(`${cls}-lg`, v('borderRadiusLG'), tv('icon-font-size-lg')),
+    ...sizeVariants(`${cls}-lg`, 'borderRadiusLG', tv('icon-font-size-lg')),
 
     // ---- size=small ----
     `${cls}-sm{`,
     ...sizeStyle(tv('container-size-sm'), tv('text-font-size-sm')),
     `}`,
-    ...sizeVariants(`${cls}-sm`, v('borderRadiusSM'), tv('icon-font-size-sm')),
+    ...sizeVariants(`${cls}-sm`, 'borderRadiusSM', tv('icon-font-size-sm')),
 
     // ---- 图片本身 ----
     `${cls} >img{`,

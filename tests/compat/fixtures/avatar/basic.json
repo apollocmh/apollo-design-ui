@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "avatar/basic",
+  "component": "avatar",
+  "description": "头像的**两层结构**契约：根 `<span class=\"{p}-avatar\">` > 内容 span `.{p}-avatar-string`（字符形态）。判据（详见 `docs/analysis/avatar.md` 与 `packages/ui/src/avatar/README.md` §2）：① 🚨 **渲染优先级是五路互斥** —— 字符串 `src`（`<img>`）→ `src` 是 VNode（原样渲染）→ `icon` → 字符（带缩放）→ 字符（首帧 `opacity:0`）；其中第 4/5 支是**同一个** `-string` span（只差 `ref` 与 style）⇒ Vue 侧**不能拆成两个分支**（会重建节点、丢 `ref`）。② 类名条件组合：`-circle`（默认）/ `-square`、`-lg` / `-sm`（`'large'` / `'small'`）、`-image`（前两支）、`-icon`（第三支）。③ 🚨 **数字尺寸走内联 style**（`width` / `height` / `font-size`），**不加** `-lg` / `-sm` 类；`fontSize` 的判据是 `icon ? size/2 : 18`（`icon` 与 `children` 二选一，**不是** `(icon || children)`）。④ 🚨 本仓数字必须过 `toCssSize()` —— Vue 的 `patchStyle` 不补 `px`，裸数字被静默丢弃（PITFALLS 170）。⑤ SSR 里 `-string` span 恒是**首帧形态**（`style=\"opacity:0\"`，无 transform）—— `scale` 的测量只在客户端跑（归 L1）。⚠️ **不覆盖**：`onError` 回退（需真实 error 事件，归 L1）、响应式 `size`（`ScreenSizeMap` 在 SSR 下取不到断点 ⇒ 产物与默认形态相同）、`scale` 几何（SSR 恒 `opacity:0`）。",
+  "antdVersion": "6.6.4",
+  "props": {},
+  "content": "U",
+  "variants": {
+    "shape": ["circle", "square"],
+    "size": ["large", "small", "medium", 40]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

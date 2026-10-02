@@ -1,0 +1,15 @@
+{
+  "$schema": "../schema.json",
+  "id": "avatar/group",
+  "component": "avatar",
+  "description": "`Avatar.Group` 的**组合**契约：根 `<div class=\"{p}-avatar-group\">` > 若干子 `Avatar`（+ 可选「+N」溢出项）。判据（详见 `docs/analysis/avatar.md` 与 `README.md` §2）：① 🚨 **每个用例都包一层 `ConfigProvider`，但两侧都「不传 `prefixCls` prop」** —— 「+N」那个头像内部是 `<Avatar>`（**不带 prefixCls**）⇒ 取 `getPrefixCls('avatar')`；子头像若传了 `prefixCls` 会与前缀不一致（实测 `apollo-avatar-*` vs `apollo-*`）。② `max.count` 的截断：`count` 为 `0` 或 `>=` 子元素数量时**不截断**；否则只渲染前 `count` 个 + 一个内容为 `+N` 的普通 `Avatar`。③ Group 的 `size` / `shape` 经 `AvatarContext` **透传**给子头像，子头像自己的 prop **覆盖**它（context 合并用 `||`）。④ 已废弃的四件套（`maxCount` / `maxStyle` / `maxPopoverPlacement` / `maxPopoverTrigger`）与新的 `max={{ … }}` **同效**。⑤ 溢出 Popover **默认不展开** ⇒ SSR 产物里没有 popup（本用例是确定性的）。⚠️ **不覆盖**：Popover 展开后的浮层内容（归 L6）、`max.popover` 的透传细节（归 L1）。",
+  "antdVersion": "6.6.4",
+  "props": { "max": { "count": 2 } },
+  "slots": { "default": "3 个字符头像 A/B/C" },
+  "variants": {
+    "shape": ["circle", "square"],
+    "size": ["large", "medium"]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": [] }
+}

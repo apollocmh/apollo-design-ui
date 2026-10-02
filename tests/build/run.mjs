@@ -307,13 +307,25 @@ function checkCssArtifact(dir, name) {
 }
 
 /**
- * B11：CSS 产物里不得出现「转换漏网」的痕迹（`NaN` / `Infinity` / `undefined` / `${`）。
+ * B11：CSS 产物里不得出现「转换漏网」的痕迹（`NaN` / `Infinity` / `undefined` / `${` /
+ * **嵌套的 `var()` 包装**）。
  *
  * 为什么需要它：本仓的组件样式是**构建期**从 antd 产物机械转换来的（`style/index.ts` 里
  * 大量字面量 + `var()`），一旦某个值来自「应该算但没算」的表达式（最典型的是 antd 的
  * `borderRadiusXS / 2` 被原样搬进 CSS 字符串 ⇒ `border-radius:NaNpx`），浏览器会**静默丢弃
  * 那条声明**：不报错、类型检查也看不见，只有像素比对能发现（2026-09-25 image 实测）。
  * `${` 同理 —— 它是模板占位没被展开的痕迹（生成器/手写字符串里的漏网）。
+ *
+ * 🚨 **嵌套 `var()` 包装**（2026-10-02 avatar 实测）：把 token 名与 token→var 的转换函数
+ * 混用（`v(v('borderRadius'))`，或调用点先算好 `var(--apollo-border-radius)` 再传给一个
+ * 内部又会 `v()` 一次的工厂）会产出 `var(--apollo-var(--apollo-border-radius))` ——
+ * 变量名成了 `--apollo-var(--apollo-border-radius)`，**整条声明失效**（无效变量名 ⇒
+ * `border-radius` 退回初始值 `0`）。它躲过了两道既有防线，因为两处的正则都是
+ * `/var\((--apollo-[a-z0-9-]+)\)/`：对 `var(--apollo-var(--apollo-border-radius))` 它会
+ * **跳过外层的坏壳、匹配到内层的合法引用** ⇒ B7（ui）与组件 `theme.test.ts` 双双判 PASS。
+ * 只有 L6 像素比对抓得到（`square` 变体 2.98% block-diff）。本检查用
+ * `var\(--[a-z0-9-]*var\(`（变量名里出现 `var(`）精确命中这种形态，不误伤
+ * `var(--a, var(--b))` 这类**合法的回退**写法（内容里有逗号 ⇒ 不匹配）。
  *
  * ⚠️ 扫描前要剥掉 `url(...)` 与引号内的字符串：data-URI 的 base64 里**可能**恰好出现
  * `NaN` 这种子串（`placeholder` 的内联 SVG 就是 base64），那是假阳性。
@@ -331,7 +343,9 @@ function checkCssSanity(dir, name) {
       .replace(/url\([^)]*\)/g, 'url()')
       .replace(/'[^']*'/g, "''")
       .replace(/"[^"]*"/g, '""');
-    for (const m of stripped.matchAll(/\$\{|(?:NaN|Infinity)[a-z%]*|\bundefined\b/g)) {
+    for (const m of stripped.matchAll(
+      /\$\{|(?:NaN|Infinity)[a-z%]*|\bundefined\b|var\(--[a-z0-9-]*var\(/g,
+    )) {
       const at = Math.max(0, m.index - 40);
       hits.push(
         `${path.relative(ROOT, f)}: …${stripped.slice(at, m.index + 24).replace(/\n/g, ' ')}`,
@@ -347,7 +361,12 @@ function checkCssSanity(dir, name) {
     );
     return;
   }
-  add(name, 'B11', 'PASS', `${cssFiles.length} 份 CSS 产物无 NaN / undefined / 未展开占位`);
+  add(
+    name,
+    'B11',
+    'PASS',
+    `${cssFiles.length} 份 CSS 产物无 NaN / undefined / 未展开占位 / 嵌套 var 包装`,
+  );
 }
 
 /**

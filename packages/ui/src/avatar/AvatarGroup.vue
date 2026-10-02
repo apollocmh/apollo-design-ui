@@ -171,7 +171,11 @@ function groupChildren() {
       ...props.max?.popover,
       placement: mergePopoverPlacement,
       trigger: mergePopoverTrigger,
-      rootClassName: [`${groupPrefixCls.value}-popover`, props.max?.popover?.rootClassName],
+      // ⚠️ 上游是 clsx(...) ⇒ 产出**字符串**（不是数组）。本仓传数组会被 Tooltip 的
+      //    rootClassName?: string 判为类型不符（实测 demo 冒烟直接 warn）。
+      rootClassName: [`${groupPrefixCls.value}-popover`, props.max?.popover?.rootClassName]
+        .filter(Boolean)
+        .join(' '),
     };
 
     childrenShow.push(

@@ -3506,3 +3506,87 @@
     或显式 `await nextTick()` 后断言「值确实变了」。同族：`watch(..., { immediate: true })`
     与 React `useEffect(fn, [dep])` 的**挂载时也会跑一次**不是一回事 ——
     React 那边挂载时跑，Vue 的 `watch` 默认不跑（avatar 因此在 `onMounted` 里手动补跑了一次测量）。
+
+304. ⚠️ **E10 的「硬编码圆角」是**文本**扫描 ⇒ 把 `v('borderRadius')` 先算成变量再插值会被**误判**
+    （2026-10-02 实测，avatar）。
+
+    **触发**：`genAvatarStyle` 里尺寸工厂是「一个工厂、三处复用」，圆角按尺寸不同
+    （`borderRadius` / `borderRadiusLG` / `borderRadiusSM`）⇒ 最自然的写法是把它当参数传：
+
+    ```ts
+    const sizeVariants = (selector: string, radius: string, iconFontSize: string) => [
+      `${selector}.${p}-avatar-square{`,
+      `  border-radius:${radius};`,   // ← 调用点传的是 v('borderRadius')
+      `}`,
+    ];
+    ...sizeVariants(cls, v('borderRadius'), tv('icon-font-size')),
+    ```
+
+    产物是 `border-radius:var(--apollo-border-radius)`（**完全正确**），但
+    `validate-registry.mjs` 的 E10 正则
+    `/border-radius:(?!\s*(?:var\(|calc\(|min\(|inherit\b|\$\{v\(|…))/`
+    只看**源码文本** ⇒ `${radius}` 不匹配 `${v(` ⇒ 报「存在硬编码圆角」，
+    `registry:check` 直接红（E10 是 error 不是 warning）。
+
+    **对策**：让源码形态与**已登记**的豁免形式一致 —— 把 token **名**传进去、在模板串里
+    **内联** `v()`：
+
+    ```ts
+    const sizeVariants = (selector: string, radiusToken: string, iconFontSize: string) => [
+      `  border-radius:${v(radiusToken)};`,
+    ];
+    ...sizeVariants(cls, 'borderRadius', tv('icon-font-size')),
+    ```
+
+    **产物逐字节不变**（L7 `theme.test.ts` 与 L6 均无变化）。
+    🚨 **不要**去放宽 E10 的正则 —— 那条规则保护的是「设计值必须走 Token」，
+    而这次只是源码的**书写形态**不匹配它的识别方式。同族判据：凡是把
+    `v('x')` / `tv('x')` 的**结果**先存成变量、再插值进 CSS 模板串的地方，
+    都可能踩到（`box-shadow` 的 E10 规则同形）。
+
+305. 🚨 **`var(--apollo-var(--apollo-x))` 双重包裹 —— 两条既有防线**都**看不见它**
+    （2026-10-02 实测，avatar）。
+
+    **怎么产生的**：token **名**与「token → var」的转换**混用**。avatar 的
+    `genAvatarStyle` 里尺寸工厂三处复用、圆角按尺寸不同（`borderRadius` / `…LG` / `…SM`），
+    形如：
+
+    ```ts
+    // 工厂内部已经会 v() 一次
+    const sizeVariants = (selector, radiusToken, iconFontSize) => [
+      `  border-radius:${v(radiusToken)};`,
+    ];
+    // 调用点又传了「已经转换好的字符串」
+    ...sizeVariants(cls, v('borderRadius'), tv('icon-font-size')),
+    ```
+
+    ⇒ `v('borderRadius')` 先得到 `var(--apollo-border-radius)`，进工厂后**再被 `v()` 一次**
+    ⇒ `var(--apollo-var(--apollo-border-radius))`。变量名成了
+    `--apollo-var(--apollo-border-radius)` ⇒ 整条声明 invalid at computed-value time
+    ⇒ `border-radius` 退回初始值 `0`（方形头像的圆角整个消失）。
+
+    **为什么两条既有防线都放过它**：组件 `theme.test.ts` 的「规则引用的全局 token 都在
+    `tokens.css` 里有声明」与 build gate 的 B7（ui）用的是**同一个正则**：
+
+    ```js
+    /var\((--apollo-[a-z0-9-]+)\)/g
+    ```
+
+    对 `var(--apollo-var(--apollo-border-radius))`：外层 `var(` 之后跟的是 `--apollo-var(`
+    而不是 `)` ⇒ **不匹配外层**；正则会**跳过坏壳、匹配到内层的合法引用**
+    `--apollo-border-radius` ⇒ 判 PASS。⚠️ 这类「正则只认最内层」的盲区对**任何嵌套结构**
+    都成立，值得在别处也警惕。
+
+    **抓到它的只有 L6**：`square` 变体 block-diff **2.98%**（mobile）/ 1.45%（tablet）/
+    0.78%（desktop）—— 差异率随视口**反比**下降，正是「固定尺寸的圆角区域」的特征。
+    ⚠️ 同批 `src`（0.81%）与 `badge`（0.86%）根因同为这一条。
+
+    **已补的防线**：`tests/build/run.mjs` 的 **B11** 增加 `var\(--[a-z0-9-]*var\(` ——
+    判据是「变量名里出现 `var(`」。✅ 不误伤 `var(--a, var(--b))` 这类**合法回退**
+    （内容里有逗号 ⇒ 不匹配）；✅ 单层 `var(--apollo-border-radius)` 与自有变量
+    `var(--apollo-avatar-*)` 均不命中（已用四个正/负例实测）。
+
+    ⚠️ **副产品教训（同一天第二次踩）**：这个 bug 之所以产生，是因为对**同一文件**的三处
+    调用点做**连续三次 `Edit`**，其中**两处没落盘却报 success** —— 与既有那条「多文件机械
+    改动别用 `Edit` 批量」同源，只是这次是**同一文件内的多处替换**。
+    ⇒ **同一文件的多处机械替换一律改用脚本 + 「断言恰好命中 N 次」，改完再 `grep` 复核**。

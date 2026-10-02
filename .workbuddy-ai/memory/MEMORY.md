@@ -2,7 +2,7 @@
 
 > 只放仓库文档里没有的：易错判据、工具所有权、未决事项。
 > 规则本体：`AGENTS.md`/`WORKFLOW.md`/`TESTING.md`/`COMPATIBILITY.md`/`ARCHITECTURE.md`；
-> **坑的全文**：同目录 `PITFALLS.md`（290+ 条，**查坑先去那**）；环境专题：`test-perf-diagnosis.md`。
+> **坑的全文**：同目录 `PITFALLS.md`（300+ 条，**查坑先去那**）；环境专题：`test-perf-diagnosis.md`。
 
 ## 本质与事实来源
 
@@ -45,7 +45,8 @@ Node ≥22.12（managed）｜pnpm 12.4.2｜TS 5.9｜Vitest 5｜Playwright（`cha
   ⚠️ **不许手写 glob**（zsh 不展开 `**` ⇒ 假绿灯，213）。biome error 基线 **0**。
 - 🚨 `registry:check` 顺序：`gen-registry.mjs` → `foundation-status.mjs`（**不带 `--check`**）→
   `gen-workstreams.mjs --check` → `validate-registry.mjs`。组件收口后要刷 foundation-status + workstreams。
-- ⚠️ 多文件机械改动**别用 Edit 批量**（会「部分落盘却报 success」）⇒ 写 Node 脚本断言「恰好命中 1 次」。
+- ⚠️ 机械改动**别用 Edit 批量**（会「部分落盘却报 success」——**同一文件内连续多次替换也会**，
+  305 的成因就是同一文件三处调用点只落盘一处）⇒ 写 Node 脚本断言「恰好命中 N 次」，改完 `grep` 复核。
 - ⚠️ 临时插桩标 `[TMP-DBG]`，收口前清光（`dist/` 是 gitignore ⇒ `git status` 不提醒）。
 - 并发红线：全仓构建门禁同一时刻只允许一个会话，锁 `/tmp/apollo-build-gate.lock`。
 
@@ -67,14 +68,20 @@ L0 utils/theme/icons ｜ 测试 test-utils
 - **props/attrs**：事件名全小写(1) · `VNodeChild` 显式 `undefined` 默认值(2) · 🚨未声明 prop 归 `attrs`
   静默失效(3,250) · catch-all 别用 `PropType<unknown>`(5,137,185) · `required:true` 要 `as const`(15,200)
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) ·
-  驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10)
+  驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) ·
+  🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) ·
+  🚨 token **名**与 token→var 转换**别混用** ⇒ `var(--apollo-var(--x))` 双包裹会让声明整条失效，
+  而 `theme.test.ts` 与 B7 的同一个正则**都看不见**（只认最内层），只有 L6 抓得到(305) ·
+  ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判，应内联 `${v(...)}`(304)
 - **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要
   轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) ·
-  `setup()` 里不能建带 `ref` 的 vnode(11,178) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
+  `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) ·
   类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) ·
-  `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168)
+  `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) ·
+  🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) ·
+  透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267)
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**
   (277) —— 搜代码用 Grep 工具。
 
@@ -103,39 +110,21 @@ L0 utils/theme/icons ｜ 测试 test-utils
 - 未决：B6 按需样式子路径（`exports` 缺 `./css/*`）；`--project types` 的 SFC 解析噪音（73）；
   Empty SVG 不跟 darkAlgorithm；开放决策见 `ask decisions --open`。
 
-## 进度（2026-10-02）
-
-foundation **13/13 completed**；组件 **63/72 completed**；可执行 12 / 被阻塞 1。下一条用 `next-task.mjs` 取。
-`date-picker` / `masonry` / `anchor` / `breadcrumb` / `card` 已 **completed**（11 维度全 done）：
-
-- **card**（本轮）：`.vue` SFC ×3（`Card` / `CardMeta` / `CardGrid`）；13 个 Component Token + 4 个
-  `mergeToken` 派生；**L6 33/33 exact、L4 51/51、L1 46/46、L3 28/28、L5 15/15、L7 19/19、demo 12/12**。
-  🚨 三条判据：① `-contain-tabs` 用 `tabList?.length`，而 **head 的判据是 `tabList` 的真值**（空数组也渲染）；
-  ② `Card.Grid` 的 **vnode 身份**（`child.type === CardGrid`）是 `-contain-grid` 的唯一判据；
-  ③ `onTabChange` 是**上游的 prop**（不是 emits）⇒ 用 `:on-tab-change`。
-  ⚠️ 两条坑：**PITFALLS 299**（biome 把只在模板 + 类型位置用的组件 import 改写成 `import type` ⇒
-  静默渲染成原生标签）、**PITFALLS 300**（跨组件 prop 名形近 `defaultActiveTabKey` vs `defaultActiveKey`，
-  类型检查无感、只有行为用例能抓）、**PITFALLS 301**（透传 `tabProps` 必须过一次 `unknown`）。
-  ⚠️ `-hoverable` **不给独立视觉变体**（静态帧只差 `cursor` / `transition` ⇒ 必然空转）。
-
-- **masonry**：无 foundation 缺口（对照表 `docs/analysis/masonry.md` §0）；L6 21/21 exact；先读 `packages/ui/src/masonry/PLAN.md`。
-- **anchor**：两个 `.ts` 渲染函数（`Anchor.ts`/`AnchorLink.ts`）；⚠️ `AnchorLink` 类名前缀取自
-  **ConfigProvider 根前缀** ⇒ L4 基线生成器每个用例都要包 ConfigProvider；L6 `active` 需「`bounds` 抬阈值 +
-  零高度夹具」且 `affix ≠ false`（旧写法两条都漏 ⇒ 三张基线与 `basic` 逐字节相同，276）。
-  🚨 改视觉用例前先 `md5 tests/visual/baselines/react/<comp>/*.png | sort` 查重复；`rtl-active` 与 `active`
-  **预期**相同（antd 对 Anchor 零 RTL CSS），别当重复删掉。⚠️ `onClick` 是自定义签名 prop；`Anchor` 没有
-  `ref`/`expose`；`children` 是插槽（271）。
-
-### 收口期新增长期约定
+## 收口期长期约定（跨组件通用）
 
 - **视觉变体要避开「静态帧测不到」的面**：`:hover` / `cursor` / `transition` / 纯属性差异（`href` / `id`）
-  在截图上不可见 ⇒ 必然是空转变体，别给它独立 variant（归 L1 的类名断言与 L4）。
-- **demo 里的外网图片一律换本地等价物**（`data:image/png;base64,…` 或纯色块）；
-  **未落地的组件**（如 `avatar`，`status: todo`）用**原生等价物**并登记组件 `README §5`。
-- **L4 的 `it.each` 别用「长度不一致的元组数组」**（推断退化成元组联合、回调签名对不上，TS2345）——
-  改用**同形对象数组** + `$name` 模板。
-- **`*.test.ts` 也在 `vue-tsc` 的检查范围内**（`lint:types` 覆盖全仓，不只是 `*.test-d.ts`）⇒
-  加完测试要重跑 `lint:types`；`noUncheckedIndexedAccess` 下 `arr[0]` 是 `T | undefined`，
-  用 `?.`，别用 `!`（`noNonNullAssertion` 是 warn）。
-- 🚨 **只要 `.vue` 里出现 `typeof SomeComponent`，就检查那条 import 有没有被 biome 改写成
-  `import type`**（PITFALLS 299）：`grep -rn "^import type .* from '.*\.vue'"` 一条命令扫全仓。
+  在截图上不可见 ⇒ 必然是空转变体，别给它独立 variant（归 L1 类名断言与 L4）。
+- 🚨 写/改变体后先 `md5 tests/visual/baselines/react/<c>/*.png | sort` 查同哈希 —— 同哈希 = **空转**。
+- **demo 里的外网图片一律换本地等价物**（`data:image/png;base64,…` 或纯色块）；**未落地的组件**
+  （如 avatar）用**原生等价物**并登记组件 `README §5`。
+- **L4 的 `it.each` 别用「长度不一致的元组数组」**（推断退化成元组联合、TS2345）⇒ 同形对象数组 + `$name`。
+- **`*.test.ts` 也在 `vue-tsc` 检查范围内** ⇒ 加完测试要重跑 `lint:types`；`noUncheckedIndexedAccess`
+  下 `arr[0]` 是 `T | undefined`，用 `?.`，别用 `!`（`noNonNullAssertion` 是 warn）。
+- 🚨 **只要 `.vue` 里出现 `typeof SomeComponent`，就检查那条 import 有没有被 biome 改成 `import type`**（299）：
+  `grep -rn "^import type .* from '.*\.vue'"` 一条命令扫全仓。
+
+## 进度（2026-10-02）
+
+foundation **13/13 completed**；组件 **64/72 completed**。下一条用 `next-task.mjs` 取。
+已 completed：`date-picker` / `masonry` / `anchor` / `breadcrumb` / `card` / `avatar`
+（各自的判据与坑见 `PITFALLS.md` 与组件 `README §5`，不在此重复）。
