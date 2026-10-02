@@ -5,13 +5,4 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/timeline/demo/ 抄清单 -->
-```vue
-<script setup lang="ts">
-import { Timeline } from '@apollo-design/ui';
-</script>
-
-<template>
-  <Timeline>basic demo 占位</Timeline>
-</template>
-```
+基础的时间轴 —— 只给 `content`（无 `title` ⇒ 纵向**不**交错）。

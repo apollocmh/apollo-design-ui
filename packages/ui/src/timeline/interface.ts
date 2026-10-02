@@ -114,6 +114,14 @@ export type TimelineSemanticClassNames = Omit<StepsSemanticClassNames, 'itemSubt
 /** `Timeline` 的语义化样式。同上。 */
 export type TimelineSemanticStyles = Omit<StepsSemanticStyles, 'itemSubtitle'>;
 
+/**
+ * 语义化槽的**值形态**：直接给对象，或给一个按 `props` 动态返回的函数。
+ *
+ * 与 `card` 的 `CardSemanticValue` 同判（上游是 `GenerateSemantic` 条件类型，
+ * 本仓手写 —— 见 D36：条件类型无法被泛型函数体证明）。
+ */
+export type TimelineSemanticValue<T> = T | ((info: { props: TimelineProps }) => T);
+
 // ---------------------------------------------------------------------------
 // Timeline
 // ---------------------------------------------------------------------------
@@ -133,10 +141,10 @@ export interface TimelineProps {
   style?: CSSProperties;
   /** 也落在根元素上。 */
   rootClassName?: string;
-  /** 语义化类名（十槽去掉 `itemSubtitle`）。 */
-  classNames?: TimelineSemanticClassNames;
-  /** 语义化样式（同上）。 */
-  styles?: TimelineSemanticStyles;
+  /** 语义化类名（十槽去掉 `itemSubtitle`）。支持函数形态。 */
+  classNames?: TimelineSemanticValue<TimelineSemanticClassNames>;
+  /** 语义化样式（同上）。支持函数形态。 */
+  styles?: TimelineSemanticValue<TimelineSemanticStyles>;
 
   /** 变体。透传给 `Steps`。 */
   variant?: StepsVariant;

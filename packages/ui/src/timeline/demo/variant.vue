@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 `basic` demo。
+// 对齐 antd 的 `variant` demo。
 import { Timeline } from '@apollo-design/ui';
 
 const items = [
@@ -11,5 +11,5 @@ const items = [
 </script>
 
 <template>
-  <Timeline :items="items" />
+  <Timeline variant="filled" :items="items" />
 </template>

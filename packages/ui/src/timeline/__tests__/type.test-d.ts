@@ -33,6 +33,7 @@ import type {
   TimelineRef,
   TimelineSemanticClassNames,
   TimelineSemanticStyles,
+  TimelineSemanticValue,
   TimelineSlot,
 } from '../interface';
 
@@ -96,10 +97,13 @@ describe('Timeline · Props 类型', () => {
   it('判据 5：`TimelineConfig` 含 `className` / `style` / `classNames` / `styles`', () => {
     expectTypeOf<TimelineConfig['className']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<TimelineConfig['style']>().toEqualTypeOf<CSSProperties | undefined>();
+    // ⚠️ 语义化槽是「对象 | 函数」的联合（与 card 的 `CardSemanticValue` 同判）
     expectTypeOf<TimelineConfig['classNames']>().toEqualTypeOf<
-      TimelineSemanticClassNames | undefined
+      TimelineSemanticValue<TimelineSemanticClassNames> | undefined
     >();
-    expectTypeOf<TimelineConfig['styles']>().toEqualTypeOf<TimelineSemanticStyles | undefined>();
+    expectTypeOf<TimelineConfig['styles']>().toEqualTypeOf<
+      TimelineSemanticValue<TimelineSemanticStyles> | undefined
+    >();
   });
 
   it('判据 2：`TimelineRef.nativeElement` 是 `HTMLElement | null`（不是 `HTMLDivElement`）', () => {

@@ -103,11 +103,17 @@ const Timeline = defineComponent({
     className: { type: String, default: undefined },
     rootClassName: { type: String, default: undefined },
     style: { type: Object as PropType<TimelineProps['style']>, default: undefined },
+    // ⚠️ **必须收 `[Object, Function]`** —— 语义化槽支持**函数形态**
+    //    （`(info) => styles`）。只写 `Object` 时函数会触发
+    //    `Invalid prop: type check failed` 的 Vue 告警（demo 冒烟实测抓到）。
     classNames: {
-      type: Object as PropType<TimelineProps['classNames']>,
+      type: [Object, Function] as PropType<TimelineProps['classNames']>,
       default: undefined,
     },
-    styles: { type: Object as PropType<TimelineProps['styles']>, default: undefined },
+    styles: {
+      type: [Object, Function] as PropType<TimelineProps['styles']>,
+      default: undefined,
+    },
     // ⚠️ 上游解构默认 `variant = 'outlined'`（**不是** Steps 自己的 `'filled'`）
     variant: { type: String as PropType<TimelineProps['variant']>, default: 'outlined' },
     mode: { type: String as PropType<TimelineMode>, default: undefined },
