@@ -437,16 +437,43 @@ export interface ComponentToken {}
 
 ## 4. Vue 对应（平台差异与关键设计）
 
-### 4.1 🚨 第一个决策点：`Color` 的 4 个缺口放哪
+### 4.1 ✅ **已裁决**（有证据，非偏好）：`Color` 缺口放 `engine/`，**不动 foundation**
 
-| 方案 | 代价 | 风险 |
-|---|---|---|
-| **A. 扩 `@apollo-design/utils` 的 `Color`** | 改 L0 foundation ⇒ **必须单独重建**（PITFALLS 176/249）+ 补 `color.oracle.test.ts` 的差分用例 | 加方法**向后兼容**；但 `toHsb`/`toHsbString` 是 **rc 的扩展**（FastColor 本身没有）⇒ 属「apollo 扩展」而非「移植」，要在文件头写明 |
-| **B. 在 `ui/src/color-picker/` 里做局部扩展** | 不动 foundation | 违反「颜色数学单一真源」；`onBackground` 已经在 `ui/_internal` 就是这个坏味道的先例 |
+**裁决依据**（三条，都是可复现的事实）：
 
-📌 **倾向 A**（理由：`color.ts` 的文件头明说「移植范围只含本仓库真实用到的部分」，
-color-picker 让「真实用到」变多了；且 `setHue` 是 FastColor 的**原生**方法，属于移植缺口）。
-**待用户确认后落 G2/G3。**
+1. **registry 已经写明**：`dependencies.json` 的 `rcReplacements` 里
+   `@rc-component/color-picker` 的 `strategy` 是 **`in-ui`**、`target` 是
+   `packages/ui/src/color-picker/engine/` ⇒ **rc 那一层本来就归 ui**。
+2. **`toHsb` / `toHsbString` 不是 FastColor 的方法**（实测 FastColor 的 API 表里没有它们），
+   是 **rc 的 `Color extends FastColor` 加的**。而 `@apollo-design/utils` 的 `Color`
+   文件头明说自己是「**`FastColor` 的等价实现**」—— 往里面加 rc 的扩展会**破坏那个等价声明**。
+3. **`setA` 不是缺口**：本仓叫 `setAlpha`（`color.ts:392`），只是改名。
+
+⇒ **结论**：`utils` 的 `Color` **一个字不改**；
+在 `engine/color.ts` 写 `class Color extends BaseColor`（`BaseColor` = utils 的 `Color`），
+逐字移植 rc 的三样东西：
+
+```ts
+// ① 构造归一：hsb → hsv（本仓 base 只认 {h,s,v}，`{h,s,b}` 会直接 throw）
+const convertHsb2Hsv = (color) => { /* rc/color.js 逐字 */ };
+
+// ② rc 加的两个方法（rc/color.js 逐字）
+class Color extends BaseColor {
+  constructor(input) { super(convertHsb2Hsv(input)); }
+  toHsb()       { const { v, ...rest } = this.toHsv(); return { ...rest, b: v, a: this.a }; }
+  toHsbString() { /* getRoundNumber(h*100) / alpha.toFixed(alpha === 0 ? 0 : 2) */ }
+  // ③ FastColor 的原生方法（FastColor.js 逐字）
+  setHue(value) { const hsv = this.toHsv(); hsv.h = value; return new Color({ ...hsv, h: value }); }
+}
+```
+
+⚠️ **`setHue` 的移植要留意 `_c`**：FastColor 用 `this._c(hsv)`（按 `this.constructor` 建实例）
+⇒ 在子类上返回子类。我们写 `new Color({...hsv, h: value})` 等价（本类即子类）。
+⚠️ **`hueCache` 语义**：utils 的 `Color` 把「构造时传入的 h」存为缓存
+（文件头：「惰性缓存不是性能优化，是行为的一部分」）⇒ `setHue` 走 `{h,s,v,a}` 构造
+会把新 `h` 写进 `hueCache`，**与 FastColor 一致**。
+
+**若将来 `setHue` 被第二个消费者需要**，再按三次法则收敛进 utils（届时是一次真正的 foundation 变更）。
 
 ### 4.2 `onChange` / `onChangeComplete` / `onFormatChange` / `onOpenChange` / `onClear` 都是**回调 prop**
 
@@ -486,7 +513,8 @@ color-picker 让「真实用到」变多了；且 `setHue` 是 FastColor 的**�
 1. 🚨 **引擎（769 行）是全新代码**，且它**有浮层 + 拖拽 + canvas-free 几何**
    ⇒ 本仓「jsdom 无布局」的老问题会集中爆发。**必须把几何算法抽成纯函数**
    （`useColorDrag` 的 `getColor`/`getAlpha` 映射）在 L1 钉死。
-2. 🚨 **`toHsb` 缺 4 个方法** ⇒ 不补就写不出 `AggregationColor`。见 §4.1。
+2. ✅ **已排除**：`toHsb`/`toHsbString`/`setHue` 的落点与实现已定（§4.1），
+   `setA` 只是改名 ⇒ 不构成风险。
 3. ✅ **已排除**：`ColorSlider` 复用本仓 `Slider` 的**硬前提已核实**（§1.5）——
    本仓 `sliderInternalContextKey` 有 `handleRender` + `direction`，
    `unstableSliderContextKey` 有 `onDragStart`/`onDragChange`，逐项对得上。
@@ -514,7 +542,7 @@ color-picker 让「真实用到」变多了；且 `setHue` 是 FastColor 的**�
 
 ### ❌ 没有证明（G2/G3/G4 必须先做）
 
-- ❌ **`Color` 缺口的落点（§4.1 A/B）未裁决** ⇒ **G2/G3 的第一个动作就是定它**。
+- ✅ **`Color` 缺口的落点已裁决**（§4.1）：`utils` 不动，rc 的子类落在 `engine/color.ts`。
 - ❌ **没有逐行读 `PanelPicker/index.tsx`(213) / `GradientColorBar.tsx`(149) /
   `ColorTrigger.tsx`(148)`** —— §1.3 的职责描述是从主文件的调用点**推断**的。
   ⚠️ 特别是 **`body` / `content` / `description` 三个语义槽归谁消费**，本分析只到
@@ -531,3 +559,94 @@ color-picker 让「真实用到」变多了；且 `setHue` 是 FastColor 的**�
   （§1.5 末尾那条 ⚠️）。
 - ❌ **`ColorPicker` 的 `ref` 落点未核实**（上游是 `ForwardRefExoticComponent`，
   ref 指向内部哪个 `div`）⇒ `expose` 面待定。
+
+---
+
+## 7. G2–G4 期间补做的实测（2026-10-02 第二轮）
+
+> §6 的「没有证明」清单里，下面这几条**已经查证**。结论都是可复现的（附命令/文件:行号）。
+
+### 7.1 ✅ `Color` 缺口落 `engine/`（已实现，§4.1 的裁决落地）
+
+`packages/ui/src/color-picker/engine/color.ts`：`class Color extends BaseColor`，
+逐字移植 `convertHsb2Hsv` / `toHsb` / `toHsbString` / `setHue`。
+
+🚨 **实现期多发现两条「必须自己补」的行为**（都写进了 `PITFALLS.md` 320/321）：
+
+| # | 行为 | 不补的后果 |
+|---|---|---|
+| 1 | **覆写 `clone()` 与 `setAlpha()`** | 基类里 `new Color(...)` 是**词法基类** ⇒ `clone()` 让类型掉回基类（TS2739）、`setAlpha()` 让**运行时**掉回基类（`metaColor.toHsb()` 不存在）。上游靠 `_c()`（`new this.constructor`）避免 |
+| 2 | **构造器入参面加 `HSV`/`HSVA`** | `setHue` 把 `toHsv()`（带 `v` 不带 `b`）直接回传构造器，而 `ColorGenInput` 只声明 `HSB` ⇒ TS2345 |
+
+另外 **falsy 输入必须走「黑 + 不透明」**：上游 `FastColor` 的构造第一句是 `if (!input) {…}`，
+而 `utils` 的 `Color` 对 `''` **抛错**。这条是**真路径**（`AggregationColor` 对空值走
+`new RcColor(isArray ? '' : color)`）。构造写成 `color ? convertHsb2Hsv(color) : undefined`
+即与上游 `!input` 逐字等价（连 `0` 的边界也对上了）。
+
+### 7.2 🚨 `ColorSlider` 的**硬约束**：本仓 `Slider` 没有 `handleRender` 通道（**PITFALLS 319**）
+
+上游 `ColorSlider` 用两条 **context** 定制 `Slider`：
+
+| 上游通道 | 本仓状态 | 判据 |
+|---|---|---|
+| `SliderInternalContext.handleRender`（改把手 style/类名、拦 `onFocus`/`onKeyDown`） | ❌ **不存在** | `grep -rn "sliderInternalContextKey" packages/ui/src` ⇒ 只有 `slider/context.ts:81`（定义）+ `slider/README.md:26`（登记 INTENDED），**零 provide、零 inject** |
+| `UnstableContext.onDragStart/onDragChange`（渐变条的增删点） | ✅ 可用 | `slider/Slider.vue:346` 真的 `inject(unstableSliderContextKey)`，只是本仓没有 provide 点 ⇒ ColorSlider 自己 provide 即可 |
+
+⇒ **`ColorSlider` 必须改用 `#handle` / `#activeHandle` scoped slot**（`slider/Slider.vue:639-643`），
+槽参数 `{ index, prefixCls, value, dragging, draggingDelete, nodeProps, className, style }`。
+要复刻的三件事（antd `handleRender` 的全部职责）：
+
+1. 渐变点的 `style.background`（`getGradientPercentColor(colors, info.value)`）；
+2. `-slider-handle-active` 类名（判据是 `activeIndex === info.index`）；
+3. `onFocus → onActive(index)` 与 `onKeyDown` 的 `Delete`/`Backspace → onKeyDelete(index)`。
+
+⚠️ **这条要在 G4 里单独验**：`#handle` 槽是否能拿到/覆盖 `onFocus` / `onKeyDown`
+（若 `Handle.ts` 自己已经绑了且槽不给出覆盖点，则「键盘删点」与「focus 激活」
+两条行为无法 1:1 复刻 ⇒ 需登记为 INTENDED 并给出等价路径）。
+
+### 7.3 ⚠️ `ContextIsolator` 在本仓**不存在**
+
+上游 `ColorPicker` 把面板包在 `<ContextIsolator form>` 里（屏蔽 Form 的 `status`）。
+本仓全仓无此物（最接近的 `NoCompactStyle` 只重置**紧凑**上下文）。
+
+**本仓的处理**：**不引入等价物**，因为面板侧的子件（`PanelPicker` / `ColorPresets` / 输入件）
+**没有一个读 `useFormItemInputContext`** —— 只有 `ColorTrigger` 读（而它本来就在隔离器**外面**）。
+⇒ 行为等价，登记为 PLATFORM（不是缺口）。
+
+### 7.4 ✅ 集成面落点（G4 接线用，逐条查证）
+
+| antd | 本仓 | 签名要点 |
+|---|---|---|
+| `useLocale('ColorPicker')` | `@apollo-design/locale` 的 `useLocale` | 返回**元组** `[locale, code]`；`ColorPicker` 的 4 个键（`presetEmpty`/`transparent`/`singleColor`/`gradientColor`）**73 个语言包全都有** |
+| `useComponentConfig('colorPicker')` | `config-provider/context.ts` | 解构出 `getPrefixCls` / `direction` / `className` / `style` / `classNames` / `styles` / `arrow` |
+| `useSize` | `config-provider/size-context.ts` | `useSize((ctx) => props.size ?? compactSize ?? ctx)`，返回 `ComputedRef` |
+| `useCompactItemContext` | `space/Compact.ts` | `(prefixCls, direction)` → `{ compactSize, compactItemClassnames, compactDirection }` |
+| `FormItemInputContext` | `form/context.ts` 的 `useFormItemInputContext()` | `ComputedRef<{ status?: InputStatus, … }>` |
+| `useMergedArrow` | `tooltip/use-merged-arrow.ts` | `(providedArrow, providedContextArrow)` → `ComputedRef<{ show, pointAtCenter? }>` |
+| `getStatusClassNames` | `space/statusUtils.ts` | 返回**空格拼接字符串**（不是数组） |
+| `useCSSVarCls` | 无 hook ⇒ 直接拼 `${prefixCls}-css-var`（rate 先例） | — |
+| `genPurePanel(ColorPicker, …)` | 本仓**手写** `PurePanel.ts` + 挂 `_InternalPanelDoNotUseOrYouWillBeFired` | 范本：`popover/PurePanel.ts`、`dropdown/PurePanel.ts` |
+| `useControlledState` | `@apollo-design/utils` 的 `useControlledValue` | `{ defaultValue, getValue, onChange }` → `[ComputedRef, setter]` |
+
+⚠️ 两条**易踩的**：
+
+- **`Segmented` 的 `onChange` 不是 prop、不在 emits 里**（`Segmented.ts` 只声明 `update:value`，
+  `onChange` 走 `attrs` 并与 `update:value` 同时发）⇒ 传 `onChange` 要按 attrs 语义写。
+- **`Collapse` 的导出名是 `Collapse`（default 是 `CollapseWithPanel`）**，`items` / `defaultActiveKey` /
+  `ghost` 都在。
+
+### 7.5 ✅ 9 个派生值的**真实形态**（§3.1/§3.2 的落地）
+
+实测产物里它们**全部被内联成字面量**：`width:234px` / `width:16px;height:16px` /
+`flex:0 0 44px` / `width:16px`（stepper）/ `width:24px;height:24px`（preset）/
+`inset 0 0 1px 0 var(--ant-color-text-quaternary)` / `height:8px` /
+`calc(8px * 2 + var(--ant-margin-sm))`（preview，**只有它保持算式**）。
+
+**本仓的处理**（与 §3.1 的决策点一致）：**9 个全部声明成 `--{p}-color-picker-*` 变量**，
+规则侧全部 `var()` 消费。三条理由（H9 / E10 / 主题自适应）与**实测数字**（9 条声明、
+9/9 全被引用、无死变量）见 `packages/ui/src/color-picker/style/token.ts` 的文件头。
+计算值逐位相同 ⇒ 不影响 L6。
+
+📌 **E10 的 `box-shadow` 正则不认 `inset` 前缀**（只放行 `var(`/`${`/`none`/`0` 开头）
+⇒ `colorPickerInsetShadow` **必须**走变量；`genColorBlockStyle` 里内联的
+`inset 0 0 0 lineWidth colorFillSecondary` 走模板串插值（**PITFALLS 322**）。

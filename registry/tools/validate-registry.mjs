@@ -331,9 +331,14 @@ if (missingFixtures === 0) ok('E9', 'completed 组件均有 compat fixture');
  * - `rgba(0, 0, 0, 0)`：slider 的可拖轨道用 `border: solid rgba(0,0,0,0)` 把
  *   拖拽热区撑到 padding 外（**全透明** ⇒ 颜色不是视觉值，宽度才是）——
  *   antd `components/slider/style/index.ts` 就是字面量，2026-09-29 登记。
+ * - `rgba(0, 0, 0, 0.45)`：color-picker 预设色板「选中 + 亮色」时对勾的描边色 ——
+ *   上游 `components/color-picker/style/presets.ts` 就是**字面量**
+ *   （`borderColor: 'rgba(0, 0, 0, 0.45)'`，紧邻的 `colorWhite` 却走了 token）。
+ *   它的值与 `colorTextTertiary` 相同，但**上游没有用 token** ⇒ 换 token 会与产物分叉。
+ *   2026-10-02 登记（color-picker 开工）。
  */
 const ANTD_LITERAL_COLOR_SKIP =
-  /rgba\(255,\s*255,\s*255,\s*[\d.]+\)|rgba\(0,\s*0,\s*0,\s*0(?:\.(?:1|2|3|04))?\)|rgba\((?:100,\s*180,\s*255,\s*0\.98|180,\s*140,\s*255,\s*0\.95|100,\s*220,\s*220,\s*0\.9|255,\s*150,\s*200,\s*0\.88|160,\s*190,\s*255,\s*0\.88|120,\s*170,\s*255,\s*0\.85|160,\s*150,\s*245,\s*0\.85|130,\s*200,\s*220,\s*0\.85)\)/;
+  /rgba\(255,\s*255,\s*255,\s*[\d.]+\)|rgba\(0,\s*0,\s*0,\s*0(?:\.(?:1|2|3|04|45))?\)|rgba\((?:100,\s*180,\s*255,\s*0\.98|180,\s*140,\s*255,\s*0\.95|100,\s*220,\s*220,\s*0\.9|255,\s*150,\s*200,\s*0\.88|160,\s*190,\s*255,\s*0\.88|120,\s*170,\s*255,\s*0\.85|160,\s*150,\s*245,\s*0\.85|130,\s*200,\s*220,\s*0\.85)\)/;
 
 const HARDCODED_PATTERNS = [
   // 2026-09-22 豁免 `linear-gradient(#fff 0 0)`：border-beam 的 mask 抠边用白色
