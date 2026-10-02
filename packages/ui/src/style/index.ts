@@ -142,7 +142,6 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'border-beam', gen: genBorderBeamStyle },
   { name: 'tabs', gen: genTabsStyle },
   { name: 'tag', gen: genTagStyle },
-  { name: 'timeline', gen: genTimelineStyle },
   { name: 'result', gen: genResultStyle },
   { name: 'statistic', gen: genStatisticStyle },
   { name: 'grid', gen: genGridStyle },
@@ -166,6 +165,12 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'modal', gen: genModalStyle },
   { name: 'select', gen: genSelectStyle },
   { name: 'steps', gen: genStepsStyle },
+  // 🚨 **必须排在 `steps` 之后** —— Timeline 是 Steps 的薄壳，它的样式大量**覆盖**
+  //    Steps 的声明（如 `-horizontal` 的 `align-items:stretch` 要压过
+  //    `.apollo-steps{align-items:flex-start}`）。两者**特异性相同**（都是 0,1,0）
+  //    ⇒ **靠 CSS 顺序决胜**。排在前面会让 Steps 赢 ⇒ 横向时间轴的高度差 4px
+  //    （L6 实测：React 94 vs Vue 98；探针定位到根 `ol` 的 `align-items`）。
+  { name: 'timeline', gen: genTimelineStyle },
   { name: 'segmented', gen: genSegmentedStyle },
   { name: 'popconfirm', gen: genPopconfirmStyle },
   { name: 'cascader', gen: genCascaderStyle },

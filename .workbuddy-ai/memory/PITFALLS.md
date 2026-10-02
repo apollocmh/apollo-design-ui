@@ -3692,6 +3692,35 @@
     —— 本次是**没照做**，不是不知道。⇒ 教训：**`baseline` / `compare` / `both` 三个模式
     都吃 dist**，任何源码改动之后都要先 `build:ui`。
 
+313. 🚨 **同特异性的「跨组件样式覆盖」靠 CSS 顺序决胜 ⇒ `COMPONENT_STYLES` 的数组顺序就是级联顺序**
+    （2026-10-02 实测，timeline 覆盖 steps）。
+
+    **形态**：Timeline 是 Steps 的薄壳，它要用**自己的类名**覆盖 Steps 的声明：
+
+    ```css
+    /* steps/style/index.ts（静态串，`.apollo-steps`）*/
+    .apollo-steps{…;display:flex;flex-wrap:nowrap;align-items:flex-start;}
+    /* timeline/style/horizontal.ts */
+    .apollo-timeline-horizontal{…;align-items:stretch;}
+    ```
+
+    根元素上**两个类都有**（`class="apollo-steps apollo-steps-horizontal … apollo-timeline
+    apollo-timeline-horizontal"`）⇒ 两条规则**特异性相同**（都是 0,1,0）⇒ **后出现的赢**。
+
+    **症状**：`timeline` 排在 `COMPONENT_STYLES` 的 `steps` **之前** ⇒ Steps 赢 ⇒
+    横向时间轴的根 `align-items` 是 `flex-start`（应为 `stretch`）⇒
+    **高度差 4px**（L6：React 94 vs Vue 98，且**只在 ≥768 视口**出现 —— 因为 375 视口下
+    两者的 stretch/flex-start 恰好同高，是**假通过**）。
+
+    **对策**：把 `timeline` 移到 `steps` **之后**，并在那一行写明「顺序是判据」。
+    ⇒ **新组件凡是「覆盖另一个组件的同名/同特异性规则」，都必须排在它之后**。
+    ⚠️ 判据：`grep -n "name: '<依赖组件>'" packages/ui/src/style/index.ts` 确认顺序。
+
+    **定位手法（值得复用）**：两侧 DOM **逐字相同**（用 `dump.mjs` + 归一化 diff 证实）时，
+    差异一定在**计算样式** ⇒ 写探针在**同一视口**下取两侧关键元素的 `getComputedStyle`
+    逐项对比（`tests/visual/debug/probe-timeline-horizontal.mjs` 是模板）。
+    本次探针**一击命中** `alignItems` —— 比逐像素猜快得多。
+
 307. ⚠️ **`split` 默认 `true` 必须 `withDefaults`**；且 **`withDefaults` 是编译器宏、不能 `import`**
     （2026-10-02 实测，list）。
 
