@@ -41,9 +41,7 @@ function stripWhere(sel) {
  */
 function parseRules(css) {
   const out = [];
-  const re = /([^{}@]+)\{([^{}]*)\}/g;
-  let m;
-  while ((m = re.exec(css))) {
+  for (const m of css.matchAll(/([^{}@]+)\{([^{}]*)\}/g)) {
     const sels = m[1]
       .split(',')
       .map((s) => stripWhere(s))
@@ -79,13 +77,24 @@ const calSet = collect(CAL, '.ant-picker-calendar');
 const panelSet = new Set([...dpSet].filter((x) => calSet.has(x)));
 
 // 只看 `.apollo-picker-dropdown <X>` 形态的规则（余下的天然是 TRIGGER）
+//
+// ⚠️ 2026-10-02：`DATE_PICKER_RULES` 已拆成**三段**（前段 42 + 面板 83 + 后段 132），
+// 本体是一个一行拼接的模板字面量 ⇒ 直接抽 `DATE_PICKER_RULES` 会只拿到那一行。
+// 这里按三段取，拼回原文（与 `split-dp-rules.mjs` 的断言同一口径）。
 const src = readFileSync(
   '/Users/nanren/Code/apollo-design-ui/packages/ui/src/date-picker/style/index.ts',
   'utf8',
 );
-const start = src.indexOf('export const DATE_PICKER_RULES = `');
-const end = src.indexOf('`;', start);
-const raw = src.slice(src.indexOf('`', start) + 1, end);
+// ⚠️ 用**单引号字符串拼接**构造正则，不用模板字面量 —— 模板字面量里写反引号
+//    需要 `\\\``，很容易被转义层次绕晕（本轮实测把 `[\\s\\S]` 写坏成 `[sS]`）。
+const partOf = (name) => {
+  // biome-ignore lint/style/useTemplate: 这里的「拼接」是**刻意**的 —— 用模板字面量就得写
+  //   `\\\`` 转义反引号，转义层次极易写错（本轮实测把 `[\\s\\S]` 写坏成 `[sS]` 直接 SyntaxError）。
+  const m = src.match(new RegExp('(?:export )?const ' + name + ' = `([\\s\\S]*?)`;'));
+  if (!m) throw new Error('找不到常量 ' + name);
+  return m[1];
+};
+const raw = partOf('RULES_BEFORE_PANEL') + partOf('PANEL_RULES') + partOf('RULES_AFTER_PANEL');
 
 const lines = raw
   .split('\n')
@@ -107,8 +116,7 @@ for (const line of lines) {
   const rems = sels.map((s) => remainder(toAnt(s), '.ant-picker-dropdown'));
 
   // 一条规则归 PANEL ⇔ **它引用的每个选择器**都在交集里（整条规则同属一个作用域）
-  const isPanel =
-    rems.every((r) => r !== null && r !== '') && rems.every((r) => panelSet.has(r));
+  const isPanel = rems.every((r) => r !== null && r !== '') && rems.every((r) => panelSet.has(r));
 
   if (isPanel) panel.push(line);
   else if (rems.every((r) => r === null)) trigger.push(line);
@@ -140,7 +148,9 @@ if (mode === 'report') {
       const selPart = l.slice(0, l.indexOf('{'));
       return selPart
         .split(',')
-        .map((s) => remainder(s.trim().replace(/\.apollo-picker/g, '.ant-picker'), '.ant-picker-dropdown'))
+        .map((s) =>
+          remainder(s.trim().replace(/\.apollo-picker/g, '.ant-picker'), '.ant-picker-dropdown'),
+        )
         .filter(Boolean);
     }),
   );
