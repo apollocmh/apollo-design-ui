@@ -15,9 +15,12 @@
    上游 `genCalendarStyles` 把 **`genPanelStyle(token)` 整个 spread 进 `[calendarCls]`**
    ⇒ 产物里 date-picker 的面板规则被**整套重作用域到 `.ant-picker-calendar` 之下**
    （实测 164 个选择器）。本仓 `date-picker/style` **未导出** `genPanelStyle` 等价物，
-   而 `DATE_PICKER_RULES` 是 **254 条**、触发与面板**混在一起**。
+   而 `DATE_PICKER_RULES` 是 **257 条**、触发与面板**混在一起**（勘误：先前写 254 是凭记忆）。
    ⇒ 走**方案 A**：拆成 `TRIGGER_RULES` + `PANEL_RULES`（按产物判据拆，并断言
-   「两者集合 == 原 254 条」），calendar 把 `PANEL_RULES` 换前缀复用。
+   「两者集合 == 原 257 条」），calendar 把 `PANEL_RULES` 换前缀复用。
+   ✅ **已落地（2026-10-02）**：判据 = 两侧产物取交集（见
+   `tests/visual/debug/classify-date-picker-rules.mjs`）⇒ **TRIGGER 174 + PANEL 83**；
+   面板块在产物里连续（第 43–125 条）⇒ 三段拼回，`DATE_PICKER_RULES` **逐字节不变**。
    ⚠️ 改的是**已 completed 的 `date-picker`** ⇒ 必须单独跑它的 7 层回归。
 2. **类名前缀是 `apollo-picker-calendar`**（`prefixCls = getPrefixCls('picker')`），
    **不是** `apollo-calendar`；面板规则也复用 `-picker-*` 那一套。
@@ -30,9 +33,15 @@
 
 - [ ] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
 - [ ] G1 ANALYZE —— 读 /tmp/antd-src/package/es/calendar/ 的 .d.ts + demo + 测试，产出 **docs/analysis/calendar.md**（先于实现！）
-- [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
-- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [x] G2 API DESIGN —— `interface.ts`：`CalendarProps`（含 4 个废弃）/ `CalendarEmits`（C11 双发，
+      `update:value`+`change`、`update:mode`+`panelChange`、`select`）/ `CalendarSlots`（3 个
+      函数 prop 的插槽等价物）/ `CalendarExpose`（**只有** `nativeElement`，照上游不补 focus/blur）
+- [x] G3 TOKEN —— `style/token.ts`：6 自有 + `...initPanelComponentToken` ⇒ **27** 条声明；
+      5 个 `mergeToken` 派生里 3 个进 CSS（`CALENDAR_DERIVED` 固化表达式）。
+      🚨 本轮把 **27 误读成 26**（探针正则漏 `_` ⇒ PITFALLS 229 重演）
+- [ ] G4 IMPLEMENT —— `style/index.ts` **已落地**（31 条自有规则 + 83 条面板规则，
+      产物 83/83 逐条一致；**前缀参数化**，与 card/alert/breadcrumb 同判）
+      ⏳ `Calendar.vue` + `components/CalendarHeader.ts` **未开始**（G5 的前置）
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言

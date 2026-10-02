@@ -39,6 +39,7 @@ import { genBadgeStyle } from '../badge/style';
 import { genBorderBeamStyle } from '../border-beam/style';
 import { genBreadcrumbStyle } from '../breadcrumb/style';
 import { genButtonStyle } from '../button/style';
+import { genCalendarStyle } from '../calendar/style';
 import { genCardStyle } from '../card/style';
 import { genCarouselStyle } from '../carousel/style';
 import { genCascaderStyle } from '../cascader/style';
@@ -125,6 +126,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'button', gen: genButtonStyle },
   { name: 'collapse', gen: genCollapseStyle },
   { name: 'date-picker', gen: genDatePickerStyle },
+  { name: 'calendar', gen: genCalendarStyle },
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },

@@ -86,8 +86,13 @@ if (!tokens) {
   console.log(css);
 } else {
   // 只打印 `--ant-calendar-*` 的声明（按出现顺序去重）
+  //
+  // 🚨 字符类**必须含下划线**（`[a-z0-9_-]`）。2026-10-02 本脚本首版写成 `[a-z0-9-]`
+  // ⇒ `internal_fixed_item_margin` 压根没被扫出来 ⇒ 把 **27** 条误读成 26。
+  // 这就是 date-picker `style/token.ts` 文件头记的 **PITFALLS 229**（同一个正则、同一个坑），
+  // 而当时那份说明就在同一个仓库里 —— 「记忆 ≠ 事实」的又一例。
   const decls = [];
-  for (const m of css.matchAll(/--ant-calendar-([a-z0-9-]+):([^;}]+)[;}]/g)) {
+  for (const m of css.matchAll(/--ant-calendar-([a-z0-9_-]+):([^;}]+)[;}]/g)) {
     const pair = [m[1], m[2]];
     if (!decls.some((d) => d[0] === pair[0] && d[1] === pair[1])) decls.push(pair);
   }
@@ -96,7 +101,8 @@ if (!tokens) {
 
   // 引用面（`var(--ant-calendar-*)`）
   const refs = new Set();
-  for (const m of css.matchAll(/var\(--ant-calendar-([a-z0-9-]+)/g)) refs.add(m[1]);
+  // ⚠️ 同上：下划线不能漏
+  for (const m of css.matchAll(/var\(--ant-calendar-([a-z0-9_-]+)/g)) refs.add(m[1]);
   console.log('\n### 引用但**未声明**的 --ant-calendar-*');
   console.log([...refs].filter((r) => !decls.some((d) => d[0] === r)).join(', ') || '（无）');
 

@@ -252,19 +252,43 @@ export const genCalendarStyles = (token) => ({
 
 **本仓的现状**：`date-picker/style/index.ts` 只导出 `genTokenDecls` / `DATE_PICKER_RULES` /
 `genDatePickerStyle`，**没有** `genPanelStyle` 的对应物；而 `DATE_PICKER_RULES` 是
-**254 条静态规则**、把**触发元素与面板混在一起**。
+**257 条静态规则**、把**触发元素与面板混在一起**。
+> ⚠️ 勘误（2026-10-02）：先前这里与 `PLAN.md` 都写成 **254 条**，是**凭记忆**写的；
+> 实测 `DATE_PICKER_RULES.split('\n').filter(l => l.trim()).length === 257`
+> （`date-picker/__tests__/theme.test.ts` 早就有这条断言）。又一次「记忆 ≠ 事实」。
 
 **候选方案**：
 
 | 方案 | 内容 | 判定 |
 |---|---|---|
-| **A（推荐）** | 把 `DATE_PICKER_RULES` 机械拆成 `TRIGGER_RULES` + `PANEL_RULES`（按选择器前缀判：`-panel` / `-body` / `-content` / `-cell` / `-time-panel` / `-preset` 归面板），导出 `PANEL_RULES`；`calendar/style` 把 `PANEL_RULES` 的**每个选择器加上 `.apollo-picker-calendar ` 前缀**再拼自己的规则 | ✅ 与上游同构（`genPanelStyle` 本就是 date-picker 的东西）；⚠️ 改 `date-picker`（已 completed）⇒ 必须单独跑它的 7 层回归 |
+| **A（✅ 已采用，2026-10-02 落地）** | 把 `DATE_PICKER_RULES` 机械拆成 `TRIGGER_RULES`（174 条）+ `PANEL_RULES`（83 条），导出 `PANEL_RULES` 与 `genPanelRules(scopeCls)`；`calendar/style` 用 `genPanelRules('.apollo-picker-calendar')` 取面板规则 | ✅ 与上游同构（`genPanelStyle` 本就是 date-picker 的东西）；⚠️ 改 `date-picker`（已 completed）⇒ 已单独跑它的 7 层回归 |
 | B | `calendar/style` 直接把**整个** `DATE_PICKER_RULES` 换前缀复用 | ❌ 会产出**大量死规则**（日历里没有 `.apollo-picker-input` / `-suffix` / `-clear`）⇒ 产物臃肿、B6 预算与「规则数」类断言会难看；**不是上游行为** |
-| C | 手抄面板规则进 calendar 的样式 | ❌ 254 条抄一遍 = 必然漂移；上游是 **import**，不是抄 |
+| C | 手抄面板规则进 calendar 的样式 | ❌ 83 条面板规则抄一遍 = 必然漂移；上游是 **import**，不是抄 |
 
-⚠️ 方案 A 的拆分**必须按产物判据**（哪个选择器属于面板），不能凭推演 ——
-拆完要断言「`TRIGGER_RULES + PANEL_RULES` 的规则集合 == 原 `DATE_PICKER_RULES`」
-（**一条不多一条不少**，与 `DATE_PICKER_RULES` 的 254 条逐字对拍）。
+⚠️ 方案 A 的拆分**必须按产物判据**（哪个选择器属于面板），不能凭推演。
+
+**✅ 实际采用的判据（可复现的双向 oracle）**：`tests/visual/debug/classify-date-picker-rules.mjs`。
+上游 `panel.ts` 的 `genPanelStyle` 被**两个**组件复用 ——
+`date-picker/index.ts` 的 `'&-dropdown': { ...genPanelStyle(token) }` 与
+`calendar/style/index.ts` 的 `[calendarCls]: { ...genPanelStyle(token) }` —— 于是：
+
+```
+date-picker 产物里 → `.ant-picker-dropdown <X>`
+calendar    产物里 → `.ant-picker-calendar <X>`
+⇒ 两边 <X> 的**交集**就是 genPanelStyle 的产物
+```
+
+实测：`dpSet = 147` · `calSet = 134` · **交集 = 119 个选择器 / 83 条规则**。
+**反向验证**：`dpSet \ calSet` 的 28 条逐条可证**不**来自 `genPanelStyle` ——
+它们全部来自 `genPickerPanelStyle`（`-footer` / `-footer-extra` / `-ranges` / `-ok` /
+`-now-btn-disabled` / `-preset`）或 `index.ts` 的 `&-dropdown` 段
+（`-panel-container*` / `-range-arrow*` / `-range-wrapper` / `-presets*` / `-panels` /
+`-panel > -time-panel`）。且 `genPanelStyle` 的 41 个根键里**没有**任何一个这些名字。
+
+**落地形态**：面板块在产物里是**连续**的第 43–125 条 ⇒ 拆成三段
+（前段 42 + 面板 83 + 后段 132）**按原顺序拼回**，`DATE_PICKER_RULES` 与拆分前
+**逐字节相同**（实测 53284 字节 == 53284 字节）。
+不变量钉在 `date-picker/__tests__/theme.test.ts` 的「规则拆分不变量」组（6 条）。
 
 ### 3.4 媒体查询
 
@@ -324,8 +348,12 @@ header 改 `display:block`，`-year-select` 宽 50%，`-month-select` 宽
 
 ## 6. 本分析没有证明什么
 
-1. **没证明方案 A 的拆分是对的**。`TRIGGER_RULES` / `PANEL_RULES` 的边界只在
-   **产物层**可判；拆完必须做「集合相等」的对拍断言（§3.3）。
+1. ~~没证明方案 A 的拆分是对的~~ —— ✅ **已证（2026-10-02）**：判据 = 两侧产物取交集
+   （`classify-date-picker-rules.mjs`）⇒ TRIGGER **174** + PANEL **83**，且反向检查
+   `dpSet \ calSet` 的 28 条逐条可证不来自 `genPanelStyle`。不变量钉在
+   `date-picker/__tests__/theme.test.ts`（6 条）。**更关键的一条**：面板规则换到
+   calendar 后与产物 **83/83 逐条逐字节一致**（含 `--apollo-date-picker-*` →
+   `--apollo-calendar-*` 的命名空间替换 —— 漏了这一步会「声明 A、引用 B」静默回退）。
 2. **没证明 Calendar 的 CSS 规则数**。本轮只拿到「164 个含 `.ant-picker-calendar` 的选择器」
    这个**粗口径**；G4 要逐条提取成规则表（与 date-picker 的 `DATE_PICKER_RULES` 同法）。
 3. **没证明 `classNames.root` 在本组件是否也失效**（§5 第 4 条）—— 需实测。

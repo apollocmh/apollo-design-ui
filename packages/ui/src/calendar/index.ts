@@ -13,7 +13,27 @@ export const Calendar = withInstall(CalendarComponent);
 
 export default Calendar;
 
-// TODO(G2): export type { CalendarProps, CalendarRef, ... } from './interface';
-// TODO(G4): export { genCalendarStyle } from './style';
-// TODO(G4): export type { ComponentToken as CalendarComponentToken } from './style/token';
-// TODO(G4): export { prepareComponentToken as prepareCalendarComponentToken } from './style/token';
+export type {
+  CalendarCellRender,
+  CalendarCellRenderInfo,
+  CalendarDate,
+  CalendarEmits,
+  CalendarExpose,
+  CalendarFullCellRender,
+  CalendarHeaderRender,
+  CalendarHeaderRenderConfig,
+  CalendarMode,
+  CalendarProps,
+  CalendarSemanticClassNames,
+  CalendarSemanticStyles,
+  CalendarSemanticValue,
+  CalendarSlots,
+  SelectInfo,
+} from './interface';
+
+export { genCalendarStyle, genCalendarTokenDecls } from './style';
+export type { ComponentToken as CalendarComponentToken } from './style/token';
+export {
+  CALENDAR_DERIVED,
+  prepareComponentToken as prepareCalendarComponentToken,
+} from './style/token';
