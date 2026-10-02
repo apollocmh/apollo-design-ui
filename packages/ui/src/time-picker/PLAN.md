@@ -33,8 +33,8 @@
 - [x] G4 IMPLEMENT —— TimePicker.vue + TimeRangePicker.vue + index.ts；**无 style/index.ts**
       （+ `_internal/picker-host-context.ts` 的注入改道；`date-picker` 回归 434/434 绿）
 - [x] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts **22/22**（接线 / 告警矩阵 / 上下文路由 / 默认形态）
-- [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
-- [ ] G8 L5 a11y —— axe + role/键盘断言
+- [x] G7 L3 类型 —— `type.test-d.ts` **36/36**，`Type Errors no errors`（5 组负例闭包）
+- [x] G8 L5 a11y —— `a11y.test.ts` **16/16**（axe 5 形态 0 violation + 与直用 date-picker **逐属性相同**）
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
 - [ ] G10 L4/L4 DOM 契约 + compat 比对
 - [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
