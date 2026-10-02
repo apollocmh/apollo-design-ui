@@ -38,5 +38,10 @@ trackPadding=lineWidthBold、trackBg=colorBgLayout、itemColor=colorTextLabel、
 
 ## 6. 测试环境已知边界
 
-- jsdom 下 Vue 的 **mousedown/mouseup listener 不被派发调用**（裸 `h('div', {onMouseDown})` 即可复现；click/keydown/mouseenter 正常）。「mousedown 清除键盘态」由 L6 真浏览器验证。
+- ✅ **2026-10-03 更正（原记法是误诊）**：原写「jsdom 下 Vue 的 mousedown/mouseup listener 不被派发调用
+  （裸 `h('div', {onMouseDown})` 即可复现）」—— **根因不是 jsdom，是事件名大小写**：
+  Vue 的 `parseName` 会对 `on` 之后的部分做 `hyphenate` ⇒ `onMouseDown` 解析成 **`mouse-down`**
+  （**永不触发、且不报错**）；而原记录里说「正常」的 `click`/`keydown`/`mouseenter` 恰好都是
+  **单段名**，不受影响。`Segmented.ts` 已改为 **`onMousedown`**（同日），该行为现在由 L1 可测。
+  判据与反向哨兵见 `PITFALLS.md` **323** 与 `color-picker/__tests__/engine.test.ts` 末节。
 - SSR/基线下 MotionThumb 不渲染（无几何）——React 的 useLayoutEffect 与 Vue 的 watch 均不在静态渲染期执行，两侧天然一致。

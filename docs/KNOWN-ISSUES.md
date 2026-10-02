@@ -49,20 +49,30 @@
   `docs/analysis/calendar.md` 的「定位三步」）。
 - **需要谁**：无（可直接做），但**属于 typography 的回归**，改动要单独过它的门禁。
 
-### 1.3 ⚠️ `h()` 事件名大小写：`Segmented.ts:353` 用了 `onMouseDown`（**永不触发**）
+### 1.3 ✅ **已修**（2026-10-03）`h()` 事件名大小写 —— **两处真 bug，静默失效**
 
-- **现象**：`packages/ui/src/segmented/Segmented.ts:353` 写的是 `onMouseDown: handleMouseDown`，
-  而 Vue 的 `parseName` 会对 `on` 之后的部分做 `hyphenate`
-  ⇒ 事件名变成 **`mouse-down`**（**永不触发、且不报错**）。
-- **证据**：`color-picker/__tests__/engine.test.ts` 末节有**反向哨兵** ——
-  `h('div', { onMousedown })` 收得到、`h('div', { onMouseDown })` **收不到**。
-- **另一处需要更正**：`packages/ui/src/segmented/README.md:41` 把这个现象记成了
-  「jsdom 不派发 mousedown」—— 那是**误诊**（真实原因是事件名大小写；
-  它说「正常」的 click / keydown / mouseenter 恰好都是**单段名**，不受 `hyphenate` 影响）。
-- **修法**：把 `onMouseDown` 改成 `onMousedown`（1 行），然后**重跑 segmented 的 L1/L4/L6**
-  （「mousedown 清除键盘态」那条行为此前从未在 jsdom 里生效过）。
-- **需要谁**：无，但**属 segmented 的回归**（本会话按「不擅自改别的组件」只登记未改）。
-- 📌 详见 `PITFALLS.md` **323**。
+> 本节保留记录：两处都已在同日修掉（`onMouseDown → onMousedown`、`onKeyDown → onKeydown`），
+> 并更正了 `segmented/README.md` 的误诊。**留在这里是因为「同类是否还有」需要定期复扫**。
+
+- **根因**：Vue 的 `parseName` 会对 `on` 之后的部分做 `hyphenate`
+  ⇒ `onMouseDown` 解析成 **`mouse-down`**、`onKeyDown` 解析成 **`key-down`**
+  （**永不触发、且不报错**，编译期与 `vue-tsc` 都无感）。
+  **单段名不受影响**（`onClick` → `click` ✓），所以这个坑**只在复合词上出现**。
+- **命中两处**（都是**原生元素**上的键，不是组件声明过的 prop）：
+  1. `segmented/Segmented.ts:353` —— `h('label', { onMouseDown })`
+     ⇒ 「mousedown 清除键盘态」**从未生效**；
+  2. `collapse/Panel.ts:98` —— `collapsibleProps` 里的 `onKeyDown` 被 spread 到**原生 `<div>`**
+     （header / 展开图标）⇒ **Enter 键展开/收起失效**（**a11y 键盘操作**）。
+- **修后实测**：`segmented` + `collapse` 的 unit/a11y **87/87 通过**；DOM 类名不变 ⇒ L4/L6 无影响。
+- **判据（复扫用）**：
+  ```sh
+  # 找「对象键」形态的复合词事件名（`: onXxxYyy`）
+  # 逐个判断目标是【原生元素】(bug) 还是【声明过的组件 prop】(合法)
+  ```
+- ⚠️ **合法 ≠ 同类**：本仓有 ~10 处 `onKeyDown:` / `onMouseEnter:` 是**组件声明过的 prop**
+  （`input/engine/Input.ts` / `notification/engine/Notice.ts` / `slider/Handles/*` 等）——
+  Vue 按**名字**解析声明过的 prop，不经 `hyphenate` ⇒ **它们是对的**，别误改。
+- 📌 详见 `PITFALLS.md` **323**（含反向哨兵用例）。
 
 ### 1.4 ⚠️ `Trigger` 的 `children[0]` 归一化对「数组」的处理，未做全仓扫描
 
@@ -167,6 +177,17 @@
 - ✅ **残留已关闭**（2026-10-03 同日补跑）：
   `pnpm exec vitest run --project unit packages/picker` ⇒ **308 / 308 通过**。
   该改动是语义等价的，picker 侧无回归。
+
+### 2.6b ⚠️ `Switch.ts` 从 `attrs` 剥掉了 `onKeyDown` / `onClick` 但**未见再次使用**
+
+- **现象**：`packages/ui/src/switch/Switch.ts:210` 解构出 `onKeyDown: _onKeyDown` / `onClick: _onClick`
+  并放进 `...restAttrs` 的**排除项**，但 `grep -n "_onKeyDown" packages/ui/src/switch/Switch.ts`
+  **只有这一处** ⇒ 这两个 handler **被静默丢弃**（父组件传的 `onKeyDown`/`onClick` 不生效）。
+- **为什么**：注释写的是「被 rc-switch 消费的三个事件」—— 但**本仓的实现里没看到消费点**。
+- **判定**：**待核**（不是已确认的 bug）：若 `Switch` 通过 `emits: ['click']` 收 `onClick`，
+  那它走的是 `props.onClick` 而不是 `attrs`，剥 attrs 不会影响它；`onKeyDown` 则**没有对应的 emit**。
+- **修法（若确认是 bug）**：把 `_onKeyDown` 显式绑到根 `<button>`（键名用 `onKeydown`，见 §1.3）。
+- **需要谁**：无（但要跑 switch 的 L1/L4 确认）。
 
 ### 2.7 ✅ `color-picker` 的 L4 只覆盖**触发器** —— 面板的 DOM 契约只在 L6
 

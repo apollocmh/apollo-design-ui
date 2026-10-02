@@ -95,7 +95,10 @@ export const CollapsePanelInner = defineComponent({
       onClick: () => {
         props.onItemClick?.(props.panelKey);
       },
-      onKeyDown: (e: KeyboardEvent) => {
+      // 🚨 必须是 **`onKeydown`**（小写 d）：本对象会被 spread 到**原生 `<div>`**
+      //    （header / 展开图标）⇒ 写成 `onKeyDown` 会得到事件名 `key-down`（**永不触发**）
+      //    ⇒ **Enter 键展开/收起失效**（a11y 键盘操作）。2026-10-03 修，见 PITFALLS 323。
+      onKeydown: (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
           props.onItemClick?.(props.panelKey);
         }

@@ -350,7 +350,10 @@ export const SegmentedComponent = defineComponent({
             key: option.value,
             class: itemCls,
             style: mergedStyles.item,
-            onMouseDown: handleMouseDown,
+            // 🚨 必须是 **`onMousedown`**（小写 d）：Vue 的 `parseName` 会对 `on` 之后的部分做
+            //    `hyphenate` ⇒ 写成 `onMouseDown` 会得到事件名 `mouse-down`（**永不触发**）。
+            //    2026-10-03 修（此前「mousedown 清除键盘态」从未生效，见 PITFALLS 323）。
+            onMousedown: handleMouseDown,
           },
           [
             h('input', {
