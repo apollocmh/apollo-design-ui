@@ -56,7 +56,7 @@ import {
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
-import { useSize } from '../config-provider/size-context';
+import { type SizeType, useSize } from '../config-provider/size-context';
 import { getAnimateConfig } from './hooks/use-animate-config';
 import type {
   TabPlacement,
@@ -88,7 +88,8 @@ export interface TabsConfig {
   classNames?: TabsSemanticClassNames;
   styles?: TabsSemanticStyles;
   type?: TabsType;
-  size?: 'small' | 'default' | 'large';
+  /** ⚠️ 与公开的 `TabsProps['size']` 同源：必须是 `SizeType`（见 `interface.ts` 的说明）。 */
+  size?: SizeType;
   centered?: boolean;
   more?: { icon?: VNodeChild };
   /** @deprecated 用 `more.icon`。 */
@@ -111,7 +112,7 @@ export default defineComponent({
     style: { type: Object as PropType<CSSProperties | undefined>, default: undefined },
     type: { type: String as PropType<TabsType>, default: undefined },
     centered: { type: Boolean, default: undefined },
-    size: { type: String as PropType<'small' | 'default' | 'large'>, default: undefined },
+    size: { type: String as PropType<SizeType>, default: undefined },
     tabPlacement: { type: String as PropType<TabPlacement>, default: undefined },
     /** @deprecated 用 `tabPlacement`。 */
     tabPosition: { type: String as PropType<TabPosition>, default: undefined },

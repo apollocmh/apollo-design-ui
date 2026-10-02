@@ -26,6 +26,7 @@
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
+import type { SizeType } from '../config-provider/size-context';
 
 // ---------------------------------------------------------------------------
 // 基础联合
@@ -225,7 +226,18 @@ export interface TabsProps {
   /** `card` / `editable-card` 的整体居中。 */
   centered?: boolean;
   /** 尺寸（未传走 ConfigProvider 的 `componentSize`）。 */
-  size?: 'small' | 'default' | 'large';
+  /**
+   * 尺寸。
+   *
+   * 🚨 **必须是 `SizeType`**（`'small' | 'medium' | 'middle' | 'large'`）——
+   * 上游是 `size?: SizeType`（`components/tabs/index.tsx:73`）并喂给 `useSize(customSize)`。
+   * 本仓此前写的是 `'small' | 'default' | 'large'`，有两处不符：
+   *   ① `'default'` **不是** antd 的值；
+   *   ② 缺 `'middle'` / `'medium'` ⇒ antd 自己的 demo（card 的 `tabProps={{ size: 'medium' }}`）
+   *      在本仓**无法表达**（2026-10-02 card 收口时报出）。
+   * ⚠️ 加宽是**行为中性**的：`size` 只被喂进 `useSize`，全仓没有任何 `=== 'default'` 的比较。
+   */
+  size?: SizeType;
   /** 位置（新写法；`start`/`end` 在 RTL 下映射为 `right`/`left`）。 */
   tabPlacement?: TabPlacement;
   /** @deprecated 用 `tabPlacement`。 */

@@ -83,7 +83,7 @@ import { Tabs } from '@apollo-design/ui';
 | defaultActiveKey | 非受控初始激活页签 | `string` | 第一项 |
 | items | 页签内容（**唯一**的写法） | `TabsItem[]` | `[]` |
 | type | 页签类型 | `'line' \| 'card' \| 'editable-card'` | `'line'` |
-| size | 尺寸（未传走 ConfigProvider 的 `componentSize`） | `'small' \| 'default' \| 'large'` | —— |
+| size | 尺寸（未传走 ConfigProvider 的 `componentSize`） | `SizeType`（`'small' \| 'medium' \| 'middle' \| 'large'`） | —— |
 | tabPlacement | 位置（`start`/`end` 会按 RTL 映射成 `left`/`right`） | `'top' \| 'end' \| 'bottom' \| 'start'` | `'top'` |
 | centered | 卡片式页签整体居中 | `boolean` | `false` |
 | tabBarGutter | 页签间距 | `number` | —— |

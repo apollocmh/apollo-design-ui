@@ -19,6 +19,7 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
+import type { SizeType } from '../../config-provider/size-context';
 import type {
   GetIndicatorSize,
   TabPlacement,
@@ -48,7 +49,10 @@ describe('Tabs · L3 类型', () => {
   it('值域：type / size / placement 都是字面量联合', () => {
     expectTypeOf<TabsProps['type']>().toEqualTypeOf<TabsType | undefined>();
     expectTypeOf<TabsType>().toEqualTypeOf<'line' | 'card' | 'editable-card'>();
-    expectTypeOf<TabsProps['size']>().toEqualTypeOf<'small' | 'default' | 'large' | undefined>();
+    // ⚠️ **修正原断言**：它此前写的是 `'small' | 'default' | 'large'`，与上游不符 ——
+    //    上游是 `size?: SizeType`（`components/tabs/index.tsx:73`）。`'default'` 不是 antd 的值，
+    //    而 `'middle'` / `'medium'` 被漏掉（导致 antd 的 `tabProps={{ size: 'medium' }}` 无法表达）。
+    expectTypeOf<TabsProps['size']>().toEqualTypeOf<SizeType | undefined>();
     expectTypeOf<TabsProps['tabPlacement']>().toEqualTypeOf<TabPlacement | undefined>();
     expectTypeOf<TabPlacement>().toEqualTypeOf<'top' | 'end' | 'bottom' | 'start'>();
     // `tabPosition` 是**废弃**通道，值域不同（left/right 而非 start/end）
@@ -157,10 +161,14 @@ describe('Tabs · L3 负例', () => {
     expectTypeOf(bad).not.toBeNever();
   });
 
-  it('`size` 不接受「middle」（只有三档）', () => {
+  it('`size` 只接受 `SizeType`（`huge` 非法）', () => {
+    // ⚠️ **修正原断言**：这条用例此前叫「`size` 不接受「middle」（只有三档）」，
+    //    断言 `'middle'` 非法 —— 那是在**把一个 bug 写成规格**：上游是 `size?: SizeType`
+    //    （`components/tabs/index.tsx:73`），`'middle'` 本来就该合法（见 `interface.ts` 的说明）。
+    //    改成一个**真正非法**的值，保持负例的效力。
     type Acceptable = TabsProps['size'];
-    // @ts-expect-error 'middle' 不是本仓的尺寸值
-    const bad: Acceptable = 'middle';
+    // @ts-expect-error 'huge' 不是 `SizeType` 的任何一档
+    const bad: Acceptable = 'huge';
     expectTypeOf(bad).not.toBeNever();
   });
 

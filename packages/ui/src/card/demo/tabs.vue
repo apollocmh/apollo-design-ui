@@ -34,6 +34,9 @@ const more = () => h('a', { href: '#' }, 'More');
 </script>
 
 <template>
+  <!-- ⚠️ `'medium'` 是**上游 demo 的原值**（antd 的 `SizeType` 里没有 `'default'`）——
+       本仓 `TabsProps['size']` 曾错写成 `'small' | 'default' | 'large'`，
+       2026-10-02 修正为 `SizeType` 后这里才能用真值（见 `tabs/interface.ts`）。 -->
   <Card
     :style="{ width: '100%' }"
     title="Card title"
@@ -52,7 +55,7 @@ const more = () => h('a', { href: '#' }, 'More');
     :active-tab-key="activeTabKey2"
     :tab-bar-extra-content="more()"
     :on-tab-change="(key: string) => (activeTabKey2 = key)"
-    :tab-props="{ size: 'default' }"
+    :tab-props="{ size: 'medium' }"
   >
     <p>{{ contentListNoTitle[activeTabKey2] }}</p>
   </Card>
