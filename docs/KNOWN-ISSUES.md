@@ -1,92 +1,147 @@
-# KNOWN-ISSUES.md — 已发现的问题登记簿
+# KNOWN-ISSUES.md — 已发现的问题登记簿（**可交接**）
 
 > **这份文档是「欠账台账」，不是规范。** 规则本体在 `AGENTS.md` / `ARCHITECTURE.md` /
 > `COMPATIBILITY.md` / `COMPONENT-RULES.md` / `TESTING.md` / `WORKFLOW.md`；
-> 坑的全文在 `.workbuddy-ai/memory/PITFALLS.md`（那份**不进会话注入**，按需读）。
+> 坑的全文在 `.workbuddy-ai/memory/PITFALLS.md`（**不进会话注入**，按需读）。
 >
-> **这里只放两类东西**（2026-10-03 起）：
->
-> | 段 | 含义 | 什么时候来 |
-> |---|---|---|
-> | **§1 已发现、未修** | 已经**证实**存在的问题（有可复现证据），但本次没修 | 接手时先扫这一节 |
-> | **§2 已修、但有残留** | 症状**已修**，但同一根因的**其它面**没覆盖 / 没审计 | 别把「已修」当成「已解决」 |
+> **接手方式**：读 §0 → 按 §4 的顺序挑一条 → 每条都给了「怎么修 + 怎么验」。
 >
 > **写法要求**（与 `PITFALLS.md` 同一条纪律）：每条必须给**可复现的判据**
-> （命令 / 文件:行号 / 实测数字），不许写「疑似」「大概」。**没有证据的不进这份文档**。
->
-> **维护**：修掉一条就把该条移到 `git log` 里（或标 ✅ 并写明 commit），**不要删了不留痕**。
+> （命令 / 文件:行号 / 实测数字）。**没有证据的不进这份文档**（宁可标「待核」）。
+> **修掉一条**：标 ✅ 并写明 commit，**不要删了不留痕**。
 
 ---
 
-## §1 已发现、未修（待排期）
+## §0 复现环境（**先做这个**，否则下面的命令会失败或慢 6–8 倍）
 
-### 1.1 🚨 L6 有 **84 条 `missing-baseline`** —— 9 个组件从未入库 React 基线
+```sh
+# ① pnpm 不在 PATH（只有 corepack）⇒ 造 shim
+mkdir -p /tmp/pnpm-shim && printf '#!/bin/sh\nexec corepack pnpm "$@"\n' > /tmp/pnpm-shim/pnpm
+chmod +x /tmp/pnpm-shim/pnpm
+export PATH=/tmp/pnpm-shim:$PATH COREPACK_ENABLE_DOWNLOAD_PROMPT=0 CI=1
+
+# ② 关掉两个拖慢 6–8 倍的沙箱钩子（本机两个都是 1）
+export CODEBUDDY_BROKERED_FS_HOOK_ENABLED=0 CODEBUDDY_SAFE_DELETE_SANDBOX=0
+
+# ③ 🚨 视觉 / 构建入口**额外**要带这个，否则打包阶段被 safe-delete 拦下（阈值 50）
+export CODEBUDDY_SAFE_DELETE_ENABLED=0
+#    报错原文：SAFE_DELETE_BULK_CONFIRM_REQUIRED {"count":50,"threshold":50}
+```
+
+| 想做什么 | 命令 |
+|---|---|
+| 看下一个任务（**唯一权威**） | `node registry/tools/next-task.mjs` |
+| 查某组件的 11 维度 | `node registry/tools/ask.mjs component <c>` |
+| 查开放决策**原文** | `node registry/tools/ask.mjs decision <id>` |
+| 全量 L6 | `node tests/visual/run.mjs --mode compare` |
+| 单组件 L6 | `node tests/visual/run.mjs --mode compare --component <c>` |
+| 重生成某组件基线 | `node tests/visual/run.mjs --mode baseline --component <c>` |
+| 基线重复自检 | `node tests/visual/run.mjs --check-baselines` |
+| L4 全量 | `pnpm run test:dom` |
+| 类型测试 | `pnpm run test:types` |
+| 四道门禁 | `pnpm run verify:full` |
+
+⚠️ **改完组件源码再跑 L6 时，必须先 `pnpm run build:ui`** —— 视觉层解析的是
+`packages/ui/dist` 产物，不是 `src`（PITFALLS **327**；判据：差异率与上一轮**逐位相同**）。
+⚠️ **改完 `style/` 同理**（PITFALLS 20）。
+⚠️ **registry 生成器有顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`
+（PITFALLS **329**），乱序会让 `registry:check` 报「已过期」。
+
+---
+
+## §1 已发现、未修（按性价比排序见 §4）
+
+> **本节现状**（2026-10-03 复核后）：
+> - **1.1 需你裁决**（`visual-baseline-in-git`）· **1.9 的 184 条 `noNonNullAssertion` 也需裁决**（改断言 vs 关规则）；
+> - **1.3 已证伪、关闭**（❌ 不是 bug，**别再查一遍**）；
+> - 其余（1.2 / 1.4 / 1.5 / 1.6 / 1.7 / 1.8）**不需要决策**，可直接排期。
+
+### 1.1 🚨 **[需裁决]** L6 有 **84 条 `missing-baseline`** —— 9 个组件从未入库 React 基线
 
 - **现象**：全量 `node tests/visual/run.mjs --mode compare` 报 84 条
   `[missing-baseline] 缺少 React 参考截图：tests/visual/baselines/react/<c>/<variant>__light__<viewport>.png`。
-  涉及 `select` / `auto-complete` / `cascader` / `popconfirm` / `float-button` / `rate` /
-  `segmented` / `steps` / `progress`。
+- **涉及**：`select` / `auto-complete` / `cascader` / `popconfirm` / `float-button` /
+  `rate` / `segmented` / `steps` / `progress`。
 - **证据**：2026-10-03 全量 compare 实测 —— `991 exact` + **84 `missing-baseline`** + 3 `size-mismatch`。
-- **根因**：**未决开放决策 `visual-baseline-in-git`**（`node registry/tools/ask.mjs decision visual-baseline-in-git`）。
+- **根因**：**未决开放决策 `visual-baseline-in-git`**
+  （`node registry/tools/ask.mjs decision visual-baseline-in-git`）。
   这 9 个组件的 `visualStatus` 是 `done`，但基线没入库 ⇒ 只能 `--mode both`（两侧现渲染再互比）。
-- **修法**：先裁决「基线是否入库」；若入库，对每个组件跑
+- **怎么修**：先裁决「基线是否入库」；若入库，对每个组件跑
   `node tests/visual/run.mjs --mode baseline --component <c>` 并提交 PNG。
+- **怎么验**：全量 compare 的 `missing-baseline` 归零。
 - **需要谁**：**用户裁决**（开放决策）。
-- ⚠️ `color-picker` **不在**这 9 个里（它的 27 张基线已入库，全量 compare 里 **27/27 exact**）。
+- ⚠️ `color-picker` **不在**这 9 个里（27 张已入库，全量 compare 里 **27/27 exact**）。
 
 ### 1.2 ⚠️ `typography/semantic` 三个视口 `size-mismatch`（1.28% / 2.41% / 4.93%）
 
 - **现象**：`node tests/visual/run.mjs --mode compare --component typography` ⇒
   `semantic__light__{mobile,tablet,desktop}` 三条 `block-diff`；差异率**与视口宽反比**
   （= 固定尺寸面，不是布局）。
-- **已排除**：**不是本次改动引入的** —— `git log -- packages/ui/src/typography` 显示该目录
-  最近一次改动是 `4acd68d`（C8-R2 插槽重构），**不在本会话的任何 commit 里**。
-- **怀疑**：`semantic` 变体的基线**早于** `4acd68d` ⇒ 基线过期（与 PITFALLS 327 同族：
-  「差异率逐位不变 / 与视口反比 ⇒ 先怀疑基线/产物，再怀疑实现」）。
-- **修法**：① 先确认是**基线过期**还是**真差异** ——
-  对 `semantic` 单独跑 `--mode baseline --component typography` 重生成基线再 compare；
-  ② 若仍红，用 `tests/visual/debug/rect.mjs` / `styles.mjs` 逐属性定位（范本见
-  `docs/analysis/calendar.md` 的「定位三步」）。
-- **需要谁**：无（可直接做），但**属于 typography 的回归**，改动要单独过它的门禁。
+- **已排除**：**不是 2026-10-03 那次改动引入的** ——
+  `git log -- packages/ui/src/typography` 显示该目录最近一次改动是 `4acd68d`（C8-R2 插槽重构）。
+- **怀疑**：`semantic` 变体的基线**早于** `4acd68d` ⇒ 基线过期（同 PITFALLS 327 家族）。
+- **怎么修**：① 先重生成基线（`--mode baseline --component typography`）再 compare
+  —— 若变绿 ⇒ 就是基线过期；② 若仍红，用 `tests/visual/debug/rect.mjs` / `styles.mjs`
+  逐属性定位（范本见 `docs/analysis/calendar.md` 的「定位三步」）。
+- **怎么验**：`--mode compare --component typography` 全 exact。
+- **需要谁**：无。⚠️ 属 typography 的回归 ⇒ 改动要**单独过它的门禁**。
 
-### 1.3 ✅ **已修**（2026-10-03）`h()` 事件名大小写 —— **两处真 bug，静默失效**
+### 1.3 ❌ **不是 bug（2026-10-03 已证伪）** `Switch.ts` 剥掉 `onKeyDown` / `onClick`
 
-> 本节保留记录：两处都已在同日修掉（`onMouseDown → onMousedown`、`onKeyDown → onKeydown`），
-> 并更正了 `segmented/README.md` 的误诊。**留在这里是因为「同类是否还有」需要定期复扫**。
+> **本条原标「待核」，经复核后撤销** —— 记在这里是为了**防止下一个人再怀疑一遍**。
+> 结论：**handler 不会被丢弃**，且**早有测试覆盖**。
 
-- **根因**：Vue 的 `parseName` 会对 `on` 之后的部分做 `hyphenate`
-  ⇒ `onMouseDown` 解析成 **`mouse-down`**、`onKeyDown` 解析成 **`key-down`**
-  （**永不触发、且不报错**，编译期与 `vue-tsc` 都无感）。
-  **单段名不受影响**（`onClick` → `click` ✓），所以这个坑**只在复合词上出现**。
-- **命中两处**（都是**原生元素**上的键，不是组件声明过的 prop）：
-  1. `segmented/Segmented.ts:353` —— `h('label', { onMouseDown })`
-     ⇒ 「mousedown 清除键盘态」**从未生效**；
-  2. `collapse/Panel.ts:98` —— `collapsibleProps` 里的 `onKeyDown` 被 spread 到**原生 `<div>`**
-     （header / 展开图标）⇒ **Enter 键展开/收起失效**（**a11y 键盘操作**）。
-- **修后实测**：`segmented` + `collapse` 的 unit/a11y **87/87 通过**；DOM 类名不变 ⇒ L4/L6 无影响。
-- **判据（复扫用）**：
-  ```sh
-  # 找「对象键」形态的复合词事件名（`: onXxxYyy`）
-  # 逐个判断目标是【原生元素】(bug) 还是【声明过的组件 prop】(合法)
-  ```
-- ⚠️ **合法 ≠ 同类**：本仓有 ~10 处 `onKeyDown:` / `onMouseEnter:` 是**组件声明过的 prop**
-  （`input/engine/Input.ts` / `notification/engine/Notice.ts` / `slider/Handles/*` 等）——
-  Vue 按**名字**解析声明过的 prop，不经 `hyphenate` ⇒ **它们是对的**，别误改。
-- 📌 详见 `PITFALLS.md` **323**（含反向哨兵用例）。
+- **原怀疑**：`packages/ui/src/switch/Switch.ts` 的 `:210/:211` 解构出
+  `onKeyDown: _onKeyDown` / `onClick: _onClick` 并放进 `...restAttrs` 的**排除项**，
+  而 `_onKeyDown` 在文件里**只出现这一处** ⇒ 疑似「父组件传的 handler 被静默丢弃」。
+- **真相（读码）**：`callbacks` 是 **`attrs` 的别名**（`:86` `const callbacks = attrs as unknown as {...}`，
+  **同一对象引用**，不是拷贝）⇒ 解构只是从**新对象** `restAttrs` 里摘掉这两个键
+  （防止把父组件的 handler 再裸绑到 DOM 上一次），**`attrs` 本身没动**
+  ⇒ `callbacks.onKeyDown?.(event)`（`:164`）/ `callbacks.onClick?.(ret, event)`（`:170`）
+  **照样取到父组件的 handler**。`_` 前缀（`_onKeyDown`）正是「**故意不使用**」的约定。
+- **实证**：这两条行为**早有 L1 用例**（`switch/__tests__/index.test.ts`）——
+  - `:175` `onKeyDown 照常转发（在内部处理之后）`
+  - `:182` `onClick 收到的是**结果值**（不是原生事件），且 disabled 时仍触发`
+  - 实测：`pnpm exec vitest run --project unit packages/ui/src/switch/__tests__/index.test.ts`
+    ⇒ **28 / 28 通过**。
+- **需要谁**：无（**已关闭**）。
 
-### 1.4 ⚠️ `Trigger` 的 `children[0]` 归一化对「数组」的处理，未做全仓扫描
+### 1.4 ⚠️ 「复合词事件名」缺**全仓护栏** —— 已修 2 处，同类可能还有
+
+- **背景**：Vue 的 `parseName` 对 `on` 之后的部分做 `hyphenate`
+  ⇒ `onMouseDown` → **`mouse-down`**、`onKeyDown` → **`key-down`**
+  ⇒ **永不触发、且不报错**（编译期无告警、`vue-tsc` 全绿）。**单段名不受影响**（`onClick` ✓）。
+- **已修 2 处**（2026-10-03，commit `7147a3f`）——⚠️ **按符号定位，别按行号**（修复时插入了注释，
+  行号已下移）：
+  1. `segmented/Segmented.ts` 的 **`onMousedown: handleMouseDown`**（现 **:356**，修前 :353）
+     —— 目标是原生 `<label>` ⇒「mousedown 清除键盘态」**从未生效**；
+  2. `collapse/Panel.ts` 的 **`onKeydown: (e: KeyboardEvent) =>`**（现 **:101**，修前 :98）
+     —— 该对象被 spread 到原生 `<div>`（header / 展开图标）⇒
+     **Enter 键展开/收起失效**（**a11y 键盘操作**）。
+- **未做**：**没有自动化护栏** ⇒ 下一个人往原生元素上写 `onMouseEnter:` 还会静默失效。
+- **怎么修（建议）**：加一条**扫描测试**（建议放 `packages/ui/src/__tests__/`）：
+  扫全仓 `.ts` / `.vue`，找「对象键」形态的复合词事件名（`: on[A-Z][a-z]+[A-Z]`），
+  **逐个判断目标**：目标是**原生标签**（`h('div' | 'label' | 'button' …`）⇒ 报错；
+  目标是**组件**（且该组件声明了同名 prop / 同名 emit）⇒ 放行。
+- ⚠️ **误报防范**：本仓另有 ~10 处 `onKeyDown:` / `onMouseEnter:` 是**组件声明过的 prop**
+  （`input/engine/Input.ts` / `notification/engine/Notice.ts` / `slider/Handles/*`）——
+  Vue 按**名字**解析声明过的 prop、**不经 `hyphenate`** ⇒ **它们是对的，别改**。
+- **反向哨兵（现成）**：`color-picker/__tests__/engine.test.ts` 末节 ——
+  `h('div', { onMousedown })` 收得到、`h('div', { onMouseDown })` **收不到**。
+- **需要谁**：无。📌 `PITFALLS.md` **323**。
+
+### 1.5 ⚠️ `Trigger` 的 `children[0]` 归一化对「数组」的处理 —— 未做全仓扫描
 
 - **现象**：`packages/ui/src/_internal/trigger.ts:606` 是
   `const first = Array.isArray(children) ? children[0] : children;` ——
-  只认**元素 vnode**；拿到**数组/Fragment** 时会走「包一层 `<span>`」分支（D79）。
-- **已知命中**：`color-picker` 的 `children` 通道（**已修**，见 §2.1）。
-- **未做**：**没有扫过其它把插槽直接转交给 Trigger 的组件** —— 它们可能同样多包一层 `<span>`。
-- **修法**：全仓扫「模板里 `<slot/>` 直接喂给 `Trigger`/`Popover`/`Tooltip` 默认插槽」的位置；
-  有 L4 用例的组件可以直接看 `$/div[0]: 标签不同 <div> vs <span>`。
-- **需要谁**：无。
-- 📌 详见 `PITFALLS.md` **330**。
+  只认**元素 vnode**；拿到**数组 / Fragment** 会走「包一层 `<span>`」分支（D79）。
+- **已知命中并已修**：`color-picker` 的 `children` 通道（commit `f950386`，见 §2.1）。
+- **未做**：**没扫过其它把插槽直接转交给 Trigger / Popover / Tooltip 的组件**。
+- **怎么扫**：找模板里「`<slot/>` 直接作为 `Trigger` / `Popover` / `Tooltip` 默认插槽内容」的位置；
+  有 L4 用例的组件可直接看是否出现 `$/div[0]: 标签不同 <div> vs <span>`。
+- **需要谁**：无。📌 `PITFALLS.md` **330**。
 
-### 1.5 ⚠️ `ContextIsolator` 在本仓**不存在**（`color-picker` 目前靠「行为等价」绕过）
+### 1.6 ⚠️ `ContextIsolator` 在本仓**不存在**（`color-picker` 靠「行为等价」绕过）
 
 - **现象**：上游 `ColorPicker` 把面板包在 `<ContextIsolator form>` 里（屏蔽 Form 的 `status`）；
   本仓全仓无此物（最接近的 `NoCompactStyle` 只重置**紧凑**上下文）。
@@ -94,128 +149,218 @@
   `useFormItemInputContext`** —— 只有 `ColorTrigger` 读，而它本来就在隔离器**外面**
   ⇒ 行为等价（登记 PLATFORM）。
 - **风险**：**将来面板里只要出现一个读 form status 的子件，就会与上游分叉**（且不会有红灯）。
-- **修法**：要么实现一个通用的 `ContextIsolator`，要么在 `ColorPicker.vue` 的面板处
-  显式 `provide` 一个空的 form 上下文（并写一条 L1 断言钉住）。
+- **怎么修**：① 实现通用的 `ContextIsolator`；或 ②（更小）在 `ColorPicker.vue` 的面板处
+  显式 `provide` 一个空的 form 上下文 + 写一条 L1 断言钉住。
 - **需要谁**：无。
 
-### 1.6 📌 `validate-registry.mjs` / `classify-date-picker-rules.mjs` 的 `suppressions/unused` 警告
+### 1.7 ⚠️ `_internal/use-merge-semantic.ts` **不支持 `schema` 档**（嵌套语义槽）
 
-- **现象**：`pnpm exec biome check .` 报 **2 条 warn 级诊断**（**不阻塞**，`Found 1 error` 那条
-  已在本会话修掉 —— 是 fixture 的 JSON 格式）：
+- **现象**：本仓的 `useMergeSemantic` 只做「平铺合并」；antd 的第四个参数 `schema`
+  （如 `{ popup: { _default: 'root' } }`）**未实现**（该文件头自己写了「等出现第一个
+  嵌套语义对象再实现」）。
+- **当前为什么没出事**：`color-picker` 曾以为需要它，实测**不需要** ——
+  读上游 `useMergeSemantic/utils.ts` 的 `fillObjectBySchema` 确认：`_default` 只做
+  「把嵌套键初始化为 `{}`」+「把**字符串**形态的嵌套键落到 `popup.root`」，
+  **不是**「从顶层 `root` 回退」。所以 `color-picker` 用可选链读 `popup.root` 即可。
+- **风险**：**下一个有「真·嵌套语义槽」的组件**（如 Table 的 `header.cell`）会需要它。
+- **怎么修**：按上游 `mergeClassNames(schema, …)` + `fillObjectBySchema` 逐条移植，
+  补一条 L1 用例（顶层 `root` 与嵌套 `popup.root` **各传一半**，断言合并结果）。
+- **需要谁**：无（**等第一个真实消费者**，别提前实现）。
+
+### 1.8 📌 `ui` 包入口**没有导出 `Color` 别名**（上游有）
+
+- **现象**：上游 `es/color-picker/index.js` 有 `export type { AggregationColor as Color }`；
+  本仓 `packages/ui/src/index.ts` **没有**这个别名（只在 `color-picker/index.ts` 里导了）。
+- **当前怎么绕过**：`color-picker` 的 7 个 demo 用
+  `Parameters<ColorPickerEmits['change']>[0]` 代替 `Color`（已登记在组件 `README §5`）。
+- **为什么不直接加**：顶层 `Color` 是**极易撞名**的短名。
+- **怎么修**：若确认要加，按本仓「重名用别名」的约定导成 `ColorPickerColor`
+  （与 `SelectInfo as CalendarSelectInfo` 同判，PITFALLS 6/158/168），并同步改 demo。
+- **需要谁**：无。
+
+### 1.9 📌 **207 条 warn 级** biome 诊断（**不阻塞**，`exit=0`，但会一直响）
+
+> ⚠️ **本条原写「2 条」，是错的**（2026-10-03 复核）。真实数字是 **207 条**。
+> 错因值得记：biome **默认只显示前 20 条诊断**（输出末尾写 `Diagnostics not shown: 198.`），
+> 照默认输出数就会严重低估 —— **必须加 `--max-diagnostics=none`** 才能看全。
+> 判据：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3`
+> ⇒ `Found 207 warnings.` / `Found 11 infos.` / `exit=0`。
+
+- **全量分布**（2026-10-03 实测，2738 文件）：
+
+  | 规则 | 条数 | 性质 |
+  |---|---|---|
+  | `lint/style/noNonNullAssertion` | **184** | 绝大多数在 `__tests__/` 里（`el()!` 形态） |
+  | `lint/style/useTemplate` | 14 | 字符串拼接 |
+  | `lint/complexity/useOptionalChain` | 9 | 可改 `?.` |
+  | `lint/correctness/noUnusedFunctionParameters` | 4 | 未用参数 |
+  | `lint/suspicious/noTemplateCurlyInString` | 3 | — |
+  | `lint/suspicious/noConfusingVoidType` | 3 | — |
+  | `lint/correctness/noUnusedPrivateClassMembers` | 2 | — |
+  | `lint/performance/noAccumulatingSpread` | 1 | — |
+
+  集中目录：`tooltip/__tests__`(23) · `tree/utils`(20) · `carousel/__tests__`(20) ·
+  `date-picker/__tests__`(17) · `dropdown/__tests__`(15) · `rate/__tests__`(12) …
+- **其中 2 条**是「非测试代码、且**可当场修**」的（原文档只写了这两条）：
   1. `tests/visual/debug/classify-date-picker-rules.mjs:91:3` **`suppressions/unused`**
-     —— 一条 `biome-ignore lint/style/useTemplate` 不再命中；
-  2. `registry/tools/validate-registry.mjs:467:15` 的 **FIXABLE 建议**
-     （`if (skip && skip.test(line))` → `skip?.test(line)`，属 `useSimplifiedLogicExpression` 一类）。
-- **已排除**：**不是本会话引入的**（`classify-date-picker-rules.mjs` 本次未被触碰；
-  `validate-registry.mjs` 只改了 `HARDCODED_PATTERNS` 的正则与注释）。
-- **修法**：按 `PITFALLS.md` **2**（`biome-ignore` 必须紧贴诊断行）核对那两处的贴合关系。
-- **需要谁**：无。
+     —— 一条 `biome-ignore lint/style/useTemplate` **不再命中**（真正命中它的违规在
+     **`:93:34` 与 `:94:27`**，说明 ignore 注释与违规行**没贴合**，同 PITFALLS **2**）；
+  2. `registry/tools/validate-registry.mjs:467:15` **`lint/complexity/useOptionalChain`**
+     （`if (skip && skip.test(line))` → `skip?.test(line)`，语义等价）。
+- **已排除**：**不是 2026-10-03 那次改动引入的**（两个文件本次均未触碰；
+  184 条 `noNonNullAssertion` 是长期存量）。
+- **怎么修**：
+  - 184 条 `noNonNullAssertion`：**别一次性机械改**（`!` → `?.` 会让断言**静默失去约束**）。
+    建议**分类**：测试里「已知非空」的用 `expect(x).toBeDefined()` + 局部变量收窄，
+    或在 `biome.json` 对 `**/__tests__/**` **整体关闭**该规则（需评估是否放宽标准 ⇒ 走用户裁决）。
+  - 上表第 1 条：把 `biome-ignore` 移到**紧贴** `:93`/`:94` 违规行；第 2 条按建议改。
+- **需要谁**：`noNonNullAssertion` 的处置方式**需要用户裁决**（改断言 vs 关规则）；其余无。
 
 ---
 
-## §2 已修、但有残留（别把「已修」当成「已解决」）
+## §2 已修、但有残留（**别把「已修」当成「已解决」**）
 
 ### 2.1 ✅ `color-picker` 的 `children` 多包一层 `<span>` —— 只修了**单子节点**路径
 
 - **已修**（commit `f950386`）：默认插槽改经**渲染函数宿主组件**（`ColorPicker.vue` 的
   `TriggerHost`）转交，摊平后取单元素 ⇒ `Trigger` 的 `children[0]` 拿到**元素**
   ⇒ 不再包 span。L4 的 `color-picker:children` **删掉 allow 后零差异**。
-- **残留**：**传多个子节点**时仍会包 span —— `renderChildren` 在 `nodes.length > 1` 时
-  原样返回数组。上游的 `children` 是**单个** `ReactNode`（无对应物）⇒ 这条**不构成分叉**，
-  但也没有测试钉住它（当前**没有**「多子节点」的 L4 用例）。
-- **继续做**：若认为需要，加一条 L4 用例 + `allow` 把「多子节点 ⇒ 包 span」写成**明确契约**。
+- **残留**：**传多个子节点**时仍会包 span（`renderChildren` 在 `nodes.length > 1` 时返回数组）。
+  上游 `children` 是**单个** `ReactNode`（无对应物）⇒ 不构成分叉，但**没有用例钉住**。
+- **继续做**：若认为需要，加一条 L4 用例把「多子节点 ⇒ 包 span」写成**明确契约**。
 
-### 2.2 ✅ `tabs` 的 `size` 类型 —— 只修了 `size`，**没有全量审计 `TabsProps` 的其它字段**
+### 2.2 ✅ `tabs` 的 `size` 类型 —— 只修了 `size`，**没有全量审计 `TabsProps`**
 
 - **已修**（commit `afc462f`）：`size` 从 `'small' | 'default' | 'large'` 改成上游的 `SizeType`
-  （`'default'` 不是 antd 的值、且缺 `'middle'`/`'medium'`）。同时修掉三处
+  （`'default'` 不是 antd 的值、且缺 `'middle'` / `'medium'`）。同时修掉三处
   **「把 bug 写成规格」**：L3 负例、两份文档 API 表、`card/demo/tabs.vue`（改回上游原值 `'medium'`）。
-- **残留**：**`TabsProps` 的其它字段没有逐一与 antd 对拍** —— 本次只处理了 card 报出的
-  `size` 与回调三类（§2.3）。**建议**：按 `registry/source/antd-6.6.4.raw.json` 做一次
-  「prop 名 × 类型」的全量 diff。
-- **继续做**：写一个脚本对比 `TabsProps` 与 antd `es/tabs/index.d.ts` 的字段集与类型。
+- **残留**：**`TabsProps` 的其它字段没有逐一与 antd 对拍**。
+- **继续做**：写脚本对比 `TabsProps` 与 antd `es/tabs/index.d.ts` 的**字段集 × 类型**
+  （数据源：`registry/source/antd-6.6.4.raw.json`）。
 
 ### 2.3 ✅ `tabs` 运行时声明 vs 公开 `TabsProps` —— 只统一了 **card 用到的字段**
 
 - **已修**（commit `9419ff5`）：运行时声明一律改用**公开类型**
-  （`TabsProps['renderTabBar'|'locale'|'more'|'classNames'|'styles']`），三个事件的 emits
+  （`TabsProps['renderTabBar' | 'locale' | 'more' | 'classNames' | 'styles']`），三个事件的 emits
   载荷从 `unknown` 换成 `TabsEditEvent` / `TabsEditAction` / 方向联合。
   **✅ 自证**：把 card 的 `as unknown as TabsRuntimeProps` 换成 `satisfies` ⇒ `lint:types` 0 错。
-- **残留**：**其余字段（`animated` / `indicator` / `tabBarExtraContent` / `getPopupContainer` …
-  ~20 个）没有逐一核对「运行时声明是否与公开类型同源」** —— 它们目前**没有消费方**在转发，
-  所以没有暴露；一旦有第二个薄壳组件转发 `TabsProps`，就会撞上同一堵墙。
+- **残留**：**其余 ~20 个字段（`animated` / `indicator` / `tabBarExtraContent` /
+  `getPopupContainer` …）没有逐一核对** —— 目前**没有消费方**在转发，所以没暴露；
+  一旦有第二个薄壳组件转发 `TabsProps`，就会撞上同一堵墙。
 - **继续做**：`grep -n "PropType<" packages/ui/src/tabs/Tabs.vue` 逐条核对是否都引用了公开类型。
-- 📌 判据见 `PITFALLS.md` **333**（消费方能用 `satisfies` 通过 = 同源）。
+- 📌 判据：`PITFALLS.md` **333**（消费方能用 `satisfies` 通过 = 同源）。
 
-### 2.4 ✅ `calendar` 的日期依赖 flake —— 只移除了那**一条**用例，未做全仓扫描
+### 2.4 ✅ `calendar` 的日期依赖 flake —— 只移除了**一条**，未做全仓扫描
 
 - **已修**（commit `c7fd2ec`）：`calendar:no-value`（不传值 ⇒ 上游取 `getNow()`）的产物
-  **随运行日变化** ⇒ 从 L4 移除（生成器 + 消费侧同步，两处写明原因）；
-  行为仍由 `calendar/__tests__/index.test.ts` 的**语义断言**覆盖。`calendar` L4 **27/27**。
-- **残留**：**没有扫过其它组件的 L4 基线里是否也有「随运行日 / 运行时刻变化」的用例** ——
-  判据是基线产物里出现 `getNow()` / `Date.now()` / `new Date()` / `Math.random()` 的痕迹
-  （如 `-today` / `-now` / 相对时间文案）。
-- **继续做**：对 `tests/compat/baseline/*.mjs` 做一次「是否传了时间相关 prop」的扫描；
-  对已入库的 `tests/compat/baselines/*.dom.json` 搜 `today` / `now` 类类名。
-- 📌 判据见 `PITFALLS.md` **334**。
+  **随运行日变化** ⇒ 从 L4 移除（生成器 + 消费侧同步，两处写明原因）；行为仍由
+  `calendar/__tests__/index.test.ts` 的**语义断言**覆盖。`calendar` L4 **27/27**。
+- **残留**：**没有扫过其它组件的 L4 基线里是否也有「随运行日 / 运行时刻变化」的用例**。
+- **怎么扫**：① 对 `tests/compat/baseline/*.mjs` 找「是否传了时间相关 prop」；
+  ② 对已入库的 `tests/compat/baselines/*.dom.json` 搜 `today` / `now` / 相对时间文案；
+  ③ 搜 `getNow()` / `Date.now()` / `new Date()` / `Math.random()`。
+- **需要谁**：无。📌 `PITFALLS.md` **334**。
 
-### 2.5 ✅ `utils.Color` 的字段 `private → public`（L0 变更）—— 只改了**已发现**的成员
+### 2.5 ✅ **已完全关闭** `utils.Color` 的字段 `private → public`（**L0 变更**）
 
-- **已修**（commit `1bd30e7`）：为绕过 Vue 的 `UnwrapRef`（**映射类型**会丢掉 `private` 成员），
+- **已修**（⚠️ **commit 是 `9c9f557`，不是原写的 `1bd30e7`** —— 2026-10-03 复核更正；
+  判据：`git log --oneline -S"@internal" -- packages/utils/src/color/color.ts` ⇒ 唯一命中 `9c9f557`）：
+  为绕过 Vue 的 `UnwrapRef`（**映射类型**会丢掉 `private` 成员），
   把 `packages/utils/src/color/color.ts` 的 **7 个缓存字段 + `getMax` / `getMin`** 改成
-  `public` + `/** @internal */`。**`utils` 已单独重建**。
-- **残留**：**没有审计 `utils` 里是否还有别的「带 private 成员的值对象」** ——
-  凡是会被放进 `ref()` / 组件 prop / 模板的类型，都会踩同一个坑。
-- **继续做**：`grep -n "private " packages/utils/src/**/*.ts` 逐个判断是否属于「值对象」。
-- 📌 判据见 `PITFALLS.md` **325**（三个触发点：`ref()` / 模板 unwrap / `props`）。
+  `public` + `/** @internal */`。**`utils` 已单独重建**
+  （改 L0 后**必须**重建，PITFALLS 176 / 249）。
+- ✅ **残留已关闭**（2026-10-03 复核）—— 原担心「`utils` 里还有别的带 private 成员的值对象」，
+  实测**一个都没有**：
+  ```sh
+  grep -rnE "(^|[^a-zA-Z])private |protected " packages/utils/src   # ⇒ 0 命中
+  grep -rnE "^\s*#[a-zA-Z_]" packages/utils/src                    # ⇒ 0 命中（JS 原生私有字段也没有）
+  ```
+  ⇒ `color.ts` 的那批是**唯一一处**，审计已天然完成。
+- 📌 `PITFALLS.md` **325**（三个触发点：`ref()` / 模板 unwrap / `props`）。
 
-### 2.6 ✅ `picker/time-tmpl.ts` 的 `useIndexOf` —— 按 biome 建议改了，**未单独跑 picker 的测试**
+### 2.6 ✅ `picker/time-tmpl.ts` 的 `useIndexOf` —— 已改，**已补跑 picker 测试 ⇒ 关闭**
 
-- **已修**（commit `0255c4b`）：`liDistList.findIndex((dist) => dist === minDist)` →
-  `liDistList.indexOf(minDist)`（**语义等价**：都是严格相等，`NaN` 时都返回 -1）。
-  这是**master 上既有的** lint 错误，会让 `verify:full` 的 `lint:format` 直接红。
-- ✅ **残留已关闭**（2026-10-03 同日补跑）：
-  `pnpm exec vitest run --project unit packages/picker` ⇒ **308 / 308 通过**。
-  该改动是语义等价的，picker 侧无回归。
+- **已修**（commit `0255c4b`）：`findIndex((d) => d === minDist)` → `indexOf(minDist)`
+  （**语义等价**：都是严格相等，`NaN` 时都返回 -1）。这是 **master 上既有的** lint 错误，
+  会让 `verify:full` 的 `lint:format` 直接红。
+- ✅ **残留已关闭**（同日补跑）：`pnpm exec vitest run --project unit packages/picker`
+  ⇒ **308 / 308 通过**。
 
-### 2.6b ⚠️ `Switch.ts` 从 `attrs` 剥掉了 `onKeyDown` / `onClick` 但**未见再次使用**
+### 2.6b ✅ `segmented` / `collapse` 的「事件名」bug 已修，但**缺 L1 覆盖**
 
-- **现象**：`packages/ui/src/switch/Switch.ts:210` 解构出 `onKeyDown: _onKeyDown` / `onClick: _onClick`
-  并放进 `...restAttrs` 的**排除项**，但 `grep -n "_onKeyDown" packages/ui/src/switch/Switch.ts`
-  **只有这一处** ⇒ 这两个 handler **被静默丢弃**（父组件传的 `onKeyDown`/`onClick` 不生效）。
-- **为什么**：注释写的是「被 rc-switch 消费的三个事件」—— 但**本仓的实现里没看到消费点**。
-- **判定**：**待核**（不是已确认的 bug）：若 `Switch` 通过 `emits: ['click']` 收 `onClick`，
-  那它走的是 `props.onClick` 而不是 `attrs`，剥 attrs 不会影响它；`onKeyDown` 则**没有对应的 emit**。
-- **修法（若确认是 bug）**：把 `_onKeyDown` 显式绑到根 `<button>`（键名用 `onKeydown`，见 §1.3）。
-- **需要谁**：无（但要跑 switch 的 L1/L4 确认）。
+- **已修**（commit `7147a3f`，见 §1.4）：两处 `onMouseDown` / `onKeyDown` 改成小写 d。
+- **残留**：**这两条行为此前没有任何 L1 用例** —— 这正是它们能活很久的原因。
+  - `segmented`：「mousedown 清除键盘态」（原 README 写「由 L6 真浏览器验证」，现在 L1 可测了）；
+  - `collapse`：**Enter 键展开/收起**（a11y 键盘操作）。
+- **继续做**：各补一条 L1 用例（**断言效果**：状态变了 / `emit` 发了），
+  并相应更新 `segmented/README.md` 里「由 L6 验证」那句。
 
 ### 2.7 ✅ `color-picker` 的 L4 只覆盖**触发器** —— 面板的 DOM 契约只在 L6
 
 - **不是缺陷，是**有意分工**：面板在 `Popover` 的 Portal 里，**SSR 不渲染**
   （上游告警 `Portal only work in client side…`）；`PurePanel` 在 SSR 下**也不渲染面板**
-  （`open` 由 `useEffect` 置真，SSR 不跑 effect）⇒ 面板的 DOM 拿不到。
-- **已做**：`tests/compat/baseline/color-picker.mjs` 里留了 `open-no-portal` 用例作为
-  **事实哨兵**；面板由 L6（真浏览器）承担 —— **27/27 exact**。
-- **残留**：**面板的 DOM 结构没有任何「与 antd 逐条对拍」的自动化** ——
-  只有像素级（L6）。若将来面板 DOM 出现「像素相同但结构不同」的漂移，**不会红**。
-- **继续做**（若认为值得）：在 L6 的用例里加 DOM 断言（`tests/visual` 有 `dump.mjs`），
-  或做一个「真浏览器里 dump 面板 DOM 再与 antd 对拍」的探针。
+  （`open` 由 `useEffect` 置真，SSR 不跑 effect）⇒ 面板 DOM 拿不到。
+- **已做**：基线里留了 `open-no-portal` 用例作为**事实哨兵**；面板由 L6 承担（**27/27 exact**）。
+- **残留**：**面板的 DOM 结构没有「与 antd 逐条对拍」的自动化** —— 只有像素级。
+  若将来面板出现「像素相同但结构不同」的漂移，**不会红**。
+- **继续做**（若认为值得）：在 L6 用例里加 DOM 断言（`tests/visual/debug/dump.mjs` 可 dump），
+  或做「真浏览器里 dump 面板 DOM 再与 antd 对拍」的探针。
+
+### 2.8 ✅ `color-picker` 的 demo **没有显式钉字体**
+
+- **现象**：G11 落地时按**仓内惯例**（`card` 等 demo 都不写 `font-family`）没有钉字体；
+  字体钉在 L6 的 `render/cases/*` 容器里。
+- **残留**：若将来 **demo 参与像素比对**，继承字体的差异会显形
+  （`docs/COMPONENT-CHECKLIST.md` 第 15 条）。
+- **需要谁**：无（与全仓一致，**不要单独改 color-picker**）。
 
 ---
 
-## 附：本登记簿的「证据来源」速查
+## §3 建议补的**护栏**（防止同类复发）
 
-| 想验证 | 命令 |
+> 三条都是「本会话踩过、修了、但**没有自动化拦截**」的坑。加护栏的收益远大于再修一次。
+
+| # | 护栏 | 防的是什么 | 落点建议 |
+|---|---|---|---|
+| 1 | **复合词事件名扫描** | §1.4：`onMouseDown` 往原生元素上写 ⇒ 静默失效 | `packages/ui/src/__tests__/event-name-casing.test.ts` |
+| 2 | **L4 基线的「时间依赖」扫描** | §2.4：`getNow()` 类用例让门禁**每天跨午夜就红** | 扫 `tests/compat/baselines/*.dom.json` 的 `today`/`now`；扫 `baseline/*.mjs` 的时间 prop |
+| 3 | **运行时声明 ↔ 公开类型同源** | §2.2 / §2.3：宽松声明让消费方被迫 `as unknown as` | 对每个组件：`InstanceType<typeof C>['$props']` 与 `CProps` 双向赋值（判据 = 消费方 `satisfies` 能过） |
+
+> ⚠️ 加护栏时**先跑一遍看会不会误报** —— 尤其 #1（本仓 ~10 处「组件声明过的 prop」是对的）。
+
+---
+
+## §4 接手顺序建议（按性价比）
+
+1. **§2.6b 补两条 L1 用例**（segmented 的 mousedown / collapse 的 Enter）——
+   **最小、最直接**：刚修的行为没有测试钉住，属于「修了但随时会回归」。
+2. **§3 #1 加「复合词事件名」扫描**（防复发，收益最大）—— 需要处理误报白名单。
+3. **§1.2 `typography/semantic`**（先重生成基线再判断）。
+4. **§1.9 的 2 条可当场修**（`classify-date-picker-rules.mjs` 的 ignore 贴合 +
+   `validate-registry.mjs:467` 的 `?.`）—— 5 分钟的事。
+5. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
+6. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
+   （都是扫描类，可批量做）。
+7. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
+   **等第一个真实消费者**再做，别提前实现。
+8. **§1.1 的 84 条 `missing-baseline`** —— **阻塞在用户裁决**（`visual-baseline-in-git`）。
+
+---
+
+## §5 本会话（2026-10-02 ~ 10-03）已修清单（留痕）
+
+| commit | 内容 |
 |---|---|
-| 全量 L6 现状（含 missing-baseline） | `CODEBUDDY_SAFE_DELETE_ENABLED=0 node tests/visual/run.mjs --mode compare` |
-| 单组件 L6 | `... --mode compare --component <c>` |
-| 重新生成某组件基线 | `... --mode baseline --component <c>` |
-| 基线重复自检 | `... --check-baselines` |
-| L4 全量 | `pnpm run test:dom` |
-| 类型测试（**已修为 `vue-tsc`**） | `pnpm run test:types` |
-| 四道门禁 | `pnpm run verify:full` |
-| 开放决策原文 | `node registry/tools/ask.mjs decision <id>` |
+| `d936962` → `0255c4b` | **color-picker G0–G14 全量交付 → `completed`（69/72）**；顺手修 `picker/time-tmpl.ts` 的既有 lint 红 |
+| `f950386` | `color-picker` 的 `children` 不再多包一层 `<span>`（§2.1） |
+| `afc462f` | `tabs` 的 `size` → 上游 `SizeType`（§2.2） |
+| `9419ff5` | `tabs` 运行时声明统一到公开类型 ⇒ **删掉 card 的 `as unknown as`**（§2.3） |
+| `c7fd2ec` | `calendar` 的日期依赖用例从 L4 移除（§2.4） |
+| `07b8ff7` | **`test:types` 的「假红」修掉**（`types` project 指定 `checker: 'vue-tsc'`）；新建本文件 |
+| `7147a3f` | `segmented` / `collapse` 的事件名大小写（§1.4、§2.6b） |
+| （本轮，未改代码） | **复核本文件并改掉 4 处事实错误**：§1.3 证伪 · §1.9 由「2 条」改「207 条」 · §2.5 的 commit 更正为 `9c9f557` 且残留关闭 · §1.4 改按符号定位 |
 
-> ⚠️ **跑视觉 / 构建门禁的入口都要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`**
-> （`tests/visual/run.mjs` / `tests/build/run.mjs` / `pnpm build:ui`）——
-> 漏了会在打包阶段被 safe-delete 拦下（阈值 50），报 `SAFE_DELETE_BULK_CONFIRM_REQUIRED`。
+**PITFALLS 319–336**（18 条）。`verify:full` **exit=0**。
+
+> ⚠️ **本文件的坐标会漂移**（改代码时插注释就会移行）—— 引用时**优先给符号名**（如
+> `onMousedown: handleMouseDown`），行号只作辅助；**动手前先 `sed -n 'Np'` 核一眼**。

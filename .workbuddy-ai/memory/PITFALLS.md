@@ -25,6 +25,8 @@
 - **浮层**：🚨 **模板里的 `<slot/>` 产出的是嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到**数组**而不是元素 ⇒ 走「包一层 `<span>`」分支（D79）。要传单个元素只能**用渲染函数**（330）
 - **Vue 化**：🚨 **`React.useEffect` ↔ Vue `watch` 不等价** —— effect 挂载必跑、watch 只在变化时跑⇒ 「初始值就命中该分支」时**静默失效**，必须补 `{ immediate: true }`（328）
 - **测试/jsdom**：🚨 **「输出随运行日变化」的用例不能进字节精确的 L4** —— 不传 `value` 的 `Calendar` 取 `getNow()` ⇒ `-today` 格子每天挪位，基线隔夜必红。正确做法：**从 L4 移除**（该行为由 L1 的**语义断言**覆盖），不是放宽比对（334）
+- **流程**：🚨 **`biome check` 默认只列前 20 条诊断**（末尾写 `Diagnostics not shown: N.`）⇒ 数诊断必须 `--max-diagnostics=none`；否则会把 **207** 条看成 **2** 条（335）
+- **排查**：⚠️ **`const x = attrs as unknown as T` 是别名不是拷贝** —— 从 `attrs` 解构剔除键**不影响** `x` ⇒ 别把 `_onXxx` 误判成「handler 被丢弃」；下结论前先 grep `__tests__/`（336）
 - **流程**：🚨 registry 生成器有**顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`；乱序会让 `registry:check` 报「已过期」（329）
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
@@ -4287,3 +4289,41 @@
 
     ⚠️ 这不是「为了绿灯删断言」（`AGENTS.md` H7）—— 是把**度量不了的用例**从**错误的层**
     里拿走。**判据**：删掉的用例，其行为必须在**别的层**有等价覆盖，且**能说出是哪一条**。
+
+335. 🚨 **`biome check` 默认只显示前 20 条诊断 —— 数诊断必须加 `--max-diagnostics=none`**
+    （2026-10-03 实测：把 **207** 条 warning 误记成 **2** 条，写进了 `KNOWN-ISSUES.md`）。
+
+    **症状**：`pnpm exec biome check .` 的输出末尾是
+    `Found 207 warnings.` —— 但**上方只列了 20 条**，中间夹一行
+    `Diagnostics not shown: 198.`。**只看列出来的部分就会严重低估**。
+
+    **判据**：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3`
+    ⇒ `Found 207 warnings.` / `Found 11 infos.` / `exit=0`。
+    按规则归类：`... | grep -oE "lint/[a-z]+/[a-zA-Z]+" | sort | uniq -c | sort -rn`。
+
+    ⚠️ **别把它和「有 error 才是红」混起来**：207 条全是 **warn** ⇒ `exit=0`，
+    `verify:full` 的 lint 步骤仍绿。**「不阻塞」≠「数量少」**。
+
+336. ⚠️ **`const x = attrs as unknown as T` 是「别名」不是「拷贝」—— 从 `attrs` 解构剔除键不影响它**
+    （2026-10-03：差点把 `Switch.ts` 的一处**正确代码**误判成 bug 写进台账）。
+
+    **当时的误判**：`Switch.ts` 里
+    ```ts
+    const callbacks = attrs as unknown as { onKeyDown?: …; onClick?: … };   // :86 别名
+    …
+    const { onKeyDown: _onKeyDown, onClick: _onClick, ...restAttrs } = attrs; // :207 解构
+    ```
+    看到 `_onKeyDown` **全文件只出现一次** ⇒ 误以为「父组件传的 handler 被静默丢弃」。
+    **真相**：解构只从**新对象** `restAttrs` 里摘键（防重复裸绑 DOM），
+    `attrs` 本身没动 ⇒ `callbacks.onKeyDown?.(event)`（:164）**照样拿到**。
+    `_` 前缀正是「故意不使用」的约定。
+
+    **判据（三步，缺一不可）**：
+    1. 这个键是从 **`attrs`** 还是 **`props`** 读的？（声明过的 prop 不在 `attrs` 里）
+    2. 真正的**调用点**在哪？（搜「读取者」的变量名，别只搜那个被剔除的键）
+    3. 读取者是 **`attrs` 的别名**还是**解构后的拷贝**？
+       `as` 只改类型**不改引用** ⇒ 别名会看到「未被剔除」的全量 `attrs`。
+
+    ⚠️ **先跑现成测试再下结论**：本例 `switch/__tests__/index.test.ts:175`（`onKeyDown 照常转发`）
+    与 `:182`（`onClick` 收结果值）**早就覆盖了**，`28/28` 全绿 ——
+    「看起来可疑」不等于「没有被测到」。**怀疑前先 `grep` 一下 `__tests__/`**。

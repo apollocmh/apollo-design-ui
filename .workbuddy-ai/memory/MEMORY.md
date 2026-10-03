@@ -17,6 +17,12 @@
 ⚠️ **`test:types` 已修**（`vitest.config.ts` 的 `types` project 指定 `checker: 'vue-tsc'`）——
 此前它**恒定 exit=1**（`tsc` 解析不了 `.vue` ⇒ 96 条假源错误），现在 **exit=0**。
 
+⚠️ **登记簿的坐标要复核后再信**（2026-10-03 实测：重写后逐条复核，改掉 **4 处事实错误**）：
+§1.3「Switch handler 被丢弃」**证伪**（`callbacks` 是 `attrs` 别名，且早有 L1 用例）·
+§1.9「2 条 biome warn」实为 **207 条**（biome **默认只列前 20** ⇒ 必须 `--max-diagnostics=none`）·
+§2.5 的 commit `1bd30e7` 实为 **`9c9f557`** · §2.5 的 private 残留**可关闭**（utils/src 零 private）。
+⇒ **`git log -S` 与「跑一遍现成测试」比读文档可靠**；`docs/KNOWN-ISSUES.md` 每条都该能被判据复现。
+
 ## 事实来源 / 任务 / registry
 Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**。优先级：用户指令>仓库规范>`registry/*.json`>antd 产物/源码>文档>先验。
 - 取任务唯一权威 `node registry/tools/next-task.mjs`（一轮一包）。🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（缺了按 PITFALLS 42 恢复）；说「某决策是这样」前先 `ask.mjs decision <id>`（出原文）。
