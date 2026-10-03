@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-10-04（transfer 收口会话，全量 72/72）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 123 | **`useDisabled(props.disabled)` 传值丢响应性**——props.disabled 在 setup 期解包成原始值，computed 闭包冻结首帧值 ⇒ Button 的 disabled 一旦 true 永不解锁（Actions 可用态不随勾选更新，且静默） | L2（moveToRight 0 次调用）+ render 期 console 探针 | useDisabled 入参改 `MaybeRefOrGetter`（toValue）；传 props 的调用点一律 getter `() => props.disabled`（Button/TreeSelect/Form/Cascader 已修） |
+| 124 | **jsdom30 的 IDL getter 拒绝派生事件对象**——`Object.create(event, {...})` 克隆上读 `e.type` 抛 `TypeError: 'get type' is not a valid instance of Event`，消费方（Transfer.Search 的 `e.type==='click'`）整条 onChange 链静默炸断 | L2（onSearch 0 次调用）+ 逐层埋点二分 | cloneEvent 时从**真事件**读 type 落成自有属性；凡克隆 Web API 对象后要读 IDL 属性的都同判 |
+| 125 | **复合组件给内嵌 Checkbox/Input 传类名必须走 `className` prop**——传 `class` 会经 attrs 落到内层 input / 被 Checkbox 的 attrClass 拦截，根元素类名链静默断裂；Dropdown 恰好相反（`classNames.root` 落浮层，触发器是 `${prefixCls}-trigger`） | L4 dom-contract（类名逐字对拍全红）+ L5（axe label 违规） | 组合他人组件前先读其 attrs 分配策略；基线里跨组件前缀用 ConfigProvider 统一对齐（tree-select 同判） |
+
 ### 2026-10-03（table T2-T5 会话，功能分期）
 
 | # | 坑 | 抓到它的层 | 对策 |
