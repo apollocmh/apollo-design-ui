@@ -6,6 +6,7 @@
  * `items` 优先，其次用注册收集到的 Image。
  */
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import {
   createImageRegistry,
@@ -120,14 +121,20 @@ const PreviewGroup = defineComponent({
 
     const currentItem = computed(() => mergedItems.value[current.value]);
 
-    // ⚠️ 这里**不能**用 `useMergeSemantic`：popup 是嵌套语义组，而本仓库的
-    // useMergeSemantic 尚未实现 antd 的 `schema` 分支（见其文件头「没有证明什么」），
-    // `clsx` 会把 popup 的对象值压成 ''。所以 popup 单独手算。
+    // ⚠️ popup 是嵌套语义组 ⇒ 走 `useMergeSemantic` 的 schema 档
+    //（`popup: { _default: 'root' }`，§1.7b 已补）：字符串形态 `popup = 'x'` 归到
+    // `popup.root`，字符串 + 对象混用不再产垃圾键。
     // 另：antd 的 PreviewGroup 还会把 `contextClassNames` / `contextStyles` 并入，
     // 本仓库的 ConfigProvider 目前不提供组件级 classNames/styles（staged），
     // 所以来源只有 props 与 previewConfig（`preview.rootClassName` / `maskClassName`）。
+    const { classNames: mergedGroupClassNames } = useMergeSemantic<
+      Record<string, unknown>,
+      SemanticClassNames,
+      Record<string, never>
+    >([() => props.classNames], [], {} as never, { popup: { _default: 'root' }, placeholder: {} });
     const popupClassNames = computed(() => {
-      const p = props.classNames?.popup;
+      const p = (mergedGroupClassNames.value as { popup?: Record<string, string | undefined> })
+        .popup;
       const cfg = previewConfig.value;
       const mask = cfg?.mask;
       return {

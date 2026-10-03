@@ -80,6 +80,34 @@ describe('Select · DOM 契约（对拍 antd v6 快照）', () => {
     wrapper.unmount();
   });
 
+  // ⚠️ KNOWN-ISSUES §1.7b：antd 给 useMergeSemantic 的第四参是
+  //    `{ popup: { _default: 'root' } }` —— 字符串形态 `classNames.popup = 'x'`
+  //    落到 `popup.root`。没有 schema 时「字符串 + 对象混用」会产垃圾键
+  //    （`Object.keys('x')` ⇒ 类名里出现 `0` / `1`）。
+  it('classNames.popup 字符串形态 ⇒ 落到 popup.root 并挂到下拉根（§1.7b）', async () => {
+    const wrapper = mountSelect({ open: true, classNames: { popup: 'my-popup' } });
+    await flush();
+    const dropdown = body().querySelector('.apollo-select-dropdown');
+    expect(dropdown).toBeTruthy();
+    expect(dropdown?.classList.contains('my-popup')).toBe(true);
+    // 垃圾键哨兵：schema 缺失时 `Object.keys('my-popup')` 会给出 '0'..'8' 这类键
+    expect(dropdown?.className).not.toMatch(/\b[0-9]\b/);
+    wrapper.unmount();
+  });
+
+  it('classNames.popup 对象形态 + popupClassName prop ⇒ 两者拼接（§1.7b）', async () => {
+    const wrapper = mountSelect({
+      open: true,
+      classNames: { popup: { root: 'obj-popup' } },
+      popupClassName: 'legacy-popup',
+    });
+    await flush();
+    const dropdown = body().querySelector('.apollo-select-dropdown');
+    expect(dropdown?.classList.contains('obj-popup')).toBe(true);
+    expect(dropdown?.classList.contains('legacy-popup')).toBe(true);
+    wrapper.unmount();
+  });
+
   it('选项结构：-item-option > [-option-content] + [-option-state]', async () => {
     const wrapper = mountSelect({ open: true });
     await flush();

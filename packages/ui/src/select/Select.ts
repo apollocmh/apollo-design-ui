@@ -695,11 +695,15 @@ export const Select = defineComponent({
     });
 
     // --------------------------- 语义槽 ---------------------------
+    // ⚠️ antd 第四参 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
+    //    字符串形态 `classNames.popup = 'x'` 归到 `popup.root`，不再产垃圾键。
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       SelectProps,
       SelectSemanticClassNames,
       SelectSemanticStyles
-    >([() => props.classNames], [() => props.styles], {} as never);
+    >([() => props.classNames], [() => props.styles], {} as never, {
+      popup: { _default: 'root' },
+    });
 
     const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
 

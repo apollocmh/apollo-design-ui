@@ -292,8 +292,8 @@ export default defineComponent({
     });
 
     // ======================== 语义槽 ========================
-    // ⚠️ antd 的 `useMergeSemantic` 第四参给了 `{ popup: { _default: 'root' } }` 的嵌套映射；
-    //    本仓的实现没有那个参数 ⇒ **手工展平**（G2 的说明 + R6）。
+    // ⚠️ antd 的第四参是 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
+    //    字符串形态 `classNames.popup = 'x'` 会被归到 `popup.root`，混用不再产垃圾键。
     const { classNames: mergedClassNamesRaw, styles: mergedStylesRaw } = useMergeSemantic<
       Record<string, unknown>,
       TabsSemanticClassNames,
@@ -307,6 +307,7 @@ export default defineComponent({
         semanticRootStyle(props.style) as TabsSemanticStyles,
       ],
       { props: props as unknown as Record<string, unknown> },
+      { popup: { _default: 'root' } },
     );
 
     const mergedClassNames = computed<TabsSemanticClassNames>(() => {

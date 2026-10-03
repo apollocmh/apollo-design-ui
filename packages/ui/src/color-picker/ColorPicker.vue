@@ -230,6 +230,10 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
     () => semanticRootStyle(props.style),
   ],
   semanticProps,
+  // ⚠️ 与 antd 6.6.4 逐字（`ColorPicker.js:98-100`）。本文件头 §9 曾判「本仓不需要
+  //    schema 档」—— 对「可选链读 popup.root」的**读取侧**确实空转，但**合并侧**在
+  //    「字符串 + 对象混用」时会产垃圾键（KNOWN-ISSUES §1.7b）⇒ 2026-10-03 补上。
+  { popup: { _default: 'root' } },
 );
 
 // ============================== 开合 / 格式 ==============================

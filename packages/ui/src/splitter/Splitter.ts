@@ -25,7 +25,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
-import { mergeClassNames, mergeStyles, semanticRootStyle } from '../_internal/use-merge-semantic';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useOrientation } from '../_internal/use-orientation';
 import { useComponentConfig, useConfigContext } from '../config-provider/context';
 import { useItems } from './hooks/useItems';
@@ -252,41 +252,24 @@ export const Splitter = defineComponent({
     };
 
     // ======================== Semantic ========================
-    // antd：useMergeSemantic(..., { _default: 'dragger' }) 把 string 展平为 {default}
-    //
-    // ⚠️ dragger 槽是**对象值**（{default, active}），而 mergeClassNames 的逐键
-    //    clsx 会把对象折叠成键名字符串 ⇒ root/panel 走 mergeClassNames，
-    //    dragger 手动合并（mergeStyles 的逐键浅合对对象值是安全的，无需特判）。
-    const mergedClassNames = computed(() => {
-      const rootAndPanel = mergeClassNames<SplitterSemanticClassNames>(
-        context.classNames,
-        props.classNames,
-      );
-      const ctxDragger = normalizeDraggerClassNames(context.classNames?.dragger);
-      const ownDragger = normalizeDraggerClassNames(props.classNames?.dragger);
-      const joinCls = (...list: (string | undefined)[]): string | undefined => {
-        const joined = list.filter(Boolean).join(' ');
-        return joined || undefined;
-      };
-      return {
-        root: rootAndPanel.root,
-        panel: rootAndPanel.panel,
-        dragger: {
-          default: joinCls(ctxDragger?.default, ownDragger?.default),
-          active: joinCls(ctxDragger?.active, ownDragger?.active),
-        },
-      };
-    });
-    const mergedStyles = computed(() => {
-      const contextStyleRoot = semanticRootStyle(context.style as never);
-      const styleRoot = semanticRootStyle(props.style);
-      return mergeStyles<SplitterSemanticStyles>(
-        context.styles,
-        contextStyleRoot as never,
-        props.styles,
-        styleRoot as never,
-      );
-    });
+    // ⚠️ antd 第四参 `{ dragger: { _default: 'default' } }`（`Splitter.js:130-134`，
+    //    §1.7b 已补）：把 string 形态 `classNames.dragger = 'a'` 归到 `dragger.default`，
+    //    字符串 + 对象混用不再产垃圾键；root/panel 等未声明键照常 clsx 平铺。
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+      Record<string, unknown>,
+      SplitterSemanticClassNames,
+      SplitterSemanticStyles
+    >(
+      [() => context.classNames, () => props.classNames],
+      [
+        () => context.styles,
+        () => semanticRootStyle(context.style as never) as never,
+        () => props.styles,
+        () => semanticRootStyle(props.style) as never,
+      ],
+      { props: props as unknown as Record<string, unknown> },
+      { dragger: { _default: 'default' } },
+    );
 
     return () => {
       const getPrefixCls = context.getPrefixCls;

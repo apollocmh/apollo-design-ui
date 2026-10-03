@@ -199,6 +199,7 @@ const Image = defineComponent({
     });
 
     // =========================== Semantic =============================
+    // ⚠️ antd 第四参 `{ popup: { _default: 'root' }, placeholder: {} }`（§1.7b 已补）。
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       ImageProps,
       SemanticClassNames,
@@ -207,6 +208,7 @@ const Image = defineComponent({
       [() => props.classNames, () => ({ root: props.wrapperStyle ? undefined : undefined })],
       [() => props.styles, () => (props.wrapperStyle ? { root: props.wrapperStyle } : undefined)],
       {} as ImageProps,
+      { popup: { _default: 'root' }, placeholder: {} },
     );
 
     // ========================== Placeholder ===========================
@@ -227,10 +229,11 @@ const Image = defineComponent({
     );
 
     // ============================ Render ==============================
-    // ⚠️ popup 是**嵌套语义组** —— useMergeSemantic 的 mergeClassNames 对每个键
-    // 跑 clsx，会把对象值压成字符串（实测：popup ⇒ ''）。嵌套组必须单独算。
+    // ⚠️ popup 是**嵌套语义组** —— 合并结果来自 useMergeSemantic 的 schema 档
+    //（`popup: { _default: 'root' }`，§1.7b 已补）：字符串形态 `popup = 'x'` 已被
+    // 归到 `popup.root`，这里只读合并结果；`previewConfig` 的两条是本仓既有的附加项。
     const popupClassNames = computed(() => {
-      const p = props.classNames?.popup;
+      const p = (mergedClassNames.value as { popup?: Record<string, string | undefined> }).popup;
       const mask = previewConfig.value?.mask;
       return {
         root: [p?.root, previewConfig.value?.rootClassName].filter(Boolean).join(' ') || undefined,
