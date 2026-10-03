@@ -69,7 +69,7 @@ for (const { side, port } of servers) {
         const text = rule.cssText ?? '';
         if (text.includes('cell-week') && text.includes('cell-inner')) {
           const i = text.indexOf('height:');
-          out.push(text.slice(0, 60) + ' … ' + (i >= 0 ? text.slice(i, i + 400) : '(无 height)'));
+          out.push(`${text.slice(0, 60)} … ${i >= 0 ? text.slice(i, i + 400) : '(无 height)'}`);
         }
       }
     }

@@ -1,0 +1,44 @@
+{
+  "$schema": "../schema.json",
+  "id": "transfer/basic",
+  "component": "transfer",
+  "description": "XL 复合组件（Section×2 + Actions + ListBody/ListItem + 内嵌 Checkbox/Dropdown/Pagination）：dataSource/targetKeys/rowKey 拆分渲染、selectedKeys 受控（不回写）、moveTo 过滤禁用项 + onChange 载荷、oneWay（隐藏向左按钮 + 右列删除按钮 + aria-label=remove）、showSearch 过滤（filterOption 自定义 + onSearch 含清空）、pagination 模式（面板加宽 + simple 分页 + selectCurrent 菜单）、status error/warning 边框、locale 文案覆盖、render {label,value} 双通道（label 渲染 / value 参与搜索）、footer 两种签名、selectAllLabels 逐列定制、useMultipleSelect shift 区间多选。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "dataSource": [
+      { "key": "0", "title": "content1", "disabled": false },
+      { "key": "1", "title": "content2", "disabled": false },
+      { "key": "2", "title": "content3", "disabled": false },
+      { "key": "3", "title": "content4", "disabled": true },
+      { "key": "4", "title": "content5", "disabled": false },
+      { "key": "5", "title": "content6", "disabled": false },
+      { "key": "6", "title": "content7", "disabled": false },
+      { "key": "7", "title": "content8", "disabled": false }
+    ],
+    "targetKeys": ["1", "4"],
+    "selectedKeys": ["0"],
+    "titles": ["Source", "Target"],
+    "showSearch": true,
+    "render": "(item) => ({ label: item.title, value: item.title })",
+    "oneWay": false
+  },
+  "assertions": {
+    "api": true,
+    "dom": true,
+    "aria": true,
+    "behavior": true,
+    "screenshot": true
+  },
+  "expect": {
+    "events": ["change", "selectChange", "search", "scroll"],
+    "dom": {
+      "root": "apollo-transfer",
+      "sections": 2,
+      "actions": true,
+      "listHeader": true,
+      "listContent": true,
+      "searchInput": true,
+      "pagination": false
+    }
+  }
+}

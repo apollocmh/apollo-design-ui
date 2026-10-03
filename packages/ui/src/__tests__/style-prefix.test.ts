@@ -65,6 +65,9 @@ const KNOWN_GAPS: Record<string, string> = {
   // `.apollo-dropdown/.apollo-dropdown-menu`、嵌套 tree/checkbox/radio/icon 等
   // （与 select/cascader/tree-select 同判 —— 跨组件前缀随消费组件的默认前缀走）。
   table: '跨组件类名（dropdown/tree/menu/icon 子类名，机械移植产物）',
+  // transfer：rename 只改 transfer 自身类名/变量名；跨组件引用（icon/btn/pagination-
+  // options/table/input，与 antd `${antCls}-table` 同构）随消费组件默认前缀走。
+  transfer: '跨组件类名（icon/btn/pagination-options/table/input，机械移植产物）',
 };
 
 /** 统计某个产物里 `.apollo-` / `.ant-` 的出现次数。 */
@@ -130,7 +133,7 @@ describe('样式前缀守恒（`gen(p)` 对每个静态前缀都要产出对应�
     }
   });
 
-  it('缺口清单的规模被钉住（23 个，修一个删一条）', () => {
-    expect(Object.keys(KNOWN_GAPS)).toHaveLength(23);
+  it('缺口清单的规模被钉住（24 个，修一个删一条）', () => {
+    expect(Object.keys(KNOWN_GAPS)).toHaveLength(24);
   });
 });

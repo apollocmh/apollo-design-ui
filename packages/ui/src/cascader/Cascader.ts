@@ -170,7 +170,7 @@ const Cascader = defineComponent({
       style?: StyleLike;
     };
     const formItem = useFormItemInputContext();
-    const disabledFromForm = useDisabled(props.disabled);
+    const disabledFromForm = useDisabled(() => props.disabled);
 
     const prefixCls = computed(() => getPrefixCls('cascader', props.prefixCls));
     const rootPrefixCls = computed(() => getPrefixCls());

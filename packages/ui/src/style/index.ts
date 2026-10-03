@@ -92,6 +92,7 @@ import { genTagStyle } from '../tag/style';
 import { genTimelineStyle } from '../timeline/style';
 import { genTooltipStyle } from '../tooltip/style';
 import { genTourStyle } from '../tour/style';
+import { genTransferStyle } from '../transfer/style';
 import { genTreeStyle } from '../tree/style';
 import { genTreeSelectStyle } from '../tree-select/style';
 import { genTypographyStyle } from '../typography/style';
@@ -203,6 +204,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'tree-select', gen: genTreeSelectStyle },
   { name: 'form', gen: genFormStyle },
   { name: 'pagination', gen: genPaginationStyle },
+  { name: 'transfer', gen: genTransferStyle },
   { name: 'slider', gen: genSliderStyle },
   { name: 'masonry', gen: genMasonryStyle },
   { name: 'anchor', gen: genAnchorStyle },

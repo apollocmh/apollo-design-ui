@@ -254,7 +254,7 @@ const isUnBordered = computed(
 const mergedShape = computed(() => props.shape ?? contextShape ?? 'default');
 const mergedInsertSpace = computed(() => props.autoInsertSpace ?? contextAutoInsertSpace ?? true);
 
-const mergedDisabled = useDisabled(props.disabled);
+const mergedDisabled = useDisabled(() => props.disabled);
 
 const { compactSize, compactItemClassnames } = useCompactItemContext(
   prefixCls.value,

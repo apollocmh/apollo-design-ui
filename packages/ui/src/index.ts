@@ -1829,6 +1829,22 @@ export {
   prepareComponentToken as prepareTourComponentToken,
   tourTokenValues,
 } from './tour/style/token';
+export type {
+  PaginationType as TransferPaginationType,
+  RenderResult as TransferRenderResult,
+  SelectAllLabelRender as TransferSelectAllLabel,
+  TransferDirection,
+  TransferItem,
+  TransferKey,
+  TransferLocale,
+  TransferProps,
+  TransferSemanticClassNames,
+  TransferSemanticStyles,
+} from './transfer';
+export { Transfer, TransferList, TransferOperation, TransferSearch } from './transfer';
+export { genTokenDecls as genTransferTokenDecls, genTransferStyle } from './transfer/style';
+export type { ComponentToken as TransferComponentToken } from './transfer/style/token';
+export { prepareComponentToken as prepareTransferComponentToken } from './transfer/style/token';
 // ---------------------------------------------------------------------------
 // Tree —— 树形控件（rc-tree 1.4.0 内核自建；四键 v-model 双发 C11；
 // DirectoryTree shift/ctrl 范围多选；TreeNode children 形态 v6 deprecated 不实现）

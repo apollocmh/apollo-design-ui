@@ -92,7 +92,7 @@ export default defineComponent({
       direction?: 'ltr' | 'rtl';
       getPrefixCls: (s?: string, c?: string) => string;
     };
-    const contextDisabled = useDisabled(props.disabled);
+    const contextDisabled = useDisabled(() => props.disabled);
     // ⚠️ antd 的 Form 会 **重新提供 SizeContext**（`SizeContext.Provider value={mergedSize}`）：
     //    Form 的 `size` 必须能传导到所有 input 族控件（-small / -large 类）。
     //    只 provide DisabledContext 是不够的 —— form 的 L4 契约用例

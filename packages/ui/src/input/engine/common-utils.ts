@@ -45,6 +45,13 @@ function cloneEvent(
   const newEvent = Object.create(event, {
     target: { value: currentTarget },
     currentTarget: { value: currentTarget },
+    // ⚠️ `type` 必须落成**自有属性**（2026-10-04 transfer 收口发现）：jsdom 30 的
+    //    IDL getter 对派生对象直接抛
+    //    "TypeError: 'get type' called on an object that is not a valid instance of Event"
+    //    —— 消费方（Transfer.Search 的 `e.type === 'click'` 判据）读 cloned 事件的
+    //    `type` 会炸掉整条 onChange 链。在克隆时从真事件上取值即可（真事件是合法
+    //    receiver），行为与上游「克隆事件等价原事件」的语义一致。
+    type: { value: event.type },
   }) as MinimalEvent;
 
   currentTarget.value = value;

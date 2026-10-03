@@ -216,7 +216,7 @@ const TreeSelect = defineComponent({
     const { getPrefixCls } = contextSemantic;
     const mergedId = useId(props.id);
     const formItem = useFormItemInputContext();
-    const mergedDisabled = useDisabled(props.disabled);
+    const mergedDisabled = useDisabled(() => props.disabled);
     const rootPrefixCls = getPrefixCls();
 
     const prefixCls = computed(() => getPrefixCls('tree-select', props.prefixCls));
