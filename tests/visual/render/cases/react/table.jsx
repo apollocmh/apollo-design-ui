@@ -11,6 +11,24 @@ const DATA = [
   { key: '3', name: 'Joe Black', age: 28, address: 'Sydney No. 1 Lake Park' },
 ];
 
+const NEST_DATA = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    children: [
+      { key: '1-1', name: 'Jim Green', age: 40 },
+      {
+        key: '1-2',
+        name: 'Joe Black',
+        age: 36,
+        children: [{ key: '1-2-1', name: 'Jim Red', age: 32 }],
+      },
+    ],
+  },
+  { key: '2', name: 'Johnny Green', age: 28 },
+];
+
 const COLUMNS = [
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
@@ -36,4 +54,16 @@ export default {
     ]),
 
   empty: () => box(<Table columns={COLUMNS} dataSource={[]} />),
+
+  expand: () =>
+    box([
+      <Table
+        key="row"
+        columns={COLUMNS}
+        dataSource={DATA}
+        expandable={{ expandedRowRender: (r) => r.address, defaultExpandAllRows: true }}
+        style={{ marginBottom: '24px' }}
+      />,
+      <Table key="nest" columns={COLUMNS} dataSource={NEST_DATA} />,
+    ]),
 };

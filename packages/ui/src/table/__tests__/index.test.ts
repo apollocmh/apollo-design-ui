@@ -10,6 +10,7 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import { EXPAND_COLUMN } from '../engine/constant';
+import type { TableKey } from '../interface';
 import { getFilterData } from '../hooks/use-filter';
 import { SELECTION_COLUMN } from '../hooks/use-selection';
 import { getSortData } from '../hooks/use-sorter';
@@ -387,5 +388,107 @@ describe('Table · getSortData（L1 直测）', () => {
     ];
     const sorted = getSortData(src, states, 'children');
     expect(sorted.map((r: { b: number }) => r.b)).toEqual([3, 2, 1]);
+  });
+});
+
+describe('Table · expandable（T2 展开）', () => {
+  it('row 型：点击图标展开/收起，onExpandedRowsChange 与受控写回', async () => {
+    const onExpandedRowsChange = vi.fn();
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        expandable: {
+          expandedRowRender: (r: Record<string, unknown>) => `Detail-${String(r.key)}`,
+          onExpandedRowsChange,
+        } as never,
+      },
+      attachTo: document.body,
+    });
+    expect(w.text()).not.toContain('Detail-1');
+    const icon = w.find('.apollo-table-row-expand-icon');
+    await icon.trigger('click');
+    await nextTick();
+    expect(w.text()).toContain('Detail-1');
+    expect(onExpandedRowsChange).toHaveBeenCalledWith(['1']);
+    expect(icon.classes()).toContain('apollo-table-row-expand-icon-expanded');
+    w.unmount();
+  });
+
+  it('nest 型：childrenColumnName 树形缩进 + 父子行各自展开', async () => {
+    const treeData = [{ key: '1', name: 'parent', children: [{ key: '1-1', name: 'child' }] }];
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: treeData as never,
+      },
+      attachTo: document.body,
+    });
+    const parentIcon = w.find('.apollo-table-row-expand-icon');
+    expect(parentIcon.classes()).toContain('apollo-table-row-expand-icon-collapsed');
+    await parentIcon.trigger('click');
+    await nextTick();
+    expect(w.text()).toContain('child');
+    w.unmount();
+  });
+
+  it('受控 expandedRowKeys：props 更新驱动展开', async () => {
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        expandable: {
+          expandedRowKeys: [] as TableKey[],
+          expandedRowRender: () => 'Detail',
+        } as never,
+      },
+      attachTo: document.body,
+    });
+    expect(w.text()).not.toContain('Detail');
+    await w.setProps({
+      expandable: {
+        expandedRowKeys: ['2'],
+        expandedRowRender: () => 'Detail',
+      } as never,
+    });
+    await nextTick();
+    expect(w.text()).toContain('Detail');
+    w.unmount();
+  });
+
+  it('defaultExpandAllRows：初始全展开', async () => {
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        expandable: {
+          expandedRowRender: () => 'Detail',
+          defaultExpandAllRows: true,
+        } as never,
+      },
+      attachTo: document.body,
+    });
+    expect(w.text()).toContain('Detail');
+    w.unmount();
+  });
+
+  it('rowExpandable=false 的行无展开图标（spaced 占位）', async () => {
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        expandable: {
+          expandedRowRender: () => 'Detail',
+          rowExpandable: (r: Record<string, unknown>) => r.key !== '1',
+        } as never,
+      },
+      attachTo: document.body,
+    });
+    const icons = w.findAll('.apollo-table-row-expand-icon');
+    expect(icons.length).toBe(3);
+    // ⚠️ antd 层 ExpandIcon 是 button，类名带 `-row-expand-icon-` 中缀（区别于引擎 span 的 `-row-spaced`）
+    expect(icons[0]!.classes()).toContain('apollo-table-row-expand-icon-spaced');
+    expect(icons[1]!.classes()).not.toContain('apollo-table-row-expand-icon-spaced');
+    w.unmount();
   });
 });
