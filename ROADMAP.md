@@ -460,12 +460,11 @@ empty → config-provider → button · space · flex · grid · divider · typo
 
 | 问题 | 状态 | 去处 |
 |---|---|---|
-| typography semantic 视觉 3 张（React 130px vs Vue 90px） | 已定位：antd `ellipsis: { expandable: 'collapsible' }` 的展开按钮行未复刻 | tag 会话登记；实现 expandable 后消除 |
-| typography 的 `ellipsis` 展开按钮 | 未实现（antd 6.6.4 新能力） | typography 收口遗留 |
 | demo 里的 Menu / Breadcrumb / Modal / Drawer | 用等价原生结构替换（组件未落地），对应组件落地后换回 | 各 demo 文件头有登记 |
-| `pnpm test` 全量 icons 用例 5s 超时 | 已修：该用例显式 120s | icons semantic.test.ts |
-| 全量跑偶发 unhandled error（组件残留 timer） | 已修：`enableAutoUnmount(afterEach)` | vitest.setup.ts |
-| theme baseline `borderRadiusCircle` | 已修：白名单登记（spin 的有意扩展） | theme baseline.test.ts |
+
+> 2026-10-03 已知问题大清理：typography semantic 视觉差异（基线过期，24/24 exact）、
+> C11 update:* 缺口、L4 时间依赖、TabsProps 同源、schema 第四参、float-button 视觉空转
+> 等全部修完（含三条新护栏）—— 权威清单见 `docs/KNOWN-ISSUES.md`（已瘦身）。
 
 **经典错误沉淀**：`docs/COMPONENT-CHECKLIST.md` §六（#1–#83，最近在顶部）——
 每类「踩过的坑 + 抓到它的层 + 对策」。写组件前先读一遍，比踩完再查省一个 Gate。
