@@ -298,3 +298,51 @@ describe('CheckboxGroup', () => {
     expect(onChange).toHaveBeenLastCalledWith([1, 2]);
   });
 });
+
+describe('Checkbox · v-model（COMPATIBILITY.md 规则 C11，PITFALLS 162 收尾）', () => {
+  it('v-model:checked 与 onChange 同时发出', async () => {
+    const onChange = vi.fn();
+    const checked = ref(false);
+    const App = defineComponent({
+      setup() {
+        return () =>
+          h(Checkbox, {
+            checked: checked.value,
+            'onUpdate:checked': (v: boolean) => {
+              checked.value = v;
+            },
+            onChange,
+          });
+      },
+    });
+    const w = mount(App);
+    await findInput(w).setValue(true);
+    await nextTick();
+    expect(checked.value).toBe(true);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(w.find('input').element.checked).toBe(true);
+  });
+
+  it('Group 的 v-model:value 与 onChange 同时发出（载荷同 onChange：排序后）', async () => {
+    const onChange = vi.fn();
+    const value = ref(['Apple']);
+    const App = defineComponent({
+      setup() {
+        return () =>
+          h(CheckboxGroup, {
+            options: ['Apple', 'Pear', 'Orange'],
+            value: value.value,
+            'onUpdate:value': (v: string[]) => {
+              value.value = v;
+            },
+            onChange,
+          });
+      },
+    });
+    const w = mount(App);
+    await w.findAll('input')[1]?.setValue(true);
+    await nextTick();
+    expect(value.value).toEqual(['Apple', 'Pear']);
+    expect(onChange).toHaveBeenLastCalledWith(['Apple', 'Pear']);
+  });
+});

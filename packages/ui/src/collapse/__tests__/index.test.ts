@@ -7,7 +7,7 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { defineComponent, h, nextTick, ref } from 'vue';
 import { getActiveKeysArray } from '../engine';
 import { Collapse } from '../index';
 
@@ -203,5 +203,31 @@ describe('Collapse · 状态机', () => {
   it('size 类名映射（small/large）', () => {
     expect(makeCollapse({ size: 'small' }).find('.apollo-collapse-small').exists()).toBe(true);
     expect(makeCollapse({ size: 'large' }).find('.apollo-collapse-large').exists()).toBe(true);
+  });
+});
+
+describe('Collapse · v-model:activeKey（COMPATIBILITY.md 规则 C11，PITFALLS 162 收尾）', () => {
+  it('点击标题 ⇒ update:activeKey 与 change 同时发出，v-model 写回', async () => {
+    const onChange = vi.fn();
+    const activeKey = ref<(string | number)[]>([]);
+    const App = defineComponent({
+      setup() {
+        return () =>
+          h(Collapse, {
+            items: ITEMS,
+            activeKey: activeKey.value,
+            'onUpdate:activeKey': (v: (string | number)[]) => {
+              activeKey.value = v;
+            },
+            onChange,
+          } as never);
+      },
+    });
+    const w = mount(App);
+    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
+    await nextTick();
+    expect(activeKey.value).toEqual(['1']);
+    expect(onChange).toHaveBeenCalledWith(['1']);
+    expect(w.find('.apollo-collapse-item-active').exists()).toBe(true);
   });
 });

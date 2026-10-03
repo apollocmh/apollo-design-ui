@@ -25,7 +25,7 @@
  *    防止正则被改坏后护栏**静默假绿**。
  */
 
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -84,7 +84,9 @@ describe('护栏 · L4 基线生成器的活时钟（§2.4 / §3 #2）', () => {
   it('基线生成器 *.mjs 不调用时间 / 随机 API', () => {
     const offenders: string[] = [];
     for (const f of listFiles(BASELINE_GENERATORS_DIR, '.mjs')) {
-      const code = stripGeneratedAt(stripComments(readFileSync(join(BASELINE_GENERATORS_DIR, f), 'utf8')));
+      const code = stripGeneratedAt(
+        stripComments(readFileSync(join(BASELINE_GENERATORS_DIR, f), 'utf8')),
+      );
       const hit = scanLiveApis(code);
       if (hit.length > 0) {
         for (const api of hit) {
@@ -100,7 +102,7 @@ describe('护栏 · L4 基线生成器的活时钟（§2.4 / §3 #2）', () => {
 
   it('豁免名单双向校验：登记的条目必须仍能命中（防豁免空转）', () => {
     for (const key of EXEMPTED) {
-      const [file, api] = key.split(':');
+      const [file, api] = key.split(':') as [string, string];
       const path = join(BASELINE_GENERATORS_DIR, file);
       expect(existsSync(path), `豁免登记的文件不存在：${file}`).toBe(true);
       const code = stripGeneratedAt(stripComments(readFileSync(path, 'utf8')));
@@ -120,11 +122,7 @@ describe('护栏 · L4 基线生成器的活时钟（§2.4 / §3 #2）', () => {
       'getNow: () => base.getNow().startOf("day"),',
     ].join('\n');
     const scannedBad = scanLiveApis(stripGeneratedAt(stripComments(bad)));
-    expect(scannedBad).toEqual([
-      'Date.now(',
-      'Math.random(',
-      '.getNow( (non-frozen receiver)',
-    ]);
+    expect(scannedBad).toEqual(['Date.now(', 'Math.random(', '.getNow( (non-frozen receiver)']);
     // 不误报：冻结包装的 getNow + generatedAt + 注释提及
     const good = [
       '// 提及 Date.now( 的注释 —— 不算',

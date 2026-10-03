@@ -410,10 +410,10 @@ const Cascader = defineComponent({
         () => (props.style ? { root: props.style } : undefined),
       ],
       mergedProps.value as never,
-    // ⚠️ antd 第四参 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
-    //    字符串形态 `classNames.popup = 'x'` 归到 `popup.root`，不再产垃圾键。
-    { popup: { _default: 'root' } },
-  );
+      // ⚠️ antd 第四参 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
+      //    字符串形态 `classNames.popup = 'x'` 归到 `popup.root`，不再产垃圾键。
+      { popup: { _default: 'root' } },
+    );
 
     const mergedRootClassName = computed(
       () =>

@@ -124,7 +124,9 @@ export const Collapse = defineComponent({
     classNames: { type: Object as PropType<CollapseSemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<CollapseSemanticStyles>, default: undefined },
   },
-  emits: ['change'],
+  // ⚠️ `update:activeKey`（供 `v-model:activeKey`）与 `change` / `onChange` 同时发出
+  //    （COMPATIBILITY.md 规则 C11；PITFALLS 162 的收尾 —— 全仓 update:* 缺口至此清零）
+  emits: ['change', 'update:activeKey'],
   setup(props, { slots, emit, expose, attrs }) {
     const context = useComponentConfig<CollapseComponentConfig>('collapse');
     const configContext = useConfigContext();
@@ -200,6 +202,8 @@ export const Collapse = defineComponent({
     const triggerActiveKey = (next: (string | number)[] | string | number | undefined): void => {
       const nextKeys = getActiveKeysArray(next);
       internalActiveKey.value = nextKeys;
+      // v-model:activeKey 通道（规则 C11：与语义事件同时发出，载荷同 onChange）
+      emit('update:activeKey', nextKeys);
       props.onChange?.(nextKeys);
       emit('change', nextKeys);
     };

@@ -58,7 +58,7 @@ const PurePanelComponent = defineComponent({
           },
           {
             default: () =>
-              props.items!.map((item, index) =>
+              props.items?.map((item, index) =>
                 h(PureFloatButton, { ...item, key: item.key ?? index }),
               ),
           },
@@ -68,11 +68,15 @@ const PurePanelComponent = defineComponent({
       const { items: _items, backTop: _backTop, ...rest } = props;
       void _items;
       void _backTop;
-      return h(PureFloatButton, {
-        ...(rest as Record<string, unknown>),
-        ...(attrs as Record<string, unknown>),
-        className: clsx(attrs.class as string | undefined, props.className, pureCls),
-      } as never, slots);
+      return h(
+        PureFloatButton,
+        {
+          ...(rest as Record<string, unknown>),
+          ...(attrs as Record<string, unknown>),
+          className: clsx(attrs.class as string | undefined, props.className, pureCls),
+        } as never,
+        slots,
+      );
     };
   },
 });

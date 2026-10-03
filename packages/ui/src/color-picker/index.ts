@@ -26,12 +26,11 @@ export { ColorPickerPanel } from './ColorPickerPanel';
  * ⚠️ 只导类型、不导值 —— 上游 `index.js` 里也是 `export type`。
  * 需要**值**（构造颜色）的消费方走 `@apollo-design/utils` 的 `Color`。
  */
-export type { AggregationColor as Color } from './color';
 /**
  * `Color` 的顶层别名（KNOWN-ISSUES §1.8 已补）：顶层 `Color` 极易撞名，
  * 按「重名用别名」约定导成 `ColorPickerColor`（与 `SelectInfo as CalendarSelectInfo` 同判）。
  */
-export type { AggregationColor as ColorPickerColor } from './color';
+export type { AggregationColor as Color, AggregationColor as ColorPickerColor } from './color';
 export type {
   ColorFormatType,
   ColorGenInput,

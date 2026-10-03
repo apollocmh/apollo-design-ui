@@ -1232,6 +1232,12 @@
      （其余 21 个已收口组件都没有）⇒ 在它们上 `v-model:xxx` 不生效。
      这是**跨组件的统一缺口**，不是 radio 的问题；后续组件照 C11 做，
      并考虑在某次整合期统一补齐（纯增量，不改 DOM）。
+     ✅ **2026-10-03 收尾清零**：复核全仓后发现缺口已比记忆里小得多 ——
+     后续组件期一直照 C11 做，真正缺的只剩 `checkbox`（update:checked /
+     Group 的 update:value）与 `collapse`（update:activeKey），均已补齐并
+     加 v-model 用例；护栏固化在
+     `packages/test-utils/src/__tests__/c11-vmodel.test.ts`（全仓扫描 +
+     豁免双向校验，含 checkbox/radio 的 value 别名等 5 条 N/A 登记）。
 
 ## Switch 流（2026-09-23，163-168）
 

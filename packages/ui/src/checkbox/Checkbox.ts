@@ -82,8 +82,14 @@ export const CheckboxComponent = defineComponent({
     },
     styles: { type: [Object, Function] as PropType<CheckboxProps['styles']>, default: undefined },
   },
+  /**
+   * ⚠️ 只声明 `update:checked`（供 `v-model:checked`），**不**声明 `change` ——
+   * antd 的 `onChange` 是 props 形态回调，声明成 emits 会被 Vue 从 attrs 摘掉
+   * （PITFALLS 35）。两者同时发出（COMPATIBILITY.md 规则 C11，radio 同款 D48）。
+   */
+  emits: ['update:checked'],
   // ⚠️ onChange/onClick/onFocus/onBlur/… 是 antd 的 props 形态回调 —— 走 attrs（layout 同判）
-  setup(props, { attrs, expose, slots }) {
+  setup(props, { attrs, emit, expose, slots }) {
     const callbacks = attrs as unknown as Pick<
       CheckboxProps,
       'onChange' | 'onClick' | 'onMouseEnter' | 'onMouseLeave' | 'onFocus' | 'onBlur'
@@ -127,6 +133,8 @@ export const CheckboxComponent = defineComponent({
     const onInternalChange = (event: Event) => {
       const inputEl = event.target as HTMLInputElement;
       setInnerChecked(inputEl.checked);
+      // v-model:checked 通道（规则 C11：与语义事件同时发出）
+      emit('update:checked', inputEl.checked);
       callbacks.onChange?.({
         target: {
           ...(props as unknown as Record<string, unknown>),

@@ -60,8 +60,14 @@ export const GroupComponent = defineComponent({
     value: { type: Array as PropType<CheckboxGroupProps['value']>, default: undefined },
     role: { type: String, default: 'group' },
   },
+  /**
+   * ⚠️ 只声明 `update:value`（供 `v-model:value`），**不**声明 `change` ——
+   * antd 的 `onChange` 是 props 形态回调，声明成 emits 会被 Vue 从 attrs 摘掉
+   * （PITFALLS 35）。两者同时发出（COMPATIBILITY.md 规则 C11，radio Group 同款）。
+   */
+  emits: ['update:value'],
   // onChange 走 attrs（props 形态回调）
-  setup(props, { attrs, expose, slots }) {
+  setup(props, { attrs, emit, expose, slots }) {
     const callbacks = attrs as unknown as {
       onChange?: (checkedValue: unknown[]) => void;
     };
@@ -118,11 +124,12 @@ export const GroupComponent = defineComponent({
         const r = registeredValues.indexOf(val);
         return r === -1 ? Number.MAX_SAFE_INTEGER : r;
       };
-      callbacks.onChange?.(
-        newValue
-          .filter((val) => registeredValues.includes(val))
-          .sort((a, b) => orderIndex(a) - orderIndex(b)),
-      );
+      const nextValue = newValue
+        .filter((val) => registeredValues.includes(val))
+        .sort((a, b) => orderIndex(a) - orderIndex(b));
+      // v-model:value 通道（规则 C11：与语义事件同时发出，载荷同 onChange）
+      emit('update:value', nextValue);
+      callbacks.onChange?.(nextValue);
     };
 
     // ⚠️ 必须 reactive（自动解包 ref/computed）：子 Checkbox 的
