@@ -323,6 +323,13 @@ const Table = defineComponent({
       locale: tableLocale.value,
       rootClassName: props.rootClassName,
     });
+    // ⚠️ `virtual` 暂未实现（需要 Vue 版 virtual-list 内核 + 横向定位模型定案，
+    //    见 KNOWN-ISSUES「Table virtual」）—— 开发环境显式警告而非静默忽略。
+    if (props.virtual && import.meta.env?.DEV !== false) {
+      console.warn(
+        '[apollo-design] Table: `virtual` is not implemented yet; rendering in non-virtual mode.',
+      );
+    }
     const mergedData = computed(() =>
       getFilterData(
         sortedData.value,

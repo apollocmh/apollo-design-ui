@@ -467,7 +467,7 @@ const Table = defineComponent({
     const stickyOffsets = useStickyOffsets(colWidths, filledColumns);
     const fixHeader = computed(() => Boolean(props.scroll?.y));
     const horizonScroll = computed(() => {
-            return Boolean(props.scroll?.x) || Boolean(expandableConfig.value.fixed);
+      return Boolean(props.scroll?.x) || Boolean(expandableConfig.value.fixed);
     });
     const fixColumn = computed(
       () =>

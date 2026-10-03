@@ -81,6 +81,18 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ---
 
+### 1.5 📌 Table 的 `virtual` 虚拟滚动（PENDING）
+
+antd 的 `virtual` prop 走 rc `VirtualTable`（605 行）+ `rc-virtual-list`（React 内核）。
+本仓需要先定案**横向定位模型**（列宽虚拟化 + rowSpan 补行），且需要 Vue 版
+virtual-list 内核（约 500 行）—— 是一个独立的 XL 片，不适合塞进 Table 收口。
+
+- 现状：`virtual` prop 已声明（类型全量），传入时**开发环境 console.warn 一次**、
+  按非虚拟渲染（不静默吞）。
+- 依据：与 picker 剩余工作同判（KNOWN-ISSUES 2026-09-29 决议）；antd 生态里
+  virtual 是大表格场景的可选能力。
+- 恢复时机：第一批真实消费者出现（或统一的 virtual-list 基建立项）时。
+
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |

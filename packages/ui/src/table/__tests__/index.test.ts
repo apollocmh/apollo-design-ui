@@ -637,7 +637,14 @@ describe('Table · 选择/分页（T4）', () => {
 
   it('树形选择：勾父全选子，半选态在表头', async () => {
     const treeData = [
-      { key: 'p', name: 'parent', children: [{ key: 'c1', name: 'c1' }, { key: 'c2', name: 'c2' }] },
+      {
+        key: 'p',
+        name: 'parent',
+        children: [
+          { key: 'c1', name: 'c1' },
+          { key: 'c2', name: 'c2' },
+        ],
+      },
     ];
     const onChange = vi.fn();
     const w = mount(Table, {
@@ -686,9 +693,7 @@ describe('Table · 选择/分页（T4）', () => {
     await nextTick();
     // ⚠️ antd 语义：selections 下拉**未传 trigger** ⇒ 默认 hover 打开（useSelection.js:325）；
     //    hover 有 150ms mouseEnterDelay ⇒ 用 vi.waitFor 轮询
-    await w
-      .find('.apollo-table-selection-extra .apollo-dropdown-trigger')
-      .trigger('mouseenter');
+    await w.find('.apollo-table-selection-extra .apollo-dropdown-trigger').trigger('mouseenter');
     await vi.waitFor(
       () => {
         const items = document.body.querySelectorAll('.apollo-dropdown-menu li');
@@ -702,9 +707,7 @@ describe('Table · 选择/分页（T4）', () => {
     const menuItems = document.body.querySelectorAll('.apollo-dropdown-menu li');
     // INVERT：1 勾 → 2/3 勾（⚠️ Menu 的监听器可能在 li 内层 —— 逐层点到底）
     const invertLi = menuItems[1] as HTMLElement;
-    invertLi.dispatchEvent(
-      new MouseEvent('click', { bubbles: true, cancelable: true }),
-    );
+    invertLi.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     await nextTick();
     console.log('SELT-ALL:', JSON.stringify(onChange.mock.calls.map((c) => c[0])));
     const keys = onChange.mock.calls.at(-1)![0] as string[];
@@ -731,9 +734,9 @@ describe('Table · 选择/分页（T4）', () => {
     });
     expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(10);
     // 非受控路径（defaultCurrent）：内部 current 翻页
-    const page2 = w.findAll('.apollo-pagination .apollo-pagination-item').find((el) =>
-      el.text() === '2',
-    );
+    const page2 = w
+      .findAll('.apollo-pagination .apollo-pagination-item')
+      .find((el) => el.text() === '2');
     await page2!.trigger('click');
     await nextTick();
     await nextTick();
@@ -779,7 +782,9 @@ describe('Table · 选择/分页（T4）', () => {
     });
     // options 选择器存在（Select 组件，交互已在 select 流覆盖）
     expect(
-      w.find('.apollo-pagination-options .apollo-select, .apollo-pagination-options select').exists(),
+      w
+        .find('.apollo-pagination-options .apollo-select, .apollo-pagination-options select')
+        .exists(),
     ).toBe(true);
     // setProps 换 pageSize → 切片 5
     await w.setProps({ pagination: { current: 1, pageSize: 5 } });

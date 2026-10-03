@@ -38,7 +38,9 @@ table/
 
 - **T0 引擎事实源 ✅**：rc/antd 源码通读 + CSS 提取脚本 + util.ts L1
 - **T1 骨架 ✅**：引擎五件套 + antd 壳 + 37 token 样式 + 21 条 L1/L2 用例全绿
-- T2 展开（expandable 完整形态）/ T3 排序过滤 / T4 选择分页 / T5 固定汇总 / T6 虚拟 / T7 收口：见 registry
+- **T2 展开 ✅ / T3 排序过滤 ✅ / T4 选择分页 ✅ / T5 固定汇总 ✅**（2026-10-03）：
+  L2 40/40 全绿；视觉 7 变体 × 3 视口 = 21/21 exact；registry 全维度 done
+- **T6 虚拟滚动 → PENDING**：KNOWN-ISSUES §1.5（`virtual` prop 显式警告、非虚拟渲染）
 
 ## 4. 与 antd 的行为差异（同步 COMPATIBILITY.md）
 
@@ -46,7 +48,7 @@ table/
 | --- | --- | --- | --- |
 | 1 | 泛型组件签名暂为 `Record<string, unknown>` 固定 | KNOWN | Vue 泛型组件表达力（AR6）验证点，T7 收口 |
 | 2 | `update:*` 与语义事件同发（C11） | INTENDED | 同 radio/checkbox |
-| 3 | 虚拟滚动未实现（T6） | 分片 | VirtualTable + virtual-list 契约补齐待做 |
+| 3 | 虚拟滚动未实现（PENDING） | KNOWN-ISSUES §1.5 | 需 Vue 版 virtual-list 内核 + 横向定位模型定案；`virtual` prop 显式警告 |
 
 ## 5. 实现要点（最容易写错的判据）
 
@@ -61,6 +63,6 @@ table/
 
 ## 6. 已知缺口（分片待办，勿重复排查）
 
-- 固定列/表头（FixedHolder 已移植，sticky offsets 联动的 L6 待 T5）
+- 固定列/表头 ✅（FixedHolder 双表 + fix-start/end 阴影 + sticky-holder，21/21 exact）
 - 排序/过滤的完整 demo + 兼容登记（hooks 已实现）
-- 虚拟滚动（T6）、泛型组件签名（T7）
+- 虚拟滚动（PENDING，见 KNOWN-ISSUES §1.5）；泛型组件签名按 AR6 由消费方 `TableProps<T>` 表达

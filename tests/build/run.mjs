@@ -453,6 +453,14 @@ const RUNTIME_ASSIGNED_VARS = {
   // 的内联 style 写入，供堆叠折叠的占位条计算。⚠️ 上游拼写就是 `notificiation`（少一个 t）。
   '--top-notificiation-height': 'notification/engine/NoticeListContent.ts',
   '--top-notificiation-width': 'notification/engine/NoticeListContent.ts',
+  // table 的固定列 z-index 与粘性表头 z-index 基数：antd rc 由组件内联 style 写入
+  //（`Cell.ts` 的 fixedStyle / `Table.ts:1006` 的 tableStyle），CSS 只消费。
+  '--z-offset': 'table/engine/Cell.ts',
+  '--z-offset-reverse': 'table/engine/Cell.ts',
+  '--columns-count': 'table/engine/Table.ts',
+  // table 虚拟行的实际宽度：上游由 rc VirtualTable/BodyGrid 运行时内联写入；
+  // 本仓 virtual 未实现（KNOWN-ISSUES §1.5）但规则体已按产物移植（引用恒回退）。
+  '--virtual-width': 'table/VirtualTable（PENDING，KNOWN-ISSUES §1.5）',
   /**
    * modal 的响应式宽度阶梯的**叶子变量**。
    *
