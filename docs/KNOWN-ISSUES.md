@@ -70,6 +70,9 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   **75 / 75 全部 `0.000% exact`** —— 我们的 Vue 实现与 antd React 渲染**逐像素一致**。
 - **⚠️ 剩下 9 条**（`float-button`）：**基线没有入库**，原因见 **§1.10**
   —— 它三变体的截图**全是空白**，入库等于制造假绿。
+- **✅ 全量 compare 实测**（2026-10-03，33 分钟）：**通过 1065 / 1077**。
+  12 条失败 = **9 条 `float-button` 的 `missing-baseline`**（见 §1.10，**有意留红**）
+  + **3 条 `typography/semantic` 的 `size-mismatch`**（见 §1.2，**既有欠账**）。
 - **怎么验**：`node tests/visual/run.mjs --mode compare --component <c>` ⇒ `通过 N / N`。
 
 ### 1.10 🚨 **[新登记]** `float-button` 的 3 个视觉变体**全是空白图 ⇒ 变体空转**
@@ -287,12 +290,17 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 - **✅ 实测**：`pnpm exec biome check . --max-diagnostics=none` ⇒
   **207 → 65 warnings**（`noNonNullAssertion` **184 → 40**），`exit=0`。
 - **怎么验**：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3` ⇒ `Found 65 warnings.`
-- **剩下的两条「可当场修」**（非测试、非算法）：
-  1. `tests/visual/debug/classify-date-picker-rules.mjs:91:3` **`suppressions/unused`**
-     —— 一条 `biome-ignore lint/style/useTemplate` **不再命中**（真正命中它的违规在
-     **`:93:34` 与 `:94:27`**，说明 ignore 注释与违规行**没贴合**，同 PITFALLS **2**）；
-  2. `registry/tools/validate-registry.mjs:467:15` **`lint/complexity/useOptionalChain`**
-     （`if (skip && skip.test(line))` → `skip?.test(line)`，语义等价）。
+- ✅ **两条「可当场修」的也已修**（2026-10-03）：
+  1. `tests/visual/debug/classify-date-picker-rules.mjs` **`suppressions/unused`**
+     —— 根因是 ignore 注释**没紧贴诊断行**（PITFALLS **2**）：`biome-ignore` 下方隔了一行
+     注释才到违规行 ⇒ 它作用于那行注释（无诊断）⇒ unused。
+     **修法**：把 `biome-ignore` 移到**紧贴** `src.match(new RegExp('…' + name + '…'))` 那行；
+     并把下一行 `throw new Error('找不到常量 ' + name)` 直接改成模板字面量
+     （那处拼接**不需要**规避转义，属纯 style）。
+  2. `registry/tools/validate-registry.mjs` **`lint/complexity/useOptionalChain`**
+     —— `if (skip && skip.test(line))` → `if (skip?.test(line))`（语义等价；
+     `skip` 为 `undefined` 时两者都是 falsy）。**✅ 改后 `registry:check` 仍 19/19。**
+- **✅ 实测**：全仓 `biome check --max-diagnostics=none` ⇒ **63 warnings / exit 0**（再 −2）。
 - **需要谁**：无（已执行）。生产代码那 40 条**随各组件下次改动时顺手收窄**，不单独排期。
 
 ---
@@ -371,8 +379,16 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 - **残留**：**这两条行为此前没有任何 L1 用例** —— 这正是它们能活很久的原因。
   - `segmented`：「mousedown 清除键盘态」（原 README 写「由 L6 真浏览器验证」，现在 L1 可测了）；
   - `collapse`：**Enter 键展开/收起**（a11y 键盘操作）。
-- **继续做**：各补一条 L1 用例（**断言效果**：状态变了 / `emit` 发了），
-  并相应更新 `segmented/README.md` 里「由 L6 验证」那句。
+- ✅ **已补，且做了「反向哨兵」验证**（2026-10-03）：
+  - `segmented/__tests__/keyboard.test.ts` 新增
+    **`mousedown 清除键盘态：-item-focused 消失`**（事件派发到 **`label`**，handler 在那儿）；
+  - `collapse/__tests__/index.test.ts` 新增
+    **`键盘：header 上 Enter 切换展开（a11y 键盘操作）`** + 对照 `非 Enter 键不切换`。
+  - **反向哨兵（关键）**：把两处键名**临时改回** `onMouseDown` / `onKeyDown` 再跑 ⇒
+    **恰好这两条新用例红**（其余全绿）；恢复后 **28 / 28**。
+    ⇒ 它们是**真的回归哨兵**，不是空转的假绿。
+  - ⚠️ **同时更正了 `keyboard.test.ts` 里的旧误诊** —— 原文把原因写成
+    「jsdom 下 Vue 的 mousedown listener 不被派发」，真因是**事件名大小写**（PITFALLS 323）。
 
 ### 2.7 ✅ `color-picker` 的 L4 只覆盖**触发器** —— 面板的 DOM 契约只在 L6
 
@@ -413,19 +429,18 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 
 1. **§1.10 `float-button` 的视觉变体空转**（**需要定夺**：改用例 vs 改 harness）——
    ⚠️ 它是**唯一的 `missing-baseline`**（9 条），且**不能靠提交空白基线糊过去**。
-2. **§2.6b 补两条 L1 用例**（segmented 的 mousedown / collapse 的 Enter）——
-   **最小、最直接**：刚修的行为没有测试钉住，属于「修了但随时会回归」。
-3. **§3 #1 加「复合词事件名」扫描**（防复发，收益最大）—— 需要处理误报白名单。
-4. **§1.2 `typography/semantic`**（先重生成基线再判断）。
-5. **§1.9 剩下的 2 条可当场修**（`classify-date-picker-rules.mjs` 的 ignore 贴合 +
-   `validate-registry.mjs:467` 的 `?.`）—— 5 分钟的事。
-6. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
-7. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
+2. **§3 #1 加「复合词事件名」扫描**（防复发，收益最大）—— 需要处理误报白名单。
+3. **§1.2 `typography/semantic`**（先重生成基线再判断；全量 compare 的 3 条 size-mismatch 就是它）。
+4. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
+5. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
    （都是扫描类，可批量做）。
-8. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
+6. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
    **等第一个真实消费者**再做，别提前实现。
-9. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
+7. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
    随各组件（`tree` / `progress` / `listy` / `cascader`）下次改动时**逐个收窄**。
+
+> ✅ **本轮已完成、从队列里划掉**：§2.6b（补两条 L1 用例 + 反向哨兵）·
+> §1.9 的两条可当场修 · §1.1（基线入库，除 float-button）。
 
 ---
 
@@ -442,6 +457,7 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 | `7147a3f` | `segmented` / `collapse` 的事件名大小写（§1.4、§2.6b） |
 | `625cc84` | **复核本文件并改掉 4 处事实错误**：§1.3 证伪 · §1.9 由「2 条」改「207 条」 · §2.5 的 commit 更正为 `9c9f557` 且残留关闭 · §1.4 改按符号定位 |
 | （本轮） | **裁决并执行**：`visual-baseline-in-git` = **A 入库 git** ⇒ 9 个组件生成 **75 张基线**（`missing-baseline` **84 → 9**，compare **75/75 exact**）；§1.9 = **测试目录关闭** `noNonNullAssertion`（**207 → 65** warn）；**新登记 §1.10**（float-button 变体空转） |
+| （本轮续） | §1.9 的**两条可当场修**修掉（**65 → 63** warn）· **§2.6b 补两条 L1 用例**并做**反向哨兵**验证（改回错误键名 ⇒ 恰好这两条红）· **全量 compare 1065 / 1077**（12 条失败 = 9 float-button + 3 typography，均已登记） |
 
 **PITFALLS 319–336**（18 条）。`verify:full` **exit=0**。
 

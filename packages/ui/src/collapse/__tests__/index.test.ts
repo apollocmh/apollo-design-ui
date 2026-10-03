@@ -43,6 +43,38 @@ describe('Collapse · 状态机', () => {
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
 
+  /**
+   * ✅ 「`onKeyDown` 大小写 bug」的**回归哨兵**（2026-10-03 补）。
+   *
+   * `Panel.ts` 的 `collapsibleProps` 会被 spread 到**原生 `<div>`**（header / 展开图标）
+   * ⇒ 写成 `onKeyDown` 会被 Vue 归一成 **`key-down`**（**永不触发**）⇒ **Enter 键展开/收起失效**
+   * （**a11y 键盘操作**）。修后必须用 `onKeydown`。见 PITFALLS 323。
+   * 反向验证过：把键名改回 `onKeyDown` 再跑，本条红。
+   */
+  it('键盘：header 上 Enter 切换展开（a11y 键盘操作）', async () => {
+    const onChange = vi.fn();
+    const w = makeCollapse({ onChange });
+    const header = w.findAll('.apollo-collapse-header')[0]!;
+
+    await header.trigger('keydown', { key: 'Enter' });
+    await nextTick();
+    expect(onChange).toHaveBeenCalledWith(['1']);
+    expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
+
+    // 再按一次收起
+    await header.trigger('keydown', { key: 'Enter' });
+    await nextTick();
+    expect(onChange).toHaveBeenLastCalledWith([]);
+  });
+
+  it('键盘：非 Enter 键不切换（对照）', async () => {
+    const onChange = vi.fn();
+    const w = makeCollapse({ onChange });
+    await w.findAll('.apollo-collapse-header')[0]?.trigger('keydown', { key: 'Space' });
+    await nextTick();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('受控 activeKey：不随点击改变内部展示（受控语义）', async () => {
     const w = makeCollapse({ activeKey: ['2'] });
     expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);

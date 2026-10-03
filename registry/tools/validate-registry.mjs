@@ -464,7 +464,7 @@ if (fs.existsSync(UI_SRC)) {
           const t = line.trim();
           if (t.startsWith('*') || t.startsWith('/*') || t.startsWith('//')) return false; // 注释里的色值是对账文本，不是代码
           if (declLine.test(line) && line.includes('--')) return false; // CSS 变量声明行（Component Token seed 实色）
-          if (skip && skip.test(line)) return false; // 逐字豁免（见 HARDCODED_PATTERNS 的说明）
+          if (skip?.test(line)) return false; // 逐字豁免（见 HARDCODED_PATTERNS 的说明）
           return re.test(line);
         });
         if (hitLine) {

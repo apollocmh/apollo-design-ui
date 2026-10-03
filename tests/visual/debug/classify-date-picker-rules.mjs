@@ -88,10 +88,11 @@ const src = readFileSync(
 // ⚠️ 用**单引号字符串拼接**构造正则，不用模板字面量 —— 模板字面量里写反引号
 //    需要 `\\\``，很容易被转义层次绕晕（本轮实测把 `[\\s\\S]` 写坏成 `[sS]`）。
 const partOf = (name) => {
-  // biome-ignore lint/style/useTemplate: 这里的「拼接」是**刻意**的 —— 用模板字面量就得写
-  //   `\\\`` 转义反引号，转义层次极易写错（本轮实测把 `[\\s\\S]` 写坏成 `[sS]` 直接 SyntaxError）。
+  // 这里的「拼接」是**刻意**的 —— 用模板字面量就得写 `\\\`` 转义反引号，
+  //   转义层次极易写错（本轮实测把 `[\\s\\S]` 写坏成 `[sS]` 直接 SyntaxError）。
+  // biome-ignore lint/style/useTemplate: 刻意拼接（理由同上：避免转义层次）
   const m = src.match(new RegExp('(?:export )?const ' + name + ' = `([\\s\\S]*?)`;'));
-  if (!m) throw new Error('找不到常量 ' + name);
+  if (!m) throw new Error(`找不到常量 ${name}`);
   return m[1];
 };
 const raw = partOf('RULES_BEFORE_PANEL') + partOf('PANEL_RULES') + partOf('RULES_AFTER_PANEL');

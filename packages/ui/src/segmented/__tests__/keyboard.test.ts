@@ -137,10 +137,13 @@ describe('Segmented · 键盘导航', () => {
 
 describe('Segmented · 焦点样式判别', () => {
   // rc：isKeyboard 靠 Tab keyup 置真、mousedown 置假 → -item-focused。
-  // ⚠️ PLATFORM：jsdom 下 Vue 的 mousedown/mouseup listener 不被派发调用
-  //    （裸 h('div', {onMouseDown}) 即可复现；click/keydown/mouseenter 正常）。
-  //    「mousedown 清除键盘态」在 L6（Playwright 真浏览器）验证，
-  //    这里只钉 Tab → focused 出现与 blur → 消失。
+  //
+  // ✅ 2026-10-03 更正（原文是**误诊**）：这里曾写「jsdom 下 Vue 的 mousedown listener
+  //    不被派发（裸 h('div', {onMouseDown}) 即可复现）」—— **真因是事件名大小写**：
+  //    Vue 的 `parseName` 对 `on` 之后的部分做 `hyphenate` ⇒ `onMouseDown` 解析成
+  //    **`mouse-down`**（**永不触发、且不报错**）；原记录里说「正常」的 click/keydown/
+  //    mouseenter 恰好都是**单段名**，不受影响。`Segmented.ts` 已改为 **`onMousedown`**
+  //    ⇒ 「mousedown 清除键盘态」现在**在 L1 就能测**（下面第三条）。见 PITFALLS 323。
   it('Tab 后聚焦：选中项挂 -item-focused', async () => {
     const w = mount(Segmented, { props: { options: OPTIONS }, attachTo: document.body });
     const input = at(findInputs(w), 0);
@@ -161,6 +164,27 @@ describe('Segmented · 焦点样式判别', () => {
     await keyup(input, 'Tab');
     expect(w.find('label').classes()).toContain('apollo-segmented-item-focused');
     await input.trigger('blur');
+    expect(w.find('label').classes()).not.toContain('apollo-segmented-item-focused');
+    w.unmount();
+  });
+
+  /**
+   * ✅ 这条是「`onMouseDown` 大小写 bug」的**回归哨兵**（2026-10-03 补）。
+   *
+   * 修前：`h('label', { onMousedown })` 写成 `onMouseDown` ⇒ Vue 归一成 `mouse-down`
+   * ⇒ handler **永不触发** ⇒ 本用例会在最后一行**失败**（类名仍在）。
+   * 反向验证过：把键名改回 `onMouseDown` 再跑，本条红。
+   *
+   * ⚠️ 事件必须派发到 **`label`**（handler 绑在 label 上，不是 input）。
+   */
+  it('mousedown 清除键盘态：-item-focused 消失', async () => {
+    const w = mount(Segmented, { props: { options: OPTIONS }, attachTo: document.body });
+    const input = at(findInputs(w), 0);
+    await input.trigger('focus');
+    await keyup(input, 'Tab');
+    expect(w.find('label').classes()).toContain('apollo-segmented-item-focused');
+
+    await w.find('label').trigger('mousedown');
     expect(w.find('label').classes()).not.toContain('apollo-segmented-item-focused');
     w.unmount();
   });
