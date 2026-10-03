@@ -293,13 +293,15 @@ export function genButtonStyle(prefixCls: string): string {
     `[class^="${prefixCls}-btn"],[class*=" ${prefixCls}-btn"]{`,
     `  font-family:${v('fontFamily')};`,
     `  font-size:${v('fontSize')};`,
-    // ⚠️ 行高必须显式给：antd 的 Button **不**调用 `resetComponent`，它靠 `antd/dist/reset.css`
-    //    里的 `button{line-height:inherit}` 从环境继承行高（实测 22px = `lineHeight`×14px）。
-    //    本仓 BASE_CSS 目前**没有**这条表单控件归一化（`packages/ui/src/style/index.ts:90`
-    //    把「button 重置」列为未决缺口），于是 `<button>` 退回 UA 的 `line-height:normal`
-    //    ⇒ span 高 17px vs 22px、文字基线差 ~2.5px ⇒ L6 全 27 例 `block-diff`。
-    //    这里按 divider / empty / space / spin 的既有做法在组件根上显式钉住。
-    `  line-height:${v('lineHeight')};`,
+    // ⚠️ **不**在这里钉 line-height（2026-10-03 修正，KNOWN-ISSUES §1.10）：
+    //    antd 的 Button **不**调用 `resetComponent`，全文件 0 处 `lineHeight` ——
+    //    行高靠 `antd/dist/reset.css` 的 `html{line-height:1.15}` + 表单控件归一化
+    //    `button{line-height:inherit}` 从**环境**继承。本仓 BASE_CSS 现已包含同一份
+    //    归一化（`packages/ui/src/style/index.ts` 表单控件段），所以这里显式给
+    //    `line-height:var(--apollo-line-height)`（1.5714）反而是**多出来的声明**：
+    //    定高单行按钮下不可见（flex 垂直居中），但 float-button 的 square content
+    //    是**auto 高多行文本** ⇒ 行高差直接显形（React 1.15×14=16.1px vs 我们
+    //    1.5714×16=25.1px，shape-content 0.88% block-diff）。删掉后与 antd 同源。
     `  box-sizing:border-box;`,
     `}`,
     `[class^="${prefixCls}-btn"]::before,[class^="${prefixCls}-btn"]::after,[class*=" ${prefixCls}-btn"]::before,[class*=" ${prefixCls}-btn"]::after{`,

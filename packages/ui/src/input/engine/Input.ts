@@ -243,7 +243,15 @@ export const RcInput = defineComponent({
         disabled: props.disabled,
         readOnly: props.readOnly,
         value: formatValue.value,
-        onChange: onInternalChange,
+        // ⚠️ Vue 的 `onChange` 在原生元素上是**原生 change**（失焦/回车才触发），
+        //    而 React 的 `onChange` 在文本控件上等价**原生 input**（每次击键）。
+        //    rc-input 判据：`React.createElement('input', { onChange: onInternalChange })`
+        //    ⇒ 这里必须绑 `onInput`，否则 `v-model:value` 要等失焦才更新
+        //    （KNOWN-ISSUES §1.12）。用户自己传的 `onInput` 一并转发，不被吞掉。
+        onInput: (e: Event): void => {
+          (attrs as { onInput?: (e: Event) => void }).onInput?.(e);
+          onInternalChange(e);
+        },
         onFocus: handleFocus,
         onBlur: handleBlur,
         onKeydown: handleKeyDown,

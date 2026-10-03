@@ -26,10 +26,18 @@ import { getFieldId } from '../util';
  */
 const LABEL_TOKEN = `$${'{label}'}`;
 
-const flush = async (): Promise<void> => {
-  await new Promise((r) => setTimeout(r, 60));
-  await nextTick();
-  await nextTick();
+/**
+ * 等「异步渲染链路」落地（KNONW-ISSUES §1.11）。
+ *
+ * ⚠️ 这里**不能**用单次墙钟等待（原实现 `setTimeout(60)`）：渲染链要走的不是
+ * 「一段固定时间」，而是「若干次宏任务让出」（`validateFields` 的旁路链 →
+ * FormItem 的 `errors` → `useDebounce` 的 `setTimeout(0|10)` → 重渲染）。
+ * 全量并行跑（277 文件）时线程被抢占，60 ms 可能在链路排上定时器之前就到期
+ * ⇒ 断言在渲染完成前执行 ⇒ **假红**。按条件轮询与调度无关，断言本身一点没放松。
+ * 实测 settle 时长：12–20 ms（首次挂载含样式注入 158 ms）⇒ timeout 取 3000 ms 足够宽松。
+ */
+const waitRender = async (assert: () => void): Promise<void> => {
+  await vi.waitFor(assert, { interval: 5, timeout: 3000 });
 };
 
 /** 挂一个单字段表单的工厂。 */
@@ -153,9 +161,10 @@ describe('Form · 校验链', () => {
       expect(info.errorFields[0]?.errors).toContain('必填');
     }
     expect(failed).toBe(true);
-    await flush();
-    expect(w.find('.apollo-form-item-explain-error').exists()).toBe(true);
-    expect(w.find('.apollo-form-item-explain-error').text()).toBe('必填');
+    await waitRender(() => {
+      expect(w.find('.apollo-form-item-explain-error').exists()).toBe(true);
+      expect(w.find('.apollo-form-item-explain-error').text()).toBe('必填');
+    });
     expect(w.find('.apollo-form-item-has-error').exists()).toBe(true);
     const input = w.find('input');
     expect(input.attributes('aria-invalid')).toBe('true');
@@ -166,8 +175,9 @@ describe('Form · 校验链', () => {
     await formRef.validateFields().catch(() => {
       throw new Error('second validate should pass');
     });
-    await flush();
-    expect(w.find('.apollo-form-item-has-error').exists()).toBe(false);
+    await waitRender(() => {
+      expect(w.find('.apollo-form-item-has-error').exists()).toBe(false);
+    });
     w.unmount();
   });
 
@@ -206,8 +216,9 @@ describe('Form · 校验链', () => {
         ?.errors[0] as string;
     }
     expect(message).toBe('User 是必填项');
-    await flush();
-    expect(w.find('.apollo-form-item-explain-error').text()).toBe('User 是必填项');
+    await waitRender(() => {
+      expect(w.find('.apollo-form-item-explain-error').text()).toBe('User 是必填项');
+    });
     w.unmount();
   });
 
@@ -220,8 +231,9 @@ describe('Form · 校验链', () => {
     } catch {
       // 预期失败
     }
-    await flush();
-    expect(w.find('.apollo-form-item-explain').text()).toContain('自定义帮助');
+    await waitRender(() => {
+      expect(w.find('.apollo-form-item-explain').text()).toContain('自定义帮助');
+    });
     w.unmount();
   });
 
@@ -250,9 +262,10 @@ describe('Form · 校验链', () => {
     // control 注入的 value 更新链：dispatch 触发 store 写入
     const input = w.find('input');
     (input.element as HTMLInputElement).value = 'abc';
-    // Input 的值更新事件是 change（emit('update:value')）；每键入的 input 时机
-    // 属于 Input 组件自身契约（本测目标是 control 注入与取值）
-    await input.trigger('change');
+    // ⚠️ 派发 **input** 而不是 change：React 的 `onChange` 在文本控件上就是原生
+    // `input`，本仓修 §1.12 后与之一致（原写 `change` 能过，是因为 Vue 把写在
+    // 原生元素上的 `onChange` 解析成了原生 `change` —— 那是事件名巧合，不是契约）。
+    await input.trigger('input');
     await nextTick();
     expect(formRef.getFieldValue('user')).toBe('abc');
     w.unmount();
@@ -299,10 +312,11 @@ describe('Form · Item 变体', () => {
     } catch {
       // 预期失败
     }
-    await flush();
-    // 外层 FormItem 聚合到子 noStyle Field 的错误 ⇒ 渲染错误文案、带 -with-help
-    expect(w.find('.apollo-form-item-explain-error').text()).toContain('子项必填');
-    expect(w.find('.apollo-form-item-with-help').exists()).toBe(true);
+    await waitRender(() => {
+      // 外层 FormItem 聚合到子 noStyle Field 的错误 ⇒ 渲染错误文案、带 -with-help
+      expect(w.find('.apollo-form-item-explain-error').text()).toContain('子项必填');
+      expect(w.find('.apollo-form-item-with-help').exists()).toBe(true);
+    });
     // ⚠️ 但外层**没有** `-has-error`：状态取的是自己的 `meta.errors`（antd ItemHolder
     //    的 getValidateState 用 meta 而非合并后的 errors），而外层没有规则 ⇒ 恒空。
     //    判据是 antd 6.6.4 的**真实运行时**实测（`tests/visual/debug/probe-form-nostyle.mjs`：
@@ -327,8 +341,9 @@ describe('Form · validateTrigger', () => {
     formRef.setFieldsValue({ user: '' });
     await nextTick();
     await w.find('input').trigger('blur');
-    await flush();
-    expect(w.find('.apollo-form-item-has-error').exists()).toBe(true);
+    await waitRender(() => {
+      expect(w.find('.apollo-form-item-has-error').exists()).toBe(true);
+    });
     void formRef;
     w.unmount();
   });

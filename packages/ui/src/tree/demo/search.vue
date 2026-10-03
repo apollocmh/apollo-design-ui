@@ -79,7 +79,7 @@ const onChange = (e: Event): void => {
 <template>
   <div>
     <!-- antd 用 Input.Search（未落地）⇒ 原生 input 等价替换（README §7 登记） -->
-    <input class="tree-demo-search" placeholder="Search" @change="onChange" />
+    <input class="tree-demo-search" placeholder="Search" @input="onChange" />
     <Tree
       :expanded-keys="expandedKeys"
       :auto-expand-parent="autoExpandParent"

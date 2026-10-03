@@ -70,8 +70,54 @@ describe('Input · L1 渲染', () => {
   });
 });
 
+describe('Input · 值同步语义（React onChange = 原生 input，§1.12）', () => {
+  it('Input 的 v-model:value 在每次击键时同步（不等失焦）', async () => {
+    const onUpdate = vi.fn((v: string) => wrapper.setProps({ value: v }));
+    const wrapper = mount(Input, { props: { value: '', 'onUpdate:value': onUpdate } });
+    const input = wrapper.find('input');
+    const el = input.element as HTMLInputElement;
+
+    el.value = 'a';
+    await input.trigger('input');
+    expect(onUpdate).toHaveBeenCalledWith('a');
+    await wrapper.setProps({ value: 'a' });
+    expect(el.value).toBe('a');
+
+    el.value = 'ab';
+    await input.trigger('input');
+    expect(onUpdate).toHaveBeenLastCalledWith('ab');
+  });
+
+  it('TextArea 的 v-model:value 在每次击键时同步（不等失焦）', async () => {
+    const onUpdate = vi.fn((v: string) => wrapper.setProps({ value: v }));
+    const wrapper = mount(TextArea, { props: { value: '', 'onUpdate:value': onUpdate } });
+    const textarea = wrapper.find('textarea');
+    const el = textarea.element as HTMLTextAreaElement;
+
+    el.value = 'he';
+    await textarea.trigger('input');
+    expect(onUpdate).toHaveBeenCalledWith('he');
+  });
+
+  it('用户自己的 @input 不被内部实现吞掉', async () => {
+    const onInput = vi.fn();
+    const wrapper = mount(Input, { attrs: { onInput } });
+    const el = wrapper.find('input').element as HTMLInputElement;
+    el.value = 'x';
+    await wrapper.find('input').trigger('input');
+    expect(onInput).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('Input · IME 与计数（registry 备注：不可简化）', () => {
-  it('组合态期间不裁剪、组合结束时触发一次 change', async () => {
+  // ⚠️ 本用例在修 §1.12 之前断言「组合态期间 onChange **不**触发」——
+  // 那条断言编码的是 **Vue 的事件名巧合**（`onChange` 落在原生元素上 = 原生
+  // `change`，而本用例派发的是 `input` ⇒ 根本没有 handler 被调用），
+  // **不是** React/antd 的语义。判据 `@rc-component/input/es/Input.js`：
+  // `React.createElement('input', { onChange: onInternalChange, … })` —— React 的
+  // `onChange` 在文本控件上就是**原生 input**，组合态期间照常触发，
+  // 只是 `getExceedValue(currentValue, compositionRef.current)` 让裁剪让路。
+  it('组合态期间不裁剪（但照常触发 change）、组合结束时裁剪并再触发一次', async () => {
     const onChange = vi.fn();
     const wrapper = mount(Input, {
       props: {
@@ -88,13 +134,16 @@ describe('Input · IME 与计数（registry 备注：不可简化）', () => {
     await input.trigger('compositionstart');
     el.value = '12345678';
     await input.trigger('input');
-    // 组合态下不裁剪
-    expect(onChange).not.toHaveBeenCalled();
+    // React 语义：组合中的每次 input 都会触发 onChange，且**不裁剪**
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const composingEvent = onChange.mock.calls[0]?.[0] as { target: { value: string } };
+    expect(composingEvent.target.value).toBe('12345678');
 
     await input.trigger('compositionend');
-    expect(onChange).toHaveBeenCalledTimes(1);
-    const event = onChange.mock.calls[0]?.[0] as { target: { value: string } };
-    expect(event.target.value).toBe('12345');
+    // compositionend：裁剪到 5 并再触发一次（currentValue !== cutValue ⇒ 不去重）
+    expect(onChange).toHaveBeenCalledTimes(2);
+    const endEvent = onChange.mock.calls[1]?.[0] as { target: { value: string } };
+    expect(endEvent.target.value).toBe('12345');
   });
 
   it('Enter 的 IME 保护：isComposing 时不触发 onPressEnter', () => {

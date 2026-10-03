@@ -23,9 +23,12 @@
 import { LoadingOutlined } from '@apollo-design/icons';
 import { isNumber, isVNode, useDevWarning } from '@apollo-design/utils';
 import {
+  Comment,
   type Component,
   type CSSProperties,
   computed,
+  cloneVNode,
+  Fragment,
   h,
   onMounted,
   onUnmounted,
@@ -35,6 +38,7 @@ import {
   Text as TextVNode,
   useAttrs,
   useSlots,
+  type VNode,
   type VNodeChild,
   watch,
   watchEffect,
@@ -505,6 +509,34 @@ const iconClass = computed(() => [
 ]);
 const contentClass = computed(() => [mergedClassNames.value.content]);
 
+/**
+ * antd `buttonHelpers.js` 的 `spaceChildren` / `splitCNCharsBySpace` 元素分支：
+ * `classNames.content` / `styles.content` 落到**元素子级**时是 `cloneElement`
+ * **直接合并**（只有字符串 / Fragment 才包一层 `<span class={classNames.content}>`）。
+ *
+ * 本仓此前一律包 wrapper —— 对字符串子级与 antd 等价，但对元素子级会多出一个
+ * **在流 flex item**：FloatButton 的 badge 是唯一消费方，float-btn 根上的
+ * `gap: calc(var(--apollo-padding-xxs) / 2)` 会为这个 0 高 wrapper 多排一份间隙
+ * ⇒ 图标整体上移 1px（badge-tooltip 三视口 block-diff，KNOWN-ISSUES §1.10）。
+ *
+ * ⚠️ 只有「子级全部是元素 vnode」**且**语义通道确实传了 content 类名/样式时才走
+ * 合并分支；纯文本（含两个中文字）等其余情形保持模板的 wrapper 路径 ——
+ * 那与 antd 的字符串分支等价，且不惊动任何既有 L4 夹具。
+ */
+const elementContentNodes = computed<VNode[] | null>(() => {
+  const cls = mergedClassNames.value.content;
+  const style = mergedStyles.value.content;
+  if (cls === undefined && style === undefined) return null;
+  const kids = childNodes.value;
+  if (kids.length === 0) return null;
+  const allElements = kids.every(
+    (k) => isVNode(k) && k.type !== TextVNode && k.type !== Fragment && k.type !== Comment,
+  );
+  if (!allElements) return null;
+  // cloneVNode 会把 class / style 与子元素已有的合并（antd cloneElement 同语义）
+  return kids.map((k) => cloneVNode(k as VNode, { class: cls as never, style: style as never }));
+});
+
 // ---------------------------------------------------------------------------
 // 事件（`:293-308`）
 // ---------------------------------------------------------------------------
@@ -555,10 +587,17 @@ defineExpose({ nativeElement: rootRef });
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
       <NodeRenderer :node="iconNode" />
     </span>
-    <span v-if="hasChildren" :class="contentClass" v-bind="contentStyleAttrs">
+    <span
+      v-if="hasChildren && elementContentNodes === null"
+      :class="contentClass"
+      v-bind="contentStyleAttrs"
+    >
       <template v-if="twoCNCharText !== undefined">{{ twoCNCharText }}</template>
       <slot v-else />
     </span>
+    <template v-else-if="elementContentNodes !== null">
+      <NodeRenderer v-for="(node, i) in elementContentNodes" :key="i" :node="node" />
+    </template>
   </a>
 
   <button
@@ -573,9 +612,16 @@ defineExpose({ nativeElement: rootRef });
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
       <NodeRenderer :node="iconNode" />
     </span>
-    <span v-if="hasChildren" :class="contentClass" v-bind="contentStyleAttrs">
+    <span
+      v-if="hasChildren && elementContentNodes === null"
+      :class="contentClass"
+      v-bind="contentStyleAttrs"
+    >
       <template v-if="twoCNCharText !== undefined">{{ twoCNCharText }}</template>
       <slot v-else />
     </span>
+    <template v-else-if="elementContentNodes !== null">
+      <NodeRenderer v-for="(node, i) in elementContentNodes" :key="i" :node="node" />
+    </template>
   </button>
 </template>

@@ -56,8 +56,21 @@ const RULES = `
 .apollo-float-btn.apollo-btn.apollo-float-btn-progress:not(:disabled):not(.apollo-btn-disabled):active{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-active), var(--apollo-btn-bg-color-active)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
 .apollo-float-btn.apollo-btn.apollo-float-btn-progress:disabled,.apollo-float-btn.apollo-btn.apollo-float-btn-progress.apollo-btn-disabled{border-color:transparent;background-image:linear-gradient(var(--apollo-btn-bg-color-disabled), var(--apollo-btn-bg-color-disabled)),conic-gradient(var(--apollo-color-primary) var(--apollo-float-btn-progress, 0turn), var(--apollo-color-border-secondary) 0);}
 .apollo-float-btn{--apollo-float-btn-size:var(--apollo-control-height-lg);flex-direction:column;margin:0;padding:var(--apollo-padding-xxs) 0;width:var(--apollo-float-btn-size);min-height:var(--apollo-float-btn-size);height:auto;word-break:break-word;white-space:normal;gap:calc(var(--apollo-padding-xxs) / 2);}
+/* ⚠️ antd 的 .ant-float-btn-css-var 重置段（css-var 模式下**不是死选择器**——
+ *    元素类列表里真的带它，且排在 button 样式之后 ⇒ 压过 .ant-btn-lg 的
+ *    font-size:16px，把根字号拉回 14px）。此前误判为死选择器没抄（KNOWN-ISSUES §1.10），
+ *    square + content 的 auto 高形态字号差 2px 直接显形。按 D5 折进根类。 */
+.apollo-float-btn{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-float-btn-rtl{direction:rtl;}
-.apollo-float-btn.apollo-float-btn-individual{position:fixed;z-index:var(--apollo-z-index-popup-base);inset-inline-end:var(--apollo-margin-lg);bottom:var(--apollo-margin-xxl);box-shadow:var(--apollo-box-shadow-secondary);}
+.apollo-float-btn.apollo-float-btn-individual{position:fixed;z-index:var(--apollo-z-index-popup-base);inset-inline-end:var(--apollo-margin-lg);bottom:var(--apollo-margin-xxl);}
+/* ⚠️ antd 这条阴影在 :where(.css-hash) 之下 = 特异性 (0,2,0)，排在 button 之后
+ *    ⇒ 压过 Button variant 的临时描边阴影（antd 同为 (0,2,0) 但靠加载顺序）。
+ *    本仓 Button 的 variant 选择器是**三个真实类** (0,3,0)（无 :where 包装），
+ *    顺序救不回来 ⇒ 用根上恒存的 .apollo-btn 提一档特异性（(0,3,0) 且更晚）。
+ *    实测：不提档 ⇒ computed 阴影 = Button 的 0 2px 0 rgba(0,0,0,0.02)，
+ *    shape-content/badge-tooltip 全变体 block-diff（KNOWN-ISSUES §1.10）。
+ *    -pure 只重置 position/inset（antd 逐字），**不**重置阴影 ⇒ 不受影响。 */
+.apollo-btn.apollo-float-btn.apollo-float-btn-individual{box-shadow:var(--apollo-box-shadow-secondary);}
 .apollo-float-btn.apollo-float-btn-pure{position:relative;inset:auto;}
 .apollo-float-btn:empty{display:none;}
 .apollo-float-btn .apollo-float-btn-icon{line-height:1;}

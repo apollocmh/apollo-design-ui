@@ -243,7 +243,12 @@ export const RcTextArea = defineComponent({
         disabled: props.disabled,
         readOnly: props.readOnly,
         value: formatValue.value,
-        onChange: onInternalChange,
+        // ⚠️ 同 `engine/Input.ts`：Vue 的原生 `onChange` = 原生 change（失焦才触发），
+        //    React 的 = 原生 input。这里必须绑 `onInput`（KNOWN-ISSUES §1.12）。
+        onInput: (e: Event): void => {
+          (attrs as { onInput?: (e: Event) => void }).onInput?.(e);
+          onInternalChange(e);
+        },
         onFocus: (e: FocusEvent) => {
           focused.value = true;
           props.onFocus?.(e);
