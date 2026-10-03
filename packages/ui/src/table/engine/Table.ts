@@ -466,9 +466,9 @@ const Table = defineComponent({
     const colWidths = computed(() => pureColWidths.value);
     const stickyOffsets = useStickyOffsets(colWidths, filledColumns);
     const fixHeader = computed(() => Boolean(props.scroll?.y));
-    const horizonScroll = computed(
-      () => Boolean(props.scroll?.x) || Boolean(expandableConfig.value.fixed),
-    );
+    const horizonScroll = computed(() => {
+            return Boolean(props.scroll?.x) || Boolean(expandableConfig.value.fixed);
+    });
     const fixColumn = computed(
       () =>
         horizonScroll.value &&
@@ -496,11 +496,16 @@ const Table = defineComponent({
     const scrollXStyle = computed<Record<string, unknown>>(() =>
       horizonScroll.value ? { overflowX: 'auto' } : {},
     );
-    const scrollTableStyle = computed<Record<string, unknown>>(() =>
-      horizonScroll.value
-        ? { width: mergedScrollX.value === true ? 'auto' : mergedScrollX.value, minWidth: '100%' }
-        : {},
-    );
+    const scrollTableStyle = computed<Record<string, unknown>>(() => {
+      if (!horizonScroll.value) return {};
+      // ⚠️ React 的 style 数字自动加 px；Vue **不加** ⇒ `width: 1200`（无单位）被
+      //    cssstyle 判无效丢弃 ⇒ 表格总宽失效、列宽全空（L6 size-mismatch 的根因）。
+      const w = mergedScrollX.value;
+      return {
+        width: w === true ? 'auto' : typeof w === 'number' ? `${w}px` : w,
+        minWidth: '100%',
+      };
+    });
 
     const onColumnResize = (columnKey: string | number, width: number) => {
       if (colsWidths.value.get(columnKey) !== width) {

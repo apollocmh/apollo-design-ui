@@ -38,7 +38,11 @@ const ColGroup = defineComponent({
           cols.unshift(
             h('col', {
               key: i,
-              style: { width: width as number | string | undefined, minWidth },
+              style: {
+                // ⚠️ React 自动加 px，Vue 不加（无单位 width 会被丢弃，见 scrollTableStyle）
+                width: typeof width === 'number' ? `${width}px` : (width as string | undefined),
+                minWidth,
+              },
               ...restAdditionalProps,
             }),
           );

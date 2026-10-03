@@ -271,12 +271,13 @@ const Cell = defineComponent({
     const mergedStyle = computed<Record<string, unknown>>(() => {
       const fixedStyle: Record<string, unknown> = {};
       if (isFixStart.value) {
-        fixedStyle.insetInlineStart = props.fixStart;
+        // ⚠️ React 自动加 px；Vue 不加 ⇒ 无单位值被丢弃（固定列吸边失效）
+        fixedStyle.insetInlineStart = `${props.fixStart}px`;
         fixedStyle['--z-offset'] = props.zIndex;
         fixedStyle['--z-offset-reverse'] = props.zIndexReverse;
       }
       if (isFixEnd.value) {
-        fixedStyle.insetInlineEnd = props.fixEnd;
+        fixedStyle.insetInlineEnd = `${props.fixEnd}px`;
         fixedStyle['--z-offset'] = props.zIndex;
         fixedStyle['--z-offset-reverse'] = props.zIndexReverse;
       }

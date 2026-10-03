@@ -55,6 +55,15 @@ const SORT_COLUMNS = [
   { title: 'Address', dataIndex: 'address', key: 'address' },
 ];
 
+const FIXED_COLUMNS = [
+  { title: 'Name', dataIndex: 'name', key: 'name', width: 120, fixed: 'left' },
+  { title: 'Age', dataIndex: 'age', key: 'age', width: 100 },
+  { title: 'Column 1', dataIndex: 'address', key: 'a1', width: 150 },
+  { title: 'Column 2', dataIndex: 'address', key: 'a2', width: 150 },
+  { title: 'Column 3', dataIndex: 'address', key: 'a3', width: 150 },
+  { title: 'Address', dataIndex: 'address', key: 'a4', width: 120, fixed: 'right' },
+];
+
 const COLUMNS = [
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
@@ -120,6 +129,30 @@ export default {
         columns: COLUMNS,
         dataSource: DATA,
         rowSelection: { type: 'radio', selectedRowKeys: ['2'] },
+      }),
+    ]),
+
+  'fixed-summary': () =>
+    box([
+      h(Table, {
+        columns: FIXED_COLUMNS,
+        dataSource: DATA,
+        scroll: { x: 790 },
+        style: { width: '480px', marginBottom: '24px' },
+      }),
+      h(Table, {
+        columns: COLUMNS,
+        dataSource: DATA,
+        summary: () =>
+          h(Table.Summary, null, {
+            default: () =>
+              h(Table.Summary.Row, null, {
+                default: () => [
+                  h(Table.Summary.Cell, { index: 0, colSpan: 2 }, { default: () => 'Total' }),
+                  h(Table.Summary.Cell, { index: 2 }, { default: () => '102' }),
+                ],
+              }),
+          }),
       }),
     ]),
 

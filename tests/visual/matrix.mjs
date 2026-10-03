@@ -501,7 +501,15 @@ export const COMPONENTS = {
   table: {
     // 6 个 variant × 3 个 viewport = 18 张（T1 骨架 + T2 展开 + T3 排序过滤 + T4 选择）
     // 固定列/汇总/粘性条随 T5 补变体。
-    variants: ['basic', 'bordered-size', 'empty', 'expand', 'selection', 'sorter-filter'],
+    variants: [
+      'basic',
+      'bordered-size',
+      'empty',
+      'expand',
+      'selection',
+      'sorter-filter',
+      'fixed-summary',
+    ],
   },
   rate: {
     // 3 个 variant × 3 个 viewport = 9 张

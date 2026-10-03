@@ -788,3 +788,88 @@ describe('Table · 选择/分页（T4）', () => {
     w.unmount();
   });
 });
+
+describe('Table · 固定/汇总（T5）', () => {
+  it('scroll.x + fixed 列：cell 带 fix-start/end 类与列宽 style', async () => {
+    const fixedColumns = [
+      { title: 'Name', dataIndex: 'name', key: 'name', width: 200, fixed: 'left' },
+      { title: 'Age', dataIndex: 'age', key: 'age', width: 400 },
+      { title: 'Address', dataIndex: 'address', key: 'address', width: 600, fixed: 'right' },
+    ];
+    const w = mount(Table, {
+      props: {
+        columns: fixedColumns as never,
+        dataSource: data as never,
+        scroll: { x: 1200 },
+      },
+      attachTo: document.body,
+    });
+    await nextTick();
+    const headCells = w.findAll('.apollo-table-thead th');
+    expect(headCells[0]!.classes()).toContain('apollo-table-cell-fix-start');
+    expect(headCells[2]!.classes()).toContain('apollo-table-cell-fix-end');
+    // body 首列同样固定
+    const bodyFirst = w.find('.apollo-table-tbody > tr[data-row-key] > td');
+    expect(bodyFirst.classes()).toContain('apollo-table-cell-fix-start');
+    w.unmount();
+  });
+
+  it('scroll.y：独立表头（FixedHolder 双表结构）', async () => {
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        scroll: { y: 100 },
+      },
+      attachTo: document.body,
+    });
+    await nextTick();
+    // fixHeader 形态：the 的容器带 -header（FixedHolder 渲染）
+    expect(w.find('.apollo-table-header').exists()).toBe(true);
+    expect(w.find('.apollo-table-body').exists()).toBe(true);
+    w.unmount();
+  });
+
+  it('Summary 行：colSpan 聚合 + tfoot 在表体内', async () => {
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        summary: () =>
+          h(Table.Summary, null, {
+            default: () =>
+              h(Table.Summary.Row, null, {
+                default: () => [
+                  h(Table.Summary.Cell, { index: 0, colSpan: 2 }, { default: () => 'Total' }),
+                  h(Table.Summary.Cell, { index: 2 }, { default: () => '72' }),
+                ],
+              }),
+          }),
+      } as never,
+      attachTo: document.body,
+    });
+    await nextTick();
+    const tfoot = w.find('.apollo-table-tfoot, tfoot');
+    expect(tfoot.exists()).toBe(true);
+    expect(tfoot.text()).toContain('Total');
+    expect(tfoot.text()).toContain('72');
+    w.unmount();
+  });
+
+  it('sticky prop：FixedHolder 带 -sticky-holder 类', async () => {
+    // ⚠️ rc useSticky.js:19：stickyClassName = `${prefixCls}-sticky-holder`（挂在
+    //    FixedHolder 容器上），不是根 `-sticky`（`.ant-table-sticky` 不存在 ——
+    //    style/sticky.js 的选择器都在 -sticky-holder 子树下）。
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        sticky: { offsetHeader: 32 },
+      } as never,
+      attachTo: document.body,
+    });
+    await nextTick();
+    expect(w.find('.apollo-table-sticky-holder').exists()).toBe(true);
+    w.unmount();
+  });
+});

@@ -60,6 +60,17 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-10-03（table T2-T5 会话，功能分期）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 118 | **React style 数字自动加 px，Vue 不加**——`{ width: 1200 }` 在 Vue 渲染成 `width:1200`（无单位），jsdom 的 cssstyle 与真实浏览器都判无效**静默丢弃** ⇒ 表格总宽/colgroup 列宽/固定列 inset 全部失效（最毒：DOM 里键直接消失，看不出曾经传过） | L6（size-mismatch 成块差异）+ L2 最小复现 | 引擎里所有数字尺寸显式 `${n}px`（scrollTableStyle/ColGroup/Cell inset）；新样式码评审时 grep `style.*width:` 检查数字直传 |
+| 119 | **antd 的累计对象在 render 期回填最新 states**（InternalTable.js:297-298 `changeEventInfo.filterStates = filterStates`），setup 一次性的 Vue 版必须用 getter 实时取，否则 onChange 的 currentDataSource 永远未过滤/未排序 | L2（filter 全流程断言） | 「React 每 render 重算」的代码搬到 Vue computed/setup 时，凡跨次 render 可变的都要 getter/ComputedRef |
+| 120 | **未声明的 prop 落 attrs 静默变 undefined**（engine Table 漏声明 `scroll`）——渲染不报错，全链 Boolean(props.scroll?.x)=false | L2 探针（setup 顶部打印 props） | 引擎 props 与 antd 层传参清单 diff（建议进 registry 检查：h(Engine) 的 props ⊆ 引擎声明） |
+| 121 | **antd 静态挂载引用未导入的哨兵**（Object.assign 里 SELECTION_ALL 是 undefined）——TS 对 `Object.assign(组件, {X})` 的 X 不做存在性检查（若值是 import 缺失会报错，但本例是 import 清单漏改） | L2（selections 菜单用例：菜单项渲染但 onSelect undefined） | 静态挂载块与 import 块相邻放置、一起 review；type 测试断言 `Table.SELECTION_ALL === SELECTION_ALL` |
+| 122 | **selections 下拉默认 hover 触发**（antd useSelection 未传 trigger ⇒ rc 默认 ['hover']）+ 150ms mouseEnterDelay ⇒ click 触发永远无效 | L2 | 交互测试前先 grep antd 源码确认 trigger 实参；hover 类用 vi.waitFor 轮询而非 nextTick |
+
+
 ### 2026-10-03（table T1 会话，XL 组件骨架期）
 
 | # | 坑 | 抓到它的层 | 对策 |
