@@ -252,6 +252,43 @@ export interface SummaryCellProps { className?, index: number, colSpan?, rowSpan
 `fixed`(95) · `virtual`(93) · `radius`(80) · `size`(74) · `sticky`(65) · `rtl`(54) · `pagination`(40) ·
 `ellipsis`(36) · `summary` · `empty`。
 
+### 3.2.1 ✅ **已实测**（2026-10-03，T0.3）
+
+**复现命令**：\`node tests/visual/debug/extract-table-css.mjs [--tokens]\`
+（SSR + \`extractStyle\`，渲染 16 种形态：默认 / middle / small / bordered / 空态 / 选择 /
+展开 / 汇总 / 分页 / 固定表头+固定列+sticky / virtual / 排序激活 / 过滤激活 / loading /
+无表头 / 全 ellipsis / RTL）
+
+| 指标 | 实测值 |
+|---|---|
+| 与 \`ant-table\` 相关的规则 | **200 条**（唯一选择器 **194**） |
+| Component Token 声明条数 | **37 条** |
+
+🚨 **registry 的 \`tokenCount = 31\` 与实际的 37 条不一致** —— 31 是
+\`prepareComponentToken\` **字面写出的键数**，而真正发到 CSS 里的还包含它内部算出的派生值
+（\`expandIconHalfInner\` / \`expandIconSize\` / \`expandIconScale\` /
+\`headerIconColor\` / \`headerIconHoverColor\`）。
+⇒ **T1 写 \`style/token.ts\` 时以这 37 条为准**，registry 的数字只当交叉参考
+（同族先例：mentions 的 3 vs 实际 22）。
+
+**实测到的 37 条**（逐条抄自产物，T1 直接对拍）：
+\`header-bg\` \`header-color\` \`header-sort-active-bg\` \`header-sort-hover-bg\`
+\`body-sort-bg\` \`row-hover-bg\` \`row-selected-bg\` \`row-selected-hover-bg\`
+\`row-expanded-bg\` \`cell-padding-block\` \`cell-padding-inline\` \`cell-padding-block-md\`
+\`cell-padding-inline-md\` \`cell-padding-block-sm\` \`cell-padding-inline-sm\`
+\`border-color\` \`header-border-radius\` \`footer-bg\` \`footer-color\`
+\`cell-font-size\` \`cell-font-size-md\` \`cell-font-size-sm\` \`header-split-color\`
+\`fixed-header-sort-active-bg\` \`header-filter-hover-bg\` \`filter-dropdown-menu-bg\`
+\`filter-dropdown-bg\` \`expand-icon-bg\` \`selection-column-width\`
+\`sticky-scroll-bar-bg\` \`sticky-scroll-bar-border-radius\` \`expand-icon-margin-top\`
+\`header-icon-color\` \`header-icon-hover-color\` \`expand-icon-half-inner\`
+\`expand-icon-size\` \`expand-icon-scale\`
+
+⚠️ 两处**不是纯别名**、要构建期算：
+\`--ant-table-expand-icon-margin-top:2.5px\`（算式：\`(fontSize*lineHeight - lineWidth*3)/2 - ceil((fontSizeSM*1.4 - lineWidth*3)/2)\`）
+与 \`--ant-table-header-icon-color:rgba(0,0,0,0.29250000000000004)\`（\`colorIcon\` 的 alpha **乘以 \`opacityLoading\`**，
+本仓要用 \`utils.Color\` 的 \`setA\` —— 那正是 \`KNOWN-ISSUES §2.5\` 把 \`Color\` 改 public 的原因）。
+
 ### 3.3 抽取方式
 
 用 `tests/visual/debug/extract-<c>-css.mjs` 的模式（SSR + `extractStyle`）：
@@ -307,6 +344,34 @@ Vue 的 `inject` 是整体响应 ⇒ 直接照搬会「全表重渲」或「漏�
 | A. 拆 key | 把大 Context 拆成 N 个 `provide`（`scroll` / `row` / `hover` / `column` / `measure`…），每个是独立 `shallowRef` | 改动小；但 `hover` 仍会让所有行重渲（除非行级再拆） |
 | B. 行级 provide | 每行 provide 自己的 `rowInfo`，单元格 inject 行级 key | 粒度最接近上游；provide 数量 = 行数 × 列数？不行 ⇒ 行级即可 |
 | C. 外部 store + `shallowRef` | 自建 `reactive` 之外的轻量 store，用 `markRaw` + 手动 `triggerRef` | 最接近上游的「比较后更新」，但需要自研 |
+
+### 4.3.1 ✅ **已定案**（2026-10-03，**实测**）：候选 B「行级 provide」
+
+**复现命令**：\`node tests/visual/debug/poc-table-context.mjs\`（100 行 × 5 单元格，jsdom + Vue）
+
+| 变体 | \`hoverRow\` 从 -1 改成 3 | **无关字段**（\`scrollLeft\`）变化 |
+|---|---|---|
+| 单一 \`reactive\` context，\`Cell\` 直接读 \`ctx.hoverRow\` | **500 / 500（全表重渲）** | **0** |
+| 行级 \`provide\` 一个 \`computed(() => ctx.hoverRow === index)\` | **5 / 500（只有命中行的 5 个 cell）** | **0** |
+
+**两条结论**：
+
+1. 🚨 **推翻了我原来的假设**：Vue 的 \`reactive\` 本来就是**属性级**追踪 ⇒「无关字段变化」**不会**重渲
+   （上表第三列两行都是 0）。所以问题不是「inject 太粗」，而是
+   **「\`Cell\` 直接读了一个每次 hover 都会变的表级字段」**。
+2. ✅ **决策 = 行级 provide**（候选 B）：每行 \`provide\` 一个 \`computed\`，
+   把「本行是否命中」变成**行级依赖** ⇒ 与上游 selector 订阅**同样粒度**（5 vs 500，**100×**），
+   而且**不需要自研 store**（候选 C 被否）。每行多一个 \`provide\` 是唯一代价。
+
+**由此得到一条 T1 必须遵守的硬规则**（写进 T1 的 README）：
+
+> **\`Cell\` 只能 \`inject\` 行级 \`computed\`，不能直接 \`inject\` 表级 \`reactive\` 对象。**
+> 凡是「每个单元格都读、但只有少数行会变」的字段（hover 区间、rowSpan 补行、展开态…），
+> 一律走行级 computed。反之，**每个单元格都读、且变化时本来就该全表重渲**的字段
+> （列定义、\`prefixCls\`、\`ellipsis\`…）才留在表级。
+
+⚠️ **本 PoC 没有证明**：真实 Table 的 \`Cell\` 会不会**间接**读到表级字段（例如通过 \`rowInfo\` 展开对象）；
+那要在 T1 落地后用同样的计数法再测一次（届时把 \`poc-table-context.mjs\` 的骨架换成真组件）。
 
 ### 4.4 其余平台差异（照抄就错）
 
