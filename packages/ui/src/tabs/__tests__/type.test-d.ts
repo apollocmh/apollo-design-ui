@@ -18,6 +18,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import { Tabs } from '../index';
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { SizeType } from '../../config-provider/size-context';
 import type {
@@ -198,5 +199,15 @@ describe('Tabs · L3 负例', () => {
     // @ts-expect-error 'delete' 不是动作
     const bad: Acceptable = 'delete';
     expectTypeOf(bad).not.toBeNever();
+  });
+});
+
+describe('Tabs · 运行时声明 ↔ 公开类型同源（KNOWN-ISSUES §2.3 / §3 #3）', () => {
+  // 判据（PITFALLS 333）：运行时的 PropType 声明必须与公开 `TabsProps` **同源**，
+  // 否则消费方会被迫写 `as unknown as`。双向可赋值 = 漂移即红。
+  it('InstanceType<typeof Tabs>[\'$props\'] 与 TabsProps 双向可赋值', () => {
+    type RuntimeProps = InstanceType<typeof Tabs>['$props'];
+    expectTypeOf<TabsProps>().toExtend<RuntimeProps>();
+    expectTypeOf<RuntimeProps>().toExtend<TabsProps>();
   });
 });

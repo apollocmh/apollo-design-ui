@@ -115,6 +115,7 @@ export default defineComponent({
     centered: { type: Boolean, default: undefined },
     size: { type: String as PropType<SizeType>, default: undefined },
     tabPlacement: { type: String as PropType<TabPlacement>, default: undefined },
+    direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
     /** @deprecated 用 `tabPlacement`。 */
     tabPosition: { type: String as PropType<TabPosition>, default: undefined },
     activeKey: { type: String, default: undefined },
@@ -276,7 +277,11 @@ export default defineComponent({
     // ⚠️ 必须走 `useDirection()`：`useComponentConfig()` 解构出的 `direction` 是
     //    **快照**（`inject` 只在 setup 期解析一次），ConfigProvider 之后改它不会响应
     //    （差异 D27；`direction` 甚至可能是 `undefined` ⇒ 直接 `.value` 会抛）
-    const direction = useDirection();
+    const contextDirection = useDirection();
+    // ⚠️ rc TabsProps 的 `direction` prop 优先于 ConfigProvider（§2.2 审计补齐）
+    const direction = computed<'ltr' | 'rtl' | undefined>(
+      () => props.direction ?? contextDirection.value,
+    );
     const rtl = computed(() => direction.value === 'rtl');
 
     const mergedPlacement = computed<TabPosition | undefined>(() => {

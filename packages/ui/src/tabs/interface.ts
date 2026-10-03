@@ -242,6 +242,8 @@ export interface TabsProps {
   tabPlacement?: TabPlacement;
   /** @deprecated 用 `tabPlacement`。 */
   tabPosition?: TabPosition;
+  /** 文字方向（rc TabsProps；缺省走 ConfigProvider 的 direction —— §2.2 审计补齐）。 */
+  direction?: 'ltr' | 'rtl';
   /** 受控激活页签（`v-model:activeKey`）。 */
   activeKey?: string;
   defaultActiveKey?: string;
