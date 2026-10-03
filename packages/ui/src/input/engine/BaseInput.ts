@@ -149,16 +149,44 @@ export const BaseInput = defineComponent({
       let element: ReturnType<typeof h> | null = null;
       if (inner) {
         // 裸形态：variant 挂在 input 本体上（rc 判据：!hasAffix）
-        element = h(inner.type as never, {
-          ...(inner.props ?? {}),
-          class: [
-            (inner.props as { class?: unknown })?.class,
-            !hasAffix ? props.classNames?.variant : undefined,
-            ...(hasAffix || hasGroup ? [] : [rootExtras.class]),
-          ],
-          style: hasAffix || hasGroup ? undefined : { ...rootExtras.style },
-          hidden: hasAffix || hasGroup ? undefined : rootExtras.hidden,
-        });
+        //
+        // 🚨 **必须把 `inner.children` 一起带上**（`h` 的第三参）。
+        //    上游是 React 的 `cloneElement(inputElement, {value, className})`，
+        //    它**保留** children；本仓若只重建 props 会**丢掉子节点的插槽**
+        //    ⇒ 子组件（如 mentions 的 `InternalMentions`）拿到的 `slots.default` 为空，
+        //    「`Mentions.Option` 形式的候选项全部消失」且**不报错**。
+        //    （`input` 家族的子节点都是原生 `<input>` / `<textarea>`，没有插槽 ⇒ 此前未暴露。）
+        element = h(
+          inner.type as never,
+          {
+            ...(inner.props ?? {}),
+            class: [
+              (inner.props as { class?: unknown })?.class,
+              !hasAffix ? props.classNames?.variant : undefined,
+              ...(hasAffix || hasGroup ? [] : [rootExtras.class]),
+            ],
+            /**
+             * 🚨 **必须与子节点自己的 `style` 合并**（不是覆盖）。
+             *
+             * 上游是 `cloneElement(inputElement, {value, className})` + 末尾
+             * `cloneElement(element, {style: {...element.props.style, ...style}})` ——
+             * **两次都是合并**。本仓此前写成 `style: {...rootExtras.style}`（覆盖），
+             * 后果是子节点的内联样式被静默清空：
+             *   · `mentions`：`<Mentions :style="{width:'320px'}">` 的宽度**丢失**（L6 实测红）；
+             *   · `input/TextArea`：textarea 自己的 `resize` / `autoSize` 内联样式同样会被清空。
+             * affix / group 形态下子节点的 style **原样保留**（那时外层自己承载 `style`）。
+             */
+            style:
+              hasAffix || hasGroup
+                ? (inner.props as { style?: unknown })?.style
+                : {
+                    ...((inner.props as { style?: Record<string, unknown> })?.style ?? {}),
+                    ...rootExtras.style,
+                  },
+            hidden: hasAffix || hasGroup ? undefined : rootExtras.hidden,
+          },
+          inner.children as never,
+        );
       }
 
       if (hasAffix) {

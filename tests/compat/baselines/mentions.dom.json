@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema.json",
+  "component": "mentions",
+  "antdVersion": "6.6.4",
+  "generatedAt": "2026-10-03T02:00:12.240Z",
+  "cases": [
+    {
+      "id": "mentions:plain",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:value",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\">@afc163</textarea></div>"
+    },
+    {
+      "id": "mentions:placeholder",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea placeholder=\"hi\" rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:disabled",
+      "html": "<div class=\"apollo-mentions apollo-mentions-disabled css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea rc-textarea-disabled\" disabled=\"\">a</textarea></div>"
+    },
+    {
+      "id": "mentions:readonly",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" readOnly=\"\" class=\"rc-textarea\">a</textarea></div>"
+    },
+    {
+      "id": "mentions:small",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var apollo-mentions-sm\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:large",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var apollo-mentions-lg\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:filled",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-filled apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:borderless",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-borderless apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:underlined",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-underlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:status-error",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions-status-error apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:status-warning",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions-status-warning apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:allow-clear",
+      "html": "<span class=\"apollo-mentions-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var apollo-mentions-has-suffix\"><textarea rows=\"1\" class=\"rc-textarea\">a</textarea><span class=\"apollo-mentions-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "mentions:allow-clear-disabled",
+      "html": "<span class=\"apollo-mentions-affix-wrapper apollo-mentions-disabled apollo-mentions-affix-wrapper-disabled css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var apollo-mentions-has-suffix\"><textarea rows=\"1\" class=\"rc-textarea rc-textarea-disabled\" disabled=\"\">a</textarea><span class=\"apollo-mentions-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon apollo-mentions-clear-icon-hidden\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "mentions:allow-clear-empty",
+      "html": "<span class=\"apollo-mentions-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var apollo-mentions-has-suffix\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea><span class=\"apollo-mentions-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon apollo-mentions-clear-icon-hidden\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    },
+    {
+      "id": "mentions:class-name",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions extra rootx css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:rows",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"3\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:options",
+      "html": "<div class=\"apollo-mentions css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:rtl",
+      "html": "<div class=\"apollo-mentions apollo-mentions-rtl css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var\"><textarea rows=\"1\" class=\"rc-textarea\"></textarea></div>"
+    },
+    {
+      "id": "mentions:semantic",
+      "html": "<span class=\"apollo-mentions-affix-wrapper css-dev-only-do-not-override-1v6lqee apollo-mentions-outlined apollo-mentions css-var-root apollo-mentions-css-var cls-root apollo-mentions-has-suffix\"><textarea rows=\"1\" class=\"rc-textarea cls-textarea\">x</textarea><span class=\"apollo-mentions-suffix cls-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button></span></span>"
+    }
+  ]
+}

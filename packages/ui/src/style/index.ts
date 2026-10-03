@@ -63,6 +63,7 @@ import { genLayoutStyle, genSiderStyle } from '../layout/style';
 import { genListStyle } from '../list/style';
 import { genListyStyle } from '../listy/style';
 import { genMasonryStyle } from '../masonry/style';
+import { genMentionsStyle } from '../mentions/style';
 import { genMenuStyle } from '../menu/style';
 import { genMessageStyle } from '../message/style';
 import { genModalStyle } from '../modal/style';
@@ -176,6 +177,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'tooltip', gen: genTooltipStyle },
   { name: 'popover', gen: genPopoverStyle },
   { name: 'menu', gen: genMenuStyle },
+  { name: 'mentions', gen: genMentionsStyle },
   { name: 'dropdown', gen: genDropdownStyle },
   { name: 'drawer', gen: genDrawerStyle },
   { name: 'app', gen: genAppStyle },

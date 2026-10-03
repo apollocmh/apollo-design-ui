@@ -1307,6 +1307,36 @@ export { Masonry } from './masonry';
 export { genMasonryStyle } from './masonry/style';
 export type { ComponentToken as MasonryComponentToken } from './masonry/style/token';
 export { prepareComponentToken as prepareMasonryComponentToken } from './masonry/style/token';
+// ---------------------------------------------------------------------------
+// Mentions —— 提及（@ 触发候选）
+//
+// ⚠️ 引擎在 `mentions/engine/`（rc-mentions 的等价物，裁决 `in-ui`）：
+//    textarea 复用 `input/engine/TextArea`，浮层复用 `_internal/trigger`，
+//    候选列表**自建**（不复用 `menu/Menu`，理由见 engine/DropdownMenu.ts 文件头）。
+// ⚠️ 静态成员：`Mentions.Option`（deprecated）/ `Mentions.getMentions` /
+//    `Mentions._InternalPanelDoNotUseOrYouWillBeFired`。
+// ⚠️ 不导出裸名 `Option`（避免与后续组件的 `Option` 撞名）—— 用 `MentionsOption`
+//    或 `Mentions.Option`。
+// ---------------------------------------------------------------------------
+export type {
+  MentionPlacement,
+  MentionProps,
+  MentionsConfig,
+  MentionsEntity,
+  MentionsOptionProps,
+  MentionsProps,
+  MentionsRef,
+  MentionsSemanticClassNames,
+  MentionsSemanticClassNamesFn,
+  MentionsSemanticContext,
+  MentionsSemanticStyles,
+  MentionsSemanticStylesFn,
+  OptionProps as MentionsOptionPropsDeprecated,
+} from './mentions';
+export { Mentions, MentionsOption } from './mentions';
+export { genMentionsStyle, genTokenDecls as genMentionsTokenDecls } from './mentions/style';
+export type { ComponentToken as MentionsComponentToken } from './mentions/style/token';
+export { prepareComponentToken as prepareMentionsComponentToken } from './mentions/style/token';
 export type {
   ItemType,
   MenuDividerType,

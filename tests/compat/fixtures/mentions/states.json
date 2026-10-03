@@ -1,0 +1,23 @@
+{
+  "$schema": "../schema.json",
+  "id": "mentions/states",
+  "component": "mentions",
+  "description": "状态面：size 三档（-sm / -lg）、variant 四形态（outlined/filled/borderless/underlined，替换 -outlined）、status error/warning（-status-*，与 variant 同一个类名槽）、disabled（根 -disabled + textarea `rc-textarea-disabled` + `disabled`）、readOnly（**只有 textarea 的 readonly，无类名**）、loading（候选项整个替换成一条 disabled 的 `ANTD_SEARCHING`，内容为 Spin，且 `silent` 让 Enter 不选中）、notFoundContent 缺省走 renderEmpty('Select')。",
+  "antdVersion": "6.6.4",
+  "props": { "loading": false },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": {
+    "states": [
+      "small",
+      "large",
+      "filled",
+      "borderless",
+      "underlined",
+      "error",
+      "warning",
+      "disabled",
+      "readOnly",
+      "loading"
+    ]
+  }
+}

@@ -656,6 +656,23 @@ export const COMPONENTS = {
       'loading', // 骨架态（footer 强制不渲染）
     ],
   },
+  mentions: {
+    // 8 个 variant × 3 个 viewport = 24 张
+    // ⚠️ panel 走「挂载后派发 input + keyup」的静态帧（两侧同款）：候选面板是本组件
+    //    最核心的视觉面（dropdown 容器 + menu 列表 + active 项），不覆盖等于没测。
+    //    getPopupContainer 指向用例自己的 wrapper —— 否则 portal 到 body 的面板
+    //    不在 #stage 的截图范围里。
+    variants: [
+      'basic', // 默认 + 有值 + disabled（rc-textarea / -disabled）
+      'sizes', // -lg / 默认 / -sm（--cmp-mentions-* 三档覆写）
+      'variants', // outlined / filled / borderless / underlined
+      'status', // -status-error / -status-warning
+      'allowClear', // affix 形态（根换成 affix-wrapper + -has-suffix + 清除按钮）
+      'readOnly', // disabled（-disabled + rc-textarea-disabled）/ readOnly（无类名）
+      'semantic', // classNames / styles 的 4 个槽
+      'panel', // 候选面板（@ 触发）
+    ],
+  },
   menu: {
     // 4 个 variant × 3 个 viewport = 12 张
     // 全部静态帧（selectedKeys/openKeys 受控）；horizontal 走真浏览器 RO 测量。

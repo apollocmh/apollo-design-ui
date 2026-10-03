@@ -1,0 +1,16 @@
+{
+  "$schema": "../schema.json",
+  "id": "mentions/basic",
+  "component": "mentions",
+  "description": "基础形态：裸态根是 div.{p}（类名里 {p} 出现两次 —— rc-mentions 的 div 前缀 + BaseInput 的 className 前缀）；**textarea 的类名是 rc-textarea**（上游不给 TextArea 传 prefixCls，走 rc-input 的默认值，逐字保留）。敲 `@` ⇒ 渲染 `div.{p}-measure`（内含 `<span>@</span>`）并把候选面板 Portal 到 body：`div.{p}-dropdown` > `ul.{p}-dropdown-menu[role=menu][data-menu-list]` > `li.{p}-dropdown-menu-item[role=menuitem][tabindex=-1]`，首项带 `-active`。键盘全部走 textarea（↑/↓ 跳过 disabled 且环形、Enter 回填、ESC 关闭）；回填走 replaceWithMeasure（前缀前补一个 split、去掉与候选重复的开头、光标落在插入文本之后）。allowClear/suffix 存在时根换成 span.{p}-affix-wrapper 并带 `-has-suffix`（此时 `-disabled/-focused/-rtl` 三个类**不渲染**，上游怪癖逐字保留）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "options": [
+      { "value": "afc163", "label": "afc163" },
+      { "value": "zombieJ", "label": "zombieJ" },
+      { "value": "yesmeck", "label": "yesmeck" }
+    ]
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "events": ["change", "select", "search", "popup-scroll"] }
+}

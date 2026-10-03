@@ -62,6 +62,16 @@ export const RcTextArea = defineComponent({
     onFocus: { type: Function as PropType<(e: FocusEvent) => void>, default: undefined },
     onBlur: { type: Function as PropType<(e: FocusEvent) => void>, default: undefined },
     onKeyDown: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
+    /**
+     * 🚨 `onKeyUp` 必须**声明成 prop**。
+     *
+     * 若不声明：Vue 会把它放进 `attrs`，而 `attrs` 被摊到 `<textarea>` 上
+     * ⇒ `parseName('onKeyUp')` → `hyphenate('KeyUp')` → 监听 **`key-up`**
+     * ⇒ 一个永不触发的事件（实测见 `docs/analysis/mentions.md` §4.3）。
+     * rc-input 的 `TextArea` 靠 `...rest` 摊给 `<textarea>`（React 的 `onKeyUp` 是合法 DOM 属性）
+     * ⇒ 本仓必须显式声明，语义才等价。
+     */
+    onKeyUp: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
     onCompositionStart: {
       type: Function as PropType<(e: CompositionEvent) => void>,
       default: undefined,
@@ -215,9 +225,16 @@ export const RcTextArea = defineComponent({
         ref: textareaRef,
         autoComplete: props.autoComplete,
         rows: props.rows,
-        // rc ResizableTextArea：textarea 恒带 `${prefixCls}` 基类（variant/status
-        // 在裸态由 BaseInput 的 variant 键追加，affix 态落 wrapper）
-        class: [props.prefixCls, props.classNames?.textarea],
+        // rc ResizableTextArea：textarea 恒带 `${prefixCls}` 基类 + 禁用类
+        // （variant/status 在裸态由 BaseInput 的 variant 键追加，affix 态落 wrapper）
+        // 🚨 `${prefixCls}-disabled` 是 `ResizableTextArea.js` 的产物，此前漏了
+        //    （`input.dom.json` 里没有 disabled 的 textarea 用例 ⇒ 一直没被发现；
+        //     由 mentions 的 disabled 形态首次踩到，见 PITFALLS）。
+        class: [
+          props.prefixCls,
+          { [`${props.prefixCls}-disabled`]: props.disabled },
+          props.classNames?.textarea,
+        ],
         style: {
           resize: (props.style as { resize?: string } | undefined)?.resize,
           ...(props.styles?.textarea ?? {}),
@@ -236,6 +253,7 @@ export const RcTextArea = defineComponent({
           props.onBlur?.(e);
         },
         onKeydown: handleKeyDown,
+        onKeyup: (e: KeyboardEvent) => props.onKeyUp?.(e),
         onCompositionstart: (e: CompositionEvent) => {
           composition.value = true;
           props.onCompositionStart?.(e);

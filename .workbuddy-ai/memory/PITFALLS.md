@@ -4394,3 +4394,78 @@
     `collapse/Panel.ts:101 onKeyDown [h('div')]`（×3，spread 到 3 处）与
     `segmented/Segmented.ts:356 onMouseDown [h('label')]`；恢复后 4/4 绿。
     📌 落地：`packages/ui/src/__tests__/event-name-casing.test.ts`（豁免清单**双向校验**）。
+
+## Mentions（2026-10-03，339–344）
+
+339. 🚨 **把 `onKeyUp` 透传给一个「组件」时，`event-name-casing.test.ts` 的护栏**看不见**它 —— 而组件若没声明这个 prop，最终仍会被 hyphenate 成 `key-up`。**
+
+    `RcTextArea` 声明了 `onKeyDown` 却**没有** `onKeyUp`（rc-input 的 `TextArea` 把 `onKeyUp`
+    留在 `...rest` 里摊给 `<textarea>`，React 里是合法 DOM 属性 ⇒ 上游不需要声明）。
+    本仓照抄 `h(RcTextArea, { onKeyUp })` ⇒ `onKeyUp` 落进 RcTextArea 的 `attrs`
+    ⇒ 被摊到 `<textarea>` 上 ⇒ `parseName('onKeyUp')` = `hyphenate('KeyUp')` = **`key-up`**
+    ⇒ **监听器挂在一个永不触发的事件上**。
+
+    **症状**：候选面板**永远不出现**，且 **dev 无告警、`lint:types` 全绿、L4 全绿**
+    （DOM 是闭态）。只有「敲 `@` 后面板出现」这类**效果**断言能抓。
+
+    **判据（10 秒）**：`node -e` 里渲染一个 `h('textarea', { onKeyUp })` 派发 `keyup`，
+    看回调是否触发（实测：不触发；`onKeyup` 才触发）。
+
+    ⚠️ **护栏的盲区**：`event-name-casing.test.ts` 只扫 `h('<原生标签>', props)` ——
+    「组件 prop → attrs → 原生标签」这条**两跳**路径它看不到。⇒ 给引擎组件补事件 prop 时，
+    要按「它会不会被摊到原生元素上」判断，不能只看护栏绿。
+
+340. 🚨 **`BaseInput` 的 clone 丢掉了子节点的 `children`（插槽）⇒ 子组件的 `slots.default` 为空。**
+
+    上游 rc 是 `cloneElement(inputElement, {value, className})` —— **保留 children**。
+    本仓 `h(inner.type, {...inner.props, class, style, hidden})` **没传第三参**
+    ⇒ 子组件的插槽全丢。
+
+    **实测形态**：`<Mentions><Mentions.Option value="afc163">Afc163</…></Mentions>`
+    的候选项**全部消失**（面板只剩 notFound 项），**不报错**。
+    `input` 家族此前没暴露，是因为它的子节点都是原生 `<input>` / `<textarea>`（没有插槽）。
+
+    **修法**：`h(inner.type, {...}, inner.children)`。
+
+341. 🚨 **`BaseInput` 的 clone 是「覆盖」`style` 而不是「合并」⇒ 子节点的内联样式被静默清空。**
+
+    上游末尾还有一次 `cloneElement(element, {style: {...element.props.style, ...style}})` ——
+    **两次 clone 都是合并**。本仓写成了 `style: {...rootExtras.style}`（覆盖）。
+
+    **实测形态**：`<Mentions :style="{width:'320px'}">` 的宽度**丢失**
+    （L6 `mentions/basic__light__*` 全红；差异率 0.147%/0.186%/0.099%）。
+    ⚠️ 同一条也影响 `input/TextArea` 的 textarea 内联 `resize` / `autoSize` 样式。
+
+    **修法**：bare 形态 `{...child.style, ...baseInputStyle}`；affix/group 形态原样保留子节点 style。
+
+342. 🚨 **组件 token 的声明块必须覆盖「不在组件子树里的浮层」—— 靠 `-css-var` 类。**
+
+    mentions 的浮层（`div.{p}-mentions-dropdown`）被 Portal 到别处，**不是 `.mentions` 的后代**，
+    却要用 `var(--{p}-mentions-item-padding-vertical)` 等组件变量。
+    antd 的 token 声明块选择器是 `.css-var-root.ant-mentions`，而浮层的 `classNames.popup`
+    里带了 `ant-mentions-css-var`（`rootCls`）⇒ 命中。本仓照抄了「保留 `{p}-css-var` 类」，
+    但**声明块只挂在 `.mentions` 上** ⇒ 浮层里所有组件变量**未定义**
+    ⇒ `padding: var(...) var(...)` 整条失效 ⇒ 候选行高少 10px。
+
+    **L6 判据**：差异率 **1.33% / 0.65% / 0.35%**，随视口**反比**下降 = 固定尺寸区域。
+
+    **修法**：`genTokenDecls` 同时产出 `.${p}-mentions{…}` 与 `.${p}-mentions-css-var{…}` 两份。
+    ⚠️ 另一条同源坑：`engine/Mentions.ts` 必须把 `classNames.popup` 传进
+    `KeywordTrigger.popupClassName`（上游是 `clsx(popupClassName, mentionClassNames?.popup)`）——
+    漏了连 `-css-var` 类都不会出现。
+
+343. ⚠️ **`input/engine/TextArea.ts` 缺 `${prefixCls}-disabled`**（rc `ResizableTextArea.js` 有）。
+
+    `input.dom.json` 的 33 个用例里**没有** disabled 的 textarea ⇒ 这个缺口从 input 收口起
+    一直存在，直到 **mentions 的 disabled 形态**才暴露（L4 直接红）。
+    ⇒ **新组件的「上游怪形态」是最好的既有缺口探测器** —— 收口期要拿新组件的 L4 去撞老组件。
+
+344. 🚨 **Vue 的插槽函数在 `computed` 里被调用 ⇒ `Slot "default" invoked outside of the render function`。**
+
+    上游的 `children` 是普通 prop，`getOptions(children)` 可以在任意位置读；
+    Vue 的 `slots.default()` 只能在渲染期求值。本仓第一次写成「`getOptions` 里读 slots」
+    ⇒ **4 个 demo 的冒烟全红**，而且那条告警会**盖掉真正的告警**（断言 `console.error`
+    时拿到的是 Vue 那条 —— breadcrumb 期踩过同一个）。
+
+    **修法**：在**外层组件的 render** 里把 children 归一成数据（`mentionsChildrenToOptions`），
+    再作为 `options` prop 往下传（下游不再碰插槽）。

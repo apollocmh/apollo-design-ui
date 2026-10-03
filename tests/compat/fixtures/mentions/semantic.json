@@ -1,0 +1,14 @@
+{
+  "$schema": "../schema.json",
+  "id": "mentions/semantic",
+  "component": "mentions",
+  "description": "语义槽：classNames/styles 各 4 键（root / textarea / popup / suffix）。root 落在**根元素**（裸态是 div，affix 态是 span）；textarea 落在 `<textarea>` 上；suffix 落在 `span.{p}-suffix`；popup 落在 Portal 里的 `div.{p}-dropdown`。classNames/styles 都支持函数形态（`(info: { props }) => 对象`），合并顺序与 antd 一致（context → styleRoot → props.styles → props.style）。",
+  "antdVersion": "6.6.4",
+  "props": {
+    "allowClear": true,
+    "classNames": { "root": "cls-root", "textarea": "cls-textarea", "suffix": "cls-suffix" },
+    "styles": { "root": { "width": "120px" } }
+  },
+  "assertions": { "api": true, "dom": true, "aria": true, "behavior": true, "screenshot": true },
+  "expect": { "slots": ["root", "textarea", "popup", "suffix"] }
+}

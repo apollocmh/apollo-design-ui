@@ -367,6 +367,41 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 
 ---
 
+### 1.12 🚨 **[新登记]**（2026-10-03）`input` 家族的 `onChange` 监听的是**原生 `change`**（失焦才触发），不是 React 语义的 `input`
+
+**事实**（可复现）：
+
+- 上游 `input/engine/{Input,TextArea}.ts` 把 `onChange` 写在 `h(input/textarea, …)` 上
+  ⇒ Vue 的 `parseName(onChange)` = **原生 `change`**（失焦/回车才触发）；
+  而 React 的 `onChange` 在文本输入上等价**原生 `input`**（每次击键）。
+- 实测：`node -e` 渲染 `h(textarea, { onChange, onInput })`，派发 `input` 事件
+  ⇒ **只有 `onInput` 触发**。
+- 后果：`<Input v-model:value="x" />` / `<TextArea v-model:value="x" />` 的 `x`
+  **在失焦前不更新**（受控回写时还会把光标后的输入吞掉）。
+- 本仓的既有测试**覆盖不到**：`input/__tests__/index.test.ts` 里只有一条
+  `trigger(input)`，且那条断言的是「组合态期间**不**触发」（走 compositionend 分支）。
+
+**mentions 绕过了它**（不是修好）：`mentions/engine/Mentions.ts` 额外接了原生 `onInput`
+（见 `COMPATIBILITY.md` D122 与 PITFALLS 339），所以 mentions 的值同步是对的。
+
+**怎么修**（两种，取一）：
+
+1. 把 `input/engine/{Input,TextArea}.ts` 的 `onChange: onInternalChange` 换成
+   `onInput: onInternalChange`（**推荐**，这才是 antd 语义）；
+   代价：`input/__tests__/index.test.ts` 的「组合态期间不触发 change」那条会红
+   ⇒ 按 `AGENTS.md` §4.2 的第 3 条改测试并说明「原断言编码的是 Vue 的事件名巧合，不是 React 语义」。
+2. 保留 `change` 并**额外**接 `input`（与 mentions 同款）—— 代价是失焦时会多调一次（幂等但重复）。
+
+**怎么验**：`<Input v-model:value="x" />` 挂载后 `el.value=a` + 派发 `input`，
+断言 `x === a`（**不等失焦**）。
+
+**顺带**：同一族的 `onFocus` / `onBlur` 语义差（React 的会冒泡 = `focusin`/`focusout`）
+登记在 `docs/foundation/rc-util-contract.md` §6.1，本组件未涉及。
+
+**已在 mentions 收口期修掉的三个同族缺口**（可作范本）：
+`RcTextArea` 缺 `onKeyUp` prop（PITFALLS 339）· `BaseInput` 的 clone 丢 `children`（340）·
+`BaseInput` 的 clone **覆盖** `style` 而非合并（341）· `RcTextArea` 缺 `${prefixCls}-disabled`（343）。
+
 ## §2 已修、但有残留（**别把「已修」当成「已解决」**）
 
 ### 2.1 ✅ `color-picker` 的 `children` 多包一层 `<span>` —— 只修了**单子节点**路径
