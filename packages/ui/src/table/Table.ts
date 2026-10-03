@@ -285,8 +285,21 @@ const Table = defineComponent({
     const sortedData = computed(() =>
       getSortData(rawData.value, sorterResult.sortStates.value as never, childrenColumnName.value),
     );
-    changeEventInfo.sorter = sorterResult.getSorters();
-    changeEventInfo.sorterStates = sorterResult.sortStates.value;
+    // ⚠️ antd InternalTable.js:297-298 在每次 render 把最新 states 回填进累计对象 ——
+    //    本仓 setup 只跑一次，必须用 getter 实时取（否则 filter/sorter 动作时
+    //    changeInfo 里是 undefined，currentDataSource 未经过滤/排序）。
+    Object.defineProperties(changeEventInfo, {
+      sorter: {
+        get: () => sorterResult.getSorters(),
+        enumerable: true,
+        configurable: true,
+      },
+      sorterStates: {
+        get: () => sorterResult.sortStates.value,
+        enumerable: true,
+        configurable: true,
+      },
+    });
 
     // ============================ Filter =============================
     const onFilterChange = (filters: Record<string, FilterValue | null>, filterStates: never[]) => {
@@ -311,8 +324,18 @@ const Table = defineComponent({
         childrenColumnName.value,
       ),
     );
-    changeEventInfo.filters = filterResult.filters.value;
-    changeEventInfo.filterStates = filterResult.filterStates.value;
+    Object.defineProperties(changeEventInfo, {
+      filters: {
+        get: () => filterResult.filters.value,
+        enumerable: true,
+        configurable: true,
+      },
+      filterStates: {
+        get: () => filterResult.filterStates.value,
+        enumerable: true,
+        configurable: true,
+      },
+    });
 
     // ============================ Column ============================
     const columnTitleProps = useColumnTitleProps<Record<string, unknown>>(

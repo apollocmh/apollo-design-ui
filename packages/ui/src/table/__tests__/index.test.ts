@@ -8,12 +8,12 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { h, nextTick } from 'vue';
 import { EXPAND_COLUMN } from '../engine/constant';
-import type { TableKey } from '../interface';
 import { getFilterData } from '../hooks/use-filter';
 import { SELECTION_COLUMN } from '../hooks/use-selection';
 import { getSortData } from '../hooks/use-sorter';
+import type { TableKey } from '../interface';
 import Table from '../Table';
 
 const data = [
@@ -489,6 +489,126 @@ describe('Table · expandable（T2 展开）', () => {
     // ⚠️ antd 层 ExpandIcon 是 button，类名带 `-row-expand-icon-` 中缀（区别于引擎 span 的 `-row-spaced`）
     expect(icons[0]!.classes()).toContain('apollo-table-row-expand-icon-spaced');
     expect(icons[1]!.classes()).not.toContain('apollo-table-row-expand-icon-spaced');
+    w.unmount();
+  });
+});
+
+describe('Table · 排序/过滤（T3）', () => {
+  it('多重排序：multiple 靠后的列在先前列已排序基础上叠加', async () => {
+    const onChange = vi.fn();
+    const multiColumns = [
+      { title: 'Name', dataIndex: 'name' },
+      {
+        title: 'Age',
+        dataIndex: 'age',
+        sorter: { compare: (a: { age: number }, b: { age: number }) => a.age - b.age, multiple: 2 },
+      },
+      {
+        title: 'Key',
+        dataIndex: 'key',
+        sorter: { compare: () => 0, multiple: 1 },
+      },
+    ];
+    const w = mount(Table, {
+      props: { columns: multiColumns as never, dataSource: data as never, onChange },
+      attachTo: document.body,
+    });
+    // 先点 Key（multiple:1 主排序），再点 Age（multiple:2 次排序）
+    const ths = w.findAll('.apollo-table-thead th');
+    await ths[2]!.trigger('click');
+    await nextTick();
+    await ths[1]!.trigger('click');
+    await nextTick();
+    // ⚠️ antd 语义：多重排序时 onChange 的 sorter 是 SorterResult[]（multiple 优先级序）
+    const sorterArg = onChange.mock.calls.at(-1)![2] as
+      | { column?: { dataIndex?: string }; order?: string }
+      | { column?: { dataIndex?: string }; order?: string }[];
+    const last = Array.isArray(sorterArg) ? sorterArg.at(-1)! : sorterArg;
+    expect(last.column?.dataIndex).toBe('age');
+    expect(last.order).toBe('ascend');
+    w.unmount();
+  });
+
+  it('受控 sortOrder 有效值：点击后 onChange 仍发、表头保持 ascend', async () => {
+    const onChange = vi.fn();
+    const w = mount(Table, {
+      props: {
+        columns: [
+          { title: 'Age', dataIndex: 'age', sorter: () => 0, sortOrder: 'ascend' },
+        ] as never,
+        dataSource: data as never,
+        onChange,
+      },
+      attachTo: document.body,
+    });
+    await w.find('.apollo-table-thead th').trigger('click');
+    await nextTick();
+    expect(onChange).toHaveBeenCalled();
+    expect(
+      w
+        .find('.apollo-table-thead th')
+        .classes()
+        .some((c) => c.includes('sort')),
+    ).toBe(true);
+    w.unmount();
+  });
+
+  it('filterIcon 定制渲染；确定后 onChange 带过滤数据', async () => {
+    const onChange = vi.fn();
+    const filterColumns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        filters: [{ text: 'John', value: 'John' }],
+        onFilter: (value: unknown, record: never) =>
+          (record as { name: string }).name.includes(value as string),
+        filterIcon: () => h('span', { class: 'my-filter-icon' }, 'F'),
+      },
+    ];
+    // ⚠️ 真实 Teleport（stub 副本不挂事件监听器）
+    const w = mount(Table, {
+      props: { columns: filterColumns as never, dataSource: data as never, onChange },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    expect(w.find('.my-filter-icon').exists()).toBe(true);
+    await w.find('.apollo-table-filter-trigger').trigger('click');
+    await nextTick();
+    const dropdown = document.body.querySelector('.apollo-table-filter-dropdown')!;
+    const checkbox = dropdown.querySelector('.apollo-dropdown-menu input') as HTMLInputElement;
+    expect(checkbox).toBeTruthy();
+    checkbox.click();
+    await nextTick();
+    (
+      dropdown.querySelector('.apollo-table-filter-dropdown-btns button:last-child') as HTMLElement
+    ).click();
+    await nextTick();
+    // ⚠️ onChange 载荷：args[1] = filters 映射（{字段: FilterValue}），数据在 args[3].currentDataSource
+    const filters = onChange.mock.calls.at(-1)![1] as Record<string, string[]>;
+    expect(filters.name).toEqual(['John']);
+    const currentDataSource = (
+      onChange.mock.calls.at(-1)![3] as { currentDataSource: { key: string }[] }
+    ).currentDataSource;
+    expect(currentDataSource.length).toBe(1); // 只有 John Brown
+    w.unmount();
+  });
+
+  it('受控 filteredValue 有效值：初始即过滤生效', async () => {
+    const filterColumns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        filters: [{ text: 'John', value: 'John' }],
+        onFilter: (value: unknown, record: never) =>
+          (record as { name: string }).name.includes(value as string),
+        filteredValue: ['John'],
+      },
+    ];
+    const w = mount(Table, {
+      props: { columns: filterColumns as never, dataSource: data as never },
+      attachTo: document.body,
+    });
+    expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(1);
     w.unmount();
   });
 });

@@ -29,6 +29,28 @@ const NEST_DATA = [
   { key: '2', name: 'Johnny Green', age: 28 },
 ];
 
+const SORT_COLUMNS = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    filters: [
+      { text: 'Joe', value: 'Joe' },
+      { text: 'John', value: 'John' },
+    ],
+    onFilter: (value, record) => record.name.includes(value),
+    defaultFilteredValue: ['John'],
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+    sorter: (a, b) => a.age - b.age,
+    defaultSortOrder: 'descend',
+  },
+  { title: 'Address', dataIndex: 'address', key: 'address' },
+];
+
 const COLUMNS = [
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Age', dataIndex: 'age', key: 'age' },
@@ -66,4 +88,6 @@ export default {
       />,
       <Table key="nest" columns={COLUMNS} dataSource={NEST_DATA} />,
     ]),
+
+  'sorter-filter': () => box(<Table columns={SORT_COLUMNS} dataSource={DATA} />),
 };
