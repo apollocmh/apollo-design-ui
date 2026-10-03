@@ -147,7 +147,7 @@ export function genDropdownStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
     prefixCls === 'apollo'
       ? cssText
-      : cssText.split('.apollo-dropdown').join('.' + prefixCls + '-dropdown');
+      : cssText.split('.apollo-dropdown').join(`.${prefixCls}-dropdown`);
   const decls =
     prefixCls === 'apollo' ? `.apollo-dropdown{${DECLS}}` : `.${prefixCls}-dropdown{${DECLS}}`;
   return `${KEYFRAMES}

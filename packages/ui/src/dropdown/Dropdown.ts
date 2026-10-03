@@ -170,12 +170,15 @@ const Dropdown = defineComponent({
     };
 
     // ======================= menu 点击关闭 ===========================
+    // ⚠️ antd dropdown.js:149-155：只通知 `onOpenChange(false, {source:'menu'})`，
+    //    **不**直接改内部 open —— 受控消费者（如 Table 过滤下拉的
+    //    onDropdownOpenChange）有权按 source 忽略（多选过滤点击菜单项不关闭）。
+    //    此前多写的 setOpen/emit 会绕过受控拦截 ⇒ 过滤菜单一点就消失。
     const onMenuClick = (): void => {
       if (props.menu?.selectable && props.menu?.multiple) {
         return;
       }
       props.onOpenChange?.(false, { source: 'menu' });
-      setOpen(false);
       emit('update:open', false);
     };
 

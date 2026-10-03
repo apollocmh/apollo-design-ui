@@ -70,7 +70,7 @@ const Menu = defineComponent({
     inlineCollapsed: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: false },
     disabledOverflow: { type: Boolean, default: false },
-    selectable: { type: Boolean, default: true },
+    selectable: { type: Boolean, default: undefined },
     multiple: { type: Boolean, default: false },
     selectedKeys: { type: Array as PropType<string[]>, default: undefined },
     defaultSelectedKeys: { type: Array as PropType<string[]>, default: undefined },
@@ -172,7 +172,10 @@ const Menu = defineComponent({
     };
 
     // ===================== Selection =====================
-    const mergedSelectable = override?.selectable ?? props.selectable;
+    // ⚠️ antd menu.js:85：`selectable ?? overrideObj.selectable` —— **props 优先**，
+    //    override 只是兜底（Dropdown override 的 selectable=false 不应盖掉
+    //    Table 过滤菜单显式传的 selectable=true）；props 未给时默认 true。
+    const mergedSelectable = props.selectable ?? override?.selectable ?? true;
     const triggerSelection = (info: MenuInfo): void => {
       if (mergedSelectable) {
         const targetKey = info.key;

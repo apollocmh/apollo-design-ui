@@ -60,6 +60,18 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-10-03（table T1 会话，XL 组件骨架期）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 112 | **provide 的 getter 已解包 `.value`，消费处不能再 `.value`**——engine context 用 `get expandableType() { return expandableType.value; }` 注入，BodyRow 里写 `ctx.expandableType.value` 得 `undefined` ⇒ 展开行静默消失（图标状态正常、行不渲染，L2 靠「展开行文本」断言抓到） | L2（展开行渲染断言） | context 的消费纪律二选一并全文件统一：getter 解包（字面量类型）或裸 ComputedRef（消费处 `.value`）；类型层 `ComputedRef` vs 字面量的 TS2367 对比警告是信号，不要用 `as never` 压掉 |
+| 113 | **CSS 变量机械替换必须先处理 `var(--ant-x)` 再处理裸 `--ant-x`**——顺序反了产出 `var(var(--apollo-x))`（无效 CSS），line-height/color/background 整条声明静默失效 ⇒ 行高差 8px 级的像素偏差，难排查 | L6（行高系统性偏差） | 样式生成器脚本先 `var(--ant-x)` → `v('x')`、再裸 decl；生成后 `grep -c 'var(var(' 必须为 0` 作为脚本自检 |
+| 114 | **test-utils 的 teleport stub 副本不挂事件监听器**——Portal 内 DOM 的 `dispatchEvent/click()` 全部无效（`_vei` 为空、事件冒泡正常但不触发 Vue 处理器），L2 假绿/假红都可能出现 | L2（过滤下拉交互用例） | Portal 内交互的 mount 必须 `global: { stubs: { teleport: false } }`（真实 Teleport 到 document.body 再查） |
+| 115 | **React 布尔守卫迁移到 Vue 受控组件时不能顺手加内部 setOpen**——antd `onMenuClick` 只调 `props.onOpenChange(false, {source:'menu'})`，本仓多写的 `setOpen(false)` 绕过了消费者的 source 过滤 ⇒ 过滤多选菜单一点就消失 | L2（多选过滤流程） | 受控组件的事件回调**只发通知**，内部 state 变更由消费方决定；diff antd 时看到「内部 setState 缺失」先确认不是受控语义 |
+| 116 | **Menu 的 override 合并方向是 props 优先**（antd menu.js:85 `selectable ?? overrideObj.selectable`）——反转会导致 Dropdown 内的过滤菜单永远不可选；props 需允许 undefined（Boolean prop 的 `default: true` 会吞掉显式 false/undefined 区分） | L2（Menu 隔离用例） | 合并语义逐字对 antd 源码行号；Boolean prop 想表达「三态」必须 `default: undefined` |
+| 117 | **列定义可能被深层 reactive 代理，哨兵引用相等必须 toRaw**——`SELECTION_COLUMN`/`EXPAND_COLUMN` 是模块单例，经 ctx/props 链后变代理副本 ⇒ `includes/indexOf` 全 miss（选择列重复插入/用户哨兵不被替换） | L2（哨兵列位置用例） | 哨兵比较统一 `toRaw(col) === SENTINEL`；这是 React→Vue 迁移的通用坑（React 无深层代理） |
+
+
 ### 2026-09-29（tour 会话，G4–G14）
 
 | # | 坑 | 抓到它的层 | 对策 |

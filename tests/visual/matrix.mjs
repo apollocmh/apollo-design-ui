@@ -498,6 +498,11 @@ export const COMPONENTS = {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: ['basic', 'status', 'style-class'],
   },
+  table: {
+    // 3 个 variant × 3 个 viewport = 9 张（T1 骨架：basic / bordered-size / empty）
+    // 固定列/汇总/粘性条随 T5 补变体。
+    variants: ['basic', 'bordered-size', 'empty'],
+  },
   rate: {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: [

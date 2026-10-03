@@ -1628,6 +1628,65 @@ export type {
 export { Steps } from './steps';
 export type { ComponentToken as StepsComponentToken } from './steps/style/token';
 export { prepareStepsComponentToken, stepsTokenValues } from './steps/style/token';
+export type {
+  ColumnFilterItem as TableColumnFilterItem,
+  ColumnGroupType as TableColumnGroupType,
+  ColumnSorter as TableColumnSorter,
+  ColumnsType as TableColumnsType,
+  ColumnTitle as TableColumnTitle,
+  ColumnTitleProps as TableColumnTitleProps,
+  ColumnType as TableColumnInterface,
+  CompareFn as TableCompareFn,
+  ExpandableConfig as TableExpandableConfig,
+  ExpandType as TableExpandType,
+  FilterConfirmProps as TableFilterConfirmProps,
+  FilterDropdownProps as TableFilterDropdownProps,
+  FilterResetProps as TableFilterResetProps,
+  FilterSearchType as TableFilterSearchType,
+  FilterValue as TableFilterValue,
+  GetPopupContainer as TableGetPopupContainer,
+  GetRowKey as TableGetRowKey,
+  RenderExpandIcon as TableRenderExpandIcon,
+  RowClassName as TableRowClassName,
+  RowSelectionType as TableRowSelectionType,
+  RowSelectMethod as TableRowSelectMethod,
+  SelectionItem as TableSelectionItem,
+  SelectionItemSelectFn as TableSelectionItemSelectFn,
+  SelectionSelectFn as TableSelectionSelectFn,
+  SorterResult as TableSorterResult,
+  SorterTooltipProps as TableSorterTooltipProps,
+  SorterTooltipTarget as TableSorterTooltipTarget,
+  SortOrder as TableSortOrder,
+  TableAction,
+  TableComponents,
+  TableCurrentDataSource,
+  TableKey,
+  TableLocale,
+  TablePaginationConfig,
+  TablePaginationPlacement,
+  TablePaginationPosition,
+  TableProps,
+  TableRowSelection,
+  TableScrollConfig,
+  TableSemanticClassNames,
+  TableSemanticStyles,
+  TableSticky,
+} from './table';
+// ---------------------------------------------------------------------------
+// Table —— 表格（XL：引擎 + antd 壳两层，分片交付）
+// ---------------------------------------------------------------------------
+export {
+  EXPAND_COLUMN,
+  getColumnKey as getTableColumnKey,
+  renderColumnTitle as renderTableColumnTitle,
+  SELECTION_ALL,
+  SELECTION_INVERT,
+  SELECTION_NONE,
+  Summary,
+  Table,
+  TableSELECTION_COLUMN as SELECTION_COLUMN,
+} from './table';
+export { genTableStyle, genTableTokenDecls } from './table/style';
 // ---------------------------------------------------------------------------
 // Tabs —— 标签页（rc-tabs 内核的 Vue 等价物）
 //

@@ -86,6 +86,7 @@ import { genSplitterStyle } from '../splitter/style';
 import { genStatisticStyle } from '../statistic/style';
 import { genStepsStyle } from '../steps/style';
 import { genSwitchStyle } from '../switch/style';
+import { genTableStyle } from '../table/style';
 import { genTabsStyle } from '../tabs/style';
 import { genTagStyle } from '../tag/style';
 import { genTimelineStyle } from '../timeline/style';
@@ -153,6 +154,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'listy', gen: genListyStyle },
   { name: 'qrcode', gen: genQrCodeStyle },
   { name: 'splitter', gen: genSplitterStyle },
+  { name: 'table', gen: genTableStyle },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },
