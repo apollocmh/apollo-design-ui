@@ -1,6 +1,6 @@
 /**
  * Vue 侧（@apollo-design/ui）的 Table 视觉用例。与 react/table.jsx 逐条对应。
- * basic（3×3 + 链接列）/ bordered-size（bordered × 2 size）/ empty（空数据）/ expand（row 展开 + nest 树形）。
+ * basic / bordered-size / empty / expand / selection（checkbox+radio）/ sorter-filter。
  *
  * ⚠️ 全部为静态形态（无固定列/滚动联动）—— T1 分片只比骨架；
  *    固定列/汇总/粘性条随 T5 补变体。
@@ -105,6 +105,21 @@ export default {
       h(Table, {
         columns: COLUMNS,
         dataSource: NEST_DATA,
+      }),
+    ]),
+
+  selection: () =>
+    box([
+      h(Table, {
+        columns: COLUMNS,
+        dataSource: DATA,
+        rowSelection: { selectedRowKeys: ['1'] },
+        style: { marginBottom: '24px' },
+      }),
+      h(Table, {
+        columns: COLUMNS,
+        dataSource: DATA,
+        rowSelection: { type: 'radio', selectedRowKeys: ['2'] },
       }),
     ]),
 

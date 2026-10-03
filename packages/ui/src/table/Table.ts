@@ -19,7 +19,13 @@ import { EXPAND_COLUMN, INTERNAL_HOOKS } from './engine/constant';
 import Footer, { Summary } from './engine/Footer';
 import EngineTable from './engine/Table';
 import { getFilterData, useFilter } from './hooks/use-filter';
-import { SELECTION_COLUMN, useSelection } from './hooks/use-selection';
+import {
+  SELECTION_ALL,
+  SELECTION_COLUMN,
+  SELECTION_INVERT,
+  SELECTION_NONE,
+  useSelection,
+} from './hooks/use-selection';
 import { getSortData, useSorter } from './hooks/use-sorter';
 import {
   DEFAULT_PAGE_SIZE,
@@ -647,6 +653,19 @@ const Table = defineComponent({
       );
     };
   },
+});
+
+// ============================ 静态挂载（antd API 兼容） ============================
+// antd：`Table.SELECTION_COLUMN` / `Table.SELECTION_ALL` / `Table.SELECTION_INVERT` /
+//       `Table.SELECTION_NONE` / `Table.EXPAND_COLUMN` / `Table.Summary`。
+// Vue 组件对象同样是对象，直接挂（消费侧两种写法都通）。
+Object.assign(Table, {
+  SELECTION_COLUMN,
+  SELECTION_ALL,
+  SELECTION_INVERT,
+  SELECTION_NONE,
+  EXPAND_COLUMN,
+  Summary,
 });
 
 export default Table;

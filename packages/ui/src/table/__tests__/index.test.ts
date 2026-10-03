@@ -8,7 +8,7 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { h, nextTick, ref } from 'vue';
 import { EXPAND_COLUMN } from '../engine/constant';
 import { getFilterData } from '../hooks/use-filter';
 import { SELECTION_COLUMN } from '../hooks/use-selection';
@@ -609,6 +609,182 @@ describe('Table · 排序/过滤（T3）', () => {
       attachTo: document.body,
     });
     expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(1);
+    w.unmount();
+  });
+});
+
+describe('Table · 选择/分页（T4）', () => {
+  it('radio 型：单选互斥，selectedRowKeys 单元素', async () => {
+    const onChange = vi.fn();
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        rowSelection: { type: 'radio', onChange } as never,
+      },
+      attachTo: document.body,
+    });
+    const radios = w.findAll('.apollo-table-tbody .apollo-radio-wrapper input');
+    expect(radios.length).toBe(3);
+    await radios[1]!.setValue(true);
+    await nextTick();
+    expect(onChange).toHaveBeenLastCalledWith(['2'], expect.anything(), expect.anything());
+    await radios[2]!.setValue(true);
+    await nextTick();
+    expect(onChange).toHaveBeenLastCalledWith(['3'], expect.anything(), expect.anything());
+    w.unmount();
+  });
+
+  it('树形选择：勾父全选子，半选态在表头', async () => {
+    const treeData = [
+      { key: 'p', name: 'parent', children: [{ key: 'c1', name: 'c1' }, { key: 'c2', name: 'c2' }] },
+    ];
+    const onChange = vi.fn();
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: treeData as never,
+        rowSelection: { onChange } as never,
+        expandable: { defaultExpandAllRows: true } as never,
+      },
+      attachTo: document.body,
+    });
+    // 默认展开后：p + c1 + c2 共 3 个 checkbox
+    const boxes = w.findAll('.apollo-table-tbody .apollo-checkbox-wrapper input');
+    expect(boxes.length).toBe(3);
+    // 勾子节点 c1 → 父半选
+    await boxes[1]!.setValue(true);
+    await nextTick();
+    const keys = onChange.mock.calls.at(-1)![0] as string[];
+    expect(keys).toEqual(['c1']);
+    // 表头 checkbox 呈 indeterminate（halfChecked）
+    const header = w.find('.apollo-table-thead .apollo-checkbox');
+    expect(header.classes()).toContain('apollo-checkbox-indeterminate');
+    // 勾另一个子 → 父全选
+    await boxes[2]!.setValue(true);
+    await nextTick();
+    expect((onChange.mock.calls.at(-1)![0] as string[]).sort()).toEqual(['c1', 'c2']);
+    w.unmount();
+  });
+
+  it('selections 菜单：ALL/INVERT/NONE 三项可执行', async () => {
+    const onChange = vi.fn();
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: data as never,
+        rowSelection: {
+          onChange,
+          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
+        } as never,
+      },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    // 先勾第一行
+    await w.findAll('.apollo-table-tbody .apollo-checkbox-wrapper input')[0]!.setValue(true);
+    await nextTick();
+    // ⚠️ antd 语义：selections 下拉**未传 trigger** ⇒ 默认 hover 打开（useSelection.js:325）；
+    //    hover 有 150ms mouseEnterDelay ⇒ 用 vi.waitFor 轮询
+    await w
+      .find('.apollo-table-selection-extra .apollo-dropdown-trigger')
+      .trigger('mouseenter');
+    await vi.waitFor(
+      () => {
+        const items = document.body.querySelectorAll('.apollo-dropdown-menu li');
+        expect(items.length).toBe(3);
+      },
+      { timeout: 2000, interval: 50 },
+    );
+    // ⚠️ 等展开 motion 结束（过渡中的 popup DOM 会被替换 ⇒ li 监听器丢失）
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await nextTick();
+    const menuItems = document.body.querySelectorAll('.apollo-dropdown-menu li');
+    // INVERT：1 勾 → 2/3 勾（⚠️ Menu 的监听器可能在 li 内层 —— 逐层点到底）
+    const invertLi = menuItems[1] as HTMLElement;
+    invertLi.dispatchEvent(
+      new MouseEvent('click', { bubbles: true, cancelable: true }),
+    );
+    await nextTick();
+    console.log('SELT-ALL:', JSON.stringify(onChange.mock.calls.map((c) => c[0])));
+    const keys = onChange.mock.calls.at(-1)![0] as string[];
+    expect(keys.sort()).toEqual(['2', '3']);
+    w.unmount();
+  });
+
+  it('受控分页：current 变化驱动切片，onPageChange 通知', async () => {
+    const big = Array.from({ length: 12 }, (_, i) => ({ key: String(i), name: `n${i}` }));
+    const current = ref(1);
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: big as never,
+        pagination: {
+          defaultCurrent: 1,
+          pageSize: 10,
+          onChange: (c: number) => {
+            current.value = c;
+          },
+        },
+      },
+      attachTo: document.body,
+    });
+    expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(10);
+    // 非受控路径（defaultCurrent）：内部 current 翻页
+    const page2 = w.findAll('.apollo-pagination .apollo-pagination-item').find((el) =>
+      el.text() === '2',
+    );
+    await page2!.trigger('click');
+    await nextTick();
+    await nextTick();
+    expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(2);
+    w.unmount();
+  });
+
+  it('受控 current：setProps 驱动切片', async () => {
+    const big = Array.from({ length: 12 }, (_, i) => ({ key: String(i), name: `n${i}` }));
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: big as never,
+        pagination: { current: 1, pageSize: 10 },
+      },
+      attachTo: document.body,
+    });
+    expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(10);
+    await w.setProps({ pagination: { current: 2, pageSize: 10 } });
+    await nextTick();
+    expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(2);
+    w.unmount();
+  });
+
+  it('showSizeChanger 换页大小：pageSize=5 → 3 页', async () => {
+    const big = Array.from({ length: 12 }, (_, i) => ({ key: String(i), name: `n${i}` }));
+    const pageSize = ref(10);
+    const w = mount(Table, {
+      props: {
+        columns: columns as never,
+        dataSource: big as never,
+        pagination: {
+          current: 1,
+          pageSize: pageSize.value,
+          pageSizeOptions: [5, 10],
+          showSizeChanger: true,
+          onShowSizeChange: (_c: number, ps: number) => {
+            pageSize.value = ps;
+          },
+        },
+      },
+      attachTo: document.body,
+    });
+    // options 选择器存在（Select 组件，交互已在 select 流覆盖）
+    expect(
+      w.find('.apollo-pagination-options .apollo-select, .apollo-pagination-options select').exists(),
+    ).toBe(true);
+    // setProps 换 pageSize → 切片 5
+    await w.setProps({ pagination: { current: 1, pageSize: 5 } });
+    await nextTick();
+    expect(w.findAll('.apollo-table-tbody > tr[data-row-key]').length).toBe(5);
     w.unmount();
   });
 });

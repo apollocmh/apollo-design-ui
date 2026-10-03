@@ -89,5 +89,22 @@ export default {
       <Table key="nest" columns={COLUMNS} dataSource={NEST_DATA} />,
     ]),
 
+  selection: () =>
+    box([
+      <Table
+        key="cb"
+        columns={COLUMNS}
+        dataSource={DATA}
+        rowSelection={{ selectedRowKeys: ['1'] }}
+        style={{ marginBottom: '24px' }}
+      />,
+      <Table
+        key="rd"
+        columns={COLUMNS}
+        dataSource={DATA}
+        rowSelection={{ type: 'radio', selectedRowKeys: ['2'] }}
+      />,
+    ]),
+
   'sorter-filter': () => box(<Table columns={SORT_COLUMNS} dataSource={DATA} />),
 };
