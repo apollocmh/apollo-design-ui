@@ -28,6 +28,14 @@
 📌 **`noNonNullAssertion` 已裁决**：`**/__tests__/**` **关闭**（`biome.json`），生产 40 条保持开启、
 随组件改动逐个收窄（**禁止扫改**：`add(parent?.key)` 会往 Set 里塞 `undefined`）⇒ 全仓 warn **207 → 65**。
 
+📌 **「复合词事件名」护栏已落地**（`packages/ui/src/__tests__/event-name-casing.test.ts`）：
+用 **TS AST** 只扫 `h('<原生标签>', <props>)` 并穿透 spread/条件/`computed`/`x.value`。
+**判据：全仓 489 处 `onXxxYyy:` 对象键 → AST 过滤后 3**（全是反向哨兵，生产 0 命中）⇒
+**别用「全仓正则 + 逐条白名单」**。两个必守的「不误报」判据见 PITFALLS **338**：
+① 先剥 `Once`/`Passive`/`Capture` 后缀（`onPointerdownCapture` 是对的）；
+② 只穿透 `computed`/`ref` 等**透明包装**（否则 `overlay.popupProps.value` 会误回溯到
+`useOverlay({…})` 的配置实参）。
+
 ⚠️ **登记簿的坐标要复核后再信**（2026-10-03 实测：重写后逐条复核，改掉 **4 处事实错误**）：
 §1.3「Switch handler 被丢弃」**证伪**（`callbacks` 是 `attrs` 别名，且早有 L1 用例）·
 §1.9「2 条 biome warn」实为 **207 条**（biome **默认只列前 20** ⇒ 必须 `--max-diagnostics=none`）·

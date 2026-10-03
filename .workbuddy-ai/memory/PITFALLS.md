@@ -20,6 +20,7 @@
 - **Vue 化**：🚨 **继承一个「方法返回自身类型」的基类时，子类必须覆写该方法** —— `utils.Color` 的 `clone()`/`setAlpha()` 里 `new Color(...)` 是**词法基类** ⇒ 子类不覆写会掉回基类（`clone` 只错在**类型**、`setAlpha` **运行时也错**）（320）
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
 - **事件名**：🚨 `h()` 里写 `onMouseDown`（大写 D）会被 Vue 规范化成 `mouse-down` ⇒ **永不触发且不报错**；必须写 `onMousedown` / `onTouchstart`（323）
+- **事件名**：🚨 **给这类 bug 加护栏不能用「全仓正则 + 逐条白名单」**（489 处对象键里绝大多数是合法的组件 prop）⇒ 用 AST 限定到 `h('<原生标签>')`（489 → 3）；且必守两条不误报判据：**① 先剥 `Once`/`Passive`/`Capture` 后缀**（`onPointerdownCapture` 是对的）· **② 只穿透 `computed`/`ref` 这类透明包装**（否则 `overlay.popupProps.value` 会误回溯到 `useOverlay({…})` 的配置实参）（338）
 - **测试/jsdom**：🚨 jsdom 的 cssstyle 把 `hsl()`/hex **规范化成** `rgb()`/`rgba()` ⇒ 断言内联样式要按规范化形态写（324）
 - **流程**：🚨 **L6 视觉层解析的是 `packages/ui/dist` 产物** —— 改**组件源码**（不只样式）后必须先 `pnpm build:ui`，否则 `--mode compare` 的差异率**逐位不变**（327）
 - **浮层**：🚨 **模板里的 `<slot/>` 产出的是嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到**数组**而不是元素 ⇒ 走「包一层 `<span>`」分支（D79）。要传单个元素只能**用渲染函数**（330）
@@ -4359,3 +4360,37 @@
 
     📌 同族：`affix` 的「固钉态（`position:fixed`）不进视觉比对」——但 affix 的
     **未固钉态是可见的**，float-button 是**整张图都空**，性质更严重。
+
+338. 🚨 **给「复合词事件名」加护栏时：不能用「全仓正则 + 逐条白名单」，必须用 AST 限定到
+    `h('<原生标签>')`** —— 而且有**两个必守的「不误报」判据**（2026-10-03 实测）。
+
+    **① 规模：489 → 3。** 全仓 `on[A-Z][a-z]*[A-Z]\w*\s*:` 形态的对象键有 **489** 处，
+    但**绝大多数是合法的组件 prop**（`onOpenChange` / `onItemClick` / `onTabClick` …）——
+    Vue 对**声明过的 prop** 按**名字**解析、**不经 hyphenate**。逐条白名单要 489 条，不可行。
+    只有 `h('<小写标签>', <props>)` 这一层才危险 ⇒ 用 TypeScript AST 过滤后是 **3**（全是反向哨兵）。
+
+    **② 必须穿透 spread（否则漏掉真 bug）。** 本仓第 2 个真 bug 藏在
+    `h('div', { ...(cond ? collapsibleProps.value : {}) })`，而
+    `collapsibleProps = computed(() => ({ onKeydown: … }))`。
+    只看调用点的**直接属性**会**完全漏掉**它（实测：只认直接属性时，把键名改回错误写法，扫描器**不报**）。
+    ⇒ 要递归穿透：`标识符 → 变量初始化式` / `条件表达式 → 两分支` / `x.value → 基对象` /
+    `对象内的 ...spread` / `computed(() => ({…})) → 实参`。
+
+    **③ 🚨 不误报判据 A：`Once` / `Passive` / `Capture` 是 Vue 的合法后缀。**
+    Vue 的 `parseName` **先剥掉**尾部 `Once|Passive|Capture`（当 `options`），**再** hyphenate
+    ⇒ `onPointerdownCapture` → 剥 `Capture` → `pointerdown` ✅ **是对的**。
+    ⇒ 判定前**必须先剥后缀**（循环剥），否则会误报本仓 `overlay/use-overlay.ts` 的写法。
+    ⚠️ 反例：`onLostPointerCapture` → 剥 `Capture` → `onLostPointer` → 仍复合 ⇒ **该报**
+    （真实事件是 `lostpointercapture`，而它会 hyphenate 成 `lost-pointer` ✗）。所以「剥后缀」不是「一律放行」。
+
+    **④ 🚨 不误报判据 B：`x.y.value` 不能回溯到 `useSomeHook({…})` 的配置实参。**
+    `trigger.ts` 里 `h('div', { ...overlay.popupProps.value })`，而
+    `const overlay = useOverlay({ onOpenChange: … })` —— `onOpenChange` 是 **hook 的配置**，
+    **不是**落到 DOM 的 prop。若解析器把 `overlay` 回溯到 `useOverlay(...)` 的实参，就会**误报**。
+    ⇒ 只穿透**透明包装**（`computed`/`ref`/`shallowRef`/`reactive`/`readonly`/`toRef`
+    —— 实参就是返回的对象本体），**其余调用一律放弃**。
+
+    **判据（护栏自身要能红）**：把两个真 bug 改回去 ⇒ 护栏报
+    `collapse/Panel.ts:101 onKeyDown [h('div')]`（×3，spread 到 3 处）与
+    `segmented/Segmented.ts:356 onMouseDown [h('label')]`；恢复后 4/4 绿。
+    📌 落地：`packages/ui/src/__tests__/event-name-casing.test.ts`（豁免清单**双向校验**）。

@@ -54,10 +54,12 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 > **本节现状**（2026-10-03 复核后）：
 > - **1.1 已裁决并执行**（`visual-baseline-in-git` = **A 入库 git**）：84 条 → **9 条**（只剩 float-button，
 >   原因见 **1.10**）；
-> - **1.9 已裁决并执行**（测试目录**关闭** `noNonNullAssertion`）：207 条 → **65 条**；
+> - **1.4 已加护栏**（`event-name-casing.test.ts`，489 → 3）· **1.9 已裁决并执行**（测试目录关闭
+>   `noNonNullAssertion`）：207 → **63** 条 warn；
 > - **1.3 已证伪、关闭**（❌ 不是 bug，**别再查一遍**）；
-> - **1.10 新登记**（float-button 的视觉变体**空转**）；
-> - 其余（1.2 / 1.4 / 1.5 / 1.6 / 1.7 / 1.8）**不需要决策**，可直接排期。
+> - **1.10 新登记**（float-button 的视觉变体**空转**，**需定夺**）·
+>   **1.11 新登记**（`form` 校验链用例偶发红，`flush()` 固定 60 ms）；
+> - 其余（1.2 / 1.5 / 1.6 / 1.7 / 1.8）**不需要决策**，可直接排期。
 
 ### 1.1 ✅ **已裁决并执行**（2026-10-03）L6 的 `missing-baseline`：**84 → 9**
 
@@ -114,6 +116,29 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   md5 tests/visual/baselines/react/float-button/*.png | awk '{print $NF}' | sort | uniq -c
   ```
 
+### 1.11 ⚠️ **[新登记]** `form` 的校验链用例**偶发红**（`flush()` 固定 60 ms，并行负载下不够）
+
+- **现象**：`verify:full` 的 `test:unit` 报
+  ```
+  FAIL unit packages/ui/src/form/__tests__/form.test.ts > Form · 校验链
+       > required 失败 → explain + has-error + aria 三键；修复后清除
+  AssertionError: expected false to be true
+    ❯ form.test.ts:157  expect(w.find('.apollo-form-item-explain-error').exists()).toBe(true)
+  ```
+- **已排除「本次改动引入」**：
+  - 单独跑该文件 ⇒ **14 / 14 通过**；
+  - 带本次全部改动**重跑整套 `test:unit`** ⇒ **277 / 277 文件全过**、`exit=0`。
+  ⇒ **间歇性**（同一份代码，一次红一次绿）。
+- **根因（读码）**：该文件的 `flush()` 是**固定等待**
+  （`form.test.ts:29-33`：`setTimeout(60)` + 两次 `nextTick`），
+  而断言依赖「异步校验完成 → 状态更新 → `explain-error` 渲染」。
+  并行 worker 多、CPU 争抢时 60 ms 可能不够 ⇒ **假红**。
+- **怎么修（建议）**：把该用例里**依赖异步渲染**的断言改成 `vi.waitFor(() => expect(…))`
+  （轮询到通过即返回，默认 timeout 1000 ms）—— 比加长 `setTimeout` 更稳，也不掩盖真慢。
+  ⚠️ 这是**另一个组件的测试**，改动要单独过它的门禁；**不要**为了让绿灯而放宽断言。
+- **需要谁**：无（但要先判断「是等待不够」还是「校验链真的慢」——后者是真 bug）。
+- 📌 判据：`pnpm exec vitest run --project unit packages/ui/src/form/__tests__/form.test.ts`
+
 ### 1.2 ⚠️ `typography/semantic` 三个视口 `size-mismatch`（1.28% / 2.41% / 4.93%）
 
 - **现象**：`node tests/visual/run.mjs --mode compare --component typography` ⇒
@@ -148,7 +173,7 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
     ⇒ **28 / 28 通过**。
 - **需要谁**：无（**已关闭**）。
 
-### 1.4 ⚠️ 「复合词事件名」缺**全仓护栏** —— 已修 2 处，同类可能还有
+### 1.4 ✅ **已加护栏**（2026-10-03）「复合词事件名」全仓扫描 —— 已修 2 处，同类不再复发
 
 - **背景**：Vue 的 `parseName` 对 `on` 之后的部分做 `hyphenate`
   ⇒ `onMouseDown` → **`mouse-down`**、`onKeyDown` → **`key-down`**
@@ -160,17 +185,29 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   2. `collapse/Panel.ts` 的 **`onKeydown: (e: KeyboardEvent) =>`**（现 **:101**，修前 :98）
      —— 该对象被 spread 到原生 `<div>`（header / 展开图标）⇒
      **Enter 键展开/收起失效**（**a11y 键盘操作**）。
-- **未做**：**没有自动化护栏** ⇒ 下一个人往原生元素上写 `onMouseEnter:` 还会静默失效。
-- **怎么修（建议）**：加一条**扫描测试**（建议放 `packages/ui/src/__tests__/`）：
-  扫全仓 `.ts` / `.vue`，找「对象键」形态的复合词事件名（`: on[A-Z][a-z]+[A-Z]`），
-  **逐个判断目标**：目标是**原生标签**（`h('div' | 'label' | 'button' …`）⇒ 报错；
-  目标是**组件**（且该组件声明了同名 prop / 同名 emit）⇒ 放行。
-- ⚠️ **误报防范**：本仓另有 ~10 处 `onKeyDown:` / `onMouseEnter:` 是**组件声明过的 prop**
-  （`input/engine/Input.ts` / `notification/engine/Notice.ts` / `slider/Handles/*`）——
-  Vue 按**名字**解析声明过的 prop、**不经 `hyphenate`** ⇒ **它们是对的，别改**。
-- **反向哨兵（现成）**：`color-picker/__tests__/engine.test.ts` 末节 ——
-  `h('div', { onMousedown })` 收得到、`h('div', { onMouseDown })` **收不到**。
-- **需要谁**：无。📌 `PITFALLS.md` **323**。
+- ✅ **护栏已落地**：`packages/ui/src/__tests__/event-name-casing.test.ts`（4 条用例）。
+  用 **TypeScript AST** 只扫 **`h('<原生标签>', <props>)`**，且**穿透**
+  `spread` / 条件表达式 / `computed(() => ({…}))` / `x.value`。
+  - **豁免清单双向校验**（与 `style-prefix.test.ts` 同纪律）：未登记却扫到 ⇒ 红；
+    登记了却扫不到 ⇒ 红（哨兵被删/改名 ⇒ 豁免不能空转）。
+  - **当前命中 3 条，全是有意的反向哨兵**（`color-picker` 的 `onMouseDown`、
+    `utils` 的 `onKeyDown` / `onDoubleClick`），**生产代码 0 命中**。
+  - **🔁 反向哨兵（护栏自身的）**：把两个真 bug 改回去 ⇒ 护栏**红**并精确点名
+    `collapse/Panel.ts:101 onKeyDown [h('div')]`（×3，spread 到 3 处）与
+    `segmented/Segmented.ts:356 onMouseDown [h('label')]`；恢复后 4/4 绿。
+- ⚠️ **两个「不误报」的判据（踩过才知道，必须保住）**：
+  1. **`Once` / `Passive` / `Capture` 是 Vue 的合法后缀** —— `parseName` **先剥后缀、再
+     hyphenate** ⇒ `onPointerdownCapture` → `pointerdown` ✅。判定前必须先剥后缀，
+     否则会把 `overlay/use-overlay.ts` 的写法误报（本仓真用到）。
+  2. **不能把 `x.y.value` 回溯到 `useSomeHook({…})` 的配置实参** ——
+     `trigger.ts` 的 `onOpenChange` 是 `useOverlay` 的**配置**，不是落到 DOM 的 prop。
+     ⇒ 只穿透 `computed` / `ref` / `shallowRef` / `reactive` / `readonly` / `toRef` 这类
+     **透明包装**（实参就是返回的对象本体），其余调用一律放弃。
+- ⚠️ **判据**：本仓有 **489** 处 `onXxxYyy:` 形态的对象键（绝大多数是**组件声明过的 prop**，
+  合法 —— Vue 按**名字**解析声明过的 prop、**不经 `hyphenate`**）。
+  所以**不能**用「全仓正则 + 逐条白名单」——那要 489 条。
+  只有 `h('<原生标签>')` 这一层才是危险面（AST 过滤后 489 → **3**）。
+- **需要谁**：无（**已关闭**）。📌 `PITFALLS.md` **323** / **338**。
 
 ### 1.5 ⚠️ `Trigger` 的 `children[0]` 归一化对「数组」的处理 —— 未做全仓扫描
 
@@ -415,13 +452,15 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 
 > 三条都是「本会话踩过、修了、但**没有自动化拦截**」的坑。加护栏的收益远大于再修一次。
 
-| # | 护栏 | 防的是什么 | 落点建议 |
-|---|---|---|---|
-| 1 | **复合词事件名扫描** | §1.4：`onMouseDown` 往原生元素上写 ⇒ 静默失效 | `packages/ui/src/__tests__/event-name-casing.test.ts` |
-| 2 | **L4 基线的「时间依赖」扫描** | §2.4：`getNow()` 类用例让门禁**每天跨午夜就红** | 扫 `tests/compat/baselines/*.dom.json` 的 `today`/`now`；扫 `baseline/*.mjs` 的时间 prop |
-| 3 | **运行时声明 ↔ 公开类型同源** | §2.2 / §2.3：宽松声明让消费方被迫 `as unknown as` | 对每个组件：`InstanceType<typeof C>['$props']` 与 `CProps` 双向赋值（判据 = 消费方 `satisfies` 能过） |
+| # | 护栏 | 防的是什么 | 落点 | 状态 |
+|---|---|---|---|---|
+| 1 | **复合词事件名扫描** | §1.4：`onMouseDown` 往原生元素上写 ⇒ 静默失效 | `packages/ui/src/__tests__/event-name-casing.test.ts` | ✅ **已落地**（4 条用例，含 5 段自证 + 双向校验） |
+| 2 | **L4 基线的「时间依赖」扫描** | §2.4：`getNow()` 类用例让门禁**每天跨午夜就红** | 扫 `tests/compat/baselines/*.dom.json` 的 `today`/`now`；扫 `baseline/*.mjs` 的时间 prop | ⬜ 待做 |
+| 3 | **运行时声明 ↔ 公开类型同源** | §2.2 / §2.3：宽松声明让消费方被迫 `as unknown as` | 对每个组件：`InstanceType<typeof C>['$props']` 与 `CProps` 双向赋值（判据 = 消费方 `satisfies` 能过） | ⬜ 待做 |
 
-> ⚠️ 加护栏时**先跑一遍看会不会误报** —— 尤其 #1（本仓 ~10 处「组件声明过的 prop」是对的）。
+> ⚠️ 加护栏时**先跑一遍看会不会误报** —— #1 的实测结论：**不能用「全仓正则 + 逐条白名单」**
+> （489 条对象键里绝大多数是合法的组件 prop），必须用 AST 限定到 `h('<原生标签>')`（489 → 3）。
+> 另有两个必守的「不误报」判据，见 §1.4。
 
 ---
 
@@ -429,18 +468,22 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 
 1. **§1.10 `float-button` 的视觉变体空转**（**需要定夺**：改用例 vs 改 harness）——
    ⚠️ 它是**唯一的 `missing-baseline`**（9 条），且**不能靠提交空白基线糊过去**。
-2. **§3 #1 加「复合词事件名」扫描**（防复发，收益最大）—— 需要处理误报白名单。
+2. **§1.11 `form` 校验链用例偶发红**（`flush()` 固定 60 ms）—— **最小**：
+   把依赖异步渲染的断言换成 `vi.waitFor`。⚠️ 先判断「等待不够」还是「校验链真慢」。
 3. **§1.2 `typography/semantic`**（先重生成基线再判断；全量 compare 的 3 条 size-mismatch 就是它）。
-4. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
-5. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
+4. **§3 #2 加「L4 时间依赖」扫描**（防 `getNow()` 类用例让门禁每天跨午夜红）——
+   §3 #1 的护栏可作范本。
+5. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
+6. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
    （都是扫描类，可批量做）。
-6. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
+7. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
    **等第一个真实消费者**再做，别提前实现。
-7. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
+8. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
    随各组件（`tree` / `progress` / `listy` / `cascader`）下次改动时**逐个收窄**。
 
 > ✅ **本轮已完成、从队列里划掉**：§2.6b（补两条 L1 用例 + 反向哨兵）·
-> §1.9 的两条可当场修 · §1.1（基线入库，除 float-button）。
+> §1.9 的两条可当场修 · §1.1（基线入库，除 float-button）· **§3 #1（复合词事件名护栏）** ·
+> §1.4（护栏落地）。
 
 ---
 
@@ -458,6 +501,7 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 | `625cc84` | **复核本文件并改掉 4 处事实错误**：§1.3 证伪 · §1.9 由「2 条」改「207 条」 · §2.5 的 commit 更正为 `9c9f557` 且残留关闭 · §1.4 改按符号定位 |
 | （本轮） | **裁决并执行**：`visual-baseline-in-git` = **A 入库 git** ⇒ 9 个组件生成 **75 张基线**（`missing-baseline` **84 → 9**，compare **75/75 exact**）；§1.9 = **测试目录关闭** `noNonNullAssertion`（**207 → 65** warn）；**新登记 §1.10**（float-button 变体空转） |
 | （本轮续） | §1.9 的**两条可当场修**修掉（**65 → 63** warn）· **§2.6b 补两条 L1 用例**并做**反向哨兵**验证（改回错误键名 ⇒ 恰好这两条红）· **全量 compare 1065 / 1077**（12 条失败 = 9 float-button + 3 typography，均已登记） |
+| （本轮再续） | **§3 #1 / §1.4 护栏落地**：`packages/ui/src/__tests__/event-name-casing.test.ts`（AST 扫描 `h('原生标签')`，489 → **3**，全是有意的反向哨兵）· 含 **5 段自证** + **双向校验** · 护栏自身的反向哨兵已验证（改回真 bug ⇒ 精确点名） |
 
 **PITFALLS 319–336**（18 条）。`verify:full` **exit=0**。
 
