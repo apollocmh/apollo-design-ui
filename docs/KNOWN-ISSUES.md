@@ -55,11 +55,11 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 > - **1.1 已裁决并执行**（`visual-baseline-in-git` = **A 入库 git**）：84 条 → **9 条**（只剩 float-button，
 >   原因见 **1.10**）；
 > - **1.4 已加护栏**（`event-name-casing.test.ts`，489 → 3）· **1.9 已裁决并执行**（测试目录关闭
->   `noNonNullAssertion`）：207 → **63** 条 warn；
+>   `noNonNullAssertion`）：207 → **63** 条 warn · **1.2 已修**（基线过期，非实现差异）；
 > - **1.3 已证伪、关闭**（❌ 不是 bug，**别再查一遍**）；
 > - **1.10 新登记**（float-button 的视觉变体**空转**，**需定夺**）·
 >   **1.11 新登记**（`form` 校验链用例偶发红，`flush()` 固定 60 ms）；
-> - 其余（1.2 / 1.5 / 1.6 / 1.7 / 1.8）**不需要决策**，可直接排期。
+> - 其余（1.5 / 1.6 / 1.7 / 1.8）**不需要决策**，可直接排期。
 
 ### 1.1 ✅ **已裁决并执行**（2026-10-03）L6 的 `missing-baseline`：**84 → 9**
 
@@ -129,29 +129,54 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   - 单独跑该文件 ⇒ **14 / 14 通过**；
   - 带本次全部改动**重跑整套 `test:unit`** ⇒ **277 / 277 文件全过**、`exit=0`。
   ⇒ **间歇性**（同一份代码，一次红一次绿）。
-- **根因（读码）**：该文件的 `flush()` 是**固定等待**
-  （`form.test.ts:29-33`：`setTimeout(60)` + 两次 `nextTick`），
-  而断言依赖「异步校验完成 → 状态更新 → `explain-error` 渲染」。
-  并行 worker 多、CPU 争抢时 60 ms 可能不够 ⇒ **假红**。
-- **怎么修（建议）**：把该用例里**依赖异步渲染**的断言改成 `vi.waitFor(() => expect(…))`
-  （轮询到通过即返回，默认 timeout 1000 ms）—— 比加长 `setTimeout` 更稳，也不掩盖真慢。
-  ⚠️ 这是**另一个组件的测试**，改动要单独过它的门禁；**不要**为了让绿灯而放宽断言。
+- **根因（读码 + 已定位到具体链路）**：
+  - 该文件的 `flush()` 是**单次墙钟等待**（`form.test.ts:29-33`：`setTimeout(60)` + 2×`nextTick`）；
+  - 而渲染链**至少需要一个宏任务跳**：`validateFields` 的**旁路链**
+    （`form-store.ts:901` `summaryPromise.catch().then(→ notifyObservers / triggerOnFieldsChange)`）
+    → FormItem 的 `errors` prop → `useDebounce` 的 `watch` → **`setTimeout(0|10)`**
+    （`form/hooks/use-debounce.ts:27`，用在 `ErrorList.ts:71` 与 `FormItem/ItemHolder.ts:68`）
+    → 状态更新 → 重渲染。
+  - ⇒ **线程被抢占时，链路可能还没走到「排定时器」那一步，而 60 ms 已经到期**
+    ⇒ 断言在链路完成前执行 ⇒ **假红**。**单一墙钟等待无法覆盖这种「微任务被饿住」**。
+- **⚠️ 复现尝试（做了，但没复现 —— 别重复劳动）**：
+  - 单独跑该文件：**14 / 14 通过**；
+  - 带本次全部改动重跑整套 `test:unit`：**277 / 277 文件全过**、`exit=0`；
+  - **6 个 CPU burner + 连跑 30 轮**：**0 次失败**。
+  ⇒ 只在**全量 277 文件并行**时偶发，**加 CPU 负载的单文件循环复现不出来**。
+- **怎么修（建议，按稳健度排序）**：
+  1. **首选**：把该用例里**依赖异步渲染**的断言换成 `vi.waitFor(() => expect(…))`
+     —— **按条件轮询**（默认 interval 50 ms / timeout 1000 ms），与调度无关；
+     断言本身**不放松**（条件始终不成立仍会红）。
+  2. 次选：把 `flush()` 改成**多轮排空宏任务**（每轮 `await` 一个宏任务 + 冲刷调度器），
+     把「单次墙钟」换成「多次让出」—— 仍不如 ①（轮次有限）。
+  ⚠️ 该文件**没有用假定时器**（无 `vi.useFakeTimers`），所以 `vi.waitFor` 可直接用。
 - **需要谁**：无（但要先判断「是等待不够」还是「校验链真的慢」——后者是真 bug）。
+  ⚠️ 这是**另一个组件的测试**，改动要单独过 form 的门禁；**不要**为了让绿灯而放宽断言。
 - 📌 判据：`pnpm exec vitest run --project unit packages/ui/src/form/__tests__/form.test.ts`
 
-### 1.2 ⚠️ `typography/semantic` 三个视口 `size-mismatch`（1.28% / 2.41% / 4.93%）
+### 1.2 ✅ **已修（基线过期，不是实现差异）**（2026-10-03）`typography/semantic` 三条 `size-mismatch`
 
 - **现象**：`node tests/visual/run.mjs --mode compare --component typography` ⇒
-  `semantic__light__{mobile,tablet,desktop}` 三条 `block-diff`；差异率**与视口宽反比**
-  （= 固定尺寸面，不是布局）。
-- **已排除**：**不是 2026-10-03 那次改动引入的** ——
-  `git log -- packages/ui/src/typography` 显示该目录最近一次改动是 `4acd68d`（C8-R2 插槽重构）。
-- **怀疑**：`semantic` 变体的基线**早于** `4acd68d` ⇒ 基线过期（同 PITFALLS 327 家族）。
-- **怎么修**：① 先重生成基线（`--mode baseline --component typography`）再 compare
-  —— 若变绿 ⇒ 就是基线过期；② 若仍红，用 `tests/visual/debug/rect.mjs` / `styles.mjs`
-  逐属性定位（范本见 `docs/analysis/calendar.md` 的「定位三步」）。
-- **怎么验**：`--mode compare --component typography` 全 exact。
-- **需要谁**：无。⚠️ 属 typography 的回归 ⇒ 改动要**单独过它的门禁**。
+  `semantic__light__{mobile,tablet,desktop}` 三条 `size-mismatch`
+  （**React 375×130 vs Vue 375×90**，差 **40 px**）；差异率**与视口宽反比**（1.284% / 2.408% / 4.931%）。
+- **判定过程（决定性实验）**：
+  1. 重新生成 React 基线 ⇒ `--mode baseline --component typography`；
+  2. **三个 `semantic` PNG 全部变化**，高度 **130 → 90**；
+  3. 复跑 compare ⇒ **24 / 24 exact**。
+  ⇒ **React 与 Vue 现在都渲染 90 px** —— 旧基线（130 px）是**过期产物**，
+  **不是**我们的实现与 antd 有差异。
+- **根因**：该基线由 `8fdb121`（**2026-09-20**「test(typography): L6 视觉用例 + React 基线入库」）
+  入库后**再未重生成**；而 `tests/visual` 的 harness / 用例在之后改过多次，
+  其中 `b9a15bc`（「修两条系统性缺陷 —— 占位残留 与 **视觉变体空转**」）就动了渲染口径。
+  ⇒ 旧图把 `ellipsis.expandable: 'collapsible'` 的 **`Expand` 渲染在单独一行**（共 3 行 / 130 px），
+  新图是 antd 当前行为：**`Expand` 与第 2 行同行**（2 行 / 90 px）。
+- **修法**：重生成基线并入库（**已做**）。
+- **怎么验**：`node tests/visual/run.mjs --mode compare --component typography` ⇒ **24 / 24 exact**；
+  基线自检 ✅（0 组重复）。
+- ⚠️ **同类风险**：**基线一旦入库就要跟着 harness 走** —— 凡改 `tests/visual/render/**`
+  或 `stabilize.mjs` / `run.mjs`，都要评估**已入库基线是否整体过期**
+  （判据：`--mode compare` 大面积 `size-mismatch`/`block-diff`，而**组件源码没动**）。
+  这与 §1.10 是**同一族**（都是「基线/harness 的口径问题」），但 1.10 更严重（拍不到东西）。
 
 ### 1.3 ❌ **不是 bug（2026-10-03 已证伪）** `Switch.ts` 剥掉 `onKeyDown` / `onClick`
 
@@ -468,22 +493,26 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 
 1. **§1.10 `float-button` 的视觉变体空转**（**需要定夺**：改用例 vs 改 harness）——
    ⚠️ 它是**唯一的 `missing-baseline`**（9 条），且**不能靠提交空白基线糊过去**。
-2. **§1.11 `form` 校验链用例偶发红**（`flush()` 固定 60 ms）—— **最小**：
-   把依赖异步渲染的断言换成 `vi.waitFor`。⚠️ 先判断「等待不够」还是「校验链真慢」。
-3. **§1.2 `typography/semantic`**（先重生成基线再判断；全量 compare 的 3 条 size-mismatch 就是它）。
-4. **§3 #2 加「L4 时间依赖」扫描**（防 `getNow()` 类用例让门禁每天跨午夜红）——
+2. **§1.11 `form` 校验链用例偶发红**（`flush()` 单次墙钟等待）—— **最小**：
+   把依赖异步渲染的断言换成 `vi.waitFor`。⚠️ 先判断「等待不够」还是「校验链真慢」；
+   **已记录「30 轮 + 6 burner 未复现」，别重复劳动**。
+3. **§3 #2 加「L4 时间依赖」扫描**（防 `getNow()` 类用例让门禁每天跨午夜红）——
    §3 #1 的护栏可作范本。
-5. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
-6. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
+4. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
+5. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
    （都是扫描类，可批量做）。
-7. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
+6. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
    **等第一个真实消费者**再做，别提前实现。
-8. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
+7. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
    随各组件（`tree` / `progress` / `listy` / `cascader`）下次改动时**逐个收窄**。
+
+> ⚠️ **改 `tests/visual/**` 的 harness / 用例后，必须评估「已入库基线是否整体过期」** ——
+> §1.2 就是这么来的（基线自 **2026-09-20** 起没再生成，harness 却改过 5 次）。
+> **判据**：`--mode compare` 出现大面积 `size-mismatch` / `block-diff`，而**组件源码没动**。
 
 > ✅ **本轮已完成、从队列里划掉**：§2.6b（补两条 L1 用例 + 反向哨兵）·
 > §1.9 的两条可当场修 · §1.1（基线入库，除 float-button）· **§3 #1（复合词事件名护栏）** ·
-> §1.4（护栏落地）。
+> §1.4（护栏落地）· **§1.2（重生成过期基线，24/24 exact）**。
 
 ---
 
@@ -501,6 +530,7 @@ const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined
 | `625cc84` | **复核本文件并改掉 4 处事实错误**：§1.3 证伪 · §1.9 由「2 条」改「207 条」 · §2.5 的 commit 更正为 `9c9f557` 且残留关闭 · §1.4 改按符号定位 |
 | （本轮） | **裁决并执行**：`visual-baseline-in-git` = **A 入库 git** ⇒ 9 个组件生成 **75 张基线**（`missing-baseline` **84 → 9**，compare **75/75 exact**）；§1.9 = **测试目录关闭** `noNonNullAssertion`（**207 → 65** warn）；**新登记 §1.10**（float-button 变体空转） |
 | （本轮续） | §1.9 的**两条可当场修**修掉（**65 → 63** warn）· **§2.6b 补两条 L1 用例**并做**反向哨兵**验证（改回错误键名 ⇒ 恰好这两条红）· **全量 compare 1065 / 1077**（12 条失败 = 9 float-button + 3 typography，均已登记） |
+| （本轮再续） | **§1.2 修掉**（重生成过期基线：`semantic` **130 → 90 px** ⇒ compare **24/24 exact**）· **§1.11 新登记**（`form` 偶发红；含「30 轮 + 6 burner **未复现**」的记录） |
 | （本轮再续） | **§3 #1 / §1.4 护栏落地**：`packages/ui/src/__tests__/event-name-casing.test.ts`（AST 扫描 `h('原生标签')`，489 → **3**，全是有意的反向哨兵）· 含 **5 段自证** + **双向校验** · 护栏自身的反向哨兵已验证（改回真 bug ⇒ 精确点名） |
 
 **PITFALLS 319–336**（18 条）。`verify:full` **exit=0**。
