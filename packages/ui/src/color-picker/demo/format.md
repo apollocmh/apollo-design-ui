@@ -14,12 +14,12 @@ title:
 // ⚠️ **一处 demo 级替换**：上游用 `useState` + `React.useMemo` 计算展示串；本仓用
 //    `ref` + `computed`（同形）。`value` / `format` 走 `v-model:value` / `v-model:format`
 //    的受控通道（C11 的双发）。
-import type { ColorFormatType, ColorPickerEmits } from '@apollo-design/ui';
+import type { ColorFormatType, ColorPickerColor } from '@apollo-design/ui';
 import { ColorPicker, Space } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 /** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
-type Color = Parameters<ColorPickerEmits['change']>[0];
+type Color = ColorPickerColor;
 
 // ---- HEX ----
 const colorHex = ref<Color | string>('#1677ff');

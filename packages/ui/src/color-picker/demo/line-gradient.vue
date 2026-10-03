@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // 对齐 antd 的 line-gradient demo：用 `mode` 切换单色 / 渐变色。
-import type { ColorPickerEmits } from '@apollo-design/ui';
+import type { ColorPickerColor } from '@apollo-design/ui';
 import { ColorPicker, Space } from '@apollo-design/ui';
 
 /** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
-type Color = Parameters<ColorPickerEmits['change']>[0];
+type Color = ColorPickerColor;
 
 const DEFAULT_COLOR = [
   { color: 'rgb(16, 142, 233)', percent: 0 },

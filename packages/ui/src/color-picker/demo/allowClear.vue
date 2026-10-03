@@ -3,12 +3,12 @@
 //
 // ⚠️ **一处 demo 级替换**：上游 `value` 收 `string`、`onChange` 里 `c.toHexString()` 回写
 //    —— 本仓 `value` 走 `:value` + `@change` 的受控通道（C11），语义逐字对应。
-import type { ColorPickerEmits } from '@apollo-design/ui';
+import type { ColorPickerColor } from '@apollo-design/ui';
 import { ColorPicker } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 /** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
-type Color = Parameters<ColorPickerEmits['change']>[0];
+type Color = ColorPickerColor;
 
 const color = ref<string>('#1677ff');
 

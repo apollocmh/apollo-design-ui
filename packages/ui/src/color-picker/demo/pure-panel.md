@@ -16,12 +16,12 @@ title:
 //      具名导出的 `ColorPickerPurePanel`（`ColorPicker` 上仍挂了同名静态别名）。
 //   2. 本仓 `PurePanel` 的入参走 `colorPickerProps` 对象（而不是把 props 摊平），
 //      `value` / `onChange` 放在里面（语义与上游逐条对应）。
-import type { ColorPickerEmits, ColorValueType } from '@apollo-design/ui';
+import type { ColorPickerColor, ColorValueType } from '@apollo-design/ui';
 import { ColorPickerPurePanel } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 /** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
-type Color = Parameters<ColorPickerEmits['change']>[0];
+type Color = ColorPickerColor;
 
 const color = ref<ColorValueType>('#1677ff');
 

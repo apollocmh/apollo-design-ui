@@ -112,5 +112,5 @@ color-picker/
 | `trigger` | `children` 覆盖触发器 + `value` / `onChange` | 默认插槽 + `:value` / `@change`（C11） |
 | `controlled` / `allowClear` / `format` | `value` + `onChange` / `onFormatChange` 受控 | `v-model:value` / `v-model:format`（或 `:value` + `@change`），C11 双发 |
 | `line-gradient` | `onChangeComplete` 里 `console.log(color.toCssString())` | 同（保留 `console.log`） |
-| `allowClear` / `controlled` / `format` / `line-gradient` / `pure-panel` / `text-render` / `trigger` | 从 `antd` `import type { Color }`（`AggregationColor` 别名） | ui barrel **未导出** `Color`（`color-picker/index.ts` 导出了，但未再导出到根）⇒ 从已导出的 `ColorPickerEmits['change']` 载荷反推：`type Color = Parameters<ColorPickerEmits['change']>[0]` |
+| `allowClear` / `controlled` / `format` / `line-gradient` / `pure-panel` / `text-render` / `trigger` | 从 `@apollo-design/ui` 导入 `ColorPickerColor` 类型（KNOWN-ISSUES §1.8 已补顶层别名；顶层的 `Color` 是极易撞名的短名，按「重名用别名」约定不导） | 原先用 `Parameters<ColorPickerEmits['change']>[0]` 反推，2026-10-03 起改用正式别名 |
 | `_semantic`（上游内部 demo） | 「语义化 DOM」示意（`simplify` 专用，不在文档正文） | **不落地**；语义槽覆盖由 `semantic.test.ts` 承担 |

@@ -10,12 +10,12 @@ title:
 ```vue
 <script setup lang="ts">
 // 对齐 antd 的 trigger demo：用**默认插槽**自定义触发器（本仓 `children` 走默认插槽）。
-import type { ColorPickerEmits } from '@apollo-design/ui';
+import type { ColorPickerColor } from '@apollo-design/ui';
 import { Button, ColorPicker } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 /** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
-type Color = Parameters<ColorPickerEmits['change']>[0];
+type Color = ColorPickerColor;
 
 // ⚠️ 收窄成 `Color | string`（上游 demo 的 `Extract<…, string | {cleared}>` 同判）：
 //    `ColorValueType` 还含 `null` / 渐变数组，它们没有 `toHexString()`。

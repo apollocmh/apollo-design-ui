@@ -4,12 +4,12 @@
 // ⚠️ **一处 demo 级替换**：上游用 `@ant-design/icons` 的 `DownOutlined` —— 本仓用
 //    `@apollo-design/icons` 的同名图标（API 同形，`rotate` / `style` 都支持）。
 import { DownOutlined } from '@apollo-design/icons';
-import type { ColorPickerEmits } from '@apollo-design/ui';
+import type { ColorPickerColor } from '@apollo-design/ui';
 import { ColorPicker, Space } from '@apollo-design/ui';
 import { h, ref } from 'vue';
 
 /** 上游 `Color`（= `AggregationColor`）：ui barrel 未导出该别名，从 `change` 的载荷反推。 */
-type Color = Parameters<ColorPickerEmits['change']>[0];
+type Color = ColorPickerColor;
 
 const open = ref(false);
 

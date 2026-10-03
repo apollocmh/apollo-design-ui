@@ -908,6 +908,7 @@ export { Collapse, CollapsePanel } from './collapse';
 export { genCollapseStyle, genTokenDecls as genCollapseTokenDecls } from './collapse/style';
 export type {
   ColorFormatType,
+  ColorPickerColor,
   ColorPickerEmits,
   ColorPickerPanelRenderExtra,
   ColorPickerProps,
