@@ -33,12 +33,26 @@
  * 判据是 `isFunction(value) ? value(info) : value`，**没有**额外的「只在需要时求值」优化
  * —— 那种优化会让函数式与对象式的行为出现差异。
  *
+ * ── `schema`（嵌套语义槽）—— **2026-10-03 补齐** ──────────────────────────────
+ *
+ * antd 的第四参 `schema` 用 `_default` 把「字符串形态的嵌套键」落到指定子槽
+ * （`classNames.popup = 'x'` ≡ `classNames.popup = { root: 'x' }`），并在最后用
+ * `fillObjectBySchema` 保证嵌套键**恒为对象**。
+ *
+ * 本仓此前没有它，用「只要有一侧是对象就递归」绕过 —— 那在**字符串与对象混用**时
+ * 会产垃圾键（`Object.keys('x')`）。antd 6.6.4 里 **9 个组件**传了 schema
+ * （`select` / `cascader` / `color-picker` / `menu` / `tabs` / `image` / `splitter` /
+ * `input.Search` / `table`），Table 是第一个**真的需要**它的（`body.cell` / `header.cell`）。
+ *
+ * ⚠️ **两条语义并存、不能合并**：不给 schema 时保持本仓既有行为（7 个消费者钉住它），
+ *    给了 schema 才走 antd 的 `mergeClassNamesBySchema`。
+ *    判据见 `__tests__/use-merge-semantic.test.ts` 的「反向哨兵」那一条。
+ *
  * ── 这个模块没有证明什么 ──────────────────────────────────────────────────────
  *   - 没证明各组件的**合并顺序声明**是对的。本模块只保证「给定顺序，合并结果正确」；
  *     顺序本身由各组件的 compat 用例与 antd 对照（Empty 见 `__tests__/semantic.test.ts`）。
- *   - 没覆盖 antd 的 `schema` 分支（嵌套语义对象）。Empty 的 schema 是 `undefined`，
- *     而 schema 分支要等出现第一个**嵌套**语义对象（如 Table 的 `header.cell`）再实现 ——
- *     提前写等于凭想象实现一条没人用过的路径。
+ *   - 没证明**既有 9 个组件该传的 schema 都传了** —— 它们目前仍靠无 schema 的宽松路径，
+ *     其中「字符串 + 对象混用」的那条输入仍会产垃圾键（已登记 `docs/KNOWN-ISSUES.md`）。
  */
 
 import { isFunction } from '@apollo-design/utils';
@@ -115,6 +129,143 @@ export function mergeClassNames<CN extends object>(
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+// ---------------------------------------------------------------------------
+// schema（嵌套语义槽）—— antd `useMergeSemantic` 的第四参
+// ---------------------------------------------------------------------------
+
+/**
+ * schema 的**键名首字符**集合。
+ *
+ * 与 antd 的 `ValidChar`（`_util/type.ts:91`）**逐字相同**：**只有小写 a–z**。
+ * 这不是「随便写的」—— 它正是让 `_default`（下划线开头）**不落进**索引签名、
+ * 从而不与 `{ _default?: string }` 冲突的机制。
+ * ⇒ 别「顺手」把大写或下划线加进来（会让 `SemanticSchema` 立刻变成 `never` 交叉）。
+ */
+type LowerChar =
+  | 'a'
+  | 'b'
+  | 'c'
+  | 'd'
+  | 'e'
+  | 'f'
+  | 'g'
+  | 'h'
+  | 'i'
+  | 'j'
+  | 'k'
+  | 'l'
+  | 'm'
+  | 'n'
+  | 'o'
+  | 'p'
+  | 'q'
+  | 'r'
+  | 's'
+  | 't'
+  | 'u'
+  | 'v'
+  | 'w'
+  | 'x'
+  | 'y'
+  | 'z';
+
+/**
+ * 嵌套语义槽的映射表。与 antd 的 `SemanticSchema` 同构。
+ *
+ * `_default: 'root'` 的语义（**逐条来自 antd 的 `mergeClassNames`**）：
+ *   - 该键收到**普通对象** ⇒ 递归按子 schema 合并；
+ *   - 该键收到**非对象**（字符串）⇒ 落到 `acc[key][_default]`（即 `classNames.popup = 'x'`
+ *     ≡ `classNames.popup = { root: 'x' }`）；
+ *   - **没有** `_default` 的子 schema（如 `image` 的 `placeholder: {}`）⇒ 只保证该键
+ *     恒为对象（`fillObjectBySchema` 的 `||= {}`），不做字符串转换。
+ */
+export type SemanticSchema = { _default?: string } & {
+  [key: `${LowerChar}${string}`]: SemanticSchema;
+};
+
+/**
+ * 按**任意字符串键**读子 schema。
+ *
+ * ⚠️ 必须走这层 cast：`SemanticSchema` 的索引签名是 `` `${LowerChar}${string}` ``
+ *    （antd 的 `ValidChar` 口径，见上面的注释），而 `Object.keys()` 给的是 `string`
+ *    ⇒ 直接写 `schema[key]` 会 **TS7053**。这里的 cast 是**诚实的**：运行时 schema 的键
+ *    本来就来自调用方写的对象字面量，`Object.keys` 拿到的正是那些键。
+ */
+function subSchema(schema: SemanticSchema, key: string): SemanticSchema | undefined {
+  return (schema as Record<string, SemanticSchema | undefined>)[key];
+}
+
+/**
+ * 按 schema 补齐对象结构（antd `fillObjectBySchema` 逐字）。
+ *
+ * 两条判据：
+ *   ① `_default` 键 ⇒ `newObj[key] ||= {}`（保证**至少是空对象**，不会残留 `undefined`）；
+ *   ② 其余子 schema ⇒ 递归（空 schema `{}` 会让该键变成 `{}`）。
+ */
+export function fillObjectBySchema(
+  obj: Record<string, unknown> | undefined,
+  schema: SemanticSchema,
+): Record<string, unknown> {
+  const newObj: Record<string, unknown> = { ...(obj ?? {}) };
+  for (const key of Object.keys(schema)) {
+    if (subSchema(schema, key)?._default) {
+      newObj[key] ||= {};
+    } else {
+      newObj[key] = fillObjectBySchema(
+        newObj[key] as Record<string, unknown> | undefined,
+        subSchema(schema, key) as SemanticSchema,
+      );
+    }
+  }
+  return newObj;
+}
+
+/**
+ * **带 schema** 的 classNames 合并（antd `mergeClassNames(schema, ...classNames)` 逐字）。
+ *
+ * ⚠️ 与下面**无 schema** 的 `mergeClassNames` 是**两条不同的语义**，不要合并：
+ *    - 无 schema：只要有一侧是对象就**递归**（本仓在 select/auto-complete 期加的行为，
+ *      比 antd 更宽松，且已被 7 个组件的既有用例钉住）；
+ *    - 有 schema：**只有 schema 声明过的键**才特殊处理，其余键一律 `clsx` 平铺（antd 语义）。
+ *
+ *    两者的差别在「字符串 vs 对象混用」时可见：
+ *      `classNames: { popup: 'x' }` 与 `{ popup: { root: 'y' } }` 两个来源
+ *      —— schema 版给 `popup.root = 'x y'`（正确）；无 schema 版会把 `'x'` 当对象递归
+ *      （`Object.keys('x')` ⇒ 垃圾键）。这正是 antd 需要 `_default` 的原因。
+ */
+export function mergeClassNamesBySchema<CN extends object>(
+  schema: SemanticSchema,
+  ...sources: readonly (Partial<CN> | undefined)[]
+): Partial<CN> {
+  const acc: Record<string, unknown> = {};
+  for (const source of sources) {
+    if (!source) continue;
+    const record = source as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
+      const keySchema = subSchema(schema, key);
+      const cur = record[key];
+      if (keySchema) {
+        if (isPlainRecord(cur)) {
+          acc[key] = mergeClassNamesBySchema(keySchema, (acc[key] ?? {}) as never, cur as never);
+        } else {
+          const defaultField = keySchema._default;
+          if (defaultField) {
+            const target = (acc[key] ?? {}) as Record<string, unknown>;
+            target[defaultField] = clsx(
+              target[defaultField] as string | undefined,
+              cur as string | undefined,
+            );
+            acc[key] = target;
+          }
+        }
+      } else {
+        acc[key] = clsx(acc[key] as string | undefined, cur as string | undefined);
+      }
+    }
+  }
+  return acc as Partial<CN>;
 }
 
 /**
@@ -199,25 +350,36 @@ export interface UseMergeSemanticResult<CN extends object, ST extends object> {
  * @param classNamesSources 按优先级从低到高排列（后者拼接在前者之后）
  * @param stylesSources 按优先级从低到高排列（后者覆盖前者）
  * @param props 传给函数式变体的 `info.props`
+ * @param schema **嵌套语义槽**的映射表（antd 第四参）。给了它就会：
+ *   ① classNames 走 `mergeClassNamesBySchema`（`_default` 的字符串→对象转换）；
+ *   ② 两个结果都过一遍 `fillObjectBySchema`（保证嵌套键恒为对象）。
+ *   ⚠️ 不给时**保持本仓既有行为**（无 schema 的递归合并）—— 7 个既有消费者不受影响。
  */
 export function useMergeSemantic<P extends object, CN extends object, ST extends object>(
   classNamesSources: readonly MaybeSource<SemanticInput<Partial<CN>, P> | undefined>[],
   stylesSources: readonly MaybeSource<SemanticInput<Partial<ST>, P> | undefined>[],
   props: P,
+  schema?: SemanticSchema,
 ): UseMergeSemanticResult<CN, ST> {
   const info: SemanticInfo<P> = { props };
 
-  const classNames = computed(() =>
-    mergeClassNames<CN>(
-      ...classNamesSources.map((source) => resolveSemantic<Partial<CN>, P>(toValue(source), info)),
-    ),
-  );
+  const classNames = computed(() => {
+    const resolved = classNamesSources.map((source) =>
+      resolveSemantic<Partial<CN>, P>(toValue(source), info),
+    );
+    const merged = schema
+      ? mergeClassNamesBySchema<CN>(schema, ...resolved)
+      : mergeClassNames<CN>(...resolved);
+    return (schema ? fillObjectBySchema(merged as never, schema) : merged) as Partial<CN>;
+  });
 
-  const styles = computed(() =>
-    mergeStyles<ST>(
-      ...stylesSources.map((source) => resolveSemantic<Partial<ST>, P>(toValue(source), info)),
-    ),
-  );
+  const styles = computed(() => {
+    const resolved = stylesSources.map((source) =>
+      resolveSemantic<Partial<ST>, P>(toValue(source), info),
+    );
+    const merged = mergeStyles<ST>(...resolved);
+    return (schema ? fillObjectBySchema(merged as never, schema) : merged) as Partial<ST>;
+  });
 
   return { classNames, styles };
 }

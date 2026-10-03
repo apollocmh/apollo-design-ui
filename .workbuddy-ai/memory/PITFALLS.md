@@ -4469,3 +4469,28 @@
 
     **修法**：在**外层组件的 render** 里把 children 归一成数据（`mentionsChildrenToOptions`），
     再作为 `options` prop 往下传（下游不再碰插槽）。
+
+## Table 期（2026-10-03，345–346）
+
+345. 🚨 **「扫描窗口太窄」也会造成假阴性 —— 与「正则字符类漏字符」是同族坑。**
+
+    查「antd 里哪些组件给 `useMergeSemantic` 传了第四参 `schema`」时，我用
+    `s.slice(i, i + 900)` 取 `useMergeSemantic<` 之后的窗口再找 `_default`
+    ⇒ 结果 **0 个组件**。改成 `i + 3000` 后 ⇒ **9 个**（select / cascader /
+    color-picker / menu / tabs / image / splitter / input.Search / **table**）。
+
+    原因：`useMergeSemantic<…>(...)` 的类型参数就有 3 行，加上两个来源数组，
+    `{props}` 到第 4 参之间隔了 **20+ 行** ⇒ 900 字符根本到不了 `_default`。
+
+    **判据**：任何「全仓扫描 N 处命中」的结论，落地前先做**一次放大验证** ——
+    把窗口/正则放宽一倍，看命中数是否变化。变了就说明第一次是假阴性。
+    ⚠️ 反例（别过度放大）：放大窗口会引入**跨调用点的误命中** ⇒ 放大后必须人工抽检 1–2 条。
+
+346. 📌 **`@rc-component/table@1.11.1` 的 `Summary.Cell` 没有 `fixed` 字段**
+    —— 而 antd 官网文档写了它。
+
+    - **判据**：`cat node_modules/.pnpm/@rc-component+table@*/node_modules/@rc-component/table/es/Footer/Cell.d.ts`
+      ⇒ `SummaryCellProps = { className?, index: number, colSpan?, rowSpan?, align? }`；
+      `fixed` 只在**外层 `Summary`**（`Summary.d.ts`：`fixed?: boolean | 'top' | 'bottom'`）。
+    - **教训**：**`.d.ts` 是判据，文档不是**。antd 的官网文档滞后于它锁定的 rc 版本
+      ⇒ 凡「文档说有某个 prop」而实现里找不到，先读 rc 的 `.d.ts` 再下结论。

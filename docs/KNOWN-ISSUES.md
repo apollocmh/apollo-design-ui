@@ -271,6 +271,21 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   补一条 L1 用例（顶层 `root` 与嵌套 `popup.root` **各传一半**，断言合并结果）。
 - **需要谁**：无（**等第一个真实消费者**，别提前实现）。
 
+### 1.7b ✅ **已实现**（2026-10-03）\`schema\`（嵌套语义槽）—— 但**既有 9 个组件还没用上它**
+
+- **已做**：\`_internal/use-merge-semantic.ts\` 补 \`SemanticSchema\` / \`fillObjectBySchema\` /
+  \`mergeClassNamesBySchema\` + \`useMergeSemantic\` 的第四参（antd 语义逐字）。
+  判据：\`_internal/__tests__/use-merge-semantic.test.ts\` **12 条**，
+  含一条**反向哨兵**（无 schema 的路径在「字符串 + 对象混用」时产垃圾键 \`0\`）。
+- **⚠️ 残留**：antd 6.6.4 里传 schema 的 **9 个组件**
+  （\`select\` / \`cascader\` / \`color-picker\` / \`menu\` / \`tabs\` / \`image\` /
+  \`splitter\` / \`input.Search\` / \`table\`）中，**前 8 个本仓仍未传**，
+  而是用「手工展平」绕过（见 \`tabs/Tabs.vue:295\` 的注释）。
+  ⇒ 它们的 \`classNames: { popup: x }\`（字符串形态）**仍会产垃圾键**。
+- **怎么修**：逐个补第四参（每个组件一处），并加一条「字符串形态」的 L1 用例。
+  \`table\` 会在 Table 落地时带上。
+- **需要谁**：无（可直接排期；建议与下一个碰这些组件的任务合并做）。
+
 ### 1.8 📌 `ui` 包入口**没有导出 `Color` 别名**（上游有）
 
 - **现象**：上游 `es/color-picker/index.js` 有 `export type { AggregationColor as Color }`；
