@@ -71,7 +71,7 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   不构成分叉，但**没有 L4 用例钉住**这个契约。
 - **若认为值得做**：加一条 L4 用例把「多子节点 ⇒ 包 span」写成明确契约。**不阻塞。**
 
-### 1.4 📌 生产代码存量 **62 条** biome warn（不阻塞，`exit=0`）
+### 1.4 📌 生产代码存量 **60 条** biome warn（不阻塞，`exit=0`）
 
 - `noNonNullAssertion` 生产存量（tree/utils · progress · listy · cascader 等）是
   **算法不变式**，机械改会改语义（`Set.add(undefined)` 实测）⇒ **逐个收窄、不扫改**，
