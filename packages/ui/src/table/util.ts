@@ -8,7 +8,13 @@ import { isFunction, isNonNullable, isPlainObject } from '@apollo-design/utils';
 import type { SizeType } from '../config-provider/size-context';
 
 /** 分页的方位（`top`/`bottom` 与 `start`/`end` 两套写法并存）。 */
-export type TablePaginationPlacement = 'topLeft' | 'topCenter' | 'topRight' | 'bottomLeft' | 'bottomCenter' | 'bottomRight';
+export type TablePaginationPlacement =
+  | 'topLeft'
+  | 'topCenter'
+  | 'topRight'
+  | 'bottomLeft'
+  | 'bottomCenter'
+  | 'bottomRight';
 export type TablePaginationPosition = 'top' | 'bottom';
 
 /** 归一化后的方位（三值）。 */

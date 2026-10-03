@@ -4,7 +4,7 @@
  * 三个导出都是**纯函数 / 纯渲染**，没有 state ⇒ L1 可直测。
  */
 
-import { type VNode, h } from 'vue';
+import { h, type VNode } from 'vue';
 
 export interface RenderExpandIconParams<RecordType> {
   prefixCls: string;
@@ -26,9 +26,7 @@ export interface RenderExpandIconParams<RecordType> {
  *
  * ⚠️ 上游返回的是 React 元素；本仓返回 **VNode**。调用点（`Cell` 的 `appendCellNode`）直接放进 children。
  */
-export function renderExpandIcon<RecordType>(
-  params: RenderExpandIconParams<RecordType>,
-): VNode {
+export function renderExpandIcon<RecordType>(params: RenderExpandIconParams<RecordType>): VNode {
   const { prefixCls, record, onExpand, expanded, expandable } = params;
   const expandClassName = `${prefixCls}-row-expand-icon`;
 

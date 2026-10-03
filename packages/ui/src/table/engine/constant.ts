@@ -10,4 +10,4 @@
 export const EXPAND_COLUMN = {};
 
 /** 内部 hook 通道的名字（antd 用它给 rc-table 注入 transformColumns）。 */
-export const INTERNAL_HOOKS = "rc-table-internal-hook";
+export const INTERNAL_HOOKS = 'rc-table-internal-hook';

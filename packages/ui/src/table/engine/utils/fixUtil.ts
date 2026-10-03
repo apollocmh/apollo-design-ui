@@ -33,8 +33,8 @@ export interface CellFixedInfo {
   zIndexReverse: number;
 }
 
-const isFixedStart = (column: FixableColumn): boolean => column.fixed === "start";
-const isFixedEnd = (column: FixableColumn): boolean => column.fixed === "end";
+const isFixedStart = (column: FixableColumn): boolean => column.fixed === 'start';
+const isFixedEnd = (column: FixableColumn): boolean => column.fixed === 'end';
 
 /**
  * 算一个单元格的固定信息。

@@ -103,7 +103,12 @@ describe('Table · engine/fixUtil · getCellFixedInfo', () => {
 
   it('start 固定（首列）⇒ fixStart 取 stickyOffsets.start[colStart]；zIndex = len*2 - colStart', () => {
     const columns = [{ fixed: 'start' }, {}, {}];
-    const info = getCellFixedInfo(0, 0, columns, offsets([0, 100, 100], [0, 0, 0], [100, 200, 300]));
+    const info = getCellFixedInfo(
+      0,
+      0,
+      columns,
+      offsets([0, 100, 100], [0, 0, 0], [100, 200, 300]),
+    );
     expect(info.fixStart).toBe(0);
     expect(info.fixedStartShadow).toBe(true); // 右边一列不是 start 固定
     expect(info.zIndex).toBe(6); // 3*2 - 0
@@ -144,7 +149,12 @@ describe('Table · engine/fixUtil · getCellFixedInfo', () => {
   });
 
   it('isSticky 原样透传', () => {
-    const info = getCellFixedInfo(0, 0, [{}], { start: [0], end: [0], widths: [1], isSticky: true });
+    const info = getCellFixedInfo(0, 0, [{}], {
+      start: [0],
+      end: [0],
+      widths: [1],
+      isSticky: true,
+    });
     expect(info.isSticky).toBe(true);
   });
 });
@@ -162,10 +172,7 @@ describe('Table · engine/expandUtil', () => {
       expandable: false,
     });
     expect(node.type).toBe('span');
-    expect(asSpan(node).class).toEqual([
-      'apollo-table-row-expand-icon',
-      'apollo-table-row-spaced',
-    ]);
+    expect(asSpan(node).class).toEqual(['apollo-table-row-expand-icon', 'apollo-table-row-spaced']);
     expect(asSpan(node).onClick).toBeUndefined();
   });
 
@@ -211,10 +218,14 @@ describe('Table · engine/expandUtil', () => {
       { key: 'b' },
     ];
     const seen: [string, number][] = [];
-    const keys = findAllChildrenKeys(data, (record, index) => {
-      seen.push([record.key, index]);
-      return record.key;
-    }, 'children');
+    const keys = findAllChildrenKeys(
+      data,
+      (record, index) => {
+        seen.push([record.key, index]);
+        return record.key;
+      },
+      'children',
+    );
     expect(keys).toEqual(['a', 'a1', 'a2', 'a21', 'b']);
     expect(seen).toEqual([
       ['a', 0],
@@ -231,7 +242,14 @@ describe('Table · engine/expandUtil', () => {
 
   it('computedExpandedClassName：string / function / 其余 ⇒ ""', () => {
     expect(computedExpandedClassName('x', {}, 0, 0)).toBe('x');
-    expect(computedExpandedClassName((r: { key: string }, i: number, indent: number) => `${r.key}-${i}-${indent}`, { key: 'k' }, 2, 1)).toBe('k-2-1');
+    expect(
+      computedExpandedClassName(
+        (r: { key: string }, i: number, indent: number) => `${r.key}-${i}-${indent}`,
+        { key: 'k' },
+        2,
+        1,
+      ),
+    ).toBe('k-2-1');
     expect(computedExpandedClassName(undefined, {}, 0, 0)).toBe('');
   });
 });

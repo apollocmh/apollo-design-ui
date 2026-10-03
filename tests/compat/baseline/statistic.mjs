@@ -140,12 +140,23 @@ push(
 
 push(
   'statistic:timer-ssr',
-  wrap(h(Statistic.Timer, { ...BP, type: 'countdown', value: Date.parse('2026-01-01T00:00:00Z') + 1000 * 60 * 2 })),
+  wrap(
+    h(Statistic.Timer, {
+      ...BP,
+      type: 'countdown',
+      value: Date.parse('2026-01-01T00:00:00Z') + 1000 * 60 * 2,
+    }),
+  ),
 );
 push(
   'statistic:timer-title',
   wrap(
-    h(Statistic.Timer, { ...BP, type: 'countdown', title: 'Deadline', value: Date.parse('2026-01-01T00:00:00Z') + 1000 }),
+    h(Statistic.Timer, {
+      ...BP,
+      type: 'countdown',
+      title: 'Deadline',
+      value: Date.parse('2026-01-01T00:00:00Z') + 1000,
+    }),
   ),
 );
 

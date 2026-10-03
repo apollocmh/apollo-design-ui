@@ -3,7 +3,7 @@
  */
 
 /** 列 key 的兜底前缀（上游同名字面量）。 */
-const INTERNAL_KEY_PREFIX = "RC_TABLE_KEY";
+const INTERNAL_KEY_PREFIX = 'RC_TABLE_KEY';
 
 /** `undefined` / `null` ⇒ `[]`；非数组 ⇒ 包成单元素数组。 */
 function toArray<T>(arr: T | T[] | undefined | null): T[] {
@@ -28,14 +28,16 @@ function toArray<T>(arr: T | T[] | undefined | null): T[] {
  *    是 truthy）⇒ 该列会被立刻改名。本仓用 `Object.create(null)` 避开这个边界，
  *    差异只在这一个病态键名上（**登记为 INTENDED**）。
  */
-export function getColumnsKey(columns: readonly (Record<string, unknown> | undefined | null)[]): string[] {
+export function getColumnsKey(
+  columns: readonly (Record<string, unknown> | undefined | null)[],
+): string[] {
   const columnKeys: string[] = [];
   const keys: Record<string, boolean> = Object.create(null);
   for (const column of columns) {
     const { key, dataIndex } = column || {};
     let mergedKey =
       (key as string | undefined) ||
-      toArray(dataIndex as string | string[] | undefined).join("-") ||
+      toArray(dataIndex as string | string[] | undefined).join('-') ||
       INTERNAL_KEY_PREFIX;
     while (keys[mergedKey]) {
       mergedKey = `${mergedKey}_next`;
@@ -58,5 +60,5 @@ export function validateValue<T>(val: T | null | undefined): val is T {
 
 /** `typeof number && !NaN`（`scroll.x/y` 的数字形态判据）。 */
 export function validNumberValue(value: unknown): value is number {
-  return typeof value === "number" && !Number.isNaN(value);
+  return typeof value === 'number' && !Number.isNaN(value);
 }
