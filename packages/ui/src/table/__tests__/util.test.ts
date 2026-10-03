@@ -51,8 +51,11 @@ describe('Table · engine/valueUtil', () => {
     ]);
   });
 
-  it('getColumnsKey：`key: 0` / `key: ""` 都算「给了」（真值判断会错）', () => {
-    expect(getColumnsKey([{ key: 0 }, { key: '' }])).toEqual(['0', '']);
+  // ⚠️ 2026-10-03 修正（原断言写错）：rc-table 的 `valueUtil.js:16` 是
+  //    `key || toArray(dataIndex).join('-') || INTERNAL_KEY_PREFIX` —— **真值**判断，
+  //    `key: 0` / `key: ''` 会落到 `RC_TABLE_KEY`（重复则 _next）。本仓逐字同构。
+  it('getColumnsKey：`key: 0` / `key: ""` 走真值判断 ⇒ 落 RC_TABLE_KEY（rc 逐字）', () => {
+    expect(getColumnsKey([{ key: 0 }, { key: '' }])).toEqual(['RC_TABLE_KEY', 'RC_TABLE_KEY_next']);
   });
 
   it('🚨 validateValue：只有 `null` / `undefined` 算「没给」', () => {
@@ -145,7 +148,7 @@ describe('Table · engine/fixUtil · getCellFixedInfo', () => {
     const columns = [{ fixed: 'end' }, {}, { fixed: 'end' }];
     const info = getCellFixedInfo(0, 0, columns, offsets([0, 0, 0], [0, 0, 0], [100, 200, 300]));
     expect(info.fixedEndShadow).toBe(true);
-    expect(info.offsetFixedEndShadow).toBe(300); // 中间那列的宽度
+    expect(info.offsetFixedEndShadow).toBe(200); // 中间那列的宽（widths[1]=200，rc 累加非固定列）
   });
 
   it('isSticky 原样透传', () => {
@@ -172,7 +175,9 @@ describe('Table · engine/expandUtil', () => {
       expandable: false,
     });
     expect(node.type).toBe('span');
-    expect(asSpan(node).class).toEqual(['apollo-table-row-expand-icon', 'apollo-table-row-spaced']);
+    // ⚠️ Vue 的 `h()` 会把 class 归一成**字符串**（React 的 className 原样保留 prop）——
+    //    断言按归一化后的形态写（原写数组形态是拿 React 语义当 Vue 契约）。
+    expect(asSpan(node).class).toBe('apollo-table-row-expand-icon apollo-table-row-spaced');
     expect(asSpan(node).onClick).toBeUndefined();
   });
 
@@ -185,10 +190,9 @@ describe('Table · engine/expandUtil', () => {
       expanded: true,
       expandable: true,
     });
-    expect(asSpan(expandedNode).class).toEqual([
-      'apollo-table-row-expand-icon',
-      { 'apollo-table-row-expanded': true, 'apollo-table-row-collapsed': false },
-    ]);
+    expect(asSpan(expandedNode).class).toBe(
+      'apollo-table-row-expand-icon apollo-table-row-expanded',
+    );
 
     const collapsedNode = renderExpandIcon({
       prefixCls: 'apollo-table',
@@ -197,10 +201,9 @@ describe('Table · engine/expandUtil', () => {
       expanded: false,
       expandable: true,
     });
-    expect(asSpan(collapsedNode).class).toEqual([
-      'apollo-table-row-expand-icon',
-      { 'apollo-table-row-expanded': false, 'apollo-table-row-collapsed': true },
-    ]);
+    expect(asSpan(collapsedNode).class).toBe(
+      'apollo-table-row-expand-icon apollo-table-row-collapsed',
+    );
 
     const order: string[] = [];
     const event = {
