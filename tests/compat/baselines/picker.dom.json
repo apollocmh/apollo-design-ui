@@ -2,7 +2,7 @@
   "$schema": "../schema.json",
   "component": "picker",
   "antdVersion": "1.12.2",
-  "generatedAt": "2026-09-30T00:16:22.054Z",
+  "generatedAt": "2026-10-03T06:33:38.860Z",
   "cases": [
     {
       "id": "picker:date-basic",

@@ -51,6 +51,10 @@ const dumpIndex = process.argv.indexOf('--dump');
 const dumpId = dumpIndex === -1 ? null : process.argv[dumpIndex + 1];
 
 const require = createRequire(import.meta.url);
+// ⚠️ dayjs 不是根依赖（catalog 里挂在 packages/picker 名下）⇒ 以 picker 包为解析基准
+const dayjs = createRequire(new URL('../../../packages/picker/package.json', import.meta.url))(
+  'dayjs',
+);
 // ⚠️ `require('@rc-component/picker/package.json')` 不行 —— 它的 `exports` 里没有
 //    `./package.json` 这一项（antd 自己有，rc 没有）。直接从磁盘读。
 const rcPickerPkg = JSON.parse(
@@ -76,11 +80,17 @@ export const FIXED_PICKER_VALUE = '2026-09-30 10:20:30';
  * 固定的 `generateConfig` —— 只把 `getNow` 换成常量，其余逐字用上游。
  *
  * ⚠️ 两侧**必须**用同一份（基线侧与 `ui`/本包测试侧），否则 `-cell-today` 会比错。
+ *
+ * 🚨 2026-10-03 修正（KNOWN-ISSUES §2.4 同族，由 test-utils 的时间依赖护栏抓出）：
+ *    这里原来是 `base.getNow().startOf('day').add(10:20:30)` —— 注释说「换成常量」，
+ *    实际是**活日期 + 固定时刻**。它在生成日（09-30）与 Vue 侧的 `dayjs(FIXED_NOW)`
+ *    巧合相等 ⇒ L4 全绿；**换一天重新生成基线**（或换机器跑 `--baseline`）就会产出
+ *    十月网格，与 Vue 侧冻结的九月网格失配 ⇒ L4 大面积假红。现在真的用常量。
  */
 function createFixedGenerateConfig(base) {
   return {
     ...base,
-    getNow: () => base.getNow().startOf('day').add(10, 'hour').add(20, 'minute').add(30, 'second'),
+    getNow: () => dayjs(FIXED_NOW),
   };
 }
 
