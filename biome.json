@@ -89,6 +89,9 @@
         "rules": {
           "performance": {
             "noDynamicNamespaceImportAccess": "off"
+          },
+          "style": {
+            "noNonNullAssertion": "off"
           }
         }
       }

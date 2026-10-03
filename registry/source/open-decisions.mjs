@@ -249,7 +249,14 @@ export const OPEN_DECISIONS = [
     impact: '影响 packages/docs（Phase 3 后期），不阻塞 foundation 包',
   }),
 
-  open('visual-baseline-in-git', {
+  decided('visual-baseline-in-git', {
+    decidedAt: '2026-10-03',
+    decidedBy: '用户（2026-10-03 指令：「visual-baseline-in-git 需要入库」）',
+    decision:
+      'A —— **基线截图入库 git**。理由：① 基线变更在 PR 中可见可审（diff 就是「这次视觉改了什么」的天然证据）；② CI 无需对象存储凭据与额外拉取步骤；③ 与仓库「证据先于断言」的纪律一致 —— 基线本身就是可复现的判据。代价（仓库体积）按推荐语**配合图片压缩**控制。',
+    note:
+      '落库范围：`tests/visual/baselines/react/**` 与 `tests/visual/baselines/vue/**`（PNG）。' +
+      '⚠️ 新增/重生成基线后必须 `git add` 并提交，否则 L6 会持续报 `missing-baseline`。',
     question: '视觉回归基线截图是否入库 git？',
     context:
       'L6 视觉回归需要基线图。入库则 diff 可审、CI 可比对；不入库则需对象存储与额外拉取步骤。',

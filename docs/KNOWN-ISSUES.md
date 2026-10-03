@@ -52,25 +52,64 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 ## §1 已发现、未修（按性价比排序见 §4）
 
 > **本节现状**（2026-10-03 复核后）：
-> - **1.1 需你裁决**（`visual-baseline-in-git`）· **1.9 的 184 条 `noNonNullAssertion` 也需裁决**（改断言 vs 关规则）；
+> - **1.1 已裁决并执行**（`visual-baseline-in-git` = **A 入库 git**）：84 条 → **9 条**（只剩 float-button，
+>   原因见 **1.10**）；
+> - **1.9 已裁决并执行**（测试目录**关闭** `noNonNullAssertion`）：207 条 → **65 条**；
 > - **1.3 已证伪、关闭**（❌ 不是 bug，**别再查一遍**）；
+> - **1.10 新登记**（float-button 的视觉变体**空转**）；
 > - 其余（1.2 / 1.4 / 1.5 / 1.6 / 1.7 / 1.8）**不需要决策**，可直接排期。
 
-### 1.1 🚨 **[需裁决]** L6 有 **84 条 `missing-baseline`** —— 9 个组件从未入库 React 基线
+### 1.1 ✅ **已裁决并执行**（2026-10-03）L6 的 `missing-baseline`：**84 → 9**
 
-- **现象**：全量 `node tests/visual/run.mjs --mode compare` 报 84 条
-  `[missing-baseline] 缺少 React 参考截图：tests/visual/baselines/react/<c>/<variant>__light__<viewport>.png`。
-- **涉及**：`select` / `auto-complete` / `cascader` / `popconfirm` / `float-button` /
-  `rate` / `segmented` / `steps` / `progress`。
-- **证据**：2026-10-03 全量 compare 实测 —— `991 exact` + **84 `missing-baseline`** + 3 `size-mismatch`。
-- **根因**：**未决开放决策 `visual-baseline-in-git`**
-  （`node registry/tools/ask.mjs decision visual-baseline-in-git`）。
-  这 9 个组件的 `visualStatus` 是 `done`，但基线没入库 ⇒ 只能 `--mode both`（两侧现渲染再互比）。
-- **怎么修**：先裁决「基线是否入库」；若入库，对每个组件跑
-  `node tests/visual/run.mjs --mode baseline --component <c>` 并提交 PNG。
-- **怎么验**：全量 compare 的 `missing-baseline` 归零。
-- **需要谁**：**用户裁决**（开放决策）。
-- ⚠️ `color-picker` **不在**这 9 个里（27 张已入库，全量 compare 里 **27/27 exact**）。
+- **裁决**：`visual-baseline-in-git` = **A —— 基线截图入库 git**
+  （`node registry/tools/ask.mjs decision visual-baseline-in-git` 看原文）。
+- **已做**：对 9 个组件跑 `node tests/visual/run.mjs --mode baseline --component <c>`，
+  **入库 75 张**（`auto-complete` 9 · `cascader` 9 · `popconfirm` 9 · `progress` 9 ·
+  `rate` 9 · `segmented` **12** · `select` 9 · `steps` 9）。
+- **✅ 实测（这才是基线入库的真正价值）**：8 个组件 `--mode compare` ⇒
+  **75 / 75 全部 `0.000% exact`** —— 我们的 Vue 实现与 antd React 渲染**逐像素一致**。
+- **⚠️ 剩下 9 条**（`float-button`）：**基线没有入库**，原因见 **§1.10**
+  —— 它三变体的截图**全是空白**，入库等于制造假绿。
+- **怎么验**：`node tests/visual/run.mjs --mode compare --component <c>` ⇒ `通过 N / N`。
+
+### 1.10 🚨 **[新登记]** `float-button` 的 3 个视觉变体**全是空白图 ⇒ 变体空转**
+
+- **现象**：生成基线时 `--check-baselines` 直接拦下：
+  ```
+  🚨 基线自检失败：
+    - float-button/desktop：badge-tooltip == basic == shape-content 逐字节相同（未登记）
+    - float-button/mobile：同上      - float-button/tablet：同上
+  ```
+  三张 PNG 的 `md5` **完全相同**，且尺寸极小（mobile **558 B** / tablet 747 B / desktop 1071 B）
+  —— 打开看是**纯白**。
+- **根因（已用 antd 源码确认）**：`FloatButton` 的根容器是 **`position: fixed`**
+  —— `/tmp/antd-src/package/es/float-button/style/button.js:46-48`：
+  ```js
+  position: 'fixed',
+  zIndex: token.zIndexPopupBase,
+  insetInlineEnd: token.floatButtonInsetInlineEnd,
+  ```
+  而视觉 harness 的截图目标是 **`#stage` 元素**（`tests/visual/run.mjs:202`
+  `screenshotElement(page, '#stage', outFile)`）⇒ `fixed` 元素定位到**视口**右下角，
+  落在 `#stage` 的 boundingBox **之外** ⇒ **裁不到** ⇒ 两侧都是空白 ⇒ compare「exact」是**空的**。
+- **为什么没有入库基线**：空白基线**不能当回归判据**（它测不出任何外观差异）。
+  入库只会把「已知缺口」变成「**看不见的假绿**」。⇒ 保持 `missing-baseline` **红着可见**。
+- **两条修法（择一，需定夺）**：
+  1. **改用例**：在 `render/cases/{react,vue}/float-button.*` 的容器上加
+     `transform: translateZ(0)` / `contain: paint`（任一都能让后代 `fixed` **改以该容器为包含块**）
+     ⇒ 截图能拍到按钮 ⇒ 变体真正产生差异。⚠️ 代价：测的就不再是 antd 的**真实定位语义**。
+  2. **改 harness**：对这类「视口级 fixed」组件改用**整页截图**（`fullPage: true`）而非元素截图
+     ⇒ 保留真实语义。⚠️ 代价：影响**所有**组件的截图口径，需全量重生成基线。
+  - 备选（不推荐）：在 `matrix.mjs` 登记 `duplicateAllow` —— 自检会过，
+    但**测试依然空转**，属于「用登记掩盖空转」。
+- **需要谁**：**用户/维护者定夺**（改用例 vs 改 harness）。📌 同族：`affix` 的
+  「固钉态（`position:fixed`）需要真实滚动，不进视觉比对」——但 `affix` 至少**未固钉态是可见的**，
+  `float-button` 是**整张图都空**，性质更严重。
+- **判据（复现）**：
+  ```sh
+  node tests/visual/run.mjs --mode baseline --component float-button   # ⇒ 自检失败 + exit=1
+  md5 tests/visual/baselines/react/float-button/*.png | awk '{print $NF}' | sort | uniq -c
+  ```
 
 ### 1.2 ⚠️ `typography/semantic` 三个视口 `size-mismatch`（1.28% / 2.41% / 4.93%）
 
@@ -178,7 +217,7 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
   （与 `SelectInfo as CalendarSelectInfo` 同判，PITFALLS 6/158/168），并同步改 demo。
 - **需要谁**：无。
 
-### 1.9 📌 **207 条 warn 级** biome 诊断（**不阻塞**，`exit=0`，但会一直响）
+### 1.9 ✅ **已裁决并执行** biome 诊断：**207 → 65 条 warn**（**不阻塞**，`exit=0`）
 
 > ⚠️ **本条原写「2 条」，是错的**（2026-10-03 复核）。真实数字是 **207 条**。
 > 错因值得记：biome **默认只显示前 20 条诊断**（输出末尾写 `Diagnostics not shown: 198.`），
@@ -186,21 +225,24 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 > 判据：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3`
 > ⇒ `Found 207 warnings.` / `Found 11 infos.` / `exit=0`。
 
-- **全量分布**（2026-10-03 实测，2738 文件）：
+- **全量分布 —— 改前（207 条，2026-10-03 实测，2738 文件）**：
 
-  | 规则 | 条数 | 性质 |
-  |---|---|---|
-  | `lint/style/noNonNullAssertion` | **184** | 绝大多数在 `__tests__/` 里（`el()!` 形态） |
-  | `lint/style/useTemplate` | 14 | 字符串拼接 |
-  | `lint/complexity/useOptionalChain` | 9 | 可改 `?.` |
-  | `lint/correctness/noUnusedFunctionParameters` | 4 | 未用参数 |
-  | `lint/suspicious/noTemplateCurlyInString` | 3 | — |
-  | `lint/suspicious/noConfusingVoidType` | 3 | — |
-  | `lint/correctness/noUnusedPrivateClassMembers` | 2 | — |
-  | `lint/performance/noAccumulatingSpread` | 1 | — |
+  | 规则 | 改前 | 改后 | 性质 |
+  |---|---|---|---|
+  | `lint/style/noNonNullAssertion` | **184** | **40** | 144 条在 `__tests__/`（**已关规则**）；剩 40 条是生产代码的算法不变式 |
+  | `lint/style/useTemplate` | 14 | 14 | 字符串拼接 |
+  | `lint/complexity/useOptionalChain` | 9 | 9 | 可改 `?.` |
+  | `lint/correctness/noUnusedFunctionParameters` | 4 | 4 | 未用参数 |
+  | `lint/suspicious/noTemplateCurlyInString` | 3 | 3 | — |
+  | `lint/suspicious/noConfusingVoidType` | 3 | 3 | — |
+  | `lint/correctness/noUnusedPrivateClassMembers` | 2 | 2 | — |
+  | `lint/performance/noAccumulatingSpread` | 1 | 1 | — |
+  | **合计** | **207** | **65** | 全部 **warn** ⇒ `exit=0` |
 
-  集中目录：`tooltip/__tests__`(23) · `tree/utils`(20) · `carousel/__tests__`(20) ·
+  改前集中目录：`tooltip/__tests__`(23) · `tree/utils`(20) · `carousel/__tests__`(20) ·
   `date-picker/__tests__`(17) · `dropdown/__tests__`(15) · `rate/__tests__`(12) …
+  改后只剩 13 个生产文件（`tree/utils/conductUtil.ts` 10 · `tree/utils/util.ts` 6 ·
+  `tree/utils/treeUtil.ts` 4 · `progress/utils.ts` 4 · `listy/Listy.ts` 4 · …）。
 - **其中 2 条**是「非测试代码、且**可当场修**」的（原文档只写了这两条）：
   1. `tests/visual/debug/classify-date-picker-rules.mjs:91:3` **`suppressions/unused`**
      —— 一条 `biome-ignore lint/style/useTemplate` **不再命中**（真正命中它的违规在
@@ -209,12 +251,49 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
      （`if (skip && skip.test(line))` → `skip?.test(line)`，语义等价）。
 - **已排除**：**不是 2026-10-03 那次改动引入的**（两个文件本次均未触碰；
   184 条 `noNonNullAssertion` 是长期存量）。
-- **怎么修**：
-  - 184 条 `noNonNullAssertion`：**别一次性机械改**（`!` → `?.` 会让断言**静默失去约束**）。
-    建议**分类**：测试里「已知非空」的用 `expect(x).toBeDefined()` + 局部变量收窄，
-    或在 `biome.json` 对 `**/__tests__/**` **整体关闭**该规则（需评估是否放宽标准 ⇒ 走用户裁决）。
-  - 上表第 1 条：把 `biome-ignore` 移到**紧贴** `:93`/`:94` 违规行；第 2 条按建议改。
-- **需要谁**：`noNonNullAssertion` 的处置方式**需要用户裁决**（改断言 vs 关规则）；其余无。
+
+#### ✅ **已裁决并执行**（2026-10-03）：**测试目录关闭该规则**，生产代码保持开启
+
+**处置 = 分两层**（判据见下）：
+
+| 层 | 条数 | 处置 | 理由 |
+|---|---|---|---|
+| `**/__tests__/**` | **144** | **关闭** `noNonNullAssertion`（`biome.json` override） | 测试里的 `!` 是**故意的非空断言**；`?.` 反而**更弱**（见下） |
+| 生产代码（13 文件） | **40** | **保持开启**，逐个用**真收窄**修，**不扫改** | 是**算法不变式**，机械改会**改语义**（见下） |
+
+**① 为什么测试目录关闭 ≠ 降低验收标准（H8）**：`noNonNullAssertion` 是 **style** 规则，
+不是 correctness。在测试里，元素为 `null` 意味着**夹具没产出预期节点** ——
+`el()!.foo` 会抛 `TypeError`（**测试响亮地失败**，正是想要的），
+而 `el()?.foo` 会**静默变 `undefined`**（部分断言形态下**假通过**）。
+⇒ 保留 `!` 是**更强的**约束，关掉这条 style 规则**不削弱任何断言**。
+（这也是主流做法：ESLint 的 `@typescript-eslint/no-non-null-assertion` 普遍对
+`**/*.test.*` / `**/__tests__/**` 关闭。biome 自己把这条的 fix 标为 **unsafe**。）
+
+**② 为什么生产代码**不能**扫改（硬证据，已实测）**：把 biome 的 unsafe fix 应用到真实形态：
+```ts
+checkedKeys.add(parent!.key);        // 原
+checkedKeys.add(parent?.key);        // biome --write --unsafe 之后 ← Set<string> 里混进 undefined！
+const steps = extra!.steps!;         // 原
+const _steps = extra?.steps!;        // 之后 ← 类型变 `number | undefined`，且变量被改名
+```
+⇒ **`Set<string>.add(undefined)` 是静默的数据污染**。这类 `parent!` / `extra!.steps!`
+（`tree/utils` 16 条 · `progress` 7 条 · `listy` 4 条 · `cascader/engine` 3 条 …）
+与 rc-* 上游同构，**必须逐个判断不变量后再收窄**（`if (!parent) continue;` 之类），
+**不能批量**。它们仍是 **warn（`exit=0`）**，不阻塞 `verify:full`。
+
+- **落地**：`biome.json` 的 `overrides` 里 `**/__tests__/**` 增加
+  `"style": { "noNonNullAssertion": "off" }`（⚠️ `biome.json` **不能写注释**，PITFALLS 4
+  ⇒ 理由只在本文件与 commit message 里）。
+- **✅ 实测**：`pnpm exec biome check . --max-diagnostics=none` ⇒
+  **207 → 65 warnings**（`noNonNullAssertion` **184 → 40**），`exit=0`。
+- **怎么验**：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3` ⇒ `Found 65 warnings.`
+- **剩下的两条「可当场修」**（非测试、非算法）：
+  1. `tests/visual/debug/classify-date-picker-rules.mjs:91:3` **`suppressions/unused`**
+     —— 一条 `biome-ignore lint/style/useTemplate` **不再命中**（真正命中它的违规在
+     **`:93:34` 与 `:94:27`**，说明 ignore 注释与违规行**没贴合**，同 PITFALLS **2**）；
+  2. `registry/tools/validate-registry.mjs:467:15` **`lint/complexity/useOptionalChain`**
+     （`if (skip && skip.test(line))` → `skip?.test(line)`，语义等价）。
+- **需要谁**：无（已执行）。生产代码那 40 条**随各组件下次改动时顺手收窄**，不单独排期。
 
 ---
 
@@ -332,18 +411,21 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §4 接手顺序建议（按性价比）
 
-1. **§2.6b 补两条 L1 用例**（segmented 的 mousedown / collapse 的 Enter）——
+1. **§1.10 `float-button` 的视觉变体空转**（**需要定夺**：改用例 vs 改 harness）——
+   ⚠️ 它是**唯一的 `missing-baseline`**（9 条），且**不能靠提交空白基线糊过去**。
+2. **§2.6b 补两条 L1 用例**（segmented 的 mousedown / collapse 的 Enter）——
    **最小、最直接**：刚修的行为没有测试钉住，属于「修了但随时会回归」。
-2. **§3 #1 加「复合词事件名」扫描**（防复发，收益最大）—— 需要处理误报白名单。
-3. **§1.2 `typography/semantic`**（先重生成基线再判断）。
-4. **§1.9 的 2 条可当场修**（`classify-date-picker-rules.mjs` 的 ignore 贴合 +
+3. **§3 #1 加「复合词事件名」扫描**（防复发，收益最大）—— 需要处理误报白名单。
+4. **§1.2 `typography/semantic`**（先重生成基线再判断）。
+5. **§1.9 剩下的 2 条可当场修**（`classify-date-picker-rules.mjs` 的 ignore 贴合 +
    `validate-registry.mjs:467` 的 `?.`）—— 5 分钟的事。
-5. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
-6. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
+6. **§2.2 + §2.3 全量审计 `TabsProps` 与运行时声明**（一次做完两件事）。
+7. **§1.5 扫 `Trigger` 的 `children[0]`** / **§2.4 扫时间依赖用例**
    （都是扫描类，可批量做）。
-7. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
+8. **§1.6 `ContextIsolator`** / **§1.7 `use-merge-semantic` 的 `schema`** ——
    **等第一个真实消费者**再做，别提前实现。
-8. **§1.1 的 84 条 `missing-baseline`** —— **阻塞在用户裁决**（`visual-baseline-in-git`）。
+9. **§1.9 的 40 条生产 `noNonNullAssertion`** —— **不单独排期**，
+   随各组件（`tree` / `progress` / `listy` / `cascader`）下次改动时**逐个收窄**。
 
 ---
 
@@ -358,7 +440,8 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 | `c7fd2ec` | `calendar` 的日期依赖用例从 L4 移除（§2.4） |
 | `07b8ff7` | **`test:types` 的「假红」修掉**（`types` project 指定 `checker: 'vue-tsc'`）；新建本文件 |
 | `7147a3f` | `segmented` / `collapse` 的事件名大小写（§1.4、§2.6b） |
-| （本轮，未改代码） | **复核本文件并改掉 4 处事实错误**：§1.3 证伪 · §1.9 由「2 条」改「207 条」 · §2.5 的 commit 更正为 `9c9f557` 且残留关闭 · §1.4 改按符号定位 |
+| `625cc84` | **复核本文件并改掉 4 处事实错误**：§1.3 证伪 · §1.9 由「2 条」改「207 条」 · §2.5 的 commit 更正为 `9c9f557` 且残留关闭 · §1.4 改按符号定位 |
+| （本轮） | **裁决并执行**：`visual-baseline-in-git` = **A 入库 git** ⇒ 9 个组件生成 **75 张基线**（`missing-baseline` **84 → 9**，compare **75/75 exact**）；§1.9 = **测试目录关闭** `noNonNullAssertion`（**207 → 65** warn）；**新登记 §1.10**（float-button 变体空转） |
 
 **PITFALLS 319–336**（18 条）。`verify:full` **exit=0**。
 

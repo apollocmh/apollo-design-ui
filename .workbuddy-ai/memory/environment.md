@@ -25,6 +25,12 @@ Node≥22.12（managed）｜pnpm 12.4.2｜TS 5.9｜Vitest 5｜Playwright（`chan
 - 🚨 **收口必须跑两个 lint**：`lint:types`（`vue-tsc -p tsconfig.json`）**和** `lint:format`（`biome check .`）
   —— 互补（vue-tsc 不看未用 import / 类型参数）。⚠️ **不许手写 glob**（zsh 不展开 `**` ⇒ 假绿灯，213）。
   biome error 基线 **0**。
+- ⚠️ **本会话是 zsh**：`for c in $VAR` **不会按空格分词**（会把整串当成一个元素）⇒
+  写循环要用**显式列表**或 zsh 数组（`for c in ${=VAR}`）。症状：`--component "a b c"`
+  被当成一个组件名 ⇒ `buildCases` 抛错、循环只跑一次。（2026-10-03 实测踩到。）
+- ⚠️ **BSD `grep` 不支持 `\|`**（会**静默返回空**，PITFALLS 277）⇒ 一律用 `grep -E` 或 Grep 工具。
+- ⚠️ **数 biome 诊断必须 `--max-diagnostics=none`**：默认只列**前 20 条**，
+  末尾写 `Diagnostics not shown: N.` ⇒ 照默认输出数会严重低估（实测把 **207** 看成 **2**，PITFALLS 335）。
 - 🚨 `registry:check` 顺序：`gen-registry.mjs` → `foundation-status.mjs`（**不带 `--check`**）→
   `gen-workstreams.mjs --check` → `validate-registry.mjs`。组件收口后要刷 foundation-status + workstreams。
 - ⚠️ 多文件机械改动**别用 Edit 批量**（会「部分落盘却报 success」，**同一文件内连续多次替换也会**，305）

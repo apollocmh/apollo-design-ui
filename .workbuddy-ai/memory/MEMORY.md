@@ -17,6 +17,17 @@
 ⚠️ **`test:types` 已修**（`vitest.config.ts` 的 `types` project 指定 `checker: 'vue-tsc'`）——
 此前它**恒定 exit=1**（`tsc` 解析不了 `.vue` ⇒ 96 条假源错误），现在 **exit=0**。
 
+⚠️ **决策的运行时状态以 `foundation.json` 为准**（`mergeOpenDecisions` 的
+`DECISION_RUNTIME_KEYS` 覆盖种子）⇒ 裁决时**必须同时改**
+`registry/source/open-decisions.mjs`（`open()`→`decided()`）**和** `registry/foundation.json`，
+再跑生成器链，否则 `ask.mjs decision <id>` 仍是 `open`。
+
+📌 **`visual-baseline-in-git` 已裁决 = A 基线入库**（2026-10-03）：9 个组件已入库 **75 张**
+（compare **75/75 exact**）；⚠️ **`float-button` 例外**（`position:fixed` 截不到 ⇒ 全白图，
+**故意不入库**，见 KNOWN-ISSUES §1.10 / PITFALLS 337）⇒ `missing-baseline` 还剩 **9 条**。
+📌 **`noNonNullAssertion` 已裁决**：`**/__tests__/**` **关闭**（`biome.json`），生产 40 条保持开启、
+随组件改动逐个收窄（**禁止扫改**：`add(parent?.key)` 会往 Set 里塞 `undefined`）⇒ 全仓 warn **207 → 65**。
+
 ⚠️ **登记簿的坐标要复核后再信**（2026-10-03 实测：重写后逐条复核，改掉 **4 处事实错误**）：
 §1.3「Switch handler 被丢弃」**证伪**（`callbacks` 是 `attrs` 别名，且早有 L1 用例）·
 §1.9「2 条 biome warn」实为 **207 条**（biome **默认只列前 20** ⇒ 必须 `--max-diagnostics=none`）·

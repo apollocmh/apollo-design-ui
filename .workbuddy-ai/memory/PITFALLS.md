@@ -25,6 +25,7 @@
 - **浮层**：🚨 **模板里的 `<slot/>` 产出的是嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到**数组**而不是元素 ⇒ 走「包一层 `<span>`」分支（D79）。要传单个元素只能**用渲染函数**（330）
 - **Vue 化**：🚨 **`React.useEffect` ↔ Vue `watch` 不等价** —— effect 挂载必跑、watch 只在变化时跑⇒ 「初始值就命中该分支」时**静默失效**，必须补 `{ immediate: true }`（328）
 - **测试/jsdom**：🚨 **「输出随运行日变化」的用例不能进字节精确的 L4** —— 不传 `value` 的 `Calendar` 取 `getNow()` ⇒ `-today` 格子每天挪位，基线隔夜必红。正确做法：**从 L4 移除**（该行为由 L1 的**语义断言**覆盖），不是放宽比对（334）
+- **视觉**：🚨 **元素级截图拍不到 `position:fixed` 的组件** ⇒ 变体必然空转（**整张纯白图**，几百字节、同哈希）；`md5` 查同哈希 + 看文件大小即可定位，**别用 `duplicateAllow` 糊过去**（337）
 - **流程**：🚨 **`biome check` 默认只列前 20 条诊断**（末尾写 `Diagnostics not shown: N.`）⇒ 数诊断必须 `--max-diagnostics=none`；否则会把 **207** 条看成 **2** 条（335）
 - **排查**：⚠️ **`const x = attrs as unknown as T` 是别名不是拷贝** —— 从 `attrs` 解构剔除键**不影响** `x` ⇒ 别把 `_onXxx` 误判成「handler 被丢弃」；下结论前先 grep `__tests__/`（336）
 - **流程**：🚨 registry 生成器有**顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`；乱序会让 `registry:check` 报「已过期」（329）
@@ -4327,3 +4328,34 @@
     ⚠️ **先跑现成测试再下结论**：本例 `switch/__tests__/index.test.ts:175`（`onKeyDown 照常转发`）
     与 `:182`（`onClick` 收结果值）**早就覆盖了**，`28/28` 全绿 ——
     「看起来可疑」不等于「没有被测到」。**怀疑前先 `grep` 一下 `__tests__/`**。
+
+337. 🚨 **元素级截图（`screenshotElement('#stage')`）拍不到 `position: fixed` 的组件
+    ⇒ 视觉变体必然「空转」（整张纯白图）**（2026-10-03 实测：`float-button` 三变体同哈希）。
+
+    **症状**：`node tests/visual/run.mjs --mode baseline --component float-button` 报
+    ```
+    🚨 基线自检失败：
+      - float-button/desktop：badge-tooltip == basic == shape-content 逐字节相同（未登记）
+    ```
+    三张 PNG 的 `md5` 完全一致，且**极小**（mobile **558 B** / desktop 1071 B）——
+    打开是**纯白**。compare 会「exact 通过」，但那是**空的**（两侧都没渲染出东西）。
+
+    **根因**：antd `FloatButton` 的根容器是 `position: fixed`
+    （`/tmp/antd-src/package/es/float-button/style/button.js:46-48`
+    `position:'fixed'` + `insetInlineEnd: floatButtonInsetInlineEnd`），
+    而 harness 的截图目标是 **`#stage` 元素**（`tests/visual/run.mjs:202`
+    `screenshotElement(page, '#stage', outFile)`）⇒ `fixed` 元素定位到**视口**右下角，
+    落在 `#stage` 的 boundingBox **之外** ⇒ 裁不到。
+
+    **判据（10 秒定位）**：
+    ```sh
+    md5 tests/visual/baselines/react/<c>/*.png | awk '{print $NF}' | sort | uniq -c
+    # 若同一 viewport 的多个 variant 同哈希 ⇒ 先怀疑「没渲染进截图区」
+    ls -la tests/visual/baselines/react/<c>/   # 几百字节 ⇒ 基本是空白图
+    ```
+    ⚠️ **别急着登记 `duplicateAllow` 糊过去** —— 那会让自检变绿而测试**依然空转**。
+    要么改用例（给容器加 `transform`/`contain: paint` 让 `fixed` 改以它为包含块），
+    要么改 harness 用整页截图；**空白基线不能当回归判据**。
+
+    📌 同族：`affix` 的「固钉态（`position:fixed`）不进视觉比对」——但 affix 的
+    **未固钉态是可见的**，float-button 是**整张图都空**，性质更严重。
