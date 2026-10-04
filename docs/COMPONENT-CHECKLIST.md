@@ -60,6 +60,13 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-10-04 续（缺口清账会话）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 126 | **临时解包目录被部分清理比「不存在」更毒**——`/tmp/antd-src/package/es/locale` 目录在但空，`existsSync` 判据仍真 ⇒ gen-locale 语言清单解析为 0 ⇒ `--check` 把 73 个语言包全判「多余产物」（unit 直接红了） | L1（gen-locale 幂等用例） | 解析候选加仓库根真实 antd 且排最前；判据从 `existsSync(locale)` 升级为「readdir 含 .js」；import 工具脚本会执行 main() —— **探测第三方脚本一律不要 import** |
+| 127 | **「缺口登记」不等于「仍开放」**——badge 的 spaceChildren（v4 逻辑）与 transfer rtl 在 antd 6.6.4 / 当前代码里早已不是缺口；动手前先对拍上游源码定现状，再决定修/证伪 | 源码 grep（antd 6.6.4 badge 无 spaceChildren） | 清账第一动作 = `grep antd/es/<c>` 核对登记是否过期；关闭方式区分「已修」与「已证伪」 |
+
 ### 2026-10-04（transfer 收口会话，全量 72/72）
 
 | # | 坑 | 抓到它的层 | 对策 |
