@@ -17,7 +17,25 @@ name: CI
 on:
   push:
     branches: [master]
+    # 纯文档 / 记忆提交不跑 CI（2026-10-04）。
+    # ⚠️ `paths-ignore` 的语义是「**所有**改动文件都命中时才跳过」⇒ 混合提交照跑，
+    #    所以它不会掩盖任何代码问题。
+    # ⚠️ 代价：**纯文档提交里若删/改了被 registry 检查引用的 .md**，那一次不会被抓到。
+    #    需要时用 `workflow_dispatch` 手动跑一轮（它不受 paths-ignore 影响）。
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.workbuddy-ai/**'
+      - '.workbuddy/**'
   pull_request:
+    # 只对「合入 master」的 PR 跑门禁（原先无过滤 ⇒ 任何 base 都跑）。
+    branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.workbuddy-ai/**'
+      - '.workbuddy/**'
+  # 手动跑完整 CI（不受 paths-ignore 影响）—— 纯文档提交后的兜底手段。
   workflow_dispatch:
 
 # 同一 ref 上的新推送取消旧运行：省 runner，也避免旧结果误导。
@@ -61,23 +79,22 @@ jobs:
         run: pnpm run lint
 
   test:
-    name: "test（vitest 五 project）"
+    name: "test（类型层；四个运行时 project 见 coverage）"
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
-      # 四个运行时 project，**各自一个进程** —— 与本地 `pnpm test` 逐字同源。
-      #
-      # 🚨 不要图快合并成「一次 vitest 带 4 个 --project」：本仓 2026-10-04 实测，
-      #    合并后 worker 互相争抢 —— `theme` 的 888 个用例从 **84s 劣化到 9min**、
-      #    24 条撞上 5s 默认超时（同一坑 `foundation-status.mjs --verify`
-      #    在 2026-09-16 就记录过，并发还会让**覆盖率静默失真**）。
-      - name: 运行时四层（unit / dom-contract / a11y / theme）
-        run: pnpm run test
-
-      # 类型层单独跑：它是 vitest 的 typecheck project（`*.test-d.ts`）。
+      # 🚨 **这里原先还跑「运行时四层」（unit / dom-contract / a11y / theme）——
+      #    2026-10-04 去重后删掉，因为 `coverage` job 跑的是**完全相同的这 4 个 project**：
+      #      test     = test:unit && test:dom && test:a11y && test:theme      （4 个进程）
+      #      coverage = vitest --coverage ... --project unit --project dom-contract \
+      #                 --project a11y --project theme                        （同样 4 个）
+      #    ⇒ 同一批 10092 个用例被完整执行两次。去掉这一份**不减少任何测试量**：
+      #      测试门禁与覆盖率门禁都由 `coverage` job 承担（它本来就同时是两者）。
+      #    ⚠️ 唯一**不在** `coverage` 里的层就是下面的 `types`（`--project types` 没进那条命令）
+      #      ⇒ 这个 job 现在只保留它，失败归因仍然清晰（类型层 vs 测试/阈值层分属两个 job）。
       - name: 类型层（*.test-d.ts）
         env:
           # 同 lint job 的说明：vitest 的 typecheck project 也是「整仓 vue-tsc」口径，

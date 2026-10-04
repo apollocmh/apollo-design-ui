@@ -1,0 +1,130 @@
+# CI Benchmark —— **只手动触发**（`workflow_dispatch`）。
+#
+# 目的：在**真实 runner**（2 vCPU / 7 GB）上量 `coverage` job 的并行度收益与风险。
+#
+# 为什么必须在 runner 上量：开发机是 8 核，**测不出 2 vCPU 的争抢行为** ——
+# 而「4 个 project 挤一个进程并发会让 theme 从 84s 劣化到 9min」这条既有结论
+# 恰恰是并发争抢的产物，本地复现不了。
+#
+# 每个变体都记：① 墙钟 ② 峰值 RSS ③ 覆盖率摘要（供与变体 1 逐项比对）。
+#
+# ⚠️ 变体 2/3/4 **不带阈值** —— 它们不是门禁，只是测时间；变体 1 用的是
+#    **当前 CI 的原始命令**（含 ratchet 阈值），作为对照基线。
+# ⚠️ 变体 3/4 的多个进程**并发启动**（`&` + `wait`），否则量不到并行收益。
+# ⚠️ 本 workflow 不参与任何门禁；它的结论用来决定要不要改 `test:coverage`。
+name: CI Benchmark
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-benchmark-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  coverage-parallelism:
+    name: coverage 并行度（1 串行 / 1×2workers / 2 进程 / 4 进程）
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      - name: runner 规格
+        run: |
+          echo "nproc = $(nproc)"
+          grep -E 'MemTotal|MemAvailable' /proc/meminfo
+
+      # ---------------------------------------------------------------- 变体 1
+      # 现状：1 进程、`--maxWorkers=1 --no-file-parallelism`（完全串行）。**含阈值**。
+      - name: 变体 1 · 1 进程 · 完全串行（现状，含 ratchet 阈值）
+        continue-on-error: true
+        run: |
+          /usr/bin/time -v npx vitest run --coverage --maxWorkers=1 --no-file-parallelism \
+            --project unit --project dom-contract --project a11y --project theme \
+            --coverage.reporter=json-summary --coverage.reporter=json \
+            --coverage.reportsDirectory=coverage/v1 2>&1 | tail -30
+
+      # ---------------------------------------------------------------- 变体 2
+      # **最低风险的提速候选**：仍是 1 进程（⇒ 只产出一份覆盖率报告，**不需要合并**），
+      # 只是允许文件级并行、上限 2 个 worker（runner 只有 2 vCPU）。
+      # 🚨 关键校验：它的覆盖率摘要必须与变体 1 **逐项相同** —— 仓库记录过
+      #    「并发导致覆盖率静默失真」（json reporter 丢文件），这一步就是测那个风险。
+      - name: 变体 2 · 1 进程 · --maxWorkers=2（允许文件级并行）
+        continue-on-error: true
+        run: |
+          /usr/bin/time -v npx vitest run --coverage --maxWorkers=2 \
+            --project unit --project dom-contract --project a11y --project theme \
+            --coverage.thresholds.statements=0 --coverage.thresholds.branches=0 \
+            --coverage.thresholds.functions=0 --coverage.thresholds.lines=0 \
+            --coverage.reporter=json-summary --coverage.reporter=json \
+            --coverage.reportsDirectory=coverage/v2 2>&1 | tail -30
+
+      # ---------------------------------------------------------------- 变体 3
+      # 2 个进程**并发**：{unit} + {dom-contract, a11y, theme}（按已知耗时配对，尽量均衡）。
+      # 需要合并覆盖率报告（本次只量时间，合并留到确认收益之后再做）。
+      - name: 变体 3 · 2 进程并发（{unit} + {dom-contract, a11y, theme}）
+        continue-on-error: true
+        run: |
+          /usr/bin/time -v sh -c '
+            npx vitest run --coverage --maxWorkers=1 --no-file-parallelism \
+              --project unit --coverage.reporter=json-summary \
+              --coverage.reportsDirectory=coverage/v3a --coverage.thresholds.statements=0 \
+              --coverage.thresholds.branches=0 --coverage.thresholds.functions=0 \
+              --coverage.thresholds.lines=0 > /tmp/v3a.log 2>&1 &
+            npx vitest run --coverage --maxWorkers=1 --no-file-parallelism \
+              --project dom-contract --project a11y --project theme \
+              --coverage.reporter=json-summary --coverage.reportsDirectory=coverage/v3b \
+              --coverage.thresholds.statements=0 --coverage.thresholds.branches=0 \
+              --coverage.thresholds.functions=0 --coverage.thresholds.lines=0 > /tmp/v3b.log 2>&1 &
+            wait
+          ' 2>&1 | tail -20
+          echo "--- v3a ---"; tail -12 /tmp/v3a.log
+          echo "--- v3b ---"; tail -12 /tmp/v3b.log
+
+      # ---------------------------------------------------------------- 变体 4
+      # 4 个进程**并发**（每个 project 一个）。2 vCPU 上属超额订阅 —— 预期会争抢，
+      # 这一条就是用来证伪「4-way 更快」的。
+      - name: 变体 4 · 4 进程并发（每 project 一个）
+        continue-on-error: true
+        run: |
+          /usr/bin/time -v sh -c '
+            for p in unit dom-contract a11y theme; do
+              npx vitest run --coverage --maxWorkers=1 --no-file-parallelism \
+                --project $p --coverage.reporter=json-summary \
+                --coverage.reportsDirectory=coverage/v4-$p --coverage.thresholds.statements=0 \
+                --coverage.thresholds.branches=0 --coverage.thresholds.functions=0 \
+                --coverage.thresholds.lines=0 > /tmp/v4-$p.log 2>&1 &
+            done
+            wait
+          ' 2>&1 | tail -20
+
+      # ------------------------------------------------- 覆盖率一致性（变体 1 vs 2）
+      - name: 比对变体 1 / 变体 2 的覆盖率（必须逐项相同）
+        if: always()
+        run: |
+          node -e "
+          const fs=require('fs');
+          const rd=(p)=>{const f=p+'/coverage-summary.json';return fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')).total:null};
+          const a=rd('coverage/v1'), b=rd('coverage/v2');
+          if(!a||!b){console.error('❌ 缺少摘要：v1='+!!a+' v2='+!!b);process.exit(1)}
+          let bad=0;
+          for(const m of ['statements','branches','functions','lines']){
+            const same=a[m].covered===b[m].covered&&a[m].total===b[m].total;
+            if(!same)bad++;
+            console.log((same?'✅':'❌')+' '+m+': v1='+a[m].covered+'/'+a[m].total+'  v2='+b[m].covered+'/'+b[m].total);
+          }
+          console.log(bad===0?'✅ 变体 2 的覆盖率与现状完全一致（无静默失真）':'❌ 变体 2 与现状不一致 —— 并发确实会让覆盖率失真');
+          "
+
+      - name: 上传 benchmark 覆盖率产物
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-benchmark-coverage
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
