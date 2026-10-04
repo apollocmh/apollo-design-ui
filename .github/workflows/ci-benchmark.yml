@@ -103,7 +103,13 @@ jobs:
           ' 2>&1 | tail -20
 
       # ------------------------------------------------- 覆盖率一致性（变体 1 vs 2）
-      - name: 比对变体 1 / 变体 2 的覆盖率（必须逐项相同）
+      #
+      # ⚠️ 判据在 2026-10-05 被实测修正过：**「逐项相同」是错的** ——
+      #    同一份代码、同一个串行配置，branches 自己就在 14385–14387 之间抖
+      #    （噪声带 0.0102 点，见 docs/KNOWN-ISSUES.md §1.6）。
+      # ⇒ 正确的判据是「**没有系统性变低**」：逐项允许 ±5 项的噪声容差。
+      #    （若并行真的丢数据，会是**单向、成片**的下降，不是双向 ±1。）
+      - name: 比对变体 1 / 变体 2 的覆盖率（不得系统性变低）
         if: always()
         run: |
           node -e "
@@ -111,13 +117,14 @@ jobs:
           const rd=(p)=>{const f=p+'/coverage-summary.json';return fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')).total:null};
           const a=rd('coverage/v1'), b=rd('coverage/v2');
           if(!a||!b){console.error('❌ 缺少摘要：v1='+!!a+' v2='+!!b);process.exit(1)}
-          let bad=0;
+          const TOL=5; let bad=0;
           for(const m of ['statements','branches','functions','lines']){
-            const same=a[m].covered===b[m].covered&&a[m].total===b[m].total;
-            if(!same)bad++;
-            console.log((same?'✅':'❌')+' '+m+': v1='+a[m].covered+'/'+a[m].total+'  v2='+b[m].covered+'/'+b[m].total);
+              const d=b[m].covered-a[m].covered;
+              const ok=d>=-TOL; if(!ok)bad++;
+              console.log((ok?'✅':'❌')+' '+m+': v1='+a[m].covered+' v2='+b[m].covered+'  Δ='+(d>=0?'+':'')+d+'（容差 ±'+TOL+'）');
           }
-          console.log(bad===0?'✅ 变体 2 的覆盖率与现状完全一致（无静默失真）':'❌ 变体 2 与现状不一致 —— 并发确实会让覆盖率失真');
+          console.log(bad===0?'✅ 变体 2 没有系统性变低（差异在噪声带内）':'❌ 变体 2 系统性变低 —— 并行确实丢了覆盖数据');
+          process.exit(bad===0?0:1);
           "
 
       - name: 上传 benchmark 覆盖率产物

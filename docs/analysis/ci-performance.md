@@ -207,3 +207,46 @@
 **40 分钟的反馈里，93% 是 `L6 visual` 这一个 job；而这个 job 的 55% 是每 case 固定 1100ms 的等待，  
 10% 才是真正的像素比对。** 第二、三名（`coverage` 23m15s、`test` 15m09s）**跑的是同一批测试**，  
 且它们 76% 的时间花在 jsdom 环境重建与模块导入上，只有 24% 是测试本身。
+
+---
+
+# 优化后（2026-10-05）
+
+## 落地了什么
+
+| # | 改动 | 文件 |
+|---|---|---|
+| 1 | `L6 visual` 4-way shard（按 case 下标取模，确定性划分）+ 缓存 Chromium + 复用 build 的 dist | `ci.yml`、`tests/visual/{run,report,assert-shard}.mjs` |
+| 2 | `test` job 去掉「运行时四层」（与 `coverage` 100% 重复），只留类型层 | `ci.yml` |
+| 3 | 触发收窄：`pull_request.branches:[master]` + `paths-ignore`（`**.md` / `docs/**` / `.workbuddy-ai/**`） | `ci.yml` |
+| 4 | `test:coverage` 由 `--maxWorkers=1 --no-file-parallelism` 改 **`--maxWorkers=2`** | `package.json` |
+
+## 实测对比
+
+| 指标 | 优化前 | P0 后（实测） | 阶段 3 后（预计） |
+|---|---|---|---|
+| **Critical Path** | **40m20s** | **21m10s** | **~17.7 min** |
+| **Runner Minutes** | **86.5 min** | **71.4 min** | ~68 min |
+
+## coverage 并行度 benchmark（真实 runner：2 vCPU / 7 GB）
+
+| 变体 | 墙钟 | 结论 |
+|---|---|---|
+| 1 进程完全串行（原配置） | 23.3 min | 基线 |
+| **1 进程 `--maxWorkers=2`** | **19.5 min** | ✅ **采用**（−16%，且不需要合并覆盖率报告） |
+| 2 进程并发 | 19.6 min | 同收益但需合并报告 ⇒ 不值得 |
+| 4 进程并发 | 21.2 min | ❌ 2 vCPU 超额订阅，反而更慢 |
+
+✅ 安全性核过：v2 的 `ui/src` 是四次运行里**覆盖最高**的一次（branches 14388 / statements 23875）；
+逐文件差异只落在**已知的时序抖动文件**且**双向**（有增有减）⇒ 噪声，不是并行丢数据。
+
+⚠️ **副产物**：benchmark 顺带暴露 ratchet 的 branches 阈值**坐在噪声带里**
+（阈值 73.8，实测最低 73.8071，余量 +0.0071 < 噪声带 0.0102）⇒ 见 `docs/KNOWN-ISSUES.md` §1.6，需单独裁决。
+
+## 明确不做（风险/收益不划算）
+
+| 项 | 原因 |
+|---|---|
+| vitest transform cache | 实测 `node_modules/.vite` 仅 64K，vitest 转换缓存不落盘 ⇒ 零收益 |
+| visual 每 case 的 1100ms 等待改造 | 承担 `motionDeadline` 正确性；shard 后只占 ~5 min/10 min ⇒ 高风险低收益 |
+| 盲目加 worker | runner 只有 2 vCPU；4 进程实测更慢（21.2 min） |

@@ -115,9 +115,15 @@ jobs:
       # **90 / 85 / 90 是长期目标**，不是现在的门禁。
       # foundation 档仍是 95 / 90 / 95（实测 98.58 / 94.21 / 98.23 —— 已达标，不动）。
       #
-      # 串行（`--maxWorkers=1 --no-file-parallelism`）：理由与上面 test job 相同，
-      # 另外串行**耗时与 CPU 核数基本无关** ⇒ 2 vCPU 的 runner 不会更慢。
-      - name: 覆盖率（串行四 project，ratchet 门禁）
+      # `--maxWorkers=2`（2026-10-05 由 `--maxWorkers=1 --no-file-parallelism` 改来）：
+      # 在真实 runner（2 vCPU / 7 GB）上 benchmark 过 4 个变体（`.github/workflows/ci-benchmark.yml`）：
+      #   1 进程完全串行 23.3 min · **1 进程 --maxWorkers=2 → 19.5 min（−16%）** ·
+      #   2 进程并发 19.6 min · 4 进程并发 21.2 min（2 vCPU 超额订阅，反而更慢）。
+      # ⇒ 取 **2 个 worker**：与「2 进程」同收益，但只产出一份覆盖率报告（**不需要合并**）。
+      # ✅ 安全性已用数据核过：v2 的 ui/src 是四次运行里**覆盖最高**的一次
+      #   （branches 14388 / statements 23875），逐文件差异只落在已知的时序抖动文件
+      #   且双向（有增有减）⇒ 是噪声，不是并行丢数据。
+      - name: 覆盖率（四 project · ratchet 门禁）
         run: pnpm run test:coverage
 
       - name: 上传覆盖率报告
