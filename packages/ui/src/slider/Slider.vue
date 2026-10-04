@@ -187,7 +187,16 @@ export default defineComponent({
 
     // ---- 语义合并（antd：useMergeSemantic([context, props])）----
     // ⚠️ 返回**对象**（`{classNames, styles}`），不是元组（empty/flex 同判）
-    const mergedSemantic = useMergeSemantic(
+    // ⚠️ **必须显式传三个泛型**（同 `empty/Empty.vue` 的写法）：不传时 TS 会从这 6 个
+    //    混合形态的 source 反推 `CN`/`ST`，退化成带索引签名约束的默认类型
+    //    ⇒ `SliderSemanticStyles`（具体接口，无索引签名）不可赋值
+    //    （`vue-tsc --noEmit` 的 `lint:types` **看不到**这条，只有 vitest 的 typecheck
+    //     project 会以 "Unhandled Source Error" 报出来 ⇒ `pnpm run test:types` 恒红）。
+    const mergedSemantic = useMergeSemantic<
+      SliderProps,
+      SliderSemanticClassNames,
+      SliderSemanticStyles
+    >(
       [computed(() => contextSemantic.classNames), computed(() => props.classNames)],
       [
         computed(() => contextSemantic.styles),
