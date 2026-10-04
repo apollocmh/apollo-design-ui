@@ -142,9 +142,23 @@ describe('BackTop · 纯函数', () => {
     expect(easeInOutCubic(225, 100, -100, 450)).toBeCloseTo(0, 5);
   });
 
-  it('scrollTo 返回取消函数（duration>0）；duration<=0 返回空函数', () => {
-    const cancel = scrollTo(0, { duration: 16, getContainer: () => makeTarget(50) });
+  it('scrollTo 返回取消函数（duration>0）；duration<=0 返回空函数', async () => {
+    // 🚨 **必须等动画跑完再结束用例**（2026-10-04 修）：
+    //    此前这里起了 `duration: 16` 的 RAF 循环就**不等它结束** ⇒ 实际跑了几帧取决于调度，
+    //    覆盖到的分支（`time < duration` 的循环退出 / `time > duration` 的 clamp / callback 分支）
+    //    随运行变化。实测后果：同一份代码 CI 跑两次，`_internal/scroll-to.ts` 的 branches
+    //    一次 18/23、一次 15/23 ⇒ `packages/ui/src/**` 的分支覆盖率 73.8122% vs 73.7968%，
+    //    而阈值是 73.8 ⇒ **门禁 flaky**（一次绿一次红）。
+    //    ⇒ 改成「等到动画结束 + 断言 callback 真的被调用」，让这些分支**每次都被确定地覆盖**。
+    const target = makeTarget(50);
+    const done = vi.fn();
+    const cancel = scrollTo(0, { duration: 16, getContainer: () => target, callback: done });
     expect(typeof cancel).toBe('function');
+
+    await new Promise((r) => setTimeout(r, 60)); // > duration，确保循环已退出
+    expect(done).toHaveBeenCalledTimes(1);
+    cancel(); // 已结束 ⇒ 这次调用是 no-op（同时钉住「返回的函数可调用」）
+
     const immediate = scrollTo(0, { duration: 0, getContainer: () => makeTarget(50) });
     expect(typeof immediate).toBe('function');
   });
