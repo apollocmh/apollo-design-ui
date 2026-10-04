@@ -67,8 +67,11 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 foundation **13/13**；组件 **72/72 completed**（全量封顶）。下一条用 `next-task.mjs` 取
 （当前输出「全部组件已完成」）。
 
-📌 **Table T6 虚拟滚动已收口**（2026-10-04）：`engine/VirtualTable/{BodyGrid,BodyLine,VirtualCell}` +
-`virtual`/`listItemHeight` prop；table 视觉 **24/24 exact**；L1+L4 用例；table 单测 78/78。
+📌 **Table T6 虚拟滚动已收口并提交**（commit `dd706d7`，2026-10-04）：
+`engine/VirtualTable/{BodyGrid,BodyLine,VirtualCell}` + `virtual`/`listItemHeight` prop；
+table 视觉 **24/24 exact**；L1+L4 用例；table 单测 78/78。
+⚠️ **收口后必须 `git status` 确认已落盘** —— T6 曾「验证全绿但整片未提交」，隔了一轮才发现。
+⚠️ **新增 demo 要配套 `.md`**（§6.1「每个 demo 一个 `.tsx` + `.md`」）—— T6 曾漏 `virtual-list.md`，已补。
 ⚠️ **两条最容易漏的**：① antd 层必须传 **`tailor: props.virtual`**（否则 `useColumns` 拿不到
 `scrollWidth`、无 width 的列宽为 0 ⇒ 表头被撑到 209px）；② **Vue 的 `setStyle` 不做 px 补全**
 —— `FixedHolder` 的 `width: scrollX` 是裸数字会被静默丢弃（PITFALLS 327-330 同族，已修）。
