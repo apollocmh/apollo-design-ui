@@ -77,6 +77,34 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 - 判据：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3`
   ⚠️ **必须加 `--max-diagnostics=none`**（默认只显示前 20 条，会严重低估）。
 
+### 1.5 ⚠️ 覆盖率 ratchet 的**分支**指标曾 flaky（主因已修，残余低风险待办）
+
+**现象**（2026-10-04）：同一份代码，CI 跑两次结果不同 ——
+`run 37196665506` 覆盖率 job **✓** / `run 37199180622` **✗**（`branches 73.79% < 阈值 73.8%`），
+两次的测试都是 **506/506 passed** ⇒ 不是代码回归，是**门禁本身落在测量噪声带里**。
+
+**定位**（下载两次 run 的 coverage artifact 逐文件对比 `coverage-summary.json`）：
+只有 3 个文件有差异，且**只有 `_internal/scroll-to.ts` 在 `branches` 上抖**（18/23 vs 15/23）；
+另两个（`date-picker/components/mask-input.ts`、`tabs/TabNavList.ts`）只抖 statements/functions 各 ±1。
+`ui/src` 三次采样：branches **73.807081（本地）/ 73.8122（CI 绿）/ 73.7968（CI 红）**
+⇒ 噪声跨度 **0.0154 点 ≈ 3 条分支**。
+
+**根因**：`back-top` 的 `scrollTo 返回取消函数` 用例起了 `duration: 16` 的 RAF 循环却**不等它结束**
+就收尾 ⇒ 实际跑几帧取决于调度 ⇒ 循环退出分支 / `time > duration` 的 clamp / callback 分支
+是否被覆盖随运行变化。
+
+**已修**（commit `1271ab6` —— 修**测试的确定性**，**未动任何阈值**）：改成「等动画结束 + 断言
+callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071**。
+
+**残余待办（低风险，未修）**：`mask-input.ts` / `TabNavList.ts` 各有 **±1 条 statements/functions**
+抖动 —— 但这两项的阈值余量分别是 **+0.0204 / +0.0435**（是抖动的 5–10 倍）⇒ **不会把门禁判红**。
+要清零需给这两处做同样的确定性处理（找出「不等异步回调就收尾」的用例）。
+
+**判据**：`gh run download <id> -n coverage -D <dir>` 后逐文件比 `coverage-summary.json` 的
+`covered/total`（**不要比 2 位小数的百分比**，0.01 点的差看不出来）。
+
+⚠️ **不要用「给阈值留余量」来掩盖这类抖动** —— 那等于降低门禁（用户 2026-10-04 明令禁止）。
+
 ---
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）

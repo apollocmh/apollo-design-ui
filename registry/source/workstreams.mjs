@@ -435,6 +435,7 @@ export const CROSS_ITEMS = [
       '⚠️ 像素比对在 CI 上**必然红**：入库基线在 macOS + 系统 Chrome 生成，Linux 的字体度量与抗锯齿不同 ⇒ 这一步的职责是**产出 diff**，不是判绿。想用 CI 判绿需先把基线与渲染环境一起固定（独立一步）',
       '✅ **GitHub Actions 真实运行已验证**（run `37196665506`，2026-10-04）：`L6 基线自检`（**阻塞**）通过 —— 71 个组件 / 23 组重复均有登记；`L6 像素比对` 产出 `visual-diff` artifact（14.3 MB，含 `report.html` + `diff/` + `snapshots/`）并成功上传',
       '📌 真实运行实测 `L6 像素比对` = **通过 0 / 1125**（全部不同）—— **完全符合预期**（macOS 基线与 Linux 渲染的差异），**不是回归**。⇒ 这条非阻塞设计的价值正在于此：它不会因为跨平台差异把 CI 判红，但仍然**每次都留下可审的 diff**',
+      '✅ 修复后复跑同样通过（run `37201797471`，`visual` 40m20s；`L6 基线自检` 阻塞步骤 ✓）',
     ],
   },
   {
@@ -492,6 +493,8 @@ export const CROSS_ITEMS = [
       '✅ **GitHub Actions 真实运行已验证**（run `37196665506`，2026-10-04，push 触发）：**6 个 job 全绿** —— `registry:check` 18s · `lint` 1m53s · `build` 1m46s · `覆盖率(ratchet)` 23m12s · `test` 23m27s · `visual` 41m22s；artifact `visual-diff`（14.3 MB）与 `coverage`（6.25 MB）均正常上传',
       '⚠️ **首次真实运行（run `37194464203`）暴露一处纯环境差异并已修**：整仓 `vue-tsc` 在 runner（2 vCPU / **7 GB**）上撞 V8 默认堆上限 —— `FATAL ERROR: Ineffective mark-compacts near heap limit ... JavaScript heap out of memory`（`lint` exit 134 / `test` 的类型层 exit 1）。本机 16 GB 跑得动 ⇒ 本机实测 vue-tsc 峰值 RSS ≈ 2.39 GB，给两个**类型检查**步骤加 `NODE_OPTIONS=--max-old-space-size=4096` 即修。⚠️ 只加这两步、**不提 job 级**：vitest 的 worker 会继承 `NODE_OPTIONS`，多 worker 各自放宽到 4 GB 反而可能触发 runner 的 OOM killer',
       '**未降低任何门禁**：测试、覆盖率 ratchet、visual 的阈值与断言一个字没动（只补了运行时环境参数）',
+      '✅ **修复后复跑同样 6/6 全绿**（run `37201797471`，commit `1271ab6`）：`registry:check` 23s · `lint` 1m10s · `build` 2m58s · `覆盖率(ratchet)` 23m42s · `test` 17m57s · `visual` 40m20s',
+      '📌 期间还发现并修掉一处**门禁 flaky**（同一份代码两次运行一次绿一次红，测试都是 506/506 passed）：主因是 `back-top` 的 RAF 用例不等动画结束 ⇒ `branches` 随调度变化。修的是**测试确定性、未动阈值**。详见 `docs/KNOWN-ISSUES.md` §1.5',
     ],
   },
 ];
