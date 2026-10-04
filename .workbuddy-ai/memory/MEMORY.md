@@ -1,6 +1,10 @@
 # MEMORY.md — 项目长期约定
 > 只放仓库文档里没有的。规则本体见 `AGENTS.md` 等 5 份文档。坑全文+索引：`PITFALLS.md`（先看 §0）；**环境与命令**：`environment.md`（跑测试/构建前必读）。
 
+> 📁 **记忆目录结构（2026-10-04 起）**：`.workbuddy` 是指向 `.workbuddy-ai` 的**软链接**
+> —— 国际版与国内版共用同一份记忆。两版写的是同一个 `memory/`，不要再按版本分开记录。
+> 合并前的旧 `.workbuddy` 记忆已并入本目录（同名日志为并集、旧 MEMORY 快照见 `memory/archive/`）。
+
 ## 📌 欠账台账：`docs/KNOWN-ISSUES.md`（2026-10-03 新建）
 
 **接手时先扫这一份**。它不在 `AGENTS.md` §5 的 5 份文档清单里（AGENTS.md 只能由用户改），
@@ -56,6 +60,23 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 - master 检出在 `/Users/nanren/Code/apollo-design-ui`；合并前有 WIP 先 `git stash push -u`。`registry/*.json` 冲突**按冲突块解析**，别 `checkout --ours`；之后重跑生成器。**收口后立刻合 master**。⚠️「绿在本地」≠「绿在仓库」：依赖磁盘产物先 `git ls-files` 确认已入库。
 - 多流必碰（按字母序追加）：`packages/ui/src/index.ts`、`style/index.ts`、`tests/visual/matrix.mjs`、`cases/shared.mjs`、`tests/compat/baseline/*.mjs`、`registry/source/open-decisions.mjs`、root `package.json`。新组件另需 compat baseline + `render/cases/{react,vue}/<n>.{jsx,js}` + matrix 一行 + `fixtures/<n>/`(E9)。
 - ⚠️ 改 foundation 包（utils/portal/motion/**picker**）后**必须单独重建**(176/249)。视觉层只链接 theme+ui⇒**用例文件**里 import `@apollo-design/icons` 解析不到，用「两侧同构」替身。⚠️ **`test:visual`/`test:types` 都不在 `verify:full`**⇒都要显式跑。
+
+## 同步与沉淀约定（2026-10-04 合并自 `.workbuddy` 记忆的 2026-09-29 快照）
+
+> 来源：旧版 `.workbuddy/memory/MEMORY.md`（该目录已并入本目录、原目录替换为软链接）。
+> 全文快照归档在 `archive/MEMORY.from-dot-workbuddy-2026-09-29.md`。
+> **以下两条是旧版独有、新版此前未覆盖的约定；如已失效请就地更新。**
+
+- **GitHub 同步**：远程 `origin = https://github.com/apollocmh/apollo-design-ui.git`（私有）。
+  每完成一个阶段（组件收口 / 基建落地）都要
+  `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master` 同步到 GitHub。
+  推送凭据在 macOS 钥匙串（`credential-osxkeychain`，用户名 `apollocmh`，scope=repo）。
+  ⚠️ 本机到 GitHub 的批量传输（release CDN / `git fetch`）直连会挂起 ⇒ 必须走代理
+  `http://127.0.0.1:7890`；小 API 请求（`api.github.com`）直连可用。
+  GitHub MCP 连接器无建仓权限（403）且看不到新建私有仓库（404）⇒ 建仓需用户手动或走 git 凭据。
+- **经典错误沉淀机制**：每个 Gate 收口时，把本次踩的经典错误追加到
+  `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），
+  含三项：坑 / 哪一层测试抓到的 / 对策。
 
 ## 收口期判据
 - **视觉变体避开静态帧测不到的面**：`:hover`/`cursor`/`transition`/纯属性(`href`/`id`)截图不可见⇒必然空转（归 L1/L4）。🚨 写/改变体后 `md5 tests/visual/baselines/react/<c>/*.png | sort` 查同哈希。

@@ -35,6 +35,12 @@ docs/.vitepress/cache/
 antd-reference/
 .antd-cache/
 
+# WorkBuddy 本地状态
+# .workbuddy 是指向 .workbuddy-ai 的软链接（WorkBuddy 国际版 / 国内版共用同一份记忆）。
+# 它只是本机文件系统的便利，不入库；真实记忆仍在 .workbuddy-ai/（继续被跟踪）。
+# ⚠️ 不要写成 `.workbuddy/`（带斜杠只匹配目录，而它现在是符号链接 ⇒ 会漏掉）。
+.workbuddy
+
 # OS / Editor
 .DS_Store
 Thumbs.db
