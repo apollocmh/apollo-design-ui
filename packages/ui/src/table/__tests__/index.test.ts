@@ -709,7 +709,6 @@ describe('Table · 选择/分页（T4）', () => {
     const invertLi = menuItems[1] as HTMLElement;
     invertLi.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     await nextTick();
-    console.log('SELT-ALL:', JSON.stringify(onChange.mock.calls.map((c) => c[0])));
     const keys = onChange.mock.calls.at(-1)![0] as string[];
     expect(keys.sort()).toEqual(['2', '3']);
     w.unmount();

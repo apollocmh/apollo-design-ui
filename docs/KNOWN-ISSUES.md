@@ -79,18 +79,6 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ---
 
-### 1.5 📌 Table 的 `virtual` 虚拟滚动（PENDING）
-
-antd 的 `virtual` prop 走 rc `VirtualTable`（605 行）+ `rc-virtual-list`（React 内核）。
-本仓需要先定案**横向定位模型**（列宽虚拟化 + rowSpan 补行），且需要 Vue 版
-virtual-list 内核（约 500 行）—— 是一个独立的 XL 片，不适合塞进 Table 收口。
-
-- 现状：`virtual` prop 已声明（类型全量），传入时**开发环境 console.warn 一次**、
-  按非虚拟渲染（不静默吞）。
-- 依据：与 picker 剩余工作同判（KNOWN-ISSUES 2026-09-29 决议）；antd 生态里
-  virtual 是大表格场景的可选能力。
-- 恢复时机：第一批真实消费者出现（或统一的 virtual-list 基建立项）时。
-
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |
@@ -128,15 +116,16 @@ virtual-list 内核（约 500 行）—— 是一个独立的 XL 片，不适合
 | （2026-10-03 续） | **§3#2 时间依赖护栏落地**：`time-dependence.test.ts`（生成器活时钟扫描 + 自证）→ 首跑抓到 picker.mjs 假冻结 getNow（真雷：换天重生成基线会全线失配）+ statistic.mjs Date.now（预防性改常量） |
 | （2026-10-03 续） | **§2.2+§2.3 TabsProps 审计**：全量对拍补 `direction` prop；**§3#3 同源护栏**（$props ↔ TabsProps 双向 toExtend，反向哨兵验证） |
 | （2026-10-03 续） | **PITFALLS 162 收尾**：全仓 update:* 清零（checkbox ×2 / collapse 补齐 + v-model 用例）；**C11 护栏** `c11-vmodel.test.ts`（5 条 N/A 豁免登记） |
+| （2026-10-04） | **§1.5 Table T6 虚拟滚动收口**：新增 `engine/VirtualTable/{BodyGrid,BodyLine,VirtualCell}` + `virtual`/`listItemHeight` prop；横向定位模型定案 = flex 行 + 原生横向滚动（`docs/analysis/table-virtual.md`）；L1+L4 用例；视觉 8 变体 × 3 视口 = 24/24。**顺手修**：`FixedHolder` 的 table 宽度是裸数字（Vue 不做 px 补全 ⇒ 声明被丢弃 ⇒ `table-layout:fixed` 下 0 宽列标题换行、表头被撑到 209px）；`use-expand.ts` 里 T1 遗留的 `EXPDBG2` 调试打印 |
 
 ---
 
 ## §4 接手顺序建议
 
 1. **没有阻塞项了。** 上表 §1 的三条都是「等时机」型：ContextIsolator 等第一个真实消费者
-   （Table 恢复时优先评估），其余两条随手可做、不做也不亏。
-2. 恢复 Table 推进：`node registry/tools/next-task.mjs`（T0 前置片已完成，可进 T1 骨架；
-   进度快照见 `ROADMAP.md` §11 与 `.workbuddy-ai/memory/2026-10-03.md`）。
+   （Table 已恢复推进，仍未出现消费者），其余两条随手可做、不做也不亏。
+2. 组件 **72/72 全部 completed**；Table 的 T6 虚拟滚动片已于 2026-10-04 收口（见 §3 留痕表）。
+   下一个任务仍以 `node registry/tools/next-task.mjs` 为准（当前输出「全部组件已完成」）。
 
 > ⚠️ **改 `tests/visual/**` 的 harness / 用例后，必须评估「已入库基线是否整体过期」**
 > （判据：`--mode compare` 大面积 `size-mismatch` / `block-diff`，而**组件源码没动**）。

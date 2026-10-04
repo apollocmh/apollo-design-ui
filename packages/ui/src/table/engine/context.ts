@@ -46,6 +46,15 @@ export interface RowContextValue {
   rowProps: Record<string, unknown>;
   expandedRowInfo: { offset: number; colSpan: number; sticky: number } | undefined;
   hovering: boolean;
+  // ---- 供 VirtualCell 复用 getCellProps（BodyRow / BodyLine 都提供这些 getter）----
+  prefixCls: string;
+  expandIconColumnIndex: number;
+  indentSize: number;
+  expandIcon: ExpandableConfig['expandIcon'];
+  fixedInfoList: CellFixedInfo[];
+  expandedKeys: Set<string | number>;
+  onTriggerExpand: (record: Record<string, unknown>, event?: Event) => void;
+  hoveringBySpan: (rowSpan: number) => boolean;
 }
 
 export interface TableContextValue<RecordType = Record<string, unknown>> {

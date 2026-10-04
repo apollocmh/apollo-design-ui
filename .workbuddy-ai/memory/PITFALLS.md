@@ -4500,3 +4500,26 @@
       `fixed` 只在**外层 `Summary`**（`Summary.d.ts`：`fixed?: boolean | 'top' | 'bottom'`）。
     - **教训**：**`.d.ts` 是判据，文档不是**。antd 的官网文档滞后于它锁定的 rc 版本
       ⇒ 凡「文档说有某个 prop」而实现里找不到，先读 rc 的 `.d.ts` 再下结论。
+
+347. 🚨 **rc `VirtualTable` 的 `tailor` 不是可选项 —— 漏传会让表头被撑高（L6 `size-mismatch` 154px）。**
+    —— 2026-10-04 Table T6 虚拟滚动实测。
+
+    - **机制**：`tailor: true` 让 rc `Table` 把 `scrollWidth = scroll.x` 传给 `useColumns`，
+      `useWidthColumns` 据此把**「没有 width 的列」按剩余宽度填满**。
+      antd 侧实测 colgroup = `100,120,120,120,100,430,430,430,150`；本仓漏传时是
+      `…,0,0,0,…` ⇒ `table-layout: fixed` 下那些列宽 0、标题换行 ⇒ 表头 209px（应 55）。
+    - **判据**（比两侧 `<colgroup>`）：
+      `node tests/visual/debug/dump.mjs react table virtual`
+    - **教训**：移植 antd 的**适配层薄壳**（`RcTable/VirtualTable.js` 只有 15 行）时，
+      它 spread 的每个 prop 都要**逐条对账** —— 越短越容易被当成「没什么内容」跳过。
+      同族：antd 的 `components.body`（render prop）在本仓是死代码，改走 `virtual` prop。
+
+348. 🚨 **`FixedHolder` 的 table 宽度写成裸数字 ⇒ Vue 静默丢弃整条声明**（PITFALLS 327-330 同族）。
+    —— 2026-10-04 Table T6 实测：`width: props.scrollX`（= `2000`，number）被丢弃
+    ⇒ 表头 table 宽退回 `auto`（710）。
+
+    - **为什么这次才暴露**：非 virtual 时列**都有 width**，表头宽 `auto` 与 `2000px`
+      在视觉上一致（列宽由 colgroup 固定）⇒ L6 `exact` 把它盖住了；virtual 的 demo 有
+      **无 width 的列**（`Address 1/2/3`），宽 0 才显形。
+    - **教训**：`width/height/minWidth/top/left…` 任何**几何数值**在 `h()` 里都必须拼单位。
+      判据：改完组件源码要 `pnpm run build:ui` 再跑 L6（否则差异率逐位不变）。

@@ -6,6 +6,7 @@
  * （fixHeader ? FixedHolder(header) + body + FixedHolder(summary) : 单表）→ footer。
  */
 
+import { devUseWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -36,6 +37,7 @@ import {
   useTimeoutLock,
 } from './hooks/use-table';
 import { getColumnsKey, validNumberValue } from './utils/valueUtil';
+import BodyGrid from './VirtualTable/BodyGrid';
 
 export const DEFAULT_PREFIX = 'rc-table';
 
@@ -154,8 +156,15 @@ const FixedHolder = defineComponent({
               style: {
                 tableLayout: props.tableLayout,
                 minWidth: '100%',
+                // ⚠️ Vue 的 setStyle 不做 px 补全（React 会）⇒ 数值必须自己拼单位，
+                //    否则整条 width 声明被静默丢弃 ⇒ 表头宽退回 auto，`table-layout: fixed`
+                //    下「无 width 的列」宽度为 0、标题换行 ⇒ 表头被撑高（virtual 变体实测 209px）。
                 width:
-                  props.scrollX === true ? 'auto' : (props.scrollX as number | string | undefined),
+                  props.scrollX === true
+                    ? 'auto'
+                    : typeof props.scrollX === 'number'
+                      ? `${props.scrollX}px`
+                      : (props.scrollX as string | undefined),
               },
             },
             [
@@ -342,10 +351,33 @@ const Table = defineComponent({
     expandedRowRender: { type: Function, default: undefined },
     expandIcon: { type: Function, default: undefined },
     childrenColumnName: { type: String, default: undefined },
+    virtual: { type: Boolean, default: false },
+    listItemHeight: { type: Number, default: undefined },
   },
   setup(props, { attrs, expose }) {
     const mergedData = computed(() => props.data ?? []);
     const hasData = computed(() => mergedData.value.length > 0);
+
+    // ==================== Virtual Scroll ====================
+    // rc `VirtualTable/index.js`：virtual 时 `scroll.x` / `scroll.y` 必须是 number，
+    // 否则兜底（x→1 / y→500）并 dev warning。放在引擎内做，避免上层漏传。
+    const mergedScroll = computed(() => {
+      const scroll = props.scroll;
+      if (!props.virtual) return scroll;
+      let x: unknown = scroll?.x;
+      let y: unknown = scroll?.y;
+      if (typeof x !== 'number') {
+        if (x) {
+          devUseWarning('Table')(false, '`scroll.x` in virtual table must be number.');
+        }
+        x = 1;
+      }
+      if (typeof y !== 'number') {
+        devUseWarning('Table')(false, '`scroll.y` in virtual table must be number.');
+        y = 500;
+      }
+      return { ...scroll, x, y } as { x?: number | true | string; y?: number | string };
+    });
     const useInternalHooks = computed(() => props.internalHooks === INTERNAL_HOOKS);
 
     // ==================== getRowKey ====================
@@ -386,7 +418,7 @@ const Table = defineComponent({
     } = useExpand(propsRef, mergedData as never, getRowKey.value as never);
 
     // ====================== Column ======================
-    const scrollX = computed(() => props.scroll?.x);
+    const scrollX = computed(() => mergedScroll.value?.x);
     const componentWidth = ref(0);
     const colsWidths = ref(new Map<string | number, number>());
     const useInternalHooksRef = useInternalHooks;
@@ -429,6 +461,11 @@ const Table = defineComponent({
     const scrollBodyRef = ref<HTMLElement | null>(null);
     const scrollBodyContainerRef = ref<HTMLElement | null>(null);
     const scrollSummaryRef = ref<HTMLElement | null>(null);
+    /** virtual 时 body 由 `BodyGrid` 渲染 —— 它的 imperative handle 承载 `scrollTo`。 */
+    const bodyGridRef = ref<{
+      scrollTo?: (config: unknown) => void;
+      nativeElement?: HTMLElement | null;
+    } | null>(null);
     expose({
       nativeElement: () => fullTableRef.value,
       scrollTo: (config: {
@@ -438,6 +475,11 @@ const Table = defineComponent({
         offset?: number;
         align?: ScrollLogicalPosition;
       }) => {
+        // virtual：交给 BodyGrid → VirtualList 的 scrollTo（支持 index/key/align/offset）
+        if (props.virtual) {
+          bodyGridRef.value?.scrollTo?.(config);
+          return;
+        }
         const body = scrollBodyRef.value as HTMLElement | null;
         if (!body) return;
         if (validNumberValue(config.top)) {
@@ -465,9 +507,9 @@ const Table = defineComponent({
     const pureColWidths = computed(() => colsKeys.value.map((k) => colsWidths.value.get(k)));
     const colWidths = computed(() => pureColWidths.value);
     const stickyOffsets = useStickyOffsets(colWidths, filledColumns);
-    const fixHeader = computed(() => Boolean(props.scroll?.y));
+    const fixHeader = computed(() => Boolean(mergedScroll.value?.y));
     const horizonScroll = computed(() => {
-      return Boolean(props.scroll?.x) || Boolean(expandableConfig.value.fixed);
+      return Boolean(mergedScroll.value?.x) || Boolean(expandableConfig.value.fixed);
     });
     const fixColumn = computed(
       () =>
@@ -488,7 +530,7 @@ const Table = defineComponent({
     // Scroll styles
     const scrollYStyle = computed<Record<string, unknown>>(() => {
       if (fixHeader.value) {
-        return { overflowY: hasData.value ? 'scroll' : 'auto', maxHeight: props.scroll?.y };
+        return { overflowY: hasData.value ? 'scroll' : 'auto', maxHeight: mergedScroll.value?.y };
       }
       if (horizonScroll.value) return { overflowY: 'hidden' };
       return {};
@@ -632,7 +674,7 @@ const Table = defineComponent({
       stickyOffsets: stickyOffsets.value,
       onHeaderRow: props.onHeaderRow,
       fixHeader: fixHeader.value,
-      scroll: props.scroll,
+      scroll: mergedScroll.value,
     }));
 
     const emptyNode = computed(() => {
@@ -701,7 +743,7 @@ const Table = defineComponent({
         return horizonScroll.value;
       },
       get scroll() {
-        return props.scroll;
+        return mergedScroll.value;
       },
       // Body
       get tableLayout() {
@@ -845,38 +887,48 @@ const Table = defineComponent({
       let groupTableNode: unknown;
       if (fixHeader.value || stickyInfo.isSticky) {
         // >>>>>> Fixed Header
-        const bodyContent = h(
-          'div',
-          {
-            style: { ...scrollXStyle.value, ...scrollYStyle.value },
-            onScroll: onBodyScroll,
-            ref: scrollBodyRef,
-            class: `${props.prefixCls}-body`,
-          },
-          [
-            h(
-              'table',
+        // virtual：body 换成 BodyGrid（rc `customizeScrollBody` 通道的等价物）
+        const bodyContent = props.virtual
+          ? h(BodyGrid, {
+              ref: bodyGridRef,
+              data: mergedData.value,
+              height: (mergedScroll.value?.y as number) ?? 500,
+              scrollWidth: typeof mergedScrollX.value === 'number' ? mergedScrollX.value : 1,
+              listItemHeight: props.listItemHeight,
+              onScroll: onInternalScroll,
+            } as never)
+          : h(
+              'div',
               {
-                style: { ...scrollTableStyle.value, tableLayout: mergedTableLayout.value },
+                style: { ...scrollXStyle.value, ...scrollYStyle.value },
+                onScroll: onBodyScroll,
+                ref: scrollBodyRef,
+                class: `${props.prefixCls}-body`,
               },
               [
-                captionElement.value,
-                bodyColGroup(),
-                bodyTable(),
-                !fixFooter.value && summaryNode.value
-                  ? h(
-                      Footer,
-                      {
-                        stickyOffsets: stickyOffsets.value,
-                        flattenColumns: filledColumns.value as never,
-                      },
-                      { default: () => summaryNode.value },
-                    )
-                  : null,
+                h(
+                  'table',
+                  {
+                    style: { ...scrollTableStyle.value, tableLayout: mergedTableLayout.value },
+                  },
+                  [
+                    captionElement.value,
+                    bodyColGroup(),
+                    bodyTable(),
+                    !fixFooter.value && summaryNode.value
+                      ? h(
+                          Footer,
+                          {
+                            stickyOffsets: stickyOffsets.value,
+                            flattenColumns: filledColumns.value as never,
+                          },
+                          { default: () => summaryNode.value },
+                        )
+                      : null,
+                  ],
+                ),
               ],
-            ),
-          ],
-        );
+            );
         const fixedHolderProps = {
           noData: !mergedData.value.length,
           maxContentScroll: horizonScroll.value && mergedScrollX.value === 'max-content',

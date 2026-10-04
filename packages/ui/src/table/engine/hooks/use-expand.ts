@@ -53,14 +53,6 @@ export function useExpand<RecordType>(
 
   const expandableType = computed<false | 'row' | 'nest'>(() => {
     const cfg = expandableConfig.value;
-    if (typeof process !== 'undefined' && (process.env as Record<string, string>).VITEST) {
-      console.log(
-        'EXPDBG2: cfgKeys=',
-        Object.keys(cfg as object).join(','),
-        'err=',
-        typeof cfg.expandedRowRender,
-      );
-    }
     if (cfg.expandedRowRender) {
       return 'row';
     }

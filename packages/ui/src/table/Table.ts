@@ -6,6 +6,7 @@
  *   columnTitle → pagination → selection → expandable 归并 → 引擎 Table。
  */
 
+import { useToken } from '@apollo-design/theme';
 import { isFunction, isNumber } from '@apollo-design/utils';
 import { type ComputedRef, computed, defineComponent, h, type PropType, type Ref, ref } from 'vue';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -323,13 +324,27 @@ const Table = defineComponent({
       locale: tableLocale.value,
       rootClassName: props.rootClassName,
     });
-    // ⚠️ `virtual` 暂未实现（需要 Vue 版 virtual-list 内核 + 横向定位模型定案，
-    //    见 KNOWN-ISSUES「Table virtual」）—— 开发环境显式警告而非静默忽略。
-    if (props.virtual && import.meta.env?.DEV !== false) {
-      console.warn(
-        '[apollo-design] Table: `virtual` is not implemented yet; rendering in non-virtual mode.',
-      );
-    }
+    // ============================ Virtual ============================
+    // antd `InternalTable.tsx:722-742`：`listItemHeight` 由 token 与 size 算出，
+    // 帮助虚拟滚动正确估算行高（不传则用 rc 默认 24，与真实行高差一倍）。
+    const themeToken = useToken();
+    const listItemHeight = computed(() => {
+      const token = themeToken.value;
+      const fontHeight = Math.floor(token.fontSize * token.lineHeight);
+      switch (mergedSize.value) {
+        case 'medium':
+          return token.paddingSM * 2 + fontHeight + token.lineWidth;
+        case 'small':
+          return token.paddingXS * 2 + fontHeight + token.lineWidth;
+        default:
+          return token.padding * 2 + fontHeight + token.lineWidth;
+      }
+    });
+    /** 引擎实例（virtual 时承载 `scrollTo` / `nativeElement`）。 */
+    const engineRef = ref<{
+      nativeElement?: () => HTMLElement | null;
+      scrollTo?: (config: unknown) => void;
+    } | null>(null);
     const mergedData = computed(() =>
       getFilterData(
         sortedData.value,
@@ -577,7 +592,7 @@ const Table = defineComponent({
     }));
 
     expose({
-      nativeElement: () => null,
+      nativeElement: () => engineRef.value?.nativeElement?.() ?? null,
       scrollTo: (config: {
         index?: number;
         top?: number;
@@ -585,7 +600,7 @@ const Table = defineComponent({
         offset?: number;
         align?: ScrollLogicalPosition;
       }) => {
-        void config;
+        engineRef.value?.scrollTo?.(config);
       },
     });
 
@@ -652,6 +667,13 @@ const Table = defineComponent({
                 internalOnlyExpandColumnWidth: undefined,
                 style: undefined,
                 internalStyle: undefined,
+                virtual: props.virtual,
+                listItemHeight: props.virtual ? listItemHeight.value : undefined,
+                // rc `VirtualTable/index.js`：virtual 时传 `tailor` ⇒ `useColumns` 才能拿到
+                // `scrollWidth`，把「无 width 的列」按剩余宽度填满；否则列宽为 0，
+                // `table-layout: fixed` 下标题换行 ⇒ 表头被撑高（实测 209px）。
+                tailor: props.virtual,
+                ref: engineRef,
               } as never),
               bottomPaginationNode.value,
             ],

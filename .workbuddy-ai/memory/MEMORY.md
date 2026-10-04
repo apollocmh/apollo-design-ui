@@ -5,14 +5,12 @@
 
 **接手时先扫这一份**。它不在 `AGENTS.md` §5 的 5 份文档清单里（AGENTS.md 只能由用户改），
 所以**必须从这里找到它**。两段：
-- **§1 已发现、未修**（有可复现证据、本次没修）：L6 的 84 条 `missing-baseline`
-  （根因 = 未决开放决策 **`visual-baseline-in-git`**，**需用户裁决**）·
-  `typography/semantic` 3 条 size-mismatch（非本次引入）·
-  **`Segmented.ts:353` 的 `onMouseDown` 永不触发**（+ 更正 `segmented/README.md:41` 的误诊）·
-  `Trigger` 的 `children[0]` 归一化未全仓扫描 · `ContextIsolator` 缺失的风险面。
-- **§2 已修但有残留**：`children` 只修单子节点 · `TabsProps` 未全量审计 ·
-  `tabs` 运行时声明只统一了 card 用到的字段 · 日期依赖用例未全仓扫描 ·
-  `utils.Color` 只改了已发现的 private 成员 · `color-picker` 面板只有像素级覆盖。
+- **§1 仍开放**（2026-10-04 复核，只剩 4 条「等时机」型）：`ContextIsolator` 缺失的风险面
+  （等第一个真实消费者）· `color-picker` 面板无 DOM 对拍（只有 L6 像素）·
+  生产存量 biome warn 60 条（`noNonNullAssertion` **逐个收窄、不扫改**）。
+  ⚠️ 旧版的「84 条 missing-baseline / typography semantic / Segmented onMouseDown」等
+  已在 2026-10-03 修完或裁决 ⇒ **本条曾整段过期，引用前先 `sed -n '1,60p' docs/KNOWN-ISSUES.md` 核一眼**。
+- **§2「不要再排查」**（已修/已证伪，防重复劳动）· **§3 历史留痕**（一行一条）· **§4 接手顺序**。
 
 ⚠️ **`test:types` 已修**（`vitest.config.ts` 的 `types` project 指定 `checker: 'vue-tsc'`）——
 此前它**恒定 exit=1**（`tsc` 解析不了 `.vue` ⇒ 96 条假源错误），现在 **exit=0**。
@@ -65,8 +63,16 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 - 🚨 **`.vue` 里出现 `typeof SomeComponent` 就查那条 import 有没有被 biome 改成 `import type`**(299)。**语义化槽(`classNames`/`styles`)支持函数形态**⇒prop 类型必须 `[Object, Function]`。
 - 📌 **置 `completed` 前三件套**：① `COMPONENT_STYLES` 注册；② `index.ts` 导出(B8)；③ `tests/compat/fixtures/<c>/` 有 fixture(E9)。
 
-## 进度（2026-10-02 深夜）
-foundation **13/13**；组件 **69/72 completed**。下一条用 `next-task.mjs` 取。
+## 进度（2026-10-04）
+foundation **13/13**；组件 **72/72 completed**（全量封顶）。下一条用 `next-task.mjs` 取
+（当前输出「全部组件已完成」）。
+
+📌 **Table T6 虚拟滚动已收口**（2026-10-04）：`engine/VirtualTable/{BodyGrid,BodyLine,VirtualCell}` +
+`virtual`/`listItemHeight` prop；table 视觉 **24/24 exact**；L1+L4 用例；table 单测 78/78。
+⚠️ **两条最容易漏的**：① antd 层必须传 **`tailor: props.virtual`**（否则 `useColumns` 拿不到
+`scrollWidth`、无 width 的列宽为 0 ⇒ 表头被撑到 209px）；② **Vue 的 `setStyle` 不做 px 补全**
+—— `FixedHolder` 的 `width: scrollX` 是裸数字会被静默丢弃（PITFALLS 327-330 同族，已修）。
+定案见 `docs/analysis/table-virtual.md`（横向定位 = flex 行 + 原生横向滚动）。
 - **timeline**=`Steps` 薄壳（无自有 DOM；`.ts` 渲染函数；样式覆盖 Steps 内部变量）；6 Token 只声明 4 条(B7)。⚠️ 扩展 `steps` 新增两个 context key，🚨 必须由 `Steps` **接住并转发**（同族键「最近的赢」遮蔽外层，256）；`Steps` **主动剥 `attrs.class`**⇒类名用 `className`(309)。
 - ✅ **color-picker 已 completed（69/72，commit 0255c4b）**：引擎在
   `packages/ui/src/color-picker/engine/`（rc 判 `in-ui`）。11 维度全 done；
