@@ -135,31 +135,56 @@ jobs:
       - name: 产物 React 痕迹扫描（E11 需 dist 存在才执行）
         run: pnpm run registry:validate
 
+      # 把 dist 传给 visual 的 4 个 shard —— 否则每个 shard 都要自己 `test:build` 一遍
+      # （137s × 4 = 9 分钟纯重复）。只在本 run 内用，所以 retention 1 天。
+      - name: 上传 dist（供 visual shard 复用）
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-dist
+          path: packages/*/dist/**
+          # 构建门禁刚校验过产物存在 ⇒ 这里传不出东西就是真出问题了，不要静默放过。
+          if-no-files-found: error
+          retention-days: 1
+
   visual:
-    name: L6 视觉回归（像素比对非阻塞）
+    name: L6 视觉回归（4-way shard，像素比对非阻塞）
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # 复用 build job 的 dist（见下面「下载 build 产物」一步）。
+    needs: build
+    strategy:
+      # 一个 shard 失败不取消其余 —— 我们要看全 4 份的结果与 diff 产物。
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
-      # ① 确定性检查：不开浏览器、秒级 —— **阻塞**。
+      # ① 复用 build job 的 dist。视觉层走的是**已构建的 dist**（`tests/visual/build.mjs`
+      #    不 alias 到 src），而 `packages/ui/dist/index.mjs` 把 11 个 workspace 包
+      #    **external** 化了 ⇒ 依赖包的 dist 必须也在。
+      #    ⚠️ 别在这里再 `pnpm run test:build` 一次：那是 137s × 4 个 shard 的纯重复。
+      - name: 下载 build 产物（复用 dist）
+        uses: actions/download-artifact@v8
+        with:
+          name: build-dist
+
+      # ② 确定性检查：不开浏览器、秒级 —— **阻塞**。
       #    它防的是「变体空转」这类假绿：两个变体逐字节相同 ⇒ 看着全绿、实际一格没测。
-      #    它不依赖渲染环境，所以没有理由不阻塞。
+      #    它不依赖渲染环境，所以没有理由不阻塞。（每个 shard 都跑一遍，1s，无所谓。）
       - name: L6 基线自检（阻塞）
         run: pnpm run test:visual:check
 
-      # ② 视觉层走的是**已构建的 dist**（`tests/visual/build.mjs` 不 alias 到 src），
-      #    而 `packages/ui/dist/index.mjs` 把 11 个 workspace 包 **external** 化了
-      #    （仍 `import '@apollo-design/{theme,utils,picker,…}'`）⇒ **只 build ui 不够**，
-      #    依赖包的 dist 必须也在，否则 vite 打包直接解析不到。
-      #    所以用仓库的权威构建入口（拓扑序构建全部 13 个包 + L7 校验）。
-      #    ⚠️ 别用 `pnpm -r run build` —— 它因 test-utils 的循环依赖恒失败。
-      - name: 构建全部包（L6 依赖 dist，且 ui/dist 会 external 化其依赖）
-        run: pnpm run test:build
-
       # ③ 浏览器：`stabilize.mjs` 会先试系统 Chrome、失败再退回 Playwright Chromium。
       #    runner 镜像自带 Chrome，但那条兜底路径必须有 Chromium 才成立 ⇒ 装上。
+      #    缓存只覆盖浏览器二进制；`--with-deps` 的 apt 依赖在全新 runner 上仍需每次装。
+      - name: 缓存 Playwright Chromium
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: 安装 Chromium
         run: pnpm exec playwright install --with-deps chromium
 
@@ -168,20 +193,24 @@ jobs:
       #    入库基线是在 macOS + 系统 Chrome 上生成的；CI 是 Linux，字体度量与抗锯齿
       #    必然不同 ⇒ 这里红是**预期**的，不是回归信号。
       #    这一步的职责不是「判绿」，而是**产出可审的 diff**（下一段上传）。
-      #    想用 CI 判绿需要先把基线与渲染环境一起固定 —— 那是独立的一步。
-      - name: L6 像素比对（非阻塞）
+      #
+      #    `--shard i/4`：按 **case 下标取模**划分 ⇒ 确定性、完整覆盖、无重复无遗漏
+      #    （本地已断言：1125 = 282 + 281 + 281 + 281，并集 1125，两两交集 0）。
+      #    不删 case、不改阈值、不改 pixelmatch 参数、不动 baseline 与截图规则。
+      - name: L6 像素比对（非阻塞 · shard ${{ matrix.shard }}/4）
         continue-on-error: true
-        run: node tests/visual/run.mjs --mode compare
+        run: node tests/visual/run.mjs --mode compare --shard ${{ matrix.shard }}/4
 
       # ⑤ 可审产物：HTML 报告（含每个 case 的差异率与并排图）+ 逐 case 的 diff 图
       #    + Vue 侧实拍图。无论上一步成败都上传。
-      - name: 上传 diff 产物
+      #    ⚠️ artifact 名与报告名都带 shard 号 —— 否则 4 个 shard 会互相覆盖。
+      - name: 上传 diff 产物（shard ${{ matrix.shard }}）
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: visual-diff
+          name: visual-diff-shard-${{ matrix.shard }}
           path: |
-            tests/visual/report.html
+            tests/visual/report-*.html
             tests/visual/diff/
             tests/visual/snapshots/
           if-no-files-found: warn

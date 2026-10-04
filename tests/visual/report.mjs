@@ -16,8 +16,10 @@ import { LIMITATIONS, VIEWPORTS } from './matrix.mjs';
  * @param {string} opts.outDir  报告输出目录（截图都在这个目录下，用相对路径引用）
  * @param {Array}  opts.results 每个 case 的比对结果
  * @param {object} opts.meta    运行元信息（浏览器、时间、模式…）
+ * @param {string} [opts.fileName] 报告文件名（默认 `report.html`）。
+ *   ⚠️ shard 并行时必须各自不同，否则 4 个 shard 会互相覆盖同一份报告。
  */
-export function writeReport({ outDir, results, meta }) {
+export function writeReport({ outDir, results, meta, fileName = 'report.html' }) {
   const passed = results.filter((r) => r.verdict === 'PASS');
   const failed = results.filter((r) => r.verdict === 'FAIL');
 
@@ -105,7 +107,7 @@ export function writeReport({ outDir, results, meta }) {
 </html>
 `;
 
-  const file = path.join(outDir, 'report.html');
+  const file = path.join(outDir, fileName);
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(file, html);
   return { file, passed: passed.length, failed: failed.length };

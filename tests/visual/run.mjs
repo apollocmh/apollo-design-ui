@@ -132,6 +132,7 @@ function parseArgs(argv) {
     mode: 'both',
     noBuild: false,
     checkBaselines: false,
+    shard: null,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
@@ -141,6 +142,7 @@ function parseArgs(argv) {
     else if (a === '--viewport') args.viewport = argv[++i];
     else if (a === '--mode') args.mode = argv[++i];
     else if (a === '--no-build') args.noBuild = true;
+    else if (a === '--shard') args.shard = argv[++i];
     else if (a === '--help' || a === '-h') args.help = true;
   }
   return args;
@@ -217,6 +219,8 @@ async function main() {
   --viewport <id>      只跑某个 viewport（mobile / tablet / desktop）
   --mode <mode>        both（默认）| baseline | compare
   --no-build           跳过 vite 打包，沿用上次的 .artifacts
+  --shard <i>/<n>      只跑第 i 份（共 n 份）。**按 case 下标取模**划分 ⇒ 确定性、
+                       完整覆盖、无重复、无遗漏（供 GitHub Actions matrix 并行用）。
 `);
     return 0;
   }
@@ -245,10 +249,30 @@ async function main() {
     console.log('  ✔ 完成');
   }
 
-  const cases = buildCases({
+  // `--shard i/n`：只跑 1/n 的 case（GitHub Actions matrix 并行用）。
+  //
+  // ⚠️ 划分方式是**按 case 下标取模**，不是「按组件分组」：
+  //    case 列表由 `matrix.mjs` 确定性生成 ⇒ 取模是**确定性划分**（同输入永远同分片），
+  //    且天然满足「完整覆盖 / 无重复 / 无遗漏」（这一点由 `shard.test.ts` 的断言钉住）。
+  let shardIndex = 1;
+  let shardCount = 1;
+  if (args.shard !== null) {
+    const m = /^([1-9]\d*)\/([1-9]\d*)$/.exec(args.shard);
+    if (!m || Number(m[1]) > Number(m[2])) {
+      console.error(`--shard 的格式应为 i/n（1<=i<=n），收到：${args.shard}`);
+      return 2;
+    }
+    shardIndex = Number(m[1]);
+    shardCount = Number(m[2]);
+  }
+
+  const allCases = buildCases({
     component: args.component,
     variants: args.variant ? [args.variant] : undefined,
   }).filter((c) => !args.viewport || c.viewport === args.viewport);
+
+  const cases =
+    shardCount > 1 ? allCases.filter((_, i) => i % shardCount === shardIndex - 1) : allCases;
 
   if (cases.length === 0) {
     console.error('没有匹配的 case。');
@@ -258,7 +282,10 @@ async function main() {
   const sides =
     args.mode === 'baseline' ? ['react'] : args.mode === 'compare' ? ['vue'] : ['react', 'vue'];
 
-  console.log(`▶ 渲染 ${cases.length} 组 × [${sides.join(', ')}]`);
+  console.log(
+    `▶ 渲染 ${cases.length} 组 × [${sides.join(', ')}]` +
+      (shardCount > 1 ? `  （shard ${shardIndex}/${shardCount}，全部 ${allCases.length} 组）` : ''),
+  );
   const { server, port } = await startServer(ARTIFACTS);
   const { browser, channel } = await launchBrowser();
   console.log(`  浏览器：${channel}`);
@@ -350,6 +377,8 @@ async function main() {
   const { file: reportFile } = writeReport({
     outDir: HERE,
     results,
+    // ⚠️ shard 并行时报告名必须各自不同，否则 4 个 shard 会互相覆盖
+    fileName: shardCount > 1 ? `report-${shardIndex}-of-${shardCount}.html` : 'report.html',
     meta: {
       component: args.component ?? Object.keys(COMPONENTS).join(', '),
       mode: args.mode,
@@ -357,6 +386,7 @@ async function main() {
       antdVersion: '6.6.4',
       timestamp: new Date().toISOString(),
       maxDiffRatio: MAX_DIFF_RATIO,
+      shard: shardCount > 1 ? `${shardIndex}/${shardCount}` : null,
     },
   });
 
