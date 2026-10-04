@@ -398,11 +398,13 @@ export const OPEN_DECISIONS = [
     impact: '决定 composables 的落位规则，影响全部包与组件的目录约定',
   }),
 
-  open('visual-harness-base-font', {
+  decided('visual-harness-base-font', {
     raisedAt: '2026-09-28',
+    decidedAt: '2026-10-04',
+    decidedBy: '用户裁决 2026-10-04（台账同步：cascader 已 completed，本条不再阻塞）',
     question: 'L6 视觉 harness 的 react 侧是否要补上 antd 的页面基座字体（reset.css）？',
     context:
-      'harness 的 react 侧不加载 `antd/dist/reset.css` ⇒ `body` 的 `font-family` 是浏览器初始值（实测 Chrome/macOS = `sans-serif`）；本仓 `ui/dist/index.css` **自带** html/body 的 reset（`font-family: var(--apollo-font-family)`）⇒ vue 侧 `body` = `-apple-system,…`。绝大多数组件无感（根类都显式声明 `font-family`，两侧归到同一份 token ⇒ 逐像素一致）；唯一暴露点是 **cascader 的面板与列** —— antd 的 `style/panel.js` 与 `style/index.js` 都是 `resetFont: false`，面板/列**没有** font-family、靠继承 ⇒ 两侧页面基座的差异直接显形。证据：`node tests/visual/debug/rect.mjs cascader basic body body` 输出两侧 body 的 `ff` 分别为 `sans-serif` / `-apple-system`；L6 残留差异像素全部落在文字与 1px 边框上（面板 0.002–0.009%、multiple 0.068–0.261%、basic 0.184–0.705%）。',
+      '⚠️ **2026-10-04 更正**：原 context 的「harness 的 react 侧**不加载** `antd/dist/reset.css`」是**误诊** —— react 侧自 `befcdb3`（2026-09-18，L6 基建落地那次提交）起就 import 了 `antd/dist/reset.css`（`tests/visual/render/react-main.jsx:8`）。而 antd 的 `reset.css` 本身就把 `html` 设成**泛型** `font-family: sans-serif`；本仓 `ui/dist/index.css` 的 html/body reset 是 `font-family: var(--apollo-font-family)`（具体栈 `-apple-system,…`）。⇒ 两侧页面基座的差异（泛型 `sans-serif` vs 具体栈）是**设计如此**，不是「缺 reset.css」，选项 A 无法消除它。绝大多数组件无感（根类都显式声明 `font-family`）；唯一暴露点是**继承页面字体**的浮层内容 —— antd 的 `style/panel.js` 与 `style/index.js` 都是 `resetFont: false`（cascader 的面板与列、date-picker 的面板等）。',
     options: [
       {
         label: 'A. react 侧加载 antd/dist/reset.css',
@@ -421,9 +423,11 @@ export const OPEN_DECISIONS = [
       },
     ],
     recommendation: 'A',
+    decision:
+      'B —— 接受两侧页面基座的固有差异，**用例内钉字体**解决（不放宽 L6 阈值、不加白名单、不改全局 BASE_CSS）。⚠️ 选项 A 系误诊：react 侧早已 import `antd/dist/reset.css`（`befcdb3` / 2026-09-18），而 antd 的 reset 给的是**泛型** `sans-serif`，加载后两侧仍不同。实证：cascader L6 `--mode compare` **9/9 exact（0.000%）**，9 张基线已入库。',
     impact:
-      '决定 cascader 的 `visual` 维度能否收口（未裁决前不得置 done）；选项 A 还会影响全部 L6 用例的 react 基线',
-    blocks: ['cascader'],
+      '（已解除）原为「决定 cascader 的 `visual` 维度能否收口（未裁决前不得置 done）」。cascader 已于 2026-10-04 置 `visual: done` 且 `completed`（`blockers: []`、9 张基线入库），本条不再阻塞任何组件或 foundation 包。',
+    blocks: [],
   }),
   decided('picker-panel-ownership', {
     raisedAt: '2026-09-19',
