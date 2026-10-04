@@ -396,13 +396,30 @@ source/workstreams.mjs（编排规则）  ─┘                              �
 
 ### 10.3 门禁（CI 必须全绿）
 
-| 门禁 | 命令 | 检查 |
+CI 落在 **`.github/workflows/ci.yml`**（`push: master` / `pull_request` / 手动触发），
+跑的就是下表这几条 —— 与本地 `verify:full` 同源，差别只有两处、且都是「本地跑得动、
+CI 需要显式补」：覆盖率（本地 `pnpm test` 不带 `--coverage`）与类型层（`verify:full` 不含 `test:types`）。
+
+| job | 命令 | 检查 |
 |---|---|---|
-| Registry 一致性 | `registry:check` | 生成→刷新→校验，E1–E18 |
-| 类型 | `vue-tsc --noEmit` | 含 `noUncheckedIndexedAccess` |
-| 格式/静态 | `biome check .` | 2.5.13 schema |
-| 测试 | `test:unit` `test:dom` `test:types` | 覆盖率 95/90/95（基础设施） |
-| React 痕迹 | E11 | 产物中不得出现 React |
+| `registry` | `registry:check` | 生成→刷新→校验，E1–E20 |
+| `lint` | `lint` | `vue-tsc --noEmit`（含 `noUncheckedIndexedAccess`）+ `biome check .` |
+| `test` | `test` + `test:types` | vitest **五个 project**（四个运行时 project **各一个进程** —— 合并成一个进程会让 worker 争抢，`theme` 从 84s 劣化到 9min 并撞 5s 超时） |
+| `coverage` | `test:coverage`（**串行**） | 覆盖率下限（foundation 95/90/95、ui 90/85/90）。⚠️ **当前非阻塞**：ui 实测 84.76 / 73.8 / 84.38，**未达标**（见下） |
+| `build` | `test:build` + `registry:validate` | L7 产物门禁；补跑一次 validate 是因为 **E11 只在有 dist 时才真正执行** |
+| `visual` | `test:visual:check`（**阻塞**）+ `tests/visual/run.mjs --mode compare`（**非阻塞**） | L6：基线自检是确定性的；像素比对跨平台必然有差 ⇒ 只产出可审 diff |
+
+⚠️ 三处**刻意**的例外，不要当漏配：
+- `build` 不加 `--strict` —— `ui` 的 B6（体积预算 `budget.json`）仍是 PENDING，见 `docs/KNOWN-ISSUES.md`；
+- `coverage` 整个 job 带 `continue-on-error` —— **阈值当前不达标**（`packages/ui/src/**` 实测
+  statements 84.76% / branches 73.8% / functions 84.38%，配置要求 90/85/90）。短板是真实组件代码
+  （upload 63% / affix 69% / splitter 70% / image 71% / carousel 72% / drawer 75% / tree 76% /
+  table 79% / date-picker 79% …），不是采集口径。**补齐后删掉那行 `continue-on-error` 即可变成真门禁**；
+- `visual` 的像素比对带 `continue-on-error` —— 入库基线在 macOS 生成，Linux 渲染必然不同。
+
+**React 痕迹（E11）**：产物中不得出现 React（H1/H5/H6）。它由 `registry:validate` 检查，
+但**扫不到 dist 时会降级成 warn**（`validate-registry.mjs`）⇒ 干净 checkout 上必须
+「先构建、再 validate」，否则它在 CI 里是静默跳过的 —— `build` job 的第二个步骤就是为它存在的。
 
 ### 10.4 阻塞如何被追踪
 
@@ -470,6 +487,11 @@ empty → config-provider → button · space · flex · grid · divider · typo
 每类「踩过的坑 + 抓到它的层 + 对策」。写组件前先读一遍，比踩完再查省一个 Gate。
 
 ### 11.4 下一步（按优先级）
+
+> ⚠️ **2026-10-04 更新：本节 1 / 2 / 4 项均已完成**（`build-output-contract` 已裁决、
+> `X:ci-pipeline` 已落地到 `.github/workflows/ci.yml`、`picker` 已 13/13 收口；
+> 组件也已 72/72 全 completed）。**当前状态以 `registry/workstreams.json`（`X:*` 横切项）
+> 与 `docs/KNOWN-ISSUES.md` 为准**，下面这段保留作当时的快照。
 
 1. **裁决 `build-output-contract`**（仍阻塞全部 13 个包的 `pkg` 维度与 B6）
 2. `X:ci-pipeline`（无阻塞，让门禁在 CI 上先存在）

@@ -60,6 +60,14 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-10-04（CI 落地会话：`X:ci-pipeline` / `X:visual-infra`）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 128 | **`lint:types`（vue-tsc）绿 ≠ 类型没问题**——`slider/Slider.vue` 调 `useMergeSemantic` 时**没传三个泛型**，TS 从 6 个混合形态的 source 反推 `CN`/`ST`、退化成带索引签名约束的默认类型 ⇒ `SliderSemanticStyles`（具体接口，无索引签名）不可赋值。`vue-tsc --noEmit -p tsconfig.json` **完全看不到**（exit 0），只有 vitest 的 typecheck project 以 `Unhandled Source Error` 报出来 ⇒ `pnpm run test:types` 恒 `exit=1` | **L3（`test:types`），不是 `lint:types`** | 调 `useMergeSemantic` **一律显式传 `<Props, ClassNames, Styles>`**（先例 `empty/Empty.vue`）；⚠️ `verify:full` **不含** `test:types` ⇒ 它必须进 CI，否则这类错误永远没人抓 |
+| 129 | **多 project 挤进一个 vitest 进程会让测试「假慢到超时」**——四个运行时 project 合并成一个进程（尤其带 `--coverage`）后 worker 互相争抢：`theme` 的 888 个用例从 **84s 劣化到 9min**、24 条撞 5s 默认超时（对照：单跑 `test:theme` = 888 passed / 84s，单跑 `test:a11y` = 1147 passed / 189s）。同坑 `foundation-status.mjs --verify` 在 2026-09-16 已记录（并发还会让覆盖率**静默失真**：只采集到 43 个文件） | CI（本地「单跑 vs 合跑」对照） | 多 project 合跑**必须** `--maxWorkers=1 --no-file-parallelism`（`test:coverage` 已固化）；排查「测试莫名超时」先做单跑对照 |
+| 130 | **E11（产物无 React 痕迹）在干净 checkout 上是静默跳过的**——`validate-registry.mjs` 扫不到 dist/es 时把它降级为一条 warn ⇒ `registry:check` 照样绿，而 H1/H5/H6 那条硬禁令**根本没执行** | 读源码（`validate-registry.mjs:533`） | CI 里「**先构建、再 validate**」（`build` job 的第二步就是为它存在）；排查同类问题时先问「这个检查项是不是因为没输入而跳过了」 |
+
 ### 2026-10-04 续（缺口清账会话）
 
 | # | 坑 | 抓到它的层 | 对策 |

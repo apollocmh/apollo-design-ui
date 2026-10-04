@@ -1,0 +1,26 @@
+name: Setup (Node + pnpm + 依赖)
+description: >-
+  安装 pnpm 与 Node 22，并按 pnpm-lock.yaml 严格安装依赖。
+  pnpm 版本取自 package.json 的 `packageManager` 字段 —— 与本地 corepack 同一个真源，
+  不在这里重复写死。
+
+runs:
+  using: composite
+  steps:
+    # ⚠️ 顺序不能反：下面 setup-node 的 `cache: pnpm` 会调用 `pnpm store path`
+    #    来定位缓存目录，所以 pnpm 必须先于 setup-node 就位。
+    - name: 安装 pnpm
+      uses: pnpm/action-setup@v6
+      with:
+        # 不传 version —— 由 package.json 的 `packageManager: pnpm@12.4.2` 决定。
+        run_install: false
+
+    - name: 安装 Node
+      uses: actions/setup-node@v7
+      with:
+        node-version: '22' # 满足 package.json 的 engines.node >= 22.12.0
+        cache: pnpm
+
+    - name: 安装依赖
+      shell: bash
+      run: pnpm install --frozen-lockfile

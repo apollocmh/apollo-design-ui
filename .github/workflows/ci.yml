@@ -1,0 +1,178 @@
+# CI — 本仓的四道门禁 + 一道非阻塞的视觉回归
+#
+# 设计原则：**CI 跑的就是本地 `verify:full` 跑的那几条命令**，一个字都不改。
+#   `verify:full` = registry:check && lint && test && test:build
+# 差别只有两处，都是「本地跑得动、CI 需要显式补」的：
+#   ① 覆盖率：本地 `pnpm test` 不带 `--coverage`，CI 用 `test:coverage` 把它变成硬门禁；
+#   ② 类型层：`verify:full` **不含** `test:types`（见 WORKFLOW.md），CI 显式补上 ⇒ 五 project 齐。
+#
+# 为什么拆成多个 job 而不是一个：不同门的失败含义完全不同（registry 漂移 / 类型退化 /
+# 行为回归 / 产物不可用），拆开后 GitHub 的检查列表能直接指出**是哪一类**问题。
+#
+# ⚠️ 关于 `CODEBUDDY_SAFE_DELETE_ENABLED=0` 之类的前缀：那是**本地 WorkBuddy 沙箱**才需要的
+#    （它把批量删文件拦下来）。CI runner 没有这个钩子，所以这里不写。
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+# 同一 ref 上的新推送取消旧运行：省 runner，也避免旧结果误导。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  registry:
+    name: "registry:check（E1–E20）"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      # 生成器是幂等的：任何「手改了派生 JSON 却忘了重跑生成器」都会在这里红。
+      - name: registry:check
+        run: pnpm run registry:check
+
+  lint:
+    name: lint（vue-tsc + biome）
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - name: vue-tsc + biome
+        run: pnpm run lint
+
+  test:
+    name: "test（vitest 五 project）"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      # 四个运行时 project，**各自一个进程** —— 与本地 `pnpm test` 逐字同源。
+      #
+      # 🚨 不要图快合并成「一次 vitest 带 4 个 --project」：本仓 2026-10-04 实测，
+      #    合并后 worker 互相争抢 —— `theme` 的 888 个用例从 **84s 劣化到 9min**、
+      #    24 条撞上 5s 默认超时（同一坑 `foundation-status.mjs --verify`
+      #    在 2026-09-16 就记录过，并发还会让**覆盖率静默失真**）。
+      - name: 运行时四层（unit / dom-contract / a11y / theme）
+        run: pnpm run test
+
+      # 类型层单独跑：它是 vitest 的 typecheck project（`*.test-d.ts`）。
+      - name: 类型层（*.test-d.ts）
+        run: pnpm run test:types
+
+  coverage:
+    name: 覆盖率（报告 + 上传，当前非阻塞）
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # 🚨 **故意非阻塞** —— 本仓在 vitest.config.ts 里配置的 `packages/ui/src/**` 阈值
+    #    （90 / 85 / 90）**当前未达标**。2026-10-04 实测（串行、四个 project 合跑）：
+    #      statements 84.76%  branches 73.8%  functions 84.38%
+    #    短板是真实组件代码，不是采集口径：upload 63% / affix 69% / splitter 70% /
+    #    image 71% / carousel 72% / drawer 75% / tree 76% / table 79% / date-picker 79%。
+    #    ⇒ 做成阻塞会让 CI **从第一天起恒红**，门禁立刻失去意义（与 `build` 的 B6 同判）。
+    #    这一步现在只做两件事：① 打印真实数字；② 上传覆盖率报告。
+    #    补齐覆盖率（或把 ui 阈值改成 ratchet 锁住当前值）后，删掉下面那行即可变成真门禁。
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      # 串行（`--maxWorkers=1 --no-file-parallelism`）：理由与上面 test job 相同，
+      # 另外串行**耗时与 CPU 核数基本无关** ⇒ 2 vCPU 的 runner 不会更慢。
+      - name: 覆盖率（串行四 project）
+        run: pnpm run test:coverage
+
+      - name: 上传覆盖率报告
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
+
+  build:
+    name: build（L7 产物门禁）
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      # 141 项产物检查：exports 指向真实子路径 / .d.ts 可解析 / 无 React 残留 等。
+      #
+      # ⚠️ 这里**不加** `--strict`：`ui` 包的 B6（体积预算 budget.json）目前是 **PENDING**
+      #    而非 FAIL（见 docs/KNOWN-ISSUES.md 与 `ui-style-output` 决策）。
+      #    `--strict` 会把 PENDING 当失败 ⇒ 从第一天起就是红的，门禁会立刻失去意义。
+      #    B6 落地后应改为 `pnpm run test:build -- --strict`，那时它才是真的「零豁免」。
+      - name: 构建全部包 + L7 产物校验
+        run: pnpm run test:build
+
+      # ⚠️ **这一步不能省**：E11（「产物无 React 痕迹」）只在**扫到 dist/es 目录时**才真正执行，
+      #    扫不到时它降级为一条 warn（`validate-registry.mjs:533`）⇒ 干净 checkout 上
+      #    `registry:check` 里的 E11 是**静默跳过**的。构建完再跑一次 validate，
+      #    H1/H5/H6 那条硬禁令在 CI 上才是真的生效。
+      - name: 产物 React 痕迹扫描（E11 需 dist 存在才执行）
+        run: pnpm run registry:validate
+
+  visual:
+    name: L6 视觉回归（像素比对非阻塞）
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      # ① 确定性检查：不开浏览器、秒级 —— **阻塞**。
+      #    它防的是「变体空转」这类假绿：两个变体逐字节相同 ⇒ 看着全绿、实际一格没测。
+      #    它不依赖渲染环境，所以没有理由不阻塞。
+      - name: L6 基线自检（阻塞）
+        run: pnpm run test:visual:check
+
+      # ② 视觉层走的是**已构建的 dist**（`tests/visual/build.mjs` 不 alias 到 src），
+      #    而 `packages/ui/dist/index.mjs` 把 11 个 workspace 包 **external** 化了
+      #    （仍 `import '@apollo-design/{theme,utils,picker,…}'`）⇒ **只 build ui 不够**，
+      #    依赖包的 dist 必须也在，否则 vite 打包直接解析不到。
+      #    所以用仓库的权威构建入口（拓扑序构建全部 13 个包 + L7 校验）。
+      #    ⚠️ 别用 `pnpm -r run build` —— 它因 test-utils 的循环依赖恒失败。
+      - name: 构建全部包（L6 依赖 dist，且 ui/dist 会 external 化其依赖）
+        run: pnpm run test:build
+
+      # ③ 浏览器：`stabilize.mjs` 会先试系统 Chrome、失败再退回 Playwright Chromium。
+      #    runner 镜像自带 Chrome，但那条兜底路径必须有 Chromium 才成立 ⇒ 装上。
+      - name: 安装 Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      # ④ 像素比对：**非阻塞**（`continue-on-error`）。
+      #
+      #    入库基线是在 macOS + 系统 Chrome 上生成的；CI 是 Linux，字体度量与抗锯齿
+      #    必然不同 ⇒ 这里红是**预期**的，不是回归信号。
+      #    这一步的职责不是「判绿」，而是**产出可审的 diff**（下一段上传）。
+      #    想用 CI 判绿需要先把基线与渲染环境一起固定 —— 那是独立的一步。
+      - name: L6 像素比对（非阻塞）
+        continue-on-error: true
+        run: node tests/visual/run.mjs --mode compare
+
+      # ⑤ 可审产物：HTML 报告（含每个 case 的差异率与并排图）+ 逐 case 的 diff 图
+      #    + Vue 侧实拍图。无论上一步成败都上传。
+      - name: 上传 diff 产物
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-diff
+          path: |
+            tests/visual/report.html
+            tests/visual/diff/
+            tests/visual/snapshots/
+          if-no-files-found: warn
+          retention-days: 14

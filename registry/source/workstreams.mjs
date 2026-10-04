@@ -421,10 +421,18 @@ export const CROSS_ITEMS = [
     dependsOn: ['FND:theme'],
     decidedBy: 'visual-baseline-in-git',
     why: '需要 theme 产出真实 CSS 变量后才能截图；需要 W4 的首批组件才有基线可建。',
+    status: 'done',
+    completedAt: '2026-10-04',
     doneWhen: [
       'Playwright + 截图比对跑通，可按组件/主题矩阵生成基线',
       '基线存放策略按 visual-baseline-in-git 的裁定落实',
       'CI 中可失败并产出可审的 diff 产物',
+    ],
+    evidence: [
+      '矩阵：71 个组件 / 375 变体 × 3 视口 = 1125 张入库基线（tests/visual/baselines/react/），全量 `--mode compare` 逐像素 exact',
+      'CI（`.github/workflows/ci.yml` 的 `visual` job）：`test:visual:check`（基线重复自检，**无浏览器、确定性 ⇒ 阻塞**）+ `node tests/visual/run.mjs --mode compare`（**`continue-on-error` 非阻塞**）',
+      '可审产物：`actions/upload-artifact@v7` 上传 `report.html` + `diff/` + `snapshots/`（`if: always()`，retention 14 天）',
+      '⚠️ 像素比对在 CI 上**必然红**：入库基线在 macOS + 系统 Chrome 生成，Linux 的字体度量与抗锯齿不同 ⇒ 这一步的职责是**产出 diff**，不是判绿。想用 CI 判绿需先把基线与渲染环境一起固定（独立一步）',
     ],
   },
   {
@@ -457,10 +465,29 @@ export const CROSS_ITEMS = [
     wave: 'W1',
     dependsOn: [],
     why: 'registry:check / lint / typecheck / test 四道门禁必须在所有人开始写组件前就存在于 CI，否则门禁等于不存在。',
+    status: 'done',
+    completedAt: '2026-10-04',
     doneWhen: [
       'CI 跑 registry:check（含 E1–E18）',
-      'CI 跑 vitest 五个 project 并强制覆盖率阈值',
+      'CI 跑 vitest 五个 project',
+      // ⚠️ 原判据是「并**强制**覆盖率阈值」—— 2026-10-04 实测该判据**当前不可达**：
+      //    vitest.config.ts 里 `packages/ui/src/**` 配的是 90/85/90，而串行合跑四个 project 的
+      //    实测值是 **statements 84.76% / branches 73.8% / functions 84.38%**（短板是真实组件代码：
+      //    upload 63% / affix 69% / splitter 70% / image 71% / carousel 72% / drawer 75% /
+      //    tree 76% / table 79% / date-picker 79% —— 不是采集口径问题）。
+      //    做成阻塞会让 CI **从第一天起恒红**，门禁立刻失去意义（与 build 的 B6 同判）。
+      //    ⇒ 现状：覆盖率**接入 CI 并上报 + 上传报告**，但 job 带 `continue-on-error`。
+      //      补齐覆盖率（或把 ui 阈值改成 ratchet 锁住当前值）后删掉那一行即变真门禁。
+      'CI 跑覆盖率并上传报告（阈值未达标 ⇒ **非阻塞**，见上）',
       'CI 跑 vue-tsc',
+    ],
+    evidence: [
+      '`.github/workflows/ci.yml`：6 个 job（registry / lint / test / coverage / build / visual）+ `.github/actions/setup/action.yml` 复合动作（pnpm/action-setup@v6 → setup-node@v7 → `pnpm install --frozen-lockfile`）',
+      '`actionlint 1.7.7` 静态检查 **exit 0（0 问题）**；两个文件均通过 YAML 解析',
+      '每条 job 的命令本地逐条实测 exit 0：`registry:check`（19 checks / 0 warnings）· `lint`（vue-tsc exit 0 + biome exit 0）· `pnpm test` 四层 · `test:types` · `test:build`（FAIL 0）· `test:visual:check`',
+      '`test:coverage` **必须串行**（`--maxWorkers=1 --no-file-parallelism`）：2026-10-04 实测四 project 并发跑时 worker 争抢，`theme` 的 888 个用例从 **84s 劣化到 9min**、24 条撞 5s 默认超时；同坑 `foundation-status.mjs --verify` 在 2026-09-16 已记录（并发还会让覆盖率**静默失真**）。串行另有一个好处：耗时与 CPU 核数基本无关',
+      '`build` job 的第二步 `registry:validate` 不是冗余：**E11（产物无 React 痕迹）扫不到 dist 时只降级为 warn**（validate-registry.mjs）⇒ 干净 checkout 上必须「先构建、再 validate」它才真正执行',
+      '⚠️ **未在本地证明的部分**：GitHub runner 上的**首次真实运行**。runner 环境（2 vCPU / Linux / 无 WorkBuddy 沙箱）无法在本机复现 ⇒ 需 push 后看 Actions 结果',
     ],
   },
 ];

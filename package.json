@@ -33,6 +33,7 @@
     "test:a11y": "vitest run --project a11y --passWithNoTests",
     "test:theme": "vitest run --project theme --passWithNoTests",
     "test:types": "vitest run --project types",
+    "test:coverage": "vitest run --coverage --maxWorkers=1 --no-file-parallelism --project unit --project dom-contract --project a11y --project theme",
     "test:visual:check": "node tests/visual/run.mjs --check-baselines",
     "test:visual": "node tests/visual/run.mjs",
     "test:compat": "node tests/compat/runner/index.mjs",
