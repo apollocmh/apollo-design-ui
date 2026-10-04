@@ -405,17 +405,19 @@ CI 需要显式补」：覆盖率（本地 `pnpm test` 不带 `--coverage`）与
 | `registry` | `registry:check` | 生成→刷新→校验，E1–E20 |
 | `lint` | `lint` | `vue-tsc --noEmit`（含 `noUncheckedIndexedAccess`）+ `biome check .` |
 | `test` | `test` + `test:types` | vitest **五个 project**（四个运行时 project **各一个进程** —— 合并成一个进程会让 worker 争抢，`theme` 从 84s 劣化到 9min 并撞 5s 超时） |
-| `coverage` | `test:coverage`（**串行**） | 覆盖率下限（foundation 95/90/95、ui 90/85/90）。⚠️ **当前非阻塞**：ui 实测 84.76 / 73.8 / 84.38，**未达标**（见下） |
+| `coverage` | `test:coverage`（**串行**） | 覆盖率 **ratchet（棘轮）**：foundation 档 95/90/95（实测 98.58/94.21/98.23 ✓）；ui 档 **84.76 / 73.8 / 84.38 = 2026-10-04 实测基线，只许升不许降**（90/85/90 是长期目标） |
 | `build` | `test:build` + `registry:validate` | L7 产物门禁；补跑一次 validate 是因为 **E11 只在有 dist 时才真正执行** |
 | `visual` | `test:visual:check`（**阻塞**）+ `tests/visual/run.mjs --mode compare`（**非阻塞**） | L6：基线自检是确定性的；像素比对跨平台必然有差 ⇒ 只产出可审 diff |
 
-⚠️ 三处**刻意**的例外，不要当漏配：
+⚠️ 两处**刻意**的例外，不要当漏配：
 - `build` 不加 `--strict` —— `ui` 的 B6（体积预算 `budget.json`）仍是 PENDING，见 `docs/KNOWN-ISSUES.md`；
-- `coverage` 整个 job 带 `continue-on-error` —— **阈值当前不达标**（`packages/ui/src/**` 实测
-  statements 84.76% / branches 73.8% / functions 84.38%，配置要求 90/85/90）。短板是真实组件代码
-  （upload 63% / affix 69% / splitter 70% / image 71% / carousel 72% / drawer 75% / tree 76% /
-  table 79% / date-picker 79% …），不是采集口径。**补齐后删掉那行 `continue-on-error` 即可变成真门禁**；
 - `visual` 的像素比对带 `continue-on-error` —— 入库基线在 macOS 生成，Linux 渲染必然不同。
+
+**覆盖率是 ratchet，不是目标**：`vitest.config.ts` 里 `packages/ui/src/**` 的三个数字
+（84.76 / 73.8 / 84.38）是 **2026-10-04 的实测基线**，策略是**不得低于基线、只能持平或提升**；
+**90 / 85 / 90 保留为长期目标**。谁补了测试就把这三个数字抬到新实测值（同样向下截到 2 位小数）。
+当前短板（真实组件代码，不是采集口径）：upload 63% / affix 69% / splitter 70% / image 71% /
+carousel 72% / drawer 75% / tree 76% / table 79% / date-picker 79%。
 
 **React 痕迹（E11）**：产物中不得出现 React（H1/H5/H6）。它由 `registry:validate` 检查，
 但**扫不到 dist 时会降级成 warn**（`validate-registry.mjs`）⇒ 干净 checkout 上必须

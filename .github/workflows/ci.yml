@@ -72,25 +72,21 @@ jobs:
         run: pnpm run test:types
 
   coverage:
-    name: 覆盖率（报告 + 上传，当前非阻塞）
+    name: 覆盖率（ratchet 门禁）
     runs-on: ubuntu-latest
     timeout-minutes: 90
-    # 🚨 **故意非阻塞** —— 本仓在 vitest.config.ts 里配置的 `packages/ui/src/**` 阈值
-    #    （90 / 85 / 90）**当前未达标**。2026-10-04 实测（串行、四个 project 合跑）：
-    #      statements 84.76%  branches 73.8%  functions 84.38%
-    #    短板是真实组件代码，不是采集口径：upload 63% / affix 69% / splitter 70% /
-    #    image 71% / carousel 72% / drawer 75% / tree 76% / table 79% / date-picker 79%。
-    #    ⇒ 做成阻塞会让 CI **从第一天起恒红**，门禁立刻失去意义（与 `build` 的 B6 同判）。
-    #    这一步现在只做两件事：① 打印真实数字；② 上传覆盖率报告。
-    #    补齐覆盖率（或把 ui 阈值改成 ratchet 锁住当前值）后，删掉下面那行即可变成真门禁。
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
+      # 阈值是 **ratchet（棘轮）**（见 `vitest.config.ts` 的 `packages/ui/src/**`）：
+      # 锁住 2026-10-04 的实测基线 **84.76 / 73.8 / 84.38**，**只许升不许降**；
+      # **90 / 85 / 90 是长期目标**，不是现在的门禁。
+      # foundation 档仍是 95 / 90 / 95（实测 98.58 / 94.21 / 98.23 —— 已达标，不动）。
+      #
       # 串行（`--maxWorkers=1 --no-file-parallelism`）：理由与上面 test job 相同，
       # 另外串行**耗时与 CPU 核数基本无关** ⇒ 2 vCPU 的 runner 不会更慢。
-      - name: 覆盖率（串行四 project）
+      - name: 覆盖率（串行四 project，ratchet 门禁）
         run: pnpm run test:coverage
 
       - name: 上传覆盖率报告
