@@ -5,11 +5,11 @@
  *    这里的 helper 统一 mount 一个空组件来提供上下文。
  */
 
-import { mount } from '@vue/test-utils';
+import { mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { defineComponent, h, provide } from 'vue';
+import { type ComputedRef, defineComponent, h, nextTick, provide, shallowRef } from 'vue';
 import type { Locale, LocaleComponentName, LocaleContextValue } from '../index';
-import { en_US, localeContextKey, useLocale } from '../index';
+import { en_US, localeContextKey, useLocale, useLocaleReactive } from '../index';
 
 /**
  * ⚠️ **必须父提供、子读取** —— `inject` 只沿父链解析，
@@ -143,5 +143,131 @@ describe('useLocale · 有 Provider 时', () => {
       Modal: en_US.Modal,
     }));
     expect(code).toBe('fr-fr');
+  });
+});
+
+// ===========================================================================
+// useLocaleReactive —— 响应式变体（2026-10-04 加，empty D24 的落点）
+// ===========================================================================
+
+/**
+ * ⚠️ 2026-10-04 补：这个变体**此前一个测试都没有**，而它的 9 条分支全在
+ *    `packages/locale/src/use-locale.ts` 里 ⇒ locale 的分支覆盖率从 91.67% 掉到 75%，
+ *    低于 foundation 档 95/90/95（`--verify` 刷新数字后 E16 直接红）。
+ *
+ * 它与 `useLocale` **逐字同语义**（浅合并 / context 侧赢 / `exist` 回退 `'en'`），
+ * 差别只在求值时机 —— 所以下面刻意用**同一组输入**再跑一遍，外加一条真正的响应性用例。
+ */
+function mountUseLocaleReactive<C extends LocaleComponentName>(
+  componentName: C,
+  defaultLocale?: Locale[C] | (() => Locale[C]),
+  // ⚠️ 用**结构类型**而不是 `Ref<LocaleContextValue>`：后者会触发 `UnwrapRef` 的深递归
+  //    （`LocaleContextValue` 是嵌套类型）⇒ `vue-tsc` 报 TS2589「类型实例化过深」。
+  provided?: LocaleContextValue | (() => LocaleContextValue) | { value: LocaleContextValue },
+): {
+  wrapper: VueWrapper;
+  merged: ComputedRef<Record<string, unknown>>;
+  code: ComputedRef<string | undefined>;
+} {
+  let merged: ComputedRef<Record<string, unknown>> | undefined;
+  let code: ComputedRef<string | undefined> | undefined;
+
+  const Child = defineComponent({
+    setup() {
+      const [m, c] = useLocaleReactive(componentName, defaultLocale as never);
+      merged = m as ComputedRef<Record<string, unknown>>;
+      code = c;
+      return () => null;
+    },
+  });
+
+  const Parent = defineComponent({
+    setup() {
+      if (provided !== undefined) {
+        provide(localeContextKey, provided as never);
+      }
+      return () => h(Child);
+    },
+  });
+
+  const wrapper = mount(Parent);
+  return {
+    wrapper,
+    merged: merged as ComputedRef<Record<string, unknown>>,
+    code: code as ComputedRef<string | undefined>,
+  };
+}
+
+describe('useLocaleReactive · 与 useLocale 同语义', () => {
+  it('没有 Provider ⇒ 回退 en_US 分片，code 是 undefined', () => {
+    const { merged, code, wrapper } = mountUseLocaleReactive('Modal');
+    expect(merged.value).toEqual(en_US.Modal);
+    expect(code.value).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it('分片不存在 ⇒ 空对象（不是 undefined）', () => {
+    const { merged, code, wrapper } = mountUseLocaleReactive('Select');
+    expect(merged.value).toEqual({});
+    expect(code.value).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it('defaultLocale 可以是函数（惰性求值）', () => {
+    let calls = 0;
+    const { merged, wrapper } = mountUseLocaleReactive('Modal', () => {
+      calls += 1;
+      return { okText: 'F', cancelText: 'F', justOkText: 'F' };
+    });
+    expect(merged.value).toEqual({ okText: 'F', cancelText: 'F', justOkText: 'F' });
+    expect(calls).toBe(1);
+    wrapper.unmount();
+  });
+
+  it('有 Provider ⇒ context 分片覆盖默认值（浅合并），code 取 locale', () => {
+    const { merged, code, wrapper } = mountUseLocaleReactive('Modal', undefined, {
+      locale: 'zh-cn',
+      Modal: { okText: '好' },
+    } as never);
+    expect(merged.value).toEqual({ ...en_US.Modal, okText: '好' });
+    expect(code.value).toBe('zh-cn');
+    wrapper.unmount();
+  });
+
+  it('context 没给这个分片 ⇒ 用默认值', () => {
+    const { merged, wrapper } = mountUseLocaleReactive('Modal', undefined, {
+      locale: 'zh-cn',
+    });
+    expect(merged.value).toEqual(en_US.Modal);
+    wrapper.unmount();
+  });
+
+  it('⭐ exist 为真且没有 locale ⇒ code 回退 "en"', () => {
+    const { code, wrapper } = mountUseLocaleReactive('Modal', undefined, { exist: true });
+    expect(code.value).toBe('en');
+    wrapper.unmount();
+  });
+
+  it('⭐ 没有 exist 且没有 locale ⇒ 仍是 undefined（不是 "en"）', () => {
+    const { code, wrapper } = mountUseLocaleReactive('Modal', undefined, {});
+    expect(code.value).toBeUndefined();
+    wrapper.unmount();
+  });
+
+  it('⭐ 响应式：Provider 的 locale 变了，merged / code 都跟着重算（它存在的理由）', async () => {
+    // ⚠️ `shallowRef` 而非 `ref`：同上，避免 `UnwrapRef` 的深递归（TS2589）。
+    const provided = shallowRef<LocaleContextValue>({
+      locale: 'zh-cn',
+      Modal: { okText: '好' },
+    } as never);
+    const { merged, code, wrapper } = mountUseLocaleReactive('Modal', undefined, provided);
+    expect(merged.value.okText).toBe('好');
+    expect(code.value).toBe('zh-cn');
+
+    provided.value = { locale: 'ja-jp', Modal: { okText: 'はい' } } as never;
+    await nextTick();
+    expect(merged.value.okText).toBe('はい');
+    expect(code.value).toBe('ja-jp');
+    wrapper.unmount();
   });
 });

@@ -101,7 +101,22 @@ const TEST_LAYERS = [
   'L7-build',
 ];
 
-/** 与 vitest.config.ts 的 coverage.thresholds 保持一致（foundation 包档位） */
+/**
+ * foundation 档的覆盖率阈值。
+ *
+ * ⚠️ **与 `vitest.config.ts` 并不完全一致**（2026-10-04 核对）：
+ *    `vitest.config.ts` 的 foundation 档 glob 是
+ *    `packages/{utils,theme,motion,portal,position,overlay,a11y,virtual-list,form-core,picker,test-utils}/src/**`
+ *    —— **不含 `locale` 与 `icons`**（理由写在那里：两者是生成产物，要求覆盖率没有意义）。
+ *    而本工具对 **13 个包一律**套这组阈值。
+ *
+ * 后果实例（2026-10-04）：`locale` 被按 95/90/95 要求，而它的**手写运行时代码**
+ * （`use-locale.ts` / `locale-provider.ts`）当时分支只有 75% ⇒ E16 判 `met=false`。
+ * 补测试后达标（99.52 / 92.5 / 100）。
+ *
+ * ⇒ 这是**口径不一致**，值得单独裁决（要么把 locale/icons 也纳入阈值，要么让本工具
+ *    按包区分）。**裁决前保持现状** —— 不静默放宽。
+ */
 const COVERAGE_THRESHOLDS = { statements: 95, branches: 90, functions: 95 };
 
 /** 保留字段清单 —— 决定哪些字段从旧文件继承 */
