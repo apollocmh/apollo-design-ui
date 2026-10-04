@@ -96,13 +96,20 @@ for (let i = 2; i < process.argv.length; i += 1) {
 function resolveAntdEs() {
   const candidates = [
     args.antdDir,
+    // ⚠️ 仓库根的真实 antd 必须排在 /tmp 解包目录前面（2026-10-04 教训）：
+    //    /tmp/antd-src 是某次临时解包，被系统清理成「目录在但 locale 空」，
+    //    existsSync(locale) 仍为真 ⇒ 语言清单解析为 0 ⇒ --check 全部判「多余产物」。
+    //    空目录比不存在的目录更毒 —— 判据加上 readdir 非空。
+    path.join(ROOT, 'node_modules/antd/es'),
     path.join(ROOT, 'packages/locale/node_modules/antd/es'),
     '/tmp/antd-src/package/es',
   ].filter(Boolean);
 
   for (const dir of candidates) {
     if (dir && fs.existsSync(path.join(dir, 'locale'))) {
-      return dir;
+      // 「locale 目录存在」不够 —— 必须真的有语言包（见上方 2026-10-04 教训）
+      const hasLangs = fs.readdirSync(path.join(dir, 'locale')).some((f) => f.endsWith('.js'));
+      if (hasLangs) return dir;
     }
   }
   console.error(

@@ -6,7 +6,7 @@
  * ⚠️ 名字里的 `get` 是**误导性的** —— 返回的两个值都已经求好了，不是函数。
  */
 
-import { inject, toValue } from 'vue';
+import { type ComputedRef, computed, inject, toValue } from 'vue';
 import { localeContextKey } from './context';
 import enUS from './locales/en_US';
 import type { Locale, LocaleComponentName } from './types';
@@ -57,3 +57,43 @@ export function useLocale<C extends LocaleComponentName>(
 }
 
 export { defaultLocaleData };
+
+/**
+ * `useLocale` 的**响应式**变体（2026-10-04，empty D24 的落点）。
+ *
+ * `useLocale` 在 setup 期一次性解包并合并，返回**快照**——`LocaleProvider` 的
+ * `locale` prop 后续变化不会触发重渲染（antd 的 React 版没有这个问题，render
+ * 每帧重算）。本变体把「解包 + 浅合并 + exist 回退」整条链放进 `computed`：
+ *
+ * ```ts
+ * const [locale, localeCode] = useLocaleReactive('Empty');
+ * // locale.value.description —— locale prop 变更后自动更新
+ * ```
+ *
+ * 合并语义与 `useLocale` **逐字一致**（浅合并、context 侧赢、`exist` 回退 `'en'`），
+ * 只是求值时机从 setup 一次变为依赖变化时重算。
+ */
+export function useLocaleReactive<C extends LocaleComponentName>(
+  componentName: C,
+  defaultLocale?: Locale[C] | (() => Locale[C]),
+): readonly [ComputedRef<NonNullable<Locale[C]>>, ComputedRef<string | undefined>] {
+  const injected = inject(localeContextKey, undefined);
+
+  const merged = computed<NonNullable<Locale[C]>>(() => {
+    const fullLocale = injected === undefined ? undefined : toValue(injected);
+    const locale = defaultLocale ?? defaultLocaleData[componentName];
+    const localeFromContext = (fullLocale?.[componentName] ?? {}) as Locale[C];
+    return {
+      ...(typeof locale === 'function' ? (locale as () => Locale[C])() : locale),
+      ...(localeFromContext || {}),
+    } as NonNullable<Locale[C]>;
+  });
+
+  const localeCode = computed<string | undefined>(() => {
+    const fullLocale = injected === undefined ? undefined : toValue(injected);
+    const code = fullLocale?.locale;
+    return fullLocale?.exist && !code ? defaultLocaleData.locale : code;
+  });
+
+  return [merged, localeCode] as const;
+}

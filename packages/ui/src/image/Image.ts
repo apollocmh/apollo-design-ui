@@ -96,7 +96,13 @@ const Image = defineComponent({
     draggable: { type: Boolean, default: undefined },
   },
   setup(props, { attrs, emit }) {
-    const { getPrefixCls } = useComponentConfig('image');
+    // antd 逐字（image/index.js:33-41）：ConfigProvider 组件级 `classNames` /
+    // `styles`（`components.image.*`）是语义合并的**最外层**来源（2026-10-04 接上）。
+    const {
+      getPrefixCls,
+      classNames: contextClassNames,
+      styles: contextStyles,
+    } = useComponentConfig('image');
     const prefixCls = props.prefixCls ?? getPrefixCls('image');
 
     // ============================ Preview =============================
@@ -205,8 +211,16 @@ const Image = defineComponent({
       SemanticClassNames,
       SemanticStyles
     >(
-      [() => props.classNames, () => ({ root: props.wrapperStyle ? undefined : undefined })],
-      [() => props.styles, () => (props.wrapperStyle ? { root: props.wrapperStyle } : undefined)],
+      [
+        () => contextClassNames as Record<string, never>,
+        () => props.classNames,
+        () => ({ root: props.wrapperStyle ? undefined : undefined }),
+      ],
+      [
+        () => contextStyles as Record<string, never>,
+        () => props.styles,
+        () => (props.wrapperStyle ? { root: props.wrapperStyle } : undefined),
+      ],
       {} as ImageProps,
       { popup: { _default: 'root' }, placeholder: {} },
     );

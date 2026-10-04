@@ -450,7 +450,7 @@ theme 的 `tokens.css` 有声明（B7）。
 
 | # | 缺口 | 根因 | 落点 | 影响 |
 |---|---|---|---|---|
-| G1 | `Tooltip` 未落地 ⇒ `copyable.tooltips` / `ellipsis.tooltip` / `editable.tooltip` 的**悬浮气泡**没有 | Tooltip 组件未实现 | Tooltip 收口后接线（`EllipsisTooltip.ts` 已留好接口） | 未展开时 DOM 逐字一致（rc-tooltip 只 clone 子元素），所以 L4/L6 不受影响；缺的是「悬浮后出现气泡」那一半，需要交互式截图 |
+| G1 | ~~`Tooltip` 未落地~~ **✅ 已接线（2026-10-04）**：`copyable.tooltips` / `ellipsis.tooltip` / `editable.tooltip` 的悬浮气泡已接上真 Tooltip（关闭态 DOM 逐字不变，L4 77/77 不受影响）；交互用例钉在 L2「Tooltip 接线」段 | ~~Tooltip 组件未实现~~ 已收口 | ~~`EllipsisTooltip.ts` 已留好接口~~ 渲染体已替换 | 「悬浮后出现气泡」的运行时能力已具备；带 `tooltip` 的用例根是 Trigger 的 Fragment 根（测试里用 `w.find('span')` 取真实触发元素） |
 | G2 | `editable` 的 **autosize** 与 `apollo-input*` 类名 | Input / TextArea 未落地 | Input 收口后换掉原生 `<textarea>` | L4 里 textarea 的类名与 antd 不同（已登记 D-typography-2） |
 | G3 | `EllipsisConfig.tooltip` 的类型收窄为 `{ title?: VNodeChild }` | 同上 | Tooltip 收口后补全为 `TooltipProps` | 类型面比 antd 窄；运行时其余字段仍被原样展开 |
 | G4 | `theme.components.Typography` **无法在运行时覆盖** `titleMarginTop/Bottom` | 零运行时管线没有「Component Token → CSS 变量」这一段 | `packages/theme` 的 `tokens.css` 生成处 | **全库缺口**（divider / spin 同源）。临时手段：`styles.*` |

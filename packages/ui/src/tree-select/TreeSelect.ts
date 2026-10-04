@@ -35,6 +35,7 @@ import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import BaseSelect from '../select/engine/BaseSelect';
 import type { DisplayValueType, SelectCommonPlacement } from '../select/interface';
+import { useCompactItemContext } from '../space/Compact';
 import { conductCheck } from '../tree/utils/conductUtil';
 import { useCheckedKeys } from './hooks/use-checked-keys';
 import { useDataEntities } from './hooks/use-data-entities';
@@ -620,6 +621,7 @@ const TreeSelect = defineComponent({
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
           // antd getStatusClassNames：`${p}-status-${status}`（hasFeedback 图标本仓 form 未接）
           props.status ? `${prefixCls.value}-status-${props.status}` : '',
+          compactItemClassnames.value,
           props.className,
           props.rootClassName,
           (mergedClassNames.value as { root?: string }).root,
@@ -656,7 +658,13 @@ const TreeSelect = defineComponent({
       variant: () => props.variant,
       legacyBordered: () => props.bordered,
     });
-    const mergedSize = computed(() => props.size);
+    // antd 逐字（tree-select/index.js:120）：customizeSize ?? compactSize ?? form ctx
+    //（2026-10-04 接上 Space.Compact 上下文 —— 此前 compact 尺寸/类名都不生效）
+    const { compactSize, compactItemClassnames } = useCompactItemContext(
+      prefixCls,
+      () => props.direction,
+    );
+    const mergedSize = computed(() => props.size ?? compactSize.value);
     // allowClear=true 时保持布尔：clearIcon 由独立 prop 传（resolveAllowClear 的
     // fallback 链 config.clearIcon ?? clearIcon —— 布尔 true 会吞掉 prop 的 VNode）
     const mergedAllowClear = computed(() => props.allowClear);

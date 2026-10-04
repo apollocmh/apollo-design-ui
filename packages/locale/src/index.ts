@@ -61,4 +61,4 @@ export type {
   UploadLocale,
   ValidateMessages,
 } from './types';
-export { defaultLocaleData, useLocale } from './use-locale';
+export { defaultLocaleData, useLocale, useLocaleReactive } from './use-locale';

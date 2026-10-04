@@ -30,7 +30,7 @@ import {
 } from 'vue';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
+import { useComponentConfig, useDirection } from '../config-provider/context';
 import { menuOverrideKey } from '../menu/context';
 import Menu from '../menu/Menu';
 import type { DropdownPopupPlacement, DropdownProps, DropdownTriggerAction } from './interface';
@@ -102,6 +102,8 @@ const Dropdown = defineComponent({
   setup(props, { slots, emit, attrs, expose }) {
     const { getPrefixCls } = useComponentConfig('dropdown');
     const prefixCls = props.prefixCls ?? getPrefixCls('dropdown');
+    const direction = useDirection();
+    const isRtl = computed(() => direction.value === 'rtl');
 
     // =================== Warning（deprecated ×4 + Center） ===================
     if (import.meta.env?.DEV ?? true) {
@@ -122,8 +124,9 @@ const Dropdown = defineComponent({
 
     // =========================== placement ============================
     const memoPlacement = computed<DropdownPopupPlacement>(() => {
+      // antd 逐字（dropdown.js:108）：未指定 placement 时 rtl 翻到 bottomRight
       if (!props.placement) {
-        return 'bottomLeft'; // rtl ⇒ bottomRight（D 侧登记：direction v1 ltr）
+        return isRtl.value ? 'bottomRight' : 'bottomLeft';
       }
       if (props.placement.includes('Center')) {
         return props.placement.slice(
@@ -277,15 +280,17 @@ const Dropdown = defineComponent({
       const childProps = (isVNode(child) ? ((child as VNodeLike).props ?? {}) : {}) as {
         disabled?: boolean;
       };
+      // antd 逐字（dropdown.js:140）：触发器类名带 `-rtl`（direction === 'rtl'）
+      const rtlCls = isRtl.value ? `${prefixCls}-rtl` : undefined;
       const triggerNode = isVNode(child)
         ? cloneVNode(
             child as VNodeLike,
             {
-              class: [`${prefixCls}-trigger`, openCls || undefined],
+              class: [`${prefixCls}-trigger`, rtlCls, openCls || undefined],
               disabled: childProps.disabled ?? props.disabled,
             } as never,
           )
-        : h('span', { class: `${prefixCls}-trigger` }, [child as VNodeChild]);
+        : h('span', { class: [`${prefixCls}-trigger`, rtlCls] }, [child as VNodeChild]);
 
       const rootCls = [
         props.overlayClassName,

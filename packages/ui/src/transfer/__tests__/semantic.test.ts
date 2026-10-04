@@ -17,6 +17,7 @@ import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/transfer.dom.json';
+import { ConfigProvider } from '../../config-provider';
 import type { TransferItem } from '../interface';
 import Transfer from '../Transfer';
 
@@ -210,10 +211,11 @@ const CASES: Record<string, () => DomRenderResult> = {
         footer: () => h('div', { class: 'my-footer' }, 'footer'),
       } as never,
     ),
-  // ── ConfigProvider / rtl ─────────────────────────────────────────────────────
-  // ⚠️ `direction: 'rtl'` 用例**本批不覆盖**（登记 README §7 缺口）：本仓 Transfer 尚未
-  //    消费 ConfigProvider 的 direction（根缺 `-rtl`、Actions 图标不翻转、Checkbox 缺
-  //    `-rtl`、Empty 缺 `-rtl`）—— 待 rtl 专项落地后把用例加回来。
+  // rtl 由 ConfigProvider 注入（与基线的 withProvider 同构）
+  'config:direction-rtl': () =>
+    h(ConfigProvider as never, { prefixCls: 'apollo', direction: 'rtl' } as never, () =>
+      h(Transfer as never, { ...base, prefixCls: 'apollo' } as never),
+    ),
 };
 
 /**
@@ -222,6 +224,27 @@ const CASES: Record<string, () => DomRenderResult> = {
  */
 
 const ALLOW = {
+  // rtl 用例（2026-10-04 加回）：diff 仍只有图标命名 + aria-label 增强两类已登记差异
+  'config:direction-rtl': {
+    reason: '两类已登记差异：① 图标类名命名（ICON）；② 有意增强的 aria-label（ARIA_LABEL）。',
+    deviationId: 'D23',
+    diff: [
+      '$/div[0]/div[0]/div[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="Select all data"',
+      '$/div[0]/div[0]/div[0]/span[1]: 类名不同 [anticon anticon-down apollo-dropdown-rtl apollo-dropdown-trigger] vs [apollo-dropdown-rtl apollo-dropdown-trigger apollo-icon apollo-icon-down]',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content1"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[1]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content2"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[2]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content3"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[3]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content4"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[4]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content5"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[5]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content6"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[6]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content7"',
+      '$/div[0]/div[0]/div[1]/ul[0]/li[7]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="content8"',
+      '$/div[0]/div[1]/button[0]/span[0]/span[0]: 类名不同 [anticon anticon-left] vs [apollo-icon apollo-icon-left]',
+      '$/div[0]/div[1]/button[1]/span[0]/span[0]: 类名不同 [anticon anticon-right] vs [apollo-icon apollo-icon-right]',
+      '$/div[0]/div[2]/div[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label="Select all data"',
+      '$/div[0]/div[2]/div[0]/span[1]: 类名不同 [anticon anticon-down apollo-dropdown-rtl apollo-dropdown-trigger] vs [apollo-dropdown-rtl apollo-dropdown-trigger apollo-icon apollo-icon-down]',
+    ],
+  },
   'prefix-cls:custom': {
     reason: '两类已登记差异：① 图标类名命名（ICON）；② 有意增强的 aria-label（ARIA_LABEL）。',
     deviationId: 'D23',

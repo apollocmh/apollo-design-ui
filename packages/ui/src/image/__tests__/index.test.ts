@@ -165,3 +165,45 @@ describe('Image · L1 Progress 占位', () => {
     expect(el.querySelector('.apollo-image-progress-rail')).toBeNull();
   });
 });
+
+describe('Image · ConfigProvider 组件级语义（2026-10-04 接线，README P5）', () => {
+  it('components.image.classNames/styles 落到根，组件 props 侧赢', async () => {
+    const { ConfigProvider } = await import('../../config-provider');
+    const { defineComponent, h } = await import('vue');
+    const Host = defineComponent({
+      setup() {
+        return () =>
+          h(
+            ConfigProvider,
+            {
+              components: {
+                image: {
+                  classNames: { root: 'ctx-root-cls' },
+                  styles: { root: { padding: '8px' } },
+                },
+              },
+            },
+            {
+              default: () =>
+                h(
+                  Image as never,
+                  {
+                    classNames: { root: 'prop-root-cls' },
+                    styles: { root: { margin: '2px' } },
+                    src: 'x.png',
+                  } as never,
+                ),
+            },
+          );
+      },
+    });
+    const w = mount(Host);
+    const root = w.find('.apollo-image');
+    expect(root.exists()).toBe(true);
+    expect(root.classes()).toContain('ctx-root-cls');
+    expect(root.classes()).toContain('prop-root-cls');
+    expect(root.attributes('style')).toContain('padding: 8px');
+    expect(root.attributes('style')).toContain('margin: 2px');
+    w.unmount();
+  });
+});

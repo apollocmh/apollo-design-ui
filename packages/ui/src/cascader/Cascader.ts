@@ -27,6 +27,7 @@ import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import BaseSelect from '../select/engine/BaseSelect';
 import type { SelectCommonPlacement } from '../select/interface';
+import { useCompactItemContext } from '../space/Compact';
 import { provideCascaderContext } from './context';
 import { conductCheck } from './engine/tree';
 import {
@@ -421,6 +422,7 @@ const Cascader = defineComponent({
           !props.prefixCls ? prefixCls.value : '',
           mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
           mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
+          compactItemClassnames.value,
           props.direction === 'rtl' ? `${prefixCls.value}-rtl` : '',
           enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
@@ -478,7 +480,13 @@ const Cascader = defineComponent({
       variant: () => props.variant,
       legacyBordered: () => props.bordered,
     });
-    const mergedSize = computed(() => props.size);
+    // antd 逐字（cascader/index.js: useSize(ctx => customizeSize ?? compactSize ?? ctx)）
+    //（2026-10-04 接上 Space.Compact 上下文 —— tree-select 同款）
+    const { compactSize, compactItemClassnames } = useCompactItemContext(
+      prefixCls,
+      () => props.direction,
+    );
+    const mergedSize = computed(() => props.size ?? compactSize.value);
     const mergedAllowClear = computed(() =>
       props.allowClear === true
         ? { clearIcon: props.clearIcon ?? contextSemantic.clearIcon ?? true }

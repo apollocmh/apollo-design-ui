@@ -230,9 +230,18 @@ push('semantic:styles', {
 });
 
 // ── ConfigProvider / rtl ─────────────────────────────────────────────────────
-// ⚠️ `direction: 'rtl'` 用例**本批不覆盖**（登记 README §7 缺口）：本仓 Transfer 尚未
-//    消费 ConfigProvider 的 direction（根缺 `-rtl`、Actions 图标不翻转、Checkbox 缺
-//    `-rtl`、Empty 缺 `-rtl`）—— 待 rtl 专项落地后把用例加回来。
+// 2026-10-04 加回：Vue 侧的 rtl 链已在（Transfer 根 `-rtl` + Actions 按 direction
+// 翻转 + Checkbox/Empty 各自消费 direction 加 `-rtl`），补上对拍用例钉住。
+cases.push({
+  id: 'config:direction-rtl',
+  html: renderToStaticMarkup(
+    h(
+      ConfigProvider,
+      { prefixCls: PREFIX, direction: 'rtl' },
+      h(Transfer, { ...base, prefixCls: PREFIX }),
+    ),
+  ),
+});
 
 // ---------------------------------------------------------------------------
 

@@ -46,7 +46,9 @@ antd `prepareComponentToken = initComponentToken`（tree 的 9 个）。样式�
 
 ## 6. 已知缺口
 
-- `Space.Compact` 下 TreeSelect 的 compact 类（antd `useCompactItemContext`）未接（cascader 同缺口）。
+- ~~`Space.Compact` 下 TreeSelect 的 compact 类未接~~ ✅ 已接（2026-10-04）：根类
+  `-compact-item` / `-compact-first-item` / `-compact-last-item` + `compactSize` 兜底
+  （antd tree-select/index.js:120 逐字），compact.test.ts 钉住。
 - form context 的 hasFeedback 图标（FeedbackIcon）未接 —— status 类已接（`-status-error/warning`）。
 - OptionList 的 `aria-live` 播报 span 已实现；键盘方向键代理 Tree.onKeyDown（Tree expose 已补，rc ref API 同构）。
 

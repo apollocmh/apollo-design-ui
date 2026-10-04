@@ -169,3 +169,40 @@ describe('ColorPicker · 安装包装', () => {
     ).toBeTruthy();
   });
 });
+
+describe('ColorPicker · 多子节点触发器契约（KNOWN-ISSUES §1.3 钉住）', () => {
+  // Trigger 的归一化只认「单个元素 vnode」；多子节点 ⇒ 包一层 <span>。
+  // 上游 children 是单个 ReactNode（无对应物）⇒ 不构成分叉，但这条契约此前无用例钉住。
+  it('单子节点：不产生包裹元素（attrs 落到用户根元素）', () => {
+    const w = mount(ColorPicker, {
+      props: { defaultValue: '#1677ff' },
+      slots: { default: () => h('button', { class: 'my-trigger' }, 'pick') },
+      attachTo: document.body,
+    });
+    const btn = w.find('.my-trigger');
+    expect(btn.exists()).toBe(true);
+    // 用户元素自己就是触发元素 —— 它的父级不是我们造的 span 包裹
+    expect(btn.classes()).toContain('my-trigger');
+    w.unmount();
+  });
+
+  it('多子节点：整体包一层 span（而非丢弃或拆散）', () => {
+    const w = mount(ColorPicker, {
+      props: { defaultValue: '#1677ff' },
+      slots: {
+        default: () => [
+          h('button', { key: 'a', class: 'my-a' }, 'A'),
+          h('button', { key: 'b', class: 'my-b' }, 'B'),
+        ],
+      },
+      attachTo: document.body,
+    });
+    expect(w.find('.my-a').exists()).toBe(true);
+    expect(w.find('.my-b').exists()).toBe(true);
+    // 两个子节点共享同一个最近公共父元素（包裹 span）
+    const pa = w.find('.my-a').element.parentElement;
+    const pb = w.find('.my-b').element.parentElement;
+    expect(pa).toBeTruthy();
+    expect(pa).toBe(pb);
+  });
+});

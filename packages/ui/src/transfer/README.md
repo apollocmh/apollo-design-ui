@@ -98,9 +98,13 @@ Button（操作按钮）/ Empty（notFoundContent 走 DefaultRenderEmpty 'Transf
 
 ## 7. 已知缺口
 
-- **rtl**：未消费 `direction`（见 §5.10）—— 待 rtl 专项落地后把 `config:direction-rtl`
-  用例加回基线；
-- **tree-transfer / table-transfer**：antd 的两个「自定义列表面板」高级 demo 未复刻
-  （`renderList` 通道已实现并有用例，demo 维度未做）；
-- **semantic source/target 方向子结构**：`classNames.source/target`、`styles.source/target`
-  的按方向合并未实现（基线用例刻意不含这两个键）。
+- ~~**rtl**：未消费 `direction`~~ ✅ 已闭合（2026-10-04）：Transfer 的 rtl 链本就完整
+  （根 `-rtl` + Actions 按 direction 翻转 + Checkbox/Empty 各自消费 direction）；本次
+  把 `config:direction-rtl` 基线用例加回（32 条），并顺手补上 Dropdown 触发器的
+  `-rtl` 类与默认 placement 的 rtl 翻转（antd dropdown.js:108/140 逐字）；
+- ~~**tree-transfer / table-transfer**~~ ✅ 已复刻（2026-10-04）：`demo/tree-transfer.vue`
+  （Tree 列表体）与 `demo/table-transfer.vue`（Table 列表体），均走 `renderList` 通道，
+  demoTest expectCount 8 → 10；
+- ~~**semantic source/target 方向子结构**~~ ✅ 已实现（2026-10-04）：`classNames` /
+  `styles` 的 `source` / `target` 子结构按 antd 逐字合并（index.js:250-265 —— 区块
+  键 clsx 拼接 / 对象合并，左列吃 source、右列吃 target），L2 有两条用例钉住。

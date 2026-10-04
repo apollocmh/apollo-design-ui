@@ -213,3 +213,22 @@ describe('Badge · 其它', () => {
     expect(w.attributes('id')).toBe('my-badge');
   });
 });
+
+describe('Badge · count 为 VNode 的克隆分支（2026-10-04 补钉）', () => {
+  // antd Badge.js:122（displayNode cloneElement，合并 offset/indicator style）
+  // + ScrollNumber.js:55（children cloneElement，注入 `-custom-component` + motion 类）。
+  // 「组件子节点内嵌两字的空间插入」在 antd 6.6.4 已不存在（仅剩 CSS `-multiple-words`，
+  // 我们同样有）—— 原登记的 gap 是 v4 时代遗留，本轮对拍证伪关闭。
+  it('count 为 VNode：cloneVNode 注入 `-custom-component` 且保留原类名/样式', () => {
+    const w = mount(Badge, {
+      props: {
+        count: h('span', { class: 'my-count', style: { fontSize: '12px' } }, '确定'),
+      },
+      slots: { default: box },
+    });
+    const node = w.find('.my-count');
+    expect(node.exists()).toBe(true);
+    expect(node.classes()).toContain('apollo-scroll-number-custom-component');
+    expect(node.attributes('style')).toContain('font-size: 12px');
+  });
+});

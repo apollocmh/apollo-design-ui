@@ -325,3 +325,54 @@ describe('Transfer · 受控', () => {
     wrapper.unmount();
   });
 });
+
+describe('Transfer · semantic source/target 方向子结构（2026-10-04 补齐）', () => {
+  // antd 逐字（index.js:250-265）：左列吃 source、右列吃 target；
+  // classNames 用 clsx 拼接、styles 用对象合并（方向侧赢）。
+  it('classNames.source/target 只落在对应列的区块元素上', () => {
+    const wrapper = mountTransfer({
+      classNames: {
+        header: 'cls-global-header',
+        item: 'cls-global-item',
+        source: { header: 'cls-src-header', item: 'cls-src-item' },
+        target: { header: 'cls-tgt-header', item: 'cls-tgt-item' },
+      },
+    });
+    const sections = wrapper.findAll('.apollo-transfer-section');
+    const leftHeader = sections[0]!.find('.apollo-transfer-list-header');
+    const rightHeader = sections[1]!.find('.apollo-transfer-list-header');
+    // 全局 header 两列都有；方向 header 只在对应列
+    expect(leftHeader.classes()).toContain('cls-global-header');
+    expect(leftHeader.classes()).toContain('cls-src-header');
+    expect(leftHeader.classes()).not.toContain('cls-tgt-header');
+    expect(rightHeader.classes()).toContain('cls-global-header');
+    expect(rightHeader.classes()).toContain('cls-tgt-header');
+    expect(rightHeader.classes()).not.toContain('cls-src-header');
+    // item 同判
+    const leftItem = sections[0]!.findAll('.apollo-transfer-list-content-item')[0]!;
+    expect(leftItem.classes()).toContain('cls-global-item');
+    expect(leftItem.classes()).toContain('cls-src-item');
+    wrapper.unmount();
+  });
+
+  it('styles.source/target 按对象合并、方向侧赢', () => {
+    const wrapper = mountTransfer({
+      styles: {
+        header: { color: 'red', padding: '4px' },
+        source: { header: { color: 'blue' } },
+        target: { header: { margin: '2px' } },
+      },
+    });
+    const sections = wrapper.findAll('.apollo-transfer-section');
+    const leftHeader = sections[0]!.find('.apollo-transfer-list-header');
+    const rightHeader = sections[1]!.find('.apollo-transfer-list-header');
+    // 左列：source 覆盖 color，全局 padding 保留
+    expect(leftHeader.attributes('style')).toContain('color: blue');
+    expect(leftHeader.attributes('style')).toContain('padding: 4px');
+    expect(leftHeader.attributes('style')).not.toContain('margin');
+    // 右列：target 追加 margin，全局 color 保留
+    expect(rightHeader.attributes('style')).toContain('color: red');
+    expect(rightHeader.attributes('style')).toContain('margin: 2px');
+    wrapper.unmount();
+  });
+});

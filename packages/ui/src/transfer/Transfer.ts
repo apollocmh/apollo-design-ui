@@ -389,13 +389,53 @@ const Transfer = defineComponent({
       blur: () => {},
     });
 
+    // ── source / target 方向子结构合并（2026-10-04 补齐，antd 逐字）──────────────
+    // antd（index.js:250-265）：Section 收到的 classNames/styles 是「全集的浅拷贝 +
+    // 每个区块键再叠上对应方向子结构」—— classNames 用 clsx 拼接、styles 用对象合并。
+    const SECTION_SEMANTIC_KEYS = [
+      'section',
+      'header',
+      'title',
+      'body',
+      'list',
+      'item',
+      'itemIcon',
+      'itemContent',
+      'footer',
+    ] as const;
+
+    const sectionClassNames = (dir: 'source' | 'target') => {
+      const all = mergedSemantic.classNames.value as Record<string, unknown>;
+      const dirCls = all[dir] as Record<string, string | undefined> | undefined;
+      const out: Record<string, unknown> = { ...all };
+      for (const key of SECTION_SEMANTIC_KEYS) {
+        out[key] = clsx(all[key] as string | undefined, dirCls?.[key]);
+      }
+      return out;
+    };
+    const sectionStyles = (dir: 'source' | 'target') => {
+      const all = mergedSemantic.styles.value as Record<string, unknown>;
+      const dirStyles = all[dir] as Record<string, Record<string, string> | undefined> | undefined;
+      const out: Record<string, unknown> = { ...all };
+      for (const key of SECTION_SEMANTIC_KEYS) {
+        out[key] = {
+          ...((all[key] as Record<string, string> | undefined) ?? {}),
+          ...(dirStyles?.[key] ?? {}),
+        };
+      }
+      return out;
+    };
+
     const sectionBind = (listDirection: TransferDirection, selectAllLabelIndex: number) => {
       const locale = listLocale.value;
+      // ⚠️ direction 键与列表方向对应：left 列吃 source、right 列吃 target
+      //（antd：sourceSectionClassNames 给左列）。rtl 下的视觉翻转不影响语义键。
+      const semanticDir = listDirection === 'left' ? 'source' : 'target';
       return {
         prefixCls: prefixCls.value,
         style: handleListStyle(listDirection),
-        classNames: mergedSemantic.classNames.value,
-        styles: mergedSemantic.styles.value,
+        classNames: sectionClassNames(semanticDir),
+        styles: sectionStyles(semanticDir),
         dataSource: listDirection === 'left' ? leftDataSource.value : rightDataSource.value,
         filterOption: props.filterOption,
         checkedKeys: listDirection === 'left' ? sourceSelectedKeys.value : targetSelectedKeys.value,

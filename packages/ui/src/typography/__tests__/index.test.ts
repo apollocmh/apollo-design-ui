@@ -878,8 +878,12 @@ const MOCK_ELLIPSIS_HEIGHT = LINE_HEIGHT + 1;
 
 /** 给根元素一个非零 `offsetWidth` 并触发一次 `ResizeObserver`。 */
 async function measureWithWidth(wrapper: ReturnType<typeof mount>, width: number) {
+  await measureWithWidthOn(wrapper.element as HTMLElement, width);
+}
+
+/** 同上，但收真实元素（Tooltip 接线后带 tooltip 的用例根是 Fragment，得拿触发 span）。 */
+async function measureWithWidthOn(root: HTMLElement, width: number) {
   await flushAll();
-  const root = wrapper.element as HTMLElement;
   Object.defineProperty(root, 'offsetWidth', { value: width, configurable: true });
   const Observer = globalThis.ResizeObserver as unknown as {
     instances: Set<{ trigger: () => void }>;
@@ -1095,19 +1099,26 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
     expect(w3.attributes('aria-label')).toBe('TITLE-ATTR');
 
     // ④ 连 `title` 都没有时兜到 `ellipsis.tooltip.title`
+    // ⚠️ 2026-10-04 起 Tooltip 已接线：带 `tooltip.title` 时根是 Tooltip（Trigger 的
+    //    Fragment 根：[触发元素, Portal 锚点]）⇒ `wrapper.element` 拿到挂载容器，
+    //    必须用真实触发元素（typography 根 span）来测量与断言。
     const w4 = mountText({ ellipsis: { onEllipsis: () => {}, tooltip: { title: 'TOOLTIP-TT' } } }, [
       'aa',
       'bb',
     ]);
-    await measureWithWidth(w4, 220);
-    expect(w4.attributes('aria-label')).toBe('TOOLTIP-TT');
+    const root4 = w4.find('span').element as HTMLElement;
+    await measureWithWidthOn(root4, 220);
+    expect(root4.getAttribute('aria-label')).toBe('TOOLTIP-TT');
   });
 
   it('★ `ellipsis.tooltip` 单独存在**不**触发 JS 测量（它不是 needMeasureEllipsis 的判据）', () => {
+    // ⚠️ Tooltip 已接线：`tooltip: true` 的 title 归一化为正文 ⇒ 根是 Tooltip 的
+    //    Fragment 根，类名/属性断言走真实触发元素（同上一用例）。
     const w = mountText({ ellipsis: { tooltip: true } }, LONG_TEXT);
-    expect(w.classes()).toContain(`${P}-ellipsis-single-line`);
+    const root = w.find('span').element as HTMLElement;
+    expect(root.classList).toContain(`${P}-ellipsis-single-line`);
     // 走 CSS 省略号 ⇒ `topAriaLabel` 恒为 undefined（上游行为：CSS 截断由浏览器负责可访问名）
-    expect(w.attributes('aria-label')).toBeUndefined();
+    expect(root.getAttribute('aria-label')).toBeNull();
   });
 
   it('★ `expandable`：溢出时渲染展开按钮，点击后显示完整内容', async () => {
@@ -1245,6 +1256,43 @@ describe('Typography · ellipsis（JS 二分裁剪路径）', () => {
 // ===========================================================================
 // ConfigProvider
 // ===========================================================================
+
+describe('Typography · Tooltip 接线（2026-10-04，D-typography-8 兑现）', () => {
+  // antd 契约：悬浮「真的截断」的省略号文本弹出气泡；未截断 / 操作区悬停时不弹。
+  // jsdom 没有布局 ⇒ isMergedEllipsis 恒 false ⇒ `disabled` 恒 true —— 用例只钉
+  // 「关闭态不弹 + DOM 无包裹元素」这条恒真路径；「截断后弹出」由 hover 事件驱动
+  // Trigger 打开（Tooltip 自身的 285 文件回归已覆盖弹出机制）。
+  it('`ellipsis.tooltip` 时内容被 Tooltip 消费（关闭态 DOM 无包裹、悬浮路径已挂）', async () => {
+    vi.useFakeTimers();
+    const w = mountText({ ellipsis: { tooltip: { title: 'TT' } } }, LONG_TEXT);
+    await vi.advanceTimersByTimeAsync(0);
+    // 触发元素 = typography 根 span（rc-tooltip 关闭态只 clone 子元素，无包裹）
+    const span = w.find('span');
+    expect(span.classes()).toContain(`${P}-ellipsis`);
+    // Tooltip 的 aria-describedby 只在开启时注入 —— 关闭态没有
+    expect(span.attributes('aria-describedby')).toBeUndefined();
+
+    // hover 触发链已挂上（disabled ⇒ onOpenChange 不会置 open —— 与 antd 的
+    // `disabled: !isEllipsis` 一致，jsdom 下不可截断所以不弹）
+    await span.trigger('mouseenter');
+    await vi.advanceTimersByTimeAsync(120);
+    await vi.advanceTimersByTimeAsync(120);
+    expect(document.querySelector('.apollo-tooltip-container')).toBeNull();
+    vi.useRealTimers();
+  });
+
+  it('copyable 的复制按钮包在 Tooltip 里（title = tooltips/语言包文案）', () => {
+    const w = mountText({ copyable: { tooltips: ['Copy here', 'Copied!'] } }, 'content');
+    const btn = w.find(`.${P}-copy`);
+    expect(btn.exists()).toBe(true);
+    expect(btn.attributes('aria-label')).toBe('Copy here');
+    // 关闭态 DOM 逐字：按钮就是触发元素本体（无 Tooltip 包裹层，直接挂在操作区 span 下）
+    expect(
+      (btn.element.parentElement as HTMLElement).classList.contains('apollo-tooltip-container'),
+    ).toBe(false);
+    expect(document.querySelector('.apollo-tooltip-container')).toBeNull();
+  });
+});
 
 describe('Typography · ConfigProvider', () => {
   it('context 的 `className` 落在根元素', () => {

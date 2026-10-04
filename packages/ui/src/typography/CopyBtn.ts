@@ -31,10 +31,9 @@
  *
  * ── 与 antd 的一处差异（INTENDED，见 README §7）─────────────────────────────────
  *
- * antd 用 `<Tooltip>` 包住按钮提供悬浮提示。**Tooltip 组件尚未落地**，这里不包 ——
- * DOM 上等价（rc-tooltip 在未展开时只渲染 children，SSR 输出完全相同），
+ * 2026-10-04 起：Tooltip 已收口，这里与 antd 逐字对齐 —— 按钮包进 `<Tooltip
+ * title={copyTitle}>`。关闭态 DOM 等价（Trigger 对单元素子节点只 cloneVNode），
  * `tooltips` 的文案仍然完整地参与 `aria-label` 的计算。
- * 登记为 D-typography-8。
  *
  * ── 为什么是 `.ts` 渲染函数而不是 `.vue` ────────────────────────────────────────
  *
@@ -48,6 +47,7 @@ import { CheckOutlined, CopyOutlined, LoadingOutlined } from '@apollo-design/ico
 import type { TextLocale } from '@apollo-design/locale';
 import { type CSSProperties, defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
+import Tooltip from '../tooltip/Tooltip';
 import { type CopyConfigListNode, getNode, toCopyConfigList } from './_util/util';
 
 export const CopyBtn = defineComponent({
@@ -90,7 +90,7 @@ export const CopyBtn = defineComponent({
         ? getNode(iconNodes[1], h(CheckOutlined), true)
         : getNode(iconNodes[0], props.loading ? h(LoadingOutlined) : h(CopyOutlined), true);
 
-      return h(
+      const buttonNode = h(
         'button',
         {
           type: 'button',
@@ -109,6 +109,9 @@ export const CopyBtn = defineComponent({
         },
         [iconNode],
       );
+      // antd 逐字：`<Tooltip title={copyTitle}>{button}</Tooltip>` —— title 可能是
+      // `false`（`tooltips: false` ⇒ 气泡不弹，aria-label 走语言包兜底），照传。
+      return h(Tooltip, { title: copyTitle } as never, { default: () => buttonNode });
     };
   },
 });

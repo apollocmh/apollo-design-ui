@@ -36,7 +36,8 @@
  * ── 与 antd 的差异 ────────────────────────────────────────────────────────────
  *
  *   - **D5**：无 CSS-in-JS 的 `hashId` / `cssVarCls` 类名。
- *   - **D-typography-8**：`Tooltip` 组件未落地 ⇒ 编辑按钮与省略号提示都不包 `Tooltip`。
+ *   - ~~D-typography-8~~：2026-10-04 起 Tooltip 已落地，编辑按钮 / 复制按钮 / 省略号
+ *     提示均已接线（关闭态 DOM 与基线一致，见 EllipsisTooltip / CopyBtn）。
  *     DOM 上等价（rc-tooltip 未展开时只渲染 children），`tooltipProps.title` 仍完整
  *     参与 `topAriaLabel` 的计算。
  *   - **D-typography-11（PLATFORM）**：`ellipsis` 的测量时序。见 `Ellipsis.ts` 文件头。
@@ -88,6 +89,7 @@ import {
 } from 'vue';
 
 import type { DirectionType } from '../config-provider/context';
+import Tooltip from '../tooltip/Tooltip';
 import {
   isValidText,
   type RenderableChild,
@@ -695,20 +697,25 @@ export const Base = defineComponent({
 
       // ⚠️ `triggerType` 不含 `icon` 时**不渲染按钮**（antd 的行为：`text` 触发靠根元素
       //    的 onClick，没有图标可点）。
+      const editButton = h(
+        'button',
+        {
+          type: 'button',
+          ref: editIconRef,
+          class: [`${prefixCls.value}-edit`, mergedClassNames.value.action],
+          style: mergedStyles.value.action,
+          onClick: onEditClick,
+          'aria-label': ariaLabel,
+          tabIndex,
+        },
+        [icon || h(EditOutlined, { role: 'button' })],
+      );
+      // antd 逐字：`<Tooltip key="edit" title={tooltip === false ? '' : editTitle}>{button}</Tooltip>`
+      // —— `tooltip: false` 是「不弹」而不是「不包」（关闭态 DOM 等价，只 cloneVNode）。
       return triggerType.value.includes('icon')
-        ? h(
-            'button',
-            {
-              type: 'button',
-              ref: editIconRef,
-              class: [`${prefixCls.value}-edit`, mergedClassNames.value.action],
-              style: mergedStyles.value.action,
-              onClick: onEditClick,
-              'aria-label': ariaLabel,
-              tabIndex,
-            },
-            [icon || h(EditOutlined, { role: 'button' })],
-          )
+        ? h(Tooltip, { title: tooltip === false ? '' : editTitle } as never, {
+            default: () => editButton,
+          })
         : null;
     };
 

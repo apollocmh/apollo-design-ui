@@ -15,7 +15,7 @@ S1 树算法 → S2 值域/搜索 hooks → S3 OptionList/Panel → S4 薄壳 �
 | 1 | onChange/onSearch/onOpenChange 等走 attrs（PITFALLS 35）；open/value 支持 v-model | INTENDED |
 | 2 | BaseSelect 的点击开合经 `openOnTriggerClick` 开关显式启用（select 既有行为不变） | INTENDED |
 | 3 | checkbox 视觉为精简对齐版（antd 用完整 checkbox 样式），像素对齐由 L6 钉 | UPSTREAM-lite |
-| 4 | genCompactItemStyle（Space Compact）未移植（space/Compact 与 select 联动未落地） | DEFERRED |
+| 4 | ~~genCompactItemStyle 未移植~~ **已失效**：genCompactItemStyle 已随 space 落地，Cascader 的 compact 消费也已接（2026-10-04，compact.test.ts 钉住） | 已闭合 |
 | 5 | 多个 deprecated props（dropdownClassName 等）不移植告警（Vue attrs 无法区分 in props） | INTENDED |
 
 ## 4. 实现要点（最容易写错的判据）

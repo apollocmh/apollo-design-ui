@@ -334,3 +334,31 @@ describe('Empty · expose', () => {
     expect(exposed.nativeElement).toBe(w.element);
   });
 });
+
+describe('Empty · D24 locale 响应式（2026-10-04 修复回归）', () => {
+  it('LocaleProvider 的 locale prop 变化后 description 自动重渲染（此前是快照不更新）', async () => {
+    const { ANT_MARK, LocaleProvider } = await import('@apollo-design/locale');
+    const zhEmpty = {
+      locale: 'zh-CN',
+      Empty: { description: '暂无数据', build: '构建中' },
+    } as never;
+    const usEmpty = {
+      locale: 'en-US',
+      Empty: { description: 'No data', build: 'Building' },
+    } as never;
+
+    const host = mount(LocaleProvider, {
+      props: { locale: zhEmpty, _ANT_MARK__: ANT_MARK },
+      slots: { default: () => h(Empty, { prefixCls: P }) },
+    });
+    await nextTick();
+    expect(host.text()).toContain('暂无数据');
+
+    await host.setProps({ locale: usEmpty });
+    await nextTick();
+    // ⚠️ 用 Empty 自己的 description 容器断言（host 里可能有 Provider 级的渲染残留文本）
+    const desc = host.find('.apollo-description');
+    expect(desc.text()).toBe('No data');
+    expect(desc.text()).not.toContain('暂无数据');
+  });
+});

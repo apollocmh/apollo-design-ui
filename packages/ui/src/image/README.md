@@ -64,7 +64,7 @@ registry 数据：token 数 = 6（+ 派生 1）。
 | P2 | 触摸手势 | rc 的 `useTouchEvent`（双指缩放/拖拽）未落地，鼠标拖拽/滚轮已实现 |
 | P3 | 语义槽函数式形态 | D36 同判 |
 | P4 | `emits` 声明 | `update:open` / `update:current` 是运行时 `emit()`，未写进 `emits` 选项（`switch`/`radio` 的惯例是声明；声明会把监听器从 attrs 摘掉，本组件 `inheritAttrs: false` 影响面小，待统一） |
-| P5 | ConfigProvider 组件级 `classNames` / `styles` | 上下文来源尚未落地（staged），当前来源只有 props 与 deprecated 的 `preview.rootClassName` / `maskClassName` |
+| P5 | ~~ConfigProvider 组件级 `classNames` / `styles`~~ **已接线（2026-10-04）**：`components.image.*` 上下文经 `useComponentConfig('image')` 进语义合并（最外层来源，antd image/index.js:33-41 逐字）；用例钉在 index.test.ts「组件级语义」 | 已闭合 |
 
 ## 6. 收口证据（G13）
 

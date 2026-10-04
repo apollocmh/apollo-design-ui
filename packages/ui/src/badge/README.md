@@ -16,7 +16,7 @@
 | — | `#2db7f5` → CSSOM 序列化为 `rgb(45,183,245)`（React SSR 是字符串拼接） | PLATFORM（语义等价） | L4 `*:custom-color` ×3 |
 | — | Component Token 的派生乘除（`indicatorHeight=20`）以默认 seed 常量落地，主题覆盖 alias token 不改变 | 已知边界（同 grid 断点） | style/token.ts |
 | — | offset 数字补 px：React 自动 / Vue 手动（L4 用数字对齐 + L1 钉数字路径） | PLATFORM | L1 offset 用例 |
-| — | 空间插入（spaceChildren）仅处理单个字符串/Text 子节点；antd 的 cloneElement 分支（组件子节点内嵌两字）未实现 | 已知缺口 | README §7 |
+| — | ~~空间插入（spaceChildren）cloneElement 分支未实现~~ **已证伪关闭（2026-10-04）**：antd 6.6.4 Badge 已无 v4 的 spaceChildren 两字插入逻辑；两条真实 cloneElement 分支（Badge.js:122 displayNode 样式合并 / ScrollNumber.js:55 `-custom-component` 注入）我们均已实现并补 L1 钉住 | ~~已知缺口~~ 已闭合 | index.test.ts「count 为 VNode 的克隆分支」 |
 
 无 BUG 类差异（L6 全 exact）。
 
@@ -46,8 +46,10 @@ textFontSize(12) / textFontSizeSM(12) / textFontWeight('normal') / statusSize(6)
 
 - antd demo 的 `Avatar` / `Icon`（Plus/Minus） / `Card` 未落地：playground 类 demo 用
   原生元素等价替换。
-- spaceChildren 的 cloneElement 分支（`<span>确定</span>` 这类元素子节点内嵌两字）
-  未实现 —— 我们只处理单个字符串 / Text vnode。
+- ~~spaceChildren 的 cloneElement 分支未实现~~ **已证伪关闭（2026-10-04）**：antd 6.6.4
+  的 Badge/ScrollNumber 只剩两条 cloneElement 分支（displayNode 样式合并、
+  `-custom-component` 类注入），本仓均已实现并有 L1 用例；v4 的两字空间插入已从
+  上游删除（`-multiple-words` 纯 CSS 方案，本仓同构）。
 - `title` 的 `false` 与 `null` 语义（显式禁用）已实现；`text === true` 不渲染（上游原样）。
 
 ## 7. 插画色（Empty 连带修复）

@@ -159,6 +159,40 @@ describe('Dropdown · L1 placement 与 motion', () => {
   });
 });
 
+describe('Dropdown · L1 rtl（2026-10-04 接线）', () => {
+  it('ConfigProvider direction=rtl ⇒ 触发器加 `-rtl`；默认 placement 翻 bottomRight', async () => {
+    const { ConfigProvider } = await import('../../config-provider');
+    const host = mount(
+      {
+        setup() {
+          return () =>
+            h(
+              ConfigProvider,
+              { direction: 'rtl' },
+              {
+                default: () =>
+                  h(Dropdown, {
+                    menu,
+                    mouseEnterDelay: 0,
+                    mouseLeaveDelay: 0,
+                    open: true,
+                  }),
+              },
+            );
+        },
+      },
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
+    );
+    await nextTick();
+    const trigger = document.querySelector<HTMLElement>('.apollo-dropdown-trigger');
+    expect(trigger!.className).toContain('apollo-dropdown-rtl');
+    // 未指定 placement 时 rtl 翻到 bottomRight（antd dropdown.js:108）
+    expect(popup()!.className).toContain('apollo-dropdown-placement-bottomRight');
+    host.unmount();
+    document.body.innerHTML = '';
+  });
+});
+
 describe('Dropdown · L1 Override 通道', () => {
   it('menu 的 selectable=false（dropdown 覆盖）⇒ 点击不产生 selected 类', async () => {
     mountDropdown({ open: true });

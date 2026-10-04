@@ -53,6 +53,9 @@ import { Transfer } from '@apollo-design/ui';
 ### 自定义选择全部文案
 
 <code src="./demo/custom-select-all-labels.vue"></code>
+<code src="./demo/tree-transfer.vue"></code>
+
+<code src="./demo/table-transfer.vue"></code>
 
 ## API
 

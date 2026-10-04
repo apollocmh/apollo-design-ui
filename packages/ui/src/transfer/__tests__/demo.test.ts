@@ -5,14 +5,13 @@
  * （本批收口 8 个）：basic / search / oneway / advanced / pagination / custom-item /
  * status / custom-select-all-labels。
  *
- * 上游另有 `table-transfer.tsx` / `tree-transfer.tsx`（自定义 renderList 通道的
- * 两个高级用法，依赖 Table / Tree 的深度定制），不在本批 demo 内 —— 缺口登记在
- * README §7。
+ * 2026-10-04 补齐上游的 `table-transfer` / `tree-transfer`（renderList 通道，
+ * 依赖 Table / Tree），expectCount 8 → 10。
  */
 
 import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Transfer', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 8,
+  expectCount: 10,
 });

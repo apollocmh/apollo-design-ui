@@ -53,6 +53,9 @@ import { Transfer } from '@apollo-design/ui';
 ### Custom select all labels
 
 <code src="./demo/custom-select-all-labels.vue"></code>
+<code src="./demo/tree-transfer.vue"></code>
+
+<code src="./demo/table-transfer.vue"></code>
 
 ## API
 

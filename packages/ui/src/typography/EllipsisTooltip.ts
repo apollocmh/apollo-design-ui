@@ -10,10 +10,9 @@
  * return <Tooltip {...tooltipProps} disabled={!isEllipsis || disabled}>{children}</Tooltip>;
  * ```
  *
- * ── ⚠️ 本阶段它是**直通**的（占位），这是有意为之 ──────────────────────────────
+ * ── 2026-10-04 起接上真 Tooltip（Tooltip 已收口）────────────────────────────
  *
- * `Tooltip` 组件尚未落地（不在本组件的依赖里，见 `registry/components.json` 的
- * `dependencies.components: []`）。两条分支在**当前**的 DOM 上是等价的：
+ * 此前因 `Tooltip` 未落地而**直通**（占位）。两条分支在**关闭态**的 DOM 上等价：
  * rc-tooltip 未展开时只渲染 children，不产生任何包裹元素（这一点已被 antd 的
  * SSR 输出证实 —— 见 `tests/compat/baselines/typography.dom.json`）。
  *
@@ -31,8 +30,9 @@
  *     那条路径是完整且被测试覆盖的。
  */
 
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, h, type PropType } from 'vue';
 
+import Tooltip from '../tooltip/Tooltip';
 import type { TypographyTooltipProps } from './interface';
 
 export const EllipsisTooltip = defineComponent({
@@ -50,10 +50,24 @@ export const EllipsisTooltip = defineComponent({
   setup(_props, { slots }) {
     return () => {
       const children = slots.default?.() ?? [];
-      // ⚠️ 单个孩子要**原样返回**，不能返回数组：数组会被 Vue 当作 Fragment 根，
-      //    组件的 `$el` 就不再是那个元素（`wrapper.classes()` / `wrapper.attributes()`
-      //    这类断言会拿到容器而失效）。antd 的 `return children` 也是单个 React 元素。
-      return children.length === 1 ? children[0] : children;
+      const child = children.length === 1 ? children[0] : children;
+      const tp = _props.tooltipProps;
+      // antd EllipsisTooltip 逐字：
+      //   if (!tooltipProps?.title || !enableEllipsis) return children;
+      //   return <Tooltip {...tooltipProps} disabled={!isEllipsis || disabled}>{children}</Tooltip>;
+      // 关闭态 DOM 等价（Trigger 对单元素子节点只 cloneVNode，不产生包裹元素），
+      // 所以 L4 基线不受影响 —— 接线后新增的只是「悬浮后出现气泡」的运行时能力。
+      if (!tp?.title || !_props.enableEllipsis) {
+        return child;
+      }
+      return h(
+        Tooltip,
+        {
+          ...tp,
+          disabled: !_props.isEllipsis || !!_props.disabled,
+        } as never,
+        { default: () => child },
+      );
     };
   },
 });

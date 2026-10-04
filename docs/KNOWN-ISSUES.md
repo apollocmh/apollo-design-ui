@@ -64,12 +64,10 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 - **若认为值得做**：L6 用例里加 DOM 断言（`tests/visual/debug/dump.mjs` 可 dump），
   或做「真浏览器 dump 面板 DOM 再与 antd 对拍」的探针。**不阻塞任何组件。**
 
-### 1.3 📌 `color-picker` 传**多个子节点**时仍会包一层 `<span>`（无用例钉住）
+### 1.3 ✅ 已钉住（2026-10-04）
 
-- 单子节点路径已修（Trigger 拿到元素）；多子节点时 `renderChildren` 返回数组 ⇒
-  Trigger 走「包 span」分支。上游 `children` 是单个 `ReactNode`（无对应物）⇒
-  不构成分叉，但**没有 L4 用例钉住**这个契约。
-- **若认为值得做**：加一条 L4 用例把「多子节点 ⇒ 包 span」写成明确契约。**不阻塞。**
+「多子节点 ⇒ 包一层 `<span>`」契约已有用例钉住（`color-picker/__tests__/index.test.ts`
+的「多子节点触发器契约」两条），正文移除。
 
 ### 1.4 📌 生产代码存量 **60 条** biome warn（不阻塞，`exit=0`）
 

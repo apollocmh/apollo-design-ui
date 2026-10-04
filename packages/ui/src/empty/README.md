@@ -181,7 +181,7 @@ Empty 是纯展示组件：无事件、无状态、无受控/非受控语义、�
 | D21 | **Boolean prop 转换**：`VNodeChild` 类型的未传 prop 会被 Vue 转成 `false`（见 §8） |
 | D22 | `EmptyRef.nativeElement` 声明为可空 |
 | D23 | `image` 接受**组件**（Vue 没有「元素」概念）；`PRESENTED_IMAGE_*` 是组件对象 |
-| D24 | locale 变更不触发重渲染（`useLocale` 是 setup 期快照）—— **待修的缺口** |
+| D24 | ~~locale 变更不触发重渲染~~ **✅ 已修（2026-10-04）**：`@apollo-design/locale` 新增 `useLocaleReactive`（返回 `ComputedRef` 的变体，合并语义与 `useLocale` 逐字一致），Empty 已改用；回归用例钉在 L1「D24 locale 响应式」 |
 
 ---
 
@@ -253,8 +253,8 @@ Vue 的 props 对象**恒**包含全部声明过的键（未传时值为 `undefi
 
 ## 9. 已知缺口
 
-1. **D24：locale 变更不触发重渲染。** 今天不可观测（没有 ConfigProvider），
-   但落点在 `@apollo-design/locale`：需要新增一个返回 `ComputedRef` 的变体。
+1. ~~**D24：locale 变更不触发重渲染**~~ ✅ 已修（2026-10-04）：`useLocaleReactive`
+   已落地并接线 Empty；其余 29 个 `useLocale` 消费者按需迁移（不为迁移而迁移）。
    **不能改 `useLocale` 的签名** —— 它会破坏 locale 包已完成的契约与测试。
 2. **L6 视觉回归基建未落地**（见 §6.2）。
 3. **插画的视觉一致性只由「生成器与 antd 产物一致」间接保证**。

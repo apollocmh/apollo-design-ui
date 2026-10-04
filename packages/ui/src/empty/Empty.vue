@@ -17,7 +17,7 @@
  *      `[contextStyles, {root: contextStyle}, styles, {root: style}]`，`style` 在最后。
  */
 
-import { useLocale } from '@apollo-design/locale';
+import { useLocaleReactive } from '@apollo-design/locale';
 import { isRenderable, useDevWarning } from '@apollo-design/utils';
 import { computed, ref, useAttrs, useSlots, type VNodeChild } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -73,7 +73,9 @@ const {
 
 const prefixCls = computed(() => getPrefixCls('empty', props.prefixCls));
 
-const [locale] = useLocale('Empty');
+// D24（2026-10-04 已修）：改用响应式变体 —— `LocaleProvider` 的 `locale` prop
+// 变化后 `des` / `alt` 自动重算（此前是 setup 期快照，locale 切换不重渲染）。
+const [locale] = useLocaleReactive('Empty');
 
 // ---------------------------------------------------------------------------
 // 废弃告警
@@ -91,7 +93,7 @@ warning.deprecated(props.imageStyle === undefined, 'imageStyle', 'styles.image')
 
 /** `des` 的判据是 `!== undefined`，与「是否渲染」的判据**不同**（见文件头注释第 1 条）。 */
 const des = computed<VNodeChild>(() =>
-  props.description !== undefined ? props.description : locale.description,
+  props.description !== undefined ? props.description : locale.value.description,
 );
 
 /** `alt` 用 `des` 而不是 `description`。 */

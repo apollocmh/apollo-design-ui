@@ -1836,6 +1836,7 @@ export type {
   TransferDirection,
   TransferItem,
   TransferKey,
+  TransferListBodyProps,
   TransferLocale,
   TransferProps,
   TransferSemanticClassNames,
