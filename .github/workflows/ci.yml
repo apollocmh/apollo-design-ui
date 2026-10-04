@@ -48,6 +48,16 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - name: vue-tsc + biome
+        env:
+          # 🚨 **必须**：整仓 `vue-tsc` 在 GitHub runner（2 vCPU / **7 GB**）上会撞 V8 默认堆上限。
+          #    实测 2026-10-04（首次真实运行）：
+          #      FATAL ERROR: Ineffective mark-compacts near heap limit
+          #                   Allocation failed - JavaScript heap out of memory   → exit 134
+          #    本机（16 GB）跑得动 ⇒ 这是**环境差异**，不是代码或 lint 规则问题。
+          #    本机实测 vue-tsc 峰值 RSS ≈ 2.39 GB；4 GB 堆上限 + ~1 GB 非堆 ≈ 5 GB < 7 GB，安全。
+          #    ⚠️ **只加在类型检查这一步**，不要提到 job / 全局 env：vitest 的 worker 会继承
+          #    NODE_OPTIONS，多 worker 各自放宽到 4 GB 反而可能触发 runner 的 OOM killer（exit 137）。
+          NODE_OPTIONS: --max-old-space-size=4096
         run: pnpm run lint
 
   test:
@@ -69,6 +79,10 @@ jobs:
 
       # 类型层单独跑：它是 vitest 的 typecheck project（`*.test-d.ts`）。
       - name: 类型层（*.test-d.ts）
+        env:
+          # 同 lint job 的说明：vitest 的 typecheck project 也是「整仓 vue-tsc」口径，
+          # 同样会撞 runner 的 V8 默认堆上限（首次真实运行实测 OOM）。
+          NODE_OPTIONS: --max-old-space-size=4096
         run: pnpm run test:types
 
   coverage:
