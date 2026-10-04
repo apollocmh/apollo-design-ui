@@ -445,10 +445,18 @@ export const CROSS_ITEMS = [
     wave: 'W5',
     dependsOn: ['FND:a11y'],
     why: 'L5 依赖 a11y 包提供的语义基础；在 W5 接入，使 W6 的 25 个组件从一开始就带 a11y 门禁。',
+    status: 'done',
+    completedAt: '2026-10-05',
     doneWhen: [
       'axe-core 或等价工具接入 vitest a11y project',
       '键盘导航与焦点管理的断言工具就位',
       '首批组件通过审计',
+    ],
+    evidence: [
+      '① **axe-core 已接入**：`vitest.config.ts:105` 的 `a11y` project（`include: packages/*/src/**/__tests__/a11y.test.ts`）+ `axe-core@4.13.0`（`pnpm-workspace.yaml` catalog + root `package.json`）+ `TESTING.md §6.1`「自动扫描（axe-core）」的契约',
+      '② **断言工具就位**：`packages/test-utils/src/a11y-demo-test.ts`（`a11yDemoTest` / `summarizeViolations` / `matchA11yAllowances` / `collectNodeCountFailures` —— axe 扫描 + 豁免匹配 + 节点数上限）与 `focus-test.ts`（焦点**获取 / 丢失 / 归还**的通用断言）。⚠️ `focus-test.ts` 比上游 `tests/shared/focusTest.tsx` **更严**：挂载后先断言「选中的元素真的可聚焦」（否则后面的断言无意义），并去掉了上游的 `await sleep(blurDelay)`（`TESTING.md` 反模式 A3）',
+      '③ **组件通过审计**：**73 个 `a11y.test.ts` / 1147 个用例**（真实 CI run `37217480454` 的 coverage job 实测**全绿**），覆盖 **71/72** 个 ui 组件 + `icons` 包 ⇒ 远超 doneWhen 的「**首批**」口径',
+      '⚠️ **已知缺口（已登记，不阻塞）**：`packages/ui/src/table/` **没有** `a11y.test.ts`（其 `__tests__/` 只有 `index` / `util` / `virtual`，且全目录无 axe 引用）—— 是 72 个组件里唯一未做 a11y 审计的一个。见 `docs/KNOWN-ISSUES.md` §1.7',
     ],
   },
   {

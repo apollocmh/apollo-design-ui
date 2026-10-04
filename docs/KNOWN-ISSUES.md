@@ -130,6 +130,24 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 
 ⚠️ 在裁决前**不要**为了让 CI 变绿而动阈值。
 
+### 1.7 📌 `table` 是唯一没有 a11y 审计的组件（低风险，随下次改动补）
+
+**事实**（2026-10-05 核）：`packages/ui/src/table/__tests__/` 只有 `index` / `util` / `virtual`，
+**没有 `a11y.test.ts`**，且整个 `table/` 目录**没有任何 axe 引用**。
+
+其余 **71/72** 个 ui 组件 + `icons` 包都有 `__tests__/a11y.test.ts`
+（`vitest.config.ts` 的 `a11y` project 按 `packages/*/src/**/__tests__/a11y.test.ts` 收集，
+真实 CI run `37217480454` 实测 **73 文件 / 1147 用例全绿**）。
+
+**为什么不阻塞 `X:a11y-pipeline` 收口**：那条 doneWhen 写的是「**首批**组件通过审计」，
+71/72 已远超该口径 ⇒ 已按事实标 `done`，并把缺口记在这里。
+
+**怎么补**（下次动 `table` 时顺手做）：
+`packages/test-utils/src/a11y-demo-test.ts` 的 `a11yDemoTest(name, options)` 是现成入口 ——
+照 `tree` / `list` 的 `__tests__/a11y.test.ts` 抄一个即可。
+⚠️ table 是复杂组件（含 T6 虚拟滚动），**先跑一次看有没有真实 violation** ——
+若有，不要顺手加豁免（`matchA11yAllowances` 的豁免必须写明理由），先登记再决定。
+
 ---
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
