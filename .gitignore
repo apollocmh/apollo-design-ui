@@ -19,6 +19,10 @@ tests/visual/.artifacts/
 tests/visual/snapshots/
 tests/visual/diff/
 tests/visual/report.html
+# shard 摘要（run.mjs 给 assert-shard.mjs 用）与 CI 的 dist 传递包
+tests/visual/report.json
+tests/visual/report-*.json
+build-dist.tar.gz
 visualRegressionReport/
 playwright-report/
 test-results/

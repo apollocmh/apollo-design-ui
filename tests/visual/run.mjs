@@ -390,6 +390,31 @@ async function main() {
     },
   });
 
+  // ⚠️ 给 CI 的**防假绿**断言用（`assert-shard.mjs`）：落一份摘要 JSON，
+  //    记录「本 shard 应渲染多少 / 实际渲染了多少 / 有几个渲染期报错」。
+  //    为什么需要：像素比对在 CI 上是非阻塞的（跨平台必然有差）⇒ 那一步带
+  //    `continue-on-error`；但「**渲染前就崩了**」（dist 缺失 / 打包失败 / 浏览器起不来）
+  //    也会被它吞成绿 —— 2026-10-04 实测发生过（4 个 shard 都在 46s「绿」了，实际零渲染）。
+  const summaryFile = path.join(
+    HERE,
+    shardCount > 1 ? `report-${shardIndex}-of-${shardCount}.json` : 'report.json',
+  );
+  fs.writeFileSync(
+    summaryFile,
+    `${JSON.stringify(
+      {
+        shard: shardCount > 1 ? `${shardIndex}/${shardCount}` : null,
+        total: allCases.length,
+        expected: cases.length,
+        compared: compared.length,
+        failed: failed.length,
+        renderErrors: results.filter((r) => r.reason === 'render-error').length,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+
   console.log(`\n报告：${path.relative(process.cwd(), reportFile)}`);
   console.log(`通过 ${compared.length - failed.length} / ${compared.length}`);
 

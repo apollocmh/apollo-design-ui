@@ -137,11 +137,20 @@ jobs:
 
       # 把 dist 传给 visual 的 4 个 shard —— 否则每个 shard 都要自己 `test:build` 一遍
       # （137s × 4 = 9 分钟纯重复）。只在本 run 内用，所以 retention 1 天。
+      #
+      # ⚠️ 必须**先 tar 再上传**：`upload-artifact` 对 `packages/*/dist/**` 这种带通配的
+      #    path 会把「第一个通配符之前的目录」当根 ⇒ 下载侧解出来是顶层 `a11y/`、`ui/`…，
+      #    **`packages/` 与 `dist/` 两级前缀全丢了**（2026-10-04 实测：shard 里
+      #    `packages/*/dist` 不存在 ⇒ vite 打包失败 ⇒ 被 `continue-on-error` 吞成假绿）。
+      #    tar 保留相对路径，解包后就是 `packages/<p>/dist/…`。
+      - name: 打包 dist（tar 保路径，供 visual shard 复用）
+        run: tar czf build-dist.tar.gz packages/*/dist
+
       - name: 上传 dist（供 visual shard 复用）
         uses: actions/upload-artifact@v7
         with:
           name: build-dist
-          path: packages/*/dist/**
+          path: build-dist.tar.gz
           # 构建门禁刚校验过产物存在 ⇒ 这里传不出东西就是真出问题了，不要静默放过。
           if-no-files-found: error
           retention-days: 1
@@ -165,10 +174,14 @@ jobs:
       #    不 alias 到 src），而 `packages/ui/dist/index.mjs` 把 11 个 workspace 包
       #    **external** 化了 ⇒ 依赖包的 dist 必须也在。
       #    ⚠️ 别在这里再 `pnpm run test:build` 一次：那是 137s × 4 个 shard 的纯重复。
+      #    用 tar 解包（保 `packages/<p>/dist/…` 路径，理由见 build job 的说明）。
       - name: 下载 build 产物（复用 dist）
         uses: actions/download-artifact@v8
         with:
           name: build-dist
+
+      - name: 解包 dist
+        run: tar xzf build-dist.tar.gz
 
       # ② 确定性检查：不开浏览器、秒级 —— **阻塞**。
       #    它防的是「变体空转」这类假绿：两个变体逐字节相同 ⇒ 看着全绿、实际一格没测。
@@ -201,8 +214,15 @@ jobs:
         continue-on-error: true
         run: node tests/visual/run.mjs --mode compare --shard ${{ matrix.shard }}/4
 
-      # ⑤ 可审产物：HTML 报告（含每个 case 的差异率与并排图）+ 逐 case 的 diff 图
-      #    + Vue 侧实拍图。无论上一步成败都上传。
+      # ⑤ **防假绿**：像素比对非阻塞，但「渲染前就崩了」不该被它吞成绿
+      #    （2026-10-04 实测：4 个 shard 都在 46s「绿」了，实际零渲染）。
+      #    断言「本 shard 的 case 全渲染了」且「没有渲染期报错」。
+      - name: 断言本 shard 完整渲染（防假绿）
+        if: always()
+        run: node tests/visual/assert-shard.mjs ${{ matrix.shard }}/4
+
+      # ⑥ 可审产物：HTML 报告（含每个 case 的差异率与并排图）+ 逐 case 的 diff 图
+      #    + Vue 侧实拍图 + 摘要 JSON。无论成败都上传。
       #    ⚠️ artifact 名与报告名都带 shard 号 —— 否则 4 个 shard 会互相覆盖。
       - name: 上传 diff 产物（shard ${{ matrix.shard }}）
         if: always()
@@ -211,7 +231,9 @@ jobs:
           name: visual-diff-shard-${{ matrix.shard }}
           path: |
             tests/visual/report-*.html
+            tests/visual/report-*.json
             tests/visual/diff/
             tests/visual/snapshots/
-          if-no-files-found: warn
+          # 真渲染过就一定有这些文件 ⇒ 空 artifact 说明本 shard 什么都没产出。
+          if-no-files-found: error
           retention-days: 14
