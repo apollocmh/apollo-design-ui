@@ -122,8 +122,12 @@ const PRESERVED_KEYS = [
 // ⚠️ `a11y` 在第一个有 a11y 测试的包（icons）落地前是空 project，所以这里一直只有三个。
 //    icons 的 a11y.test.ts 落地后必须计入，否则 `--verify` 会把 32 个真实通过的用例
 //    漏掉，而 testLayers['L5-a11y'] 却标 done —— 那就是虚假进度。
-//    `theme` 仍为空（无 theme.test.ts），等它落地时同样要加进来。
-const TEST_PROJECTS = ['unit', 'dom-contract', 'types', 'a11y'];
+//
+// 🚨 2026-10-04 补 `theme`：这里原本写着「`theme` 仍为空（无 theme.test.ts），等它落地时
+//    同样要加进来」—— 而 theme **早已落地**（69 个 `theme.test.ts` / 888 个用例），
+//    只是没人回来改这一行 ⇒ `--verify` 的「已实测验证」数字一直**不含 theme 的测试与覆盖率**
+//    （少算 888 个用例）。补上后 `--verify` 才是五个 project 的完整口径。
+const TEST_PROJECTS = ['unit', 'dom-contract', 'types', 'a11y', 'theme'];
 
 // ---------------------------------------------------------------------------
 // 读取输入

@@ -225,7 +225,12 @@ export const OPEN_DECISIONS = [
     impact: '仅影响 Carousel 一个组件（P5），不阻塞 foundation 包',
   }),
 
-  open('docs-site-framework', {
+  decided('docs-site-framework', {
+    raisedAt: '2026-09-15',
+    decidedAt: '2026-10-04',
+    decidedBy: '用户裁决 2026-10-04',
+    decision:
+      'A —— **VitePress**。API 表格由脚本从组件源码生成（本仓每个组件已带 `index.zh-CN.md` / `index.en-US.md` 与 `demo/*.md`，可机械汇总）。理由：开箱即用、Markdown 友好；代价（demo 实时预览与 API 表格自动化需自建）由脚本补足。',
     question: '文档站点用什么框架？',
     context:
       '组件文档需要 API 表格、demo 预览、主题切换。antd 用 dumi。本项目需在 VitePress / 自建 Vite 应用 / dumi 之间选择。',
@@ -246,7 +251,8 @@ export const OPEN_DECISIONS = [
       },
     ],
     recommendation: 'A 起步，API 表格用脚本从组件源码生成。',
-    impact: '影响 packages/docs（Phase 3 后期），不阻塞 foundation 包',
+    impact: '影响 packages/docs（Phase 4），不阻塞 foundation 包；**解锁横切项 `X:docs-site`**',
+    blocks: [],
   }),
 
   decided('visual-baseline-in-git', {
@@ -275,8 +281,12 @@ export const OPEN_DECISIONS = [
     impact: '影响 tests/visual 的基建（Phase 3 中期），不阻塞 foundation 包',
   }),
 
-  open('ui-style-output', {
+  decided('ui-style-output', {
     raisedAt: '2026-09-17',
+    decidedAt: '2026-10-04',
+    decidedBy: '用户裁决 2026-10-04',
+    decision:
+      'A —— **每组件一份 CSS + 汇总 `dist/index.css`**。理由：72 组件规模下唯一「体积可控 + 保留整体引入便利」的形态，且支持 `import "@apollo-design/ui/<component>/style.css"` 按需引入。落地范围：ui 的 `build.config.ts`（每组件一条 CSS 入口）+ `tests/build/run.mjs` 的 B5/B6/B7 判据 —— 其中 **B6（体积预算 `budget.json`）从 PENDING 转真检查**。',
     question:
       'packages/ui 的组件样式产物是什么形态？按需引入（`@apollo-design/ui/<component>/style.css`）是否要真正落实？',
     context:
@@ -300,7 +310,7 @@ export const OPEN_DECISIONS = [
     ],
     recommendation: 'A。这是 72 组件规模下唯一体积可控、且保留整体引入便利的形态。',
     impact:
-      '决定 packages/ui 的 build.config.ts 形态、tests/build/run.mjs 的 B5/B6/B7 判据，以及全部 72 个组件的样式落地方式',
+      '决定 packages/ui 的 build.config.ts 形态、tests/build/run.mjs 的 B5/B6/B7 判据（B6 体积预算从 PENDING 转真检查），以及全部 72 个组件的样式落地方式',
     blocks: [],
   }),
 

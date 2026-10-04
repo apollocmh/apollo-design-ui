@@ -903,11 +903,11 @@
           "items": {
             "type": "string"
           },
-          "description": "受影响的 foundation 包名（⚠️ 只填 foundation 包名，不要填组件名）。语义是「本决策会阻塞这些包达到 completed」，不一定是「阻塞它们开工」：`status: 'open'` 时是**当前阻塞**（gen-workstreams 据此把决策挂到对应 item 上）；`status: 'decided'` 时是**历史影响范围**（记录该决策曾约束过哪些包，**不再表示当前阻塞**）—— 已裁决决策保留 blocks 是有意的，不要当成陈旧数据清掉。"
+          "description": "**影响范围**：本决策会波及哪些 foundation 包（⚠️ 只填 foundation 包名，不要填组件名）。⚠️ **它不是「阻塞与否」的判据** —— 那看 `hardBlock`（2026-10-04 用户裁决）。`gen-workstreams` 据此把决策挂到对应 item 上（仅当 `status: 'open'`）；`status: 'decided'` 时它退化为**历史影响范围**（记录该决策曾约束过哪些包）。⚠️ 已裁决决策保留 blocks 是**有意的**，不要当成陈旧数据清掉。"
         },
         "hardBlock": {
           "type": "boolean",
-          "description": "true 表示相关包完全无法开工；false 表示可以开工但无法收口"
+          "description": "**「是否阻塞」的唯一判据**（`blocks` 只是影响范围）：`true` = 相关包完全无法开工；`false` = 可以开工但收不了口。`gen-workstreams` 对 `status: 'open'` 的决策按此分流 —— `true` 把 item 按在 waiting-decision，`false` 标 `cannotFinish`。"
         },
         "status": {
           "type": "string",
