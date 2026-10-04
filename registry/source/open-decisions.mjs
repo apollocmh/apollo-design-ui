@@ -82,7 +82,7 @@ export const OPEN_DECISIONS = [
       'B。文档已经声明了这个契约，且 72 个组件库的深导入能力对 tree-shaking 是刚需；mkdist 与 unbuild 同作者，组合成本最低。无论选哪个，都必须同步修正 scaffold 模板，使 exports 只声明真实存在的子路径。',
     impact:
       '阻塞全部 foundation 包的 pkg 维度（无法收口），并使 pnpm build / L7 构建门禁全仓不可用；@apollo-design/ui 的对外入口形态也取决于此',
-    // 注意：这里是 12 个运行包（不含 test-utils —— 它是 private，不发布，但同样需要可构建）
+    // 注意：这里是全部 13 个 foundation 包（含 test-utils —— 它是 private、不发布，但同样需要可构建）
     blocks: [
       '@apollo-design/utils',
       '@apollo-design/theme',
@@ -487,7 +487,10 @@ export const OPEN_DECISIONS = [
       'A —— 完整对齐，分阶段落地。G4 必须实现：① 值/开合/面板接线（受控 + 非受控，含多处 v-model 的 C11 双发）；② 键入解析与 format 的函数/数组形态；③ 掩码模式（format.type: "mask"）；④ 键盘字段导航与分段（-input-active）；⑤ inputReadOnly / preserveInvalidOnBlur / previewValue / order / needConfirm / maxTagCount / tagRender / multiple。分阶段顺序：接线 → 键入与格式化 → 掩码 → 键盘与分段；⑥ 不得以「先跳过、回头补」的方式落 DEFERRED。',
     impact:
       '决定 date-picker 的 11 维度能否全 done（A 下无缺口），并顺带清偿跨包欠账：@apollo-design/picker 的 PickerFormat 要加回 DateType 泛型 + CustomFormat<DateType>（PITFALLS 214）。另决定 time-picker（唯一被 date-picker 阻塞的下游）能拿到一个**完整**的可复用输入框内核。',
-    blocks: ['date-picker'],
+    // ⚠️ 原为 `['date-picker']`（**组件名**）—— 违反 schema「blocks 只填 foundation 包名」。
+    //    2026-10-04 台账同步改为本条 impact 里点名的那个包（"@apollo-design/picker 的
+    //    PickerFormat 要加回 DateType 泛型"）；组件侧的范围由上面的 impact 文本承载。
+    blocks: ['@apollo-design/picker'],
   }),
 ];
 

@@ -20,9 +20,14 @@
 此前它**恒定 exit=1**（`tsc` 解析不了 `.vue` ⇒ 96 条假源错误），现在 **exit=0**。
 
 ⚠️ **决策的运行时状态以 `foundation.json` 为准**（`mergeOpenDecisions` 的
-`DECISION_RUNTIME_KEYS` 覆盖种子）⇒ 裁决时**必须同时改**
+`DECISION_RUNTIME_KEYS = ['status','decision','decidedAt','decidedBy','note']` 覆盖种子；
+函数在 `foundation-status.mjs:164-181`，**不在** gen-registry）⇒ 裁决时**必须同时改**
 `registry/source/open-decisions.mjs`（`open()`→`decided()`）**和** `registry/foundation.json`，
 再跑生成器链，否则 `ask.mjs decision <id>` 仍是 `open`。
+📌 **`decision.blocks` 不在运行时键里** ⇒ 只认种子。语义（2026-10-04 用户裁决）=
+「本决策曾约束过哪些包」：`open` 时是**当前阻塞**（`gen-workstreams.mjs:102` 只消费 open 的），
+`decided` 时是**历史影响范围**。⇒ **看到「decided + 非空 blocks」别当陈旧**（5/6 条已裁决决策都这样），
+只有**值是组件名**（违反 schema「只填 foundation 包名」）才是真陈旧（已修 `cascader` / `date-picker`）。
 
 📌 **`visual-baseline-in-git` 已裁决 = A 基线入库**（2026-10-03）：9 个组件已入库 **75 张**
 （compare **75/75 exact**）；⚠️ **`float-button` 例外**（`position:fixed` 截不到 ⇒ 全白图，

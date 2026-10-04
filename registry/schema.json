@@ -903,7 +903,7 @@
           "items": {
             "type": "string"
           },
-          "description": "受影响的 foundation 包名。语义是「阻塞这些包达到 completed」，不一定是「阻塞它们开工」"
+          "description": "受影响的 foundation 包名（⚠️ 只填 foundation 包名，不要填组件名）。语义是「本决策会阻塞这些包达到 completed」，不一定是「阻塞它们开工」：`status: 'open'` 时是**当前阻塞**（gen-workstreams 据此把决策挂到对应 item 上）；`status: 'decided'` 时是**历史影响范围**（记录该决策曾约束过哪些包，**不再表示当前阻塞**）—— 已裁决决策保留 blocks 是有意的，不要当成陈旧数据清掉。"
         },
         "hardBlock": {
           "type": "boolean",
