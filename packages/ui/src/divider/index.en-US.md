@@ -41,13 +41,18 @@ See [`demo/`](./demo) (9 demos, one-to-one with antd's **user-facing** demos).
 | variant | Line variant | `'dashed' \| 'dotted' \| 'solid'` | `'solid'` |
 | dashed | Whether the line is dashed. Equivalent to `variant="dashed"`, but the two **can be combined** | `boolean` | `false` |
 | size | Spacing size, **only valid for horizontal layout** | `'small' \| 'medium' \| 'middle' \| 'large'` | — |
-| className | Class name of the root element | `string` | — |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — |
-| style | Inline style of the root element. **Overrides `styles.root`** | `CSSProperties` | — |
 | classNames | Semantic class names | `DividerSemanticClassNames \| ((info: { props }) => DividerSemanticClassNames)` | — |
 | styles | Semantic inline styles | `DividerSemanticStyles \| ((info: { props }) => DividerSemanticStyles)` | — |
 | ~~type~~ | ⚠️ Deprecated, use `orientation` | `'horizontal' \| 'vertical'` | — |
 | ~~orientationMargin~~ | ⚠️ Deprecated, use `styles.content.margin`. Distance between the title and its closest border; a unitless numeric string is treated as px | `string \| number` | — |
+
+### Native root attributes
+
+The root is a single `<div role="separator">`. Vue-native `class`, `style`, and other `$attrs` fall through to it; `class` supports string, array, and object forms, and caller `style` takes precedence over `styles.root`. These are not Divider-specific Props, so `className`, `rootClassName`, and `style` are not declared.
+
+```vue
+<Divider class="my-divider" :style="{ borderColor: 'red' }" />
+```
 
 ### Slots
 
@@ -64,10 +69,10 @@ Merge priority (low → high):
 ```
 ConfigProvider.divider.classNames/styles
   → component classNames / styles
-  → className / rootClassName / style (applied to the root element)
+  → native root class / style attrs
 ```
 
-**`style` overrides `styles.root`** (this is antd's merge order, mirrored verbatim).
+The caller's native **`:style` overrides `styles.root`** (preserving precedence while using Vue `$attrs`, not `DividerProps.style`).
 
 ⚠️ The `rail` slot lands on the **root element** when there is no default slot, and on the two
 rail child elements when there is — this is upstream behavior, not a typo.

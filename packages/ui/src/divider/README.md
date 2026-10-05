@@ -58,17 +58,18 @@ interface DividerProps {
   titlePlacement?: TitlePlacement;
   /** @deprecated 用 styles.content.margin */
   orientationMargin?: string | number;
-  className?: string;
-  rootClassName?: string;
   dashed?: boolean;
   variant?: DividerVariant;                  // 默认 'solid'
-  style?: CSSProperties;
   size?: DividerSize;
   plain?: boolean;
   classNames?: DividerSemanticValue<DividerSemanticClassNames>;
   styles?: DividerSemanticValue<DividerSemanticStyles>;
 }
 ```
+
+> 根节点的 `class` / `style` 是 **Vue 原生 attrs**（经 `mergeProps` 落到根元素），
+> 不声明 `className` / `rootClassName` / `style` Props。ConfigProvider 的
+> `divider.className/style` 是配置对象字段（`DividerConfig`），保留。
 
 `children` **不在** Props 里（规则 C19）—— antd 的 `children?: React.ReactNode` 在 Vue 侧是
 默认插槽 `DividerSlot`。
@@ -119,7 +120,7 @@ placement === 'right' → direction === 'rtl' ? 'start' : 'end'
 |---|---|---|
 | `-rail` 类名（`${prefixCls}-rail`） | 落在**根元素** | 落在两个 rail 子元素上 |
 | 语义槽位 `classNames.rail` / `styles.rail` | 落在**根元素** | 落在两个 rail 子元素上 |
-| 根元素的 `style` | `{...styles.root, ...styles.rail, ...style}` | `{...styles.root, ...style}` |
+| 根元素的 `style` | `{...styles.root, ...styles.rail, ...调用方原生 style}` | `{...styles.root, ...调用方原生 style}` |
 
 第三行是**最反直觉**的一条：无 children 时根元素会**额外**吃到 `styles.rail`。
 `index.test.ts` 对「有/无 children」两侧各有一条用例。
@@ -319,8 +320,8 @@ margin / fontSize / lineHeight / color 全部显式写死 —— 否则比出来
    差异会来自夹具。要探「函数式 `classNames` / `styles` 收到了什么」，用**类名**承载探针值。
 5. **告警要写在 `watchEffect` 里**，不能只在 setup 期求值一次。antd 的告警在**每次渲染**
    都求值，所以「挂载时合法、之后更新成非法」也会告警；setup 期只求值一次会让这条差异静默。
-6. **`classNames` 是拼接、`styles` 是覆盖**，且 `style` prop 排在 `styles.root` **之后**
-   （所以 `style` 覆盖 `styles.root`）。这条最容易「顺手改成更合理的顺序」。
+6. **`classNames` 是拼接、`styles` 是覆盖**，且调用方原生 `style` attrs 排在 `styles.root`
+   **之后**（所以原生 `style` 覆盖 `styles.root`）。这条最容易「顺手改成更合理的顺序」。
 7. **L6 用例里凡是「组件外」的上下文文字，`font-family` 要写死**（§6.3）。
    antd 的 `reset.css` 给 `html` 的是泛型 `sans-serif`，我们的 `BASE_CSS` 给的是
    `var(--apollo-font-family)` —— 写 `inherit` 会让两侧继承到不同字体，

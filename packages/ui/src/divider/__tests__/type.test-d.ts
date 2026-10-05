@@ -60,11 +60,8 @@ describe('Divider · Props', () => {
       vertical: true,
       titlePlacement: 'start',
       orientationMargin: 20,
-      className: 'a',
-      rootClassName: 'b',
       dashed: true,
       variant: 'dotted',
-      style: { color: 'red' },
       size: 'medium',
       plain: true,
       classNames: { root: 'a' },
@@ -77,8 +74,26 @@ describe('Divider · Props', () => {
     expectTypeOf<DividerProps['orientationMargin']>().toEqualTypeOf<string | number | undefined>();
   });
 
-  it('`style` 是 Vue 的 `CSSProperties`，不是字符串', () => {
-    expectTypeOf<DividerProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+  it('根 `class` / `style` 是 Vue 原生 attrs，不重复声明为 DividerProps', () => {
+    type PublicProps = InstanceType<typeof Divider>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-divider', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: DividerProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` 不是 Divider 的 prop
+      const badRootClassName: DividerProps = { rootClassName: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 DividerProps
+      const badStyle: DividerProps = { style: { color: 'red' } };
+      // @ts-expect-error 组件实例不暴露 React 根别名
+      const badPublicClassName: PublicProps = { className: 'legacy' };
+      return [badClassName, badRootClassName, badStyle, badPublicClassName];
+    };
+    void _never;
   });
 
   it('`variant` 有默认值但类型上仍是可选（默认值在运行时生效）', () => {
@@ -183,8 +198,6 @@ describe('Divider · 负例（应当报错）', () => {
       const badFnReturn: DividerProps = { classNames: () => ({ body: 'x' }) };
       // @ts-expect-error `prefixCls` 必须是字符串
       const badPrefixCls: DividerProps = { prefixCls: 123 };
-      // @ts-expect-error `style` 是样式对象，不是字符串
-      const badStyle: DividerProps = { style: 'color: red' };
       return [
         extraClassKey,
         extraStyleKey,
@@ -195,7 +208,6 @@ describe('Divider · 负例（应当报错）', () => {
         badMargin,
         badFnReturn,
         badPrefixCls,
-        badStyle,
       ];
     };
     expectTypeOf(negatives).toBeFunction();

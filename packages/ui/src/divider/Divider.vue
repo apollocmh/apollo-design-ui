@@ -25,7 +25,16 @@
  */
 
 import { isNumber, useDevWarning } from '@apollo-design/utils';
-import { type CSSProperties, computed, reactive, ref, useAttrs, useSlots, watchEffect } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  mergeProps,
+  reactive,
+  ref,
+  useAttrs,
+  useSlots,
+  watchEffect,
+} from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type {
@@ -71,11 +80,8 @@ const props = withDefaults(defineProps<DividerProps>(), {
   vertical: undefined,
   titlePlacement: undefined,
   orientationMargin: undefined,
-  className: undefined,
-  rootClassName: undefined,
   dashed: undefined,
   variant: 'solid',
-  style: undefined,
   size: undefined,
   plain: undefined,
   classNames: undefined,
@@ -270,8 +276,6 @@ const rootClass = computed(() => {
       // 语义化的 `rail` 槽位同样只在无 children 时上根元素。
       ...(railSemantic && !hasContent ? { [railSemantic]: true } : {}),
     },
-    props.className,
-    props.rootClassName,
     mergedClassNames.value.root,
   ];
 });
@@ -294,7 +298,6 @@ const contentClass = computed(() => [innerTextCls.value, mergedClassNames.value.
 const rootStyle = computed<CSSProperties>(() => ({
   ...mergedStyles.value.root,
   ...(hasChildren.value ? {} : mergedStyles.value.rail),
-  ...props.style,
 }));
 
 const railStyleAttrs = computed(() => styleAttrs(mergedStyles.value.rail));
@@ -309,16 +312,19 @@ const rootStyleAttrs = computed(() => styleAttrs(rootStyle.value));
  * 根元素的属性对象。
  *
  * ⚠️ 不能写成两个裸 `v-bind`（`v-bind="x" v-bind="$attrs"`）—— Vue 会报
- *    「Duplicate attribute」。所以把 `$attrs` 并进同一个对象。
+ *    「Duplicate attribute」。所以把 `$attrs` 并进同一个对象（`mergeProps` 会正确处理
+ *    `class` / `style` 的合并，后者胜出）。
+ * ⚠️ 根 `class` / `style` 是 **Vue 原生 attrs**：调用方的 `class` / `style` 经 `$attrs`
+ *    进来，与「内部状态类 + 语义/Provider 根样式」合并，调用方同名样式优先。
  * ⚠️ `role` 放在最后：antd 的 `{...restProps}` 在 `role="separator"` **之前**，
  *    所以用户传的 `role` 会被覆盖。放在对象末尾可保证同一语义，且不依赖
  *    Vue 对「v-bind + 静态属性」的合并顺序。
  */
-const rootAttrs = computed(() => ({
-  ...attrs,
-  ...rootStyleAttrs.value,
-  role: 'separator',
-}));
+const rootAttrs = computed(() =>
+  mergeProps({ class: rootClass.value, ...rootStyleAttrs.value }, attrs, {
+    role: 'separator',
+  }),
+);
 
 // ---------------------------------------------------------------------------
 // 开发期告警
@@ -358,7 +364,7 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div ref="rootRef" v-bind="rootAttrs">
     <template v-if="hasChildren && !mergedVertical">
       <div :class="[railClass, `${railCls}-start`]" v-bind="railStyleAttrs" />
       <span :class="contentClass" v-bind="contentStyleAttrs">

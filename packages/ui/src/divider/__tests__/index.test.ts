@@ -345,10 +345,18 @@ describe('Divider · dashed / variant / plain / size', () => {
 });
 
 describe('Divider · class / style / 属性透传', () => {
-  it('className 与 rootClassName 都落在根元素', () => {
-    const w = mountDivider({ className: 'a', rootClassName: 'b' });
-    expect(w.classes()).toContain('a');
-    expect(w.classes()).toContain('b');
+  it('Vue 原生 root class 支持字符串、数组、对象，并与内部/语义类拼接', () => {
+    const stringClass = mountDivider({ class: 'native-a', classNames: { root: 'semantic' } });
+    expect(stringClass.classes()).toContain('native-a');
+    expect(stringClass.classes()).toContain('semantic');
+
+    const arrayClass = mountDivider({ class: ['native-b', { active: true }] });
+    expect(arrayClass.classes()).toContain('native-b');
+    expect(arrayClass.classes()).toContain('active');
+
+    const objectClass = mountDivider({ class: { 'native-c': true, inactive: false } });
+    expect(objectClass.classes()).toContain('native-c');
+    expect(objectClass.classes()).not.toContain('inactive');
   });
 
   it('未声明的属性透传到根元素，且 `role` 恒为 separator（用户传的 role 会被覆盖）', () => {
@@ -436,7 +444,7 @@ describe('Divider · 语义化 classNames / styles', () => {
   });
 
   it('classNames 是**拼接**而非覆盖（与 styles 的语义不同）', () => {
-    const w = mountDivider({ className: 'user-class', classNames: { root: 'semantic-class' } });
+    const w = mountDivider({ class: 'user-class', classNames: { root: 'semantic-class' } });
     expect(w.classes()).toContain('user-class');
     expect(w.classes()).toContain('semantic-class');
   });

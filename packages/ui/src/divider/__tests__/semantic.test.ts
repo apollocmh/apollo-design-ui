@@ -138,10 +138,10 @@ const CASES: Record<string, () => DomRenderResult> = {
   'size:middle': () => noText({ prefixCls: PREFIX, size: 'middle' }),
   'size:large': () => noText({ prefixCls: PREFIX, size: 'large' }),
 
-  // ---- 8. className / rootClassName / 属性透传 ----
-  'class:className': () => noText({ prefixCls: PREFIX, className: 'my-class' }),
-  'class:rootClassName': () => noText({ prefixCls: PREFIX, rootClassName: 'root-class' }),
-  'class:both': () => noText({ prefixCls: PREFIX, className: 'a', rootClassName: 'b' }),
+  // ---- 8. 根节点原生 attrs（React className/rootClassName 的 Vue 对应物是 class） ----
+  'class:className': () => noText({ prefixCls: PREFIX, class: 'my-class' }),
+  'class:rootClassName': () => noText({ prefixCls: PREFIX, class: 'root-class' }),
+  'class:both': () => noText({ prefixCls: PREFIX, class: ['a', 'b'] }),
   'attrs:passthrough': () => noText({ prefixCls: PREFIX, 'data-testid': 'x', id: 'my-divider' }),
 
   // ---- 9. 语义化 ----

@@ -41,13 +41,18 @@ subtitle: 分割线
 | variant | 线型 | `'dashed' \| 'dotted' \| 'solid'` | `'solid'` |
 | dashed | 是否虚线。等价于 `variant="dashed"`，但**两者可叠加** | `boolean` | `false` |
 | size | 间距大小，**仅对水平布局有效** | `'small' \| 'medium' \| 'middle' \| 'large'` | — |
-| className | 根元素类名 | `string` | — |
-| rootClassName | 也落在根元素上（在 `className` **之后**） | `string` | — |
-| style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
 | classNames | 语义化类名 | `DividerSemanticClassNames \| ((info: { props }) => DividerSemanticClassNames)` | — |
 | styles | 语义化样式 | `DividerSemanticStyles \| ((info: { props }) => DividerSemanticStyles)` | — |
 | ~~type~~ | ⚠️ 已废弃，请用 `orientation` | `'horizontal' \| 'vertical'` | — |
 | ~~orientationMargin~~ | ⚠️ 已废弃，请用 `styles.content.margin`。标题与最近边框的距离；不带单位的字符串数字按 px 处理 | `string \| number` | — |
+
+### 根节点原生属性
+
+根节点是单个 `<div role="separator">`。Vue 原生 `class`、`style` 及其它 `$attrs` 会透传到该节点；`class` 支持字符串、数组、对象，调用方 `style` 优先于 `styles.root`。它们不是 Divider 专属 Props，因此不声明 `className` / `rootClassName` / `style`。
+
+```vue
+<Divider class="my-divider" :style="{ borderColor: 'red' }" />
+```
 
 ### 插槽
 
@@ -64,10 +69,10 @@ subtitle: 分割线
 ```
 ConfigProvider.divider.classNames/styles
   → 组件的 classNames / styles
-  → className / rootClassName / style（落在根元素）
+  → 根节点原生 class / style attrs
 ```
 
-其中 **`style` 会覆盖 `styles.root`**（antd 的合并顺序如此，我们逐条对齐）。
+其中调用处原生 **`:style` 会覆盖 `styles.root`**（保持合并优先级；该值走 Vue `$attrs`，不是 `DividerProps.style`）。
 
 ⚠️ `rail` 槽位在**没有默认插槽**时落在**根元素**上，有插槽时落在两个 rail 子元素上 ——
 这是上游行为，不是笔误。

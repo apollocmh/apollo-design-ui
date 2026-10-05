@@ -98,6 +98,13 @@ export interface DividerSemanticAllType {
 // Props
 // ---------------------------------------------------------------------------
 
+/**
+ * Divider 的 Props。
+ *
+ * ⚠️ 根节点的 `class` / `style` 是 Vue 原生 attrs（由 `inheritAttrs: false` 后的显式
+ *    `mergeProps` 落到根元素），**不**声明 `className` / `rootClassName` / `style` Props。
+ *    ConfigProvider 的 `DividerConfig.className/style` 是另一回事（配置对象字段），保留。
+ */
 export interface DividerProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
@@ -125,10 +132,6 @@ export interface DividerProps {
    * 仅在 `titlePlacement` 为 `start` / `end` 时生效。
    */
   orientationMargin?: string | number;
-  /** 落在根元素上（在 ConfigProvider 的 `className` 之后）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
   /** 是否虚线。等价于 `variant="dashed"`，但**两者可叠加**（会同时加两个类名）。 */
   dashed?: boolean;
   /**
@@ -136,8 +139,6 @@ export interface DividerProps {
    * @default 'solid'
    */
   variant?: DividerVariant;
-  /** 根元素的内联样式。会**覆盖** `styles.root`（与 antd 的合并顺序一致）。 */
-  style?: CSSProperties;
   /** 间距大小，**仅对水平布局有效**。 */
   size?: DividerSize;
   /** 文字是否显示为普通正文样式。 */
