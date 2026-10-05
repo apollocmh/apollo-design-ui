@@ -12,8 +12,23 @@ import type { CollapseType, LayoutProps, SiderProps } from '../interface';
 
 it('LayoutProps 的字段类型', () => {
   expectTypeOf<LayoutProps['hasSider']>().toEqualTypeOf<boolean | undefined>();
-  expectTypeOf<LayoutProps['rootClassName']>().toEqualTypeOf<string | undefined>();
   expectTypeOf<LayoutProps['prefixCls']>().toEqualTypeOf<string | undefined>();
+  expectTypeOf<keyof LayoutProps>().toEqualTypeOf<'prefixCls' | 'hasSider'>();
+});
+
+it('根 `class` / `style` 是 Vue 原生 attrs（不在 LayoutProps / SiderProps 键集里）', () => {
+  type LayoutPublic = InstanceType<typeof Layout>['$props'];
+  const nativeAttrs: LayoutPublic = { class: ['a', { b: true }], style: { color: 'red' } };
+  expectTypeOf(nativeAttrs).toMatchTypeOf<LayoutPublic>();
+
+  const _never = () => {
+    // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+    const badLayout: LayoutProps = { className: 'legacy' };
+    // @ts-expect-error 原生 `style` 不是 SiderProps
+    const badSider: SiderProps = { style: { color: 'red' } };
+    return [badLayout, badSider];
+  };
+  void _never;
 });
 
 it('SiderProps 的字段类型', () => {

@@ -22,14 +22,8 @@ export type SiderTheme = 'light' | 'dark';
 export interface LayoutProps {
   /** 自定义前缀（BasicLayout 用 getPrefixCls('layout', …)）。 */
   prefixCls?: string;
-  /** 根元素类名。 */
-  className?: string;
-  /** 根元素类名（语义化之前，排在 className 之后）。 */
-  rootClassName?: string;
   /** 是否有侧边栏（不传 ⇒ 自动检测）。 */
   hasSider?: boolean;
-  /** 根元素内联样式（**覆盖** ConfigProvider 的 layout.style）。 */
-  style?: CSSProperties;
 }
 
 /**
@@ -99,10 +93,6 @@ export interface SiderProps {
   theme?: SiderTheme;
   /** 断点变化回调（挂载时立即以 `mql.matches` 调用一次）。 */
   onBreakpoint?: (broken: boolean) => void;
-  /** 根元素类名。 */
-  className?: string;
-  /** 根元素内联样式。 */
-  style?: CSSProperties;
   /** 语义化类名（对象或函数）。 */
   classNames?: SiderSemanticClassNames | SiderSemanticClassNamesFn;
   /** 语义化样式（对象或函数）。 */

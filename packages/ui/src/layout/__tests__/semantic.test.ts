@@ -45,7 +45,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
   'layout:has-sider-true': { render: () => h(Layout, { ...BP, hasSider: true }) },
   'layout:class-order': {
-    render: () => h(Layout, { ...BP, className: 'cn', rootClassName: 'rcn' }),
+    render: () => h(Layout, { ...BP, class: ['cn', 'rcn'] }),
   },
   'layout:style': { render: () => h(Layout, { ...BP, style: { height: '100vh' } }) },
   'layout:custom-prefix': { render: () => h(Layout, { prefixCls: 'my-layout' }) },
@@ -53,7 +53,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'layout:header': { render: () => h(Header, BP, { default: () => 'Header' }) },
   'layout:footer': { render: () => h(Footer, BP, { default: () => 'Footer' }) },
   'layout:content': { render: () => h(Content, BP, { default: () => 'Content' }) },
-  'layout:header-class': { render: () => h(Header, { ...BP, className: 'h' }) },
+  'layout:header-class': { render: () => h(Header, { ...BP, class: 'h' }) },
   'layout:header-custom-prefix': { render: () => h(Header, { prefixCls: 'my-header' }) },
 
   'sider:no-props': { render: () => h(Sider, SBP, { default: () => 'Sider' }) },
@@ -115,7 +115,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
     render: () => h(Sider, { ...SBP, breakpoint: 'lg' }, { default: () => 'Sider' }),
   },
   'sider:class-name': {
-    render: () => h(Sider, { ...SBP, className: 'my-sider' }, { default: () => 'Sider' }),
+    render: () => h(Sider, { ...SBP, class: 'my-sider' }, { default: () => 'Sider' }),
   },
   'sider:style': {
     render: () =>

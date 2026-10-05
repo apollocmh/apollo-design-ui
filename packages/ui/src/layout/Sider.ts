@@ -23,6 +23,7 @@
 import { BarsOutlined, LeftOutlined, RightOutlined } from '@apollo-design/icons';
 import { useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -88,8 +89,6 @@ export const SiderComponent = defineComponent({
     },
     breakpoint: { type: String as PropType<Breakpoint>, default: undefined },
     theme: { type: String as PropType<SiderTheme>, default: 'dark' },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<SiderProps['style']>, default: () => ({}) },
     classNames: {
       type: [Object, Function] as PropType<SiderProps['classNames']>,
       default: undefined,
@@ -249,8 +248,9 @@ export const SiderComponent = defineComponent({
     });
 
     // ============================== Render ===============================
+    // 根 `style` 是 Vue 原生 attrs（不再是 prop）；位置不变 —— 内部宽度仍最后胜出。
     const divStyle = computed(() => ({
-      ...props.style,
+      ...((attrs.style as CSSProperties | undefined) ?? {}),
       flex: `0 0 ${siderWidth.value}`,
       maxWidth: siderWidth.value,
       minWidth: siderWidth.value,
@@ -275,7 +275,8 @@ export const SiderComponent = defineComponent({
           [`${cls}-below`]: !!below.value,
           [`${cls}-zero-width`]: Number.parseFloat(siderWidth.value) === 0,
         },
-        props.className,
+        // 调用方原生 `class`（位置与原先的 props.className 一致）
+        attrs.class,
         context.className,
         mergedClassNames.value.root,
       ];

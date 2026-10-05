@@ -16,7 +16,7 @@
  * 5. **tagName**：Layout=div / Header=header / Footer=footer / Content=main。
  */
 
-import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
+import { type CSSProperties, computed, defineComponent, h, shallowRef, type VNodeChild } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
 import { provideLayoutContext } from './context';
 import { useHasSider } from './hooks/use-has-sider';
@@ -24,10 +24,7 @@ import type { LayoutConfig, LayoutProps } from './interface';
 
 const layoutProps = {
   prefixCls: { type: String, default: undefined },
-  className: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
   hasSider: { type: Boolean, default: undefined },
-  style: { type: Object as PropType<LayoutProps['style']>, default: undefined },
 };
 
 /** 内部注入参数（antd 的 `generator({ suffixCls, tagName, displayName })`）。 */
@@ -70,8 +67,8 @@ function createBasic(config: GeneratorConfig) {
           {
             ...attrs,
             ref: rootRef,
-            class: [props.prefixCls || prefixWithSuffixCls, props.className],
-            style: props.style,
+            // 根 `class` / `style` 是 Vue 原生 attrs（`style` 直接由 `...attrs` 带入）。
+            class: [props.prefixCls || prefixWithSuffixCls, attrs.class],
           },
           [slots.default?.() as VNodeChild],
         );
@@ -120,8 +117,8 @@ const BasicLayout = defineComponent({
           [`${prefixCls}-rtl`]: direction === 'rtl',
         },
         context.className,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致，都在最后）
+        attrs.class,
       ];
 
       return h(
@@ -130,7 +127,8 @@ const BasicLayout = defineComponent({
           ...attrs,
           ref: rootRef,
           class: classString,
-          style: { ...context.style, ...props.style },
+          // 根 `style` 是原生 attr：位置与原先的 `props.style` 一致（覆盖 context.style）
+          style: { ...context.style, ...((attrs.style as CSSProperties | undefined) ?? {}) },
         },
         [children as VNodeChild],
       );
