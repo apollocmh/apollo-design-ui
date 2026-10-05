@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-05T13:23:40.770Z",
+  "updatedAt": "2026-10-05T23:15:11.016Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 45,
+      "todo": 42,
       "analyzing": 9,
       "refactoring": 0,
       "testing": 0,
-      "done": 18,
+      "done": 21,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 142,
+    "reviewedProductionSourceFiles": 175,
     "issues": {
       "total": 13,
       "bySeverity": {
@@ -202,7 +202,7 @@
       "reviewedFileCount": 5
     },
     "space": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/space/Addon.vue",
         "packages/ui/src/space/Compact.ts",
@@ -219,7 +219,22 @@
         "packages/ui/src/space/style/token.ts",
         "packages/ui/src/space/useOrientation.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/space/Addon.vue",
+        "packages/ui/src/space/Compact.ts",
+        "packages/ui/src/space/Compact.vue",
+        "packages/ui/src/space/context.ts",
+        "packages/ui/src/space/gapSize.ts",
+        "packages/ui/src/space/index.ts",
+        "packages/ui/src/space/interface.ts",
+        "packages/ui/src/space/Item.ts",
+        "packages/ui/src/space/node.ts",
+        "packages/ui/src/space/Space.vue",
+        "packages/ui/src/space/statusUtils.ts",
+        "packages/ui/src/space/style/index.ts",
+        "packages/ui/src/space/style/token.ts",
+        "packages/ui/src/space/useOrientation.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 16,
       "docFiles": [
@@ -227,9 +242,14 @@
         "packages/ui/src/space/index.en-US.md",
         "packages/ui/src/space/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 294/294；Space/Compact/Addon 三面都改。Space 用 mergeProps(语义根样式, attrs) 保持「调用方 style 最后胜出」。"
+      ],
+      "reviewedFileCount": 14
     },
     "flex": {
       "auditStatus": "done",
@@ -267,7 +287,7 @@
       "reviewedFileCount": 6
     },
     "grid": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/grid/Col.vue",
         "packages/ui/src/grid/hooks/use-breakpoint.ts",
@@ -280,7 +300,18 @@
         "packages/ui/src/grid/style/token.ts",
         "packages/ui/src/grid/utils.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/grid/Col.vue",
+        "packages/ui/src/grid/hooks/use-breakpoint.ts",
+        "packages/ui/src/grid/hooks/use-gutter.ts",
+        "packages/ui/src/grid/index.ts",
+        "packages/ui/src/grid/interface.ts",
+        "packages/ui/src/grid/Row.vue",
+        "packages/ui/src/grid/RowContext.ts",
+        "packages/ui/src/grid/style/index.ts",
+        "packages/ui/src/grid/style/token.ts",
+        "packages/ui/src/grid/utils.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 13,
       "docFiles": [
@@ -290,10 +321,14 @@
         "packages/ui/src/grid/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-AVATAR-01"
+        "VNA-AVATAR-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 53/53；Row/Col 双面都改，style 合并位置保持（Col 仍是 mergedStyle → 调用方 → sizeStyle）。"
+      ],
+      "reviewedFileCount": 10
     },
     "divider": {
       "auditStatus": "done",
@@ -367,7 +402,7 @@
       "notes": []
     },
     "layout": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/layout/context.ts",
         "packages/ui/src/layout/hooks/use-has-sider.ts",
@@ -379,7 +414,17 @@
         "packages/ui/src/layout/style/sider.ts",
         "packages/ui/src/layout/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/layout/context.ts",
+        "packages/ui/src/layout/hooks/use-has-sider.ts",
+        "packages/ui/src/layout/index.ts",
+        "packages/ui/src/layout/interface.ts",
+        "packages/ui/src/layout/Layout.ts",
+        "packages/ui/src/layout/Sider.ts",
+        "packages/ui/src/layout/style/index.ts",
+        "packages/ui/src/layout/style/sider.ts",
+        "packages/ui/src/layout/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 11,
       "docFiles": [
@@ -388,9 +433,14 @@
         "packages/ui/src/layout/index.en-US.md",
         "packages/ui/src/layout/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 73/73；Layout/Header/Footer/Content/Sider 五面都改。踩坑：对象展开里 class: 写在 ...attrs 之后会整段顶掉调用方 class，必须显式放进数组。"
+      ],
+      "reviewedFileCount": 9
     },
     "tag": {
       "auditStatus": "todo",
@@ -447,9 +497,13 @@
         "packages/ui/src/badge/index.en-US.md",
         "packages/ui/src/badge/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 22/22 · dom 26/26 · types 5/5；Badge 去掉 className/rootClassName（根 class 走 attrs），Ribbon 去掉 rootClassName 并给包裹层接上 attrs。保留：Badge.style（条件目标）、Ribbon.className/style（落丝带本体）。"
+      ],
       "reviewedFileCount": 8
     },
     "alert": {
@@ -1184,10 +1238,13 @@
       ],
       "issueIds": [
         "VNA-DROPDOWN-01",
-        "VNA-DROPDOWN-02"
+        "VNA-DROPDOWN-02",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 14/14 · dom 5/5 · types 3/3；PurePanel 的 className/style 改原生 attrs；DropdownButtonProps.className 删除（修 VNA-DROPDOWN-02 的 classname 泄漏）。保留：DropdownProps.rootClassName（落浮层，无自有根）。"
+      ],
       "reviewedFileCount": 7
     },
     "modal": {
@@ -3095,7 +3152,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（13 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam（Effect 层）、anchor items[] 的 className（数据字段）、carousel 内层 slick-slider 的 className/style、descriptions item 级、avatar group max/popover、card 子组件目标。阻塞：auto-complete 的 className 转发给未迁移的 Select.className ⇒ 需先做 select。其余待办。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（18 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam（Effect 层）、anchor items[] 的 className（数据字段）、carousel 内层 slick-slider、badge.style（条件目标）、ribbon.className/style（丝带本体）、dropdown.rootClassName（浮层）、descriptions item 级、avatar group max/popover。阻塞：auto-complete 需先做 select；typography 的 Base 是内部件、根属性归 InternalTypography，需单独处理。其余待办。"
     }
   ],
   "batches": [
@@ -3243,6 +3300,11 @@
       "date": "2026-10-05",
       "status": "in_progress",
       "note": "Root-alias migration batch 3: descriptions, anchor, carousel, app, calendar migrated and committed separately (13 components total). Notable: anchor needed inheritAttrs:false to bind attrs to the INNER wrapper (not the outer Affix); carousel/calendar roots intentionally accept only class/style because upstream does not spread restProps (L4 carousel:attrs/calendar:attrs prove it); anchor items[] className is a data field on a shared base type and stays. auto-complete is blocked on select (its className is forwarded to Select.className)."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 4: badge, dropdown, space, grid, layout migrated (18 components total). Key pitfall found: writing `class: <array>` AFTER `...attrs` in an object literal silently replaces the caller class entirely (L4 caught it on Layout/Sider) - attrs.class must be pushed into the array instead. Also removed DropdownButtonProps.className which fixes VNA-DROPDOWN-02 (React key leaking into the DOM as a classname attribute)."
     }
   ],
   "observations": [
