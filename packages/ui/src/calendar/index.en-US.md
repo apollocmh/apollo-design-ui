@@ -42,7 +42,7 @@ See [`demo/`](./demo) (**8** demos). ⚠️ Gaps vs. antd are listed in `README.
 | classNames | Semantic class names (6 slots, **function form** supported) | `CalendarSemanticValue<…>` | —— |
 | styles | Semantic styles (same) | `CalendarSemanticValue<…>` | —— |
 | prefixCls | Custom class prefix | `string` | `apollo-picker` |
-| className / rootClassName | Extra class names on the root | `string` | —— |
+| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | —— |
 | style | Inline style of the root | `CSSProperties` | —— |
 | dateFullCellRender | **@deprecated** Use `fullCellRender` | `(date) => VNodeChild` | —— |
 | dateCellRender | **@deprecated** Use `cellRender` | `(date) => VNodeChild` | —— |

@@ -41,7 +41,7 @@ subtitle: 日历
 | classNames | 语义化类名（6 槽，支持**函数形态**） | `CalendarSemanticValue<…>` | —— |
 | styles | 语义化样式（同上） | `CalendarSemanticValue<…>` | —— |
 | prefixCls | 自定义前缀类名 | `string` | `apollo-picker` |
-| className / rootClassName | 根节点附加类名 | `string` | —— |
+| class / style | **根节点原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | —— |
 | style | 根节点内联样式 | `CSSProperties` | —— |
 | dateFullCellRender | **@deprecated** 用 `fullCellRender` | `(date) => VNodeChild` | —— |
 | dateCellRender | **@deprecated** 用 `cellRender` | `(date) => VNodeChild` | —— |

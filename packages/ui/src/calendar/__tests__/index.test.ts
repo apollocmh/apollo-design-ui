@@ -86,8 +86,8 @@ describe('Calendar · 根元素与条件类名', () => {
     expect(w.classes()).toContain('css-var-root');
   });
 
-  it('`className` / `rootClassName` 都落根元素', () => {
-    const w = mountCal({ className: 'c1', rootClassName: 'c2' });
+  it('原生 `class`（字符串/数组）落根元素', () => {
+    const w = mountCal({ class: ['c1', 'c2'] });
     expect(w.classes()).toContain('c1');
     expect(w.classes()).toContain('c2');
   });

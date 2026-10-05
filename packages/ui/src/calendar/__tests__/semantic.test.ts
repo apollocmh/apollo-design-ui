@@ -158,7 +158,8 @@ const specs: Record<
   },
 
   'calendar:rtl': { props: { ...BP }, ctx: { direction: 'rtl' } },
-  'calendar:className': { props: { ...BP, className: 'user-cls', rootClassName: 'root-cls' } },
+  // React 的 className + rootClassName 在 Vue 侧是同一个原生 `class`。
+  'calendar:className': { props: { ...BP, class: ['user-cls', 'root-cls'] } },
   'calendar:style': { props: { ...BP, style: { color: 'rgb(7, 8, 9)' } } },
   'calendar:attrs': { props: { ...BP, 'data-testid': 'cal', 'aria-label': '日历' } },
 

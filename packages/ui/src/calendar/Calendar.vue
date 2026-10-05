@@ -57,6 +57,7 @@ import { PickerPanel } from '@apollo-design/picker';
 import { isFunction, merge, useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -93,9 +94,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<CalendarProps['style']>, default: undefined },
     /**
      * 🚨 **运行时类型必须是 `[Object, Function]`** —— `classNames` / `styles` 支持
      * **函数形态**（`(info: { props }) => 对象`）。只写 `Object` 时 Vue 会对函数报
@@ -180,7 +178,7 @@ export default defineComponent({
       classNames?: CalendarSemanticClassNames;
       styles?: CalendarSemanticStyles;
       className?: string;
-      style?: CalendarProps['style'];
+      style?: CSSProperties;
       getPrefixCls: (suffix?: string, custom?: string) => string;
       direction?: 'ltr' | 'rtl';
     };
@@ -290,12 +288,7 @@ export default defineComponent({
       CalendarSemanticStyles
     >(
       [() => context.classNames, () => props.classNames],
-      [
-        () => context.styles,
-        () => semanticRootStyle(context.style),
-        () => props.styles,
-        () => semanticRootStyle(props.style),
-      ],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
       semanticProps,
     );
 
@@ -519,8 +512,6 @@ export default defineComponent({
           [`${cls}-rtl`]: direction.value === 'rtl',
         },
         context.className,
-        props.className,
-        props.rootClassName,
         rootCls.value,
         // 无 `hashId`（D2）；`css-var` 类与 `genCalendarStyle` 的 `${cls}-css-var` 对应
         'css-var-root',

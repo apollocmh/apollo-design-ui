@@ -201,12 +201,6 @@ export interface CalendarProps {
   // ============================================================ 外观与语义槽
   /** 自定义前缀类名。⚠️ 默认 = `getPrefixCls('picker')` = **`apollo-picker`**（不是 `apollo-calendar`）。 */
   prefixCls?: string;
-  /** 根节点附加类名。 */
-  className?: string;
-  /** 根节点附加类名（与 `className` 并列，上游有两个入口）。 */
-  rootClassName?: string;
-  /** 根节点内联样式。⚠️ 语义槽的 `styles.root` 会**覆盖**它（`useMergeSemantic` 的第 3 条判据）。 */
-  style?: CSSProperties;
   /** 语义化类名（6 平铺槽）。支持**函数形态**。 */
   classNames?: CalendarSemanticValue<CalendarSemanticClassNames, CalendarProps>;
   /** 语义化样式（同上）。支持**函数形态**。 */

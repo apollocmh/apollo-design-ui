@@ -40,13 +40,10 @@ import type {
   SelectInfo,
 } from '../interface';
 
-describe('Calendar · Props 键集（21 个）', () => {
-  it('🚨 键集与上游 `CalendarProps` **逐一对应**', () => {
+describe('Calendar · Props 键集（18 个）', () => {
+  it('🚨 键集与上游 `CalendarProps` **逐一对应**（根 class/style 走原生 attrs，不在键集里）', () => {
     expectTypeOf<keyof CalendarProps>().toEqualTypeOf<
       | 'prefixCls'
-      | 'className'
-      | 'rootClassName'
-      | 'style'
       | 'classNames'
       | 'styles'
       | 'locale'
