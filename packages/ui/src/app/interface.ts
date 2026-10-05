@@ -14,9 +14,6 @@ export type AppComponentType = 'div' | 'section' | 'main' | 'span' | false;
 
 export interface AppProps extends AppConfig {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: Record<string, string | number>;
   children?: VNodeChild;
   /** 渲染的根元素；`false` ⇒ 无包裹（Fragment）。 */
   component?: AppComponentType;

@@ -26,10 +26,10 @@ describe('App · L1 渲染', () => {
     expect(el.textContent).toBe('content');
   });
 
-  it('component=false ⇒ 无包裹；带根类 props 时 dev 警告', async () => {
+  it('component=false ⇒ 无包裹；带根 attrs（class/style）时 dev 警告', async () => {
     const err = vi.spyOn(console, 'error').mockImplementation(() => {});
     const wrapper = mount(App, {
-      props: { component: false, className: 'legacy' },
+      props: { component: false, class: 'legacy' },
       slots: { default: () => h('span', 'x') },
     });
     expect(wrapper.element.tagName).toBe('DIV'); // VTU 的宿主

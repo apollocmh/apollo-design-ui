@@ -61,9 +61,6 @@ const App = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     component: {
       type: [String, Boolean] as PropType<AppComponentType>,
       default: 'div' as AppComponentType,
@@ -91,9 +88,8 @@ const App = defineComponent({
     provide(appContextKey, api);
     provide(appConfigContextKey, mergedAppConfig.value);
 
-    const hasRootProps = Boolean(
-      props.className || props.rootClassName || props.style || attrs.class || attrs.style,
-    );
+    // 根 `class` / `style` 是 Vue 原生 attrs（不再有 className/rootClassName/style Props）。
+    const hasRootProps = Boolean(attrs.class || attrs.style);
     if (props.component === false && hasRootProps) {
       console.error(
         '[Warning] [antd: App] When using cssVar, ensure `component` is assigned a valid React component string.',
@@ -113,14 +109,7 @@ const App = defineComponent({
         props.component as 'div',
         {
           ...attrs,
-          class: [
-            prefixCls,
-            props.className,
-            props.rootClassName,
-            typeof attrs.class === 'string' ? attrs.class : undefined,
-            direction === 'rtl' ? `${prefixCls}-rtl` : undefined,
-          ],
-          style: { ...(props.style ?? {}) },
+          class: [prefixCls, attrs.class, direction === 'rtl' ? `${prefixCls}-rtl` : undefined],
         },
         [children as VNodeChild].filter((c) => c !== null && c !== undefined),
       );
