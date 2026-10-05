@@ -44,8 +44,7 @@ subtitle: 面包屑
 | classNames | 语义化类名（`root` / `item` / `separator`），支持函数形态 | `BreadcrumbSemanticClassNames \| ((info) => …)` | — | ✅（`breadcrumb.classNames`） |
 | styles | 语义化样式（三个槽），支持函数形态 | `BreadcrumbSemanticStyles \| ((info) => …)` | — | ✅（`breadcrumb.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-breadcrumb` | × |
-| className | 根元素类名 | `string` | — | × |
-| rootClassName | 也落在根元素上 | `string` | — | × |
+| class / style | 根元素原生 attrs（不是 Props） | `string` / `CSSProperties` | — | × |
 | style | 根元素内联样式 | `CSSProperties` | — | × |
 
 #### BreadcrumbItemInput

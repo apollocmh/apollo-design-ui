@@ -133,9 +133,6 @@ export interface BreadcrumbProps {
   // ---------------------------------------------------------------- 样式
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-breadcrumb`。 */
   prefixCls?: string | undefined;
-  className?: string | undefined;
-  rootClassName?: string | undefined;
-  style?: Record<string, string | number> | undefined;
   classNames?:
     | BreadcrumbSemanticClassNames
     | ((info: { props: BreadcrumbProps }) => BreadcrumbSemanticClassNames)

@@ -44,8 +44,7 @@ See [`demo/`](./demo) (**7** demos, mirroring antd's user-visible demos).
 | classNames | Semantic class names (`root` / `item` / `separator`), function form supported | `BreadcrumbSemanticClassNames \| ((info) => …)` | — | ✅ (`breadcrumb.classNames`) |
 | styles | Semantic styles (three slots), function form supported | `BreadcrumbSemanticStyles \| ((info) => …)` | — | ✅ (`breadcrumb.styles`) |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-breadcrumb` | × |
-| className | Class name of the root element | `string` | — | × |
-| rootClassName | Also applied to the root element | `string` | — | × |
+| class / style | Native root attrs (not Props) | `string` / `CSSProperties` | — | × |
 | style | Inline style of the root element | `CSSProperties` | — | × |
 
 #### BreadcrumbItemInput

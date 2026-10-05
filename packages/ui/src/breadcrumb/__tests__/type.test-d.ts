@@ -39,16 +39,31 @@ import type {
 describe('Breadcrumb · Props 类型', () => {
   it('核心 props 的形态', () => {
     expectTypeOf<BreadcrumbProps['prefixCls']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<BreadcrumbProps['className']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<BreadcrumbProps['rootClassName']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<BreadcrumbProps['style']>().toEqualTypeOf<
-      Record<string, string | number> | undefined
-    >();
     expectTypeOf<BreadcrumbProps['separator']>().toEqualTypeOf<VNodeChild>();
     expectTypeOf<BreadcrumbProps['dropdownIcon']>().toEqualTypeOf<VNodeChild>();
     expectTypeOf<BreadcrumbProps['items']>().toEqualTypeOf<BreadcrumbItemInput[] | undefined>();
     expectTypeOf<BreadcrumbProps['routes']>().toEqualTypeOf<BreadcrumbItemInput[] | undefined>();
     expectTypeOf<BreadcrumbProps['params']>().toEqualTypeOf<BreadcrumbParams | undefined>();
+  });
+
+  it('根 `class` / `style` 是 Vue 原生 attrs，不重复声明为 BreadcrumbProps', () => {
+    type PublicProps = InstanceType<typeof Breadcrumb>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-breadcrumb', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: BreadcrumbProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` 不是 Breadcrumb 的 prop
+      const badRootClassName: BreadcrumbProps = { rootClassName: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 BreadcrumbProps
+      const badStyle: BreadcrumbProps = { style: { color: 'red' } };
+      return [badClassName, badRootClassName, badStyle];
+    };
+    void _never;
   });
 
   it('🚨 `params` 是 `Record<string, unknown>`（泛型 `<T>` 非泛型实例化的结果）', () => {

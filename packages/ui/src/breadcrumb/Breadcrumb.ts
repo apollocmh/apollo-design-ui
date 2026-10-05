@@ -101,12 +101,6 @@ export const Breadcrumb = defineComponent({
       type: null as unknown as PropType<BreadcrumbProps['dropdownIcon']>,
       default: undefined,
     },
-    className: { type: String as PropType<string | undefined>, default: undefined },
-    rootClassName: { type: String as PropType<string | undefined>, default: undefined },
-    style: {
-      type: Object as PropType<BreadcrumbProps['style']>,
-      default: undefined,
-    },
     classNames: {
       type: [Object, Function] as PropType<BreadcrumbProps['classNames']>,
       default: undefined,
@@ -170,12 +164,7 @@ export const Breadcrumb = defineComponent({
       BreadcrumbSemanticStyles
     >(
       [() => context.classNames, () => props.classNames],
-      [
-        () => context.styles,
-        () => semanticRootStyle(context.style),
-        () => props.styles,
-        () => semanticRootStyle(props.style),
-      ],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
       semanticProps,
     );
 
@@ -243,8 +232,6 @@ export const Breadcrumb = defineComponent({
       prefixCls.value,
       context.className,
       { [`${prefixCls.value}-rtl`]: direction.value === 'rtl' },
-      props.className,
-      props.rootClassName,
       mergedClassNames.value.root,
       // 本仓无 hashId（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D5）
       `${prefixCls.value}-css-var`,
@@ -336,9 +323,11 @@ export const Breadcrumb = defineComponent({
         });
       }
 
+      // 根 `class` / `style` 是 Vue 原生 attrs：`attrs` 排在语义根样式**之后**
+      // ⇒ 调用方同名样式优先（与原先 `props.style` 参与合并的优先级一致）。
       return h(
         'nav',
-        mergeProps(attrs, styleAttrs(mergedStyles.value.root), {
+        mergeProps(styleAttrs(mergedStyles.value.root), attrs, {
           ref: nativeElementRef,
           class: rootClassNames.value,
         }),
