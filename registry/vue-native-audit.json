@@ -4,9 +4,9 @@
   "target": "@apollo-design/ui / Vue 3.5+ native component library",
   "antdVersion": "6.6.4",
   "overallStatus": "in_progress",
-  "phase": "audit-affix-native-api-verified",
+  "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-05T06:48:39.414Z",
+  "updatedAt": "2026-10-05T08:00:15.157Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -39,10 +39,10 @@
     "components": {
       "total": 72,
       "todo": 46,
-      "analyzing": 8,
+      "analyzing": 9,
       "refactoring": 0,
       "testing": 0,
-      "done": 18,
+      "done": 17,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,19 +51,19 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 142,
+    "reviewedProductionSourceFiles": 136,
     "issues": {
-      "total": 10,
+      "total": 13,
       "bySeverity": {
         "P0": 1,
-        "P1": 3,
-        "P2": 6,
-        "P3": 0
+        "P1": 4,
+        "P2": 7,
+        "P3": 1
       },
       "byStatus": {
-        "open": 7,
-        "in_progress": 0,
-        "fixed": 3,
+        "open": 8,
+        "in_progress": 1,
+        "fixed": 4,
         "deferred": 0,
         "wont_fix": 0
       }
@@ -192,10 +192,13 @@
         "packages/ui/src/button/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-RENDERER-01"
+        "VNA-RENDERER-01",
+        "VNA-BUTTON-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "按全局映射重构：ButtonProps 移除 className/rootClassName/style；根 class/style 走 Vue 原生 $attrs，render 期 mergeProps 合并；ConfigProvider ButtonConfig 字段保留。同步 Tour/Modal/Popconfirm 嵌套按钮配置为原生 class 并类型层拒绝 React 别名。"
+      ],
       "reviewedFileCount": 5
     },
     "space": {
@@ -304,10 +307,13 @@
         "packages/ui/src/divider/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-DIVIDER-01"
+        "VNA-DIVIDER-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：DividerProps 移除 className/rootClassName/style；根 attrs 用 render 期 mergeProps 合并（内部类 + 语义/Provider 根样式 + 实时 $attrs，调用方 style 优先）；DividerConfig.className/style 作为 Provider schema 保留。unit 61/61、dom 54/54、types 32/32 无错误。"
+      ],
       "reviewedFileCount": 5
     },
     "typography": {
@@ -1151,7 +1157,8 @@
         "packages/ui/src/dropdown/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-DROPDOWN-01"
+        "VNA-DROPDOWN-01",
+        "VNA-DROPDOWN-02"
       ],
       "batch": "AUDIT-01",
       "notes": [],
@@ -2897,6 +2904,153 @@
       ],
       "status": "fixed",
       "verification": "unit：Affix 2 files / 21 tests passed；dom-contract：Affix 11 tests passed；types：Affix 2 files / 30 tests passed, Type Errors: no errors；full `pnpm run lint:types` passed；targeted Biome check passed; `git diff --check` passed."
+    },
+    {
+      "id": "VNA-BUTTON-01",
+      "component": "button",
+      "files": [
+        "packages/ui/src/button/interface.ts:117-150",
+        "packages/ui/src/button/Button.vue:65-99,452-500,585-634",
+        "packages/ui/src/button/__tests__/type.test-d.ts",
+        "packages/ui/src/button/__tests__/index.test.ts",
+        "packages/ui/src/button/__tests__/semantic.test.ts",
+        "packages/ui/src/button/index.zh-CN.md",
+        "packages/ui/src/button/index.en-US.md",
+        "packages/ui/src/button/README.md",
+        "packages/ui/src/tour/interface.ts:152-165",
+        "packages/ui/src/tour/panel.ts:57-70,236-266",
+        "packages/ui/src/modal/interface.ts:248-263",
+        "packages/ui/src/popconfirm/interface.ts:21-29"
+      ],
+      "category": "attrs",
+      "severity": "P2",
+      "currentImplementation": "Button declares className/rootClassName/style as Props, consumes them manually for both <button> and <a>, while COMPATIBILITY.md §7 maps root className/style to Vue native class/style attrs. ConfigProvider style/className is a separate configuration object and must remain. Button has two mutually-exclusive roots but attrs already are explicitly forwarded to each branch.",
+      "semanticDifference": "Root styling is expressed as React-style component props instead of Vue-native attrs, creating duplicate APIs and preventing native class values from being type-checked as the primary contract.",
+      "recommendation": "已修：ButtonProps 只保留原生 attrs 契约；Button.vue 用 render 期 mergeProps 合并「状态类 + 语义/Provider 根样式 + 实时 $attrs」，两条互斥根（<button>/<a>）各自取用；ButtonConfig.className/style 作为 Provider schema 保留。嵌套按钮配置（Tour/Modal/Popconfirm）改用 Vue 原生 class，并声明 className/rootClassName 为 never 拒绝旧写法。",
+      "systemic": false,
+      "relatedComponents": [
+        "button"
+      ],
+      "tests": [
+        "button/__tests__/type.test-d.ts",
+        "button/__tests__/index.test.ts",
+        "button/__tests__/semantic.test.ts",
+        "tour/__tests__/index.test.ts (Button nested actions adapter)"
+      ],
+      "status": "fixed",
+      "verification": "unit：button/index 97 + tour/index 31 + modal/index 25 + modal/engine 19 + popconfirm/index 16 = 188/188；dom-contract：button/semantic 66/66（React className/rootClassName oracle 译为原生 class）；types：button 18 + tour 7 + modal 12 + popconfirm 4 = 82/82 且 Type Errors 无；全仓 `pnpm run lint:types` exit 0；L6 视觉（先 `pnpm build:ui`）：`tests/visual/run.mjs --component button --mode compare` 通过 27/27（24 张 0.000% exact，semantic 3 张 0.005–0.021% antialias-noise，属既有噪声）；目标文件 Biome 与 `git diff --check` 通过。"
+    },
+    {
+      "id": "VNA-DROPDOWN-02",
+      "component": "dropdown",
+      "files": [
+        "packages/ui/src/dropdown/interface.ts:115-119",
+        "packages/ui/src/dropdown/DropdownButton.ts:18-62,148-158"
+      ],
+      "category": "react-api",
+      "severity": "P3",
+      "currentImplementation": "DropdownButtonProps 声明了 className?: string / style?: Record<string,string|number> 作为「传给 Button 的原生 attrs」，但运行时 props 未声明它们 ⇒ 走 attrs 透传到根 <div>：style 恰好是原生属性可用，className 会渲染成非法 DOM 属性 classname=\"…\"。",
+      "semanticDifference": "React 的 className 在 Vue 里没有原生对应；声明在类型层会诱导用户写出 classname 属性泄漏。",
+      "recommendation": "随 dropdown 批次处理：从 DropdownButtonProps 移除 className（改用 class）；style 保留为原生 style。补类型负例与 DOM 断言（根不得出现 classname 属性）。",
+      "systemic": false,
+      "relatedComponents": [
+        "dropdown"
+      ],
+      "tests": [
+        "dropdown/__tests__/type.test-d.ts",
+        "dropdown/__tests__/index.test.ts"
+      ],
+      "status": "open",
+      "verification": "源码核读：interface 声明 className/style，运行时 props 未声明、渲染层只消费 attrs.class/attrs.style。尚未跑测试，留待 dropdown 批次。"
+    },
+    {
+      "id": "VNA-ROOTALIAS-01",
+      "component": "(cross-component)",
+      "files": [
+        "packages/ui/src/*/interface.ts",
+        "packages/ui/src/*/*.{vue,ts}"
+      ],
+      "category": "attrs",
+      "severity": "P1",
+      "currentImplementation": "机械扫描 73 个组件目录，69 个在公开 Props 里声明 className / rootClassName（部分还有 style）作为根节点别名，并在实现里手动拼接。这与 COMPATIBILITY.md §7（React className→Vue 原生 class、style→原生 style）系统冲突：根 class/style 应走 $attrs。",
+      "semanticDifference": "Vue 单根组件默认自动透传 class/style/attrs；显式声明根别名既重复又与原生 attrs 语义打架，且会诱导用户写出 React 写法。多根 / inheritAttrs:false 的组件还需要显式 mergeProps 才能保证 attrs 落到正确根。",
+      "recommendation": "作为系统性问题统一处理：单根组件删除根别名 Props（Vue 自动透传即可）；多根或 inheritAttrs:false 的组件改用 render 期 mergeProps 合并「内部类 + 实时 $attrs」；有独立目标（如浮层 / 子节点）的 className/style 保留并逐条登记理由。Provider 配置对象（ComponentStyleConfig）的 className/style 不在此列，保留。",
+      "systemic": true,
+      "relatedComponents": [
+        "alert",
+        "anchor",
+        "app",
+        "auto-complete",
+        "avatar",
+        "back-top",
+        "badge",
+        "border-beam",
+        "breadcrumb",
+        "calendar",
+        "card",
+        "carousel",
+        "cascader",
+        "checkbox",
+        "collapse",
+        "color-picker",
+        "date-picker",
+        "descriptions",
+        "divider",
+        "drawer",
+        "dropdown",
+        "empty",
+        "flex",
+        "float-button",
+        "form",
+        "grid",
+        "image",
+        "input",
+        "input-number",
+        "layout",
+        "list",
+        "listy",
+        "masonry",
+        "mentions",
+        "message",
+        "modal",
+        "notification",
+        "pagination",
+        "popconfirm",
+        "popover",
+        "progress",
+        "qr-code",
+        "radio",
+        "rate",
+        "result",
+        "segmented",
+        "select",
+        "skeleton",
+        "slider",
+        "space",
+        "spin",
+        "splitter",
+        "statistic",
+        "steps",
+        "switch",
+        "table",
+        "tabs",
+        "tag",
+        "timeline",
+        "tooltip",
+        "tour",
+        "transfer",
+        "tree",
+        "tree-select",
+        "typography",
+        "upload",
+        "watermark"
+      ],
+      "tests": [
+        "各组件 __tests__/type.test-d.ts",
+        "各组件 __tests__/semantic.test.ts"
+      ],
+      "status": "in_progress",
+      "verification": "机械扫描：69/73 组件命中。已迁移：divider（unit 61/61、dom 54/54、types 32/32、Biome/diff 通过）。其余待办。"
     }
   ],
   "batches": [
@@ -2913,7 +3067,11 @@
         "VNA-AFFIX-02",
         "VNA-AVATAR-01",
         "VNA-DIVIDER-01",
-        "VNA-DROPDOWN-01"
+        "VNA-DROPDOWN-01",
+        "VNA-RENDERER-01",
+        "VNA-AFFIX-03",
+        "VNA-BUTTON-01",
+        "VNA-DROPDOWN-02"
       ],
       "verification": [
         "node registry/tools/ask.mjs progress -> components 72/72 completed, foundation 13/13 completed",
@@ -2922,7 +3080,9 @@
         "Affix: removed production probe logs and fixed CSS px-string equality fast path; focused unit 19/19 passed; targeted Biome check passed; full type check pending.",
         "Affix: full type check `pnpm run lint:types` passed with exit 0; targeted Biome passed; `git diff --check` passed.",
         "Affix API correction (user review): className/rootClassName/style removed from component Props; ConfigProvider AffixConfig retained; live Vue attrs merged at render. unit 21/21, DOM 11/11, types 30/30, full vue-tsc, Biome and diff-check pass.",
-        "Reusable missed-audit lesson added to .workbuddy-ai/skills/vue-native-audit/SKILL.md; quick_validate passed; vue-native-audit.zip repackaged successfully."
+        "Reusable missed-audit lesson added to .workbuddy-ai/skills/vue-native-audit/SKILL.md; quick_validate passed; vue-native-audit.zip repackaged successfully.",
+        "Button API correction verified: unit 188/188, DOM 66/66, types 82/82 (no errors), full lint:types exit 0, Biome + diff-check pass. Nested button bags (Tour/Modal/Popconfirm) migrated to native class with type-level rejection of React aliases. DropdownButton React className alias logged as VNA-DROPDOWN-02 for the dropdown batch.",
+        "Button L6 visual (after build:ui): 27/27 pass — 24 exact 0.000%, 3 semantic variants 0.005–0.021% antialias-noise."
       ],
       "componentProgress": {
         "done": 17,
@@ -2998,6 +3158,31 @@
       "date": "2026-10-05",
       "status": "in_progress",
       "note": "User requested that audit learnings be accumulated. Expanded vue-native-audit Skill with an Affix postmortem: map-contract reconciliation; component Props vs ConfigProvider schema; live useAttrs/mergeProps at render; translating React oracle inputs to Vue API; positive/negative public $props tests; reopening premature done findings. Skill Creator quick validation and repackaging passed; full repo lint:types rerun passed after final Affix type-test changes."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Started Button as the next demonstration after Affix. Registry had Button prematurely marked done from read-only audit; re-opened because interface.ts still exposed className/rootClassName/style against COMPATIBILITY §7. Updating native attrs, contract/type tests, React oracle translation, docs, and preserving ConfigProvider ButtonConfig fields. Tracing consumers including Tour before closing."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Button sample complete and verified. Removed className/rootClassName/style from ButtonProps; root attrs now merge via render-time mergeProps (state+semantic+Provider style then live $attrs) across both <button>/<a> roots; ButtonConfig schema kept. Migrated nested button config bags to native class: TourButtonProps.className→class; ModalButtonProps/PopconfirmButtonProps add class/style and declare className/rootClassName as never (verified never+index-signature rejects). Removed now-dead runtime alias mapping. Gates: unit 188/188, DOM 66/66, types 82/82 no errors, full lint:types exit 0, Biome/diff-check clean. Logged VNA-DROPDOWN-02 (DropdownButton declared className leaks as classname attr) for the dropdown batch. Affix + Button now done; rest pending."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Button L6 visual regression confirmed after `pnpm build:ui`: `tests/visual/run.mjs --component button --mode compare` → 27/27 pass (24 exact, 3 semantic at 0.005–0.021% antialias-noise). Button demo fully verified: unit 188/188, DOM 66/66, types 82/82, full lint:types, L6 27/27, Biome/diff-check."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Library-wide scan found 69/73 components still declaring root alias props (className/rootClassName/style) against COMPATIBILITY §7. Recorded as systemic P1 VNA-ROOTALIAS-01. Plan: migrate per component (single-root → delete alias props and rely on Vue fallthrough; multi-root/inheritAttrs:false → render-time mergeProps), verifying and committing one component at a time."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Root-alias migration started. divider migrated first: DividerProps drops className/rootClassName/style; root attrs merged via render-time mergeProps; DividerConfig schema kept. unit 61/61, DOM 54/54, types 32/32 no errors, Biome+diff clean. Committing one component at a time per user instruction."
     }
   ],
   "observations": [

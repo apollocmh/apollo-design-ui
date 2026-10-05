@@ -18,6 +18,7 @@
       "!**/registry/tokens.json",
       "!**/registry/foundation.json",
       "!**/registry/workstreams.json",
+      "!**/registry/vue-native-audit.json",
       "!**/tsconfig.check.json",
       "!**/registry/source/antd-*.raw.json",
       "!**/packages/*/src/**/__fixtures__",
