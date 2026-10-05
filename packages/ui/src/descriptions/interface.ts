@@ -64,9 +64,6 @@ export interface DescriptionsSemanticStyles {
 
 export interface DescriptionsProps {
   prefixCls?: string;
-  rootClassName?: string;
-  className?: string;
-  style?: Record<string, string | number>;
   id?: string;
   /** 边框形态。默认 `false`。 */
   bordered?: boolean;

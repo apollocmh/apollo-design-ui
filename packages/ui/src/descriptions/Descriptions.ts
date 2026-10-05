@@ -34,6 +34,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  mergeProps,
   type PropType,
   shallowRef,
   type VNode,
@@ -84,9 +85,6 @@ export const DescriptionsComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<DescriptionsProps['style']>, default: undefined },
     id: { type: String, default: undefined },
     bordered: { type: Boolean, default: undefined },
     size: { type: String as PropType<NonNullable<DescriptionsProps['size']>>, default: undefined },
@@ -479,34 +477,29 @@ export const DescriptionsComponent = defineComponent({
       const mergedExtra: unknown = extraSlot;
       const hasExtra = mergedExtra !== null && mergedExtra !== undefined;
 
-      const {
-        class: _attrClass,
-        style: _attrStyle,
-        ...restAttrs
-      } = attrs as Record<string, unknown>;
-
+      // 根 `class` / `style` 是 Vue 原生 attrs：内部类 + 语义根样式在前，`attrs` 在后
+      // ⇒ 调用方同名样式优先（与原先 `props.style` 在合并末尾的语义一致）。
       return h(
         'div',
-        {
-          ...restAttrs,
-          ref: rootRef,
-          id: props.id,
-          class: [
-            cls,
-            context.className as string | undefined,
-            mergedClassNames.value.root,
-            {
-              [`${cls}-medium`]: size === 'medium' || size === 'middle',
-              [`${cls}-small`]: size === 'small',
-              [`${cls}-bordered`]: !!props.bordered,
-              [`${cls}-rtl`]: direction.value === 'rtl',
-            },
-            props.className,
-            props.rootClassName,
-          ],
-          // 判据 6：用户 style 走语义槽 root（antd 的 useSemanticRootStyle 同构）
-          ...styleAttrs({ ...props.style, ...mergedStyles.value.root }),
-        },
+        mergeProps(
+          {
+            ref: rootRef,
+            id: props.id,
+            class: [
+              cls,
+              context.className as string | undefined,
+              mergedClassNames.value.root,
+              {
+                [`${cls}-medium`]: size === 'medium' || size === 'middle',
+                [`${cls}-small`]: size === 'small',
+                [`${cls}-bordered`]: !!props.bordered,
+                [`${cls}-rtl`]: direction.value === 'rtl',
+              },
+            ],
+          },
+          styleAttrs(mergedStyles.value.root),
+          attrs,
+        ),
         [
           (hasTitle || hasExtra) &&
             h(
