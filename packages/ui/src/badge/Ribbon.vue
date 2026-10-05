@@ -13,7 +13,7 @@
  *   3. 结构：wrapper > children + ribbon > (content, corner)。
  */
 
-import { computed, ref, useAttrs, useSlots } from 'vue';
+import { computed, mergeProps, ref, useAttrs, useSlots } from 'vue';
 import { isPresetColor } from '../_internal/preset-color';
 import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
@@ -23,7 +23,6 @@ defineOptions({ name: 'ARibbon', inheritAttrs: false });
 
 const props = withDefaults(defineProps<RibbonProps>(), {
   prefixCls: undefined,
-  rootClassName: undefined,
   className: undefined,
   style: undefined,
   color: undefined,
@@ -88,18 +87,17 @@ const cornerColorStyle = computed(() =>
   props.color && !colorInPreset.value ? { color: props.color } : undefined,
 );
 
-const rootClass = computed(() => [
-  wrapperCls.value,
-  props.rootClassName,
-  mergedClassNames.value.root,
-]);
+const rootClass = computed(() => [wrapperCls.value, mergedClassNames.value.root]);
+
+// 包裹层根属性：语义根样式 + 调用方原生 attrs（`class` / `style` 等）。
+const rootAttrs = computed(() => mergeProps(styleAttrs(mergedStyles.value.root), attrs));
 
 const rootRef = ref<HTMLElement | null>(null);
 defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="styleAttrs(mergedStyles.root)">
+  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
     <slot />
     <div :class="ribbonClass" v-bind="styleAttrs({ ...colorStyle, ...mergedStyles.indicator })">
       <span :class="[`${prefixCls}-content`, mergedClassNames.content]" v-bind="styleAttrs(mergedStyles.content)">

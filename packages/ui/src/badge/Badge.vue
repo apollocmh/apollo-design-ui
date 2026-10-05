@@ -52,8 +52,6 @@ defineOptions({ name: 'ABadge', inheritAttrs: false });
 const props = withDefaults(defineProps<BadgeProps>(), {
   prefixCls: undefined,
   scrollNumberPrefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
   style: undefined,
   count: null,
   overflowCount: 99,
@@ -229,13 +227,12 @@ const badgeClassName = computed(() => {
       [`${cls}-not-a-wrapper`]: !slots.default,
       [`${cls}-rtl`]: direction === 'rtl',
     },
-    props.className,
-    props.rootClassName,
     contextClassName,
     mergedClassNames.value.root,
   ];
 });
 
+// 根 `class` / `style` 是 Vue 原生 attrs（`class` 经此透传到根 span）。
 const rootAttrs = computed(() => ({ ...attrs }));
 
 // count 为 VNode 时（antd 的 displayNode）：合并 offset/indicator 样式后传给 ScrollNumber。

@@ -35,11 +35,11 @@ export interface BadgeProps {
   prefixCls?: string;
   /** ScrollNumber 的类名前缀（一般不用传）。 */
   scrollNumberPrefixCls?: string;
-  /** 根元素类名（antd 的 `className`）。 */
-  className?: string;
-  /** 根元素类名（antd 的 `rootClassName`，语义同 className —— Vue 无 hash 包裹层之分）。 */
-  rootClassName?: string;
-  /** 根元素内联样式。 */
+  /**
+   * 内联样式。⚠️ **条件目标**：状态徽标（`status`）落**根元素**，其余落**角标**（indicator）
+   * —— 上游 `useSemanticRootStyle(style, isStatusBadge ? 'root' : 'indicator')` 的行为，
+   * 属独立目标，因此保留为专用 prop；根节点的类名请用 Vue 原生 `class`。
+   */
   style?: CSSProperties;
   /** 显示的数字或节点。`null` / 不传 = 无 count。 */
   count?: VNodeChild;
@@ -88,11 +88,9 @@ export interface RibbonSemanticStyles {
 export interface RibbonProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-ribbon`。 */
   prefixCls?: string;
-  /** 包裹层类名（antd 的 `rootClassName`）。 */
-  rootClassName?: string;
-  /** 丝带本体类名。 */
+  /** 丝带本体类名（⚠️ 落**丝带本体**，不是包裹层 —— 独立目标）。 */
   className?: string;
-  /** 包裹层内联样式。 */
+  /** 丝带本体内联样式（⚠️ 同上是**独立目标**，落 indicator）。 */
   style?: CSSProperties;
   /** 颜色。预设键走类名，其它色串走内联样式（丝带本体 + 角标）。 */
   color?: PresetColorKey | (string & {});
