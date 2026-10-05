@@ -51,9 +51,7 @@ subtitle: 锚点
 | classNames | 语义化类名（`root` / `item` / `itemTitle` / `indicator`），支持函数形态 | `AnchorSemanticClassNames \| ((info) => …)` | — | ✅（`anchor.classNames`） |
 | styles | 语义化样式（四个槽），支持函数形态 | `AnchorSemanticStyles \| ((info) => …)` | — | ✅（`anchor.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-anchor` | × |
-| className | 根元素类名 | `string` | — | × |
-| rootClassName | 也落在根元素上 | `string` | — | × |
-| style | 根元素内联样式。**会覆盖算出来的 `max-height`** | `CSSProperties` | — | × |
+| class / style | **根节点（内层 wrapper div）原生 attrs**（不是 Props）；调用方 `style` 覆盖算出来的 `max-height` | `string \| array \| object` / `CSSProperties` | — | × |
 
 #### AnchorLinkItemProps
 

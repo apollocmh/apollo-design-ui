@@ -52,7 +52,13 @@ export interface AnchorLinkBaseProps {
   target?: string | undefined;
   /** 显示的文本。 */
   title: VNodeChild;
-  /** 落在 `.{prefixCls}-link` 上。 */
+  /**
+   * 落在 `.{prefixCls}-link` 上。
+   *
+   * ⚠️ 这是**共享基类型**的字段：既用于 `items[]` 的数据项（不是组件 prop），
+   *    也被 `Anchor.Link` 组件继承。⇒ 不按「根别名」处理，保留。
+   *    （根节点的类名请用 Vue 原生 `class`。）
+   */
   className?: string | undefined;
   /** 单条覆盖 `Anchor` 的 `replace`。 */
   replace?: boolean | undefined;
@@ -105,9 +111,6 @@ export interface AnchorProps {
   // ---------------------------------------------------------------- 样式
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-anchor`。 */
   prefixCls?: string | undefined;
-  className?: string | undefined;
-  rootClassName?: string | undefined;
-  style?: Record<string, string | number> | undefined;
   classNames?:
     | AnchorSemanticClassNames
     | ((info: { props: AnchorProps }) => AnchorSemanticClassNames)

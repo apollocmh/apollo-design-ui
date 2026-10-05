@@ -36,6 +36,7 @@ import {
   computed,
   defineComponent,
   h,
+  mergeProps,
   onMounted,
   onScopeDispose,
   onUpdated,
@@ -99,14 +100,11 @@ interface Section {
 
 export const Anchor = defineComponent({
   name: 'AAnchor',
+  // 根 `class` / `style` 是 Vue 原生 attrs：显式绑到内层 wrapper div（不是外层 Affix），
+  // 与 antd 把 `{...restProps}` 放在内层 div 一致 ⇒ 必须关掉自动透传。
+  inheritAttrs: false,
   props: {
     prefixCls: { type: String as PropType<string | undefined>, default: undefined },
-    className: { type: String as PropType<string | undefined>, default: undefined },
-    rootClassName: { type: String as PropType<string | undefined>, default: undefined },
-    style: {
-      type: Object as PropType<Record<string, string | number> | undefined>,
-      default: undefined,
-    },
     classNames: {
       type: [Object, Function] as PropType<AnchorProps['classNames']>,
       default: undefined,
@@ -136,7 +134,7 @@ export const Anchor = defineComponent({
     /** 当前锚点变化（与 `onChange` prop 是同一条通路 —— emit 自己会调它）。 */
     change: (_currentActiveLink: string) => true,
   },
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, attrs }) {
     // ======================= Warning =======================
     const devWarning = useDevWarning('Anchor');
     watchEffect(() => {
@@ -369,12 +367,7 @@ export const Anchor = defineComponent({
       AnchorSemanticStyles
     >(
       [() => context.classNames, () => props.classNames],
-      [
-        () => context.styles,
-        () => semanticRootStyle(context.style),
-        () => props.styles,
-        () => semanticRootStyle(props.style),
-      ],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
       semanticProps,
     );
 
@@ -382,11 +375,9 @@ export const Anchor = defineComponent({
     const wrapperClass = computed(() => [
       // 本仓无 hashId（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D3）
       `${prefixCls.value}-css-var`,
-      props.rootClassName,
       `${prefixCls.value}-wrapper`,
       anchorDirection.value === 'horizontal' ? `${prefixCls.value}-wrapper-horizontal` : undefined,
       context.direction === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
-      props.className,
       context.className,
       mergedClassNames.value.root,
     ]);
@@ -583,7 +574,10 @@ export const Anchor = defineComponent({
     return () => {
       const anchorContent = h(
         'div',
-        { ref: wrapperRef, class: wrapperClass.value, style: wrapperStyle.value },
+        mergeProps(
+          { ref: wrapperRef, class: wrapperClass.value, style: wrapperStyle.value },
+          attrs,
+        ),
         [
           h('div', { class: anchorClass.value }, [
             h('span', {

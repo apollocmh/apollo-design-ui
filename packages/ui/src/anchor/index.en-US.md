@@ -52,9 +52,7 @@ See [`demo/`](./demo) (**8**, mirroring antd's user-visible demos).
 | classNames | Semantic class names (`root` / `item` / `itemTitle` / `indicator`); the function form is supported | `AnchorSemanticClassNames \| ((info) => …)` | — | ✅ (`anchor.classNames`) |
 | styles | Semantic styles (four slots); the function form is supported | `AnchorSemanticStyles \| ((info) => …)` | — | ✅ (`anchor.styles`) |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-anchor` | × |
-| className | Root element class name | `string` | — | × |
-| rootClassName | Also applied to the root element | `string` | — | × |
-| style | Root element inline style. **Overrides the computed `max-height`** | `CSSProperties` | — | × |
+| class / style | **Native attrs on the root (inner wrapper div)**, not Props; caller `style` overrides the computed `max-height` | `string \| array \| object` / `CSSProperties` | — | × |
 
 #### AnchorLinkItemProps
 
