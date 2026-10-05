@@ -55,6 +55,7 @@
 import { isRenderable, toArray, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
+  mergeProps,
   onBeforeUpdate,
   ref,
   useAttrs,
@@ -98,12 +99,9 @@ const props = withDefaults(defineProps<CardProps>(), {
   bordered: undefined,
   headStyle: undefined,
   bodyStyle: undefined,
-  style: undefined,
   loading: undefined,
   hoverable: undefined,
   id: undefined,
-  className: undefined,
-  rootClassName: undefined,
   size: undefined,
   type: undefined,
   cover: undefined,
@@ -207,12 +205,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   CardSemanticStyles
 >(
   [() => contextClassNames, () => props.classNames],
-  [
-    () => contextStyles,
-    () => semanticRootStyle(contextStyle),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
   semanticProps,
 );
 
@@ -375,18 +368,18 @@ function rootClass(): unknown[] {
       [`${cls}-type-${props.type}`]: !!props.type,
       [`${cls}-rtl`]: direction.value === 'rtl',
     },
-    props.className,
-    props.rootClassName,
     `${cls}-css-var`,
     mergedClassNames.value.root,
   ];
 }
 
-/** 根属性：`{...divProps}` + 语义化 `styles.root`（后者已含 `props.style`）。 */
-const rootAttrs = computed(() => ({
-  ...attrs,
-  ...styleAttrs(mergedStyles.value.root),
-}));
+/**
+ * 根属性：语义化 `styles.root` + `{...divProps}`。
+ *
+ * ⚠️ 根 `class` / `style` 是 Vue 原生 attrs：`attrs` 排在语义根样式**之后**
+ *    ⇒ 调用方同名样式优先（与原先 `props.style` 参与合并的优先级一致）。
+ */
+const rootAttrs = computed(() => mergeProps(styleAttrs(mergedStyles.value.root), attrs));
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });

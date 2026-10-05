@@ -19,7 +19,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { VNodeChild } from 'vue';
 import type { SizeType } from '../../config-provider/size-context';
 import type { TabsExtraContent, TabsProps } from '../../tabs/interface';
 import type { Card, CardGrid, CardMeta } from '../index';
@@ -47,15 +47,38 @@ describe('Card · Props 类型', () => {
     expectTypeOf<CardProps['prefixCls']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<CardProps['title']>().toEqualTypeOf<VNodeChild>();
     expectTypeOf<CardProps['extra']>().toEqualTypeOf<VNodeChild>();
-    expectTypeOf<CardProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
     expectTypeOf<CardProps['loading']>().toEqualTypeOf<boolean | undefined>();
     expectTypeOf<CardProps['hoverable']>().toEqualTypeOf<boolean | undefined>();
     expectTypeOf<CardProps['id']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<CardProps['className']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<CardProps['rootClassName']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<CardProps['cover']>().toEqualTypeOf<VNodeChild>();
     expectTypeOf<CardProps['actions']>().toEqualTypeOf<VNodeChild[] | undefined>();
     expectTypeOf<CardProps['variant']>().toEqualTypeOf<'borderless' | 'outlined' | undefined>();
+  });
+
+  it('根 `class` / `style` 是 Vue 原生 attrs，不重复声明为 Props', () => {
+    type CardPublic = InstanceType<typeof Card>['$props'];
+    type GridPublic = InstanceType<typeof CardGrid>['$props'];
+    type MetaPublic = InstanceType<typeof CardMeta>['$props'];
+
+    const nativeAttrs: CardPublic = { class: ['c', { active: true }], style: { color: 'red' } };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<CardPublic>();
+    expectTypeOf<{ class: string }>().toMatchTypeOf<GridPublic>();
+    expectTypeOf<{ class: string }>().toMatchTypeOf<MetaPublic>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badCardClassName: CardProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` 不是 Card 的 prop
+      const badCardRoot: CardProps = { rootClassName: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 CardProps
+      const badCardStyle: CardProps = { style: { color: 'red' } };
+      // @ts-expect-error CardGridProps 不再声明 className
+      const badGrid: CardGridProps = { className: 'legacy' };
+      // @ts-expect-error CardMetaProps 不再声明 style
+      const badMeta: CardMetaProps = { style: { color: 'red' } };
+      return [badCardClassName, badCardRoot, badCardStyle, badGrid, badMeta];
+    };
+    void _never;
   });
 
   it("🚨 `CardSize` 含 `'default'`（已废弃但**未移除**）+ 排除 `'large'`", () => {

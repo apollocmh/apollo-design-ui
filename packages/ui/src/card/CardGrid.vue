@@ -13,9 +13,11 @@
  * ── 平台差异（PLATFORM）──────────────────────────────────────────────────────
  *
  * 上游的 `extends React.HTMLAttributes<HTMLDivElement>` + `{...rest}` 在 Vue 侧
- * 由 `inheritAttrs` 承担：`class` / `data-*` / `onXxx` 等未声明属性自动落到根 `<div>`。
- * `style` 是**声明过的 prop**（上游也声明了），所以显式绑定 —— 否则它会因为
- * `inheritAttrs` 的 class/style 合并语义而与 attrs 里的 `style` 重复。
+ * 由 `inheritAttrs` 承担：`class` / `style` / `data-*` / `onXxx` 等未声明属性
+ * 自动落到根 `<div>`（单根组件，无需显式绑定）。
+ *
+ * ⚠️ `<template>` 里**不能**留注释 —— 注释也是一个根节点，会把组件变成**多根**，
+ *    Vue 随即关闭 attrs 自动透传（`class` / `style` 静默丢失）。注释写在这里。
  */
 
 import { computed, ref, type VNodeChild } from 'vue';
@@ -34,9 +36,7 @@ defineSlots<{ default?: () => VNodeChild }>();
  */
 const props = withDefaults(defineProps<CardGridProps>(), {
   prefixCls: undefined,
-  className: undefined,
   hoverable: true,
-  style: undefined,
 });
 
 const { getPrefixCls } = useComponentConfig('card');
@@ -46,7 +46,6 @@ const prefixCls = computed(() => getPrefixCls('card', props.prefixCls));
 /** `clsx(`${prefix}-grid`, className, { [`${prefix}-grid-hoverable`]: hoverable })`。 */
 const classString = computed(() => [
   `${prefixCls.value}-grid`,
-  props.className,
   { [`${prefixCls.value}-grid-hoverable`]: props.hoverable },
 ]);
 
@@ -55,5 +54,5 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="classString" :style="props.style"><slot /></div>
+  <div ref="rootRef" :class="classString"><slot /></div>
 </template>

@@ -193,18 +193,12 @@ export interface CardProps {
   headStyle?: CSSProperties;
   /** @deprecated 请用 `styles.body`。 */
   bodyStyle?: CSSProperties;
-  /** 根元素的内联样式。参与语义化合并，且**覆盖** `styles.root`。 */
-  style?: CSSProperties;
   /** 加载中（内容替换成 `Skeleton`）。 */
   loading?: boolean;
   /** 悬浮时的阴影与手型光标（根类名 `-hoverable`）。 */
   hoverable?: boolean;
   /** 根元素 id。 */
   id?: string;
-  /** 落在根元素上（在 ConfigProvider 的 `className` **之后**）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
   /** 尺寸。`'small'` 落 `-small` 类名；`'default'` 已废弃。 */
   size?: CardSize;
   /** 卡片类型。目前只有 `'inner'`（落 `-type-inner`）。 */
@@ -259,12 +253,8 @@ export type CardSlot = () => VNodeChild;
 export interface CardGridProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根元素上。 */
-  className?: string;
   /** 悬浮高亮。**默认 `true`**。 */
   hoverable?: boolean;
-  /** 根元素的内联样式。 */
-  style?: CSSProperties;
 }
 
 /** `Card.Grid` 暴露的实例。 */
@@ -287,10 +277,6 @@ export type CardGridSlot = () => VNodeChild;
 export interface CardMetaProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 根元素的内联样式。参与语义化合并，且**覆盖** `styles.root`。 */
-  style?: CSSProperties;
-  /** 落在根元素上（在 ConfigProvider 的 `className` **之前**）。 */
-  className?: string;
   /** 头像。 */
   avatar?: VNodeChild;
   /** 标题。 */

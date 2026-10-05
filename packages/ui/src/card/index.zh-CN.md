@@ -56,8 +56,7 @@ subtitle: 卡片
 | classNames | 语义化类名（7 槽），支持函数形态 | `CardSemanticClassNames \| ((info) => …)` | — | ✅（`card.classNames`） |
 | styles | 语义化样式（7 槽），支持函数形态 | `CardSemanticStyles \| ((info) => …)` | — | ✅（`card.styles`） |
 | prefixCls | 类名前缀（**根前缀本身**，不是后缀） | `string` | 从 ConfigProvider 取，兜底 `apollo-card` | × |
-| className | 根元素类名 | `string` | — | × |
-| rootClassName | 也落在根元素上 | `string` | — | × |
+| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — | × |
 | style | 根元素内联样式（**覆盖** `styles.root`） | `CSSProperties` | — | × |
 | id | 根元素 id | `string` | — | × |
 | bordered | ⚠️ **已废弃**，用 `variant` | `boolean` | — | × |
@@ -89,7 +88,7 @@ subtitle: 卡片
 | classNames | 语义化类名（`root` / `section` / `avatar` / `title` / `description`） | `CardMetaSemanticClassNames \| ((info) => …)` | — |
 | styles | 语义化样式（同上五个槽） | `CardMetaSemanticStyles \| ((info) => …)` | — |
 | prefixCls | 类名前缀（**card 的前缀**：传 `x` ⇒ `x-meta`） | `string` | 兜底 `apollo-card` |
-| className / style | 根元素 | `string` / `CSSProperties` | — |
+| class / style | 根元素原生 attrs | `string` / `CSSProperties` | — |
 
 > ⚠️ `avatar` 在 `section` **外面**，`title` / `description` 在 **里面**；
 > 根上**没有** `-rtl`（`Card.Meta` 不读 `direction`）。
@@ -100,7 +99,7 @@ subtitle: 卡片
 |---|---|---|---|
 | hoverable | 悬浮高亮。⚠️ **默认 `true`**（与 `Card` 的默认 `false` 不同） | `boolean` | `true` |
 | prefixCls | 类名前缀（**card 的前缀**：传 `x` ⇒ `x-grid`） | `string` | 兜底 `apollo-card` |
-| className / style | 根元素 | `string` / `CSSProperties` | — |
+| class / style | 根元素原生 attrs | `string` / `CSSProperties` | — |
 
 ### 实例方法（ref）
 

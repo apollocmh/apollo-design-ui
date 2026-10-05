@@ -59,8 +59,7 @@ in a zero-runtime architecture) · `no-body-debug` / `button-alignment-debug`
 | classNames | Semantic class names (7 slots), function form supported | `CardSemanticClassNames \| ((info) => …)` | — | ✅ (`card.classNames`) |
 | styles | Semantic styles (7 slots), function form supported | `CardSemanticStyles \| ((info) => …)` | — | ✅ (`card.styles`) |
 | prefixCls | Class prefix (**the root prefix itself**, not a suffix) | `string` | from ConfigProvider, falls back to `apollo-card` | × |
-| className | Root class name | `string` | — | × |
-| rootClassName | Also applied to the root element | `string` | — | × |
+| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | — | × |
 | style | Root inline style (**overrides** `styles.root`) | `CSSProperties` | — | × |
 | id | Root element id | `string` | — | × |
 | bordered | ⚠️ **Deprecated**, use `variant` | `boolean` | — | × |
@@ -92,7 +91,7 @@ in a zero-runtime architecture) · `no-body-debug` / `button-alignment-debug`
 | classNames | Semantic class names (`root` / `section` / `avatar` / `title` / `description`) | `CardMetaSemanticClassNames \| ((info) => …)` | — |
 | styles | Semantic styles (same five slots) | `CardMetaSemanticStyles \| ((info) => …)` | — |
 | prefixCls | Class prefix (**the *card* prefix**: `x` ⇒ `x-meta`) | `string` | falls back to `apollo-card` |
-| className / style | Root element | `string` / `CSSProperties` | — |
+| class / style | Native root attrs | `string` / `CSSProperties` | — |
 
 > ⚠️ `avatar` sits **outside** `section`; `title` / `description` sit **inside** it.
 > The root has **no** `-rtl` (`Card.Meta` does not read `direction`).
@@ -103,7 +102,7 @@ in a zero-runtime architecture) · `no-body-debug` / `button-alignment-debug`
 |---|---|---|---|
 | hoverable | Hover highlight. ⚠️ **Defaults to `true`** (unlike `Card`'s `false`) | `boolean` | `true` |
 | prefixCls | Class prefix (**the *card* prefix**: `x` ⇒ `x-grid`) | `string` | falls back to `apollo-card` |
-| className / style | Root element | `string` / `CSSProperties` | — |
+| class / style | Native root attrs | `string` / `CSSProperties` | — |
 
 ### Ref
 

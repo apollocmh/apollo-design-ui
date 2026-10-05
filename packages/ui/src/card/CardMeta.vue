@@ -23,7 +23,7 @@
  */
 
 import { isRenderable } from '@apollo-design/utils';
-import { computed, ref, useAttrs, type VNodeChild, watchEffect } from 'vue';
+import { computed, mergeProps, ref, useAttrs, type VNodeChild, watchEffect } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 // ⚠️ `NodeRenderer` 是**平台原语**（`.vue` 模板没有「渲染一个 VNode 变量」的语法），
@@ -85,12 +85,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   CardMetaSemanticStyles
 >(
   [() => contextClassNames, () => props.classNames],
-  [
-    () => contextStyles,
-    () => semanticRootStyle(contextStyle),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
   semanticProps,
 );
 
@@ -100,7 +95,6 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
 
 const rootClassNames = computed(() => [
   metaPrefixCls.value,
-  props.className,
   contextClassName,
   mergedClassNames.value.root,
 ]);
@@ -135,11 +129,8 @@ const hasDescription = computed(() => isRenderable(props.description));
 /** `titleDom || descriptionDom` ⇒ 有 section。 */
 const hasSection = computed(() => hasTitle.value || hasDescription.value);
 
-/** 根属性：`{...restProps}` + 语义化 `styles.root`（后者已含 `props.style`）。 */
-const rootAttrs = computed(() => ({
-  ...attrs,
-  ...styleAttrs(mergedStyles.value.root),
-}));
+/** 根属性：语义化 `styles.root` + `{...restProps}`（调用方原生 attrs 优先）。 */
+const rootAttrs = computed(() => mergeProps(styleAttrs(mergedStyles.value.root), attrs));
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });

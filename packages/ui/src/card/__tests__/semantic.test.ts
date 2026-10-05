@@ -233,7 +233,7 @@ const specs: Record<
     slots: {
       default: () => [
         h(CardMeta, {
-          className: 'meta-cls',
+          class: 'meta-cls',
           style: { color: 'red' },
           title: 'T',
           'data-testid': 'meta',
@@ -321,8 +321,9 @@ const specs: Record<
     props: { ...BP, title: 'T', 'data-testid': 'card', 'aria-label': '卡片' },
     slots: { default: body },
   },
+  // React 的 className + rootClassName 在 Vue 侧是同一个原生 `class`。
   'card:className': {
-    props: { ...BP, className: 'user-cls', rootClassName: 'root-cls' },
+    props: { ...BP, class: ['user-cls', 'root-cls'] },
     slots: { default: body },
   },
 };

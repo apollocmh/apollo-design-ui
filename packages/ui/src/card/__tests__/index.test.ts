@@ -61,11 +61,10 @@ describe('Card · 根元素与四段结构', () => {
     w.unmount();
   });
 
-  it('`id` / `className` / `rootClassName` / 未声明 attrs 全部落到根', () => {
+  it('`id` / 原生 `class` / 未声明 attrs 全部落到根', () => {
     const w = mountCard({
       id: 'c1',
-      className: 'from-class-name',
-      rootClassName: 'from-root',
+      class: ['from-class-name', 'from-root'],
       'data-testid': 'probe',
     });
 
@@ -449,9 +448,9 @@ describe('Card.Meta', () => {
     expect(w.element.classList.contains('x-meta')).toBe(true);
   });
 
-  it('根类名顺序是 `metaPrefixCls` → `className` → context → 语义化 root', () => {
+  it('根类名顺序是 `metaPrefixCls` → context → 语义化 root（调用方 class 由 attrs 合并）', () => {
     const w = mount(CardMeta, {
-      props: { className: 'user-cls', classNames: { root: 'sem-cls' } },
+      props: { class: 'user-cls', classNames: { root: 'sem-cls' } },
     });
     const cls = w.element.classList;
     expect(cls.contains(`${P}-meta`)).toBe(true);
@@ -496,9 +495,9 @@ describe('Card.Grid', () => {
     expect(w.element.classList.contains(`${P}-grid-hoverable`)).toBe(false);
   });
 
-  it('`className` / `style` / attrs 落到根；`prefixCls` 生效', () => {
+  it('原生 `class` / `style` / attrs 落到根；`prefixCls` 生效', () => {
     const w = mount(CardGrid, {
-      props: { prefixCls: 'x', className: 'user-cls', style: { width: '25%' } },
+      props: { prefixCls: 'x', class: 'user-cls', style: { width: '25%' } },
       attrs: { 'data-testid': 'g' },
     });
 
