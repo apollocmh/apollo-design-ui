@@ -52,13 +52,30 @@ describe('Avatar · Props 类型', () => {
       boolean | 'true' | 'false' | undefined
     >();
     expectTypeOf<AvatarProps['icon']>().toEqualTypeOf<VNodeChild>();
-    expectTypeOf<AvatarProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
-    expectTypeOf<AvatarProps['className']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<AvatarProps['rootClassName']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<AvatarProps['alt']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<AvatarProps['crossOrigin']>().toEqualTypeOf<
       '' | 'anonymous' | 'use-credentials' | undefined
     >();
+  });
+
+  it('根 `class` / `style` 是 Vue 原生 attrs，不重复声明为 AvatarProps', () => {
+    type PublicProps = InstanceType<typeof Avatar>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-avatar', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: AvatarProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` 不是 Avatar 的 prop
+      const badRootClassName: AvatarProps = { rootClassName: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 AvatarProps
+      const badStyle: AvatarProps = { style: { color: 'red' } };
+      return [badClassName, badRootClassName, badStyle];
+    };
+    void _never;
   });
 
   it('🚨 `AvatarSize` 是四个成员的联合（含 `number` 与响应式表）', () => {

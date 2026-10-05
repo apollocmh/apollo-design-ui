@@ -33,6 +33,7 @@ import {
   computed,
   h,
   inject,
+  mergeProps,
   onBeforeUpdate,
   provide,
   reactive,
@@ -53,9 +54,6 @@ defineOptions({ name: 'AAvatarGroup', inheritAttrs: false });
 
 const props = withDefaults(defineProps<AvatarGroupProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
-  style: undefined,
   maxCount: undefined,
   maxStyle: undefined,
   maxPopoverPlacement: undefined,
@@ -196,18 +194,17 @@ const groupClass = computed(() => [
   groupPrefixCls.value,
   { [`${groupPrefixCls.value}-rtl`]: direction.value === 'rtl' },
   `${prefixCls.value}-css-var`,
-  props.className,
-  props.rootClassName,
 ]);
 
-const rootAttrs = computed(() => ({ ...attrs, style: props.style }));
+// 根 `class` / `style` 是 Vue 原生 attrs，用 mergeProps 合并（调用方值优先）。
+const rootAttrs = computed(() => mergeProps({ class: groupClass.value }, attrs));
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="groupClass" v-bind="rootAttrs">
+  <div ref="rootRef" v-bind="rootAttrs">
     <NodeRenderer :node="groupChildren()" />
   </div>
 </template>

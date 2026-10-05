@@ -51,7 +51,17 @@ import {
   useDevWarning,
   useResizeObserver,
 } from '@apollo-design/utils';
-import { computed, inject, onMounted, ref, useAttrs, useSlots, type VNodeChild, watch } from 'vue';
+import {
+  computed,
+  inject,
+  mergeProps,
+  onMounted,
+  ref,
+  useAttrs,
+  useSlots,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { type Breakpoint, responsiveArray } from '../_internal/responsive-observer';
 import { toCssSize } from '../_internal/to-css-size';
 import { useComponentConfig } from '../config-provider/context';
@@ -77,9 +87,6 @@ const props = withDefaults(defineProps<AvatarProps>(), {
   srcSet: undefined,
   draggable: undefined,
   icon: undefined,
-  style: undefined,
-  className: undefined,
-  rootClassName: undefined,
   alt: undefined,
   crossOrigin: undefined,
   onClick: undefined,
@@ -284,8 +291,6 @@ const classString = computed(() => [
     [`${prefixCls.value}-icon`]: !!props.icon,
   },
   `${prefixCls.value}-css-var`,
-  props.className,
-  props.rootClassName,
 ]);
 
 // ---------------------------------------------------------------------------
@@ -328,17 +333,23 @@ devWarning(
 // 根属性 / 暴露
 // ---------------------------------------------------------------------------
 
-/** `{...others}` + 四层 style 合并（顺序即契约，见文件头）。 */
+/**
+ * `{...others}` + 四层 style 合并（顺序即契约，见文件头）。
+ *
+ * ⚠️ 根 `class` / `style` 是 Vue 原生 attrs：调用方 `style` 经 `$attrs` 进来，
+ *    排在四层内部样式**之后** ⇒ 同名键优先（与原先 `props.style` 的位置一致）。
+ */
 function rootAttrs(): Record<string, unknown> {
-  return {
-    ...attrs,
-    style: {
-      ...sizeStyle.value,
-      ...responsiveSizeStyle(),
-      ...contextStyle,
-      ...props.style,
+  return mergeProps(
+    {
+      style: {
+        ...sizeStyle.value,
+        ...responsiveSizeStyle(),
+        ...contextStyle,
+      },
     },
-  };
+    attrs,
+  );
 }
 
 defineExpose({ nativeElement: rootRef });

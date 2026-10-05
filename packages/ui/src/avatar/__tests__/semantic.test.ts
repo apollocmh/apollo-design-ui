@@ -109,8 +109,9 @@ const specs: Record<
   },
   'avatar:draggable-string': { props: { src: 'x.png', draggable: 'false' } },
 
+  // React 的 className + rootClassName 在 Vue 侧是同一个原生 `class`。
   'avatar:className': {
-    props: { className: 'user-cls', rootClassName: 'root-cls' },
+    props: { class: ['user-cls', 'root-cls'] },
     slots: { default: () => 'U' },
   },
   'avatar:style': {
@@ -164,7 +165,7 @@ const specs: Record<
   'avatar:group-className': {
     props: {},
     group: true,
-    groupProps: { className: 'g-cls', rootClassName: 'g-root' },
+    groupProps: { class: ['g-cls', 'g-root'] },
     slots: { default: () => kids(2) },
   },
 };

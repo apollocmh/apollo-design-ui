@@ -47,7 +47,8 @@ subtitle: 头像
 | crossOrigin | `<img>` 的 `crossorigin` | `'' \| 'anonymous' \| 'use-credentials'` | — |
 | onClick | 点击回调（**prop**，不是事件） | `(e?: MouseEvent) => void` | — |
 | onError | 图片加载失败回调。⚠️ **返回 `false` 阻止内置回退**（判据 `!== false`） | `() => boolean` | — |
-| prefixCls / className / rootClassName / style | 常规落点 | | — |
+| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取 |
+| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — |
 
 > ⚠️ **渲染优先级是五路互斥**：字符串 `src` → `src` 是 VNode → `icon` → 字符（带缩放）→ 字符（首帧 `opacity:0`）。
 

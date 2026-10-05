@@ -47,7 +47,8 @@ See [`demo/`](./demo) (**9**, matching antd's user-visible demos).
 | crossOrigin | `<img>` `crossorigin` | `'' \| 'anonymous' \| 'use-credentials'` | — |
 | onClick | Click callback. ⚠️ This is a **prop**, not an event | `(e?: MouseEvent) => void` | — |
 | onError | Image error callback. ⚠️ **Return `false` to prevent the built-in fallback** (check is `!== false`) | `() => boolean` | — |
-| prefixCls / className / rootClassName / style | Usual targets | | — |
+| prefixCls | Class name prefix | `string` | from ConfigProvider |
+| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | — |
 
 > ⚠️ **Rendering priority is five-way exclusive**: string `src` → `src` is a VNode → `icon` → characters (scaled) → characters (first frame, `opacity:0`).
 

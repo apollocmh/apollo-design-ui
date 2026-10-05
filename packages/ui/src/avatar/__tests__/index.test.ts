@@ -73,10 +73,15 @@ describe('Avatar · 根元素与类名', () => {
     expect(numeric.element.classList.contains(`${P}-sm`)).toBe(false);
   });
 
-  it('`className` / `rootClassName` / attrs 落到根', () => {
-    const w = mountAvatar({ className: 'user-cls', rootClassName: 'root-cls' });
+  it('原生 `class`（字符串/数组/对象）/ `style` / attrs 落到根', () => {
+    const w = mountAvatar({ class: ['user-cls', { active: true }] });
     expect(w.element.classList.contains('user-cls')).toBe(true);
-    expect(w.element.classList.contains('root-cls')).toBe(true);
+    expect(w.element.classList.contains('active')).toBe(true);
+
+    const withStyle = mountAvatar({ style: { backgroundColor: 'red' }, size: 40 });
+    // 调用方 style 覆盖内部 sizeStyle（同名键优先）
+    expect((withStyle.element as HTMLElement).style.backgroundColor).toBe('red');
+    expect((withStyle.element as HTMLElement).style.width).toBe('40px');
 
     const withAttrs = mount(Avatar, { attrs: { 'data-testid': 'av' } });
     expect(withAttrs.element.getAttribute('data-testid')).toBe('av');

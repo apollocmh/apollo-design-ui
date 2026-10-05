@@ -99,12 +99,6 @@ export interface AvatarProps {
   draggable?: boolean | 'true' | 'false';
   /** 图标。 */
   icon?: VNodeChild;
-  /** 根 `<span>` 的内联样式（**覆盖** context 的 style）。 */
-  style?: CSSProperties;
-  /** 落在根元素上（在 ConfigProvider 的 `className` **之后**）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
   /** `<img>` 的 `alt`。 */
   alt?: string;
   /** `<img>` 的 `crossorigin`。 */
@@ -161,12 +155,6 @@ export interface AvatarGroupMax {
 export interface AvatarGroupProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根 `<div>` 上。 */
-  className?: string;
-  /** 也落在根 `<div>` 上。 */
-  rootClassName?: string;
-  /** 根 `<div>` 的内联样式。 */
-  style?: CSSProperties;
   /** @deprecated 请用 `max={{ count }}`。 */
   maxCount?: number;
   /** @deprecated 请用 `max={{ style }}`。 */
