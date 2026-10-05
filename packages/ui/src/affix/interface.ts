@@ -14,6 +14,10 @@ export type AffixTarget = () => HTMLElement | Window | null;
 /** 占位/固钉层的定位计算用的矩形快照。 */
 export type { AffixRect } from './utils';
 
+/**
+ * 组件逻辑 Props。根节点的 `class` / `style` 是 Vue 原生 fallthrough attrs，
+ * 由 Affix 透传至外层占位测量节点，不重复声明 `className` / `rootClassName` / `style`。
+ */
 export interface AffixProps {
   /** 距离窗口（或 `target`）顶部达到指定偏移后固钉。 */
   offsetTop?: number;
@@ -29,16 +33,6 @@ export interface AffixProps {
    */
   /** 类名前缀。 */
   prefixCls?: string;
-  /** 根元素（占位测量层）类名。 */
-  className?: string;
-  /** 根元素类名（优先级最高）。 */
-  rootClassName?: string;
-  /** 根元素（占位测量层）样式。 */
-  style?: CSSProperties;
-  /**
-   * ⚠️ **`children` 不在 Props 里**（Vue 侧是默认插槽，规则 C19）。
-   *    本文件不声明它，`defineSlots` 负责。
-   */
 }
 
 /** `ref` 暴露面 —— 与 antd 一致，只有 `updatePosition`。 */
@@ -47,7 +41,10 @@ export interface AffixRef {
   updatePosition: () => void;
 }
 
-/** ConfigProvider 里 `components.affix` 的形状。 */
+/**
+ * ConfigProvider `components.affix` 配置对象的形状。
+ * 此处的 `className` / `style` 是配置 schema，不是 `<Affix>` 组件 Props。
+ */
 export interface AffixConfig {
   className?: string;
   style?: CSSProperties;

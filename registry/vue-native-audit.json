@@ -1,0 +1,3015 @@
+{
+  "schemaVersion": 1,
+  "title": "Vue Native Audit Registry",
+  "target": "@apollo-design/ui / Vue 3.5+ native component library",
+  "antdVersion": "6.6.4",
+  "overallStatus": "in_progress",
+  "phase": "audit-affix-native-api-verified",
+  "startedAt": "2026-10-04T17:37:01.098Z",
+  "updatedAt": "2026-10-05T06:48:39.414Z",
+  "currentBatch": "AUDIT-01",
+  "scope": {
+    "componentsSource": "registry/components.json",
+    "componentCount": 72,
+    "componentDirectories": "packages/ui/src/<component>",
+    "sharedSurfaces": {
+      "ui-public-entry": "packages/ui/src",
+      "ui-internal": "packages/ui/src/_internal",
+      "utils": "packages/utils/src",
+      "a11y": "packages/a11y/src",
+      "form-core": "packages/form-core/src",
+      "motion": "packages/motion/src",
+      "overlay": "packages/overlay/src",
+      "picker": "packages/picker/src",
+      "portal": "packages/portal/src",
+      "position": "packages/position/src",
+      "virtual-list": "packages/virtual-list/src",
+      "test-utils": "packages/test-utils/src"
+    },
+    "sourceExtensions": [
+      ".vue",
+      ".ts",
+      ".tsx"
+    ],
+    "exclusions": [
+      "__tests__ and demo implementation details are tracked by counts; tests/docs are changed when findings require contract changes"
+    ]
+  },
+  "summary": {
+    "components": {
+      "total": 72,
+      "todo": 46,
+      "analyzing": 8,
+      "refactoring": 0,
+      "testing": 0,
+      "done": 18,
+      "blocked": 0
+    },
+    "sharedSurfaces": {
+      "total": 12,
+      "todo": 12,
+      "done": 0
+    },
+    "productionSourceFiles": 955,
+    "reviewedProductionSourceFiles": 142,
+    "issues": {
+      "total": 10,
+      "bySeverity": {
+        "P0": 1,
+        "P1": 3,
+        "P2": 6,
+        "P3": 0
+      },
+      "byStatus": {
+        "open": 7,
+        "in_progress": 0,
+        "fixed": 3,
+        "deferred": 0,
+        "wont_fix": 0
+      }
+    }
+  },
+  "statusLegend": {
+    "auditStatus": [
+      "todo",
+      "analyzing",
+      "refactoring",
+      "testing",
+      "done",
+      "blocked"
+    ],
+    "issueStatus": [
+      "open",
+      "in_progress",
+      "fixed",
+      "deferred",
+      "wont_fix"
+    ],
+    "severity": [
+      "P0",
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "categories": [
+      "react-api",
+      "slot",
+      "emits",
+      "attrs",
+      "class-style",
+      "renderer",
+      "react-implementation-migration",
+      "vue-composition-api",
+      "type-design",
+      "duplicate-implementation",
+      "test",
+      "architecture"
+    ]
+  },
+  "components": {
+    "empty": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/empty/components/artwork.ts",
+        "packages/ui/src/empty/components/Images.ts",
+        "packages/ui/src/empty/components/NodeRenderer.ts",
+        "packages/ui/src/empty/Empty.vue",
+        "packages/ui/src/empty/index.ts",
+        "packages/ui/src/empty/interface.ts",
+        "packages/ui/src/empty/style/index.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/empty/components/NodeRenderer.ts",
+        "packages/ui/src/empty/interface.ts",
+        "packages/ui/src/empty/Empty.vue"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 6,
+      "docFiles": [
+        "packages/ui/src/empty/README.md",
+        "packages/ui/src/empty/index.en-US.md",
+        "packages/ui/src/empty/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-02",
+      "notes": [],
+      "reviewedFileCount": 3
+    },
+    "config-provider": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/config-provider/ConfigProvider.ts",
+        "packages/ui/src/config-provider/context.ts",
+        "packages/ui/src/config-provider/default-render-empty.ts",
+        "packages/ui/src/config-provider/disabled-context.ts",
+        "packages/ui/src/config-provider/global-config.ts",
+        "packages/ui/src/config-provider/hooks/use-theme.ts",
+        "packages/ui/src/config-provider/index.ts",
+        "packages/ui/src/config-provider/interface.ts",
+        "packages/ui/src/config-provider/size-context.ts",
+        "packages/ui/src/config-provider/use-config.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 5,
+      "docFiles": [
+        "packages/ui/src/config-provider/README.md",
+        "packages/ui/src/config-provider/index.en-US.md",
+        "packages/ui/src/config-provider/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-DIVIDER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 2
+    },
+    "button": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/button/Button.vue",
+        "packages/ui/src/button/index.ts",
+        "packages/ui/src/button/interface.ts",
+        "packages/ui/src/button/style/index.ts",
+        "packages/ui/src/button/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/button/Button.vue",
+        "packages/ui/src/button/index.ts",
+        "packages/ui/src/button/interface.ts",
+        "packages/ui/src/button/style/index.ts",
+        "packages/ui/src/button/style/token.ts"
+      ],
+      "testFileCount": 7,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/button/README.md",
+        "packages/ui/src/button/index.en-US.md",
+        "packages/ui/src/button/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 5
+    },
+    "space": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/space/Addon.vue",
+        "packages/ui/src/space/Compact.ts",
+        "packages/ui/src/space/Compact.vue",
+        "packages/ui/src/space/context.ts",
+        "packages/ui/src/space/gapSize.ts",
+        "packages/ui/src/space/index.ts",
+        "packages/ui/src/space/interface.ts",
+        "packages/ui/src/space/Item.ts",
+        "packages/ui/src/space/node.ts",
+        "packages/ui/src/space/Space.vue",
+        "packages/ui/src/space/statusUtils.ts",
+        "packages/ui/src/space/style/index.ts",
+        "packages/ui/src/space/style/token.ts",
+        "packages/ui/src/space/useOrientation.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 16,
+      "docFiles": [
+        "packages/ui/src/space/README.md",
+        "packages/ui/src/space/index.en-US.md",
+        "packages/ui/src/space/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "flex": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/flex/Flex.vue",
+        "packages/ui/src/flex/index.ts",
+        "packages/ui/src/flex/interface.ts",
+        "packages/ui/src/flex/style/index.ts",
+        "packages/ui/src/flex/style/token.ts",
+        "packages/ui/src/flex/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 6,
+      "docFiles": [
+        "packages/ui/src/flex/PLAN.md",
+        "packages/ui/src/flex/README.md",
+        "packages/ui/src/flex/index.en-US.md",
+        "packages/ui/src/flex/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "grid": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/grid/Col.vue",
+        "packages/ui/src/grid/hooks/use-breakpoint.ts",
+        "packages/ui/src/grid/hooks/use-gutter.ts",
+        "packages/ui/src/grid/index.ts",
+        "packages/ui/src/grid/interface.ts",
+        "packages/ui/src/grid/Row.vue",
+        "packages/ui/src/grid/RowContext.ts",
+        "packages/ui/src/grid/style/index.ts",
+        "packages/ui/src/grid/style/token.ts",
+        "packages/ui/src/grid/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 13,
+      "docFiles": [
+        "packages/ui/src/grid/PLAN.md",
+        "packages/ui/src/grid/README.md",
+        "packages/ui/src/grid/index.en-US.md",
+        "packages/ui/src/grid/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-AVATAR-01"
+      ],
+      "batch": null,
+      "notes": []
+    },
+    "divider": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/divider/Divider.vue",
+        "packages/ui/src/divider/index.ts",
+        "packages/ui/src/divider/interface.ts",
+        "packages/ui/src/divider/style/index.ts",
+        "packages/ui/src/divider/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/divider/Divider.vue",
+        "packages/ui/src/divider/index.ts",
+        "packages/ui/src/divider/interface.ts",
+        "packages/ui/src/divider/style/index.ts",
+        "packages/ui/src/divider/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 9,
+      "docFiles": [
+        "packages/ui/src/divider/README.md",
+        "packages/ui/src/divider/index.en-US.md",
+        "packages/ui/src/divider/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-DIVIDER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 5
+    },
+    "typography": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/typography/_util/copy.ts",
+        "packages/ui/src/typography/_util/nodes.ts",
+        "packages/ui/src/typography/_util/util.ts",
+        "packages/ui/src/typography/Base.ts",
+        "packages/ui/src/typography/CopyBtn.ts",
+        "packages/ui/src/typography/Editable.ts",
+        "packages/ui/src/typography/Ellipsis.ts",
+        "packages/ui/src/typography/EllipsisTooltip.ts",
+        "packages/ui/src/typography/hooks/use-copy-click.ts",
+        "packages/ui/src/typography/hooks/use-merged-config.ts",
+        "packages/ui/src/typography/hooks/use-tooltip-props.ts",
+        "packages/ui/src/typography/hooks/use-typography-semantic.ts",
+        "packages/ui/src/typography/index.ts",
+        "packages/ui/src/typography/interface.ts",
+        "packages/ui/src/typography/InternalTypography.vue",
+        "packages/ui/src/typography/Link.vue",
+        "packages/ui/src/typography/Paragraph.vue",
+        "packages/ui/src/typography/style/index.ts",
+        "packages/ui/src/typography/style/token.ts",
+        "packages/ui/src/typography/Text.vue",
+        "packages/ui/src/typography/Title.vue",
+        "packages/ui/src/typography/Typography.vue"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 7,
+      "docFiles": [
+        "packages/ui/src/typography/README.md",
+        "packages/ui/src/typography/index.en-US.md",
+        "packages/ui/src/typography/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "layout": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/layout/context.ts",
+        "packages/ui/src/layout/hooks/use-has-sider.ts",
+        "packages/ui/src/layout/index.ts",
+        "packages/ui/src/layout/interface.ts",
+        "packages/ui/src/layout/Layout.ts",
+        "packages/ui/src/layout/Sider.ts",
+        "packages/ui/src/layout/style/index.ts",
+        "packages/ui/src/layout/style/sider.ts",
+        "packages/ui/src/layout/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 11,
+      "docFiles": [
+        "packages/ui/src/layout/PLAN.md",
+        "packages/ui/src/layout/README.md",
+        "packages/ui/src/layout/index.en-US.md",
+        "packages/ui/src/layout/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "tag": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/tag/CheckableTag.ts",
+        "packages/ui/src/tag/CheckableTagGroup.ts",
+        "packages/ui/src/tag/hooks/use-color.ts",
+        "packages/ui/src/tag/index.ts",
+        "packages/ui/src/tag/interface.ts",
+        "packages/ui/src/tag/style/index.ts",
+        "packages/ui/src/tag/style/token.ts",
+        "packages/ui/src/tag/Tag.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 11,
+      "docFiles": [
+        "packages/ui/src/tag/PLAN.md",
+        "packages/ui/src/tag/README.md",
+        "packages/ui/src/tag/index.en-US.md",
+        "packages/ui/src/tag/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "badge": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/badge/Badge.vue",
+        "packages/ui/src/badge/index.ts",
+        "packages/ui/src/badge/interface.ts",
+        "packages/ui/src/badge/Ribbon.vue",
+        "packages/ui/src/badge/ScrollNumber.ts",
+        "packages/ui/src/badge/SingleNumber.vue",
+        "packages/ui/src/badge/style/index.ts",
+        "packages/ui/src/badge/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/badge/Badge.vue",
+        "packages/ui/src/badge/index.ts",
+        "packages/ui/src/badge/interface.ts",
+        "packages/ui/src/badge/Ribbon.vue",
+        "packages/ui/src/badge/ScrollNumber.ts",
+        "packages/ui/src/badge/SingleNumber.vue",
+        "packages/ui/src/badge/style/index.ts",
+        "packages/ui/src/badge/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/badge/PLAN.md",
+        "packages/ui/src/badge/README.md",
+        "packages/ui/src/badge/index.en-US.md",
+        "packages/ui/src/badge/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 8
+    },
+    "alert": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/alert/Alert.ts",
+        "packages/ui/src/alert/ErrorBoundary.ts",
+        "packages/ui/src/alert/index.ts",
+        "packages/ui/src/alert/interface.ts",
+        "packages/ui/src/alert/style/index.ts",
+        "packages/ui/src/alert/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/alert/Alert.ts",
+        "packages/ui/src/alert/ErrorBoundary.ts",
+        "packages/ui/src/alert/index.ts",
+        "packages/ui/src/alert/interface.ts",
+        "packages/ui/src/alert/style/index.ts",
+        "packages/ui/src/alert/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 13,
+      "docFiles": [
+        "packages/ui/src/alert/PLAN.md",
+        "packages/ui/src/alert/README.md",
+        "packages/ui/src/alert/index.en-US.md",
+        "packages/ui/src/alert/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 6
+    },
+    "skeleton": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/skeleton/Avatar.vue",
+        "packages/ui/src/skeleton/Button.vue",
+        "packages/ui/src/skeleton/Element.vue",
+        "packages/ui/src/skeleton/Image.vue",
+        "packages/ui/src/skeleton/index.ts",
+        "packages/ui/src/skeleton/Input.vue",
+        "packages/ui/src/skeleton/interface.ts",
+        "packages/ui/src/skeleton/Node.vue",
+        "packages/ui/src/skeleton/Paragraph.vue",
+        "packages/ui/src/skeleton/Skeleton.vue",
+        "packages/ui/src/skeleton/style/index.ts",
+        "packages/ui/src/skeleton/style/token.ts",
+        "packages/ui/src/skeleton/styleLength.ts",
+        "packages/ui/src/skeleton/Title.vue"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 4,
+      "demoFileCount": 5,
+      "docFiles": [
+        "packages/ui/src/skeleton/README.md",
+        "packages/ui/src/skeleton/index.en-US.md",
+        "packages/ui/src/skeleton/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "spin": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/spin/components/Indicator.ts",
+        "packages/ui/src/spin/components/Looper.ts",
+        "packages/ui/src/spin/components/NodeRenderer.ts",
+        "packages/ui/src/spin/components/Progress.ts",
+        "packages/ui/src/spin/defaultIndicator.ts",
+        "packages/ui/src/spin/index.ts",
+        "packages/ui/src/spin/interface.ts",
+        "packages/ui/src/spin/Spin.vue",
+        "packages/ui/src/spin/style/index.ts",
+        "packages/ui/src/spin/style/token.ts",
+        "packages/ui/src/spin/usePercent.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/spin/components/NodeRenderer.ts",
+        "packages/ui/src/spin/interface.ts",
+        "packages/ui/src/spin/Spin.vue"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 9,
+      "docFiles": [
+        "packages/ui/src/spin/README.md",
+        "packages/ui/src/spin/index.en-US.md",
+        "packages/ui/src/spin/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-02",
+      "notes": [],
+      "reviewedFileCount": 3
+    },
+    "result": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/result/components/NoFound.ts",
+        "packages/ui/src/result/components/ServerError.ts",
+        "packages/ui/src/result/components/Unauthorized.ts",
+        "packages/ui/src/result/index.ts",
+        "packages/ui/src/result/interface.ts",
+        "packages/ui/src/result/maps.ts",
+        "packages/ui/src/result/Result.vue",
+        "packages/ui/src/result/style/index.ts",
+        "packages/ui/src/result/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 9,
+      "docFiles": [
+        "packages/ui/src/result/PLAN.md",
+        "packages/ui/src/result/README.md",
+        "packages/ui/src/result/index.en-US.md",
+        "packages/ui/src/result/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "batch": null,
+      "notes": []
+    },
+    "watermark": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/watermark/context.ts",
+        "packages/ui/src/watermark/index.ts",
+        "packages/ui/src/watermark/interface.ts",
+        "packages/ui/src/watermark/use-clips.ts",
+        "packages/ui/src/watermark/use-raf-debounce.ts",
+        "packages/ui/src/watermark/use-singleton-cache.ts",
+        "packages/ui/src/watermark/use-watermark.ts",
+        "packages/ui/src/watermark/utils.ts",
+        "packages/ui/src/watermark/Watermark.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 4,
+      "docFiles": [
+        "packages/ui/src/watermark/PLAN.md",
+        "packages/ui/src/watermark/README.md",
+        "packages/ui/src/watermark/index.en-US.md",
+        "packages/ui/src/watermark/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "border-beam": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/border-beam/BorderBeam.ts",
+        "packages/ui/src/border-beam/index.ts",
+        "packages/ui/src/border-beam/interface.ts",
+        "packages/ui/src/border-beam/style/index.ts",
+        "packages/ui/src/border-beam/style/token.ts",
+        "packages/ui/src/border-beam/util.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/border-beam/BorderBeam.ts",
+        "packages/ui/src/border-beam/index.ts",
+        "packages/ui/src/border-beam/interface.ts",
+        "packages/ui/src/border-beam/style/index.ts",
+        "packages/ui/src/border-beam/style/token.ts",
+        "packages/ui/src/border-beam/util.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 8,
+      "docFiles": [
+        "packages/ui/src/border-beam/PLAN.md",
+        "packages/ui/src/border-beam/README.md",
+        "packages/ui/src/border-beam/index.en-US.md",
+        "packages/ui/src/border-beam/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-ATTRS-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 6
+    },
+    "statistic": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/statistic/Countdown.ts",
+        "packages/ui/src/statistic/index.ts",
+        "packages/ui/src/statistic/interface.ts",
+        "packages/ui/src/statistic/Number.ts",
+        "packages/ui/src/statistic/Statistic.ts",
+        "packages/ui/src/statistic/style/index.ts",
+        "packages/ui/src/statistic/style/token.ts",
+        "packages/ui/src/statistic/Timer.ts",
+        "packages/ui/src/statistic/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 6,
+      "docFiles": [
+        "packages/ui/src/statistic/PLAN.md",
+        "packages/ui/src/statistic/README.md",
+        "packages/ui/src/statistic/index.en-US.md",
+        "packages/ui/src/statistic/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "affix": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/affix/Affix.vue",
+        "packages/ui/src/affix/index.ts",
+        "packages/ui/src/affix/interface.ts",
+        "packages/ui/src/affix/style/index.ts",
+        "packages/ui/src/affix/style/token.ts",
+        "packages/ui/src/affix/utils.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/affix/Affix.vue",
+        "packages/ui/src/affix/index.ts",
+        "packages/ui/src/affix/interface.ts",
+        "packages/ui/src/affix/style/index.ts",
+        "packages/ui/src/affix/style/token.ts",
+        "packages/ui/src/affix/utils.ts"
+      ],
+      "testFileCount": 4,
+      "demoFileCount": 5,
+      "docFiles": [
+        "packages/ui/src/affix/README.md",
+        "packages/ui/src/affix/index.en-US.md",
+        "packages/ui/src/affix/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-AFFIX-01",
+        "VNA-AFFIX-02",
+        "VNA-AFFIX-03"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [
+        "单组件示范批次已完成：VNA-AFFIX-01/02 修复并完成聚焦测试/全仓类型/目标格式检查；不代表其余组件或共享面的审计完成。",
+        "Vue root class/style contract corrected after user review: native attrs only; AffixConfig fields retained as Provider schema. Verified unit, DOM, types, lint:types, and Biome."
+      ],
+      "reviewedFileCount": 6
+    },
+    "back-top": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/back-top/BackTop.ts",
+        "packages/ui/src/back-top/index.ts",
+        "packages/ui/src/back-top/interface.ts",
+        "packages/ui/src/back-top/style/index.ts",
+        "packages/ui/src/back-top/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/back-top/BackTop.ts",
+        "packages/ui/src/back-top/index.ts",
+        "packages/ui/src/back-top/interface.ts",
+        "packages/ui/src/back-top/style/index.ts",
+        "packages/ui/src/back-top/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 1,
+      "docFiles": [
+        "packages/ui/src/back-top/PLAN.md",
+        "packages/ui/src/back-top/README.md",
+        "packages/ui/src/back-top/index.en-US.md",
+        "packages/ui/src/back-top/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-ATTRS-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 5
+    },
+    "checkbox": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/checkbox/Checkbox.ts",
+        "packages/ui/src/checkbox/context.ts",
+        "packages/ui/src/checkbox/Group.ts",
+        "packages/ui/src/checkbox/index.ts",
+        "packages/ui/src/checkbox/interface.ts",
+        "packages/ui/src/checkbox/style/index.ts",
+        "packages/ui/src/checkbox/style/token.ts",
+        "packages/ui/src/checkbox/use-bubble-lock.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 8,
+      "docFiles": [
+        "packages/ui/src/checkbox/PLAN.md",
+        "packages/ui/src/checkbox/README.md",
+        "packages/ui/src/checkbox/index.en-US.md",
+        "packages/ui/src/checkbox/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 3
+    },
+    "radio": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/radio/context.ts",
+        "packages/ui/src/radio/Group.ts",
+        "packages/ui/src/radio/index.ts",
+        "packages/ui/src/radio/interface.ts",
+        "packages/ui/src/radio/Radio.ts",
+        "packages/ui/src/radio/RadioButton.ts",
+        "packages/ui/src/radio/style/index.ts",
+        "packages/ui/src/radio/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 14,
+      "docFiles": [
+        "packages/ui/src/radio/PLAN.md",
+        "packages/ui/src/radio/README.md",
+        "packages/ui/src/radio/index.en-US.md",
+        "packages/ui/src/radio/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "switch": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/switch/index.ts",
+        "packages/ui/src/switch/interface.ts",
+        "packages/ui/src/switch/style/index.ts",
+        "packages/ui/src/switch/style/token.ts",
+        "packages/ui/src/switch/Switch.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 7,
+      "docFiles": [
+        "packages/ui/src/switch/PLAN.md",
+        "packages/ui/src/switch/README.md",
+        "packages/ui/src/switch/index.en-US.md",
+        "packages/ui/src/switch/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "input": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/input/engine/BaseInput.ts",
+        "packages/ui/src/input/engine/calculate-node-height.ts",
+        "packages/ui/src/input/engine/common-utils.ts",
+        "packages/ui/src/input/engine/Input.ts",
+        "packages/ui/src/input/engine/TextArea.ts",
+        "packages/ui/src/input/engine/use-count.ts",
+        "packages/ui/src/input/Group.ts",
+        "packages/ui/src/input/hooks/use-remove-password-timeout.ts",
+        "packages/ui/src/input/index.ts",
+        "packages/ui/src/input/Input.ts",
+        "packages/ui/src/input/interface.ts",
+        "packages/ui/src/input/Password.ts",
+        "packages/ui/src/input/style/index.ts",
+        "packages/ui/src/input/style/token.ts",
+        "packages/ui/src/input/TextArea.ts",
+        "packages/ui/src/input/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 8,
+      "docFiles": [
+        "packages/ui/src/input/PLAN.md",
+        "packages/ui/src/input/README.md",
+        "packages/ui/src/input/index.en-US.md",
+        "packages/ui/src/input/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "input-number": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/input-number/engine/decimal.ts",
+        "packages/ui/src/input-number/engine/number-util.ts",
+        "packages/ui/src/input-number/engine/StepHandler.ts",
+        "packages/ui/src/input-number/engine/use-cursor.ts",
+        "packages/ui/src/input-number/index.ts",
+        "packages/ui/src/input-number/InputNumber.ts",
+        "packages/ui/src/input-number/interface.ts",
+        "packages/ui/src/input-number/style/index.ts",
+        "packages/ui/src/input-number/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/input-number/PLAN.md",
+        "packages/ui/src/input-number/README.md",
+        "packages/ui/src/input-number/index.en-US.md",
+        "packages/ui/src/input-number/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "listy": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/listy/engine/index.ts",
+        "packages/ui/src/listy/index.ts",
+        "packages/ui/src/listy/interface.ts",
+        "packages/ui/src/listy/Listy.ts",
+        "packages/ui/src/listy/style/index.ts",
+        "packages/ui/src/listy/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 4,
+      "docFiles": [
+        "packages/ui/src/listy/PLAN.md",
+        "packages/ui/src/listy/README.md",
+        "packages/ui/src/listy/index.en-US.md",
+        "packages/ui/src/listy/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "qr-code": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/qr-code/engine/qrcodegen.d.ts",
+        "packages/ui/src/qr-code/engine/utils.ts",
+        "packages/ui/src/qr-code/index.ts",
+        "packages/ui/src/qr-code/interface.ts",
+        "packages/ui/src/qr-code/QrCode.ts",
+        "packages/ui/src/qr-code/style/index.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 4,
+      "docFiles": [
+        "packages/ui/src/qr-code/PLAN.md",
+        "packages/ui/src/qr-code/README.md",
+        "packages/ui/src/qr-code/index.en-US.md",
+        "packages/ui/src/qr-code/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "upload": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/upload/Dragger.ts",
+        "packages/ui/src/upload/engine/AjaxUploader.ts",
+        "packages/ui/src/upload/engine/attr-accept.ts",
+        "packages/ui/src/upload/engine/request.ts",
+        "packages/ui/src/upload/engine/traverse-file-tree.ts",
+        "packages/ui/src/upload/engine/uid.ts",
+        "packages/ui/src/upload/index.ts",
+        "packages/ui/src/upload/interface.ts",
+        "packages/ui/src/upload/style/index.ts",
+        "packages/ui/src/upload/style/token.ts",
+        "packages/ui/src/upload/Upload.ts",
+        "packages/ui/src/upload/UploadList/ListItem.ts",
+        "packages/ui/src/upload/UploadList/MiniProgress.ts",
+        "packages/ui/src/upload/UploadList.ts",
+        "packages/ui/src/upload/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 3,
+      "docFiles": [
+        "packages/ui/src/upload/PLAN.md",
+        "packages/ui/src/upload/README.md",
+        "packages/ui/src/upload/index.en-US.md",
+        "packages/ui/src/upload/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "splitter": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/splitter/hooks/sizeUtil.ts",
+        "packages/ui/src/splitter/hooks/useItems.ts",
+        "packages/ui/src/splitter/hooks/useResizable.ts",
+        "packages/ui/src/splitter/hooks/useResize.ts",
+        "packages/ui/src/splitter/hooks/useSizes.ts",
+        "packages/ui/src/splitter/index.ts",
+        "packages/ui/src/splitter/interface.ts",
+        "packages/ui/src/splitter/Panel.ts",
+        "packages/ui/src/splitter/SplitBar.ts",
+        "packages/ui/src/splitter/Splitter.ts",
+        "packages/ui/src/splitter/style/index.ts",
+        "packages/ui/src/splitter/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 4,
+      "docFiles": [
+        "packages/ui/src/splitter/PLAN.md",
+        "packages/ui/src/splitter/README.md",
+        "packages/ui/src/splitter/index.en-US.md",
+        "packages/ui/src/splitter/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "carousel": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/carousel/Carousel.ts",
+        "packages/ui/src/carousel/engine.ts",
+        "packages/ui/src/carousel/index.ts",
+        "packages/ui/src/carousel/interface.ts",
+        "packages/ui/src/carousel/style/index.ts",
+        "packages/ui/src/carousel/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/carousel/Carousel.ts",
+        "packages/ui/src/carousel/engine.ts",
+        "packages/ui/src/carousel/index.ts",
+        "packages/ui/src/carousel/interface.ts",
+        "packages/ui/src/carousel/style/index.ts",
+        "packages/ui/src/carousel/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 7,
+      "docFiles": [
+        "packages/ui/src/carousel/README.md",
+        "packages/ui/src/carousel/index.en-US.md",
+        "packages/ui/src/carousel/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 6
+    },
+    "collapse": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/collapse/Collapse.ts",
+        "packages/ui/src/collapse/engine/index.ts",
+        "packages/ui/src/collapse/index.ts",
+        "packages/ui/src/collapse/interface.ts",
+        "packages/ui/src/collapse/Panel.ts",
+        "packages/ui/src/collapse/style/index.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 4,
+      "docFiles": [
+        "packages/ui/src/collapse/PLAN.md",
+        "packages/ui/src/collapse/README.md",
+        "packages/ui/src/collapse/index.en-US.md",
+        "packages/ui/src/collapse/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-API-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 3
+    },
+    "descriptions": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/descriptions/Descriptions.ts",
+        "packages/ui/src/descriptions/DescriptionsItem.ts",
+        "packages/ui/src/descriptions/index.ts",
+        "packages/ui/src/descriptions/interface.ts",
+        "packages/ui/src/descriptions/items.ts",
+        "packages/ui/src/descriptions/style/index.ts",
+        "packages/ui/src/descriptions/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/descriptions/Descriptions.ts",
+        "packages/ui/src/descriptions/DescriptionsItem.ts",
+        "packages/ui/src/descriptions/index.ts",
+        "packages/ui/src/descriptions/interface.ts",
+        "packages/ui/src/descriptions/items.ts",
+        "packages/ui/src/descriptions/style/index.ts",
+        "packages/ui/src/descriptions/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 6,
+      "docFiles": [
+        "packages/ui/src/descriptions/PLAN.md",
+        "packages/ui/src/descriptions/README.md",
+        "packages/ui/src/descriptions/index.en-US.md",
+        "packages/ui/src/descriptions/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-API-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 7
+    },
+    "tooltip": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/tooltip/index.ts",
+        "packages/ui/src/tooltip/interface.ts",
+        "packages/ui/src/tooltip/PurePanel.ts",
+        "packages/ui/src/tooltip/style/index.ts",
+        "packages/ui/src/tooltip/style/token.ts",
+        "packages/ui/src/tooltip/Tooltip.ts",
+        "packages/ui/src/tooltip/use-merged-arrow.ts",
+        "packages/ui/src/tooltip/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 14,
+      "docFiles": [
+        "packages/ui/src/tooltip/PLAN.md",
+        "packages/ui/src/tooltip/README.md",
+        "packages/ui/src/tooltip/index.en-US.md",
+        "packages/ui/src/tooltip/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "popover": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/popover/index.ts",
+        "packages/ui/src/popover/interface.ts",
+        "packages/ui/src/popover/Popover.ts",
+        "packages/ui/src/popover/PurePanel.ts",
+        "packages/ui/src/popover/style/index.ts",
+        "packages/ui/src/popover/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/popover/PLAN.md",
+        "packages/ui/src/popover/README.md",
+        "packages/ui/src/popover/index.en-US.md",
+        "packages/ui/src/popover/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "menu": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/menu/context.ts",
+        "packages/ui/src/menu/engine/key-records.ts",
+        "packages/ui/src/menu/engine/parse-items.ts",
+        "packages/ui/src/menu/engine/use-accessibility.ts",
+        "packages/ui/src/menu/index.ts",
+        "packages/ui/src/menu/interface.ts",
+        "packages/ui/src/menu/Menu.ts",
+        "packages/ui/src/menu/MenuDivider.ts",
+        "packages/ui/src/menu/MenuItem.ts",
+        "packages/ui/src/menu/MenuItemGroup.ts",
+        "packages/ui/src/menu/style/index.ts",
+        "packages/ui/src/menu/style/token.ts",
+        "packages/ui/src/menu/SubMenu.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 8,
+      "demoFileCount": 13,
+      "docFiles": [
+        "packages/ui/src/menu/PLAN.md",
+        "packages/ui/src/menu/README.md",
+        "packages/ui/src/menu/index.en-US.md",
+        "packages/ui/src/menu/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "dropdown": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/dropdown/Dropdown.ts",
+        "packages/ui/src/dropdown/DropdownButton.ts",
+        "packages/ui/src/dropdown/index.ts",
+        "packages/ui/src/dropdown/interface.ts",
+        "packages/ui/src/dropdown/PurePanel.ts",
+        "packages/ui/src/dropdown/style/index.ts",
+        "packages/ui/src/dropdown/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/dropdown/Dropdown.ts",
+        "packages/ui/src/dropdown/DropdownButton.ts",
+        "packages/ui/src/dropdown/index.ts",
+        "packages/ui/src/dropdown/interface.ts",
+        "packages/ui/src/dropdown/PurePanel.ts",
+        "packages/ui/src/dropdown/style/index.ts",
+        "packages/ui/src/dropdown/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 19,
+      "docFiles": [
+        "packages/ui/src/dropdown/PLAN.md",
+        "packages/ui/src/dropdown/README.md",
+        "packages/ui/src/dropdown/index.en-US.md",
+        "packages/ui/src/dropdown/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-DROPDOWN-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 7
+    },
+    "modal": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/modal/components/ActionButton.ts",
+        "packages/ui/src/modal/components/ConfirmCancelBtn.ts",
+        "packages/ui/src/modal/components/ConfirmOkBtn.ts",
+        "packages/ui/src/modal/components/NormalCancelBtn.ts",
+        "packages/ui/src/modal/components/NormalOkBtn.ts",
+        "packages/ui/src/modal/confirm.ts",
+        "packages/ui/src/modal/ConfirmDialog.ts",
+        "packages/ui/src/modal/context.ts",
+        "packages/ui/src/modal/destroyFns.ts",
+        "packages/ui/src/modal/engine/Content.ts",
+        "packages/ui/src/modal/engine/context.ts",
+        "packages/ui/src/modal/engine/Dialog.ts",
+        "packages/ui/src/modal/engine/DialogWrap.ts",
+        "packages/ui/src/modal/engine/index.ts",
+        "packages/ui/src/modal/engine/Mask.ts",
+        "packages/ui/src/modal/engine/MemoChildren.ts",
+        "packages/ui/src/modal/engine/Panel.ts",
+        "packages/ui/src/modal/engine/util.ts",
+        "packages/ui/src/modal/index.ts",
+        "packages/ui/src/modal/interface.ts",
+        "packages/ui/src/modal/Modal.ts",
+        "packages/ui/src/modal/ModalPanel.ts",
+        "packages/ui/src/modal/PurePanel.ts",
+        "packages/ui/src/modal/style/index.ts",
+        "packages/ui/src/modal/style/token.ts",
+        "packages/ui/src/modal/useModal.ts",
+        "packages/ui/src/modal/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 23,
+      "docFiles": [
+        "packages/ui/src/modal/PLAN.md",
+        "packages/ui/src/modal/README.md",
+        "packages/ui/src/modal/index.en-US.md",
+        "packages/ui/src/modal/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "drawer": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/drawer/Drawer.ts",
+        "packages/ui/src/drawer/DrawerPanel.ts",
+        "packages/ui/src/drawer/engine/context.ts",
+        "packages/ui/src/drawer/engine/Drawer.ts",
+        "packages/ui/src/drawer/engine/DrawerPopup.ts",
+        "packages/ui/src/drawer/engine/DrawerSection.ts",
+        "packages/ui/src/drawer/engine/index.ts",
+        "packages/ui/src/drawer/engine/useDrag.ts",
+        "packages/ui/src/drawer/engine/useFocusable.ts",
+        "packages/ui/src/drawer/engine/util.ts",
+        "packages/ui/src/drawer/index.ts",
+        "packages/ui/src/drawer/interface.ts",
+        "packages/ui/src/drawer/PurePanel.ts",
+        "packages/ui/src/drawer/style/index.ts",
+        "packages/ui/src/drawer/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 18,
+      "docFiles": [
+        "packages/ui/src/drawer/PLAN.md",
+        "packages/ui/src/drawer/README.md",
+        "packages/ui/src/drawer/index.en-US.md",
+        "packages/ui/src/drawer/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-API-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 6
+    },
+    "message": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/message/icon.ts",
+        "packages/ui/src/message/index.ts",
+        "packages/ui/src/message/interface.ts",
+        "packages/ui/src/message/PureList.ts",
+        "packages/ui/src/message/PurePanel.ts",
+        "packages/ui/src/message/style/index.ts",
+        "packages/ui/src/message/style/token.ts",
+        "packages/ui/src/message/useMessage.ts",
+        "packages/ui/src/message/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 11,
+      "docFiles": [
+        "packages/ui/src/message/PLAN.md",
+        "packages/ui/src/message/README.md",
+        "packages/ui/src/message/index.en-US.md",
+        "packages/ui/src/message/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "notification": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/notification/engine/hooks/useClosable.ts",
+        "packages/ui/src/notification/engine/hooks/useListPosition.ts",
+        "packages/ui/src/notification/engine/hooks/useNoticeTimer.ts",
+        "packages/ui/src/notification/engine/hooks/useSizes.ts",
+        "packages/ui/src/notification/engine/hooks/useStack.ts",
+        "packages/ui/src/notification/engine/index.ts",
+        "packages/ui/src/notification/engine/interface.ts",
+        "packages/ui/src/notification/engine/Notice.ts",
+        "packages/ui/src/notification/engine/NoticeList.ts",
+        "packages/ui/src/notification/engine/NoticeListContent.ts",
+        "packages/ui/src/notification/engine/NotificationProvider.ts",
+        "packages/ui/src/notification/engine/Notifications.ts",
+        "packages/ui/src/notification/engine/Progress.ts",
+        "packages/ui/src/notification/engine/useNotification.ts",
+        "packages/ui/src/notification/engine/util.ts",
+        "packages/ui/src/notification/hooks/useStackConfig.ts",
+        "packages/ui/src/notification/icon.ts",
+        "packages/ui/src/notification/index.ts",
+        "packages/ui/src/notification/interface.ts",
+        "packages/ui/src/notification/PureList.ts",
+        "packages/ui/src/notification/PurePanel.ts",
+        "packages/ui/src/notification/style/index.ts",
+        "packages/ui/src/notification/style/token.ts",
+        "packages/ui/src/notification/useNotification.ts",
+        "packages/ui/src/notification/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 14,
+      "docFiles": [
+        "packages/ui/src/notification/PLAN.md",
+        "packages/ui/src/notification/README.md",
+        "packages/ui/src/notification/index.en-US.md",
+        "packages/ui/src/notification/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "app": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/app/App.ts",
+        "packages/ui/src/app/index.ts",
+        "packages/ui/src/app/interface.ts",
+        "packages/ui/src/app/style/index.ts",
+        "packages/ui/src/app/style/token.ts",
+        "packages/ui/src/app/useApp.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/app/App.ts",
+        "packages/ui/src/app/index.ts",
+        "packages/ui/src/app/interface.ts",
+        "packages/ui/src/app/style/index.ts",
+        "packages/ui/src/app/style/token.ts",
+        "packages/ui/src/app/useApp.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 2,
+      "docFiles": [
+        "packages/ui/src/app/PLAN.md",
+        "packages/ui/src/app/README.md",
+        "packages/ui/src/app/index.en-US.md",
+        "packages/ui/src/app/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-API-01",
+        "VNA-ATTRS-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 6
+    },
+    "image": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/image/context.ts",
+        "packages/ui/src/image/hooks/useImageTransform.ts",
+        "packages/ui/src/image/hooks/useStatus.ts",
+        "packages/ui/src/image/Image.ts",
+        "packages/ui/src/image/index.ts",
+        "packages/ui/src/image/interface.ts",
+        "packages/ui/src/image/Preview.ts",
+        "packages/ui/src/image/PreviewGroup.ts",
+        "packages/ui/src/image/Progress.ts",
+        "packages/ui/src/image/style/index.ts",
+        "packages/ui/src/image/style/token.ts",
+        "packages/ui/src/image/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 14,
+      "docFiles": [
+        "packages/ui/src/image/PLAN.md",
+        "packages/ui/src/image/README.md",
+        "packages/ui/src/image/index.en-US.md",
+        "packages/ui/src/image/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "select": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/select/engine/BaseSelect.ts",
+        "packages/ui/src/select/engine/context.ts",
+        "packages/ui/src/select/engine/keyUtil.ts",
+        "packages/ui/src/select/engine/OptionList.ts",
+        "packages/ui/src/select/engine/SearchInput.ts",
+        "packages/ui/src/select/engine/Selector.ts",
+        "packages/ui/src/select/engine/TransBtn.ts",
+        "packages/ui/src/select/engine/useOpen.ts",
+        "packages/ui/src/select/engine/useOptions.ts",
+        "packages/ui/src/select/engine/valueUtil.ts",
+        "packages/ui/src/select/index.ts",
+        "packages/ui/src/select/interface.ts",
+        "packages/ui/src/select/OptGroup.ts",
+        "packages/ui/src/select/Option.ts",
+        "packages/ui/src/select/PurePanel.ts",
+        "packages/ui/src/select/Select.ts",
+        "packages/ui/src/select/style/index.ts",
+        "packages/ui/src/select/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 35,
+      "docFiles": [
+        "packages/ui/src/select/PLAN.md",
+        "packages/ui/src/select/README.md",
+        "packages/ui/src/select/index.en-US.md",
+        "packages/ui/src/select/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "auto-complete": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/auto-complete/AutoComplete.ts",
+        "packages/ui/src/auto-complete/index.ts",
+        "packages/ui/src/auto-complete/interface.ts",
+        "packages/ui/src/auto-complete/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/auto-complete/AutoComplete.ts",
+        "packages/ui/src/auto-complete/index.ts",
+        "packages/ui/src/auto-complete/interface.ts",
+        "packages/ui/src/auto-complete/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 10,
+      "docFiles": [
+        "packages/ui/src/auto-complete/PLAN.md",
+        "packages/ui/src/auto-complete/README.md",
+        "packages/ui/src/auto-complete/index.en-US.md",
+        "packages/ui/src/auto-complete/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 4
+    },
+    "cascader": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/cascader/Cascader.ts",
+        "packages/ui/src/cascader/context.ts",
+        "packages/ui/src/cascader/engine/tree.ts",
+        "packages/ui/src/cascader/hooks/search.ts",
+        "packages/ui/src/cascader/hooks/values.ts",
+        "packages/ui/src/cascader/index.ts",
+        "packages/ui/src/cascader/OptionList.ts",
+        "packages/ui/src/cascader/Panel.ts",
+        "packages/ui/src/cascader/style/index.ts",
+        "packages/ui/src/cascader/style/token.ts",
+        "packages/ui/src/cascader/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 9,
+      "demoFileCount": 5,
+      "docFiles": [
+        "packages/ui/src/cascader/README.md",
+        "packages/ui/src/cascader/index.en-US.md",
+        "packages/ui/src/cascader/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 1
+    },
+    "tree": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/tree/DirectoryTree.ts",
+        "packages/ui/src/tree/DropIndicator.ts",
+        "packages/ui/src/tree/Indent.ts",
+        "packages/ui/src/tree/index.ts",
+        "packages/ui/src/tree/interface.ts",
+        "packages/ui/src/tree/MotionTreeNode.ts",
+        "packages/ui/src/tree/NodeList.ts",
+        "packages/ui/src/tree/style/index.ts",
+        "packages/ui/src/tree/style/token.ts",
+        "packages/ui/src/tree/Tree.ts",
+        "packages/ui/src/tree/TreeContext.ts",
+        "packages/ui/src/tree/TreeNode.ts",
+        "packages/ui/src/tree/use-tree.ts",
+        "packages/ui/src/tree/utils/conductUtil.ts",
+        "packages/ui/src/tree/utils/dictUtil.ts",
+        "packages/ui/src/tree/utils/diffUtil.ts",
+        "packages/ui/src/tree/utils/iconUtil.ts",
+        "packages/ui/src/tree/utils/index.ts",
+        "packages/ui/src/tree/utils/keyUtil.ts",
+        "packages/ui/src/tree/utils/treeUtil.ts",
+        "packages/ui/src/tree/utils/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 10,
+      "demoFileCount": 18,
+      "docFiles": [
+        "packages/ui/src/tree/PLAN.md",
+        "packages/ui/src/tree/README.md",
+        "packages/ui/src/tree/index.en-US.md",
+        "packages/ui/src/tree/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "tree-select": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/tree-select/hooks/use-checked-keys.ts",
+        "packages/ui/src/tree-select/hooks/use-data-entities.ts",
+        "packages/ui/src/tree-select/hooks/use-filter-tree-data.ts",
+        "packages/ui/src/tree-select/hooks/use-tree-data.ts",
+        "packages/ui/src/tree-select/index.ts",
+        "packages/ui/src/tree-select/interface.ts",
+        "packages/ui/src/tree-select/OptionList.ts",
+        "packages/ui/src/tree-select/style/index.ts",
+        "packages/ui/src/tree-select/TreeSelect.ts",
+        "packages/ui/src/tree-select/utils/legacy-util.ts",
+        "packages/ui/src/tree-select/utils/strategy-util.ts",
+        "packages/ui/src/tree-select/utils/value-util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 8,
+      "demoFileCount": 15,
+      "docFiles": [
+        "packages/ui/src/tree-select/README.md",
+        "packages/ui/src/tree-select/index.en-US.md",
+        "packages/ui/src/tree-select/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "popconfirm": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/popconfirm/index.ts",
+        "packages/ui/src/popconfirm/interface.ts",
+        "packages/ui/src/popconfirm/Popconfirm.ts",
+        "packages/ui/src/popconfirm/PurePanel.ts",
+        "packages/ui/src/popconfirm/style/index.ts",
+        "packages/ui/src/popconfirm/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 10,
+      "docFiles": [
+        "packages/ui/src/popconfirm/README.md",
+        "packages/ui/src/popconfirm/index.en-US.md",
+        "packages/ui/src/popconfirm/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "tour": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/tour/index.ts",
+        "packages/ui/src/tour/interface.ts",
+        "packages/ui/src/tour/Mask.ts",
+        "packages/ui/src/tour/panel.ts",
+        "packages/ui/src/tour/PurePanel.ts",
+        "packages/ui/src/tour/style/index.ts",
+        "packages/ui/src/tour/style/token.ts",
+        "packages/ui/src/tour/Tour.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 9,
+      "docFiles": [
+        "packages/ui/src/tour/PLAN.md",
+        "packages/ui/src/tour/README.md",
+        "packages/ui/src/tour/index.en-US.md",
+        "packages/ui/src/tour/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "float-button": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/float-button/BackTop.ts",
+        "packages/ui/src/float-button/context.ts",
+        "packages/ui/src/float-button/FloatButton.ts",
+        "packages/ui/src/float-button/FloatButtonGroup.ts",
+        "packages/ui/src/float-button/hooks/useScroll.ts",
+        "packages/ui/src/float-button/index.ts",
+        "packages/ui/src/float-button/interface.ts",
+        "packages/ui/src/float-button/PurePanel.ts",
+        "packages/ui/src/float-button/style/index.ts",
+        "packages/ui/src/float-button/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/float-button/PLAN.md",
+        "packages/ui/src/float-button/README.md",
+        "packages/ui/src/float-button/index.en-US.md",
+        "packages/ui/src/float-button/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "form": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/form/context.ts",
+        "packages/ui/src/form/ErrorList.ts",
+        "packages/ui/src/form/Form.vue",
+        "packages/ui/src/form/FormItem/ItemHolder.ts",
+        "packages/ui/src/form/FormItem/StatusProvider.ts",
+        "packages/ui/src/form/FormItem.vue",
+        "packages/ui/src/form/FormItemInput.ts",
+        "packages/ui/src/form/FormItemLabel.ts",
+        "packages/ui/src/form/FormList.vue",
+        "packages/ui/src/form/hooks/exports.ts",
+        "packages/ui/src/form/hooks/use-debounce.ts",
+        "packages/ui/src/form/hooks/use-form-item-prefix.ts",
+        "packages/ui/src/form/hooks/use-form.ts",
+        "packages/ui/src/form/hooks/use-watch.ts",
+        "packages/ui/src/form/hooks/useVariants.ts",
+        "packages/ui/src/form/index.ts",
+        "packages/ui/src/form/interface.ts",
+        "packages/ui/src/form/style/index.ts",
+        "packages/ui/src/form/style/token.ts",
+        "packages/ui/src/form/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 5,
+      "docFiles": [
+        "packages/ui/src/form/README.md",
+        "packages/ui/src/form/index.en-US.md",
+        "packages/ui/src/form/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "slider": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/slider/context.ts",
+        "packages/ui/src/slider/Handles/Handle.ts",
+        "packages/ui/src/slider/Handles/index.ts",
+        "packages/ui/src/slider/hooks/use-drag.ts",
+        "packages/ui/src/slider/hooks/use-offset.ts",
+        "packages/ui/src/slider/hooks/use-range.ts",
+        "packages/ui/src/slider/index.ts",
+        "packages/ui/src/slider/interface.ts",
+        "packages/ui/src/slider/Marks/index.ts",
+        "packages/ui/src/slider/Slider.vue",
+        "packages/ui/src/slider/SliderTooltip.ts",
+        "packages/ui/src/slider/Steps/index.ts",
+        "packages/ui/src/slider/style/index.ts",
+        "packages/ui/src/slider/style/token.ts",
+        "packages/ui/src/slider/Tracks/index.ts",
+        "packages/ui/src/slider/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 13,
+      "docFiles": [
+        "packages/ui/src/slider/PLAN.md",
+        "packages/ui/src/slider/README.md",
+        "packages/ui/src/slider/index.en-US.md",
+        "packages/ui/src/slider/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "rate": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/rate/index.ts",
+        "packages/ui/src/rate/interface.ts",
+        "packages/ui/src/rate/Rate.ts",
+        "packages/ui/src/rate/Star.ts",
+        "packages/ui/src/rate/style/index.ts",
+        "packages/ui/src/rate/style/token.ts",
+        "packages/ui/src/rate/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 9,
+      "docFiles": [
+        "packages/ui/src/rate/PLAN.md",
+        "packages/ui/src/rate/README.md",
+        "packages/ui/src/rate/index.en-US.md",
+        "packages/ui/src/rate/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "segmented": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/segmented/components/MotionThumb.ts",
+        "packages/ui/src/segmented/index.ts",
+        "packages/ui/src/segmented/interface.ts",
+        "packages/ui/src/segmented/Segmented.ts",
+        "packages/ui/src/segmented/style/index.ts",
+        "packages/ui/src/segmented/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 14,
+      "docFiles": [
+        "packages/ui/src/segmented/README.md",
+        "packages/ui/src/segmented/index.en-US.md",
+        "packages/ui/src/segmented/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "steps": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/steps/context.ts",
+        "packages/ui/src/steps/index.ts",
+        "packages/ui/src/steps/interface.ts",
+        "packages/ui/src/steps/PanelArrow.ts",
+        "packages/ui/src/steps/ProgressIcon.ts",
+        "packages/ui/src/steps/Rail.ts",
+        "packages/ui/src/steps/Step.ts",
+        "packages/ui/src/steps/StepIcon.ts",
+        "packages/ui/src/steps/Steps.ts",
+        "packages/ui/src/steps/style/index.ts",
+        "packages/ui/src/steps/style/token.ts",
+        "packages/ui/src/steps/useDisplaySteps.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 20,
+      "docFiles": [
+        "packages/ui/src/steps/PLAN.md",
+        "packages/ui/src/steps/README.md",
+        "packages/ui/src/steps/index.en-US.md",
+        "packages/ui/src/steps/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "progress": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/progress/engine/Circle.ts",
+        "packages/ui/src/progress/engine/kernel.ts",
+        "packages/ui/src/progress/engine/Line.ts",
+        "packages/ui/src/progress/engine/Steps.ts",
+        "packages/ui/src/progress/index.ts",
+        "packages/ui/src/progress/interface.ts",
+        "packages/ui/src/progress/Progress.ts",
+        "packages/ui/src/progress/style/index.ts",
+        "packages/ui/src/progress/style/token.ts",
+        "packages/ui/src/progress/utils.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 17,
+      "docFiles": [
+        "packages/ui/src/progress/PLAN.md",
+        "packages/ui/src/progress/README.md",
+        "packages/ui/src/progress/index.en-US.md",
+        "packages/ui/src/progress/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "pagination": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/pagination/getPagerList.ts",
+        "packages/ui/src/pagination/index.ts",
+        "packages/ui/src/pagination/interface.ts",
+        "packages/ui/src/pagination/Options.ts",
+        "packages/ui/src/pagination/Pager.ts",
+        "packages/ui/src/pagination/Pagination.vue",
+        "packages/ui/src/pagination/style/index.ts",
+        "packages/ui/src/pagination/style/token.ts",
+        "packages/ui/src/pagination/useShowSizeChanger.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/pagination/PLAN.md",
+        "packages/ui/src/pagination/README.md",
+        "packages/ui/src/pagination/index.en-US.md",
+        "packages/ui/src/pagination/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "breadcrumb": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/interface.ts",
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/interface.ts",
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 7,
+      "docFiles": [
+        "packages/ui/src/breadcrumb/PLAN.md",
+        "packages/ui/src/breadcrumb/README.md",
+        "packages/ui/src/breadcrumb/index.en-US.md",
+        "packages/ui/src/breadcrumb/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 10
+    },
+    "tabs": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/tabs/AddButton.ts",
+        "packages/ui/src/tabs/ExtraContent.ts",
+        "packages/ui/src/tabs/hooks/use-animate-config.ts",
+        "packages/ui/src/tabs/hooks/use-indicator.ts",
+        "packages/ui/src/tabs/hooks/use-offsets.ts",
+        "packages/ui/src/tabs/hooks/use-touch-move.ts",
+        "packages/ui/src/tabs/hooks/use-visible-range.ts",
+        "packages/ui/src/tabs/index.ts",
+        "packages/ui/src/tabs/interface.ts",
+        "packages/ui/src/tabs/OperationNode.ts",
+        "packages/ui/src/tabs/style/index.ts",
+        "packages/ui/src/tabs/style/token.ts",
+        "packages/ui/src/tabs/TabNavList.ts",
+        "packages/ui/src/tabs/TabNode.ts",
+        "packages/ui/src/tabs/TabPane.ts",
+        "packages/ui/src/tabs/TabPanelList.ts",
+        "packages/ui/src/tabs/Tabs.vue",
+        "packages/ui/src/tabs/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 13,
+      "docFiles": [
+        "packages/ui/src/tabs/PLAN.md",
+        "packages/ui/src/tabs/README.md",
+        "packages/ui/src/tabs/index.en-US.md",
+        "packages/ui/src/tabs/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "card": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/card/Card.vue",
+        "packages/ui/src/card/CardGrid.vue",
+        "packages/ui/src/card/CardMeta.vue",
+        "packages/ui/src/card/index.ts",
+        "packages/ui/src/card/interface.ts",
+        "packages/ui/src/card/style/index.ts",
+        "packages/ui/src/card/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/card/Card.vue",
+        "packages/ui/src/card/CardGrid.vue",
+        "packages/ui/src/card/CardMeta.vue",
+        "packages/ui/src/card/index.ts",
+        "packages/ui/src/card/interface.ts",
+        "packages/ui/src/card/style/index.ts",
+        "packages/ui/src/card/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 10,
+      "docFiles": [
+        "packages/ui/src/card/PLAN.md",
+        "packages/ui/src/card/README.md",
+        "packages/ui/src/card/index.en-US.md",
+        "packages/ui/src/card/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 7
+    },
+    "timeline": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/timeline/index.ts",
+        "packages/ui/src/timeline/interface.ts",
+        "packages/ui/src/timeline/style/context.ts",
+        "packages/ui/src/timeline/style/horizontal.ts",
+        "packages/ui/src/timeline/style/index.ts",
+        "packages/ui/src/timeline/style/token.ts",
+        "packages/ui/src/timeline/Timeline.ts",
+        "packages/ui/src/timeline/use-items.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 13,
+      "docFiles": [
+        "packages/ui/src/timeline/PLAN.md",
+        "packages/ui/src/timeline/README.md",
+        "packages/ui/src/timeline/index.en-US.md",
+        "packages/ui/src/timeline/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "masonry": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/masonry/components/MasonryItem.ts",
+        "packages/ui/src/masonry/hooks/column-count.ts",
+        "packages/ui/src/masonry/hooks/positions.ts",
+        "packages/ui/src/masonry/hooks/use-delay.ts",
+        "packages/ui/src/masonry/index.ts",
+        "packages/ui/src/masonry/interface.ts",
+        "packages/ui/src/masonry/Masonry.vue",
+        "packages/ui/src/masonry/style/index.ts",
+        "packages/ui/src/masonry/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 6,
+      "docFiles": [
+        "packages/ui/src/masonry/PLAN.md",
+        "packages/ui/src/masonry/README.md",
+        "packages/ui/src/masonry/index.en-US.md",
+        "packages/ui/src/masonry/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "anchor": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/anchor/Anchor.ts",
+        "packages/ui/src/anchor/AnchorLink.ts",
+        "packages/ui/src/anchor/context.ts",
+        "packages/ui/src/anchor/index.ts",
+        "packages/ui/src/anchor/interface.ts",
+        "packages/ui/src/anchor/style/index.ts",
+        "packages/ui/src/anchor/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/anchor/Anchor.ts",
+        "packages/ui/src/anchor/AnchorLink.ts",
+        "packages/ui/src/anchor/context.ts",
+        "packages/ui/src/anchor/index.ts",
+        "packages/ui/src/anchor/interface.ts",
+        "packages/ui/src/anchor/style/index.ts",
+        "packages/ui/src/anchor/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 8,
+      "docFiles": [
+        "packages/ui/src/anchor/PLAN.md",
+        "packages/ui/src/anchor/README.md",
+        "packages/ui/src/anchor/index.en-US.md",
+        "packages/ui/src/anchor/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-API-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 7
+    },
+    "list": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/list/context.ts",
+        "packages/ui/src/list/index.ts",
+        "packages/ui/src/list/interface.ts",
+        "packages/ui/src/list/Item.vue",
+        "packages/ui/src/list/ItemMeta.vue",
+        "packages/ui/src/list/List.vue",
+        "packages/ui/src/list/style/index.ts",
+        "packages/ui/src/list/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 8,
+      "docFiles": [
+        "packages/ui/src/list/PLAN.md",
+        "packages/ui/src/list/README.md",
+        "packages/ui/src/list/index.en-US.md",
+        "packages/ui/src/list/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "batch": null,
+      "notes": []
+    },
+    "table": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/table/engine/Body.ts",
+        "packages/ui/src/table/engine/Cell.ts",
+        "packages/ui/src/table/engine/ColGroup.ts",
+        "packages/ui/src/table/engine/constant.ts",
+        "packages/ui/src/table/engine/context.ts",
+        "packages/ui/src/table/engine/Footer.ts",
+        "packages/ui/src/table/engine/Header.ts",
+        "packages/ui/src/table/engine/hooks/use-columns.ts",
+        "packages/ui/src/table/engine/hooks/use-expand.ts",
+        "packages/ui/src/table/engine/hooks/use-table.ts",
+        "packages/ui/src/table/engine/Table.ts",
+        "packages/ui/src/table/engine/utils/expandUtil.ts",
+        "packages/ui/src/table/engine/utils/fixUtil.ts",
+        "packages/ui/src/table/engine/utils/legacyUtil.ts",
+        "packages/ui/src/table/engine/utils/offsetUtil.ts",
+        "packages/ui/src/table/engine/utils/valueUtil.ts",
+        "packages/ui/src/table/engine/VirtualTable/BodyGrid.ts",
+        "packages/ui/src/table/engine/VirtualTable/BodyLine.ts",
+        "packages/ui/src/table/engine/VirtualTable/VirtualCell.ts",
+        "packages/ui/src/table/ExpandIcon.ts",
+        "packages/ui/src/table/hooks/use-filter.ts",
+        "packages/ui/src/table/hooks/use-selection.ts",
+        "packages/ui/src/table/hooks/use-sorter.ts",
+        "packages/ui/src/table/hooks/use-table-data.ts",
+        "packages/ui/src/table/index.ts",
+        "packages/ui/src/table/interface.ts",
+        "packages/ui/src/table/style/index.ts",
+        "packages/ui/src/table/Table.ts",
+        "packages/ui/src/table/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 3,
+      "demoFileCount": 12,
+      "docFiles": [
+        "packages/ui/src/table/README.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "transfer": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/transfer/Actions.ts",
+        "packages/ui/src/transfer/index.ts",
+        "packages/ui/src/transfer/interface.ts",
+        "packages/ui/src/transfer/ListBody.ts",
+        "packages/ui/src/transfer/ListItem.ts",
+        "packages/ui/src/transfer/Search.ts",
+        "packages/ui/src/transfer/Section.ts",
+        "packages/ui/src/transfer/style/index.ts",
+        "packages/ui/src/transfer/style/token.ts",
+        "packages/ui/src/transfer/Transfer.ts",
+        "packages/ui/src/transfer/use-data.ts",
+        "packages/ui/src/transfer/use-multiple-select.ts",
+        "packages/ui/src/transfer/use-selection.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 10,
+      "docFiles": [
+        "packages/ui/src/transfer/README.md",
+        "packages/ui/src/transfer/index.en-US.md",
+        "packages/ui/src/transfer/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "mentions": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/mentions/engine/context.ts",
+        "packages/ui/src/mentions/engine/DropdownMenu.ts",
+        "packages/ui/src/mentions/engine/KeywordTrigger.ts",
+        "packages/ui/src/mentions/engine/Mentions.ts",
+        "packages/ui/src/mentions/engine/use-effect-state.ts",
+        "packages/ui/src/mentions/engine/util.ts",
+        "packages/ui/src/mentions/index.ts",
+        "packages/ui/src/mentions/interface.ts",
+        "packages/ui/src/mentions/Mentions.ts",
+        "packages/ui/src/mentions/PurePanel.ts",
+        "packages/ui/src/mentions/style/index.ts",
+        "packages/ui/src/mentions/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 7,
+      "demoFileCount": 16,
+      "docFiles": [
+        "packages/ui/src/mentions/README.md",
+        "packages/ui/src/mentions/index.en-US.md",
+        "packages/ui/src/mentions/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "color-picker": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/color-picker/color.ts",
+        "packages/ui/src/color-picker/ColorPicker.vue",
+        "packages/ui/src/color-picker/ColorPickerPanel.ts",
+        "packages/ui/src/color-picker/components/ColorAlphaInput.vue",
+        "packages/ui/src/color-picker/components/ColorClear.vue",
+        "packages/ui/src/color-picker/components/ColorHexInput.vue",
+        "packages/ui/src/color-picker/components/ColorHsbInput.vue",
+        "packages/ui/src/color-picker/components/ColorInput.vue",
+        "packages/ui/src/color-picker/components/ColorPresets.vue",
+        "packages/ui/src/color-picker/components/ColorRgbInput.vue",
+        "packages/ui/src/color-picker/components/ColorSlider.ts",
+        "packages/ui/src/color-picker/components/ColorSteppers.vue",
+        "packages/ui/src/color-picker/components/ColorTrigger.vue",
+        "packages/ui/src/color-picker/components/GradientColorBar.ts",
+        "packages/ui/src/color-picker/components/PanelPicker.vue",
+        "packages/ui/src/color-picker/components/PanelPresets.ts",
+        "packages/ui/src/color-picker/context.ts",
+        "packages/ui/src/color-picker/engine/color-picker.ts",
+        "packages/ui/src/color-picker/engine/color.ts",
+        "packages/ui/src/color-picker/engine/components/color-block.ts",
+        "packages/ui/src/color-picker/engine/components/handler.ts",
+        "packages/ui/src/color-picker/engine/components/palette.ts",
+        "packages/ui/src/color-picker/engine/components/picker.ts",
+        "packages/ui/src/color-picker/engine/interface.ts",
+        "packages/ui/src/color-picker/engine/use-color-drag.ts",
+        "packages/ui/src/color-picker/engine/use-color-state.ts",
+        "packages/ui/src/color-picker/engine/util.ts",
+        "packages/ui/src/color-picker/hooks/use-mode-color.ts",
+        "packages/ui/src/color-picker/index.ts",
+        "packages/ui/src/color-picker/interface.ts",
+        "packages/ui/src/color-picker/PurePanel.ts",
+        "packages/ui/src/color-picker/style/index.ts",
+        "packages/ui/src/color-picker/style/token.ts",
+        "packages/ui/src/color-picker/util.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 8,
+      "demoFileCount": 16,
+      "docFiles": [
+        "packages/ui/src/color-picker/PLAN.md",
+        "packages/ui/src/color-picker/README.md",
+        "packages/ui/src/color-picker/index.en-US.md",
+        "packages/ui/src/color-picker/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-API-01",
+        "VNA-SLOT-01",
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 4
+    },
+    "date-picker": {
+      "auditStatus": "analyzing",
+      "sourceFiles": [
+        "packages/ui/src/date-picker/components/Footer.ts",
+        "packages/ui/src/date-picker/components/mask-format.ts",
+        "packages/ui/src/date-picker/components/mask-input.ts",
+        "packages/ui/src/date-picker/components/picker-shared.ts",
+        "packages/ui/src/date-picker/components/PresetPanel.ts",
+        "packages/ui/src/date-picker/components/root-class.ts",
+        "packages/ui/src/date-picker/components/Selector.ts",
+        "packages/ui/src/date-picker/components/trigger-config.ts",
+        "packages/ui/src/date-picker/DatePicker.vue",
+        "packages/ui/src/date-picker/hooks/dayjs-config.ts",
+        "packages/ui/src/date-picker/hooks/picker-fields-invalidate.ts",
+        "packages/ui/src/date-picker/hooks/picker-filled.ts",
+        "packages/ui/src/date-picker/hooks/picker-focus-lock.ts",
+        "packages/ui/src/date-picker/hooks/picker-format.ts",
+        "packages/ui/src/date-picker/hooks/picker-invalidate.ts",
+        "packages/ui/src/date-picker/hooks/picker-locale.ts",
+        "packages/ui/src/date-picker/hooks/picker-presets.ts",
+        "packages/ui/src/date-picker/hooks/picker-range-picker-value.ts",
+        "packages/ui/src/date-picker/hooks/picker-suffix.ts",
+        "packages/ui/src/date-picker/hooks/picker-types.ts",
+        "packages/ui/src/date-picker/hooks/picker-typing.ts",
+        "packages/ui/src/date-picker/hooks/picker-value-change.ts",
+        "packages/ui/src/date-picker/hooks/picker-value.ts",
+        "packages/ui/src/date-picker/hooks/use-picker-semantic.ts",
+        "packages/ui/src/date-picker/index.ts",
+        "packages/ui/src/date-picker/interface.ts",
+        "packages/ui/src/date-picker/RangePicker.vue",
+        "packages/ui/src/date-picker/style/index.ts",
+        "packages/ui/src/date-picker/style/token.ts"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 20,
+      "demoFileCount": 1,
+      "docFiles": [
+        "packages/ui/src/date-picker/PLAN.md",
+        "packages/ui/src/date-picker/README.md",
+        "packages/ui/src/date-picker/index.en-US.md",
+        "packages/ui/src/date-picker/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-SLOT-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [
+        "前序审计仅给出已读文件数，未留下逐文件路径；继续前须对照 sourceFiles 清单补齐，不能推定完成。"
+      ],
+      "reviewedFileCount": 3
+    },
+    "time-picker": {
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/time-picker/index.ts",
+        "packages/ui/src/time-picker/interface.ts",
+        "packages/ui/src/time-picker/TimePicker.vue",
+        "packages/ui/src/time-picker/TimeRangePicker.vue"
+      ],
+      "reviewedFiles": [],
+      "testFileCount": 6,
+      "demoFileCount": 14,
+      "docFiles": [
+        "packages/ui/src/time-picker/PLAN.md",
+        "packages/ui/src/time-picker/README.md",
+        "packages/ui/src/time-picker/index.en-US.md",
+        "packages/ui/src/time-picker/index.zh-CN.md"
+      ],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "calendar": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/calendar/Calendar.vue",
+        "packages/ui/src/calendar/components/CalendarHeader.ts",
+        "packages/ui/src/calendar/index.ts",
+        "packages/ui/src/calendar/interface.ts",
+        "packages/ui/src/calendar/style/index.ts",
+        "packages/ui/src/calendar/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/calendar/Calendar.vue",
+        "packages/ui/src/calendar/components/CalendarHeader.ts",
+        "packages/ui/src/calendar/index.ts",
+        "packages/ui/src/calendar/interface.ts",
+        "packages/ui/src/calendar/style/index.ts",
+        "packages/ui/src/calendar/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 8,
+      "docFiles": [
+        "packages/ui/src/calendar/PLAN.md",
+        "packages/ui/src/calendar/README.md",
+        "packages/ui/src/calendar/index.en-US.md",
+        "packages/ui/src/calendar/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-SLOT-01",
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 6
+    },
+    "avatar": {
+      "auditStatus": "done",
+      "sourceFiles": [
+        "packages/ui/src/avatar/Avatar.vue",
+        "packages/ui/src/avatar/AvatarGroup.vue",
+        "packages/ui/src/avatar/context.ts",
+        "packages/ui/src/avatar/index.ts",
+        "packages/ui/src/avatar/interface.ts",
+        "packages/ui/src/avatar/style/index.ts",
+        "packages/ui/src/avatar/style/token.ts"
+      ],
+      "reviewedFiles": [
+        "packages/ui/src/avatar/Avatar.vue",
+        "packages/ui/src/avatar/AvatarGroup.vue",
+        "packages/ui/src/avatar/context.ts",
+        "packages/ui/src/avatar/index.ts",
+        "packages/ui/src/avatar/interface.ts",
+        "packages/ui/src/avatar/style/index.ts",
+        "packages/ui/src/avatar/style/token.ts"
+      ],
+      "testFileCount": 6,
+      "demoFileCount": 9,
+      "docFiles": [
+        "packages/ui/src/avatar/PLAN.md",
+        "packages/ui/src/avatar/README.md",
+        "packages/ui/src/avatar/index.en-US.md",
+        "packages/ui/src/avatar/index.zh-CN.md"
+      ],
+      "issueIds": [
+        "VNA-AVATAR-01",
+        "VNA-RENDERER-01"
+      ],
+      "batch": "AUDIT-01",
+      "notes": [],
+      "reviewedFileCount": 7
+    }
+  },
+  "sharedSurfaces": {
+    "ui-public-entry": {
+      "path": "packages/ui/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/index.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "ui-internal": {
+      "path": "packages/ui/src/_internal",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/ui/src/_internal/action-button.ts",
+        "packages/ui/src/_internal/app-context.ts",
+        "packages/ui/src/_internal/color-composite.ts",
+        "packages/ui/src/_internal/overflow.ts",
+        "packages/ui/src/_internal/picker-host-context.ts",
+        "packages/ui/src/_internal/preset-color.ts",
+        "packages/ui/src/_internal/responsive-observer.ts",
+        "packages/ui/src/_internal/scroll-to.ts",
+        "packages/ui/src/_internal/to-css-size.ts",
+        "packages/ui/src/_internal/trigger.ts",
+        "packages/ui/src/_internal/use-allow-clear.ts",
+        "packages/ui/src/_internal/use-closable.ts",
+        "packages/ui/src/_internal/use-merge-semantic.ts",
+        "packages/ui/src/_internal/use-merged-mask.ts",
+        "packages/ui/src/_internal/use-orientation.ts",
+        "packages/ui/src/_internal/with-install.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "utils": {
+      "path": "packages/utils/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/utils/src/brand.ts",
+        "packages/utils/src/children/to-array.ts",
+        "packages/utils/src/color/color.ts",
+        "packages/utils/src/color/generate.ts",
+        "packages/utils/src/color/index.ts",
+        "packages/utils/src/color/types.ts",
+        "packages/utils/src/dev-warning.ts",
+        "packages/utils/src/dom/can-use-dom.ts",
+        "packages/utils/src/dom/contains.ts",
+        "packages/utils/src/dom/focus.ts",
+        "packages/utils/src/dom/get-element.ts",
+        "packages/utils/src/dom/get-scroll-bar-size.ts",
+        "packages/utils/src/dom/get-scroll.ts",
+        "packages/utils/src/dom/index.ts",
+        "packages/utils/src/dom/is-visible.ts",
+        "packages/utils/src/dom/style-checker.ts",
+        "packages/utils/src/dom/update-css.ts",
+        "packages/utils/src/env.ts",
+        "packages/utils/src/event-name.ts",
+        "packages/utils/src/hooks/index.ts",
+        "packages/utils/src/hooks/use-controlled-value.ts",
+        "packages/utils/src/hooks/use-delay-state.ts",
+        "packages/utils/src/hooks/use-id.ts",
+        "packages/utils/src/hooks/use-safe-state.ts",
+        "packages/utils/src/hooks/use-update-effect.ts",
+        "packages/utils/src/index.ts",
+        "packages/utils/src/is-equal.ts",
+        "packages/utils/src/is.ts",
+        "packages/utils/src/key-code.ts",
+        "packages/utils/src/merge-props.ts",
+        "packages/utils/src/object.ts",
+        "packages/utils/src/observers/index.ts",
+        "packages/utils/src/observers/use-mutation-observer.ts",
+        "packages/utils/src/observers/use-resize-observer.ts",
+        "packages/utils/src/omit.ts",
+        "packages/utils/src/pick-attrs-allowlist.ts",
+        "packages/utils/src/pick-attrs.ts",
+        "packages/utils/src/raf.ts",
+        "packages/utils/src/ref.ts",
+        "packages/utils/src/throttle-by-animation-frame.ts",
+        "packages/utils/src/throttle.ts",
+        "packages/utils/src/to-list.ts",
+        "packages/utils/src/warning.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "a11y": {
+      "path": "packages/a11y/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/a11y/src/combobox.ts",
+        "packages/a11y/src/focus-restore.ts",
+        "packages/a11y/src/index.ts",
+        "packages/a11y/src/live-region.ts",
+        "packages/a11y/src/roving.ts",
+        "packages/a11y/src/use-active-descendant.ts",
+        "packages/a11y/src/use-roving-focus.ts",
+        "packages/a11y/src/use-typeahead.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "form-core": {
+      "path": "packages/form-core/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/form-core/src/async-util.ts",
+        "packages/form-core/src/delay-frame.ts",
+        "packages/form-core/src/field.ts",
+        "packages/form-core/src/form-context.ts",
+        "packages/form-core/src/form-provider.ts",
+        "packages/form-core/src/form-store.ts",
+        "packages/form-core/src/form-types.ts",
+        "packages/form-core/src/form-util.ts",
+        "packages/form-core/src/form.ts",
+        "packages/form-core/src/index.ts",
+        "packages/form-core/src/list.ts",
+        "packages/form-core/src/messages.ts",
+        "packages/form-core/src/name-map.ts",
+        "packages/form-core/src/name-path-type.ts",
+        "packages/form-core/src/rules/index.ts",
+        "packages/form-core/src/rules/url.ts",
+        "packages/form-core/src/schema.ts",
+        "packages/form-core/src/types.ts",
+        "packages/form-core/src/use-form.ts",
+        "packages/form-core/src/use-watch.ts",
+        "packages/form-core/src/util.ts",
+        "packages/form-core/src/validate-messages.ts",
+        "packages/form-core/src/validate-util.ts",
+        "packages/form-core/src/validators/index.ts",
+        "packages/form-core/src/value-util.ts",
+        "packages/form-core/src/watcher-center.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "motion": {
+      "path": "packages/motion/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/motion/src/css-motion.ts",
+        "packages/motion/src/diff.ts",
+        "packages/motion/src/driver.ts",
+        "packages/motion/src/index.ts",
+        "packages/motion/src/motion-list.ts",
+        "packages/motion/src/next-frame.ts",
+        "packages/motion/src/presets.ts",
+        "packages/motion/src/status.ts",
+        "packages/motion/src/support.ts",
+        "packages/motion/src/use-motion-status.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "overlay": {
+      "path": "packages/overlay/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/overlay/src/actions.ts",
+        "packages/overlay/src/delay.ts",
+        "packages/overlay/src/esc-stack.ts",
+        "packages/overlay/src/index.ts",
+        "packages/overlay/src/use-overlay.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "picker": {
+      "path": "packages/picker/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/picker/src/date-panel.ts",
+        "packages/picker/src/date-util.ts",
+        "packages/picker/src/generate/dayjs.ts",
+        "packages/picker/src/index.ts",
+        "packages/picker/src/keyboard.ts",
+        "packages/picker/src/locale-fill.ts",
+        "packages/picker/src/misc-util.ts",
+        "packages/picker/src/panel-body.ts",
+        "packages/picker/src/panel-context.ts",
+        "packages/picker/src/panel-header-limit.ts",
+        "packages/picker/src/panel-header.ts",
+        "packages/picker/src/panel-props.ts",
+        "packages/picker/src/panel.ts",
+        "packages/picker/src/picker-panel.ts",
+        "packages/picker/src/range.ts",
+        "packages/picker/src/time-column.ts",
+        "packages/picker/src/time-config.ts",
+        "packages/picker/src/time-panel-body.ts",
+        "packages/picker/src/time-panel.ts",
+        "packages/picker/src/time-tmpl.ts",
+        "packages/picker/src/time-units.ts",
+        "packages/picker/src/time-util.ts",
+        "packages/picker/src/toggle-dates.ts",
+        "packages/picker/src/types.ts",
+        "packages/picker/src/upper-panels.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "portal": {
+      "path": "packages/portal/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/portal/src/container.ts",
+        "packages/portal/src/index.ts",
+        "packages/portal/src/mock.ts",
+        "packages/portal/src/portal.ts",
+        "packages/portal/src/use-esc-key-down.ts",
+        "packages/portal/src/use-portal.ts",
+        "packages/portal/src/use-scroll-locker.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "position": {
+      "path": "packages/position/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/position/src/align.ts",
+        "packages/position/src/area.ts",
+        "packages/position/src/index.ts",
+        "packages/position/src/measure.ts",
+        "packages/position/src/offset.ts",
+        "packages/position/src/placements.ts",
+        "packages/position/src/point.ts",
+        "packages/position/src/types.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "virtual-list": {
+      "path": "packages/virtual-list/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/virtual-list/src/algorithm.ts",
+        "packages/virtual-list/src/cache.ts",
+        "packages/virtual-list/src/filler.ts",
+        "packages/virtual-list/src/index.ts",
+        "packages/virtual-list/src/range.ts",
+        "packages/virtual-list/src/scroll-target.ts",
+        "packages/virtual-list/src/size.ts",
+        "packages/virtual-list/src/types.ts",
+        "packages/virtual-list/src/use-heights.ts",
+        "packages/virtual-list/src/virtual-list.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    },
+    "test-utils": {
+      "path": "packages/test-utils/src",
+      "auditStatus": "todo",
+      "sourceFiles": [
+        "packages/test-utils/src/a11y-demo-test.ts",
+        "packages/test-utils/src/allowance.ts",
+        "packages/test-utils/src/demo-test.ts",
+        "packages/test-utils/src/dom-contract.ts",
+        "packages/test-utils/src/focus-test.ts",
+        "packages/test-utils/src/index.ts",
+        "packages/test-utils/src/mount-test.ts",
+        "packages/test-utils/src/render.ts",
+        "packages/test-utils/src/root-props-test.ts",
+        "packages/test-utils/src/rtl-test.ts",
+        "packages/test-utils/src/theme-test.ts",
+        "packages/test-utils/src/timing.ts",
+        "packages/test-utils/src/types.ts",
+        "packages/test-utils/src/warnings.ts"
+      ],
+      "reviewedFiles": [],
+      "issueIds": [],
+      "batch": null,
+      "notes": []
+    }
+  },
+  "issues": [
+    {
+      "id": "VNA-API-01",
+      "component": "cross-component",
+      "files": [
+        "packages/ui/src/app/interface.ts:20",
+        "packages/ui/src/anchor/interface.ts:66",
+        "packages/ui/src/collapse/interface.ts:102",
+        "packages/ui/src/color-picker/interface.ts:244",
+        "packages/ui/src/drawer/interface.ts:146-147",
+        "packages/ui/src/descriptions/interface.ts:95"
+      ],
+      "category": "react-api",
+      "severity": "P1",
+      "currentImplementation": "多个公开组件 Props 声明 children?: VNodeChild；其实现以 Vue default slot 承载内容，children 字段本身不构成 Vue 插槽。Descriptions/Collapse 等还存在子项数据结构，不能对所有名为 children 的字段一刀切。",
+      "semanticDifference": "React children 是隐式内容通道；Vue 模板内容应走 default slot，数据树中的 children 则仍是业务数据。",
+      "recommendation": "逐组件确认字段是否是组件级内容；对纯内容 Props 改为默认插槽并从公开 Props 类型移除，对树/面板数据的 children 保留。同步类型正负例与 API 文档。",
+      "systemic": true,
+      "relatedComponents": [
+        "app",
+        "anchor",
+        "collapse",
+        "color-picker",
+        "drawer",
+        "descriptions"
+      ],
+      "tests": [
+        "对应组件 __tests__/type.test-d.ts",
+        "对应组件 __tests__/index.test.ts",
+        "各组件中英文 API 文档"
+      ],
+      "status": "open",
+      "verification": "第一批源码静态审阅线索；尚未逐个核验所有消费端/迁移影响，未运行测试。"
+    },
+    {
+      "id": "VNA-SLOT-01",
+      "component": "cross-component",
+      "files": [
+        "packages/ui/src/calendar/interface.ts: CalendarSlots/headerRender/cellRender",
+        "packages/ui/src/calendar/Calendar.vue: render paths (no named-slot reads found)",
+        "packages/ui/src/date-picker/interface.ts:784-805",
+        "packages/ui/src/date-picker/DatePicker.vue: render paths",
+        "packages/ui/src/color-picker/interface.ts: panelRender slot declaration",
+        "packages/ui/src/color-picker/ColorPicker.vue: props.panelRender forwarding"
+      ],
+      "category": "slot",
+      "severity": "P1",
+      "currentImplementation": "Calendar/DatePicker/ColorPicker 的接口声明具名 scoped-slot 形态，但源码扫描只发现函数 Props 被读取/转发，未发现相应 slots.<name> 渲染路径；ColorPicker 的 panelRender 以函数 prop 喂给面板。",
+      "semanticDifference": "类型或注释表达了模板插槽通道，但消费者实际只可用函数 Props，导致 Vue 模板 API 与运行时不一致。",
+      "recommendation": "逐组件落实 slot 函数的公共类型接线与渲染优先级，优先为可扩展区域提供 scoped slots；无法兼容的重复 API 则从公开 slot 类型/文档移除。测试真实 slot 渲染、上下文参数及与旧函数 prop 并用时的规则。",
+      "systemic": true,
+      "relatedComponents": [
+        "calendar",
+        "date-picker",
+        "color-picker"
+      ],
+      "tests": [
+        "calendar/__tests__/index.test.ts",
+        "date-picker/__tests__/footer.test.ts",
+        "color-picker/__tests__/index.test.ts",
+        "三组件 type.test-d.ts"
+      ],
+      "status": "open",
+      "verification": "静态源码与全目录关键字核验；未运行测试，待组件级 slot 挂载验证。"
+    },
+    {
+      "id": "VNA-ATTRS-01",
+      "component": "cross-component",
+      "files": [
+        "packages/ui/src/app/App.ts:115-123",
+        "packages/ui/src/back-top/BackTop.ts:152-175",
+        "packages/ui/src/border-beam/BorderBeam.ts:92-110,164-209"
+      ],
+      "category": "attrs",
+      "severity": "P1",
+      "currentImplementation": "App 仅将 attrs.class 的字符串形式重新并入根 class，数组/对象 class 未合并；BackTop 从 attrs 中剔除 class/style 后未并回目标根；BorderBeam 设 inheritAttrs:false 且未接收/合并其余 attrs。",
+      "semanticDifference": "Vue class/style 是可归一化的原生 fallthrough 值；手工分流若丢失对象/数组 class 或其它 attrs，会破坏 Vue 调用体验。",
+      "recommendation": "依据真实 root/host 语义显式合并 normalizeClass/normalizeStyle 与 rest attrs，确保 class/style/aria/data/id/原生事件落到正确宿主且只触发一次。",
+      "systemic": true,
+      "relatedComponents": [
+        "app",
+        "back-top",
+        "border-beam"
+      ],
+      "tests": [
+        "各组件 __tests__/index.test.ts 或 semantic.test.ts：class string/array/object、style、aria/data/id、原生事件"
+      ],
+      "status": "open",
+      "verification": "核读实现代码确认合并路径；尚未新增回归用例或运行测试。"
+    },
+    {
+      "id": "VNA-AFFIX-01",
+      "component": "affix",
+      "files": [
+        "packages/ui/src/affix/Affix.vue:136-148,167-168,211-218",
+        "packages/ui/src/affix/utils.ts:30-39,90-100"
+      ],
+      "category": "test",
+      "severity": "P2",
+      "currentImplementation": "Affix 的生产测量与纯函数每次触发时无条件 console.log [affix-probe]，且日志包含目标和布局数值。",
+      "semanticDifference": "诊断探针遗留在公开组件执行路径中，滚动/resize 会向消费者控制台持续输出。",
+      "recommendation": "移除临时探针；如确需调试，只保留显式 dev-only 且默认关闭的诊断入口，并补无意外 console 输出的回归断言。",
+      "systemic": false,
+      "relatedComponents": [
+        "affix"
+      ],
+      "tests": [
+        "packages/ui/src/affix/__tests__/index.test.ts",
+        "packages/ui/src/affix/__tests__/utils.test.ts"
+      ],
+      "status": "fixed",
+      "verification": "已从 Affix.vue / utils.ts 移除所有生产 console.log 探针；Grep packages/ui/src/affix --glob **/*.{vue,ts} 的 console.log|affix-probe = 0。聚焦 unit 运行 packages/ui/src/affix/__tests__/utils.test.ts + index.test.ts：19/19 通过。"
+    },
+    {
+      "id": "VNA-AFFIX-02",
+      "component": "affix",
+      "files": [
+        "packages/ui/src/affix/Affix.vue:230-239",
+        "packages/ui/src/affix/utils.ts:23-34"
+      ],
+      "category": "vue-composition-api",
+      "severity": "P2",
+      "currentImplementation": "fixedTop/fixedBottom 是数字，Vue inline style 中 top/bottom 是像素字符串。hasSameFixedPosition 同时接受 number 与 \"<n>px\"，Affix 的 RAF 快路径使用该比较器。",
+      "semanticDifference": "字符串与数字比较恒不相等，已固钉且位置未变时的快速返回不生效，滚动时继续做完整测量。",
+      "recommendation": "已修：抽出 hasSameFixedPosition，兼容 Vue px 字符串与数值样式；新增单测覆盖 top/bottom、不同位置、无判据。",
+      "systemic": false,
+      "relatedComponents": [
+        "affix"
+      ],
+      "tests": [
+        "packages/ui/src/affix/__tests__/index.test.ts：相同位置重复 scroll 不再次测量"
+      ],
+      "status": "fixed",
+      "verification": "聚焦 unit 运行 packages/ui/src/affix/__tests__/utils.test.ts + index.test.ts：19/19 通过；新组件测试验证首次固定后再 scroll 同位置只调用 getBoundingClientRect 一次（只做快路径读取，不进入完整重测）。"
+    },
+    {
+      "id": "VNA-AVATAR-01",
+      "component": "avatar",
+      "files": [
+        "packages/ui/src/avatar/Avatar.vue:216-223",
+        "packages/ui/src/grid/hooks/use-breakpoint.ts:20-41"
+      ],
+      "category": "vue-composition-api",
+      "severity": "P2",
+      "currentImplementation": "Avatar setup 时以 needResponsive.value 初始化 useBreakpoint(refreshOnChange)，后续虽然 size prop 可响应变化，但订阅回调是否刷新 screens 由首次布尔值固定。",
+      "semanticDifference": "响应式决定订阅刷新策略的 prop 被一次性解包，切换尺寸模式后仍沿用初始化行为。",
+      "recommendation": "让断点订阅能随尺寸响应性切换而更新，或以稳定刷新策略订阅并在 Avatar computed 中筛选；保留 SSR 不触碰 window 的语义。",
+      "systemic": false,
+      "relatedComponents": [
+        "avatar",
+        "grid"
+      ],
+      "tests": [
+        "avatar/__tests__/index.test.ts：由普通尺寸切换到断点尺寸并响应 viewport 变化"
+      ],
+      "status": "open",
+      "verification": "源码调用与 useBreakpoint 实现已核对；未运行动态更新测试。"
+    },
+    {
+      "id": "VNA-DIVIDER-01",
+      "component": "divider",
+      "files": [
+        "packages/ui/src/divider/Divider.vue:200-208",
+        "packages/ui/src/config-provider/size-context.ts",
+        "packages/ui/src/config-provider/ConfigProvider.ts"
+      ],
+      "category": "vue-composition-api",
+      "severity": "P2",
+      "currentImplementation": "Divider 的 sizeFullName 只计算 props.size；同文件注释称 SizeContext/ConfigProvider 尚不存在，但仓库中已存在 useSize 和 componentSize provide。",
+      "semanticDifference": "组件未消费当前 Vue ConfigProvider 已提供的尺寸上下文，默认尺寸可能与 Provider 配置分叉。",
+      "recommendation": "核验 Divider 应否遵循全局 componentSize；若遵循，接入 useSize 并以本地 size 覆盖上下文，更新 README 中过期说明。",
+      "systemic": false,
+      "relatedComponents": [
+        "divider",
+        "config-provider"
+      ],
+      "tests": [
+        "divider/__tests__/index.test.ts：Provider componentSize 与显式 size 覆盖"
+      ],
+      "status": "open",
+      "verification": "与 config-provider 已实现 useSize/provide 的源码交叉核对；未运行测试。"
+    },
+    {
+      "id": "VNA-DROPDOWN-01",
+      "component": "dropdown",
+      "files": [
+        "packages/ui/src/dropdown/interface.ts:79-81,101-124",
+        "packages/ui/src/dropdown/Dropdown.ts:200-207",
+        "packages/ui/src/dropdown/DropdownButton.ts: slots.buttonsRender/popupRender",
+        "packages/ui/src/dropdown/index.zh-CN.md: C8-R2 migration note"
+      ],
+      "category": "type-design",
+      "severity": "P2",
+      "currentImplementation": "接口仍公开 popupRender/dropdownRender/buttonsRender/icon 等 React 风格函数/VNode props；运行时说明这些函数 Props 已删除，实际通道是同名 slots，文档也写明删除并改用 Slots。",
+      "semanticDifference": "导出的 Props 类型仍允许已被 Vue Slots 取代的旧写法，类型接受但运行时不生效，与公开契约/文档相悖。",
+      "recommendation": "确认 interface/index 的真实公共导出后，删除已弃用且无运行时实现的函数 Props，保留真实 slot 契约并加类型负例；同步英文/中文 API 表。",
+      "systemic": false,
+      "relatedComponents": [
+        "dropdown"
+      ],
+      "tests": [
+        "dropdown/__tests__/type.test-d.ts",
+        "dropdown/__tests__/index.test.ts"
+      ],
+      "status": "open",
+      "verification": "源码与文档对照确认不一致候选；尚未核实包入口导出范围、未运行类型测试。"
+    },
+    {
+      "id": "VNA-RENDERER-01",
+      "component": "shared-infrastructure",
+      "files": [
+        "packages/ui/src/empty/components/NodeRenderer.ts:51-60",
+        "packages/ui/src/spin/components/NodeRenderer.ts:45-53",
+        "packages/ui/src/card/CardMeta.vue:32",
+        "packages/ui/src/card/Card.vue:72",
+        "packages/ui/src/result/Result.vue:34",
+        "packages/ui/src/calendar/Calendar.vue:71",
+        "packages/ui/src/list/ItemMeta.vue:27",
+        "packages/ui/src/list/Item.vue:38",
+        "packages/ui/src/list/List.vue:61",
+        "packages/ui/src/color-picker/components/ColorTrigger.vue:31",
+        "packages/ui/src/button/Button.vue:52",
+        "packages/ui/src/avatar/AvatarGroup.vue:46",
+        "packages/ui/src/avatar/Avatar.vue:60",
+        "packages/ui/README.md:36",
+        "packages/ui/src/spin/README.md:76"
+      ],
+      "category": "architecture",
+      "severity": "P0",
+      "currentImplementation": "Vue VNodeChild 渲染/clone 是有真实平台需求的基础原语，但共享实现位于 empty/components/NodeRenderer.ts 并被 11 个导入点、分布在 7 个其它组件目录直接引用；Spin 因此在 spin/components/NodeRenderer.ts 维护几乎重复的实现，spin README 已将其列为待合并。",
+      "semanticDifference": "VNode 可变且模板不能直接渲染变量节点，故需要克隆/归一化；问题不是应删掉 Renderer，而是共享基础设施被某个业务组件所有、违反组件目录隔离并造成重复实现。",
+      "recommendation": "将通用 VNodeChild renderer/clone 逻辑迁到 packages/ui/src/_internal；Empty 专有的 string-to-img ImageNode 留在 empty；Spin 等消费者统一引用内部原语，移除其局部重复实现。保留无包裹 DOM、VNode clone、字符串/数字/数组/null 的既有行为。",
+      "systemic": true,
+      "relatedComponents": [
+        "empty",
+        "spin",
+        "card",
+        "result",
+        "calendar",
+        "list",
+        "color-picker",
+        "button",
+        "avatar"
+      ],
+      "tests": [
+        "NodeRenderer 渲染/clone/无额外 wrapper 的单测",
+        "相关组件现有 L1 与 L4",
+        "架构/边界静态检查，确认无其它组件从 empty/components 导入"
+      ],
+      "status": "open",
+      "verification": "读取 Empty/Spin renderer 与消费者调用；Grep 精确列出 11 个跨目录 imports。未运行测试，未修改代码。"
+    },
+    {
+      "id": "VNA-AFFIX-03",
+      "component": "affix",
+      "files": [
+        "packages/ui/src/affix/interface.ts:17-42,44-51",
+        "packages/ui/src/affix/Affix.vue:67-95,326-329",
+        "packages/ui/src/affix/__tests__/type.test-d.ts:30-65",
+        "packages/ui/src/affix/__tests__/index.test.ts:20-40,68-114",
+        "packages/ui/src/affix/__tests__/semantic.test.ts:56-65",
+        "packages/ui/src/affix/index.zh-CN.md:101-116",
+        "packages/ui/src/affix/index.en-US.md:101-119",
+        "COMPATIBILITY.md:224-238"
+      ],
+      "category": "attrs",
+      "severity": "P2",
+      "currentImplementation": "AffixProps no longer declares className/rootClassName/style. Root class/style stay in live $attrs and merge with ConfigProvider defaults at render time via mergeProps. AffixConfig.className/style remain configuration-schema fields and are not component Props.",
+      "semanticDifference": "Vue class/style are built-in root attrs, not component-specific Props; duplicating them creates parallel APIs and the declared-but-unused rootClassName is a false contract.",
+      "recommendation": "修复已完成：仅移除 AffixProps 中的 React 风格根别名；保留 AffixConfig 的 Provider 配置字段；根 attrs 在 render 时合并；semantic oracle 的 React className case 对应 Vue 原生 class，rootClassName 的旧基线用例不传该 Vue-only prop。",
+      "systemic": false,
+      "relatedComponents": [
+        "affix"
+      ],
+      "tests": [
+        "affix/__tests__/type.test-d.ts: component $props accepts class/style, rejects className/rootClassName",
+        "affix/__tests__/index.test.ts: root attrs, provider merge, parent updates",
+        "affix/__tests__/semantic.test.ts: behavior oracle for React className maps to Vue class"
+      ],
+      "status": "fixed",
+      "verification": "unit：Affix 2 files / 21 tests passed；dom-contract：Affix 11 tests passed；types：Affix 2 files / 30 tests passed, Type Errors: no errors；full `pnpm run lint:types` passed；targeted Biome check passed; `git diff --check` passed."
+    }
+  ],
+  "batches": [
+    {
+      "id": "AUDIT-01",
+      "title": "Establish full source inventory and cross-component scan",
+      "status": "in_progress",
+      "scope": "All 72 components plus shared hooks, utils, and infrastructure surfaces",
+      "issueIds": [
+        "VNA-API-01",
+        "VNA-SLOT-01",
+        "VNA-ATTRS-01",
+        "VNA-AFFIX-01",
+        "VNA-AFFIX-02",
+        "VNA-AVATAR-01",
+        "VNA-DIVIDER-01",
+        "VNA-DROPDOWN-01"
+      ],
+      "verification": [
+        "node registry/tools/ask.mjs progress -> components 72/72 completed, foundation 13/13 completed",
+        "Read-only audit report: 17 components complete; 7 components partial; 130/955 production source files reviewed",
+        "No tests run; findings are open, no source refactoring performed",
+        "Affix: removed production probe logs and fixed CSS px-string equality fast path; focused unit 19/19 passed; targeted Biome check passed; full type check pending.",
+        "Affix: full type check `pnpm run lint:types` passed with exit 0; targeted Biome passed; `git diff --check` passed.",
+        "Affix API correction (user review): className/rootClassName/style removed from component Props; ConfigProvider AffixConfig retained; live Vue attrs merged at render. unit 21/21, DOM 11/11, types 30/30, full vue-tsc, Biome and diff-check pass.",
+        "Reusable missed-audit lesson added to .workbuddy-ai/skills/vue-native-audit/SKILL.md; quick_validate passed; vue-native-audit.zip repackaged successfully."
+      ],
+      "componentProgress": {
+        "done": 17,
+        "partial": 7,
+        "reviewedProductionSourceFiles": 130,
+        "affix": "done"
+      }
+    },
+    {
+      "id": "AUDIT-02",
+      "title": "Audit components 25-48 and the shared VNode renderer boundary",
+      "status": "in_progress",
+      "scope": "empty, flex, float-button, form, grid, image, input, input-number, layout, list, listy, masonry, mentions, menu, message, modal, notification, pagination, popconfirm, popover, progress, qr-code, radio, rate; initial cross-cut renderer probe in Empty/Spin",
+      "componentProgress": {
+        "started": 2,
+        "partial": 2,
+        "done": 0
+      },
+      "issueIds": [
+        "VNA-RENDERER-01"
+      ],
+      "verification": [
+        "Read empty/components/NodeRenderer.ts, empty/interface.ts, empty/Empty.vue",
+        "Read spin/components/NodeRenderer.ts, spin/interface.ts, spin/Spin.vue",
+        "Grep found 11 direct imports from empty/components/NodeRenderer across component directories",
+        "No tests run; no source refactor performed"
+      ]
+    }
+  ],
+  "gateResults": {},
+  "sessionLog": [
+    {
+      "date": "2026-10-05",
+      "status": "started",
+      "note": "Created and validated vue-native-audit Skill; initialized component/surface inventory. Full audit and refactor remain in progress."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Persisted first-batch evidence: 17/24 component source reviews complete, 7 partial, 130/955 production source files reviewed; registered 8 open findings (P1=3, P2=5). No product code changed and no tests run."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Started next component batch with a focused shared-renderer probe: 11 import sites across 7 component directories consume the VNodeChild renderer from empty/components; Spin has a duplicate. Recorded P0 architecture finding VNA-RENDERER-01 while explicitly retaining the Vue-specific renderer abstraction. Empty and Spin each have 3/7 and 3/11 source files reviewed."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Affix sample refactor implemented. Removed production [affix-probe] console logging; added hasSameFixedPosition to compare Vue inline px strings in the RAF fast path; added component regression test and unit cases, updated Chinese/English docs and README. Focused unit: 2 files / 19 tests passed; targeted Biome passed; full vue-tsc still pending. Issues VNA-AFFIX-01/02 marked fixed subject to type-check completion; Affix component audit status testing."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Affix one-component pilot is verified: all 6 production files reviewed, two findings fixed, focused unit 2 files/19 tests pass, repo-wide vue-tsc exits 0, targeted Biome and git diff --check pass. Added explicit Affix component regression test and synced README + zh/en docs. Other components and shared surfaces remain pending."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "User caught an audit miss in Affix: className/rootClassName/style remained in AffixProps. Cross-check found this contradicted COMPATIBILITY.md §7 (className→native class; style→native style); rootClassName was declared but not consumed at runtime. Reopened Affix as refactoring; added VNA-AFFIX-03. Keeping AffixConfig.className/style because these are ConfigProvider object schema, not component props. Skill now has mandatory mapping-reconciliation and native-attrs type-test gates."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "API correction checks completed: moved React className baseline expectation onto Vue native class, removed className/rootClassName/style from AffixProps, kept ConfigProvider AffixConfig className/style, and merged provider defaults with live attrs at render time. Focused unit 21/21, dom-contract 11/11, type project 30/30 (no type errors), targeted Biome and diff-check all pass. Full repo vue-tsc is running."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Affix contract miss fully corrected. Removed className/rootClassName/style from AffixProps, kept AffixConfig.className/style solely as ConfigProvider schema, switched React className oracle case to Vue class, and changed rootClassName baseline case to no Vue prop. Added type negatives for all removed Props, live attr/update/provider tests, and docs. Skill now mandates mapping reconciliation and separate component-Props vs attrs/config schema review. Verification: unit 21/21, DOM 11/11, types 30/30 (no errors), full lint:types, Biome, diff check pass. Affix done; rest audit remains in progress."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "User requested that audit learnings be accumulated. Expanded vue-native-audit Skill with an Affix postmortem: map-contract reconciliation; component Props vs ConfigProvider schema; live useAttrs/mergeProps at render; translating React oracle inputs to Vue API; positive/negative public $props tests; reopening premature done findings. Skill Creator quick validation and repackaging passed; full repo lint:types rerun passed after final Affix type-test changes."
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS-RENDERER-01",
+      "surface": "VNodeChild rendering",
+      "decision": "retain-platform-primitive-centralize-internal",
+      "note": "NodeRenderer 本身不是应被删除的 ReactNode adapter：它解决 Vue render 对动态 VNodeChild 与 cloneVNode 的真实需求。需修的是空状态组件目录持有共享 Renderer 和 Spin 重复实现。",
+      "evidence": [
+        "packages/ui/src/empty/components/NodeRenderer.ts:43-60",
+        "packages/ui/src/spin/components/NodeRenderer.ts:39-53"
+      ]
+    }
+  ]
+}

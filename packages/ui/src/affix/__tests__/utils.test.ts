@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
-import { getFixedBottom, getFixedTop, getTargetRect } from '../utils';
+import { getFixedBottom, getFixedTop, getTargetRect, hasSameFixedPosition } from '../utils';
 
 /** 手造一个矩形（省得每处都写全字段）。 */
 const rect = (
@@ -142,6 +142,38 @@ describe('getTargetRect', () => {
     try {
       expect(getTargetRect(null)).toEqual({ top: 0, bottom: 700 });
     } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+});
+
+describe('hasSameFixedPosition', () => {
+  it('Vue 生成的 top/bottom 像素字符串与数值判据相同', () => {
+    expect(hasSameFixedPosition({ top: '64px' }, 64, undefined)).toBe(true);
+    expect(hasSameFixedPosition({ bottom: '12.5px' }, undefined, 12.5)).toBe(true);
+  });
+
+  it('也接受数值样式；不同位置不应命中快速返回', () => {
+    expect(hasSameFixedPosition({ top: 64 }, 64, undefined)).toBe(true);
+    expect(hasSameFixedPosition({ top: '65px' }, 64, undefined)).toBe(false);
+  });
+
+  it('没有可比较的位置时返回 false', () => {
+    expect(hasSameFixedPosition(undefined, 64, undefined)).toBe(false);
+    expect(hasSameFixedPosition({ top: '64px' }, undefined, undefined)).toBe(false);
+  });
+});
+
+describe('几何判据不输出诊断日志', () => {
+  it('getTargetRect / getFixedBottom 不向控制台输出调试信息', () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.stubGlobal('innerHeight', 800);
+    try {
+      getTargetRect(null);
+      getFixedBottom(rect(660, 760), rect(0, 800), 64);
+      expect(log).not.toHaveBeenCalled();
+    } finally {
+      log.mockRestore();
       vi.unstubAllGlobals();
     }
   });

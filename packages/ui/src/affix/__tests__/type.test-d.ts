@@ -33,6 +33,35 @@ describe('Affix · Props 可选性', () => {
     expectTypeOf(empty).toMatchTypeOf<AffixProps>();
   });
 
+  it('根 `class` / `style` 使用 Vue 原生 attrs，不属于 AffixProps', () => {
+    type PublicProps = InstanceType<typeof Affix>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-class', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error Vue consumers use native `class`, not React's className
+      const badClassName: PublicProps = { className: 'legacy' };
+      // @ts-expect-error Vue consumers use native `class`, not rootClassName
+      const badRootClassName: PublicProps = { rootClassName: 'legacy' };
+      return [badClassName, badRootClassName];
+    };
+    void _never;
+
+    const invalidPropDeclarations = () => {
+      // @ts-expect-error native root class is not an Affix-specific prop
+      const badClassName: AffixProps = { className: 'legacy' };
+      // @ts-expect-error rootClassName is a React-only root alias
+      const badRootClassName: AffixProps = { rootClassName: 'legacy' };
+      // @ts-expect-error native root style is not an Affix-specific prop
+      const badStyle: AffixProps = { style: { color: 'red' } };
+      return [badClassName, badRootClassName, badStyle];
+    };
+    void invalidPropDeclarations;
+  });
+
   it('★ `offsetTop` / `offsetBottom` 是 `number | undefined`（三态判据的基础）', () => {
     const a: AffixProps = { offsetTop: 64 };
     const b: AffixProps = { offsetBottom: 0 };
@@ -99,7 +128,7 @@ describe('Affix · Ref 与插槽', () => {
 });
 
 describe('Affix · Config 与 Rect', () => {
-  it('`AffixConfig` 含 `className` / `style`', () => {
+  it('ConfigProvider 的 `AffixConfig` 保留配置对象字段（不是组件 Props）', () => {
     const c: AffixConfig = { className: 'x', style: { color: 'red' } };
     expectTypeOf(c).toMatchTypeOf<AffixConfig>();
     expectTypeOf(c.style).toEqualTypeOf<CSSProperties | undefined>();

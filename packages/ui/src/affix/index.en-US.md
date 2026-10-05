@@ -104,9 +104,16 @@ const affixRef = ref<{ updatePosition: () => void } | null>(null);
 | `offsetBottom` | Offset from the bottom of the viewport after affixing. **Mutually exclusive with `offsetTop`**: when both are set only `offsetTop` takes effect | `number` | — |
 | `target` | Scroll listening and positioning reference; **a function returning an element or `window`**. Default `window` | `() => HTMLElement \| Window \| null` | — |
 | `prefixCls` | Class name prefix | `string` | `apollo-affix` |
-| `className` | Class name of the root (placeholder measuring) element | `string` | — |
-| `rootClassName` | Class name of the root element (highest priority) | `string` | — |
-| `style` | Style of the root (placeholder measuring) element | `CSSProperties` | — |
+
+### Native root attributes
+
+The outer placeholder-measuring element is the root. Vue-native `class`, `style`, and other `$attrs` fall through to it; `class` supports string, array, and object forms. `style` merges with `ConfigProvider.components.affix.style`, with caller values taking precedence. These are not Affix-specific Props, so no `className`, `rootClassName`, or `style` Props are declared.
+
+```vue
+<Affix class="toolbar-affix" :style="{ zIndex: 20 }">
+  <Toolbar />
+</Affix>
+```
 
 ### Events
 
@@ -159,6 +166,11 @@ the result uses the raw values.
 ⚠️ `getFixedBottom` uses `window.innerHeight` (not the target height) — affixing to the
 "visible bottom of a container" needs the distance from the container's bottom edge to the
 viewport's bottom edge.
+
+When comparing an unchanged affix position, account for Vue's inline style values: numeric
+measurements are written as pixel strings such as `"64px"`. The fast path compares that value
+with the computed position to avoid repeating the full measurement. Geometry helpers do not emit
+probe logs in production.
 
 ### Accessibility
 

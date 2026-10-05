@@ -20,6 +20,18 @@ export interface AffixRect {
   left?: number;
 }
 
+/** `Affix.vue` 写入 Vue inline style 的位置会是 `"80px"`，不是 React 的数值 `80`。 */
+export function hasSameFixedPosition(
+  style: { top?: string | number; bottom?: string | number } | undefined,
+  fixedTop: number | undefined,
+  fixedBottom: number | undefined,
+): boolean {
+  const matches = (current: string | number | undefined, next: number | undefined): boolean =>
+    next !== undefined && (current === next || current === `${next}px`);
+
+  return matches(style?.top, fixedTop) || matches(style?.bottom, fixedBottom);
+}
+
 /**
  * 目标容器的矩形。
  *
@@ -28,15 +40,6 @@ export interface AffixRect {
  * （antd 原样如此，`getFixedTop` 只读 `top`、`getFixedBottom` 只读 `bottom`）。
  */
 export function getTargetRect(target: Window | HTMLElement | null): AffixRect {
-  // eslint-disable-next-line no-console
-  console.log(
-    '[affix-probe] getTargetRect target=',
-    String(target),
-    '| ctor=',
-    target?.constructor?.name || String(target),
-    '| hasGBCR=',
-    typeof ((target as HTMLElement | undefined) && (target as HTMLElement).getBoundingClientRect),
-  );
   if (target && typeof (target as HTMLElement).getBoundingClientRect === 'function') {
     return (target as HTMLElement).getBoundingClientRect();
   }
@@ -87,17 +90,6 @@ export function getFixedBottom(
   targetRect: AffixRect,
   offsetBottom: number | undefined,
 ): number | undefined {
-  // eslint-disable-next-line no-console
-  console.log(
-    '[affix-probe] getFixedBottom targetRect.bottom=',
-    targetRect.bottom,
-    '| placeholderRect.bottom=',
-    placeholderRect.bottom,
-    '| innerHeight=',
-    typeof window !== 'undefined' ? window.innerHeight : '(no window)',
-    '| offsetBottom=',
-    offsetBottom,
-  );
   if (
     offsetBottom !== undefined &&
     Math.round(targetRect.bottom) < Math.round(placeholderRect.bottom) + offsetBottom

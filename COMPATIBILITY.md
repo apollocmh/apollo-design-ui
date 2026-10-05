@@ -229,7 +229,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | `style` | `style` | |
 | `classNames={{ root, body }}` | `:classNames="{ root, body }"` | 语义化类名，结构一致 |
 | `styles={{ root, body }}` | `:styles="{ root, body }"` | |
-| `rootClassName` / `rootStyle` | 同名保留 | |
+| `rootClassName` / `rootStyle` | 默认并入根节点原生 `class` / `style` attrs；仅在语义目标独立于根 attrs 且有实证需求时保留专用 prop | 不因 React 存在同名字段就默认声明 Vue prop；ConfigProvider 配置对象另行审计 |
 | `ConfigProvider theme={{ token, components, algorithm, cssVar, zeroRuntime }}` | 同名保留 | `cssVar.prefix` 默认改为 `apollo`；`zeroRuntime` 恒为 `true`（本项目唯一模式） |
 | `ConfigProvider prefixCls="ant"` | `prefixCls` 默认 `apollo` | |
 | `ConfigProvider locale={zhCN}` | 同名保留 | 语言包路径 `@apollo-design/ui/locale/zh-CN` |

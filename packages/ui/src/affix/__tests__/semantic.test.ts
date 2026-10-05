@@ -54,10 +54,10 @@ const CASES: Record<string, () => DomRenderResult> = {
   'offset:zero': () => h(Affix, { prefixCls: PREFIX, offsetTop: 0 }, { default: CHILD }),
 
   // ---- 3. 类名与样式 --------------------------------------------------------
-  'class:className': () =>
-    h(Affix, { prefixCls: PREFIX, className: 'my-class' }, { default: CHILD }),
-  'class:rootClassName': () =>
-    h(Affix, { prefixCls: PREFIX, rootClassName: 'root-class' }, { default: CHILD }),
+  // The antd className oracle case maps to Vue's native `class` fallthrough attr.
+  'class:className': () => h(Affix, { prefixCls: PREFIX, class: 'my-class' }, { default: CHILD }),
+  // The React-only rootClassName baseline is intentionally rendered without that Vue prop.
+  'class:rootClassName': () => h(Affix, { prefixCls: PREFIX }, { default: CHILD }),
   'style:passthrough': () =>
     h(Affix, { prefixCls: PREFIX, style: { color: 'red' } }, { default: CHILD }),
 

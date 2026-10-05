@@ -15,7 +15,7 @@
 ```
 affix/
 ├── Affix.vue        # 组件（测量 → 喂判据 → 应用结果 → 绑/解事件）
-├── utils.ts         # 判据本体：getTargetRect / getFixedTop / getFixedBottom（纯函数，**导出**供单测）
+├── utils.ts         # 判据与 Vue style 比较：getTargetRect / getFixedTop / getFixedBottom / hasSameFixedPosition（**导出**供单测）
 ├── interface.ts     # 类型面（脚手架没预生成 affix ⇒ 本文件是源头）
 ├── index.ts         # 导出
 ├── style/token.ts   # zIndexPopup = zIndexBase + 10
@@ -27,6 +27,8 @@ affix/
 ## 3. 公共 API
 
 见 `index.zh-CN.md`。要点：`offsetTop` / `offsetBottom` / `target` / `@change` / `ref.updatePosition`。
+
+根节点的 `class` / `style` 是 Vue 原生 attrs，由 `inheritAttrs: false` 后的显式 fallthrough 合并到外层占位测量节点；它们不属于 `AffixProps`。`AffixConfig.className` / `style` 则是 ConfigProvider 配置对象字段，形状不同、用途不同，仍保留。
 
 ## 4. 五条最容易写错的判据（都已被测试钉住）
 
@@ -55,6 +57,10 @@ target 就是 window 时恒为 0（结果就是 `offsetBottom`）；target 是�
 
 `top/left/width/height` 全为 0 ⇒ 视为「还没量到」，放弃本次测量（隐藏元素会命中）。
 
+### 4.6 固钉位置的快速比较要遵循 Vue 的 style 值
+
+Affix 把测量结果转换成 `"64px"` 写入 Vue 的 inline style；位置未变时的快路径必须将它与 `"64px"`（或数值）比较，不能拿 `"64px"` 直接和 `64` 比。调试探针不得留在组件测量/几何函数的生产路径中。
+
 ## 5. 样式
 
 ```css
@@ -71,7 +77,7 @@ target 就是 window 时恒为 0（结果就是 `offsetBottom`）；target 是�
 
 | 层 | 状态 | 覆盖 |
 |---|---|---|
-| L1 判据 | ✅ 14 例 | 3 个纯函数的边界（round、互锁、undefined、亚像素、innerHeight） |
+| L1 判据 | ✅ 18 例 | 3 个几何判据 + Vue 像素字符串位置比较 + 无诊断日志 |
 | L3 types | ✅ 14 例 | Props 可选性 / target 工厂 / Ref 形状 / AffixRect 可选字段 |
 | L5 a11y | ✅ 11 例 | 不凭空加 ARIA / 未固钉不渲染占位层 / 无 tabindex |
 | L4 dom-contract | ⬜ 待补 | |

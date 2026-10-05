@@ -104,9 +104,16 @@ const affixRef = ref<{ updatePosition: () => void } | null>(null);
 | `offsetBottom` | 距离窗口底部达到指定偏移后固钉。**与 `offsetTop` 互斥**：都传时只有 `offsetTop` 生效 | `number` | — |
 | `target` | 滚动监听与定位的参照目标，**返回元素或 `window` 的函数**。默认 `window` | `() => HTMLElement \| Window \| null` | — |
 | `prefixCls` | 类名前缀 | `string` | `apollo-affix` |
-| `className` | 根元素（占位测量层）类名 | `string` | — |
-| `rootClassName` | 根元素类名（优先级最高） | `string` | — |
-| `style` | 根元素（占位测量层）样式 | `CSSProperties` | — |
+
+### 根节点原生属性
+
+根节点是外层占位测量层。Vue 原生 `class`、`style` 及其它 `$attrs` 会透传到该节点；`class` 支持字符串、数组和对象形态，`style` 与 ConfigProvider 中的 `components.affix.style` 合并，调用处同名样式优先。它们不是 Affix 专属 Props，因此不声明 `className`、`rootClassName` 或 `style` Props。
+
+```vue
+<Affix class="toolbar-affix" :style="{ zIndex: 20 }">
+  <Toolbar />
+</Affix>
+```
 
 ### 事件
 
@@ -155,6 +162,8 @@ getFixedBottom(placeholderRect, targetRect, offsetBottom)
 ⚠️ `Math.round` **只参与比较**（消除亚像素抖动），结果用原始值。
 ⚠️ `getFixedBottom` 用 `window.innerHeight`（不是 target 高度）—— 固在「容器可视区底部」
 需要容器底边到视口底边的距离补偿。
+
+位置未变时的快速路径需按 Vue 的 inline style 值比较：测量数值写入样式后会变成 `"64px"` 这样的像素字符串；与当前判据位置相等时跳过完整重测。几何函数不在生产路径输出探针日志。
 
 ### 无障碍
 

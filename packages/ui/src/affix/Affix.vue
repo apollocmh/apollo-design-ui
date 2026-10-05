@@ -37,6 +37,7 @@ import { throttleByAnimationFrame, useResizeObserver } from '@apollo-design/util
 import {
   type CSSProperties,
   computed,
+  mergeProps,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -47,7 +48,7 @@ import {
 } from 'vue';
 import { useComponentConfig, useConfigContext } from '../config-provider/context';
 import type { AffixConfig, AffixProps, AffixRef, AffixTarget } from './interface';
-import { getFixedBottom, getFixedTop, getTargetRect } from './utils';
+import { getFixedBottom, getFixedTop, getTargetRect, hasSameFixedPosition } from './utils';
 
 const TRIGGER_EVENTS = [
   'resize',
@@ -85,6 +86,12 @@ const {
 // ⚠️ `getTargetContainer` 挂在 context **顶层**，不在 `components.affix` 里
 //    （它是全局的浮层容器配置，不是组件配置）—— 所以单独取。
 const { getTargetContainer } = useConfigContext();
+
+/**
+ * Vue-native root attrs: component-level `class` / `style` stay in `$attrs` and are
+ * merged with the ConfigProvider defaults using Vue's own class/style merge rules.
+ */
+const rootAttrs = () => mergeProps({ class: contextClassName, style: contextStyle }, attrs);
 
 const affixPrefixCls = computed(() => getPrefixCls('affix', props.prefixCls));
 
@@ -133,19 +140,6 @@ const measure = (): void => {
   //    实测 style 变体的差异率从 0.013-0.048% 恶化到 0.796-3.68% ⇒ 已回退。
   //    （React 基线定格的就是「测量时的外层高度」，改量占位层反而偏离。）
   const placeholderRect = getTargetRect(placeholderNode.value);
-  // eslint-disable-next-line no-console
-  console.log(
-    '[affix-probe] measure h=',
-    placeholderRect.height,
-    'w=',
-    placeholderRect.width,
-    'top=',
-    placeholderRect.top,
-    '| lastAffix=',
-    lastAffix.value,
-    '| 现affixStyle=',
-    JSON.stringify(affixStyle.value),
-  );
   // antd `:48-50`：零矩形 ⇒ 还没量到，放弃本次测量。
   if (
     placeholderRect.top === 0 &&
@@ -164,7 +158,6 @@ const measure = (): void => {
     return;
   }
   const targetRect = getTargetRect(targetNode);
-  // eslint-disable-next-line no-console
   const fixedTop = getFixedTop(placeholderRect, targetRect, internalOffsetTop.value);
   const fixedBottom = getFixedBottom(placeholderRect, targetRect, props.offsetBottom);
 
@@ -208,14 +201,6 @@ const measure = (): void => {
     emit('change', nextLastAffix);
   }
   statusRef.value = AFFIX_STATUS_NONE;
-  // eslint-disable-next-line no-console
-  // eslint-disable-next-line no-console
-  console.log(
-    '[affix-probe] affixStyle=',
-    JSON.stringify(nextAffixStyle),
-    '| placeholderStyle=',
-    JSON.stringify(nextPlaceholderStyle),
-  );
   // ⚠️⚠️ **直接赋值，不要包一层对象**：
   //    曾在这里做过 `Object.freeze({ ...nextAffixStyle })` 的「诊断实验」——
   //    当 nextAffixStyle 为 **undefined** 时，`{ ...undefined }` 的结果是 **`{}`（真值！）**，
@@ -249,11 +234,7 @@ const lazyUpdatePosition = throttleByAnimationFrame((): void => {
       const placeholderRect = getTargetRect(placeholderNode.value);
       const fixedTop = getFixedTop(placeholderRect, targetRect, internalOffsetTop.value);
       const fixedBottom = getFixedBottom(placeholderRect, targetRect, props.offsetBottom);
-      const style = affixStyle.value as { top?: number; bottom?: number };
-      if (
-        (fixedTop !== undefined && style.top === fixedTop) ||
-        (fixedBottom !== undefined && style.bottom === fixedBottom)
-      ) {
+      if (hasSameFixedPosition(affixStyle.value, fixedTop, fixedBottom)) {
         return;
       }
     }
@@ -342,12 +323,7 @@ defineExpose<AffixRef>({
 </script>
 
 <template>
-  <div
-    ref="placeholderNode"
-    :style="{ ...contextStyle, ...style }"
-    :class="[className, contextClassName]"
-    v-bind="attrs"
-  >
+  <div ref="placeholderNode" v-bind="rootAttrs()">
     <!-- ① 占位层：只在固钉时渲染（antd `:186`） -->
     <div v-if="affixStyle" :style="placeholderStyle" aria-hidden="true"></div>
 
