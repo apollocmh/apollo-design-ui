@@ -32,8 +32,6 @@ defineOptions({ name: 'ACol', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  style: undefined,
   span: undefined,
   order: undefined,
   offset: undefined,
@@ -123,7 +121,6 @@ const rootClass = computed(() => {
       [`${cls}-push-${props.push}`]: props.push,
       [`${cls}-pull-${props.pull}`]: props.pull,
     },
-    props.className,
     sizeClasses.value,
   ];
 });
@@ -151,9 +148,15 @@ const mergedStyle = computed<CSSProperties>(() => {
   return style;
 });
 
+// 根 `style` 是 Vue 原生 attrs（不再是 prop），合并位置与原先的 `props.style` 一致：
+// mergedStyle → 调用方 style → sizeStyle（响应式 sizeStyle 仍然最后胜出）。
 const rootAttrs = computed(() => ({
   ...attrs,
-  ...styleAttrs({ ...mergedStyle.value, ...props.style, ...sizeStyle.value }),
+  ...styleAttrs({
+    ...mergedStyle.value,
+    ...((attrs.style as CSSProperties | undefined) ?? {}),
+    ...sizeStyle.value,
+  }),
 }));
 
 // ---------------------------------------------------------------------------

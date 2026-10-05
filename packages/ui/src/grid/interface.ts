@@ -47,10 +47,6 @@ export interface ColSize {
 export interface RowProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-row`。 */
   prefixCls?: string;
-  /** 根元素类名。 */
-  className?: string;
-  /** 根元素内联样式。会覆盖 gutter 生成的 margin/rowGap。 */
-  style?: CSSProperties;
   /** 间距。 */
   gutter?: Gutter;
   /** 主轴对齐。 */
@@ -70,10 +66,6 @@ export interface RowProps {
 export interface ColProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-col`。 */
   prefixCls?: string;
-  /** 根元素类名。 */
-  className?: string;
-  /** 根元素内联样式（在 gutter padding 与 flex 之后合并，最后是响应式 sizeStyle）。 */
-  style?: CSSProperties;
   /** 栅格占位（1–24）。 */
   span?: number;
   /** 栅格顺序。 */

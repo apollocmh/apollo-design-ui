@@ -30,8 +30,6 @@ defineOptions({ name: 'ARow', inheritAttrs: false });
 
 const props = withDefaults(defineProps<RowProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  style: undefined,
   gutter: 0,
   justify: undefined,
   align: undefined,
@@ -66,7 +64,6 @@ const rootClass = computed(() => {
       [`${cls}-${mergedAlign.value}`]: mergedAlign.value,
       [`${cls}-rtl`]: direction === 'rtl',
     },
-    props.className,
   ];
 });
 
@@ -89,8 +86,9 @@ const rowStyle = computed<CSSProperties>(() => {
     style.marginInline = isNumber(gutterH) ? `${gutterH / -2}px` : `calc(${gutterH} / -2)`;
   }
   style.rowGap = typeof gutterV === 'number' ? (gutterV === 0 ? '0' : `${gutterV}px`) : gutterV;
-  // antd: style: { ...rowStyle, ...style } —— prop style 在最后，覆盖 gutter 值
-  return { ...style, ...props.style };
+  // antd: style: { ...rowStyle, ...style } —— 调用方 style 在最后，覆盖 gutter 值。
+  // 根 `style` 是 Vue 原生 attrs（不再是 prop），位置保持不变。
+  return { ...style, ...((attrs.style as CSSProperties | undefined) ?? {}) };
 });
 
 const rootStyleAttrs = computed(() => styleAttrs(rowStyle.value));

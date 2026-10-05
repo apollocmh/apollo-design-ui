@@ -42,7 +42,7 @@ subtitle: 栅格
 | align | 垂直对齐方式（支持响应式对象） | `'top' \| 'middle' \| 'bottom' \| 'stretch'` | — |
 | wrap | 是否自动换行 | `boolean` | `true` |
 | prefixCls | 类名前缀 | `string` | 兜底 `apollo-row` |
-| className / style | 透传根元素（style 覆盖 gutter 值） | — | — |
+| class / style | **根元素原生 attrs**（不是 Props）；调用方 `style` 覆盖 gutter 值 | — | — |
 
 ### Col
 
@@ -52,7 +52,8 @@ subtitle: 栅格
 | order / offset / push / pull | 排序与偏移 | `number` | — |
 | flex | flex 布局属性（`'auto'`、数字 `n n auto`、长度串 `0 0 n`） | `string \| number` | — |
 | xs … xxxl | 响应式栅格（≥576 / ≥768 / ≥992 / ≥1200 / ≥1600 / ≥1920；xs 为 <576） | `number \| object` | — |
-| prefixCls / className / style | 同上 | — | — |
+| prefixCls | 类名前缀 | `string` | 兜底 `apollo-col` |
+| class / style | 根元素原生 attrs；`style` 的合并位置在**响应式 sizeStyle 之前**（sizeStyle 仍最后胜出） | — | — |
 
 ### Hook
 
