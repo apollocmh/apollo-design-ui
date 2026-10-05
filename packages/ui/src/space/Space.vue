@@ -35,6 +35,7 @@ import { isEmptyVNode, toArray, useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
+  mergeProps,
   provide,
   ref,
   shallowReactive,
@@ -82,9 +83,6 @@ defineOptions({ name: 'ASpace', inheritAttrs: false });
  */
 const props = withDefaults(defineProps<SpaceProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
-  style: undefined,
   size: undefined,
   direction: undefined,
   vertical: undefined,
@@ -298,12 +296,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   SpaceSemanticStyles
 >(
   [() => contextClassNames, () => props.classNames],
-  [
-    () => contextStyles,
-    () => semanticRootStyle(contextStyle),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
   semanticProps,
 );
 
@@ -326,8 +319,6 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-gap-row-${verticalSize.value}`]: isPresetVerticalSize.value,
     [`${prefixCls.value}-gap-col-${horizontalSize.value}`]: isPresetHorizontalSize.value,
   },
-  props.className,
-  props.rootClassName,
   mergedClassNames.value.root,
 ]);
 
@@ -384,7 +375,7 @@ const rootStyleAttrs = computed(() =>
  * 这与 antd 的位置（`className` 在中间）不同，但两者都是「用户的类名」，
  * 且 L4 的投影会把类名排序 ⇒ 不可观测。差异登记见 `docs/analysis/space.md` §9。
  */
-const rootAttrs = computed(() => ({ ...attrs, ...rootStyleAttrs.value }));
+const rootAttrs = computed(() => mergeProps(rootStyleAttrs.value, attrs));
 
 /**
  * `v-for` 的 key。

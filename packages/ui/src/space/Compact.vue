@@ -65,9 +65,6 @@ const props = withDefaults(defineProps<SpaceCompactProps>(), {
   orientation: undefined,
   vertical: undefined,
   block: undefined,
-  rootClassName: undefined,
-  className: undefined,
-  style: undefined,
 });
 
 const slots = useSlots();
@@ -130,18 +127,15 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-block`]: props.block,
     [`${prefixCls.value}-vertical`]: mergedVertical.value,
   },
-  props.className,
-  props.rootClassName,
 ]);
 
 /**
  * 根元素属性。
  *
- * ⚠️ `style` 在 antd 里没被解构出来 ⇒ 它随 `{...restProps}` 落在最后。
- *    这里等价：`$attrs` 先、`style` 后。空样式必须返回 `{}`（连 `style` 键都
- *    不出现），否则 SSR 会渲染出 `style=""`（见 `styleAttrs` 的注释）。
+ * ⚠️ 根 `class` / `style` 是 Vue 原生 attrs（上游的 `className` / `rootClassName` / `style`
+ *    都随 `{...restProps}` 落根），整体由 `$attrs` 透传即可。
  */
-const rootAttrs = computed(() => ({ ...attrs, ...styleAttrs(props.style) }));
+const rootAttrs = computed(() => ({ ...attrs }));
 
 /** `v-for` 的 key。antd：`child?.key || \`${prefixCls}-item-${i}\``（`Compact.tsx:134`）。 */
 const compactItemKey = (child: VNode, index: number): string | number => {

@@ -261,10 +261,10 @@ const CASES: Record<string, () => DomRenderResult> = {
   'split:legacy': () => space({ split: '-' }, ['a', 'b']),
   'split:legacy+separator': () => space({ split: '|', separator: '-' }, ['a', 'b']),
 
-  // ---- 7. className / rootClassName / 属性透传 ----
-  'class:className': () => space({ className: 'my-class' }),
-  'class:rootClassName': () => space({ rootClassName: 'root-class' }),
-  'class:both': () => space({ className: 'a', rootClassName: 'b' }),
+  // ---- 7. 根节点原生 attrs（React className/rootClassName 的 Vue 对应物是 class） ----
+  'class:className': () => space({ class: 'my-class' }),
+  'class:rootClassName': () => space({ class: 'root-class' }),
+  'class:both': () => space({ class: ['a', 'b'] }),
   'attrs:passthrough': () => space({ 'data-testid': 'x', id: 'my-space', title: 'tip' }),
 
   // ---- 8. 语义化 ----
@@ -330,8 +330,8 @@ const CASES: Record<string, () => DomRenderResult> = {
   'compact:vertical-false': () => compact({ vertical: false }),
   'compact:vertical-true': () => compact({ vertical: true }),
   'compact:orientation+vertical': () => compact({ orientation: 'vertical', vertical: false }),
-  'compact:class:className': () => compact({ className: 'cc' }),
-  'compact:class:rootClassName': () => compact({ rootClassName: 'cc-root' }),
+  'compact:class:className': () => compact({ class: 'cc' }),
+  'compact:class:rootClassName': () => compact({ class: 'cc-root' }),
   'compact:style': () => compact({ style: { color: 'red' } }),
   'compact:attrs': () => compact({ 'data-testid': 'c', id: 'my-compact' }),
   'compact:size-small': () => compact({ size: 'small' }),
@@ -385,7 +385,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'addon:status-empty': () => addon({ status: '' }),
   'addon:disabled': () => addon({ disabled: true }),
   'addon:disabled+status-error': () => addon({ disabled: true, status: 'error' }),
-  'addon:class:className': () => addon({ className: 'my-addon' }),
+  'addon:class:className': () => addon({ class: 'my-addon' }),
   'addon:style': () => addon({ style: { color: 'red' } }),
   'addon:attrs': () => addon({ 'data-testid': 'a', id: 'my-addon' }),
   'addon:children-element': () => addon({}, h('span', null, 'Addon')),

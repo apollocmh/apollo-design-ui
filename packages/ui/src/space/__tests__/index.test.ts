@@ -504,8 +504,8 @@ describe('Space · latestIndex（SpaceContext）', () => {
 // ---------------------------------------------------------------------------
 
 describe('Space · class / style / 属性透传', () => {
-  it('`className` 与 `rootClassName` 都落在根元素上', () => {
-    const w = mountSpace({ className: 'a', rootClassName: 'b' }, twoSpans());
+  it('原生 `class`（字符串 / 数组）落在根元素上', () => {
+    const w = mountSpace({ class: ['a', 'b'] }, twoSpans());
     expect(w.classes()).toContain('a');
     expect(w.classes()).toContain('b');
   });
@@ -862,7 +862,7 @@ describe('Space.Compact · 基本结构', () => {
 
   it('`className` / `rootClassName` / `style` / attrs 都落在根元素上', () => {
     const w = mountCompact(
-      { className: 'cc', rootClassName: 'cc-root', style: { color: 'red' }, id: 'my-compact' },
+      { class: ['cc', 'cc-root'], style: { color: 'red' }, id: 'my-compact' },
       twoSpans(),
     );
     expect(w.classes()).toContain('cc');
@@ -1139,7 +1139,7 @@ describe('Space.Addon', () => {
   });
 
   it('`className` / `style` / attrs 都落在根元素上', () => {
-    const w = mountAddon({ className: 'my-addon', style: { color: 'red' }, id: 'my-addon' });
+    const w = mountAddon({ class: 'my-addon', style: { color: 'red' }, id: 'my-addon' });
     expect(w.classes()).toContain('my-addon');
     expect(w.element.style.color).toBe('red');
     expect(w.attributes('id')).toBe('my-addon');

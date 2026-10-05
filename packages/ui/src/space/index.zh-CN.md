@@ -50,9 +50,7 @@ subtitle: 间距
 | align | 对齐方式。⚠️ 垂直时未传**不会**折成 `center` | `'start' \| 'end' \| 'center' \| 'baseline'` | 水平时 `'center'`，垂直时 — |
 | separator | 设置分隔符 | `VNodeChild` | — |
 | wrap | 是否自动换行。仅水平时有效 | `boolean` | `false` |
-| className | 根元素类名 | `string` | — |
-| rootClassName | 也落在根元素上（在 `className` **之后**） | `string` | — |
-| style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
+| class / style | **根元素原生 attrs**（不是 Props）；调用方 `style` 覆盖 `styles.root` | `string \| array \| object` / `CSSProperties` | — |
 | classNames | 语义化类名 | `SpaceSemanticValue<SpaceSemanticClassNames>` | — |
 | styles | 语义化样式 | `SpaceSemanticValue<SpaceSemanticStyles>` | — |
 | ~~direction~~ | ⚠️ 已废弃，请用 `orientation` | `'horizontal' \| 'vertical'` | — |
@@ -87,10 +85,10 @@ subtitle: 间距
 ```
 ConfigProvider.space.classNames/styles
   → 组件的 classNames / styles
-  → className / rootClassName / style（落在根元素）
+  → 根节点原生 class / style attrs
 ```
 
-其中 **`style` 会覆盖 `styles.root`**（antd 的合并顺序如此，我们逐条对齐）。
+其中调用处原生 **`:style` 会覆盖 `styles.root`**（保持合并优先级；该值走 Vue `$attrs`）。
 
 #### ref
 
@@ -111,9 +109,7 @@ ConfigProvider.space.classNames/styles
 | orientation | 排列方向。优先级最高 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | vertical | 是否垂直。与 `orientation` 同时配置时以 `orientation` 优先 | `boolean` | — |
 | block | 宽度撑满父元素 | `boolean` | `false` |
-| className | 根元素类名 | `string` | — |
-| rootClassName | 也落在根元素上（在 `className` **之后**） | `string` | — |
-| style | 根元素内联样式 | `CSSProperties` | — |
+| class / style | 根元素原生 attrs | `string \| array \| object` / `CSSProperties` | — |
 | ~~direction~~ | ⚠️ 已废弃，请用 `orientation` | `'horizontal' \| 'vertical'` | — |
 
 #### 插槽
@@ -169,8 +165,7 @@ const { compactSize, compactDirection, compactItemClassnames } = useCompactItemC
 | variant | 外观变体 | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | status | 校验状态 | `'error' \| 'warning' \| 'success' \| 'validating' \| ''` | — |
 | disabled | 禁用态。⚠️ 只改变颜色，**不设** `disabled` 属性 | `boolean` | `false` |
-| className | 根元素类名 | `string` | — |
-| style | 根元素内联样式 | `CSSProperties` | — |
+| class / style | 根元素原生 attrs | `string \| array \| object` / `CSSProperties` | — |
 
 #### 插槽
 

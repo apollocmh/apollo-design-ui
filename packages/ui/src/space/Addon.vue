@@ -46,8 +46,6 @@ defineOptions({ name: 'ASpaceAddon', inheritAttrs: false });
 
 const props = withDefaults(defineProps<SpaceAddonProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  style: undefined,
   // antd 的默认值是字面量 `'outlined'`（`Addon.tsx:25`）—— 逐字对齐。
   variant: 'outlined',
   disabled: undefined,
@@ -83,11 +81,10 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-${compactSize.value}`]: compactSize.value,
     [`${prefixCls.value}-disabled`]: props.disabled,
   },
-  props.className,
 ]);
 
-/** ⚠️ 空样式必须返回 `{}`（连 `style` 键都不出现），否则 SSR 会渲染出 `style=""`。 */
-const rootAttrs = computed(() => ({ ...attrs, ...styleAttrs(props.style) }));
+/** 根 `class` / `style` 是 Vue 原生 attrs（上游随 `{...restProps}` 落根）。 */
+const rootAttrs = computed(() => ({ ...attrs }));
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });

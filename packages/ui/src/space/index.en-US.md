@@ -87,7 +87,7 @@ Merge priority (low → high):
 ```
 ConfigProvider.space.classNames/styles
   → component classNames / styles
-  → className / rootClassName / style (applied to the root element)
+  → native root class / style attrs
 ```
 
 **`style` overrides `styles.root`** (this is antd's merge order, mirrored verbatim).

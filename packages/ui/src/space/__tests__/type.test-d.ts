@@ -67,9 +67,6 @@ describe('Space · Props', () => {
 
     const full: SpaceProps = {
       prefixCls: 'apollo',
-      className: 'a',
-      rootClassName: 'b',
-      style: { color: 'red' },
       size: 'medium',
       direction: 'vertical',
       vertical: true,
@@ -98,8 +95,19 @@ describe('Space · Props', () => {
     expectTypeOf([scalar, preset, tuple, mixed]).toMatchTypeOf<SpaceProps[]>();
   });
 
-  it('★ `style` 是 Vue 的 `CSSProperties`，不是字符串', () => {
-    expectTypeOf<SpaceProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+  it('根 `class` / `style` 是 Vue 原生 attrs，不在 SpaceProps 键集里', () => {
+    type Public = InstanceType<typeof Space>['$props'];
+    const nativeAttrs: Public = { class: ['a', { b: true }], style: { color: 'red' } };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<Public>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: SpaceProps = { className: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 SpaceProps
+      const badStyle: SpaceProps = { style: { color: 'red' } };
+      return [badClassName, badStyle];
+    };
+    void _never;
   });
 
   it('★ C8-R2 后 `separator` / `split` 收窄为 `string`（富内容走 `#separator` 插槽）', () => {
@@ -120,9 +128,6 @@ describe('Space · Props', () => {
     // `SpaceProps` 会多出一个键 —— 用 `keyof` 的集合断言把它钉住。
     expectTypeOf<keyof SpaceProps>().toEqualTypeOf<
       | 'prefixCls'
-      | 'className'
-      | 'rootClassName'
-      | 'style'
       | 'size'
       | 'direction'
       | 'vertical'
@@ -211,21 +216,10 @@ describe('Space.Compact · 跨组件协议的类型面', () => {
       orientation: 'horizontal',
       vertical: true,
       block: true,
-      className: 'a',
-      rootClassName: 'b',
-      style: { color: 'red' },
     };
     expectTypeOf(full).toMatchTypeOf<SpaceCompactProps>();
     expectTypeOf<keyof SpaceCompactProps>().toEqualTypeOf<
-      | 'prefixCls'
-      | 'size'
-      | 'direction'
-      | 'orientation'
-      | 'vertical'
-      | 'block'
-      | 'className'
-      | 'rootClassName'
-      | 'style'
+      'prefixCls' | 'size' | 'direction' | 'orientation' | 'vertical' | 'block'
     >();
   });
 
@@ -239,8 +233,6 @@ describe('Space.Compact · 跨组件协议的类型面', () => {
   it('`SpaceAddonProps` 有 variant / disabled / status', () => {
     const full: SpaceAddonProps = {
       prefixCls: 'apollo',
-      className: 'a',
-      style: { color: 'red' },
       variant: 'filled',
       disabled: true,
       status: 'error',

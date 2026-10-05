@@ -97,12 +97,6 @@ export type SpaceAlign = 'start' | 'end' | 'center' | 'baseline';
 export interface SpaceProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根元素上（在 `-{orientation}` / `-align-*` / `-gap-*` 之后）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
-  /** 根元素的内联样式。参与语义化合并，且**覆盖** `styles.root`。 */
-  style?: CSSProperties;
   /**
    * 间距大小。
    *
@@ -206,12 +200,6 @@ export interface SpaceCompactProps {
   vertical?: boolean;
   /** 宽度撑满父元素。 */
   block?: boolean;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 根元素的内联样式。 */
-  style?: CSSProperties;
 }
 
 /** `Space.Compact` 暴露的实例。 */
@@ -227,10 +215,6 @@ export interface SpaceCompactRef {
 export interface SpaceAddonProps {
   /** 类名前缀。⚠️ antd 传的后缀是 `'space-addon'`。 */
   prefixCls?: string;
-  /** 落在根元素上（在全部结构类名**之后**）。 */
-  className?: string;
-  /** 根元素的内联样式。 */
-  style?: CSSProperties;
   /** 外观变体。默认 `'outlined'`。 */
   variant?: Variant;
   /** 禁用态：加 `-disabled`，颜色改 `colorTextDisabled`。 */
