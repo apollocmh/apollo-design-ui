@@ -45,7 +45,9 @@ subtitle: 走马灯
 | accessibility | 键盘 Left/Right 切换 | `boolean` | `true` |
 | adaptiveHeight | 自适应高度 | `boolean` | `false` |
 | rtl | RTL（默认跟随 ConfigProvider 的 direction，且不与 vertical 同用） | `boolean` | — |
-| id / className / rootClassName / style | 常规属性（⚠️ style 落在 `.slick-slider` 上，与 antd 一致） | — | — |
+| id | 根元素 id | `string` | — | — |
+| class / style | **根节点原生 attrs**（替代上游 `rootClassName`） | — | — | — |
+| className / style（prop） | ⚠️ 落在**内层 `.slick-slider`**（独立目标，与 antd 一致） | — | — | — |
 
 ### Slots
 

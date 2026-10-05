@@ -38,6 +38,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  mergeProps,
   type PropType,
   shallowRef,
   type VNode,
@@ -76,7 +77,6 @@ export const CarouselComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<CarouselProps['style']>, default: undefined },
     id: { type: String, default: undefined },
@@ -560,21 +560,27 @@ export const CarouselComponent = defineComponent({
           ? { '--dot-duration': `${c.autoplaySpeed}ms` }
           : undefined;
 
+      // 根 `class` / `style` 是 Vue 原生 attrs（替代上游的 `rootClassName`）；
+      // ⚠️ **其余 attrs 不透传** —— 上游不 spread restProps（L4 基线 `carousel:attrs`
+      //    里 React 产物没有 `data-x`），这里保持同一行为。
+      // 另：`className` / `style` prop 指向**内层 `slick-slider`**，属独立目标（见 interface.ts）。
       return h(
         'div',
-        {
-          ref: rootRef,
-          class: [
-            cls,
-            {
-              [`${cls}-rtl`]: isRTL.value,
-              [`${cls}-vertical`]: c.vertical,
-            },
-            props.rootClassName,
-          ],
-          id: props.id,
-          style: dotDurationStyle,
-        },
+        mergeProps(
+          {
+            ref: rootRef,
+            class: [
+              cls,
+              {
+                [`${cls}-rtl`]: isRTL.value,
+                [`${cls}-vertical`]: c.vertical,
+              },
+            ],
+            id: props.id,
+            style: dotDurationStyle,
+          },
+          { class: attrs.class, style: attrs.style },
+        ),
         [
           h(
             'div',

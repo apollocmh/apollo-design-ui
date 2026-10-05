@@ -112,9 +112,12 @@ export interface CarouselProps {
   rtl?: boolean;
   /** 前缀类（默认经 ConfigProvider，`apollo-carousel`）。 */
   prefixCls?: string;
-  /** 挂在根元素上的附加类。 */
-  rootClassName?: string;
+  /**
+   * ⚠️ 落在**内层 `slick-slider`**（不是根 div）—— 上游 Carousel 的两层结构如此，
+   *    属**独立目标**，因此保留为专用 prop；根节点的类名请用 Vue 原生 `class`。
+   */
   className?: string;
+  /** ⚠️ 同上：落在内层 `slick-slider`。 */
   style?: Record<string, string | number>;
   id?: string;
 }
