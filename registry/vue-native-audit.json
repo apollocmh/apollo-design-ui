@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-05T08:00:15.157Z",
+  "updatedAt": "2026-10-05T08:05:25.710Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 46,
+      "todo": 45,
       "analyzing": 9,
       "refactoring": 0,
       "testing": 0,
-      "done": 17,
+      "done": 18,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 136,
+    "reviewedProductionSourceFiles": 142,
     "issues": {
       "total": 13,
       "bySeverity": {
@@ -232,7 +232,7 @@
       "notes": []
     },
     "flex": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/flex/Flex.vue",
         "packages/ui/src/flex/index.ts",
@@ -241,7 +241,14 @@
         "packages/ui/src/flex/style/token.ts",
         "packages/ui/src/flex/utils.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/flex/Flex.vue",
+        "packages/ui/src/flex/index.ts",
+        "packages/ui/src/flex/interface.ts",
+        "packages/ui/src/flex/style/index.ts",
+        "packages/ui/src/flex/style/token.ts",
+        "packages/ui/src/flex/utils.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 6,
       "docFiles": [
@@ -250,9 +257,14 @@
         "packages/ui/src/flex/index.en-US.md",
         "packages/ui/src/flex/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：FlexProps 移除 className/rootClassName/style；mergeProps 顺序保持 antd 语义（Provider style < 调用方 attrs < 派生 flex/gap）；FlexConfig 保留。踩坑：useComponentConfig 解构值是普通值非 ref。unit 33/33、dom 39/39、types 10/10 无错误。"
+      ],
+      "reviewedFileCount": 6
     },
     "grid": {
       "auditStatus": "todo",
@@ -3050,7 +3062,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描：69/73 组件命中。已迁移：divider（unit 61/61、dom 54/54、types 32/32、Biome/diff 通过）。其余待办。"
+      "verification": "机械扫描：69/73 组件命中。已迁移：divider、flex（各自 unit/dom/types 全绿）。其余待办。"
     }
   ],
   "batches": [
@@ -3183,6 +3195,11 @@
       "date": "2026-10-05",
       "status": "in_progress",
       "note": "Root-alias migration started. divider migrated first: DividerProps drops className/rootClassName/style; root attrs merged via render-time mergeProps; DividerConfig schema kept. unit 61/61, DOM 54/54, types 32/32 no errors, Biome+diff clean. Committing one component at a time per user instruction."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Root-alias migration: divider + flex done and committed (one commit each). Learned and recorded in the Skill that useComponentConfig() destructured fields are plain values, not refs — writing contextStyle.value throws on every render and fails the whole suite. Next components pending."
     }
   ],
   "observations": [

@@ -78,6 +78,17 @@ The first Affix pass marked the component complete while retaining `className`, 
 - **Type-test rule:** positively test native class/style on `InstanceType<typeof Component>['$props']`; negatively test removed aliases both against that public `$props` and the exported ergonomic Props interface. Do not use `h(Component, rawProps)` as the negative oracle because Vue deliberately accepts broad raw vnode props.
 - **Completion rule:** never mark a component `done` while an unresolved mismatch remains between global compatibility mapping, component Props, runtime consumes/attrs, type tests, docs, and oracle cases. If user review finds one, reopen it and record the cause in the audit Skill/Registry before continuing the next batch.
 
+### Reusable finding: the root-alias migration is systemic and mechanical
+
+A library-wide scan (`^\s*(className|rootClassName|style)\?:` in every `packages/ui/src/*/interface.ts`) found **69 of 73 components** declaring React root aliases as public Props — the same defect as Affix/Button. Treat it as one systemic finding, then migrate per component:
+
+- **Single root + `inheritAttrs: false`:** delete the alias Props, then merge the live `$attrs` into the root with `mergeProps({ class: internalClass, ...internalStyleAttrs }, attrs, { role })`. Put `attrs` **last** (or after provider style) so caller `class`/`style` win; keep any fixed attribute (e.g. `role="separator"`) after `attrs` if upstream lets it win.
+- **Derived style beats caller style in some components.** `Flex` computes `flex`/`gap` inline styles *after* the caller's `style` (antd order: `{...ctx.style, ...style, flex, gap}`). So merge as `mergeProps({class}, providerStyleAttrs, attrs, derivedStyleAttrs)` — caller style must sit *between* provider and derived. Verify with a test that a `flex` prop overrides `style.flex`.
+- **🚨 Gotcha that breaks every test at once:** in this repo `useComponentConfig()` destructured fields (`className`, `style`, `classNames`, `styles`) are **plain values, not refs**. Writing `styleAttrs(contextStyle.value)` throws `Cannot read properties of undefined (reading 'value')` on every render, failing the whole suite with a stack pointing at the template. Use `styleAttrs(contextStyle)`.
+- **Keep the Provider schema.** `ComponentStyleConfig.className/style` and every `XxxConfig` field stay — they are configuration objects, not component Props.
+- **Translate the oracle, don't rename it.** In the DOM-compat fixtures, render the React `className` case with Vue `class` and drop React-only `rootClassName` inputs. Keep the case ids unchanged so the baseline still matches one-to-one.
+- **Always run all four layers per component** (unit + dom-contract + types + Biome) before committing; the `contextStyle.value` class of bug is invisible to type checks and only shows up as mass test failure.
+
 ## Finding taxonomy and severity
 
 Use one or more categories: `react-api`, `slot`, `emits`, `attrs`, `class-style`, `renderer`, `react-implementation-migration`, `vue-composition-api`, `type-design`, `duplicate-implementation`, `test`, `architecture`.
