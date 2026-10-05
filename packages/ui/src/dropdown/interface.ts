@@ -83,6 +83,12 @@ export interface DropdownProps {
   overlayClassName?: string;
   /** ⚠️ deprecated：用 `styles.root`。 */
   overlayStyle?: Record<string, string | number>;
+  /**
+   * 浮层根节点类名。
+   *
+   * ⚠️ Dropdown **没有自有 DOM 根**（渲染的是 Trigger + 浮层），所以这是**独立目标**
+   *    （落浮层，不是「组件根」）⇒ 保留为专用 prop。触发元素的类名请用原生 `class`。
+   */
   rootClassName?: string;
   openClassName?: string;
   id?: string;
@@ -114,8 +120,7 @@ export interface DropdownButtonProps {
   split?: boolean;
   /** ⚠️ deprecated：不再需要。 */
   buttonsRender?: (buttons: VNodeChild[]) => VNodeChild[];
-  /** ⚠️ deprecated：传给 Button 的原生 attrs（本仓 attrs 透传自动覆盖）。 */
-  className?: string;
+  /** ⚠️ deprecated：直接写原生 attrs（`class` / `style` 会经 attrs 透传到根 div）。 */
   style?: Record<string, string | number>;
   autoAdjustOverflow?: boolean;
   destroyOnHidden?: boolean;

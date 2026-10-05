@@ -29,8 +29,6 @@ const PurePanel = defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     menu: { type: Object as PropType<DropdownProps['menu']>, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: { type: Object as PropType<DropdownProps['classNames']>, default: undefined },
     styles: { type: Object as PropType<DropdownProps['styles']>, default: undefined },
   },
@@ -49,10 +47,11 @@ const PurePanel = defineComponent({
         'div',
         {
           ...restAttrs,
-          class: [prefixCls, props.classNames?.root, props.className, attrs.class],
+          // 根 `class` / `style` 是 Vue 原生 attrs（`attrs.class` 已在数组里）。
+          class: [prefixCls, props.classNames?.root, attrs.class],
           style: {
             ...(props.styles?.root ?? {}),
-            ...(props.style ?? {}),
+            ...((attrs.style as StyleLike | undefined) ?? {}),
           },
         },
         h(OverrideProvider, { override }, () =>
