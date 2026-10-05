@@ -23,12 +23,6 @@ export interface BackTopProps {
   target?: BackTopTarget;
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-back-top`。 */
   prefixCls?: string;
-  /** 透传类名。 */
-  className?: string;
-  /** 透传类名（根级，antd 契约保留）。 */
-  rootClassName?: string;
-  /** 透传根样式。 */
-  style?: Record<string, string | number>;
   /** 回顶动画时长（ms；<=0 直落）。 */
   duration?: number;
 }

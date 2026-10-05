@@ -33,6 +33,7 @@ import {
   computed,
   defineComponent,
   h,
+  mergeProps,
   onMounted,
   onScopeDispose,
   type PropType,
@@ -50,13 +51,10 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     visibilityHeight: { type: Number, default: 400 },
     duration: { type: Number, default: 450 },
     target: { type: Function as PropType<BackTopTarget>, default: undefined },
     onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
   },
   setup(props, { slots, attrs, expose }) {
     const { getPrefixCls, direction } = useComponentConfig('back-top');
@@ -149,49 +147,36 @@ export default defineComponent({
       ]);
 
     return () => {
-      // antd 的 omit(props, [...])：class/style 已被框架消费，其余 attrs 透传
-      const restAttrs: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(attrs)) {
-        if (key !== 'class' && key !== 'style') {
-          restAttrs[key] = value;
-        }
-      }
-
-      const rootClass = [
-        prefixCls.value,
-        { [`${prefixCls.value}-rtl`]: direction === 'rtl' },
-        props.className,
-        props.rootClassName,
-      ];
-
-      return h(
-        'div',
+      // 根 `class` / `style` 是 Vue 原生 attrs：`attrs` 整体交给 mergeProps 合并。
+      // ⚠️ `onClick` 放在 `attrs` **之后** —— antd 的 `{...restProps, onClick: scrollToTop}`
+      //    让内置滚动处理器胜出（用户传的 onClick 被覆盖）。
+      const rootProps = mergeProps(
         {
           ref: rootRef,
-          ...restAttrs,
-          class: rootClass,
-          style: props.style,
-          onClick: scrollToTop,
+          class: [prefixCls.value, { [`${prefixCls.value}-rtl`]: direction === 'rtl' }],
         },
-        [
-          h(
-            CSSMotion,
-            { visible: visible.value, motionName: `${rootPrefixCls.value}-fade` },
-            {
-              default: ({ className: motionClassName }: { className: string }) => {
-                // antd：cloneElement(children || defaultElement, 注入 motionClassName)
-                const raw = slots.default?.() as VNode[] | VNode | undefined;
-                const childNodes = Array.isArray(raw) ? raw : raw !== undefined ? [raw] : [];
-                const first = childNodes[0];
-                if (isVNode(first)) {
-                  return cloneVNode(first, { class: motionClassName });
-                }
-                return defaultElement(motionClassName);
-              },
-            },
-          ),
-        ],
+        attrs,
+        { onClick: scrollToTop },
       );
+
+      return h('div', rootProps, [
+        h(
+          CSSMotion,
+          { visible: visible.value, motionName: `${rootPrefixCls.value}-fade` },
+          {
+            default: ({ className: motionClassName }: { className: string }) => {
+              // antd：cloneElement(children || defaultElement, 注入 motionClassName)
+              const raw = slots.default?.() as VNode[] | VNode | undefined;
+              const childNodes = Array.isArray(raw) ? raw : raw !== undefined ? [raw] : [];
+              const first = childNodes[0];
+              if (isVNode(first)) {
+                return cloneVNode(first, { class: motionClassName });
+              }
+              return defaultElement(motionClassName);
+            },
+          },
+        ),
+      ]);
     };
   },
 });

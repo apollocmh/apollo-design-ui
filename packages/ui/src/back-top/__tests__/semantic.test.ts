@@ -23,7 +23,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'back-top:basic': { render: () => h(BackTop, { visibilityHeight: 0 }) },
   'back-top:custom-children': {
     render: () =>
-      h(BackTop, { visibilityHeight: 0, className: 'user-class' }, () =>
+      h(BackTop, { visibilityHeight: 0, class: 'user-class' }, () =>
         h('div', { class: 'my-content' }, 'top'),
       ),
   },
