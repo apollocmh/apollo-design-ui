@@ -201,14 +201,33 @@ describe('Flex · flex / gap 内联样式', () => {
 });
 
 describe('Flex · ConfigProvider 合并', () => {
-  it('ctx className 与组件 className 拼接', () => {
+  it('ctx className 与组件原生 class 拼接', () => {
     const w = mountWithConfig(
       { components: { flex: { className: 'ctx-cls' } } },
-      { className: 'own-cls' },
+      { class: 'own-cls' },
     );
     const probe = w.find(`.${P}`);
     expect(probe.classes()).toContain('ctx-cls');
     expect(probe.classes()).toContain('own-cls');
+  });
+
+  it('Vue 原生 root class 支持字符串、数组、对象', () => {
+    const stringClass = mountFlex({ class: 'native-a' });
+    expect(stringClass.classes()).toContain('native-a');
+
+    const arrayClass = mountFlex({ class: ['native-b', { active: true }] });
+    expect(arrayClass.classes()).toContain('native-b');
+    expect(arrayClass.classes()).toContain('active');
+
+    const objectClass = mountFlex({ class: { 'native-c': true, inactive: false } });
+    expect(objectClass.classes()).toContain('native-c');
+    expect(objectClass.classes()).not.toContain('inactive');
+  });
+
+  it('派生的 flex / gap 覆盖调用方原生 style 的同名键（antd 顺序）', () => {
+    const w = mountFlex({ flex: 1, style: { flex: '9 9 9px' } });
+    expect(styleOf(w)).toContain('flex: 1 1 0%');
+    expect(styleOf(w)).not.toContain('9 9 9px');
   });
 
   it('ctx style 在前、prop style 覆盖', () => {

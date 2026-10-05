@@ -8,14 +8,15 @@
  *
  * 1. `children` 不在 Props 里（规则 C19）—— antd 的 `children?: React.ReactNode`
  *    在 Vue 侧是默认插槽。
- * 2. `React.CSSProperties` → Vue 的 `CSSProperties`（规则 C16）。
+ * 2. 根 `className` / `rootClassName` / `style` 不声明为 Props —— 它们是 **Vue 原生
+ *    attrs**（`$attrs` 经 `mergeProps` 落到根元素，见 COMPATIBILITY.md §7）。
  * 3. `CustomComponent<P>` → Vue 的 `Component | string`（`component :is` 的合法值）。
  * 4. antd 的 `LiteralUnion<SizeType>` 拍平为 `SizeType | string | number` ——
  *    `(string & {})` 会让 SFC 编译器把运行时 prop 推成 `String | Object`，
  *    挂 Number 时触发开发期告警（见 `gap` 字段的注释）。
  */
 
-import type { Component, CSSProperties } from 'vue';
+import type { Component } from 'vue';
 import type { Orientation } from '../_internal/use-orientation';
 import type { ComponentStyleConfig } from '../config-provider/context';
 import type { SizeType } from '../config-provider/size-context';
@@ -56,15 +57,16 @@ export type FlexAlign =
 /** 根元素的自定义标签。React 的 `CustomComponent<P>` ≈ Vue 的 `Component | string`。 */
 export type FlexComponent = Component | string;
 
+/**
+ * Flex 的 Props。
+ *
+ * ⚠️ 根节点的 `class` / `style` 是 Vue 原生 attrs（由 `inheritAttrs: false` 后的
+ *    显式 `mergeProps` 落到根元素），**不**声明 `className` / `rootClassName` / `style`。
+ *    ConfigProvider 的 `FlexConfig.className/style` 是配置对象字段，保留。
+ */
 export interface FlexProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-flex`。 */
   prefixCls?: string;
-  /** 也落在根元素上（在 `className` **之后**，与 antd 的合并顺序一致）。 */
-  rootClassName?: string;
-  /** 落在根元素上（在 ConfigProvider 的 `className` 之后）。 */
-  className?: string;
-  /** 根元素的内联样式。会覆盖 ConfigProvider 的 `style`。 */
-  style?: CSSProperties;
   /**
    * flex 主轴是否垂直（`flex-direction: column`）。
    *

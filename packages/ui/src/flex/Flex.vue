@@ -21,7 +21,7 @@
  */
 
 import { isNonNullable } from '@apollo-design/utils';
-import { type CSSProperties, computed, ref, useAttrs } from 'vue';
+import { type CSSProperties, computed, mergeProps, ref, useAttrs } from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useOrientation } from '../_internal/use-orientation';
 import { useComponentConfig } from '../config-provider/context';
@@ -51,9 +51,6 @@ defineOptions({ name: 'AFlex', inheritAttrs: false });
  */
 const props = withDefaults(defineProps<FlexProps>(), {
   prefixCls: undefined,
-  rootClassName: undefined,
-  className: undefined,
-  style: undefined,
   vertical: undefined,
   orientation: undefined,
   wrap: undefined,
@@ -92,16 +89,14 @@ const mergedVertical = computed(() => mergedOrientation.value[1]);
 // ---------------------------------------------------------------------------
 // 类名
 //
-// 顺序逐字来自 antd：className → rootClassName → ctxFlex.className → prefixCls
-// → 语义类（吃 mergedVertical）→ gap / vertical / rtl。
-// `attrs.class` 由 v-bind 的对象并进同一绑定（Vue 会合并 class），与 divider 同构。
+// 顺序逐字来自 antd：ctxFlex.className → prefixCls → 语义类（吃 mergedVertical）
+// → gap / vertical / rtl。调用方 `class` 是 Vue 原生 attrs，由 `rootAttrs` 的
+// `mergeProps` 并进同一绑定（Vue 会合并 class），与 divider 同构。
 // ---------------------------------------------------------------------------
 
 const rootClass = computed(() => {
   const cls = prefixCls.value;
   return [
-    props.className,
-    props.rootClassName,
     contextClassName,
     cls,
     createFlexClassNames(cls, { ...props, vertical: mergedVertical.value }),
@@ -128,11 +123,21 @@ const rootClass = computed(() => {
 const toCssLength = (value: string | number): string =>
   typeof value === 'number' ? (value === 0 ? '0' : `${value}px`) : value;
 
-const rootStyle = computed<CSSProperties>(() => {
-  const style: CSSProperties = { ...contextStyle, ...props.style };
+/** ConfigProvider 的 `flex.style` —— 最低优先级。（`contextStyle` 是普通值，不是 ref。） */
+const providerStyleAttrs = computed(() => styleAttrs(contextStyle));
+
+/**
+ * 由 `flex` / `gap` prop 派生的内联样式 —— **最高**优先级。
+ *
+ * ⚠️ antd 的顺序是 `{...ctxFlex.style, ...style, flex, gap}`：派生的 `flex` / `gap`
+ *    排在调用方 `style` **之后** ⇒ 同名键由 prop 胜出。这里用 `mergeProps` 的
+ *    「后者胜」保持同一顺序（调用方 `style` 现在是 Vue 原生 attrs）。
+ * ⚠️ `flex` 是 **unitless** 属性（React 的 unitlessNumbers 含 flex）：
+ *    `flex: 1` → `'1'`，不是 `'1px'`。基线用例 `flex:number` 钉死这一条。
+ */
+const derivedStyleAttrs = computed(() => {
+  const style: CSSProperties = {};
   if (isNonNullable(props.flex)) {
-    // ⚠️ `flex` 是 **unitless** 属性（React 的 unitlessNumbers 含 flex）：
-    // `flex: 1` → `'1'`，不是 `'1px'`。基线用例 `flex:number` 钉死这一条。
     const flex = props.flex;
     style.flex = typeof flex === 'number' ? String(flex) : flex;
   }
@@ -140,22 +145,20 @@ const rootStyle = computed<CSSProperties>(() => {
     const gap = props.gap;
     style.gap = typeof gap === 'number' ? toCssLength(gap) : gap;
   }
-  return style;
+  return styleAttrs(style);
 });
-
-const rootStyleAttrs = computed(() => styleAttrs(rootStyle.value));
 
 /**
  * 根元素的属性对象。
  *
  * ⚠️ `justify` / `wrap` / `align` 已声明为 props、天然不进 attrs，
  * 与 antd 的 `omit(othersProps, ['justify','wrap','align'])` 同一语义。
- * `attrs`（id / data-* / 其余 HTML 属性；`class` 由 Vue 与 `:class` 合并）原样透传。
+ * ⚠️ 根 `class` / `style` 是 **Vue 原生 attrs**；`mergeProps` 的顺序即合并优先级：
+ *    Provider style < 调用方 attrs（含 class / style） < 派生 flex / gap。
  */
-const rootAttrs = computed(() => ({
-  ...attrs,
-  ...rootStyleAttrs.value,
-}));
+const rootAttrs = computed(() =>
+  mergeProps({ class: rootClass.value }, providerStyleAttrs.value, attrs, derivedStyleAttrs.value),
+);
 
 // ---------------------------------------------------------------------------
 // 暴露：与 antd 的 `RefAttributes<HTMLElement>` 对应
@@ -169,7 +172,7 @@ const rootTag = computed(() => props.component ?? 'div');
 </script>
 
 <template>
-  <component :is="rootTag" ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <component :is="rootTag" ref="rootRef" v-bind="rootAttrs">
     <slot />
   </component>
 </template>

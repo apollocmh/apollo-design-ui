@@ -37,9 +37,10 @@ See [`demo/`](./demo) (6 demos, one-to-one with antd, including the `debug` demo
 | gap | Gap between items. Presets go to class names, others inline | `'small' \| 'medium' \| 'large' \| string \| number` | — | × |
 | component | Custom root element | `Component \| string` | `'div'` | × |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-flex` | × |
-| rootClassName | Also applied to root (after `className`) | `string` | — | × |
-| className | Root class name | `string` | — | × |
-| style | Root inline style. **Overrides ConfigProvider `style`** | `CSSProperties` | — | × |
+
+> **Native root attributes**: the root's `class` / `style` are **Vue-native attrs** (not Props) —
+> `<Flex class="..." :style="..." />`. Merge order (low → high):
+> ConfigProvider `flex.style` → caller native `style` → inline style derived from `flex` / `gap`.
 
 ### Ref
 

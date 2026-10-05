@@ -6,6 +6,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import type { Flex } from '../index';
 import type {
   FlexAlign,
   FlexComponent,
@@ -31,6 +32,26 @@ describe('Flex · Props 类型', () => {
   it('gap 的预设串有字面量补全（small / medium / middle / large）', () => {
     expectTypeOf<'small'>().toMatchTypeOf<NonNullable<FlexProps['gap']>>();
     expectTypeOf<'middle'>().toMatchTypeOf<NonNullable<FlexProps['gap']>>();
+  });
+
+  it('根 `class` / `style` 是 Vue 原生 attrs，不重复声明为 FlexProps', () => {
+    type PublicProps = InstanceType<typeof Flex>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-flex', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: FlexProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` 不是 Flex 的 prop
+      const badRootClassName: FlexProps = { rootClassName: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 FlexProps
+      const badStyle: FlexProps = { style: { color: 'red' } };
+      return [badClassName, badRootClassName, badStyle];
+    };
+    void _never;
   });
 });
 

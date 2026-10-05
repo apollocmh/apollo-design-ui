@@ -46,9 +46,10 @@ subtitle: 弹性布局
 | gap | 设置网格之间的间隙。预设串走类名，其它值内联 | `'small' \| 'medium' \| 'large' \| string \| number` | — | × |
 | component | 自定义元素类型 | `Component \| string` | `'div'` | × |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-flex` | × |
-| rootClassName | 也落在根元素上（在 `className` 之后） | `string` | — | × |
-| className | 根元素类名 | `string` | — | × |
-| style | 根元素内联样式。**会覆盖 ConfigProvider 的 `style`** | `CSSProperties` | — | × |
+
+> **根节点原生属性**：根元素的 `class` / `style` 是 **Vue 原生 attrs**（不是 Props）——
+> `<Flex class="..." :style="..." />`。合并优先级（低 → 高）：
+> ConfigProvider `flex.style` → 调用方原生 `style` → 由 `flex` / `gap` prop 派生的内联样式。
 
 ### Ref
 
