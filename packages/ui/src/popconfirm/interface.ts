@@ -9,7 +9,7 @@
  *   - `open` 支持 `v-model:open`（emits `update:open`）。
  */
 
-import type { VNode } from 'vue';
+import type { ClassValue, CSSProperties, VNode } from 'vue';
 import type { LegacyButtonType } from '../_internal/action-button';
 import type {
   TooltipArrow,
@@ -18,8 +18,15 @@ import type {
   TooltipRef,
 } from '../tooltip/interface';
 
-/** 按钮属性集合（与 `Button` 的 props 同形，避免与具体组件类型耦合）。 */
-export type PopconfirmButtonProps = Record<string, unknown>;
+/** Button 配置属性；根节点 class/style 采用 Vue 原生 attrs。 */
+export interface PopconfirmButtonProps extends Record<string, unknown> {
+  class?: ClassValue;
+  style?: CSSProperties;
+  /** @deprecated Use `class`. */
+  className?: never;
+  /** @deprecated Use `class`. */
+  rootClassName?: never;
+}
 
 /** 语义槽位：Popover 的三槽 + Popconfirm 的 icon（description 复用 `content`）。 */
 export interface PopconfirmSemanticType {

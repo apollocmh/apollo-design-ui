@@ -23,6 +23,7 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import { type CSSProperties, defineComponent, h, type VNodeChild } from 'vue';
 import type {
+  Button,
   ButtonColorType,
   ButtonConfig,
   ButtonHTMLType,
@@ -95,8 +96,6 @@ describe('Button · Props', () => {
       disabled: true,
       loading: { delay: 100, icon: 'x' },
       prefixCls: 'apollo',
-      className: 'a',
-      rootClassName: 'b',
       ghost: true,
       danger: true,
       block: true,
@@ -105,9 +104,32 @@ describe('Button · Props', () => {
       autoInsertSpace: false,
       classNames: { root: 'a' },
       styles: { root: { color: 'red' } },
-      style: { color: 'red' },
     };
     expectTypeOf(full).toMatchTypeOf<ButtonProps>();
+  });
+
+  it('根 class/style 是 Vue 原生 attrs，不重复声明为 ButtonProps', () => {
+    type PublicProps = InstanceType<typeof Button>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-button', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error `className` is replaced by Vue's native `class`
+      const badClassName: ButtonProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` is not a Button prop
+      const badRootClassName: ButtonProps = { rootClassName: 'legacy' };
+      // @ts-expect-error native `style` is not part of ButtonProps
+      const badStyle: ButtonProps = { style: { color: 'red' } };
+      // @ts-expect-error the public component instance does not expose React root aliases
+      const badPublicClassName: PublicProps = { className: 'legacy' };
+      // @ts-expect-error the public component instance does not expose rootClassName
+      const badPublicRootClassName: PublicProps = { rootClassName: 'legacy' };
+      return [badClassName, badRootClassName, badStyle, badPublicClassName, badPublicRootClassName];
+    };
+    void _never;
   });
 
   it('★ `loading` 是「布尔 | 对象」两种形态（不是只有布尔）', () => {
@@ -122,8 +144,7 @@ describe('Button · Props', () => {
     expectTypeOf<ButtonProps['icon']>().toEqualTypeOf<ButtonIcon | undefined>();
   });
 
-  it('`style` / `styles.root` 是 Vue 的 `CSSProperties`', () => {
-    expectTypeOf<ButtonProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+  it('`styles.root` 是 Vue 的 `CSSProperties`', () => {
     expectTypeOf<ButtonSemanticStyles['root']>().toEqualTypeOf<CSSProperties | undefined>();
   });
 
@@ -168,6 +189,15 @@ describe('Button · ref / config / slot', () => {
     expectTypeOf<ButtonConfig>().toHaveProperty('color');
     expectTypeOf<ButtonConfig>().toHaveProperty('variant');
     expectTypeOf<ButtonConfig>().toHaveProperty('autoInsertSpace');
+  });
+
+  it('ButtonConfig 保留 provider schema 中的 className / style，但不把它们当 ButtonProps', () => {
+    const config: ButtonConfig = {
+      className: 'provider-button',
+      style: { color: 'red' },
+    };
+    expectTypeOf(config.className).toEqualTypeOf<string | undefined>();
+    expectTypeOf(config.style).toEqualTypeOf<CSSProperties | undefined>();
   });
 
   it('插槽签名都是 `() => VNodeChild`（组件要走 prop，不能当插槽返回）', () => {

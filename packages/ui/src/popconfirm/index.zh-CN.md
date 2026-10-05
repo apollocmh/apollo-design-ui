@@ -72,8 +72,8 @@ import { Popconfirm } from '@apollo-design/ui';
 | okText | 确认按钮文案；为空回退 locale | string | OK |
 | okType | 确认按钮类型 | LegacyButtonType | 'primary' |
 | cancelText | 取消按钮文案；为空回退 locale | string | Cancel |
-| okButtonProps | 确认按钮属性 | ButtonProps | - |
-| cancelButtonProps | 取消按钮属性 | ButtonProps | - |
+| okButtonProps | 确认按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
+| cancelButtonProps | 取消按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
 | showCancel | 是否显示取消按钮 | boolean | true |
 | icon | 自定义图标；`false` 时不显示 | VNode \| false | ExclamationCircleFilled |
 | onOpenChange | 展开状态变化 | (open: boolean) => void | - |

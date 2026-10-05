@@ -65,7 +65,7 @@ const CASES: Record<string, () => DomRenderResult> = {
     h(TourPurePanel, {
       ...BP,
       title: 't',
-      nextButtonProps: { children: 'Go', className: 'custom-next' },
+      nextButtonProps: { children: 'Go', class: 'custom-next' },
       prevButtonProps: { children: 'Back' },
     }),
   'tour:pure-panel-single-step': () => h(TourPurePanel, { ...BP, title: 'only' }),

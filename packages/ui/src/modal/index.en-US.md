@@ -35,7 +35,7 @@ See [`demo/`](./demo) (23 files, mirroring antd's demo list).
 | okText / cancelText | Button text | `VNodeChild` | locale (OK / Cancel) |
 | okType | OK button type | `'text' \| 'link' \| 'primary' \| 'default' \| 'dashed'` | `'primary'` |
 | confirmLoading | OK button loading (**cancelling is blocked while true**) | `boolean` | `false` |
-| okButtonProps / cancelButtonProps | Button props | `ButtonProps` | — |
+| okButtonProps / cancelButtonProps | OK / Cancel button props; use Vue-native `class` for root styling (not `className` / `rootClassName`) | `ModalButtonProps` | — |
 | onOk / onCancel | OK / Cancel (also mask, close button and ESC) | `(e: Event) => void` | — |
 | afterClose / afterOpenChange | Close motion end / motion end (both directions) | `() => void` / `(open: boolean) => void` | — |
 | getContainer | Container; `false` renders **inline** (no portal) | `false \| string \| HTMLElement \| () => HTMLElement` | `document.body` |

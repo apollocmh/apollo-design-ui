@@ -4,6 +4,7 @@ import type {
   AutoFocusButton,
   FocusableConfig,
   MaskType,
+  ModalButtonProps,
   ModalFuncProps,
   ModalHookAPI,
   ModalInstance,
@@ -79,6 +80,23 @@ describe('Modal · 类型', () => {
     expectTypeOf<ModalHookAPI>().toHaveProperty('confirm');
     expectTypeOf<ModalHookAPI>().toHaveProperty('warn');
     expectTypeOf<ModalHookAPI>().toHaveProperty('warning');
+  });
+
+  it('Modal button config uses Vue-native class/style attrs', () => {
+    const button: ModalButtonProps = {
+      class: ['ok-button', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(button.class).not.toBeNever();
+
+    const _never = () => {
+      // @ts-expect-error nested Button config uses `class`, not className
+      const oldClassName: ModalButtonProps = { className: 'legacy' };
+      // @ts-expect-error nested Button config uses `class`, not rootClassName
+      const oldRootClassName: ModalButtonProps = { rootClassName: 'legacy' };
+      return [oldClassName, oldRootClassName];
+    };
+    void _never;
   });
 
   it('正例：合法配置', () => {

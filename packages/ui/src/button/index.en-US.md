@@ -55,11 +55,16 @@ ghost / block / icon / shape / color-variant / href / semantic.
 | htmlType | native `type` of `<button>` | `'submit' \| 'button' \| 'reset'` | `'button'` |
 | autoInsertSpace | insert a space between two Chinese characters | `boolean` | `true` |
 | prefixCls | class name prefix | `string` | from ConfigProvider, falls back to `apollo-btn` |
-| className | root class name | `string` | — |
-| rootClassName | also on the root (after `className`) | `string` | — |
-| style | root inline style. **Overrides `styles.root`** | `CSSProperties` | — |
 | classNames | semantic class names (**object form only**) | `ButtonSemanticClassNames` | — |
 | styles | semantic styles (**object form only**) | `ButtonSemanticStyles` | — |
+
+### Native root attributes
+
+The root is `<button>` or `<a>` depending on `href`. Vue-native `class`, `style`, and other `$attrs` fall through to that root; `class` supports string, array, and object forms. Caller `style` overrides `styles.root`. These are not Button-specific Props, so `className`, `rootClassName`, and `style` are not declared in `ButtonProps`.
+
+```vue
+<Button class="save-button" :style="{ color: 'rebeccapurple' }">Save</Button>
+```
 
 ### Events
 
@@ -99,10 +104,10 @@ Merge order (low → high):
 ```
 ConfigProvider.button.classNames/styles
   → component classNames / styles
-  → className / rootClassName / style (on the root)
+  → native root class / style attrs
 ```
 
-**`style` overrides `styles.root`** (same as antd's merge order).
+The caller's native **`:style` overrides `styles.root`** (preserving precedence while using Vue `$attrs`, not `ButtonProps.style`).
 
 ⚠️ The **function form is not supported** (`classNames` / `styles` accept objects only) —
 per open decision `empty-semantic-fn` = B, consistent with divider / empty / space / spin.

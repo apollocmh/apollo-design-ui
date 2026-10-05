@@ -118,6 +118,9 @@ export interface ButtonSemanticType {
  * Button 的 Props。
  *
  * ⚠️ 合成事件在 Vue 侧是 `emit`，不在 Props 里 —— 见 `Button.vue` 的 `defineEmits`。
+ * 根 `class` / `style` 使用 Vue 原生 fallthrough attrs，不重复声明 React 风格 root aliases。
+ * `className` / `rootClassName` / `style` 不属于 `ButtonProps`；ConfigProvider 的
+ * `ButtonConfig` 仍继承 `ComponentStyleConfig.className/style` 作为配置对象字段。
  */
 export interface ButtonProps {
   /** 旧版类型糖，会被解析成 `color` + `variant`（见 `ButtonTypeMap`）。 */
@@ -134,8 +137,6 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: ButtonLoading;
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   ghost?: boolean;
   danger?: boolean;
   block?: boolean;
@@ -146,7 +147,6 @@ export interface ButtonProps {
   autoInsertSpace?: boolean;
   classNames?: ButtonSemanticClassNames;
   styles?: ButtonSemanticStyles;
-  style?: CSSProperties;
 }
 
 // ---------------------------------------------------------------------------

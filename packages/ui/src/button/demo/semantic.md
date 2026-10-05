@@ -12,7 +12,7 @@ title:
 ```
 ConfigProvider.button.classNames/styles
   → 组件的 classNames / styles
-  → className / rootClassName / style（落在根元素）
+  → 根节点原生 class / style attrs
 ```
 
 ⚠️ 与 antd 的差异：本仓库**不支持函数式变体**（`classNames` / `styles` 只接受对象），

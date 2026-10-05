@@ -35,8 +35,10 @@ packages/ui/src/button/
 ## 3. 公共 API
 
 `Props`：`type / color / variant / icon / iconPosition(废弃) / iconPlacement / shape /
-size / disabled / loading / prefixCls / className / rootClassName / ghost / danger /
-block / href / htmlType / autoInsertSpace / classNames / styles / style`
+size / disabled / loading / prefixCls / ghost / danger / block / href / htmlType /
+autoInsertSpace / classNames / styles`
+
+根节点的 `class` / `style` 是 Vue 原生 attrs，由 Button 合并到 `<button>` 或 `<a>` 根元素；它们不属于 `ButtonProps`。ConfigProvider 的 `button.className/style` 仍是配置对象字段。
 
 `Emits`：`click` → `(event: MouseEvent)`
 

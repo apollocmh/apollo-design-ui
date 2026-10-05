@@ -18,7 +18,7 @@
  *   + antd 自有字段。本仓不引 rc 类型（R7），把 rc 侧**未 omit** 的字段逐条展开写在这里。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { ClassValue, CSSProperties, VNodeChild } from 'vue';
 
 // ---------------------------------------------------------------------------
 // 复用 _internal 的单一真源（三次法则后的落点）
@@ -245,14 +245,21 @@ export interface ModalFooterExtra {
  * ⚠️ 本仓不引同包 `Button` 的 `ButtonProps`（会构成同包循环引用），用结构化描述；
  *    实际使用时会透传给 `Button`。
  */
-export interface ModalButtonProps {
+export interface ModalButtonProps extends Record<string, unknown> {
   type?: ModalOkType;
   loading?: boolean;
   disabled?: boolean;
   danger?: boolean;
   ghost?: boolean;
   onClick?: (e: MouseEvent) => void;
-  [key: string]: unknown;
+  /** Button root class —— Vue 原生 attrs。 */
+  class?: ClassValue;
+  /** Button root style —— Vue 原生 attrs。 */
+  style?: CSSProperties;
+  /** ⚠️ React 根别名不移植：用 `class`。声明 `never` 让旧写法在类型层被拒绝。 */
+  className?: never;
+  /** ⚠️ React 根别名不移植：用 `class`。 */
+  rootClassName?: never;
 }
 
 /** antd 的 `Breakpoint`（响应式 width 的键）。 */

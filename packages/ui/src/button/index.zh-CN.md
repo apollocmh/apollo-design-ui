@@ -54,11 +54,16 @@ block / icon / shape / color-variant / href / semantic）。
 | htmlType | `<button>` 的原生 `type` | `'submit' \| 'button' \| 'reset'` | `'button'` |
 | autoInsertSpace | 两个中文字之间是否自动插空格 | `boolean` | `true` |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-btn` |
-| className | 根元素类名 | `string` | — |
-| rootClassName | 也落在根元素上（在 `className` 之后） | `string` | — |
-| style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
 | classNames | 语义化类名（**只支持对象形态**） | `ButtonSemanticClassNames` | — |
 | styles | 语义化样式（**只支持对象形态**） | `ButtonSemanticStyles` | — |
+
+### 根节点原生属性
+
+根节点会根据 `href` 渲染为 `<button>` 或 `<a>`。Vue 原生 `class`、`style` 和其它 `$attrs` 会透传到这个根节点；`class` 支持字符串、数组、对象，`style` 调用值优先于 `styles.root`。它们不是 Button 专属 Props，因此不声明 `className` / `rootClassName` / `style`。
+
+```vue
+<Button class="save-button" :style="{ color: 'rebeccapurple' }">保存</Button>
+```
 
 ### 事件
 
@@ -98,10 +103,10 @@ block / icon / shape / color-variant / href / semantic）。
 ```
 ConfigProvider.button.classNames/styles
   → 组件的 classNames / styles
-  → className / rootClassName / style（落在根元素）
+  → 根节点原生 class / style attrs
 ```
 
-其中 **`style` 会覆盖 `styles.root`**（antd 的合并顺序如此，我们逐条对齐）。
+其中调用处原生 **`:style` 会覆盖 `styles.root`**（保持合并优先级；该值走 Vue `$attrs`，不是 `ButtonProps.style`）。
 
 ⚠️ **不支持函数式变体**（`classNames` / `styles` 只接受对象）—— 依据
 `empty-semantic-fn` 开放决策的建议 B，与已完成的 divider / empty / space / spin 一致。

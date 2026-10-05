@@ -30,7 +30,14 @@
 import { CloseOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { pickAttrs } from '@apollo-design/utils';
-import { type CSSProperties, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import {
+  type ClassValue,
+  type CSSProperties,
+  defineComponent,
+  h,
+  type PropType,
+  type VNodeChild,
+} from 'vue';
 import { Button } from '../button';
 import { clsx as cx } from '../tooltip/util';
 import type {
@@ -57,13 +64,13 @@ export interface TourPanelStep {
   nextButtonProps?: {
     children?: VNodeChild;
     onClick?: () => void;
-    className?: string;
+    class?: ClassValue;
     style?: CSSProperties;
   };
   prevButtonProps?: {
     children?: VNodeChild;
     onClick?: () => void;
-    className?: string;
+    class?: ClassValue;
     style?: CSSProperties;
   };
   closable?: TourClosableConfig | null;
@@ -242,7 +249,7 @@ const TourPanel = defineComponent({
                 type: 'default',
                 ghost: mergedType === 'primary',
                 onClick: prevBtnClick,
-                className: cx(`${prefixCls}-prev-btn`, prevButtonProps?.className),
+                class: [`${prefixCls}-prev-btn`, prevButtonProps?.class],
                 style: prevButtonProps?.style,
               },
               { default: () => prevButtonProps?.children ?? contextLocaleTour?.Previous },
@@ -254,7 +261,7 @@ const TourPanel = defineComponent({
             size: 'small',
             type: mainBtnType,
             onClick: nextBtnClick,
-            className: cx(`${prefixCls}-next-btn`, nextButtonProps?.className),
+            class: [`${prefixCls}-next-btn`, nextButtonProps?.class],
             style: nextButtonProps?.style,
           },
           {

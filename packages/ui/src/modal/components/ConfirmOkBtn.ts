@@ -43,7 +43,12 @@ export default defineComponent({
             onClose?.();
           },
           autoFocus: autoFocusButton === 'ok',
-          buttonProps: okButtonProps,
+          // 根类名/样式走 Vue 原生 attrs；`className` / `rootClassName` 已被类型层拒绝。
+          buttonProps: {
+            ...okButtonProps,
+            class: okButtonProps?.class,
+            style: okButtonProps?.style,
+          },
           prefixCls: `${rootPrefixCls}-btn`,
         } as never,
         { default: () => okTextLocale as VNodeChild },

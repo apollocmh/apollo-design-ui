@@ -33,7 +33,7 @@ subtitle: 对话框
 | okText / cancelText | 按钮文案（同名 `#okText` / `#cancelText` slot 优先） | `string` | locale（OK / Cancel） |
 | okType | 确定按钮类型 | `'text' \| 'link' \| 'primary' \| 'default' \| 'dashed'` | `'primary'` |
 | confirmLoading | 确定按钮 loading（**为真时点取消不关**） | `boolean` | `false` |
-| okButtonProps / cancelButtonProps | 按钮属性 | `ButtonProps` | — |
+| okButtonProps / cancelButtonProps | 确定/取消按钮属性；根类名用 Vue 原生 `class`（不是 `className` / `rootClassName`） | `ModalButtonProps` | — |
 | onOk / onCancel | 确定 / 取消（含遮罩、关闭按钮、ESC） | `(e: Event) => void` | — |
 | afterClose / afterOpenChange | 关闭动效结束 / 动效结束（开与关都触发） | `() => void` / `(open: boolean) => void` | — |
 | getContainer | 容器；`false` ⇒ **内联渲染**（不 portal） | `false \| string \| HTMLElement \| () => HTMLElement` | `document.body` |

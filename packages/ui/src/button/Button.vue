@@ -30,6 +30,7 @@ import {
   computed,
   Fragment,
   h,
+  mergeProps,
   onMounted,
   onUnmounted,
   onUpdated,
@@ -85,8 +86,6 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   disabled: undefined,
   loading: false,
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
   ghost: undefined,
   danger: undefined,
   block: undefined,
@@ -95,7 +94,6 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   autoInsertSpace: undefined,
   classNames: undefined,
   styles: undefined,
-  style: undefined,
 });
 
 const emit = defineEmits<{
@@ -472,8 +470,6 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-icon-end`]: mergedIconPlacement.value === 'end',
   },
   compactItemClassnames?.value,
-  props.className,
-  props.rootClassName,
   mergedClassNames.value.root,
 ]);
 
@@ -481,13 +477,26 @@ const rootClass = computed(() => [
 // 样式与属性
 // ---------------------------------------------------------------------------
 
-const rootStyle = computed<CSSProperties>(() => ({
-  ...mergedStyles.value.root,
-  ...props.style,
-}));
-
-const rootStyleAttrs = computed(() => styleAttrs(rootStyle.value));
+const rootStyleAttrs = computed(() => styleAttrs(mergedStyles.value.root));
 const iconStyleAttrs = computed(() => styleAttrs(mergedStyles.value.icon));
+
+/**
+ * Root `class` / `style` are Vue fallthrough attrs, merged with generated state and semantic
+ * classes plus ConfigProvider / semantic root styles. Re-read attrs during render because
+ * useAttrs() is intentionally non-reactive.
+ */
+const getRootAttrs = (isAnchor = false) =>
+  mergeProps(
+    {
+      class: [
+        rootClass.value,
+        isAnchor ? { [`${prefixCls.value}-disabled`]: mergedDisabled.value } : undefined,
+      ],
+      ...rootStyleAttrs.value,
+    },
+    attrs,
+  );
+
 const contentStyleAttrs = computed(() => styleAttrs(mergedStyles.value.content));
 
 /**
@@ -577,11 +586,10 @@ defineExpose({ nativeElement: rootRef });
   <a
     v-if="href !== undefined"
     ref="rootRef"
-    :class="[rootClass, { [`${prefixCls}-disabled`]: mergedDisabled }]"
     :href="mergedDisabled ? undefined : href"
     :tabindex="mergedDisabled ? -1 : 0"
     :aria-disabled="mergedDisabled"
-    v-bind="{ ...attrs, ...rootStyleAttrs }"
+    v-bind="getRootAttrs(true)"
     @click="onClick"
   >
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
@@ -604,9 +612,8 @@ defineExpose({ nativeElement: rootRef });
     v-else
     ref="rootRef"
     :type="htmlType"
-    :class="rootClass"
     :disabled="mergedDisabled"
-    v-bind="{ ...attrs, ...rootStyleAttrs }"
+    v-bind="getRootAttrs()"
     @click="onClick"
   >
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">

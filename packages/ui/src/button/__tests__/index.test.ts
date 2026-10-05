@@ -797,14 +797,21 @@ describe('Button · classNames / styles 语义化', () => {
     expect(contentSpan?.attributes('style') ?? '').toContain('color: rgb(0, 255, 0)');
   });
 
-  it('className / rootClassName 都落在根元素，且是**拼接**不是覆盖', () => {
-    const w = mountBtn({ className: 'a', rootClassName: 'b', classNames: { root: 'c' } });
-    expect(w.classes()).toContain('a');
-    expect(w.classes()).toContain('b');
-    expect(w.classes()).toContain('c');
+  it('Vue 原生 root class 接受字符串、数组和对象，并与内部/语义类拼接', () => {
+    const stringClass = mountBtn({ class: 'native-a', classNames: { root: 'semantic' } });
+    expect(stringClass.classes()).toContain('native-a');
+    expect(stringClass.classes()).toContain('semantic');
+
+    const arrayClass = mountBtn({ class: ['native-b', { active: true }] });
+    expect(arrayClass.classes()).toContain('native-b');
+    expect(arrayClass.classes()).toContain('active');
+
+    const objectClass = mountBtn({ class: { 'native-c': true, inactive: false } });
+    expect(objectClass.classes()).toContain('native-c');
+    expect(objectClass.classes()).not.toContain('inactive');
   });
 
-  it('★ `style` 覆盖 `styles.root`', () => {
+  it('★ 原生 `style` attr 覆盖 `styles.root`', () => {
     const w = withText({ style: { color: 'green' }, styles: { root: { color: 'red' } } }, 'T');
     const style = w.attributes('style') ?? '';
     expect(style).toContain('color: green');
@@ -829,6 +836,54 @@ describe('Button · classNames / styles 语义化', () => {
       { classNames: { root: 'own-root' } },
     );
     expect(w2.classes()).toContain('own-root');
+  });
+
+  it('ConfigProvider root style 是默认值，调用方原生 style attr 优先', () => {
+    const w = mountWithConfig(
+      {
+        components: {
+          button: { style: { color: 'red', marginTop: '2px' } },
+        },
+      },
+      { style: { color: 'blue', paddingTop: '4px' } },
+    );
+    const style = w.element.getAttribute('style') ?? '';
+    expect(style).toContain('color: blue');
+    expect(style).toContain('margin-top: 2px');
+    expect(style).toContain('padding-top: 4px');
+    expect(style).not.toContain('color: red');
+  });
+
+  it('父组件更新时重新应用 native class/style attrs', async () => {
+    const Host = defineComponent({
+      props: {
+        nativeClass: { type: String, required: true },
+        nativeColor: { type: String, required: true },
+      },
+      setup(props) {
+        return () =>
+          h(
+            Button,
+            { class: props.nativeClass, style: { color: props.nativeColor } },
+            () => 'Text',
+          );
+      },
+    });
+    const w = mount(Host, { props: { nativeClass: 'first-class', nativeColor: 'red' } });
+    expect(w.element.classList.contains('first-class')).toBe(true);
+    expect((w.element as HTMLElement).style.color).toBe('red');
+
+    await w.setProps({ nativeClass: 'second-class', nativeColor: 'blue' });
+    expect(w.element.classList.contains('first-class')).toBe(false);
+    expect(w.element.classList.contains('second-class')).toBe(true);
+    expect((w.element as HTMLElement).style.color).toBe('blue');
+  });
+
+  it('原生 DOM 事件 attrs 只透传/触发一次', async () => {
+    const onFocus = vi.fn();
+    const w = mountBtn({ onFocus });
+    await w.trigger('focus');
+    expect(onFocus).toHaveBeenCalledTimes(1);
   });
 });
 

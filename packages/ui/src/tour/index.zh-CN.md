@@ -103,8 +103,8 @@ import { Tour } from '@apollo-design/ui';
 | scrollIntoViewOptions | 步骤级滚动选项 | boolean \| ScrollIntoViewOptions | - |
 | closeIcon | 步骤级关闭图标 | VNodeChild | - |
 | closable | 步骤级关闭配置 | boolean \| { closeIcon?, ...aria } | - |
-| nextButtonProps | 下一步按钮（`children` 走 `#nextButton` 插槽优先） | { children?, onClick?, className?, style? } | - |
-| prevButtonProps | 上一步按钮（`children` 走 `#prevButton` 插槽优先） | 同上 | - |
+| nextButtonProps | 下一步按钮（`children` 走 `#nextButton` 插槽优先；按钮类名用 Vue 原生 `class`） | { children?, onClick?, class?, style? } | - |
+| prevButtonProps | 上一步按钮（`children` 走 `#prevButton` 插槽优先；按钮类名用 Vue 原生 `class`） | 同上 | - |
 | type | 步骤级形态（覆盖 `TourProps.type`） | 'default' \| 'primary' | - |
 | classNames / styles | 步骤级语义槽（不支持函数形态） | 同上 | - |
 

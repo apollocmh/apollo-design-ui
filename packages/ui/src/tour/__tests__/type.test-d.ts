@@ -9,6 +9,7 @@ import { expectTypeOf, it } from 'vitest';
 import { h } from 'vue';
 import { Tour } from '../index';
 import type {
+  TourButtonProps,
   TourClosableConfig,
   TourPlacement,
   TourProps,
@@ -36,6 +37,21 @@ it('TourProps 的关键字段类型', () => {
   expectTypeOf<TourProps['mask']>().not.toBeNever();
   expectTypeOf<TourProps['gap']>().not.toBeNever();
   expectTypeOf<TourProps['animated']>().not.toBeNever();
+});
+
+it('Tour 按钮配置使用 Vue 原生 class attrs', () => {
+  const props: TourButtonProps = {
+    class: ['tour-action', { active: true }],
+    style: { color: 'red' },
+  };
+  expectTypeOf(props.class).not.toBeNever();
+
+  const _never = () => {
+    // @ts-expect-error nested button config uses Vue's class attr, not className
+    const legacy: TourButtonProps = { className: 'legacy' };
+    return legacy;
+  };
+  void _never;
 });
 
 it('placement 含 center（13 个值）', () => {

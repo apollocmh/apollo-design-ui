@@ -184,10 +184,10 @@ const CASES: Record<string, () => DomRenderResult> = {
     withText({ prefixCls: PREFIX, href: 'https://example.com', disabled: true }),
   'href:target': () => withText({ prefixCls: PREFIX, href: '#', target: '_blank' }),
 
-  // ---- 10. className / 属性透传 ----
-  'class:className': () => withText({ prefixCls: PREFIX, className: 'my-class' }),
-  'class:rootClassName': () => withText({ prefixCls: PREFIX, rootClassName: 'root-class' }),
-  'class:both': () => withText({ prefixCls: PREFIX, className: 'a', rootClassName: 'b' }),
+  // ---- 10. 根节点原生 attrs（React className/rootClassName 的 Vue 对应物是 class） ----
+  'class:className': () => withText({ prefixCls: PREFIX, class: 'my-class' }),
+  'class:rootClassName': () => withText({ prefixCls: PREFIX, class: 'root-class' }),
+  'class:both': () => withText({ prefixCls: PREFIX, class: 'a b' }),
   'attrs:passthrough': () => withText({ prefixCls: PREFIX, 'data-testid': 'x', id: 'my-btn' }),
 
   // ---- 11. 语义化 ----

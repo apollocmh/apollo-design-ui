@@ -22,7 +22,7 @@
  */
 
 import type { TourLocale } from '@apollo-design/locale';
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { ClassValue, CSSProperties, VNodeChild } from 'vue';
 
 import type { TriggerAlign } from '../_internal/trigger';
 
@@ -152,12 +152,13 @@ export interface TourSemanticAllType {
 // 步骤
 // ---------------------------------------------------------------------------
 
-/** 步骤上的按钮配置（`nextButtonProps` / `prevButtonProps`）。 */
+/** 步骤上的按钮配置（`nextButtonProps` / `prevButtonProps`）；按钮根样式使用 Vue 原生 attrs。 */
 export interface TourButtonProps {
   /** slot `#nextButton` / `#prevButton` 优先；此 prop 为字符串兜底。 */
   children?: string;
   onClick?: () => void;
-  className?: string;
+  /** Vue 原生 class attrs，落在步骤操作按钮上。 */
+  class?: ClassValue;
   style?: CSSProperties;
 }
 

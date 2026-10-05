@@ -70,8 +70,8 @@ A simple and compact dialog used for asking confirmation of an action from the u
 | okText | Text of the OK button; falls back to locale when empty | string | OK |
 | okType | Type of the OK button | LegacyButtonType | 'primary' |
 | cancelText | Text of the Cancel button; falls back to locale when empty | string | Cancel |
-| okButtonProps | Props of the OK button | ButtonProps | - |
-| cancelButtonProps | Props of the Cancel button | ButtonProps | - |
+| okButtonProps | Props of the OK button; use Vue-native `class` for root styling | PopconfirmButtonProps | - |
+| cancelButtonProps | Props of the Cancel button; use Vue-native `class` for root styling | PopconfirmButtonProps | - |
 | showCancel | Whether to show the Cancel button | boolean | true |
 | icon | Custom icon; `false` hides it | VNode \| false | ExclamationCircleFilled |
 | onOpenChange | Called when the open state changes | (open: boolean) => void | - |

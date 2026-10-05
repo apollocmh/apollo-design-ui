@@ -377,7 +377,7 @@ describe('Tour · 主行为（antd 矩阵）', () => {
   });
 
   // 上游 it('custom step pre btn & next btn className & style')
-  it('nextButtonProps 的 className / style 落到按钮', async () => {
+  it('nextButtonProps 的 Vue 原生 class / style 落到按钮', async () => {
     mount(Tour, {
       attachTo: document.body,
       global: { stubs: { teleport: false } },
@@ -388,7 +388,7 @@ describe('Tour · 主行为（antd 矩阵）', () => {
             title: 'Show in Center',
             description: 'Here is the content of Tour.',
             nextButtonProps: {
-              className: 'customClassName',
+              class: 'customClassName',
               style: { backgroundColor: 'rgb(69,69,255)' },
             },
           },

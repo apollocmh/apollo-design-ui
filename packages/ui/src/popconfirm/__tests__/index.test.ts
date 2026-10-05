@@ -220,4 +220,21 @@ describe('Popconfirm · PurePanel', () => {
     expect(html).toContain('apollo-popconfirm-message');
     expect(html).toContain('apollo-popconfirm-buttons');
   });
+
+  it('嵌套按钮配置用 Vue 原生 class/style attrs', () => {
+    const w = mount(PopconfirmPurePanel, {
+      props: {
+        title: 'Title',
+        showCancel: true,
+        cancelButtonProps: { class: 'cancel-native', style: { color: 'blue' } },
+        okButtonProps: { class: ['ok-native', { active: true }], style: { color: 'green' } },
+      },
+    });
+    const cancel = w.find('button.cancel-native');
+    const ok = w.find('button.ok-native');
+    expect(cancel.exists()).toBe(true);
+    expect(cancel.attributes('style')).toContain('color: blue');
+    expect(ok.classes()).toContain('active');
+    expect(ok.attributes('style')).toContain('color: green');
+  });
 });

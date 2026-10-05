@@ -158,6 +158,20 @@ describe('Modal · footer 文案与交互', () => {
     wrapper.unmount();
   });
 
+  it('嵌套按钮配置用 Vue 原生 class/style attrs', async () => {
+    const wrapper = await mountModal({
+      cancelButtonProps: { class: 'cancel-native', style: { color: 'blue' } },
+      okButtonProps: { class: ['ok-native', { active: true }], style: { color: 'green' } },
+    });
+    const buttons = wrapper.findAll('.apollo-modal-footer button');
+    expect(buttons[0]?.classes()).toContain('cancel-native');
+    expect(buttons[0]?.attributes('style')).toContain('color: blue');
+    expect(buttons[1]?.classes()).toContain('ok-native');
+    expect(buttons[1]?.classes()).toContain('active');
+    expect(buttons[1]?.attributes('style')).toContain('color: green');
+    wrapper.unmount();
+  });
+
   it('okText / cancelText 覆盖 locale；okType 默认 primary', async () => {
     const wrapper = await mountModal({ okText: '好', cancelText: '不好' });
     const ok = wrapper.findAll('.apollo-modal-footer button')[1];
