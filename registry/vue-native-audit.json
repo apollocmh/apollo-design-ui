@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-05T08:05:25.710Z",
+  "updatedAt": "2026-10-05T10:05:39.532Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -478,9 +478,13 @@
         "packages/ui/src/alert/index.en-US.md",
         "packages/ui/src/alert/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 53/53 · dom 28/28 · types 16/16；根 div 用 mergeProps（内部类+语义/motion 样式+pickAttrs+调用方 attrs）。"
+      ],
       "reviewedFileCount": 6
     },
     "skeleton": {
@@ -722,10 +726,13 @@
         "packages/ui/src/back-top/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-ATTRS-01"
+        "VNA-ATTRS-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 12/12 · dom 4/4 · types 2/2；根 div mergeProps，onClick 放在 attrs 之后以保持「内置滚动处理器覆盖用户 onClick」。"
+      ],
       "reviewedFileCount": 5
     },
     "checkbox": {
@@ -1851,9 +1858,13 @@
         "packages/ui/src/breadcrumb/index.en-US.md",
         "packages/ui/src/breadcrumb/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit+dom+types 90/90；根 nav mergeProps（attrs 在语义根样式之后）；item/separator 级别的 className/style 是独立目标，保留。"
+      ],
       "reviewedFileCount": 10
     },
     "tabs": {
@@ -1920,10 +1931,13 @@
         "packages/ui/src/card/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-RENDERER-01"
+        "VNA-RENDERER-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 46/46 · dom 51/51 · types 15/15；Card/Card.Grid/Card.Meta 三面都改。踩坑：<template> 里的 HTML 注释会多出根节点 ⇒ 组件变多根、attrs 透传被静默关闭。"
+      ],
       "reviewedFileCount": 7
     },
     "timeline": {
@@ -2333,10 +2347,13 @@
       ],
       "issueIds": [
         "VNA-AVATAR-01",
-        "VNA-RENDERER-01"
+        "VNA-RENDERER-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 36/36 · dom 31/31 · types 17/17；Avatar/AvatarGroup 双面都改；AvatarGroupMax.style 与 max.popover.rootClassName 是独立目标，保留。"
+      ],
       "reviewedFileCount": 7
     }
   },
@@ -3062,7 +3079,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描：69/73 组件命中。已迁移：divider、flex（各自 unit/dom/types 全绿）。其余待办。"
+      "verification": "机械扫描：69/73 组件命中。已迁移并各自提交：divider、flex、alert、breadcrumb、avatar、back-top、card（+ 上一轮 button）。每个都跑 unit/dom-contract/types 全绿。保留为独立目标的：border-beam（className/style 指向注入的 Effect 层，无自有根）、breadcrumb item/separator、avatar group max/popover、card meta/grid 之外的子目标。其余待办。"
     }
   ],
   "batches": [
@@ -3200,6 +3217,11 @@
       "date": "2026-10-05",
       "status": "in_progress",
       "note": "Root-alias migration: divider + flex done and committed (one commit each). Learned and recorded in the Skill that useComponentConfig() destructured fields are plain values, not refs — writing contextStyle.value throws on every render and fails the whole suite. Next components pending."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 2: alert, breadcrumb, avatar, back-top, card migrated, each committed separately with unit+dom+types green. Two reusable pitfalls recorded in the Skill: (1) an HTML comment sibling of the root element in <template> silently makes the component multi-root and disables attrs fallthrough; (2) leftover React className keys are no longer props, fall into attrs and override the root class. Total migrated so far: button, divider, flex, alert, breadcrumb, avatar, back-top, card."
     }
   ],
   "observations": [

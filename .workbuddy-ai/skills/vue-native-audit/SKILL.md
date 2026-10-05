@@ -88,6 +88,9 @@ A library-wide scan (`^\s*(className|rootClassName|style)\?:` in every `packages
 - **Keep the Provider schema.** `ComponentStyleConfig.className/style` and every `XxxConfig` field stay — they are configuration objects, not component Props.
 - **Translate the oracle, don't rename it.** In the DOM-compat fixtures, render the React `className` case with Vue `class` and drop React-only `rootClassName` inputs. Keep the case ids unchanged so the baseline still matches one-to-one.
 - **Always run all four layers per component** (unit + dom-contract + types + Biome) before committing; the `contextStyle.value` class of bug is invisible to type checks and only shows up as mass test failure.
+- **🚨 Never leave an HTML comment as a sibling of the root element in `<template>`.** A comment counts as a root node, so the component silently becomes **multi-root** and Vue disables automatic `attrs` fallthrough — `class`/`style` vanish with no warning. Symptom: unrelated tests (e.g. a default-value test) fail because `wrapper.element` is a fragment, not the root. Put the note in the `<script>` block instead.
+- **When you delete a root alias prop, every test/oracle that fed the old key must be renamed, not just deleted.** A leftover React key such as `className: 'x'` is no longer a prop, so it lands in `attrs` and silently takes over the root class (observed: the internal prefix class disappeared and the DOM class became just `x`). Sweep tests, fixtures and docs for the old key in the same change.
+- **Verify precedence explicitly.** Whenever provider/derived/user styles all exist, add a test asserting which one wins (`Flex`: derived `flex` prop beats caller `style.flex`; `Card`/`Breadcrumb`/`Avatar`: caller `style` beats semantic root style). The `mergeProps` argument order *is* the contract.
 
 ## Finding taxonomy and severity
 
