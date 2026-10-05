@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-05T10:05:39.532Z",
+  "updatedAt": "2026-10-05T13:23:40.770Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -1001,9 +1001,13 @@
         "packages/ui/src/carousel/index.en-US.md",
         "packages/ui/src/carousel/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 29/29 · dom 19/19 · types 6/6；只移除 rootClassName；根 div 只接 class/style attrs（上游不 spread restProps，基线 carousel:attrs 里 React 无 data-x）；className/style prop 指向内层 slick-slider，保留为独立目标。"
+      ],
       "reviewedFileCount": 6
     },
     "collapse": {
@@ -1063,10 +1067,13 @@
         "packages/ui/src/descriptions/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-API-01"
+        "VNA-API-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 19/19 · dom 18/18 · types 6/6；根 div mergeProps（attrs 在语义根样式后）。DescriptionsItemProps 的 className/style 是 item 级独立目标，保留。"
+      ],
       "reviewedFileCount": 7
     },
     "tooltip": {
@@ -1360,10 +1367,13 @@
       ],
       "issueIds": [
         "VNA-API-01",
-        "VNA-ATTRS-01"
+        "VNA-ATTRS-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 6/6 · dom 3/3 · types 3/3；根 class 数组改 [prefixCls, attrs.class, rtl]，hasRootProps 判据改 Boolean(attrs.class||attrs.style)。"
+      ],
       "reviewedFileCount": 6
     },
     "image": {
@@ -2020,10 +2030,13 @@
         "packages/ui/src/anchor/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-API-01"
+        "VNA-API-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit+dom+types 76/76；新增 inheritAttrs:false，attrs 显式绑**内层 wrapper div**（不是外层 Affix）。⚠️ AnchorLinkBaseProps.className 是 items[] 数据字段（共享基类型），保留。"
+      ],
       "reviewedFileCount": 7
     },
     "list": {
@@ -2311,10 +2324,13 @@
       ],
       "issueIds": [
         "VNA-SLOT-01",
-        "VNA-RENDERER-01"
+        "VNA-RENDERER-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit 29/29 · dom 27/27 · types 21/21；根 div 原有 attrs.class/style 合并，去掉语义列表里的 props.style；其余 attrs 仍不透传；类型键集断言 21→18。"
+      ],
       "reviewedFileCount": 6
     },
     "avatar": {
@@ -3079,7 +3095,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描：69/73 组件命中。已迁移并各自提交：divider、flex、alert、breadcrumb、avatar、back-top、card（+ 上一轮 button）。每个都跑 unit/dom-contract/types 全绿。保留为独立目标的：border-beam（className/style 指向注入的 Effect 层，无自有根）、breadcrumb item/separator、avatar group max/popover、card meta/grid 之外的子目标。其余待办。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（13 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam（Effect 层）、anchor items[] 的 className（数据字段）、carousel 内层 slick-slider 的 className/style、descriptions item 级、avatar group max/popover、card 子组件目标。阻塞：auto-complete 的 className 转发给未迁移的 Select.className ⇒ 需先做 select。其余待办。"
     }
   ],
   "batches": [
@@ -3222,6 +3238,11 @@
       "date": "2026-10-05",
       "status": "in_progress",
       "note": "Root-alias migration batch 2: alert, breadcrumb, avatar, back-top, card migrated, each committed separately with unit+dom+types green. Two reusable pitfalls recorded in the Skill: (1) an HTML comment sibling of the root element in <template> silently makes the component multi-root and disables attrs fallthrough; (2) leftover React className keys are no longer props, fall into attrs and override the root class. Total migrated so far: button, divider, flex, alert, breadcrumb, avatar, back-top, card."
+    },
+    {
+      "date": "2026-10-05",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 3: descriptions, anchor, carousel, app, calendar migrated and committed separately (13 components total). Notable: anchor needed inheritAttrs:false to bind attrs to the INNER wrapper (not the outer Affix); carousel/calendar roots intentionally accept only class/style because upstream does not spread restProps (L4 carousel:attrs/calendar:attrs prove it); anchor items[] className is a data field on a shared base type and stays. auto-complete is blocked on select (its className is forwarded to Select.className)."
     }
   ],
   "observations": [
