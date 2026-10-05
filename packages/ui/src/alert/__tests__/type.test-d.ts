@@ -3,7 +3,8 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { VNodeChild } from 'vue';
+import type { Alert } from '../index';
 import type {
   AlertClosable,
   AlertConfig,
@@ -44,7 +45,26 @@ describe('Alert · Props 类型', () => {
     // C8-R2：title / description 收窄 string（富内容走 #title / #description 插槽）
     expectTypeOf<AlertProps['title']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<AlertProps['description']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<AlertProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+  });
+
+  it('根 `class` / `style` 是 Vue 原生 attrs，不重复声明为 AlertProps', () => {
+    type PublicProps = InstanceType<typeof Alert>['$props'];
+    const nativeAttrs: PublicProps = {
+      class: ['native-alert', { active: true }],
+      style: { color: 'red' },
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: AlertProps = { className: 'legacy' };
+      // @ts-expect-error `rootClassName` 不是 Alert 的 prop
+      const badRootClassName: AlertProps = { rootClassName: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 AlertProps
+      const badStyle: AlertProps = { style: { color: 'red' } };
+      return [badClassName, badRootClassName, badStyle];
+    };
+    void _never;
   });
 
   it('AlertConfig 携带四种类型图标', () => {

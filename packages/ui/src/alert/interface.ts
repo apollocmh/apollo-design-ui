@@ -141,12 +141,6 @@ export interface AlertProps {
   role?: string;
   /** 类名前缀。 */
   prefixCls?: string;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 也落在根元素上。 */
-  rootClassName?: string;
-  /** 根元素内联样式（参与语义化合并）。 */
-  style?: CSSProperties;
   /** 顶部通告形态（边框/圆角清零、默认 warning + 图标）。 */
   banner?: boolean;
   /**

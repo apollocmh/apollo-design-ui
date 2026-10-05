@@ -51,6 +51,7 @@ import {
   computed,
   defineComponent,
   h,
+  mergeProps,
   type PropType,
   ref,
   shallowRef,
@@ -220,9 +221,8 @@ export default defineComponent({
       [() => contextClassNames, () => props.classNames],
       [
         () => contextStyles as AlertSemanticStyles | undefined,
-        () => semanticRootStyle(contextStyle as AlertProps['style']),
+        () => semanticRootStyle(contextStyle),
         () => props.styles,
-        () => semanticRootStyle(props.style),
       ],
       semanticProps,
     );
@@ -273,8 +273,6 @@ export default defineComponent({
           [`${cls}-rtl`]: direction.value === 'rtl',
         },
         contextClassName,
-        props.className,
-        props.rootClassName,
         mergedClassNames.value.root,
       ];
 
@@ -319,21 +317,25 @@ export default defineComponent({
           }) =>
             h(
               'div',
-              {
-                id: props.id,
-                ref: rootRef,
-                'data-show': !closed.value,
-                class: [alertCls, motionClassName],
-                style: {
-                  ...(mergedStyles.value.root as Record<string, string | number | undefined>),
-                  ...(motionStyle ?? {}),
+              mergeProps(
+                {
+                  id: props.id,
+                  ref: rootRef,
+                  'data-show': !closed.value,
+                  class: [alertCls, motionClassName],
+                  style: {
+                    ...(mergedStyles.value.root as Record<string, string | number | undefined>),
+                    ...(motionStyle ?? {}),
+                  },
+                  onMouseenter: props.onMouseenter,
+                  onMouseleave: props.onMouseleave,
+                  onClick: props.onClick,
+                  role: 'alert',
                 },
-                onMouseenter: props.onMouseenter,
-                onMouseleave: props.onMouseleave,
-                onClick: props.onClick,
-                role: 'alert',
-                ...restProps,
-              },
+                restProps,
+                // 根 `class` / `style` 是 Vue 原生 attrs：调用方值在最后，同名样式优先。
+                { class: attrs.class, style: attrs.style },
+              ),
               [
                 isShowIcon.value
                   ? h(
