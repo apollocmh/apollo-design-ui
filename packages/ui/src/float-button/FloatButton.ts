@@ -147,7 +147,7 @@ const FloatButtonComponent = defineComponent({
       delete badgeProps.text;
       return h(Badge, {
         ...(badgeProps as Record<string, unknown>),
-        className: [
+        class: [
           (badgeProps.className as string) ?? '',
           `${prefixCls.value}-badge`,
           (props.badge as { dot?: boolean }).dot ? `${prefixCls.value}-badge-dot` : '',

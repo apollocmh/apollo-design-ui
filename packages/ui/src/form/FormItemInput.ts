@@ -162,7 +162,8 @@ const FormItemInput = defineComponent({
             )
           : null;
 
-      return h(Col, { ...(mergedWrapperCol.value as object), className } as never, {
+      // Col 已迁移到「根 class 走原生 attrs」⇒ 用 `class`
+      return h(Col, { ...(mergedWrapperCol.value as object), class: className } as never, {
         default: () => [inputDom, additionalDom],
       });
     };

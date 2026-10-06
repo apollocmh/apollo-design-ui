@@ -438,9 +438,9 @@ export default defineComponent({
             active: true,
             title: false,
             paragraph: { rows: 4 },
-            // ⚠️ 是 `className` **prop**，不是 attrs 的 `class` —— Skeleton 设了
-            //    `inheritAttrs: false`，走 `class` 会被静默丢弃（上游也是传 `className`）
-            className: `${prefixCls}-body-skeleton`,
+            // 根类名走 Vue 原生 `class`（Skeleton 已迁移：根 class 由 attrs 承接；
+            // 其余多余属性仍按上游丢弃）
+            class: `${prefixCls}-body-skeleton`,
           } as never)
         : (semanticContent.value as never);
 

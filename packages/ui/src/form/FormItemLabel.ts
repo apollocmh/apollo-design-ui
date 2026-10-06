@@ -169,7 +169,7 @@ const FormItemLabel = defineComponent({
         Col,
         {
           ...(mergedLabelCol as Record<string, unknown>),
-          className: labelColClassName,
+          class: labelColClassName,
         },
         {
           default: () =>

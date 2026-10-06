@@ -907,7 +907,7 @@ export const InputNumberComponent = defineComponent({
       return h(
         SpaceAddon,
         {
-          className: `${prefixCls.value}-addon`,
+          class: `${prefixCls.value}-addon`,
           variant: props.variant,
           disabled: props.disabled,
           status: mergedStatus.value,
@@ -943,7 +943,7 @@ export const InputNumberComponent = defineComponent({
       if (hasLegacyAddon.value) {
         return h(
           SpaceCompact,
-          { rootClassName: props.rootClassName },
+          { class: props.rootClassName },
           { default: () => [renderAddon(props.addonBefore), inner, renderAddon(props.addonAfter)] },
         );
       }

@@ -208,8 +208,9 @@ const FloatButtonGroupComponent = defineComponent({
         [listCls, mergedClassNames.value.list, motionClassName].filter(Boolean).join(' ');
 
       const renderList = (motionClassName?: string): ReturnType<typeof h> => {
+        // Flex / SpaceCompact 都已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
         const shared = {
-          className: listSharedClass(motionClassName),
+          class: listSharedClass(motionClassName),
           style: mergedStyles.value.list,
         };
         if (mergedShape.value === 'circle') {
