@@ -8,7 +8,7 @@
 > 这是**入口**：先在这里按主题定位编号，再往下读全文。新增坑时**同时**补这里一行。
 
 - **props/attrs**：事件名全小写(1) · `VNodeChild` 显式 `undefined` 默认值(2) · 🚨未声明 prop 归 `attrs` 静默失效(3,250) · catch-all 别用 `PropType<unknown>`(5,137,185) · `required:true` 要 `as const`(15,200) · 🚨 **`class`/`className`/`style` 与 `...attrs` 的先后决定胜负**（`{class:X,...attrs}` 整段丢 / `{className:X,...restAttrs}` 双份）(349) · 🚨 **`inheritAttrs:false` + 从不读 `attrs` = `class`/`style` 静默丢弃**（声明了 prop 也≠生效）(351) · ⚠️ `attrs.class` 是 `ClassValue`、`attrs.style` 是 `StyleValue` ⇒ 进 `string[]`/`CSSProperties` 前要归一或断言(352)
-- **根别名迁移**（`className`/`rootClassName`/`style` → 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232）：🚨 消费者扫描要覆盖**模板 `:class-name=`** 与**同目录内部件**（把被迁组件自己也放进列表）(350) · 🚨 组件可能**半迁移**（classString 里 props 与 attrs 并存）⇒ 判据是「扫代码」不是「看状态」(354,355) · 🚨 **L4 两侧各用各的词汇是既有约定，别改基线**(353)
+- **根别名迁移**（`className`/`rootClassName`/`style` → 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232）：🚨 消费者扫描要覆盖**模板 `:class-name=`** 与**同目录内部件**（把被迁组件自己也放进列表）(350) · 🚨 组件可能**半迁移**（classString 里 props 与 attrs 并存）⇒ 判据是「扫代码」不是「看状态」(354,355) · 🚨 **「查哪些组件还有根别名」要按公开导出枚举，不是按目录**（漏了 `StatisticTimer` / `PopconfirmPurePanel`）(358) · 🚨 **L4 两侧各用各的词汇是既有约定，别改基线**(353)
 - **样式**：🚨 **E10 的 `box-shadow` 正则不认 `inset` 前缀** —— 只放行 `var(`/`${`/`none`/`0` 开头 ⇒ `box-shadow:inset 0 0 1px 0 var(--apollo-…)` 会被判「硬编码阴影」；对策是把这条阴影**声明成组件变量**（322）
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
 - **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
@@ -4616,6 +4616,23 @@
       ② `run.mjs` 支持 `--component/--variant/--viewport/--mode/--no-build/--shard`，
       孤立重跑 **~19 s**（全量 `--no-build` 约 31 分钟）⇒ 分类成本很低。
     - **别做**：把这些「失败」登记进 `COMPATIBILITY.md` 当平台差异 —— 它们是**测量噪声**，不是差异。
+
+358. 🚨 **「按组件目录查」会漏掉**同一个目录里的**公开子组件** —— 判据要按**公开导出**枚举，不是按目录。
+    —— 2026-10-06 根别名迁移收口期实测：我按 `packages/ui/src/<组件>/` 逐个查，两次宣称
+    「72/72 完成」，之后又被抓出 **2 个**：
+
+    - `StatisticTimer`（`statistic/index.ts` 的 `withInstall(TimerComponent)`）—— 还带
+      `className`/`rootClassName`/`style`，且是**半迁移**（渲染里 `props.className ?? attrClass`）。
+    - `PopconfirmPurePanel`（`popconfirm/index.ts` 的 `withInstall(PurePanelComponent)`）——
+      同样带 `className`/`style`，且渲染末尾 `...attrs` 会整段覆盖 `class`。
+
+    - **正确判据**（脚本）：对每个 `<dir>/index.ts`，先建「本地名 → 文件」的 import 映射，
+      再收集**公开导出的本地名**（`withInstall(X)` 的 `X`、`export { X }` 里大驼峰的 `X`），
+      最后只查这些文件里的 `props.className|props.rootClassName|props.style`。
+      ⚠️ 按目录 `walk` 会把**引擎/内部件**一起算进来 ⇒ 159 处噪声里淹掉真正的那 2 处。
+    - **误报提醒**：打印路径时别用 `path.basename()` —— 会把 `engine/Footer.ts` 显示成
+      `Footer.ts`，看着像「根目录多了个文件」。判据要看**相对路径**。
+    - **同族**：PITFALLS **350**（消费者扫描要含同目录内部件）、**355**（扫代码不是看状态）。
 
 357. 🚨 **本仓禁用 `git stash push -u` —— 它会让索引失同步（6352 条 staged-deleted），而工作区文件其实完好。**
     —— 2026-10-06 实测：为对比「改动前是否也红」而 stash，`git status` 随后显示

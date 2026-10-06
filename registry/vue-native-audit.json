@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T12:17:08.019Z",
+  "updatedAt": "2026-10-06T12:40:27.521Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -851,7 +851,8 @@
       ],
       "batch": null,
       "notes": [
-        "根别名迁移完成：unit + dom + types = 100/100；StatisticProps 去掉 className/rootClassName/style；Timer 转发时把 className/rootClassName 合并成一个 class 数组。"
+        "根别名迁移完成：unit + dom + types = 100/100；StatisticProps 去掉 className/rootClassName/style；Timer 转发时把 className/rootClassName 合并成一个 class 数组。",
+        "⚠️ 收口期复查补漏：`StatisticTimer`（公开导出）此前仍带 className/rootClassName/style，且是**半迁移**（渲染里 props.className ?? attrClass）⇒ 已收敛成只读 attrs（7 文件 / 84 用例全过）。教训：按「组件目录」查会漏同目录的公开子组件（PITFALLS 358）。"
       ],
       "reviewedFileCount": 9
     },
@@ -2181,7 +2182,8 @@
       ],
       "batch": null,
       "notes": [
-        "根别名迁移完成：unit + dom-contract + types = 39/39；**无需改代码** —— 类型面早已迁移（PopconfirmButtonProps 的 className/rootClassName 已是 `never` 标记，PopconfirmProps 继承 PopoverProps 且不再有这三个键），实现里只用 overlayClassName 与语义槽。"
+        "根别名迁移完成：unit + dom-contract + types = 39/39；**无需改代码** —— 类型面早已迁移（PopconfirmButtonProps 的 className/rootClassName 已是 `never` 标记，PopconfirmProps 继承 PopoverProps 且不再有这三个键），实现里只用 overlayClassName 与语义槽。",
+        "⚠️ 收口期复查补漏：`PopconfirmPurePanel`（公开导出）此前仍带 className/style，且渲染末尾 `...attrs` 会整段覆盖 `class` ⇒ 已迁移 + 摘掉 class/style 再展开（7 文件 / 73 用例全过）。同族 PITFALLS 349 第二种形态。"
       ],
       "reviewedFileCount": 6
     },
@@ -4064,7 +4066,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。**72/72 全部完成**（69 个迁移 + 3 个验证后确认无需改码：menu / time-picker / message+notification / config-provider）。⚠️ 后 6 个（checkbox/collapse/drawer/cascader/color-picker/date-picker）原本在 `analyzing` 档，容易被「只筛 todo」漏掉 —— 判据是扫 `props.className|props.rootClassName|props.style`，不是看状态。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter、mentions 的 PurePanel、checkbox 的 CheckboxOptionType、collapse 的 Collapse.Panel/CollapsePanelInner、cascader 的 ConfigProvider 上下文。"
+      "verification": "机械扫描 69/73 命中。**72/72 全部完成**（收口期又按「公开导出枚举」复查出 2 个同目录公开子组件：`StatisticTimer` / `PopconfirmPurePanel`，已补）（69 个迁移 + 3 个验证后确认无需改码：menu / time-picker / message+notification / config-provider）。⚠️ 后 6 个（checkbox/collapse/drawer/cascader/color-picker/date-picker）原本在 `analyzing` 档，容易被「只筛 todo」漏掉 —— 判据是扫 `props.className|props.rootClassName|props.style`，不是看状态。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter、mentions 的 PurePanel、checkbox 的 CheckboxOptionType、collapse 的 Collapse.Panel/CollapsePanelInner、cascader 的 ConfigProvider 上下文。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4385,6 +4387,11 @@
       "date": "2026-10-06",
       "status": "completed",
       "note": "Root-alias migration TRULY COMPLETE: 72/72. The 6 stragglers were hiding in auditStatus=analyzing (I had only been filtering todo) - checkbox, collapse, drawer, cascader, color-picker, date-picker. Lesson: scan for `props.className|props.rootClassName|props.style` rather than trusting the status bucket. Also fixed 2 internal consumers of Checkbox in transfer (ListItem/Section). Notable pre-existing bugs found on the way: Checkbox props.style was dead + attrs.class/style were destructured into unused attrClass/attrStyle (silently dropped); date-picker does not forward ANY other attrs (no useAttrs, no $attrs) - logged, not fixed (out of scope)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "completed",
+      "note": "Post-completion re-verification caught 2 MORE stragglers that the per-directory scan missed: StatisticTimer (statistic/index.ts exports it via withInstall) and PopconfirmPurePanel (popconfirm/index.ts likewise). Both were half-migrated. The correct scan is to enumerate each package index.ts PUBLIC EXPORTS (withInstall(X) / export {X}) and check only those files - walking the directory counts engines/internals and drowns the real hits in noise. PITFALLS 358. Also cleaned 7 stale doc rows (date-picker/image/space/tour) that still documented the removed props."
     }
   ],
   "observations": [
