@@ -59,7 +59,8 @@ export const DefaultRenderEmpty = defineComponent({
         case 'Mentions':
           return h(Empty, {
             image: PRESENTED_IMAGE_SIMPLE,
-            className: `${prefix}-small`,
+            // Empty 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+            class: `${prefix}-small`,
           });
 
         /**

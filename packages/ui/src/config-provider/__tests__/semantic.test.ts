@@ -118,7 +118,7 @@ describe('ConfigProvider · 对下游 DOM 的影响', () => {
   it('组件自己的 prop 优先于 ConfigProvider 的配置', () => {
     const w = mount(ConfigProvider, {
       props: { empty: { className: 'from-cp' } },
-      slots: { default: () => h(Empty, { className: 'from-prop' }) },
+      slots: { default: () => h(Empty, { class: 'from-prop' }) },
     });
     const root = w.find(`.${P}-empty`);
     expect(root.classes()).toContain('from-cp');
