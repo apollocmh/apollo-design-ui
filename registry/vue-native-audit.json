@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:44:46.980Z",
+  "updatedAt": "2026-10-06T06:27:07.317Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 2,
+      "todo": 1,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 63,
+      "done": 64,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 650,
+    "reviewedProductionSourceFiles": 679,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2818,7 +2818,7 @@
       "reviewedFileCount": 8
     },
     "table": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/table/engine/Body.ts",
         "packages/ui/src/table/engine/Cell.ts",
@@ -2850,15 +2850,50 @@
         "packages/ui/src/table/Table.ts",
         "packages/ui/src/table/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/table/engine/Body.ts",
+        "packages/ui/src/table/engine/Cell.ts",
+        "packages/ui/src/table/engine/ColGroup.ts",
+        "packages/ui/src/table/engine/constant.ts",
+        "packages/ui/src/table/engine/context.ts",
+        "packages/ui/src/table/engine/Footer.ts",
+        "packages/ui/src/table/engine/Header.ts",
+        "packages/ui/src/table/engine/hooks/use-columns.ts",
+        "packages/ui/src/table/engine/hooks/use-expand.ts",
+        "packages/ui/src/table/engine/hooks/use-table.ts",
+        "packages/ui/src/table/engine/Table.ts",
+        "packages/ui/src/table/engine/utils/expandUtil.ts",
+        "packages/ui/src/table/engine/utils/fixUtil.ts",
+        "packages/ui/src/table/engine/utils/legacyUtil.ts",
+        "packages/ui/src/table/engine/utils/offsetUtil.ts",
+        "packages/ui/src/table/engine/utils/valueUtil.ts",
+        "packages/ui/src/table/engine/VirtualTable/BodyGrid.ts",
+        "packages/ui/src/table/engine/VirtualTable/BodyLine.ts",
+        "packages/ui/src/table/engine/VirtualTable/VirtualCell.ts",
+        "packages/ui/src/table/ExpandIcon.ts",
+        "packages/ui/src/table/hooks/use-filter.ts",
+        "packages/ui/src/table/hooks/use-selection.ts",
+        "packages/ui/src/table/hooks/use-sorter.ts",
+        "packages/ui/src/table/hooks/use-table-data.ts",
+        "packages/ui/src/table/index.ts",
+        "packages/ui/src/table/interface.ts",
+        "packages/ui/src/table/style/index.ts",
+        "packages/ui/src/table/Table.ts",
+        "packages/ui/src/table/util.ts"
+      ],
       "testFileCount": 3,
       "demoFileCount": 12,
       "docFiles": [
         "packages/ui/src/table/README.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：Table 与 SummaryCell（= Table.Summary.Cell）去掉根别名。⚠️ Table 没关 inheritAttrs ⇒ 删 props 即可；wrappercls 里原本手工加的 attrs.class 与透传**叠加**（潜在重复），一并去掉。⚠️ 上下文里的 rootClassName（喂 filter 下拉浮层根）随 prop 去掉。⚠️ **全量回归**抓到 36 处跨组件连带（tabs/card/calendar/color-picker），见 VNA-ROOTALIAS-02。"
+      ],
+      "reviewedFileCount": 29
     },
     "transfer": {
       "auditStatus": "done",
@@ -3877,7 +3912,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（59 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree、tree-select、form，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（60 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree、tree-select、form、table，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。**全量 unit+dom-contract+types = 533/533 文件、10253/10253 用例、0 类型错误**。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3885,7 +3920,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 20 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（走 classNames.root）；typography/Base → Tooltip；color-picker/components/ColorSlider → Slider；transfer/Search → Input。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
+      "verification": "累计修 24 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（走 classNames.root）；typography/Base → Tooltip；color-picker/components/ColorSlider → Slider；transfer/Search → Input；modal/ConfirmDialog → Modal；directory-tree → Tree；tree-select → Select；form/FormItemInput → ErrorList；**tabs/Card.vue、calendar/CalendarHeader（selectBase）、color-picker 模板 ×4（全量回归抓到）**。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。⚠️ **教训：消费者扫描必须同时覆盖模板写法（`:class-name=` / `:root-class-name=`）与同目录内部件** —— 只看 `h(<Tag>, { className })` 会漏。"
     }
   ],
   "batches": [
@@ -4183,6 +4218,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 31: form done (Form + FormItem + ErrorList). Total done = 63. Form.vue declared a rootClassName that was NEVER used (dead prop). FormItem/ItemHolder/ErrorList all use the DEFAULT inheritAttrs, so deleting the props is sufficient - wiring attrs by hand would double. Ran a consumer regression (input/select/input-number/switch/radio/checkbox) = 174/174, no fallout."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 32: table done - the LAST big component. Total done = 64 (of 72; 8 remain: 4 zero-change verifications + mentions pending a ruling + others). FULL suite green: 533/533 files, 10253/10253 tests, 0 type errors. The full run caught 36 cross-component failures that per-component runs missed: (a) template consumers (:class-name= / :root-class-name=) in Card/ColorPicker, (b) a helper returning { className } in CalendarHeader, (c) Tabs root props { class, ...attrs } where the trailing ...attrs overrode the whole class string."
     }
   ],
   "observations": [
