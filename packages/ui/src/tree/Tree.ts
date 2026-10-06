@@ -148,9 +148,6 @@ export const treeProps = {
   filterTreeNode: { type: Function as PropType<TreeProps['filterTreeNode']>, default: undefined },
 
   prefixCls: { type: String, default: undefined },
-  className: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
-  style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
   rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
   classNames: {
     type: [Object, Function] as PropType<TreeProps['classNames']>,
@@ -1352,8 +1349,8 @@ export default defineComponent({
       const rootClass = clsx(
         prefixCls.value,
         mergedClassNames.value.root,
-        props.className,
-        props.rootClassName,
+        // ⚠️ 调用方原生 class/style **不在这里加** —— Tree 没关 inheritAttrs，
+        //    Vue 会自动把它们合并到根（且位置与上游一致）。加一遍会重复。
         {
           [`${prefixCls.value}-show-line`]: !!props.showLine,
           [`${prefixCls.value}-icon-hide`]: !(props.showIcon ?? false),
@@ -1373,7 +1370,7 @@ export default defineComponent({
             ...(componentConfig.style as Record<string, unknown> | undefined),
             ...(mergedStyles.value.root as Record<string, unknown> | undefined),
             ...(props.rootStyle as Record<string, unknown> | undefined),
-            ...(props.style as Record<string, unknown> | undefined),
+            // ⚠️ 原生 style 同样交给 inheritAttrs 的自动落根（见上）。
           },
         },
         [

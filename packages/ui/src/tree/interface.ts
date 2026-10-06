@@ -320,9 +320,6 @@ export interface TreeProps {
 
   // ---- 常规 ----
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   /** @deprecated 请用 `styles.root`（antd v6 标记）。 */
   rootStyle?: CSSProperties;
   classNames?: TreeSemanticValue<TreeSemanticClassNames>;

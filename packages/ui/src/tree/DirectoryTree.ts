@@ -56,7 +56,7 @@ export default defineComponent({
     'drop',
     'activeChange',
   ],
-  setup(props, { emit, slots, expose }) {
+  setup(props, { attrs, emit, slots, expose }) {
     const { getPrefixCls } = useComponentConfig('tree');
     const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('tree'));
 
@@ -175,7 +175,8 @@ export default defineComponent({
         {
           [`${prefixCls.value}-directory-rtl`]: false, // direction 接线见 Tree 内部
         },
-        props.className,
+        // Tree 已迁移到「根 class 走原生 attrs」⇒ 调用方原生 class 从这里接
+        attrs.class,
       );
 
       return h(
@@ -187,7 +188,7 @@ export default defineComponent({
           showIcon: props.showIcon ?? true,
           expandAction: props.expandAction ?? 'click',
           prefixCls: prefixCls.value,
-          className: connectClassName,
+          class: connectClassName,
           defaultExpandParent: props.defaultExpandParent ?? true,
           expandedKeys: expandedKeysRef.value,
           selectedKeys: selectedKeysRef.value,
