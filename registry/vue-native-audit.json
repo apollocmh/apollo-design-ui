@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T01:53:11.239Z",
+  "updatedAt": "2026-10-06T01:56:37.103Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 26,
+      "todo": 25,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 39,
+      "done": 40,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 338,
+    "reviewedProductionSourceFiles": 347,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1686,7 +1686,9 @@
       ],
       "issueIds": [],
       "batch": null,
-      "notes": []
+      "notes": [
+        "⚠️ 迁移提示：pagination 通过 `className` 把类名传给内部 Select（本仓 Select 用 className prop + inheritAttrs:false）。迁移 Select 时必须同步把 pagination 的这处改成 `class`。"
+      ]
     },
     "auto-complete": {
       "auditStatus": "done",
@@ -2116,7 +2118,7 @@
       "reviewedFileCount": 10
     },
     "pagination": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/pagination/getPagerList.ts",
         "packages/ui/src/pagination/index.ts",
@@ -2128,7 +2130,17 @@
         "packages/ui/src/pagination/style/token.ts",
         "packages/ui/src/pagination/useShowSizeChanger.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/pagination/getPagerList.ts",
+        "packages/ui/src/pagination/index.ts",
+        "packages/ui/src/pagination/interface.ts",
+        "packages/ui/src/pagination/Options.ts",
+        "packages/ui/src/pagination/Pager.ts",
+        "packages/ui/src/pagination/Pagination.vue",
+        "packages/ui/src/pagination/style/index.ts",
+        "packages/ui/src/pagination/style/token.ts",
+        "packages/ui/src/pagination/useShowSizeChanger.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 12,
       "docFiles": [
@@ -2137,9 +2149,14 @@
         "packages/ui/src/pagination/index.en-US.md",
         "packages/ui/src/pagination/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 99/99；PaginationProps 去掉三个根别名。⚠️ 反向依赖：给内部 Select 传的 className 保持不变（Select 未迁移、用 className prop），迁移 Select 时要同步改。"
+      ],
+      "reviewedFileCount": 9
     },
     "breadcrumb": {
       "auditStatus": "done",
@@ -3416,7 +3433,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（36 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（37 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3424,7 +3441,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 12 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
+      "verification": "累计修 15 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
     }
   ],
   "batches": [
@@ -3622,6 +3639,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 13: steps migrated (36 components total) and the timeline reverse dependency was fixed in the same commit (timeline className -> class). Two new pitfalls: (1) a setup-time computed cannot reference a render-local destructure (ReferenceError, whole L4 suite red) - use attrs.style directly; (2) when the root object ends with ...restAttrs, style must be stripped too or it overrides the computed rootStyle. Also: never put backticks in node -e strings - zsh eats them."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 14: pagination migrated (37 components total). Scan caught 3 consumers (table/Table x2, transfer/ListBody). New subtlety: Table spreads the user pagination config, so the className key had to be destructured OUT of the spread before being converted to class - otherwise it would leak as a classname attribute. Registered a migration hint on `select` (pagination forwards className to it)."
     }
   ],
   "observations": [
