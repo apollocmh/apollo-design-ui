@@ -26,7 +26,7 @@
  *     `hooks/use-typography-semantic.ts` 的职责。
  */
 
-import { computed, ref, useAttrs } from 'vue';
+import { computed, mergeProps, ref, useAttrs } from 'vue';
 
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import type { DirectionType } from '../config-provider/context';
@@ -59,9 +59,12 @@ const props = withDefaults(
      *    比手写字符串拼接更不容易漏。模板里它会被放进 `:class` 的数组，Vue 会自行展平。
      */
     className?: TypographyClassValue;
-    /** 也落在根元素上，在 `className` **之后**。 */
-    rootClassName?: string;
-    /** 根元素内联样式。会**覆盖** `styles.root`（与 antd 的合并顺序一致）。 */
+    /**
+     * 内部样式通道（`Base` 传它补 `WebkitLineClamp`）。
+     *
+     * ⚠️ 不是公共 API：用户的原生 `style` 走 `$attrs`，在 `rootAttrs` 里排在它**之后**
+     *    ⇒ 仍然覆盖 `styles.root`（与 antd 的合并顺序一致）。
+     */
     style?: import('vue').CSSProperties;
   }>(),
   {
@@ -70,7 +73,6 @@ const props = withDefaults(
     classNames: undefined,
     styles: undefined,
     className: undefined,
-    rootClassName: undefined,
     style: undefined,
   },
 );
@@ -81,7 +83,6 @@ const rootClass = computed(() => [
   props.prefixCls,
   { [`${props.prefixCls}-rtl`]: props.direction === 'rtl' },
   props.className,
-  props.rootClassName,
   props.classNames?.root,
 ]);
 
@@ -101,7 +102,7 @@ const rootStyleAttrs = computed(() => styleAttrs({ ...props.styles?.root, ...pro
  *    「Duplicate attribute」。所以把 `$attrs` 一起并进来。
  *    `$attrs` 里的 `class` 由模板上的 `:class` 与它经 `mergeProps` 合并。
  */
-const rootAttrs = computed(() => ({ ...attrs, ...rootStyleAttrs.value }));
+const rootAttrs = computed(() => mergeProps(rootStyleAttrs.value, attrs));
 
 const rootRef = ref<HTMLElement | null>(null);
 defineExpose({ nativeElement: rootRef });

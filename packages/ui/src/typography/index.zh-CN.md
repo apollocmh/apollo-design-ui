@@ -47,9 +47,7 @@ const { Text, Title, Paragraph, Link } = Typography;   // 与 antd 同形
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo` |
-| className | 根元素类名 | `string` | — |
-| rootClassName | 也落在根元素上（在 `className` **之后**） | `string` | — |
-| style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
+| class / style | **根元素原生 attrs**（不是 Props）；`style` 覆盖 `styles.root` | `string \| array \| object` / `CSSProperties` | — |
 | classNames | 语义化类名（对象或函数） | `TypographySemanticValue<TypographySemanticClassNames>` | — |
 | styles | 语义化样式（对象或函数） | `TypographySemanticValue<TypographySemanticStyles>` | — |
 | direction | 文字方向 | `'ltr' \| 'rtl'` | 从 ConfigProvider 取 |

@@ -222,12 +222,6 @@ export interface TypographySemanticAllType {
 export interface BaseTypographyProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
-  /** 根元素的内联样式。会**覆盖** `styles.root`。 */
-  style?: CSSProperties;
   /** 语义化类名。 */
   classNames?: TypographySemanticValue<TypographySemanticClassNames>;
   /** 语义化样式。 */

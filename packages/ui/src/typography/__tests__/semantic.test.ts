@@ -125,13 +125,7 @@ const CASES: Record<string, () => DomRenderResult> = {
       ),
     ),
   'typography:class-both': () =>
-    wrap(() =>
-      h(
-        Typography,
-        { prefixCls: PREFIX, className: 'a', rootClassName: 'b' },
-        { default: () => 'x' },
-      ),
-    ),
+    wrap(() => h(Typography, { prefixCls: PREFIX, class: ['a', 'b'] }, { default: () => 'x' })),
   'typography:attrs-passthrough': () =>
     wrap(() => h(Typography, { prefixCls: PREFIX, id: 'my-typo' }, { default: () => 'x' })),
   'typography:style-over-root': () =>
@@ -275,13 +269,12 @@ const CASES: Record<string, () => DomRenderResult> = {
   'ellipsis:text-rows-stripped': () =>
     wrap(() => withText(Text, { prefixCls: PREFIX, ellipsis: { rows: 3 } }, LONG)),
 
-  // ---- 11. className / rootClassName / 属性透传 ----
+  // ---- 11. 根节点原生 class / 属性透传 ----
   'class:className': () =>
-    wrap(() => withText(Text, { prefixCls: PREFIX, className: 'my-class' }, 'x')),
+    wrap(() => withText(Text, { prefixCls: PREFIX, class: 'my-class' }, 'x')),
   'class:rootClassName': () =>
-    wrap(() => withText(Text, { prefixCls: PREFIX, rootClassName: 'root-class' }, 'x')),
-  'class:both': () =>
-    wrap(() => withText(Text, { prefixCls: PREFIX, className: 'a', rootClassName: 'b' }, 'x')),
+    wrap(() => withText(Text, { prefixCls: PREFIX, class: 'root-class' }, 'x')),
+  'class:both': () => wrap(() => withText(Text, { prefixCls: PREFIX, class: ['a', 'b'] }, 'x')),
   'attrs:passthrough': () => wrap(() => withText(Text, { prefixCls: PREFIX, id: 'my-text' }, 'x')),
   'attrs:title': () => wrap(() => withText(Text, { prefixCls: PREFIX, title: 'hover me' }, 'x')),
 

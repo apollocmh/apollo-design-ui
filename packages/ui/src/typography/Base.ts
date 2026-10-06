@@ -219,10 +219,6 @@ export const Base = defineComponent({
     /** 用户传的标签名。`Text`→`span`、`Paragraph`→`div`、`Link`→`a`、`Title`→`h1..h5`。 */
     component: { type: String, default: undefined },
     direction: { type: String as PropType<DirectionType>, default: undefined },
-    /** antd 的 `className` prop。用户直接写的 `class` 走 `$attrs`。 */
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<CSSProperties>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<BlockProps['classNames']>,
       default: undefined,
@@ -640,8 +636,9 @@ export const Base = defineComponent({
       { [`${prefixCls.value}-ellipsis-single-line`]: cssTextOverflow.value },
       { [`${prefixCls.value}-ellipsis-multiple-line`]: cssLineClamp.value },
       { [`${prefixCls.value}-link`]: props.component === 'a' },
-      props.className,
-      // ⚠️ 语义槽位 root **不在这里**：InternalTypography 会追加 `classNames.root`
+      // ⚠️ 用户原生 `class` 不在这里：它经 `...attrs` 透传给 InternalTypography
+      //    （`inheritAttrs: false` + 显式 spread，见下方 render）。
+      // ⚠️ 语义槽位 root **也不在这里**：InternalTypography 会追加 `classNames.root`
       //    （antd 的 Base className 只有 type/disabled/ellipsis/link + 用户 className；
       //    重复添加会渲染出两份类名 —— L4 实测抓到）。
     ]);
@@ -651,7 +648,7 @@ export const Base = defineComponent({
       //    InternalTypography，由它做 `{...styles.root, ...style}` 合并 ——
       //    antd 的用户 `style` **覆盖** `styles.root`（Base 的 style 只补
       //    WebkitLineClamp）。在这里再合一次会颠倒顺序（L4 实测抓到）。
-      ...props.style,
+      //    用户原生 `style` 走 `$attrs`（InternalTypography 里排在语义根样式之后）。
       ...(cssLineClamp.value ? { WebkitLineClamp: rows.value } : {}),
     }));
 
@@ -776,6 +773,10 @@ export const Base = defineComponent({
     ];
 
     return () => {
+      // 根 `class` / `style` 是 Vue 原生 attrs：从 `attrs` 里摘出来单独合并，
+      // 其余属性仍按 antd 的 `{...rest}` 原样透传（放在对象末尾 ⇒ 优先级最高）。
+      const { class: attrClass, style: attrStyle, ...restAttrs } = attrs as Record<string, unknown>;
+
       // >>>>>>>>>>> 编辑态
       if (editing.value) {
         return h(Editable, {
@@ -784,8 +785,8 @@ export const Base = defineComponent({
           onCancel: onEditCancel,
           onEnd: editConfig.value.onEnd,
           prefixCls: prefixCls.value,
-          className: props.className,
-          style: props.style,
+          className: attrs.class as string | undefined,
+          style: attrs.style as CSSProperties | undefined,
           direction: direction.value,
           component: props.component,
           maxLength: editConfig.value.maxLength,
@@ -819,15 +820,17 @@ export const Base = defineComponent({
               styles: mergedStyles.value,
               component: props.component,
               direction: direction.value,
-              className: rootClassNames.value,
-              rootClassName: props.rootClassName,
-              style: rootStyle.value,
+              // ⚠️ `class` / `style` **必须**在这里显式合并，且**不能**留在末尾的
+              //    `...restAttrs` 里 —— 对象展开是后者胜，`attrs.style` 会把
+              //    `WebkitLineClamp` 整段顶掉（L4 的 `style:with-line-clamp` 抓到过）。
+              className: [rootClassNames.value, attrClass],
+              style: { ...rootStyle.value, ...((attrStyle as CSSProperties) ?? {}) },
               onClick: triggerType.value.includes('text') ? onEditClick : undefined,
               'aria-label': topAriaLabel.value?.toString(),
               title: props.title,
               onMouseenter: handleMouseEnter,
               onMouseleave: handleMouseLeave,
-              ...attrs,
+              ...restAttrs,
             },
             () =>
               h(

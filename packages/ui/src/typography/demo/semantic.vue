@@ -21,10 +21,10 @@ const stylesObject: TypographyProps['styles'] = {
  * ⚠️ `info.props` 的类型是 `BaseTypographyProps`（= `TypographyProps`），**不含**
  *    `disabled` / `type` / `copyable` 这些 `BlockProps` 独有的字段 —— 上游 antd 也如此
  *    （`TypographySemanticAllType = GenerateSemantic<TypographySemanticType, BaseTypographyProps>`）。
- *    所以这里分支用的判据必须是基础 props 里有的（`rootClassName`）。
+ *    所以这里分支用的判据必须是基础 props 里有的（`prefixCls`）。
  */
 const classNamesFn: TypographyProps['classNames'] = (info) =>
-  info.props.rootClassName
+  info.props.prefixCls === 'apollo-typography-alt'
     ? { root: 'demo-typography-root--alt' }
     : { root: 'demo-typography-root' };
 </script>

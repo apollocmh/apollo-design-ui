@@ -50,9 +50,7 @@ onto the root element and produces **no class names** (antd behaves the same way
 | Property | Description | Type | Default |
 |---|---|---|---|
 | prefixCls | Class name prefix | `string` | From ConfigProvider, falling back to `apollo` |
-| className | Class name of the root element | `string` | — |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — |
-| style | Inline style of the root element. **Overrides `styles.root`** | `CSSProperties` | — |
+| class / style | **Native root attrs** (not Props); `style` overrides `styles.root` | `string \| array \| object` / `CSSProperties` | — |
 | classNames | Semantic class names (object or function) | `TypographySemanticValue<TypographySemanticClassNames>` | — |
 | styles | Semantic styles (object or function) | `TypographySemanticValue<TypographySemanticStyles>` | — |
 | direction | Text direction | `'ltr' \| 'rtl'` | From ConfigProvider |

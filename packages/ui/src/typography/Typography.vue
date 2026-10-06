@@ -39,9 +39,6 @@ defineOptions({ name: 'ATypography', inheritAttrs: false });
 
 const props = withDefaults(defineProps<TypographyProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
-  style: undefined,
   classNames: undefined,
   styles: undefined,
   direction: undefined,
@@ -79,9 +76,6 @@ defineExpose({ nativeElement: computed(() => rootRef.value?.nativeElement ?? nul
     :direction="direction"
     :class-names="classNames"
     :styles="styles"
-    :class-name="props.className"
-    :root-class-name="props.rootClassName"
-    :style="props.style"
     v-bind="$attrs"
   >
     <slot />

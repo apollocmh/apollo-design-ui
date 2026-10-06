@@ -112,16 +112,9 @@ describe('Typography · 基础枚举与配置对象', () => {
 });
 
 describe('Typography · Props 的三层结构', () => {
-  it('`BaseTypographyProps` 只有 8 个字段（本体不支持装饰 / 省略 / 复制 / 编辑）', () => {
+  it('`BaseTypographyProps` 只有 5 个字段（根 class/style 走原生 attrs）', () => {
     expectTypeOf<keyof BaseTypographyProps>().toEqualTypeOf<
-      | 'prefixCls'
-      | 'className'
-      | 'rootClassName'
-      | 'style'
-      | 'classNames'
-      | 'styles'
-      | 'direction'
-      | 'component'
+      'prefixCls' | 'classNames' | 'styles' | 'direction' | 'component'
     >();
   });
 
@@ -185,8 +178,21 @@ describe('Typography · Props 的三层结构', () => {
     expectTypeOf(emptyLink).toMatchTypeOf<LinkProps>();
   });
 
-  it('`style` 是 Vue 的 `CSSProperties`，不是字符串', () => {
-    expectTypeOf<BlockProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+  it('根 `class` / `style` 是 Vue 原生 attrs（不在 BaseTypographyProps 键集里）', () => {
+    const nativeAttrs: InstanceType<typeof Text>['$props'] = {
+      class: ['a', { b: true }],
+      style: { color: 'red' } satisfies CSSProperties,
+    };
+    expectTypeOf(nativeAttrs).toMatchTypeOf<InstanceType<typeof Text>['$props']>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: BaseTypographyProps = { className: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 BaseTypographyProps
+      const badStyle: BlockProps = { style: { color: 'red' } };
+      return [badClassName, badStyle];
+    };
+    void _never;
   });
 });
 

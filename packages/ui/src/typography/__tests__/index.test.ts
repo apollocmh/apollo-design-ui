@@ -130,9 +130,9 @@ describe('Typography · 本体', () => {
     expect(w.classes()).not.toContain(`${P}-ellipsis`);
   });
 
-  it('`className` 与 `rootClassName` 都落在根元素，且顺序是 className 在前', () => {
+  it('原生 `class`（字符串 / 数组）落在根元素', () => {
     const w = mount(Typography, {
-      props: { className: 'a', rootClassName: 'b' },
+      props: { class: ['a', 'b'] },
       slots: { default: () => 'x' },
     });
     expect(w.classes()).toEqual([P, 'a', 'b']);
@@ -1360,7 +1360,7 @@ describe('Typography · ConfigProvider', () => {
   });
 
   it('`classNames` 是**拼接**而非覆盖', () => {
-    const w = mountText({ className: 'user-class', classNames: { root: 'semantic-class' } });
+    const w = mountText({ class: 'user-class', classNames: { root: 'semantic-class' } });
     expect(w.classes()).toContain('user-class');
     expect(w.classes()).toContain('semantic-class');
   });
