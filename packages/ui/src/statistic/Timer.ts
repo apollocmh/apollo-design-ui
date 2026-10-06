@@ -53,9 +53,6 @@ export default defineComponent({
   props: {
     /* --- Statistic 全量 props（转发） --- */
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     value: { type: [Number, String], default: 0 },
     valueStyle: {
       type: Object as PropType<Record<string, string | number>>,
@@ -157,13 +154,9 @@ export default defineComponent({
           styles: props.styles,
           onMouseenter: props.onMouseenter,
           onMouseleave: props.onMouseleave,
-          /* --- class / style：className/rootClassName 都并入 class（prop 优先，attrs 兜底）；
-                顺序与 Statistic 的 clsx 一致：className 在 rootClassName 之前 --- */
-          class: [
-            props.className ?? ((attrClass as string | undefined) || undefined),
-            props.rootClassName,
-          ],
-          style: (props.style ?? attrStyle) as never,
+          /* --- 根 class / style 走 Vue 原生 attrs（`Statistic` 已迁移 ⇒ 这里也只转发 attrs）--- */
+          class: (attrClass as string | undefined) || undefined,
+          style: attrStyle as never,
           /* --- Timer 注入 --- */
           value: props.value,
           formatter: formatter as NonNullable<StatisticTimerProps['formatter']>,

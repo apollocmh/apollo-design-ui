@@ -35,9 +35,7 @@ preview-img-info / preview-mask / preview-src.
 | fallback | Image shown when loading fails | `string` | — |
 | placeholder | Placeholder content; `{ progress: true \| { percent, render } }` renders the progress layer | `VNodeChild \| { progress }` | — |
 | preview | `false` disables preview; object form see below | `boolean \| PreviewConfig` | `true` |
-| className | Root class name (also applied to `<img>`, same as antd) | `string` | — |
-| class / style | **Native root attrs** (not Props) | `string` / `CSSProperties` | — |
-| style | Root inline style. **Overrides `styles.root`** | `CSSProperties` | — |
+| class / style | **Native root attrs** (not Props; replacing upstream `className` / `rootClassName` / `style`). `style` **overrides `styles.root`** | `string \| array \| object` / `CSSProperties` | — |
 | wrapperStyle | ⚠️ Deprecated, use `styles.root` | `CSSProperties` | — |
 | classNames / styles | Semantic class names / styles, see "Semantic slots" | — | — |
 | imageRender | Custom `<img>` rendering | `(info: ImageRenderInfo) => VNodeChild` | — |

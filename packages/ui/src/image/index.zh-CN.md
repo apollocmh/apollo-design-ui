@@ -32,8 +32,7 @@ preview-img-info / preview-mask / preview-src。
 | fallback | 加载失败时的兜底图 | `string` | — |
 | placeholder | 占位内容；`{ progress: true \| { percent, render } }` 时渲染进度层 | `VNodeChild \| { progress }` | — |
 | preview | `false` 关闭预览；对象形态见下表 | `boolean \| PreviewConfig` | `true` |
-| className | 根元素类名（同时也落到 `<img>` 上，与 antd 一致） | `string` | — |
-| class / style | **根元素原生 attrs**（不是 Props） | `string` / `CSSProperties` | — |
+| class / style | **根元素原生 attrs**（不是 Props；替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | — |
 | style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
 | wrapperStyle | ⚠️ 已废弃，请用 `styles.root` | `CSSProperties` | — |
 | classNames / styles | 语义化类名/样式，见「语义化槽位」 | — | — |

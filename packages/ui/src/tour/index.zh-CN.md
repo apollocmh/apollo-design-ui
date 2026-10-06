@@ -83,7 +83,7 @@ import { Tour } from '@apollo-design/ui';
 | getPopupContainer | 挂载容器 | (node: HTMLElement) => HTMLElement | - |
 | disabledInteraction | 蒙层是否拦截全部交互（含洞内） | boolean | false |
 | builtinPlacements | 自定义 placement 配置表（默认由 `getPlacements` 生成） | Record&lt;string, AlignType&gt; | - |
-| rootClassName | 根元素附加类名 | string | - |
+| class | **根元素原生 attrs**（替代上游 `rootClassName`） | string / array / object | - |
 | className / style | 落在占位元素上（rc 协议）；`style` 同时落到蒙层 | string / CSSProperties | - |
 | classNames / styles | 语义化槽位 ×12（对象或函数） | TourSemanticClassNames / TourSemanticStyles | - |
 

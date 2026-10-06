@@ -82,7 +82,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | required | Native `required` (forwarded to `input[required]` and `aria-required`) | `boolean` | —— |
 | name / autoComplete / id | Forwarded to the native `input` | `string` | —— |
 | prefixCls | Class prefix. ⚠️ Defaults to **`apollo-picker`** (not `apollo-date-picker`) | `string` | —— |
-| rootClassName | Extra class on the root node | `string` | —— |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | —— |
 | classNames / styles | Semantic class names / styles (**4 flat + 7 nested `popup`**). `popup` accepts a **string** (= `popup.root`) | `DatePickerSemanticAllType` | —— |
 
 ### Events

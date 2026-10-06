@@ -78,7 +78,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | required | 原生 `required`（透传 `input[required]` 与 `aria-required`） | `boolean` | —— |
 | name / autoComplete / id | 透传到原生 `input` | `string` | —— |
 | prefixCls | 类名前缀。⚠️ 默认是 **`apollo-picker`**（不是 `apollo-date-picker`） | `string` | —— |
-| rootClassName | 根节点附加类名 | `string` | —— |
+| class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | —— |
 | classNames / styles | 语义化类名 / 样式（**4 个平铺 + 7 个嵌套 `popup`**）。`popup` 允许 **string**（= `popup.root`） | `DatePickerSemanticAllType` | —— |
 
 ### 事件

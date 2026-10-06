@@ -83,7 +83,7 @@ import { Tour } from '@apollo-design/ui';
 | getPopupContainer | Mount container | (node: HTMLElement) => HTMLElement | - |
 | disabledInteraction | Whether the mask blocks all interactions (including inside the hole) | boolean | false |
 | builtinPlacements | Custom placement config map | Record&lt;string, AlignType&gt; | - |
-| rootClassName | Additional class on the root | string | - |
+| class | **Native root attrs** (replacing upstream `rootClassName`) | string / array / object | - |
 | className / style | Land on the placeholder element (rc protocol); `style` also lands on the mask | string / CSSProperties | - |
 | classNames / styles | 12 semantic slots (object or function) | TourSemanticClassNames / TourSemanticStyles | - |
 

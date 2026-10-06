@@ -168,8 +168,7 @@ A custom cell inside a compact layout (available since antd@5.29.0).
 | variant | Visual variant | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | status | Validation status | `'error' \| 'warning' \| 'success' \| 'validating' \| ''` | — |
 | disabled | Disabled state. ⚠️ Only changes the color, it does **not** set the `disabled` attribute | `boolean` | `false` |
-| className | Class name of the root element | `string` | — |
-| style | Inline style of the root element | `CSSProperties` | — |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | — |
 
 #### Slots
 
