@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:26:44.759Z",
+  "updatedAt": "2026-10-06T05:34:13.550Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 6,
+      "todo": 5,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 59,
+      "done": 60,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 570,
+    "reviewedProductionSourceFiles": 597,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1542,7 +1542,7 @@
       "reviewedFileCount": 7
     },
     "modal": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/modal/components/ActionButton.ts",
         "packages/ui/src/modal/components/ConfirmCancelBtn.ts",
@@ -1572,7 +1572,35 @@
         "packages/ui/src/modal/useModal.ts",
         "packages/ui/src/modal/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/modal/components/ActionButton.ts",
+        "packages/ui/src/modal/components/ConfirmCancelBtn.ts",
+        "packages/ui/src/modal/components/ConfirmOkBtn.ts",
+        "packages/ui/src/modal/components/NormalCancelBtn.ts",
+        "packages/ui/src/modal/components/NormalOkBtn.ts",
+        "packages/ui/src/modal/confirm.ts",
+        "packages/ui/src/modal/ConfirmDialog.ts",
+        "packages/ui/src/modal/context.ts",
+        "packages/ui/src/modal/destroyFns.ts",
+        "packages/ui/src/modal/engine/Content.ts",
+        "packages/ui/src/modal/engine/context.ts",
+        "packages/ui/src/modal/engine/Dialog.ts",
+        "packages/ui/src/modal/engine/DialogWrap.ts",
+        "packages/ui/src/modal/engine/index.ts",
+        "packages/ui/src/modal/engine/Mask.ts",
+        "packages/ui/src/modal/engine/MemoChildren.ts",
+        "packages/ui/src/modal/engine/Panel.ts",
+        "packages/ui/src/modal/engine/util.ts",
+        "packages/ui/src/modal/index.ts",
+        "packages/ui/src/modal/interface.ts",
+        "packages/ui/src/modal/Modal.ts",
+        "packages/ui/src/modal/ModalPanel.ts",
+        "packages/ui/src/modal/PurePanel.ts",
+        "packages/ui/src/modal/style/index.ts",
+        "packages/ui/src/modal/style/token.ts",
+        "packages/ui/src/modal/useModal.ts",
+        "packages/ui/src/modal/util.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 23,
       "docFiles": [
@@ -1581,9 +1609,14 @@
         "packages/ui/src/modal/index.en-US.md",
         "packages/ui/src/modal/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 58/58；ModalProps 与 ModalPurePanelProps 去掉三个根别名。⚠️ 公开面 = Modal + ModalPurePanel。⚠️ ConfirmDialog 把 className 转发给 Modal（同目录内部件）⇒ 必须改 class，否则 confirm 的 `apollo-modal-confirm` 类名全丢（5 个单测抓到）。rootStyle 是独立目标，保留。"
+      ],
+      "reviewedFileCount": 27
     },
     "drawer": {
       "auditStatus": "analyzing",
@@ -3773,7 +3806,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（55 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（56 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4059,6 +4092,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 27: tabs done. Total done = 59. tabs only exports Tabs itself, so AddButton/OperationNode/TabNavList/TabPane are internal and were left alone; TabsItem.className/style are item-level data fields. The two identical semanticRootStyle(props.style) entries (antd four-arg shape) were both swapped to attrs.style, preserving the shape."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 28: modal done. Total done = 60. TWO IMPORTANT LESSONS: (1) the consumer scan MUST include the component being migrated - ConfirmDialog (same-directory internal) forwards className to Modal, and missing it silently dropped the whole `apollo-modal-confirm` class (5 unit tests caught it). (2) NEVER run `git stash push -u` in this repo: it desynced the index (6352 entries staged-deleted while the files were fine on disk); recovery is a plain `git reset`."
     }
   ],
   "observations": [
