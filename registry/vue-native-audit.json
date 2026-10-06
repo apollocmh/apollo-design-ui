@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T01:45:39.538Z",
+  "updatedAt": "2026-10-06T01:49:19.657Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 28,
+      "todo": 27,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 37,
+      "done": 38,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 318,
+    "reviewedProductionSourceFiles": 326,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2052,7 +2052,9 @@
       ],
       "issueIds": [],
       "batch": null,
-      "notes": []
+      "notes": [
+        "⚠️ 迁移提示：timeline 通过 `className: classString` 把类名转发给 Steps（因为本仓 Steps 会主动剥掉 attrs 里的 class）。迁移 Steps 时必须同步把 timeline 的这处改成 `class`，否则 timeline 的类名静默丢失。"
+      ]
     },
     "progress": {
       "auditStatus": "done",
@@ -2240,7 +2242,7 @@
       "reviewedFileCount": 7
     },
     "timeline": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/timeline/index.ts",
         "packages/ui/src/timeline/interface.ts",
@@ -2251,7 +2253,16 @@
         "packages/ui/src/timeline/Timeline.ts",
         "packages/ui/src/timeline/use-items.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/timeline/index.ts",
+        "packages/ui/src/timeline/interface.ts",
+        "packages/ui/src/timeline/style/context.ts",
+        "packages/ui/src/timeline/style/horizontal.ts",
+        "packages/ui/src/timeline/style/index.ts",
+        "packages/ui/src/timeline/style/token.ts",
+        "packages/ui/src/timeline/Timeline.ts",
+        "packages/ui/src/timeline/use-items.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 13,
       "docFiles": [
@@ -2260,9 +2271,14 @@
         "packages/ui/src/timeline/index.en-US.md",
         "packages/ui/src/timeline/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 71/71；TimelineProps 去掉三个根别名，style 走 styles.root 语义槽。⚠️ 反向依赖：Timeline 是 Steps 薄壳，Steps 会主动剥 attrs.class ⇒ 这里必须继续给 Steps 传 className（待 steps 迁移时同步改）。"
+      ],
+      "reviewedFileCount": 8
     },
     "masonry": {
       "auditStatus": "todo",
@@ -3384,7 +3400,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（34 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（35 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3580,6 +3596,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 11: segmented migrated (34 components total). Clean case again - the checklist handled it end to end with no new pitfalls and no new internal consumers."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 12: timeline migrated (35 components total). NEW: timeline is a thin shell over Steps, and our Steps implementation actively strips `class` from attrs (it only merges the className prop), so timeline MUST keep forwarding `className: classString`. A reverse-dependency note was registered on the `steps` component so it gets fixed when steps is migrated."
     }
   ],
   "observations": [
