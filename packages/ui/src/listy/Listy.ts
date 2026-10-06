@@ -87,12 +87,6 @@ export const Listy = defineComponent({
     virtual: { type: Boolean, default: undefined },
     height: { type: Number, default: undefined },
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: {
-      type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
     classNames: { type: Object as PropType<ListyClassNames>, default: undefined },
     styles: { type: Object as PropType<ListyStyles>, default: undefined },
     onScroll: {
@@ -116,12 +110,7 @@ export const Listy = defineComponent({
       ListyStyles
     >(
       [() => context.classNames, () => props.classNames],
-      [
-        () => context.styles,
-        () => rootStyleSem(context.style),
-        () => props.styles,
-        () => rootStyleSem(props.style),
-      ],
+      [() => context.styles, () => rootStyleSem(context.style), () => props.styles],
       props as ListyProps,
     );
 
@@ -325,8 +314,7 @@ export const Listy = defineComponent({
       const rootClass = [
         context.className,
         mergedClassNames.value.root,
-        props.rootClassName,
-        props.className,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
         attrs.class,
       ];
 
@@ -393,7 +381,8 @@ export const Listy = defineComponent({
           prefixCls: cls,
           onScroll: props.onScroll,
           class: rootClass,
-          style: mergedStyles.value.root,
+          // 根 `style` 是 Vue 原生 attrs（Virtual 分支原先靠语义列表带上 props.style）
+          style: [mergedStyles.value.root, attrs.style],
         },
         {
           default: ({

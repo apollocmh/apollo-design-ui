@@ -26,7 +26,8 @@ subtitle: 轻量列表
 | virtual | 虚拟滚动（⚠️ antd 默认 `false`；与 ConfigProvider 的 `virtual` 上下文合并） | `boolean` | `false` |
 | height | 容器高度（Raw ⇒ maxHeight；Virtual ⇒ 与估算行高一起启用虚拟化） | `number` | — |
 | classNames / styles | 语义槽 `{ root, item, groupHeader }`（对象或函数式） | — | — |
-| prefixCls / className / style / rootClassName | 常规 | — | — |
+| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取 |
+| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — |
 
 > ⚠️ `direction` **不是** Listy 的公开 prop（antd Omit）——文字方向由 ConfigProvider
 > 的 `direction` 控制。

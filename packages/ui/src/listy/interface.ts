@@ -83,9 +83,6 @@ export interface ListyProps<T = Record<string, unknown>, K extends ListyKey = Li
   /** 容器高度（Raw ⇒ maxHeight；Virtual ⇒ 与 itemHeight 一起启用虚拟化）。 */
   height?: number | undefined;
   prefixCls?: string | undefined;
-  rootClassName?: string | undefined;
-  className?: string | undefined;
-  style?: Record<string, string | number> | undefined;
   classNames?: Partial<Record<ListySemanticName, string>> | undefined;
   styles?: ListyStyles | undefined;
   onScroll?: ((event: Event) => void) | undefined;
