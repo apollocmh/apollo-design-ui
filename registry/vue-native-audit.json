@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:24:31.923Z",
+  "updatedAt": "2026-10-06T05:26:44.759Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 7,
+      "todo": 6,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 58,
+      "done": 59,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 552,
+    "reviewedProductionSourceFiles": 570,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2459,7 +2459,7 @@
       "reviewedFileCount": 10
     },
     "tabs": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/tabs/AddButton.ts",
         "packages/ui/src/tabs/ExtraContent.ts",
@@ -2480,7 +2480,26 @@
         "packages/ui/src/tabs/Tabs.vue",
         "packages/ui/src/tabs/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/tabs/AddButton.ts",
+        "packages/ui/src/tabs/ExtraContent.ts",
+        "packages/ui/src/tabs/hooks/use-animate-config.ts",
+        "packages/ui/src/tabs/hooks/use-indicator.ts",
+        "packages/ui/src/tabs/hooks/use-offsets.ts",
+        "packages/ui/src/tabs/hooks/use-touch-move.ts",
+        "packages/ui/src/tabs/hooks/use-visible-range.ts",
+        "packages/ui/src/tabs/index.ts",
+        "packages/ui/src/tabs/interface.ts",
+        "packages/ui/src/tabs/OperationNode.ts",
+        "packages/ui/src/tabs/style/index.ts",
+        "packages/ui/src/tabs/style/token.ts",
+        "packages/ui/src/tabs/TabNavList.ts",
+        "packages/ui/src/tabs/TabNode.ts",
+        "packages/ui/src/tabs/TabPane.ts",
+        "packages/ui/src/tabs/TabPanelList.ts",
+        "packages/ui/src/tabs/Tabs.vue",
+        "packages/ui/src/tabs/util.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 13,
       "docFiles": [
@@ -2489,9 +2508,14 @@
         "packages/ui/src/tabs/index.en-US.md",
         "packages/ui/src/tabs/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 109/109；TabsProps 去掉三个根别名。公开面只有 Tabs（index.ts 只导出它）⇒ AddButton/OperationNode/TabNavList/TabPane 是未导出的内部件，不动；TabsItem 的 className/style 是项级数据字段。"
+      ],
+      "reviewedFileCount": 18
     },
     "card": {
       "auditStatus": "done",
@@ -3749,7 +3773,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（54 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（55 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4030,6 +4054,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 26: transfer done. Total done = 58. transfer has FOUR public surfaces (Transfer + Transfer.List=Section + Transfer.Operation=Actions + Transfer.Search); three of them had root aliases and all were migrated. Notably Transfer had already been partially migrated (it read attrs.class) but still kept the props plus an attrs.rootClassName leak - both cleaned up. Section/Actions never disabled inheritAttrs, so their class/style now fall through automatically."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 27: tabs done. Total done = 59. tabs only exports Tabs itself, so AddButton/OperationNode/TabNavList/TabPane are internal and were left alone; TabsItem.className/style are item-level data fields. The two identical semanticRootStyle(props.style) entries (antd four-arg shape) were both swapped to attrs.style, preserving the shape."
     }
   ],
   "observations": [
