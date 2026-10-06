@@ -169,11 +169,15 @@ function groupChildren() {
       ...props.max?.popover,
       placement: mergePopoverPlacement,
       trigger: mergePopoverTrigger,
-      // ⚠️ 上游是 clsx(...) ⇒ 产出**字符串**（不是数组）。本仓传数组会被 Tooltip 的
-      //    rootClassName?: string 判为类型不符（实测 demo 冒烟直接 warn）。
-      rootClassName: [`${groupPrefixCls.value}-popover`, props.max?.popover?.rootClassName]
-        .filter(Boolean)
-        .join(' '),
+      // ⚠️ 上游是 clsx(...) ⇒ 产出**字符串**（不是数组）。
+      // 🚨 这个类名要落在 **Popover 的浮层根**（不是组件根）—— 所以走语义槽
+      //    `classNames.root`。若改用原生 `class`，它会经 Tooltip 的 `...attrs`
+      //    同时落到**触发器子元素**上（L4 的 avatar:group-max 抓到多出类名）。
+      classNames: {
+        root: [`${groupPrefixCls.value}-popover`, props.max?.popover?.rootClassName]
+          .filter(Boolean)
+          .join(' '),
+      },
     };
 
     childrenShow.push(

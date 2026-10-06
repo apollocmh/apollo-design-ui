@@ -731,7 +731,8 @@ export const Base = defineComponent({
         onCopy: onCopyClick,
         loading: copyLoading.value,
         iconOnly: !hasContent.value,
-        className: mergedClassNames.value.action,
+        // Tooltip 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+        class: mergedClassNames.value.action,
         style: mergedStyles.value.action,
       });
     };

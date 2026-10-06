@@ -143,8 +143,14 @@ export interface AvatarGroupMax {
   count?: number;
   /** 「+N」那个头像的样式。 */
   style?: CSSProperties;
-  /** 溢出 Popover 的 props。 */
-  popover?: PopoverProps;
+  /**
+   * 溢出 Popover 的 props。
+   *
+   * ⚠️ `rootClassName` 是**额外的配置字段**（Popover 本体已把它迁成原生 `class`）——
+   *    这里保留是因为它的语义是「**浮层根**类名」，AvatarGroup 会把它并进
+   *    `popover.classNames.root` 转发（见 `AvatarGroup.vue`）。
+   */
+  popover?: PopoverProps & { rootClassName?: string };
 }
 
 /**
