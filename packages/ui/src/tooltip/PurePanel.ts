@@ -27,8 +27,6 @@ const PurePanel = defineComponent({
     placement: { type: String, default: 'top' },
     // C8-R2：title 收窄 String（富内容走 `#title` 插槽，slot 优先）
     title: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: { type: Object as PropType<TooltipSemanticType['classNames']>, default: undefined },
     styles: { type: Object as PropType<TooltipSemanticType['styles']>, default: undefined },
   },
@@ -55,12 +53,10 @@ const PurePanel = defineComponent({
             `${prefixCls}-placement-${placement}`,
             colorInfo.className,
             mergedClassNames.value.root,
-            props.className,
           ),
           style: {
             ...(colorInfo.arrowStyle as StyleLike),
             ...(mergedStyles.value.root ?? {}),
-            ...(props.style ?? {}),
             ...((attrs.style as StyleLike | undefined) ?? {}),
           },
           ...stripClassStyle(attrs),

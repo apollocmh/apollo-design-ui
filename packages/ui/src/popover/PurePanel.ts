@@ -37,8 +37,6 @@ const PurePanel = defineComponent({
     //    公开 `Popover` 本体已同构（title/content 双通道），此处仅收窄 PurePanel 的 prop 类型。
     title: { type: String, default: undefined },
     content: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: {
       type: Object as PropType<PopoverSemanticType['classNames']>,
       default: undefined,
@@ -69,11 +67,9 @@ const PurePanel = defineComponent({
             `${prefixCls}-pure`,
             `${prefixCls}-placement-${placement}`,
             mergedClassNames.value.root,
-            props.className,
           ),
           style: {
             ...(mergedStyles.value.root ?? {}),
-            ...(props.style ?? {}),
             ...((attrs.style as StyleLike | undefined) ?? {}),
           },
           ...stripClassStyle(attrs),
@@ -88,7 +84,7 @@ const PurePanel = defineComponent({
               // 在 root 与 container **双落点**（覆盖 styles.container）。L6 钉住。
               style: {
                 ...(mergedStyles.value.container as StyleLike | undefined),
-                ...(props.style ?? {}),
+                ...((attrs.style as StyleLike | undefined) ?? {}),
               },
               role: 'tooltip',
             },

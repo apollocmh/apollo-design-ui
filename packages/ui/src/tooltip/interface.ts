@@ -120,9 +120,6 @@ export interface TooltipProps {
   forceRender?: boolean;
   /** 禁用（禁用时不响应触发，且不渲染浮层）。 */
   disabled?: boolean;
-  className?: string;
-  rootClassName?: string;
-  style?: Record<string, string | number>;
   classNames?: TooltipClassNames;
   styles?: TooltipStyles;
   /** ⚠️ 已废弃，请用 `styles.root`。 */

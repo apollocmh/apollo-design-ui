@@ -93,9 +93,6 @@ const Popover = defineComponent({
       default: undefined,
     },
     styles: { type: [Object, Function] as PropType<PopoverStyles>, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     zIndex: { type: Number, default: undefined },
   },
   emits: {
@@ -177,11 +174,8 @@ const Popover = defineComponent({
       mergedProps.value,
     );
 
-    const rootClassNames = computed(() =>
-      props.rootClassName
-        ? `${props.rootClassName} ${mergedClassNames.value.root ?? ''}`.trim()
-        : mergedClassNames.value.root,
-    );
+    // 根 class/style 是 Vue 原生 attrs（见下方 Tooltip 调用处的转发）。
+    const rootClassNames = computed(() => mergedClassNames.value.root);
 
     // ============================ Overlay ============================
     // antd：title/content 双双不可渲染 ⇒ overlay=null ⇒ Tooltip 的 noTitle 生效。
@@ -247,7 +241,6 @@ const Popover = defineComponent({
           destroyOnHidden: props.destroyOnHidden,
           fresh: props.fresh,
           forceRender: props.forceRender,
-          rootClassName: props.rootClassName,
           // 语义：Popover 的 root 合并了 overlayClassName/contextClassName 之外
           // 还带 title/content 两槽 —— root/container/arrow 传给 Tooltip，
           // title/content 由 Overlay 消费。
@@ -261,8 +254,9 @@ const Popover = defineComponent({
             container: mergedStyles.value.container,
             arrow: mergedStyles.value.arrow,
           } as PopoverSemanticType['styles'],
-          className: props.className,
-          style: props.style as StyleLike | undefined,
+          // 调用方原生 class/style 转给 Tooltip（Tooltip 已迁移到原生 attrs 通道）
+          class: attrs.class as string | undefined,
+          style: attrs.style as StyleLike | undefined,
           open: mergedOpen.value,
           onOpenChange: settingOpen,
           afterOpenChange: props.afterOpenChange,

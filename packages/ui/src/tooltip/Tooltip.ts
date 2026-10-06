@@ -107,9 +107,6 @@ const Tooltip = defineComponent({
     fresh: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<TooltipClassNames>,
       default: undefined,
@@ -291,10 +288,9 @@ const Tooltip = defineComponent({
         props.overlayClassName,
         direction.value === 'rtl' && `${prefixCls}-rtl`,
         colorInfo.value.className,
-        props.rootClassName,
         contextSemantic.className,
         mergedClassNames.value.root,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
         typeof attrs.class === 'string' ? attrs.class : undefined,
       ),
     );
@@ -418,7 +414,7 @@ const Tooltip = defineComponent({
             ...(colorInfo.value.arrowStyle as StyleLike),
             ...(mergedStyles.value.root ?? {}),
           },
-          style: props.style,
+          // 根 style 是 Vue 原生 attrs（`...attrs` 在末尾，位置与原先的 props.style 一致）
           ...attrs,
         },
         {
