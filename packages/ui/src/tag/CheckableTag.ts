@@ -17,13 +17,11 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
     checked: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: undefined },
     onChange: { type: Function as PropType<(checked: boolean) => void>, default: undefined },
     onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     onKeyDown: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
   },
   setup(props, { slots, attrs, expose }) {
     const {
@@ -69,7 +67,6 @@ export default defineComponent({
           [`${prefixCls.value}-checkable-disabled`]: mergedDisabled.value,
         },
         contextClassName,
-        props.className,
         // ⚠️ inheritAttrs=false 时 attrs.class 不会自动合并 —— Group 的
         // `-checkable-group-item` 类经 class attr 传入，必须显式并入。
         (attrs.class as string | undefined) ?? null,
@@ -93,7 +90,11 @@ export default defineComponent({
           'aria-checked': props.checked,
           'aria-disabled': mergedDisabled.value || undefined,
           tabindex: mergedDisabled.value ? -1 : 0,
-          style: { ...(contextStyle ?? {}), ...(props.style ?? {}) },
+          // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致）
+          style: {
+            ...(contextStyle ?? {}),
+            ...((attrs.style as Record<string, string | number>) ?? {}),
+          },
           class: cls,
           onClick: handleClick,
           onKeydown: handleKeyDown,

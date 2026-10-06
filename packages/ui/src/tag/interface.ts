@@ -43,8 +43,6 @@ export interface TagProps {
   /** Advised to use closeIcon instead. */
   closable?: ClosableType;
   onClose?: (e: MouseEvent) => void;
-  /** 透传根样式（折进 styles.root，与 antd 的 useSemanticRootStyle 同构）。 */
-  style?: CSSProperties;
   href?: string;
   target?: string;
   disabled?: boolean;
@@ -71,12 +69,10 @@ export interface TagConfig extends ComponentStyleConfig {
 
 export interface CheckableTagProps {
   prefixCls?: string;
-  className?: string;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   onClick?: (e: MouseEvent) => void;
   onKeyDown?: (e: KeyboardEvent) => void;
-  style?: CSSProperties;
   disabled?: boolean;
 }
 
@@ -92,9 +88,6 @@ export interface CheckableTagOption {
 export interface CheckableTagGroupProps {
   id?: string;
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   classNames?: TagSemanticClassNames;
   styles?: TagSemanticStyles;
   disabled?: boolean;

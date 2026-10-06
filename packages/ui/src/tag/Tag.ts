@@ -33,6 +33,7 @@ import {
   useDevWarning,
 } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   cloneVNode,
   computed,
   defineComponent,
@@ -62,8 +63,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     color: { type: String, default: undefined },
     variant: { type: String as PropType<TagVariant>, default: undefined },
     bordered: { type: Boolean, default: undefined },
@@ -72,7 +71,6 @@ export default defineComponent({
     href: { type: String, default: undefined },
     target: { type: String, default: undefined },
     disabled: { type: Boolean, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     classNames: { type: Object as PropType<TagSemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<TagSemanticStyles>, default: undefined },
   },
@@ -150,9 +148,8 @@ export default defineComponent({
       [() => contextClassNames, () => props.classNames],
       [
         () => contextStyles as TagSemanticStyles | undefined,
-        () => semanticRootStyle(contextStyle as TagProps['style']),
+        () => semanticRootStyle(contextStyle as CSSProperties | undefined),
         () => props.styles,
-        () => semanticRootStyle(props.style),
       ],
       semanticProps.value,
     );
@@ -326,8 +323,8 @@ export default defineComponent({
           [`${prefixCls.value}-rtl`]: direction === 'rtl',
           [`${prefixCls.value}-disabled`]: mergedDisabled.value,
         },
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
       ];
 
       return h(
@@ -336,7 +333,11 @@ export default defineComponent({
           ref: rootRef,
           ...restAttrs,
           class: tagClassName,
-          ...styleAttrs(tagStyle.value),
+          // 根 `style` 是 Vue 原生 attrs：位置与原先的 props.style 一致（最后胜出）
+          ...styleAttrs({
+            ...tagStyle.value,
+            ...((attrs.style as Record<string, string | number>) ?? {}),
+          }),
           href: mergedDisabled.value ? undefined : props.href,
           target: props.target,
           onClick: mergedDisabled.value ? undefined : restAttrs.onClick,

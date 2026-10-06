@@ -34,9 +34,6 @@ export default defineComponent({
   props: {
     id: { type: String, default: undefined },
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     multiple: { type: Boolean, default: undefined },
     options: {
@@ -113,12 +110,12 @@ export default defineComponent({
       const groupCls = [
         groupPrefixCls.value,
         contextClassName,
-        props.rootClassName,
         {
           [`${groupPrefixCls.value}-disabled`]: props.disabled,
           [`${groupPrefixCls.value}-rtl`]: direction === 'rtl',
         },
-        props.className,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         props.classNames?.root,
       ];
 
@@ -129,7 +126,8 @@ export default defineComponent({
         {
           ...ariaProps,
           class: groupCls,
-          style: props.styles?.root ?? props.style,
+          // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致）
+          style: props.styles?.root ?? (attrs.style as Record<string, string | number> | undefined),
           id: props.id,
           ref: divRef,
         },
