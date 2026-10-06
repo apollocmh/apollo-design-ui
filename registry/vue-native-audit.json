@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T00:42:37.653Z",
+  "updatedAt": "2026-10-06T00:58:06.646Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 36,
+      "todo": 33,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 29,
+      "done": 32,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 258,
+    "reviewedProductionSourceFiles": 283,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -942,7 +942,7 @@
       "reviewedFileCount": 3
     },
     "radio": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/radio/context.ts",
         "packages/ui/src/radio/Group.ts",
@@ -953,7 +953,16 @@
         "packages/ui/src/radio/style/index.ts",
         "packages/ui/src/radio/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/radio/context.ts",
+        "packages/ui/src/radio/Group.ts",
+        "packages/ui/src/radio/index.ts",
+        "packages/ui/src/radio/interface.ts",
+        "packages/ui/src/radio/Radio.ts",
+        "packages/ui/src/radio/RadioButton.ts",
+        "packages/ui/src/radio/style/index.ts",
+        "packages/ui/src/radio/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 14,
       "docFiles": [
@@ -962,12 +971,17 @@
         "packages/ui/src/radio/index.en-US.md",
         "packages/ui/src/radio/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 172/172（含 switch）；AbstractRadioProps/RadioGroupProps 去掉三个根别名；Radio 的 option.className 是数据字段（保留），但转发给 Radio 时必须用 class。"
+      ],
+      "reviewedFileCount": 8
     },
     "switch": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/switch/index.ts",
         "packages/ui/src/switch/interface.ts",
@@ -975,7 +989,13 @@
         "packages/ui/src/switch/style/token.ts",
         "packages/ui/src/switch/Switch.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/switch/index.ts",
+        "packages/ui/src/switch/interface.ts",
+        "packages/ui/src/switch/style/index.ts",
+        "packages/ui/src/switch/style/token.ts",
+        "packages/ui/src/switch/Switch.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 7,
       "docFiles": [
@@ -984,9 +1004,14 @@
         "packages/ui/src/switch/index.en-US.md",
         "packages/ui/src/switch/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 172/172（含 radio）；SwitchProps 去掉三个根别名；classString 接 attrs.class，button 根样式合并 _attrStyle。"
+      ],
+      "reviewedFileCount": 5
     },
     "input": {
       "auditStatus": "todo",
@@ -1126,7 +1151,7 @@
       "notes": []
     },
     "splitter": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/splitter/hooks/sizeUtil.ts",
         "packages/ui/src/splitter/hooks/useItems.ts",
@@ -1141,7 +1166,20 @@
         "packages/ui/src/splitter/style/index.ts",
         "packages/ui/src/splitter/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/splitter/hooks/sizeUtil.ts",
+        "packages/ui/src/splitter/hooks/useItems.ts",
+        "packages/ui/src/splitter/hooks/useResizable.ts",
+        "packages/ui/src/splitter/hooks/useResize.ts",
+        "packages/ui/src/splitter/hooks/useSizes.ts",
+        "packages/ui/src/splitter/index.ts",
+        "packages/ui/src/splitter/interface.ts",
+        "packages/ui/src/splitter/Panel.ts",
+        "packages/ui/src/splitter/SplitBar.ts",
+        "packages/ui/src/splitter/Splitter.ts",
+        "packages/ui/src/splitter/style/index.ts",
+        "packages/ui/src/splitter/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 4,
       "docFiles": [
@@ -1150,9 +1188,14 @@
         "packages/ui/src/splitter/index.en-US.md",
         "packages/ui/src/splitter/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 46/46；SplitterProps 去掉三个根别名。SplitterPanel/InternalPanel 的 className/style 是数据收集 prop（Panel renderless），保留。"
+      ],
+      "reviewedFileCount": 12
     },
     "carousel": {
       "auditStatus": "done",
@@ -3276,7 +3319,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（26 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography 的 InternalTypography 内部通道。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（29 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3284,7 +3327,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 8 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName（浮层目标）、transfer/Actions 的 props 声明。扫描脚本在 Skill 里，每批迁移后都跑。"
+      "verification": "累计修 10 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio（option 转发）。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
     }
   ],
   "batches": [
@@ -3447,6 +3490,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 6: typography, watermark, spin, empty migrated (26 components total). Two more pitfalls recorded: (1) leaving attrs.style inside a trailing {...attrs} spread silently overrides the computed style key (Typography lost WebkitLineClamp); (2) adding attrs.class to rootClass when the template already has v-bind=\"rootAttrs\" renders the caller class twice (Spin/Empty). Rule: render-function components must push attrs.class in; template components with v-bind must not. The internal-consumer scan caught one more: config-provider default Empty render."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 7: radio, switch, splitter migrated (29 components total). The consumer scan caught two more: calendar/components/CalendarHeader passing className to RadioGroup, and radio/Group forwarding option.className to Radio. Both would have silently dropped classes. SplitterPanel/InternalPanel className/style intentionally kept - Panel is renderless and its props are a data-collection channel."
     }
   ],
   "observations": [
