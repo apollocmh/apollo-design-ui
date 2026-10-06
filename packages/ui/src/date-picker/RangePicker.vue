@@ -52,12 +52,14 @@ import { useZIndex } from '@apollo-design/portal';
 import { observeResize, useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
+  type CSSProperties,
   computed,
   h,
   inject,
   onScopeDispose,
   type Ref,
   ref,
+  useAttrs,
   type VNode,
   type VNodeChild,
   watch,
@@ -114,6 +116,9 @@ import type {
 } from './interface';
 
 defineOptions({ name: 'ARangePicker', inheritAttrs: false });
+
+/** 根 `class` / `style` 走 Vue 原生 attrs（见 `COMPATIBILITY.md` §228/§232）。 */
+const attrs = useAttrs();
 
 /** ⚠️ Boolean prop 必须显式 `undefined` 默认值（同 `DatePicker.vue`，PITFALLS 2 同族）。 */
 const props = withDefaults(defineProps<RangePickerProps>(), {
@@ -1145,9 +1150,9 @@ const rootClass = computed(() =>
     hasFeedback: hasFeedback.value,
     compactItemClassnames: compactItemClassnames.value,
     contextClassName: rangePickerConfig.className ?? pickerContext.className,
-    className: props.className,
+    // 调用方原生 class（位置与原先的 props.className 一致）
+    className: attrs.class as string | undefined,
     cssVarClassName: cssVarClassName.value,
-    rootClassName: props.rootClassName,
   }),
 );
 
@@ -1182,7 +1187,8 @@ const selectorProps = computed(() => ({
   readOnly: props.inputReadOnly === true,
   activeIndex: focused.value || mergedOpen.value ? activeIndex.value : null,
   rootClass: rootClass.value,
-  rootStyle: props.style,
+  // 根 style 是 Vue 原生 attrs
+  rootStyle: attrs.style as CSSProperties | undefined,
   classNames: semantic.classNames.value,
   styles: semantic.styles.value,
   invalid: invalidPair.value.some(Boolean),

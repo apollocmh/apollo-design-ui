@@ -71,6 +71,7 @@ import {
   h,
   inject,
   ref,
+  useAttrs,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -126,6 +127,9 @@ defineOptions({ name: 'ADatePicker', inheritAttrs: false });
  *   - `allowClear` 的三态同理（`undefined` 用默认、`false` 永不渲染）
  * 所以下面这串 `undefined` 不是冗余，是**语义的一部分**。
  */
+/** 根 `class` / `style` 走 Vue 原生 attrs（见 `COMPATIBILITY.md` §228/§232）。 */
+const attrs = useAttrs();
+
 const props = withDefaults(defineProps<DatePickerProps>(), {
   open: undefined,
   defaultOpen: undefined,
@@ -973,10 +977,10 @@ const rootClass = computed(() =>
     hasFeedback: hasFeedback.value,
     compactItemClassnames: compactItemClassnames.value,
     contextClassName: pickerContext.className,
-    className: props.className,
+    // 调用方原生 class（位置与原先的 props.className 一致）
+    className: attrs.class as string | undefined,
     // 🚨 在 `className` 之后、`rootClassName` 之前（上游 `clsx(hashId, cssVarCls, rootCls, rootClassName)`）
     cssVarClassName: cssVarClassName.value,
-    rootClassName: props.rootClassName,
   }),
 );
 
@@ -1189,7 +1193,8 @@ const selectorProps = computed(() => ({
   disabled: mergedDisabled.value,
   readOnly: props.inputReadOnly === true,
   rootClass: rootClass.value,
-  rootStyle: props.style,
+  // 根 style 是 Vue 原生 attrs
+  rootStyle: attrs.style as CSSProperties | undefined,
   classNames: semantic.classNames.value,
   styles: semantic.styles.value,
   invalid: invalid.value,

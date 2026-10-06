@@ -473,11 +473,6 @@ export interface PickerCommonProps {
   // ============================================================ 语义槽 / 根节点
   classNames?: DatePickerSemanticValue<DatePickerSemanticClassNames, PickerCommonProps>;
   styles?: DatePickerSemanticValue<DatePickerSemanticStyles, PickerCommonProps>;
-  /** 根节点附加类名。 */
-  className?: string;
-  /** 根节点附加类名（与 `className` 并列，上游有两个入口）。 */
-  rootClassName?: string;
-  style?: CSSProperties;
 
   // ============================================================ 定位 / 透传
   /** 浮层动效名（默认 `${rootPrefixCls}-slide-up`，⚠️ 前缀是 **rootPrefixCls**）。 */
