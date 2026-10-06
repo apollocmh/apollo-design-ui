@@ -85,8 +85,8 @@ const CASES: Record<string, () => DomRenderResult> = {
   'class:active': () => h(Skeleton, { prefixCls: PREFIX, active: true }),
   'class:round': () => h(Skeleton, { prefixCls: PREFIX, round: true }),
   'class:active+round': () => h(Skeleton, { prefixCls: PREFIX, active: true, round: true }),
-  'class:className': () => h(Skeleton, { prefixCls: PREFIX, className: 'my-class' }),
-  'class:rootClassName': () => h(Skeleton, { prefixCls: PREFIX, rootClassName: 'root-class' }),
+  'class:className': () => h(Skeleton, { prefixCls: PREFIX, class: 'my-class' }),
+  'class:rootClassName': () => h(Skeleton, { prefixCls: PREFIX, class: 'root-class' }),
   'prefix-cls:no-props': () => h(Skeleton, {}),
 
   // ---- 5. 属性透传 ---------------------------------------------------------

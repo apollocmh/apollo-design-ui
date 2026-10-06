@@ -51,7 +51,7 @@
  */
 
 import { isPlainObject } from '@apollo-design/utils';
-import { computed, ref, type VNodeChild, watchEffect } from 'vue';
+import { type CSSProperties, computed, ref, useAttrs, type VNodeChild, watchEffect } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import Element from './Element.vue';
@@ -79,9 +79,6 @@ const props = withDefaults(defineProps<SkeletonProps>(), {
   active: undefined,
   loading: undefined,
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
-  style: undefined,
   avatar: false,
   title: true,
   paragraph: true,
@@ -100,6 +97,7 @@ const {
   styles: contextStyles,
 } = useComponentConfig<SkeletonConfig>('skeleton');
 
+const attrs = useAttrs();
 const direction = useDirection();
 
 const prefixCls = computed(() => getPrefixCls('skeleton', props.prefixCls));
@@ -223,12 +221,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   SkeletonSemanticStyles
 >(
   [() => contextClassNames, () => props.classNames],
-  [
-    () => contextStyles,
-    () => semanticRootStyle(contextStyle),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
   semanticProps,
 );
 
@@ -278,8 +271,8 @@ const rootClass = computed(() => [
   },
   mergedClassNames.value.root,
   contextClassName,
-  props.className,
-  props.rootClassName,
+  // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+  attrs.class,
 ]);
 
 /** 头像容器：`clsx(mergedClassNames.header, `${prefixCls}-header`)`。 */
@@ -302,7 +295,12 @@ defineExpose({ nativeElement: rootRef });
     `children ?? null`，根元素**根本不存在**（不加包裹 div 才与上游同构）。
     `inheritAttrs: false` 让「多余的属性被丢掉」这件事与 antd 一致。
   -->
-  <div v-if="isSkeleton" ref="rootRef" :class="rootClass" v-bind="styleAttrs(mergedStyles.root)">
+  <div
+    v-if="isSkeleton"
+    ref="rootRef"
+    :class="rootClass"
+    v-bind="styleAttrs({ ...mergedStyles.root, ...((attrs.style as CSSProperties) ?? {}) })"
+  >
     <div v-if="hasAvatar" :class="headerClass" v-bind="styleAttrs(mergedStyles.header)">
       <Element v-bind="avatarProps" />
     </div>

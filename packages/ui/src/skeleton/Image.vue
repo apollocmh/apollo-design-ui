@@ -43,7 +43,7 @@
  *   - 无 CSS-in-JS 的 hashId / cssVarCls（D5）。
  */
 
-import { computed } from 'vue';
+import { computed, useAttrs } from 'vue';
 import { useConfigContext } from '../config-provider/context';
 import type { SkeletonImageProps } from './interface';
 import Node from './Node.vue';
@@ -53,7 +53,6 @@ defineOptions({ name: 'ASkeletonImage', inheritAttrs: false });
 const props = withDefaults(defineProps<SkeletonImageProps>(), {
   prefixCls: undefined,
   className: undefined,
-  rootClassName: undefined,
   style: undefined,
   active: undefined,
   classNames: undefined,
@@ -62,6 +61,7 @@ const props = withDefaults(defineProps<SkeletonImageProps>(), {
 
 const { getPrefixCls } = useConfigContext();
 
+const attrs = useAttrs();
 const prefixCls = computed(() => getPrefixCls('skeleton', props.prefixCls));
 const imageCls = computed(() => `${prefixCls.value}-image`);
 const svgCls = computed(() => `${prefixCls.value}-image-svg`);
@@ -72,7 +72,7 @@ const pathCls = computed(() => `${prefixCls.value}-image-path`);
   <Node
     :prefix-cls="props.prefixCls"
     :class-name="props.className"
-    :root-class-name="props.rootClassName"
+    :class="attrs.class"
     :style="props.style"
     :active="props.active"
     :class-names="props.classNames"

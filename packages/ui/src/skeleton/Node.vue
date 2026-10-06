@@ -38,7 +38,7 @@
  *     复刻这个行为（实测上游产物里确实没有 `data-testid`）。
  */
 
-import { type CSSProperties, computed, type VNodeChild } from 'vue';
+import { type CSSProperties, computed, useAttrs, type VNodeChild } from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useConfigContext } from '../config-provider/context';
 import type { SkeletonNodeProps } from './interface';
@@ -48,7 +48,6 @@ defineOptions({ name: 'ASkeletonNode', inheritAttrs: false });
 const props = withDefaults(defineProps<SkeletonNodeProps>(), {
   prefixCls: undefined,
   className: undefined,
-  rootClassName: undefined,
   style: undefined,
   active: undefined,
   classNames: undefined,
@@ -58,6 +57,7 @@ const props = withDefaults(defineProps<SkeletonNodeProps>(), {
 
 defineSlots<{ default?: () => VNodeChild }>();
 
+const attrs = useAttrs();
 const { getPrefixCls } = useConfigContext();
 
 const prefixCls = computed(() => getPrefixCls('skeleton', props.prefixCls));
@@ -68,7 +68,8 @@ const rootClass = computed(() => [
   { [`${prefixCls.value}-active`]: props.active },
   props.classNames?.root,
   props.className,
-  props.rootClassName,
+  // 调用方原生 `class`（替代上游的 `rootClassName`；其余多余属性仍按上游丢弃）
+  attrs.class,
 ]);
 
 /** 内层类名。`||` 而不是 `??` —— 空串同样回落到 `${prefixCls}-node`。 */

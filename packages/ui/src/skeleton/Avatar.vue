@@ -41,7 +41,7 @@
  *     我们用 `inheritAttrs: false` + 不绑 `$attrs` 复刻。
  */
 
-import { computed } from 'vue';
+import { computed, useAttrs } from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useConfigContext } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
@@ -53,7 +53,6 @@ defineOptions({ name: 'ASkeletonAvatar', inheritAttrs: false });
 const props = withDefaults(defineProps<SkeletonAvatarOwnProps>(), {
   prefixCls: undefined,
   className: undefined,
-  rootClassName: undefined,
   style: undefined,
   size: undefined,
   // antd 的默认值是字面量 `'circle'`（`Avatar.js:20`）—— 逐字对齐。
@@ -65,6 +64,7 @@ const props = withDefaults(defineProps<SkeletonAvatarOwnProps>(), {
 
 const { getPrefixCls } = useConfigContext();
 
+const attrs = useAttrs();
 const prefixCls = computed(() => getPrefixCls('skeleton', props.prefixCls));
 
 const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
@@ -75,7 +75,8 @@ const rootClass = computed(() => [
   { [`${prefixCls.value}-active`]: props.active },
   props.classNames?.root,
   props.className,
-  props.rootClassName,
+  // 调用方原生 class（替代上游的 rootClassName）
+  attrs.class,
 ]);
 
 const elementCls = computed(() => `${prefixCls.value}-avatar`);

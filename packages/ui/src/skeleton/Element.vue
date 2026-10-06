@@ -34,7 +34,6 @@ defineOptions({ name: 'ASkeletonElement', inheritAttrs: false });
 const props = withDefaults(defineProps<SkeletonElementProps>(), {
   prefixCls: undefined,
   className: undefined,
-  rootClassName: undefined,
   style: undefined,
   size: undefined,
   shape: undefined,

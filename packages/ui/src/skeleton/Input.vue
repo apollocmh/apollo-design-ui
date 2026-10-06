@@ -24,7 +24,7 @@
  * 多余属性不透传）与 `Button.vue` 完全相同，理由见那个文件的文件头。
  */
 
-import { computed } from 'vue';
+import { computed, useAttrs } from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useConfigContext } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
@@ -36,7 +36,6 @@ defineOptions({ name: 'ASkeletonInput', inheritAttrs: false });
 const props = withDefaults(defineProps<SkeletonInputProps>(), {
   prefixCls: undefined,
   className: undefined,
-  rootClassName: undefined,
   style: undefined,
   size: undefined,
   // ⚠️ 上游**没有**给默认值（`Input.js:17` 只解构 `block`）—— 逐字对齐，
@@ -49,6 +48,7 @@ const props = withDefaults(defineProps<SkeletonInputProps>(), {
 
 const { getPrefixCls } = useConfigContext();
 
+const attrs = useAttrs();
 const prefixCls = computed(() => getPrefixCls('skeleton', props.prefixCls));
 
 const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
@@ -62,7 +62,8 @@ const rootClass = computed(() => [
   },
   props.classNames?.root,
   props.className,
-  props.rootClassName,
+  // 调用方原生 class（替代上游的 rootClassName）
+  attrs.class,
 ]);
 
 const elementCls = computed(() => `${prefixCls.value}-input`);

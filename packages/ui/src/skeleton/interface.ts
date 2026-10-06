@@ -81,11 +81,9 @@ export type SkeletonElementSize = SizeType | number | 'default';
 export interface SkeletonElementProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在**内层** `<span>` 上（`rootClassName` 落在外层 `<div>` 上）。 */
+  /** 落在**内层** `<span>` 上（⚠️ 独立目标；外层 `<div>` 请用 Vue 原生 `class`）。 */
   className?: string;
-  /** 落在**外层** `<div class="{prefixCls}-element">` 上。 */
-  rootClassName?: string;
-  /** 内层 `<span>` 的内联样式，**覆盖** `styles.content`。 */
+  /** 内层 `<span>` 的内联样式（⚠️ 同上，独立目标），**覆盖** `styles.content`。 */
   style?: CSSProperties;
   /**
    * @deprecated `'default'` 已废弃，请用 `'medium'`。
@@ -303,12 +301,6 @@ export interface SkeletonProps {
   loading?: boolean;
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根元素上（在 ConfigProvider 的 `className` **之前**）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
-  /** 根元素的内联样式。参与语义化合并，且**覆盖** `styles.root`。 */
-  style?: CSSProperties;
   /** 头像块。`true` 用默认几何（`size:'large'` + `circle`，无 `paragraph` 时改 `square`）。 */
   avatar?: SkeletonAvatarProps | boolean;
   /** 标题块。`true` 用默认几何（宽度由 `hasAvatar` / `hasParagraph` 决定）。 */

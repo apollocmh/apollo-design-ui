@@ -79,9 +79,7 @@ const loading = ref(true);
 | `paragraph` | Show a paragraph placeholder. Pass an object to override | `boolean \| SkeletonParagraphProps` | `true` |
 | `round` | Show rounded corners | `boolean` | `false` |
 | `prefixCls` | Class name prefix | `string` | `apollo-skeleton` |
-| `className` | Class name of the root element | `string` | — |
-| `rootClassName` | Class name of the root element (highest priority) | `string` | — |
-| `style` | Style of the root element | `CSSProperties` | — |
+| `class` / `style` | **Native root attrs** (not Props); `style` overrides `styles.root`. ⚠️ Other extra attrs are still dropped, matching upstream | `string \| array \| object` / `CSSProperties` | — |
 | `classNames` | Semantic class names, see "Semantic slots" | `SkeletonSemanticClassNames` | — |
 | `styles` | Semantic styles, see "Semantic slots" | `SkeletonSemanticStyles` | — |
 

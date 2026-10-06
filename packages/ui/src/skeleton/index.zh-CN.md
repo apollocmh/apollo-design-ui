@@ -79,9 +79,7 @@ const loading = ref(true);
 | `paragraph` | 是否显示段落占位。传对象可覆盖推导值 | `boolean \| SkeletonParagraphProps` | `true` |
 | `round` | 是否显示圆角 | `boolean` | `false` |
 | `prefixCls` | 类名前缀 | `string` | `apollo-skeleton` |
-| `className` | 根元素类名 | `string` | — |
-| `rootClassName` | 根元素类名（优先级最高） | `string` | — |
-| `style` | 根元素样式 | `CSSProperties` | — |
+| `class` / `style` | **根元素原生 attrs**（不是 Props）；`style` 覆盖 `styles.root`。⚠️ 其余多余属性仍按上游丢弃 | `string \| array \| object` / `CSSProperties` | — |
 | `classNames` | 语义化类名，见「语义化槽位」 | `SkeletonSemanticClassNames` | — |
 | `styles` | 语义化样式，见「语义化槽位」 | `SkeletonSemanticStyles` | — |
 
