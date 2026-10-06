@@ -43,7 +43,7 @@ import {
   watch,
   watchEffect,
 } from 'vue';
-import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { type SizeType, useSize } from '../config-provider/size-context';
@@ -96,9 +96,6 @@ function getDecimalIfValidate(value: unknown): Decimal | null {
 /** Internal 与外层共用同一份 prop 表（antd 的 InternalInputNumber 透传面一致）。 */
 const inputNumberPropDefs = {
   prefixCls: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
-  className: { type: String, default: undefined },
-  style: { type: Object as PropType<InputNumberProps['style']>, default: undefined },
   classNames: {
     type: [Object, Function] as PropType<InputNumberProps['classNames']>,
     default: undefined,
@@ -584,11 +581,7 @@ export const InputNumberInternalComponent = defineComponent({
         () => context.classNames as InputNumberSemanticClassNames | undefined,
         () => props.classNames,
       ],
-      [
-        () => context.styles as InputNumberSemanticStyles | undefined,
-        () => props.styles,
-        () => semanticRootStyle(props.style),
-      ],
+      [() => context.styles as InputNumberSemanticStyles | undefined, () => props.styles],
       mergedProps.value,
     );
 
@@ -609,8 +602,8 @@ export const InputNumberInternalComponent = defineComponent({
       const rootClass = [
         prefixCls.value,
         `${prefixCls.value}-mode-${mode}`,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
         (context as { className?: string }).className,
         compactItemClassnames.value,
@@ -936,14 +929,15 @@ export const InputNumberComponent = defineComponent({
         ref: internalRef as never,
         key: undefined,
         prefixCls: prefixCls.value,
-        rootClassName: hasLegacyAddon.value ? undefined : props.rootClassName,
+        // 原生 `class` 转给内部件（有 legacy addon 时只落 SpaceCompact，与原先同判）
+        class: hasLegacyAddon.value ? undefined : (attrs.class as string | undefined),
         status: mergedStatus.value,
         'onUpdate:value': (v: string | number | null) => emit('update:value', v),
       } as never);
       if (hasLegacyAddon.value) {
         return h(
           SpaceCompact,
-          { class: props.rootClassName },
+          { class: attrs.class },
           { default: () => [renderAddon(props.addonBefore), inner, renderAddon(props.addonAfter)] },
         );
       }

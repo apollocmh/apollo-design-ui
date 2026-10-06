@@ -79,7 +79,6 @@ export interface InputNumberStepInfo {
  */
 export interface InputNumberProps {
   prefixCls?: string;
-  rootClassName?: string;
   /** 值（受控）。配合 `v-model:value` 使用。 */
   value?: ValueType | null;
   /** 初始值（非受控）。 */
@@ -138,8 +137,6 @@ export interface InputNumberProps {
   addonBefore?: VNodeChild;
   /** @deprecated 用 `Space.Compact` 替代。 */
   addonAfter?: VNodeChild;
-  className?: string;
-  style?: CSSProperties;
   classNames?: InputNumberSemanticClassNames | InputNumberSemanticClassNamesFn;
   styles?: InputNumberSemanticStyles | InputNumberSemanticStylesFn;
 }
