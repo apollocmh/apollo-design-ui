@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T04:44:35.003Z",
+  "updatedAt": "2026-10-06T04:50:52.355Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 18,
+      "todo": 15,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 47,
+      "done": 50,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 412,
+    "reviewedProductionSourceFiles": 445,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1396,7 +1396,7 @@
       "reviewedFileCount": 6
     },
     "menu": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/menu/context.ts",
         "packages/ui/src/menu/engine/key-records.ts",
@@ -1412,7 +1412,21 @@
         "packages/ui/src/menu/style/token.ts",
         "packages/ui/src/menu/SubMenu.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/menu/context.ts",
+        "packages/ui/src/menu/engine/key-records.ts",
+        "packages/ui/src/menu/engine/parse-items.ts",
+        "packages/ui/src/menu/engine/use-accessibility.ts",
+        "packages/ui/src/menu/index.ts",
+        "packages/ui/src/menu/interface.ts",
+        "packages/ui/src/menu/Menu.ts",
+        "packages/ui/src/menu/MenuDivider.ts",
+        "packages/ui/src/menu/MenuItem.ts",
+        "packages/ui/src/menu/MenuItemGroup.ts",
+        "packages/ui/src/menu/style/index.ts",
+        "packages/ui/src/menu/style/token.ts",
+        "packages/ui/src/menu/SubMenu.ts"
+      ],
       "testFileCount": 8,
       "demoFileCount": 13,
       "docFiles": [
@@ -1421,9 +1435,14 @@
         "packages/ui/src/menu/index.en-US.md",
         "packages/ui/src/menu/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 26/26；**无需改代码** —— Menu.ts 无 className/rootClassName/style props，靠 `...attrs` 透传。保留：SubMenu/Item 类型上的 rootClassName（独立目标）与 MenuContextData.rootClassName（rc 内部通道）。"
+      ],
+      "reviewedFileCount": 13
     },
     "dropdown": {
       "auditStatus": "done",
@@ -2018,7 +2037,7 @@
       "notes": []
     },
     "slider": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/slider/context.ts",
         "packages/ui/src/slider/Handles/Handle.ts",
@@ -2037,7 +2056,24 @@
         "packages/ui/src/slider/Tracks/index.ts",
         "packages/ui/src/slider/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/slider/context.ts",
+        "packages/ui/src/slider/Handles/Handle.ts",
+        "packages/ui/src/slider/Handles/index.ts",
+        "packages/ui/src/slider/hooks/use-drag.ts",
+        "packages/ui/src/slider/hooks/use-offset.ts",
+        "packages/ui/src/slider/hooks/use-range.ts",
+        "packages/ui/src/slider/index.ts",
+        "packages/ui/src/slider/interface.ts",
+        "packages/ui/src/slider/Marks/index.ts",
+        "packages/ui/src/slider/Slider.vue",
+        "packages/ui/src/slider/SliderTooltip.ts",
+        "packages/ui/src/slider/Steps/index.ts",
+        "packages/ui/src/slider/style/index.ts",
+        "packages/ui/src/slider/style/token.ts",
+        "packages/ui/src/slider/Tracks/index.ts",
+        "packages/ui/src/slider/util.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 13,
       "docFiles": [
@@ -2046,9 +2082,14 @@
         "packages/ui/src/slider/index.en-US.md",
         "packages/ui/src/slider/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 110/110；SliderProps 去掉三个根别名；context 窄化类型的 SliderProps['style'] 收窄为 CSSProperties。"
+      ],
+      "reviewedFileCount": 16
     },
     "rate": {
       "auditStatus": "done",
@@ -2723,14 +2764,19 @@
       "reviewedFileCount": 3
     },
     "time-picker": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/time-picker/index.ts",
         "packages/ui/src/time-picker/interface.ts",
         "packages/ui/src/time-picker/TimePicker.vue",
         "packages/ui/src/time-picker/TimeRangePicker.vue"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/time-picker/index.ts",
+        "packages/ui/src/time-picker/interface.ts",
+        "packages/ui/src/time-picker/TimePicker.vue",
+        "packages/ui/src/time-picker/TimeRangePicker.vue"
+      ],
       "testFileCount": 6,
       "demoFileCount": 14,
       "docFiles": [
@@ -2739,9 +2785,14 @@
         "packages/ui/src/time-picker/index.en-US.md",
         "packages/ui/src/time-picker/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 80/80；**无需改代码** —— inheritAttrs:false + `const attrs = useAttrs()`，并把 `...attrs` 放在转发对象**最后** ⇒ class/style 天然生效。"
+      ],
+      "reviewedFileCount": 4
     },
     "calendar": {
       "auditStatus": "done",
@@ -3542,7 +3593,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（45 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（48 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3550,7 +3601,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 18 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（改走 classNames.root）；typography/Base → Tooltip。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
+      "verification": "累计修 19 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（走 classNames.root）；typography/Base → Tooltip；color-picker/components/ColorSlider → Slider。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
     }
   ],
   "batches": [
@@ -3778,6 +3829,16 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 19: float-button done (45 components total) - BackTop, FloatButton and FloatButtonGroup all migrated, plus the internal PurePanel. Note: zIndex is derived from attrs.style (same as antd). BackTop forwards its class to FloatButton as `class` now."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "menu and time-picker verified as ALREADY migrated (no code change): menu has no className/rootClassName/style props at all (pure attrs passthrough), time-picker uses inheritAttrs:false + useAttrs() and spreads ...attrs last. Both confirmed by running their three test layers. This confirms the \"run the tests first\" rule from batch 17 pays off."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 20: slider migrated; menu + time-picker verified as already-migrated (no code change). Total done = 49. The consumer scan caught color-picker ColorSlider -> Slider. Running the three test layers FIRST (the rule from batch 17) paid off twice in a row - menu and time-picker needed zero edits."
     }
   ],
   "observations": [
