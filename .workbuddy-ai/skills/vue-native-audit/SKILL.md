@@ -170,6 +170,11 @@ For changed contracts, add/adjust checks for applicable items:
 - expose/ref behavior and provide/inject nesting when public;
 - SSR only where the project has an SSR contract, avoiding unsupported assumptions.
 
+- 🚨 **Never trust a filtered vitest run's case count.** `vitest run <file> --project types <file2>` can silently run only a SUBSET — I once reported "84/84 passed" for a file whose new cases had never executed (they were red). **Rule: the reported test count must equal the expected count, otherwise suspect the filter first.** Cross-check with a full-suite run before claiming anything is green.
+- 🚨 **When eliminating a `!` (non-null assertion), evaluate the `undefined` branch value-by-value — not just the truthy branch.** `!arr.includes(x!)` looks like `x && !arr.includes(x)`, but `includes(undefined)` is always `false` ⇒ the `!` is always `true` ⇒ the original also took that branch when `x` was `undefined`. My "equivalent" rewrite silently removed that path and two tests caught it. The safe rewrite is `!(x && arr.includes(x))`.
+- 📌 **Before designing a fix for a `KNOWN-ISSUES` entry, read the UPSTREAM implementation of the thing you are fixing.** §1.1 said "implement a generic `ContextIsolator`" — reading antd's `ContextIsolator.js` showed it is literally `<NoFormStyle override status>`, and the repo already had `provideNoFormStyle(...)`. One grep replaced a proposed framework.
+- 📌 **A guard that tests `entity.parent` does not narrow a local `parent` destructured from it.** Reordering to test the LOCAL (`!parent`) removes N `!`s at once with zero behavior change — far better than `parent?.key`, which inserts `undefined` into `Set`s.
+
 Never remove tests, weaken assertions, or label an API `Vue-native` as a substitute for testing. For visual or DOM-sensitive changes, preserve the Ant Design behavior/visual baseline or record a justified compatibility classification. A component/batch is not verified until its focused tests and type checks pass; the project is not accepted until all required repository gates have run and their actual outcomes are recorded.
 
 ## Security and scope
