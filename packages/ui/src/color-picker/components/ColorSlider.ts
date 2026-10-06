@@ -158,7 +158,8 @@ export const GradientColorSlider = defineComponent({
           value: props.value,
           disabled: props.disabled,
           track: false,
-          className: [props.className, `${p}-slider`].filter(Boolean).join(' '),
+          // Slider 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+          class: [props.className, `${p}-slider`].filter(Boolean).join(' '),
           tooltip: { open: false },
           // ⚠️ 恒传对象（真值 ⇒ 恒为 range 模式）—— 上游如此，快照里有 `-handle-1`
           range: { editable: props.range, minCount: 2 },
