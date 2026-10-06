@@ -17,6 +17,7 @@ export interface CollapsePanelProps {
   label?: VNodeChild | undefined;
   /** children 形态的面板标题（prop 收窄 string，富内容走 `#header` 插槽）。 */
   header?: string | undefined;
+  /** item 级目标（转发给内层面板），不是根别名。 */
   className?: string | undefined;
   style?: Record<string, string | number> | undefined;
   showArrow?: boolean | undefined;
@@ -79,9 +80,6 @@ export interface CollapseProps {
   /** @deprecated 用 `destroyOnHidden`。 */
   destroyInactivePanel?: boolean | undefined;
   destroyOnHidden?: boolean | undefined;
-  className?: string | undefined;
-  rootClassName?: string | undefined;
-  style?: Record<string, string | number> | undefined;
   bordered?: boolean | undefined;
   prefixCls?: string | undefined;
   /** 自定义展开图标（返回 VNodeChild；panelProps 含 isActive/collapsible 等）。 */

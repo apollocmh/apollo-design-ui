@@ -60,11 +60,8 @@ export type CheckboxSemanticStylesFn = (context: CheckboxSemanticContext) => Che
 
 export interface AbstractCheckboxProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   defaultChecked?: boolean;
   checked?: boolean;
-  style?: CSSProperties;
   disabled?: boolean;
   title?: string;
   onChange?: (e: CheckboxChangeEvent) => void;
@@ -108,8 +105,6 @@ export interface CheckboxOptionType<T = unknown> {
 
 export interface CheckboxGroupProps<T = unknown> {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   options?: (CheckboxOptionType<T> | string | number)[];
   disabled?: boolean;
   style?: CSSProperties;

@@ -290,6 +290,8 @@ export const CollapsePanel = defineComponent({
   props: {
     // 文本主导 prop（规则 #1）：收窄 string + 同名 slot 优先
     header: { type: String, default: undefined },
+    // ⚠️ item 级目标（**不是**根别名）：children 形态下转发给内层面板，
+    //    见 `Collapse.ts` 的 `cProps.className` / `cProps.style`。与 `CollapseItemType` 同类。
     className: { type: String, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     showArrow: { type: Boolean, default: true },

@@ -88,12 +88,6 @@ export const Collapse = defineComponent({
     accordion: { type: Boolean, default: undefined },
     destroyInactivePanel: { type: Boolean, default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: {
-      type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
     bordered: { type: Boolean, default: true },
     prefixCls: { type: String, default: undefined },
     expandIcon: {
@@ -155,7 +149,8 @@ export const Collapse = defineComponent({
           () => context.styles,
           () => semanticRootStyle(context.style as never),
           () => props.styles,
-          () => semanticRootStyle(props.style),
+          // 根 style 是 Vue 原生 attrs
+          () => semanticRootStyle(attrs.style as never),
         ],
         props,
       );
@@ -172,7 +167,8 @@ export const Collapse = defineComponent({
           () => context.styles,
           () => semanticRootStyle(context.style as never),
           () => props.styles,
-          () => semanticRootStyle(props.style),
+          // 根 style 是 Vue 原生 attrs
+          () => semanticRootStyle(attrs.style as never),
         ],
         props,
       );
@@ -352,10 +348,9 @@ export const Collapse = defineComponent({
         { [`${cls}-large`]: mergedSize.value === 'large' },
         { [`${cls}-small`]: mergedSize.value === 'small' },
         context.className,
-        props.className,
-        props.rootClassName,
-        mergedClassNames.value.root,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
         attrs.class,
+        mergedClassNames.value.root,
       ];
 
       return h(

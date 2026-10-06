@@ -54,11 +54,8 @@ export const CheckboxComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     defaultChecked: { type: Boolean, default: false },
     checked: { type: Boolean, default: undefined },
-    style: { type: Object as PropType<CheckboxProps['style']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     title: { type: String, default: undefined },
     indeterminate: { type: Boolean, default: false },
@@ -223,9 +220,9 @@ export const CheckboxComponent = defineComponent({
           [`${cls}-wrapper-disabled`]: mergedDisabled.value,
         },
         context.className,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
-        props.rootClassName,
       ];
 
       const checkboxClass = [
@@ -241,12 +238,15 @@ export const CheckboxComponent = defineComponent({
         },
       ];
 
-      // rc-checkbox 语义：除「被 antd 消费的字段」外的 attrs 全部落 input
+      // rc-checkbox 语义：除「被 antd 消费的字段」外的 attrs 全部落 input。
+      // ⚠️ `class` / `style` 除外 —— 它们已归根（见上面的 classString 与根 style）。
       const {
-        class: attrClass,
-        style: attrStyle,
+        class: _attrsClass,
+        style: _attrsStyle,
         ...inputAttrs
       } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
 
       const labelValue = slots.default?.() as VNodeChild;
 
@@ -254,7 +254,8 @@ export const CheckboxComponent = defineComponent({
         'label',
         {
           class: classString,
-          style: mergedStyles.value.root,
+          // 根 style：语义 root 之后叠加调用方原生 attrs.style（调用方最后胜出）
+          style: { ...(mergedStyles.value.root ?? {}), ...((attrs.style as object) ?? {}) },
           onMouseenter: callbacks.onMouseEnter,
           onMouseleave: callbacks.onMouseLeave,
           onClick: onLabelClick,

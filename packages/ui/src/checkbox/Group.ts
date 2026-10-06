@@ -44,14 +44,11 @@ export const GroupComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     options: {
       type: Array as PropType<CheckboxGroupProps['options']>,
       default: () => [],
     },
     disabled: { type: Boolean, default: undefined },
-    style: { type: Object as PropType<CheckboxGroupProps['style']>, default: undefined },
     name: { type: String, default: undefined },
     defaultValue: {
       type: Array as PropType<CheckboxGroupProps['defaultValue']>,
@@ -187,7 +184,8 @@ export const GroupComponent = defineComponent({
                   value: option.value,
                   checked: mergedValue.value.includes(option.value),
                   onChange: option.onChange,
-                  className: `${groupPrefixCls}-item${option.className ? ` ${option.className}` : ''}`,
+                  // Checkbox 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+                  class: `${groupPrefixCls}-item${option.className ? ` ${option.className}` : ''}`,
                   style: option.style,
                   title: option.title,
                   id: option.id,
@@ -203,8 +201,8 @@ export const GroupComponent = defineComponent({
         {
           [`${groupPrefixCls}-rtl`]: direction === 'rtl',
         },
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
       ];
 
       return h(
@@ -215,7 +213,8 @@ export const GroupComponent = defineComponent({
           //    （上游快照 group:name 钉住这个双写）
           name: props.name,
           class: classString,
-          style: props.style,
+          // 根 style 是 Vue 原生 attrs（domProps 里也有，显式写一次保证它不被顶掉）
+          style: attrs.style as object,
           role: props.role,
           ref: rootRef,
         },
