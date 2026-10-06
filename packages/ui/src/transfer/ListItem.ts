@@ -93,7 +93,8 @@ const ListItem = defineComponent({
         },
         [
           h(Checkbox, {
-            className: props.classNames?.itemIcon
+            // Checkbox 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+            class: props.classNames?.itemIcon
               ? `${p}-checkbox ${props.classNames.itemIcon}`
               : `${p}-checkbox`,
             // ⚠️ Checkbox 的语义 `styles.root` 落在 label（wrapper）上 —— antd 的

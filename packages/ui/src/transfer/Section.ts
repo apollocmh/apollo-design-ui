@@ -255,7 +255,8 @@ const Section = defineComponent({
         disabled: !filteredItems.value.some((d) => !d.disabled) || props.disabled,
         checked: checkStatus.value === 'all',
         indeterminate: checkStatus.value === 'part',
-        className: `${listPrefixCls}-checkbox`,
+        // Checkbox 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+        class: `${listPrefixCls}-checkbox`,
         // 有意增强（超出 antd）：头部全选框无可读文本，aria-label 取全选文案
         //（axe `label` 规则要求表单元素有可访问名）。
         'aria-label': props.selectAll ? String(props.selectAll) : 'Select all',

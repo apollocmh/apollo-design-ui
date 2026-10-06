@@ -156,10 +156,7 @@ const CASES: Record<string, () => DomRenderResult> = {
       } as never,
     ),
   'class:both': () =>
-    h(
-      Transfer as never,
-      { ...base, prefixCls: 'apollo', class: ['a', 'b'] } as never,
-    ),
+    h(Transfer as never, { ...base, prefixCls: 'apollo', class: ['a', 'b'] } as never),
   'attrs:passthrough': () =>
     h(
       Transfer as never,
