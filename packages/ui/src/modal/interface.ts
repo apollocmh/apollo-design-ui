@@ -149,12 +149,8 @@ export interface ModalProps {
   /** 是否显示（rc 的 `visible`）。 */
   open?: boolean;
   prefixCls?: string;
-  /** 面板类名。 */
-  className?: string;
-  rootClassName?: string;
+  /** 根节点内联样式。 */
   rootStyle?: CSSProperties;
-  /** 面板内联样式。⚠️ `rootStyle` 才是根节点。 */
-  style?: CSSProperties;
   wrapClassName?: string;
   /** @deprecated rc 侧：请用 `classNames.wrapper` + `styles.wrapper`。 */
   wrapStyle?: Record<string, unknown>;
@@ -333,8 +329,6 @@ export interface ModalGlobalConfig {
 /** `_InternalPanelDoNotUseOrYouWillBeFired` 的 props。 */
 export interface ModalPurePanelProps {
   prefixCls?: string;
-  className?: string;
-  style?: CSSProperties;
   closable?: boolean | (ClosableType & Record<string, unknown>);
   type?: ModalType;
   /** 标题区。同名 `#title` slot 优先。 */

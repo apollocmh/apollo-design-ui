@@ -354,7 +354,8 @@ const ConfirmDialog = defineComponent({
         >),
         prefixCls: props.prefixCls,
         open: props.open,
-        className: classString.value,
+        // Modal 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+        class: classString.value,
         wrapClassName:
           [props.centered ? `${confirmPrefixCls.value}-centered` : undefined, props.wrapClassName]
             .filter(Boolean)

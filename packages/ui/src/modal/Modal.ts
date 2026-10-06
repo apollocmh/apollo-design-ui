@@ -30,7 +30,14 @@
 import { CloseOutlined } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
 import { isEmptyVNode, isNumber, isPlainObject, omit, pickAttrs } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  type VNodeChild,
+} from 'vue';
 import { pickClosable, useClosable } from '../_internal/use-closable';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { type MaskType, useMergedMask } from '../_internal/use-merged-mask';
@@ -120,8 +127,6 @@ export default defineComponent({
     wrapProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     transitionName: { type: String, default: undefined },
     maskTransitionName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     /**
@@ -456,8 +461,7 @@ export default defineComponent({
           zIndex: zIndex.value,
           getContainer:
             props.getContainer === undefined ? config.getPopupContainer : props.getContainer,
-          rootClassName:
-            [config.className, props.rootClassName, cn.root].filter(Boolean).join(' ') || undefined,
+          rootClassName: [config.className, cn.root].filter(Boolean).join(' ') || undefined,
           rootStyle: { ...config.style, ...props.rootStyle, ...st.root },
           footer: dialogFooter.value,
           closable: mergedClosable.value,
@@ -472,9 +476,10 @@ export default defineComponent({
           maskProps: props.maskProps,
           scrollLock: props.scrollLock,
           keyboard: props.keyboard,
-          className: props.className,
+          // 调用方原生 class（位置与原先的 props.className 一致）
+          className: attrs.class,
           style: {
-            ...props.style,
+            ...((attrs.style as CSSProperties | undefined) ?? {}),
             ...responsiveWidthVars.value,
           },
           classNames: {

@@ -25,8 +25,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     closable: {
       type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
       default: undefined,
@@ -65,10 +63,11 @@ export default defineComponent({
       ],
       [
         () => config.styles,
-        // `useSemanticRootStyle(style)` 的等价物：把裸 style 当成 `root` 槽
+        // `useSemanticRootStyle(style)` 的等价物：把裸 style 当成 `root` 槽。
+        // 根 style 现在是 Vue 原生 attrs。
         () =>
-          props.style
-            ? ({ root: props.style } as unknown as NonNullable<ModalSemanticType['styles']>)
+          attrs.style
+            ? ({ root: attrs.style } as unknown as NonNullable<ModalSemanticType['styles']>)
             : undefined,
         () => props.styles as unknown as NonNullable<ModalSemanticType['styles']>,
       ],
@@ -88,7 +87,8 @@ export default defineComponent({
         `${prefixCls}-pure-panel`,
         props.type ? confirmPrefixCls : undefined,
         props.type ? `${confirmPrefixCls}-${props.type}` : undefined,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className 一致）
+        attrs.class,
         config.className,
         cn?.root,
       ]
