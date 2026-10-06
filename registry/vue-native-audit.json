@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:18:11.240Z",
+  "updatedAt": "2026-10-06T05:21:53.104Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 11,
+      "todo": 8,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 54,
+      "done": 57,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 490,
+    "reviewedProductionSourceFiles": 539,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1180,7 +1180,7 @@
       "reviewedFileCount": 6
     },
     "upload": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/upload/Dragger.ts",
         "packages/ui/src/upload/engine/AjaxUploader.ts",
@@ -1198,7 +1198,23 @@
         "packages/ui/src/upload/UploadList.ts",
         "packages/ui/src/upload/utils.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/upload/Dragger.ts",
+        "packages/ui/src/upload/engine/AjaxUploader.ts",
+        "packages/ui/src/upload/engine/attr-accept.ts",
+        "packages/ui/src/upload/engine/request.ts",
+        "packages/ui/src/upload/engine/traverse-file-tree.ts",
+        "packages/ui/src/upload/engine/uid.ts",
+        "packages/ui/src/upload/index.ts",
+        "packages/ui/src/upload/interface.ts",
+        "packages/ui/src/upload/style/index.ts",
+        "packages/ui/src/upload/style/token.ts",
+        "packages/ui/src/upload/Upload.ts",
+        "packages/ui/src/upload/UploadList/ListItem.ts",
+        "packages/ui/src/upload/UploadList/MiniProgress.ts",
+        "packages/ui/src/upload/UploadList.ts",
+        "packages/ui/src/upload/utils.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 3,
       "docFiles": [
@@ -1207,9 +1223,14 @@
         "packages/ui/src/upload/index.en-US.md",
         "packages/ui/src/upload/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 77/77；UploadProps 去掉三个根别名。⚠️ 根 style 仍走语义 root 通道的 trigger 槽（semanticRootStyle(attrs.style, 'trigger')）—— 上游落点在那儿。UploadListProps.className 是内部件字段，保留。"
+      ],
+      "reviewedFileCount": 15
     },
     "splitter": {
       "auditStatus": "done",
@@ -1602,7 +1623,7 @@
       "reviewedFileCount": 6
     },
     "message": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/message/icon.ts",
         "packages/ui/src/message/index.ts",
@@ -1614,7 +1635,17 @@
         "packages/ui/src/message/useMessage.ts",
         "packages/ui/src/message/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/message/icon.ts",
+        "packages/ui/src/message/index.ts",
+        "packages/ui/src/message/interface.ts",
+        "packages/ui/src/message/PureList.ts",
+        "packages/ui/src/message/PurePanel.ts",
+        "packages/ui/src/message/style/index.ts",
+        "packages/ui/src/message/style/token.ts",
+        "packages/ui/src/message/useMessage.ts",
+        "packages/ui/src/message/util.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 11,
       "docFiles": [
@@ -1623,12 +1654,17 @@
         "packages/ui/src/message/index.en-US.md",
         "packages/ui/src/message/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 81/81（与 notification 合计）；**无需改代码** —— 公开面是命令式 API（`message.open({className, style})`），className/style 是**配置对象字段**而非组件根别名；PurePanel/PureList 是内部件。"
+      ],
+      "reviewedFileCount": 9
     },
     "notification": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/notification/engine/hooks/useClosable.ts",
         "packages/ui/src/notification/engine/hooks/useListPosition.ts",
@@ -1656,7 +1692,33 @@
         "packages/ui/src/notification/useNotification.ts",
         "packages/ui/src/notification/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/notification/engine/hooks/useClosable.ts",
+        "packages/ui/src/notification/engine/hooks/useListPosition.ts",
+        "packages/ui/src/notification/engine/hooks/useNoticeTimer.ts",
+        "packages/ui/src/notification/engine/hooks/useSizes.ts",
+        "packages/ui/src/notification/engine/hooks/useStack.ts",
+        "packages/ui/src/notification/engine/index.ts",
+        "packages/ui/src/notification/engine/interface.ts",
+        "packages/ui/src/notification/engine/Notice.ts",
+        "packages/ui/src/notification/engine/NoticeList.ts",
+        "packages/ui/src/notification/engine/NoticeListContent.ts",
+        "packages/ui/src/notification/engine/NotificationProvider.ts",
+        "packages/ui/src/notification/engine/Notifications.ts",
+        "packages/ui/src/notification/engine/Progress.ts",
+        "packages/ui/src/notification/engine/useNotification.ts",
+        "packages/ui/src/notification/engine/util.ts",
+        "packages/ui/src/notification/hooks/useStackConfig.ts",
+        "packages/ui/src/notification/icon.ts",
+        "packages/ui/src/notification/index.ts",
+        "packages/ui/src/notification/interface.ts",
+        "packages/ui/src/notification/PureList.ts",
+        "packages/ui/src/notification/PurePanel.ts",
+        "packages/ui/src/notification/style/index.ts",
+        "packages/ui/src/notification/style/token.ts",
+        "packages/ui/src/notification/useNotification.ts",
+        "packages/ui/src/notification/util.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 14,
       "docFiles": [
@@ -1665,9 +1727,14 @@
         "packages/ui/src/notification/index.en-US.md",
         "packages/ui/src/notification/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 81/81（与 message 合计）；**无需改代码** —— 同 message，公开面是命令式 API 的配置对象。"
+      ],
+      "reviewedFileCount": 25
     },
     "app": {
       "auditStatus": "done",
@@ -3663,7 +3730,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（52 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（53 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3929,6 +3996,16 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 24: input done (Input + Password + TextArea + InputGroup). Total done = 54. Two important findings: (1) root `style` may need to keep flowing through the SEMANTIC root channel - Input/TextArea/Password did, and a plain native style landed on the <input> instead (L4 input:group caught it), so the fix is semanticRootStyle(attrs.style). (2) mentions CANNOT be migrated as-is: the L4 baseline is a pre-recorded React artifact and antd does not put className/rootClassName on the root, so the native class would conflict; mentions was reverted and left todo with only a minimal type patch."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "message + notification verified as needing NO code change: their className/style live on the imperative API config objects (message.open({...})), not on a component root, and PurePanel/PureList are internal helpers. Confirmed by running all three test layers for both."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 25: upload done. Total done = 57. Same lesson as input applied proactively: upload routes its root style through the SEMANTIC root channel trigger slot (semanticRootStyle(attrs.style, \"trigger\")), so only the source was swapped, not the channel."
     }
   ],
   "observations": [
