@@ -19,6 +19,7 @@ import { useLocale } from '@apollo-design/locale';
 import { isPlainObject } from '@apollo-design/utils';
 import {
   type Component,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -63,9 +64,6 @@ export const PasswordComponent = defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     inputPrefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<InputPasswordProps['style']>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<InputPasswordProps['classNames']>,
       default: undefined,
@@ -119,7 +117,7 @@ export const PasswordComponent = defineComponent({
         () => context.styles as InputSemanticStyles | undefined,
         () => semanticRootStyle(undefined),
         () => props.styles as InputSemanticStyles | undefined,
-        () => semanticRootStyle(props.style),
+        () => semanticRootStyle(attrs.style as CSSProperties),
       ],
       mergedProps.value,
     );
@@ -259,13 +257,13 @@ export const PasswordComponent = defineComponent({
         defaultValue: props.defaultValue,
         variant: variant.value,
         suffix: [iconNode, asNode(props.suffix)],
-        className: [
+        // Input 已迁移到原生 attrs ⇒ 用 `class`（不再有 rootClassName）
+        class: [
           p,
           (context as { className?: string }).className,
-          props.className,
+          attrs.class,
           { [`${p}-${props.size}`]: !!props.size },
         ],
-        rootClassName: props.rootClassName,
         classNames: mergedClassNames.value as never,
         styles: mergedStyles.value as never,
         'onUpdate:value': (v: string | undefined) => emit('update:value', v),

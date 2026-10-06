@@ -19,8 +19,6 @@ export const GroupComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<InputGroupProps['style']>, default: undefined },
     size: { type: String as PropType<InputGroupProps['size']>, default: undefined },
     compact: { type: Boolean, default: undefined },
   },
@@ -47,18 +45,25 @@ export const GroupComponent = defineComponent({
         [`${prefixCls.value}-compact`]: props.compact,
         [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
       },
-      props.className,
+      // 调用方原生 class（位置与原先的 props.className 一致）
+      attrs.class,
     ]);
 
-    return () =>
-      h(
+    return () => {
+      // ⚠️ 末尾的 `...restAttrs` 会**覆盖** `class`/`style` ⇒ 两者都必须先摘掉
+      //    （class 已并入 cls.value；style 从 attrs.style 取）。
+      const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs;
+      void _attrsClass;
+      void _attrsStyle;
+      return h(
         SpaceCompact,
         {
           class: cls.value,
-          style: props.style,
-          ...attrs,
+          style: attrs.style,
+          ...restAttrs,
         } as never,
         { default: () => slots.default?.() },
       );
+    };
   },
 });

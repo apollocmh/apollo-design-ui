@@ -17,6 +17,7 @@
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -58,13 +59,6 @@ export const InputComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    // ⚠️ Password 会把 className 拼成**数组**传进来 —— 类型要放开，否则 prop 校验告警
-    className: {
-      type: [String, Array, Object] as PropType<string | unknown[]>,
-      default: undefined,
-    },
-    style: { type: Object as PropType<InputProps['style']>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<InputProps['classNames']>,
       default: undefined,
@@ -158,7 +152,8 @@ export const InputComponent = defineComponent({
         () => context.styles as InputSemanticStyles | undefined,
         () => semanticRootStyle(undefined),
         () => props.styles,
-        () => semanticRootStyle(props.style),
+        // 根 style 是 Vue 原生 attrs，但仍经语义 root 通道下发（与上游落点一致）
+        () => semanticRootStyle(attrs.style as CSSProperties),
       ],
       mergedProps.value,
     );
@@ -222,8 +217,8 @@ export const InputComponent = defineComponent({
     return () => {
       const p = prefixCls.value;
       const rootClass = [
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         compactItemClassnames.value,
         (context as { className?: string }).className,
         mergedClassNames.value.root,

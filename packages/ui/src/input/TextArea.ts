@@ -15,6 +15,7 @@
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -55,9 +56,6 @@ export const TextAreaComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<TextAreaProps['style']>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<TextAreaProps['classNames']>,
       default: undefined,
@@ -131,7 +129,7 @@ export const TextAreaComponent = defineComponent({
         () => context.styles as TextAreaSemanticStyles | undefined,
         () => semanticRootStyle(undefined),
         () => props.styles,
-        () => semanticRootStyle(props.style),
+        () => semanticRootStyle(attrs.style as CSSProperties),
       ],
       mergedProps.value,
     );
@@ -215,8 +213,8 @@ export const TextAreaComponent = defineComponent({
             ])
           : undefined,
         className: [
-          props.className,
-          props.rootClassName,
+          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+          attrs.class,
           compactItemClassnames.value,
           (context as { className?: string }).className,
           mergedClassNames.value.root,

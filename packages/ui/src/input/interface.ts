@@ -108,9 +108,6 @@ export interface InputFocusOptions {
 
 export interface InputProps {
   prefixCls?: string;
-  rootClassName?: string;
-  className?: string;
-  style?: CSSProperties;
   /** 受控值（配 `v-model:value`）。 */
   value?: string;
   defaultValue?: string;
@@ -162,9 +159,6 @@ export interface InputRef {
 
 export interface TextAreaProps {
   prefixCls?: string;
-  rootClassName?: string;
-  className?: string;
-  style?: CSSProperties;
   value?: string;
   defaultValue?: string;
   size?: SizeType;
@@ -204,9 +198,6 @@ export interface TextAreaRef {
 export interface InputPasswordProps {
   prefixCls?: string;
   inputPrefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   disabled?: boolean;
   /** @deprecated 用 `variant`。 */
   bordered?: boolean;
@@ -234,8 +225,6 @@ export interface InputPasswordProps {
 
 export interface InputGroupProps {
   prefixCls?: string;
-  className?: string;
-  style?: CSSProperties;
   size?: SizeType;
   compact?: boolean;
 }
