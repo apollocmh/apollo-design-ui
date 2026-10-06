@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T01:49:19.657Z",
+  "updatedAt": "2026-10-06T01:53:11.239Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 27,
+      "todo": 26,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 38,
+      "done": 39,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 326,
+    "reviewedProductionSourceFiles": 338,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2026,7 +2026,7 @@
       "reviewedFileCount": 6
     },
     "steps": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/steps/context.ts",
         "packages/ui/src/steps/index.ts",
@@ -2041,7 +2041,20 @@
         "packages/ui/src/steps/style/token.ts",
         "packages/ui/src/steps/useDisplaySteps.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/steps/context.ts",
+        "packages/ui/src/steps/index.ts",
+        "packages/ui/src/steps/interface.ts",
+        "packages/ui/src/steps/PanelArrow.ts",
+        "packages/ui/src/steps/ProgressIcon.ts",
+        "packages/ui/src/steps/Rail.ts",
+        "packages/ui/src/steps/Step.ts",
+        "packages/ui/src/steps/StepIcon.ts",
+        "packages/ui/src/steps/Steps.ts",
+        "packages/ui/src/steps/style/index.ts",
+        "packages/ui/src/steps/style/token.ts",
+        "packages/ui/src/steps/useDisplaySteps.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 20,
       "docFiles": [
@@ -2050,11 +2063,14 @@
         "packages/ui/src/steps/index.en-US.md",
         "packages/ui/src/steps/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
       "notes": [
-        "⚠️ 迁移提示：timeline 通过 `className: classString` 把类名转发给 Steps（因为本仓 Steps 会主动剥掉 attrs 里的 class）。迁移 Steps 时必须同步把 timeline 的这处改成 `class`，否则 timeline 的类名静默丢失。"
-      ]
+        "根别名迁移完成：unit + dom-contract + types = 136/136（与 timeline 合计）；StepsProps 去掉三个根别名。⚠️ 已同步修 timeline 的 className 转发 → class。StepItem 的 className/style 是项级数据字段，保留；Rail/StepIcon 是内部件。"
+      ],
+      "reviewedFileCount": 12
     },
     "progress": {
       "auditStatus": "done",
@@ -3400,7 +3416,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（35 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（36 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3601,6 +3617,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 12: timeline migrated (35 components total). NEW: timeline is a thin shell over Steps, and our Steps implementation actively strips `class` from attrs (it only merges the className prop), so timeline MUST keep forwarding `className: classString`. A reverse-dependency note was registered on the `steps` component so it gets fixed when steps is migrated."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 13: steps migrated (36 components total) and the timeline reverse dependency was fixed in the same commit (timeline className -> class). Two new pitfalls: (1) a setup-time computed cannot reference a render-local destructure (ReferenceError, whole L4 suite red) - use attrs.style directly; (2) when the root object ends with ...restAttrs, style must be stripped too or it overrides the computed rootStyle. Also: never put backticks in node -e strings - zsh eats them."
     }
   ],
   "observations": [
