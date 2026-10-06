@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:08:36.135Z",
+  "updatedAt": "2026-10-06T05:18:11.240Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 12,
+      "todo": 11,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 53,
+      "done": 54,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 474,
+    "reviewedProductionSourceFiles": 490,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1014,7 +1014,7 @@
       "reviewedFileCount": 5
     },
     "input": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/input/engine/BaseInput.ts",
         "packages/ui/src/input/engine/calculate-node-height.ts",
@@ -1033,7 +1033,24 @@
         "packages/ui/src/input/TextArea.ts",
         "packages/ui/src/input/utils.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/input/engine/BaseInput.ts",
+        "packages/ui/src/input/engine/calculate-node-height.ts",
+        "packages/ui/src/input/engine/common-utils.ts",
+        "packages/ui/src/input/engine/Input.ts",
+        "packages/ui/src/input/engine/TextArea.ts",
+        "packages/ui/src/input/engine/use-count.ts",
+        "packages/ui/src/input/Group.ts",
+        "packages/ui/src/input/hooks/use-remove-password-timeout.ts",
+        "packages/ui/src/input/index.ts",
+        "packages/ui/src/input/Input.ts",
+        "packages/ui/src/input/interface.ts",
+        "packages/ui/src/input/Password.ts",
+        "packages/ui/src/input/style/index.ts",
+        "packages/ui/src/input/style/token.ts",
+        "packages/ui/src/input/TextArea.ts",
+        "packages/ui/src/input/utils.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 8,
       "docFiles": [
@@ -1042,9 +1059,14 @@
         "packages/ui/src/input/index.en-US.md",
         "packages/ui/src/input/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 65/65；Input/Password/TextArea/InputGroup 四个公开面都去掉根别名。⚠️ 根 style **仍走语义 root 通道**（semanticRootStyle(attrs.style)）—— 上游落点在根，直接当原生 style 会落到 <input> 上（L4 input:group 抓到）。⚠️ Group 末尾的 ...restAttrs 会覆盖 class/style ⇒ 两者先摘掉。"
+      ],
+      "reviewedFileCount": 16
     },
     "input-number": {
       "auditStatus": "done",
@@ -2698,7 +2720,9 @@
       ],
       "issueIds": [],
       "batch": null,
-      "notes": []
+      "notes": [
+        "⚠️ 暂不迁移（待裁决）：Mentions 的 L4 基线是 **React 预录产物**，antd 侧 className/rootClassName **不落根**；迁移后原生 class 会落根 ⇒ 与基线冲突（且共享 fixture 用 React 形态的 props，class 在 React 侧会重复渲染）。已做最小修复：MentionsProps 显式声明 `style?: CSSProperties`（因 TextAreaProps 不再继承该键）。"
+      ]
     },
     "color-picker": {
       "auditStatus": "analyzing",
@@ -3639,7 +3663,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（51 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（52 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3647,7 +3671,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 19 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（走 classNames.root）；typography/Base → Tooltip；color-picker/components/ColorSlider → Slider。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
+      "verification": "累计修 20 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（走 classNames.root）；typography/Base → Tooltip；color-picker/components/ColorSlider → Slider；transfer/Search → Input。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
     }
   ],
   "batches": [
@@ -3900,6 +3924,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 23: input-number done. Total done = 53. Note: the outer component and InputNumberInternalComponent share one prop table (inputNumberPropDefs), so removing the three keys there migrates both at once; the outer forwards the class to the internal one as `class` (still undefined in the legacy-addon branch)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 24: input done (Input + Password + TextArea + InputGroup). Total done = 54. Two important findings: (1) root `style` may need to keep flowing through the SEMANTIC root channel - Input/TextArea/Password did, and a plain native style landed on the <input> instead (L4 input:group caught it), so the fix is semanticRootStyle(attrs.style). (2) mentions CANNOT be migrated as-is: the L4 baseline is a pre-recorded React artifact and antd does not put className/rootClassName on the root, so the native class would conflict; mentions was reverted and left todo with only a minimal type patch."
     }
   ],
   "observations": [
