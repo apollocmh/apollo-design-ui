@@ -113,6 +113,7 @@ console.log(out.join('\n')||'clean');"
 ```
 
   The 25-line lookback is a heuristic — **verify each hit by reading the actual `h(Component, {` it belongs to**. Known false positives: `modal/engine/Dialog.ts`'s own `Content`, `table/hooks/use-filter.ts`'s `FilterWrapper`, and `Dropdown.rootClassName` (a popup target, legitimately kept). Also note a migration can create a **duplicate-key** lint error when two old props (`className` + `rootClassName`) collapse into one `class:` — merge them into an array preserving the original clsx order.
+- **🚨 Don't add `attrs.class` to the class array when the template already has `v-bind="rootAttrs"` containing `attrs`.** Vue merges `:class` with the `class` key of the bound object, so the caller class ends up rendered **twice** (L4: `[apollo my-class] vs [apollo my-class my-class]`). Rule of thumb: the **render-function** components (no `v-bind`) must push `attrs.class` into the array; the **template** components with `v-bind="rootAttrs"`/`v-bind="$attrs"` must **not**.
 - **Check whether the "root" is the component's own root or an inner layer.** `Anchor` puts `restProps` on the **inner wrapper div**, not the outer `Affix` → needs `inheritAttrs: false` plus an explicit bind. `Dropdown`'s `rootClassName` targets the popup (the component has no DOM root) and `Carousel`'s `className`/`style` target the inner `slick-slider` — those are genuine dedicated props, not aliases; keep them and document why.
 
 ## Finding taxonomy and severity
