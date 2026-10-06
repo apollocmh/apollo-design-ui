@@ -26,7 +26,7 @@ const columns = [
     title: 'Age',
     dataIndex: 'age',
     key: 'age',
-    sorter: (a: { age: number }, b: { age: number }) => a.age - b.age,
+    sorter: (a: never, b: never) => (a as { age: number }).age - (b as { age: number }).age,
   },
 ];
 const dataSource = [
@@ -42,7 +42,7 @@ a11yDemoTest('Table', {
 describe('Table · a11y（L5）', () => {
   it('表头 <th scope="col">、行头 <th scope="row">（有 rowScope 时）', async () => {
     const w = mount(Table, {
-      props: { columns, dataSource, rowScope: 'row' },
+      props: { columns: columns as never, dataSource: dataSource as never, rowScope: 'row' },
     });
     await nextTick();
     const ths = w.findAll('thead th');
@@ -62,7 +62,7 @@ describe('Table · a11y（L5）', () => {
         dataIndex: 'age',
         key: 'age',
         defaultSortOrder: 'ascend' as const,
-        sorter: (a: { age: number }, b: { age: number }) => a.age - b.age,
+        sorter: (a: never, b: never) => (a as { age: number }).age - (b as { age: number }).age,
       },
     ];
     const w = mount(Table, { props: { columns: ascColumns, dataSource } });
@@ -79,7 +79,7 @@ describe('Table · a11y（L5）', () => {
 
   it('选择列：全选复选框有可访问名', async () => {
     const w = mount(Table, {
-      props: { columns, dataSource, rowSelection: {} },
+      props: { columns: columns as never, dataSource: dataSource as never, rowSelection: {} },
     });
     await nextTick();
     const boxes = w.findAll('input[type="checkbox"]');
@@ -90,7 +90,11 @@ describe('Table · a11y（L5）', () => {
 
   it('展开图标：aria-label + aria-expanded', async () => {
     const w = mount(Table, {
-      props: { columns, dataSource, expandable: { expandedRowRender: () => 'detail' } },
+      props: {
+        columns: columns as never,
+        dataSource: dataSource as never,
+        expandable: { expandedRowRender: () => 'detail' },
+      },
     });
     await nextTick();
     const icon = w.find('button[aria-expanded]');
@@ -105,7 +109,7 @@ describe('Table · a11y（L5）', () => {
         dataIndex: 'name',
         key: 'name',
         filters: [{ text: 'Alice', value: 'Alice' }],
-        onFilter: (value: unknown, record: { name: string }) => record.name === value,
+        onFilter: (value: unknown, record: never) => (record as { name: string }).name === value,
       },
     ];
     const w = mount(Table, { props: { columns: filterColumns, dataSource } });

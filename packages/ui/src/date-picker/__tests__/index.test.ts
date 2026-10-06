@@ -493,3 +493,49 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     spy.mockRestore();
   });
 });
+
+/**
+ * 根 attrs 透传（`docs/KNOWN-ISSUES.md` §1.8）。
+ *
+ * 上游把 `...restProps` spread 给**内层 picker**（`generateSinglePicker.js:180` /
+ * `generateRangePicker.js:165`）⇒ `data-*` / `aria-*` 落到选择器根元素上。
+ * 本仓此前 `inheritAttrs: false` 且**从不读 attrs** ⇒ 这些属性**全部静默丢弃**。
+ */
+describe('DatePicker · 根 attrs 透传（§1.8）', () => {
+  it('data-* / aria-* 落到选择器根元素上', async () => {
+    const w = mount(DatePicker, {
+      props: { defaultValue: dayjs('2016-11-22') },
+      attrs: { 'data-testid': 'dp', 'aria-describedby': 'hint' },
+    });
+    await nextTick();
+    // ⚠️ 落点是**选择器根元素**（外层还有 Trigger）—— 不是
+    const root = w.find('.apollo-picker');
+    expect(root.exists()).toBe(true);
+    expect(root.attributes('data-testid')).toBe('dp');
+    expect(root.attributes('aria-describedby')).toBe('hint');
+    w.unmount();
+  });
+
+  it('原生 class / style 仍落根（没被 attrs 透传挤掉）', async () => {
+    const w = mount(DatePicker, {
+      props: { defaultValue: dayjs('2016-11-22') },
+      attrs: { class: 'my-dp', style: 'width: 200px' },
+    });
+    await nextTick();
+    const root = w.find('.apollo-picker');
+    expect(root.classes()).toContain('my-dp');
+    expect(root.attributes('style')).toContain('width: 200px');
+    w.unmount();
+  });
+
+  it('引擎自己的 props 不被调用方 attrs 顶掉（顺序：attrs 在前、引擎在后）', async () => {
+    const w = mount(DatePicker, {
+      props: { defaultValue: dayjs('2016-11-22') },
+      attrs: { id: 'user-id' },
+    });
+    await nextTick();
+    // `id` 是引擎自己的 prop（mergedId），不该被 attrs 覆盖
+    expect(w.element.getAttribute('id')).not.toBe('user-id');
+    w.unmount();
+  });
+});

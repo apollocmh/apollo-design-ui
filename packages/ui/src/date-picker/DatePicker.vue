@@ -1275,6 +1275,24 @@ const selectorProps = computed(() => ({
     onOpenChange(true);
   },
 }));
+const restAttrs = computed(() => {
+  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
+  void _attrsClass;
+  void _attrsStyle;
+  return rest;
+});
+
+/**
+ * 引擎的最终绑定：调用方 attrs（**除 class/style** —— 它们已归根/走语义通道）在前，
+ * 引擎自己的 props 在后（引擎胜）。
+ *
+ * ⚠️ 上游把 `...restProps` spread 给**内层 picker**（`generateSinglePicker.js:180`）——
+ *    `data-*` / `aria-*` 由此落到选择器根元素上。本仓此前**完全没接**（KNOWN-ISSUES §1.8）。
+ */
+const selectorBindings = computed(() => ({
+  ...restAttrs.value,
+  ...selectorProps.value,
+}));
 
 // ============================== Trigger 的接线值 ==============================
 // ⚠️ Vue 的 **template 不支持 TS 断言**（`as X`）⇒ 所有需要收窄/断言的量
@@ -1485,6 +1503,6 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
     :motion="popupMotion"
     stretch="minWidth"
   >
-    <Selector ref="selectorRef" v-bind="selectorProps" />
+    <Selector ref="selectorRef" v-bind="selectorBindings" />
   </Trigger>
 </template>
