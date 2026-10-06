@@ -40,9 +40,6 @@ export interface QRCodeProps {
   status?: QrcodeStatusType | undefined;
   bordered?: boolean | undefined;
   onRefresh?: (() => void) | undefined;
-  style?: Record<string, string | number> | undefined;
-  className?: string | undefined;
-  rootClassName?: string | undefined;
   prefixCls?: string | undefined;
   bgColor?: string | undefined;
   /** 模块静默区（覆盖 includeMargin 语义）。 */

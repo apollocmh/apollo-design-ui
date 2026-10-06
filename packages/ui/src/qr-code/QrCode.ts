@@ -125,12 +125,6 @@ export const QrCode = defineComponent({
       default: 'active',
     },
     bordered: { type: Boolean, default: true },
-    style: {
-      type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     prefixCls: { type: String, default: undefined },
     bgColor: { type: String, default: 'transparent' },
     marginSize: { type: Number, default: undefined },
@@ -162,12 +156,7 @@ export const QrCode = defineComponent({
         QrCodeSemanticStyles
       >(
         [() => context.classNames, () => props.classNames],
-        [
-          () => context.styles,
-          () => semanticRootStyle(context.style as never),
-          () => props.styles,
-          () => semanticRootStyle(props.style),
-        ],
+        [() => context.styles, () => semanticRootStyle(context.style as never), () => props.styles],
         props,
       );
       return classNames.value;
@@ -179,12 +168,7 @@ export const QrCode = defineComponent({
         QrCodeSemanticStyles
       >(
         [() => context.classNames, () => props.classNames],
-        [
-          () => context.styles,
-          () => semanticRootStyle(context.style as never),
-          () => props.styles,
-          () => semanticRootStyle(props.style),
-        ],
+        [() => context.styles, () => semanticRootStyle(context.style as never), () => props.styles],
         props,
       );
       return styles.value;
@@ -323,8 +307,6 @@ export const QrCode = defineComponent({
 
       const rootClassNames = [
         cls,
-        props.className,
-        props.rootClassName,
         context.className,
         mergedClassNames.value.root,
         attrs.class,
@@ -336,8 +318,13 @@ export const QrCode = defineComponent({
       const rootStyle = {
         backgroundColor: props.bgColor,
         ...(mergedStyles.value.root ?? {}),
-        width: px(props.style?.width ?? props.size),
-        height: px(props.style?.height ?? props.size),
+        // 根 style 是 Vue 原生 attrs：宽度/高度仍按 antd 语义优先取调用方 style
+        width: px(
+          (attrs.style as Record<string, string | number> | undefined)?.width ?? props.size,
+        ),
+        height: px(
+          (attrs.style as Record<string, string | number> | undefined)?.height ?? props.size,
+        ),
       };
 
       const nodes: VNodeChild[] = [];
