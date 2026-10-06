@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T04:50:52.355Z",
+  "updatedAt": "2026-10-06T05:03:33.807Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 15,
+      "todo": 14,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 50,
+      "done": 51,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 445,
+    "reviewedProductionSourceFiles": 453,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2528,7 +2528,7 @@
       "reviewedFileCount": 7
     },
     "list": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/list/context.ts",
         "packages/ui/src/list/index.ts",
@@ -2539,7 +2539,16 @@
         "packages/ui/src/list/style/index.ts",
         "packages/ui/src/list/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/list/context.ts",
+        "packages/ui/src/list/index.ts",
+        "packages/ui/src/list/interface.ts",
+        "packages/ui/src/list/Item.vue",
+        "packages/ui/src/list/ItemMeta.vue",
+        "packages/ui/src/list/List.vue",
+        "packages/ui/src/list/style/index.ts",
+        "packages/ui/src/list/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 8,
       "docFiles": [
@@ -2549,10 +2558,14 @@
         "packages/ui/src/list/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-RENDERER-01"
+        "VNA-RENDERER-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 102/102；List/ListItem/ListItemMeta 三个公开面都去掉根别名。⚠️ 模板是 `:class` + `v-bind` ⇒ mergeProps 会合并 class，必须把 class 从 v-bind 对象里摘掉，否则重复。"
+      ],
+      "reviewedFileCount": 8
     },
     "table": {
       "auditStatus": "todo",
@@ -3593,7 +3606,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（48 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（49 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3839,6 +3852,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 20: slider migrated; menu + time-picker verified as already-migrated (no code change). Total done = 49. The consumer scan caught color-picker ColorSlider -> Slider. Running the three test layers FIRST (the rule from batch 17) paid off twice in a row - menu and time-picker needed zero edits."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 21: list done (List + ListItem + ListItemMeta). Total done = 51. New pitfall: these .vue templates use `:class=\"x\" v-bind=\"y\"`, and Vue mergeProps MERGES class - so the class key must be stripped from the v-bind object or the user class appears twice."
     }
   ],
   "observations": [
