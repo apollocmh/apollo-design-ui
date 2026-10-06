@@ -60,7 +60,10 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 
   'mentions:class-name': {
-    render: () => h(Mentions, { ...BP, className: 'extra', rootClassName: 'rootx' } as never),
+    // ⚠️ 两侧**各用各的词汇**（仓库既有约定，见 button 的 `class:className`）：
+    //    React 生成器传 `className` / `rootClassName`，Vue 侧传原生 `class`。
+    //    用例 ID 才是契约，基线不需要动。
+    render: () => h(Mentions, { ...BP, class: 'extra rootx' } as never),
   },
   'mentions:rows': { render: () => h(Mentions, { ...BP, rows: 3 } as never) },
   'mentions:options': { render: () => h(Mentions, { ...BP, options: OPTIONS } as never) },

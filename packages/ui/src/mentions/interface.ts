@@ -112,14 +112,6 @@ type MentionsBaseTextareaAttrs = Omit<TextAreaProps, MentionsOmittedTextAreaKeys
 /** antd `MentionProps`（= `MentionsProps`，两个名字都导出）。 */
 export interface MentionsProps extends MentionsBaseTextareaAttrs {
   prefixCls?: string;
-  rootClassName?: string;
-  /**
-   * 根元素的内联样式。
-   *
-   * ⚠️ 显式声明：`TextAreaProps` 已把根 `style` 迁成 Vue 原生 attrs ⇒ 不再继承到，
-   *    而 Mentions 尚未迁移（L4 基线与 React 侧的落点冲突，见 KNOWN 记录）。
-   */
-  style?: CSSProperties;
   /** 受控值（配 `v-model:value`）。 */
   value?: string;
   defaultValue?: string;

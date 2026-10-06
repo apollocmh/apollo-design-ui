@@ -24,7 +24,15 @@
 
 import { useZIndex } from '@apollo-design/portal';
 import { useDevWarning } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type VNodeChild,
+} from 'vue';
 import { useAllowClear } from '../_internal/use-allow-clear';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -56,9 +64,6 @@ export const MentionsComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<MentionsProps['style']>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<MentionsProps['classNames']>,
       default: undefined,
@@ -134,7 +139,7 @@ export const MentionsComponent = defineComponent({
 
     const context = useComponentConfig<{
       className?: string;
-      style?: MentionsProps['style'];
+      style?: CSSProperties;
       classNames?: MentionsSemanticClassNames | MentionsSemanticClassNamesFn;
       styles?: MentionsSemanticStyles | MentionsSemanticStylesFn;
       allowClear?: boolean | { clearIcon?: VNodeChild; disabled?: boolean };
@@ -171,7 +176,8 @@ export const MentionsComponent = defineComponent({
         () => context.styles as MentionsSemanticStyles | undefined,
         () => semanticRootStyle(undefined),
         () => props.styles,
-        () => semanticRootStyle(props.style),
+        // 根 style 是 Vue 原生 attrs（仍走语义 root 通道，与上游落点一致）
+        () => semanticRootStyle(attrs.style as CSSProperties),
       ],
       mergedProps.value,
     );
@@ -260,8 +266,8 @@ export const MentionsComponent = defineComponent({
 
       const mergedClassName = [
         context.className,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         `${p}-css-var`,
         mc.root,
         {
@@ -273,7 +279,7 @@ export const MentionsComponent = defineComponent({
       /** 传给引擎的类名（比公开的语义类型多 3 个内部键，见文件头 §3）。 */
       const engineClassNames = {
         textarea: mc.textarea,
-        popup: [mc.popup, props.popupClassName, props.rootClassName, `${p}-css-var`],
+        popup: [mc.popup, props.popupClassName, `${p}-css-var`],
         suffix: mc.suffix,
         // 引擎内部通道：`-disabled` / `-focused` / `-rtl`
         mentions: {
@@ -294,10 +300,20 @@ export const MentionsComponent = defineComponent({
         suffix: ms.suffix,
       };
 
+      // ⚠️ 末尾的 `...restAttrs` 会**覆盖** `className` / `style`（对象展开后者胜）
+      //    ⇒ 必须先把 `class` / `style` 摘掉，否则整条 mergedClassName 被顶掉。
+      const {
+        class: _attrsClass,
+        style: _attrsStyle,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
+
       return h(
         RcMentions,
         {
-          ...attrs,
+          ...restAttrs,
           ref: innerRef,
           silent: props.loading,
           prefixCls: p,
