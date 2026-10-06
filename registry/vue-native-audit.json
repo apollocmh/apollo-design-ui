@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T04:39:39.391Z",
+  "updatedAt": "2026-10-06T04:44:35.003Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 19,
+      "todo": 18,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 46,
+      "done": 47,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 402,
+    "reviewedProductionSourceFiles": 412,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1939,7 +1939,7 @@
       "reviewedFileCount": 8
     },
     "float-button": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/float-button/BackTop.ts",
         "packages/ui/src/float-button/context.ts",
@@ -1952,7 +1952,18 @@
         "packages/ui/src/float-button/style/index.ts",
         "packages/ui/src/float-button/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/float-button/BackTop.ts",
+        "packages/ui/src/float-button/context.ts",
+        "packages/ui/src/float-button/FloatButton.ts",
+        "packages/ui/src/float-button/FloatButtonGroup.ts",
+        "packages/ui/src/float-button/hooks/useScroll.ts",
+        "packages/ui/src/float-button/index.ts",
+        "packages/ui/src/float-button/interface.ts",
+        "packages/ui/src/float-button/PurePanel.ts",
+        "packages/ui/src/float-button/style/index.ts",
+        "packages/ui/src/float-button/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 12,
       "docFiles": [
@@ -1961,9 +1972,14 @@
         "packages/ui/src/float-button/index.en-US.md",
         "packages/ui/src/float-button/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 46/46；BackTop/FloatButton/FloatButtonGroup 三个公开面都去掉三个根别名。⚠️ zIndex 从 attrs.style 读（与 antd 同判）；BackTop 转发给 FloatButton 的 className → class。"
+      ],
+      "reviewedFileCount": 10
     },
     "form": {
       "auditStatus": "todo",
@@ -3526,7 +3542,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（44 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（45 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3757,6 +3773,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 18: masonry done (44 components total). Masonry did not read attrs at all (template had only :class/:style), so :class/:style were silently dropped - wired up useAttrs in the same change. First run went red on every L4 case with ReferenceError because attrs was referenced before useAttrs() was added."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 19: float-button done (45 components total) - BackTop, FloatButton and FloatButtonGroup all migrated, plus the internal PurePanel. Note: zIndex is derived from attrs.style (same as antd). BackTop forwards its class to FloatButton as `class` now."
     }
   ],
   "observations": [
