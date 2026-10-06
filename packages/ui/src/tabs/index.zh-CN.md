@@ -99,7 +99,8 @@ import { Tabs } from '@apollo-design/ui';
 | getPopupContainer | 溢出下拉的挂载容器 | `(node) => HTMLElement` | —— |
 | classNames / styles | 语义化类名 / 样式（**8 个平铺 + 1 个嵌套 `popup`**） | `TabsSemanticAllType` | —— |
 | id | 根节点 id，同时是 aria 关联的前缀 | `string` | **异步生成** |
-| prefixCls / className / rootClassName / style | 常规外观通道 | —— | —— |
+| prefixCls | 类名前缀 | —— | —— |
+| class / style | **根元素原生 attrs**（不是 Props）；`style` 经语义 root 通道下发 | —— | —— |
 
 #### `TabsItem`
 

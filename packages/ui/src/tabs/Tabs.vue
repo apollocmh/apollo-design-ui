@@ -108,9 +108,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<CSSProperties | undefined>, default: undefined },
     type: { type: String as PropType<TabsType>, default: undefined },
     centered: { type: Boolean, default: undefined },
     size: { type: String as PropType<SizeType>, default: undefined },
@@ -307,9 +304,9 @@ export default defineComponent({
       [contextClassNames as TabsSemanticClassNames, props.classNames as TabsSemanticClassNames],
       [
         contextStyles as TabsSemanticStyles,
-        semanticRootStyle(props.style) as TabsSemanticStyles,
+        semanticRootStyle(attrs.style as CSSProperties | undefined) as TabsSemanticStyles,
         props.styles as TabsSemanticStyles,
-        semanticRootStyle(props.style) as TabsSemanticStyles,
+        semanticRootStyle(attrs.style as CSSProperties | undefined) as TabsSemanticStyles,
       ],
       { props: props as unknown as Record<string, unknown> },
       { popup: { _default: 'root' } },
@@ -461,8 +458,8 @@ export default defineComponent({
           [`${prefixCls}-editable`]: !!editable.value,
           [`${prefixCls}-rtl`]: rtl.value,
         },
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
       ];
 

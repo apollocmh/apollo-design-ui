@@ -218,9 +218,6 @@ export interface TabsRef {
  */
 export interface TabsProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   /** 页签类型。 */
   type?: TabsType;
   /** `card` / `editable-card` 的整体居中。 */
