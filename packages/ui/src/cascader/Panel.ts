@@ -32,8 +32,6 @@ import {
 
 export interface CascaderPanelProps {
   prefixCls?: string;
-  className?: string;
-  style?: Record<string, string | number>;
   options?: BaseOptionType[];
   multiple?: boolean;
   value?: RawValue | RawValue[];
@@ -58,8 +56,6 @@ const CascaderPanel = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     options: { type: Array as PropType<BaseOptionType[]>, default: undefined },
     multiple: { type: Boolean, default: false },
     value: { type: null as unknown as PropType<RawValue | RawValue[]>, default: undefined },
@@ -89,7 +85,7 @@ const CascaderPanel = defineComponent({
     },
   },
   emits: ['update:value', 'change'],
-  setup(props, { emit }) {
+  setup(props, { attrs, emit }) {
     // ========================= Values =========================
     // rc useControlledState：受控优先，否则内部态
     const innerValues = ref<ValueCell[]>(toRawValues(props.defaultValue));
@@ -210,9 +206,10 @@ const CascaderPanel = defineComponent({
               [`${panelPrefixCls}-rtl`]: props.direction === 'rtl',
               [`${panelPrefixCls}-empty`]: isEmpty.value,
             },
-            props.className,
+            // 调用方原生 class（位置与原先的 props.className 一致）
+            attrs.class,
           ],
-          style: props.style,
+          style: attrs.style,
         },
         isEmpty.value ? ((props.notFoundContent ?? undefined) as never) : listNode,
       );

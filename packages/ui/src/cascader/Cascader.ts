@@ -127,9 +127,6 @@ const Cascader = defineComponent({
       default: undefined,
     },
     styles: { type: [Object, Function] as PropType<Record<string, unknown>>, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
     // antd 的 maxTagPlaceholder 是 `ReactNode | ((omittedValues) => ReactNode)` ⇒ 两形态
@@ -408,7 +405,8 @@ const Cascader = defineComponent({
         () => contextSemantic.styles as Record<string, StyleLike> | undefined,
         () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
         () => props.styles as Record<string, StyleLike> | undefined,
-        () => (props.style ? { root: props.style } : undefined),
+        // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
+        () => (attrs.style ? { root: attrs.style as StyleLike } : undefined),
       ],
       mergedProps.value as never,
       // ⚠️ antd 第四参 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
@@ -426,8 +424,8 @@ const Cascader = defineComponent({
           props.direction === 'rtl' ? `${prefixCls.value}-rtl` : '',
           enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
-          props.className,
-          props.rootClassName,
+          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+          attrs.class,
           (mergedClassNames.value as { root?: string }).root,
         ]
           .filter(Boolean)
@@ -440,7 +438,6 @@ const Cascader = defineComponent({
           props.popupClassName || props.dropdownClassName,
           `${prefixCls.value}-dropdown`,
           props.direction === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
-          props.rootClassName,
           (mergedClassNames.value as { popup?: { root?: string } }).popup?.root,
         ]
           .filter(Boolean)
@@ -497,6 +494,16 @@ const Cascader = defineComponent({
     return () => {
       const emptyOptions = !(mergedSearchValue.value ? searchOptions.value : mergedOptions.value)
         .length;
+
+      // ⚠️ 末尾的  会**整段覆盖**  / （对象展开后者胜）
+      //    ⇒ 必须先把  /  摘掉，否则 mergedRootClassName 全丢。
+      const {
+        class: _attrsClass,
+        style: _attrsStyle,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
 
       return h(
         BaseSelect,
@@ -570,7 +577,7 @@ const Cascader = defineComponent({
               notFoundContent: mergedNotFoundContent.value,
               toggleOpen: (next: boolean) => setOpen(next),
             } as never),
-          ...attrs,
+          ...restAttrs,
         } as never,
         {},
       );
