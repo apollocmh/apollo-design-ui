@@ -44,6 +44,7 @@
 
 import { devUseWarning, isFunction, isPlainObject, mergeProps } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   Fragment,
   h,
@@ -157,8 +158,8 @@ const classString = computed(() => {
       [`${p}-rtl`]: direction.value === 'rtl',
     },
     config.className,
-    props.className,
-    props.rootClassName,
+    // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+    attrs.class,
     cssVarCls.value,
   ];
 });
@@ -362,10 +363,16 @@ if (import.meta.env?.DEV ?? true) {
   );
 }
 
-const rootAttrs = computed(() => ({
-  ...attrs,
-  style: { ...config.style, ...props.style },
-}));
+const rootAttrs = computed(() => {
+  // ⚠️ `class` 已被 classString 显式消费；留在 rootAttrs 里会被 `v-bind` 二次合并（重复）。
+  const { class: _attrsClass, ...restAttrs } = attrs;
+  void _attrsClass;
+  return {
+    ...restAttrs,
+    // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：覆盖 config.style）
+    style: { ...config.style, ...((attrs.style as CSSProperties) ?? {}) },
+  };
+});
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });

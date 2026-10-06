@@ -58,7 +58,8 @@ See [`demo/`](./demo) (**8**, mirroring antd's user-visible demos).
 | header | List header | `VNodeChild` | — |
 | footer | List footer | `VNodeChild` | — |
 | locale | Empty text override (**plain prop**) | `{ emptyText: VNodeChild }` | — |
-| prefixCls / className / rootClassName / style | Common targets | | — |
+| prefixCls | Class name prefix | | — |
+| class / style | **Native root attrs** (not Props) | | — |
 
 ### List.Item
 

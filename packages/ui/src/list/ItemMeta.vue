@@ -22,7 +22,7 @@
  * 避免同一个 VNode 被渲染两次时踩 Vue 的 VNode 可变坑）。
  */
 
-import { computed, ref, useAttrs } from 'vue';
+import { type CSSProperties, computed, ref, useAttrs } from 'vue';
 import { useConfigContext } from '../config-provider/context';
 import { NodeRenderer } from '../empty/components/NodeRenderer';
 import type { ListItemMetaProps } from './interface';
@@ -39,9 +39,19 @@ const prefixCls = computed(() => getPrefixCls('list', props.prefixCls));
 const cls = computed(() => `${prefixCls.value}-item-meta`);
 
 /** 根类名。顺序逐字来自上游 `clsx(...)`。 */
-const classString = computed(() => [cls.value, props.className]);
+const classString = computed(() => [
+  cls.value,
+  // 调用方原生 class（位置与原先的 props.className 一致）
+  attrs.class,
+]);
 
-const rootAttrs = computed(() => ({ ...attrs, style: props.style }));
+const rootAttrs = computed(() => {
+  // ⚠️ `class` 已被 classString 显式消费；留在 rootAttrs 里会被 `v-bind` 二次合并（重复）。
+  const { class: _attrsClass, ...restAttrs } = attrs;
+  void _attrsClass;
+  // 根 style 是 Vue 原生 attrs
+  return { ...restAttrs, style: attrs.style as CSSProperties | undefined };
+});
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });

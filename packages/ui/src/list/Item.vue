@@ -188,10 +188,16 @@ function contentNodes() {
 const itemClass = computed(() => [
   cls.value,
   { [`${cls.value}-no-flex`]: !isFlexMode() },
-  props.className,
+  // 调用方原生 class（位置与原先的 props.className 一致）
+  attrs.class,
 ]);
 
-const itemAttrs = computed(() => ({ ...attrs }));
+const itemAttrs = computed(() => {
+  // ⚠️ `class` 已被 itemClass 显式消费；留在 itemAttrs 里会被 `v-bind` 二次合并（重复）。
+  const { class: _attrsClass, ...restAttrs } = attrs;
+  void _attrsClass;
+  return { ...restAttrs };
+});
 
 // ---------------------------------------------------------------------------
 // ref（判据 2：grid 落 Col、非 grid 落 li）

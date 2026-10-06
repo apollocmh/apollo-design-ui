@@ -103,8 +103,8 @@ describe('List · L1 结构与类名（判据 1 / 2 / 7 / 10）', () => {
     );
   });
 
-  it('判据 10：`rootClassName` 与 `className` 都落在根上', () => {
-    const w = mountList({ className: 'my-cls', rootClassName: 'my-root' });
+  it('判据 10：原生 `class`（数组）落在根上', () => {
+    const w = mountList({ class: ['my-cls', 'my-root'] });
     expect(w.classes()).toContain('my-cls');
     expect(w.classes()).toContain('my-root');
   });

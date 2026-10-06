@@ -87,12 +87,6 @@ export interface ListLocale {
 export interface ListProps<T = unknown> {
   /** 是否带边框。 */
   bordered?: boolean;
-  /** 落在根元素上（在 ConfigProvider 的 `className` **之后**）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
-  /** 根元素的内联样式（**覆盖** ConfigProvider 的 `style`）。 */
-  style?: CSSProperties;
   /** 数据源。 */
   dataSource?: T[];
   /** 列表最外层右侧的内容（`-item-extra` 之外的另一个落点）。 */
@@ -168,10 +162,6 @@ export interface ListItemSemanticStyles {
 export interface ListItemProps {
   /** 类名前缀。 */
   prefixCls?: string;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 根元素的内联样式。 */
-  style?: CSSProperties;
   /** 语义化类名（`actions` / `extra` 两个槽）。 */
   classNames?: ListItemSemanticClassNames;
   /** 语义化样式（`actions` / `extra` 两个槽）。 */
@@ -188,10 +178,6 @@ export interface ListItemProps {
 export interface ListItemMetaProps {
   /** 头像。 */
   avatar?: VNodeChild;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 根元素的内联样式。 */
-  style?: CSSProperties;
   /** 描述。 */
   description?: VNodeChild;
   /** 类名前缀。 */

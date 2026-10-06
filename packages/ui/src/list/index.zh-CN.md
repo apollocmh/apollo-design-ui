@@ -56,7 +56,8 @@ subtitle: 列表
 | header | 列表头部 | `VNodeChild` | — |
 | footer | 列表底部 | `VNodeChild` | — |
 | locale | 空态文案覆盖（**纯 prop**） | `{ emptyText: VNodeChild }` | — |
-| prefixCls / className / rootClassName / style | 常规落点 | | — |
+| prefixCls | 类名前缀 | | — |
+| class / style | **根元素原生 attrs**（不是 Props） | | — |
 
 ### List.Item
 

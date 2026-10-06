@@ -51,9 +51,10 @@ describe('List · Props 类型', () => {
   it('核心 props 的形态', () => {
     expectTypeOf<ListProps['prefixCls']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<ListProps['bordered']>().toEqualTypeOf<boolean | undefined>();
-    expectTypeOf<ListProps['className']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<ListProps['rootClassName']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<ListProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+    // 根 class/style 走 Vue 原生 attrs，不在 ListProps 键集里
+    expectTypeOf<
+      Extract<keyof ListProps, 'className' | 'rootClassName' | 'style'>
+    >().toEqualTypeOf<never>();
     expectTypeOf<ListProps['id']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<ListProps['split']>().toEqualTypeOf<boolean | undefined>();
     expectTypeOf<ListProps['itemLayout']>().toEqualTypeOf<ListItemLayout | undefined>();

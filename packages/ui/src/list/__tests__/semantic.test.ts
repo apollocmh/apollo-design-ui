@@ -219,8 +219,7 @@ const specs: Record<
 
   'list:className': {
     props: {
-      className: 'my-cls',
-      rootClassName: 'my-root',
+      class: ['my-cls', 'my-root'],
       dataSource: DATA,
       renderItem: textItem,
     },
