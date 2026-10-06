@@ -808,6 +808,8 @@ export default defineComponent({
 
       // >>>>>>>>>> Expand & Selection
       const activeItem = getActiveItem();
+      // ⚠️ 提成局部变量才能收窄（`children?.length` 收窄不了 `children[0]`）
+      const firstChild = activeItem.children?.[0];
       if (activeItem?.data) {
         const treeNodeRequiredProps = getTreeNodeRequiredProps();
         const eventNode = convertNodePropsToEventData({
@@ -851,8 +853,8 @@ export default defineComponent({
           case 'ArrowRight': {
             if (expandable && !expandedKeys.includes(activeKeyRef.value as TreeKey)) {
               onNodeExpand(undefined, eventNode);
-            } else if (activeItem.children?.length) {
-              onActiveChange(activeItem.children[0]!.key);
+            } else if (firstChild) {
+              onActiveChange(firstChild.key);
             }
             event.preventDefault();
             break;

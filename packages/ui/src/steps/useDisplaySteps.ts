@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: index 来自折叠集合，必在 [0, len) 内（函数内注释已说明）
 /**
  * useDisplaySteps —— maxCount 折叠算法（G4 产物）。
  *

@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: rc-tree 拖拽算法不变式 —— getEntity(拖动中的 key) 必命中、flattenedNodes 非空、isLastChild 为真时必有 parent、selectedKeys 非空；守卫都在调用方
 /**
  * Tree 的遗留工具函数（rc `util.js` 的逐字移植，rc 原注释「Legacy code」保留）。
  *

@@ -109,6 +109,7 @@ export function traverseDataNodes(
     const children = (node ? node[fieldChildren] : dataNodes) as
       | Record<string, unknown>[]
       | undefined;
+    // biome-ignore lint/style/noNonNullAssertion: node 非空时 mergedParent 必由调用方给出（pos/parentPos 都从它派生）
     const pos = node ? getPosition(mergedParent!.pos, index) : '0';
     const connectNodes = node ? [...pathNodes, node] : [];
 
@@ -118,6 +119,7 @@ export function traverseDataNodes(
         index,
         pos,
         key: getKey(node[fieldKey], pos),
+        // biome-ignore lint/style/noNonNullAssertion: 同上 —— 这一支只在 node 非空时执行
         parentPos: mergedParent!.pos,
         level,
         nodes: connectNodes,
@@ -214,8 +216,13 @@ function groupByLevel(keyEntities: Record<string, DataEntity>) {
     const entity = keyEntities[key];
     if (!entity) return;
     const { level } = entity;
-    if (!levelEntities.has(level)) levelEntities.set(level, new Set());
-    levelEntities.get(level)!.add(entity);
+    // ⚠️ 用局部变量接住（`get(...)!` 消不掉，且 `Map.get` 的返回类型永远是 `T | undefined`）
+    let levelSet = levelEntities.get(level);
+    if (!levelSet) {
+      levelSet = new Set();
+      levelEntities.set(level, levelSet);
+    }
+    levelSet.add(entity);
     maxLevel = Math.max(maxLevel, level);
   });
   return { levelEntities, maxLevel };

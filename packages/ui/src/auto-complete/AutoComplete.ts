@@ -199,10 +199,12 @@ const AutoCompleteComponent = defineComponent({
       const realNodes = nodes.filter((n) => n && n.type !== Comment);
 
       // 1) 首个 child 是 SelectOption/OptGroup ⇒ 透传 default slot
+      // ⚠️ 先提成局部变量：`isVNode(realNodes[0])` 收窄不了索引访问
+      const firstNode = realNodes[0];
       if (
         realNodes.length &&
-        isVNode(realNodes[0]) &&
-        (realNodes[0]!.type as Record<string, unknown>)?.[OPTION_MARK]
+        isVNode(firstNode) &&
+        (firstNode.type as Record<string, unknown>)?.[OPTION_MARK]
       ) {
         return { kind: 'children' as const };
       }

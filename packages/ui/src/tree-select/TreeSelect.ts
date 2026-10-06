@@ -532,6 +532,7 @@ const TreeSelect = defineComponent({
             (val) => !valueEntities.value.has(val),
           );
           const existRawValues = newRawValues.filter((val) => valueEntities.value.has(val));
+          // biome-ignore lint/style/noNonNullAssertion: 上一行已用 .has(val) 过滤 ⇒ get 必命中（Map.get 的类型收窄不掉）
           const keyList = existRawValues.map((val) => valueEntities.value.get(val)!.key as string);
           let checkedKeys: (string | number)[];
           if (info.selected) {

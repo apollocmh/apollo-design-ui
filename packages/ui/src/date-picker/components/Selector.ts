@@ -309,7 +309,7 @@ export const Selector = defineComponent({
       default: undefined,
     },
   },
-  setup(props, { expose }) {
+  setup(props, { attrs, expose }) {
     const disabledPair = computed(() => toDisabledPair(props.disabled));
 
     /**
@@ -728,10 +728,25 @@ export const Selector = defineComponent({
         ? props.rootClass
         : [props.prefixCls, ...(props.range ? [`${props.prefixCls}-range`] : [])];
 
+      /**
+       * 调用方透传的**其它 attrs**（`data-*` / `aria-*` / 事件…），铺到选择器根元素上。
+       *
+       * ⚠️ 本组件是 `inheritAttrs: false` ⇒ 不显式铺就**全丢**（`KNOWN-ISSUES` §1.8）。
+       * ⚠️ `class` / `style` 排除 —— 它们走 `rootClass` / `rootStyle`（调用方已组装）。
+       */
+      const {
+        class: _attrsClass,
+        style: _attrsStyle,
+        ...passthroughAttrs
+      } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
+
       if (!props.range) {
         return h(
           'div',
           {
+            ...passthroughAttrs,
             ref: rootElRef,
             class: rootClass,
             style: props.rootStyle,
@@ -753,6 +768,7 @@ export const Selector = defineComponent({
       return h(
         'div',
         {
+          ...passthroughAttrs,
           ref: rootElRefWithResize,
           class: rootClass,
           style: props.rootStyle,

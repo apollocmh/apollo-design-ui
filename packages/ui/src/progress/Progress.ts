@@ -154,7 +154,14 @@ const ProgressComponent = defineComponent({
     });
 
     const progressStatus = computed<ProgressStatus>(() => {
-      if (!ProgressStatuses.includes(props.status!) && percentNumber.value >= 100) {
+      // ⚠️ **别写成 `props.status && !includes(...)`** —— 那会把「status 为 undefined」这条路径掐掉。
+      //    原 `!ProgressStatuses.includes(props.status!)` 的语义：`includes(undefined)` 恒 false
+      //    ⇒ `!` 恒 true ⇒ **无 status 且 100% 时也返回 `success`**（有用例专门钉这条）。
+      //    写成 `!(status && includes(status))` 与之逐值等价。
+      if (
+        !(props.status && ProgressStatuses.includes(props.status)) &&
+        percentNumber.value >= 100
+      ) {
         return 'success';
       }
       return props.status || 'normal';
@@ -255,7 +262,8 @@ const ProgressComponent = defineComponent({
                 size: size.value,
                 steps: isPlainObject(props.steps)
                   ? (props.steps as { count: number }).count
-                  : props.steps!,
+                  : // biome-ignore lint/style/noNonNullAssertion: 这条分支只可能在 step 形态走到，此时 steps 必是 number（prop 类型是 number | {count} | undefined）
+                    props.steps!,
                 rounding: props.rounding,
                 percent: percent.value,
                 strokeWidth: props.strokeWidth ?? 8,

@@ -50,7 +50,8 @@ export default defineComponent({
   setup(props, { slots }) {
     return (): VNodeChild => {
       const { prefixCls, classNames, styles, steps } = props;
-      const current = props.rounding!(steps * (props.percent / 100));
+      // `rounding` 的运行时默认是 `Math.round` ⇒ `?? Math.round` 与原 `!` 行为一致
+      const current = (props.rounding ?? Math.round)(steps * (props.percent / 100));
       const stepWidth = props.size === 'small' ? 2 : 14;
       const mergedSize = props.size ?? [stepWidth, props.strokeWidth];
       const [width, height] = getSize(mergedSize, 'step', {

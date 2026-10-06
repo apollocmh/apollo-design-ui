@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: traverseDataNodes 的算法不变式 —— node 非空时 parent 必由调用方给出（pos/level 都从它派生）
 /**
  * Tree 的数据结构工具（rc `utils/treeUtil.js` 的逐字移植，H5：不依赖 @rc-component/*）。
  *

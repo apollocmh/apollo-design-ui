@@ -48,6 +48,7 @@ import { defineComponent, h, nextTick } from 'vue';
 import ConfigProvider from '../../config-provider/ConfigProvider';
 import DatePicker from '../DatePicker.vue';
 import type { SingleValue } from '../interface';
+import RangePicker from '../RangePicker.vue';
 
 const P = 'apollo-picker';
 
@@ -536,6 +537,22 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
     await nextTick();
     // `id` 是引擎自己的 prop（mergedId），不该被 attrs 覆盖
     expect(w.element.getAttribute('id')).not.toBe('user-id');
+    w.unmount();
+  });
+});
+
+/** 范围（RangePicker）也要透传 —— 它走 `Selector` 的另一个根分支。 */
+describe('RangePicker · 根 attrs 透传（§1.8）', () => {
+  it('data-* / aria-* 落到范围选择器根元素上', async () => {
+    const w = mount(RangePicker, {
+      props: { defaultValue: [dayjs('2016-11-22'), dayjs('2016-11-23')] as never },
+      attrs: { 'data-testid': 'rp', 'aria-describedby': 'hint2' },
+    });
+    await nextTick();
+    const root = w.find('.apollo-picker');
+    expect(root.exists()).toBe(true);
+    expect(root.attributes('data-testid')).toBe('rp');
+    expect(root.attributes('aria-describedby')).toBe('hint2');
     w.unmount();
   });
 });

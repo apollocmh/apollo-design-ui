@@ -1,3 +1,4 @@
+// biome-ignore-all lint/style/noNonNullAssertion: item.type === 'group' 时 props.group / item.groupKey 必由 flattenList 同一次遍历填好（不会缺）；非 group 行的 item.index 同理
 /**
  * Listy —— 轻量列表（antd v6 新增组件）。
  *

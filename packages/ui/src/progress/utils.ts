@@ -60,7 +60,9 @@ export const getSize = (
   let width = -1;
   let height = -1;
   if (type === 'step') {
+    // biome-ignore lint/style/noNonNullAssertion: type === 'step' 时调用方必给 extra（只有 step 形态传），steps 由它算默认值
     const steps = extra!.steps!;
+    // biome-ignore lint/style/noNonNullAssertion: 同上 —— extra 必存在，strokeWidth 是它的必填项
     const strokeWidth = extra!.strokeWidth!;
     if (typeof size === 'string' || typeof size === 'undefined') {
       width = size === 'small' ? 2 : 14;
