@@ -92,7 +92,7 @@ async function dumpStage(browser, { port, side }) {
     });
     try {
       await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 45_000 });
-    } catch (err) {
+    } catch {
       // ⚠️ 超时必须把「页面自己报了什么」带出来，否则只知道「没就绪」而不知为什么
       //    （常见：这个 component/variant 组合不存在 ⇒ 入口抛错 ⇒ 标志永不置位）
       const stage = await page.evaluate(() => document.querySelector('#stage')?.outerHTML ?? '');
