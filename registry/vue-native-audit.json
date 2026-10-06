@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:37:49.507Z",
+  "updatedAt": "2026-10-06T05:40:12.675Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 4,
+      "todo": 3,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 61,
+      "done": 62,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 618,
+    "reviewedProductionSourceFiles": 630,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2039,7 +2039,7 @@
       "reviewedFileCount": 21
     },
     "tree-select": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/tree-select/hooks/use-checked-keys.ts",
         "packages/ui/src/tree-select/hooks/use-data-entities.ts",
@@ -2054,7 +2054,20 @@
         "packages/ui/src/tree-select/utils/strategy-util.ts",
         "packages/ui/src/tree-select/utils/value-util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/tree-select/hooks/use-checked-keys.ts",
+        "packages/ui/src/tree-select/hooks/use-data-entities.ts",
+        "packages/ui/src/tree-select/hooks/use-filter-tree-data.ts",
+        "packages/ui/src/tree-select/hooks/use-tree-data.ts",
+        "packages/ui/src/tree-select/index.ts",
+        "packages/ui/src/tree-select/interface.ts",
+        "packages/ui/src/tree-select/OptionList.ts",
+        "packages/ui/src/tree-select/style/index.ts",
+        "packages/ui/src/tree-select/TreeSelect.ts",
+        "packages/ui/src/tree-select/utils/legacy-util.ts",
+        "packages/ui/src/tree-select/utils/strategy-util.ts",
+        "packages/ui/src/tree-select/utils/value-util.ts"
+      ],
       "testFileCount": 8,
       "demoFileCount": 15,
       "docFiles": [
@@ -2062,9 +2075,14 @@
         "packages/ui/src/tree-select/index.en-US.md",
         "packages/ui/src/tree-select/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 22/22；运行时 props 去掉三个根别名；根 style 仍走语义 root 通道（attrs.style）；浮层的 rootClassName 去掉（改用 popupClassName）。公开面只有 TreeSelect，OptionList 是内部件。"
+      ],
+      "reviewedFileCount": 12
     },
     "popconfirm": {
       "auditStatus": "done",
@@ -3833,7 +3851,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（57 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（58 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree、tree-select，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4129,6 +4147,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 29: tree done (Tree + DirectoryTree). Total done = 61. KEY INSIGHT: if the component does NOT set inheritAttrs:false, Vue already merges native class/style onto the root - so adding attrs.class/attrs.style into the explicit class array / style object DOUBLES them (L4 tree:directory showed `apollo-tree-directory` twice). The right move there is to change nothing in the render body, only remove the props. DirectoryTree (same-directory internal) forwarded className to Tree and needed class."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 30: tree-select done. Total done = 62. Only TreeSelect is public (OptionList is internal). Root style stays on the semantic root channel; the popup rootClassName was dropped (users use popupClassName)."
     }
   ],
   "observations": [
