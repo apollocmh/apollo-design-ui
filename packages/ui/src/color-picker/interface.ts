@@ -207,12 +207,6 @@ export interface ColorPickerProps {
   // ============================================================ 外观与语义槽
   /** 类名前缀。默认 = `getPrefixCls('color-picker')` = **`apollo-color-picker`**。 */
   prefixCls?: string;
-  /** 根节点附加类名。 */
-  className?: string;
-  /** 根节点附加类名（与 `className` 并列，上游有两个入口）。 */
-  rootClassName?: string;
-  /** 根节点内联样式。 */
-  style?: CSSProperties;
   /** 语义化类名（5 槽，`popup` 嵌套）。支持**函数形态**。 */
   classNames?: ColorPickerSemanticValue<ColorPickerSemanticClassNames, ColorPickerProps>;
   /** 语义化样式（6 槽，`popup` 嵌套）。支持**函数形态**。 */

@@ -106,7 +106,9 @@ const specs: Record<
   },
 
   'color-picker:className': {
-    props: { ...BASE, className: 'my-cls', rootClassName: 'my-root' },
+    // ⚠️ 两侧各用各的词汇（仓库既有约定，见 button 的 `class:className`）：
+    //    React 侧传 className/rootClassName，Vue 侧传原生 class。用例 ID 才是契约。
+    props: { ...BASE, class: 'my-cls my-root' },
   },
   'color-picker:attrs': { props: { ...BASE, 'data-testid': 'cp', 'aria-label': '颜色' } },
 

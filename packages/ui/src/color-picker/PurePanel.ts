@@ -46,12 +46,11 @@ export const PurePanel = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     open: { type: Boolean, default: undefined },
     /** 其余 ColorPicker props 原样透传。 */
     colorPickerProps: { type: Object as PropType<Partial<ColorPickerProps>>, default: undefined },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const { getPrefixCls } = useComponentConfig('color-picker');
     const prefixCls = computed(() => getPrefixCls('color-picker', props.prefixCls));
 
@@ -111,7 +110,8 @@ export const PurePanel = defineComponent({
 
       const mergedProps: Record<string, unknown> = {
         ...(props.colorPickerProps ?? {}),
-        style: { ...(props.style ?? {}), margin: 0 },
+        // 调用方原生 style（位置与原先的 props.style 一致）
+        style: { ...((attrs.style as StyleLike) ?? {}), margin: 0 },
         open: open.value,
         getPopupContainer: () => holderRef.value as HTMLElement,
         // 3. postProps

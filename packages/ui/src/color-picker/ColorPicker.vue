@@ -227,7 +227,8 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
     () => context.styles,
     () => semanticRootStyle(context.style),
     () => props.styles,
-    () => semanticRootStyle(props.style),
+    // 根 style 是 Vue 原生 attrs；仍走语义 root 通道
+    () => semanticRootStyle(attrs.style as CSSProperties | undefined),
   ],
   semanticProps,
   // ⚠️ 与 antd 6.6.4 逐字（`ColorPicker.js:98-100`）。本文件头 §9 曾判「本仓不需要
@@ -333,7 +334,14 @@ const joinCls = (...parts: Array<string | false | null | undefined>): string =>
   parts.filter(Boolean).join(' ');
 
 const mergedRootCls = computed<string[]>(() => {
-  const list = [props.rootClassName ?? '', 'css-var-root', `${prefixCls.value}-css-var`];
+  // 调用方原生 class（位置与原先的 props.rootClassName 一致；它同时进触发器与浮层根）。
+  // ⚠️ `attrs.class` 的类型是 Vue 的 `ClassValue`（可能是数组）⇒ 归一成字符串。
+  const rawClass = attrs.class as string | string[] | undefined;
+  const list = [
+    Array.isArray(rawClass) ? rawClass.join(' ') : (rawClass ?? ''),
+    'css-var-root',
+    `${prefixCls.value}-css-var`,
+  ];
   if (direction.value === 'rtl') {
     list.push(`${prefixCls.value}-rtl`);
   }
@@ -347,7 +355,6 @@ const mergedCls = computed(() =>
     compactItemClassnames.value,
     context.className,
     ...mergedRootCls.value,
-    props.className,
   ),
 );
 const mergedPopupCls = computed(() =>
