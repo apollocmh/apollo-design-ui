@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T01:30:46.499Z",
+  "updatedAt": "2026-10-06T01:39:35.136Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 31,
+      "todo": 30,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 34,
+      "done": 35,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 295,
+    "reviewedProductionSourceFiles": 305,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2030,7 +2030,7 @@
       "notes": []
     },
     "progress": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/progress/engine/Circle.ts",
         "packages/ui/src/progress/engine/kernel.ts",
@@ -2043,7 +2043,18 @@
         "packages/ui/src/progress/style/token.ts",
         "packages/ui/src/progress/utils.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/progress/engine/Circle.ts",
+        "packages/ui/src/progress/engine/kernel.ts",
+        "packages/ui/src/progress/engine/Line.ts",
+        "packages/ui/src/progress/engine/Steps.ts",
+        "packages/ui/src/progress/index.ts",
+        "packages/ui/src/progress/interface.ts",
+        "packages/ui/src/progress/Progress.ts",
+        "packages/ui/src/progress/style/index.ts",
+        "packages/ui/src/progress/style/token.ts",
+        "packages/ui/src/progress/utils.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 17,
       "docFiles": [
@@ -2052,9 +2063,14 @@
         "packages/ui/src/progress/index.en-US.md",
         "packages/ui/src/progress/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 63/63；ProgressProps 去掉三个根别名。⚠️ style 有**两处**运行时声明（第二个是 [Object, String]），差点漏掉。"
+      ],
+      "reviewedFileCount": 10
     },
     "pagination": {
       "auditStatus": "todo",
@@ -3343,7 +3359,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（31 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（32 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3351,7 +3367,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 10 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio（option 转发）。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
+      "verification": "累计修 12 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
     }
   ],
   "batches": [
@@ -3524,6 +3540,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 8: qr-code, listy migrated (31 components total). Notable: both had a NON-obvious coupling - qr-code read props.style.width/height to derive the canvas size, and listy Virtual branch relied on the semantic list to carry props.style into mergedStyles.root. Removing the props silently broke those two paths; both now read attrs.style explicitly. Lesson: always grep for props.style usages beyond the class array, and check every render branch."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 9: progress migrated (32 components total). The consumer scan caught two more (image/Image placeholder Progress, notification Notice progress bar). Pitfall: Progress declared `style` TWICE in runtime props (one as [Object, String]) - grepping only `style: { type` missed it. Skill updated with the post-edit grep-and-confirm-zero rule."
     }
   ],
   "observations": [
