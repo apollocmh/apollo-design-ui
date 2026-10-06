@@ -78,9 +78,6 @@ const Image = defineComponent({
     placeholder: { type: [Object, String] as PropType<PlaceholderType>, default: undefined },
     preview: { type: [Boolean, Object] as PropType<boolean | PreviewConfig>, default: true },
     wrapperStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     classNames: { type: Object as PropType<SemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<SemanticStyles>, default: undefined },
     onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
@@ -305,8 +302,9 @@ const Image = defineComponent({
             : ((cfg as { render?: never }).render ?? undefined),
           classNames: mergedClassNames.value?.placeholder?.progress,
           styles: mergedStyles.value?.placeholder?.progress as never,
-          // Progress 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
-          class: [props.rootClassName, props.className].filter(Boolean).join(' '),
+          // Progress 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`。
+          // 调用方的 `class` 归**组件根**（见下方根 div）⇒ 这里不再重复下发。
+          class: undefined,
           rootStyle: mergedStyles.value?.root,
           width: props.width,
           height: props.height,
@@ -321,15 +319,17 @@ const Image = defineComponent({
           ...attrs,
           class: [
             prefixCls,
-            props.rootClassName,
+            // 调用方原生 class（位置与原先的 props.rootClassName 一致）
+            attrs.class,
             mergedClassNames.value?.root,
             isError ? `${prefixCls}-error` : undefined,
-            typeof attrs.class === 'string' ? attrs.class : undefined,
           ],
           style: {
             width: toCssSize(props.width),
             height: toCssSize(props.height),
             ...(mergedStyles.value?.root ?? {}),
+            // 根 style 是 Vue 原生 attrs
+            ...((attrs.style as Record<string, string | number>) ?? {}),
           },
           role: canPreview.value ? 'button' : undefined,
           tabindex: canPreview.value ? 0 : undefined,
@@ -344,7 +344,6 @@ const Image = defineComponent({
               `${prefixCls}-img`,
               props.placeholder === true ? `${prefixCls}-img-placeholder` : undefined,
               mergedClassNames.value?.image,
-              props.className,
             ],
             style: {
               // ⚠️ 必须 toCssSize：Vue 的 `style` 数字值**不会**自动补 px（rc 在 React
@@ -352,7 +351,7 @@ const Image = defineComponent({
               // `height:auto`，图片按原始比例撑成正方形（L6 才暴露，contract 档丢 style）。
               height: toCssSize(props.height),
               ...(mergedStyles.value?.image ?? {}),
-              ...(props.style ?? {}),
+              ...((attrs.style as Record<string, string | number>) ?? {}),
             },
             width: props.width,
             height: props.height,
@@ -377,7 +376,11 @@ const Image = defineComponent({
                     `${prefixCls}-cover-${coverInfo.value.placement}`,
                   ],
                   style: {
-                    display: props.style?.display === 'none' ? 'none' : undefined,
+                    display:
+                      (attrs.style as Record<string, string | number> | undefined)?.display ===
+                      'none'
+                        ? 'none'
+                        : undefined,
                     ...(mergedStyles.value?.cover ?? {}),
                   },
                 },

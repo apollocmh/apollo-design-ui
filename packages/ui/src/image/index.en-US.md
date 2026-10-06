@@ -36,7 +36,7 @@ preview-img-info / preview-mask / preview-src.
 | placeholder | Placeholder content; `{ progress: true \| { percent, render } }` renders the progress layer | `VNodeChild \| { progress }` | — |
 | preview | `false` disables preview; object form see below | `boolean \| PreviewConfig` | `true` |
 | className | Root class name (also applied to `<img>`, same as antd) | `string` | — |
-| rootClassName | Also applied to the root, **after** `className` | `string` | — |
+| class / style | **Native root attrs** (not Props) | `string` / `CSSProperties` | — |
 | style | Root inline style. **Overrides `styles.root`** | `CSSProperties` | — |
 | wrapperStyle | ⚠️ Deprecated, use `styles.root` | `CSSProperties` | — |
 | classNames / styles | Semantic class names / styles, see "Semantic slots" | — | — |
@@ -111,7 +111,7 @@ popup: root / mask / body / footer / actions / close
 ```
 
 Merge priority (low → high): `classNames` → `preview.rootClassName` /
-`preview.maskClassName` (deprecated surface) → `className` / `rootClassName` / `style`
+`preview.maskClassName` (deprecated surface) → **native `class` / `style`**
 (applied to the root element).
 
 > ⚠️ `popup` is a nested semantic group: this repo's `useMergeSemantic` does not yet

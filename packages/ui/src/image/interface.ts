@@ -191,9 +191,6 @@ export interface ImageProps extends ImageCommonProps {
   preview?: boolean | PreviewConfig;
   /** ⚠️ deprecated：用 `styles.root`。 */
   wrapperStyle?: Record<string, string | number>;
-  className?: string;
-  rootClassName?: string;
-  style?: Record<string, string | number>;
   classNames?: ImageSemanticType['classNames'];
   styles?: ImageSemanticType['styles'];
   onClick?: (e: MouseEvent) => void;
