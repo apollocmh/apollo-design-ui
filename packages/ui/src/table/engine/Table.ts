@@ -11,7 +11,6 @@ import {
   computed,
   defineComponent,
   h,
-  inject,
   onBeforeUnmount,
   onMounted,
   type PropType,
@@ -24,7 +23,7 @@ import type { ColumnsType, ExpandableConfig, GetRowKey, TableComponents } from '
 import Body from './Body';
 import ColGroup from './ColGroup';
 import { INTERNAL_HOOKS } from './constant';
-import { type TableContextValue, tableContextKey } from './context';
+import { type TableContextValue, tableContextKey, useTableContext } from './context';
 import Footer, { Panel } from './Footer';
 import Header from './Header';
 import { useColumns } from './hooks/use-columns';
@@ -67,7 +66,7 @@ const FixedHolder = defineComponent({
     colGroup: { type: null, default: undefined },
   },
   setup(props, { slots, expose }) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const scrollRef = ref<HTMLElement | null>(null);
     expose({ scrollRef });
 
@@ -197,7 +196,7 @@ const StickyScrollBar = defineComponent({
     container: { type: null, default: undefined },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const barRef = ref<HTMLElement | null>(null);
     const _bodyRef = ref<HTMLElement | null>(null);
     const visible = ref(false);

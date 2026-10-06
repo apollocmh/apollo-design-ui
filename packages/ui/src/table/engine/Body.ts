@@ -10,7 +10,6 @@ import {
   computed,
   defineComponent,
   h,
-  inject,
   onBeforeUnmount,
   onMounted,
   type PropType,
@@ -20,7 +19,7 @@ import {
 } from 'vue';
 import type { ColumnsType, ColumnType, ExpandableConfig } from '../interface';
 import Cell from './Cell';
-import { type RowContextValue, rowContextKey, tableContextKey } from './context';
+import { type RowContextValue, rowContextKey, useTableContext } from './context';
 import { type FlattenRecord, flattenRecords } from './hooks/use-table';
 import { computedExpandedClassName } from './utils/expandUtil';
 import type { CellFixedInfo } from './utils/fixUtil';
@@ -134,7 +133,7 @@ const ExpandedRow = defineComponent({
     stickyOffset: { type: Number, default: 0 },
   },
   setup(props, { attrs, slots }) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const contentNode = computed(() => {
       let node: unknown = slots.default?.();
       const wrapIt = props.isEmpty ? ctx.horizonScroll && ctx.componentWidth : ctx.fixColumn;
@@ -198,7 +197,7 @@ const BodyRow = defineComponent({
     },
   },
   setup(props, { attrs }) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const { record, index, renderIndex, rowKey, rowKeys, indent } = props;
 
     // ======================= 行级信息（useRowInfo） =======================
@@ -521,7 +520,7 @@ const MeasureRow = defineComponent({
     columns: { type: Array as PropType<ColumnsType>, required: true },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const rowRef = ref<HTMLElement | null>(null);
     // ResizeObserver 兜底重测（rc 用 ResizeObserver.Collection 的批量回调）
     let observer: ResizeObserver | undefined;
@@ -577,7 +576,7 @@ const Body = defineComponent({
     measureColumnWidth: { type: Boolean, default: false },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
 
     const flattenData = computed<FlattenRecord<Record<string, unknown>>[]>(() =>
       flattenRecords(props.data, ctx.childrenColumnName, ctx.expandedKeys, ctx.getRowKey as never),

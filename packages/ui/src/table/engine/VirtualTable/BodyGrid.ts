@@ -11,9 +11,9 @@
  */
 
 import { type ExtraRenderInfo, VirtualList } from '@apollo-design/virtual-list';
-import { computed, defineComponent, h, inject, type PropType, ref, watch } from 'vue';
+import { computed, defineComponent, h, type PropType, ref, watch } from 'vue';
 import type { ColumnType } from '../../interface';
-import { tableContextKey } from '../context';
+import { useTableContext } from '../context';
 import { type FlattenRecord, flattenRecords } from '../hooks/use-table';
 import BodyLine from './BodyLine';
 
@@ -40,7 +40,7 @@ export default defineComponent({
     },
   },
   setup(props, { expose }) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const listRef = ref<{
       scrollTo?: (c: unknown) => void;
       nativeElement?: HTMLElement | null;

@@ -3,10 +3,10 @@
  * `parseHeaderRows` 是分组表头的行/列展开算法（逐字）。
  */
 
-import { computed, defineComponent, h, inject, type PropType } from 'vue';
+import { computed, defineComponent, h, type PropType } from 'vue';
 import type { ColumnsType, ColumnType } from '../interface';
 import Cell from './Cell';
-import { tableContextKey } from './context';
+import { useTableContext } from './context';
 import { getCellFixedInfo } from './utils/fixUtil';
 import { getColumnsKey } from './utils/valueUtil';
 
@@ -96,7 +96,7 @@ const HeaderRow = defineComponent({
     },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     return () => {
       const { cells, stickyOffsets, flattenColumns, classNames, styles } = props;
       let rowProps: Record<string, unknown> | undefined;
@@ -157,7 +157,7 @@ const Header = defineComponent({
     onHeaderRow: { type: Function, default: undefined },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const rows = computed(() => {
       const headerCls =
         (ctx.classNames as never as { header?: Record<string, string> } | undefined)?.header ?? {};

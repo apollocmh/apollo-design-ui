@@ -56,9 +56,11 @@ export function getDragChildrenKeys(
 
 /** 是否父级的最后一个孩子（按 pos 末段序号判定）。 */
 export function isLastChild(treeNodeEntity: TreeDataEntity): boolean {
-  if (treeNodeEntity.parent) {
+  const { parent } = treeNodeEntity;
+  if (parent) {
     const posArr = posToArr(treeNodeEntity.pos);
-    return Number(posArr[posArr.length - 1]) === treeNodeEntity.parent.children!.length - 1;
+    // ⚠️ 解构出 `parent` 是为了让 TS 收窄（写 `treeNodeEntity.parent.children` 时它不认守卫）
+    return Number(posArr[posArr.length - 1]) === parent.children.length - 1;
   }
   return false;
 }

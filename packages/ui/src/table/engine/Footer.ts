@@ -8,7 +8,7 @@
 import { computed, defineComponent, h, inject, type PropType, provide } from 'vue';
 import type { ColumnsType } from '../interface';
 import Cell from './Cell';
-import { summaryContextKey, tableContextKey } from './context';
+import { summaryContextKey, useTableContext } from './context';
 import { getCellFixedInfo } from './utils/fixUtil';
 
 // ============================== Panel ==============================
@@ -42,7 +42,7 @@ export const SummaryCell = defineComponent({
     align: { type: String, default: undefined },
   },
   setup(props, { slots }) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const summaryCtx = inject(summaryContextKey, null);
     const merged = computed(() => {
       const lastIndex = props.index + props.colSpan - 1;
@@ -101,7 +101,7 @@ const Footer = defineComponent({
     flattenColumns: { type: Array as unknown as PropType<ColumnsType>, required: true },
   },
   setup(props, { slots }) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const summaryContext = computed(() => {
       const flattenColumns = props.flattenColumns as never as { scrollbar?: boolean }[];
       const lastColumnIndex = flattenColumns.length - 1;

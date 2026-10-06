@@ -3,9 +3,9 @@
  * 只渲染「有宽度 / 有附加属性 / 已开始渲染」的 col（尾列省略）。
  */
 
-import { defineComponent, h, inject, type PropType } from 'vue';
+import { defineComponent, h, type PropType } from 'vue';
 import type { ColumnsType } from '../interface';
-import { tableContextKey } from './context';
+import { useTableContext } from './context';
 import { INTERNAL_COL_DEFINE } from './utils/legacyUtil';
 
 const ColGroup = defineComponent({
@@ -16,7 +16,7 @@ const ColGroup = defineComponent({
     columCount: { type: Number, default: undefined },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     return () => {
       const cols: unknown[] = [];
       const len = props.columCount ?? props.columns.length;

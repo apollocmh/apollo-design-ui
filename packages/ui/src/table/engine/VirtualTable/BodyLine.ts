@@ -12,10 +12,10 @@
  * ⚠️ `extra`（rowSpan 补行）时行是 `position:absolute; pointerEvents:none`。
  */
 
-import { computed, defineComponent, h, inject, type PropType, provide, reactive, ref } from 'vue';
+import { computed, defineComponent, h, type PropType, provide, reactive, ref } from 'vue';
 import type { ColumnType } from '../../interface';
 import Cell from '../Cell';
-import { type RowContextValue, rowContextKey, tableContextKey } from '../context';
+import { type RowContextValue, rowContextKey, useTableContext } from '../context';
 import type { FlattenRecord } from '../hooks/use-table';
 import { computedExpandedClassName } from '../utils/expandUtil';
 import { getColumnsKey } from '../utils/valueUtil';
@@ -40,7 +40,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
+    const ctx = useTableContext();
     const { record, indent, index: renderIndex } = props.data;
     const { index, rowKey } = props;
 

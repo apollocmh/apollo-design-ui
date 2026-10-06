@@ -11,7 +11,7 @@
  * 的**行级 provide**（`rowContextKey`）。粒度与上游 selector 订阅同构。
  */
 
-import type { ComputedRef, InjectionKey } from 'vue';
+import { type ComputedRef, type InjectionKey, inject } from 'vue';
 import type {
   ColumnsType,
   ExpandableConfig,
@@ -141,3 +141,29 @@ export interface SummaryContextValue {
 }
 
 export const summaryContextKey: InjectionKey<SummaryContextValue> = Symbol('tableSummaryContext');
+
+// ============================== 取上下文的助手 ==============================
+
+/**
+ * 取表级上下文（引擎件的标准入口）。
+ *
+ * ⚠️ 为什么不写 `inject(tableContextKey)!`：`inject` 返回 `T | undefined`，而引擎件
+ * **必然**渲染在 `<Table>` 内部 ⇒ 用 `!` 只是把「万一不在」变成运行期 `undefined` 解引用
+ * （报错信息看不出原因）。这里显式抛一条可读的错，同时消掉 13 处 `!`。
+ */
+export function useTableContext(): TableContextValue {
+  const ctx = inject(tableContextKey);
+  if (!ctx) {
+    throw new Error('[apollo/table] 缺少 TableContext：引擎件必须在 <Table> 内部渲染');
+  }
+  return ctx;
+}
+
+/** 取行级上下文（`BodyRow` provide ⇒ `Cell` inject）。 */
+export function useRowContext(): RowContextValue {
+  const ctx = inject(rowContextKey);
+  if (!ctx) {
+    throw new Error('[apollo/table] 缺少 RowContext：Cell 必须在 BodyRow 内部渲染');
+  }
+  return ctx;
+}

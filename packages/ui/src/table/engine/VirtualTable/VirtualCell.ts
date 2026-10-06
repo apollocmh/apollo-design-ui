@@ -10,11 +10,11 @@
  * ⚠️ Vue 的 `setStyle` 不做 px 补全（React 会）⇒ 所有数值宽度**必须自己拼单位**。
  */
 
-import { computed, defineComponent, h, inject, type PropType } from 'vue';
+import { computed, defineComponent, h, type PropType } from 'vue';
 import type { ColumnType } from '../../interface';
 import { getCellProps } from '../Body';
 import Cell from '../Cell';
-import { rowContextKey, tableContextKey } from '../context';
+import { useRowContext, useTableContext } from '../context';
 
 /** rc `VirtualCell.getColumnWidth`：列宽**前缀和**求跨 `colSpan` 宽（`colSpan=0` 当 1）。 */
 export function getColumnWidth(colIndex: number, colSpan: number, columnsOffset: number[]): number {
@@ -43,8 +43,8 @@ export default defineComponent({
     className: { type: null, default: undefined },
   },
   setup(props) {
-    const ctx = inject(tableContextKey)!;
-    const rowCtx = inject(rowContextKey)!;
+    const ctx = useTableContext();
+    const rowCtx = useRowContext();
 
     // ===================== getCellProps（与 BodyRow 同源） =====================
     const cellProps = computed(() =>

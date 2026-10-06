@@ -77,18 +77,20 @@ function fillConductCheck(
       const { parent, node } = entity;
 
       // Skip if no need to check
-      if (syntheticGetCheckDisabled(node) || !entity.parent || visitedKeys.has(entity.parent.key)) {
+      // ⚠️ 判据用**局部变量** `parent`（不是 `entity.parent`）—— 这样 TS 能把它收窄，
+      //    下面就不需要 10 处 `parent!`（那些 `!` 正是 PITFALLS 记的「改成 `?.` 会往 Set 里塞 undefined」）
+      if (syntheticGetCheckDisabled(node) || !parent || visitedKeys.has(parent.key)) {
         return;
       }
 
       // Skip if parent is disabled
-      if (syntheticGetCheckDisabled(entity.parent.node)) {
-        visitedKeys.add(parent!.key);
+      if (syntheticGetCheckDisabled(parent.node)) {
+        visitedKeys.add(parent.key);
         return;
       }
       let allChecked = true;
       let partialChecked = false;
-      (parent!.children || [])
+      (parent.children || [])
         .filter((childEntity) => !syntheticGetCheckDisabled(childEntity.node))
         .forEach(({ key }) => {
           const checked = checkedKeys.has(key);
@@ -100,12 +102,12 @@ function fillConductCheck(
           }
         });
       if (allChecked) {
-        checkedKeys.add(parent!.key);
+        checkedKeys.add(parent.key);
       }
       if (partialChecked) {
-        halfCheckedKeys.add(parent!.key);
+        halfCheckedKeys.add(parent.key);
       }
-      visitedKeys.add(parent!.key);
+      visitedKeys.add(parent.key);
     });
   }
   return {
@@ -148,17 +150,18 @@ function cleanConductCheck(
     entities.forEach((entity) => {
       const { parent, node } = entity;
 
-      if (syntheticGetCheckDisabled(node) || !entity.parent || visitedKeys.has(entity.parent.key)) {
+      // 同上：判据用局部变量 `parent`，让 TS 收窄（去掉 `parent!`）
+      if (syntheticGetCheckDisabled(node) || !parent || visitedKeys.has(parent.key)) {
         return;
       }
 
-      if (syntheticGetCheckDisabled(entity.parent.node)) {
-        visitedKeys.add(parent!.key);
+      if (syntheticGetCheckDisabled(parent.node)) {
+        visitedKeys.add(parent.key);
         return;
       }
       let allChecked = true;
       let partialChecked = false;
-      (parent!.children || [])
+      (parent.children || [])
         .filter((childEntity) => !syntheticGetCheckDisabled(childEntity.node))
         .forEach(({ key }) => {
           const checked = checkedKeys.has(key);
@@ -170,12 +173,12 @@ function cleanConductCheck(
           }
         });
       if (!allChecked) {
-        checkedKeys.delete(parent!.key);
+        checkedKeys.delete(parent.key);
       }
       if (partialChecked) {
-        halfCheckedKeys.add(parent!.key);
+        halfCheckedKeys.add(parent.key);
       }
-      visitedKeys.add(parent!.key);
+      visitedKeys.add(parent.key);
     });
   }
   return {
