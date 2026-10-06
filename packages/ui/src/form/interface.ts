@@ -110,10 +110,7 @@ export interface FormSemanticStyles {
  * 就成了一个永远拿不到值的假 prop。
  */
 export interface FormProps<Values = unknown>
-  extends Omit<
-    RcFormProps<Values>,
-    'onValuesChange' | 'onFieldsChange' | 'onFinish' | 'onFinishFailed'
-  > {
+  extends Omit<RcFormProps<Values>, 'className' | 'style' | 'rootClassName'> {
   prefixCls?: string;
   colon?: boolean;
   layout?: FormLayout;
@@ -126,7 +123,6 @@ export interface FormProps<Values = unknown>
   disabled?: boolean;
   scrollToFirstError?: ScrollFocusOptions | boolean;
   requiredMark?: RequiredMark;
-  rootClassName?: string;
   variant?: Variant;
   tooltip?: FormTooltipProps;
   classNames?: FormSemanticClassNames;

@@ -51,7 +51,6 @@ const ErrorList = defineComponent({
     helpStatus: { type: String as PropType<string>, default: undefined },
     errors: { type: Array as PropType<VNodeChild[]>, default: () => [] },
     warnings: { type: Array as PropType<VNodeChild[]>, default: () => [] },
-    className: { type: String, default: undefined },
     /** 语义槽（FormContext 的 classNames.help / helpItem）。 */
     helpClassName: { type: String, default: undefined },
     helpItemClassName: { type: String, default: undefined },
@@ -145,7 +144,8 @@ const ErrorList = defineComponent({
                   baseClassName,
                   holderProps.className,
                   props.helpClassName ?? formContext.classNames?.help,
-                  props.className,
+                  // ⚠️ 调用方原生 class 不在这里加 —— 本组件没关 inheritAttrs，
+                  //    Vue 会自动合并到根（加一遍会重复）。
                 ]
                   .filter(Boolean)
                   .join(' '),

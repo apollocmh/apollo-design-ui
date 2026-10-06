@@ -63,9 +63,6 @@ function genEmptyMeta(): CoreMeta & { destroy?: boolean } {
 const uiProps = {
   prefixCls: { type: String, default: undefined },
   noStyle: { type: Boolean, default: undefined },
-  style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-  className: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
   hasFeedback: {
     type: [Boolean, Object] as PropType<boolean | { icons: unknown }>,
     default: undefined,
@@ -205,9 +202,8 @@ export default defineComponent({
           ItemHolder as never,
           {
             prefixCls: prefixCls.value,
-            className: props.className,
-            rootClassName: props.rootClassName,
-            style: props.style,
+            // ⚠️ 原生 class/style **不在这里转发** —— FormItem 没关 inheritAttrs，
+            //    Vue 会自动把它们落到 ItemHolder 的根（位置与原先一致）。
             help: props.help,
             errors: mergedErrors.value,
             warnings: mergedWarnings.value,

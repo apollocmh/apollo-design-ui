@@ -128,7 +128,8 @@ const FormItemInput = defineComponent({
             warnings: props.warnings,
             help: props.help,
             helpStatus: props.status,
-            className: `${baseClassName}-explain-connected`,
+            // ErrorList 已迁移到「根 class 走原生 attrs」⇒ 用 `class`
+            class: `${baseClassName}-explain-connected`,
             onVisibleChanged: props.onVisibleChanged,
           })
         : null;

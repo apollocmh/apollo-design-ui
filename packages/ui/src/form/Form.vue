@@ -57,7 +57,6 @@ export default defineComponent({
     },
     variant: { type: String as PropType<FormProps['variant']>, default: undefined },
     tooltip: { type: Object as PropType<FormProps['tooltip']>, default: undefined },
-    rootClassName: { type: String, default: undefined },
     classNames: { type: Object as PropType<FormProps['classNames']>, default: undefined },
     styles: { type: Object as PropType<FormProps['styles']>, default: undefined },
     // ---- form-core FormProps（Form.vue 原骨架声明，转发给 core Form）----
