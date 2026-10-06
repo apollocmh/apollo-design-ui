@@ -93,12 +93,6 @@ export const Splitter = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: {
-      type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
     classNames: { type: Object as PropType<SplitterSemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<SplitterSemanticStyles>, default: undefined },
     collapsible: {
@@ -265,7 +259,6 @@ export const Splitter = defineComponent({
         () => context.styles,
         () => semanticRootStyle(context.style as never) as never,
         () => props.styles,
-        () => semanticRootStyle(props.style) as never,
       ],
       { props: props as unknown as Record<string, unknown> },
       { dragger: { _default: 'default' } },
@@ -278,10 +271,8 @@ export const Splitter = defineComponent({
 
       const containerClassName = [
         prefixCls,
-        props.className,
         `${prefixCls}-${mergedOrientation.value}`,
         { [`${prefixCls}-rtl`]: isRTL.value },
-        props.rootClassName,
         mergedClassNames.value.root,
         context.className,
         attrs.class,

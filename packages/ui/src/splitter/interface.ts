@@ -68,9 +68,6 @@ export interface SplitterSemanticStyles {
 
 export interface SplitterProps {
   prefixCls?: string | undefined;
-  className?: string | undefined;
-  rootClassName?: string | undefined;
-  style?: Record<string, string | number> | undefined;
   classNames?: SplitterSemanticClassNames | undefined;
   styles?: SplitterSemanticStyles | undefined;
   /** 折叠全局配置：`motion: true` 开启折叠动画（时长走 Component Token）。 */
