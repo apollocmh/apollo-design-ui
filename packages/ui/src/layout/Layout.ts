@@ -20,7 +20,7 @@ import { type CSSProperties, computed, defineComponent, h, shallowRef, type VNod
 import { useComponentConfig } from '../config-provider/context';
 import { provideLayoutContext } from './context';
 import { useHasSider } from './hooks/use-has-sider';
-import type { LayoutConfig, LayoutProps } from './interface';
+import type { LayoutConfig } from './interface';
 
 const layoutProps = {
   prefixCls: { type: String, default: undefined },

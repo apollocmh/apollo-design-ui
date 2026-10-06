@@ -65,14 +65,18 @@ describe('Table · a11y（L5）', () => {
         sorter: (a: never, b: never) => (a as { age: number }).age - (b as { age: number }).age,
       },
     ];
-    const w = mount(Table, { props: { columns: ascColumns, dataSource } });
+    const w = mount(Table, {
+      props: { columns: ascColumns as never, dataSource: dataSource as never },
+    });
     await nextTick();
     const sorter = w.find('thead th[aria-sort]');
     expect(sorter.exists()).toBe(true);
     expect(sorter.attributes('aria-sort')).toBe('ascending');
 
     // 未排序时**不**写 aria-sort（与上游一致）
-    const plain = mount(Table, { props: { columns, dataSource } });
+    const plain = mount(Table, {
+      props: { columns: columns as never, dataSource: dataSource as never },
+    });
     await nextTick();
     expect(plain.find('thead th[aria-sort]').exists()).toBe(false);
   });
@@ -112,7 +116,9 @@ describe('Table · a11y（L5）', () => {
         onFilter: (value: unknown, record: never) => (record as { name: string }).name === value,
       },
     ];
-    const w = mount(Table, { props: { columns: filterColumns, dataSource } });
+    const w = mount(Table, {
+      props: { columns: filterColumns as never, dataSource: dataSource as never },
+    });
     await nextTick();
     expect(w.find('.apollo-table-filter-trigger[role="button"]').exists()).toBe(true);
   });

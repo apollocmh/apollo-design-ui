@@ -6,7 +6,6 @@
  * `CSSProperties`、`React.ReactNode` → `VNodeChild`（规则 C16 / C18）。
  */
 
-import type { CSSProperties } from 'vue';
 
 /** 水印字体。与 antd 的 `WatermarkFont` 一致（字段直接喂 canvas）。 */
 export interface WatermarkFont {
