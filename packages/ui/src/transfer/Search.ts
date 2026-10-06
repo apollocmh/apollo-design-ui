@@ -37,7 +37,8 @@ const Search = defineComponent({
     return () =>
       h(Input, {
         placeholder: props.placeholder,
-        className: props.prefixCls,
+        // Input 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+        class: props.prefixCls,
         value: props.value,
         onChange: handleChange,
         disabled: props.disabled,
