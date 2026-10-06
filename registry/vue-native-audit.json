@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:21:53.104Z",
+  "updatedAt": "2026-10-06T05:24:31.923Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 8,
+      "todo": 7,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 57,
+      "done": 58,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 539,
+    "reviewedProductionSourceFiles": 552,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2733,7 +2733,7 @@
       "notes": []
     },
     "transfer": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/transfer/Actions.ts",
         "packages/ui/src/transfer/index.ts",
@@ -2749,7 +2749,21 @@
         "packages/ui/src/transfer/use-multiple-select.ts",
         "packages/ui/src/transfer/use-selection.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/transfer/Actions.ts",
+        "packages/ui/src/transfer/index.ts",
+        "packages/ui/src/transfer/interface.ts",
+        "packages/ui/src/transfer/ListBody.ts",
+        "packages/ui/src/transfer/ListItem.ts",
+        "packages/ui/src/transfer/Search.ts",
+        "packages/ui/src/transfer/Section.ts",
+        "packages/ui/src/transfer/style/index.ts",
+        "packages/ui/src/transfer/style/token.ts",
+        "packages/ui/src/transfer/Transfer.ts",
+        "packages/ui/src/transfer/use-data.ts",
+        "packages/ui/src/transfer/use-multiple-select.ts",
+        "packages/ui/src/transfer/use-selection.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 10,
       "docFiles": [
@@ -2757,9 +2771,14 @@
         "packages/ui/src/transfer/index.en-US.md",
         "packages/ui/src/transfer/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 88/88；Transfer / Section（=Transfer.List）/ Actions（=Transfer.Operation）三个公开面都去掉根别名；Search 无根别名。⚠️ Transfer 原先已部分迁移（读了 attrs.class）但残留 props 与一处 attrs.rootClassName 泄漏，一并清掉；根 style 仍走语义 root 通道。ListBody/ListItem 是内部件。"
+      ],
+      "reviewedFileCount": 13
     },
     "mentions": {
       "auditStatus": "todo",
@@ -3730,7 +3749,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（53 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（54 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4006,6 +4025,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 25: upload done. Total done = 57. Same lesson as input applied proactively: upload routes its root style through the SEMANTIC root channel trigger slot (semanticRootStyle(attrs.style, \"trigger\")), so only the source was swapped, not the channel."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 26: transfer done. Total done = 58. transfer has FOUR public surfaces (Transfer + Transfer.List=Section + Transfer.Operation=Actions + Transfer.Search); three of them had root aliases and all were migrated. Notably Transfer had already been partially migrated (it read attrs.class) but still kept the props plus an attrs.rootClassName leak - both cleaned up. Section/Actions never disabled inheritAttrs, so their class/style now fall through automatically."
     }
   ],
   "observations": [
