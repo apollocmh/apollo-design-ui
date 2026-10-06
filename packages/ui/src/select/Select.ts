@@ -90,8 +90,6 @@ export const Select = defineComponent({
   props: {
     id: { type: String, default: undefined },
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     value: { type: null as unknown as PropType<SelectValue>, default: undefined },
     defaultValue: { type: null as unknown as PropType<SelectValue>, default: undefined },
     labelInValue: { type: Boolean, default: undefined },
@@ -717,8 +715,8 @@ export const Select = defineComponent({
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
           getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
           compactItemClassnames.value,
-          props.className,
-          props.rootClassName,
+          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+          attrs.class as string | undefined,
           cssVarCls.value,
           'css-var-root',
           // ⚠️ 不含 mergedClassNames.root —— BaseSelect 的根类里已有
@@ -735,7 +733,6 @@ export const Select = defineComponent({
           props.popupClassName,
           props.dropdownClassName,
           mergedDirection.value === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
-          props.rootClassName,
           cssVarCls.value,
           'css-var-root',
         ]
@@ -808,7 +805,11 @@ export const Select = defineComponent({
           prefixCls: prefixCls.value,
           id: mergedId,
           className: mergedRootClassName.value,
-          style: mergedStyles.value?.root,
+          // 根 style 是 Vue 原生 attrs（位置与原先的语义 root 之后：调用方最后胜出）
+          style: {
+            ...(mergedStyles.value?.root ?? {}),
+            ...((attrs.style as CSSProperties | undefined) ?? {}),
+          },
           mode: props.mode,
           multiple: multiple.value,
           showSearch: mergedShowSearch.value,

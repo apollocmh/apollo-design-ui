@@ -231,9 +231,8 @@ export interface SelectProps<ValueType = SelectValue> {
   // ---- 身份 ----
   id?: string;
   prefixCls?: string;
-  rootClassName?: string;
+  /** ⚠️ Vue 原生 `class` / `style` 走 attrs（不是 prop）；这里只为类型面留位。 */
   class?: unknown;
-  style?: CSSProperties;
 
   // ---- 值 ----
   value?: ValueType;
