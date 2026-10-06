@@ -125,9 +125,6 @@ export type PaginationShowTotal = (total: number, range: PaginationRange) => VNo
  */
 export interface PaginationProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   /** ⚠️ `total === 0` 时 `allPages === 0`，`current` 被钳到 **1**（不是 0）。 */
   total?: number;
   /** 受控当前页（`v-model:current`）。 */

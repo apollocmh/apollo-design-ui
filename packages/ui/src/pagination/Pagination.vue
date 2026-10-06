@@ -33,6 +33,7 @@ import {
 } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -67,9 +68,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<PaginationProps['style']>, default: undefined },
     total: { type: Number, default: 0 },
     current: { type: Number, default: undefined },
     defaultCurrent: { type: Number, default: 1 },
@@ -122,7 +120,7 @@ export default defineComponent({
     const config = useComponentConfig('pagination') as unknown as {
       getPrefixCls: (suffix?: string, custom?: string) => string;
       className?: string;
-      style?: PaginationProps['style'];
+      style?: CSSProperties;
       classNames?: PaginationSemanticClassNames;
       styles?: PaginationSemanticStyles;
       showSizeChanger?: PaginationProps['showSizeChanger'];
@@ -142,7 +140,6 @@ export default defineComponent({
         computed(() => config.styles),
         computed(() => semanticRootStyle(config.style)),
         computed(() => props.styles),
-        computed(() => semanticRootStyle(props.style)),
       ],
       props,
     );
@@ -620,9 +617,9 @@ export default defineComponent({
 
       const rootClassName = [
         p,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className 一致）
+        attrs.class,
         config.className,
-        props.rootClassName,
         classNames.root,
         props.align ? `${p}-${props.align}` : '',
         mergedSize.value ? `${p}-${mergedSize.value}` : '',
@@ -642,7 +639,8 @@ export default defineComponent({
         {
           ...passthrough,
           class: rootClassName,
-          style: { ...styles.root },
+          // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
+          style: { ...styles.root, ...((attrs.style as CSSProperties) ?? {}) },
           role: props.role,
         },
         items,
