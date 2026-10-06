@@ -73,9 +73,6 @@ const TreeSelect = defineComponent({
     // ---- shell ----
     prefixCls: { type: String, default: undefined },
     id: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<Record<string, unknown>>,
       default: undefined,
@@ -605,7 +602,8 @@ const TreeSelect = defineComponent({
         () => contextSemantic.styles as Record<string, StyleLike> | undefined,
         () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
         () => props.styles as Record<string, StyleLike> | undefined,
-        () => (props.style ? { root: props.style } : undefined),
+        // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
+        () => (attrs.style ? { root: attrs.style as StyleLike } : undefined),
       ],
       { ...props } as never,
     );
@@ -622,8 +620,8 @@ const TreeSelect = defineComponent({
           // antd getStatusClassNames：`${p}-status-${status}`（hasFeedback 图标本仓 form 未接）
           props.status ? `${prefixCls.value}-status-${props.status}` : '',
           compactItemClassnames.value,
-          props.className,
-          props.rootClassName,
+          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+          attrs.class,
           (mergedClassNames.value as { root?: string }).root,
         ]
           .filter(Boolean)
@@ -636,7 +634,6 @@ const TreeSelect = defineComponent({
           props.popupClassName || props.dropdownClassName,
           `${prefixCls.value}-dropdown`,
           props.direction === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
-          props.rootClassName,
           (mergedClassNames.value as { popup?: { root?: string } }).popup?.root,
         ]
           .filter(Boolean)
