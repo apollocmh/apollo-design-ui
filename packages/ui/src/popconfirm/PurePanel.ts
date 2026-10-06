@@ -210,8 +210,6 @@ export const Overlay = defineComponent({
 });
 
 export interface PurePanelProps extends Omit<OverlayProps, 'prefixCls'> {
-  className?: string;
-  style?: Record<string, string | number>;
   placement?: PopconfirmProps['placement'];
 }
 
@@ -220,8 +218,6 @@ const PurePanel = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     placement: { type: String as PropType<PopconfirmProps['placement']>, default: undefined },
     title: {
       type: [Object, String, Number, Function] as PropType<PopconfirmProps['title']>,
@@ -254,13 +250,24 @@ const PurePanel = defineComponent({
       const prefixCls = getPrefixCls('popconfirm', props.prefixCls);
       // ⚠️ content 走 **slot** 而不是 prop：`Popover.PurePanel` 的 `content`
       //    prop 按 C8-R2 收窄为 String（富内容走同名 slot），Overlay 是 VNode。
+      // ⚠️ 末尾的 `...restAttrs` 会**覆盖** `class` / `style`（对象展开后者胜）
+      //    ⇒ 先把它们摘掉，否则整条 `class: [prefixCls, …]` 被顶掉。
+      const {
+        class: _attrsClass,
+        style: _attrsStyle,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
+
       return h(
         PopoverPurePanel,
         {
           placement: props.placement,
-          class: [prefixCls, props.className],
-          style: props.style,
-          ...attrs,
+          // 调用方原生 class / style（位置与原先的 props.className / props.style 一致）
+          class: [prefixCls, attrs.class],
+          style: attrs.style,
+          ...restAttrs,
         } as never,
         {
           content: () =>

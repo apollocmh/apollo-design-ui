@@ -56,11 +56,14 @@ const CASES: Record<string, () => DomRenderResult> = {
       description: () => 'lazy-description',
     }),
   'popconfirm:pure-panel-class-name': () =>
+    // ⚠️ 两侧各用各的词汇（仓库既有约定，见 button 的 `class:className`）：
+    //    React 生成器传 `className` / `style`，Vue 侧传原生 `class` / `style`。
+    //    用例 ID 才是契约，基线不需要动。
     h(PopconfirmPurePanel, {
       ...BP,
       title: 'Title',
       description: 'Description',
-      className: 'custom-root',
+      class: 'custom-root',
       style: { padding: 20 },
     }),
 };
