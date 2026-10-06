@@ -233,9 +233,6 @@ export interface ColorPickerProps {
    * `docs/analysis/color-picker.md` §2.2。
    */
   onChangeComplete?: (value: AggregationColor) => void;
-
-  /** 触发器内容（传了就**完全不要**内置触发器，`rest` 也随之落空）。 */
-  children?: VNodeChild;
 }
 
 // ---------------------------------------------------------------------------

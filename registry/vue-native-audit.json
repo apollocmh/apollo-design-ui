@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T22:05:54.082Z",
+  "updatedAt": "2026-10-06T23:04:46.461Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -61,8 +61,7 @@
         "P3": 1
       },
       "byStatus": {
-        "open": 7,
-        "fixed": 7
+        "fixed": 14
       }
     }
   },
@@ -3667,8 +3666,8 @@
         "对应组件 __tests__/index.test.ts",
         "各组件中英文 API 文档"
       ],
-      "status": "open",
-      "verification": "第一批源码静态审阅线索；尚未逐个核验所有消费端/迁移影响，未运行测试。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07：7 处**组件级内容**的 children 从公开 Props 类型面移除（app / color-picker / drawer / modal ×2 / tooltip / upload）—— 此前它们是「类型上可用、运行时静默失效」的死字段（内容走 default slot）。**保留**的是数据树/项级：masonry / descriptions / anchor / collapse / menu / timeline / tabs / mentions。color-picker 的类型测试改成**负例**（not.toHaveProperty）。"
     },
     {
       "id": "VNA-SLOT-01",
@@ -3698,8 +3697,8 @@
         "color-picker/__tests__/index.test.ts",
         "三组件 type.test-d.ts"
       ],
-      "status": "open",
-      "verification": "静态源码与全目录关键字核验；未运行测试，待组件级 slot 挂载验证。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07：ColorPicker（panelRender）/ DatePicker（cellRender + tagRender）/ Calendar（cellRender + fullCellRender + headerRender）**全部接上同名 slot**（slot 优先于函数 prop，做入参形状适配）。⚠️ 关键细节：**只在存在同名 slot 时才接管** —— 传一个恒真函数会让下游的 if (xxxRender) 恒成立、覆盖「没传」的原行为（DatePicker 上实测红一片用例）。"
     },
     {
       "id": "VNA-ATTRS-01",
@@ -3723,8 +3722,8 @@
       "tests": [
         "各组件 __tests__/index.test.ts 或 semantic.test.ts：class string/array/object、style、aria/data/id、原生事件"
       ],
-      "status": "open",
-      "verification": "核读实现代码确认合并路径；尚未新增回归用例或运行测试。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07 复核 + 修 BorderBeam：**App 与 BackTop 的指控不成立**（App 用 [prefixCls, attrs.class, …] 数组形态 ⇒ Vue 的 normalizeClass 会归一嵌套数组/对象；BackTop 用 mergeProps({class}, attrs, {onClick}) 整体合并）—— 审计是第一批的、代码已变。**BorderBeam 成立**：renderless（无自有根）却 inheritAttrs:false 且从不读 attrs ⇒ 用户 attrs 全丢；现用 mergeProps(attrs, first.props) 落到**宿主**（class/style 叠加而非覆盖），并加 2 条 L1。"
     },
     {
       "id": "VNA-AFFIX-01",
@@ -3791,8 +3790,8 @@
       "tests": [
         "avatar/__tests__/index.test.ts：由普通尺寸切换到断点尺寸并响应 viewport 变化"
       ],
-      "status": "open",
-      "verification": "源码调用与 useBreakpoint 实现已核对；未运行动态更新测试。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07：useBreakpoint 的 refreshOnChange 支持**取值函数**（boolean | (() => boolean)）并在订阅回调里**每次重新求值**。此前裸布尔被闭包捕获一次 ⇒ size 变成响应式（{ xs: 'small' }）也永不刷新。同族调用点一并修：Avatar / List / Pagination。"
     },
     {
       "id": "VNA-DIVIDER-01",
@@ -3815,8 +3814,8 @@
       "tests": [
         "divider/__tests__/index.test.ts：Provider componentSize 与显式 size 覆盖"
       ],
-      "status": "open",
-      "verification": "与 config-provider 已实现 useSize/provide 的源码交叉核对；未运行测试。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07：sizeFullName 接上 useSize((ctxSize) => props.size ?? ctxSize)，全局 componentSize 生效、本地 size 覆盖。此前注释写「ConfigProvider 尚未落地、SizeContext 不存在」，但两者都已存在 ⇒ 它一直是死的 props.size。加 1 条 L1（含「本地覆盖上下文」）。"
     },
     {
       "id": "VNA-DROPDOWN-01",
@@ -3840,8 +3839,8 @@
         "dropdown/__tests__/type.test-d.ts",
         "dropdown/__tests__/index.test.ts"
       ],
-      "status": "open",
-      "verification": "源码与文档对照确认不一致候选；尚未核实包入口导出范围、未运行类型测试。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07：删掉 4 个**死函数 prop**（DropdownProps.popupRender / dropdownRender、DropdownButtonProps.buttonsRender / popupRender）—— 运行时零读取，真正的通道是**同名 slot**（slots.popupRender / slots.buttonsRender）。"
     },
     {
       "id": "VNA-RENDERER-01",
@@ -3973,8 +3972,8 @@
         "dropdown/__tests__/type.test-d.ts",
         "dropdown/__tests__/index.test.ts"
       ],
-      "status": "open",
-      "verification": "源码核读：interface 声明 className/style，运行时 props 未声明、渲染层只消费 attrs.class/attrs.style。尚未跑测试，留待 dropdown 批次。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07 复核：**已不成立** —— DropdownButtonProps 里已无 className（审计的行号陈旧）。style 保留（原生名）。"
     },
     {
       "id": "VNA-ROOTALIAS-01",
@@ -4394,6 +4393,11 @@
       "date": "2026-10-07",
       "status": "completed",
       "note": "VNA-RENDERER-01 (P0, architecture) FIXED: merged the three duplicate NodeRenderer implementations (empty/components/NodeRenderer.ts, spin/components/NodeRenderer.ts, space/node.ts) into packages/ui/src/_internal/node-renderer.ts. 15 imports repointed across 11 components; two copies deleted; empty keeps only its ImageNode. Behavior preserved verbatim. Full suite 676 files / 12317 tests / 0 type errors; biome 0/0. Also closed VNA-ROOTALIAS-01 (root-alias migration complete)."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "Closed the remaining 7 registry issues: VNA-API-01 (removed 7 dead component-level children props; kept data-tree children), VNA-SLOT-01 (wired named slots for ColorPicker/DatePicker/Calendar; slot only takes over when present), VNA-ATTRS-01 (BorderBeam attrs -> host via mergeProps; App/BackTop claims disproved), VNA-AVATAR-01 (useBreakpoint accepts a getter), VNA-DIVIDER-01 (useSize wiring), VNA-DROPDOWN-01 (removed 4 dead render props), VNA-DROPDOWN-02 (already resolved)."
     }
   ],
   "observations": [

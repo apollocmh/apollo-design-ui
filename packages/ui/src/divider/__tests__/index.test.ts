@@ -565,3 +565,43 @@ describe('Divider · expose', () => {
     expect(exposed.nativeElement).toBe(w.element);
   });
 });
+
+/**
+ * 全局 `componentSize`（registry `VNA-DIVIDER-01`）。
+ *
+ * 此前 `sizeFullName` 恒等于 `props.size`（注释写「ConfigProvider 尚未落地、
+ * SizeContext 不存在」——但两者都已存在）⇒ **ConfigProvider 的 `componentSize` 对它无效**。
+ * 现在走 `useSize((ctxSize) => props.size ?? ctxSize)`，与 antd 一致。
+ */
+describe('Divider · 全局 componentSize（VNA-DIVIDER-01）', () => {
+  it('ConfigProvider 的 componentSize 生效；本地 size 覆盖它', async () => {
+    const { ConfigProvider } = await import('../../config-provider');
+    const w = mount(
+      {
+        setup() {
+          // ⚠️ 不传 prefixCls ⇒ 用兜底 `apollo-divider`（`prefixCls` 是**完整前缀**，
+          //    传 'apollo' 会得到类名 `apollo` 而不是 `apollo-divider`）
+          return () => h(ConfigProvider, { componentSize: 'small' }, () => h(Divider));
+        },
+      },
+      { attachTo: document.body },
+    );
+    await nextTick();
+    expect(w.find('.apollo-divider').classes()).toContain('apollo-divider-sm');
+
+    const local = mount(
+      {
+        setup() {
+          return () =>
+            h(ConfigProvider, { componentSize: 'small' }, () => h(Divider, { size: 'large' }));
+        },
+      },
+      { attachTo: document.body },
+    );
+    await nextTick();
+    // 本地 size 覆盖上下文
+    expect(local.find('.apollo-divider').classes()).not.toContain('apollo-divider-sm');
+    w.unmount();
+    local.unmount();
+  });
+});

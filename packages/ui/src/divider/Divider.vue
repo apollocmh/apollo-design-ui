@@ -37,6 +37,7 @@ import {
 } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
+import { useSize } from '../config-provider/size-context';
 import type {
   DividerConfig,
   DividerProps,
@@ -206,12 +207,13 @@ const innerStyle = computed<CSSProperties>(() => ({
 // ---------------------------------------------------------------------------
 // 间距大小
 //
-// ⚠️ antd 走 `useSize(customSize)`：先读 `SizeContext`（ConfigProvider 的 `componentSize`），
-//    再由 `size` prop 覆盖。ConfigProvider **组件**尚未落地，SizeContext 不存在，
-//    所以当前 `sizeFullName` 恒等于 `size` prop。
-//    缺口登记在 README.md §7 —— 不是「忘了」，是依赖未就绪。
+// antd 走 `useSize(customSize)`：先读 `SizeContext`（ConfigProvider 的 `componentSize`），
+// 再由 `size` prop 覆盖（`customSize ?? ctxSize`）。
+// ✅ 2026-10-07 接上（registry `VNA-DIVIDER-01`）：此前注释写「ConfigProvider 组件尚未落地、
+//    SizeContext 不存在」，但**两者都已存在** ⇒ `sizeFullName` 一直是死的 `props.size`，
+//    全局 `componentSize` 对它无效。
 // ---------------------------------------------------------------------------
-const sizeFullName = computed<DividerSize | undefined>(() => props.size);
+const sizeFullName = useSize((ctxSize) => props.size ?? ctxSize);
 
 // ---------------------------------------------------------------------------
 // 语义化合并

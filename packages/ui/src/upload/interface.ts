@@ -173,8 +173,6 @@ export interface UploadProps<T = unknown> {
   progress?: UploadListProgressProps;
   /** Config max count of `fileList`. Will replace current one when `maxCount` is 1 */
   maxCount?: number;
-  /** 触发区内容（drag 容器 / select 按钮的子节点）—— 默认插槽 */
-  children?: VNodeChild;
   capture?: string | 'user' | 'environment' | boolean | null;
   hasControlInside?: boolean;
   pastable?: boolean;

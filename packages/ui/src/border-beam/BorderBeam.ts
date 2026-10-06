@@ -27,6 +27,7 @@ import {
   createVNode,
   defineComponent,
   h,
+  mergeProps,
   onMounted,
   onScopeDispose,
   type PropType,
@@ -114,7 +115,7 @@ export default defineComponent({
     outset: { type: [Number, String] as PropType<number | string>, default: undefined },
     size: { type: [Number, String] as PropType<number | string>, default: undefined },
   },
-  setup(props, { slots }) {
+  setup(props, { attrs, slots }) {
     const {
       getPrefixCls,
       className: contextClassName,
@@ -203,10 +204,20 @@ export default defineComponent({
         : originalChildren !== null && originalChildren !== undefined && originalChildren !== ''
           ? [originalChildren, ...injectedChildren]
           : injectedChildren;
+      // 🚨 调用方的 attrs（`data-*` / `aria-*` / `class` / `style` / 原生事件）**落到宿主**上。
+      //
+      // 本组件是 **renderless**（没有自己的 DOM 根，装饰的是子节点那个元素）⇒ attrs 唯一的
+      // 合理落点就是宿主。此前是 `inheritAttrs: false` 且**从不读 attrs** ⇒ 用户传的
+      // `data-*` / `aria-*` 全部静默丢弃（registry `VNA-ATTRS-01`）。
+      //
+      // ⚠️ 用 `mergeProps`（不是对象展开）：`class` / `style` 需要**叠加**而不是后者覆盖前者；
+      //    顺序 = 调用方 attrs 在前、宿主自己的 props 在后 ⇒ 宿主原有的 class/style 不被顶掉。
+      const hostProps = mergeProps(attrs, first.props ?? {});
+
       return createVNode(
         first.type,
         {
-          ...(first.props ?? {}),
+          ...hostProps,
           key: first.key ?? undefined,
           ref: (el: unknown) => {
             hostDom.value =

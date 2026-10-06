@@ -206,9 +206,13 @@ describe('ColorPicker · 本组件「没有」的东西', () => {
     expectTypeOf<NonNullable<ColorPickerSlots['panelRender']>>().parameters.toEqualTypeOf<
       [{ panel: VNodeChild; extra: ColorPickerPanelRenderExtra }]
     >();
-    // ⚠️ `ColorPickerProps.children`（上游同形）仍在类型面上；Vue 运行时 props 面
-    //    用 `ColorPickerVueProps` 的 `Omit<…, 'children'>` 摘掉它、改走默认插槽。
-    expectTypeOf<ColorPickerProps['children']>().toEqualTypeOf<VNodeChild | undefined>();
+    // 🚨 **负例**：`children` **不在**公开 Props 类型面上（registry `VNA-API-01`）。
+    //
+    // 此前它作为「上游同形」保留在类型面上、只在运行时 props 用 `Omit<…, 'children'>` 摘掉
+    // ⇒ 结果是一个**类型上可用、运行时静默失效**的死字段（`:children="x"` 什么也不会发生）。
+    // 2026-10-07 按 Phase 2 的方向（Vue-native、不留 React 死字段）从类型面也移除：
+    // 内容一律走默认插槽。
+    expectTypeOf<ColorPickerProps>().not.toHaveProperty('children');
   });
 
   it('🚨 **没有 `expose`**（上游无 ref 转发）—— `ColorPickerExpose` 是空类型', () => {

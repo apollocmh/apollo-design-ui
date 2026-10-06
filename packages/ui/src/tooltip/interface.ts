@@ -128,8 +128,6 @@ export interface TooltipProps {
   overlayInnerStyle?: Record<string, string | number>;
   /** ⚠️ 已废弃，请用 `classNames.root`。 */
   overlayClassName?: string;
-  /** 触发元素 —— 默认插槽。 */
-  children?: VNodeChild;
 }
 
 /** expose（antd 的 `TooltipRef`；nativeElement 可空性按真实情况，D22 同判）。 */

@@ -156,7 +156,8 @@ export default defineComponent({
     //    （本仓 PITFALLS 163 / CHECKLIST #46，input-number / radio / switch 各踩过一次）
     const mergedSize = useSize((ctx) => props.size ?? ctx);
     // ⚠️ 本仓的 `useBreakpoint` 返回 `Ref<Screens | null>`（antd 返回 screens 对象本体）
-    const screens = useBreakpoint(!!props.responsive);
+    // 🚨 取值函数（不是裸布尔）：后者会被订阅闭包捕获一次 ⇒ 永不随 props 变化（VNA-AVATAR-01 同族）
+    const screens = useBreakpoint(() => !!props.responsive);
     const isSmall = computed(
       () =>
         mergedSize.value === 'small' ||

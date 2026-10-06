@@ -63,6 +63,7 @@ import {
   h,
   type PropType,
   ref,
+  useSlots,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -74,6 +75,7 @@ import CalendarHeader from './components/CalendarHeader';
 import type {
   CalendarCellRenderInfo,
   CalendarDate,
+  CalendarHeaderRenderConfig,
   CalendarMode,
   CalendarProps,
   CalendarSemanticClassNames,
@@ -168,6 +170,33 @@ export default defineComponent({
     select: (_date: CalendarDate, _info: SelectInfo) => true,
   },
   setup(props, { attrs, emit, expose }) {
+    const slots = useSlots();
+
+    /**
+     * 单元格 / 表头渲染通道：**同名 slot 优先于函数 prop**（registry `VNA-SLOT-01`）。
+     *
+     * ⚠️ 入参形状不同：prop 是 `(date, info)`，slot 收一个对象（Vue 插槽惯例）⇒ 做一层适配。
+     * 🚨 **只在存在同名 slot 时才接管** —— 传一个恒真的函数会让下游的 `if (xxxRender)`
+     *    恒成立，把「没传」的原行为覆盖掉（DatePicker 上实测会红一片用例）。
+     */
+    const useCellRender = computed(() =>
+      slots.cellRender
+        ? (date: CalendarDate, info: CalendarCellRenderInfo) =>
+            slots.cellRender?.({ current: date, info })
+        : props.cellRender,
+    );
+    const useFullCellRender = computed(() =>
+      slots.fullCellRender
+        ? (date: CalendarDate, info: CalendarCellRenderInfo) =>
+            slots.fullCellRender?.({ current: date, info })
+        : props.fullCellRender,
+    );
+    const useHeaderRender = computed(() =>
+      slots.headerRender
+        ? (config: CalendarHeaderRenderConfig) => slots.headerRender?.(config)
+        : props.headerRender,
+    );
+
     /**
      * ⚠️ `useComponentConfig` 的默认泛型是 `Record<string, unknown>`（它只负责搬运）——
      * 这里按 `slider/Slider.vue` 的既有手法显式收窄成本组件要用的形状。
@@ -393,8 +422,8 @@ export default defineComponent({
     // ============================== 渲染 ==============================
     /** 判据 5：这里判 **`isFunction`**（`monthRender` 判真值，两处不同）。 */
     const dateRender = (date: CalendarDate, info: CalendarCellRenderInfo): VNodeChild => {
-      if (isFunction(props.fullCellRender)) {
-        return props.fullCellRender(date, info);
+      if (isFunction(useFullCellRender.value)) {
+        return useFullCellRender.value(date, info);
       }
       if (isFunction(props.dateFullCellRender)) {
         return props.dateFullCellRender(date, info);
@@ -419,8 +448,8 @@ export default defineComponent({
               style: mergedItemContentStyle.value,
             },
             [
-              isFunction(props.cellRender)
-                ? props.cellRender(date, info)
+              isFunction(useCellRender.value)
+                ? useCellRender.value(date, info)
                 : props.dateCellRender?.(date, info),
             ],
           ),
@@ -430,8 +459,8 @@ export default defineComponent({
 
     /** 判据 5（第二处）：这里判 **真值**，不是 `isFunction`。 */
     const monthRender = (date: CalendarDate, info: CalendarCellRenderInfo): VNodeChild => {
-      if (props.fullCellRender) {
-        return props.fullCellRender(date, info);
+      if (useFullCellRender.value) {
+        return useFullCellRender.value(date, info);
       }
       if (props.monthFullCellRender) {
         return props.monthFullCellRender(date, info);
@@ -467,8 +496,8 @@ export default defineComponent({
               style: mergedItemContentStyle.value,
             },
             [
-              isFunction(props.cellRender)
-                ? props.cellRender(date, info)
+              isFunction(useCellRender.value)
+                ? useCellRender.value(date, info)
                 : props.monthCellRender?.(date, info),
             ],
           ),
@@ -518,9 +547,9 @@ export default defineComponent({
         `${cls}-css-var`,
       ];
 
-      const headerVNode = props.headerRender
+      const headerVNode = useHeaderRender.value
         ? h(NodeRenderer, {
-            node: props.headerRender({
+            node: useHeaderRender.value({
               value: mergedValue.value,
               type: mergedMode.value,
               onChange: (nextDate: CalendarDate) => onInternalSelect(nextDate, 'customize'),

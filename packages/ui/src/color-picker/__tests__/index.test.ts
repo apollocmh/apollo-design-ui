@@ -221,10 +221,12 @@ describe('ColorPicker · 多子节点触发器契约（KNOWN-ISSUES §1.3 钉住
 describe('ColorPickerPanel · §1.1 Form 上下文隔离', () => {
   it('面板注册了 formItemInputContext 的 provide（且被隔离）', async () => {
     const { ColorPickerPanel } = await import('../ColorPickerPanel');
+    const { AggregationColor: AggColor } = await import('../color');
     const { formItemInputContextKey } = await import('../../form/context');
 
     const w = mount(ColorPickerPanel, {
-      props: { prefixCls: P, value: undefined },
+      // ⚠️ `as never`：VTU 对 `defineComponent` 的复杂 props 推导不出，仓库测试里通行此写法
+      props: { prefixCls: P, value: new AggColor('#1677ff') } as never,
       attachTo: document.body,
     });
     const provides = (w.vm.$ as unknown as { provides: Record<symbol, unknown> }).provides;

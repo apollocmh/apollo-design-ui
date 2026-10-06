@@ -124,7 +124,6 @@ export interface ModalPanelProps {
   closable?: boolean | (ClosableType & Record<string, unknown>);
   closeIcon?: VNodeChild;
   onClose?: (e: Event) => void;
-  children?: VNodeChild;
   bodyStyle?: CSSProperties;
   bodyProps?: Record<string, unknown>;
   modalRender?: (node: VNodeChild) => VNodeChild;
@@ -333,7 +332,6 @@ export interface ModalPurePanelProps {
   type?: ModalType;
   /** 标题区。同名 `#title` slot 优先。 */
   title?: string;
-  children?: VNodeChild;
   classNames?: ModalSemanticType['classNames'];
   styles?: ModalSemanticType['styles'];
   /** confirm 形态的正文（`type` 有值时用）。同名 `#content` slot 优先。 */

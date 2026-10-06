@@ -81,6 +81,7 @@ import useModeColor from './hooks/use-mode-color';
 import type {
   ColorFormatType,
   ColorPickerEmits,
+  ColorPickerPanelRenderExtra,
   ColorPickerProps,
   ColorPickerSemanticClassNames,
   ColorPickerSemanticStyles,
@@ -142,6 +143,24 @@ const emit = defineEmits({
 
 const attrs = useAttrs();
 const slots = useSlots();
+
+/**
+ * 面板渲染通道：**同名 slot 优先于函数 prop**（registry `VNA-SLOT-01`）。
+ *
+ * ⚠️ 两者**入参形状不同**：prop 是 `(originPanel, extra)`，slot 收一个对象
+ * `{ panel, extra }`（Vue 插槽的惯例）⇒ 这里做一层适配，把 slot 形态归一成 prop 形态。
+ * 此前 `ColorPickerSlots.panelRender` 只在类型面上存在、**运行时从不读取**
+ * ⇒ 写了 `#panelRender` 的模板什么也不会发生。
+ */
+const mergedPanelRender = (
+  originPanel: VNodeChild,
+  extra: ColorPickerPanelRenderExtra,
+): VNodeChild =>
+  slots.panelRender
+    ? (slots.panelRender({ panel: originPanel, extra }) as VNodeChild)
+    : props.panelRender
+      ? props.panelRender(originPanel, extra)
+      : originPanel;
 
 // ============================== Context ==============================
 const context = useComponentConfig('color-picker') as unknown as {
@@ -474,7 +493,7 @@ const onClearInternal = (): void => {
         :disabled="mergedDisabled"
         :disabled-alpha="disabledAlpha"
         :presets="presets"
-        :panel-render="panelRender"
+        :panel-render="mergedPanelRender"
         :format="formatValue"
         :on-format-change="triggerFormatChange"
         :on-change="onInternalChange"

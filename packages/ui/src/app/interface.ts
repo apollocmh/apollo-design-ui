@@ -6,15 +6,12 @@
  * 或 `false`（antd 的 CustomComponent 泛型族收窄，H2）。
  */
 
-import type { VNodeChild } from 'vue';
-
 import type { AppConfig } from '../_internal/app-context';
 
 export type AppComponentType = 'div' | 'section' | 'main' | 'span' | false;
 
 export interface AppProps extends AppConfig {
   prefixCls?: string;
-  children?: VNodeChild;
   /** 渲染的根元素；`false` ⇒ 无包裹（Fragment）。 */
   component?: AppComponentType;
 }

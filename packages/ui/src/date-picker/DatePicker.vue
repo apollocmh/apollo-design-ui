@@ -72,6 +72,7 @@ import {
   inject,
   ref,
   useAttrs,
+  useSlots,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -1142,7 +1143,9 @@ const panelProps = computed(() => ({
   disabledDate: boundaryDisabledDate as never,
   minDate: resolveLimit(props.minDate),
   maxDate: resolveLimit(props.maxDate),
-  cellRender: props.cellRender as never,
+  // ⚠️ **只有存在同名 slot 时才接管** —— 否则传一个恒真的函数会让引擎的
+  //    `if (cellRender)` 恒成立、把「没传 cellRender」的原行为覆盖掉（实测会红一片用例）。
+  cellRender: (slots.cellRender ? mergedCellRender : props.cellRender) as never,
   /**
    * 🚨 时间面板**没有表头**（上游 `Popup/PopupPanel.js:44` 的 `hideHeader = picker === 'time'`）。
    *
@@ -1213,7 +1216,7 @@ const selectorProps = computed(() => ({
    */
   activeHelp: internalHoverValue.value !== null,
   allHelp: internalHoverValue.value !== null && hoverSource.value === 'preset',
-  tagRender: props.tagRender,
+  tagRender: (slots.tagRender ? mergedTagRender : props.tagRender) as never,
   maxTagCount: props.maxTagCount,
   /**
    * 标签的删除图标。
@@ -1275,6 +1278,25 @@ const selectorProps = computed(() => ({
     onOpenChange(true);
   },
 }));
+/**
+ * 面板/标签渲染通道：**同名 slot 优先于函数 prop**（registry `VNA-SLOT-01`）。
+ *
+ * ⚠️ 两者**入参形状不同**：prop 是 `(date, info)`，slot 收一个对象 `{ current, info }`
+ * （Vue 插槽的惯例）⇒ 这里做一层适配。此前 `DatePickerSlots` 只在类型面上存在、
+ * **运行时从不读取** ⇒ 写了 `#cellRender` 的模板什么也不会发生。
+ */
+const mergedCellRender = (date: unknown, info: unknown): unknown =>
+  slots.cellRender
+    ? slots.cellRender({ current: date as never, info: info as never })
+    : props.cellRender
+      ? props.cellRender(date as never, info as never)
+      : undefined;
+
+/** `tagRender` 同理（slot 收 `{ label, value, ... }`）。 */
+const mergedTagRender = (tagProps: Record<string, unknown>): unknown =>
+  slots.tagRender ? slots.tagRender(tagProps as never) : props.tagRender?.(tagProps as never);
+const slots = useSlots();
+
 const restAttrs = computed(() => {
   const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
   void _attrsClass;

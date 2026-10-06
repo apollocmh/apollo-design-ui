@@ -190,3 +190,33 @@ describe('BorderBeam · 结构', () => {
     expect(effect.getAttribute('style')).toContain('margin-top: 2px');
   });
 });
+
+/**
+ * 宿主 attrs 透传（registry `VNA-ATTRS-01`）。
+ *
+ * 本组件是 **renderless**（装饰的是子节点那个元素，没有自己的 DOM 根）⇒ 调用方的
+ * attrs 唯一合理落点就是**宿主**。此前 `inheritAttrs: false` 且从不读 attrs
+ * ⇒ `data-*` / `aria-*` 全部静默丢弃。
+ */
+describe('BorderBeam · 宿主 attrs 透传（VNA-ATTRS-01）', () => {
+  it('data-* / aria-* 落到宿主元素上', async () => {
+    const w = mountInHost({}, { 'data-testid': 'host', 'aria-describedby': 'hint' });
+    await nextTick();
+    await nextTick();
+    // ⚠️ `w.element` **本身就是**宿主（`mountInHost` 的最外层 div）—— querySelector 只搜后代
+    const host = w.element as HTMLElement;
+    expect(host.getAttribute('data-testid')).toBe('host');
+    expect(host.getAttribute('aria-describedby')).toBe('hint');
+  });
+
+  it('调用方 class 与宿主自己的 class **叠加**（不是覆盖）', async () => {
+    const w = mountInHost({}, { class: 'from-caller' });
+    await nextTick();
+    await nextTick();
+    // ⚠️ `w.element` **本身就是**宿主（`mountInHost` 的最外层 div）—— querySelector 只搜后代
+    const host = w.element as HTMLElement;
+    expect(host.classList.contains('from-caller')).toBe(true);
+    // 宿主原有的内联 style 不能被顶掉
+    expect(host.getAttribute('style')).toContain('border');
+  });
+});

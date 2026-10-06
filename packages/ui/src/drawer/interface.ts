@@ -118,7 +118,6 @@ export interface DrawerPanelProps {
       };
   closeIcon?: VNodeChild;
   onClose?: (e: Event) => void;
-  children?: VNodeChild;
   classNames?: DrawerSemanticType['classNames'];
   styles?: DrawerSemanticType['styles'];
   /** 内容区骨架态（依赖 `@apollo-design/ui` 的 Skeleton）。 */

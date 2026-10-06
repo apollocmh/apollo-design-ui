@@ -227,7 +227,9 @@ const needResponsive = computed(() =>
   ),
 );
 
-const screens = useBreakpoint(needResponsive.value);
+// 🚨 传**取值函数**而不是 `needResponsive.value` —— 后者会被订阅闭包捕获一次，
+// 此后 size 变成响应式（`{ xs: 'small' }`）也永不刷新（registry `VNA-AVATAR-01`）
+const screens = useBreakpoint(() => needResponsive.value);
 
 /**
  * 响应式尺寸的内联样式（上游 `responsiveSizeStyle`）。

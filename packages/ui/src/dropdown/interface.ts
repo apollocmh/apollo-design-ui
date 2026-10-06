@@ -76,9 +76,6 @@ export interface DropdownProps {
   destroyOnHidden?: boolean;
   forceRender?: boolean;
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
-  popupRender?: (originNode: VNodeChild) => VNodeChild;
-  /** ⚠️ deprecated：用 `popupRender`。 */
-  dropdownRender?: (originNode: VNodeChild) => VNodeChild;
   /** ⚠️ deprecated：用 `classNames.root`。 */
   overlayClassName?: string;
   /** ⚠️ deprecated：用 `styles.root`。 */
@@ -123,15 +120,12 @@ export interface DropdownButtonProps {
   onOpenChange?: (open: boolean, info: { source: 'trigger' | 'menu' }) => void;
   /** split：按钮与箭头分离（点击主钮 = onClick；箭头区触发下拉）。 */
   split?: boolean;
-  /** ⚠️ deprecated：不再需要。 */
-  buttonsRender?: (buttons: VNodeChild[]) => VNodeChild[];
   /** ⚠️ deprecated：直接写原生 attrs（`class` / `style` 会经 attrs 透传到根 div）。 */
   style?: Record<string, string | number>;
   autoAdjustOverflow?: boolean;
   destroyOnHidden?: boolean;
   forceRender?: boolean;
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
-  popupRender?: (originNode: VNodeChild) => VNodeChild;
   id?: string;
   zIndex?: number;
 }
