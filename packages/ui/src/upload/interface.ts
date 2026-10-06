@@ -145,20 +145,17 @@ export interface UploadProps<T = unknown> {
   onChange?: (info: UploadChangeParam<UploadFile<T>>) => void;
   onDrop?: (event: DragEvent) => void;
   listType?: UploadListType;
-  className?: string;
   classNames?:
     | UploadSemanticType['classNames']
     | ((info: { props: UploadProps<T> }) => UploadSemanticType['classNames']);
   styles?:
     | UploadSemanticType['styles']
     | ((info: { props: UploadProps<T> }) => UploadSemanticType['styles']);
-  rootClassName?: string;
   onPreview?: (file: UploadFile<T>) => void;
   onDownload?: (file: UploadFile<T>) => void;
   // biome-ignore lint/suspicious/noConfusingVoidType: antd 逐字契约 —— 返回 void 视为「不否决」，语句体回调依赖它
   onRemove?: (file: UploadFile<T>) => void | boolean | Promise<void | boolean>;
   supportServerRender?: boolean;
-  style?: Record<string, string | number>;
   disabled?: boolean;
   prefixCls?: string;
   customRequest?: (

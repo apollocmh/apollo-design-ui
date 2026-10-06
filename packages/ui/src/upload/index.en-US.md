@@ -59,7 +59,7 @@ omitted; see [`README.md`](./README.md) §6 for the landing points.
 | showUploadList | Show the list, or configure it: `{ showPreviewIcon, showRemoveIcon, showDownloadIcon }` | `boolean \| ShowUploadListInterface` | `true` |
 | type | `'drag'` is equivalent to using `UploadDragger` | `'select' \| 'drag'` | `'select'` |
 | withCredentials | Whether to send cookies on cross-origin requests | `boolean` | `false` |
-| rootClassName / className / style | Root class names and inline style | — | — |
+| class / style | **Native root attrs** (not Props); `style` flows through the semantic root channel's `trigger` slot | — | — |
 | hasControlInside | Whether the trigger already contains a focusable control (drives `role="button"` / `tabIndex` on the engine root) | `boolean` | `true` |
 | locale | Override built-in text | `{ uploading, removeFile, downloadFile, previewFile }` | from `LocaleProvider` |
 

@@ -58,7 +58,7 @@ subtitle: 上传
 | showUploadList | 是否展示列表，或 `{ showPreviewIcon, showRemoveIcon, showDownloadIcon }` | `boolean \| ShowUploadListInterface` | `true` |
 | type | 上传形态。`'drag'` 等价于使用 `UploadDragger` | `'select' \| 'drag'` | `'select'` |
 | withCredentials | 跨域请求是否携带 cookie | `boolean` | `false` |
-| rootClassName / className / style | 根元素类名与内联样式 | — | — |
+| class / style | **根元素原生 attrs**（不是 Props）；`style` 经语义 root 通道的 `trigger` 槽下发 | — | — |
 | hasControlInside | 触发区内是否已有可聚焦控件（决定引擎根是否带 `role="button"` / `tabIndex`） | `boolean` | `true` |
 | locale | 覆盖内置文案 | `{ uploading, removeFile, downloadFile, previewFile }` | 从 `LocaleProvider` 取 |
 

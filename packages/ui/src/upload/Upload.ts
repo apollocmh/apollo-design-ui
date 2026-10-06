@@ -51,9 +51,6 @@ export const UploadComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<CSSStyleLike>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<UploadProps['classNames']>,
       default: undefined,
@@ -367,7 +364,8 @@ export const UploadComponent = defineComponent({
       (context as { style?: CSSStyleLike }).style,
       'trigger',
     );
-    const triggerStyle = semanticRootStyle(props.style, 'trigger');
+    // 根 style 是 Vue 原生 attrs；仍走语义 root 通道的 'trigger' 槽（与上游落点一致）
+    const triggerStyle = semanticRootStyle(attrs.style as CSSStyleLike, 'trigger');
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       UploadProps,
       NonNullable<UploadSemanticType['classNames']>,
@@ -407,8 +405,8 @@ export const UploadComponent = defineComponent({
     const wrapperCls = computed(() => `${prefixCls.value}-wrapper`);
     const rootCls = computed(() => [
       wrapperCls.value,
-      props.className,
-      props.rootClassName,
+      // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+      attrs.class,
       (context as { className?: string }).className,
       mergedClassNames.value?.root,
       {
