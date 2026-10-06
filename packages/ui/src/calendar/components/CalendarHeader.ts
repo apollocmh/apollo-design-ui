@@ -179,7 +179,8 @@ function renderModeSwitch(
     {
       // ⚠️ `value` / `onChange` 是 RadioGroup 的 **prop**（不是 emit），见其 interface
       value: p.mode,
-      className: `${p.prefixCls}-mode-switch`,
+      // RadioGroup 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+      class: `${p.prefixCls}-mode-switch`,
       ...(p.fullscreen ? {} : { size: 'small' as const }),
       onChange: (e: { target: { value: string } }) => {
         p.onModeChange(e.target.value as CalendarMode);
