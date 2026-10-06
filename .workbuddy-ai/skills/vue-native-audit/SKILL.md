@@ -94,6 +94,25 @@ A library-wide scan (`^\s*(className|rootClassName|style)\?:` in every `packages
 - **🚨 In a hand-written object literal, `class: <array>` written AFTER `...attrs` silently replaces the caller class.** Object spread is last-wins, so the caller's `class` disappears entirely (L4 reported "Vue side only has the prefix class"). Same for `style:`. Fix: push `attrs.class` **into** the array and don't re-assign the `style` key (let `...attrs` carry it), or use `mergeProps`. Keep the original position of the user value inside the array/merge so the SSR byte contract is unchanged.
 - **Preserve the original merge position of the user `style`.** Several components merge user style *between* internal layers rather than last (`Col`: `mergedStyle → user → sizeStyle`, so the responsive `sizeStyle` still wins; `Sider`: user first, computed width last). Read the existing expression before replacing it — moving the user value to the end changes behavior even though types still pass.
 - **Some roots deliberately accept only `class`/`style` and drop every other attr.** `Carousel` and `Calendar` roots have no `{...restProps}` upstream (proven by the L4 `carousel:attrs` / `calendar:attrs` cases where the React output has no `data-x`). Spreading the whole `attrs` object there turns the suite red; merge only `{ class: attrs.class, style: attrs.style }`.
+- **🚨 After migrating a component, sweep the whole repo for internal consumers that still pass `className` / `rootClassName` to it.** They are no longer props, so the value falls into `attrs` and the class is **silently lost** — the consumer's own suite goes red with a diff like `[apollo-col apollo-form-item-control] vs [apollo-form-item-control]`. This bit us on `Form → Col` (19 L4 cases red at once), `FloatButtonGroup → Flex/SpaceCompact`, `FloatButton → Badge`, `InputNumber → SpaceAddon/SpaceCompact`, `Modal → Skeleton`, `Statistic.Timer → Statistic`. Reusable scan (run it after each component, or once per batch):
+
+```sh
+node -e "
+const fs=require('fs'),path=require('path');
+const MIG=['Button','Divider','Flex','Alert','Breadcrumb','Avatar','Card','Descriptions','Anchor',
+'Carousel','App','Calendar','Badge','Dropdown','Space','Row','Col','Layout','Tag','Skeleton',
+'Result','Statistic'];                       // ← 追加刚迁移的组件
+const out=[];
+(function walk(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);
+if(e.isDirectory()){if(['__tests__','demo','node_modules','dist'].includes(e.name))continue;walk(p);continue;}
+if(!/\.(ts|vue|tsx)\$/.test(e.name))continue;const lines=fs.readFileSync(p,'utf8').split('\n');
+lines.forEach((l,i)=>{if(!/className:|rootClassName:/.test(l)||/^\s*\//.test(l))return;
+const m=[...lines.slice(Math.max(0,i-25),i).join('\n').matchAll(/h\(\s*([A-Z][A-Za-z0-9_]*)\s*,/g)].map(x=>x[1]);
+const hit=m.filter(n=>MIG.includes(n));if(hit.length)out.push(p+':'+(i+1)+' ['+hit.at(-1)+'] '+l.trim());});}})('packages/ui/src');
+console.log(out.join('\n')||'clean');"
+```
+
+  The 25-line lookback is a heuristic — **verify each hit by reading the actual `h(Component, {` it belongs to**. Known false positives: `modal/engine/Dialog.ts`'s own `Content`, `table/hooks/use-filter.ts`'s `FilterWrapper`, and `Dropdown.rootClassName` (a popup target, legitimately kept). Also note a migration can create a **duplicate-key** lint error when two old props (`className` + `rootClassName`) collapse into one `class:` — merge them into an array preserving the original clsx order.
 - **Check whether the "root" is the component's own root or an inner layer.** `Anchor` puts `restProps` on the **inner wrapper div**, not the outer `Affix` → needs `inheritAttrs: false` plus an explicit bind. `Dropdown`'s `rootClassName` targets the popup (the component has no DOM root) and `Carousel`'s `className`/`style` target the inner `slick-slider` — those are genuine dedicated props, not aliases; keep them and document why.
 
 ## Finding taxonomy and severity

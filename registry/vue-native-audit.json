@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-05T23:15:11.016Z",
+  "updatedAt": "2026-10-06T00:25:58.802Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 42,
+      "todo": 38,
       "analyzing": 9,
       "refactoring": 0,
       "testing": 0,
-      "done": 21,
+      "done": 25,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,19 +51,19 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 175,
+    "reviewedProductionSourceFiles": 215,
     "issues": {
-      "total": 13,
+      "total": 14,
       "bySeverity": {
         "P0": 1,
-        "P1": 4,
+        "P1": 5,
         "P2": 7,
         "P3": 1
       },
       "byStatus": {
         "open": 8,
         "in_progress": 1,
-        "fixed": 4,
+        "fixed": 5,
         "deferred": 0,
         "wont_fix": 0
       }
@@ -443,7 +443,7 @@
       "reviewedFileCount": 9
     },
     "tag": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/tag/CheckableTag.ts",
         "packages/ui/src/tag/CheckableTagGroup.ts",
@@ -454,7 +454,16 @@
         "packages/ui/src/tag/style/token.ts",
         "packages/ui/src/tag/Tag.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/tag/CheckableTag.ts",
+        "packages/ui/src/tag/CheckableTagGroup.ts",
+        "packages/ui/src/tag/hooks/use-color.ts",
+        "packages/ui/src/tag/index.ts",
+        "packages/ui/src/tag/interface.ts",
+        "packages/ui/src/tag/style/index.ts",
+        "packages/ui/src/tag/style/token.ts",
+        "packages/ui/src/tag/Tag.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 11,
       "docFiles": [
@@ -463,9 +472,14 @@
         "packages/ui/src/tag/index.en-US.md",
         "packages/ui/src/tag/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 58/58；Tag/CheckableTag/CheckableTagGroup 三面都改。CheckableTagOption 的 className/style 是选项数据字段，保留。"
+      ],
+      "reviewedFileCount": 8
     },
     "badge": {
       "auditStatus": "done",
@@ -542,7 +556,7 @@
       "reviewedFileCount": 6
     },
     "skeleton": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/skeleton/Avatar.vue",
         "packages/ui/src/skeleton/Button.vue",
@@ -559,7 +573,22 @@
         "packages/ui/src/skeleton/styleLength.ts",
         "packages/ui/src/skeleton/Title.vue"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/skeleton/Avatar.vue",
+        "packages/ui/src/skeleton/Button.vue",
+        "packages/ui/src/skeleton/Element.vue",
+        "packages/ui/src/skeleton/Image.vue",
+        "packages/ui/src/skeleton/index.ts",
+        "packages/ui/src/skeleton/Input.vue",
+        "packages/ui/src/skeleton/interface.ts",
+        "packages/ui/src/skeleton/Node.vue",
+        "packages/ui/src/skeleton/Paragraph.vue",
+        "packages/ui/src/skeleton/Skeleton.vue",
+        "packages/ui/src/skeleton/style/index.ts",
+        "packages/ui/src/skeleton/style/token.ts",
+        "packages/ui/src/skeleton/styleLength.ts",
+        "packages/ui/src/skeleton/Title.vue"
+      ],
       "testFileCount": 4,
       "demoFileCount": 5,
       "docFiles": [
@@ -567,9 +596,14 @@
         "packages/ui/src/skeleton/index.en-US.md",
         "packages/ui/src/skeleton/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 111/111；Skeleton 去掉 className/rootClassName/style；SkeletonNodeProps 去掉 rootClassName（外层 div 根别名），保留 className/style（落内层 span，独立目标）；Avatar/Button/Image/Input 四个子组件同步。"
+      ],
+      "reviewedFileCount": 14
     },
     "spin": {
       "auditStatus": "analyzing",
@@ -606,7 +640,7 @@
       "reviewedFileCount": 3
     },
     "result": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/result/components/NoFound.ts",
         "packages/ui/src/result/components/ServerError.ts",
@@ -618,7 +652,17 @@
         "packages/ui/src/result/style/index.ts",
         "packages/ui/src/result/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/result/components/NoFound.ts",
+        "packages/ui/src/result/components/ServerError.ts",
+        "packages/ui/src/result/components/Unauthorized.ts",
+        "packages/ui/src/result/index.ts",
+        "packages/ui/src/result/interface.ts",
+        "packages/ui/src/result/maps.ts",
+        "packages/ui/src/result/Result.vue",
+        "packages/ui/src/result/style/index.ts",
+        "packages/ui/src/result/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 9,
       "docFiles": [
@@ -628,10 +672,14 @@
         "packages/ui/src/result/index.zh-CN.md"
       ],
       "issueIds": [
-        "VNA-RENDERER-01"
+        "VNA-RENDERER-01",
+        "VNA-ROOTALIAS-01"
       ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 100/100；ResultProps 去掉 className/style，根 class 接 attrs.class、style 保持调用方最后胜出。"
+      ],
+      "reviewedFileCount": 9
     },
     "watermark": {
       "auditStatus": "todo",
@@ -693,7 +741,7 @@
       "reviewedFileCount": 6
     },
     "statistic": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/statistic/Countdown.ts",
         "packages/ui/src/statistic/index.ts",
@@ -705,7 +753,17 @@
         "packages/ui/src/statistic/Timer.ts",
         "packages/ui/src/statistic/utils.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/statistic/Countdown.ts",
+        "packages/ui/src/statistic/index.ts",
+        "packages/ui/src/statistic/interface.ts",
+        "packages/ui/src/statistic/Number.ts",
+        "packages/ui/src/statistic/Statistic.ts",
+        "packages/ui/src/statistic/style/index.ts",
+        "packages/ui/src/statistic/style/token.ts",
+        "packages/ui/src/statistic/Timer.ts",
+        "packages/ui/src/statistic/utils.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 6,
       "docFiles": [
@@ -714,9 +772,14 @@
         "packages/ui/src/statistic/index.en-US.md",
         "packages/ui/src/statistic/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 100/100；StatisticProps 去掉 className/rootClassName/style；Timer 转发时把 className/rootClassName 合并成一个 class 数组。"
+      ],
+      "reviewedFileCount": 9
     },
     "affix": {
       "auditStatus": "done",
@@ -3152,7 +3215,15 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（18 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam（Effect 层）、anchor items[] 的 className（数据字段）、carousel 内层 slick-slider、badge.style（条件目标）、ribbon.className/style（丝带本体）、dropdown.rootClassName（浮层）、descriptions item 级、avatar group max/popover。阻塞：auto-complete 需先做 select；typography 的 Base 是内部件、根属性归 InternalTypography，需单独处理。其余待办。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（22 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 的内层 className/style、tag 的 CheckableTagOption。阻塞：auto-complete 需先做 select；typography 的根属性归 InternalTypography。"
+    },
+    {
+      "id": "VNA-ROOTALIAS-02",
+      "severity": "P1",
+      "status": "fixed",
+      "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
+      "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
+      "verification": "已修 6 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName（浮层目标）。扫描脚本已写进 Skill，每批迁移后都要跑。"
     }
   ],
   "batches": [
@@ -3305,6 +3376,11 @@
       "date": "2026-10-05",
       "status": "in_progress",
       "note": "Root-alias migration batch 4: badge, dropdown, space, grid, layout migrated (18 components total). Key pitfall found: writing `class: <array>` AFTER `...attrs` in an object literal silently replaces the caller class entirely (L4 caught it on Layout/Sider) - attrs.class must be pushed into the array instead. Also removed DropdownButtonProps.className which fixes VNA-DROPDOWN-02 (React key leaking into the DOM as a classname attribute)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 5: tag, skeleton, result, statistic migrated (22 components total). New P1 issue VNA-ROOTALIAS-02 found and fixed: internal consumers still passing className/rootClassName to migrated components silently lose the class (Form->Col broke 19 L4 cases at once). A reusable repo-wide scan script is now in the Skill and must be run after every batch. Also learned: collapsing className+rootClassName into one class key can create a duplicate-key lint error; merge into an array preserving clsx order."
     }
   ],
   "observations": [
