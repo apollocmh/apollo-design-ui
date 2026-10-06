@@ -46,12 +46,6 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §1 仍开放的问题
 
-### 1.2 📌 `color-picker` 面板的 DOM 结构没有「与 antd 逐条对拍」的自动化
-
-- 面板在 Popover 的 Portal 里，L4 拿不到（SSR 不渲染）⇒ 只有 L6 像素级（27/27 exact）。
-  若将来出现「像素相同但结构不同」的漂移，不会红。
-- **若认为值得做**：L6 用例里加 DOM 断言（`tests/visual/debug/dump.mjs` 可 dump），
-  或做「真浏览器 dump 面板 DOM 再与 antd 对拍」的探针。**不阻塞任何组件。**
 
 ### 1.3 ✅ 已钉住（2026-10-04）
 
@@ -135,6 +129,7 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 | commit | 内容 |
 |---|---|
 | （2026-10-06） | **§1.1 面板隔离 Form 上下文**：读了上游才发现  的实现**就是** （）⇒ 本仓**已有对应物** ，不必自建通用 ContextIsolator。加在 **ColorPickerPanel 的 setup**（不是 ColorPicker.vue —— 否则连触发器也会被隔离）。⚠️ 面板里当前**没有**子件读 form status ⇒ 这是**防将来分叉**、不是修 bug。用例**直接查 provide 表**（查 DOM 会空转通过=假绿灯），并**用反向哨兵验过**：删掉那句 provide ⇒ 用例变红。 |
+| （2026-10-06） | **§1.2 真浏览器 DOM 对拍探针**：新增 `tests/visual/dom-probe.mjs` —— 两侧页面在**真浏览器**里渲染、取 `#stage` 的 `outerHTML`，再喂给 **L4 的同一套归一化**（`@apollo-design/test-utils` 的 `contractOf`；Node 侧用 jsdom 提供 `document`）后逐节点对比。**判据只有一个来源** ⇒ 不会出现「L4 绿 + 探针红」互相矛盾（PITFALLS 353 的同类教训）。复用 `stabilize.mjs` 的 `newStablePage` + `__VISUAL_READY__`（与 L6 看同一个状态）；`class` 值内做 `ant-` → `apollo-` 前缀归一（视觉层两侧前缀本就不对齐）。**已验**：`color-picker/basicOpen`、`tooltip/basicOpen` 两侧一致；**且能区分**（首轮就抓出前缀差异 ⇒ 不是空转）。用法：`node tests/visual/dom-probe.mjs <component> <variant>`。 |
 | （2026-10-06） | **§1.9 L6 假红自检**：`run.mjs` 现在对 FAIL 项（排除 render-error）用 `launchBrowser()` 起**全新浏览器**重拍 + 重比，PASS 的判 `FLAKY`。**实测生效**：全量跑时那 6 处（menu/vertical ×3 + upload/basic ×3）被自动识别、逐个「单独重拍 0.000%」，汇总改为「假红（单独重拍 exact，不算失败、也不要记进 COMPATIBILITY.md）：6」，**退出码不再变红**。根因（全量连跑 1125 张时的负载/时序）不追。新增 `--no-recheck` 可跳过。 |
 | （2026-10-06） | **§1.4 biome 存量告警清零**：全仓 `biome check .` = **0 error / 0 warning**（2871 文件）。做法严格遵守「逐个收窄、不扫改」：**能靠守卫收窄的真修**（`tree/utils/conductUtil.ts` 10 处把守卫从 `!entity.parent` 改成 `!parent`；`table/engine/*` 14 处 `inject(...)!` 换成新助手 `useTableContext()`/`useRowContext()`，缺 provider 时抛可读错）；**收窄不了的按「算法不变式」加带具体理由的豁免**（rc-tree 拖拽 / progress 的 step 形态 / Map.get-after-has …）。⚠️ 顺带修掉 2 个 **error**（`noUnusedImports`，是本轮迁移删 prop 后留下的）—— 组件级测试不查 lint，只有全仓 biome 抓得到。 |
 | （2026-10-06） | **§1.8 date-picker 接上 attrs 透传**：两个文件此前 `inheritAttrs: false` 且**从不读 attrs** ⇒ `data-*`/`aria-*` 全丢。现在 `restAttrs`（除 class/style）并进引擎绑定（`selectorBindings`），**引擎自己的 props 在后（引擎胜）**。新增 3 条 L1：`data-*`/`aria-*` 落选择器根 / 原生 `class`+`style` 仍落根 / `id` 不被 attrs 顶掉。✅ **L4 基线零改动**（先核实过：date-picker 的 L4 用例不传 `className`/`style`/额外 attrs）。 |
