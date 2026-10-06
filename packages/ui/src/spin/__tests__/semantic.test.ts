@@ -198,9 +198,9 @@ const CASES: Record<string, () => DomRenderResult> = {
     }),
 
   // ---- 10. style / className / 属性透传 ----
-  'class:className': () => noChildren({ prefixCls: PREFIX, className: 'my-class' }),
-  'class:rootClassName': () => noChildren({ prefixCls: PREFIX, rootClassName: 'root-class' }),
-  'class:both': () => noChildren({ prefixCls: PREFIX, className: 'a', rootClassName: 'b' }),
+  'class:className': () => noChildren({ prefixCls: PREFIX, class: 'my-class' }),
+  'class:rootClassName': () => noChildren({ prefixCls: PREFIX, class: 'root-class' }),
+  'class:both': () => noChildren({ prefixCls: PREFIX, class: ['a', 'b'] }),
   'attrs:passthrough': () => noChildren({ prefixCls: PREFIX, 'data-testid': 'x', id: 'my-spin' }),
   'style:style-over-root': () =>
     noChildren({

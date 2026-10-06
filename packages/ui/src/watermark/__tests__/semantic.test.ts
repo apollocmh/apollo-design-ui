@@ -48,18 +48,13 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 
   'watermark:class-name': {
-    render: () => h(Watermark, { className: 'cn' }, { default: () => h('div', null, 'x') }),
+    render: () => h(Watermark, { class: 'cn' }, { default: () => h('div', null, 'x') }),
   },
   'watermark:root-class-name': {
-    render: () => h(Watermark, { rootClassName: 'rcn' }, { default: () => h('div', null, 'x') }),
+    render: () => h(Watermark, { class: 'rcn' }, { default: () => h('div', null, 'x') }),
   },
   'watermark:class-both': {
-    render: () =>
-      h(
-        Watermark,
-        { className: 'cn', rootClassName: 'rcn' },
-        { default: () => h('div', null, 'x') },
-      ),
+    render: () => h(Watermark, { class: ['cn', 'rcn'] }, { default: () => h('div', null, 'x') }),
   },
   'watermark:style-merge': {
     render: () =>

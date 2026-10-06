@@ -114,17 +114,11 @@ export interface SpinSemanticAllType {
 export interface SpinProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根元素上（在 ConfigProvider 的 `className` 之后）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**）。 */
-  rootClassName?: string;
   /**
    * 是否处于加载中。
    * @default true
    */
   spinning?: boolean;
-  /** 根元素的内联样式。会**覆盖** `styles.root`（与 antd 的合并顺序一致）。 */
-  style?: CSSProperties;
   /**
    * 尺寸。
    *

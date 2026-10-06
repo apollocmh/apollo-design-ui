@@ -177,8 +177,8 @@ describe('Empty · image 的三种形态', () => {
 });
 
 describe('Empty · class / style / 属性透传', () => {
-  it('className 与 rootClassName 都落在根元素', () => {
-    const w = mountEmpty({ className: 'a', rootClassName: 'b' });
+  it('原生 class（字符串 / 数组）落在根元素', () => {
+    const w = mountEmpty({ class: ['a', 'b'] });
     expect(w.classes()).toContain('a');
     expect(w.classes()).toContain('b');
   });
@@ -257,7 +257,7 @@ describe('Empty · 语义化 classNames / styles', () => {
 
   it('classNames 是**拼接**而非覆盖（与 styles 的语义不同）', () => {
     const w = mountEmpty({
-      className: 'user-class',
+      class: 'user-class',
       classNames: { root: 'semantic-class' },
     });
     expect(w.classes()).toContain('user-class');

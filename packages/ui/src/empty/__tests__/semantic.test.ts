@@ -107,9 +107,9 @@ const CASES: Record<string, () => DomRenderResult> = {
   'children:empty-array': () => h(Empty, { prefixCls: PREFIX }, () => []),
 
   // ---- 5. className / rootClassName / 属性透传 ----
-  'class:className': () => h(Empty, { prefixCls: PREFIX, className: 'my-class' }),
-  'class:rootClassName': () => h(Empty, { prefixCls: PREFIX, rootClassName: 'root-class' }),
-  'class:both': () => h(Empty, { prefixCls: PREFIX, className: 'a', rootClassName: 'b' }),
+  'class:className': () => h(Empty, { prefixCls: PREFIX, class: 'my-class' }),
+  'class:rootClassName': () => h(Empty, { prefixCls: PREFIX, class: 'root-class' }),
+  'class:both': () => h(Empty, { prefixCls: PREFIX, class: ['a', 'b'] }),
   'attrs:passthrough': () => h(Empty, { prefixCls: PREFIX, 'data-testid': 'x', id: 'my-empty' }),
 
   // ---- 6. 语义化 ----

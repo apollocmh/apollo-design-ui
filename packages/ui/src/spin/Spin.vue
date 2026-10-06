@@ -71,10 +71,7 @@ defineOptions({ name: 'ASpin', inheritAttrs: false });
  */
 const props = withDefaults(defineProps<SpinProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
   spinning: true,
-  style: undefined,
   size: undefined,
   tip: undefined,
   description: undefined,
@@ -289,14 +286,14 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-rtl`]: direction === 'rtl',
     [`${prefixCls.value}-fullscreen`]: props.fullscreen,
   },
-  props.rootClassName,
   mergedClassNames.value.root,
   props.fullscreen && mergedClassNames.value.mask,
   // ⚠️ 非嵌套时根元素自己就是 section（同时吃 section 的语义类名）；
   //    嵌套时根元素改吃（已废弃的）`wrapperClassName`，`-section` 下移到内层 div。
   isNested.value ? props.wrapperClassName : [sectionCls.value, mergedClassNames.value.section],
   contextClassName,
-  props.className,
+  // ⚠️ 调用方原生 `class` **不在这里**：模板的 `v-bind="rootAttrs"` 已带 `attrs.class`，
+  //    由 Vue 的 mergeProps 与 `:class` 合并 —— 这里再加一次会渲染出两份类名。
 ]);
 
 const innerSectionClass = computed(() => [sectionCls.value, mergedClassNames.value.section]);
@@ -325,7 +322,7 @@ const rootStyle = computed<CSSProperties>(() => ({
   ...mergedStyles.value.root,
   ...(isNested.value ? {} : mergedStyles.value.section),
   ...(props.fullscreen ? mergedStyles.value.mask : {}),
-  ...props.style,
+  // 根 `style` 是 Vue 原生 attrs：`rootAttrs` 把它排在 `rootStyleAttrs` 之后 ⇒ 最后胜出
 }));
 
 const innerSectionStyleAttrs = computed(() => styleAttrs(mergedStyles.value.section));

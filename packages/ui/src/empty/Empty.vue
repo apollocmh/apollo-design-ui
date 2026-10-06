@@ -19,7 +19,7 @@
 
 import { useLocaleReactive } from '@apollo-design/locale';
 import { isRenderable, useDevWarning } from '@apollo-design/utils';
-import { computed, ref, useAttrs, useSlots, type VNodeChild } from 'vue';
+import { computed, mergeProps, ref, useAttrs, useSlots, type VNodeChild } from 'vue';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { EmptyImage as DefaultEmptyImage, SimpleEmptyImage } from './components/Images';
@@ -122,12 +122,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   EmptySemanticStyles
 >(
   [() => contextClassNames, () => props.classNames],
-  [
-    () => contextStyles,
-    () => semanticRootStyle(contextStyle),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
   props,
 );
 
@@ -142,8 +137,8 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-normal`]: mergedImage.value === SimpleEmptyImage,
     [`${prefixCls.value}-rtl`]: direction === 'rtl',
   },
-  props.className,
-  props.rootClassName,
+  // ⚠️ 调用方原生 `class` **不在这里**：模板的 `v-bind="rootAttrs"` 已带 `attrs.class`，
+  //    由 Vue 的 mergeProps 与 `:class` 合并 —— 这里再加一次会渲染出两份类名。
   mergedClassNames.value.root,
 ]);
 
@@ -185,7 +180,8 @@ const footerStyleAttrs = computed(() => styleAttrs(mergedStyles.value.footer));
  * ⚠️ 样式的处理见 `styleAttrs` 的注释：SSR 对 `style` 键是无条件输出的，
  *    必须让空样式时**连键都不出现**。
  */
-const rootAttrs = computed(() => ({ ...attrs, ...rootStyleAttrs.value }));
+// 语义根样式在前、调用方原生 attrs 在后 ⇒ 调用方 `style` 最后胜出。
+const rootAttrs = computed(() => mergeProps(rootStyleAttrs.value, attrs));
 
 // ---------------------------------------------------------------------------
 // 暴露

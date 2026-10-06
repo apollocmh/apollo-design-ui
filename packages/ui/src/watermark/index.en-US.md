@@ -30,7 +30,7 @@ because Modal + Drawer are not landed yet).
 | zIndex | Stacking level | `number` | `zIndexPopupBase - 1` (999) |
 | inherit | Whether descendant overlays inherit the watermark | `boolean` | `true` |
 | onRemove | Fired when the watermark element is removed / reparented | `() => void` | — |
-| className / rootClassName / style | Root element attributes (**style overrides** `position`/`overflow`) | — | — |
+| class / style | **Native root attrs** (not Props); `style` overrides `position`/`overflow` | — | — |
 
 ### Slots
 

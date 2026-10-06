@@ -22,8 +22,7 @@ See [`demo/`](./demo) (6 demos, one-to-one with antd).
 | Property | Description | Type | Default |
 |---|---|---|---|
 | prefixCls | Class name prefix | `string` | from ConfigProvider, falls back to `apollo` |
-| className | Class name of the root element | `string` | — |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — |
+| class / style | **Native root attrs** (not Props); `style` overrides `styles.root` | `string \| array \| object` / `CSSProperties` | — |
 | style | Inline style of the root element. **Overrides `styles.root`** | `CSSProperties` | — |
 | image | Custom illustration. A string renders as `<img draggable="false">` | `VNodeChild \| Component` | `PRESENTED_IMAGE_DEFAULT` |
 | imageStyle | ⚠️ Deprecated, use `styles.image`. Merged with `styles.image`, which wins | `CSSProperties` | — |
@@ -59,7 +58,7 @@ Merge priority (low → high):
 ```
 ConfigProvider.empty.classNames/styles
   → component classNames / styles
-  → className / rootClassName / style (applied to the root element)
+  → native root class / style attrs
 ```
 
 Note that **`style` overrides `styles.root`** — that is antd's merge order, matched one-to-one.

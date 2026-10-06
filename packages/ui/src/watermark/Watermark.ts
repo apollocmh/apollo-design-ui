@@ -66,15 +66,12 @@ export default defineComponent({
       default: undefined,
     },
     font: { type: Object as PropType<WatermarkFont>, default: () => ({}) },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     gap: { type: Array as unknown as PropType<WatermarkProps['gap']>, default: undefined },
     offset: { type: Array as unknown as PropType<WatermarkProps['offset']>, default: undefined },
     inherit: { type: Boolean, default: true },
     onRemove: { type: Function as PropType<() => void>, default: undefined },
   },
-  setup(props, { expose, slots }) {
+  setup(props, { attrs, expose, slots }) {
     const context = useComponentConfig('watermark');
     const contextClassName = context.className;
     const contextStyle = context.style as Record<string, string | number> | undefined;
@@ -82,10 +79,10 @@ export default defineComponent({
     const token = useToken();
 
     // ============================ Style ================================
+    // 根 `style` 是 Vue 原生 attrs（不再是 prop），在 render 里排在最后 ⇒ 仍覆盖一切。
     const mergedStyle = computed<Record<string, string | number>>(() => ({
       ...fixedStyle,
       ...contextStyle,
-      ...props.style,
     }));
 
     // 运行时 token：canvas 需要**实值**（CSS 变量进不了 canvas）。
@@ -371,8 +368,13 @@ export default defineComponent({
         'div',
         {
           ref: setContainerRef,
-          class: [props.className, contextClassName, props.rootClassName],
-          style: mergedStyle.value,
+          // 根 `class` / `style` 是 Vue 原生 attrs（位置与原先的
+          // props.className/rootClassName/style 一致）。
+          class: [attrs.class, contextClassName],
+          style: {
+            ...mergedStyle.value,
+            ...((attrs.style as Record<string, string | number>) ?? {}),
+          },
         },
         [childNode()],
       );

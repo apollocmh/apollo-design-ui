@@ -57,10 +57,7 @@ describe('Spin · Props', () => {
 
     const full: SpinProps = {
       prefixCls: 'apollo',
-      className: 'a',
-      rootClassName: 'b',
       spinning: true,
-      style: { color: 'red' },
       size: 'medium',
       tip: 'tip',
       description: 'desc',
@@ -79,8 +76,19 @@ describe('Spin · Props', () => {
     expectTypeOf<SpinProps['delay']>().toEqualTypeOf<number | undefined>();
   });
 
-  it('`style` 是 Vue 的 `CSSProperties`，不是字符串', () => {
-    expectTypeOf<SpinProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+  it('根 `class` / `style` 是 Vue 原生 attrs（不在 SpinProps 键集里）', () => {
+    expectTypeOf<
+      Extract<keyof SpinProps, 'className' | 'rootClassName' | 'style'>
+    >().toEqualTypeOf<never>();
+
+    const _never = () => {
+      // @ts-expect-error `className` 由 Vue 原生 `class` 取代
+      const badClassName: SpinProps = { className: 'legacy' };
+      // @ts-expect-error 原生 `style` 不是 SpinProps
+      const badStyle: SpinProps = { style: { color: 'red' } };
+      return [badClassName, badStyle];
+    };
+    void _never;
   });
 
   it('`spinning` / `fullscreen` 是 boolean（都有运行时默认值）', () => {

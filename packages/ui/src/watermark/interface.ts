@@ -42,12 +42,6 @@ export interface WatermarkProps {
   content?: WatermarkContent | WatermarkContent[];
   /** 字体。@default color=colorFill, fontSize=fontSizeLG, … */
   font?: WatermarkFont;
-  /** 根元素内联样式。 */
-  style?: CSSProperties;
-  /** 根元素类名。 */
-  className?: string;
-  /** 根元素类名。 */
-  rootClassName?: string;
   /** 水印间距。@default [100, 100] */
   gap?: [number, number];
   /** 水印偏移。@default gap/2 */

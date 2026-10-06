@@ -94,7 +94,7 @@ describe('Watermark · 结构', () => {
   it('nativeElement ref 指向根 div；fixedStyle 落根元素', () => {
     // ⚠️ 必须直接 mount 组件：函数式包装会让 getCurrentComponent() 取到包装组件，
     //    exposed 恒为 undefined（statistic 会话踩过同一坑）。
-    const w = mount(Watermark, { props: { className: 'watermark-ref', content: 'Ant Design' } });
+    const w = mount(Watermark, { props: { class: 'watermark-ref', content: 'Ant Design' } });
     const root = w.find('.watermark-ref');
     expect(root.exists()).toBe(true);
     const exposed = (w.getCurrentComponent().exposed ?? {}) as { nativeElement?: unknown };
@@ -105,7 +105,7 @@ describe('Watermark · 结构', () => {
   });
 
   it('水印 div 被运行时 append：背景图 + pointer-events:none + repeat + 默认 zIndex 999', async () => {
-    const w = mount(() => h(Watermark, { className: 'watermark', content: 'Ant Design' }));
+    const w = mount(() => h(Watermark, { class: 'watermark', content: 'Ant Design' }));
     await flushFrame();
     const target = w.find('.watermark div');
     expect(target.exists()).toBe(true);
@@ -122,7 +122,7 @@ describe('Watermark · 结构', () => {
   it('offset 修正：>0 才写 left/top 与 calc 宽高，position 归 0', async () => {
     const w = mount(() =>
       h(Watermark, {
-        className: 'watermark',
+        class: 'watermark',
         offset: [200, 200],
         content: ['Ant Design', 'Ant Design Pro'],
       }),
@@ -139,7 +139,7 @@ describe('Watermark · 结构', () => {
   it('交错平铺 backgroundSize（width=height=200, gap 100/100 ⇒ 720px）', async () => {
     const w = mount(() =>
       h(Watermark, {
-        className: 'watermark',
+        class: 'watermark',
         width: 200,
         height: 200,
         content: 'Ant Design',
@@ -180,7 +180,7 @@ describe('Watermark · 结构', () => {
   });
 
   it('content 为空串 ⇒ 零尺寸保护（无 0,0 drawImage）', async () => {
-    const w = mount(() => h(Watermark, { className: 'watermark', content: '' }));
+    const w = mount(() => h(Watermark, { class: 'watermark', content: '' }));
     await flushFrame();
     for (const call of ctxMock.drawImage.mock.calls) {
       const [, x, y] = call;
@@ -191,7 +191,7 @@ describe('Watermark · 结构', () => {
 
   it('MutationObserver：水印元素被删 ⇒ 重挂（参数未变则命中缓存，不重绘）', async () => {
     toDataUrlCalls = 0;
-    const w = mount(() => h(Watermark, { className: 'watermark', content: 'MutationObserver' }));
+    const w = mount(() => h(Watermark, { class: 'watermark', content: 'MutationObserver' }));
     await flushFrame();
     expect(toDataUrlCalls).toBe(1);
     const root = w.find('.watermark').element;
@@ -205,7 +205,7 @@ describe('Watermark · 结构', () => {
 
   it('防篡改：container 的 style 被清空 ⇒ fixedStyle 回写', async () => {
     const w = mount(() =>
-      h(Watermark, { className: 'watermark', offset: [-200, -200], content: 'MutationObserver' }),
+      h(Watermark, { class: 'watermark', offset: [-200, -200], content: 'MutationObserver' }),
     );
     await flushFrame();
     const root = w.find('.watermark').element as HTMLElement;
@@ -218,7 +218,7 @@ describe('Watermark · 结构', () => {
 
   it('防篡改：水印元素 style 被清空 ⇒ 重写完整样式', async () => {
     const w = mount(() =>
-      h(Watermark, { className: 'watermark', offset: [-200, -200], content: 'MutationObserver' }),
+      h(Watermark, { class: 'watermark', offset: [-200, -200], content: 'MutationObserver' }),
     );
     await flushFrame();
     const root = w.find('.watermark').element;
@@ -280,7 +280,7 @@ describe('Watermark · 图片水印', () => {
     });
     ctxMock.drawImage.mockClear();
     const w = mount(Watermark, {
-      props: { className: 'watermark', width: 130, height: 30, image: 'https://test/svg.svg' },
+      props: { class: 'watermark', width: 130, height: 30, image: 'https://test/svg.svg' },
     });
     await flushFrame();
     const style = w.find('.watermark div').attributes('style') ?? '';
@@ -304,7 +304,7 @@ describe('Watermark · 图片水印', () => {
     });
     ctxMock.drawImage.mockClear();
     const w = mount(Watermark, {
-      props: { className: 'watermark', content: 'Ant Design', image: 'https://test.svg' },
+      props: { class: 'watermark', content: 'Ant Design', image: 'https://test.svg' },
     });
     await flushFrame();
     const style = w.find('.watermark div').attributes('style') ?? '';

@@ -30,7 +30,7 @@ subtitle: 水印
 | zIndex | 层级 | `number` | `zIndexPopupBase - 1`（999） |
 | inherit | 子孙浮层是否继承水印 | `boolean` | `true` |
 | onRemove | 水印元素被移除/换父时触发（防篡改） | `() => void` | — |
-| className / rootClassName / style | 根元素属性（**style 可覆盖** `position`/`overflow`） | — | — |
+| class / style | **根元素原生 attrs**（不是 Props）；`style` 可覆盖 `position`/`overflow` | — | — |
 
 ### 插槽
 
