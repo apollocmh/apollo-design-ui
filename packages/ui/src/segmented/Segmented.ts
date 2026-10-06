@@ -41,7 +41,6 @@
  */
 
 import { isString, pickAttrs, useControlledValue, useId } from '@apollo-design/utils';
-import type { CSSProperties } from 'vue';
 import {
   computed,
   defineComponent,
@@ -283,17 +282,16 @@ export const SegmentedComponent = defineComponent({
       const contextStyleRoot = semanticRootStyle(
         (context as { style?: Record<string, unknown> }).style as never,
       );
-      const styleRoot = semanticRootStyle(props.style as CSSProperties);
       const mergedClassNames = mergeClassNames<SegmentedSemanticClassNames>(
         contextClassNames,
         resolveSemantic(props.classNames, info),
       );
-      // 顺序是契约：style prop 排在 styles.root 之后 → style 覆盖 styles.root
+      // 顺序是契约：调用方原生 style 排在 styles.root 之后 → style 覆盖 styles.root
+      // （它现在走 `$attrs`，在 render 里作为最后一个 style 源合并）
       const mergedStyles = mergeStyles<SegmentedSemanticStyles>(
         contextStyles,
         contextStyleRoot,
         resolveSemantic(props.styles, info),
-        styleRoot,
       ) as Record<string, Record<string, unknown> | undefined>;
 
       const itemValue = currentValue.value;
@@ -389,8 +387,8 @@ export const SegmentedComponent = defineComponent({
       const classString = [
         prefixCls,
         mergedClassNames.root,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         (context as { className?: string }).className,
         {
           [`${prefixCls}-block`]: props.block,
@@ -417,8 +415,11 @@ export const SegmentedComponent = defineComponent({
           'aria-orientation': mergedVertical.value ? 'vertical' : 'horizontal',
           ...pickAttrs(attrs as Record<string, unknown>, { aria: true, data: true }),
           class: classString,
-          // antd：style={mergedStyles.root} —— style prop 已并入 root 键
-          ...styleAttrs(mergedStyles.root as never),
+          // antd：style={mergedStyles.root} —— 调用方原生 style 排在最后（位置同原 props.style）
+          ...styleAttrs({
+            ...(mergedStyles.root as Record<string, unknown>),
+            ...((attrs.style as Record<string, unknown>) ?? {}),
+          } as never),
           ref: rootRef,
         },
         [

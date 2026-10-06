@@ -119,10 +119,6 @@ export interface SegmentedRef {
 export interface SegmentedProps {
   /** 自动生成前缀。 */
   prefixCls?: string;
-  /** 根元素追加类名。 */
-  className?: string;
-  /** 根元素追加类名（透传语义，与 antd 同名）。 */
-  rootClassName?: string;
   /**
    * 选项集合。原始值或对象（可带 icon / disabled / tooltip）。
    * `undefined` 时按 antd 默认空数组处理。
@@ -150,6 +146,4 @@ export interface SegmentedProps {
   classNames?: SegmentedSemanticTypeInput['classNames'];
   /** 语义化样式（root/icon/label/item），**对象 | 函数**两形态。 */
   styles?: SegmentedSemanticTypeInput['styles'];
-  /** 内联样式（root）。 */
-  style?: Record<string, unknown>;
 }
