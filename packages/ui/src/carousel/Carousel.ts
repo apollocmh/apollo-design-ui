@@ -77,7 +77,15 @@ export const CarouselComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
+    // 语义化槽位（本仓自有 API，替代下面两个 deprecated 的 React 名）
+    classNames: {
+      type: Object as PropType<CarouselProps['classNames']>,
+      default: undefined,
+    },
+    styles: { type: Object as PropType<CarouselProps['styles']>, default: undefined },
+    /** @deprecated 用 `classNames.slider`。 */
     className: { type: String, default: undefined },
+    /** @deprecated 用 `styles.slider`。 */
     style: { type: Object as PropType<CarouselProps['style']>, default: undefined },
     id: { type: String, default: undefined },
     effect: { type: String as PropType<CarouselProps['effect']>, default: undefined },
@@ -587,6 +595,8 @@ export const CarouselComponent = defineComponent({
             {
               class: [
                 'slick-slider',
+                // 语义槽在前、deprecated 的 React 名在后（后者覆盖前者，保证旧代码行为不变）
+                props.classNames?.slider,
                 props.className,
                 context.className as string | undefined,
                 { 'slick-vertical': c.vertical, 'slick-initialized': true },
@@ -594,6 +604,7 @@ export const CarouselComponent = defineComponent({
               dir: 'ltr',
               style: {
                 ...(context.style as Record<string, string | number> | undefined),
+                ...(props.styles?.slider ?? {}),
                 ...props.style,
               },
             },

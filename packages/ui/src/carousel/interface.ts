@@ -113,13 +113,36 @@ export interface CarouselProps {
   /** 前缀类（默认经 ConfigProvider，`apollo-carousel`）。 */
   prefixCls?: string;
   /**
-   * ⚠️ 落在**内层 `slick-slider`**（不是根 div）—— 上游 Carousel 的两层结构如此，
-   *    属**独立目标**，因此保留为专用 prop；根节点的类名请用 Vue 原生 `class`。
+   * 语义化类名。**本仓自有 API**（上游 antd 的 Carousel 没有 `classNames`）——
+   * 因为它的 `className` 落在内层 `slick-slider` 上，而 Vue 里根节点已经用原生 `class`，
+   * 内层需要一个**与根不冲突**的入口。
+   */
+  classNames?: CarouselSemanticClassNames;
+  /** 语义化内联样式，与 `classNames` 同槽位。 */
+  styles?: CarouselSemanticStyles;
+  /**
+   * ⚠️ 落在**内层 `slick-slider`**（不是根 div）—— 上游 Carousel 的两层结构如此。
+   *    根节点的类名请用 Vue 原生 `class`。
+   *
+   * @deprecated 用 `classNames.slider`（**同一个落点**）。保留是为了让从 antd 迁过来的
+   *   代码能直接跑；新代码请用槽位。
    */
   className?: string;
-  /** ⚠️ 同上：落在内层 `slick-slider`。 */
+  /** ⚠️ 同上：落在内层 `slick-slider`。@deprecated 用 `styles.slider`。 */
   style?: Record<string, string | number>;
   id?: string;
+}
+
+/** 语义化类名槽位。 */
+export interface CarouselSemanticClassNames {
+  /** 内层 `slick-slider`（= 上游 `className` 的落点）。 */
+  slider?: string;
+}
+
+/** 语义化内联样式槽位。 */
+export interface CarouselSemanticStyles {
+  /** 内层 `slick-slider`（= 上游 `style` 的落点）。 */
+  slider?: Record<string, string | number>;
 }
 
 /** ref 形状（`innerSlider` 是 PLATFORM 差异 —— 引擎状态对象，非 slick 实例）。 */

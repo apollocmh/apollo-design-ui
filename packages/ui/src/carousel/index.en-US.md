@@ -38,6 +38,10 @@ See [`demo/`](./demo) (7 demos, one-to-one with antd non-debug demos).
 | pauseOnHover | Pause on hover | `boolean` | `true` |
 | arrows | ⚠️ antd default is **false** (slick's is true) | `boolean` | `false` |
 | rtl | RTL (follows ConfigProvider direction by default) | `boolean` | — |
+| class / style | **Native root attrs** (replacing upstream `rootClassName`) | — | — |
+| classNames.slider | Lands on the **inner `.slick-slider`**. **Our own API** (upstream has no `classNames`) — the root already uses native `class`, so the inner layer needs a non-conflicting entry | `{ slider?: string }` | — |
+| styles.slider | Inline style for the same slot | `{ slider?: CSSProperties }` | — |
+| ~~className~~ / ~~style~~ (props) | ⚠️ Land on the **inner `.slick-slider`**. **@deprecated**: use `classNames.slider` / `styles.slider` (same target; kept so antd-migrated code runs as-is) | — | — |
 
 ### Slots
 

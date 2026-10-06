@@ -414,3 +414,42 @@ describe('Carousel · 事件与 ref 形状', () => {
     expect((exposed.innerSlider as { currentSlide: number }).currentSlide).toBe(0);
   });
 });
+
+/**
+ * 语义槽 `classNames.slider` / `styles.slider`（**本仓自有 API**，替代 deprecated 的
+ * `className` / `style`）—— 落点都是**内层 `slick-slider`**，根节点仍走 Vue 原生 `class`。
+ */
+describe('Carousel · 语义槽 classNames.slider / styles.slider', () => {
+  it('classNames.slider 落在内层 .slick-slider（不是根 div）', () => {
+    const w = makeCarousel({ classNames: { slider: 'my-slider' } });
+    expect(w.find('.slick-slider').classes()).toContain('my-slider');
+    // 根 div 不该拿到它
+    expect(w.element.classList.contains('my-slider')).toBe(false);
+  });
+
+  it('styles.slider 落在内层 .slick-slider', () => {
+    const w = makeCarousel({ styles: { slider: { marginTop: '7px' } } });
+    expect(styleOf(w.find('.slick-slider'))).toContain('margin-top:7px');
+  });
+
+  it('原生 class 落根、classNames.slider 落内层 —— 两个目标互不干扰', () => {
+    const w = makeCarousel({ class: 'on-root', classNames: { slider: 'on-slider' } });
+    expect(w.element.classList.contains('on-root')).toBe(true);
+    expect(w.element.classList.contains('on-slider')).toBe(false);
+    expect(w.find('.slick-slider').classes()).toContain('on-slider');
+  });
+
+  it('deprecated 的 className / style 仍然生效，且排在槽位之后（旧代码行为不变）', () => {
+    const w = makeCarousel({
+      classNames: { slider: 'from-slot' },
+      className: 'from-legacy',
+      styles: { slider: { marginTop: '1px' } },
+      style: { marginTop: '2px' },
+    });
+    const slider = w.find('.slick-slider');
+    expect(slider.classes()).toContain('from-slot');
+    expect(slider.classes()).toContain('from-legacy');
+    // 后者覆盖前者
+    expect(styleOf(slider)).toContain('margin-top:2px');
+  });
+});

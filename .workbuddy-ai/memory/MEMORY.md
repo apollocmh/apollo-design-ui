@@ -49,8 +49,25 @@
 §2.5 的 commit `1bd30e7` 实为 **`9c9f557`** · §2.5 的 private 残留**可关闭**（utils/src 零 private）。
 ⇒ **`git log -S` 与「跑一遍现成测试」比读文档可靠**；`docs/KNOWN-ISSUES.md` 每条都该能被判据复现。
 
+## 🚨 阶段转变（2026-10-06，用户裁决）—— **Phase 2：不再紧跟 antd，当成自己的组件库做**
+Phase 1（复刻 antd 成 Vue 库）**已结束**。antd 从「**答案的判据**」降为「**参考实现**」。
+- **根别名**（指向组件自己的根）：`className`/`rootClassName`/`style` **一律用 Vue 原生 `class`/`style`** ——
+  已全仓完成（72 组件 + 8 个收口期补漏）。
+- **非根目标**（浮层根 / 内层元素 / item 级）：**本仓自己设计 `classNames.*` / `styles.*` 槽位**，
+  上游名保留但标 `@deprecated`。已做：`carousel.classNames.slider` · `border-beam.classNames.effect`；
+  已标废弃：`dropdown.rootClassName` → `classNames.root`（跟随上游 `dropdown.d.ts:56` 的标注）。
+- **规则 C3 放宽**：不再「Props 名与 antd 完全一致」；新增能力用本仓命名。
+- ⚠️ **不变的底线**：`AGENTS.md` §1 硬禁令 + §4 验收纪律（**不许为绿灯放宽断言**）+ PITFALLS 实测判据。
+- ⚠️ `AGENTS.md` §0「Ant Design 是答案的判据」**尚未更新**（该文件只能由用户改）；
+  阶段声明已写进 `COMPATIBILITY.md` 顶部。
+
+📌 **判据（判别式，别一刀切）**：先问「这个 prop 指向的是不是**组件自己的根**？」
+**是** ⇒ 必须收敛成原生 `class`/`style`；**否** ⇒ 上游有 `classNames.*` 槽就标 deprecated 指向槽，
+没有就**由本仓设计槽位**（Phase 2 起不再需要「发明 antd 没有的 API」这条顾虑）。
+
 ## 事实来源 / 任务 / registry
 Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**。优先级：用户指令>仓库规范>`registry/*.json`>antd 产物/源码>文档>先验。
+⚠️ **Phase 2 起**：antd 降为「参考实现」，优先级序列里第 4 层只在「没有本仓自有裁决」时兜底。
 - 取任务唯一权威 `node registry/tools/next-task.mjs`（一轮一包）。🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（缺了按 PITFALLS 42 恢复）；说「某决策是这样」前先 `ask.mjs decision <id>`（出原文）。
 - 派生字段（手改被覆盖）：`notDo`/`publicApi`/包 package.json←`scaffold-packages.mjs`；`foundation.json`←`foundation-status.mjs`；components/dependencies/tokens/workstreams←`gen-*.mjs`。
 - 🚨 跨运行**只保留** `status`+11 维度+`blockers`+`layerNotes` ⇒ 收口直接改 `components.json` 这 13 项再重跑生成器。⚠️ `notes` 不保留 ⇒ 注记写 `registry/source/components.meta.mjs`(220)。

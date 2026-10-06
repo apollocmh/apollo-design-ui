@@ -35,7 +35,7 @@ import {
   type VNodeChild,
 } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
-import type { BorderBeamColor } from './interface';
+import type { BorderBeamColor, BorderBeamProps } from './interface';
 import { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient, isSameBorderWidth } from './util';
 
 /** 数字 → `-${n}px`；字符串 → `calc(-1 * ${s})`（antd 的 getInset 逐字）。 */
@@ -94,7 +94,15 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
+    // 语义化槽位（本仓自有 API，替代下面两个 deprecated 的 React 名）
+    classNames: {
+      type: Object as PropType<BorderBeamProps['classNames']>,
+      default: undefined,
+    },
+    styles: { type: Object as PropType<BorderBeamProps['styles']>, default: undefined },
+    /** @deprecated 用 `classNames.effect`。 */
     className: { type: String, default: undefined },
+    /** @deprecated 用 `styles.effect`。 */
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     color: {
       type: [String, Array] as PropType<BorderBeamColor>,
@@ -147,6 +155,8 @@ export default defineComponent({
       const v = (name: string): string => `--${rootPrefix.value}-border-beam-${name}`;
       return {
         ...(contextStyle ?? {}),
+        // 语义槽在前、deprecated 的 React 名在后（后者覆盖前者，旧代码行为不变）
+        ...((props.styles?.effect as Record<string, string | number> | undefined) ?? {}),
         ...(props.style ?? {}),
         ...(beamGradient.value ? { [v('beam-gradient')]: beamGradient.value } : {}),
         ...(isNumber(props.duration) && props.duration > 0
@@ -171,7 +181,7 @@ export default defineComponent({
         return first ?? null;
       }
 
-      const cls = [prefixCls.value, contextClassName, props.className];
+      const cls = [prefixCls.value, contextClassName, props.classNames?.effect, props.className];
       const effects = Array.from({ length: mergedCount.value }, (_, index) =>
         h('div', {
           key: index,

@@ -6,6 +6,30 @@
 
 ---
 
+## ⚠️ 阶段声明（2026-10-06，用户裁决）
+
+> **Phase 1（已结束）**：把 Ant Design React 当**兼容性规格**逐字复刻成 Vue 组件库。
+> 目标是「熟悉 antd 的开发者零成本迁移」，所以 Props 名尽量与上游一致。
+>
+> **Phase 2（当前）**：**不再紧跟 antd —— 当成自己的组件库来做。**
+> antd 从「**答案的判据**」降为「**参考实现**」。
+>
+> 具体含义：
+>
+> | 主题 | Phase 1 | **Phase 2（现在）** |
+> |---|---|---|
+> | 根节点的类名/样式 | `className` / `rootClassName` / `style` 作 prop | **一律用 Vue 原生 `class` / `style`**（已完成，见 §1.2 与规则 C3 的例外） |
+> | 非根目标的类名/样式 | 跟随上游命名（`className` 落内层、`rootClassName` 落浮层…） | **本仓自己设计 `classNames.*` / `styles.*` 槽位**；上游名保留但标 `@deprecated` |
+> | 规则 C3（Props 名与 antd 一致） | 硬约束 | **放宽**：**根别名**必须用 Vue 原生写法；**新增能力**用本仓命名；上游名只作为 deprecated 兼容层 |
+> | 上游没有的能力 | 不新增 | **可以新增**（如 `carousel.classNames.slider` / `border-beam.classNames.effect`） |
+>
+> ⚠️ **不变的底线**：`AGENTS.md` §1 的硬禁令（H1–H12）、§4 的验收纪律（**不许为绿灯放宽断言**）、
+> `PITFALLS` 里的实测判据 —— 这些是工程纪律，与「跟不跟 antd」无关。
+>
+> ⚠️ `AGENTS.md` §0 那句「Ant Design 是答案的判据」**尚未随之更新**（该文件只能由用户改）。
+
+---
+
 ## 0. 兼容性的五个层级
 
 我们不是"看起来像"，而是分层可度量的兼容。每个组件必须逐层达标：
@@ -229,7 +253,7 @@ emit('change', val, option) // 供语义监听，参数与 React 完全一致
 | `style` | `style` | |
 | `classNames={{ root, body }}` | `:classNames="{ root, body }"` | 语义化类名，结构一致 |
 | `styles={{ root, body }}` | `:styles="{ root, body }"` | |
-| `rootClassName` / `rootStyle` | 默认并入根节点原生 `class` / `style` attrs；仅在语义目标独立于根 attrs 且有实证需求时保留专用 prop | 不因 React 存在同名字段就默认声明 Vue prop；ConfigProvider 配置对象另行审计 |
+| `rootClassName` / `rootStyle` | 默认并入根节点原生 `class` / `style` attrs。**语义目标独立于根时（浮层根 / 内层元素 / item 级）**：优先用本仓的 `classNames.*` / `styles.*` 槽位（Phase 2，见「阶段声明」）；上游名保留但标 `@deprecated`。 | 不因 React 存在同名字段就默认声明 Vue prop；ConfigProvider 配置对象另行审计 |
 | `ConfigProvider theme={{ token, components, algorithm, cssVar, zeroRuntime }}` | 同名保留 | `cssVar.prefix` 默认改为 `apollo`；`zeroRuntime` 恒为 `true`（本项目唯一模式） |
 | `ConfigProvider prefixCls="ant"` | `prefixCls` 默认 `apollo` | |
 | `ConfigProvider locale={zhCN}` | 同名保留 | 语言包路径 `@apollo-design/ui/locale/zh-CN` |

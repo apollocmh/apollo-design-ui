@@ -20,6 +20,9 @@ A light beam flowing along the host container's border.
 | lineWidth | Beam thickness (defaults to host border width) | `number \| string` | — |
 | outset | Override uniform inset offset | `number \| string` | — |
 | size | Beam head length | `number \| string` | `100px` |
+| classNames.effect | Lands on the **Effect layer** (one div per beam). **Our own API** — `BorderBeam` is renderless (it has no DOM root of its own), so there is nowhere for a "root class" to go; the slot gives this target a Vue-native name | `{ effect?: string }` | — |
+| styles.effect | Inline style for the same slot (merged after the CSS variables) | `{ effect?: CSSProperties }` | — |
+| ~~className~~ / ~~style~~ | ⚠️ Forwarded to the **Effect layer**. **@deprecated**: use `classNames.effect` / `styles.effect` (same target) | — | — |
 
 ## Design Notes
 

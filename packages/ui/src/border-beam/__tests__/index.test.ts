@@ -150,4 +150,43 @@ describe('BorderBeam · 结构', () => {
   it('默认导出常量', () => {
     expect(DEFAULT_BORDER_BEAM_DURATION).toBe(6);
   });
+
+  /**
+   * 语义槽 `classNames.effect` / `styles.effect`（**本仓自有 API**）。
+   *
+   * ⚠️ `BorderBeam` 是 renderless —— 它**没有自己的 DOM 根**（把 Effect 层注入宿主的
+   * children），所以「根类名」在 Vue 里无处可放；槽位给这个落点一个 Vue-native 的名字，
+   * 取代上游那两个 React 名（`className` / `style`）。
+   */
+  it('classNames.effect / styles.effect 落在 Effect 层（每个流光一个）', async () => {
+    const w = mountInHost({
+      count: 2,
+      classNames: { effect: 'my-effect' },
+      styles: { effect: { marginTop: '9px' } },
+    });
+    await nextTick();
+    await nextTick();
+    const effects = w.element.querySelectorAll('.apollo-border-beam');
+    expect(effects.length).toBe(2);
+    for (const el of effects) {
+      expect((el as HTMLElement).classList.contains('my-effect')).toBe(true);
+      expect((el as HTMLElement).getAttribute('style')).toContain('margin-top: 9px');
+    }
+  });
+
+  it('deprecated 的 className / style 仍生效，且排在槽位之后（旧代码行为不变）', async () => {
+    const w = mountInHost({
+      classNames: { effect: 'from-slot' },
+      className: 'from-legacy',
+      styles: { effect: { marginTop: '1px' } },
+      style: { marginTop: '2px' },
+    });
+    await nextTick();
+    await nextTick();
+    const effect = w.element.querySelector('.apollo-border-beam') as HTMLElement;
+    expect(effect.classList.contains('from-slot')).toBe(true);
+    expect(effect.classList.contains('from-legacy')).toBe(true);
+    // 后者覆盖前者
+    expect(effect.getAttribute('style')).toContain('margin-top: 2px');
+  });
 });

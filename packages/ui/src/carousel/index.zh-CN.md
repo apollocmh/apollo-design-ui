@@ -47,7 +47,9 @@ subtitle: 走马灯
 | rtl | RTL（默认跟随 ConfigProvider 的 direction，且不与 vertical 同用） | `boolean` | — |
 | id | 根元素 id | `string` | — | — |
 | class / style | **根节点原生 attrs**（替代上游 `rootClassName`） | — | — | — |
-| className / style（prop） | ⚠️ 落在**内层 `.slick-slider`**（独立目标，与 antd 一致） | — | — | — |
+| classNames.slider | 落在**内层 `.slick-slider`**。**本仓自有 API**（上游没有 `classNames`）—— 因为 Vue 里根节点已用原生 `class`，内层需要一个不冲突的入口 | `{ slider?: string }` | — | — |
+| styles.slider | 同槽位的内联样式 | `{ slider?: CSSProperties }` | — | — |
+| ~~className~~ / ~~style~~（prop） | ⚠️ 落在**内层 `.slick-slider`**。**@deprecated**：用 `classNames.slider` / `styles.slider`（同一落点，保留只为让 antd 迁过来的代码能直接跑） | — | — | — |
 
 ### Slots
 
