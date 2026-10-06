@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T04:35:38.819Z",
+  "updatedAt": "2026-10-06T04:39:39.391Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 20,
+      "todo": 19,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 45,
+      "done": 46,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 393,
+    "reviewedProductionSourceFiles": 402,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2392,7 +2392,7 @@
       "reviewedFileCount": 8
     },
     "masonry": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/masonry/components/MasonryItem.ts",
         "packages/ui/src/masonry/hooks/column-count.ts",
@@ -2404,7 +2404,17 @@
         "packages/ui/src/masonry/style/index.ts",
         "packages/ui/src/masonry/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/masonry/components/MasonryItem.ts",
+        "packages/ui/src/masonry/hooks/column-count.ts",
+        "packages/ui/src/masonry/hooks/positions.ts",
+        "packages/ui/src/masonry/hooks/use-delay.ts",
+        "packages/ui/src/masonry/index.ts",
+        "packages/ui/src/masonry/interface.ts",
+        "packages/ui/src/masonry/Masonry.vue",
+        "packages/ui/src/masonry/style/index.ts",
+        "packages/ui/src/masonry/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 6,
       "docFiles": [
@@ -2413,9 +2423,14 @@
         "packages/ui/src/masonry/index.en-US.md",
         "packages/ui/src/masonry/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 68/68；MasonryProps 去掉三个根别名。⚠️ Masonry 原本不读 attrs（模板只有 :class/:style）⇒ 调用方 :class/:style 一直被丢，本次一并接上。"
+      ],
+      "reviewedFileCount": 9
     },
     "anchor": {
       "auditStatus": "done",
@@ -3511,7 +3526,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（43 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（44 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3737,6 +3752,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 17: popconfirm + tour done (43 components total). popconfirm needed NO code change - its type surface was already migrated (className/rootClassName marked `never`, PopconfirmProps inherits PopoverProps which no longer has them) and the impl only uses overlayClassName + semantic slots. tour required the usual set of edits (runtime props + mergedRootClassName + mask/placeholder styles + PurePanel)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 18: masonry done (44 components total). Masonry did not read attrs at all (template had only :class/:style), so :class/:style were silently dropped - wired up useAttrs in the same change. First run went red on every L4 case with ReferenceError because attrs was referenced before useAttrs() was added."
     }
   ],
   "observations": [
