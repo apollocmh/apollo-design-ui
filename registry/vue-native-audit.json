@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T01:43:04.678Z",
+  "updatedAt": "2026-10-06T01:45:39.538Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 29,
+      "todo": 28,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 36,
+      "done": 37,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 312,
+    "reviewedProductionSourceFiles": 318,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1992,7 +1992,7 @@
       "reviewedFileCount": 7
     },
     "segmented": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/segmented/components/MotionThumb.ts",
         "packages/ui/src/segmented/index.ts",
@@ -2001,7 +2001,14 @@
         "packages/ui/src/segmented/style/index.ts",
         "packages/ui/src/segmented/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/segmented/components/MotionThumb.ts",
+        "packages/ui/src/segmented/index.ts",
+        "packages/ui/src/segmented/interface.ts",
+        "packages/ui/src/segmented/Segmented.ts",
+        "packages/ui/src/segmented/style/index.ts",
+        "packages/ui/src/segmented/style/token.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 14,
       "docFiles": [
@@ -2009,9 +2016,14 @@
         "packages/ui/src/segmented/index.en-US.md",
         "packages/ui/src/segmented/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 48/48；SegmentedProps 去掉三个根别名。选项级 className 是数据字段（rc 透传到 label），保留。"
+      ],
+      "reviewedFileCount": 6
     },
     "steps": {
       "auditStatus": "todo",
@@ -3372,7 +3384,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（33 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（34 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3563,6 +3575,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 10: rate migrated (33 components total). Clean case - no new pitfalls, no new internal consumers. The established checklist (interface + runtime props + class array + every render branch + style usages + consumer scan + docs) handled it end to end."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 11: segmented migrated (34 components total). Clean case again - the checklist handled it end to end with no new pitfalls and no new internal consumers."
     }
   ],
   "observations": [
