@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:06:01.679Z",
+  "updatedAt": "2026-10-06T05:08:36.135Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 13,
+      "todo": 12,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 52,
+      "done": 53,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 465,
+    "reviewedProductionSourceFiles": 474,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1047,7 +1047,7 @@
       "notes": []
     },
     "input-number": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/input-number/engine/decimal.ts",
         "packages/ui/src/input-number/engine/number-util.ts",
@@ -1059,7 +1059,17 @@
         "packages/ui/src/input-number/style/index.ts",
         "packages/ui/src/input-number/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/input-number/engine/decimal.ts",
+        "packages/ui/src/input-number/engine/number-util.ts",
+        "packages/ui/src/input-number/engine/StepHandler.ts",
+        "packages/ui/src/input-number/engine/use-cursor.ts",
+        "packages/ui/src/input-number/index.ts",
+        "packages/ui/src/input-number/InputNumber.ts",
+        "packages/ui/src/input-number/interface.ts",
+        "packages/ui/src/input-number/style/index.ts",
+        "packages/ui/src/input-number/style/token.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 12,
       "docFiles": [
@@ -1068,9 +1078,14 @@
         "packages/ui/src/input-number/index.en-US.md",
         "packages/ui/src/input-number/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 55/55；共享 prop 表 inputNumberPropDefs 去掉三个根别名（外层与 Internal 共用 ⇒ 两处一起迁移）；外层转发给 Internal 的 rootClassName 改 class（legacy addon 时仍 undefined）。"
+      ],
+      "reviewedFileCount": 9
     },
     "listy": {
       "auditStatus": "done",
@@ -3624,7 +3639,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（50 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（51 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number，外加 menu / time-picker（验证后确认已迁移、无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3880,6 +3895,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 22: image done. Total done = 52. Semantic convergence: Image used to send className to img+progress and rootClassName to root+progress (two props targeting different elements); now unified to \"class = component root\", img/progress no longer get a copy. L4 does not cover these three keys, so the baseline is unaffected. Kept: Preview.rootClassName (deprecated semantic alias) and Progress.rootClassName (internal)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 23: input-number done. Total done = 53. Note: the outer component and InputNumberInternalComponent share one prop table (inputNumberPropDefs), so removing the three keys there migrates both at once; the outer forwards the class to the internal one as `class` (still undefined in the legacy-addon branch)."
     }
   ],
   "observations": [
