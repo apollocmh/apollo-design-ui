@@ -32,7 +32,7 @@ subtitle: 开关
 | size | 尺寸；⚠️ `'default'` 已废弃（提示改用 `'medium'`） | `'small' \| 'medium' \| 'middle' \| 'default'` | — |
 | autoFocus | 自动获取焦点 | `boolean` | — |
 | title / id / tabIndex | 原生属性（落 `<button>`） | — | — |
-| className / rootClassName / style | 根元素属性 | — | — |
+| class / style | **根元素原生 attrs**（不是 Props） | — | — |
 | classNames / styles | 语义槽 `{ root, content, indicator }`（对象或函数） | — | — |
 
 ### Events

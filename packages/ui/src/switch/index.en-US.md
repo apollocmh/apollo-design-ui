@@ -33,7 +33,7 @@ See [`demo/`](./demo) (7 demos, one-to-one with antd's non-debug demos).
 | size | Size; ⚠️ `'default'` is deprecated (use `'medium'`) | `'small' \| 'medium' \| 'middle' \| 'default'` | — |
 | autoFocus | Focus automatically | `boolean` | — |
 | title / id / tabIndex | Native attributes (rendered on `<button>`) | — | — |
-| className / rootClassName / style | Root attributes | — | — |
+| class / style | **Native root attrs** (not Props) | — | — |
 | classNames / styles | Semantic slots `{ root, content, indicator }` (object or function) | — | — |
 
 ### Events

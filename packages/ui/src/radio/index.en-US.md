@@ -54,7 +54,8 @@ See [`demo/`](./demo) (14 demos, one-to-one with antd's non-debug demos).
 | orientation | Layout direction (wins over `vertical`) | `'horizontal' \| 'vertical'` | — |
 | block | Fit to the parent width | `boolean` | `false` |
 | role | Root role | `string` | `'radiogroup'` |
-| className / rootClassName / style / id | Root attributes | — | — |
+| id | Root element id | `string` | — | — |
+| class / style | **Native root attrs** (not Props) | — | — |
 | onMouseEnter / onMouseLeave / onFocus / onBlur | Root events | — | — |
 
 ### Radio.Button

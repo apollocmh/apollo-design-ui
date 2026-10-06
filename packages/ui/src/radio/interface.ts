@@ -79,11 +79,8 @@ export type RadioSemanticStylesFn = (context: RadioSemanticContext) => RadioSema
  */
 export interface AbstractRadioProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   defaultChecked?: boolean;
   checked?: boolean;
-  style?: CSSProperties;
   disabled?: boolean;
   title?: string;
   onChange?: (e: RadioChangeEvent) => void;
@@ -120,11 +117,8 @@ export interface RadioProps extends AbstractRadioProps {
 
 export interface RadioGroupProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   options?: (RadioOptionItem | string | number)[];
   disabled?: boolean;
-  style?: CSSProperties;
   name?: string;
   defaultValue?: RadioValue;
   value?: RadioValue;

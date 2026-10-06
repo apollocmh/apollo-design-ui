@@ -25,7 +25,15 @@
 
 import { LoadingOutlined } from '@apollo-design/icons';
 import { KeyCode, useControlledValue, useDevWarning } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, shallowRef, watchEffect } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  shallowRef,
+  watchEffect,
+} from 'vue';
 import {
   mergeClassNames,
   mergeStyles,
@@ -51,8 +59,6 @@ export const SwitchComponent = defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     size: { type: String as PropType<SwitchProps['size']>, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     checked: { type: Boolean, default: undefined },
     defaultChecked: { type: Boolean, default: undefined },
     value: { type: Boolean, default: undefined },
@@ -63,7 +69,6 @@ export const SwitchComponent = defineComponent({
     disabled: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: false },
     autoFocus: { type: Boolean, default: undefined },
-    style: { type: Object as PropType<SwitchProps['style']>, default: undefined },
     title: { type: String, default: undefined },
     tabIndex: { type: Number, default: undefined },
     id: { type: String, default: undefined },
@@ -194,8 +199,8 @@ export const SwitchComponent = defineComponent({
           [`${cls}-loading`]: props.loading,
           [`${cls}-rtl`]: direction === 'rtl',
         },
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
         {
           [`${cls}-checked`]: innerChecked.value,
@@ -221,7 +226,11 @@ export const SwitchComponent = defineComponent({
           'aria-checked': String(innerChecked.value),
           disabled: mergedDisabled.value,
           class: classString,
-          ...styleAttrs(mergedStyles.value.root),
+          // 根 `style` 是 Vue 原生 attrs（`_attrStyle` 已从 restAttrs 里摘出）
+          ...styleAttrs({
+            ...mergedStyles.value.root,
+            ...((_attrStyle as CSSProperties | undefined) ?? {}),
+          }),
           ref: buttonRef,
           // ⚠️ 这四个是**声明过的 prop**（不在 attrs 里），antd 的 `{...restProps}` 会把它们
           //    透传到 button —— 我们必须显式落一遍，否则静默丢失。

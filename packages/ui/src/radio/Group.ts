@@ -26,6 +26,7 @@
 
 import { isNumber, isString, pickAttrs, useControlledValue, useId } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -54,14 +55,11 @@ export const GroupComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     options: {
       type: Array as PropType<RadioGroupProps['options']>,
       default: () => [],
     },
     disabled: { type: Boolean, default: undefined },
-    style: { type: Object as PropType<RadioGroupProps['style']>, default: undefined },
     name: { type: String, default: undefined },
     defaultValue: {
       type: [String, Number, Boolean] as PropType<RadioValue>,
@@ -202,7 +200,8 @@ export const GroupComponent = defineComponent({
                   checked: currentValue === option.value,
                   title: isPrimitive ? undefined : option.title,
                   style: isPrimitive ? undefined : option.style,
-                  className: isPrimitive ? undefined : option.className,
+                  // Radio 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+                  class: isPrimitive ? undefined : option.className,
                   id: isPrimitive ? undefined : option.id,
                   required: isPrimitive ? undefined : option.required,
                   onChange: isPrimitive ? undefined : option.onChange,
@@ -221,8 +220,8 @@ export const GroupComponent = defineComponent({
           [`${groupPrefixCls}-rtl`]: direction === 'rtl',
           [`${groupPrefixCls}-block`]: props.block,
         },
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         // ⚠️ antd 把它拼在 classString **之后**（`clsx(classString, {...})`）
         { [`${groupPrefixCls}-vertical`]: mergedVertical.value },
       ];
@@ -234,7 +233,8 @@ export const GroupComponent = defineComponent({
           ...pickAttrs(attrs as Record<string, unknown>, { aria: true, data: true }),
           role: props.role,
           class: classString,
-          ...styleAttrs(props.style),
+          // 根 `style` 是 Vue 原生 attrs
+          ...styleAttrs((attrs.style as CSSProperties | undefined) ?? {}),
           onMouseenter: callbacks.onMouseEnter,
           onMouseleave: callbacks.onMouseLeave,
           onFocus: callbacks.onFocus,

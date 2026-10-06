@@ -54,7 +54,8 @@ subtitle: 单选框
 | orientation | 排列方向（优先于 `vertical`） | `'horizontal' \| 'vertical'` | — |
 | block | 撑满父容器宽度 | `boolean` | `false` |
 | role | 根元素 role | `string` | `'radiogroup'` |
-| className / rootClassName / style / id | 根元素属性 | — | — |
+| id | 根元素 id | `string` | — | — |
+| class / style | **根元素原生 attrs**（不是 Props） | — | — |
 | onMouseEnter / onMouseLeave / onFocus / onBlur | 根元素事件 | — | — |
 
 ### Radio.Button

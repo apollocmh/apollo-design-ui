@@ -32,6 +32,7 @@
 
 import { isRenderable, useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -75,11 +76,8 @@ export const WAVE_TARGET_CLS = 'ant-wave-target';
  */
 export const radioPropDefs = {
   prefixCls: { type: String, default: undefined },
-  className: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
   defaultChecked: { type: Boolean, default: false },
   checked: { type: Boolean, default: undefined },
-  style: { type: Object as PropType<RadioProps['style']>, default: undefined },
   disabled: { type: Boolean, default: undefined },
   title: { type: String, default: undefined },
   // ⚠️ 不能写 PropType<unknown>：vue-tsc 会把它推断成 undefined（SFC 模板与 h()
@@ -259,8 +257,8 @@ export const RadioComponent = defineComponent({
           [`${cls}-wrapper-block`]: !!groupContext?.block,
         },
         context.className,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
       ];
 
@@ -288,7 +286,11 @@ export const RadioComponent = defineComponent({
         'label',
         {
           class: wrapperClassString,
-          ...styleAttrs(mergedStyles.value.root),
+          // 根 `style` 是 Vue 原生 attrs（`_attrStyle` 已从 inputAttrs 里摘出）
+          ...styleAttrs({
+            ...mergedStyles.value.root,
+            ...((_attrStyle as CSSProperties | undefined) ?? {}),
+          }),
           title: props.title,
           onMouseenter: callbacks.onMouseEnter,
           onMouseleave: callbacks.onMouseLeave,

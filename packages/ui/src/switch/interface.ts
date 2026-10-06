@@ -69,8 +69,6 @@ export type SwitchSemanticStylesFn = (context: SwitchSemanticContext) => SwitchS
 export interface SwitchProps {
   prefixCls?: string;
   size?: SwitchSize;
-  className?: string;
-  rootClassName?: string;
   /** 指定当前是否选中（受控）。 */
   checked?: boolean;
   /** 初始是否选中（非受控）。 */
@@ -93,7 +91,6 @@ export interface SwitchProps {
   disabled?: boolean;
   loading?: boolean;
   autoFocus?: boolean;
-  style?: CSSProperties;
   title?: string;
   tabIndex?: number;
   id?: string;
