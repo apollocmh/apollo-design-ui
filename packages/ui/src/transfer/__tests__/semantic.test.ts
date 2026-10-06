@@ -158,7 +158,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'class:both': () =>
     h(
       Transfer as never,
-      { ...base, prefixCls: 'apollo', className: 'a', rootClassName: 'b' } as never,
+      { ...base, prefixCls: 'apollo', class: ['a', 'b'] } as never,
     ),
   'attrs:passthrough': () =>
     h(

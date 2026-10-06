@@ -13,8 +13,6 @@ import { defineComponent, h, type PropType, type VNode, type VNodeChild } from '
 import Button from '../button/Button.vue';
 
 export interface ActionsProps {
-  className?: string;
-  style?: Record<string, string>;
   rightActive?: boolean;
   moveToRight?: (e?: unknown) => void;
   leftActive?: boolean;
@@ -87,8 +85,6 @@ const Action = defineComponent({
 const Actions = defineComponent({
   name: 'ATransferActions',
   props: {
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string>>, default: undefined },
     rightActive: { type: Boolean, default: undefined },
     moveToRight: { type: Function as PropType<ActionsProps['moveToRight']>, default: undefined },
     leftActive: { type: Boolean, default: undefined },
@@ -101,7 +97,8 @@ const Actions = defineComponent({
   setup(props) {
     return () => {
       const tail = props.actions?.slice(props.oneWay ? 1 : 2) ?? [];
-      return h('div', { class: props.className, style: props.style }, [
+      // 根 class/style 走 Vue 原生 attrs（未关 inheritAttrs ⇒ 自动落到根 div）
+      return h('div', null, [
         h(Action, {
           type: 'right',
           actions: props.actions ?? [],

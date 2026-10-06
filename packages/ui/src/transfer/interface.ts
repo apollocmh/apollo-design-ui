@@ -84,11 +84,8 @@ export interface TransferLocale {
 
 export interface TransferProps {
   prefixCls?: string;
-  rootClassName?: string;
-  className?: string;
   classNames?: TransferSemanticClassNames;
   styles?: TransferSemanticStyles;
-  style?: Record<string, string>;
   /** 面板外联样式（⚠️ antd 6 已废弃 → `styles.section`，本仓保留兼容）。 */
   listStyle?:
     | Record<string, string>

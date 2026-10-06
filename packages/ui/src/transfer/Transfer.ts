@@ -39,11 +39,8 @@ const Transfer = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
     classNames: { type: Object as PropType<TransferProps['classNames']>, default: undefined },
     styles: { type: Object as PropType<TransferProps['styles']>, default: undefined },
-    style: { type: Object as PropType<Record<string, string>>, default: undefined },
     listStyle: {
       type: [Object, Function] as PropType<TransferProps['listStyle']>,
       default: undefined,
@@ -351,7 +348,8 @@ const Transfer = defineComponent({
         computed(() => config.styles),
         computed(() => semanticRootStyle(config.style)),
         computed(() => props.styles),
-        computed(() => semanticRootStyle(props.style)),
+        // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
+        computed(() => semanticRootStyle(attrs.style as Record<string, string> | undefined)),
       ],
       props as never,
     );
@@ -366,10 +364,8 @@ const Transfer = defineComponent({
         },
         getStatusClassNames(prefixCls.value, mergedStatus.value, false),
         config.className,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
         attrs.class as string | undefined,
-        attrs.rootClassName as string | undefined,
-        props.rootClassName,
         (mergedSemantic.classNames.value as Record<string, string | undefined>).root,
       ),
     );

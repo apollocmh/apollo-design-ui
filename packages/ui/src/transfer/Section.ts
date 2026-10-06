@@ -95,7 +95,6 @@ const Section = defineComponent({
   name: 'ATransferSection',
   props: {
     prefixCls: { type: String, required: true },
-    style: { type: Object as PropType<Record<string, string>>, default: undefined },
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: undefined },
     dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
@@ -171,7 +170,7 @@ const Section = defineComponent({
     handleClear: { type: Function as PropType<() => void>, required: true },
     onScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const sectionPrefixCls = `${props.prefixCls}-section`;
     const listPrefixCls = `${props.prefixCls}-list`;
     const searchOptions = computed(() => getShowSearchOption(props.showSearch ?? false));
@@ -532,7 +531,11 @@ const Section = defineComponent({
               [`${sectionPrefixCls}-with-footer`]: !!footerDom.value,
             },
           ],
-          style: { ...props.style, ...props.styles?.section },
+          // 根 style 是 Vue 原生 attrs
+          style: {
+            ...((attrs.style as Record<string, string> | undefined) ?? {}),
+            ...props.styles?.section,
+          },
         },
         [
           h(
