@@ -20,6 +20,7 @@
 
 import { isEmptyVNode, isRenderable, pickAttrs } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   isVNode,
   ref,
@@ -100,12 +101,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   ResultSemanticStyles
 >(
   [() => contextClassNames, () => props.classNames],
-  [
-    () => contextStyles,
-    () => semanticRootStyle(contextStyle),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
   semanticProps,
 );
 
@@ -113,7 +109,8 @@ const rootClass = computed(() => [
   prefixCls.value,
   `${prefixCls.value}-${props.status ?? 'info'}`,
   contextClassName,
-  props.className,
+  // 调用方原生 `class`（位置与原先的 props.className 一致）
+  attrs.class,
   { [`${prefixCls.value}-rtl`]: direction === 'rtl' },
   mergedClassNames.value.root,
 ]);
@@ -187,7 +184,14 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="{ ...rootAttrs, ...styleAttrs(mergedStyles.root) }">
+  <div
+    ref="rootRef"
+    :class="rootClass"
+    v-bind="{
+      ...rootAttrs,
+      ...styleAttrs({ ...mergedStyles.root, ...((attrs.style as CSSProperties) ?? {}) }),
+    }"
+  >
     <!-- 异常分支：-icon -image > 静态插画（忽略 icon prop，antd 逐字） -->
     <div v-if="isException" :class="iconClass" v-bind="styleAttrs(mergedStyles.icon)">
       <component :is="ExceptionMap[status as unknown as keyof typeof ExceptionMap]" />

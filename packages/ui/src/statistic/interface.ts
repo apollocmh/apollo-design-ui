@@ -127,12 +127,6 @@ export interface StatisticSemanticAllType {
 export interface StatisticProps extends StatisticFormatConfig {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
-  /** 落在根元素上（在 ConfigProvider 的 `className` **之后**）。 */
-  className?: string;
-  /** 也落在根元素上（在 `className` **之后**、语义化 root **之前**）。 */
-  rootClassName?: string;
-  /** 根元素的内联样式（参与语义化合并，包成 `{root: …}` 形态）。 */
-  style?: CSSProperties;
   /** 数值。 */
   value?: ValueType;
   /**

@@ -145,7 +145,6 @@ export default defineComponent({
           ...restAttrs,
           /* --- Statistic 全量 props 逐字转发（antd 的 {...rest}） --- */
           prefixCls: props.prefixCls,
-          rootClassName: props.rootClassName,
           title: props.title,
           prefix: props.prefix,
           suffix: props.suffix,
@@ -158,8 +157,12 @@ export default defineComponent({
           styles: props.styles,
           onMouseenter: props.onMouseenter,
           onMouseleave: props.onMouseleave,
-          /* --- className / style：prop 优先，attrs 兜底（见文件头 PLATFORM 条） --- */
-          className: props.className ?? ((attrClass as string | undefined) || undefined),
+          /* --- class / style：className/rootClassName 都并入 class（prop 优先，attrs 兜底）；
+                顺序与 Statistic 的 clsx 一致：className 在 rootClassName 之前 --- */
+          class: [
+            props.className ?? ((attrClass as string | undefined) || undefined),
+            props.rootClassName,
+          ],
           style: (props.style ?? attrStyle) as never,
           /* --- Timer 注入 --- */
           value: props.value,

@@ -36,6 +36,7 @@
 
 import { isRenderable, pickAttrs, useDevWarning } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -62,9 +63,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     value: { type: [Number, String] as PropType<ValueType>, default: 0 },
     valueStyle: {
       type: Object as PropType<Record<string, string | number>>,
@@ -138,9 +136,8 @@ export default defineComponent({
       [() => contextClassNames, () => props.classNames],
       [
         () => contextStyles as StatisticSemanticStyles | undefined,
-        () => semanticRootStyle(contextStyle as StatisticProps['style']),
+        () => semanticRootStyle(contextStyle as CSSProperties | undefined),
         () => props.styles,
-        () => semanticRootStyle(props.style),
       ],
       semanticProps,
     );
@@ -158,8 +155,8 @@ export default defineComponent({
           [`${cls}-rtl`]: direction.value === 'rtl',
         },
         contextClassName,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
       ];
       const headerClassNames = [`${cls}-header`, mergedClassNames.value.header].filter(
@@ -241,7 +238,11 @@ export default defineComponent({
           ...restProps,
           ref: rootRef,
           class: rootClassNames,
-          ...styleAttrs(mergedStyles.value.root),
+          // 根 `style` 是 Vue 原生 attrs：位置与原先的 props.style 一致（最后胜出）
+          ...styleAttrs({
+            ...mergedStyles.value.root,
+            ...((attrs.style as Record<string, string | number>) ?? {}),
+          }),
           onMouseenter: props.onMouseenter,
           onMouseleave: props.onMouseleave,
         },
@@ -270,7 +271,7 @@ export default defineComponent({
             {
               paragraph: false,
               loading: props.loading,
-              className: `${cls}-skeleton`,
+              class: `${cls}-skeleton`,
               active: true,
             },
             { default: () => contentNode },

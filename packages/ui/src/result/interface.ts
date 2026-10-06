@@ -46,10 +46,6 @@ export interface ResultProps {
   subTitle?: string;
   /** 操作区：VNode 主导，已删除 prop，改 #extra slot。 */
   extra?: never;
-  /** 透传类名（语义槽位请用 classNames）。 */
-  className?: string;
-  /** 透传根样式（折进 styles.root，与 antd 的 useSemanticRootStyle 同构）。 */
-  style?: CSSProperties;
   classNames?: ResultSemanticClassNames;
   styles?: ResultSemanticStyles;
 }
