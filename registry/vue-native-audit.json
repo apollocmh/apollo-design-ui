@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:40:12.675Z",
+  "updatedAt": "2026-10-06T05:44:46.980Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 3,
+      "todo": 2,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 62,
+      "done": 63,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 630,
+    "reviewedProductionSourceFiles": 650,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2201,7 +2201,7 @@
       "reviewedFileCount": 10
     },
     "form": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/form/context.ts",
         "packages/ui/src/form/ErrorList.ts",
@@ -2224,7 +2224,28 @@
         "packages/ui/src/form/style/token.ts",
         "packages/ui/src/form/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/form/context.ts",
+        "packages/ui/src/form/ErrorList.ts",
+        "packages/ui/src/form/Form.vue",
+        "packages/ui/src/form/FormItem/ItemHolder.ts",
+        "packages/ui/src/form/FormItem/StatusProvider.ts",
+        "packages/ui/src/form/FormItem.vue",
+        "packages/ui/src/form/FormItemInput.ts",
+        "packages/ui/src/form/FormItemLabel.ts",
+        "packages/ui/src/form/FormList.vue",
+        "packages/ui/src/form/hooks/exports.ts",
+        "packages/ui/src/form/hooks/use-debounce.ts",
+        "packages/ui/src/form/hooks/use-form-item-prefix.ts",
+        "packages/ui/src/form/hooks/use-form.ts",
+        "packages/ui/src/form/hooks/use-watch.ts",
+        "packages/ui/src/form/hooks/useVariants.ts",
+        "packages/ui/src/form/index.ts",
+        "packages/ui/src/form/interface.ts",
+        "packages/ui/src/form/style/index.ts",
+        "packages/ui/src/form/style/token.ts",
+        "packages/ui/src/form/util.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 5,
       "docFiles": [
@@ -2232,9 +2253,14 @@
         "packages/ui/src/form/index.en-US.md",
         "packages/ui/src/form/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 55/55（消费方回归 174/174）；Form / FormItem / ErrorList 三个公开面去掉根别名。⚠️ Form.vue 的 rootClassName 原本**从未被使用**（死 prop）。⚠️ FormItem/ItemHolder/ErrorList 都没关 inheritAttrs ⇒ 删 props 即可，不要手工接（会重复）。FormItemInput → ErrorList 的 className 改 class。⚠️ form 的 L4 契约不覆盖这三个键。"
+      ],
+      "reviewedFileCount": 20
     },
     "slider": {
       "auditStatus": "done",
@@ -3851,7 +3877,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（58 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree、tree-select，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（59 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree、tree-select、form，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4152,6 +4178,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 30: tree-select done. Total done = 62. Only TreeSelect is public (OptionList is internal). Root style stays on the semantic root channel; the popup rootClassName was dropped (users use popupClassName)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 31: form done (Form + FormItem + ErrorList). Total done = 63. Form.vue declared a rootClassName that was NEVER used (dead prop). FormItem/ItemHolder/ErrorList all use the DEFAULT inheritAttrs, so deleting the props is sufficient - wiring attrs by hand would double. Ran a consumer regression (input/select/input-number/switch/radio/checkbox) = 174/174, no fallout."
     }
   ],
   "observations": [
