@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T02:09:12.680Z",
+  "updatedAt": "2026-10-06T04:35:38.819Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 22,
+      "todo": 20,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 43,
+      "done": 45,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 379,
+    "reviewedProductionSourceFiles": 393,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1866,7 +1866,7 @@
       "notes": []
     },
     "popconfirm": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/popconfirm/index.ts",
         "packages/ui/src/popconfirm/interface.ts",
@@ -1875,7 +1875,14 @@
         "packages/ui/src/popconfirm/style/index.ts",
         "packages/ui/src/popconfirm/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/popconfirm/index.ts",
+        "packages/ui/src/popconfirm/interface.ts",
+        "packages/ui/src/popconfirm/Popconfirm.ts",
+        "packages/ui/src/popconfirm/PurePanel.ts",
+        "packages/ui/src/popconfirm/style/index.ts",
+        "packages/ui/src/popconfirm/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 10,
       "docFiles": [
@@ -1883,12 +1890,17 @@
         "packages/ui/src/popconfirm/index.en-US.md",
         "packages/ui/src/popconfirm/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 39/39；**无需改代码** —— 类型面早已迁移（PopconfirmButtonProps 的 className/rootClassName 已是 `never` 标记，PopconfirmProps 继承 PopoverProps 且不再有这三个键），实现里只用 overlayClassName 与语义槽。"
+      ],
+      "reviewedFileCount": 6
     },
     "tour": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/tour/index.ts",
         "packages/ui/src/tour/interface.ts",
@@ -1899,7 +1911,16 @@
         "packages/ui/src/tour/style/token.ts",
         "packages/ui/src/tour/Tour.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/tour/index.ts",
+        "packages/ui/src/tour/interface.ts",
+        "packages/ui/src/tour/Mask.ts",
+        "packages/ui/src/tour/panel.ts",
+        "packages/ui/src/tour/PurePanel.ts",
+        "packages/ui/src/tour/style/index.ts",
+        "packages/ui/src/tour/style/token.ts",
+        "packages/ui/src/tour/Tour.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 9,
       "docFiles": [
@@ -1908,9 +1929,14 @@
         "packages/ui/src/tour/index.en-US.md",
         "packages/ui/src/tour/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 59/59；TourProps 去掉三个根别名；mergedRootClassName 接 attrs.class；遮罩/占位符改 attrs.style；PurePanel 同步。"
+      ],
+      "reviewedFileCount": 8
     },
     "float-button": {
       "auditStatus": "todo",
@@ -3485,7 +3511,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（41 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（已改走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名。阻塞：无。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（43 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3706,6 +3732,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 16: tooltip + popover migrated (41 components total). New insight: for floater components, className/rootClassName target the POPUP root, not the component root - and native class now lands on BOTH the popup and the trigger child (because Tooltip spreads ...attrs onto the Trigger). That is pre-existing native-class behaviour, but it means consumers that need popup-ONLY targeting (avatar AvatarGroup) must use the classNames.root semantic slot instead of class. Scan caught 2 more consumers (avatar, typography)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 17: popconfirm + tour done (43 components total). popconfirm needed NO code change - its type surface was already migrated (className/rootClassName marked `never`, PopconfirmProps inherits PopoverProps which no longer has them) and the impl only uses overlayClassName + semantic slots. tour required the usual set of edits (runtime props + mergedRootClassName + mask/placeholder styles + PurePanel)."
     }
   ],
   "observations": [
