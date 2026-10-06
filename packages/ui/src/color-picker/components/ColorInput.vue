@@ -111,7 +111,7 @@ const inputProps = computed(() => ({
       :get-popup-container="getPopupContainer"
       :popup-match-select-width="68"
       placement="bottomRight"
-      :class-name="`${prefixCls}-format-select`"
+      :class="`${prefixCls}-format-select`"
       size="small"
       :options="selectOptions"
       @change="onSelectFormatChange"

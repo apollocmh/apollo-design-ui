@@ -409,7 +409,7 @@ defineExpose({ nativeElement: rootRef });
         v-if="hasTabs"
         :size="tabSize"
         v-bind="tabsBind"
-        :class-name="`${prefixCls}-head-tabs`"
+        :class="`${prefixCls}-head-tabs`"
         :items="tabsItems"
         @change="handleTabChange"
       />

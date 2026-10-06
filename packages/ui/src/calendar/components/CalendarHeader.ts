@@ -82,7 +82,9 @@ interface SharedProps {
  */
 function selectBase(p: SharedProps, className: string): Record<string, unknown> {
   return {
-    className,
+    // ⚠️ Select 已迁移到「根 class 走原生 attrs」⇒ 必须用 `class`
+    //    （传旧的 `className` 会让 Select 的整条类名链塌陷 —— 只留下这一个类）
+    class: className,
     getPopupContainer: () => p.divRef.value as HTMLElement,
     ...(p.fullscreen ? {} : { size: 'small' as const }),
   };

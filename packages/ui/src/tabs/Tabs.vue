@@ -484,13 +484,17 @@ export default defineComponent({
         } as never,
       );
 
+      // ⚠️ 末尾的 `...attrs` 会**覆盖** `class`（Vue 的对象展开语义）⇒
+      //    必须先把 `class` 摘掉，否则调用方传 class 时整条 rootClass 全丢。
+      const { class: _attrsClass, ...restAttrs } = attrs;
+      void _attrsClass;
       return h(
         'div',
         {
           ref: rootRef,
           id: props.id,
           class: rootClass,
-          ...attrs,
+          ...restAttrs,
         },
         [navNode, panelNode] as never,
       );

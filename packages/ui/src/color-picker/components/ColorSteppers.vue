@@ -53,7 +53,7 @@ const onInternalChange = (step: number | null): void => {
 <template>
   <!-- ⚠️ 必须传 `className` prop：本仓 `InputNumber` 会剥掉 `attrs.class`（PITFALLS 309） -->
   <InputNumber
-    :class-name="[`${prefixCls}-steppers`, className].filter(Boolean).join(' ')"
+    :class="[`${prefixCls}-steppers`, className].filter(Boolean).join(' ')"
     :min="min"
     :max="max"
     :value="stepValue"

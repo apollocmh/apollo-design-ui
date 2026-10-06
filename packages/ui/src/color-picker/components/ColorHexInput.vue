@@ -67,7 +67,7 @@ const handleHexChange = (event: Event): void => {
 
 <template>
   <Input
-    :class-name="`${prefixCls}-hex-input`"
+    :class="`${prefixCls}-hex-input`"
     :value="hexValue"
     prefix="#"
     size="small"

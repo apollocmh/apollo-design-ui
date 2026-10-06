@@ -451,7 +451,6 @@ const onClearInternal = (): void => {
     :trigger="trigger"
     :placement="placement"
     :arrow="mergedArrow"
-    :root-class-name="rootClassName"
     :get-popup-container="getPopupContainer"
     :auto-adjust-overflow="autoAdjustOverflow"
     :destroy-on-hidden="mergedDestroyOnHidden"
