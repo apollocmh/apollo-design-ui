@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T00:58:06.646Z",
+  "updatedAt": "2026-10-06T01:30:46.499Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 33,
+      "todo": 31,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 32,
+      "done": 34,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 283,
+    "reviewedProductionSourceFiles": 295,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1073,7 +1073,7 @@
       "notes": []
     },
     "listy": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/listy/engine/index.ts",
         "packages/ui/src/listy/index.ts",
@@ -1082,7 +1082,14 @@
         "packages/ui/src/listy/style/index.ts",
         "packages/ui/src/listy/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/listy/engine/index.ts",
+        "packages/ui/src/listy/index.ts",
+        "packages/ui/src/listy/interface.ts",
+        "packages/ui/src/listy/Listy.ts",
+        "packages/ui/src/listy/style/index.ts",
+        "packages/ui/src/listy/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 4,
       "docFiles": [
@@ -1091,12 +1098,17 @@
         "packages/ui/src/listy/index.en-US.md",
         "packages/ui/src/listy/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 36/36；ListyProps 去掉三个根别名。⚠️ Virtual 分支原先靠语义列表带 props.style，现在必须显式并入 attrs.style，否则虚拟路径下样式静默丢失。"
+      ],
+      "reviewedFileCount": 6
     },
     "qr-code": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/qr-code/engine/qrcodegen.d.ts",
         "packages/ui/src/qr-code/engine/utils.ts",
@@ -1105,7 +1117,14 @@
         "packages/ui/src/qr-code/QrCode.ts",
         "packages/ui/src/qr-code/style/index.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/qr-code/engine/qrcodegen.d.ts",
+        "packages/ui/src/qr-code/engine/utils.ts",
+        "packages/ui/src/qr-code/index.ts",
+        "packages/ui/src/qr-code/interface.ts",
+        "packages/ui/src/qr-code/QrCode.ts",
+        "packages/ui/src/qr-code/style/index.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 4,
       "docFiles": [
@@ -1114,9 +1133,14 @@
         "packages/ui/src/qr-code/index.en-US.md",
         "packages/ui/src/qr-code/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom + types = 35/35；QRCodeProps 去掉三个根别名（含两处语义列表）。⚠️ rootStyle 的 width/height 原本读 props.style，改读 attrs.style（antd 语义：调用方 style 优先于 size）。"
+      ],
+      "reviewedFileCount": 6
     },
     "upload": {
       "auditStatus": "todo",
@@ -3319,7 +3343,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（29 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（31 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig。阻塞：auto-complete 需先做 select。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3495,6 +3519,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 7: radio, switch, splitter migrated (29 components total). The consumer scan caught two more: calendar/components/CalendarHeader passing className to RadioGroup, and radio/Group forwarding option.className to Radio. Both would have silently dropped classes. SplitterPanel/InternalPanel className/style intentionally kept - Panel is renderless and its props are a data-collection channel."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 8: qr-code, listy migrated (31 components total). Notable: both had a NON-obvious coupling - qr-code read props.style.width/height to derive the canvas size, and listy Virtual branch relied on the semantic list to carry props.style into mergedStyles.root. Removing the props silently broke those two paths; both now read attrs.style explicitly. Lesson: always grep for props.style usages beyond the class array, and check every render branch."
     }
   ],
   "observations": [
