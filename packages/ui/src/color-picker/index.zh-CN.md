@@ -68,9 +68,7 @@ subtitle: 颜色选择器
 | classNames | 语义化类名（`root` / `body` / `content` / `description` / `popup`），支持函数形态 | `ColorPickerSemanticClassNames \| ((info) => …)` | — | ✅ |
 | styles | 语义化样式（6 个槽，比 `classNames` 多一个 `popupOverlayInner`），支持函数形态 | `ColorPickerSemanticStyles \| ((info) => …)` | — | ✅ |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-color-picker` | × |
-| className | 根节点附加类名 | `string` | — | × |
-| rootClassName | 根节点附加类名（与 `className` 并列） | `string` | — | × |
-| style | 根节点内联样式 | `CSSProperties` | — | × |
+| class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`；`class` 同时进触发器与浮层根） | `string \| array \| object` / `CSSProperties` | — | × |
 
 #### ColorValueType
 

@@ -50,9 +50,7 @@ See [`demo/`](./demo) (15 demos, one-to-one with antd's **user-facing** demos).
 | align | Alignment. ⚠️ When vertical, omitting it does **not** fall back to `center` | `'start' \| 'end' \| 'center' \| 'baseline'` | `'center'` when horizontal, — when vertical |
 | separator | Sets the separator | `VNodeChild` | — |
 | wrap | Whether to wrap automatically. Only effective when horizontal | `boolean` | `false` |
-| className | Class name of the root element | `string` | — |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — |
-| style | Inline style of the root element. **Overrides `styles.root`** | `CSSProperties` | — |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`). `style` **overrides `styles.root`** | `string \| array \| object` / `CSSProperties` | — |
 | classNames | Semantic class names | `SpaceSemanticValue<SpaceSemanticClassNames>` | — |
 | styles | Semantic inline styles | `SpaceSemanticValue<SpaceSemanticStyles>` | — |
 | ~~direction~~ | ⚠️ Deprecated, use `orientation` | `'horizontal' \| 'vertical'` | — |
@@ -111,9 +109,7 @@ Joins form components tightly and merges their borders.
 | orientation | Direction. Highest priority | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | vertical | Whether it is vertical. `orientation` takes precedence when both are set | `boolean` | — |
 | block | Stretch to the width of the parent | `boolean` | `false` |
-| className | Class name of the root element | `string` | — |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — |
-| style | Inline style of the root element | `CSSProperties` | — |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | — |
 | ~~direction~~ | ⚠️ Deprecated, use `orientation` | `'horizontal' \| 'vertical'` | — |
 
 #### Slots

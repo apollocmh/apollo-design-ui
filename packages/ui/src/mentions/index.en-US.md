@@ -67,9 +67,7 @@ See [`demo/`](./demo) (16 demos, one-to-one with antd's user-facing demos).
 | classNames | Semantic class names (`root` / `textarea` / `popup` / `suffix`), function supported | `MentionsSemanticClassNames \| ((info) => …)` | — | ✅ (`mentions.classNames`) |
 | styles | Semantic styles (same 4 keys), function supported | `MentionsSemanticStyles \| ((info) => …)` | — | ✅ (`mentions.styles`) |
 | prefixCls | Class name prefix | `string` | From ConfigProvider, fallback `apollo-mentions` | × |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — | × |
-| className | Class name of the root element | `string` | — | × |
-| style | Inline style of the root element | `CSSProperties` | — | × |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | — | × |
 
 #### MentionsOptionProps
 

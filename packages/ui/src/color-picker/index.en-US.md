@@ -69,9 +69,7 @@ See [`demo/`](./demo) (**16** demos, mirroring antd's user-visible demos).
 | classNames | Semantic class names (`root` / `body` / `content` / `description` / `popup`); function form supported | `ColorPickerSemanticClassNames \| ((info) => …)` | — | ✅ |
 | styles | Semantic styles (6 slots — one more than `classNames`: `popupOverlayInner`); function form supported | `ColorPickerSemanticStyles \| ((info) => …)` | — | ✅ |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-color-picker` | × |
-| className | Extra class name on the root node | `string` | — | × |
-| rootClassName | Extra class name on the root node (alongside `className`) | `string` | — | × |
-| style | Inline style of the root node | `CSSProperties` | — | × |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`; `class` goes to both the trigger and the popup root) | `string \| array \| object` / `CSSProperties` | — | × |
 
 #### ColorValueType
 

@@ -67,9 +67,7 @@ subtitle: 提及
 | classNames | 语义化类名（`root` / `textarea` / `popup` / `suffix`），支持函数形态 | `MentionsSemanticClassNames \| ((info) => …)` | — | ✅（`mentions.classNames`） |
 | styles | 语义化样式（同上 4 键），支持函数形态 | `MentionsSemanticStyles \| ((info) => …)` | — | ✅（`mentions.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-mentions` | × |
-| rootClassName | 也落在根元素上（在 `className` 之后） | `string` | — | × |
-| className | 根元素类名 | `string` | — | × |
-| style | 根元素内联样式 | `CSSProperties` | — | × |
+| class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | — | × |
 
 #### MentionsOptionProps
 
