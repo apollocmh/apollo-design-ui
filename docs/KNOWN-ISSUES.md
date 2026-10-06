@@ -69,14 +69,6 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 「多子节点 ⇒ 包一层 `<span>`」契约已有用例钉住（`color-picker/__tests__/index.test.ts`
 的「多子节点触发器契约」两条），正文移除。
 
-### 1.4 📌 生产代码存量 **60 条** biome warn（不阻塞，`exit=0`）
-
-- `noNonNullAssertion` 生产存量（tree/utils · progress · listy · cascader 等）是
-  **算法不变式**，机械改会改语义（`Set.add(undefined)` 实测）⇒ **逐个收窄、不扫改**，
-  随各组件下次改动顺手做，**不单独排期**。
-- 判据：`pnpm exec biome check . --max-diagnostics=none 2>&1 | tail -3`
-  ⚠️ **必须加 `--max-diagnostics=none`**（默认只显示前 20 条，会严重低估）。
-
 ### 1.5 ⚠️ 覆盖率 ratchet 的**分支**指标曾 flaky（主因已修，残余低风险待办）
 
 **现象**（2026-10-04）：同一份代码，CI 跑两次结果不同 ——
@@ -179,6 +171,7 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 
 | commit | 内容 |
 |---|---|
+| （2026-10-06） | **§1.4 biome 存量告警清零**：全仓 `biome check .` = **0 error / 0 warning**（2871 文件）。做法严格遵守「逐个收窄、不扫改」：**能靠守卫收窄的真修**（`tree/utils/conductUtil.ts` 10 处把守卫从 `!entity.parent` 改成 `!parent`；`table/engine/*` 14 处 `inject(...)!` 换成新助手 `useTableContext()`/`useRowContext()`，缺 provider 时抛可读错）；**收窄不了的按「算法不变式」加带具体理由的豁免**（rc-tree 拖拽 / progress 的 step 形态 / Map.get-after-has …）。⚠️ 顺带修掉 2 个 **error**（`noUnusedImports`，是本轮迁移删 prop 后留下的）—— 组件级测试不查 lint，只有全仓 biome 抓得到。 |
 | （2026-10-06） | **§1.8 date-picker 接上 attrs 透传**：两个文件此前 `inheritAttrs: false` 且**从不读 attrs** ⇒ `data-*`/`aria-*` 全丢。现在 `restAttrs`（除 class/style）并进引擎绑定（`selectorBindings`），**引擎自己的 props 在后（引擎胜）**。新增 3 条 L1：`data-*`/`aria-*` 落选择器根 / 原生 `class`+`style` 仍落根 / `id` 不被 attrs 顶掉。✅ **L4 基线零改动**（先核实过：date-picker 的 L4 用例不传 `className`/`style`/额外 attrs）。 |
 | （2026-10-06） | **§1.7 补齐 `table` 的 a11y 审计**（最后一个缺的组件）：`table/__tests__/a11y.test.ts` = 12 个 demo 的 axe 全量扫描（**零 violation**）+ 5 条结构断言（`th scope` / `aria-sort` / 选择列可访问名 / 展开图标 `aria-expanded` / 筛选 `role=button`），**18/18**。⚠️ 顺带实测钉住一条：**未排序的列不写 `aria-sort`**（`use-sorter.ts:240` 的 `if (sortOrder)`），不是写 `none`。 |
 | （2026-10-06） | **根别名迁移全部完成（72/72）** —— `className`/`rootClassName`/`style` → Vue 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232；**全程零基线改动、零 deprecated 别名**。60+ 个提交，每组件独立 commit；收口时全量 `unit+dom-contract+types+a11y+theme` = **675 文件 / 12288 用例 / 0 类型错误**，L6 = **1125/1125 exact**。⚠️ 最后 6 个（checkbox/collapse/drawer/cascader/color-picker/date-picker）藏在 `auditStatus=analyzing` 档里被漏过两轮 ⇒ 判据是**扫代码**不是看状态（PITFALLS **355**）。新坑全文见 PITFALLS **349–357**；本条只留「迁移已完成」这一事实，**不要重做**。 |
