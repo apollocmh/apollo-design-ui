@@ -257,12 +257,6 @@ export interface TourProps {
   disabledInteraction?: boolean;
   /** 浮层对齐完成后的回调（rc-trigger 的 `onPopupAlign` 同构）。 */
   onPopupAlign?: (element: HTMLElement, align: TriggerAlign) => void;
-  /** 根元素额外类名（在 ConfigProvider 的 `className` 之后）。 */
-  rootClassName?: string;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 落在根元素上；`root`/`mask` 相关的值会同时落到蒙层（antd 的 `useSemanticRootStyle`）。 */
-  style?: CSSProperties;
   /** 语义化类名（对象或函数）。 */
   classNames?: TourSemanticValue<TourSemanticClassNames>;
   /** 语义化样式（对象或函数）。 */

@@ -38,6 +38,7 @@ import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { getDesignToken } from '@apollo-design/theme';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -156,7 +157,7 @@ interface TourContext {
   styles?: TourSemanticStyles;
   closeIcon?: VNodeChild;
 }
-type VueCSSProperties = TourProps['style'];
+type VueCSSProperties = CSSProperties;
 
 const Tour = defineComponent({
   name: 'ATour',
@@ -201,9 +202,6 @@ const Tour = defineComponent({
       type: Function as PropType<(element: HTMLElement, align: TriggerAlign) => void>,
       default: undefined,
     },
-    rootClassName: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<TourProps['classNames']>,
       default: undefined,
@@ -484,7 +482,7 @@ const Tour = defineComponent({
         () => semanticRootStyle(contextStyle.value, 'mask'),
         () => semanticRootStyle(resolvedPropsStyles.value?.root, 'mask'),
         resolvedPropsStyles,
-        () => semanticRootStyle(props.style as VueCSSProperties | undefined, 'mask'),
+        () => semanticRootStyle(attrs.style as VueCSSProperties | undefined, 'mask'),
       ],
       mergedProps.value,
     );
@@ -494,10 +492,10 @@ const Tour = defineComponent({
     const mergedRootClassName = computed(() =>
       clsx(
         direction.value === 'rtl' && `${prefixCls.value}-rtl`,
-        props.rootClassName,
         context.className,
         mergedClassNames.value.root,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class as string | undefined,
       ),
     );
 
@@ -570,13 +568,12 @@ const Tour = defineComponent({
           : CENTER_PLACEHOLDER),
         position: 'fixed',
         pointerEvents: 'none',
-        ...(props.style as StyleLike),
+        // 根 style 是 Vue 原生 attrs
+        ...(attrs.style as StyleLike),
       };
       const placeholder = h('div', {
         class: clsx(
-          props.className,
           typeof attrs.class === 'string' ? attrs.class : undefined,
-          props.rootClassName,
           `${p}-target-placeholder`,
         ),
         style: placeholderStyle,

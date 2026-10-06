@@ -13,15 +13,7 @@
  */
 
 import { useLocale } from '@apollo-design/locale';
-import {
-  type CSSProperties,
-  cloneVNode,
-  defineComponent,
-  h,
-  isVNode,
-  type PropType,
-  type VNodeChild,
-} from 'vue';
+import { cloneVNode, defineComponent, h, isVNode, type PropType, type VNodeChild } from 'vue';
 import { type ClosableType, useClosable } from '../_internal/use-closable';
 import { useComponentConfig } from '../config-provider/context';
 import { clsx } from '../tooltip/util';
@@ -41,8 +33,6 @@ const PurePanel = defineComponent({
     // antd：current = 0 / total = 6（怪值逐字保留）
     current: { type: Number, default: 0 },
     total: { type: Number, default: 6 },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<CSSProperties>, default: undefined },
     type: { type: String as PropType<TourType>, default: undefined },
     closable: {
       type: [Boolean, Object] as PropType<TourStepProps['closable']>,
@@ -125,12 +115,12 @@ const PurePanel = defineComponent({
             p,
             `${p}-pure`,
             `${p}-placement-top`,
-            props.className,
             `${p}-pure`,
             props.type && `${p}-${props.type}`,
             typeof attrs.class === 'string' ? attrs.class : undefined,
           ),
-          style: props.style,
+          // 根 style 是 Vue 原生 attrs
+          style: attrs.style,
         },
         [
           h('div', { class: `${p}-arrow` }),

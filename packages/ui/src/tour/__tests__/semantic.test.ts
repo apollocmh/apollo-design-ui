@@ -74,7 +74,7 @@ const CASES: Record<string, () => DomRenderResult> = {
       ...BP,
       title: 't',
       description: 'd',
-      className: 'custom-root',
+      class: 'custom-root',
       style: { padding: 20 },
     }),
 };
