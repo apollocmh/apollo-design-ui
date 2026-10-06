@@ -87,7 +87,12 @@ export interface DropdownProps {
    * 浮层根节点类名。
    *
    * ⚠️ Dropdown **没有自有 DOM 根**（渲染的是 Trigger + 浮层），所以这是**独立目标**
-   *    （落浮层，不是「组件根」）⇒ 保留为专用 prop。触发元素的类名请用原生 `class`。
+   *    （落浮层，不是「组件根」）⇒ 不随「根别名 → 原生 `class`」一起收敛。
+   *    触发元素的类名请用原生 `class`。
+   *
+   * @deprecated 用 `classNames.root`（**同一个落点**）。上游 antd 6.6.4
+   *   `es/dropdown/dropdown.d.ts:56` 就是这条 `@deprecated Use \`classNames.root\` instead`，
+   *   本仓跟随（同 `image`）。
    */
   rootClassName?: string;
   openClassName?: string;
