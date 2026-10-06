@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T05:34:13.550Z",
+  "updatedAt": "2026-10-06T05:37:49.507Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 5,
+      "todo": 4,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 60,
+      "done": 61,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 597,
+    "reviewedProductionSourceFiles": 618,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1974,7 +1974,7 @@
       "reviewedFileCount": 1
     },
     "tree": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/tree/DirectoryTree.ts",
         "packages/ui/src/tree/DropIndicator.ts",
@@ -1998,7 +1998,29 @@
         "packages/ui/src/tree/utils/treeUtil.ts",
         "packages/ui/src/tree/utils/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/tree/DirectoryTree.ts",
+        "packages/ui/src/tree/DropIndicator.ts",
+        "packages/ui/src/tree/Indent.ts",
+        "packages/ui/src/tree/index.ts",
+        "packages/ui/src/tree/interface.ts",
+        "packages/ui/src/tree/MotionTreeNode.ts",
+        "packages/ui/src/tree/NodeList.ts",
+        "packages/ui/src/tree/style/index.ts",
+        "packages/ui/src/tree/style/token.ts",
+        "packages/ui/src/tree/Tree.ts",
+        "packages/ui/src/tree/TreeContext.ts",
+        "packages/ui/src/tree/TreeNode.ts",
+        "packages/ui/src/tree/use-tree.ts",
+        "packages/ui/src/tree/utils/conductUtil.ts",
+        "packages/ui/src/tree/utils/dictUtil.ts",
+        "packages/ui/src/tree/utils/diffUtil.ts",
+        "packages/ui/src/tree/utils/iconUtil.ts",
+        "packages/ui/src/tree/utils/index.ts",
+        "packages/ui/src/tree/utils/keyUtil.ts",
+        "packages/ui/src/tree/utils/treeUtil.ts",
+        "packages/ui/src/tree/utils/util.ts"
+      ],
       "testFileCount": 10,
       "demoFileCount": 18,
       "docFiles": [
@@ -2007,9 +2029,14 @@
         "packages/ui/src/tree/index.en-US.md",
         "packages/ui/src/tree/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 58/58；TreeProps 去掉三个根别名。⚠️ Tree 没关 inheritAttrs ⇒ 原生 class/style 自动合并到根，**不要**再手工加（加了会重复，L4 tree:directory 抓到）。⚠️ DirectoryTree 转发给 Tree 的 className → class（同目录内部件）。公开面 = Tree / DirectoryTree / useTree；MotionTreeNode / TreeNode 是内部件。"
+      ],
+      "reviewedFileCount": 21
     },
     "tree-select": {
       "auditStatus": "todo",
@@ -3806,7 +3833,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（56 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（57 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4097,6 +4124,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 28: modal done. Total done = 60. TWO IMPORTANT LESSONS: (1) the consumer scan MUST include the component being migrated - ConfirmDialog (same-directory internal) forwards className to Modal, and missing it silently dropped the whole `apollo-modal-confirm` class (5 unit tests caught it). (2) NEVER run `git stash push -u` in this repo: it desynced the index (6352 entries staged-deleted while the files were fine on disk); recovery is a plain `git reset`."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 29: tree done (Tree + DirectoryTree). Total done = 61. KEY INSIGHT: if the component does NOT set inheritAttrs:false, Vue already merges native class/style onto the root - so adding attrs.class/attrs.style into the explicit class array / style object DOUBLES them (L4 tree:directory showed `apollo-tree-directory` twice). The right move there is to change nothing in the render body, only remove the props. DirectoryTree (same-directory internal) forwarded className to Tree and needed class."
     }
   ],
   "observations": [
