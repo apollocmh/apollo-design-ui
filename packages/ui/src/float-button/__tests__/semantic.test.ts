@@ -23,7 +23,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   disabled: () => h(FloatButton, { prefixCls: PREFIX, disabled: true }),
   // ⚠️ badge 集成不在 L4：Badge 作为 Button children 的嵌入形态存在结构差异
   //    （wrapper 层/sup 标签），由 L1 结构断言 + Badge 自身 L4 覆盖
-  'class-name': () => h(FloatButton, { prefixCls: PREFIX, className: 'extra' }),
+  'class-name': () => h(FloatButton, { prefixCls: PREFIX, class: 'extra' }),
   'prefix-cls:custom': () => h(FloatButton, { prefixCls: 'custom' }),
   'prefix-cls:no-props': () => h(FloatButton),
 };

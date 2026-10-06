@@ -15,6 +15,7 @@ import { CSSMotion } from '@apollo-design/motion';
 import { useZIndex } from '@apollo-design/portal';
 import { useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -46,12 +47,6 @@ const FloatButtonGroupComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: {
-      type: [Object, String] as PropType<FloatButtonGroupProps['style']>,
-      default: undefined,
-    },
     type: { type: String as PropType<FloatButtonType>, default: undefined },
     shape: { type: String as PropType<FloatButtonShape>, default: undefined },
     disabled: { type: Boolean, default: undefined },
@@ -137,9 +132,10 @@ const FloatButtonGroupComponent = defineComponent({
     };
 
     // ---- zIndex ----
+    // 根 `style` 是 Vue 原生 attrs（zIndex 也从它读）
     const zIndex = useZIndex('FloatButton', (): number | undefined =>
-      typeof props.style === 'object' && props.style !== null
-        ? (props.style.zIndex as number | undefined)
+      typeof attrs.style === 'object' && attrs.style !== null
+        ? ((attrs.style as CSSProperties).zIndex as number | undefined)
         : undefined,
     );
 
@@ -264,8 +260,8 @@ const FloatButtonGroupComponent = defineComponent({
         mergedShape.value === 'circle' ? `${gCls}-individual` : '',
         isMenuMode.value ? `${gCls}-${mergedPlacement.value}` : '',
         isMenuMode.value ? `${gCls}-menu-mode` : '',
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
       ]
         .filter(Boolean)
         .join(' ');
@@ -277,7 +273,8 @@ const FloatButtonGroupComponent = defineComponent({
           class: rootClass,
           style: {
             zIndex: zIndex.value,
-            ...(typeof props.style === 'object' ? props.style : {}),
+            // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致）
+            ...(typeof attrs.style === 'object' ? attrs.style : {}),
             ...(mergedStyles.value.root ?? {}),
           },
           onMouseenter: () => {

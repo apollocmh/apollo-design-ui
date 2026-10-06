@@ -20,6 +20,7 @@ import { useZIndex } from '@apollo-design/portal';
 import { isPlainObject, useDevWarning } from '@apollo-design/utils';
 import {
   type ComponentPublicInstance,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -56,9 +57,6 @@ const FloatButtonComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: [Object, String] as PropType<FloatButtonProps['style']>, default: undefined },
     type: { type: String as PropType<FloatButtonType>, default: undefined },
     shape: { type: String as PropType<FloatButtonShape>, default: undefined },
     description: { type: String, default: undefined },
@@ -123,14 +121,15 @@ const FloatButtonComponent = defineComponent({
     );
 
     // ---- zIndex ----
+    // 根 `style` 是 Vue 原生 attrs（zIndex 也从它读，与 antd 同判）
     const zIndex = useZIndex('FloatButton', (): number | undefined =>
-      typeof props.style === 'object' && props.style !== null
-        ? (props.style.zIndex as number | undefined)
+      typeof attrs.style === 'object' && attrs.style !== null
+        ? ((attrs.style as CSSProperties).zIndex as number | undefined)
         : undefined,
     );
 
     const mergedStyle = computed<Record<string, unknown>>(() => ({
-      ...((typeof props.style === 'object' && props.style !== null ? props.style : {}) as Record<
+      ...((typeof attrs.style === 'object' && attrs.style !== null ? attrs.style : {}) as Record<
         string,
         unknown
       >),
@@ -209,8 +208,8 @@ const FloatButtonComponent = defineComponent({
           'aria-label': props['aria-label'],
           class: [
             prefixCls.value,
-            props.className,
-            props.rootClassName,
+            // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+            attrs.class,
             `${prefixCls.value}-${mergedType.value}`,
             `${prefixCls.value}-${mergedShape.value}`,
             direction.value === 'rtl' ? `${prefixCls.value}-rtl` : '',

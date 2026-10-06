@@ -39,7 +39,6 @@ const PurePanelComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
     backTop: { type: Boolean, default: false },
     items: { type: Array as PropType<PurePanelItem[]>, default: undefined },
   },
@@ -54,7 +53,8 @@ const PurePanelComponent = defineComponent({
           FloatButtonGroupComponent,
           {
             ...(attrs as Record<string, unknown>),
-            className: clsx(attrs.class as string | undefined, props.className, pureCls),
+            // FloatButton/Group 已迁移到原生 attrs ⇒ 用 `class`
+            class: clsx(attrs.class as string | undefined, pureCls),
           },
           {
             default: () =>
@@ -73,7 +73,8 @@ const PurePanelComponent = defineComponent({
         {
           ...(rest as Record<string, unknown>),
           ...(attrs as Record<string, unknown>),
-          className: clsx(attrs.class as string | undefined, props.className, pureCls),
+          // FloatButton/Group 已迁移到原生 attrs ⇒ 用 `class`
+          class: clsx(attrs.class as string | undefined, pureCls),
         } as never,
         slots,
       );

@@ -29,9 +29,6 @@ export type FloatButtonSemanticStyles = ButtonSemanticStyles;
 export interface FloatButtonProps {
   // ---- 样式 ----
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   classNames?:
     | FloatButtonSemanticClassNames
     | ((info: { props: FloatButtonProps }) => FloatButtonSemanticClassNames);
@@ -92,9 +89,6 @@ export type FloatButtonGroupPlacement = 'top' | 'left' | 'right' | 'bottom';
 
 export interface FloatButtonGroupProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   classNames?:
     | FloatButtonGroupSemanticClassNames
     | ((info: { props: FloatButtonGroupProps }) => FloatButtonGroupSemanticClassNames);

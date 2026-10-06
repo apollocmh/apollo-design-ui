@@ -28,12 +28,6 @@ const BackTopComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: {
-      type: [Object, String] as PropType<FloatButtonBackTopProps['style']>,
-      default: undefined,
-    },
     type: { type: String as PropType<FloatButtonType>, default: undefined },
     shape: { type: String as PropType<FloatButtonShape>, default: undefined },
     description: { type: String, default: undefined },
@@ -105,7 +99,8 @@ const BackTopComponent = defineComponent({
 
     return () => {
       const styleObj = {
-        ...(typeof props.style === 'object' ? props.style : {}),
+        // 根 style 是 Vue 原生 attrs
+        ...(typeof attrs.style === 'object' ? attrs.style : {}),
         ...(props.showProgress
           ? { [`--${prefixCls.value}-progress`]: `${scrollProgress.value}turn` }
           : {}),
@@ -132,8 +127,9 @@ const BackTopComponent = defineComponent({
                 htmlType: props.htmlType,
                 onClick: scrollToTop,
                 style: styleObj,
-                className: [
-                  props.className,
+                // FloatButton 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+                class: [
+                  attrs.class as string | undefined,
                   motionClassName,
                   props.showProgress ? `${prefixCls.value}-progress` : '',
                 ]
