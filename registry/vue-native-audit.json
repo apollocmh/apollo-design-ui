@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T12:40:27.521Z",
+  "updatedAt": "2026-10-06T22:05:54.082Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -61,11 +61,8 @@
         "P3": 1
       },
       "byStatus": {
-        "open": 8,
-        "in_progress": 1,
-        "fixed": 5,
-        "deferred": 0,
-        "wont_fix": 0
+        "open": 7,
+        "fixed": 7
       }
     }
   },
@@ -3888,8 +3885,8 @@
         "相关组件现有 L1 与 L4",
         "架构/边界静态检查，确认无其它组件从 empty/components 导入"
       ],
-      "status": "open",
-      "verification": "读取 Empty/Spin renderer 与消费者调用；Grep 精确列出 11 个跨目录 imports。未运行测试，未修改代码。"
+      "status": "fixed",
+      "verification": "✅ 2026-10-07 落地：新建 `packages/ui/src/_internal/node-renderer.ts`（`normalizeNode` + `NodeRenderer` + `RenderableNode`，三份副本合一）。删除 `spin/components/NodeRenderer.ts` 与 `space/node.ts`；`empty/components/NodeRenderer.ts` 只留 empty 专有的 `ImageNode`。**15 处 import 全部改指 `_internal`**（avatar ×2 / button / calendar / card ×2 / color-picker / list ×3 / result / spin / space ×2 / input-number）。行为逐字保留（无包裹 DOM、VNode 克隆、字符串/数字/数组/null 原样）。验证：全量 676 文件 / 12317 用例 / Type Errors 0；全仓 biome 0 error / 0 warning；8 处文档同步更新。"
     },
     {
       "id": "VNA-AFFIX-03",
@@ -4065,8 +4062,8 @@
         "各组件 __tests__/type.test-d.ts",
         "各组件 __tests__/semantic.test.ts"
       ],
-      "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。**72/72 全部完成**（收口期又按「公开导出枚举」复查出 2 个同目录公开子组件：`StatisticTimer` / `PopconfirmPurePanel`，已补）（69 个迁移 + 3 个验证后确认无需改码：menu / time-picker / message+notification / config-provider）。⚠️ 后 6 个（checkbox/collapse/drawer/cascader/color-picker/date-picker）原本在 `analyzing` 档，容易被「只筛 todo」漏掉 —— 判据是扫 `props.className|props.rootClassName|props.style`，不是看状态。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter、mentions 的 PurePanel、checkbox 的 CheckboxOptionType、collapse 的 Collapse.Panel/CollapsePanelInner、cascader 的 ConfigProvider 上下文。"
+      "status": "fixed",
+      "verification": "机械扫描 69/73 命中。**72/72 全部完成**（收口期又按「公开导出枚举」复查出 2 个同目录公开子组件：`StatisticTimer` / `PopconfirmPurePanel`，已补）（69 个迁移 + 3 个验证后确认无需改码：menu / time-picker / message+notification / config-provider）。⚠️ 后 6 个（checkbox/collapse/drawer/cascader/color-picker/date-picker）原本在 `analyzing` 档，容易被「只筛 todo」漏掉 —— 判据是扫 `props.className|props.rootClassName|props.style`，不是看状态。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter、mentions 的 PurePanel、checkbox 的 CheckboxOptionType、collapse 的 Collapse.Panel/CollapsePanelInner、cascader 的 ConfigProvider 上下文。 ✅ 2026-10-07 结案：72/72 完成 + 收口期补 2 个（StatisticTimer / PopconfirmPurePanel）+ §1.9 收口期按「公开导出枚举」复查零新增。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4392,6 +4389,11 @@
       "date": "2026-10-06",
       "status": "completed",
       "note": "Post-completion re-verification caught 2 MORE stragglers that the per-directory scan missed: StatisticTimer (statistic/index.ts exports it via withInstall) and PopconfirmPurePanel (popconfirm/index.ts likewise). Both were half-migrated. The correct scan is to enumerate each package index.ts PUBLIC EXPORTS (withInstall(X) / export {X}) and check only those files - walking the directory counts engines/internals and drowns the real hits in noise. PITFALLS 358. Also cleaned 7 stale doc rows (date-picker/image/space/tour) that still documented the removed props."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "VNA-RENDERER-01 (P0, architecture) FIXED: merged the three duplicate NodeRenderer implementations (empty/components/NodeRenderer.ts, spin/components/NodeRenderer.ts, space/node.ts) into packages/ui/src/_internal/node-renderer.ts. 15 imports repointed across 11 components; two copies deleted; empty keeps only its ImageNode. Behavior preserved verbatim. Full suite 676 files / 12317 tests / 0 type errors; biome 0/0. Also closed VNA-ROOTALIAS-01 (root-alias migration complete)."
     }
   ],
   "observations": [

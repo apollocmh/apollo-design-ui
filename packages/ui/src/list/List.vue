@@ -55,11 +55,11 @@ import {
   type VNode,
   type VNodeChild,
 } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { type Breakpoint, responsiveArray } from '../_internal/responsive-observer';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { DefaultRenderEmpty } from '../config-provider/default-render-empty';
 import { useSize } from '../config-provider/size-context';
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import { Row, useBreakpoint } from '../grid';
 import { Pagination } from '../pagination';
 import { Spin } from '../spin';

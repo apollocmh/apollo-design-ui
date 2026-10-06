@@ -43,6 +43,7 @@ import {
   watch,
   watchEffect,
 } from 'vue';
+import { normalizeNode } from '../_internal/node-renderer';
 import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
@@ -50,7 +51,6 @@ import { type SizeType, useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { SpaceAddon, SpaceCompact, useCompactItemContext } from '../space';
-import { normalizeNode } from '../space/node';
 import { getStatusClassNames } from '../space/statusUtils';
 import { type Decimal, getMiniDecimal, toFixedDecimal } from './engine/decimal';
 import { getDecupleSteps, getNumberPrecision, num2str, validateNumber } from './engine/number-util';

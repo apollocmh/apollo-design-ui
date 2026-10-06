@@ -88,9 +88,9 @@ node tests/visual/debug/extract-avatar-css.mjs > /tmp/avatar-antd.css   # 24 条
    ⚠️ 与 anchor / masonry / card 一致。
 3. **`Avatar` 没有 `classNames` / `styles` 语义化槽**（上游也没有）⇒ `AvatarConfig` 只有
    `className` / `style`。别照抄 card / empty / skeleton 的配置面。
-4. **`NodeRenderer` 的落点**：目前住在 `empty/components/NodeRenderer.ts`（card / button / result
-   也这样 import）。它是**平台原语**，应上移到 `ui/src/_internal/`；`spin/components/` 的本地副本同理。
-   本仓未做这次搬迁（会牵动四个组件的门禁）。
+4. **`NodeRenderer` 的落点**：住在 `ui/src/_internal/node-renderer.ts`。
+   ✅ 2026-10-07 已按架构规则迁出组件目录（registry `VNA-RENDERER-01`）：此前它在
+   `empty/components/` 里被 7 个组件目录跨目录 import，且 `spin` / `space` 各有一份副本。
 5. **demo 里的图片用 data URI / 必然失败的相对地址**（外网图片会污染 L6 基线；与 `image` / `avatar`
    的 demo 同判）。`fallback` demo 用的是 `./not-exist-avatar.png`（不发外链请求）。
 

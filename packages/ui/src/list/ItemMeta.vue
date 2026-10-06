@@ -23,8 +23,8 @@
  */
 
 import { type CSSProperties, computed, ref, useAttrs } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { useConfigContext } from '../config-provider/context';
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import type { ListItemMetaProps } from './interface';
 
 defineOptions({ name: 'AListItemMeta', inheritAttrs: false });

@@ -34,8 +34,8 @@
 
 import { isTextVNode, toArray } from '@apollo-design/utils';
 import { computed, h, onBeforeUpdate, ref, useAttrs, useSlots, type VNode } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { useComponentConfig } from '../config-provider/context';
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import { Col } from '../grid';
 import { useListContext } from './context';
 import type {

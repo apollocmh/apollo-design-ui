@@ -42,9 +42,9 @@ import {
   useSlots,
   watchEffect,
 } from 'vue';
-import { useComponentConfig, useDirection } from '../config-provider/context';
 // ⚠️ 平台原语：`.vue` 模板没有「渲染一个 VNode 变量」的语法（见 empty/components/NodeRenderer.ts）
-import { NodeRenderer } from '../empty/components/NodeRenderer';
+import { NodeRenderer } from '../_internal/node-renderer';
+import { useComponentConfig, useDirection } from '../config-provider/context';
 import { Popover } from '../popover';
 import Avatar from './Avatar.vue';
 import { type AvatarContextValue, avatarContextKey } from './context';

@@ -108,9 +108,9 @@ Card 的**段**是固定的，不涉及这个问题。
    本仓走 (B) 通道（`components?: Record<string, ComponentConfigLike>`）
    —— **运行时可用，只是类型宽**。⚠️ 与 `anchor` / `masonry` / `breadcrumb` 一致。
    🚨 注意**同一组件族有两个配置键**（`card` 与 `cardMeta`）—— `Card.Meta` 自己读后者。
-5. **`NodeRenderer` 的落点**：目前住在 `empty/components/NodeRenderer.ts`（`button` / `result` 也这样
-   import）。它是**平台原语**，应上移到 `ui/src/_internal/`；`spin/components/` 里的本地副本同理。
-   本仓未做这次搬迁（会牵动 `empty` / `spin` / `button` / `result` 四个组件的门禁）。
+5. **`NodeRenderer` 的落点**：住在 `ui/src/_internal/node-renderer.ts`。
+   ✅ 2026-10-07 已按架构规则迁出组件目录（registry `VNA-RENDERER-01`）—— 此前它在
+   `empty/components/` 里被多个组件目录跨目录 import，且 `spin` / `space` 各有一份副本。
 6. **`TabsProps` 与 `Tabs.vue` 运行时声明的类型不一致**（见 §2 第 9 条）：
    建议后续把 `Tabs.vue` 的 `locale` / `renderTabBar` / `onTabClick` 等声明与 `TabsProps` 对齐，
    ✅ **2026-10-03 已完成**：Card 里的 `as unknown as TabsRuntimeProps` 已换成 `satisfies`（`Tabs.vue` 的运行时声明已统一）。

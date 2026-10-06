@@ -44,10 +44,10 @@ import {
   toValue,
   type VNodeChild,
 } from 'vue';
+import { normalizeNode } from '../_internal/node-renderer';
 import type { DirectionType } from '../config-provider/context';
 import type { SizeType } from '../config-provider/size-context';
 import type { SpaceCompactItemContextType } from './interface';
-import { normalizeNode } from './node';
 
 export type { SpaceCompactItemContextType };
 

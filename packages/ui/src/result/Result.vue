@@ -30,9 +30,9 @@ import {
   type VNodeChild,
   watchEffect,
 } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import type {
   ResultConfig,
   ResultProps,

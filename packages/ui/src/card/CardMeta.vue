@@ -24,12 +24,12 @@
 
 import { isRenderable } from '@apollo-design/utils';
 import { computed, mergeProps, ref, useAttrs, type VNodeChild, watchEffect } from 'vue';
-import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
 // ⚠️ `NodeRenderer` 是**平台原语**（`.vue` 模板没有「渲染一个 VNode 变量」的语法），
 // 目前住在 `empty/components/`。`button` / `result` 也这样 import —— 详见 README §5 的
 // 「应上移到 `_internal/`」债务登记。
-import { NodeRenderer } from '../empty/components/NodeRenderer';
+import { NodeRenderer } from '../_internal/node-renderer';
+import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { useComponentConfig } from '../config-provider/context';
 import type {
   CardMetaConfig,
   CardMetaProps,

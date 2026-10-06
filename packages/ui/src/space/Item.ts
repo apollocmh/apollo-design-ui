@@ -43,9 +43,9 @@
 
 import { isEmptyVNode } from '@apollo-design/utils';
 import { type CSSProperties, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { normalizeNode, type RenderableNode } from '../_internal/node-renderer';
 import { useSpaceContext } from './context';
 import type { SpaceSemanticClassNames, SpaceSemanticStyles } from './interface';
-import { normalizeNode, type RenderableNode } from './node';
 
 export const Item = defineComponent({
   name: 'ASpaceItem',

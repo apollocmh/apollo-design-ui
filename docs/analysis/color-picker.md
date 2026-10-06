@@ -487,7 +487,7 @@ class Color extends BaseColor {
 
 `panelRender(panel, { components: { Picker, Presets } })` —— 第二个参数给了**两个组件引用**。
 ⇒ 本仓按 C8：函数 prop + scoped slot 双通道；`.vue` 里要用 `h()` 渲染返回值
-（模板没有「渲染一个 VNode 变量」的语法，见 `empty/components/NodeRenderer.ts`）。
+（模板没有「渲染一个 VNode 变量」的语法，见 `_internal/node-renderer.ts`）。
 
 ### 4.4 `children` 覆盖触发器
 

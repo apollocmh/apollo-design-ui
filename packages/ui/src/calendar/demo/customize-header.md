@@ -16,7 +16,7 @@ title:
 //      ⇒ 用原生 `<h4>` + 本仓 `Flex`。
 //   2. 上游的 `Radio.Group` / `Select` 是 antd 的；本仓用**同名组件**（API 同形）。
 //   3. `headerRender` 是**函数 prop**（返回 VNode）⇒ 本仓用 `h()` 写（`.vue` 模板里
-//      没有「渲染一个 VNode 变量」的语法，见 `empty/components/NodeRenderer.ts`）。
+//      没有「渲染一个 VNode 变量」的语法，见 `_internal/node-renderer.ts`）。
 
 import type { CalendarHeaderRenderConfig } from '@apollo-design/ui';
 import { Calendar, Flex, RadioButton, RadioGroup, Select } from '@apollo-design/ui';

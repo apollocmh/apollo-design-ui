@@ -107,9 +107,8 @@ node tests/visual/debug/extract-list-css.mjs > /tmp/list-antd.css   # 62 条 ant
    `README §2`，未登记进 §9.2（最后一号停在 **D118**）。本组件沿用同一先例；
    若要让 C24 名副其实，需要一次**统一补登记**（跨组件的独立工作）。
 5. **`COMPATIBILITY.md` D111 与 card 的落地不一致**（见 §2 第 8 条）。
-6. **`NodeRenderer` 的落点**：目前住在 `empty/components/NodeRenderer.ts`（card / button /
-   result / avatar / **list** 都这样 import）。它是**平台原语**，应上移到 `ui/src/_internal/`。
-   本仓未做这次搬迁（会牵动多个组件的门禁）。
+6. **`NodeRenderer` 的落点**：住在 `ui/src/_internal/node-renderer.ts`。
+   ✅ 2026-10-07 已按架构规则迁出组件目录（registry `VNA-RENDERER-01`）。
 
 ## 6. 本轮实测结果（G4–G10）
 

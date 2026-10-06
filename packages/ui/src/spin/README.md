@@ -73,4 +73,4 @@
 | 三个 dot 尺寸不能通过 `theme.components.Spin` 覆盖 | `tokens.css` 只声明 Alias 层 | theme 把 `prepareComponentToken(getDesignToken())` 也落成 CSS 变量时 |
 | `aria-live="polite"` 在嵌套用法下会播报 children 更新 | antd 行为，逐字保留 | 不复刻；用户可用 `aria-live="off"` 逃生（已在 L5 钉住） |
 | 装饰性四点未挂 `aria-hidden` | antd 6.6.4 也未挂，逐字保留 | 不复刻；与 `style-class` 那条「复用 antd 选择器」同源 |
-| `NodeRenderer` 在 `spin/components/` 里有**本地副本** | 架构规则禁止组件互相 import `empty/components/` | `empty/components/NodeRenderer.ts` 迁到 `_internal/` 后合并 |
+| ~~`NodeRenderer` 在 `spin/components/` 里有**本地副本**~~ | ✅ **2026-10-07 已合并**：副本删除，统一引用 `ui/src/_internal/node-renderer.ts`（registry `VNA-RENDERER-01`） | 已落地 |

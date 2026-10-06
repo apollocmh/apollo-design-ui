@@ -28,7 +28,7 @@
 import { useLocale } from '@apollo-design/locale';
 import { isFunction, pickAttrs } from '@apollo-design/utils';
 import { type CSSProperties, computed, h, useAttrs, type VNodeChild } from 'vue';
-import { NodeRenderer } from '../../empty/components/NodeRenderer';
+import { NodeRenderer } from '../../_internal/node-renderer';
 import type { AggregationColor } from '../color';
 import { ColorBlock } from '../engine/components/color-block';
 import type {

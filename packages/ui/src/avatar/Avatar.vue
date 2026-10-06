@@ -62,12 +62,12 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+// ⚠️ 平台原语：`.vue` 模板没有「渲染一个 VNode 变量」的语法（见 empty/components/NodeRenderer.ts）
+import { NodeRenderer } from '../_internal/node-renderer';
 import { type Breakpoint, responsiveArray } from '../_internal/responsive-observer';
 import { toCssSize } from '../_internal/to-css-size';
 import { useComponentConfig } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
-// ⚠️ 平台原语：`.vue` 模板没有「渲染一个 VNode 变量」的语法（见 empty/components/NodeRenderer.ts）
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
 import { avatarContextKey } from './context';
 import type { AvatarConfig, AvatarProps, ScreenSizeMap } from './interface';

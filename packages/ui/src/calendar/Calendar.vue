@@ -66,10 +66,10 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { dayjsConfig } from '../date-picker/hooks/dayjs-config';
-import { NodeRenderer } from '../empty/components/NodeRenderer';
 import CalendarHeader from './components/CalendarHeader';
 import type {
   CalendarCellRenderInfo,

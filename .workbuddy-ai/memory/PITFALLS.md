@@ -792,7 +792,7 @@
      对联合类型**逐支分配**，而 `void & {}` 不是 `never`（`void` 既不是 `null` 也不是
      `undefined`）⇒ 结果里仍留着 `void`，`h()` 照样报 `TS2769`。
      **处方**：写 `Exclude<VNodeChild, null | undefined | void>`
-     （见 `packages/ui/src/space/node.ts` 的 `RenderableNode`）。
+     （见 `packages/ui/src/_internal/node-renderer.ts` 的 `RenderableNode`；2026-10-07 从 `space/node.ts` 迁入）。
      ⚠️ biome 的 `noConfusingVoidType` 会建议把它换成 `undefined`
      （`Exclude<…, null | undefined | undefined>`）—— 那样 `void` 仍在，**不要采纳**，
      加 `biome-ignore` 并写清理由。同理 `void` 在 `UnionToIntersection` 这类条件类型里
@@ -1117,7 +1117,7 @@
      别把这条豁免当成「可以随便内联阴影」。
 
 135. 🚨 **`NodeRenderer` 只挡住「VNode 变量」，挡不住「组件对象」—— 同一个坑已踩两次。**
-     `empty/components/NodeRenderer.ts` 的 `normalizeNode()` 只做
+     `_internal/node-renderer.ts` 的 `normalizeNode()` 只做
      `isVNode(node) ? cloneVNode(node) : node`。注释里写的「平台差异的落点」是对的，
      但**不完整**：组件对象不是 VNode，会被**原样返回**，模板再 `toDisplayString`
      成字面量文本 **`[object Object]`**（不是渲染成空，也不是报错 —— 最难发现的那种）。

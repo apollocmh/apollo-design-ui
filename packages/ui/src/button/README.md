@@ -224,7 +224,7 @@ L6 的 3 张失败是**已登记**的差异 D41（见 §7），不是回归。
    正确写法：`useSize((ctxSize) => props.size ?? compactSize ?? ctxSize)`。
 2. **模板里没有「渲染一个 `VNodeChild` 变量」的语法**。`{{ vnode }}` 走 `toDisplayString`
    会把节点变成 `[object Object]`；`<component :is>` 只接受组件或标签名。
-   用 `NodeRenderer`（目前在 `empty/components/NodeRenderer.ts`，是平台原语，应上移到 `_internal/`）。
+   用 `NodeRenderer`（平台原语，住在 `ui/src/_internal/node-renderer.ts`；2026-10-07 已从 `empty/components/` 迁出）。
    ⚠️ **`NodeRenderer` 只挡一半**：它的 `normalizeNode()` 只做
    `isVNode ? cloneVNode : 原样`，所以**组件对象**会被原样返回，一样渲染成
    `[object Object]`。凡是「可能收到组件」的 prop（`icon` / `image` / …），

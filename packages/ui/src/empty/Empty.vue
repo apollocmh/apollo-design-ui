@@ -20,10 +20,11 @@
 import { useLocaleReactive } from '@apollo-design/locale';
 import { isRenderable, useDevWarning } from '@apollo-design/utils';
 import { computed, mergeProps, ref, useAttrs, useSlots, type VNodeChild } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { EmptyImage as DefaultEmptyImage, SimpleEmptyImage } from './components/Images';
-import { ImageNode, NodeRenderer } from './components/NodeRenderer';
+import { ImageNode } from './components/NodeRenderer';
 import type {
   EmptyConfig,
   EmptyImage,
