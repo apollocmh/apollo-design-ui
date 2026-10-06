@@ -96,9 +96,6 @@ export interface MasonryProps<ItemDataType = unknown> {
   // ---------------------------------------------------------------- 样式
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-masonry`。 */
   prefixCls?: string | undefined;
-  className?: string | undefined;
-  rootClassName?: string | undefined;
-  style?: Record<string, string | number> | undefined;
   classNames?:
     | MasonrySemanticClassNames
     | ((info: { props: MasonryProps<ItemDataType> }) => MasonrySemanticClassNames)

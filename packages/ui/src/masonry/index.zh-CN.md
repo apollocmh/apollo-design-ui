@@ -39,8 +39,7 @@ subtitle: 瀑布流
 | classNames | 语义化类名（`root` / `item`），支持函数形态 | `MasonrySemanticClassNames \| ((info) => …)` | — | ✅（`masonry.classNames`） |
 | styles | 语义化样式（`root` / `item`），支持函数形态 | `MasonrySemanticStyles \| ((info) => …)` | — | ✅（`masonry.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-masonry` | × |
-| rootClassName | 也落在根元素上（在 `className` 之后） | `string` | — | × |
-| className | 根元素类名 | `string` | — | × |
+| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — | × |
 | style | 根元素内联样式。**会覆盖算出来的容器高度** | `CSSProperties` | — | × |
 
 #### MasonryItemType

@@ -41,8 +41,7 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 | classNames | Semantic class names (`root` / `item`); the function form is supported | `MasonrySemanticClassNames \| ((info) => …)` | — | ✅ (`masonry.classNames`) |
 | styles | Semantic styles (`root` / `item`); the function form is supported | `MasonrySemanticStyles \| ((info) => …)` | — | ✅ (`masonry.styles`) |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-masonry` | × |
-| rootClassName | Also applied to the root element (after `className`) | `string` | — | × |
-| className | Root element class name | `string` | — | × |
+| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | — | × |
 | style | Root element inline style. **Overrides the computed container height** | `CSSProperties` | — | × |
 
 #### MasonryItemType

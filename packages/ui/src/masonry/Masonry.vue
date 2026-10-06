@@ -26,7 +26,16 @@
  */
 import { MotionList } from '@apollo-design/motion';
 import { isEqual, observeResize } from '@apollo-design/utils';
-import { computed, onMounted, onScopeDispose, ref, shallowRef, type VNodeChild, watch } from 'vue';
+import {
+  computed,
+  onMounted,
+  onScopeDispose,
+  ref,
+  shallowRef,
+  useAttrs,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { toCssSize } from '../_internal/to-css-size';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -60,9 +69,6 @@ defineOptions({
 const props = withDefaults(defineProps<MasonryProps>(), {
   // ⚠️ 可选项一律显式 `undefined`（Boolean prop 未传 ≠ false）
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
-  style: undefined,
   classNames: undefined,
   styles: undefined,
   columns: undefined,
@@ -73,6 +79,9 @@ const props = withDefaults(defineProps<MasonryProps>(), {
   /** 上游 `gutter = 0`。 */
   gutter: 0,
 });
+
+/** 根 `class` / `style` 是 Vue 原生 attrs（上游也把它们挂在根 div 上）。 */
+const attrs = useAttrs();
 
 const emit = defineEmits<MasonryEmits>();
 
@@ -341,12 +350,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   MasonrySemanticStyles
 >(
   [() => context.classNames, () => props.classNames],
-  [
-    () => context.styles,
-    () => semanticRootStyle(context.style),
-    () => props.styles,
-    () => semanticRootStyle(props.style),
-  ],
+  [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
   semanticProps,
 );
 
@@ -355,8 +359,8 @@ const rootClassNames = computed(() => [
   prefixCls.value,
   context.className,
   mergedClassNames.value.root,
-  props.rootClassName,
-  props.className,
+  // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+  attrs.class,
   // 本仓无 hashId（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D5）
   `${prefixCls.value}-css-var`,
   direction.value === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
@@ -379,6 +383,8 @@ const rootHeight = computed(() => (totalHeight.value === 0 ? '0' : toCssSize(tot
 const rootStyle = computed(() => ({
   height: rootHeight.value,
   ...mergedStyles.value.root,
+  // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
+  ...((attrs.style as Record<string, string | number>) ?? {}),
 }));
 
 /** `fresh` 时每个 item 各挂一个观察者；否则不挂（上游传 `null`，本仓用 `undefined`）。 */
