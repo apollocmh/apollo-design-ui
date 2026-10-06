@@ -5,7 +5,8 @@
 import { Pagination, type PaginationItemRender } from '@apollo-design/ui';
 import { h, type VNodeChild } from 'vue';
 
-const itemRender: PaginationItemRender = (page, type, element) => {
+// ⚠️ 参数名要与 `PaginationItemRender` 同形（`page` 这个 demo 用不到，前缀 `_` 表意）
+const itemRender: PaginationItemRender = (_page, type, element) => {
   if (type === 'prev') return h('a', null, 'Previous');
   if (type === 'next') return h('a', null, 'Next');
   return element as VNodeChild;

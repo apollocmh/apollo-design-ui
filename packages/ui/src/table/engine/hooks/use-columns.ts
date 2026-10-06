@@ -75,16 +75,19 @@ export function flatColumns(columns: AnyColumns, parentKey = 'key'): ColumnType[
             : (fixed as ColumnType['fixed']);
       const mergedKey = `${parentKey}-${index}`;
       const subColumns = (column as ColumnGroupLike).children as AnyColumns | undefined;
+      // ⚠️ 不用 `[...list, …]`（`noAccumulatingSpread`）：每轮复制整个数组。
+      //    `list` 是本次 reduce 私有的累加器，原地 push 外部看不到。
       if (subColumns && subColumns.length > 0) {
-        return [
-          ...list,
+        list.push(
           ...flatColumns(subColumns, mergedKey).map((subColumn) => ({
             ...subColumn,
             fixed: subColumn.fixed ?? parsedFixed,
           })),
-        ];
+        );
+        return list;
       }
-      return [...list, { key: mergedKey, ...(column as ColumnType), fixed: parsedFixed }];
+      list.push({ key: mergedKey, ...(column as ColumnType), fixed: parsedFixed });
+      return list;
     }, []);
 }
 

@@ -1,3 +1,4 @@
+// biome-ignore-all lint/suspicious/noConfusingVoidType: 本文件断言 antd 的**精确类型**（含 void 联合），void 是被断言的契约本身、不是笔误
 /**
  * L3 · 类型测试（含负例）
  *

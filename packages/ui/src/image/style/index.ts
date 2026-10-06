@@ -94,9 +94,7 @@ const RULES = `
 /** 生成单个前缀下的完整样式（约定出口：ant 前缀在出口替换类名段）。 */
 export function genImageStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
-    prefixCls === 'apollo'
-      ? cssText
-      : cssText.split('.apollo-image').join('.' + prefixCls + '-image');
+    prefixCls === 'apollo' ? cssText : cssText.split('.apollo-image').join(`.${prefixCls}-image`);
   // ⚠️ 声明块必须覆盖**两个**根形态（同 input 的 D69）。
   // antd 把组件变量声明在每个 `-css-var` 根上，而预览浮层的根拿到的是
   // `mergedRootClassName`（含 cssVarCls）⇒ 它也带 `-css-var` 类；本仓无这个类，
@@ -106,7 +104,7 @@ export function genImageStyle(prefixCls: string = 'apollo'): string {
   // font-size 由 18px 回退成继承的 16px（图标 1em ⇒ 16px，antd 18px）。
   // 抓它的层：L6（`image/preview__light__*` 0.011%–0.043% block-diff，且差异像素
   // 100% 落在关闭按钮的 40×40 区域内）；L4 的 contract 档看不见（丢 style）。
-  const body = rename('{' + DECLS + '}').slice(1, -1);
+  const body = rename(`{${DECLS}}`).slice(1, -1);
   const decls = [`.apollo-image{${body}}`, `.apollo-image-preview{${body}}`].join('\n');
   return `${KEYFRAMES}
 ${decls}

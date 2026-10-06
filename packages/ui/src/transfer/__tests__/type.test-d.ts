@@ -29,7 +29,7 @@ import type {
 } from '../index';
 import { Transfer, TransferList } from '../index';
 
-const neverFn = (...args: unknown[]) => {
+const neverFn = (..._args: unknown[]) => {
   throw new Error('never called');
 };
 void neverFn;

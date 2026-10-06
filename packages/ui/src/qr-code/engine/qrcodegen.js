@@ -1,4 +1,7 @@
 // biome-ignore-all lint/suspicious/noDoubleEquals: vendored 第三方库（Nayuki MIT），保持原样不重写
+// biome-ignore-all lint/correctness/noUnusedPrivateClassMembers: 同上 —— `static #_ = (() => …)()` 是
+//   babel 编译 `static NUMERIC = …` 的产物（`#_` 只是个承载副作用的名字，本来就不该被引用）；
+//   重写它会偏离 vendored 版本 ⇒ 保持原样。
 // vendored: Project Nayuki 的 QR Code 生成器（MIT License）
 // https://www.nayuki.io/page/qr-code-generator-library
 // 来源：@rc-component/qrcode@2.0.0 es/libs/qrcodegen.js（与 antd 6.6.4 的 QR 链路同源，

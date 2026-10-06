@@ -14,6 +14,7 @@ describe('parseItems · rc convertItemsToNodes 同判', () => {
     expect(nodes[0]).toMatchObject({ kind: 'item', key: 'a', label: 'A' });
   });
 
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: 标题里是**字面量**（描述生成的 key 形态），不是模板串
   it('无 key ⇒ tmp-${index}', () => {
     const nodes = parseItems([{ label: 'A' }, { label: 'B' }]);
     expect(nodes.map((n) => n.key)).toEqual(['tmp-0', 'tmp-1']);

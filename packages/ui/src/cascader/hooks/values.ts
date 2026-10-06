@@ -239,7 +239,8 @@ export type DisplayRender = (
 /** 默认展示渲染：单选取全路径 ` / ` 连接；多选取最后一段。 */
 export function defaultDisplayRender(
   labels: unknown[],
-  selectedOptions: (BaseOptionType | null)[],
+  // ⚠️ 签名保留（与 `CascaderDisplayRender` 类型同形），但默认渲染用不到它
+  _selectedOptions: (BaseOptionType | null)[],
   multiple: boolean,
 ): unknown {
   const mergedLabels = multiple ? labels.slice(-1) : labels;
@@ -250,7 +251,10 @@ export function defaultDisplayRender(
   // 含非字符串值：数组形态（`' / '` 作为分隔节点），由 BaseSelect 的标签渲染消费
   return mergedLabels.reduce<unknown[]>((list, label, index) => {
     if (index === 0) return [label];
-    return [...list, SPLIT, label];
+    // ⚠️ 不用 `[...list, …]`（`noAccumulatingSpread`）：每轮复制整个数组，
+    //    这里改原地 `push` —— 累加器是本次 reduce 私有的，外部看不到。
+    list.push(SPLIT, label);
+    return list;
   }, []);
 }
 

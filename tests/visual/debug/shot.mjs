@@ -29,7 +29,7 @@ const { page } = await newStablePage(
   { width: 1024, height: 768 },
 );
 await page.goto(
-  'http://127.0.0.1:' + port + '/react.html?component=tooltip&variant=basicOpen&theme=light',
+  `http://127.0.0.1:${port}/react.html?component=tooltip&variant=basicOpen&theme=light`,
   { waitUntil: 'load' },
 );
 await page.waitForFunction('window.__VISUAL_READY__ === true', null, { timeout: 20000 });

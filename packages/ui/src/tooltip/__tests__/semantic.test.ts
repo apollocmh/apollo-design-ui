@@ -70,7 +70,7 @@ domContractTest('Tooltip', {
   baseline,
   render: (id) => {
     const spec = specs[id];
-    if (!spec) throw new Error('semantic.test: 基线用例 ' + id + ' 缺少 Vue 侧 spec');
+    if (!spec) throw new Error(`semantic.test: 基线用例 ${id} 缺少 Vue 侧 spec`);
     return spec.render();
   },
 });

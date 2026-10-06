@@ -808,7 +808,7 @@ export default defineComponent({
 
       // >>>>>>>>>> Expand & Selection
       const activeItem = getActiveItem();
-      if (activeItem && activeItem.data) {
+      if (activeItem?.data) {
         const treeNodeRequiredProps = getTreeNodeRequiredProps();
         const eventNode = convertNodePropsToEventData({
           ...getTreeNodeProps(activeKeyRef.value as TreeKey, treeNodeRequiredProps),
@@ -851,7 +851,7 @@ export default defineComponent({
           case 'ArrowRight': {
             if (expandable && !expandedKeys.includes(activeKeyRef.value as TreeKey)) {
               onNodeExpand(undefined, eventNode);
-            } else if (activeItem.children && activeItem.children.length) {
+            } else if (activeItem.children?.length) {
               onActiveChange(activeItem.children[0]!.key);
             }
             event.preventDefault();

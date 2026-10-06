@@ -75,6 +75,7 @@ const ALLOW = {
     reason:
       'antd 的默认 prefixCls 是 `ant`，我们是 `apollo`（裁决 `prefix-cls-default` = A）。' +
       '这条用例两边都不传 prefixCls，把「默认值不同」钉成断言。' +
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: 这是给 reviewer 看的**字面量**说明，不是模板串
       '⚠️ 与 divider 不同：rate 的类链是 `${prefixCls}-star / -first / -second`，' +
       '所以差异落在**每一个**由前缀派生的节点上（26 条）—— 少一条都可能掩盖「子结构没跟前缀走」的 bug。',
     deviationId: 'D6',

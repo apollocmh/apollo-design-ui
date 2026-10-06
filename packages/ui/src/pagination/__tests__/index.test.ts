@@ -212,7 +212,7 @@ describe('Pagination showTotal（L2）', () => {
   });
 
   it('total=0 时 range 的第一项是 0', () => {
-    const w = mountPg({ total: 0, showTotal: (t: number, r: number[]) => `${r[0]}-${r[1]}` });
+    const w = mountPg({ total: 0, showTotal: (_t: number, r: number[]) => `${r[0]}-${r[1]}` });
     expect(w.find(`.${P}-total-text`).text()).toBe('0-0');
   });
 

@@ -23,7 +23,8 @@ function getClientPosition(elem: Element): { left: number; top: number } {
   let y: number;
   const doc = elem.ownerDocument;
   const { body } = doc;
-  const docElem = doc && doc.documentElement;
+  // `doc` 是 `elem.ownerDocument`（非空）⇒ 原来的 `doc && …` 是多余的守卫
+  const docElem = doc.documentElement;
   const box = elem.getBoundingClientRect();
   x = box.left;
   y = box.top;

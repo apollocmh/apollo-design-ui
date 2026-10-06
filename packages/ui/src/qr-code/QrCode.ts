@@ -246,11 +246,7 @@ export const QrCode = defineComponent({
       const image = imageEl.value;
       const cis: CalculatedImageSettings | null = qr.value.calculatedImageSettings;
       const haveImageToRender =
-        cis != null &&
-        image !== null &&
-        image.complete &&
-        image.naturalHeight !== 0 &&
-        image.naturalWidth !== 0;
+        cis != null && image?.complete && image.naturalHeight !== 0 && image.naturalWidth !== 0;
       if (haveImageToRender && cis?.excavation != null) {
         cellsToDraw = excavateModules(qr.value.cells, cis.excavation);
       }

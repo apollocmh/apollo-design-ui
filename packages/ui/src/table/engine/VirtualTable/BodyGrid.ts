@@ -138,7 +138,7 @@ export default defineComponent({
           const endItemIndex = index + rowSpan - 1;
           const endItem = flattenData.value[endItemIndex];
           // clamp 到当前可用的最后一行（上游注释：正常不会走到）
-          if (!endItem || !endItem.record) {
+          if (!endItem?.record) {
             const safeEndIndex = Math.min(endItemIndex, flattenData.value.length - 1);
             const safeEndItem = flattenData.value[safeEndIndex];
             if (!safeEndItem) return 0;

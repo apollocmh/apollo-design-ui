@@ -105,6 +105,7 @@ describe('Cascader · 主题无关性', () => {
     expect(css).toContain('.apollo-cascader-menu:not(:last-child){');
   });
 
+  // biome-ignore lint/suspicious/noTemplateCurlyInString: 用例标题里是**字面量**（引述 antd 源码的写法），不是模板串
   it('checkbox 整套复用（antd `getCheckboxStyle(`${p}-checkbox`)` 同构）', () => {
     // ⚠️ 防回归：早期是手写「精简对齐版」（只有方框 + 选中 + indeterminate + disabled）
     // ⇒ L6 的多选形态差 0.008–0.032%、差异像素**全部**落在复选框上。

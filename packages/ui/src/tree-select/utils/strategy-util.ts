@@ -29,9 +29,7 @@ export function formatStrategyValues(
     return values.filter((key) => {
       const entity = keyEntities[key];
       return (
-        !entity ||
-        !entity.children ||
-        !entity.children.some(({ node }) => valueSet.has(node[fieldNames.value] as string)) ||
+        !entity?.children?.some(({ node }) => valueSet.has(node[fieldNames.value] as string)) ||
         !entity.children.every(
           ({ node }) => isCheckDisabled(node) || valueSet.has(node[fieldNames.value] as string),
         )

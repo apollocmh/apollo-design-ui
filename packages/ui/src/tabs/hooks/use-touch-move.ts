@@ -36,6 +36,7 @@ const SPEED_OFF_MULTIPLE = 0.995 ** REFRESH_INTERVAL;
  */
 export function useTouchMove(
   target: Ref<HTMLElement | null>,
+  // biome-ignore lint/suspicious/noConfusingVoidType: 上游逐字契约（rc-tabs 的 onOffset 就是 boolean | void）；改成 undefined 会放宽写法、与上游分叉
   onOffset: (offsetX: number, offsetY: number) => boolean | void,
 ): void {
   const touchPosition = ref<{ x: number; y: number } | null>(null);

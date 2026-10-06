@@ -131,7 +131,9 @@ const Table = defineComponent({
     onScroll: { type: Function, default: undefined },
     rowExpandable: { type: Function, default: undefined },
   },
-  setup(props, { attrs, expose }) {
+  // ⚠️ 不解构 `attrs` —— Table **没关** `inheritAttrs`（见下方 class/style 的说明），
+  //    attrs 由 Vue 自动落根，这里读了也不用。
+  setup(props, { expose }) {
     const {
       getPrefixCls,
       direction: contextDirection,
