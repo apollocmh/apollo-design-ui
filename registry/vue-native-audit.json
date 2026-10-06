@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T06:27:07.317Z",
+  "updatedAt": "2026-10-06T11:35:26.163Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 1,
+      "todo": 0,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 64,
+      "done": 65,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 679,
+    "reviewedProductionSourceFiles": 691,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -2944,7 +2944,7 @@
       "reviewedFileCount": 13
     },
     "mentions": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/mentions/engine/context.ts",
         "packages/ui/src/mentions/engine/DropdownMenu.ts",
@@ -2959,7 +2959,20 @@
         "packages/ui/src/mentions/style/index.ts",
         "packages/ui/src/mentions/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/mentions/engine/context.ts",
+        "packages/ui/src/mentions/engine/DropdownMenu.ts",
+        "packages/ui/src/mentions/engine/KeywordTrigger.ts",
+        "packages/ui/src/mentions/engine/Mentions.ts",
+        "packages/ui/src/mentions/engine/use-effect-state.ts",
+        "packages/ui/src/mentions/engine/util.ts",
+        "packages/ui/src/mentions/index.ts",
+        "packages/ui/src/mentions/interface.ts",
+        "packages/ui/src/mentions/Mentions.ts",
+        "packages/ui/src/mentions/PurePanel.ts",
+        "packages/ui/src/mentions/style/index.ts",
+        "packages/ui/src/mentions/style/token.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 16,
       "docFiles": [
@@ -2967,11 +2980,14 @@
         "packages/ui/src/mentions/index.en-US.md",
         "packages/ui/src/mentions/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
       "notes": [
-        "⚠️ 暂不迁移（待裁决）：Mentions 的 L4 基线是 **React 预录产物**，antd 侧 className/rootClassName **不落根**；迁移后原生 class 会落根 ⇒ 与基线冲突（且共享 fixture 用 React 形态的 props，class 在 React 侧会重复渲染）。已做最小修复：MentionsProps 显式声明 `style?: CSSProperties`（因 TextAreaProps 不再继承该键）。"
-      ]
+        "根别名迁移完成：mentions 的 unit + dom-contract + types + a11y + theme = 95/95，Type Errors 0。⚠️ **之前的「L4 基线冲突」是误判** —— 仓库约定是「两侧各用各的词汇」（React 生成器传 className/rootClassName，Vue 侧传 class，用例 ID 才是契约）⇒ **基线零改动**。真实根因是 `{ className: X, ...restAttrs }` 的双重应用（末尾 restAttrs 覆盖/叠加），与 Tabs 同族。已撤销之前打的补丁（attrs 里 strip className/rootClassName）。"
+      ],
+      "reviewedFileCount": 12
     },
     "color-picker": {
       "auditStatus": "analyzing",
@@ -3912,7 +3928,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（60 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover、popconfirm、tour、masonry、float-button、slider、list、image、input-number、input、upload、transfer、tabs、modal、tree、tree-select、form、table，外加 menu / time-picker / message / notification（验证后确认已迁移或无需改码）。**全量 unit+dom-contract+types = 533/533 文件、10253/10253 用例、0 类型错误**。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter。阻塞：mentions（L4 基线与迁移语义冲突，待裁决）。"
+      "verification": "机械扫描 69/73 命中。**72/72 全部完成**（68 个迁移 + 4 个验证后确认无需改码）。阻塞：无（mentions 的「基线冲突」已证伪）。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名、tour 的 step 级、menu 的 SubMenu rootClassName、list 的 item 级、image 的 Preview/Progress rootClassName、input 的 Group legacy addon、upload 的 UploadList、transfer 的 ListBody/ListItem、tabs 的内部件与项级、modal 的 rootStyle/ConfirmDialog、tree 的 MotionTreeNode/TreeNode/rootStyle、tree-select 的浮层类名与 OptionList、form 的 ItemHolder 内部件、table 的 Panel/use-filter、mentions 的 PurePanel。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -4223,6 +4239,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 32: table done - the LAST big component. Total done = 64 (of 72; 8 remain: 4 zero-change verifications + mentions pending a ruling + others). FULL suite green: 533/533 files, 10253/10253 tests, 0 type errors. The full run caught 36 cross-component failures that per-component runs missed: (a) template consumers (:class-name= / :root-class-name=) in Card/ColorPicker, (b) a helper returning { className } in CalendarHeader, (c) Tabs root props { class, ...attrs } where the trailing ...attrs overrode the whole class string."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "completed",
+      "note": "Root-alias migration COMPLETE: mentions was the last one and is now done (72/72). The \"L4 baseline conflict\" I had reported was a MISDIAGNOSIS: the repo already uses per-side vocabulary (React generator passes className, Vue passes class, the case ID is the contract), so the baseline never needed changing. The real cause was the { className: X, ...restAttrs } double-application bug, same family as the Tabs ...attrs one. The patch I had shipped (stripping className/rootClassName from attrs) was reverted. Lesson recorded in the skill: before claiming a baseline conflict, grep how an already-migrated component handles the same case."
     }
   ],
   "observations": [
