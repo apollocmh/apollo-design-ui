@@ -156,7 +156,8 @@ const ListBody = defineComponent({
             pageSize: pageSize.value,
             showLessItems: mergedPagination.value.showLessItems,
             showSizeChanger: mergedPagination.value.showSizeChanger,
-            className: `${p}-pagination`,
+            // Pagination 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+            class: `${p}-pagination`,
             total: props.filteredRenderItems.length,
             current: current.value,
             'onUpdate:current': onPageChange,

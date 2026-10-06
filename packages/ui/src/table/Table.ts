@@ -474,16 +474,19 @@ const Table = defineComponent({
         );
         const { placement, position } = mergedPagination.value as TablePaginationConfig;
         const mergedPlacement = placement ?? position;
-        const renderPagination = (p: string = 'end') =>
-          h(Pagination, {
-            ...mergedPagination.value,
-            className: clsx(
-              `${prefixCls}-pagination`,
-              `${prefixCls}-pagination-${p}`,
-              (mergedPagination.value as unknown as { className?: string }).className,
-            ),
+        const renderPagination = (p: string = 'end') => {
+          // ⚠️ Pagination 已迁移到「根 class 走原生 attrs」⇒ 必须把用户配置里的
+          //    `className` **摘出来**再转成 `class`（留在 spread 里会落进 attrs 变成
+          //    `classname` 属性、类名静默丢失）。
+          const { className: pgClassName, ...pgRest } = mergedPagination.value as unknown as {
+            className?: string;
+          };
+          return h(Pagination, {
+            ...pgRest,
+            class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
             size: paginationSize,
           } as never);
+        };
         if (Array.isArray(mergedPlacement)) {
           const topPos = mergedPlacement.find((p) => p.includes('top'));
           const bottomPos = mergedPlacement.find((p) => p.includes('bottom'));
@@ -510,16 +513,19 @@ const Table = defineComponent({
         );
         const { placement, position } = mergedPagination.value as TablePaginationConfig;
         const mergedPlacement = placement ?? position;
-        const renderPagination = (p: string = 'end') =>
-          h(Pagination, {
-            ...mergedPagination.value,
-            className: clsx(
-              `${prefixCls}-pagination`,
-              `${prefixCls}-pagination-${p}`,
-              (mergedPagination.value as unknown as { className?: string }).className,
-            ),
+        const renderPagination = (p: string = 'end') => {
+          // ⚠️ Pagination 已迁移到「根 class 走原生 attrs」⇒ 必须把用户配置里的
+          //    `className` **摘出来**再转成 `class`（留在 spread 里会落进 attrs 变成
+          //    `classname` 属性、类名静默丢失）。
+          const { className: pgClassName, ...pgRest } = mergedPagination.value as unknown as {
+            className?: string;
+          };
+          return h(Pagination, {
+            ...pgRest,
+            class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
             size: paginationSize,
           } as never);
+        };
         if (Array.isArray(mergedPlacement)) {
           const topPos = mergedPlacement.find((p) => p.includes('top'));
           const bottomPos = mergedPlacement.find((p) => p.includes('bottom'));
