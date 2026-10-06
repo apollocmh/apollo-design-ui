@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T01:56:37.103Z",
+  "updatedAt": "2026-10-06T02:01:29.498Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 25,
+      "todo": 24,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 40,
+      "done": 41,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 347,
+    "reviewedProductionSourceFiles": 365,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1654,7 +1654,7 @@
       "notes": []
     },
     "select": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/select/engine/BaseSelect.ts",
         "packages/ui/src/select/engine/context.ts",
@@ -1675,7 +1675,26 @@
         "packages/ui/src/select/style/index.ts",
         "packages/ui/src/select/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/select/engine/BaseSelect.ts",
+        "packages/ui/src/select/engine/context.ts",
+        "packages/ui/src/select/engine/keyUtil.ts",
+        "packages/ui/src/select/engine/OptionList.ts",
+        "packages/ui/src/select/engine/SearchInput.ts",
+        "packages/ui/src/select/engine/Selector.ts",
+        "packages/ui/src/select/engine/TransBtn.ts",
+        "packages/ui/src/select/engine/useOpen.ts",
+        "packages/ui/src/select/engine/useOptions.ts",
+        "packages/ui/src/select/engine/valueUtil.ts",
+        "packages/ui/src/select/index.ts",
+        "packages/ui/src/select/interface.ts",
+        "packages/ui/src/select/OptGroup.ts",
+        "packages/ui/src/select/Option.ts",
+        "packages/ui/src/select/PurePanel.ts",
+        "packages/ui/src/select/Select.ts",
+        "packages/ui/src/select/style/index.ts",
+        "packages/ui/src/select/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 35,
       "docFiles": [
@@ -1684,11 +1703,14 @@
         "packages/ui/src/select/index.en-US.md",
         "packages/ui/src/select/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
       "notes": [
-        "⚠️ 迁移提示：pagination 通过 `className` 把类名传给内部 Select（本仓 Select 用 className prop + inheritAttrs:false）。迁移 Select 时必须同步把 pagination 的这处改成 `class`。"
-      ]
+        "根别名迁移完成：unit + dom-contract + types = 55/55；SelectProps 移除 rootClassName/style（类型面留 class 占位）。⚠️ Select 原本完全不读 attrs ⇒ 调用方的 :class/:style 一直被丢弃，本次一并接上。⚠️ 反向依赖已消费：pagination 的 className → class。"
+      ],
+      "reviewedFileCount": 18
     },
     "auto-complete": {
       "auditStatus": "done",
@@ -1712,9 +1734,13 @@
         "packages/ui/src/auto-complete/index.en-US.md",
         "packages/ui/src/auto-complete/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": "AUDIT-01",
-      "notes": [],
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 135/135（含 select/pagination）；AutoCompleteProps 移除三个根别名；转发给 Select 的 className → class（阻塞解除）。"
+      ],
       "reviewedFileCount": 4
     },
     "cascader": {
@@ -3433,7 +3459,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（37 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置。阻塞：auto-complete 需先做 select。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（39 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名。阻塞：无（auto-complete 已解锁）。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3644,6 +3670,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 14: pagination migrated (37 components total). Scan caught 3 consumers (table/Table x2, transfer/ListBody). New subtlety: Table spreads the user pagination config, so the className key had to be destructured OUT of the spread before being converted to class - otherwise it would leak as a classname attribute. Registered a migration hint on `select` (pagination forwards className to it)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 15: select + auto-complete migrated (39 components total). Select was the last blocker (auto-complete depended on it) - all blockers are now cleared. Notable: Select did not read attrs at all (inheritAttrs:false, no spread), so :class/:style were silently dropped before; that got wired up too. The select migration hint registered on the previous batch was consumed (pagination className -> class)."
     }
   ],
   "observations": [
