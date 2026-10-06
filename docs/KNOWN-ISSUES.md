@@ -122,32 +122,6 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 
 ⚠️ 在裁决前**不要**为了让 CI 变绿而动阈值。
 
-### 1.9 🚨 L6 全量跑有 **6 处可复现的假失败**（`menu/vertical` ×3 + `upload/basic` ×3）—— 是**调用方式**问题，不是差异
-
-**事实**（2026-10-06 三轮实测）：
-
-| 条件 | 结果 |
-|---|---|
-| 全量矩阵 + **含构建**（两次不同 `dist`） | 6 失败，**差异率逐位相同**（0.3205 / 0.2358 / 0.1258 / 0.3726 / 0.1820 / 0.0970） |
-| 全量矩阵 + `--no-build` | **1125 / 1125** |
-| 单组件 + 含构建（`--component menu`） | **9 / 9 exact** |
-
-**为什么判为假失败**（三条互证）：
-① 孤立重跑 exact；② 这两个组件的 **L4（DOM 契约）全绿**（L4 比的就是类名字符串）；
-③ 差异率在**两次不同的 `dist`** 下逐位相同 ⇒ 与组件代码无关。
-
-**结论**：诱因是「一次调用里连跑满 1125 张」（含构建那一步之后机器的负载状态）——
-运行期**测出来**的几何（`upload` 的进度条宽度、`menu` 的子菜单浮层定位）被截到动画中间态。
-
-**怎么修**（未做，属基建）：
-1. **CI 侧把构建与截图分成两步**（截图固定用 `--no-build`）—— 最小改动，已实测能全绿；
-2. 或给这 6 个 case 加「等动画 settle 再截」的钩子（同 §1.5 给 `back-top` 做的那种确定性处理）；
-3. ⚠️ **不要**把它们登记进 `COMPATIBILITY.md` 当 PLATFORM 差异 —— 那是**把测量噪声洗成规范**。
-
-**判据**：`node tests/visual/run.mjs --component menu --no-build --mode compare`（~19 s）。
-
----
-
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |
@@ -171,6 +145,7 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 
 | commit | 内容 |
 |---|---|
+| （2026-10-06） | **§1.9 L6 假红自检**：`run.mjs` 现在对 FAIL 项（排除 render-error）用 `launchBrowser()` 起**全新浏览器**重拍 + 重比，PASS 的判 `FLAKY`。**实测生效**：全量跑时那 6 处（menu/vertical ×3 + upload/basic ×3）被自动识别、逐个「单独重拍 0.000%」，汇总改为「假红（单独重拍 exact，不算失败、也不要记进 COMPATIBILITY.md）：6」，**退出码不再变红**。根因（全量连跑 1125 张时的负载/时序）不追。新增 `--no-recheck` 可跳过。 |
 | （2026-10-06） | **§1.4 biome 存量告警清零**：全仓 `biome check .` = **0 error / 0 warning**（2871 文件）。做法严格遵守「逐个收窄、不扫改」：**能靠守卫收窄的真修**（`tree/utils/conductUtil.ts` 10 处把守卫从 `!entity.parent` 改成 `!parent`；`table/engine/*` 14 处 `inject(...)!` 换成新助手 `useTableContext()`/`useRowContext()`，缺 provider 时抛可读错）；**收窄不了的按「算法不变式」加带具体理由的豁免**（rc-tree 拖拽 / progress 的 step 形态 / Map.get-after-has …）。⚠️ 顺带修掉 2 个 **error**（`noUnusedImports`，是本轮迁移删 prop 后留下的）—— 组件级测试不查 lint，只有全仓 biome 抓得到。 |
 | （2026-10-06） | **§1.8 date-picker 接上 attrs 透传**：两个文件此前 `inheritAttrs: false` 且**从不读 attrs** ⇒ `data-*`/`aria-*` 全丢。现在 `restAttrs`（除 class/style）并进引擎绑定（`selectorBindings`），**引擎自己的 props 在后（引擎胜）**。新增 3 条 L1：`data-*`/`aria-*` 落选择器根 / 原生 `class`+`style` 仍落根 / `id` 不被 attrs 顶掉。✅ **L4 基线零改动**（先核实过：date-picker 的 L4 用例不传 `className`/`style`/额外 attrs）。 |
 | （2026-10-06） | **§1.7 补齐 `table` 的 a11y 审计**（最后一个缺的组件）：`table/__tests__/a11y.test.ts` = 12 个 demo 的 axe 全量扫描（**零 violation**）+ 5 条结构断言（`th scope` / `aria-sort` / 选择列可访问名 / 展开图标 `aria-expanded` / 筛选 `role=button`），**18/18**。⚠️ 顺带实测钉住一条：**未排序的列不写 `aria-sort`**（`use-sorter.ts:240` 的 `if (sortOrder)`），不是写 `none`。 |
