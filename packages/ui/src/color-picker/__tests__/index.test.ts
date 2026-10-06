@@ -206,3 +206,34 @@ describe('ColorPicker · 多子节点触发器契约（KNOWN-ISSUES §1.3 钉住
     expect(pa).toBe(pb);
   });
 });
+
+/**
+ * §1.1 —— 面板**隔离 Form 上下文**（上游 `ContextIsolator form` 的等价物）。
+ *
+ * 上游把面板包在 `<ContextIsolator form>` 里，而它的实现就是 `<NoFormStyle override status>`
+ * ⇒ 本仓对应 `provideNoFormStyle({ override: true, status: true })`，放在 `ColorPickerPanel`
+ * 的 setup（**不是** `ColorPicker.vue`，否则连触发器也会被隔离）。
+ *
+ * ⚠️ 这条断言**直接查 provide 表**，不是查 DOM —— 因为面板里**当前没有**子件读 form status
+ *    ⇒ 查 DOM 会**空转通过**（假绿灯）。查 provide 表则能真正区分：删掉那句
+ *    `provideNoFormStyle` 这条就红。
+ */
+describe('ColorPickerPanel · §1.1 Form 上下文隔离', () => {
+  it('面板注册了 formItemInputContext 的 provide（且被隔离）', async () => {
+    const { ColorPickerPanel } = await import('../ColorPickerPanel');
+    const { formItemInputContextKey } = await import('../../form/context');
+
+    const w = mount(ColorPickerPanel, {
+      props: { prefixCls: P, value: undefined },
+      attachTo: document.body,
+    });
+    const provides = (w.vm.$ as unknown as { provides: Record<symbol, unknown> }).provides;
+    const provided = provides[formItemInputContextKey as unknown as symbol];
+    expect(provided, 'ColorPickerPanel 必须 provide formItemInputContext（§1.1）').toBeTruthy();
+
+    // 反向哨兵：提供出来的上下文**不带 status**（被 `provideNoFormStyle({ status: true })` 清掉）
+    const value = (provided as { value?: { status?: unknown } }).value ?? provided;
+    expect((value as { status?: unknown }).status).toBeUndefined();
+    w.unmount();
+  });
+});

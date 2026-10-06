@@ -46,17 +46,6 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §1 仍开放的问题
 
-### 1.1 ⚠️ `ContextIsolator` 在本仓**不存在**（`color-picker` 靠「行为等价」绕过）
-
-- 上游 `ColorPicker` 把面板包在 `<ContextIsolator form>` 里（屏蔽 Form 的 `status`）；
-  本仓无此物（最接近的 `NoCompactStyle` 只重置**紧凑**上下文）。
-- **当前为什么没出事**：面板侧没有任何子件读 `useFormItemInputContext` ⇒ 行为等价
-  （登记 PLATFORM）。
-- **风险**：将来面板里只要出现一个读 form status 的子件，就会与上游分叉（且不会红灯）。
-- **怎么修**：① 实现通用的 `ContextIsolator`；或 ②（更小）在 `ColorPicker.vue` 的面板处
-  显式 `provide` 一个空的 form 上下文 + 写一条 L1 断言钉住。
-- **时机**：**等第一个真实消费者**（Table 是候选），别提前实现。
-
 ### 1.2 📌 `color-picker` 面板的 DOM 结构没有「与 antd 逐条对拍」的自动化
 
 - 面板在 Popover 的 Portal 里，L4 拿不到（SSR 不渲染）⇒ 只有 L6 像素级（27/27 exact）。
@@ -145,6 +134,7 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 
 | commit | 内容 |
 |---|---|
+| （2026-10-06） | **§1.1 面板隔离 Form 上下文**：读了上游才发现  的实现**就是** （）⇒ 本仓**已有对应物** ，不必自建通用 ContextIsolator。加在 **ColorPickerPanel 的 setup**（不是 ColorPicker.vue —— 否则连触发器也会被隔离）。⚠️ 面板里当前**没有**子件读 form status ⇒ 这是**防将来分叉**、不是修 bug。用例**直接查 provide 表**（查 DOM 会空转通过=假绿灯），并**用反向哨兵验过**：删掉那句 provide ⇒ 用例变红。 |
 | （2026-10-06） | **§1.9 L6 假红自检**：`run.mjs` 现在对 FAIL 项（排除 render-error）用 `launchBrowser()` 起**全新浏览器**重拍 + 重比，PASS 的判 `FLAKY`。**实测生效**：全量跑时那 6 处（menu/vertical ×3 + upload/basic ×3）被自动识别、逐个「单独重拍 0.000%」，汇总改为「假红（单独重拍 exact，不算失败、也不要记进 COMPATIBILITY.md）：6」，**退出码不再变红**。根因（全量连跑 1125 张时的负载/时序）不追。新增 `--no-recheck` 可跳过。 |
 | （2026-10-06） | **§1.4 biome 存量告警清零**：全仓 `biome check .` = **0 error / 0 warning**（2871 文件）。做法严格遵守「逐个收窄、不扫改」：**能靠守卫收窄的真修**（`tree/utils/conductUtil.ts` 10 处把守卫从 `!entity.parent` 改成 `!parent`；`table/engine/*` 14 处 `inject(...)!` 换成新助手 `useTableContext()`/`useRowContext()`，缺 provider 时抛可读错）；**收窄不了的按「算法不变式」加带具体理由的豁免**（rc-tree 拖拽 / progress 的 step 形态 / Map.get-after-has …）。⚠️ 顺带修掉 2 个 **error**（`noUnusedImports`，是本轮迁移删 prop 后留下的）—— 组件级测试不查 lint，只有全仓 biome 抓得到。 |
 | （2026-10-06） | **§1.8 date-picker 接上 attrs 透传**：两个文件此前 `inheritAttrs: false` 且**从不读 attrs** ⇒ `data-*`/`aria-*` 全丢。现在 `restAttrs`（除 class/style）并进引擎绑定（`selectorBindings`），**引擎自己的 props 在后（引擎胜）**。新增 3 条 L1：`data-*`/`aria-*` 落选择器根 / 原生 `class`+`style` 仍落根 / `id` 不被 attrs 顶掉。✅ **L4 基线零改动**（先核实过：date-picker 的 L4 用例不传 `className`/`style`/额外 attrs）。 |

@@ -60,8 +60,10 @@ export function isLastChild(treeNodeEntity: TreeDataEntity): boolean {
   const { parent } = treeNodeEntity;
   if (parent) {
     const posArr = posToArr(treeNodeEntity.pos);
-    // ⚠️ 解构出 `parent` 是为了让 TS 收窄（写 `treeNodeEntity.parent.children` 时它不认守卫）
-    return Number(posArr[posArr.length - 1]) === parent.children.length - 1;
+    // ⚠️ 解构出 `parent` 是为了让 TS 收窄（写 `treeNodeEntity.parent.children` 时它不认守卫）。
+    //    `children` 仍是可选的 —— 原 `parent.children!.length` 在缺失时会**抛异常**，
+    //    这里用 `?? 0` 退化成 `-1`（永不等于合法下标）⇒ 更稳且不改变正常路径。
+    return Number(posArr[posArr.length - 1]) === (parent.children?.length ?? 0) - 1;
   }
   return false;
 }

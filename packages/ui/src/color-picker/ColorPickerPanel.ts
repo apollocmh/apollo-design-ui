@@ -21,6 +21,7 @@
 import { isFunction } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, provide, type VNodeChild } from 'vue';
 import { Divider } from '../divider';
+import { provideNoFormStyle } from '../form/context';
 import type { AggregationColor } from './color';
 import PanelPicker from './components/PanelPicker.vue';
 import PanelPresets from './components/PanelPresets';
@@ -132,6 +133,21 @@ export const ColorPickerPanel = defineComponent({
 
     provide(panelPickerContextKey, pickerContext);
     provide(panelPresetsContextKey, presetsContext);
+
+    /**
+     * 🚨 **隔离 Form 上下文**（`KNOWN-ISSUES` §1.1）。
+     *
+     * 上游把面板包在 `<ContextIsolator form>` 里，而 `ContextIsolator` 的实现就是
+     * `<NoFormStyle override status>`（`es/_util/ContextIsolator.js`）—— 本仓有现成对应物
+     * `provideNoFormStyle({ override, status })`（`form/context.ts`）。
+     *
+     * 目的：面板**不该继承外层 Form.Item 的 `status`**（否则会多出 `-status-error` 一类）。
+     * ⚠️ 放在 `ColorPickerPanel` 的 setup（**不是** `ColorPicker.vue`）—— 否则连**触发器**
+     *    也会被隔离，那与上游不一致。
+     * ⚠️ 当前面板里没有子件读它 ⇒ **行为等价、不是回归修复**；这条是**防将来分叉**，
+     *    并由 L1 用例钉住（面板不出现 `-status-*` 类）。
+     */
+    provideNoFormStyle({ override: true, status: true });
 
     return (): VNodeChild => {
       const p = props.prefixCls;
