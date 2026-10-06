@@ -305,7 +305,8 @@ const Image = defineComponent({
             : ((cfg as { render?: never }).render ?? undefined),
           classNames: mergedClassNames.value?.placeholder?.progress,
           styles: mergedStyles.value?.placeholder?.progress as never,
-          rootClassName: [props.rootClassName, props.className].filter(Boolean).join(' '),
+          // Progress 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+          class: [props.rootClassName, props.className].filter(Boolean).join(' '),
           rootStyle: mergedStyles.value?.root,
           width: props.width,
           height: props.height,

@@ -245,7 +245,8 @@ export default defineComponent({
             : null,
           props.showProgress && typeof props.duration === 'number' && props.duration > 0
             ? h(Progress, {
-                className: clsx(`${noticePrefixCls.value}-progress`, cls.progress),
+                // Progress 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+                class: clsx(`${noticePrefixCls.value}-progress`, cls.progress),
                 percent: validPercent.value,
                 style: sty.progress,
               })
