@@ -418,9 +418,6 @@ export interface TableSemanticStyles {
 /** Table 公开 props（antd `TableProps` 的 Vue 对应，`data`→`dataSource`）。 */
 export interface TableProps<RecordType = Record<string, unknown>> {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: Record<string, string>;
   classNames?: TableSemanticClassNames;
   styles?: TableSemanticStyles;
   size?: SizeType;

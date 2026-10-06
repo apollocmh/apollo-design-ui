@@ -40,7 +40,6 @@ export const SummaryCell = defineComponent({
     colSpan: { type: Number, default: 1 },
     rowSpan: { type: Number, default: undefined },
     align: { type: String, default: undefined },
-    className: { type: null, default: undefined },
   },
   setup(props, { slots }) {
     const ctx = inject(tableContextKey)!;
@@ -63,7 +62,8 @@ export const SummaryCell = defineComponent({
     });
     return () =>
       h(Cell, {
-        class: props.className,
+        // ⚠️ 调用方原生 class 不在这里加 —— SummaryCell 没关 inheritAttrs，
+        //    Vue 会自动落到 Cell（Cell 自己读 attrs.class）。
         index: props.index,
         component: 'td',
         prefixCls: ctx.prefixCls,

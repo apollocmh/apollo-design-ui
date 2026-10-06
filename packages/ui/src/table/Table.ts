@@ -79,8 +79,6 @@ const Table = defineComponent({
   name: 'ATable',
   props: {
     prefixCls: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string>>, default: undefined },
     classNames: { type: Object as PropType<TableProps['classNames']>, default: undefined },
     styles: { type: Object as PropType<TableProps['styles']>, default: undefined },
     size: { type: String as PropType<TableProps['size']>, default: undefined },
@@ -322,7 +320,6 @@ const Table = defineComponent({
         | ((node: HTMLElement) => HTMLElement)
         | undefined,
       locale: tableLocale.value,
-      rootClassName: props.rootClassName,
     });
     // ============================ Virtual ============================
     // antd `InternalTable.tsx:722-742`：`listItemHeight` 由 token 与 size 算出，
@@ -585,8 +582,8 @@ const Table = defineComponent({
         {
           [`${prefixCls}-wrapper-rtl`]: direction.value === 'rtl',
         },
-        (attrs as { class?: unknown }).class,
-        props.rootClassName,
+        // ⚠️ 调用方原生 class/style **不在这里加** —— Table 没关 inheritAttrs，
+        //    Vue 会自动合并到根 div（加一遍会重复）。
         mergedClassNames.value.root as string,
         hashId,
       ),
@@ -594,7 +591,7 @@ const Table = defineComponent({
 
     const mergedStyle = computed(() => ({
       ...(props.styles?.root ?? {}),
-      ...props.style,
+      // ⚠️ 原生 style 同样交给 inheritAttrs 的自动落根（见上）。
     }));
 
     expose({
