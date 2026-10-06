@@ -49,14 +49,11 @@ export const Steps = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     classNames: {
       type: Object as PropType<StepsSemanticClassNames>,
       default: undefined,
     },
     styles: { type: Object as PropType<StepsSemanticStyles>, default: undefined },
-    style: { type: Object as PropType<StepsProps['style']>, default: undefined },
 
     variant: { type: String as PropType<StepsProps['variant']>, default: 'filled' },
     size: { type: String as PropType<StepsProps['size']>, default: undefined },
@@ -212,12 +209,7 @@ export const Steps = defineComponent({
     >(
       // ⚠️ 顺序 = 优先级（后者拼接在前者之后）：ConfigProvider → 组件自身
       [() => contextClassNames, () => props.classNames],
-      [
-        () => contextStyles,
-        () => semanticRootStyle(contextStyle),
-        () => props.styles,
-        () => semanticRootStyle(props.style),
-      ],
+      [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
       semanticProps,
     );
 
@@ -318,8 +310,8 @@ export const Steps = defineComponent({
         mergedPercent.value !== undefined ? `${prefixCls.value}-with-progress` : '',
         mergedSize.value === 'small' ? `${prefixCls.value}-small` : '',
         contextClassName,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class as string | undefined,
         mergedClassNames.value?.root,
         cssVarCls.value,
       ]
@@ -333,7 +325,10 @@ export const Steps = defineComponent({
       //    `style="--ant-cmp-steps-items-offset:0"`（L4 基线逐条确认）。
       //    原先只在 `offset !== 0` 时写 ⇒ 37 条契约用例全部差这一条。
       [`--${rootPrefixCls}-cmp-steps-items-offset`]: String(props.offset),
-      ...(props.style ?? {}),
+      // 根 style 是 Vue 原生 attrs：位置与原先的 props.style 一致（被语义 root 覆盖）。
+      // ⚠️ 这里用 `attrs.style` 而不是 render 里的 `_attrStyle` —— 本 computed 在
+      //    setup 期创建，看不到 render 函数内的局部解构。
+      ...((attrs.style as Record<string, unknown>) ?? {}),
       ...mergedStyles.value?.root,
     }));
 
@@ -455,7 +450,9 @@ export const Steps = defineComponent({
         renderStep(item, index),
       );
 
-      const { class: _attrsClass, ...restAttrs } = attrs;
+      // ⚠️ `class` / `style` 都已被显式消费（见 stepsClassName / rootStyle）⇒
+      //    必须从 restAttrs 里摘掉，否则末尾的 `...restAttrs` 会把它们整段顶掉。
+      const { class: _attrsClass, style: _attrStyle, ...restAttrs } = attrs;
       // ⚠️ 根标签可由内部上下文覆盖（Timeline 传 `'ol'`）；缺省仍是 `'div'`
       return h(
         internalContext?.rootComponent ?? 'div',

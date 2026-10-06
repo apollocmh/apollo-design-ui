@@ -255,11 +255,11 @@ const Timeline = defineComponent({
         ref: stepsRef,
         // 判据 8：restProps 透传（`attrs` 承载未声明的 prop）
         //
-        // 🚨 **必须传 `className` 而不是 `class`** —— 本仓 `Steps.ts` 的渲染是
-        //    `const { class: _attrsClass, ...restAttrs } = attrs;`，即它**主动剥掉**
-        //    落到 attrs 里的 `class`（自己的根类名由 `stepsClassName` 算），
-        //    只把 **`className` prop** 并进去。传 `class` 会被**静默丢弃**。
-        className: classString,
+        // ✅ Steps 已迁移到「根 class 走原生 attrs」（它的 `stepsClassName` 会并入
+        //    `attrs.class`，并把 `class` 从 restAttrs 里摘掉）⇒ 这里必须传 **`class`**；
+        //    继续传 `className` 会落进 attrs 变成 `classname` 属性、类名静默丢失。
+        //    （2026-10-06 迁移 steps 时同步改的 —— 见 registry 里 steps 的迁移提示。）
+        class: classString,
         // ⚠️ 只放 `titleSpan` 的内联变量 —— **用户的 `style` 走 `styles.root`**（见上）
         style: stepStyle,
         // 判据 5：八键映射 + 上下文 / 用户的语义化槽（**三路合并**）

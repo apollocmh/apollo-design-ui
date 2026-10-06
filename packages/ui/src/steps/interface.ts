@@ -124,8 +124,6 @@ export interface StepsProgressDotSlotProps {
 
 export interface StepsProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   /**
    * 语义化类名（十个槽）。
    *
