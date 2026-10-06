@@ -148,6 +148,30 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 ⚠️ table 是复杂组件（含 T6 虚拟滚动），**先跑一次看有没有真实 violation** ——
 若有，不要顺手加豁免（`matchA11yAllowances` 的豁免必须写明理由），先登记再决定。
 
+### 1.8 🚨 `date-picker` 两个组件**完全不透传其它 attrs**（`data-*` / `aria-*` / 事件都会丢）
+
+**事实**（2026-10-06 根别名迁移时发现）：`date-picker/DatePicker.vue` 与 `RangePicker.vue`
+都声明了 `inheritAttrs: false`，但**既没有 `useAttrs()` 也没有 `$attrs`** ⇒ 除
+`class`/`style`（本次已接）之外的所有 attrs **一个都落不到 DOM**。
+
+**为什么不阻塞根别名迁移**：那条审计的判据只覆盖 `className`/`rootClassName`/`style`
+（`COMPATIBILITY.md` §228/§232），attrs 透传是**另一件事**；而且**动它必然改 L4**
+（现有基线是在「不透传」的前提下录的）⇒ 按「不擅自扩大改动面」留在台账里。
+
+**影响面（待评估）**：使用方传 `<DatePicker data-testid="x" aria-describedby="y" @keyup.enter="…">`
+时全部静默失效。`aria-*` 丢失对 a11y 是实打实的（`aria-describedby` 常用于关联错误提示）。
+
+**怎么修**（需先评估）：
+1. 加 `const attrs = useAttrs()`，把**除 `class`/`style` 外**的 attrs 透传给引擎的根元素
+   （引擎是 `picker` 包的 `Selector`，注意它自己的 attrs 通道 —— 见 `picker` 的 L2/L4 门禁）；
+2. 顺带对齐 antd：`es/date-picker/generatePicker/singlePicker.js` 里 `restProps` 落在哪个元素；
+3. 改完必须**重录 date-picker 的 L4 基线**并跑 L6 —— 这属于「改冻结 oracle」，
+   **先上报再动**（PITFALLS **353** 的教训）。
+
+**同类排查**：本次迁移顺手修掉的是「声明了 prop 却从不消费」（`checkbox` 的 `style`、
+`Form.vue` 的 `rootClassName`）；**本条是更隐蔽的一类** —— 「根本没声明、也没读 attrs」。
+判据：`grep -n "inheritAttrs" <file>` 与 `grep -n "useAttrs\|\\\$attrs" <file>` 同时命中才安全。
+
 ---
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
@@ -173,6 +197,7 @@ callback 真被调用 + 再调一次 cancel」⇒ `branches` 稳定在 **73.8071
 
 | commit | 内容 |
 |---|---|
+| （2026-10-06） | **根别名迁移全部完成（72/72）** —— `className`/`rootClassName`/`style` → Vue 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232；**全程零基线改动、零 deprecated 别名**。60+ 个提交，每组件独立 commit；收口时全量 `unit+dom-contract+types+a11y+theme` = **675 文件 / 12288 用例 / 0 类型错误**，L6 = **1125/1125 exact**。⚠️ 最后 6 个（checkbox/collapse/drawer/cascader/color-picker/date-picker）藏在 `auditStatus=analyzing` 档里被漏过两轮 ⇒ 判据是**扫代码**不是看状态（PITFALLS **355**）。新坑全文见 PITFALLS **349–357**；本条只留「迁移已完成」这一事实，**不要重做**。 |
 | `d936962`→`0255c4b` | color-picker G0–G14 全量交付 → completed（69/72）；顺手修 picker/time-tmpl 既有 lint 红 |
 | `f950386` | color-picker children 不再多包 `<span>`（单子节点） |
 | `afc462f` / `9419ff5` | tabs size → SizeType；运行时声明统一公开类型 |

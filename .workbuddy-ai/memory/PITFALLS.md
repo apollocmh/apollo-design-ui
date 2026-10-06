@@ -7,7 +7,8 @@
 
 > 这是**入口**：先在这里按主题定位编号，再往下读全文。新增坑时**同时**补这里一行。
 
-- **props/attrs**：事件名全小写(1) · `VNodeChild` 显式 `undefined` 默认值(2) · 🚨未声明 prop 归 `attrs` 静默失效(3,250) · catch-all 别用 `PropType<unknown>`(5,137,185) · `required:true` 要 `as const`(15,200)
+- **props/attrs**：事件名全小写(1) · `VNodeChild` 显式 `undefined` 默认值(2) · 🚨未声明 prop 归 `attrs` 静默失效(3,250) · catch-all 别用 `PropType<unknown>`(5,137,185) · `required:true` 要 `as const`(15,200) · 🚨 **`class`/`className`/`style` 与 `...attrs` 的先后决定胜负**（`{class:X,...attrs}` 整段丢 / `{className:X,...restAttrs}` 双份）(349) · 🚨 **`inheritAttrs:false` + 从不读 `attrs` = `class`/`style` 静默丢弃**（声明了 prop 也≠生效）(351) · ⚠️ `attrs.class` 是 `ClassValue`、`attrs.style` 是 `StyleValue` ⇒ 进 `string[]`/`CSSProperties` 前要归一或断言(352)
+- **根别名迁移**（`className`/`rootClassName`/`style` → 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232）：🚨 消费者扫描要覆盖**模板 `:class-name=`** 与**同目录内部件**（把被迁组件自己也放进列表）(350) · 🚨 组件可能**半迁移**（classString 里 props 与 attrs 并存）⇒ 判据是「扫代码」不是「看状态」(354,355) · 🚨 **L4 两侧各用各的词汇是既有约定，别改基线**(353)
 - **样式**：🚨 **E10 的 `box-shadow` 正则不认 `inset` 前缀** —— 只放行 `var(`/`${`/`none`/`0` 开头 ⇒ `box-shadow:inset 0 0 1px 0 var(--apollo-…)` 会被判「硬编码阴影」；对策是把这条阴影**声明成组件变量**（322）
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
 - **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
@@ -30,6 +31,9 @@
 - **流程**：🚨 **`biome check` 默认只列前 20 条诊断**（末尾写 `Diagnostics not shown: N.`）⇒ 数诊断必须 `--max-diagnostics=none`；否则会把 **207** 条看成 **2** 条（335）
 - **排查**：⚠️ **`const x = attrs as unknown as T` 是别名不是拷贝** —— 从 `attrs` 解构剔除键**不影响** `x` ⇒ 别把 `_onXxx` 误判成「handler 被丢弃」；下结论前先 grep `__tests__/`（336）
 - **流程**：🚨 registry 生成器有**顺序**：`gen-registry` → `foundation-status` → `gen-workstreams`；乱序会让 `registry:check` 报「已过期」（329）
+- **流程**：🚨 **收口判据是「扫代码」不是「看 `auditStatus`」** —— 只筛 `todo` 会漏掉 `analyzing` 档里的活（本次漏 6 个组件、两次误报完成）(355)
+- **流程**：🚨 **本仓禁用 `git stash push -u`** —— 会让索引失同步（6352 条 staged-deleted，文件其实完好）；恢复用 `git reset`（mixed）；要留副本用 `git show HEAD:<path>`(357)
+- **测试/视觉**：⚠️ **L6 全量有抖动用例** ⇒ 报红先 `--component X --no-build --mode compare` 孤立重跑（~19s）；判据「L6 红但 L4 绿 ⇒ 大概率不是类名字符串问题」；别把测量噪声登记成平台差异(356)
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
 - **浮层/滚动**：🚨 「滚动到选中项」在首次 post-flush 时**没有布局盒** ⇒ rAF 5 帧后放弃且**不再重试** ⇒ `scrollTop` 恒 0；`date-picker` 因时间值恒 `00`（`targetLi === firstLi` 提前 return）而**长期潜伏**（318）。
@@ -4523,3 +4527,99 @@
       **无 width 的列**（`Address 1/2/3`），宽 0 才显形。
     - **教训**：`width/height/minWidth/top/left…` 任何**几何数值**在 `h()` 里都必须拼单位。
       判据：改完组件源码要 `pnpm run build:ui` 再跑 L6（否则差异率逐位不变）。
+
+349. 🚨 **同一个对象字面量里，`class` / `className` / `style` 与 `...attrs` 的先后决定胜负 —— 位置错了要么整段丢、要么双份。**
+    —— 2026-10-06 根别名迁移（`className`/`rootClassName`/`style` → Vue 原生 `class`/`style`）期间连撞 4 次。
+
+    三种形态，改之前先认准是哪一种：
+
+    | 形态 | 后果 | 对策 |
+    |---|---|---|
+    | `{ ...attrs, class: X }` | `class` 在**后** ⇒ 胜，**但展开残留的 `class` 键还在** ⇒ 与 `className` 并存时引擎侧双份 | 展开前把 `class`/`style` 摘掉 |
+    | `{ class: X, ...attrs }` | `...attrs` 在**后** ⇒ **整段覆盖 `class`**，`X` 全丢 | 同上：摘掉再展开 |
+    | `{ className: X, ...restAttrs }` | 调用方 `class` 已进 `X`，`restAttrs` 里还有一份 ⇒ **双份** | 同上 |
+
+    - **实测**：`Tabs.vue` 是第二种 ⇒ 调用方一传 `class`，`apollo-tabs apollo-tabs-*` 全没（Card 的 tabs 用例抓到，Vue 只剩 `apollo-head-tabs`）；`cascader/Cascader.ts` 同；`mentions/Mentions.ts` 是第三种 ⇒ `extra extra rootx rootx`。
+    - **判据**：扫 `^\s*(class|style):` 后面 14 行内是否出现 `^\s*\.\.\.(attrs|restAttrs)`。
+    - **教训**：这不是「迁移引入的」，而是**一直存在的潜在 bug** —— 迁移前 `className` 是 prop、`attrs` 里没有 `class`，所以顺序无所谓；一旦 `class` 走 attrs，这个顺序就变成正确性问题。
+
+350. 🚨 **「内部消费者」扫描必须同时覆盖模板写法与同目录内部件 —— 只扫 `h(<Tag>, { className })` 会漏一大半。**
+    —— 2026-10-06 实测：全量回归一次抓到 **36 处**失败，全是逐组件跑看不到的。
+
+    漏源有三类：
+    1. **模板写法**：`.vue` 里旧 prop 写作 `:class-name="…"` / `:root-class-name="…"`
+       （`card/Card.vue`、`color-picker` 模板 ×4、`skeleton`/`spin`/`space` 的内部件）。
+    2. **返回对象的 helper**：`calendar/components/CalendarHeader.ts` 的 `selectBase()` 返回 `{ className }`，
+       正则只看 `h()` 调用点会完全看不见。
+    3. **同目录内部件**：`ConfirmDialog`→`Modal`、`DirectoryTree`→`Tree`、`Group`→`Checkbox`、
+       `FormItemInput`→`ErrorList`、`transfer/{ListItem,Section}`→`Checkbox`、`use-filter`→`Pagination`。
+       ⇒ **把「正在迁移的组件自己」也放进扫描列表**。
+    - **症状**：不是「类名少了」，而是**整条类名链塌陷**（`Select` 收到旧 `className` 后连
+      `-sm`/`-outlined` 一起没）。
+    - **判据**：迁移后跑**全量** `unit + dom-contract`（逐组件跑会给假绿），并分别扫
+      `h(...)+className:` 与 `:class-name=`/`:root-class-name=`。
+
+351. 🚨 **`inheritAttrs: false` + 从不读 `attrs` = 调用方传的 `class`/`style` 被静默丢弃。**
+    —— 2026-10-06 `date-picker/{DatePicker,RangePicker}.vue` 实测：两个文件都声明了
+    `inheritAttrs: false`，却**既没有 `useAttrs()` 也没有 `$attrs`** ⇒ 用户传的 `class`/`style`
+    完全落不到 DOM。`checkbox/Checkbox.ts` 是变体：解构进了 `attrClass`/`attrStyle` 却**从未使用**。
+
+    - **判据**：迁移某组件前先 `grep -n "useAttrs\|\\\$attrs" <file>`；没有就得**补上**再谈接 `attrs.class`。
+    - **同族**：`props.style` 声明了但从不消费（`checkbox` 走老 `mergeStyles`、`Form.vue` 的
+      `rootClassName`）—— 声明≠生效，「有 prop」不代表「接上了」。
+
+352. ⚠️ **`attrs.class` 是 Vue 的 `ClassValue`（可能是数组）、`attrs.style` 是 `StyleValue` ⇒ 进 `string[]` / `CSSProperties` 槽位前必须归一或断言。**
+    —— 2026-10-06 `color-picker/ColorPicker.vue` 与 `date-picker` 实测。
+
+    - `computed<string[]>(() => [attrs.class, …])` ⇒ `vue-tsc` 报
+      `Type 'ClassValue' is not assignable to type 'string'`；`className: attrs.class`
+      传给引擎 ⇒ `ClassValue` 不是 `string | undefined`。
+    - **对策**：数组用 `Array.isArray(x) ? x.join(' ') : (x ?? '')` 归一；标量槽位用
+      `as string | undefined` / `as CSSProperties | undefined`。
+
+353. 🚨 **L4 的两侧「各用各的词汇」是仓库既有约定 —— 别因为「基线是 React 产物」就去改基线。**
+    —— 2026-10-06 `mentions` 实测（我为此误判过一轮）。
+
+    - **约定**：React 生成器传 `className`/`rootClassName`（`tests/compat/baseline/button.mjs:190`
+      `push('class:className', { …, className: 'my-class' })`），Vue 侧传原生 `class`
+      （`button/__tests__/semantic.test.ts:188` `'class:className': () => withText({ …, class: 'my-class' })`）。
+      **用例 ID 才是契约**，两侧 props 本来就该不同。
+    - **判据**：声称「基线与迁移冲突」之前，先 `grep 'class:' <另一个已迁移组件>/__tests__/semantic.test.ts`
+      看它怎么写。一条 grep 能省掉整轮弯路。
+    - **反例代价**：我当时误诊成基线冲突，还打了个补丁（在 `attrs` 里 strip `className`/`rootClassName`），
+      真实根因却是 PITFALLS **349** 的第三种形态。**改冻结的 oracle 是最坏的一种「补丁」。**
+
+354. 🚨 **组件可能是「半迁移」状态 —— 别只看 props，要看渲染体。**
+    —— 2026-10-06 `collapse/Collapse.ts` 实测：classString 里**同时**有
+    `props.className` / `props.rootClassName` **和** `attrs.class`，而渲染末尾又是 `...attrs`
+    ⇒ 调用方的 `class` 实际被应用**两次**。
+
+    - **教训**：「已经有人加了 `attrs.class`」**不是**迁完的证据。判据是
+      `props.className|props.rootClassName|props.style` **零命中** + 渲染体顺序正确（349）。
+
+355. 🚨 **挑活的判据是「扫代码」，不是「看 `auditStatus`」。**
+    —— 2026-10-06 实测：我一直只筛 `auditStatus === 'todo'`，**把 6 个 `analyzing` 的组件
+    （`checkbox`/`collapse`/`drawer`/`cascader`/`color-picker`/`date-picker`）当成已完成**，
+    并两次对外宣称「迁移完成」。
+
+    - **判据**：收口前**全目录扫** `props.className|props.rootClassName|props.style`，
+      不看状态桶。状态是人的记账，代码才是事实。
+    - **同族**：PITFALLS 329（registry 生成器有顺序）、`KNOWN-ISSUES` 的「登记簿坐标要复核」。
+
+356. ⚠️ **L6 全量跑存在「抖动」用例 —— 报红先孤立重跑，别急着改代码。**
+    —— 2026-10-06 实测：全量 1125 张报 6 处失败（`menu/vertical` ×3、`upload/basic` ×3，
+    差异率 0.10–0.37%）；`--component X --no-build --mode compare` 孤立重跑**全部 `0.000% exact`**，
+    再跑一次全量 **1125/1125 全过**。
+
+    - **根因**：运行期**测出来**的几何（进度条宽度、子菜单浮层定位）在机器吃满时被截到**动画中间态**。
+    - **判据**：① L6 红但 **L4（DOM 契约）绿** ⇒ 几乎肯定**不是类名字符串问题**（L4 比的就是它）；
+      ② `run.mjs` 支持 `--component/--variant/--viewport/--mode/--no-build/--shard`，
+      孤立重跑 **~19 s**（全量 `--no-build` 约 31 分钟）⇒ 分类成本很低。
+    - **别做**：把这些「失败」登记进 `COMPATIBILITY.md` 当平台差异 —— 它们是**测量噪声**，不是差异。
+
+357. 🚨 **本仓禁用 `git stash push -u` —— 它会让索引失同步（6352 条 staged-deleted），而工作区文件其实完好。**
+    —— 2026-10-06 实测：为对比「改动前是否也红」而 stash，`git status` 随后显示
+    `.editorconfig` / `.github/**` 等**数千条已删除**，看着像灾难。
+
+    - **恢复**：**`git reset`（mixed）** 把索引对齐回 HEAD，工作区不动（实测 3 个改动文件完好）。
+    - **要留原始副本**：`git show HEAD:<path> > /tmp/x` 或先 `cp`，**别 stash**。

@@ -60,6 +60,17 @@
 
 ## 六、经典错误沉淀（持续追加 —— 每 Gate 收口时回顾；最近在顶部）
 
+### 2026-10-06（根别名迁移收口：`className`/`rootClassName`/`style` → 原生 `class`/`style`，72/72）
+
+| # | 坑 | 抓到它的层 | 对策 |
+|---|---|---|---|
+| 132 | **`{ class: X, ...attrs }` 里末尾的 `...attrs` 会整段覆盖 `class`**（对象展开后者胜）——迁移前 `className` 是 prop、attrs 里没有 `class`，所以顺序无所谓；一旦 `class` 走 attrs 就变成正确性问题。同族三种形态：`{...attrs, class:X}` ⇒ 残留的 `class` 键与 `className` 并存**双份**；`{className:X, ...restAttrs}` ⇒ 调用方 class 进两次 | **L4（dom-contract）**：Card 的 `tabs*` 用例（Vue 只剩 `apollo-head-tabs`，`apollo-tabs*` 全丢）；mentions 是 `extra extra rootx rootx` | 展开前把 `class`/`style` **摘掉**再 spread；判据：扫 `^\s*(class\|style):` 后 14 行内有无 `^\s*\.\.\.(attrs\|restAttrs)`。⚠️ 影响 `Tabs` / `Cascader` / `Mentions` / `Drawer` 四处 |
+| 133 | **「内部消费者」扫描只扫 `h(<Tag>, { className })` 会漏一大半** —— ① 模板写法 `:class-name=` / `:root-class-name=`（Card / ColorPicker ×4）；② 返回对象的 helper（`CalendarHeader.selectBase()`）；③ **同目录内部件**（`ConfirmDialog`→`Modal`、`Group`→`Checkbox`、`DirectoryTree`→`Tree`、`FormItemInput`→`ErrorList`、`transfer/{ListItem,Section}`→`Checkbox`） | **全量 L4 回归**（一次 36 处失败；逐组件跑完全看不到） | 迁移后**必须跑全量** `unit + dom-contract`；扫描要同时覆盖 `h()+className:` 与 `:class-name=`/`:root-class-name=`，并把**被迁组件自己**也放进列表 |
+| 134 | **`inheritAttrs: false` + 从不读 `attrs` = 调用方传的 `class`/`style` 静默丢弃**——`date-picker/{DatePicker,RangePicker}.vue` 两个文件都既无 `useAttrs()` 也无 `$attrs`；`checkbox/Checkbox.ts` 是变体：解构进 `attrClass`/`attrStyle` 后**从未使用**。同族「声明了 prop 却从不消费」：`checkbox` 的 `style`（走老 `mergeStyles`）、`Form.vue` 的 `rootClassName` | L4（date-picker 的 class/style 用例）+ 读源码 | 迁移前先 `grep -n "useAttrs\|\\\$attrs"`，没有就**补上**；「有 prop」≠「接上了」 |
+| 135 | **挑活的判据是「扫代码」不是「看 `auditStatus`」**——只筛 `todo` 会把 `analyzing` 档里的活当成已完成（本次漏 6 个组件：checkbox / collapse / drawer / cascader / color-picker / date-picker，并**两次**对外宣称「迁移完成」） | **收口全量扫描**（不是测试抓到的，是主动扫出来的） | 收口前全目录扫 `props.className\|props.rootClassName\|props.style`；状态是人的记账，**代码才是事实** |
+| 136 | **L6 全量跑有「抖动」用例 ⇒ 报红先孤立重跑，别急着改代码**——全量 1125 张报 6 处失败（menu/vertical ×3、upload/basic ×3，0.10–0.37%）；`--component X --no-build --mode compare` 孤立重跑**全部 0.000% exact**，再跑全量 **1125/1125 全过** | **L6** + 孤立重跑对照 | 根因是运行期**测出来**的几何被截到动画中间态。判据：**L6 红但 L4 绿 ⇒ 大概率不是类名字符串问题**；`run.mjs --component … --no-build` 只要 ~19 s。⚠️ **别把测量噪声登记成平台差异** |
+| 137 | **`attrs.class` 是 Vue 的 `ClassValue`（可能是数组）、`attrs.style` 是 `StyleValue`** —— `computed<string[]>(() => [attrs.class, …])` 过不了 `vue-tsc`；传给引擎的 `className` 槽位也不是 `string \| undefined` | **L3（`test:types`）** | 数组用 `Array.isArray(x) ? x.join(' ') : (x ?? '')` 归一；标量槽位 `as string \| undefined` / `as CSSProperties \| undefined` |
+
 ### 2026-10-04（CI 落地会话：`X:ci-pipeline` / `X:visual-infra`）
 
 | # | 坑 | 抓到它的层 | 对策 |
