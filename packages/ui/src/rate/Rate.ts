@@ -29,6 +29,7 @@ import {
   useDevWarning,
 } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -50,14 +51,11 @@ import { getOffsetLeft } from './util';
 /** antd 薄壳从 `useComponentConfig('rate')` 读取的组件级配置。 */
 export interface RateConfig {
   className?: string;
-  style?: RateProps['style'];
+  style?: CSSProperties;
 }
 
 export const ratePropDefs = {
   prefixCls: { type: String, default: undefined },
-  className: { type: String, default: undefined },
-  rootClassName: { type: String, default: undefined },
-  style: { type: [Object, String] as PropType<RateProps['style']>, default: undefined },
   value: { type: Number, default: undefined },
   defaultValue: { type: Number, default: undefined },
   count: { type: Number, default: undefined },
@@ -312,12 +310,12 @@ const RateComponent = defineComponent({
 
       const classString = [
         cls,
-        props.className,
+        // 调用方原生 `class`（位置与原先的 props.className 一致）
+        attrs.class as string | undefined,
         mergedDisabled.value ? `${cls}-disabled` : '',
         (props.direction ?? directionContext.value) === 'rtl' ? `${cls}-rtl` : '',
         mergedSize.value === 'large' ? `${cls}-large` : '',
         mergedSize.value === 'small' ? `${cls}-small` : '',
-        props.rootClassName,
         context.className,
         `${cls}-css-var`,
       ]
@@ -347,9 +345,10 @@ const RateComponent = defineComponent({
       void _c;
       void _h;
 
+      // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
       const rootStyle = {
-        ...(context.style as RateProps['style']),
-        ...props.style,
+        ...(context.style as CSSProperties),
+        ...((attrs.style as CSSProperties) ?? {}),
       };
 
       return h(

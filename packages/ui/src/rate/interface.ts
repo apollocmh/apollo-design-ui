@@ -8,7 +8,6 @@
  * `characterRender`（fn）→ `#characterRender` 作用域插槽。`tooltips` 是数据 prop。
  */
 
-import type { CSSProperties } from 'vue';
 import type { TooltipProps } from '../tooltip/interface';
 
 /** rc `Star.d.ts` 的渲染上下文（`#character` / `#characterRender` 的 slot props 面）。 */
@@ -28,10 +27,6 @@ export interface StarRenderInfo {
 export interface RateProps {
   /** 主题前缀覆盖（getPrefixCls 的第二参）。 */
   prefixCls?: string;
-  /** 根元素类。 */
-  className?: string;
-  /** 根元素内联样式。 */
-  style?: CSSProperties;
   /** 当前值（受控；`v-model:value` 走 `update:value` 事件）。 */
   value?: number;
   /** 非受控初始值。 */
@@ -67,8 +62,6 @@ export interface RateProps {
   tooltips?: (TooltipProps | string)[];
   /** antd 尺寸语义：`-large` / `-small`（middle 不落类）。 */
   size?: 'large' | 'small' | 'middle';
-  /** 根元素附加类（与 className 分列，antd 壳逐字）。 */
-  rootClassName?: string;
 }
 
 /** `ref` 的 expose 面（rc 的 RateRef）。 */
