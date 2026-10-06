@@ -131,6 +131,7 @@ function parseArgs(argv) {
     viewport: null,
     mode: 'both',
     noBuild: false,
+    noRecheck: false,
     checkBaselines: false,
     shard: null,
   };
@@ -142,6 +143,8 @@ function parseArgs(argv) {
     else if (a === '--viewport') args.viewport = argv[++i];
     else if (a === '--mode') args.mode = argv[++i];
     else if (a === '--no-build') args.noBuild = true;
+    // 跳过「假红自检」（见 KNOWN-ISSUES §1.9）。默认开启 —— 它只对失败项多花几秒。
+    else if (a === '--no-recheck') args.noRecheck = true;
     else if (a === '--shard') args.shard = argv[++i];
     else if (a === '--help' || a === '-h') args.help = true;
   }
@@ -357,6 +360,51 @@ async function main() {
         `  ${cmp.verdict === 'PASS' ? '✔' : '✗'} ${c.id}  ${(cmp.diffRatio * 100).toFixed(3)}%  ${cmp.reason}`,
       );
     }
+
+    // ---- 假红自检（依据 `docs/KNOWN-ISSUES.md` §1.9）----------------------------
+    //
+    // 全量连跑（1125 张）时，运行期**测出来**的几何（进度条宽度、子菜单浮层定位）
+    // 可能被截到**动画中间态** ⇒ 报「假红」。
+    //
+    // 判据（三轮实测）：全量 + 新打包 ⇒ 6 处失败且**差异率逐位相同**；同样的 case
+    // **换一个全新浏览器**单独重拍 ⇒ `0.000% exact`；这两个组件的 L4 全绿。
+    //
+    // ⚠️ 必须**换浏览器**：实测「同一进程内重跑」不够 —— `--component X`（新进程 +
+    //    新浏览器）才 exact。所以这里 `launchBrowser()` 一个新的。
+    //
+    // ⚠️ 判为 FLAKY 的**不得**记进 `COMPATIBILITY.md` —— 那是把测量噪声洗成规范。
+    if (!args.noRecheck && args.mode !== 'baseline') {
+      const fails = results.filter((r) => r.verdict === 'FAIL' && r.reason !== 'render-error');
+      if (fails.length > 0) {
+        console.log(`\n▶ 假红自检：${fails.length} 个失败项换全新浏览器单独重拍…`);
+        const { browser: recheckBrowser } = await launchBrowser();
+        try {
+          for (const r of fails) {
+            const c = cases.find((x) => x.id === r.id);
+            if (!c) continue;
+            const rel = `${c.component}/${c.variant}__${c.theme}__${c.viewport}.png`;
+            const vueOut = path.join(SNAPSHOTS, 'vue', rel);
+            const reactRef = path.join(BASELINES, 'react', rel);
+
+            const shot = await capture(recheckBrowser, { port, side: 'vue' }, c, vueOut);
+            if (shot.errors.length > 0) continue;
+
+            const again = await comparePair(reactRef, vueOut, path.join(DIFF_DIR, rel));
+            if (again.verdict === 'PASS') {
+              r.verdict = 'FLAKY';
+              r.reason = 'flaky-isolated-exact';
+              r.message =
+                `全量连跑时报 ${(r.diffRatio * 100).toFixed(3)}%，换全新浏览器单独重拍是 ` +
+                `${(again.diffRatio * 100).toFixed(3)}% ⇒ **假红**（KNOWN-ISSUES §1.9）。` +
+                '不要记入 COMPATIBILITY.md。';
+              console.log(`  ~ ${c.id}  假红（单独重拍 ${(again.diffRatio * 100).toFixed(3)}%）`);
+            }
+          }
+        } finally {
+          await recheckBrowser.close();
+        }
+      }
+    }
   } finally {
     await browser.close();
     server.close();
@@ -415,11 +463,18 @@ async function main() {
     )}\n`,
   );
 
+  const flaky = compared.filter((r) => r.verdict === 'FLAKY');
+
   console.log(`\n报告：${path.relative(process.cwd(), reportFile)}`);
-  console.log(`通过 ${compared.length - failed.length} / ${compared.length}`);
+  console.log(`通过 ${compared.filter((r) => r.verdict === 'PASS').length} / ${compared.length}`);
+  if (flaky.length > 0) {
+    console.log(
+      `假红（单独重拍 exact，**不算失败、也不要记进 COMPATIBILITY.md**）：${flaky.length}`,
+    );
+  }
 
   if (failed.length > 0) {
-    console.log('\n失败项（必须人工分类后记入 COMPATIBILITY.md）：');
+    console.log('\n失败项（**孤立重拍仍红** ⇒ 真差异，必须人工分类后记入 COMPATIBILITY.md）：');
     for (const f of failed) console.log(`  - ${f.id}  [${f.reason}] ${f.message}`);
     return 1;
   }
