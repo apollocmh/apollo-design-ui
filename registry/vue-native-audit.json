@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-rootalias-migration",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T02:01:29.498Z",
+  "updatedAt": "2026-10-06T02:09:12.680Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -38,11 +38,11 @@
   "summary": {
     "components": {
       "total": 72,
-      "todo": 24,
+      "todo": 22,
       "analyzing": 7,
       "refactoring": 0,
       "testing": 0,
-      "done": 41,
+      "done": 43,
       "blocked": 0
     },
     "sharedSurfaces": {
@@ -51,7 +51,7 @@
       "done": 0
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 365,
+    "reviewedProductionSourceFiles": 379,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -1322,7 +1322,7 @@
       "reviewedFileCount": 7
     },
     "tooltip": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/tooltip/index.ts",
         "packages/ui/src/tooltip/interface.ts",
@@ -1333,7 +1333,16 @@
         "packages/ui/src/tooltip/use-merged-arrow.ts",
         "packages/ui/src/tooltip/util.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/tooltip/index.ts",
+        "packages/ui/src/tooltip/interface.ts",
+        "packages/ui/src/tooltip/PurePanel.ts",
+        "packages/ui/src/tooltip/style/index.ts",
+        "packages/ui/src/tooltip/style/token.ts",
+        "packages/ui/src/tooltip/Tooltip.ts",
+        "packages/ui/src/tooltip/use-merged-arrow.ts",
+        "packages/ui/src/tooltip/util.ts"
+      ],
       "testFileCount": 7,
       "demoFileCount": 14,
       "docFiles": [
@@ -1342,12 +1351,17 @@
         "packages/ui/src/tooltip/index.en-US.md",
         "packages/ui/src/tooltip/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 53/53（含 popover）；TooltipProps 去掉三个根别名。⚠️ className/rootClassName 原本落浮层根 ⇒ 迁成原生 class 后同时落触发器子元素（原生 class 的既有行为）；只落浮层请用 classNames.root。"
+      ],
+      "reviewedFileCount": 8
     },
     "popover": {
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/popover/index.ts",
         "packages/ui/src/popover/interface.ts",
@@ -1356,7 +1370,14 @@
         "packages/ui/src/popover/style/index.ts",
         "packages/ui/src/popover/style/token.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/ui/src/popover/index.ts",
+        "packages/ui/src/popover/interface.ts",
+        "packages/ui/src/popover/Popover.ts",
+        "packages/ui/src/popover/PurePanel.ts",
+        "packages/ui/src/popover/style/index.ts",
+        "packages/ui/src/popover/style/token.ts"
+      ],
       "testFileCount": 6,
       "demoFileCount": 12,
       "docFiles": [
@@ -1365,9 +1386,14 @@
         "packages/ui/src/popover/index.en-US.md",
         "packages/ui/src/popover/index.zh-CN.md"
       ],
-      "issueIds": [],
+      "issueIds": [
+        "VNA-ROOTALIAS-01"
+      ],
       "batch": null,
-      "notes": []
+      "notes": [
+        "根别名迁移完成：unit + dom-contract + types = 53/53（含 tooltip）；PopoverProps（extends Omit<TooltipProps,…>）随之生效；转发给 Tooltip 的类名/样式改原生通道。"
+      ],
+      "reviewedFileCount": 6
     },
     "menu": {
       "auditStatus": "todo",
@@ -3459,7 +3485,7 @@
         "各组件 __tests__/semantic.test.ts"
       ],
       "status": "in_progress",
-      "verification": "机械扫描 69/73 命中。已迁移并各自提交（39 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名。阻塞：无（auto-complete 已解锁）。"
+      "verification": "机械扫描 69/73 命中。已迁移并各自提交（41 个）：button、divider、flex、alert、breadcrumb、avatar、back-top、card、descriptions、anchor、carousel、app、calendar、badge、dropdown、space、grid、layout、tag、skeleton、result、statistic、typography、watermark、spin、empty、radio、switch、splitter、qr-code、listy、progress、rate、segmented、timeline、steps、pagination、select、auto-complete、tooltip、popover。每个都跑 unit/dom-contract/types 全绿。保留为独立目标：border-beam、anchor items[]、carousel 内层 slick-slider、badge.style、ribbon.className/style、dropdown.rootClassName、descriptions item 级、avatar group max/popover（已改走 classNames.root）、skeleton Node 内层、tag CheckableTagOption、typography InternalTypography 内部通道、radio option、splitter Panel、qr-code 的 QrCodeComponentConfig、segmented 选项、timeline 项级、steps 的 StepItem/Rail/StepIcon、pagination 的 sizeChanger 配置、select/auto-complete 的 popup 类名、tooltip/popover 的浮层类名。阻塞：无。"
     },
     {
       "id": "VNA-ROOTALIAS-02",
@@ -3467,7 +3493,7 @@
       "status": "fixed",
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
-      "verification": "累计修 15 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
+      "verification": "累计修 18 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（改走 classNames.root）；typography/Base → Tooltip。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。"
     }
   ],
   "batches": [
@@ -3675,6 +3701,11 @@
       "date": "2026-10-06",
       "status": "in_progress",
       "note": "Root-alias migration batch 15: select + auto-complete migrated (39 components total). Select was the last blocker (auto-complete depended on it) - all blockers are now cleared. Notable: Select did not read attrs at all (inheritAttrs:false, no spread), so :class/:style were silently dropped before; that got wired up too. The select migration hint registered on the previous batch was consumed (pagination className -> class)."
+    },
+    {
+      "date": "2026-10-06",
+      "status": "in_progress",
+      "note": "Root-alias migration batch 16: tooltip + popover migrated (41 components total). New insight: for floater components, className/rootClassName target the POPUP root, not the component root - and native class now lands on BOTH the popup and the trigger child (because Tooltip spreads ...attrs onto the Trigger). That is pre-existing native-class behaviour, but it means consumers that need popup-ONLY targeting (avatar AvatarGroup) must use the classNames.root semantic slot instead of class. Scan caught 2 more consumers (avatar, typography)."
     }
   ],
   "observations": [
