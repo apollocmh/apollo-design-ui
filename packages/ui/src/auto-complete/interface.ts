@@ -95,9 +95,6 @@ export interface AutoCompleteProps {
 
   // ---- 样式 ----
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   classNames?:
     | AutoCompleteSemanticClassNames
     | ((info: { props: AutoCompleteProps }) => AutoCompleteSemanticClassNames);

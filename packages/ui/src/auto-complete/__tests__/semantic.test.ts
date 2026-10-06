@@ -23,7 +23,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   disabled: () => h(AutoComplete, { prefixCls: PREFIX, disabled: true }),
   'size:large': () => h(AutoComplete, { prefixCls: PREFIX, size: 'large' }),
   'status:error': () => h(AutoComplete, { prefixCls: PREFIX, status: 'error' }),
-  'class-name': () => h(AutoComplete, { prefixCls: PREFIX, className: 'extra' }),
+  'class-name': () => h(AutoComplete, { prefixCls: PREFIX, class: 'extra' }),
   'prefix-cls:custom': () => h(AutoComplete, { prefixCls: 'custom' }),
   'prefix-cls:no-props': () => h(AutoComplete),
 };

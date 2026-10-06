@@ -51,9 +51,6 @@ const AutoCompleteComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: [Object, String] as PropType<AutoCompleteProps['style']>, default: undefined },
     value: { type: null as unknown as PropType<AutoCompleteProps['value']>, default: undefined },
     defaultValue: {
       type: null as unknown as PropType<AutoCompleteProps['defaultValue']>,
@@ -256,8 +253,8 @@ const AutoCompleteComponent = defineComponent({
     const finalClassNames = computed<AutoCompleteSemanticClassNames>(() => ({
       root: [
         `${prefixCls.value}-auto-complete`,
-        props.className,
-        props.rootClassName,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class as string | undefined,
         mergedClassNames.value.root,
       ]
         .filter(Boolean)
@@ -277,7 +274,8 @@ const AutoCompleteComponent = defineComponent({
     }));
 
     const finalStyles = computed<AutoCompleteSemanticStyles>(() => ({
-      root: { ...mergedStyles.value.root, ...props.style },
+      // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
+      root: { ...mergedStyles.value.root, ...((attrs.style as Record<string, unknown>) ?? {}) },
       input: mergedStyles.value.input,
       prefix: mergedStyles.value.prefix,
       placeholder: mergedStyles.value.placeholder,
@@ -350,9 +348,10 @@ const AutoCompleteComponent = defineComponent({
           // ---- 全量转发（antd 的 {...omit(props, [...])}；omit 的五个键已并入
           //      merged 类名/回调，不在此列）----
           id: props.id,
-          // antd：className 同时进 classNames.root 与 Select 根 —— 上游产物里
-          // root 类名出现两次（L4 基线逐字，勿「顺手修复」）
-          className: props.className,
+          // antd：类名同时进 classNames.root 与 Select 根 —— 上游产物里
+          // root 类名出现两次（L4 基线逐字，勿「顺手修复」）。
+          // ✅ Select 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`。
+          class: attrs.class as string | undefined,
           prefixCls: prefixCls.value,
           value: props.value,
           defaultValue: props.defaultValue,

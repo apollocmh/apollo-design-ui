@@ -407,7 +407,7 @@ describe('Pagination 尺寸切换器（L2）', () => {
     ).toBe(true);
   });
 
-  it('渲染成本仓的 Select，类名走 `className` 通道', () => {
+  it('渲染成本仓的 Select（类名走原生 class 通道）', () => {
     const w = mountPg({ showSizeChanger: true });
     expect(w.find(`.${P}-options`).exists()).toBe(true);
     expect((w.find(`.${P}-options-size-changer`).element.outerHTML ?? '').length).toBeGreaterThan(

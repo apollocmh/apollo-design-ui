@@ -46,12 +46,11 @@ describe('AutoComplete · 结构契约', () => {
     w.unmount();
   });
 
-  it('status 落 -status-error 类；className/rootClassName 附加', () => {
+  it('status 落 -status-error 类；原生 class 附加', () => {
     const w = mountAC({
       options: [{ value: 'a' }],
       status: 'error',
-      className: 'extra',
-      rootClassName: 'root-extra',
+      class: ['extra', 'root-extra'],
     });
     const cls = w.find(`.${P}-auto-complete`).classes();
     expect(cls).toContain(`${P}-status-error`);

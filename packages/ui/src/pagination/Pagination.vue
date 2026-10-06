@@ -379,8 +379,8 @@ export default defineComponent({
             options: info.options,
             value: selectedValue,
             size: mergedSize.value,
-            // ⚠️ 本仓的 Select 用 `className` **prop**（且 `inheritAttrs: false`）
-            className: [
+            // ✅ Select 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+            class: [
               `${p}-options-size-changer-select`,
               info.className,
               (selectProps as { className?: string }).className,
