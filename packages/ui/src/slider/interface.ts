@@ -161,9 +161,6 @@ export type SliderAriaValueFormat = (value: number) => string;
  */
 export interface SliderBaseProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
-  style?: CSSProperties;
   id?: string;
   /** 禁用：布尔（整体）或**数组**（逐把手）。 */
   disabled?: boolean | boolean[];

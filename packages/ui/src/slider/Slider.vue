@@ -23,6 +23,7 @@
 
 import { isNumber, isVNode, useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -78,9 +79,6 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<SliderProps['style']>, default: undefined },
     id: { type: String, default: undefined },
     disabled: { type: [Boolean, Array] as PropType<boolean | boolean[]>, default: undefined },
     keyboard: { type: Boolean, default: undefined },
@@ -158,7 +156,7 @@ export default defineComponent({
       classNames?: SliderSemanticClassNames;
       styles?: SliderSemanticStyles;
       className?: string;
-      style?: SliderProps['style'];
+      style?: CSSProperties;
       getPrefixCls: (suffix?: string, custom?: string) => string;
       getPopupContainer?: (trigger: HTMLElement) => HTMLElement;
     };
@@ -202,7 +200,6 @@ export default defineComponent({
         computed(() => contextSemantic.styles),
         computed(() => semanticRootStyle(contextSemantic.style)),
         computed(() => props.styles),
-        computed(() => semanticRootStyle(props.style)),
       ],
       props,
     );
@@ -680,10 +677,10 @@ export default defineComponent({
       const rootClassName = [
         // ⚠️ 基础类名必须在最前（rc：clsx(prefixCls, className, …)）
         p,
-        props.className,
+        // 调用方原生 class（位置与原先的 props.className 一致）
+        attrs.class,
         contextSemantic.className,
         mergedClassNames.value.root,
-        props.rootClassName,
         isRTL.value ? `${p}-rtl` : '',
         draggingIndex.value !== -1 ? `${p}-lock` : '',
         disabled.value ? `${p}-disabled` : '',
@@ -699,7 +696,11 @@ export default defineComponent({
           ...(attrs as Record<string, unknown>),
           ref: containerRef,
           class: rootClassName,
-          style: { ...mergedStyles.value.root },
+          // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
+          style: {
+            ...mergedStyles.value.root,
+            ...((attrs.style as Record<string, string | number>) ?? {}),
+          },
           id: props.id,
           onMousedown: onSliderMouseDown,
         },
