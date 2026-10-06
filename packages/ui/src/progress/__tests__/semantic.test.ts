@@ -40,7 +40,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'type:dashboard': () => h(Progress, { percent: 75, type: 'dashboard' }),
   'circle:small': () => h(Progress, { percent: 50, type: 'circle', size: 'small' }),
   'circle:stroke-width': () => h(Progress, { percent: 50, type: 'circle', strokeWidth: 12 }),
-  'class-name': () => h(Progress, { percent: 30, className: 'extra' }),
+  'class-name': () => h(Progress, { percent: 30, class: 'extra' }),
   aria: () => h(Progress, { percent: 30, 'aria-label': 'uploading' }),
   'prefix-cls:custom': () => h(Progress, { percent: 30, prefixCls: 'custom' }),
 };

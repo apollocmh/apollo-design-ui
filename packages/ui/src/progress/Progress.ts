@@ -22,7 +22,15 @@ import {
   CloseOutlined,
 } from '@apollo-design/icons';
 import { isPlainObject, useDevWarning } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type VNodeChild, watchEffect } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  type VNodeChild,
+  watchEffect,
+} from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useConfigContext, useDirection } from '../config-provider/context';
 import { clsx } from '../notification/engine/util';
@@ -45,8 +53,6 @@ const ProgressComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<ProgressProps['classNames']>,
       default: undefined,
@@ -79,7 +85,6 @@ const ProgressComponent = defineComponent({
     railColor: { type: String, default: undefined },
     width: { type: Number, default: undefined },
     success: { type: Object as PropType<ProgressProps['success']>, default: undefined },
-    style: { type: [Object, String] as PropType<ProgressProps['style']>, default: undefined },
     gapDegree: { type: Number, default: undefined },
     gapPlacement: {
       type: String as PropType<ProgressProps['gapPlacement']>,
@@ -320,8 +325,8 @@ const ProgressComponent = defineComponent({
           [`${pCls}-small`]: size.value === 'small',
           [`${pCls}-rtl`]: direction.value === 'rtl',
         },
-        props.className,
-        props.rootClassName,
+        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        attrs.class,
         mergedClassNames.value.root,
       );
 
@@ -329,7 +334,11 @@ const ProgressComponent = defineComponent({
         'div',
         {
           ...attrs,
-          style: { ...sharedStyles.root, ...(typeof props.style === 'object' ? props.style : {}) },
+          // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
+          style: {
+            ...sharedStyles.root,
+            ...(typeof attrs.style === 'object' ? (attrs.style as CSSProperties) : {}),
+          },
           class: classString,
           role: 'progressbar',
           'aria-valuenow': percentNumber.value,

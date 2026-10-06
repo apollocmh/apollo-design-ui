@@ -58,8 +58,6 @@ export type ProgressSemanticStylesFn = (info: { props: ProgressProps }) => Progr
 
 export interface ProgressProps {
   prefixCls?: string;
-  className?: string;
-  rootClassName?: string;
   classNames?: ProgressSemanticClassNames | ProgressSemanticClassNamesFn;
   styles?: ProgressSemanticStyles | ProgressSemanticStylesFn;
 
@@ -77,7 +75,6 @@ export interface ProgressProps {
   /** @deprecated Use `size` instead */
   width?: number;
   success?: SuccessProps;
-  style?: CSSProperties;
   gapDegree?: number;
   gapPlacement?: GapPlacement;
   /** @deprecated please use `gapPlacement` instead */
