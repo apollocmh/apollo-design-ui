@@ -49,6 +49,7 @@
 
 import { devUseWarning, isNonNullable, isNumber } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -100,9 +101,6 @@ const Timeline = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<TimelineProps['style']>, default: undefined },
     // ⚠️ **必须收 `[Object, Function]`** —— 语义化槽支持**函数形态**
     //    （`(info) => styles`）。只写 `Object` 时函数会触发
     //    `Invalid prop: type check failed` 的 Vue 告警（demo 冒烟实测抓到）。
@@ -207,11 +205,11 @@ const Timeline = defineComponent({
     const classString = [
       prefixCls,
       contextClassName,
-      props.className,
+      // 调用方原生 class（位置与原先的 props.className 一致）
+      attrs.class as string | undefined,
       orientation === 'horizontal' ? `${prefixCls}-horizontal` : '',
       layoutAlternate ? `${prefixCls}-layout-alternate` : '',
       direction === 'rtl' ? `${prefixCls}-rtl` : '',
-      props.rootClassName,
       cssVarCls,
     ]
       .filter(Boolean)
@@ -228,7 +226,8 @@ const Timeline = defineComponent({
     //   2. **用户的 `style` 不走 `style` prop，而是走 `styles.root` 语义槽**
     //      （上游 `useSemanticRootStyle(style)`）⇒ 本仓对应 `semanticRootStyle`。
     //      直接塞进 `style` 会被 Steps 的 `rootStyle` 覆盖（L4 实测：整条 style 丢失）。
-    const styleRoot = semanticRootStyle(props.style);
+    // 根 style 是 Vue 原生 attrs；它必须走 styles.root 语义槽（见上）
+    const styleRoot = semanticRootStyle(attrs.style as CSSProperties);
     const contextStyleRoot = semanticRootStyle(contextStyle);
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       TimelineProps,

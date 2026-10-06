@@ -150,7 +150,7 @@ const specs: Record<
   'timeline:variant-outlined': { props: { variant: 'outlined', items: ITEMS } },
 
   'timeline:className': {
-    props: { className: 'my-cls', rootClassName: 'my-root', items: ITEMS },
+    props: { class: ['my-cls', 'my-root'], items: ITEMS },
   },
   'timeline:style': {
     props: { style: { backgroundColor: '#fde3cf', color: '#f56a00' }, items: ITEMS },

@@ -77,8 +77,8 @@ describe('Timeline · L1 根与类名（判据 1 / 3 / 7）', () => {
     expect(bogus.findAll('.apollo-timeline-item-placement-end')).toHaveLength(0);
   });
 
-  it('`className` / `rootClassName` 都落在根上', () => {
-    const w = mountTimeline({ className: 'my-cls', rootClassName: 'my-root' });
+  it('原生 `class`（字符串 / 数组）落在根上', () => {
+    const w = mountTimeline({ class: ['my-cls', 'my-root'] });
     expect(w.classes()).toContain('my-cls');
     expect(w.classes()).toContain('my-root');
   });

@@ -53,7 +53,8 @@ subtitle: 时间轴
 | pending | ⚠️ **已废弃** —— 直接在 `items` 里加一项 | `VNodeChild` | — |
 | pendingDot | ⚠️ **已废弃** —— 直接在 `items` 里加一项 | `VNodeChild` | — |
 | classNames / styles | 语义化槽（**十槽去掉 `itemSubtitle`**；支持**函数形态**） | | — |
-| prefixCls / className / rootClassName / style | 常规落点 | | — |
+| prefixCls | 类名前缀 | | — |
+| class / style | **根元素原生 attrs**（不是 Props）；`style` 走 `styles.root` 语义槽 | | — |
 
 > 🚨 **`layoutAlternate` 的判据**：`mode === 'alternate'` **或**（纵向 **且** 任一项带 `title`）。
 > ⇒ 纵向只要有一项带 `title`，整个时间轴就进入**左右交错**布局。

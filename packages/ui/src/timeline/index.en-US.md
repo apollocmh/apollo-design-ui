@@ -54,7 +54,8 @@ See [`demo/`](./demo) (**13**, mirroring antd's user-visible demos).
 | pending | ⚠️ **deprecated** — add an item in `items` instead | `VNodeChild` | — |
 | pendingDot | ⚠️ **deprecated** — add an item in `items` instead | `VNodeChild` | — |
 | classNames / styles | Semantic slots (**the ten `Steps` slots minus `itemSubtitle`**; the **function form** is supported) | | — |
-| prefixCls / className / rootClassName / style | Common targets | | — |
+| prefixCls | Class name prefix | | — |
+| class / style | **Native root attrs** (not Props); `style` goes through the `styles.root` semantic slot | | — |
 
 > 🚨 **`layoutAlternate` rule**: `mode === 'alternate'` **or** (vertical **and** any item
 > has a `title`). ⇒ With a vertical timeline, a single item with `title` puts the whole

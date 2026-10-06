@@ -135,12 +135,6 @@ export type TimelineSemanticValue<T> = T | ((info: { props: TimelineProps }) => 
 export interface TimelineProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-timeline`。 */
   prefixCls?: string;
-  /** 落在根元素上。 */
-  className?: string;
-  /** 根元素的内联样式。 */
-  style?: CSSProperties;
-  /** 也落在根元素上。 */
-  rootClassName?: string;
   /** 语义化类名（十槽去掉 `itemSubtitle`）。支持函数形态。 */
   classNames?: TimelineSemanticValue<TimelineSemanticClassNames>;
   /** 语义化样式（同上）。支持函数形态。 */

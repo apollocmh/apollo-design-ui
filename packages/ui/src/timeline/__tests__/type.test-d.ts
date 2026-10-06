@@ -40,9 +40,10 @@ import type {
 describe('Timeline · Props 类型', () => {
   it('核心 props 的形态', () => {
     expectTypeOf<TimelineProps['prefixCls']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<TimelineProps['className']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<TimelineProps['rootClassName']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<TimelineProps['style']>().toEqualTypeOf<CSSProperties | undefined>();
+    // 根 class/style 走 Vue 原生 attrs，不在 TimelineProps 键集里
+    expectTypeOf<
+      Extract<keyof TimelineProps, 'className' | 'rootClassName' | 'style'>
+    >().toEqualTypeOf<never>();
     expectTypeOf<TimelineProps['variant']>().toEqualTypeOf<StepsVariant | undefined>();
     expectTypeOf<TimelineProps['mode']>().toEqualTypeOf<TimelineMode | undefined>();
     expectTypeOf<TimelineProps['orientation']>().toEqualTypeOf<
