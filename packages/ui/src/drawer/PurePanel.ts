@@ -26,7 +26,7 @@ export default defineComponent({
     onClose: { type: Function as PropType<(e: Event) => void>, default: undefined },
     loading: { type: Boolean, default: false },
   },
-  setup(props, { slots }) {
+  setup(props, { attrs, slots }) {
     // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
     const readSlot = (name: string): unknown => {
       const fn = (slots as Record<string, unknown>)[name];
@@ -50,9 +50,10 @@ export default defineComponent({
             prefixCls,
             `${prefixCls}-pure`,
             `${prefixCls}-${props.placement}`,
-            props.className,
+            // 调用方原生 class / style（位置与原先的 props.className / props.style 一致）
+            attrs.class,
           ],
-          style: props.style,
+          style: attrs.style,
         },
         h(
           DrawerPanel,

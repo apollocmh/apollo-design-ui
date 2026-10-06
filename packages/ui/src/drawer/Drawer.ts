@@ -70,10 +70,7 @@ export default defineComponent({
       default: undefined,
     },
     panelRef: { type: [Object, Function] as PropType<unknown>, default: null },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     resizable: {
       type: [Boolean, Object] as PropType<boolean | DrawerResizableConfig>,
       default: undefined,
@@ -219,15 +216,24 @@ export default defineComponent({
       const drawerClassName = [
         !mask.enabled.value ? 'no-mask' : undefined,
         config.direction === 'rtl' ? `${prefixCls}-rtl` : undefined,
-        props.rootClassName,
       ]
         .filter(Boolean)
         .join(' ');
 
+      // ⚠️ 末尾显式写了 className / style，但展开进来的 `class` / `style` 键仍在
+      //    ⇒ 会把它们摘掉，避免 `class` 与 `className` 同时出现（引擎侧会双份）。
+      const {
+        class: _attrsClass,
+        style: _attrsStyle,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
+
       return h(
         RcDrawer,
         {
-          ...(attrs as Record<string, unknown>),
+          ...restAttrs,
           prefixCls,
           open: props.open,
           placement: props.placement,
@@ -246,8 +252,9 @@ export default defineComponent({
           zIndex: zIndex.value,
           rootClassName: drawerClassName || undefined,
           rootStyle: { ...props.rootStyle },
-          className: props.className,
-          style: props.style,
+          // 调用方原生 class / style（位置与原先的 props.className / props.style 一致）
+          className: attrs.class,
+          style: attrs.style,
           maskMotion,
           motion: panelMotion,
           resizable: props.resizable,

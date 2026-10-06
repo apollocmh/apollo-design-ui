@@ -188,8 +188,6 @@ export interface DrawerProps
   panelRef?: unknown;
   /** @deprecated 请用 `classNames.content` / `styles.content` 之外的 `section`。 */
   destroyInactivePanel?: boolean;
-  /** 根节点的类名（antd 的 `rootClassName`）。 */
-  rootClassName?: string;
   /** 根节点的内联样式（v5 起 `style` 语义改到 `rootStyle`）。 */
   rootStyle?: CSSProperties;
   /** @deprecated 请用 `rootStyle`。 */
@@ -199,8 +197,6 @@ export interface DrawerProps
   /** 面板的 `aria-labelledby`（未传则用 `ariaId`）。 */
   ariaLabelledby?: string;
   zIndex?: number;
-  className?: string;
-  style?: CSSProperties;
 }
 
 /** `_InternalPanelDoNotUseOrYouWillBeFired` 的 props。 */
@@ -208,8 +204,6 @@ export interface DrawerPurePanelProps
   extends Omit<DrawerPanelProps, 'title' | 'footer' | 'extra' | 'closeIcon'> {
   /** 标题（文本）。富标题走 `#title` slot（slot 优先）。 */
   title?: string;
-  style?: CSSProperties;
-  className?: string;
   /** 默认 `'right'`。 */
   placement?: DrawerPlacement;
 }
