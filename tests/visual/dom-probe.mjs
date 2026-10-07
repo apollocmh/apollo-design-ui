@@ -154,9 +154,24 @@ async function main() {
    *
    * ⚠️ 只改 **`class` 属性值内部** —— 不碰 `data-*` / `aria-*` / id，避免把
    *    「属性值里恰好含 `ant-`」的内容也改掉。
+   *
+   * 🚨 **2026-10-08 补一条：`anticon` → `apollo-icon`**。
+   *    antd 的图标类名是 **`anticon` / `anticon-down`**（`ant` 后面**没有连字符**），
+   *    本仓是 `apollo-icon` / `apollo-icon-down` ⇒ 只换 `\bant-` **匹配不到它们**，
+   *    于是**任何带图标的组件都会误报差异**（collapse / table / dropdown… 全中）。
+   *    那让本探针等于不可用 —— 而它正是用来找「结构性分叉」这类 bug 的工具
+   *    （Button 多包一层 `<span>` 就是这么发现的）。
    */
   const normalizePrefix = (html) =>
-    html.replace(/class="([^"]*)"/g, (_m, cls) => `class="${cls.replace(/\bant-/g, 'apollo-')}"`);
+    html.replace(
+      /class="([^"]*)"/g,
+      (_m, cls) =>
+        `class="${cls
+          // 先换 icon 类（它们在 `ant` 后没有连字符，必须先处理）
+          .replace(/\banticon-/g, 'apollo-icon-')
+          .replace(/\banticon\b/g, 'apollo-icon')
+          .replace(/\bant-/g, 'apollo-')}"`,
+    );
 
   const opts = keepStyle ? { keepStyle: true } : undefined;
   const a = contractOf(normalizePrefix(left.html), opts);
