@@ -91,7 +91,42 @@ export default defineBuildConfig({
      * **之后**（1291 行起）执行，写进去的东西会被清掉；而且 `build:before` 本身
      * 也晚于 exports 解析。
      */
-    'rollup:options': (_ctx, options) => {
+    /**
+     * ⚠️⚠️ `preserveModules`（2026-10-07 补，裁决 `ui-tree-shaking` 的 **D** 项）
+     *
+     * D 的原话是「**13 个 foundation 包**同步保留模块结构」。其余 12 个包走共享配置
+     * `scripts/unbuild-preserve-modules.mjs`，而 **theme 有 `ownBuildConfig`**（要写
+     * `dist/tokens.css`）⇒ 被共享配置跳过了 ⇒ **D 实际只落地 12/13**，且门禁里那句
+     * 「产物已是模块结构」对 theme 是**假的**（dist 只有 4 个文件 / 1 个 mjs）。
+     * 这里把同一套设置补上，让 13/13 成立。
+     *
+     * 为什么放在本 hook 里：theme 需要 `ctx.options.rootDir`（由 unbuild 按 CWD 解析），
+     * 不能像共享配置那样从配置文件位置推导。
+     *
+     * ⚠️ 与 `tokensCssPlugin` 的相互作用已实测：`preserveModules` 下入口模块仍是
+     *    `index.mjs` ⇒ 下面的 `bundle['index.mjs']` 判定照旧成立，`dist/tokens.css`
+     *    仍能正常生成（B5/B7 不因此失效）。
+     */
+    'rollup:options': (ctx, options) => {
+      const rootDir = ctx.options.rootDir ?? '.';
+      const srcDir = resolve(rootDir, 'src');
+      // ⚠️ 参数类型必须是 `OutputOptions` 本身（`Record<string, unknown>` 会报 TS2345，
+      //    且该错误只有 `pnpm run test:types` 抓得到）。与 `packages/ui/build.config.ts` 同款写法。
+      //    ⚠️ 必须**显式分发**：直接写 `NonNullable<X> extends Array<infer U> ? U : X` 是错的
+      //       （不分发 ⇒ OutputOption 仍是 `OutputOptions | OutputOptions[]` ⇒ `.map()` 又报错）。
+      type ElementOf<T> = T extends Array<infer U> ? U : T;
+      type OutputOption = ElementOf<NonNullable<typeof options.output>>;
+      const applyPreserveModules = (output: OutputOption): OutputOption => ({
+        ...output,
+        preserveModules: true,
+        preserveModulesRoot: srcDir,
+      });
+      if (Array.isArray(options.output)) {
+        options.output = options.output.map(applyPreserveModules);
+      } else if (options.output) {
+        options.output = applyPreserveModules(options.output);
+      }
+
       const tokensCssPlugin = {
         name: 'apollo-theme-tokens-css',
         async writeBundle(

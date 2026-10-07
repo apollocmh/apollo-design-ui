@@ -6,10 +6,13 @@
  * 这类问题只有构建后才会暴露。设计见 tests/build/README.md 与 TESTING.md §10。
  *
  * 与 --strict 的关系（重要）：
- *   B5/B6/B7/B8 依赖「存在有视觉的组件」与「ui 包有 CSS 产物」，现在还不具备条件。
- *   它们的状态是 **PENDING** 而不是 PASS —— 既不谎报通过，也不让整个门禁卡死。
- *   `--strict` 下 PENDING 视为失败，用于这些检查落地之后的 CI。
+ *   B5/B7/B8 曾依赖「存在有视觉的组件」与「ui 包有 CSS 产物」。它们的状态是 **PENDING**
+ *   而不是 PASS —— 既不谎报通过，也不让整个门禁卡死。`--strict` 下 PENDING 视为失败。
  *   这是显式声明的未覆盖，不是放宽标准：pending 清单会打印在报告里。
+ *
+ * 🚨 2026-10-07：B6 已转**真检查**（裁决 `ui-tree-shaking` = A+B+D）。它此前挂了近一年的
+ *   PENDING，而恰恰在它底下沉积了「ui 事实无法按需引入」这个缺陷 —— 见 checkTreeShaking
+ *   的说明。**结论：PENDING 不是免罚牌，定期复查 pending 清单是必要的。**
  *
  * 用法：
  *   node tests/build/run.mjs                 # 构建全部包并校验
@@ -23,6 +26,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { exportNamesOf, runBudgetChecks } from './checks/treeshake.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -188,24 +192,50 @@ function add(pkg, id, status, detail) {
   results.push({ pkg, id, status, detail });
 }
 
-/** B1：构建 */
+/**
+ * B1：构建 —— 跑**包自己声明的 `scripts.build`**，而不是硬编码 `unbuild`。
+ *
+ * 🚨 2026-10-07 改（裁决 `ui-tree-shaking` 的 D 项）：
+ *   原实现是 `execFileSync(node_modules/.bin/unbuild, [])` —— **不带参数**。
+ *   于是 foundation 包改用 `unbuild --config ../../scripts/unbuild-preserve-modules.mjs`
+ *   打开 `preserveModules` 之后，本门禁**照样跑的是裸 unbuild**、照样出单文件，
+ *   而门禁**全绿** ⇒ 一个「门禁与发布命令不是同一条」的静默分叉。
+ *
+ *   这与 `ui-tree-shaking` 那条教训同源（**门禁必须跑真正会被发布的那个命令**）：
+ *   凡「门禁自己拼一条等价命令」的地方，都要问一句「它真的等价吗」。
+ *
+ * 实现细节：用 `/bin/sh -c <script>` 执行，并把**仓库的 `node_modules/.bin` 前置到 PATH**
+ *   —— 这样 `unbuild` 能解析到，又**不依赖 pnpm 在 PATH 里**（本机只有 corepack，
+ *   见 `.workbuddy-ai/memory/environment.md`）。
+ */
 function checkBuild(dir, name) {
   if (args.noBuild) {
     add(name, 'B1', 'SKIP', '--no-build，复用现有 dist');
     return true;
   }
-  const bin = path.join(ROOT, 'node_modules/.bin/unbuild');
-  if (!fs.existsSync(bin)) {
+  const pkg = readJson(path.join(dir, 'package.json'));
+  const script = pkg.scripts?.build;
+  if (!script) {
+    add(name, 'B1', 'FAIL', 'package.json 没有 scripts.build');
+    return false;
+  }
+  const binDir = path.join(ROOT, 'node_modules/.bin');
+  if (!fs.existsSync(path.join(binDir, 'unbuild'))) {
     add(name, 'B1', 'FAIL', '找不到 node_modules/.bin/unbuild，先跑 pnpm install');
     return false;
   }
   try {
-    execFileSync(bin, [], { cwd: dir, encoding: 'utf8', stdio: 'pipe' });
-    add(name, 'B1', 'PASS', 'unbuild 退出码 0');
+    execFileSync('/bin/sh', ['-c', script], {
+      cwd: dir,
+      encoding: 'utf8',
+      stdio: 'pipe',
+      env: { ...process.env, PATH: `${binDir}:${process.env.PATH ?? ''}` },
+    });
+    add(name, 'B1', 'PASS', `\`${script}\` 退出码 0`);
     return true;
   } catch (err) {
     const out = `${err.stdout ?? ''}${err.stderr ?? ''}`.split('\n').filter(Boolean).slice(-3);
-    add(name, 'B1', 'FAIL', `unbuild 退出码 ${err.status ?? 1}: ${out.join(' | ')}`);
+    add(name, 'B1', 'FAIL', `\`${script}\` 退出码 ${err.status ?? 1}: ${out.join(' | ')}`);
     return false;
   }
 }
@@ -759,16 +789,12 @@ function checkUiCssTokens(dir, name) {
 
 /**
  * 多导出组件的 SSR 冒烟别名：目录名 → 实际导出名列表。
- * （grid 目录导出的是 Row + Col，没有名为 Grid 的组件 —— 与 antd 的导出面一致。）
+ *
+ * ⚠️ 2026-10-07：这张表**搬到** `checks/treeshake.mjs` 的 `COMPONENT_EXPORT_ALIASES`，
+ *    本文件改为 import —— B6（预算测量）与 B8（SSR 冒烟）消费的是同一张表，两份副本必然漂移
+ *    （旧副本里 `qrcode` 这个键其实已经**匹配不上任何目录名**了：真实目录名是 `qr-code`，
+ *    靠机械 Pascal 转换恰好也能得到 `QrCode` ⇒ 是一处**静默失效的死条目**）。
  */
-const SSR_EXPORT_ALIASES = {
-  grid: ['Row', 'Col'],
-  // antd 的组件名是 `QRCode`（驼峰两个大写），目录名 'qrcode' 的机械 pascal 是 `Qrcode`
-  qrcode: ['QrCode'],
-  // antd 的 message / notification 导出名是**小写**（它们是方法集合，不是组件）
-  message: ['message'],
-  notification: ['notification'],
-};
 
 /**
  * B8 · SSR 冒烟：组件能在没有 `window` / `document` 的环境里渲染出内容。
@@ -804,9 +830,7 @@ async function checkSsr(dir, name) {
     for (const entry of styles) {
       // 组件目录名 → 导出名（`empty` → `Empty`）。约定来自 COMPONENT-RULES.md §12.3。
       // 多导出组件（如 grid = Row + Col）用别名表展开，逐个冒烟。
-      const exportNames = SSR_EXPORT_ALIASES[entry.name] ?? [
-        entry.name.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase()),
-      ];
+      const exportNames = exportNamesOf(entry.name);
       for (const exportName of exportNames) {
         const component = mod[exportName];
         if (!component) {
@@ -831,6 +855,71 @@ async function checkSsr(dir, name) {
   }
 
   add(name, 'B8', 'PASS', `${styles.length} 个组件在无 DOM 环境下渲染出非空内容`);
+  return true;
+}
+
+/**
+ * B6 —— tree-shaking 有效：**按需引入单组件后的产物体积 ≤ 预算**。
+ *
+ * 🚨 2026-10-07 从 PENDING 转真检查（裁决 `ui-tree-shaking` = A+B+D 落地后）。
+ *
+ *    **这条门禁本身就是「不跑的门禁会沉积缺陷」的实证**：它自 2026-09-18 起一直是
+ *    PENDING，而在它底下躺着本仓库迄今最严重的一个发布缺陷 —— `@apollo-design/ui`
+ *    事实上**无法按需引入**（实测：引任一个组件 = 1272.9 KB = 全量的 63%）。
+ *    转真后的同一测量方法：Divider 7.5 KB（0.4%）、Table 318.7 KB（15.9%）。
+ *
+ * 判据（两条都要满足）：
+ *   ① `实际 ≤ budget.entries[i].budgetKb`
+ *   ② `实际 / 全量 ≤ maxRatioOfFull` —— 单看绝对值分不清「组件本来就大」与「摇树失效」，
+ *      占比这一条才是「摇树失效」的直接判据（退化成单文件产物时会立刻飙到 63%）。
+ *
+ * 预算缺失 / entries 为空 ⇒ **FAIL**（没有预算的 B6 等于没有 B6，静默失效比红灯更危险）。
+ */
+async function checkTreeShaking(name) {
+  const budgetFile = path.join(ROOT, 'tests/build/budget.json');
+  if (!fs.existsSync(budgetFile)) {
+    add(name, 'B6', 'FAIL', '找不到 tests/build/budget.json —— 没有预算的 B6 等于没有 B6');
+    return false;
+  }
+  const budget = readJson(budgetFile);
+  if (!Array.isArray(budget.entries) || budget.entries.length === 0) {
+    add(name, 'B6', 'FAIL', 'budget.json 的 entries 为空');
+    return false;
+  }
+
+  let out;
+  try {
+    out = await runBudgetChecks(ROOT, budget);
+  } catch (e) {
+    add(name, 'B6', 'FAIL', `测量失败: ${e.message.split('\n')[0]}`);
+    return false;
+  }
+
+  if (out.failures.length) {
+    const detail = out.failures
+      .slice(0, 5)
+      .map(
+        (f) =>
+          `${f.id} ${f.actualKb.toFixed(1)}KB ${f.ratio > (budget.maxRatioOfFull ?? 0.3) ? '(超占比)' : '>预算'} ${f.budgetKb}KB`,
+      )
+      .join(', ');
+    add(
+      name,
+      'B6',
+      'FAIL',
+      `tree-shaking 超预算（${out.failures.length}/${out.results.length}，全量 ${out.fullKb.toFixed(1)} KB）: ${detail}`,
+    );
+    return false;
+  }
+
+  const heaviest = out.results.reduce((a, b) => (a.actualKb > b.actualKb ? a : b));
+  add(
+    name,
+    'B6',
+    'PASS',
+    `${out.results.length} 个组件全部在预算内（全量 ${out.fullKb.toFixed(1)} KB；` +
+      `最重 ${heaviest.id} ${heaviest.actualKb.toFixed(1)} KB = ${(heaviest.ratio * 100).toFixed(1)}%）`,
+  );
   return true;
 }
 
@@ -881,16 +970,15 @@ async function markPending(name, dir) {
   }
 
   if (comp) {
+    await checkTreeShaking(name);
+    await checkSsr(dir, name);
+  } else {
     add(
       name,
       'B6',
-      'PENDING',
-      'ui 事实无法按需引入：任一组件 = 1272.9 KB = 全量的 63%（2026-10-07 实测；根因 = 单文件产物无法被模块级摇树）' +
-        ' ⇒ 需先按决策 ui-tree-shaking 定产物形态，再据实测设 budget.json。见 docs/KNOWN-ISSUES.md §1.1',
+      'n/a',
+      '本包无「按组件」入口（B6 只对含组件的包有意义）；产物已是模块结构（裁决 ui-tree-shaking 的 D 项）',
     );
-    await checkSsr(dir, name);
-  } else {
-    add(name, 'B6', 'n/a', '裁决 A 下为单文件产物，无按组件按需入口可比对');
     add(name, 'B8', 'n/a', '本包不含组件，无 SSR 冒烟对象');
   }
 }

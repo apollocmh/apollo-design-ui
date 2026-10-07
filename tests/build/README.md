@@ -13,18 +13,18 @@ node tests/build/run.mjs --strict        # PENDING 也视为失败（等 B5-B8 �
 node tests/build/run.mjs --json          # 机器可读
 ```
 
-## 状态（2026-09-16）
+## 状态（2026-10-07 更新）
 
 | 检查 | 状态 | 说明 |
 |---|---|---|
-| B1 全包构建 | ✅ 生效 | 调 `node_modules/.bin/unbuild`，校验退出码 |
-| B2 `exports` 可解析 | ✅ 生效 | **校验 `exports` 只声明构建后真实存在的路径**，含通配符检测 |
+| B1 全包构建 | ✅ 生效 | 跑**包自己声明的 `scripts.build`**（`/bin/sh -c`，并把仓库 `node_modules/.bin` 前置到 PATH）—— 🚨 2026-10-07 改：此前硬编码裸 `unbuild`、不带参数，于是包改用 `unbuild --config` 之后门禁**照样跑裸 unbuild 还全绿**（裁决 `ui-tree-shaking` 的 D 项踩到） |
+| B2 `exports` 可解析 | ✅ 生效 | **双向**：`exports` 只声明构建后真实存在的路径（含通配符检测）**且**产出的 CSS 都有声明（反方向，2026-10-07 补） |
 | B3 产物无 React | ✅ 生效 | 扫描 dist 的 ESM/CJS/`d.ts` 说明符 |
 | B4 无 CSS-in-JS 运行时 | ✅ 生效 | 同上 |
 | B9 Node 版本 | ✅ 生效 | 要求 ≥ 22.12 |
 | B10 无 `@rc-component/*` | ✅ 生效 | 同上 |
 | B5 / B7 | ✅ 生效 | 仅 `theme` / `ui`：需要 CSS 产物。其他包判为 n/a（不产 CSS） |
-| B6 | ⏳ PENDING | 仅 `ui`：**已实测到真实缺陷** —— 任一组件 = 1272.9 KB = 全量 63%（2026-10-07），见 `docs/KNOWN-ISSUES.md` §1.1 与决策 `ui-tree-shaking` |
+| B6 | ✅ 生效 | 仅 `ui`：73 个组件逐个比对 `tests/build/budget.json`（另加「≤ 全量 30%」第二条判据）。🚨 **2026-10-07 前它是 PENDING，而恰恰在它底下沉积了本仓库最严重的发布缺陷** —— 任一组件 = 1272.9 KB = 全量 63%。裁决 `ui-tree-shaking` = A+B+D 后 Divider 降到 **7.5 KB**（0.4%）。**教训：PENDING 不是免罚牌。** |
 | B8 | ✅ 生效 | 仅 `ui`：`renderToString` 冒烟。其他包判为 n/a |
 
 ### 为什么 PENDING ≠ 通过

@@ -39,45 +39,64 @@ const forcePkg = force || process.argv.includes('--force-pkg');
 const forceReadme = force || process.argv.includes('--force-readme');
 
 /**
- * ui 的 CSS 子路径导出（裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css）。
+ * ui 的**额外子路径导出**（`exports` 里除 `'.'` 与 `'./package.json'` 之外的全部）。
  *
- * 🚨 **单一真源 = 产出 CSS 的那份清单本身**（`packages/ui/src/style/index.ts` 的
- *    `ComponentStyleEntry[]`）—— 它同时决定 `build.config.ts` 写哪些 `dist/<name>/style.css`。
+ * 两类，各有各的单一真源：
  *
- * ── 为什么不再用 `components.json` 的 `styleStatus`（2026-10-07 修）────────────────
+ * ── ① `./<component>/style.css` —— 每组件一份 CSS（裁决 `ui-style-output` = A）────────
+ *   真源 = `packages/ui/src/style/index.ts` 的 `ComponentStyleEntry[]`
+ *   （它同时决定 `build.config.ts` 写哪些 `dist/<name>/style.css`）。
  *
- * 旧实现读 `styleStatus === 'done'`。那是「样式维度做完了」这个**进度**字段，
- * 与「**真的产出了** `dist/<name>/style.css`」**不是同一件事** ⇒ 两个来源必然漂移。
- * 实测漂移出三处（B2 抓到 2 处，第 3 处 B2 当时**抓不到**，因为它是反方向）：
- *   ① `qr-code`：清单里 `name` 写成了 `'qrcode'`（**违反 `ComponentStyleEntry` 自己的
- *      注释契约「组件目录名」**）⇒ 产物在 `dist/qrcode/`，而 exports 声明 `dist/qr-code/`
- *      ⇒ 消费者 `ERR_PACKAGE_PATH_NOT_EXPORTED`；
- *   ② `auto-complete`：只有 `style/token.ts`、**不在**清单里 ⇒ 无 CSS，却被声明；
- *   ③ `layout-sider`：**产出了** CSS（11 KB）却没被声明 ⇒ 只引 `layout` 的按需用户
- *      **拿不到 Sider 的样式**（B2 只查「声明了但不存在」，查不到这个反方向）。
+ *   ⚠️ 旧实现读 `components.json` 的 `styleStatus`，那是**进度**字段，与「真的产出了
+ *   CSS」不是一回事 ⇒ 必然漂移。实测漂移三处（B2 抓到 2 处）：`qr-code` 在清单里写成
+ *   `qrcode`（产物在 `dist/qrcode/`）、`auto-complete` 无 CSS 却被声明、
+ *   **`layout-sider` 产出了 11 KB CSS 却没被声明**（反方向，B2 当时抓不到）。
+ *   判据改成读清单后三处同时消失。详见 `docs/KNOWN-ISSUES.md` §3 的 2026-10-07 条目。
  *
- * 判据改成读清单后，①②③ 同时消失。清单是**仓库源文件**（不是构建产物），
- * 所以不会因 `rm -rf dist` 而缩水 —— 旧的「不读文件系统」顾虑依然成立。
+ * ── ② `./<component>` —— 每组件一份 JS 入口（裁决 `ui-tree-shaking` 的 B 项）──────────
+ *   真源 = `registry/components.json` 的组件名（**结构**字段，不是进度字段）。
+ *   指向模块结构产物（A 项打开 `preserveModules` 后的 `dist/<c>/index.mjs`）。
+ *
+ *   ⚠️ **只暴露入口名，不暴露内部文件路径** —— 于是内部布局（`dist/` 里怎么摆）仍是
+ *   实现细节，将来重构不会变成破坏性变更。这是「不留技术债」的关键：`exports` 是契约，
+ *   `dist/**` 不是。
  *
  * ⚠️ 必须在模块顶层声明：PACKAGES 在模块求值时就调用它，函数声明虽提升，
  *    但声明在 `if (isMain)` 块里就出不了那个块。
  */
-function uiStyleExports() {
-  const file = path.join(ROOT, 'packages/ui/src/style/index.ts');
-  if (!fs.existsSync(file)) return { './style.css': './dist/index.css' };
-  const src = fs.readFileSync(file, 'utf8');
-  const names = [...src.matchAll(/\{\s*name:\s*'([^']+)',\s*gen:/g)].map((m) => m[1]);
-  // 解析失败必须**响亮地**失败：静默产出「只有汇总」的 exports 会让按需引入悄悄消失。
-  if (names.length === 0) {
-    throw new Error(
-      '[scaffold] 未能从 packages/ui/src/style/index.ts 解析出样式清单 —— ' +
-        '该文件的结构变了？exports 的 ./<component>/style.css 依赖它。',
-    );
+function uiExtraExports() {
+  const out = {};
+
+  // ① 每组件 CSS
+  const styleFile = path.join(ROOT, 'packages/ui/src/style/index.ts');
+  if (fs.existsSync(styleFile)) {
+    const src = fs.readFileSync(styleFile, 'utf8');
+    const names = [...src.matchAll(/\{\s*name:\s*'([^']+)',\s*gen:/g)].map((m) => m[1]);
+    // 解析失败必须**响亮地**失败：静默产出「只有汇总」的 exports 会让按需引入悄悄消失。
+    if (names.length === 0) {
+      throw new Error(
+        '[scaffold] 未能从 packages/ui/src/style/index.ts 解析出样式清单 —— ' +
+          '该文件的结构变了？exports 的 ./<component>/style.css 依赖它。',
+      );
+    }
+    out['./style.css'] = './dist/index.css';
+    for (const name of names) {
+      out[`./${name}/style.css`] = `./dist/${name}/style.css`;
+    }
   }
-  const out = { './style.css': './dist/index.css' };
-  for (const name of names) {
-    out[`./${name}/style.css`] = `./dist/${name}/style.css`;
+
+  // ② 每组件 JS 入口
+  const compFile = path.join(ROOT, 'registry/components.json');
+  if (fs.existsSync(compFile)) {
+    const components = JSON.parse(fs.readFileSync(compFile, 'utf8')).components ?? [];
+    for (const c of components) {
+      out[`./${c.name}`] = {
+        types: `./dist/${c.name}/index.d.ts`,
+        import: `./dist/${c.name}/index.mjs`,
+      };
+    }
   }
+
   return out;
 }
 
@@ -149,6 +168,8 @@ const PACKAGES = [
   },
   {
     dir: 'theme',
+    /** theme 有自己的 `build.config.ts`（要写 `dist/tokens.css`）⇒ 不用共享配置。 */
+    ownBuildConfig: true,
     name: '@apollo-design/theme',
     layer: 'L0',
     purpose:
@@ -599,6 +620,8 @@ const PACKAGES = [
   },
   {
     dir: 'ui',
+    /** ui 有自己的 `build.config.ts`（SFC 编译 + vue-tsc 出声明 + 每组件 CSS）⇒ 不用共享配置。 */
+    ownBuildConfig: true,
     name: '@apollo-design/ui',
     layer: 'L3',
     purpose: '组件库本体：72 个组件 + locale + 全局样式 + ConfigProvider。',
@@ -620,9 +643,10 @@ const PACKAGES = [
       'scroll-into-view-if-needed': 'catalog:',
     },
     peerDeps: { vue: 'catalog:' },
-    // 裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css。
-    // 由 uiStyleExports() 从 components.json 推导，不手写。
-    extraExports: uiStyleExports(),
+    // ① 裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css。
+    // ② 裁决 `ui-tree-shaking` = B：每组件一份 JS 入口（`./<component>`）。
+    // 两类都由 uiExtraExports() 从各自**单一真源**推导，不手写（见该函数注释）。
+    extraExports: uiExtraExports(),
     publicApi: [
       '72 个组件（见 registry/components.json）',
       'ConfigProvider —— Token / 主题 / locale / size / disabled / prefixCls 的统一入口',
@@ -813,7 +837,18 @@ if (isMain) {
         //    （实测会把编译后的 JS 当成 .d.ts 写出去，是**静默的错误产物**）。
         //    所以 ui 在 build.config.ts 里关掉 declaration，改由 `build:done` hook
         //    调 vue-tsc 出声明。package.json 这边无需变化。
-        build: 'unbuild',
+        //
+        // 🚨 2026-10-07（裁决 `ui-tree-shaking` 的 D 项）：foundation 包改用**共享配置**
+        //    打开 `preserveModules`（保留模块结构）—— 单文件产物下消费方打包器只能
+        //    **整模块**丢弃，实测 `ui` 引任一组件要 1272.9 KB（全量 63%）。
+        //    共享配置在 `scripts/unbuild-preserve-modules.mjs`：13 份内容相同的配置
+        //    必然漂移，所以用 `--config` 指向同一份（`build-output-contract` 选项 B 的
+        //    tradeoff 里「每个包多一套构建配置」那半条债可以避免）。
+        //    ⚠️ `--config` 的路径**相对 CWD**，而 pnpm 在包目录里跑 `build` ⇒ 成立。
+        //    theme / ui 有自己的 `build.config.ts`（`ownBuildConfig: true`）⇒ 仍用裸 `unbuild`。
+        build: p.ownBuildConfig
+          ? 'unbuild'
+          : 'unbuild --config ../../scripts/unbuild-preserve-modules.mjs',
         test: 'vitest run',
         lint: 'vue-tsc --noEmit',
       },

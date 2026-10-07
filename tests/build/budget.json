@@ -1,0 +1,518 @@
+{
+  "_readme": "B6 —— tree-shaking 体积预算。判据：单独 import 某组件后，Vite/rolldown 产物（minify: esbuild，\nexternal: [vue, dayjs]）的字节数不得超过 budgetKb，且不得超过「全量 import * as all」的 maxRatioOfFull。\n\n⚠️ budgetKb 只能因**技术原因**上调，且必须在 commit message 写明理由。\n   把预算设成「等于全量」等于宣告本门禁永不失败 —— 那是 AGENTS.md H8 明禁的降低验收标准。\n\nmeasuredKb 是确立预算时的实测值（2026-10-07，裁决 ui-tree-shaking = A+B+D 落地后首次实测），\n   仅供回溯参考、不参与判定。budgetKb = ceil(measuredKb * 1.5 + 5)。",
+  "external": ["vue", "dayjs"],
+  "maxRatioOfFull": 0.3,
+  "entries": [
+    {
+      "id": "affix",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Affix"],
+      "budgetKb": 14,
+      "measuredKb": 6
+    },
+    {
+      "id": "alert",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Alert"],
+      "budgetKb": 53,
+      "measuredKb": 31.7
+    },
+    {
+      "id": "anchor",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Anchor"],
+      "budgetKb": 35,
+      "measuredKb": 19.4
+    },
+    {
+      "id": "app",
+      "pkg": "@apollo-design/ui",
+      "imports": ["App"],
+      "budgetKb": 9,
+      "measuredKb": 2.2
+    },
+    {
+      "id": "auto-complete",
+      "pkg": "@apollo-design/ui",
+      "imports": ["AutoComplete"],
+      "budgetKb": 212,
+      "measuredKb": 137.3
+    },
+    {
+      "id": "avatar",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Avatar"],
+      "budgetKb": 120,
+      "measuredKb": 76.1
+    },
+    {
+      "id": "back-top",
+      "pkg": "@apollo-design/ui",
+      "imports": ["BackTop"],
+      "budgetKb": 40,
+      "measuredKb": 23
+    },
+    {
+      "id": "badge",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Badge"],
+      "budgetKb": 37,
+      "measuredKb": 21.3
+    },
+    {
+      "id": "border-beam",
+      "pkg": "@apollo-design/ui",
+      "imports": ["BorderBeam"],
+      "budgetKb": 11,
+      "measuredKb": 3.6
+    },
+    {
+      "id": "breadcrumb",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Breadcrumb"],
+      "budgetKb": 130,
+      "measuredKb": 83.2
+    },
+    {
+      "id": "button",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Button"],
+      "budgetKb": 37,
+      "measuredKb": 20.9
+    },
+    {
+      "id": "calendar",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Calendar"],
+      "budgetKb": 294,
+      "measuredKb": 192.6
+    },
+    {
+      "id": "card",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Card"],
+      "budgetKb": 178,
+      "measuredKb": 115.3
+    },
+    {
+      "id": "carousel",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Carousel"],
+      "budgetKb": 45,
+      "measuredKb": 26.7
+    },
+    {
+      "id": "cascader",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Cascader"],
+      "budgetKb": 172,
+      "measuredKb": 110.8
+    },
+    {
+      "id": "checkbox",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Checkbox"],
+      "budgetKb": 19,
+      "measuredKb": 8.8
+    },
+    {
+      "id": "collapse",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Collapse"],
+      "budgetKb": 50,
+      "measuredKb": 29.8
+    },
+    {
+      "id": "color-picker",
+      "pkg": "@apollo-design/ui",
+      "imports": ["ColorPicker"],
+      "budgetKb": 424,
+      "measuredKb": 278.8
+    },
+    {
+      "id": "config-provider",
+      "pkg": "@apollo-design/ui",
+      "imports": ["ConfigProvider"],
+      "budgetKb": 53,
+      "measuredKb": 31.5
+    },
+    {
+      "id": "date-picker",
+      "pkg": "@apollo-design/ui",
+      "imports": ["DatePicker"],
+      "budgetKb": 254,
+      "measuredKb": 165.8
+    },
+    {
+      "id": "descriptions",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Descriptions"],
+      "budgetKb": 51,
+      "measuredKb": 30.1
+    },
+    {
+      "id": "divider",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Divider"],
+      "budgetKb": 17,
+      "measuredKb": 7.5
+    },
+    {
+      "id": "drawer",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Drawer"],
+      "budgetKb": 96,
+      "measuredKb": 60.4
+    },
+    {
+      "id": "dropdown",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Dropdown"],
+      "budgetKb": 133,
+      "measuredKb": 85.1
+    },
+    {
+      "id": "empty",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Empty"],
+      "budgetKb": 56,
+      "measuredKb": 33.6
+    },
+    {
+      "id": "flex",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Flex"],
+      "budgetKb": 10,
+      "measuredKb": 3.3
+    },
+    {
+      "id": "float-button",
+      "pkg": "@apollo-design/ui",
+      "imports": ["FloatButton"],
+      "budgetKb": 161,
+      "measuredKb": 104
+    },
+    {
+      "id": "form",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Form"],
+      "budgetKb": 230,
+      "measuredKb": 149.6
+    },
+    {
+      "id": "grid",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Row", "Col"],
+      "budgetKb": 44,
+      "measuredKb": 25.5
+    },
+    {
+      "id": "image",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Image"],
+      "budgetKb": 77,
+      "measuredKb": 47.5
+    },
+    {
+      "id": "input",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Input"],
+      "budgetKb": 89,
+      "measuredKb": 55.9
+    },
+    {
+      "id": "input-number",
+      "pkg": "@apollo-design/ui",
+      "imports": ["InputNumber"],
+      "budgetKb": 67,
+      "measuredKb": 41
+    },
+    {
+      "id": "layout",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Layout"],
+      "budgetKb": 32,
+      "measuredKb": 17.4
+    },
+    {
+      "id": "layout-sider",
+      "pkg": "@apollo-design/ui",
+      "imports": ["LayoutSider"],
+      "budgetKb": 32,
+      "measuredKb": 17.4
+    },
+    {
+      "id": "list",
+      "pkg": "@apollo-design/ui",
+      "imports": ["List"],
+      "budgetKb": 256,
+      "measuredKb": 167.2
+    },
+    {
+      "id": "listy",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Listy"],
+      "budgetKb": 62,
+      "measuredKb": 37.9
+    },
+    {
+      "id": "masonry",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Masonry"],
+      "budgetKb": 68,
+      "measuredKb": 41.7
+    },
+    {
+      "id": "mentions",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Mentions"],
+      "budgetKb": 165,
+      "measuredKb": 106.4
+    },
+    {
+      "id": "menu",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Menu"],
+      "budgetKb": 55,
+      "measuredKb": 32.7
+    },
+    {
+      "id": "message",
+      "pkg": "@apollo-design/ui",
+      "imports": ["message"],
+      "budgetKb": 82,
+      "measuredKb": 50.8
+    },
+    {
+      "id": "modal",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Modal"],
+      "budgetKb": 173,
+      "measuredKb": 111.5
+    },
+    {
+      "id": "notification",
+      "pkg": "@apollo-design/ui",
+      "imports": ["notification"],
+      "budgetKb": 93,
+      "measuredKb": 58.4
+    },
+    {
+      "id": "pagination",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Pagination"],
+      "budgetKb": 228,
+      "measuredKb": 148.5
+    },
+    {
+      "id": "popconfirm",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Popconfirm"],
+      "budgetKb": 142,
+      "measuredKb": 91.1
+    },
+    {
+      "id": "popover",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Popover"],
+      "budgetKb": 106,
+      "measuredKb": 67.2
+    },
+    {
+      "id": "progress",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Progress"],
+      "budgetKb": 127,
+      "measuredKb": 81
+    },
+    {
+      "id": "qr-code",
+      "pkg": "@apollo-design/ui",
+      "imports": ["QrCode"],
+      "budgetKb": 101,
+      "measuredKb": 63.6
+    },
+    {
+      "id": "radio",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Radio"],
+      "budgetKb": 25,
+      "measuredKb": 13.2
+    },
+    {
+      "id": "rate",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Rate"],
+      "budgetKb": 120,
+      "measuredKb": 76.5
+    },
+    {
+      "id": "result",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Result"],
+      "budgetKb": 79,
+      "measuredKb": 48.7
+    },
+    {
+      "id": "segmented",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Segmented"],
+      "budgetKb": 116,
+      "measuredKb": 73.6
+    },
+    {
+      "id": "select",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Select"],
+      "budgetKb": 205,
+      "measuredKb": 133.2
+    },
+    {
+      "id": "skeleton",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Skeleton"],
+      "budgetKb": 27,
+      "measuredKb": 14.5
+    },
+    {
+      "id": "slider",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Slider"],
+      "budgetKb": 138,
+      "measuredKb": 88.4
+    },
+    {
+      "id": "space",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Space"],
+      "budgetKb": 25,
+      "measuredKb": 13.1
+    },
+    {
+      "id": "spin",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Spin"],
+      "budgetKb": 22,
+      "measuredKb": 10.9
+    },
+    {
+      "id": "splitter",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Splitter"],
+      "budgetKb": 49,
+      "measuredKb": 29
+    },
+    {
+      "id": "statistic",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Statistic"],
+      "budgetKb": 41,
+      "measuredKb": 23.7
+    },
+    {
+      "id": "steps",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Steps"],
+      "budgetKb": 125,
+      "measuredKb": 79.4
+    },
+    {
+      "id": "switch",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Switch"],
+      "budgetKb": 32,
+      "measuredKb": 17.5
+    },
+    {
+      "id": "table",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Table"],
+      "budgetKb": 484,
+      "measuredKb": 318.7
+    },
+    {
+      "id": "tabs",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Tabs"],
+      "budgetKb": 158,
+      "measuredKb": 101.9
+    },
+    {
+      "id": "tag",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Tag"],
+      "budgetKb": 51,
+      "measuredKb": 30.2
+    },
+    {
+      "id": "time-picker",
+      "pkg": "@apollo-design/ui",
+      "imports": ["TimePicker"],
+      "budgetKb": 267,
+      "measuredKb": 174.6
+    },
+    {
+      "id": "timeline",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Timeline"],
+      "budgetKb": 129,
+      "measuredKb": 82.6
+    },
+    {
+      "id": "tooltip",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Tooltip"],
+      "budgetKb": 101,
+      "measuredKb": 63.8
+    },
+    {
+      "id": "tour",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Tour"],
+      "budgetKb": 143,
+      "measuredKb": 91.6
+    },
+    {
+      "id": "transfer",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Transfer"],
+      "budgetKb": 364,
+      "measuredKb": 239.3
+    },
+    {
+      "id": "tree",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Tree"],
+      "budgetKb": 137,
+      "measuredKb": 87.8
+    },
+    {
+      "id": "tree-select",
+      "pkg": "@apollo-design/ui",
+      "imports": ["TreeSelect"],
+      "budgetKb": 254,
+      "measuredKb": 165.6
+    },
+    {
+      "id": "typography",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Typography"],
+      "budgetKb": 154,
+      "measuredKb": 99
+    },
+    {
+      "id": "upload",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Upload"],
+      "budgetKb": 106,
+      "measuredKb": 66.8
+    },
+    {
+      "id": "watermark",
+      "pkg": "@apollo-design/ui",
+      "imports": ["Watermark"],
+      "budgetKb": 46,
+      "measuredKb": 27.1
+    }
+  ]
+}

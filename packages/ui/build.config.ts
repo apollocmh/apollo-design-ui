@@ -81,6 +81,46 @@ export default defineBuildConfig({
       //    实测构建可跑通（JS 产物、SFC 编译、样式全部正常）。
       //    断言的目标是**精确的**插件表元素类型，不是 `any` —— 所以它不掩盖别的类型错误。
       options.plugins.push(vue() as unknown as (typeof options.plugins)[number]);
+
+      // ---- A：保留模块结构（裁决 `ui-tree-shaking` 的 A 项，2026-10-07）----
+      //
+      // 🚨 单文件产物下，消费方打包器只能**整模块**丢弃。实测（2026-10-07）：
+      //    `@apollo-design/ui` 引**任意一个**组件都要 **1272.9 KB = 全量的 63%**，
+      //    且「引 Button」与「引 Empty」字节数**完全相同** ⇒ 「按需引入」事实上不存在。
+      //    判据（同一次实测）：`import '@apollo-design/ui'`（裸副作用）⇒ **0 KB**，
+      //    `import { X }` 只 re-export 不使用 ⇒ **0 KB** —— 说明包元数据与摇树机制都正常，
+      //    限制因素**只是**「整个库是一个模块」。
+      //
+      // 打开后：`dist/index.mjs` 降级为 re-export barrel，每个源模块各出一个文件。
+      // 公开入口不变（`exports["."]` 仍指 `dist/index.mjs`）。
+      //
+      // ⚠️ 与 `dist/<component>/*.d.ts` 的关系：vue-tsc 本来就按源结构 emit 声明
+      //    （见下面「2. 类型产物」），所以这一步只是让 **JS 布局与已有的类型布局对齐**。
+      const srcDir = resolve(pkgDir, 'src');
+
+      // ⚠️ 参数类型**必须**是 `OutputOptions` 本身，不能写成 `Record<string, unknown>`。
+      //    2026-10-07 修：原实现用 `Record<string, unknown>`，`options.output.map(withPreserveModules)`
+      //    直接报 TS2345 —— `OutputOptions` 没有 string 索引签名，赋不进 `Record<string, unknown>`。
+      //    ⚠️ 这个错误**只有 `pnpm run test:types` 抓得到**：`vue-tsc --noEmit` 不看 build.config.ts，
+      //    而 vitest 的 `types` project 会把它当源文件收进去（实测报在
+      //    `packages/ui/build.config.ts:106:45`，且它算 **unhandled error** ⇒ 测试全绿但 exit=1）。
+      //    这里从 `options.output` 反推元素类型，避免依赖 rollup 能否被本包直接解析（pnpm 严格布局）。
+      //    ⚠️ 必须**显式分发**：直接写 `NonNullable<X> extends Array<infer U> ? U : X` 是错的 ——
+      //       `NonNullable<X>` 不是裸类型参数、不分发，`OutputOptions | OutputOptions[]` 整体
+      //       判为「不可赋给 Array」⇒ 走 false 分支 ⇒ OutputOption 仍是那个联合 ⇒
+      //       `.map()` 产出 `(OutputOptions | OutputOptions[])[]` 又报错（实测 2026-10-07）。
+      type ElementOf<T> = T extends Array<infer U> ? U : T;
+      type OutputOption = ElementOf<NonNullable<typeof options.output>>;
+      const withPreserveModules = (output: OutputOption): OutputOption => ({
+        ...output,
+        preserveModules: true,
+        preserveModulesRoot: srcDir,
+      });
+      if (Array.isArray(options.output)) {
+        options.output = options.output.map(withPreserveModules);
+      } else if (options.output) {
+        options.output = withPreserveModules(options.output);
+      }
     },
 
     /** 见上「2」「3」。 */

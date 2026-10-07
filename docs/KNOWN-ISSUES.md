@@ -5,11 +5,11 @@
 > 坑的全文在 `.workbuddy-ai/memory/PITFALLS.md`（**不进会话注入**，按需读）。
 >
 > **2026-10-03 大清理**：本文件此前积累的 1.1–1.12 / 2.1–2.8 / §3 / §4 全部条目
-> 已在这一天**修完或裁决**（见 §5 留痕表），正文按用户要求**移除已修条目**，
+> 已在这一天**修完或裁决**（见 §3 留痕表），正文按用户要求**移除已修条目**，
 > 只保留仍开放的问题与「不要再排查」清单。
 >
 > **写法要求**：每条必须给**可复现的判据**（命令 / 文件 / 实测数字）。
-> **修掉一条**：从正文移除，在 §5 留痕表里加一行 commit。
+> **修掉一条**：从正文移除，在 **§3 留痕表**里加一行 commit（最近的在顶部）。
 
 ---
 
@@ -46,36 +46,13 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §1 仍开放的问题
 
-### §1.1 `@apollo-design/ui` 事实上**无法按需引入**（B6 因此仍是 PENDING）
+**（§1 当前为空）** —— 2026-10-07 前 §1 的 9 条已全部修完或裁决，逐条留痕见 §3。
 
-**2026-10-07 实测发现**（VNA 共享面审计在落实 `ui-style-output` 裁决要求的「B6 转真检查」时测出来的）。
-
-**判据（可复现）**：用 Vite 8（rolldown）lib 构建一个只 import 一个导出的入口，`external: [vue, dayjs]`、`minify: esbuild`、`write: false` 读内存字节数：
-
-| 入口 | 产物 |
-|---|---|
-| 空基线 / `import "@apollo-design/ui"`（裸副作用）/ 只 re-export 不使用 | **0.0 KB** |
-| **真正使用** Button / Empty / Divider / Table / ConfigProvider（逐个测） | **全部恰好 1272.9 KB** |
-| 全量 `import * as all` | 2010.1 KB |
-| 对照：`@apollo-design/theme` 的 `useToken` 单独使用 | 22.6 KB |
-
-⇒ 按需引入一个组件要付**全量 63%** 的体积；而且「引 Button」与「引 Empty」字节数**完全相同**。
-
-**根因（逐条实测，不是推测）**：
-1. `sideEffects: false` **已正确声明** —— 裸副作用导入与未使用的 re-export 都被摇成 0 KB ⇒ 包元数据没问题；
-2. 限制因素是**模块粒度**：`packages/ui/dist/index.mjs` 是**一个** 3.2 MB / 77668 行的单文件产物（unbuild 默认）⇒ 打包器只能整模块丢弃，「全不用 ⇒ 0 KB」「用一个 ⇒ 全留」正是这个形态的必然结果；
-3. 产物里 **329 处 `defineComponent(...)` + 126 处 `withInstall(...)` 顶层调用、0 处 `/*#__PURE__*/`**；全加上 PURE 后只从 1272.9 降到 **1168.8 KB**（仅省 104.1 KB）⇒ **不是主因**；
-4. 压缩产物里仍能搜到 `"ATable"` / `"AForm"` / `"ApolloPickerPanel"` / `"AActionButton"` ⇒ 只引 `Divider` 却保留了 Table / Form / picker / ActionButton 整片。
-
-**为什么它一直没被发现**：L7 的 B6（判据正是「按需引入单组件后产物体积 ≤ 预算」）从 2026-09-18 起就是 PENDING ⇒ 这条**恰好用来抓它的门禁从未真正运行**。
-
-**处置**：已登记为开放决策 **`ui-tree-shaking`**（`node registry/tools/ask.mjs decision ui-tree-shaking` 看三个选项与推荐）。**需用户裁决后**再动 ui 的构建产物形态；`budget.json` 必须在产物形态定下来之后按实测设定，**不得为了让 B6 变绿而把预算设成全量**（H8）。
-
-⚠️ 与 `build-output-contract`（裁决 A：**foundation 层**单文件 dist）**不冲突** —— `ARCHITECTURE.md` §8.1 明写「ui 的按组件按需引入需求不在本次裁决范围内」；ui 的**样式**侧已有 `ui-style-output` A（69 个 `dist/<c>/style.css` 实测存在），**JS 侧此前没有对应裁决**。
-
----
-
-**（§1 其余项：无）** —— 2026-10-07 前 §1 的 8 条已全部修完或裁决，逐条留痕见 §3。
+> 📌 **§1 曾长期挂着「ui 事实无法按需引入」**（2026-10-07 修完，留痕见 §3 2026-10-07 那条）。
+> 它的教训值得单独留在正文里：**那条缺陷之所以能躺近一年，是因为唯一能抓到它的门禁
+> B6 从 2026-09-18 起就是 PENDING —— 一条从不运行的门禁，就是缺陷的沉积区。**
+> 现在 B6 已转真检查（73 个组件逐个有预算，`tests/build/budget.json`），
+> **任何新增 PENDING 都应被视为「待补的债」，不是免罚牌。**
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
@@ -100,6 +77,7 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 | commit | 内容 |
 |---|---|
+| （2026-10-07） | **§1.1「`@apollo-design/ui` 事实无法按需引入」已修**（裁决 `ui-tree-shaking` = **A+B+D**，用户前提「不计成本、避免技术债」）：**A** ui 走 unbuild/rollup 的 `preserveModules` 出多模块产物（`dist/index.mjs` 降为 re-export barrel，761 个 `.mjs`）；**B** `exports` 增 73 条 `@apollo-design/ui/<c>` 深入口（与 `<c>/style.css` 对称，**只暴露入口名、不暴露内部路径**）；**D** 13 个 foundation 包同步 `preserveModules`（`scripts/unbuild-preserve-modules.mjs` + 各包 `build` 脚本改 `unbuild --config`）。**同一测量方法复测**：Divider **1272.9 KB → 7.5 KB**（全量 0.4%，此前 63%）· Button 20.9 · Empty 33.6 · Select 133.2 · Table 318.7（15.9%，最重）· 全量 `import * as all` 2009.0 KB（修复前 2010.1 ⇒ 全量未被牺牲）。**B6 据此从 PENDING 转真检查**：73 条预算落在 `tests/build/budget.json`（`ceil(实测×1.5+5)`，另加「占全量 ≤ 30%」第二条判据），`node tests/build/run.mjs` = **FAIL 0 / PENDING 0**。⚠️ 两个实测坑：① **build 门禁此前绕过了 `scripts.build`**（硬编码裸 `unbuild`、不带 `--config`）⇒ D 实施后门禁**照样出单文件还全绿**，是「门禁与发布命令不是同一条」的静默分叉，已改为跑包自己声明的 `scripts.build`；② 用 `import * as all` 探深入口会留住**整个模块**的导出（divider 29.9 KB vs 具名导入 7.5 KB）⇒ 预算只认**根入口具名导入**。 |
 | （2026-10-07） | **§1.5 + §1.6 覆盖率抖动 —— 不再复现，余量已健康**（**未动任何阈值**）：本机连跑两次 `test:coverage`（1048 文件），**逐文件比 covered/total 完全一致**（四项指标零差异）。`ui/src`（717 文件）聚合两次逐位相同：statements **23982/28208 = 85.018434%**（阈值 84.76）· branches **14482/19519 = 74.194375%**（阈值 73.8）· functions **6634/7847 = 84.541863%**（阈值 84.38）。⇒ §1.5 的残余（mask-input/TabNavList ±1）**已不复现**；§1.6 的 branches 余量从 **+0.0071 涨到 +0.394**（是原噪声带 0.0102 的 **38 倍**）⇒ 偶发假红的实际风险已消除。⚠️ 终极证据仍需 CI 侧连跑两次（本机无法代替）。 |
 | （2026-10-07） | **`ui-style-output` 的「按组件 CSS 按需引入」此前只在 `empty` 一个组件上可用**（B6 调查的副产物，已修）：`exports` 里只声明了 `./empty/style.css`，而磁盘上有 **69** 个 `dist/<c>/style.css` ⇒ `@apollo-design/ui/button/style.css` 报 `ERR_PACKAGE_PATH_NOT_EXPORTED`。根因是**两个独立来源必然漂移**：生成器读 `components.json` 的 `styleStatus`，而真正产出 CSS 的是 `packages/ui/src/style/index.ts` 的清单。实测漂移三处 —— ① `qr-code` 在清单里 `name` 写成 `'qrcode'`（**违反 `ComponentStyleEntry` 自己的注释契约「组件目录名」**）⇒ 产物落在 `dist/qrcode/`；② `auto-complete` 只有 `style/token.ts`、不在清单里，却被声明；③ **`layout-sider` 产出了 11 KB CSS 却没被声明** ⇒ 只引 `layout` 的按需用户拿不到 Sider 样式。修法：**清单成为单一真源**（生成器解析它，解析失败即抛），`qrcode`→`qr-code`，并给 **B2 补反方向检查**（「产出了却没声明」此前抓不到）。实测：**70 条 CSS 深入口全部可解析**、B2 PASS、`dist/qrcode/` 已消失。 |
 | （2026-10-06） | **§1.1 面板隔离 Form 上下文**：读了上游才发现  的实现**就是** （）⇒ 本仓**已有对应物** ，不必自建通用 ContextIsolator。加在 **ColorPickerPanel 的 setup**（不是 ColorPicker.vue —— 否则连触发器也会被隔离）。⚠️ 面板里当前**没有**子件读 form status ⇒ 这是**防将来分叉**、不是修 bug。用例**直接查 provide 表**（查 DOM 会空转通过=假绿灯），并**用反向哨兵验过**：删掉那句 provide ⇒ 用例变红。 |

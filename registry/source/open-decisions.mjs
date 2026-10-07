@@ -502,8 +502,28 @@ export const OPEN_DECISIONS = [
     //    PickerFormat 要加回 DateType 泛型"）；组件侧的范围由上面的 impact 文本承载。
     blocks: ['@apollo-design/picker'],
   }),
-  open('ui-tree-shaking', {
+  decided('ui-tree-shaking', {
     raisedAt: '2026-10-07',
+    decidedAt: '2026-10-07',
+    decidedBy: '用户裁决（2026-10-07，前提「不计成本、避免日后技术债」）',
+    decision:
+      '**A + B + D 三件一起做**：' +
+      'A 是**机制** —— ui 走 unbuild/rollup 的 `preserveModules` 出多模块产物，`dist/index.mjs` 降级为 re-export barrel；' +
+      'B 是**契约** —— `exports` 增加按组件深入口 `@apollo-design/ui/<component>`（与既有的 `<component>/style.css` 对称），' +
+      '**只暴露入口名、不暴露内部文件路径**，这样内部布局仍可自由演进、深导入不会退化成隐式公开契约；' +
+      'D **消除地板** —— 13 个 foundation 包同步保留模块结构（即重开 `build-output-contract` 的 B 项）。' +
+      'C 违反 AGENTS.md H8（把预算设成实测值 = 宣告门禁永不失败），不选。',
+    note:
+      '落地实测（2026-10-07，与提问时**同一测量方法**复测；全量 `import * as all` 2009.0 KB，与修复前 2010.1 KB 一致 ⇒ 「全量」没被牺牲）：' +
+      'Divider **1272.9 KB → 7.5 KB**（全量的 0.4%，此前 63%）；App 2.2 KB；Button 20.9 KB；Empty 33.6 KB；' +
+      'Select 133.2 KB；Table 318.7 KB（15.9%，最重）。73 个组件逐个有预算，落在 `tests/build/budget.json`；B6 据此从 PENDING 转真检查。' +
+      '⚠️ 实测里另一个坑：用 `import * as all` 探**深入口**会把整个模块的导出都留住（divider 29.9 KB vs 具名导入 7.5 KB）' +
+      ' ⇒ 预算只认「根入口 + 具名导入」这一列，别拿 `import * as` 的数字当真实场景。' +
+      '⚠️ 两点诚实的收尾：① **theme 一开始漏了**（它有 `ownBuildConfig`，被共享配置跳过）⇒ D 一度只落地 12/13，' +
+      '而门禁里那句「产物已是模块结构」对 theme 是**假的**；补上后 13/13。' +
+      '② 补 theme 后**复测 ui 的组件体积零变化**（divider/button/empty/color-picker/table 逐个比对，差 < 0.05 KB）' +
+      ' —— 因为 ui 本来就整块消费 theme 的模块，theme 的粒度对 ui 消费者无影响。' +
+      '⇒ 别把 Divider 1272.9→7.5 的功劳算到 D 头上，那是 **A** 的；D 的收益在**直接消费 foundation 包**的场景。',
     question:
       '@apollo-design/ui 的 JS 产物形态要不要为 tree-shaking 改？现状「单文件 dist/」下，**按需引入任意一个组件 = 1272.9 KB，占全量的 63%** —— 即 `@apollo-design/ui` 事实上无法按需引入。',
     context:
@@ -561,7 +581,23 @@ export const OPEN_DECISIONS = [
     impact:
       '决定 `@apollo-design/ui` 能否真正「按需引入」（当前实测为否：任一组件 = 1272.9 KB / 全量 63%），决定 L7 的 B6 能否从 PENDING 转真检查（`ui-style-output` 裁决的落地范围明确要求它转真检查），' +
       '并决定是否**重开已裁决的 `build-output-contract`**（其 A 把 13 个 foundation 包定为单文件 dist）。',
-    blocks: [],
+    // D 项把这 13 个 foundation 包从「单文件 dist」改为「保留模块结构」，故逐一登记影响范围。
+    // （schema：`blocks` 只填 foundation 包名；`status: 'decided'` 时它退化为历史影响范围。）
+    blocks: [
+      '@apollo-design/a11y',
+      '@apollo-design/form-core',
+      '@apollo-design/icons',
+      '@apollo-design/locale',
+      '@apollo-design/motion',
+      '@apollo-design/overlay',
+      '@apollo-design/picker',
+      '@apollo-design/portal',
+      '@apollo-design/position',
+      '@apollo-design/test-utils',
+      '@apollo-design/theme',
+      '@apollo-design/utils',
+      '@apollo-design/virtual-list',
+    ],
   }),
 ];
 

@@ -20,7 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "unbuild --config ../../scripts/unbuild-preserve-modules.mjs",
     "test": "vitest run",
     "lint": "vue-tsc --noEmit"
   },
