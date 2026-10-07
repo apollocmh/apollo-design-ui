@@ -139,6 +139,67 @@ console.log(out.join('\n')||'clean');"
 - **🚨 Don't add `attrs.class` to the class array when the template already has `v-bind="rootAttrs"` containing `attrs`.** Vue merges `:class` with the `class` key of the bound object, so the caller class ends up rendered **twice** (L4: `[apollo my-class] vs [apollo my-class my-class]`). Rule of thumb: the **render-function** components (no `v-bind`) must push `attrs.class` into the array; the **template** components with `v-bind="rootAttrs"`/`v-bind="$attrs"` must **not**.
 - **Check whether the "root" is the component's own root or an inner layer.** `Anchor` puts `restProps` on the **inner wrapper div**, not the outer `Affix` → needs `inheritAttrs: false` plus an explicit bind. `Dropdown`'s `rootClassName` targets the popup (the component has no DOM root) and `Carousel`'s `className`/`style` target the inner `slick-slider` — those are genuine dedicated props, not aliases; keep them and document why.
 
+### Reusable finding: auditing the SHARED LAYERS (utils / `_internal` / foundation packages)
+
+The component pass and the shared-surface pass find different classes of defect. Components
+mostly had React-shaped *public APIs*; the shared layers (L0 `utils`, `ui/src/_internal`, and
+the foundation packages) are where **Vue lifecycle/reactivity** bugs hide. Techniques that worked:
+
+- **A clean L0 is a real result, not a failed audit.** `packages/utils` (43 files) came back with
+  **0 issues**: every React-shaped carryover (`pickAttrs` React attribute-name whitelist, `useId`
+  not pinning a test id, `isDev` as a module const with no DCE, module-level singletons in
+  `raf`/`focus`/`observers`) is documented with a contract source + intentional-deviation note and
+  **locked by a focused test**. Record these as *rejected candidates with rationale*, do not file
+  issues for them. The audit is not "done" because you found something; it is done when every
+  in-scope file was read to completion.
+- **🚨 The highest-yield shared-layer check: does every raw `addEventListener` have a matching
+  `removeEventListener` on teardown?** Vue only auto-cleans `watch`'s `onCleanup` — a raw
+  `window.addEventListener` registered in `setup` is **never** removed automatically. This found
+  the only real defect in the whole `_internal` batch: `trigger.ts` leaked a global `window`
+  `resize` listener (no `removeEventListener` / `onBeforeUnmount` / `onScopeDispose` anywhere in
+  the file), affecting every popup consumer (tooltip/dropdown/select/cascader/date-picker/tour/
+  mentions). Sweep (fast, whole-repo, avoids eyeballing every file):
+
+  ```sh
+  node -e '
+  const fs=require("fs"),path=require("path");
+  const roots=["packages/ui/src","packages/overlay/src","packages/portal/src","packages/position/src","packages/motion/src","packages/a11y/src","packages/virtual-list/src","packages/form-core/src","packages/picker/src","packages/utils/src","packages/test-utils/src"];
+  const files=[]; for(const r of roots){ if(!fs.existsSync(r))continue;
+   (function w(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);
+   if(e.isDirectory()){if(["__tests__","demo","node_modules","dist"].includes(e.name))continue;w(p);continue;}
+   if(/\.(ts|vue|tsx)$/.test(e.name))files.push(p);}})(r); }
+  for(const f of files){const s=fs.readFileSync(f,"utf8");
+   const a=[...s.matchAll(/(window|document|el|element|container|scroller|target|node|popupEle)\.addEventListener\(/g)].length;
+   if(!a)continue; const r=[...s.matchAll(/\.removeEventListener\(/g)].length;
+   if(r<a)console.log(`ADD=${a} REMOVE=${r} | ${f}`);}'
+  ```
+
+  A hit is a *lead* — read the file to confirm the listener is not removed elsewhere.
+  **If the sweep returns exactly one hit across ~950 files, that is strong evidence it is a real
+  isolated defect, not a repo-wide convention** (the opposite of the root-alias case, which was
+  systemic and mechanical). Say so in the issue.
+- **A fix is not verified until the new test FAILS without it.** After adding the regression test,
+  temporarily revert the fix, confirm the test goes red, then restore. Report the observed
+  `N failed | M passed`. A test that passes both ways is decoration. (Also: a test that asserts the
+  *same function reference* is removed — not merely that `removeEventListener` was called — is what
+  catches the real leak, since a mismatched handler is silently ignored by the DOM.)
+- **Sweep for dead statements and stale doc pointers while you are in the file.** Two P3s came out
+  of the same batch: a no-op `void getCurrentInstance();` (the only occurrence in the repo) and two
+  comments referencing state that no longer exists (a `docs/KNOWN-ISSUES.md` entry that had been
+  cleared, and a hand-written `1 / 72` progress number in the public barrel that contradicted
+  itself in the same paragraph). Grep the repo for the suspicious statement to see whether it is
+  isolated.
+- **`pnpm run registry:check` rewrites `generatedAt` in `components.json` / `dependencies.json` /
+  `tokens.json`.** After running it, `git checkout --` those three if the only diff is the
+  timestamp — otherwise the audit commit carries timestamp noise.
+- **Batch progress lives in `registry/vue-native-audit.json`.** Update `sharedSurfaces.<id>`:
+  `auditStatus`, `reviewedFiles`, `batch`, `issueIds`, `notes`; recompute
+  `summary.reviewedProductionSourceFiles` **from the `reviewedFiles` arrays** (never hand-add), and
+  append to `batches` / `sessionLog` / `observations`. The invariant to assert:
+  `sum(component reviewedFiles) + sum(shared reviewedFiles)` grows by exactly the batch's file count.
+- **Put one-off audit scripts under `.workbuddy-ai/memory/`**, not a new `.workbuddy-ai/scripts/`
+  dir (only `memory/` and `skills/` are tracked; a new top-level dir shows up as untracked).
+
 ## Finding taxonomy and severity
 
 Use one or more categories: `react-api`, `slot`, `emits`, `attrs`, `class-style`, `renderer`, `react-implementation-migration`, `vue-composition-api`, `type-design`, `duplicate-implementation`, `test`, `architecture`.
