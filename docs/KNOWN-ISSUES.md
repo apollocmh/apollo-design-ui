@@ -52,7 +52,10 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 > 现在 B6 已转真检查（73 个组件逐个有预算，`tests/build/budget.json`），
 > **任何新增 PENDING 都应被视为「待补的债」，不是免罚牌。**
 
-### §1.1 Button 多包一层 `<span>` ⇒ 移植来的 `>` 直接子选择器全部失效
+> ✅ **§1.1 已于 2026-10-07 修完**（裁决 `button-children-wrapper` = **A**：Button 改为与 antd 结构对齐），
+> 留痕见 §3。~~（原内容保留在 §3 那条里）~~
+
+### §1.1 ~~Button 多包一层 `<span>` ⇒ 移植来的 `>` 直接子选择器全部失效~~　**（已修，见 §3）**
 
 **2026-10-07 实测发现**（修 §3 里那条 `.ant-` 死规则时，为了验证修复生效而临时加 L6 变体，结果它红了，顺藤摸出来的）。
 
@@ -101,6 +104,7 @@ Vue:   SPAN.apollo-icon.apollo-icon-down → SPAN → BUTTON.apollo-btn    多�
 
 | commit | 内容 |
 |---|---|
+| （2026-10-07） | **裁决 `button-children-wrapper` = A：Button 改为与 antd 结构对齐**（本仓最后一个结构性分叉）。起因：修 dropdown 死规则时为验证「改对了没有」加了能触发它的 L6 变体，它**红了**；量两侧计算样式发现 **Button 在 children 含文字时比 antd 多包一层 `<span>`**（React 侧 `SPAN.anticon-down → BUTTON` 直接子 ⇒ font-size 12px；Vue 侧多一层 ⇒ 14px 继承）⇒ 把所有从 antd 移植的 **`>` 直接子选择器全部打断**。落地：`Button.vue` 新增 `contentNodes`，对应 antd `buttonHelpers.js:66` `spaceChildren` → `splitCNCharsBySpace` —— **字符串/数字包 span、Fragment 包 span、元素 vnode 只 cloneVNode 合并 class/style 不包**；纯文本仍走模板既有 wrapper 路径（已被 L4 夹具与 27 张 L6 基线覆盖）。`<a>`（href）分支同样处理。⚠️ **踩到的坑**：改完源码直接跑 L6，差异率与改前**一模一样** —— 因为 **L6 解析的是 `packages/ui/dist`**，源码改动必须先重建 ui 才进产物，否则是「改了但看起来没生效」的假象。验证：`dropdown/buttonIcon` 变体**改前红 → 改后 9/9 exact**，并**永久保留**为那条 CSS 唯一的执行证据（它此前从没被 L6 覆盖过）；L4 dom-contract **1736** 全过、unit 6356、test:types 无错误。 |
 | （2026-10-07） | **修掉 2 个组件在 `apollo` 版里硬编码 `.ant-` 的死规则**（砍 `ant` 变体后才暴露）：`menu` 的 `.ant-typography-ellipsis-single-line`（2 处）+ `.ant-layout-header`、`dropdown` 的 `.ant-btn` / `.ant-btn-icon`（4 处）⇒ 改成对应 `.apollo-*`。判据：这些是**跨组件**类名（Typography / Layout / Button），本仓渲染的是 `.apollo-*` ⇒ 永不命中；antd 那边 `antCls` 恰好等于它自己的默认前缀所以能命中，我们照搬字面量就是**端口错误**。产物校验：剥离注释后 `.ant-` 出现 **0** 次（剩 2 处在 float-button 的说明注释里）；`style-prefix.test.ts` 的 `HARDCODED_ANT_IN_DEFAULT` 清空、断言保留为防回归。L6 复验受影响组件（menu/dropdown/layout/button/table/select/cascader/tree-select/popover/tooltip/typography）**150 张全过**。⚠️ 顺带挖出**更深的根因**：这些规则改对了仍不生效，因为 **Button 多包了一层 `<span>`** 打断了 `>` 选择器 —— 见 §1.1 与新决策 `button-children-wrapper`。 |
 | （2026-10-07） | **transfer 补上 L6 覆盖 —— 全仓最后一个盲区消除**（此前 72 个组件里 71 个有 L6，**只有 transfer 两边都没有**：`matrix.mjs` 未登记、无基线，无「有意跳过」的记载 ⇒ 判为遗漏）。新增 `render/cases/{react/transfer.jsx, vue/transfer.js}` + matrix 一条（3 变体 × 3 viewport = 9 张）。🚨 **踩到一个只有人眼能抓到的坑**：antd 6.6.4 `transfer/Section.js:14` 是 `const defaultRender = () => null;` ⇒ **不传 `render` 时列表项内容为空**（`item.title` 只落原生 `title` 属性与过滤逻辑）。首版没传，9 张基线每行只有 checkbox；**`md5` 查重与体积检查都发现不了**（9 个哈希互不相同、5–8 KB），L6 也照样 exact（本仓 Vue 侧行为一致 ⇒ 「两侧一致地错」），只有**看图**才看得出来。教训：**新增视觉用例后必须亲眼看一遍基线图**，自动化检查（哈希/体积/L6）对「内容缺失」这类失真全是盲的。修正后 9/9 exact、9 个唯一哈希、11.9–18.2 KB。 |
 | （2026-10-07） | **裁决 `early-extract-table-core-tree-core` = C + 三条开放决策清零**（开放决策 **19/19 decided**）。起因是复核时发现决策自己写的触发条件「等第二个消费者出现」**对 `tree` 已经满足**（`tree-select` 与 `table` 都在 import `../../tree/...`），而 `table` 仍只有 1 个消费者 ⇒ 按判别式拆开判：**不抽独立包**（那两个 core 只会被 `ui` 一个包消费，不够格），**把共享纯逻辑挪到 `_internal/`**。落地：① `tree` 的数据模型类型（`TreeKey`/`SafeKey`/`DataNode`/`TreeDataEntity`…）→ `_internal/tree/types.ts`，算法 `keyUtil`/`treeUtil`/`conductUtil` → `_internal/tree/`。⚠️ **类型必须跟着一起搬** —— 那些算法依赖这份数据模型，只搬函数会造成 `_internal/ → tree/` 反向依赖，比原状更糟；`tree/interface.ts` 原样再导出 ⇒ **公开 API 面零变化**。② `arrAdd`/`arrDel` → `_internal/array-util.ts`（跟树无关，顺手改泛型）。③ **顺带修掉一处更大、同类的债**：`clsx` 定义在 `notification/engine/util.ts` 却被 **20 个文件 / 8 个组件**跨目录 import ⇒ 搬到 `_internal/clsx.ts`；并**删掉 4 份重复实现**（`tooltip/util.ts` 轻量版、`modal/engine/util.ts` 版改为再导出、`drawer/engine/useDrag.ts`、`cascader/OptionList.ts`）。⚠️ 保留两处**刻意不统一**的：`_internal/use-merge-semantic.ts`（更窄，只收字符串 —— 语义化 classNames 本就是字符串，宽版会把「传错形态」静默变成类名）。④ 另两条 `use-id-test-env`（选 C：不固定生产、只在断言侧归一化 —— 实测证明「固定成编号」买不到稳定，而固定成常量会让 aria 引用静默错位）、`empty-semantic-fn`（B 早已实现，只是没登记）。验收：dom-contract **1736** 全过（tree/table/notification 契约未受影响）、unit 291 文件 6356、test:types 168 文件 2175、L7 141/FAIL 0、biome 2883 文件。 |

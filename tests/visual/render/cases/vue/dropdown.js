@@ -34,4 +34,20 @@ export default {
         { default: () => h(Button, null, () => 'Arrow') },
       ),
     ),
+
+  /** 与 react/dropdown.jsx 的 `buttonIcon` 逐条对应 —— 理由见那边（那条 CSS 唯一的执行证据）。 */
+  buttonIcon: () =>
+    box(
+      h(
+        Dropdown,
+        { menu, open: true, placement: 'bottom', autoAdjustOverflow: false },
+        {
+          default: () =>
+            h(Button, null, () => [
+              'Trigger ',
+              h('span', { class: 'apollo-icon apollo-icon-down' }, '↓'),
+            ]),
+        },
+      ),
+    ),
 };

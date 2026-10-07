@@ -484,6 +484,7 @@ export const COMPONENTS = {
     variants: [
       'basicOpen', // open + bottom：Menu 浮层（portal 定位 + item/danger/disabled）
       'arrow', // 带箭头（--arrow-x/y 运行时变量 + ::before/::after 斜块）
+      'buttonIcon',
     ],
   },
   progress: {

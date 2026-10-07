@@ -532,6 +532,57 @@ const contentClass = computed(() => [mergedClassNames.value.content]);
  * 合并分支；纯文本（含两个中文字）等其余情形保持模板的 wrapper 路径 ——
  * 那与 antd 的字符串分支等价，且不惊动任何既有 L4 夹具。
  */
+/**
+ * antd `spaceChildren`（`buttonHelpers.js:66` → `splitCNCharsBySpace`）的 Vue 对应物：
+ * **逐个子节点**决定「包不包 `<span>`」——
+ *
+ *   · 字符串 / 数字 → 包 `<span class={content} style={content}>`（用于两字中文插空格）
+ *   · Fragment      → 包 `<span class style>`
+ *   · 元素 vnode    → `cloneVNode` **只合并 class / style，不包**
+ *
+ * 🚨 **为什么必须有它**：本仓此前是「含文字就把**全部**子节点包进一个 `<span>`」，
+ *    而 antd **不包元素子节点** ⇒ 我们比 antd 多一层，把从 antd 移植过来的
+ *    **`>` 直接子选择器全部打断**（实测：`dropdown` 的
+ *    `.apollo-dropdown-trigger.apollo-btn > .apollo-icon-down` 永不命中，
+ *    React 侧 12px、Vue 侧 14px）。见开放决策 `button-children-wrapper`。
+ *
+ * ⚠️ 返回 `null` ⇒ 走模板既有 wrapper 路径（**纯文本**场景）。
+ *    那条路径已被 L4 夹具与 27 张 L6 基线覆盖，不动它以免惊动既有契约。
+ */
+const contentNodes = computed<VNode[] | null>(() => {
+  const kids = childNodes.value;
+  if (kids.length === 0) return null;
+
+  // 没有任何元素子节点 ⇒ 纯文本 / 纯 Fragment 之外的情形，交回模板既有路径
+  const hasElement = kids.some(
+    (k) => isVNode(k) && k.type !== TextVNode && k.type !== Fragment && k.type !== Comment,
+  );
+  if (!hasElement) return null;
+
+  const cls = mergedClassNames.value.content;
+  const style = mergedStyles.value.content;
+  const insert = needInserted.value && mergedInsertSpace.value;
+
+  const spaceText = (text: string): string =>
+    insert && TWO_CN_CHAR.test(text) ? text.split('').join(' ') : text;
+
+  return kids.map((k, i) => {
+    if (!isVNode(k)) {
+      return h('span', { class: cls, style, key: `t${i}` }, spaceText(String(k ?? '')));
+    }
+    if (k.type === TextVNode) {
+      const text = typeof k.children === 'string' ? k.children : '';
+      return h('span', { class: cls, style, key: `t${i}` }, spaceText(text));
+    }
+    if (k.type === Comment) return k;
+    if (k.type === Fragment) {
+      return h('span', { class: cls, style, key: `f${i}` }, [k]);
+    }
+    // 元素：与 antd `cloneElement` 同语义 —— 合并 class / style，**不额外包一层**
+    return cloneVNode(k, { class: cls as never, style: style as never });
+  });
+});
+
 const elementContentNodes = computed<VNode[] | null>(() => {
   const cls = mergedClassNames.value.content;
   const style = mergedStyles.value.content;
@@ -595,8 +646,11 @@ defineExpose({ nativeElement: rootRef });
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
       <NodeRenderer :node="iconNode" />
     </span>
+    <template v-if="contentNodes">
+      <NodeRenderer v-for="(node, i) in contentNodes" :key="i" :node="node" />
+    </template>
     <span
-      v-if="hasChildren && elementContentNodes === null"
+      v-else-if="hasChildren && elementContentNodes === null"
       :class="contentClass"
       v-bind="contentStyleAttrs"
     >
@@ -619,8 +673,11 @@ defineExpose({ nativeElement: rootRef });
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
       <NodeRenderer :node="iconNode" />
     </span>
+    <template v-if="contentNodes">
+      <NodeRenderer v-for="(node, i) in contentNodes" :key="i" :node="node" />
+    </template>
     <span
-      v-if="hasChildren && elementContentNodes === null"
+      v-else-if="hasChildren && elementContentNodes === null"
       :class="contentClass"
       v-bind="contentStyleAttrs"
     >

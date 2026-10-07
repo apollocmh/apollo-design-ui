@@ -217,8 +217,29 @@ export const OPEN_DECISIONS = [
     impact: '仅影响测试写法，不阻塞任何包的实现',
   }),
 
-  open('button-children-wrapper', {
+  decided('button-children-wrapper', {
     raisedAt: '2026-10-07',
+    decidedAt: '2026-10-07',
+    decidedBy: '用户裁决 2026-10-07（选 A）',
+    decision:
+      '**A —— Button 改为与 antd 结构对齐**：逐个子节点决定「包不包 `<span>`」，' +
+      '**元素子节点不再被包**（此前含文字时会被整包进一个 span）⇒ 与 antd 的 ' +
+      '`spaceChildren` / `splitCNCharsBySpace` 同语义。',
+    note:
+      '落地：新增 `Button.vue` 的 `contentNodes`，对应 antd `buttonHelpers.js:66` 的 `spaceChildren` →\n' +
+      '  `splitCNCharsBySpace`：**字符串 / 数字包 span、Fragment 包 span、元素 vnode 只 cloneVNode 合\n' +
+      '  并 class/style 不包**。纯文本场景仍走模板既有 wrapper 路径（已被 L4 夹具与 27 张 L6 基线覆盖，\n' +
+      '  不动它以免惊动既有契约）。`<a>`（href）分支同样处理。\n' +
+      '\n**验证方式 —— 关键在「有执行证据」**：\n' +
+      '  · 临时 L6 变体 `dropdown/buttonIcon`（Dropdown + Button 触发器 + 下箭头图标）\n' +
+      '    **改前红**（3 张，0.018–0.069%；React 侧 font-size=12px、Vue 侧 14px 继承）\n' +
+      '    ⇒ **改后 9/9 exact**。这条规则此前**从没被 L6 覆盖过**，所以现在把它**永久保留**为\n' +
+      '    那条 CSS（`.apollo-dropdown-trigger.apollo-btn > .apollo-icon-down`）唯一的执行证据。\n' +
+      '  · ⚠️ **踩到的坑**：改完 Button 源码后直接跑 L6，差异率与改前**一模一样** ——\n' +
+      '    因为 **L6 解析的是 `packages/ui/dist`**，源码改动必须先重建 ui（`tests/build/run.mjs --package ui`）\n' +
+      '    才会进产物。否则会得到「改了但看起来没生效」的假象。\n' +
+      '\n⚠️ 该变体两侧都**不引图标包**（视觉层只链接 theme+ui，`@apollo-design/icons` 解析不到），\n' +
+      '  用「两侧同构替身」：同一字形 `↓` 的 span + 各自图标类名 ⇒ 字号变化落在像素上。',
     question:
       'Button 要不要照 antd 那样**不包裹** children？（实测：我们多包了一层 `<span>`，' +
       '打断了从 antd 移植过来的 `>` 直接子选择器）',

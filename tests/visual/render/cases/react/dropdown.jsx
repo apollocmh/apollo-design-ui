@@ -30,4 +30,22 @@ export default {
         <Button>Arrow</Button>
       </Dropdown>,
     ),
+
+  /**
+   * 🚨 **这条是那条 CSS 唯一的执行证据**：`dropdown/style` 里
+   *    `.apollo-dropdown-trigger.apollo-btn > .apollo-icon-down { font-size: var(--apollo-font-size-icon) }`
+   *    只在**用户自己往触发器里放下箭头图标**时生效 —— 原有 basicOpen / arrow 的触发器都只有文字，
+   *    所以这条规则从没被 L6 覆盖过（也因此 2026-10-07 才发现它的前缀写成了 `.ant-btn`）。
+   *
+   *    ⚠️ 两侧都不引图标包（视觉层只链接 theme+ui，`@apollo-design/icons` 解析不到），
+   *    用「两侧同构替身」：同一字形 `↓` 的 span + 各自图标类名 ⇒ 字号变化会落在像素上。
+   */
+  buttonIcon: () =>
+    box(
+      <Dropdown menu={menu} open placement="bottom" autoAdjustOverflow={false}>
+        <Button>
+          Trigger <span className="anticon anticon-down">↓</span>
+        </Button>
+      </Dropdown>,
+    ),
 };
