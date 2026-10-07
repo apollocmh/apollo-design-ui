@@ -226,6 +226,28 @@ the foundation packages) are where **Vue lifecycle/reactivity** bugs hide. Techn
   contract with **zero** consumers. Changing a rule doc + a public test-utils API is a user
   decision ⇒ recorded as `VNA-TESTUTILS-01` (P2, `open`) with three options + a recommendation.
 
+- **🚨 A gate that has never run is where defects accumulate — check the gate's own status before trusting a green board.**
+  The single highest-impact finding of the 2026-10-07 shared-surface pass came from asking *why a check was PENDING*
+  rather than from reading code: L7's **B6** ("按需引入单组件后产物体积 ≤ 预算") had been `PENDING` since
+  2026-09-18, so **the one gate designed to catch tree-shaking failure had never executed** — and measuring it
+  showed `@apollo-design/ui` could not be tree-shaken at all (importing *any* single component = 1272.9 KB =
+  63% of the full 2010.1 KB). Two generalizable rules:
+  1. **"Found nothing this round" usually means "not measured yet", not "nothing there."** Before concluding a
+     surface is clean, ask which gate would have caught a defect there, and whether that gate actually runs
+     (in CI *and* locally). `--strict`, `continue-on-error`, `--passWithNoTests`, and `n/a` verdicts are all
+     places a check can silently not-check.
+  2. **A PENDING entry in a ledger is a to-do, not a pass.** Trace it to a decision: this one turned out to be
+     *mandated by an already-decided decision* (`ui-style-output` A said B6 "从 PENDING 转真检查") — i.e. the
+     work was owed, not blocked. Distinguish "欠裁决" from "欠实现" before escalating.
+- **When measuring a size/performance claim, separate "whole-module drop" from "intra-module DCE".** The pair
+  `import 'pkg'` → 0 KB vs `import { X } from 'pkg'` → 1272.9 KB localizes the cause to **module granularity**
+  in one step. Corollaries learned the hard way: (a) my first hypothesis (`missing /*#__PURE__*/` on 329
+  `defineComponent(` + 126 `withInstall(` calls) was **disproven by measurement** — annotating them recovered
+  only 104 KB of 1273; (b) when grepping a **non-minified** bundle for markers, use **quoted string literals**
+  (`"ATable"`) — bare identifiers get false positives from preserved comments; (c) put the probe's entry file
+  **inside the repo/package directory**, since pnpm links `@apollo-design/utils` only under
+  `packages/<pkg>/node_modules/`.
+
 ## Finding taxonomy and severity
 
 Use one or more categories: `react-api`, `slot`, `emits`, `attrs`, `class-style`, `renderer`, `react-implementation-migration`, `vue-composition-api`, `type-design`, `duplicate-implementation`, `test`, `architecture`.
