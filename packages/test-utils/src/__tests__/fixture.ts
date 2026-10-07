@@ -95,15 +95,17 @@ export const CleanBox = defineComponent({
 
 // ---------------------------------------------------------------------------
 // rootPropsTest
+//
+// ⚠️ 2026-10-07：契约从「`rootClassName` / `rootStyle` 两个 prop」改为
+//    **原生 `class` / `style` attrs**（Phase 2 + `COMPATIBILITY.md` §7）。
+//    夹具同步改写：只声明 `prefixCls`，`class` / `style` 走 attrs 并显式并入根。
 // ---------------------------------------------------------------------------
 
-/** 正确实现了 rootClassName / rootStyle / prefixCls 的根属性契约。 */
+/** 正确实现了「根 class / style 落根且不下渗」的契约。 */
 export const RootPropsBox = defineComponent({
   name: 'FixtureRootPropsBox',
   inheritAttrs: false,
   props: {
-    rootClassName: { type: String, default: undefined },
-    rootStyle: { type: Object, default: undefined },
     prefixCls: { type: String, default: 'fixture' },
   },
   setup(props, { attrs }) {
@@ -111,28 +113,26 @@ export const RootPropsBox = defineComponent({
       h(
         'div',
         {
-          class: [`${props.prefixCls}-box`, props.rootClassName],
-          style: props.rootStyle,
-          ...attrs,
+          class: [`${props.prefixCls}-box`, attrs.class],
+          style: attrs.style,
         },
         [h('span', { class: 'fixture-root-inner' }, 'inner')],
       );
   },
 });
 
-/** 把 `rootClassName` 同时写到根与子元素上 —— 应当被「不下渗」断言抓到。 */
+/** 把根 class 同时写到子元素上（下渗）—— 应当被「不下渗」断言抓到。 */
 export const RootPropsLeakBox = defineComponent({
   name: 'FixtureRootPropsLeakBox',
   inheritAttrs: false,
   props: {
-    rootClassName: { type: String, default: undefined },
-    rootStyle: { type: Object, default: undefined },
     prefixCls: { type: String, default: 'fixture' },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     return () =>
-      h('div', { class: [`${props.prefixCls}-box`, props.rootClassName] }, [
-        h('span', { class: props.rootClassName }, 'inner'),
+      h('div', { class: [`${props.prefixCls}-box`, attrs.class] }, [
+        // ⚠️ 故意下渗：同一个类名出现在子孙元素上
+        h('span', { class: attrs.class }, 'inner'),
       ]);
   },
 });

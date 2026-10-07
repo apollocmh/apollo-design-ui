@@ -122,7 +122,7 @@ defineExpose({ focus, blur, nativeElement });
 | 废弃 prop | 保留并输出 `warning`，与 antd 的废弃节奏一致 |
 | `prefixCls` | 每个组件都必须支持，默认从 ConfigProvider 读取，兜底 `'apollo'` |
 | 语义化 classNames/styles | 每个组件都必须支持 `classNames` / `styles`，键名与 antd 一致 |
-| `rootClassName` / `rootStyle` | 必须支持 |
+| 根 class / style | **一律走原生 `class` / `style`**（`$attrs` 透传，或 `inheritAttrs: false` 时用 `mergeProps` 显式并入根）；**不得声明 `rootClassName` / `rootStyle` prop**。依据：`COMPATIBILITY.md` §7 与顶部「阶段声明」（Phase 2，2026-10-06）。语义目标**独立于根**时（浮层根 / 内层元素 / item 级）用本仓的 `classNames.*` / `styles.*` 槽位，上游名保留但标 `@deprecated` |
 | `getPopupContainer` | 含浮层的组件必须支持 |
 
 **规则 R6**：`prefixCls` 派生的类名结构必须与 antd 同构。例如 Button：`${prefixCls}-btn`、`${prefixCls}-btn-primary`、`${prefixCls}-btn-icon`。

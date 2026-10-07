@@ -159,13 +159,13 @@ rootPropsTest('fixture-root-props · containerId 与 props', {
   props: { extra: 'x' },
 });
 
-/** 泄漏版：`rootClassName` 同时写到子元素上 —— 用真实挂载证明这条断言会触发。 */
+/** 泄漏版：根 class 同时写到子元素上 —— 用真实挂载证明这条断言会触发。 */
 describe('泄漏版夹具（证明「不下渗」这条断言不是摆设）', () => {
   it('真实挂载 RootPropsLeakBox 后，collectRootPropFailures 报出「下渗」', () => {
     const mounted = mountCase(() =>
       h(RootPropsLeakBox, {
-        rootClassName: ROOT_PROPS_DEFAULTS.rootClassName,
-        rootStyle: ROOT_PROPS_DEFAULTS.rootStyle,
+        class: ROOT_PROPS_DEFAULTS.rootClassName,
+        style: ROOT_PROPS_DEFAULTS.rootStyle,
         prefixCls: ROOT_PROPS_DEFAULTS.prefixCls,
       }),
     );
@@ -174,7 +174,7 @@ describe('泄漏版夹具（证明「不下渗」这条断言不是摆设）', (
       // 默认查找：跳过挂载容器，取产物自己的根
       const roots = Array.from(mounted.content.children);
       expect(roots).toHaveLength(1);
-      // 这个夹具**故意**有两处不合规：rootClassName 下渗，且完全没接 rootStyle。
+      // 这个夹具**故意**有两处不合规：根 class 下渗，且完全没接 style。
       // 两条都要报出来 —— 断言恰好两条（而不是 toContain），
       // 这样「只报了一条」这种退化也会被发现。
       expect(collectRootPropFailures(roots, EXPECT)).toEqual([
@@ -189,8 +189,8 @@ describe('泄漏版夹具（证明「不下渗」这条断言不是摆设）', (
   it('对照组：正确实现的夹具在同一条断言下为空数组', () => {
     const mounted = mountCase(() =>
       h(RootPropsBox, {
-        rootClassName: ROOT_PROPS_DEFAULTS.rootClassName,
-        rootStyle: ROOT_PROPS_DEFAULTS.rootStyle,
+        class: ROOT_PROPS_DEFAULTS.rootClassName,
+        style: ROOT_PROPS_DEFAULTS.rootStyle,
         prefixCls: ROOT_PROPS_DEFAULTS.prefixCls,
       }),
     );

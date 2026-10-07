@@ -72,7 +72,7 @@ export interface RenderSource {
   global?: { stubs?: Record<string, boolean | Component> };
 }
 
-/** 带 props 的渲染工厂：`rootPropsTest` 需要往组件里注入 `rootClassName` / `rootStyle` / `prefixCls`。 */
+/** 带 props 的渲染工厂：`rootPropsTest` 需要往组件里注入 `class` / `style`（原生 attrs）与 `prefixCls`。 */
 export type PropsRenderFactory = (props: Record<string, unknown>) => VNodeChild;
 
 /** 一条**告警豁免**：命中 `match` 的告警文本被允许出现。 */

@@ -209,7 +209,7 @@ a11yDemoTest('button');   // 对每个 demo 渲染后跑 axe，要求 0 violatio
 | `a11yDemoTest` | 遍历所有 demo 跑 axe | `accessibilityTest.tsx` |
 | `focusTest` | 焦点获取/丢失/归还的通用断言 | `focusTest.tsx` |
 | `rtlTest` | 镜像渲染无布局异常 | `rtlTest.tsx` |
-| `rootPropsTest` | `rootClassName` / `rootStyle` / `prefixCls` 契约 | `rootPropsTest.tsx` |
+| `rootPropsTest` | 根 `class` / `style` / `prefixCls` 契约（**注入原生 attrs**，见 `COMPONENT-RULES.md` §4 的「根 class / style」行） | `rootPropsTest.tsx` |
 | `domContractTest` | 与 React 基线比对结构化 DOM 契约 | 新增（本项目独有） |
 | `themeTest` | light / dark / compact / token override 四态渲染 | 新增 |
 | `resetWarned` | 重置 warning 计数，便于断言 | `excludeWarning.ts` |

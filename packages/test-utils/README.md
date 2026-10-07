@@ -22,7 +22,7 @@
 - a11yDemoTest —— 遍历全部 demo 跑 axe，要求 0 violation
 - focusTest —— 焦点获取/丢失/归还
 - rtlTest —— 镜像布局无异常
-- rootPropsTest —— rootClassName / rootStyle / prefixCls 契约
+- rootPropsTest —— 根 class / style / prefixCls 契约（注入原生 attrs）
 - domContractTest —— 与 React 基线比对结构化 DOM 契约（本项目新增）
 - themeTest —— light/dark/compact/token-override 四态渲染（本项目新增）
 - resetWarned / waitFrames / flushAll
