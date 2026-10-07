@@ -4440,7 +4440,7 @@
     {
       "id": "AUDIT-01",
       "title": "Establish full source inventory and cross-component scan",
-      "status": "in_progress",
+      "status": "completed",
       "scope": "All 72 components plus shared hooks, utils, and infrastructure surfaces",
       "issueIds": [
         "VNA-API-01",
@@ -4465,7 +4465,8 @@
         "Affix API correction (user review): className/rootClassName/style removed from component Props; ConfigProvider AffixConfig retained; live Vue attrs merged at render. unit 21/21, DOM 11/11, types 30/30, full vue-tsc, Biome and diff-check pass.",
         "Reusable missed-audit lesson added to .workbuddy-ai/skills/vue-native-audit/SKILL.md; quick_validate passed; vue-native-audit.zip repackaged successfully.",
         "Button API correction verified: unit 188/188, DOM 66/66, types 82/82 (no errors), full lint:types exit 0, Biome + diff-check pass. Nested button bags (Tour/Modal/Popconfirm) migrated to native class with type-level rejection of React aliases. DropdownButton React className alias logged as VNA-DROPDOWN-02 for the dropdown batch.",
-        "Button L6 visual (after build:ui): 27/27 pass — 24 exact 0.000%, 3 semantic variants 0.005–0.021% antialias-noise."
+        "Button L6 visual (after build:ui): 27/27 pass — 24 exact 0.000%, 3 semantic variants 0.005–0.021% antialias-noise.",
+        "2026-10-07 收口：本批次的范围（72 组件 + 共享面）已全部审阅完毕（组件 72/72 done、共享面 12/12 done、issues 19/20 fixed、1 open 已登记），故置 completed。历史 verification 保留原样。"
       ],
       "componentProgress": {
         "done": 17,
@@ -4477,7 +4478,7 @@
     {
       "id": "AUDIT-02",
       "title": "Audit components 25-48 and the shared VNode renderer boundary",
-      "status": "in_progress",
+      "status": "completed",
       "scope": "empty, flex, float-button, form, grid, image, input, input-number, layout, list, listy, masonry, mentions, menu, message, modal, notification, pagination, popconfirm, popover, progress, qr-code, radio, rate; initial cross-cut renderer probe in Empty/Spin",
       "componentProgress": {
         "started": 2,
@@ -4491,7 +4492,8 @@
         "Read empty/components/NodeRenderer.ts, empty/interface.ts, empty/Empty.vue",
         "Read spin/components/NodeRenderer.ts, spin/interface.ts, spin/Spin.vue",
         "Grep found 11 direct imports from empty/components/NodeRenderer across component directories",
-        "No tests run; no source refactor performed"
+        "No tests run; no source refactor performed",
+        "2026-10-07 收口：本批次的范围（72 组件 + 共享面）已全部审阅完毕（组件 72/72 done、共享面 12/12 done、issues 19/20 fixed、1 open 已登记），故置 completed。历史 verification 保留原样。"
       ]
     },
     {
