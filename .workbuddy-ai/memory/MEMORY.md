@@ -1,138 +1,93 @@
 # MEMORY.md — 项目长期约定
-> 只放仓库文档里没有的。规则本体见 `AGENTS.md` 等 5 份文档。坑全文+索引：`PITFALLS.md`（先看 §0）；**环境与命令**：`environment.md`（跑测试/构建前必读）。
+> 只放**仓库文档里没有**的。规则本体：`AGENTS.md` 等 5 份文档。坑全文+索引：`PITFALLS.md`（先看 §0）。
+> **环境与命令**：`environment.md`（跑测试/构建前必读）。本文件只留**指针 + 判别式 + 当前事实**。
 
-> 📁 **记忆目录结构（2026-10-04 起）**：`.workbuddy` 是指向 `.workbuddy-ai` 的**软链接**
-> —— 国际版与国内版共用同一份记忆。两版写的是同一个 `memory/`，不要再按版本分开记录。
-> 合并前的旧 `.workbuddy` 记忆已并入本目录（同名日志为并集、旧 MEMORY 快照见 `memory/archive/`）。
+> 📁 `.workbuddy` 是 `.workbuddy-ai` 的**软链接** —— 国际版/国内版共用一份记忆，勿按版本分开记。
 
-## 📌 欠账台账：`docs/KNOWN-ISSUES.md`（2026-10-03 新建）
+## §0 接手顺序（先看这三份）
+1. **`docs/KNOWN-ISSUES.md`** —— 欠账台账。**不在** `AGENTS.md` §5 的 5 份文档清单里，必须从这里找到它。
+   §1 仍开放（**2026-10-07 起为空**）· §2「不要再排查」· §3 历史留痕。**引用前先核一眼**，本文件曾整段过期。
+2. `node registry/tools/next-task.mjs` —— 下一个任务的**唯一权威**。
+3. `node registry/tools/ask.mjs decisions --open` —— 当前未裁决决策。
 
-**接手时先扫这一份**。它不在 `AGENTS.md` §5 的 5 份文档清单里（AGENTS.md 只能由用户改），
-所以**必须从这里找到它**。两段：
-- **§1 仍开放**（2026-10-04 复核，只剩 4 条「等时机」型）：`ContextIsolator` 缺失的风险面
-  （等第一个真实消费者）· `color-picker` 面板无 DOM 对拍（只有 L6 像素）·
-  生产存量 biome warn 60 条（`noNonNullAssertion` **逐个收窄、不扫改**）。
-  ⚠️ 旧版的「84 条 missing-baseline / typography semantic / Segmented onMouseDown」等
-  已在 2026-10-03 修完或裁决 ⇒ **本条曾整段过期，引用前先 `sed -n '1,60p' docs/KNOWN-ISSUES.md` 核一眼**。
-- **§2「不要再排查」**（已修/已证伪，防重复劳动）· **§3 历史留痕**（一行一条）· **§4 接手顺序**。
+⚠️ **登记簿/文档的坐标要复核后再信**（2026-10-03 实测重写时改掉 **4 处事实错误**）。
+⇒ `git log -S` 与「跑一遍现成测试」比读文档可靠；每条欠账都该能被命令复现。
 
-⚠️ **`test:types` 已修**（`vitest.config.ts` 的 `types` project 指定 `checker: 'vue-tsc'`）——
-此前它**恒定 exit=1**（`tsc` 解析不了 `.vue` ⇒ 96 条假源错误），现在 **exit=0**。
+## §1 事实来源 / 任务 / registry
+Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**。
+优先级：用户指令 > 仓库规范 > `registry/*.json` > antd 产物/源码 > 文档 > 先验。
 
-⚠️ **决策的运行时状态以 `foundation.json` 为准**（`mergeOpenDecisions` 的
-`DECISION_RUNTIME_KEYS = ['status','decision','decidedAt','decidedBy','note']` 覆盖种子；
-函数在 `foundation-status.mjs:164-181`，**不在** gen-registry）⇒ 裁决时**必须同时改**
-`registry/source/open-decisions.mjs`（`open()`→`decided()`）**和** `registry/foundation.json`，
-再跑生成器链，否则 `ask.mjs decision <id>` 仍是 `open`。
-📌 **`decision.blocks` 不在运行时键里** ⇒ 只认种子。语义（2026-10-04 用户裁决）=
-「本决策曾约束过哪些包」：`open` 时是**当前阻塞**（`gen-workstreams.mjs:102` 只消费 open 的），
-`decided` 时是**历史影响范围**。⇒ **看到「decided + 非空 blocks」别当陈旧**（5/6 条已裁决决策都这样），
-只有**值是组件名**（违反 schema「只填 foundation 包名」）才是真陈旧（已修 `cascader` / `date-picker`）。
+- 🚨 **Phase 2 起**（2026-10-06 用户裁决）antd 从「答案的判据」降为「**参考实现**」，第 4 层只在无本仓裁决时兜底。
+  **根别名一律用原生 `class`/`style`**（不再有 `rootClassName`/`rootStyle` prop，全仓 72 组件已完成）；
+  **非根目标**由本仓设计 `classNames.*`/`styles.*` 槽位，上游名标 `@deprecated`。
+  ⚠️ 判别式：先问「这个 prop 指向的是不是**组件自己的根**？」是⇒收敛成原生；否⇒设计槽位。
+  ⚠️ `AGENTS.md` §0 还没更新（只能由用户改）；阶段声明在 `COMPATIBILITY.md` 顶部。
+- 🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（缺了按 PITFALLS 42 恢复）；
+  说「某决策是这样」前先 `ask.mjs decision <id>`（出原文，不是摘要）。
+- **派生字段**（手改会被覆盖）：`notDo`/`publicApi`/包 package.json ← `scaffold-packages.mjs`；
+  `foundation.json` ← `foundation-status.mjs`；components/dependencies/tokens/workstreams ← `gen-*.mjs`。
+- 生成器**有顺序**：`gen-registry` → `foundation-status` → `gen-workstreams` → `validate-registry`。
+- 🚨 跨运行**只保留** `status`+11 维度+`blockers`+`layerNotes` ⇒ 收口直接改 `components.json` 这 13 项再重跑生成器。
+  ⚠️ `notes` **不保留** ⇒ 注记写 `registry/source/components.meta.mjs`。
 
-📌 **`visual-baseline-in-git` 已裁决 = A 基线入库**（2026-10-03）：9 个组件已入库 **75 张**
-（compare **75/75 exact**）；⚠️ **`float-button` 例外**（`position:fixed` 截不到 ⇒ 全白图，
-**故意不入库**，见 KNOWN-ISSUES §1.10 / PITFALLS 337）⇒ `missing-baseline` 还剩 **9 条**。
-📌 **`noNonNullAssertion` 已裁决**：`**/__tests__/**` **关闭**（`biome.json`），生产 40 条保持开启、
-随组件改动逐个收窄（**禁止扫改**：`add(parent?.key)` 会往 Set 里塞 `undefined`）⇒ 全仓 warn **207 → 65**。
-
-📌 **「复合词事件名」护栏已落地**（`packages/ui/src/__tests__/event-name-casing.test.ts`）：
-用 **TS AST** 只扫 `h('<原生标签>', <props>)` 并穿透 spread/条件/`computed`/`x.value`。
-**判据：全仓 489 处 `onXxxYyy:` 对象键 → AST 过滤后 3**（全是反向哨兵，生产 0 命中）⇒
-**别用「全仓正则 + 逐条白名单」**。两个必守的「不误报」判据见 PITFALLS **338**：
-① 先剥 `Once`/`Passive`/`Capture` 后缀（`onPointerdownCapture` 是对的）；
-② 只穿透 `computed`/`ref` 等**透明包装**（否则 `overlay.popupProps.value` 会误回溯到
-`useOverlay({…})` 的配置实参）。
-
-⚠️ **登记簿的坐标要复核后再信**（2026-10-03 实测：重写后逐条复核，改掉 **4 处事实错误**）：
-§1.3「Switch handler 被丢弃」**证伪**（`callbacks` 是 `attrs` 别名，且早有 L1 用例）·
-§1.9「2 条 biome warn」实为 **207 条**（biome **默认只列前 20** ⇒ 必须 `--max-diagnostics=none`）·
-§2.5 的 commit `1bd30e7` 实为 **`9c9f557`** · §2.5 的 private 残留**可关闭**（utils/src 零 private）。
-⇒ **`git log -S` 与「跑一遍现成测试」比读文档可靠**；`docs/KNOWN-ISSUES.md` 每条都该能被判据复现。
-
-## 🚨 阶段转变（2026-10-06，用户裁决）—— **Phase 2：不再紧跟 antd，当成自己的组件库做**
-Phase 1（复刻 antd 成 Vue 库）**已结束**。antd 从「**答案的判据**」降为「**参考实现**」。
-- **根别名**（指向组件自己的根）：`className`/`rootClassName`/`style` **一律用 Vue 原生 `class`/`style`** ——
-  已全仓完成（72 组件 + 8 个收口期补漏）。
-- **非根目标**（浮层根 / 内层元素 / item 级）：**本仓自己设计 `classNames.*` / `styles.*` 槽位**，
-  上游名保留但标 `@deprecated`。已做：`carousel.classNames.slider` · `border-beam.classNames.effect`；
-  已标废弃：`dropdown.rootClassName` → `classNames.root`（跟随上游 `dropdown.d.ts:56` 的标注）。
-- **规则 C3 放宽**：不再「Props 名与 antd 完全一致」；新增能力用本仓命名。
-- ⚠️ **不变的底线**：`AGENTS.md` §1 硬禁令 + §4 验收纪律（**不许为绿灯放宽断言**）+ PITFALLS 实测判据。
-- ⚠️ `AGENTS.md` §0「Ant Design 是答案的判据」**尚未更新**（该文件只能由用户改）；
-  阶段声明已写进 `COMPATIBILITY.md` 顶部。
-
-📌 **判据（判别式，别一刀切）**：先问「这个 prop 指向的是不是**组件自己的根**？」
-**是** ⇒ 必须收敛成原生 `class`/`style`；**否** ⇒ 上游有 `classNames.*` 槽就标 deprecated 指向槽，
-没有就**由本仓设计槽位**（Phase 2 起不再需要「发明 antd 没有的 API」这条顾虑）。
-
-## 事实来源 / 任务 / registry
-Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**。优先级：用户指令>仓库规范>`registry/*.json`>antd 产物/源码>文档>先验。
-⚠️ **Phase 2 起**：antd 降为「参考实现」，优先级序列里第 4 层只在「没有本仓自有裁决」时兜底。
-- 取任务唯一权威 `node registry/tools/next-task.mjs`（一轮一包）。🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（缺了按 PITFALLS 42 恢复）；说「某决策是这样」前先 `ask.mjs decision <id>`（出原文）。
-- 派生字段（手改被覆盖）：`notDo`/`publicApi`/包 package.json←`scaffold-packages.mjs`；`foundation.json`←`foundation-status.mjs`；components/dependencies/tokens/workstreams←`gen-*.mjs`。
-- 🚨 跨运行**只保留** `status`+11 维度+`blockers`+`layerNotes` ⇒ 收口直接改 `components.json` 这 13 项再重跑生成器。⚠️ `notes` 不保留 ⇒ 注记写 `registry/source/components.meta.mjs`(220)。
-
-## 架构
+## §2 架构
 `L3 ui ｜ L2 form-core/picker/overlay/locale ｜ L1 motion/portal/position/a11y/virtual-list ｜ L0 utils/theme/icons ｜ 测试 test-utils`
-- 包边界：消费者≥2 且无视觉语义才独立成包(13 包)；共享代码放 `packages/ui/src/_internal/`。
-- ⚠️ **`picker`=引擎+面板**（裁决 `picker-panel-ownership`=B）：面板在本包，`ui` 的 DatePicker/TimePicker/Calendar 只做输入框+浮层+样式⇒它的 L2/L4/L5 是硬门禁；但它**不产 CSS**。
-- `prefixCls` 默认 `apollo`；动手前先 grep `packages/utils/src`。🚨 R7(ADR 0004)：发布包零 `@ant-design/*` 运行时依赖，门禁 E19 双扫描。Oracle：上游零框架耦合⇒可对拍，否则只读源码。
+- 包边界：消费者≥2 且无视觉语义才独立成包（13 包）；共享代码放 `packages/ui/src/_internal/`。
+- ⚠️ **`picker` = 引擎+面板**（裁决 `picker-panel-ownership`=B）：面板在本包，ui 侧只做输入框+浮层+样式 ⇒ 它的 L2/L4/L5 是硬门禁；但**不产 CSS**。
+- `prefixCls` 默认 `apollo`；动手前先 grep `packages/utils/src`。
+- 🚨 R7（ADR 0004）：发布包零 `@ant-design/*` 运行时依赖，门禁 E19 双扫描。
 
-## 主分支 / 合并 / 共享文件
-- master 检出在 `/Users/nanren/Code/apollo-design-ui`；合并前有 WIP 先 `git stash push -u`。`registry/*.json` 冲突**按冲突块解析**，别 `checkout --ours`；之后重跑生成器。**收口后立刻合 master**。⚠️「绿在本地」≠「绿在仓库」：依赖磁盘产物先 `git ls-files` 确认已入库。
-- 多流必碰（按字母序追加）：`packages/ui/src/index.ts`、`style/index.ts`、`tests/visual/matrix.mjs`、`cases/shared.mjs`、`tests/compat/baseline/*.mjs`、`registry/source/open-decisions.mjs`、root `package.json`。新组件另需 compat baseline + `render/cases/{react,vue}/<n>.{jsx,js}` + matrix 一行 + `fixtures/<n>/`(E9)。
-- ⚠️ 改 foundation 包（utils/portal/motion/**picker**）后**必须单独重建**(176/249)。视觉层只链接 theme+ui⇒**用例文件**里 import `@apollo-design/icons` 解析不到，用「两侧同构」替身。⚠️ **`test:visual`/`test:types` 都不在 `verify:full`**⇒都要显式跑。
+## §3 构建与产物形态（2026-10-07 裁决 `ui-tree-shaking` = A+B+D 后）
+- **全部 14 个包都保留模块结构**（`preserveModules`）：ui 出 766 个 `.mjs` + 70 份 CSS；13 个 foundation 包同步。
+  12 个走共享 `scripts/unbuild-preserve-modules.mjs`（`build` 脚本 = `unbuild --config ../../scripts/...`）；
+  ⚠️ **`theme` / `ui` 不用共享配置、在自己 `build.config.ts` 里各自打开** —— 「不用共享配置」≠「不用 preserveModules」。
+- **B6 已转真检查**：73 条预算在 `tests/build/budget.json`（`ceil(实测×1.5+5)`）+「占全量 ≤ 30%」。
+  再生：`node tests/build/checks/treeshake.mjs --measure-all`。预算只能因**技术原因**上调且须写理由（设成等于全量 = H8）。
+- 实测成果：Divider **1272.9 KB → 7.5 KB**（全量 0.4%，原 63%）· Button 20.9 · Table 318.7（最重）· 全量 2009.0 KB。
+- `exports`：ui 有 73 条 `@apollo-design/ui/<c>` JS 深入口 + 70 条 `<c>/style.css`，**只暴露入口名、不暴露内部路径**。
+  两类都由 `uiExtraExports()` 从单一真源推导（`components.json` / `packages/ui/src/style/index.ts`）。
+- 🚨 **门禁必须跑真正会被发布的命令**：B1 改过一次硬编码裸 `unbuild` 的坑（不带 `--config` ⇒ D 实施后照样出单文件还全绿）。
+- ⚠️ 本仓是 **ESM-only**（dist 里零 `.cjs`，exports 只有 `types`/`import`）⇒ 用 `createRequire().resolve()` 探测必然
+  `ERR_PACKAGE_PATH_NOT_EXPORTED`（**假警报**）；要用 `import.meta.resolve`，且**探针文件必须在仓库内**。
 
-## 同步与沉淀约定（2026-10-04 合并自 `.workbuddy` 记忆的 2026-09-29 快照）
+## §4 决策（registry）
+- 🚨 裁决时**必须同时改** `registry/source/open-decisions.mjs`（`open()`→`decided()`）**和** `registry/foundation.json`
+  （运行时键 `status/decision/decidedAt/decidedBy/note` 以后者为准）⇒ 用
+  `node registry/tools/sync-decision-runtime.mjs <id>` 同步，再跑生成器链。
+- 📌 `decision.blocks` **不在**运行时键里 ⇒ 只认种子（`blocks` 要跑生成器链才生效）。语义 =「曾约束过哪些包」：
+  `open` 时是当前阻塞、`decided` 时是历史影响范围 ⇒ **看到「decided + 非空 blocks」别当陈旧**；
+  只有**值是组件名**（违反 schema「只填 foundation 包名」）才是真陈旧。
+- 已裁决要点：`visual-baseline-in-git`=A（基线入库；`float-button` 因 `position:fixed` 故意不入库）·
+  `noNonNullAssertion`（测试目录关闭、生产逐个收窄、**禁止扫改**）· `picker-panel-ownership`=B · `ui-style-output`=A ·
+  `ui-tree-shaking`=A+B+D。
 
-> 来源：旧版 `.workbuddy/memory/MEMORY.md`（该目录已并入本目录、原目录替换为软链接）。
-> 全文快照归档在 `archive/MEMORY.from-dot-workbuddy-2026-09-29.md`。
-> **以下两条是旧版独有、新版此前未覆盖的约定；如已失效请就地更新。**
+## §5 收口期判据
+- **视觉变体避开静态帧测不到的面**：`:hover`/`cursor`/`transition`/纯属性(`href`/`id`) 截图不可见 ⇒ 必然空转（归 L1/L4）。
+  🚨 写/改变体后 `md5 tests/visual/baselines/react/<c>/*.png | sort` 查同哈希。
+- **L4 的 `it.each` 别用「长度不一致的元组数组」**(TS2345) ⇒ 同形对象数组 + `$name`。`*.test.ts` 也在 `vue-tsc` 内。
+- 🚨 `.vue` 里出现 `typeof SomeComponent` 就查那条 import 有没有被 biome 改成 `import type`（PITFALLS 299）。
+  **语义化槽（`classNames`/`styles`）支持函数形态** ⇒ prop 类型必须 `[Object, Function]`。
+- 📌 置 `completed` 前三件套：① `COMPONENT_STYLES` 注册；② `index.ts` 导出(B8)；③ `tests/compat/fixtures/<c>/` 有 fixture(E9)。
+- 🚨 **收口后必须 `git status` 确认已落盘** —— 曾两次「验证全绿但整片未提交」，隔一轮才发现。
+- ⚠️ 新增 demo 要配套 `.md`（每个 demo 一个 `.tsx` + `.md`）。
 
-- **GitHub 同步**：远程 `origin = https://github.com/apollocmh/apollo-design-ui.git`（私有）。
-  每完成一个阶段（组件收口 / 基建落地）都要
-  `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master` 同步到 GitHub。
-  推送凭据在 macOS 钥匙串（`credential-osxkeychain`，用户名 `apollocmh`，scope=repo）。
-  ⚠️ 本机到 GitHub 的批量传输（release CDN / `git fetch`）直连会挂起 ⇒ 必须走代理
-  `http://127.0.0.1:7890`；小 API 请求（`api.github.com`）直连可用。
-  GitHub MCP 连接器无建仓权限（403）且看不到新建私有仓库（404）⇒ 建仓需用户手动或走 git 凭据。
-- **经典错误沉淀机制**：每个 Gate 收口时，把本次踩的经典错误追加到
-  `docs/COMPONENT-CHECKLIST.md` 的「六、经典错误沉淀」（最近的在顶部），
-  含三项：坑 / 哪一层测试抓到的 / 对策。
+## §6 环境 / 命令 / 同步
+- 🚨 视觉层与构建门禁的入口**都要带** `CODEBUDDY_SAFE_DELETE_ENABLED=0`（另有 `CODEBUDDY_BROKERED_FS_HOOK_ENABLED=0`
+  / `CODEBUDDY_SAFE_DELETE_SANDBOX=0`，本机两个都是 1）：漏了会在打包阶段被 safe-delete 拦下（阈值 50）。
+  `pnpm` 不在 PATH（只有 corepack）⇒ 先造 `/tmp/pnpm-shim/pnpm`。详见 `environment.md`。
+- ⚠️ **`test:visual` / `test:types` 都不在 `verify:full`** ⇒ 都要显式跑。
+  ⚠️ `test:types` 报的是 **unhandled error** 时会「Tests 全绿但 exit=1」⇒ 看到这种组合直接搜 `Unhandled Source Error`。
+  （`build.config.ts` 的类型错误**只有** `test:types` 抓得到 —— `vue-tsc --noEmit` 不看它。）
+- ⚠️ 改 foundation 包后**必须单独重建**；视觉层只链接 theme+ui ⇒ 用例文件里 import `@apollo-design/icons` 解析不到，用「两侧同构」替身。
+- ⚠️ L6 解析的是 `packages/ui/dist` ⇒ 改**组件源码**（不只样式）也要先 `pnpm build:ui`。
+- **GitHub 同步**（每完成一个阶段都要）：
+  `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（`origin` 私有）。
+  ⚠️ 到 GitHub 的**批量**传输直连会挂起 ⇒ 必须走代理；小 API 请求直连可用。
+- 合并：`registry/*.json` 冲突**按冲突块解析**，别 `checkout --ours`，之后重跑生成器。**收口后立刻合 master**。
+  ⚠️「绿在本地」≠「绿在仓库」：依赖磁盘产物先 `git ls-files` 确认已入库。
 
-## 收口期判据
-- **视觉变体避开静态帧测不到的面**：`:hover`/`cursor`/`transition`/纯属性(`href`/`id`)截图不可见⇒必然空转（归 L1/L4）。🚨 写/改变体后 `md5 tests/visual/baselines/react/<c>/*.png | sort` 查同哈希。
-- **L4 的 `it.each` 别用「长度不一致的元组数组」**(TS2345)⇒同形对象数组+`$name`。**`*.test.ts` 也在 `vue-tsc` 内**⇒加完测试重跑 `lint:types`；`arr[0]` 用 `?.`。
-- 🚨 **`.vue` 里出现 `typeof SomeComponent` 就查那条 import 有没有被 biome 改成 `import type`**(299)。**语义化槽(`classNames`/`styles`)支持函数形态**⇒prop 类型必须 `[Object, Function]`。
-- 📌 **置 `completed` 前三件套**：① `COMPONENT_STYLES` 注册；② `index.ts` 导出(B8)；③ `tests/compat/fixtures/<c>/` 有 fixture(E9)。
-
-## 进度（2026-10-04）
-foundation **13/13**；组件 **72/72 completed**（全量封顶）。下一条用 `next-task.mjs` 取
-（当前输出「全部组件已完成」）。
-
-📌 **Table T6 虚拟滚动已收口并提交**（commit `dd706d7`，2026-10-04）：
-`engine/VirtualTable/{BodyGrid,BodyLine,VirtualCell}` + `virtual`/`listItemHeight` prop；
-table 视觉 **24/24 exact**；L1+L4 用例；table 单测 78/78。
-⚠️ **收口后必须 `git status` 确认已落盘** —— T6 曾「验证全绿但整片未提交」，隔了一轮才发现。
-⚠️ **新增 demo 要配套 `.md`**（§6.1「每个 demo 一个 `.tsx` + `.md`」）—— T6 曾漏 `virtual-list.md`，已补。
-⚠️ **两条最容易漏的**：① antd 层必须传 **`tailor: props.virtual`**（否则 `useColumns` 拿不到
-`scrollWidth`、无 width 的列宽为 0 ⇒ 表头被撑到 209px）；② **Vue 的 `setStyle` 不做 px 补全**
-—— `FixedHolder` 的 `width: scrollX` 是裸数字会被静默丢弃（PITFALLS 327-330 同族，已修）。
-定案见 `docs/analysis/table-virtual.md`（横向定位 = flex 行 + 原生横向滚动）。
-- **timeline**=`Steps` 薄壳（无自有 DOM；`.ts` 渲染函数；样式覆盖 Steps 内部变量）；6 Token 只声明 4 条(B7)。⚠️ 扩展 `steps` 新增两个 context key，🚨 必须由 `Steps` **接住并转发**（同族键「最近的赢」遮蔽外层，256）；`Steps` **主动剥 `attrs.class`**⇒类名用 `className`(309)。
-- ✅ **color-picker 已 completed（69/72，commit 0255c4b）**：引擎在
-  `packages/ui/src/color-picker/engine/`（rc 判 `in-ui`）。11 维度全 done；
-  L1/L2 49 + L3 20 + **L4 23/23** + L5 15 + **L6 27/27 exact** + L7 21 + demo 16。
-  🚨 **三条收口期最值钱的经验**（PITFALLS 327-330）：
-  ① **L6 解析的是 `packages/ui/dist`** ⇒ 改**组件源码**（不只样式）也要先 `pnpm build:ui`，
-     否则 `--mode compare` 差异率**逐位不变**；
-  ② **`React.useEffect` ↔ Vue `watch` 不等价**（effect 挂载必跑）⇒ 必须补 `immediate: true`
-     —— 这条漏了会让「初始值就命中该分支」静默失效，**jsdom 测不出、只有 L6 抓得到**；
-  ③ **模板里的 `<slot/>` 产出嵌套数组 `[[vnode]]`** ⇒ `Trigger` 的 `children[0]` 拿到数组
-     ⇒ 多包一层 `<span>`（D79）；要传单个元素只能用**渲染函数**。
-  ⚠️ **L4 只覆盖触发器**（面板在 Portal 里、SSR 不渲染）——面板归 L6，**是有意的分工**。
-  ⚠️ 已知未修差异：传自定义 `children` 时多包一层 `<span>`（修法 = ColorPicker 改渲染函数）。
-  ⚠️ **视觉层/构建门禁的入口都要带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`**
-     （`tests/visual/run.mjs` / `tests/build/run.mjs` / `pnpm build:ui`）——
-     漏了会在打包阶段被 safe-delete 拦下（阈值 50），报 `SAFE_DELETE_BULK_CONFIRM_REQUIRED`。
-- ⚠️ 9 组件「completed+`visualStatus: done` 但零入库 L6 基线」（含 select/auto-complete/cascader/popconfirm/float-button/rate/segmented/**steps**/progress）⇒L6 只能 `--mode both`。根因=未决开放决策 **`visual-baseline-in-git`**。
+## §7 进度
+foundation **13/13**；组件 **72/72 completed**（全量封顶）。
+- 9 个组件「completed 但零入库 L6 基线」（含 select/cascader/float-button/steps…）⇒ L6 只能 `--mode both`。
+- 已收口的大项：Table 虚拟滚动（`dd706d7`）· color-picker（`0255c4b`）· timeline（Steps 薄壳）·
+  ui 按需引入 / `ui-tree-shaking`（`c4fcf4bc`）。
