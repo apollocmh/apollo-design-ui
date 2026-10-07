@@ -6,7 +6,7 @@
   "overallStatus": "in_progress",
   "phase": "audit-shared-surfaces",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-07T01:28:39.893Z",
+  "updatedAt": "2026-10-07T01:34:09.820Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -47,11 +47,11 @@
     },
     "sharedSurfaces": {
       "total": 12,
-      "done": 3,
-      "todo": 9
+      "done": 8,
+      "todo": 4
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 842,
+    "reviewedProductionSourceFiles": 885,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -3524,7 +3524,7 @@
     },
     "a11y": {
       "path": "packages/a11y/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/a11y/src/combobox.ts",
         "packages/a11y/src/focus-restore.ts",
@@ -3535,10 +3535,21 @@
         "packages/a11y/src/use-roving-focus.ts",
         "packages/a11y/src/use-typeahead.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/a11y/src/combobox.ts",
+        "packages/a11y/src/focus-restore.ts",
+        "packages/a11y/src/index.ts",
+        "packages/a11y/src/live-region.ts",
+        "packages/a11y/src/roving.ts",
+        "packages/a11y/src/use-active-descendant.ts",
+        "packages/a11y/src/use-roving-focus.ts",
+        "packages/a11y/src/use-typeahead.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S3",
+      "notes": [
+        "2026-10-07 审阅 8/8。0 条缺陷。live-region 的 onMounted/onScopeDispose 配对；focus-restore 的门控与 try/catch 照抄上游；roving/combobox/typeahead 是纯函数（上游无 typeahead，本仓自定并写明理由）。"
+      ]
     },
     "form-core": {
       "path": "packages/form-core/src",
@@ -3578,7 +3589,7 @@
     },
     "motion": {
       "path": "packages/motion/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/motion/src/css-motion.ts",
         "packages/motion/src/diff.ts",
@@ -3591,10 +3602,23 @@
         "packages/motion/src/support.ts",
         "packages/motion/src/use-motion-status.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/motion/src/css-motion.ts",
+        "packages/motion/src/diff.ts",
+        "packages/motion/src/driver.ts",
+        "packages/motion/src/index.ts",
+        "packages/motion/src/motion-list.ts",
+        "packages/motion/src/next-frame.ts",
+        "packages/motion/src/presets.ts",
+        "packages/motion/src/status.ts",
+        "packages/motion/src/support.ts",
+        "packages/motion/src/use-motion-status.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S3",
+      "notes": [
+        "2026-10-07 审阅 10/10。0 条缺陷。刻意保留/非缺陷：CSSMotion 的槽 payload 键 `className`/`style` 是 rc 的 render-prop 契约（数据字段，非根别名）；`driver.ts` 的 attach/detach 用元素上的 `__motionListener` 正确配对；`next-frame`/`use-motion-status` 均 onUnmounted 清理；status.ts 的 STEP_ACTIVATED 值为 end 等命名照抄上游。"
+      ]
     },
     "overlay": {
       "path": "packages/overlay/src",
@@ -3648,7 +3672,7 @@
     },
     "portal": {
       "path": "packages/portal/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/portal/src/container.ts",
         "packages/portal/src/index.ts",
@@ -3658,14 +3682,24 @@
         "packages/portal/src/use-portal.ts",
         "packages/portal/src/use-scroll-locker.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/portal/src/container.ts",
+        "packages/portal/src/index.ts",
+        "packages/portal/src/mock.ts",
+        "packages/portal/src/portal.ts",
+        "packages/portal/src/use-esc-key-down.ts",
+        "packages/portal/src/use-portal.ts",
+        "packages/portal/src/use-scroll-locker.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S3",
+      "notes": [
+        "2026-10-07 审阅 7/7。0 条缺陷。useEscKeyDown 的全局 keydown/compositionend 在栈空与 onScopeDispose 两处都摘；useScrollLocker 用 onScopeDispose 移除 CSS；usePortalContainer 的「首次必须 onMounted 而非 immediate」有完整推导（子先于父 ⇒ 嵌套顺序）。"
+      ]
     },
     "position": {
       "path": "packages/position/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/position/src/align.ts",
         "packages/position/src/area.ts",
@@ -3676,14 +3710,25 @@
         "packages/position/src/point.ts",
         "packages/position/src/types.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/position/src/align.ts",
+        "packages/position/src/area.ts",
+        "packages/position/src/index.ts",
+        "packages/position/src/measure.ts",
+        "packages/position/src/offset.ts",
+        "packages/position/src/placements.ts",
+        "packages/position/src/point.ts",
+        "packages/position/src/types.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S3",
+      "notes": [
+        "2026-10-07 审阅 8/8。0 条缺陷（纯几何 + 一次 DOM 测量；measureAlign 用 try/finally 保证 inline style 还原 —— 比上游更严且登记为有意差异）。"
+      ]
     },
     "virtual-list": {
       "path": "packages/virtual-list/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/virtual-list/src/algorithm.ts",
         "packages/virtual-list/src/cache.ts",
@@ -3696,10 +3741,23 @@
         "packages/virtual-list/src/use-heights.ts",
         "packages/virtual-list/src/virtual-list.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/virtual-list/src/algorithm.ts",
+        "packages/virtual-list/src/cache.ts",
+        "packages/virtual-list/src/filler.ts",
+        "packages/virtual-list/src/index.ts",
+        "packages/virtual-list/src/range.ts",
+        "packages/virtual-list/src/scroll-target.ts",
+        "packages/virtual-list/src/size.ts",
+        "packages/virtual-list/src/types.ts",
+        "packages/virtual-list/src/use-heights.ts",
+        "packages/virtual-list/src/virtual-list.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S3",
+      "notes": [
+        "2026-10-07 审阅 10/10。0 条缺陷。虚拟列表的根 `inheritAttrs:false` + `attrs.class` 并入数组 + `attrs.style` 显式首参 —— 无重复/丢失；useHeights 用微任务 + id 合并并在 onScopeDispose 作废；两处「不做自绘滚动条 / 不做 marginLeft 模拟」是登记的有意差异。"
+      ]
     },
     "test-utils": {
       "path": "packages/test-utils/src",
@@ -4320,6 +4378,19 @@
         "VNA-ALLOWCLEAR-01 / VNA-DOC-STALE-01 为死代码与过期注释，删除/更正",
         "unit _internal 4 文件/36 用例全绿（trigger 7→8）；改动文件 biome 0 诊断"
       ]
+    },
+    {
+      "id": "AUDIT-S3",
+      "title": "Shared surface audit — L1 packages (motion / portal / position / a11y / virtual-list)",
+      "status": "completed",
+      "scope": "packages/{motion,portal,position,a11y,virtual-list}/src (43 production source files)",
+      "issueIds": [],
+      "verification": [
+        "逐文件读完全部 43 个生产源文件（motion 10 · portal 7 · position 8 · a11y 8 · virtual-list 10）",
+        "机械扫描（React 类型/生命周期/any/children/class-alias/defaultProps/props 访问/$attrs/emit/watch-computed/lifecycle）：唯一「class-alias」命中是 motion 的槽 payload 键（数据字段，非根别名）",
+        "全仓 addEventListener 缺 removeEventListener 扫描（955 文件）在 L1 五包 0 命中",
+        "结论：0 条新增 issue（本批无需改动）"
+      ]
     }
   ],
   "gateResults": {},
@@ -4598,6 +4669,11 @@
       "date": "2026-10-07",
       "status": "completed",
       "note": "AUDIT-S2 (shared surfaces) COMPLETE: ui-internal 16/16 + ui-public-entry 1/1 reviewed. 3 issues (1 P1 + 2 P3), all fixed. P1 = VNA-TRIGGER-01: Trigger leaked a global window resize listener (no removeEventListener anywhere; Vue does not auto-clean raw listeners) — fixed with onBeforeUnmount, reverse-sentinel verified, and a 955-file sweep confirmed it was the ONLY file missing a removeEventListener. P3 = dead `void getCurrentInstance()` in use-allow-clear; stale doc comments (removed KNOWN-ISSUES pointer + wrong 1/72 progress in the barrel)."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "AUDIT-S3 (shared surfaces) COMPLETE: L1 packages motion 10/10, portal 7/7, position 8/8, a11y 8/8, virtual-list 10/10 reviewed — 0 issues. Same profile as utils: every React-shaped carryover is documented (contract source + intentional deviation) and locked by focused tests. Notable justified items: CSSMotion slot payload keys className/style are rc render-prop contract data fields (not root aliases); useEscKeyDown detaches global listeners in both the empty-stack path and onScopeDispose; usePortalContainer uses onMounted (not immediate watch) to keep child-before-parent append order; measureAlign wraps the inline-style rewrite in try/finally (stricter than upstream, registered as intentional)."
     }
   ],
   "observations": [
