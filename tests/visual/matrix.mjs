@@ -764,6 +764,23 @@ export const COMPONENTS = {
       'variants', // 变体 / 尺寸 / 状态 / 禁用 / 前后缀（**不开浮层**）
     ],
   },
+  transfer: {
+    // 3 个 variant × 3 个 viewport = 9 张
+    //
+    // 🚨 **2026-10-07 新增**：transfer 此前是全仓**唯一**没有 L6 覆盖的组件 ——
+    //    72 个组件里其余 71 个在 `matrix.mjs` 与 `baselines/react/` 两边齐备，
+    //    只有它两边都没有（没有查到「有意跳过」的记载 ⇒ 判为遗漏）。
+    //
+    // ⚠️ 三条纪律（详见 `render/cases/react/transfer.jsx` 的文件头）：
+    //    ① 数据**静态**、不绑 change 回调（L6 只拍静态帧，交互归 L1/L4）；
+    //    ② 上下文字体**钉成具体值**（两侧页面基座字体不同，列表项文字靠继承 ⇒ 会显形）；
+    //    ③ 不写 `:hover` / 动画 / 拖拽类变体 —— 静态帧测不到（必然空转）。
+    variants: [
+      'basic', // 双列 + 部分选中 + disabled 项（i%4===0）
+      'search', // showSearch：两列各多一个搜索框
+      'oneway', // oneWay：只保留单向箭头（与 basic 的可测差异）
+    ],
+  },
   tooltip: {
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部 open 受控静态帧（不走 hover 时序）。basicOpen/colorful 的浮层经

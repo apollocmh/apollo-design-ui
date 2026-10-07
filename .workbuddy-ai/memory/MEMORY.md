@@ -88,6 +88,24 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 
 ## §7 进度
 foundation **13/13**；组件 **72/72 completed**（全量封顶）。
-- 9 个组件「completed 但零入库 L6 基线」（含 select/cascader/float-button/steps…）⇒ L6 只能 `--mode both`。
+- ✅ **L6 基线已全覆盖**（2026-10-07 实测复核）：`tests/visual/baselines/react/` 下
+  **71 个组件目录 / 1128 张 PNG，零基线：无**。
+  ⚠️ 此前这里写的「9 个组件零入库基线 ⇒ L6 只能 `--mode both`」**已过期** ——
+  实测 `node tests/visual/run.mjs --mode compare --component tree` = **9/9 exact**（21 秒）。
+  ⇒ **别再信那条，动手前先 `ls` 一遍基线目录数一下。**
 - 已收口的大项：Table 虚拟滚动（`dd706d7`）· color-picker（`0255c4b`）· timeline（Steps 薄壳）·
-  ui 按需引入 / `ui-tree-shaking`（`c4fcf4bc`）。
+  ui 按需引入 / `ui-tree-shaking`（`c4fcf4bc`）· 砍 `ant` CSS 变体（`825a2055`）·
+  共享逻辑入 `_internal` + 开放决策清零（`c3d5649f`）。
+
+## §8 判别式补充（2026-10-07）
+- **「≥2 个消费者」要分两级看**：能进**独立包**的要「≥2 个**包**消费」；
+  只被多个**组件**共用的 ⇒ 放 `packages/ui/src/_internal/`，**不是**新包。
+- 🚨 **搬逻辑到 `_internal/` 时，它依赖的「类型」必须一起搬** —— 否则会造出
+  `_internal/ → <组件>/` 的反向依赖，比原来的跨组件 import 更糟。
+  做法：类型搬进 `_internal/`，原 `interface.ts` **原样再导出** ⇒ 公开 API 零变化。
+- **消重不是无条件的**：`_internal/use-merge-semantic.ts` 的 clsx **刻意**比共享版窄
+  （只收字符串）。判据是「宽版会不会把错误形态静默吞掉」，不是「能不能合并」。
+- 🚨 **新增视觉用例后必须 `Read` 看基线图**。哈希查重 / 体积 / L6 exact 对「内容缺失」
+  全是盲的 —— 两侧一致地错时像素差异恰好为 0（transfer 不传 `render` 的实测教训）。
+- **antd 6.6.4 `Transfer` 的 `defaultRender = () => null`** ⇒ 不传 `render` 列表项内容为空
+  （`item.title` 只进原生 `title` 属性）。本仓 Vue 侧行为一致，是忠实移植不是 bug。
