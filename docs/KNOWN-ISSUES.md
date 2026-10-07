@@ -46,13 +46,39 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §1 仍开放的问题
 
-**（§1 当前为空）** —— 2026-10-07 前 §1 的 9 条已全部修完或裁决，逐条留痕见 §3。
-
 > 📌 **§1 曾长期挂着「ui 事实无法按需引入」**（2026-10-07 修完，留痕见 §3 2026-10-07 那条）。
 > 它的教训值得单独留在正文里：**那条缺陷之所以能躺近一年，是因为唯一能抓到它的门禁
 > B6 从 2026-09-18 起就是 PENDING —— 一条从不运行的门禁，就是缺陷的沉积区。**
 > 现在 B6 已转真检查（73 个组件逐个有预算，`tests/build/budget.json`），
 > **任何新增 PENDING 都应被视为「待补的债」，不是免罚牌。**
+
+### §1.1 `prefixCls="ant"` 在 **24 个组件**上不完整（7 个几乎完全没样式）
+
+**2026-10-07 实测**（`ui-tree-shaking` 收尾后回头核对 CSS 半边的按需粒度时发现）。
+
+**判据（可复现）**：
+
+```sh
+# 权威缺口清单 + 双向校验（修一个删一条、漏登记会红）
+node_modules/.bin/vitest run --project unit style-prefix
+# 代价：纯 ant 变体占组件 CSS 总量的比例
+#   实测 827.2 KB / 2522.2 KB = 32.8%
+```
+
+- `STATIC_PREFIX_CLS = ['apollo','ant']`（`packages/ui/src/style/index.ts`）⇒ 每份组件 CSS 两个前缀各生成一遍，
+  这是**有意的**（裁决 `prefix-cls-default` = A 承诺「默认 apollo，可覆盖为 ant」；零运行时下不生成 `ant` 那份，
+  那条承诺就是空的）。文件注释里也明写了「代价是 CSS 体积翻倍」。
+- 但 `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS` 现有 **24 个组件**的 `ant` 版类名数少于
+  `apollo` 版 —— 其中 **7 个是「规则体完全静态」（`gen(p)` 忽略了 `p`）**，实测计数：
+  `tabs` 885→1 · `input` 734→3 · `upload` 1051→1 · **`tooltip` 213→0** · `form` 322→2 · `pagination` 477→1 ·
+  `slider` 136→1 ⇒ 对这些组件，**设了 `prefixCls="ant"` 事实上是没有任何样式的**。
+  其余 17 个是「跨组件类名写成字面量」（`.apollo-icon` / `.apollo-dropdown` …）⇒ 部分不一致。
+
+⚠️ **不要当成 bug 去改的两件事**（已核为刻意设计）：① `BASE_CSS`（antd reset + 图标基线）确实嵌进了**每一份**
+组件 CSS，是「单引自足」所需（否则只引单个组件 CSS 会退回 Times）；② 每份组件 CSS 里两个前缀并存，换来运行时可切前缀。
+
+**处置**：已登记为开放决策 **`css-ant-prefix-cost`**（4 个选项，推荐 C「按前缀拆成两个文件」）。
+`node registry/tools/ask.mjs decision css-ant-prefix-cost` 看全文。**需用户裁决后**再动 `STATIC_PREFIX_CLS` 或产物布局。
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 

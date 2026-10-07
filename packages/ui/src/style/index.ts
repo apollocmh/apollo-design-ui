@@ -116,10 +116,21 @@ import { genUploadStyle } from '../upload/style';
  *     实测 382 个、0 个 `--ant-*`）；
  *   - **组件自有变量** `--apollo-<component>-*` ⇒ 跟着换。
  *
- * ⚠️ **当前仍有缺口**：2026-10-02 修好 `date-picker` / `calendar` 后全仓扫描，
- * 另有 **22 个组件**的 `ant` 版类名数少于 `apollo` 版（其中 7 个是「规则体完全静态」
- * ⇒ `ant` 版几乎为空）。**权威清单 + 双向校验**（修一个删一条、漏登记会红）
- * 在 `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS`。
+ * ⚠️ **当前仍有缺口**（2026-10-07 复核数字）：`KNOWN_GAPS` 现有 **24 个组件**的
+ * `ant` 版类名数少于 `apollo` 版 —— 其中 **7 个是「规则体完全静态」**
+ * （tabs 885→1 / input 734→3 / upload 1051→1 / tooltip 213→0 / form 322→2 /
+ * pagination 477→1 / slider 136→1）⇒ `ant` 版**几乎为空**，对这些组件来说
+ * `prefixCls="ant"` 事实上是**没有样式**的。
+ *
+ *   ⚠️ 注释里原先写的「22 个」是 2026-10-02 的快照，实测已变成 24 ——
+ *      **这类数字会漂移，引用前请去权威清单核对**（下同 §0 那条纪律）。
+ *
+ *   **权威清单 + 双向校验**（修一个删一条、漏登记会红）在
+ *   `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS`。
+ *
+ * 💰 **这笔账现在是负的**（2026-10-07 实测）：`ant` 那份占组件 CSS 总量的 **32.8%**
+ *    （827.2 KB / 2522.2 KB），而它买到的能力在 24 个组件上是不完整的。
+ *    是否继续承担这个代价，见开放决策 **`css-ant-prefix-cost`**。
  */
 export const STATIC_PREFIX_CLS = ['apollo', 'ant'] as const;
 
