@@ -32,11 +32,10 @@ import {
   toValue,
   type VNode,
 } from 'vue';
-
+import { clsx } from '../_internal/clsx';
 import { computeClosable, pickClosable } from '../_internal/use-closable';
 import { useComponentConfig } from '../config-provider/context';
 import { useNotification as useKernelNotification } from './engine';
-import { clsx } from './engine/util';
 import { useStackConfig } from './hooks/useStackConfig';
 import { getCloseIcon, getCloseIconWithLabel, TypeIcon } from './icon';
 import type {

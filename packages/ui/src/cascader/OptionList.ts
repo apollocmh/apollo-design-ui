@@ -32,7 +32,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
-
+import { clsx } from '../_internal/clsx';
 import { useCascaderContext } from './context';
 import {
   type BaseOptionType,
@@ -50,23 +50,8 @@ export const FIX_LABEL = '__cascader_fix_label__';
 
 const KeyCode = { UP: 38, DOWN: 40, LEFT: 37, RIGHT: 39, ENTER: 13, ESC: 27, BACKSPACE: 8 };
 
-/** 本地 clsx（字符串 + `{[k]: boolean}` 对象形态）。 */
-function clsx(
-  ...parts: Array<string | false | null | undefined | Record<string, boolean | undefined>>
-): string {
-  const out: string[] = [];
-  for (const part of parts) {
-    if (!part) continue;
-    if (typeof part === 'string') {
-      out.push(part);
-    } else {
-      for (const [key, value] of Object.entries(part)) {
-        if (value) out.push(key);
-      }
-    }
-  }
-  return out.join(' ');
-}
+// ⚠️ 这里原先有一份本地 clsx（字符串 + `{[k]: boolean}` 对象形态）—— 2026-10-07 删除，
+//    改用共享层的 `_internal/clsx.ts`（行为在本文件的输入空间下完全一致，见 useDrag.ts 的注释）。
 
 // ================================ Checkbox ================================
 

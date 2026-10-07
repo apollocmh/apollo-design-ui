@@ -82,7 +82,14 @@ export type SemanticInput<T, P> = T | ((info: SemanticInfo<P>) => T);
 /** 任意可响应化的输入。普通值、ref、getter 都接受（与 `toValue` 同构）。 */
 export type MaybeSource<T> = MaybeRefOrGetter<T>;
 
-/** `clsx` 在本仓库的等价物：过滤假值后用空格连接。 */
+/**
+ * ⚠️ **刻意不用** `_internal/clsx.ts` 那一份（2026-10-07 核对过）。
+ *
+ * 这里是**更窄**的语义：只保留字符串，数字 / 数组 / 对象一律丢弃。
+ * 而共享层那份会展开数组与对象（`{a:true}` → `'a'`）。语义化 `classNames` 的槽位值
+ * 本来就是字符串，宽版本在这里只会把「传错了形态」静默变成一个类名。
+ * ⇒ 别为了「消重」把它换成共享版 —— 那份窄语义是有意的。
+ */
 function clsx(...values: unknown[]): string {
   return values.filter((v) => typeof v === 'string' && v !== '').join(' ');
 }

@@ -28,6 +28,21 @@ import {
   ref,
   watch,
 } from 'vue';
+import { clsx } from '../_internal/clsx';
+import { conductCheck } from '../_internal/tree/conduct-util';
+import getEntity from '../_internal/tree/key-util';
+import {
+  convertDataToEntities,
+  convertNodePropsToEventData,
+  type EventDataNodeLike,
+  type FlattenNode,
+  fillFieldNames,
+  flattenTreeData,
+  getTreeNodeProps,
+  isLeafNode,
+  type TreeNodeRequiredProps,
+  warningWithoutKey,
+} from '../_internal/tree/tree-util';
 import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
 import {
   useComponentConfig,
@@ -36,7 +51,6 @@ import {
   useThemeConfig,
 } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
-import { clsx } from '../notification/engine/util';
 import DropIndicator, { type DropIndicatorProps } from './DropIndicator';
 import type {
   DataNode,
@@ -59,21 +73,7 @@ import {
   parseCheckedKeys,
   posToArr,
 } from './utils';
-import { conductCheck } from './utils/conductUtil';
 import renderSwitcherIcon from './utils/iconUtil';
-import getEntity from './utils/keyUtil';
-import {
-  convertDataToEntities,
-  convertNodePropsToEventData,
-  type EventDataNodeLike,
-  type FlattenNode,
-  fillFieldNames,
-  flattenTreeData,
-  getTreeNodeProps,
-  isLeafNode,
-  type TreeNodeRequiredProps,
-  warningWithoutKey,
-} from './utils/treeUtil';
 
 /** rc `MAX_RETRY_TIMES`：loadData 失败重试上限。 */
 const MAX_RETRY_TIMES = 10;
@@ -81,7 +81,7 @@ const MAX_RETRY_TIMES = 10;
 /** rc `EventDataNodeLike` 的本仓别名（convertNodePropsToEventData 的产物）。 */
 type TreeEventData = EventDataNodeLike<BasicDataNodeLike>;
 
-type BasicDataNodeLike = import('./utils/keyUtil').BasicDataNodeLike;
+type BasicDataNodeLike = import('../_internal/tree/key-util').BasicDataNodeLike;
 
 export const treeProps = {
   treeData: { type: Array as PropType<DataNode[]>, default: undefined },

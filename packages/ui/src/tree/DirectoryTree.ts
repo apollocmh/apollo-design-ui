@@ -14,13 +14,13 @@
 
 import { FileOutlined, FolderOpenOutlined, FolderOutlined } from '@apollo-design/icons';
 import { computed, defineComponent, h, ref, watch } from 'vue';
+import { clsx } from '../_internal/clsx';
+import { convertDataToEntities } from '../_internal/tree/tree-util';
 import { useComponentConfig } from '../config-provider/context';
-import { clsx } from '../notification/engine/util';
 import type { DataNode, EventDataNode, TreeKey } from './interface';
 import Tree, { treeProps } from './Tree';
 import { conductExpandParent } from './utils';
 import { calcRangeKeys, convertDirectoryKeysToNodes } from './utils/dictUtil';
-import { convertDataToEntities } from './utils/treeUtil';
 
 function getIcon(props: { isLeaf?: boolean; expanded?: boolean }) {
   const { isLeaf, expanded } = props;

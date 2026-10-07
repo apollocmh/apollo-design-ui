@@ -38,8 +38,8 @@ import {
   type PropType,
   type VNodeChild,
 } from 'vue';
+import { clsx as cx } from '../_internal/clsx';
 import { Button } from '../button';
-import { clsx as cx } from '../tooltip/util';
 import type {
   TourClosableConfig,
   TourSemanticClassNames,

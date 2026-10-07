@@ -11,7 +11,7 @@
  * v6 deprecated —— docs/analysis/tree.md §6）。
  */
 
-export * from './conductUtil';
+export * from '../../_internal/tree/conduct-util';
+export * from '../../_internal/tree/tree-util';
 export * from './diffUtil';
-export * from './treeUtil';
 export * from './util';

@@ -31,9 +31,9 @@ import {
   type VNodeChild,
   watchEffect,
 } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useConfigContext, useDirection } from '../config-provider/context';
-import { clsx } from '../notification/engine/util';
 import CircleEngine from './engine/Circle';
 import LineEngine from './engine/Line';
 import StepsEngine from './engine/Steps';

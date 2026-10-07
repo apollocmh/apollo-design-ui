@@ -13,10 +13,9 @@
  */
 import { isEmptyVNode } from '@apollo-design/utils';
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
-
+import { clsx } from '../_internal/clsx';
 import { useComponentConfig } from '../config-provider/context';
 import Notice from '../notification/engine/Notice';
-import { clsx } from '../notification/engine/util';
 import { getMessageIcon } from './icon';
 import type { ArgsProps, MessageSemanticType, NoticeType } from './interface';
 

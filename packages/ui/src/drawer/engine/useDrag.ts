@@ -12,6 +12,7 @@
  *      + `-horizontal` / `-vertical`。
  */
 import { type MaybeRefOrGetter, onScopeDispose, ref, toValue, watch } from 'vue';
+import { clsx } from '../../_internal/clsx';
 
 export interface UseDragOptions {
   prefixCls: string;
@@ -31,20 +32,10 @@ export interface UseDragResult {
   isDragging: { value: boolean };
 }
 
-function clsx(...args: Array<string | Record<string, boolean> | undefined>): string {
-  const out: string[] = [];
-  for (const arg of args) {
-    if (!arg) continue;
-    if (typeof arg === 'string') {
-      out.push(arg);
-      continue;
-    }
-    for (const [key, value] of Object.entries(arg)) {
-      if (value) out.push(key);
-    }
-  }
-  return out.join(' ');
-}
+// ⚠️ 这里原先有一份本地 clsx（字符串 + `{[k]: boolean}` 对象形态）—— 2026-10-07 删除。
+//    它与 `_internal/clsx.ts` 那份在自己的输入空间下**行为一致**（后者是超集，
+//    额外支持数字与数组；并会跳过空串 —— 那只会少产空格，不会少产类名）。
+//    ⇒ 统一到共享层，消掉本仓最后一份重复实现。
 
 export function useDrag(options: MaybeRefOrGetter<UseDragOptions>): UseDragResult {
   const isDragging = ref(false);

@@ -22,115 +22,45 @@
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
+import type {
+  BasicDataNode,
+  DataNode,
+  EventDataNode,
+  SafeKey,
+  TreeDataEntity,
+  TreeDraggable,
+  TreeExpandAction,
+  TreeFieldNames,
+  TreeIconType,
+  TreeKey,
+} from '../_internal/tree/types';
 
-// ---------------------------------------------------------------------------
-// 数据结构（rc interface.d.ts 逐字段对齐）
-// ---------------------------------------------------------------------------
-
-/** `React.Key` 的 Vue 对应物；`SafeKey` 排除 bigint（rc :88-95 的既有约束）。 */
-export type TreeKey = string | number;
-export type SafeKey = Exclude<TreeKey, bigint>;
-
-/** rc `FieldDataNode`：用户数据节点 + 递归 children（字段名可由 fieldNames 改写）。 */
-export interface BasicDataNode {
-  checkable?: boolean;
-  disabled?: boolean;
-  disableCheckbox?: boolean;
-  icon?: TreeIconType;
-  isLeaf?: boolean;
-  selectable?: boolean;
-  switcherIcon?: TreeIconType;
-  className?: string;
-  style?: CSSProperties;
-}
-
-export type FieldDataNode<T, ChildFieldName extends string = 'children'> = BasicDataNode &
-  T &
-  Partial<Record<ChildFieldName, FieldDataNode<T, ChildFieldName>[]>>;
-
-/** rc `DataNode`（默认字段名形态）。 */
-export type DataNode = FieldDataNode<{
-  key: TreeKey;
-  title?: VNodeChild | ((data: DataNode) => VNodeChild);
-}>;
-
-/** rc `EventDataNode`：事件回调里的节点（数据 + 运行时态）。 */
-export type EventDataNode<TreeDataType extends BasicDataNode = DataNode> = {
-  key: TreeKey;
-  expanded: boolean;
-  selected: boolean;
-  checked: boolean;
-  loaded: boolean;
-  loading: boolean;
-  halfChecked: boolean;
-  dragOver: boolean;
-  dragOverGapTop: boolean;
-  dragOverGapBottom: boolean;
-  pos: string;
-  active: boolean;
-} & TreeDataType &
-  BasicDataNode;
-
-/** rc `FieldNames`（`_title` 仅 tree-select 内部使用，保留字段不公开）。 */
-export interface TreeFieldNames {
-  title?: string;
-  key?: string;
-  children?: string;
-}
-
-/** rc `DataEntity`（键实体表值；keyEntities 的公开形态）。 */
-export interface TreeDataEntity<TreeDataType extends BasicDataNode = DataNode> {
-  index: number;
-  key: SafeKey;
-  pos: string;
-  level: number;
-  node: TreeDataType;
-  nodes: TreeDataType[];
-  children?: TreeDataEntity<TreeDataType>[];
-  parent?: TreeDataEntity<TreeDataType>;
-}
-
-// ---------------------------------------------------------------------------
-// 图标 / 回调形态（D111 例外清单：程序化上下文保留 VNode|fn）
-// ---------------------------------------------------------------------------
-
-/** 节点态传给 icon/switcherIcon fn 的参数（rc `TreeNodeProps` 的只读子集）。 */
-export interface TreeNodeRenderInfo<TreeDataType extends BasicDataNode = DataNode> {
-  eventKey?: TreeKey;
-  expanded?: boolean;
-  selected?: boolean;
-  checked?: boolean;
-  loaded?: boolean;
-  loading?: boolean;
-  halfChecked?: boolean;
-  dragOver?: boolean;
-  dragOverGapTop?: boolean;
-  dragOverGapBottom?: boolean;
-  pos?: string;
-  data?: TreeDataType;
-  isLeaf?: boolean;
-  checkable?: boolean;
-  selectable?: boolean;
-  disabled?: boolean;
-  disableCheckbox?: boolean;
-  /** 展开函数等注入位与 rc 的 treeNodeProps 同构。 */
-  [key: string]: unknown;
-}
-
-/** rc `IconType`：VNode 或按节点态求值的 fn。 */
-export type TreeIconType = VNodeChild | ((props: TreeNodeRenderInfo) => VNodeChild);
-
-/** rc `ExpandAction`。 */
-export type TreeExpandAction = false | 'click' | 'doubleClick';
-
-/** rc `DraggableFn` / `DraggableConfig`。 */
-export type TreeNodeDraggableFn = (node: DataNode) => boolean;
-export interface TreeDraggableConfig {
-  /** `false` 显式关闭拖拽把手（默认渲染 HolderOutlined）。 */
-  icon?: VNodeChild | false;
-  nodeDraggable?: TreeNodeDraggableFn;
-}
-export type TreeDraggable = TreeNodeDraggableFn | boolean | TreeDraggableConfig;
+// ── 数据模型的定义已搬到 packages/ui/src/_internal/tree/types.ts ──────────────
+//
+// 裁决 `early-extract-table-core-tree-core` = **C**（2026-10-07）：`tree` 的纯逻辑
+// （键实体表 / 勾选传导 / 数组增删）有 ≥2 个消费者（`tree-select` / `table`），
+// 按「共享工具必须放 `src/_internal/`」该搬出组件目录；而那些逻辑**依赖这份数据模型**
+// ⇒ 只搬函数会造成 `_internal/ → tree/` 的反向依赖，比原状更糟。所以类型跟着一起搬。
+//
+// ⚠️ 下面这一句**不能删**：它保证公开 API 面与所有既有的 `tree/interface` 导入站点
+//    完全不变（`FieldDataNode` / `TreeNodeRenderInfo` / `TreeNodeDraggableFn` /
+//    `TreeDraggableConfig` 本文件已不再直接使用，但仍是对外契约的一部分）。
+export type {
+  BasicDataNode,
+  DataNode,
+  EventDataNode,
+  FieldDataNode,
+  SafeKey,
+  TreeDataEntity,
+  TreeDraggable,
+  TreeDraggableConfig,
+  TreeExpandAction,
+  TreeFieldNames,
+  TreeIconType,
+  TreeKey,
+  TreeNodeDraggableFn,
+  TreeNodeRenderInfo,
+} from '../_internal/tree/types';
 
 /** rc `AllowDrop`。 */
 export interface TreeAllowDropOptions<TreeDataType extends BasicDataNode = DataNode> {

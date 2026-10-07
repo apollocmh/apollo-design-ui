@@ -18,11 +18,11 @@
 import { useId } from '@apollo-design/utils';
 import { VirtualList } from '@apollo-design/virtual-list';
 import { computed, defineComponent, h, onUnmounted, type PropType, ref, watch } from 'vue';
+import { type FlattenNode, getKey, getTreeNodeProps } from '../_internal/tree/tree-util';
 import type { TreeKey } from './interface';
 import MotionTreeNode from './MotionTreeNode';
 import type { TreeNodeRequiredProps } from './TreeContext';
 import { findExpandedKeys, getExpandRange } from './utils/diffUtil';
-import { type FlattenNode, getKey, getTreeNodeProps } from './utils/treeUtil';
 
 export const MOTION_KEY = `RC_TREE_MOTION_${Math.random()}`;
 const MotionNode = { key: MOTION_KEY };

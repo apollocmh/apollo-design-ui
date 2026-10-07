@@ -36,6 +36,7 @@ import {
   type VNode,
   type VNodeChild,
 } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -49,7 +50,7 @@ import type {
 } from './interface';
 import { tooltipTokenValues } from './style/token';
 import { useMergedArrow } from './use-merged-arrow';
-import { clsx, parseTooltipColor } from './util';
+import { parseTooltipColor } from './util';
 
 type StyleLike = Record<string, string | number>;
 

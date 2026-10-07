@@ -10,11 +10,11 @@
 
 import { CSSMotion, type MotionHooks } from '@apollo-design/motion';
 import { computed, defineComponent, h, type PropType, ref, watch } from 'vue';
-import { clsx } from '../notification/engine/util';
+import { clsx } from '../_internal/clsx';
+import type { FlattenNode } from '../_internal/tree/tree-util';
+import { getTreeNodeProps } from '../_internal/tree/tree-util';
 import type { TreeNodeRequiredProps } from './TreeContext';
 import TreeNode from './TreeNode';
-import type { FlattenNode } from './utils/treeUtil';
-import { getTreeNodeProps } from './utils/treeUtil';
 
 export default defineComponent({
   name: 'ATreeMotionTreeNode',

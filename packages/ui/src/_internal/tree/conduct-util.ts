@@ -10,8 +10,8 @@
  */
 
 import { warning } from '@apollo-design/utils';
-import type { SafeKey } from '../interface';
-import type { BasicDataNodeLike } from './keyUtil';
+import type { BasicDataNodeLike } from './key-util';
+import type { SafeKey } from './types';
 
 /** 级联计算用的最小实体视图（TreeDataEntity 的结构子集，node 收窄为 BasicDataNodeLike）。 */
 export interface ConductEntity {

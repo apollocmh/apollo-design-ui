@@ -291,8 +291,11 @@ export const Steps = defineComponent({
 
     const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
 
-    // ⚠️ 本仓 clsx（notification/engine/util）是简化版：**不支持对象参数**——
-    //    条件类必须自己展开成字符串（CHECKLIST 沉淀：拼类名一律 filter(Boolean).join(' ')）。
+    // ⚠️ 这条注释**曾经是错的**（2026-10-07 订正）：它说本仓 clsx「不支持对象参数」，
+    //    而 `notification/engine/util` 那份**一直有** object 分支（`{k: on}` → `k`）。
+    //    现在那份 clsx 已搬到 `_internal/clsx.ts`（裁决 `early-extract-table-core-tree-core` = C），
+    //    支持的形态是 string / number / array / object —— **包含**对象参数。
+    //    这里仍然手写展开，是因为条件类本来就该显式展开（可读性，不是能力限制）。
     const stepsClassName = computed(() =>
       [
         prefixCls.value,

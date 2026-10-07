@@ -36,7 +36,7 @@ export interface DragNodeSnapshot {
 }
 
 /** rc `TreeNodeRequiredProps`：getTreeNodeRequiredProps() 的产物（定义在 treeUtil）。 */
-export type { TreeNodeRequiredProps } from './utils/treeUtil';
+export type { TreeNodeRequiredProps } from '../_internal/tree/tree-util';
 
 export interface TreeContextValue {
   prefixCls: string;

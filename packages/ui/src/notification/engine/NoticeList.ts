@@ -16,6 +16,7 @@
  */
 import { MotionList } from '@apollo-design/motion';
 import { computed, defineComponent, h, nextTick, onMounted, type PropType, ref, watch } from 'vue';
+import { clsx } from '../../_internal/clsx';
 import { useListPosition } from './hooks/useListPosition';
 import { useStack } from './hooks/useStack';
 import type {
@@ -28,7 +29,6 @@ import type {
 import Notice from './Notice';
 import NoticeListContent from './NoticeListContent';
 import { useNotificationContext } from './NotificationProvider';
-import { clsx } from './util';
 
 /** rc 的 9 个 notice 槽（顺序即合并顺序）。 */
 const NOTICE_SLOT_KEYS = [

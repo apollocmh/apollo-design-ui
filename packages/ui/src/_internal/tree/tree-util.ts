@@ -9,9 +9,9 @@
  */
 
 import { warning } from '@apollo-design/utils';
-import type { SafeKey, TreeFieldNames, TreeKey } from '../interface';
-import type { BasicDataNodeLike } from './keyUtil';
-import getEntity from './keyUtil';
+import type { BasicDataNodeLike } from './key-util';
+import getEntity from './key-util';
+import type { SafeKey, TreeFieldNames, TreeKey } from './types';
 
 export function getPosition(level: string, index: number): string {
   return `${level}-${index}`;

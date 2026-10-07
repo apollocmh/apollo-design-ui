@@ -10,27 +10,13 @@
  */
 
 import { warning } from '@apollo-design/utils';
+import type { BasicDataNodeLike } from '../../_internal/tree/key-util';
+import getEntity from '../../_internal/tree/key-util';
 import type { SafeKey, TreeDataEntity, TreeKey } from '../interface';
-import type { BasicDataNodeLike } from './keyUtil';
-import getEntity from './keyUtil';
 
-export function arrDel(list: TreeKey[] | undefined | null, value: TreeKey): TreeKey[] {
-  if (!list) return [];
-  const clone = list.slice();
-  const index = clone.indexOf(value);
-  if (index >= 0) {
-    clone.splice(index, 1);
-  }
-  return clone;
-}
-
-export function arrAdd(list: TreeKey[] | undefined | null, value: TreeKey): TreeKey[] {
-  const clone = (list || []).slice();
-  if (clone.indexOf(value) === -1) {
-    clone.push(value);
-  }
-  return clone;
-}
+// `arrDel` / `arrAdd` 已搬到 `_internal/array-util.ts`（裁决 `early-extract-table-core-tree-core` = C：
+// 它们有 ≥2 个消费者且跟「树」无关）。这里再导出，保持 `tree/utils` 的既有导入面不变。
+export { arrAdd, arrDel } from '../../_internal/array-util';
 
 export function posToArr(pos: string): string[] {
   return pos.split('-');

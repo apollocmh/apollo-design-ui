@@ -16,12 +16,12 @@
  */
 
 import { computed, defineComponent, h, inject, type PropType, type VNodeChild, watch } from 'vue';
-import { clsx } from '../notification/engine/util';
+import { clsx } from '../_internal/clsx';
+import getEntity from '../_internal/tree/key-util';
+import { convertNodePropsToEventData, isLeafNode } from '../_internal/tree/tree-util';
 import Indent from './Indent';
 import type { TreeKey } from './interface';
 import { treeContextKey } from './TreeContext';
-import getEntity from './utils/keyUtil';
-import { convertNodePropsToEventData, isLeafNode } from './utils/treeUtil';
 
 const ICON_OPEN = 'open';
 const ICON_CLOSE = 'close';

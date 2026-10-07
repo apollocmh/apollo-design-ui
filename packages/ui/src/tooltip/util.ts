@@ -57,7 +57,6 @@ export function parseTooltipColor(prefixCls: string, color?: string): ParsedTool
   return { className, overlayStyle, arrowStyle };
 }
 
-/** 轻量 clsx（本目录两个组件共用；只处理 string / falsy）。 */
-export function clsx(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
-}
+// ⚠️ 这里**曾经**有一份「轻量 clsx」（只处理 string / falsy）—— 2026-10-07 删除：
+//    它是 `notification/engine/util.ts` 那份 clsx 的**重复实现**（后者还支持对象参数，
+//    是这个的真超集）。两份并存就是重复代码债。现在统一用 `_internal/clsx.ts` 那一份。

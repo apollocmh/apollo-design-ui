@@ -8,7 +8,7 @@
 
 import { isPlainObject } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, useId, type VNodeChild } from 'vue';
-import { clsx } from '../../notification/engine/util';
+import { clsx } from '../../_internal/clsx';
 import Tooltip from '../../tooltip/Tooltip';
 import type {
   GapPlacement,

@@ -3,7 +3,7 @@
  */
 
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
-import { clsx } from '../../notification/engine/util';
+import { clsx } from '../../_internal/clsx';
 import type {
   ProgressProps,
   ProgressSemanticClassNames,

@@ -6,8 +6,8 @@
  */
 
 import { defineComponent, h, type PropType, type Slots } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { useConfigContext } from '../config-provider/context';
-import { clsx } from '../notification/engine/util';
 import BackTopComponent from './BackTop';
 import FloatButtonComponent, { floatButtonPrefixCls } from './FloatButton';
 import FloatButtonGroupComponent from './FloatButtonGroup';

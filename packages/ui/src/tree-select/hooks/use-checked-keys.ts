@@ -6,9 +6,9 @@
  */
 
 import { type ComputedRef, computed } from 'vue';
+import { conductCheck } from '../../_internal/tree/conduct-util';
+import type { TreeEntity } from '../../_internal/tree/tree-util';
 import type { SafeKey } from '../../tree/interface';
-import { conductCheck } from '../../tree/utils/conductUtil';
-import type { TreeEntity } from '../../tree/utils/treeUtil';
 import type { InternalLabeledValue, TreeSelectDataNode } from '../interface';
 
 type EntityMap = Record<string, TreeEntity<TreeSelectDataNode>>;

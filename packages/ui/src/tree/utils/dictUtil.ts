@@ -7,9 +7,9 @@
  *   - convertDirectoryKeysToNodes：先序遍历反查 keys 对应的原始数据节点。
  */
 
+import type { BasicDataNodeLike } from '../../_internal/tree/key-util';
+import { fillFieldNames } from '../../_internal/tree/tree-util';
 import type { TreeFieldNames } from '../interface';
-import type { BasicDataNodeLike } from './keyUtil';
-import { fillFieldNames } from './treeUtil';
 
 const RECORD_NONE = 0;
 const RECORD_START = 1;

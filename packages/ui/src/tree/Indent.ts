@@ -6,7 +6,7 @@
  */
 
 import { defineComponent, h } from 'vue';
-import { clsx } from '../notification/engine/util';
+import { clsx } from '../_internal/clsx';
 
 export default defineComponent({
   name: 'ATreeIndent',

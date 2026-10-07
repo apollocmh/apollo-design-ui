@@ -5,10 +5,10 @@
  */
 
 import { computed } from 'vue';
+import getEntity from '../_internal/tree/key-util';
+import type { TreeEntity } from '../_internal/tree/tree-util';
+import { convertDataToEntities, fillFieldNames } from '../_internal/tree/tree-util';
 import type { DataNode, TreeFieldNames, TreeKey } from './interface';
-import getEntity from './utils/keyUtil';
-import type { TreeEntity } from './utils/treeUtil';
-import { convertDataToEntities, fillFieldNames } from './utils/treeUtil';
 
 export interface UseTreeOptions {
   fieldNames?: TreeFieldNames;

@@ -6,7 +6,7 @@
  * - SHOW_ALL：原样返回。
  */
 
-import type { TreeEntity } from '../../tree/utils/treeUtil';
+import type { TreeEntity } from '../../_internal/tree/tree-util';
 import type { TreeSelectDataNode } from '../interface';
 import { type FilledFieldNames, isCheckDisabled } from './value-util';
 

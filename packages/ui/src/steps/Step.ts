@@ -7,7 +7,7 @@
 
 import type { CSSProperties, VNodeChild } from 'vue';
 import { computed, defineComponent, h, inject, type PropType } from 'vue';
-import { clsx } from '../notification/engine/util';
+import { clsx } from '../_internal/clsx';
 import type { StepItem, StepsRenderInfo, StepsStatus } from './interface';
 import Rail from './Rail';
 import StepIcon, {

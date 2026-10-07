@@ -14,11 +14,11 @@
 import { useLocale } from '@apollo-design/locale';
 import { isFunction } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { DefaultRenderEmpty } from '../config-provider/default-render-empty';
 import { useDisabled } from '../config-provider/disabled-context';
-import { clsx } from '../notification/engine/util';
 import { getStatusClassNames } from '../space/statusUtils';
 import Actions from './Actions';
 import type {

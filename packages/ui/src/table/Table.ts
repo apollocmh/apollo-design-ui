@@ -9,10 +9,10 @@
 import { useToken } from '@apollo-design/theme';
 import { isFunction, isNumber } from '@apollo-design/utils';
 import { type ComputedRef, computed, defineComponent, h, type PropType, type Ref, ref } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { defaultRenderEmpty } from '../config-provider/default-render-empty';
 import { useSize } from '../config-provider/size-context';
-import { clsx } from '../notification/engine/util';
 import Pagination from '../pagination/Pagination.vue';
 import Spin from '../spin/Spin.vue';
 import renderExpandIcon from './ExpandIcon';

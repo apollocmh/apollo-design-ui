@@ -3,11 +3,11 @@
  * `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板（demo / 文档用）。
  */
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
-
+import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { TooltipSemanticType } from './interface';
-import { clsx, parseTooltipColor } from './util';
+import { parseTooltipColor } from './util';
 
 type StyleLike = Record<string, string | number>;
 

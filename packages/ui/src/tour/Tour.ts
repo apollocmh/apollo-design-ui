@@ -52,10 +52,10 @@ import {
   watch,
   watchEffect,
 } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
-import { clsx } from '../tooltip/util';
 import type {
   TourAnimatedConfig,
   TourClosableConfig,

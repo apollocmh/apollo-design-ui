@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { TreeEntity } from '../../tree/utils/treeUtil';
+import type { TreeEntity } from '../../_internal/tree/tree-util';
 import type { TreeSelectDataNode } from '../interface';
 import { formatStrategyValues, SHOW_ALL, SHOW_CHILD, SHOW_PARENT } from '../utils/strategy-util';
 import { fillFieldNames, getAllKeys, isCheckDisabled, isNil, toArray } from '../utils/value-util';

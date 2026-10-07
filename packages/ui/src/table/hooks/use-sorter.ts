@@ -8,7 +8,7 @@
 import { CaretDownOutlined, CaretUpOutlined } from '@apollo-design/icons';
 import { isFunction, isNumber, isPlainObject } from '@apollo-design/utils';
 import { type ComputedRef, computed, h, ref, type VNodeChild } from 'vue';
-import { clsx } from '../../notification/engine/util';
+import { clsx } from '../../_internal/clsx';
 import Tooltip from '../../tooltip/Tooltip';
 import type {
   ColumnsType,

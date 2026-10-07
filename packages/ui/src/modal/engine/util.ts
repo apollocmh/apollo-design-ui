@@ -59,24 +59,15 @@ export function offset(el: HTMLElement): { left: number; top: number } {
   return pos;
 }
 
-export { toCssSize } from '../../_internal/to-css-size';
-
 /**
- * `clsx` 的最小实现（引擎内共用）。
+ * ⚠️ **这里原先有一份 clsx 实现，2026-10-07 已删除**（改成下面这句再导出）。
  *
- * ⚠️ 仓库没有全局的 `clsx`（`drawer/engine/DrawerPopup.ts` 里各有一份）。
- *    这里放在 util 里让 5 个引擎文件共用一份，避免出现第 3、4 份拷贝。
+ * 当时的注释写着「仓库没有全局的 clsx（`drawer/engine/DrawerPopup.ts` 里各有一份）。
+ * 这里放在 util 里让 5 个引擎文件共用一份，避免出现第 3、4 份拷贝」——
+ * 那条注释**恰恰说明了需要一个全局版本**。裁决 `early-extract-table-core-tree-core` = C
+ * 之后它有了：`packages/ui/src/_internal/clsx.ts`。
+ *
+ * 本文件继续再导出 ⇒ 5 个引擎文件的导入面不变。
  */
-export function clsx(
-  ...args: Array<string | false | null | undefined | Record<string, unknown>>
-): string {
-  const out: string[] = [];
-  for (const arg of args) {
-    if (!arg) continue;
-    if (typeof arg === 'string') out.push(arg);
-    else {
-      for (const [key, value] of Object.entries(arg)) if (value) out.push(key);
-    }
-  }
-  return out.join(' ');
-}
+export { clsx } from '../../_internal/clsx';
+export { toCssSize } from '../../_internal/to-css-size';

@@ -5,6 +5,7 @@
  * 对外只暴露 antd 有的东西（`message` / `notification` 自己的导出）。
  */
 
+export { clsx } from '../../_internal/clsx';
 export { useClosable } from './hooks/useClosable';
 export { useListPosition } from './hooks/useListPosition';
 export { useNoticeTimer } from './hooks/useNoticeTimer';
@@ -37,4 +38,3 @@ export {
 export { default as Notifications } from './Notifications';
 export { default as NotificationProgress } from './Progress';
 export { default as useNotification } from './useNotification';
-export { clsx } from './util';

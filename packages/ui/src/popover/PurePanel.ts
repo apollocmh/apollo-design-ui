@@ -6,10 +6,9 @@
  * `{p}-placement-{placement}` 类；内容是 Overlay（title + content 两块）。
  */
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
-
+import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import { clsx } from '../tooltip/util';
 import type { PopoverSemanticType } from './interface';
 
 type StyleLike = Record<string, string | number>;

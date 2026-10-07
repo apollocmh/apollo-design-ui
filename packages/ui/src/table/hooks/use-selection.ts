@@ -2,7 +2,15 @@
  * antd `table/hooks/useSelection.js`（542 行）—— Vue 移植。
  *
  * 大额复用（analysis §0）：`conductCheck` / `convertDataToEntities` / `arrAdd` /
- * `arrDel` 直接来自本仓 `tree/utils`（`tree/index.ts` 已 `export *`）。
+ * `arrDel` 来自本仓共享层。
+ *
+ * ⚠️ 2026-10-07 改路径（裁决 `early-extract-table-core-tree-core` = **C**）：
+ *    原先写的是 `from '../../tree/utils'` —— 那是**跨组件 import 组件目录**，
+ *    违反 `packages/ui/README.md` 的「组件间不得互相 import 组件目录；共享工具必须放
+ *    `_internal/`」。现在这些都搬进了 `_internal/`：
+ *      · `conductCheck`        → `_internal/tree/conduct-util`
+ *      · `convertDataToEntities` → `_internal/tree/tree-util`
+ *      · `arrAdd` / `arrDel`   → `_internal/array-util`（跟「树」无关，是通用键数组操作）
  * ⚠️ 逐字保留（analysis §4.4 #6）：`isCheckboxDisabled` 用 `has(某key)` 却
  * `get(重算的key)` —— 上游如此，不"修"。
  */
@@ -21,11 +29,13 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { arrAdd, arrDel } from '../../_internal/array-util';
+import { clsx } from '../../_internal/clsx';
+import { conductCheck } from '../../_internal/tree/conduct-util';
+import { convertDataToEntities } from '../../_internal/tree/tree-util';
 import Checkbox from '../../checkbox/Checkbox';
 import Dropdown from '../../dropdown/Dropdown';
-import { clsx } from '../../notification/engine/util';
 import Radio from '../../radio/Radio';
-import { arrAdd, arrDel, conductCheck, convertDataToEntities } from '../../tree/utils';
 import { INTERNAL_COL_DEFINE } from '../engine/utils/legacyUtil';
 import type {
   ColumnsType,

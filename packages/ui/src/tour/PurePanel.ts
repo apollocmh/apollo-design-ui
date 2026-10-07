@@ -14,9 +14,9 @@
 
 import { useLocale } from '@apollo-design/locale';
 import { cloneVNode, defineComponent, h, isVNode, type PropType, type VNodeChild } from 'vue';
+import { clsx } from '../_internal/clsx';
 import { type ClosableType, useClosable } from '../_internal/use-closable';
 import { useComponentConfig } from '../config-provider/context';
-import { clsx } from '../tooltip/util';
 import type {
   TourSemanticClassNames,
   TourSemanticStyles,

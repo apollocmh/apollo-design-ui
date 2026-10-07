@@ -7,7 +7,7 @@
 
 import { useDevWarning } from '@apollo-design/utils';
 import { type ComputedRef, computed } from 'vue';
-import { convertDataToEntities, type TreeEntity } from '../../tree/utils/treeUtil';
+import { convertDataToEntities, type TreeEntity } from '../../_internal/tree/tree-util';
 import type { TreeSelectDataNode } from '../interface';
 import type { FilledFieldNames } from '../utils/value-util';
 import { isNil } from '../utils/value-util';

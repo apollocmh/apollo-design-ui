@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { convertDataToEntities, flattenTreeData } from '../treeUtil';
+import { convertDataToEntities, flattenTreeData } from '../../../_internal/tree/tree-util';
 import { calcDropPosition } from '../util';
 
 const treeData = [

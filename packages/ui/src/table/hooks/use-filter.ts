@@ -9,12 +9,12 @@
 import { FilterFilled } from '@apollo-design/icons';
 import { isEqual, isFunction, isNumber } from '@apollo-design/utils';
 import { type ComputedRef, computed, defineComponent, h, type PropType, ref, watch } from 'vue';
+import { clsx } from '../../_internal/clsx';
 import Button from '../../button/Button.vue';
 import Checkbox from '../../checkbox/Checkbox';
 import Dropdown from '../../dropdown/Dropdown';
 import Empty from '../../empty/Empty.vue';
 import Menu from '../../menu/Menu';
-import { clsx } from '../../notification/engine/util';
 import Radio from '../../radio/Radio';
 import Tree from '../../tree/Tree';
 import type {

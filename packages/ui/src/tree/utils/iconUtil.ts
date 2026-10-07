@@ -18,7 +18,7 @@ import {
   PlusSquareOutlined,
 } from '@apollo-design/icons';
 import { cloneVNode, h, isVNode, type VNodeChild } from 'vue';
-import { clsx } from '../../notification/engine/util';
+import { clsx } from '../../_internal/clsx';
 import type { TreeNodeRenderInfo, TreeProps } from '../interface';
 
 type ShowLine = TreeProps['showLine'];
