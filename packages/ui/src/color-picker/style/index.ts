@@ -27,16 +27,19 @@
  * L6 用例必须覆盖到（本轮 CSS dump 里 `ant-slider` 计数是 0，因为 SSR 下 Portal
  * 不渲染；真浏览器里它会在）。
  *
- * ── 前缀参数化（`STATIC_PREFIX_CLS = ['apollo', 'ant']`）────────────────────────
+ * ── 前缀参数化（`STATIC_PREFIX_CLS`）────────────────────────────────────────────
  *
- * `gen(prefixCls)` 会被**各调一次**，每次都必须产出对应前缀的选择器。三类替换规则：
+ * `gen(prefixCls)` 对 `STATIC_PREFIX_CLS` 里每个前缀各调一次（2026-10-07 起只有
+ * `apollo`，见裁决 `css-ant-prefix-cost` = B），每次都必须产出**对应前缀**的选择器。
+ * 三类替换规则：
  *   - **类名** `.apollo-*` ⇒ 跟着前缀走（含跨组件的 `.apollo-divider` / `.apollo-select` /
  *     `.apollo-collapse*` / `.apollo-input*`）；
  *   - **全局别名变量** `--apollo-*` ⇒ **不动**（`theme/dist/tokens.css` 只声明 `--apollo-*`）；
  *   - **组件自有变量** `--apollo-color-picker-*` ⇒ 跟着换。
  *
- * 本文件**全部参数化**（`.${p}-…` / `--${p}-color-picker-…`），`theme.test.ts` 里有一条
- * 「`ant` 版一个 `.apollo-` 都不剩 + 总数守恒」的守卫。
+ * 本文件**全部参数化**（`.${p}-…` / `--${p}-color-picker-…`），
+ * `packages/ui/src/__tests__/style-prefix.test.ts` 有「换前缀后一个 `.apollo-` 都不剩
+ * + 总数守恒」的守卫（用**探针前缀**跑，不依赖产物里真有第二份）。
  */
 
 import { token2CSSVar } from '@apollo-design/theme';

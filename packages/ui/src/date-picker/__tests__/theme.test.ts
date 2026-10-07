@@ -534,8 +534,13 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）
 /**
  * ── 🚨 前缀参数化（2026-10-02 修的缺口）──────────────────────────────────────
  *
- * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS = ['apollo', 'ant']`
- * ⇒ `entry.gen(prefixCls)` 会被**两个前缀各调一次**，每次都必须产出**对应前缀**的选择器。
+ * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS` 里每个前缀
+ * ⇒ `entry.gen(prefixCls)` 会被**各调一次**，每次都必须产出**对应前缀**的选择器。
+ *
+ * ⚠️ 2026-10-07：`STATIC_PREFIX_CLS` 已缩成 `['apollo']`（裁决 `css-ant-prefix-cost` = B）。
+ *    **本用例不受影响** —— 它测的是 `genDatePickerStyle` 这个**函数**的参数化，
+ *    用的 `'ant'` 在这里是**校验值**（与 `style-prefix.test.ts` 的探针前缀同性质），
+ *    不依赖产物里真有第二份 CSS。函数级参数化这条不变量仍然必须成立。
  *
  * 本文件此前是**机器搬运的静态串**（前缀写死 `.apollo-`）⇒
  * `dist/date-picker/style.css` 里 `.ant-picker-*` 规则 **0 条**、只有 45 条没人用的

@@ -473,8 +473,8 @@ export const DATE_PICKER_RULES = `${RULES_BEFORE_PANEL}${PANEL_RULES}${RULES_AFT
  * ⚠️ `rootPrefixCls === 'apollo'` 时**直接返回原文**（不做字符串替换）——
  * 这样默认前缀的产物**逐字节不变**，L6 的 27 组基线不受影响。
  *
- * 🚨 **本轮之前这里是缺口**：规则体是机器搬运的静态串、前缀写死 `.apollo-`，
- * 而 `STATIC_PREFIX_CLS = ['apollo', 'ant']` 会调 `gen('ant')` 两次
+ * 🚨 **2026-10-02 之前这里是缺口**：规则体是机器搬运的静态串、前缀写死 `.apollo-`，
+ * 而 `STATIC_PREFIX_CLS` 当时是 `['apollo', 'ant']` ⇒ 会调 `gen('ant')`
  * ⇒ `dist/date-picker/style.css` 里 `.ant-picker-*` 规则 **0 条**、
  * 只有 45 条**没人用**的 `--ant-date-picker-*` 声明 ⇒ `ConfigProvider prefixCls="ant"`
  * 下 DatePicker 的样式**完全不生效**（实测：card / alert / breadcrumb / select 的

@@ -32,10 +32,12 @@
  * 2. 别名 token 落 `var(--apollo-*)` 而不是产物的**解析后字面量**
  *    （`#ffffff` / `rgba(0,0,0,0.04)`）—— 见 `./token.ts` 文件头的说明。
  *
- * ── 前缀参数化（`STATIC_PREFIX_CLS = ['apollo', 'ant']`）────────────────────────
+ * ── 前缀参数化（`STATIC_PREFIX_CLS`）────────────────────────────────────────────
  *
- * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS` 有两个前缀
+ * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS` 里每个前缀
  * ⇒ `gen(prefixCls)` 会被**各调一次**，**每次都必须产出对应前缀的选择器**。
+ * （2026-10-07 起该数组只有 `apollo`，见裁决 `css-ant-prefix-cost` = B；
+ * 但参数化不能因此松掉 —— 自定义前缀要靠 `genComponentCss` 自行产 CSS，那时 `p` 才真的会变。）
  * 本文件是**参数化**的（`.${p}-picker-calendar` / `--${p}-calendar-*`），
  * 与 card / alert / breadcrumb / select 同判。
  *

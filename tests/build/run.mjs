@@ -581,15 +581,18 @@ const UPSTREAM_UNDECLARED_TOKEN_VARS = {
    * timeline 的 `dotSize` / `dotBg`：`prepareComponentToken` **显式返回 `undefined`**
    * （上游注释是「should be `undefined` to create css var」）⇒ 产物 css-var 块只有 4 条。
    *
-   * ⚠️ 两个前缀各登记一次：**组件 token 的声明与引用都随前缀变**
-   * （`genTokenDecls(p)` / `tv()` 都用 `--${p}-timeline-*`）⇒ `ant` 变体会引用
-   * `--ant-timeline-dot-size`。⚠️ 与 `--apollo-cmp-steps-*`（Steps 的内部变量，
-   * **前缀固定 `apollo`**，见 `genStepsStyle`）不是同一回事。
+   * ⚠️ 与 `--apollo-cmp-steps-*`（Steps 的内部变量，**前缀固定 `apollo`**，
+   *   见 `genStepsStyle`）不是同一回事。
+   *
+   * ⚠️ **2026-10-07**：原先 `--ant-timeline-dot-size` / `--ant-timeline-dot-bg`
+   *   也各登记一条（当时 `STATIC_PREFIX_CLS = ['apollo','ant']`，组件 token 的声明与
+   *   引用都随前缀变 ⇒ `ant` 变体会引用它们）。裁决 `css-ant-prefix-cost` = B 砍掉
+   *   `ant` 变体后，这两条**变成陈旧豁免** —— 本检查的第三条自证（「必须至少有一次
+   *   `var()` 引用」）当场把它抓出来并判 FAIL。**这正是那条自证存在的意义：**
+   *   产物形态一变，豁免表会自己报出该删的条目，而不是静默失效。
    */
   '--apollo-timeline-dot-size': 'timeline/style/token.ts（prepareComponentToken 返回 undefined）',
   '--apollo-timeline-dot-bg': 'timeline/style/token.ts（prepareComponentToken 返回 undefined）',
-  '--ant-timeline-dot-size': 'timeline/style/token.ts（同上；ant 变体）',
-  '--ant-timeline-dot-bg': 'timeline/style/token.ts（同上；ant 变体）',
 };
 
 const CONTAINER_QUERY_OPT_IN_VARS = {

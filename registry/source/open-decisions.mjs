@@ -100,7 +100,19 @@ export const OPEN_DECISIONS = [
     ],
   }),
 
-  open('prefix-cls-default', {
+  decided('prefix-cls-default', {
+    decidedAt: '2026-09-16',
+    decidedBy: '用户裁决 2026-09-16',
+    decision:
+      'A —— 默认 `apollo`。⚠️ 其中的「允许 ConfigProvider 覆盖为 `ant`」这一半已于 2026-10-07 ' +
+      '被裁决 **`css-ant-prefix-cost` = B 撤回**：静态 CSS 不再生成 `ant` 变体。' +
+      '任意 `prefixCls`（含 `ant`）仍然是合法 API，但用户需自行用 `genComponentCss(name, prefixCls)` / ' +
+      '`genAllStyles()` 产出并引入 CSS —— 零运行时下这是唯一可行的路径。',
+    note:
+      '默认 apollo。DOM 契约测试必须做前缀归一化，否则 prefixCls 这个 API 自身就测不了。' +
+      '⚠️ 2026-10-07 修订：原裁决里「ConfigProvider 可覆盖为 ant」的**开箱即用**那一层已撤回' +
+      "（`STATIC_PREFIX_CLS` 从 `['apollo','ant']` 缩为 `['apollo']`）—— 实测 `ant` 变体占组件 CSS " +
+      '32.8%（827.2 KB / 2522.2 KB），却只在 45/69 个组件上完整。见 `css-ant-prefix-cost`。',
     question: 'prefixCls 与 CSS 变量的默认前缀用 `apollo` 还是 `ant`？',
     context:
       'antd 的默认 prefixCls 是 `ant`，CSS 变量是 `--ant-*`。本项目用 `--apollo-*` 更符合自有品牌，但会改变 DOM class 与 CSS 变量名 —— 这直接影响 L4 DOM 契约测试与 L6 视觉回归的可比对性，也影响用户从 antd 迁移时是否需要改覆盖样式。',
@@ -600,8 +612,34 @@ export const OPEN_DECISIONS = [
     ],
   }),
 
-  open('css-ant-prefix-cost', {
+  decided('css-ant-prefix-cost', {
     raisedAt: '2026-10-07',
+    decidedAt: '2026-10-07',
+    decidedBy: '用户裁决（2026-10-07，选 B）',
+    decision:
+      "**B —— 砍掉 `ant` 前缀**：`STATIC_PREFIX_CLS` 从 `['apollo','ant']` 缩为 `['apollo']`。" +
+      '⚠️ 这**推翻**了 `prefix-cls-default` = A 里「允许 ConfigProvider 覆盖为 `ant`」的**开箱即用**那一层 —— ' +
+      '该决策已同步修订（见其 `note`）。任意 `prefixCls` 仍是合法 API，但改用者需自行用 ' +
+      '`genComponentCss(name, prefixCls)` / `genAllStyles()` 产出并引入 CSS。',
+    note:
+      '落地实测（2026-10-07，与提问时同一口径复测）：\n' +
+      '  · 组件 CSS 合计 **2522.2 KB → 1399.3 KB**（−1122.9 KB，**−44.5%**）；\n' +
+      '  · `dist/index.css` **2303.4 KB → 1180.8 KB**（−48.7%）；\n' +
+      '  · `button/style.css` **209.9 KB → 109.7 KB**（−48.3%）。\n' +
+      '  （降幅比提问时估的 32.8% 更大 —— 那个估算只数了「选择器里含 `.ant-` 且不含 apollo」的顶层块，\n' +
+      '    低估了混合选择器里的 ant 内容。）\n' +
+      '⚠️ **两个必须留在记录里的副产物**：\n' +
+      '  ① B7 当场判 FAIL —— `--ant-timeline-dot-size` / `--ant-timeline-dot-bg` 两条豁免变成**陈旧条目**。' +
+      '     这是 `UPSTREAM_UNDECLARED_TOKEN_VARS` 那条「必须至少有一次 var() 引用」自证在干活：' +
+      '     **产物形态一变，豁免表会自己报出该删的条目**。已从 `tests/build/run.mjs` 删除该两条。\n' +
+      '  ② 砍掉第二份 CSS 后暴露出 **2 个组件在 `apollo` 版里硬编码了 `.ant-` 选择器**' +
+      '     （`menu` 的 `>.ant-typography-ellipsis-single-line`、`dropdown` 的 `.ant-btn` / `.ant-btn-icon`）' +
+      '     ⇒ 默认前缀下**永不命中**（死规则）。性质未判定（可能照搬 antd 的固定 `antCls` 常量，' +
+      '     也可能端口写错），且**改它有视觉回归风险**（改成 `.apollo-*` 就会真的开始匹配）⇒ ' +
+      '     **未擅自修**，已用双向校验的 `HARDCODED_ANT_IN_DEFAULT` 钉在 `style-prefix.test.ts` 里。\n' +
+      '③ 「`gen(p)` 必须吃 `p`」这条不变量**不能跟着删** —— 该测试改为用**探针前缀**' +
+      '     （`zzprobe`，不在 `STATIC_PREFIX_CLS` 里）比对，护栏照旧生效、只是不再进产物。' +
+      '    `KNOWN_GAPS` 那 24 条的语义因此变成「**加第二个前缀前必须先修这些**」。',
     question:
       '静态 CSS 还要不要继续为 `ant` 前缀生成一份？（2026-10-07 实测：这份占组件 CSS 总量的 **32.8%**，' +
       '而它支撑的能力在 **24 个组件**上并不完整）',

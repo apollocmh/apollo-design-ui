@@ -52,33 +52,33 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 > 现在 B6 已转真检查（73 个组件逐个有预算，`tests/build/budget.json`），
 > **任何新增 PENDING 都应被视为「待补的债」，不是免罚牌。**
 
-### §1.1 `prefixCls="ant"` 在 **24 个组件**上不完整（7 个几乎完全没样式）
+### §1.1 2 个组件在 `apollo` 版里硬编码了 `.ant-` 选择器（死规则）
 
-**2026-10-07 实测**（`ui-tree-shaking` 收尾后回头核对 CSS 半边的按需粒度时发现）。
+**2026-10-07 实测**（砍掉 `ant` 变体之后才暴露出来的 —— 以前被第二份 CSS 盖住了）。
 
 **判据（可复现）**：
 
 ```sh
-# 权威缺口清单 + 双向校验（修一个删一条、漏登记会红）
-node_modules/.bin/vitest run --project unit style-prefix
-# 代价：纯 ant 变体占组件 CSS 总量的比例
-#   实测 827.2 KB / 2522.2 KB = 32.8%
+node_modules/.bin/vitest run --project unit style-prefix   # 双向校验，修一个删一条
+grep -o '[^};{]*\.ant-[a-z-]*[^};{]*' packages/ui/dist/index.css
 ```
 
-- `STATIC_PREFIX_CLS = ['apollo','ant']`（`packages/ui/src/style/index.ts`）⇒ 每份组件 CSS 两个前缀各生成一遍，
-  这是**有意的**（裁决 `prefix-cls-default` = A 承诺「默认 apollo，可覆盖为 ant」；零运行时下不生成 `ant` 那份，
-  那条承诺就是空的）。文件注释里也明写了「代价是 CSS 体积翻倍」。
-- 但 `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS` 现有 **24 个组件**的 `ant` 版类名数少于
-  `apollo` 版 —— 其中 **7 个是「规则体完全静态」（`gen(p)` 忽略了 `p`）**，实测计数：
-  `tabs` 885→1 · `input` 734→3 · `upload` 1051→1 · **`tooltip` 213→0** · `form` 322→2 · `pagination` 477→1 ·
-  `slider` 136→1 ⇒ 对这些组件，**设了 `prefixCls="ant"` 事实上是没有任何样式的**。
-  其余 17 个是「跨组件类名写成字面量」（`.apollo-icon` / `.apollo-dropdown` …）⇒ 部分不一致。
+`menu` 与 `dropdown` 两个组件的 **`apollo` 版**里硬编码了 `.ant-*` 选择器：
 
-⚠️ **不要当成 bug 去改的两件事**（已核为刻意设计）：① `BASE_CSS`（antd reset + 图标基线）确实嵌进了**每一份**
-组件 CSS，是「单引自足」所需（否则只引单个组件 CSS 会退回 Times）；② 每份组件 CSS 里两个前缀并存，换来运行时可切前缀。
+| 组件 | 硬编码的选择器 |
+|---|---|
+| `menu` | `.apollo-menu-title-content > .ant-typography-ellipsis-single-line` |
+| `dropdown` | `.apollo-dropdown-trigger.ant-btn` / `.ant-btn-icon` |
 
-**处置**：已登记为开放决策 **`css-ant-prefix-cost`**（4 个选项，推荐 C「按前缀拆成两个文件」）。
-`node registry/tools/ask.mjs decision css-ant-prefix-cost` 看全文。**需用户裁决后**再动 `STATIC_PREFIX_CLS` 或产物布局。
+⇒ 在默认前缀（`apollo`）下这些选择器**永远命中不了**，是死规则。
+
+⚠️ **性质未判定，且不要顺手改**：可能只是照搬 antd 的 `antCls` 常量（antd 里 `antCls` 固定为 `'ant'`，
+与可配置的 `prefixCls` 不是一回事），也可能是我们端口写错。无论哪种，**把它改成 `.apollo-*` 会让它真的开始匹配
+⇒ 有视觉回归风险**，改之前必须先跑 L6 确认。
+
+**处置**：已用双向校验的 `HARDCODED_ANT_IN_DEFAULT` 清单钉在
+`packages/ui/src/__tests__/style-prefix.test.ts`（多出来会红、修好了没删也会红）。
+背景见裁决 **`css-ant-prefix-cost`** = B。
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
@@ -103,6 +103,7 @@ node_modules/.bin/vitest run --project unit style-prefix
 
 | commit | 内容 |
 |---|---|
+| （2026-10-07） | **裁决 `css-ant-prefix-cost` = B：砍掉 `ant` 前缀变体** —— `STATIC_PREFIX_CLS` 从 `[\'apollo\',\'ant\']` 缩为 `[\'apollo\']`。背景：那份 `ant` 变体占组件 CSS 的 32.8%，却在 24/69 个组件上不完整（其中 7 个几乎为空）⇒ 付双倍价钱买到半个功能。**实测降幅比估算更大**：组件 CSS 合计 **2522.2 → 1399.3 KB（−44.5%）** · `index.css` **2303.4 → 1180.8 KB（−48.7%）** · `button/style.css` **209.9 → 109.7 KB**（估算只数了「纯 ant」顶层块，低估了混合选择器里的 ant 内容）。⚠️ **推翻** `prefix-cls-default`=A 里「允许覆盖为 ant」的开箱即用那一层（已同步修订其 `decision`/`note`）；任意 prefixCls 仍可用，但需自行用 `genComponentCss(name, prefixCls)` 产 CSS。三个副产物：① **B7 当场判 FAIL** —— `--ant-timeline-dot-*` 两条豁免变陈旧，是那条「必须至少一次 var() 引用」自证在干活（已从 `run.mjs` 删除）；② 暴露出 2 个组件在 apollo 版硬编码 `.ant-`（现 §1.1，已用双向校验钉住、**未擅自改**，改有视觉回归风险）；③ 「`gen(p)` 必须吃 `p`」不变量**不能跟着删** —— `style-prefix.test.ts` 改用**探针前缀** `zzprobe` 比对，护栏照旧生效、`KNOWN_GAPS` 那 24 条语义变成「加第二个前缀前必须先修这些」。 |
 | （2026-10-07） | **§1.1「`@apollo-design/ui` 事实无法按需引入」已修**（裁决 `ui-tree-shaking` = **A+B+D**，用户前提「不计成本、避免技术债」）：**A** ui 走 unbuild/rollup 的 `preserveModules` 出多模块产物（`dist/index.mjs` 降为 re-export barrel，761 个 `.mjs`）；**B** `exports` 增 73 条 `@apollo-design/ui/<c>` 深入口（与 `<c>/style.css` 对称，**只暴露入口名、不暴露内部路径**）；**D** 13 个 foundation 包同步 `preserveModules`（`scripts/unbuild-preserve-modules.mjs` + 各包 `build` 脚本改 `unbuild --config`）。**同一测量方法复测**：Divider **1272.9 KB → 7.5 KB**（全量 0.4%，此前 63%）· Button 20.9 · Empty 33.6 · Select 133.2 · Table 318.7（15.9%，最重）· 全量 `import * as all` 2009.0 KB（修复前 2010.1 ⇒ 全量未被牺牲）。**B6 据此从 PENDING 转真检查**：73 条预算落在 `tests/build/budget.json`（`ceil(实测×1.5+5)`，另加「占全量 ≤ 30%」第二条判据），`node tests/build/run.mjs` = **FAIL 0 / PENDING 0**。⚠️ 两个实测坑：① **build 门禁此前绕过了 `scripts.build`**（硬编码裸 `unbuild`、不带 `--config`）⇒ D 实施后门禁**照样出单文件还全绿**，是「门禁与发布命令不是同一条」的静默分叉，已改为跑包自己声明的 `scripts.build`；② 用 `import * as all` 探深入口会留住**整个模块**的导出（divider 29.9 KB vs 具名导入 7.5 KB）⇒ 预算只认**根入口具名导入**。 |
 | （2026-10-07） | **§1.5 + §1.6 覆盖率抖动 —— 不再复现，余量已健康**（**未动任何阈值**）：本机连跑两次 `test:coverage`（1048 文件），**逐文件比 covered/total 完全一致**（四项指标零差异）。`ui/src`（717 文件）聚合两次逐位相同：statements **23982/28208 = 85.018434%**（阈值 84.76）· branches **14482/19519 = 74.194375%**（阈值 73.8）· functions **6634/7847 = 84.541863%**（阈值 84.38）。⇒ §1.5 的残余（mask-input/TabNavList ±1）**已不复现**；§1.6 的 branches 余量从 **+0.0071 涨到 +0.394**（是原噪声带 0.0102 的 **38 倍**）⇒ 偶发假红的实际风险已消除。⚠️ 终极证据仍需 CI 侧连跑两次（本机无法代替）。 |
 | （2026-10-07） | **`ui-style-output` 的「按组件 CSS 按需引入」此前只在 `empty` 一个组件上可用**（B6 调查的副产物，已修）：`exports` 里只声明了 `./empty/style.css`，而磁盘上有 **69** 个 `dist/<c>/style.css` ⇒ `@apollo-design/ui/button/style.css` 报 `ERR_PACKAGE_PATH_NOT_EXPORTED`。根因是**两个独立来源必然漂移**：生成器读 `components.json` 的 `styleStatus`，而真正产出 CSS 的是 `packages/ui/src/style/index.ts` 的清单。实测漂移三处 —— ① `qr-code` 在清单里 `name` 写成 `'qrcode'`（**违反 `ComponentStyleEntry` 自己的注释契约「组件目录名」**）⇒ 产物落在 `dist/qrcode/`；② `auto-complete` 只有 `style/token.ts`、不在清单里，却被声明；③ **`layout-sider` 产出了 11 KB CSS 却没被声明** ⇒ 只引 `layout` 的按需用户拿不到 Sider 样式。修法：**清单成为单一真源**（生成器解析它，解析失败即抛），`qrcode`→`qr-code`，并给 **B2 补反方向检查**（「产出了却没声明」此前抓不到）。实测：**70 条 CSS 深入口全部可解析**、B2 PASS、`dist/qrcode/` 已消失。 |

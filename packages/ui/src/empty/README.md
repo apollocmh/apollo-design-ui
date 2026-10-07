@@ -125,8 +125,10 @@ dist/index.css           ← 全部组件汇总
 2. **变量真的存在**：`tests/build/run.mjs` 的 B7 校验每个 `var(--apollo-*)` 都能在
    `packages/theme/dist/tokens.css` 里找到声明。这条检查是「零运行时 + 静态 CSS」
    的必要配套 —— 写错变量名不会报错，只会静默失效。
-3. **两套前缀**：`STATIC_PREFIX_CLS = ['apollo', 'ant']`。只生成 `apollo` 的话，
-   把 `prefixCls` 改成 `ant` 会得到一堆没有样式的类名 —— 裁决承诺的「可覆盖为 ant」就是空的。
+3. **前缀参数化**：`gen(p)` 必须对**入参** `p` 产出对应前缀的选择器（`.apollo-*` 不许写死）。
+   静态产物只覆盖 `STATIC_PREFIX_CLS` 里列出的前缀 —— 2026-10-07 起**只有 `apollo`**
+   （裁决 `css-ant-prefix-cost` = B，砍掉了占组件 CSS 32.8% 且并不完整的 `ant` 变体）。
+   ⇒ 要用别的前缀，**必须**用 `genComponentCss(name, prefix)` 自行产 CSS，否则没样式。
 
 ### 5.1 Component Token：一个都没有
 

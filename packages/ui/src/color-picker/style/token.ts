@@ -36,7 +36,11 @@
  *
  * ── 变量名必须**跟着前缀走**（`--${p}-color-picker-*`）────────────────────────────
  *
- * `STATIC_PREFIX_CLS = ['apollo', 'ant']` ⇒ `gen(p)` 被调两次，两份都进产物。
+ * `STATIC_PREFIX_CLS` 里每个前缀都会调 `gen(p)` 一次（2026-10-07 起**只有 `apollo`**，
+ * 裁决 `css-ant-prefix-cost` = B 砍掉了 `ant`）。
+ * 但**参数化仍然必须做**：`gen(p)` 吃 `p` 这条不变量由
+ * `packages/ui/src/__tests__/style-prefix.test.ts` 的**探针前缀**守着
+ * （自定义前缀要靠 `genComponentCss(name, prefixCls)` 自行产 CSS，那时 `p` 才真的会变）。
  * 组件自有变量**跟着前缀换**（全局别名变量 `--apollo-*` 不动）——
  * 所以 `previewSize` 的算式里引用的是 `--${p}-color-picker-slider-height`，
  * 于是派生集必须是**前缀的函数**，不能是模块级常量。

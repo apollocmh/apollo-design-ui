@@ -209,7 +209,10 @@ antd 在 cssVar 模式下会给**每个**组件 Token 生成 CSS 变量
    **恰好**是这四个 —— 多一个少一个都红。颜色一律不许硬编码。
 2. **变量真的存在**：`tests/build/run.mjs` 的 B7 校验每个 `var(--apollo-*)` 都能在
    `packages/theme/dist/tokens.css` 里找到声明。
-3. **两套前缀**：`STATIC_PREFIX_CLS = ['apollo', 'ant']`。
+3. **前缀参数化**：`gen(p)` 必须对**入参** `p` 产出对应前缀的选择器（`.apollo-*` 不许写死）。
+   静态产物只覆盖 `STATIC_PREFIX_CLS` 里列出的前缀 —— 2026-10-07 起**只有 `apollo`**
+   （裁决 `css-ant-prefix-cost` = B）。该不变量由
+   `packages/ui/src/__tests__/style-prefix.test.ts` 用**探针前缀**守着。
 
 ---
 

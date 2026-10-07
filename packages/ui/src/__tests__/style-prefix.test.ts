@@ -1,15 +1,14 @@
 /**
- * 「前缀守恒」—— 每个组件的 `gen(prefixCls)` 必须对**每个静态前缀**都产出
+ * 「前缀守恒」—— 每个组件的 `gen(prefixCls)` 必须对**传入的前缀**产出
  * **对应前缀**的选择器。
  *
  * ── 为什么需要这条 ──────────────────────────────────────────────────────────
  *
- * `packages/ui/src/style/index.ts` 的 `STATIC_PREFIX_CLS = ['apollo', 'ant']`
- * ⇒ `genComponentStyleSheet` 会调 `entry.gen(prefix)` **两次**，两份都进
- * `dist/<component>/style.css`。用户把 `ConfigProvider prefixCls="ant"` 打开时，
- * 组件渲染出 `.ant-*` 类名 ⇒ **只有第二份能命中**。
+ * 静态 CSS 是构建期产物（`STATIC_PREFIX_CLS` 里每个前缀各生成一份）。
+ * 若某个 `gen(p)` 把 `.apollo-` **写死**在静态串里、忽略入参 `p`，那么给它的第二个前缀
+ * 会产出「类名对、但样式空」的一份 —— 用户切过去就**完全没样式**，且不报错。
  *
- * ⇒ 判据：`gen('ant')` 里 `.ant-` 的出现次数必须与 `gen('apollo')` 里 `.apollo-` 的
+ * ⇒ 判据：`gen(PROBE)` 里 `.PROBE-` 的出现次数必须与 `gen(DEFAULT)` 里 `.DEFAULT-` 的
  * 出现次数**相等**（只换前缀，不增不减）。不相等就说明有一批规则的前缀被写死了。
  *
  * ── 🚨 这条测试是怎么来的（2026-10-02）────────────────────────────────────────
@@ -17,8 +16,21 @@
  * 起因是 date-picker 的**用户可见**缺口：`dist/date-picker/style.css` 里
  * `.ant-picker-*` 规则 **0 条**，只有 45 条没人用的 `--ant-date-picker-*` 声明
  * ⇒ `prefixCls="ant"` 下 DatePicker **完全没有样式**。
- * 修完 date-picker 后顺手全仓扫了一遍，发现**22 个组件**同类
- * （其中 7 个是「规则体完全静态」，`ant` 版几乎为空）。
+ * 修完 date-picker 后顺手全仓扫了一遍，发现**另有 24 个组件**同类
+ * （其中 7 个是「规则体完全静态」，换前缀后几乎为空）。
+ *
+ * ── ⚠️ 2026-10-07：为什么改用「探针前缀」而不是 `STATIC_PREFIX_CLS[1]` ──────────
+ *
+ * 裁决 `css-ant-prefix-cost` = **B**：`STATIC_PREFIX_CLS` 从 `['apollo','ant']` 缩成
+ * `['apollo']`（砍掉 `ant`，组件 CSS 因此少了 32.8%）。
+ *
+ * **但「`gen(p)` 必须吃 `p`」这条不变量不能跟着一起删** —— 一旦删除，
+ * 将来谁想加第二个前缀，就会在**没有任何预警**的情况下再踩一次 2026-10-02 那个坑。
+ * 所以比对改成拿一个**不在产物里的探针前缀**（`PROBE_PREFIX`）去跑：
+ * 护栏照旧生效，只是不再把第二份 CSS 打进产物。
+ *
+ * ⇒ 换句话说：`KNOWN_GAPS` 里那 24 条的语义变了 ——
+ *    从「`prefixCls="ant"` 现在是坏的」变成「**加第二个前缀前必须先修这些**」。
  *
  * ── 豁免清单的用法 ──────────────────────────────────────────────────────────
  *
@@ -31,13 +43,23 @@
 import { describe, expect, it } from 'vitest';
 import { COMPONENT_STYLES, STATIC_PREFIX_CLS } from '../style';
 
+/** 产物里的默认前缀（`STATIC_PREFIX_CLS` 的第一个）。 */
+const DEFAULT_PREFIX = STATIC_PREFIX_CLS[0];
+
 /**
- * 已知缺口（**待修**）。键 = 组件名，值 = 一句话原因 + 实测的两个计数。
+ * 只用于**校验**的前缀：刻意不在 `STATIC_PREFIX_CLS` 里，所以不会进产物。
+ * ⚠️ 别改成已存在的前缀 —— 那会让本测试退化成「什么都没测」。
+ */
+const PROBE_PREFIX = 'zzprobe';
+
+/**
+ * 已知缺口（**待修**）。键 = 组件名，值 = 一句话原因 + 实测的两个计数
+ * （`DEFAULT_PREFIX → PROBE_PREFIX`）。
  *
  * ⚠️ 修好之后**必须**把对应行删掉（否则本测试的第二条断言会红）。
  */
 const KNOWN_GAPS: Record<string, string> = {
-  // ---- 规则体是**完全静态串**（`.apollo-*` 写死，`gen(p)` 忽略 `p`）⇒ `ant` 版几乎为空
+  // ---- 规则体是**完全静态串**（`.apollo-*` 写死，`gen(p)` 忽略 `p`）⇒ 换前缀后几乎为空
   tabs: '规则体静态串 885→1',
   input: '规则体静态串 734→3',
   upload: '规则体静态串 1051→1',
@@ -70,27 +92,59 @@ const KNOWN_GAPS: Record<string, string> = {
   transfer: '跨组件类名（icon/btn/pagination-options/table/input，机械移植产物）',
 };
 
-/** 统计某个产物里 `.apollo-` / `.ant-` 的出现次数。 */
+/**
+ * `apollo` 版里**硬编码** `.ant-*` 选择器的组件。
+ *
+ * ⚠️ **性质未判定**（2026-10-07 发现，未擅自改）：可能是照搬 antd 的 `antCls` 常量
+ * （antd 里 `antCls` 是**固定** `'ant'`，与可配置的 `prefixCls` 不是一回事），
+ * 也可能是我们端口写错。无论哪种，在本仓默认前缀（`apollo`）下这些选择器**永远不会命中**
+ * ⇒ 是死规则。⚠️ 修的时候有**视觉回归风险**（一旦改成 `.apollo-*` 就会真的开始匹配），
+ * 所以要先跑 L6 确认，别顺手改。
+ *
+ * 清单同样**双向**（多出来会红、修好了没删也会红）。
+ */
+const HARDCODED_ANT_IN_DEFAULT: Record<string, string> = {
+  menu: '`.apollo-menu-title-content > .ant-typography-ellipsis-single-line`',
+  dropdown: '`.apollo-dropdown-trigger.ant-btn` / `.ant-btn-icon`',
+};
+
+/** 剥掉 CSS 注释（否则注释里提到的 `.ant-` 会被误判成选择器）。 */
+const stripComments = (css: string): string => css.replace(/\/\*[\s\S]*?\*\//g, '');
+
+/** 统计某个产物里 `.${prefix}-` 的出现次数。 */
 const countOf = (css: string, prefix: string): number =>
   (css.match(new RegExp(`\\.${prefix}-`, 'g')) ?? []).length;
 
-const measure = (name: string): { apollo: number; ant: number } => {
+const genOf = (name: string): ((p: string) => string) => {
   const entry = COMPONENT_STYLES.find((item) => item.name === name);
   if (!entry) throw new Error(`未知组件 ${name}`);
-  const [a = 'apollo', b = 'ant'] = STATIC_PREFIX_CLS as readonly string[];
-  return { apollo: countOf(entry.gen(a), a), ant: countOf(entry.gen(b), b) };
+  return entry.gen;
 };
 
-describe('样式前缀守恒（`gen(p)` 对每个静态前缀都要产出对应选择器）', () => {
-  it('两个静态前缀恰好是 `apollo` / `ant`（改这里要同步改本文件）', () => {
-    expect([...STATIC_PREFIX_CLS]).toEqual(['apollo', 'ant']);
+const measure = (name: string): { base: number; probe: number } => {
+  const gen = genOf(name);
+  return {
+    base: countOf(gen(DEFAULT_PREFIX), DEFAULT_PREFIX),
+    probe: countOf(gen(PROBE_PREFIX), PROBE_PREFIX),
+  };
+};
+
+describe('样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器）', () => {
+  it('静态前缀只有 `apollo`（裁决 `css-ant-prefix-cost` = B 砍掉 ant）', () => {
+    // 钉住产物约定：加第二个前缀会让组件 CSS 线性翻倍，必须先跑通本文件的探针比对。
+    expect([...STATIC_PREFIX_CLS]).toEqual(['apollo']);
+  });
+
+  it('探针前缀不在 `STATIC_PREFIX_CLS` 里（否则本测试会退化成空转）', () => {
+    expect([...STATIC_PREFIX_CLS]).not.toContain(PROBE_PREFIX);
   });
 
   it('实际不一致的组件集合 == `KNOWN_GAPS` 的键集合（双向）', () => {
-    const actual = COMPONENT_STYLES.filter((entry) => {
-      const [a = 'apollo', b = 'ant'] = STATIC_PREFIX_CLS as readonly string[];
-      return countOf(entry.gen(a), a) !== countOf(entry.gen(b), b);
-    }).map((entry) => entry.name);
+    const actual = COMPONENT_STYLES.filter(
+      (entry) =>
+        countOf(entry.gen(DEFAULT_PREFIX), DEFAULT_PREFIX) !==
+        countOf(entry.gen(PROBE_PREFIX), PROBE_PREFIX),
+    ).map((entry) => entry.name);
 
     // 方向 A：没登记却出现不一致 ⇒ 新引入的缺口
     const unregistered = actual.filter((n) => !(n in KNOWN_GAPS));
@@ -104,36 +158,51 @@ describe('样式前缀守恒（`gen(p)` 对每个静态前缀都要产出对应�
   it('🚨 已修的组件不在清单里：`date-picker` / `calendar`', () => {
     // date-picker：2026-10-02 修（`genDatePickerRules`）
     const dp = measure('date-picker');
-    expect(dp.apollo).toBeGreaterThan(200);
-    expect(dp.ant).toBe(dp.apollo);
+    expect(dp.base).toBeGreaterThan(200);
+    expect(dp.probe).toBe(dp.base);
     // calendar：同日修（`genCalendarPanelRules`）
     const cal = measure('calendar');
-    expect(cal.apollo).toBeGreaterThan(200);
-    expect(cal.ant).toBe(cal.apollo);
+    expect(cal.base).toBeGreaterThan(200);
+    expect(cal.probe).toBe(cal.base);
   });
 
-  it('`ant` 版必须**零** `.apollo-` 残留（这两个组件）', () => {
-    const [a = 'apollo', b = 'ant'] = STATIC_PREFIX_CLS as readonly string[];
+  it('换前缀后必须**零** `.apollo-` 残留（这两个组件）', () => {
     for (const name of ['date-picker', 'calendar']) {
-      const entry = COMPONENT_STYLES.find((item) => item.name === name);
-      if (!entry) throw new Error(`未知组件 ${name}`);
-      expect(entry.gen(a).includes('.apollo-'), `${name} apollo 版应含 .apollo-`).toBe(true);
-      expect(entry.gen(b).includes('.apollo-'), `${name} ant 版不应含 .apollo-`).toBe(false);
+      const gen = genOf(name);
+      expect(
+        gen(DEFAULT_PREFIX).includes(`.${DEFAULT_PREFIX}-`),
+        `${name} 默认版应含 .${DEFAULT_PREFIX}-`,
+      ).toBe(true);
+      expect(gen(PROBE_PREFIX).includes('.apollo-'), `${name} 换前缀后不应含 .apollo-`).toBe(false);
     }
   });
 
-  it('`ant` 版必须**保留**全局别名变量（`tokens.css` 只声明 `--apollo-*`）', () => {
-    const [b = 'ant'] = [...STATIC_PREFIX_CLS].slice(1);
+  it('换前缀后必须**保留**全局别名变量（`tokens.css` 只声明 `--apollo-*`）', () => {
     for (const name of ['date-picker', 'calendar']) {
-      const entry = COMPONENT_STYLES.find((item) => item.name === name);
-      if (!entry) throw new Error(`未知组件 ${name}`);
-      const ant = entry.gen(b);
-      expect(ant.includes('--apollo-color-text'), `${name} 丢了全局别名`).toBe(true);
-      expect(ant.includes('--ant-color-text'), `${name} 错改了全局别名`).toBe(false);
+      const probe = genOf(name)(PROBE_PREFIX);
+      expect(probe.includes('--apollo-color-text'), `${name} 丢了全局别名`).toBe(true);
+      expect(
+        probe.includes(`--${PROBE_PREFIX}-color-text`),
+        `${name} 错改了全局别名（全局别名必须不动）`,
+      ).toBe(false);
     }
   });
 
   it('缺口清单的规模被钉住（24 个，修一个删一条）', () => {
     expect(Object.keys(KNOWN_GAPS)).toHaveLength(24);
+  });
+
+  it('`apollo` 版里硬编码 `.ant-` 的组件集合 == `HARDCODED_ANT_IN_DEFAULT`（双向）', () => {
+    // 为什么值得钉：默认前缀下这些选择器**永不命中**（死规则）。
+    // 2026-10-07 砍掉 ant 变体后它们才暴露出来 —— 以前被第二份 CSS 盖住了。
+    const actual = COMPONENT_STYLES.filter((entry) =>
+      stripComments(entry.gen(DEFAULT_PREFIX)).includes('.ant-'),
+    ).map((entry) => entry.name);
+
+    const unregistered = actual.filter((n) => !(n in HARDCODED_ANT_IN_DEFAULT));
+    expect(unregistered, `新出现的硬编码 .ant- 选择器: ${unregistered.join(', ')}`).toEqual([]);
+
+    const stale = Object.keys(HARDCODED_ANT_IN_DEFAULT).filter((n) => !actual.includes(n));
+    expect(stale, `已修好但仍登记在 HARDCODED_ANT_IN_DEFAULT: ${stale.join(', ')}`).toEqual([]);
   });
 });

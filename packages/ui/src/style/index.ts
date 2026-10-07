@@ -9,18 +9,29 @@
  * （与 `packages/theme/build.config.ts` 从 `dist/index.mjs` 取 `getCSSVarDeclarations`
  * 同一套路：顺带验证了「产物能被真实 import」）。
  *
- * ── 为什么同时为 `apollo` 与 `ant` 生成 ──────────────────────────────────────
+ * ── 为什么现在**只有 `apollo` 一个前缀**（2026-10-07 裁决 `css-ant-prefix-cost` = B）──
  *
- * 裁决 `prefix-cls-default` = A 承诺「默认 `apollo`，允许 ConfigProvider 覆盖为 `ant`」。
- * 但零运行时下 CSS 是构建期产物：只生成 `apollo` 的话，用户把 prefixCls 改成 `ant`
- * 会得到一堆没有样式的类名 —— 那条承诺就是空的。
+ * 这里原先是 `['apollo', 'ant']`：裁决 `prefix-cls-default` = A 承诺「默认 `apollo`，
+ * 允许 ConfigProvider 覆盖为 `ant`」，而零运行时下 CSS 是构建期产物 —— 不生成 `ant`
+ * 那份，那条承诺就是空的。
  *
- * 所以 `STATIC_PREFIX_CLS` 里的每个前缀都会生成一份。代价是 CSS 体积翻倍
- * （单个组件的 CSS 只有几百字节，可接受），换来的是「迁移时把 prefixCls 设成 `ant`
- * 就能复用 antd 的覆盖样式」这条真实可用的路径。
+ * 但 2026-10-07 实测这笔账是**负的**：`ant` 那份占组件 CSS 总量的 **32.8%**
+ * （827.2 KB / 2522.2 KB），而它支撑的能力并不完整 —— `style-prefix.test.ts` 的
+ * `KNOWN_GAPS` 有 **24 个组件**的 `ant` 版类名数少于 `apollo` 版，其中 7 个几乎为空
+ * （`tooltip` 213→0 · `upload` 1051→1 · `tabs` 885→1 …）⇒ 对这些组件，设了
+ * `prefixCls="ant"` 是**真没有样式**。付双倍价钱买到半个功能。
  *
- * **自定义前缀（如 `my-app`）不生成** —— 那种情况请调用 `genComponentCss(name, prefixCls)`
- * 自行产出并引入。这是零运行时的固有代价，登记在 `COMPONENT-RULES.md` 的 R9 讨论里。
+ * ⇒ 用户裁决**砍掉 `ant`**：`prefix-cls-default` = A 里「允许覆盖为 `ant`」这一半撤回。
+ *
+ * ── 现在的契约 ────────────────────────────────────────────────────────────────
+ *
+ * 静态 CSS **只覆盖 `STATIC_PREFIX_CLS` 里列出的前缀**（当前只有 `apollo`）。
+ * 要用别的前缀（**含 `ant`**）仍然可以 —— 但必须自己产出并引入 CSS：
+ *   `genComponentCss(name, prefixCls)` 产单个组件，`genAllStyles()` 产全部。
+ * ⇒ 丢的是「开箱即带的第二套 CSS」，**「任意 prefixCls」这条能力没丢**。
+ *
+ * ⚠️ 不产自用 CSS 就把 `prefixCls` 设成本数组以外的值，渲染出的类名**没有任何样式**
+ *    —— 这是零运行时的固有结果（与 `COMPONENT-RULES.md` R9 的讨论同源）。
  *
  * ── 加一个新组件时要做什么 ──────────────────────────────────────────────────
  *
@@ -102,12 +113,14 @@ import { genUploadStyle } from '../upload/style';
  * 静态 CSS 覆盖的前缀。
  *
  * 顺序即产物顺序：第一个是默认前缀（`prefix-cls-default` 裁决的 `apollo`）。
- * 新增前缀只要加进这个数组 —— 它同时决定 `dist/<component>/style.css` 的内容。
+ * 新增前缀只要加进这个数组 —— 它同时决定 `dist/<component>/style.css` 的内容
+ * （每加一个，组件 CSS 总量**线性涨一倍**，这里是体积的主要旋钮）。
  *
- * 🚨 **每个 `entry.gen(p)` 都必须对 `p` 产出对应前缀的选择器**。
- * 用户把 `ConfigProvider prefixCls="ant"` 打开时，组件渲染出 `.ant-*` 类名
- * ⇒ 只有本数组里 `'ant'` 那一份能命中；`gen` 若忽略 `p`（比如把 `.apollo-` 写死
- * 在静态串里），那个组件的 `ant` 样式就是**空的**。
+ * 🚨 **加第二个前缀之前，先做这两件事**（2026-10-07 `css-ant-prefix-cost` = B 的教训）：
+ *   1. 跑 `node_modules/.bin/vitest run --project unit style-prefix` —— 它的探针比对会
+ *      指出**哪些组件的 `gen(p)` 其实是忽略了 `p`**（把 `.apollo-` 写死在静态串里）。
+ *   2. 修掉它们（`KNOWN_GAPS` 是权威清单，**修一个删一条**）。
+ *   否则你会得到一套「类名对、但样式空」的前缀 —— 那就是 `'ant'` 时期的实况。
  *
  * 两条替换的规则**不同**（判据同 `date-picker/style/index.ts` 的 `genDatePickerRules`）：
  *   - **类名** `.apollo-*` ⇒ 跟着前缀走（含跨组件的 `.apollo-icon` / `.apollo-tag-blue`
@@ -116,23 +129,11 @@ import { genUploadStyle } from '../upload/style';
  *     实测 382 个、0 个 `--ant-*`）；
  *   - **组件自有变量** `--apollo-<component>-*` ⇒ 跟着换。
  *
- * ⚠️ **当前仍有缺口**（2026-10-07 复核数字）：`KNOWN_GAPS` 现有 **24 个组件**的
- * `ant` 版类名数少于 `apollo` 版 —— 其中 **7 个是「规则体完全静态」**
- * （tabs 885→1 / input 734→3 / upload 1051→1 / tooltip 213→0 / form 322→2 /
- * pagination 477→1 / slider 136→1）⇒ `ant` 版**几乎为空**，对这些组件来说
- * `prefixCls="ant"` 事实上是**没有样式**的。
- *
- *   ⚠️ 注释里原先写的「22 个」是 2026-10-02 的快照，实测已变成 24 ——
- *      **这类数字会漂移，引用前请去权威清单核对**（下同 §0 那条纪律）。
- *
- *   **权威清单 + 双向校验**（修一个删一条、漏登记会红）在
- *   `packages/ui/src/__tests__/style-prefix.test.ts` 的 `KNOWN_GAPS`。
- *
- * 💰 **这笔账现在是负的**（2026-10-07 实测）：`ant` 那份占组件 CSS 总量的 **32.8%**
- *    （827.2 KB / 2522.2 KB），而它买到的能力在 24 个组件上是不完整的。
- *    是否继续承担这个代价，见开放决策 **`css-ant-prefix-cost`**。
+ * ⚠️ **`gen(p)` 吃 `p` 这条不变量现在仍然在测**，用的是**探针前缀**（不是本数组里的值）
+ * —— 见 `style-prefix.test.ts`。也就是说：本数组现在只有一个值，**不代表那份护栏失效**，
+ * 它只是不再被打包进产物罢了。
  */
-export const STATIC_PREFIX_CLS = ['apollo', 'ant'] as const;
+export const STATIC_PREFIX_CLS = ['apollo'] as const;
 
 /** 一个组件的样式入口。 */
 export interface ComponentStyleEntry {

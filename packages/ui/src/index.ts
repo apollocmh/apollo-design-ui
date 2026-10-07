@@ -20,8 +20,10 @@
  * import '@apollo-design/ui/style.css';           // 汇总：全部组件
  * ```
  *
- * 自定义 `prefixCls`（如 `my-app`）时用 `genComponentCss('empty', 'my-app')`
- * 自行产出 CSS —— 静态 CSS 只覆盖 `STATIC_PREFIX_CLS` 里列出的前缀。
+ * 自定义 `prefixCls`（如 `my-app`，**也包括 `ant`**）时用 `genComponentCss('empty', 'my-app')`
+ * 自行产出 CSS —— 静态 CSS 只覆盖 `STATIC_PREFIX_CLS` 里列出的前缀，
+ * 而该数组 2026-10-07 起**只有 `apollo`**（裁决 `css-ant-prefix-cost` = B，
+ * 砍掉了占组件 CSS 32.8% 的 `ant` 变体）。不自行产 CSS 就换前缀 ⇒ 渲染出的类名没有样式。
  */
 
 export type {
