@@ -13,7 +13,7 @@
 
 import { CloseCircleFilled } from '@apollo-design/icons';
 import { isPlainObject, useDevWarning } from '@apollo-design/utils';
-import { type ComputedRef, computed, getCurrentInstance, type VNodeChild } from 'vue';
+import { type ComputedRef, computed, type VNodeChild } from 'vue';
 
 export interface AllowClearConfig {
   clearIcon?: VNodeChild;
@@ -50,8 +50,6 @@ export function useAllowClear(
     'clearIcon',
     'allowClear={{ clearIcon: VNode }}',
   );
-
-  void getCurrentInstance();
 
   return computed<false | AllowClearConfig>(() => {
     const mergedAllowClear =

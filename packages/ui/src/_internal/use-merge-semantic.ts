@@ -51,8 +51,15 @@
  * ── 这个模块没有证明什么 ──────────────────────────────────────────────────────
  *   - 没证明各组件的**合并顺序声明**是对的。本模块只保证「给定顺序，合并结果正确」；
  *     顺序本身由各组件的 compat 用例与 antd 对照（Empty 见 `__tests__/semantic.test.ts`）。
- *   - 没证明**既有 9 个组件该传的 schema 都传了** —— 它们目前仍靠无 schema 的宽松路径，
- *     其中「字符串 + 对象混用」的那条输入仍会产垃圾键（已登记 `docs/KNOWN-ISSUES.md`）。
+ *   - 没证明**所有该传 schema 的组件都传了**。schema 档 2026-10-03 实现，
+ *     select / cascader / color-picker / tabs / image（×2）/ splitter 已补第四参；
+ *     menu 无语义通道、`input.Search` 未实现（见 `docs/KNOWN-ISSUES.md` §2 留痕）。
+ *
+ *   ⚠️ 无 schema 的宽松路径（`mergeClassNames`）**仍在服务既有消费者**：它在
+ *     「字符串 + 对象混用」时会产垃圾键（`Object.keys('x')`）。这条**曾**登记在
+ *     `docs/KNOWN-ISSUES.md`，该文件的 §1 已于 2026-10-07 清零、登记项转入 §2 的
+ *     「已修 / 已裁决」；但宽松路径本身**未改**（7 个既有消费者的用例钉住它）。
+ *     若将来统一到 schema 档，需同步改这 7 处并重跑它们的 L4/L6。
  */
 
 import { isFunction } from '@apollo-design/utils';

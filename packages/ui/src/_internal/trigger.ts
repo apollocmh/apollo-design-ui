@@ -46,6 +46,7 @@ import {
   computed,
   defineComponent,
   h,
+  onBeforeUnmount,
   type PropType,
   ref,
   shallowRef,
@@ -379,8 +380,15 @@ export const Trigger = defineComponent({
       },
       { flush: 'post' },
     );
+    // ⚠️ 这是**原生全局监听**，Vue 不会自动清理（只有 `watch` 的 onCleanup 会自动跑）
+    //    ⇒ 必须在卸载时显式移除，否则每个已卸载的 Trigger 都会继续响应 window resize
+    //    （Trigger 是 tooltip/dropdown/select/cascader/date-picker/tour/mentions 的共享基建，
+    //     泄漏按实例累积）。全仓扫描确认这是唯一一处缺移除的 addEventListener。
     if (canUseDom()) {
       window.addEventListener('resize', triggerAlign);
+      onBeforeUnmount(() => {
+        window.removeEventListener('resize', triggerAlign);
+      });
     }
 
     // placement / mousePos 变化立即对齐（rc useLayoutEffect [mousePos, popupPlacement]）

@@ -4,9 +4,9 @@
   "target": "@apollo-design/ui / Vue 3.5+ native component library",
   "antdVersion": "6.6.4",
   "overallStatus": "in_progress",
-  "phase": "audit-rootalias-migration",
+  "phase": "audit-shared-surfaces",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-06T23:04:46.461Z",
+  "updatedAt": "2026-10-07T01:28:39.893Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -47,11 +47,11 @@
     },
     "sharedSurfaces": {
       "total": 12,
-      "todo": 12,
-      "done": 0
+      "done": 3,
+      "todo": 9
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 782,
+    "reviewedProductionSourceFiles": 842,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -3343,18 +3343,25 @@
   "sharedSurfaces": {
     "ui-public-entry": {
       "path": "packages/ui/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/index.ts"
       ],
-      "reviewedFiles": [],
-      "issueIds": [],
-      "batch": null,
-      "notes": []
+      "reviewedFiles": [
+        "packages/ui/src/index.ts"
+      ],
+      "issueIds": [
+        "VNA-DOC-STALE-01"
+      ],
+      "batch": "AUDIT-S2",
+      "notes": [
+        "2026-10-07 审阅 1/1（1934 行 barrel）。0 条实质缺陷 —— 纯 re-export，React 形状模式扫描 0 命中。",
+        "仅修 1 处过期注释（进度数字 1/72）。"
+      ]
     },
     "ui-internal": {
       "path": "packages/ui/src/_internal",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/ui/src/_internal/action-button.ts",
         "packages/ui/src/_internal/app-context.ts",
@@ -3373,14 +3380,43 @@
         "packages/ui/src/_internal/use-orientation.ts",
         "packages/ui/src/_internal/with-install.ts"
       ],
-      "reviewedFiles": [],
-      "issueIds": [],
-      "batch": null,
-      "notes": []
+      "reviewedFiles": [
+        "packages/ui/src/_internal/action-button.ts",
+        "packages/ui/src/_internal/app-context.ts",
+        "packages/ui/src/_internal/color-composite.ts",
+        "packages/ui/src/_internal/overflow.ts",
+        "packages/ui/src/_internal/picker-host-context.ts",
+        "packages/ui/src/_internal/preset-color.ts",
+        "packages/ui/src/_internal/responsive-observer.ts",
+        "packages/ui/src/_internal/scroll-to.ts",
+        "packages/ui/src/_internal/to-css-size.ts",
+        "packages/ui/src/_internal/trigger.ts",
+        "packages/ui/src/_internal/use-allow-clear.ts",
+        "packages/ui/src/_internal/use-closable.ts",
+        "packages/ui/src/_internal/use-merge-semantic.ts",
+        "packages/ui/src/_internal/use-merged-mask.ts",
+        "packages/ui/src/_internal/use-orientation.ts",
+        "packages/ui/src/_internal/with-install.ts"
+      ],
+      "issueIds": [
+        "VNA-TRIGGER-01",
+        "VNA-ALLOWCLEAR-01",
+        "VNA-DOC-STALE-01"
+      ],
+      "batch": "AUDIT-S2",
+      "notes": [
+        "2026-10-07 全量审阅 16/16 生产源文件。3 条 issue（1 P1 + 2 P3），全部 fixed。",
+        "已核实为「刻意保真 / 非缺陷」的候选（不计入 issues）：",
+        "  - node-renderer 的 VNode 克隆是 Vue 可变 vnode 的必然要求（PLATFORM），非 React 残留。",
+        "  - action-button 用 `actionFn.length` 判「是否接受 close 参数」= 上游判据，保留。",
+        "  - overflow 根 `{...attrs, class}` 的显式 class 会顶掉 attrs.class 的 spread 副本，但 Vue 的自动 fallthrough 会再并入一次 ⇒ 净效果恰好一次（无缺陷）。",
+        "  - responsive-observer / focus / observers 的模块级单例均为上游真实设计。",
+        "  - use-merge-semantic 的「无 schema 宽松路径」是有意保留（7 个既有消费者钉住），仅注释过期。"
+      ]
     },
     "utils": {
       "path": "packages/utils/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/utils/src/brand.ts",
         "packages/utils/src/children/to-array.ts",
@@ -3426,10 +3462,65 @@
         "packages/utils/src/to-list.ts",
         "packages/utils/src/warning.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/utils/src/brand.ts",
+        "packages/utils/src/children/to-array.ts",
+        "packages/utils/src/color/color.ts",
+        "packages/utils/src/color/generate.ts",
+        "packages/utils/src/color/index.ts",
+        "packages/utils/src/color/types.ts",
+        "packages/utils/src/dev-warning.ts",
+        "packages/utils/src/dom/can-use-dom.ts",
+        "packages/utils/src/dom/contains.ts",
+        "packages/utils/src/dom/focus.ts",
+        "packages/utils/src/dom/get-element.ts",
+        "packages/utils/src/dom/get-scroll-bar-size.ts",
+        "packages/utils/src/dom/get-scroll.ts",
+        "packages/utils/src/dom/index.ts",
+        "packages/utils/src/dom/is-visible.ts",
+        "packages/utils/src/dom/style-checker.ts",
+        "packages/utils/src/dom/update-css.ts",
+        "packages/utils/src/env.ts",
+        "packages/utils/src/event-name.ts",
+        "packages/utils/src/hooks/index.ts",
+        "packages/utils/src/hooks/use-controlled-value.ts",
+        "packages/utils/src/hooks/use-delay-state.ts",
+        "packages/utils/src/hooks/use-id.ts",
+        "packages/utils/src/hooks/use-safe-state.ts",
+        "packages/utils/src/hooks/use-update-effect.ts",
+        "packages/utils/src/index.ts",
+        "packages/utils/src/is-equal.ts",
+        "packages/utils/src/is.ts",
+        "packages/utils/src/key-code.ts",
+        "packages/utils/src/merge-props.ts",
+        "packages/utils/src/object.ts",
+        "packages/utils/src/observers/index.ts",
+        "packages/utils/src/observers/use-mutation-observer.ts",
+        "packages/utils/src/observers/use-resize-observer.ts",
+        "packages/utils/src/omit.ts",
+        "packages/utils/src/pick-attrs-allowlist.ts",
+        "packages/utils/src/pick-attrs.ts",
+        "packages/utils/src/raf.ts",
+        "packages/utils/src/ref.ts",
+        "packages/utils/src/throttle-by-animation-frame.ts",
+        "packages/utils/src/throttle.ts",
+        "packages/utils/src/to-list.ts",
+        "packages/utils/src/warning.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S1",
+      "notes": [
+        "2026-10-07 全量审阅 43/43 生产源文件。0 条实质缺陷。",
+        "本包是 L0 地基，质量极高：每个 React 形状的残留都带「契约来源 + 有意差异 + 登记项」注释，",
+        "并由针对性测试锁定（rc-util-contract.md 逐符号记录取舍）。",
+        "已核实为「刻意保真 / 非缺陷」的候选（不计入 issues）：",
+        "  1) pickAttrs 白名单是 React 属性名（className/style/htmlFor/tabIndex…），只改写事件名、不改写属性名。",
+        "     ⇒ 被 pick-attrs.test.ts:121-124 显式锁定；所有消费点（ColorTrigger/Rate/Tree…）都另行显式合并 attrs.class/style，无实际丢失。",
+        "  2) useId 不复刻 rc-util 的 test-id 固定值（对应开放决策 use-id-test-env 的选项 A）。",
+        "  3) env.ts 的 isDev 为模块级常量 ⇒ 打包器无法 DCE（换取跨打包器正确性，已在注释登记）。",
+        "  4) raf / focus / observers / update-css 用模块级单例，均为上游真实设计，非可优化项。",
+        "  5) is-equal 的共享引用判不等、object.set 的 removeIfUndefined 浅拷贝 quirk —— 均与上游一致且有测试。"
+      ]
     },
     "a11y": {
       "path": "packages/a11y/src",
@@ -4071,6 +4162,73 @@
       "title": "根别名迁移的内部消费者连带：className/rootClassName 静默丢失类名",
       "detail": "组件迁移后，仓内其他组件仍以 className/rootClassName 调用它 ⇒ 这些键不再是 props ⇒ 落进 attrs ⇒ 类名静默丢失（form 一次红 19 条 L4 用例）。已逐处改为原生 class。",
       "verification": "累计修 24 处：form/FormItemInput+FormItemLabel → Col；float-button/FloatButtonGroup → Flex/SpaceCompact、FloatButton → Badge；input-number/InputNumber → SpaceAddon/SpaceCompact；modal/Modal → Skeleton；statistic/Timer → Statistic；config-provider/default-render-empty → Empty；calendar/components/CalendarHeader → RadioGroup；radio/Group → Radio；image/Image + notification/engine/Notice → Progress；table/Table ×2 + transfer/ListBody → Pagination；pagination → Select；auto-complete → Select；avatar/AvatarGroup → Popover（走 classNames.root）；typography/Base → Tooltip；color-picker/components/ColorSlider → Slider；transfer/Search → Input；modal/ConfirmDialog → Modal；directory-tree → Tree；tree-select → Select；form/FormItemInput → ErrorList；**tabs/Card.vue、calendar/CalendarHeader（selectBase）、color-picker 模板 ×4（全量回归抓到）**。误报排除：modal/engine/Dialog 的 Content、table/use-filter 的 FilterWrapper、Dropdown.rootClassName、transfer/Actions 与 CalendarHeader 自身的 props 声明。⚠️ **教训：消费者扫描必须同时覆盖模板写法（`:class-name=` / `:root-class-name=`）与同目录内部件** —— 只看 `h(<Tag>, { className })` 会漏。"
+    },
+    {
+      "id": "VNA-TRIGGER-01",
+      "surface": "ui-internal / trigger",
+      "severity": "P1",
+      "status": "fixed",
+      "category": "vue-composition-api",
+      "systemic": false,
+      "title": "Trigger 注册的全局 window resize 监听在卸载时未移除（监听泄漏）",
+      "files": [
+        "packages/ui/src/_internal/trigger.ts:383（修复前：仅 addEventListener，无 removeEventListener / 无 onBeforeUnmount / 无 onScopeDispose）"
+      ],
+      "currentImplementation": "setup 顶层 `if (canUseDom()) window.addEventListener('resize', triggerAlign)`；全文件无任何移除路径。",
+      "semanticDifference": "React/rc-trigger 的 useResizeObserver/useEffect 带 cleanup，卸载即解除。Vue 里只有 `watch` 的 onCleanup 会自动跑；**原生 addEventListener 不会被 Vue 自动清理**，必须显式 removeEventListener。",
+      "recommendation": "在 addEventListener 的同一 `if (canUseDom())` 块内注册 `onBeforeUnmount(() => window.removeEventListener('resize', triggerAlign))`（与兄弟件 overflow.ts 同一惯例）。",
+      "relatedComponents": [
+        "tooltip",
+        "dropdown",
+        "select",
+        "cascader",
+        "date-picker",
+        "tour",
+        "mentions"
+      ],
+      "tests": [
+        "packages/ui/src/_internal/__tests__/trigger.test.ts（新增「卸载时移除 window resize 监听」用例，含反向哨兵）"
+      ],
+      "verification": "修复后 unit 4 文件/36 用例全绿（trigger 7→8）；反向哨兵实测：临时删掉 onBeforeUnmount ⇒ 新用例变红（1 failed | 7 passed），恢复 ⇒ 绿。全仓扫描 955 个生产文件，`addEventListener` 缺 `removeEventListener` 的**仅此一处**。"
+    },
+    {
+      "id": "VNA-ALLOWCLEAR-01",
+      "surface": "ui-internal / use-allow-clear",
+      "severity": "P3",
+      "status": "fixed",
+      "category": "react-implementation-migration",
+      "systemic": false,
+      "title": "useAllowClear 里残留一条无副作用的 `void getCurrentInstance();` 死代码",
+      "files": [
+        "packages/ui/src/_internal/use-allow-clear.ts:54（修复前）"
+      ],
+      "currentImplementation": "函数体里 `void getCurrentInstance();` —— `getCurrentInstance()` 无副作用，`void` 丢弃返回值 ⇒ 整条语句是空操作；其 import 也仅为此存在。",
+      "semanticDifference": "无（纯冗余，疑似从早期「确保 setup 上下文」的尝试残留）。",
+      "recommendation": "删除该语句与 `getCurrentInstance` 的 import。",
+      "relatedComponents": [],
+      "tests": [
+        "既有 consumers（input/select 等的 clear 图标）不受影响 —— 该语句本就无行为"
+      ],
+      "verification": "全仓 Grep `void getCurrentInstance\\(\\)` 仅此一处；删除后 biome 该文件 0 诊断（若 import 未删会触发 noUnusedImports）。"
+    },
+    {
+      "id": "VNA-DOC-STALE-01",
+      "surface": "ui-internal + ui-public-entry",
+      "severity": "P3",
+      "status": "fixed",
+      "category": "architecture",
+      "systemic": true,
+      "title": "两处注释引用了已过期的状态（已删的 KNOWN-ISSUES 登记 / 陈旧进度数字）",
+      "files": [
+        "packages/ui/src/_internal/use-merge-semantic.ts:51-55（称「已登记 docs/KNOWN-ISSUES.md」，但该文件 §1 已于 2026-10-07 清零、登记项转入 §2 留痕）",
+        "packages/ui/src/index.ts:9-10（「已落地 1 / 72 个组件」，实际 72/72；且同段又写「这个数字不写在这里」，自相矛盾）"
+      ],
+      "currentImplementation": "注释描述的状态与仓库当前事实不符。",
+      "semanticDifference": "无（文档准确性）。",
+      "recommendation": "更新注释：use-merge-semantic 改为「schema 档已实现并补齐消费者；无 schema 的宽松路径仍在服务既有消费者」；index.ts 删除手写数字、指向 registry。",
+      "relatedComponents": [],
+      "tests": [],
+      "verification": "Grep `已登记 .docs/KNOWN-ISSUES` 命中 1（已改）；`1 / 72` 命中 0（已改）。"
     }
   ],
   "batches": [
@@ -4129,6 +4287,38 @@
         "Read spin/components/NodeRenderer.ts, spin/interface.ts, spin/Spin.vue",
         "Grep found 11 direct imports from empty/components/NodeRenderer across component directories",
         "No tests run; no source refactor performed"
+      ]
+    },
+    {
+      "id": "AUDIT-S1",
+      "title": "Shared surface audit — utils (L0)",
+      "status": "completed",
+      "scope": "packages/utils/src (43 production source files)",
+      "issueIds": [],
+      "verification": [
+        "逐文件读完全部 43 个生产源文件（brand/children/color/dev-warning/dom/env/event-name/hooks/index/is/is-equal/key-code/merge-props/object/observers/omit/pick-attrs/pick-attrs-allowlist/raf/ref/throttle/throttle-by-animation-frame/to-list/warning）",
+        "两轮机械候选扫描（React 类型/生命周期/any/children-prop/onXxx/class-alias/style-prop；vue-runtime/watch-computed/vnode-factory/slot/emit/renderfn/prop-access/$attrs）：除色相变量 h 与 vnode 判定工具外零命中",
+        "pickAttrs 的 React 属性名白名单经 pick-attrs.test.ts:121-124 确认是锁定行为，消费点全部另行合并 attrs.class/style ⇒ 非缺陷",
+        "结论：0 条新增 issue（本包无需改动）",
+        "证据（2026-10-07 实测）：unit 19 文件/560 用例全绿；dom-contract 1 文件/17 用例全绿；types 2 文件/98 用例，Type Errors: no errors。",
+        "未改动任何源文件（0 issue）。"
+      ]
+    },
+    {
+      "id": "AUDIT-S2",
+      "title": "Shared surface audit — ui-internal + ui-public-entry",
+      "status": "completed",
+      "scope": "packages/ui/src/_internal (16 files) + packages/ui/src/index.ts (1 barrel)",
+      "issueIds": [
+        "VNA-TRIGGER-01",
+        "VNA-ALLOWCLEAR-01",
+        "VNA-DOC-STALE-01"
+      ],
+      "verification": [
+        "逐文件读完 16 个 _internal 生产源文件（action-button/app-context/color-composite/node-renderer/overflow/picker-host-context/preset-color/responsive-observer/scroll-to/to-css-size/trigger/use-allow-clear/use-closable/use-merge-semantic/use-merged-mask/use-orientation/with-install）+ 1934 行公开入口",
+        "VNA-TRIGGER-01 修复：trigger.ts 增加 onBeforeUnmount 移除 window resize 监听；全仓 955 文件扫描确认这是唯一缺移除处；反向哨兵实测（删修复⇒红，恢复⇒绿）",
+        "VNA-ALLOWCLEAR-01 / VNA-DOC-STALE-01 为死代码与过期注释，删除/更正",
+        "unit _internal 4 文件/36 用例全绿（trigger 7→8）；改动文件 biome 0 诊断"
       ]
     }
   ],
@@ -4398,6 +4588,16 @@
       "date": "2026-10-07",
       "status": "completed",
       "note": "Closed the remaining 7 registry issues: VNA-API-01 (removed 7 dead component-level children props; kept data-tree children), VNA-SLOT-01 (wired named slots for ColorPicker/DatePicker/Calendar; slot only takes over when present), VNA-ATTRS-01 (BorderBeam attrs -> host via mergeProps; App/BackTop claims disproved), VNA-AVATAR-01 (useBreakpoint accepts a getter), VNA-DIVIDER-01 (useSize wiring), VNA-DROPDOWN-01 (removed 4 dead render props), VNA-DROPDOWN-02 (already resolved)."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "AUDIT-S1 (shared surfaces) COMPLETE: packages/utils/src 43/43 reviewed, 0 issues. Every React-shaped carryover is documented with contract source + intentional-deviation + registry pointer and locked by focused tests. Rejected candidates (not counted as issues): pickAttrs React attribute-name whitelist (test-locked, all consumers merge attrs.class/style separately); useId not pinning a test id; isDev module-const (no DCE by design); module-level singletons in raf/focus/observers/update-css; is-equal shared-ref and object.set shallow-copy quirks."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "AUDIT-S2 (shared surfaces) COMPLETE: ui-internal 16/16 + ui-public-entry 1/1 reviewed. 3 issues (1 P1 + 2 P3), all fixed. P1 = VNA-TRIGGER-01: Trigger leaked a global window resize listener (no removeEventListener anywhere; Vue does not auto-clean raw listeners) — fixed with onBeforeUnmount, reverse-sentinel verified, and a 955-file sweep confirmed it was the ONLY file missing a removeEventListener. P3 = dead `void getCurrentInstance()` in use-allow-clear; stale doc comments (removed KNOWN-ISSUES pointer + wrong 1/72 progress in the barrel)."
     }
   ],
   "observations": [
@@ -4409,6 +4609,17 @@
       "evidence": [
         "packages/ui/src/empty/components/NodeRenderer.ts:43-60",
         "packages/ui/src/spin/components/NodeRenderer.ts:39-53"
+      ]
+    },
+    {
+      "id": "OBS-PICKATTRS-01",
+      "surface": "utils / pickAttrs",
+      "decision": "keep-react-attribute-names-rewrite-events-only",
+      "note": "pickAttrs 的输出把事件键改写成 Vue 规范事件名（onKeyDown→onKeydown），但**不改写属性名**（className 仍输出 className）。在 Vue 里 className 恰好经 el.className 生效，所以功能正常，但这是「依赖 DOM prop 名巧合」而非 Vue-native。属刻意保真（与 rc-util 的 DOM 契约一致），且被 pick-attrs.test.ts 锁定；所有消费点均显式合并 attrs.class/style。若未来 Phase 2 要彻底 Vue 化，可评估同时归一 class/style，但需同步 DOM 契约基线。",
+      "evidence": [
+        "packages/utils/src/pick-attrs.ts:82-102（仅事件名走 toVueEventName）",
+        "packages/utils/src/__tests__/pick-attrs.test.ts:121-124（className/tabIndex/style 原样输出，测试锁定）",
+        "消费点：color-picker/components/ColorTrigger.vue:146+162+164、rate/Rate.ts:311-314+357、tree/Tree.ts:1347（均另行处理 class）"
       ]
     }
   ]

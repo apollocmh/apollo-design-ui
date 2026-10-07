@@ -148,3 +148,37 @@ describe('Trigger · L1 开合与渲染', () => {
     expect(popup()!.textContent).toContain('TIP3');
   });
 });
+
+describe('Trigger · 生命周期清理', () => {
+  /**
+   * VNA-TRIGGER-01 回归。
+   *
+   * `window.addEventListener('resize', …)` 是**原生全局监听**，Vue 不会自动清理
+   * （只有 `watch` 的 onCleanup 会自动跑）⇒ 必须在卸载时显式移除，否则每个已卸载的
+   * Trigger 都会继续响应 window resize（Trigger 是 tooltip / dropdown / select /
+   * cascader / date-picker / tour / mentions 的共享基建，泄漏按实例累积）。
+   *
+   * 反向哨兵：删掉 `onBeforeUnmount(() => window.removeEventListener('resize', triggerAlign))`
+   * 后，`removed` 里不会有对应 handler ⇒ 本用例变红。
+   */
+  it('★ 卸载时移除 window resize 监听（同一函数引用，否则静默泄漏）', async () => {
+    const addSpy = vi.spyOn(window, 'addEventListener');
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
+
+    const wrapper = mountTrigger({ open: false });
+    const addedResize = addSpy.mock.calls.filter(([type]) => type === 'resize').map(([, fn]) => fn);
+    expect(addedResize.length, '挂载时应注册 window resize 监听').toBeGreaterThan(0);
+
+    wrapper.unmount();
+
+    const removedResize = removeSpy.mock.calls
+      .filter(([type]) => type === 'resize')
+      .map(([, fn]) => fn);
+    for (const handler of addedResize) {
+      expect(removedResize, '卸载时应移除刚注册的同一个 handler').toContain(handler);
+    }
+
+    addSpy.mockRestore();
+    removeSpy.mockRestore();
+  });
+});
