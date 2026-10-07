@@ -596,7 +596,15 @@ export const COMPONENTS = {
       {
         variants: ['checkable', 'multiple'],
         reason:
-          '`treeCheckable` 的**勾选框在未展开的下拉里** ⇒ 静态帧（下拉关闭）与 `multiple` 逐字节相同。要测它必须 `open` 受控展开浮层。',
+          '`treeCheckable` 的**勾选框在未展开的下拉里** ⇒ 静态帧（下拉关闭）与 `multiple` 逐字节相同。\n' +
+          '        ⚠️ **2026-10-08 实测：「`open` 受控展开」这条路走不通，别再试**。\n' +
+          '           加了 `open` 后豁免确实失效了（变体终于产生差异），但**三视口全红**\n' +
+          '           （mobile 1.469% / tablet 0.718% / desktop 0.383%，孤立重拍仍红）——\n' +
+          '           探针实测：antd 侧只渲染出 **2 个父节点**（`parent 1` / `parent 2`），\n' +
+          '           **展开的 leaf 1 / leaf 2 缺失**（`rc-virtual-list` 在「挂载即 open」下测量不全）；\n' +
+          '           本仓侧渲染完整 ⇒ 两侧**不可比**。这是**上游在非常规状态下的产物**，\n' +
+          '           不是本仓 BUG ⇒ 已回退 `open`，保持登记。\n' +
+          '           真要覆盖「勾选态」，需要能触发真实交互后再截帧（当前 harness 不支持）。',
       },
     ],
     // 3 个 variant × 3 个 viewport = 9 张
