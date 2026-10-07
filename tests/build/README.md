@@ -23,8 +23,9 @@ node tests/build/run.mjs --json          # 机器可读
 | B4 无 CSS-in-JS 运行时 | ✅ 生效 | 同上 |
 | B9 Node 版本 | ✅ 生效 | 要求 ≥ 22.12 |
 | B10 无 `@rc-component/*` | ✅ 生效 | 同上 |
-| B5 / B7 | ⏳ PENDING | 仅 `theme` / `ui`：需要 CSS 产物。其他包判为 n/a（不产 CSS） |
-| B6 / B8 | ⏳ PENDING | 仅 `ui`：需要体积预算与可 SSR 组件。其他包判为 n/a |
+| B5 / B7 | ✅ 生效 | 仅 `theme` / `ui`：需要 CSS 产物。其他包判为 n/a（不产 CSS） |
+| B6 | ⏳ PENDING | 仅 `ui`：**已实测到真实缺陷** —— 任一组件 = 1272.9 KB = 全量 63%（2026-10-07），见 `docs/KNOWN-ISSUES.md` §1.1 与决策 `ui-tree-shaking` |
+| B8 | ✅ 生效 | 仅 `ui`：`renderToString` 冒烟。其他包判为 n/a |
 
 ### 为什么 PENDING ≠ 通过
 

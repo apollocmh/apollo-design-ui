@@ -46,8 +46,36 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §1 仍开放的问题
 
+### §1.1 `@apollo-design/ui` 事实上**无法按需引入**（B6 因此仍是 PENDING）
 
-**（当前无开放问题）** —— 2026-10-07 前 §1 的 8 条已全部修完或裁决，逐条留痕见 §3。
+**2026-10-07 实测发现**（VNA 共享面审计在落实 `ui-style-output` 裁决要求的「B6 转真检查」时测出来的）。
+
+**判据（可复现）**：用 Vite 8（rolldown）lib 构建一个只 import 一个导出的入口，`external: [vue, dayjs]`、`minify: esbuild`、`write: false` 读内存字节数：
+
+| 入口 | 产物 |
+|---|---|
+| 空基线 / `import "@apollo-design/ui"`（裸副作用）/ 只 re-export 不使用 | **0.0 KB** |
+| **真正使用** Button / Empty / Divider / Table / ConfigProvider（逐个测） | **全部恰好 1272.9 KB** |
+| 全量 `import * as all` | 2010.1 KB |
+| 对照：`@apollo-design/theme` 的 `useToken` 单独使用 | 22.6 KB |
+
+⇒ 按需引入一个组件要付**全量 63%** 的体积；而且「引 Button」与「引 Empty」字节数**完全相同**。
+
+**根因（逐条实测，不是推测）**：
+1. `sideEffects: false` **已正确声明** —— 裸副作用导入与未使用的 re-export 都被摇成 0 KB ⇒ 包元数据没问题；
+2. 限制因素是**模块粒度**：`packages/ui/dist/index.mjs` 是**一个** 3.2 MB / 77668 行的单文件产物（unbuild 默认）⇒ 打包器只能整模块丢弃，「全不用 ⇒ 0 KB」「用一个 ⇒ 全留」正是这个形态的必然结果；
+3. 产物里 **329 处 `defineComponent(...)` + 126 处 `withInstall(...)` 顶层调用、0 处 `/*#__PURE__*/`**；全加上 PURE 后只从 1272.9 降到 **1168.8 KB**（仅省 104.1 KB）⇒ **不是主因**；
+4. 压缩产物里仍能搜到 `"ATable"` / `"AForm"` / `"ApolloPickerPanel"` / `"AActionButton"` ⇒ 只引 `Divider` 却保留了 Table / Form / picker / ActionButton 整片。
+
+**为什么它一直没被发现**：L7 的 B6（判据正是「按需引入单组件后产物体积 ≤ 预算」）从 2026-09-18 起就是 PENDING ⇒ 这条**恰好用来抓它的门禁从未真正运行**。
+
+**处置**：已登记为开放决策 **`ui-tree-shaking`**（`node registry/tools/ask.mjs decision ui-tree-shaking` 看三个选项与推荐）。**需用户裁决后**再动 ui 的构建产物形态；`budget.json` 必须在产物形态定下来之后按实测设定，**不得为了让 B6 变绿而把预算设成全量**（H8）。
+
+⚠️ 与 `build-output-contract`（裁决 A：**foundation 层**单文件 dist）**不冲突** —— `ARCHITECTURE.md` §8.1 明写「ui 的按组件按需引入需求不在本次裁决范围内」；ui 的**样式**侧已有 `ui-style-output` A（69 个 `dist/<c>/style.css` 实测存在），**JS 侧此前没有对应裁决**。
+
+---
+
+**（§1 其余项：无）** —— 2026-10-07 前 §1 的 8 条已全部修完或裁决，逐条留痕见 §3。
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 

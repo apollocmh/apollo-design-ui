@@ -502,6 +502,52 @@ export const OPEN_DECISIONS = [
     //    PickerFormat 要加回 DateType 泛型"）；组件侧的范围由上面的 impact 文本承载。
     blocks: ['@apollo-design/picker'],
   }),
+  open('ui-tree-shaking', {
+    raisedAt: '2026-10-07',
+    question:
+      '@apollo-design/ui 的 JS 产物形态要不要为 tree-shaking 改？现状「单文件 dist/」下，**按需引入任意一个组件 = 1272.9 KB，占全量的 63%** —— 即 `@apollo-design/ui` 事实上无法按需引入。',
+    context:
+      '来源：VNA 共享面审计（2026-10-07）在落实 L7 的 B6（`ui-style-output` 裁决要求「B6 从 PENDING 转真检查」）时**实测**出来的。' +
+      '测量方法：Vite 8（rolldown）lib 构建一个只 import 一个导出的入口，`external: [vue, dayjs]`，`minify: esbuild`，`write: false` 读内存产物字节数。' +
+      '实测（2026-10-07）：\n' +
+      '  · 空基线 / `import "@apollo-design/ui"`（裸副作用）/ 只 re-export 不使用 ⇒ **0.0 KB**；\n' +
+      '  · **真正使用**任一个组件（Button / Empty / Divider / Table / ConfigProvider 逐个测）⇒ **全部恰好 1272.9 KB**；\n' +
+      '  · 全量 `import * as all` ⇒ 2010.1 KB；\n' +
+      '  · 对照：`@apollo-design/theme` 的 `useToken` 单独使用只有 22.6 KB。\n' +
+      '根因定位（逐条实测）：\n' +
+      '  ① `sideEffects: false` **已正确声明** —— 裸副作用导入与未使用的 re-export 都被摇成 0 KB，说明包元数据没问题；\n' +
+      '  ② 问题在**模块粒度**：`packages/ui/dist/index.mjs` 是**一个** 3.2 MB / 77668 行的单文件打包产物（unbuild 默认行为），rollup/rolldown 只能整模块丢弃 —— 「全不用 ⇒ 0 KB」与「用一个 ⇒ 全留」正是这个形态的必然结果；\n' +
+      '  ③ 产物里有 **329 处 `defineComponent(...)` 与 126 处 `withInstall(...)` 顶层调用，0 处带 `/*#__PURE__*/`**；但给它们全加上 PURE 标注后只从 1272.9 降到 **1168.8 KB**（仅省 104.1 KB）⇒ 不是主因；\n' +
+      '  ④ 压缩产物里仍能搜到 `"ATable"` / `"AForm"` / `"ApolloPickerPanel"` / `"AActionButton"` ⇒ 只引 `Divider` 却把 Table / Form / picker / ActionButton 整片保留。\n' +
+      '⚠️ 这与 `build-output-contract`（裁决 A：**foundation 层**单文件 dist）**不冲突** —— 那条只管 13 个 foundation 包，`ARCHITECTURE.md` §8.1 明写「ui 的按组件按需引入需求不在本次裁决范围内」。' +
+      'ui 的**样式**侧已有 `ui-style-output` A（每组件一份 CSS，69 个 `dist/<c>/style.css` 实测存在）；**JS 侧没有对应裁决**，本条就是它。',
+    options: [
+      {
+        label: 'A. ui 改出「保留模块结构」的 ESM（`preserveModules`）（★ 推荐）',
+        tradeoff:
+          '`packages/ui/build.config.ts` 打开 `preserveModules`，产物变成 `dist/<component>/index.mjs` 等**多文件**，`dist/index.mjs` 降级为 re-export barrel。' +
+          '**依据**：本次实测已证明「模块级丢弃」是有效的（整包不用 ⇒ 0 KB），限制因素正是「只有一个模块」。改动小、公开入口不变（`exports["."]` 仍指 `dist/index.mjs`）、不动任何组件源码。' +
+          '代价：dist 文件数从 4 涨到数百；需重跑 B2（exports 解析）/B5（CSS）/B6（体积）并确认 `files: ["dist"]` 仍覆盖全部产物。',
+      },
+      {
+        label: 'B. 给 exports 增加按组件 JS 入口（`@apollo-design/ui/button`）',
+        tradeoff:
+          '与样式侧的 `@apollo-design/ui/<c>/style.css` 对称，深导入最明确、不依赖消费方打包器的摇树能力。' +
+          '代价：需要**每组件一份 JS 产物**（构建配置与体积都上升），且要新增 72 条 `exports` 记录（或通配符，但 B2 有「通配符检测」）。适合作为 A 的后续增强。',
+      },
+      {
+        label: 'C. 不改产物形态，只把 B6 的预算设成实测值（1272.9 KB）',
+        tradeoff:
+          '立刻让 B6 从 PENDING 转绿、改动最小。**但这是 H8 明禁的「降低验收标准以换取进度」** —— B6 的判据是「按需引入单组件后产物体积 ≤ 预算」，把预算设成「等于全量」等于宣告这条门禁永远不可能失败。**不推荐**，仅列出以说明为何不能选。',
+      },
+    ],
+    recommendation:
+      'A。本次实测已经把根因收敛到「单文件模块无法被模块级摇树」，而 A 正是针对这一点、且不动组件源码与公开入口；B 可作为后续增强（若确需显式深导入）。C 违反 H8，不应作为选项。',
+    impact:
+      '决定 `@apollo-design/ui` 能否真正「按需引入」（当前实测为否：任一组件 = 1272.9 KB / 全量 63%），并决定 L7 的 B6 能否从 PENDING 转真检查（`ui-style-output` 裁决的落地范围明确要求它转真检查）。' +
+      '不影响 13 个 foundation 包（`build-output-contract` A 仍有效）。',
+    blocks: [],
+  }),
 ];
 
 export default OPEN_DECISIONS;

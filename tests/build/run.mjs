@@ -855,7 +855,8 @@ async function markPending(name, dir) {
       name,
       'B6',
       'PENDING',
-      '需要 budget.json 体积预算与按组件按需引入入口（见 docs 的 ui 样式裁决；当前未落地）',
+      'ui 事实无法按需引入：任一组件 = 1272.9 KB = 全量的 63%（2026-10-07 实测；根因 = 单文件产物无法被模块级摇树）' +
+        ' ⇒ 需先按决策 ui-tree-shaking 定产物形态，再据实测设 budget.json。见 docs/KNOWN-ISSUES.md §1.1',
     );
     await checkSsr(dir, name);
   } else {

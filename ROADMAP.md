@@ -410,7 +410,7 @@ CI 需要显式补」：覆盖率（本地 `pnpm test` 不带 `--coverage`）与
 | `visual` | `test:visual:check`（**阻塞**）+ `tests/visual/run.mjs --mode compare`（**非阻塞**） | L6：基线自检是确定性的；像素比对跨平台必然有差 ⇒ 只产出可审 diff |
 
 ⚠️ 两处**刻意**的例外，不要当漏配：
-- `build` 不加 `--strict` —— `ui` 的 B6（体积预算 `budget.json`）仍是 PENDING，见 `docs/KNOWN-ISSUES.md`；
+- `build` 不加 `--strict` —— `ui` 的 B6（体积预算 `budget.json`）仍是 PENDING，见 `docs/KNOWN-ISSUES.md` **§1.1**（2026-10-07 实测：ui 事实**无法按需引入** —— 任一组件 = 1272.9 KB = 全量的 63%，根因是单文件产物无法被模块级摇树；处置见开放决策 `ui-tree-shaking`）；
 - `visual` 的像素比对带 `continue-on-error` —— 入库基线在 macOS 生成，Linux 渲染必然不同。
 
 **覆盖率是 ratchet，不是目标**：`vitest.config.ts` 里 `packages/ui/src/**` 的三个数字
