@@ -27,10 +27,14 @@
  *
  * ── Provider 由调用方注入（重要）──────────────────────────────────────────────
  * 上游直接 `import ConfigProvider from '../../components/config-provider'`。
- * 我们的 `ConfigProvider` 是 `packages/ui` 的组件，**尚未实现**；而且 `direction`
- * 的 provide 键属于 ui 层的契约，本包若自己定义一个就是**第二个事实来源**。
+ * 本包**不**这么做：`direction` 的 provide 键属于 ui 层的契约，本包若自己定义一个
+ * 就是**第二个事实来源**（`test-utils-contract.md` F5）。
  * 所以 `wrap` 默认恒等 —— 不给 Provider 时组件收不到 `direction: 'rtl'`，
  * 断言会失败。这是**正确**的行为：它在告诉你「还没接上 RTL 上下文」。
+ *
+ * ⚠️ 本文件此前写着「我们的 ConfigProvider **尚未实现**」—— 那条已过期
+ *    （`config-provider` 早已 completed，是 72 个组件之一）。但**结论不变**：
+ *    依赖方向仍是 ui → test-utils，本包不该 import 它。
  *
  *     rtlTest('button', {
  *       demos,

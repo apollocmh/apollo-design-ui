@@ -3,10 +3,10 @@
   "title": "Vue Native Audit Registry",
   "target": "@apollo-design/ui / Vue 3.5+ native component library",
   "antdVersion": "6.6.4",
-  "overallStatus": "in_progress",
-  "phase": "audit-shared-surfaces",
+  "overallStatus": "audit-complete",
+  "phase": "shared-surfaces-complete",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-07T01:34:09.820Z",
+  "updatedAt": "2026-10-07T01:50:39.591Z",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -47,11 +47,10 @@
     },
     "sharedSurfaces": {
       "total": 12,
-      "done": 8,
-      "todo": 4
+      "done": 12
     },
     "productionSourceFiles": 955,
-    "reviewedProductionSourceFiles": 885,
+    "reviewedProductionSourceFiles": 955,
     "issues": {
       "total": 14,
       "bySeverity": {
@@ -3553,7 +3552,7 @@
     },
     "form-core": {
       "path": "packages/form-core/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/form-core/src/async-util.ts",
         "packages/form-core/src/delay-frame.ts",
@@ -3582,10 +3581,41 @@
         "packages/form-core/src/value-util.ts",
         "packages/form-core/src/watcher-center.ts"
       ],
-      "reviewedFiles": [],
-      "issueIds": [],
-      "batch": null,
-      "notes": []
+      "reviewedFiles": [
+        "packages/form-core/src/async-util.ts",
+        "packages/form-core/src/delay-frame.ts",
+        "packages/form-core/src/field.ts",
+        "packages/form-core/src/form-context.ts",
+        "packages/form-core/src/form-provider.ts",
+        "packages/form-core/src/form-store.ts",
+        "packages/form-core/src/form-types.ts",
+        "packages/form-core/src/form-util.ts",
+        "packages/form-core/src/form.ts",
+        "packages/form-core/src/index.ts",
+        "packages/form-core/src/list.ts",
+        "packages/form-core/src/messages.ts",
+        "packages/form-core/src/name-map.ts",
+        "packages/form-core/src/name-path-type.ts",
+        "packages/form-core/src/rules/index.ts",
+        "packages/form-core/src/rules/url.ts",
+        "packages/form-core/src/schema.ts",
+        "packages/form-core/src/types.ts",
+        "packages/form-core/src/use-form.ts",
+        "packages/form-core/src/use-watch.ts",
+        "packages/form-core/src/util.ts",
+        "packages/form-core/src/validate-messages.ts",
+        "packages/form-core/src/validate-util.ts",
+        "packages/form-core/src/validators/index.ts",
+        "packages/form-core/src/value-util.ts",
+        "packages/form-core/src/watcher-center.ts"
+      ],
+      "issueIds": [
+        "VNA-FORMCORE-01"
+      ],
+      "batch": "AUDIT-S4",
+      "notes": [
+        "2026-10-07 审阅 26/26。1 条 issue（VNA-FORMCORE-01，P3，已修）。\n刻意保真/非缺陷：FormStore 保留**显式订阅模型**（store 是普通对象、不是 reactive）—— 这是 H3 要求的 Vue 心智模型重写，非 React 残留；`Values = any` 的泛型默认是**上游公开签名**（收紧会破坏 `useForm()` 的可用性），biome 的 noExplicitAny 确会报它 ⇒ 那些 biome-ignore 都必要（实测去掉 form-types 的文件级 ignore 会报 24 个 error）；`containsNamePath` 的三态返回（null/undefined/false）由 oracle 抓出，不能改成 `!!`。"
+      ]
     },
     "motion": {
       "path": "packages/motion/src",
@@ -3622,7 +3652,7 @@
     },
     "overlay": {
       "path": "packages/overlay/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/overlay/src/actions.ts",
         "packages/overlay/src/delay.ts",
@@ -3630,14 +3660,22 @@
         "packages/overlay/src/index.ts",
         "packages/overlay/src/use-overlay.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/overlay/src/actions.ts",
+        "packages/overlay/src/delay.ts",
+        "packages/overlay/src/esc-stack.ts",
+        "packages/overlay/src/index.ts",
+        "packages/overlay/src/use-overlay.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S4",
+      "notes": [
+        "2026-10-07 审阅 5/5。0 条缺陷。esc-stack 与 use-overlay 的全局监听（keydown/compositionend/pointerdown/mousedown/contextmenu）**全部有配对移除**（全仓 addEventListener 缺移除扫描在 L2 也 0 命中）；onScopeDispose 收尾；`delay` 的「0 同步 vs undefined 下一宏任务」是两个 kind 不合并（上游语义）。"
+      ]
     },
     "picker": {
       "path": "packages/picker/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/picker/src/date-panel.ts",
         "packages/picker/src/date-util.ts",
@@ -3665,10 +3703,38 @@
         "packages/picker/src/types.ts",
         "packages/picker/src/upper-panels.ts"
       ],
-      "reviewedFiles": [],
+      "reviewedFiles": [
+        "packages/picker/src/date-panel.ts",
+        "packages/picker/src/date-util.ts",
+        "packages/picker/src/generate/dayjs.ts",
+        "packages/picker/src/index.ts",
+        "packages/picker/src/keyboard.ts",
+        "packages/picker/src/locale-fill.ts",
+        "packages/picker/src/misc-util.ts",
+        "packages/picker/src/panel-body.ts",
+        "packages/picker/src/panel-context.ts",
+        "packages/picker/src/panel-header-limit.ts",
+        "packages/picker/src/panel-header.ts",
+        "packages/picker/src/panel-props.ts",
+        "packages/picker/src/panel.ts",
+        "packages/picker/src/picker-panel.ts",
+        "packages/picker/src/range.ts",
+        "packages/picker/src/time-column.ts",
+        "packages/picker/src/time-config.ts",
+        "packages/picker/src/time-panel-body.ts",
+        "packages/picker/src/time-panel.ts",
+        "packages/picker/src/time-tmpl.ts",
+        "packages/picker/src/time-units.ts",
+        "packages/picker/src/time-util.ts",
+        "packages/picker/src/toggle-dates.ts",
+        "packages/picker/src/types.ts",
+        "packages/picker/src/upper-panels.ts"
+      ],
       "issueIds": [],
-      "batch": null,
-      "notes": []
+      "batch": "AUDIT-S4",
+      "notes": [
+        "2026-10-07 审阅 25/25。0 条缺陷。picker-panel 的 `triggerChange` 有「先取快照再写」的真 bug 修复记录（L2 抓到）；time-column 用 onBeforeUnmount 清理 rAF 与定时器；纯函数层（date-util / panel / range / time-util / time-units / time-tmpl / keyboard / misc-util / locale-fill / toggle-dates）与上游逐位对拍；组件层落 Dayjs 而非泛型有完整推导（InjectionKey 无法参数化）。"
+      ]
     },
     "portal": {
       "path": "packages/portal/src",
@@ -3761,7 +3827,7 @@
     },
     "test-utils": {
       "path": "packages/test-utils/src",
-      "auditStatus": "todo",
+      "auditStatus": "done",
       "sourceFiles": [
         "packages/test-utils/src/a11y-demo-test.ts",
         "packages/test-utils/src/allowance.ts",
@@ -3778,10 +3844,31 @@
         "packages/test-utils/src/types.ts",
         "packages/test-utils/src/warnings.ts"
       ],
-      "reviewedFiles": [],
-      "issueIds": [],
-      "batch": null,
-      "notes": []
+      "reviewedFiles": [
+        "packages/test-utils/src/a11y-demo-test.ts",
+        "packages/test-utils/src/allowance.ts",
+        "packages/test-utils/src/demo-test.ts",
+        "packages/test-utils/src/dom-contract.ts",
+        "packages/test-utils/src/focus-test.ts",
+        "packages/test-utils/src/index.ts",
+        "packages/test-utils/src/mount-test.ts",
+        "packages/test-utils/src/render.ts",
+        "packages/test-utils/src/root-props-test.ts",
+        "packages/test-utils/src/rtl-test.ts",
+        "packages/test-utils/src/theme-test.ts",
+        "packages/test-utils/src/timing.ts",
+        "packages/test-utils/src/types.ts",
+        "packages/test-utils/src/warnings.ts"
+      ],
+      "issueIds": [
+        "VNA-TESTUTILS-01",
+        "VNA-DOC-STALE-02"
+      ],
+      "batch": "AUDIT-S5",
+      "notes": [
+        "2026-10-07 审阅 14/14。2 条 issue（1 P2 open + 1 P3 fixed）。",
+        "刻意保真/非缺陷：全包「不允许沉默的例外」（所有豁免必须带非空 reason，且未被命中的豁免会让测试失败）；无 sleep（等待只能表达成 flushAll / waitFrames）；mountTest 的观察者泄漏判据用**增量基线**而非绝对值（axe-core 在导入期就 new MutationObserver，绝对值会让每个组件必然失败）—— 均为有理由的设计。"
+      ]
     }
   },
   "issues": [
@@ -4287,6 +4374,66 @@
       "relatedComponents": [],
       "tests": [],
       "verification": "Grep `已登记 .docs/KNOWN-ISSUES` 命中 1（已改）；`1 / 72` 命中 0（已改）。"
+    },
+    {
+      "id": "VNA-FORMCORE-01",
+      "surface": "form-core / validate-util",
+      "severity": "P3",
+      "status": "fixed",
+      "category": "type-design",
+      "systemic": false,
+      "title": "toSchemaRule 用 `as any` 并声称「无法用更窄的断言表达」—— 实测那条判断是错的",
+      "files": [
+        "packages/form-core/src/validate-util.ts:58-61（修复前：`return rule as any;` + 一条 biome-ignore）"
+      ],
+      "currentImplementation": "`RuleObject` → `RuleItem` 的桥接用 `as any`，并配 `biome-ignore lint/suspicious/noExplicitAny`，注释断言「两层规则类型的声明差异无法用更窄的断言表达」。",
+      "semanticDifference": "无（纯类型层）。但 `as any` 违反 AGENTS.md H10 的「禁止 as any」；且它是**全仓生产源码里唯一的一处 `as any`**。",
+      "recommendation": "改成 `as RuleItem`（实测通过），删除已无必要的 biome-ignore，并更正注释。",
+      "relatedComponents": [],
+      "tests": [
+        "既有 form-core 单测（validateRules / schema oracle）覆盖该函数的行为，纯类型改动不影响"
+      ],
+      "verification": "实测（2026-10-07）：基线 `vue-tsc --noEmit -p tsconfig.json` exit 0 / 0 输出；把 `as any` 换成 `as RuleItem` 后**仍是 exit 0 / 0 输出** ⇒ 两侧类型在这条路径上确实重叠，TS 允许该断言。反向验证过：删掉 biome-ignore 保留 `as any` 会报 noExplicitAny（说明该 ignore 原本是被使用的）。全仓 `as any` 扫描：修复后为 0。"
+    },
+    {
+      "id": "VNA-TESTUTILS-01",
+      "surface": "test-utils / root-props-test + COMPONENT-RULES.md",
+      "severity": "P2",
+      "status": "open",
+      "category": "architecture",
+      "systemic": true,
+      "title": "rootPropsTest 与 COMPONENT-RULES.md §4 仍描述「rootClassName/rootStyle 必须支持」—— 与 Phase 2 后的实际状态冲突",
+      "files": [
+        "COMPONENT-RULES.md:125（`| rootClassName / rootStyle | 必须支持 |`）",
+        "packages/test-utils/src/root-props-test.ts:1-240（把 rootClassName/rootStyle 作为 **props** 注入并断言落根）",
+        "TESTING.md:212（§7 模块表仍把 rootPropsTest 列为 rootClassName/rootStyle 契约）"
+      ],
+      "currentImplementation": "规范文档要求每个组件支持 rootClassName / rootStyle 两个 prop；rootPropsTest 按此契约注入这两个 prop。",
+      "semanticDifference": "**Phase 2（2026-10-06 用户裁决）+ COMPATIBILITY.md §7 已把根别名收敛成原生 class / style**，72/72 组件全部移除了这两个 prop（实测：`packages/ui/src/button/interface.ts` 里 `rootClassName|rootStyle` 零命中）。⇒ 规范文档与 test-utils 描述的是一个**已不存在的契约**。\n后果：① 按 COMPONENT-RULES.md 办事的人会把删掉的 prop 加回来；② rootPropsTest 若真被调用，注入的 `rootClassName`/`rootStyle` 会落进 attrs（不是 class）⇒ 断言必然失败；③ 它目前**零消费者**（全仓 grep 只有自身测试与文档引用）。",
+      "recommendation": "需用户裁决（涉及规范文档 + 公开 API，不擅自改）：\n  A. 把 COMPONENT-RULES.md:125 改成「根 class / style 一律走原生 attrs」并**删除** rootPropsTest（含 TESTING.md §7 与 test-utils 的导出面）；\n  B. 把 COMPONENT-RULES.md:125 改成同上，但**重写** rootPropsTest 为「原生 class / style 落根且不下渗」的契约（保留 API 名，行为换新）；\n  C. 保留现状（不推荐：规范与实现长期分叉，且该 helper 会误导数使用者）。\n推荐 **B**：与 Phase 2 一致、保留 antd 迁移期的 API 名、且能重新获得「类名不下渗」这条有价值的断言。",
+      "relatedComponents": [],
+      "tests": [
+        "packages/test-utils/src/__tests__/root-props.test.ts（现有实现的自测，改用 B 后需同步改写）"
+      ],
+      "verification": "实测：`grep -n \"rootClassName\\|rootStyle\" packages/ui/src/button/interface.ts` → 0 命中；`grep -rn \"rootPropsTest\" packages/ui` → 0 命中（仅 test-utils 自身与文档引用）。"
+    },
+    {
+      "id": "VNA-DOC-STALE-02",
+      "surface": "test-utils / rtl-test",
+      "severity": "P3",
+      "status": "fixed",
+      "category": "architecture",
+      "systemic": false,
+      "title": "rtl-test.ts 文件头称「我们的 ConfigProvider 尚未实现」—— 早已 completed",
+      "files": [
+        "packages/test-utils/src/rtl-test.ts:29-30（修复前）"
+      ],
+      "currentImplementation": "注释断言 ConfigProvider 尚未实现。",
+      "semanticDifference": "无（文档准确性）。`config-provider` 是 72 个 completed 组件之一（`ask.mjs progress` 可验）。",
+      "recommendation": "更正注释：说明「已实现，但依赖方向仍不允许本包 import 它」。",
+      "relatedComponents": [],
+      "tests": [],
+      "verification": "`node registry/tools/ask.mjs progress` 输出含 `✅ config-provider`。"
     }
   ],
   "batches": [
@@ -4390,6 +4537,37 @@
         "机械扫描（React 类型/生命周期/any/children/class-alias/defaultProps/props 访问/$attrs/emit/watch-computed/lifecycle）：唯一「class-alias」命中是 motion 的槽 payload 键（数据字段，非根别名）",
         "全仓 addEventListener 缺 removeEventListener 扫描（955 文件）在 L1 五包 0 命中",
         "结论：0 条新增 issue（本批无需改动）"
+      ]
+    },
+    {
+      "id": "AUDIT-S4",
+      "title": "Shared surface audit — L2 engines (overlay / form-core / picker)",
+      "status": "completed",
+      "scope": "packages/{overlay,form-core,picker}/src (56 production source files)",
+      "issueIds": [
+        "VNA-FORMCORE-01"
+      ],
+      "verification": [
+        "逐文件读完全部 56 个生产源文件（overlay 5 · form-core 26 · picker 25）",
+        "VNA-FORMCORE-01 修复：`as any` → `as RuleItem`；基线 vue-tsc exit 0，改后仍 exit 0 ⇒ 断言收窄可行；删掉原 biome-ignore",
+        "全仓 `as any` 扫描：修复后 0 处；全仓 addEventListener 缺移除扫描在 L2 0 命中",
+        "结论：1 条 issue（P3，已修），其余 55 个文件无需改动"
+      ]
+    },
+    {
+      "id": "AUDIT-S5",
+      "title": "Shared surface audit — test-utils + audit closure",
+      "status": "completed",
+      "scope": "packages/test-utils/src (14 production source files) + 收口",
+      "issueIds": [
+        "VNA-TESTUTILS-01",
+        "VNA-DOC-STALE-02"
+      ],
+      "verification": [
+        "逐文件读完 14 个生产源文件（a11y-demo-test/allowance/demo-test/dom-contract/focus-test/index/mount-test/render/root-props-test/rtl-test/theme-test/timing/types/warnings）",
+        "VNA-DOC-STALE-02 修复：rtl-test 的「ConfigProvider 尚未实现」注释更正",
+        "VNA-TESTUTILS-01 登记为 **open**（需用户裁决：改规范文档 + 处置公开 API，不擅自改）",
+        "12/12 共享面全部 done；reviewedProductionSourceFiles 955/955"
       ]
     }
   ],
@@ -4674,6 +4852,16 @@
       "date": "2026-10-07",
       "status": "completed",
       "note": "AUDIT-S3 (shared surfaces) COMPLETE: L1 packages motion 10/10, portal 7/7, position 8/8, a11y 8/8, virtual-list 10/10 reviewed — 0 issues. Same profile as utils: every React-shaped carryover is documented (contract source + intentional deviation) and locked by focused tests. Notable justified items: CSSMotion slot payload keys className/style are rc render-prop contract data fields (not root aliases); useEscKeyDown detaches global listeners in both the empty-stack path and onScopeDispose; usePortalContainer uses onMounted (not immediate watch) to keep child-before-parent append order; measureAlign wraps the inline-style rewrite in try/finally (stricter than upstream, registered as intentional)."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "AUDIT-S4 (shared surfaces) COMPLETE: L2 engines overlay 5/5, form-core 26/26, picker 25/25 reviewed. 1 issue (P3) fixed — VNA-FORMCORE-01: toSchemaRule used `as any` with a biome-ignore claiming a narrower assertion was impossible; measured that `as RuleItem` type-checks (baseline vue-tsc exit 0, after change still exit 0) so the claim was wrong. Also learned (and corrected a wrong inference): a file-level `biome-ignore-all` makes a per-file biome run look clean — form-types.ts has 24 `any`s that ARE flagged by noExplicitAny (removing the ignore-all → 24 errors), so those exemptions are all legitimate. Noted: `Values = any` generic defaults are upstream public signatures (tightening breaks `useForm()`), and `containsNamePath`'s three-state return (null/undefined/false) is oracle-verified."
+    },
+    {
+      "date": "2026-10-07",
+      "status": "completed",
+      "note": "AUDIT-S5 (shared surfaces) COMPLETE: test-utils 14/14 reviewed. 2 issues. P2 OPEN = VNA-TESTUTILS-01: COMPONENT-RULES.md:125 still requires rootClassName/rootStyle on every component, and rootPropsTest implements that contract by injecting them as PROPS — but Phase 2 + COMPATIBILITY.md §7 moved root aliases to native class/style and all 72 components removed those props (verified: 0 hits in button/interface.ts). rootPropsTest has zero in-repo consumers and would now fail. Needs a user ruling (normative doc + public API). P3 fixed = rtl-test.ts stale \"ConfigProvider 尚未实现\". ALL 12 SHARED SURFACES DONE; 955/955 production files reviewed."
     }
   ],
   "observations": [

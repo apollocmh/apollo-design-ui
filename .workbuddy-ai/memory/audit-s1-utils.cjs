@@ -2,8 +2,8 @@
  * AUDIT-S1：把共享面 utils 置 done，并同步 summary / batches / sessionLog / observations。
  * 幂等：重复运行结果一致。带断言，命中数不符即抛错。
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const JSON_PATH = path.resolve(__dirname, '../../registry/vue-native-audit.json');
 const audit = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
@@ -40,12 +40,14 @@ let ssReviewed = 0;
 for (const x of Object.values(audit.sharedSurfaces)) ssReviewed += (x.reviewedFiles || []).length;
 audit.summary.reviewedProductionSourceFiles = compReviewed + ssReviewed;
 if (audit.summary.reviewedProductionSourceFiles !== 825) {
-  throw new Error(`reviewedProductionSourceFiles 应为 825，实为 ${audit.summary.reviewedProductionSourceFiles}`);
+  throw new Error(
+    `reviewedProductionSourceFiles 应为 825，实为 ${audit.summary.reviewedProductionSourceFiles}`,
+  );
 }
 
 // --- 4. sharedSurfaces 进度摘要（若有） -------------------------------------
 const ssStatus = {};
-for (const [k, v] of Object.entries(audit.sharedSurfaces)) {
+for (const v of Object.values(audit.sharedSurfaces)) {
   ssStatus[v.auditStatus] = (ssStatus[v.auditStatus] || 0) + 1;
 }
 audit.summary.sharedSurfaces = {
@@ -99,5 +101,8 @@ audit.updatedAt = new Date().toISOString();
 audit.phase = 'audit-shared-surfaces';
 
 fs.writeFileSync(JSON_PATH, `${JSON.stringify(audit, null, 2)}\n`);
-console.log('OK: utils -> done; reviewedProductionSourceFiles =', audit.summary.reviewedProductionSourceFiles);
+console.log(
+  'OK: utils -> done; reviewedProductionSourceFiles =',
+  audit.summary.reviewedProductionSourceFiles,
+);
 console.log('sharedSurfaces summary =', JSON.stringify(audit.summary.sharedSurfaces));

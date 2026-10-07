@@ -54,10 +54,16 @@ const CODE_LOGIC_ERROR = 'CODE_LOGIC_ERROR';
  *
  * 运行时是同一个值 —— `Schema` 只判 `message !== undefined`，然后把它原样塞进 `errors`
  * （见 `schema.ts` 的 `cb` 分支）。这条路径上游同样存在（antd 允许 ReactNode message）。
+ *
+ * ⚠️ **2026-10-07 实测更正**：本函数此前用 `as any`，并在 biome-ignore 里声称
+ *    「两层规则类型的声明差异**无法用更窄的断言表达**」—— 那条判断是**错的**。
+ *    实测把 `as any` 换成 `as RuleItem` 后，全仓 `vue-tsc --noEmit -p tsconfig.json`
+ *    仍 **exit 0 / 0 错误**（基线也是 0）⇒ 两侧类型在这条路径上确实重叠，TS 允许该断言。
+ *    于是改为 `as RuleItem`：**去掉全仓生产源码里唯一的 `as any`**（`AGENTS.md` H10），
+ *    并连带删掉那条已无必要的 `biome-ignore`。纯类型层，行为零变化。
  */
 function toSchemaRule(rule: RuleObject): RuleItem {
-  // biome-ignore lint/suspicious/noExplicitAny: 见函数注释 —— 两层规则类型的声明差异无法用更窄的断言表达，`RuleObject` 与 `RuleItem` 的 `message`/`validator`/`type` 三个键互不可赋值。收窄成 `unknown` 中转不改变任何运行时行为，只是多一层噪音。
-  return rule as any;
+  return rule as RuleItem;
 }
 
 /**

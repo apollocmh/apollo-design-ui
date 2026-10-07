@@ -2,8 +2,8 @@
  * AUDIT-S2：ui-internal（16）+ ui-public-entry（1）置 done，登记 3 条 issue。
  * 幂等；带断言。
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const JSON_PATH = path.resolve(__dirname, '../../registry/vue-native-audit.json');
 const audit = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
@@ -12,8 +12,10 @@ const audit = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
 const ui = audit.sharedSurfaces['ui-internal'];
 const entry = audit.sharedSurfaces['ui-public-entry'];
 if (!ui || !entry) throw new Error('sharedSurfaces 缺少 ui-internal / ui-public-entry');
-if (ui.sourceFiles.length !== 16) throw new Error(`ui-internal 应为 16，实为 ${ui.sourceFiles.length}`);
-if (entry.sourceFiles.length !== 1) throw new Error(`ui-public-entry 应为 1，实为 ${entry.sourceFiles.length}`);
+if (ui.sourceFiles.length !== 16)
+  throw new Error(`ui-internal 应为 16，实为 ${ui.sourceFiles.length}`);
+if (entry.sourceFiles.length !== 1)
+  throw new Error(`ui-public-entry 应为 1，实为 ${entry.sourceFiles.length}`);
 
 // --- issues ---
 const newIssues = [
@@ -25,15 +27,27 @@ const newIssues = [
     category: 'vue-composition-api',
     systemic: false,
     title: 'Trigger 注册的全局 window resize 监听在卸载时未移除（监听泄漏）',
-    files: ['packages/ui/src/_internal/trigger.ts:383（修复前：仅 addEventListener，无 removeEventListener / 无 onBeforeUnmount / 无 onScopeDispose）'],
+    files: [
+      'packages/ui/src/_internal/trigger.ts:383（修复前：仅 addEventListener，无 removeEventListener / 无 onBeforeUnmount / 无 onScopeDispose）',
+    ],
     currentImplementation:
-      'setup 顶层 `if (canUseDom()) window.addEventListener(\'resize\', triggerAlign)`；全文件无任何移除路径。',
+      "setup 顶层 `if (canUseDom()) window.addEventListener('resize', triggerAlign)`；全文件无任何移除路径。",
     semanticDifference:
       'React/rc-trigger 的 useResizeObserver/useEffect 带 cleanup，卸载即解除。Vue 里只有 `watch` 的 onCleanup 会自动跑；**原生 addEventListener 不会被 Vue 自动清理**，必须显式 removeEventListener。',
     recommendation:
-      '在 addEventListener 的同一 `if (canUseDom())` 块内注册 `onBeforeUnmount(() => window.removeEventListener(\'resize\', triggerAlign))`（与兄弟件 overflow.ts 同一惯例）。',
-    relatedComponents: ['tooltip', 'dropdown', 'select', 'cascader', 'date-picker', 'tour', 'mentions'],
-    tests: ['packages/ui/src/_internal/__tests__/trigger.test.ts（新增「卸载时移除 window resize 监听」用例，含反向哨兵）'],
+      "在 addEventListener 的同一 `if (canUseDom())` 块内注册 `onBeforeUnmount(() => window.removeEventListener('resize', triggerAlign))`（与兄弟件 overflow.ts 同一惯例）。",
+    relatedComponents: [
+      'tooltip',
+      'dropdown',
+      'select',
+      'cascader',
+      'date-picker',
+      'tour',
+      'mentions',
+    ],
+    tests: [
+      'packages/ui/src/_internal/__tests__/trigger.test.ts（新增「卸载时移除 window resize 监听」用例，含反向哨兵）',
+    ],
     verification:
       '修复后 unit 4 文件/36 用例全绿（trigger 7→8）；反向哨兵实测：临时删掉 onBeforeUnmount ⇒ 新用例变红（1 failed | 7 passed），恢复 ⇒ 绿。全仓扫描 955 个生产文件，`addEventListener` 缺 `removeEventListener` 的**仅此一处**。',
   },
@@ -114,10 +128,13 @@ let ssReviewed = 0;
 for (const x of Object.values(audit.sharedSurfaces)) ssReviewed += (x.reviewedFiles || []).length;
 audit.summary.reviewedProductionSourceFiles = compReviewed + ssReviewed;
 if (audit.summary.reviewedProductionSourceFiles !== 842) {
-  throw new Error(`reviewedProductionSourceFiles 应为 842，实为 ${audit.summary.reviewedProductionSourceFiles}`);
+  throw new Error(
+    `reviewedProductionSourceFiles 应为 842，实为 ${audit.summary.reviewedProductionSourceFiles}`,
+  );
 }
 const ssStatus = {};
-for (const v of Object.values(audit.sharedSurfaces)) ssStatus[v.auditStatus] = (ssStatus[v.auditStatus] || 0) + 1;
+for (const v of Object.values(audit.sharedSurfaces))
+  ssStatus[v.auditStatus] = (ssStatus[v.auditStatus] || 0) + 1;
 audit.summary.sharedSurfaces = { total: Object.keys(audit.sharedSurfaces).length, ...ssStatus };
 
 // --- batch ---

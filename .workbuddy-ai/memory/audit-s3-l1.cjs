@@ -2,8 +2,8 @@
  * AUDIT-S3：L1 五个包（motion/portal/position/a11y/virtual-list，43 文件）置 done。
  * 0 条新 issue。幂等；带断言。
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const JSON_PATH = path.resolve(__dirname, '../../registry/vue-native-audit.json');
 const audit = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
@@ -29,8 +29,7 @@ const NOTES = {
     '2026-10-07 审阅 7/7。0 条缺陷。useEscKeyDown 的全局 keydown/compositionend 在栈空与 onScopeDispose 两处都摘；useScrollLocker 用 onScopeDispose 移除 CSS；usePortalContainer 的「首次必须 onMounted 而非 immediate」有完整推导（子先于父 ⇒ 嵌套顺序）。',
   position:
     '2026-10-07 审阅 8/8。0 条缺陷（纯几何 + 一次 DOM 测量；measureAlign 用 try/finally 保证 inline style 还原 —— 比上游更严且登记为有意差异）。',
-  a11y:
-    '2026-10-07 审阅 8/8。0 条缺陷。live-region 的 onMounted/onScopeDispose 配对；focus-restore 的门控与 try/catch 照抄上游；roving/combobox/typeahead 是纯函数（上游无 typeahead，本仓自定并写明理由）。',
+  a11y: '2026-10-07 审阅 8/8。0 条缺陷。live-region 的 onMounted/onScopeDispose 配对；focus-restore 的门控与 try/catch 照抄上游；roving/combobox/typeahead 是纯函数（上游无 typeahead，本仓自定并写明理由）。',
   'virtual-list':
     '2026-10-07 审阅 10/10。0 条缺陷。虚拟列表的根 `inheritAttrs:false` + `attrs.class` 并入数组 + `attrs.style` 显式首参 —— 无重复/丢失；useHeights 用微任务 + id 合并并在 onScopeDispose 作废；两处「不做自绘滚动条 / 不做 marginLeft 模拟」是登记的有意差异。',
 };
@@ -51,10 +50,13 @@ let ssReviewed = 0;
 for (const x of Object.values(audit.sharedSurfaces)) ssReviewed += (x.reviewedFiles || []).length;
 audit.summary.reviewedProductionSourceFiles = compReviewed + ssReviewed;
 if (audit.summary.reviewedProductionSourceFiles !== 885) {
-  throw new Error(`reviewedProductionSourceFiles 应为 885，实为 ${audit.summary.reviewedProductionSourceFiles}`);
+  throw new Error(
+    `reviewedProductionSourceFiles 应为 885，实为 ${audit.summary.reviewedProductionSourceFiles}`,
+  );
 }
 const ssStatus = {};
-for (const v of Object.values(audit.sharedSurfaces)) ssStatus[v.auditStatus] = (ssStatus[v.auditStatus] || 0) + 1;
+for (const v of Object.values(audit.sharedSurfaces))
+  ssStatus[v.auditStatus] = (ssStatus[v.auditStatus] || 0) + 1;
 audit.summary.sharedSurfaces = { total: Object.keys(audit.sharedSurfaces).length, ...ssStatus };
 
 // --- batch ---
