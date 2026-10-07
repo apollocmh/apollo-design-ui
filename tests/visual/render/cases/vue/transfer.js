@@ -38,8 +38,22 @@ export default {
     ),
 
   search: () =>
-    box(h(Transfer, { dataSource: MOCK, targetKeys: TARGET, showSearch: true, render: (item) => item.title })),
+    box(
+      h(Transfer, {
+        dataSource: MOCK,
+        targetKeys: TARGET,
+        showSearch: true,
+        render: (item) => item.title,
+      }),
+    ),
 
   oneway: () =>
-    box(h(Transfer, { dataSource: MOCK, targetKeys: TARGET, oneWay: true, render: (item) => item.title })),
+    box(
+      h(Transfer, {
+        dataSource: MOCK,
+        targetKeys: TARGET,
+        oneWay: true,
+        render: (item) => item.title,
+      }),
+    ),
 };

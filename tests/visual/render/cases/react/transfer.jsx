@@ -55,15 +55,10 @@ export default {
     ),
 
   search: () =>
-    box(<Transfer dataSource={MOCK} targetKeys={TARGET} showSearch render={(item) => item.title} />),
+    box(
+      <Transfer dataSource={MOCK} targetKeys={TARGET} showSearch render={(item) => item.title} />,
+    ),
 
   oneway: () =>
-    box(
-      <Transfer
-        dataSource={MOCK}
-        targetKeys={TARGET}
-        oneWay
-        render={(item) => item.title}
-      />,
-    ),
+    box(<Transfer dataSource={MOCK} targetKeys={TARGET} oneWay render={(item) => item.title} />),
 };

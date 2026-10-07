@@ -217,6 +217,60 @@ export const OPEN_DECISIONS = [
     impact: '仅影响测试写法，不阻塞任何包的实现',
   }),
 
+  open('button-children-wrapper', {
+    raisedAt: '2026-10-07',
+    question:
+      'Button 要不要照 antd 那样**不包裹** children？（实测：我们多包了一层 `<span>`，' +
+      '打断了从 antd 移植过来的 `>` 直接子选择器）',
+    context:
+      '2026-10-07 修 `dropdown` 的死规则（`.ant-btn` → `.apollo-btn`）时，为了验证修复是否真的生效，\n' +
+      '临时加了一个 L6 变体（Dropdown + Button 触发器 + 下箭头图标），结果**它红了**（3 张，0.018–0.069%）。\n' +
+      '用 playwright 量两侧计算样式后定位到真正的根因 —— **不是前缀问题**：\n' +
+      '\n' +
+      '```\n' +
+      'React: SPAN.anticon.anticon-down  → BUTTON.ant-btn            ← 直接子元素，规则命中，font-size=12px\n' +
+      'Vue:   SPAN.apollo-icon.apollo-icon-down → SPAN → BUTTON.apollo-btn  ← 多一层，规则不命中，font-size=14px（继承）\n' +
+      '```\n' +
+      '\n' +
+      '即：**本仓 Button 在 children 含文字时会额外包一层 `<span>`**（`Button.vue` 的\n' +
+      '`hasChildren && elementContentNodes === null` 分支），而 antd 是**直接渲染 children** ——\n' +
+      'antd 只在 `icon` **prop** 上包 `<span class="ant-btn-icon">`（`button/IconWrapper.js`）。\n' +
+      '\n' +
+      '⇒ 所以 `dropdown/style` 里那两条 `.apollo-dropdown-trigger.apollo-btn > .apollo-icon-down`\n' +
+      '  （直接子选择器）在本仓**永不命中**：前缀改对了也不够。\n' +
+      '  受影响的不止 dropdown —— 任何从 antd 移植、用 `>` 连到 Button 子节点的规则都会失效。',
+    options: [
+      {
+        label: 'A. Button 改为**不包裹** children，与 antd 结构对齐（★ 推荐）',
+        tradeoff:
+          '从根上解决，也让所有移植来的 `>` 规则恢复生效。代价：**Button 是 72 个组件里最高频的组件**，\n' +
+          '      改结构影响面极大 ⇒ 必须跑**全量 L6**（1137 张，约 33 分钟）+ L4 DOM 契约后才能定。\n' +
+          '      ⚠️ 那层 wrapper 可能与 `autoInsertSpace`（两字中文插空格）有关，改动前要先确认\n' +
+          '      两字中文按钮的渲染不被破坏（button 的 L6 基线里有中文用例，可覆盖）。',
+      },
+      {
+        label: 'B. 不去 wrapper，改把受影响的 CSS 从 `>` 放宽成后代选择器',
+        tradeoff:
+          '改动小、风险低。代价：我们的 CSS 与 antd 的 CSS **不再逐条对应** ——\n' +
+          '      这正是本仓一直避免的（CSS 是「机械移植产物」，判据靠与 antd 对拍）。\n' +
+          '      且放宽后可能命中本不该命中的深层节点，属于「改判据去迁就实现」。',
+      },
+      {
+        label: 'C. 维持现状，接受这几条规则是死规则',
+        tradeoff:
+          '零风险。代价：dropdown 那两条规则继续失效（触发器是 Button 时的箭头字号不对），\n' +
+          '      且**结构分叉本身不解决** —— 将来再移植带 `>` 的 antd 规则会继续静默失效。',
+      },
+    ],
+    recommendation:
+      '**A**。这是**结构**层面的对齐，不是样式层面的妥协；B 是在改判据迁就实现，C 是把分叉留在地基里。\n' +
+      '但 A 必须先跑全量 L6 与 L4 才能落地 —— 不要在没有验证的情况下改 Button。',
+    impact:
+      '决定本仓 Button 的 DOM 结构是否与 antd 对齐；影响所有从 antd 移植的、以 Button 为祖先的\n' +
+      '**直接子选择器** CSS 规则。',
+    blocks: [],
+  }),
+
   decided('early-extract-table-core-tree-core', {
     decidedAt: '2026-10-07',
     decidedBy: '用户裁决 2026-10-07（选 C）',

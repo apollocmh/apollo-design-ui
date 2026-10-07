@@ -93,20 +93,27 @@ const KNOWN_GAPS: Record<string, string> = {
 };
 
 /**
- * `apollo` 版里**硬编码** `.ant-*` 选择器的组件。
+ * `apollo` 版里**硬编码** `.ant-*` 选择器的组件。**当前为空 —— 保持为空。**
  *
- * ⚠️ **性质未判定**（2026-10-07 发现，未擅自改）：可能是照搬 antd 的 `antCls` 常量
- * （antd 里 `antCls` 是**固定** `'ant'`，与可配置的 `prefixCls` 不是一回事），
- * 也可能是我们端口写错。无论哪种，在本仓默认前缀（`apollo`）下这些选择器**永远不会命中**
- * ⇒ 是死规则。⚠️ 修的时候有**视觉回归风险**（一旦改成 `.apollo-*` 就会真的开始匹配），
- * 所以要先跑 L6 确认，别顺手改。
+ * ── 历史（2026-10-07 发现并修完）──────────────────────────────────────────────
  *
- * 清单同样**双向**（多出来会红、修好了没删也会红）。
+ * 砍掉 `ant` 前缀变体（裁决 `css-ant-prefix-cost` = B）之后，暴露出 2 个组件在
+ * **`apollo` 版**里硬编码了 `.ant-*`：
+ *   · `menu`     → `.ant-typography-ellipsis-single-line` / `.ant-layout-header`
+ *   · `dropdown` → `.ant-btn` / `.ant-btn-icon`（「触发器是 Button 时下拉箭头的字号」）
+ *
+ * 判据：这些都是**跨组件**类名（Typography / Layout / Button），而对应组件在本仓渲染的是
+ * `.apollo-*` ⇒ 在默认前缀下**永远命中不了**，是死规则。
+ * 追到 antd 源头是 `transfer/Section.js` 那类 `antCls` 常量 —— 但 antd 那边 `antCls`
+ * 恰好等于它自己的默认前缀所以能命中，我们照搬字面量就永远不命中 ⇒ **是端口错误，不是照搬有理**。
+ *
+ * 修法：改成 `.apollo-*`。这些规则随后会**真的开始匹配**，所以必须跑 L6 确认
+ * （实测：menu / dropdown / layout / table / select / cascader 全量 1134 张仍逐像素一致）。
+ *
+ * ⚠️ 注释里提到的 `.ant-menu-css-var` / `.ant-dropdown-css-var` 是**注释文字**，
+ *    不是选择器 —— 本断言会先剥注释再比对，不会误报。
  */
-const HARDCODED_ANT_IN_DEFAULT: Record<string, string> = {
-  menu: '`.apollo-menu-title-content > .ant-typography-ellipsis-single-line`',
-  dropdown: '`.apollo-dropdown-trigger.ant-btn` / `.ant-btn-icon`',
-};
+const HARDCODED_ANT_IN_DEFAULT: Record<string, string> = {};
 
 /** 剥掉 CSS 注释（否则注释里提到的 `.ant-` 会被误判成选择器）。 */
 const stripComments = (css: string): string => css.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -192,9 +199,9 @@ describe('样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择�
     expect(Object.keys(KNOWN_GAPS)).toHaveLength(24);
   });
 
-  it('`apollo` 版里硬编码 `.ant-` 的组件集合 == `HARDCODED_ANT_IN_DEFAULT`（双向）', () => {
-    // 为什么值得钉：默认前缀下这些选择器**永不命中**（死规则）。
-    // 2026-10-07 砍掉 ant 变体后它们才暴露出来 —— 以前被第二份 CSS 盖住了。
+  it('`apollo` 版里不得硬编码 `.ant-` 选择器（清单当前为空，防回归）', () => {
+    // 为什么值得钉：默认前缀下 `.ant-*` 永不命中，是死规则（2026-10-07 修完 2 个组件）。
+    // 清单为空时「双向」退化为单向断言，但仍然拦得住回归 —— 别因为空就删掉这条测试。
     const actual = COMPONENT_STYLES.filter((entry) =>
       stripComments(entry.gen(DEFAULT_PREFIX)).includes('.ant-'),
     ).map((entry) => entry.name);

@@ -52,33 +52,31 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 > 现在 B6 已转真检查（73 个组件逐个有预算，`tests/build/budget.json`），
 > **任何新增 PENDING 都应被视为「待补的债」，不是免罚牌。**
 
-### §1.1 2 个组件在 `apollo` 版里硬编码了 `.ant-` 选择器（死规则）
+### §1.1 Button 多包一层 `<span>` ⇒ 移植来的 `>` 直接子选择器全部失效
 
-**2026-10-07 实测**（砍掉 `ant` 变体之后才暴露出来的 —— 以前被第二份 CSS 盖住了）。
+**2026-10-07 实测发现**（修 §3 里那条 `.ant-` 死规则时，为了验证修复生效而临时加 L6 变体，结果它红了，顺藤摸出来的）。
 
-**判据（可复现）**：
+**判据（可复现）**：任意 `Dropdown` + `Button` 触发器 + 下箭头图标，用 playwright 量两侧：
 
-```sh
-node_modules/.bin/vitest run --project unit style-prefix   # 双向校验，修一个删一条
-grep -o '[^};{]*\.ant-[a-z-]*[^};{]*' packages/ui/dist/index.css
+```
+React: SPAN.anticon.anticon-down  → BUTTON.ant-btn                     直接子元素 ⇒ 规则命中，font-size=12px
+Vue:   SPAN.apollo-icon.apollo-icon-down → SPAN → BUTTON.apollo-btn    多一层     ⇒ 规则不命中，font-size=14px（继承）
 ```
 
-`menu` 与 `dropdown` 两个组件的 **`apollo` 版**里硬编码了 `.ant-*` 选择器：
+- 本仓 `Button.vue` 在 **children 含文字**时会额外包一层 `<span>`
+  （`hasChildren && elementContentNodes === null` 分支）；
+- antd 是**直接渲染 children** —— 它只在 `icon` **prop** 上包 `<span class="ant-btn-icon">`
+  （`node_modules/antd/es/button/IconWrapper.js`）。
 
-| 组件 | 硬编码的选择器 |
-|---|---|
-| `menu` | `.apollo-menu-title-content > .ant-typography-ellipsis-single-line` |
-| `dropdown` | `.apollo-dropdown-trigger.ant-btn` / `.ant-btn-icon` |
+⇒ 所以 `dropdown/style` 里那两条
+`.apollo-dropdown-trigger.apollo-btn > .apollo-icon-down`（触发器是 Button 时箭头图标的字号）
+**在本仓永不命中**。受影响的**不止 dropdown** —— 任何从 antd 移植、用 `>` 连到 Button 子节点的规则都会失效。
 
-⇒ 在默认前缀（`apollo`）下这些选择器**永远命中不了**，是死规则。
+⚠️ **不要顺手改 Button**：它是 72 个组件里最高频的组件，且那层 wrapper 可能与
+`autoInsertSpace`（两字中文插空格）有关。必须先跑**全量 L6**（1137 张，约 33 分钟）+ L4 DOM 契约。
 
-⚠️ **性质未判定，且不要顺手改**：可能只是照搬 antd 的 `antCls` 常量（antd 里 `antCls` 固定为 `'ant'`，
-与可配置的 `prefixCls` 不是一回事），也可能是我们端口写错。无论哪种，**把它改成 `.apollo-*` 会让它真的开始匹配
-⇒ 有视觉回归风险**，改之前必须先跑 L6 确认。
-
-**处置**：已用双向校验的 `HARDCODED_ANT_IN_DEFAULT` 清单钉在
-`packages/ui/src/__tests__/style-prefix.test.ts`（多出来会红、修好了没删也会红）。
-背景见裁决 **`css-ant-prefix-cost`** = B。
+**处置**：已登记为开放决策 **`button-children-wrapper`**（3 个选项，推荐 A「与 antd 结构对齐」）。
+`node registry/tools/ask.mjs decision button-children-wrapper` 看全文。需用户裁决后再动 Button。
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
@@ -103,6 +101,7 @@ grep -o '[^};{]*\.ant-[a-z-]*[^};{]*' packages/ui/dist/index.css
 
 | commit | 内容 |
 |---|---|
+| （2026-10-07） | **修掉 2 个组件在 `apollo` 版里硬编码 `.ant-` 的死规则**（砍 `ant` 变体后才暴露）：`menu` 的 `.ant-typography-ellipsis-single-line`（2 处）+ `.ant-layout-header`、`dropdown` 的 `.ant-btn` / `.ant-btn-icon`（4 处）⇒ 改成对应 `.apollo-*`。判据：这些是**跨组件**类名（Typography / Layout / Button），本仓渲染的是 `.apollo-*` ⇒ 永不命中；antd 那边 `antCls` 恰好等于它自己的默认前缀所以能命中，我们照搬字面量就是**端口错误**。产物校验：剥离注释后 `.ant-` 出现 **0** 次（剩 2 处在 float-button 的说明注释里）；`style-prefix.test.ts` 的 `HARDCODED_ANT_IN_DEFAULT` 清空、断言保留为防回归。L6 复验受影响组件（menu/dropdown/layout/button/table/select/cascader/tree-select/popover/tooltip/typography）**150 张全过**。⚠️ 顺带挖出**更深的根因**：这些规则改对了仍不生效，因为 **Button 多包了一层 `<span>`** 打断了 `>` 选择器 —— 见 §1.1 与新决策 `button-children-wrapper`。 |
 | （2026-10-07） | **transfer 补上 L6 覆盖 —— 全仓最后一个盲区消除**（此前 72 个组件里 71 个有 L6，**只有 transfer 两边都没有**：`matrix.mjs` 未登记、无基线，无「有意跳过」的记载 ⇒ 判为遗漏）。新增 `render/cases/{react/transfer.jsx, vue/transfer.js}` + matrix 一条（3 变体 × 3 viewport = 9 张）。🚨 **踩到一个只有人眼能抓到的坑**：antd 6.6.4 `transfer/Section.js:14` 是 `const defaultRender = () => null;` ⇒ **不传 `render` 时列表项内容为空**（`item.title` 只落原生 `title` 属性与过滤逻辑）。首版没传，9 张基线每行只有 checkbox；**`md5` 查重与体积检查都发现不了**（9 个哈希互不相同、5–8 KB），L6 也照样 exact（本仓 Vue 侧行为一致 ⇒ 「两侧一致地错」），只有**看图**才看得出来。教训：**新增视觉用例后必须亲眼看一遍基线图**，自动化检查（哈希/体积/L6）对「内容缺失」这类失真全是盲的。修正后 9/9 exact、9 个唯一哈希、11.9–18.2 KB。 |
 | （2026-10-07） | **裁决 `early-extract-table-core-tree-core` = C + 三条开放决策清零**（开放决策 **19/19 decided**）。起因是复核时发现决策自己写的触发条件「等第二个消费者出现」**对 `tree` 已经满足**（`tree-select` 与 `table` 都在 import `../../tree/...`），而 `table` 仍只有 1 个消费者 ⇒ 按判别式拆开判：**不抽独立包**（那两个 core 只会被 `ui` 一个包消费，不够格），**把共享纯逻辑挪到 `_internal/`**。落地：① `tree` 的数据模型类型（`TreeKey`/`SafeKey`/`DataNode`/`TreeDataEntity`…）→ `_internal/tree/types.ts`，算法 `keyUtil`/`treeUtil`/`conductUtil` → `_internal/tree/`。⚠️ **类型必须跟着一起搬** —— 那些算法依赖这份数据模型，只搬函数会造成 `_internal/ → tree/` 反向依赖，比原状更糟；`tree/interface.ts` 原样再导出 ⇒ **公开 API 面零变化**。② `arrAdd`/`arrDel` → `_internal/array-util.ts`（跟树无关，顺手改泛型）。③ **顺带修掉一处更大、同类的债**：`clsx` 定义在 `notification/engine/util.ts` 却被 **20 个文件 / 8 个组件**跨目录 import ⇒ 搬到 `_internal/clsx.ts`；并**删掉 4 份重复实现**（`tooltip/util.ts` 轻量版、`modal/engine/util.ts` 版改为再导出、`drawer/engine/useDrag.ts`、`cascader/OptionList.ts`）。⚠️ 保留两处**刻意不统一**的：`_internal/use-merge-semantic.ts`（更窄，只收字符串 —— 语义化 classNames 本就是字符串，宽版会把「传错形态」静默变成类名）。④ 另两条 `use-id-test-env`（选 C：不固定生产、只在断言侧归一化 —— 实测证明「固定成编号」买不到稳定，而固定成常量会让 aria 引用静默错位）、`empty-semantic-fn`（B 早已实现，只是没登记）。验收：dom-contract **1736** 全过（tree/table/notification 契约未受影响）、unit 291 文件 6356、test:types 168 文件 2175、L7 141/FAIL 0、biome 2883 文件。 |
 | （2026-10-07） | **裁决 `css-ant-prefix-cost` = B：砍掉 `ant` 前缀变体** —— `STATIC_PREFIX_CLS` 从 `[\'apollo\',\'ant\']` 缩为 `[\'apollo\']`。背景：那份 `ant` 变体占组件 CSS 的 32.8%，却在 24/69 个组件上不完整（其中 7 个几乎为空）⇒ 付双倍价钱买到半个功能。**实测降幅比估算更大**：组件 CSS 合计 **2522.2 → 1399.3 KB（−44.5%）** · `index.css` **2303.4 → 1180.8 KB（−48.7%）** · `button/style.css` **209.9 → 109.7 KB**（估算只数了「纯 ant」顶层块，低估了混合选择器里的 ant 内容）。⚠️ **推翻** `prefix-cls-default`=A 里「允许覆盖为 ant」的开箱即用那一层（已同步修订其 `decision`/`note`）；任意 prefixCls 仍可用，但需自行用 `genComponentCss(name, prefixCls)` 产 CSS。三个副产物：① **B7 当场判 FAIL** —— `--ant-timeline-dot-*` 两条豁免变陈旧，是那条「必须至少一次 var() 引用」自证在干活（已从 `run.mjs` 删除）；② 暴露出 2 个组件在 apollo 版硬编码 `.ant-`（现 §1.1，已用双向校验钉住、**未擅自改**，改有视觉回归风险）；③ 「`gen(p)` 必须吃 `p`」不变量**不能跟着删** —— `style-prefix.test.ts` 改用**探针前缀** `zzprobe` 比对，护栏照旧生效、`KNOWN_GAPS` 那 24 条语义变成「加第二个前缀前必须先修这些」。 |
