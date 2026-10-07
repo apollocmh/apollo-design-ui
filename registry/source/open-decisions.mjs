@@ -523,7 +523,8 @@ export const OPEN_DECISIONS = [
       'ui 的**样式**侧已有 `ui-style-output` A（每组件一份 CSS，69 个 `dist/<c>/style.css` 实测存在）；**JS 侧没有对应裁决**，本条就是它。',
     options: [
       {
-        label: 'A. ui 改出「保留模块结构」的 ESM（`preserveModules`）（★ 推荐，且应与 B、foundation 同步做）',
+        label:
+          'A. ui 改出「保留模块结构」的 ESM（`preserveModules`）（★ 推荐，且应与 B、foundation 同步做）',
         tradeoff:
           '`packages/ui/build.config.ts` 的 `rollup:options` 里打开 `output.preserveModules`，产物变成 `dist/<component>/index.mjs` 等**多文件**，`dist/index.mjs` 降级为 re-export barrel。' +
           '**依据**：本次实测已证明「模块级丢弃」是有效的（整包不用 ⇒ 0 KB），限制因素正是「只有一个模块」。改动小、公开入口不变（`exports["."]` 仍指 `dist/index.mjs`）、不动任何组件源码。' +
@@ -532,7 +533,8 @@ export const OPEN_DECISIONS = [
           '代价：dist 文件数从 4 涨到数百；需重跑 B2（exports 解析）/B5（CSS）/B6/B7/B8 并确认 `files: ["dist"]` 仍覆盖全部产物。',
       },
       {
-        label: 'B. 给 exports 增加按组件 JS 入口（`@apollo-design/ui/button`）—— **A 的薄层，不是替代品**',
+        label:
+          'B. 给 exports 增加按组件 JS 入口（`@apollo-design/ui/button`）—— **A 的薄层，不是替代品**',
         tradeoff:
           '与样式侧的 `@apollo-design/ui/<c>/style.css` 对称，深导入最明确、不依赖消费方打包器的摇树能力。' +
           '⚠️ **不能只要 B 不要 A**：没有模块结构就得**每组件一份 bundle** ⇒ 共享代码在每个入口里重复，那是**制造**技术债而不是消除。' +

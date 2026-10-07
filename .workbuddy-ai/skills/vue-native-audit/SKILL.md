@@ -248,6 +248,10 @@ the foundation packages) are where **Vue lifecycle/reactivity** bugs hide. Techn
   **inside the repo/package directory**, since pnpm links `@apollo-design/utils` only under
   `packages/<pkg>/node_modules/`.
 
+- **🚨 Never pipe a gate's output into `tail`/`head` and then chain with `&&` — the pipeline's exit code is the LAST command's, so the gate's failure is silently masked.** I ran `pnpm exec biome check . | tail -3 && git commit …`; biome actually exited **1** (a `format` error in the file I had just edited) but `tail` returned 0, so the commit went through and the gate result was never seen. Redirect to a file and read the real exit code instead:
+  `pnpm exec biome check . > /tmp/biome.txt 2>&1; echo "exit=$?"; grep -E "lint/|format|Found" /tmp/biome.txt`
+  Same trap applies to `vitest … | tail` (already documented in this repo: read "Tests passed"/"Type Errors", not the exit code) and to any `cmd | tail && next-step` chain.
+
 ## Finding taxonomy and severity
 
 Use one or more categories: `react-api`, `slot`, `emits`, `attrs`, `class-style`, `renderer`, `react-implementation-migration`, `vue-composition-api`, `type-design`, `duplicate-implementation`, `test`, `architecture`.
