@@ -199,6 +199,32 @@ the foundation packages) are where **Vue lifecycle/reactivity** bugs hide. Techn
   `sum(component reviewedFiles) + sum(shared reviewedFiles)` grows by exactly the batch's file count.
 - **Put one-off audit scripts under `.workbuddy-ai/memory/`**, not a new `.workbuddy-ai/scripts/`
   dir (only `memory/` and `skills/` are tracked; a new top-level dir shows up as untracked).
+- **🚨 `registry/foundation.json` records per-package `srcLines`** — so editing a file in a
+  **foundation** package (utils / motion / portal / position / a11y / virtual-list / overlay /
+  form-core / picker / locale / test-utils / theme / icons) makes it stale and `registry:check`
+  fails with `foundation.json 已过期`. Fix: run `node registry/tools/foundation-status.mjs`
+  (no flag) and commit the refreshed file — its diff shows the real line-count change alongside
+  `generatedAt`. Editing `packages/ui/src` does **not** do this (ui is not a foundation package).
+- **🚨 A file-level `biome-ignore-all` makes a per-file `biome check` look clean — which can
+  produce a WRONG inference about what the linter flags.** I once concluded "biome's
+  `noExplicitAny` doesn't check `any` in interface/type declarations" from a clean
+  `biome check packages/form-core/src/form-types.ts`. That was false: the file begins with
+  `// biome-ignore-all lint/suspicious/noExplicitAny`, and deleting that one line produced
+  **24 errors**. Before concluding "the linter allows this", grep the file (and the line above the
+  hit) for `biome-ignore` / `biome-ignore-all`. Conversely, the line-level ignores in
+  `use-form.ts` / `use-watch.ts` / `types.ts` are all genuinely needed — do not delete them.
+- **🚨 Run the WHOLE-REPO biome (`biome check .`), not just the files you think you touched.**
+  Audit scripts under `.workbuddy-ai/memory/` ARE inside biome's `files.includes`
+  (`["**", "!**/node_modules", …]`) ⇒ they are format-checked and lint-checked
+  (`lint/style/useNodejsImportProtocol` → `require('node:fs')`;
+  `lint/correctness/noUnusedVariables` → an unused destructured binding is an **error**).
+  `verify:full` runs the repo-wide check and fails on them.
+- **When the audit surfaces a contradiction with a NORMATIVE doc, file it `open` — do not fix it.**
+  Real example: `COMPONENT-RULES.md:125` still required `rootClassName` / `rootStyle` on every
+  component while Phase 2 had removed those props from all 72 (verified: 0 hits in
+  `button/interface.ts`), and the `rootPropsTest` helper implemented exactly that obsolete
+  contract with **zero** consumers. Changing a rule doc + a public test-utils API is a user
+  decision ⇒ recorded as `VNA-TESTUTILS-01` (P2, `open`) with three options + a recommendation.
 
 ## Finding taxonomy and severity
 
