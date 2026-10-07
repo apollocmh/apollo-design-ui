@@ -242,7 +242,37 @@ function checkExports(dir, name) {
     );
     return false;
   }
-  add(name, 'B2', 'PASS', 'exports 全部可解析');
+  // ---- 反方向：产出了却没声明（2026-10-07 补）--------------------------------
+  //
+  // 上面的循环只查「声明了但不存在」。但**产出了却没声明**当时抓不到 ——
+  // 实测 `layout-sider`（11 KB）就这样漏在 exports 之外，于是只引
+  // `@apollo-design/ui/layout/style.css` 的按需用户**拿不到 Sider 的样式**。
+  // 判据：`dist/<x>/style.css` 存在 ⇒ exports 里必须有指向它的条目。
+  const declaredTargets = new Set(
+    Object.values(pkgJson.exports ?? {})
+      .flatMap((t) => (typeof t === 'string' ? [t] : Object.values(t)))
+      .map((t) => t.replace(/^\.\//, '')),
+  );
+  const undeclared = [];
+  const distDir = path.join(dir, 'dist');
+  if (fs.existsSync(distDir)) {
+    for (const entry of fs.readdirSync(distDir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const rel = `dist/${entry.name}/style.css`;
+      if (fs.existsSync(path.join(dir, rel)) && !declaredTargets.has(rel)) undeclared.push(rel);
+    }
+  }
+  if (undeclared.length) {
+    add(
+      name,
+      'B2',
+      'FAIL',
+      `CSS 产物未在 exports 声明（按需引入拿不到）: ${undeclared.join(', ')}`,
+    );
+    return false;
+  }
+
+  add(name, 'B2', 'PASS', 'exports 全部可解析（含「产出即有声明」反查）');
   return true;
 }
 

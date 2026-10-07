@@ -153,7 +153,7 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'descriptions', gen: genDescriptionsStyle },
   { name: 'list', gen: genListStyle },
   { name: 'listy', gen: genListyStyle },
-  { name: 'qrcode', gen: genQrCodeStyle },
+  { name: 'qr-code', gen: genQrCodeStyle },
   { name: 'splitter', gen: genSplitterStyle },
   { name: 'table', gen: genTableStyle },
   { name: 'divider', gen: genDividerStyle },

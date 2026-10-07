@@ -41,22 +41,42 @@ const forceReadme = force || process.argv.includes('--force-readme');
 /**
  * ui 的 CSS 子路径导出（裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css）。
  *
- * 判据是 `registry/components.json` 里该组件的 `styleStatus === 'done'` —— 那是
- * 「样式产物真的存在」的机器可读记录。不读文件系统是因为构建产物可能已被 `rm -rf dist`
- * 清掉，那会让 exports 随着一次清理而缩水；而 progress 字段不会。
- * 两者不一致时由 `tests/build/run.mjs` 的 B2 报错，而不是静默。
+ * 🚨 **单一真源 = 产出 CSS 的那份清单本身**（`packages/ui/src/style/index.ts` 的
+ *    `ComponentStyleEntry[]`）—— 它同时决定 `build.config.ts` 写哪些 `dist/<name>/style.css`。
+ *
+ * ── 为什么不再用 `components.json` 的 `styleStatus`（2026-10-07 修）────────────────
+ *
+ * 旧实现读 `styleStatus === 'done'`。那是「样式维度做完了」这个**进度**字段，
+ * 与「**真的产出了** `dist/<name>/style.css`」**不是同一件事** ⇒ 两个来源必然漂移。
+ * 实测漂移出三处（B2 抓到 2 处，第 3 处 B2 当时**抓不到**，因为它是反方向）：
+ *   ① `qr-code`：清单里 `name` 写成了 `'qrcode'`（**违反 `ComponentStyleEntry` 自己的
+ *      注释契约「组件目录名」**）⇒ 产物在 `dist/qrcode/`，而 exports 声明 `dist/qr-code/`
+ *      ⇒ 消费者 `ERR_PACKAGE_PATH_NOT_EXPORTED`；
+ *   ② `auto-complete`：只有 `style/token.ts`、**不在**清单里 ⇒ 无 CSS，却被声明；
+ *   ③ `layout-sider`：**产出了** CSS（11 KB）却没被声明 ⇒ 只引 `layout` 的按需用户
+ *      **拿不到 Sider 的样式**（B2 只查「声明了但不存在」，查不到这个反方向）。
+ *
+ * 判据改成读清单后，①②③ 同时消失。清单是**仓库源文件**（不是构建产物），
+ * 所以不会因 `rm -rf dist` 而缩水 —— 旧的「不读文件系统」顾虑依然成立。
  *
  * ⚠️ 必须在模块顶层声明：PACKAGES 在模块求值时就调用它，函数声明虽提升，
  *    但声明在 `if (isMain)` 块里就出不了那个块。
  */
 function uiStyleExports() {
-  const file = path.join(ROOT, 'registry/components.json');
-  if (!fs.existsSync(file)) return {};
-  const components = JSON.parse(fs.readFileSync(file, 'utf8')).components ?? [];
+  const file = path.join(ROOT, 'packages/ui/src/style/index.ts');
+  if (!fs.existsSync(file)) return { './style.css': './dist/index.css' };
+  const src = fs.readFileSync(file, 'utf8');
+  const names = [...src.matchAll(/\{\s*name:\s*'([^']+)',\s*gen:/g)].map((m) => m[1]);
+  // 解析失败必须**响亮地**失败：静默产出「只有汇总」的 exports 会让按需引入悄悄消失。
+  if (names.length === 0) {
+    throw new Error(
+      '[scaffold] 未能从 packages/ui/src/style/index.ts 解析出样式清单 —— ' +
+        '该文件的结构变了？exports 的 ./<component>/style.css 依赖它。',
+    );
+  }
   const out = { './style.css': './dist/index.css' };
-  for (const c of components) {
-    if (c.styleStatus !== 'done') continue;
-    out[`./${c.name}/style.css`] = `./dist/${c.name}/style.css`;
+  for (const name of names) {
+    out[`./${name}/style.css`] = `./dist/${name}/style.css`;
   }
   return out;
 }
