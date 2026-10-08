@@ -31,7 +31,8 @@ function collectNav() {
     if (!categories.has(category)) categories.set(category, []);
     categories
       .get(category)
-      .push({ name: e.name, text: `${title}${subtitle ? ` ${subtitle}` : ''}` });
+      // 🚨 必须带 link：缺 link 的条目会被渲染成空分组标题（不可点击跳转）
+      .push({ text: `${title}${subtitle ? ` ${subtitle}` : ''}`, link: `/components/${e.name}` });
   }
   return [...categories.entries()].map(([text, items]) => ({
     text,

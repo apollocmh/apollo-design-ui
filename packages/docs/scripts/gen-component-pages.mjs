@@ -179,6 +179,11 @@ for (const f of fs.readdirSync(OUT_DIR)) {
 for (const c of components) {
   fs.writeFileSync(nodePath.join(OUT_DIR, `${c.name}.md`), renderComponentPage(c));
 }
-fs.writeFileSync(nodePath.join(OUT_DIR, 'index.md'), renderOverview(components));
+// ⚠️ 必须是 overview.md：nav/侧边栏链接 /components/overview，
+//    写成 index.md 会变成 /components/（链接 404）。
+fs.writeFileSync(
+  nodePath.join(OUT_DIR, 'overview.md'),
+  renderOverview(components),
+);
 
 console.log(`[gen-component-pages] ${components.length} 组件页 + 1 总览页 → components/`);
