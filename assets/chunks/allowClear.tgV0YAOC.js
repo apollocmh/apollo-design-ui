@@ -1,0 +1,23 @@
+const o=`<script setup lang="ts">
+// 对齐 antd 的 allowClear demo：受控值 + 清空按钮。
+//
+// ⚠️ **一处 demo 级替换**：上游 \`value\` 收 \`string\`、\`onChange\` 里 \`c.toHexString()\` 回写
+//    —— 本仓 \`value\` 走 \`:value\` + \`@change\` 的受控通道（C11），语义逐字对应。
+import type { ColorPickerColor } from '@apollo-design/ui';
+import { ColorPicker } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+/** 上游 \`Color\`（= \`AggregationColor\`）：ui barrel 未导出该别名，从 \`change\` 的载荷反推。 */
+type Color = ColorPickerColor;
+
+const color = ref<string>('#1677ff');
+
+const onChange = (c: Color) => {
+  color.value = c.toHexString();
+};
+<\/script>
+
+<template>
+  <ColorPicker :value="color" allow-clear @change="onChange" />
+</template>
+`;export{o as default};

@@ -1,0 +1,1 @@
+import{p as r,q as c,h as f}from"./framework.C7mMih4h.js";function p(n){const{defaultValue:o,getValue:l,onChange:u}=n,t=r(typeof o=="function"?o():o),s=f(()=>{const e=l();return e!==void 0?e:t.value});return c(l,e=>{t.value=e}),[s,e=>{const a=typeof e=="function"?e(t.value):e;t.value=a,u==null||u(a)}]}export{p as u};

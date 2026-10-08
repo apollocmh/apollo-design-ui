@@ -1,0 +1,1 @@
+import{w as u}from"./raf.BxTc1jxX.js";import{aH as f,p as r}from"./framework.C7mMih4h.js";function n(a){const l=r(null),e=()=>{l.value!==null&&(u.cancel(l.value),l.value=null)},s=()=>{e(),l.value=u(()=>{l.value=null})},c=o=>{l.value!==null&&(o.stopPropagation(),e()),a==null||a(o)};return f(e),{onLabelClick:s,onInputClick:c}}export{n as u};

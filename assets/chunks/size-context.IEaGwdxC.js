@@ -1,0 +1,1 @@
+import{L as e,h as o}from"./framework.C7mMih4h.js";const f=Symbol("apolloSizeContext");function s(t){const r=e(f,void 0);return o(()=>{const n=r==null?void 0:r.value;return t?typeof t=="string"?t??n:typeof t=="function"?t(n):n:n})}export{f as s,s as u};

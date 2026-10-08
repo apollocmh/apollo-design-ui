@@ -1,0 +1,1 @@
+import{g as u}from"./get-design-token.B_9TyWfK.js";import{L as r,h as s,G as a}from"./framework.C7mMih4h.js";const c=Symbol("apollo-theme");function f(n){const e=a(n),o=s(()=>u(e.value));return{config:e,token:o}}let t=null;function l(){return t??(t=f({})),t}function m(){return r(c,l,!0)}function h(){return m().token}export{c as T,h as u};

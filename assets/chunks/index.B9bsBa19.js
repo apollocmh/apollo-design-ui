@@ -1,0 +1,1 @@
+import{w as e}from"./with-install.CzkHEFNh.js";import{M as u,a as t,S as M,b as o,c as s}from"./Menu.BYOw0xi6.js";const n=e(u),r=e(t),m=e(M),a=e(o),i=e(s);n.Item=r;n.SubMenu=m;n.Divider=a;n.ItemGroup=i;export{n as M};

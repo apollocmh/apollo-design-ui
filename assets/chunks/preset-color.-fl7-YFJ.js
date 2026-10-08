@@ -1,0 +1,1 @@
+const n=["blue","purple","cyan","green","magenta","pink","red","orange","yellow","volcano","geekblue","lime","gold"],s=["success","processing","error","default","warning"],t=n.map(e=>`${e}-inverse`);function o(e,r=!0){return r?[...t,...n].includes(e):n.includes(e)}function u(e){return s.includes(e)}export{u as a,o as i};

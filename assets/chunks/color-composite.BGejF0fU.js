@@ -1,0 +1,1 @@
+import{C as o}from"./generate.fN970kD0.js";function u(e,c){const n=new o(e),a=new o(c),r=n.a+a.a*(1-n.a);if(r===0)return new o("rgba(0,0,0,0)");const t=(g,s)=>Math.round((g*n.a+s*a.a*(1-n.a))/r);return new o({r:t(n.r,a.r),g:t(n.g,a.g),b:t(n.b,a.b),a:r})}export{u as o};

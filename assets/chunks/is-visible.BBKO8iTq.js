@@ -1,0 +1,1 @@
+function r(t){if(!t)return!1;if(typeof Element<"u"&&t instanceof Element){if(t.offsetParent)return!0;const f=t.getBBox;if(f){const{width:i,height:n}=f.call(t);if(i||n)return!0}if(t.getBoundingClientRect){const{width:i,height:n}=t.getBoundingClientRect();if(i||n)return!0}}return!1}export{r as i};

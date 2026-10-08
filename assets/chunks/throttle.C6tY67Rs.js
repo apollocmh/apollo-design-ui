@@ -1,0 +1,1 @@
+function d(t,u,n){const o=(n==null?void 0:n.noTrailing)??!1;let i,l=!1;function c(){i!==void 0&&clearTimeout(i)}function a(e){const r=(e==null?void 0:e.upcomingOnly)??!1;c(),l=!r}function f(...e){const r=this;if(l)return;function m(){u.apply(r,e)}c(),o!==!0&&(i=setTimeout(m,t))}return f.cancel=a,f}function g(t,u,n){return d(t,u,{})}export{g as d};

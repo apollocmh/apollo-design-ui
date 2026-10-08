@@ -1,0 +1,1 @@
+function l(n){const t=n,a=n.name;return t.install=e=>{if(!a)throw new Error('[apollo: withInstall] 组件没有 name，无法全局注册。每个组件都必须用 defineOptions({ name: "A<Xxx>" }) 显式声明（COMPONENT-RULES.md 规则 R2）。');e.component(a,n)},t}export{l as w};

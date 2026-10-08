@@ -1,0 +1,1 @@
+import{h as s,ak as r}from"./framework.C7mMih4h.js";function n(e){return e==="horizontal"||e==="vertical"}function f(e,l,c){return s(()=>{const o=r(e),i=r(l),a=r(c);let t;return n(o)?t=o:typeof i=="boolean"?t=i?"vertical":"horizontal":n(a)?t=a:t="horizontal",[t,t==="vertical"]})}export{f as u};

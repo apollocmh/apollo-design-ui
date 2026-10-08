@@ -1,0 +1,1 @@
+function u(a,n,t){const s=[];return n==="success"&&s.push(`${a}-status-success`),n==="warning"&&s.push(`${a}-status-warning`),n==="error"&&s.push(`${a}-status-error`),n==="validating"&&s.push(`${a}-status-validating`),t&&s.push(`${a}-has-feedback`),s.join(" ")}export{u as g};

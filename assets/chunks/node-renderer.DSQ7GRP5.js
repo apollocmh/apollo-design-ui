@@ -1,0 +1,1 @@
+import{a as o}from"./is.tv3z3OW6.js";import{d as n,aE as r}from"./framework.C7mMih4h.js";function t(e){return o(e)?r(e):e}const s=n({name:"ANodeRenderer",props:{node:{type:null,default:null}},setup(e){return()=>t(e.node)}});export{s as N,t as n};

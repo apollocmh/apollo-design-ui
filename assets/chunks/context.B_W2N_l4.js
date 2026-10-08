@@ -1,0 +1,1 @@
+import{L as l,aH as m}from"./framework.C7mMih4h.js";const s=()=>{},i=Symbol("apolloWatermark"),f={add:s,remove:s};function u(r){const e=l(i,f);let o=null;const c=t=>{if(t){const a=t.$el??t,n=r?a.querySelector(r):a;n&&(e.add(n),o=n)}else e.remove(o)};return m(()=>{e.remove(o)}),c}export{u,i as w};
