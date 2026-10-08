@@ -6,6 +6,7 @@
  */
 
 import { CaretDownOutlined, CaretUpOutlined } from '@apollo-design/icons';
+import { useLocale } from '@apollo-design/locale';
 import { isFunction, isNumber, isPlainObject } from '@apollo-design/utils';
 import { type ComputedRef, computed, h, ref, type VNodeChild } from 'vue';
 import { clsx } from '../../_internal/clsx';
@@ -116,6 +117,8 @@ function injectSorter<RecordType>(
   tableLocale: TableLocale | undefined,
   tableShowSorterTooltip: boolean | { target?: string } | undefined,
   pos?: string,
+  /** antd `useSorter.tsx:125` —— 无障碍文案源（`locale.global`）。 */
+  a11yLocale?: { sortable?: string },
 ): ColumnsType<RecordType> {
   return (columns || []).map((raw, index) => {
     const column = raw as ColumnType<RecordType>;
@@ -182,7 +185,11 @@ function injectSorter<RecordType>(
 
       newColumn = {
         ...newColumn,
-        class: clsx(newColumn.className, {
+        // 🚨 **键必须是 `className`**（rc `ColumnType`，引擎 `Header.ts:39` /
+        //    `Cell.ts` 读的都是它）—— 写成 Vue 风格的 `class` 会让排序列的
+        //    `-column-sort` 类名**静默丢失**（该列 th/td 的背景样式是死规则，
+        //    dom-probe 全变体扫描 table/sorter-filter 抓出）。
+        className: clsx(newColumn.className, {
           [`${prefixCls}-column-sort`]: sortOrder,
         }),
         title: (renderProps: unknown) => {
@@ -240,6 +247,7 @@ function injectSorter<RecordType>(
           if (sortOrder) {
             cell['aria-sort'] = sortOrder === 'ascend' ? 'ascending' : 'descending';
           }
+          cell['aria-description'] = a11yLocale?.sortable;
           cell['aria-label'] = displayTitle || '';
           cell.className = clsx(cell.className as string, `${prefixCls}-column-has-sorters`);
           cell.tabIndex = 0;
@@ -262,6 +270,7 @@ function injectSorter<RecordType>(
           tableLocale,
           tableShowSorterTooltip,
           columnPos,
+          a11yLocale,
         ),
       } as ColumnType<RecordType>;
     }
@@ -384,6 +393,9 @@ export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
     showSorterTooltip,
     onSorterChange,
   } = params;
+  // antd `useSorter.tsx:250`：可排序列的 `aria-description` 取 locale 的
+  // `global.sortable` —— 屏幕阅读器靠它知道「这一列可以排序」。
+  const [globalLocale] = useLocale('global');
   // baseColumns（responsive 过滤前）收种子状态 —— antd issue 32847
   const collectColumns = computed(() => baseColumns.value ?? mergedColumns.value);
   const sortStates = ref<SortState<RecordType>[]>(collectSortStates(collectColumns.value, true));
@@ -486,6 +498,7 @@ export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
       tableLocale,
       showSorterTooltip,
       undefined,
+      globalLocale as { sortable?: string } | undefined,
     );
 
   const getSorters = () => generateSorterInfo(mergedSorterStates.value);

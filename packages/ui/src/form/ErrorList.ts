@@ -20,7 +20,7 @@
 
 import { CSSMotion, initCollapseMotion, type MotionHooks, MotionList } from '@apollo-design/motion';
 import type { PropType, VNodeChild } from 'vue';
-import { computed, defineComponent, h } from 'vue';
+import { computed, defineComponent, h, useAttrs } from 'vue';
 import { useFormContext } from './context';
 import { useDebounce } from './hooks/use-debounce';
 import { useFormItemPrefixContext } from './hooks/use-form-item-prefix';
@@ -63,6 +63,8 @@ const ErrorList = defineComponent({
   setup(props) {
     const { prefixCls } = useFormItemPrefixContext();
     const formContext = useFormContext();
+    /** 调用方原生 class（见下方 render：CSSMotion 不接力 fallthrough）。 */
+    const attrs = useAttrs();
     const baseClassName = `${prefixCls}-item-explain`;
 
     // antd useDebounce：延迟若干帧再更新（对拍 rc `useDebounce.js`；
@@ -144,8 +146,12 @@ const ErrorList = defineComponent({
                   baseClassName,
                   holderProps.className,
                   props.helpClassName ?? formContext.classNames?.help,
-                  // ⚠️ 调用方原生 class 不在这里加 —— 本组件没关 inheritAttrs，
-                  //    Vue 会自动合并到根（加一遍会重复）。
+                  // 🚨 **调用方原生 class 必须在这里显式加**：本组件的根 vnode 是
+                  //    `CSSMotion`（不是这个 div），Vue 的 class fallthrough 落在
+                  //    CSSMotion 上而它不往 slot 里传 ⇒ 静默丢失（dom-probe
+                  //    form/status 抓出：少了 `-explain-connected`）。
+                  //    这里不会重复 —— CSSMotion 那条通路已被证明不生效。
+                  attrs.class,
                 ]
                   .filter(Boolean)
                   .join(' '),

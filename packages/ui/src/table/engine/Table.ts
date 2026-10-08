@@ -353,7 +353,7 @@ const Table = defineComponent({
     virtual: { type: Boolean, default: false },
     listItemHeight: { type: Number, default: undefined },
   },
-  setup(props, { attrs, expose }) {
+  setup(props, { expose }) {
     const mergedData = computed(() => props.data ?? []);
     const hasData = computed(() => mergedData.value.length > 0);
 
@@ -611,11 +611,16 @@ const Table = defineComponent({
       props.onScroll?.(e);
     };
     const triggerOnScroll = () => {
-      if (horizonScroll.value && scrollBodyRef.value) {
-        onInternalScroll({
-          currentTarget: scrollBodyRef.value as HTMLElement,
-          scrollLeft: (scrollBodyRef.value as HTMLElement).scrollLeft,
-        });
+      // 🚨 virtual 时 body 是 `BodyGrid`（滚动容器在它内部）—— `scrollBodyRef`
+      //    不会被赋值 ⇒ 若只认它，横向阴影会**恒为 false**（rc 是把 ref 传进
+      //    customizeScrollBody 的）。这里按 rc 的语义取「真正的滚动容器」
+      //    （dom-probe 全变体扫描 table/virtual 抓出：少了 `-fix-end-shadow-show`）。
+      const bodyEl = props.virtual
+        ? ((bodyGridRef.value as { nativeElement?: HTMLElement | null } | null)?.nativeElement ??
+          null)
+        : scrollBodyRef.value;
+      if (horizonScroll.value && bodyEl) {
+        onInternalScroll({ currentTarget: bodyEl, scrollLeft: bodyEl.scrollLeft });
       } else {
         shadowStart.value = false;
         shadowEnd.value = false;
@@ -1092,8 +1097,11 @@ const Table = defineComponent({
         'div',
         {
           class: [
+            // ⚠️ **不要再手动放 `attrs.class`** —— 本组件没关 `inheritAttrs`，Vue 会
+            //    自动把调用方的 class 合并到根元素；手动再放一遍 ⇒ 状态类
+            //    （`-bordered` / `-small` / `-empty`，来自 Table.ts 的 tableClass）
+            //    **出现两次**（dom-probe 全变体扫描抓出；像素不受影响，L6 抓不到）。
             props.prefixCls,
-            (attrs as { class?: unknown }).class,
             {
               [`${props.prefixCls}-rtl`]: props.direction === 'rtl',
               [`${props.prefixCls}-fix-start-shadow`]: horizonScroll.value,
@@ -1101,7 +1109,12 @@ const Table = defineComponent({
               [`${props.prefixCls}-fix-start-shadow-show`]:
                 horizonScroll.value && shadowStart.value,
               [`${props.prefixCls}-fix-end-shadow-show`]: horizonScroll.value && shadowEnd.value,
-              [`${props.prefixCls}-layout-fixed`]: mergedTableLayout.value === 'fixed',
+              // 🚨 rc 逐字（Table.js:586）：判的是**原始 prop** `tableLayout`，
+              //    不是内部合并后的 `mergedTableLayout` —— antd 侧根本不传这个 prop
+              //    ⇒ 有横向滚动也**不**挂 `-layout-fixed`（我们此前多挂，扫描抓出）。
+              [`${props.prefixCls}-layout-fixed`]: props.tableLayout === 'fixed',
+              // rc `VirtualTable/index.js:71`：`clsx(className, `${prefixCls}-virtual`)`
+              [`${props.prefixCls}-virtual`]: props.virtual,
               [`${props.prefixCls}-fixed-header`]: fixHeader.value,
               [`${props.prefixCls}-fixed-column`]: fixColumn.value,
               [`${props.prefixCls}-scroll-horizontal`]: horizonScroll.value,

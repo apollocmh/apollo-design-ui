@@ -19,6 +19,10 @@
  * 1. **`-block` 类名落在外层 `<div>` 上**（不是内层 span），与 `-active` 同级。
  * 2. **不传 `shape`**：`Element` 的 `shape` 默认 `undefined` ⇒ 一个形状类名都不产生。
  *    （`Skeleton.Avatar` 才给 `'circle'` 默认值。）
+ * 2b. 🚨 **`shape` 必须透传给 `Element`**（antd `Button.tsx:56` 的 `{...rest}`）——
+ *     漏传会让 `Skeleton.Button shape="circle" / "round"` 少一个形状类名
+ *     （dom-probe 全变体扫描 skeleton/element 抓出；像素上看不出来）。
+ *     `Skeleton.Input` **没有**这个字段（上游 `Omit<..., 'size' | 'shape'>`）。
  * 3. **`size` 走 `useSize(ctx => size ?? ctx)`**（理由见 `Avatar.vue` 的第 2 条）。
  *    这里 `size` 的类型是 `SizeType | 'default'`（**不含数字**）——
  *    `SkeletonElementProps` 的 `number` 被 `Omit` 掉了，逐字对齐上游 `Button.d.ts`。
@@ -82,6 +86,7 @@ const contentStyle = computed(() => ({ ...props.styles?.content, ...props.style 
       :prefix-cls="elementCls"
       :class-name="props.classNames?.content"
       :style="contentStyle"
+      :shape="props.shape"
       :size="mergedSize"
     />
   </div>

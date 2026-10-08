@@ -45,16 +45,13 @@ const MIME = {
   '.woff2': 'font/woff2',
 };
 
-const argv = process.argv.slice(2);
-const flags = new Set(argv.filter((a) => a.startsWith('--')));
-const positional = argv.filter((a) => !a.startsWith('--'));
-const component = positional[0] ?? 'color-picker';
-const variant = positional[1] ?? 'basicOpen';
-const theme = positional[2] ?? 'light';
-const keepStyle = flags.has('--keep-style');
-
-/** 起一个只服务 `.artifacts/<side>` 的静态服务器（与 `run.mjs` / `debug/dump.mjs` 同构）。 */
-function startServer(root) {
+/**
+ * 起一个只服务 `.artifacts/<side>` 的静态服务器（与 `run.mjs` / `debug/dump.mjs` 同构）。
+ *
+ * `export` 是为了**全量扫描器** `dom-probe-scan.mjs` 复用同一条通路 —— 判据只能
+ * 有一个来源（`PITFALLS` 353 同判）：扫描器与本探针必须看到**同一份 DOM**。
+ */
+export function startServer(root) {
   const server = http.createServer((req, res) => {
     let pathname = decodeURIComponent(new URL(req.url, 'http://127.0.0.1').pathname);
     if (pathname.endsWith('/')) pathname += 'index.html';
@@ -78,7 +75,7 @@ function startServer(root) {
  * ⚠️ 复用 `run.mjs` 的**同一套**加载姿势（`newStablePage` + `__VISUAL_READY__`），
  *    否则探针看到的 DOM 与 L6 拍的不是同一状态（判据就会分叉）。
  */
-async function dumpStage(browser, { port, side }) {
+export async function dumpStage(browser, { port, side, component, variant, theme = 'light' }) {
   const { context, page } = await newStablePage(browser, { width: 1440, height: 900 });
   const errors = [];
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
@@ -111,7 +108,55 @@ async function dumpStage(browser, { port, side }) {
   }
 }
 
-async function main() {
+/**
+ * 前缀归一 + `contractOf` —— **扫描器与探针共用同一份判据**。
+ *
+ * 独立成函数是为了让全量扫描（379 个 component/variant）能复用；逻辑不变。
+ */
+/**
+ * 前缀归一：视觉层的 React 侧用的是 antd 默认前缀（`ant-`），Vue 侧是 `apollo-`
+ * ⇒ 直接比会满屏前缀差异（那不是结构差异）。
+ *
+ * ⚠️ 只改 **`class` 属性值内部** —— 不碰 `data-*` / `aria-*` / id，避免把
+ *    「属性值里恰好含 `ant-`」的内容也改掉。
+ *
+ * 🚨 **2026-10-08 补一条：`anticon` → `apollo-icon`**。
+ *    antd 的图标类名是 **`anticon` / `anticon-down`**（`ant` 后面**没有连字符**），
+ *    本仓是 `apollo-icon` / `apollo-icon-down` ⇒ 只换 `\bant-` **匹配不到它们**，
+ *    于是**任何带图标的组件都会误报差异**（collapse / table / dropdown… 全中）。
+ *    那让本探针等于不可用 —— 而它正是用来找「结构性分叉」这类 bug 的工具
+ *    （Button 多包一层 `<span>` 就是这么发现的）。
+ */
+export const normalizePrefix = (html) =>
+  html.replace(
+    /class="([^"]*)"/g,
+    (_m, cls) =>
+      `class="${cls
+        // 先换 icon 类（它们在 `ant` 后没有连字符，必须先处理）
+        .replace(/\banticon-/g, 'apollo-icon-')
+        .replace(/\banticon\b/g, 'apollo-icon')
+        .replace(/\bant-/g, 'apollo-')}"`,
+  );
+
+/**
+ * 归一化后的两侧契约（**扫描器与探针共用**）。
+ */
+export async function contractsOfPair({ contractOf, reactHtml, vueHtml, keepStyle = false }) {
+  const opts = keepStyle ? { keepStyle: true } : undefined;
+  return {
+    react: contractOf(normalizePrefix(reactHtml), opts),
+    vue: contractOf(normalizePrefix(vueHtml), opts),
+  };
+}
+
+async function main(argv = process.argv.slice(2)) {
+  const flags = new Set(argv.filter((a) => a.startsWith('--')));
+  const positional = argv.filter((a) => !a.startsWith('--'));
+  const component = positional[0] ?? 'color-picker';
+  const variant = positional[1] ?? 'basicOpen';
+  const theme = positional[2] ?? 'light';
+  const keepStyle = flags.has('--keep-style');
+
   if (!fs.existsSync(ARTIFACTS)) {
     console.error(
       `找不到 ${path.relative(process.cwd(), ARTIFACTS)} —— 先跑一次 tests/visual/run.mjs 构建产物。`,
@@ -133,8 +178,8 @@ async function main() {
   let left;
   let right;
   try {
-    left = await dumpStage(browser, { port, side: 'react' });
-    right = await dumpStage(browser, { port, side: 'vue' });
+    left = await dumpStage(browser, { port, side: 'react', component, variant, theme });
+    right = await dumpStage(browser, { port, side: 'vue', component, variant, theme });
   } finally {
     await browser.close();
     server.close();
@@ -148,34 +193,12 @@ async function main() {
       console.error(`⚠️ ${side} 侧渲染期报错：${r.errors.slice(0, 3).join(' | ')}`);
   }
 
-  /**
-   * 前缀归一：视觉层的 React 侧用的是 antd 默认前缀（`ant-`），Vue 侧是 `apollo-`
-   * ⇒ 直接比会满屏前缀差异（那不是结构差异）。
-   *
-   * ⚠️ 只改 **`class` 属性值内部** —— 不碰 `data-*` / `aria-*` / id，避免把
-   *    「属性值里恰好含 `ant-`」的内容也改掉。
-   *
-   * 🚨 **2026-10-08 补一条：`anticon` → `apollo-icon`**。
-   *    antd 的图标类名是 **`anticon` / `anticon-down`**（`ant` 后面**没有连字符**），
-   *    本仓是 `apollo-icon` / `apollo-icon-down` ⇒ 只换 `\bant-` **匹配不到它们**，
-   *    于是**任何带图标的组件都会误报差异**（collapse / table / dropdown… 全中）。
-   *    那让本探针等于不可用 —— 而它正是用来找「结构性分叉」这类 bug 的工具
-   *    （Button 多包一层 `<span>` 就是这么发现的）。
-   */
-  const normalizePrefix = (html) =>
-    html.replace(
-      /class="([^"]*)"/g,
-      (_m, cls) =>
-        `class="${cls
-          // 先换 icon 类（它们在 `ant` 后没有连字符，必须先处理）
-          .replace(/\banticon-/g, 'apollo-icon-')
-          .replace(/\banticon\b/g, 'apollo-icon')
-          .replace(/\bant-/g, 'apollo-')}"`,
-    );
-
-  const opts = keepStyle ? { keepStyle: true } : undefined;
-  const a = contractOf(normalizePrefix(left.html), opts);
-  const b = contractOf(normalizePrefix(right.html), opts);
+  const { react: a, vue: b } = await contractsOfPair({
+    contractOf,
+    reactHtml: left.html,
+    vueHtml: right.html,
+    keepStyle,
+  });
   const sa = JSON.stringify(a, null, 1);
   const sb = JSON.stringify(b, null, 1);
 
@@ -206,4 +229,8 @@ async function main() {
   return 1;
 }
 
-process.exitCode = await main();
+// 只有**直接运行**本文件时才跑 CLI —— 被 `dom-probe-scan.mjs` import 时不跑
+// （否则扫描器一 import 就会开一次浏览器做一次无意义的对拍）。
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  process.exitCode = await main();
+}

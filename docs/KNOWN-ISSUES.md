@@ -35,6 +35,9 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 | 全量 L6 | `node tests/visual/run.mjs --mode compare` |
 | 单组件 L6 | `node tests/visual/run.mjs --mode compare --component <c>` |
 | 基线重复自检 | `node tests/visual/run.mjs --check-baselines` |
+| 单组 DOM 契约对拍（L6/L4 的盲区） | `node tests/visual/dom-probe.mjs <component> <variant> [--full]` |
+| **全变体** DOM 契约扫描（379 组，~19 分钟） | `node tests/visual/dom-probe-scan.mjs [--component <c>]` |
+| compat 基线校验（E9，73 个组件） | `node tests/compat/runner/index.mjs` |
 | 四道门禁 | `pnpm run verify:full` |
 
 ⚠️ **改完组件源码再跑 L6 时，必须先 `pnpm run build:ui`** —— 视觉层解析的是

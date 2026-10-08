@@ -2,7 +2,7 @@
   "$schema": "../schema.json",
   "component": "list",
   "antdVersion": "6.6.4",
-  "generatedAt": "2026-10-02T03:24:17.458Z",
+  "generatedAt": "2026-10-08T00:33:38.700Z",
   "cases": [
     {
       "id": "list:basic",
@@ -74,7 +74,7 @@
     },
     {
       "id": "list:item-actions",
-      "html": "<div class=\"apollo-list apollo-list-split css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-spin css-dev-only-do-not-override-1v6lqee css-var-root\" aria-live=\"polite\" aria-busy=\"false\"><div class=\"apollo-spin-container\"><ul class=\"apollo-list-items apollo-list-container css-var-root\"><li class=\"apollo-list-item\">Alpha<ul class=\"apollo-list-item-action\"><li><a>edit</a><em class=\"apollo-list-item-action-split\"></em></li><li><a>more</a></li></ul></li><li class=\"apollo-list-item\">Beta<ul class=\"apollo-list-item-action\"><li><a>edit</a><em class=\"apollo-list-item-action-split\"></em></li><li><a>more</a></li></ul></li><li class=\"apollo-list-item\">Gamma<ul class=\"apollo-list-item-action\"><li><a>edit</a><em class=\"apollo-list-item-action-split\"></em></li><li><a>more</a></li></ul></li></ul></div></div></div>"
+      "html": "<div class=\"apollo-list apollo-list-split css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-spin css-dev-only-do-not-override-1v6lqee css-var-root\" aria-live=\"polite\" aria-busy=\"false\"><div class=\"apollo-spin-container\"><ul class=\"apollo-list-items apollo-list-container css-var-root\"><li class=\"apollo-list-item\">Alpha<ul class=\"apollo-list-item-action\"><li><a href=\"#edit\">edit</a><em class=\"apollo-list-item-action-split\"></em></li><li><a href=\"#more\">more</a></li></ul></li><li class=\"apollo-list-item\">Beta<ul class=\"apollo-list-item-action\"><li><a href=\"#edit\">edit</a><em class=\"apollo-list-item-action-split\"></em></li><li><a href=\"#more\">more</a></li></ul></li><li class=\"apollo-list-item\">Gamma<ul class=\"apollo-list-item-action\"><li><a href=\"#edit\">edit</a><em class=\"apollo-list-item-action-split\"></em></li><li><a href=\"#more\">more</a></li></ul></li></ul></div></div></div>"
     },
     {
       "id": "list:item-no-flex",

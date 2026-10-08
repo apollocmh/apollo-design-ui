@@ -486,7 +486,6 @@ const MeasureCell = defineComponent({
         'td',
         {
           ref: cellRef,
-          'data-measure-key': String(props.columnKey),
           style: {
             paddingTop: 0,
             paddingBottom: 0,
@@ -526,10 +525,13 @@ const MeasureRow = defineComponent({
     let observer: ResizeObserver | undefined;
     const remeasure = () => {
       if (rowRef.value && rowRef.value.offsetParent !== null) {
-        props.columnsKey.forEach((columnKey) => {
-          const cell = rowRef.value?.querySelector<HTMLElement>(
-            `[data-measure-key="${String(columnKey)}"]`,
-          );
+        // ⚠️ **按索引取单元格**，不要给 td 加 `data-measure-key` 之类的定位属性：
+        //    rc 是靠 `ResizeObserver.Collection` 的 `data`（不落 DOM）定位的，
+        //    我们多一个属性 ⇒ DOM 契约对不上（dom-probe 全变体扫描 table
+        //    fixed-summary 抓出）。测量行的列顺序与 columnsKey 一一对应。
+        const cells = rowRef.value.children;
+        props.columnsKey.forEach((columnKey, index) => {
+          const cell = cells[index] as HTMLElement | undefined;
           if (cell) props.onColumnResize(columnKey, cell.offsetWidth);
         });
       }
