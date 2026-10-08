@@ -1,0 +1,13 @@
+/* 文档站全局微调（叠加在 VitePress 默认主题之上）。 */
+
+/* 首页 hero 的组件数量徽标 */
+.component-count {
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+/* demo 画布底色：暗色模式下避免组件内容看不清 */
+.demo-preview-canvas {
+  background: var(--vp-c-bg);
+}

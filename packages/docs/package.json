@@ -1,0 +1,20 @@
+{
+  "name": "@apollo-design/docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "apollo-design-ui 文档站（VitePress）。产物直接发布为 GitHub Pages 项目首页。",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/gen-component-pages.mjs && vitepress dev",
+    "build": "node scripts/gen-component-pages.mjs && vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@apollo-design/theme": "workspace:*",
+    "@apollo-design/ui": "workspace:*",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  }
+}

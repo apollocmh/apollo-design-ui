@@ -27,9 +27,6 @@ const ItemHolder = defineComponent({
   name: 'AFormItemHolder',
   props: {
     prefixCls: { type: String, required: true },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     help: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     errors: { type: Array as PropType<VNodeChild[]>, default: () => [] },
     warnings: { type: Array as PropType<VNodeChild[]>, default: () => [] },
@@ -110,8 +107,6 @@ const ItemHolder = defineComponent({
     const itemClassName = computed(() =>
       [
         itemPrefixCls,
-        props.className,
-        props.rootClassName,
         hasWithHelp.value ? `${itemPrefixCls}-with-help` : '',
         // Status
         mergedValidateStatus.value && props.hasFeedback ? `${itemPrefixCls}-has-feedback` : '',
@@ -188,7 +183,7 @@ const ItemHolder = defineComponent({
         { default: () => [labelNode, inputNode] } as never,
       );
 
-      return h('div', { class: itemClassName.value, style: props.style, ref: itemRef }, [
+      return h('div', { class: itemClassName.value, ref: itemRef }, [
         row,
         !!marginBottom.value &&
           h('div', {

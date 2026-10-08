@@ -164,9 +164,6 @@ export interface FormSlots<Values = unknown> {
 export interface FormItemProps<Values = unknown> extends FieldProps<Values> {
   prefixCls?: string;
   noStyle?: boolean;
-  style?: CSSProperties;
-  className?: string;
-  rootClassName?: string;
   id?: string;
   hasFeedback?: boolean | { icons: FeedbackIcons };
   validateStatus?: ValidateStatus;

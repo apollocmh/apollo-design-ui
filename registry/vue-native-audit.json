@@ -6,7 +6,7 @@
   "overallStatus": "audit-complete",
   "phase": "shared-surfaces-complete",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-07T01:50:39.591Z",
+  "updatedAt": "2026-10-08",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -52,15 +52,16 @@
     "productionSourceFiles": 955,
     "reviewedProductionSourceFiles": 955,
     "issues": {
-      "total": 14,
+      "total": 24,
       "bySeverity": {
         "P0": 1,
         "P1": 5,
-        "P2": 7,
-        "P3": 1
+        "P2": 8,
+        "P3": 3
       },
       "byStatus": {
-        "fixed": 14
+        "fixed": 17,
+        "open": 1
       }
     }
   },
@@ -4437,6 +4438,87 @@
       "relatedComponents": [],
       "tests": [],
       "verification": "`node registry/tools/ask.mjs progress` 输出含 `✅ config-provider`。"
+    },
+    {
+      "id": "VNA-RECHECK-01",
+      "component": "form",
+      "files": [
+        "packages/ui/src/form/interface.ts:167-169",
+        "packages/ui/src/form/FormItem/ItemHolder.ts:27-29,113-114,191"
+      ],
+      "category": "react-api",
+      "severity": "P2",
+      "systemic": false,
+      "relatedComponents": [
+        "form"
+      ],
+      "currentImplementation": "docs 接入前复核发现：FormItemProps 公开类型仍声明 style/className/rootClassName；ItemHolder 运行时声明同名 props 且消费 props.className/rootClassName/style（FormItem 不转发 ⇒ 恒 undefined 的死消费）。",
+      "semanticDifference": "audit note 声称 form 三个公开面已去根别名，但公开类型与 ItemHolder 内部链路残留。运行时行为未坏（attrs 透传仍生效），属类型面污染 + 死代码。",
+      "recommendation": "删除 FormItemProps 三行别名；删除 ItemHolder 同名运行时 props 与死消费（class/style 由 Vue attrs fallthrough 合并到根）。",
+      "tests": "vitest --project unit --project dom-contract (form/alert/segmented) 176/176；--project types 2175/2175",
+      "status": "fixed",
+      "verification": "exit=0；types no errors",
+      "fixedAt": "2026-10-08",
+      "foundBy": "docs-site pre-wiring recheck (docs-audit-recheck.mjs + classify-alias-decls.mjs)"
+    },
+    {
+      "id": "VNA-RECHECK-02",
+      "component": "alert",
+      "files": [
+        "packages/ui/src/alert/Alert.ts:94-96"
+      ],
+      "category": "react-api",
+      "severity": "P3",
+      "systemic": false,
+      "relatedComponents": [
+        "alert"
+      ],
+      "currentImplementation": "运行时 props 声明 className/rootClassName/style 但全文件零消费（interface.ts 已无这些键 ⇒ 类型上不可达）。",
+      "semanticDifference": "声明未消费的 prop 会把传入值静默吞掉（不进 attrs），与『根别名一律原生 class/style』契约不符。",
+      "recommendation": "删除三行死声明。",
+      "tests": "alert unit/dom 176/176（与 form/segmented 同批）",
+      "status": "fixed",
+      "fixedAt": "2026-10-08",
+      "foundBy": "docs-site pre-wiring recheck"
+    },
+    {
+      "id": "VNA-RECHECK-03",
+      "component": "segmented",
+      "files": [
+        "packages/ui/src/segmented/Segmented.ts:125-126"
+      ],
+      "category": "react-api",
+      "severity": "P3",
+      "systemic": false,
+      "relatedComponents": [
+        "segmented"
+      ],
+      "currentImplementation": "inheritAttrs:false 组件声明 className/rootClassName 运行时 props，零消费；390/418 行注释证实原生 class/style 已由 attrs 接管。",
+      "semanticDifference": "同上：死声明吞值。",
+      "recommendation": "删除两行死声明。",
+      "tests": "segmented unit/dom 176/176（同批）",
+      "status": "fixed",
+      "fixedAt": "2026-10-08",
+      "foundBy": "docs-site pre-wiring recheck"
+    },
+    {
+      "id": "VNA-RECHECK-04",
+      "component": "table",
+      "files": [
+        "packages/ui/src/table/（无 index.zh-CN.md）"
+      ],
+      "category": "test",
+      "severity": "P2",
+      "systemic": false,
+      "relatedComponents": [
+        "table"
+      ],
+      "currentImplementation": "table 是 72 组件里唯一没有 index.zh-CN.md/index.en-US.md 的（只有实现说明 README.md）。",
+      "semanticDifference": "docs 站 table 页只能出 demo 演示块；AGENTS.md §6.1 的交付物清单含中英文档，且该组件 registry 标记 completed。",
+      "recommendation": "补齐 table 的 index.zh-CN.md / index.en-US.md（API 表 + demo 说明），补齐后文档站自动生成完整页。",
+      "tests": "无（文档债务）",
+      "status": "open",
+      "foundBy": "docs-site pre-wiring recheck"
     }
   ],
   "batches": [
@@ -4867,6 +4949,11 @@
       "date": "2026-10-07",
       "status": "completed",
       "note": "AUDIT-S5 (shared surfaces) COMPLETE: test-utils 14/14 reviewed. 2 issues. P2 OPEN = VNA-TESTUTILS-01: COMPONENT-RULES.md:125 still requires rootClassName/rootStyle on every component, and rootPropsTest implements that contract by injecting them as PROPS — but Phase 2 + COMPATIBILITY.md §7 moved root aliases to native class/style and all 72 components removed those props (verified: 0 hits in button/interface.ts). rootPropsTest has zero in-repo consumers and would now fail. Needs a user ruling (normative doc + public API). P3 fixed = rtl-test.ts stale \"ConfigProvider 尚未实现\". ALL 12 SHARED SURFACES DONE; 955/955 production files reviewed."
+    },
+    {
+      "date": "2026-10-08",
+      "action": "docs-site pre-wiring recheck",
+      "summary": "文档站接入前按本 skill 机械化清单全量复核 72 组件：根别名声明/消费、监听器失衡、占位 keyframes、props.style 残留。修复 3（form 公开类型+ItemHolder 死消费；alert/segmented 死声明），新开 1（table 缺组件文档）。聚焦测试 176/176 + types 2175/2175。复核结论：Dropdown.rootClassName（popup 目标）、Carousel className/style（内层 slick）、BorderBeam className/style（@deprecated→classNames.effect/styles.effect）、skeleton 内层目标、数据标记组件（Option/OptGroup/DescriptionsItem/BreadcrumbItem items 配置）均为合法保留。"
     }
   ],
   "observations": [

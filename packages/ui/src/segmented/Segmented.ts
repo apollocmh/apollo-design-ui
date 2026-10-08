@@ -122,8 +122,6 @@ export const SegmentedComponent = defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
     options: { type: Array as PropType<SegmentedProps['options']>, default: () => [] },
     disabled: { type: Boolean, default: undefined },
     defaultValue: { type: [String, Number] as PropType<SegmentedValue>, default: undefined },

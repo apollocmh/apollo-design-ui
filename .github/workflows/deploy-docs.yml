@@ -1,0 +1,81 @@
+# 文档站 → GitHub Pages（项目首页 https://apollocmh.github.io/apollo-design-ui/）
+#
+# 与 ci.yml 的分工：ci.yml 是代码门禁（registry/lint/test/build），本 workflow 只管
+# 文档站的构建与发布。两者可并行，互不阻塞。
+#
+# 产物链路（与本地 `pnpm build:docs` 完全一致）：
+#   theme 构建 → ui 构建（tokens.css + 组件 CSS 的真源）→ vitepress build（base=/apollo-design-ui/）
+#
+# ⚠️ vitepress build 会做 SSR 预渲染；所有 demo 一律经 <ClientOnly> + 异步组件加载，
+#    因此组件里的浏览器 API 不会影响构建（这是 DemoPreview 的设计约束，别破坏）。
+name: Deploy Docs
+
+on:
+  push:
+    branches: [master]
+    # 文档站源码 / 组件文档与 demo / 组件实现 任一变化都重新发布；
+    # 纯记忆、registry 数据变化不触发。
+    paths:
+      - 'packages/docs/**'
+      - 'packages/ui/src/**'
+      - 'packages/theme/src/**'
+      - 'packages/theme/build.config.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
+
+# Pages 部署需要并发保护：同 ref 只保留最新一次部署。
+concurrency:
+  group: deploy-docs-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: 构建文档站
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      # theme + ui 的 dist 是文档站样式的真源（tokens.css / style.css），
+      # 本地由 `build:docs` 脚本串联，CI 在这里显式分开跑以便定位失败层。
+      - name: 构建 theme
+        run: pnpm --filter @apollo-design/theme run build
+
+      - name: 构建 ui
+        run: pnpm --filter @apollo-design/ui run build
+
+      - name: 构建文档站
+        run: pnpm --filter @apollo-design/docs run build
+
+      - name: 关键产物检查
+        run: |
+          test -f packages/docs/.vitepress/dist/index.html || { echo '缺少 index.html'; exit 1; }
+          grep -q 'apollo-design-ui' packages/docs/.vitepress/dist/index.html || { echo 'base 路径缺失'; exit 1; }
+          echo "页面数: $(find packages/docs/.vitepress/dist -name '*.html' | wc -l)"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/docs/.vitepress/dist
+
+  deploy:
+    name: 发布到 GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,32 @@
+---
+layout: home
+
+hero:
+  name: Apollo Design
+  text: Vue 3 原生组件库
+  tagline: 以 Ant Design 6 为兼容规格、用 Vue 3 + TypeScript 重新实现的组件库 —— 不是翻译，是原生。
+  actions:
+    - theme: brand
+      text: 快速开始
+      link: /guide/getting-started
+    - theme: alt
+      text: 组件总览
+      link: /components/overview
+    - theme: alt
+      text: GitHub
+      link: https://github.com/apollocmh/apollo-design-ui
+
+features:
+  - icon: ⚡
+    title: Vue 3 原生
+    details: Composition API / emits / slots / v-model —— 每个 API 都按 Vue 的心智模型设计，没有 React 移植层。
+  - icon: 🎯
+    title: 兼容 Ant Design 6
+    details: 行为、DOM、视觉与 antd 6.6.4 逐项对齐，兼容性差异全部记录在案并有分类裁决。
+  - icon: 🧩
+    title: 72 个组件
+    details: 从 Button 到 Table 虚拟滚动，全部通过七层测试与视觉基线，按需引入产物体积有预算门禁。
+  - icon: 🎨
+    title: 设计令牌
+    details: 静态 CSS + CSS 变量，主题色、圆角、间距全部走 Token 系统，组件内零硬编码样式值。
+---

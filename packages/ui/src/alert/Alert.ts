@@ -91,9 +91,6 @@ export default defineComponent({
     // ⚠️ role 不声明为 prop：antd 把 role 留在 rest 里经 pickAttrs 覆盖默认
     //    `role="alert"` —— Vue 侧同理，role 落 attrs 再被挑出（不是漏了）。
     prefixCls: { type: String, default: undefined },
-    className: { type: String, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     banner: { type: Boolean, default: undefined },
     // ⚠️ icon / action 是 VNode 主导 prop（规则 #2/#3）：彻底删除 prop，改同名 slot
     //    （#icon / #action）。icon 不再接受 VNode prop，自定义图标走 `#icon` slot。

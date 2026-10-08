@@ -65,3 +65,6 @@ tsconfig.scoped.json
 
 # tsc --build 的类型检查缓存与声明产物（scripts/gen-tsconfig-refs.mjs）
 node_modules/.cache/apollo/
+
+# VitePress dev cache（docs 包）
+packages/docs/.vitepress/cache/
