@@ -8,7 +8,9 @@ const columns: TableColumnsType = [
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: ({ text }: { text: unknown }) => h('a', String(text)),
+    // ⚠️ render 是 rc 口径的位置参数：(value, record, index) —— 不是对象参数。
+    //    写成 ({ text }) 会把「单元格值」当对象解构，渲染出 undefined。
+    render: (value: unknown) => h('a', String(value)),
   },
   { title: 'Age', dataIndex: 'age', key: 'age' },
   { title: 'Address', dataIndex: 'address', key: 'address' },

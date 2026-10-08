@@ -81,7 +81,20 @@ export default defineConfig({
     nav: [
       { text: '指南', link: '/guide/getting-started' },
       { text: '组件', link: '/components/overview' },
-      { text: '全部组件', items: componentGroups },
+      // ⚠️ nav 下拉只支持一层平铺 items（{text, link}）；嵌套分组会让
+      //    VPNavBarMenuGroup 渲染抛错 → 整页白屏（VitePress 的已知约束）。
+      //    全量分类入口放侧边栏，这里只放几个高频组件的快捷入口。
+      {
+        text: '常用组件',
+        items: [
+          { text: 'Button 按钮', link: '/components/button' },
+          { text: 'Form 表单', link: '/components/form' },
+          { text: 'Table 表格', link: '/components/table' },
+          { text: 'Modal 对话框', link: '/components/modal' },
+          { text: 'Select 选择器', link: '/components/select' },
+          { text: 'DatePicker 日期选择', link: '/components/date-picker' },
+        ],
+      },
     ],
     sidebar: {
       '/guide/': [
