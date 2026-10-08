@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { Button } from '../../index';
+import { Button, Space } from '../../index';
 </script>
 
 <template>
-  <Button type="primary" block>Primary</Button>
-  <Button block>Default</Button>
-  <Button type="dashed" block>Dashed</Button>
+  <Space orientation="vertical" style="width: 100%">
+    <Button type="primary" block>Primary</Button>
+    <Button block>Default</Button>
+    <Button type="dashed" block>Dashed</Button>
+  </Space>
 </template>

@@ -4,8 +4,7 @@ import { BorderBeam } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">
-    <BorderBeam :duration="12" />
-    Slower
-  </div>
+  <BorderBeam :duration="12">
+    <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">Slower</div>
+  </BorderBeam>
 </template>

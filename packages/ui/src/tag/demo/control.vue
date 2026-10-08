@@ -2,7 +2,7 @@
 // 对齐 antd 的 control demo（Input/Tooltip 未落地 —— 原生 input + Tag 等价组合）
 
 import { PlusOutlined } from '@apollo-design/icons';
-import { Tag } from '@apollo-design/ui';
+import { Space, Tag } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const tags = ref(['Tag 1', 'Tag 2', 'Tag 3']);
@@ -26,16 +26,18 @@ const handleClose = (removed: string) => {
 </script>
 
 <template>
-  <Tag v-for="tag in tags" :key="tag" closable @close="handleClose(tag)">{{ tag }}</Tag>
-  <input
-    v-if="inputVisible"
-    type="text"
-    size="small"
-    :style="{ width: '78px', marginRight: '8px', verticalAlign: 'top' }"
-    @blur="handleInputConfirm"
-    @keydown.enter="handleInputConfirm"
-  >
-  <Tag v-else :style="{ borderStyle: 'dashed', cursor: 'pointer' }" @click="showInput">
-    <PlusOutlined /> New Tag
-  </Tag>
+  <Space wrap>
+    <Tag v-for="tag in tags" :key="tag" closable @close="handleClose(tag)">{{ tag }}</Tag>
+    <input
+      v-if="inputVisible"
+      type="text"
+      size="small"
+      :style="{ width: '78px', marginRight: '8px', verticalAlign: 'top' }"
+      @blur="handleInputConfirm"
+      @keydown.enter="handleInputConfirm"
+    >
+    <Tag v-else :style="{ borderStyle: 'dashed', cursor: 'pointer' }" @click="showInput">
+      <PlusOutlined /> New Tag
+    </Tag>
+  </Space>
 </template>

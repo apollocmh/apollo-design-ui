@@ -4,8 +4,11 @@ import { BorderBeam } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="border-radius: 16px">
-    <BorderBeam :size="40" />
-    <div style="height: 64px; display: flex; align-items: center; justify-content: center">Custom container</div>
-  </div>
+  <BorderBeam :size="40">
+    <div
+      style="position: relative; border-radius: 16px; height: 64px; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd"
+    >
+      Custom container
+    </div>
+  </BorderBeam>
 </template>

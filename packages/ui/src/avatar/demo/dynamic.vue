@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 dynamic demo。
-import { Avatar, Button } from '@apollo-design/ui';
+import { Avatar, Button, Space } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const UserList = ['U', 'Lucy', 'Tom', 'Edward'];
@@ -23,15 +23,17 @@ const changeGap = () => {
 </script>
 
 <template>
-  <Avatar :style="{ backgroundColor: color, verticalAlign: 'middle' }" size="large" :gap="gap">
-    {{ user }}
-  </Avatar>
-  <Button
-    size="small"
-    :style="{ margin: '0 16px', verticalAlign: 'middle' }"
-    @click="changeUser"
-  >
-    ChangeUser
-  </Button>
-  <Button size="small" :style="{ verticalAlign: 'middle' }" @click="changeGap">changeGap</Button>
+  <Space wrap>
+    <Avatar :style="{ backgroundColor: color, verticalAlign: 'middle' }" size="large" :gap="gap">
+      {{ user }}
+    </Avatar>
+    <Button
+      size="small"
+      :style="{ margin: '0 16px', verticalAlign: 'middle' }"
+      @click="changeUser"
+    >
+      ChangeUser
+    </Button>
+    <Button size="small" :style="{ verticalAlign: 'middle' }" @click="changeGap">changeGap</Button>
+  </Space>
 </template>

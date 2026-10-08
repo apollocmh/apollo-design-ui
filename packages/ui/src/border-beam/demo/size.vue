@@ -4,8 +4,7 @@ import { BorderBeam } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">
-    <BorderBeam :size="160" />
-    Bigger beam
-  </div>
+  <BorderBeam :size="160">
+    <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">Bigger beam</div>
+  </BorderBeam>
 </template>

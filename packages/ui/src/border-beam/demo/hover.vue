@@ -8,12 +8,19 @@ const hovered = ref(false);
 </script>
 
 <template>
-  <div
-    style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px"
+  <BorderBeam v-if="hovered">
+    <div
+      :style="{ position: 'relative', border: '1px solid #ddd', borderRadius: '8px', padding: '24px', cursor: 'pointer' }"
+      @mouseenter="hovered = true"
+      @mouseleave="hovered = false"
+    >
+      Hover me
+    </div>
+  </BorderBeam>
+  <div v-else
+    :style="{ position: 'relative', border: '1px solid #ddd', borderRadius: '8px', padding: '24px', cursor: 'pointer' }"
     @mouseenter="hovered = true"
-    @mouseleave="hovered = false"
   >
-    <BorderBeam v-if="hovered" />
     Hover me
   </div>
 </template>

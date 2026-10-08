@@ -10,8 +10,7 @@ const stops = [
 </script>
 
 <template>
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">
-    <BorderBeam :color="stops" />
-    Gradient
-  </div>
+  <BorderBeam :color="stops">
+    <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">Gradient</div>
+  </BorderBeam>
 </template>

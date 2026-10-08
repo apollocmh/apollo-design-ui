@@ -69,6 +69,7 @@ title: 组件总览
 - [Popover 气泡卡片](./popover)
 - [QRCode 二维码](./qr-code)
 - [Statistic 统计数值](./statistic)
+- [Table 表格](./table)
 - [Tag 标签](./tag)
 - [Timeline 时间轴](./timeline)
 - [Tooltip 文字提示](./tooltip)
@@ -95,4 +96,3 @@ title: 组件总览
 - [App 包裹组件](./app)
 - [ConfigProvider 全局配置](./config-provider)
 - [FloatButton 浮动按钮](./float-button)
-- [Table](./table)

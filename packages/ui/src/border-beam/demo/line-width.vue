@@ -4,8 +4,7 @@ import { BorderBeam } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="position: relative; border: 8px solid #ddd; border-radius: 8px; padding: 24px">
-    <BorderBeam :line-width="8" />
-    Thick border
-  </div>
+  <BorderBeam :line-width="8">
+    <div style="position: relative; border: 8px solid #ddd; border-radius: 8px; padding: 24px">Thick border</div>
+  </BorderBeam>
 </template>

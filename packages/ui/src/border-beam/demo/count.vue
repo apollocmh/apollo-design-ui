@@ -4,8 +4,7 @@ import { BorderBeam } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">
-    <BorderBeam :count="3" />
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  </div>
+  <BorderBeam :count="3">
+    <div style="position: relative; border: 1px solid #ddd; border-radius: 8px; padding: 24px">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+  </BorderBeam>
 </template>
