@@ -2,9 +2,6 @@
 category: 其他
 title: Affix
 subtitle: 固钉
-group:
-  title: 其他
-  order: 7
 ---
 
 # Affix 固钉

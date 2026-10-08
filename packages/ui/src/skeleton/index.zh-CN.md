@@ -2,9 +2,6 @@
 category: 反馈
 title: Skeleton
 subtitle: 骨架屏
-group:
-  title: 反馈
-  order: 2
 ---
 
 # Skeleton 骨架屏

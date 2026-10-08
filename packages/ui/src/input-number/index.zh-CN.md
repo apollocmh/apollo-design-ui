@@ -1,6 +1,5 @@
 ---
-category: Components
-group: 数据录入
+category: 数据录入
 title: InputNumber 数字输入框
 ---
 

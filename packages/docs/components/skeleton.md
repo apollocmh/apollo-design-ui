@@ -1,5 +1,5 @@
 ---
-title: 反馈 骨架屏
+title: Skeleton 骨架屏
 outline: [2, 3]
 ---
 

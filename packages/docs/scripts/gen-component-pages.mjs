@@ -8,7 +8,7 @@
  *
  * 产出：
  *   - packages/docs/components/<c>.md      组件页（原文档正文 + 每个演示的实时渲染块）
- *   - packages/docs/components/index.md    组件总览页
+ *   - packages/docs/components/overview.md 组件总览页
  *
  * 幂等：每次 build/dev 前全量重生成（脚本由 docs 的 dev/build 自动调用），
  * 因此组件源码或文档更新后文档站无需手工同步。
@@ -16,6 +16,7 @@
 import fs from 'node:fs';
 import nodePath from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compareCategories } from './categories.mjs';
 
 const __dirname = nodePath.dirname(fileURLToPath(import.meta.url));
 const UI_SRC = nodePath.resolve(__dirname, '../../ui/src');
@@ -158,7 +159,9 @@ function renderOverview(components) {
     `<div class="component-count">共 ${components.length} 个组件</div>`,
     '',
   ];
-  for (const [cat, list] of byCat) {
+  const cats = [...byCat.keys()].sort(compareCategories);
+  for (const cat of cats) {
+    const list = byCat.get(cat);
     lines.push(`## ${cat}`, '');
     for (const c of list) {
       lines.push(`- [${c.title}${c.subtitle ? ` ${c.subtitle}` : ''}](./${c.name})`);
@@ -181,9 +184,6 @@ for (const c of components) {
 }
 // ⚠️ 必须是 overview.md：nav/侧边栏链接 /components/overview，
 //    写成 index.md 会变成 /components/（链接 404）。
-fs.writeFileSync(
-  nodePath.join(OUT_DIR, 'overview.md'),
-  renderOverview(components),
-);
+fs.writeFileSync(nodePath.join(OUT_DIR, 'overview.md'), renderOverview(components));
 
 console.log(`[gen-component-pages] ${components.length} 组件页 + 1 总览页 → components/`);

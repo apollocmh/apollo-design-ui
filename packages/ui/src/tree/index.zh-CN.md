@@ -1,4 +1,5 @@
 ---
+category: 数据展示
 title: Tree 树形控件
 titleTemplate: '%s - @apollo-design/ui'
 description: 文件夹、组织架构、生物分类、国家地区等，万物皆为树。

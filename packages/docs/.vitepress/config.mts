@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import nodePath from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitepress';
+import { compareCategories } from '../scripts/categories.mjs';
 
 const __dirname = nodePath.dirname(fileURLToPath(import.meta.url));
 const UI_SRC = nodePath.resolve(__dirname, '../../ui/src');
@@ -34,10 +35,12 @@ function collectNav() {
       // 🚨 必须带 link：缺 link 的条目会被渲染成空分组标题（不可点击跳转）
       .push({ text: `${title}${subtitle ? ` ${subtitle}` : ''}`, link: `/components/${e.name}` });
   }
-  return [...categories.entries()].map(([text, items]) => ({
-    text,
-    items: items.sort((a, b) => a.text.localeCompare(b.text)),
-  }));
+  return [...categories.entries()]
+    .sort(([a], [b]) => compareCategories(a, b))
+    .map(([text, items]) => ({
+      text,
+      items: items.sort((a, b) => a.text.localeCompare(b.text)),
+    }));
 }
 
 const componentGroups = collectNav();

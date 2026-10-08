@@ -1,4 +1,5 @@
 ---
+category: 数据录入
 title: Form 表单
 titleTemplate: '%s - @apollo-design/ui'
 description: 数据采集与校验，支持输入、选择、嵌套与列表字段。

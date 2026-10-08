@@ -1,4 +1,5 @@
 ---
+category: 数据录入
 title: Segmented 分段控制器
 titleTemplate: '%s - @apollo-design/ui'
 description: 用于展示多个选项并允许用户选择其中单个选项。

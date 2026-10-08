@@ -1,4 +1,5 @@
 ---
+category: 数据录入
 title: Slider 滑动输入条
 titleTemplate: '%s - @apollo-design/ui'
 description: 滑动型输入器，展示当前值和可选范围。

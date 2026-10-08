@@ -1,5 +1,5 @@
 ---
-category: 反馈
+category: 数据展示
 title: BorderBeam
 subtitle: 边框流光
 ---

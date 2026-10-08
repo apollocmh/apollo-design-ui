@@ -1,4 +1,5 @@
 ---
+category: 数据录入
 title: Transfer 穿梭框
 titleTemplate: '%s - @apollo-design/ui'
 description: 双栏穿梭选择框，用于在两组数据之间移动条目。

@@ -1,4 +1,5 @@
 ---
+category: 导航
 title: Tabs 标签页
 titleTemplate: '%s - @apollo-design/ui'
 description: 选项卡切换组件，提供平级区域的内容切换能力。

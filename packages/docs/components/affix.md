@@ -1,5 +1,5 @@
 ---
-title: 其他 固钉
+title: Affix 固钉
 outline: [2, 3]
 ---
 

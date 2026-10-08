@@ -1,4 +1,5 @@
 ---
+category: 数据录入
 title: TreeSelect 树选择
 titleTemplate: '%s - @apollo-design/ui'
 description: 弹层内的树形结构，用于多层数据的选择。
