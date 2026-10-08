@@ -54,7 +54,57 @@ export default defineConfig({
   description: 'Vue 3 原生实现的 Ant Design 兼容组件库',
   base: BASE,
   ignoreDeadLinks: true,
-  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: `${BASE}logo.svg` }]],
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${BASE}logo.svg` }],
+    ['link', { rel: 'alternate icon', type: 'image/x-icon', href: `${BASE}favicon.ico` }],
+  ],
+
+  // 🚨 浏览器的 favicon 兜底请求打在 **origin 根**（/favicon.ico），而项目站
+  //    一切资源都挂在 base 子路径下 ⇒ 每页一个 404 console error。
+  //    dev 侧用 middleware 重写到 base 路径；生产侧在 buildEnd 把
+  //    public/favicon.ico 复制到 dist 根（GitHub Pages 同样吃这条 404）。
+  vite: {
+    // 🚨 依赖预构建「首访税」：demo 按需 import dayjs 插件/locale 等，vite 默认只扫
+    //    index.html 入口 ⇒ 巡检/首访到某页才发现新依赖 → 重新预构建 → 整页 reload，
+    //    在飞的动态导入全部中断（假阴性 + 白屏闪）。把 entries 指向全部 demo 源文件，
+    //    启动时一次性收集依赖。
+    optimizeDeps: {
+      // ⚠️ entries 相对 **vite root**（packages/docs）解析 —— 不是 .vitepress！
+      //    写 ../../ui/src 会指到仓库根下的 ui/src（不存在）⇒ 扫描零文件静默失效。
+      entries: ['../ui/src/*/demo/*.vue', '../ui/src/*/*/demo/*.vue'],
+      // 🚨 ui 的 dist barrel 运行时才 import 这些（entries 扫不到）——显式列全，
+      //    缺一个就会在首访对应组件页时触发重新预构建 + 整页 reload。
+      include: [
+        'dayjs',
+        'dayjs/plugin/advancedFormat.js',
+        'dayjs/plugin/customParseFormat.js',
+        // ⚠️ calendar/demo/customize-header.vue 用的是**无 .js** 说明符，
+        //    dist barrel 用的是带 .js —— vite 视为两个 dep id，两个都要列。
+        'dayjs/plugin/localeData',
+        'dayjs/plugin/localeData.js',
+        'dayjs/plugin/weekOfYear.js',
+        'dayjs/plugin/weekYear.js',
+        'dayjs/plugin/weekday.js',
+        'scroll-into-view-if-needed',
+      ],
+    },
+    plugins: [
+      {
+        name: 'docs-favicon-fallback',
+        configureServer(server) {
+          server.middlewares.use((req, _res, next) => {
+            if (req.url === '/favicon.ico') req.url = `${BASE}favicon.ico`;
+            next();
+          });
+        },
+      },
+    ],
+  },
+
+  buildEnd({ outDir }) {
+    const src = nodePath.resolve(__dirname, '../public/favicon.ico');
+    if (fs.existsSync(src)) fs.copyFileSync(src, nodePath.join(outDir, 'favicon.ico'));
+  },
 
   themeConfig: {
     siteTitle: 'Apollo Design',

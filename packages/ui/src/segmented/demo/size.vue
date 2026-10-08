@@ -4,7 +4,8 @@ import { Segmented } from '@apollo-design/ui';
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 8px">
+  <!-- 🚨 flex 列容器的 align-items 默认 stretch，会把 inline-block 子项拉满宽 -->
+  <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px">
     <Segmented size="large" :options="['Daily', 'Weekly', 'Monthly']" />
     <Segmented :options="['Daily', 'Weekly', 'Monthly']" />
     <Segmented size="small" :options="['Daily', 'Weekly', 'Monthly']" />

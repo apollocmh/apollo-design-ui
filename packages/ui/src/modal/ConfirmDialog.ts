@@ -347,71 +347,80 @@ const ConfirmDialog = defineComponent({
     const mergedZIndex = computed(() => props.zIndex ?? confirmMaxZIndex());
 
     return () =>
-      h(Modal, {
-        ...(omit(attrs as Record<string, unknown>, ['bodyStyle', 'maskStyle']) as Record<
-          string,
-          unknown
-        >),
-        prefixCls: props.prefixCls,
-        open: props.open,
-        // Modal 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
-        class: classString.value,
-        wrapClassName:
-          [props.centered ? `${confirmPrefixCls.value}-centered` : undefined, props.wrapClassName]
-            .filter(Boolean)
-            .join(' ') || undefined,
-        onCancel: () => {
-          props.close?.({ triggerCancel: true });
-          props.onConfirm?.(false);
-        },
-        title: props.title,
-        footer: null,
-        transitionName: props.transitionName,
-        maskTransitionName: props.maskTransitionName,
-        mask: mergedMask.value as unknown as MaskType,
-        style: style.value,
-        styles: semanticStyles.value as ModalSemanticType['styles'],
-        width: width.value,
-        zIndex: mergedZIndex.value,
-        closable: props.closable,
-        keyboard: props.keyboard,
-        getContainer: props.getContainer,
-        centered: props.centered,
-        _semanticOmit: CONFIRM_OMIT_SEMANTIC_NAMES,
-        _renderSemanticContent: ({
-          classNames: mergedClassNames,
-          styles: mergedStyles,
-        }: {
-          classNames: ModalSemanticType['classNames'];
-          styles: ModalSemanticType['styles'];
-        }) =>
-          h(ConfirmContent, {
-            ...(attrs as Record<string, unknown>),
-            prefixCls: props.prefixCls,
-            confirmPrefixCls: confirmPrefixCls.value,
-            rootPrefixCls: props.rootPrefixCls,
-            type: props.type,
-            icon: props.icon,
-            okCancel: props.okCancel,
-            okText: props.okText,
-            cancelText: props.cancelText,
-            okType: props.okType,
-            footer: props.footer,
-            title: props.title,
-            content: props.content,
-            autoFocusButton: props.autoFocusButton,
-            focusable: props.focusable,
-            close: props.close,
-            onConfirm: props.onConfirm,
-            onOk: props.onOk,
-            onCancel: props.onCancel,
-            isSilent: props.isSilent,
-            okButtonProps: { ...config.okButtonProps, ...props.okButtonProps },
-            cancelButtonProps: { ...config.cancelButtonProps, ...props.cancelButtonProps },
-            contentClassName: mergedClassNames?.body,
-            contentStyle: mergedStyles?.body,
-          } as never),
-      } as never);
+      h(
+        Modal,
+        // props 整体 `as never`：Modal 的 props 类型不含 confirm 注入的内部键
+        //（_semanticOmit/_renderSemanticContent 等），三参 h() 的重载推断会失败。
+        {
+          ...(omit(attrs as Record<string, unknown>, ['bodyStyle', 'maskStyle']) as Record<
+            string,
+            unknown
+          >),
+          prefixCls: props.prefixCls,
+          open: props.open,
+          // Modal 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+          class: classString.value,
+          wrapClassName:
+            [props.centered ? `${confirmPrefixCls.value}-centered` : undefined, props.wrapClassName]
+              .filter(Boolean)
+              .join(' ') || undefined,
+          onCancel: () => {
+            props.close?.({ triggerCancel: true });
+            props.onConfirm?.(false);
+          },
+          title: props.title,
+          transitionName: props.transitionName,
+          maskTransitionName: props.maskTransitionName,
+          mask: mergedMask.value as unknown as MaskType,
+          style: style.value,
+          styles: semanticStyles.value as ModalSemanticType['styles'],
+          width: width.value,
+          zIndex: mergedZIndex.value,
+          closable: props.closable,
+          keyboard: props.keyboard,
+          getContainer: props.getContainer,
+          centered: props.centered,
+          _semanticOmit: CONFIRM_OMIT_SEMANTIC_NAMES,
+          _renderSemanticContent: ({
+            classNames: mergedClassNames,
+            styles: mergedStyles,
+          }: {
+            classNames: ModalSemanticType['classNames'];
+            styles: ModalSemanticType['styles'];
+          }) =>
+            h(ConfirmContent, {
+              ...(attrs as Record<string, unknown>),
+              prefixCls: props.prefixCls,
+              confirmPrefixCls: confirmPrefixCls.value,
+              rootPrefixCls: props.rootPrefixCls,
+              type: props.type,
+              icon: props.icon,
+              okCancel: props.okCancel,
+              okText: props.okText,
+              cancelText: props.cancelText,
+              okType: props.okType,
+              footer: props.footer,
+              title: props.title,
+              content: props.content,
+              autoFocusButton: props.autoFocusButton,
+              focusable: props.focusable,
+              close: props.close,
+              onConfirm: props.onConfirm,
+              onOk: props.onOk,
+              onCancel: props.onCancel,
+              isSilent: props.isSilent,
+              okButtonProps: { ...config.okButtonProps, ...props.okButtonProps },
+              cancelButtonProps: { ...config.cancelButtonProps, ...props.cancelButtonProps },
+              contentClassName: mergedClassNames?.body,
+              contentStyle: mergedStyles?.body,
+            } as never),
+        } as never,
+        // 🚨 footer 必须走 **slot** 关闭（C8-R2：Modal 的 footer ReactNode prop 已删除，
+        // 传 `footer: null` prop 只是无效 attrs）。空 slot ⇒ readSlot 归一为 null
+        // ⇒ Modal 不渲染默认 footer —— 确认框的按钮由 ConfirmContent 自绘。
+        // 漏了这条会让 Modal 默认 footer 与 ConfirmContent 的按钮**同屏两份**。
+        { footer: () => null },
+      );
   },
 });
 

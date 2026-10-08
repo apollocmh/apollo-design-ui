@@ -11,3 +11,73 @@
 .demo-preview-canvas {
   background: var(--vp-c-bg);
 }
+
+/*
+ * ═══ Demo 画布样式隔离 ═══
+ *
+ * 组件 demo 渲染在 `.vp-doc` 内，VitePress 的文档排版规则（链接下划线、
+ * 表格 display:block/斑马纹/单元格边框、段落 margin 等）会渗进画布，
+ * 把组件 demo 的视觉打乱（pagination 下划线、table 变形、tag 无间距等）。
+ *
+ * 修法：下面这批 reset 用 `:where(.vp-doc)` 包裹 —— 特异性与 vp-doc
+ * 的元素规则**同级 (0,1,1)**，靠加载顺序取胜：
+ *   tokens.css → ui/style.css → DefaultTheme → custom.css（本文件）
+ * 即本文件赢默认主题；而 demo 组件样式是异步 chunk 注入、晚于本文件，
+ * 组件自身的语义样式（如 breadcrumb 链接色、Typography 下划线）在平手时
+ * 反过来赢本 reset —— 两边都不误伤。
+ * 🚨 因此不要把这些选择器改成更高特异性（会压过组件自身的 (0,1,1) 规则）。
+ */
+
+:where(.vp-doc) .demo-preview-canvas a {
+  text-decoration: none;
+  font-weight: inherit;
+}
+
+:where(.vp-doc) .demo-preview-canvas a:hover {
+  text-decoration: none;
+}
+
+:where(.vp-doc) .demo-preview-canvas p {
+  margin: 0;
+}
+
+:where(.vp-doc) .demo-preview-canvas ul,
+:where(.vp-doc) .demo-preview-canvas ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.vp-doc) .demo-preview-canvas table {
+  display: table;
+  margin: 0;
+  overflow: visible;
+}
+
+:where(.vp-doc) .demo-preview-canvas tr {
+  background-color: transparent;
+  border-top: 0;
+  transition: none;
+}
+
+:where(.vp-doc) .demo-preview-canvas tr:nth-child(2n) {
+  background-color: transparent;
+}
+
+:where(.vp-doc) .demo-preview-canvas th,
+:where(.vp-doc) .demo-preview-canvas td {
+  border: 0;
+  padding: 0;
+}
+
+:where(.vp-doc) .demo-preview-canvas th {
+  text-align: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  color: inherit;
+  background-color: transparent;
+}
+
+:where(.vp-doc) .demo-preview-canvas td {
+  font-size: inherit;
+}
