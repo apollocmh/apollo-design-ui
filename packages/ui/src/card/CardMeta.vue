@@ -23,7 +23,7 @@
  */
 
 import { isRenderable } from '@apollo-design/utils';
-import { computed, mergeProps, ref, useAttrs, type VNodeChild, watchEffect } from 'vue';
+import { computed, mergeProps, ref, useAttrs, useSlots, type VNodeChild, watchEffect } from 'vue';
 // ⚠️ `NodeRenderer` 是**平台原语**（`.vue` 模板没有「渲染一个 VNode 变量」的语法），
 // 目前住在 `empty/components/`。`button` / `result` 也这样 import —— 详见 README §5 的
 // 「应上移到 `_internal/`」债务登记。
@@ -123,9 +123,10 @@ const sectionClassNames = computed(() => [
 // 三个真值判据
 // ---------------------------------------------------------------------------
 
-const hasAvatar = computed(() => isRenderable(props.avatar));
-const hasTitle = computed(() => isRenderable(props.title));
-const hasDescription = computed(() => isRenderable(props.description));
+const slots = useSlots();
+const hasAvatar = computed(() => isRenderable(props.avatar) || !!slots.avatar);
+const hasTitle = computed(() => isRenderable(props.title) || !!slots.title);
+const hasDescription = computed(() => isRenderable(props.description) || !!slots.description);
 /** `titleDom || descriptionDom` ⇒ 有 section。 */
 const hasSection = computed(() => hasTitle.value || hasDescription.value);
 
@@ -139,7 +140,7 @@ defineExpose({ nativeElement: rootRef });
 <template>
   <div ref="rootRef" :class="rootClassNames" v-bind="rootAttrs">
     <div v-if="hasAvatar" :class="avatarClassNames" v-bind="styleAttrs(mergedStyles.avatar)">
-      <NodeRenderer :node="props.avatar" />
+      <slot name="avatar"><NodeRenderer :node="props.avatar" /></slot>
     </div>
     <div v-if="hasSection" :class="sectionClassNames" v-bind="styleAttrs(mergedStyles.section)">
       <div
@@ -147,14 +148,14 @@ defineExpose({ nativeElement: rootRef });
         :class="titleClassNames"
         v-bind="styleAttrs(mergedStyles.title)"
       >
-        <NodeRenderer :node="props.title" />
+        <slot name="title"><NodeRenderer :node="props.title" /></slot>
       </div>
       <div
         v-if="hasDescription"
         :class="descriptionClassNames"
         v-bind="styleAttrs(mergedStyles.description)"
       >
-        <NodeRenderer :node="props.description" />
+        <slot name="description"><NodeRenderer :node="props.description" /></slot>
       </div>
     </div>
   </div>

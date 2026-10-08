@@ -84,6 +84,40 @@ Vue:   SPAN.apollo-icon.apollo-icon-down → SPAN → BUTTON.apollo-btn    多�
 **处置**：已登记为开放决策 **`button-children-wrapper`**（3 个选项，推荐 A「与 antd 结构对齐」）。
 `node registry/tools/ask.mjs decision button-children-wrapper` 看全文。需用户裁决后再动 Button。
 
+### §1.2 VNodeChild props 的插槽支持缺口（2026-10-08 登记 · 分批推进中）
+
+**背景**：React 语义里 `React.ReactNode` prop 在 Vue 惯例下应支持**插槽**（slot 优先、
+prop 兜底）。全站审计（脚本 `.workbuddy-ai/memory/audit-vnode-props.cjs`，
+重新生成：`node .workbuddy-ai/memory/audit-vnode-props.cjs`）：
+
+- VNodeChild 类型 props 共 **190** 处；组件已支持同名插槽的仅 **36** 处；缺失 **154**。
+- 其中**组件顶层 Props 类**约 164（该补插槽）；**数据面字段**（items[].label /
+  TableLocale 文案 / ColumnType 等）56 处为**合法保留**——数据驱动配置无法用插槽
+  （antd-vue 同样保持 VNode/渲染函数）。
+- **@deprecated 标注的**（如 `addonBefore/addonAfter` → `Space.Compact`）不补。
+
+**判据模板**（已落地组件的统一模式，抄它们）：
+- `.vue` 模板：`<slot name="x"><NodeRenderer :node="props.x" /></slot>`，
+  条件渲染判据同步加 `|| slots.x`（`hasX` computed 或模板 v-if）。
+- 渲染函数组件：`slots.x?.() ?? props.x`。
+- ⚠️ `NodeRenderer` 在 `packages/ui/src/_internal/node-renderer.ts`（全库唯一平台原语）。
+
+**已落地**（2026-10-08）：`input`（prefix/suffix）、`card`（title/extra/cover +
+CardMeta 的 avatar/title/description）、`empty`（description）、`spin`（description）、
+`date-picker`（range demo 顺带）。测试：card/empty/spin 304/304、input/date-picker/segmented 484/484。
+
+**待推进**（按用户可见频率排序，每批 3-5 个组件）：
+`badge`（count/text —— ⚠️ 牵涉 ScrollNumber 离场动画缓存链，动前先读
+Badge.vue 的 livingCount/displayCount 判据）、`descriptions`、`steps`、`tabs`、
+`timeline`、`collapse`、`breadcrumb`、`list`、`alert`（状态图标）、`image`（操作图标）、
+`input-number`（prefix/suffix/upIcon/downIcon）、`transfer`、`mentions`、`drawer`、
+`typography`、`switch`（checkedChildren/unCheckedChildren）、`pagination`。
+数据面/合法保留不补：`menu`/`tabs.children`/`mentions.children` 等 items 配置字段、
+`table` 的 locale 文案、`form` 的 errors/warnings（内部契约）、`modal`（C8-R2 slot-only
+已裁决，confirm 场景的 content prop 合法）、`avatar.src`（URL 语义）、`layout.trigger`、
+`tree.checkable`（布尔语义）、`pagination.showQuickJumper`。
+
+
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |

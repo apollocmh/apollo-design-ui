@@ -196,7 +196,7 @@ const mergedDescription = computed<VNodeChild>(() => props.description ?? props.
  * ⚠️ 因此 `description={0}` 在 React 侧会渲染出裸文本 `0`（`0 && <div/>` → `0`），
  *    而我们渲染空 —— 这是上游的一个 quirk，登记在 README §7，**不**复刻。
  */
-const hasDescription = computed(() => !!mergedDescription.value);
+const hasDescription = computed(() => !!mergedDescription.value || !!slots.description);
 
 // ---------------------------------------------------------------------------
 // 指示器：indicator > ConfigProvider > setDefaultIndicator
@@ -396,8 +396,12 @@ defineExpose({ nativeElement: rootRef });
           :class-name="indicatorClass"
           :style="mergedStyles.indicator"
         />
-        <div v-if="hasDescription" :class="descriptionClass" v-bind="descriptionStyleAttrs">
-          <NodeRenderer :node="mergedDescription" />
+        <div
+          v-if="hasDescription || slots.description"
+          :class="descriptionClass"
+          v-bind="descriptionStyleAttrs"
+        >
+          <slot name="description"><NodeRenderer :node="mergedDescription" /></slot>
         </div>
       </div>
       <template v-else>
@@ -408,8 +412,12 @@ defineExpose({ nativeElement: rootRef });
           :class-name="indicatorClass"
           :style="mergedStyles.indicator"
         />
-        <div v-if="hasDescription" :class="descriptionClass" v-bind="descriptionStyleAttrs">
-          <NodeRenderer :node="mergedDescription" />
+        <div
+          v-if="hasDescription || slots.description"
+          :class="descriptionClass"
+          v-bind="descriptionStyleAttrs"
+        >
+          <slot name="description"><NodeRenderer :node="mergedDescription" /></slot>
         </div>
       </template>
     </template>

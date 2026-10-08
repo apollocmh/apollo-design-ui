@@ -314,7 +314,12 @@ function handleTabChange(key: string): void {
 
 /** head 判据：`isRenderable(title) || isRenderable(extra) || tabs`。 */
 const hasHead = computed(
-  () => isRenderable(props.title) || isRenderable(props.extra) || hasTabs.value,
+  () =>
+    isRenderable(props.title) ||
+    isRenderable(props.extra) ||
+    !!slots.title ||
+    !!slots.extra ||
+    hasTabs.value,
 );
 
 // ---------------------------------------------------------------------------
@@ -391,18 +396,18 @@ defineExpose({ nativeElement: rootRef });
     <div v-if="hasHead" :class="headClass" v-bind="styleAttrs(mergedHeadStyle)">
       <div :class="`${prefixCls}-head-wrapper`">
         <div
-          v-if="isRenderable(props.title)"
+          v-if="isRenderable(props.title) || slots.title"
           :class="titleClass"
           v-bind="styleAttrs(mergedStyles.title)"
         >
-          <NodeRenderer :node="props.title" />
+          <slot name="title"><NodeRenderer :node="props.title" /></slot>
         </div>
         <div
-          v-if="isRenderable(props.extra)"
+          v-if="isRenderable(props.extra) || slots.extra"
           :class="extraClass"
           v-bind="styleAttrs(mergedStyles.extra)"
         >
-          <NodeRenderer :node="props.extra" />
+          <slot name="extra"><NodeRenderer :node="props.extra" /></slot>
         </div>
       </div>
       <Tabs
@@ -416,8 +421,12 @@ defineExpose({ nativeElement: rootRef });
     </div>
 
     <!-- cover -->
-    <div v-if="isRenderable(props.cover)" :class="coverClass" v-bind="styleAttrs(mergedStyles.cover)">
-      <NodeRenderer :node="props.cover" />
+    <div
+      v-if="isRenderable(props.cover) || slots.cover"
+      :class="coverClass"
+      v-bind="styleAttrs(mergedStyles.cover)"
+    >
+      <slot name="cover"><NodeRenderer :node="props.cover" /></slot>
     </div>
 
     <!-- body：loading 走 Skeleton（`children` 不传 —— 上游那个 Skeleton 的 loading 写死为 true） -->

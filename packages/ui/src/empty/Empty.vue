@@ -197,8 +197,8 @@ defineExpose({ nativeElement: rootRef });
     <div :class="imageClass" v-bind="imageStyleAttrs">
       <ImageNode :node="mergedImage" :alt="alt" />
     </div>
-    <div v-if="showDescription" :class="descriptionClass" v-bind="descriptionStyleAttrs">
-      <NodeRenderer :node="des" />
+    <div v-if="showDescription || slots.description" :class="descriptionClass" v-bind="descriptionStyleAttrs">
+      <slot name="description"><NodeRenderer :node="des" /></slot>
     </div>
     <div v-if="showFooter" :class="footerClass" v-bind="footerStyleAttrs">
       <slot />
