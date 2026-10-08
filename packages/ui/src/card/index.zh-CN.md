@@ -38,9 +38,9 @@ subtitle: 卡片
 
 | 参数 | 说明 | 类型 | 默认值 | 全局配置 |
 |---|---|---|---|---|
-| title | 卡片标题 | `VNodeChild` | — | × |
-| extra | 右上角操作区 | `VNodeChild` | — | × |
-| cover | 封面 | `VNodeChild` | — | × |
+| title | 卡片标题；**支持插槽 `#title`**（插槽优先） | `VNodeChild` | — | × |
+| extra | 右上角操作区；**支持插槽 `#extra`** | `VNodeChild` | — | × |
+| cover | 封面；**支持插槽 `#cover`** | `VNodeChild` | — | × |
 | actions | 操作区（每项包一层 `<li><span>`，宽度均分） | `VNodeChild[]` | — | × |
 | loading | 加载中（内容替换成 `Skeleton`） | `boolean` | `false` | × |
 | hoverable | 悬浮时显示阴影与手型光标 | `boolean` | `false` | × |
@@ -82,9 +82,9 @@ subtitle: 卡片
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| avatar | 头像 | `VNodeChild` | — |
-| title | 标题 | `VNodeChild` | — |
-| description | 描述 | `VNodeChild` | — |
+| avatar | 头像；**支持插槽 `#avatar`** | `VNodeChild` | — |
+| title | 标题；**支持插槽 `#title`** | `VNodeChild` | — |
+| description | 描述；**支持插槽 `#description`** | `VNodeChild` | — |
 | classNames | 语义化类名（`root` / `section` / `avatar` / `title` / `description`） | `CardMetaSemanticClassNames \| ((info) => …)` | — |
 | styles | 语义化样式（同上五个槽） | `CardMetaSemanticStyles \| ((info) => …)` | — |
 | prefixCls | 类名前缀（**card 的前缀**：传 `x` ⇒ `x-meta`） | `string` | 兜底 `apollo-card` |

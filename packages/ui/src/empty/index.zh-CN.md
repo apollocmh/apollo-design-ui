@@ -26,7 +26,7 @@ subtitle: 空状态
 | style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
 | image | 自定义插画。字符串时渲染成 `<img draggable="false">` | `VNodeChild \| Component` | `PRESENTED_IMAGE_DEFAULT` |
 | imageStyle | ⚠️ 已废弃，请用 `styles.image`。与 `styles.image` 合并，后者覆盖前者 | `CSSProperties` | — |
-| description | 描述文案。`false` 表示不渲染描述块 | `VNodeChild` | locale 的 `Empty.description`（`en_US` 是 `No data`） |
+| description | 描述文案。`false` 表示不渲染描述块；**支持插槽 `#description`** | `VNodeChild` | locale 的 `Empty.description`（`en_US` 是 `No data`） |
 | classNames | 语义化类名 | `EmptySemanticClassNames \| ((info: { props }) => EmptySemanticClassNames)` | — |
 | styles | 语义化样式 | `EmptySemanticStyles \| ((info: { props }) => EmptySemanticStyles)` | — |
 
