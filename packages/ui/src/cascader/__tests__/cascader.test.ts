@@ -60,8 +60,12 @@ describe('Cascader · 薄壳组装', () => {
     w.unmount();
   });
 
-  it('点击触发 ⇒ 打开（openOnTriggerClick）；popup 类名链', async () => {
+  it('mousedown 触发 ⇒ 打开（与 Select 同款，openOnTriggerClick 已移除 —— 它会让 mousedown 开、click 又关，见 KNOWN-ISSUES 调试记录）；popup 类名链', async () => {
     const w = mountCascader();
+    await w.find('.apollo-cascader').trigger('mousedown');
+    await nextTick();
+    expect(menus().length).toBe(1);
+    // 同一交互的 click 不应把它关掉（双触发回归哨兵）
     await w.find('.apollo-cascader').trigger('click');
     await nextTick();
     expect(menus().length).toBe(1);

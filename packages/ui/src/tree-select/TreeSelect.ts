@@ -747,7 +747,6 @@ const TreeSelect = defineComponent({
           onInputKeyDown: (event: KeyboardEvent) => {
             optionListRef.value?.onKeyDown(event);
           },
-          openOnTriggerClick: true,
           optionListRenderer: () =>
             h(OptionList, {
               ref: optionListRef as never,

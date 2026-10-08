@@ -85,7 +85,11 @@ const props = withDefaults(defineProps<SpinProps>(), {
 
 const slots = useSlots();
 const attrs = useAttrs();
-defineSlots<{ default?: () => VNodeChild; indicator?: () => VNodeChild; description?: () => VNodeChild }>();
+defineSlots<{
+  default?: () => VNodeChild;
+  indicator?: () => VNodeChild;
+  description?: () => VNodeChild;
+}>();
 
 const {
   getPrefixCls,
