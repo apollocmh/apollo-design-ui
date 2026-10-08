@@ -53,7 +53,12 @@ const props = withDefaults(defineProps<CardMetaProps>(), {
 const attrs = useAttrs();
 
 /** 默认插槽 = 上游的 `children`（规则 C19）。 */
-defineSlots<{ default?: () => VNodeChild }>();
+defineSlots<{
+  default?: () => VNodeChild;
+  avatar?: () => VNodeChild;
+  title?: () => VNodeChild;
+  description?: () => VNodeChild;
+}>();
 
 const {
   getPrefixCls,

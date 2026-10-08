@@ -121,7 +121,12 @@ const attrs = useAttrs();
 const slots = useSlots();
 
 /** 默认插槽 = 上游的 `children`（规则 C19）。 */
-defineSlots<{ default?: () => VNodeChild }>();
+defineSlots<{
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+  extra?: () => VNodeChild;
+  cover?: () => VNodeChild;
+}>();
 
 const {
   getPrefixCls,

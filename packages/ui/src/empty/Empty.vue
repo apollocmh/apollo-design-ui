@@ -60,7 +60,10 @@ const props = withDefaults(defineProps<EmptyProps>(), {
 });
 const slots = useSlots();
 const attrs = useAttrs();
-defineSlots<{ default?: () => VNodeChild }>();
+defineSlots<{
+  default?: () => VNodeChild;
+  description?: () => VNodeChild;
+}>();
 
 const {
   getPrefixCls,
