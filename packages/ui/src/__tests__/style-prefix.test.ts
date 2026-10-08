@@ -212,4 +212,15 @@ describe('样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择�
     const stale = Object.keys(HARDCODED_ANT_IN_DEFAULT).filter((n) => !actual.includes(n));
     expect(stale, `已修好但仍登记在 HARDCODED_ANT_IN_DEFAULT: ${stale.join(', ')}`).toEqual([]);
   });
+
+  it('全组件 CSS 不得引用 cssinjs 开发态占位动画名（U-KEYFRAMES，2026-10-08）', () => {
+    // `css-dev-only-do-not-override-…` 是 cssinjs **运行时**注入时才有的哈希壳：
+    // 静态 CSS 里照抄它 ⇒ `@keyframes` 永远对不上 ⇒ 动画不跑、`animationend`
+    // 不触发、motion 类名卡死在 appear/enter 态（dom-probe upload/basic 实测）。
+    // 已修：upload(fade/inline) / tabs / date-picker(slide) / tree(node-fx)。
+    const offenders = COMPONENT_STYLES.filter((entry) =>
+      entry.gen(DEFAULT_PREFIX).includes('css-dev-only-do-not-override'),
+    ).map((entry) => entry.name);
+    expect(offenders, `仍在引用占位动画名的组件: ${offenders.join(', ')}`).toEqual([]);
+  });
 });

@@ -13,8 +13,17 @@
  */
 
 import { CloseOutlined } from '@apollo-design/icons';
-import { isNonNullable, isPlainObject, mergeProps } from '@apollo-design/utils';
-import { type ComputedRef, computed, h, type MaybeRefOrGetter, toValue } from 'vue';
+import { isNonNullable, isPlainObject, mergeProps, pickAttrs } from '@apollo-design/utils';
+import {
+  type ComputedRef,
+  cloneVNode,
+  computed,
+  h,
+  isVNode,
+  type MaybeRefOrGetter,
+  toValue,
+  type VNode,
+} from 'vue';
 
 /** `closable` 支持布尔或配置对象（antd 的 ClosableType）。 */
 export interface ClosableConfig {
@@ -106,10 +115,11 @@ function mergeClosableConfigs(
 /**
  * 纯函数版 computeClosable（antd 逐字）。
  *
- * 与 antd 的差异（PLATFORM）：antd 在 hook 里合并 locale 的 closeLabel 并对
- * 自定义 closeIcon vnode 做 cloneElement 注入 aria-label —— vnode 的注入需要
- * 组件侧的类名上下文，由 Tag 的 closeIconRender 闭包完成；本函数只负责
- * 「配置合并 + fallback 图标 + 非 vnode 值的兜底包 span」。
+ * vnode 的 aria 注入（antd 的 `cloneElement(icon, { 'aria-label': closeLabel, ... })`）
+ * 用 Vue 的 `cloneVNode` 等价实现 —— 不需要组件上下文。
+ * ⚠️ 2026-10-08 修正：此前注释声称「注入需要组件侧闭包、本函数做不到」是**错误结论**
+ *    （notification 的 D98 早就用 cloneVNode 做了同一件事）。漏掉它导致 modal 的
+ *    `-close-x` span 比 antd 少一个 `aria-label=Close`（dom-probe modal/basic 实测）。
  */
 export function computeClosable(
   propCloseCollection: ClosableCollection | undefined,
@@ -138,16 +148,29 @@ export function computeClosable(
   const mergedConfig = merged as ClosableConfig;
   const closeLabel = fallbackCloseCollection.closeLabel ?? 'Close';
   const { closeIconRender } = fallbackCloseCollection;
-  const { closeIcon: _ignored, ...ariaOrDataProps } = mergedConfig;
+  const { closeIcon: _ignored, ...restConfig } = mergedConfig;
   void _ignored;
+  // antd 逐字：`ariaOrDataProps = pickAttrs(restConfig, true)` —— 只留 aria/data，
+  // `closable` / `closeIconRender` 这类配置键不能漏到 DOM 上。
+  const ariaOrDataProps = pickAttrs(restConfig, true);
   let finalCloseIcon: unknown = mergedConfig.closeIcon;
 
   if (isNonNullable(finalCloseIcon)) {
     if (closeIconRender) {
       finalCloseIcon = closeIconRender(finalCloseIcon);
     }
-    // 非 vnode 的原始值（字符串等）兜底包 span（antd 的 createElement 分支）
-    if (typeof finalCloseIcon !== 'object') {
+    if (isVNode(finalCloseIcon)) {
+      // antd 逐字：`cloneElement(finalCloseIcon, {
+      //   'aria-label': closeLabel, ...finalCloseIcon.props, ...ariaOrDataProps })`
+      // —— 优先级：closable 对象里的 aria > 图标自身 props > locale 文案。
+      const vnode = finalCloseIcon as VNode;
+      finalCloseIcon = cloneVNode(vnode, {
+        'aria-label': closeLabel,
+        ...vnode.props,
+        ...ariaOrDataProps,
+      });
+    } else if (typeof finalCloseIcon !== 'object') {
+      // 非 vnode 的原始值（字符串等）兜底包 span（antd 的 createElement 分支）
       finalCloseIcon = h(
         'span',
         { 'aria-label': closeLabel, ...ariaOrDataProps },

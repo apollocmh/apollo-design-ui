@@ -206,17 +206,17 @@ const RULES = `
 
 .apollo-upload-wrapper .apollo-upload-animate-inline-appear,.apollo-upload-wrapper .apollo-upload-animate-inline-enter,.apollo-upload-wrapper .apollo-upload-animate-inline-leave{animation-duration:var(--apollo-motion-duration-slow);animation-timing-function:var(--apollo-motion-ease-in-out-circ);animation-fill-mode:forwards;}
 
-.apollo-upload-wrapper .apollo-upload-animate-inline-appear,.apollo-upload-wrapper .apollo-upload-animate-inline-enter{animation-name:css-dev-only-do-not-override-19u5a7b-uploadAnimateInlineIn;}
+.apollo-upload-wrapper .apollo-upload-animate-inline-appear,.apollo-upload-wrapper .apollo-upload-animate-inline-enter{animation-name:apollo-upload-animate-inline-in;}
 
-.apollo-upload-wrapper .apollo-upload-animate-inline-leave{animation-name:css-dev-only-do-not-override-19u5a7b-uploadAnimateInlineOut;}
+.apollo-upload-wrapper .apollo-upload-animate-inline-leave{animation-name:apollo-upload-animate-inline-out;}
 
 .apollo-upload-wrapper .apollo-fade-enter,.apollo-upload-wrapper .apollo-fade-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
 
 .apollo-upload-wrapper .apollo-fade-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
 
-.apollo-upload-wrapper .apollo-fade-enter.apollo-fade-enter-active,.apollo-upload-wrapper .apollo-fade-appear.apollo-fade-appear-active{animation-name:css-dev-only-do-not-override-19u5a7b-antFadeIn;animation-play-state:running;}
+.apollo-upload-wrapper .apollo-fade-enter.apollo-fade-enter-active,.apollo-upload-wrapper .apollo-fade-appear.apollo-fade-appear-active{animation-name:apollo-fade-in;animation-play-state:running;}
 
-.apollo-upload-wrapper .apollo-fade-leave.apollo-fade-leave-active{animation-name:css-dev-only-do-not-override-19u5a7b-antFadeOut;animation-play-state:running;pointer-events:none;}
+.apollo-upload-wrapper .apollo-fade-leave.apollo-fade-leave-active{animation-name:apollo-fade-out;animation-play-state:running;pointer-events:none;}
 
 .apollo-upload-rtl{direction:rtl;}
 
@@ -227,10 +227,27 @@ const RULES = `
 .apollo-upload .apollo-motion-collapse{overflow:hidden;transition:height var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out),opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out)!important;}
 `;
 
+/**
+ * 动画 keyframes（antd 的 `Keyframes('antFadeIn')` / `uploadAnimateInlineIn`，
+ * 体逐字取自 antd 产物）。
+ *
+ * 🚨 2026-10-08：此前 `animation-name` 直接照抄了 cssinjs **开发态占位名**
+ * `css-dev-only-do-not-override-…-antFadeIn`，而对应的 `@keyframes` 从未定义
+ * ⇒ 动画永远不跑、`animationend` 不触发，upload 列表进度条的 appear 态
+ * 类名**卡死**到 motionDeadline（dom-probe upload/basic 抓出）。
+ * 与 select/style「动画名稳定化」同判（U-KEYFRAMES 家族）。
+ */
+const KEYFRAMES = `
+@keyframes apollo-fade-in{0%{opacity:0;}100%{opacity:1;}}
+@keyframes apollo-fade-out{0%{opacity:1;}100%{opacity:0;}}
+@keyframes apollo-upload-animate-inline-in{from{width:0;height:0;padding:0;opacity:0;margin:calc(var(--apollo-margin-xs) / -2);}}
+@keyframes apollo-upload-animate-inline-out{to{width:0;height:0;padding:0;opacity:0;margin:calc(var(--apollo-margin-xs) / -2);}}`;
+
 /** Upload 家族样式。 */
 export function genUploadStyle(rootPrefixCls: string = 'apollo'): string {
   const decls = `.${rootPrefixCls}-upload-wrapper{${genTokenDecls(rootPrefixCls).join('')}}`;
-  return `${decls}
+  return `${KEYFRAMES}
+${decls}
 
 ${RULES}`;
 }

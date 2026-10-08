@@ -109,3 +109,17 @@ foundation **13/13**；组件 **72/72 completed**（全量封顶）。
   全是盲的 —— 两侧一致地错时像素差异恰好为 0（transfer 不传 `render` 的实测教训）。
 - **antd 6.6.4 `Transfer` 的 `defaultRender = () => null`** ⇒ 不传 `render` 列表项内容为空
   （`item.title` 只进原生 `title` 属性）。本仓 Vue 侧行为一致，是忠实移植不是 bug。
+
+## §9 判别式补充（2026-10-08 · DOM 探针轮）
+- 🚨 **U-KEYFRAMES 家族**：静态 CSS 里 `animation-name` 引用 cssinjs 开发态占位名
+  （`css-dev-only-do-not-override-…-antFadeIn` 等）⇒ `@keyframes` 对不上 ⇒ 动画不跑、
+  motion 类名**卡死在 appear 态**（L6 静态帧测不到）。已修 upload/tabs/date-picker/tree；
+  style-prefix 测试有全组件清零断言，新组件样式禁照抄占位名（用 select/style 的
+  「动画名稳定化 + keyframes 内联」模式）。
+- **useClosable 的 vnode 注入**：antd 对最终 closeIcon `cloneElement` 注入
+  `aria-label=closeLabel(locale.global.close)`；本仓 `computeClosable` 已用 cloneVNode
+  等价实现（优先级：closable 对象 aria > 图标自身 props > locale）。新消费者不用自己做。
+- **探针 buildAll 传绝对路径**：vite outDir 相对 `render/` 解析，相对路径产物写歪
+  ⇒ bundle 是旧的 ⇒ 探针结果全盘误导（判据：asset 文件名 hash 不变）。
+- **布尔/配置兜底 ≠ 图标兜底**：allowClear 兜底 `true` 会渲染空按钮；图标位兜底
+  必须给**真的图标 vnode**（CloseCircleFilled / CloseOutlined 同判）。

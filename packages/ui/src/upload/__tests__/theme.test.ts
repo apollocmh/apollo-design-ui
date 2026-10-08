@@ -54,6 +54,18 @@ describe('Upload · token 契约', () => {
   it('action 按钮色消费 actionsColor token', () => {
     expect(css).toContain('var(--apollo-upload-actions-color)');
   });
+
+  it('动画名稳定化（占位名会静默失配 ⇒ motion 卡死，2026-10-08）', () => {
+    // cssinjs 开发态占位名（`css-dev-only-do-not-override-…`）在静态 CSS 里
+    // 没有对应的 @keyframes ⇒ 动画不跑、animationend 不触发。
+    expect(css).not.toContain('css-dev-only-do-not-override');
+    expect(css).toContain('@keyframes apollo-fade-in');
+    expect(css).toContain('@keyframes apollo-fade-out');
+    expect(css).toContain('@keyframes apollo-upload-animate-inline-in');
+    expect(css).toContain('@keyframes apollo-upload-animate-inline-out');
+    expect(css).toContain('animation-name:apollo-fade-in');
+    expect(css).toContain('animation-name:apollo-upload-animate-inline-in');
+  });
 });
 
 describe('Upload · prepareComponentToken 判据', () => {

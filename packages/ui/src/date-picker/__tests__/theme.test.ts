@@ -557,6 +557,13 @@ describe('DatePicker · 前缀参数化（`gen(p)` 对每个前缀都要产出�
     expect(APOLLO.endsWith(DATE_PICKER_RULES)).toBe(true);
   });
 
+  it('动画名稳定化（cssinjs 占位名没有对应 @keyframes ⇒ 开合动画不跑，2026-10-08）', () => {
+    expect(APOLLO).not.toContain('css-dev-only-do-not-override');
+    expect(APOLLO).toContain('@keyframes apollo-slide-up-in');
+    expect(APOLLO).toContain('animation-name:apollo-slide-up-in');
+    expect(APOLLO).toContain('animation-name:apollo-slide-down-out');
+  });
+
   it('🚨 `genDatePickerRules("ant")`：类名**一个 `.apollo-` 都不剩**', () => {
     const rules = genDatePickerRules('ant');
     expect(rules.includes('.apollo-')).toBe(false);

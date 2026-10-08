@@ -83,7 +83,7 @@ const RULES = `
 .apollo-tree .apollo-tree-list-holder-inner{align-items:flex-start;}
 .apollo-tree.apollo-tree-block-node .apollo-tree-list-holder-inner{align-items:stretch;}
 .apollo-tree.apollo-tree-block-node .apollo-tree-list-holder-inner .apollo-tree-node-content-wrapper{flex:auto;}
-.apollo-tree.apollo-tree-block-node .apollo-tree-list-holder-inner .apollo-tree-treenode.dragging:after{position:absolute;inset:0;border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-primary);opacity:0;animation-name:css-dev-only-do-not-override-19u5a7b-apollo-tree-node-fx-do-not-use;animation-duration:var(--apollo-motion-duration-slow);animation-play-state:running;animation-fill-mode:forwards;content:"";pointer-events:none;border-radius:var(--apollo-border-radius);}
+.apollo-tree.apollo-tree-block-node .apollo-tree-list-holder-inner .apollo-tree-treenode.dragging:after{position:absolute;inset:0;border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-primary);opacity:0;animation-name:apollo-tree-node-fx;animation-duration:var(--apollo-motion-duration-slow);animation-play-state:running;animation-fill-mode:forwards;content:"";pointer-events:none;border-radius:var(--apollo-border-radius);}
 .apollo-tree .apollo-tree-treenode{display:flex;align-items:flex-start;margin-bottom:calc(var(--apollo-padding-xs) / 2);line-height:var(--apollo-tree-title-height);position:relative;}
 .apollo-tree .apollo-tree-treenode:before{content:"";position:absolute;z-index:1;inset-inline-start:0;width:100%;top:100%;height:calc(var(--apollo-padding-xs) / 2);}
 .apollo-tree .apollo-tree-treenode-disabled .apollo-tree-node-content-wrapper{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
@@ -145,12 +145,23 @@ const RULES = `
 `;
 
 /**
+ * 拖拽节点高亮动画的 keyframes（antd `Keyframes('ant-tree-node-fx-do-not-use')`，
+ * 体逐字：0% opacity 0 → 100% opacity 1）。
+ *
+ * 🚨 2026-10-08：此前 `animation-name` 照抄了 cssinjs 开发态占位名
+ * `css-dev-only-do-not-override-…-apollo-tree-node-fx-do-not-use`，
+ * `@keyframes` 从未定义 ⇒ 拖拽高亮动画不跑（U-KEYFRAMES 家族）。
+ */
+const KEYFRAMES = `
+@keyframes apollo-tree-node-fx{0%{opacity:0;}100%{opacity:1;}}`;
+
+/**
  * 生成 Tree 全量静态 CSS（组件变量声明块 + 组件规则）。
  * 自定义前缀走 popover/tour 同款字符串替换（R9：只预生成 apollo / ant 两份）。
  */
 export function genTreeStyle(prefixCls: string = 'apollo'): string {
   if (prefixCls === 'apollo') {
-    return `.${prefixCls}-tree{${genTreeTokenDecls()}}
+    return `${KEYFRAMES}\n.${prefixCls}-tree{${genTreeTokenDecls()}}
 ${RULES}`;
   }
   const rules = RULES.split('.apollo-tree')
@@ -159,6 +170,6 @@ ${RULES}`;
     .join(`.${prefixCls}-motion-collapse`)
     .split('.apollo-row')
     .join(`.${prefixCls}-row`);
-  return `.${prefixCls}-tree{${genTreeTokenDecls()}}
+  return `${KEYFRAMES}\n.${prefixCls}-tree{${genTreeTokenDecls()}}
 ${rules}`;
 }

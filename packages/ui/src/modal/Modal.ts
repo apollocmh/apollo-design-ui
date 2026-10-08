@@ -28,6 +28,7 @@
  *   - `ContextIsolator`（form / space）本仓未落地（D36 同判）。
  */
 import { CloseOutlined } from '@apollo-design/icons';
+import { useLocale } from '@apollo-design/locale';
 import { useZIndex } from '@apollo-design/portal';
 import { isEmptyVNode, isNumber, isPlainObject, omit, pickAttrs } from '@apollo-design/utils';
 import {
@@ -258,6 +259,8 @@ export default defineComponent({
     };
 
     // =========================== Closable =============================
+    // 关闭按钮的可访问名来自 locale（antd 逐字：`useLocale('global').close`）
+    const [globalLocale] = useLocale('global');
     const closableResult = useClosable(
       pickClosable(() => ({
         closable: props.closable as ClosableType,
@@ -271,6 +274,10 @@ export default defineComponent({
       ),
       {
         closable: true,
+        // ⚠️ antd 的 `useClosable` hook 内部读 locale 的 `global.close` 作为
+        //    关闭按钮可访问名（en=`Close` / zh=`关闭`）；`'Close'` 只是纯函数
+        //    `computeClosable` 的兜底 —— composable 消费方必须自己接 locale。
+        closeLabel: (globalLocale as { close?: string }).close,
         // ⚠️ 兜底图标必须是**真的图标**（`CloseOutlined`），不是空 span ——
         //    `renderCloseIcon` 只在**没给** closeIcon 时才补图标，给一个空 span
         //    会得到一个「有按钮、没有 ×」的面板（L6 抓到：desktop 0.008% 全是这个 ×）

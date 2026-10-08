@@ -147,10 +147,10 @@ export const TABS_RULES = `
   .apollo-tabs-right >.apollo-tabs-body-holder >.apollo-tabs-body>.apollo-tabs-content,.apollo-tabs-right >div>.apollo-tabs-body-holder >.apollo-tabs-body>.apollo-tabs-content{padding-right:var(--apollo-padding-lg);}
   .apollo-tabs-dropdown{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);position:absolute;top:-9999px;left:-9999px;z-index:var(--apollo-tabs-z-index-popup);display:block;}
   .apollo-tabs-dropdown-hidden{display:none;}
-  .apollo-tabs-dropdown.apollo-slide-down-enter.apollo-slide-down-enter-active.apollo-tabs-dropdown-placement-bottomLeft,.apollo-tabs-dropdown.apollo-slide-down-appear.apollo-slide-down-appear-active.apollo-tabs-dropdown-placement-bottomLeft,.apollo-tabs-dropdown.apollo-slide-down-enter.apollo-slide-down-enter-active.apollo-tabs-dropdown-placement-bottom,.apollo-tabs-dropdown.apollo-slide-down-appear.apollo-slide-down-appear-active.apollo-tabs-dropdown-placement-bottom,.apollo-tabs-dropdown.apollo-slide-down-enter.apollo-slide-down-enter-active.apollo-tabs-dropdown-placement-bottomRight,.apollo-tabs-dropdown.apollo-slide-down-appear.apollo-slide-down-appear-active.apollo-tabs-dropdown-placement-bottomRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideUpIn;}
-  .apollo-tabs-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-tabs-dropdown-placement-topLeft,.apollo-tabs-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-tabs-dropdown-placement-topLeft,.apollo-tabs-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-tabs-dropdown-placement-top,.apollo-tabs-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-tabs-dropdown-placement-top,.apollo-tabs-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-tabs-dropdown-placement-topRight,.apollo-tabs-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-tabs-dropdown-placement-topRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideDownIn;}
-  .apollo-tabs-dropdown.apollo-slide-down-leave.apollo-slide-down-leave-active.apollo-tabs-dropdown-placement-bottomLeft,.apollo-tabs-dropdown.apollo-slide-down-leave.apollo-slide-down-leave-active.apollo-tabs-dropdown-placement-bottom,.apollo-tabs-dropdown.apollo-slide-down-leave.apollo-slide-down-leave-active.apollo-tabs-dropdown-placement-bottomRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideUpOut;}
-  .apollo-tabs-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-tabs-dropdown-placement-topLeft,.apollo-tabs-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-tabs-dropdown-placement-top,.apollo-tabs-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-tabs-dropdown-placement-topRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideDownOut;}
+  .apollo-tabs-dropdown.apollo-slide-down-enter.apollo-slide-down-enter-active.apollo-tabs-dropdown-placement-bottomLeft,.apollo-tabs-dropdown.apollo-slide-down-appear.apollo-slide-down-appear-active.apollo-tabs-dropdown-placement-bottomLeft,.apollo-tabs-dropdown.apollo-slide-down-enter.apollo-slide-down-enter-active.apollo-tabs-dropdown-placement-bottom,.apollo-tabs-dropdown.apollo-slide-down-appear.apollo-slide-down-appear-active.apollo-tabs-dropdown-placement-bottom,.apollo-tabs-dropdown.apollo-slide-down-enter.apollo-slide-down-enter-active.apollo-tabs-dropdown-placement-bottomRight,.apollo-tabs-dropdown.apollo-slide-down-appear.apollo-slide-down-appear-active.apollo-tabs-dropdown-placement-bottomRight{animation-name:apollo-slide-up-in;}
+  .apollo-tabs-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-tabs-dropdown-placement-topLeft,.apollo-tabs-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-tabs-dropdown-placement-topLeft,.apollo-tabs-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-tabs-dropdown-placement-top,.apollo-tabs-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-tabs-dropdown-placement-top,.apollo-tabs-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-tabs-dropdown-placement-topRight,.apollo-tabs-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-tabs-dropdown-placement-topRight{animation-name:apollo-slide-down-in;}
+  .apollo-tabs-dropdown.apollo-slide-down-leave.apollo-slide-down-leave-active.apollo-tabs-dropdown-placement-bottomLeft,.apollo-tabs-dropdown.apollo-slide-down-leave.apollo-slide-down-leave-active.apollo-tabs-dropdown-placement-bottom,.apollo-tabs-dropdown.apollo-slide-down-leave.apollo-slide-down-leave-active.apollo-tabs-dropdown-placement-bottomRight{animation-name:apollo-slide-up-out;}
+  .apollo-tabs-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-tabs-dropdown-placement-topLeft,.apollo-tabs-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-tabs-dropdown-placement-top,.apollo-tabs-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-tabs-dropdown-placement-topRight{animation-name:apollo-slide-down-out;}
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu{max-height:200px;margin:0;padding:var(--apollo-padding-xxs) 0;overflow-x:hidden;overflow-y:auto;text-align:left;list-style-type:none;background-color:var(--apollo-color-bg-container);background-clip:padding-box;border-radius:var(--apollo-border-radius-lg);outline:none;box-shadow:var(--apollo-box-shadow-secondary);}
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:flex;align-items:center;min-width:120px;margin:0;padding:var(--apollo-padding-xxs) var(--apollo-padding-sm);color:var(--apollo-color-text);font-weight:normal;font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);cursor:pointer;transition:all var(--apollo-motion-duration-slow);}
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item >span{flex:1;white-space:nowrap;}
@@ -216,8 +216,22 @@ export const TABS_RULES = `
   .apollo-tabs .apollo-tabs-switch-leave-start{opacity:1;}
   .apollo-tabs .apollo-tabs-switch-leave-active{opacity:0;transition:opacity var(--apollo-motion-duration-slow);}`;
 
+/**
+ * 下拉溢出菜单的滑动动画 keyframes（select/style「动画名稳定化」的同款副本；
+ * 体逐字相同，供 tabs/style.css 单独引入时命中）。
+ *
+ * 🚨 2026-10-08：此前 `animation-name` 照抄了 cssinjs 开发态占位名
+ * `css-dev-only-do-not-override-…-antSlideUpIn` 等，`@keyframes` 从未定义
+ * ⇒ 溢出菜单开合动画不跑（U-KEYFRAMES 家族）。
+ */
+const KEYFRAMES = `
+@keyframes apollo-slide-up-in{0%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}100%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}}
+@keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
+@keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
+@keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
+
 /** 生成完整样式：token 声明块 + 规则体。 */
 export function genTabsStyle(rootPrefixCls: string): string {
   const decls = genTokenDecls(rootPrefixCls).join('');
-  return `.${rootPrefixCls}-tabs{${decls}}\n\n${TABS_RULES}`;
+  return `${KEYFRAMES}\n.${rootPrefixCls}-tabs{${decls}}\n\n${TABS_RULES}`;
 }

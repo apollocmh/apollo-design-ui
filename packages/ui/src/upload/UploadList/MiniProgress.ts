@@ -4,10 +4,14 @@
  *
  * DOM 判据（antd 6.6.4 实测渲染）：
  * `<div class="ant-progress -status-normal -line -line-align-end
- *  -line-position-outer -small" role="progressbar" aria-valuenow/min/max>`
+ *  -line-position-outer" role="progressbar" aria-valuenow/min/max>`
  *   `<div class="-progress-body" style="width:100%">`
  *     `<div class="-progress-rail" style="height:6px">`
  *       `<div class="-progress-track" style="width:50%;height:6px">`
+ *
+ * ⚠️ 6.6.4 的上传内嵌 Progress **不带** `-small`（也不带 `-show-info`）——
+ *    轨道 6px 是 Progress 默认（无 showInfo 时的线高），不是 size="small"
+ *    （此前类名里多挂了 `-small`，dom-probe upload/basic 抓出后去掉）。
  *
  * 差异（D 登记）：track 背景色内联 `var(--apollo-color-primary)`
  * （antd 走 progress 自己的 CSS，本仓无该样式段）；strokeColor 覆盖为内联色。
@@ -52,7 +56,7 @@ export const MiniProgress = defineComponent({
         'div',
         {
           class:
-            'apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer apollo-progress-small',
+            'apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer',
           role: 'progressbar',
           'aria-valuenow': props.percent,
           'aria-valuemin': 0,

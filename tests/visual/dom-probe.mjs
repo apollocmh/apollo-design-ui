@@ -186,6 +186,11 @@ async function main() {
   }
 
   console.log('✗ 两侧契约不同 —— 逐行 diff（左 React / 右 Vue）：');
+  if (flags.has('--full')) {
+    console.log(`--- React 契约 ---\n${sa}`);
+    console.log(`--- Vue 契约 ---\n${sb}`);
+    return 1;
+  }
   const la = sa.split('\n');
   const lb = sb.split('\n');
   const max = Math.max(la.length, lb.length);

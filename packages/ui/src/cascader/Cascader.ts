@@ -16,7 +16,13 @@
  * 5. 键盘：BaseSelect 的 onInputKeyDown 回调驱动注入的 OptionList（optionListRef）。
  */
 
-import { DownOutlined, LeftOutlined, LoadingOutlined, RightOutlined } from '@apollo-design/icons';
+import {
+  CloseCircleFilled,
+  DownOutlined,
+  LeftOutlined,
+  LoadingOutlined,
+  RightOutlined,
+} from '@apollo-design/icons';
 import { useControlledValue, useId } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
 
@@ -417,7 +423,9 @@ const Cascader = defineComponent({
     const mergedRootClassName = computed(
       () =>
         [
-          !props.prefixCls ? prefixCls.value : '',
+          // ⚠️ antd 在 className 里补 `cascaderPrefixCls`（rc-select 根自己挂
+          //    `ant-select` ⇒ 根同时有两前缀）。本仓 D112：BaseSelect 的根类就是
+          //    cascader 前缀 ⇒ 这里再放一遍会出现**重复类**（dom-probe 抓出），故不补。
           mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
           mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
           compactItemClassnames.value,
@@ -484,10 +492,15 @@ const Cascader = defineComponent({
       () => props.direction,
     );
     const mergedSize = computed(() => props.size ?? compactSize.value);
+    // ⚠️ antd 逐字（cascader/index.tsx:400 `allowClear === true ? { clearIcon: mergedClearIcon }`）：
+    //    默认图标由 `useSelectIcons` 兜底为 `CloseCircleFilled` —— 不能兜底成布尔
+    //    `true`（true 是 truthy 但渲染不出任何 DOM，清除按钮会是空壳；
+    //    dom-probe cascader/basic 抓出）。
+    const mergedDefaultClearIcon = computed(
+      () => props.clearIcon ?? contextSemantic.clearIcon ?? h(CloseCircleFilled),
+    );
     const mergedAllowClear = computed(() =>
-      props.allowClear === true
-        ? { clearIcon: props.clearIcon ?? contextSemantic.clearIcon ?? true }
-        : props.allowClear,
+      props.allowClear === true ? { clearIcon: mergedDefaultClearIcon.value } : props.allowClear,
     );
 
     // ============================ Render ==============================

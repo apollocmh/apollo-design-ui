@@ -297,11 +297,11 @@ const RULES_AFTER_PANEL = `
   .apollo-picker-dropdown.apollo-picker-dropdown-placement-bottomLeft .apollo-picker-range-arrow,.apollo-picker-dropdown.apollo-picker-dropdown-placement-bottomRight .apollo-picker-range-arrow{top:0;display:block;transform:translateY(-100%);}
   .apollo-picker-dropdown.apollo-picker-dropdown-placement-topLeft .apollo-picker-range-arrow,.apollo-picker-dropdown.apollo-picker-dropdown-placement-topRight .apollo-picker-range-arrow{bottom:0;display:block;transform:translateY(100%) rotate(180deg);}
   .apollo-picker-dropdown.apollo-slide-up-appear .apollo-picker-range-arrow.apollo-picker-range-arrow,.apollo-picker-dropdown.apollo-slide-up-enter .apollo-picker-range-arrow.apollo-picker-range-arrow{transition:none;}
-  .apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-topLeft,.apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-topRight,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-topLeft,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-topRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideDownIn;}
-  .apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-bottomLeft,.apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-bottomRight,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-bottomLeft,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-bottomRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideUpIn;}
+  .apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-topLeft,.apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-topRight,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-topLeft,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-topRight{animation-name:apollo-slide-down-in;}
+  .apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-bottomLeft,.apollo-picker-dropdown.apollo-slide-up-enter.apollo-slide-up-enter-active.apollo-picker-dropdown-placement-bottomRight,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-bottomLeft,.apollo-picker-dropdown.apollo-slide-up-appear.apollo-slide-up-appear-active.apollo-picker-dropdown-placement-bottomRight{animation-name:apollo-slide-up-in;}
   .apollo-picker-dropdown.apollo-slide-up-leave .apollo-picker-panel-container{pointer-events:none;}
-  .apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-topLeft,.apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-topRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideDownOut;}
-  .apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-bottomLeft,.apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-bottomRight{animation-name:css-dev-only-do-not-override-19u5a7b-antSlideUpOut;}
+  .apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-topLeft,.apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-topRight{animation-name:apollo-slide-down-out;}
+  .apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-bottomLeft,.apollo-picker-dropdown.apollo-slide-up-leave.apollo-slide-up-leave-active.apollo-picker-dropdown-placement-bottomRight{animation-name:apollo-slide-up-out;}
   .apollo-picker-dropdown .apollo-picker-panel>.apollo-picker-time-panel{padding-top:var(--apollo-padding-xxs);}
   .apollo-picker-dropdown .apollo-picker-range-wrapper{display:flex;position:relative;}
   .apollo-picker-dropdown .apollo-picker-range-arrow{position:absolute;z-index:1;display:none;padding-inline:calc(var(--apollo-date-picker-padding-inline) * 1.5);box-sizing:content-box;transition:all var(--apollo-motion-duration-slow) ease-out;pointer-events:none;width:var(--apollo-size-popup-arrow);height:var(--apollo-size-popup-arrow);overflow:hidden;}
@@ -490,6 +490,21 @@ export function genDatePickerRules(rootPrefixCls: string): string {
   );
 }
 
+/**
+ * 浮层滑动动画的 keyframes（select/style「动画名稳定化」的同款副本 ——
+ * keyframes 名全局生效，这里再内联一份是为了 date-picker/style.css
+ * **单独引入**时也能命中；体与 select 的逐字相同）。
+ *
+ * 🚨 2026-10-08：此前 `animation-name` 照抄了 cssinjs 开发态占位名
+ * `css-dev-only-do-not-override-…-antSlideUpIn` 等，`@keyframes` 从未定义
+ * ⇒ 面板开合动画不跑（`animationend` 永不触发）。
+ */
+const KEYFRAMES = `
+@keyframes apollo-slide-up-in{0%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}100%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}}
+@keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
+@keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
+@keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
+
 /** 生成完整样式：token 声明块 + 规则体。 */
 export function genDatePickerStyle(rootPrefixCls: string): string {
   const decls = genTokenDecls(rootPrefixCls).join('');
@@ -501,7 +516,7 @@ export function genDatePickerStyle(rootPrefixCls: string): string {
   //    症状：面板宽度 `width: calc(var(--apollo-date-picker-cell-width) * 7 + …)`
   //    的 calc 非法 ⇒ `width` 整条被丢弃 ⇒ **面板铺满容器**（L6 的 21 组里 18 组红）。
   //    与 `select` 的 `.apollo-select,.apollo-select-css-var{…}` 同判。
-  return `.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${genDatePickerRules(rootPrefixCls)}`;
+  return `${KEYFRAMES}\n.${rootPrefixCls}-picker,.${rootPrefixCls}-picker-css-var{${decls}}\n\n${genDatePickerRules(rootPrefixCls)}`;
 }
 
 // ---------------------------------------------------------------------------
