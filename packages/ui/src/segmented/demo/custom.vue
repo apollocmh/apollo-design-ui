@@ -18,7 +18,7 @@ const seasons = [
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 8px">
+  <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px">
     <Segmented :options="users" />
     <Segmented :options="seasons" />
   </div>

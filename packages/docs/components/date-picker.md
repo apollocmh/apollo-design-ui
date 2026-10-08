@@ -37,6 +37,14 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 
 ::: v-pre
 
+**range-picker**：`DatePicker.RangePicker`（或具名导出的 `RangePicker`）用于选择一个日期范围。
+
+:::
+
+<DemoPreview component="date-picker" demo="range-picker" />
+
+::: v-pre
+
 ## API
 
 ### 单值 DatePicker

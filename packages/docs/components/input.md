@@ -92,7 +92,7 @@ outline: [2, 3]
 | disabled / readOnly | 禁用 / 只读 | boolean | false |
 | variant | 形态变体 | `outlined` \| `filled` \| `borderless` \| `underlined` | `outlined` |
 | status | 校验状态 | `error` \| `warning` | - |
-| prefix / suffix | 前置 / 后置内容 | VNodeChild | - |
+| prefix / suffix | 前置 / 后置内容；**支持插槽 `#prefix` / `#suffix`**（插槽优先于 prop） | VNodeChild | - |
 | allowClear | 清空按钮（可 `{ clearIcon, disabled }`） | boolean \| object | false |
 | showCount | 字数统计（可 `{ formatter }`） | boolean \| object | false |
 | count | 计数策略 / 超长裁剪 | object | - |

@@ -55,7 +55,7 @@ import { Segmented } from '@apollo-design/ui';
 
 ::: v-pre
 
-**custom**：`tooltip` 支持 `string | TooltipProps`。Avatar 等价替换见文件头登记。
+**custom**：自定义渲染选项内容，并支持为选项配置 tooltip 提示（`tooltip` 支持 `string | TooltipProps`）。
 
 :::
 

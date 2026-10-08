@@ -91,7 +91,7 @@ export const InputComponent = defineComponent({
     autoFocus: { type: Boolean, default: undefined },
   },
   emits: ['update:value'],
-  setup(props, { attrs, emit, expose }) {
+  setup(props, { attrs, emit, expose, slots }) {
     const devWarning = useDevWarning('Input');
     const context = useComponentConfig('input');
     const { getPrefixCls } = context;
@@ -178,8 +178,25 @@ export const InputComponent = defineComponent({
       (attrs as { onChange?: (e: unknown) => void }).onChange?.(e);
     };
 
+    // prefix/suffix：slot 优先、prop 兜底（antd 两者皆可传；slot 便于传 VNode/组件）
+    const prefixNode = computed<VNodeChild | undefined>(() => {
+      const fromSlot = slots.prefix?.();
+      if (
+        fromSlot !== undefined &&
+        fromSlot !== null &&
+        (!Array.isArray(fromSlot) || fromSlot.length)
+      ) {
+        return fromSlot as VNodeChild;
+      }
+      return asNode(props.prefix);
+    });
+
     const suffixNode = computed<VNodeChild | undefined>(() => {
-      const suffix = asNode(props.suffix);
+      const fromSlot = slots.suffix?.();
+      const suffix =
+        fromSlot !== undefined && fromSlot !== null && (!Array.isArray(fromSlot) || fromSlot.length)
+          ? (fromSlot as VNodeChild)
+          : asNode(props.suffix);
       if (!hasFeedback.value && suffix === undefined) {
         return undefined;
       }
@@ -237,7 +254,7 @@ export const InputComponent = defineComponent({
         htmlSize: props.htmlSize,
         maxLength: props.maxLength,
         hidden: props.hidden,
-        prefix: asNode(props.prefix),
+        prefix: prefixNode.value,
         suffix: suffixNode.value,
         addonBefore: asNode(props.addonBefore),
         addonAfter: asNode(props.addonAfter),

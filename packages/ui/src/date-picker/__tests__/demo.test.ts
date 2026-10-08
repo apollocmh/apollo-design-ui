@@ -4,7 +4,7 @@
  * ── 🚨 与 antd 的差距（**必须知道**）──────────────────────────────────────────
  *
  * antd 6.6.4 的 `components/date-picker/demo/` 有 **33 个**用户可见 demo；
- * 本仓**只移植了 1 个**（`basic`）。
+ * 本仓已移植 `basic` + `range-picker`（2026-10-08）。
  *
  * `expectCount: 1` 钉住的是**已落地**的那批 —— 它**不是**「与 antd 一一对应」的证据。
  * 缺口登记在 `README.md` §5.2（`docsStatus` 的口径见那里）。
@@ -17,5 +17,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('DatePicker', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 1,
+  expectCount: 2,
 });

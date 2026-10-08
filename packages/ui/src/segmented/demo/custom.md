@@ -5,4 +5,4 @@ title:
   en-US: Custom render & tooltip
 ---
 
-`tooltip` 支持 `string | TooltipProps`。Avatar 等价替换见文件头登记。
+自定义渲染选项内容，并支持为选项配置 tooltip 提示（`tooltip` 支持 `string | TooltipProps`）。
