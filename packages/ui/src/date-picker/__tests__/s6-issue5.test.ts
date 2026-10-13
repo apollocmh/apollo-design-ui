@@ -72,15 +72,26 @@ describe('DatePicker · multiple 的 change 第二参（Issue #5.1）', () => {
     w.unmount();
   });
 
-  it('★ 多选清空 ⇒ `([], [])`（空值语义与 `dates` 对齐）', async () => {
+  it('★ 多选清空 ⇒ `(null, null)`（上游 `pickerParam` 的 `null` 判断在最前）', async () => {
     const w = mount(DatePicker, { props: { multiple: true, defaultValue: TWO } });
 
     await w.find(`.${P}-clear`).trigger('click');
 
+    // 🚨 rc `SinglePicker.js:97-102`：`if (values === null) return null;` **先于**
+    //    `multiple ? values : values[0]` ⇒ 多选清空同样是 `null`，**不是** `[]`。
+    //    （`isNullValue && everyEmpty ? null : clone` 那条在 `useRangeValue.js:216-221`。）
     const payload = lastChange(w);
-    expect(payload?.[0]).toEqual([]);
-    // 🚨 修复前是 `null`（单值语义漏到多选上）
-    expect(payload?.[1]).toEqual([]);
+    expect(payload?.[0]).toBeNull();
+    expect(payload?.[1]).toBeNull();
+    w.unmount();
+  });
+
+  it('`update:value` 与 `change` 同值（C11）：多选清空两个都是 `null`', async () => {
+    const w = mount(DatePicker, { props: { multiple: true, defaultValue: TWO } });
+    await w.find(`.${P}-clear`).trigger('click');
+
+    expect(w.emitted('update:value')?.at(-1)?.[0]).toBeNull();
+    expect(lastChange(w)?.[0]).toBeNull();
     w.unmount();
   });
 

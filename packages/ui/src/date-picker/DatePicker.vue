@@ -416,6 +416,29 @@ const semantic = useMergedPickerSemantic({
 });
 
 // ============================== 值状态机 ==============================
+/**
+ * 值列表 → 对外载荷（rc `SinglePicker.js:97-102` 的 `pickerParam`，**逐字**）。
+ *
+ * ```js
+ * function pickerParam(values) {
+ *   if (values === null) return null;      // ← 「清空」判据**最先**，多选也返回 null
+ *   return multiple ? values : values[0];
+ * }
+ * ```
+ *
+ * 🚨 **`null` 判断必须在最前**：多选 + 清空时上游给的是 `null`（不是 `[]`）。
+ *    本仓 Issue #5 首版写成 `multiple ? (dates ?? []) : …` ⇒ 多选清空给 `[]`，
+ *    与上游不一致（本轮据 rc 源码修正）。
+ * ⚠️ 单选时是 `values[0]`（**不是** `values[0] ?? null`）：`clone` 对单值恒非空，
+ *    取到 `undefined` 只可能来自越界，保持上游原样。
+ */
+const pickerParam = <T>(values: T[] | null): T[] | T | null => {
+  if (values === null) {
+    return null;
+  }
+  return props.multiple ? values : (values[0] as T);
+};
+
 /** 把值列表格式化成文本（`dateString`）。上游用 `formatList[0]`。 */
 const getDateTexts = (dates: ValueSlot[]): string[] =>
   dates.map((date) =>
@@ -510,14 +533,12 @@ const rangeValue = useRangeValue({
   getDateTexts,
   inner,
   onChange: (dates, texts) => {
-    // 🚨 C11：`update:value` 与语义事件 `change` **同时**发
-    const next = props.multiple ? (dates ?? []) : (dates?.[0] ?? null);
-    // ⚠️ 第二个参数必须**按模式**给：hook 传上来的 `texts` 是「每个日期一个文本」的
+    // 🚨 C11：`update:value` 与语义事件 `change` **同时**发。
+    const next = pickerParam(dates);
+    // ⚠️ 第二个参数走同一条归一：hook 传上来的 `texts` 是「每个日期一个文本」的
     //    数组（`picker-value.ts` 的 `getDateTexts(clone)`）—— 多选时整组都要，
-    //    单选时才是 `[text]` 取首项。此前一律 `texts?.[0]` ⇒ 多选只拿到第一个
-    //    字符串（Issue #5.1）。空值语义与 `dates` 对齐：多选 `[]`、单选 `null`。
-    const nextTexts = props.multiple ? (texts ?? []) : (texts?.[0] ?? null);
-    emit('change', next as never, nextTexts as never);
+    //    单选时才是 `[text]` 取首项（Issue #5.1）。
+    emit('change', next as never, pickerParam(texts) as never);
     emit('update:value', next as never);
   },
 });
