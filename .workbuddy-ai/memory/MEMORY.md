@@ -139,9 +139,15 @@ foundation **13/13**；组件 **72/72 completed**（全量封顶）。
   `proxyRefs` 包一层，字面量会在 setup 期定格成 `null`（date-picker / time-picker）。
 - ⚠️ **`w.emitted('x')` 对「薄壳不声明 `defineEmits`」的组件无效**（time-picker / auto-complete）
   —— 它们是靠 attrs 转发 `onXxx` 的，测试要 spy 那个 handler。
-- ⚠️ **jsdom 里纯 `picker: 'time'` 的面板渲染为空**（`.apollo-picker-content` 零列），
-  而 `datetime` 的时间列正常、L6（真浏览器）也正常 ⇒ 「列数/格数/选中格」类断言在
-  jsdom 不可用。这是 Issue #6 的 #6.2/#6.5 未交付的直接原因（`KNOWN-ISSUES` §1.4）。
+- 🚨 **浮层断言一律查 `wrapper.element`，不要查 `document`** ——
+  `attachTo: document.body` + `document.querySelector('.apollo-picker-…')` 会**串到上一个
+  实例残留的节点**上。我据此误判「纯 `picker: 'time'` 的面板在 jsdom 里渲染为空」，
+  白绕一大圈（`KNOWN-ISSUES` §3 留痕）。正确口径 `wrapper.element.querySelectorAll`。
+- 🚨 **新加的 Boolean prop 必须配 `withDefaults(…, { x: undefined })`，薄壳也要给** ——
+  未传时 Vue 强制 `false`，而 `existShowConfig`（`.some(v => v !== undefined)`）把
+  「显式 false」判成「用户关了」⇒ `fillShowConfig` 的「全空即全开」兜底失效
+  ⇒ date-picker 的时间面板**一列都不渲染**。薄壳整包转发 `props`，不给就把 `false`
+  显式喂给内层，内层默认值救不回来（Issue #6.2 实测：24h 3 列 → 0 列）。
 - **公共 Hook 收裸值 = 静默失效**：`useAllowClear` / `useMergeSemantic` / `useDisabled`
   已全部改成 `MaybeRefOrGetter` + `toValue`；新写 Hook 一律按此。
 - **语义 `root` 槽的落点**（rc `SinglePicker.js:476-478`）：class = `[rootClass, classNames.root]`、
