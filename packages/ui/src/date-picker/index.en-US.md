@@ -85,6 +85,23 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | —— |
 | classNames / styles | Semantic class names / styles (**4 flat + 7 nested `popup`**). `popup` accepts a **string** (= `popup.root`). `classNames.root` / `styles.root` land on the **selector root** (merged with native `class` / `style`; native wins) | `DatePickerSemanticAllType` | —— |
 
+### Top-level time config
+
+Upstream `PickerProps extends Omit<SharedTimeProps, 'format' | 'defaultValue'>`
+(`SinglePicker.d.ts`) ⇒ these are **top-level props** (no need to nest them in `showTime`);
+they are merged with `showTime` inside `getTimeProps` (same-named keys in `showTime` **win**).
+They apply to both the date and the time panel.
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| use12Hours | 12-hour clock (adds an AM/PM column) | `boolean` | —— |
+| showHour / showMinute / showSecond / showMillisecond | Explicitly toggle a column | `boolean` | derived from the format |
+| hourStep / minuteStep / secondStep / millisecondStep | Step inside a column | `number` | `1` / `1` / `1` / `100` |
+| hideDisabledOptions | Skip disabled options instead of rendering them disabled | `boolean` | `false` |
+| disabledTime | Per-day disabled options (the three legacy `disabledHours`-style keys are noted in the compatibility doc) | `(date) => DisabledTimes` | —— |
+| changeOnScroll | Commit the value as soon as the column scrolls | `boolean` | `false` |
+| defaultOpenValue | **Anchor for the panel when empty** (does not write a value; confirming does) | `DatePickerDate` | —— |
+
 ### Events
 
 | Event | Description | Payload |

@@ -93,10 +93,16 @@ export interface UseFilledLocaleOptions {
    * `getTimeProps` 的入参（组件 props 的**超集**）。
    *
    * ⚠️ 只放「`getTimeProps` 会读、且本组件声明了」的键。
-   * 顶层的时间 props（`showHour` / `hourStep` / `use12Hours` …）**不在
-   * `DatePickerProps` 上** —— antd 的 `DatePicker` 也不声明它们
-   * （`InjectDefaultProps<RcPickerProps>` 不含 `SharedTimeProps`），
-   * 它们只在 `showTime` 对象里 ⇒ 这里刻意不展开。
+   *
+   * 🚨 **订正（Issue #6.2）**：这里原先写着「顶层的时间 props 不在 `DatePickerProps`
+   *    上 —— antd 的 `DatePicker` 也不声明它们（`InjectDefaultProps<RcPickerProps>`
+   *    不含 `SharedTimeProps`）」。**这条判据是错的**：上游
+   *    `PickerProps<DateType> extends BasePickerProps<DateType>,
+   *    Omit<SharedTimeProps<DateType>, 'format' | 'defaultValue'>`
+   *    ⇒ `DatePickerProps` / `TimePickerProps` **都接受** `use12Hours` / `hourStep` /
+   *    `disabledTime` …（它们已补进 `PickerCommonProps`）。
+   *    这条错误判据正是该缺口长期存在的直接原因（PITFALLS 317 同族）。
+   *    ⇒ 调用方（`DatePicker.vue`）现在会把它们**逐键**喂进来。
    */
   source: ComputedRef<TimeConfigSource<PanelDateType>>;
   /** 合并后**未补齐**的 rc locale（`mergePickerLocale(...).lang`）。 */

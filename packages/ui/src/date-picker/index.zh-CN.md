@@ -82,6 +82,22 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | —— |
 | classNames / styles | 语义化类名 / 样式（**4 个平铺 + 7 个嵌套 `popup`**）。`popup` 允许 **string**（= `popup.root`）。`classNames.root` / `styles.root` 落**选择器根元素**（与原生 `class` / `style` 合并，原生胜） | `DatePickerSemanticAllType` | —— |
 
+### 顶层时间配置
+
+上游 `PickerProps extends Omit<SharedTimeProps, 'format' | 'defaultValue'>`（`SinglePicker.d.ts`）⇒
+下面这组键是**顶层 prop**（不必塞进 `showTime`），与 `showTime` 在 `getTimeProps` 内部合并
+（`showTime` 里的同名键**胜**）。它们对**日期面板**与**时间面板**都生效。
+
+| Prop | 说明 | 类型 | 默认 |
+| --- | --- | --- | --- |
+| use12Hours | 12 小时制（时间列多一列上午下午） | `boolean` | —— |
+| showHour / showMinute / showSecond / showMillisecond | 显式开关某一列 | `boolean` | 全部按格式推导 |
+| hourStep / minuteStep / secondStep / millisecondStep | 列内档位步长 | `number` | `1` / `1` / `1` / `100` |
+| hideDisabledOptions | 为真时**跳过**禁用档位（而不是渲染成禁用态） | `boolean` | `false` |
+| disabledTime | 按天给出禁用的档位（`disabledHours` 等三个 legacy 键见「兼容性说明」） | `(date) => DisabledTimes` | —— |
+| changeOnScroll | 时间列滚动时立即改值 | `boolean` | `false` |
+| defaultOpenValue | **无值时面板的锚定时刻**（不写入值；点「确定」才会落值） | `DatePickerDate` | —— |
+
 ### 事件
 
 | 事件 | 说明 | 载荷 |

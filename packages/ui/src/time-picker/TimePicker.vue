@@ -87,6 +87,17 @@ const props = withDefaults(defineProps<TimePickerProps>(), {
   pickerValue: undefined,
   defaultPickerValue: undefined,
   defaultOpenValue: undefined,
+  // 🚨 新补的顶层时间键里 4 个是 Boolean ⇒ 未传时 Vue 会强制成 `false`
+  //    （PLAN.md 避坑清单第 5 条）。薄壳会把 `props` 整包转发给内层 ⇒ 不在这里
+  //    显式给 `undefined`，就会把 `showHour: false` **显式**喂给内层，
+  //    内层自己的 `withDefaults` 也救不回来（值不是 `undefined`）。
+  use12Hours: undefined,
+  showHour: undefined,
+  showMinute: undefined,
+  showSecond: undefined,
+  showMillisecond: undefined,
+  hideDisabledOptions: undefined,
+  changeOnScroll: undefined,
   allowClear: undefined,
   previewValue: undefined,
 });

@@ -85,40 +85,47 @@ ls /tmp/antd-repo/ant-design-master/components/time-picker/   # → 没有 style
 4. **`ConfigProvider` 的 `TimePickerConfig` 类型未提升**：与 anchor / masonry / card /
    avatar / list / timeline 一致（走 `components?: Record<string, ConfigLike>`，
    运行时可用、只是类型宽）。
-5. 🚨 **顶层时间 props 静默失效**（`use12Hours` / `hourStep` / `minuteStep` /
-   `secondStep` / `millisecondStep` / `hideDisabledOptions` / `showHour` / `showMinute` /
-   `showSecond` / `showMillisecond` / `disabledTime` / `disabledHours` / `disabledMinutes` /
-   `disabledSeconds`）—— 它们**不在**本仓 `PickerCommonProps` 上。
+5. ✅ **已修（2026-10-13，Issue #6.2）**：顶层时间 props 静默失效。
 
-   **实测**（临时 vitest 探针；SSR 看不到浮层，不能用 SSR 探针）：
+   14 个顶层键（`use12Hours` / `hourStep` / `minuteStep` / `secondStep` /
+   `millisecondStep` / `hideDisabledOptions` / `showHour` / `showMinute` / `showSecond` /
+   `showMillisecond` / `disabledTime` / `disabledHours` / `disabledMinutes` /
+   `disabledSeconds`）此前**不在** `PickerCommonProps` 上 ⇒ 落进 `attrs` ⇒
+   `getTimeProps` 取不到 ⇒ 面板恒 3 列 24 格。
 
-   | 场景 | 面板列数 | 第一列格数 |
-   |---|---|---|
-   | `<DatePicker picker="time"/>` | 3 | 24 |
-   | `<DatePicker picker="time" use12Hours/>` | 3 | **24** ← 应为 12 项 + AM/PM 列 |
-   | `<TimePicker use12Hours/>` | 3 | **24** ← 同上 |
-   | `<TimePicker showTime={{ use12Hours: true }}/>` | **4** | 24 ← `showTime` 通道**生效** |
-
-   **上游判据**（`@rc-component/picker/es/PickerInput/SinglePicker.d.ts` 全文）：
+   **上游判据**（`@rc-component/picker/es/PickerInput/SinglePicker.d.ts`）：
 
    ```ts
    export interface PickerProps<DateType> extends BasePickerProps<DateType>,
        Omit<SharedTimeProps<DateType>, 'format' | 'defaultValue'> {}
    ```
 
-   ⇒ `PickerProps` **本身就有** `use12Hours` / `hourStep` / … ⇒ antd 的 `TimePickerProps`
-   （`Omit<PickerProps, 'picker' | 'showTime'>`）与 `DatePickerProps` **都接受**它们
-   （已用 `tsc` 探针验证）。
+   **两条根因**（缺一条都修不好，第二条是本轮实测才暴露的）：
 
-   ⚠️ `date-picker/hooks/picker-filled.ts:96` 的注释写着「antd 的 `DatePicker` 也不声明它们
-   （`InjectDefaultProps<RcPickerProps>` 不含 `SharedTimeProps`）」—— **这条判据是错的**，
-   是本缺口能长期存在的直接原因（PITFALLS 317）。
+   | # | 根因 | 修法 |
+   |---|---|---|
+   | ① | 键**没声明** ⇒ 落进 `attrs`，`getTimeProps` 的 `pickProps(props, showTimeKeys)` 取不到 | 补进 `PickerCommonProps`（`date-picker/interface.ts`），并在 `DatePicker.vue` / `RangePicker.vue` 里**逐键下发**给 `PickerPanel` —— 面板**自己**也会跑一遍 `getTimeProps(props)`（`picker-panel.ts:298-300`），只折进 `showTime` 不够 |
+   | ② | 其中 7 个是 **Boolean** 类型 ⇒ Vue 在**未传时**强制成 `false`，而 `existShowConfig`（`.some(show => show !== undefined)`）把「显式 `false`」判成「用户关了这三列」⇒ `fillShowConfig` 的「全空 ⇒ 全开」兜底失效 ⇒ **一列都不渲染**（实测 24h 从 3 列变 0 列）。⚠️ **薄壳（`TimePicker` / `TimeRangePicker`）也要加** —— 它们整包转发 `props`，不加就把 `false` **显式**喂给内层，内层自己的 `withDefaults` 也救不回来 | 四个文件都在 `withDefaults(…, { use12Hours: undefined, showHour: undefined, … })` 里显式给 `undefined`（PLAN.md 避坑清单第 5 条） |
 
-   **影响**：`demo/12hours` 与 `demo/interval-options` **无法忠实移植**（写了也是 24 小时面板
-   ⇒ demo 会说谎）⇒ `demo.test.ts` 的 `expectCount` 相应少 2。
-   **未擅自修改已 completed 的 `date-picker`** —— 修法是把这 14 个键补进 `PickerCommonProps`
-   并传进面板（面板侧 `getTimeProps(props)` 已支持顶层时间 props，缺的只是「组件层声明 + 转发」），
-   需要一次跨组件的独立修复 + 它的 7 层回归。
+   **修复后实测**（`__tests__/s6-issue6.test.ts`，口径是 `wrapper.element` 而不是
+   `document` —— 后者会串到上一个实例的残留节点上，本轮因此误判过一次）：
+
+   | 场景 | 列数 | 各列格数 |
+   |---|---|---|
+   | 不传（基线） | 3 | 24 / 60 / 60 |
+   | `use12Hours` | **4** | 12 / 60 / 60 / 2（AM·PM） |
+   | `hourStep: 15` | 3 | **2**（`00, 15` —— `generateUnits(0, 23, 15)` 的上界是 23）|
+   | `minuteStep: 30` | 3 | 24 / **2** / 60 |
+   | `disabledTime` | 3 | 24 里 **3 个禁用**（格数不变）|
+   | `hideDisabledOptions` | 3 | **21**（跳过禁用档位）|
+
+   ⚠️ `date-picker/hooks/picker-filled.ts` 里「antd 的 `DatePicker` 也不声明它们
+   （`InjectDefaultProps<RcPickerProps>` 不含 `SharedTimeProps`）」这条判据**是错的**，
+   已一并订正 —— 它正是本缺口长期存在的直接原因（PITFALLS 317）。
+
+   ⚠️ **`demo/12hours` 与 `demo/interval-options` 仍未移植**（`demo.test.ts` 的
+   `expectCount` 仍是 14）—— 现在**只是「还没写」**，不再是「写了会说谎」。
+
 6. ✅ **已修（2026-10-02）**：时间列从不滚动到选中值 —— 根因在 **`packages/picker` 的
    `TimeColumn`**（`watch(..., { immediate: true, flush: 'post' })` 的首次回调跑在
    本组件渲染**之前** ⇒ `ulRef === null` ⇒ 早退且永不重跑），**不是本组件**。

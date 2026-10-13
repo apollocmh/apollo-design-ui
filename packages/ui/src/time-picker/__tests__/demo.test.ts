@@ -11,8 +11,8 @@
  *
  * | 上游 demo | 为什么不移植 |
  * |---|---|
- * | `12hours` | 依赖**顶层** `use12Hours` —— 本仓静默失效（README §5 第 5 条 / PITFALLS 317） |
- * | `interval-options` | 依赖顶层 `hourStep` / `minuteStep` / `secondStep` —— 同上 |
+ * | `12hours` | 依赖**顶层** `use12Hours` —— ✅ **已支持**（Issue #6.2，2026-10-13），只是 demo 还没写 |
+ * | `interval-options` | 依赖顶层 `hourStep` / `minuteStep` / `secondStep` —— ✅ **同上** |
  * | `render-panel` | 依赖 `_InternalPanelDoNotUseOrYouWillBeFired`（`PurePanel`）—— 本仓未落地 |
  * | `_semantic` | 上游的**内部**演示件（不在用户文档侧栏） |
  *

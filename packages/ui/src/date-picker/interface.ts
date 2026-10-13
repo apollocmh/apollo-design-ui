@@ -401,6 +401,41 @@ export interface PickerCommonProps {
   /** @deprecated 用 `cellRender`。 */
   monthCellRender?: (currentDate: DatePickerDate, locale: PickerLocale) => VNodeChild;
 
+  // ================================================ 顶层时间配置（Issue #6.2）
+  //
+  // 🚨 上游 `PickerProps<DateType> extends BasePickerProps, Omit<SharedTimeProps<DateType>,
+  //    'format' | 'defaultValue'>`（`SinglePicker.d.ts`）⇒ **`DatePickerProps` 与
+  //    `TimePickerProps` 都接受**这一整组键，`getTimeProps` 会把它们与 `showTime`
+  //    合并成 `mergedShowTime`（`useFilledProps.js:72-76`）。
+  //
+  // ⚠️ 本仓此前**一个都没声明** ⇒ 它们落进 `attrs`、`getTimeProps` 取不到
+  //    ⇒ `use12Hours` / `hourStep` / `hiddenDisabledOptions` 全部**静默失效**
+  //    （实测：`<TimePicker use12Hours/>` 仍是 3 列 24 格）。`hooks/picker-filled.ts`
+  //    里那句「antd 的 DatePicker 也不声明它们」**是错的**，已一并订正。
+  /** 12 小时制（多出上下午列）。 */
+  use12Hours?: boolean;
+  showHour?: boolean;
+  showMinute?: boolean;
+  showSecond?: boolean;
+  showMillisecond?: boolean;
+  hourStep?: number;
+  minuteStep?: number;
+  secondStep?: number;
+  millisecondStep?: number;
+  /** 为真时**跳过**禁用档位（而不是渲染成禁用态）。 */
+  hideDisabledOptions?: boolean;
+  /** 滚动时立即改值（不等滚动停下）。 */
+  changeOnScroll?: boolean;
+  /** @deprecated 用 `disabledTime`。 */
+  disabledHours?: () => number[];
+  /** @deprecated 用 `disabledTime`。 */
+  disabledMinutes?: (hour: number) => number[];
+  /** @deprecated 用 `disabledTime`。 */
+  disabledSeconds?: (hour: number, minute: number) => number[];
+  disabledMilliseconds?: (hour: number, minute: number, second: number) => number[];
+  /** 该时间点禁用的档位（`disabledTime` 按天给，比上面三个 legacy 更细）。 */
+  disabledTime?: (date: DatePickerDate) => DisabledTimes;
+
   // ============================================================ 格式化
   /** 输入框的解析 / 格式化。 */
   format?: DatePickerFormat;

@@ -117,6 +117,7 @@ import type {
   NoUndefinedRangeValue,
   OpenConfig,
   RangePickerProps,
+  RangeTimeProps,
   RangeValue,
 } from './interface';
 
@@ -153,6 +154,17 @@ const props = withDefaults(defineProps<RangePickerProps>(), {
   defaultPickerValue: undefined,
   defaultOpenValue: undefined,
   allowClear: undefined,
+  // 🚨 **新补的顶层时间键里 4 个是 Boolean** ⇒ Vue 在**未传时**会强制成 `false`
+  //    （PLAN.md 避坑清单第 5 条）。不在这里显式给 `undefined`，`getTimeProps` 的
+  //    `existShowConfig`（`.some(show => show !== undefined)`）就会判成「用户显式关了」
+  //    ⇒ 时间面板**一列都不渲染**（实测：24h 从 3 列变 0 列）。
+  use12Hours: undefined,
+  showHour: undefined,
+  showMinute: undefined,
+  showSecond: undefined,
+  showMillisecond: undefined,
+  hideDisabledOptions: undefined,
+  changeOnScroll: undefined,
   allowEmpty: undefined,
   previewValue: undefined,
   presets: undefined,
@@ -538,12 +550,38 @@ const mergedShowTime = computed(() => {
   if (!showTime) {
     return null;
   }
+  /**
+   * 🚨 **顶层时间配置**（Issue #6.2）：上游 `getTimeProps(props)` 会把它们与
+   * `showTime` 合并（`useFilledProps.js:72-76`）。展开顺序 `{ ...顶层, ...showTime }`
+   * —— `showTime` 里的同名键**胜**（与 `getTimeProps` 同判）。
+   */
+  const topLevel = {
+    use12Hours: props.use12Hours,
+    showHour: props.showHour,
+    showMinute: props.showMinute,
+    showSecond: props.showSecond,
+    showMillisecond: props.showMillisecond,
+    hourStep: props.hourStep,
+    minuteStep: props.minuteStep,
+    secondStep: props.secondStep,
+    millisecondStep: props.millisecondStep,
+    hideDisabledOptions: props.hideDisabledOptions,
+    changeOnScroll: props.changeOnScroll,
+    disabledHours: props.disabledHours,
+    disabledMinutes: props.disabledMinutes,
+    disabledSeconds: props.disabledSeconds,
+    disabledMilliseconds: props.disabledMilliseconds,
+    defaultOpenValue: props.defaultOpenValue,
+  } as Record<string, unknown>;
+
   if (typeof showTime !== 'object') {
-    return showTime;
+    // `showTime === true` ⇒ 只用顶层配置（上游 `fillShowTimeConfig` 同判）
+    return topLevel;
   }
-  const disabledTime = showTime.disabledTime;
+  const merged = { ...topLevel, ...(showTime as Record<string, unknown>) };
+  const disabledTime = (showTime as { disabledTime?: RangeTimeProps['disabledTime'] }).disabledTime;
   if (!disabledTime) {
-    return showTime;
+    return merged;
   }
   const proxyDisabledTime = (date: DatePickerDate) => {
     const index = activeIndex.value;
@@ -555,7 +593,7 @@ const mergedShowTime = computed(() => {
     ) as DatePickerDate | undefined;
     return disabledTime(date, range, { from: fromDate });
   };
-  return { ...showTime, disabledTime: proxyDisabledTime };
+  return { ...merged, disabledTime: proxyDisabledTime };
 });
 
 // ============================== 焦点 ==============================
@@ -767,6 +805,33 @@ const panelBaseProps = computed(() => ({
     showWeakHover.value && activeHoverValue.value ? ([activeHoverValue.value] as never) : null,
   hoverRangeValue: (showWeakHover.value ? null : hoverValues.value) as never,
   showTime: mergedShowTime.value as never,
+  /**
+   * 🚨 **顶层时间配置必须逐键下发给面板**（Issue #6.2）。
+   *
+   * 面板**自己**会跑一遍 `getTimeProps(props)`（`picker-panel.ts:298-300`），走的是
+   * `pickProps(props, showTimeKeys)` —— 读的是**面板自己的顶层 props**
+   * （`picker-panel.ts:218-246` 明说「这批键必须显式声明」就是为这一步）。
+   * 只把顶层键折进 `showTime` **不够**：`timeProps` 取自顶层，`showTime` 只贡献
+   * `showTimeFormat`。
+   *
+   * ⚠️ `disabledTime` 这里给的是**已代理成一参**的 `proxyDisabledTime`（面板要的形态）。
+   */
+  use12Hours: props.use12Hours,
+  showHour: props.showHour,
+  showMinute: props.showMinute,
+  showSecond: props.showSecond,
+  showMillisecond: props.showMillisecond,
+  hourStep: props.hourStep,
+  minuteStep: props.minuteStep,
+  secondStep: props.secondStep,
+  millisecondStep: props.millisecondStep,
+  hideDisabledOptions: props.hideDisabledOptions,
+  changeOnScroll: props.changeOnScroll,
+  disabledHours: props.disabledHours,
+  disabledMinutes: props.disabledMinutes,
+  disabledSeconds: props.disabledSeconds,
+  disabledMilliseconds: props.disabledMilliseconds,
+  disabledTime: (mergedShowTime.value as { disabledTime?: unknown } | null)?.disabledTime,
   showWeek: props.showWeek,
   format: mergedFormat.value.firstFormat,
   classNames: semantic.classNames.value.popup,

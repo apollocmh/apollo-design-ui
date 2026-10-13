@@ -165,6 +165,17 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
   defaultPickerValue: undefined,
   defaultOpenValue: undefined,
   allowClear: undefined,
+  // 🚨 **新补的顶层时间键里 4 个是 Boolean** ⇒ Vue 在**未传时**会强制成 `false`
+  //    （PLAN.md 避坑清单第 5 条）。不在这里显式给 `undefined`，`getTimeProps` 的
+  //    `existShowConfig`（`.some(show => show !== undefined)`）就会判成「用户显式关了」
+  //    ⇒ 时间面板**一列都不渲染**（实测：24h 从 3 列变 0 列）。
+  use12Hours: undefined,
+  showHour: undefined,
+  showMinute: undefined,
+  showSecond: undefined,
+  showMillisecond: undefined,
+  hideDisabledOptions: undefined,
+  changeOnScroll: undefined,
   previewValue: undefined,
 });
 
@@ -365,6 +376,27 @@ const filled = useFilledLocale({
     picker: props.picker,
     showTime: props.showTime,
     format: props.format,
+    // 🚨 **顶层时间配置必须一起喂进去**（Issue #6.2）：上游 `getTimeProps(props)`
+    //    收的是整个 `props`，顶层键与 `showTime` 在它内部合并
+    //    （`useFilledProps.js:72-76`）。只给 `showTime` 会让
+    //    `use12Hours` / `hourStep` / `disabledTime` 全部**静默失效**。
+    use12Hours: props.use12Hours,
+    showHour: props.showHour,
+    showMinute: props.showMinute,
+    showSecond: props.showSecond,
+    showMillisecond: props.showMillisecond,
+    hourStep: props.hourStep,
+    minuteStep: props.minuteStep,
+    secondStep: props.secondStep,
+    millisecondStep: props.millisecondStep,
+    hideDisabledOptions: props.hideDisabledOptions,
+    changeOnScroll: props.changeOnScroll,
+    disabledHours: props.disabledHours,
+    disabledMinutes: props.disabledMinutes,
+    disabledSeconds: props.disabledSeconds,
+    disabledMilliseconds: props.disabledMilliseconds,
+    disabledTime: props.disabledTime,
+    defaultOpenValue: props.defaultOpenValue ?? undefined,
   })),
   locale: computed(() => mergedLocale.value.lang),
   internalMode,
@@ -1148,6 +1180,69 @@ const clearIcon = computed(() =>
 );
 
 /** 面板的全部 props 一次性绑定（`v-bind` 一个 computed，避免 template 里 20+ 属性）。 */
+/**
+ * 面板里点一格（上游 `SinglePicker.js:322-328`，逐字）。
+ *
+ * 提到 `onPanelSelect` 是因为**页脚的 `OK` 也要用它** —— 上游
+ * `Popup/index.js:110-117` 的 `onFooterSubmit` 在「时间 picker 且无值」时会先
+ * `onSelect(defaultOpenValue)` 再 `onOk()` / `onSubmit()`（Issue #6.5）。
+ */
+const onPanelSelect = (date: PanelDateType): void => {
+  if (props.multiple && panelInternalMode.value !== mergedPicker.value) {
+    return;
+  }
+  const nextValues = props.multiple
+    ? toggleDates(
+        dayjsConfig,
+        filledLang.value,
+        mergedMode.value,
+        inner.calendarValue.value,
+        date as DatePickerDate,
+      )
+    : [date];
+  // 「面板这一下走完了吗」= 不是复杂选择器 **且** 面板粒度就是组件的粒度
+  const panelFinished = !complexPicker.value && internalMode.value === panelInternalMode.value;
+  valueChange.triggerChange(0, panelFinished ? 'panel-final' : 'panel-intermediate', nextValues);
+};
+
+/**
+ * 非空值的列表（上游 `Popup/index.js:98` 的 `filterEmpty(toArray(value))`）。
+ *
+ * ⚠️ 与 `inner.calendarValue` 不同：后者可能含 `null` / `undefined` 槽位。
+ */
+const panelValueList = computed(() =>
+  inner.calendarValue.value.filter((v): v is DatePickerDate => Boolean(v)),
+);
+
+/** 纯时间 picker 且无值（上游 `Popup/index.js:99` 的 `isTimePickerEmptyValue`）。 */
+const isTimePickerEmptyValue = computed(
+  () => mergedPicker.value === 'time' && panelValueList.value.length === 0,
+);
+
+/**
+ * 面板拿到的值（上游 `Popup/index.js:104` 的 `popupPanelValue`）。
+ *
+ * 🚨 空值的时间 picker 用 `defaultOpenValue` **锚定面板**（三列都停在它那一刻），
+ *    但**不写入值** —— 它只喂给面板，值通道一个字都不动（Issue #6.5）。
+ */
+const popupPanelValue = computed(() =>
+  isTimePickerEmptyValue.value && props.defaultOpenValue
+    ? [props.defaultOpenValue]
+    : inner.calendarValue.value,
+);
+
+/**
+ * 「确定」按钮判据用的值（上游 `Popup/index.js:100-103` 的 `footerSubmitValue`）。
+ *
+ * 空值的时间 picker 走 `defaultOpenValue` ⇒ **不是** `disabled`（否则空的时间 picker
+ * 永远点不了确定，而 upstream 点得动 —— 点了会落到 `defaultOpenValue`）。
+ */
+const footerSubmitValue = computed(() =>
+  isTimePickerEmptyValue.value && props.defaultOpenValue
+    ? [props.defaultOpenValue]
+    : panelValueList.value,
+);
+
 const panelProps = computed(() => ({
   prefixCls: prefixCls.value,
   direction: direction.value,
@@ -1164,7 +1259,7 @@ const panelProps = computed(() => ({
    * 全部粒度变化都走 `onPanelChange` 回灌（见 `mergedMode` 的说明）。
    */
   mode: mergedMode.value,
-  value: inner.calendarValue.value as never,
+  value: popupPanelValue.value as never,
   multiple: props.multiple,
   /**
    * 悬停预览（上游 `SinglePicker.js:308` 的 `hoverValue: hoverValues` /
@@ -1177,24 +1272,7 @@ const panelProps = computed(() => ({
   onHover: (date: PanelDateType | null) => {
     onSetHover(date as DatePickerDate | null, 'cell');
   },
-  onSelect: (date: PanelDateType) => {
-    // 上游 `SinglePicker.js:322-328`（逐字）
-    if (props.multiple && panelInternalMode.value !== mergedPicker.value) {
-      return;
-    }
-    const nextValues = props.multiple
-      ? toggleDates(
-          dayjsConfig,
-          filledLang.value,
-          mergedMode.value,
-          inner.calendarValue.value,
-          date as DatePickerDate,
-        )
-      : [date];
-    // 「面板这一下走完了吗」= 不是复杂选择器 **且** 面板粒度就是组件的粒度
-    const panelFinished = !complexPicker.value && internalMode.value === panelInternalMode.value;
-    valueChange.triggerChange(0, panelFinished ? 'panel-final' : 'panel-intermediate', nextValues);
-  },
+  onSelect: onPanelSelect,
   onPickerValueChange: (next: PanelDateType) => {
     if (props.pickerValue === undefined) {
       innerPickerValue.value = next;
@@ -1248,6 +1326,35 @@ const panelProps = computed(() => ({
     }
   },
   showTime: props.showTime as never,
+  /**
+   * 🚨 **顶层时间配置必须逐键下发给面板**（Issue #6.2）。
+   *
+   * 面板**自己**会跑一遍 `getTimeProps(props)`（`picker-panel.ts:298-300`），走的是
+   * `pickProps(props, showTimeKeys)` —— 读的是**面板自己的顶层 props**
+   * （`picker-panel.ts:218-246` 的注释明确要求「这批键必须显式声明」，就是为这一步）。
+   * 只把顶层键折进 `showTime` **不够**：`getTimeProps` 的 `timeProps` 取自顶层，
+   * `showTime` 只贡献 `showTimeFormat` ⇒ `use12Hours` / `hourStep` / `disabledTime`
+   * 仍然取不到。
+   *
+   * ⚠️ `disabledTime` 在顶层与面板同名键都是**单参**形态（`picker-panel.ts:246`）；
+   *    范围的**三参**形态由 `RangePicker` 自己代理成本组件形态后再下发。
+   */
+  use12Hours: props.use12Hours,
+  showHour: props.showHour,
+  showMinute: props.showMinute,
+  showSecond: props.showSecond,
+  showMillisecond: props.showMillisecond,
+  hourStep: props.hourStep,
+  minuteStep: props.minuteStep,
+  secondStep: props.secondStep,
+  millisecondStep: props.millisecondStep,
+  hideDisabledOptions: props.hideDisabledOptions,
+  changeOnScroll: props.changeOnScroll,
+  disabledHours: props.disabledHours,
+  disabledMinutes: props.disabledMinutes,
+  disabledSeconds: props.disabledSeconds,
+  disabledMilliseconds: props.disabledMilliseconds,
+  disabledTime: props.disabledTime,
   showWeek: props.showWeek,
   format: mergedFormat.value.firstFormat,
   classNames: semantic.classNames.value.popup,
@@ -1499,7 +1606,7 @@ const mergedShowNow = computed(() =>
  * （`TimePicker` 是另一个组件，S5 之后）。
  */
 const disableSubmit = computed(() => {
-  const valueList = inner.calendarValue.value.filter((v): v is DatePickerDate => Boolean(v));
+  const valueList = footerSubmitValue.value;
   if (valueList.length === 0) {
     return true;
   }
@@ -1549,6 +1656,12 @@ const footerVNode = computed(() =>
        *    全程静默失效（在 Issue #6.3 的取证过程中发现，一并修）。
        */
       onSubmit: () => {
+        // 上游 `onFooterSubmit` 的第一步：空值的时间 picker ⇒ 先把 `defaultOpenValue`
+        // 落成值（`Popup/index.js:110-117`）。⚠️ **必须在 `emit('ok')` 之前** ——
+        // 上游顺序就是 `onSelect(defaultOpenValue)` → `onOk()` → `onSubmit()`。
+        if (isTimePickerEmptyValue.value && props.defaultOpenValue) {
+          onPanelSelect(props.defaultOpenValue as never);
+        }
         // `onOk(calendarValue())` + `pickerParam`（rc `SinglePicker.js:121-123`）
         emit('ok', pickerParam(inner.calendarValue.value) as never);
         valueChange.triggerChange(0, 'confirm');

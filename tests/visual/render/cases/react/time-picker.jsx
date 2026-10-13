@@ -7,8 +7,10 @@
  *
  * ⚠️ 这里用的是 **`ref` 回调**而不是 `useRef`：用例是**普通函数**（不是组件），调不了 hook。
  *
- * ⚠️ **不写 `use12Hours` / `minuteStep` 变体** —— 本仓这两条顶层时间 props 静默失效
- * （`README.md` §5 第 5 条 / PITFALLS 317）⇒ 写进来会得到一个**两侧都不生效**的空转变体。
+ * ✅ **`use12Hours` / `minuteStep` 变体现已可写**（2026-10-13 修 Issue #6.2 之后）——
+ *    此前它们会得到「两侧都不生效」的空转变体，所以刻意不写。
+ *    ⚠️ 加变体要**同时**改 `vue/time-picker.js`（逐条对应）并**重新生成两侧基线**
+ *    （`baselines/react/time-picker/`），不是只加一行 jsx 就完事。
  */
 
 import { TimePicker } from 'antd';

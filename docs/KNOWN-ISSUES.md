@@ -152,50 +152,6 @@ time-picker 上全部失效（表单外置 label、`getByLabelText` 类测试都
 **修的时候注意**：两条独立动作 —— ① **让 `id` 不再消失**（或按上游把它送进 input 的 `id`）；
 ② 把那条空转用例改成**可证伪**的断言（先跑一遍确认它在修复前必红）。
 
-### §1.4 date-picker / time-picker：顶层时间配置与 `defaultOpenValue`（2026-10-13 登记，Issue #6 的两项未完成）
-
-**背景**：Issue #6 的 #2（顶层时间配置贯通）与 #5（`defaultOpenValue` 锚定面板）**没有交付**。
-不是「忘了做」，而是**取证链断了** —— 记录现场，避免下一个人从零重推。
-
-**判据 A（阻塞取证的那条）**：**纯 `picker: 'time'` 的面板在 jsdom 里渲染为空。**
-
-```
-mount(TimePicker, { props: { open: true, defaultValue: dayjs('2016-11-22 12:30:45') },
-                    attachTo: document.body })
-document.querySelector('.apollo-picker-time-panel').outerHTML
-→ <div class="apollo-picker-time-panel"><!----><div class="apollo-picker-content"></div></div>
-```
-
-`.apollo-picker-content` 里**零列**（`-time-panel-column` 一个都没有），加 `use12Hours`
-也只是多出一列「上午/下午」（2 项）。`PanelHeader` 的 `<!---->` 是预期的
-（纯时间 picker `hideHeader`）。**⚠️ 但 L6（真浏览器）是绿的** ⇒ 这是
-jsdom ↔ 浏览器 的行为差异，**不是**「面板本来就空」。⇒ 任何「列数 / 格数 / 选中格」
-断言在 jsdom 里都**不可用**，而 L6 又不能为 `use12Hours` 造新变体而不动基线。
-（对照：**datetime** picker 的时间列在 jsdom 里**正常** —— `date-picker/__tests__/index.test.ts`
-的 `showTime` 那组用例能断言 3/4 列并通过。）
-
-**判据 B（上游契约，已核实到源码行）**：
-
-| 项 | 上游出处 | 内容 |
-|---|---|---|
-| 顶层时间键 | `SinglePicker.d.ts` | `PickerProps extends BasePickerProps, Omit<SharedTimeProps, 'format' \| 'defaultValue'>` ⇒ `DatePickerProps` / `TimePickerProps` **都接受** `use12Hours` / `hourStep` / `disabledTime` … |
-| 合并 | `useFilledProps.js:72-76` | `timeProps = getTimeProps(props)` → `mergedShowTime = fillShowTimeConfig(...)` |
-| 面板自己也要读 | `picker-panel.ts:298-300` | 面板跑 `getTimeProps(**自己**的 props)` ⇒ 顶层键必须**逐键**下发到面板（只折进 `showTime` 不够） |
-| 空值锚定 | `Popup/index.js:99-104` | `isTimePickerEmptyValue = picker === 'time' && !valueList.length`；`popupPanelValue = isEmpty ? defaultOpenValue : valueList` |
-| 确定按钮 | `Popup/index.js:100-117` | `footerSubmitValue = isEmpty ? filterEmpty([defaultOpenValue]) : valueList`；`onFooterSubmit` 先 `onSelect(defaultOpenValue)` 再 `onOk()` 再 `onSubmit()` |
-
-**本轮已改到的**（`<TimePicker use12Hours/>` 仍**未验证生效**）：`PickerCommonProps` 补 17 个顶层
-时间键、`DatePicker.vue` 把顶层键喂进 `useFilledLocale.source` 并逐键下发面板。**这些都已被回退**
-（见下），只留判据。
-
-**为什么回退**：改了之后 jsdom 里面板**仍然是空的** ⇒ 既不能证明修好、也不能证明没修坏。
-按 `AGENTS.md` §4「声称完成必须附带可复现的证据」，**宁可不交付**。
-
-**下次怎么做**：先解决「jsdom 里纯时间面板为空」这件事（先查 `PickerPanel` →
-`TimePanel.showTime` 这一跳在 jsdom 下的实际值），拿到能证伪的断言之后再改。
-`bare` 的真浏览器用例已经存在：`node tests/visual/debug/probe-time-picker-antd.mjs`。
-
-
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |
@@ -219,6 +175,8 @@ jsdom ↔ 浏览器 的行为差异，**不是**「面板本来就空」。⇒ �
 
 | commit | 内容 |
 |---|---|
+| `4b30300c` | **time-picker：`*Expose` 落地 + `ok` 事件接线**（Issue #6.1/#6.3）。① `DatePickerExpose` / `RangePickerExpose` 此前是**纯装饰**（内层没有 `defineExpose`）⇒ `ref.value.focus` 恒 `undefined`；两个薄壳也无从转发。⇒ 内层按 `DatePickerRef` / `RangePickerRef` 暴露（`nativeElement` 用 **getter** —— 暴露对象被 `proxyRefs` 包一层，字面量会定格成 `null`），薄壳转一手。② `useRangeValue` 的 `triggerOk`（rc `useRangeValue.js:119-120`）在本仓**没有任何调用点** ⇒ `ok` / `@ok` 从头到尾不发出；且载荷恒为 `dates.filter(Boolean)` 的数组，与 `TimePickerProps['onSelect'] = (v: Dayjs) => void` 相反。⇒ 页脚 `OK` 里按上游 `onFooterSubmit` 顺序接上，载荷走 `pickerParam`。 |
+| （2026-10-13） | **time-picker：顶层时间配置贯通 + `defaultOpenValue` 锚定**（Issue #6.2/#6.5，即本条原 §1.4 的两项）。**两条根因缺一不可**：① 14 个顶层键不在 `PickerCommonProps` 上 ⇒ 落进 `attrs`、`getTimeProps` 的 `pickProps(props, showTimeKeys)` 取不到 ⇒ 补声明并**逐键下发**给 `PickerPanel`（面板自己也会跑一遍 `getTimeProps`，只折进 `showTime` 不够）；② 其中 7 个是 **Boolean** ⇒ Vue 未传时强制 `false`，而 `existShowConfig` 把「显式 `false`」判成「用户关了这三列」⇒ `fillShowConfig` 的「全空即全开」兜底失效 ⇒ **一列都不渲染**（24h 从 3 列变 0 列）⇒ 四个文件都在 `withDefaults` 里显式给 `undefined`（**薄壳也要给** —— 它整包转发 `props`）。⚠️ **本条原 §1.4 写的「纯 time 面板在 jsdom 里渲染为空」是错的**：那是探针口径问题（`attachTo` + `document.querySelector` 串到上一个实例的残留节点）。正确口径是 `wrapper.element.querySelectorAll`。实测：12h 4 列（12/60/60/2）、`hourStep: 15` → 小时列 `[00,15]`（`generateUnits(0,23,step)` 上界 23）、`minuteStep: 30` → `[00,30]`、`disabledTime` 3 格禁用、`hideDisabledOptions` 21 格；`defaultOpenValue` 让空值面板三列停在它那一刻且不发 `change`、确定按钮可点。 |
 | （2026-10-07） | **裁决 `button-children-wrapper` = A：Button 改为与 antd 结构对齐**（本仓最后一个结构性分叉）。起因：修 dropdown 死规则时为验证「改对了没有」加了能触发它的 L6 变体，它**红了**；量两侧计算样式发现 **Button 在 children 含文字时比 antd 多包一层 `<span>`**（React 侧 `SPAN.anticon-down → BUTTON` 直接子 ⇒ font-size 12px；Vue 侧多一层 ⇒ 14px 继承）⇒ 把所有从 antd 移植的 **`>` 直接子选择器全部打断**。落地：`Button.vue` 新增 `contentNodes`，对应 antd `buttonHelpers.js:66` `spaceChildren` → `splitCNCharsBySpace` —— **字符串/数字包 span、Fragment 包 span、元素 vnode 只 cloneVNode 合并 class/style 不包**；纯文本仍走模板既有 wrapper 路径（已被 L4 夹具与 27 张 L6 基线覆盖）。`<a>`（href）分支同样处理。⚠️ **踩到的坑**：改完源码直接跑 L6，差异率与改前**一模一样** —— 因为 **L6 解析的是 `packages/ui/dist`**，源码改动必须先重建 ui 才进产物，否则是「改了但看起来没生效」的假象。验证：`dropdown/buttonIcon` 变体**改前红 → 改后 9/9 exact**，并**永久保留**为那条 CSS 唯一的执行证据（它此前从没被 L6 覆盖过）；L4 dom-contract **1736** 全过、unit 6356、test:types 无错误。 |
 | （2026-10-07） | **修掉 2 个组件在 `apollo` 版里硬编码 `.ant-` 的死规则**（砍 `ant` 变体后才暴露）：`menu` 的 `.ant-typography-ellipsis-single-line`（2 处）+ `.ant-layout-header`、`dropdown` 的 `.ant-btn` / `.ant-btn-icon`（4 处）⇒ 改成对应 `.apollo-*`。判据：这些是**跨组件**类名（Typography / Layout / Button），本仓渲染的是 `.apollo-*` ⇒ 永不命中；antd 那边 `antCls` 恰好等于它自己的默认前缀所以能命中，我们照搬字面量就是**端口错误**。产物校验：剥离注释后 `.ant-` 出现 **0** 次（剩 2 处在 float-button 的说明注释里）；`style-prefix.test.ts` 的 `HARDCODED_ANT_IN_DEFAULT` 清空、断言保留为防回归。L6 复验受影响组件（menu/dropdown/layout/button/table/select/cascader/tree-select/popover/tooltip/typography）**150 张全过**。⚠️ 顺带挖出**更深的根因**：这些规则改对了仍不生效，因为 **Button 多包了一层 `<span>`** 打断了 `>` 选择器 —— 见 §1.1 与新决策 `button-children-wrapper`。 |
 | （2026-10-07） | **transfer 补上 L6 覆盖 —— 全仓最后一个盲区消除**（此前 72 个组件里 71 个有 L6，**只有 transfer 两边都没有**：`matrix.mjs` 未登记、无基线，无「有意跳过」的记载 ⇒ 判为遗漏）。新增 `render/cases/{react/transfer.jsx, vue/transfer.js}` + matrix 一条（3 变体 × 3 viewport = 9 张）。🚨 **踩到一个只有人眼能抓到的坑**：antd 6.6.4 `transfer/Section.js:14` 是 `const defaultRender = () => null;` ⇒ **不传 `render` 时列表项内容为空**（`item.title` 只落原生 `title` 属性与过滤逻辑）。首版没传，9 张基线每行只有 checkbox；**`md5` 查重与体积检查都发现不了**（9 个哈希互不相同、5–8 KB），L6 也照样 exact（本仓 Vue 侧行为一致 ⇒ 「两侧一致地错」），只有**看图**才看得出来。教训：**新增视觉用例后必须亲眼看一遍基线图**，自动化检查（哈希/体积/L6）对「内容缺失」这类失真全是盲的。修正后 9/9 exact、9 个唯一哈希、11.9–18.2 KB。 |
