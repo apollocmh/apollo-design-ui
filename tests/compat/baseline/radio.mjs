@@ -201,10 +201,7 @@ push(
 //    本仓曾把这条判据写成「form 未落地 ⇒ 恒 false」，form 已在 Issue #8 落地，
 //    于是这里补一条**能看见该差异**的用例。
 
-push(
-  'radio:in-form-item',
-  wrap(h(Form, null, h(Form.Item, { name: 'r' }, h(Radio, BP, 'x')))),
-);
+push('radio:in-form-item', wrap(h(Form, null, h(Form.Item, { name: 'r' }, h(Radio, BP, 'x')))));
 
 const payload = {
   $comment:
