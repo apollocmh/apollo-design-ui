@@ -30,6 +30,7 @@ import { DownOutlined, MinusOutlined, PlusOutlined, UpOutlined } from '@apollo-d
 import { cancelRaf, isPlainObject, raf, triggerFocus, useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -44,7 +45,7 @@ import {
   watchEffect,
 } from 'vue';
 import { normalizeNode } from '../_internal/node-renderer';
-import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { type SizeType, useSize } from '../config-provider/size-context';
@@ -226,7 +227,16 @@ export const InputNumberInternalComponent = defineComponent({
       return Math.max(getNumberPrecision(numStr), getNumberPrecision(mergedStep.value));
     }
 
-    function mergedParser(num: unknown): string {
+    /**
+     * 解析显示值。
+     *
+     * 🚨 返回类型是 **`ValueType`**（`string | number`）：上游
+     * `parser?: (displayValue: string | undefined) => T`（`T extends ValueType`）
+     * ⇒ 用户的 `parser` 可以返回 `number`（`(t) => Number(t)`），本仓此前把它声明成
+     * `string` ⇒ 合法的用法在类型层被拒（Issue #7.5）。
+     * 消费点只有 `getMiniDecimal(mergedParser(...))`（形参 `unknown`）⇒ 无风险。
+     */
+    function mergedParser(num: unknown): ValueType {
       const numStr = String(num);
       if (props.parser) {
         return props.parser(numStr);
@@ -427,8 +437,11 @@ export const InputNumberInternalComponent = defineComponent({
       const base = decimalValue.value.isInvalidate() ? getMiniDecimal(0) : decimalValue.value;
       const target = base.add(directionDecimal.toString());
       const updatedValue = triggerValueUpdate(target, false);
+      // 🚨 **不要 `as number`**：`stringMode` 下 `getDecimalValue` 返回的是**字符串**
+      //    （上游 `onStep?: (value: T, …)`，`T extends ValueType`）⇒ 断言只是骗 TS
+      //    （Issue #7.4）。类型已放宽到 `ValueType`。
       (attrs as { onStep?: InputNumberProps['onStep'] }).onStep?.(
-        getDecimalValue(props.stringMode === true, updatedValue) as number,
+        getDecimalValue(props.stringMode === true, updatedValue),
         {
           offset: shiftKey ? getDecupleSteps(mergedStep.value) : mergedStep.value,
           type: up ? 'up' : 'down',
@@ -506,6 +519,20 @@ export const InputNumberInternalComponent = defineComponent({
     let mounted = false;
     onMounted(() => {
       mounted = true;
+      /**
+       * 🚨 **`autoFocus` 必须自己调 `focus()`**（Issue #7.2）。
+       *
+       * 原生 `autofocus` 只在 HTML **解析期**生效；Vue 的 `patchProp` 是元素创建
+       * **之后**才设属性 ⇒ 浏览器与 jsdom 都不会因此聚焦。
+       * `restInputAttrs()` 又把 `autoFocus` 保留（Vue 已把它摘成 prop）⇒ 此前这个
+       * 公开 prop **完全没有任何效果**。
+       *
+       * 判据与 `Rate` / `_internal/action-button` / `select/engine/SearchInput` 一致：
+       * **禁用态不聚焦**。
+       */
+      if (props.autoFocus === true && !mergedDisabled.value) {
+        inputRef.value?.focus();
+      }
     });
     watch(
       () => props.value,
@@ -581,8 +608,19 @@ export const InputNumberInternalComponent = defineComponent({
         () => context.classNames as InputNumberSemanticClassNames | undefined,
         () => props.classNames,
       ],
-      [() => context.styles as InputNumberSemanticStyles | undefined, () => props.styles],
-      mergedProps.value,
+      [
+        () => context.styles as InputNumberSemanticStyles | undefined,
+        () => props.styles,
+        // 🚨 **根 `style` 是 Vue 原生 attrs**，但必须经语义 `root` 通道下发
+        //    （上游把 `style` 落在同一处）—— 放在**最后** ⇒ 原生 attrs 胜。
+        //    此前完全没接：`restInputAttrs()` 又把 `style` 保留（不给 input），
+        //    于是 `style="width:240px"` **整条丢掉**（Issue #7.1）。
+        () => semanticRootStyle(attrs.style as CSSProperties),
+      ],
+      // ⚠️ 传 getter 而不是 `mergedProps.value`：后者是 setup 期求值出的对象，
+      //    函数式 classNames/styles 会永远按首帧的 props 计算（Issue #7.3，
+      //    与 `input/Input.ts` 同判）。
+      () => mergedProps.value,
     );
 
     // ---- 图标（mode=spinner 换 Plus/Minus）----

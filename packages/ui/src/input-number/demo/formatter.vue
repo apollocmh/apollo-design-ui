@@ -7,7 +7,8 @@ import { ref } from 'vue';
 const value = ref<number | null>(1000);
 
 const formatter = (v: number | string): string => `$ ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-const parser = (v: string): string => v.replace(/\$\s?|(,*)/g, '');
+// ⚠️ 形参允许 `undefined`（上游 `parser?: (displayValue: string | undefined) => T`）
+const parser = (v: string | undefined): string => (v ?? '').replace(/\$\s?|(,*)/g, '');
 </script>
 
 <template>

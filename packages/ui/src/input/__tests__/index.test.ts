@@ -185,6 +185,22 @@ describe('Input · IME 与计数（registry 备注：不可简化）', () => {
 // Issue #3 · 响应性与 API 契约
 // ===========================================================================
 
+describe('Input · 根 style 的两种形态都落根（#7.1 的公共助手修复）', () => {
+  it('★ 字符串 style 不会被拆成字符索引对象（同一处坑的回归哨兵）', () => {
+    // `attrs.style` 允许 CSS 字符串，它经 `semanticRootStyle` → `mergeStyles`。
+    // 助手修好之前：`'set' on proxy: trap returned falsish for property '0'`（整组件崩）。
+    const w = mount(Input, { attrs: { style: 'width: 200px' } });
+    expect((w.find('input').element as HTMLInputElement).style.width).toBe('200px');
+    w.unmount();
+  });
+
+  it('对象形态照旧', () => {
+    const w = mount(Input, { attrs: { style: { width: '260px' } } });
+    expect((w.find('input').element as HTMLInputElement).style.width).toBe('260px');
+    w.unmount();
+  });
+});
+
 describe('Input · allowClear / clearIcon 的运行时更新（Issue #3.1）', () => {
   it('★ Input：allowClear false → true → false 即时生效', async () => {
     const allowClear = ref(false);

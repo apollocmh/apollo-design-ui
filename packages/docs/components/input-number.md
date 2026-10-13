@@ -124,7 +124,7 @@ outline: [2, 3]
 | step | 每次改变步数，可以为小数 | number \| string | `1` |
 | precision | 数值精度，配置 `formatter` 时会以 `formatter` 为准 | number | - |
 | formatter | 指定输入框展示值的格式 | function(value, info: { userTyping, input }): string | - |
-| parser | 指定从 `formatter` 里转换回数字的方式 | function(string): string | - |
+| parser | 指定从 `formatter` 里转换回数字的方式 | `(displayValue: string \| undefined) => string \| number` | - |
 | disabled | 禁用 | boolean | `false` |
 | readOnly | 只读 | boolean | `false` |
 | keyboard | 是否启用键盘快捷行为 | boolean | `true` |
@@ -153,7 +153,7 @@ outline: [2, 3]
 | --- | --- | --- |
 | change | 变化回调（`v-model:value` 同步发出） | function(value: number \| string \| null) |
 | press-enter | 按下回车的回调 | function(e: KeyboardEvent) |
-| step | 点击上下箭头、键盘、滚轮的回调 | function(value: number, info: { offset, type: 'up' \| 'down', emitter: 'handler' \| 'keyboard' \| 'wheel' }) |
+| step | 点击上下箭头、键盘、滚轮的回调。⚠️ `value` 是 `string \| number` —— `stringMode` 下是**字符串** | function(value: string \| number, info: { offset, type: 'up' \| 'down', emitter: 'handler' \| 'keyboard' \| 'wheel' }) |
 
 ### Ref
 

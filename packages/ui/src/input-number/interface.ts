@@ -92,7 +92,14 @@ export interface InputNumberProps {
   /** 键入 Enter 的回调（同步触发 flush）。 */
   onPressEnter?: (e: KeyboardEvent) => void;
   /** 步进回调（按钮 / 键盘 / 滚轮共用，`info.emitter` 区分来源）。 */
-  onStep?: (value: number, info: InputNumberStepInfo) => void;
+  /**
+   * 步进回调。
+   *
+   * 🚨 载荷是 **`ValueType`**（`string | number`），**不是** `number` ——
+   * 上游 `onStep?: (value: T, info) => void`（`T extends ValueType`），
+   * 且 `stringMode: true` 时运行时给的确实是**字符串**（Issue #7.4）。
+   */
+  onStep?: (value: ValueType, info: InputNumberStepInfo) => void;
   /** 是否禁用键盘步进（↑/↓）。默认 `true`。 */
   keyboard?: boolean;
   /** 失焦时是否触发 `change`（把超界值回正）。默认 `true`。 */
@@ -110,7 +117,15 @@ export interface InputNumberProps {
   /** 展示格式化（`info: { userTyping, input }`）。 */
   formatter?: (value: ValueType, info: { userTyping: boolean; input: string }) => string;
   /** 解析回数值（与 formatter 配对）。 */
-  parser?: (string_: string) => string;
+  /**
+   * 把显示文本解析成值。
+   *
+   * 🚨 形参允许 `undefined`、返回值允许 `number` —— 上游
+   * `parser?: (displayValue: string | undefined) => T`（`T extends ValueType`）。
+   * 本仓此前声明成 `(string_) => string` ⇒ `(t) => Number(t)` 这类合法用法被拒
+   * （Issue #7.5）。
+   */
+  parser?: (displayValue: string | undefined) => ValueType;
   /** 数值精度（键入中不生效）。 */
   precision?: number;
   /** 小数点符号（如 `','`）。 */

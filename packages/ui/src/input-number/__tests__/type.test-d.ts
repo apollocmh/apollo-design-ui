@@ -12,8 +12,41 @@ import type {
   InputNumberRef,
   InputNumberSemanticClassNames,
   InputNumberSemanticStyles,
+  InputNumberStepInfo,
   ValueType,
 } from '../interface';
+
+// ===========================================================================
+// Issue #7.4 / #7.5 · 载荷与 `parser` 的真实形态
+// ===========================================================================
+
+describe('InputNumber · onStep / parser 的类型（Issue #7.4 / #7.5）', () => {
+  it('★ `onStep` 的载荷是 `ValueType`（不是 `number`）', () => {
+    // 上游 `onStep?: (value: T, info) => void`，`T extends ValueType`；
+    // `stringMode: true` 时运行时给的确实是**字符串**（L1 有 typeof 断言）。
+    expectTypeOf<InputNumberProps['onStep']>().toEqualTypeOf<
+      ((value: ValueType, info: InputNumberStepInfo) => void) | undefined
+    >();
+  });
+
+  it('★ `parser` 形参允许 `undefined`、返回值允许 `number`', () => {
+    // 上游 `parser?: (displayValue: string | undefined) => T`
+    expectTypeOf<InputNumberProps['parser']>().toEqualTypeOf<
+      ((displayValue: string | undefined) => ValueType) | undefined
+    >();
+  });
+
+  it('正例：返回 `number` 的 parser 与收 `ValueType` 的 onStep 都通过', () => {
+    const ok: InputNumberProps = {
+      parser: (displayValue) => Number((displayValue ?? '').replace(/,/g, '')),
+      onStep: (value) => {
+        // 既可能是 string 也可能是 number —— 联合类型上不能直接 `.toFixed()`
+        expectTypeOf(value).toEqualTypeOf<ValueType>();
+      },
+    };
+    expectTypeOf(ok).toEqualTypeOf<InputNumberProps>();
+  });
+});
 
 describe('InputNumber · L3 类型', () => {
   it('Props 面关键字段', () => {

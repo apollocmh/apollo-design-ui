@@ -34,7 +34,7 @@ Enter a number within certain range with the mouse or keyboard.
 | step | Step; decimals supported | number \| string | `1` |
 | precision | Precision; `formatter` wins when both set | number | - |
 | formatter | Display formatter | (value, info: { userTyping, input }) => string | - |
-| parser | Parse back from `formatter` | (string) => string | - |
+| parser | Parse back from `formatter` | `(displayValue: string \| undefined) => string \| number` | - |
 | disabled | Disabled | boolean | `false` |
 | readOnly | Read-only | boolean | `false` |
 | keyboard | Enable keyboard behavior | boolean | `true` |

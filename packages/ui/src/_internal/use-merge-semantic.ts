@@ -293,12 +293,43 @@ export function mergeStyles<ST extends object>(
   const acc: Record<string, CSSProperties | undefined> = {};
   for (const source of sources) {
     if (!source) continue;
-    const record = source as Record<string, CSSProperties | undefined>;
+    const record = source as Record<string, CSSProperties | string | undefined>;
     for (const key of Object.keys(record)) {
-      acc[key] = { ...acc[key], ...record[key] };
+      // 🚨 **叶子可能是 CSS 字符串**（Vue 的 `style` attr 允许字符串，而 `attrs.style`
+      //    会经 `semanticRootStyle` 进到这里）。直接展开字符串会得到
+      //    `{ 0: 'w', 1: 'i', … }` ⇒ Vue 的 `setStyle` 抛
+      //    `'set' on proxy: trap returned falsish for property '0'`。
+      acc[key] = { ...acc[key], ...normalizeStyleValue(record[key]) };
     }
   }
   return acc as Partial<ST>;
+}
+
+/**
+ * `'width: 240px; color: red'` → `{ width: '240px', color: 'red' }`。
+ *
+ * ⚠️ 不引入 `@vue/shared` 的 `parseStringStyle`：它是 `vue` 的**传递依赖**，
+ *    直接 import 属于幻影依赖（R7 的精神）。这里只需要支持 `;` 分隔的声明段，
+ *    与 Vue 自己的实现判据一致（空段 / 无冒号的段跳过）。
+ */
+function parseStyleString(text: string): CSSProperties {
+  const out: Record<string, string> = {};
+  for (const part of text.split(';')) {
+    const index = part.indexOf(':');
+    if (index < 0) continue;
+    const name = part.slice(0, index).trim();
+    if (!name) continue;
+    out[name] = part.slice(index + 1).trim();
+  }
+  return out as CSSProperties;
+}
+
+/** 样式叶子归一：字符串解析成对象，其余原样。 */
+function normalizeStyleValue(value: CSSProperties | string | undefined): CSSProperties | undefined {
+  if (typeof value === 'string') {
+    return parseStyleString(value);
+  }
+  return value;
 }
 
 /**
@@ -309,10 +340,16 @@ export function mergeStyles<ST extends object>(
  * 后者会让 `mergeStyles` 多产出一个 `root` 键，进而在 DOM 上多出一个空的 `style=""`。
  */
 export function semanticRootStyle(
-  style: CSSProperties | undefined,
+  style: CSSProperties | string | undefined,
   key = 'root',
 ): Record<string, CSSProperties> | undefined {
-  return style ? { [key]: style } : undefined;
+  if (!style) {
+    return undefined;
+  }
+  // 🚨 `style` 可能是 **CSS 字符串**（`<Input style="width: 240px" />` —— Vue 的 `style`
+  //    attr 两种形态都合法）。必须在这里解析成对象，否则下游 `mergeStyles` 的
+  //    对象展开会把它拆成 `{ 0: 'w', … }`（Issue #7.1 实测）。
+  return { [key]: typeof style === 'string' ? parseStyleString(style) : style };
 }
 
 /**
