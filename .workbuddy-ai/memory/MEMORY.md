@@ -123,3 +123,18 @@ foundation **13/13**；组件 **72/72 completed**（全量封顶）。
   ⇒ bundle 是旧的 ⇒ 探针结果全盘误导（判据：asset 文件名 hash 不变）。
 - **布尔/配置兜底 ≠ 图标兜底**：allowClear 兜底 `true` 会渲染空按钮；图标位兜底
   必须给**真的图标 vnode**（CloseCircleFilled / CloseOutlined 同判）。
+
+## §10 判别式补充（2026-10-08 · Tree motion 收口轮）
+- 🚨 **hide 型 motion 行卡死判别式**：DOM 卡在旧展开态 + 出现 `<c>-treenode-motion` 行 +
+  全页无 `-motion-collapse-leave-*` 类 ⇒ MotionTreeNode 的 `visible` 没翻转。
+  **MotionTreeNode 的 motionNodes watch 必须 `{ immediate: true, flush: 'post' }`**
+  （rc useLayoutEffect 挂载也跑；hide 行是 MOTION_KEY 新挂载行，非 immediate 永不翻转）。
+- 🚨 **「React gDSFP 每渲染重 derive」vs「Vue watch 只在变化时触发」**：受控回写值与 props
+  **等值**（内容同/新引用）时 Vue 侧全链不触发 ⇒ 移植组件的同步 watch 要按「变化源」拆
+  （如 autoExpandParent 翻 false ⇒ 纯同步丢 conduct 父级，rc-tree Tree.js:1104 双向语义）。
+- **jsdom motion 探测误报**：`detectMotionSupport()` 在 jsdom 返回 `supported:true`
+  （`AnimationEvent` 缺失走 `webkitAnimationEnd` 前缀分支）⇒ jsdom 里 CSSMotion 等
+  animationend 等不到；修复后的 leave 会在帧/微任务步进中直接收尾（motion 元素已移除），
+  测试要容错这个时序，兜底手动 dispatch `detectMotionSupport().animationEndName`。
+- **docs dev 验证 UI**：重启必须 `--force`；先 `curl '/@fs/.../dist/xxx.mjs'` 核对服务出的
+  模块内容再下结论（转换缓存会让浏览器跑旧代码，白白排查一轮）。

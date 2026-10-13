@@ -42,7 +42,14 @@ export default defineComponent({
 
     const targetVisible = computed(() => !!(props.motionNodes && props.motionType !== 'hide'));
 
-    // rc：useLayoutEffect —— motionNodes 存在且目标可见态与当前不同 ⇒ 切换
+    // rc：useLayoutEffect —— motionNodes 存在且目标可见态与当前不同 ⇒ 切换。
+    // ⚠️ 必须 `immediate + flush:'post'`：rc 的 layout effect 在**首次挂载**也会跑——
+    //    hide 型 motion 行是**新挂载**的（MOTION_KEY 行 spliced 进 transitionData），
+    //    挂载时 visible 初始 true、targetVisible=false，若不在挂载后翻转，
+    //    CSSMotion 永远不走 leave ⇒ onMotionEnd 永不触发 ⇒ transitionData 卡死、
+    //    「展开收起节点始终显示」（实测踩坑）。
+    //    flush:'post' 保证翻转发生在 CSSMotion 已挂载（visible=true 的首帧）之后，
+    //    才能形成 true→false 的 leave 转换（等价 rc setVisible(false) 时序）。
     watch(
       () => props.motionNodes,
       () => {
@@ -50,6 +57,7 @@ export default defineComponent({
           visible.value = targetVisible.value;
         }
       },
+      { immediate: true, flush: 'post' },
     );
 
     function triggerMotionStart() {

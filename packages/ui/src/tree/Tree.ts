@@ -283,9 +283,17 @@ export default defineComponent({
       () => props.expandedKeys,
       (controlledKeys, oldKeys) => {
         if (controlledKeys === undefined) return;
+        // ⚠️ **只在首次 conduct**（defaultExpandParent 语义：defaultExpandedKeys
+        // 只写深层 key 时自动补父级）。**受控回写必须纯同步** —— pre-flush watch
+        // 在 props 批量更新的中间执行：basic-controlled 的标准用法是 demo 同时改
+        // expandedKeys + autoExpandParent（true→false），这里若按
+        // `props.autoExpandParent` 做 conduct，会读到**旧值 true** ⇒ conduct 把
+        // 刚收起的父级**加回去** ⇒ 「展开收起节点始终显示」（实测踩坑，见
+        // KNOWN-ISSUES）。autoExpandParent=true 的受控 conduct 场景由
+        // 分支 A'（autoExpandParent 显式变化）承担。
         const isFirst = oldKeys === undefined;
         expandedKeysRef.value =
-          props.autoExpandParent || (isFirst && props.defaultExpandParent)
+          isFirst && (props.autoExpandParent ?? props.defaultExpandParent)
             ? conductExpandParent(controlledKeys, keyEntities.value)
             : [...controlledKeys];
       },
@@ -295,9 +303,14 @@ export default defineComponent({
     watch(
       () => props.autoExpandParent,
       (autoExpand) => {
-        if (props.expandedKeys !== undefined && autoExpand) {
-          expandedKeysRef.value = conductExpandParent(props.expandedKeys, keyEntities.value);
-        }
+        if (props.expandedKeys === undefined) return;
+        // rc gDSFP：`needSync('autoExpandParent')` 时**双向**重同步（rc Tree.js:1104）——
+        // true ⇒ conduct；false ⇒ **纯同步**（丢弃内部 conduct 出的父级 key）。
+        // 缺 false 方向 ⇒ basic-controlled 场景（onExpand 回写的 keys 恰好等于
+        // 原 props 值，props 引用不变）⇒ 展开收起节点始终显示（实测踩坑）。
+        expandedKeysRef.value = autoExpand
+          ? conductExpandParent(props.expandedKeys, keyEntities.value)
+          : [...props.expandedKeys];
       },
     );
     // 分支 B/C：首挂 defaultExpandAll / defaultExpandedKeys
