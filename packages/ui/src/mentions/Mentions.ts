@@ -179,7 +179,9 @@ export const MentionsComponent = defineComponent({
         // 根 style 是 Vue 原生 attrs（仍走语义 root 通道，与上游落点一致）
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],
-      mergedProps.value,
+      // ⚠️ 传 getter（与 Input 同判，Issue #3.2）：裸对象会让函数式语义化永远
+      //    按首帧的 props 计算。
+      () => mergedProps.value,
     );
 
     const { variant, enableVariantCls } = useVariant({
@@ -188,9 +190,10 @@ export const MentionsComponent = defineComponent({
       legacyBordered: () => props.bordered,
     });
 
+    // ⚠️ 传 getter（与 Input 同判，Issue #3.1）。
     const mergedAllowClear = useAllowClear({
-      allowClear: props.allowClear,
-      contextAllowClear: context.allowClear,
+      allowClear: () => props.allowClear,
+      contextAllowClear: () => context.allowClear,
       defaultAllowClear: false,
       componentName: 'Mentions',
     });

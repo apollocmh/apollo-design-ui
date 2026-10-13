@@ -57,8 +57,14 @@ No prefix/addon; adds `autoSize` (`true` or `{ minRows, maxRows }`), `rows`,
 
 ## API · Input.Password
 
-`visibilityToggle` (`false` or `{ visible, onVisibleChange, tabIndex, action }`),
-`iconRender(visible)`; everything else is forwarded to Input.
+`action` (`'click' | 'hover'`, default `'click'` — the **antd 6.6.4 top-level API**),
+`visibilityToggle` (`false` or `{ visible, onVisibleChange, tabIndex, action }`; its
+`action` is a local extension and the top-level `action` wins when both are given),
+`iconRender(visible)`.
+
+`InputPasswordProps extends InputProps` (with `classNames` / `styles` omitted and
+re-declared for Password's own slots) ⇒ `allowClear` / `readOnly` / `maxLength` /
+`showCount` / `status` / `prefix` and the rest of Input's public props are typed too.
 
 ## Notes
 

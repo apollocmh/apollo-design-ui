@@ -32,10 +32,22 @@ export const GroupComponent = defineComponent({
 
     const prefixCls = computed(() => getPrefixCls('input-group', props.prefixCls));
 
-    provide(formItemInputContextKey, {
-      ...formItemContext.value,
-      isFormItemInput: false,
-    });
+    /**
+     * Form.Item 上下文要**降级**：group 内 `isFormItemInput = false`。
+     *
+     * ⚠️ 必须 provide **`ComputedRef`**（`formItemInputContextKey` 的联合类型已包含它，
+     *    读取方 `useFormItemInputContext` 内部走 `toValue`）。
+     *    此前 provide 的是 `{...formItemContext.value}` 的**快照** ⇒ 父 Form.Item
+     *    的 `status` / `hasFeedback` / 校验状态后续变化时，group 里的子输入框拿到的
+     *    永远是首帧那一份（Issue #3.5）。
+     */
+    provide(
+      formItemInputContextKey,
+      computed(() => ({
+        ...formItemContext.value,
+        isFormItemInput: false,
+      })),
+    );
 
     const cls = computed(() => [
       prefixCls.value,

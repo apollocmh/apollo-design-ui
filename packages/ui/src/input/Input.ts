@@ -155,15 +155,20 @@ export const InputComponent = defineComponent({
         // 根 style 是 Vue 原生 attrs，但仍经语义 root 通道下发（与上游落点一致）
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],
-      mergedProps.value,
+      // ⚠️ 传 getter 而不是 `mergedProps.value`：后者是 setup 期求值出的对象，
+      //    函数式 classNames/styles 会永远按首帧的 props 计算（Issue #3.2）。
+      () => mergedProps.value,
     );
 
     // ============================= AllowClear ==========================
+    // ⚠️ 全部传 getter（Issue #3.1）：裸值会让 `allowClear` / `clearIcon` 的动态变化失效。
+    //    `context.allowClear` 走的是 `useComponentConfig` 的惰性视图 ⇒ 在 computed
+    //    内读它会被追踪，ConfigProvider 的运行时更新也能传导。
     const mergedAllowClear = useAllowClear({
-      allowClear: props.allowClear,
-      clearIcon: asNode(props.clearIcon),
-      contextAllowClear: (context as { allowClear?: InputProps['allowClear'] }).allowClear,
-      contextClearIcon: asNode((context as { clearIcon?: VNodeChild }).clearIcon as never),
+      allowClear: () => props.allowClear,
+      clearIcon: () => asNode(props.clearIcon),
+      contextAllowClear: () => (context as { allowClear?: InputProps['allowClear'] }).allowClear,
+      contextClearIcon: () => asNode((context as { clearIcon?: VNodeChild }).clearIcon as never),
       componentName: 'Input',
     });
 

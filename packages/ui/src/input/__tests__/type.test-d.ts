@@ -15,7 +15,9 @@ import type {
   InputProps,
   InputRef,
   InputSemanticClassNames,
+  InputSemanticContext,
   InputSemanticStyles,
+  PasswordSemanticClassNames,
   ShowCountProp,
   TextAreaProps,
   TextAreaRef,
@@ -118,6 +120,64 @@ describe('Input · L3 类型', () => {
       void badToggle;
     };
     void _negatives;
+    expectTypeOf(_negatives).toBeFunction();
+  });
+});
+
+// ===========================================================================
+// Issue #3.4 · PasswordProps 必须覆盖完整的 InputProps
+// ===========================================================================
+
+describe('Input.Password · 类型面覆盖 InputProps（Issue #3.4）', () => {
+  it('★ 从 InputProps 继承（上游 `Password.d.ts:7` 就是 `extends InputProps`）', () => {
+    // 这三个是「独立接口」时代最典型的缺口 —— 运行时能透传、类型层却拒绝
+    expectTypeOf<InputPasswordProps['allowClear']>().toEqualTypeOf<InputProps['allowClear']>();
+    expectTypeOf<InputPasswordProps['readOnly']>().toEqualTypeOf<InputProps['readOnly']>();
+    expectTypeOf<InputPasswordProps['maxLength']>().toEqualTypeOf<InputProps['maxLength']>();
+    expectTypeOf<InputPasswordProps['showCount']>().toEqualTypeOf<InputProps['showCount']>();
+    expectTypeOf<InputPasswordProps['status']>().toEqualTypeOf<InputProps['status']>();
+    expectTypeOf<InputPasswordProps['size']>().toEqualTypeOf<InputProps['size']>();
+  });
+
+  it('★ 顶层 `action` 是公开 API（`Password.d.ts:8`）', () => {
+    expectTypeOf<InputPasswordProps['action']>().toEqualTypeOf<'click' | 'hover' | undefined>();
+  });
+
+  it('`classNames` 仍是 Password 自己的槽位集合（多一个 `icon`）', () => {
+    // Omit 再声明的理由：PasswordSemanticClassNames 与 InputSemanticClassNames 不兼容
+    expectTypeOf<InputPasswordProps['classNames']>().toEqualTypeOf<
+      | PasswordSemanticClassNames
+      | ((context: InputSemanticContext) => PasswordSemanticClassNames)
+      | undefined
+    >();
+  });
+
+  it('正例：按 antd 文档写的 Password 用法全部通过', () => {
+    const full: InputPasswordProps = {
+      action: 'hover',
+      allowClear: true,
+      readOnly: true,
+      maxLength: 12,
+      showCount: true,
+      status: 'error',
+      placeholder: 'pw',
+      prefix: 'P',
+      visibilityToggle: { visible: false, onVisibleChange: () => {}, tabIndex: 0 },
+      iconRender: () => null,
+    };
+    expectTypeOf(full).toEqualTypeOf<InputPasswordProps>();
+  });
+
+  it('负例（永不调用的闭包）', () => {
+    const _negatives = () => {
+      // @ts-expect-error `action` 只接受 click / hover
+      const badAction: InputPasswordProps = { action: 'dblclick' };
+      void badAction;
+      // @ts-expect-error `maxLength` 是数字
+      const badMax: InputPasswordProps = { maxLength: '12' };
+      void badMax;
+      return [badAction, badMax];
+    };
     expectTypeOf(_negatives).toBeFunction();
   });
 });

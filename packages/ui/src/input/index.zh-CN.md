@@ -56,8 +56,14 @@ title: Input 输入框
 
 ## API · Input.Password
 
-`visibilityToggle`（`false` 或 `{ visible, onVisibleChange, tabIndex, action }`）、
-`iconRender(visible)`；其余透传 Input。
+`action`（`'click' | 'hover'`，默认 `'click'` —— **antd 6.6.4 的顶层 API**）、
+`visibilityToggle`（`false` 或 `{ visible, onVisibleChange, tabIndex, action }`；其中
+`action` 是本仓扩展，与顶层 `action` 同时给出时**顶层优先**）、
+`iconRender(visible)`。
+
+`InputPasswordProps extends InputProps`（`Omit` 掉 `classNames` / `styles` 后按
+Password 的语义槽重新声明）⇒ `allowClear` / `readOnly` / `maxLength` / `showCount` /
+`status` / `prefix` 等 Input 的公开属性在类型层同样可用。
 
 ## 注意事项
 

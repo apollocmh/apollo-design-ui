@@ -195,16 +195,31 @@ export interface TextAreaRef {
 
 // ============================== Password ==============================
 
-export interface InputPasswordProps {
-  prefixCls?: string;
+/**
+ * `Input.Password` 的 Props。
+ *
+ * ⚠️ **继承 `InputProps`**（上游 `Password.d.ts:7`：`PasswordProps extends InputProps`）。
+ *
+ * 此前这里是一份**独立的**接口，只抄了 10 来个字段 ⇒ `allowClear` / `readOnly` /
+ * `maxLength` / `showCount` / `status` 等常见属性在类型层**不存在**。
+ * 运行时它们其实能透传（Password 把 `...attrs` 交给内层 Input，Input 声明了这些 prop），
+ * 于是「类型比运行时窄」—— 用户按 antd 文档写的代码会被 TS 拒绝（Issue #3.4）。
+ *
+ * `classNames` / `styles` 必须 `Omit` 掉再声明：Password 的语义槽比 Input 多一个
+ * `icon`（少 `affixWrapper` / `wrapper` / `groupWrapper` / `variant`），
+ * 直接继承会与基类冲突（属性类型不兼容）。
+ */
+export interface InputPasswordProps extends Omit<InputProps, 'classNames' | 'styles'> {
   inputPrefixCls?: string;
-  disabled?: boolean;
-  /** @deprecated 用 `variant`。 */
-  bordered?: boolean;
-  variant?: Variant;
-  size?: SizeType;
-  value?: string;
-  defaultValue?: string;
+  /**
+   * 显隐触发方式（**antd 6.6.4 的顶层 API**，`Password.d.ts:8`）。默认 `'click'`。
+   *
+   * ⚠️ 与下面的 `visibilityToggle.action` 同时给出时**顶层优先**。
+   */
+  action?: 'click' | 'hover';
+  /**
+   * @since 5.27.0
+   */
   suffix?: VNodeChild;
   visibilityToggle?:
     | boolean
@@ -212,6 +227,10 @@ export interface InputPasswordProps {
         visible?: boolean;
         onVisibleChange?: (visible: boolean) => void;
         tabIndex?: number;
+        /**
+         * ⚠️ **本仓扩展**：antd 6.6.4 的 `VisibilityToggle` 里**没有**这个字段
+         * （触发方式只在上面的顶层 `action`）。保留它不破坏既有用法。
+         */
         action?: 'click' | 'hover';
       };
   iconRender?: (visible: boolean) => VNodeChild;

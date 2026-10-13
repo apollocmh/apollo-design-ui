@@ -75,6 +75,13 @@ export const PasswordComponent = defineComponent({
     disabled: { type: Boolean, default: undefined },
     bordered: { type: Boolean, default: undefined },
     variant: { type: String as PropType<InputPasswordProps['variant']>, default: undefined },
+    /**
+     * 显隐触发方式。**antd 6.6.4 的顶层 API**（`Password.d.ts`：`action?: 'click' | 'hover'`，
+     * 默认 `'click'`）。此前本仓只认 `visibilityToggle.action`（上游 6.6.4 的
+     * `VisibilityToggle` 里**没有**这个字段）⇒ 按 antd 文档传顶层 `action` 静默无效
+     * （Issue #3.3）。两者都给时**顶层优先**，`visibilityToggle.action` 作为本仓扩展保留。
+     */
+    action: { type: String as PropType<'click' | 'hover'>, default: undefined },
     suffix: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
     // ⚠️ antd 的默认值是 true（不是 undefined）—— 且 Boolean 类型 prop 未传时
     //    Vue 会转成 false，这里必须显式给 default: true（CHECKLIST #3）
@@ -119,7 +126,8 @@ export const PasswordComponent = defineComponent({
         () => props.styles as InputSemanticStyles | undefined,
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],
-      mergedProps.value,
+      // ⚠️ 传 getter（Issue #3.2）—— 见 Input.ts 同处注释。
+      () => mergedProps.value,
     );
 
     const toggle = computed(() => {
@@ -207,12 +215,13 @@ export const PasswordComponent = defineComponent({
 
     return () => {
       const p = prefixCls.value;
-      const iconTrigger =
-        ACTION_MAP[
-          (isPlainObject(toggle.value)
-            ? (toggle.value as { action?: string }).action
-            : undefined) ?? 'click'
-        ] ?? 'onClick';
+      // 触发方式：**顶层 `action` 优先**（antd 6.6.4 的公开 API），
+      // 其次 `visibilityToggle.action`（本仓扩展），最后默认 `'click'`（上游默认值）。
+      const action =
+        props.action ??
+        (isPlainObject(toggle.value) ? (toggle.value as { action?: string }).action : undefined) ??
+        'click';
+      const iconTrigger = ACTION_MAP[action] ?? 'onClick';
 
       const iconNode =
         toggle.value === false

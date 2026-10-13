@@ -4,6 +4,9 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
+import { computed, defineComponent, h, nextTick, provide, ref, shallowRef } from 'vue';
+import { formItemInputContextKey, useFormItemInputContext } from '../../form/context';
+import type { InputStatus } from '../../space/statusUtils';
 import { Input, InputGroup, InputPassword, TextArea } from '../index';
 
 describe('Input · L1 渲染', () => {
@@ -175,5 +178,279 @@ describe('Input · IME 与计数（registry 备注：不可简化）', () => {
       props: { defaultValue: 'abc', showCount: true, maxLength: 10 },
     });
     expect(wrapper.find('.apollo-input-show-count-suffix').text()).toBe('3 / 10');
+  });
+});
+
+// ===========================================================================
+// Issue #3 · 响应性与 API 契约
+// ===========================================================================
+
+describe('Input · allowClear / clearIcon 的运行时更新（Issue #3.1）', () => {
+  it('★ Input：allowClear false → true → false 即时生效', async () => {
+    const allowClear = ref(false);
+    const Host = defineComponent({
+      name: 'AAllowClearHost',
+      setup: () => () => h(Input, { allowClear: allowClear.value, defaultValue: 'x' }),
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon').exists()).toBe(false);
+
+    allowClear.value = true;
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon').exists()).toBe(true);
+
+    allowClear.value = false;
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon').exists()).toBe(false);
+  });
+
+  it('★ Input：`allowClear.clearIcon` 换成另一个节点 ⇒ DOM 跟着换', async () => {
+    // ⚠️ `VNodeChild` 是递归类型 ⇒ `ref<T>` 的深展开会 TS2589（PITFALLS 86），用 shallowRef
+    const icon = shallowRef(h('i', { class: 'ic-1' }));
+    const Host = defineComponent({
+      name: 'AClearIconHost',
+      setup: () => () => h(Input, { allowClear: { clearIcon: icon.value }, defaultValue: 'x' }),
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon .ic-1').exists()).toBe(true);
+
+    icon.value = h('i', { class: 'ic-2' });
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon .ic-2').exists()).toBe(true);
+    expect(w.find('.apollo-input-clear-icon .ic-1').exists()).toBe(false);
+  });
+
+  it('★ TextArea：同一条路径（allowClear 动态开关）', async () => {
+    const allowClear = ref(false);
+    const Host = defineComponent({
+      name: 'ATextAreaAllowClearHost',
+      setup: () => () => h(TextArea, { allowClear: allowClear.value, defaultValue: 'x' }),
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon').exists()).toBe(false);
+    allowClear.value = true;
+    await nextTick();
+    expect(w.find('.apollo-input-clear-icon').exists()).toBe(true);
+  });
+
+  it('清空仍然可用（动态打开之后）', async () => {
+    const allowClear = ref(true);
+    const onChange = vi.fn();
+    const Host = defineComponent({
+      name: 'AClearEventHost',
+      setup: () => () => h(Input, { allowClear: allowClear.value, defaultValue: 'abc', onChange }),
+    });
+    const w = mount(Host);
+    await nextTick();
+    await w.find('.apollo-input-clear-icon').trigger('click');
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect((w.find('input').element as HTMLInputElement).value).toBe('');
+  });
+});
+
+describe('Input · 函数式 classNames / styles 拿到当前 props（Issue #3.2）', () => {
+  it('★ 函数式 `classNames` 随 `disabled` 变化重算', async () => {
+    const disabled = ref(false);
+    const Host = defineComponent({
+      name: 'AFnClassNamesHost',
+      setup: () => () =>
+        h(Input, {
+          disabled: disabled.value,
+          classNames: (info: { props: { disabled?: boolean } }) => ({
+            root: info.props.disabled ? 'is-disabled' : 'is-enabled',
+          }),
+        } as never),
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.find('input').classes()).toContain('is-enabled');
+
+    disabled.value = true;
+    await nextTick();
+    expect(w.find('input').classes()).toContain('is-disabled');
+    expect(w.find('input').classes()).not.toContain('is-enabled');
+  });
+
+  it('★ 函数式 `styles` 随 `variant` 变化重算', async () => {
+    const variant = ref<'outlined' | 'filled'>('outlined');
+    const Host = defineComponent({
+      name: 'AFnStylesHost',
+      setup: () => () =>
+        h(Input, {
+          variant: variant.value,
+          styles: (info: { props: { variant?: string } }) => ({
+            root: { color: info.props.variant === 'filled' ? 'red' : 'blue' },
+          }),
+        } as never),
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect((w.find('input').element as HTMLInputElement).style.color).toBe('blue');
+
+    variant.value = 'filled';
+    await nextTick();
+    expect((w.find('input').element as HTMLInputElement).style.color).toBe('red');
+  });
+
+  it('★ TextArea / Password 同判（函数式 classNames 跟随 disabled）', async () => {
+    const disabled = ref(false);
+    const mk = (component: unknown) => {
+      const Host = defineComponent({
+        name: 'AFnSemanticHost',
+        setup: () => () =>
+          h(component as never, {
+            disabled: disabled.value,
+            classNames: (info: { props: { disabled?: boolean } }) => ({
+              root: info.props.disabled ? 'is-disabled' : 'is-enabled',
+            }),
+          }),
+      });
+      return mount(Host);
+    };
+
+    for (const component of [TextArea, InputPassword]) {
+      disabled.value = false;
+      const w = mk(component);
+      await nextTick();
+      // ⚠️ 只断言「类名出现在产物里」而不是绑某个具体元素：TextArea 的
+      //    `classNames.root` 落在引擎的外层包裹节点上，Password 落在内层 input 上，
+      //    本用例要证明的是**函数式拿到的是当前 props**，不是类名落点。
+      expect(w.html()).toContain('is-enabled');
+      expect(w.html()).not.toContain('is-disabled');
+
+      disabled.value = true;
+      await nextTick();
+      expect(w.html()).toContain('is-disabled');
+      expect(w.html()).not.toContain('is-enabled');
+      w.unmount();
+    }
+  });
+});
+
+describe('Input.Password · 顶层 `action`（Issue #3.3）', () => {
+  const iconOf = (w: ReturnType<typeof mount>) => w.find('.apollo-input-password-icon');
+  const typeOf = (w: ReturnType<typeof mount>) => w.find('input').attributes('type');
+
+  it('★ 默认 `click`：点击切换显隐', async () => {
+    const w = mount(InputPassword, { props: { defaultValue: 'pw' } });
+    expect(typeOf(w)).toBe('password');
+    await iconOf(w).trigger('click');
+    expect(typeOf(w)).toBe('text');
+  });
+
+  it('★ 顶层 `action="hover"`：mouseover 切换、click **不**切换', async () => {
+    const w = mount(InputPassword, { props: { action: 'hover', defaultValue: 'pw' } });
+    expect(typeOf(w)).toBe('password');
+
+    await iconOf(w).trigger('click');
+    expect(typeOf(w), 'hover 模式下 click 不应切换').toBe('password');
+
+    await iconOf(w).trigger('mouseover');
+    expect(typeOf(w)).toBe('text');
+    await iconOf(w).trigger('mouseover');
+    expect(typeOf(w)).toBe('password');
+  });
+
+  it('本仓扩展 `visibilityToggle.action` 仍然生效', async () => {
+    const w = mount(InputPassword, {
+      props: { visibilityToggle: { action: 'hover' }, defaultValue: 'pw' },
+    });
+    await iconOf(w).trigger('click');
+    expect(typeOf(w)).toBe('password');
+    await iconOf(w).trigger('mouseover');
+    expect(typeOf(w)).toBe('text');
+  });
+
+  it('★ 两者同时给出时**顶层 `action` 优先**', async () => {
+    const w = mount(InputPassword, {
+      props: { action: 'click', visibilityToggle: { action: 'hover' }, defaultValue: 'pw' },
+    });
+    await iconOf(w).trigger('mouseover');
+    expect(typeOf(w), '顶层 click 应压过 visibilityToggle.action=hover').toBe('password');
+    await iconOf(w).trigger('click');
+    expect(typeOf(w)).toBe('text');
+  });
+
+  it('disabled 时两种模式都不切换（受控判据在最前）', async () => {
+    const hover = mount(InputPassword, {
+      props: { action: 'hover', disabled: true, defaultValue: 'pw' },
+    });
+    await iconOf(hover).trigger('mouseover');
+    expect(typeOf(hover)).toBe('password');
+    const click = mount(InputPassword, {
+      props: { action: 'click', disabled: true, defaultValue: 'pw' },
+    });
+    await iconOf(click).trigger('click');
+    expect(typeOf(click)).toBe('password');
+  });
+});
+
+describe('Input.Group · Form.Item 上下文是**响应式**的（Issue #3.5）', () => {
+  const Probe = defineComponent({
+    name: 'AGroupContextProbe',
+    setup() {
+      const ctx = useFormItemInputContext();
+      return () =>
+        h('i', {
+          class: [
+            'probe',
+            `probe-status-${String(ctx.value.status)}`,
+            `probe-is-form-item-${String(ctx.value.isFormItemInput)}`,
+          ],
+        });
+    },
+  });
+
+  it('★ 父级 status 变化能传导；且 group 内 `isFormItemInput` 恒为 false', async () => {
+    const status = ref<InputStatus>('error');
+    const Host = defineComponent({
+      name: 'AGroupContextHost',
+      setup() {
+        provide(
+          formItemInputContextKey,
+          computed(() => ({ status: status.value, hasFeedback: true, isFormItemInput: true })),
+        );
+        return () => h(InputGroup, null, { default: () => h(Probe) });
+      },
+    });
+    const w = mount(Host);
+    await nextTick();
+    const probe = () => w.find('.probe');
+    expect(probe().classes()).toContain('probe-status-error');
+    // group 的降级判据：不能是 true
+    expect(probe().classes()).toContain('probe-is-form-item-false');
+
+    status.value = 'success';
+    await nextTick();
+    expect(probe().classes()).toContain('probe-status-success');
+    expect(probe().classes()).not.toContain('probe-status-error');
+    // 降级不因更新而丢失
+    expect(probe().classes()).toContain('probe-is-form-item-false');
+  });
+
+  it('★ group 内的真实 Input 会吃到最新的 status 类名', async () => {
+    const status = ref<InputStatus>('error');
+    const Host = defineComponent({
+      name: 'AGroupStatusHost',
+      setup() {
+        provide(
+          formItemInputContextKey,
+          computed(() => ({ status: status.value, isFormItemInput: true })),
+        );
+        return () =>
+          h(InputGroup, null, { default: () => h(Input, { prefixCls: 'apollo-input' }) });
+      },
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.find('input').classes()).toContain('apollo-input-status-error');
+
+    status.value = 'warning';
+    await nextTick();
+    expect(w.find('input').classes()).toContain('apollo-input-status-warning');
+    expect(w.find('input').classes()).not.toContain('apollo-input-status-error');
   });
 });

@@ -131,14 +131,16 @@ export const TextAreaComponent = defineComponent({
         () => props.styles,
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],
-      mergedProps.value,
+      // ⚠️ 传 getter（Issue #3.2）—— 见 Input.ts 同处注释。
+      () => mergedProps.value,
     );
 
+    // ⚠️ 全部传 getter（Issue #3.1）—— 见 Input.ts 同处注释。
     const mergedAllowClear = useAllowClear({
-      allowClear: props.allowClear,
-      clearIcon: asNode(props.clearIcon),
-      contextAllowClear: (context as { allowClear?: TextAreaProps['allowClear'] }).allowClear,
-      contextClearIcon: asNode((context as { clearIcon?: VNodeChild }).clearIcon as never),
+      allowClear: () => props.allowClear,
+      clearIcon: () => asNode(props.clearIcon),
+      contextAllowClear: () => (context as { allowClear?: TextAreaProps['allowClear'] }).allowClear,
+      contextClearIcon: () => asNode((context as { clearIcon?: VNodeChild }).clearIcon as never),
       componentName: 'TextArea',
     });
 

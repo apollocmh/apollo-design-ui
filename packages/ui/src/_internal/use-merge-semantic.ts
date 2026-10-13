@@ -363,7 +363,10 @@ export interface UseMergeSemanticResult<CN extends object, ST extends object> {
  *
  * @param classNamesSources 按优先级从低到高排列（后者拼接在前者之后）
  * @param stylesSources 按优先级从低到高排列（后者覆盖前者）
- * @param props 传给函数式变体的 `info.props`
+ * @param props 传给函数式变体的 `info.props`。**可以是 getter / ref** ——
+ *   函数式变体每次重算都要看到**当前** props。传 `mergedProps.value` 那种
+ *   setup 期快照会让 `disabled` / `size` / `variant` 变化后函数式仍按旧值计算
+ *   （Issue #3.2）。裸对象仍然可用（`toValue` 原样返回）。
  * @param schema **嵌套语义槽**的映射表（antd 第四参）。给了它就会：
  *   ① classNames 走 `mergeClassNamesBySchema`（`_default` 的字符串→对象转换）；
  *   ② 两个结果都过一遍 `fillObjectBySchema`（保证嵌套键恒为对象）。
@@ -372,12 +375,13 @@ export interface UseMergeSemanticResult<CN extends object, ST extends object> {
 export function useMergeSemantic<P extends object, CN extends object, ST extends object>(
   classNamesSources: readonly MaybeSource<SemanticInput<Partial<CN>, P> | undefined>[],
   stylesSources: readonly MaybeSource<SemanticInput<Partial<ST>, P> | undefined>[],
-  props: P,
+  props: MaybeRefOrGetter<P>,
   schema?: SemanticSchema,
 ): UseMergeSemanticResult<CN, ST> {
-  const info: SemanticInfo<P> = { props };
-
+  // ⚠️ `info` 必须在**每次重算时**新建，且 `props` 要在 computed 内 `toValue` ——
+  //    在 setup 期建一次会把首帧的 props 快照焊死（Issue #3.2）。
   const classNames = computed(() => {
+    const info: SemanticInfo<P> = { props: toValue(props) };
     const resolved = classNamesSources.map((source) =>
       resolveSemantic<Partial<CN>, P>(toValue(source), info),
     );
@@ -388,6 +392,7 @@ export function useMergeSemantic<P extends object, CN extends object, ST extends
   });
 
   const styles = computed(() => {
+    const info: SemanticInfo<P> = { props: toValue(props) };
     const resolved = stylesSources.map((source) =>
       resolveSemantic<Partial<ST>, P>(toValue(source), info),
     );
