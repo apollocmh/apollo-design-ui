@@ -32,6 +32,13 @@
     `v-if` 二选一反而会写错；
   - attrs 需要**按目标拆分**：`onKeyDown` / `onClick` 被 rc-switch 包装（不是直接绑定），
     其余才原样落到 `<button>`。
+    ⚠️ 两个键**各自有两种拼写**，都要摘、都要认（Issue #11.1）：
+    `onKeyDown`（antd 名）与 **`onKeydown`**（Vue 模板 `@keydown` 编译产物）。
+    只摘 camelCase 会让模板写法留在 `restAttrs` 里、随即被内部 `onKeydown` **覆盖**
+    ⇒ 调用方回调**一次都不调**（静默，连 DOM 属性这条退路都没有）。
+  - `checkedChildren` / `unCheckedChildren` 的运行时类型必须是
+    `null as unknown as PropType<VNodeChild>`（规则 D21）—— 写成 `String` 时传 VNode
+    会报 `Invalid prop: type check failed`（Issue #11.2）。
 
 ## 4. Component Token 清单（13 个）
 

@@ -32,6 +32,7 @@ import {
   h,
   type PropType,
   shallowRef,
+  type VNodeChild,
   watchEffect,
 } from 'vue';
 import {
@@ -63,9 +64,18 @@ export const SwitchComponent = defineComponent({
     defaultChecked: { type: Boolean, default: undefined },
     value: { type: Boolean, default: undefined },
     defaultValue: { type: Boolean, default: undefined },
-    // 文本主导 prop（规则 #1）：收窄 string + 同名 slot 优先（#checkedChildren / #unCheckedChildren）
-    checkedChildren: { type: String, default: undefined },
-    unCheckedChildren: { type: String, default: undefined },
+    /**
+     * 选中 / 未选中时的内容。
+     *
+     * 🚨 **必须 `type: null`**（Issue #11.2）：公开类型是 `VNodeChild`
+     * （`interface.ts` 逐字对齐上游 `React.ReactNode`），而运行时此前写成
+     * `String` ⇒ 传 VNode 时 Vue 报 `Invalid prop: type check failed`。
+     * `interface.ts` 的文件头注释**自己**写着该用这一形态（规则 D21），代码却没照做。
+     *
+     * ⚠️ 同名 slot（`#checkedChildren` / `#unCheckedChildren`）优先，见渲染处。
+     */
+    checkedChildren: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    unCheckedChildren: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: false },
     autoFocus: { type: Boolean, default: undefined },
@@ -166,7 +176,22 @@ export const SwitchComponent = defineComponent({
       } else if (event.which === KeyCode.RIGHT) {
         triggerChange(true, event);
       }
-      callbacks.onKeyDown?.(event);
+      /**
+       * 🚨 **两种拼写都要认**（Issue #11.1）。
+       *
+       * antd 的 props 名是 `onKeyDown`（rc-switch 透传），而 Vue 模板的 `@keydown`
+       * 编译出的键是 **`onKeydown`**（全小写 d）。此前只读 camelCase ⇒ 模板写法
+       * **一次都不调**，而且它还会被 `onKeydown: onInternalKeyDown` 覆盖
+       * ⇒ 连「落成 DOM 属性」这条退路也没有（静默丢失）。
+       *
+       * ⚠️ 与 `useBubbleLock` 同判：**触发时现读** `attrs`（它在 setup 期不参与
+       *    依赖追踪，早读会锁死首帧回调）。camelCase（antd 名）优先。
+       */
+      const rawAttrs = attrs as {
+        onKeyDown?: (e: KeyboardEvent) => void;
+        onKeydown?: (e: KeyboardEvent) => void;
+      };
+      (rawAttrs.onKeyDown ?? rawAttrs.onKeydown)?.(event);
     };
 
     const onInternalClick = (event: MouseEvent) => {
@@ -212,7 +237,11 @@ export const SwitchComponent = defineComponent({
       const {
         class: _attrClass,
         style: _attrStyle,
+        // ⚠️ **两种拼写都要摘**（Issue #11.1）：只摘 camelCase 的话，Vue 模板产出的
+        //    `onKeydown` 会留在 `restAttrs` 里被铺上 button，随即被
+        //    `onKeydown: onInternalKeyDown` 覆盖 —— 调用方回调就此静默丢失。
         onKeyDown: _onKeyDown,
+        onKeydown: _onKeydownLower,
         onClick: _onClick,
         ...restAttrs
       } = attrs as Record<string, unknown>;
