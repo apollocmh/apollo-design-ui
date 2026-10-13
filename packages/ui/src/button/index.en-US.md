@@ -20,7 +20,7 @@ ghost / block / icon / shape / color-variant / href / semantic.
 | demo | content |
 |---|---|
 | `basic` | the five `type` values; the last one demos auto spacing for two Chinese chars |
-| `size` | `large` / default (`middle`) / `small` |
+| `size` | `large` / default (`medium` / `middle`) / `small` |
 | `loading` | boolean form and `{ delay }` form |
 | `disabled` | including the `<a>` branch (with `href`) |
 | `danger` | `danger` × the five `type` values |
@@ -45,7 +45,7 @@ ghost / block / icon / shape / color-variant / href / semantic.
 | iconPlacement | icon position | `'start' \| 'end'` | `'start'` |
 | ~~iconPosition~~ | ⚠️ deprecated, use `iconPlacement` | `'start' \| 'end'` | — |
 | shape | shape | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
-| size | size. `middle` emits **no** class | `'small' \| 'middle' \| 'large'` | ConfigProvider `componentSize` |
+| size | size. Both `medium` and `middle` are the default tier and emit **no** class | `'small' \| 'medium' \| 'middle' \| 'large'` (= `SizeType`) | ConfigProvider `componentSize` |
 | disabled | disabled. Merged with `??` ⇒ explicit `false` can turn off a parent `true` | `boolean` | — |
 | loading | loading state | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
 | ghost | ghost button. Degrades a `solid` variant to `outlined` | `boolean` | `false` |

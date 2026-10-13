@@ -19,7 +19,7 @@ block / icon / shape / color-variant / href / semantic）。
 | demo | 内容 |
 |---|---|
 | `basic` | 五种 `type`；最后一颗演示两个中文字自动插空格 |
-| `size` | `large` / 默认（`middle`）/ `small` |
+| `size` | `large` / 默认（`medium` / `middle`）/ `small`（`medium` 是 6.6.4 推荐写法） |
 | `loading` | 布尔形态与 `{ delay }` 形态 |
 | `disabled` | 含 `<a>` 分支（有 `href`）的禁用表达 |
 | `danger` | `danger` × 五种 `type` |
@@ -44,7 +44,7 @@ block / icon / shape / color-variant / href / semantic）。
 | iconPlacement | 图标位置 | `'start' \| 'end'` | `'start'` |
 | ~~iconPosition~~ | ⚠️ 已废弃，请用 `iconPlacement` | `'start' \| 'end'` | — |
 | shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
-| size | 尺寸。`middle` **不**产类名 | `'small' \| 'middle' \| 'large'` | 取 ConfigProvider 的 `componentSize` |
+| size | 尺寸。`medium` / `middle` 都是默认档，**不**产类名 | `'small' \| 'medium' \| 'middle' \| 'large'`（= `SizeType`） | 取 ConfigProvider 的 `componentSize` |
 | disabled | 禁用。判据是 `??` ⇒ 显式 `false` 能关闭父级的 `true` | `boolean` | — |
 | loading | 加载态 | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
 | ghost | 幽灵按钮。会把 `solid` 变体退化成 `outlined` | `boolean` | `false` |

@@ -26,10 +26,16 @@
 import { mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { computed, defineComponent, h, nextTick, ref } from 'vue';
-import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
+import { computed, defineComponent, h, nextTick, provide, ref } from 'vue';
+import { ConfigProvider } from '../../config-provider';
+import {
+  configContextKey,
+  DEFAULT_CONFIG_CONTEXT,
+  type DirectionType,
+} from '../../config-provider/context';
 import { disabledContextKey } from '../../config-provider/disabled-context';
 import { sizeContextKey } from '../../config-provider/size-context';
+import { spaceCompactItemContextKey } from '../../space/Compact';
 import { Button } from '../index';
 
 /** 兜底前缀 —— 不传 `prefixCls` 时 `getPrefixCls('btn')` 的结果。 */
@@ -154,6 +160,50 @@ describe('Button · 基本结构', () => {
     const w = mountBtn({ 'data-testid': 'x', id: 'my-btn' });
     expect(w.attributes('data-testid')).toBe('x');
     expect(w.attributes('id')).toBe('my-btn');
+  });
+
+  it('★ 只含「非内容」节点（Comment / 空串）时不渲染 content `<span>` —— Issue #1.5', async () => {
+    // Vue 把 `v-if="false"` 的条件插槽编译成 `createCommentVNode('v-if', true)`，
+    // 它是一个**真实节点**，但它不是内容 —— antd 的 `toArray` + `isReactRenderable`
+    // 会把它剔掉。此前本仓照 length 判定 ⇒ 多出一个空的 content 包裹。
+    const cond = ref(false);
+    const Host = defineComponent({
+      setup() {
+        return () => h(Button, null, { default: () => (cond.value ? h('span', null, 'x') : null) });
+      },
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.find('button').find('span').exists()).toBe(false);
+
+    // 空字符串同理（`isReactRenderable('')` 为 false）
+    expect(
+      mount(Button, { slots: { default: () => '' } })
+        .find('span')
+        .exists(),
+    ).toBe(false);
+
+    // 条件转真之后要能正常出现（过滤不是把插槽废掉）
+    cond.value = true;
+    await nextTick();
+    expect(w.find('button').find('span').text()).toBe('x');
+  });
+
+  it('★ 空内容 + 有图标 ⇒ 挂 `-icon-only`（上游判据 `!children && children !== 0`）', async () => {
+    const icon = h('i', { class: 'ico' });
+    const empty = mount(Button, { props: { icon }, slots: { default: () => '' } });
+    await nextTick();
+    expect(empty.classes()).toContain(`${P}-icon-only`);
+
+    const cond = mount(Button, { props: { icon }, slots: { default: () => null } });
+    await nextTick();
+    expect(cond.classes()).toContain(`${P}-icon-only`);
+
+    // ⚠️ `0` 算**有内容**（上游 `children !== 0`）⇒ 不能挂 `-icon-only`
+    const zero = mount(Button, { props: { icon }, slots: { default: () => '0' } });
+    await nextTick();
+    expect(zero.classes()).not.toContain(`${P}-icon-only`);
+    expect(zero.find('span:last-child').text()).toBe('0');
   });
 });
 
@@ -294,6 +344,18 @@ describe('Button · size / shape / disabled 回退', () => {
     const none = classesOf({});
     expect(none).not.toContain(`${P}-lg`);
     expect(none).not.toContain(`${P}-sm`);
+  });
+
+  it('★ size=medium 是合法默认档 ⇒ 不产尺寸类名（与 middle 同落点）—— Issue #1.1', () => {
+    // antd 的类名映射只有两档（`Button.js:230-231`）：`large ⇒ -lg`、`small ⇒ -sm`。
+    // `medium`（6.6.4 推荐的默认档写法）与 `middle` 一样**不产类名**。
+    const medium = classesOf({ size: 'medium' });
+    expect(medium).not.toContain(`${P}-lg`);
+    expect(medium).not.toContain(`${P}-sm`);
+    // 与 middle 的产物**逐字**一致（同一个默认档）
+    expect(medium.slice().sort()).toEqual(classesOf({ size: 'middle' }).slice().sort());
+    // 也不能产出 `-medium` / `-md` 这种上游没有的类名
+    expect(medium.some((c) => c.includes('medium') || c.endsWith('-md'))).toBe(false);
   });
 
   it('size 回退到 ConfigProvider 的 componentSize', () => {
@@ -470,6 +532,34 @@ describe('Button · 两个中文字自动插空格', () => {
     expect(w.classes()).not.toContain(`${P}-two-chinese-chars`);
   });
 
+  it('★ 用 `<span>` 包住两个汉字时**也要**拆 —— Issue #1.4', async () => {
+    // antd `splitCNCharsBySpace` 的元素分支（`buttonHelpers.js:30-36`）：
+    // `isString(child.type) && isTwoCNChar(child.props.children)` 时 cloneElement
+    // 并把 children 逐字 join。此前本仓只处理字符串 / Text vnode 子节点，
+    // 元素子节点直接 cloneVNode ⇒ `<span>确定</span>` 不插空格，而 antd 插。
+    const w = mount(Button, { slots: { default: () => h('span', null, '确定') } });
+    await nextTick();
+    expect(w.find('span').text()).toBe('确 定');
+    expect(w.html()).not.toContain('<span>确定</span>');
+  });
+
+  it('元素包裹但内容不是两字 ⇒ 原样（判据是 `^{2}$`，不是「有元素就拆」）', async () => {
+    const one = mount(Button, { slots: { default: () => h('span', null, '确') } });
+    const three = mount(Button, { slots: { default: () => h('span', null, '确定吧') } });
+    await nextTick();
+    expect(one.find('span').text()).toBe('确');
+    expect(three.find('span').text()).toBe('确定吧');
+  });
+
+  it('autoInsertSpace=false 时元素包裹也不拆', async () => {
+    const w = mount(Button, {
+      props: { autoInsertSpace: false },
+      slots: { default: () => h('span', null, '确定') },
+    });
+    await nextTick();
+    expect(w.find('span').text()).toBe('确定');
+  });
+
   it('判据是 `^{2}$`：一个字 / 三个字都不算', () => {
     expect(withText({}, '确').text()).not.toContain(' ');
     expect(withText({}, '确定吧').text()).not.toContain(' ');
@@ -587,6 +677,35 @@ describe('Button · href 分支（<a> vs <button>）', () => {
     const w = mountBtn({ href: 'https://example.com' });
     expect(w.attributes('tabindex')).toBe('0');
     expect(w.attributes('aria-disabled')).toBe('false');
+  });
+
+  it('★ <a> 分支：受控的 tabindex / aria-disabled **压过**用户透传的同名属性 —— Issue #1.2', () => {
+    // antd 的 <a> 是 `{...linkButtonRestProps, …, tabIndex, "aria-disabled"}`
+    // （`Button.js:273-284`）—— 透传在前、受控在后。此前本仓模板把 `v-bind` 写在最后，
+    // 用户值会覆盖组件值 ⇒ 禁用锚点仍能 Tab 聚焦、且 aria-disabled 撒谎。
+    const w = mount(Button, {
+      props: { href: '#', disabled: true },
+      attrs: { tabindex: '5', 'aria-disabled': 'false' },
+    });
+    expect(w.attributes('tabindex')).toBe('-1');
+    expect(w.attributes('aria-disabled')).toBe('true');
+    // 未禁用时同样：受控值是 tabindex=0 / aria-disabled=false
+    const w2 = mount(Button, {
+      props: { href: '#' },
+      attrs: { tabindex: '5', 'aria-disabled': 'true' },
+    });
+    expect(w2.attributes('tabindex')).toBe('0');
+    expect(w2.attributes('aria-disabled')).toBe('false');
+  });
+
+  it('★ <a> 分支：与受控语义无关的透传属性仍然生效（不是一刀切丢弃 attrs）', () => {
+    const w = mount(Button, {
+      props: { href: '#', disabled: true },
+      attrs: { 'data-testid': 'anchor', 'aria-label': '自定义标签' },
+    });
+    expect(w.attributes('data-testid')).toBe('anchor');
+    // 合理的用户自定义 aria **保留**（上游也没有对 aria-label 做受控覆盖）
+    expect(w.attributes('aria-label')).toBe('自定义标签');
   });
 
   it('★ <a> 分支禁用时额外加 `-disabled` 类名（<button> 分支没有）', () => {
@@ -766,6 +885,83 @@ describe('Button · 其它类名', () => {
     expect(classesOf({})).toContain(`${P}-default`);
     expect(classesOf({ type: 'primary' })).toContain(`${P}-primary`);
     expect(classesOf({ type: 'dashed' })).toContain(`${P}-dashed`);
+  });
+});
+
+// ===========================================================================
+// 11.5 ★ Space.Compact 联动（前缀 / 方向必须**运行时**重算）
+// ===========================================================================
+
+describe('Button · Space.Compact 联动', () => {
+  /**
+   * 宿主：真实的 `Space.Compact` 上下文 + 真实的 `ConfigProvider`（方向）。
+   *
+   * ⚠️ 两者都必须是**响应式**的 —— 这条用例的全部意义就在于「上下文变了之后
+   *    Button 有没有重算」。用固定值的 provide 会把 bug 藏起来。
+   */
+  const mountHost = () => {
+    const prefixCls = ref('apollo-btn');
+    const direction = ref<DirectionType | undefined>('ltr');
+    const Host = defineComponent({
+      name: 'ACompactHost',
+      setup() {
+        provide(
+          spaceCompactItemContextKey,
+          computed(() => ({
+            compactSize: undefined,
+            compactDirection: 'horizontal' as const,
+            isFirstItem: true,
+            isLastItem: true,
+          })),
+        );
+        return () =>
+          h(
+            ConfigProvider,
+            { direction: direction.value },
+            {
+              default: () => h(Button, { prefixCls: prefixCls.value }, { default: () => 'Text' }),
+            },
+          );
+      },
+    });
+    return { w: mount(Host), prefixCls, direction };
+  };
+
+  it('初值：`{prefixCls}-compact-item` 三连（item / first / last）', async () => {
+    const { w } = mountHost();
+    await nextTick();
+    const classes = w.find('button').classes();
+    expect(classes).toContain(`${P}-compact-item`);
+    expect(classes).toContain(`${P}-compact-first-item`);
+    expect(classes).toContain(`${P}-compact-last-item`);
+  });
+
+  it('★ 动态改 `prefixCls` ⇒ 紧凑类名跟着换前缀 —— Issue #1.3', async () => {
+    const { w, prefixCls } = mountHost();
+    await nextTick();
+    prefixCls.value = 'my-btn';
+    await nextTick();
+    const classes = w.find('button').classes();
+    expect(classes).toContain('my-btn-compact-item');
+    expect(classes).toContain('my-btn-compact-first-item');
+    expect(classes).not.toContain(`${P}-compact-item`);
+  });
+
+  it('★ 动态切 RTL ⇒ 紧凑类名补 `-item-rtl` —— Issue #1.3', async () => {
+    const { w, direction } = mountHost();
+    await nextTick();
+    expect(w.find('button').classes()).not.toContain(`${P}-compact-item-rtl`);
+    direction.value = 'rtl';
+    await nextTick();
+    expect(w.find('button').classes()).toContain(`${P}-compact-item-rtl`);
+    // 根上的 `-rtl` 与紧凑的 `-item-rtl` 是两条独立判据，都要在
+    expect(w.find('button').classes()).toContain(`${P}-rtl`);
+  });
+
+  it('不在 Compact 里 ⇒ 一个紧凑类名都没有', async () => {
+    const w = mount(Button, { slots: { default: () => 'Text' } });
+    await nextTick();
+    expect(w.classes().some((c) => c.includes('-compact-'))).toBe(false);
   });
 });
 

@@ -143,7 +143,7 @@ outline: [2, 3]
 
 ::: v-pre
 
-**size**：`size` 的默认值是 `middle`，此时**不**输出 `-lg` / `-sm` 类名。
+**size**：`size` 的默认档是 `medium`（旧写法 `middle` 同样合法），此时**不**输出 `-lg` / `-sm` 类名。
 
 :::
 
@@ -164,7 +164,7 @@ outline: [2, 3]
 | iconPlacement | 图标位置 | `'start' \| 'end'` | `'start'` |
 | ~~iconPosition~~ | ⚠️ 已废弃，请用 `iconPlacement` | `'start' \| 'end'` | — |
 | shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
-| size | 尺寸。`middle` **不**产类名 | `'small' \| 'middle' \| 'large'` | 取 ConfigProvider 的 `componentSize` |
+| size | 尺寸。`medium` / `middle` 都是默认档，**不**产类名 | `'small' \| 'medium' \| 'middle' \| 'large'`（= `SizeType`） | 取 ConfigProvider 的 `componentSize` |
 | disabled | 禁用。判据是 `??` ⇒ 显式 `false` 能关闭父级的 `true` | `boolean` | — |
 | loading | 加载态 | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
 | ghost | 幽灵按钮。会把 `solid` 变体退化成 `outlined` | `boolean` | `false` |

@@ -118,7 +118,7 @@ defineExpose({ focus, blur, nativeElement });
 | 类型 | 使用具体类型，禁止 `any`；复杂联合类型从 `interface.ts` 引用 |
 | 默认值 | 必须显式声明且与 antd 一致 |
 | 可选性 | 与 antd 一致（antd 中可选的在 Vue 中也必须可选） |
-| 枚举值 | 与 antd 一致，如 `size?: 'small' \| 'middle' \| 'large'`（**保留 `middle`，不改成 `medium`**） |
+| 枚举值 | 与 antd 一致，如 `size?: 'small' \| 'medium' \| 'middle' \| 'large'`（= `config-provider` 的 `SizeType`）。**`middle` 保留不删、`medium` 也不能漏** —— 6.6.4 两个都在，`medium` 是推荐写法（`SizeContext.d.ts:5`） |
 | 废弃 prop | 保留并输出 `warning`，与 antd 的废弃节奏一致 |
 | `prefixCls` | 每个组件都必须支持，默认从 ConfigProvider 读取，兜底 `'apollo'` |
 | 语义化 classNames/styles | 每个组件都必须支持 `classNames` / `styles`，键名与 antd 一致 |

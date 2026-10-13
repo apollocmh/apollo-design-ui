@@ -128,8 +128,41 @@ const prefixCls = computed(() => getPrefixCls('btn', props.prefixCls));
 // children / icon
 // ---------------------------------------------------------------------------
 
-/** 默认插槽的 VNode 列表。上游的 `toArray(children)`（`:160`）。 */
-const childNodes = computed(() => (slots.default ? slots.default() : []));
+/**
+ * 「这个子节点算不算内容」—— `React.Children.toArray` + `isReactRenderable` 的
+ * Vue 对应物。判据逐条来自上游：
+ *
+ *   - `React.Children.toArray` 丢弃 `null` / `undefined` / **布尔**
+ *   - `isReactRenderable(v)`（`@rc-component/util/es/is.js:17`）
+ *     = `v !== null && v !== undefined && v !== false && v !== ''`
+ *     ⇒ **空字符串不算内容**（但 `0` 算 —— 上游 `-icon-only` 的判据里专门有
+ *     `children !== 0`，`:384`）
+ *   - Vue 特有的 **Comment vnode**：`v-if="false"` 的条件插槽编译出的是
+ *     `createCommentVNode('v-if', true)`。它**不是**内容，但在 Vue 里是实打实的
+ *     一个节点 ⇒ 不过滤就会让「只含条件插槽 / 空插槽」的 Button 被判定成「有内容」，
+ *     表现为**少一个 `-icon-only`、多一个空 `<span>` 包裹**（Issue #1.5）。
+ *   - 空文本 vnode（`createTextVNode('')`）同上。
+ */
+function isRenderableChild(node: VNodeChild): boolean {
+  if (node === null || node === undefined || typeof node === 'boolean') return false;
+  if (node === '') return false;
+  if (isVNode(node)) {
+    if (node.type === Comment) return false;
+    if (node.type === TextVNode && (node.children === '' || node.children === null)) return false;
+  }
+  return true;
+}
+
+/**
+ * 默认插槽的 VNode 列表。上游的 `toArray(children)`（`:160`）。
+ *
+ * ⚠️ 必须**先过滤**再判 `length`：`needInserted`（`childNodes.length === 1`）、
+ *    `hasChildren`（`-icon-only` 与内容包裹的开关）都吃这个长度。
+ */
+const childNodes = computed<VNodeChild[]>(() => {
+  const raw = slots.default ? slots.default() : [];
+  return (Array.isArray(raw) ? raw : [raw]).filter(isRenderableChild);
+});
 
 /**
  * 是否有内容。判据含 `children !== 0`（`:384`）—— `0` 算有内容。
@@ -254,9 +287,17 @@ const mergedInsertSpace = computed(() => props.autoInsertSpace ?? contextAutoIns
 
 const mergedDisabled = useDisabled(() => props.disabled);
 
+/**
+ * ⚠️ 必须传 **getter**，不能传 `prefixCls.value` / `direction.value` 的**快照**。
+ *
+ * `useCompactItemContext` 内部是 `computed(() => … toValue(prefixCls) …)`；传裸值
+ * 时 `toValue` 返回的就是那个字符串，`computed` 再也追踪不到 `prefixCls` / `direction`
+ * 的变化 ⇒ 动态切 `prefixCls` 或切 RTL 之后，紧凑类名会**停在旧前缀/旧方向**上
+ * （Issue #1.3）。其余 12 个消费方传的都是 ref / getter，Button 是唯一的例外。
+ */
 const { compactSize, compactItemClassnames } = useCompactItemContext(
-  prefixCls.value,
-  direction.value,
+  () => prefixCls.value,
+  () => direction.value,
 );
 
 /**
@@ -462,6 +503,9 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-sm`]: sizeFullName.value === 'small',
     [`${prefixCls.value}-two-chinese-chars`]:
       hasTwoCNChar.value && mergedInsertSpace.value && !innerLoading.value,
+    // ⚠️ 上游是 `!children && children !== 0 && !!iconType`（`:384`）。`children !== 0`
+    //    这一支由 `childNodes` 的过滤器保证：`0` / `'0'` 是**内容**，不会被剔掉
+    //    ⇒ `hasChildren` 为真 ⇒ 不挂 `-icon-only`。空串 / `false` / Comment 则被剔掉。
     [`${prefixCls.value}-icon-only`]: !hasChildren.value && !!iconType.value,
     [`${prefixCls.value}-background-ghost`]: ghost.value && !isUnBordered.value,
     [`${prefixCls.value}-loading`]: innerLoading.value,
@@ -484,6 +528,14 @@ const iconStyleAttrs = computed(() => styleAttrs(mergedStyles.value.icon));
  * Root `class` / `style` are Vue fallthrough attrs, merged with generated state and semantic
  * classes plus ConfigProvider / semantic root styles. Re-read attrs during render because
  * useAttrs() is intentionally non-reactive.
+ *
+ * ⚠️ **这个对象必须在模板里排在受控属性之前**（`v-bind` 先、`href`/`tabindex`/
+ *    `aria-disabled` 后）。antd 的 `<a>` 分支是 `{...linkButtonRestProps, className, href,
+ *    style, onClick, ref, tabIndex, "aria-disabled"}`（`Button.js:273-284`）——
+ *    用户透传的属性**在前**、组件受控的属性**在后**，后者胜。
+ *    此前模板把 `v-bind` 写在最后，于是 `<Button href disabled tabindex="5">` 的
+ *    `tabindex` / `aria-disabled` 会被用户值覆盖 ⇒ 禁用的锚点仍可 Tab 聚焦
+ *    （Issue #1.2）。
  */
 const getRootAttrs = (isAnchor = false) =>
   mergeProps(
@@ -516,7 +568,14 @@ const iconClass = computed(() => [
   { [`${prefixCls.value}-loading-icon`]: innerLoading.value && !mergedLoadingIcon.value },
   mergedClassNames.value.icon,
 ]);
-const contentClass = computed(() => [mergedClassNames.value.content]);
+/**
+ * ⚠️ 返回**裸值**而不是 `[value]`。antd 的字符串分支是
+ * `createElement("span", { className, style }, …)`，`className` 为 `undefined` 时
+ * React **不输出**该属性；而 Vue 的 `:class="[undefined]"` 会输出 `class=""`
+ * —— 与元素分支（`cloneVNode` 合并 class）自相矛盾，也与 antd 的产物不一致。
+ * （顺带修：Issue #1 的关联面「内容包裹节点」。）
+ */
+const contentClass = computed(() => mergedClassNames.value.content);
 
 /**
  * antd `buttonHelpers.js` 的 `spaceChildren` / `splitCNCharsBySpace` 元素分支：
@@ -579,7 +638,22 @@ const contentNodes = computed<VNode[] | null>(() => {
       return h('span', { class: cls, style, key: `f${i}` }, [k]);
     }
     // 元素：与 antd `cloneElement` 同语义 —— 合并 class / style，**不额外包一层**
-    return cloneVNode(k, { class: cls as never, style: style as never });
+    const cloned = cloneVNode(k, { class: cls as never, style: style as never });
+    // `splitCNCharsBySpace` 的**元素分支**（`buttonHelpers.js:30-36`）：
+    // `isString(child.type) && isTwoCNChar(child.props.children)` 时把 children
+    // 逐字拆开再 join —— 与字符串分支同一判据，只是落点是元素**自己的** children。
+    // 漏了它 ⇒ `<Button><span>确定</span></Button>` 不插空格，而 antd 插（Issue #1.4）。
+    if (
+      insert &&
+      typeof k.type === 'string' &&
+      typeof k.children === 'string' &&
+      TWO_CN_CHAR.test(k.children)
+    ) {
+      // ⚠️ `cloneVNode` 的 extraProps **不接管** `children`（只合并 props，children
+      //    仍取自原 vnode）⇒ 必须在克隆产物上直接改写；此时它是全新对象，安全。
+      cloned.children = spaceText(k.children);
+    }
+    return cloned;
   });
 });
 
@@ -637,10 +711,10 @@ defineExpose({ nativeElement: rootRef });
   <a
     v-if="href !== undefined"
     ref="rootRef"
+    v-bind="getRootAttrs(true)"
     :href="mergedDisabled ? undefined : href"
     :tabindex="mergedDisabled ? -1 : 0"
     :aria-disabled="mergedDisabled"
-    v-bind="getRootAttrs(true)"
     @click="onClick"
   >
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
@@ -665,9 +739,9 @@ defineExpose({ nativeElement: rootRef });
   <button
     v-else
     ref="rootRef"
+    v-bind="getRootAttrs()"
     :type="htmlType"
     :disabled="mergedDisabled"
-    v-bind="getRootAttrs()"
     @click="onClick"
   >
     <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">

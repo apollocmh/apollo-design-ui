@@ -24,7 +24,7 @@ ButtonVariantType = 'outlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link'
 ButtonColorType = 'default' | 'primary' | 'danger' |
                   'blue' | 'purple' | 'cyan' | 'green' | 'magenta' | 'pink' | 'red' |
                   'orange' | 'yellow' | 'volcano' | 'geekblue' | 'lime' | 'gold'
-SizeType        = 'small' | 'middle' | 'large'
+SizeType        = 'small' | 'medium' | 'middle' | 'large'   // = config-provider 的 SizeType
 ```
 
 `BaseButtonProps`：`type / color / variant / icon / iconPosition(废弃) / iconPlacement /

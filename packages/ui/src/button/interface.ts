@@ -8,8 +8,10 @@
  * ── 与 antd 类型面的差异（都有据可查）────────────────────────────────────────
  *
  * 1. `children` 不在 Props 里（规则 C19）—— Vue 侧是默认插槽。
- * 2. `SizeType` 改名为 `ButtonSize`。antd 的 `SizeType` 住在 config-provider；
- *    这里不重复导出同名类型，避免 `index.ts` 重名导出（与 Divider 同一处置）。
+ * 2. `SizeType` 以别名 `ButtonSize` 导出（`type ButtonSize = SizeType`）。antd 的
+ *    `SizeType` 住在 config-provider；这里不重复导出**同名**类型，避免 `index.ts`
+ *    重名导出（与 Divider 同一处置），但集合本身**不再手抄** —— 手抄过一次就漏了
+ *    `medium`（Issue #1.1）。
  * 3. `React.CSSProperties` → Vue 的 `CSSProperties`，`React.ReactNode` → `VNodeChild`
  *    （规则 C16 / C18）。
  *    例外：`icon` / `loading.icon` 另接 `Component` —— Vue 没有「React 元素」这一
@@ -21,6 +23,7 @@
 
 import type { Component, CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
+import type { SizeType } from '../config-provider/size-context';
 
 // ---------------------------------------------------------------------------
 // 基础枚举（取值集合逐字来自 antd 的 `buttonHelpers.d.ts`）
@@ -57,8 +60,21 @@ export type ButtonColorType =
   | 'lime'
   | 'gold';
 
-/** 尺寸。与 antd 的 `SizeType` 同集合。 */
-export type ButtonSize = 'small' | 'middle' | 'large';
+/**
+ * 尺寸。
+ *
+ * ⚠️ **直接别名到 `config-provider` 的 `SizeType`**，不另立枚举 —— 上游 `ButtonProps.size`
+ *    的类型就是 `SizeType`（`Button.d.ts:8,24`），而 6.6.4 的 `SizeType` 是
+ *    `'small' | 'medium' | 'middle' | 'large' | undefined`（`SizeContext.d.ts:5`）。
+ *
+ *    此前这里手写 `'small' | 'middle' | 'large'`，**漏了 `medium`** ⇒
+ *    「与当前基准支持的 medium 不一致；运行时与类型定义分叉」（Issue #1.1）。
+ *    用别名而不是再抄一份，是为了让以后 `SizeType` 变化时不会再分叉。
+ *
+ * 类名映射只有两档（`Button.js:230-231`）：`large` ⇒ `-lg`、`small` ⇒ `-sm`；
+ * `medium` / `middle` 都是**默认档**，不产生尺寸类名（与 antd 一致）。
+ */
+export type ButtonSize = SizeType;
 
 /** 图标位置。 */
 export type ButtonIconPlacement = 'start' | 'end';

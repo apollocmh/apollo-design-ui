@@ -11,7 +11,8 @@
  *
  * ── 与 antd 类型面的登记差异（见 `interface.ts` 的文件头）──────────────────────
  *   1. `children` 不在 Props 里（Vue 侧是默认插槽，规则 C19）
- *   2. `SizeType` 改名为 `ButtonSize`（避免与 config-provider 的 `SizeType` 重名）
+ *   2. `SizeType` 以别名 `ButtonSize` 导出（`type ButtonSize = SizeType`）—— 集合与
+ *      `config-provider` 的 `SizeType` **同源**，含 `'medium' | 'middle'` 两档默认值
  *   3. `React.CSSProperties` → Vue `CSSProperties`、`React.ReactNode` → `VNodeChild`
  *      —— 例外：`icon` / `loading.icon` 另接 `Component`（Vue 没有「React 元素」
  *      形态，对应物是组件本身，与 `EmptyImage` 同一裁决）。见下面的
@@ -22,6 +23,7 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import { type CSSProperties, defineComponent, h, type VNodeChild } from 'vue';
+import type { SizeType } from '../../config-provider/size-context';
 import type {
   Button,
   ButtonColorType,
@@ -50,7 +52,8 @@ describe('Button · 基础枚举', () => {
     expectTypeOf<ButtonVariantType>().toEqualTypeOf<
       'outlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link'
     >();
-    expectTypeOf<ButtonSize>().toEqualTypeOf<'small' | 'middle' | 'large'>();
+    // ★ `medium` 与 `middle` 都是合法默认档（Issue #1.1）—— 集合直接别名到 `SizeType`
+    expectTypeOf<ButtonSize>().toEqualTypeOf<'small' | 'medium' | 'middle' | 'large'>();
   });
 
   it('★ `ButtonColorType` 是 3 个语义色 + 13 个预设色板色（16 个）', () => {
@@ -106,6 +109,19 @@ describe('Button · Props', () => {
       styles: { root: { color: 'red' } },
     };
     expectTypeOf(full).toMatchTypeOf<ButtonProps>();
+  });
+
+  it('★ `size` 接受 6.6.4 的 `SizeType` 全集（`medium` 不再被类型拒绝）—— Issue #1.1', () => {
+    const small: ButtonProps = { size: 'small' };
+    const medium: ButtonProps = { size: 'medium' };
+    const middle: ButtonProps = { size: 'middle' };
+    const large: ButtonProps = { size: 'large' };
+    expectTypeOf(small).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(medium).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(middle).toEqualTypeOf<ButtonProps>();
+    expectTypeOf(large).toEqualTypeOf<ButtonProps>();
+    // 与 config-provider 的 `SizeType` 是**同一个**类型，不是「长得像」
+    expectTypeOf<ButtonSize>().toEqualTypeOf<SizeType>();
   });
 
   it('根 class/style 是 Vue 原生 attrs，不重复声明为 ButtonProps', () => {
@@ -236,8 +252,8 @@ describe('Button · 负例（应当报错）', () => {
       const badColor: ButtonProps = { color: 'teal' };
       // @ts-expect-error `variant` 不接受 'ghost'（ghost 是独立 prop）
       const badVariant: ButtonProps = { variant: 'ghost' };
-      // @ts-expect-error `size` 不接受 'middle' 之外的其它值拼写
-      const badSize: ButtonProps = { size: 'medium' };
+      // @ts-expect-error `size` 不接受 'big'（合法集合是 small/medium/middle/large）
+      const badSize: ButtonProps = { size: 'big' };
       // @ts-expect-error `shape` 不接受 'pill'
       const badShape: ButtonProps = { shape: 'pill' };
       // @ts-expect-error `htmlType` 不接受 'menu'
