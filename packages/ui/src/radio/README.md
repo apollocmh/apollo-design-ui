@@ -17,7 +17,7 @@
 | # | 差异 | 分类 | 证据 |
 |---|---|---|---|
 | D43 | Wave 波纹不实现；`ant-wave-target` 类保留（**仅非 button 形态**） | PLATFORM | L1「非 button 形态带 ant-wave-target，button 形态不带」+ L4 |
-| D44 | `-wrapper-in-form-item` 恒 `false`（form 未落地） | PLATFORM | interface 注释 |
+| D44 | ~~`-wrapper-in-form-item` 恒 `false`~~ ⇒ ✅ **已接线**（Issue #10.2，2026-10-14）：读 `FormItemInputContext.isFormItemInput`（上游 `radio.js:27/92`） | 已修 | L4 `radio:in-form-item` 对拍 |
 | D45 | Group 的 `name` 默认走 `useId()`（值格式与 React 不同，语义相同） | PLATFORM | L1「未传 name ⇒ 自动生成且整组一致」 |
 | D46 | Component Token 落 `var(--apollo-*)` 别名派生；`radioSize` / `dotSize` 按默认主题算成常量 | INTENDED | L7 `theme.test.ts` |
 | D47 | `RadioButton` 与 `Radio` 共用同一份 props（antd 的类型更窄） | INTENDED | L3 `type.test-d.ts` |
@@ -95,7 +95,9 @@
 ## 7. 已知缺口
 
 - **Wave 波纹动画**：将来做 wave 基建时补（类名已对齐）。
-- **`-wrapper-in-form-item`**：form 落地后接 `FormItemInputContext`。
+- **`skipGroup`**（Issue #10.3，**已核为误报**）：类型从 `AbstractCheckboxProps` 继承，
+  但 antd 的 `radio.js` 全文不读 ⇒ **无运行时语义**。本仓保留声明以实现 DOM 对齐
+  （不声明会多一个 `skipgroup` 属性）。详见 `interface.ts`。
 - **form 的 `name` 注入**：antd 的 `useId(toNamePathStr(formItemName))` 在 Form.Item 内会
   拿到表单字段名（`preference` / `0_preferences` 这类）。本仓 form 未落地 ⇒ 恒走
   `useId()` 生成。落点：`packages/ui/src/form` 的 `FormItemInputContext`（与 D44 同一处）。

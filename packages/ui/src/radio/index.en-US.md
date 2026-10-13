@@ -49,7 +49,7 @@ See [`demo/`](./demo) (14 demos, one-to-one with antd's non-debug demos).
 | name | `name` for all inputs; a single generated value is used when omitted | `string` | auto |
 | optionType | Appearance of children: `default` dot / `button` | `'default' \| 'button'` | `'default'` |
 | buttonStyle | Fill style for the button appearance | `'outline' \| 'solid'` | `'outline'` |
-| size | Size for the button appearance | `'large' \| 'middle' \| 'small'` | — |
+| size | Size (**shared `SizeType`**, includes `'medium'`). ⚠️ Only `'large'` / `'small'` emit a size class; `'medium'` / `'middle'` are both the default | `'small' \| 'medium' \| 'middle' \| 'large'` | `'middle'` |
 | vertical | Stack vertically (`orientation` wins) | `boolean` | `false` |
 | orientation | Layout direction (wins over `vertical`) | `'horizontal' \| 'vertical'` | — |
 | block | Fit to the parent width | `boolean` | `false` |

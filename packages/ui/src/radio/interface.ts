@@ -25,6 +25,7 @@
 
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { CheckboxChangeEvent, CheckboxOptionType, CheckboxRef } from '../checkbox/interface';
+import type { SizeType } from '../config-provider/size-context';
 
 /** antd：`export type { CheckboxRef as RadioRef } from '@rc-component/checkbox'`。 */
 export type RadioRef = CheckboxRef;
@@ -97,6 +98,24 @@ export interface AbstractRadioProps {
   id?: string;
   autoFocus?: boolean;
   type?: string;
+  /**
+   * ⚠️ **类型继承产物，antd 的 Radio 运行时从不读它**（Issue #10.3，已核为**误报**）。
+   *
+   * 来源：上游 `RadioProps extends AbstractCheckboxProps<RadioChangeEvent>`
+   * （`radio/interface.d.ts:49`），而 `AbstractCheckboxProps` 里有
+   * `skipGroup?: boolean`（`checkbox/Checkbox.d.ts:28`，为 `Checkbox.Group` 服务）
+   * ⇒ Radio **在类型上**继承到了它。
+   *
+   * 但 `radio.js` 全文**没有** `skipGroup` 出现：`groupContext` 一律无条件生效
+   * （`radio.js:68-73` 的 `if (groupContext)`）。SSR 实测（antd 6.6.4）：
+   * `<Radio.Group><Radio skipGroup value={1}/></Radio.Group>` 里那项**照样**
+   * 带 `-wrapper-checked`，且 React 会打印
+   * `does not recognize the 'skipGroup' prop on a DOM element`。
+   *
+   * ⇒ 本仓保留声明（**类型面与 antd 对齐**），但**刻意不给任何运行时语义**；
+   *    声明成 Vue prop 还能顺带实现 DOM 对齐 —— 不声明的话它会落进 `attrs`
+   *    变成一个 `skipgroup="true"` 属性（antd 的产物里没有）。
+   */
   skipGroup?: boolean;
   required?: boolean;
 }
@@ -123,7 +142,16 @@ export interface RadioGroupProps {
   defaultValue?: RadioValue;
   value?: RadioValue;
   onChange?: (e: RadioChangeEvent) => void;
-  size?: 'large' | 'middle' | 'small';
+  /**
+   * 尺寸。
+   *
+   * 🚨 **必须用共享 `SizeType`**（`'small' | 'medium' | 'middle' | 'large'`），
+   * 不能手写 `'large' | 'middle' | 'small'` —— 上游 `RadioGroupProps.size?: SizeType`
+   * （`radio/interface.d.ts:14`，从 `config-provider/SizeContext` 取）⇒ 手写会**漏掉
+   * `'medium'`**，让合法用法在类型层被拒（Issue #10.1）。
+   * ⚠️ `'medium'` / `'middle'` **都不产尺寸类名**（只有 `-large` / `-small`）。
+   */
+  size?: SizeType;
   onMouseEnter?: (e: MouseEvent) => void;
   onMouseLeave?: (e: MouseEvent) => void;
   onFocus?: (e: FocusEvent) => void;

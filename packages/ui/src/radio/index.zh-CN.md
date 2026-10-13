@@ -49,7 +49,7 @@ subtitle: 单选框
 | name | 组内全部 input 的 name；不传则自动生成一个整组一致的值 | `string` | 自动 |
 | optionType | 子项的形态：`default` 圆点 / `button` 按钮 | `'default' \| 'button'` | `'default'` |
 | buttonStyle | 按钮形态的填充风格 | `'outline' \| 'solid'` | `'outline'` |
-| size | 按钮形态的尺寸 | `'large' \| 'middle' \| 'small'` | — |
+| size | 尺寸（**共享 `SizeType`**，含 `'medium'`）。⚠️ 只有 `'large'` / `'small'` 产尺寸类名，`'medium'` / `'middle'` 同属默认档 | `'small' \| 'medium' \| 'middle' \| 'large'` | `'middle'` |
 | vertical | 竖向排列（`orientation` 优先） | `boolean` | `false` |
 | orientation | 排列方向（优先于 `vertical`） | `'horizontal' \| 'vertical'` | — |
 | block | 撑满父容器宽度 | `boolean` | `false` |

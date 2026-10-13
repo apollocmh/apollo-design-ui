@@ -8,6 +8,7 @@
 
 import { expectTypeOf, it } from 'vitest';
 import { h } from 'vue';
+import type { SizeType } from '../../config-provider/size-context';
 import { Radio, RadioButton, RadioGroup } from '../index';
 import type {
   RadioChangeEvent,
@@ -89,6 +90,15 @@ it('负例：Radio 的 checked 不能是字符串', () => {
   // @ts-expect-error checked 是 boolean
   const badChecked: RadioProps = { checked: 'yes' };
   void badChecked;
+});
+
+it('★ Issue #10.1：RadioGroupProps.size 是共享 SizeType（含 medium）', () => {
+  // 上游 `RadioGroupProps.size?: SizeType`（`radio/interface.d.ts:14`）。
+  expectTypeOf<RadioGroupProps['size']>().toEqualTypeOf<SizeType | undefined>();
+
+  // 正例：'medium' 必须可用（此前手写 `'large' | 'middle' | 'small'` 把它漏掉了）
+  const sizes: NonNullable<RadioGroupProps['size']>[] = ['small', 'medium', 'middle', 'large'];
+  void sizes;
 });
 
 it('负例：RadioGroup 没有语义化槽位（antd 同）', () => {

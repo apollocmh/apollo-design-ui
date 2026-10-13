@@ -50,6 +50,7 @@ import {
 import { useBubbleLock } from '../checkbox/use-bubble-lock';
 import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
+import { useFormItemInputContext } from '../form/context';
 import { useRadioGroup, useRadioOptionType } from './context';
 import type {
   RadioChangeEvent,
@@ -93,6 +94,14 @@ export const radioPropDefs = {
   tabIndex: { type: Number, default: undefined },
   required: { type: Boolean, default: undefined },
   autoFocus: { type: Boolean, default: undefined },
+  /**
+   * ⚠️ **类型继承产物，运行时无任何语义**（Issue #10.3，已核为误报）。
+   *
+   * 详见 `interface.ts` 的 `AbstractRadioProps.skipGroup` —— antd 的 `radio.js`
+   * 全文不读它（`groupContext` 无条件生效），但类型从 `AbstractCheckboxProps`
+   * 继承到了。这里**照样声明**：既保持类型面一致，又能把它从 `attrs` 摘掉
+   * （不声明的话它会在 DOM 上留一个 `skipgroup="true"`，antd 产物里没有）。
+   */
   skipGroup: { type: Boolean, default: false },
   /** ⚠️ 无效 prop：出现即 usage 告警（见文件头判据 3）。 */
   optionType: { type: String as PropType<RadioProps['optionType']>, default: undefined },
@@ -126,6 +135,16 @@ export const RadioComponent = defineComponent({
     const groupContext = useRadioGroup();
     const optionTypeContext = useRadioOptionType();
     const contextDisabled = useDisabled();
+    /**
+     * Form.Item 通道（Issue #10.2）。
+     *
+     * 上游 `radio.js:27` 读 `FormItemInputContext` 只为产出
+     * `${prefixCls}-wrapper-in-form-item`（`radio.js:92`）—— 本仓原注释写「依赖 form
+     * 未落地 ⇒ 恒 false」，而 **form 已在 Issue #8 落地** ⇒ 那条注释已过期，必须接线。
+     * ⚠️ 它是**纯 DOM 契约类**，antd 的样式里也没有对应规则（SSR 实测确认）——
+     *    但 L4 的 DOM 对拍会看到它，不接就是差异。
+     */
+    const formItemInputContext = useFormItemInputContext();
     const devWarning = useDevWarning('Radio');
 
     // ============================ Warning ==============================
@@ -227,7 +246,14 @@ export const RadioComponent = defineComponent({
     );
 
     // ============================ Event Lock ============================
-    const { onLabelClick, onInputClick } = useBubbleLock(callbacks.onClick);
+    /**
+     * ⚠️ 传 **getter**（Issue #10.4）：`callbacks` 就是 `attrs`，裸传会把首帧的
+     *    `onClick` 焊死 —— 父级替换 handler 之后仍调旧的。与 checkbox 同判
+     *    （`useBubbleLock` 自 #9.2 起收 `MaybeRefOrGetter`）。
+     */
+    const { onLabelClick, onInputClick } = useBubbleLock(
+      () => (attrs as { onClick?: (e: MouseEvent) => void }).onClick,
+    );
 
     // ============================== Refs ===============================
     const inputRef = shallowRef<HTMLInputElement | null>(null);
@@ -253,7 +279,8 @@ export const RadioComponent = defineComponent({
           [`${cls}-wrapper-checked`]: mergedChecked.value,
           [`${cls}-wrapper-disabled`]: mergedDisabled.value,
           [`${cls}-wrapper-rtl`]: direction === 'rtl',
-          // `-wrapper-in-form-item` 依赖 form 未落地 ⇒ 恒 false（PLATFORM）
+          // 上游 `radio.js:92`：Form.Item 内加这个类（纯 DOM 契约，无样式规则）
+          [`${cls}-wrapper-in-form-item`]: formItemInputContext.value.isFormItemInput,
           [`${cls}-wrapper-block`]: !!groupContext?.block,
         },
         context.className,

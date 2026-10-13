@@ -10,6 +10,7 @@
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/radio.dom.json';
+import { Form, FormItem } from '../../form';
 import { Radio, RadioButton, RadioGroup } from '../index';
 
 const BP = { prefixCls: 'apollo-radio' };
@@ -162,6 +163,21 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
         },
         { default: () => 'x' },
       ),
+  },
+  /**
+   * Form.Item 通道（Issue #10.2）。
+   *
+   * 上游读 `FormItemInputContext.isFormItemInput` 只为产出
+   * `${prefixCls}-wrapper-in-form-item`（`radio.js:27/92`）—— 本仓原判据写
+   * 「form 未落地 ⇒ 恒 false」，而 form 已在 Issue #8 落地 ⇒ 这条用例专门钉住
+   * 「进了 Form.Item 就要有这个类」。
+   */
+  'radio:in-form-item': {
+    render: () =>
+      h(Form, null, {
+        default: () =>
+          h(FormItem, { name: 'r' }, { default: () => h(Radio, BP, { default: () => 'x' }) }),
+      }),
   },
 };
 

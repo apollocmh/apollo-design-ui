@@ -3,7 +3,7 @@
   "antdVersion": "6.6.4",
   "renderer": "react-dom/server.renderToStaticMarkup",
   "prefixCls": "apollo",
-  "caseCount": 31,
+  "caseCount": 32,
   "cases": [
     {
       "id": "radio:no-props",
@@ -128,6 +128,10 @@
     {
       "id": "radio:semantic",
       "html": "<label class=\"apollo-radio-wrapper custom-root css-dev-only-do-not-override-1v6lqee css-var-root apollo-radio-css-var\" style=\"padding:10px\"><span class=\"apollo-radio custom-icon ant-wave-target\" style=\"border-radius:2px\"><input class=\"apollo-radio-input\" type=\"radio\"/></span><span class=\"apollo-radio-label custom-label\">x</span></label>"
+    },
+    {
+      "id": "radio:in-form-item",
+      "html": "<form class=\"apollo-form apollo-form-horizontal css-var-root apollo-form-css-var css-dev-only-do-not-override-1v6lqee\"><div class=\"apollo-form-item css-var-root apollo-form-css-var css-dev-only-do-not-override-1v6lqee apollo-form-item-horizontal\"><div class=\"apollo-row apollo-form-item-row css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-col apollo-form-item-control css-dev-only-do-not-override-1v6lqee css-var-root\"><div class=\"apollo-form-item-control-input\"><div class=\"apollo-form-item-control-input-content\"><label class=\"apollo-radio-wrapper apollo-radio-wrapper-in-form-item css-dev-only-do-not-override-1v6lqee css-var-root apollo-radio-css-var\"><span class=\"apollo-radio ant-wave-target\"><input id=\"r\" class=\"apollo-radio-input\" type=\"radio\"/></span><span class=\"apollo-radio-label\">x</span></label></div></div></div></div></div></form>"
     }
   ]
 }

@@ -30,7 +30,7 @@ const check = process.argv.includes('--check');
 const require = createRequire(import.meta.url);
 const antdPkg = require('antd/package.json');
 const antd = require('antd');
-const { ConfigProvider, Radio } = antd;
+const { ConfigProvider, Form, Radio } = antd;
 const { Group: RadioGroup, Button: RadioButton } = Radio;
 
 const cases = [];
@@ -194,6 +194,16 @@ push(
       'x',
     ),
   ),
+);
+
+// ---- Form.Item 通道（Issue #10.2）：`-wrapper-in-form-item` 类 ----
+// ⚠️ 上游读的是 `FormItemInputContext.isFormItemInput`（`radio.js:27/92`）——
+//    本仓曾把这条判据写成「form 未落地 ⇒ 恒 false」，form 已在 Issue #8 落地，
+//    于是这里补一条**能看见该差异**的用例。
+
+push(
+  'radio:in-form-item',
+  wrap(h(Form, null, h(Form.Item, { name: 'r' }, h(Radio, BP, 'x')))),
 );
 
 const payload = {
