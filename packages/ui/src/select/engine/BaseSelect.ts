@@ -88,6 +88,8 @@ export const BaseSelect = defineComponent({
     placeholder: { type: null as unknown as PropType<unknown>, default: undefined },
     maxLength: { type: Number, default: undefined },
     tabIndex: { type: Number, default: undefined },
+    /** 挂载后自动聚焦搜索框。Selector → SearchInput 的链路本就有它，缺的是这一跳。 */
+    autoFocus: { type: Boolean, default: undefined },
     title: { type: String, default: undefined },
     allowClear: {
       type: [Boolean, Object] as PropType<boolean | { clearIcon?: unknown; label?: string }>,
@@ -874,6 +876,7 @@ export const BaseSelect = defineComponent({
                 rawOpen: rawOpen.value,
                 tabIndex: props.tabIndex,
                 title: props.title,
+                autoFocus: props.autoFocus,
                 maxLength: props.maxLength,
                 maxTagCount: props.maxTagCount,
                 maxTagTextLength: props.maxTagTextLength,

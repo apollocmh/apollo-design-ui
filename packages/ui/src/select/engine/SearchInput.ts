@@ -17,7 +17,16 @@
  *    `--select-input-width`，让输入框宽度跟着内容长（样式层用 `calc(var(...) * 1px)`）。
  */
 
-import { type CSSProperties, computed, defineComponent, h, type PropType, ref, watch } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  type PropType,
+  ref,
+  watch,
+} from 'vue';
 
 export const SearchInput = defineComponent({
   name: 'ASelectSearchInput',
@@ -60,7 +69,7 @@ export const SearchInput = defineComponent({
     },
     onInputBlur: { type: Function as PropType<() => void>, default: undefined },
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const inputRef = ref<HTMLInputElement | null>(null);
     const widthVar = ref<number | undefined>(undefined);
     const composing = ref(false);
@@ -78,6 +87,20 @@ export const SearchInput = defineComponent({
 
     watch(() => props.value, syncWidth, { flush: 'post' });
     watch(() => props.syncWidth, syncWidth, { flush: 'post' });
+
+    /**
+     * ⚠️ `autoFocus` 必须**自己调 `focus()`**。
+     *
+     * 原生 `autofocus` 只在 HTML **解析期**生效；Vue 的 `patchProp` 是元素创建**之后**
+     * 才设 `el.autofocus = true` —— 浏览器与 jsdom 都不会因此聚焦（React 之所以
+     * "能用"是它在 mount 时显式 `node.focus()`）。判据与 `Rate` /
+     * `_internal/action-button` 一致。禁用态不聚焦（`disabled` 元素本身也不可聚焦）。
+     */
+    onMounted(() => {
+      if (props.autoFocus && !props.disabled) {
+        inputRef.value?.focus();
+      }
+    });
 
     const handleInput = (event: Event): void => {
       const target = event.target as HTMLInputElement;
@@ -122,6 +145,11 @@ export const SearchInput = defineComponent({
       };
 
       return h('input', {
+        // ⚠️ 透传属性（`aria-describedby` 等由 Selector 按 antd 落点分派下来的）
+        //    必须落到这个 combobox input 上 —— 它 `inheritAttrs: false`，
+        //    不铺就会**整条丢**（antd 6.6.4 SSR 实测：`aria-*` 在 input 上）。
+        //    透传在前、受控在后：内部值压过同名透传。
+        ...attrs,
         ref: inputRef,
         id: props.id,
         type: 'text',

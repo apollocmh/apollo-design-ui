@@ -317,7 +317,7 @@ outline: [2, 3]
 | filterSort | 过滤结果排序 | `fn` | — |
 | allowClear | 清除按钮（`{ clearIcon, label }` 定制） | `boolean \| object` | `false` |
 | placeholder | 占位文本（富内容用 `#placeholder` 插槽） | `string` | — |
-| size | 尺寸 | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| size | 尺寸（= `SizeType`，含 `medium`） | `'small' \| 'medium' \| 'middle' \| 'large'` | `'middle'` |
 | variant | 变体 | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | status | 校验状态 | `'error' \| 'warning' \| 'success' \| 'validating'` | — |
 | disabled / loading | 禁用 / 加载中 | `boolean` | `false` |

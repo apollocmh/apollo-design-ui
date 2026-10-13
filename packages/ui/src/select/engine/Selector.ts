@@ -115,7 +115,7 @@ export const Selector = defineComponent({
       default: undefined,
     },
   },
-  setup(props, { expose }) {
+  setup(props, { expose, attrs }) {
     const inputCompRef = shallowRef<ComponentPublicInstance | null>(null);
     const rootRef = ref<HTMLElement | null>(null);
     /** rc 的 `event.nativeEvent._select_lazy`：点清除按钮时不要「点开下拉」。 */
@@ -343,6 +343,8 @@ export const Selector = defineComponent({
         role: props.role ?? 'combobox',
         ariaLabel: props.ariaLabel,
         ariaLabelledby: props.ariaLabelledby,
+        // 其余 `aria-*` 直接落到 combobox input 上（antd 同落点，见 splitAttrs）
+        ...splitAttrs().aria,
         tabIndex: props.tabIndex,
         maxLength: props.mode === 'combobox' ? props.maxLength : undefined,
         autoFocus: props.autoFocus,
@@ -356,6 +358,31 @@ export const Selector = defineComponent({
         onInputKeyDown: props.onInputKeyDown,
         onInputBlur: props.onInputBlur,
       });
+
+    /**
+     * 把落到 Selector 上的透传属性按 antd 的落点拆开。
+     *
+     * rc 的 `SelectInput`（`SelectInput/index.js:160-162`）是：
+     * ```js
+     * const domProps = omit(restProps, DEFAULT_OMIT_PROPS);
+     * const ariaProps = pickAttrs(domProps, { aria: true });   // aria-* + role
+     * <div {...omit(domProps, Object.keys(ariaProps))}> … <input {...ariaProps} />
+     * ```
+     * antd 6.6.4 SSR 实测：`data-*` / `name` / `title` 落**根 div**，
+     * `aria-*` 落 **combobox input**。
+     *
+     * ⚠️ **必须在渲染期读 `attrs`**：`useAttrs()` 返回的是普通对象，
+     *    在 setup 解构出来的是快照，父级只改透传属性时永远读到旧值（Issue #4.2）。
+     */
+    const splitAttrs = () => {
+      const aria: Record<string, unknown> = {};
+      const rest: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(attrs as Record<string, unknown>)) {
+        if (key.startsWith('aria-')) aria[key] = value;
+        else rest[key] = value;
+      }
+      return { aria, rest };
+    };
 
     return () => {
       const { prefixCls } = props;
@@ -478,6 +505,9 @@ export const Selector = defineComponent({
       return h(
         'div',
         {
+          // ⚠️ 透传在前、受控在后：内部事件/类名/样式**压过**同名透传，
+          //    避免用户 attrs 把内部处理器顶掉（Issue #4.2 的「防止回写覆盖内部事件」）。
+          ...splitAttrs().rest,
           ref: rootRef,
           class: props.className,
           style: props.style,

@@ -184,14 +184,14 @@ export const Select = defineComponent({
    */
   emits: ['update:value', 'update:open'],
   setup(props, { slots, emit, attrs, expose }) {
-    // aria-label / aria-labelledby 单独走 props（见下面 h(BaseSelect) 处的说明）
-    const {
-      'aria-label': ariaLabelAttr,
-      'aria-labelledby': ariaLabelledbyAttr,
-      ...restAttrs
-    } = attrs as Record<string, unknown>;
-    void ariaLabelAttr;
-    void ariaLabelledbyAttr;
+    /**
+     * ⚠️ **不在 setup 解构 `attrs`**。
+     *
+     * `useAttrs()` 返回的是普通对象（由父级 render 原地打补丁），setup 期解构出来的
+     * `restAttrs` 是一份**快照** —— 父级只改 `aria-*` / `data-*` / `tabindex` /
+     * 原生监听器时，重渲染读到的还是首帧那一份（Issue #4.2）。
+     * 解构移到渲染函数里（见下方 `...restAttrs`）。
+     */
     const { getPrefixCls } = useComponentConfig('select');
     const config = useConfigContext();
     const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('select'));
@@ -226,7 +226,9 @@ export const Select = defineComponent({
     });
     const formItem = useFormItemInputContext();
     const mergedStatus = computed(() => getMergedStatus(formItem.value.status, props.status));
-    const mergedDisabled = useDisabled(props.disabled);
+    // ⚠️ 传 getter：`useDisabled` 支持 `MaybeRefOrGetter`，传裸值会让
+    //    「父级切换 disabled」永远读不到新值（Issue #4.1）。
+    const mergedDisabled = useDisabled(() => props.disabled);
     const directionCtx = useDirection();
     const mergedDirection = computed<'ltr' | 'rtl'>(
       () => props.direction ?? directionCtx.value ?? 'ltr',
@@ -640,17 +642,20 @@ export const Select = defineComponent({
           );
         }
         if (slots.suffixIcon) {
-          return getSuffixIconNode(
-            readSlot('suffixIcon') !== undefined
-              ? readSlot('suffixIcon')
-              : (slots.suffixIcon as (p: Record<string, unknown>) => unknown)({
-                  open: Boolean(st.open),
-                  showSearch: Boolean(st.showSearch),
-                  searchValue: mergedSearchValue.value,
-                  focused: false,
-                  loading: props.loading,
-                }),
-          );
+          // ⚠️ **只调用一次，且必须带作用域参数**（Issue #4.5）。
+          //    此前先 `readSlot('suffixIcon')`（**无参**）探一次、再带参调一次 ——
+          //    对 `#suffixIcon="{ open }"` 这类解构参数的插槽，无参调用会直接抛
+          //    `Cannot destructure property 'open' of undefined`，整个下拉渲染崩掉。
+          //    契约（`SelectSlots['suffixIcon']`）是 `{ open, showSearch, searchValue,
+          //    focused, loading }`，按契约传一次即可；空产物归一为 null（语义：隐藏）。
+          const node = (slots.suffixIcon as (p: Record<string, unknown>) => unknown)({
+            open: Boolean(st.open),
+            showSearch: Boolean(st.showSearch),
+            searchValue: mergedSearchValue.value,
+            focused: false,
+            loading: props.loading,
+          });
+          return getSuffixIconNode(isEmptyVNode(node) ? null : node);
         }
         return getSuffixIconNode(componentConfig.value.suffixIcon ?? h(DownOutlined));
       };
@@ -705,26 +710,32 @@ export const Select = defineComponent({
 
     const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
 
-    const mergedRootClassName = computed(
-      () =>
-        [
-          mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
-          mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
-          mergedDirection.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
-          enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
-          formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
-          getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
-          compactItemClassnames.value,
-          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-          attrs.class as string | undefined,
-          cssVarCls.value,
-          'css-var-root',
-          // ⚠️ 不含 mergedClassNames.root —— BaseSelect 的根类里已有
-          //    props.classNames?.root，这里再拼会双份（AutoComplete 期抓出）
-        ]
-          .filter(Boolean)
-          .join(' ') || undefined,
-    );
+    /**
+     * 根类名。
+     *
+     * 🚨 **必须是渲染期求值的函数，不能是 `computed`**：列表里含 `attrs.class`
+     * （调用方原生 class），而 `useAttrs()` 的对象不参与依赖追踪 —— 包成 computed
+     * 后只有「尺寸/方向/变体/状态变化」才会重算，**父级只改 class 时永远读到旧值**
+     * （与 Issue #4.2 同一根因，故一并修）。
+     */
+    const getRootClassName = (): string | undefined =>
+      [
+        mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
+        mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
+        mergedDirection.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
+        enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
+        formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
+        getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
+        compactItemClassnames.value,
+        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        attrs.class as string | undefined,
+        cssVarCls.value,
+        'css-var-root',
+        // ⚠️ 不含 mergedClassNames.root —— BaseSelect 的根类里已有
+        //    props.classNames?.root，这里再拼会双份（AutoComplete 期抓出）
+      ]
+        .filter(Boolean)
+        .join(' ') || undefined;
 
     const mergedPopupClassName = computed(
       () =>
@@ -772,9 +783,18 @@ export const Select = defineComponent({
         listItemHeight: listItemHeight.value,
         childrenAsData: childrenAsData.value,
         maxCount: multiple.value ? props.maxCount : undefined,
+        // ⚠️ 内核的 `OptionRenderFn` 是**位置参数** `(option, info)`，而公开的插槽契约
+        //    是**单个对象** `{ option, index }`（`SelectSlots['optionRender']`）。
+        //    此前直接把位置参数 spread 给插槽 ⇒ `#optionRender="{ option }"` 拿到
+        //    `option === undefined`（Issue #4.4）。这里显式转换。
         optionRender: slots.optionRender
-          ? (...args: Parameters<OptionRenderFn>) =>
-              (slots.optionRender as (...a: Parameters<OptionRenderFn>) => unknown)(...args)
+          ? (option: Parameters<OptionRenderFn>[0], info: Parameters<OptionRenderFn>[1]) =>
+              (
+                slots.optionRender as (p: {
+                  option: Parameters<OptionRenderFn>[0];
+                  index: number;
+                }) => unknown
+              )({ option, index: info.index })
           : undefined,
         classNames: mergedClassNames.value,
         styles: mergedStyles.value,
@@ -797,14 +817,24 @@ export const Select = defineComponent({
       },
     });
 
-    return () =>
-      h(
+    return () => {
+      // ⚠️ 在这里（渲染期）解构 —— 见 setup 顶部关于「setup 解构即快照」的说明。
+      //    `aria-label` / `aria-labelledby` 单独走 props（antd 只把它们放在
+      //    combobox input 上，不随 attrs 扩散）。
+      const {
+        'aria-label': _ariaLabel,
+        'aria-labelledby': _ariaLabelledby,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+      void _ariaLabel;
+      void _ariaLabelledby;
+      return h(
         BaseSelect,
         {
           ref: baseSelectRef as never,
           prefixCls: prefixCls.value,
           id: mergedId,
-          className: mergedRootClassName.value,
+          className: getRootClassName(),
           // 根 style 是 Vue 原生 attrs（位置与原先的语义 root 之后：调用方最后胜出）
           style: {
             ...(mergedStyles.value?.root ?? {}),
@@ -826,6 +856,9 @@ export const Select = defineComponent({
           placeholder: readSlot('placeholder') ?? props.placeholder,
           maxLength: props.maxLength,
           tabIndex: props.tabIndex,
+          // ⚠️ `autoFocus` 被声明成 prop 之后就不再进 `attrs` ⇒ 必须显式转发，
+          //    否则 BaseSelect → Selector → SearchInput 这条链永远收不到（Issue #4.6）。
+          autoFocus: props.autoFocus,
           title: props.title,
           allowClear: mergedAllowClear.value as
             | boolean
@@ -855,7 +888,9 @@ export const Select = defineComponent({
           placement: memoPlacement.value,
           direction: mergedDirection.value,
           popupMatchSelectWidth: popupMatchSelectWidth.value ?? true,
-          getPopupContainer: props.getPopupContainer,
+          // antd：`getPopupContainer || getContextPopupContainer`（`select/index.js:259`）
+          // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #4.7）。
+          getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
           transitionName: props.transitionName ?? `${rootPrefixCls}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
@@ -902,6 +937,7 @@ export const Select = defineComponent({
         } as never,
         {},
       );
+    };
   },
 });
 

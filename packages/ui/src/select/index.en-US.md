@@ -32,7 +32,7 @@ See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
 | filterSort | Sort the filtered options | `fn` | — |
 | allowClear | Clear button (`{ clearIcon, label }` to customize) | `boolean \| object` | `false` |
 | placeholder | Placeholder text (rich content via the `#placeholder` slot) | `string` | — |
-| size | Size | `'small' \| 'middle' \| 'large'` | `'middle'` |
+| size | Size (= `SizeType`, includes `medium`) | `'small' \| 'medium' \| 'middle' \| 'large'` | `'middle'` |
 | variant | Variant | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
 | status | Validation status | `'error' \| 'warning' \| 'success' \| 'validating'` | — |
 | disabled / loading | Disabled / loading | `boolean` | `false` |

@@ -8,6 +8,8 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
+import { defineComponent, h, ref } from 'vue';
+import { ConfigProvider } from '../../config-provider';
 import Select from '../Select';
 
 const OPTIONS = [
@@ -441,5 +443,212 @@ describe('Select · 实例句柄', () => {
     expect(typeof vm.blur).toBe('function');
     expect(typeof vm.scrollTo).toBe('function');
     expect(vm.nativeElement).toBeTruthy();
+  });
+});
+
+// ===========================================================================
+// Issue #4 · 响应性 / 原生属性 / 插槽契约
+// ===========================================================================
+
+describe('Select · disabled 与 attrs 的运行时更新（Issue #4.1 / #4.2）', () => {
+  it('★ disabled 由父级切换 ⇒ 根类名与 input 的原生 disabled 都跟着变', async () => {
+    const disabled = ref(false);
+    const Host = defineComponent({
+      name: 'ASelectDisabledHost',
+      setup: () => () => h(Select, { options: OPTIONS, id: 'test-id', disabled: disabled.value }),
+    });
+    const w = mount(Host, { attachTo: document.body });
+    await flush();
+    expect(w.find('.apollo-select').classes()).not.toContain('apollo-select-disabled');
+    expect(w.find('input').attributes('disabled')).toBeUndefined();
+
+    disabled.value = true;
+    await flush();
+    expect(w.find('.apollo-select').classes()).toContain('apollo-select-disabled');
+    expect(w.find('input').attributes('disabled')).toBeDefined();
+
+    disabled.value = false;
+    await flush();
+    expect(w.find('.apollo-select').classes()).not.toContain('apollo-select-disabled');
+    w.unmount();
+  });
+
+  it('★ 只改 attrs（data-* / aria-describedby / tabindex）⇒ DOM 跟着变', async () => {
+    const marker = ref('m1');
+    const describedBy = ref('hint-1');
+    const Host = defineComponent({
+      name: 'ASelectAttrsHost',
+      setup: () => () =>
+        h(Select, {
+          options: OPTIONS,
+          id: 'test-id',
+          'data-marker': marker.value,
+          'aria-describedby': describedBy.value,
+        }),
+    });
+    const w = mount(Host, { attachTo: document.body });
+    await flush();
+    const root = () => w.find('.apollo-select');
+    expect(root().attributes('data-marker')).toBe('m1');
+    expect(w.find('input').attributes('aria-describedby')).toBe('hint-1');
+
+    marker.value = 'm2';
+    describedBy.value = 'hint-2';
+    await flush();
+    expect(root().attributes('data-marker')).toBe('m2');
+    expect(w.find('input').attributes('aria-describedby')).toBe('hint-2');
+    w.unmount();
+  });
+});
+
+describe('Select · size=medium 与运行时一致（Issue #4.3）', () => {
+  it('★ medium 不产尺寸类名（与 middle 同落点）', () => {
+    const medium = mountSelect({ size: 'medium' });
+    const cls = medium.find('.apollo-select').classes();
+    expect(cls).not.toContain('apollo-select-sm');
+    expect(cls).not.toContain('apollo-select-lg');
+    expect(cls).not.toContain('apollo-select-md');
+    medium.unmount();
+  });
+});
+
+describe('Select · 插槽作用域契约（Issue #4.4 / #4.5）', () => {
+  it('★ `#optionRender` 收到的是**单个对象** `{ option, index }`', async () => {
+    const seen: Array<{ label?: unknown; index: number }> = [];
+    const wrapper = mountSelect(
+      { open: true },
+      {
+        slots: {
+          optionRender: (scope: { option?: { label?: unknown }; index: number }) => {
+            seen.push({ label: scope?.option?.label, index: scope?.index });
+            return h('span', { class: 'opt-render' }, String(scope?.option?.label ?? 'MISSING'));
+          },
+        },
+      },
+    );
+    await flush();
+    expect(seen.length).toBeGreaterThan(0);
+    // 关键判据：不是 undefined —— 此前位置参数被 spread，`{ option }` 恒 undefined
+    expect(seen[0]?.label).toBe('Apple');
+    expect(seen[0]?.index).toBe(0);
+    expect(body().querySelector('.opt-render')?.textContent).toBe('Apple');
+    wrapper.unmount();
+  });
+
+  it('★ `#suffixIcon="{ open }"` 解构参数不抛错，且拿到完整作用域', async () => {
+    const scopes: Array<Record<string, unknown>> = [];
+    const wrapper = mountSelect(
+      {},
+      {
+        slots: {
+          suffixIcon: (scope: Record<string, unknown>) => {
+            scopes.push(scope);
+            return h('i', { class: 'my-suffix' }, scope.open ? 'O' : 'C');
+          },
+        },
+      },
+    );
+    await flush();
+    expect(scopes.length).toBe(1);
+    expect(Object.keys(scopes[0] ?? {}).sort()).toEqual(
+      ['focused', 'loading', 'open', 'searchValue', 'showSearch'].sort(),
+    );
+    expect(scopes[0]?.open).toBe(false);
+    expect(wrapper.find('.my-suffix').exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it('`#suffixIcon` 返回空 ⇒ 箭头隐藏（原有语义不回退）', async () => {
+    const wrapper = mountSelect({}, { slots: { suffixIcon: () => null } });
+    await flush();
+    expect(wrapper.find('.apollo-select-arrow').exists()).toBe(false);
+    wrapper.unmount();
+  });
+});
+
+describe('Select · autoFocus（Issue #4.6）', () => {
+  it('★ autoFocus ⇒ 挂载后 combobox input 获得焦点', async () => {
+    const wrapper = mountSelect({ autoFocus: true });
+    await flush();
+    expect(document.activeElement).toBe(wrapper.find('input').element);
+    wrapper.unmount();
+  });
+
+  it('★ disabled + autoFocus ⇒ 不聚焦', async () => {
+    const wrapper = mountSelect({ autoFocus: true, disabled: true });
+    await flush();
+    expect(document.activeElement).not.toBe(wrapper.find('input').element);
+    wrapper.unmount();
+  });
+
+  it('不传 autoFocus ⇒ 不抢焦点', async () => {
+    const wrapper = mountSelect();
+    await flush();
+    expect(document.activeElement).not.toBe(wrapper.find('input').element);
+    wrapper.unmount();
+  });
+});
+
+describe('Select · getPopupContainer 回退到 ConfigProvider（Issue #4.7）', () => {
+  it('★ 未传局部容器 ⇒ 用 ConfigProvider 的全局设置', async () => {
+    const container = document.createElement('div');
+    container.id = 'popup-container';
+    document.body.appendChild(container);
+
+    const Host = defineComponent({
+      name: 'ASelectPopupContainerHost',
+      setup: () => () =>
+        h(
+          ConfigProvider,
+          { getPopupContainer: () => container },
+          {
+            default: () => h(Select, { options: OPTIONS, id: 'test-id', open: true }),
+          },
+        ),
+    });
+    // ⚠️ 浮层必须关掉 Teleport 打桩（VTU 默认渲染成 `<teleport-stub>`），
+    //    否则内容不会真的挂到 getPopupContainer 指定的容器里。
+    const w = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    await flush();
+    expect(container.querySelector('.apollo-select-dropdown')).not.toBeNull();
+    w.unmount();
+    container.remove();
+  });
+
+  it('局部 getPopupContainer 优先于全局', async () => {
+    const global = document.createElement('div');
+    const local = document.createElement('div');
+    document.body.append(global, local);
+
+    const Host = defineComponent({
+      name: 'ASelectPopupLocalHost',
+      setup: () => () =>
+        h(
+          ConfigProvider,
+          { getPopupContainer: () => global },
+          {
+            default: () =>
+              h(Select, {
+                options: OPTIONS,
+                id: 'test-id',
+                open: true,
+                getPopupContainer: () => local,
+              }),
+          },
+        ),
+    });
+    const w = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    await flush();
+    expect(local.querySelector('.apollo-select-dropdown')).not.toBeNull();
+    expect(global.querySelector('.apollo-select-dropdown')).toBeNull();
+    w.unmount();
+    global.remove();
+    local.remove();
   });
 });

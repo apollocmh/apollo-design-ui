@@ -12,6 +12,7 @@
  */
 
 import type { CSSProperties } from 'vue';
+import type { SizeType } from '../config-provider/size-context';
 
 // ---------------------------------------------------------------------------
 // 基础值类型
@@ -80,7 +81,13 @@ export type SelectMode = 'multiple' | 'tags';
 /** 内核模式（engine 内部用）。 */
 export type InternalSelectMode = SelectMode | 'combobox';
 
-export type SelectSize = 'small' | 'middle' | 'large';
+/**
+ * 尺寸。**直接别名到 `config-provider` 的 `SizeType`**（`'small' | 'medium' | 'middle' | 'large'`）。
+ *
+ * 上游 `SelectProps.size` 就是 `SizeType`；此前手抄成 `'small' | 'middle' | 'large'`
+ * 漏了 `medium`（运行时 `useSize` 是吃 `SizeType` 的 ⇒ 类型比运行时窄，Issue #4.3）。
+ */
+export type SelectSize = SizeType;
 
 export type SelectVariant = 'outlined' | 'borderless' | 'filled' | 'underlined';
 

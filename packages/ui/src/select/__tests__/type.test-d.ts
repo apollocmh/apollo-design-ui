@@ -1,11 +1,13 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。 */
 import { describe, expectTypeOf, it } from 'vitest';
+import type { SizeType } from '../../config-provider/size-context';
 import type {
   DefaultOptionType,
   SelectCommonPlacement,
   SelectMode,
   SelectProps,
   SelectRef,
+  SelectSize,
 } from '../interface';
 
 describe('Select · 类型', () => {
@@ -57,7 +59,7 @@ describe('Select · 类型', () => {
       const props: SelectProps = {
         // @ts-expect-error 公开 mode 不接受 combobox（内部模式）
         mode: 'combobox',
-        // @ts-expect-error size 是 small|middle|large
+        // @ts-expect-error size 是 small|medium|middle|large
         size: 'huge',
         // @ts-expect-error variant 是 4 值联合
         variant: 'dashed',
@@ -65,5 +67,21 @@ describe('Select · 类型', () => {
       return props;
     };
     void negative;
+  });
+});
+
+// ===========================================================================
+// Issue #4.3 · SelectSize 必须覆盖 6.6.4 的 SizeType 全集（含 medium）
+// ===========================================================================
+
+describe('Select · size 类型（Issue #4.3）', () => {
+  it('★ `SelectSize` 就是 `SizeType`（不是「长得像」）', () => {
+    expectTypeOf<SelectSize>().toEqualTypeOf<SizeType>();
+    expectTypeOf<SelectProps['size']>().toEqualTypeOf<SizeType | undefined>();
+  });
+
+  it('正例：medium 通过类型检查', () => {
+    const medium: SelectProps = { size: 'medium' };
+    expectTypeOf(medium).toEqualTypeOf<SelectProps>();
   });
 });
