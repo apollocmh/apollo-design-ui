@@ -20,7 +20,17 @@
  */
 
 import { Form as CoreForm, type FormInstance, useForm } from '@apollo-design/form-core';
-import { computed, defineComponent, h, type PropType, provide, type Ref, shallowRef } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  type Ref,
+  shallowRef,
+} from 'vue';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { sizeContextKey, useSize } from '../config-provider/size-context';
@@ -88,6 +98,8 @@ export default defineComponent({
       tooltip?: FormProps['tooltip'];
       className?: string;
       style?: Record<string, string | number>;
+      classNames?: FormProps['classNames'];
+      styles?: FormProps['styles'];
       direction?: 'ltr' | 'rtl';
       getPrefixCls: (s?: string, c?: string) => string;
     };
@@ -96,7 +108,13 @@ export default defineComponent({
     //    Form 的 `size` 必须能传导到所有 input 族控件（-small / -large 类）。
     //    只 provide DisabledContext 是不够的 —— form 的 L4 契约用例
     //    `form:size-small/-large` 就是被这条抓出来的。
-    const mergedSize = useSize(props.size);
+    // 🚨 必须用**函数形态**（解析器）：`useSize(props.size)` 在 setup 期读一次
+    //    ⇒ 运行中改 `size` / `componentSize` 都传不到子控件（Issue #8.1）。
+    //    ⚠️ 写法要带 context 兜底 —— `useSize(() => props.size)` **不是**等价物：
+    //    它走的是「解析器」分支，返回值直接就是 `props.size`，
+    //    `ConfigProvider componentSize` 会被绕过（实测：根类名拿不到 `-small`）。
+    //    全仓既有范式（tabs / radio / card / input / pagination …）都是这一条。
+    const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
     provide(sizeContextKey, mergedSize);
 
     const mergedRequiredMark = (): FormProps['requiredMark'] => {
@@ -206,6 +224,40 @@ export default defineComponent({
     // ⚠️ NoFormStyle(status=true)：Form 根上不吃 Item 的状态反馈（antd 逐字）
     provideNoFormStyle({ status: true });
 
+    /**
+     * 语义化合并（上游 `Form.js:78-97`）。
+     *
+     * 🚨 此前本组件**完全没有语义通道** —— 根类名 / 根样式都是裸读
+     * `props.classNames?.root` / `props.styles?.root` ⇒ 三件事同时坏掉（Issue #8.2）：
+     *  ① `ConfigProvider` 的 `components.form.classNames` / `styles` 被丢；
+     *  ② 调用方原生 `class` / `style` 被 `class:` / `style:` 覆盖 ⇒ **整条丢**；
+     *  ③ `classNames` / `styles` 的**函数形态**被当对象读（拿到函数对象本身）。
+     *
+     * 顺序逐字对齐上游：`[contextStyles, contextStyleRoot, styles, styleRoot]`
+     * —— 调用方 `style`（`styleRoot`）在**最后** ⇒ 胜出。
+     */
+    const semanticSource = computed(() => contextSemantic);
+    const semanticProps = computed<Record<string, unknown>>(() => ({
+      ...props,
+      size: mergedSize.value,
+      disabled: props.disabled,
+      layout: props.layout,
+      colon: mergedColon(),
+      requiredMark: mergedRequiredMark(),
+      labelAlign: mergedLabelAlign(),
+      labelWrap: mergedLabelWrap(),
+    }));
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic(
+      [() => semanticSource.value.classNames, () => props.classNames],
+      [
+        () => semanticSource.value.styles,
+        () => semanticRootStyle(semanticSource.value.style),
+        () => props.styles,
+        () => semanticRootStyle(attrs.style as CSSProperties),
+      ],
+      () => semanticProps.value,
+    );
+
     return () => {
       const p = prefixCls();
       const rm = mergedRequiredMark();
@@ -214,9 +266,15 @@ export default defineComponent({
         `${p}-${props.layout}`,
         rm === false ? `${p}-hide-required-mark` : '',
         contextSemantic.direction === 'rtl' ? `${p}-rtl` : '',
-        props.size === 'large' ? `${p}-large` : '',
-        props.size === 'small' ? `${p}-small` : '',
-        props.classNames?.root,
+        // 🚨 判据是 **`mergedSize`**（上游 `Form.js:104-105` 逐字），不是裸 `props.size`：
+        //    组件级 `ConfigProvider componentSize` 也要产出 `-small` / `-large`。
+        mergedSize.value === 'large' ? `${p}-large` : '',
+        mergedSize.value === 'small' ? `${p}-small` : '',
+        // 调用方 `class` 与 context 的 `className`：位置对齐上游
+        // `clsx(…, contextClassName, className, rootClassName, mergedClassNames.root)`
+        contextSemantic.className,
+        attrs.class as string | undefined,
+        mergedClassNames.value.root,
       ]
         .filter(Boolean)
         .join(' ');
@@ -237,7 +295,9 @@ export default defineComponent({
           renderProps: props.renderProps,
           form: wrapForm as never,
           ref: nativeElementRef as never,
-          style: props.styles?.root,
+          // 上游 `Form.js:181`：根样式就是**合并后**的 `mergedStyles.root`
+          // （含 context styles / 组件 styles / 调用方 `style`）。
+          style: mergedStyles.value.root,
           class: formClassName,
           onFinish: (values: unknown) => {
             emit('finish', values);

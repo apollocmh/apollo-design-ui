@@ -68,7 +68,7 @@ const { Item, List, useForm, useWatch, ErrorList } = Form;
 | size / variant / tooltip / feedbackIcons | 表单态 | - | - |
 | scrollToFirstError | 校验失败滚动到首个错误字段 | boolean \| ScrollOptions | - |
 | component | 容器元素（false 不渲染） | string \| Component \| false | 'form' |
-| classNames / styles | 语义槽（root/label/content/help/helpItem/extra） | object | - |
+| classNames / styles | 语义槽（root/label/content/help/helpItem/extra）。⚠️ 也接受**函数形态**（`(info) => …`）；根槽与 `ConfigProvider components.form` 及调用方原生 `class` / `style` **合并**（原生 `style` 胜） | object \| function | - |
 
 ### 事件（Emits）
 
