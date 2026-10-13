@@ -153,3 +153,17 @@ foundation **13/13**；组件 **72/72 completed**（全量封顶）。
 - **语义 `root` 槽的落点**（rc `SinglePicker.js:476-478`）：class = `[rootClass, classNames.root]`、
   style = `[styles.root, rootStyle]`（原生 style 胜）。date-picker 的这两个公开槽
   此前**从未落到任何元素**（Issue #5.4 修）。
+- 🚨 **`useSize` 必须用解析器形态** `useSize((ctx) => props.size ?? ctx)`：
+  `useSize(props.size)` 是 setup 快照；而 **`useSize(() => props.size)` 会绕过
+  `ConfigProvider componentSize`**（它走「解析器」分支，返回值就是 `props.size`）。
+  全仓范式：tabs / radio / card / input / input-number / pagination（Issue #8.1 踩过）。
+- 🚨 **`cloneVNode` 是「合并」不是「替换」**：它走 `mergeProps(child.props, extra)`，
+  而 `mergeProps` 对 `on*` 键**拼成数组**。想复刻 React `cloneElement`（替换）必须
+  `createVNode(child.type, 自己拼好的 props, child.children)` —— 否则：用户回调被调 2 次
+  （同一函数出现在两边 ⇒ `[user, user]`），或子组件把 `attrs.onX` 当函数调时
+  **`TypeError: attrs.onX is not a function`**（Issue #8.3 实测）。
+- ⚠️ **`triggers` / 事件键的形态**：rc 的 `trigger` 默认值**已经是 `onChange` 形态**
+  ⇒ 查用户回调时键就是 `eventName` 本身，再拼一次 `on` 会得到 `onOnChange`（恒 undefined，
+  **静默不调用户回调**）。
+- ⚠️ **VTU `setValue()` 对文本输入会同时派发 `input` 与 `change`** ⇒ 计数用例只能调一次
+  `setValue`（再手动 `trigger('change')` 会数出 2，那是两个事件不是双调）。
