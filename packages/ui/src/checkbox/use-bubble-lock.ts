@@ -6,9 +6,19 @@
  */
 
 import { raf } from '@apollo-design/utils';
-import { onScopeDispose, ref } from 'vue';
+import { type MaybeRefOrGetter, onScopeDispose, ref, toValue } from 'vue';
 
-export function useBubbleLock(onOriginInputClick?: (e: MouseEvent) => void): {
+/**
+ * @param onOriginInputClick 原始的 input click 回调。
+ *
+ * 🚨 **收 `MaybeRefOrGetter` 而不是裸值**（Issue #9.2）：裸值是在 setup 期捕获的，
+ *    父级替换 `onClick` 之后这里仍会调**旧**函数。调用方传 `() => attrs.onClick`
+ *    即可每次取到最新的 —— 与全仓 `useAllowClear` / `useMergeSemantic` / `useDisabled`
+ *    的处置一致（React 之所以不踩，是它每次渲染都重新调用这个 hook）。
+ */
+export function useBubbleLock(
+  onOriginInputClick?: MaybeRefOrGetter<((e: MouseEvent) => void) | undefined>,
+): {
   onLabelClick: () => void;
   onInputClick: (e: MouseEvent) => void;
 } {
@@ -33,7 +43,8 @@ export function useBubbleLock(onOriginInputClick?: (e: MouseEvent) => void): {
       e.stopPropagation();
       clearLock();
     }
-    onOriginInputClick?.(e);
+    // ⚠️ 每次触发时现读（`toValue` 打在 reactive 的 `attrs` 上）
+    toValue(onOriginInputClick)?.(e);
   };
 
   onScopeDispose(clearLock);

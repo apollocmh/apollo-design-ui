@@ -32,6 +32,7 @@ import {
   type PropType,
   shallowRef,
   type VNodeChild,
+  watch,
   watchEffect,
 } from 'vue';
 import { mergeClassNames, mergeStyles, resolveSemantic } from '../_internal/use-merge-semantic';
@@ -152,7 +153,25 @@ export const CheckboxComponent = defineComponent({
 
     // ======================== Register to Group =========================
     if (checkboxGroup && !props.skipGroup) {
-      checkboxGroup.registerValue?.(props.value);
+      /**
+       * 🚨 **必须 watch `props.value`**（Issue #9.3）：注册 / 注销只发生在
+       * 挂载 / 卸载时的话，运行中把 `value` 从 `a` 改成 `b`（DOM 不卸载）
+       * 会让 Group 的 `registeredValues` **一直持旧值** ⇒ 排序 / 筛选 / 选择结果全歪。
+       *
+       * 上游是 `useEffect(() => { registerValue(value); return () => cancelValue(value) },
+       * [value])` —— 依赖变化时先 cancel 旧的、再 register 新的。
+       */
+      watch(
+        () => props.value,
+        (value, previous) => {
+          if (previous !== undefined) {
+            checkboxGroup.cancelValue?.(previous);
+          }
+          checkboxGroup.registerValue?.(value);
+        },
+        { immediate: true },
+      );
+      // 卸载时注销**当前**值（`props.value` 在这里现读，是懒的）
       onScopeDispose(() => checkboxGroup.cancelValue?.(props.value));
     }
 
@@ -168,6 +187,20 @@ export const CheckboxComponent = defineComponent({
     };
     onMounted(applyIndeterminate);
     watchEffect(applyIndeterminate);
+
+    /**
+     * `autoFocus` 必须**自己调 `focus()`**（Issue #9.1）。
+     *
+     * 原生 `autofocus` 只在 HTML **解析期**生效；Vue 的 `patchProp` 是元素创建
+     * **之后**才设属性 ⇒ 浏览器与 jsdom 都不会因此聚焦（React 之所以能用，
+     * 是它在 mount 时显式 `node.focus()`）。禁用态不聚焦。
+     * 判据与 `Rate` / `_internal/action-button` / `input-number` 一致。
+     */
+    onMounted(() => {
+      if (props.autoFocus === true && !mergedDisabled.value) {
+        inputRef.value?.focus();
+      }
+    });
 
     // ============================ Semantic ==============================
     const semanticProps = computed<CheckboxProps>(
@@ -194,7 +227,11 @@ export const CheckboxComponent = defineComponent({
     );
 
     // ============================ Event Lock ============================
-    const { onLabelClick, onInputClick } = useBubbleLock(callbacks.onClick);
+    // ⚠️ 传 getter（Issue #9.2）：`callbacks` 就是 `attrs`，裸传会把首帧的
+    //    `onClick` 焊死 —— 父级替换 handler 之后仍调旧的。
+    const { onLabelClick, onInputClick } = useBubbleLock(
+      () => (attrs as { onClick?: (e: MouseEvent) => void }).onClick,
+    );
 
     expose({
       focus: (options?: FocusOptions) => inputRef.value?.focus(options),
@@ -272,6 +309,14 @@ export const CheckboxComponent = defineComponent({
             [
               h('input', {
                 ...inputAttrs,
+                // 🚨 这三个 + `id` 都是**声明过的 prop** ⇒ Vue 已把它们从 `attrs` 摘走
+                //    ⇒ 不显式绑就永远不会落到 input 上（Issue #9.1）。
+                //    落点判据来自 antd 6.6.4 的 SSR 实测：
+                //    `<input id required tabindex autofocus class type name>`。
+                id: props.id,
+                required: props.required,
+                tabIndex: props.tabIndex,
+                autoFocus: props.autoFocus,
                 class: `${cls}-input`,
                 type: 'checkbox',
                 ref: inputRef,
