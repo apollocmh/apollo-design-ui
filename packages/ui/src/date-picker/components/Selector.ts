@@ -90,12 +90,28 @@ import {
 } from './picker-shared';
 
 export interface SelectorSemanticClassNames {
+  /**
+   * 选择器**根元素**。
+   *
+   * 🚨 上游落点是 rc 的 `SinglePicker.js:476`：
+   * `className: clsx(filledProps.className, rootClassName, mergedClassNames.root)`
+   * —— 调用方（`DatePicker.vue`）算好的 `rootClass` 已经含前两项，这里只补最后一项。
+   */
+  root?: string;
   prefix?: string;
   input?: string;
   suffix?: string;
 }
 
 export interface SelectorSemanticStyles {
+  /**
+   * 选择器**根元素**的内联样式。
+   *
+   * 🚨 上游落点是 rc 的 `SinglePicker.js:478`：
+   * `style: { ...mergedStyles.root, ...filledProps.style }`
+   * —— 语义 root **在前**、原生 `style`（`rootStyle`）**在后**（后者胜）。
+   */
+  root?: CSSProperties;
   prefix?: CSSProperties;
   input?: CSSProperties;
   suffix?: CSSProperties;
@@ -748,8 +764,19 @@ export const Selector = defineComponent({
           {
             ...passthroughAttrs,
             ref: rootElRef,
-            class: rootClass,
-            style: props.rootStyle,
+            // 🚨 语义 `root` 槽（`mergedClassNames.root` / `mergedStyles.root`）落在这里。
+            //    此前**从不落根** ⇒ `classNames.root` / `styles.root` 两个公开 API
+            //    静默无效（Issue #5.4）。
+            //    顺序对齐上游：class = `[rootClass, classNames.root]`，
+            //    style = `{ ...styles.root, ...rootStyle }`（原生 style 胜）。
+            class: [rootClass, props.classNames.root],
+            // 🚨 用**数组**而不是对象展开：`rootStyle` 可能是**字符串**
+            //    （Vue 的 `style` attr 允许字符串）。`{...'width: 200px'}` 会得到
+            //    `{0:'w',1:'i',…}` ⇒ Vue 的 `setStyle` 直接抛
+            //    `'set' on proxy: trap returned falsish`。
+            //    `normalizeStyle` 认得数组里的字符串（`parseStringStyle`），
+            //    顺序仍是「语义 root 在前、原生 style 在后」（后者胜，同上游）。
+            style: [props.styles.root, props.rootStyle],
             onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
           },
           // 🚨 多选**不渲染 `-input` 包裹层**（上游 `SingleSelector` 的 `selectorNode` 分支）
@@ -770,8 +797,9 @@ export const Selector = defineComponent({
         {
           ...passthroughAttrs,
           ref: rootElRefWithResize,
-          class: rootClass,
-          style: props.rootStyle,
+          // 与单值分支同判：语义 `root` 槽（`classNames.root` / `styles.root`）落根。
+          class: [rootClass, props.classNames.root],
+          style: [props.styles.root, props.rootStyle],
           onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
           /**
            * 🚨 保焦点（上游 `RangeSelector.js:168-176`）：目标是**两个输入框之外**的

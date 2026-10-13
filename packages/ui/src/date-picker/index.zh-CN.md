@@ -56,7 +56,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | panelRender | 自定义整个面板 | `(props: { originPanel }) => VNodeChild` | —— |
 | cellRender | 自定义单元格 | `(current, info) => VNodeChild` | —— |
 | disabledDate | 不可选日期 | `(date, info) => boolean` | —— |
-| minDate / maxDate | 可选范围的边界。**支持函数**（「结束的最早值」取决于「开始选了什么」） | `LimitDate` | —— |
+| minDate / maxDate | 可选范围的边界（静态日期，与上游一致） | `DatePickerDate` | —— |
 | placeholder | 占位符 | `string` | 由语言包给出 |
 | locale | 语言包（与 `ConfigProvider` 的 `locale.DatePicker` 深合并） | `PickerLocale` | —— |
 | size | 尺寸（未传走 `ConfigProvider`） | `'small' \| 'medium' \| 'middle' \| 'large'` | —— |
@@ -77,10 +77,10 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | getPopupContainer | 浮层挂载容器 | `(node) => HTMLElement` | `document.body` |
 | transitionName | 浮层动效名 | `string` | `${rootPrefixCls}-slide-up` |
 | required | 原生 `required`（透传 `input[required]` 与 `aria-required`） | `boolean` | —— |
-| name / autoComplete / id | 透传到原生 `input` | `string` | —— |
+| name / autoComplete / id | 透传到原生 `input`。⚠️ **`id` 当前会整个丢失**（`docs/KNOWN-ISSUES.md` §1.3），未修 | `string` | —— |
 | prefixCls | 类名前缀。⚠️ 默认是 **`apollo-picker`**（不是 `apollo-date-picker`） | `string` | —— |
 | class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | —— |
-| classNames / styles | 语义化类名 / 样式（**4 个平铺 + 7 个嵌套 `popup`**）。`popup` 允许 **string**（= `popup.root`） | `DatePickerSemanticAllType` | —— |
+| classNames / styles | 语义化类名 / 样式（**4 个平铺 + 7 个嵌套 `popup`**）。`popup` 允许 **string**（= `popup.root`）。`classNames.root` / `styles.root` 落**选择器根元素**（与原生 `class` / `style` 合并，原生胜） | `DatePickerSemanticAllType` | —— |
 
 ### 事件
 

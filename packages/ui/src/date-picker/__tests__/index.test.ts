@@ -535,7 +535,11 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
       attrs: { id: 'user-id' },
     });
     await nextTick();
-    // `id` 是引擎自己的 prop（mergedId），不该被 attrs 覆盖
+    // `id` 是引擎自己的 prop（mergedId），不该被 attrs 覆盖。
+    // 🚨 **这条断言目前是空转的** —— `id` 在本仓整条链路里被丢掉了（根与 input 都没有），
+    //    而不落任何元素的 `getAttribute('id')` 也满足 `not.toBe('user-id')`。
+    //    真实的判据（`id` 必须落到 combobox input，与上游一致）见
+    //    `docs/KNOWN-ISSUES.md` §1.3；修好之后这里的断言要一起改成可证伪的形态。
     expect(w.element.getAttribute('id')).not.toBe('user-id');
     w.unmount();
   });

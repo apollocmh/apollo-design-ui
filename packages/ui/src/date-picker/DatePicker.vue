@@ -37,8 +37,9 @@
  *
  * ── 已知欠账（登记在 README §5）─────────────────────────────────────────────
  *
- * - **`minDate` / `maxDate` 的函数形态**在本地求值（`resolveLimit`），求值时机与
- *   上游 `useDisabledBoundary` 可能有别 ⇒ 待核对。
+ * - ~~**`minDate` / `maxDate` 的函数形态**在本地求值（`resolveLimit`），求值时机与
+ *   上游 `useDisabledBoundary` 可能有别~~ ⇒ **已裁决**（Issue #5.5）：上游是静态日期
+ *   （rc-picker `interface.d.ts:179,258`），本仓的自造函数形态已**收窄移除**。
  * - **掩码模式（`format.type: 'mask'`）= S3**；**`-input-active` 分段渲染 = S4**；
  *   **`multiple` + `tagRender` / `maxTagCount`、范围两端切换 = S5**。
  * - **面板 `mode` 的受控化**：上游把 `mergedMode` 受控地喂给面板，本仓让面板自管、
@@ -78,7 +79,12 @@ import {
 } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import { semanticRootStyle } from '../_internal/use-merge-semantic';
+import {
+  type GetPopupContainer,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
@@ -261,6 +267,8 @@ interface DatePickerComponentConfig {
   suffixIcon?: VNodeChild;
   clearIcon?: VNodeChild;
   allowClear?: boolean | { clearIcon?: VNodeChild };
+  /** 组件级浮层容器（`components.datePicker.getPopupContainer`）。 */
+  getPopupContainer?: GetPopupContainer;
 }
 const pickerContext = context as unknown as DatePickerComponentConfig;
 const direction = useDirection();
@@ -396,6 +404,11 @@ const semantic = useMergedPickerSemantic({
   contextClassNames: () => pickerContext.classNames,
   classNames: () => props.classNames,
   contextStyles: () => pickerContext.styles,
+  // ⚠️ 上游 `useMergedPickerSemantic(…, contextPickerConfig?.style)`（第 7 参）
+  //    ⇒ 组件级 `style` 要经 `semanticRootStyle` 当成 `{ root }` 参与合并
+  //    （顺序 `[contextStyles, contextStyleRoot, styles]`）。此前完全没传
+  //    ⇒ ConfigProvider 的 `components.datePicker.style` 被静默丢弃（Issue #5.4）。
+  contextStyleRoot: () => semanticRootStyle(pickerContext.style),
   styles: () => props.styles,
   popupClassName: () => props.popupClassName ?? props.dropdownClassName,
   popupStyle: () => props.popupStyle as Record<string, string | number> | undefined,
@@ -433,9 +446,16 @@ const inner = useInnerValue({
   onOk: (dates) => emit('ok', dates.filter((d): d is DatePickerDate => Boolean(d)) as never),
 });
 
-/** `minDate` / `maxDate` 的函数形态在本地求值（⚠️ S1 欠账，见文件头）。 */
+/**
+ * `minDate` / `maxDate` 归一（**只剩类型收窄，不再求值**）。
+ *
+ * ⚠️ 上游的 `minDate` / `maxDate` 是静态日期（rc-picker `interface.d.ts:179,258`），
+ * 没有函数形态。本仓曾公开 `(info) => Date` 扩展，但运行时恒传空对象 ⇒
+ * `info.from` 永远 undefined（Issue #5.5）。⇒ `LimitDate` 已收窄成 `DatePickerDate`，
+ * 这里只做 `DatePickerDate → PanelDateType` 的等价收窄。
+ */
 const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =>
-  typeof limit === 'function' ? (limit({}) as PanelDateType) : (limit as PanelDateType | undefined);
+  limit as PanelDateType | undefined;
 
 /**
  * ① 「禁用」的合并判定（上游 `useFilledProps.js:115` 的 `useDisabledBoundary`）。
@@ -492,7 +512,12 @@ const rangeValue = useRangeValue({
   onChange: (dates, texts) => {
     // 🚨 C11：`update:value` 与语义事件 `change` **同时**发
     const next = props.multiple ? (dates ?? []) : (dates?.[0] ?? null);
-    emit('change', next as never, (texts?.[0] ?? null) as never);
+    // ⚠️ 第二个参数必须**按模式**给：hook 传上来的 `texts` 是「每个日期一个文本」的
+    //    数组（`picker-value.ts` 的 `getDateTexts(clone)`）—— 多选时整组都要，
+    //    单选时才是 `[text]` 取首项。此前一律 `texts?.[0]` ⇒ 多选只拿到第一个
+    //    字符串（Issue #5.1）。空值语义与 `dates` 对齐：多选 `[]`、单选 `null`。
+    const nextTexts = props.multiple ? (texts ?? []) : (texts?.[0] ?? null);
+    emit('change', next as never, nextTexts as never);
     emit('update:value', next as never);
   },
 });
@@ -1297,24 +1322,45 @@ const mergedTagRender = (tagProps: Record<string, unknown>): unknown =>
   slots.tagRender ? slots.tagRender(tagProps as never) : props.tagRender?.(tagProps as never);
 const slots = useSlots();
 
-const restAttrs = computed(() => {
-  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
-  void _attrsClass;
-  void _attrsStyle;
-  return rest;
-});
-
 /**
- * 引擎的最终绑定：调用方 attrs（**除 class/style** —— 它们已归根/走语义通道）在前，
- * 引擎自己的 props 在后（引擎胜）。
+ * 引擎的最终绑定：调用方 attrs（**除 class/style** —— 它们已归根/走语义通道）在前、
+ * 引擎自己的 props 在后（**引擎胜**）。
  *
  * ⚠️ 上游把 `...restProps` spread 给**内层 picker**（`generateSinglePicker.js:180`）——
  *    `data-*` / `aria-*` 由此落到选择器根元素上。本仓此前**完全没接**（KNOWN-ISSUES §1.8）。
+ *
+ * 🚨 **必须是渲染期求值的函数，不能是 `computed`**：`useAttrs()` 的对象不参与依赖追踪，
+ *    包成 computed 后「父级只改 attrs」的更新永远读到旧快照（Issue #5.3）。
+ *
+ * 🚨 **模板里不能放 HTML 注释**！Vue 会把模板注释编译成 Comment vnode 保留下来，
+ *    而 `Trigger` 取的是 `slots.default()[0]`（`_internal/trigger.ts:613-614`）——
+ *    一条注释就会把真正的触发元素顶掉，整个组件渲染成空（本轮实测踩到）。
+ *
+ * 🚨 `v-bind` 用的是**函数调用**，而 `vue-tsc` 对「组件 + `v-bind="fn()"`」的
+ *    `mergeProps` 重载要求**第一个实参**就满足组件的必填 prop ⇒ 模板里把
+ *    `prefix-cls` / `value-texts` 显式写出来（值与这里返回的完全一致，重复无害）。
  */
-const selectorBindings = computed(() => ({
-  ...restAttrs.value,
-  ...selectorProps.value,
-}));
+const selectorBindings = (): Record<string, unknown> => {
+  // ⚠️ **渲染期**读 `attrs`（`useAttrs()` 的对象不参与依赖追踪；包成 `computed`
+  //    会让「只改 class/style/aria/data」的更新读到旧快照，Issue #5.3）。
+  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
+  void _attrsClass;
+  void _attrsStyle;
+  // ⚠️ 不要加 `as never`：`Selector` 有必填 prop（`prefixCls` / `valueTexts`），
+  //    而 `vue-tsc` 要靠这里的**推断类型**去满足它们（`as never` 会让整条 `v-bind`
+  //    变成 `never` ⇒ 报「missing prefixCls / valueTexts」）。
+  return { ...rest, ...selectorProps.value };
+};
+
+/** Trigger 的浮层容器：局部优先，回退 ConfigProvider 的全局设置（Issue #5.2）。 */
+const mergedGetPopupContainer = computed(
+  // `Trigger` 的 `getPopupContainer` 声明比 `GetPopupContainer` 窄（只收 `HTMLElement`，
+  // 而配置面允许 `ShadowRoot`）⇒ 一次收窄断言。运行时 Portal 两者都接得住。
+  () =>
+    (props.getPopupContainer ?? pickerContext.getPopupContainer) as
+      | ((triggerNode: HTMLElement) => HTMLElement)
+      | undefined,
+);
 
 // ============================== Trigger 的接线值 ==============================
 // ⚠️ Vue 的 **template 不支持 TS 断言**（`as X`）⇒ 所有需要收窄/断言的量
@@ -1520,11 +1566,16 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
     :popup-align="popupAlign"
     :popup-class-name="popupClassNames"
     :popup-style="popupStyle"
-    :get-popup-container="props.getPopupContainer"
+    :get-popup-container="mergedGetPopupContainer"
     :z-index="zIndex"
     :motion="popupMotion"
     stretch="minWidth"
   >
-    <Selector ref="selectorRef" v-bind="selectorBindings" />
+    <Selector
+      :prefix-cls="prefixCls"
+      :value-texts="valueTexts"
+      v-bind="selectorBindings()"
+      ref="selectorRef"
+    />
   </Trigger>
 </template>

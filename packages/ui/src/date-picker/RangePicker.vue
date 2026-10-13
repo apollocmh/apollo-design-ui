@@ -66,7 +66,12 @@ import {
 } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import { semanticRootStyle } from '../_internal/use-merge-semantic';
+import {
+  type GetPopupContainer,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
@@ -222,6 +227,8 @@ interface DatePickerComponentConfig {
   clearIcon?: VNodeChild;
   allowClear?: boolean | { clearIcon?: VNodeChild };
   separator?: VNodeChild;
+  /** 组件级浮层容器（`components.rangePicker.getPopupContainer`）。 */
+  getPopupContainer?: GetPopupContainer;
 }
 const pickerContext = context as unknown as DatePickerComponentConfig;
 const rangePickerConfig = rangePickerContext as unknown as DatePickerComponentConfig;
@@ -308,11 +315,13 @@ const semantic = useMergedPickerSemantic({
   contextClassNames: () => pickerContext.classNames,
   classNames: () => props.classNames,
   contextStyles: () => pickerContext.styles,
+  // ⚠️ 上游 `rangePicker?.style ?? null`（第 7 参）—— 是**单数 style** 经
+  //    `semanticRootStyle`，不是 `styles`。此前传 `rangePickerConfig.styles`
+  //    是错的字段（Issue #5.4）。
+  contextStyleRoot: () => semanticRootStyle(rangePickerConfig.style),
   styles: () => props.styles,
   popupClassName: () => props.popupClassName ?? props.dropdownClassName,
   popupStyle: () => props.popupStyle as Record<string, string | number> | undefined,
-  // ⚠️ 范围多一层：上游 `useMergedPickerSemantic(…, rangePicker?.style ?? null)`（第 7 参）
-  contextStyleRoot: () => rangePickerConfig.styles,
   props: props as never,
 });
 
@@ -340,8 +349,16 @@ const inner = useInnerValue({
   onOk: (dates) => emit('ok', dates as never),
 });
 
+/**
+ * `minDate` / `maxDate` 归一（**只剩类型收窄，不再求值**）。
+ *
+ * ⚠️ 上游的 `minDate` / `maxDate` 是静态日期（rc-picker `interface.d.ts:179,258`），
+ * 没有函数形态。本仓曾公开 `(info) => Date` 扩展，但运行时恒传空对象 ⇒
+ * `info.from` 永远 undefined（Issue #5.5）。⇒ `LimitDate` 已收窄成 `DatePickerDate`，
+ * 这里只做 `DatePickerDate → PanelDateType` 的等价收窄。
+ */
 const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =>
-  typeof limit === 'function' ? (limit({}) as PanelDateType) : (limit as PanelDateType | undefined);
+  limit as PanelDateType | undefined;
 
 const boundaryDisabledDate = useDisabledBoundary({
   generateConfig: dayjsConfig,
@@ -1220,24 +1237,45 @@ const selectorProps = computed(() => ({
    */
   multiple: false,
 }));
-const restAttrs = computed(() => {
-  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
-  void _attrsClass;
-  void _attrsStyle;
-  return rest;
-});
 
 /**
- * 引擎的最终绑定：调用方 attrs（**除 class/style** —— 它们已归根/走语义通道）在前，
- * 引擎自己的 props 在后（引擎胜）。
+ * 引擎的最终绑定：调用方 attrs（**除 class/style** —— 它们已归根/走语义通道）在前、
+ * 引擎自己的 props 在后（**引擎胜**）。
  *
  * ⚠️ 上游把 `...restProps` spread 给**内层 picker**（`generateSinglePicker.js:180`）——
  *    `data-*` / `aria-*` 由此落到选择器根元素上。本仓此前**完全没接**（KNOWN-ISSUES §1.8）。
+ *
+ * 🚨 **必须是渲染期求值的函数，不能是 `computed`**：`useAttrs()` 的对象不参与依赖追踪，
+ *    包成 computed 后「父级只改 attrs」的更新永远读到旧快照（Issue #5.3）。
+ *
+ * 🚨 **模板里不能放 HTML 注释**！Vue 会把模板注释编译成 Comment vnode 保留下来，
+ *    而 `Trigger` 取的是 `slots.default()[0]`（`_internal/trigger.ts:613-614`）——
+ *    一条注释就会把真正的触发元素顶掉，整个组件渲染成空（本轮实测踩到）。
+ *
+ * 🚨 `v-bind` 用的是**函数调用**，而 `vue-tsc` 对「组件 + `v-bind="fn()"`」的
+ *    `mergeProps` 重载要求**第一个实参**就满足组件的必填 prop ⇒ 模板里把
+ *    `prefix-cls` / `value-texts` 显式写出来（值与这里返回的完全一致，重复无害）。
  */
-const selectorBindings = computed(() => ({
-  ...restAttrs.value,
-  ...selectorProps.value,
-}));
+const selectorBindings = (): Record<string, unknown> => {
+  // ⚠️ 渲染期读 attrs（与 DatePicker 同判，Issue #5.3）。
+  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
+  void _attrsClass;
+  void _attrsStyle;
+  // ⚠️ 不要加 `as never`：`Selector` 有必填 prop（`prefixCls` / `valueTexts`），
+  //    而 `vue-tsc` 要靠这里的**推断类型**去满足它们（`as never` 会让整条 `v-bind`
+  //    变成 `never` ⇒ 报「missing prefixCls / valueTexts」）。
+  return { ...rest, ...selectorProps.value };
+};
+
+/** Trigger 的浮层容器：局部优先，回退 ConfigProvider 的全局设置（Issue #5.2）。 */
+const mergedGetPopupContainer = computed(
+  // `Trigger` 的 `getPopupContainer` 声明比 `GetPopupContainer` 窄（只收 `HTMLElement`，
+  // 而配置面允许 `ShadowRoot`）⇒ 一次收窄断言。运行时 Portal 两者都接得住。
+  () =>
+    (props.getPopupContainer ?? pickerContext.getPopupContainer) as
+      | ((triggerNode: HTMLElement) => HTMLElement)
+      | undefined,
+);
 </script>
 
 <template>
@@ -1254,11 +1292,16 @@ const selectorBindings = computed(() => ({
     :popup-align="popupAlign"
     :popup-class-name="popupClassNames"
     :popup-style="popupStyle"
-    :get-popup-container="props.getPopupContainer"
+    :get-popup-container="mergedGetPopupContainer"
     :z-index="zIndex"
     :motion="popupMotion"
     stretch="minWidth"
   >
-    <Selector ref="selectorRef" v-bind="selectorBindings" />
+    <Selector
+      :prefix-cls="prefixCls"
+      :value-texts="valueTexts"
+      v-bind="selectorBindings()"
+      ref="selectorRef"
+    />
   </Trigger>
 </template>

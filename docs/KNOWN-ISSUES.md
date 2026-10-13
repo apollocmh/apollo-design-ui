@@ -117,6 +117,41 @@ Badge.vue 的 livingCount/displayCount 判据）、`descriptions`、`steps`、`t
 已裁决，confirm 场景的 content prop 合法）、`avatar.src`（URL 语义）、`layout.trigger`、
 `tree.checkable`（布尔语义）、`pagination.showQuickJumper`。
 
+### §1.3 date-picker：`id` 被静默丢弃、`tabIndex` 落根（2026-10-13 登记，修 Issue #5 时发现）
+
+**背景**：修 Issue #5.3（attrs 动态透传）时核实「透传到底落到哪」，用 React SSR 对拍 antd 6.6.4
+后发现的**上游落点差异**。两块都是上游**明确有**的行为，本仓都没有。
+
+**判据（可复现）**：React SSR 探针（antd 6.6.4，`ConfigProvider prefixCls="apollo"`）：
+
+```
+DatePicker id="my-id"    → <input ... id="my-id" ...>          （落 combobox input）
+DatePicker tabIndex={5}  → <input ... tabindex="5" ...>        （落 combobox input）
+```
+
+本仓实测（`mount(DatePicker, { attrs: { id: 'x1', tabindex: '5' } })`）：
+
+```
+root  attrs: { "tabindex": "5", "class": "apollo-picker …" }   ← tabindex 落**根**
+input attrs: { "aria-invalid","autocomplete","size","placeholder","value" }  ← 没有 id
+```
+
+- **`id` 完全消失** —— 根上没有、input 上也没有。`Selector` 单独挂载时 `id` 能正常落根
+  （`{"id":"x1","tabindex":"5","class":"apollo-picker"}`）⇒ 丢失发生在
+  `DatePicker（inheritAttrs:false）→ Trigger → cloneVNode(slots.default()[0])` 这条链上，
+  **根因尚未定位**（触发元素是经 `Trigger` 克隆后渲染的，嫌疑在那一跳）。
+- ⚠️ `packages/ui/src/date-picker/__tests__/index.test.ts` 的
+  「引擎自己的 props 不被调用方 attrs 顶掉」那条用例**断言是空转的**：
+  `expect(w.element.getAttribute('id')).not.toBe('user-id')` 在「属性被整个丢掉」时也成立。
+  它给了一个「已验证」的假信号（§1.8 的留痕也据此写了「`id` 不被 attrs 顶掉」）。
+- `tabIndex` 落根**不是**上游行为，但也不像 `id` 那样消失；一并按上游改到 input 更省事。
+
+**影响面**：`id` / `aria-labelledby` / `<label for>` 这类「靠 id 关联」的用法在 date-picker /
+time-picker 上全部失效（表单外置 label、`getByLabelText` 类测试都拿不到）。
+
+**修的时候注意**：两条独立动作 —— ① **让 `id` 不再消失**（或按上游把它送进 input 的 `id`）；
+② 把那条空转用例改成**可证伪**的断言（先跑一遍确认它在修复前必红）。
+
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 

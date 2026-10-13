@@ -161,10 +161,15 @@ export interface DisabledTimes {
 /**
  * 上下界。
  *
- * ⚠️ 上游是**函数形态**（`(info) => DateType | null | undefined`），不是静态日期 ——
- * 因为「结束日期最早能选哪天」取决于「开始日期选了什么」。
+ * ⚠️ **上游就是静态日期**：rc-picker 1.12.2 的 `interface.d.ts:179,258` 是
+ * `minDate?: DateType` / `maxDate?: DateType`，**没有**函数形态。
+ *
+ * 本仓此前公开了一个「函数形态」扩展（`(info: { from }) => Date`），但运行时对函数
+ * **恒传空对象** `{}` ⇒ `info.from` 永远是 `undefined`，即「公开承诺了却做不到」
+ * （Issue #5.5）。既然上游没有这个契约，按「Ant Design 是答案的判据」**收窄类型**，
+ * 而不是去发明一套 `from` 语义。
  */
-export type LimitDate = DatePickerDate | ((info: { from?: DatePickerDate }) => DatePickerDate);
+export type LimitDate = DatePickerDate;
 
 /** `cellRender` 的 info 参数（面板格子的上下文）。 */
 export interface CellRenderInfo {

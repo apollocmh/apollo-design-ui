@@ -59,7 +59,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | panelRender | Customize the whole panel | `(props: { originPanel }) => VNodeChild` | —— |
 | cellRender | Customize a cell | `(current, info) => VNodeChild` | —— |
 | disabledDate | Disabled dates | `(date, info) => boolean` | —— |
-| minDate / maxDate | Selectable bounds. **Accepts a function** | `LimitDate` | —— |
+| minDate / maxDate | Selectable bounds (a plain date, as upstream) | `DatePickerDate` | —— |
 | placeholder | Placeholder | `string` | from locale |
 | locale | Locale (deep-merged with `ConfigProvider`'s `locale.DatePicker`) | `PickerLocale` | —— |
 | size | Size (falls back to `ConfigProvider`) | `'small' \| 'medium' \| 'middle' \| 'large'` | —— |
@@ -83,7 +83,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | name / autoComplete / id | Forwarded to the native `input` | `string` | —— |
 | prefixCls | Class prefix. ⚠️ Defaults to **`apollo-picker`** (not `apollo-date-picker`) | `string` | —— |
 | class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | —— |
-| classNames / styles | Semantic class names / styles (**4 flat + 7 nested `popup`**). `popup` accepts a **string** (= `popup.root`) | `DatePickerSemanticAllType` | —— |
+| classNames / styles | Semantic class names / styles (**4 flat + 7 nested `popup`**). `popup` accepts a **string** (= `popup.root`). `classNames.root` / `styles.root` land on the **selector root** (merged with native `class` / `style`; native wins) | `DatePickerSemanticAllType` | —— |
 
 ### Events
 

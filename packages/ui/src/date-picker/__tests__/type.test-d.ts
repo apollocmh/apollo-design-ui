@@ -314,10 +314,26 @@ describe('DatePicker · L3 判定与渲染函数的签名', () => {
     >();
   });
 
-  it('🚨 `LimitDate` 允许**函数形态**（「结束的最早值」取决于「开始选了什么」）', () => {
-    expectTypeOf<LimitDate>().toEqualTypeOf<
-      DatePickerDate | ((info: { from?: DatePickerDate }) => DatePickerDate)
-    >();
+  it('🚨 `LimitDate` 是**静态日期**（与上游 rc-picker `interface.d.ts:179,258` 一致）', () => {
+    // ⚠️ 原断言是「允许函数形态 `(info: { from }) => Date`」—— 那是本仓的**自造扩展**：
+    //    上游 `minDate?: DateType` / `maxDate?: DateType` 根本没有函数形态，
+    //    而本仓运行时对函数恒传空对象 `{}` ⇒ `info.from` **永远 undefined**。
+    //    「公开承诺了却做不到」比「不提供」更糟 ⇒ 收窄为静态日期（Issue #5.5）。
+    //    RangePicker 的动态边界仍然可用 `disabledDate(date, { from })`（那是上游真有的契约）。
+    expectTypeOf<LimitDate>().toEqualTypeOf<DatePickerDate>();
+    expectTypeOf<DatePickerProps['minDate']>().toEqualTypeOf<DatePickerDate | undefined>();
+    expectTypeOf<DatePickerProps['maxDate']>().toEqualTypeOf<DatePickerDate | undefined>();
+    expectTypeOf<RangePickerProps['minDate']>().toEqualTypeOf<DatePickerDate | undefined>();
+    expectTypeOf<RangePickerProps['maxDate']>().toEqualTypeOf<DatePickerDate | undefined>();
+  });
+
+  it('负例：函数形态不再被接受（避免「承诺了做不到」）', () => {
+    const _negatives = () => {
+      // @ts-expect-error `minDate` 不接受函数
+      const bad: DatePickerProps = { minDate: (info: { from?: DatePickerDate }) => info.from };
+      void bad;
+    };
+    expectTypeOf(_negatives).toBeFunction();
   });
 
   it('`CellRender` 的第一参是**联合**（时间列传数字、上下午列传字符串）', () => {
