@@ -38,7 +38,7 @@
  */
 
 import { useDevWarning } from '@apollo-design/utils';
-import { computed, provide, useAttrs, useSlots } from 'vue';
+import { computed, provide, ref, useAttrs, useSlots } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { useComponentConfig } from '../config-provider/context';
 import DatePicker from '../date-picker/DatePicker.vue';
@@ -265,10 +265,36 @@ const FORWARDED_SLOTS = [
  * ⇒ 模板里改用 `<template v-for #[name]>` 动态具名插槽（Vue 3.3+ 支持）。
  */
 const forwardedSlotNames = computed(() => FORWARDED_SLOTS.filter((name) => Boolean(slots[name])));
+
+// ============================== 命令面转发（Issue #6.1）==============================
+/**
+ * 上游 `forwardRef((props, ref) => <InternalTimePicker {...props} ref={ref} />)`
+ * —— 内层 picker 的 `DatePickerRef` 原样透出。
+ *
+ * 本仓内层是 `DatePicker.vue`，它自 Issue #6.1 起 `defineExpose` 了同一组命令面
+ * （`nativeElement` / `focus` / `blur`）⇒ 这里只需按 `TimePickerExpose` 转一手。
+ *
+ * ⚠️ `nativeElement` 用 **getter**（`proxyRefs` 每次访问现算）—— 见
+ *    `DatePicker.vue` 的说明。
+ */
+const innerRef = ref<{
+  nativeElement: HTMLElement | null;
+  focus: (options?: FocusOptions) => void;
+  blur: () => void;
+} | null>(null);
+
+defineExpose({
+  get nativeElement(): HTMLElement | null {
+    return innerRef.value?.nativeElement ?? null;
+  },
+  focus: (options?: FocusOptions): void => innerRef.value?.focus(options),
+  blur: (): void => innerRef.value?.blur(),
+});
 </script>
 
 <template>
   <DatePicker
+    ref="innerRef"
     v-bind="forwardProps"
     :variant="mergedVariant"
     :class-names="mergedClassNames"

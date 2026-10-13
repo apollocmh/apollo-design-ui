@@ -325,6 +325,29 @@ const semantic = useMergedPickerSemantic({
   props: props as never,
 });
 
+// ============================== 命令面（expose）==============================
+/**
+ * 公开的命令面（上游 `RangePickerRef`）。逐条转发给 `Selector`。
+ *
+ * ⚠️ `focus` 的签名与单值**不同**：可指定聚焦哪一端（`focus(1)` /
+ *    `focus({ index: 1 })`）；另有 `startInput` / `endInput` 两个原生 input。
+ *    详见 `DatePicker.vue` 同处关于 getter 与 `proxyRefs` 的说明（Issue #6.1）。
+ */
+defineExpose({
+  get nativeElement(): HTMLElement | null {
+    return selectorRef.value?.nativeElement() ?? null;
+  },
+  focus: (index?: number | (FocusOptions & { index?: number })): void =>
+    selectorRef.value?.focus(index),
+  blur: (): void => selectorRef.value?.blur(),
+  get startInput(): HTMLInputElement | null {
+    return selectorRef.value?.startInput() ?? null;
+  },
+  get endInput(): HTMLInputElement | null {
+    return selectorRef.value?.endInput() ?? null;
+  },
+});
+
 // ============================== 值状态机 ==============================
 const getDateTexts = (dates: ValueSlot[]): string[] =>
   dates.map((date) =>
@@ -975,7 +998,13 @@ const panelLayoutVNode = computed(() =>
           classNames: semantic.classNames.value.popup,
           styles: semantic.styles.value.popup,
           onNow,
-          onSubmit: () => valueChange.triggerChange(activeIndex.value, 'confirm'),
+          onSubmit: () => {
+            // 上游 `Popup/index.js:110-117` 的 `onFooterSubmit`：`onOk()` 在 `onSubmit()`
+            // **之前**。载荷是 `calendarValue()`（范围版的槽位列表）。
+            // ⚠️ 此前本仓**从不发 `ok`**（`useRangeValue` 的 `triggerOk` 无调用点）。
+            emit('ok', inner.calendarValue.value as never);
+            valueChange.triggerChange(activeIndex.value, 'confirm');
+          },
         } as unknown as Record<string, unknown>,
       ),
     ]),

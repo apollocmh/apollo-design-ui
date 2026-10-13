@@ -291,7 +291,8 @@ const rtl = computed(() => direction.value === 'rtl');
  * 本仓按需加（S5 再说）。
  */
 const selectorRef = ref<{
-  focus: () => void;
+  focus: (options?: number | { index?: number; preventScroll?: boolean }) => void;
+  blur: () => void;
   nativeElement: () => HTMLElement | null;
 } | null>(null);
 
@@ -415,6 +416,25 @@ const semantic = useMergedPickerSemantic({
   props: props as never,
 });
 
+// ============================== 命令面（expose）==============================
+/**
+ * 公开的命令面（上游 `DatePickerRef` = `PickerRef`）。逐条转发给 `Selector`。
+ *
+ * 🚨 此前本组件**完全没有 `defineExpose`** ⇒ `DatePickerExpose` 这个公开类型在运行时
+ *    一个字都取不到（`ref.value.focus` 是 `undefined`），薄壳 `TimePicker` 更无从转发
+ *    （Issue #6.1）。
+ *
+ * ⚠️ `nativeElement` 用 **getter**：暴露的对象会被 Vue 的 `proxyRefs` 包一层，
+ *    `get` 每次访问现算 ⇒ 取值永远是最新的 DOM（写成字面量会在 setup 期就 `null` 定格）。
+ */
+defineExpose({
+  get nativeElement(): HTMLElement | null {
+    return selectorRef.value?.nativeElement() ?? null;
+  },
+  focus: (options?: FocusOptions): void => selectorRef.value?.focus(options),
+  blur: (): void => selectorRef.value?.blur(),
+});
+
 // ============================== 值状态机 ==============================
 /**
  * 值列表 → 对外载荷（rc `SinglePicker.js:97-102` 的 `pickerParam`，**逐字**）。
@@ -461,12 +481,24 @@ const inner = useInnerValue({
   getValue: () => (props.value !== undefined ? toDateArray(props.value) : undefined),
   onCalendarChange: (dates, texts, info) => {
     emit('calendarChange', dates as never, texts, info);
-    // legacy `onSelect`：上游只在 `picker === 'time' && !multiple` 时转发
+    // legacy `onSelect`：上游只在 `picker === 'time' && !multiple` 时转发，
+    // 🚨 且**载荷是单值** —— `generateSinglePicker.js:124-128` 是 `onSelect(date)`，
+    //    而 `date` 就是 rc 的 `onInternalCalendarChange` 收到的**已归一**第一参
+    //    （`SinglePicker.js:118`：`onCalendarChange(pickerParam(dates), …)`）。
+    //    此前给 `dates.filter(Boolean)` 的数组 ⇒ 与
+    //    `TimePickerProps['onSelect'] = (value: Dayjs) => void` 的类型契约相反（Issue #6.3）。
     if (props.onSelect && mergedPicker.value === 'time' && !props.multiple) {
-      props.onSelect(dates.filter((d): d is DatePickerDate => Boolean(d)) as never);
+      props.onSelect(pickerParam(dates) as never);
     }
   },
-  onOk: (dates) => emit('ok', dates.filter((d): d is DatePickerDate => Boolean(d)) as never),
+  /**
+   * 点「确定」。
+   *
+   * 🚨 载荷同样走 `pickerParam`（rc `SinglePicker.js:121-123` 的
+   *    `onInternalOk = dates => onOk?.(pickerParam(dates))`）—— 单值是**单个** Dayjs，
+   *    不是数组。此前恒给 `dates.filter(Boolean)` 的数组（Issue #6.3）。
+   */
+  onOk: (dates) => emit('ok', pickerParam(dates) as never),
 });
 
 /**
@@ -1508,8 +1540,19 @@ const footerVNode = computed(() =>
        * 所以这里直接复用，不再自己拼一遍 `triggerSubmit`（`multiple` 的分支因此也一致）。
        */
       onNow: (date: PanelDateType) => onPresetSubmit(date),
-      /** 点 `OK`（上游 `onSubmit: () => triggerConfirm('confirm')`） */
-      onSubmit: () => valueChange.triggerChange(0, 'confirm'),
+      /**
+       * 点 `OK`。上游 `Popup/index.js:110-117` 的 `onFooterSubmit` 里 `onOk()` 在
+       * `onSubmit()` **之前**（`onSelect(defaultOpenValue)` 那一支见 KNOWN-ISSUES §1.4）。
+       *
+       * 🚨 此前本仓**从不发 `ok`** —— `useRangeValue` 的 `triggerOk`（rc
+       *    `useRangeValue.js:119-120`）在本仓**没有任何调用点** ⇒ `onOk` / `@ok`
+       *    全程静默失效（在 Issue #6.3 的取证过程中发现，一并修）。
+       */
+      onSubmit: () => {
+        // `onOk(calendarValue())` + `pickerParam`（rc `SinglePicker.js:121-123`）
+        emit('ok', pickerParam(inner.calendarValue.value) as never);
+        valueChange.triggerChange(0, 'confirm');
+      },
     } as unknown as Record<string, unknown>,
   ),
 );

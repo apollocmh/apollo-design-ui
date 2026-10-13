@@ -152,6 +152,49 @@ time-picker 上全部失效（表单外置 label、`getByLabelText` 类测试都
 **修的时候注意**：两条独立动作 —— ① **让 `id` 不再消失**（或按上游把它送进 input 的 `id`）；
 ② 把那条空转用例改成**可证伪**的断言（先跑一遍确认它在修复前必红）。
 
+### §1.4 date-picker / time-picker：顶层时间配置与 `defaultOpenValue`（2026-10-13 登记，Issue #6 的两项未完成）
+
+**背景**：Issue #6 的 #2（顶层时间配置贯通）与 #5（`defaultOpenValue` 锚定面板）**没有交付**。
+不是「忘了做」，而是**取证链断了** —— 记录现场，避免下一个人从零重推。
+
+**判据 A（阻塞取证的那条）**：**纯 `picker: 'time'` 的面板在 jsdom 里渲染为空。**
+
+```
+mount(TimePicker, { props: { open: true, defaultValue: dayjs('2016-11-22 12:30:45') },
+                    attachTo: document.body })
+document.querySelector('.apollo-picker-time-panel').outerHTML
+→ <div class="apollo-picker-time-panel"><!----><div class="apollo-picker-content"></div></div>
+```
+
+`.apollo-picker-content` 里**零列**（`-time-panel-column` 一个都没有），加 `use12Hours`
+也只是多出一列「上午/下午」（2 项）。`PanelHeader` 的 `<!---->` 是预期的
+（纯时间 picker `hideHeader`）。**⚠️ 但 L6（真浏览器）是绿的** ⇒ 这是
+jsdom ↔ 浏览器 的行为差异，**不是**「面板本来就空」。⇒ 任何「列数 / 格数 / 选中格」
+断言在 jsdom 里都**不可用**，而 L6 又不能为 `use12Hours` 造新变体而不动基线。
+（对照：**datetime** picker 的时间列在 jsdom 里**正常** —— `date-picker/__tests__/index.test.ts`
+的 `showTime` 那组用例能断言 3/4 列并通过。）
+
+**判据 B（上游契约，已核实到源码行）**：
+
+| 项 | 上游出处 | 内容 |
+|---|---|---|
+| 顶层时间键 | `SinglePicker.d.ts` | `PickerProps extends BasePickerProps, Omit<SharedTimeProps, 'format' \| 'defaultValue'>` ⇒ `DatePickerProps` / `TimePickerProps` **都接受** `use12Hours` / `hourStep` / `disabledTime` … |
+| 合并 | `useFilledProps.js:72-76` | `timeProps = getTimeProps(props)` → `mergedShowTime = fillShowTimeConfig(...)` |
+| 面板自己也要读 | `picker-panel.ts:298-300` | 面板跑 `getTimeProps(**自己**的 props)` ⇒ 顶层键必须**逐键**下发到面板（只折进 `showTime` 不够） |
+| 空值锚定 | `Popup/index.js:99-104` | `isTimePickerEmptyValue = picker === 'time' && !valueList.length`；`popupPanelValue = isEmpty ? defaultOpenValue : valueList` |
+| 确定按钮 | `Popup/index.js:100-117` | `footerSubmitValue = isEmpty ? filterEmpty([defaultOpenValue]) : valueList`；`onFooterSubmit` 先 `onSelect(defaultOpenValue)` 再 `onOk()` 再 `onSubmit()` |
+
+**本轮已改到的**（`<TimePicker use12Hours/>` 仍**未验证生效**）：`PickerCommonProps` 补 17 个顶层
+时间键、`DatePicker.vue` 把顶层键喂进 `useFilledLocale.source` 并逐键下发面板。**这些都已被回退**
+（见下），只留判据。
+
+**为什么回退**：改了之后 jsdom 里面板**仍然是空的** ⇒ 既不能证明修好、也不能证明没修坏。
+按 `AGENTS.md` §4「声称完成必须附带可复现的证据」，**宁可不交付**。
+
+**下次怎么做**：先解决「jsdom 里纯时间面板为空」这件事（先查 `PickerPanel` →
+`TimePanel.showTime` 这一跳在 jsdom 下的实际值），拿到能证伪的断言之后再改。
+`bare` 的真浏览器用例已经存在：`node tests/visual/debug/probe-time-picker-antd.mjs`。
+
 
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 

@@ -34,7 +34,7 @@
  * `[antd: DatePicker.RangePicker]`（不是 `[antd: TimePicker]`）。
  */
 
-import { computed, provide, useAttrs, useSlots } from 'vue';
+import { computed, provide, ref, useAttrs, useSlots } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import RangePicker from '../date-picker/RangePicker.vue';
 import type { TimeRangePickerProps } from './interface';
@@ -120,10 +120,35 @@ const FORWARDED_SLOTS = [
 
 /** 实际提供了的插槽名（见 `TimePicker.vue` 的同名说明：`v-slots` 是 JSX-only 的）。 */
 const forwardedSlotNames = computed(() => FORWARDED_SLOTS.filter((name) => Boolean(slots[name])));
+
+// ============================== 命令面转发（Issue #6.1）==============================
+/** 上游 `forwardRef((props, ref) => <InternalRangePicker {...props} ref={ref} />)`。 */
+const innerRef = ref<{
+  nativeElement: HTMLElement | null;
+  focus: (index?: number | (FocusOptions & { index?: number })) => void;
+  blur: () => void;
+  startInput: HTMLInputElement | null;
+  endInput: HTMLInputElement | null;
+} | null>(null);
+
+defineExpose({
+  get nativeElement(): HTMLElement | null {
+    return innerRef.value?.nativeElement ?? null;
+  },
+  focus: (index?: number | (FocusOptions & { index?: number })): void =>
+    innerRef.value?.focus(index),
+  blur: (): void => innerRef.value?.blur(),
+  get startInput(): HTMLInputElement | null {
+    return innerRef.value?.startInput ?? null;
+  },
+  get endInput(): HTMLInputElement | null {
+    return innerRef.value?.endInput ?? null;
+  },
+});
 </script>
 
 <template>
-  <RangePicker v-bind="forwardProps">
+  <RangePicker ref="innerRef" v-bind="forwardProps">
     <template v-for="name in forwardedSlotNames" :key="name" #[name]="slotProps">
       <component :is="slots[name]" v-bind="slotProps ?? {}" />
     </template>
