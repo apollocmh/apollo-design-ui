@@ -1258,3 +1258,216 @@ describe('Space · 叶子函数', () => {
     expect(getStatusClassNames('x', undefined, true)).toBe('x-has-feedback');
   });
 });
+
+// ===========================================================================
+// Issue #2 · 响应性三连（attrs / NoCompactStyle 隔离 / 组件配置动态更新）
+// ===========================================================================
+
+describe('Space · 根 attrs 的运行时更新（Issue #2.1）', () => {
+  /**
+   * 宿主：只改 `class` / `style` / `aria-label`，**不改任何 prop**。
+   *
+   * 这条路径正是 `computed(() => ({...attrs}))` 会失效的地方 ——
+   * `useAttrs()` 返回的对象不参与依赖追踪，computed 只在自身依赖变化时重算。
+   * Vue 仍会重渲染本组件（`shouldUpdateComponent` 会比较 attrs），
+   * 但重渲染读到的还是那份缓存快照。
+   */
+  const mountAttrsHost = (
+    component: unknown,
+    render: (state: { cls: string; label: string; style: { color: string } }) => VNodeChild,
+  ) => {
+    const cls = ref('a');
+    const label = ref('l1');
+    const style = ref({ color: 'red' });
+    const Host = defineComponent({
+      name: 'ASpaceAttrsHost',
+      setup() {
+        return () =>
+          h(
+            component as never,
+            {
+              class: cls.value,
+              'aria-label': label.value,
+              style: style.value,
+            },
+            { default: () => render({ cls: cls.value, label: label.value, style: style.value }) },
+          );
+      },
+    });
+    return { w: mount(Host), cls, label, style };
+  };
+
+  it('Space：只改 class / aria-label / style ⇒ DOM 跟着变', async () => {
+    const { w, cls, label, style } = mountAttrsHost(Space, () => twoSpans());
+    await nextTick();
+    expect(w.find(`.${P}`).classes()).toContain('a');
+    expect(w.attributes('aria-label')).toBe('l1');
+
+    cls.value = 'b';
+    label.value = 'l2';
+    style.value = { color: 'blue' };
+    await nextTick();
+
+    expect(w.find(`.${P}`).classes()).toContain('b');
+    expect(w.find(`.${P}`).classes()).not.toContain('a');
+    expect(w.attributes('aria-label')).toBe('l2');
+    expect(styleOf(w, `.${P}`).color).toBe('blue');
+  });
+
+  it('Space.Compact：同上', async () => {
+    const { w, cls, label } = mountAttrsHost(SpaceCompact, () => twoSpans());
+    await nextTick();
+    expect(w.find(`.${PC}`).classes()).toContain('a');
+
+    cls.value = 'b';
+    label.value = 'l2';
+    await nextTick();
+
+    expect(w.find(`.${PC}`).classes()).toContain('b');
+    expect(w.find(`.${PC}`).classes()).not.toContain('a');
+    expect(w.attributes('aria-label')).toBe('l2');
+  });
+
+  it('Space.Addon：同上', async () => {
+    const { w, cls, label } = mountAttrsHost(SpaceAddon, () => 'Addon');
+    await nextTick();
+    expect(w.find(`.${PA}`).classes()).toContain('a');
+
+    cls.value = 'b';
+    label.value = 'l2';
+    await nextTick();
+
+    expect(w.find(`.${PA}`).classes()).toContain('b');
+    expect(w.find(`.${PA}`).classes()).not.toContain('a');
+    expect(w.attributes('aria-label')).toBe('l2');
+  });
+
+  it('data-* 也走同一条路径（不是只给 class 打补丁）', async () => {
+    const id = ref('x1');
+    const Host = defineComponent({
+      name: 'ASpaceDataHost',
+      setup() {
+        return () => h(Space, { 'data-testid': id.value }, { default: () => twoSpans() });
+      },
+    });
+    const w = mount(Host);
+    await nextTick();
+    expect(w.attributes('data-testid')).toBe('x1');
+    id.value = 'x2';
+    await nextTick();
+    expect(w.attributes('data-testid')).toBe('x2');
+  });
+});
+
+describe('Space.Compact · NoCompactStyle 之后是**新的**独立组（Issue #2.2）', () => {
+  const ItemProbe = defineComponent({
+    name: 'ANoCompactItemProbe',
+    setup() {
+      const { compactItemClassnames } = useCompactItemContext('probe', 'ltr');
+      return () => h('i', { class: ['probe', compactItemClassnames.value] });
+    },
+  });
+
+  const three = () => [
+    h(ItemProbe, { key: 'a' }),
+    h(ItemProbe, { key: 'b' }),
+    h(ItemProbe, { key: 'c' }),
+  ];
+
+  it('★ 隔离后的内层 Compact：首项带 `-first-item`、末项带 `-last-item`', async () => {
+    // 上游判据是 `!compactItemContext || compactItemContext?.isFirstItem`
+    // （`Compact.js:98-99`）—— `NoCompactStyle` 提供的是 `null`，而 `!null` 为真
+    // ⇒ 内层被当成**全新的独立组**。此前本仓只判「ref 对象是否存在」，
+    // `null` 落到 `!!value?.isFirstItem` ⇒ 恒 false ⇒ 首末项圆角全丢。
+    const w = mount(SpaceCompact, {
+      slots: {
+        default: () => [
+          h(ItemProbe, { key: 'p0' }),
+          h(
+            NoCompactStyle,
+            { key: 'n' },
+            {
+              default: () => h(SpaceCompact, { key: 'inner' }, { default: () => three() }),
+            },
+          ),
+        ],
+      },
+    });
+    await nextTick();
+    const inner = w.find(`.${PC} .${PC}`);
+    const probes = inner.findAll('.probe');
+    expect(probes).toHaveLength(3);
+    expect(probes[0]?.classes()).toContain('probe-compact-first-item');
+    expect(probes[0]?.classes()).not.toContain('probe-compact-last-item');
+    expect(probes[2]?.classes()).toContain('probe-compact-last-item');
+    expect(probes[2]?.classes()).not.toContain('probe-compact-first-item');
+  });
+
+  it('对照组：**没有**隔离时，内层首项在外层不是首项 ⇒ 不带 `-first-item`', async () => {
+    const w = mount(SpaceCompact, {
+      slots: {
+        default: () => [
+          h(ItemProbe, { key: 'p0' }),
+          h(SpaceCompact, { key: 'inner' }, { default: () => three() }),
+        ],
+      },
+    });
+    await nextTick();
+    const probes = w.find(`.${PC} .${PC}`).findAll('.probe');
+    expect(probes[0]?.classes()).not.toContain('probe-compact-first-item');
+  });
+});
+
+describe('Space · ConfigProvider 的组件级 size 动态更新（Issue #2.3）', () => {
+  const mountSizeHost = () => {
+    const size = ref<SizeType | undefined>('small');
+    const Host = defineComponent({
+      name: 'ASpaceConfigSizeHost',
+      setup() {
+        return () =>
+          h(
+            ConfigProvider,
+            { components: { space: { size: size.value } } },
+            { default: () => h(Space, null, { default: () => twoSpans() }) },
+          );
+      },
+    });
+    return { w: mount(Host), size };
+  };
+
+  it('★ 运行中改 `components.space.size` ⇒ gap 类名跟着换', async () => {
+    const { w, size } = mountSizeHost();
+    await nextTick();
+    expect(w.find(`.${P}`).classes()).toContain(`${P}-gap-col-small`);
+
+    size.value = 'large';
+    await nextTick();
+    expect(w.find(`.${P}`).classes()).toContain(`${P}-gap-col-large`);
+    expect(w.find(`.${P}`).classes()).not.toContain(`${P}-gap-col-small`);
+
+    // 组件自己的 `size` prop 仍然**压过** ConfigProvider
+    size.value = 'small';
+    await nextTick();
+    expect(w.find(`.${P}`).classes()).toContain(`${P}-gap-col-small`);
+  });
+
+  it('★ 数字 gap 也要跟着换（走的是同一条 `sizeFullName` 依赖）', async () => {
+    const size = ref<SizeType | number | undefined>('small');
+    const Host = defineComponent({
+      name: 'ASpaceConfigGapHost',
+      setup() {
+        return () =>
+          h(
+            ConfigProvider,
+            { components: { space: { size: size.value } } },
+            { default: () => h(Space, null, { default: () => twoSpans() }) },
+          );
+      },
+    });
+    const w = mount(Host);
+    await nextTick();
+    size.value = 24;
+    await nextTick();
+    expect(styleOf(w, `.${P}`).columnGap).toBe('24px');
+  });
+});

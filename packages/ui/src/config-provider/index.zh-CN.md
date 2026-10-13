@@ -67,4 +67,5 @@ subtitle: 全局配置
 - **`components` 的类型是渐进式**：已落地的三个组件（`divider` / `empty` / `spin`）有精确 prop；其余 53 个走 `Record<string, any>` 逃生口，等对应组件落地再补精确类型。
 - **`theme` 给出时会渲染一个 `display: contents` 的作用域元素承载 CSS 变量**。对布局零影响，但在 Chromium 的 `#stage` 这类 inline 容器里会让 stage 高 1px（D32，不修）。
 - **`direction` 的读取必须用 `useDirection()`**：`inject` 只在 setup 解析一次，解构 `useComponentConfig()` 拿到的 `direction` 是快照。
+- **`useComponentConfig()` 返回的是惰性视图**：组件配置里的**原始值**（`size` / `shape` …）在 `computed` / render 里读才跟得上 `components.xxx` 的运行时更新；**解构仍然是快照**（与 `direction` 同判据）。
 - **不提供** `tooltip` / `popover` / `popconfirm` prop（依赖 `UniqueProvider`，未实现）。

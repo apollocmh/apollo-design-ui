@@ -28,7 +28,7 @@
  *   - 无 CSS-in-JS 的 hash 类名（D1）。
  *   - `SpaceContext` 注入的是 `ComputedRef`（D5 / D27）。
  *   - `className` / `style` 是**显式 prop**（antd 也是），但 Vue 里 `class` 恒走
- *     `$attrs` —— 两者都会被应用，位置见 `rootClass` / `rootAttrs` 的注释。
+ *     `$attrs` —— 两者都会被应用，位置见 `rootClass` / `getRootAttrs` 的注释。
  */
 
 import { isEmptyVNode, toArray, useDevWarning } from '@apollo-design/utils';
@@ -99,14 +99,27 @@ const slots = useSlots();
 const attrs = useAttrs();
 defineSlots<{ default?: SpaceSlot; separator?: () => VNodeChild }>();
 
+/**
+ * ⚠️ **`size` 不能在这里解构**。
+ *
+ * `useComponentConfig` 返回的是惰性视图（`Proxy`），但**解构会把 getter 求值一次**
+ * ⇒ 拿到的仍是 setup 期的快照。`ConfigProvider` 的 `components` 是整对象替换，
+ * 所以 `components.space.size` 运行时改小/改大时，解构出来的值不会跟着变
+ * （Issue #2.3）。`sizeFullName` 里改成读 `spaceConfig.size`（在 `computed` 内），
+ * 依赖才会被追踪。
+ *
+ * 其余字段（`className` / `classNames` / `styles`）仍按 setup 期取值 ——
+ * 它们要么是稳定的引用、要么是对象（其字段的读取本来就被追踪），
+ * 本 Issue 不动它们以免扩大影响面。
+ */
+const spaceConfig = useComponentConfig<SpaceConfig>('space');
 const {
   getPrefixCls,
-  size: contextSize,
   className: contextClassName,
   style: contextStyle,
   classNames: contextClassNames,
   styles: contextStyles,
-} = useComponentConfig<SpaceConfig>('space');
+} = spaceConfig;
 
 /**
  * `direction` 走 `useDirection()` 而**不是** `useComponentConfig` 的解构值。
@@ -176,7 +189,8 @@ const mergedSeparator = computed(() => {
 // 间距大小
 // ---------------------------------------------------------------------------
 const sizeFullName = computed<SpaceSize | [SpaceSize, SpaceSize]>(
-  () => props.size ?? contextSize ?? 'small',
+  // ⚠️ 读 `spaceConfig.size` 而不是解构值 —— 见上面 `spaceConfig` 的注释（Issue #2.3）。
+  () => props.size ?? spaceConfig.size ?? 'small',
 );
 
 /**
@@ -374,8 +388,16 @@ const rootStyleAttrs = computed(() =>
  * 它与 `:class` 由 Vue 的 `mergeProps` 拼接，落在根类名串的**最后**。
  * 这与 antd 的位置（`className` 在中间）不同，但两者都是「用户的类名」，
  * 且 L4 的投影会把类名排序 ⇒ 不可观测。差异登记见 `docs/analysis/space.md` §9。
+ *
+ * 🚨 **必须是普通函数、在渲染路径里求值，不能包成 `computed`**。
+ *    `useAttrs()` 返回的对象**不参与依赖追踪**（`instance.attrs` 是普通对象，
+ *    由父级 render 原地打补丁）。包进 `computed` 后，只要 `rootStyleAttrs`
+ *    的依赖没变，computed 就永远返回**第一次**缓存下来的那份 `$attrs` 快照 ——
+ *    父级只改 `class` / `style` / `aria-*` 时（`shouldUpdateComponent` 判定
+ *    「props 没变、attrs 变了」仍会重渲染本组件），DOM 上看到的还是旧值。
+ *    同一判据见 `Button.vue` 的 `getRootAttrs`（Issue #2.1）。
  */
-const rootAttrs = computed(() => mergeProps(rootStyleAttrs.value, attrs));
+const getRootAttrs = () => mergeProps(rootStyleAttrs.value, attrs);
 
 /**
  * `v-for` 的 key。
@@ -417,7 +439,7 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div v-if="hasChildren" ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div v-if="hasChildren" ref="rootRef" :class="rootClass" v-bind="getRootAttrs()">
     <!--
       `SpaceContext` 由本组件 provide（Item 用它拿 `latestIndex`）。
       与 antd 的 `<SpaceContextProvider>` 同构 —— 它也不产生任何元素。

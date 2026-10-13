@@ -84,14 +84,21 @@ const rootClass = computed(() => [
 ]);
 
 /** 根 `class` / `style` 是 Vue 原生 attrs（上游随 `{...restProps}` 落根）。 */
-const rootAttrs = computed(() => ({ ...attrs }));
+/**
+ * 根 `class` / `style` 是 Vue 原生 attrs（上游随 `{...restProps}` 落根）。
+ *
+ * 🚨 与 `Space.vue` / `Compact.vue` 同判（Issue #2.1）：必须是**普通函数**、
+ *    渲染期求值 —— `useAttrs()` 的普通对象不参与依赖追踪，包成 `computed`
+ *    会让「只改 class / style / aria-*」的更新读到旧快照。
+ */
+const getRootAttrs = () => ({ ...attrs });
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div ref="rootRef" :class="rootClass" v-bind="getRootAttrs()">
     <slot />
   </div>
 </template>

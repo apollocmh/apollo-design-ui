@@ -248,23 +248,82 @@ export type ComponentConfig<T> = T & ComponentConfigBase;
  *    antd 那边同样如此（`context[propName]` 的类型是 `any`），我们至少把它收在
  *    这一个赋值语句里，且断言目标是调用方给的 `T`（而非 `any`）。
  *
- * ⭐ 响应式边界：ConfigProvider 注入的是 `reactive` 对象，所以这里取出的
- *    `classNames` / `styles` 以及组件配置里的**对象/函数**值仍是 proxy ——
- *    在 `computed` 里读它们的字段会被追踪。但 `direction` 这类**原始值**是快照，
- *    要用 `useDirection()`（见上）。
+ * ⭐ 响应式边界（2026-10-13 修）：返回的是**惰性视图**（`Proxy`），不是一次性浅拷贝。
+ *
+ *    此前这里是 `Object.assign({…}, propValue, {…})` —— `propValue` 里的**原始值**
+ *    （`size` / `className` / `shape` …）在 setup 期就被拷了出来。`ConfigProvider`
+ *    的 `components` 是**整对象替换**（`ConfigProvider.ts:220`），换完那个拷贝
+ *    永远停在旧值上：`components.space.size` 从 `small` 改成 `large`，Space 的
+ *    gap 不动（Issue #2.3）。
+ *
+ *    现在每次读都从 `context` 现取，所以：
+ *      - 在 `computed` / render 里读 `config.size` ⇒ **会被追踪**，动态更新生效；
+ *      - `classNames` / `styles` 仍回落同一个 `EMPTY_OBJECT` 常量（判据 1 不变）；
+ *      - `Object.keys` / 展开 / `in` / `toEqual` 语义与旧实现一致
+ *        （`ownKeys` + `getOwnPropertyDescriptor` + `has` 三个陷阱补齐）。
+ *
+ *    ⚠️ **解构仍然是快照** —— `const { size } = useComponentConfig('space')` 会把
+ *       getter 求值一次。要动态更新就必须把 `config` 留着、在响应式上下文里读它。
+ *       这与 `useDirection()`（D27）是同一条判据的两种表现。
  */
 const EMPTY_OBJECT = {};
+
+/**
+ * 恒出现在返回对象上的键 —— 前两个来自默认值，后四个恒来自 context 顶层。
+ *
+ * ⚠️ 顺序即旧实现的 `Object.assign` 顺序：`{classNames, styles}` → `propValue` →
+ *    `{getPrefixCls, direction, getPopupContainer, renderEmpty}`。
+ *    `propValue` 里同名的键会覆盖前一组（见判据 2）。
+ */
+const COMPONENT_CONFIG_BASE_KEYS = [
+  'classNames',
+  'styles',
+  'getPrefixCls',
+  'direction',
+  'getPopupContainer',
+  'renderEmpty',
+] as const;
 
 export function useComponentConfig<T extends object = Record<string, unknown>>(
   propName: string,
 ): ComponentConfig<T> {
   const context = useConfigContext();
-  const propValue = (context.components?.[propName] ?? {}) as T;
 
-  return Object.assign({ classNames: EMPTY_OBJECT, styles: EMPTY_OBJECT }, propValue, {
-    getPrefixCls: context.getPrefixCls,
-    direction: context.direction,
-    getPopupContainer: context.getPopupContainer,
-    renderEmpty: context.renderEmpty,
+  /** 组件配置的**当前**值。必须每次现读 —— 见上面的「响应式边界」。 */
+  const readConfig = (): Record<string, unknown> =>
+    (context.components?.[propName] ?? {}) as Record<string, unknown>;
+
+  const read = (key: string): unknown => {
+    switch (key) {
+      // 恒来自 context 顶层（判据 2：组件配置不能覆盖它们）
+      case 'getPrefixCls':
+        return context.getPrefixCls;
+      case 'direction':
+        return context.direction;
+      case 'getPopupContainer':
+        return context.getPopupContainer;
+      case 'renderEmpty':
+        return context.renderEmpty;
+      // 判据 1：默认值是同一个空对象常量（不是每次新建）
+      case 'classNames':
+      case 'styles':
+        return readConfig()[key] ?? EMPTY_OBJECT;
+      default:
+        return readConfig()[key];
+    }
+  };
+
+  return new Proxy({} as ComponentConfig<T>, {
+    get: (_target, key) => (typeof key === 'string' ? read(key) : undefined),
+    has: (_target, key) =>
+      typeof key === 'string' &&
+      ((COMPONENT_CONFIG_BASE_KEYS as readonly string[]).includes(key) || key in readConfig()),
+    ownKeys: () => [...new Set([...Object.keys(readConfig()), ...COMPONENT_CONFIG_BASE_KEYS])],
+    getOwnPropertyDescriptor: (_target, key) => ({
+      value: typeof key === 'string' ? read(key) : undefined,
+      enumerable: true,
+      configurable: true,
+      writable: false,
+    }),
   });
 }

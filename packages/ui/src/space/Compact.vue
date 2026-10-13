@@ -42,7 +42,11 @@ import { computed, inject, ref, useAttrs, useSlots, type VNode, watchEffect } fr
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useConfigContext, useDirection } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
-import { CompactItem, spaceCompactItemContextKey } from './Compact';
+import {
+  CompactItem,
+  type SpaceCompactItemContextType,
+  spaceCompactItemContextKey,
+} from './Compact';
 import type { SpaceCompactProps, SpaceSlot } from './interface';
 import { useOrientation } from './useOrientation';
 
@@ -80,8 +84,21 @@ const direction = useDirection();
  *
  * 它决定「本 Compact 的首项/末项在外层是否也是首项/末项」—— 嵌套 Compact 时
  * 内层的首项若在外层不是首项，就不能合并圆角（否则中间那个会被削成直角）。
+ *
+ * ⚠️ 值是 `ComputedRef<… | null>`：`null` 是**合法取值**，表示「被
+ *    `NoCompactStyle` 显式隔离」。它必须与 `undefined`（没有 Provider）走**同一条**
+ *    分支 —— 上游的判据是 `!compactItemContext || compactItemContext?.isFirstItem`
+ *    （`Compact.js:98-99`），而 `!null` 在 JS 里为真。
+ *    此前本仓只判 `!outerContext`（**ref 对象**是否存在），`null` 落到了
+ *    `!!outerContext.value?.isFirstItem` ⇒ 恒 false ⇒ 隔离后的 Compact
+ *    首末项都不加 `-compact-first-item` / `-compact-last-item`，圆角全丢
+ *    （Issue #2.2）。
  */
 const outerContext = inject(spaceCompactItemContextKey, undefined);
+
+/** 外层上下文的值；`undefined` 与 `null` 都归一成 `undefined`（见上）。 */
+const outerItemContext = (): SpaceCompactItemContextType | undefined =>
+  outerContext?.value ?? undefined;
 
 const prefixCls = computed(() => getPrefixCls('space-compact', props.prefixCls));
 
@@ -134,8 +151,12 @@ const rootClass = computed(() => [
  *
  * ⚠️ 根 `class` / `style` 是 Vue 原生 attrs（上游的 `className` / `rootClassName` / `style`
  *    都随 `{...restProps}` 落根），整体由 `$attrs` 透传即可。
+ *
+ * 🚨 与 `Space.vue` 同判（Issue #2.1）：必须是**普通函数**、渲染期求值。
+ *    包成 `computed(() => ({...attrs}))` 后，`useAttrs()` 的普通对象不参与追踪
+ *    ⇒ 只有 `class` / `style` / `aria-*` 变化时永远返回旧快照。
  */
-const rootAttrs = computed(() => ({ ...attrs }));
+const getRootAttrs = () => ({ ...attrs });
 
 /** `v-for` 的 key。antd：`child?.key || \`${prefixCls}-item-${i}\``（`Compact.tsx:134`）。 */
 const compactItemKey = (child: VNode, index: number): string | number => {
@@ -145,17 +166,22 @@ const compactItemKey = (child: VNode, index: number): string | number => {
 };
 
 /**
- * 首项判据：下标为 0 **且**外层（若存在）也是首项。
+ * 首项判据：下标为 0 **且**外层（若存在且**未被隔离**）也是首项。
  *
- * ⚠️ `!outerContext || …` 这一支不能省：没有外层时 `outerContext` 是
- *    `undefined`，此时「下标 0 就是首项」成立。
+ * ⚠️ `!outer` 这一支不能省：没有外层时 `outer` 是 `undefined`，此时「下标 0 就是首项」
+ *    成立。`NoCompactStyle` 注入的 `null` 也走这一支（上游 `!compactItemContext`
+ *    对 `null` 为真）—— 见 `outerItemContext` 的注释。
  */
-const isFirstItem = (index: number): boolean =>
-  index === 0 && (!outerContext || !!outerContext.value?.isFirstItem);
+const isFirstItem = (index: number): boolean => {
+  const outer = outerItemContext();
+  return index === 0 && (!outer || !!outer.isFirstItem);
+};
 
-/** 末项判据：下标为最后一个 **且**外层（若存在）也是末项。 */
-const isLastItem = (index: number): boolean =>
-  index === childNodes.value.length - 1 && (!outerContext || !!outerContext.value?.isLastItem);
+/** 末项判据：下标为最后一个 **且**外层（若存在且未被隔离）也是末项。 */
+const isLastItem = (index: number): boolean => {
+  const outer = outerItemContext();
+  return index === childNodes.value.length - 1 && (!outer || !!outer.isLastItem);
+};
 
 // ---------------------------------------------------------------------------
 // 开发期告警
@@ -180,7 +206,7 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div v-if="hasChildren" ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div v-if="hasChildren" ref="rootRef" :class="rootClass" v-bind="getRootAttrs()">
     <!--
       `CompactItem` 不产生任何元素（纯 provider）—— 与 antd 的 `<CompactItem>` 一致。
       所以这个 v-for 在 DOM 上完全不可见，只影响下游组件拼出来的类名。
