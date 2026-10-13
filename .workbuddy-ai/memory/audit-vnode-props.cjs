@@ -75,7 +75,14 @@ for (const comp of listComponents()) {
 }
 
 const missing = rows.filter((r) => !r.hasSlot);
-console.log('=== VNodeChild props 总数:', rows.length, '其中组件支持同名 slot:', rows.length - missing.length, '缺失:', missing.length);
+console.log(
+  '=== VNodeChild props 总数:',
+  rows.length,
+  '其中组件支持同名 slot:',
+  rows.length - missing.length,
+  '缺失:',
+  missing.length,
+);
 console.log('\n=== 缺失 slot 的（应补插槽支持）===');
 for (const r of missing) console.log(`${r.comp}  .${r.prop}`);
 console.log('\n=== 已支持（无需改）===');
