@@ -123,3 +123,27 @@ foundation **13/13**；组件 **72/72 completed**（全量封顶）。
   ⇒ bundle 是旧的 ⇒ 探针结果全盘误导（判据：asset 文件名 hash 不变）。
 - **布尔/配置兜底 ≠ 图标兜底**：allowClear 兜底 `true` 会渲染空按钮；图标位兜底
   必须给**真的图标 vnode**（CloseCircleFilled / CloseOutlined 同判）。
+
+## §10 判别式补充（2026-10-13/14 · Issue #1–#6 批量修复）
+- 🚨 **`useAttrs()` 不参与依赖追踪** ⇒ 包进 `computed` = 首帧快照（父级只改
+  `class`/`style`/`aria-*`/`data-*` 时永远读旧值）。全仓判据统一为
+  **模板里 `v-bind="fn()"`**（渲染期求值）。⚠️ `vue-tsc` 对「组件 + `v-bind="fn()"`」
+  要求 `fn()` 的**返回值第一个实参**满足必填 prop ⇒ 模板里把必填 prop 显式写出来。
+- 🚨 **SFC 模板里不能放 HTML 注释** —— Vue 编译成 Comment vnode 保留，而 `Trigger` 取
+  `slots.default()[0]`（`_internal/trigger.ts:613-614`）⇒ 一条注释就把触发元素顶掉、
+  **整个组件渲染成空**。注释写进 `<script>`。
+- 🚨 **样式合并不要用对象展开**：`attrs.style` 可能是**字符串**，`{...'width:200px'}`
+  得到 `{0:'w',…}` ⇒ Vue `setStyle` 抛 `'set' on proxy: trap returned falsish`。
+  用**数组** `[semantic.root, rootStyle]`（`normalizeStyle` 认得字符串）。
+- **组件 expose 用 getter**：`defineExpose({ get nativeElement() {…} })` —— 暴露对象被
+  `proxyRefs` 包一层，字面量会在 setup 期定格成 `null`（date-picker / time-picker）。
+- ⚠️ **`w.emitted('x')` 对「薄壳不声明 `defineEmits`」的组件无效**（time-picker / auto-complete）
+  —— 它们是靠 attrs 转发 `onXxx` 的，测试要 spy 那个 handler。
+- ⚠️ **jsdom 里纯 `picker: 'time'` 的面板渲染为空**（`.apollo-picker-content` 零列），
+  而 `datetime` 的时间列正常、L6（真浏览器）也正常 ⇒ 「列数/格数/选中格」类断言在
+  jsdom 不可用。这是 Issue #6 的 #6.2/#6.5 未交付的直接原因（`KNOWN-ISSUES` §1.4）。
+- **公共 Hook 收裸值 = 静默失效**：`useAllowClear` / `useMergeSemantic` / `useDisabled`
+  已全部改成 `MaybeRefOrGetter` + `toValue`；新写 Hook 一律按此。
+- **语义 `root` 槽的落点**（rc `SinglePicker.js:476-478`）：class = `[rootClass, classNames.root]`、
+  style = `[styles.root, rootStyle]`（原生 style 胜）。date-picker 的这两个公开槽
+  此前**从未落到任何元素**（Issue #5.4 修）。
