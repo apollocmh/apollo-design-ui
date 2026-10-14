@@ -16,12 +16,15 @@ import { useControlledValue } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
+  Fragment,
   h,
   type PropType,
   shallowRef,
   type VNode,
   type VNodeChild,
 } from 'vue';
+import { clsx } from '../_internal/clsx';
+import type { TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { TooltipPlacement, TooltipRef } from '../tooltip/interface';
@@ -94,6 +97,24 @@ const Popover = defineComponent({
     },
     styles: { type: [Object, Function] as PropType<PopoverStyles>, default: undefined },
     zIndex: { type: Number, default: undefined },
+    // ⚠️ 以下是 `PopoverProps extends TooltipProps` 承诺、但本组件原先**没有声明**
+    //    ⇒ 传进来会落进 attrs 又被 `inheritAttrs: false` 静默丢弃（Issue #25.1）。
+    //    声明后统一显式下传给内部 Tooltip，不要指望 attrs 透传（那会打到触发器 DOM）。
+    getPopupContainer: {
+      type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+      default: undefined,
+    },
+    getTooltipContainer: {
+      type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+      default: undefined,
+    },
+    align: { type: Object as PropType<TriggerAlign>, default: undefined },
+    builtinPlacements: {
+      type: Object as PropType<Record<string, TriggerAlign>>,
+      default: undefined,
+    },
+    onPopupClick: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
+    openClassName: { type: String, default: undefined },
   },
   emits: {
     'update:open': (_open: boolean) => true,
@@ -177,8 +198,21 @@ const Popover = defineComponent({
       mergedProps.value,
     );
 
-    // 根 class/style 是 Vue 原生 attrs（见下方 Tooltip 调用处的转发）。
-    const rootClassNames = computed(() => mergedClassNames.value.root);
+    // ⚠️ 根 class/style：语义 root + ConfigProvider 的 `className`（#25.4）+
+    //    调用方的**原生** class/style（#25.3）。
+    //    原生 class/style **不**走 Tooltip 的 attrs 通道 —— 那条通道会被 Trigger
+    //    `cloneVNode(child, {...attrs})` 打到**触发元素**上（双落点污染）。
+    const rootClassNames = computed(() =>
+      clsx(
+        contextSemantic.className,
+        mergedClassNames.value.root,
+        attrs.class as string | undefined,
+      ),
+    );
+    const rootStyles = computed<StyleLike>(() => ({
+      ...(mergedStyles.value.root ?? {}),
+      ...((attrs.style as StyleLike | undefined) ?? {}),
+    }));
 
     // ============================ Overlay ============================
     // antd：title/content 双双不可渲染 ⇒ overlay=null ⇒ Tooltip 的 noTitle 生效。
@@ -186,7 +220,10 @@ const Popover = defineComponent({
       const title = titleNode.value;
       const content = contentNode.value;
       if (!isRenderable(title) && !isRenderable(content)) return null;
-      return h('div', [
+      // ⚠️ antd 的 Overlay 是 **Fragment** ⇒ `-container` 的直接子元素就是
+      //    title / content；包一层 div 会破坏 `container > .title` 这类规则
+      //    （flex/grid 布局也会多一层）—— Issue #25.5。
+      return h(Fragment, [
         isRenderable(title)
           ? h(
               'div',
@@ -253,13 +290,19 @@ const Popover = defineComponent({
             arrow: mergedClassNames.value.arrow,
           } as PopoverSemanticType['classNames'],
           styles: {
-            root: mergedStyles.value.root,
+            root: rootStyles.value,
             container: mergedStyles.value.container,
             arrow: mergedStyles.value.arrow,
           } as PopoverSemanticType['styles'],
-          // 调用方原生 class/style 转给 Tooltip（Tooltip 已迁移到原生 attrs 通道）
-          class: attrs.class as string | undefined,
-          style: attrs.style as StyleLike | undefined,
+          // ⚠️ 调用方原生 class/style **不再**经 Tooltip 的 attrs 通道转发
+          //    （那条通道会落到触发元素上）⇒ 已在上面并入语义 root。
+          // 以下是 `PopoverProps extends TooltipProps` 的公共配置（Issue #25.1）。
+          getPopupContainer: props.getPopupContainer,
+          getTooltipContainer: props.getTooltipContainer,
+          align: props.align,
+          builtinPlacements: props.builtinPlacements,
+          onPopupClick: props.onPopupClick,
+          openClassName: props.openClassName,
           open: mergedOpen.value,
           onOpenChange: settingOpen,
           afterOpenChange: props.afterOpenChange,

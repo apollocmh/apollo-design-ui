@@ -41,6 +41,25 @@ popover/
 
 L6 视觉 6 张（2 variant × 3 viewport）**全部 0.000% exact**。
 
+## 3.5 Issue #25 的五条判据
+
+1. **`PopoverProps extends TooltipProps` 承诺的公共配置必须**显式声明并下传**（#25.1）：
+   本组件 `inheritAttrs: false`，未声明的字段会静默丢进 attrs 再被丢弃。已补齐
+   `getPopupContainer` / `getTooltipContainer` / `align` / `builtinPlacements` /
+   `onPopupClick` / `openClassName`。
+2. **预设色背景的选择器要命中真实容器**（#25.2）：本仓 Popover 的浮层内容容器是
+   `-container`（rc-tooltip `Popup.js` 的产物），而 antd 提取产物里写的是 `-inner`
+   （antd Popover 有自己的 `-inner`）⇒ 13 个预设色的 `background-color` 全部落空。
+   已把 13 条规则改为 `.apollo-popover-container`；自定义 HEX 走 `parseTooltipColor`
+   的内联变量（不受影响）。
+3. **原生 `class` / `style` 只落弹层根**（#25.3）：不能经 Tooltip 的 attrs 通道转发 ——
+   Trigger 会 `cloneVNode(child, {...attrs})` 把它们打到**触发元素**上（双落点）。
+   现在并入语义 `root`（`classNames.root` / `styles.root`），触发元素保持干净。
+4. **`contextSemantic.className` 要进根类名**（#25.4）：`rootClassNames` 原来只吃
+   `mergedClassNames.root`，漏了 ConfigProvider 的 `className`（同层 `style` 早就参与了）。
+5. **Overlay 用 Fragment**（#25.5）：antd 的 `-container` 直接子元素就是 title/content，
+   多包一层 `div` 会破坏 `container > .title` 与 flex/grid 布局。
+
 ## 4. 已知缺口
 
 | # | 缺口 | 说明 |
