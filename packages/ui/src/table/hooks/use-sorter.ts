@@ -8,7 +8,15 @@
 import { CaretDownOutlined, CaretUpOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { isFunction, isNumber, isPlainObject } from '@apollo-design/utils';
-import { type ComputedRef, computed, h, ref, type VNodeChild } from 'vue';
+import {
+  type ComputedRef,
+  computed,
+  h,
+  type MaybeRefOrGetter,
+  ref,
+  toValue,
+  type VNodeChild,
+} from 'vue';
 import { clsx } from '../../_internal/clsx';
 import Tooltip from '../../tooltip/Tooltip';
 import type {
@@ -369,9 +377,14 @@ export interface UseSorterParams<RecordType> {
     sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
     sorterStates: SortState<RecordType>[],
   ) => void;
-  sortDirections: SortOrder[];
-  tableLocale?: TableLocale;
-  showSorterTooltip: boolean | { target?: string };
+  /**
+   * ⚠️ 三项都收 `MaybeRefOrGetter`：antd 每次 render 重新读 props，本仓 setup 只跑一次 ⇒
+   * 传普通值就是快照（运行时切 `sortDirections`/tooltip 不生效，Issue #17.3）。
+   * `transformColumns` 由引擎在渲染期调用 ⇒ 用 `toValue` 取值的那一次会被正确追踪。
+   */
+  sortDirections?: MaybeRefOrGetter<SortOrder[] | undefined>;
+  tableLocale?: MaybeRefOrGetter<TableLocale | undefined>;
+  showSorterTooltip?: MaybeRefOrGetter<boolean | { target?: string } | undefined>;
 }
 
 export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
@@ -494,9 +507,9 @@ export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
       innerColumns,
       mergedSorterStates.value,
       triggerSorter,
-      sortDirections,
-      tableLocale,
-      showSorterTooltip,
+      toValue(sortDirections) ?? ['ascend', 'descend'],
+      toValue(tableLocale),
+      toValue(showSorterTooltip),
       undefined,
       globalLocale as { sortable?: string } | undefined,
     );

@@ -8,7 +8,17 @@
 
 import { FilterFilled } from '@apollo-design/icons';
 import { isEqual, isFunction, isNumber } from '@apollo-design/utils';
-import { type ComputedRef, computed, defineComponent, h, type PropType, ref, watch } from 'vue';
+import {
+  type ComputedRef,
+  computed,
+  defineComponent,
+  h,
+  type MaybeRefOrGetter,
+  type PropType,
+  ref,
+  toValue,
+  watch,
+} from 'vue';
 import { clsx } from '../../_internal/clsx';
 import Button from '../../button/Button.vue';
 import Checkbox from '../../checkbox/Checkbox';
@@ -717,8 +727,9 @@ export interface UseFilterParams<RecordType> {
     filters: Record<string, FilterValue | null>,
     filterStates: TableFilterState<RecordType>[],
   ) => void;
-  getPopupContainer?: (node: HTMLElement) => HTMLElement;
-  locale: TableLocale;
+  /** ⚠️ 收 `MaybeRefOrGetter`：运行时替换容器要生效（Issue #17.3），传普通值 = setup 快照。 */
+  getPopupContainer?: MaybeRefOrGetter<((node: HTMLElement) => HTMLElement) | undefined>;
+  locale: MaybeRefOrGetter<TableLocale>;
   rootClassName?: string;
 }
 
@@ -799,9 +810,9 @@ export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
       dropdownPrefixCls,
       innerColumns,
       mergedFilterStates.value,
-      tableLocale,
+      toValue(tableLocale),
       triggerFilter,
-      getPopupContainer,
+      toValue(getPopupContainer),
       undefined,
       rootClassName,
     );

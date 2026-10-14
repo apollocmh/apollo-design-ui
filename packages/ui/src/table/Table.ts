@@ -198,10 +198,16 @@ const Table = defineComponent({
     });
     const childrenColumnName = computed(() => props.childrenColumnName ?? 'children');
 
+    // ⚠️ `column` 必须是 computed —— `ref(props.column)` 是 setup 期快照，父组件换
+    //    公共列配置（align/ellipsis/width…）时这个 ref 不会变（Issue #17.2）。
     const baseColumns = useFilledColumns(
       computed(() => props.columns ?? []) as never,
-      ref(props.column) as never,
+      computed(() => props.column) as never,
     ) as ComputedRef<ColumnsType>;
+    // antd `InternalTable.js:94-99`：`mergedColumns` = baseColumns（填充后）经 responsive 过滤。
+    // 本仓未实现 responsive ⇒ 二者等价；**引擎与 hooks 都必须吃填充后的列**（否则 `column`
+    // 的 align/className 到不了 DOM —— 修复前引擎拿的是 `props.columns` 原始列）。
+    const mergedColumns = computed(() => baseColumns.value);
 
     // ========================== Expandable（提前：selection 依赖 expandType） ==========================
     const mergedExpandable = computed<ExpandableConfig>(
@@ -282,12 +288,14 @@ const Table = defineComponent({
     };
     const sorterResult = useSorter<Record<string, unknown>>({
       prefixCls,
-      mergedColumns: computed(() => (props.columns ?? []) as never),
+      mergedColumns: mergedColumns as never,
       baseColumns: computed(() => baseColumns.value as never),
       onSorterChange: onSorterChange as never,
-      sortDirections: props.sortDirections ?? ['ascend', 'descend'],
-      tableLocale: tableLocale.value,
-      showSorterTooltip: props.showSorterTooltip as never,
+      // ⚠️ 三项配置都可能是运行时变更的 ⇒ 传 computed，由 hook 侧 toValue 取最新值
+      // （传普通值 = setup 期快照 ⇒ 动态 sortDirections / tooltip 不生效，Issue #17.3）。
+      sortDirections: computed(() => props.sortDirections) as never,
+      tableLocale: computed(() => tableLocale.value) as never,
+      showSorterTooltip: computed(() => props.showSorterTooltip) as never,
     });
     const sortedData = computed(() =>
       getSortData(rawData.value, sorterResult.sortStates.value as never, childrenColumnName.value),
@@ -315,13 +323,11 @@ const Table = defineComponent({
     const filterResult = useFilter<Record<string, unknown>>({
       prefixCls,
       dropdownPrefixCls,
-      mergedColumns: computed(() => (props.columns ?? []) as never),
+      mergedColumns: mergedColumns as never,
       baseColumns: computed(() => baseColumns.value as never),
       onFilterChange: onFilterChange as never,
-      getPopupContainer: props.getPopupContainer as
-        | ((node: HTMLElement) => HTMLElement)
-        | undefined,
-      locale: tableLocale.value,
+      getPopupContainer: computed(() => props.getPopupContainer) as never,
+      locale: computed(() => tableLocale.value) as never,
     });
     // ============================ Virtual ============================
     // antd `InternalTable.tsx:722-742`：`listItemHeight` 由 token 与 size 算出，
@@ -391,10 +397,19 @@ const Table = defineComponent({
       onPaginationChange,
       computed(() => props.pagination ?? ({} as false | TablePaginationConfig)) as never,
     );
-    changeEventInfo.pagination =
-      props.pagination === false
-        ? {}
-        : getPaginationParam(mergedPagination.value as never, props.pagination ?? {});
+    // ⚠️ antd `InternalTable.js:433` 在**每次 render** 回填 pagination（mergedPagination 会随翻页
+    //    变化，props.pagination 也可动态改）⇒ 与 sorter/filters 同判：必须是 getter，赋值一次会
+    //    让「翻到第 2 页后再排序/过滤」的 onChange.pagination 停留在初始页（Issue #17.1）。
+    Object.defineProperties(changeEventInfo, {
+      pagination: {
+        get: () =>
+          props.pagination === false
+            ? {}
+            : getPaginationParam(mergedPagination.value as never, props.pagination ?? {}),
+        enumerable: true,
+        configurable: true,
+      },
+    });
     changeEventInfo.resetPagination = resetPagination;
 
     // ============================= Data =============================
@@ -641,7 +656,7 @@ const Table = defineComponent({
               h(EngineTable, {
                 prefixCls,
                 class: tableClass.value,
-                columns: (props.columns ?? []) as never,
+                columns: mergedColumns.value as never,
                 data: pageData.value as never,
                 rowKey: getRowKey.value as never,
                 rowClassName: internalRowClassName as never,

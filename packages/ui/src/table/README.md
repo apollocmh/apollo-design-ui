@@ -66,6 +66,16 @@ table/
 6. **测试里 Portal 内交互必须真实 Teleport**：test-utils 的 teleport stub 副本**不挂事件监听器** ⇒ `document.body.querySelector` 拿到的 DOM 点击永远无效；mount 需 `global: { stubs: { teleport: false } }`。
 7. **样式 token 落点**：`--{p}-table-*` 落在根类 + `-css-var` 类（PITFALLS 342：过滤下拉走 Portal，不在 `.{p}-table` 子树 ⇒ 只有根块 var 全部静默回退）。
 8. **阴影/圆角等固定几何值升级为派生 decl**（E10：规则侧硬编码值是 error 级）。
+9. 🚨 **antd 每次 render 回填的东西，本仓必须是 getter/computed**（setup 只跑一次）：
+   `changeEventInfo.pagination`（`InternalTable.js:433`，随翻页/受控 pagination 变；Issue #17.1）、
+   `sorter`/`filters`/`sorterStates`/`filterStates` 已用 `Object.defineProperties` getter，别改回赋值。
+10. 🚨 **填充后的列要进渲染链**：`baseColumns = useFilledColumns(columns, computed(()=>props.column))`
+    ⇒ `mergedColumns` ⇒ **引擎 `columns` 与 sorter/filter hooks 都吃 mergedColumns**。
+    引擎若拿 `props.columns` 原始列，`column` 的 align/className/ellipsis 就**完全不生效**
+    （Issue #17.2 的真实根因，比「ref 快照」更靠前）。`ref(props.column)` 同理要改 computed。
+11. **hook 配置项收 `MaybeRefOrGetter` + `toValue`**：`sortDirections`/`tableLocale`/
+    `showSorterTooltip`/`getPopupContainer`（Issue #17.3）—— 它们在 `transformColumns` 里被读，
+    而 `transformColumns` 由引擎在渲染期调用 ⇒ `toValue` 取值那次会被正确追踪。
 
 ## 6. 已知缺口（分片待办，勿重复排查）
 
