@@ -12,7 +12,7 @@
  * 形态 PENDING（D36 同判）、zIndexContext Provider 不做（useZIndex 已含层叠）。
  */
 
-import { RightOutlined } from '@apollo-design/icons';
+import { LeftOutlined, RightOutlined } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { useControlledValue } from '@apollo-design/utils';
@@ -214,21 +214,28 @@ const Dropdown = defineComponent({
     const OverlayRenderer = defineComponent({
       name: 'ADropdownOverlayRenderer',
       setup() {
-        const arrowIcon = h(RightOutlined, { class: `${prefixCls}-menu-submenu-arrow-icon` });
-        const override = {
-          prefixCls: `${prefixCls}-menu`,
-          mode: 'vertical' as const,
-          selectable: false,
-          onClick: onMenuClick,
-          expandIcon: h('span', { class: `${prefixCls}-menu-submenu-arrow` }, [arrowIcon]),
-          validator: ({ mode }: { mode?: string }) => {
-            if (mode && mode !== 'vertical') {
-              console.error(
-                `[Warning] [antd: Dropdown] mode="${mode}" is not supported for Dropdown's Menu.`,
-              );
-            }
-          },
-        };
+        // ⚠️ antd `dropdown.js:194-196`：`direction === 'rtl' ? LeftOutlined : RightOutlined`
+        //    ⇒ 必须在**渲染函数**里选（放在 setup 里就是快照，切 direction 后箭头不翻，
+        //    Issue #21.4）。
+        const override = computed(() => {
+          const arrowIcon = h(isRtl.value ? LeftOutlined : RightOutlined, {
+            class: `${prefixCls}-menu-submenu-arrow-icon`,
+          });
+          return {
+            prefixCls: `${prefixCls}-menu`,
+            mode: 'vertical' as const,
+            selectable: false,
+            onClick: onMenuClick,
+            expandIcon: h('span', { class: `${prefixCls}-menu-submenu-arrow` }, [arrowIcon]),
+            validator: ({ mode }: { mode?: string }) => {
+              if (mode && mode !== 'vertical') {
+                console.error(
+                  `[Warning] [antd: Dropdown] mode="${mode}" is not supported for Dropdown's Menu.`,
+                );
+              }
+            },
+          };
+        });
         return () => {
           let overlayNode: VNodeChild = props.menu?.items
             ? h(Menu, {
@@ -244,7 +251,7 @@ const Dropdown = defineComponent({
           } else if (overlayNode === null || overlayNode === undefined) {
             overlayNode = null;
           }
-          return h(OverlayProvider, { override }, () => overlayNode as VNodeChild);
+          return h(OverlayProvider, { override: override.value }, () => overlayNode as VNodeChild);
         };
       },
     });

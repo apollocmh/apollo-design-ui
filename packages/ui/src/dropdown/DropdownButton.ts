@@ -132,17 +132,26 @@ const DropdownButton = defineComponent({
         autoAdjustOverflow: props.autoAdjustOverflow,
         destroyOnHidden: props.destroyOnHidden,
         forceRender: props.forceRender,
-        popupRender: slots.popupRender
-          ? (node: VNodeChild) =>
-              (slots.popupRender as (p: { originNode: VNodeChild }) => unknown)({
-                originNode: node,
-              })
-          : undefined,
+        // ⚠️ `popupRender` **不是 Dropdown 的 prop**（C8-R2 已改成 `#popupRender`
+        //    作用域插槽）⇒ 必须在下面的第三参数里转发，塞进 props 会被静默忽略
+        //    （Issue #21.2）。
         id: props.id,
         zIndex: props.zIndex,
         open: props.open,
         placement: props.placement ?? 'bottomRight',
         prefixCls,
+      };
+
+      const dropdownSlots = {
+        // antd `dropdown-button.js`：`leftButton` 在 Dropdown **外面**，`rightButton`
+        // 才是 `<Dropdown>` 的 trigger。split 语义正是「主钮只发 onClick、箭头触发下拉」，
+        // 把两个同级 VNode 一起塞进 Dropdown 的默认插槽，会被它按 `Children.only`
+        // 包成一个 span ⇒ 点主钮也会开下拉（Issue #21.1）。
+        default: () => (props.split ? buttons[1] : buttons[0]),
+        // C8-R2：自定义浮层是**作用域插槽**，签名与 Dropdown 一致 `{ originNode }`
+        popupRender: slots.popupRender as
+          | ((p: { originNode: VNodeChild }) => VNodeChild)
+          | undefined,
       };
 
       return h(
@@ -152,9 +161,9 @@ const DropdownButton = defineComponent({
           class: [buttonPrefixCls, attrs.class],
           style: attrs.style as StyleLike | undefined,
         },
-        h(Dropdown, dropdownProps as never, {
-          default: () => (props.split ? buttons : [buttons[0]]),
-        }),
+        props.split
+          ? [buttons[0], h(Dropdown, dropdownProps as never, dropdownSlots)]
+          : [h(Dropdown, dropdownProps as never, dropdownSlots)],
       );
     };
   },
