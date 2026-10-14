@@ -51,6 +51,12 @@ config-provider/
 1. **`components` 必须逐组件名合并**（不能整体替换）。antd 的 `config` 是 `{...parentContext}` 后**逐键**覆盖（`index.tsx:588-594`），我们把 56 个组件配置收进一个 `map` 字段，整体替换会把父级的组件配置全丢 —— 嵌套 provider 只给一部分配置时静默丢配置，影响 50 个组件。
 2. **`undefined` 不覆盖**（同上）。本层 prop 为 `undefined` 时回落父级值；且「本层曾经设过、现在改回 `undefined`」也要回落 —— 所以每次都「从父级重算全量」再打补丁，不是增量改（`ConfigProvider.ts:265-269` 的清理循环为此而存在）。
 3. **`componentSize` 用 ||、`componentDisabled` 用 ??**（`SizeContext.tsx:17` / `DisabledContext.tsx:16`）。`componentDisabled={false}` 必须能显式关闭父级的 `true`，用 || 失效。两个判据不能统一。
+4. **`virtual` 的 prop 缺省只能是 `undefined`（Issue #39）**：写成 `default: true` 会让
+   `props.virtual` **恒为 boolean**，而「本层 `!== undefined` 就覆盖父级」⇒ 内层
+   Provider 没写 `virtual` 也会把父级的 `false` 顶成 `true`。正确写法是三段式
+   `props.virtual ?? parentContext.virtual ?? true`（本层 → 父级 → antd 文档 `@default true`）。
+   ⚠️ 上游实测：无 Provider ⇒ false、父 false + 子不传 ⇒ false、父 true + 子不传 ⇒ true
+   —— 本仓「无父级兜底 `true`」是既有裁决（`index.test.ts` 已钉）。（`SizeContext.tsx:17` / `DisabledContext.tsx:16`）。`componentDisabled={false}` 必须能显式关闭父级的 `true`，用 || 失效。两个判据不能统一。
 
 ## 4. 与 antd 的有意差异
 

@@ -95,8 +95,15 @@ const configProviderProps = {
   componentSize: { type: String as PropType<SizeType>, default: undefined },
   componentDisabled: { type: Boolean, default: undefined },
   direction: { type: String as PropType<DirectionType>, default: undefined },
-  /** antd 的默认就是 `true`（`index.d.ts` 的 `@default true`） */
-  virtual: { type: Boolean, default: true },
+  /**
+   * ⚠️ **不能写 `default: true`**（Issue #39）：那会让 `props.virtual` **恒为 boolean**
+   *    （永不 `undefined`），而合并逻辑是「本层值 `!== undefined` 就覆盖父级」
+   *    ⇒ 内层 Provider 即使没写 `virtual` 也会把父级的 `false` 顶成 `true`。
+   *    未传 = `undefined` = **继承父级**；父级也没有时才在合并处兜底 `true`
+   *    （antd 文档的 `@default true` —— 上游实测：无 Provider ⇒ false，
+   *    父 false + 子不传 ⇒ false，父 true + 子不传 ⇒ true）。
+   */
+  virtual: { type: Boolean, default: undefined },
   dropdownMatchSelectWidth: { type: Boolean, default: undefined },
   popupMatchSelectWidth: { type: Boolean, default: undefined },
   popupOverflow: { type: String as PropType<PopupOverflow>, default: undefined },
@@ -227,7 +234,9 @@ export const ConfigProvider = defineComponent({
         csp: props.csp,
         autoInsertSpaceInButton: props.autoInsertSpaceInButton,
         variant: props.variant,
-        virtual: props.virtual,
+        // ⚠️ 三段式（Issue #39）：本层显式值 → 父级值 → `true`（antd 的 `@default true`）。
+        //    写成裸 `props.virtual` 会因为 prop 缺省而失去继承。
+        virtual: props.virtual ?? parentContext.virtual ?? true,
         popupMatchSelectWidth: props.popupMatchSelectWidth ?? props.dropdownMatchSelectWidth,
         popupOverflow: props.popupOverflow,
         wave: props.wave,
