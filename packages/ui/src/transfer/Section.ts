@@ -171,8 +171,13 @@ const Section = defineComponent({
     onScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
   },
   setup(props, { attrs }) {
-    const sectionPrefixCls = `${props.prefixCls}-section`;
-    const listPrefixCls = `${props.prefixCls}-list`;
+    // 🚨 必须是 **computed**（Issue #15.3）：此前是 setup 期普通字符串，父级
+    //    （Transfer）动态切 `prefixCls` 后这里仍是旧值 ⇒ Section/ListBody/ListItem
+    //    整棵子树继续渲染旧前缀类名（实测：根 `custom` 已换、子级还挂 `apollo-section`）。
+    //    这些字符串被多个 computed（checkBox / footerDom / search / dropdown）和渲染函数
+    //    读取 ⇒ 包成 computed 后依赖链自动贯通。
+    const sectionPrefixCls = computed(() => `${props.prefixCls}-section`);
+    const listPrefixCls = computed(() => `${props.prefixCls}-list`);
     const searchOptions = computed(() => getShowSearchOption(props.showSearch ?? false));
     const filterValue = ref(searchOptions.value.defaultValue ?? '');
     const listBodyRef = ref<{ items?: RenderedItem[] } | null>(null);
@@ -256,7 +261,7 @@ const Section = defineComponent({
         checked: checkStatus.value === 'all',
         indeterminate: checkStatus.value === 'part',
         // Checkbox 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
-        class: `${listPrefixCls}-checkbox`,
+        class: `${listPrefixCls.value}-checkbox`,
         // 有意增强（超出 antd）：头部全选框无可读文本，aria-label 取全选文案
         //（axe `label` 规则要求表单元素有可访问名）。
         'aria-label': props.selectAll ? String(props.selectAll) : 'Select all',
@@ -294,7 +299,7 @@ const Section = defineComponent({
       if (!footer) return null;
       const self = {
         ...props,
-        prefixCls: sectionPrefixCls,
+        prefixCls: sectionPrefixCls.value,
       } as unknown as Record<string, unknown>;
       return footer.length < 2 ? footer(self) : footer(self, { direction: props.direction });
     });
@@ -304,7 +309,10 @@ const Section = defineComponent({
         ? h(
             'div',
             {
-              class: [`${listPrefixCls}-footer`, props.classNames?.footer as string | undefined],
+              class: [
+                `${listPrefixCls.value}-footer`,
+                props.classNames?.footer as string | undefined,
+              ],
               style: props.styles?.footer,
             },
             footerDom.value,
@@ -316,9 +324,9 @@ const Section = defineComponent({
       const search = showSearchBool.value
         ? h(
             'div',
-            { class: `${listPrefixCls}-body-search-wrapper` },
+            { class: `${listPrefixCls.value}-body-search-wrapper` },
             h(Search, {
-              prefixCls: `${listPrefixCls}-search`,
+              prefixCls: `${listPrefixCls.value}-search`,
               onChange: internalHandleFilter,
               handleClear: internalHandleClear,
               placeholder:
@@ -383,7 +391,7 @@ const Section = defineComponent({
           ref: (el: unknown) => {
             listBodyRef.value = el as { items?: RenderedItem[] } | null;
           },
-          prefixCls: listPrefixCls,
+          prefixCls: listPrefixCls.value,
           classNames: props.classNames,
           styles: props.styles,
           filteredRenderItems: filteredRenderItems.value,
@@ -402,7 +410,7 @@ const Section = defineComponent({
       if (customize) {
         bodyNode = h(
           'div' as never,
-          { class: `${listPrefixCls}-body-customize-wrapper` } as never,
+          { class: `${listPrefixCls.value}-body-customize-wrapper` } as never,
           bodyContent as never,
         );
       } else {
@@ -410,7 +418,7 @@ const Section = defineComponent({
           ? bodyContent
           : h(
               'div' as never,
-              { class: `${listPrefixCls}-body-not-found` } as never,
+              { class: `${listPrefixCls.value}-body-not-found` } as never,
               notFoundContentEle.value as never,
             );
       }
@@ -419,8 +427,8 @@ const Section = defineComponent({
         'div',
         {
           class: [
-            `${listPrefixCls}-body`,
-            { [`${listPrefixCls}-body-with-search`]: showSearchBool.value },
+            `${listPrefixCls.value}-body`,
+            { [`${listPrefixCls.value}-body-with-search`]: showSearchBool.value },
             props.classNames?.body as string | undefined,
           ],
           style: props.styles?.body,
@@ -510,7 +518,7 @@ const Section = defineComponent({
         {
           // ⚠️ antd 的 `<Dropdown className>` 落的是**浮层**（classNames.root →
           //    overlayClassName），不是触发器 —— SSR DOM 里看不到这个类，照抄。
-          classNames: { root: `${listPrefixCls}-header-dropdown` },
+          classNames: { root: `${listPrefixCls.value}-header-dropdown` },
           menu: { items: dropdownItems.value as never },
           disabled: props.disabled,
         },
@@ -525,11 +533,11 @@ const Section = defineComponent({
         'div',
         {
           class: [
-            sectionPrefixCls,
+            sectionPrefixCls.value,
             props.classNames?.section as string | undefined,
             {
-              [`${sectionPrefixCls}-with-pagination`]: !!props.pagination,
-              [`${sectionPrefixCls}-with-footer`]: !!footerDom.value,
+              [`${sectionPrefixCls.value}-with-pagination`]: !!props.pagination,
+              [`${sectionPrefixCls.value}-with-footer`]: !!footerDom.value,
             },
           ],
           // 根 style 是 Vue 原生 attrs
@@ -542,14 +550,17 @@ const Section = defineComponent({
           h(
             'div',
             {
-              class: [`${listPrefixCls}-header`, props.classNames?.header as string | undefined],
+              class: [
+                `${listPrefixCls.value}-header`,
+                props.classNames?.header as string | undefined,
+              ],
               style: props.styles?.header,
             },
             [
               props.showSelectAll ? [checkAllCheckbox, dropdown.value] : null,
               h(
                 'span',
-                { class: `${listPrefixCls}-header-selected` },
+                { class: `${listPrefixCls.value}-header-selected` },
                 getSelectAllLabel(
                   checkedActiveItems.value.length,
                   filteredItems.value.length,
@@ -559,7 +570,7 @@ const Section = defineComponent({
                 'span' as never,
                 {
                   class: [
-                    `${listPrefixCls}-header-title`,
+                    `${listPrefixCls.value}-header-title`,
                     props.classNames?.title as string | undefined,
                   ],
                   style: props.styles?.title,

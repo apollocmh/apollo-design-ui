@@ -83,12 +83,30 @@ Button（操作按钮）/ Empty（notFoundContent 走 DefaultRenderEmpty 'Transf
    （全选文案/条目 title），否则 axe `label` 规则违规。
 10. **rtl 未实现**：未消费 ConfigProvider 的 direction（根缺 `-rtl`、Actions 图标不翻转、
     Checkbox/Empty 缺 `-rtl`）—— 基线里没有 rtl 用例，登记 KNOWN-GAPS。
+11. **自定义操作按钮必须 `createVNode` 重建，不能 `h(element, {...})`**（Issue #15.1）：
+    `h()` 对已有 VNode 走 `cloneVNode` → `mergeProps`，`on*` 键是**拼成数组**不是覆盖 ⇒
+    用户 `onClick` 先在数组里调一次、又在新合成器里显式调一次 ⇒ **双调**；禁用态更糟
+    （数组首位的 user 回调先于 `mergedDisabled` 早退）。上游 `React.cloneElement` 是
+    **替换**语义 ⇒ 显式构造最终 props（同名键覆盖）再 `createVNode(element.type, …)`，
+    `key`/`ref` 随 `element.props` 铺过去（`createBaseVNode` 从 `props.key`/`props.ref` 取）。
+    同 `FormItem.vue` 的 Issue #8.3 判据。
+12. **Section 的类名前缀必须 computed**（Issue #15.3）：`sectionPrefixCls` /
+    `listPrefixCls` 曾是 setup 期普通字符串 ⇒ 父级动态切 `prefixCls` 后 Section /
+    ListBody / ListItem 整棵子树继续渲染旧前缀（根类名已换、子级还挂旧前缀）。
+    这两个字符串还被 `checkBox` / `footerDom` / `search` / `dropdown` 四个 computed
+    读取 ⇒ 包成 computed 后依赖链自动贯通，无需逐个改。
+13. **`computed` 直接读 `attrs.class` 是有追踪的**（Issue #15.2 实测为误报）：Vue 3.5 的
+    setup-context attrs 代理 `get` 会 `track(attrs, 'get', '')`，`updateProps` 在
+    `hasAttrsChanged` 时 `trigger(attrs, 'set', '')` —— 同一个键 ⇒ 纯 attrs 派生值
+    **不需要**改成渲染期求值。真正的坑是 setup 期**解构** `attrs`（`const { class } = attrs`
+    拿到的是快照），date-picker #5.3 那个才是；Transfer 的 `cls` computed 保持原样。
 
 ## 6. 测试矩阵
 
 | 层 | 文件 | 用例 | 说明 |
 | --- | --- | --- | --- |
 | L2 | index.test.ts | 33 | 结构/勾选/移动/oneWay/搜索/filterOption/分页/受控/rowKey/render/footer |
+| L2 | s15-issue15.test.ts | 9 | Issue #15 三项回归：自定义按钮事件恰好一次 ×4 / attrs 响应性与合并语义 ×3 / prefixCls 切换 ×2 |
 | L3 | type.test-d.ts | 32 | 枚举/正例/负例（逆变、字面量收窄）/语义结构/运行时形态 |
 | L4 | semantic.test.ts | 31 | 基线 30 用例 + CASES 覆盖对拍；ALLOW 逐条（图标命名 + aria-label） |
 | L5 | a11y.test.ts | 19 | demo axe ×8 + 配置 axe ×8 + ARIA 契约 ×3 |

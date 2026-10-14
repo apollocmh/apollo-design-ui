@@ -181,6 +181,38 @@ time-picker 上全部失效（表单外置 label、`getByLabelText` 类测试都
 （每渲染重算 O(n)，与 React 同成本，丢 memo）；
 ② 渲染期比对 slot 引用、变化时 bump 一个 ref 让 `parsed` 失效（保计算缓存，但要在渲染期写 ref）。
 
+### §1.5 form：`prefixCls` 动态切换后 FormItem 内部类名过期（2026-10-14 登记 · 修 Issue #15 时发现）
+
+**根因**：与 transfer/Section（Issue #15.3，已修）**同族** —— `FormItem/ItemHolder.ts:59` 与
+`FormItem/StatusProvider.ts:99` 都是 setup 期普通字符串：
+
+```ts
+const itemPrefixCls = `${props.prefixCls}-item`;   // ← setup 期求值一次
+```
+
+`prefixCls` prop 来自 `FormItem.vue:100` 的 computed（ConfigProvider 全局前缀切换时它**会**变），
+但这两个字符串不跟踪 ⇒ 切换后 FormItem 根/行容器类名停在旧前缀。
+
+**判据（可复现，2026-10-14 实测）**：`ConfigProvider prefixCls` 从 `f1` 运行时切到 `f2`：
+
+```
+<form class="f2-form f2-form-horizontal">            ← Form 根：已跟上（渲染期求值）
+  <div class="f1-form-item f1-form-item-horizontal"> ← ItemHolder 根：❌ 旧前缀
+    <div class="f1-form-item-row">                   ← ❌ 旧前缀
+      <div class="f2-row …"> <div class="f2-col …">  ← Row/Col/Input：已跟上
+```
+
+（复现方式：`mount` 一个 `ConfigProvider(prefixCls=ref) → Form(form=useForm()) → FormItem(label,name)
+→ Input`，改 ref 后 `await nextTick()`，比对 `wrapper.html()`。）
+
+**影响面**：运行时切换全局前缀（`ConfigProvider prefixCls` 动态改）后，FormItem 的结构类名
+（`-form-item` / `-form-item-row` / `-form-item-control-input` 等由 ItemHolder/StatusProvider
+产出的）不换；**静态前缀场景不受影响**（现有用例全部传静态前缀，所以一直没红）。
+
+**修的时候注意**：两个文件同样改成 `computed(() => \`${props.prefixCls}-item\`)` + 使用点补
+`.value`（transfer/Section 的改法可直接抄，`s15-issue15.test.ts` 有对应用例）；改完需跑 form
+全量用例 + L4/L6（form 是已完成组件，按惯例单独一轮）。
+
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |

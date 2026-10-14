@@ -9,7 +9,7 @@
  */
 
 import { LeftOutlined, RightOutlined } from '@apollo-design/icons';
-import { defineComponent, h, type PropType, type VNode, type VNodeChild } from 'vue';
+import { createVNode, defineComponent, h, type PropType, type VNode, type VNodeChild } from 'vue';
 import Button from '../button/Button.vue';
 
 export interface ActionsProps {
@@ -54,15 +54,45 @@ const Action = defineComponent({
       if (button && typeof button === 'object' && 'type' in (button as VNode)) {
         const element = button as VNode & { props?: Record<string, unknown> };
         const mergedDisabled = element.props?.disabled || props.disabled || !active;
+        // ⚠️ 用户原回调要从**原 element.props** 上取 —— 它在下面的重建 props 里
+        //    会被我们的 `onClick` 覆盖掉（React cloneElement 的替换语义）。
+        const userOnClick = element.props?.onClick as ((e: Event) => void) | undefined;
         const onClick = (event: Event) => {
           if (mergedDisabled) {
             event.preventDefault();
             return;
           }
-          (element.props?.onClick as ((e: Event) => void) | undefined)?.(event);
+          userOnClick?.(event);
           moveHandler?.(event);
         };
-        return h(element, { disabled: mergedDisabled, onClick });
+        /**
+         * 🚨 **必须 `createVNode` 重建，不能用 `h(element, {...})`**（Issue #15.1）。
+         *
+         * 上游是 `React.cloneElement(element, { disabled, onClick })` —— React 的语义是
+         * **替换**：config 里的键覆盖同名键，其余保留。而 Vue 的 `h(vnode, extra)` 对已有
+         * VNode 走 `cloneVNode` → `mergeProps(vnode.props, extra)`，`mergeProps` 对
+         * `on*` 键是**拼成数组**（不是覆盖）：
+         *
+         * - `onClick` 在两边都存在（用户原回调 vs 我们的合成器）⇒ 合并成
+         *   `[user, ours]` ⇒ 用户回调先在数组里调一次、又在新 `onClick` 里显式调一次
+         *   ⇒ **双调**（实测 2 次）；
+         * - 禁用态更糟：数组里排在首位的 user 回调**先于**我们的 `mergedDisabled`
+         *   早退执行 ⇒ 禁用态也漏调一次用户回调。
+         *
+         * ⇒ 自己构造最终 props（同名键覆盖 = 替换）再 `createVNode(element.type, …)`。
+         *    `key` / `ref` 不是 props 而是 vnode 字段，但 `createBaseVNode` 会从
+         *    `props.key` / `props.ref` 取 ⇒ 随 `element.props` 原样铺过去即可
+         *    （同 `FormItem.vue` 的 Issue #8.3 判据）。
+         */
+        return createVNode(
+          element.type,
+          {
+            ...(element.props ?? {}),
+            disabled: mergedDisabled,
+            onClick,
+          } as never,
+          element.children as never,
+        );
       }
       return h(
         Button,
