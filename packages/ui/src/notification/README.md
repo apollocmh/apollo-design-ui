@@ -31,7 +31,11 @@ notification/
 - **关闭图标要补 `aria-label`**：图标自带的是 `close`（小写），契约要求 locale 的 `Close`
   ⇒ `getCloseIconWithLabel`（等价于 antd 的 `cloneElement(icon, { 'aria-label': closeLabel })`）。
 - **`closable: false` 与 `closeIcon: null` 都移除整个按钮**（上游 `computeClosable` 的第一条分支）。
-- 复用了 Tag 那轮建的 `_internal/use-closable.ts`（其注释里就写着「Alert / Notification 将来复用」）。
+- 复用了 Tag 那轮建的 `_internal/use-closable.ts`
+- **模块级单例的销毁要先 `unmount()`**（Issue #44，与 message 的 Issue #43 同判）：
+  命令式入口用 `createApp(GlobalHolder).mount(游离容器)` 建的是**真的 Vue 根应用**，
+  `actDestroy()` 必须在复位模块变量之前 `notification?.app?.unmount()` —— 否则上一个
+  app 的 watch 与 Teleport 到 `document.body` 的 notice 都会残留（重建后变成两条）。（其注释里就写着「Alert / Notification 将来复用」）。
 
 ## 3. 与 antd 的差异
 

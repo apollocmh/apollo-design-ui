@@ -9,7 +9,7 @@
  *   - 用**游离的 `div`** 承载 holder（React 用 `DocumentFragment`，两者都不进 document）；
  *   - 不实现 `holderRender` / `warnContext`（D30 同源）。
  */
-import { createApp, defineComponent, shallowRef } from 'vue';
+import { type App, createApp, defineComponent, shallowRef } from 'vue';
 import type { ArgsProps, GlobalConfigProps, NotificationInstance } from './interface';
 import PureList from './PureList';
 import PurePanel from './PurePanel';
@@ -22,6 +22,12 @@ import useNotification, { useInternalNotification } from './useNotification';
 interface GlobalNotification {
   /** 游离容器（不进 document —— 与 antd 的 DocumentFragment 同效）。 */
   container: HTMLElement;
+  /**
+   * 根应用。⚠️ 必须留引用：销毁时要 `unmount()` —— 只重置模块变量会留下一个
+   * 仍在运行的 Vue app（watch 监听 + Teleport 到 `document.body` 的 notice 不会消失）
+   * （Issue #44，与 message 的 Issue #43 同判）。
+   */
+  app?: App<Element> | null;
   instance?: NotificationInstance | null;
   sync?: () => void;
 }
@@ -89,7 +95,9 @@ function flushNotificationQueue(): void {
     globalConfigRef.value = getGlobalContext();
 
     act(() => {
-      createApp(GlobalHolder).mount(container);
+      const app = createApp(GlobalHolder);
+      app.mount(container);
+      newNotification.app = app;
     });
 
     return;
@@ -188,6 +196,9 @@ export function actWrapper(wrapper: (fn: () => void) => void): void {
  * ⚠️ 只给测试用 —— 全局 holder 是模块级单例，用例之间必须复位。
  */
 export function actDestroy(): void {
+  // ⚠️ 先卸载根应用：只重置模块变量会留下一个仍在运行的 Vue app
+  //    （它的 watch 还在、Teleport 出去的 notice 还挂在 document.body 上）。
+  notification?.app?.unmount();
   notification = null;
   taskQueue = [];
   defaultGlobalConfig = {};
