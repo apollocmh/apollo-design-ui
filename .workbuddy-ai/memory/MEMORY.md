@@ -5,7 +5,7 @@
 
 ## §0 接手顺序
 1. **`docs/KNOWN-ISSUES.md`** —— 欠账台账。**不在** `AGENTS.md` §5 的 5 份文档清单里，必须从这里找到。
-   §1 仍开放 · §2「不要再排查」· §3 历史留痕。**引用前先核一眼**，本文件曾整段过期。
+   §1 仍开放（**§1.2 VNodeChild 插槽 · §1.3 date-picker id/tabIndex · §1.4 Select 条件 default slot**）· §2「不要再排查」· §3 历史留痕。**引用前先核一眼**，本文件曾整段过期。
 2. `node registry/tools/next-task.mjs` —— 下一个任务的唯一权威。
 3. `node registry/tools/ask.mjs decisions --open` —— 未裁决决策。
 ⚠️ **登记簿/文档的坐标要复核后再信**（重写时实测改掉 4 处事实错误）⇒ `git log -S` 与「跑一遍现成测试」比读文档可靠；每条欠账都该能被命令复现。
@@ -18,7 +18,7 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
   **根别名一律用原生 `class`/`style`**（不再有 `rootClassName`/`rootStyle` prop，全仓 72 组件已完成）；**非根目标**由本仓设计 `classNames.*`/`styles.*` 槽位，上游名标 `@deprecated`。
   ⚠️ 判别式：先问「这个 prop 指向的是不是**组件自己的根**？」是⇒收敛成原生；否⇒设计槽位。
   ⚠️ `AGENTS.md` §0 还没更新（只能由用户改）；阶段声明在 `COMPATIBILITY.md` 顶部。
-- 🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（缺了按 PITFALLS 42 恢复）；说「某决策是这样」前先 `ask.mjs decision <id>`（出原文）。
+- 🚨 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`（**缺了就现拉**：`cd /tmp/antd-restore && https_proxy=http://127.0.0.1:7890 npm pack antd@6.6.4` 解包到 `/tmp/antd-src/package`，约 20 秒；PITFALLS 42 已不存在，别按旧指针找）；说「某决策是这样」前先 `ask.mjs decision <id>`（出原文）。
 - **派生字段**（手改会被覆盖）：`notDo`/`publicApi`/包 package.json ← `scaffold-packages.mjs`；`foundation.json` ← `foundation-status.mjs`；components/dependencies/tokens/workstreams ← `gen-*.mjs`。
 - 生成器**有顺序**：`gen-registry` → `foundation-status` → `gen-workstreams` → `validate-registry`。
 - 🚨 跨运行**只保留** `status`+11 维度+`blockers`+`layerNotes` ⇒ 收口直接改 `components.json` 这 13 项再重跑。⚠️ `notes` **不保留** ⇒ 注记写 `registry/source/components.meta.mjs`。
@@ -59,7 +59,7 @@ Vue3+TS 重写 antd（**兼容规格，非代码来源**），目标 **6.6.4**�
 ## §5 进度（当前事实）
 foundation **13/13**；组件 **72/72 completed**。
 - ✅ **L6 基线已全覆盖**：`tests/visual/baselines/react/` 下 **71 个组件目录 / 1128 张 PNG，零基线：无**。⚠️ 别再信「9 个组件零基线只能 `--mode both`」那条（已过期）—— 动手前 `ls` 一遍数一下。
-- Issue 批量修复进度见 `/tmp/issues/ledger.md`。已交付：#1–#9（button / space / input / select / date-picker / time-picker / input-number / form / checkbox），每轮跑全量 unit+dom-contract + L6 + L4 compat + biome。
+- Issue 批量修复进度见 `/tmp/issues/ledger.md`。已交付：#1–#14（button / space / input / select / date-picker / time-picker / input-number / form / checkbox / radio / switch / cascader / tree-select / **auto-complete**），每轮跑全量 unit+dom-contract + types + biome + L6 + L4 compat。
 
 ## §6 判别式（合并 §8–§10，按主题）
 
@@ -77,6 +77,8 @@ foundation **13/13**；组件 **72/72 completed**。
 - **消重不是无条件的**：`_internal/use-merge-semantic.ts` 的 clsx **刻意**比共享版窄（只收字符串）。判据是「宽版会不会把错误形态静默吞掉」。
 
 ### 渲染 / 事件陷阱
+- 🚨 **computed 调 `slots.default?.()` 不过「插槽引用/有无」变化**（#14.3 实测，引擎级）：Select 的 `parsed` 求值时调默认插槽 ⇒ 挂载时**无** default slot ⇒ 那次求值什么都不 track ⇒ 之后插槽从无到有，Select 虽重渲染（DYNAMIC_SLOTS）但 computed 缓存干净 ⇒ 选项永远不出现。影响 Select/TreeSelect/Cascader/AutoComplete 用户侧「条件默认插槽」，已登记 KNOWN-ISSUES §1.4（两条候选修法未实施）。⇒ **薄壳给子组件传插槽内容时，包装函数要显式读本组件的 reactive 分类态**（别当纯透传）；`parsed` 这类「解析 slots 的 computed」同款小心。
+- 🚨 **computed 里的 dev 告警副作用会随「惰性求值不被触发」一起消失**（#14 回归实测）：仅传 `options` 时 AutoComplete 的 `mergedOptions` 首行短路 + Select `childrenAsData=false` ⇒ `optionInfo` 永不求值 ⇒ 「Custom input element」usage 告警消失。⇒ 告警放**渲染期沿对比**触发，别塞进可能不被读取的 computed。
 - 🚨 **SFC 模板里不能放 HTML 注释** —— Vue 编译成 Comment vnode 保留，而 `Trigger` 取 `slots.default()[0]`（`_internal/trigger.ts:613-614`）⇒ 一条注释就把触发元素顶掉、**整个组件渲染成空**。注释写进 `<script>`。
 - **组件 expose 用 getter**：`defineExpose({ get nativeElement() {…} })` —— 暴露对象被 `proxyRefs` 包一层，字面量会在 setup 期定格成 `null`。
 - ⚠️ **`w.emitted('x')` 对「薄壳不声明 `defineEmits`」的组件无效**（time-picker / auto-complete）—— 靠 attrs 转发 `onXxx`，测试要 spy 那个 handler。
