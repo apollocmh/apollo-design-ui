@@ -11,6 +11,7 @@
 Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库规范 > `registry/*.json` > antd 源码 > 文档 > 先验。
 - 🚨 **Phase 2 起**（2026-10-06 裁决）antd 降为「参考实现」；根别名一律原生 `class`/`style`（72 组件已完成），非根目标用 `classNames.*`/`styles.*` 槽位。判别式：「这个 prop 指向组件自己的根吗？」。
 - 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`；缺了现拉（`/tmp/antd-restore` + `https_proxy=http://127.0.0.1:7890 npm pack antd@6.6.4`）。
+  rc-* 内核同法（`npm pack @rc-component/tree@1.4.0` → `/tmp/rctree-restore/rc-tree-src/es`）⇒ gDSFP 分支判据一律核上游原文。
 - 生成器顺序 `gen-registry → foundation-status → gen-workstreams → validate-registry`；派生字段手改会被覆盖；`notes` 不跨运行保留 ⇒ 注记写 `registry/source/components.meta.mjs`。
 - 裁决须同改 `open-decisions.mjs` + `foundation.json` ⇒ `sync-decision-runtime.mjs <id>` 再跑生成器链。已裁决：`visual-baseline-in-git`=A · `noNonNullAssertion`（禁扫改）· `picker-panel-ownership`=B · `ui-style-output`=A · `ui-tree-shaking`=A+B+D。
 
@@ -26,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#15**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#16**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -35,6 +36,7 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 🚨 新 Boolean prop 必须 `withDefaults(…,{x:undefined})`（薄壳也要）：未传时 Vue 强制 `false`，`existShowConfig` 把「显式 false」当「用户关了」⇒ 整片不渲染（#6.2）。
 - 公共 Hook 收 `MaybeRefOrGetter`+`toValue`；`useSize` 必须解析器形态 `useSize((ctx)=>props.size??ctx)`（`()=>props.size` 会绕过 componentSize）。
 - 🚨 上游 React `useXxx(...)` 每次渲染重算 ⇒ Vue 侧包 `computed`，否则动态改配置静默无效（#12.3）。🚨 prop 默认值写字面量堵死 ConfigProvider 回退 ⇒ `default: undefined`+`mergedXxx`。
+- 🚨 **rc gDSFP 分支要逐条复刻**：Tree 勾选段第三分支「treeData 变化 ⇒ `parseCheckedKeys(props.checkedKeys) || prevState`」⇒ 受控与否**只决定 base，不影响是否重算**（#16.1）；这类派生态同步必须**静默不 emit**。
 - 🚨 **`${props.prefixCls}-x` 在 setup 期求值 = 切前缀后子树全过期** ⇒ 一律 computed（#15.3 修 transfer/Section；form 同族未修见 §1.5）。⚠️ `prefixCls` prop 是**完整前缀**（`'p1'` ⇒ `.p1-section`）。
 **渲染 / 事件**
 - 🚨 computed 调 `slots.default?.()` 不过「插槽有无」变化 ⇒ 无 slot 那次求值不 track ⇒ 之后 slot 从无到有但缓存干净 ⇒ 选项永远不出现（#14.3，引擎级，§1.4）。⇒ 薄壳传插槽的包装函数要显式读本组件 reactive 分类态。
@@ -44,6 +46,9 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 **测试探针**
 - 🚨 **jsdom 不给 `disabled` 元素派发 click**（原生 button / Button 组件双通道都测不到监听器层）⇒ 禁用态事件用例用**非表单元素**（`<a disabled>`）探针（#15.1）。
 - 🚨 `console.log(w.html())` 后接 `grep` 造假象：Vue DOM 含换行、grep 只打首行 ⇒ 「空 form」是截断假象；打印先 `.replace(/\s+/g,' ')`。
+- 🚨 **jsdom 下 expand/collapse 动效不结束**：`expandedKeys` 引用一变 NodeList 就 `motionType='show'` 且 `onMotionEnd` 不触发 ⇒ `transitionData` 停在旧列表 ⇒ 「新节点没渲染」可能是动效假象。树结构类复现**只改 treeData**。
+- 📌 「新出现的 key 即使已在 expandedKeys 里也不自动展开」是**上游同款**（rc 只在 needSync('expandedKeys') 重算），别当缺陷改。
+- ⚠️ tree 的 `TreeCheckedKeys` 只指对象形态；数组形态是 `SafeKey[]`（prop = `SafeKey[] | TreeCheckedKeys`）—— 写错会 7 条 types unhandled error。
 - 浮层断言查 `wrapper.element` 别查 `document`（`attachTo` 串残留实例）。
 **样式合并 / 元判据**
 - `attrs.style` 可能是字符串 ⇒ 合并必须过 `semanticRootStyle`/`mergeStyles`（对象展开拆成 `{0:'w'}` 崩组件）。语义 root 落点：class `[rootClass, classNames.root]`、style `[styles.root, rootStyle]`（原生 style 胜）。
