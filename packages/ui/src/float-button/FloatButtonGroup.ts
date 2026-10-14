@@ -19,11 +19,11 @@ import {
   computed,
   defineComponent,
   h,
-  onMounted,
-  onScopeDispose,
+  mergeProps,
   type PropType,
   ref,
   type VNodeChild,
+  watch,
   watchEffect,
 } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -116,18 +116,22 @@ const FloatButtonGroupComponent = defineComponent({
     });
 
     // ---- open（受控/非受控）----
+    // ⚠️ 单一回调出口：`setOpen` → `useControlledValue.onChange` 已经发过
+    //    `onOpenChange`；`triggerOpen` 里再调一次就会**双通知**（Issue #27.1）。
+    //    `update:open` 也一起挪进 onChange ⇒ 两条通知同源同次。
     const [mergedOpen, setOpen] = useControlledValue<boolean>({
       defaultValue: false,
       getValue: () => props.open,
-      onChange: (next) => props.onOpenChange?.(next),
+      onChange: (next: boolean) => {
+        props.onOpenChange?.(next);
+        emit('update:open', next);
+      },
     });
 
     const triggerOpen = (next: boolean): void => {
       if (mergedDisabled.value) return;
       if (mergedOpen.value !== next) {
         setOpen(next);
-        props.onOpenChange?.(next);
-        emit('update:open', next);
       }
     };
 
@@ -145,17 +149,19 @@ const FloatButtonGroupComponent = defineComponent({
       if (rootRef.value?.contains(e.target as Node)) return;
       triggerOpen(false);
     };
-    onMounted(() => {
-      if (!clickTrigger.value) return;
-      document.addEventListener('click', onDocClick, { capture: true });
-      onScopeDispose(() => document.removeEventListener('click', onDocClick, { capture: true }));
-    });
-    // trigger 卸载（menu → 非 menu）时摘监听
-    onScopeDispose(() => {
-      if (clickTrigger.value) {
-        document.removeEventListener('click', onDocClick, { capture: true });
-      }
-    });
+    // ⚠️ 监听必须**跟随 trigger 安装/卸载**：原来只在 onMounted 判一次 ⇒ hover→click
+    //    不补装、click→hover 不摘除（且 onScopeDispose 读的是当时的 clickTrigger，
+    //    可能摘错/漏摘，Issue #27.2）。用 watch + onCleanup ⇒ 每次安装的 cleanup
+    //    精确摘掉自己那一个；组件卸载在 setup 作用域里自动执行最后的 cleanup。
+    watch(
+      clickTrigger,
+      (enabled, _old, onCleanup) => {
+        if (!enabled) return;
+        document.addEventListener('click', onDocClick, { capture: true });
+        onCleanup(() => document.removeEventListener('click', onDocClick, { capture: true }));
+      },
+      { immediate: true, flush: 'post' },
+    );
 
     // ---- 语义合并 ----
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
@@ -266,25 +272,28 @@ const FloatButtonGroupComponent = defineComponent({
         .filter(Boolean)
         .join(' ');
 
+      // ⚠️ `...attrs` 放在末尾会**覆盖**内部同名的 `class` / `onMouseenter` /
+      //    `onMouseleave`（Issue #27.3）⇒ 用 `mergeProps` 组合：class/style 合并、
+      //    同名事件拼成数组（用户的与内部的都会执行）。
       return h(
         'div',
-        {
-          ref: rootRef,
-          class: rootClass,
-          style: {
-            zIndex: zIndex.value,
-            // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致）
-            ...(typeof attrs.style === 'object' ? attrs.style : {}),
-            ...(mergedStyles.value.root ?? {}),
+        mergeProps(
+          {
+            ref: rootRef,
+            class: rootClass,
+            style: {
+              zIndex: zIndex.value,
+              ...(mergedStyles.value.root ?? {}),
+            },
+            onMouseenter: () => {
+              if (hoverTrigger.value) triggerOpen(true);
+            },
+            onMouseleave: () => {
+              if (hoverTrigger.value) triggerOpen(false);
+            },
           },
-          onMouseenter: () => {
-            if (hoverTrigger.value) triggerOpen(true);
-          },
-          onMouseleave: () => {
-            if (hoverTrigger.value) triggerOpen(false);
-          },
-          ...attrs,
-        },
+          attrs,
+        ),
         [
           isMenuMode.value
             ? h(

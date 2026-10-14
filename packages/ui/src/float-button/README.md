@@ -44,6 +44,25 @@ float-button/
   不在 L4 基线（由 L1 + Badge 自身 L4 覆盖），视觉无差异（L6 exact 验证）。
 - 其余见 `COMPATIBILITY.md` D6 / D111。
 
+## 3.5 Issue #27 的四条判据
+
+1. **开合回调只有一个出口**（#27.1）：`setOpen` → `useControlledValue.onChange` 已经发过
+   `onOpenChange`；`triggerOpen` 里**不能再调一次**。现在 `onChange` 同时发
+   `onOpenChange` + `update:open` ⇒ 两条通知同源同次。
+2. **document 监听要跟随 `trigger` 安装/卸载**（#27.2）：原来只在 `onMounted` 判一次，
+   且 `onScopeDispose` 读的是**当时**的 `clickTrigger` ⇒ hover→click 不补装、
+   click→hover 不摘除。改用 `watch(clickTrigger, (ok, _o, onCleanup) => …,
+   { immediate: true })` ⇒ 每次安装的 cleanup 精确摘掉自己那一个。
+3. **根 VNode 用 `mergeProps(内部 props, attrs)`**（#27.3）：把 `...attrs` 摊在末尾会
+   **覆盖**内部的 `class` 与 `onMouseenter`/`onMouseleave`（用户的和内部的二选一）。
+   `mergeProps` 会合并 class/style、把同名事件拼成数组 ⇒ 两边都生效。
+4. **`useScroll` 的配置必须是 getter/ref**（#27.4）：原来是裸值 ⇒ 解构后是 setup 期
+   快照，`visibilityHeight` / `showProgress` 动态变化全不生效；watch 依赖又写成
+   `[getTarget, showProgress, visibilityHeight]`（比较函数/常量引用 ⇒ 永不变化）。
+   现在 `MaybeRefOrGetter` + `toValue`，watch 依赖**求值后**的结果。
+   ⚠️ 顺带修了返回类型：`ReturnType<typeof ref<boolean>>` 会解析成
+   `Ref<boolean | undefined>` ⇒ 直接用 `Ref<boolean>` / `Ref<number>`。
+
 ## 4. Component Token 清单
 
 registry 数据：token 数 = **0**（ComponentToken = object）。

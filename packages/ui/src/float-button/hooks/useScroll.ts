@@ -14,14 +14,26 @@ import {
   type ScrollTarget,
   throttleByAnimationFrame,
 } from '@apollo-design/utils';
-import { onMounted, onScopeDispose, ref, watch } from 'vue';
+import {
+  type MaybeRefOrGetter,
+  onMounted,
+  onScopeDispose,
+  type Ref,
+  ref,
+  toValue,
+  watch,
+} from 'vue';
 
 type ScrollTargetLike = HTMLElement | Window | Document;
 
 interface ScrollOptions {
   getTarget: () => ScrollTargetLike | null;
-  showProgress: boolean;
-  visibilityHeight: number;
+  /**
+   * ⚠️ 必须是 **getter / ref**：原来是裸值 ⇒ 解构后是 setup 期快照，父级动态改
+   *    `visibilityHeight` / `showProgress` 完全不生效（Issue #27.4）。
+   */
+  showProgress: MaybeRefOrGetter<boolean>;
+  visibilityHeight: MaybeRefOrGetter<number>;
 }
 
 const getScrollProgress = (target: ScrollTargetLike | null): number => {
@@ -47,19 +59,19 @@ const getScrollProgress = (target: ScrollTargetLike | null): number => {
 };
 
 export function useScroll(options: ScrollOptions): {
-  scrollProgress: ReturnType<typeof ref<number>>;
-  visible: ReturnType<typeof ref<boolean>>;
+  scrollProgress: Ref<number>;
+  visible: Ref<boolean>;
 } {
-  const { getTarget, showProgress, visibilityHeight } = options;
+  const { getTarget } = options;
 
-  const visible = ref(visibilityHeight === 0);
+  const visible = ref(toValue(options.visibilityHeight) === 0);
   const scrollProgress = ref(0);
 
   const syncScrollState = (): void => {
     const container = getTarget();
     const scrollTop = getScroll(container as ScrollTarget) ?? 0;
-    visible.value = scrollTop >= visibilityHeight;
-    if (showProgress) {
+    visible.value = scrollTop >= toValue(options.visibilityHeight);
+    if (toValue(options.showProgress)) {
       scrollProgress.value = getScrollProgress(container);
     }
   };
@@ -92,9 +104,11 @@ export function useScroll(options: ScrollOptions): {
 
   onMounted(bind);
   onScopeDispose(unbind);
-  // antd 的 useEffect 依赖 [getTarget, showProgress, visibilityHeight] —— 变化重绑
+  // antd 的 useEffect 依赖 [getTarget, showProgress, visibilityHeight] —— 变化重绑。
+  // ⚠️ 依赖必须是**求值后**的结果：写 `[getTarget, showProgress, visibilityHeight]`
+  //    比较的是函数/常量引用 ⇒ 永不变化（Issue #27.4）。
   watch(
-    () => [getTarget, showProgress, visibilityHeight] as const,
+    () => [getTarget(), toValue(options.showProgress), toValue(options.visibilityHeight)] as const,
     () => {
       unbind();
       bind();

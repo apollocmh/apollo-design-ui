@@ -78,10 +78,12 @@ const BackTopComponent = defineComponent({
     const getTarget = (): HTMLElement | Window | Document =>
       props.target ? props.target() : getDefaultTarget();
 
+    // ⚠️ 两个配置要传 **getter**：`useScroll` 会在 watch 里对求值结果做依赖比较，
+    //    传裸值 ⇒ 阈值/进度开关动态变化不生效（Issue #27.4）。
     const { scrollProgress, visible } = useScroll({
       getTarget,
-      showProgress: props.showProgress,
-      visibilityHeight: props.visibilityHeight ?? 400,
+      showProgress: () => props.showProgress ?? false,
+      visibilityHeight: () => props.visibilityHeight ?? 400,
     });
 
     const groupShape = useFloatButtonGroup()?.shape ?? null;
