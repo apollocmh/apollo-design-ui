@@ -319,6 +319,21 @@ export const Listy = defineComponent({
         attrs.class,
       ];
 
+      /**
+       * 透传给根节点的普通 attrs（Issue #38）。
+       *
+       * ⚠️ `class` / `style` / `dir` 在**本层各有显式落点**（语义合并后的 rootClass、
+       *    style 数组、方向），从透传集合里摘掉：
+       *    - `class` 留着会被 VirtualList 的 `attrs.class` 再拼一次（类名重复）；
+       *    - `dir` 留着会让调用方传的脏值绕开「方向只来自 ConfigProvider」的裁决。
+       */
+      const {
+        class: _ignoredClass,
+        style: _ignoredStyle,
+        dir: _ignoredDir,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+
       // ---------- Raw 分支（默认；RawList/index.js） ----------
       if (!mergedVirtual.value) {
         const groupData = collectGroupSegments<Item>(
@@ -348,7 +363,7 @@ export const Listy = defineComponent({
         return h(
           'div',
           {
-            ...attrs,
+            ...restAttrs,
             ref: rawHolderRef,
             class: [cls, { [`${cls}-rtl`]: direction === 'rtl' }, ...rootClass],
             dir: direction,
@@ -371,10 +386,19 @@ export const Listy = defineComponent({
       return h(
         VirtualList,
         {
+          // ⚠️ Issue #38：raw 分支用 `{...attrs}` 透传普通根属性，virtual 分支原来只带
+          //    `class` / `style` / `onScroll` ⇒ `id` / `data-*` / `aria-*` / `tabindex`
+          //    在 `virtual=true` 时**静默丢失**（`@rc-component/virtual-list` 的根节点
+          //    本来就会 `{...attrs}`，所以直接透传即可）。
+          //    内部键（`direction` / `height` / `onScroll` / `class` / `style`）写在
+          //    后面 ⇒ 内部优先级更高（与 raw 分支同构）。
+          ...restAttrs,
           ref: virtualListRef,
           data: flat.value.rows,
           itemKey: (row: unknown) => (row as { taggedKey: string }).taggedKey,
           direction,
+          // 与 raw 分支一致：方向来自 ConfigProvider，不吃调用方同名 attrs
+          dir: direction,
           fullHeight: false,
           height: props.height,
           itemHeight,

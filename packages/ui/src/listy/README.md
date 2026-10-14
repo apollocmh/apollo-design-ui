@@ -20,7 +20,23 @@
 | D60 | ⚠️ **`direction` 不是公开 prop**：antd 的 `ListyProps` Omit 了它，方向只来自 ConfigProvider（实测：传入被上下文值覆盖） | — | L4 rtl 用例 + antd 类型 Omit |
 | D61 | **虚拟模式 DOM 与 rc-virtual-list 不同**：本仓 foundation 原生滚动、无自绘滚动条（`-scrollbar` 样式段保留为无害死规则对齐产物） | PLATFORM | foundation 契约 §5.1（已登记）；L1 行为测试覆盖 |
 | D62 | **`itemHeight` 是默认主题的构建期解析值**（`fontHeight + (itemPaddingBlock ?? paddingSM) * 2`）。antd 用 `useToken()` 主题响应式；本仓 token 消费静态（D50 同判）⇒ 主题覆盖 `Listy.itemPaddingBlock` 不反映到估算行高 | INTENDED | Listy.ts 文件头差异 4 |
+| D130 | **普通根 attrs 透传**：上游 rc 的 RawList / VirtualList 根节点都不展开 `restProps` ⇒ antd 两侧都只保留 `class`/`style`，`id`/`data-*`/`aria-*`/`tabindex` 全丢（React SSR 实测） | 本仓**两侧都透传**（`...restAttrs`；`class`/`style`/`dir` 在本层有显式落点，故从透传集合里摘掉以免类名重复） | INTENDED（Vue 惯例 + 两侧自洽） |
 | — | 吸顶克隆头渲染在 Filler 内层（inner 坐标 `top = scrollTop + push`），与 rc 的 Portal-to-holder（holder 坐标 `top = push`）视觉等价 | INTENDED（坐标换算等价） | engine/index.ts 注释 |
+
+### 2.1 根 attrs 的落点（Issue #38）
+
+两条分支的根属性**必须一致**：
+
+| 属性 | 落点 |
+|---|---|
+| `class` | 语义合并后的 `rootClass`（含 `attrs.class`） |
+| `style` | `[mergedStyles.root, attrs.style]`（raw 另有一段 `max-height/overflow-y/overflow-anchor`） |
+| `dir` | 恒取 ConfigProvider 方向（调用方同名 attrs 不生效，与 antd 的 Omit 同判） |
+| `onScroll` | prop（raw 挂根；virtual 由 VirtualList 挂 `-holder`） |
+| 其余（`id`/`data-*`/`aria-*`/`tabindex`…） | 原样透传给根（D130） |
+
+⚠️ `class`/`style`/`dir` 必须从透传集合里**摘掉**：`class` 留着会被 VirtualList 的
+`attrs.class` 再拼一次（类名重复），`dir` 留着会绕开「方向只来自 ConfigProvider」。
 
 ## 3. 渲染函数选型（无 .vue）
 
