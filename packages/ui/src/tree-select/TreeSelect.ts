@@ -30,8 +30,9 @@ import type { PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h, ref, shallowRef } from 'vue';
 import { conductCheck } from '../_internal/tree/conduct-util';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
+import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
+import { useSize } from '../config-provider/size-context';
 import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import BaseSelect from '../select/engine/BaseSelect';
@@ -147,7 +148,11 @@ const TreeSelect = defineComponent({
     popupMatchSelectWidth: { type: [Boolean, Number], default: undefined },
     dropdownMatchSelectWidth: { type: [Boolean, Number], default: undefined },
     placement: { type: String as PropType<SelectCommonPlacement>, default: undefined },
-    direction: { type: String as PropType<'ltr' | 'rtl'>, default: 'ltr' },
+    /**
+     * ⚠️ 默认 `undefined` 而不是字面的 `'ltr'`（Issue #13.4）—— 字面默认会让
+     *    「局部 ?? ConfigProvider ?? 'ltr'」这条回退链永远短路在第一支。
+     */
+    direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
     getPopupContainer: {
@@ -215,6 +220,18 @@ const TreeSelect = defineComponent({
     const mergedId = useId(props.id);
     const formItem = useFormItemInputContext();
     const mergedDisabled = useDisabled(() => props.disabled);
+    /**
+     * 方向（Issue #13.4）：上游 `useBase(customizePrefixCls, direction)` 的
+     * `mergedDirection` ⇒ **局部 prop 优先、回退 ConfigProvider 的 `direction`**。
+     * 本仓此前写 `default: 'ltr'` ⇒ 全局 RTL 永远不生效（`-rtl` / `-dropdown-rtl` /
+     * placement 默认 / compact 类名 四处同时错）。
+     */
+    const directionCtx = useDirection();
+    const mergedDirection = computed<'ltr' | 'rtl'>(
+      () => props.direction ?? directionCtx.value ?? 'ltr',
+    );
+    /** ConfigProvider 的全局配置（`getPopupContainer` 等，Issue #13.4）。 */
+    const config = useConfigContext();
     const rootPrefixCls = getPrefixCls();
 
     const prefixCls = computed(() => getPrefixCls('tree-select', props.prefixCls));
@@ -468,45 +485,38 @@ const TreeSelect = defineComponent({
           newRawValues,
           mergedTreeData.value as TreeSelectDataNode[],
           mergedFieldNames.value,
+          // 🚨 判据下沉到 `fillAdditionalInfo`（Issue #13.2）—— 此前在这里再定义一次
+          //    同名 getter，而新 getter 内又读 `additionalInfo.allCheckedNodes`
+          //    （= 它自己）⇒ 访问即 `RangeError: Maximum call stack size exceeded`。
+          showPosition,
         );
-        if (showPosition === false) {
-          // allCheckedNodes 不带位置信息时返回纯节点（rc 语义）
-          Object.defineProperty(additionalInfo, 'allCheckedNodes', {
-            get() {
-              const nodes = (additionalInfo as unknown as { allCheckedNodes?: unknown })
-                .allCheckedNodes;
-              return nodes;
-            },
-            configurable: true,
-          });
-        }
         if (mergedCheckable.value) additionalInfo.checked = selected;
         else additionalInfo.selected = selected;
 
         const returnValues = mergedLabelInValue.value
           ? returnLabeledValues
           : returnLabeledValues.map((item) => item.value);
+        /**
+         * 🚨 **单选时是单值**（Issue #13.3）—— 多选数组 / 单选单值，
+         * 与 `labelInValue` 无关。此前 `labelInValue` 分支直接把数组发出去了
+         * ⇒ 单选 + `labelInValue` 时 `v-model:value` 拿到 `[{value,label}]`
+         *     而不是 `{value,label}`（与 `onChange` 首参也不一致）。
+         */
+        const nextValue = (isMultiple.value ? returnValues : returnValues[0]) as never;
         callbacks.onChange(
-          isMultiple.value ? returnValues : returnValues[0],
+          nextValue,
           mergedLabelInValue.value ? null : returnLabeledValues.map((item) => item.label),
           additionalInfo as unknown as ChangeEventExtra,
         );
-        // C11：update:value 与 onChange 同发；形状 = rc onChange 首参
-        // （多选数组 / 单选单值；labelInValue 时为 LabeledValueType）。
-        const emitValue = mergedLabelInValue.value
-          ? returnLabeledValues
-          : isMultiple.value
-            ? returnLabeledValues.map((item) => item.value)
-            : (returnLabeledValues.map((item) => item.value)[0] as never);
-        emit('update:value', emitValue as never);
+        // C11：update:value 与 onChange 同发；形状 = rc onChange **首参**（同一份）。
+        emit('update:value', nextValue);
       } else {
         // 无 onChange 回调时仍按同一形状 emit（C11）
+        const plainValues = labeledValues.map((item) => item.value);
         const emitValue = mergedLabelInValue.value
-          ? labeledValues
-          : isMultiple.value
-            ? labeledValues.map((item) => item.value)
-            : (labeledValues.map((item) => item.value)[0] as never);
-        emit('update:value', emitValue as never);
+          ? ((isMultiple.value ? labeledValues : labeledValues[0]) as never)
+          : ((isMultiple.value ? plainValues : plainValues[0]) as never);
+        emit('update:value', emitValue);
       }
     };
 
@@ -615,7 +625,7 @@ const TreeSelect = defineComponent({
           !props.prefixCls ? prefixCls.value : '',
           mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
           mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
-          props.direction === 'rtl' ? `${prefixCls.value}-rtl` : '',
+          mergedDirection.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
           enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
           // antd getStatusClassNames：`${p}-status-${status}`（hasFeedback 图标本仓 form 未接）
@@ -634,7 +644,7 @@ const TreeSelect = defineComponent({
         [
           props.popupClassName || props.dropdownClassName,
           `${prefixCls.value}-dropdown`,
-          props.direction === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
+          mergedDirection.value === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
           (mergedClassNames.value as { popup?: { root?: string } }).popup?.root,
         ]
           .filter(Boolean)
@@ -643,7 +653,7 @@ const TreeSelect = defineComponent({
 
     const memoPlacement = computed<SelectCommonPlacement>(() => {
       if (props.placement !== undefined) return props.placement;
-      return props.direction === 'rtl' ? 'bottomRight' : 'bottomLeft';
+      return mergedDirection.value === 'rtl' ? 'bottomRight' : 'bottomLeft';
     });
 
     const mergedNotFoundContent = computed<unknown>(() => {
@@ -660,9 +670,9 @@ const TreeSelect = defineComponent({
     //（2026-10-04 接上 Space.Compact 上下文 —— 此前 compact 尺寸/类名都不生效）
     const { compactSize, compactItemClassnames } = useCompactItemContext(
       prefixCls,
-      () => props.direction,
+      () => mergedDirection.value,
     );
-    const mergedSize = computed(() => props.size ?? compactSize.value);
+    const mergedSize = useSize((ctxSize) => props.size ?? compactSize.value ?? ctxSize);
     // allowClear=true 时保持布尔：clearIcon 由独立 prop 传（resolveAllowClear 的
     // fallback 链 config.clearIcon ?? clearIcon —— 布尔 true 会吞掉 prop 的 VNode）
     const mergedAllowClear = computed(() => props.allowClear);
@@ -685,6 +695,35 @@ const TreeSelect = defineComponent({
 
     // ===================== Render =====================
     return () => {
+      /**
+       * 🚨 末尾的 `...restAttrs` 会**整段覆盖**同名的前序键（对象展开后者胜）。
+       *    `attrs` 里既有调用方的原生 `class` / `style`（它们已经单独并进
+       *    `mergedRootClassName` / `mergedStyles.root`），也有 antd 的 props 形态回调
+       *    （`onSearch` / `onClear` / `onOpenChange` …）。后者会把 BaseSelect 接线上
+       *    由**内部持有**的同名处理器顶掉（Issue #13.1）：
+       *      `onSearch` → `onInternalSearch`（内部先 `setSearchValue`，再调 `callbacks.onSearch`）
+       *      `onClear`  → `() => callbacks.onClear?.()`
+       *      `onOpenChange` → `setOpen`（内部再调 `callbacks.onOpenChange` / …）
+       *    ⇒ 全部**只摘不补**（用户回调本来就在内部处理器里被调，语义与上游一致）。
+       */
+      const {
+        class: _attrsClass,
+        style: _attrsStyle,
+        onSearch: _onSearch,
+        onDisplayValuesChange: _onDisplayValuesChange,
+        onClear: _onClear,
+        onOpenChange: _onOpenChange,
+        onInputKeyDown: _onInputKeyDown,
+        ...restAttrs
+      } = attrs as Record<string, unknown>;
+      void _attrsClass;
+      void _attrsStyle;
+      void _onSearch;
+      void _onDisplayValuesChange;
+      void _onClear;
+      void _onOpenChange;
+      void _onInputKeyDown;
+
       const emptyOptions = !mergedTreeData.value.length;
       // antd：controlHeightSM(24) + paddingXXS(4) = 28（构建期派生常量写死）
       const listItemHeight = props.listItemHeight ?? 28;
@@ -726,10 +765,12 @@ const TreeSelect = defineComponent({
           maxCount: mergedMaxCount.value,
           emptyOptions,
           placement: memoPlacement.value,
-          direction: props.direction,
+          direction: mergedDirection.value,
           popupMatchSelectWidth:
             props.popupMatchSelectWidth ?? props.dropdownMatchSelectWidth ?? true,
-          getPopupContainer: props.getPopupContainer,
+          // antd：`getPopupContainer || getContextPopupContainer`
+          // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #13.4）。
+          getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
           transitionName: `${rootPrefixCls}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
@@ -803,7 +844,7 @@ const TreeSelect = defineComponent({
               treeNodeFilterProp: props.treeNodeFilterProp ?? 'value',
               keyEntities: keyEntities.value,
             } as never),
-          ...attrs,
+          ...restAttrs,
         } as never,
         {},
       );

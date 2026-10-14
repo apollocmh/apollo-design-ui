@@ -41,6 +41,17 @@ export function fillAdditionalInfo(
   checkedValues: (string | number)[],
   treeData: TreeSelectDataNode[],
   fieldNames: FilledFieldNames,
+  /**
+   * 是否带上位置信息（Issue #13.2）。
+   *
+   * 🚨 上游 `legacyUtil.js:107-115` 的 getter 里就是这个判据：
+   * `showPosition ? nodeList : nodeList.map(({node}) => node)`。
+   * 本仓此前在 `TreeSelect.ts` 里**再定义一次同名 getter**，而新 getter 内又读
+   * `additionalInfo.allCheckedNodes` —— 读的**就是自己** ⇒
+   * `RangeError: Maximum call stack size exceeded`。
+   * ⇒ 判据下沉到本函数（与上游同形），外面不要二次包装。
+   */
+  showPosition = true,
 ): void {
   let triggerNode: TreeSelectDataNode | null = null;
   let nodeList: TreeSelectDataNode[] | null = null;
@@ -88,8 +99,17 @@ export function fillAdditionalInfo(
         '[apollo: TreeSelect] `allCheckedNodes` 已废弃（不再返回节点实例）。请自行按 `value` 映射数据。',
       );
       generateMap();
-      return nodeList;
+      const list = nodeList ?? [];
+      // 上游：`showPosition ? nodeList : nodeList.map(({ node }) => node)`
+      // —— 不带位置信息时返回**纯节点**（剥掉 `pos`）。
+      return showPosition ? list : list.map(stripPos);
     },
     configurable: true,
   });
+}
+
+/** 剥掉位置字段（`pos`）—— 用于 `showPosition === false` 的 `allCheckedNodes`。 */
+function stripPos(node: TreeSelectDataNode): TreeSelectDataNode {
+  const { pos: _pos, ...rest } = node as TreeSelectDataNode & { pos?: string };
+  return rest as TreeSelectDataNode;
 }

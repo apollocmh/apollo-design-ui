@@ -90,18 +90,36 @@ describe('Checkbox · 原生属性落到 input（Issue #9.1）', () => {
 // 9.2 · 替换 onClick
 // ===========================================================================
 
+/**
+ * ⚠️ 换 handler 必须经**父组件**（Host）而不是改 `wrapper.vm.$attrs`：
+ *    - `setProps({ onClick })` 在**类型层**就不成立（`onClick` 不是声明过的 prop，
+ *      PITFALLS 35 ⇒ 只能走 attrs），`vue-tsc` 会报 TS2353；
+ *    - 直接改 `wrapper.vm.$attrs` 实测**不生效**（VTU 的 `$attrs` 不是触发源）。
+ *    ⇒ 用一个 Host 持有响应式 handler 引用，暴露 `swap()` 换它。
+ */
+const mountSwappable = (eventName: 'onClick' | 'onChange') => {
+  const first = vi.fn();
+  const second = vi.fn();
+  const Host = defineComponent({
+    setup(_, { expose }) {
+      const handler = ref<((...args: unknown[]) => void) | undefined>(first);
+      expose({ swap: () => (handler.value = second) });
+      return () => h(Checkbox, { [eventName]: handler.value } as never);
+    },
+  });
+  return { first, second, w: mount(Host) };
+};
+
 describe('Checkbox · 替换 `onClick` 后用新回调（Issue #9.2）', () => {
   it('★ 换掉 `onClick` 之后点 input ⇒ 只调新的', async () => {
-    const first = vi.fn();
-    const second = vi.fn();
-    const w = mountBox({}, { onClick: first });
+    const { first, second, w } = mountSwappable('onClick');
 
     await inputOf(w).trigger('click');
     expect(first).toHaveBeenCalledTimes(1);
     expect(second).not.toHaveBeenCalled();
 
-    // 换 handler（Vue 里 `onClick` 走 attrs）
-    await w.setProps({ onClick: second });
+    (w.vm as unknown as { swap: () => void }).swap();
+    await nextTick();
     first.mockClear();
 
     await inputOf(w).trigger('click');
@@ -112,14 +130,13 @@ describe('Checkbox · 替换 `onClick` 后用新回调（Issue #9.2）', () => {
   });
 
   it('反向哨兵：`onChange` 一直是 attrs（本来就是现读的，不应回退）', async () => {
-    const first = vi.fn();
-    const second = vi.fn();
-    const w = mountBox({}, { onChange: first });
+    const { first, second, w } = mountSwappable('onChange');
 
     await inputOf(w).setValue(true);
     expect(first).toHaveBeenCalledTimes(1);
 
-    await w.setProps({ onChange: second });
+    (w.vm as unknown as { swap: () => void }).swap();
+    await nextTick();
     first.mockClear();
     await inputOf(w).setValue(false);
     expect(second).toHaveBeenCalledTimes(1);
