@@ -25,7 +25,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#34 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#35 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -64,7 +64,10 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   焦点来源只在「变真」帧记录、从不清空（#20.2）；监听器解绑用「绑定时的元素」（#23.5）；
   document/window 监听用 `watch(条件,(ok,_o,onCleanup)=>…,{immediate:true})`（#27.2）。
 - 🚨 **antd 多 child 结构照抄**（dropdown-button `[left, <Dropdown>right]` #21.1）；Overlay 用 Fragment（#25.5）。
-- 🚨 **`useId()` 只在同一个 app 内唯一**（`instance.ids[1]++`）⇒ 跨 app 自传 id（#24.2）。
+- 🚨 **`useId()` 只在同一个 app 内唯一**
+- 🚨 **`useSize` 一律函数形态** `useSize((ctx) => props.size ?? ctx)`（#35.1 第七例）：
+  `useSize(props.size)` 是 setup 期裸值快照；`useSize(() => props.size)` 丢 context 兜底。
+- ⚠️ 修完「缺口登记」要同步更正 README §7 缺口表 / 组件头注 / 测试头注三处过期描述。（`instance.ids[1]++`）⇒ 跨 app 自传 id（#24.2）。
 - 🚨 **薄壳→底层隔离上层专属 ConfigProvider 配置**（antd `data-popover-inject` ⇒ provide/inject 标记，
   公共 getPopupContainer/direction 不动，#24.4）。
 - ⚠️ **`ReturnType<typeof ref<T>>` = `Ref<T|undefined>`** ⇒ 返回值直接声明 `Ref<T>`。
