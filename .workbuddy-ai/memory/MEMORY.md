@@ -3,17 +3,15 @@
 > 📁 `.workbuddy` 是 `.workbuddy-ai` 的软链接，勿按版本分开记。本文件只放**仓库文档没有的**判别式。
 
 ## §0 接手顺序
-1. **`docs/KNOWN-ISSUES.md`**（不在 AGENTS §5 清单里）。§1 仍开放：§1.2 VNodeChild 插槽缺口 · §1.3 date-picker id/tabIndex · §1.4 Select 条件 default slot · §1.5 form ItemHolder/StatusProvider setup 期前缀过期（2026-10-14，同 #15.3 族）。
+1. **`docs/KNOWN-ISSUES.md`**（不在 AGENTS §5 清单里）§1 仍开放：§1.2 VNodeChild 插槽 · §1.3 date-picker id/tabIndex · §1.4 Select 条件 default slot · §1.5 form setup 期前缀（同 #15.3 族）。
 2. `node registry/tools/next-task.mjs`（唯一权威）；`ask.mjs decisions --open`。
-⚠️ 登记簿坐标复核后再信（曾改掉 4 处事实错误）⇒ `git log -S` 与跑现成测试比读文档可靠；欠账都要能被命令复现。
+⚠️ 登记簿坐标复核后再信 ⇒ `git log -S` 与跑现成测试比读文档可靠。
 
 ## §1 事实来源 / registry
 Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库规范 > `registry/*.json` > antd 源码 > 文档 > 先验。
-- 🚨 **Phase 2 起**（2026-10-06 裁决）antd 降为「参考实现」；根别名一律原生 `class`/`style`（72 组件已完成），非根目标用 `classNames.*`/`styles.*` 槽位。判别式：「这个 prop 指向组件自己的根吗？」。
-- 禁止凭记忆描述 antd：读 `/tmp/antd-src/package/`；缺了现拉（`/tmp/antd-restore` + `https_proxy=http://127.0.0.1:7890 npm pack antd@6.6.4`）。
-  rc-* 内核同法（`npm pack @rc-component/tree@1.4.0` → `/tmp/rctree-restore/rc-tree-src/es`）⇒ gDSFP 分支判据一律核上游原文。
-- 生成器顺序 `gen-registry → foundation-status → gen-workstreams → validate-registry`；派生字段手改会被覆盖；`notes` 不跨运行保留 ⇒ 注记写 `registry/source/components.meta.mjs`。
-- 裁决须同改 `open-decisions.mjs` + `foundation.json` ⇒ `sync-decision-runtime.mjs <id>` 再跑生成器链。已裁决：`visual-baseline-in-git`=A · `noNonNullAssertion`（禁扫改）· `picker-panel-ownership`=B · `ui-style-output`=A · `ui-tree-shaking`=A+B+D。
+- 🚨 **Phase 2 起** antd 降为「参考实现」；根别名一律原生 `class`/`style`，非根用 `classNames.*`/`styles.*`。判别式：「这个 prop 指向组件自己的根吗？」。
+- 禁止凭记忆描述 antd / rc：读 `/tmp/antd-src/package/`；缺了现拉（`npm pack antd@6.6.4` / `@rc-component/tree@1.4.0`，走 `http_proxy=127.0.0.1:7890`）⇒ gDSFP 分支判据一律核上游原文。
+- 生成器顺序 `gen-registry → foundation-status → gen-workstreams → validate-registry`；派生字段手改会被覆盖 ⇒ 注记写 `registry/source/components.meta.mjs`；裁决改 `open-decisions.mjs`+`foundation.json` 后跑 `sync-decision-runtime.mjs <id>`。
 
 ## §2 架构 / 构建（细节查 docs）
 - 包边界：≥2 **个包**消费且无视觉语义才独立成包；只被多个**组件**共用 ⇒ `_internal/`。🚨 搬逻辑时**依赖的类型必须一起搬**，原 `interface.ts` 原样再导出。
@@ -21,7 +19,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 
 ## §3 收口
 - 三件套：`COMPONENT_STYLES` 注册 · `index.ts` 导出(B8) · `tests/compat/fixtures/<c>/`(E9)。🚨 收口后 `git status` 确认落盘（曾两次全绿但整片未提交）。新增 demo 配 `.md`。
-- 🚨 新增视觉用例后必须 `Read` 看基线图（哈希/体积/L6 对「内容缺失」全盲）。L4 `it.each` 用同形对象数组。`.vue` 出现 `typeof SomeComponent` ⇒ 查 import 被 biome 改成 `import type`（PITFALLS 299）。语义化槽支持函数形态 ⇒ prop 类型 `[Object, Function]`。
+- 🚨 新增视觉用例后必须 `Read` 看基线图（L6 对「内容缺失」全盲）。L4 `it.each` 用同形对象数组。`.vue` 出现 `typeof X` ⇒ 查 biome 把 import 改成 `import type`（PITFALLS 299）。语义槽支持函数形态 ⇒ prop 类型 `[Object, Function]`。
 ## §4 环境 / 命令
 - 🚨 视觉层与构建门禁都带 `CODEBUDDY_SAFE_DELETE_ENABLED=0`（+`CODEBUDDY_BROKERED_FS_HOOK_ENABLED=0`/`CODEBUDDY_SAFE_DELETE_SANDBOX=0`）。`pnpm` 不在 PATH ⇒ `/tmp/pnpm-shim/pnpm`；📌 **`build:ui` 内部 `pnpm --filter` 找不到 pnpm ⇒ 必须 `PATH="/tmp/pnpm-shim:$PATH" pnpm run build:ui`**。
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
@@ -31,44 +29,35 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 
 ## §6 判别式（高价值）
 **响应性**
-- 🚨 **attrs 追踪准确口径**（#15.2 实测）：Vue 3.5.42 attrs 代理 `get` 会 track、`updateProps` 变化会 trigger ⇒ **computed 直接读 `attrs.class` 会更新**（「缓存旧值」是误报）。真坑 = **setup 期解构 attrs**（date-picker #5.3）。
-- 🚨 **`cloneVNode` 是合并不是替换**
-- 🚨 **用 `cloneVNode` 注入 `on*` 后不要再手动调 `origin.props?.onXxx`**（合并 ⇒ 自动调一次，#30.2）。
-- 🚨 **`useDisabled` / `useSize` 这类 `toValue` hook 一律传 getter**（`() => props.disabled`，#30.3）；
-  全仓还剩 `slider/Slider.vue:153` 是裸值（待下轮）。（`mergeProps`：`on*` 拼数组 ⇒ 双调；`class` 拼两遍）。复刻 React `cloneElement` ⇒ 先 `cloneVNode(child)` 再**整体替换 `cloned.props`**（#24.7；保 dirs，勿用 createVNode 重建）。
-- 🚨 新 Boolean prop 必须 `withDefaults(…,{x:undefined})`（薄壳也要）：未传时 Vue 强制 `false`，`existShowConfig` 把「显式 false」当「用户关了」⇒ 整片不渲染（#6.2）。
-- 公共 Hook 收 `MaybeRefOrGetter`+`toValue`；`useSize` 必须解析器形态 `useSize((ctx)=>props.size??ctx)`（`()=>props.size` 会绕过 componentSize）。
-- 🚨 上游 React `useXxx(...)` 每次渲染重算 ⇒ Vue 侧包 `computed`，否则动态改配置静默无效（#12.3）。🚨 prop 默认值写字面量堵死 ConfigProvider 回退 ⇒ `default: undefined`+`mergedXxx`。
-- 🚨 **rc gDSFP 分支要逐条复刻**：Tree 勾选段第三分支「treeData 变化 ⇒ `parseCheckedKeys(props.checkedKeys) || prevState`」⇒ 受控与否**只决定 base，不影响是否重算**（#16.1）；这类派生态同步必须**静默不 emit**。
-- 🚨 **`${props.prefixCls}-x` 在 setup 期求值 = 切前缀后子树全过期** ⇒ 一律 computed（#15.3 修 transfer/Section；form 同族未修见 §1.5）。⚠️ `prefixCls` prop 是**完整前缀**（`'p1'` ⇒ `.p1-section`）。
-- 🚨 **antd 在 render 体里回填的（非 useMemo）本仓必须 getter/computed**
-- 🚨 **内置类名放进 `classNames.*` 时必须**合并**用户的 classNames（对象 + 函数形态都要处理）；
-  上游若用独立键（`rootClassName`）就不会覆盖 ⇒ 本仓换了通道就得自己补合并（avatar #29.1）。
-- 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**：anchor `{replace, ...item, key}` = **单项胜**（写反就
-  被父级 undefined 顶掉，#28.1）。同理「上游 render 体里的常量」不能在 setup 算（anchor affixProps，#28.2）。：table `changeEventInfo.pagination`（#17.1）。
-- 🚨 **派生数据要确认真进了渲染链且真有人消费**：table `column`（引擎仍吃 `props.columns`，#17.2）、tabs
-  `mergedItems`（死代码，#23.1）⇒ 先写**静态**复现。归一 pipeline = **先过滤非法项再 map**。
-- 🚨 **「外层有 prop、引擎/下层没声明」必须显式转交**：modal `wrapStyle`/`wrapProps`（#19.1）、drawer `push`
-  （#20.1，静默退化 180）、popover/popconfirm 继承 Tooltip 的 10 个字段（#25.1/#26.1）。
-- 🚨 **纯函数式的归一/解析放 setup = 快照**（pagination `useShowSizeChanger`，#18）⇒ 归一本身进 computed。
-- 🚨 **`useMergeSemantic` 第三参传 computed/getter**（不是 `.value`）⇒ 函数式槽才跟得上 props（#26.3）。
-- 🚨 rc 的焦点来源只在「变真」帧记录、从不清空（#20.2）；`activeRef` 每次 render 同步 activeKey（#22.2）。
-- 🚨 **antd 多 child 结构照抄**：dropdown-button = `[leftButton, <Dropdown>right</Dropdown>]`（#21.1）。
-- 🚨 **provide 的 context 里来自 props 的字段写 getter**（#22.7）；监听器解绑用「绑定时的元素」（#23.5）。
-- 🚨 **`vnode.props.class` 恒为字符串**（createVNode 已 normalizeClass）⇒ class 合并一律 `normalizeClass([...])`。
-- 🚨 **`useId()` 只在同一个 app 内唯一**（序号 `instance.ids[1]++`）⇒ 跨 app 要自传 id（#24.2）。
-- 🚨 **`inheritAttrs:false` 薄壳：类型 `extends` 承诺的字段要显式声明+下传**；误展开 attrs 会打到触发
-  元素（双落点）。原生 class/style 走语义 root（#25.3）。转发 attrs 前先 `omit` 掉本组件要消费的键
-  （`onPopupClick` 因此双调，#26.1）。
-- 🚨 **静态 CSS 提取自 antd SSR 产物 ⇒ 按本仓真实 DOM 校对选择器**（antd `-inner` vs rc 系 `-container`，#25.2）。
-- 🚨 **薄壳→底层要隔离上层专属 ConfigProvider 配置**：antd `data-popover-inject` ⇒ Vue 用 provide/inject
-  标记；公共 getPopupContainer/direction 不动（#24.4）。
+- 🚨 **setup 期快照三件套**（最高频）：① 纯函数式归一/解析（#18 pagination）② 上游 render 体里的
+  常量（#17.1 table / #28.2 anchor affixProps）③ `toValue` hook 传裸值（`useDisabled`/`useSize`，#30.3）
+  ⇒ 一律改 computed / getter。传 getter 时注意：watch 依赖要写**求值后**的结果（#27.4）。
+- 🚨 **attrs 追踪准确口径**（#15.2）：computed 直接读 `attrs.class` **会**更新；真坑是 setup 期解构 attrs。
+- 🚨 **cloneVNode 是合并不是替换**（`on*` 拼数组、`class` 拼两遍）⇒ ① 注入 `on*` 后**不要再手动调**
+  `origin.props?.onXxx`（#30.2）；② 要「替换」语义就先 clone 再整体替换 `cloned.props`（保 dirs，#24.7）。
 - 🚨 **「受控 hook 的 onChange + 业务 handler」各调一次 = 双调**（tooltip #24.1 / popconfirm #26.1 /
-  float-button #27.1 三连）⇒ 回调只留一个出口。🚨 **根 VNode 末尾 `...attrs` 会顶掉内部 class 与
-  `on*`** ⇒ 一律 `mergeProps(内部, attrs)`（#27.3）。
-- 🚨 **document/window 监听用 `watch(条件,(ok,_o,onCleanup)=>…,{immediate:true})`**（#27.2）；
-  hook 配置收 `MaybeRefOrGetter` 时 watch 依赖要写**求值后**的结果（#27.4）。
-- ⚠️ **`ReturnType<typeof ref<T>>` = `Ref<T | undefined>`** ⇒ 返回值直接声明 `Ref<T>`。
+  float-button #27.1 / tag #30.1 四连）⇒ 回调只留一个出口。
+- 🚨 **根 VNode 末尾 `...attrs` 会顶掉内部 class 与 `on*`** ⇒ 一律 `mergeProps(内部, attrs)`（#27.3）；
+  `vnode.props.class` 恒为字符串 ⇒ class 合并用 `normalizeClass([...])`；转发 attrs 前先 `omit`
+  掉本组件要消费的键（`onPopupClick` 因此双调，#26.1）。
+- 🚨 **`inheritAttrs:false` 薄壳：类型 `extends` 承诺的字段要显式声明 + 显式下传**（#25.1/#26.1）；
+  「外层有 prop、引擎/下层没声明」同理（modal wrapProps #19.1、drawer push #20.1 静默退化 180）。
+- 🚨 **`useMergeSemantic` 第三参传 computed/getter**（不是 `.value`），否则函数式槽吃快照（#26.3）。
+- 🚨 **内置类名放进 `classNames.*` 时必须合并用户的 classNames**（对象 + 函数形态，#29.1）；
+  上游用独立键（`rootClassName`）不会覆盖 ⇒ 本仓换通道就要自己补合并。
+- 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**：anchor `{replace, ...item, key}` = **单项胜**（#28.1）。
+- 🚨 **派生数据要确认真进渲染链且真有人消费**（table column #17.2、tabs mergedItems #23.1）⇒ 先写
+  **静态**复现；归一 pipeline = **先过滤非法项再 map**。
+- 🚨 上游 `useXxx(...)` 每次渲染重算 ⇒ Vue 侧包 computed（#12.3）；rc gDSFP 分支逐条复刻（#16.1，
+  派生态同步**静默不 emit**）；`${props.prefixCls}-x` 一律 computed（#15.3，form 同族未修 §1.5）。
+- 🚨 provide context 里来自 props 的字段写 getter（#22.7）；`activeRef` 每次 render 同步 activeKey（#22.2）；
+  焦点来源只在「变真」帧记录、从不清空（#20.2）；监听器解绑用「绑定时的元素」（#23.5）；
+  document/window 监听用 `watch(条件,(ok,_o,onCleanup)=>…,{immediate:true})`（#27.2）。
+- 🚨 **antd 多 child 结构照抄**（dropdown-button `[left, <Dropdown>right]` #21.1）；Overlay 用 Fragment（#25.5）。
+- 🚨 **`useId()` 只在同一个 app 内唯一**（`instance.ids[1]++`）⇒ 跨 app 自传 id（#24.2）。
+- 🚨 **薄壳→底层隔离上层专属 ConfigProvider 配置**（antd `data-popover-inject` ⇒ provide/inject 标记，
+  公共 getPopupContainer/direction 不动，#24.4）。
+- ⚠️ **`ReturnType<typeof ref<T>>` = `Ref<T|undefined>`** ⇒ 返回值直接声明 `Ref<T>`。
 - ⚠️ 键码在 jsdom 只有 `keyCode`（`which` 恒 0）；rc `getFocusNodeList(c,true)` 收负 tabindex；
   rc 可见性判据（offsetParent/rect）在 jsdom 恒 false ⇒ 退化 display/visibility。
 **渲染 / 事件**
