@@ -295,6 +295,11 @@ export const Splitter = defineComponent({
           {
             prefixCls,
             className: [mergedClassNames.value.panel, item.className].filter(Boolean).join(' '),
+            // ⚠️ Vue 原生 `class`（Issue #33.1）：上面只拼了 React 式的 `className`，
+            //    调用方写 `class="editor"` 会静默丢失。这里把原生 class 也传下去 ——
+            //    它落在 InternalPanel 的 attrs 上，由 Vue 自己归一（数组/对象/动态都行）
+            //    并合并到面板根 div，且保持响应式。
+            class: (item as unknown as { class?: unknown }).class,
             style: { ...mergedStyles.value.panel, ...item.style },
             size: panelSizes.value[idx],
             supportMotion: !!props.collapsible?.motion && resize.movingIndex.value === undefined,

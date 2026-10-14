@@ -13,6 +13,7 @@
 import { DownOutlined, LeftOutlined, RightOutlined, UpOutlined } from '@apollo-design/icons';
 import { isNumber } from '@apollo-design/utils';
 import {
+  computed,
   defineComponent,
   h,
   onBeforeUnmount,
@@ -107,7 +108,9 @@ export const SplitBar = defineComponent({
     },
   },
   setup(props) {
-    const splitBarPrefixCls = `${props.prefixCls}-bar`;
+    // ⚠️ 必须是 computed（Issue #33.2）：setup 期拼成的常量只求值一次 ⇒ 之后
+    //    `prefixCls` 变化，bar / dragger / collapse 的类名全部停留在旧前缀。
+    const splitBarPrefixCls = computed(() => `${props.prefixCls}-bar`);
     const lastClickTime = ref(0);
 
     // ======================== Resize ========================
@@ -174,11 +177,11 @@ export const SplitBar = defineComponent({
     const getVisibilityClass = (mode: ShowCollapsibleIconMode): string => {
       switch (mode) {
         case true:
-          return `${splitBarPrefixCls}-collapse-bar-always-visible`;
+          return `${splitBarPrefixCls.value}-collapse-bar-always-visible`;
         case false:
-          return `${splitBarPrefixCls}-collapse-bar-always-hidden`;
+          return `${splitBarPrefixCls.value}-collapse-bar-always-hidden`;
         case 'auto':
-          return `${splitBarPrefixCls}-collapse-bar-hover-only`;
+          return `${splitBarPrefixCls.value}-collapse-bar-hover-only`;
         default:
           return '';
       }
@@ -249,7 +252,7 @@ export const SplitBar = defineComponent({
     });
 
     return () => {
-      const bar = splitBarPrefixCls;
+      const bar = splitBarPrefixCls.value;
 
       // ---- 折叠图标 ----
       const startCustomize = props.collapsibleIcon?.start !== undefined;
@@ -370,7 +373,7 @@ export const SplitBar = defineComponent({
         ),
       );
 
-      return h('div', { class: splitBarPrefixCls }, nodes);
+      return h('div', { class: splitBarPrefixCls.value }, nodes);
     };
   },
 });

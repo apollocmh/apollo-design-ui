@@ -48,6 +48,18 @@
 | L7 | `__tests__/theme.test.ts` | 13 | Token 常量 + 全样式段 |
 | — | `tests/compat/fixtures/splitter/*.json` | 3 | basic / collapsible / size-px |
 
+## 5.5 Issue #33 的两条判据
+
+1. **`Splitter.Panel` 的 Vue 原生 `class` 必须落到面板节点**（#33.1）：
+   `Splitter.Panel` 是 renderless，父层只收集 `vnode.props`；创建 `InternalPanel`
+   时原来只拼 React 式的 `className` ⇒ 调用方写 `class="editor"` 会**静默丢失**。
+   现在额外把原生 `class` 传给 `InternalPanel`（落在 attrs ⇒ 由 Vue 自己归一并
+   合并到面板根 div）⇒ 字符串/数组/对象/动态 class 全部生效，且与
+   `classNames.panel`、旧键 `className` 三者共存。
+2. **`SplitBar` 的 `splitBarPrefixCls` 必须是 computed**（#33.2）：setup 期拼
+   `` `${props.prefixCls}-bar` `` 是常量 ⇒ `prefixCls` 变化后 bar / dragger /
+   collapse / preview 的类名全部停留在旧前缀。改 computed + 所有消费点读 `.value`。
+
 ## 6. 已知边界
 
 - 拖拽/折叠的**运行时**行为（窗口监听、lazy 预览、折叠记忆）在 jsdom 里只能桩
