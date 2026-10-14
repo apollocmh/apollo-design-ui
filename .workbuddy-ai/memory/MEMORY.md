@@ -25,7 +25,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#39 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#40 全部**（#40 关闭了 app 的 PENDING-2 stub）（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -49,6 +49,9 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   上游用独立键（`rootClassName`）不会覆盖 ⇒ 本仓换通道就要自己补合并。
 - 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**
 - 🚨 **React「JSX children = props.children」在 Vue 不成立**
+- 📌 **App 的 HookAPI**：`useMessage/useNotification(getter)` + `Modal.useModal()` ⇒ `[api, holder]`，
+  holder 与 `<Component>` **同级** ⇒ App 根是 Fragment（测试别用 `wrapper.element` 当根）。
+  通知 API 必须在 holder 挂载后调用，open→DOM 需 3 次 nextTick（#40）。
 - 🚨 **Boolean prop 写 `default: true` 会破坏继承**（#39.1）：值恒真 ⇒ 子级永远覆盖父级。
   凡「未传应继承」的布尔配置，缺省只能是 `undefined`，在**合并处**写 `props.x ?? parent.x ?? 兜底`。
 - 🚨 **判定上游继承/缺省语义的快招**：React SSR 渲染组合（无 Provider / 父+子不传 / 子显式）看产物分支。
