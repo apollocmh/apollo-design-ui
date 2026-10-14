@@ -15,9 +15,12 @@ import {
   h,
   type PropType,
   provide,
+  reactive,
   type VNodeChild,
+  watchEffect,
 } from 'vue';
 import {
+  type AppConfig,
   appConfigContextKey,
   appContextKey,
   injectAppConfig,
@@ -52,6 +55,20 @@ const App = defineComponent({
       notification: { ...parentConfig.notification, ...props.notification },
     }));
 
+    /**
+     * ⚠️ **不能** provide `mergedAppConfig.value`（Issue #41）：那是 setup 期的
+     *    **快照对象**，之后改 `message` / `notification` props，已经注入的子孙
+     *    拿到的还是挂载那一刻的值。
+     *
+     *    与 `ConfigProvider` 的 `config` 同范式：provide 一个**引用恒定**的
+     *    reactive 对象、内容由 `watchEffect` 打补丁 —— `inject` 只在 setup 期解析
+     *    一次，「引用恒定」是硬约束。
+     */
+    const appConfig = reactive<AppConfig>({ ...mergedAppConfig.value });
+    watchEffect(() => {
+      Object.assign(appConfig, mergedAppConfig.value);
+    });
+
     // ======================== HookAPI（Issue #40）========================
     //
     // 上游 antd `App.tsx` 就是「三个 useXxx + 三个 contextHolder」：
@@ -73,7 +90,7 @@ const App = defineComponent({
       modal: modalApi,
     } as unknown as UseAppProps;
     provide(appContextKey, api);
-    provide(appConfigContextKey, mergedAppConfig.value);
+    provide(appConfigContextKey, appConfig);
 
     // 根 `class` / `style` 是 Vue 原生 attrs（不再有 className/rootClassName/style Props）。
     const hasRootProps = Boolean(attrs.class || attrs.style);

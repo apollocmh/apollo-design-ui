@@ -34,6 +34,10 @@ _internal/app-context.ts  # ⭐ 消环叶子模块：只含类型 + InjectionKey
 
 ## 3. 与 antd 的差异
 
+- **appConfig 必须引用恒定**（Issue #41）：`provide(appConfigContextKey, mergedAppConfig.value)`
+  是 setup 期**快照** ⇒ 之后改 `message` / `notification` props，已注入的子孙拿不到新值。
+  与 `ConfigProvider` 的 `config` 同范式：provide 一个 **reactive 对象**、内容用
+  `watchEffect` 打补丁（`inject` 只在 setup 解析一次 ⇒ 引用恒定是硬约束）。
 - ~~**PENDING-2**：`useApp()` 的三件套为 stub~~ → ✅ **2026-10-14 已关闭**（Issue #40）：
   三者都由各自 hook 提供，App 本身的结构（context 注入 / 配置合并 /
   component=false 告警）未变。

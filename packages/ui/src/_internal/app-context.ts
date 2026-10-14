@@ -44,7 +44,13 @@ export function useApp(): UseAppProps {
   return inject(appContextKey, EMPTY_DEFAULT);
 }
 
-/** 读配置 context（App 嵌套合并用）。 */
+/**
+ * 读配置 context（App 嵌套合并用）。
+ *
+ * ⚠️ 注入的是**引用恒定的 reactive 对象**（Issue #41）—— App 一侧用 `watchEffect`
+ *    打补丁更新它的内容，所以这里返回的对象可以直接在 `computed` / 渲染里读，
+ *    配置更新能传导下来。
+ */
 export function injectAppConfig(): AppConfig {
   return inject(appConfigContextKey, {});
 }
