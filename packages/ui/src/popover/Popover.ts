@@ -195,7 +195,9 @@ const Popover = defineComponent({
         () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
         () => props.styles as PopoverSemanticType['styles'] | undefined,
       ],
-      mergedProps.value,
+      // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
+      //    props；传 setup 期快照会让后续 props 变化在函数式里不可见（Issue #26.3）。
+      mergedProps,
     );
 
     // ⚠️ 根 class/style：语义 root + ConfigProvider 的 `className`（#25.4）+

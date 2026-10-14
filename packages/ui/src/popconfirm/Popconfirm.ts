@@ -26,7 +26,7 @@
 import { ExclamationCircleFilled } from '@apollo-design/icons';
 import { omit, useControlledValue } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
-
+import type { TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { PopoverRef } from '../popover/interface';
@@ -86,6 +86,27 @@ const Popconfirm = defineComponent({
     overlayStyle: { type: Object as PropType<StyleLike>, default: undefined },
     classNames: { type: [Object, Function] as PropType<PopconfirmClassNames>, default: undefined },
     styles: { type: [Object, Function] as PropType<PopconfirmStyles>, default: undefined },
+    // ⚠️ 以下来自 antd `AbstractTooltipProps`（Issue #26.1）：原先**没声明** ⇒ 落进
+    //    attrs 后被 `...restProps` 塞给 Popover，能否生效全看 Popover 有没有声明
+    //    （而且 `onPopupClick` 因此被**传了两份** ⇒ 一次点击回调两次）。
+    getPopupContainer: {
+      type: Function as PropType<PopconfirmProps['getPopupContainer']>,
+      default: undefined,
+    },
+    getTooltipContainer: {
+      type: Function as PropType<PopconfirmProps['getTooltipContainer']>,
+      default: undefined,
+    },
+    align: { type: Object as PropType<TriggerAlign>, default: undefined },
+    builtinPlacements: {
+      type: Object as PropType<Record<string, TriggerAlign>>,
+      default: undefined,
+    },
+    zIndex: { type: Number, default: undefined },
+    destroyOnHidden: { type: Boolean, default: undefined },
+    fresh: { type: Boolean, default: undefined },
+    forceRender: { type: Boolean, default: undefined },
+    id: { type: String, default: undefined },
   },
   /** 只声明 `update:open`（供 `v-model:open`）；回调类一律走 attrs（PITFALLS 35）。 */
   emits: ['update:open'],
@@ -183,7 +204,9 @@ const Popconfirm = defineComponent({
         // antd：overlayStyleRoot = useSemanticRootStyle(overlayStyle) 排在最后
         () => (props.overlayStyle ? { root: props.overlayStyle } : undefined),
       ],
-      mergedProps.value,
+      // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
+      //    props，传 setup 期快照会让 `open` 变化后函数式仍按旧值算（Issue #26.3）。
+      mergedProps,
     );
 
     const rootClassNames = computed(() =>
@@ -207,8 +230,11 @@ const Popconfirm = defineComponent({
 
     return () => {
       const p = prefixCls.value;
-      // 判据 5：title 不进 Popover 的 restProps
-      const restProps = omit(attrs as Record<string, unknown>, ['title']);
+      // 判据 5：title 不进 Popover 的 restProps。
+      // ⚠️ `onPopupClick` 也必须摘掉：Overlay 的 `-inner-content` 已经挂了这个
+      //    监听，再随 restProps 传给 Popover ⇒ Tooltip 的容器再挂一次 ⇒ 一次点击
+      //    回调两次（Issue #26.1[E]）。
+      const restProps = omit(attrs as Record<string, unknown>, ['title', 'onPopupClick']);
 
       return h(
         Popover,
@@ -232,24 +258,46 @@ const Popconfirm = defineComponent({
             container: mergedStyles.value.container,
             arrow: mergedStyles.value.arrow,
           },
-          content: h(Overlay, {
-            prefixCls: p,
-            icon: props.icon === undefined ? h(ExclamationCircleFilled) : props.icon,
-            okType: props.okType,
-            okButtonProps: props.okButtonProps,
-            cancelButtonProps: props.cancelButtonProps,
-            cancelText: props.cancelText,
-            okText: props.okText,
-            showCancel: props.showCancel,
-            title: props.title,
-            description: props.description,
-            onPopupClick: callbacks.onPopupClick,
-            close,
-            onConfirm,
-            onCancel,
-            classNames: mergedClassNames.value as never,
-            styles: mergedStyles.value as never,
-          }),
+          // Issue #26.1：公开类型承诺的公共浮层配置显式下传（不再靠 attrs 逃逸）
+          getPopupContainer: props.getPopupContainer,
+          getTooltipContainer: props.getTooltipContainer,
+          align: props.align,
+          builtinPlacements: props.builtinPlacements,
+          zIndex: props.zIndex,
+          destroyOnHidden: props.destroyOnHidden,
+          fresh: props.fresh,
+          forceRender: props.forceRender,
+          id: props.id,
+          content: h(
+            Overlay,
+            {
+              prefixCls: p,
+              icon: props.icon === undefined ? h(ExclamationCircleFilled) : props.icon,
+              okType: props.okType,
+              okButtonProps: props.okButtonProps,
+              cancelButtonProps: props.cancelButtonProps,
+              cancelText: props.cancelText,
+              okText: props.okText,
+              showCancel: props.showCancel,
+              title: props.title,
+              description: props.description,
+              onPopupClick: callbacks.onPopupClick,
+              close,
+              onConfirm,
+              onCancel,
+              classNames: mergedClassNames.value as never,
+              styles: mergedStyles.value as never,
+            } as never,
+            // ⚠️ C8：富内容走**插槽**（`#okText` / `#cancelText` / `#title` /
+            //    `#description`）—— Overlay 内部是「slot 优先」（Issue #26.4）。
+            {
+              default: slots.default ? () => slots.default?.() : undefined,
+              title: slots.title ? () => slots.title?.() : undefined,
+              description: slots.description ? () => slots.description?.() : undefined,
+              okText: slots.okText ? () => slots.okText?.() : undefined,
+              cancelText: slots.cancelText ? () => slots.cancelText?.() : undefined,
+            },
+          ),
         } as never,
         { default: () => slots.default?.() as VNodeChild },
       );

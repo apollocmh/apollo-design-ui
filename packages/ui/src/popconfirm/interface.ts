@@ -11,6 +11,7 @@
 
 import type { ClassValue, CSSProperties, VNode } from 'vue';
 import type { LegacyButtonType } from '../_internal/action-button';
+import type { TriggerAlign } from '../_internal/trigger';
 import type {
   TooltipArrow,
   TooltipContent,
@@ -111,6 +112,32 @@ export interface PopconfirmProps {
   onCancel?: (e?: MouseEvent) => void;
   /** 浮层内容点击回调。 */
   onPopupClick?: (e: MouseEvent) => void;
+
+  // ------------------------------------------------------------------
+  // 以下来自 antd 的 `AbstractTooltipProps`（Issue #26.1）：上游 Popconfirm 继承它，
+  // 本仓原先是**手写独立接口** ⇒ 这些字段类型上不存在（运行时靠 attrs 逃逸，时灵
+  // 时不灵）。现在补齐类型 + 运行时声明，统一显式下传给 Popover。
+  // ------------------------------------------------------------------
+  /** 浮层挂载容器。 */
+  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  /** 浮层挂载容器（Tooltip 旧名，与 `getPopupContainer` 同义）。 */
+  getTooltipContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  /** 浮层对齐配置。 */
+  align?: TriggerAlign;
+  /** 预设对齐位置表。 */
+  builtinPlacements?: Record<string, TriggerAlign>;
+  /** 浮层层级。 */
+  zIndex?: number;
+  /** 关闭后销毁浮层。 */
+  destroyOnHidden?: boolean;
+  /** 每次打开都重新渲染内容。 */
+  fresh?: boolean;
+  /** 强制预渲染浮层。 */
+  forceRender?: boolean;
+  /** 开合动画结束回调。 */
+  afterOpenChange?: (open: boolean) => void;
+  /** 浮层容器 id（ARIA 关联用）。 */
+  id?: string;
 }
 
 /** expose —— 与 Popover 同物（antd 的 `TooltipRef`）。 */

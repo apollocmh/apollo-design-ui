@@ -381,7 +381,9 @@ export const UploadComponent = defineComponent({
         () => props.styles as UploadSemanticType['styles'] | undefined,
         () => triggerStyle as UploadSemanticType['styles'] | undefined,
       ],
-      mergedProps.value,
+      // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
+      //    props；传 setup 期快照会让后续 props 变化在函数式里不可见（Issue #26.3）。
+      mergedProps,
     );
 
     const rcUploadProps = computed(() => ({

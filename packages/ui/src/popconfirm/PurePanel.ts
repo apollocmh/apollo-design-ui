@@ -106,12 +106,16 @@ export const Overlay = defineComponent({
       getRenderPropValue(props.description ?? slots.description?.()),
     );
 
-    /** 判据 3：falsy（含空串）回退 locale。 */
+    /**
+     * 判据 3：falsy（含空串）回退 locale。
+     * ⚠️ C8-R2：**插槽优先** —— `#okText` / `#cancelText` 是富内容通道（可在文案里
+     *    插 icon + text），字符串 prop 只作普通文案入口（Issue #26.4）。
+     */
     const mergedOkText = computed<VNodeChild>(
-      () => props.okText || (contextLocale.okText as string),
+      () => (slots.okText?.() ?? props.okText) || (contextLocale.okText as string),
     );
     const mergedCancelText = computed<VNodeChild>(
-      () => props.cancelText || (contextLocale.cancelText as string),
+      () => (slots.cancelText?.() ?? props.cancelText) || (contextLocale.cancelText as string),
     );
 
     /**
@@ -243,8 +247,17 @@ const PurePanel = defineComponent({
       default: undefined,
     },
     showCancel: { type: Boolean, default: true },
+    // ⚠️ Issue #26.2：公开类型 `PurePanelProps extends OverlayProps` 承诺的字段，
+    //    这里原先一个都没声明 ⇒ 传进来只落到外层 attrs，内部 Overlay 收不到
+    //    （点了 OK 不触发 onConfirm、icon 语义槽不生效）。
+    onPopupClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
+    close: { type: Function as PropType<(...args: unknown[]) => void>, default: undefined },
+    onConfirm: { type: Function as PropType<(e?: MouseEvent) => unknown>, default: undefined },
+    onCancel: { type: Function as PropType<(e?: MouseEvent) => void>, default: undefined },
+    classNames: { type: Object as PropType<MergedClassNames>, default: undefined },
+    styles: { type: Object as PropType<MergedStyles>, default: undefined },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
     const { getPrefixCls } = useComponentConfig('popconfirm');
     return () => {
       const prefixCls = getPrefixCls('popconfirm', props.prefixCls);
@@ -271,18 +284,33 @@ const PurePanel = defineComponent({
         } as never,
         {
           content: () =>
-            h(Overlay, {
-              prefixCls,
-              icon: props.icon,
-              okButtonProps: props.okButtonProps,
-              cancelButtonProps: props.cancelButtonProps,
-              cancelText: props.cancelText,
-              okText: props.okText,
-              okType: props.okType,
-              showCancel: props.showCancel,
-              title: props.title,
-              description: props.description,
-            }),
+            h(
+              Overlay,
+              {
+                prefixCls,
+                icon: props.icon,
+                okButtonProps: props.okButtonProps,
+                cancelButtonProps: props.cancelButtonProps,
+                cancelText: props.cancelText,
+                okText: props.okText,
+                okType: props.okType,
+                showCancel: props.showCancel,
+                title: props.title,
+                description: props.description,
+                onPopupClick: props.onPopupClick,
+                close: props.close,
+                onConfirm: props.onConfirm,
+                onCancel: props.onCancel,
+                classNames: props.classNames,
+                styles: props.styles,
+              } as never,
+              {
+                title: slots.title ? () => slots.title?.() : undefined,
+                description: slots.description ? () => slots.description?.() : undefined,
+                okText: slots.okText ? () => slots.okText?.() : undefined,
+                cancelText: slots.cancelText ? () => slots.cancelText?.() : undefined,
+              },
+            ),
         } as never,
       );
     };

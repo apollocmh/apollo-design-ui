@@ -56,3 +56,42 @@ it('负例（仅类型层面）', () => {
     h(Popconfirm, { okType: 'unknown' });
   });
 });
+
+it('#26.1 来自 AbstractTooltipProps 的公共浮层配置在类型与运行时都可用', () => {
+  const props: Pick<
+    PopconfirmProps,
+    | 'getPopupContainer'
+    | 'getTooltipContainer'
+    | 'align'
+    | 'builtinPlacements'
+    | 'zIndex'
+    | 'destroyOnHidden'
+    | 'fresh'
+    | 'forceRender'
+    | 'afterOpenChange'
+    | 'id'
+  > = {
+    getPopupContainer: () => document.body,
+    getTooltipContainer: () => document.body,
+    align: { offset: [0, 4] },
+    builtinPlacements: { top: { offset: [0, -4] } },
+    zIndex: 1200,
+    destroyOnHidden: true,
+    fresh: false,
+    forceRender: true,
+    afterOpenChange: (_open: boolean) => {},
+    id: 'pc-1',
+  };
+  expectTypeOf(props).not.toBeNever();
+
+  const negative = () => {
+    const bad: PopconfirmProps = {
+      // @ts-expect-error zIndex 不接受字符串
+      zIndex: '1200',
+      // @ts-expect-error afterOpenChange 是回调，不接受字符串
+      afterOpenChange: 'nope',
+    };
+    return bad;
+  };
+  void negative;
+});

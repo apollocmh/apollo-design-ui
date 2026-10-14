@@ -70,9 +70,9 @@ import { Popconfirm } from '@apollo-design/ui';
 | defaultOpen | 默认是否展开 | boolean | false |
 | trigger | 触发行为 | string \| string[] | 'click' |
 | placement | 浮层位置 | TooltipPlacement | 'top' |
-| okText | 确认按钮文案；为空回退 locale | string | OK |
+| okText | 确认按钮文案；为空回退 locale。富内容走 `#okText` 插槽（优先） | string \| slot | OK |
 | okType | 确认按钮类型 | LegacyButtonType | 'primary' |
-| cancelText | 取消按钮文案；为空回退 locale | string | Cancel |
+| cancelText | 取消按钮文案；为空回退 locale。富内容走 `#cancelText` 插槽（优先） | string \| slot | Cancel |
 | okButtonProps | 确认按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
 | cancelButtonProps | 取消按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
 | showCancel | 是否显示取消按钮 | boolean | true |

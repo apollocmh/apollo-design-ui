@@ -33,6 +33,26 @@
 8. **`useLocale` 返回普通对象不是 ref** —— 别写 `.value`（empty 同判）。
 9. **`Popover.PurePanel` 的 `content` prop 按 C8-R2 收窄为 String** → Overlay 必须走 `content` **slot** 传，不能走 prop。
 
+## 4.5 Issue #26 的四条判据
+
+1. **继承来的公共浮层配置必须自己声明**（#26.1）：本组件 `inheritAttrs: false`，
+   未声明的字段落进 attrs 后被 `...restProps` 塞给 Popover —— 能否生效全看
+   Popover 有没有声明，且 `onPopupClick` 因此被**传了两份**（Overlay 的
+   `-inner-content` + Tooltip 容器）⇒ 一次点击回调两次。现在类型与运行时都补齐
+   （`getPopupContainer` / `getTooltipContainer` / `align` / `builtinPlacements` /
+   `zIndex` / `destroyOnHidden` / `fresh` / `forceRender` / `afterOpenChange` / `id`），
+   并显式下传；`restProps` 摘掉 `title` **和** `onPopupClick`。
+2. **PurePanel 要接住 Overlay 的回调与语义槽**（#26.2）：`PurePanelProps extends
+   OverlayProps` 承诺的 `onConfirm` / `onCancel` / `onPopupClick` / `classNames` /
+   `styles` 原先一个都没声明 ⇒ 只落到外层 attrs，内部 Overlay 收不到。
+3. **函数式 `classNames` / `styles` 要吃响应式 Props**（#26.3）：给 `useMergeSemantic`
+   的第三参必须是 **computed / getter**（`mergedProps`），不能是 `mergedProps.value`
+   —— 后者是 setup 期快照，props 更新后函数式仍按旧值算。本轮统一修了
+   tooltip / popover / popconfirm / tour / upload 五处（input 系早就是 getter 形态）。
+4. **`okText` / `cancelText` 的富内容走插槽**（#26.4）：新增 `#okText` / `#cancelText`
+   （同时把 `#title` / `#description` 转进 Overlay），字符串 prop 仍是普通文案入口；
+   优先级 **slot > prop > locale**（C8-R2 同判，与 tooltip 的 `#title` 一致）。
+
 ## 5. ActionButton 的提升（2026-09-28）
 
 `_util/ActionButton` 在 antd 是共享件；本仓原先只有 modal 在用（`modal/components/ActionButton.ts`）。Popconfirm 是**第二个消费者**，为避免 `popconfirm → modal` 的组件间横向依赖，实现搬到 `_internal/action-button.ts`，`modal/components/ActionButton.ts` 降级为 re-export 垫片（modal 的 import 点不动，`useOrientation` 提升时的同一套做法）。
