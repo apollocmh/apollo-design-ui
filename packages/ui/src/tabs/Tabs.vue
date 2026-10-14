@@ -120,16 +120,6 @@ export default defineComponent({
     items: { type: Array as PropType<TabsItem[]>, default: undefined },
     /** ⚠️ 兼容形态：只发 deprecated 告警，**不实现**（用 `items`）。 */
     children: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    /**
-     * ⚠️ 用**公开类型**（`TabsProps['renderTabBar']`）而不是宽松的
-     * `(props: Record<string, unknown>) => VNodeChild` —— 后者会让
-     * `InstanceType<typeof Tabs>['$props']` 与 `TabsProps` 因**函数参数逆变**而**双向不可赋值**
-     * ⇒ 消费方（card 的 `tabProps`）转发时必须过一次 `unknown`（2026-10-03 修正）。
-     */
-    renderTabBar: {
-      type: Function as PropType<TabsProps['renderTabBar']>,
-      default: undefined,
-    },
     hideAdd: { type: Boolean, default: undefined },
     addIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
@@ -253,7 +243,9 @@ export default defineComponent({
 
     // ======================== items 归一 ========================
     const mergedItems = computed<TabsItem[]>(() =>
-      (props.items ?? []).map((item) => ({
+      // ⚠️ 先 filter 再归一：`items` 里可能有 `null`/字符串等非法项（有 `filterItems`
+      //    的用例钉着），直接读 `item.destroyOnHidden` 会抛错。
+      filterItems(props.items).map((item) => ({
         ...item,
         destroyOnHidden: item.destroyOnHidden ?? item.destroyInactiveTabPane,
       })),
@@ -348,10 +340,28 @@ export default defineComponent({
       // ⚠️ antd 强制这个动效名（**rootPrefixCls**，不是组件前缀；PITFALLS 180 同族）
       transitionName: `${rootPrefixCls}-slide-up`,
       ...(props.more ?? {}),
+      // ⚠️ Vue 侧的统一入口：`#popupRender`（原名 `#morePopup` 只是 interface 注释里的
+      //    过时写法 —— 本轮的裁决是**统一成 `popupRender`**）。原来只认
+      //    `more.popupRender` 函数 prop，调用方的插槽被静默忽略（Issue #23.2）；
+      //    放在最后 ⇒ 插槽优先于 `props.more.popupRender`。
+      ...(slots.popupRender
+        ? {
+            // ⚠️ 签名与 `TabsSlots['popupRender']` 一致：`(menu, { restTabs, onClose })`
+            //    （`type.test-d.ts` 钉着），不另造 `{ originNode }` 形态。
+            popupRender: (menu: VNodeChild, info: Record<string, unknown>) =>
+              (slots.popupRender as (m: VNodeChild, i: Record<string, unknown>) => VNodeChild)(
+                menu,
+                info,
+              ),
+          }
+        : {}),
     }));
 
     // ======================== 状态机 ========================
-    const tabs = computed(() => filterItems(props.items));
+    // ⚠️ 渲染列表必须吃**归一后**的 items：`destroyInactiveTabPane → destroyOnHidden` 的
+    //    映射只在 mergedItems 里做，直接用 props.items 会让单项卸载配置失效
+    //    （`TabPanelList` 的 `removeOnLeave = 组件级 ?? item 级`）—— Issue #23.1。
+    const tabs = computed(() => filterItems(mergedItems.value));
 
     const innerActiveKey = ref<string | undefined>(props.defaultActiveKey ?? tabs.value[0]?.key);
     const mergedActiveKey = computed(() => props.activeKey ?? innerActiveKey.value);
@@ -495,6 +505,13 @@ export default defineComponent({
           id: props.id,
           class: rootClass,
           ...restAttrs,
+          // ⚠️ 根 style：语义 `styles.root`（已含 ConfigProvider + attrs.style 的合并结果）
+          //    必须落到根，否则语义槽样式整条丢失（Issue #23.3）。放在 restAttrs 之后 ⇒
+          //    原生 `style` 仍是最后一层（与「原生 style 胜」的仓库判据一致）。
+          style: {
+            ...(mergedStyles.value.root as Record<string, unknown> | undefined),
+            ...((restAttrs.style as Record<string, unknown> | undefined) ?? {}),
+          },
         },
         [navNode, panelNode] as never,
       );

@@ -12,7 +12,7 @@
  * | `activeKey` + `onChange` | `v-model:activeKey`（同时发 `change`，C11） | §3 |
  * | `onTabClick` / `onEdit` / `onTabScroll` | **emits**（载荷与 antd 同形） | C5 |
  * | `renderTabBar` | **scoped slot** `#tabBar`（槽参数 = rc 的 `RenderTabBarProps`） | C8 |
- * | `more.popupRender` | **scoped slot** `#morePopup`（`(menu, { restTabs, onClose })`） | C8 |
+ * | `more.popupRender` | **scoped slot** `#popupRender`（`(menu, { restTabs, onClose })`） | C8 |
  * | `tabBarExtraContent`（`ReactNode \| {left,right}`） | `#extra` 槽（带 `position` 参数）+ 同形 prop | C8 |
  * | `TabsRef.nativeElement` | `expose({ nativeElement })` | 同上游 |
  * | `Tabs.TabPane`（children 兼容写法） | **不实现**（v6 已 deprecated），只发告警 | UPSTREAM |
@@ -255,7 +255,7 @@ export interface TabsProps {
   items?: TabsItem[];
   /** ⚠️ 兼容形态：只发 deprecated 告警，**不实现**（用 `items`）。 */
   children?: VNodeChild;
-  renderTabBar?: (props: TabsRenderTabBarProps) => VNodeChild;
+  /** ⚠️ `renderTabBar` 已**移除**：按 C8 一律走 `#tabBar` 作用域插槽（Issue #23.4）。 */
   onChange?: (activeKey: string) => void;
   onTabClick?: (key: string, event: TabsEditEvent) => void;
   onTabScroll?: (info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => void;

@@ -111,20 +111,25 @@ export function useTouchMove(
     lastTimeDiff = 0;
   };
 
+  // ⚠️ 记录**绑定时的那个元素**：watch 回调触发时 `target.value` 已经是新元素，
+  //    detach 用当前值 ⇒ 旧元素的 listener 永远留着（Issue #23.5）。
+  let boundEl: HTMLElement | null = null;
+
   const attach = (): void => {
     const el = target.value;
     if (!el) return;
+    boundEl = el;
     el.addEventListener('touchstart', onTouchStart, { passive: true });
     el.addEventListener('touchmove', onTouchMove, { passive: true });
     el.addEventListener('touchend', onTouchEnd, { passive: true });
   };
 
   const detach = (): void => {
-    const el = target.value;
-    if (el) {
-      el.removeEventListener('touchstart', onTouchStart);
-      el.removeEventListener('touchmove', onTouchMove);
-      el.removeEventListener('touchend', onTouchEnd);
+    if (boundEl) {
+      boundEl.removeEventListener('touchstart', onTouchStart);
+      boundEl.removeEventListener('touchmove', onTouchMove);
+      boundEl.removeEventListener('touchend', onTouchEnd);
+      boundEl = null;
     }
     clearMotion();
   };

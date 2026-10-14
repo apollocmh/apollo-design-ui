@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 1 | `activeKey` + `onChange` → `v-model:activeKey`（同时发 `change`，C11） | INTENDED | —— |
 | 2 | `onTabClick` / `onEdit` / `onTabScroll` → **emits**（`tabClick` / `edit` / `tabScroll`） | INTENDED | ⚠️ **不要**同时声明成 props：`emit('tabClick')` 会去找 `props.onTabClick` ⇒ **回调触发两次**（本轮实测踩到） |
-| 3 | `renderTabBar` / `more.popupRender` / `tabBarExtraContent` → **scoped slot** | INTENDED | C8 |
+| 3 | `renderTabBar`（**已移除**）/ `more.popupRender` / `tabBarExtraContent` → **scoped slot** | INTENDED | C8；槽名统一 `#tabBar` / `#popupRender` / `#extra`（`#morePopup` 是过时写法） |
 | 4 | `children`（`Tabs.TabPane` 兼容写法）**不实现**，只发告警 | UPSTREAM | 上游 v6 已 deprecated |
 | 5 | `onPrevClick` / `onNextClick` **不实现**，只发 breaking 告警 | UPSTREAM | 上游已移除 |
 | 6 | 面板 id 前缀是 `apollo-tabs-N`（上游是 `rc-tabs-N`） | PLATFORM | 上游用模块级 `uuid`；本仓用 `prefixCls` 使前缀随库 |
@@ -86,7 +86,19 @@ tabs/
     补 `px`，`el.style.width = '33.45'` 是**非法值会被静默丢弃** —— 指示条会恒 0 宽。
     本轮**正是 L6 视觉（0.03% 像素差）**把它揪出来的；`pure.test.ts` 里已加哨兵断言。
 11. 🚨 **回调不能同时是 prop 与 emit**（否则触发两次）—— 见 §2 的第 2 条。
-12. `tabBarGutter` 的首项**不带**间距（`i === 0 ? styles.item : {...tabBarNodeStyle, ...}`）。
+12. `tabBarGutter` 的首项**不带**间距（`i === 0 ? styles.item : {...tabBarNodeStyle, ...}`)。
+13. 🚨 **渲染列表必须吃归一后的 items**（Issue #23.1）：`destroyInactiveTabPane → destroyOnHidden`
+    的映射只在 `mergedItems` 里做，`tabs` 直接用 `props.items` 会让**单项**卸载配置失效
+    （`TabPanelList` 的 `removeOnLeave = 组件级 ?? item 级`）。
+    ⚠️ `mergedItems` 要**先 `filterItems` 再归一** —— `items` 里可能有 `null`/字符串，
+    直接读 `item.destroyOnHidden` 会抛错（有 `filterItems` 的用例钉着）。
+14. 🚨 **根元素要合并 `mergedStyles.root`**（Issue #23.3）：语义样式槽合并出来却没落到根
+    ⇒ `styles.root` / ConfigProvider 的样式整条丢失。顺序：语义 root → 原生 `attrs.style`。
+15. 🚨 **`#popupRender` 是全链路统一名**（签名 `(menu, { restTabs, onClose })`，
+    与 `TabsSlots['popupRender']` 一致）：Tabs 的插槽 → `more.popupRender` → Dropdown 的
+    `#popupRender`；旧注释里的 `#morePopup` 已作废（Issue #23.2）。
+16. 🚨 **监听器解绑要用「绑定时的元素」**：`watch(target, …)` 回调里 `target.value` 已经是
+    新元素 ⇒ `detach` 读当前值会漏删旧元素的 listener（`use-touch-move`，Issue #23.5）。
 
 ## 6. 层与证据
 
