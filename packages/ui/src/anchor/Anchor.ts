@@ -555,7 +555,10 @@ export const Anchor = defineComponent({
         ? options.map(({ children: nestedItems, ...item }) =>
             h(
               AnchorLink,
-              { ...item, replace: props.replace, key: item.key },
+              // ⚠️ antd `Anchor.js:230` 逐字：`{ replace, ...item, key }` —— 父级
+              //    `replace` 在前 ⇒ **单项的显式值胜**；反过来写（原来的顺序）会让
+              //    父级的 `undefined`/`false` 顶掉 item 的 `true`（Issue #28.1）。
+              { replace: props.replace, ...item, key: item.key },
               {
                 // 上游：`anchorDirection === 'vertical' && createNestedLink(item.children)`
                 default:
@@ -567,11 +570,14 @@ export const Anchor = defineComponent({
           )
         : null;
 
-    const affixProps = isPlainObject(mergedAffix.value)
-      ? (mergedAffix.value as AnchorAffixConfig)
-      : undefined;
-
     return () => {
+      // ⚠️ antd 的 `affixProps` 在 **render 体里**求值（每次渲染重算）⇒ 调用方换
+      //    配置对象立刻生效。放在 setup 里是一次性快照，动态改 `offsetTop`/`target`
+      //    完全无效（Issue #28.2）。
+      const affixProps = isPlainObject(mergedAffix.value)
+        ? (mergedAffix.value as AnchorAffixConfig)
+        : undefined;
+
       const anchorContent = h(
         'div',
         mergeProps(

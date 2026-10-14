@@ -43,6 +43,19 @@
 
 ⚠️ 先例：`splitter/Splitter.ts`（同为 `.ts` 渲染函数组件）。
 
+## 3.5 Issue #28 的两条判据
+
+1. **`createNestedLink` 的 props 展开顺序必须是 `{ replace, ...item, key }`**（#28.1）：
+   antd `Anchor.js:230` 逐字如此 —— 父级 `replace` 在**前** ⇒ **单项显式值胜**。
+   写成 `{ ...item, replace: props.replace }` 会让父级的 `undefined`/`false`
+   顶掉 item 的 `replace: true` ⇒ 单项配置静默失效（走 `pushState` 而不是
+   `replaceState`）。嵌套子项走同一个函数 ⇒ 一并生效。
+2. **`affixProps` 必须在渲染体里求值**（#28.2）：antd 的 `const affixProps = …` 就在
+   render 体里（每次渲染重算）。移到 setup 里就成一次性快照 ⇒ 调用方动态改
+   `offsetBottom` / `prefixCls` 或 `true → object` 都不生效。
+   ⚠️ `AnchorAffixConfig = Omit<AffixProps,'offsetTop'|'target'>` —— 这两个键由
+   Anchor 自己控制（`offsetTop` prop + `getCurrentContainer`），配置对象里不存在。
+
 ## 4. Component Token 清单
 
 **2 个**（都是别名派生，落 `var(--apollo-*)`）：
