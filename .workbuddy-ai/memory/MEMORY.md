@@ -27,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#28 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#29 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -39,6 +39,8 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 🚨 **rc gDSFP 分支要逐条复刻**：Tree 勾选段第三分支「treeData 变化 ⇒ `parseCheckedKeys(props.checkedKeys) || prevState`」⇒ 受控与否**只决定 base，不影响是否重算**（#16.1）；这类派生态同步必须**静默不 emit**。
 - 🚨 **`${props.prefixCls}-x` 在 setup 期求值 = 切前缀后子树全过期** ⇒ 一律 computed（#15.3 修 transfer/Section；form 同族未修见 §1.5）。⚠️ `prefixCls` prop 是**完整前缀**（`'p1'` ⇒ `.p1-section`）。
 - 🚨 **antd 在 render 体里回填的（非 useMemo）本仓必须 getter/computed**
+- 🚨 **内置类名放进 `classNames.*` 时必须**合并**用户的 classNames（对象 + 函数形态都要处理）；
+  上游若用独立键（`rootClassName`）就不会覆盖 ⇒ 本仓换了通道就得自己补合并（avatar #29.1）。
 - 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**：anchor `{replace, ...item, key}` = **单项胜**（写反就
   被父级 undefined 顶掉，#28.1）。同理「上游 render 体里的常量」不能在 setup 算（anchor affixProps，#28.2）。：table `changeEventInfo.pagination`（#17.1）。
 - 🚨 **派生数据要确认真进了渲染链且真有人消费**：table `column`（引擎仍吃 `props.columns`，#17.2）、tabs
