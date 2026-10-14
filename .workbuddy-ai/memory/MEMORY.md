@@ -27,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -50,6 +50,11 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   会让离场后的 `afterOpenChange(false)` 拿不到触发器。
 - 🚨 **antd 多 child 结构要照抄**：dropdown-button = `[leftButton, <Dropdown>right</Dropdown>]`
   （#21.1）—— 同级多 VNode 塞进只收单 child 的 Trigger，split 语义就丢。
+- 🚨 **provide 的 context 里来自 props 的字段要写 getter**（menu #22.7）；rc 的
+  `activeRef` 是「每次 render 同步 activeKey」，本仓易写成 setup 对齐一次 ⇒ 焦点永不落（#22.2）。
+- 🚨 **键盘代码在 jsdom 只有 `keyCode`**（`which` 恒 0）⇒ 一律 `which || keyCode` 归一化（#22.2）。
+- ⚠️ rc 的 `getFocusNodeList(c, true)` = 负 tabindex **也要收**（roving -1）；rc 的可见性判据
+  （offsetParent/rect）在 jsdom 恒 false ⇒ 退化成 display/visibility。
 **渲染 / 事件**
 - 🚨 computed 调 `slots.default?.()` 不过「插槽有无」变化 ⇒ 无 slot 那次求值不 track ⇒ 之后 slot 从无到有但缓存干净 ⇒ 选项永远不出现（#14.3，引擎级，§1.4）。⇒ 薄壳传插槽的包装函数要显式读本组件 reactive 分类态。
 - 🚨 computed 里的 dev 告警随惰性求值不触发一起消失 ⇒ 放渲染期沿对比（#14）。
