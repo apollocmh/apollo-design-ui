@@ -30,11 +30,11 @@ import {
   defineComponent,
   getCurrentInstance,
   h,
-  onMounted,
   type PropType,
   ref,
   type VNodeChild,
   watch,
+  watchEffect,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { Button } from '../button';
@@ -276,8 +276,27 @@ export const QrCode = defineComponent({
         ctx.drawImage(image, cis.x + qr.value.margin, cis.y + qr.value.margin, cis.w, cis.h);
       }
     };
-    onMounted(drawCanvas);
-    watch([qr, imageLoaded], () => drawCanvas(), { flush: 'post' });
+    /**
+     * ⚠️ **逐字对拍上游**（Issue #37）：rc 的绘制挂在
+     *    `React.useEffect(() => { … }, )` —— **没有依赖数组** ⇒ **每次渲染后都重绘**。
+     *
+     * 本仓原来是 `watch([qr, imageLoaded], …)`：`qr` 只含「值 / 纠错级 / margin /
+     * size / icon」这些**几何输入**，而 `drawCanvas` 里读的 `props.bgColor` 与
+     * `color` 不在依赖里 ⇒ **只改颜色时画布保留旧像素**（SVG 分支却会跟着变）。
+     *
+     * 改用 `watchEffect(..., { flush: 'post' })`：自动追踪 `drawCanvas` 真正读到的
+     * 响应式值（`qr` / `props.size` / `props.bgColor` / `color` / `imageEl`），
+     * 同样在渲染后执行（= useEffect 的时机）。
+     * ⚠️ 必须显式读一次 `imageLoaded`：图片 `onLoad` 只把该标记置真，`imageEl`
+     *    的**引用不变**，不显式订阅就收不到「图载好了、该补画了」。
+     */
+    watchEffect(
+      () => {
+        void imageLoaded.value;
+        drawCanvas();
+      },
+      { flush: 'post' },
+    );
 
     // ======================== Ref ========================
     const rootRef = ref<HTMLDivElement | null>(null);

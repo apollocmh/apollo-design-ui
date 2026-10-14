@@ -41,6 +41,12 @@
 - **数值补 `px`**：React 会自动为数字内联样式补 `px`，Vue 不会 ⇒ 带值时一律过
   `px()`。根那里还要把 px 化后的值**再覆盖回**调用方 style —— 否则根 vnode 末尾
   展开的 `attrs.style` 会用裸数字把它顶掉，整个声明被 CSSOM 丢弃。
+- **canvas 重绘挂 `watchEffect(post)`**（Issue #37）：上游 rc 用的是
+  `React.useEffect(() => {...})` —— **无依赖数组 ⇒ 每次渲染后都重绘**。
+  ⚠️ 别改写成显式依赖数组（`watch([qr, imageLoaded], …)` 会漏掉 `bgColor` / `color` /
+  `size` ⇒ 只改颜色时画布保留旧像素，而 SVG 分支会跟着变 ⇒ 两侧不一致）。
+  ⚠️ `imageLoaded` 必须**显式读一次**：图片 `onLoad` 只置真该标记，`imageEl` 的
+  **引用不变** ⇒ 不显式订阅就收不到「图载好了、该补画了」。
 
 ## 4. Component Token（1 个）
 
