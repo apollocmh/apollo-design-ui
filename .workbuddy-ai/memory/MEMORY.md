@@ -27,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#26 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#27 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -56,6 +56,12 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 🚨 **静态 CSS 提取自 antd SSR 产物 ⇒ 按本仓真实 DOM 校对选择器**（antd `-inner` vs rc 系 `-container`，#25.2）。
 - 🚨 **薄壳→底层要隔离上层专属 ConfigProvider 配置**：antd `data-popover-inject` ⇒ Vue 用 provide/inject
   标记；公共 getPopupContainer/direction 不动（#24.4）。
+- 🚨 **「受控 hook 的 onChange + 业务 handler」各调一次 = 双调**（tooltip #24.1 / popconfirm #26.1 /
+  float-button #27.1 三连）⇒ 回调只留一个出口。🚨 **根 VNode 末尾 `...attrs` 会顶掉内部 class 与
+  `on*`** ⇒ 一律 `mergeProps(内部, attrs)`（#27.3）。
+- 🚨 **document/window 监听用 `watch(条件,(ok,_o,onCleanup)=>…,{immediate:true})`**（#27.2）；
+  hook 配置收 `MaybeRefOrGetter` 时 watch 依赖要写**求值后**的结果（#27.4）。
+- ⚠️ **`ReturnType<typeof ref<T>>` = `Ref<T | undefined>`** ⇒ 返回值直接声明 `Ref<T>`。
 - ⚠️ 键码在 jsdom 只有 `keyCode`（`which` 恒 0）；rc `getFocusNodeList(c,true)` 收负 tabindex；
   rc 可见性判据（offsetParent/rect）在 jsdom 恒 false ⇒ 退化 display/visibility。
 **渲染 / 事件**
