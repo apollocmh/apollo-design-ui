@@ -81,6 +81,11 @@ foundation **13/13**；组件 **72/72 completed**。
 - **组件 expose 用 getter**：`defineExpose({ get nativeElement() {…} })` —— 暴露对象被 `proxyRefs` 包一层，字面量会在 setup 期定格成 `null`。
 - ⚠️ **`w.emitted('x')` 对「薄壳不声明 `defineEmits`」的组件无效**（time-picker / auto-complete）—— 靠 attrs 转发 `onXxx`，测试要 spy 那个 handler。
 - ⚠️ **VTU `setValue()` 对文本输入会同时派发 `input` 与 `change`** ⇒ 计数用例只能调一次 `setValue`（再手动 `trigger('change')` 会数出 2）。
+- 🚨 **末尾 `...restAttrs` 会覆盖内部同名事件键**（对象展开后者胜）：cascader 把 BaseSelect 的 `onSearch`/`onOpenChange` 顶掉（内部 `setSearchValue`/`setOpen` 不再跑）；switch 的 `onKeydown` 被内部覆盖（模板 `@keydown` 一次都不调）。⇒ **内部持有的事件键必须先从 `restAttrs` 摘掉**；用户回调通常已在内部处理器里被调（内部先跑、再通知用户）。
+- 🚨 **prop 默认值写成字面量会堵死 ConfigProvider 回退**：`direction: { default: 'ltr' }` ⇒ `props.direction ?? ctx ?? 'ltr'` 永远短路在第一支，全局 RTL 不可能生效。收敛成 `default: undefined` + `mergedDirection`。同类：`componentSize` 要经 `useSize((ctx) => props.size ?? compactSize ?? ctx)`、`getPopupContainer` 要 `?? config.getPopupContainer`。
+- 🚨 **上游 `useXxx(...)`（React 每次渲染重算）在 Vue 侧必须包 `computed`**，否则动态改配置静默无效（cascader `useSearchConfig` #12.3）。同族：`normalizeSearchConfig` / `fillFieldNames` 这类「归一」函数。
+- 🚨 **别信注释、要跑代码**：switch 的 `interface.ts` 注释写着 D21 的正确形态而代码写 `String`；radio README 的 D44「form 未落地」早已过期（form 在 #8 落地）⇒ 引用任何「已知缺口 / PLATFORM 判据」前先确认它是否仍成立。
+- ⚠️ **空态占位项也算 `menu-item`** ⇒ 断言「搜索结果变空」不能写 `length === 0`（换成不匹配 filter 后是 1 条 disabled 的 `Not Found`）。
 - ⚠️ `autoFocus` 必须自己 `focus()`：原生 `autofocus` 只在 HTML 解析期生效，Vue 是创建后才设属性 ⇒ 浏览器与 jsdom 都不聚焦；**禁用态不聚焦**（判据与 Rate / action-button 一致）。
 
 ### 测试探针
