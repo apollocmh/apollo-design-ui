@@ -17,7 +17,7 @@ subtitle: Tooltip
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | title | 提示内容（`0` 合法） | `VNodeChild \| (() => VNodeChild)` | — |
-| overlay | 旧版内容通道（与 `title` 同物） | 同上 | — |
+| — | ~~`overlay`~~ **已移除**（C8-R2）：富内容走 `#title` 插槽 | — | — |
 | open / defaultOpen | 受控开合（`v-model:open` 等价）/ 非受控初值 | `boolean` | `false` |
 | onOpenChange | 开合回调（与 `update:open` 同时发出） | `(open: boolean) => void` | — |
 | afterOpenChange | 动画结束回调 | `(open: boolean) => void` | — |

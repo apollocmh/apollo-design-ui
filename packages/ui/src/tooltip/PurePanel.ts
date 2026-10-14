@@ -62,7 +62,14 @@ const PurePanel = defineComponent({
           ...stripClassStyle(attrs),
         },
         [
-          h('div', { class: `${prefixCls}-arrow` }),
+          // ⚠️ 与 Tooltip 同判：语义 arrow 的 class/style 要落到箭头（Issue #24.6）
+          h('div', {
+            class: clsx(`${prefixCls}-arrow`, mergedClassNames.value.arrow),
+            style: {
+              ...(colorInfo.arrowStyle as StyleLike),
+              ...(mergedStyles.value.arrow ?? {}),
+            },
+          }),
           h(
             'div',
             {

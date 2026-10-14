@@ -57,5 +57,5 @@ subtitle: 文字提示
 - **trigger 基建**：`_internal/trigger.ts` 组装 overlay + position + portal +
   motion（见 [`docs/analysis/tooltip.md`](../../../../docs/analysis/tooltip.md) §8）。
 - **C8-R2**：`overlay` 与 render-fn `title` 已删除 —— 内容走 `#title` 插槽（slot 优先）。
-- **noTitle 抑制**：`title` 与 `overlay` 均未传（`title=0` 除外）⇒ 强制关闭且不发回调。
+- **noTitle 抑制**：`#title` 与 `title` 均为空（`title=0` 除外）⇒ 强制关闭且不发回调。
 - **差异**：D77–D82（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。

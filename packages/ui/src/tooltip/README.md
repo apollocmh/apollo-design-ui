@@ -37,6 +37,34 @@ Trigger 内补齐）、挂载 `portal.Portal`、动画 `motion.CSSMotion`。
 实例归一 / Text vnode 包装 / 动作类型收窄 / keyframes 静态化 / harness 等待）。
 L6 视觉 9 张（3 variant × 3 viewport）**全部 0.000% exact**。
 
+## 3.5 Issue #24 的六条判据
+
+1. **开合回调只有一个出口**（#24.1）：`setOpen` → `useControlledValue.onChange`
+   已经发过 `onOpenChange` + `update:open`，`onInternalOpenChange` 里**不能再调一次**
+   （否则一次 mouseenter 通知两次）。noTitle 的「不回调」由 onChange 里的早退保证。
+2. **未显式传 `id` 的实例必须用 `useId()`**（#24.2，rc-tooltip `Tooltip.js:36`）：
+   固定字符串 `apollo-tooltip` 会让同页多实例共用同一个 id。⚠️ `useId()` 的序号挂在
+   `instance.ids`（父级继承）上 ⇒ 同一 app 内唯一，**跨 app 仍可能撞**（多应用页面
+   需要自己传 `id`）；显式 `id` 始终优先。
+3. **默认插槽要吃全部节点**（#24.3）：`children[0]` 会静默丢掉其余兄弟。单「真实元素」
+   直接用，其余（多节点 / Fragment / Text / Comment）整体包一层 `span`。
+4. **触发元素的 props 要「替换」而不是「合并」**（#24.7）：Vue 的 `cloneVNode` 走
+   `mergeProps` ⇒ `class` 被拼两遍（实测 `u-a u-on u-a u-on`）。用 `cloneWithProps`
+   （先 `cloneVNode` 保住 dirs/transition/ref，再整体替换 props）复刻 React
+   `cloneElement` 的替换语义；class 合并一律 `normalizeClass([...])`（任意形态都对，
+   且 `vnode.props.class` 其实已被 Vue 归一成字符串 ⇒ 「数组 class 不加 -open」的分支
+   实际不可达）。
+5. **Popover/Popconfirm 注入要隔离 tooltip 专属配置**（#24.4，antd
+   `tooltip/index.js:63-73` 的 `data-popover-inject`）：用 `provideTooltipInjection()`
+   + `inject(tooltipInjectKey)` 传标记 ⇒ 跳过 `className/style/classNames/styles/arrow/
+   trigger/延迟`；公共 `getPopupContainer` / `direction` / `getPrefixCls` 不受影响。
+6. **语义 arrow 要并进 arrow 配置**（#24.6，rc-tooltip `Tooltip.js:51-63`）：
+   `classNames.arrow` → `arrow.className`、`styles.arrow` → `arrow.style`（颜色内联变量
+   在先、用户样式在后）；`PurePanel` 的箭头同样要吃这两个槽。
+
+另外 `TooltipProps.overlay` 已**移除**（#24.5）：C8-R2 裁决后运行时不消费，留着类型
+只会「类型通过但无法工作」；富内容走 `#title` 插槽。
+
 ## 4. 已知缺口
 
 | # | 缺口 | 说明 |

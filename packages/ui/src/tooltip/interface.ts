@@ -76,8 +76,9 @@ export interface TooltipProps {
   afterOpenChange?: (open: boolean) => void;
   /** 提示内容（`title === 0` 合法）。 */
   title?: TooltipContent;
-  /** 旧版内容通道（与 `title` 同物，antd 未废弃）。 */
-  overlay?: TooltipContent;
+  /** ⚠️ 旧版内容通道 `overlay` 已**移除**（C8-R2 裁决）：运行时不消费，保留类型
+   *  只会让「类型通过但无法工作」。富内容走 `#title` 插槽（Issue #24.5）。
+   */
   /** 触发动作（`hover` / `click` / `focus` / `contextMenu` 或数组）。 */
   trigger?: string | string[];
   /** 浮层对齐位置。 */

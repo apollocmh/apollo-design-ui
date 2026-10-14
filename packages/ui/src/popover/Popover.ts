@@ -25,7 +25,7 @@ import {
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { TooltipPlacement, TooltipRef } from '../tooltip/interface';
-import Tooltip from '../tooltip/Tooltip';
+import Tooltip, { provideTooltipInjection } from '../tooltip/Tooltip';
 import { useMergedArrow } from '../tooltip/use-merged-arrow';
 import type {
   PopoverClassNames,
@@ -99,6 +99,9 @@ const Popover = defineComponent({
     'update:open': (_open: boolean) => true,
   },
   setup(props, { slots, attrs, expose, emit }) {
+    // ⚠️ antd 的 `data-popover-inject`：告诉下层 Tooltip「我是注入方」⇒ 跳过
+    //    ConfigProvider `components.tooltip` 的专属配置（Issue #24.4）。
+    provideTooltipInjection();
     const context = useComponentConfig('popover');
     const contextSemantic = context as {
       classNames?: PopoverSemanticType['classNames'];

@@ -79,7 +79,9 @@ describe('Popover · L1 开合与内容', () => {
     await nextTick();
     expect(container()).not.toBeNull();
     expect(triggerEl()?.className).toContain('apollo-popover-open');
-    expect(triggerEl()?.getAttribute('aria-describedby')).toBe('apollo-tooltip');
+    // ⚠️ Issue #24.2 后 popup id 不再固定为 `apollo-tooltip`（同页多实例会重复）
+    //    ⇒ 断言「aria-describedby 指向浮层容器 id」而不是字面量。
+    expect(triggerEl()?.getAttribute('aria-describedby')).toBe(container()?.getAttribute('id'));
   });
 
   it('title=0 合法（isRenderable 对 0 为真）', async () => {

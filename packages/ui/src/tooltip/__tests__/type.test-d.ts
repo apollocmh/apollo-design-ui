@@ -44,8 +44,14 @@ describe('Tooltip · 类型', () => {
         // @ts-expect-error zIndex 不接受字符串
         zIndex: '100',
       };
+      // @ts-expect-error C8-R2 已移除 overlay（运行时不消费，内容走 `#title` 插槽）
+      void props.overlay;
       return props;
     };
     void negative;
+  });
+
+  it('#24.5 `overlay` 不在公开类型里（C8-R2 裁决：类型与运行时一致）', () => {
+    expectTypeOf<TooltipProps>().not.toHaveProperty('overlay');
   });
 });

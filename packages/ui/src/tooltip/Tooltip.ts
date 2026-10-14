@@ -29,10 +29,15 @@ import {
   computed,
   defineComponent,
   h,
+  type InjectionKey,
+  inject,
   isVNode,
+  normalizeClass,
   type PropType,
+  provide,
   shallowRef,
   Text,
+  useId,
   type VNode,
   type VNodeChild,
 } from 'vue';
@@ -56,6 +61,37 @@ type StyleLike = Record<string, string | number>;
 
 function isFragmentNode(node: VNode | null | undefined): boolean {
   return node !== null && node !== undefined && node.type === Symbol.for('v-fgt');
+}
+
+/**
+ * Popover / Popconfirm 注入标记 —— antd 的 `data-popover-inject` prop 在 Vue 侧的
+ * 等价物（Issue #24.4）。上游据此跳过 ConfigProvider `components.tooltip` 的**专属**
+ * 语义配置（className/style/classNames/styles/arrow/trigger/延迟），防止它们泄漏进
+ * Popover/Popconfirm；公共通道（`getPopupContainer` / `direction` / `getPrefixCls`）
+ * 不受影响。用 provide/inject 而不是 prop ⇒ 不污染公开 props 面。
+ */
+export const tooltipInjectKey: InjectionKey<boolean> = Symbol('apollo-tooltip-inject');
+
+/** 供 Popover / Popconfirm 声明「我是注入方」。 */
+export function provideTooltipInjection(): void {
+  provide(tooltipInjectKey, true);
+}
+
+/**
+ * 复刻 React `cloneElement` 的**替换**语义。
+ *
+ * ⚠️ Vue 的 `cloneVNode` 走 `mergeProps`：同类键是**合并** —— `class` 会被拼两遍
+ *    （实测 `u-a u-on u-a u-on`）、`on*` 会被拼成数组（双调）。antd 的
+ *    `cloneElement(child, { className: clsx(...) })` 是替换（#24.7；仓库既有判据：
+ *    transfer #15.1 / FormItem #8.3）。
+ *
+ * 先 `cloneVNode`（保留 dirs / transition / ref / key / el），再整体替换 `props`
+ * —— 比 `createVNode` 重建安全（后者会丢 `dirs`，破坏子元素上的 `v-model`）。
+ */
+function cloneWithProps(child: VNode, extra: Record<string, unknown>): VNode {
+  const cloned = cloneVNode(child);
+  cloned.props = { ...((child.props as Record<string, unknown> | null) ?? {}), ...extra };
+  return cloned;
 }
 
 const Tooltip = defineComponent({
@@ -142,8 +178,6 @@ const Tooltip = defineComponent({
     const direction = useDirection();
     const { getPrefixCls } = context;
 
-    // rc：injectFromPopover 时跳过 tooltip 专属语义（Popover 注入场景）—— v1 无
-    // Popover，context 全量生效。
     const contextSemantic = context as {
       classNames?: TooltipSemanticType['classNames'];
       styles?: TooltipSemanticType['styles'];
@@ -156,21 +190,28 @@ const Tooltip = defineComponent({
       style?: StyleLike;
     };
 
+    // ⚠️ antd（`tooltip/index.js:63-73`）：从 Popover/Popconfirm 注入时
+    //    `injectFromPopover` ⇒ 专属语义配置整组置空（className / style /
+    //    classNames / styles / arrow / trigger / 两个延迟），只留公共通道
+    //    `getPopupContainer` / `getPrefixCls` / `direction`（Issue #24.4）。
+    const injectFromPopover = inject(tooltipInjectKey, false);
+    const semanticConfig: typeof contextSemantic = injectFromPopover ? {} : contextSemantic;
+
     const prefixCls = props.prefixCls ?? getPrefixCls('tooltip');
 
     // ============================ Merge ==============================
     const mergedMouseEnterDelay = computed(
-      () => props.mouseEnterDelay ?? contextSemantic.mouseEnterDelay ?? 0.1,
+      () => props.mouseEnterDelay ?? semanticConfig.mouseEnterDelay ?? 0.1,
     );
     const mergedMouseLeaveDelay = computed(
-      () => props.mouseLeaveDelay ?? contextSemantic.mouseLeaveDelay ?? 0.1,
+      () => props.mouseLeaveDelay ?? semanticConfig.mouseLeaveDelay ?? 0.1,
     );
     const mergedArrow = useMergedArrow(
       () => props.arrow,
-      () => contextSemantic.arrow,
+      () => semanticConfig.arrow,
     );
     const mergedShowArrow = computed(() => mergedArrow.value.show);
-    const mergedTrigger = computed(() => props.trigger || contextSemantic.trigger || 'hover');
+    const mergedTrigger = computed(() => props.trigger || semanticConfig.trigger || 'hover');
     const mergedGetPopupContainer = computed(
       () =>
         props.getPopupContainer ?? props.getTooltipContainer ?? contextSemantic.getPopupContainer,
@@ -215,12 +256,19 @@ const Tooltip = defineComponent({
         emit('update:open', next);
       },
     });
+    // ⚠️ 单一回调出口：`setOpen` → `useControlledValue.onChange` 已发过
+    //    `onOpenChange` + `update:open`；这里再调一次就会**双通知**（Issue #24.1）。
+    //    noTitle 的「不回调」语义由 onChange 里的早退保证。
     const onInternalOpenChange = (nextOpen: boolean): void => {
       setOpen(noTitle.value ? false : nextOpen);
-      if (!noTitle.value && props.onOpenChange) {
-        props.onOpenChange(nextOpen);
-      }
     };
+
+    // ============================ Id =================================
+    // ⚠️ rc-tooltip 1.5.2 `Tooltip.js:36`：`const mergedId = useId(id)` —— 未显式
+    //    传 id 的实例必须有**唯一** id，否则同页多实例共用 `apollo-tooltip`，
+    //    产生重复 ID 与歧义的 `aria-describedby`（Issue #24.2）。显式 id 始终优先。
+    const innerId = useId();
+    const mergedId = computed(() => props.id ?? `${prefixCls}-${innerId}`);
 
     // ========================= Placements ============================
     const seed = getDesignToken() as unknown as {
@@ -253,7 +301,7 @@ const Tooltip = defineComponent({
 
     // ======================== Merged Semantic ========================
     const colorInfo = computed(() => parseTooltipColor(prefixCls, props.color));
-    const contextStyleRoot = contextSemantic.style;
+    const contextStyleRoot = semanticConfig.style;
     const overlayStyleRoot = props.overlayStyle;
 
     const mergedProps = computed<TooltipProps>(() => ({
@@ -271,12 +319,12 @@ const Tooltip = defineComponent({
       NonNullable<TooltipSemanticType['styles']>
     >(
       [
-        () => contextSemantic.classNames,
+        () => semanticConfig.classNames,
         () => props.classNames as TooltipSemanticType['classNames'] | undefined,
         () => (props.overlayClassName ? { root: props.overlayClassName } : undefined),
       ],
       [
-        () => contextSemantic.styles,
+        () => semanticConfig.styles,
         () => (contextStyleRoot ? { root: contextStyleRoot } : undefined),
         () => props.styles as TooltipSemanticType['styles'] | undefined,
         () => (overlayStyleRoot ? { root: overlayStyleRoot } : undefined),
@@ -289,7 +337,7 @@ const Tooltip = defineComponent({
         props.overlayClassName,
         direction.value === 'rtl' && `${prefixCls}-rtl`,
         colorInfo.value.className,
-        contextSemantic.className,
+        semanticConfig.className,
         mergedClassNames.value.root,
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
         typeof attrs.class === 'string' ? attrs.class : undefined,
@@ -324,56 +372,71 @@ const Tooltip = defineComponent({
     });
 
     return () => {
-      // 触发元素：default slot 首个 vnode；非元素 / fragment 包一层 span（rc 同款）。
-      const children = slots.default?.();
-      const first = Array.isArray(children) ? children[0] : children;
+      // 触发元素：default slot 的**全部**节点。
+      // ⚠️ 原来写 `children[0]` ⇒ 多节点默认插槽会静默丢掉其余兄弟（Issue #24.3）。
+      //    rc 的 `Children.only` 语义在 Vue 侧的等价处理：单「真实元素」直接用，
+      //    其余（多节点 / Fragment / Text / Comment）整体包一层 span。
       // ⚠️ 字符串插槽经 Vue 编译是 **Text vnode**（type = Symbol(v-txt)）——
-      // 必须与 fragment 一样包一层 span（rc 的 isValidElement 判据在 Vue 里是
-      // 「真实元素 vnode」：排除 Text / Comment / Fragment）。
-      const firstType = isVNode(first) ? (first as VNode).type : null;
+      //    必须与 fragment 一样包一层 span（rc 的 isValidElement 判据在 Vue 里是
+      //    「真实元素 vnode」：排除 Text / Comment / Fragment）。
+      const children = slots.default?.() as unknown[] | undefined;
+      const childList = (
+        Array.isArray(children)
+          ? children
+          : children === null || children === undefined
+            ? []
+            : [children]
+      ).filter((c): c is VNodeChild => c !== null && c !== undefined && c !== false && c !== true);
+      const single = childList.length === 1 ? childList[0] : null;
+      const singleType = isVNode(single) ? (single as VNode).type : null;
       const isRealElement =
-        isVNode(first) && !isFragmentNode(first) && firstType !== Text && firstType !== Comment;
-      const child = isRealElement
-        ? (first as VNode)
-        : h(
-            'span',
-            [first as VNodeChild].filter((c) => c !== null && c !== undefined),
-          );
+        isVNode(single) &&
+        !isFragmentNode(single as VNode) &&
+        singleType !== Text &&
+        singleType !== Comment;
+      const child: VNode = isRealElement ? (single as VNode) : h('span', childList);
 
       // -open 类：开（或受控开）时追加（antd 判 `'open' in props` 的口径 ——
       // 受控与否都加，区别只在 noTitle 抑制后的 tempOpen）。
+      // ⚠️ `normalizeClass` 而不是「字符串才 clsx」的分支：任意形态（数组 / 对象 /
+      //    嵌套）都正确合并，且**不覆写**用户 class（Issue #24.7）。
       const childProps = (child.props ?? {}) as { class?: unknown; 'aria-describedby'?: string };
       const openCls =
         tempOpen.value || (props.openClassName !== undefined && mergedOpen.value)
           ? (props.openClassName ?? `${prefixCls}-open`)
           : '';
-      const childClass =
-        typeof childProps.class === 'string' || childProps.class === undefined
-          ? clsx(childProps.class, openCls)
-          : childProps.class;
+      const childClass = normalizeClass([childProps.class, openCls]);
       const describedBy = [
         childProps['aria-describedby'],
-        tempOpen.value ? (props.id ?? 'apollo-tooltip') : undefined,
+        tempOpen.value ? mergedId.value : undefined,
       ]
         .filter(Boolean)
         .join(' ');
 
-      const triggerNode = cloneVNode(child, {
-        class: childClass,
+      const triggerNode = cloneWithProps(child, {
+        class: childClass || undefined,
         'aria-describedby': describedBy || undefined,
       });
 
+      // ⚠️ rc-tooltip 1.5.2 `Tooltip.js:51-63`：语义 arrow 的 class/style 要并进
+      //    arrow 配置（`clsx(arrowConfig.className, classNames?.arrow)` /
+      //    `{...arrowConfig.style, ...styles?.arrow}`）—— 原来只传颜色样式，
+      //    `classNames.arrow` / `styles.arrow` 全丢（Issue #24.6）。
       const arrowProp = mergedShowArrow.value
         ? {
             content: h('span', { class: `${prefixCls}-arrow-content` }),
-            style: colorInfo.value.arrowStyle as StyleLike,
+            className: mergedClassNames.value.arrow,
+            style: {
+              ...(colorInfo.value.arrowStyle as StyleLike),
+              ...(mergedStyles.value.arrow ?? {}),
+            },
           }
         : undefined;
 
       const popup = h(
         'div',
         {
-          id: props.id ?? 'apollo-tooltip',
+          id: mergedId.value,
           class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
           style: containerStyle.value as CSSProperties,
           role: 'tooltip',
