@@ -15,7 +15,7 @@
  *   4. `getContainer` **每次渲染都重新求值**（rc 的 effect 无依赖数组）——
  *      容器可能在运行期被换掉（`config.test` 有对应用例）。
  */
-import { h, nextTick, onMounted, ref, type VNode, watch } from 'vue';
+import { h, nextTick, onMounted, ref, toValue, type VNode, watch } from 'vue';
 
 import type {
   NoticeListConfig,
@@ -80,7 +80,14 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
     renderNotifications,
   } = rootConfig;
 
-  const shareConfig = { placement, closable, duration, showProgress };
+  // ⚠️ `duration` 可能是 getter（Issue #45）⇒ 每次 `open` 都重新求值，
+  //    否则「holder 建好之后再改 duration」传不进内核
+  const shareConfig = () => ({
+    placement,
+    closable,
+    duration: toValue(duration) as number | false | null | undefined,
+    showProgress,
+  });
 
   const container = ref<HTMLElement | ShadowRoot | null>(null);
   const notificationsRef = ref<{
@@ -110,7 +117,7 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
 
   const open = (config: Partial<NoticeListConfig>): void => {
     const mergedConfig = mergeConfig(
-      shareConfig,
+      shareConfig(),
       config as Record<string, unknown>,
     ) as Partial<NoticeListConfig>;
     if (mergedConfig.key === null || mergedConfig.key === undefined) {

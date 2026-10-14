@@ -26,6 +26,12 @@ message/
 └── style/{token.ts,index.ts}
 ```
 
+- **Holder → 内核的配置必须传 getter**（Issue #45）：`useNotification()` 在 setup 期
+  把根配置**解构成常量** ⇒ `duration` / `maxCount` / `pauseOnHover` / `stack`
+  传裸值会被钉死，holder 建好之后再 `message.config({ maxCount })` 就传不进内核。
+  现在这四个（连同本来就走 getter 的 `style` / `className` / `motion` / `getContainer`）
+  统一传 getter，内核侧 `toValue` 求值（类型 `ConfigValue<T>` 见
+  `notification/engine/interface.ts`）。
 - **内核复用**：命令式 API 与浮层结构来自 `notification/engine/`（rc-notification 的
   Vue 自建，见 `notification/README.md`）；message 只做配置翻译 + 图标/语义槽 + 入口。
   antd 也是这样分层的（message 完全建立在 rc-notification 上）。

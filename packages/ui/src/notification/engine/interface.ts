@@ -134,20 +134,29 @@ export interface NoticeListProps {
   onAllRemoved?: (placement: Placement) => void;
 }
 
+/**
+ * 既可给**裸值**、也可给 **getter** 的配置键（Issue #45）。
+ *
+ * ⚠️ `useNotification()` 在 setup 期把根配置**解构**成常量，裸值会被钉死 ⇒
+ *    「holder 建好之后再改配置」（`message.config({ maxCount })` 等）传不进内核。
+ *    getter 形态会在每次渲染 / 每次 `open` 时求值 ⇒ 能读到最新的 props。
+ */
+export type ConfigValue<T> = T | (() => T | undefined) | undefined;
+
 /** rc `NotificationsProps`（容器层）。 */
 export interface NotificationsProps {
   prefixCls?: string;
   container?: HTMLElement | ShadowRoot | null;
   motion?: NoticeListProps['motion'];
-  maxCount?: number;
-  pauseOnHover?: boolean;
+  maxCount?: ConfigValue<number>;
+  pauseOnHover?: ConfigValue<boolean>;
   classNames?: NotificationClassNames;
   styles?: NotificationStyles;
   components?: ComponentsType;
   className?: (placement: Placement) => string | undefined;
   style?: (placement: Placement) => CSSProperties | undefined;
   onAllRemoved?: () => void;
-  stack?: boolean | StackConfig;
+  stack?: ConfigValue<boolean | StackConfig>;
   renderNotifications?: (
     node: NoticeNode,
     info: { prefixCls: string; key: Placement },
@@ -159,7 +168,7 @@ export interface NotificationConfig extends Omit<NotificationsProps, 'container'
   placement?: Placement;
   getContainer?: () => HTMLElement | ShadowRoot;
   closable?: NoticeProps['closable'];
-  duration?: number | false | null;
+  duration?: ConfigValue<number | false | null>;
   showProgress?: boolean;
 }
 

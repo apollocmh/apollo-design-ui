@@ -22,6 +22,7 @@ import {
   type PropType,
   ref,
   shallowRef,
+  toValue,
   type VNodeChild,
   watch,
   watchEffect,
@@ -33,6 +34,7 @@ import type {
   NotificationStyles,
   NotificationsProps,
   Placement,
+  StackConfig,
 } from './interface';
 import NoticeList from './NoticeList';
 
@@ -48,15 +50,25 @@ export default defineComponent({
       type: [Object, Function] as PropType<NotificationsProps['motion']>,
       default: undefined,
     },
-    maxCount: { type: Number, default: undefined },
-    pauseOnHover: { type: Boolean, default: undefined },
+    // ⚠️ 允许 Function（getter）：见 `interface.ts` 的 `ConfigValue`（Issue #45）
+    maxCount: {
+      type: [Number, Function] as PropType<number | (() => number | undefined)>,
+      default: undefined,
+    },
+    pauseOnHover: {
+      type: [Boolean, Function] as PropType<boolean | (() => boolean | undefined)>,
+      default: undefined,
+    },
     classNames: { type: Object as PropType<NotificationClassNames>, default: undefined },
     styles: { type: Object as PropType<NotificationStyles>, default: undefined },
     components: { type: Object as PropType<NotificationsProps['components']>, default: undefined },
     className: { type: Function as PropType<NotificationsProps['className']>, default: undefined },
     style: { type: Function as PropType<NotificationsProps['style']>, default: undefined },
     onAllRemoved: { type: Function as PropType<() => void>, default: undefined },
-    stack: { type: [Boolean, Object] as PropType<NotificationsProps['stack']>, default: undefined },
+    stack: {
+      type: [Boolean, Object, Function] as PropType<NotificationsProps['stack']>,
+      default: undefined,
+    },
     renderNotifications: {
       type: Function as PropType<NotificationsProps['renderNotifications']>,
       default: undefined,
@@ -93,7 +105,7 @@ export default defineComponent({
         innerConfig.times = 0;
         list.push(innerConfig);
       }
-      const maxCount = props.maxCount;
+      const maxCount = toValue(props.maxCount) as number | undefined;
       configList.value =
         maxCount && maxCount > 0 && list.length > maxCount ? list.slice(-maxCount) : list;
     };
@@ -142,14 +154,14 @@ export default defineComponent({
           configList: placements.value[key],
           placement: key,
           prefixCls: props.prefixCls,
-          pauseOnHover: props.pauseOnHover,
+          pauseOnHover: toValue(props.pauseOnHover) as boolean | undefined,
           classNames: props.classNames,
           styles: props.styles,
           components: props.components,
           className: props.className?.(key),
           style: props.style?.(key),
           motion: props.motion,
-          stack: props.stack,
+          stack: toValue(props.stack) as boolean | StackConfig | undefined,
           onNoticeClose: (closeKey: string | number) => {
             configList.value = configList.value.filter((item) => item.key !== closeKey);
           },

@@ -32,6 +32,9 @@ notification/
   ⇒ `getCloseIconWithLabel`（等价于 antd 的 `cloneElement(icon, { 'aria-label': closeLabel })`）。
 - **`closable: false` 与 `closeIcon: null` 都移除整个按钮**（上游 `computeClosable` 的第一条分支）。
 - 复用了 Tag 那轮建的 `_internal/use-closable.ts`
+- **engine 的配置键支持 getter**（Issue #45）：`useNotification()` 在 setup 期解构根配置
+  ⇒ `duration` / `maxCount` / `pauseOnHover` / `stack` 传裸值会被钉死；类型放宽为
+  `ConfigValue<T>`（`T | (() => T | undefined)`），容器内部 `toValue` 求值。裸值仍完全兼容。
 - **模块级单例的销毁要先 `unmount()`**（Issue #44，与 message 的 Issue #43 同判）：
   命令式入口用 `createApp(GlobalHolder).mount(游离容器)` 建的是**真的 Vue 根应用**，
   `actDestroy()` 必须在复位模块变量之前 `notification?.app?.unmount()` —— 否则上一个
