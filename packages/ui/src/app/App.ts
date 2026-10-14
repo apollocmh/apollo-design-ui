@@ -2,9 +2,11 @@
  * App —— antd `components/app/App.tsx`（122 行）的 Vue 版。
  *
  * 职责：包裹应用根，向子树提供 message/notification/modal 的 HookAPI
- * （useApp()）并沿树合并 AppConfig。message/notification/modal 未落地
- * （v1）：API 为 stub（调用即 dev 警告 + no-op），contextHolder 渲染 null；
- * 三者落地后回填（PENDING-2，registry notes）。
+ * （useApp()）并沿树合并 AppConfig。
+ *
+ * 接线（Issue #40）：三个 HookAPI 由各自的 `useMessage` / `useNotification` /
+ * `Modal.useModal()` 提供，holder 与 `<Component>` 同级渲染 ⇒ 每个 App 实例
+ * 自带一套通知容器（嵌套 App 互相隔离、随 App 卸载而销毁）。
  */
 import {
   computed,
@@ -22,39 +24,10 @@ import {
   type UseAppProps,
 } from '../_internal/app-context';
 import { useComponentConfig } from '../config-provider/context';
+import useMessage from '../message/useMessage';
+import useModal from '../modal/useModal';
+import useNotification from '../notification/useNotification';
 import type { AppComponentType, AppProps } from './interface';
-
-/** v1 stub API：方法调用即 dev 警告（message/modal/notification 落地后回填）。 */
-function createStubApi(name: string, methods: string[]): UseAppProps['message'] {
-  const api: Record<string, unknown> = {};
-  for (const method of methods) {
-    api[method] = (..._args: never[]) => {
-      console.error(
-        `[Warning] [antd: App] \`${method}\` is not available yet: the \`${name}\` component is not implemented in this build. It will be wired once \`${name}\` lands.`,
-      );
-    };
-  }
-  return api as UseAppProps['message'];
-}
-
-const stubMessage = createStubApi('message', [
-  'success',
-  'error',
-  'info',
-  'warning',
-  'loading',
-  'open',
-  'destroy',
-]);
-const stubNotification = createStubApi('notification', [
-  'success',
-  'error',
-  'info',
-  'warning',
-  'open',
-  'destroy',
-]);
-const stubModal = createStubApi('modal', ['info', 'success', 'error', 'warning', 'confirm']);
 
 const App = defineComponent({
   name: 'AApp',
@@ -79,12 +52,26 @@ const App = defineComponent({
       notification: { ...parentConfig.notification, ...props.notification },
     }));
 
-    // v1 stub API（message/modal/notification 落地后由各自 useXxx 提供）
+    // ======================== HookAPI（Issue #40）========================
+    //
+    // 上游 antd `App.tsx` 就是「三个 useXxx + 三个 contextHolder」：
+    //   `useMessage(mergeConfig)` / `useNotification(mergeConfig)` / `Modal.useModal()`
+    // 三者的 holder 与 `<Component>` **同级**（都在 App 的 Fragment 里），
+    // 于是隔离到本 App 实例：嵌套 App 各用各的、ConfigProvider 的配置也能吃到。
+    //
+    // ⚠️ 配置必须传 **getter**（`() => mergedAppConfig.value.message`）：
+    //    传裸值会把首帧配置钉死（同 `useSize(props.size)` 那一族，PITFALLS 163）。
+    const [messageApi, messageHolder] = useMessage(() => mergedAppConfig.value.message);
+    const [notificationApi, notificationHolder] = useNotification(
+      () => mergedAppConfig.value.notification,
+    );
+    const [modalApi, modalHolder] = useModal();
+
     const api: UseAppProps = {
-      message: stubMessage,
-      notification: stubNotification,
-      modal: stubModal,
-    };
+      message: messageApi,
+      notification: notificationApi,
+      modal: modalApi,
+    } as unknown as UseAppProps;
     provide(appContextKey, api);
     provide(appConfigContextKey, mergedAppConfig.value);
 
@@ -97,22 +84,34 @@ const App = defineComponent({
     }
 
     return () => {
-      const children = slots.default?.();
-      if (props.component === false) {
-        return h(
-          Fragment,
-          null,
-          [children as VNodeChild].filter((c) => c !== null && c !== undefined),
-        );
-      }
-      return h(
-        props.component as 'div',
-        {
-          ...attrs,
-          class: [prefixCls, attrs.class, direction === 'rtl' ? `${prefixCls}-rtl` : undefined],
-        },
-        [children as VNodeChild].filter((c) => c !== null && c !== undefined),
+      const children = [slots.default?.() as VNodeChild].filter(
+        (c) => c !== null && c !== undefined,
       );
+
+      // ⚠️ 三个 holder 与 `<Component>` **同级**（上游 App.tsx 同结构）——
+      //    放进去会污染 `<Component>` 的子节点契约（L4 会看到多出的节点）。
+      const nodes: VNodeChild[] = [
+        messageHolder() as VNodeChild,
+        notificationHolder() as VNodeChild,
+        modalHolder as VNodeChild,
+      ];
+
+      if (props.component === false) {
+        nodes.push(...children);
+        return h(Fragment, null, nodes);
+      }
+
+      nodes.push(
+        h(
+          props.component as 'div',
+          {
+            ...attrs,
+            class: [prefixCls, attrs.class, direction === 'rtl' ? `${prefixCls}-rtl` : undefined],
+          },
+          children,
+        ),
+      );
+      return h(Fragment, null, nodes);
     };
   },
 });

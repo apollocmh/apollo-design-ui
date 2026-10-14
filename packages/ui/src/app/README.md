@@ -26,14 +26,19 @@ _internal/app-context.ts  # ⭐ 消环叶子模块：只含类型 + InjectionKey
 - **消环**：antd 中 App ↔ message/notification/modal 互相引用。本仓把
   context 抽到 `_internal/app-context.ts`（**不含任何组件导入**），三方落地后
   可安全依赖，不再有循环。
-- **v1 stub API**：三者未落地 ⇒ API 为 stub（调用即 dev 警告 + no-op）。
-  `contextHolder` 渲染 null。三者落地后回填（PENDING-2）。
+- **HookAPI 已接线**（Issue #40，PENDING-2 关闭）：`useApp()` 的三件套来自
+  `useMessage()` / `useNotification()` / `Modal.useModal()`，各自的 `contextHolder`
+  与 `<Component>` **同级**渲染（antd `App.tsx` 同构）⇒ 每个 App 实例自带一套
+  通知容器（嵌套隔离、随 App 卸载销毁、能吃 AppConfig 与 ConfigProvider 的配置）。
+  ⚠️ 配置必须传 **getter**（`() => mergedAppConfig.value.message`），传裸值会钉死首帧。
 
 ## 3. 与 antd 的差异
 
-- **PENDING-2**：message / notification / modal 未落地 ⇒ `useApp()` 的三件套
-  为 stub（调用即 dev 警告）。组件落地后按 antd 的 HookAPI 契约回填，
-  App 本身的结构（context 注入 / 配置合并 / component=false 告警）不受影响。
+- ~~**PENDING-2**：`useApp()` 的三件套为 stub~~ → ✅ **2026-10-14 已关闭**（Issue #40）：
+  三者都由各自 hook 提供，App 本身的结构（context 注入 / 配置合并 /
+  component=false 告警）未变。
+  ⚠️ 接线后 App 的渲染根变成 **Fragment**（holder + `<Component>`）⇒ 测试里别再用
+  `wrapper.element` 当根，要用 `.apollo-app`。
 - 样式单规则**手写对拍**（antd 源仅 30 行，SSR 提取管线对单规则组件是过度工程）。
 
 L6 视觉 3 张（1 variant × 3 viewport）**全部 0.000% exact**。

@@ -4,7 +4,7 @@
 
 ## 状态
 
-- registry status: **completed（G0–G14 全部完成，2026-09-25 收口；PENDING-2：message/modal/notification 未落地 ⇒ stub API）** · priority P3 · complexity M
+- registry status: **completed（G0–G14 全部完成，2026-09-25 收口；PENDING-2 已关闭（2026-10-14，Issue #40）：message/modal/notification 已按 antd 的 HookAPI 接线）** · priority P3 · complexity M
 - 依赖组件: 无
 - foundation: @apollo-design/theme, @apollo-design/utils
 - antd 规模: 126 行 / 10 文件 · token 0
