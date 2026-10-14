@@ -25,7 +25,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#30 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#31 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -45,7 +45,11 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 🚨 **`useMergeSemantic` 第三参传 computed/getter**（不是 `.value`），否则函数式槽吃快照（#26.3）。
 - 🚨 **内置类名放进 `classNames.*` 时必须合并用户的 classNames**（对象 + 函数形态，#29.1）；
   上游用独立键（`rootClassName`）不会覆盖 ⇒ 本仓换通道就要自己补合并。
-- 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**：anchor `{replace, ...item, key}` = **单项胜**（#28.1）。
+- 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**
+- 🚨 **React「JSX children = props.children」在 Vue 不成立**：语法糖组件正文在**默认插槽**
+  （`vnode.children.default`）⇒ 读 vnode 生成数据的函数要同时读插槽（#31.1）。
+- 🚨 **归一化产出的标记字段不能丢**（`span:'filled'` ⇒ `filled:true`，#31.2）⇒ 丢了是静默退化。
+  验证行切分/布局要用**三条目以上**（行尾补齐会让两条目的用例误绿）。：anchor `{replace, ...item, key}` = **单项胜**（#28.1）。
 - 🚨 **派生数据要确认真进渲染链且真有人消费**（table column #17.2、tabs mergedItems #23.1）⇒ 先写
   **静态**复现；归一 pipeline = **先过滤非法项再 map**。
 - 🚨 上游 `useXxx(...)` 每次渲染重算 ⇒ Vue 侧包 computed（#12.3）；rc gDSFP 分支逐条复刻（#16.1，
