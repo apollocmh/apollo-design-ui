@@ -27,9 +27,8 @@
  * ── 与 antd 的平台 / 架构差异 ────────────────────────────────────────────────
  *
  *   - 无 CSS-in-JS 的 hash 类名（D5）。
- *   - `size` 目前只读 prop，不读 ConfigProvider 的 `componentSize`
- *     —— `config-provider/hooks/useSize` 这个叶子模块尚未落地，
- *     缺口登记在 `README.md` §7（与 divider 的 `size` 同一条）。
+ *   - `size` 与 antd 逐字走 `useSize`（读 ConfigProvider 的 `componentSize`，
+ *     局部 `size` 覆盖）—— 见下方「尺寸」段。
  */
 
 import { debounce, isEmptyVNode, useDevWarning } from '@apollo-design/utils';
@@ -45,6 +44,7 @@ import {
 import { NodeRenderer } from '../_internal/node-renderer';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
+import { useSize } from '../config-provider/size-context';
 import { Indicator } from './components/Indicator';
 import { getDefaultIndicator } from './defaultIndicator';
 import type {
@@ -117,12 +117,15 @@ const hasChildren = computed(() => slots.default !== undefined);
 // ---------------------------------------------------------------------------
 // 尺寸
 //
-// ⚠️ antd 走 `useSize((ctx) => size ?? ctx)`：先读 SizeContext（ConfigProvider 的
-//    `componentSize`），再由 `size` prop 覆盖。`config-provider/hooks/useSize`
-//    这个叶子模块尚未落地，所以这里 `mergedSize` 恒等于 `size` prop。
-//    缺口登记在 README.md §7 —— 不是「忘了」，是依赖未就绪（同 divider）。
+// antd 逐字：`useSize((ctxSize) => size ?? ctxSize)` —— 先读 SizeContext
+// （ConfigProvider 的 `componentSize`），再由 `size` prop 覆盖。
+//
+// ⚠️ 必须用**函数形态**（Issue #35.1）：`useSize(props.size)` 在 setup 期只读一次
+//    `props.size` ⇒ 之后改 `size` / `componentSize` 都不生效（PITFALLS 163，
+//    radio / switch / tabs / card 各踩过一次）；`useSize(() => props.size)` 也
+//    **不等价**（拿不到 context 兜底，见 form/Form.vue 的注释）。
 // ---------------------------------------------------------------------------
-const mergedSize = computed<SpinSize | undefined>(() => props.size);
+const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
 
 // ---------------------------------------------------------------------------
 // spinning：prop 是目标值，内部态才是渲染依据

@@ -29,8 +29,9 @@
  * ── 这个文件没有证明什么 ──────────────────────────────────────────────────────
  *   - 没证明与 antd 的 DOM 一致（那是 L4，见 `semantic.test.ts`）
  *   - 没证明像素一致（那是 L6，见 `tests/visual`）
- *   - 没证明 `size` 会读 ConfigProvider 的 `componentSize`（`useSize` 未落地，
- *     缺口登记在 `README.md` §7）
+ *   - 没证明 `size` 会读 ConfigProvider 的 `componentSize`（Issue #35 已修，见
+ *     专门的 `__tests__/s35-issue35.test.ts`：全局尺寸 / 局部覆盖 / 运行时更新 /
+ *     嵌套 Provider 共 9 条）
  */
 
 import { captureWarnings, flushAll, mountTest, resetWarned } from '@apollo-design/test-utils';
