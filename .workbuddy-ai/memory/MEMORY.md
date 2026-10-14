@@ -25,7 +25,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#37 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#38 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -49,6 +49,9 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   上游用独立键（`rootClassName`）不会覆盖 ⇒ 本仓换通道就要自己补合并。
 - 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**
 - 🚨 **React「JSX children = props.children」在 Vue 不成立**
+- 🚨 **React 组件默认不透传普通 attrs**（rc 根不展开 restProps）⇒ 本仓（Vue 自动继承）
+  透传是**超集**；两侧自洽优先 + 登记 D 编号（#38 / D130）。透传给内部组件前先摘掉
+  `class`/`style`（内部会再拼一次 ⇒ 类名重复）。
 - 🚨 **React `useEffect(无依赖数组)` = 每次渲染后都跑 ⇒ Vue 用 `watchEffect(post)`**（#37.1）：
   别写成显式依赖数组（漏依赖就是「改颜色不重绘」）。ref 容器 + 布尔标记要**显式读**标记。
 - 🚨 **静态审计型 issue 的前提可能错**（#36）：先跑真浏览器探针/L6 复核，再动手；
