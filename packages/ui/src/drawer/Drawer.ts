@@ -138,9 +138,16 @@ export default defineComponent({
     const mergedCloseIcon = (): unknown => readSlot('closeIcon');
 
     // 标题（来自 slot 或 String prop）存在才挂 aria-labelledby
-    const titleSlot = readSlot('title');
-    const hasTitle = titleSlot !== undefined ? titleSlot !== null : isRenderable(props.title);
-    const ariaId = hasTitle ? id : undefined;
+    //
+    // ⚠️ 必须在**渲染期**判定：写在 setup 里是快照 ⇒ 标题由「有」变「无」后
+    //    `aria-labelledby` 还指向已不存在的节点（Issue #20.3）。另外 slot 的「有无」变化
+    //    不会让 computed 失效（computed 调 slot 在「无 slot」那次不 track 任何依赖）⇒
+    //    这里用普通函数每渲染现读，而不是 computed。
+    const resolveAriaId = (): string | undefined => {
+      const titleSlot = readSlot('title');
+      const hasTitle = titleSlot !== undefined ? titleSlot !== null : isRenderable(props.title);
+      return hasTitle ? id : undefined;
+    };
 
     const getContainer = computed<unknown>(() =>
       props.getContainer === undefined && config.getPopupContainer
@@ -230,6 +237,9 @@ export default defineComponent({
       void _attrsClass;
       void _attrsStyle;
 
+      // 标题是否可渲染 ⇒ 决定 aria-labelledby 的目标（渲染期现读，见 resolveAriaId）
+      const ariaId = resolveAriaId();
+
       return h(
         RcDrawer,
         {
@@ -241,6 +251,10 @@ export default defineComponent({
           keyboard: props.keyboard,
           mask: mask.enabled.value,
           maskClosable: mask.closable.value,
+          // ⚠️ `push` 是外层公开 prop，引擎 Drawer 没声明它 ⇒ 不显式传就进不了 DrawerPopup
+          //    （那里才有 `pushDistance` 的 `distance ?? parent ?? 180` 兜底）⇒ 自定义推挤距离
+          //    永远不生效（Issue #20.1）。
+          push: props.push,
           getContainer: getContainer.value,
           // ⚠️ rc 的判据就是「容器是 false」⇒ 加 `-inline` 类（CSS 里它把 position 从 fixed 改成 absolute）
           inline: getContainer.value === false,

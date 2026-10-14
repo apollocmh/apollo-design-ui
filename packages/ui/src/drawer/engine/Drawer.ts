@@ -55,27 +55,34 @@ export default defineComponent({
       animatedVisible.value = nextVisible;
       props.afterOpenChange?.(nextVisible);
 
-      if (
-        !nextVisible &&
-        props.focusTriggerAfterClose !== false &&
-        lastActiveRef.value &&
-        !popupRef.value?.contains(lastActiveRef.value)
-      ) {
-        lastActiveRef.value.focus({ preventScroll: true });
+      if (!nextVisible && props.focusTriggerAfterClose !== false) {
+        const lastActive = lastActiveRef.value;
+        // ⚠️ 用完即清：本仓不在渲染期清空（见下）⇒ 必须在这里收尾，否则元素卸载后
+        //    下一次关闭会拿一个已脱离文档的节点去 focus。
+        lastActiveRef.value = null;
+        // 安全回退：元素已卸载 / 在面板内（面板马上也要消失）都不归还焦点
+        if (lastActive && !popupRef.value?.contains(lastActive) && lastActive.isConnected) {
+          lastActive.focus?.({ preventScroll: true });
+        }
       }
     };
 
     // ⚠️ `panelRef` 通过 ref-context 透给 DrawerSection（上游的 RefContext）
     provide(drawerRefContextKey, { panel: popupRef });
 
+    // rc 只在 `mergedOpen` **变真**的那一帧记录（`useLayoutEffect(..., [mergedOpen])`），
+    // 且**从不**在关闭时清空 —— 清空了，`afterOpenChange(false)`（离场动效之后才触发）
+    // 就拿不到触发器，焦点永远回不去（Issue #20.2）。
+    let prevMergedOpen = false;
+
     return () => {
       const mergedOpen = mounted.value ? props.open : false;
 
-      // 「打开时记下当前焦点」——上游是 useLayoutEffect，Vue 侧在渲染前判一次即可
-      if (mergedOpen && typeof document !== 'undefined' && !lastActiveRef.value) {
+      // 「从未开到开」这一帧记下当前焦点（等价上游的 effect 依赖变化那一帧）
+      if (mergedOpen && !prevMergedOpen && typeof document !== 'undefined') {
         lastActiveRef.value = document.activeElement as HTMLElement | null;
       }
-      if (!mergedOpen) lastActiveRef.value = null;
+      prevMergedOpen = mergedOpen;
 
       if (!props.forceRender && !animatedVisible.value && !mergedOpen && props.destroyOnHidden) {
         return null;

@@ -62,6 +62,22 @@ registry 数据：token 数 = 4。
 | `footerPaddingInline` | `padding` = 16 |
 | `draggerSize` | 4 |
 
+## 4.5 push 链路 / 焦点归还 / 标题 ARIA（Issue #20）
+
+1. 🚨 **外层→引擎的 prop 必须逐个显式传**：`push` 是外层公开 prop，而引擎 `Drawer`（rc 层）
+   没有声明它 —— 不显式传就进不了 `DrawerPopup`（那里才有 `distance ?? parent ?? 180`），
+   自定义推挤距离会静默退化成 180。凡是「外层有、引擎没声明」的 prop 都要这么检查一遍。
+2. 🚨 **焦点来源不能在渲染期清空**：rc 只在 `mergedOpen` **变真**那一帧记
+   `document.activeElement`（`useLayoutEffect([mergedOpen])`），**从不**在关闭时清。
+   本仓改成「渲染期 `!mergedOpen ⇒ null`」后，`afterOpenChange(false)`（离场动效之后）
+   拿到 null ⇒ 焦点回不去。现在用 `prevMergedOpen` 只在「未开→开」记录，归还时用完即清，
+   并加 `isConnected` 安全回退。
+3. 🚨 **标题 ARIA 要在渲染期判定**：`titleSlot`/`hasTitle`/`ariaId` 写进 setup 是快照 ⇒
+   标题由「有」变「无」后 `aria-labelledby` 还指向已不存在的节点。用普通函数每渲染现读
+   （不要用 computed —— slot 从「无」到「有」时 computed 不失效）。
+4. ⚠️ **jsdom 下 CSSMotion 不推进**：`afterOpenChange` 连「打开」那次都不触发 ⇒ 焦点归还
+   只能在**引擎层**手动驱动 `afterOpenChange(false)` 验证（见 `s20-issue20.test.ts`）。
+
 ## 5. 已知缺口
 
 | # | 缺口 | 说明 |
