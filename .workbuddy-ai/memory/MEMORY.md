@@ -27,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#17**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -42,6 +42,14 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   `changeEventInfo.pagination`（#17.1）与 sorter/filters 同判 ⇒ setup 里赋值一次就是初始快照。
 - 🚨 **派生数据要确认真的进了渲染链**：table `column` 一例（#17.2）hook 算对了但引擎仍吃原始
   `props.columns` ⇒ 先写**静态**复现（align 有没有落到 td style），别只看「动态更不更新」。
+- 🚨 **「外层有 prop、引擎层没声明」必须显式转交**：modal `wrapStyle`/`wrapProps`（#19.1）、
+  drawer `push`（#20.1，不传就静默退化成兜底 180）。反之「外层声明了却没传」= 静默失效。
+- 🚨 **纯函数式的归一/解析放 setup = 快照**：pagination `useShowSizeChanger(props…)`（#18）
+  —— 后面的 computed 吃它的返回值 ⇒ 归一本身要进 computed。
+- 🚨 **rc 的焦点来源只在「变真」那帧记录、从不清空**（drawer #20.2）：渲染期 `!open ⇒ null`
+  会让离场后的 `afterOpenChange(false)` 拿不到触发器。
+- 🚨 **antd 多 child 结构要照抄**：dropdown-button = `[leftButton, <Dropdown>right</Dropdown>]`
+  （#21.1）—— 同级多 VNode 塞进只收单 child 的 Trigger，split 语义就丢。
 **渲染 / 事件**
 - 🚨 computed 调 `slots.default?.()` 不过「插槽有无」变化 ⇒ 无 slot 那次求值不 track ⇒ 之后 slot 从无到有但缓存干净 ⇒ 选项永远不出现（#14.3，引擎级，§1.4）。⇒ 薄壳传插槽的包装函数要显式读本组件 reactive 分类态。
 - 🚨 computed 里的 dev 告警随惰性求值不触发一起消失 ⇒ 放渲染期沿对比（#14）。
