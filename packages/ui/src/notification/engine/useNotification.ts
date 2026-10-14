@@ -80,13 +80,13 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
     renderNotifications,
   } = rootConfig;
 
-  // ⚠️ `duration` 可能是 getter（Issue #45）⇒ 每次 `open` 都重新求值，
-  //    否则「holder 建好之后再改 duration」传不进内核
+  // ⚠️ `duration` / `showProgress` 可能是 getter（Issue #45 / #46）⇒ 每次 `open`
+  //    都重新求值，否则「holder 建好之后再改配置」传不进内核
   const shareConfig = () => ({
     placement,
     closable,
     duration: toValue(duration) as number | false | null | undefined,
-    showProgress,
+    showProgress: toValue(showProgress) as boolean | undefined,
   });
 
   const container = ref<HTMLElement | ShadowRoot | null>(null);

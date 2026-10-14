@@ -169,7 +169,7 @@ export interface NotificationConfig extends Omit<NotificationsProps, 'container'
   getContainer?: () => HTMLElement | ShadowRoot;
   closable?: NoticeProps['closable'];
   duration?: ConfigValue<number | false | null>;
-  showProgress?: boolean;
+  showProgress?: ConfigValue<boolean>;
 }
 
 /** rc `NotificationAPI`。 */

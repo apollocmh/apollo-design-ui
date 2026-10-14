@@ -112,18 +112,22 @@ const Holder = defineComponent({
         clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls}-rtl` : undefined),
       motion: () => getMotion(prefixCls),
       closable: { closeIcon: getCloseIcon(prefixCls) },
-      duration: mergedDuration.value,
+      // ⚠️ 这几个必须是 **getter**（Issue #46，与 message #45 同判）：`useNotification`
+      //    在 setup 期把根配置解构成常量 ⇒ 传裸值会被钉死，「holder 建好之后再改配置」
+      //    （`notification.config({ maxCount })` 等）就传不进内核。
+      //    `style` / `className` / `motion` / `getContainer` 本来就是 getter，同判。
+      duration: () => mergedDuration.value,
       getContainer: () =>
         props.getContainer?.() ??
         (config.getPopupContainer as (() => HTMLElement) | undefined)?.() ??
         document.body,
-      maxCount: props.maxCount,
-      pauseOnHover: props.pauseOnHover,
-      showProgress: props.showProgress,
+      maxCount: () => props.maxCount,
+      pauseOnHover: () => props.pauseOnHover,
+      showProgress: () => props.showProgress,
       classNames: props.classNames as never,
       styles: props.styles as never,
       onAllRemoved: props.onAllRemoved,
-      stack: stackConfig.value,
+      stack: () => stackConfig.value,
     });
 
     expose({ ...api, prefixCls, closeLabel });
