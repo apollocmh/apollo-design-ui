@@ -68,6 +68,10 @@ pagination/
    状态不变就不 patch，非法字符会**留在框里**。
 6. **prev/next 需要 `hasPrev` / `hasNext` 守卫**（rc 的 `prevHandle` 有）：否则点「已禁用的上一页」
    会把 0 传进 `changeCurrent`，`isValid(0)` 通过（0 是整数、≠ current、total>0），钳回 1 后**多发一次同值事件**。
+7. 🚨 **`showSizeChanger` 的两路归一必须进 computed**：`useShowSizeChanger` 是**纯函数**（返回
+   `[启用?, SelectProps?]`），setup 里调用一次就是快照 ⇒ props / ConfigProvider 后续
+   `false→true→对象→false` 全都不参与重算（Issue #18）。优先级仍是
+   `props 结果 ?? ConfigProvider 结果 ?? total > totalBoundaryShowSizeChanger`（`??` 不是布尔或）。
 7. **`simple` 模式仍渲染 prev/next**（见 §2）。
 8. **注入点两个字段名**：rc `sizeChangerRender` 的实参叫 `onSizeChange`、antd `components.sizeChanger`
    叫 `onChange` —— 两个都给同一个函数。

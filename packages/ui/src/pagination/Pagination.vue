@@ -185,21 +185,19 @@ export default defineComponent({
     const hasNext = computed(() => mergedCurrent.value < allPages.value);
 
     // ---- 尺寸切换器（props ↔ ConfigProvider 的 ?? 合并）----
-    const [propShowSizeChanger, propSizeChangerSelectProps] = useShowSizeChanger(
-      props.showSizeChanger,
-    );
-    const [configShowSizeChanger, configSizeChangerSelectProps] = useShowSizeChanger(
-      config.showSizeChanger,
-    );
+    // ⚠️ `useShowSizeChanger` 是**纯函数**：在 setup 里调用一次 = 快照 ⇒ props / ConfigProvider
+    //    后续 false→true→对象→false 的变化都不参与重算（Issue #18）。两路归一必须放进 computed。
+    const propSizeChanger = computed(() => useShowSizeChanger(props.showSizeChanger));
+    const configSizeChanger = computed(() => useShowSizeChanger(config.showSizeChanger));
     const mergedShowSizeChanger = computed(
       () =>
-        propShowSizeChanger ??
-        configShowSizeChanger ??
+        propSizeChanger.value[0] ??
+        configSizeChanger.value[0] ??
         (props.total ?? 0) >
           (props.totalBoundaryShowSizeChanger ?? config.totalBoundaryShowSizeChanger ?? 50),
     );
     const mergedSizeChangerSelectProps = computed(
-      () => propSizeChangerSelectProps ?? configSizeChangerSelectProps,
+      () => propSizeChanger.value[1] ?? configSizeChanger.value[1],
     );
 
     // ---- 变化入口 ----
