@@ -25,14 +25,16 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#31 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#32 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
 - 🚨 **setup 期快照三件套**（最高频）：① 纯函数式归一/解析（#18 pagination）② 上游 render 体里的
   常量（#17.1 table / #28.2 anchor affixProps）③ `toValue` hook 传裸值（`useDisabled`/`useSize`，#30.3）
   ⇒ 一律改 computed / getter。传 getter 时注意：watch 依赖要写**求值后**的结果（#27.4）。
-- 🚨 **attrs 追踪准确口径**（#15.2）：computed 直接读 `attrs.class` **会**更新；真坑是 setup 期解构 attrs。
+- 🚨 **attrs 追踪准确口径**
+- 🚨 **provide 的 context 里放值必须是 ref/computed 或 getter**（Sider `siderCollapsed` 传裸布尔 ⇒
+  子孙永远首帧值，#32.1）。🚨 **attrs 回调不能解构**（快照）⇒ 触发时现读（#32.2）。（#15.2）：computed 直接读 `attrs.class` **会**更新；真坑是 setup 期解构 attrs。
 - 🚨 **cloneVNode 是合并不是替换**（`on*` 拼数组、`class` 拼两遍）⇒ ① 注入 `on*` 后**不要再手动调**
   `origin.props?.onXxx`（#30.2）；② 要「替换」语义就先 clone 再整体替换 `cloned.props`（保 dirs，#24.7）。
 - 🚨 **「受控 hook 的 onChange + 业务 handler」各调一次 = 双调**（tooltip #24.1 / popconfirm #26.1 /
