@@ -64,3 +64,13 @@
   否则 `<div class="-trigger">`；`trigger === null` ⇒ 都不渲染。
 - **响应式**：挂载时立即以 `mql.matches` 调一次 `onBreakpoint`；不匹配时以
   `'responsive'` 触发折叠（依赖数组只有 breakpoint）。
+
+## 6.5 Issue #32 的两条判据
+
+1. **`provideSiderContext` 必须传 `ComputedRef`**（#32.1）：context 对象只在 setup
+   建一次，提供裸布尔值 ⇒ 子孙（Menu）只能拿到**首帧**折叠态 ⇒ 侧栏宽度变了、
+   导航不折叠。Menu 侧用 `props.inlineCollapsed ?? siderContext.siderCollapsed?.value ?? false`
+   （显式 `inlineCollapsed={false}` 仍能覆盖）。
+2. **`onCollapse` / `onBreakpoint` 不能从 attrs 解构**（#32.2）：解出来的是 setup 期
+   快照，父组件换掉回调后仍然调旧的 ⇒ **触发时现读** `attrs.onCollapse`。
+   （这两个走 attrs 而非 emits：声明 emits 会让 Vue 把它们从 attrs 里摘掉。）

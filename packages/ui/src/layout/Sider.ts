@@ -98,7 +98,12 @@ export const SiderComponent = defineComponent({
   // ⚠️ onCollapse / onBreakpoint 走 attrs（antd 是 props，不是 DOM 事件）；
   //    声明 emits 会让 Vue 把它们从 attrs 里摘掉 —— 这里刻意不声明。
   setup(props, { attrs, expose, slots }) {
-    const { onCollapse, onBreakpoint } = attrs as unknown as {
+    /**
+     * ⚠️ **不能**在 setup 期解构 `attrs` 取回调：解出来的是 setup 期快照，父组件
+     *    之后换掉 `onCollapse` / `onBreakpoint` 也不会被用到（Issue #32.2）。
+     *    改为**触发时现读** —— 这是 attrs 回调（非 emits）的唯一响应式写法。
+     */
+    const callbacks = attrs as unknown as {
       onCollapse?: (collapsed: boolean, type: CollapseType) => void;
       onBreakpoint?: (broken: boolean) => void;
     };
@@ -117,7 +122,7 @@ export const SiderComponent = defineComponent({
 
     const handleSetCollapsed = (value: boolean, type: CollapseType) => {
       setCollapsed(value);
-      onCollapse?.(value, type);
+      callbacks.onCollapse?.(value, type);
     };
 
     // ============================= Responsive ============================
@@ -126,7 +131,7 @@ export const SiderComponent = defineComponent({
     const responsiveHandler = (event: MediaQueryList | MediaQueryListEvent) => {
       const matched = event.matches;
       below.value = matched;
-      onBreakpoint?.(matched);
+      callbacks.onBreakpoint?.(matched);
       if (mergedCollapsed.value !== matched) {
         handleSetCollapsed(matched, 'responsive');
       }
@@ -257,7 +262,9 @@ export const SiderComponent = defineComponent({
       width: siderWidth.value,
     }));
 
-    provideSiderContext({ siderCollapsed: mergedCollapsed.value });
+    // ⚠️ 传 **ComputedRef 本身**（不是 `.value`）：context 对象只在 setup 建一次，
+    //    传裸值 ⇒ 子孙（Menu）只能拿到首帧的折叠态（Issue #32.1）。
+    provideSiderContext({ siderCollapsed: mergedCollapsed });
 
     expose({
       nativeElement: rootRef,

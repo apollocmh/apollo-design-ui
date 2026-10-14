@@ -6,7 +6,7 @@
  * `CSSProperties`、`React.ReactNode` → `VNodeChild`（规则 C16 / C18）。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { ComputedRef, CSSProperties, VNodeChild } from 'vue';
 
 /** 响应式断点（antd 的 `_util/responsiveObserver` 的 Breakpoint）。 */
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
@@ -106,7 +106,12 @@ export interface SiderRef {
 
 /** SiderContext（Menu 消费 `siderCollapsed`）。 */
 export interface SiderContextProps {
-  siderCollapsed?: boolean;
+  /**
+   * 折叠态。⚠️ 必须是 **ComputedRef**（响应式引用）：Sider 的 context 对象在 setup
+   * 里只建一次，提供裸布尔值 ⇒ Menu 只能拿到首帧快照，折叠联动完全失效
+   * （Issue #32.1）。
+   */
+  siderCollapsed?: ComputedRef<boolean>;
 }
 
 /** LayoutContext（Sider 注册自己，Layout 据此算 has-sider）。 */

@@ -33,6 +33,7 @@ import {
 } from 'vue';
 import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
 import { useDirection } from '../config-provider/context';
+import { useSiderContext } from '../layout/context';
 import {
   isSubPathKeyKey,
   type MenuContextData,
@@ -124,8 +125,16 @@ const Menu = defineComponent({
     const containerRef = shallowRef<HTMLElement | null>(null);
 
     const parsedNodes = computed<ParsedNode[]>(() => parseItems(props.items));
+
+    // ⚠️ Sider 联动（Issue #32.1）：上游 Menu 用 `SiderContext.siderCollapsed` 作为
+    //    `inlineCollapsed` 的**回退源** ⇒ 侧栏折叠时导航自动进入 inline-collapsed。
+    //    之前本仓只读 `props.inlineCollapsed` ⇒ 宽度变了、导航不折叠。
+    const siderContext = useSiderContext();
+    const mergedInlineCollapsed = computed(
+      () => props.inlineCollapsed ?? siderContext.siderCollapsed?.value ?? false,
+    );
     const mergedMode = computed<MenuMode>(
-      () => override?.mode ?? (props.inlineCollapsed ? 'vertical' : props.mode),
+      () => override?.mode ?? (mergedInlineCollapsed.value ? 'vertical' : props.mode),
     );
 
     // ======================= Path ========================
@@ -293,7 +302,7 @@ const Menu = defineComponent({
       openKeys: mergedOpenKeys,
       renderNode: renderNode as unknown as (node: unknown, keyPath: string[]) => unknown,
       get inlineCollapsed() {
-        return props.inlineCollapsed ?? false;
+        return mergedInlineCollapsed.value;
       },
       firstLevel: true,
       get theme() {
@@ -470,7 +479,7 @@ const Menu = defineComponent({
           `${prefixCls}-root`,
           `${prefixCls}-${mergedMode.value}`,
           `${prefixCls}-${props.theme}`,
-          props.inlineCollapsed ? `${prefixCls}-inline-collapsed` : undefined,
+          mergedInlineCollapsed.value ? `${prefixCls}-inline-collapsed` : undefined,
           isRtl.value ? `${prefixCls}-rtl` : undefined,
           typeof attrs.class === 'string' ? attrs.class : undefined,
         ],

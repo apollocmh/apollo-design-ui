@@ -67,6 +67,20 @@ DOM 结构由 L4 `menu:horizontal` 钉住；几何待 Overflow 时序精调后�
 
 L6 视觉 9 张（vertical/inline/dark × 3 viewport）**全部 0.000% exact**。
 
+## 3.6 Menu 的 Sider 联动（Issue #32）
+
+`inlineCollapsed` 的回退源是 **`SiderContext.siderCollapsed`**（上游同判）：
+
+```
+mergedInlineCollapsed = props.inlineCollapsed ?? siderContext.siderCollapsed?.value ?? false
+```
+
+- 该值同时驱动 `mergedMode`（`true ⇒ 'vertical'`）、context 的 `inlineCollapsed`
+  与根上的 `-inline-collapsed` 类 ⇒ 侧栏折叠时导航自动收起。
+- ⚠️ Sider 必须 provide **ComputedRef**（不能是裸布尔），否则这里只能读到首帧值
+  （见 `layout/README.md` §6.5）。
+- 显式 `inlineCollapsed={false}` 仍然覆盖 Sider 的折叠态。
+
 ## 4. 收口证据（G13）
 
 - L1 29（engine 15 + 组件 14）/ L4 6（基线 `menu.dom.json`）/ L5 17 /
