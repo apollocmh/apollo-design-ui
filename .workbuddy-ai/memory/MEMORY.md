@@ -25,7 +25,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#44 全部**（#40 关闭 app PENDING-2）（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#45 全部**（#40 关闭 app PENDING-2）（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -34,6 +34,9 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   ⇒ 一律改 computed / getter。传 getter 时注意：watch 依赖要写**求值后**的结果（#27.4）。
 - 🚨 **attrs 追踪准确口径**
 - 🚨 **provide 的 context 里放值必须是 ref/computed 或 getter**
+- 🚨 **hook 工厂（useNotification 等）在 setup 期解构配置 ⇒ 裸值被钉死**（#45）：
+  要「配置后改」能传导就传 **getter** + 容器侧 `toValue`。⚠️ 放宽类型时同名键可能有多份
+  （NoticeProps/NoticeListProps/NotificationsProps）⇒ 按行号精准替换，改完必跑 `--project types`。
 - 🚨 **命令式 API 的模块级单例要留 `app` 引用**（#43）：`createApp().mount(游离容器)` 是真根应用，
   复位函数必须 `unmount()`。判据：Teleport 出去的 notice 是否还在 DOM 里。
   ✅ 同族（notification #44）已一并修掉：改一个就改另一个，不要留半边。
