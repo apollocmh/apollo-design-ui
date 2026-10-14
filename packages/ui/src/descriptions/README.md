@@ -26,6 +26,24 @@
 Row.js/Cell.js 的机械规则决定，模板写分支只会更绕；cell 的 style/class 组合
 （4 级合并、语义槽落点）在渲染函数里最清晰。
 
+## 3.5 Issue #31 的两条判据（都在 `items.ts`）
+
+1. **`transChildren2Items` 必须读默认插槽**（#31.1）：
+   React 的 `Descriptions.Item` 是 `props => props.children`（JSX children 落在
+   `props.children`）⇒ 移植时只读 `vnode.props` 就够。但 **Vue 的语法糖正文写在
+   默认插槽里**，落在 `vnode.children` 的 **`{ default: fn }` 插槽对象**上
+   ⇒ 只复制 props 会出现「标签在、正文丢」。现在补 `readDefaultSlotChildren()`：
+   - 只对**组件 vnode** 读（元素 vnode 的 `children` 是子节点 string/数组，不是插槽对象）；
+   - 优先级：显式 `children` prop > 默认插槽（`items` 数据源仍整体优先于 children）。
+2. **`span: 'filled'` 归一化后必须带 `filled: true`**（#31.2）：
+   `normalizeItems` 的 filled 分支只 `return rest`（既去掉 `span` 又**没设 filled**）
+   ⇒ `getCalcRows` 收不到「推入当前行后立刻收行」的标记，filled 退化成普通
+   `span=1` ⇒ 跨行语义丢失。改为 `{ ...rest, filled: true }`。
+   ⚠️ 两条目的旧用例会因为「行尾自动补齐」而碰巧通过 ⇒ 要用**三条目**测
+   （column=3 / A(1) B(filled) C(1) ⇒ 必须是 **2 行**）。
+   ⚠️ colspan 口径：**非 bordered** 是「一格一 td」；**bordered** 才是
+   `label th(colSpan=1) + content td(colSpan=span*2-1)`。
+
 ## 4. Component Token 清单（10 个）
 
 与 antd 的 `ComponentToken` 接口**逐字段对齐**（规则 R7）。

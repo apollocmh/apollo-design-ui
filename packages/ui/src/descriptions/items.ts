@@ -21,8 +21,26 @@ export const DEFAULT_COLUMN_MAP: Partial<Record<Breakpoint, number>> = {
 };
 
 /**
+ * 取组件 vnode 的**默认插槽**内容（Issue #31.1）。
+ *
+ * ⚠️ Vue 的 `Descriptions.Item` 是「语法糖组件」：正文写在**默认插槽**里，落在
+ *    `vnode.children` 的 **`{ default: fn }` 插槽对象**上，而**不在** `vnode.props`
+ *    里（React 的 JSX children 才是 props.children）。原来只读 props ⇒ 标签出现、
+ *    **正文丢失**。
+ * ⚠️ 只对「组件 vnode」这么读：元素 vnode 的 `children` 是子节点（string / 数组），
+ *    不是插槽对象。
+ */
+function readDefaultSlotChildren(vnode: VNode): VNodeChild | undefined {
+  const raw = vnode.children as unknown;
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const slot = (raw as { default?: unknown }).default;
+  if (typeof slot !== 'function') return undefined;
+  return (slot as (...args: unknown[]) => VNodeChild)();
+}
+
+/**
  * children → items（`transChildren2Items`）：读每个 vnode 的 props（Item 语法糖）
- * + key。Comment 摊平剔除、Fragment 摊平。
+ * + key + **默认插槽正文**。Comment 摊平剔除、Fragment 摊平。
  */
 export function transChildren2Items(childNodes: VNodeChild[]): DescriptionsItemType[] {
   const out: DescriptionsItemType[] = [];
@@ -35,8 +53,14 @@ export function transChildren2Items(childNodes: VNodeChild[]): DescriptionsItemT
         walk((v.children as VNodeChild[]) ?? []);
         continue;
       }
-      const props = (v.props ?? {}) as DescriptionsItemType & { children?: VNodeChild };
-      out.push({ ...props, key: (v.key as string | number) ?? props.key });
+      const props = (v.props ?? {}) as DescriptionsItemType;
+      const slotChildren = readDefaultSlotChildren(v);
+      out.push({
+        ...props,
+        // 显式 `children` prop 优先，否则用默认插槽（语法糖的正文）
+        children: props.children ?? slotChildren,
+        key: (v.key as string | number) ?? props.key,
+      });
     }
   };
   walk(childNodes);
@@ -56,7 +80,10 @@ export function normalizeItems(
   const merged = items ?? transChildren2Items(children ?? []);
   return merged.map(({ span, ...rest }) => {
     if (span === 'filled') {
-      return rest as DescriptionsRowItem;
+      // ⚠️ 必须 **带上 `filled: true`**（去掉 span 即可）—— `getCalcRows` 靠这个
+      //    标记「推入当前行后立刻收行」；原来只 `return rest` ⇒ filled 退化成普通
+      //    span=1，跨行语义丢失（Issue #31.2）。
+      return { ...rest, filled: true } as Omit<DescriptionsRowItem, 'index'> & { span?: number };
     }
     return {
       ...rest,
