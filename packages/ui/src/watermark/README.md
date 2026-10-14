@@ -54,3 +54,8 @@
 - **style 合并**：`{...fixedStyle, ...props.style}` —— **用户 style 覆盖** fixed
   （L4 `watermark:style-override-fixed` 钉住）。
 - **class 顺序**：`className → contextClassName → rootClassName`。
+- **图片异步回调有竞态守卫**（Issue #42）：每次 `renderWatermark` 领一个 `renderId`，
+  只有**最新**一次能提交结果（`onScopeDispose` 时作废）⇒ 换图 A→B 时 A 晚到也不会
+  把 B 顶回去；卸载后在途 `onload` / `onerror` 不再写 `watermarkInfo`。
+  ⚠️ 只有**几何参数也变**时才看得出竞态：`useSingletonCache` 把图片元素归一成空串
+  参与比较（逐字上游）⇒ 光换图会命中缓存、根本不重绘。

@@ -211,13 +211,33 @@ export default defineComponent({
     const getClipsCache = useSingletonCache<unknown, [string, number, number]>();
     const watermarkInfo = ref<[string, number] | null>(null);
 
+    /**
+     * 竞态守卫（Issue #42）：`img.onload` / `img.onerror` 是**异步**的 ——
+     * 换图 A→B 时 A 可能晚于 B 完成，而 A 的 `drawCanvas` 会把已经画好的 B
+     * 顶回 A（几何参数也变了的时候缓存不命中，就会真的重绘 ⇒ 可见）。
+     *
+     * 每次 `renderWatermark` 领一个 id，**只有最新一次**能提交结果；
+     * 卸载时把 id 作废 ⇒ 在途回调不再写 `watermarkInfo` / 不再碰 DOM。
+     */
+    let renderId = 0;
+    let disposed = false;
+    onScopeDispose(() => {
+      disposed = true;
+      renderId += 1;
+    });
+
     const renderWatermark = () => {
+      const id = (renderId += 1);
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       if (ctx) {
         const ratio = getPixelRatio();
         const [markWidth, markHeight] = getMarkSize(ctx);
         const drawCanvas = (drawContent: HTMLImageElement | typeof contentLines.value) => {
+          // 旧版本 / 已卸载 ⇒ 丢弃这次结果
+          if (disposed || id !== renderId) {
+            return;
+          }
           const params = [
             drawContent || [],
             props.rotate,
