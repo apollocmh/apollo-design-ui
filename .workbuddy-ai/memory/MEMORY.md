@@ -27,48 +27,37 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#25 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#26 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
 - 🚨 **attrs 追踪准确口径**（#15.2 实测）：Vue 3.5.42 attrs 代理 `get` 会 track、`updateProps` 变化会 trigger ⇒ **computed 直接读 `attrs.class` 会更新**（「缓存旧值」是误报）。真坑 = **setup 期解构 attrs**（date-picker #5.3）。
-- 🚨 **`cloneVNode` 是合并不是替换**：`mergeProps` 对 `on*` 拼数组 ⇒ 用户回调双调/`TypeError`。复刻 React `cloneElement` 必须 `createVNode(child.type, 自拼props, child.children)`（#8.3 与 #15.1 同栽两次；`key`/`ref` 随 props 铺过去）。
+- 🚨 **`cloneVNode` 是合并不是替换**（`mergeProps`：`on*` 拼数组 ⇒ 双调；`class` 拼两遍）。复刻 React `cloneElement` ⇒ 先 `cloneVNode(child)` 再**整体替换 `cloned.props`**（#24.7；保 dirs，勿用 createVNode 重建）。
 - 🚨 新 Boolean prop 必须 `withDefaults(…,{x:undefined})`（薄壳也要）：未传时 Vue 强制 `false`，`existShowConfig` 把「显式 false」当「用户关了」⇒ 整片不渲染（#6.2）。
 - 公共 Hook 收 `MaybeRefOrGetter`+`toValue`；`useSize` 必须解析器形态 `useSize((ctx)=>props.size??ctx)`（`()=>props.size` 会绕过 componentSize）。
 - 🚨 上游 React `useXxx(...)` 每次渲染重算 ⇒ Vue 侧包 `computed`，否则动态改配置静默无效（#12.3）。🚨 prop 默认值写字面量堵死 ConfigProvider 回退 ⇒ `default: undefined`+`mergedXxx`。
 - 🚨 **rc gDSFP 分支要逐条复刻**：Tree 勾选段第三分支「treeData 变化 ⇒ `parseCheckedKeys(props.checkedKeys) || prevState`」⇒ 受控与否**只决定 base，不影响是否重算**（#16.1）；这类派生态同步必须**静默不 emit**。
 - 🚨 **`${props.prefixCls}-x` 在 setup 期求值 = 切前缀后子树全过期** ⇒ 一律 computed（#15.3 修 transfer/Section；form 同族未修见 §1.5）。⚠️ `prefixCls` prop 是**完整前缀**（`'p1'` ⇒ `.p1-section`）。
-- 🚨 **antd 在 render 体里回填的东西（不是 useMemo），本仓必须是 getter/computed**：table
-  `changeEventInfo.pagination`（#17.1）与 sorter/filters 同判 ⇒ setup 里赋值一次就是初始快照。
-- 🚨 **派生数据要确认真的进了渲染链**：table `column` 一例（#17.2）hook 算对了但引擎仍吃原始
-  `props.columns` ⇒ 先写**静态**复现（align 有没有落到 td style），别只看「动态更不更新」。
-- 🚨 **「外层有 prop、引擎层没声明」必须显式转交**：modal `wrapStyle`/`wrapProps`（#19.1）、
-  drawer `push`（#20.1，不传就静默退化成兜底 180）。反之「外层声明了却没传」= 静默失效。
-- 🚨 **纯函数式的归一/解析放 setup = 快照**：pagination `useShowSizeChanger(props…)`（#18）
-  —— 后面的 computed 吃它的返回值 ⇒ 归一本身要进 computed。
-- 🚨 **rc 的焦点来源只在「变真」那帧记录、从不清空**（drawer #20.2）：渲染期 `!open ⇒ null`
-  会让离场后的 `afterOpenChange(false)` 拿不到触发器。
-- 🚨 **antd 多 child 结构要照抄**：dropdown-button = `[leftButton, <Dropdown>right</Dropdown>]`
-  （#21.1）—— 同级多 VNode 塞进只收单 child 的 Trigger，split 语义就丢。
-- 🚨 **provide 的 context 里来自 props 的字段要写 getter**（menu #22.7）；rc 的
-  `activeRef` 是「每次 render 同步 activeKey」，本仓易写成 setup 对齐一次 ⇒ 焦点永不落（#22.2）。
-- 🚨 **键盘代码在 jsdom 只有 `keyCode`**（`which` 恒 0）⇒ 一律 `which || keyCode` 归一化（#22.2）。
-- ⚠️ rc 的 `getFocusNodeList(c, true)` = 负 tabindex **也要收**（roving -1）；rc 的可见性判据
-  （offsetParent/rect）在 jsdom 恒 false ⇒ 退化成 display/visibility。
-- 🚨 **「归一/派生」computed 做完要确认真有人消费**（tabs `mergedItems` 曾是死代码，#23.1）；
-  归一 pipeline 顺序 = **先过滤非法项再 map**（否则对 null/字符串取属性抛错）。
-- 🚨 **语义 `styles.root` 要落到根 `style`**（类名常在、样式常漏，#23.3）；顺序 语义 root → 原生 attrs.style。
-- 🚨 **监听器解绑用「绑定时的元素」引用**（watch 回调里 ref 已是新值，#23.5）。
-- 🚨 **`vnode.props.class` 恒为字符串**（createVNode 已 normalizeClass）⇒ 「只处理字符串 class」的
-  分支永不走；class 合并一律 `normalizeClass([...])`。🚨 **`cloneVNode` 会把 class 拼两遍**
-  ⇒ 复刻 React cloneElement = 先 clone 再整体替换 `cloned.props`（保 dirs；勿用 createVNode 重建）。
-- 🚨 **`useId()` 只在同一个 app 内唯一**（序号 `instance.ids[1]++`，ids 由父级继承）⇒ 跨 app 要自传 id。
-- 🚨 **`inheritAttrs:false` 薄壳：类型 `extends` 承诺的字段必须显式声明 + 显式下传**（否则落
-  attrs 被丢弃；误展开 attrs 会打到触发元素，popover #25.1/#25.3）。原生 class/style 走语义 root。
-- 🚨 **静态 CSS 提取自 antd SSR 产物 ⇒ 必须按本仓真实 DOM 校对选择器**（antd `-inner` vs rc 系
-  `-container`，popover 13 条预设色曾全部落空，#25.2）。
+- 🚨 **antd 在 render 体里回填的（非 useMemo）本仓必须 getter/computed**：table `changeEventInfo.pagination`（#17.1）。
+- 🚨 **派生数据要确认真进了渲染链且真有人消费**：table `column`（引擎仍吃 `props.columns`，#17.2）、tabs
+  `mergedItems`（死代码，#23.1）⇒ 先写**静态**复现。归一 pipeline = **先过滤非法项再 map**。
+- 🚨 **「外层有 prop、引擎/下层没声明」必须显式转交**：modal `wrapStyle`/`wrapProps`（#19.1）、drawer `push`
+  （#20.1，静默退化 180）、popover/popconfirm 继承 Tooltip 的 10 个字段（#25.1/#26.1）。
+- 🚨 **纯函数式的归一/解析放 setup = 快照**（pagination `useShowSizeChanger`，#18）⇒ 归一本身进 computed。
+- 🚨 **`useMergeSemantic` 第三参传 computed/getter**（不是 `.value`）⇒ 函数式槽才跟得上 props（#26.3）。
+- 🚨 rc 的焦点来源只在「变真」帧记录、从不清空（#20.2）；`activeRef` 每次 render 同步 activeKey（#22.2）。
+- 🚨 **antd 多 child 结构照抄**：dropdown-button = `[leftButton, <Dropdown>right</Dropdown>]`（#21.1）。
+- 🚨 **provide 的 context 里来自 props 的字段写 getter**（#22.7）；监听器解绑用「绑定时的元素」（#23.5）。
+- 🚨 **`vnode.props.class` 恒为字符串**（createVNode 已 normalizeClass）⇒ class 合并一律 `normalizeClass([...])`。
+- 🚨 **`useId()` 只在同一个 app 内唯一**（序号 `instance.ids[1]++`）⇒ 跨 app 要自传 id（#24.2）。
+- 🚨 **`inheritAttrs:false` 薄壳：类型 `extends` 承诺的字段要显式声明+下传**；误展开 attrs 会打到触发
+  元素（双落点）。原生 class/style 走语义 root（#25.3）。转发 attrs 前先 `omit` 掉本组件要消费的键
+  （`onPopupClick` 因此双调，#26.1）。
+- 🚨 **静态 CSS 提取自 antd SSR 产物 ⇒ 按本仓真实 DOM 校对选择器**（antd `-inner` vs rc 系 `-container`，#25.2）。
 - 🚨 **薄壳→底层要隔离上层专属 ConfigProvider 配置**：antd `data-popover-inject` ⇒ Vue 用 provide/inject
-  标记（不污染公开 props）；公共 getPopupContainer/direction 不动（#24.4）。
+  标记；公共 getPopupContainer/direction 不动（#24.4）。
+- ⚠️ 键码在 jsdom 只有 `keyCode`（`which` 恒 0）；rc `getFocusNodeList(c,true)` 收负 tabindex；
+  rc 可见性判据（offsetParent/rect）在 jsdom 恒 false ⇒ 退化 display/visibility。
 **渲染 / 事件**
 - 🚨 computed 调 `slots.default?.()` 不过「插槽有无」变化 ⇒ 无 slot 那次求值不 track ⇒ 之后 slot 从无到有但缓存干净 ⇒ 选项永远不出现（#14.3，引擎级，§1.4）。⇒ 薄壳传插槽的包装函数要显式读本组件 reactive 分类态。
 - 🚨 computed 里的 dev 告警随惰性求值不触发一起消失 ⇒ 放渲染期沿对比（#14）。
