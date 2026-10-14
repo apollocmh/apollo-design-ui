@@ -27,12 +27,15 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#29 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#30 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
 - 🚨 **attrs 追踪准确口径**（#15.2 实测）：Vue 3.5.42 attrs 代理 `get` 会 track、`updateProps` 变化会 trigger ⇒ **computed 直接读 `attrs.class` 会更新**（「缓存旧值」是误报）。真坑 = **setup 期解构 attrs**（date-picker #5.3）。
-- 🚨 **`cloneVNode` 是合并不是替换**（`mergeProps`：`on*` 拼数组 ⇒ 双调；`class` 拼两遍）。复刻 React `cloneElement` ⇒ 先 `cloneVNode(child)` 再**整体替换 `cloned.props`**（#24.7；保 dirs，勿用 createVNode 重建）。
+- 🚨 **`cloneVNode` 是合并不是替换**
+- 🚨 **用 `cloneVNode` 注入 `on*` 后不要再手动调 `origin.props?.onXxx`**（合并 ⇒ 自动调一次，#30.2）。
+- 🚨 **`useDisabled` / `useSize` 这类 `toValue` hook 一律传 getter**（`() => props.disabled`，#30.3）；
+  全仓还剩 `slider/Slider.vue:153` 是裸值（待下轮）。（`mergeProps`：`on*` 拼数组 ⇒ 双调；`class` 拼两遍）。复刻 React `cloneElement` ⇒ 先 `cloneVNode(child)` 再**整体替换 `cloned.props`**（#24.7；保 dirs，勿用 createVNode 重建）。
 - 🚨 新 Boolean prop 必须 `withDefaults(…,{x:undefined})`（薄壳也要）：未传时 Vue 强制 `false`，`existShowConfig` 把「显式 false」当「用户关了」⇒ 整片不渲染（#6.2）。
 - 公共 Hook 收 `MaybeRefOrGetter`+`toValue`；`useSize` 必须解析器形态 `useSize((ctx)=>props.size??ctx)`（`()=>props.size` 会绕过 componentSize）。
 - 🚨 上游 React `useXxx(...)` 每次渲染重算 ⇒ Vue 侧包 `computed`，否则动态改配置静默无效（#12.3）。🚨 prop 默认值写字面量堵死 ConfigProvider 回退 ⇒ `default: undefined`+`mergedXxx`。
