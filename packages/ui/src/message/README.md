@@ -31,6 +31,10 @@ message/
   antd 也是这样分层的（message 完全建立在 rc-notification 上）。
 - **模块级单例**：`message.success()` 没有组件实例 ⇒ holder/队列/默认配置挂在模块上；
   测试用 `actDestroy()` 复位。
+  ⚠️ `actDestroy()` 必须**先卸载根应用**（Issue #43）：`createApp(GlobalHolder).mount(container)`
+  建的是真 Vue app，只重置模块变量会留下一个仍在运行的 app（watch 还在、Teleport 到
+  `document.body` 的 notice 不会消失）⇒ 要在 `GlobalMessage` 上留 `app` 引用并 `unmount()`。
+  🔭 同族未修：`notification/index.ts` 的 `actDestroy()` 同样没有 unmount（不在本 Issue 范围）。
 - **holder 挂在游离 div 上**（React 用 `DocumentFragment`）：两者都不进 document。
 - **`config()` 是合并语义**；`getContainer` 在调用 `config()` 时求值一次并缓存。
 

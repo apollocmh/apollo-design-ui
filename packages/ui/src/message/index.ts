@@ -26,7 +26,7 @@
  *   - 不实现 `holderRender`（D30：React 特有的「再包一层」）；
  *   - 不实现 `warnContext` 告警（D30 同源：本仓没有那套 context 告警基建）。
  */
-import { createApp, defineComponent, shallowRef } from 'vue';
+import { type App, createApp, defineComponent, shallowRef } from 'vue';
 
 import type {
   ArgsProps,
@@ -48,6 +48,12 @@ import { wrapPromiseFn } from './util';
 interface GlobalMessage {
   /** 游离容器（不进 document —— 与 antd 的 DocumentFragment 同效）。 */
   container: HTMLElement;
+  /**
+   * 根应用。⚠️ 必须留引用：销毁时要 `unmount()` —— 只重置模块变量会留下一个
+   * 仍在运行的 Vue app（watch 监听 + Teleport 到 `document.body` 的 notice 不会消失）
+   * （Issue #43）。
+   */
+  app?: App<Element> | null;
   instance?: MessageInstance | null;
   sync?: () => void;
 }
@@ -130,7 +136,9 @@ function flushMessageQueue(): void {
     globalConfigRef.value = getGlobalContext();
 
     act(() => {
-      createApp(GlobalHolder).mount(container);
+      const app = createApp(GlobalHolder);
+      app.mount(container);
+      newMessage.app = app;
     });
 
     return;
@@ -306,6 +314,9 @@ export function actWrapper(wrapper: (fn: () => void) => void): void {
  *    否则上一条用例的实例会被下一条复用。
  */
 export function actDestroy(): void {
+  // ⚠️ 先卸载根应用：只重置模块变量会留下一个仍在运行的 Vue app
+  //    （它的 watch 还在、Teleport 出去的 notice 还挂在 document.body 上）。
+  message?.app?.unmount();
   message = null;
   taskQueue = [];
   defaultGlobalConfig = {};
