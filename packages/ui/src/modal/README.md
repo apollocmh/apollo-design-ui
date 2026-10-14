@@ -90,6 +90,20 @@ registry 数据：token 数 = **6**（公开面）。
 `modalCloseIcon{Color,HoverColor}` / `modalCloseBtnSize` / `modalConfirmIconSize` /  
 `modalTitleHeight`。
 
+## 4.5 Wrapper 透传与前缀（Issue #19）
+
+1. 🚨 **`wrapStyle` / `wrapProps` 必须显式转交 `DialogWrap`** —— 两者是公开 prop，引擎
+   `Dialog` 的 wrapper 合并顺序是 `zIndex → wrapStyle → styles.wrapper → display`，
+   `wrapProps` **最后展开**（能盖到 `onClick`/`onMousedown`）。`styles.wrapper`、`maskProps`、
+   `bodyProps` 是不同层级/通道，**不能**当等价替代。
+2. 🚨 **`prefixCls` / `rootPrefixCls` 是 computed**：局部前缀或 ConfigProvider 全局前缀
+   运行时变更后，mask / wrap / panel / container / 动效名要跟着换。带前缀的派生面还有三处
+   容易漏：
+   - `useClosable` 的 **fallback**（兜底图标 `{p}-close-icon` + `closeIconRender`）⇒
+     fallback 传 computed（hook 的第三个参数收 `MaybeRefOrGetter`）；
+   - `usePanelRef` 的 **panelSelector**（`.{p}-container`）⇒ 传 computed，ref 回调里现读；
+   - `wrapClassName` 上的 `{p}-centered` / `{p}-wrap-rtl`。
+
 ## 5. 已知缺口
 
 | #  | 缺口                                                    | 说明                                                          |

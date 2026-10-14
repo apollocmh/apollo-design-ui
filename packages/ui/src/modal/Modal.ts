@@ -178,8 +178,11 @@ export default defineComponent({
       focusable?: FocusableConfig;
     }>('modal');
 
-    const prefixCls = props.prefixCls || config.getPrefixCls('modal');
-    const rootPrefixCls = config.getPrefixCls();
+    // ⚠️ 两个前缀都必须是 computed —— 普通字符串是 setup 期快照，父组件更新局部
+    //    `prefixCls`（或 ConfigProvider 换全局前缀）后，mask/wrap/panel 的类名与动效名
+    //    会继续用旧值（Issue #19.2）。
+    const prefixCls = computed(() => props.prefixCls || config.getPrefixCls('modal'));
+    const rootPrefixCls = computed(() => config.getPrefixCls());
 
     // ============================ Closable ============================
     const closableAfterClose = computed(() =>
@@ -197,7 +200,7 @@ export default defineComponent({
     const mask = useMergedMask(
       () => props.mask,
       () => config.mask,
-      () => prefixCls,
+      () => prefixCls.value,
       () => props.maskClosable,
     );
 
@@ -272,7 +275,9 @@ export default defineComponent({
           closeIcon: (config as { closeIcon?: unknown }).closeIcon,
         })),
       ),
-      {
+      // ⚠️ fallback 必须是 computed：兜底图标与 `closeIconRender` 都带 `prefixCls`
+      // （普通对象只在 setup 求值一次 ⇒ 换前缀后关闭图标类名停留旧值，Issue #19.2）。
+      computed(() => ({
         closable: true,
         // ⚠️ antd 的 `useClosable` hook 内部读 locale 的 `global.close` 作为
         //    关闭按钮可访问名（en=`Close` / zh=`关闭`）；`'Close'` 只是纯函数
@@ -281,9 +286,9 @@ export default defineComponent({
         // ⚠️ 兜底图标必须是**真的图标**（`CloseOutlined`），不是空 span ——
         //    `renderCloseIcon` 只在**没给** closeIcon 时才补图标，给一个空 span
         //    会得到一个「有按钮、没有 ×」的面板（L6 抓到：desktop 0.008% 全是这个 ×）
-        closeIcon: h(CloseOutlined, { class: `${prefixCls}-close-icon` }),
-        closeIconRender: (icon: unknown) => renderCloseIcon(prefixCls, icon as VNodeChild),
-      },
+        closeIcon: h(CloseOutlined, { class: `${prefixCls.value}-close-icon` }),
+        closeIconRender: (icon: unknown) => renderCloseIcon(prefixCls.value, icon as VNodeChild),
+      })),
     );
 
     const mergedClosable = computed(() => {
@@ -303,15 +308,16 @@ export default defineComponent({
         ? (node: VNodeChild) =>
             // ⚠️ 必须包成数组：`h` 的 children 重载不收 `null | undefined`
             //    （而 `VNodeChild` 含它们）—— 上游的 `createElement` 没这个限制
-            h('div', { class: `${prefixCls}-render` }, [props.modalRender?.(node) as never])
+            h('div', { class: `${prefixCls.value}-render` }, [props.modalRender?.(node) as never])
         : undefined,
     );
 
     // ============================= Refs ==============================
     const panelSelector = computed(
-      () => `.${prefixCls}-${props.modalRender ? 'render' : 'container'}`,
+      () => `.${prefixCls.value}-${props.modalRender ? 'render' : 'container'}`,
     );
-    const innerPanelRef = usePanelRef(panelSelector.value);
+    // ⚠️ 选择器随前缀变 ⇒ 传 computed（panelRef 在每次元素挂载时现读）
+    const innerPanelRef = usePanelRef(panelSelector);
     const mergedPanelRef = (el: unknown): void => {
       const external = props.panelRef;
       if (typeof external === 'function') (external as (e: unknown) => void)(el);
@@ -398,7 +404,7 @@ export default defineComponent({
         for (const breakpoint of Object.keys(width) as ModalBreakpoint[]) {
           const breakpointWidth = width[breakpoint];
           if (breakpointWidth !== undefined && breakpointWidth !== null) {
-            vars[`--${prefixCls}-${breakpoint}-width`] = isNumber(breakpointWidth)
+            vars[`--${prefixCls.value}-${breakpoint}-width`] = isNumber(breakpointWidth)
               ? `${breakpointWidth}px`
               : breakpointWidth;
           }
@@ -436,8 +442,8 @@ export default defineComponent({
     return () => {
       const wrapClassNameExtended = [
         props.wrapClassName,
-        (props.centered ?? config.centered) ? `${prefixCls}-centered` : undefined,
-        config.direction === 'rtl' ? `${prefixCls}-wrap-rtl` : undefined,
+        (props.centered ?? config.centered) ? `${prefixCls.value}-centered` : undefined,
+        config.direction === 'rtl' ? `${prefixCls.value}-wrap-rtl` : undefined,
       ]
         .filter(Boolean)
         .join(' ');
@@ -452,7 +458,7 @@ export default defineComponent({
             paragraph: { rows: 4 },
             // 根类名走 Vue 原生 `class`（Skeleton 已迁移：根 class 由 attrs 承接；
             // 其余多余属性仍按上游丢弃）
-            class: `${prefixCls}-body-skeleton`,
+            class: `${prefixCls.value}-body-skeleton`,
           } as never)
         : (semanticContent.value as never);
 
@@ -463,7 +469,7 @@ export default defineComponent({
             string,
             unknown
           >),
-          prefixCls,
+          prefixCls: prefixCls.value,
           visible: props.open,
           zIndex: zIndex.value,
           getContainer:
@@ -475,12 +481,21 @@ export default defineComponent({
           closeIcon: closableResult.value.closeIconNode,
           // ⚠️ 动效名走 **rootPrefixCls**（`apollo-zoom` / `apollo-fade`），
           //    不是组件前缀 —— 见 `util.ts` 的 `getTransitionName`
-          transitionName: getTransitionName(rootPrefixCls, 'zoom', props.transitionName),
-          maskTransitionName: getTransitionName(rootPrefixCls, 'fade', props.maskTransitionName),
+          transitionName: getTransitionName(rootPrefixCls.value, 'zoom', props.transitionName),
+          maskTransitionName: getTransitionName(
+            rootPrefixCls.value,
+            'fade',
+            props.maskTransitionName,
+          ),
           mask: mask.enabled.value,
           maskClosable: mask.closable.value,
           maskStyle: props.maskStyle,
           maskProps: props.maskProps,
+          // ⚠️ 这两个 prop 是**公开**的（interface.ts 有声明），但原来没往下传 ⇒ 调用方的
+          //    wrapper 样式 / ARIA / data-* 全丢（Issue #19.1）。合并顺序由 engine/Dialog
+          //    决定：`zIndex → wrapStyle → styles.wrapper → display`，`wrapProps` 最后展开。
+          wrapStyle: props.wrapStyle,
+          wrapProps: props.wrapProps,
           scrollLock: props.scrollLock,
           keyboard: props.keyboard,
           // 调用方原生 class（位置与原先的 props.className 一致）

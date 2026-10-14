@@ -188,16 +188,22 @@ export function computeClosable(
 }
 
 /** composable 版：响应式包装 computeClosable。 */
+/**
+ * ⚠️ `fallbackCloseCollection` 也收 `MaybeRefOrGetter`：fallback 里常带前缀相关的
+ * `closeIcon` / `closeIconRender`（Modal 的 `{p}-close-icon`），前缀可运行时变更 ⇒
+ * 传普通对象 = setup 快照，换前缀后兜底图标继续用旧类名（Issue #19.2）。
+ * 其它消费方传普通对象行为不变（`toValue` 原样返回）。
+ */
 export function useClosable(
   propCloseCollection: MaybeRefOrGetter<ClosableCollection | undefined>,
   contextCloseCollection: MaybeRefOrGetter<ClosableCollection | undefined>,
-  fallbackCloseCollection: ClosableFallback = {},
+  fallbackCloseCollection: MaybeRefOrGetter<ClosableFallback> = {},
 ): ComputedRef<ClosableResult> {
   return computed(() =>
     computeClosable(
       toValue(propCloseCollection),
       toValue(contextCloseCollection),
-      fallbackCloseCollection,
+      toValue(fallbackCloseCollection),
     ),
   );
 }
