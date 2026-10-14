@@ -30,6 +30,17 @@
 - `emits` 声明会把 `onRefresh` 从 props 剥离 ⇒ 监听器存在性从
   `instance.vnode.props.onRefresh` 探测（**新坑 #68**）。
 - `color` 默认 = 默认主题 `colorText`（构建期解析值，D50 同判）。
+- **尺寸的两条通道别混**（Issue #36）：
+  - HTML `width`/`height` **属性** = `size`（画布坐标尺寸，恒为数字）；
+  - CSS `width`/`height` = **调用方 `style`**（antd 给 rc 的是
+    `style: { width: style?.width, height: style?.height }`，会把 rc 内部的
+    `{ height: size, width: size, ...style }` 覆盖成 `undefined` ⇒ 调用方没传
+    style 时 canvas **没有任何内联尺寸**，视觉尺寸交给 CSS 的 `width/height:100%`）。
+    ⚠️ **不是** `size` —— 真浏览器探针实测两侧都是
+    `<canvas height="160" width="160" role="img">`（computed 134×134）。
+- **数值补 `px`**：React 会自动为数字内联样式补 `px`，Vue 不会 ⇒ 带值时一律过
+  `px()`。根那里还要把 px 化后的值**再覆盖回**调用方 style —— 否则根 vnode 末尾
+  展开的 `attrs.style` 会用裸数字把它顶掉，整个声明被 CSSOM 丢弃。
 
 ## 4. Component Token（1 个）
 

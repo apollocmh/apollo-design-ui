@@ -311,17 +311,28 @@ export const QrCode = defineComponent({
       // ⚠️ 数字必须补 px（Vue CSSOM 不自动加单位，CHECKLIST #66）
       const px = (n: number | string | undefined): string | number | undefined =>
         typeof n === 'number' ? `${n}px` : n;
+      // 调用方 `style` 的 width/height（Vue 原生 attrs，可能是字符串形态 ⇒ 取不到就当没传）
+      const styleWH = attrs.style as Record<string, string | number> | undefined;
+      /**
+       * 根的宽高：antd 是 `style?.width ?? size` —— 数字在 React 会自动补 `px`，
+       * Vue 不会（CHECKLIST #66 / Issue #36）。
+       * ⚠️ 必须把 px 化后的值**再覆盖回**调用方 style（下面的 `callerStyle`）：
+       *    否则根 vnode 末尾展开的 `attrs.style` 会用裸数字覆盖掉这里的结果
+       *    ⇒ CSSOM 丢弃该声明 ⇒ 「`<QrCode :style="{ width: 200 }" />` 根宽失效」。
+       */
+      const rootSize = {
+        width: px(styleWH?.width ?? props.size),
+        height: px(styleWH?.height ?? props.size),
+      };
       const rootStyle = {
         backgroundColor: props.bgColor,
         ...(mergedStyles.value.root ?? {}),
-        // 根 style 是 Vue 原生 attrs：宽度/高度仍按 antd 语义优先取调用方 style
-        width: px(
-          (attrs.style as Record<string, string | number> | undefined)?.width ?? props.size,
-        ),
-        height: px(
-          (attrs.style as Record<string, string | number> | undefined)?.height ?? props.size,
-        ),
+        ...rootSize,
       };
+      const callerStyle =
+        attrs.style && typeof attrs.style === 'object'
+          ? { ...(attrs.style as Record<string, unknown>), ...rootSize }
+          : attrs.style;
 
       const nodes: VNodeChild[] = [];
 
@@ -351,7 +362,15 @@ export const QrCode = defineComponent({
       if (props.type === 'canvas') {
         nodes.push(
           h('canvas', {
-            style: { height: size, width: size },
+            // ⚠️ **逐字对拍 antd 6.6.4**（Issue #36）：上游给 rc 的
+            //    `style: { width: style?.width, height: style?.height }` 会把 rc 内部
+            //    的 `{ height: size, width: size, ...style }` **覆盖成 undefined**
+            //    ⇒ 调用方没传 style 时 canvas **没有**任何内联尺寸（视觉尺寸交给
+            //    CSS 的 `width/height:100%` 与 HTML 属性）；**不是** `size`。
+            //    真浏览器探针实测：两侧都是 `<canvas height="160" width="160" role="img">`。
+            //    ⚠️ 只有真的带值时才补 `px`（React 会自动补，Vue 不会 ⇒ 裸数字会被
+            //    CSSOM 丢弃）。HTML `width`/`height` 属性则恒为 `size`（画布坐标尺寸）。
+            style: { height: px(styleWH?.height), width: px(styleWH?.width) },
             height: size,
             width: size,
             ref: canvasRef,
@@ -425,7 +444,7 @@ export const QrCode = defineComponent({
           ...attrs,
           ref: rootRef,
           class: rootClassNames,
-          style: [rootStyle, attrs.style],
+          style: [rootStyle, callerStyle],
         },
         nodes,
       );
