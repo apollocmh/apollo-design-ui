@@ -35,6 +35,12 @@ extraMargin(=paddingLG 0 0 0)`。CSS 变量声明在 `.apollo-result`，`iconFon
 2. **`style` prop 折进 `styles.root`** 且**覆盖**之（`useMergeSemantic` 的顺序契约）。
 3. **`pickAttrs(attrs, { aria: true, data: true })`** —— id/class 等不透传。
 4. **`nativeElement`** 经 `defineExpose` 暴露。
+5. **具名插槽覆盖同名 prop 时，`undefined` 与 `null` 必须区分**（Issue #34）：
+   `readNamedSlot()` 用 `undefined` = 没给插槽（回退 `props.title` / `props.subTitle`）、
+   `null` = 给了但渲染为空（comment / `null` / `false` / 空串，**显式覆盖、不回退**）。
+   ⇒ 回退只能写 `slot === undefined ? prop : slot`，**不能**用 `??`
+   （`??` 对 `null` 也回退 ⇒ `<template #title><span v-if="show"/></template>`
+   在 `show` 转 false 时会重新显示回旧标题）。
 
 ## 6. 连带修复：图标基线进全局
 

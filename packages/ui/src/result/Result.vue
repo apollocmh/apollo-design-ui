@@ -134,9 +134,12 @@ const bodyClass = computed(() => [`${prefixCls.value}-body`, mergedClassNames.va
 // ---------------------------------------------------------------------------
 
 /**
- * 读具名 slot；无 slot 返回 undefined，空 slot 归一成 comment ⇒ 返回 null（隐藏）。
- * 单元素数组 / Text VNode 解包（Vue 把 string slot 归一为 Text VNode），便于判字符串。
- * slot 优先于同名 prop。
+ * 读具名 slot；无 slot 返回 `undefined`，空 slot（comment / null / false / 空串）返回
+ * `null`。单元素数组 / Text VNode 解包（Vue 把 string slot 归一为 Text VNode），
+ * 便于判字符串。
+ *
+ * ⚠️ `undefined` 与 `null` **必须区分**：前者是「没给插槽」（回退同名 prop），
+ *    后者是「给了但渲染为空」（显式覆盖，**不回退**）。
  */
 function readNamedSlot(name: string): unknown {
   const fn = slots[name];
@@ -149,10 +152,19 @@ function readNamedSlot(name: string): unknown {
   return isEmptyVNode(r) ? null : r;
 }
 
-const mergedTitle = computed(() => (readNamedSlot('title') ?? props.title) as VNodeChild | null);
-const mergedSubTitle = computed(
-  () => (readNamedSlot('subTitle') ?? props.subTitle) as VNodeChild | null,
-);
+/**
+ * 插槽覆盖同名 prop（Issue #34）。
+ *
+ * ⚠️ **不能**写 `readNamedSlot('title') ?? props.title`：`??` 对 `null` 也回退 ⇒
+ *    显式空插槽（`<template #title><span v-if="show"/></template>`，show 转 false）
+ *    反而显示回旧标题。只认 `undefined` 才是「没给插槽」。
+ */
+function mergeSlotWithProp(slotNode: unknown, propValue: unknown): VNodeChild | null {
+  return (slotNode === undefined ? propValue : slotNode) as VNodeChild | null;
+}
+
+const mergedTitle = computed(() => mergeSlotWithProp(readNamedSlot('title'), props.title));
+const mergedSubTitle = computed(() => mergeSlotWithProp(readNamedSlot('subTitle'), props.subTitle));
 const mergedExtra = computed(() => readNamedSlot('extra') as VNodeChild | null);
 const iconSlotNode = computed(() => readNamedSlot('icon') as VNodeChild | null);
 
