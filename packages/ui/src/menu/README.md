@@ -40,6 +40,24 @@ _internal/overflow.ts    # rc-overflow 的 Vue 版（horizontal 溢出折叠基�
 
 ## 3. 与 antd 的差异
 
+## 3.5 Menu 的五条判据（Issue #22）
+
+1. 🚨 **键盘候选集要收 roving `tabindex="-1"`**：rc 是 `getFocusNodeList(container, true)`
+   ⇒ `focusable(node, includePositive = true)`（负 tabindex 也要收）。写成
+   `[tabindex]:not([tabindex="-1"])` 会把所有菜单项排除，ArrowUp/Down、Home/End 全失效。
+2. 🚨 **焦点落点要在 rAF 里对**实时** activeKey 判定**：rc 的 `activeRef.current` 每次 render
+   跟着 activeKey 走；本仓在 setup 对齐一次 ⇒ 条件恒 false ⇒ 一次都不 focus。
+3. 🚨 **`e.which` 在 jsdom 恒为 0**（只有 `keyCode` 有值）⇒ 用 `getEventKeyCode()`
+   （`which || keyCode`）归一化，否则键盘路径不可测（浏览器两者都有值，行为不变）。
+4. 🚨 **overflow 的「更多」子菜单必须拿到省略项**（rc `Menu.js:361-371`：`childrenNodes =
+   omittedItems`、`internalPopupClose = len === 0`）；写死空 children ⇒ 「更多」永远空。
+5. 🚨 **context 对象是 setup 期建的**：普通字段 = 快照 ⇒ `disabled`/`inlineIndent`/延迟/
+   `inlineCollapsed`/`theme`/`expandIcon` 一律写成 **getter**（消费处读时现取、可被追踪）。
+
+⚠️ 未修（已登记 `KNOWN-ISSUES.md` §1.6/§1.7）：SubMenu 的 popup 恒 `visibility:hidden`
+（缺 rc PopupTrigger 的定位，单独翻可见性会打断 L6 基线）；公开类型与运行时 props 的逐字段
+对照；measure 路径缺 `unregisterPath`。
+
 登记于 `COMPATIBILITY.md` §9.2 **D87–D90**：flushSync（PLATFORM）、RO 时序
 （PLATFORM）、items 唯一真源（INTENDED）、keyPath reverse 口径（UPSTREAM 事实契约）。
 

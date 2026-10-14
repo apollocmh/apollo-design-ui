@@ -213,6 +213,33 @@ const itemPrefixCls = `${props.prefixCls}-item`;   // ← setup 期求值一次
 `.value`（transfer/Section 的改法可直接抄，`s15-issue15.test.ts` 有对应用例）；改完需跑 form
 全量用例 + L4/L6（form 是已完成组件，按惯例单独一轮）。
 
+### §1.6 menu：SubMenu 的 popup 恒为 `visibility:hidden`（2026-10-14 登记 · Issue #22.1，未修）
+
+**根因**：`SubMenu.ts` 的 popup 节点（`Teleport` 到 body）样式写死
+`{ position: 'absolute', visibility: 'hidden' }`，且**没有任何对齐/定位实现** —— 文件头已注明
+「popup 的精确对齐（rc `PopupTrigger` 的 offset 计算）PENDING」。
+
+**为什么本轮不直接翻成 visible**：
+1. 只改可见性而不补定位 ⇒ 浮层会以 body 为原点绝对定位乱飞，**比隐藏更糟**；
+2. 现有 **L6 视觉基线（menu/vertical、horizontal…）与 DOM 契约都编码了「popup 不可见」**
+   （React 侧在静态渲染里 Trigger 的浮层本就不产出）⇒ 单独翻可见性会让 menu 的 L6/L4 变红，
+   需要连带重拍基线——属于「实现 popup 定位」这项工程的一部分，不是本 Issue 的补丁范围。
+
+**正确修法**（单独一轮）：移植 rc `PopupTrigger`（placements + `getPopupContainer` + motion），
+浮层只在**测量阶段**隐藏，对齐完成后置为可见；同时重拍 menu 的 L6 基线并复核 Tabs/Dropdown 的
+组合用例。
+
+### §1.7 menu：公开类型与运行时 props 的逐字段对照未完成（2026-10-14 登记 · Issue #22.6/#22.8）
+
+- **#22.6**（P1）：`classNames` / `styles` / `expandIcon` / `tooltip` 等公开 API 与运行时消费
+  的对照表未做完 —— 已确认的是：`expandIcon` 走 `#expandIcon`/OverrideProvider；`classNames/styles`
+  在 Menu 上尚未接入语义通道（与 §1「menu 无语义通道」同族）。
+- **#22.8**（P2）：`MenuItem` / `SubMenu` 的 measure 路径只 `registerPath`、**缺对称的
+  `unregisterPath`**（`context.ts` 的 `PathRegister` 只有 register 被用）⇒ 动态移除/重建同 key
+  节点后，旧 keyPath 映射可能残留。
+
+两项都不影响当前已交付行为（无用例因它们变红），按「不制造无意义提交」留待专项一轮。
+
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |

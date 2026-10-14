@@ -10,7 +10,7 @@ import { isEmptyVNode } from '@apollo-design/utils';
 import { computed, defineComponent, h, isVNode, type PropType, Text, type VNodeChild } from 'vue';
 
 import { useFullPath, useMeasure, useMenuContext } from './context';
-import { getMenuId, KeyCode } from './engine/use-accessibility';
+import { getEventKeyCode, getMenuId, KeyCode } from './engine/use-accessibility';
 import type { MenuClickEventHandler, MenuHoverEventHandler, RenderIconType } from './interface';
 
 /** 解包 Vue slot 归一结果：单元素数组 ⇒ 元素；Text VNode（string slot 归一产物）⇒ 字符串。 */
@@ -103,7 +103,7 @@ const MenuItem = defineComponent({
         ctx.onItemClick(info);
       };
       const onInternalKeyDown = (e: KeyboardEvent): void => {
-        if (e.which === KeyCode.ENTER && !mergedDisabled.value) {
+        if (getEventKeyCode(e) === KeyCode.ENTER && !mergedDisabled.value) {
           const info = getEventInfo(e);
           props.onClick?.(info as never);
           ctx.onItemClick(info);

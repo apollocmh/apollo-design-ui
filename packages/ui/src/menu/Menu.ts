@@ -29,8 +29,10 @@ import {
   ref,
   shallowRef,
   type VNodeChild,
+  watch,
 } from 'vue';
 import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
+import { useDirection } from '../config-provider/context';
 import {
   isSubPathKeyKey,
   type MenuContextData,
@@ -164,6 +166,14 @@ const Menu = defineComponent({
 
     // ====================== Active =======================
     const activeKey = ref<string | undefined>(props.activeKey);
+    // ⚠️ 受控 `activeKey` 要跟着 props 走（原来只在 setup 取一次 ⇒ 外部改了不同步，
+    //    Issue #22.7）
+    watch(
+      () => props.activeKey,
+      (key) => {
+        activeKey.value = key;
+      },
+    );
     const onActive = (key: string): void => {
       activeKey.value = key;
     };
@@ -225,7 +235,10 @@ const Menu = defineComponent({
       const nextOpen = open ?? !mergedOpenKeys.value.includes(key);
       onInternalOpenChange(key, nextOpen);
     };
-    const isRtl = computed(() => false);
+    // ⚠️ rc `Menu.js:104`：`isRtl = direction === 'rtl'` —— 写死 false 会让左右键
+    //    导航、箭头与 popup 方向全部失效（Issue #22.5）。
+    const direction = useDirection();
+    const isRtl = computed(() => direction.value === 'rtl');
     const onInternalKeyDown = useAccessibility({
       mode: mergedMode,
       activeKey: activeKey as ComputedRef<string | undefined>,
@@ -244,27 +257,51 @@ const Menu = defineComponent({
       prefixCls,
       menuId,
       mode: mergedMode,
-      disabled: props.disabled,
+      get disabled() {
+        return props.disabled;
+      },
       activeKey: activeKey as ComputedRef<string | undefined>,
       onActive,
       onInactive,
       selectedKeys: mergedSelectKeys as ComputedRef<string[]>,
-      inlineIndent: props.inlineIndent,
-      subMenuOpenDelay: props.subMenuOpenDelay,
-      subMenuCloseDelay: props.subMenuCloseDelay,
-      forceSubMenuRender: props.forceSubMenuRender,
-      triggerSubMenuAction: props.triggerSubMenuAction,
-      getPopupContainer: props.getPopupContainer,
+      // ⚠️ 以下是 **getter**：context 对象在 setup 里只建一次，写成普通值就是快照 ⇒
+      //    运行时改 `disabled`/`inlineIndent`/延迟/`collapsed`/`theme` 等配置，
+      //    MenuItem / SubMenu 完全感知不到（Issue #22.7）。getter 让消费处在
+      //    渲染/computed 里读到最新值并被追踪（与 table 的 ctx getter 同判）。
+      get inlineIndent() {
+        return props.inlineIndent;
+      },
+      get subMenuOpenDelay() {
+        return props.subMenuOpenDelay;
+      },
+      get subMenuCloseDelay() {
+        return props.subMenuCloseDelay;
+      },
+      get forceSubMenuRender() {
+        return props.forceSubMenuRender;
+      },
+      get triggerSubMenuAction() {
+        return props.triggerSubMenuAction;
+      },
+      get getPopupContainer() {
+        return props.getPopupContainer;
+      },
       motion: null,
       defaultMotions: null,
       onItemClick: onInternalClick as (info: unknown) => void,
       onOpenChange: onInternalOpenChange,
       openKeys: mergedOpenKeys,
       renderNode: renderNode as unknown as (node: unknown, keyPath: string[]) => unknown,
-      inlineCollapsed: props.inlineCollapsed ?? false,
+      get inlineCollapsed() {
+        return props.inlineCollapsed ?? false;
+      },
       firstLevel: true,
-      theme: props.theme,
-      expandIcon: override?.expandIcon as RenderIconType | undefined,
+      get theme() {
+        return props.theme;
+      },
+      get expandIcon() {
+        return override?.expandIcon as RenderIconType | undefined;
+      },
     };
     provide(menuContextKey, menuContext);
     provide(isSubPathKeyKey, isSubPathKey);
@@ -295,6 +332,32 @@ const Menu = defineComponent({
     });
 
     // ====================== Render =======================
+    /**
+     * items 数据项上允许落到 `li` 的 DOM/ARIA 键（rc：`parseItems` 的 restProps 原样进
+     * MenuItem ⇒ `id`/`role`/`aria-*` 都能表达；antd 的 Tabs 溢出下拉就靠
+     * `<MenuItem role="option" aria-controls=...>` 把菜单当 listbox 用 —— Issue #22.4）。
+     * ⚠️ 只放纯 DOM 语义的键：`tabindex` / `data-menu-id` / 事件仍由 MenuItem 决定。
+     */
+    const ITEM_DOM_KEYS = [
+      'id',
+      'role',
+      'title',
+      'aria-controls',
+      'aria-expanded',
+      'aria-haspopup',
+      'aria-label',
+      'aria-describedby',
+    ] as const;
+
+    const pickItemDomAttrs = (node: ParsedNode): Record<string, unknown> => {
+      const out: Record<string, unknown> = {};
+      for (const key of ITEM_DOM_KEYS) {
+        const value = (node as unknown as Record<string, unknown>)[key];
+        if (value !== undefined) out[key] = value;
+      }
+      return out;
+    };
+
     /** 规范节点 → vnode（可见/measure 两棵子树共用）。 */
     function renderNode(
       node: ParsedNode,
@@ -309,6 +372,7 @@ const Menu = defineComponent({
           return h(
             MenuItem,
             {
+              ...pickItemDomAttrs(node),
               key: eventKey,
               eventKey,
               disabled: node.disabled,
@@ -407,8 +471,10 @@ const Menu = defineComponent({
           `${prefixCls}-${mergedMode.value}`,
           `${prefixCls}-${props.theme}`,
           props.inlineCollapsed ? `${prefixCls}-inline-collapsed` : undefined,
+          isRtl.value ? `${prefixCls}-rtl` : undefined,
           typeof attrs.class === 'string' ? attrs.class : undefined,
         ],
+        dir: direction.value,
         onKeydown: onInternalKeyDown,
       };
 
@@ -440,14 +506,17 @@ const Menu = defineComponent({
                 index > overflowIndex.value,
                 `${prefixCls}-overflow-item`,
               ),
-            renderRawRest: () =>
+            renderRawRest: (omittedItems: unknown[]) =>
               h(
                 SubMenu,
                 {
                   key: OVERFLOW_KEY,
                   eventKey: OVERFLOW_KEY,
-                  internalPopupClose: true,
-                  childrenNodes: [],
+                  // ⚠️ rc `Menu.js:361-371`：省略项**作为 children 进子菜单**，
+                  //    `internalPopupClose = len === 0`。原来写死 `true` + 空 children
+                  //    ⇒ 「更多」永远是个空菜单（Issue #22.3）。
+                  internalPopupClose: (omittedItems?.length ?? 0) === 0,
+                  childrenNodes: (omittedItems ?? []) as ParsedNode[],
                 } as never,
                 // 溢出「更多」指示：程序化 VNode ⇒ 走 #title slot（C8-R2）
                 { title: () => h(EllipsisOutlined) },
