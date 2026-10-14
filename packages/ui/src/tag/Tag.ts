@@ -127,7 +127,9 @@ export default defineComponent({
     );
 
     // ===================== Disabled =====================
-    const mergedDisabled = useDisabled(props.disabled);
+    // ⚠️ 必须传 **getter**：`useDisabled` 用 `toValue` 解包，传裸值是 setup 期快照
+    //    ⇒ 后续 `disabled` 变化读不到（Issue #30.3；`disabled-context.ts` 已注明）。
+    const mergedDisabled = useDisabled(() => props.disabled);
 
     // ====================== Visible ======================
     const visible = ref(true);
@@ -227,12 +229,14 @@ export default defineComponent({
                 ...(mergedStyles.value.close as Record<string, string | number | undefined>),
                 ...(origin.props?.style as object),
               },
+              // ⚠️ `cloneVNode` 对 `on*` 是**合并**（拼成数组）⇒ 图标自带的
+              //    `onClick` 会被 Vue 自动调用一次；这里再手动调一次就变两次
+              //    （Issue #30.2）。只保留「关掉」这一步。
+              //    `onKeydown` 同理（且要尊重用户的 `preventDefault`）。
               onClick: (e: MouseEvent) => {
-                (origin.props?.onClick as ((ev: MouseEvent) => void) | undefined)?.(e);
                 triggerClose(e);
               },
               onKeydown: (e: KeyboardEvent) => {
-                (origin.props?.onKeyDown as ((ev: KeyboardEvent) => void) | undefined)?.(e);
                 if (!e.defaultPrevented) {
                   handleCloseKeyDown(e);
                 }

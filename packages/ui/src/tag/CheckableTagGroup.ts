@@ -102,8 +102,9 @@ export default defineComponent({
       } else {
         newValue = checked ? option.value : null;
       }
+      // ⚠️ 单一回调出口：`setMergedValue` → `useControlledValue.onChange` 已经发过
+      //    `props.onChange`；这里再调一次就会**双通知**（Issue #30.1）。
       setMergedValue(newValue);
-      props.onChange?.(newValue);
     };
 
     return () => {

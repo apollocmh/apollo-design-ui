@@ -41,6 +41,24 @@ solidTextColor(#fff，isBright(colorBgSolid) 判定)`。antd cssVar 产物同为
 4. **CheckableTag 键盘**：空格触发 onChange（Enter 不触发，antd 逐字）。
 5. **tagStyle 合并**：disabled → 只 styles.root；否则动态色在前、语义槽位覆盖。
 
+## 5.5 Issue #30 的三条判据
+
+1. **CheckableTag.Group 的 onChange 只有一个出口**（#30.1）：`setMergedValue`
+   （即 `useControlledValue.onChange`）已经发过 `props.onChange`，`handleChange`
+   里**不能再调一次** —— 否则每次点击通知两次（单选/多选/受控都是）。
+2. **关闭图标的事件靠 `cloneVNode` 合并，不要再手动调一次**（#30.2）：
+   `cloneVNode(origin, { onClick })` 把 `on*` **拼成数组** ⇒ 图标自带的 `onClick`
+   会被 Vue 自动调用；`closeIconRender` 里再手动调 `origin.props?.onClick` 就变两次。
+   `onKeydown` 同理（保留「尊重用户 `preventDefault`」这条判据）。
+   ⚠️ 顺带确认：`closeIcon` **不是本仓的运行时 prop**（C8-R2 走 `#closeIcon` 插槽；
+   只有 ConfigProvider 的程序化上下文用同名键）—— 写成 prop 会落进 attrs 变成
+   `closeicon="[object Object]"` 属性。
+3. **`useDisabled` 必须传 getter**（#30.3）：`useDisabled(props.disabled)` 会在 setup
+   期一次性解包 ⇒ 动态改 `disabled`（false→true→false）读不到新值（类名、关闭图标
+   `tabindex`、CheckableTag 的点击/空格拦截全部停在首帧）。写
+   `useDisabled(() => props.disabled)`；ConfigProvider 的 `componentDisabled`
+   回落语义不变。
+
 ## 6. 共享层
 
 - `_internal/use-closable.ts`：computeClosable 纯函数 + useClosable composable

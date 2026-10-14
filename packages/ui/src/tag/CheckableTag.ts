@@ -33,7 +33,9 @@ export default defineComponent({
     const rootRef = shallowRef<HTMLElement | null>(null);
     expose({ nativeElement: rootRef });
 
-    const mergedDisabled = useDisabled(props.disabled);
+    // ⚠️ 必须传 **getter**：`useDisabled` 用 `toValue` 解包，传裸值是 setup 期快照
+    //    ⇒ 后续 `disabled` 变化读不到（Issue #30.3；`disabled-context.ts` 已注明）。
+    const mergedDisabled = useDisabled(() => props.disabled);
 
     const prefixCls = computed(() => getPrefixCls('tag', props.prefixCls));
 
