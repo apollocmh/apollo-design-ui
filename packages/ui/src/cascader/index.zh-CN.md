@@ -40,7 +40,7 @@ import { Cascader } from '@apollo-design/ui';
 | displayRender | 展示渲染（默认 ` / ` 连接） | (labels, options) => VNodeChild | - |
 | fieldNames | 字段映射（label/value/children；key 与 value 同字段） | object | - |
 | size / disabled / status | 与 select 同物 | - | - |
-| placement / direction / popupClassName / popupStyle / popupRender | 浮层（select 同物） | - | - |
+| placement / direction / popupClassName / popupStyle / popupRender / getPopupContainer | 浮层（select 同物）。⚠️ `direction` / `getPopupContainer` **局部优先、回退 ConfigProvider**；`getPopupContainer` 局部没给时走全局（Issue #12.4） | - | - |
 | notFoundContent | 空态内容 | VNodeChild | 'Not Found' |
 | classNames / styles | 语义化（root/prefix/suffix/input/placeholder/content/item/itemContent/itemRemove/popup） | 对象或函数 | - |
 

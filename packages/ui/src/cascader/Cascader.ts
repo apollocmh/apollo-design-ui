@@ -27,8 +27,9 @@ import { useControlledValue, useId } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
 
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
+import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
+import { useSize } from '../config-provider/size-context';
 import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import BaseSelect from '../select/engine/BaseSelect';
@@ -98,7 +99,12 @@ const Cascader = defineComponent({
     defaultOpen: { type: Boolean, default: undefined },
     trigger: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     placement: { type: String as PropType<SelectCommonPlacement>, default: undefined },
-    direction: { type: String as PropType<'ltr' | 'rtl'>, default: 'ltr' },
+    /**
+     * ⚠️ 默认是 `undefined` 而不是字面的 `'ltr'`（Issue #12.4）—— 后者会让
+     *    `props.direction ?? directionCtx ?? 'ltr'` 永远短路在第一支，
+     *    ConfigProvider 的全局 RTL **不可能生效**。收敛到 `mergedDirection`。
+     */
+    direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
     showSearch: {
       type: [Boolean, Object] as PropType<boolean | (SearchConfig & { searchIcon?: VNodeChild })>,
       default: undefined,
@@ -193,6 +199,22 @@ const Cascader = defineComponent({
     });
     const mergedDisabled = disabledFromForm;
 
+    /**
+     * 方向（Issue #12.4）。
+     *
+     * 🚨 上游是 `const [.., .., mergedDirection] = useBase(customizePrefixCls, direction)`
+     *    （`cascader/index.js:158`），其中 `direction` 来自 `useComponentConfig('cascader')`
+     *    ⇒ **局部 prop 优先、回退 ConfigProvider 的 `direction`**。
+     *    本仓此前写 `default: 'ltr'` 把它焊死成字面量 ⇒ 全局 RTL 永远不生效
+     *    （`-rtl` 类、`-dropdown-rtl`、placement 默认值、展开图标方向四处同时错）。
+     */
+    const directionCtx = useDirection();
+    const mergedDirection = computed<'ltr' | 'rtl'>(
+      () => props.direction ?? directionCtx.value ?? 'ltr',
+    );
+    /** ConfigProvider 的全局配置（`getPopupContainer` / `getTargetContainer` 等，Issue #12.4）。 */
+    const config = useConfigContext();
+
     // ============================ Context =============================
     // ⚠️ Vue 的 provide 必须在 setup **同步阶段**调用（rc 的 Provider 在 render 里
     //    每帧给值——Vue 侧用 Proxy 桥达到同样效果：provide 一次，读取时取最新值）。
@@ -207,7 +229,8 @@ const Cascader = defineComponent({
           halfValues: valuesResult.value.halfCheckedValues,
           changeOnSelect: props.changeOnSelect,
           onSelect: (valuePath: ValueCell) => {
-            if (!multiple.value || (searchConfig.autoClearSearchValue ?? true)) setSearchValue('');
+            if (!multiple.value || (searchConfig.value.autoClearSearchValue ?? true))
+              setSearchValue('');
             selectHandler.value(valuePath);
           },
           checkable: multiple.value,
@@ -220,7 +243,9 @@ const Cascader = defineComponent({
           //    antd 层被覆盖掉了；照抄 rc 会让展开图标渲染成文字 `>`（L6 差异抓出）。
           expandIcon: (props.expandIcon ??
             contextSemantic.expandIcon ??
-            (props.direction === 'rtl' ? h(LeftOutlined) : h(RightOutlined))) as VNodeChild | null,
+            (mergedDirection.value === 'rtl'
+              ? h(LeftOutlined)
+              : h(RightOutlined))) as VNodeChild | null,
           loadingIcon: (props.loadingIcon ??
             contextSemantic.loadingIcon ??
             h(LoadingOutlined, { spin: true })) as VNodeChild | null | undefined,
@@ -248,11 +273,23 @@ const Cascader = defineComponent({
     });
     const mergedSearchValue = computed(() => internalSearchValue.value || '');
 
-    const [enabledSearch, searchConfig] = normalizeSearchConfigFull(props.showSearch, {
-      autoClearSearchValue: props.autoClearSearchValue,
-      searchValue: props.searchValue,
-      onSearch: callbacks.onSearch,
-    });
+    /**
+     * 搜索配置（Issue #12.3）。
+     *
+     * 🚨 **必须包成 `computed`**：此前在 setup 期算**一次** ⇒
+     *    运行中改 `showSearch`（false→true）、换 `filter` / `sort` / `limit`
+     *    都不会影响当前搜索结果。上游是 `useSearchConfig(showSearch, props)`
+     *    —— 每次渲染重算。
+     */
+    const searchConfigTuple = computed(() =>
+      normalizeSearchConfigFull(props.showSearch, {
+        autoClearSearchValue: props.autoClearSearchValue,
+        searchValue: props.searchValue,
+        onSearch: callbacks.onSearch,
+      }),
+    );
+    const enabledSearch = computed(() => searchConfigTuple.value[0]);
+    const searchConfig = computed(() => searchConfigTuple.value[1]);
 
     const searchOptions = computed<BaseOptionType[]>(() =>
       computeSearchOptions(
@@ -260,12 +297,28 @@ const Cascader = defineComponent({
         mergedOptions.value,
         mergedFieldNames.value,
         prefixCls.value,
-        searchConfig,
+        searchConfig.value,
         props.changeOnSelect || multiple.value,
       ),
     );
 
-    const rawValues = computed<ValueCell[]>(() => toRawValues(props.value ?? props.defaultValue));
+    /**
+     * 非受控值状态（Issue #12.1）。
+     *
+     * 🚨 上游是 `const [interanlRawValues, setRawValues] =
+     *    useControlledState(defaultValue, value)`（rc-cascader `Cascader.js:61`），
+     *    且 `triggerChange` 的**第一步**就是 `setRawValues(nextValues)`
+     *    （`Cascader.js:102-103`）。
+     *
+     * 本仓此前只从 `props.value ?? props.defaultValue` **派生**、从不写回
+     * ⇒ 不传 `value` / `v-model:value` 时选完立刻弹回：面板选中态、tag、
+     * 展示文案全都停在旧值（**默认用法直接不可用**）。
+     */
+    const [internalRawValue, setRawValue] = useControlledValue<RawValue | RawValue[] | undefined>({
+      defaultValue: () => props.defaultValue,
+      getValue: () => props.value,
+    });
+    const rawValues = computed<ValueCell[]>(() => toRawValues(internalRawValue.value));
     const valuesResult = computed(() => {
       const getMissing = (list: ValueCell[]): [ValueCell[], ValueCell[]] => {
         const exists: ValueCell[] = [];
@@ -297,6 +350,10 @@ const Cascader = defineComponent({
     );
 
     const triggerChange = (nextValues: ValueCell | ValueCell[]): void => {
+      // 上游第一步：写回内部值（受控时 `useControlledValue` 会忽略内部态，直接吃
+      // `props.value` ⇒ **不改变受控的更新边界**，Issue #12.1）。
+      setRawValue(nextValues);
+
       const isMultipleShape = Array.isArray((nextValues as unknown[])[0] as unknown);
       const nextRaw = isMultipleShape ? (nextValues as ValueCell[]) : [nextValues as ValueCell];
       emit('update:value', isMultipleShape ? nextRaw : (nextRaw[0] as ValueCell));
@@ -323,7 +380,7 @@ const Cascader = defineComponent({
       }
       const valueCells = info.values[0]?.valueCells;
       if (!valueCells) return;
-      if (!multiple.value || (searchConfig.autoClearSearchValue ?? true)) setSearchValue('');
+      if (!multiple.value || (searchConfig.value.autoClearSearchValue ?? true)) setSearchValue('');
       selectHandler.value(valueCells);
     };
 
@@ -414,7 +471,11 @@ const Cascader = defineComponent({
         // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
         () => (attrs.style ? { root: attrs.style as StyleLike } : undefined),
       ],
-      mergedProps.value as never,
+      // 🚨 传 **getter** 而不是 `mergedProps.value`（Issue #12.5）：后者是 setup 期
+      //    求值出的普通对象 ⇒ 函数式 `classNames(info => …)` / `styles(info => …)`
+      //    会永远按首帧 props 计算（运行中改 disabled / size 不生效）。
+      //    与 `input` / `input-number` / `form` 同判（公共 Hook 自 #3.2 起支持）。
+      () => mergedProps.value as never,
       // ⚠️ antd 第四参 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
       //    字符串形态 `classNames.popup = 'x'` 归到 `popup.root`，不再产垃圾键。
       { popup: { _default: 'root' } },
@@ -429,7 +490,7 @@ const Cascader = defineComponent({
           mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
           mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
           compactItemClassnames.value,
-          props.direction === 'rtl' ? `${prefixCls.value}-rtl` : '',
+          mergedDirection.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
           enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
           formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
           // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
@@ -445,7 +506,7 @@ const Cascader = defineComponent({
         [
           props.popupClassName || props.dropdownClassName,
           `${prefixCls.value}-dropdown`,
-          props.direction === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
+          mergedDirection.value === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
           (mergedClassNames.value as { popup?: { root?: string } }).popup?.root,
         ]
           .filter(Boolean)
@@ -454,7 +515,7 @@ const Cascader = defineComponent({
 
     const memoPlacement = computed<SelectCommonPlacement>(() => {
       if (props.placement !== undefined) return props.placement;
-      return props.direction === 'rtl' ? 'bottomRight' : 'bottomLeft';
+      return mergedDirection.value === 'rtl' ? 'bottomRight' : 'bottomLeft';
     });
 
     const mergedNotFoundContent = computed<unknown>(() => {
@@ -489,9 +550,9 @@ const Cascader = defineComponent({
     //（2026-10-04 接上 Space.Compact 上下文 —— tree-select 同款）
     const { compactSize, compactItemClassnames } = useCompactItemContext(
       prefixCls,
-      () => props.direction,
+      () => mergedDirection.value,
     );
-    const mergedSize = computed(() => props.size ?? compactSize.value);
+    const mergedSize = useSize((ctxSize) => props.size ?? compactSize.value ?? ctxSize);
     // ⚠️ antd 逐字（cascader/index.tsx:400 `allowClear === true ? { clearIcon: mergedClearIcon }`）：
     //    默认图标由 `useSelectIcons` 兜底为 `CloseCircleFilled` —— 不能兜底成布尔
     //    `true`（true 是 truthy 但渲染不出任何 DOM，清除按钮会是空壳；
@@ -510,13 +571,29 @@ const Cascader = defineComponent({
 
       // ⚠️ 末尾的  会**整段覆盖**  / （对象展开后者胜）
       //    ⇒ 必须先把  /  摘掉，否则 mergedRootClassName 全丢。
+      // 🚨 末尾的 `...restAttrs` 会**整段覆盖**同名的前序键（对象展开后者胜）。
+      //    这里摘掉的 4 个键是 **BaseSelect 接线上由内部持有的事件**
+      //    （Issue #12.2）—— 不摘的话调用方从 attrs 传同名 handler 会把内部逻辑
+      //    整个顶掉，而**用户回调其实已经在内部处理器里被调用**：
+      //      `onSearch`  → `onInternalSearch` → `callbacks.onSearch`
+      //      `onOpenChange` → `setOpen` → `callbacks.onOpenChange` /
+      //                       `onPopupVisibleChange` / `onDropdownVisibleChange`
+      //    ⇒ 只摘不补，语义与上游一致（内部先跑、再通知用户）。
       const {
         class: _attrsClass,
         style: _attrsStyle,
+        onSearch: _onSearch,
+        onOpenChange: _onOpenChange,
+        onDisplayValuesChange: _onDisplayValuesChange,
+        onInputKeyDown: _onInputKeyDown,
         ...restAttrs
       } = attrs as Record<string, unknown>;
       void _attrsClass;
       void _attrsStyle;
+      void _onSearch;
+      void _onOpenChange;
+      void _onDisplayValuesChange;
+      void _onInputKeyDown;
 
       return h(
         BaseSelect,
@@ -527,9 +604,9 @@ const Cascader = defineComponent({
           className: mergedRootClassName.value,
           style: mergedStyles.value?.root,
           multiple: multiple.value,
-          showSearch: enabledSearch,
+          showSearch: enabledSearch.value,
           searchValue: mergedSearchValue.value,
-          autoClearSearchValue: searchConfig.autoClearSearchValue ?? true,
+          autoClearSearchValue: searchConfig.value.autoClearSearchValue ?? true,
           displayValues: displayValues.value,
           disabled: mergedDisabled.value,
           loading: props.loading,
@@ -553,9 +630,11 @@ const Cascader = defineComponent({
           maxTagPlaceholder: props.maxTagPlaceholder,
           emptyOptions,
           placement: memoPlacement.value,
-          direction: props.direction,
+          direction: mergedDirection.value,
           popupMatchSelectWidth: props.popupMatchSelectWidth ?? false,
-          getPopupContainer: props.getPopupContainer,
+          // antd：`getPopupContainer || getContextPopupContainer`（`cascader/index.js:309`）
+          // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #12.4）。
+          getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
           transitionName: `${rootPrefixCls.value}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
@@ -586,7 +665,7 @@ const Cascader = defineComponent({
               searchValue: mergedSearchValue.value,
               open: mergedOpen.value,
               disabled: mergedDisabled.value,
-              direction: props.direction,
+              direction: mergedDirection.value,
               notFoundContent: mergedNotFoundContent.value,
               toggleOpen: (next: boolean) => setOpen(next),
             } as never),
