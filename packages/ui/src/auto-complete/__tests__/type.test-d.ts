@@ -1,5 +1,6 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。 */
 import { describe, expectTypeOf, it } from 'vitest';
+import type { SizeType } from '../../config-provider/size-context';
 import type { AutoCompleteProps, AutoCompleteRef, DataSourceItemObject } from '../interface';
 
 describe('AutoComplete · 类型', () => {
@@ -38,6 +39,15 @@ describe('AutoComplete · 类型', () => {
       scrollTo: () => undefined,
     };
     expectTypeOf(ref).not.toBeNever();
+  });
+
+  it('★ Issue #14.2：size 是共享 SizeType（含 medium，不是手写三档）', () => {
+    // 上游 `AutoCompleteProps` 继承 `InternalSelectProps`，其 `size` 就是
+    // `SizeType`（运行时转发给 Select 的 `useSize`）。
+    expectTypeOf<AutoCompleteProps['size']>().toEqualTypeOf<SizeType | undefined>();
+    // 正例：四档都必须可用（此前手写 `'large' | 'middle' | 'small'` 漏掉 medium）
+    const sizes: NonNullable<AutoCompleteProps['size']>[] = ['small', 'medium', 'middle', 'large'];
+    void sizes;
   });
 
   it('负例（永不调用的闭包）', () => {

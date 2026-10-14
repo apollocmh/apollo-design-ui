@@ -152,6 +152,35 @@ time-picker 上全部失效（表单外置 label、`getByLabelText` 类测试都
 **修的时候注意**：两条独立动作 —— ① **让 `id` 不再消失**（或按上游把它送进 input 的 `id`）；
 ② 把那条空转用例改成**可证伪**的断言（先跑一遍确认它在修复前必红）。
 
+### §1.4 Select 引擎：条件 default slot 的选项不出现（computed 缓存不过插槽变化）（2026-10-14 登记 · 修 Issue #14 时发现）
+
+**根因**：`Select.ts` 的 `parsed` 是 `computed`，求值时调 `slots.default?.()`。computed 只在「**上次求值读到的 reactive 依赖**」变化时重算 —— 插槽函数**换引用 / 从无到有**不是 reactive 信号。于是：
+
+- 挂载时没有 default slot ⇒ `parsed` 求值读到 `undefined`、**什么都不 track**；
+- 之后 slot 从无到有（父级 `<template v-if="flag" #default>`）⇒ Select **确实重渲染**（编译出的 slot 带 `DYNAMIC_SLOTS` ⇒ `shouldUpdateComponent` 为真，实测有 render 日志），但 `parsed` 缓存是干净的 ⇒ 选项永远不出现。
+
+**判据（可复现，2026-10-14 实测）**：Host 模板
+
+```vue
+<Select open>
+  <template v-if="flag" #default>
+    <SelectOption value="a">A label</SelectOption>
+  </template>
+</Select>
+```
+
+`flag` 初值 `false`，挂载后置 `true` ⇒ `.apollo-select-item-option` 恒为 **0**。
+对照组（slot 始终存在、只切内容）正常：初始 1 → 切 `v-else` 1 → 切回 1。
+
+**影响面**：用户侧「条件默认插槽」写法在 Select / TreeSelect / Cascader / AutoComplete 四组件上全部中招。
+⚠️ **AutoComplete 侧已绕开**（Issue #14.3：默认插槽始终下传 + 包装函数显式读分类态 ⇒ `parsed` 间接跟踪）；
+**引擎级缺口仍在**，那只是让 AutoComplete 不再触发它。
+
+**候选修法**（未实施 —— 动引擎影响 4 个消费者约 600 条用例，需单独一轮 + 全量回归）：
+① **渲染阶段解析**：渲染期把 `convertChildrenToData(slots.default?.())` 写进 `shallowRef`，`parsed` 改吃它
+（每渲染重算 O(n)，与 React 同成本，丢 memo）；
+② 渲染期比对 slot 引用、变化时 bump 一个 ref 让 `parsed` 失效（保计算缓存，但要在渲染期写 ref）。
+
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |

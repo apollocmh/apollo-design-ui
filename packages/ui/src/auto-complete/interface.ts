@@ -8,6 +8,7 @@
  */
 
 import type { CSSProperties } from 'vue';
+import type { SizeType } from '../config-provider/size-context';
 import type {
   DefaultOptionType,
   SelectSemanticClassNames,
@@ -66,7 +67,13 @@ export interface AutoCompleteProps {
   // ---- 展示 ----
   placeholder?: string;
   disabled?: boolean;
-  size?: 'large' | 'middle' | 'small';
+  /**
+   * 尺寸。**必须用共享 `SizeType`**（`'small' | 'medium' | 'middle' | 'large'`）：
+   * 上游 `AutoCompleteProps` 继承 `InternalSelectProps`，其 `size` 就是 `SizeType`
+   * （运行时转发给 Select 的 `useSize`）⇒ 手写 `'large' | 'middle' | 'small'`
+   * 会漏掉 `medium`（类型比运行时窄，Issue #14.2）。
+   */
+  size?: SizeType;
   variant?: SelectVariant;
   status?: InputStatus;
   allowClear?: boolean | Record<string, unknown>;

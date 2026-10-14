@@ -49,8 +49,12 @@ auto-complete/
 - **自定义输入元素（getInputElement）v1 未实现**：单个非 Option child 会 usage 告警
   并丢弃（antd 支持 `<AutoComplete><TextArea/></AutoComplete>`）。SearchInput 承载
   ARIA/IME/宽度同步全套，替换需深度改造 select engine（INTENDED 缺口，README §5）。
-- dataSource 混 VNode 且同时有 options 时 VNode 丢失（本仓 Select 的 options 优先于
-  children —— 边缘缺口）。
+- **dataSource 映射逐字复刻 antd 的 `optionChildren` 分支**（AutoComplete.js:49-76）：
+  children 首项是 Option/OptGroup ⇒ children 胜、dataSource 整条忽略；否则
+  string/`{value,text}` ⇒ Option、VNode 项原样作为 option children。VNode 数据源
+  与结构化项混合时整条走 children-as-data 通道（结构化项转 Option vnode）——
+  Select 的 `childrenAsData = !options` 是全有全无开关，分两条路会丢选项（Issue #14.1）。
+  同传 `options` prop 时 options 胜（与 antd 一致：`options` 堵死 children 通道）。
 - 其余见 `COMPATIBILITY.md` D6 / D111。
 
 ## 4. Component Token 清单
@@ -63,7 +67,6 @@ registry 数据：token 数 = **0** —— 无独立样式，复用 select。
 |---|---|---|
 | P1 | 自定义输入元素 | getInputElement 内部 API（SearchInput 深改造）；demo `custom` 未对外 |
 | P2 | PurePanel 别名 | antd `_InternalPanelDoNotUseOrYouWillBeFired`（debug-only，istanbul ignore） |
-| P3 | dataSource 混 VNode + options 同传 | VNode 项丢失（边缘） |
 
 ## 6. 收口证据（G13）
 

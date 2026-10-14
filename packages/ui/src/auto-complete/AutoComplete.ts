@@ -14,10 +14,19 @@
  * 3. **自定义输入元素（getInputElement）v1 未实现**：SearchInput 承载 ARIA/IME/
  *    宽度同步全套，替换需深度改造 select engine —— usage 告警 + 缺口登记（README §5）。
  * 4. **deprecated ×7** 全部落 usage 告警（antd 逐字文案）。
- * 5. **dataSource 映射**：string ⇒ `{value, label: value}`；`{value,text}` ⇒
- *    `{value, label: text}`；VNode ⇒ 透传 default slot（Select 的 children-as-data）。
- *    ⚠️ 本仓 Select 的 `options` prop 优先于 children（childrenAsData = !options）——
- *    dataSource 里混 VNode 且同时有 options 时 VNode 会丢（边缘缺口，README §5）。
+ * 5. **dataSource 映射**（antd 的 `optionChildren` 分支逐字）：
+ *    - children 首项是 Option/OptGroup ⇒ `optionChildren = children`，dataSource **整条忽略**；
+ *    - 否则 `dataSource.map`：string ⇒ `{value, label: value}`；`{value,text}` ⇒
+ *      `{value, label: text}`；**VNode 项原样作为 option children**。
+ *    ⚠️ 混有 VNode 项时整条 dataSource 走 children-as-data 通道（结构化项转成
+ *    Option vnode）—— Select 的 `childrenAsData = !options` 是全有全无开关，
+ *    `options=[]` 会把默认插槽整条堵死（#14.1：仅 VNode dataSource ⇒ 零选项）。
+ * 6. **默认插槽始终下传**：Select 的 `parsed` 是 computed，只在「上次求值读到的
+ *    reactive 依赖」变化时重算。某个渲染周期**不下传** default slot ⇒ 那次求值
+ *    什么都不 track ⇒ 之后插槽再回来时 computed 是干净的 ⇒ 选项永远停在上一个
+ *    周期（#14.3 实测：自定义输入结构切回 Option 列表后候选不恢复）。
+ *    ⇒ 包装函数读 `optionInfo` / `hasVNodeItems` / `dataSource`（均 reactive）
+ *    ⇒ `parsed` 间接跟踪分类态，任何插槽结构/内容变化都能穿透。
  */
 
 import { isPlainObject, useDevWarning } from '@apollo-design/utils';
@@ -31,11 +40,11 @@ import {
   type PropType,
   ref,
   type VNode,
-  type VNodeChild,
   watchEffect,
 } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useConfigContext } from '../config-provider/context';
+import { SelectOption } from '../select';
 import { OPTION_MARK } from '../select/engine/valueUtil';
 import type { DefaultOptionType } from '../select/interface';
 import Select from '../select/Select';
@@ -193,7 +202,8 @@ const AutoCompleteComponent = defineComponent({
     });
 
     // =========================== Options ===============================
-    // antd 的 children 三分支。本仓 v1：自定义输入元素未实现（usage 告警）。
+    // antd 的 children 三分支。本仓 v1：自定义输入元素未实现（usage 告警，
+    // 见渲染期的 `warnCustomInputIfNeeded`）。
     const optionInfo = computed(() => {
       const nodes = (slots.default?.() ?? []) as VNode[];
       const realNodes = nodes.filter((n) => n && n.type !== Comment);
@@ -211,23 +221,55 @@ const AutoCompleteComponent = defineComponent({
 
       // 2) 单个非 Option 元素 ⇒ 自定义输入元素（v1 未实现）
       if (realNodes.length === 1 && isVNode(realNodes[0])) {
-        devWarning(
-          false,
-          'Custom input element is not supported yet in this Vue implementation. It will be ignored.',
-        );
         return { kind: 'children' as const, dropCustomInput: true };
       }
 
       return { kind: 'none' as const };
     });
 
-    // dataSource → options（antd 的 dataSource.map 逐字：string/object/VNode）
+    // 「自定义输入元素」usage 告警（antd 逐字文案）。
+    // ⚠️ 放在**渲染期**而不是 `optionInfo` computed 里：computed 惰性求值 ——
+    // 仅传 `options` 时 `mergedOptions` 首行短路、default 包装也不会被 Select
+    // 调用（`childrenAsData = !options` = false）⇒ optionInfo 永不求值 ⇒
+    // 告警消失（#14 修复时的回归实测）。沿对比触发 ⇒ 与旧代码「每个求值
+    // 周期一次」等价，不会每个渲染周期刷屏。
+    let warnedCustomInput = false;
+    const warnCustomInputIfNeeded = (info: { dropCustomInput?: boolean }): void => {
+      if (info.dropCustomInput) {
+        if (!warnedCustomInput) {
+          devWarning(
+            false,
+            'Custom input element is not supported yet in this Vue implementation. It will be ignored.',
+          );
+          warnedCustomInput = true;
+        }
+      } else {
+        warnedCustomInput = false;
+      }
+    };
+
+    const hasVNodeItems = computed(() => Boolean(props.dataSource?.some((item) => isVNode(item))));
+
+    // dataSource → options（antd 的 `optionChildren` 分支逐字，AutoComplete.js:49-76）：
+    // ① children 首项是 Option/OptGroup ⇒ optionChildren = children，dataSource 整条忽略；
+    // ② 否则 dataSource.map：string ⇒ Option{value,label}；{value,text} ⇒ Option{value,label:text}；
+    //    VNode 项原样作为 option children（走默认插槽通道）。
     const mergedOptions = computed<DefaultOptionType[] | undefined>(() => {
       if (props.options) return props.options;
+      // antd：childNodes[0] 是 Option/OptGroup ⇒ dataSource 不再参与。否则
+      // options 非空会把 Select 的 children-as-data 通道整条堵死（#14.1 实测：
+      // Option children 与 dataSource 同传 ⇒ children 反被丢）。
+      if (optionInfo.value.kind === 'children' && !optionInfo.value.dropCustomInput) {
+        return undefined;
+      }
       const ds = props.dataSource;
       if (!ds) return undefined;
+      // ⚠️ 混有 VNode 项 ⇒ 整条 dataSource 走默认插槽（渲染期把结构化项转成
+      // Option vnode）：Select 的 `childrenAsData = !options` 是全有全无开关，
+      // `options=[]`（仅 VNode 时 flatMap 的产物）会把插槽里的选项整条丢掉。
+      if (hasVNodeItems.value) return undefined;
       return ds.flatMap((item) => {
-        if (isVNode(item)) return []; // VNode 项走 default slot（children-as-data）
+        if (isVNode(item)) return [];
         if (typeof item === 'string') return [{ value: item, label: item }];
         if (isPlainObject(item)) {
           const obj = item as { value: string; text: string };
@@ -236,8 +278,6 @@ const AutoCompleteComponent = defineComponent({
         return [];
       });
     });
-
-    const hasVNodeItems = computed(() => Boolean(props.dataSource?.some((item) => isVNode(item))));
 
     // ====================== Merged props（antd 逐字）===================
     const mergedPopupMatchSelectWidth = computed(
@@ -306,7 +346,13 @@ const AutoCompleteComponent = defineComponent({
 
     // ============================ Render ===============================
     return () => {
-      // 透传给 Select 的插槽：default（Option 列表 / dataSource VNode）+ 其余具名插槽；
+      // 渲染期读一次分类态：① 驱动 `warnCustomInputIfNeeded`（告警时机）；
+      // ② 让本组件的渲染效应跟踪 `optionInfo` —— 插槽结构变化 ⇒ 重新渲染
+      //    ⇒ 下传新的 default 包装（旧代码在这里做分支判断，天然每渲染期求值）。
+      const info = optionInfo.value;
+      warnCustomInputIfNeeded(info);
+
+      // 透传给 Select 的插槽：default（Option 列表 / dataSource 派生）+ 其余具名插槽；
       // suffixIcon：用户插槽优先，否则空渲染（antd 的 suffixIcon={null}）。
       const selectSlots: Record<string, () => unknown> = {};
       const passThrough = [
@@ -332,13 +378,39 @@ const AutoCompleteComponent = defineComponent({
         // antd 的 suffixIcon={null}：空渲染 ⇒ getSuffixIconNode(null) ⇒ 无箭头
         selectSlots.suffixIcon = () => null;
       }
-      if (optionInfo.value.kind === 'children' && !optionInfo.value.dropCustomInput) {
-        selectSlots.default = slots.default as () => unknown;
-      } else if (hasVNodeItems.value) {
-        // dataSource 的 VNode 项（children-as-data 通道）
-        selectSlots.default = () =>
-          (props.dataSource ?? []).filter((item) => isVNode(item)) as unknown as VNodeChild;
-      }
+
+      // 默认插槽**始终**下传（内容按分类/数据源三分支，空内容也传一个返回 [] 的 fn）：
+      // ① Option children（首项是 Option/OptGroup）⇒ 透传 slots.default；
+      // ② dataSource 含 VNode 项 ⇒ 整条 dataSource 走 children-as-data 通道
+      //    （antd 的 optionChildren = dataSource.map：string/object 转 Option
+      //    vnode，VNode 项原样透传）；
+      // ③ 其余（无 children / 自定义输入元素被丢弃）⇒ 空列表。
+      // ⚠️ 为什么必须始终下传：Select 的 `parsed` 是 **computed**，只在「上次求值
+      // 读到的 reactive 依赖」变化时重算。某个渲染周期不下传 default slot ⇒ 那次
+      // 求值 `slots.default?.()` 为 undefined、什么都不 track ⇒ 之后插槽再回来时
+      // computed 是干净的 ⇒ 选项永远停在上一个周期（#14.3 实测：从自定义输入结构
+      // 切回 Option 列表后候选不恢复，即使 Select 重渲染了）。
+      // ⇒ 包装函数显式读 `optionInfo` / `hasVNodeItems` / `dataSource`（均 reactive）
+      //    ⇒ `parsed` 间接跟踪分类态，插槽结构/内容变化都能穿透到选项列表。
+      selectSlots.default = () => {
+        if (optionInfo.value.kind === 'children' && !optionInfo.value.dropCustomInput) {
+          return (slots.default as () => unknown)();
+        }
+        if (hasVNodeItems.value) {
+          return (props.dataSource ?? []).map((item) => {
+            if (isVNode(item)) return item;
+            if (typeof item === 'string') {
+              return h(SelectOption, { key: item, value: item }, () => item);
+            }
+            if (isPlainObject(item)) {
+              const obj = item as { value: string; text: string };
+              return h(SelectOption, { key: obj.value, value: obj.value }, () => obj.text);
+            }
+            return null;
+          });
+        }
+        return [];
+      };
 
       // ⚠️ `as never`：Select 的 props 表是运行时宽（PropType 推断带 undefined 交集），
       // vue-tsc 对跨组件 h() 的 props 重载解析过严（PITFALLS 137 同族）——
