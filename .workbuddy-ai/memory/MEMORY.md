@@ -25,7 +25,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#33 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#34 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -49,7 +49,9 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   上游用独立键（`rootClassName`）不会覆盖 ⇒ 本仓换通道就要自己补合并。
 - 🚨 **「父级默认 + 单项配置」的展开顺序照抄上游**
 - 🚨 **React「JSX children = props.children」在 Vue 不成立**
-- 🚨 **renderless 复合组件收集 `vnode.props` 时别只认 `className`** —— Vue 侧是原生 `class`；
+- 🚨 **renderless 复合组件收集 `vnode.props` 时别只认 `className`**
+- 🚨 **「slot 覆盖 prop」的回退禁用 `??`**：`undefined`=无插槽、`null`=显式空插槽 ⇒ 写
+  `slot === undefined ? prop : slot`（#34.1）；`??` 会把「显式空」误判成「未提供」而回退旧值。 —— Vue 侧是原生 `class`；
   修法是把原生 class 也传给内部渲染组件（走 attrs ⇒ Vue 归并/合并/保响应式，#33.1）。：语法糖组件正文在**默认插槽**
   （`vnode.children.default`）⇒ 读 vnode 生成数据的函数要同时读插槽（#31.1）。
 - 🚨 **归一化产出的标记字段不能丢**（`span:'filled'` ⇒ `filled:true`，#31.2）⇒ 丢了是静默退化。
