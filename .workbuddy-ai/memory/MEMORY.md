@@ -27,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -55,6 +55,10 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 🚨 **键盘代码在 jsdom 只有 `keyCode`**（`which` 恒 0）⇒ 一律 `which || keyCode` 归一化（#22.2）。
 - ⚠️ rc 的 `getFocusNodeList(c, true)` = 负 tabindex **也要收**（roving -1）；rc 的可见性判据
   （offsetParent/rect）在 jsdom 恒 false ⇒ 退化成 display/visibility。
+- 🚨 **「归一/派生」computed 做完要确认真有人消费**（tabs `mergedItems` 曾是死代码，#23.1）；
+  归一 pipeline 顺序 = **先过滤非法项再 map**（否则对 null/字符串取属性抛错）。
+- 🚨 **语义 `styles.root` 要落到根 `style`**（类名常在、样式常漏，#23.3）；顺序 语义 root → 原生 attrs.style。
+- 🚨 **监听器解绑用「绑定时的元素」引用**（watch 回调里 ref 已是新值，#23.5）。
 **渲染 / 事件**
 - 🚨 computed 调 `slots.default?.()` 不过「插槽有无」变化 ⇒ 无 slot 那次求值不 track ⇒ 之后 slot 从无到有但缓存干净 ⇒ 选项永远不出现（#14.3，引擎级，§1.4）。⇒ 薄壳传插槽的包装函数要显式读本组件 reactive 分类态。
 - 🚨 computed 里的 dev 告警随惰性求值不触发一起消失 ⇒ 放渲染期沿对比（#14）。
