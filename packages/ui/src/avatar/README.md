@@ -51,6 +51,19 @@ node tests/visual/debug/extract-avatar-css.mjs > /tmp/avatar-antd.css   # 24 条
 **异构**列表 ⇒ 本仓用 `NodeRenderer`（`.ts` 平台原语）直接渲染这个 vnode 数组，
 不产包裹元素。
 
+## 3.5 Issue #29 的判据：溢出 Popover 的语义类名必须**合并**
+
+上游（`AvatarGroup.js:80`）用的是**独立键** `rootClassName: clsx(...)` ⇒
+`max.popover.classNames` 天然不会被覆盖。本仓把内置类名走**语义槽**
+`classNames.root`（若改用原生 `class`，它会经 Tooltip 的 `...attrs` 同时落到
+**触发器子元素**上，L4 的 `avatar:group-max` 抓到过多出类名）⇒ 必须**合并**
+用户的 `classNames`，不能整体替换 —— 否则 `container` / `arrow` 以及用户自己的
+`root` 会被静默丢弃（Issue #29.1）。
+
+- 对象形态：`{ ...userClassNames, root: clsx(内置, rootClassName, userClassNames.root) }`
+- 函数形态：包一层 `info => ({ ...resolved(info), root: clsx(内置, rootClassName, resolved.root) })`
+- 优先级：内置 `-popover` → `max.popover.rootClassName`（旧键）→ `classNames.root`
+
 ## 4. Component Token 清单
 
 <!-- registry 数据：token 数 = 12 -->

@@ -163,21 +163,44 @@ function groupChildren() {
     const mergePopoverPlacement =
       props.max?.popover?.placement || props.maxPopoverPlacement || 'top';
 
+    /**
+     * 溢出 Popover 的语义类名（Issue #29.1）。
+     *
+     * ⚠️ 上游用的是**独立键** `rootClassName: clsx(...)`，所以 `max.popover.classNames`
+     *    不会被覆盖；本仓把内置类名走语义槽 `classNames.root`（原因见下）⇒ 必须
+     *    **合并**用户的 `classNames`，不能整体替换 —— 否则 `container` / `arrow`
+     *    （以及用户自己的 `root`）会被静默丢弃。
+     * ⚠️ 上游是 clsx(...) ⇒ 产出**字符串**（不是数组）。
+     * 🚨 这个类名要落在 **Popover 的浮层根**（不是组件根）—— 所以走语义槽
+     *    `classNames.root`。若改用原生 `class`，它会经 Tooltip 的 `...attrs`
+     *    同时落到**触发器子元素**上（L4 的 avatar:group-max 抓到多出类名）。
+     */
+    const userClassNames = props.max?.popover?.classNames;
+    const builtinRootClassName = [
+      `${groupPrefixCls.value}-popover`,
+      props.max?.popover?.rootClassName,
+    ]
+      .filter(Boolean)
+      .join(' ');
+    const mergedRoot = (extraRoot?: string): string =>
+      [builtinRootClassName, extraRoot].filter(Boolean).join(' ');
+
     // ⚠️ 展开顺序即契约（见文件头第 6 条）
     const popoverProps = {
       content: childrenHidden,
       ...props.max?.popover,
       placement: mergePopoverPlacement,
       trigger: mergePopoverTrigger,
-      // ⚠️ 上游是 clsx(...) ⇒ 产出**字符串**（不是数组）。
-      // 🚨 这个类名要落在 **Popover 的浮层根**（不是组件根）—— 所以走语义槽
-      //    `classNames.root`。若改用原生 `class`，它会经 Tooltip 的 `...attrs`
-      //    同时落到**触发器子元素**上（L4 的 avatar:group-max 抓到多出类名）。
-      classNames: {
-        root: [`${groupPrefixCls.value}-popover`, props.max?.popover?.rootClassName]
-          .filter(Boolean)
-          .join(' '),
-      },
+      classNames:
+        typeof userClassNames === 'function'
+          ? (info: never) => {
+              const resolved = (userClassNames as (i: never) => Record<string, string>)(info) ?? {};
+              return { ...resolved, root: mergedRoot(resolved.root) };
+            }
+          : {
+              ...(userClassNames ?? {}),
+              root: mergedRoot((userClassNames as { root?: string } | undefined)?.root),
+            },
     };
 
     childrenShow.push(
