@@ -27,7 +27,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23、#24 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#25 全部**（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -63,6 +63,10 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   分支永不走；class 合并一律 `normalizeClass([...])`。🚨 **`cloneVNode` 会把 class 拼两遍**
   ⇒ 复刻 React cloneElement = 先 clone 再整体替换 `cloned.props`（保 dirs；勿用 createVNode 重建）。
 - 🚨 **`useId()` 只在同一个 app 内唯一**（序号 `instance.ids[1]++`，ids 由父级继承）⇒ 跨 app 要自传 id。
+- 🚨 **`inheritAttrs:false` 薄壳：类型 `extends` 承诺的字段必须显式声明 + 显式下传**（否则落
+  attrs 被丢弃；误展开 attrs 会打到触发元素，popover #25.1/#25.3）。原生 class/style 走语义 root。
+- 🚨 **静态 CSS 提取自 antd SSR 产物 ⇒ 必须按本仓真实 DOM 校对选择器**（antd `-inner` vs rc 系
+  `-container`，popover 13 条预设色曾全部落空，#25.2）。
 - 🚨 **薄壳→底层要隔离上层专属 ConfigProvider 配置**：antd `data-popover-inject` ⇒ Vue 用 provide/inject
   标记（不污染公开 props）；公共 getPopupContainer/direction 不动（#24.4）。
 **渲染 / 事件**
