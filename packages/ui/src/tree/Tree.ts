@@ -347,6 +347,27 @@ export default defineComponent({
     const checkedKeysRef = ref<SafeKey[]>([]);
     const halfCheckedKeysRef = ref<SafeKey[]>([]);
 
+    /**
+     * rc gDSFP 勾选段的落地动作（Tree.js:229-232）：base + 最新 keyEntities → conduct → refs。
+     *
+     * ⚠️ 纯派生，**不 emit** —— rc 在 gDSFP 里改 state，用户侧感知不到 change。treeData 驱动的
+     * 级联同步必须走这条路径（Issue #16），否则会污染受控语义：父组件没改 `checkedKeys`，
+     * 却收到 `update:checkedKeys`。
+     */
+    const applyCheckedEntity = (
+      entity: { checkedKeys?: TreeKey[]; halfCheckedKeys?: SafeKey[] },
+      entities: typeof keyEntities.value,
+    ) => {
+      let { checkedKeys = [], halfCheckedKeys = [] } = entity;
+      if (!props.checkStrictly) {
+        const conduct = conductCheck(checkedKeys, true, entities as never);
+        checkedKeys = conduct.checkedKeys;
+        halfCheckedKeys = conduct.halfCheckedKeys;
+      }
+      checkedKeysRef.value = checkedKeys as SafeKey[];
+      halfCheckedKeysRef.value = halfCheckedKeys ?? [];
+    };
+
     watch(
       () => props.checkedKeys,
       (controlledKeys, oldKeys) => {
@@ -361,24 +382,27 @@ export default defineComponent({
           return;
         }
         if (checkedKeyEntity) {
-          let { checkedKeys = [], halfCheckedKeys = [] } = checkedKeyEntity;
-          if (!props.checkStrictly) {
-            const conduct = conductCheck(checkedKeys, true, keyEntities.value as never);
-            checkedKeys = conduct.checkedKeys;
-            halfCheckedKeys = conduct.halfCheckedKeys;
-          }
-          checkedKeysRef.value = checkedKeys;
-          halfCheckedKeysRef.value = halfCheckedKeys ?? [];
+          applyCheckedEntity(checkedKeyEntity, keyEntities.value);
         }
       },
       { immediate: true },
     );
-    // rc：treeData 变化 ⇒ 用当前勾选态重算级联
+    // rc：treeData 变化 ⇒ 用当前勾选态重算级联（Tree.js:215-220 第三分支）
+    //
+    // ⚠️ **受控与否不影响这条路径**（Issue #16）—— rc 的判据是
+    //   `parseCheckedKeys(props.checkedKeys) || { checkedKeys: prevState.checkedKeys, … }`
+    // 即：受控 ⇒ 以 **props 原值**为 base（不是内部已派生的肯定勾选集），非受控 ⇒ 以当前派生态为 base。
+    // 差别在语义：受控时按新 keyEntities 从「用户给的键」重新导电，异步挂到已勾选父节点下的
+    // 新子节点才能继承勾选、父被部分勾选时才能重建半选。
     watch(keyEntities, (entities) => {
-      if (!props.checkable || props.checkedKeys !== undefined || props.checkStrictly) return;
-      const conduct = conductCheck(checkedKeysRef.value, true, entities as never);
-      checkedKeysRef.value = conduct.checkedKeys;
-      halfCheckedKeysRef.value = conduct.halfCheckedKeys;
+      if (!props.checkable || props.checkStrictly) return;
+      applyCheckedEntity(
+        parseCheckedKeys(props.checkedKeys as never) ?? {
+          checkedKeys: checkedKeysRef.value,
+          halfCheckedKeys: halfCheckedKeysRef.value,
+        },
+        entities,
+      );
     });
 
     // ======================== 加载态（gDSFP 8）========================

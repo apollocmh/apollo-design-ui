@@ -41,11 +41,21 @@
 8. **Wrapper 初值**：DirectoryTree 的 selectedKeysRef 初值必须含受控 `selectedKeys`（rc useControlledState 受控初值语义）。
 9. **NodeList 返回 Fragment**（量测 div + VirtualList 平铺）—— 包 wrapper 会破坏根 div 子节点数契约。
 10. **VirtualList slot 是 `{item,index,style,offsetX}` 包装对象**；事件键必须 DOM 小写（onKeydown 非 onKeyDown）；Wrapper 布尔 prop 用 `default: undefined`。
+11. 🚨 **受控 checkedKeys 也要随 treeData 重导电**（Issue #16）：rc 的第三分支是
+    `parseCheckedKeys(props.checkedKeys) || prevState`，即 **受控与否不影响 treeData 变化时
+    的重算，只决定 base 取 props 原值还是取内部派生态**。 ⇒ 受控时以「用户给的键」在新
+    keyEntities 上重跑 conductCheck（异步挂到已勾选父下的子节点才继承勾选、孤儿半选才会
+    回落）；两者共用同一落地路径且**不 emit**（gDSFP 里改 state，用户侧不该感知 change）。
+    非对称拉 perimeter ⇒ 别写成「受控时跳过 treeData watch」。
 
 ## 6. 已知缺口
 
 - 拖拽的 window 级时序在 jsdom 受限（mousedown 派发）—— 拖拽断言在 calcDropPosition L1 + 视觉层覆盖。
 - axe demo 扫描已接入（expectCount=18）；G9 视觉基线待跑。
+- ⚠️ **jsdom 下 collapse/expand 动效不结束**：测试里只改 treeData（不同步重设 `expandedKeys`）
+  才能看到新结构；一旦 `expandedKeys` 引用变化，NodeList 会进入 `motionType='show'` 且
+  `onMotionEnd` 不触发 ⇒ transitionData 停在旧列表。另外「新出现的 key 即使已在 expandedKeys
+  里也不会自动展开」—— rc 的 expandedKeys 只在自身变化时重算，**与上游一致**，不是缺陷。
 
 ## 7. demo 替换登记
 
