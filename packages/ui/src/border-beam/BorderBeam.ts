@@ -27,6 +27,8 @@ import {
   createVNode,
   defineComponent,
   h,
+  isRef,
+  isVNode,
   mergeProps,
   onMounted,
   onScopeDispose,
@@ -43,6 +45,54 @@ import { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient, isSameBorderWidth 
 /** 数字 → `-${n}px`；字符串 → `calc(-1 * ${s})`（antd 的 getInset 逐字）。 */
 const getInset = (width: number | string): string =>
   isString(width) ? `calc(-1 * ${width})` : `-${width}px`;
+
+/**
+ * 合并宿主的原始 children 与要注入的 Effect（Issue #56）。
+ *
+ * ⚠️ 三种形态**不能一把打包成数组**：
+ *   1. 数组 / 单个 vnode / 字符串 —— DOM 宿主的常规形态 ⇒ 追加在末尾；
+ *   2. **slots 对象**（组件子节点的内容经插槽传入）⇒ 打包成数组会让
+ *      `createVNode(Comp, props, [slotsObj])` 走 `ARRAY_CHILDREN` 而不是 `SLOTS_CHILDREN`
+ *      ⇒ 组件拿不到任何插槽，**内容整块丢失**（实测抓到，语义用例 `.inner` 找不到）。
+ *      改为把 Effect 并进 `default` 插槽的输出末尾 —— 组件的默认插槽通常渲染在它的宿主
+ *      元素内，DOM 结果与上游 `createPortal(effect, hostDom)` 一致；
+ *   3. `null` / `''` ⇒ 只渲染 Effect。
+ *
+ * ⚠️ 边界（写在 README 差异表）：组件**没有** `default` 插槽时无处注入 ⇒ 保持原 children
+ *    （Effect 不渲染）；上游的 portal 不受此限。
+ */
+function mergeHostChildren(
+  original: VNodeChild | VNodeChild[] | null,
+  injected: VNodeChild[],
+): VNodeChild {
+  // 空内容（`null` / `undefined` / 空串 / `false`）⇒ 只渲染 Effect
+  if (original === null || original === undefined || original === '' || original === false) {
+    return injected;
+  }
+  if (Array.isArray(original)) {
+    return [...original, ...injected];
+  }
+  if (isVNode(original) || typeof original === 'string' || typeof original === 'number') {
+    return [original, ...injected];
+  }
+  // 剩下的只可能是 slots 对象（`{ default: fn, ... }`）
+  const slotsObj = original as unknown as Record<string, unknown>;
+  if (injected.length === 0) {
+    return original;
+  }
+  const originalDefault = slotsObj.default as ((...args: unknown[]) => unknown) | undefined;
+  if (typeof originalDefault !== 'function') {
+    return original;
+  }
+  return {
+    ...slotsObj,
+    default: (...args: unknown[]) => {
+      const out = originalDefault(...args);
+      const list = Array.isArray(out) ? out : out === null || out === undefined ? [] : [out];
+      return [...list, ...injected];
+    },
+  } as unknown as VNodeChild;
+}
 
 /** useBorderSize：读宿主 computed border 宽度 4 元组（antd 逐字，NaN→0）。 */
 function useBorderSize(getDom: () => HTMLElement | null) {
@@ -199,11 +249,7 @@ export default defineComponent({
       // ⚠️ 首帧（含 SSR）hostDom 未挂载 → 不渲染 Effect（与 antd 的 portal 时机一致）。
       const originalChildren = first.children as VNodeChild | VNodeChild[] | null;
       const injectedChildren: VNodeChild[] = hostDom.value ? effects : [];
-      const newChildren: VNodeChild[] | VNodeChild = Array.isArray(originalChildren)
-        ? [...originalChildren, ...injectedChildren]
-        : originalChildren !== null && originalChildren !== undefined && originalChildren !== ''
-          ? [originalChildren, ...injectedChildren]
-          : injectedChildren;
+      const newChildren = mergeHostChildren(originalChildren, injectedChildren);
       // 🚨 调用方的 attrs（`data-*` / `aria-*` / `class` / `style` / 原生事件）**落到宿主**上。
       //
       // 本组件是 **renderless**（没有自己的 DOM 根，装饰的是子节点那个元素）⇒ attrs 唯一的
@@ -213,6 +259,10 @@ export default defineComponent({
       // ⚠️ 用 `mergeProps`（不是对象展开）：`class` / `style` 需要**叠加**而不是后者覆盖前者；
       //    顺序 = 调用方 attrs 在前、宿主自己的 props 在后 ⇒ 宿主原有的 class/style 不被顶掉。
       const hostProps = mergeProps(attrs, first.props ?? {});
+      // 🚨 `first.ref` 是 Vue **归一化后**的对象（`{ i, r, k, f }`），**不是**用户传的那个函数
+      //    ⇒ 直接 `typeof first.ref === 'function'` 永远为假、用户的 ref 被静默丢弃
+      //    （Issue #56 实测抓到）。原始值在 `first.props.ref` 上。
+      const rawRef = (first.props as Record<string, unknown> | null | undefined)?.ref;
 
       return createVNode(
         first.type,
@@ -222,8 +272,11 @@ export default defineComponent({
           ref: (el: unknown) => {
             hostDom.value =
               el instanceof HTMLElement ? el : ((el as { $el?: HTMLElement } | null)?.$el ?? null);
-            const userRef = (first as { ref?: unknown }).ref;
-            if (typeof userRef === 'function') userRef(el);
+            if (typeof rawRef === 'function') {
+              (rawRef as (v: unknown) => void)(el);
+            } else if (isRef(rawRef)) {
+              rawRef.value = el;
+            }
           },
         },
         newChildren,

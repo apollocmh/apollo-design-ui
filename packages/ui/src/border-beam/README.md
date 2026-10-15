@@ -15,6 +15,7 @@
 | — | Effect 注入方式：antd createPortal / 我们重建宿主 children（DOM 结果一致） | PLATFORM（实现形态） | L1 |
 | — | reduced-motion 双保险（genNoMotionRawStyle + display:none）逐字保留 | INTENDED | theme 测试 |
 | — | `useBorderSize` **轮询**宿主 `border-width`（上游只在 `domNode` 变化时读一次）—— 宿主 border 变化不触发 ResizeObserver / 无对应事件，本仓选择跟随运行时变化；改由**模块级共享定时器**调度且隐藏页整轮跳过（Issue #50） | INTENDED | L1 `s50-issue50` |
+| — | 宿主 vnode 用 **`createVNode` 同型重建 + 把 Effect 并进 children**（上游 `cloneElement` + `createPortal(effect, hostDom)`）—— DOM 结果一致。⚠️ 已知边界：**组件子节点没有 `default` 插槽时无处注入 ⇒ Effect 不渲染**（上游 portal 不受此限） | PLATFORM（实现形态） | L1 `s56-issue56` |
 
 ## 3. 实现形态
 
