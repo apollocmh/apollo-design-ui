@@ -1,5 +1,5 @@
 {
-  "_readme": "B6 —— tree-shaking 体积预算。判据：单独 import 某组件后，Vite/rolldown 产物（minify: esbuild，\nexternal: [vue, dayjs]）的字节数不得超过 budgetKb，且不得超过「全量 import * as all」的 maxRatioOfFull。\n\n⚠️ budgetKb 只能因**技术原因**上调，且必须在 commit message 写明理由。\n   把预算设成「等于全量」等于宣告本门禁永不失败 —— 那是 AGENTS.md H8 明禁的降低验收标准。\n\nmeasuredKb 是确立预算时的实测值（2026-10-07，裁决 ui-tree-shaking = A+B+D 落地后首次实测），\n   仅供回溯参考、不参与判定。budgetKb = ceil(measuredKb * 1.5 + 5)。",
+  "_readme": "B6 —— tree-shaking 体积预算。判据：单独 import 某组件后，Vite/rolldown 产物（minify: esbuild，\nexternal: [vue, dayjs]）的字节数不得超过 budgetKb，且不得超过「全量 import * as all」的 maxRatioOfFull。\n\n⚠️ budgetKb 只能因**技术原因**上调，且必须在 commit message 写明理由。\n   把预算设成「等于全量」等于宣告本门禁永不失败 —— 那是 AGENTS.md H8 明禁的降低验收标准。\n\nmeasuredKb 是确立预算时的实测值（2026-10-07，裁决 ui-tree-shaking = A+B+D 落地后首次实测），\n   仅供回溯参考、不参与判定。budgetKb = ceil(measuredKb * 1.5 + 5)。\n\n单条重定**只改那一条**（其余条目的 measuredKb 保持确立时原值，便于回溯），并可带 `_note`\n   写明技术原因 —— app 已于 2026-10-15 因 #40 接线 HookAPI 而重定，见该条目。\n   整表重定用 `node tests/build/checks/treeshake.mjs --measure-all`。",
   "external": ["vue", "dayjs"],
   "maxRatioOfFull": 0.3,
   "entries": [
@@ -28,8 +28,9 @@
       "id": "app",
       "pkg": "@apollo-design/ui",
       "imports": ["App"],
-      "budgetKb": 9,
-      "measuredKb": 2.2
+      "budgetKb": 194,
+      "measuredKb": 125.7,
+      "_note": "2026-10-15 重定：App 按契约必须提供 message/modal/notification 的 context（#40 接线 useMessage/useModal/useNotification），三者合计 ~87KB；其中 modal 又必然传导 skeleton（loading 占位）与 button（footer 按钮）—— antd modal/Modal.js:20 同样 import Skeleton from '../skeleton'，逐字同源，非本仓摇树缺陷。125.7KB 仍远低于 maxRatioOfFull 上限（2025.1KB × 30% = 607.5KB），门禁照旧有效：误引入 table/date-picker 级依赖会立刻超 194KB。"
     },
     {
       "id": "auto-complete",

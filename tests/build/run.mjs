@@ -204,9 +204,16 @@ function add(pkg, id, status, detail) {
  *   这与 `ui-tree-shaking` 那条教训同源（**门禁必须跑真正会被发布的那个命令**）：
  *   凡「门禁自己拼一条等价命令」的地方，都要问一句「它真的等价吗」。
  *
- * 实现细节：用 `/bin/sh -c <script>` 执行，并把**仓库的 `node_modules/.bin` 前置到 PATH**
- *   —— 这样 `unbuild` 能解析到，又**不依赖 pnpm 在 PATH 里**（本机只有 corepack，
+ * 实现细节：用 `/bin/sh -c <script>` 执行，并把 **包自己 + 仓库的 `node_modules/.bin`**
+ *   前置到 PATH —— 这样 `unbuild` 能解析到，又**不依赖 pnpm 在 PATH 里**（本机只有 corepack，
  *   见 `.workbuddy-ai/memory/environment.md`）。
+ *
+ * 🚨 2026-10-15 补（同一条教训的第三次应验）：原先只前置**根** `node_modules/.bin`，
+ *   而 pnpm workspace 里**每个包有自己的 `.bin`** —— `vitepress` 只存在于
+ *   `packages/docs/node_modules/.bin`，于是 docs 的 B1 以 `exit 127 command not found`
+ *   失败，且连带 B2 被 SKIP。真实 `npm/pnpm run` 会把**包自身及各级父目录**的
+ *   `node_modules/.bin` 都放进 PATH，门禁少了「包自身」这一级 ⇒ 又是一次
+ *   「门禁拼的环境 ≠ 真实发布环境」。
  */
 function checkBuild(dir, name) {
   if (args.noBuild) {
@@ -219,8 +226,12 @@ function checkBuild(dir, name) {
     add(name, 'B1', 'FAIL', 'package.json 没有 scripts.build');
     return false;
   }
+  // 包自身优先（其 devDependencies 只装在这里），再退回仓库根 —— 与 `npm run` 的解析顺序一致
+  const localBinDir = path.join(dir, 'node_modules/.bin');
   const binDir = path.join(ROOT, 'node_modules/.bin');
-  if (!fs.existsSync(path.join(binDir, 'unbuild'))) {
+  const hasUnbuild =
+    fs.existsSync(path.join(localBinDir, 'unbuild')) || fs.existsSync(path.join(binDir, 'unbuild'));
+  if (!hasUnbuild) {
     add(name, 'B1', 'FAIL', '找不到 node_modules/.bin/unbuild，先跑 pnpm install');
     return false;
   }
@@ -229,7 +240,10 @@ function checkBuild(dir, name) {
       cwd: dir,
       encoding: 'utf8',
       stdio: 'pipe',
-      env: { ...process.env, PATH: `${binDir}:${process.env.PATH ?? ''}` },
+      env: {
+        ...process.env,
+        PATH: [localBinDir, binDir, process.env.PATH].filter(Boolean).join(path.delimiter),
+      },
     });
     add(name, 'B1', 'PASS', `\`${script}\` 退出码 0`);
     return true;
