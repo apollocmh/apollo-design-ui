@@ -4722,6 +4722,10 @@
 - 🚨 **cloneVNode 是合并不是替换**（`on*` 拼数组、`class` 拼两遍）⇒ ① 注入 `on*` 后**不要再手动调** `origin.props?.onXxx`（#30.2）② 要「替换」语义就先 clone 再整体替换 `cloned.props`（保 dirs，#24.7）。
 - 🚨 **`vnode.ref` 是归一化对象 `{i,r,k,f}`，用户原值在 `vnode.props.ref`**（#56）：判 `typeof vnode.ref === 'function'` **恒假** ⇒ 用户 ref 静默丢弃。
 - 🚨 **`vnode.children` 可能是 slots 对象**（内容经插槽传入）：`createVNode(Comp, props, [slotsObj])` 走 `ARRAY_CHILDREN` 而非 `SLOTS_CHILDREN` ⇒ **组件拿不到插槽、内容整块丢失**（#56）。重建 vnode 按「空/数组/vnode·字符串/slots 对象」**四态分流**，slots 对象把 Effect 并进 `default` 插槽输出末尾。
+- 🚨 **`vnode.children` 四态分流的终局结论（#56 第二轮）：别再分了 —— Effect/额外内容一律走 Teleport。** 「往 children 里塞」这条路上有解不开的死结：组件**没有 `default` 插槽**时无处注入 ⇒ 内容静默消失，而上游 `createPortal(effect, hostDom)` 完全不受此限 —— 这是**「复制了上游的实现形态、却丢了行为」的典型**（用户明示：不要把「antd 也这样实现」当不修的理由）。正解 = 宿主 vnode 只用来透传 attrs + 注入 ref，`first.children` **原样回填**，额外内容交给 `<Teleport :to="hostDom">`（与 `createPortal` 逐字等价）。配套三条：
+  - 🚨 **根必须恒为 Fragment**（`[hostVNode]` 或 `[hostVNode, Teleport]`）：根形态在「无 → 有」之间翻转，Vue 会判定根类型变化 ⇒ **整棵重挂**（宿主组件状态与 DOM 全丢）。
+  - 🚨 `Teleport` 的 `to` 传**元素对象**，别传选择器 —— 目标是本组件自己渲染出来的宿主时解析为 null，并 dev 告警「Failed to locate Teleport target」。
+  - 🚨 宿主不可用时必须**显式回落 null**：`el instanceof HTMLElement ? el : el?.$el instanceof HTMLElement ? $el : null`（组件多根时 `$el` 是片段锚点文本节点）—— 对齐上游 `isHTMLElement(hostDom)` 判据。
 - 🚨 **React「JSX children = props.children」在 Vue 不成立**；语法糖组件正文在**默认插槽**（`vnode.children.default`）⇒ 读 vnode 生成数据的函数要同时读插槽（#31.1）。
 - 🚨 **`provide` 无法在 setup 后增删**：`if (props.x) provide(...)` = 挂载期常量（#49）。要「运行时可切」就恒 provide + 调用时现读，并把已注册状态**在父子间搬运**。
 - 🚨 **React 组件默认不透传普通 attrs**（rc 根不展开 restProps）⇒ 本仓（Vue 自动继承）透传是**超集**；两侧自洽优先 + 登记 D 编号（#38 / D130）。透传给内部组件前先摘掉 `class`/`style`（内部会再拼一次 ⇒ 类名重复）。
@@ -4756,6 +4760,9 @@
 - ⚠️ 递归类型（`MasonryItemType.children: VNodeChild`）写进 `[...items.value, x]` 会 TS2589 ⇒ 测试里 items 用 `unknown[]`。
 - ⚠️ 键码在 jsdom 只有 `keyCode`（`which` 恒 0）；rc `getFocusNodeList(c,true)` 收负 tabindex；rc 可见性判据（offsetParent/rect）在 jsdom 恒 false ⇒ 退化 display/visibility。
 - ⚠️ 浮层断言查 `wrapper.element` 别查 `document`（`attachTo` 串残留实例）。
+- 🚨 **Teleport 在本仓被全局 stub 掉了**（`vitest.setup.ts`：`config.global.stubs = { teleport: true }`）⇒ teleport-stub 把内容渲染到**原地**（宿主的兄弟节点）。凡是断言「内容确实落进宿主/目标 DOM 内部」的用例（`parentElement === 宿主`、`宿主.querySelectorAll(x).length`）都会**假绿**。必须显式 `mount(..., { global: { stubs: { teleport: false } } })`（已有本地 ao 用 dtype/overlay 组件在这么做，见 `packages/test-utils/src/types.ts` 的 `RenderSource.global` 文档）。反过来：**只 change 内容、不要断言落点的用例**保持 stub 更省事。
+- 🚨 **组件是多根（Fragment 根）时 VTU `w.element` 不是第一个根**，而是**父容器**（`get element() { return this.hasMultipleRoots ? this.parentElement : this.vm.$el }`）；`getRootNodes()` 会把 Teleport 的 start 锚点注释也算一个 root ⇒ 「住宿 n 就算多根」。构建中标要从容器里再查一次（`root.querySelector(sel) ?? document.querySelector(sel)`）。React 侧同理（`<BorderBeam ref>` 拿不到 DOM），不算偏离。
+- 🚨 **Teleport 动态宿主切换**（`to` 从 A 元素换成 B）由 Vue 的 `TARGET_CHANGE` 自动搬运，旧宿主不留残骸；卸载时 teleported 内容自动从目标 DOM 摘除 —— 动态切换/卸载两类用例可以直接断言「全文档只有一个 Effect」。
 - ⚠️ flaky：`select/__tests__/theme.test.ts` L7「light 态下渲染」全量跑 ~5.2s > 默认 5s ⇒ 偶发超时红。
 - 📌 **App HookAPI**：`useMessage/useNotification(getter)` + `Modal.useModal()` ⇒ `[api, holder]`，holder 与 `<Component>` **同级** ⇒ App 根是 Fragment（测试别用 `wrapper.element` 当根）。通知 API 必须在 holder 挂载后调用，open→DOM 需 3 次 nextTick（#40）。
 - ⚠️ **`ReturnType<typeof ref<T>>` = `Ref<T|undefined>`** ⇒ 返回值直接声明 `Ref<T>`。🚨 **`useId()` 只在同一个 app 内唯一**（跨 app 自传 id，`instance.ids[1]++`，#24.2）。

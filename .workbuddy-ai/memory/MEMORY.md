@@ -10,6 +10,10 @@
 
 ## §1 事实来源 / registry
 Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库规范 > `registry/*.json` > antd 源码 > 文档 > 先验。
+- 🚨🚨 **元判据（用户 2026-10-15 明示，推翻此前多轮判断）：「对齐 Ant Design ≠ 复制 Ant Design 的缺陷」。** 不许把「antd 也是这样实现的」当成**拒绝修复**的充分理由。据此 #51/#53/#55/#56 由「上游同款/实现形态差异」**改判为真缺陷并修复**（此前判为不可修的三条全部翻案）。
+  - 判定顺序：**先核上游逐字源码** ⇒ 再问「这个行为自身站得住吗」 ⇒ 站不住（ARIA 非法、异步后不重算、动态 prop 不响应、children 无处注入）就修，修成**优于上游**并在 README §2 + `COMPATIBILITY.md` §9 登记为 INTENDED（D131 起）。
+  - 「本仓实现形态 ≠ 上游」本身**不是**不修的理由 —— 恰恰相反：走了不同的路却丢了上游行为（如用 children 注入代替 `createPortal`）是典型的**「复制形态、丢了行为」**，必须补回来。
+  - 仍然不修的只有一类：改动会与 **L4/L6 基线**或上游**正确**行为分叉的性能/时序取舍。
 - 🚨 Phase 2 起 antd 降为「参考实现」；根别名一律原生 `class`/`style`，非根用 `classNames.*`/`styles.*`。判别式：「这个 prop 指向组件自己的根吗？」。
 - 禁止凭记忆描述 antd/rc：读 `/tmp/antd-src/package/`；缺了现拉（`npm pack antd@6.6.4`，走 `http_proxy=127.0.0.1:7890`）。gDSFP 分支判据一律核上游原文。
 - 生成器顺序 `gen-registry → foundation-status → gen-workstreams → validate-registry`；派生字段手改会被覆盖 ⇒ 注记写 `registry/source/components.meta.mjs`；裁决改 `open-decisions.mjs`+`foundation.json` 后跑 `sync-decision-runtime.mjs <id>`。
@@ -39,10 +43,10 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 ⚠️ MEMORY.md 每轮自动注入，**过大会被截断**（实测 ~18KB 字节即截断；中文 3 字节/字 ⇒ 约 1 万字符到顶），
 所以本文件只放**索引**。改判据时**两处都要改**。命中下列关键字 ⇒ 去 PITFALLS 查对应条目：
 
-- **A 静态审计型 issue**（#36/#49–#56）：四步：测量 → 核上游**逐字**源码 → **真缺陷才修** → 钉回归。三类产出：真缺陷 / 上游同款（**不修**）/ Vue 超集。📌「运行时改配置不生效」在 antd 上大多也不生效，别顺着 issue 措辞改。
+- **A 静态审计型 issue**（#36/#49–#56）：四步：测量 → 核上游**逐字**源码 → **真缺陷才修** → 钉回归。三类产出：真缺陷 / 上游同款（**现在也要再看一遍是否站得住**）/ Vue 超集。📌「运行时改配置不生效」在 antd 上大多也不生效，别顺着 issue 措辞改 —— 但**站不住就要修**（见 §1 元判据）。
 - **B 响应性**（最高频）：setup 期快照三件套 · provide 必须是 ref/computed/getter · React `useContext` 每次 render 重读 ⇒ provide 与消费者**两侧配套改** · `useImperativeHandle` 无依赖数组 ⇒ expose 挂 getter · hook 工厂 setup 期解构配置 ⇒ 传 getter · 模块级单例留 `app` 引用 · `useEffect(无deps)` ⇒ `watchEffect(post)` · attrs 回调不能解构 · 异步回调加 requestId 守卫 · `useSize` 函数形态 · `useMergeSemantic` 第三参传 computed。
-- **C VNode/clone/透传**：根 VNode 末尾 `...attrs` 顶掉内部 class/on\* ⇒ `mergeProps(内部, attrs)` · cloneVNode 是合并非替换 · `vnode.ref` 是归一化对象（原值在 `props.ref`）· `vnode.children` 可能是 slots 对象（四态分流）· React children ≠ Vue 插槽 · `provide` 无法 setup 后增删 · React 默认不透传 attrs。
+- **C VNode/clone/透传**：根 VNode 末尾 `...attrs` 顶掉内部 class/on\* ⇒ `mergeProps(内部, attrs)` · cloneVNode 是合并非替换 · `vnode.ref` 是归一化对象（原值在 `props.ref`）· 🚨 **往 children 塞内容是死路 ⇒ 统一走 `<Teleport :to="宿主DOM">`**（children 原样回填；根恒 Fragment；`to` 传元素对象；非 HTMLElement 回落 null）· React children ≠ Vue 插槽 · `provide` 无法 setup 后增删 · React 默认不透传 attrs。
 - **D 薄壳/语义槽/合并顺序**：`inheritAttrs:false` 要显式下传 · `classNames.*` 必须合并用户的 · slot 回退禁用 `??`（`undefined`/`null` 语义不同）· 归一化标记字段不能丢 · 布尔 prop `default:true` 破坏继承。
 - **E 事件/渲染**：受控 onChange + 业务 handler = 双调 ⇒ 只留一个出口 · computed 调 slots 不 track「有无」· SFC 模板不能放 HTML 注释。
-- **F 测试探针（jsdom）**：不给 disabled 派发 click ⇒ 用 `<a disabled>` · `console.log(html)` 后 grep 造假象 · 动效不结束（expand/collapse、`MotionList`）· 容器尺寸恒为 0 · `TreeCheckedKeys` 只指对象形态 · 递归类型 TS2589。
+- **F 测试探针（jsdom）**：不给 disabled 派发 click ⇒ 用 `<a disabled>` · 🚨 **Teleport 被全局 stub**（`vitest.setup.ts`）⇒ 断言「内容落进目标 DOM」会**假绿**，必须 `global:{stubs:{teleport:false}}` · 🚨 **多根组件 `w.element` = 父容器**（不是第一个根）⇒ 容器内再查一次 · `console.log(html)` 后 grep 造假象 · 动效不结束（expand/collapse、`MotionList`）· 容器尺寸恒为 0 · `TreeCheckedKeys` 只指对象形态 · 递归类型 TS2589。
 - **G 样式合并**：`attrs.style` 可能是字符串 ⇒ 过 `mergeStyles` · `style:[a,b]` 后展开者胜 ⇒ px 化后再覆盖回 · 别信注释、跑代码。
