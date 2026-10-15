@@ -36,7 +36,9 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - 🚨 **`registry/*.json` 是生成物**：改了 `packages/*/src` 后 `verify:full` 首关 `registry:check` 就红（`foundation.json 已过期`）⇒ 重跑 `node registry/tools/foundation-status.mjs`。**verify:full 长期不跑 ⇒ 派生漂移会沉积**。
 
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#56 全部**。每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交（**用户已令停止推送**）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#56 全部**。每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交。
+- 📌 **推送授权 2026-10-15 恢复**：此前「不推送了」是**阶段性**指令；本轮用户明确要求「统一推送到 GitHub 并关闭已完成 Issue」⇒ 已推（`gh` 不在 PATH，用 **`/usr/local/bin/gh`**，已登录 apollocmh）。推送命令：`git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`。
+- ⚠️ 下一轮候选：**#52（Masonry `items` 原地修改）/ #54（Affix 监听重绑）** 仍是上轮「上游同款 ⇒ 不修」结论，**尚未用 §1 新元判据复核过**。
 ✅ `test:build` 两处既有红灯已于 2026-10-15 清零（`d152fd32`）⇒ **151 项 / FAIL 0 / PENDING 0**：① B6 app 预算按公式 `ceil(measured*1.5+5)` 重定 9→194KB（App 契约必须提供 message/modal/notification context，modal 又传导 skeleton/button，上游 antd 同源）② B1 docs `vitepress` 找不到 ⇒ 门禁真缺陷，见 §2。
 
 ## §6 判别式索引（**完整判据见 PITFALLS.md 末尾「判别式总表」**）
