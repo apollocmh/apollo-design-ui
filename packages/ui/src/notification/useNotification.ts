@@ -20,7 +20,7 @@
  *    （本仓无 cssinjs 的 hash/`-css-var` 类机制；组件变量由静态 CSS 的声明块提供）。
  */
 
-import { useLocale } from '@apollo-design/locale';
+import { useLocaleReactive } from '@apollo-design/locale';
 import { isNumber, isPlainObject, isRenderable } from '@apollo-design/utils';
 import {
   computed,
@@ -93,8 +93,13 @@ const Holder = defineComponent({
   setup(props, { expose }) {
     const config = useComponentConfig('notification');
     const prefixCls = props.prefixCls || config.getPrefixCls('notification');
-    const [locale] = useLocale('global');
-    const closeLabel = locale?.close ?? 'Close';
+    // ⚠️ 必须用**响应式**变体（Issue #47）：把 `closeLabel` 拍成 setup 期常量的话，
+    //    运行时切语言后**新开**的通知仍拿旧文案。上游的 React 版没有这个问题 ——
+    //    `useImperativeHandle(ref, () => ({ ..., closeLabel: contextLocale.close }))`
+    //    **没有依赖数组** ⇒ 每次 render 重建 imperative handle ⇒ 每次 `open()` 都现读。
+    //    本仓的等价物：`closeLabel` 做成 computed + expose 上挂 getter（见下方 `expose`）。
+    const [locale] = useLocaleReactive('global');
+    const closeLabel = computed(() => locale.value?.close ?? 'Close');
 
     const mergedDuration = computed(() =>
       isNumber(props.duration) && props.duration > 0 ? props.duration : false,
@@ -130,7 +135,15 @@ const Holder = defineComponent({
       stack: () => stackConfig.value,
     });
 
-    expose({ ...api, prefixCls, closeLabel });
+    // ⚠️ `closeLabel` 必须是 **getter**（Issue #47）：`useInternalNotification.open()` 在每次
+    //    调用时现读 `instance.closeLabel` ⇒ 只有 getter 才能拿到「切语言后」的新文案。
+    expose({
+      ...api,
+      prefixCls,
+      get closeLabel() {
+        return closeLabel.value;
+      },
+    });
 
     return () => holder();
   },

@@ -32,6 +32,12 @@ notification/
   ⇒ `getCloseIconWithLabel`（等价于 antd 的 `cloneElement(icon, { 'aria-label': closeLabel })`）。
 - **`closable: false` 与 `closeIcon: null` 都移除整个按钮**（上游 `computeClosable` 的第一条分支）。
 - 复用了 Tag 那轮建的 `_internal/use-closable.ts`
+- **`closeLabel` 必须是「活的」**（Issue #47）：Holder 用 `useLocaleReactive('global')` +
+  `computed`，并存进 `expose` 的 **getter**（`useInternalNotification.open()` 每次现读
+  `instance.closeLabel`）。上游的 React 版同效 —— `useImperativeHandle(ref, () => ({
+  ..., closeLabel: contextLocale.close }))` **没有依赖数组** ⇒ 每次 render 重建。
+  ⚠️ 判据边界：`open()` 会把文案**烘进** notice 配置 ⇒ 只有**新开**的通知跟随语言；
+  已存在的通知保留旧文案（antd 同判，见 `__tests__/s47-issue47.test.ts` 用例 [C]）。
 - **engine 的配置键支持 getter**（Issue #45）：`useNotification()` 在 setup 期解构根配置
   ⇒ `duration` / `maxCount` / `pauseOnHover` / `stack` / `showProgress` 传裸值会被钉死；
   类型放宽为 `ConfigValue<T>`（`T | (() => T | undefined)`），容器内部 `toValue` 求值。裸值仍完全兼容。
