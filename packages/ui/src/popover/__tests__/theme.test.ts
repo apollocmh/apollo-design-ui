@@ -88,12 +88,14 @@ describe('Popover · token 契约', () => {
     expect(css).toContain('background:transparent;}');
   });
 
-  it('预设色段（13 个 {p}-{color} ⇒ arrow-background-color + -inner 背景 + 箭头透明）', () => {
+  // ⚠️ 预设色背景落在 `.apollo-popover-container` 而非 `.apollo-popover-inner`：
+  // #25 修正了预设色选择器（`-inner` 这个类名本仓并不存在，见 s25-issue25 的 not.toContain 断言）。
+  it('预设色段（13 个 {p}-{color} ⇒ arrow-background-color + -container 背景 + 箭头透明）', () => {
     expect(css).toContain(
       '.apollo-popover.apollo-popover-blue{--apollo-tooltip-arrow-background-color:var(--apollo-blue-6);}',
     );
     expect(css).toContain(
-      '.apollo-popover.apollo-popover-blue .apollo-popover-inner{background-color:var(--apollo-blue-6);}',
+      '.apollo-popover.apollo-popover-blue .apollo-popover-container{background-color:var(--apollo-blue-6);}',
     );
     expect(css).toContain(
       '.apollo-popover.apollo-popover-gold .apollo-popover-arrow{background:transparent;}',
