@@ -26,6 +26,7 @@
 | D10 | 纵向间距非数字时上游退化成字符串拼接（`totalHeight` 变 `NaN`）；本仓收敛成「能转成有限数就用，否则 0」 | INTENDED | `Masonry.vue` 的 `verticalGutterPx` |
 | D11 | 根高为 0 时输出 `height:0`（**与 React 的 `dangerousStyleValue` 一致**，不补 `px`） | 一致 | `Masonry.vue` 的 `rootHeight` |
 | D12 | 内部 prop `onResize` 用 `undefined` 而不是上游的 `null` | PLATFORM | 内部 prop，不可观测 |
+| D13 | `items` **更新契约**：换成新数组 ⇒ 完整同步（量测 + 重排 + `onLayoutChange`）；`reactive` 数组原地 `push` ⇒ **DOM 列表跟随但 `onLayoutChange` 不跟随**（Vue 侧超集，但不完整）；普通数组原地改 ⇒ 不跟随（无响应式来源）。上游 `useEffect([items])` 两条通道都不跟随 ⇒ **受支持的更新方式是「给新数组」** | INTENDED | L1 `s52-issue52`（Issue #52） |
 
 ## 3. `.vue` / `.ts` 选择
 
