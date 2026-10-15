@@ -16,6 +16,7 @@
 | — | **fade 无 CSS**：antd 产物同样没有 `-fade` keyframes（initFadeMotion 只有 tooltip 等局部用）——motion 类挂 DOM 但无动画 | 平台一致 | L4 + theme 断言 |
 | — | deprecated 告警：antd 每次 render 检查；我们 setup 期发一次（dev 层去重） | PLATFORM | — |
 | — | `@media` 断点用**字面量** 768/480px（media feature 里 `var()` 非法，浏览器整条忽略——L6 实测） | PLATFORM（token 边界） | style/index.ts |
+| — | `visibilityHeight` 的**生效时点**是「下一次 scroll」（上游 `useEffect` 依赖只有 `[target]`，改阈值不重算）。**本仓还更好一点**：`handleScroll` 现读 `props.visibilityHeight`（`BackTop.ts:91`）⇒ 下一次 scroll 即用新阈值；上游注册的监听器闭包来自挂载那一帧，阈值实际被冻住 | 平台一致（Vue 侧超集） | L1 `s55-issue55`（Issue #55） |
 
 ## 3. .vue / .tsx 选择
 
