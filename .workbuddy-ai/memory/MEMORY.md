@@ -39,7 +39,8 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#56 全部**。每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交。
 - 📌 **推送授权 2026-10-15 恢复**：此前「不推送了」是**阶段性**指令；本轮用户明确要求「统一推送到 GitHub 并关闭已完成 Issue」⇒ 已推（`gh` 不在 PATH，用 **`/usr/local/bin/gh`**，已登录 apollocmh）。推送命令：`git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`。
 - ✅ **#51–#56 已全部翻案修复 + 推送 + 关闭**（2026-10-15）：#51/`8de72b49` #52/`e77e9c6b` #53/`05820f04` #54/`7c09c142` #55/`e50c5f6f` #56/`9f1475d1`。翻案理由四类：违反外部规范(#51) / 功能正确性缺失(#53) / 动态 prop 不响应(#55) / **复制形态丢了行为**(#56)；#52 = 半更新态比不更新更糟，#54 = 有界 ≠ 无代价。
-- ⚠️ 仓库仍有 **33 个 open Issue**（#31–#50 等），台账里多数已交付但**未关闭** ⇒ 若要清账需批量核验后关闭。
+- ✅ **Issue 已统一清账**（2026-10-15 夜）：#18–#56 **全部关闭**，仓库仅剩 **#22 开放**（menu，`partial 5/8`）。清账方式：台账行 → `git cat-file -e <commit>` 逐个核验提交存在 → 批量 `gh issue close`，评论附 commit + 台账验收记录 + 门禁结论。
+- ⚠️ **#22 不能关**：#22.1 SubMenu popup 恒 `visibility:hidden`、#22.6 menu 无语义通道、#22.8 measure 路径缺对称 deregister（见 `docs/KNOWN-ISSUES.md` §1.6/§1.7）。⚠️ #22.1 尤其不能只翻可见性 —— **现有 L6 基线与 DOM 契约都编码了「popup 不可见」**（React 静态渲染 Trigger 浮层本就不产出）⇒ 改了 menu 的 L6/L4 会红，必须「只在测量阶段隐藏」+ 重拍基线 + 复核 Tabs/Dropdown。
 ✅ `test:build` 两处既有红灯已于 2026-10-15 清零（`d152fd32`）⇒ **151 项 / FAIL 0 / PENDING 0**：① B6 app 预算按公式 `ceil(measured*1.5+5)` 重定 9→194KB（App 契约必须提供 message/modal/notification context，modal 又传导 skeleton/button，上游 antd 同源）② B1 docs `vitepress` 找不到 ⇒ 门禁真缺陷，见 §2。
 
 ## §6 判别式索引（**完整判据见 PITFALLS.md 末尾「判别式总表」**）
