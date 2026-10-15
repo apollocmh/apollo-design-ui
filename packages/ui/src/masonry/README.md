@@ -26,7 +26,7 @@
 | D10 | 纵向间距非数字时上游退化成字符串拼接（`totalHeight` 变 `NaN`）；本仓收敛成「能转成有限数就用，否则 0」 | INTENDED | `Masonry.vue` 的 `verticalGutterPx` |
 | D11 | 根高为 0 时输出 `height:0`（**与 React 的 `dangerousStyleValue` 一致**，不补 `px`） | 一致 | `Masonry.vue` 的 `rootHeight` |
 | D12 | 内部 prop `onResize` 用 `undefined` 而不是上游的 `null` | PLATFORM | 内部 prop，不可观测 |
-| D13 | `items` **更新契约**：换成新数组 ⇒ 完整同步（量测 + 重排 + `onLayoutChange`）；`reactive` 数组原地 `push` ⇒ **DOM 列表跟随但 `onLayoutChange` 不跟随**（Vue 侧超集，但不完整）；普通数组原地改 ⇒ 不跟随（无响应式来源）。上游 `useEffect([items])` 两条通道都不跟随 ⇒ **受支持的更新方式是「给新数组」** | INTENDED | L1 `s52-issue52`（Issue #52） |
+| D13 | `items` **更新契约**：上游 `useEffect([items])` 是**引用比较** ⇒ 原地 `push`/`splice`/`swap`/改 `column` **完全不更新**。本仓用「依赖探针（逐条读 `length`/`key`/`column`）+ 赋值浅拷贝」把响应式数组（`ref`/`reactive` 持有）的**原地变更也变成完整更新路径**（量测 + 重排 + `onLayoutChange` 三条通道同步）。⚠️ 修复前本仓是「**DOM 更新了、布局没更新**」的半更新态（比上游更糟：新 item 无位置 ⇒ 堆在左上角，且 `collectLayout` 要求全部有位置 ⇒ 回调停在旧载荷）。保留边界：① **普通（非响应式）数组**没有数据源 ⇒ 物理上不可追踪（请给新数组）；② `children`/`data` 变化 ⇒ 走 `fresh`（item 级 `ResizeObserver`），上游同判 | INTENDED | L1 `s52-issue52`（Issue #52） |
 
 ## 3. `.vue` / `.ts` 选择
 

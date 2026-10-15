@@ -109,18 +109,58 @@ const itemWidthVar = computed(() => `--${rootPrefixCls.value}-masonry-item-width
  */
 const mergedItems = shallowRef<MasonryItemType[]>([]);
 
-onMounted(() => {
-  mergedItems.value = props.items ?? [];
-});
+/**
+ * 🚨 **`items` 的依赖探针**（Issue #52）。
+ *
+ * 上游 `useEffect(…, [items])` 是**引用比较** ⇒ 原地 `push` / `splice` 完全不更新。
+ * 本仓照抄后出现了**比上游更糟的半更新态**：`mergedItems` 存的就是调用方那个响应式
+ * 数组本身，而 `motionKeys` 是 `mergedItems.value.map(...)` ⇒ 遍历读到 `length`
+ * ⇒ **DOM 跟着多渲染出 item**；但 `watch([mergedItems, columnCount], collectItemSize)`
+ * 因**引用未变**不重测量 ⇒ 新 item **没有位置**（`top: undefined`、列号 0，视觉上
+ * 堆在左上角），且 `collectLayout` 要求「**全部** item 都有位置」⇒ `onLayoutChange`
+ * 停在旧载荷。上游是「不更新」，本仓是「**DOM 更新了、布局没更新**」。
+ *
+ * ⇒ 逐条读 `length` / `key` / `column` 建立响应式依赖，返回**字符串签名**：
+ *   · 原地 `push` / `splice` / `swap` ⇒ length 或 key 序列变 ⇒ 签名变 ⇒ 触发；
+ *   · 原地改 `item.column` ⇒ 签名变 ⇒ 触发（重新排布到指定列）；
+ *   · **返回字符串而不是对象**：内容相同时字符串相同 ⇒ `Object.is` 判定「未变」
+ *     ⇒ 不会自激循环（[E] 用例钉住）。
+ *
+ * ⚠️ 刻意**不用** `{ deep: true }`：`item.children` 是 `VNodeChild`（递归类型，且含
+ *    `el` / `component` 等成环引用），深遍历既贵又危险。`children` / `data` 变化
+ *    ⇒ 走 `fresh`（item 级 `ResizeObserver`），上游同判。
+ */
+const itemsSignature = (): string => {
+  const items = props.items;
+  if (!items) return '';
+  let signature = String(items.length);
+  for (let i = 0; i < items.length; i += 1) {
+    const item = items[i];
+    if (!item) {
+      signature += '|';
+      continue;
+    }
+    // 只掺**参与布局**的标量：`key` 决定位置表的键，`column` 决定落列
+    signature += `|${String(item.key ?? i)}:${item.column ?? ''}`;
+  }
+  return signature;
+};
+
+/**
+ * ⚠️ **必须拷贝**（`[...items]`），不能写 `mergedItems.value = props.items`：
+ * 原地变更时两者是**同一个数组** ⇒ 赋值等于赋同一个引用 ⇒ `shallowRef` 不触发
+ * ⇒ 量测 / 排布 / 回调三条通道**仍然不同步**（[B] 用例的第二种失败模式）。
+ * 拷贝是**浅**的：元素仍是调用方的原对象（`shallowRef` 的「不深度代理」意图保留），
+ * 且对象身份稳定 ⇒ `itemColumns` 的 `isEqual` 去重与 `MotionList` 的 key 都不受影响。
+ */
+const syncItems = (): void => {
+  mergedItems.value = props.items ? [...props.items] : [];
+};
+
+onMounted(syncItems);
 
 // 见文件头第 1 条：`flush: 'post'` 复刻 `useEffect` 的「commit 之后」
-watch(
-  () => props.items,
-  (next) => {
-    mergedItems.value = next ?? [];
-  },
-  { flush: 'post' },
-);
+watch(itemsSignature, syncItems, { flush: 'post' });
 
 // ============================== 列数 / 间距 ==============================
 const screens = useBreakpoint();
