@@ -69,6 +69,35 @@ const finiteRange = (b: { now: number; min: number; max: number }) => {
   expect(b.now).toBeLessThanOrEqual(b.max);
 };
 
+/**
+ * 复刻 `useResize.onOffsetUpdate` 的边界对齐规则（px 空间，**顺序覆盖**）
+ * —— 它决定这条 bar 实际能拖到哪。
+ *
+ * ⚠️ 只能在纯函数层验证：这段算式依赖容器尺寸，而 jsdom 下容器恒为 0
+ * （`MockResizeObserver.trigger()` 也测不到），组件级拿不到真实像素。
+ */
+const dragOffset = (
+  sizes: readonly [number, number],
+  min: readonly [number, number],
+  max: readonly [number, number],
+  offset: number,
+): number => {
+  let merged = offset;
+  if (sizes[0] + merged < min[0]) {
+    merged = min[0] - sizes[0];
+  }
+  if (sizes[1] - merged < min[1]) {
+    merged = sizes[1] - min[1];
+  }
+  if (sizes[0] + merged > max[0]) {
+    merged = max[0] - sizes[0];
+  }
+  if (sizes[1] - merged > max[1]) {
+    merged = max[1] - sizes[1];
+  }
+  return merged;
+};
+
 describe('Splitter · Issue #51 ARIA 上下界', () => {
   it('[A] 良构约束 + 已测量容器 ⇒ min <= now <= max（核心回归）', () => {
     // 默认两面板
@@ -98,25 +127,66 @@ describe('Splitter · Issue #51 ARIA 上下界', () => {
     finiteRange(boundsFor(mins, maxs, 1));
   });
 
-  it('[B] 容器未测量（SSR）⇒ min/max 为 NaN ⇒ 由 SplitBar 归一成 0（上游同式）', () => {
-    // 未测量 ⇒ `ptgMaxSizes = (item.max || 0) / 0` = NaN（useSizes 与上游同式），
-    // 于是 `Math.max/min` 也得出 NaN；DOM 上看到的是 `getValidNumber(NaN) === 0`。
+  it('[B] 容器未测量（SSR）⇒ 上下界退化为全区间且 now 落在其中', () => {
+    // 未测量 ⇒ `ptgMaxSizes = (item.max || 0) / 0` = NaN（useSizes 与上游同式）。
+    // 修复前 `Math.max/min` 也得出 NaN ⇒ DOM 上 `getValidNumber(NaN) === 0`
+    // ⇒ `valuemin=0 / valuemax=0 / valuenow=50`，now 甚至不在 [min,max] 内 —— ARIA 非法。
+    // 修复后：非有限的比例回退到「无约束」语义 ⇒ min=0 / max=100 / now=50。
     const raw = getAriaBounds([0.5, 1], [0, 0], [Number.NaN, Number.NaN], 0);
     expect(raw.now).toBe(50);
-    expect(Number.isNaN(raw.min)).toBe(true);
-    expect(Number.isNaN(raw.max)).toBe(true);
-    // 归一后（SplitBar.getValidNumber 的口径：非有限 ⇒ 0）
-    expect(Number.isFinite(raw.min) ? raw.min : 0).toBe(0);
+    expect(raw.min).toBe(0);
+    expect(raw.max).toBe(100);
+    finiteRange(raw);
   });
 
-  it('[C] 矛盾约束（两侧 min=80%）⇒ min > max（上游同式，别当成本仓缺陷）', () => {
+  it('[C] 矛盾约束（两侧 min=80%）⇒ 退化为「不可拖」单点而非 min > max', () => {
     const b = boundsFor(['80%', '80%'], [undefined, undefined], 0);
-    expect(b.now).toBeCloseTo(20, 10);
-    expect(b.min).toBeCloseTo(80, 10);
+    // 两侧 min 之和 > 100% ⇒ 约束不可满足 ⇒ 没有有效拖拽区间。
+    // 修复前产出 min=80 / max=20（区间反转，ARIA 非法，屏幕阅读器读到自相矛盾的区间）；
+    // 修复后退化为单点 = 当前位置，与「两侧 min 互相夹死、实际拖不动」一致。
+    expect(b.min).toBeCloseTo(20, 10);
     expect(b.max).toBeCloseTo(20, 10);
-    // 有限但**区间非法** —— 与 antd 逐字同源（Math.max / Math.min 各取一侧极值）
-    expect(Number.isFinite(b.min) && Number.isFinite(b.max)).toBe(true);
-    expect(b.min).toBeGreaterThan(b.max);
+    expect(b.now).toBeCloseTo(20, 10);
+    finiteRange(b);
+  });
+
+  // ==================== ARIA 语义 ⇄ 实际拖拽范围的一致性 ====================
+
+  it('[C2] 矛盾约束退化为单点：同一布局下实际拖拽也确实归零（不是只改 ARIA）', () => {
+    // 容器 500px，两侧 min=80% = 400px（400+400 > 500 ⇒ 不可满足）。
+    // 面板按约束摊得 [100, 400]（即 ARIA 的 now=20%）。
+    const sizes: [number, number] = [100, 400];
+    const min: [number, number] = [400, 400];
+    const max: [number, number] = [500, 500];
+
+    // 两个方向都尝试够大的位移
+    expect(dragOffset(sizes, min, max, 200)).toBe(0);
+    expect(dragOffset(sizes, min, max, -200)).toBe(0);
+
+    // ⇒ 该分支下这条 bar 真的拖不动，ARIA 退化成 min === max 是**如实反映**，
+    //   而不是为了让 £min <= now <= max¡ 成立而编造一段可拖区间。
+  });
+
+  it('[C3] 良构约束下 ARIA 的 [min,max] 正好等于拖拽可达的两个端点', () => {
+    // 容器 500px，两侧 min=20% = 100px，无 max ⇒ ARIA 应为 [20, 80]，now = 50。
+    const b = boundsFor(['20%', '20%'], [undefined, undefined], 0);
+    expect(b.min).toBeCloseTo(20, 10);
+    expect(b.max).toBeCloseTo(80, 10);
+    expect(b.now).toBeCloseTo(50, 10);
+
+    const CONTAINER_PX = 500;
+    const min: [number, number] = [100, 100];
+    const max: [number, number] = [CONTAINER_PX, CONTAINER_PX];
+    // 面板当前各 250px（50%）
+    const sizes: [number, number] = [250, 250];
+
+    // 向右拖到极限 ⇒ 起始面板尺寸占比应等于 aria-valuemax
+    const rightMost = sizes[0] + dragOffset(sizes, min, max, 10_000);
+    expect((rightMost / CONTAINER_PX) * 100).toBeCloseTo(b.max, 6);
+
+    // 向左拖到极限 ⇒ 应等于 aria-valuemin
+    const leftMost = sizes[0] + dragOffset(sizes, min, max, -10_000);
+    expect((leftMost / CONTAINER_PX) * 100).toBeCloseTo(b.min, 6);
   });
 });
 

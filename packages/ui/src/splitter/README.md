@@ -19,7 +19,13 @@
 | D63 | 事件名映射：`onResizeStart/onResize/onResizeEnd/onCollapse/onDraggerDoubleClick` ⇒ `resize-start/resize/resize-end/collapse/dragger-double-click`（C19 惯例，emit + onXxx prop 双通道） | INTENDED | L1 事件用例 |
 | — | ref ⇒ `expose({ nativeElement })`（antd 的 `SplitterRef` 同形状） | INTENDED | L1 |
 | — | Panel children 收集：slot 函数/槽对象/数组三形态归一化（Vue 特有，React children 恒为数组） | INTENDED | Splitter.ts `renderPanelChildren` |
-| — | ARIA 上下界在**容器未测量**（SSR / jsdom）时为 `NaN` ⇒ `SplitBar.getValidNumber` 归一成 `0`；面板 `min` 之和 > 100% 时可能 `min > max`。**与 antd 逐字同源**（`Splitter.js:181-201` + `useSizes.js:27-38` 同式）⇒ 不修（改了会与 L4 基线分叉），仅加回归钉住（Issue #51） | UPSTREAM | L1 `s51-issue51` |
+| D131 | **ARIA 上下界收口为有限且 `min ≤ now ≤ max`** —— antd 在①容器**未测量**（SSR/首帧）时 `ptgMaxSizes = (max \|\| 0)/0` = `NaN` ⇒ 渲染出 `valuemin=0 / valuemax=0 / valuenow=50`（now 落在区间外）；②约束**不可满足**（两侧 `min` 之和 > 100%）时产出 `min > max`（区间反转）。本仓两条都收口：非有限比例回退「无约束」语义得 `0 / 100 / 50`；矛盾约束退化为「不可拖」单点 = 当前位置（**而非**交换端点谎报一段拖不到的区间），最后把 `now` 夹回区间。**只改 ARIA 属性，不改拖拽/布局**：可满足场景的数值与 antd 逐字相同 | INTENDED（**优于上游**：A11y 正确性，依据 ARIA 规范） | COMPATIBILITY.md §9 `D131`；L1 `s51-issue51`（`[C2]` 证明矛盾约束下拖拽 offset 确实归零、`[C3]` 证明良构约束下 `[min,max]` 恰为拖拽端点）；L4 的 9 条 allow |
+
+> ⚠️ **D131 的取舍边界（改之前请先读）**：为什么矛盾约束是「退化为单点」而不是「交换 min/max」？
+> `useResize.onOffsetUpdate` 的边界对齐是**顺序覆盖**的四条规则，两侧 `min` 互相夹死时会把
+> offset 压回 0 ⇒ 这条 bar **真的拖不动**。此时若向辅助技术播报一段 `[20, 80]` 的可拖区间，
+> 等于承诺用户一个拖不到的范围 —— 违反「ARIA 语义必须与实际可拖范围一致」。
+> 矛盾约束本身是**使用方的配置错误**（`min` 之和超过容器），本仓选择如实告知「当前不可拖」。
 
 ## 3. 引擎（hooks/ 自建）
 

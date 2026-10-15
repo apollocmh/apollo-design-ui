@@ -35,7 +35,7 @@ const PANELS_BASIC = () => [
 ];
 
 /** 用例规格表：id → Vue 侧渲染产物。必须覆盖基线里的每一个用例。 */
-const specs: Record<string, { render: () => DomRenderResult }> = {
+export const specs: Record<string, { render: () => DomRenderResult }> = {
   'splitter:basic': {
     render: () => h(Splitter, { style: { height: '200px' } }, () => PANELS_BASIC()),
   },
@@ -103,10 +103,77 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 };
 
+/**
+ * 与 antd SSR 产物的**已知差异**（登记：COMPATIBILITY.md §9 `D131`）。
+ *
+ * 全部集中在 `aria-valuemin` / `aria-valuemax`：上游在容器未测量时算出 `NaN`
+ * （归一成 `0`，导致 `valuemin=0 / valuemax=0` 而 `valuenow` 却是 50），本仓收口为
+ * 「有限且 `min ≤ now ≤ max`」—— 见 Issue #51 与 `hooks/ariaBounds.ts` 的说明。
+ *
+ * ⚠️ `toEqual` 要求 diff **恰好**命中，多一条/少一条都会红；所以这里是逐条而不是通配。
+ */
+const ARIA_MAX_FULL_RANGE = '$/div[0]/div[1]/div[0]: 属性 aria-valuemax 不同 "0" vs "100"';
+
+const allow: Record<string, { reason: string; deviationId: string; diff: string[] }> = {
+  'splitter:basic': {
+    reason:
+      'Issue #51：容器未测量时上游 aria-valuemax 是 NaN ⇒ 归一成 0（与 valuenow=50 自相矛盾）；本仓退化为全区间 0–100。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+  'splitter:vertical': {
+    reason: 'Issue #51：同 `splitter:basic` —— 未测量容器的 aria-valuemax 收口为 100。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+  'splitter:layout-deprecated': {
+    reason: 'Issue #51：同 `splitter:basic` —— 未测量容器的 aria-valuemax 收口为 100。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+  'splitter:collapsible': {
+    reason:
+      'Issue #51：左侧面板 `min: "20%"` 是百分比 ⇒ 上下界本就可解析；上游因 ptgMax=NaN 把两端都压成 0，本仓给出 [20, 100]。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE, '$/div[0]/div[1]/div[0]: 属性 aria-valuemin 不同 "0" vs "20"'],
+  },
+  'splitter:collapsible-icon-custom': {
+    reason: 'Issue #51：同 `splitter:basic` —— 未测量容器的 aria-valuemax 收口为 100。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+  'splitter:multiple': {
+    reason:
+      'Issue #51：三面板用例暴露真实约束 —— bar0 受左侧 `min:"10%"` 与中 panel 上界影响应为 [10, 60]，bar1 受右侧 `max:"60%"` 影响应为 [40, 100]；上游两组都因 NaN 退化成 [0, 0]。',
+    deviationId: 'D131',
+    diff: [
+      '$/div[0]/div[1]/div[0]: 属性 aria-valuemax 不同 "0" vs "60"',
+      '$/div[0]/div[1]/div[0]: 属性 aria-valuemin 不同 "0" vs "10"',
+      '$/div[0]/div[3]/div[0]: 属性 aria-valuemax 不同 "0" vs "100"',
+      '$/div[0]/div[3]/div[0]: 属性 aria-valuemin 不同 "0" vs "40"',
+    ],
+  },
+  'splitter:size-px': {
+    reason: 'Issue #51：px 尺寸在未测量容器下同样让上游 ptgMax 变 NaN；本仓收口为有限区间。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+  'splitter:rtl': {
+    reason: 'Issue #51：RTL 只影响视觉/键盘轴向，ARIA 数值与 LTR 一致 —— 收口同 `splitter:basic`。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+  'splitter:semantic': {
+    reason: 'Issue #51：同 `splitter:basic` —— 未测量容器的 aria-valuemax 收口为 100。',
+    deviationId: 'D131',
+    diff: [ARIA_MAX_FULL_RANGE],
+  },
+};
+
 domContractTest('Splitter', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow,
   render: (id) => {
     const spec = specs[id];
     if (!spec)
