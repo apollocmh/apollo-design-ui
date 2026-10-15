@@ -37,6 +37,7 @@ import type { GetContainer } from '@apollo-design/portal';
 import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { getDesignToken } from '@apollo-design/theme';
+import { observeResize } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -345,16 +346,99 @@ const Tour = defineComponent({
       }
     };
 
-    watch([targetElement, mergedOpen], () => updatePos());
+    // ==================== 异步布局同步（Issue #53 · 优于上游）====================
+    //
+    // rc `useTarget` 的触发集只有 `[targetElement, open]` + window 的 resize/scroll，
+    // 于是两类**很常见**的场景下遮罩挖洞与浮层会停在旧位置：
+    //   ① 目标被异步内容推移（上方图片加载、手风琴展开、异步列表插入）；
+    //   ② 目标位于可滚动容器内，容器滚动（scroll **不冒泡**，挂在 window 冒泡阶段收不到）。
+    //
+    // 本仓补齐三类信号，**全部是事件驱动**（没有轮询 / setInterval）：
+    //   1. 目标自身尺寸变化 —— ResizeObserver（内容展开直接撑大目标时命中）
+    //   2. 祖先链尺寸变化   —— ResizeObserver（「纯位置变化」的主要来源：祖先变高 ⇒ 目标被推走）
+    //   3. 任意滚动祖先滚动 —— document 上 **capture 阶段**的 scroll（捕获不冒泡的滚动）
+    //
+    // ⚠️ 已知边界（**故意不做**，代价与收益不成比例）：
+    //   ResizeObserver 捕获不到「祖先尺寸没变、目标位置却变了」的场景（如目标自身
+    //   position 变化、同胞重排但父尺寸不变）。那需要 MutationObserver 或轮询，
+    //   而它们会在任意 DOM 变动时高频触发 ⇒ 与「避免高频无效测量」冲突。见 README §7。
+    //
+    // 抗抖动三道闸：
+    //   · 所有外部信号走 rAF 合并 —— 同一帧内的多个回调只测量一次；
+    //   · `updatePos` 内部已有 JSON 去重 —— 位置没变就不写状态、不触发重渲染
+    //     （也切断了「RO 回调 → 重排 → 再 RO」的自激）；
+    //   · 只在打开时注册，关闭 / 切步 / 卸载时全部注销。
+
+    /** 待执行的帧回调 id（`null` = 没有挂起的测量）。 */
+    let pendingFrame: number | null = null;
+
+    /** rAF 合并后的位置更新。无 rAF 环境（SSR / 老 jsdom）退化为同步。 */
+    const scheduleUpdatePos = (): void => {
+      if (typeof requestAnimationFrame !== 'function') {
+        updatePos();
+        return;
+      }
+      if (pendingFrame !== null) return;
+      pendingFrame = requestAnimationFrame(() => {
+        pendingFrame = null;
+        updatePos();
+      });
+    };
+
+    const cancelScheduledUpdatePos = (): void => {
+      if (pendingFrame !== null) {
+        cancelAnimationFrame(pendingFrame);
+        pendingFrame = null;
+      }
+    };
+
+    /** 当前注册的 ResizeObserver 注销函数。 */
+    let unobserveFns: Array<() => void> = [];
+
+    const stopObserving = (): void => {
+      for (const off of unobserveFns) off();
+      unobserveFns = [];
+    };
+
+    /**
+     * 观察目标**及其祖先链**（止于 `documentElement`，即含 `body`，不含 `html`：
+     * 文档级尺寸变化由 window resize 覆盖）。
+     *
+     * 注意传的是**稳定引用** `scheduleUpdatePos`：`observeResize` 用 Set 按引用去重，
+     * 每次传新箭头函数会让「同元素只注册一次」失效。
+     */
+    const startObserving = (): void => {
+      stopObserving();
+      const el = targetElement.value;
+      if (!el || !mergedOpen.value) return;
+      unobserveFns.push(observeResize(el, scheduleUpdatePos));
+      let ancestor = el.parentElement;
+      while (ancestor && ancestor !== document.documentElement) {
+        unobserveFns.push(observeResize(ancestor, scheduleUpdatePos));
+        ancestor = ancestor.parentElement;
+      }
+    };
+
+    watch([targetElement, mergedOpen], () => {
+      updatePos();
+      if (mergedOpen.value) {
+        startObserving();
+      } else {
+        stopObserving();
+      }
+    });
     onMounted(() => {
       updatePos();
-      window.addEventListener('resize', updatePos);
-      // rc：只监听 window 的 scroll（元素级滚动不触发 —— 上游真实行为）
-      window.addEventListener('scroll', updatePos);
+      startObserving();
+      window.addEventListener('resize', scheduleUpdatePos);
+      // 🚨 capture 阶段：scroll 不冒泡，冒泡阶段只能收到 window/document 自身的滚动。
+      document.addEventListener('scroll', scheduleUpdatePos, true);
     });
     onBeforeUnmount(() => {
-      window.removeEventListener('resize', updatePos);
-      window.removeEventListener('scroll', updatePos);
+      window.removeEventListener('resize', scheduleUpdatePos);
+      document.removeEventListener('scroll', scheduleUpdatePos, true);
+      stopObserving();
+      cancelScheduledUpdatePos();
     });
 
     // gap 外扩：offset 默认 6、radius 默认 2；二元组是 [水平, 垂直]

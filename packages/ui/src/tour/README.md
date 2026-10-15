@@ -22,7 +22,14 @@
 | 8 | `open` 未传时默认打开（`internalOpen ?? true`） | 同上游 | rc 源码判据（§9-V6），antd 文档口径为 false —— UPSTREAM 文档 vs 源码以源码为准 |
 | 9 | `className`/`style` 落在占位元素（Placeholder）而非浮层根 | 同上游 | rc-tour 协议；`style` 另经 useSemanticRootStyle 双落到 mask |
 | 10 | PurePanel 的 closable 合并用 `_internal/use-closable`（antd _util 语义）而非 rc 双层版 | 同上游 | 两套 useClosable 在上游就不同源（Tour.ts 内联 rc 版） |
-| 11 | `updatePos` 的触发集 = `{targetElement, open}` + window `resize`/`scroll` + 挂载；**没有** ResizeObserver / MutationObserver / 轮询 ⇒ 目标被异步内容推移时**不重定位** | **同上游** | rc `useTarget.js` 逐字同触发集；L1 `s53-issue53`（Issue #53） |
+| 11 | `updatePos` 的触发集 = `{targetElement, open}` + window `resize`/`scroll` + 挂载；**没有** ResizeObserver / MutationObserver / 轮询 ⇒ ①目标被异步内容推移时**不重定位**；②目标在**滚动容器内**滚动时不重算（scroll **不冒泡**，挂在 window 冒泡阶段收不到） | **优于上游**（Issue #53 修复）。本仓在原触发集之外补齐三类**事件驱动**信号：①目标自身 RO；②目标**祖先链** RO（这是「纯位置变化」的主要来源：祖先变高 ⇒ 目标被推走）；③`document` 上 **capture 阶段**的 scroll（捕获容器滚动）。抗抖动：rAF 合并 + `updatePos` 原有 JSON 去重；只在打开时注册，关闭/切步/卸载即注销。**无轮询、无 setInterval** | COMPATIBILITY.md §9 `D132`；L1 `s53-issue53`（`[A]` 异步推移重定位 / `[B2]` 容器内滚动 / `[D]` 关闭注销·卸载清零 / `[E]` 切步重新观察） |
+
+> ⚠️ **#53 的能力边界（故意不做的部分）**：ResizeObserver 捕获不到「**祖先尺寸没变、目标位置却变了**」
+> 的场景（如目标自身 `position` 变化、同胞重排但父容器高度不变）。要覆盖它需要 MutationObserver
+> 或轮询 —— 二者会在**任意** DOM 变动时高频触发，与「避免高频无效测量」直接冲突，收益/代价不成比例。
+> 真实业务里绝大多数「异步推移」（图片加载、手风琴展开、异步列表插入）都会让某个祖先的尺寸发生变化，
+> 因此落在 RO 的覆盖范围内。若将来确有只移不缩的场景，优先让使用方在变化后主动触发一次
+> window `resize`/`scroll`，而不是在本组件里加轮询。
 
 ## 3. .vue / .ts 选择
 
