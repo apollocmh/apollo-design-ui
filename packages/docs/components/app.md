@@ -54,8 +54,9 @@ outline: [2, 3]
 const { message, notification, modal } = App.useApp();
 ```
 
-⚠️ **v1**：`message` / `notification` / `modal` 组件尚未落地 ⇒ 返回的 API 是
-stub（调用即 dev 警告）。组件落地后自动回填（README §3 PENDING-2）。
+`message` / `notification` / `modal` 由 `useMessage()` / `useNotification()` /
+`Modal.useModal()` 提供（PENDING-2 已关闭，见 README §3）：每个 `App` 实例自带一套
+通知容器，卸载 App 即销毁。
 
 ## 设计说明
 
