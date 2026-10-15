@@ -4701,6 +4701,9 @@
 - 🚨 判「是否上游同款」只看源码：grep 上游依赖数组/触发集（tour `useTarget`、affix `useEffect` deps、back-top `[target]`）比读文档可靠。
 - 📌 高频结论：**「运行时改配置不生效」在 antd 上大多也不生效**（React 依赖数组/引用比较），但 Vue 常能做得更好 ⇒ 先量再判，别顺着 issue 措辞改。
 - 🚨 **改样式前先记录该组件当前 L6 状态**（`git checkout` + `build:ui` + 跑 L6 ≈1.5min），否则分不清「新坏」与「本来就红」。L6 也是「过度修复」的哨兵。
+- 🚨 **元判据（用户 2026-10-15 明示，高于上面第 ③ 步）：「Ant Design 也这样实现」不是拒绝修复的充分理由。** 四类可翻案：① 违反外部规范（ARIA/Web/WCAG，#51）；② 功能正确性缺失（异步变化不跟随，#53）；③ 动态 prop 不响应（#55）；④ **复制了上游的「实现形态」却丢了「行为」**（#56 用 children 注入代替 `createPortal`）。据此 #51/#52/#53/#54/#55/#56 全部由「上游同款/形态差异」翻案为真缺陷。
+- 🚨 **「有界 ≠ 无代价」（#52/#54 的翻案理由）**：判性能类 issue 时，证明「不泄漏 / 净绑定有界」**不够** —— 必须再问三件事：① 每次触发的**代价**是什么（#54 = 14 次 DOM 调用/帧）；② **触发频率**多高（滚动 = 每帧）；③ **触发源是否真的相关**（`affixStyle` 是固钉状态、`offsetTop` 只参与位置计算，都不影响「绑到谁、绑什么」⇒ 依赖数组写宽了）。
+- 🚨 **比上游更糟的「半更新态」比「完全不更新」严重**（#52）：上游引用比较 ⇒ 原地 push 两条通道都停（观感=没反应）；本仓因为存的就是那个响应式数组 ⇒ DOM 跟着渲染、布局没更新 ⇒ 新 item 没有位置、视觉错位，且「要求全部有位置才提交」的去重逻辑会让整轮回调停在旧值。**判据：先量「两条通道动了几条」，别只看 DOM。**
 
 ### B. 响应性（最高频）
 - 🚨 **setup 期快照三件套**：① 纯函数式归一/解析（#18 pagination）② 上游 render 体里的常量（#17.1 table / #28.2 anchor affixProps）③ `toValue` hook 传裸值（`useDisabled`/`useSize`，#30.3）⇒ 一律改 computed/getter。传 getter 时 watch 依赖要写**求值后**的结果（#27.4）。
@@ -4755,6 +4758,11 @@
 - 🚨 **jsdom 下 expand/collapse 动效不结束**：`expandedKeys` 引用一变 NodeList 就 `motionType='show'` 且 `onMotionEnd` 不触发 ⇒ `transitionData` 停在旧列表 ⇒ 「新节点没渲染」可能是动效假象。树结构类复现**只改 treeData**。
 - 🚨 `MotionList` 退场动效在 jsdom 不结束 ⇒ **移除类断言不能用 DOM 计数**，用 `onLayoutChange` 载荷长度。
 - 📌 jsdom 里**容器尺寸永远是 0**（`MockResizeObserver.trigger()` 也测不到）⇒ 依赖 `containerSize` 的算术（splitter ARIA 上下界）只能抽成纯函数再验证。
+- 🚨 **写性能/契约回归前，先确认「被测路径真的被走到了」**（#54 [A3] 第一版白测）：在**未固钉**状态下连续测量，`affixStyle` 保持 `undefined`、引用不变 ⇒ watch 不触发 ⇒ 修复前后都绿。真正的重绑发生在**已固钉**时（`fixedTop` 恒为 `offsetTop + 0`，内容不变但每次 `measure()` 都是**新对象**）。⇒ **先造出状态翻转，再连续触发**，并留一条「基线前后不变」的对照。
+- 📌 **造「真实的固钉翻转」**（affix）：mock `HTMLElement.prototype.getBoundingClientRect` 返回可控矩形。判据 `getFixedTop` 要求 `targetRect.top > placeholderRect.top - offsetTop`；target = window ⇒ `targetRect.top === 0` ⇒ **`placeholderTop < offsetTop` 时固钉**。⚠️ 必须给**非零 `width`/`height`**，否则 `measure()` 的「零矩形 ⇒ 放弃本次测量」会短路。
+- 📌 **统计事件绑定用 `vi.spyOn(target,'addEventListener').mockImplementation(只计数)`**（`spyOn` 可 `mockRestore`）。⚠️ 别只 mock 元素 —— 默认 target 是 `window`，要 `instrument(window)`。⚠️ 卸载断言写 `net <= 0` 不是 `=== 0`（`removeListeners` 从两处各摘一次，上游同款，多摘是 no-op）。
+- 🚨 **响应式数组原地变更的追踪：用「依赖探针返回字符串签名」，不要用 `{ deep: true }`**（#52）：`item.children` 是 `VNodeChild`（递归类型，含 `el`/`component` 等成环引用），深遍历既贵又危险。探针逐条读 `length`/`key`/`column` 建立依赖并返回**字符串** ⇒ 内容相同则字符串相同 ⇒ `Object.is` 判未变 ⇒ **不自激**（若返回对象则每次都「变」，会无限重排）。
+- 🚨 **原地变更时赋值必须浅拷贝**（#52）：`mergedItems.value = props.items` 与 `props.items` 是**同一个数组** ⇒ 赋同一引用 ⇒ `shallowRef` 不触发 ⇒ 量测链条仍然断。写 `[...props.items]`：元素对象身份不变 ⇒ `isEqual` 去重与 `MotionList` 的 key 都不受影响。
 - 📌 「新出现的 key 即使已在 expandedKeys 里也不自动展开」是**上游同款**（rc 只在 needSync('expandedKeys') 重算），别当缺陷改。
 - ⚠️ tree 的 `TreeCheckedKeys` 只指对象形态；数组形态是 `SafeKey[]` —— 写错会 7 条 types unhandled error。
 - ⚠️ 递归类型（`MasonryItemType.children: VNodeChild`）写进 `[...items.value, x]` 会 TS2589 ⇒ 测试里 items 用 `unknown[]`。

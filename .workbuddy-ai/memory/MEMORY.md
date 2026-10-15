@@ -38,17 +38,17 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 ## §5 进度
 foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#56 全部**。每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交。
 - 📌 **推送授权 2026-10-15 恢复**：此前「不推送了」是**阶段性**指令；本轮用户明确要求「统一推送到 GitHub 并关闭已完成 Issue」⇒ 已推（`gh` 不在 PATH，用 **`/usr/local/bin/gh`**，已登录 apollocmh）。推送命令：`git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`。
-- ⚠️ 下一轮候选：**#52（Masonry `items` 原地修改）/ #54（Affix 监听重绑）** 仍是上轮「上游同款 ⇒ 不修」结论，**尚未用 §1 新元判据复核过**。
+- ✅ **#52 / #54 已按元判据复核并双双翻案修掉**（2026-10-15 晚，`e77e9c6b` / `7c09c142`）：#52 masonry 本仓是「DOM 更新、布局没更新」的**半更新态**（比上游完全不更新更糟）；#54 affix 是「**有界 ≠ 无代价**」（滚动每帧 14 次无谓 DOM 调用，依赖数组写宽）。⇒ **经验：判性能/契约类 issue 时，「不泄漏/有界」只是及格线，还要问代价、频率、触发源是否相关。**
 ✅ `test:build` 两处既有红灯已于 2026-10-15 清零（`d152fd32`）⇒ **151 项 / FAIL 0 / PENDING 0**：① B6 app 预算按公式 `ceil(measured*1.5+5)` 重定 9→194KB（App 契约必须提供 message/modal/notification context，modal 又传导 skeleton/button，上游 antd 同源）② B1 docs `vitepress` 找不到 ⇒ 门禁真缺陷，见 §2。
 
 ## §6 判别式索引（**完整判据见 PITFALLS.md 末尾「判别式总表」**）
 ⚠️ MEMORY.md 每轮自动注入，**过大会被截断**（实测 ~18KB 字节即截断；中文 3 字节/字 ⇒ 约 1 万字符到顶），
 所以本文件只放**索引**。改判据时**两处都要改**。命中下列关键字 ⇒ 去 PITFALLS 查对应条目：
 
-- **A 静态审计型 issue**（#36/#49–#56）：四步：测量 → 核上游**逐字**源码 → **真缺陷才修** → 钉回归。三类产出：真缺陷 / 上游同款（**现在也要再看一遍是否站得住**）/ Vue 超集。📌「运行时改配置不生效」在 antd 上大多也不生效，别顺着 issue 措辞改 —— 但**站不住就要修**（见 §1 元判据）。
+- **A 静态审计型 issue**（#36/#49–#56）：四步：测量 → 核上游**逐字**源码 → **真缺陷才修** → 钉回归。三类产出：真缺陷 / 上游同款（**现在也要再看一遍是否站得住**）/ Vue 超集。📌「运行时改配置不生效」在 antd 上大多也不生效，别顺着 issue 措辞改 —— 但**站不住就要修**（见 §1 元判据）。🚨 另两条翻案理由：**「有界 ≠ 无代价」**（性能类要再问代价/频率/触发源是否相关）、**「半更新态比完全不更新更糟」**（先量两条通道各动了几条）。
 - **B 响应性**（最高频）：setup 期快照三件套 · provide 必须是 ref/computed/getter · React `useContext` 每次 render 重读 ⇒ provide 与消费者**两侧配套改** · `useImperativeHandle` 无依赖数组 ⇒ expose 挂 getter · hook 工厂 setup 期解构配置 ⇒ 传 getter · 模块级单例留 `app` 引用 · `useEffect(无deps)` ⇒ `watchEffect(post)` · attrs 回调不能解构 · 异步回调加 requestId 守卫 · `useSize` 函数形态 · `useMergeSemantic` 第三参传 computed。
 - **C VNode/clone/透传**：根 VNode 末尾 `...attrs` 顶掉内部 class/on\* ⇒ `mergeProps(内部, attrs)` · cloneVNode 是合并非替换 · `vnode.ref` 是归一化对象（原值在 `props.ref`）· 🚨 **往 children 塞内容是死路 ⇒ 统一走 `<Teleport :to="宿主DOM">`**（children 原样回填；根恒 Fragment；`to` 传元素对象；非 HTMLElement 回落 null）· React children ≠ Vue 插槽 · `provide` 无法 setup 后增删 · React 默认不透传 attrs。
 - **D 薄壳/语义槽/合并顺序**：`inheritAttrs:false` 要显式下传 · `classNames.*` 必须合并用户的 · slot 回退禁用 `??`（`undefined`/`null` 语义不同）· 归一化标记字段不能丢 · 布尔 prop `default:true` 破坏继承。
 - **E 事件/渲染**：受控 onChange + 业务 handler = 双调 ⇒ 只留一个出口 · computed 调 slots 不 track「有无」· SFC 模板不能放 HTML 注释。
-- **F 测试探针（jsdom）**：不给 disabled 派发 click ⇒ 用 `<a disabled>` · 🚨 **Teleport 被全局 stub**（`vitest.setup.ts`）⇒ 断言「内容落进目标 DOM」会**假绿**，必须 `global:{stubs:{teleport:false}}` · 🚨 **多根组件 `w.element` = 父容器**（不是第一个根）⇒ 容器内再查一次 · `console.log(html)` 后 grep 造假象 · 动效不结束（expand/collapse、`MotionList`）· 容器尺寸恒为 0 · `TreeCheckedKeys` 只指对象形态 · 递归类型 TS2589。
+- **F 测试探针（jsdom）**：不给 disabled 派发 click ⇒ 用 `<a disabled>` · 🚨 **Teleport 被全局 stub**（`vitest.setup.ts`）⇒ 断言「内容落进目标 DOM」会**假绿**，必须 `global:{stubs:{teleport:false}}` · 🚨 **多根组件 `w.element` = 父容器**（不是第一个根）⇒ 容器内再查一次 · 🚨 **性能/契约回归先确认被测路径真被走到**（#54 [A3] 白测教训：未固钉时 `affixStyle` 保持 `undefined`、引用不变 ⇒ watch 不触发 ⇒ 修复前后都绿）⇒ 先造状态翻转再连续触发 · 造固钉翻转要 mock `getBoundingClientRect` 且**给非零 width/height**（否则「零矩形」短路）；target=window ⇒ `placeholderTop < offsetTop` 才固钉 · 计数用 `spyOn(...).mockImplementation` 且别漏了 `window` · `console.log(html)` 后 grep 造假象 · 动效不结束（expand/collapse、`MotionList`）· 容器尺寸恒为 0 · `TreeCheckedKeys` 只指对象形态 · 递归类型 TS2589 ⇒ 🚨 **追踪响应式数组用「字符串签名探针」而非 `deep:true`**，且赋值要**浅拷贝**（不拷贝 = 赋同一引用 = 不触发）。
 - **G 样式合并**：`attrs.style` 可能是字符串 ⇒ 过 `mergeStyles` · `style:[a,b]` 后展开者胜 ⇒ px 化后再覆盖回 · 别信注释、跑代码。
