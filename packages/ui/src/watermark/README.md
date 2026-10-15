@@ -14,6 +14,7 @@
 | — | MutationObserver 走 `@apollo-design/utils` 的 `observeMutation`（元素→回调集合的全局单例）而不是裸 `new MutationObserver` | PLATFORM | L1 防篡改用例 |
 | — | 无 canvas 环境（`getContext('2d')` 返回 null，如 jsdom）**跳过绘制**而不抛错 | PLATFORM | L5/demo 测试能在 jsdom 挂住 |
 | — | ErrorBoundary 式能力（antd 无）不适用；`inherit` 用 `provide/inject` 而非 React context | PLATFORM | L1 inherit 用例 |
+| — | `inherit` 运行时可变（Issue #49）：恒 provide **稳定 context** + 调用时现读；上游是 render 期增删 Provider（**子树会重挂**），本仓改为在翻转时把已登记元素在「自己 ↔ 父级」间**搬运** —— 可观测结果一致 | PLATFORM | L1 `s49-issue49` |
 | — | demo `custom` 用原生控件替换 Form/Slider/ColorPicker（依赖未落地） | PLATFORM | demo 文件头 |
 | — | demo `portal` 未做（依赖未落地的 Modal / Drawer） | PLATFORM | §5 缺口 |
 

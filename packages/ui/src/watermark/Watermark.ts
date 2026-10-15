@@ -16,7 +16,9 @@
  * 5. **防篡改**：MutationObserver 盯「水印元素被删/属性被改 ⇒ 重绘」与
  *    「container style 被改 ⇒ 回写 fixedStyle」两件事。
  * 6. **onRemove**：水印换父时触发；组件卸载不触发（disposeAll 直接清 Map）。
- * 7. **inherit=false 不 provide context**（嵌套面板拿不到 add/remove）。
+ * 7. **inherit 运行时可变**（Issue #49）：恒 provide 稳定 context，`inherit` 在调用时现读；
+ *    `false` 时把登记往上交给父级（对齐上游「没有本层 Provider ⇒ 消费到外层」），
+ *    翻转时用 watch 搬运已登记元素。
  */
 
 import { type AliasToken, getDesignToken, useToken } from '@apollo-design/theme';
@@ -34,7 +36,7 @@ import {
   watch,
 } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
-import { type WatermarkContextValue, watermarkContextKey } from './context';
+import { useWatermarkContext, type WatermarkContextValue, watermarkContextKey } from './context';
 import type { WatermarkFont, WatermarkProps } from './interface';
 import { FontGap, getClips } from './use-clips';
 import { useRafDebounce } from './use-raf-debounce';
@@ -156,31 +158,80 @@ export default defineComponent({
     });
 
     // ======================= Nest（inherit）============================
+    //
+    // ⚠️ `inherit` 是**运行时可变**的（Issue #49）。上游 `index.js:232` 把它写在 render 体里：
+    //    `inherit ? <WatermarkContext.Provider value={ctx}>{children}</WatermarkContext.Provider>
+    //             : children`
+    //    ⇒ 改 `inherit` 真的会加/减 Provider：Provider 不在时子孙 `useContext` 落到**外层**
+    //    （或默认空实现），且子树会重挂 ⇒ 面板的 ref 回调重跑一遍 add/remove。
+    //
+    //    Vue 的 `provide` 只在 setup 跑一次，无法增删 ⇒ 本仓的等价做法：
+    //    ① **恒 provide 一个稳定 context**，`inherit` 在**调用时**现读；
+    //    ② `inherit=false` 时把登记**往上交给父级**（对齐「没有本层 Provider ⇒ 消费到外层」）；
+    //    ③ 用 watch 在状态翻转时把已登记元素在「自己 ↔ 父级」之间搬运
+    //       （对齐上游「子树重挂 ⇒ 重新 add/remove」的可观测结果）。
+    // -----------------------------------------------------------------------
+    const parentWatermark = useWatermarkContext();
     const subElements = shallowRef<Set<HTMLElement>>(new Set());
+    /** `inherit=false` 期间交给父级托管的那批（翻转时用于精确搬运）。 */
+    const delegatedElements = new Set<HTMLElement>();
+
+    const ownAdd = (ele: HTMLElement): void => {
+      const clone = new Set(subElements.value);
+      clone.add(ele);
+      subElements.value = getSizeDiff(subElements.value, clone);
+    };
+    const ownRemove = (ele: HTMLElement | null): void => {
+      removeWatermark(ele);
+      const clone = new Set(subElements.value);
+      if (ele) {
+        clone.delete(ele);
+      }
+      subElements.value = getSizeDiff(subElements.value, clone);
+    };
+
     const targetElements = computed<HTMLElement[]>(() => {
       const list = container.value ? [container.value] : [];
       return [...list, ...Array.from(subElements.value)];
     });
 
-    const provideContext = computed<WatermarkContextValue>(() => ({
-      add: (ele) => {
-        const clone = new Set(subElements.value);
-        clone.add(ele);
-        subElements.value = getSizeDiff(subElements.value, clone);
-      },
-      remove: (ele) => {
-        removeWatermark(ele);
-        const clone = new Set(subElements.value);
-        if (ele) {
-          clone.delete(ele);
+    const watermarkContext: WatermarkContextValue = {
+      add: (ele: HTMLElement) => {
+        if (!props.inherit) {
+          // 本层不暴露给子孙 ⇒ 登记交给父级（无父级时是默认空实现，即「谁都不管」）
+          parentWatermark.add(ele);
+          delegatedElements.add(ele);
+          return;
         }
-        subElements.value = getSizeDiff(subElements.value, clone);
+        ownAdd(ele);
       },
-    }));
+      remove: (ele: HTMLElement | null) => {
+        ownRemove(ele);
+        if (ele && delegatedElements.delete(ele)) {
+          parentWatermark.remove(ele);
+        }
+      },
+    };
+    provide(watermarkContextKey, watermarkContext);
 
-    if (props.inherit) {
-      provide(watermarkContextKey, provideContext.value);
-    }
+    watch(
+      () => props.inherit,
+      (inherit) => {
+        if (inherit) {
+          for (const ele of Array.from(delegatedElements)) {
+            delegatedElements.delete(ele);
+            parentWatermark.remove(ele);
+            ownAdd(ele);
+          }
+        } else {
+          for (const ele of Array.from(subElements.value)) {
+            ownRemove(ele);
+            parentWatermark.add(ele);
+            delegatedElements.add(ele);
+          }
+        }
+      },
+    );
 
     // ============================ Content ==============================
     const getMarkSize = (ctx: CanvasRenderingContext2D): [number, number] => {

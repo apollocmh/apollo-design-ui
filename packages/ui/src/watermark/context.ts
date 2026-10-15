@@ -26,6 +26,16 @@ export const watermarkContextKey: InjectionKey<WatermarkContextValue> = Symbol('
 
 const DEFAULT_CONTEXT: WatermarkContextValue = { add: VOID_FUNC, remove: VOID_FUNC };
 
+/**
+ * 取最近的 Watermark 上下文（没有则退化为空实现）。
+ *
+ * ⚠️ `usePanelRef` 与 Watermark 本体**共用**这个入口（Issue #49）：Watermark 需要在
+ *    provide 之前先拿到父级 context，才能在 `inherit=false` 时把登记「往上交」。
+ */
+export function useWatermarkContext(): WatermarkContextValue {
+  return inject(watermarkContextKey, DEFAULT_CONTEXT);
+}
+
 type ComponentPublicInstanceLike = { $el?: HTMLElement };
 
 /**
@@ -38,7 +48,7 @@ type ComponentPublicInstanceLike = { $el?: HTMLElement };
 export function usePanelRef(
   panelSelector?: MaybeRefOrGetter<string | undefined>,
 ): (ele: HTMLElement | ComponentPublicInstanceLike | null) => void {
-  const watermark = inject(watermarkContextKey, DEFAULT_CONTEXT);
+  const watermark = useWatermarkContext();
   let panelEle: HTMLElement | null = null;
 
   const panelRef = (ele: HTMLElement | ComponentPublicInstanceLike | null) => {
