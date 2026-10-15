@@ -14,9 +14,13 @@
  *   antd 在 `if (NODE_ENV !== 'production')` 块里调用 `devUseWarning('Empty')`，
  *   我们的 `useDevWarning` 必须在 `setup()` 同步阶段调用（`inject` 的限制），
  *   但内部做了 `getCurrentInstance()` 守卫，setup 之外调用会退化为「无 context」而不是抛错。
+ *
+ * ⚠️ **context 必须惰性求值**（Issue #48）：antd 的 `const { strict } = React.useContext(...)`
+ *    在**每次 render** 重读，所以挂载后改 `ConfigProvider.warning` 是活的；Vue 的 `provide`
+ *    只在 setup 跑一次 ⇒ 必须 provide `computed`/getter，消费者侧用 `toValue` 现读。
  */
 
-import { getCurrentInstance, type InjectionKey, inject } from 'vue';
+import { getCurrentInstance, type InjectionKey, inject, type MaybeRefOrGetter, toValue } from 'vue';
 import { BRAND_BRACKET, warningPrefix } from './brand';
 import { isDev, isTest } from './env';
 import { resetWarned, warning } from './warning';
@@ -33,10 +37,15 @@ export interface WarningContextValue {
 /**
  * 注入键。`ConfigProvider` 用 `provide(warningContextKey, value)` 提供。
  *
+ * ⚠️ 值可以是**裸对象**，也可以是 `ref` / `computed` / getter（Issue #48）——
+ *    上游的 React context 每次 render 现读，本仓要让「挂载后改 `warning`」也能传导，
+ *    `ConfigProvider` 因此 provide 的是 `computed`。裸对象仍然完全兼容。
+ *
  * 用 `Symbol` 而不是字符串：避免与用户自己的 provide 键冲突。
  * 键名 `apolloWarning` 只在 devtools 中可见。
  */
-export const warningContextKey: InjectionKey<WarningContextValue> = Symbol('apolloWarning');
+export const warningContextKey: InjectionKey<MaybeRefOrGetter<WarningContextValue>> =
+  Symbol('apolloWarning');
 
 /** 默认 context：空对象 → `strict` 为 `undefined` → 逐条打印（与 antd 默认一致）。 */
 const EMPTY_WARNING_CONTEXT: WarningContextValue = {};
@@ -84,14 +93,16 @@ export function useDevWarning(component: string): DevWarning {
   if (!isDev) return createNoopWarning();
 
   const instance = getCurrentInstance();
-  const context = instance
-    ? inject(warningContextKey, EMPTY_WARNING_CONTEXT)
-    : EMPTY_WARNING_CONTEXT;
+  // ⚠️ 只捕获**来源**（可能是裸对象，也可能是 computed），每次告警时现读（Issue #48）——
+  //    上游 `const { strict } = React.useContext(WarningContext)` 每次 render 都重读，
+  //    在 setup 期就把 `strict` 取出来的话，「挂载后改 warning」永远不生效。
+  const injected = instance ? inject(warningContextKey, EMPTY_WARNING_CONTEXT) : undefined;
+  const readContext = (): WarningContextValue => toValue(injected) ?? EMPTY_WARNING_CONTEXT;
 
   const typeWarning = (valid: boolean, type: 'normal' | 'deprecated', message: string): void => {
     if (valid) return;
 
-    if (context.strict === false && type === 'deprecated') {
+    if (readContext().strict === false && type === 'deprecated') {
       const isFirstEver = deprecatedWarnList === null;
       if (!deprecatedWarnList) deprecatedWarnList = {};
       deprecatedWarnList[component] ??= [];

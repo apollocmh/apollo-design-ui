@@ -46,6 +46,7 @@ import {
   provide,
   reactive,
   ref,
+  toValue,
   type VNode,
   watchEffect,
 } from 'vue';
@@ -300,7 +301,14 @@ export const ConfigProvider = defineComponent({
       disabledContextKey,
       computed<boolean>(() => props.componentDisabled ?? parentDisabled?.value ?? false),
     );
-    provide(warningContextKey, props.warning ?? parentWarning ?? {});
+    // ⚠️ `warning` 也必须是**响应式**的（Issue #48）：上游是
+    //    `React.useContext(WarningContext)` —— 每次 render 重读 ⇒ 挂载后改 `warning`
+    //    是活的。`provide` 只在 setup 跑一次，所以必须 provide `computed`；
+    //    `parentWarning` 同样收 `toValue`（父级 provide 的也是 computed）。
+    provide(
+      warningContextKey,
+      computed(() => props.warning ?? toValue(parentWarning) ?? {}),
+    );
 
     // -----------------------------------------------------------------------
     // 7. 废弃告警

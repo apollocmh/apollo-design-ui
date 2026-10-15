@@ -18,7 +18,7 @@
 | `ConfigContext` | `configContextKey`（`reactive` patch） | `prefixCls` / `iconPrefixCls` / `theme` / `direction` / `renderEmpty` / `csp` / `variant` / `wave` / 组件配置 |
 | `SizeContext` | `sizeContextKey`（`ComputedRef`） | `componentSize`（独立 context，避免牵动 ConfigContext） |
 | `DisabledContext` | `disabledContextKey`（`ComputedRef`） | `componentDisabled`（独立 context，同上） |
-| `WarningContext` | `warningContextKey` | 显式 `warning` 对象（utils 的 `useDevWarning` 默认 `{}`） |
+| `WarningContext` | `warningContextKey`（`ComputedRef`，Issue #48） | 显式 `warning` 对象（utils 的 `useDevWarning` 默认 `{}`；消费者侧 `toValue` 现读） |
 | `LocaleContext` | 经 `LocaleProvider` | 透传到 `@apollo-design/locale` |
 | `FormContext` | 经 `FormProvider` | 透传 `validateMessages`（自动与 `defaultLocale.Form` 合并） |
 
