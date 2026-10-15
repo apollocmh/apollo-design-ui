@@ -19,6 +19,7 @@
 | D63 | 事件名映射：`onResizeStart/onResize/onResizeEnd/onCollapse/onDraggerDoubleClick` ⇒ `resize-start/resize/resize-end/collapse/dragger-double-click`（C19 惯例，emit + onXxx prop 双通道） | INTENDED | L1 事件用例 |
 | — | ref ⇒ `expose({ nativeElement })`（antd 的 `SplitterRef` 同形状） | INTENDED | L1 |
 | — | Panel children 收集：slot 函数/槽对象/数组三形态归一化（Vue 特有，React children 恒为数组） | INTENDED | Splitter.ts `renderPanelChildren` |
+| — | ARIA 上下界在**容器未测量**（SSR / jsdom）时为 `NaN` ⇒ `SplitBar.getValidNumber` 归一成 `0`；面板 `min` 之和 > 100% 时可能 `min > max`。**与 antd 逐字同源**（`Splitter.js:181-201` + `useSizes.js:27-38` 同式）⇒ 不修（改了会与 L4 基线分叉），仅加回归钉住（Issue #51） | UPSTREAM | L1 `s51-issue51` |
 
 ## 3. 引擎（hooks/ 自建）
 
@@ -26,6 +27,7 @@
 |---|---|---|
 | `sizeUtil.ts` | `hooks/sizeUtil.js` | `fitPtgSizes`（min/max 夹取 + 空间分摊）/ `autoPtgSizes`（均分/贪婪/缩放/全 0） |
 | `useSizes.ts` | `hooks/useSizes.js` | prop size 优先于内部 state；px/百分比归一化；SSR 未测量 ⇒ 开发者原值 |
+| `ariaBounds.ts` | `Splitter.js:181-201` | 拖拽条 ARIA 三值（`now/min/max`）。⚠️ 抽成纯函数的动机是**可验证**（Issue #51）：容器尺寸在 jsdom 恒为 0 ⇒ 组件级只能看到退化解 |
 | `useResizable.ts` | `hooks/useResizable.js` | 相邻面板对的可拖/可折叠矩阵 + 图标显隐 + RTL 镜像 |
 | `useResize.ts` | `hooks/useResize.js` | 拖拽状态机（movingIndex 确认/四边界夹取/折叠三路+记忆） |
 

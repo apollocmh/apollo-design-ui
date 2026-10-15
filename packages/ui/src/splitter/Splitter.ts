@@ -28,6 +28,7 @@ import {
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useOrientation } from '../_internal/use-orientation';
 import { useComponentConfig, useConfigContext } from '../config-provider/context';
+import { getAriaBounds } from './hooks/ariaBounds';
 import { useItems } from './hooks/useItems';
 import { useResizable } from './hooks/useResizable';
 import { useResize } from './hooks/useResize';
@@ -313,17 +314,9 @@ export const Splitter = defineComponent({
         // Split Bar
         const resizableInfo = resizableInfos.value[idx];
         if (resizableInfo) {
-          const prevStackSize = Number.isFinite(stackSizes[idx - 1])
-            ? (stackSizes[idx - 1] as number)
-            : 0;
-          const nextStackSize = Number.isFinite(stackSizes[idx + 1])
-            ? (stackSizes[idx + 1] as number)
-            : 1;
-          const ariaMinStart = prevStackSize + (ptgMinSizes.value[idx] ?? 0);
-          const ariaMinEnd = nextStackSize - (ptgMaxSizes.value[idx + 1] ?? 1);
-          const ariaMaxStart = prevStackSize + (ptgMaxSizes.value[idx] ?? 1);
-          const ariaMaxEnd = nextStackSize - (ptgMinSizes.value[idx + 1] ?? 0);
-
+          // ARIA 上下界（antd `Splitter.js:181-201` 逐字）—— 抽到 `getAriaBounds`
+          // 以便在「已测量容器」下对拍 `min <= now <= max`（Issue #51）
+          const ariaBounds = getAriaBounds(stackSizes, ptgMinSizes.value, ptgMaxSizes.value, idx);
           nodes.push(
             h(SplitBar, {
               key: `split-bar-${idx}`,
@@ -339,9 +332,9 @@ export const Splitter = defineComponent({
               // 内部：由 Splitter 的 #draggerIcon slot 程序化传递（VNode prop 合法）
               draggerIcon: slots.draggerIcon?.(),
               collapsibleIcon: props.collapsible?.icon || props.collapsibleIcon || {},
-              ariaNow: (stackSizes[idx] ?? 0) * 100,
-              ariaMin: Math.max(ariaMinStart, ariaMinEnd) * 100,
-              ariaMax: Math.min(ariaMaxStart, ariaMaxEnd) * 100,
+              ariaNow: ariaBounds.now,
+              ariaMin: ariaBounds.min,
+              ariaMax: ariaBounds.max,
               startCollapsible: resizableInfo.startCollapsible,
               endCollapsible: resizableInfo.endCollapsible,
               showStartCollapsibleIcon: resizableInfo.showStartCollapsibleIcon,
