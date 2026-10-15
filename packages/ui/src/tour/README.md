@@ -22,6 +22,7 @@
 | 8 | `open` 未传时默认打开（`internalOpen ?? true`） | 同上游 | rc 源码判据（§9-V6），antd 文档口径为 false —— UPSTREAM 文档 vs 源码以源码为准 |
 | 9 | `className`/`style` 落在占位元素（Placeholder）而非浮层根 | 同上游 | rc-tour 协议；`style` 另经 useSemanticRootStyle 双落到 mask |
 | 10 | PurePanel 的 closable 合并用 `_internal/use-closable`（antd _util 语义）而非 rc 双层版 | 同上游 | 两套 useClosable 在上游就不同源（Tour.ts 内联 rc 版） |
+| 11 | `updatePos` 的触发集 = `{targetElement, open}` + window `resize`/`scroll` + 挂载；**没有** ResizeObserver / MutationObserver / 轮询 ⇒ 目标被异步内容推移时**不重定位** | **同上游** | rc `useTarget.js` 逐字同触发集；L1 `s53-issue53`（Issue #53） |
 
 ## 3. .vue / .ts 选择
 
