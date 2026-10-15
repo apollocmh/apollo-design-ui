@@ -17,7 +17,8 @@ describe('BorderBeam · 无障碍', () => {
   it('Effect 恒为 aria-hidden（装饰性）', async () => {
     const w = mount(
       { setup: () => () => h('div', [h(BorderBeam, {}, { default: () => h('div', 'x') })]) },
-      { attachTo: document.body },
+      // ⚠️ 真实 portal（仓库全局把 Teleport 换成了 stub，见 vitest.setup.ts）
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
     );
     await nextTick();
     await nextTick();

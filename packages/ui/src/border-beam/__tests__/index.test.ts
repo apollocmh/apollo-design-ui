@@ -31,9 +31,10 @@ const mountInHost = (props = {}, hostProps = {}) =>
     },
     {
       attachTo: document.body,
-      // VTU 默认把 Teleport 换成不渲染内容的 stub —— 打开 renderStubDefaultSlot
-      // 让 portal 进宿主 DOM 的 Effect 真实出现在查询范围内。
-      global: { renderStubDefaultSlot: true },
+      // ⚠️ 仓库全局把 Teleport 换成了 teleport-stub（`vitest.setup.ts`）—— stub 会把内容
+      //    渲染到**原地**（宿主的兄弟节点），断言「Effect 在宿主 DOM 内部」会假绿。
+      //    这里必须关掉 stub，才能钉住真实的 portal 语义（Issue #56）。
+      global: { stubs: { teleport: false } },
     },
   );
 
@@ -45,8 +46,8 @@ describe('BorderBeam · 结构', () => {
     const effect = w.element.querySelector('.apollo-border-beam');
     expect(effect).not.toBeNull();
     expect(effect?.getAttribute('aria-hidden')).toBe('true');
-    // Effect 是宿主的**子元素**（portal 语义）
-    expect(w.element.contains(effect)).toBe(true);
+    // Effect 是宿主的**子元素**（portal 语义）—— 直接认父节点，避免 `contains` 的假绿
+    expect(effect?.parentElement).toBe(w.element.querySelector('.inner'));
   });
 
   it('inset-offset：随宿主 border 取负（数字 -2px；0 边写 0px）', async () => {

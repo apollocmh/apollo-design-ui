@@ -6,11 +6,11 @@
  *
  * ── 为什么是 render 函数 ──────────────────────────────────────────────────────
  *
- * 渲染结构是 `Fragment = clone(child, ref) + count × <Teleport to=hostDom>`，
- * cloneVNode 注入 ref 与 Teleport 都要拿到 vnode/DOM 对象本身，SFC 模板表达不了
- * （spin/Indicator、badge/ScrollNumber 同范式）。
+ * 渲染结构是 `Fragment = 重建的宿主 vnode + <Teleport to=hostDom>`，注入 ref 与
+ * Teleport 都要拿到 vnode/DOM 对象本身，SFC 模板表达不了（spin/Indicator、
+ * badge/ScrollNumber 同范式）。
  *
- * ── 五条最容易写错的判据 ─────────────────────────────────────────────────────
+ * ── 六条最容易写错的判据 ─────────────────────────────────────────────────────
  *
  *   1. **CSS 变量挂在 Effect 的 style 上**（不是宿主）—— 变量名
  *      `--{root}-border-beam-*` 与 style/index.ts 的 varRef 配对。
@@ -19,6 +19,9 @@
  *      各自取负（数字 `-${n}px`，字符串 `calc(-1 * ${s})`）。
  *   4. **宿主不可用（纯文本等）→ 只渲染 child 本身，无 Effect**。
  *   5. **count 归一**：有限且 ≥1 取整，否则 1。
+ *   6. **Effect 只能走 Teleport 到宿主 DOM，不能并进宿主的 children**（Issue #56）：
+ *      children 可能是 slots 对象（打包成数组会退化成 ARRAY_CHILDREN ⇒ 内容整块
+ *      丢失），且组件**没有 default 插槽**时根本无处注入。
  */
 
 import { isNonNullable, isNumber, isString } from '@apollo-design/utils';
@@ -28,14 +31,13 @@ import {
   defineComponent,
   h,
   isRef,
-  isVNode,
   mergeProps,
   onMounted,
   onScopeDispose,
   type PropType,
   shallowRef,
+  Teleport,
   type VNode,
-  type VNodeChild,
 } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
 import { subscribeBorderSample } from './border-sampler';
@@ -47,51 +49,19 @@ const getInset = (width: number | string): string =>
   isString(width) ? `calc(-1 * ${width})` : `-${width}px`;
 
 /**
- * 合并宿主的原始 children 与要注入的 Effect（Issue #56）。
+ * 从 ref 回调拿到宿主的 **真实 DOM 元素**（Issue #56）。
  *
- * ⚠️ 三种形态**不能一把打包成数组**：
- *   1. 数组 / 单个 vnode / 字符串 —— DOM 宿主的常规形态 ⇒ 追加在末尾；
- *   2. **slots 对象**（组件子节点的内容经插槽传入）⇒ 打包成数组会让
- *      `createVNode(Comp, props, [slotsObj])` 走 `ARRAY_CHILDREN` 而不是 `SLOTS_CHILDREN`
- *      ⇒ 组件拿不到任何插槽，**内容整块丢失**（实测抓到，语义用例 `.inner` 找不到）。
- *      改为把 Effect 并进 `default` 插槽的输出末尾 —— 组件的默认插槽通常渲染在它的宿主
- *      元素内，DOM 结果与上游 `createPortal(effect, hostDom)` 一致；
- *   3. `null` / `''` ⇒ 只渲染 Effect。
- *
- * ⚠️ 边界（写在 README 差异表）：组件**没有** `default` 插槽时无处注入 ⇒ 保持原 children
- *    （Effect 不渲染）；上游的 portal 不受此限。
+ * - 元素 vnode ⇒ ref 直接给 `HTMLElement`；
+ * - 组件 vnode ⇒ ref 给组件公开实例（`$el` 才是它的根 DOM）；
+ * - 组件是**多根**（Fragment）⇒ `$el` 是锚点文本节点 ⇒ 无单一宿主 ⇒ `null`
+ *   （与上游 antd `supportRef` 的判据一致：拿不到单一 DOM 就不画流光）。
  */
-function mergeHostChildren(
-  original: VNodeChild | VNodeChild[] | null,
-  injected: VNodeChild[],
-): VNodeChild {
-  // 空内容（`null` / `undefined` / 空串 / `false`）⇒ 只渲染 Effect
-  if (original === null || original === undefined || original === '' || original === false) {
-    return injected;
+function resolveHostDom(el: unknown): HTMLElement | null {
+  if (el instanceof HTMLElement) {
+    return el;
   }
-  if (Array.isArray(original)) {
-    return [...original, ...injected];
-  }
-  if (isVNode(original) || typeof original === 'string' || typeof original === 'number') {
-    return [original, ...injected];
-  }
-  // 剩下的只可能是 slots 对象（`{ default: fn, ... }`）
-  const slotsObj = original as unknown as Record<string, unknown>;
-  if (injected.length === 0) {
-    return original;
-  }
-  const originalDefault = slotsObj.default as ((...args: unknown[]) => unknown) | undefined;
-  if (typeof originalDefault !== 'function') {
-    return original;
-  }
-  return {
-    ...slotsObj,
-    default: (...args: unknown[]) => {
-      const out = originalDefault(...args);
-      const list = Array.isArray(out) ? out : out === null || out === undefined ? [] : [out];
-      return [...list, ...injected];
-    },
-  } as unknown as VNodeChild;
+  const maybe = (el as { $el?: unknown } | null | undefined)?.$el;
+  return maybe instanceof HTMLElement ? maybe : null;
 }
 
 /** useBorderSize：读宿主 computed border 宽度 4 元组（antd 逐字，NaN→0）。 */
@@ -242,14 +212,6 @@ export default defineComponent({
         }),
       );
 
-      // antd 用 createPortal(el, hostDom) 把 Effect 挂进宿主 DOM **内部** ——
-      // `position:absolute` 才以宿主为包含块（border-radius:inherit 同理）。
-      // Vue 侧等价做法：重建宿主 vnode（createVNode 同型拷贝），children 追加
-      // Effect —— DOM 结果与 portal 一致，且不依赖 Teleport 的目标时机。
-      // ⚠️ 首帧（含 SSR）hostDom 未挂载 → 不渲染 Effect（与 antd 的 portal 时机一致）。
-      const originalChildren = first.children as VNodeChild | VNodeChild[] | null;
-      const injectedChildren: VNodeChild[] = hostDom.value ? effects : [];
-      const newChildren = mergeHostChildren(originalChildren, injectedChildren);
       // 🚨 调用方的 attrs（`data-*` / `aria-*` / `class` / `style` / 原生事件）**落到宿主**上。
       //
       // 本组件是 **renderless**（没有自己的 DOM 根，装饰的是子节点那个元素）⇒ attrs 唯一的
@@ -264,14 +226,13 @@ export default defineComponent({
       //    （Issue #56 实测抓到）。原始值在 `first.props.ref` 上。
       const rawRef = (first.props as Record<string, unknown> | null | undefined)?.ref;
 
-      return createVNode(
+      const hostVNode = createVNode(
         first.type,
         {
           ...hostProps,
           key: first.key ?? undefined,
           ref: (el: unknown) => {
-            hostDom.value =
-              el instanceof HTMLElement ? el : ((el as { $el?: HTMLElement } | null)?.$el ?? null);
+            hostDom.value = resolveHostDom(el);
             if (typeof rawRef === 'function') {
               (rawRef as (v: unknown) => void)(el);
             } else if (isRef(rawRef)) {
@@ -279,8 +240,26 @@ export default defineComponent({
             }
           },
         },
-        newChildren,
+        // ⚠️ children **原样回填**（绝不注入 Effect）—— 曾尝试把 Effect 并进 children，
+        //    但组件子节点的 children 是 **slots 对象**，打包进数组会退化成 ARRAY_CHILDREN
+        //    ⇒ 组件拿不到插槽、内容整块丢失；且「组件没有 default 插槽」时根本无处注入。
+        //    改走下面的 Teleport：宿主 vnode 完全不被改动。
+        first.children ?? null,
       );
+
+      // Effect 用 **真实 portal**（Teleport 到宿主 DOM 内部）—— 与 antd 的
+      // `createPortal(effect, hostDom)` 逐字等价：`position:absolute` 才以宿主为
+      // 包含块（`border-radius:inherit` 同理），且**与宿主是否声明插槽无关**。
+      // ⚠️ 首帧（含 SSR）hostDom 未挂载 → 不渲染 Teleport（与 antd portal 时机一致）。
+      //
+      // 🚨 根**恒为 Fragment**（哪怕只有一个 child）：根形态在「无 Effect → 有 Effect」
+      //    之间翻转会让 Vue 判定为不同类型的根 ⇒ 整棵**重挂**（宿主组件状态与 DOM 全丢）。
+      return hostDom.value
+        ? [
+            hostVNode,
+            createVNode(Teleport, { key: `${prefixCls.value}-portal`, to: hostDom.value }, effects),
+          ]
+        : [hostVNode];
     };
   },
 });
