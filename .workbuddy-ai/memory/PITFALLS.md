@@ -4774,6 +4774,7 @@
 - ⚠️ flaky：`select/__tests__/theme.test.ts` L7「light 态下渲染」全量跑 ~5.2s > 默认 5s ⇒ 偶发超时红。
 - 📌 **App HookAPI**：`useMessage/useNotification(getter)` + `Modal.useModal()` ⇒ `[api, holder]`，holder 与 `<Component>` **同级** ⇒ App 根是 Fragment（测试别用 `wrapper.element` 当根）。通知 API 必须在 holder 挂载后调用，open→DOM 需 3 次 nextTick（#40）。
 - ⚠️ **`ReturnType<typeof ref<T>>` = `Ref<T|undefined>`** ⇒ 返回值直接声明 `Ref<T>`。🚨 **`useId()` 只在同一个 app 内唯一**（跨 app 自传 id，`instance.ids[1]++`，#24.2）。
+- 📌 **L6（`test:visual`）全量崩了先隔离证伪，别急着回滚**：崩点定位 = `node -e "import('./tests/visual/matrix.mjs')"` 取 `Object.keys(COMPONENTS)` 的**下标**，用最后一条 `✔ <component>/<variant>__<theme>__<viewport>` 反查崩在下一个组件；再用 `node tests/visual/run.mjs --component <c>` 单独重跑（全量 ~40min，单组件 ~2s/case，便宜得多）。2026-10-15 实测：`locator.screenshot: Timeout 29994ms exceeded / waiting for element to be stable` 落在 `tag`，单独跑 9/9 全绿 ⇒ 是长时间跑的**偶发截图超时**（30s 硬上限），不是组件动画失控。
 
 ### G. 样式合并 / 元判据
 - `attrs.style` 可能是字符串 ⇒ 合并必须过 `semanticRootStyle`/`mergeStyles`（对象展开拆成 `{0:'w'}` 崩组件）。语义 root 落点：class `[rootClass, classNames.root]`、style `[styles.root, rootStyle]`（原生 style 胜）。
