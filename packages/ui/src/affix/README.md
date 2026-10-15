@@ -99,6 +99,14 @@ Affix 把测量结果转换成 `"64px"` 写入 Vue 的 inline style；位置未�
 - **固钉状态变化对读屏器不可见**：没有 `aria-live` / `role="status"` / `aria-busy`。
   antd 亦然 ⇒ 逐字对齐，不擅自补。
 - 整个组件只有占位层一处 ARIA（`aria-hidden="true"`）。
+- **固钉状态翻转会重绑原生监听**（Issue #54）：`watch` 的依赖集与上游 `useEffect` 的
+  `[target, affixStyle, lastAffix, offsetTop, offsetBottom]` **逐字一致**
+  （`index.js:168-171`）⇒ `affixStyle` / `lastAffix` 变化就重跑 `addListeners`。
+  **但绑定次数有界、不是泄漏**：① `add` 用的是同一个 `lazyUpdatePosition` 引用 + 同一
+  capture ⇒ DOM 对 `(type, listener, capture)` 三元组**去重**；② `addListeners` 自身先摘
+  `prevTargetRef` 再 add（换 target 不残留）；③ 卸载时 `removeListeners` 两侧都摘
+  （同一个元素时会多摘一次 —— 上游同款，`removeEventListener` 对不存在的监听是 no-op）。
+  ⇒ 不「把监听目标切换与位置计算拆开」（那会偏离上游依赖集）。回归见 L1 `s54-issue54`。
 
 ### 7.3 与 React 的平台差异（分类）
 
