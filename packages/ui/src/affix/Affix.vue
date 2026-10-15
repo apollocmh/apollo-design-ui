@@ -215,6 +215,17 @@ const measure = (): void => {
 const prepareMeasure = (): void => {
   statusRef.value = AFFIX_STATUS_PREPARE;
   measure();
+  /**
+   * 🚨 **补挂监听**（Issue #54）。
+   *
+   * 依赖收窄成只有 `props.target` 之后，若**首次**绑定时 `targetFunc()` 还没就绪
+   * （返回 `null`），后面就再也没有重绑时机了。上游是靠「`affixStyle` 每次变化都
+   * 重绑」**无意中**获得了重试能力 —— 那个能力是真的，只是代价是每帧 14 次 DOM 调用。
+   *
+   * ⇒ 这里用**一次引用比较**显式保留它：已绑成 ⇒ 幂等短路（零成本），
+   *   未绑成 ⇒ 补上（比上游更可靠，因为每次测量都会检查）。
+   */
+  addListeners();
 };
 
 // ---------------------------------------------------------------------------
@@ -252,14 +263,33 @@ const prevListenerRef = shallowRef<EventListener | null>(null);
 const addListeners = (): void => {
   const listenerTarget = targetFunc.value();
   if (!listenerTarget) return;
+
+  /**
+   * 🚨 **幂等短路**（Issue #54）。
+   *
+   * 上游 `useEffect(…, [target, affixStyle, lastAffix, offsetTop, offsetBottom])`
+   * 把**固钉状态**也放进了依赖 ⇒ 每次 `measure()` 写出新的 `affixStyle` 对象
+   * （React 的 `setState` / 本仓的 `shallowRef` 都是**引用比较**，新对象必然不同）
+   * 就重跑一轮 `removeListeners()` + `addListeners()`
+   * = **14 次无谓的 DOM 调用**（7 个事件 × remove + add），
+   * 且滚动期间**每一帧**都在发生。
+   *
+   * 绑定目标只由 `targetFunc()` 决定，listener 是**引用稳定**的节流函数
+   * ⇒ 两者都没变时这一轮纯粹是噪音。
+   */
+  const listener = lazyUpdatePosition as unknown as EventListener;
+  if (prevTargetRef.value === listenerTarget && prevListenerRef.value === listener) {
+    return;
+  }
+
   for (const eventName of TRIGGER_EVENTS) {
     if (prevListenerRef.value) {
       prevTargetRef.value?.removeEventListener(eventName, prevListenerRef.value);
     }
-    listenerTarget.addEventListener(eventName, lazyUpdatePosition as EventListener);
+    listenerTarget.addEventListener(eventName, listener);
   }
   prevTargetRef.value = listenerTarget;
-  prevListenerRef.value = lazyUpdatePosition as unknown as EventListener;
+  prevListenerRef.value = listener;
 };
 
 const removeListeners = (): void => {
@@ -293,12 +323,25 @@ onBeforeUnmount(() => {
   removeListeners();
 });
 
-// 依赖变化 ⇒ 重新绑事件（antd `:104-107`）。⚠️ 固钉状态翻转也会重绑。
+/**
+ * 依赖变化 ⇒ 重新绑事件。
+ *
+ * 🚨 依赖**只有** `props.target`（Issue #54）。上游 `antd :168-171` 写的是
+ * `[target, affixStyle, lastAffix, offsetTop, offsetBottom]` —— 其中 `affixStyle`
+ * / `lastAffix` 是**固钉状态**、`offsetTop` / `offsetBottom` 只参与**位置计算**，
+ * 三者都**不影响**「绑到哪个 target、绑哪个 listener」。
+ * ⇒ 这是上游依赖数组写宽了：滚动时每次测量都白跑一轮 remove + add（**每帧 14 次
+ * DOM 调用**）。本仓收窄依赖，`addListeners` 再加一层幂等短路双重兜底。
+ *
+ * ⚠️ `flush: 'post'` 对齐上游 `useEffect` 的「commit 之后」（原先是默认的 `'pre'`）。
+ * ⚠️ 「target 还没就绪」的补挂由 `prepareMeasure()` 收尾负责 —— 见那里的注释。
+ */
 watch(
-  [() => props.target, affixStyle, lastAffix, () => props.offsetTop, () => props.offsetBottom],
+  () => props.target,
   () => {
     addListeners();
   },
+  { flush: 'post' },
 );
 
 watch(

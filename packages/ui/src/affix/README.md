@@ -99,14 +99,21 @@ Affix 把测量结果转换成 `"64px"` 写入 Vue 的 inline style；位置未�
 - **固钉状态变化对读屏器不可见**：没有 `aria-live` / `role="status"` / `aria-busy`。
   antd 亦然 ⇒ 逐字对齐，不擅自补。
 - 整个组件只有占位层一处 ARIA（`aria-hidden="true"`）。
-- **固钉状态翻转会重绑原生监听**（Issue #54）：`watch` 的依赖集与上游 `useEffect` 的
-  `[target, affixStyle, lastAffix, offsetTop, offsetBottom]` **逐字一致**
-  （`index.js:168-171`）⇒ `affixStyle` / `lastAffix` 变化就重跑 `addListeners`。
-  **但绑定次数有界、不是泄漏**：① `add` 用的是同一个 `lazyUpdatePosition` 引用 + 同一
-  capture ⇒ DOM 对 `(type, listener, capture)` 三元组**去重**；② `addListeners` 自身先摘
-  `prevTargetRef` 再 add（换 target 不残留）；③ 卸载时 `removeListeners` 两侧都摘
-  （同一个元素时会多摘一次 —— 上游同款，`removeEventListener` 对不存在的监听是 no-op）。
-  ⇒ 不「把监听目标切换与位置计算拆开」（那会偏离上游依赖集）。回归见 L1 `s54-issue54`。
+- **监听重绑已收窄**（Issue #54，原「与上游逐字一致」已翻案）：
+  上游 `useEffect(…, [target, affixStyle, lastAffix, offsetTop, offsetBottom])`
+  （`index.js:168-171`）把**绑定目标**、**固钉状态**、**位置计算参数**混在一个依赖集里。
+  后两者都不影响「绑到哪个 target、绑哪个 listener」，而 `affixStyle` 每次 `measure()`
+  都是**新对象**（React `setState` / 本仓 `shallowRef` 同为引用比较）
+  ⇒ **滚动期间每一帧**都白跑一轮 `removeListeners()` + `addListeners()`
+  = 14 次无谓 DOM 调用（7 事件 × remove + add）。
+  **修复**：① `addListeners` 幂等短路（目标未变 + listener 未变 ⇒ return；
+  `lazyUpdatePosition` 是节流函数、**引用稳定** ⇒ 判据可靠）；② 依赖收窄为
+  `[() => props.target]`（+ `flush: 'post'` 对齐 `useEffect`）；③ `prepareMeasure`
+  收尾补挂 —— 用**一次引用比较**显式保留上游「靠 `affixStyle` 每次变都重绑」无意获得
+  的「target 未就绪 ⇒ 后续重试」能力。
+  ⚠️ 已知边界（与上游同判）：「target 元素晚于 Affix 挂载、且期间没有任何测量发生」
+  ⇒ 仍然绑不上（覆盖需 MutationObserver 或轮询）。
+  回归见 L1 `s54-issue54`（修复前 [A]/[A2]/[A3]/[C] 四例皆红）。
 
 ### 7.3 与 React 的平台差异（分类）
 
