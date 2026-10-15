@@ -278,7 +278,8 @@ export default defineComponent({
     });
 
     const renderWatermark = () => {
-      const id = (renderId += 1);
+      renderId += 1;
+      const id = renderId;
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       if (ctx) {

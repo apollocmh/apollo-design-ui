@@ -49,9 +49,10 @@ beforeAll(() => {
     () => ctxMock as unknown as CanvasRenderingContext2D,
   );
   // ⚠️ 每次返回不同的 URL ⇒ background-image 能分辨「哪一版」
-  vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockImplementation(
-    () => `data:image/png;base64,SEQ${(dataUrlSeq += 1)}`,
-  );
+  vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockImplementation(() => {
+    dataUrlSeq += 1;
+    return `data:image/png;base64,SEQ${dataUrlSeq}`;
+  });
 });
 
 beforeEach(() => {
