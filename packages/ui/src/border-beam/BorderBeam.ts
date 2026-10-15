@@ -36,6 +36,7 @@ import {
   type VNodeChild,
 } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
+import { subscribeBorderSample } from './border-sampler';
 import type { BorderBeamColor, BorderBeamProps } from './interface';
 import { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient, isSameBorderWidth } from './util';
 
@@ -53,11 +54,11 @@ function useBorderSize(getDom: () => HTMLElement | null) {
     return isNumber(size) ? size : 0;
   };
 
-  let unwatch: (() => void) | undefined;
+  let unsubscribe: (() => void) | undefined;
   onMounted(() => {
-    unwatch = watchHost();
+    unsubscribe = watchHost();
   });
-  onScopeDispose(() => unwatch?.());
+  onScopeDispose(() => unsubscribe?.());
 
   function watchHost(): () => void {
     // host 是 ref 赋值（挂载后）才有 —— 与 antd 的 useEffect [domNode] 对齐
@@ -81,10 +82,9 @@ function useBorderSize(getDom: () => HTMLElement | null) {
       }
     };
     read();
-    // border 宽度变化（响应式布局）跟随 —— rAF 轮询是 antd 无监听场景的等价物；
-    // ResizeObserver 更精确，但 border-width 变化不触发 size 变化，故用轻量轮询。
-    const timer = setInterval(read, 500);
-    return () => clearInterval(timer);
+    // border 宽度变化（响应式布局）跟随 —— 上游没有监听场景，本仓用轻量轮询；
+    // ⚠️ 多实例**共享**同一个 500ms 定时器 + 隐藏页整轮跳过（Issue #50，见 border-sampler.ts）
+    return subscribeBorderSample(read);
   }
 
   return borderWidth;

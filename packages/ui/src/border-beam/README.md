@@ -14,13 +14,16 @@
 | — | `#ddd` → CSSOM 序列化 `rgb(221,221,221)` | PLATFORM | L4 allow ×3 |
 | — | Effect 注入方式：antd createPortal / 我们重建宿主 children（DOM 结果一致） | PLATFORM（实现形态） | L1 |
 | — | reduced-motion 双保险（genNoMotionRawStyle + display:none）逐字保留 | INTENDED | theme 测试 |
+| — | `useBorderSize` **轮询**宿主 `border-width`（上游只在 `domNode` 变化时读一次）—— 宿主 border 变化不触发 ResizeObserver / 无对应事件，本仓选择跟随运行时变化；改由**模块级共享定时器**调度且隐藏页整轮跳过（Issue #50） | INTENDED | L1 `s50-issue50` |
 
 ## 3. 实现形态
 
 - `BorderBeam.ts`：render 函数 —— 宿主子元素用 `createVNode` 同型重建并**向 children
   追加 Effect**（Vue 等价 antd 的 createPortal；不依赖 Teleport 目标时机，SSR 首帧
   与 antd 一致只有宿主）。
-- `useBorderSize`：读宿主 computed border 4 元组（500ms 轻量轮询跟随变化）。
+- `useBorderSize`：读宿主 computed border 4 元组。**共享调度**：多实例共用一个
+  500ms 定时器（`border-sampler.ts`，0 实例即停表），`document.hidden` 时整轮跳过、
+  回到可见补一次（Issue #50）。
 - 运行时 CSS 变量 `--{root}-border-beam-*` 由 props 写在 Effect style 上，规则侧
   `var(…, fallback)` 消费（fallback 逐字对齐）。
 
