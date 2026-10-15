@@ -25,7 +25,11 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；`test:types` 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~53s）。
 - ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码也要先 build:ui。GitHub 推送走代理 `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:master`（批量传输直连会挂起）。`registry/*.json` 冲突按冲突块解析再重跑生成器。
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#47 全部**（#40 关闭 app PENDING-2）（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 批量修复见 `/tmp/issues/ledger.md`，已交付 **#1–#21 全部 + #22 的 5/8 + #23–#48 全部**（#40 关闭 app PENDING-2）（每轮：最小复现 → 修 → 回归 → verify:component + 全量 unit/dom + types + biome + L6 + L4 compat → 提交推送）。
+⚠️ `pnpm run test:build`（**不在每轮清单**）当前 2 红，均为**既有**、非 issue 引入：
+① B6 `app 125.7KB > 预算 9KB` —— #40 把 `useMessage`/`useModal`/`useNotification` 接进
+`App.mjs` 后预算未同步（仍是最初 2.2KB），属需**用户裁决**的验收标准变更；
+② B1 docs `vitepress: command not found`（依赖未装，环境问题）。
 
 ## §6 判别式（高价值）
 **响应性**
@@ -38,6 +42,11 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
   要「配置后改」能传导就传 **getter** + 容器侧 `toValue`。⚠️ 放宽类型时同名键可能有多份
   （NoticeProps/NoticeListProps/NotificationsProps）⇒ 按行号精准替换，改完必跑 `--project types`。
   ✅ 同族（notification Holder #46，含 `showProgress`）已一并修掉：message 改完顺手改 notification。
+- 🚨 **React `useContext(X)` 每次 render 重读 ⇒ Vue 侧 provide 必须 computed/getter，且
+  消费者也要改**（#48，与 #41/#32.1 同族但**两侧配套**）：
+  `ConfigProvider` 的 size/disabled 早就是 computed，`warning` 漏了 —— 看到「同层三条
+  provide 只有一条是裸值」就是漏网。⚠️ **只改一侧无效**：provide 改 computed 而消费者
+  仍 `context.strict` ⇒ 拿到 `ComputedRef` 当对象读（恒 undefined）。
 - 🚨 **React `useImperativeHandle(ref, () => ({...}))` 无依赖数组 = 每次 render 重建**（#47）：
   命令式 API 从 ref 现读的字段（如 notification 的 `closeLabel`）在 React 侧是「活的」。
   本仓等价物 = **响应式源（`useLocaleReactive`）+ `computed` + `expose` 上挂 getter**
