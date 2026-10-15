@@ -11,20 +11,24 @@
  *   return () => { handleScroll.cancel(); container?.removeEventListener('scroll', handleScroll); };
  * }, [target]);          // ⚠️ 依赖里**没有** visibilityHeight
  * ```
- * 两条结论：
- *   1. **改了阈值但不产生新 scroll ⇒ `visible` 不变** —— 上游也不会重算
- *      （effect 依赖只有 `[target]`；本仓 `watch(() => props.target)` 逐字一致）；
+ * 上游的两条事实：
+ *   1. **改了阈值但不产生新 scroll ⇒ `visible` 不变**（effect 依赖只有 `[target]`）；
  *   2. 上游注册的监听器闭包来自**挂载那一帧** ⇒ 阈值实际上被冻在挂载值；
- *      本仓在 `handleScroll` 里**现读 `props.visibilityHeight`**（`BackTop.ts:91`）
- *      ⇒ **下一次 scroll 就用新阈值**（Vue 侧超集，比上游更正确）。
+ *      本仓在 `applyVisible` 里**现读 `props.visibilityHeight`** ⇒ 下一次 scroll 就用新阈值。
  *
- * ⇒ 按 Issue 判据（「对比 React 动态阈值行为；若需实时生效则补订阅」）**判为非缺陷**：
- *   `visibilityHeight` 的生效时点是「下一次 scroll」，与上游一致（且比上游多认了新阈值）。
- *   要「改阈值即刻生效」属于**增强**（上游没有），不在本轮范围。
+ * ⇒ **Issue #55 已按「正确性优先」修复**（不再以「上游也这样」为由保留）：
+ *   · 补 `watch(() => props.visibilityHeight, syncVisible)` ⇒ 改阈值**无需滚动事件**立即生效；
+ *   · 顺带修掉一个闪烁：初始校准原先走 `handleScroll`（`throttleByAnimationFrame` 的语义是
+ *     「第一次调用**排到下一帧**」）⇒ 已滚过阈值的页面会先渲染「不可见」再翻转；
+ *     现在初始 / 换容器 / 改阈值都走**同步**的 `syncVisible`，只有滚动事件走节流路径。
+ *
+ * 保留的守卫：[B]（下一次 scroll 仍用新阈值）、[C]（换 target 重绑并立即校准）。
+ * 新增：[D]（挂载时已滚过阈值 ⇒ 首帧即可见）、[E]（卸载摘监听恰好一次、换 target 不重复注册）。
  */
 
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { nextTick } from 'vue';
 
 import BackTop from '../BackTop';
 
@@ -49,7 +53,7 @@ afterEach(() => {
 });
 
 describe('BackTop · Issue #55 visibilityHeight 动态修改', () => {
-  it('[A] 只改阈值、不产生新 scroll ⇒ visible 不变（上游同款）', async () => {
+  it('[A] 改阈值 ⇒ **无需新 scroll** 立即更新可见状态（Issue #55 修复）', async () => {
     const target = makeTarget(200);
     const w = mount(BackTop, {
       props: { visibilityHeight: 400, target: () => target },
@@ -59,12 +63,19 @@ describe('BackTop · Issue #55 visibilityHeight 动态修改', () => {
     // 200 < 400 ⇒ 不可见
     expect(w.find(`.${P}-content`).exists()).toBe(false);
 
-    // 阈值降到 100（200 >= 100 ⇒ 「应该」可见），但**没有新 scroll**
+    // 阈值降到 100（200 >= 100 ⇒ 应该可见），且**不产生任何 scroll 事件**：
+    // 上游 effect 依赖只有 [target] ⇒ 到这一步为止都不会重算；
+    // 本仓补了 `watch(visibilityHeight)` ⇒ 下一 tick 就生效。
     await w.setProps({ visibilityHeight: 100 });
-    await nextFrame();
+    // 🚨 刻意**不**等帧：证明它不依赖 rAF / scroll
+    expect(w.find(`.${P}-content`).exists()).toBe(true);
 
-    // 上游同样不重算（effect 依赖只有 [target]）
-    expect(w.find(`.${P}-content`).exists()).toBe(false);
+    // 反向：阈值再抬回 400 ⇒ 立即开始退场
+    await w.setProps({ visibilityHeight: 400 });
+    // ⚠️ 判「已开始 leave」而不是「元素消失」：jsdom 下 CSSMotion 的退场动画
+    //    不会真正结束，元素会一直留在 DOM 里（PITFALLS：动效不结束）。
+    //    leave 类出现在同一 tick ⇒ 足以证明 visible 已经翻成 false。
+    expect(w.find('.apollo-fade-leave').exists()).toBe(true);
 
     w.unmount();
   });
@@ -109,5 +120,47 @@ describe('BackTop · Issue #55 visibilityHeight 动态修改', () => {
     expect(w.find(`.${P}-content`).exists()).toBe(true);
 
     w.unmount();
+  });
+
+  it('[D] 挂载时已滚过阈值 ⇒ **首帧**即可见（不经 rAF，不闪烁）', async () => {
+    const target = makeTarget(500);
+    const w = mount(BackTop, {
+      props: { visibilityHeight: 400, target: () => target },
+      attachTo: document.body,
+    });
+    // 🚨 只等微任务，**不等** rAF：若初始校准走 `throttleByAnimationFrame`
+    //    （它的语义是「第一次调用排到下一帧」），这里会是 false
+    //    ⇒ 页面先渲染「不可见」再在下一帧翻成「可见」= 闪烁。
+    await nextTick();
+    expect(w.find(`.${P}-content`).exists()).toBe(true);
+
+    w.unmount();
+  });
+
+  it('[E] 卸载 ⇒ 摘监听恰好一次；反复换 target 不重复注册', async () => {
+    const a = makeTarget(500);
+    const b = makeTarget(0);
+    const w = mount(BackTop, {
+      props: { visibilityHeight: 400, target: () => a },
+      attachTo: document.body,
+    });
+    await nextFrame();
+    expect(a.addEventListener).toHaveBeenCalledTimes(1);
+
+    await w.setProps({ target: () => b });
+    await nextFrame();
+    // 切走：旧容器摘一次、新容器挂一次（不多挂）
+    expect(a.removeEventListener).toHaveBeenCalledTimes(1);
+    expect(b.addEventListener).toHaveBeenCalledTimes(1);
+
+    await w.setProps({ target: () => a });
+    await nextFrame();
+    expect(a.addEventListener).toHaveBeenCalledTimes(2);
+    expect(b.removeEventListener).toHaveBeenCalledTimes(1);
+
+    w.unmount();
+    // 卸载只摘**当前**容器，且只摘一次（无残留、无重复）
+    expect(a.removeEventListener).toHaveBeenCalledTimes(2);
+    expect(b.removeEventListener).toHaveBeenCalledTimes(1);
   });
 });
