@@ -213,6 +213,24 @@ export const Trigger = defineComponent({
 
     // ============================ Align =============================
     const popupEle = shallowRef<HTMLElement | null>(null);
+    /**
+     * ⭐ 浮层元素的**唯一**写入口。
+     *
+     * `overlay.popupRef` 不是可选的装饰 —— 它是 `@apollo-design/overlay` 契约的一部分，
+     * 两处行为依赖它（缺了就是「接线遗漏」，不是"上游也这样"）：
+     *   1. **hover 保活**（契约 §3.6）：鼠标从触发元素移进浮层时，浮层的
+     *      `onMouseenter` 要排一个开启定时器去顶掉 `onMouseleave` 排的关闭定时器；
+     *      判定用的是 `popupRef.value.contains(event.target)` ⇒ 恒 null 就永不保活，
+     *      表现为"鼠标一移过去浮层就消失"。
+     *   2. **点浮层内不算外部点击**（§3.10）：`inPopupOrChild()` 用它判定，
+     *      恒 null 会把浮层内部的点击当成外部点击而关闭（click 型浮层直接失效）。
+     *
+     * ⚠️ 别改成"只写 popupEle"—— 那正是这个 bug 的成因。
+     */
+    const setPopupEle = (element: HTMLElement | null): void => {
+      popupEle.value = element;
+      overlay.popupRef.value = element;
+    };
     const offsetInfo = ref<OffsetInfo>({
       ready: false,
       offsetX: 0,
@@ -402,11 +420,11 @@ export const Trigger = defineComponent({
     // appear/enter 的 prepare ⇒ 先对齐再放行动画（首帧定位先于动画）。
     const motionHooks = {
       onAppearPrepare: (element: Element | null) => {
-        if (element instanceof HTMLElement && !popupEle.value) popupEle.value = element;
+        if (element instanceof HTMLElement && !popupEle.value) setPopupEle(element);
         onAlign();
       },
       onEnterPrepare: (element: Element | null) => {
-        if (element instanceof HTMLElement && !popupEle.value) popupEle.value = element;
+        if (element instanceof HTMLElement && !popupEle.value) setPopupEle(element);
         onAlign();
       },
       onVisibleChanged: (visible: boolean) => {
@@ -559,7 +577,9 @@ export const Trigger = defineComponent({
                   return h(
                     'div',
                     {
-                      ref: popupEle as never,
+                      ref: ((el: unknown) => {
+                        setPopupEle((el as HTMLElement | null) ?? null);
+                      }) as never,
                       class: [
                         props.prefixCls,
                         motion.className,

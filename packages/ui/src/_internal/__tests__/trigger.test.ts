@@ -70,6 +70,41 @@ describe('Trigger · L1 开合与渲染', () => {
     vi.useRealTimers();
   });
 
+  /**
+   * ⭐ 回归：浮层元素必须接到 `overlay.popupRef`（`setPopupEle` 是唯一写入口）。
+   *
+   * 漏接线的表现是"鼠标一移向浮层它就消失"—— `onMouseleave` 排的关闭定时器
+   * 没人顶掉，因为保活分支的 `popupRef.value.contains(...)` 恒为 `null` 判据失败。
+   * 这条用例就是那个可见行为的钉子：离开触发元素 ⇒ 移进浮层 ⇒ 推过 leave 延迟。
+   */
+  it('hover 保活：鼠标移进浮层 ⇒ 顶掉 mouseleave 排的关闭定时器', async () => {
+    vi.useFakeTimers();
+    mountTrigger({ mouseLeaveDelay: 0.1 });
+
+    await triggerEl()!.dispatchEvent(new Event('mouseenter'));
+    await vi.advanceTimersByTimeAsync(0);
+    await nextTick();
+    expect(popup()).not.toBeNull();
+
+    // 离开触发元素：此刻只是**排**了 0.1s 的关闭定时器，浮层还开着
+    await triggerEl()!.dispatchEvent(new Event('mouseleave'));
+    await nextTick();
+    expect(popup()!.className).not.toContain('apollo-trigger-hidden');
+
+    // 还没到 0.1s 就移进浮层 ⇒ 保活；再把时钟推过 leave 延迟也不能关
+    await popup()!.dispatchEvent(new Event('mouseenter'));
+    await vi.advanceTimersByTimeAsync(1000);
+    await nextTick();
+    expect(popup()!.className).not.toContain('apollo-trigger-hidden');
+
+    // 对照：不进浮层，同样的等待必须关掉（证明上面的"没关"确实是保活生效）
+    await popup()!.dispatchEvent(new Event('mouseleave'));
+    await vi.advanceTimersByTimeAsync(1000);
+    await nextTick();
+    expect(popup()!.className).toContain('apollo-trigger-hidden');
+    vi.useRealTimers();
+  });
+
   it('受控 open：false ⇒ 不渲染；true ⇒ 渲染且带 placement 类名 + 定位样式', async () => {
     const wrapper = mountTrigger({ open: false });
     await nextTick();
