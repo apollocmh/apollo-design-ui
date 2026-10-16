@@ -260,3 +260,43 @@ describe('TreeSelect · 外壳行为', () => {
     w.unmount();
   });
 });
+
+describe('TreeSelect · 选完关闭（非受控）', () => {
+  it('★ 单选点节点 ⇒ 浮层关闭（BaseSelect 必须接本层 mergedOpen）', async () => {
+    const w = mount(TreeSelect, {
+      props: {
+        ...P,
+        treeData: TREE_DATA,
+        defaultOpen: true,
+        treeDefaultExpandAll: true,
+      },
+      attachTo: document.body,
+    });
+    await nextTick();
+    await nextTick();
+    const leaf = [...document.querySelectorAll('.apollo-tree-select-node-content-wrapper')].find(
+      (e) => e.textContent?.includes('leaf 1'),
+    ) as HTMLElement | undefined;
+    expect(leaf).toBeTruthy();
+    leaf!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await nextTick();
+    await nextTick();
+    // ⚠️ 同 Cascader：树里 toggleOpen(false) 只改本层 mergedOpen，
+    //    BaseSelect 拿原始 `props.open`（undefined）时会自己另开一套状态 ⇒ 关不掉。
+    await vi
+      .waitUntil(
+        () =>
+          !document.querySelector(
+            '.apollo-tree-select-dropdown:not(.apollo-tree-select-dropdown-hidden)',
+          ),
+        { timeout: 2000, interval: 20 },
+      )
+      .catch(() => {});
+    expect(
+      document.querySelector(
+        '.apollo-tree-select-dropdown:not(.apollo-tree-select-dropdown-hidden)',
+      ),
+    ).toBeNull();
+    w.unmount();
+  });
+});

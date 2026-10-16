@@ -743,7 +743,11 @@ const TreeSelect = defineComponent({
           displayValues: cachedDisplayValues.value,
           disabled: mergedDisabled.value,
           loading: props.loading,
-          open: props.open,
+          // ⚠️ 必须传**本层的 mergedOpen**，不能传原始 `props.open`（与 Cascader 同判据）：
+          //    传 `undefined` 时 BaseSelect 走自己的非受控状态，与本层 mergedOpen 是
+          //    两套互不同步的状态 ⇒ 树里选节点 `toggleOpen(false)` 只改本层，浮层收不到
+          //    ⇒ **非受控单选选完不关闭**（antd 会关）。
+          open: mergedOpen.value,
           defaultOpen: props.defaultOpen,
           notFoundContent: mergedNotFoundContent.value,
           placeholder: (slots.placeholder?.() as VNodeChild) ?? props.placeholder,

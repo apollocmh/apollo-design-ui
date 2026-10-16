@@ -109,3 +109,35 @@ describe('Cascader · 薄壳组装', () => {
     w.unmount();
   });
 });
+
+describe('Cascader · 选完关闭（非受控）', () => {
+  it('★ 选到叶子 ⇒ 浮层关闭（BaseSelect 必须接本层 mergedOpen）', async () => {
+    vi.useFakeTimers();
+    const w = mountCascader({ defaultOpen: true });
+    await nextTick();
+    await vi.runAllTimersAsync();
+    await vi.waitUntil(() => document.querySelectorAll('.apollo-cascader-menu').length > 0, {
+      timeout: 1000,
+    });
+    const clickItem = async (text: string): Promise<void> => {
+      const el = [...document.querySelectorAll('.apollo-cascader-menu-item')].find((e) =>
+        e.textContent?.includes(text),
+      ) as HTMLElement | undefined;
+      expect(el, `菜单项 ${text}`).toBeTruthy();
+      el!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await nextTick();
+    };
+    await clickItem('浙江');
+    await clickItem('杭州');
+    await clickItem('西湖');
+    await vi.runAllTimersAsync();
+    await nextTick();
+    // ⚠️ 面板的 toggleOpen(false) 只改本层 mergedOpen；BaseSelect 若拿的是原始
+    //    `props.open`（非受控时 undefined）就会走自己的状态 ⇒ 浮层收不到关闭信号。
+    expect(
+      document.querySelector('.apollo-cascader-dropdown:not(.apollo-cascader-dropdown-hidden)'),
+    ).toBeNull();
+    w.unmount();
+    vi.useRealTimers();
+  });
+});

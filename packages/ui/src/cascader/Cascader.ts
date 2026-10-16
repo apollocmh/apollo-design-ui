@@ -610,7 +610,14 @@ const Cascader = defineComponent({
           displayValues: displayValues.value,
           disabled: mergedDisabled.value,
           loading: props.loading,
-          open: props.open,
+          // ⚠️ 必须传**本层的 mergedOpen**，不能传原始 `props.open`：
+          //    BaseSelect 的 `useOpen({ getOpen: () => props.open })` 一旦拿到
+          //    `undefined` 就走**它自己的**非受控状态，与 Cascader 的 mergedOpen
+          //    成为两套互不同步的状态 ⇒ 面板选到叶子时 `toggleOpen(false)` 只改了
+          //    本层，浮层收不到 ⇒ **非受控下选完不关闭**（antd 会关）。
+          //    传 mergedOpen 后 BaseSelect 完全受控，它内部的一切开合（点触发器、
+          //    点外部、ESC）都会经 `onOpenChange` 回流到这里的 `setOpen`。
+          open: mergedOpen.value,
           defaultOpen: props.defaultOpen,
           notFoundContent: mergedNotFoundContent.value,
           placeholder: (slots.placeholder?.() as VNodeChild) ?? props.placeholder,
