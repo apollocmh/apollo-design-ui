@@ -30,7 +30,7 @@ When part of the page is waiting for asynchronous data or during a rendering pro
 
 ## API
 
-Common props ref：[Common props](/docs/react/common-props)
+Common props ref：[Common props](https://ant.design/docs/react/common-props)
 
 | Property | Description | Type | Default | Version | [Global Config](/components/config-provider#component-config) |
 | --- | --- | --- | --- | --- | --- |
