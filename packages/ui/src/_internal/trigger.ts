@@ -120,6 +120,23 @@ export function getAlignPopupClassName(
 }
 
 // ---------------------------------------------------------------------------
+// 触发元素归一（Vue 的 ref 在组件 vnode 上给的是**实例**，契约要的是元素）
+// ---------------------------------------------------------------------------
+
+/**
+ * 把 Vue 的 ref 回调值归一成 DOM 元素：`null` / 元素 / 组件实例（读 `$el`）。
+ *
+ * ⚠️ 组件实例的 `$el` 未必是元素（多根组件是文本节点 / Fragment 占位注释）
+ * ⇒ 取不到就回落 `null`，与「未绑 ref」同判（rc 的可选链语义）。
+ */
+function resolveTriggerElement(value: unknown): HTMLElement | null {
+  if (!value) return null;
+  if (value instanceof HTMLElement) return value;
+  const el = (value as { $el?: unknown }).$el;
+  return el instanceof HTMLElement ? el : null;
+}
+
+// ---------------------------------------------------------------------------
 // 组件
 // ---------------------------------------------------------------------------
 
@@ -252,16 +269,33 @@ export const Trigger = defineComponent({
 
     const isMobile = false; // v1 无 mobile 形态（tooltip / dropdown 都没有）
 
-    /** 对齐目标：alignPoint 场景用鼠标位置，否则用触发元素。 */
-    // child 是**组件**时，cloneVNode 的 ref 拿到的是组件实例 ⇒ 归一到根元素
-    // （antd 用 forwardRef 达成同一效果；Vue 的实例有 ``）。
-    const targetElement = computed<HTMLElement | null>(() => {
-      const t = overlay.targetRef.value as HTMLElement | { $el?: HTMLElement } | null;
-      if (!t) return null;
-      if (t instanceof HTMLElement) return t;
-      const el = (t as { $el?: HTMLElement }).$el;
-      return el instanceof HTMLElement ? el : null;
-    });
+    /**
+     * ⭐ 触发元素的**唯一**写入口 —— 写入前先归一成 DOM 元素。
+     *
+     * 🚨 **为什么必须归一**：`overlay.targetRef` 的契约是 `Ref<HTMLElement | null>`
+     * （`use-overlay.ts` 头注「绑到触发元素上」）。但 Vue 的 ref 在 **child 是组件
+     * vnode** 时给的是**组件实例**（`ComponentPublicInstance`），不是元素 ——
+     * `ColorPicker` 的 `ColorTrigger`、`Button` 触发器等**全是这种形态**。
+     * 直接存实例的后果（2026-10-16 实测）：
+     *   · overlay 的 `inPopupOrChild()` 调 `containsOrIs(target, ele)` ⇒
+     *     `host.contains` 不存在 ⇒ **抛 TypeError** ⇒ 外部点击处理器整体崩掉
+     *     ⇒ 「点浮层外面不关闭」（ColorPicker / 一切组件触发器的浮层）。
+     *   · `getPopupContainer(target)` 拿到的也不是元素。
+     *
+     * ⚠️ 别把归一逻辑只放在读取侧（本文件的 `targetElement`）：overlay 自己也会
+     *    直接读 `targetRef`，那里读到的仍是实例。
+     */
+    const setTargetEle = (value: unknown): void => {
+      overlay.targetRef.value = resolveTriggerElement(value);
+    };
+
+    /**
+     * 对齐目标：alignPoint 场景用鼠标位置，否则用触发元素。
+     *
+     * ⚠️ 直接别名即可 —— `setTargetEle` 是唯一写入口且已归一 ⇒ `targetRef` 恒为元素。
+     *    （此前这里还做一遍 `$el` 归一是**不够**的：overlay 自己读的是 `targetRef`。）
+     */
+    const targetElement = overlay.targetRef;
 
     const alignTarget = computed<HTMLElement | readonly [number, number] | null>(() => {
       if (props.alignPoint && overlay.mousePos.value) {
@@ -645,7 +679,9 @@ export const Trigger = defineComponent({
         {
           ...attrs,
           ...overlay.targetProps.value,
-          ref: overlay.targetRef as never,
+          // 🚨 不能写 `ref: overlay.targetRef`：组件 vnode 的 ref 给的是实例，
+          //    会让 overlay 的 `inPopupOrChild()` 抛 TypeError ⇒ 外部点击不关闭。
+          ref: setTargetEle as never,
         },
         // mergeRef=true：child 自己的 ref 与 targetRef 合并（rc 的 useComposeRef）
         true,

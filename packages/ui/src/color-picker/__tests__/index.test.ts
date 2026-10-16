@@ -9,7 +9,7 @@
  */
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { h } from 'vue';
+import { h, nextTick } from 'vue';
 import ColorPicker from '../ColorPicker.vue';
 import type { AggregationColor } from '../color';
 import { ColorPicker as InstalledColorPicker } from '../index';
@@ -236,6 +236,45 @@ describe('ColorPickerPanel · §1.1 Form 上下文隔离', () => {
     // 反向哨兵：提供出来的上下文**不带 status**（被 `provideNoFormStyle({ status: true })` 清掉）
     const value = (provided as { value?: { status?: unknown } }).value ?? provided;
     expect((value as { status?: unknown }).status).toBeUndefined();
+    w.unmount();
+  });
+});
+
+/**
+ * §3.10 —— **点浮层外面要关闭**（2026-10-16 实测缺陷）。
+ *
+ * `ColorTrigger` / `TriggerHost` 都是**组件** vnode ⇒ Vue 的 ref 给的是组件实例；
+ * `overlay.targetRef` 契约要的是元素 ⇒ 实例进去了会让 `inPopupOrChild()` 的
+ * `containsOrIs(target, ele)` 抛 `TypeError: host.contains is not a function`
+ * ⇒ 外部点击处理器整体崩掉 ⇒ 「点外面不关闭」。
+ *
+ * ⚠️ 必须 `stubs: { teleport: false }`：Teleport 在全局被 stub ⇒ 不还原就断言不到
+ *    真正落进 body 的浮层（会假绿）。
+ */
+describe('ColorPicker · 点外部关闭', () => {
+  it('★ 点触发器打开 → 点浮层外面 ⇒ 关闭', async () => {
+    const onOpenChange = vi.fn();
+    const w = mount(ColorPicker, {
+      props: { defaultValue: '#1677ff', onOpenChange },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    await nextTick();
+
+    w.find(`.${P}-trigger`).element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await nextTick();
+    await nextTick();
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+    expect(document.querySelector(`.${P}-inner`)).toBeTruthy();
+
+    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    await nextTick();
+    await nextTick();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    // ⚠️ jsdom 没有 transition ⇒ 离场动画停在 `-leave`（拿不到 `-hidden`），
+    //    所以两个状态都算「已经关」：`-hidden`（动画结束）或 `-leave`（离场中）。
+    const popupCls = document.querySelector('.apollo-popover')?.className ?? '';
+    expect(popupCls).toMatch(/apollo-popover-hidden|-leave/);
     w.unmount();
   });
 });

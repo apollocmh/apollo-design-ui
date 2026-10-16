@@ -12,8 +12,14 @@
 import { getPlacements } from '@apollo-design/position';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { defineComponent, h, nextTick } from 'vue';
 import { Trigger } from '../trigger';
+
+/** 组件形态的触发器 —— Vue 的 ref 在这上面给的是**实例**，不是元素。 */
+const CompTrigger = defineComponent({
+  name: 'CompTrigger',
+  setup: () => () => h('button', { class: 'trigger-target' }, 'target'),
+});
 
 const placements = getPlacements({
   arrowPointAtCenter: false,
@@ -181,6 +187,59 @@ describe('Trigger · L1 开合与渲染', () => {
     await wrapper.setProps({ fresh: true });
     await nextTick();
     expect(popup()!.textContent).toContain('TIP3');
+  });
+
+  /**
+   * ⭐ 回归：**触发器是组件 vnode** 时，点浮层外面必须关闭。
+   *
+   * Vue 的 ref 在**组件** vnode 上给的是**组件实例**，而 `overlay.targetRef` 的契约
+   * 是 `Ref<HTMLElement | null>`（`use-overlay.ts` 头注「绑到触发元素上」）。把实例
+   * 原样塞进去 ⇒ overlay 的 `inPopupOrChild()` 里 `containsOrIs(target, ele)` 走到
+   * `host.contains(...)` 抛 **TypeError** ⇒ 外部点击处理器整体崩掉 ⇒ 表现为
+   * 「点浮层外面不关闭」。`ColorPicker` 的 `ColorTrigger`、`<Button>` 触发器
+   * 全是这种形态（2026-10-16 实测）。
+   *
+   * ⚠️ 断言 `nativeElement()` 是**元素**：只断言「点外面会关」会**假绿** ——
+   *    targetRef 恒 null 时一切都算外部点击，同样"会关"（但点浮层内部也会关）。
+   */
+  it('组件触发器：点外部 ⇒ 关闭（targetRef 必须是元素，不能是组件实例）', async () => {
+    const onOpenChange = vi.fn();
+    const wrapper = mount(Trigger, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+      props: {
+        prefixCls: 'apollo-trigger',
+        builtinPlacements: placements,
+        motion: { motionName: 'apollo-zoom-big-fast', supportMotion: false },
+        popup: 'TIP',
+        action: 'click',
+        onOpenChange,
+        ...{},
+      },
+      slots: { default: () => h(CompTrigger) },
+    });
+    await nextTick();
+
+    // 归一后的触发元素就是组件渲染出来的那个 button
+    const exposed = wrapper.vm as unknown as { nativeElement: () => HTMLElement | null };
+    expect(exposed.nativeElement()).toBe(triggerEl());
+    expect(triggerEl()).toBeInstanceOf(HTMLElement);
+
+    await triggerEl()!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await vi.waitFor(() => expect(popup()).not.toBeNull());
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+
+    // 对照：点浮层**内部**不关（证明 target/popup 都真拿到了元素）
+    await popup()!.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    await nextTick();
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+
+    // 点外部 ⇒ 关
+    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    await nextTick();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    expect(popup()!.className).toContain('apollo-trigger-hidden');
+    wrapper.unmount();
   });
 });
 
