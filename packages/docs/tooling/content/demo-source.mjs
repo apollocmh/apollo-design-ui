@@ -9,8 +9,9 @@
  * 刻意不做字符串全局替换：`from '../../index'` 只可能出现在模块说明符位置，
  * 但粗暴 replace 会误伤注释、字符串字面量里的同名文本。
  */
-import nodePath from 'node:path';
+
 import fs from 'node:fs';
+import nodePath from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // 本文件位于 packages/docs/tooling/content/ ⇒ ui/src 在 ../../../ui/src。

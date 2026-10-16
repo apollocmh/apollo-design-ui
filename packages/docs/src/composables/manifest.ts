@@ -2,6 +2,8 @@
  * 内容数据访问层：manifest 静态导入（小），页面数据按需懒加载（大）。
  * `.generated/` 由 tooling/content/build-manifest.mjs 产出。
  */
+
+import rawManifest from '../../.generated/manifest.json';
 import type {
   ChangelogDay,
   ComponentPageData,
@@ -9,8 +11,6 @@ import type {
   SearchDocument,
   SiteManifest,
 } from '../types/manifest';
-
-import rawManifest from '../../.generated/manifest.json';
 
 export const siteManifest = rawManifest as unknown as SiteManifest;
 

@@ -37,7 +37,7 @@ describe('transformImports', () => {
       "import type { ButtonProps } from '../../index';",
       buttonDemo,
     );
-    expect(code).toContain("@apollo-design/ui");
+    expect(code).toContain('@apollo-design/ui');
   });
 
   it('动态 import() 同样改写', () => {
@@ -58,7 +58,7 @@ describe('transformImports', () => {
   it('不误伤注释与字符串字面量里的同名文本', () => {
     const src = [
       "// 注意：不要写 from '../../index'",
-      "const tip = \"import x from '../../index'\";",
+      'const tip = "import x from \'../../index\'";',
       "import { Button } from '../../index';",
     ].join('\n');
     const { code } = transformImports(src, buttonDemo);
@@ -124,7 +124,9 @@ describe('展示源码的可用性红线', () => {
   });
 
   it('引用组件库时一律用 @apollo-design/ui（不是相对路径）', () => {
-    const offenders = allDemoSources().filter((s) => /@apollo-design\/ui/.test(s.code) === false && /from\s+['"]\.\.\/\.\.\//.test(s.code));
+    const offenders = allDemoSources().filter(
+      (s) => /@apollo-design\/ui/.test(s.code) === false && /from\s+['"]\.\.\/\.\.\//.test(s.code),
+    );
     expect(offenders.map((s) => s.path)).toEqual([]);
   });
 });

@@ -24,9 +24,10 @@
   --site-toc-width: 208px;
   --site-content-max: 1096px;
   --site-radius: 8px;
-  --site-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  --site-font-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --site-font:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --site-font-code: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
   --site-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12);
   --site-topbar-z: 100;
 
@@ -35,7 +36,7 @@
   --site-break-mobile: 640px;
 }
 
-[data-apollo-theme='dark'] {
+[data-apollo-theme="dark"] {
   --site-brand: #1668dc;
   --site-brand-hover: #3c89e8;
   --site-bg: #0d0d0d;

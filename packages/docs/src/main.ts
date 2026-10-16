@@ -6,9 +6,9 @@
  */
 import { ViteSSG } from 'vite-ssg';
 import App from './App.vue';
-import { routes } from './router';
 import { provideSiteLocale } from './composables/locale';
 import { setupTheme } from './composables/theme';
+import { routes } from './router';
 
 import '@apollo-design/theme/tokens.css';
 // ⚠️ 组件样式必须显式引入：文档站的示例走的是**发布产物同源**的静态 CSS

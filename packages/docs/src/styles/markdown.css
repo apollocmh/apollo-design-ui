@@ -121,8 +121,8 @@
 }
 
 /* shiki 双主题：默认亮色变量，暗色作用域切换 */
-[data-apollo-theme='dark'] .shiki,
-[data-apollo-theme='dark'] .shiki span {
+[data-apollo-theme="dark"] .shiki,
+[data-apollo-theme="dark"] .shiki span {
   color: var(--shiki-dark) !important;
   background-color: transparent !important;
   font-style: var(--shiki-dark-font-style) !important;

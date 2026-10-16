@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { loadChangelog } from '../composables/manifest';
 import { useSiteLocale } from '../composables/locale';
+import { loadChangelog } from '../composables/manifest';
 import { useTocState } from '../composables/toc';
 import type { ChangelogDay } from '../types/manifest';
 

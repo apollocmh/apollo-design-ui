@@ -11,8 +11,9 @@
  * 卸载策略：示例组件随本组件卸载而卸载（Vue 自动断开其 effect / 监听）；
  * 「离开视口」不销毁实例 ⇒ 用户在示例里的操作状态（表单输入、展开的面板）保留。
  */
-import { onMounted, ref, shallowRef, watch } from 'vue';
+
 import type { Component } from 'vue';
+import { onMounted, ref, shallowRef, watch } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 
 const props = defineProps<{

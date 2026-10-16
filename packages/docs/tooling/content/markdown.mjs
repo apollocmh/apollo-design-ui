@@ -9,8 +9,8 @@
  *  - 不把 Markdown 当 Vue 模板：产物是纯 HTML 字符串，页面用 v-html 注入。
  */
 import MarkdownIt from 'markdown-it';
-import { createHighlighterCore } from 'shiki/core';
 import { createJavaScriptRegexEngine } from 'shiki';
+import { createHighlighterCore } from 'shiki/core';
 
 /**
  * 去掉内联 HTML 标签（标题里出现 `<a>` / `<code>` 这类标签时，锚点与 TOC 文案
@@ -25,13 +25,15 @@ function stripTags(text) {
 
 /** kebab-case slug（中文保留，空格/标点转 -）。 */
 export function slugify(text) {
-  return stripTags(text)
-    .toLowerCase()
-    // HTML 属性里不能原样出现的字符（引号 / 尖括号 / 斜杠）一律剔除
-    .replace(/[`*~[\]{}()<>"'\/\\]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+  return (
+    stripTags(text)
+      .toLowerCase()
+      // HTML 属性里不能原样出现的字符（引号 / 尖括号 / 斜杠）一律剔除
+      .replace(/[`*~[\]{}()<>"'/\\]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+  );
 }
 
 let highlighterPromise = null;
@@ -40,10 +42,7 @@ let highlighterPromise = null;
 async function getHighlighter() {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighterCore({
-      themes: [
-        import('shiki/themes/github-light.mjs'),
-        import('shiki/themes/github-dark.mjs'),
-      ],
+      themes: [import('shiki/themes/github-light.mjs'), import('shiki/themes/github-dark.mjs')],
       langs: [
         import('shiki/langs/vue.mjs'),
         import('shiki/langs/typescript.mjs'),
@@ -84,7 +83,7 @@ export async function createMarkdownRenderer({ currentPathPrefix = '' } = {}) {
   // ── 标题 slug + 双层锚点 ────────────────────────────────────────────────
   const usedSlugs = new Set();
   const uniqueSlug = (raw) => {
-    let base = slugify(raw) || 'section';
+    const base = slugify(raw) || 'section';
     let slug = base;
     let i = 2;
     while (usedSlugs.has(slug)) slug = `${base}-${i++}`;

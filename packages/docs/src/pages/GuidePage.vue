@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { loadGuidePage } from '../composables/manifest';
+import DocHtml from '../components/docs/DocHtml.vue';
 import { useSiteLocale } from '../composables/locale';
+import { loadGuidePage } from '../composables/manifest';
 import { useTocState } from '../composables/toc';
 import type { GuidePageData } from '../types/manifest';
-import DocHtml from '../components/docs/DocHtml.vue';
 
 const route = useRoute();
 const { t, pick, locale } = useSiteLocale();
@@ -38,7 +38,9 @@ onServerPrefetch(async () => {
   if (route.name === 'guide') await load(String(route.params.slug ?? ''));
 });
 
-const doc = computed(() => (page.value ? page.value.doc[locale.value === 'zh-CN' ? 'zh' : 'en'] : null));
+const doc = computed(() =>
+  page.value ? page.value.doc[locale.value === 'zh-CN' ? 'zh' : 'en'] : null,
+);
 const titleText = computed(() => (page.value ? pick(page.value.title).text : ''));
 
 watch(

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { siteManifest } from '../composables/manifest';
-import { useSiteLocale } from '../composables/locale';
-import { useTocState } from '../composables/toc';
 import { onMounted } from 'vue';
+import { useSiteLocale } from '../composables/locale';
+import { siteManifest } from '../composables/manifest';
+import { useTocState } from '../composables/toc';
 
 const { pick } = useSiteLocale();
 const { setToc } = useTocState();

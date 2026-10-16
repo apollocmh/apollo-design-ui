@@ -7,8 +7,8 @@
  *     「搜索能用」和「搜索只能靠鼠标点」的分界线。
  */
 import { mount } from '@vue/test-utils';
-import { nextTick } from 'vue';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import SearchModal from '../src/components/site/SearchModal.vue';
 import { safeText, useSearch } from '../src/composables/search';
 

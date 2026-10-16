@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue';
-import { useSearch } from '../../composables/search';
 import { useSiteLocale } from '../../composables/locale';
+import { useSearch } from '../../composables/search';
 
 const emit = defineEmits<{ close: []; navigate: [path: string] }>();
 
@@ -35,9 +35,7 @@ function onKeydown(e: KeyboardEvent): void {
     if (e.key === 'ArrowDown') activeIndex.value = (activeIndex.value + 1) % total;
     else activeIndex.value = (activeIndex.value - 1 + total) % total;
     void nextTick(() => {
-      document
-        .querySelector('.site-search-item.active')
-        ?.scrollIntoView({ block: 'nearest' });
+      document.querySelector('.site-search-item.active')?.scrollIntoView({ block: 'nearest' });
     });
     return;
   }

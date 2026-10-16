@@ -10,12 +10,12 @@
 import { computed, ref } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 import type { DemoMeta } from '../../types/manifest';
+import DemoErrorBoundary from './DemoErrorBoundary.vue';
+import DemoFrame from './DemoFrame.vue';
 import DemoProvider from './DemoProvider.vue';
 import DemoRenderer from './DemoRenderer.vue';
-import DemoErrorBoundary from './DemoErrorBoundary.vue';
-import DemoToolbar from './DemoToolbar.vue';
 import DemoSource from './DemoSource.vue';
-import DemoFrame from './DemoFrame.vue';
+import DemoToolbar from './DemoToolbar.vue';
 
 const props = defineProps<{ demo: DemoMeta; fullWidth?: boolean }>();
 

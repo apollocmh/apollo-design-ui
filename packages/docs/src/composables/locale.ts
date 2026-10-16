@@ -4,7 +4,7 @@
  * 与组件库 LocaleProvider 是两回事：这里管的是**官网 chrome**（导航、工具栏、提示）
  * 和组件文档内容的选择；组件示例内部文案由示例自己（或用户示例里的 LocaleProvider）决定。
  */
-import { computed, ref, type App, type InjectionKey, inject, provide } from 'vue';
+import { type App, computed, type InjectionKey, inject, ref } from 'vue';
 import type { Bilingual } from '../types/manifest';
 
 export type SiteLocale = 'zh-CN' | 'en-US';

@@ -89,7 +89,7 @@ describe('组件页数据', () => {
     for (const p of pages) {
       for (const lang of ['zh', 'en'] as const) {
         for (const t of p.data.doc[lang].toc as Array<{ id: string; text: string }>) {
-          expect(t.id, `${p.meta.name}/${lang}`).not.toMatch(/[<>"'\/\\]/);
+          expect(t.id, `${p.meta.name}/${lang}`).not.toMatch(/[<>"'/\\]/);
           expect(t.text).not.toMatch(/<[a-z/]/i);
         }
       }
@@ -177,7 +177,9 @@ describe('站内链接可达性（不许静默死链）', () => {
         offenders.push(`${p.meta.name}: ${href}`);
       }
     }
-    expect(offenders, `死链 ${offenders.length} 条：${offenders.slice(0, 8).join(', ')}`).toEqual([]);
+    expect(offenders, `死链 ${offenders.length} 条：${offenders.slice(0, 8).join(', ')}`).toEqual(
+      [],
+    );
   });
 
   it('外链一律带 target=_blank + rel=noopener', () => {

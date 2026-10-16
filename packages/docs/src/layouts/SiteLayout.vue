@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import TopBar from '../components/site/TopBar.vue';
 import SideNav from '../components/site/SideNav.vue';
 import SiteFooter from '../components/site/SiteFooter.vue';
 import TocNav from '../components/site/TocNav.vue';
+import TopBar from '../components/site/TopBar.vue';
 import { useTocState } from '../composables/toc';
 
 const route = useRoute();

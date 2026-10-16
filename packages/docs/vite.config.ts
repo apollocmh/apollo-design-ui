@@ -1,7 +1,6 @@
-import process from 'node:process';
-import fs from 'node:fs';
-import { cpSync, mkdirSync, writeFileSync } from 'node:fs';
+import fs, { cpSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 import type { ViteSSGOptions } from 'vite-ssg';
@@ -17,7 +16,8 @@ function contentWatchPlugin(): Plugin {
     name: 'apollo-docs-content-watch',
     apply: 'serve',
     configureServer(server) {
-      const RELEVANT = /(packages\/ui\/src\/[^/]+\/(index\.(zh-CN|en-US)\.md|demo\/[^/]+\.(md|vue))|packages\/docs\/content\/)/;
+      const RELEVANT =
+        /(packages\/ui\/src\/[^/]+\/(index\.(zh-CN|en-US)\.md|demo\/[^/]+\.(md|vue))|packages\/docs\/content\/)/;
       const schedule = (p: string): void => {
         if (!RELEVANT.test(p)) return;
         if (timer) clearTimeout(timer);
@@ -104,7 +104,10 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
       ];
       const origin = 'https://apollocmh.github.io';
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-        .map((u) => `  <url><loc>${origin}${BASE.replace(/\/$/, '')}${u}</loc><lastmod>${today}</lastmod></url>`)
+        .map(
+          (u) =>
+            `  <url><loc>${origin}${BASE.replace(/\/$/, '')}${u}</loc><lastmod>${today}</lastmod></url>`,
+        )
         .join('\n')}\n</urlset>\n`;
       mkdirSync(outDir, { recursive: true });
       writeFileSync(path.join(outDir, 'sitemap.xml'), sitemap);

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { siteManifest } from '../../composables/manifest';
 import { useSiteLocale } from '../../composables/locale';
-import { useThemeMode, type ThemeMode } from '../../composables/theme';
+import { siteManifest } from '../../composables/manifest';
+import { type ThemeMode, useThemeMode } from '../../composables/theme';
 import SearchModal from './SearchModal.vue';
 
 defineEmits<{ toggleMenu: [] }>();

@@ -36,5 +36,7 @@ afterEach(() => {
   localStorage.clear();
   delete document.documentElement.dataset.apolloTheme;
   document.documentElement.lang = '';
-  document.head.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
+  document.head.querySelectorAll('meta[name="theme-color"]').forEach((el) => {
+    el.remove();
+  });
 });

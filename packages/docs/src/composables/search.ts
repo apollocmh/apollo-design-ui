@@ -5,9 +5,9 @@
  * 中文名 / 英文名 / 副标题权重最高，demo 标题次之，描述再次。
  */
 import { computed, ref } from 'vue';
-import { loadSearchIndex } from './manifest';
+import type { SearchDocType, SearchDocument } from '../types/manifest';
 import { useSiteLocale } from './locale';
-import type { SearchDocument, SearchDocType } from '../types/manifest';
+import { loadSearchIndex } from './manifest';
 
 export interface SearchResult extends SearchDocument {
   score: number;

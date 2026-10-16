@@ -8,13 +8,21 @@
  *     postMessage 向父页面汇报高度；`?theme=` 与 `?lang=` 让 iframe 内
  *     的主题与语言和宿主一致。
  */
-import { computed, onBeforeUnmount, onMounted, onServerPrefetch, ref, shallowRef, watch } from 'vue';
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  onServerPrefetch,
+  ref,
+  shallowRef,
+  watch,
+} from 'vue';
 import { useRoute } from 'vue-router';
-import { loadComponentPage } from '../composables/manifest';
-import { initSiteLocale, useSiteLocale } from '../composables/locale';
-import type { ComponentPageData, DemoMeta } from '../types/manifest';
 import DemoProvider from '../components/demo/DemoProvider.vue';
 import DemoRenderer from '../components/demo/DemoRenderer.vue';
+import { initSiteLocale, useSiteLocale } from '../composables/locale';
+import { loadComponentPage } from '../composables/manifest';
+import type { ComponentPageData, DemoMeta } from '../types/manifest';
 
 const route = useRoute();
 const { t } = useSiteLocale();

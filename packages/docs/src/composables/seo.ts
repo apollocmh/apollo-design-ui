@@ -2,8 +2,9 @@
  * SEO 元数据（title / description / canonical / hreflang）。
  * vite-ssg 内置 unhead（SSR 渲染 <head>，客户端接管后续切换）。
  */
-import { computed, type Ref } from 'vue';
+
 import { useHead } from '@unhead/vue';
+import type { Ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const SITE_NAME = 'Apollo Design';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import type { TocItem } from '../../types/manifest';
 import { useSiteLocale } from '../../composables/locale';
+import type { TocItem } from '../../types/manifest';
 
 const props = defineProps<{ items: TocItem[] }>();
 const { t } = useSiteLocale();

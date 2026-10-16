@@ -49,7 +49,7 @@ try {
   const srcText = await page.locator('.demo-source-code').first().innerText();
   check(
     '源码展示（import 已改写）',
-    srcText.includes("@apollo-design/ui") && !srcText.includes('../../index'),
+    srcText.includes('@apollo-design/ui') && !srcText.includes('../../index'),
     srcText.split('\n')[1]?.trim() ?? '',
   );
   await page.screenshot({ path: `${SHOT_DIR}/button-demo-expanded.png` });
@@ -73,7 +73,10 @@ try {
   await page.locator('.site-lang-toggle').click();
   await page.waitForTimeout(400);
   check('英文文档', (await page.content()).includes('When To Use'));
-  check('英文导航', await page.locator('.site-topbar-nav a:has-text("Components")').first().isVisible());
+  check(
+    '英文导航',
+    await page.locator('.site-topbar-nav a:has-text("Components")').first().isVisible(),
+  );
   await page.locator('.site-lang-toggle').click();
   await page.waitForTimeout(400);
   check('切回中文文档', (await page.content()).includes('何时使用'));
@@ -111,15 +114,25 @@ try {
   await page.keyboard.press('Enter');
   await page.waitForTimeout(800);
   check('搜索跳转', page.url().includes('/components/table'), page.url());
-  await page.waitForSelector('.demo-canvas .apollo-table, .demo-canvas .apollo-form', { timeout: 15000 }).catch(() => {});
+  await page
+    .waitForSelector('.demo-canvas .apollo-table, .demo-canvas .apollo-form', { timeout: 15000 })
+    .catch(() => {});
   check('table 页 demo 渲染', (await page.locator('.demo-canvas > *').count()) > 0);
 
   // ── 6. 指南 & 总览 & 404 ────────────────────────────────────────────
   await page.goto(`${BASE}/components`, { waitUntil: 'domcontentloaded' });
-  check('组件总览卡片', (await page.locator('.overview-card').count()) === 72, `${await page.locator('.overview-card').count()}`);
+  check(
+    '组件总览卡片',
+    (await page.locator('.overview-card').count()) === 72,
+    `${await page.locator('.overview-card').count()}`,
+  );
   await page.goto(`${BASE}/guide/compatibility`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(500);
-  check('兼容性指南（真源注入）', (await page.content()).includes('COMPATIBILITY') || (await page.locator('.doc-markdown').innerText()).length > 500);
+  check(
+    '兼容性指南（真源注入）',
+    (await page.content()).includes('COMPATIBILITY') ||
+      (await page.locator('.doc-markdown').innerText()).length > 500,
+  );
   await page.goto(`${BASE}/no-such-page`, { waitUntil: 'domcontentloaded' });
   check('404 页', await page.locator('.notfound-code:has-text("404")').isVisible());
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { siteManifest } from '../composables/manifest';
 import { useSiteLocale } from '../composables/locale';
+import { siteManifest } from '../composables/manifest';
 
 const { locale } = useSiteLocale();
 

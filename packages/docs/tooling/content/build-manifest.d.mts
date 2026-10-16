@@ -16,6 +16,4 @@ export interface BuildManifestResult {
   };
 }
 
-export declare function buildManifest(options?: {
-  write?: boolean;
-}): Promise<BuildManifestResult>;
+export declare function buildManifest(options?: { write?: boolean }): Promise<BuildManifestResult>;

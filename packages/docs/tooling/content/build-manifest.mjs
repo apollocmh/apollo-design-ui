@@ -20,10 +20,10 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import nodePath from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compareCategories } from './categories.mjs';
+import { collectDemoSources } from './demo-source.mjs';
 import { bilingualOf, localeOf, normalizeText, parseFrontmatter } from './frontmatter.mjs';
 import { highlightCode, renderDocWithToc } from './markdown.mjs';
-import { collectDemoSources } from './demo-source.mjs';
-import { compareCategories } from './categories.mjs';
 
 const HERE = nodePath.dirname(fileURLToPath(import.meta.url));
 export const DOCS_DIR = nodePath.resolve(HERE, '../..');
@@ -72,8 +72,7 @@ function extractExports(name) {
   if (fs.existsSync(entry)) {
     const src = fs.readFileSync(entry, 'utf8');
     const re = /export\s*\{([^}]*)\}/g;
-    let m;
-    while ((m = re.exec(src))) {
+    for (const m of src.matchAll(re)) {
       for (const piece of m[1].split(',')) {
         let id = piece.trim();
         if (!id || id.startsWith('type')) continue;
@@ -190,7 +189,8 @@ export function scanComponents() {
   const components = [];
   for (const entry of fs.readdirSync(UI_SRC, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
-    if (entry.name.startsWith('_') || entry.name === '__tests__' || entry.name === 'style') continue;
+    if (entry.name.startsWith('_') || entry.name === '__tests__' || entry.name === 'style')
+      continue;
     const hasDoc = fs.existsSync(nodePath.join(UI_SRC, entry.name, 'index.zh-CN.md'));
     if (!hasDoc) continue;
     components.push(scanComponentDir(entry));
@@ -434,9 +434,7 @@ export async function buildManifest({ write = true } = {}) {
     .sort(([a], [b]) => compareCategories(a, b))
     .map(([name, items]) => ({
       name,
-      components: items.sort((a, b) =>
-        (a.title.zh || a.name).localeCompare(b.title.zh || b.name),
-      ),
+      components: items.sort((a, b) => (a.title.zh || a.name).localeCompare(b.title.zh || b.name)),
     }));
 
   const manifest = {
@@ -481,10 +479,7 @@ export async function buildManifest({ write = true } = {}) {
       JSON.stringify({ generatedAt: manifest.generatedAt, days: buildChangelog() }),
     );
     for (const [name, data] of Object.entries(pageData)) {
-      fs.writeFileSync(
-        nodePath.join(OUT_DIR, 'docs', `${name}.json`),
-        JSON.stringify(data),
-      );
+      fs.writeFileSync(nodePath.join(OUT_DIR, 'docs', `${name}.json`), JSON.stringify(data));
     }
     for (const [slug, data] of Object.entries(guidePages)) {
       fs.writeFileSync(nodePath.join(OUT_DIR, 'guides', `${slug}.json`), JSON.stringify(data));

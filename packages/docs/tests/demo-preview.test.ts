@@ -5,18 +5,32 @@
  * 复制没有反馈 —— 页面看起来都还在，但用户实际用不了。
  */
 import { flushPromises, mount } from '@vue/test-utils';
-import { nextTick } from 'vue';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { nextTick } from 'vue';
 import DemoPreview from '../src/components/demo/DemoPreview.vue';
 import DemoRenderer from '../src/components/demo/DemoRenderer.vue';
-import DemoToolbar from '../src/components/demo/DemoToolbar.vue';
 import DemoSource from '../src/components/demo/DemoSource.vue';
+import DemoToolbar from '../src/components/demo/DemoToolbar.vue';
 import { useSiteLocale } from '../src/composables/locale';
 import type { DemoMeta, SourceFile } from '../src/types/manifest';
 
 const sources: SourceFile[] = [
-  { path: 'basic.vue', label: 'basic.vue', code: '<template><b/></template>', lang: 'vue', main: true, codeHtml: '<pre>basic</pre>' },
-  { path: '../interface.ts', label: '../interface.ts', code: 'export interface X {}', lang: 'ts', main: false, codeHtml: '<pre>ts</pre>' },
+  {
+    path: 'basic.vue',
+    label: 'basic.vue',
+    code: '<template><b/></template>',
+    lang: 'vue',
+    main: true,
+    codeHtml: '<pre>basic</pre>',
+  },
+  {
+    path: '../interface.ts',
+    label: '../interface.ts',
+    code: 'export interface X {}',
+    lang: 'ts',
+    main: false,
+    codeHtml: '<pre>ts</pre>',
+  },
 ];
 
 const demoMeta: DemoMeta = {
@@ -213,9 +227,7 @@ describe('DemoPreview —— 卡片编排', () => {
     await flushPromises();
     const renderer = wrapper.findComponent(DemoRenderer);
     expect(renderer.props('resetToken')).toBe(0);
-    const resetBtn = wrapper
-      .findAll('.demo-tool-btn')
-      .find((b) => b.text().includes('重置示例'))!;
+    const resetBtn = wrapper.findAll('.demo-tool-btn').find((b) => b.text().includes('重置示例'))!;
     await resetBtn.trigger('click');
     await flushPromises();
     expect(wrapper.findComponent(DemoRenderer).props('resetToken')).toBe(1);

@@ -6,13 +6,13 @@
  * （例：搜索把 number 当 string 用 → 整个搜索面板渲染抛错）。
  */
 import { describe, expect, it } from 'vitest';
+import { CATEGORY_ORDER, compareCategories } from '../tooling/content/categories.mjs';
 import {
   bilingualOf,
   localeOf,
   normalizeText,
   parseFrontmatter,
 } from '../tooling/content/frontmatter.mjs';
-import { CATEGORY_ORDER, compareCategories } from '../tooling/content/categories.mjs';
 
 /** frontmatter 的值是动态结构，断言时按「双语对象」读取。 */
 const titleOf = (meta: Record<string, unknown>): Record<string, string> =>
@@ -30,7 +30,8 @@ describe('normalizeText', () => {
 
 describe('parseFrontmatter', () => {
   it('解析标量 + 双语嵌套', () => {
-    const raw = '---\norder: 3\ncategory: 通用\ntitle:\n  zh-CN: 按钮\n  en-US: Button\n---\n\n# 正文';
+    const raw =
+      '---\norder: 3\ncategory: 通用\ntitle:\n  zh-CN: 按钮\n  en-US: Button\n---\n\n# 正文';
     const { meta, body } = parseFrontmatter(raw);
     expect(meta.order).toBe(3);
     expect(meta.category).toBe('通用');
@@ -58,7 +59,9 @@ describe('parseFrontmatter', () => {
   });
 
   it('YAML 语法错误要抛出可读信息（不是静默空对象）', () => {
-    expect(() => parseFrontmatter('---\ntitle: "未闭合\n---\n正文')).toThrow(/frontmatter YAML 解析失败/);
+    expect(() => parseFrontmatter('---\ntitle: "未闭合\n---\n正文')).toThrow(
+      /frontmatter YAML 解析失败/,
+    );
   });
 });
 
@@ -81,7 +84,10 @@ describe('localeOf / bilingualOf —— 标量类型归一化', () => {
 
   it('缺失字段回落 fallback', () => {
     expect(localeOf({}, 'title', '默认')).toBe('默认');
-    expect(bilingualOf({}, 'title', '默认zh', '默认en')).toMatchObject({ zh: '默认zh', en: '默认en' });
+    expect(bilingualOf({}, 'title', '默认zh', '默认en')).toMatchObject({
+      zh: '默认zh',
+      en: '默认en',
+    });
   });
 });
 
@@ -110,6 +116,14 @@ describe('分类顺序', () => {
   });
 
   it('固定序覆盖 antd 的七大类', () => {
-    expect(CATEGORY_ORDER).toEqual(['通用', '布局', '导航', '数据录入', '数据展示', '反馈', '其他']);
+    expect(CATEGORY_ORDER).toEqual([
+      '通用',
+      '布局',
+      '导航',
+      '数据录入',
+      '数据展示',
+      '反馈',
+      '其他',
+    ]);
   });
 });

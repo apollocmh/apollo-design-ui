@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { siteManifest } from '../../composables/manifest';
 import { useSiteLocale } from '../../composables/locale';
+import { siteManifest } from '../../composables/manifest';
 
 defineEmits<{ navigate: [] }>();
 

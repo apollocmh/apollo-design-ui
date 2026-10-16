@@ -10,8 +10,8 @@
  * origin 校验 = 同源（GitHub Pages 自托管）。
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import type { DemoMeta } from '../../types/manifest';
 import { useSiteLocale } from '../../composables/locale';
+import type { DemoMeta } from '../../types/manifest';
 
 const props = defineProps<{ demo: DemoMeta }>();
 

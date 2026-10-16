@@ -12,11 +12,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mount } from '@vue/test-utils';
-import { createMemoryHistory, createRouter } from 'vue-router';
 import { describe, expect, it } from 'vitest';
+import { createMemoryHistory, createRouter } from 'vue-router';
+import manifest from '../.generated/manifest.json';
 import DemoFrame from '../src/components/demo/DemoFrame.vue';
 import { routes } from '../src/router';
-import manifest from '../.generated/manifest.json';
 import type { DemoMeta } from '../src/types/manifest';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -37,14 +37,20 @@ describe('全量 demo 审计', () => {
 
   it('每个 demo 的 .vue 文件真实存在（渲染器 glob 一定命中）', () => {
     const missing = allDemos
-      .filter(({ component, demo }) => !fs.existsSync(path.join(UI_SRC, component, 'demo', `${demo.name}.vue`)))
+      .filter(
+        ({ component, demo }) =>
+          !fs.existsSync(path.join(UI_SRC, component, 'demo', `${demo.name}.vue`)),
+      )
       .map(({ component, demo }) => `${component}/${demo.name}`);
     expect(missing, `缺失 ${missing.length} 个：${missing.slice(0, 5).join(', ')}`).toEqual([]);
   });
 
   it('每个 demo 都有说明 .md（标题与描述来自它）', () => {
     const missing = allDemos
-      .filter(({ component, demo }) => !fs.existsSync(path.join(UI_SRC, component, 'demo', `${demo.name}.md`)))
+      .filter(
+        ({ component, demo }) =>
+          !fs.existsSync(path.join(UI_SRC, component, 'demo', `${demo.name}.md`)),
+      )
       .map(({ component, demo }) => `${component}/${demo.name}`);
     expect(missing).toEqual([]);
   });
@@ -59,7 +65,10 @@ describe('全量 demo 审计', () => {
   it('每个 demo 的源码都已完成 import 改写（用户复制即可用）', () => {
     const offenders = allDemos
       .flatMap(({ component, demo }) =>
-        demo.sources.map((s: { code: string }) => ({ id: `${component}/${demo.name}`, code: s.code })),
+        demo.sources.map((s: { code: string }) => ({
+          id: `${component}/${demo.name}`,
+          code: s.code,
+        })),
       )
       .filter(({ code }) => /from\s+['"](\.\.\/){2,}index['"]/.test(code))
       .map(({ id }) => id);
@@ -134,17 +143,26 @@ describe('iframe 隔离预览', () => {
   });
 
   it('同源 postMessage 才更新高度（防跨站注入）', async () => {
-    const wrapper = mount(DemoFrame, { props: { demo: allDemos[0]!.demo }, attachTo: document.body });
+    const wrapper = mount(DemoFrame, {
+      props: { demo: allDemos[0]!.demo },
+      attachTo: document.body,
+    });
     const el = wrapper.find('iframe').element as HTMLIFrameElement;
     const before = el.style.height;
     window.dispatchEvent(
-      new MessageEvent('message', { data: { type: 'apollo-demo:resize', height: 999 }, origin: 'https://evil.example' }),
+      new MessageEvent('message', {
+        data: { type: 'apollo-demo:resize', height: 999 },
+        origin: 'https://evil.example',
+      }),
     );
     await new Promise((r) => setTimeout(r, 0));
     expect(el.style.height).toBe(before);
 
     window.dispatchEvent(
-      new MessageEvent('message', { data: { type: 'apollo-demo:resize', height: 320 }, origin: location.origin }),
+      new MessageEvent('message', {
+        data: { type: 'apollo-demo:resize', height: 320 },
+        origin: location.origin,
+      }),
     );
     await new Promise((r) => setTimeout(r, 0));
     expect(el.style.height).toBe('320px');

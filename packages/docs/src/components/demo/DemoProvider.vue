@@ -16,8 +16,7 @@ const props = defineProps<{ instanceId: string }>();
 const resetToken = ref(0);
 provide(DEMO_CONTEXT_KEY, {
   instanceId: props.instanceId,
-  direction:
-    typeof document === 'object' && document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr',
+  direction: typeof document === 'object' && document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr',
   resetToken,
 });
 

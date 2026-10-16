@@ -6,13 +6,13 @@
  */
 import { computed, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { findComponent, loadComponentPage, siteManifest } from '../composables/manifest';
-import { useSiteLocale } from '../composables/locale';
-import { useTocState } from '../composables/toc';
-import { useSeo } from '../composables/seo';
-import type { ComponentPageData, TocItem } from '../types/manifest';
-import DocHtml from '../components/docs/DocHtml.vue';
 import DemoPreview from '../components/demo/DemoPreview.vue';
+import DocHtml from '../components/docs/DocHtml.vue';
+import { useSiteLocale } from '../composables/locale';
+import { findComponent, loadComponentPage, siteManifest } from '../composables/manifest';
+import { useSeo } from '../composables/seo';
+import { useTocState } from '../composables/toc';
+import type { ComponentPageData, TocItem } from '../types/manifest';
 
 const route = useRoute();
 const { t, pick, locale } = useSiteLocale();
@@ -57,11 +57,7 @@ const toc = computed<TocItem[]>(() => {
   return [...doc.value.toc, { level: 2 as const, text: t('groupDemo'), id: 'demos' }];
 });
 
-watch(
-  toc,
-  (next) => setToc(next),
-  { immediate: true },
-);
+watch(toc, (next) => setToc(next), { immediate: true });
 onBeforeUnmount(() => setToc([]));
 
 const importLine = computed(() => {
@@ -72,7 +68,10 @@ const importLine = computed(() => {
 const titleText = computed(() => (page.value ? pick(page.value.title).text : ''));
 const subtitleText = computed(() => (page.value ? pick(page.value.subtitle).text : ''));
 
-useSeo(titleText, computed(() => `${titleText.value} ${subtitleText.value} - Apollo Design 组件文档`));
+useSeo(
+  titleText,
+  computed(() => `${titleText.value} ${subtitleText.value} - Apollo Design 组件文档`),
+);
 </script>
 
 <template>
