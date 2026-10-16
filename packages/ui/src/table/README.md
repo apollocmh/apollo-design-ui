@@ -60,7 +60,7 @@ table/
 
 1. **ctx getter 已解包 `.value`**：provide 对象用 `get expandableType() { return expandableType.value; }` —— 消费处**不能**再 `.value`（得 undefined，展开行静默消失；实测踩过）。
 2. **哨兵引用判断必须 toRaw**：columns 数组经 ctx/props 链会被深层 reactive 代理，`SELECTION_COLUMN`/`EXPAND_COLUMN` 的引用相等判断全走 `toRaw(col)`（否则代理副本 ≠ 模块单例 ⇒ 选择列重复插入）。
-3. **Dropdown 的 onMenuClick 只通知不改内部 open**：受控消费者按 `source: 'menu'` 决定是否关闭（Table 过滤菜单多选点击不关闭 —— antd `onDropdownOpenChange` 只处理 `source==='trigger'`）。
+3. **Dropdown 的 onMenuClick「先按 `source:'menu'` 通知、再写内部 open」（antd dropdown.js:149-157 两步都要做）**：Table 的 `onDropdownOpenChange` 只处理 `source==='trigger'`，所以过滤菜单多选点项不关闭；而**非受控**用法（Table 之外的普通 `<Dropdown>`）靠第二步才真的关闭 —— 少了它就「点菜单项不关闭」。⚠️ 写内部 open 时**必须抑制** `useControlledValue` 的默认通知，否则 Table 会补收到一发 `source:'trigger'` 而关闭（Issue #21 回归）。
 4. **Menu 的 selectable 合并是 props 优先**：`props.selectable ?? override?.selectable ?? true`（antd menu.js:85）—— Dropdown override 的 `selectable:false` 不能盖掉过滤菜单显式的 `selectable:true`。
 5. **`getExpandableProps` 的 truthy 判断**：`'expandable' in props` 决定 legacy 键是否参与合并；`showExpandColumn === false ⇒ expandIconColumnIndex = -1`。
 6. **测试里 Portal 内交互必须真实 Teleport**：test-utils 的 teleport stub 副本**不挂事件监听器** ⇒ `document.body.querySelector` 拿到的 DOM 点击永远无效；mount 需 `global: { stubs: { teleport: false } }`。

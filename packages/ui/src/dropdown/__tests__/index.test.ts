@@ -116,6 +116,12 @@ describe('Dropdown · L1 开合', () => {
     item.click();
     await nextTick();
     expect(onOpenChange).toHaveBeenCalledWith(false, { source: 'menu' });
+    // ⚠️ 受控且消费者**不回传**（Table 过滤下拉按 source 忽略）⇒ 浮层必须仍在，
+    //    且 menu 通道只通知一次（不得因写内部状态再补一发 source:'trigger'，
+    //    否则 Table 会照 trigger 通道关闭 ⇒ 多选过滤一点就消失，Issue #21 回归）。
+    await vi.runAllTimersAsync();
+    expect(document.querySelector('.apollo-dropdown:not(.apollo-dropdown-hidden)')).not.toBeNull();
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
     wrapper.unmount();
 
     document.body.innerHTML = '';
@@ -130,6 +136,23 @@ describe('Dropdown · L1 开合', () => {
     await nextTick();
     expect(onOpenChange2).not.toHaveBeenCalledWith(false, { source: 'menu' });
     wrapper2.unmount();
+  });
+
+  it('菜单点击 ⇒ 非受控也要真的关闭（antd dropdown.js:149-157 的 setOpen(false)）', async () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    mountDropdown({ trigger: ['click'], onOpenChange });
+    await triggerEl()!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await vi.runAllTimersAsync();
+    await nextTick();
+    expect(document.querySelector('.apollo-dropdown:not(.apollo-dropdown-hidden)')).not.toBeNull();
+
+    const item = popupMenu()!.querySelector('li[data-menu-id$="-1"]') as HTMLElement;
+    item.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await vi.runAllTimersAsync();
+    await nextTick();
+    expect(document.querySelector('.apollo-dropdown:not(.apollo-dropdown-hidden)')).toBeNull();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false, { source: 'menu' });
   });
 });
 

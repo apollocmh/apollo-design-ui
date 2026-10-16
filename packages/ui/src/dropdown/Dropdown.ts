@@ -159,10 +159,17 @@ const Dropdown = defineComponent({
     });
 
     // ============================ open ================================
+    // ⚠️ rc 的 `useControlledState` **只写内部值、不发通知**，通知由 trigger / menu
+    //    各通道自己发；本仓 `useControlledValue` 把「写值」与「通知」绑在一起
+    //    （setValue ⇒ onChange），所以 menu 通道要用 `suppressNotify` 抑制第二次通知：
+    //    否则 Table 过滤下拉会先收到 `source:'menu'`（它按 source 忽略）、紧接着又收到
+    //    `source:'trigger'`（它照办关闭）⇒ 多选过滤点一下就消失（Issue #21 的回归）。
+    let suppressNotify = false;
     const [mergedOpen, setOpen] = useControlledValue<boolean>({
       defaultValue: () => props.defaultOpen ?? false,
       getValue: () => props.open,
       onChange: (next: boolean) => {
+        if (suppressNotify) return;
         props.onOpenChange?.(next, { source: 'trigger' });
         emit('update:open', next);
       },
@@ -173,16 +180,22 @@ const Dropdown = defineComponent({
     };
 
     // ======================= menu 点击关闭 ===========================
-    // ⚠️ antd dropdown.js:149-155：只通知 `onOpenChange(false, {source:'menu'})`，
-    //    **不**直接改内部 open —— 受控消费者（如 Table 过滤下拉的
-    //    onDropdownOpenChange）有权按 source 忽略（多选过滤点击菜单项不关闭）。
-    //    此前多写的 setOpen/emit 会绕过受控拦截 ⇒ 过滤菜单一点就消失。
+    // ⚠️ antd 逐字（dropdown.js:149-157）：**两件事都要做** ——
+    //     ① `onOpenChange(false, { source: 'menu' })`：受控消费者（如 Table 过滤下拉
+    //        的 onDropdownOpenChange）有权按 source 忽略（多选过滤点菜单项不关闭）；
+    //     ② `setOpen(false)`：同步内部状态。
+    //    只做 ① 不做 ② 是有害的 —— 非受控用法（`open` 未传）下 emit 无人接收、
+    //    内部 open 仍是 true ⇒ **点菜单项后浮层不关闭**（antd 会关）。
     const onMenuClick = (): void => {
       if (props.menu?.selectable && props.menu?.multiple) {
         return;
       }
       props.onOpenChange?.(false, { source: 'menu' });
       emit('update:open', false);
+      // 通知已在上面按 `source: 'menu'` 发过 ⇒ 抑制 setValue 的默认通知
+      suppressNotify = true;
+      setOpen(false);
+      suppressNotify = false;
     };
 
     // ========================== zIndex ================================
