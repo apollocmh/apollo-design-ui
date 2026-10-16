@@ -1,0 +1,146 @@
+/**
+ * 文档正文（markdown-it + shiki 产物）的排版。
+ *
+ * ⚠️ 作用域纪律：所有选择器都锚定在 .doc-markdown 容器内，
+ * 不会泄漏到站点 chrome，更不会污染组件示例（.demo-canvas 在组件令牌作用域）。
+ */
+
+.doc-markdown {
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--site-text);
+  word-break: break-word;
+}
+
+.doc-markdown h1 {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 8px 0 20px;
+}
+
+.doc-markdown h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 44px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--site-border);
+  scroll-margin-top: calc(var(--site-header-height) + 16px);
+}
+
+.doc-markdown h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 32px 0 12px;
+  scroll-margin-top: calc(var(--site-header-height) + 16px);
+}
+
+.doc-markdown h4 {
+  font-size: 15px;
+  margin: 24px 0 8px;
+}
+
+.doc-markdown p {
+  margin: 0 0 14px;
+}
+
+.doc-markdown ul,
+.doc-markdown ol {
+  margin: 0 0 14px;
+  padding-left: 24px;
+}
+
+.doc-markdown li {
+  margin: 4px 0;
+}
+
+.doc-markdown blockquote {
+  margin: 0 0 14px;
+  padding: 8px 16px;
+  border-left: 3px solid var(--site-border-strong);
+  color: var(--site-text-secondary);
+  background: var(--site-bg-soft);
+  border-radius: 0 6px 6px 0;
+}
+
+/* 表格（API 表为主） */
+.doc-markdown table {
+  width: 100%;
+  margin: 0 0 18px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  display: block;
+  overflow-x: auto;
+}
+
+.doc-markdown th,
+.doc-markdown td {
+  border: 1px solid var(--site-border);
+  padding: 9px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.doc-markdown th {
+  background: var(--site-bg-soft);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.doc-markdown td code,
+.doc-markdown li code,
+.doc-markdown p code,
+.doc-markdown h3 code,
+.doc-markdown h4 code {
+  font-family: var(--site-font-code);
+  font-size: 0.92em;
+  background: var(--site-code-bg);
+  border: 1px solid var(--site-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin: 0 1px;
+}
+
+/* 代码块（shiki 产物：pre.shiki > code > span） */
+.doc-markdown pre {
+  margin: 0 0 18px;
+  padding: 16px 20px;
+  border-radius: var(--site-radius);
+  background: var(--site-pre-bg);
+  border: 1px solid var(--site-border);
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.doc-markdown pre code {
+  font-family: var(--site-font-code);
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* shiki 双主题：默认亮色变量，暗色作用域切换 */
+[data-apollo-theme='dark'] .shiki,
+[data-apollo-theme='dark'] .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: transparent !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+}
+
+.shiki {
+  background-color: transparent !important;
+}
+
+/* 行内代码块语言标记 */
+.doc-markdown hr {
+  border: none;
+  border-top: 1px solid var(--site-border);
+  margin: 32px 0;
+}
+
+.doc-markdown del,
+.doc-markdown s {
+  color: var(--site-text-tertiary);
+}

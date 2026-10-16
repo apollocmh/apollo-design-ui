@@ -1,20 +1,41 @@
 {
   "name": "@apollo-design/docs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "apollo-design-ui 文档站（VitePress）。产物直接发布为 GitHub Pages 项目首页。",
+  "description": "Apollo Design 官网（Vue 3 + Vite + vite-ssg 独立产品应用，弃用 VitePress）。",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/gen-component-pages.mjs && vitepress dev",
-    "build": "node scripts/gen-component-pages.mjs && vitepress build",
-    "preview": "vitepress preview"
+    "dev": "node tooling/content/build-manifest.mjs && vite",
+    "build": "node tooling/content/build-manifest.mjs && vite-ssg build",
+    "preview": "vite preview",
+    "content:check": "node tooling/content/build-manifest.mjs --check",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "node tooling/content/build-manifest.mjs --if-missing && vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts"
   },
   "dependencies": {
+    "@apollo-design/icons": "workspace:*",
+    "@apollo-design/locale": "workspace:*",
     "@apollo-design/theme": "workspace:*",
     "@apollo-design/ui": "workspace:*",
-    "vue": "catalog:"
+    "@unhead/vue": "^2.1.17",
+    "dayjs": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "vitepress": "^1.6.3"
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "jsdom": "catalog:",
+    "markdown-it": "^14.1.0",
+    "shiki": "^3.4.0",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-ssg": "28.3.0",
+    "vitest": "catalog:",
+    "vue-tsc": "catalog:",
+    "yaml": "^2.8.0"
   }
 }

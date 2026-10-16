@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "vite/client"],
+    "resolveJsonModule": true,
+    "paths": {
+      "@apollo-design/ui": ["../ui/src/index.ts"],
+      "@apollo-design/icons": ["../icons/src/index.ts"],
+      "@apollo-design/theme": ["../theme/src/index.ts"],
+      "@apollo-design/locale": ["../locale/src/index.ts"],
+      "@": ["./src"]
+    },
+    "baseUrl": "."
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "tooling/**/*.mjs",
+    "tests/**/*.ts",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": ["node_modules", "dist", ".generated", ".vite-ssg-temp"]
+}
