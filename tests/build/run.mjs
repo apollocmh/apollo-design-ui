@@ -236,7 +236,8 @@ function checkBuild(dir, name) {
   const needsUnbuild = /\bunbuild\b/.test(script);
   if (needsUnbuild) {
     const hasUnbuild =
-      fs.existsSync(path.join(localBinDir, 'unbuild')) || fs.existsSync(path.join(binDir, 'unbuild'));
+      fs.existsSync(path.join(localBinDir, 'unbuild')) ||
+      fs.existsSync(path.join(binDir, 'unbuild'));
     if (!hasUnbuild) {
       add(name, 'B1', 'FAIL', '找不到 node_modules/.bin/unbuild，先跑 pnpm install');
       return false;
