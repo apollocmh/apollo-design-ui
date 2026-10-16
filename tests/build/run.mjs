@@ -229,11 +229,18 @@ function checkBuild(dir, name) {
   // 包自身优先（其 devDependencies 只装在这里），再退回仓库根 —— 与 `npm run` 的解析顺序一致
   const localBinDir = path.join(dir, 'node_modules/.bin');
   const binDir = path.join(ROOT, 'node_modules/.bin');
-  const hasUnbuild =
-    fs.existsSync(path.join(localBinDir, 'unbuild')) || fs.existsSync(path.join(binDir, 'unbuild'));
-  if (!hasUnbuild) {
-    add(name, 'B1', 'FAIL', '找不到 node_modules/.bin/unbuild，先跑 pnpm install');
-    return false;
+  // 🚨 2026-10-16 补：unbuild 前置检查只对「库包」成立。文档站已改为 Vite 应用
+  //   （`vite-ssg build`），它的 build 脚本里根本没有 unbuild —— 无条件要求
+  //   unbuild 会让 B1 以「找不到 unbuild」误判 FAIL（又一次门禁假设 ≠ 真实形态）。
+  //   判据改为：脚本里出现 unbuild 才校验该二进制存在。
+  const needsUnbuild = /\bunbuild\b/.test(script);
+  if (needsUnbuild) {
+    const hasUnbuild =
+      fs.existsSync(path.join(localBinDir, 'unbuild')) || fs.existsSync(path.join(binDir, 'unbuild'));
+    if (!hasUnbuild) {
+      add(name, 'B1', 'FAIL', '找不到 node_modules/.bin/unbuild，先跑 pnpm install');
+      return false;
+    }
   }
   try {
     execFileSync('/bin/sh', ['-c', script], {

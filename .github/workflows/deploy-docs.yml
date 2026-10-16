@@ -4,10 +4,12 @@
 # 文档站的构建与发布。两者可并行，互不阻塞。
 #
 # 产物链路（与本地 `pnpm build:docs` 完全一致）：
-#   theme 构建 → ui 构建（tokens.css + 组件 CSS 的真源）→ vitepress build（base=/apollo-design-ui/）
+#   theme 构建 → ui 构建（tokens.css + 组件 CSS 的真源）→ docs 构建
+#   （内容管线 .generated → vite-ssg 预渲染，base=/apollo-design-ui/）
 #
-# ⚠️ vitepress build 会做 SSR 预渲染；所有 demo 一律经 <ClientOnly> + 异步组件加载，
-#    因此组件里的浏览器 API 不会影响构建（这是 DemoPreview 的设计约束，别破坏）。
+# ⚠️ vite-ssg 会做 SSR 预渲染；demo 一律**只在客户端**加载（DemoRenderer 在 onMounted
+#     才 import 模块），因此组件里的浏览器 API 不会污染构建 —— 这是硬约束，别破坏。
+#     产物里的 404.html / sitemap.xml / robots.txt 由 vite.config.ts 的 onFinished 生成。
 name: Deploy Docs
 
 on:
@@ -58,15 +60,23 @@ jobs:
 
       - name: 关键产物检查
         run: |
-          test -f packages/docs/.vitepress/dist/index.html || { echo '缺少 index.html'; exit 1; }
-          grep -q 'apollo-design-ui' packages/docs/.vitepress/dist/index.html || { echo 'base 路径缺失'; exit 1; }
-          echo "页面数: $(find packages/docs/.vitepress/dist -name '*.html' | wc -l)"
+          set -eu
+          D=packages/docs/dist
+          test -f "$D/index.html" || { echo '缺少 index.html'; exit 1; }
+          test -f "$D/404.html" || { echo '缺少 404.html（GitHub Pages 深链接兜底）'; exit 1; }
+          test -f "$D/sitemap.xml" || { echo '缺少 sitemap.xml'; exit 1; }
+          test -f "$D/robots.txt" || { echo '缺少 robots.txt'; exit 1; }
+          grep -q 'apollo-design-ui' "$D/index.html" || { echo 'base 路径缺失'; exit 1; }
+          echo "页面数: $(find "$D" -name '*.html' | wc -l)"
+          # 深链接直访：组件页必须产出物理文件，且含真实正文（SSR 预渲染证据）
+          test -f "$D/components/button.html" || { echo '组件页未预渲染'; exit 1; }
+          grep -q 'id="何时使用"' "$D/components/button.html" || { echo '组件页正文为空'; exit 1; }
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/docs/.vitepress/dist
+          path: packages/docs/dist
 
   deploy:
     name: 发布到 GitHub Pages
