@@ -17,3 +17,10 @@ export interface BuildManifestResult {
 }
 
 export declare function buildManifest(options?: { write?: boolean }): Promise<BuildManifestResult>;
+
+/**
+ * 清掉历史遗留的 demo 引用标记：`### 标题` + `<code src="…">`。
+ * 演示卡片由 `demo/*.md` + `demo/*.vue` 渲染，这些标记只会被直出成空小节
+ * （页面底部重复的标题列表）。
+ */
+export declare function stripLegacyDemoRefs(body: string): string;

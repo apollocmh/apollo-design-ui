@@ -6,6 +6,7 @@
  * （例：搜索把 number 当 string 用 → 整个搜索面板渲染抛错）。
  */
 import { describe, expect, it } from 'vitest';
+import { stripLegacyDemoRefs } from '../tooling/content/build-manifest.mjs';
 import { CATEGORY_ORDER, compareCategories } from '../tooling/content/categories.mjs';
 import {
   bilingualOf,
@@ -125,5 +126,60 @@ describe('分类顺序', () => {
       '反馈',
       '其他',
     ]);
+  });
+});
+
+/**
+ * 历史遗留的 demo 引用标记（`### 标题` + `<code src="…">`）。
+ *
+ * 演示卡片由 `demo/*.md` + `demo/*.vue` 渲染，这些标记对页面零贡献，但会被 markdown
+ * 直出成「只有标题、没有正文」的小节，浮在演示网格与 API 之间 ⇒ 页面底部出现一整列
+ * 与卡片**重复**的标题（2026-10-17 实测：popconfirm / tabs / tree 等 14 个组件中招）。
+ */
+describe('stripLegacyDemoRefs', () => {
+  it('丢掉代码引用行与随之变空的小节标题', () => {
+    const src = [
+      '## 代码演示',
+      '',
+      '### 基本',
+      '',
+      '<code src="./demo/basic.vue"></code>',
+      '',
+      '### 定制按钮文案',
+      '',
+      '<code src="./demo/locale.vue">定制按钮文案</code>',
+      '',
+      '## API',
+      '',
+      '### Props',
+    ].join('\n');
+    // 空行原样保留（只删引用行与空小节标题），故按非空行比较
+    expect(
+      stripLegacyDemoRefs(src)
+        .split('\n')
+        .filter((l: string) => l.trim() !== ''),
+    ).toEqual(['## 代码演示', '## API', '### Props']);
+  });
+
+  it('保留有正文的小节（含父子标题结构）', () => {
+    const src = [
+      '### Space',
+      '',
+      '#### Props',
+      '',
+      '| a | b |',
+      '',
+      '### 工具导出',
+      '',
+      '文字',
+    ].join('\n');
+    expect(stripLegacyDemoRefs(src)).toBe(src);
+  });
+
+  it('保留 demo 区块里的说明正文与一览表格', () => {
+    const src = ['## 代码演示', '', '见 [`demo/`](./demo)（13 个）。', '', '| demo | 内容 |'].join(
+      '\n',
+    );
+    expect(stripLegacyDemoRefs(src)).toBe(src);
   });
 });

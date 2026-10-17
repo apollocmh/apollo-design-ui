@@ -104,6 +104,18 @@ describe('组件页数据', () => {
     }
   });
 
+  it('正文里不留历史遗留的 <code src="…"> demo 引用标记', () => {
+    // 演示卡片由 demo/*.md + demo/*.vue 渲染；这些标记对页面零贡献，却会被 markdown
+    // 直出成「只有标题、没有正文」的小节 ⇒ 页面底部出现一整列与卡片重复的标题
+    // （2026-10-17 实测 14 个组件中招）。生成期由 stripLegacyDemoRefs 清掉。
+    for (const p of pages) {
+      for (const lang of ['zh', 'en'] as const) {
+        const html = p.data.doc[lang].introHtml + p.data.doc[lang].restHtml;
+        expect(html, `${p.meta.name}.${lang}`).not.toContain('<code src=');
+      }
+    }
+  });
+
   it('每个组件都给出了可用的 import 名字（页面据此拼 import 语句）', () => {
     for (const p of pages) {
       const names: string[] = Array.isArray(p.data.imports)

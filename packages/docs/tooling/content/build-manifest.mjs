@@ -245,13 +245,76 @@ function scanGuides() {
 // 渲染
 // ---------------------------------------------------------------------------
 
+/** 历史遗留的 demo 引用标记：`<code src="./demo/x.vue"></code>`（可带内联文案）。 */
+const LEGACY_DEMO_CODE_RE = /^\s*<code\s+src="[^"]*"[^>]*>.*<\/code>\s*$/;
+/** 任意级 markdown 标题（捕获组给层级）。 */
+const ANY_HEADING_RE = /^(#{1,6})\s+\S/;
+/** 三级及以下标题（demo 小节用的层级）。 */
+const SUB_HEADING_RE = /^(#{3,})\s+\S/;
+
+/**
+ * 清掉历史遗留的 demo 引用标记（2026-10-17）。
+ *
+ * 站点的代码演示由 `demo/*.md`（标题 / 顺序 / 说明）+ `demo/*.vue` 渲染
+ * （见 scanComponentDir），`index.*.md` 里 `### 标题` + `<code src="…">` 这套
+ * 标记对渲染毫无贡献；但 markdown 会把它直出成「只有标题、正文为空」的小节，
+ * 浮在演示网格与 API 之间 ⇒ 页面底部出现一整列与演示卡片**重复**的标题
+ * （实测 popconfirm / tabs / tree / input 等 14 个组件中招）。
+ *
+ * 规则：① 丢掉代码引用行；② 丢掉删完之后**正文为空**的小节标题（下一行仍是标题
+ * 或已到文末）。
+ *
+ * ⚠️ 不能整段丢掉 `## 代码演示` 区块 —— 多数组件的该区块里还有
+ * 「见 demo/（13 个…）+ 一览表格」这类正文，那是刻意保留的内容。
+ */
+export function stripLegacyDemoRefs(body) {
+  const lines = String(body)
+    .split('\n')
+    .filter((line) => !LEGACY_DEMO_CODE_RE.test(line));
+  // HTML 注释在渲染结果里不可见 ⇒ 判断「本节有没有正文」时当它不存在
+  // （date-picker 的 `### 基本` 下面只剩一段 TODO 注释，不这样就漏网）。
+  const invisible = lines.map(() => false);
+  let inComment = false;
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (inComment) {
+      invisible[i] = true;
+      if (line.includes('-->')) inComment = false;
+      continue;
+    }
+    if (line.includes('<!--')) {
+      invisible[i] = true;
+      if (!line.includes('-->', line.indexOf('<!--') + 4)) inComment = true;
+    }
+  }
+  const hasContent = (i) => lines[i].trim() !== '' && !invisible[i];
+  const out = [];
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    const h = SUB_HEADING_RE.test(line) ? ANY_HEADING_RE.exec(line) : null;
+    if (h) {
+      const level = h[1].length;
+      const nextIdx = lines.findIndex((_, j) => j > i && hasContent(j));
+      const next = nextIdx === -1 ? undefined : lines[nextIdx];
+      const nextH = next ? ANY_HEADING_RE.exec(next) : null;
+      // 下一个可见行是「同级或更高级」标题 ⇒ 本节既无正文也无子节 ⇒ 纯 demo 索引，丢。
+      // ⚠️ 下一个标题**更深**（如 `### Space` 下面是 `#### Props`）说明是父子结构，保留；
+      //    文末没有下一行时也保留（宁可多留，不要吃掉正文开头的标题）。
+      if (nextH && nextH[1].length <= level) continue;
+    }
+    out.push(line);
+  }
+  return out.join('\n');
+}
+
 /** 组件文档拆分：代码演示之前的 intro / 之后的 rest（API、FAQ…）。 */
 function splitDocBody(body) {
-  const m = DEMO_SECTION_RE.exec(body);
-  if (!m) return { intro: body.trim(), rest: '' };
-  const restStart = body.indexOf(m[0], m.index);
-  const intro = body.slice(0, m.index).trim();
-  const rest = body.slice(restStart + m[0].length).trim();
+  const src = stripLegacyDemoRefs(body);
+  const m = DEMO_SECTION_RE.exec(src);
+  if (!m) return { intro: src.trim(), rest: '' };
+  const restStart = src.indexOf(m[0], m.index);
+  const intro = src.slice(0, m.index).trim();
+  const rest = src.slice(restStart + m[0].length).trim();
   return { intro, rest };
 }
 
