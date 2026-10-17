@@ -8,7 +8,7 @@ import { ViteSSG } from 'vite-ssg';
 import App from './App.vue';
 import { provideSiteLocale } from './composables/locale';
 import { setupTheme } from './composables/theme';
-import { routes } from './router';
+import { routes, stripHtmlGuard } from './router';
 
 import '@apollo-design/theme/tokens.css';
 // ⚠️ 组件样式必须显式引入：文档站的示例走的是**发布产物同源**的静态 CSS
@@ -39,6 +39,13 @@ export const createApp = ViteSSG(
       router.afterEach(() => {
         // 锚点跳转交给 scrollBehavior；这里只负责回顶后的焦点复位（无障碍）
       });
+      // 🚨 SSG 的 dirStyle=flat 产出 `.html` 物理路径（sitemap / GitHub Pages / 外链
+      //    都指向 `.html`），而客户端路由只认无后缀路径 —— 直开 `.html` 链接时
+      //    预渲染内容先正常闪出，水合后被 catch-all 换成 404 页（demo 全部消失，
+      //    2026-10-17 实测）。这里统一剥掉 `.html` 再进路由；无后缀路径两种托管
+      //    都可达（GH Pages 用 404.html 做 SPA 回退，vite preview 有 history fallback）。
+      //    判据本体在 `./router` 的 `stripHtmlGuard`（单测钉在 tests/html-redirect.test.ts）。
+      router.beforeEach(stripHtmlGuard);
     }
     provideSiteLocale(app);
   },
