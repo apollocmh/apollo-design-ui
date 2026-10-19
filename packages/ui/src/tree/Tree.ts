@@ -14,6 +14,7 @@
  */
 
 import { HolderOutlined } from '@apollo-design/icons';
+import { initCollapseMotion } from '@apollo-design/motion';
 import { getDesignToken } from '@apollo-design/theme';
 import { warning as devWarning, pickAttrs } from '@apollo-design/utils';
 import {
@@ -197,9 +198,15 @@ export default defineComponent({
     // antd：virtual 来自 ConfigProvider（props 显式传值优先）
     const mergedVirtual = computed(() => props.virtual ?? config.virtual ?? true);
 
-    // antd：motion 默认 collapse（`{rootPrefixCls}-motion-collapse`，motionAppear: false）
+    // antd：`const motion = customMotion ?? { ...initCollapseMotion(rootPrefixCls), motionAppear: false }`
+    //
+    // ⚠️ 那 9 个 handler（height `0 ↔ scrollHeight / offsetHeight`）+ `motionDeadline: 500`
+    // **一个都不能省**（2026-10-17 修）：CSS 侧只有 `transition: height, opacity`，
+    // 高度的目标值必须靠 JS 运行期测量。少了它们 ⇒ 高度从不变化 ⇒ 没有过渡可跑
+    // ⇒ `transitionend` 永不到 ⇒ 收起动效永不结束 ⇒ `listChanging` 永久为真
+    // ⇒ 整棵树的展开/收起全部失效。`motionDeadline` 是慢机器上的兜底闸门。
     const motion = computed(() => ({
-      motionName: `${rootPrefixCls}-motion-collapse`,
+      ...initCollapseMotion(rootPrefixCls),
       motionAppear: false,
     }));
 

@@ -426,3 +426,94 @@ describe('diffKeys（多元素）', () => {
     expect(key1[0]?.status).toBe(STATUS_KEEP);
   });
 });
+
+// ---------------------------------------------------------------------------
+// onVisibleChanged —— rc-motion `useStatus` 尾部 effect 的移植
+//
+// 为什么要单独钉这一组（2026-10-17）：`CSSMotion` 是 `inheritAttrs: false`，
+// 只要 `onVisibleChanged` 没被**显式声明成 prop**，传进来的回调会被静默丢弃。
+// Tree 的 `MotionTreeNode` 就靠它收尾收起动效 —— 丢了 ⇒ `listChanging` 永久为真
+// ⇒ 后续展开/收起全部被 `Tree.onNodeExpand` 的守卫吞掉（「展开收起失效」）。
+// ---------------------------------------------------------------------------
+
+describe('onVisibleChanged', () => {
+  /** 只暴露 `onVisibleChanged` 与 status 的最小宿主，帧用注入的帧泵。 */
+  function createSpyHost(
+    pump: FramePump,
+    opts: { motionAppear?: boolean; motionLeave?: boolean } = {},
+  ) {
+    const calls: boolean[] = [];
+    const Host = defineComponent({
+      props: { visible: { type: Boolean, default: true } },
+      setup(props, { expose }) {
+        const motion = useMotionStatus({
+          visible: () => props.visible,
+          motionName: MOTION_NAME,
+          supportMotion: true,
+          motionAppear: opts.motionAppear ?? true,
+          motionEnter: true,
+          motionLeave: opts.motionLeave ?? true,
+          scheduler: pump.scheduler,
+          onVisibleChanged: (v: boolean) => {
+            calls.push(v);
+          },
+        });
+        expose({ status: () => motion.status.value });
+        return () =>
+          h('div', {
+            ref: motion.elementRef,
+            class: motion.className.value,
+            style: motion.style.value ?? undefined,
+          });
+      },
+    });
+    return { Host, calls };
+  }
+
+  it('⭐ 无动画且首帧可见 ⇒ 挂载后立刻回调 true（rc：asyncVisible 为真可绕过守卫）', async () => {
+    const pump = createFramePump();
+    const { Host, calls } = createSpyHost(pump, { motionAppear: false });
+    const wrapper = mount(Host, { props: { visible: true } });
+    await nextTick();
+    expect(calls).toEqual([true]);
+    wrapper.unmount();
+  });
+
+  it('挂载即不可见 ⇒ 不回调（rc：firstMountChange 守卫，避免白收一条 false）', async () => {
+    const pump = createFramePump();
+    const { Host, calls } = createSpyHost(pump, { motionAppear: false });
+    const wrapper = mount(Host, { props: { visible: false } });
+    await nextTick();
+    expect(calls).toEqual([]);
+    wrapper.unmount();
+  });
+
+  it('可见 → 不可见 ⇒ 回调 false', async () => {
+    const pump = createFramePump();
+    const { Host, calls } = createSpyHost(pump, { motionAppear: false, motionLeave: false });
+    const wrapper = mount(Host, { props: { visible: true } });
+    await nextTick();
+    expect(calls).toEqual([true]);
+    await wrapper.setProps({ visible: false });
+    await nextTick();
+    expect(calls).toEqual([true, false]);
+    wrapper.unmount();
+  });
+
+  it('⭐ 离场动效没跑完 ⇒ 绝不提前回调（status === NONE 守卫）', async () => {
+    const pump = createFramePump();
+    // motionLeave 打开 ⇒ 转 false 后进入 leave 时间线，此时不许发通知
+    const { Host, calls } = createSpyHost(pump, { motionAppear: false, motionLeave: true });
+    const wrapper = mount(Host, { props: { visible: true } });
+    await nextTick();
+    calls.length = 0;
+
+    await wrapper.setProps({ visible: false });
+    pump.tickFrames(4);
+    await nextTick();
+
+    expect((wrapper.vm as unknown as { status: () => string }).status()).toBe('leave');
+    expect(calls).toEqual([]);
+    wrapper.unmount();
+  });
+});

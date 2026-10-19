@@ -51,6 +51,30 @@ export interface UseMotionStatusOptions {
   forceRender?: boolean;
   leavedClassName?: string;
   hooks?: MotionHooks;
+  /**
+   * 可见性**最终生效后**的通知（rc-motion `useStatus` 的 `onVisibleChanged`）。
+   *
+   * ⚠️ 判据（rc-motion `es/hooks/useStatus.js` 尾部）：
+   *
+   * ```js
+   * useEffect(() => {
+   *   if (asyncVisible) firstMountChangeRef.current = true;
+   *   if (asyncVisible !== undefined && currentStatus === STATUS_NONE) {
+   *     if (firstMountChangeRef.current || asyncVisible) onVisibleChanged(asyncVisible);
+   *     firstMountChangeRef.current = true;
+   *   }
+   * }, [asyncVisible, currentStatus]);
+   * ```
+   *
+   * 三条要点，缺一都会在 Tree 上翻车（2026-10-17 实测）：
+   *   1. 只在 **`status === NONE`** 时发 —— 动效没跑完就发会让调用方提前收尾。
+   *   2. **首帧「不可见」不发**（`firstMountChange` 守卫）—— 否则「一上来就是
+   *      visible=false 且没动画」的组件会白收一条 `onVisibleChanged(false)`。
+   *   3. `visible=true` 且无动画时**首帧也要发** —— rc 靠 `asyncVisible` 为真
+   *      绕过守卫。Tree 的 `show` 型 motion（`motionAppear` 被关掉或环境不支持）
+   *      正是靠这条才能在挂载后立刻收尾；缺了它哨兵节点永远清不掉。
+   */
+  onVisibleChanged?: (visible: boolean) => void;
   /** 测试注入点：帧泵与 DOM 适配器 */
   scheduler?: MotionScheduler;
   dom?: MotionDomAdapter;
@@ -89,6 +113,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     forceRender = false,
     leavedClassName,
     hooks,
+    onVisibleChanged,
     scheduler,
     dom,
   } = options;
@@ -158,6 +183,43 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   watch(visible, (next) => {
     driver.setVisible(next);
   });
+
+  // ── onVisibleChanged（rc `useStatus` 尾部 effect 的移植）──────────────────
+  //
+  // ⚠️ 这个 watch 必须**排在** `watch(visible, …)` 之后：驱动在 `setVisible`
+  //    里同步 emit 新快照，先建的那个 watch 先跑，这里读到的 `status` 才是
+  //    本次变更后的值（否则会拿上一帧的 NONE 误发一条通知）。
+  if (onVisibleChanged) {
+    // rc 的 `asyncVisible`：跟随 props.visible，但只在 effect 里更新，
+    // 用来区分「还没跑过 effect」与「已经跑过」。
+    const asyncVisible = shallowRef<boolean | undefined>(undefined);
+    let firstMountChange = false;
+    // ⚠️ 必须自己按「值对」去重，不能靠 watch 的 deps 比较：
+    //    驱动每次 emit 都会换一个**新的快照对象**，而 `status` 常常没变（仍是 NONE），
+    //    于是 watch 会重复触发 ⇒ `onVisibleChanged` 被发两遍（实测）。
+    //    React 版 `[asyncVisible, currentStatus]` 是逐项 Object.is 比较，等价于此。
+    let lastKey = '';
+
+    watch(
+      () => [visible(), snapshot.value.status] as const,
+      ([nextVisible, status]) => {
+        const key = `${nextVisible}|${status}`;
+        if (key === lastKey) return;
+        lastKey = key;
+
+        asyncVisible.value = nextVisible;
+        if (nextVisible) firstMountChange = true;
+
+        if (asyncVisible.value !== undefined && status === STATUS_NONE) {
+          if (firstMountChange || asyncVisible.value) {
+            onVisibleChanged(asyncVisible.value);
+          }
+          firstMountChange = true;
+        }
+      },
+      { immediate: true, flush: 'post' },
+    );
+  }
 
   onUnmounted(() => {
     driver.destroy();

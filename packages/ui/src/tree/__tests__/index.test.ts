@@ -6,6 +6,7 @@
  * 快照类断言改为行为断言（本仓不养快照，TESTING.md L1 规则）。
  */
 
+import { waitFrames } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
@@ -419,6 +420,80 @@ describe('Tree · 语义槽 / 禁用（antd semantic + DisabledContext 矩阵）
     });
     await nextTick();
     expect(w.find('.filter-node').exists()).toBe(true);
+    w.unmount();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 展开 / 收起的动效收尾（2026-10-17 修）
+//
+// 症状：**点一次收起之后，整棵树的展开/收起全部失效**。
+//
+// 根因两处，缺一不可修：
+//   1. `CSSMotion` 是 `inheritAttrs: false`，而 `onVisibleChanged` **没被声明成 prop**
+//      ⇒ `MotionTreeNode` 传的回调被静默丢弃 ⇒ `onMotionEnd` 永不触发
+//      ⇒ `listChanging` 永久为真 ⇒ `Tree.onNodeExpand` 的 `if (listChanging) return`
+//      把后续每一次点击都吞掉。
+//   2. rc 用 `useLayoutEffect` 同步 `visible`，它在**挂载时也会跑一次**；
+//      Vue 的 `watch` 不会。收起时哨兵节点是连同 `motionNodes` 一起新建的，
+//      `props.motionNodes` 从未「变化」过 ⇒ `visible` 停在 true ⇒ 离场根本没开始。
+//
+// 为什么既有测试全绿：jsdom 没有真实 CSS transition，动效「永不结束」在
+// jsdom 里和「还没结束」长得一模一样 —— 只有手动派发 `transitionend`
+// （真实浏览器由 CSS 触发同一个事件）才能把这条路径走到头。
+// ---------------------------------------------------------------------------
+
+/**
+ * 手动结束当前动效 —— 真实浏览器由 CSS 触发同一个事件，这里只是补上那一帧。
+ *
+ * ⚠️ 必须带 `propertyName: 'height'`：collapse 预设的 `onLeaveEnd` 是
+ *    `skipOpacityTransition`，只认 height 的 transitionend（或 deadline）。
+ *    `transition: height, opacity` 里 opacity 通常先结束，认它会导致高度
+ *    还没跑完就被摘掉 —— 表现是「闪一下」。
+ */
+async function finishMotion(w: ReturnType<typeof mount>): Promise<void> {
+  const el = w.find('.apollo-tree-treenode-motion').element;
+  el.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'height', bubbles: true }));
+  await waitFrames(4);
+}
+
+describe('Tree · 展开/收起的动效收尾', () => {
+  it('⭐ 收起：离场结束后子节点必须被移除', async () => {
+    const w = mount(Tree, {
+      props: { treeData, defaultExpandedKeys: ['0-0'] },
+      global: globalCfg,
+      attachTo: document.body,
+    });
+    await waitFrames(4);
+    expect(items(w).map((n) => n.text())).toContain('leaf-0');
+
+    await w.find('.apollo-tree-switcher').trigger('click');
+    await waitFrames(6);
+    // 离场中：哨兵容器还在（这是 rc 的正常中间态）
+    expect(w.find('.apollo-tree-treenode-motion').exists()).toBe(true);
+
+    await finishMotion(w);
+    expect(items(w).map((n) => n.text())).not.toContain('leaf-0');
+    w.unmount();
+  });
+
+  it('⭐ 收起之后还能再展开 —— listChanging 不能被卡死', async () => {
+    const w = mount(Tree, {
+      props: { treeData, defaultExpandedKeys: ['0-0'] },
+      global: globalCfg,
+      attachTo: document.body,
+    });
+    await waitFrames(4);
+
+    await w.find('.apollo-tree-switcher').trigger('click');
+    await waitFrames(6);
+    await finishMotion(w);
+    expect(items(w).map((n) => n.text())).not.toContain('leaf-0');
+
+    // 第二次点击若被 listChanging 吞掉，这里就还是收起状态
+    await w.find('.apollo-tree-switcher').trigger('click');
+    await waitFrames(6);
+    expect(items(w).map((n) => n.text())).toContain('leaf-0');
     w.unmount();
   });
 });

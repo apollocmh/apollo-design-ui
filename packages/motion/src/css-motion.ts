@@ -52,6 +52,17 @@ export const CSSMotion = defineComponent({
     /** 五个时机 × 三类 handler。见 `MotionHooks` */
     hooks: { type: Object as PropType<MotionHooks>, default: undefined },
     /**
+     * 可见性最终生效后的通知（rc-motion `CSSMotion` 同名 prop）。
+     *
+     * ⚠️ 必须显式声明：本组件 `inheritAttrs: false`，未声明的 prop 会被**静默丢弃**
+     *    —— Tree 的 `MotionTreeNode` 就曾因此把 `onVisibleChanged` 传了个寂寞，
+     *    收起动效永远不收尾（2026-10-17 修）。语义见 `useMotionStatus` 的同名选项。
+     */
+    onVisibleChanged: {
+      type: Function as PropType<(visible: boolean) => void>,
+      default: undefined,
+    },
+    /**
      * 是否支持 CSS 动画。不传则调 `detectSupportMotion()` 探测。
      * ⚠️ 测试里**必须**显式传 `true`：jsdom 的 CSSStyleDeclaration 未必认
      *    `animation` / `transition` 属性，探测结果可能是 false，
@@ -73,6 +84,7 @@ export const CSSMotion = defineComponent({
       forceRender: props.forceRender,
       leavedClassName: props.leavedClassName,
       hooks: props.hooks,
+      onVisibleChanged: props.onVisibleChanged,
     });
 
     return () => {
