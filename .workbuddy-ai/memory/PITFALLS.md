@@ -4780,3 +4780,16 @@
 - `attrs.style` 可能是字符串 ⇒ 合并必须过 `semanticRootStyle`/`mergeStyles`（对象展开拆成 `{0:'w'}` 崩组件）。语义 root 落点：class `[rootClass, classNames.root]`、style `[styles.root, rootStyle]`（原生 style 胜）。
 - 🚨 **`style: [a, b]` 后展开者胜**：`{...attrs}` / 数组尾部会让**原始裸数字**顶掉内部已 px 化的值 ⇒ 声明被 CSSOM 丢弃。修法：px 化后**再覆盖回** callerStyle（#36）。
 - 🚨 别信注释、跑代码（switch interface 注释与代码不符、radio README D44 过期）。空态占位项也算 `menu-item`（「搜索为空」别写 `length===0`）。
+
+### Tree 展开/收起 与动效收尾流（2026-10-17～20，332-336）
+- 🚨 **`CSSMotion` 是 `inheritAttrs: false` ⇒ 回调必须显式声明成 prop**：`MotionTreeNode` 传了 `onVisibleChanged`，但 `css-motion.ts` 的 props 里**没有**它 ⇒ 被静默丢弃 ⇒ `onMotionEnd` 永不触发 ⇒ `listChanging` 永久为真 ⇒ `Tree.onNodeExpand` 的 `if (listChanging) return` 吞掉后续每一次点击（症状：**点一次收起之后整棵树再也点不动**）。判据：给 `CSSMotion` 传**任何**回调前，先确认它在 props 里声明过（全仓曾 8 处传 `onVisibleChanged`，只有 Tree / Image Preview 走 prop，其余走 `hooks` 是通的）。
+- 🚨 **rc 的 `useLayoutEffect` 在挂载时也跑，Vue 的 `watch` 不会**：收起时哨兵节点是**连同 `motionNodes` 一起新建**的（`NodeList` 在 `transitionData` 里插 `MOTION_KEY` ⇒ 新 key ⇒ 新实例），`props.motionNodes` 从未「变化」 ⇒ watch 永不触发 ⇒ `visible` 停在 `true` ⇒ 离场根本没开始。修：`onMounted` 里跑一次同步。**不能**用 `watch(immediate: true)` —— 那会在 setup 期就置 false，元素从第一帧不渲染，更没有离场过渡。
+- 🚨 **motion 配置要整个摊进 CSSMotion**（rc `_extends({ref, visible}, motion, {motionAppear, onVisibleChanged})`）：只带 `motionName` ⇒ antd `initCollapseMotion()` 的 `onLeaveStart`（`height: offsetHeight`）/ `onLeaveActive`（`height: 0`）缺失 ⇒ 高度从不变化 ⇒ CSS `transition: height` 没有过渡可跑 ⇒ `transitionend` 永不到，连 `motionDeadline`（antd 500ms 兜底）也没有。别把业务回调塞进 `onAppearStart`/`onLeaveStart`（会顶掉 collapse 预设自己的 handler）；`useUnmount(triggerMotionStart, …)` 是挂载后触发，与 CSSMotion hooks 无关。
+- 🚨 **jsdom 没有真实 CSS transition ⇒「动效永不结束」和「还没结束」长得一模一样**，这类缺陷**既有测试必然全绿**。回归必须手动派发带 `propertyName: 'height'` 的 `transitionend`（真实浏览器由 CSS 触发同一个事件），并钉「收起之后还能再展开」这条反向路径。
+- ⚠️ 真机验证的前提：**docs 只把 `@apollo-design/ui` 别名到源码**，其余 workspace 包（含 `@apollo-design/motion`）走 **dist** ⇒ 改了 motion 源码必须先 `pnpm --filter @apollo-design/motion run build` 再 `build:docs`，否则改了个寂寞（同一坑第二次应验）。
+
+### 写 demo 与发 Pages（2026-10-20，337-339）
+- ⚠️ **`interface` 没有隐式索引签名**（只有类型别名 / 推断出来的对象字面量有）⇒ `interface RecordType` 传给 `data-source`（收 `Record<string, unknown>[]`）报 `Index signature for type 'string' is missing` ⇒ 显式补 `[key: string]: unknown`（或干脆不标注，让 TS 推断，如既有 `sorter.vue`）。
+- ⚠️ **table 的内部类型在根出口统一加 `Table` 前缀**：根名是 `TableFilterDropdownProps`，不是 `FilterDropdownProps`（照 `table/index.ts` 的内部名引会报错）。批量自检：解析 `packages/ui/src/index.ts` 的 `export type {X as Y}` 建集合，再对 demo 的 `import type {…} from '@apollo-design/ui'` 逐名核对。
+- ⚠️ **展开含递归大类型会触发 TS2589**：`{ ...pagination.value }`（`TablePaginationConfig` 含 `showSizeChanger?: boolean | SelectProps`）⇒ `Type instantiation is excessively deep and possibly infinite` ⇒ 改成逐字段赋值。
+- 📌 **手动发 Pages**：`gh-pages` 分支根 = `packages/docs/dist`；`deploy-docs.yml` 只在 **master** 触发（feature 分支不会自动发）。流程：`git worktree add -b gh-pages /tmp/ghp origin/gh-pages` → `git rm -r .` → 拷 dist → `touch .nojekyll`（dist 不产这个文件，但没有它 Jekyll 会跳过 `_` 前缀目录）→ commit → `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:gh-pages`。⚠️ 拷完记得剔掉 `.vite/` 缓存目录。发布后 `gh api repos/<owner>/<repo>/pages` 看 `status: building`，约 1 分钟生效；验证要**等水合后**（demo 只在客户端加载，SSR HTML 里没有示例标题）。
