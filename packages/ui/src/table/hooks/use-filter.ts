@@ -638,9 +638,18 @@ function defineFilterDropdownComponent() {
         //    变量已被重赋值为包装层 ⇒ 插槽渲染自身 ⇒ 无限递归（React 无此坑：
         //    children 是立即求值的引用）。
         const dropdownInner = dropdownContent;
+        // 🚨 必须挂 `apollo-table-css-var`：
+        //    `.apollo-table-filter-dropdown` 的背景 / 阴影 / 圆角全部依赖
+        //    `--apollo-table-filter-dropdown-bg`（声明在 `.apollo-table, .apollo-table-css-var` 上）。
+        //    弹层通过 Teleport 落到 body 后，祖先链上**找不到** `.apollo-table` ⇒ 变量继承失败
+        //    ⇒ 计算样式退回 `transparent`（用户报「过滤菜单没加背景色」，Issue 2026-10-20-01）。
+        //    把 `apollo-table-css-var` 放到 FilterWrapper 自己的 className 上 ⇒ CSS 变量在
+        //    **同一元素**声明、同元素被 `background-color: var(...)` 消费，cascade 闭合。
         dropdownContent = h(
           FilterWrapper,
-          { className: `${props.prefixCls}-dropdown` },
+          {
+            className: clsx(`${props.prefixCls}-dropdown`, 'apollo-table-css-var'),
+          },
           { default: () => dropdownInner },
         );
 

@@ -877,3 +877,53 @@ describe('Table · 固定/汇总（T5）', () => {
     w.unmount();
   });
 });
+
+// ---------------------------------------------------------------------------
+// 过滤弹层 —— popup 容器必须带 `apollo-table-css-var`（2026-10-20 修）
+//
+// 症状：自定义 `filterDropdown` 的弹层**没有背景色**——下面的行穿透可见。
+//
+// 原理：`.apollo-table-filter-dropdown` 的背景 / 阴影 / 圆角全部依赖
+//   `--apollo-table-filter-dropdown-bg`（声明在 `.apollo-table, .apollo-table-css-var` 上）。
+//   弹层通过 Teleport 落到 body 后，祖先链上找不到 `.apollo-table` ⇒ 变量未定义
+//   ⇒ `background-color: var(--apollo-table-filter-dropdown-bg)` 退回 `transparent`。
+//
+// 修：use-filter.ts 在 Dropdown 的 rootClassName 上**显式拼上** `apollo-table-css-var`
+//   （css 里专门为弹层准备的「表 token 挂载点」），由 Trigger 在 popup 根 class
+//   上叠加 ⇒ 弹层容器直接继承 token。
+// ---------------------------------------------------------------------------
+
+describe('Table · 过滤弹层的 token 继承', () => {
+  it('⭐ 弹层根容器必须带 `apollo-table-css-var` —— 否则 table token 不生效', async () => {
+    const w = mount(Table, {
+      props: {
+        columns: [
+          {
+            title: 'Name',
+            dataIndex: 'name',
+            filterDropdown: () => 'custom',
+          },
+        ] as never,
+        dataSource: data as never,
+      },
+      global: {
+        stubs: { teleport: false }, // 🚨 F 组：Teleport 不被 stub ⇒ popup 真正渲染进 DOM
+      },
+      attachTo: document.body,
+    });
+    await nextTick();
+
+    // 打开弹层
+    await w.find('.apollo-table-filter-trigger').trigger('click');
+    await nextTick();
+
+    // 弹层在 body 下（Teleport），`.apollo-table-filter-dropdown` 自身必须挂上
+    // `apollo-table-css-var` —— 否则 css 变量未声明 ⇒ 背景退回 `transparent`。
+    const popup = document.body.querySelector('.apollo-table-filter-dropdown');
+    expect(popup).not.toBeNull();
+    expect(popup!.classList.contains('apollo-table-css-var')).toBe(true);
+    // 反向钉哨兵：祖先上至少存在 `.apollo-dropdown`（Trigger 拼的 popup 根）
+    expect(popup!.closest('.apollo-dropdown')).not.toBeNull();
+    w.unmount();
+  });
+});
