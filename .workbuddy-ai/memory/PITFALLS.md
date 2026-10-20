@@ -4793,3 +4793,17 @@
 - ⚠️ **table 的内部类型在根出口统一加 `Table` 前缀**：根名是 `TableFilterDropdownProps`，不是 `FilterDropdownProps`（照 `table/index.ts` 的内部名引会报错）。批量自检：解析 `packages/ui/src/index.ts` 的 `export type {X as Y}` 建集合，再对 demo 的 `import type {…} from '@apollo-design/ui'` 逐名核对。
 - ⚠️ **展开含递归大类型会触发 TS2589**：`{ ...pagination.value }`（`TablePaginationConfig` 含 `showSizeChanger?: boolean | SelectProps`）⇒ `Type instantiation is excessively deep and possibly infinite` ⇒ 改成逐字段赋值。
 - 📌 **手动发 Pages**：`gh-pages` 分支根 = `packages/docs/dist`；`deploy-docs.yml` 只在 **master** 触发（feature 分支不会自动发）。流程：`git worktree add -b gh-pages /tmp/ghp origin/gh-pages` → `git rm -r .` → 拷 dist → `touch .nojekyll`（dist 不产这个文件，但没有它 Jekyll 会跳过 `_` 前缀目录）→ commit → `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:gh-pages`。⚠️ 拷完记得剔掉 `.vite/` 缓存目录。发布后 `gh api repos/<owner>/<repo>/pages` 看 `status: building`，约 1 分钟生效；验证要**等水合后**（demo 只在客户端加载，SSR HTML 里没有示例标题）。
+
+### Table 过滤弹层 token 继承（2026-10-20，340）
+- ❌ `.apollo-table-filter-dropdown` 的背景 / 阴影 / 圆角依赖
+  `--apollo-table-filter-dropdown-bg`，而变量只在 `.apollo-table, .apollo-table-css-var`
+  选择器上声明。弹层通过 **Teleport** 落到 body 后，祖先链上**找不到** `.apollo-table` ⇒
+  变量未定义 ⇒ `background-color: var(...)` 退回 `transparent`（症状：菜单完全透明，
+  表格行穿透可见）。修：把 `apollo-table-css-var` 挂到 `FilterWrapper` **自身的 className**
+  上（不要塞 `rootClassName`/`popupClassName`：DropDown 那一层不会把 class 透到 Trigger
+  的 popup 根 class 上；Trigger 的 popup 根 class = `[prefixCls, motion, popupClassName, ...]`）。
+  `apollo-table-css-var` 是 css 里专门准备的「弹层 token 挂载点」（与 `.apollo-table` 共用
+  同一组变量声明），变量在**同元素**声明、被同元素的 `background-color: var(...)` 消费，
+  cascade 闭合。回归必须带 `stubs:{teleport:false}`，否则 popup 不会真落到 DOM 上、
+  `document.body.querySelector` 查不到。判据：凡走 Teleport 的弹层，**先量其祖先链**
+  是否含 css token 声明 selector。
