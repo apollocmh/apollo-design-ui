@@ -17,13 +17,19 @@ import {
   h,
   inject,
   isVNode,
+  nextTick,
+  onUnmounted,
   type PropType,
   provide,
+  ref,
+  shallowRef,
   Teleport,
   Text,
   type VNode,
   type VNodeChild,
+  watch,
 } from 'vue';
+import { styleAttrs } from '../_internal/use-merge-semantic';
 import {
   isSubPathKeyKey,
   type MenuContextData,
@@ -32,6 +38,7 @@ import {
   useFullPath,
   useMeasure,
   useMenuContext,
+  usePathRegister,
 } from './context';
 import type { ParsedNode } from './engine/parse-items';
 import { getMenuId } from './engine/use-accessibility';
@@ -84,7 +91,8 @@ const SubMenu = defineComponent({
     const connectedPath = useFullPath(props.eventKey);
 
     if (measure) {
-      measure.registerPath(props.eventKey ?? '', connectedPath.value);
+      // ⚠️ 登记与注销必须对称（Issue #22.8），见 `usePathRegister` 的注释。
+      usePathRegister(measure, props.eventKey, connectedPath);
       return () => null;
     }
 
@@ -113,6 +121,101 @@ const SubMenu = defineComponent({
     const childrenSelected = computed(
       () => isSubPathKey?.(ctx.selectedKeys.value, props.eventKey ?? '') ?? false,
     );
+
+    // ---------------------- popup 定位（Issue #22.1） ----------------------
+    /**
+     * popup 的 style：**测量阶段隐藏、对齐后可见**。
+     *
+     * 原实现写死 `{ position: 'absolute', visibility: 'hidden' }` ⇒ 非 inline 子菜单
+     * 打开后永远看不见（issue #22.1 的 P0）。
+     *
+     * 这里按 rc PopupTrigger 的两种 placement 轻量实现（v1 不做 offset / 溢出翻转）：
+     *   vertical   → 贴 title 右侧（RTL 贴左侧），top 对齐 title 顶部
+     *   horizontal → 贴 title 下方，left 对齐 title 左侧
+     *
+     * ⚠️ 只改 popup 自身样式，DOM 结构不动（仍 Teleport 到 body）—— L4 对拍只取
+     *    组件容器内的节点，popup 在 body 上，所以基线不受影响；L6 静态截图里
+     *    open=false 不渲染 popup，同样不受影响。
+     */
+    const titleRef = shallowRef<HTMLElement | null>(null);
+    const popupRef = shallowRef<HTMLElement | null>(null);
+    const popupStyle = ref<Record<string, string>>({
+      position: 'absolute',
+      visibility: 'hidden',
+    });
+
+    const syncPopupPosition = (): void => {
+      const title = titleRef.value;
+      const popup = popupRef.value;
+      if (!title || !popup) return;
+      const rect = title.getBoundingClientRect();
+      const scrollX = window.scrollX || window.pageXOffset || 0;
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const isHorizontal = ctx.mode.value === 'horizontal';
+      const isRtl = ctx.direction === 'rtl';
+      if (isHorizontal) {
+        popupStyle.value = {
+          position: 'absolute',
+          visibility: 'visible',
+          top: `${rect.bottom + scrollY}px`,
+          left: `${rect.left + scrollX}px`,
+        };
+        return;
+      }
+      popupStyle.value = isRtl
+        ? {
+            position: 'absolute',
+            visibility: 'visible',
+            top: `${rect.top + scrollY}px`,
+            // RTL：popup 的左边缘 = title 左边缘 - popup 宽度
+            left: `${rect.left + scrollX - popup.offsetWidth}px`,
+          }
+        : {
+            position: 'absolute',
+            visibility: 'visible',
+            top: `${rect.top + scrollY}px`,
+            left: `${rect.right + scrollX}px`,
+          };
+    };
+
+    // popup 是「open 时才新建」的 ⇒ 等 DOM 挂上再量（不能只 watch open）。
+    //
+    // ⚠️ 必须**连续两帧**再量：首帧刚 Teleport 进 body 时，demo/页面布局（字体、图片、
+    //    异步 demo 内容）还没稳定，实测首帧 rect.top 与稳定后差 126px（popup 明显偏上）。
+    //    rAF 双帧 = 布局稳定后的第一帧。
+    const scheduleSync = (): void => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(syncPopupPosition);
+      });
+    };
+
+    const onViewportChange = (): void => {
+      if (open.value) syncPopupPosition();
+    };
+
+    watch(
+      open,
+      async (next) => {
+        if (!next) {
+          popupStyle.value = { position: 'absolute', visibility: 'hidden' };
+          window.removeEventListener('scroll', onViewportChange, true);
+          window.removeEventListener('resize', onViewportChange);
+          return;
+        }
+        await nextTick();
+        scheduleSync();
+        // 跟随滚动 / 窗口尺寸（捕获阶段：内部滚动容器也要跟）
+        window.addEventListener('scroll', onViewportChange, true);
+        window.addEventListener('resize', onViewportChange);
+      },
+      { immediate: true, flush: 'post' },
+    );
+
+    // 组件卸载时兜底摘监听（open 为 false 的分支已摘，但卸载时可能仍是 true）
+    onUnmounted(() => {
+      window.removeEventListener('scroll', onViewportChange, true);
+      window.removeEventListener('resize', onViewportChange);
+    });
 
     // ---------------- hover / click 开合（rc PopupTrigger 的简化） ------------
     let openTimer: ReturnType<typeof setTimeout> | null = null;
@@ -178,6 +281,19 @@ const SubMenu = defineComponent({
       const mode = ctx.mode.value;
       const isInline = mode === 'inline';
 
+      // 语义槽（Issue #22.6）：item / itemTitle / itemContent / itemIcon / popup
+      // ⚠️ 先收成 `unknown` 再按槽位 cast：顶层既有字符串（item 等）又有嵌套对象
+      //    （popup / subMenu），一次 cast 到具体形态会因索引签名不重叠而报 TS2352。
+      const semCls = (ctx.semanticClassNames?.value ?? {}) as Record<string, unknown>;
+      const semStyle = (ctx.semanticStyles?.value ?? {}) as Record<string, unknown>;
+      const itemClsOf = semCls as Record<string, string | undefined>;
+      const itemStyleOf = semStyle as Record<string, Record<string, string | number> | undefined>;
+      const popupSemCls = (semCls.popup ?? {}) as Record<string, string | undefined>;
+      const popupSemStyle = (semStyle.popup ?? {}) as Record<
+        string,
+        Record<string, string | number> | undefined
+      >;
+
       const titleNode = h(
         'div',
         {
@@ -186,7 +302,9 @@ const SubMenu = defineComponent({
             ctx.mode.value === 'inline'
               ? { paddingLeft: `${connectedPath.value.length * ctx.inlineIndent}px` }
               : undefined,
-          class: `${subMenuPrefixCls}-title`,
+          ref: titleRef as never,
+          class: [`${subMenuPrefixCls}-title`, itemClsOf.itemTitle],
+          ...styleAttrs(itemStyleOf.itemTitle),
           role: 'menuitem',
           'data-menu-id': props.overflowDisabled ? undefined : getMenuId(ctx.menuId, eventKey),
           tabindex: mergedDisabled.value ? undefined : -1,
@@ -215,15 +333,23 @@ const SubMenu = defineComponent({
                 ? rawTitle
                 : h(
                     'span',
-                    { class: `${ctx.prefixCls}-title-content` },
+                    {
+                      class: [`${ctx.prefixCls}-title-content`, itemClsOf.itemContent],
+                      ...styleAttrs(itemStyleOf.itemContent),
+                    },
                     [rawTitle as VNodeChild].filter((c) => c !== null && c !== undefined),
                   );
           })(),
           // rc：expandIcon 覆盖（dropdown 的 OverrideProvider 注入 arrow icon）
           ctx.expandIcon
-            ? h('span', { class: `${subMenuPrefixCls}-expand-icon` }, [
-                ctx.expandIcon as VNodeChild,
-              ])
+            ? h(
+                'span',
+                {
+                  class: [`${subMenuPrefixCls}-expand-icon`, itemClsOf.itemIcon],
+                  ...styleAttrs(itemStyleOf.itemIcon),
+                },
+                [ctx.expandIcon as VNodeChild],
+              )
             : h('i', { class: `${subMenuPrefixCls}-arrow` }),
         ],
       );
@@ -238,16 +364,31 @@ const SubMenu = defineComponent({
               h(
                 'div',
                 {
-                  class: [`${subMenuPrefixCls}-popup`, props.popupClassName],
+                  class: [`${subMenuPrefixCls}-popup`, props.popupClassName, popupSemCls.root],
+                  ref: popupRef as never,
                   onMouseenter: onPopupMouseEnter,
                   onMouseleave: onPopupMouseLeave,
-                  style: { position: 'absolute', visibility: 'hidden' } as Record<string, string>,
+                  style: {
+                    ...popupStyle.value,
+                    ...(popupSemStyle.root ?? {}),
+                  } as Record<string, string>,
                 },
                 h(
                   'ul',
                   {
                     id: popupId,
-                    class: [ctx.prefixCls, `${ctx.prefixCls}-sub`],
+                    // 🚨 必须带 mode 类（`{p}-vertical`）：item 的尺寸/内边距/行高规则
+                    //    都挂在 `.apollo-menu-{mode} .apollo-menu-item` 下，缺了它
+                    //    popup 里的 li 全是 0 高（探针实测：li height 0 / padding 0 /
+                    //    line-height 0，而变量 `--apollo-menu-item-height: 40px` 明明在）。
+                    //    antd 的 popup ul 是 `ant-menu ant-menu-sub ant-menu-vertical`；
+                    //    horizontal 的子菜单弹出来也是**竖直列表**（与 subCtx 的
+                    //    `horizontal → vertical` 映射同判），所以这里用 popupMode 而非 mode。
+                    class: [
+                      ctx.prefixCls,
+                      `${ctx.prefixCls}-sub`,
+                      `${ctx.prefixCls}-${mode === 'horizontal' ? 'vertical' : mode}`,
+                    ],
                     role: 'menu',
                     'data-menu-list': true,
                   },
@@ -285,8 +426,12 @@ const SubMenu = defineComponent({
             childrenSelected.value ? `${subMenuPrefixCls}-selected` : undefined,
             mergedDisabled.value ? `${subMenuPrefixCls}-disabled` : undefined,
             props.danger ? `${subMenuPrefixCls}-danger` : undefined,
+            itemClsOf.item,
           ],
-          style: attrs.style as Record<string, string | number> | undefined,
+          ...styleAttrs({
+            ...(attrs.style as Record<string, string | number> | undefined),
+            ...(itemStyleOf.item ?? {}),
+          }),
           onMouseenter: onTitleMouseEnter,
           onMouseleave: onTitleMouseLeave,
         },

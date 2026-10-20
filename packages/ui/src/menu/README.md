@@ -54,9 +54,20 @@ _internal/overflow.ts    # rc-overflow 的 Vue 版（horizontal 溢出折叠基�
 5. 🚨 **context 对象是 setup 期建的**：普通字段 = 快照 ⇒ `disabled`/`inlineIndent`/延迟/
    `inlineCollapsed`/`theme`/`expandIcon` 一律写成 **getter**（消费处读时现取、可被追踪）。
 
-⚠️ 未修（已登记 `KNOWN-ISSUES.md` §1.6/§1.7）：SubMenu 的 popup 恒 `visibility:hidden`
-（缺 rc PopupTrigger 的定位，单独翻可见性会打断 L6 基线）；公开类型与运行时 props 的逐字段
-对照；measure 路径缺 `unregisterPath`。
+✅ **Issue #22 三项遗留已全部修复（2026-10-21）**：
+- **#22.1** popup 不再恒 `visibility:hidden` —— 挂载后按 title 的 `getBoundingClientRect()`
+  定位（vertical 贴右侧 / horizontal 贴下方 / RTL 贴左侧）并置 `visible`；关闭时节点本就不
+  渲染，无需「藏回去」。DOM 结构不变（仍 Teleport 到 body）⇒ L4 只取组件容器内的节点、
+  L6 静态截图 open=false，两套基线都不受影响。
+- **#22.6** 语义通道接通：`classNames` / `styles` 进 props（原先只在 interface 声明，
+  `inheritAttrs: false` 导致静默丢弃），经 `useMergeSemantic` 合并（第四参 schema 处理
+  `popup` / `subMenu` 的字符串形态），落点为 root+list（同一个根 ul）、item、itemTitle、
+  itemContent、itemIcon、popup.root。
+- **#22.8** measure 路径补对称注销：`usePathRegister()`（`context.ts`）在卸载与 keyPath
+  变化时 `unregisterPath`，避免动态移除 items 后残留旧 `key → keyPath` 映射。
+
+⚠️ 仍未做：公开类型与运行时 props 的**逐字段**对照（#22.6 只覆盖 classNames/styles；
+`expandIcon` / `tooltip` 等仍按「Vue 侧 slot 替代」处理，见 COMPATIBILITY）。
 
 登记于 `COMPATIBILITY.md` §9.2 **D87–D90**：flushSync（PLATFORM）、RO 时序
 （PLATFORM）、items 唯一真源（INTENDED）、keyPath reverse 口径（UPSTREAM 事实契约）。

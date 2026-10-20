@@ -260,3 +260,165 @@ describe('Menu · Issue #22', () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// #22.6 语义通道：classNames / styles 必须真的落到 DOM
+//
+// 症状：`interface.ts` 里声明了 `MenuSemanticType`（root / list / item / itemTitle /
+// itemIcon / itemContent + popup / subMenu），文档也写了，但 `Menu.ts` 运行时**零消费**
+// —— 组件 `inheritAttrs: false`，传进来的 `classNames` 被静默丢弃（类型合法、运行不生效）。
+//
+// 判据：antd menu.tsx 的槽位落点
+//   root        → 根 <ul>
+//   list        → 同一个根 <ul>（antd 6 的 Menu 根就是 ul，没有额外包裹层）
+//   item        → MenuItem 的 <li> / SubMenu 的 <li>
+//   itemTitle   → SubMenu 的 div.{p}-submenu-title
+//   itemContent → span.{p}-title-content
+//   itemIcon    → span.{p}-item-icon / span.{p}-submenu-expand-icon
+//   popup.root  → div.{p}-submenu-popup
+// ---------------------------------------------------------------------------
+
+describe('#22.6 语义通道（classNames / styles 落到 DOM）', () => {
+  const semItems = [
+    { key: '1', label: 'One', icon: h('i', { class: 'ico' }) },
+    { key: 'sub1', label: 'Sub', children: [{ key: '2', label: 'Two' }] },
+  ] as never;
+
+  it('⭐ classNames 的 root / list / item / itemContent / itemIcon 都落到对应元素', async () => {
+    mountMenu({
+      items: semItems,
+      mode: 'inline',
+      defaultOpenKeys: ['sub1'],
+      classNames: {
+        root: 'sem-root',
+        list: 'sem-list',
+        item: 'sem-item',
+        itemContent: 'sem-content',
+        itemIcon: 'sem-icon',
+      },
+    });
+    await nextTick();
+
+    const root = document.querySelector('ul[data-menu-list]') as HTMLElement;
+    expect(root.classList.contains('sem-root')).toBe(true);
+    expect(root.classList.contains('sem-list')).toBe(true);
+
+    const item = document.querySelector('[data-menu-id$="-1"]')?.closest('li') as HTMLElement;
+    expect(item.classList.contains('sem-item')).toBe(true);
+    expect(item.querySelector('.sem-content')).not.toBeNull();
+    expect(item.querySelector('.sem-icon')).not.toBeNull();
+  });
+
+  it('SubMenu 的 itemTitle / popup.root 槽生效（popup 走 Teleport）', async () => {
+    mountMenu({
+      items: semItems,
+      mode: 'vertical',
+      defaultOpenKeys: ['sub1'],
+      classNames: { itemTitle: 'sem-title', popup: { root: 'sem-popup' } },
+    });
+    await nextTick();
+
+    const title = document.querySelector('.apollo-menu-submenu-title') as HTMLElement;
+    expect(title.classList.contains('sem-title')).toBe(true);
+
+    const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
+    expect(popup).not.toBeNull();
+    expect(popup.classList.contains('sem-popup')).toBe(true);
+  });
+
+  it('⭐ 字符串形态的嵌套槽 `popup: "x"` 走 schema 落到 popup.root', async () => {
+    mountMenu({
+      items: semItems,
+      mode: 'vertical',
+      defaultOpenKeys: ['sub1'],
+      classNames: { popup: 'string-popup' },
+    });
+    await nextTick();
+
+    const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
+    expect(popup.classList.contains('string-popup')).toBe(true);
+  });
+
+  it('styles 逐槽落到元素（root / item）', async () => {
+    mountMenu({
+      items: semItems,
+      mode: 'inline',
+      styles: { root: { backgroundColor: 'rgb(1, 2, 3)' }, item: { color: 'rgb(4, 5, 6)' } },
+    });
+    await nextTick();
+
+    const root = document.querySelector('ul[data-menu-list]') as HTMLElement;
+    expect(root.style.backgroundColor).toBe('rgb(1, 2, 3)');
+
+    const item = document.querySelector('[data-menu-id$="-1"]')?.closest('li') as HTMLElement;
+    expect(item.style.color).toBe('rgb(4, 5, 6)');
+  });
+
+  it('不传 classNames 时不产生多余 class（基线不受影响）', async () => {
+    mountMenu({ items: semItems, mode: 'inline' });
+    await nextTick();
+    const root = document.querySelector('ul[data-menu-list]') as HTMLElement;
+    expect(root.className).toBe(
+      'apollo-menu apollo-menu-root apollo-menu-inline apollo-menu-light',
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// #22.1 SubMenu popup 恒为 visibility:hidden
+//
+// 原实现写死 `style: { position: 'absolute', visibility: 'hidden' }` —— 非 inline
+// 子菜单打开后**永远看不见**（P0，默认交互直接不可用）。
+//
+// 修：popup 挂载后按 title 的 rect 定位并置 visible（vertical 贴右侧 / horizontal 贴下方；
+// RTL 贴左侧）。关闭时节点本就不渲染，所以不需要「再藏回去」的分支。
+//
+// ⚠️ jsdom 里 getBoundingClientRect 恒为 0 ⇒ 只能钉「可见 + 有定位声明」，
+//    真实位置靠浏览器（本地 preview / 线上）复核。
+// ---------------------------------------------------------------------------
+
+describe('#22.1 SubMenu popup 可见性与定位', () => {
+  const subItems = [
+    { key: 'sub1', label: 'Sub', children: [{ key: 'c1', label: 'Child' }] },
+  ] as never;
+
+  it('⭐ vertical：打开后 popup 必须 visible 且带 top/left', async () => {
+    mountMenu({ items: subItems, mode: 'vertical', defaultOpenKeys: ['sub1'] });
+    await nextTick();
+    // 定位是「rAF 双帧」后才写入的（首帧布局未稳定）⇒ 等两帧
+    await raf();
+    await raf();
+
+    const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
+    expect(popup).not.toBeNull();
+    expect(popup.style.visibility).toBe('visible');
+    expect(popup.style.position).toBe('absolute');
+    expect(popup.style.top).not.toBe('');
+    expect(popup.style.left).not.toBe('');
+  });
+
+  it('horizontal：popup 贴在 title 下方（同样 visible）', async () => {
+    mountMenu({ items: subItems, mode: 'horizontal', defaultOpenKeys: ['sub1'] });
+    await nextTick();
+    await raf();
+    await raf();
+
+    const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
+    expect(popup).not.toBeNull();
+    expect(popup.style.visibility).toBe('visible');
+    expect(popup.style.top).not.toBe('');
+  });
+
+  it('未展开时不产出 popup（不是靠 hidden 藏起来）', async () => {
+    mountMenu({ items: subItems, mode: 'vertical' });
+    await nextTick();
+    expect(document.querySelector('.apollo-menu-submenu-popup')).toBeNull();
+  });
+
+  it('inline 模式走内联列表，不产出 popup', async () => {
+    mountMenu({ items: subItems, mode: 'inline', defaultOpenKeys: ['sub1'] });
+    await nextTick();
+    expect(document.querySelector('.apollo-menu-submenu-popup')).toBeNull();
+    expect(document.querySelector('.apollo-menu-sub.apollo-menu-inline')).not.toBeNull();
+  });
+});

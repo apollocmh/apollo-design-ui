@@ -32,6 +32,7 @@ import {
   watch,
 } from 'vue';
 import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
+import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useDirection } from '../config-provider/context';
 import { useSiderContext } from '../layout/context';
 import {
@@ -50,6 +51,7 @@ import type {
   ItemType,
   MenuInfo,
   MenuMode,
+  MenuProps,
   MenuTheme,
   RenderIconType,
   SelectInfo,
@@ -112,6 +114,18 @@ const Menu = defineComponent({
       default: undefined,
     },
     onKeyDown: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
+    /**
+     * 语义化槽位（Issue #22.6）：`root / list / item / itemTitle / itemIcon / itemContent`
+     * + 嵌套的 `popup` / `subMenu`。
+     *
+     * ⚠️ 必须**显式声明成 prop**：本组件 `inheritAttrs: false`，漏声明会被静默丢弃
+     * （类型合法但运行不生效 —— 正是 #22.6 的症状）。
+     */
+    classNames: {
+      type: Object as PropType<MenuProps['classNames']>,
+      default: undefined,
+    },
+    styles: { type: Object as PropType<MenuProps['styles']>, default: undefined },
   },
   emits: {
     'update:selectedKeys': (_keys: string[]) => true,
@@ -123,6 +137,21 @@ const Menu = defineComponent({
     const prefixCls = override?.prefixCls ?? props.prefixCls ?? 'apollo-menu';
     const menuId = props.id ?? `apollo-menu-${uuid++}`;
     const containerRef = shallowRef<HTMLElement | null>(null);
+
+    // ====================== Semantic ======================
+    // Issue #22.6：`classNames` / `styles` 此前只在 interface 里声明、运行时零消费
+    // （`inheritAttrs: false` ⇒ 传进来被静默丢弃）。这里按 antd menu.tsx 的槽位合并：
+    // `root / list / item / itemTitle / itemIcon / itemContent` + 嵌套 `popup` / `subMenu`。
+    // ⚠️ 第四参 schema 是**必需**的：`classNames.popup = 'x'`（字符串）要落到
+    //    `popup.root`，否则会被无 schema 路径当成对象递归（`Object.keys('x')`）。
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+      MenuProps,
+      NonNullable<MenuProps['classNames']>,
+      NonNullable<MenuProps['styles']>
+    >([() => props.classNames], [() => props.styles], () => props, {
+      popup: { _default: 'root' },
+      subMenu: { _default: 'root' },
+    });
 
     const parsedNodes = computed<ParsedNode[]>(() => parseItems(props.items));
 
@@ -311,6 +340,9 @@ const Menu = defineComponent({
       get expandIcon() {
         return override?.expandIcon as RenderIconType | undefined;
       },
+      // 语义槽（Issue #22.6）：computed 直接下发，子组件在渲染里读 ⇒ 响应式
+      semanticClassNames: mergedClassNames as unknown as ComputedRef<Record<string, unknown>>,
+      semanticStyles: mergedStyles as unknown as ComputedRef<Record<string, unknown>>,
     };
     provide(menuContextKey, menuContext);
     provide(isSubPathKeyKey, isSubPathKey);
@@ -464,6 +496,10 @@ const Menu = defineComponent({
       const ariaAttrs = Object.fromEntries(
         Object.entries(attrs).filter(([key]) => key.startsWith('aria-')),
       );
+      // 语义槽（Issue #22.6）：本仓的根 `<ul>` 同时承担 antd 的 `root` 与 `list` 两个槽
+      // （antd 6 的 Menu 根就是 ul，没有额外包裹层）⇒ 两个槽的 class 都拼到这一个元素上。
+      const rootCls = mergedClassNames.value as Record<string, string | undefined>;
+      const rootStyle = mergedStyles.value as Record<string, unknown>;
       const rootAttrs = {
         ref: containerRef as never,
         'data-menu-list': true,
@@ -471,9 +507,13 @@ const Menu = defineComponent({
         tabindex: props.tabIndex,
         id: props.id,
         ...ariaAttrs,
-        ...(typeof attrs.style === 'object'
-          ? { style: attrs.style as Record<string, string | number> }
-          : {}),
+        ...styleAttrs({
+          ...(typeof attrs.style === 'object'
+            ? (attrs.style as Record<string, string | number>)
+            : {}),
+          ...((rootStyle.root ?? {}) as Record<string, string | number>),
+          ...((rootStyle.list ?? {}) as Record<string, string | number>),
+        }),
         class: [
           prefixCls,
           `${prefixCls}-root`,
@@ -482,6 +522,8 @@ const Menu = defineComponent({
           mergedInlineCollapsed.value ? `${prefixCls}-inline-collapsed` : undefined,
           isRtl.value ? `${prefixCls}-rtl` : undefined,
           typeof attrs.class === 'string' ? attrs.class : undefined,
+          rootCls.root,
+          rootCls.list,
         ],
         dir: direction.value,
         onKeydown: onInternalKeyDown,

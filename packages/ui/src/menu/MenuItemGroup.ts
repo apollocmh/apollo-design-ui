@@ -4,7 +4,7 @@
  */
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
-import { useFullPath, useMeasure, useMenuContext } from './context';
+import { useFullPath, useMeasure, useMenuContext, usePathRegister } from './context';
 import type { ItemType } from './interface';
 
 const MenuItemGroup = defineComponent({
@@ -20,7 +20,8 @@ const MenuItemGroup = defineComponent({
 
     if (measure) {
       // rc：measure 模式只返回 childList（children 由 Menu 以规范节点另行渲染）
-      measure.registerPath(props.eventKey ?? '', connectedKeyPath.value);
+      // ⚠️ 登记与注销必须对称（Issue #22.8），见 `usePathRegister` 的注释。
+      usePathRegister(measure, props.eventKey, connectedKeyPath);
       return () => null;
     }
 

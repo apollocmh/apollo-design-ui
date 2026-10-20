@@ -9,7 +9,8 @@
 import { isEmptyVNode } from '@apollo-design/utils';
 import { computed, defineComponent, h, isVNode, type PropType, Text, type VNodeChild } from 'vue';
 
-import { useFullPath, useMeasure, useMenuContext } from './context';
+import { styleAttrs } from '../_internal/use-merge-semantic';
+import { useFullPath, useMeasure, useMenuContext, usePathRegister } from './context';
 import { getEventKeyCode, getMenuId, KeyCode } from './engine/use-accessibility';
 import type { MenuClickEventHandler, MenuHoverEventHandler, RenderIconType } from './interface';
 
@@ -60,8 +61,9 @@ const MenuItem = defineComponent({
     const connectedKeyPath = useFullPath(props.eventKey);
 
     if (measure) {
-      measure.registerPath(props.eventKey ?? '', connectedKeyPath.value);
-      // measure 子树是静态登记（Menu 每次渲染整树重建）—— 无需卸载钩子
+      // ⚠️ 登记与注销必须对称（Issue #22.8）：动态移除 items / key 变化时，
+      //    旧的 key→keyPath 映射不删会让键盘导航指向已不存在的节点。
+      usePathRegister(measure, props.eventKey, connectedKeyPath);
       return () => null;
     }
 
@@ -77,6 +79,12 @@ const MenuItem = defineComponent({
       const connectedKeys = connectedKeyPath.value;
       const itemCls = `${ctx.prefixCls}-item`;
       const children = slots.default?.();
+      // 语义槽（Issue #22.6）：item / itemContent / itemIcon
+      const semCls = (ctx.semanticClassNames?.value ?? {}) as Record<string, string | undefined>;
+      const semStyle = (ctx.semanticStyles?.value ?? {}) as Record<
+        string,
+        Record<string, string | number> | undefined
+      >;
 
       const getEventInfo = (e: Event) => {
         const itemData = props.itemData ?? {
@@ -158,15 +166,17 @@ const MenuItem = defineComponent({
             props.danger ? `${itemCls}-danger` : undefined,
             !mergedItemIcon ? `${itemCls}-only-child` : undefined,
             props.overflowCls,
+            semCls.item,
           ],
-          style: {
+          ...styleAttrs({
             // rc useDirectionStyle：inline 模式的缩进（level × inlineIndent，内联；
             // ⚠️ Vue 的 style 值必须是带单位字符串 —— 数字会被静默丢弃）
             ...(ctx.mode.value === 'inline'
               ? { paddingLeft: `${connectedKeys.length * ctx.inlineIndent}px` }
               : {}),
             ...(attrs.style as Record<string, string | number> | undefined),
-          },
+            ...(semStyle.item ?? {}),
+          }),
           onClick: onInternalClick,
           onKeydown: onInternalKeyDown,
           onFocus: onInternalFocus,
@@ -176,19 +186,29 @@ const MenuItem = defineComponent({
         collapsedNoIcon !== null
           ? [h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, collapsedNoIcon)]
           : [
-              h('span', { class: `${ctx.prefixCls}-title-content` }, [
-                children,
-                (() => {
-                  const extra = mergedExtra();
-                  return extra !== undefined && extra !== null
-                    ? h('span', { class: `${ctx.prefixCls}-item-extra` }, [extra as VNodeChild])
-                    : null;
-                })(),
-              ]),
+              h(
+                'span',
+                {
+                  class: [`${ctx.prefixCls}-title-content`, semCls.itemContent],
+                  ...styleAttrs(semStyle.itemContent),
+                },
+                [
+                  children,
+                  (() => {
+                    const extra = mergedExtra();
+                    return extra !== undefined && extra !== null
+                      ? h('span', { class: `${ctx.prefixCls}-item-extra` }, [extra as VNodeChild])
+                      : null;
+                  })(),
+                ],
+              ),
               mergedItemIcon
                 ? h(
                     'span',
-                    { class: `${ctx.prefixCls}-item-icon` },
+                    {
+                      class: [`${ctx.prefixCls}-item-icon`, semCls.itemIcon],
+                      ...styleAttrs(semStyle.itemIcon),
+                    },
                     typeof mergedItemIcon === 'function'
                       ? [mergedItemIcon({ isSelected: isSelected.value })].filter(
                           (c) => c !== null && c !== undefined,
