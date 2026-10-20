@@ -11,7 +11,7 @@ import DocHtml from '../components/docs/DocHtml.vue';
 import { useSiteLocale } from '../composables/locale';
 import { findComponent, loadComponentPage, siteManifest } from '../composables/manifest';
 import { useSeo } from '../composables/seo';
-import { useTocState } from '../composables/toc';
+import { useTocState, withDemoAnchor } from '../composables/toc';
 import type { ComponentPageData, TocItem } from '../types/manifest';
 
 const route = useRoute();
@@ -51,10 +51,18 @@ const langKey = computed(() => (locale.value === 'zh-CN' ? 'zh' : 'en'));
 
 const doc = computed(() => (page.value ? page.value.doc[langKey.value] : null));
 
-/** TOC = intro/rest 标题 + 「代码演示」锚点（demo 区块由本页渲染并占锚 id="demos"）。 */
+/**
+ * TOC = intro 标题 + 「代码演示」锚点 + rest 标题（demo 区块由本页渲染，占锚 `id="demos"`）。
+ *
+ * 🚨 「代码演示」必须**插到 intro 与 rest 的交界**，不能追加到末尾（2026-10-20 修）。
+ *    生成器 `splitDocBody()` 用 `## 代码演示` 作切分点、把它**连同标题一起吃掉**，
+ *    所以 `doc.toc` 里天然没有这一项；旧实现直接追加 ⇒ 目录里「代码演示」从正文
+ *    第 3 位掉到最后，与正文顺序不符（用户报「表格文档页目录没更新」）。
+ *    插入规则见 `composables/toc.ts` 的 `withDemoAnchor()`。
+ */
 const toc = computed<TocItem[]>(() => {
   if (!doc.value) return [];
-  return [...doc.value.toc, { level: 2 as const, text: t('groupDemo'), id: 'demos' }];
+  return withDemoAnchor(doc.value.toc, t('groupDemo'));
 });
 
 watch(toc, (next) => setToc(next), { immediate: true });

@@ -131,7 +131,7 @@ describe('展示源码的可用性红线', () => {
   });
 });
 
-/** 全量示例源码（742 个主文件 + 辅助文件）。 */
+/** 全量示例源码（754 个主文件 + 辅助文件）。 */
 function allDemoSources(): Array<{ path: string; code: string }> {
   const out: Array<{ path: string; code: string }> = [];
   for (const comp of fs.readdirSync(UI_SRC)) {

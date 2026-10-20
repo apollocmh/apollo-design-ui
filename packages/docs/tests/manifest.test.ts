@@ -131,8 +131,8 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（742 个）', () => {
-    expect(allDemos.length).toBe(742);
+  it('demo 全量可枚举（754 个）', () => {
+    expect(allDemos.length).toBe(754);
   });
 
   it('demo id 全局唯一 —— id 同时是锚点与搜索主键', () => {

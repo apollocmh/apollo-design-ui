@@ -31,8 +31,8 @@ const allDemos: Array<{ component: string; demo: DemoMeta }> = manifest.componen
 );
 
 describe('全量 demo 审计', () => {
-  it('数量与管线口径一致（742）', () => {
-    expect(allDemos.length).toBe(742);
+  it('数量与管线口径一致（754）', () => {
+    expect(allDemos.length).toBe(754);
   });
 
   it('每个 demo 的 .vue 文件真实存在（渲染器 glob 一定命中）', () => {
