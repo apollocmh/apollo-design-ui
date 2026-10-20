@@ -4820,3 +4820,26 @@
   （实际 754）。这两个断言是「全量 demo 可枚举」的数量快照，数据真变了就同步数字；
   但要在 commit message 里写清「不是放宽断言，是数据变化」。判据：先跑
   `vitest run` 看 `expected N to be M`，N 与新增数量对得上才改。
+
+### Menu Issue #22 三项收口（2026-10-21，343-346）
+- 🚨 **浮层写死 `visibility:hidden` = 功能不可用**（#22.1 P0）：`SubMenu` 的 popup 原先
+  `style:{position:'absolute',visibility:'hidden'}` 且**没有任何定位** ⇒ 非 inline 子菜单
+  打开后永远看不见。修：挂载后按 title 的 `getBoundingClientRect()` 定位（vertical 贴右 /
+  horizontal 贴下 / RTL 贴左）+ 置 `visible`，并跟随 scroll/resize。判据：**凡「打开后
+  该出现却没出现」的浮层，先量 `getComputedStyle(popup).visibility`，别先怀疑数据**。
+- 🚨 **Teleport 出去的 `<ul>` 必须自带 mode 类**：item 的尺寸规则挂在
+  `.apollo-menu-{mode} .apollo-menu-item` 下 ⇒ popup 的 ul 只有 `apollo-menu apollo-menu-sub`
+  时，li 的 `height/padding/line-height` 全为 0（变量 `--apollo-menu-item-height:40px`
+  明明在）。antd 的 popup ul 是 `ant-menu ant-menu-sub ant-menu-vertical`；horizontal 弹出
+  的列表也是**竖直**的（`horizontal → vertical`）。
+- 🚨 **定位要 rAF 双帧后再量**：popup 首帧刚 Teleport 进 body 时页面布局未稳定，实测
+  `rect.top` 与稳定后差 **126px**（浮层明显偏上）。`nextTick` 不够，`flush:'post'` 也不够。
+  回归测试同样要 `await raf(); await raf();` 才能看到定位。
+- 🚨 **`inheritAttrs:false` + 只在 interface 声明 = 静默丢弃**（#22.6）：`Menu` 的
+  `classNames`/`styles` 类型合法、文档也写了，但运行时零消费。判据：**类型里有的 prop，
+  去 `props:{}` 里搜一遍**；语义槽要经 `useMergeSemantic` 第四参 schema 处理
+  `popup`/`subMenu` 的字符串形态，否则 `classNames.popup='x'` 会被无 schema 路径当对象递归。
+- ⚠️ **measure 模式必须对称注销**（#22.8）：`registerPath` 配 `unregisterPath`
+  （挂载登记 / keyPath 变化先注销旧的 / 卸载注销），否则动态移除 items 后
+  `key → keyPath` 残留，键盘导航指向已不存在的节点。「静态登记无需卸载」只在整树重建时
+  近似成立，`v-for` 换 key 就破了。

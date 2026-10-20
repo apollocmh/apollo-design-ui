@@ -37,10 +37,10 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - 📌 **手动发 Pages**（用户 2026-10-20 要求）：`gh-pages` 分支根就是 `packages/docs/dist`；workflow `deploy-docs.yml` 只在 master 触发。做法：`git worktree add -b gh-pages /tmp/ghp origin/gh-pages` → 清内容 → 拷 dist（保留 `.nojekyll`）→ commit → `git -c http.proxy=… push origin HEAD:gh-pages`。站点 https://apollocmh.github.io/apollo-design-ui/ 。
 
 ## §5 进度
-foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，**#18–#56 全部关闭，仅剩 #22 开放**（menu `partial 5/8`：SubMenu popup 恒 hidden / 无语义通道 / measure 缺对称 deregister，见 `docs/KNOWN-ISSUES.md` §1.6/§1.7）。
+foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，**#1–#56 全部关闭（#22 于 2026-10-21 收口），仓库当前 0 个开放 issue**。
 - ✅ `test:build` 151 项 / FAIL 0（`d152fd32`）。
 - 📌 推送授权 2026-10-15 恢复：用户要求统一推送并关闭已完成 Issue。
-- 2026-10-17～20 文档站 V2 分支 `feature/docs-site-v2`：hover 浮层 `ea0cbf6c` · dropdown 开合 `fee81a58` · cascader/tree-select `9118f946` · 点外部 `d2460163` · `.html` 深链 `463cfcde` · 重复标题 `8cbe272f` · **tree 动效收尾 `5de76911`** · **table 示例 `65243a1e`**。
+- 2026-10-17～21 文档站 V2 分支 `feature/docs-site-v2`：hover 浮层 `ea0cbf6c` · dropdown 开合 `fee81a58` · cascader/tree-select `9118f946` · 点外部 `d2460163` · `.html` 深链 `463cfcde` · 重复标题 `8cbe272f` · tree 动效收尾 `5de76911` · table 示例 `65243a1e` · 过滤弹层 token `9f0e0d06` · 组件页 TOC 顺序 `797c8399` · **menu #22 三项 `7b00b40c`**。
 
 ## §6 判别式索引（完整判据见 PITFALLS.md 末尾「判别式总表」）
 - **A 静态审计型 issue**：四步：测量 → 核上游**逐字**源码 → **真缺陷才修** → 钉回归。三类产出：真缺陷 / 上游同款（再看是否站得住）/ Vue 超集。🚨 翻案理由：**「有界 ≠ 无代价」**、**「半更新态比完全不更新更糟」**。
