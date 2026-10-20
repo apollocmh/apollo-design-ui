@@ -4807,3 +4807,16 @@
   cascade 闭合。回归必须带 `stubs:{teleport:false}`，否则 popup 不会真落到 DOM 上、
   `document.body.querySelector` 查不到。判据：凡走 Teleport 的弹层，**先量其祖先链**
   是否含 css token 声明 selector。
+
+### 组件页 TOC 顺序（2026-10-21，341-342）
+- 🚨 **「代码演示」锚点不能追加到 TOC 末尾**：`build-manifest.mjs` 的 `splitDocBody()`
+  用 `## 代码演示` 当切分点，`rest = src.slice(restStart + m[0].length)` ⇒ **标题连同
+  那一行被吃掉**，`doc.toc` 里天然没有这一项。旧实现 `[...toc, demo]` 追加 ⇒ 目录里
+  「代码演示」从正文第 3 位掉到最后（用户报「表格文档页目录没更新」）。
+  修：以 rest 的第一个二级标题 `API`（`id="api"`）为锚点**插入**（`withDemoAnchor()`）；
+  无 API 章节时退化为追加。⚠️ 别用「intro 的标题数」反推插入点 —— 合并后的 toc 里
+  没有 intro/rest 的分界标记。
+- ⚠️ **新增 demo 会让 `demo-audit.test.ts` / `manifest.test.ts` 的 742 快照红灯**
+  （实际 754）。这两个断言是「全量 demo 可枚举」的数量快照，数据真变了就同步数字；
+  但要在 commit message 里写清「不是放宽断言，是数据变化」。判据：先跑
+  `vitest run` 看 `expected N to be M`，N 与新增数量对得上才改。
