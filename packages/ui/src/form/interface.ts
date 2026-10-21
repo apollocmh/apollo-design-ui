@@ -212,18 +212,27 @@ export interface FormListProps<Values = unknown> extends Omit<RcListProps<Values
   prefixCls?: string;
 }
 
-/** ⭐ `children` render props → scoped slot（规则 C8）。 */
-// biome-ignore lint/correctness/noUnusedVariables: `Values` 与 antd 的 `FormListProps<Values>` 对齐，③c 落地后 slot 的 `fields` 会按 `Values` 推导；骨架阶段先保留泛型位，避免落地时再改一次公开类型。
+/**
+ * ⭐ `children` render props → **单对象** scoped slot（规则 C8）。
+ *
+ * ⚠️ Vue 模板的 scoped slot 只能接收**一个** props 对象；把 React 的三个位置参数
+ * 原样传给 `slots.default(fields, operations, meta)` 会让模板侧只拿到 `fields`，
+ * `add/remove/move` 永远不可达（`<template #default="{ operations }">` 取到
+ * `undefined`）。2026-10-21 阶段 2 做 Form.List 示例时实测发现，改为对象载荷。
+ */
+export interface FormListSlotProps {
+  fields: { name: number; key: number; isListField: boolean; fieldKey: number }[];
+  operations: {
+    add: (defaultValue?: StoreValue, index?: number) => void;
+    remove: (index: number | number[]) => void;
+    move: (from: number, to: number) => void;
+  };
+  meta: { errors?: unknown[]; warnings?: unknown[] };
+}
+
+// biome-ignore lint/correctness/noUnusedVariables: 保留与 `FormListProps<Values>` 对齐的泛型位，消费者可写 `FormListSlots<MyValues>`
 export interface FormListSlots<Values = unknown> {
-  default?: (
-    fields: { name: number; key: number; isListField: boolean }[],
-    operations: {
-      add: (defaultValue?: StoreValue, index?: number) => void;
-      remove: (index: number | number[]) => void;
-      move: (from: number, to: number) => void;
-    },
-    meta: unknown,
-  ) => VNodeChild;
+  default?: (props: FormListSlotProps) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------

@@ -26,7 +26,7 @@ const panelDemo = Object.fromEntries(
 // combobox input，所以 panel 单独扫（不带豁免）。
 a11yDemoTest('Cascader', {
   demos: comboboxDemos,
-  expectCount: 4,
+  expectCount: 13,
   global: { stubs: { teleport: false } },
   allow: [
     {

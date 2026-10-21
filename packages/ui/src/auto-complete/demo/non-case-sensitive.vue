@@ -13,7 +13,7 @@ const options = ref<DefaultOptionType[]>(
 </script>
 
 <template>
-  <AutoComplete
+  <AutoComplete aria-label="自动补全输入框"
     style="width: 200px"
     :options="options"
     placeholder="input here"

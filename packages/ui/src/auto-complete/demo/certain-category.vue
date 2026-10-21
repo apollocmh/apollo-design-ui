@@ -18,7 +18,7 @@ const handleSearch = (value: string) => {
 </script>
 
 <template>
-  <AutoComplete
+  <AutoComplete aria-label="自动补全输入框"
     style="width: 200px"
     :show-search="{ onSearch: handleSearch }"
     placeholder="input here"

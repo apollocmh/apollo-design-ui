@@ -4,22 +4,14 @@
  * ARIA 契约由 Select 的 SearchInput 承担（role=combobox + aria-expanded 等，
  * select 期已钉住）；AutoComplete 只是薄包装，无新增角色。
  *
- * 豁免 `label`（与 select/__tests__/a11y.test.ts 同款，antd 自测 a11y.test.ts
- * 的放行规则一致 —— R13「不低于 antd」）：combobox 的可访问名由
- * role=combobox + aria-* 状态承担，antd 同款不绑 <label>。
+ * ⚠️ 不再豁免 `label`：所有 demo 的 combobox 都显式提供 `aria-label`
+ * （2026-10-21 阶段 2 新增 demo 时收紧；`allow` 必须被命中，留着反而会腐烂）。
  */
 
 import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('AutoComplete', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 10,
+  expectCount: 13,
   global: { stubs: { teleport: false } },
-  allow: [
-    {
-      rule: 'label',
-      reason:
-        'combobox 的可访问名由 role=combobox + aria-* 状态承担（select 同款，antd a11y.test.ts 同款放行）。',
-    },
-  ],
 });

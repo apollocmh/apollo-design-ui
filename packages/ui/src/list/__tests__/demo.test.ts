@@ -26,7 +26,7 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('List', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 8,
+  expectCount: 12,
   // 🚨 上游把 `List` 整体废弃了（D91 先例：本仓保留同款告警）⇒ 每个 demo 都会发。
   //    这是**有意的**，不是 demo 写错。
   allow: [

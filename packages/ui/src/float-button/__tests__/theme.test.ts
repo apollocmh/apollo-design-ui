@@ -22,7 +22,7 @@ import { prepareComponentToken } from '../style/token';
 
 themeTest('FloatButton', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 12,
+  expectCount: 14,
 });
 
 const PREFIX = 'apollo';

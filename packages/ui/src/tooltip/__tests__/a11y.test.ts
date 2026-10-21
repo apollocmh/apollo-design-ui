@@ -37,7 +37,7 @@ a11yDemoTest('Tooltip', {
     }
     return rest;
   })(),
-  expectCount: 13,
+  expectCount: 14,
   global: { stubs: { teleport: false } },
 });
 

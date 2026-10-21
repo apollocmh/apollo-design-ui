@@ -24,5 +24,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Typography', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 7,
+  expectCount: 11,
 });

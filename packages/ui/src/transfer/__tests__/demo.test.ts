@@ -13,5 +13,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Transfer', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 10,
+  expectCount: 12,
 });

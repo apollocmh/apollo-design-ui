@@ -24,7 +24,7 @@ const onChange = (data: SelectValue) => {
 
 <template>
   <div>
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       :options="options"
       style="width: 200px"
       :show-search="{ onSearch: (t: string) => (options = getPanelValue(t)) }"
@@ -33,7 +33,7 @@ const onChange = (data: SelectValue) => {
     />
     <br />
     <br />
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       v-model:value="value"
       :options="anotherOptions"
       style="width: 200px"

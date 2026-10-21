@@ -18,5 +18,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Anchor', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 8,
+  expectCount: 10,
 });

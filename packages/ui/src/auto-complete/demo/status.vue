@@ -15,13 +15,13 @@ const mockVal = (str: string, repeat = 1) => ({ value: str.repeat(repeat) });
 
 <template>
   <Space vertical style="width: 100%">
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       :options="options"
       :show-search="{ onSearch: (t: string) => (options = getPanelValue(t)) }"
       status="error"
       style="width: 200px"
     />
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       :options="anotherOptions"
       :show-search="{ onSearch: (t: string) => (anotherOptions = getPanelValue(t)) }"
       status="warning"

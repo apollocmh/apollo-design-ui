@@ -10,5 +10,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Form', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 5,
+  expectCount: 15,
 });

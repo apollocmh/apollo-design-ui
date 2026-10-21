@@ -8,6 +8,6 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('FloatButton', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 12,
+  expectCount: 14,
   global: { stubs: { teleport: false } },
 });

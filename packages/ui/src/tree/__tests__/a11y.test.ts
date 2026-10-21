@@ -31,7 +31,7 @@ const treeData = [
 
 a11yDemoTest('Tree', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 18,
+  expectCount: 19,
 });
 
 describe('Tree · a11y（L5）', () => {

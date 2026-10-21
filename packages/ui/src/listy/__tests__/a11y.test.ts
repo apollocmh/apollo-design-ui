@@ -7,5 +7,5 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('Listy', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 4,
+  expectCount: 8,
 });

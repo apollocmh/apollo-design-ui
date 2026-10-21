@@ -253,3 +253,42 @@
 - 上游 demo 名与本地名并非一一对应；完整名单在 `demo-coverage.json`，阶段 2 建立
   “上游场景 → 本仓 API → 示例 → 测试/缺口”映射表。
 - 本阶段没有执行新增/修改 demo，也没有更新 `demo-audit.test.ts` 的 758 总量断言。
+
+## 7. 阶段 2 收口记录（2026-10-21）
+
+> 复算脚本：`node docs/audit/tools/demo-coverage-refresh.mjs`
+> → `docs/audit/evidence/demo-coverage-stage2.json`（保留阶段 0 的上游清单，只更新本地侧）。
+> 浏览器验收：`node docs/audit/tools/stage2-demo-probe.mjs`（Upload / DatePicker / Form）。
+
+| 指标 | 阶段 0 | 阶段 2 | 变化 |
+|---|---:|---:|---:|
+| 可对照组件 | 71 | 71 | — |
+| 本地 demo 文件（可比对） | 754 | 877 | **+123** |
+| 上游 demo 文件 | 1060 | 1060 | — |
+| 文件数覆盖率 | 71.1% | **82.7%** | +11.6pp |
+| 文件数少于 antd 的组件 | 47 | **43** | −4 |
+| 场景名重合度（下限口径） | 67.2% | **74.1%** | +6.9pp |
+| 场景名重合度 < 50% 的组件 | 14 | **6** | −8 |
+
+**核心组件**
+
+| 组件 | 阶段 0 | 阶段 2 | 覆盖要点 |
+|---|---:|---:|---|
+| DatePicker | 2 | **18** | 禁用日期、上下界、时间/12h/步长、预设、受控、格式化、多选、cellRender、needConfirm、extra footer、range time、panelRender、placement、allowEmpty |
+| Upload | 3 | **15** | 基础（库 Button）、拖拽、照片墙/圆形、maxCount、accept+beforeUpload、beforeUpload false/LIST_IGNORE、进度/失败、受控、目录、粘贴、手动上传、列表操作、头像 |
+| Form | 5 | **15** | 动态/嵌套 Form.List、useWatch、dependencies、异步校验、initialValues/reset、finishFailed+scroll、set/getFieldsValue、disabled/size、scrollToField、validateTrigger |
+| Cascader | 5 | **14** | 禁用选项、默认值、自定义渲染、fieldNames、异步加载、maxTagCount、placement、size、status |
+| Input | 10 | **18** | addon（Space.Compact）、进阶计数、对齐、自适应文本域、组合输入、密码可见、异步搜索、focus/select |
+| Table | 24 | **30** | column 默认值、可编辑单元格、树形数据、筛选搜索树、滚动容器吸顶、分页位置 |
+| Splitter | 4 | **10** | 尺寸约束、受控、lazy、嵌套组、自定义拖拽图标、折叠图标 |
+| Button / InputNumber / Collapse / Descriptions / Typography / List / Listy / TreeSelect / Tabs / Anchor | — | 均 +2～5 | 见 `demo-coverage-stage2.json` 的 `rows[].localNames` |
+
+**仍未追平的高价值缺口**（已记录，不冒充完成）：
+
+- `form`（15/44）：复杂联动、跨表单、登录/高级搜索等组合场景；
+- `table`（30/53）：拖拽排序、可编辑行/单元组合、更多虚拟与固定列变体；
+- `date-picker`（18/32）：佛历、外层面板、组件替换等低频能力；
+- `upload`（15/24）：裁剪、自定义进度条、阿里云 OSS 等外部服务场景（不作为无网示例）；
+- `cascader`（14/23）：自定义下拉、触发器、多选调试类场景。
+
+这些缺口需要真实 API/依赖支撑，后续按能力矩阵继续补；本阶段不以数量断言替代功能验收。

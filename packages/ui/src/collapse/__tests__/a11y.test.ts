@@ -7,5 +7,5 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('Collapse', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 4,
+  expectCount: 9,
 });

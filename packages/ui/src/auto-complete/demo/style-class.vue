@@ -34,8 +34,8 @@ const stylesFn: AutoCompleteProps['styles'] = ({ props }: { props: AutoCompleteP
 
 <template>
   <Flex vertical gap="medium">
-    <AutoComplete :options="options" style="width: 200px" placeholder="object styles" :styles="stylesObject" />
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="object styles" :styles="stylesObject" />
+    <AutoComplete aria-label="自动补全输入框"
       :options="options"
       style="width: 200px"
       variant="filled"

@@ -15,12 +15,12 @@ const handleSearch = (value: string) => {
 
 <template>
   <Flex vertical gap="medium">
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       style="width: 200px"
       :show-search="{ onSearch: handleSearch }"
       placeholder="try to type `b`"
       :options="options"
     />
-    <Select style="width: 200px" placeholder="Select" :options="options" />
+    <Select aria-label="选项选择" style="width: 200px" placeholder="Select" :options="options" />
   </Flex>
 </template>

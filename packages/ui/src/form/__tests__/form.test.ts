@@ -15,7 +15,7 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import Input from '../../input';
-import { Form, FormItem, useForm } from '../index';
+import { Form, FormItem, FormList, type FormListSlotProps, useForm } from '../index';
 import { getFieldId } from '../util';
 
 /**
@@ -345,6 +345,44 @@ describe('Form · validateTrigger', () => {
       expect(w.find('.apollo-form-item-has-error').exists()).toBe(true);
     });
     void formRef;
+    w.unmount();
+  });
+});
+
+describe('Form · Form.List 插槽载荷', () => {
+  it('⭐ 模板只接收一个对象：fields / operations / meta 都必须可达', async () => {
+    let payload: FormListSlotProps | undefined;
+    const w = mount(Form, {
+      slots: {
+        default: () =>
+          h(FormList as never, { name: 'users' } as never, {
+            default: (slotProps: FormListSlotProps) => {
+              payload = slotProps;
+              return h(
+                'div',
+                { class: 'list-body' },
+                slotProps.fields.map((field) =>
+                  h('span', { key: field.key, class: 'list-row' }, String(field.name)),
+                ),
+              );
+            },
+          }),
+      },
+      global: { stubs: { teleport: true } },
+    });
+    await nextTick();
+    // 位置参数时代：`operations` / `meta` 在模板侧永远是 undefined。
+    expect(payload).toBeTruthy();
+    expect(Array.isArray(payload?.fields)).toBe(true);
+    expect(typeof payload?.operations.add).toBe('function');
+    expect(typeof payload?.operations.remove).toBe('function');
+    expect(typeof payload?.operations.move).toBe('function');
+    expect(payload?.meta).toBeTypeOf('object');
+
+    payload?.operations.add();
+    await vi.waitFor(() => {
+      expect(w.findAll('.list-row').length).toBe(1);
+    });
     w.unmount();
   });
 });

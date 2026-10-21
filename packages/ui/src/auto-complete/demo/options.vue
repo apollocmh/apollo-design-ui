@@ -8,5 +8,5 @@ const options = ref(['Burns Bay Road', 'Downing Street', 'Wall Street']);
 </script>
 
 <template>
-  <AutoComplete v-model:value="value" style="width: 200px" :options="options.map((o) => ({ value: o }))" />
+  <AutoComplete aria-label="自动补全输入框" v-model:value="value" style="width: 200px" :options="options.map((o) => ({ value: o }))" />
 </template>

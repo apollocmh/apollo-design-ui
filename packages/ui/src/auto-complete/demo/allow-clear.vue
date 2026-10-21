@@ -5,13 +5,13 @@ import { AutoComplete, Space } from '@apollo-design/ui';
 
 <template>
   <Space vertical style="width: 100%">
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       :options="[{ value: 'text' }]"
       placeholder="allowClear"
       style="width: 200px"
       allow-clear
     />
-    <AutoComplete
+    <AutoComplete aria-label="自动补全输入框"
       :options="[{ value: 'text' }]"
       placeholder="clearIcon"
       style="width: 200px"

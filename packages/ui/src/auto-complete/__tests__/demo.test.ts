@@ -3,6 +3,6 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('AutoComplete', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 10,
+  expectCount: 13,
   global: { stubs: { teleport: false } },
 });
