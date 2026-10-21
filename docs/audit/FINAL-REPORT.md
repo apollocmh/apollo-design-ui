@@ -108,6 +108,8 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
 | `813d1bfe` | Form.List 单对象插槽运行时与类型导出 |
 | `chore(memory)` | 记忆交接（根提交，可用 `git log --grep 'chore(memory)'` 定位） |
 
-- 分支：`fix/docs-motion-demo-quality` → `master`。
-- 标签：`v0.1.1`（打在合并后的 `master`），触发 CI 与 Deploy Docs。
-- 见证：GitHub Actions run 链接见推送后回填。
+- 分支：`fix/docs-motion-demo-quality` → `master`（`cc8af285`）。
+- 标签：`v0.1.1`（annotated tag `a46ef1c9` → `cc8af285`），触发 CI 与 Deploy Docs。
+- **CI `39610059996` 全绿**：lint / types / coverage / registry / L7 / L6 四 shard 均 success。
+- **Deploy Docs `39610060088` 全绿**：构建 + 发布 `gh-pages`（`60b26152`）。
+- 线上入口：`https://apollocmh.github.io/apollo-design-ui/`（GitHub Pages）。
