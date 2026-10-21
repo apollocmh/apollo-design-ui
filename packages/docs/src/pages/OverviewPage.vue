@@ -92,7 +92,7 @@ onMounted(() => setToc([]));
   flex-direction: column;
   gap: 8px;
   border: 1px solid var(--site-border);
-  border-radius: 10px;
+  border-radius: var(--site-radius);
   padding: 14px 16px;
   color: var(--site-text);
   transition: border-color 0.15s, box-shadow 0.15s;

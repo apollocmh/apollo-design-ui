@@ -22,17 +22,17 @@ onMounted(async () => {
 });
 
 const TYPE_COLOR: Record<string, string> = {
-  feat: '#52c41a',
-  fix: '#f5222d',
-  perf: '#722ed1',
-  docs: '#1677ff',
-  refactor: '#13c2c2',
-  test: '#faad14',
-  build: '#fa8c16',
-  ci: '#fa8c16',
+  feat: 'var(--apollo-color-success)',
+  fix: 'var(--apollo-color-error)',
+  perf: 'var(--apollo-purple)',
+  docs: 'var(--apollo-color-primary)',
+  refactor: 'var(--apollo-cyan)',
+  test: 'var(--apollo-color-warning)',
+  build: 'var(--apollo-orange)',
+  ci: 'var(--apollo-orange)',
   chore: '#8c8c8c',
-  style: '#eb2f96',
-  other: '#8c8c8c',
+  style: 'var(--apollo-magenta)',
+  other: 'var(--apollo-color-text-tertiary)',
 };
 </script>
 
@@ -56,7 +56,7 @@ const TYPE_COLOR: Record<string, string> = {
           <li v-for="c in day.commits" :key="c.hash" class="changelog-item">
             <span
               class="changelog-type"
-              :style="{ color: TYPE_COLOR[c.type] ?? '#8c8c8c', borderColor: TYPE_COLOR[c.type] ?? '#8c8c8c' }"
+              :style="{ color: TYPE_COLOR[c.type] ?? 'var(--apollo-color-text-tertiary)', borderColor: TYPE_COLOR[c.type] ?? 'var(--apollo-color-text-tertiary)' }"
             >
               {{ c.type }}{{ c.scope ? `(${c.scope})` : '' }}
             </span>

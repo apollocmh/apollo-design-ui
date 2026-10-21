@@ -169,7 +169,7 @@ const GROUP_LABEL = {
 .site-search-mask {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--apollo-color-bg-mask);
   z-index: 200;
   display: flex;
   justify-content: center;

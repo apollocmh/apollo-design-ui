@@ -43,9 +43,9 @@ defineExpose({ error });
 <style scoped>
 .demo-error {
   padding: 24px;
-  border: 1px dashed #ff4d4f66;
+  border: 1px dashed color-mix(in srgb, var(--apollo-color-error) 40%, transparent);
   border-radius: var(--site-radius);
-  background: color-mix(in srgb, #ff4d4f 6%, transparent);
+  background: color-mix(in srgb, var(--apollo-color-error) 6%, transparent);
 }
 
 .demo-error-title {

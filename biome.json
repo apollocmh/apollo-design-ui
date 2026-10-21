@@ -26,7 +26,8 @@
       "!**/packages/icons/src/icons",
       "!**/packages/locale/src/locales",
       "!**/registry/source/locale-rc",
-      "!**/docs/audit/evidence"
+      "!**/docs/audit/evidence",
+      "!**/docs/audit/visual-v3/metrics*.json"
     ]
   },
   "formatter": {

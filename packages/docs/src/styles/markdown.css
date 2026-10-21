@@ -82,17 +82,20 @@
 /* 表格（API 表为主） */
 .doc-markdown table {
   width: 100%;
-  margin: 0 0 18px;
+  max-width: 100%;
+  margin: 0 0 20px;
   border-collapse: collapse;
-  font-size: 13.5px;
+  font-size: 13px;
   display: block;
   overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .doc-markdown th,
 .doc-markdown td {
   border: 1px solid var(--site-border);
-  padding: 9px 14px;
+  padding: 10px 16px;
   text-align: left;
   vertical-align: top;
 }
@@ -101,6 +104,7 @@
   background: var(--site-bg-soft);
   font-weight: 600;
   white-space: nowrap;
+  color: var(--site-text);
 }
 
 .doc-markdown td code,

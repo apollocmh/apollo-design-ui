@@ -99,3 +99,8 @@ jobs:
           # FloatButton）。脚本内置断言，失败即非零退出。
           DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
             node docs/audit/tools/stage2-demo-probe.mjs
+
+          # V3 文档站视觉/结构门禁：shell 利用率、稳定 Grid（展开不换列）、
+          # 自举控件、Token 别名、390 无溢出、暗色。失败即非零退出。
+          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
+            node docs/audit/visual-v3/verify.mjs
