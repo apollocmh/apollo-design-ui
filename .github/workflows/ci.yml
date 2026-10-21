@@ -15,18 +15,11 @@
 name: CI
 
 on:
+  # 版本发布门禁：只有打版本标签才跑完整 CI（2026-10-21 用户裁决）。
+  # 普通 master 提交不再触发；标签必须打在 master 上（发布流程约定）。
   push:
-    branches: [master]
-    # 纯文档 / 记忆提交不跑 CI（2026-10-04）。
-    # ⚠️ `paths-ignore` 的语义是「**所有**改动文件都命中时才跳过」⇒ 混合提交照跑，
-    #    所以它不会掩盖任何代码问题。
-    # ⚠️ 代价：**纯文档提交里若删/改了被 registry 检查引用的 .md**，那一次不会被抓到。
-    #    需要时用 `workflow_dispatch` 手动跑一轮（它不受 paths-ignore 影响）。
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.workbuddy-ai/**'
-      - '.workbuddy/**'
+    tags:
+      - 'v*'
   pull_request:
     # 只对「合入 master」的 PR 跑门禁（原先无过滤 ⇒ 任何 base 都跑）。
     branches: [master]
@@ -35,7 +28,7 @@ on:
       - 'docs/**'
       - '.workbuddy-ai/**'
       - '.workbuddy/**'
-  # 手动跑完整 CI（不受 paths-ignore 影响）—— 纯文档提交后的兜底手段。
+  # 手动跑完整 CI（不受 paths-ignore / 标签限制）—— 发布前的兜底手段。
   workflow_dispatch:
 
 # 同一 ref 上的新推送取消旧运行：省 runner，也避免旧结果误导。
@@ -65,6 +58,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+      # `.generated/*.json` 是 gitignore 的构建产物，但 docs 的 `manifest.ts` 与
+      # 多个测试直接 import 它们 ⇒ 类型检查前必须先生成（2026-10-21 CI 实测 TS2307）。
+      - name: 生成文档站内容管线产物
+        run: pnpm --filter @apollo-design/docs run content:build
       - name: vue-tsc + biome
         env:
           # 🚨 **必须**：整仓 `vue-tsc` 在 GitHub runner（2 vCPU / **7 GB**）上会撞 V8 默认堆上限。
@@ -85,6 +82,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+
+      # 类型层包含 docs 的 `*.test-d.ts` / `manifest.ts` ⇒ 同 lint job，先落盘 `.generated`。
+      - name: 生成文档站内容管线产物
+        run: pnpm --filter @apollo-design/docs run content:build
 
       # 🚨 **这里原先还跑「运行时四层」（unit / dom-contract / a11y / theme）——
       #    2026-10-04 去重后删掉，因为 `coverage` job 跑的是**完全相同的这 4 个 project**：

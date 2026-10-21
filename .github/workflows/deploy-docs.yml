@@ -13,19 +13,11 @@
 name: Deploy Docs
 
 on:
+  # 版本发布：只有打版本标签才构建并发布（2026-10-21 用户裁决）。
+  # 普通 master 提交不再触发；标签必须打在 master 上（发布流程约定）。
   push:
-    branches: [master]
-    # 文档站源码 / 组件文档与 demo / 组件实现 任一变化都重新发布；
-    # 纯记忆、registry 数据变化不触发。
-    paths:
-      - 'packages/docs/**'
-      - 'packages/ui/src/**'
-      - 'packages/theme/src/**'
-      - 'packages/theme/build.config.ts'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
-      - '.github/workflows/deploy-docs.yml'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 # Pages 部署需要并发保护：同 ref 只保留最新一次部署。
@@ -33,10 +25,12 @@ concurrency:
   group: deploy-docs-${{ github.ref }}
   cancel-in-progress: true
 
+# Pages 当前是 legacy「Deploy from a branch」模式，发布源 = `gh-pages`。
+# `actions/deploy-pages` 要求 Pages source = GitHub Actions，且环境保护规则
+# 只允许 `gh-pages` 分支（2026-10-21 实测：构建成功、部署被环境策略拒绝）。
+# ⇒ 这里改为构建产物后**推送 gh-pages 分支**，与仓库既有手工发布流程一致。
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   build:
@@ -82,20 +76,44 @@ jobs:
           test -f "$D/components/icon.html" || { echo '图标资源页未预渲染'; exit 1; }
           grep -q 'icon-catalog' "$D/components/icon.html" || { echo '图标资源页正文为空'; exit 1; }
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
+      - name: 上传文档站 dist（供 deploy 作业）
+        uses: actions/upload-artifact@v7
         with:
+          name: docs-dist
           path: packages/docs/dist
+          if-no-files-found: error
+          retention-days: 1
 
   deploy:
-    name: 发布到 GitHub Pages
+    name: 发布到 gh-pages
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v7
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: docs-dist
+          path: /tmp/docs-dist
+
+      - name: 同步 dist 到 gh-pages 并推送
+        shell: bash
+        run: |
+          set -eu
+          # 保留 .git 与 .nojekyll，其余全部替换为本次 SSG 产物
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .nojekyll -exec rm -rf {} +
+          cp -a /tmp/docs-dist/. .
+          test -f .nojekyll || touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "gh-pages 无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "docs: deploy ${GITHUB_REF_NAME}"
+          git push origin HEAD:gh-pages
