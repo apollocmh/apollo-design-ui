@@ -1114,6 +1114,7 @@ export type {
   FormLabelAlign,
   FormLayout,
   FormListProps,
+  FormListSlotProps,
   FormListSlots,
   FormProps,
   FormSemanticClassNames,

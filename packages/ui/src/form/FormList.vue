@@ -2,7 +2,7 @@
 /**
  * Form.List —— 列表字段（antd `es/form/FormList.js` 37 行的 Vue 等价物）。
  *
- * 消费 form-core 的 `List`；scoped slot `(fields, operation, meta)`；
+ * 消费 form-core 的 `List`；scoped slot 载荷是**单对象** `{ fields, operations, meta }`；
  * fields 补 `fieldKey: field.key`；meta 只透传 errors/warnings；
  * name 缺失告警（antd 逐字）。Form.Item 的 noStyle 聚合依赖 ListContext
  * （form-core List 已 provide），本组件只做 prefixCls 前缀与 prefix context。
@@ -40,11 +40,13 @@ export default defineComponent({
             fieldKey: field.key,
           }));
           void inject;
-          return slots.default?.(
-            allFields as never,
-            operation as never,
-            ((meta as { errors?: unknown[]; warnings?: unknown[] }) ?? {}) as never,
-          );
+          // ⚠️ 必须包成单对象：模板 scoped slot 只接收一个 props 对象，
+          //    位置参数会让 `operations` / `meta` 在模板侧永远拿不到。
+          return slots.default?.({
+            fields: allFields,
+            operations: operation,
+            meta: (meta as { errors?: unknown[]; warnings?: unknown[] }) ?? {},
+          } as never);
         },
       });
     };
