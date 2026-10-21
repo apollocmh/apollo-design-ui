@@ -43,6 +43,7 @@
 - **Windows / 部署**：🚨 `/logo.svg` 被编译成 `file:///logo.svg` ⇒ `includeAbsolute:false`（361） · 🚨 `.bin/vue-tsc` 无扩展名 ENOENT ⇒ node + JS 入口（362） · 🚨 ESM `import('D:\\…')` 被当 `d:` 协议 ⇒ `pathToFileURL`（363） · ⚠️ 路径断言先 `split(path.sep).join('/')`（364） · 🚨 public 资源写死 `/logo.svg` 在子路径部署下 404 ⇒ `BASE_URL`（368） · 🚨 CLI 守卫 `file://${argv[1]}` Windows 恒假静默 no-op ⇒ `pathToFileURL`（369） · 🚨 pnpm 12 `pnpm.overrides` 不读 package.json，tarball 消费端写 `pnpm-workspace.yaml`（370） · ⚠️ tarball 分发必须断言 CSS 类真进产物（371）。
 - **消费端 / 浏览器冒烟**：🚨 Webpack 入口用 `DefinePlugin` 提供 `import.meta.env` + css/style-loader（372） · 🚨 冒烟必须跑 `vite preview` 不是 dev（无 SSR / 挂载时序不同）（373） · 🚨 SSG 404 水合后才出现 ⇒ 等 visible（374） · ⚠️ 语言断言页要含目标小节（375） · ⚠️ 图标目录首屏 120 上限 ⇒ 断言计数文本（376）。
 - **L6 基线平台**：🚨 入库基线由 macOS 生成；Windows 经典滚动条让 `#stage` 从 1440 变 1425 ⇒ **不要用 `--mode baseline` 覆盖既有基线**（377）。
+- **CI / 发布**：🚨 `content:check` 不落盘，docs 类型检查/测试/coverage 前必须 `content:build`（378,379） · 🚨 `pnpm run preview -- --host` 的 `--` 会让 vite 退回 4173 ⇒ 用 `exec vite preview`（380） · 🚨 Pages legacy 源为 gh-pages + 环境仅允许 gh-pages ⇒ 部署推 gh-pages，不能用 deploy-pages（381）。
 
 ## 工具 / 沙箱
 
@@ -4910,3 +4911,19 @@
     判据：`sharp(f).metadata().width` 对比同组件旧基线；**新变体可以补，既有基线不要重生成**，
     除非在 canonical macOS 环境统一重做。本次 input 仅新增 search/otp 6 张（1425），
     既有 9 张保持 macOS 原样，已在 `tests/visual/README.md` 登记。
+378. 🚨 **`content:check` 按设计只校验、不落盘**：`buildManifest({ write: !checkOnly })`。
+    docs 的 `manifest.ts` 与多个测试直接 import `.generated/*.json` ⇒ CI 里
+    `content:check` 之后必须再跑 `node tooling/content/build-manifest.mjs`
+    （已加 `content:build` 脚本），否则 typecheck / test 报 TS2307 或 Vite
+    `Failed to resolve import`（2026-10-21 Deploy Docs / CI 实测）。
+379. 🚨 **root vitest 的 unit project 包含 `packages/docs/tests/**`**：coverage 作业
+    不是「只跑 ui」，同样需要先生成 `.generated`；漏了会让 5 个 docs 测试在导入阶段
+    失败（2026-10-21 CI：569 passed / 5 failed）。
+380. 🚨 **`pnpm run preview -- --host … --port …` 在 pnpm 12 会把 `--` 原样传给 vite**：
+    vite 看到 `--` 后停止解析，退回默认 **4173**，CI 冒烟连 4477 必失败。
+    用 `pnpm --filter @apollo-design/docs exec vite preview --host … --port …`。
+381. 🚨 **本仓 Pages 是 legacy「Deploy from a branch」+ 环境规则只允许 `gh-pages`**：
+    `actions/deploy-pages` 需要 Pages source = GitHub Actions，必然被
+    `Branch "master" is not allowed to deploy to github-pages` 拒绝。
+    发布改成构建 artifact → checkout `gh-pages` → 替换内容（保留 `.nojekyll`）→ push；
+    `permissions: contents: write` 即可，不需要 `pages: write` / environment。
