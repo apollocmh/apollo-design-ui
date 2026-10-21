@@ -94,9 +94,15 @@ const PAGES = [
 ];
 
 const WIDTHS = [1440, 1920, 2560, 390];
-const KEY_PAGES = new Set(['home', 'overview', 'button']);
 const FULL_PAGES = new Set(['home', 'overview', 'button', 'table']);
-const COMPONENT_PAGES = new Set(['button', 'float-button', 'form', 'date-picker', 'upload', 'table']);
+const COMPONENT_PAGES = new Set([
+  'button',
+  'float-button',
+  'form',
+  'date-picker',
+  'upload',
+  'table',
+]);
 
 const pageList = ONLY ? PAGES.filter((p) => ONLY.includes(p.key)) : PAGES;
 const widths = ONLY_WIDTH ? [ONLY_WIDTH] : WIDTHS;
@@ -120,27 +126,37 @@ async function setTheme(page, side, theme) {
   if (side === 'apollo') {
     // 主题已由 context.addInitScript 注入（reload 会再次执行 init script，
     // 因此不能「先 evaluate 再 reload」——会被重置回 light）。
-    await page.waitForFunction(
-      () => document.documentElement.dataset.apolloTheme === 'dark',
-      null,
-      { timeout: 10000 },
-    ).catch(() => {});
+    await page
+      .waitForFunction(() => document.documentElement.dataset.apolloTheme === 'dark', null, {
+        timeout: 10000,
+      })
+      .catch(() => {});
     return;
   }
   // Ant Design：顶栏 Theme 按钮先开下拉，再点「Dark theme」菜单项。
-  const current = await page.evaluate(() => document.documentElement.getAttribute('data-prefers-color'));
+  const current = await page.evaluate(() =>
+    document.documentElement.getAttribute('data-prefers-color'),
+  );
   if (current !== 'dark') {
     const themeBtn = page.locator('header button').filter({ hasText: 'Theme icon' }).first();
     await themeBtn.click({ timeout: 10000 }).catch(() => {});
     await page.waitForTimeout(300);
     const darkItem = page.locator('[role="menuitem"]').filter({ hasText: 'Dark theme' }).first();
     await darkItem.click({ timeout: 10000 }).catch(async () => {
-      await page.getByText('Dark theme', { exact: true }).first().click({ timeout: 5000 }).catch(() => {});
+      await page
+        .getByText('Dark theme', { exact: true })
+        .first()
+        .click({ timeout: 5000 })
+        .catch(() => {});
     });
     await page
-      .waitForFunction(() => document.documentElement.getAttribute('data-prefers-color') === 'dark', null, {
-        timeout: 10000,
-      })
+      .waitForFunction(
+        () => document.documentElement.getAttribute('data-prefers-color') === 'dark',
+        null,
+        {
+          timeout: 10000,
+        },
+      )
       .catch(() => {});
     await page.keyboard.press('Escape').catch(() => {});
     await page.waitForTimeout(600);
@@ -163,20 +179,20 @@ function measurePage(side) {
   const q = (sel) => document.querySelector(sel);
   const qa = (sel) => [...document.querySelectorAll(sel)];
   const cs = (el, prop) => (el ? getComputedStyle(el)[prop] : null);
-  const px = (value) => (value ? Number.parseFloat(value) : null);
 
   const header = q(side === 'ant' ? 'header' : '.site-topbar');
   const main = q('main');
   const sidebar =
     side === 'ant'
-      ? qa('main .ant-col').find((el) => getComputedStyle(el).position === 'sticky') ?? null
+      ? (qa('main .ant-col').find((el) => getComputedStyle(el).position === 'sticky') ?? null)
       : q('.site-sidebar');
   const content = q(side === 'ant' ? 'article' : '.site-content');
   const prose =
     side === 'ant'
-      ? [...(q('article')?.children ?? [])]
+      ? ([...(q('article')?.children ?? [])]
           .filter((el) => el.tagName === 'DIV')
-          .sort((a, b) => b.getBoundingClientRect().height - a.getBoundingClientRect().height)[0] ?? null
+          .sort((a, b) => b.getBoundingClientRect().height - a.getBoundingClientRect().height)[0] ??
+        null)
       : q('.site-content .doc-markdown');
   const toc = q(side === 'ant' ? '.ant-anchor-wrapper' : '.site-toc');
 
@@ -184,10 +200,12 @@ function measurePage(side) {
   const demos = qa(demoSelector);
   const card = demos[0] ?? null;
   const canvas = card?.querySelector(side === 'ant' ? '.code-box-demo' : '.demo-canvas') ?? null;
-  const title = card?.querySelector(side === 'ant' ? '.code-box-title' : '.demo-preview-title') ?? null;
+  const title =
+    card?.querySelector(side === 'ant' ? '.code-box-title' : '.demo-preview-title') ?? null;
   const desc =
-    card?.querySelector(side === 'ant' ? '.code-box-description, .code-box-meta' : '.demo-preview-desc') ??
-    null;
+    card?.querySelector(
+      side === 'ant' ? '.code-box-description, .code-box-meta' : '.demo-preview-desc',
+    ) ?? null;
 
   // API 表：取「API」标题之后的第一个 table（Ant 的 h2#api / Apollo 的 h2 API 均适用）
   const headings = qa('h2, h3');
@@ -200,8 +218,7 @@ function measurePage(side) {
     });
   const apiCell = apiTable?.querySelector('td') ?? null;
 
-  const heroTitle =
-    side === 'ant' ? q('h1') : q('.home-title, .component-title, h1');
+  const heroTitle = side === 'ant' ? q('h1') : q('.home-title, .component-title, h1');
 
   return {
     side,
@@ -244,7 +261,9 @@ function measurePage(side) {
           list.push(r);
           rows.set(key, list);
         }
-        const multi = [...rows.entries()].filter(([, list]) => list.length > 1).sort((a, b) => a[0] - b[0])[0];
+        const multi = [...rows.entries()]
+          .filter(([, list]) => list.length > 1)
+          .sort((a, b) => a[0] - b[0])[0];
         if (!multi) return { columns: 1, cardWidth: Math.round(rects[0].width), gap: null };
         const list = multi[1].sort((a, b) => a.x - b.x);
         return {
@@ -287,22 +306,16 @@ async function captureSide(browser, { side, pageKey, width, theme, pageDef }) {
     reducedMotion: 'reduce',
   });
   if (side === 'apollo') {
-    await context.addInitScript(
-      (requestedTheme) => {
-        localStorage.setItem('apollo-site-locale', 'en-US');
-        localStorage.setItem('apollo-site-theme', requestedTheme);
-      },
-      theme,
-    );
+    await context.addInitScript((requestedTheme) => {
+      localStorage.setItem('apollo-site-locale', 'en-US');
+      localStorage.setItem('apollo-site-theme', requestedTheme);
+    }, theme);
   }
   const page = await context.newPage();
   const base = side === 'ant' ? ANT_URL : APOLLO_URL;
   const pathPart = side === 'ant' ? pageDef.ant : pageDef.apollo;
   const sep = pathPart.includes('?') ? '&' : '?';
-  const url =
-    side === 'apollo'
-      ? `${base}${pathPart}${sep}lang=en-US`
-      : `${base}${pathPart}`;
+  const url = side === 'apollo' ? `${base}${pathPart}${sep}lang=en-US` : `${base}${pathPart}`;
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
   await stabilize(page, side, pageKey);
   if (theme === 'dark') await setTheme(page, side, theme);
@@ -346,11 +359,15 @@ async function captureSide(browser, { side, pageKey, width, theme, pageDef }) {
       return tables.findIndex((t) => t.getBoundingClientRect().y + window.scrollY > apiY);
     });
     if (apiIndex >= 0) {
-      await page.locator('table').nth(apiIndex).screenshot({
-        path: shotPath(side, `${prefix}-api`),
-        animations: 'disabled',
-        caret: 'hide',
-      }).catch(() => {});
+      await page
+        .locator('table')
+        .nth(apiIndex)
+        .screenshot({
+          path: shotPath(side, `${prefix}-api`),
+          animations: 'disabled',
+          caret: 'hide',
+        })
+        .catch(() => {});
     }
   }
 
@@ -411,6 +428,6 @@ const main = async () => {
   };
   fs.writeFileSync(METRICS, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`\n✅ ${rows.length} 条采样 → ${METRICS}`);
-}
+};
 
 await main();
