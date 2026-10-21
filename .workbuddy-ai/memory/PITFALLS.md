@@ -42,6 +42,7 @@
 - **薄壳/转发**：🚨 **被 `Omit` 掉的 prop 必须在转发时显式补回**（内层有默认值就会静默用错，315） · ⚠️ VTU `mount(C, options, slots)` 的**第三参被静默忽略**，插槽要写进 `options.slots`（316）。
 - **Windows / 部署**：🚨 `/logo.svg` 被编译成 `file:///logo.svg` ⇒ `includeAbsolute:false`（361） · 🚨 `.bin/vue-tsc` 无扩展名 ENOENT ⇒ node + JS 入口（362） · 🚨 ESM `import('D:\\…')` 被当 `d:` 协议 ⇒ `pathToFileURL`（363） · ⚠️ 路径断言先 `split(path.sep).join('/')`（364） · 🚨 public 资源写死 `/logo.svg` 在子路径部署下 404 ⇒ `BASE_URL`（368） · 🚨 CLI 守卫 `file://${argv[1]}` Windows 恒假静默 no-op ⇒ `pathToFileURL`（369） · 🚨 pnpm 12 `pnpm.overrides` 不读 package.json，tarball 消费端写 `pnpm-workspace.yaml`（370） · ⚠️ tarball 分发必须断言 CSS 类真进产物（371）。
 - **消费端 / 浏览器冒烟**：🚨 Webpack 入口用 `DefinePlugin` 提供 `import.meta.env` + css/style-loader（372） · 🚨 冒烟必须跑 `vite preview` 不是 dev（无 SSR / 挂载时序不同）（373） · 🚨 SSG 404 水合后才出现 ⇒ 等 visible（374） · ⚠️ 语言断言页要含目标小节（375） · ⚠️ 图标目录首屏 120 上限 ⇒ 断言计数文本（376）。
+- **动效 / 浮层（阶段 0）**：🚨 Trigger 关闭置 `ready=false` ⇒ 浮层瞬移 `-1000vw/-1000vh`，离场在屏外（382） · 🚨 Notification MotionList slot 回查实时 keys ⇒ removed key 拿不到 config，立即卸载（383） · 🚨 Modal 的 zoom 原点要跟随最近 100ms 点击，不是固定中心（384） · ⚠️ Tree 收起后再次展开无 appear（385，H）。
 - **L6 基线平台**：🚨 入库基线由 macOS 生成；Windows 经典滚动条让 `#stage` 从 1440 变 1425 ⇒ **不要用 `--mode baseline` 覆盖既有基线**（377）。
 - **CI / 发布**：🚨 `content:check` 不落盘，docs 类型检查/测试/coverage 前必须 `content:build`（378,379） · 🚨 `pnpm run preview -- --host` 的 `--` 会让 vite 退回 4173 ⇒ 用 `exec vite preview`（380） · 🚨 Pages legacy 源为 gh-pages + 环境仅允许 gh-pages ⇒ 部署推 gh-pages，不能用 deploy-pages（381）。
 
@@ -4927,3 +4928,29 @@
     `Branch "master" is not allowed to deploy to github-pages` 拒绝。
     发布改成构建 artifact → checkout `gh-pages` → 替换内容（保留 `.nojekyll`）→ push；
     `permissions: contents: write` 即可，不需要 `pages: write` / environment。
+382. 🚨 **Trigger 关闭时把 `offsetInfo.ready` 置 false，浮层会瞬移到 `-1000vw/-1000vh`，离场动画在屏幕外播放**：
+    `packages/ui/src/_internal/trigger.ts` 的 `watch(mergedOpen)` 在 `!open` 时
+    `ready=false`，而 `offsetStyle` 只要 `!ready` 就返回屏外占位。上游
+    `@rc-component/trigger/es/hooks/useOffsetStyle.js` 的条件是 `ready || !open`
+    —— 关闭但未 ready 时**继续使用上一次 offset**。症状：Select/DatePicker/
+    Popconfirm/Popover/Tooltip/Dropdown/Cascader/TreeSelect 等所有 Trigger 消费者
+    「看不到关闭动画」；实测关闭首帧 rect `[-14400,-9000]`。修时先改共享层，
+    再逐组件复测，别给各组件补 CSS。
+383. 🚨 **Notification 的 MotionList slot 用「当前 keys」查 config：被移除的 key 查不到 ⇒ 返回 null ⇒ 立即卸载**：
+    `NoticeList.ts` 的 slot 里 `const item = keys.value.find(...)`，而 `keys` 来自
+    过滤后的 `configList`；`MotionList` 只把 key 字符串带进 removed entity。
+    症状：点击关闭后约 35ms 整个 `.apollo-notification` 容器消失，没有
+    `-fade-leave-start/active`；antd 是 leave 约 0.2s 后才移除。修法：让
+    MotionList 的实体携带 `{key, config}` 载荷（或 NoticeList 维护 removed
+    config 缓存），**不能在 slot 里回查实时 keys**。
+384. 🚨 **Modal 的 zoom 原点：antd 监听 document capture click 记录 pageX/pageY（100ms 有效），本仓只读 `props.mousePosition`**：
+    实测点击打开时 antd `transform-origin: -398px -76px`（点击点相对面板），
+    本仓 `260px 106px`（面板中心），入场轨迹肉眼可见不同。上游证据
+    `antd/es/modal/Modal.js:24-41, 228`；本仓 `modal/Modal.ts:524` 只传 prop。
+    Vue 侧要实现同语义的 document click capture + 100ms 过期 + 卸载清理，
+    不能照搬模块级副作用。
+385. ⚠️ **Tree 收起正常但「收起后再次展开」没有 appear 动效**（阶段 0 部分复现）：
+    basic 树收起有 `-motion-collapse-leave-start/active`；收起完成后再展开，
+    nodes 从 2 回到 7，但没有 `.apollo-tree-treenode-motion` 包装（antd 有）。
+    初步怀疑 `NodeList` 的 expand diff / MOTION_KEY 哨兵分支（**H，未确认**）；
+    阶段 1 先做逐帧探针，别直接重写 2026-10-17 已修过的 Tree motion。

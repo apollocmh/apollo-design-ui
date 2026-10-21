@@ -45,6 +45,7 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 2026-10-21 审计 A01–A13 整改（收口）：docs **142 tests** / L7 `--no-build` **151 FAIL 0** / 独立 Icon 页 **848** / **Input.Search+OTP 补齐**（L4 **40 例**、L6 `both` **15/15 exact**；新增 6 张 Windows 基线待 macOS 重生成）/ `verify:consumer` **tarball+Vite+Webpack** / Playwright 冒烟 **36/36** 进 `docs-ci.yml`；台账 `docs/audit/2026-10-21-remediation.md`。审计项 0 剩余。
 - 2026-10-21 CI 收口：`ci.yml` / `deploy-docs.yml` 改为 **`v*` 标签触发**（PR 门禁保留）；Deploy Docs 改构建后推 `gh-pages`；手动 dispatch CI **run 39555460116 全绿**（registry/lint/test/coverage/build + 4 L6 shard），Docs CI **run 39554118134 全绿**（含冒烟 36/36）。
 - 2026-10-21 首个标签 **`v0.1.0`**（指向 `2fa3d9f1`）：CI **39559668861 全绿**；Deploy Docs **39559668851 全绿**，已推 `gh-pages`（`9bea9c11`）并上线 https://apollocmh.github.io/apollo-design-ui/ 。
+- 2026-10-21 阶段 0（`fix/docs-motion-demo-quality` @ `fceda9a9`）：六类动效真实浏览器复现（Trigger 关闭瞬移屏外 / Notification 立即卸载 / Modal zoom 原点 / Tree 再展开无 motion）；Demo 覆盖 Form 5/44、DatePicker 2/32、Upload 3/24；交付 `docs/audit/{baseline-motion-matrix,demo-coverage-matrix,stage0-static-findings}.md` + `evidence/`。**待用户确认后进入阶段 1**。
 - 2026-10-17～21 文档站 V2 分支 `feature/docs-site-v2`：hover 浮层 `ea0cbf6c` · dropdown 开合 `fee81a58` · cascader/tree-select `9118f946` · 点外部 `d2460163` · `.html` 深链 `463cfcde` · 重复标题 `8cbe272f` · tree 动效收尾 `5de76911` · table 示例 `65243a1e` · 过滤弹层 token `9f0e0d06` · 组件页 TOC 顺序 `797c8399` · **menu #22 三项 `7b00b40c`**。
 
 ## §6 判别式索引（完整判据见 PITFALLS.md 末尾「判别式总表」）
