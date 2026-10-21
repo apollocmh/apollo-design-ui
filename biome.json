@@ -25,7 +25,8 @@
       "!**/tests/compat/baselines",
       "!**/packages/icons/src/icons",
       "!**/packages/locale/src/locales",
-      "!**/registry/source/locale-rc"
+      "!**/registry/source/locale-rc",
+      "!**/docs/audit/evidence"
     ]
   },
   "formatter": {
