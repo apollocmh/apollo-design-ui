@@ -42,7 +42,7 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - ✅ `test:build` 151 项 / FAIL 0（`d152fd32`）。
 - 📌 推送授权 2026-10-15 恢复：用户要求统一推送并关闭已完成 Issue。
 - 2026-10-21 Claude Code 接手：分析 + 建根 `CLAUDE.md`（含 Memory 交接协议）；业务代码零改动，结论/文档漂移见 `2026-10-21.md`。
-- 2026-10-21 阶段 0–4 整改（`fix/docs-motion-demo-quality`）：Trigger/Notification/Tree/Modal 动效修复；Demo 758→**881**（可比对覆盖 82.7%）；文档站 viewport 模式 / BASE_URL / iframe 校验 / 语言同步 / 布局与内部文案清理；门禁 unit **7147**、types **2213**、L7 **151/FAIL 0**、docs smoke **36/36**、文档视觉 9/9 `0.000%`。报告 `docs/audit/FINAL-REPORT.md`；发布标签 `v0.1.1`。
+- 2026-10-21 阶段 0–4 整改（`fix/docs-motion-demo-quality`）：Trigger/Notification/Tree/Modal 动效修复；Demo 758→**881**（可比对覆盖 82.7%）；文档站 viewport 模式 / BASE_URL / iframe 校验 / 语言同步 / 布局与内部文案清理；门禁 unit **7147**、types **2213**、L7 **151/FAIL 0**、docs smoke **36/36**、文档视觉 9/9 `0.000%`。报告 `docs/audit/FINAL-REPORT.md`；发布标签 `v0.1.1` → `cc8af285`；CI 39610059996 / Deploy Docs 39610060088 全绿。
 - 2026-10-21 审计 A01–A13 整改（收口）：docs **142 tests** / L7 `--no-build` **151 FAIL 0** / 独立 Icon 页 **848** / **Input.Search+OTP 补齐**（L4 **40 例**、L6 `both` **15/15 exact**；新增 6 张 Windows 基线待 macOS 重生成）/ `verify:consumer` **tarball+Vite+Webpack** / Playwright 冒烟 **36/36** 进 `docs-ci.yml`；台账 `docs/audit/2026-10-21-remediation.md`。审计项 0 剩余。
 - 2026-10-21 CI 收口：`ci.yml` / `deploy-docs.yml` 改为 **`v*` 标签触发**（PR 门禁保留）；Deploy Docs 改构建后推 `gh-pages`；手动 dispatch CI **run 39555460116 全绿**（registry/lint/test/coverage/build + 4 L6 shard），Docs CI **run 39554118134 全绿**（含冒烟 36/36）。
 - 2026-10-21 首个标签 **`v0.1.0`**（指向 `2fa3d9f1`）：CI **39559668861 全绿**；Deploy Docs **39559668851 全绿**，已推 `gh-pages`（`9bea9c11`）并上线 https://apollocmh.github.io/apollo-design-ui/ 。
