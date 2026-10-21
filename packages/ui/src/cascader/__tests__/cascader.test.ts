@@ -60,9 +60,9 @@ describe('Cascader · 薄壳组装', () => {
     w.unmount();
   });
 
-  it('点击触发 ⇒ 打开（openOnTriggerClick）；popup 类名链', async () => {
+  it('点击触发 ⇒ 打开（Selector mousedown）；popup 类名链', async () => {
     const w = mountCascader();
-    await w.find('.apollo-cascader').trigger('click');
+    await w.find('.apollo-cascader').trigger('mousedown');
     await nextTick();
     expect(menus().length).toBe(1);
     w.unmount();

@@ -35,8 +35,9 @@ _internal/overflow.ts    # rc-overflow 的 Vue 版（horizontal 溢出折叠基�
   可见子树（PathTracker 注入 keyPath）—— rc 的 measureChildList 协议。
 - **Overflow 新基建**：`_internal/overflow.ts`（calcDisplayCount 纯函数化，
   raw 路径 cloneVNode 注入，ssr='full'，renderRawRest）。
-- **collapsed 态 Tooltip 集成**：firstLevel item 的标题走 Tooltip（v1 由
-  noicon/Tooltip 通道承担，完整 tooltip prop 透传 PENDING）。
+- **collapsed 态 Tooltip 集成**（2026-10-21 落地）：`Menu.tooltip`（`false` 关闭）
+  透传到 MenuItem；折叠态（inlineCollapsed / Sider 折叠）用 Tooltip 展示标题，
+  `title` 未定义时按 antd 取 firstLevel 的 label，placement 默认 RTL?left:right。
 
 ## 3. 与 antd 的差异
 
@@ -67,14 +68,16 @@ _internal/overflow.ts    # rc-overflow 的 Vue 版（horizontal 溢出折叠基�
   变化时 `unregisterPath`，避免动态移除 items 后残留旧 `key → keyPath` 映射。
 
 ⚠️ 仍未做：公开类型与运行时 props 的**逐字段**对照（#22.6 只覆盖 classNames/styles；
-`expandIcon` / `tooltip` 等仍按「Vue 侧 slot 替代」处理，见 COMPATIBILITY）。
+`tooltip` 已在 2026-10-21 接通，`expandIcon` 仍按「Vue 侧 slot 替代」处理，见 COMPATIBILITY）。
 
 登记于 `COMPATIBILITY.md` §9.2 **D87–D90**：flushSync（PLATFORM）、RO 时序
 （PLATFORM）、items 唯一真源（INTENDED）、keyPath reverse 口径（UPSTREAM 事实契约）。
 
-**已知缺口 PENDING-1**：horizontal 的 L6 视觉裁剪 —— Overflow 的 RO 测量
-时序存在 hidden 中间态冻结（absolute 元素不再触发 RO ⇒ 无法收敛）。
-DOM 结构由 L4 `menu:horizontal` 钉住；几何待 Overflow 时序精调后回归。
+**PENDING-1 已在 2026-10-21 定位并修复**：horizontal 菜单整体不可见的根因不是 RO 时序，
+而是 `renderRawItem` 返回的是**组件 VNode**（MenuItem / SubMenu），overflow 的 ref 拿到
+组件实例后 `el instanceof HTMLElement` 恒 false ⇒ 每项宽度缺失 ⇒ `displayCount = -1`
+全部判溢出。Overflow 现在解包 `$el` 再测量（`overflow.test.ts` 回归）。DOM 结构由
+L4 `menu:horizontal` 钉住；几何仍需在 CI 的 L6 环境回归后更新基线。
 
 L6 视觉 9 张（vertical/inline/dark × 3 viewport）**全部 0.000% exact**。
 

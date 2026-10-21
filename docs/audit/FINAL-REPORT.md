@@ -10,7 +10,7 @@
 |---|---|---|
 | 阶段 0 · 复现与基线 | ✅ 完成 | 六类动效真实浏览器矩阵 + 72 组件 Demo 覆盖矩阵 + DOC/I18N 源码证据 |
 | 阶段 1 · 动效与交互 | ✅ 完成（`eda548e2`） | Trigger / Notification / Tree / Modal 全部修复；message 同路径；高度过渡补单位 |
-| 阶段 2 · 功能 Demo | ✅ 完成 | 758 → **881** demo；可比对覆盖率 71.1% → **82.7%**；场景重合度 67.2% → **74.1%** |
+| 阶段 2 · 功能 Demo | ✅ 完成 | 758 → 881（本轮补遗后 **989**）demo；可比对覆盖率 71.1% → **92.9%**；场景重合度 67.2% → **83.8%** |
 | 阶段 3 · 文档站产品化 | ✅ 完成 | viewport/isolated/inline 三模式；BASE_URL；iframe 安全；SSR 主题；语言同步；布局/卡片/侧栏；内部文字清理 |
 | 阶段 4 · 回归与发布 | ✅ 完成 | unit/dom/a11y/theme、L3、L7、docs smoke、功能 probe、文档视觉基线均通过（见 §4） |
 
@@ -94,9 +94,9 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
   `biome check <改动文件>`（0 error）。CI Linux 跑全量。
 - 英文 demo 说明仍有 `## en-US` 缺失时回退中文并显示提示；组件内置文案已随
   `ConfigProvider.locale` 切换。剩余英文正文翻译属于内容翻译批次。
-- Demo 仍未追平的高价值缺口：Form 15/44、Table 30/53、DatePicker 18/32、
-  Upload 15/24、Cascader 14/23（依赖裁剪、拖拽、外部 OSS 等能力）；已记录在
-  `demo-coverage-matrix.md` §7。
+- Demo 仍未追平的高价值缺口（本轮补遗后）：Form 35/44、Table 43/53、
+  DatePicker 28/32、Upload 23/24、Input 24/27、Button 20/22（依赖裁剪、拖拽、
+  外部 OSS、debug-only 等能力）；逐组件见 `demo-coverage-stage2.json`。
 
 ## 6. 提交与发布
 
@@ -113,3 +113,47 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
 - **CI `39610059996` 全绿**：lint / types / coverage / registry / L7 / L6 四 shard 均 success。
 - **Deploy Docs `39610060088` 全绿**：构建 + 发布 `gh-pages`（`60b26152`）。
 - 线上入口：`https://apollocmh.github.io/apollo-design-ui/`（GitHub Pages）。
+
+## 7. 补遗（2026-10-21 第二轮：Demo 余量 + Menu/选择器交互缺陷）
+
+### 7.1 Demo 补齐
+
+- 总 demo：**881 → 989**（+108），`demo.test.ts` / `a11y.test.ts` / `theme.test.ts`
+  的 `expectCount` 全部按实际 glob 结果核对；文档管线总量
+  （`demo-audit.test.ts` / `manifest.test.ts`）同步为 **989**。
+- 主要增量：Form 15→35、Table 30→43、DatePicker 18→28、Upload 15→23、
+  Cascader 14→23、Input 18→24、InputNumber 16→20、Button 17→20、Tabs 15→19、
+  Upload/Descriptions/Menu/Pagination 等组件 token / style-class demo。
+- 覆盖复算（`demo-coverage-refresh.mjs`）：可比对覆盖率 **92.9%**（985/1060，
+  基线组件集口径），场景重合度 **83.8%**；`componentsBelowUpstream` 31。
+
+### 7.2 交互缺陷普查（均为真实浏览器复现后修复，附回归）
+
+| 问题 | 根因（引入点） | 修复 | 回归 |
+|---|---|---|---|
+| Menu `inline-collapsed`：hover 打开后无法选中、鼠标移开即收起、折叠项弹层不可见 | ① measure 子树的 `SubMenu` / `MenuItemGroup` 直接 `return null`，嵌套子项从未登记 keyPath ⇒ `isSubPathKey` 恒 false、父级 selected 不出现（`b8770f5f` 初版）② 折叠切换时 openKeys 未按 rc 清空/回放（`Menu.js` inlineCacheOpenKeys）③ popup 定位只 `watch(open)`，mode 切换不重算 | ① measure 分支继续渲染 children 并 provide PathTracker（对齐 rc `SubMenu/index.js:273-287`、`MenuItemGroup.js`）② 补 inlineCacheOpenKeys：折叠清空、展开回放 ③ watch `[open, mode]` | `menu/__tests__/index.test.ts`：measure 路径选中、group 选中、折叠/回放、popup 可见、嵌套弹层不误关 |
+| 嵌套子菜单（horizontal 三级）：移入三级弹层后父级 100ms 关闭，整条链消失 | 嵌套弹层 Teleport 到 body，父弹层先收到 mouseleave；rc-trigger 的 hover 判定未移植 | Menu context 登记各层 closeTimer；进入后代弹层时取消所有**祖先**计时器（兄弟不互消） | 同上「嵌套弹层」用例 |
+| horizontal 菜单整体不可见（高度 1px，所有项 `height:0;position:absolute`） | `Overflow.renderRawItem` 返回的是**组件 VNode**；ref 拿到组件实例后 `instanceof HTMLElement` 恒 false ⇒ 宽度全缺失 ⇒ `calcDisplayCount = -1` 全部判溢出（`b3512d08` 初版） | Overflow 统一 `resolveElement($el)` 后测量（item 与 rest） | `_internal/__tests__/overflow.test.ts` 组件 VNode 回归 |
+| 折叠态 Tooltip demo 无 Tooltip | `Menu.tooltip` 只在 interface 声明，Menu props/context/MenuItem 均未实现（README 标注 PENDING） | 实现 antd MenuItem 同款：折叠态包裹 Tooltip（`false` 关闭、title/placement 规则一致） | `menu` demo 浏览器验证 + `tooltip` demo |
+| **全站选择器 hover 即弹层**（用户报 Pagination 页大小 Select；同族 Cascader/TreeSelect/AutoComplete） | Trigger 的默认 `action='hover'`（`348b0e37` Tooltip 基建）被 BaseSelect 继承；BaseSelect 的点击开合是 `openOnTriggerClick` 实验开关（`1e600de3`），与 Selector mousedown **双重切换互相抵消** ⇒ TreeSelect/Cascader 点击反而不开 | BaseSelect 两处 Trigger 显式 `action: []`；开合收敛为单一通道（Selector mousedown / raw 触发器 onClick）；删除 `openOnTriggerClick` | `select`/`tree-select`/`cascader` 用例改为真实 mousedown；浏览器复验 hover=0 / click 开 / 再点关 / 外部点击关 |
+
+**普查结论**：弹层按键位的判据按 antd 逐组件核对——`Tooltip`/`Popover` 默认 hover、
+`Popconfirm`/`ColorPicker` 默认 click、`Dropdown` 默认 hover（trigger 可配）、
+`DatePicker`/`TimePicker` 受控 `showAction=[]` + `hideAction=['click']`、
+`Table` 筛选 click、`Menu` 子菜单 hover。受本轮 BaseSelect 缺陷影响的是
+**Select / AutoComplete（Select 薄包装）/ TreeSelect / Cascader /
+Pagination sizeChanger**；其余组件无此问题。
+
+### 7.3 门禁（本轮实测）
+
+| 门禁 | 结果 |
+|---|---|
+| `pnpm test` | unit **7261 passed / 3 skipped**；dom-contract **1743**；a11y **1357**；theme **890**（0 failed） |
+| `pnpm test:types` | **2213 passed / 170 files / no type errors** |
+| `pnpm lint:types` | 0 errors |
+| `node tests/build/run.mjs` | **151 项 / FAIL 0**（menu 预算按 Tooltip 依赖重定为 145KB，见 `budget.json` `_note`） |
+| `pnpm registry:check` | **19 checks passed / 0 warnings** |
+| `packages/docs/tests/smoke-browser.mjs` | **36/36** |
+| `docs/audit/tools/stage2-demo-probe.mjs` | 全部断言通过 |
+| `tools/docs-visual-diff.mjs` | **9 张基线 / 全部 0.000%**（新增 demo 导致 CSS columns 重排，已肉眼核对后重生成） |
+| biome（LF 归一后检查 179 个改动文件） | **0 error / 5 warning**（均为 `noNonNullAssertion` 既有 warn 级） |

@@ -292,3 +292,31 @@
 - `cascader`（14/23）：自定义下拉、触发器、多选调试类场景。
 
 这些缺口需要真实 API/依赖支撑，后续按能力矩阵继续补；本阶段不以数量断言替代功能验收。
+
+### 7.1 补遗（2026-10-21 第二轮）
+
+> 同样由 `demo-coverage-refresh.mjs` 复算；`demo-audit.test.ts` / `manifest.test.ts`
+> 的管线总量已同步为 **989**。
+
+| 指标 | 阶段 2 | 补遗后 | 变化 |
+|---|---:|---:|---:|
+| 本地 demo 文件（可比对） | 877 | **985** | +108 |
+| 文件数覆盖率 | 82.7% | **92.9%** | +10.2pp |
+| 文件数少于 antd 的组件 | 43 | **31** | −12 |
+| 场景名重合度（下限口径） | 74.1% | **83.8%** | +9.7pp |
+| 场景名重合度 < 50% 的组件 | 6 | **0** | −6 |
+
+| 组件 | 阶段 2 | 补遗后 | 说明 |
+|---|---:|---:|---|
+| Form | 15 | **35** | 高级搜索、嵌套/动态规则、Form.Item path、Modal 内表单、登录、variant、warningOnly 等 |
+| Table | 30 | **43** | 可编辑行、树表省略、展开行吸顶、动态设置、嵌套表、分页/筛选重置等 |
+| DatePicker | 18 | **28** | 起止、时间、12h、步长、mode、suffix、switchable、style-class/component-token |
+| Upload | 15 | **23** | 头像、裁剪前置、图片校验、transformFile、预览等本地 mock 场景 |
+| Cascader | 14 | **23** | 自定义触发器/下拉、hover、renderPanel、showCheckedStrategy、suffix、variant |
+| Input / InputNumber | 18 / 16 | **24 / 20** | 变体、状态、前后缀、键盘与 style-class/component-token |
+| 其余 | — | +1～7 | Alert/Anchor/Breadcrumb/Button/Card/Descriptions/Menu/Pagination/Tabs/Typography 等 |
+
+补遗后仍低于上游的主要是：`form` 35/44、`table` 43/53、`date-picker` 28/32、
+`input` 24/27、`button` 20/22、`upload` 23/24，差额集中在 debug-only、
+需要外部服务（OSS/裁剪）、拖拽排序等能力，已在 `demo-coverage-stage2.json`
+逐项保留名单，不以数量凑数。

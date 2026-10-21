@@ -14,7 +14,7 @@ subtitle: 图片
 
 ## 代码演示
 
-见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景）：basic / component-token /
+见 [`demo/`](./demo)（15 个，覆盖 antd 的主要用户场景）：basic / component-token /
 controlled-preview / cover-placement / fallback / image-render / nested /
 placeholder / preview-group / preview-group-top-progress / preview-group-visible /
 preview-img-info / preview-mask / preview-src。

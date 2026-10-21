@@ -4,8 +4,15 @@
  */
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { h, nextTick } from 'vue';
+import { defineComponent, h, nextTick } from 'vue';
 import Overflow, { calcDisplayCount, INVALIDATE, RESPONSIVE } from '../overflow';
+
+interface MockRO {
+  targets: Set<Element>;
+  trigger(): void;
+}
+const roInstances = (): Set<MockRO> =>
+  (globalThis.ResizeObserver as unknown as { instances: Set<MockRO> }).instances;
 
 describe('calcDisplayCount · rc useLayoutEffect 循环逐分支', () => {
   it('containerWidth 为 0/null ⇒ 不计算（displayCount null = 保持现状）', () => {
@@ -66,6 +73,40 @@ describe('Overflow · jsdom 集成（无 ResizeObserver ⇒ 不测量）', () =>
     // 与 React 版一致：containerWidth null ⇒ mergedData 空 ⇒ 无 item 节点
     expect(wrapper.findAll('span').length).toBe(0);
     void wrapper.unmount;
+  });
+
+  it('renderRawItem 返回组件 VNode 时解包 $el 后再测量（horizontal 菜单不可见的回归）', async () => {
+    const Item = defineComponent({
+      name: 'AOverflowRawItem',
+      setup(_, { attrs }) {
+        return () => h('li', attrs, 'item');
+      },
+    });
+    const wrapper = mount(Overflow, {
+      attachTo: document.body,
+      props: {
+        data: ['a', 'b', 'c'],
+        maxCount: RESPONSIVE,
+        ssr: 'full',
+        component: 'ul',
+        renderRawItem: (item: unknown) => h(Item, { key: String(item) }),
+      },
+    });
+    await nextTick();
+    const container = wrapper.element as HTMLElement;
+    const items = [...container.querySelectorAll('li')] as HTMLElement[];
+    Object.defineProperty(container, 'clientWidth', { value: 1000, configurable: true });
+    for (const el of items) {
+      Object.defineProperty(el, 'offsetWidth', { value: 100, configurable: true });
+    }
+    // 触发全部观察者（每项登记宽度 / 容器写入 clientWidth），watch 在 post 阶段统一计算
+    for (const ro of roInstances()) ro.trigger();
+    await nextTick();
+    await nextTick();
+    // displayCount 必须是最后一项（全部可见），而不是 -1（全部 overflow 隐藏）
+    expect(items.every((el) => el.getAttribute('aria-hidden') !== 'true')).toBe(true);
+    expect(wrapper.emitted('visible-change')?.at(-1)).toEqual([2]);
+    wrapper.unmount();
   });
 
   it('数字 maxCount：按数量截断 + rest 节点', () => {

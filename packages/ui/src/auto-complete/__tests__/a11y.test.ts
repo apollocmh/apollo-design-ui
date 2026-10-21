@@ -12,6 +12,6 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('AutoComplete', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 13,
+  expectCount: 14,
   global: { stubs: { teleport: false } },
 });

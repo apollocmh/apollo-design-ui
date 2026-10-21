@@ -21,7 +21,7 @@ import { TimePicker, TimePickerWithRange, TimeRangePicker } from '../index';
 
 themeTest('TimePicker', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 14,
+  expectCount: 16,
 });
 
 describe('TimePicker · 无样式表契约', () => {

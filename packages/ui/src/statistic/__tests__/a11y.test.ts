@@ -9,5 +9,5 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('Statistic', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 6,
+  expectCount: 7,
 });

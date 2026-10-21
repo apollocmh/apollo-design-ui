@@ -31,9 +31,9 @@ const allDemos: Array<{ component: string; demo: DemoMeta }> = manifest.componen
 );
 
 describe('全量 demo 审计', () => {
-  // 阶段 2 补齐后从 758 → 881；新增 demo 时同步更新此数（它是管线重复/漏收的哨兵）。
-  it('数量与管线口径一致（881）', () => {
-    expect(allDemos.length).toBe(881);
+  // 阶段 2 补齐后 758 → 881，2026-10-21 余量补齐后 → 989；新增 demo 时同步更新此数（它是管线重复/漏收的哨兵）。
+  it('数量与管线口径一致（989）', () => {
+    expect(allDemos.length).toBe(989);
   });
 
   it('预览模式合法；FloatButton / BackTop 的 fixed 场景使用 viewport', () => {

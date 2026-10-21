@@ -25,6 +25,7 @@ subtitle: Menu
 | onOpenChange | 子菜单展开回调 | `(openKeys) => void` | — |
 | selectable / multiple | 是否可选中 / 多选 | `boolean` | `true` / `false` |
 | inlineCollapsed | 折叠为图标条（配合 Tooltip 显示标题） | `boolean` | — |
+| tooltip | Tooltip config for collapsed items; `false` disables it | `false \| TooltipProps` | — |
 | inlineIndent | 缩进（px） | `number` | `24` |
 | triggerSubMenuAction | 子菜单触发方式 | `'hover' \| 'click'` | `'hover'` |
 | disabledOverflow | 关闭水平溢出折叠 | `boolean` | `false` |

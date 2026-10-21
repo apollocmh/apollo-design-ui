@@ -45,8 +45,23 @@ const at = <T>(list: T[], index: number): T => {
   return item;
 };
 
-a11yDemoTest('Slider', {
-  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+// ⚠️ 豁免必须**恰好命中**：给了 `ariaLabelForHandle` 的 demo 不会触发该规则，
+//    与未命名的 demo 混在一组会互相判「未被命中的豁免」。按可访问名分成两组。
+const allDemoFiles = import.meta.glob('../demo/*.vue', { eager: true });
+const labeledDemos = Object.fromEntries(
+  Object.entries(allDemoFiles).filter(
+    ([path]) => path.endsWith('/component-token.vue') || path.endsWith('/style-class.vue'),
+  ),
+);
+const unlabeledDemos = Object.fromEntries(
+  Object.entries(allDemoFiles).filter(
+    ([path]) => !path.endsWith('/component-token.vue') && !path.endsWith('/style-class.vue'),
+  ),
+);
+
+a11yDemoTest('Slider（未命名把手 · label 豁免组）', {
+  demos: unlabeledDemos,
+  expectCount: 13,
   // ⚠️ demo 里的 `<Slider />` 不传 `ariaLabelForHandle` ⇒ `aria-input-field-name`。
   //    与 antd 逐字一致（上游同样不给默认名），见 COMPATIBILITY 的 **U13**。
   allow: [
@@ -56,6 +71,11 @@ a11yDemoTest('Slider', {
         'demo 未给把手取名，`role="slider"` 因此没有可访问名 —— 与 antd 6.6.4 一致（上游也不编默认名，见 U13）。组件提供 ariaLabelForHandle / ariaLabelledByForHandle 由使用方按语义命名。',
     },
   ],
+});
+
+a11yDemoTest('Slider（已命名把手 · 无豁免组）', {
+  demos: labeledDemos,
+  expectCount: 2,
 });
 
 /** 与 test-utils 的 `DEFAULT_TAGS` 同源：WCAG 2.0/2.1/2.2 的 A + AA。 */

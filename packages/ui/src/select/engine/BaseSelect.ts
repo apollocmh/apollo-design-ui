@@ -140,19 +140,11 @@ export const BaseSelect = defineComponent({
      * raw trigger 协议（rc 的 `getRawInputElement` 同构）：提供时**不渲染**内建
      * Selector，改为渲染该函数返回的元素并注入开合/键盘/焦点事件与 aria-*。
      * React SSR 时 Cascader 只输出裸 children —— DOM 基线依赖此协议。
-     * ⚠️ 必须与 `openOnTriggerClick` 配合使用（注入 onClick 的开关）。
      */
     getRawInputElement: {
       type: Function as PropType<(() => unknown) | undefined>,
       default: undefined,
     },
-    /**
-     * ⚠️ 实验开关（2026-09-28，Cascader 期）：点击 selector 切换开合。
-     * rc 的 BaseSelect 有内建的点击开合，本仓 select 收口时**只测了受控 open**
-     * （点击开合交互从未落地）。为不动 select 的既有行为，默认 false，
-     * 由 Cascader 显式开启；select 补全交互时再翻默认值。
-     */
-    openOnTriggerClick: { type: Boolean, default: false },
     classNames: {
       type: Object as PropType<SelectSemanticClassNames | undefined>,
       default: undefined,
@@ -686,12 +678,15 @@ export const BaseSelect = defineComponent({
       if (raw === undefined || raw === null) return null;
       const node = raw as VNode;
       return cloneVNode(node, {
-        onClick: props.openOnTriggerClick
-          ? () => {
-              if (props.disabled) return;
-              toggleOpen(!mergedOpen.value);
-            }
-          : (node.props as Record<string, unknown> | undefined)?.onClick,
+        // raw 触发器没有 Selector 的 mousedown 开合通道，点击由这里负责。
+        onClick: (event: MouseEvent) => {
+          const originOnClick = (node.props as Record<string, unknown> | undefined)?.onClick as
+            | ((e: MouseEvent) => void)
+            | undefined;
+          originOnClick?.(event);
+          if (props.disabled) return;
+          toggleOpen(!mergedOpen.value);
+        },
         onKeydown: (event: KeyboardEvent) => props.onInputKeyDown?.(event),
         onFocus: (event: FocusEvent) => props.onFocus?.(event),
         onBlur: (event: FocusEvent) => props.onBlur?.(event),
@@ -742,6 +737,14 @@ export const BaseSelect = defineComponent({
                 prefixCls: popupPrefixCls,
                 popup: h('div', { class: popupPrefixCls }, [popupNode as never]),
                 open: mergedOpen.value,
+                // ⚠️ 选择类浮层只能 click 开合（rc-select 的 showAction/hideAction
+                //    都是 `['click']`）。Trigger 的默认 action 是 `'hover'`，不显式
+                //    覆盖会让 Select / TreeSelect / Cascader / AutoComplete（以及
+                //    Pagination 的页大小选择器）**鼠标一划过就弹层**，且悬停后点击
+                //    反而把浮层关掉（2026-10-21 普查修复）。开合的实际切换由
+                //    Selector 的 mousedown / raw 触发器的 onClick 完成，这里不再挂
+                //    第二套 click action（否则两套切换互相抵消）。
+                action: [],
                 onOpenChange: (next: boolean) => toggleOpen(next),
                 disabled: props.disabled ?? false,
                 placement: props.placement ?? 'bottomLeft',
@@ -802,6 +805,8 @@ export const BaseSelect = defineComponent({
               [popupNode as never],
             ),
             open: mergedOpen.value,
+            // 同上：选择类浮层只响应 click，绝不允许 hover 开层。
+            action: [],
             onOpenChange: (next: boolean) => toggleOpen(next),
             disabled: props.disabled ?? false,
             placement: props.placement ?? 'bottomLeft',
@@ -843,12 +848,8 @@ export const BaseSelect = defineComponent({
                 // 可访问名（转发到 combobox input；见 Select 的 attrs 处理）
                 ariaLabel: props.ariaLabel,
                 ariaLabelledby: props.ariaLabelledby,
-                onClick: props.openOnTriggerClick
-                  ? () => {
-                      if (props.disabled) return;
-                      toggleOpen(!mergedOpen.value);
-                    }
-                  : undefined,
+                // 开合只走 Selector 自己的 mousedown（rc Selector 同判）：
+                // 再挂一个 onClick 切换会与 mousedown 的切换互相抵消。
                 prefixCls: props.prefixCls,
                 id: props.id,
                 className: mergedClassName.value,

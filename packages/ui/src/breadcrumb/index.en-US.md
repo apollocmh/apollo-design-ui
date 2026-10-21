@@ -14,7 +14,7 @@ Displays the location of the current page in the system hierarchy, and allows na
 
 ## Examples
 
-See [`demo/`](./demo) (**7** demos, mirroring antd's user-visible demos).
+See [`demo/`](./demo) (**9** demos, mirroring antd's user-visible demos).
 
 | demo | Description |
 |---|---|

@@ -15,7 +15,7 @@ import { Segmented } from '../index';
 
 a11yDemoTest('Segmented', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 14,
+  expectCount: 16,
 });
 
 describe('Segmented · ARIA 契约', () => {

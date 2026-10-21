@@ -18,7 +18,7 @@ import { prepareComponentToken } from '../style/token';
 
 themeTest('AutoComplete', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 13,
+  expectCount: 14,
 });
 
 describe('AutoComplete · 无 Component Token', () => {

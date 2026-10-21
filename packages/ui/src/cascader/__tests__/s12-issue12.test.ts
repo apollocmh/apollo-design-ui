@@ -104,7 +104,8 @@ describe('Issue #12.2 · 内部事件不被 restAttrs 覆盖', () => {
     const w = mountCascader({}, { onOpenChange });
     await nextTick();
 
-    await w.find('.apollo-cascader').trigger('click');
+    // 开合走 Selector 的 mousedown（2026-10-21 起 Trigger 不再承担 hover/click action）
+    await w.find('.apollo-cascader').trigger('mousedown');
     await nextTick();
     await waitMenus();
 

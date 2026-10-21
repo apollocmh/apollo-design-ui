@@ -36,7 +36,7 @@ const dataSource = [
 
 a11yDemoTest('Table', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 30,
+  expectCount: 43,
 });
 
 describe('Table · a11y（L5）', () => {

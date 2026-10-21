@@ -61,8 +61,9 @@ describe('Issue #13.1 · 内部事件不被 attrs 覆盖', () => {
     });
     await nextTick();
 
-    // ⚠️ 触发点击挂在**根**上（与既有 `tree-select.test.ts` / cascader 测试同判）
-    await w.find('.apollo-tree-select').trigger('click');
+    // ⚠️ 开合挂在 Selector 的 mousedown（真实用户点击的第一个事件）；
+    //    2026-10-21 起 Trigger 不再用 hover/click action，点击只走这一条通道。
+    await w.find('.apollo-tree-select').trigger('mousedown');
     await nextTick();
     await nextTick();
 

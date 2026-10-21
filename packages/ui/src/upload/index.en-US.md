@@ -16,7 +16,7 @@ Upload files by selecting or dragging.
 
 ## Examples
 
-See [`demo/`](./demo) (15 demos).
+See [`demo/`](./demo) (23 demos).
 
 | demo | Content |
 |---|---|

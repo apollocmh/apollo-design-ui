@@ -228,6 +228,23 @@ const Overflow = defineComponent({
       { flush: 'post', immediate: true },
     );
 
+    /**
+     * `renderRawItem` / `renderRawRest` 返回的是**组件 VNode**（menu 的
+     * `MenuItem` / `SubMenu`），ref 拿到的是组件实例而不是 DOM。rc 那边
+     * MenuItem 是 `forwardRef` 到 `li`，所以 rc-overflow 能直接量；Vue 没有
+     * forwardRef，必须自己解 `$el`。
+     *
+     * 不解包时 `el instanceof HTMLElement` 恒为 false ⇒ 每项宽度永远缺失
+     * ⇒ `calcDisplayCount` 返回 `displayCount = -1` ⇒ horizontal 菜单所有项
+     * 都被判为溢出（`height: 0; position: absolute`），整条菜单不可见
+     * （2026-10-21 修）。
+     */
+    const resolveElement = (el: Element | ComponentPublicInstance | null): HTMLElement | null => {
+      if (!el) return null;
+      const dom = el instanceof HTMLElement ? el : (el as ComponentPublicInstance).$el;
+      return dom instanceof HTMLElement ? dom : null;
+    };
+
     // ---------------- 测量（jsdom / SSR：ResizeObserver 不可用 ⇒ 不测量） -------------
     let containerObserver: ResizeObserver | null = null;
     const itemObservers = new Map<string | number, ResizeObserver>();
@@ -254,8 +271,12 @@ const Overflow = defineComponent({
       observedEls.clear();
     });
 
-    const observeItem = (key: string | number, el: HTMLElement | null): void => {
+    const observeItem = (
+      key: string | number,
+      rawEl: Element | ComponentPublicInstance | null,
+    ): void => {
       if (!canObserve) return;
+      const el = resolveElement(rawEl);
       // 同 key 且同元素 ⇒ 已连接，跳过（ref 回调每渲染新建，无此守卫会递归更新）
       if (observedEls.get(key) === el) return;
       const prev = itemObservers.get(key);
@@ -263,7 +284,7 @@ const Overflow = defineComponent({
         prev.disconnect();
         itemObservers.delete(key);
       }
-      if (!(el instanceof HTMLElement)) {
+      if (!el) {
         observedEls.delete(key);
         return;
       }
@@ -312,7 +333,7 @@ const Overflow = defineComponent({
             },
             'aria-hidden': hidden ? true : undefined,
             ref: (el: Element | ComponentPublicInstance | null) => {
-              observeItem(key, el as HTMLElement | null);
+              observeItem(key, el);
             },
           } as never);
         } else {
@@ -330,7 +351,7 @@ const Overflow = defineComponent({
               },
               'aria-hidden': hidden ? true : undefined,
               ref: (el) => {
-                observeItem(key, el as HTMLElement | null);
+                observeItem(key, el);
               },
             },
             // rc `Item.js:39`：`renderItem(item, { index: order })`（**对象**，不是数字）；
@@ -364,8 +385,9 @@ const Overflow = defineComponent({
             : undefined,
         };
         const restRef = (el: Element | ComponentPublicInstance | null): void => {
-          if (el && canObserve) {
-            restWidth.value = (el as HTMLElement).offsetWidth || restWidth.value;
+          const dom = resolveElement(el);
+          if (dom && canObserve) {
+            restWidth.value = dom.offsetWidth || restWidth.value;
           }
         };
         if (props.renderRawRest) {

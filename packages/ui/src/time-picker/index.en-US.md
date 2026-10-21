@@ -19,7 +19,7 @@ To select/input a time.
 
 ## Examples
 
-See [`demo/`](./demo) (**14** demos). ⚠️ Differences from antd are listed in
+See [`demo/`](./demo) (**16** demos). ⚠️ Differences from antd are listed in
 `README.md` §5 (`12hours` / `interval-options` / `render-panel` are not ported).
 
 ## API

@@ -18,7 +18,7 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Timeline', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 13,
+  expectCount: 14,
   // 🚨 上游把 `Timeline.Item` / `pending` / `pendingDot` / `mode=left|right` 与四个项级
   //    字段都废弃了 ⇒ 挂载即发多条 `console.error`。这是**有意的**（`pending-legacy`
   //    demo 的存在就是为了演示废弃 API），不是 demo 写错。

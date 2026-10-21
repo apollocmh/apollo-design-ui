@@ -18,7 +18,7 @@ Vertical display timeline.
 
 ## Examples
 
-See [`demo/`](./demo) (**13**, mirroring antd's user-visible demos).
+See [`demo/`](./demo) (**14**, mirroring antd's user-visible demos).
 
 | demo | Description |
 |---|---|

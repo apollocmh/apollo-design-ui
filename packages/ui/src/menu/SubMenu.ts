@@ -93,7 +93,17 @@ const SubMenu = defineComponent({
     if (measure) {
       // ⚠️ 登记与注销必须对称（Issue #22.8），见 `usePathRegister` 的注释。
       usePathRegister(measure, props.eventKey, connectedPath);
-      return () => null;
+      // rc SubMenu 的 measure 分支返回 **childList**（不是 null）：子项（含嵌套
+      // SubMenu）必须继续挂载，才能把 `sub1 >>> child` 这类完整路径登记进
+      // useKeyRecords。只登记自身会让 `isSubPathKey` 永远查不到子项 ⇒ 选中子项后
+      // 父级 `.apollo-menu-submenu-selected` 不出现（2026-10-21 修复）。
+      // PathTrackerContext 同样必须提供，否则嵌套层级会被拍平。
+      provide(pathTrackerKey, connectedPath);
+      const ctx = useMenuContext();
+      return () =>
+        props.childrenNodes.map(
+          (node) => ctx.renderNode(node, connectedPath.value) as VNodeChild,
+        ) as VNodeChild[];
     }
 
     const ctx = useMenuContext();
@@ -194,8 +204,11 @@ const SubMenu = defineComponent({
     };
 
     watch(
-      open,
-      async (next) => {
+      // ⚠️ 也要监听 mode：inline → vertical 折叠切换时 `open` 可能一直为 true
+      //    （openKeys 里已有该 key），只监听 open 会让新建的 popup 停在初始的
+      //    `visibility: hidden`，鼠标悬停也永远不可见（2026-10-21 修）。
+      [open, () => ctx.mode.value],
+      async ([next]) => {
         if (!next) {
           popupStyle.value = { position: 'absolute', visibility: 'hidden' };
           window.removeEventListener('scroll', onViewportChange, true);
@@ -256,7 +269,16 @@ const SubMenu = defineComponent({
         ctx.onOpenChange(props.eventKey ?? '', !originOpen.value);
       }
     };
+    /**
+     * 弹层 hover 的跨层级联动。
+     *
+     * 嵌套弹层 Teleport 到 body，DOM 上并不在父弹层里：从父弹层移入三级弹层时，
+     * 父弹层先收到 mouseleave，若照常启动 closeTimer，100ms 后父弹层连同三级弹层
+     * 一起消失（真实浏览器复现）。进入**后代**弹层时，取消所有祖先弹层的关闭计时器；
+     * 兄弟弹层不会互相取消，父层该收仍然收。
+     */
     const onPopupMouseEnter = (): void => {
+      ctx.cancelAncestorPopupClose?.(connectedPath.value);
       clearTimers();
     };
     const onPopupMouseLeave = (): void => {
@@ -268,6 +290,8 @@ const SubMenu = defineComponent({
         );
       }
     };
+    // 登记「取消本层关闭计时器」的句柄（Menu 在任意后代弹层 mouseenter 时调用）。
+    onUnmounted(ctx.registerPopupClose?.(() => connectedPath.value, clearTimers) ?? (() => {}));
 
     const renderChildren = (): VNode[] =>
       props.childrenNodes

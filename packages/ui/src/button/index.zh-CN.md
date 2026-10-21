@@ -13,7 +13,7 @@ subtitle: 按钮
 
 ## 代码演示
 
-见 [`demo/`](./demo)（17 个，覆盖 type / size / loading / disabled / danger / ghost /
+见 [`demo/`](./demo)（20 个，覆盖 type / size / loading / disabled / danger / ghost /
 block / icon / shape / color-variant / href / semantic）。
 
 | demo | 内容 |

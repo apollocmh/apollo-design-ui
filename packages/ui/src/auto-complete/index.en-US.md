@@ -13,7 +13,7 @@ Auto-complete input.
 
 ## Examples
 
-See [`demo/`](./demo) (13 demos, covering the main antd scenarios
+See [`demo/`](./demo) (14 demos, covering the main antd scenarios
 `custom` (custom input element) is not implemented in v1 — see README §5).
 
 ## API

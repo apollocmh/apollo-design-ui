@@ -19,7 +19,7 @@ A container for displaying data in calendar form.
 
 ## Examples
 
-See [`demo/`](./demo) (**8** demos). ⚠️ Gaps vs. antd are listed in `README.md` §5
+See [`demo/`](./demo) (**9** demos). ⚠️ Gaps vs. antd are listed in `README.md` §5
 (`lunar` / `component-token` are not ported).
 
 ## API

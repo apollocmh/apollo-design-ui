@@ -12,7 +12,7 @@ Display statistic values.
 
 ## Examples
 
-See [`demo/`](./demo) (6, covering the main antd scenarios.
+See [`demo/`](./demo) (7, covering the main antd scenarios.
 
 ## API
 

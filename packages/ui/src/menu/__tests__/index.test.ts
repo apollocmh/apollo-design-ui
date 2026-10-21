@@ -74,6 +74,28 @@ describe('Menu · L1 渲染结构', () => {
     expect(visible?.getAttribute('data-menu-id')).toContain('my-menu-');
     wrapper.unmount();
   });
+
+  it('inlineCollapsed 时 item 标题走 Tooltip；tooltip=false 关闭', async () => {
+    vi.useFakeTimers();
+    const wrapper = mountMenu({ mode: 'inline', inlineCollapsed: true });
+    await nextTick();
+    const item = wrapper.element.querySelector('li.apollo-menu-item') as HTMLElement;
+    item.dispatchEvent(new Event('mouseenter'));
+    await vi.runAllTimersAsync();
+    await nextTick();
+    expect(wrapper.element.querySelector('.apollo-tooltip')?.textContent).toContain('One');
+    wrapper.unmount();
+
+    const off = mountMenu({ mode: 'inline', inlineCollapsed: true, tooltip: false });
+    await nextTick();
+    (off.element.querySelector('li.apollo-menu-item') as HTMLElement).dispatchEvent(
+      new Event('mouseenter'),
+    );
+    await vi.runAllTimersAsync();
+    await nextTick();
+    expect(off.element.querySelector('.apollo-tooltip')).toBeNull();
+    off.unmount();
+  });
 });
 
 describe('Menu · L1 选择协议', () => {
@@ -138,6 +160,33 @@ describe('Menu · L1 选择协议', () => {
     expect(onClick.mock.calls[0]?.[0].keyPath).toEqual(['3', 'sub1']);
     wrapper.unmount();
   });
+
+  it('选中弹出子项 ⇒ 父级 submenu-selected（measure 子树登记完整路径）', async () => {
+    const wrapper = mountMenu({ triggerSubMenuAction: 'click' });
+    await nextTick();
+    const title = wrapper.element.querySelector('.apollo-menu-submenu-title') as HTMLElement;
+    title.click();
+    await nextTick();
+    const popupItem = wrapper.element.querySelector(
+      '.apollo-menu-submenu-popup li[data-menu-id$="-3"]',
+    ) as HTMLElement;
+    expect(popupItem).not.toBeNull();
+    popupItem.click();
+    await nextTick();
+    const submenu = wrapper.element.querySelector('li.apollo-menu-submenu') as HTMLElement;
+    expect(submenu.className).toContain('apollo-menu-submenu-selected');
+    wrapper.unmount();
+  });
+
+  it('选中 group 内的子项同样生效（group 的 measure 分支继续渲染子项）', async () => {
+    const wrapper = mountMenu({});
+    await nextTick();
+    const item = wrapper.element.querySelector('li[data-menu-id$="-5"]') as HTMLElement;
+    item.click();
+    await nextTick();
+    expect(item.className).toContain('apollo-menu-item-selected');
+    wrapper.unmount();
+  });
 });
 
 describe('Menu · L1 openKeys 与子菜单', () => {
@@ -189,6 +238,43 @@ describe('Menu · L1 openKeys 与子菜单', () => {
     wrapper.unmount();
   });
 
+  it('嵌套弹层：移入三级弹层不触发父层关闭（Teleport 后父层先收到 mouseleave）', async () => {
+    vi.useFakeTimers();
+    const nestedItems = [
+      {
+        key: 'sub',
+        label: 'Sub',
+        children: [{ key: 'inner', label: 'Inner', children: [{ key: 'leaf', label: 'Leaf' }] }],
+      },
+    ] as never;
+    const wrapper = mountMenu({ items: nestedItems, triggerSubMenuAction: 'hover' });
+    await nextTick();
+    const titles = wrapper.element.querySelectorAll('.apollo-menu-submenu-title');
+    (titles[0] as HTMLElement).dispatchEvent(new Event('mouseenter'));
+    await vi.advanceTimersByTimeAsync(100);
+    await nextTick();
+    const nestedTitle = wrapper.element.querySelector(
+      '.apollo-menu-submenu-popup .apollo-menu-submenu-title',
+    ) as HTMLElement;
+    expect(nestedTitle).not.toBeNull();
+    nestedTitle.dispatchEvent(new Event('mouseenter'));
+    await vi.advanceTimersByTimeAsync(100);
+    await nextTick();
+
+    const popups = wrapper.element.querySelectorAll('.apollo-menu-submenu-popup');
+    expect(popups.length).toBeGreaterThanOrEqual(2);
+    // 父弹层 leave → 立刻进入三级弹层
+    (popups[0] as HTMLElement).dispatchEvent(new Event('mouseleave'));
+    (popups[1] as HTMLElement).dispatchEvent(new Event('mouseenter'));
+    await vi.advanceTimersByTimeAsync(200);
+    await nextTick();
+    expect(
+      wrapper.element.querySelectorAll('.apollo-menu-submenu-open').length,
+      '父层与三级层都应保持展开',
+    ).toBe(2);
+    wrapper.unmount();
+  });
+
   it('hover 前置延迟尊重 subMenuOpenDelay=0', async () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
@@ -198,6 +284,41 @@ describe('Menu · L1 openKeys 与子菜单', () => {
     title.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
     expect(onOpenChange).toHaveBeenCalledWith(['sub1']);
+    wrapper.unmount();
+  });
+
+  it('inlineCollapsed 切换：折叠清空 openKeys，展开回放折叠前的展开项', async () => {
+    const wrapper = mountMenu({ mode: 'inline', openKeys: ['sub1'] });
+    await nextTick();
+    expect(wrapper.element.querySelector('.apollo-menu-inline')).not.toBeNull();
+
+    await wrapper.setProps({ inlineCollapsed: true });
+    await nextTick();
+    // rc：离开 inline 模式 ⇒ triggerOpenKeys([])
+    expect(wrapper.emitted('update:openKeys')?.at(-1)).toEqual([[]]);
+    // 折叠态不再渲染内联子列表
+    expect(wrapper.element.querySelector('.apollo-menu-inline')).toBeNull();
+
+    await wrapper.setProps({ inlineCollapsed: false });
+    await nextTick();
+    // 回到 inline ⇒ 回放折叠前缓存的展开项
+    expect(wrapper.emitted('update:openKeys')?.at(-1)).toEqual([['sub1']]);
+    wrapper.unmount();
+  });
+
+  it('折叠态下 popup 定位在 mode 切换后同步（不会停在 visibility:hidden）', async () => {
+    const wrapper = mountMenu({ mode: 'inline', openKeys: ['sub1'] });
+    await nextTick();
+    await wrapper.setProps({ inlineCollapsed: true });
+    await nextTick();
+    await nextTick();
+    // scheduleSync 是双 rAF；等待两帧
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+    const popup = wrapper.element.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
+    expect(popup).not.toBeNull();
+    expect(popup.style.visibility).toBe('visible');
     wrapper.unmount();
   });
 });

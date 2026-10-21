@@ -4,7 +4,7 @@
  */
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
-import { useFullPath, useMeasure, useMenuContext, usePathRegister } from './context';
+import { useMeasure, useMenuContext } from './context';
 import type { ItemType } from './interface';
 
 const MenuItemGroup = defineComponent({
@@ -16,13 +16,12 @@ const MenuItemGroup = defineComponent({
   },
   setup(props, { slots, attrs }) {
     const measure = useMeasure();
-    const connectedKeyPath = useFullPath(props.eventKey);
 
     if (measure) {
-      // rc：measure 模式只返回 childList（children 由 Menu 以规范节点另行渲染）
-      // ⚠️ 登记与注销必须对称（Issue #22.8），见 `usePathRegister` 的注释。
-      usePathRegister(measure, props.eventKey, connectedKeyPath);
-      return () => null;
+      // rc MenuItemGroup 的 measure 分支直接返回 childList，且**不登记自身路径**
+      // （group 不是可导航节点）。返回 null 会让组内子项从 key→keyPath 表中消失，
+      // 选中态 / getSubPathKeys / 键盘导航全部失效。
+      return () => slots.default?.() ?? null;
     }
 
     const ctx = useMenuContext();

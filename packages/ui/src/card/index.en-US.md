@@ -15,7 +15,7 @@ A general card container.
 
 ## Demos
 
-See [`demo/`](./demo) (**10**, matching antd's user-visible demos).
+See [`demo/`](./demo) (**12**, matching antd's user-visible demos).
 
 | demo | Content |
 |---|---|

@@ -13,7 +13,7 @@ Add a watermark to a region of the page.
 
 ## Examples
 
-See [`demo/`](./demo) (4: basic / multi-line / image / custom; `portal` is missing
+See [`demo/`](./demo) (5: basic / multi-line / image / custom; `portal` is missing
 because Modal + Drawer are not landed yet).
 
 ## API

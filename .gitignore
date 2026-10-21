@@ -18,6 +18,7 @@ tests/compat/baselines/**/*.diff.png
 tests/visual/.artifacts/
 tests/visual/snapshots/
 tests/visual/diff/
+tests/visual/current/
 tests/visual/report.html
 # shard 报告与摘要（run.mjs 生成；`--shard i/n` 时为 report-<i>-of-<n>.{html,json}）
 tests/visual/report-*.html
@@ -68,3 +69,4 @@ node_modules/.cache/apollo/
 
 # VitePress dev cache（docs 包）
 packages/docs/.vitepress/cache/
+/.claude/settings.json

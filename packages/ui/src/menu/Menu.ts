@@ -86,6 +86,11 @@ const Menu = defineComponent({
     subMenuOpenDelay: { type: Number, default: 0.1 },
     subMenuCloseDelay: { type: Number, default: 0.1 },
     forceSubMenuRender: { type: Boolean, default: false },
+    /** 折叠态 item 标题的 Tooltip 配置（`false` 关闭）；与 antd Menu 同判。 */
+    tooltip: {
+      type: [Boolean, Object] as PropType<false | Record<string, unknown>>,
+      default: undefined,
+    },
     triggerSubMenuAction: {
       type: String as PropType<TriggerSubMenuAction>,
       default: 'hover',
@@ -159,9 +164,11 @@ const Menu = defineComponent({
     //    `inlineCollapsed` 的**回退源** ⇒ 侧栏折叠时导航自动进入 inline-collapsed。
     //    之前本仓只读 `props.inlineCollapsed` ⇒ 宽度变了、导航不折叠。
     const siderContext = useSiderContext();
-    const mergedInlineCollapsed = computed(
-      () => props.inlineCollapsed ?? siderContext.siderCollapsed?.value ?? false,
-    );
+    // rc：只有 inline / vertical 才消费 inlineCollapsed（horizontal 的收起由 Overflow 负责）。
+    const mergedInlineCollapsed = computed(() => {
+      if (props.mode !== 'inline' && props.mode !== 'vertical') return false;
+      return props.inlineCollapsed ?? siderContext.siderCollapsed?.value ?? false;
+    });
     const mergedMode = computed<MenuMode>(
       () => override?.mode ?? (mergedInlineCollapsed.value ? 'vertical' : props.mode),
     );
@@ -194,13 +201,28 @@ const Menu = defineComponent({
         emit('update:openKeys', next);
       },
     });
-    // rc 的 inlineCacheOpenKeys 仅在折叠切换瞬间注入（v1 不做折叠切换的缓存回放）
     const mergedOpenKeys = computed<string[]>(() => mergedOpenKeysValue.value ?? []);
 
     const triggerOpenKeys = (keys: string[]): void => {
       setOpenKeys(keys);
       props.onOpenChange?.(keys);
     };
+
+    // rc `Menu.js` 的 inlineCacheOpenKeys：折叠时清空 openKeys（弹层只由 hover 开），
+    // 展开时回放折叠前的展开项。缺了这段时「折叠前已展开的 key」会一直留在
+    // openKeys 里，mode 变成 vertical 后 popup 立刻常驻（且其定位在旧的 hidden
+    // 状态上），表现为「鼠标一离开就收起 / 菜单看起来坏了」。
+    const inlineCacheOpenKeys = ref<string[]>(mergedOpenKeys.value);
+    watch(mergedOpenKeys, (keys) => {
+      if (mergedMode.value === 'inline') inlineCacheOpenKeys.value = keys;
+    });
+    watch(mergedMode, (mode) => {
+      if (mode === 'inline') {
+        triggerOpenKeys(inlineCacheOpenKeys.value);
+      } else {
+        triggerOpenKeys([]);
+      }
+    });
 
     // ====================== Active =======================
     const activeKey = ref<string | undefined>(props.activeKey);
@@ -291,6 +313,28 @@ const Menu = defineComponent({
     });
 
     // ====================== Context ======================
+    /**
+     * 子菜单弹层的关闭计时器登记表。
+     *
+     * 嵌套弹层 Teleport 到 body：指针从父弹层移入三级弹层时，父弹层会收到
+     * mouseleave 并启动关闭计时器。进入后代弹层时取消**祖先**的计时器即可，
+     * 兄弟弹层不互相取消（父层该收仍然收）。见 SubMenu 的 onPopupMouseEnter。
+     */
+    const popupCloseCancelers = new Map<() => void, () => string[]>();
+    const registerPopupClose = (path: () => string[], cancel: () => void): (() => void) => {
+      popupCloseCancelers.set(cancel, path);
+      return () => {
+        popupCloseCancelers.delete(cancel);
+      };
+    };
+    const cancelAncestorPopupClose = (keyPath: string[]): void => {
+      const isPrefix = (prefix: string[]): boolean =>
+        prefix.length <= keyPath.length && prefix.every((key, index) => keyPath[index] === key);
+      for (const [cancel, path] of popupCloseCancelers) {
+        if (isPrefix(path())) cancel();
+      }
+    };
+
     const menuContext: MenuContextData = {
       prefixCls,
       menuId,
@@ -330,8 +374,13 @@ const Menu = defineComponent({
       onOpenChange: onInternalOpenChange,
       openKeys: mergedOpenKeys,
       renderNode: renderNode as unknown as (node: unknown, keyPath: string[]) => unknown,
+      registerPopupClose,
+      cancelAncestorPopupClose,
       get inlineCollapsed() {
         return mergedInlineCollapsed.value;
+      },
+      get tooltip() {
+        return props.tooltip;
       },
       firstLevel: true,
       get theme() {

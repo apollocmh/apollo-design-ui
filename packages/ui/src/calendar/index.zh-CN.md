@@ -18,7 +18,7 @@ subtitle: 日历
 
 ## 代码演示
 
-见 [`demo/`](./demo)（**8 个**）。⚠️ 与 antd 的差距见 `README.md` §5
+见 [`demo/`](./demo)（**9 个**）。⚠️ 与 antd 的差距见 `README.md` §5
 （`lunar` / `component-token` 两个未移植）。
 
 ## API

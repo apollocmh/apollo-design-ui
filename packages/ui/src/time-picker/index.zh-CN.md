@@ -18,7 +18,7 @@ subtitle: 时间选择框
 
 ## 代码演示
 
-见 [`demo/`](./demo)（**14 个**）。⚠️ 与 antd 的差距见 `README.md` §5
+见 [`demo/`](./demo)（**16 个**）。⚠️ 与 antd 的差距见 `README.md` §5
 （`12hours` / `interval-options` / `render-panel` 三个未移植）。
 
 ## API

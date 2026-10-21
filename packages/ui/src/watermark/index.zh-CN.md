@@ -13,7 +13,7 @@ subtitle: 水印
 
 ## 代码演示
 
-见 [`demo/`](./demo)（4 个：basic / multi-line / image / custom；`portal` 依赖
+见 [`demo/`](./demo)（5 个：basic / multi-line / image / custom；`portal` 依赖
 未落地的 Modal + Drawer，暂缺）。
 
 ## API

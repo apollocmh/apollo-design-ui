@@ -10,6 +10,7 @@ import { isEmptyVNode } from '@apollo-design/utils';
 import { computed, defineComponent, h, isVNode, type PropType, Text, type VNodeChild } from 'vue';
 
 import { styleAttrs } from '../_internal/use-merge-semantic';
+import Tooltip from '../tooltip';
 import { useFullPath, useMeasure, useMenuContext, usePathRegister } from './context';
 import { getEventKeyCode, getMenuId, KeyCode } from './engine/use-accessibility';
 import type { MenuClickEventHandler, MenuHoverEventHandler, RenderIconType } from './interface';
@@ -145,7 +146,7 @@ const MenuItem = defineComponent({
       const { role: roleAttr, ...restAttrs } = attrs as { role?: string | null };
       const itemRole = roleAttr === null ? 'none' : roleAttr || 'menuitem';
 
-      return h(
+      const node = h(
         'li',
         {
           ...restAttrs,
@@ -217,6 +218,37 @@ const MenuItem = defineComponent({
                   )
                 : null,
             ].filter((n) => n !== null),
+      );
+
+      // antd `MenuItem.tsx`：折叠态（inlineCollapsed / Sider 折叠）用 Tooltip 展示标题。
+      // 未展开时 `title` 为 null ⇒ Tooltip 不显示；`tooltip === false` 完全关闭。
+      if (!ctx.inlineCollapsed || ctx.tooltip === false) return node;
+      const tooltipConfig = (ctx.tooltip ?? {}) as Record<string, unknown>;
+      const cfgClassNames = tooltipConfig.classNames as Record<string, string> | undefined;
+      const tooltipTitle =
+        tooltipConfig.title !== undefined
+          ? tooltipConfig.title
+          : typeof props.title === 'string'
+            ? props.title
+            : ctx.firstLevel
+              ? props.labelText
+              : undefined;
+      return h(
+        Tooltip,
+        {
+          ...tooltipConfig,
+          title: tooltipTitle ?? null,
+          placement:
+            (tooltipConfig.placement as string | undefined) ??
+            (ctx.direction === 'rtl' ? 'left' : 'right'),
+          classNames: {
+            ...(cfgClassNames ?? {}),
+            root: [`${ctx.prefixCls}-inline-collapsed-tooltip`, cfgClassNames?.root]
+              .filter(Boolean)
+              .join(' '),
+          },
+        } as never,
+        { default: () => node },
       );
     };
   },

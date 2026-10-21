@@ -55,8 +55,17 @@ export interface MenuContextData {
   openKeys: ComputedRef<string[]>;
   /** 规范节点渲染器（Menu 提供，SubMenu 递归子树用）。 */
   renderNode: (node: unknown, keyPath: string[]) => unknown;
+  /**
+   * 登记子菜单弹层的「取消关闭计时器」句柄；返回注销函数。
+   * `path` 是 getter —— 路径可能随 items / key 变化。
+   */
+  registerPopupClose?: (path: () => string[], cancel: () => void) => () => void;
+  /** 进入后代弹层时，取消所有**祖先**弹层的关闭计时器（见 SubMenu 注释）。 */
+  cancelAncestorPopupClose?: (keyPath: string[]) => void;
   // antd 扩展（MenuContext.tsx）
   inlineCollapsed: boolean;
+  /** 折叠态 item 的 Tooltip 配置（`false` = 关闭）。 */
+  tooltip?: false | Record<string, unknown>;
   direction?: 'ltr' | 'rtl';
   firstLevel: boolean;
   theme: 'light' | 'dark';

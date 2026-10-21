@@ -13,7 +13,7 @@ subtitle: 导航菜单
 
 ## 代码演示
 
-见 [`demo/`](./demo)（13 个，覆盖 antd 的主要用户场景）。
+见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -30,6 +30,7 @@ subtitle: 导航菜单
 | onOpenChange | 子菜单展开回调 | `(openKeys) => void` | — |
 | selectable / multiple | 是否可选中 / 多选 | `boolean` | `true` / `false` |
 | inlineCollapsed | 折叠为图标条（配合 Tooltip 显示标题） | `boolean` | — |
+| tooltip | 折叠态 item 的 Tooltip 配置；`false` 关闭 | `false \| TooltipProps` | — |
 | inlineIndent | 缩进（px） | `number` | `24` |
 | triggerSubMenuAction | 子菜单触发方式 | `'hover' \| 'click'` | `'hover'` |
 | disabledOverflow | 关闭水平溢出折叠 | `boolean` | `false` |

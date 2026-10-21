@@ -8,5 +8,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Watermark', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 4,
+  expectCount: 5,
 });

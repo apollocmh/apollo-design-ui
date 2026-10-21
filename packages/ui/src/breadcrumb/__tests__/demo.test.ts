@@ -16,7 +16,7 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Breadcrumb', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 7,
+  expectCount: 9,
   allow: [
     {
       // demo/debug-routes.vue 用的是 **deprecated** 的 `routes` 通道 —— antd 同款告警

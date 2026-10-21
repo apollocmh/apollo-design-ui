@@ -17,7 +17,7 @@ flip / switching inside a group.
 
 ## Demos
 
-See [`demo/`](./demo) (14 demos, covering the main antd scenarios
+See [`demo/`](./demo) (15 demos, covering the main antd scenarios
 controlled-preview / cover-placement / fallback / image-render / nested /
 placeholder / preview-group / preview-group-top-progress / preview-group-visible /
 preview-img-info / preview-mask / preview-src.

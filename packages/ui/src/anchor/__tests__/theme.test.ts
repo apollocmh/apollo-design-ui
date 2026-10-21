@@ -22,7 +22,7 @@ import { prepareComponentToken } from '../style/token';
 
 themeTest('Anchor', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 10,
+  expectCount: 12,
 });
 
 const PREFIX = 'apollo';

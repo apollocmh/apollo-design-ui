@@ -29,5 +29,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Calendar', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 8,
+  expectCount: 9,
 });

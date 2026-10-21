@@ -274,8 +274,9 @@
       "id": "menu",
       "pkg": "@apollo-design/ui",
       "imports": ["Menu"],
-      "budgetKb": 55,
-      "measuredKb": 32.7
+      "budgetKb": 145,
+      "measuredKb": 92.7,
+      "_note": "2026-10-21 重定：折叠态标题 Tooltip 落地（antd MenuItem.tsx 同款：Menu 依赖 Tooltip）。Tooltip 必然传导 Trigger/overlay/portal/motion/position ≈ 60KB，与 menu 自身 32.7KB 合计 92.7KB；antd 的 Menu 同样静态 import Tooltip，非本仓摇树缺陷。仍远低于 maxRatioOfFull（2040.6KB × 30% = 612.2KB），误引入 table/date-picker 级依赖会立刻超预算。"
     },
     {
       "id": "message",

@@ -69,6 +69,19 @@ describe('Select · DOM 契约（对拍 antd v6 快照）', () => {
     wrapper.unmount();
   });
 
+  it('hover 不开层；mousedown 开层（rc-select 的 click 语义，2026-10-21 回归）', async () => {
+    const wrapper = mountSelect();
+    await flush();
+    const root = wrapper.find('.apollo-select');
+    root.element.dispatchEvent(new Event('mouseenter'));
+    await flush();
+    expect(body().querySelector('.apollo-select-dropdown')).toBeNull();
+    root.element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    await flush();
+    expect(body().querySelector('.apollo-select-dropdown')).toBeTruthy();
+    wrapper.unmount();
+  });
+
   it('下拉结构：dropdown > wrapper > [影子 listbox, -dropdown-list]', async () => {
     const wrapper = mountSelect({ open: true });
     await flush();
