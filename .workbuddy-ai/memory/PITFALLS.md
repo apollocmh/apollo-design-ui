@@ -40,6 +40,9 @@
 - **浮层/滚动**：🚨 「滚动到选中项」在首次 post-flush 时**没有布局盒** ⇒ rAF 5 帧后放弃且**不再重试** ⇒ `scrollTop` 恒 0；`date-picker` 因时间值恒 `00`（`targetLi === firstLi` 提前 return）而**长期潜伏**（318）。
 - **上游判据**：🚨 rc 的 `PickerProps` **本身 extends `Omit<SharedTimeProps,'format'|'defaultValue'>`** ⇒ 顶层时间 props（`use12Hours`/`hourStep`…）**不是**只属于 `showTime`；只看 `SharedTimeProps` 的定义会得出相反结论（317）。
 - **薄壳/转发**：🚨 **被 `Omit` 掉的 prop 必须在转发时显式补回**（内层有默认值就会静默用错，315） · ⚠️ VTU `mount(C, options, slots)` 的**第三参被静默忽略**，插槽要写进 `options.slots`（316）。
+- **Windows / 部署**：🚨 `/logo.svg` 被编译成 `file:///logo.svg` ⇒ `includeAbsolute:false`（361） · 🚨 `.bin/vue-tsc` 无扩展名 ENOENT ⇒ node + JS 入口（362） · 🚨 ESM `import('D:\\…')` 被当 `d:` 协议 ⇒ `pathToFileURL`（363） · ⚠️ 路径断言先 `split(path.sep).join('/')`（364） · 🚨 public 资源写死 `/logo.svg` 在子路径部署下 404 ⇒ `BASE_URL`（368） · 🚨 CLI 守卫 `file://${argv[1]}` Windows 恒假静默 no-op ⇒ `pathToFileURL`（369） · 🚨 pnpm 12 `pnpm.overrides` 不读 package.json，tarball 消费端写 `pnpm-workspace.yaml`（370） · ⚠️ tarball 分发必须断言 CSS 类真进产物（371）。
+- **消费端 / 浏览器冒烟**：🚨 Webpack 入口用 `DefinePlugin` 提供 `import.meta.env` + css/style-loader（372） · 🚨 冒烟必须跑 `vite preview` 不是 dev（无 SSR / 挂载时序不同）（373） · 🚨 SSG 404 水合后才出现 ⇒ 等 visible（374） · ⚠️ 语言断言页要含目标小节（375） · ⚠️ 图标目录首屏 120 上限 ⇒ 断言计数文本（376）。
+- **L6 基线平台**：🚨 入库基线由 macOS 生成；Windows 经典滚动条让 `#stage` 从 1440 变 1425 ⇒ **不要用 `--mode baseline` 覆盖既有基线**（377）。
 
 ## 工具 / 沙箱
 
@@ -4843,3 +4846,67 @@
   （挂载登记 / keyPath 变化先注销旧的 / 卸载注销），否则动态移除 items 后
   `key → keyPath` 残留，键盘导航指向已不存在的节点。「静态登记无需卸载」只在整树重建时
   近似成立，`v-for` 换 key 就破了。
+
+### Windows 11 实机适配（2026-10-21，361-371）
+
+361. 🚨 **SFC 模板里的 public 绝对路径 `/logo.svg` 在 Windows 测试环境会炸**：
+    `@vitejs/plugin-vue` 默认把它编译成 `file:///logo.svg`，随后 `fileURLToPath`
+    因「缺少盘符」抛 `TypeError`（macOS/Linux 上返回 `/logo.svg`，所以一直没暴露）。
+    修：`vue({ template: { transformAssetUrls: { includeAbsolute: false } } })`
+    （docs 的 `vite.config.ts` 与 `vitest.config.ts` 都要加）。
+362. 🚨 **`execFileSync('node_modules/.bin/vue-tsc', …)` 在 Windows 上 ENOENT**：
+    `.bin` 里实际是 `vue-tsc.cmd` / `.ps1`，没有无扩展名文件。修：用
+    `process.execPath` + `node_modules/vue-tsc/bin/vue-tsc.js`（跨平台、不依赖 shell）。
+363. 🚨 **ESM `await import('D:\\…')` 被 Node 当成 `d:` 协议**：
+    `Only URLs with a scheme in: file, data, and node are supported…`。
+    修：`await import(pathToFileURL(abs).href)`（`tests/build/run.mjs` 的 B7/B8 已改）。
+364. ⚠️ **测试里的路径断言不能写死 `/`**：`path.relative()` 在 Windows 返回反斜杠，
+    `endsWith('tree/interface.ts')` 会假红。修：`p.split(path.sep).join('/')` 后再比。
+365. ⚠️ **vitest 的文档站测试必须从 `packages/docs` 运行**（或 `--root packages/docs`）；
+    否则 `include: ['tests/**/*.test.ts']` 相对仓库根解析，报「No test files found」。
+366. ⚠️ **PowerShell 传数组参数不能用 `$files` 直接拼**：`biome check $files` 会把整个
+    数组当一个参数；用 splatting `biome check @files` 或显式列表。
+367. ⚠️ **本仓 L7 门禁的 B1 用 `/bin/sh` 执行 `scripts.build`**，Windows 上不可用；
+    本地用 `node tests/build/run.mjs --no-build` 复用已构建 dist 做产物检查，
+    真正构建逐包 `pnpm --filter <pkg> run build`。CI（Ubuntu）仍走完整 B1。
+368. 🚨 **public 资源不能写死站点根路径**：`<img src="/logo.svg">` 在
+    `/apollo-design-ui/` 子路径部署下请求的是**域名根**的 `/logo.svg` ⇒ 404。
+    用 `` `${import.meta.env.BASE_URL}logo.svg` ``（TopBar / HomePage 实测；真浏览器
+    冒烟的 `failed request` 才抓到，普通单测看不见）。
+369. 🚨 **CLI 入口守卫 `import.meta.url === \`file://${process.argv[1]}\`` 在 Windows 上恒假**：
+    argv[1] 是 `D:\…`，拼出来不是合法 file URL ⇒ 脚本**静默不执行、exit 0**。
+    症状：`pnpm docs:dev` 看着成功，但 `.generated` 仍是旧 manifest（新增 demo 不出现）。
+    修：`import.meta.url === pathToFileURL(process.argv[1]).href`（build-manifest 已改）。
+370. 🚨 **pnpm 12 不再读取 package.json 的 `pnpm.overrides`**：tarball 消费端要
+    把 overrides 写进 `pnpm-workspace.yaml`（`packages: ['.']` + `overrides:`）；
+    且 `pnpm pack` 出来的依赖版本是 `0.0.0`，不重定向就会去 registry 找未发布的包（404）。
+    可运行 `pnpm run verify:consumer` 一键复现/验证（13 tgz + Vite build + CSS/无 React 断言）。
+371. ⚠️ **tarball 分发必须验证 CSS 没被 `sideEffects` 摇掉**：`ui` / `theme` 的
+    `sideEffects` 应为 `["**/*.css"]`；消费端断言 `.apollo-btn` / `.apollo-input-search` /
+    `.apollo-otp` 真进了产物 CSS，而不是只看 build 成功。
+
+### 消费端 / 浏览器冒烟（2026-10-21，372-376）
+
+372. 🚨 **Webpack 消费端要给 `import.meta.env` 提供 `DefinePlugin`**：
+    `packages/ui/dist` 的 `dropdown` / `slider` / `list` / `tree-select` 里有
+    `import.meta.env?.DEV`（Vite 专用）。Webpack 5 下用
+    `new webpack.DefinePlugin({ 'import.meta.env': JSON.stringify({ DEV:false, PROD:true }) })`，
+    CSS 走 `css-loader` + `style-loader`；同一份 tarball 入口即可双打包器验证。
+373. 🚨 **浏览器冒烟必须跑 `vite preview`（SSG 产物），不能跑 dev server**：
+    dev 没有 SSR（`组件标题 SSR` / shiki 断言必红），`/components` 与 404 的挂载时序
+    也与生产不同。`docs-ci.yml` 因此先 `docs build` 再 `preview` + Playwright。
+374. 🚨 **SSG 的 404 页在水合后才出现**：`domcontentloaded` 后立刻 `isVisible()` 会假红；
+    先 `waitForSelector('.notfound-code', { state:'visible' })` 再断言。
+375. ⚠️ **文档站语言冒烟的断言页要选对**：`When To Use / 何时使用` 是 Button 文档的小节；
+    若冒烟流程在语言切换前已跳到 Input（其文档没有该小节），断言会假红。
+    固定回到 Button 页再切语言，或改断言 `html lang` / 导航文案。
+376. ⚠️ **图标目录首屏 120 是硬上限**：TwoTone 共 150 个，筛完后首屏仍渲染 120 个
+    瓦片 ⇒ 用「瓦片数变少」判断筛选会假红；应断言 `.icon-count` 的计数文本（150）。
+377. 🚨 **L6 入库基线是 macOS + 系统 Chrome 的产物，Windows 重生成会整批「变窄 15px」**：
+    `render/*.html` 的 `#stage { width:100% }` 在 macOS 覆盖式滚动条下是 1440，
+    Windows 经典滚动条下是 **1425**（stabilize 的 `scrollbar-gutter:stable` 只保证占位稳定）。
+    症状：`--mode baseline` 会把既有 macOS 基线全部覆盖成 1425 宽（文件体积也明显变小），
+    本地 `compare` 变绿，但换回 macOS 会因尺寸不一致整组 FAIL。
+    判据：`sharp(f).metadata().width` 对比同组件旧基线；**新变体可以补，既有基线不要重生成**，
+    除非在 canonical macOS 环境统一重做。本次 input 仅新增 search/otp 6 张（1425），
+    既有 9 张保持 macOS 原样，已在 `tests/visual/README.md` 登记。

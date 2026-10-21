@@ -6,6 +6,7 @@
 ## §0 接手顺序
 1. **`docs/KNOWN-ISSUES.md`**（不在 AGENTS §5 清单）§1 仍开放：§1.2 VNodeChild 插槽 · §1.3 date-picker id/tabIndex · §1.4 Select 条件 default slot · §1.5 form setup 期前缀。
 2. `node registry/tools/next-task.mjs`（唯一权威）；`ask.mjs decisions --open`。
+3. **Claude Code 会话结束前写记忆**：追加 `.workbuddy-ai/memory/YYYY-MM-DD.md` 并更新 §5；协议见根 `CLAUDE.md`「Memory / 交接协议」。
 ⚠️ 登记簿坐标复核后再信 ⇒ `git log -S` 与跑现成测试比读文档可靠。
 
 ## §1 事实来源 / registry
@@ -40,6 +41,8 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，**#1–#56 全部关闭（#22 于 2026-10-21 收口），仓库当前 0 个开放 issue**。
 - ✅ `test:build` 151 项 / FAIL 0（`d152fd32`）。
 - 📌 推送授权 2026-10-15 恢复：用户要求统一推送并关闭已完成 Issue。
+- 2026-10-21 Claude Code 接手：分析 + 建根 `CLAUDE.md`（含 Memory 交接协议）；业务代码零改动，结论/文档漂移见 `2026-10-21.md`。
+- 2026-10-21 审计 A01–A13 整改（收口）：docs **142 tests** / L7 `--no-build` **151 FAIL 0** / 独立 Icon 页 **848** / **Input.Search+OTP 补齐**（L4 **40 例**、L6 `both` **15/15 exact**；新增 6 张 Windows 基线待 macOS 重生成）/ `verify:consumer` **tarball+Vite+Webpack** / Playwright 冒烟 **36/36** 进 `docs-ci.yml`；台账 `docs/audit/2026-10-21-remediation.md`。审计项 0 剩余。
 - 2026-10-17～21 文档站 V2 分支 `feature/docs-site-v2`：hover 浮层 `ea0cbf6c` · dropdown 开合 `fee81a58` · cascader/tree-select `9118f946` · 点外部 `d2460163` · `.html` 深链 `463cfcde` · 重复标题 `8cbe272f` · tree 动效收尾 `5de76911` · table 示例 `65243a1e` · 过滤弹层 token `9f0e0d06` · 组件页 TOC 顺序 `797c8399` · **menu #22 三项 `7b00b40c`**。
 
 ## §6 判别式索引（完整判据见 PITFALLS.md 末尾「判别式总表」）
