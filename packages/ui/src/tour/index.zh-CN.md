@@ -1,6 +1,7 @@
 ---
 category: 反馈
-title: Tour 导览
+title: Tour
+subtitle: 导览
 titleTemplate: '%s - @apollo-design/ui'
 description: 引导用户按步骤了解页面功能的遮罩式导览。
 ---

@@ -1,5 +1,6 @@
 ---
 title: Form
+subtitle: Form
 titleTemplate: '%s - @apollo-design/ui'
 description: Data collection and validation with inputs, selects, nested and list fields.
 ---

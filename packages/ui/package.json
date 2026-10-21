@@ -4,7 +4,9 @@
   "description": "组件库本体：72 个组件 + locale + 全局样式 + ConfigProvider。",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

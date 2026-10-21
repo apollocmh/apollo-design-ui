@@ -1,5 +1,6 @@
 ---
 title: Tour
+subtitle: Tour
 titleTemplate: '%s - @apollo-design/ui'
 description: A mask-based guide to walk users through features step by step.
 ---

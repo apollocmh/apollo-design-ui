@@ -20,6 +20,7 @@ const DICT = {
     components: '组件',
     changelog: '更新日志',
     resources: '资源',
+    iconGallery: '图标',
     github: 'GitHub',
     search: '搜索组件…',
     searchShort: '搜索',
@@ -29,6 +30,7 @@ const DICT = {
     groupDemo: '代码演示',
     groupGuide: '指南',
     overview: '组件总览',
+    liveDemo: '实时示例',
     whenToUse: '何时使用',
     api: 'API',
     onThisPage: '本页目录',
@@ -52,6 +54,16 @@ const DICT = {
     notFoundText: '页面不存在或已被移动。',
     backHome: '返回首页',
     menu: '导航菜单',
+    mainNav: '主导航',
+    componentNav: '组件分类导航',
+    mobileNav: '移动端导航',
+    theme: '主题',
+    themeLight: '亮色',
+    themeDark: '暗色',
+    themeSystem: '跟随系统',
+    switchToEnglish: '切换到英文',
+    switchToChinese: '切换到中文',
+    searchError: '搜索索引加载失败',
     fullscreen: '全宽',
     split: '双列',
   },
@@ -61,6 +73,7 @@ const DICT = {
     components: 'Components',
     changelog: 'Changelog',
     resources: 'Resources',
+    iconGallery: 'Icons',
     github: 'GitHub',
     search: 'Search components…',
     searchShort: 'Search',
@@ -70,6 +83,7 @@ const DICT = {
     groupDemo: 'Demos',
     groupGuide: 'Guides',
     overview: 'Overview',
+    liveDemo: 'Live demo',
     whenToUse: 'When To Use',
     api: 'API',
     onThisPage: 'On this page',
@@ -93,12 +107,40 @@ const DICT = {
     notFoundText: 'This page does not exist or has been moved.',
     backHome: 'Back home',
     menu: 'Menu',
+    mainNav: 'Main navigation',
+    componentNav: 'Component navigation',
+    mobileNav: 'Mobile navigation',
+    theme: 'Theme',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSystem: 'System',
+    switchToEnglish: 'Switch to English',
+    switchToChinese: 'Switch to Chinese',
+    searchError: 'Failed to load search index',
     fullscreen: 'Full width',
     split: 'Split',
   },
 } as const;
 
 export type SiteTextKey = keyof (typeof DICT)['zh-CN'];
+
+/**
+ * 分类名与界面语言解耦：manifest 里的 category 是中文真源（与组件文档
+ * frontmatter 一致），英文站按固定词典翻译。新增分类时必须同时补这里。
+ */
+const CATEGORY_EN: Record<string, string> = {
+  通用: 'General',
+  布局: 'Layout',
+  导航: 'Navigation',
+  数据录入: 'Data Entry',
+  数据展示: 'Data Display',
+  反馈: 'Feedback',
+  其他: 'Other',
+};
+
+export function categoryLabel(name: string, current: SiteLocale): string {
+  return current === 'en-US' ? (CATEGORY_EN[name] ?? name) : name;
+}
 
 /** 初始化（客户端启动时；SSR 下保持默认 zh-CN）。 */
 export function initSiteLocale(): void {

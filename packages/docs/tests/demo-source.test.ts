@@ -74,7 +74,11 @@ describe('transformImports', () => {
       dir,
     );
     expect(code).toContain("'../interface'");
-    expect(auxiliary.some((p: string) => p.endsWith('tree/interface.ts'))).toBe(true);
+    // Windows 上 path.resolve 返回反斜杠路径；判据按 POSIX 形态比较，
+    // 否则同一条断言在 Linux CI 绿、本地 Windows 红（2026-10-21）。
+    expect(
+      auxiliary.some((p: string) => p.split(path.sep).join('/').endsWith('tree/interface.ts')),
+    ).toBe(true);
   });
 });
 

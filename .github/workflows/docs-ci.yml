@@ -1,0 +1,90 @@
+# 文档站专项门禁（2026-10-21 审计 A04）
+#
+# 主 CI 的 paths-ignore 会跳过纯文档 / demo 提交，而 docs 包自己的
+# content:check / typecheck / vitest 一直没有 CI 入口 ⇒ 「有测试文件」不等于
+# 「有测试门禁」。这个 workflow 只覆盖文档站及其内容真源，PR 可触发。
+name: Docs CI
+
+on:
+  pull_request:
+    paths:
+      - 'packages/docs/**'
+      - 'packages/ui/src/**/*.md'
+      - 'packages/ui/src/**/demo/**'
+      - 'packages/theme/src/**'
+      - '.github/workflows/docs-ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: docs-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: 文档站（内容 / 类型 / 单测 / SSG）
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      - name: 内容管线校验（frontmatter / demo 配对 / 路由）
+        run: pnpm --filter @apollo-design/docs run content:check
+
+      - name: 文档站类型检查
+        run: pnpm --filter @apollo-design/docs run typecheck
+
+      - name: 文档站单元测试
+        run: pnpm --filter @apollo-design/docs run test
+
+      # SSG 构建依赖 theme / ui 的 dist，而 theme 又依赖 utils 的 dist。
+      # 干净 checkout 上必须先按拓扑序构建全部包（L7 门禁会做这件事），
+      # 否则 `theme` 的 build 会因为没有 utils/dist 直接失败。
+      - name: 构建全部包（拓扑序 + L7 产物检查）
+        run: pnpm run test:build
+
+      - name: 构建文档站（vite-ssg）
+        run: pnpm --filter @apollo-design/docs run build
+
+      - name: 关键产物检查（深链接 / base）
+        shell: bash
+        run: |
+          set -eu
+          D=packages/docs/dist
+          test -f "$D/index.html"
+          test -f "$D/404.html"
+          test -f "$D/components/button.html"
+          test -f "$D/components/icon.html"
+          grep -q 'apollo-design-ui' "$D/index.html"
+          echo "页面数: $(find "$D" -name '*.html' | wc -l)"
+
+      # L8：浏览器冒烟由 `packages/docs/tests/smoke-browser.mjs` 承担，
+      # 覆盖 SSR / 水合 / demo 真实渲染 / 语言 / 主题 / 搜索 / 图标目录 / 移动端抽屉。
+      - name: 安装 Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: 浏览器冒烟（生产 preview）
+        shell: bash
+        run: |
+          set -eu
+          pnpm --filter @apollo-design/docs run preview -- --host 127.0.0.1 --port 4477 \
+            > /tmp/docs-preview.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
+          READY=0
+          for _ in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4477/apollo-design-ui/ > /dev/null; then
+              READY=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$READY" -ne 1 ]; then
+            cat /tmp/docs-preview.log
+            exit 1
+          fi
+          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
+            node packages/docs/tests/smoke-browser.mjs

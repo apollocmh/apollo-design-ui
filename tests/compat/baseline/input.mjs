@@ -112,6 +112,18 @@ push('input:password-value', wrap(h(Input.Password, { ...BP, defaultValue: 'secr
 
 push('input:group', wrap(h(Input.Group, { ...BP }, h(Input, { ...BP, style: { width: '50%' } }))));
 
+// ---- Search（2026-10-21 补齐）----
+
+push('input:search', wrap(h(Input.Search, { ...BP, placeholder: 'search' })));
+push('input:search-enter-button', wrap(h(Input.Search, { ...BP, enterButton: true })));
+push('input:search-enter-button-text', wrap(h(Input.Search, { ...BP, enterButton: 'Go' })));
+
+// ---- OTP（2026-10-21 补齐）----
+
+push('input:otp', wrap(h(Input.OTP, { length: 6, defaultValue: '12' })));
+push('input:otp-separator', wrap(h(Input.OTP, { length: 6, defaultValue: '12', separator: '-' })));
+push('input:otp-mask', wrap(h(Input.OTP, { length: 6, defaultValue: '12', mask: true })));
+
 // ---- rtl ----
 
 push(

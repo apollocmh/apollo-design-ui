@@ -86,6 +86,17 @@ Playwright 1.63 不再为 macOS 12 提供 Chromium 构建（`playwright install 
 `does not support chromium on mac12`）。`stabilize.mjs` 自动降级：先试系统 Chrome
 （`channel: 'chrome'`），失败再退回自带 Chromium。macOS 13+ 仍走自带 Chromium。
 
+### 基线生成平台（2026-10-21）
+
+- **既有的 `baselines/react/**` 由 macOS + 系统 Chrome 生成**（`#stage` 宽 1440/768/375）。
+  CI 的像素比对因此是**非阻塞**的（`assert-shard.mjs`：只把 render-error 当失败）。
+- ⚠️ Windows 的经典滚动条占 15px：`#stage { width:100% }` 会变成 **1425** 宽。这不是组件差异，
+  是平台差异；本地 `compare` 应与生成基线时同一平台运行。
+- 2026-10-21 新增的 `input/search__*` / `input/otp__*` 共 6 张基线在 **Windows** 上生成（1425 宽）。
+  既有 9 张 input 基线**未替换**（保持 macOS 原样）。在 canonical macOS 环境重生成后，
+  input 的 15 张应统一为 1440/768/375 宽：
+  `node tests/visual/run.mjs --mode baseline --component input`。
+
 ### 占位 favicon
 
 `render/{react,vue}.html` 都有 `<link rel="icon" href="data:," />` —— 否则浏览器自动请求

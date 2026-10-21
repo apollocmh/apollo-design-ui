@@ -41,4 +41,23 @@ export default {
         <Input.TextArea placeholder="textarea" rows={2} />
       </div>,
     ),
+
+  search: () =>
+    box(
+      <div style={col}>
+        <Input.Search placeholder="search" />
+        <Input.Search placeholder="search" enterButton />
+        <Input.Search placeholder="search" enterButton="Search" />
+        <Input.Search placeholder="search" enterButton loading />
+      </div>,
+    ),
+
+  otp: () =>
+    box(
+      <div style={col}>
+        <Input.OTP />
+        <Input.OTP defaultValue="123" />
+        <Input.OTP defaultValue="123456" separator="-" mask />
+      </div>,
+    ),
 };

@@ -20,6 +20,13 @@ export const routes: RouteRecordRaw[] = [
     meta: { chrome: 'site' },
   },
   {
+    // ⚠️ 必须排在 `/components/:name` 之前，否则会被当成名为「icon」的组件页。
+    path: '/components/icon',
+    name: 'icon',
+    component: () => import('./pages/IconPage.vue'),
+    meta: { chrome: 'site' },
+  },
+  {
     path: '/components/:name',
     name: 'component',
     component: () => import('./pages/ComponentPage.vue'),

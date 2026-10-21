@@ -18,7 +18,10 @@ import { defineConfig } from 'vitest/config';
 const r = (p: string) => resolve(import.meta.dirname, p);
 
 export default defineConfig({
-  plugins: [vue()],
+  // `includeAbsolute: false`：`/logo.svg` 是 public 绝对路径，不需要被编译成
+  // 资源 import。Windows 上把它转成 `file:///logo.svg` 后 `fileURLToPath`
+  // 会因缺少盘符直接抛错（macOS/Linux 不会）⇒ 测试在 Windows 上整片加载失败。
+  plugins: [vue({ template: { transformAssetUrls: { includeAbsolute: false } } })],
   resolve: {
     alias: {
       '@apollo-design/utils': r('../utils/src'),

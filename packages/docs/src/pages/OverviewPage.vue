@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useSiteLocale } from '../composables/locale';
+import { categoryLabel, useSiteLocale } from '../composables/locale';
 import { siteManifest } from '../composables/manifest';
 import { useTocState } from '../composables/toc';
 
-const { pick } = useSiteLocale();
+const { pick, locale } = useSiteLocale();
 const { setToc } = useTocState();
 onMounted(() => setToc([]));
 </script>
@@ -22,8 +22,24 @@ onMounted(() => setToc([]));
       }}
     </p>
 
+    <section class="overview-group">
+      <h2 class="overview-group-title">{{ pick({ zh: '资源', en: 'Resources', enFallback: true }).text }}</h2>
+      <div class="overview-grid">
+        <RouterLink to="/components/icon" class="overview-card">
+          <span class="overview-card-title">
+            {{ pick({ zh: '图标', en: 'Icons', enFallback: true }).text }}
+            <span class="overview-card-desc">{{ siteManifest.icons.total }}</span>
+          </span>
+          <span class="overview-card-meta">
+            <code>@apollo-design/icons</code>
+            <span class="site-badge">{{ siteManifest.icons.byStyle.outlined }} / {{ siteManifest.icons.byStyle.filled }} / {{ siteManifest.icons.byStyle.twoTone }}</span>
+          </span>
+        </RouterLink>
+      </div>
+    </section>
+
     <section v-for="group in siteManifest.categories" :key="group.name" class="overview-group">
-      <h2 class="overview-group-title">{{ group.name }}</h2>
+      <h2 class="overview-group-title">{{ categoryLabel(group.name, locale) }}</h2>
       <div class="overview-grid">
         <RouterLink
           v-for="c in group.components"
@@ -33,7 +49,9 @@ onMounted(() => setToc([]));
         >
           <span class="overview-card-title">
             {{ pick(c.title).text }}
-            <span class="overview-card-sub">{{ pick(c.subtitle).text }}</span>
+            <span v-if="pick(c.subtitle).text" class="overview-card-desc">
+              {{ pick(c.subtitle).text }}
+            </span>
           </span>
           <span class="overview-card-meta">
             <code>{{ c.name }}</code>
@@ -90,7 +108,7 @@ onMounted(() => setToc([]));
   font-size: 14.5px;
 }
 
-.overview-card-sub {
+.overview-card-desc {
   margin-left: 6px;
   font-weight: 400;
   font-size: 12px;

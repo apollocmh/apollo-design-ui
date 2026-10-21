@@ -175,7 +175,24 @@ const childNodes = computed<VNodeChild[]>(() => {
  *    让 `hasChildren`（模板里的 `v-if`，渲染期必读）先把它读一遍，
  *    `computed` 的缓存就保证了后续读取不再调用插槽函数。
  */
-const hasChildren = computed(() => childNodes.value.length > 0);
+const hasRenderableChildren = computed(() => childNodes.value.length > 0);
+
+/**
+ * antd 的 `-icon-only` 判据吃的是**原始 `children`**：
+ * `!children && children !== 0 && !!iconType`。布尔 `true` 在 React 里是
+ * 「有 children」（虽然不渲染任何内容），而 `React.Children.toArray` 又会把它丢掉。
+ *
+ * Vue 没有布尔子节点，但 `Input.Search` 的 `enterButton={true}` 正是靠
+ * 「传一个 `true` 子节点」让 antd 的 Button 不加 `-icon-only`。这里把
+ * `true` 单独算进 raw 判据、但不放进可渲染列表，从而同时满足两件事：
+ *   - `-icon-only` 不出现（与 antd 的宽度 / padding 一致）；
+ *   - 模板不产生任何内容包裹 span（与 antd 的 DOM 一致）。
+ */
+const hasRawChildren = computed(() => {
+  const raw = slots.default ? slots.default() : [];
+  const list = Array.isArray(raw) ? raw : [raw];
+  return list.some((node) => (node as unknown) === true || isRenderableChild(node));
+});
 
 /**
  * 把 `icon` / `loading.icon` 归一化成「Vue 能渲染的东西」。
@@ -506,7 +523,7 @@ const rootClass = computed(() => [
     // ⚠️ 上游是 `!children && children !== 0 && !!iconType`（`:384`）。`children !== 0`
     //    这一支由 `childNodes` 的过滤器保证：`0` / `'0'` 是**内容**，不会被剔掉
     //    ⇒ `hasChildren` 为真 ⇒ 不挂 `-icon-only`。空串 / `false` / Comment 则被剔掉。
-    [`${prefixCls.value}-icon-only`]: !hasChildren.value && !!iconType.value,
+    [`${prefixCls.value}-icon-only`]: !hasRawChildren.value && !!iconType.value,
     [`${prefixCls.value}-background-ghost`]: ghost.value && !isUnBordered.value,
     [`${prefixCls.value}-loading`]: innerLoading.value,
     [`${prefixCls.value}-block`]: props.block,
@@ -724,7 +741,7 @@ defineExpose({ nativeElement: rootRef });
       <NodeRenderer v-for="(node, i) in contentNodes" :key="i" :node="node" />
     </template>
     <span
-      v-else-if="hasChildren && elementContentNodes === null"
+      v-else-if="hasRenderableChildren && elementContentNodes === null"
       :class="contentClass"
       v-bind="contentStyleAttrs"
     >
@@ -751,7 +768,7 @@ defineExpose({ nativeElement: rootRef });
       <NodeRenderer v-for="(node, i) in contentNodes" :key="i" :node="node" />
     </template>
     <span
-      v-else-if="hasChildren && elementContentNodes === null"
+      v-else-if="hasRenderableChildren && elementContentNodes === null"
       :class="contentClass"
       v-bind="contentStyleAttrs"
     >

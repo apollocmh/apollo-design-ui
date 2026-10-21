@@ -4,7 +4,9 @@
   "description": "Token Runtime：Seed → Map → Alias → Component 的完整派生链，以及 Token → CSS 变量的注入。",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

@@ -1,5 +1,6 @@
 ---
 title: Slider
+subtitle: Slider
 titleTemplate: '%s - @apollo-design/ui'
 description: A slider input for selecting a value or a range of values.
 ---

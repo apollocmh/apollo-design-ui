@@ -35,7 +35,12 @@ function contentWatchPlugin(): Plugin {
 
 const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
   base: BASE,
-  plugins: [vue(), contentWatchPlugin()],
+  // `includeAbsolute: false`：`/logo.svg` 是 public 绝对路径，保持原样即可。
+  // Windows 上若被编译成 `file:///logo.svg`，`fileURLToPath` 会因缺少盘符抛错。
+  plugins: [
+    vue({ template: { transformAssetUrls: { includeAbsolute: false } } }),
+    contentWatchPlugin(),
+  ],
   resolve: {
     alias: {
       // ⚠️ 顺序敏感：alias 是**前缀**匹配，必须把更长的说明符放在前面，
@@ -55,13 +60,8 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
   build: {
     // demo 源码（?raw）+ 72 个组件页数据都是大字符串，提高上限避免误报
     chunkSizeWarningLimit: 1500,
-    // ⚠️ Vite 8 默认 CSS 压缩器 lightningcss 会**拒绝**组件库产物里一段
-    //    `transition: A !important, B !important`（collapse 样式，见缺陷台账 #D1 ——
-    //    antd 上游根本没有 !important，这是本仓自加的非法声明）。
-    //    浏览器对它的处理是「整条丢弃」，esbuild 与浏览器一样宽容（只压缩不校验），
-    //    所以这里选 esbuild：文档站不该因为组件库的一段 CSS 而无法构建。
-    //    那段 CSS 本身要在组件侧修（连同它钉住行为的 theme 测试一起），不在这里遮掩。
-    cssMinify: 'esbuild',
+    // 使用 Vite 默认 CSS 压缩器（lightningcss）。如果这里再次出现「只能退回
+    // esbuild」的情况，先修组件 CSS 的非法声明，不要用压缩器绕过校验。
   },
   server: {
     fs: {
@@ -82,6 +82,7 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
       const { manifest } = await buildManifest({ write: false });
       return [
         ...paths.filter((p) => !p.includes(':')),
+        '/components/icon',
         ...manifest.components.map((c) => `/components/${c.name}`),
         ...manifest.guides.map((g) => `/guide/${g.slug}`),
       ];
@@ -96,11 +97,12 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
       const { manifest } = await buildManifest({ write: false });
       const today = new Date().toISOString().slice(0, 10);
       const urls = [
+        '/',
+        '/components',
+        '/components/icon',
+        '/changelog',
         ...manifest.components.map((c) => `/components/${c.name}`),
         ...manifest.guides.map((g) => `/guide/${g.slug}`),
-        '/components',
-        '/changelog',
-        '/',
       ];
       const origin = 'https://apollocmh.github.io';
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls

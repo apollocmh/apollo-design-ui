@@ -48,7 +48,10 @@ import { defineBuildConfig } from 'unbuild';
 
 /** 仓库根下的可执行文件。unbuild 用 jiti 加载本文件，`import.meta.dirname` 是包目录。 */
 const pkgDir = import.meta.dirname ?? '.';
-const bin = (name: string): string => resolve(pkgDir, '../../node_modules/.bin', name);
+// 🚨 直接走 node + vue-tsc 的 JS 入口，不调用 `.bin/vue-tsc`：
+//    Windows 上 `.bin` 里是 `vue-tsc.cmd` / `.ps1`，`execFileSync('…/vue-tsc')`
+//    会因找不到无扩展名文件而 ENOENT（2026-10-21 本机构建实测）。
+const vueTscEntry = resolve(pkgDir, '../../node_modules/vue-tsc/bin/vue-tsc.js');
 
 export default defineBuildConfig({
   // 见上「2. 类型产物」。这不是省事，是**避开一个会静默产出错误产物的默认行为**。
@@ -149,8 +152,16 @@ export default defineBuildConfig({
       const tmp = resolve(pkgDir, '.dts-tmp');
       rmSync(tmp, { recursive: true, force: true });
       execFileSync(
-        bin('vue-tsc'),
-        ['-p', 'tsconfig.json', '--outDir', tmp, '--rootDir', resolve(pkgDir, '../..')],
+        process.execPath,
+        [
+          vueTscEntry,
+          '-p',
+          'tsconfig.json',
+          '--outDir',
+          tmp,
+          '--rootDir',
+          resolve(pkgDir, '../..'),
+        ],
         { cwd: pkgDir, stdio: 'inherit' },
       );
       cpSync(resolve(tmp, 'packages/ui/src'), resolve(pkgDir, 'dist'), {

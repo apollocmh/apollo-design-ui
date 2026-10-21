@@ -1148,9 +1148,9 @@ export { prepareComponentToken as prepareImageComponentToken } from './image/sty
 // ---------------------------------------------------------------------------
 // Input —— 输入框（引擎自建于 engine/：BaseInput 三层包裹 + IME 组合态 + 计数裁剪）
 //
-// ⚠️ 本轮范围：Input / TextArea / Input.Password / Input.Group。
-//    Search 与 OTP 顺延（docs/analysis/input.md §7）。样式层：186 条规则
-//    （产物逐条对拍）+ 18 Component Token（token.ts）。
+// 家族：Input / TextArea / Input.Password / Input.Group / Input.Search / Input.OTP。
+// 样式层：Input 主链 186 条规则（产物逐条对拍）+ Search/OTP 补充规则
+// + 18 Component Token（token.ts）。
 // ---------------------------------------------------------------------------
 export type {
   AllowClearProp as InputAllowClearProp,
@@ -1160,16 +1160,25 @@ export type {
   InputPasswordProps,
   InputProps,
   InputRef,
+  InputSearchProps,
+  InputSearchSemanticClassNames,
+  InputSearchSemanticContext,
+  InputSearchSemanticStyles,
   InputSemanticClassNames,
   InputSemanticContext,
   InputSemanticStyles,
+  OTPProps,
+  OTPRef,
+  OTPSemanticClassNames,
+  OTPSemanticContext,
+  OTPSemanticStyles,
   PasswordSemanticClassNames,
   TextAreaProps,
   TextAreaRef,
   TextAreaSemanticClassNames,
   TextAreaSemanticStyles,
 } from './input';
-export { Input, InputGroup, InputPassword, TextArea } from './input';
+export { Input, InputGroup, InputOTP, InputPassword, InputSearch, TextArea } from './input';
 export { genInputStyle, genTokenDecls as genInputTokenDecls } from './input/style';
 export type { ComponentToken as InputComponentToken } from './input/style/token';
 export { prepareComponentToken as prepareInputComponentToken } from './input/style/token';

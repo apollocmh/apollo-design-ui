@@ -1,5 +1,6 @@
 ---
 title: Transfer
+subtitle: Transfer
 titleTemplate: '%s - @apollo-design/ui'
 description: Double-column transfer list for moving items between two groups.
 ---

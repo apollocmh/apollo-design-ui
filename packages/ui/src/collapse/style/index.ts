@@ -293,11 +293,11 @@ export function genCollapseStyle(rootPrefixCls: string): string {
     `  overflow:hidden;`,
     `}`,
     `${cls} ${motionCls}-legacy-active{`,
-    `  transition:height ${v('motionDurationMid')} ${v('motionEaseInOut')} !important, opacity ${v('motionDurationMid')} ${v('motionEaseInOut')} !important;`,
+    `  transition:height ${v('motionDurationMid')} ${v('motionEaseInOut')}, opacity ${v('motionDurationMid')} ${v('motionEaseInOut')} !important;`,
     `}`,
     `${cls} ${motionCls}{`,
     `  overflow:hidden;`,
-    `  transition:height ${v('motionDurationMid')} ${v('motionEaseInOut')} !important, opacity ${v('motionDurationMid')} ${v('motionEaseInOut')} !important;`,
+    `  transition:height ${v('motionDurationMid')} ${v('motionEaseInOut')}, opacity ${v('motionDurationMid')} ${v('motionEaseInOut')} !important;`,
     `}`,
   ].join('\n');
 }

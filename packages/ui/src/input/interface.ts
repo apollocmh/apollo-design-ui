@@ -13,7 +13,8 @@
  *   - 只声明 `update:value`（C11：v-model 与语义事件同时发出）
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { Component, CSSProperties, VNodeChild } from 'vue';
+import type { ButtonSemanticClassNames, ButtonSemanticStyles } from '../button/interface';
 import type { Variant } from '../config-provider/context';
 import type { SizeType } from '../config-provider/size-context';
 import type { InputStatus } from '../space/statusUtils';
@@ -246,4 +247,113 @@ export interface InputGroupProps {
   prefixCls?: string;
   size?: SizeType;
   compact?: boolean;
+}
+
+// ============================== Search ==============================
+
+export interface InputSearchSemanticClassNames {
+  root?: string;
+  input?: string;
+  prefix?: string;
+  suffix?: string;
+  clear?: string;
+  count?: string;
+  button?: ButtonSemanticClassNames;
+}
+
+export interface InputSearchSemanticStyles {
+  root?: CSSProperties;
+  input?: CSSProperties;
+  prefix?: CSSProperties;
+  suffix?: CSSProperties;
+  clear?: CSSProperties;
+  count?: CSSProperties;
+  button?: ButtonSemanticStyles;
+}
+
+export interface InputSearchSemanticContext {
+  props: InputSearchProps;
+}
+
+export type InputSearchSemanticClassNamesFn = (
+  context: InputSearchSemanticContext,
+) => InputSearchSemanticClassNames;
+export type InputSearchSemanticStylesFn = (
+  context: InputSearchSemanticContext,
+) => InputSearchSemanticStyles;
+
+/**
+ * `Input.Search` 的 Props。
+ *
+ * 契约来源：antd 6.6.4 `components/input/Search.tsx` 的 `SearchProps`。
+ * `extends InputProps` 保留全部输入框属性；`enterButton` 在 React 侧是
+ * `ReactNode`（boolean / 字符串 / 元素），Vue 侧额外接受**组件对象**（D42 同判）。
+ */
+export interface InputSearchProps extends Omit<InputProps, 'classNames' | 'styles'> {
+  inputPrefixCls?: string;
+  enterButton?: boolean | string | number | VNodeChild | Component;
+  searchIcon?: VNodeChild | Component;
+  loading?: boolean;
+  /** 搜索回调（antd 同名 prop；`source: 'clear'` 表示由清空触发）。 */
+  onSearch?: (value: string, event?: Event, info?: { source?: 'clear' | 'input' }) => void;
+  onCompositionStart?: (e: CompositionEvent) => void;
+  onCompositionEnd?: (e: CompositionEvent) => void;
+  classNames?: InputSearchSemanticClassNames | InputSearchSemanticClassNamesFn;
+  styles?: InputSearchSemanticStyles | InputSearchSemanticStylesFn;
+}
+
+// ============================== OTP ==============================
+
+export interface OTPSemanticClassNames {
+  root?: string;
+  input?: string;
+  separator?: string;
+}
+
+export interface OTPSemanticStyles {
+  root?: CSSProperties;
+  input?: CSSProperties;
+  separator?: CSSProperties;
+}
+
+export interface OTPSemanticContext {
+  props: OTPProps;
+}
+
+export type OTPSemanticClassNamesFn = (context: OTPSemanticContext) => OTPSemanticClassNames;
+export type OTPSemanticStylesFn = (context: OTPSemanticContext) => OTPSemanticStyles;
+
+/**
+ * `Input.OTP` 的 Props。
+ *
+ * 契约来源：antd 6.6.4 `components/input/OTP/index.tsx` 的 `OTPProps`。
+ * `onInput` 是「每次格子变化」的数组回调；`onChange` 只在**全部填满且值变化**时触发。
+ */
+export interface OTPProps {
+  prefixCls?: string;
+  length?: number;
+  variant?: Variant;
+  size?: SizeType;
+  defaultValue?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  formatter?: (value: string) => string;
+  separator?: VNodeChild | ((index: number) => VNodeChild);
+  disabled?: boolean;
+  status?: InputStatus;
+  mask?: boolean | string;
+  type?: string;
+  autoComplete?: string;
+  autoFocus?: boolean;
+  inputMode?: string;
+  onInput?: (value: string[]) => void;
+  onFocus?: (e: FocusEvent) => void;
+  classNames?: OTPSemanticClassNames | OTPSemanticClassNamesFn;
+  styles?: OTPSemanticStyles | OTPSemanticStylesFn;
+}
+
+export interface OTPRef {
+  focus: () => void;
+  blur: () => void;
+  nativeElement: HTMLDivElement | null;
 }

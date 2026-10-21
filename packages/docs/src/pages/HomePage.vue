@@ -3,7 +3,8 @@ import { onMounted, ref } from 'vue';
 import { useSiteLocale } from '../composables/locale';
 import { siteManifest } from '../composables/manifest';
 
-const { locale } = useSiteLocale();
+const { locale, t } = useSiteLocale();
+const logoSrc = `${import.meta.env.BASE_URL}logo.svg`;
 
 /** 首页实时示例：与所有 demo 一致，仅客户端动态加载（SSR 安全 + 按需 chunk）。 */
 const hero = ref<Record<string, unknown>>({});
@@ -26,7 +27,7 @@ onMounted(async () => {
   <div class="home">
     <section class="home-hero">
       <div class="home-hero-logo">
-        <img src="/logo.svg" alt="Apollo Design" />
+        <img :src="logoSrc" alt="Apollo Design" />
       </div>
       <h1 class="home-title">Apollo Design</h1>
       <p class="home-subtitle">
@@ -54,16 +55,20 @@ onMounted(async () => {
       </div>
       <div class="home-meta">
         <span class="site-badge">v{{ siteManifest.apolloVersion }}</span>
-        <span class="site-badge">antd {{ siteManifest.antdTarget }} 兼容</span>
-        <span class="site-badge">{{ siteManifest.components.length }} 组件</span>
+        <span class="site-badge">
+          antd {{ siteManifest.antdTarget }} {{ locale === 'zh-CN' ? '兼容' : 'compatible' }}
+        </span>
+        <span class="site-badge">
+          {{ siteManifest.components.length }} {{ locale === 'zh-CN' ? '组件' : 'components' }}
+        </span>
       </div>
     </section>
 
     <!-- 真实组件实时示例（客户端挂载） -->
-    <section v-if="hero.Button" class="home-demo" aria-label="实时示例">
+    <section v-if="hero.Button" class="home-demo" :aria-label="t('liveDemo')">
       <component :is="hero.Space" wrap align="center" style="row-gap: 12px">
         <component :is="hero.Button" type="primary" @click="count += 1">
-          +1（{{ count }}）
+          +1 ({{ count }})
         </component>
         <component :is="hero.Button" @click="count = 0">Reset</component>
         <component

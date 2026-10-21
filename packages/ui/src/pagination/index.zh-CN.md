@@ -1,6 +1,7 @@
 ---
 category: 导航
-title: Pagination 分页
+title: Pagination
+subtitle: 分页
 titleTemplate: '%s - @apollo-design/ui'
 description: 采用分页的形式分隔长列表，每次只加载一个页面。
 ---

@@ -1,5 +1,6 @@
 ---
 title: DatePicker
+subtitle: Date picker
 titleTemplate: '%s - @apollo-design/ui'
 description: To select or input a date.
 ---

@@ -13,8 +13,9 @@ import { describe, expect, it } from 'vitest';
 import { createApp, nextTick } from 'vue';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import TopBar from '../src/components/site/TopBar.vue';
-import { provideSiteLocale, useSiteLocale } from '../src/composables/locale';
+import { categoryLabel, provideSiteLocale, useSiteLocale } from '../src/composables/locale';
 import { setupTheme, useThemeMode } from '../src/composables/theme';
+import SiteLayout from '../src/layouts/SiteLayout.vue';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.resolve(HERE, '../src');
@@ -143,17 +144,74 @@ describe('无障碍与移动端', () => {
     expect(wrapper.emitted('toggleMenu')).toBeTruthy();
     wrapper.unmount();
   });
+
+  it('抽屉按钮暴露展开态与受控目标（aria-expanded / aria-controls）', async () => {
+    const wrapper = await mountTopBar({ menuOpen: true });
+    const btn = wrapper.find('.site-mobile-toggle');
+    expect(btn.attributes('aria-expanded')).toBe('true');
+    expect(btn.attributes('aria-controls')).toBe('site-mobile-drawer');
+    wrapper.unmount();
+  });
+
+  it('移动抽屉：Escape 关闭并把焦点归还给触发元素', async () => {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/', component: { template: '<div />' } }],
+    });
+    router.push('/');
+    await router.isReady();
+    const trigger = document.createElement('button');
+    trigger.textContent = 'open';
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    const wrapper = mount(SiteLayout, {
+      global: { plugins: [router] },
+      slots: { default: '<div>content</div>' },
+      attachTo: document.body,
+    });
+    await nextTick();
+    await wrapper.find('.site-mobile-toggle').trigger('click');
+    await nextTick();
+    expect(wrapper.find('#site-mobile-drawer').exists()).toBe(true);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await nextTick();
+    expect(wrapper.find('#site-mobile-drawer').exists()).toBe(false);
+    expect(document.activeElement).toBe(trigger);
+
+    wrapper.unmount();
+    trigger.remove();
+  });
+});
+
+describe('站点 chrome 的国际化（2026-10-21 审计 A09）', () => {
+  it('英文站分类名走英文词典，未知分类原样保留', () => {
+    expect(categoryLabel('数据录入', 'en-US')).toBe('Data Entry');
+    expect(categoryLabel('数据展示', 'en-US')).toBe('Data Display');
+    expect(categoryLabel('数据录入', 'zh-CN')).toBe('数据录入');
+    expect(categoryLabel('未知分类', 'en-US')).toBe('未知分类');
+  });
+
+  it('主题按钮的 aria-label 随语言切换（不再写死中文）', async () => {
+    const state = useSiteLocale();
+    state.setLocale('en-US');
+    const wrapper = await mountTopBar();
+    expect(wrapper.find('.site-theme-toggle').attributes('aria-label')).toContain('Theme');
+    wrapper.unmount();
+    state.setLocale('zh-CN');
+  });
 });
 
 /** TopBar 用 useRouter / RouterLink，必须有**真** router（provide 假对象会炸在模板里）。 */
-async function mountTopBar() {
+async function mountTopBar(props: Record<string, unknown> = {}) {
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [{ path: '/', component: { template: '<div />' } }],
   });
   router.push('/');
   await router.isReady();
-  const wrapper = mount(TopBar, { global: { plugins: [router] } });
+  const wrapper = mount(TopBar, { props, global: { plugins: [router] } });
   await nextTick();
   return wrapper;
 }

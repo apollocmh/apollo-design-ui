@@ -1,5 +1,6 @@
 ---
 title: Segmented
+subtitle: Segmented control
 titleTemplate: '%s - @apollo-design/ui'
 description: Display multiple options and allow users to select a single one.
 ---

@@ -2,6 +2,7 @@
 category: Components
 group: 数据录入
 title: InputNumber
+subtitle: Input number
 ---
 
 # InputNumber

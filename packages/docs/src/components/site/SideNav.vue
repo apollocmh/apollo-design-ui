@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useSiteLocale } from '../../composables/locale';
+import { categoryLabel, useSiteLocale } from '../../composables/locale';
 import { siteManifest } from '../../composables/manifest';
 
 defineEmits<{ navigate: [] }>();
 
 const route = useRoute();
-const { pick, t } = useSiteLocale();
+const { pick, t, locale } = useSiteLocale();
 
 const activeName = computed(() =>
   route.name === 'component' || route.name === 'standalone-demo'
@@ -17,9 +17,9 @@ const activeName = computed(() =>
 </script>
 
 <template>
-  <nav aria-label="组件分类导航">
+  <nav :aria-label="t('componentNav')">
     <div v-for="group in siteManifest.categories" :key="group.name" class="site-side-group">
-      <div class="site-side-group-title">{{ group.name }}</div>
+      <div class="site-side-group-title">{{ categoryLabel(group.name, locale) }}</div>
       <RouterLink
         v-for="item in group.components"
         :key="item.name"
@@ -28,8 +28,23 @@ const activeName = computed(() =>
         :to="`/components/${item.name}`"
         @click="$emit('navigate')"
       >
-        <span class="zh">{{ pick(item.title).text }}</span>
-        <span class="en">{{ item.subtitle ? pick(item.subtitle).text : '' }}</span>
+        <span class="site-side-link-name">{{ pick(item.title).text }}</span>
+        <span v-if="pick(item.subtitle).text" class="site-side-link-desc">
+          {{ pick(item.subtitle).text }}
+        </span>
+      </RouterLink>
+    </div>
+
+    <div class="site-side-group">
+      <div class="site-side-group-title">{{ t('resources') }}</div>
+      <RouterLink
+        class="site-side-link"
+        :class="{ active: route.name === 'icon' }"
+        to="/components/icon"
+        @click="$emit('navigate')"
+      >
+        <span class="site-side-link-name">{{ t('iconGallery') }}</span>
+        <span class="site-side-link-desc">{{ siteManifest.icons.total }}</span>
       </RouterLink>
     </div>
 
@@ -43,7 +58,7 @@ const activeName = computed(() =>
         :to="`/guide/${g.slug}`"
         @click="$emit('navigate')"
       >
-        <span class="zh">{{ pick(g.title).text }}</span>
+        <span class="site-side-link-name">{{ pick(g.title).text }}</span>
       </RouterLink>
     </div>
   </nav>

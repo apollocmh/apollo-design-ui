@@ -95,6 +95,19 @@ export interface GuidePageData {
   doc: { zh: RenderedGuideDoc; en: RenderedGuideDoc };
 }
 
+export type IconStyle = 'outlined' | 'filled' | 'twoTone';
+
+export interface IconMeta {
+  name: string;
+  style: IconStyle;
+}
+
+export interface IconCatalog {
+  total: number;
+  byStyle: Record<IconStyle, number>;
+  items: IconMeta[];
+}
+
 export type SearchDocType = 'component' | 'demo' | 'guide';
 
 export interface SearchDocument {
@@ -136,4 +149,6 @@ export interface SiteManifest {
     demoCount: number;
   }>;
   guides: GuideMeta[];
+  /** 独立图标资源目录（不计入 72 个顶层组件）。 */
+  icons: IconCatalog;
 }

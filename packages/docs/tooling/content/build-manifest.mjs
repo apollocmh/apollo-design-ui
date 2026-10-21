@@ -19,7 +19,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import nodePath from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { compareCategories } from './categories.mjs';
 import { collectDemoSources } from './demo-source.mjs';
 import { bilingualOf, localeOf, normalizeText, parseFrontmatter } from './frontmatter.mjs';
@@ -29,11 +29,24 @@ const HERE = nodePath.dirname(fileURLToPath(import.meta.url));
 export const DOCS_DIR = nodePath.resolve(HERE, '../..');
 export const REPO_ROOT = nodePath.resolve(DOCS_DIR, '../..');
 const UI_SRC = nodePath.resolve(REPO_ROOT, 'packages/ui/src');
+const ICONS_SRC = nodePath.resolve(REPO_ROOT, 'packages/icons/src/icons');
 const OUT_DIR = nodePath.resolve(DOCS_DIR, '.generated');
 const GUIDE_SRC = nodePath.resolve(DOCS_DIR, 'content/guide');
 const REPO_URL = 'https://github.com/apollocmh/apollo-design-ui';
 
 const DEMO_SECTION_RE = /^## (代码演示|代码示例|Examples?|Demos?)\s*$/im;
+
+// 分类名的英文映射（与 src/composables/locale.ts 的 CATEGORY_EN 保持同步）。
+// 搜索索引必须给出英文 text，否则英文站搜「Data Entry」搜不到任何组件。
+const CATEGORY_EN = {
+  通用: 'General',
+  布局: 'Layout',
+  导航: 'Navigation',
+  数据录入: 'Data Entry',
+  数据展示: 'Data Display',
+  反馈: 'Feedback',
+  其他: 'Other',
+};
 
 // ---------------------------------------------------------------------------
 // 校验错误收集：errors = 门禁失败（重复 ID / 缺失文件 / 解析错误）；
@@ -145,6 +158,21 @@ function scanComponentDir(entry) {
   const { meta: zhMeta, body: zhBody } = parseFrontmatter(zhRaw);
   const { meta: enMeta, body: enBody } = parseFrontmatter(enRaw);
 
+  // 导航主副标题契约（2026-10-21 审计 A02）：
+  //   title    = 技术组件名（如 Table），不得混中文；
+  //   subtitle = 简体中文说明（如 表格），导航/总览据此渲染次级文字。
+  // 英文文档允许独立 subtitle；但 title 同样只能是技术名。
+  const zhTitle = localeOf(zhMeta, 'title', '');
+  const zhSubtitle = localeOf(zhMeta, 'subtitle', '');
+  const enTitle = localeOf(enMeta, 'title', '');
+  assert(zhTitle.trim() !== '', `${name}：frontmatter 缺少 title`);
+  assert(
+    !/[一-鿿]/.test(zhTitle),
+    `${name}：title 只能放技术名（中文说明放 subtitle），实际「${zhTitle}」`,
+  );
+  assert(zhSubtitle.trim() !== '', `${name}：frontmatter 缺少 subtitle（中文说明）`);
+  assert(!/[一-鿿]/.test(enTitle), `${name}：en-US title 含中文「${enTitle}」`);
+
   // demo 目录：有 .md 的才收（.vue-only 的历史残留给警告）
   const demoDir = nodePath.join(dir, 'demo');
   const demos = [];
@@ -197,6 +225,34 @@ export function scanComponents() {
   }
   components.sort((a, b) => a.name.localeCompare(b.name));
   return components;
+}
+
+/**
+ * 图标目录清单（2026-10-21 审计 A13）。
+ *
+ * 只读文件名 + 后缀，不 import 848 个生成组件 —— 文档站首屏不能为此加载全量 JS。
+ * 风格直接由真实导出名后缀判定（Outlined / Filled / TwoTone），不臆造上游分组。
+ */
+export function scanIcons() {
+  if (!fs.existsSync(ICONS_SRC)) {
+    return { total: 0, byStyle: { outlined: 0, filled: 0, twoTone: 0 }, items: [] };
+  }
+  const items = fs
+    .readdirSync(ICONS_SRC)
+    .filter((f) => f.endsWith('.ts') && f !== 'index.ts')
+    .map((f) => {
+      const name = f.slice(0, -3);
+      const style = name.endsWith('TwoTone')
+        ? 'twoTone'
+        : name.endsWith('Filled')
+          ? 'filled'
+          : 'outlined';
+      return { name, style };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const byStyle = { outlined: 0, filled: 0, twoTone: 0 };
+  for (const item of items) byStyle[item.style] += 1;
+  return { total: items.length, byStyle, items };
 }
 
 // ---------------------------------------------------------------------------
@@ -389,7 +445,7 @@ function buildSearchIndex(manifest, pageData) {
       component: c.name,
       title: c.title,
       subtitle: c.subtitle,
-      text: { zh: c.category, en: c.category },
+      text: { zh: c.category, en: CATEGORY_EN[c.category] ?? c.category },
       route: { zh: `/components/${c.name}`, en: `/components/${c.name}` },
     });
     for (const d of full?.demos ?? []) {
@@ -517,6 +573,7 @@ export async function buildManifest({ write = true } = {}) {
       demoCount: c.demos.length,
     })),
     guides: guides.map((g) => ({ slug: g.slug, title: g.title, order: g.order })),
+    icons: scanIcons(),
   };
 
   const search = buildSearchIndex(manifest, pageData);
@@ -564,7 +621,10 @@ export async function buildManifest({ write = true } = {}) {
 }
 
 // CLI
-if (import.meta.url === `file://${process.argv[1]}`) {
+// ⚠️ Windows 上 process.argv[1] 是 `D:\…`，拼成 `file://D:\…` 永远不等于
+// import.meta.url ⇒ CLI 静默不执行（2026-10-21 实测：docs build 用的仍是旧
+// manifest）。必须走 pathToFileURL。
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const checkOnly = process.argv.includes('--check');
   // --if-missing：产物齐全就跳过（本地反复跑 test / dev 时可省掉 ~25s 全量重扫）。
   // 注意这只是**跳过重建**，不是跳过校验 —— 校验请用 --check。

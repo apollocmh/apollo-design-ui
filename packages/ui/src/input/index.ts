@@ -2,18 +2,18 @@
  * Input 的公共导出。
  *
  * 与 antd 的 `es/input/index.js` 对齐：`Input` 默认导出 + 静态属性
- * `Input.Group` / `Input.TextArea` / `Input.Password`；另有具名别名
- * `InputGroup` / `TextArea` / `InputPassword`（Vue 模板里没有 `Input.Password`
- * 这种写法，具名导出是模板唯一可用形态 —— 与 Radio/Form 同判）。
- *
- * 本轮范围：Input / TextArea / Password / Group。`Search` / `OTP` 顺延
- * （见 docs/analysis/input.md §7，登记 INTENDED 缺口）。
+ * `Input.Group` / `Input.TextArea` / `Input.Password` / `Input.Search` / `Input.OTP`；
+ * 另有具名别名 `InputGroup` / `TextArea` / `InputPassword` / `InputSearch` / `InputOTP`
+ * （Vue 模板里没有 `Input.Password` 这种写法，具名导出是模板唯一可用形态 ——
+ * 与 Radio/Form 同判）。
  */
 
 import { withInstall } from '../_internal/with-install';
 import { GroupComponent } from './Group';
 import { InputComponent } from './Input';
+import { OTPComponent } from './OTP';
 import { PasswordComponent } from './Password';
+import { SearchComponent } from './Search';
 import { TextAreaComponent } from './TextArea';
 
 /** Input 组件。注册名 `AInput`。 */
@@ -22,6 +22,8 @@ export const Input = withInstall(
     Group: GroupComponent,
     TextArea: TextAreaComponent,
     Password: PasswordComponent,
+    Search: SearchComponent,
+    OTP: OTPComponent,
   }),
 );
 
@@ -31,6 +33,10 @@ export const InputGroup = withInstall(GroupComponent);
 export const TextArea = withInstall(TextAreaComponent);
 /** `Input.Password`。 */
 export const InputPassword = withInstall(PasswordComponent);
+/** `Input.Search`。 */
+export const InputSearch = withInstall(SearchComponent);
+/** `Input.OTP`。 */
+export const InputOTP = withInstall(OTPComponent);
 
 export default Input;
 
@@ -42,9 +48,18 @@ export type {
   InputPasswordProps,
   InputProps,
   InputRef,
+  InputSearchProps,
+  InputSearchSemanticClassNames,
+  InputSearchSemanticContext,
+  InputSearchSemanticStyles,
   InputSemanticClassNames,
   InputSemanticContext,
   InputSemanticStyles,
+  OTPProps,
+  OTPRef,
+  OTPSemanticClassNames,
+  OTPSemanticContext,
+  OTPSemanticStyles,
   PasswordSemanticClassNames,
   ShowCountProp,
   TextAreaProps,

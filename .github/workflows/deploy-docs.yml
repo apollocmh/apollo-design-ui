@@ -47,16 +47,19 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
-      # theme + ui 的 dist 是文档站样式的真源（tokens.css / style.css），
-      # 本地由 `build:docs` 脚本串联，CI 在这里显式分开跑以便定位失败层。
-      - name: 构建 theme
-        run: pnpm --filter @apollo-design/theme run build
+      # 发布前先跑文档站自己的门禁（2026-10-21 审计 A04）。
+      - name: 内容管线校验
+        run: pnpm --filter @apollo-design/docs run content:check
+      - name: 文档站类型检查
+        run: pnpm --filter @apollo-design/docs run typecheck
+      - name: 文档站单元测试
+        run: pnpm --filter @apollo-design/docs run test
 
-      - name: 构建 ui
-        run: pnpm --filter @apollo-design/ui run build
-
-      - name: 构建文档站
-        run: pnpm --filter @apollo-design/docs run build
+      # 干净 checkout 上没有 foundation dist；必须按拓扑序构建全部包
+      # （utils → theme/icons → … → ui → docs）。L7 门禁的 B1 就是包的
+      # 真实 `scripts.build`，同时校验产物契约；文档站 dist 也由这一步产出。
+      - name: 构建全部包（拓扑序 + L7 产物检查）
+        run: pnpm run test:build
 
       - name: 关键产物检查
         run: |
@@ -71,6 +74,8 @@ jobs:
           # 深链接直访：组件页必须产出物理文件，且含真实正文（SSR 预渲染证据）
           test -f "$D/components/button.html" || { echo '组件页未预渲染'; exit 1; }
           grep -q 'id="何时使用"' "$D/components/button.html" || { echo '组件页正文为空'; exit 1; }
+          test -f "$D/components/icon.html" || { echo '图标资源页未预渲染'; exit 1; }
+          grep -q 'icon-catalog' "$D/components/icon.html" || { echo '图标资源页正文为空'; exit 1; }
 
       - uses: actions/configure-pages@v5
 

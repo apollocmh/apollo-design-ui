@@ -15,6 +15,7 @@
 import type { Component } from 'vue';
 import { onMounted, ref, shallowRef, watch } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
+import { createRequestGuard } from '../../composables/request-guard';
 
 const props = defineProps<{
   component: string;
@@ -29,22 +30,26 @@ const loaders = import.meta.glob<{ default: Component }>('../../../../ui/src/*/d
 const Comp = shallowRef<Component | null>(null);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
 const { t } = useSiteLocale();
+const requestGuard = createRequestGuard();
 let mounted = false;
 
 async function load(): Promise<void> {
+  const token = requestGuard.next();
   state.value = 'loading';
   Comp.value = null;
   const key = `../../../../ui/src/${props.component}/demo/${props.demo}.vue`;
   const loader = loaders[key];
   if (!loader) {
-    state.value = 'error';
+    if (requestGuard.isCurrent(token)) state.value = 'error';
     return;
   }
   try {
     const mod = await loader();
+    if (!requestGuard.isCurrent(token)) return;
     Comp.value = mod.default;
     state.value = 'ready';
   } catch {
+    if (!requestGuard.isCurrent(token)) return;
     state.value = 'error';
   }
 }

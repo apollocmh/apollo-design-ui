@@ -10,6 +10,7 @@ import DemoPreview from '../components/demo/DemoPreview.vue';
 import DocHtml from '../components/docs/DocHtml.vue';
 import { useSiteLocale } from '../composables/locale';
 import { findComponent, loadComponentPage, siteManifest } from '../composables/manifest';
+import { createRequestGuard } from '../composables/request-guard';
 import { useSeo } from '../composables/seo';
 import { useTocState, withDemoAnchor } from '../composables/toc';
 import type { ComponentPageData, TocItem } from '../types/manifest';
@@ -21,14 +22,19 @@ const { setToc } = useTocState();
 const page = shallowRef<ComponentPageData | null>(null);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
 const fullWidth = ref(false);
+const requestGuard = createRequestGuard();
 
 async function load(name: string): Promise<void> {
+  const token = requestGuard.next();
   state.value = 'loading';
   page.value = null;
   try {
-    page.value = await loadComponentPage(name);
+    const data = await loadComponentPage(name);
+    if (!requestGuard.isCurrent(token)) return;
+    page.value = data;
     state.value = 'ready';
   } catch {
+    if (!requestGuard.isCurrent(token)) return;
     state.value = 'error';
   }
 }

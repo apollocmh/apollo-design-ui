@@ -1,6 +1,7 @@
 ---
 category: 数据录入
-title: Cascader 级联选择
+title: Cascader
+subtitle: 级联选择
 titleTemplate: '%s - @apollo-design/ui'
 description: 多级联动下拉选择。
 ---

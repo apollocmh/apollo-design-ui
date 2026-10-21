@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useSiteLocale } from '../../composables/locale';
+import { type SiteTextKey, useSiteLocale } from '../../composables/locale';
 import { siteManifest } from '../../composables/manifest';
 import { type ThemeMode, useThemeMode } from '../../composables/theme';
 import SearchModal from './SearchModal.vue';
 
+defineProps<{ menuOpen?: boolean }>();
 defineEmits<{ toggleMenu: [] }>();
 
 const router = useRouter();
@@ -13,25 +14,38 @@ const { t, locale, setLocale } = useSiteLocale();
 const { mode, setMode } = useThemeMode();
 
 const searchOpen = ref(false);
+const logoSrc = `${import.meta.env.BASE_URL}logo.svg`;
 let searchIndexReady = false;
+let searchIndexLoading = false;
 
 function openSearch(): void {
   searchOpen.value = true;
-  if (!searchIndexReady) {
-    searchIndexReady = true;
-    void useSearchOnce();
-  }
+  void useSearchOnce();
 }
 
-async function useSearchOnce() {
-  const { useSearch } = await import('../../composables/search');
-  const { ensureIndex } = useSearch();
-  await ensureIndex();
+async function useSearchOnce(): Promise<void> {
+  // 失败时不能把「已就绪」永久置 true —— 否则一次网络抖动之后，
+  // 搜索面板再也不会重新加载索引（2026-10-21 审计 A10）。
+  if (searchIndexReady || searchIndexLoading) return;
+  searchIndexLoading = true;
+  try {
+    const { useSearch } = await import('../../composables/search');
+    await useSearch().ensureIndex();
+    searchIndexReady = true;
+  } catch {
+    searchIndexReady = false;
+  } finally {
+    searchIndexLoading = false;
+  }
 }
 
 onMounted(() => {
   // 快捷键：/ 或 Cmd/Ctrl+K 呼出搜索
   window.addEventListener('keydown', onKeydown);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown);
 });
 
 function onKeydown(e: KeyboardEvent): void {
@@ -48,15 +62,24 @@ function onSearchNavigate(path: string): void {
   void router.push(path);
 }
 
-const themeOptions: Array<{ value: ThemeMode; label: string; icon: string }> = [
-  { value: 'light', label: '亮色', icon: '☀' },
-  { value: 'dark', label: '暗色', icon: '🌙' },
-  { value: 'system', label: '跟随系统', icon: '🖥' },
-];
+const themeOptions = [
+  { value: 'light', labelKey: 'themeLight', icon: '☀' },
+  { value: 'dark', labelKey: 'themeDark', icon: '🌙' },
+  { value: 'system', labelKey: 'themeSystem', icon: '🖥' },
+] as const satisfies ReadonlyArray<{
+  value: ThemeMode;
+  labelKey: SiteTextKey;
+  icon: string;
+}>;
+
+const currentTheme = computed(
+  () => themeOptions.find((o) => o.value === mode.value) ?? themeOptions[0],
+);
 
 function cycleTheme(): void {
   const i = themeOptions.findIndex((o) => o.value === mode.value);
-  setMode(themeOptions[(i + 1) % themeOptions.length]!.value);
+  const next = themeOptions[(i + 1) % themeOptions.length] ?? themeOptions[0];
+  setMode(next.value);
 }
 
 function toggleLocale(): void {
@@ -66,14 +89,23 @@ function toggleLocale(): void {
 
 <template>
   <header class="site-topbar">
-    <button class="site-icon-btn site-mobile-toggle" type="button" :aria-label="t('menu')" @click="$emit('toggleMenu')">☰</button>
+    <button
+      class="site-icon-btn site-mobile-toggle"
+      type="button"
+      :aria-label="t('menu')"
+      :aria-expanded="menuOpen === true"
+      aria-controls="site-mobile-drawer"
+      @click="$emit('toggleMenu')"
+    >
+      ☰
+    </button>
 
     <RouterLink to="/" class="site-logo">
-      <img src="/logo.svg" alt="" />
+      <img :src="logoSrc" alt="" />
       <span>Apollo Design</span>
     </RouterLink>
 
-    <nav class="site-topbar-nav" aria-label="主导航">
+    <nav class="site-topbar-nav" :aria-label="t('mainNav')">
       <RouterLink to="/components" :class="{ 'router-link-active': $route.path.startsWith('/components') }">
         {{ t('components') }}
       </RouterLink>
@@ -94,7 +126,7 @@ function toggleLocale(): void {
       <button
         class="site-icon-btn site-lang-toggle"
         type="button"
-        :aria-label="locale === 'zh-CN' ? 'Switch to English' : '切换到中文'"
+        :aria-label="locale === 'zh-CN' ? t('switchToEnglish') : t('switchToChinese')"
         :title="locale === 'zh-CN' ? 'English' : '中文'"
         @click="toggleLocale"
       >
@@ -104,11 +136,11 @@ function toggleLocale(): void {
       <button
         class="site-icon-btn site-theme-toggle"
         type="button"
-        :aria-label="`主题：${themeOptions.find((o) => o.value === mode)?.label}`"
-        :title="themeOptions.find((o) => o.value === mode)?.label"
+        :aria-label="`${t('theme')}: ${t(currentTheme.labelKey)}`"
+        :title="t(currentTheme.labelKey)"
         @click="cycleTheme"
       >
-        {{ themeOptions.find((o) => o.value === mode)?.icon }}
+        {{ currentTheme.icon }}
       </button>
 
       <a

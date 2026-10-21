@@ -9,5 +9,5 @@ import { a11yDemoTest } from '@apollo-design/test-utils';
 
 a11yDemoTest('Input', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 8,
+  expectCount: 10,
 });

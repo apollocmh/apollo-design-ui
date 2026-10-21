@@ -1,5 +1,6 @@
 ---
 title: TreeSelect
+subtitle: Tree select
 titleTemplate: '%s - @apollo-design/ui'
 description: Tree-like selection in a dropdown popup for hierarchical data.
 ---

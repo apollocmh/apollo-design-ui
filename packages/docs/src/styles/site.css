@@ -301,14 +301,20 @@ a:hover {
   font-weight: 500;
 }
 
-.site-side-link .zh {
+.site-side-link-name {
   color: inherit;
 }
 
-.site-side-link .en {
+.site-side-link-desc {
   color: var(--site-text-tertiary);
   font-size: 12px;
   margin-left: 6px;
+}
+
+.site-side-link:hover .site-side-link-desc,
+.site-side-link.active .site-side-link-desc {
+  color: inherit;
+  opacity: 0.72;
 }
 
 /* ── TOC ──────────────────────────────────────────────────────────────── */

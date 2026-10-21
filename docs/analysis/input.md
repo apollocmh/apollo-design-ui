@@ -107,9 +107,11 @@ clea r：handleReset ⇒ setValue('') + focus + resolveOnChange（click 事件 �
 
 ## 7. 本轮不做什么（明确登记）
 
-1. `Input.Search` —— 需要 Button 的语义拼接与 `input-search` 独立样式；
-2. `Input.OTP` —— 分格验证码（331 行 + 60 行样式），与输入框主链路弱相关；
-3. `autoSize` 的 ResizeObserver 版本（rc 用 `resizeObserver` + 隐藏 textarea；
+> 2026-10-21：`Input.Search` 与 `Input.OTP` 已补齐（`Search.ts` / `OTP.ts` +
+> `style/index.ts` 的 Search/OTP 规则 + demo/tests）。以下只剩 autoSize 的
+> ResizeObserver 版本。
+
+1. `autoSize` 的 ResizeObserver 版本（rc 用 `resizeObserver` + 隐藏 textarea；
    本仓先做 mount/输入时的同步量测，ResizeObserver 留给 `utils` 的既有实现）。
 
 ## 8. 测试策略

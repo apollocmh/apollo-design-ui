@@ -1,5 +1,6 @@
 ---
 title: Popconfirm
+subtitle: Popconfirm
 titleTemplate: '%s - @apollo-design/ui'
 description: A simple and compact confirmation dialog of an action.
 ---

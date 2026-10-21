@@ -1,5 +1,6 @@
 ---
 title: Tree
+subtitle: Tree
 titleTemplate: '%s - @apollo-design/ui'
 description: Hierarchical data display with selection, check, async load, drag and virtual scroll.
 ---

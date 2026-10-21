@@ -82,9 +82,13 @@ describe('Collapse · 样式', () => {
     );
     expect(css).toContain('  transform:rotate(180deg);');
     expect(css).toContain('.apollo-collapse .apollo-motion-collapse{');
+    // ⚠️ `!important` 只能出现在整条声明的末尾。写成
+    //    `transition:A !important, B !important` 是非法 CSS（浏览器会整条丢弃，
+    //    lightningcss 直接拒绝构建）—— 2026-10-21 审计 A07。
     expect(css).toContain(
-      '  transition:height var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out) !important, opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out) !important;',
+      '  transition:height var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out), opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out) !important;',
     );
+    expect(css).not.toContain('!important,');
   });
 
   it('disabled 段', () => {

@@ -1,6 +1,7 @@
 ---
 category: 数据展示
-title: Table 表格
+title: Table
+subtitle: 表格
 titleTemplate: '%s - @apollo-design/ui'
 description: 数据表格，用于展示行列数据结构，支持排序、筛选、分页、行选择、固定列/表头、汇总行与虚拟滚动。
 ---

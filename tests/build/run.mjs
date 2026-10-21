@@ -25,7 +25,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { exportNamesOf, runBudgetChecks } from './checks/treeshake.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -486,7 +486,9 @@ async function checkDefaultThemeCss(dir, name) {
 
   let mod;
   try {
-    mod = await import(path.join(dir, 'dist/index.mjs'));
+    // Windows 上 `import('D:\\…')` 会被 ESM loader 当成 `d:` 协议拒绝；
+    // 必须转成 file:// URL（macOS/Linux 上两种写法等价）。
+    mod = await import(pathToFileURL(path.join(dir, 'dist/index.mjs')).href);
   } catch (e) {
     add(name, 'B7', 'FAIL', `无法 import dist/index.mjs: ${e.message}`);
     return false;
@@ -835,7 +837,9 @@ function checkUiCssTokens(dir, name) {
 async function checkSsr(dir, name) {
   let mod;
   try {
-    mod = await import(path.join(dir, 'dist/index.mjs'));
+    // Windows 上 `import('D:\\…')` 会被 ESM loader 当成 `d:` 协议拒绝；
+    // 必须转成 file:// URL（macOS/Linux 上两种写法等价）。
+    mod = await import(pathToFileURL(path.join(dir, 'dist/index.mjs')).href);
   } catch (e) {
     add(name, 'B8', 'FAIL', `无法 import dist/index.mjs: ${e.message}`);
     return false;

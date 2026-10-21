@@ -2,12 +2,13 @@
 category: Components
 group: 数据录入
 title: Input
+subtitle: Input
 ---
 
 # Input
 
-A basic widget for getting user input. Current scope: `Input`, `TextArea`,
-`Input.Password`, `Input.Group`. `Input.Search` and `Input.OTP` are deferred.
+A basic widget for getting user input. Includes `Input`, `TextArea`,
+`Input.Password`, `Input.Group`, `Input.Search`, and `Input.OTP`.
 
 ## Examples
 
@@ -19,6 +20,8 @@ A basic widget for getting user input. Current scope: `Input`, `TextArea`,
 <code src="./demo/textarea.vue">TextArea</code>
 <code src="./demo/password.vue">Password</code>
 <code src="./demo/variant-status.vue">Variants & status</code>
+<code src="./demo/search.vue">Search</code>
+<code src="./demo/otp.vue">OTP</code>
 
 ## API · Input
 
@@ -65,6 +68,38 @@ No prefix/addon; adds `autoSize` (`true` or `{ minRows, maxRows }`), `rows`,
 `InputPasswordProps extends InputProps` (with `classNames` / `styles` omitted and
 re-declared for Password's own slots) ⇒ `allowClear` / `readOnly` / `maxLength` /
 `showCount` / `status` / `prefix` and the rest of Input's public props are typed too.
+
+## API · Input.Search
+
+Adds to Input:
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| enterButton | `false` icon / `true` primary / text / custom node | boolean \| string \| VNodeChild \| Component | false |
+| searchIcon | Custom search icon | VNodeChild \| Component | `<SearchOutlined />` |
+| loading | Button loading; also blocks Enter search | boolean | false |
+| onSearch | `(value, event, { source })`; `source='clear'` when cleared | function | - |
+| inputPrefixCls | Prefix for the inner Input | string | - |
+| addonAfter | Node appended after the button | VNodeChild \| Component | - |
+
+Semantic slots: `{ root, input, prefix, suffix, clear, count, button }`.
+
+## API · Input.OTP
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| length | Number of cells | number | 6 |
+| value / defaultValue | Controlled / initial value (`v-model:value`) | string | - |
+| onChange | Fires when all cells are filled and the value changed | `(value: string) => void` | - |
+| onInput | Fires on every cell change (array) | `(value: string[]) => void` | - |
+| formatter | Format the value (e.g. uppercase) | `(value: string) => string` | - |
+| separator | Separator between cells (or `(index) => VNode`) | VNodeChild \| function | - |
+| mask | Mask (`true` = •, or a single character) | boolean \| string | false |
+| type / inputMode / autoComplete | Passed to each native input | string | - |
+| autoFocus | Focus the first cell | boolean | false |
+| classNames / styles | Semantic slots `{ root, input, separator }` | object \| function | - |
+
+Ref: `focus()`, `blur()`, `nativeElement`.
 
 ## Notes
 

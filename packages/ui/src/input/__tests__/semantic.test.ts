@@ -18,7 +18,7 @@ import {
   configContextKey,
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
-import { Input, InputGroup, InputPassword, TextArea } from '../index';
+import { Input, InputGroup, InputOTP, InputPassword, InputSearch, TextArea } from '../index';
 
 const BP = { prefixCls: 'apollo-input' };
 
@@ -92,6 +92,26 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
       }),
   },
 
+  'input:search': {
+    render: () => h(InputSearch, { ...BP, placeholder: 'search' } as never),
+  },
+  'input:search-enter-button': {
+    render: () => h(InputSearch, { ...BP, enterButton: true } as never),
+  },
+  'input:search-enter-button-text': {
+    render: () => h(InputSearch, { ...BP, enterButton: 'Go' } as never),
+  },
+
+  'input:otp': {
+    render: () => h(InputOTP, { length: 6, defaultValue: '12' } as never),
+  },
+  'input:otp-separator': {
+    render: () => h(InputOTP, { length: 6, defaultValue: '12', separator: '-' } as never),
+  },
+  'input:otp-mask': {
+    render: () => h(InputOTP, { length: 6, defaultValue: '12', mask: true } as never),
+  },
+
   'input:semantic': {
     render: () =>
       h(Input, {
@@ -106,7 +126,16 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Input', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: {
+    'input:search-enter-button': {
+      reason:
+        'PLATFORM (D136): antd 的 Button 收到 children=true（不计入内容但影响 icon-only 判据）；Vue 把布尔子节点归一成 Comment，Button 仍加 -icon-only。Search 样式已补齐 15px 内边距与宽度，视觉一致，仅类名差异。',
+      deviationId: 'D136',
+      diff: [
+        '$/div[0]/button[1]: 类名不同 [apollo-btn apollo-btn-color-primary apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-default apollo-btn-variant-solid apollo-input-btn] vs [apollo-btn apollo-btn-color-primary apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-default apollo-btn-icon-only apollo-btn-variant-solid apollo-input-btn]',
+      ],
+    },
+  },
   render: (id) => {
     if (id === 'input:rtl' || id === 'input:rtl-affix') {
       // 方向由 ConfigProvider 注入（input-number 同范式：SSR 探针注入方向）

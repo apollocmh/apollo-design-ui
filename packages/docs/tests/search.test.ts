@@ -126,6 +126,33 @@ describe('SearchModal —— 键盘与 ARIA', () => {
     wrapper.unmount();
   });
 
+  it('Tab 在面板内循环，卸载后焦点归还给打开前的元素', async () => {
+    const trigger = document.createElement('button');
+    trigger.textContent = 'open search';
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    await useSearch().ensureIndex();
+    useSearch().query.value = 'table';
+    await nextTick();
+    const wrapper = mount(SearchModal, { attachTo: document.body });
+    await nextTick();
+
+    const focusables = $$('.site-search-panel input, .site-search-panel button') as HTMLElement[];
+    expect(focusables.length).toBeGreaterThan(1);
+    expect(document.activeElement).toBe(focusables[0]);
+
+    const last = focusables[focusables.length - 1];
+    if (!last) throw new Error('搜索面板缺少可聚焦元素');
+    last.focus();
+    press(last, 'Tab');
+    expect(document.activeElement).toBe(focusables[0]);
+
+    wrapper.unmount();
+    expect(document.activeElement).toBe(trigger);
+    trigger.remove();
+  });
+
   it('combobox / listbox 语义齐全，aria-activedescendant 指向真实 option id', async () => {
     useSearch().query.value = 'table';
     await nextTick();

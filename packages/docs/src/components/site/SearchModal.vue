@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 import { useSearch } from '../../composables/search';
 
 const emit = defineEmits<{ close: []; navigate: [path: string] }>();
 
-const { query, grouped, ensureIndex, loading } = useSearch();
-const { t, pick } = useSiteLocale();
+const { query, grouped, ensureIndex, loading, error } = useSearch();
+const { t, pick, locale } = useSiteLocale();
 
 const input = ref<HTMLInputElement | null>(null);
+const panel = ref<HTMLElement | null>(null);
 const activeIndex = ref(0);
+let previousFocus: HTMLElement | null = null;
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function focusables(): HTMLElement[] {
+  return panel.value ? Array.from(panel.value.querySelectorAll<HTMLElement>(FOCUSABLE)) : [];
+}
 
 const flatResults = computed(() => grouped.value.flatMap((g) => g.items));
 
@@ -26,6 +35,23 @@ function flatIndexOf(groupType: string, i: number): number {
 function onKeydown(e: KeyboardEvent): void {
   if (e.key === 'Escape') {
     emit('close');
+    return;
+  }
+  if (e.key === 'Tab') {
+    const list = focusables();
+    if (list.length === 0) return;
+    const first = list[0];
+    const last = list[list.length - 1];
+    if (!first || !last) return;
+    const active = document.activeElement as HTMLElement | null;
+    const inside = active ? panel.value?.contains(active) : false;
+    if (e.shiftKey && (active === first || !inside)) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
     return;
   }
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -50,11 +76,23 @@ function onKeydown(e: KeyboardEvent): void {
   }
 }
 
-const { locale } = useSiteLocale();
+async function retry(): Promise<void> {
+  try {
+    await ensureIndex();
+  } catch {
+    // 错误态由 useSearch().error 驱动；这里只负责不让 rejection 逃逸
+  }
+}
 
 onMounted(() => {
-  void ensureIndex();
+  previousFocus = document.activeElement as HTMLElement | null;
   input.value?.focus();
+  void retry();
+});
+
+onBeforeUnmount(() => {
+  previousFocus?.focus();
+  previousFocus = null;
 });
 
 const GROUP_LABEL = {
@@ -67,22 +105,32 @@ const GROUP_LABEL = {
 <template>
   <Teleport to="body">
     <div class="site-search-mask" @click.self="emit('close')">
-      <div class="site-search-panel" role="dialog" aria-modal="true" :aria-label="t('search')">
+      <div
+        ref="panel"
+        class="site-search-panel"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('search')"
+        @keydown="onKeydown"
+      >
         <input
           ref="input"
           v-model="query"
           class="site-search-input"
           type="text"
           role="combobox"
-          aria-expanded="true"
+          :aria-expanded="flatResults.length > 0"
           aria-controls="site-search-listbox"
           :aria-activedescendant="
             flatResults[activeIndex] ? `search-opt-${activeIndex}` : undefined
           "
           :placeholder="t('search')"
-          @keydown="onKeydown"
         />
-        <div v-if="loading" class="site-search-empty">{{ t('loading') }}</div>
+        <div v-if="error" class="site-search-empty" role="alert">
+          {{ t('searchError') }}
+          <button type="button" class="site-search-retry" @click="retry">{{ t('retry') }}</button>
+        </div>
+        <div v-else-if="loading" class="site-search-empty">{{ t('loading') }}</div>
         <div v-else-if="flatResults.length === 0" class="site-search-empty">
           {{ t('noResults') }}
         </div>
@@ -203,6 +251,16 @@ const GROUP_LABEL = {
   padding: 28px;
   text-align: center;
   color: var(--site-text-tertiary);
+}
+
+.site-search-retry {
+  margin-left: 8px;
+  border: 1px solid var(--site-border-strong);
+  background: transparent;
+  color: var(--site-brand);
+  border-radius: 6px;
+  padding: 2px 10px;
+  cursor: pointer;
 }
 
 .site-search-hint {

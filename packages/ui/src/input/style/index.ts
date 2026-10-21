@@ -461,7 +461,62 @@ input.apollo-input-filled.apollo-input-status-warning:not(.apollo-input-disabled
 .apollo-input-compact-item:not(.apollo-input-compact-first-item).apollo-input-compact-last-item,.apollo-input-compact-item:not(.apollo-input-compact-first-item).apollo-input-compact-last-item.apollo-input-sm,.apollo-input-compact-item:not(.apollo-input-compact-first-item).apollo-input-compact-last-item.apollo-input-lg{border-start-start-radius:0;border-end-start-radius:0;}
 `;
 
-/** Input 家族样式（Input / TextArea / Password / Group）。 */
+/**
+ * Search / OTP 的补充规则（2026-10-21）。
+ *
+ * 两段都挂在 input 组件的样式产物里（antd 同源：`style/search.js` 与 `style/otp.js`
+ * 都由 Input 的 genStyleHooks 带出），不新增独立 Component Token。
+ */
+function genSearchOTPStyles(rootPrefixCls: string): string {
+  const p = rootPrefixCls;
+  return `.${p}-input-search{width:100%;font-size:var(--apollo-font-size);font-family:var(--apollo-font-family);}
+
+.${p}-input-search .${p}-input-search-btn{height:var(--apollo-control-height);}
+
+.${p}-input-search.${p}-input-search-with-button .${p}-input-search-btn.${p}-btn-icon-only{padding-inline:calc(var(--apollo-padding-content-horizontal) - var(--apollo-line-width));width:auto;}
+
+.${p}-input-search .${p}-input-search-btn.${p}-btn-icon-only{width:var(--apollo-control-height);}
+
+.${p}-input-search .${p}-input-search-btn:focus-visible{z-index:5;}
+
+.${p}-input-search .${p}-input-search-btn-filled{background:var(--apollo-color-fill-tertiary);}
+
+.${p}-input-search .${p}-input-search-btn-filled:not(:disabled):hover{background:var(--apollo-color-fill-secondary);}
+
+.${p}-input-search .${p}-input-search-btn-filled:not(:disabled):active{background:var(--apollo-color-fill);}
+
+.${p}-input-search.${p}-input-search-large .${p}-input-search-btn{height:var(--apollo-control-height-lg);}
+
+.${p}-input-search.${p}-input-search-large .${p}-input-search-btn.${p}-btn-icon-only{width:var(--apollo-control-height-lg);}
+
+.${p}-input-search.${p}-input-search-small .${p}-input-search-btn{height:var(--apollo-control-height-sm);min-height:var(--apollo-control-height-sm);}
+
+.${p}-input-search.${p}-input-search-small .${p}-input-search-btn.${p}-btn-icon-only{width:var(--apollo-control-height-sm);min-width:var(--apollo-control-height-sm);}
+
+.${p}-otp{display:inline-flex;align-items:center;flex-wrap:nowrap;column-gap:var(--apollo-padding-xs);font-size:var(--apollo-font-size);font-family:var(--apollo-font-family);}
+
+.${p}-otp-input-wrapper{position:relative;}
+
+.${p}-otp-mask-icon{position:absolute;z-index:1;top:50%;right:50%;transform:translate(50%,-50%);pointer-events:none;}
+
+.${p}-otp-mask-input{color:transparent;caret-color:var(--apollo-color-text);}
+
+.${p}-otp-mask-input::selection{color:transparent;}
+
+.${p}-otp-mask-input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+
+.${p}-otp-mask-input[type=number]{-moz-appearance:textfield;}
+
+.${p}-otp-rtl{direction:rtl;}
+
+.${p}-otp-input{text-align:center;padding-inline:var(--apollo-padding-xxs);}
+
+.${p}-otp-sm .${p}-otp-input{padding-inline:calc(var(--apollo-padding-xxs) / 2);}
+
+.${p}-otp-lg .${p}-otp-input{padding-inline:var(--apollo-padding-xs);}`;
+}
+
+/** Input 家族样式（Input / TextArea / Password / Group / Search / OTP）。 */
 export function genInputStyle(rootPrefixCls: string = 'apollo'): string {
   // ⚠️ antd 把组件变量声明在每个 css-var 根上（useCSSVarCls：裸 input / affix
   // wrapper / group wrapper 都带 -css-var 类）—— 本仓无 -css-var 类，等价做法是
@@ -475,5 +530,7 @@ export function genInputStyle(rootPrefixCls: string = 'apollo'): string {
   ].join('\n\n');
   return `${decls}
 
-${RULES}`;
+${RULES}
+
+${genSearchOTPStyles(rootPrefixCls)}`;
 }

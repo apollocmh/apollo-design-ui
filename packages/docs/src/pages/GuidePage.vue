@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import DocHtml from '../components/docs/DocHtml.vue';
 import { useSiteLocale } from '../composables/locale';
 import { loadGuidePage } from '../composables/manifest';
+import { createRequestGuard } from '../composables/request-guard';
 import { useTocState } from '../composables/toc';
 import type { GuidePageData } from '../types/manifest';
 
@@ -13,14 +14,19 @@ const { setToc } = useTocState();
 
 const page = shallowRef<GuidePageData | null>(null);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
+const requestGuard = createRequestGuard();
 
 async function load(slug: string): Promise<void> {
+  const token = requestGuard.next();
   state.value = 'loading';
   page.value = null;
   try {
-    page.value = await loadGuidePage(slug);
+    const data = await loadGuidePage(slug);
+    if (!requestGuard.isCurrent(token)) return;
+    page.value = data;
     state.value = 'ready';
   } catch {
+    if (!requestGuard.isCurrent(token)) return;
     state.value = 'error';
   }
 }

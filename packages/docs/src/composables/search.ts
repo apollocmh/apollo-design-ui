@@ -26,22 +26,33 @@ export function safeText(v: unknown): string {
 const index = ref<SearchDocument[] | null>(null);
 const query = ref('');
 const loading = ref(false);
+const error = ref(false);
 let loadPromise: Promise<void> | null = null;
 
 export function useSearch() {
   const { locale } = useSiteLocale();
 
   async function ensureIndex(): Promise<void> {
-    if (index.value || loading.value) return;
+    if (index.value) return;
+    // 失败的 Promise 不能永久缓存：否则一次网络抖动之后，搜索索引
+    // 再也不会重新加载（2026-10-21 审计 A10）。
+    if (loadPromise) return loadPromise;
     loading.value = true;
-    loadPromise ??= loadSearchIndex()
+    error.value = false;
+    const promise = loadSearchIndex()
       .then((docs) => {
         index.value = docs;
       })
+      .catch((err: unknown) => {
+        error.value = true;
+        throw err;
+      })
       .finally(() => {
         loading.value = false;
+        loadPromise = null;
       });
-    await loadPromise;
+    loadPromise = promise;
+    await promise;
   }
 
   /** 打分匹配：0 = 不匹配。 */
@@ -80,5 +91,5 @@ export function useSearch() {
       .filter((g) => g.items.length > 0);
   });
 
-  return { query, results, grouped, ensureIndex, loading, open: ensureIndex };
+  return { query, results, grouped, ensureIndex, loading, error, open: ensureIndex };
 }

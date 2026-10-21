@@ -1,6 +1,7 @@
 ---
 category: Data Display
 title: Table
+subtitle: Table
 titleTemplate: '%s - @apollo-design/ui'
 description: A table displays rows of data, with sorting, filtering, pagination, row selection, fixed columns/header, summary row and virtual scrolling.
 ---

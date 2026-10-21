@@ -1,6 +1,7 @@
 ---
 category: 数据录入
-title: DatePicker 日期选择器
+title: DatePicker
+subtitle: 日期选择器
 titleTemplate: '%s - @apollo-design/ui'
 description: 输入或选择日期的控件。
 ---

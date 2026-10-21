@@ -3,10 +3,12 @@
  * 区分三层结论：加载成功 / 交互通过 / 视觉截图。
  */
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { chromium } from 'playwright';
 
 const BASE = process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui';
-const SHOT_DIR = '/tmp/docs-shots';
+const SHOT_DIR = path.join(os.tmpdir(), 'docs-shots');
 fs.mkdirSync(SHOT_DIR, { recursive: true });
 
 const results = [];
@@ -69,16 +71,34 @@ try {
   check('分类侧栏', await page.locator('.site-side-link.active:has-text("Button")').isVisible());
   check('本页目录', (await page.locator('.site-toc-link').count()) > 3);
 
+  // ── 2b. Input.Search / InputOTP demo 真实渲染 ────────────────────────
+  await page.goto(`${BASE}/components/input`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('.demo-canvas .apollo-input-search', { timeout: 15000 });
+  check('Search demo 渲染', (await page.locator('.demo-canvas .apollo-input-search').count()) > 0);
+  await page.waitForSelector('.demo-canvas .apollo-otp', { timeout: 15000 });
+  check('OTP demo 渲染', (await page.locator('.demo-canvas .apollo-otp').count()) > 0);
+
   // ── 3. 语言切换 ─────────────────────────────────────────────────────
+  // 回到 Button 页：语言断言依赖「When To Use / 何时使用」这组标题，
+  // Input 文档没有该小节（上面的 2b 会改当前路由）。
+  await page.goto(`${BASE}/components/button`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('h1.component-title', { state: 'visible', timeout: 10000 });
   await page.locator('.site-lang-toggle').click();
-  await page.waitForTimeout(400);
+  // 文档正文由异步 chunk + 响应式 langKey 驱动，固定 sleep 在慢机器上会假失败。
+  await page
+    .waitForFunction(() => document.body.innerText.includes('When To Use'), null, {
+      timeout: 10000,
+    })
+    .catch(() => {});
   check('英文文档', (await page.content()).includes('When To Use'));
   check(
     '英文导航',
     await page.locator('.site-topbar-nav a:has-text("Components")').first().isVisible(),
   );
   await page.locator('.site-lang-toggle').click();
-  await page.waitForTimeout(400);
+  await page
+    .waitForFunction(() => document.body.innerText.includes('何时使用'), null, { timeout: 10000 })
+    .catch(() => {});
   check('切回中文文档', (await page.content()).includes('何时使用'));
 
   // ── 4. 主题切换 ─────────────────────────────────────────────────────
@@ -122,9 +142,13 @@ try {
   // ── 6. 指南 & 总览 & 404 ────────────────────────────────────────────
   await page.goto(`${BASE}/components`, { waitUntil: 'domcontentloaded' });
   check(
-    '组件总览卡片',
-    (await page.locator('.overview-card').count()) === 72,
+    '组件总览卡片（72 组件 + 图标资源）',
+    (await page.locator('.overview-card').count()) === 73,
     `${await page.locator('.overview-card').count()}`,
+  );
+  check(
+    '总览含图标入口',
+    await page.locator('a.overview-card[href*="/components/icon"]').first().isVisible(),
   );
   await page.goto(`${BASE}/guide/compatibility`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(500);
@@ -134,6 +158,10 @@ try {
       (await page.locator('.doc-markdown').innerText()).length > 500,
   );
   await page.goto(`${BASE}/no-such-page`, { waitUntil: 'domcontentloaded' });
+  // 静态 404.html 在客户端水合后才出现，domcontentloaded 时可能还没挂载。
+  await page
+    .waitForSelector('.notfound-code', { state: 'visible', timeout: 10000 })
+    .catch(() => {});
   check('404 页', await page.locator('.notfound-code:has-text("404")').isVisible());
 
   // ── 7. 独立示例页（新窗口打开的目标） ────────────────────────────────
@@ -141,6 +169,34 @@ try {
   await page.waitForSelector('.apollo-btn', { timeout: 15000 });
   check('独立示例页渲染', (await page.locator('.apollo-btn').count()) > 0);
   await page.screenshot({ path: `${SHOT_DIR}/standalone-demo.png` });
+
+  // ── 7b. 独立图标目录（资源页，不是第 73 个组件） ─────────────────────
+  await page.goto(`${BASE}/components/icon`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('.icon-tile', { timeout: 15000 });
+  const iconCount = await page.locator('.icon-tile').count();
+  check('图标目录渲染（首屏 120）', iconCount === 120, `${iconCount}`);
+  const countText = await page.locator('.icon-count').innerText();
+  check('图标总数（848）', countText.includes('848'), countText.trim());
+
+  await page.locator('.icon-search').fill('search');
+  await page.waitForTimeout(300);
+  const filteredCount = await page.locator('.icon-tile').count();
+  check('图标搜索过滤', filteredCount > 0 && filteredCount < iconCount, `${filteredCount}`);
+  await page.locator('.icon-search').fill('');
+  await page.waitForTimeout(300);
+
+  await page.locator('.icon-style-tab:has-text("TwoTone")').click();
+  await page.waitForTimeout(300);
+  const twoToneCountText = await page.locator('.icon-count').innerText();
+  // TwoTone 共 150 个 > 单页 120，所以首屏瓦片数仍是 120；用计数文本断言更准确。
+  check('图标风格筛选', twoToneCountText.includes('150'), twoToneCountText.trim());
+  check(
+    '风格 tab 激活',
+    (await page.locator('.icon-style-tab.active').innerText()).includes('TwoTone'),
+  );
+  await page.locator('.icon-style-tab:has-text("全部")').click();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${SHOT_DIR}/icon-catalog.png` });
 
   // ── 8. 移动端 ────────────────────────────────────────────────────────
   await page.setViewportSize({ width: 390, height: 844 });
@@ -150,6 +206,9 @@ try {
   await page.locator('.site-mobile-toggle').click();
   await page.waitForTimeout(300);
   check('移动端抽屉展开', await page.locator('.site-drawer').isVisible());
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(400);
+  check('移动端抽屉 Esc 关闭', !(await page.locator('.site-drawer').isVisible()));
   await page.screenshot({ path: `${SHOT_DIR}/mobile.png` });
 } catch (e) {
   check('意外中断', false, e.message);

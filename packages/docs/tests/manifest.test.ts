@@ -27,7 +27,7 @@ const allDemos = pages.flatMap((p) => p.data.demos);
 describe('manifest 骨架', () => {
   it('组件与指南都有产出', () => {
     expect(manifest.components.length).toBe(72);
-    expect(manifest.guides.length).toBe(6);
+    expect(manifest.guides.length).toBe(7);
   });
 
   it('组件 name / id 唯一', () => {
@@ -58,6 +58,30 @@ describe('manifest 骨架', () => {
         expect(entry.demoCount, `${entry.name} demoCount`).toBe(page.data.demos.length);
       }
     }
+  });
+
+  it('导航主副标题契约：title 是技术名，中文 subtitle 非空', () => {
+    for (const c of manifest.components) {
+      expect(c.title.zh, `${c.name} title.zh`).not.toMatch(/[一-鿿]/);
+      expect(c.title.en, `${c.name} title.en`).not.toMatch(/[一-鿿]/);
+      expect(c.subtitle.zh.trim(), `${c.name} subtitle.zh`).not.toBe('');
+    }
+  });
+});
+
+describe('图标目录（独立资源，不计入 72 组件）', () => {
+  it('848 个图标，Outlined / Filled / TwoTone 计数正确', () => {
+    expect(manifest.icons.total).toBe(848);
+    expect(manifest.icons.byStyle).toEqual({ outlined: 447, filled: 251, twoTone: 150 });
+    expect(manifest.icons.items.length).toBe(848);
+    expect(new Set(manifest.icons.items.map((i) => i.name)).size).toBe(848);
+  });
+
+  it('不把 icon 混进 UI 组件清单 / 分类导航', () => {
+    expect(manifest.components.some((c) => c.name === 'icon')).toBe(false);
+    expect(manifest.categories.flatMap((c) => c.components).some((c) => c.name === 'icon')).toBe(
+      false,
+    );
   });
 });
 
@@ -131,8 +155,8 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（754 个）', () => {
-    expect(allDemos.length).toBe(754);
+  it('demo 全量可枚举（758 个）', () => {
+    expect(allDemos.length).toBe(758);
   });
 
   it('demo id 全局唯一 —— id 同时是锚点与搜索主键', () => {
@@ -172,7 +196,7 @@ describe('demo 元数据', () => {
 
 // 路由集合提到 describe 外层：搜索索引的路由校验要用同一份，
 // 各自维护一份「已知路由」就会漂移。
-const staticRoutes = new Set(['/', '/components', '/changelog', '/guide']);
+const staticRoutes = new Set(['/', '/components', '/components/icon', '/changelog', '/guide']);
 const componentRoutes = new Set(manifest.components.map((c) => `/components/${c.name}`));
 const guideRoutes = new Set(manifest.guides.map((g) => `/guide/${g.slug}`));
 const allRoutes = new Set([...staticRoutes, ...componentRoutes, ...guideRoutes]);
@@ -214,6 +238,13 @@ describe('搜索索引', () => {
         expect(typeof doc.text.en).toBe('string');
       }
     }
+  });
+
+  it('英文搜索文本使用英文分类名（不再原样展示中文）', () => {
+    const button = search.find((d: { id: string }) => d.id === 'button');
+    expect(button?.text.en).toBe('General');
+    const table = search.find((d: { id: string }) => d.id === 'table');
+    expect(table?.text.en).toBe('Data Display');
   });
 
   it('每条记录的路由指向真实页面', () => {

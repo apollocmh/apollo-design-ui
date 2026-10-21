@@ -1,5 +1,6 @@
 ---
 title: Pagination
+subtitle: Pagination
 titleTemplate: '%s - @apollo-design/ui'
 description: A long list can be divided into several pages, and only one page will be loaded at a time.
 ---

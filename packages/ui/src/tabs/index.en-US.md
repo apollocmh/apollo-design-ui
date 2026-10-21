@@ -1,5 +1,6 @@
 ---
 title: Tabs
+subtitle: Tabs
 titleTemplate: '%s - @apollo-design/ui'
 description: Tabs make it easy to switch between different views.
 ---

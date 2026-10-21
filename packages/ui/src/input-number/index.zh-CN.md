@@ -1,6 +1,7 @@
 ---
 category: 数据录入
-title: InputNumber 数字输入框
+title: InputNumber
+subtitle: 数字输入框
 ---
 
 # InputNumber 数字输入框

@@ -41,7 +41,7 @@ onBeforeUnmount(() => observer?.disconnect());
 </script>
 
 <template>
-  <nav v-if="items.length > 0" class="site-toc" aria-label="本页目录">
+  <nav v-if="items.length > 0" class="site-toc" :aria-label="t('onThisPage')">
     <div class="site-toc-title">{{ t('onThisPage') }}</div>
     <a
       v-for="item in items"
