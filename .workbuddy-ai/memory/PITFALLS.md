@@ -44,6 +44,7 @@
 - **消费端 / 浏览器冒烟**：🚨 Webpack 入口用 `DefinePlugin` 提供 `import.meta.env` + css/style-loader（372） · 🚨 冒烟必须跑 `vite preview` 不是 dev（无 SSR / 挂载时序不同）（373） · 🚨 SSG 404 水合后才出现 ⇒ 等 visible（374） · ⚠️ 语言断言页要含目标小节（375） · ⚠️ 图标目录首屏 120 上限 ⇒ 断言计数文本（376）。
 - **动效 / 浮层（阶段 0）**：🚨 Trigger 关闭置 `ready=false` ⇒ 浮层瞬移 `-1000vw/-1000vh`，离场在屏外（382） · 🚨 Notification MotionList slot 回查实时 keys ⇒ removed key 拿不到 config，立即卸载（383） · 🚨 Modal 的 zoom 原点要跟随最近 100ms 点击，不是固定中心（384） · ⚠️ Tree 收起后再次展开无 appear（385，H）。
 - **L6 基线平台**：🚨 入库基线由 macOS 生成；Windows 经典滚动条让 `#stage` 从 1440 变 1425 ⇒ **不要用 `--mode baseline` 覆盖既有基线**（377）。
+- **阶段 1/2/3 实测（2026-10-21）**：🚨 `onVisibleChanged` 不能在 setup 期 immediate 回调（386） · 🚨 Vue style 数值不补 px ⇒ 高度过渡失效（387） · 🚨 Form.List 位置参数在模板不可达 ⇒ 单对象 payload（388） · 🚨 Windows L7 门禁 `/bin/sh` + `;` PATH 全红（389） · 🚨 站点语言未在 main 初始化 ⇒ 刷新丢语言 + 面板中英混排（390） · 🚨 双引号 `node -e` 遇 `$(` 会毁文件（391） · ⚠️ Windows 全仓 Biome 报 CRLF 噪声，收口只检查改动文件（392）
 - **CI / 发布**：🚨 `content:check` 不落盘，docs 类型检查/测试/coverage 前必须 `content:build`（378,379） · 🚨 `pnpm run preview -- --host` 的 `--` 会让 vite 退回 4173 ⇒ 用 `exec vite preview`（380） · 🚨 Pages legacy 源为 gh-pages + 环境仅允许 gh-pages ⇒ 部署推 gh-pages，不能用 deploy-pages（381）。
 
 ## 工具 / 沙箱
@@ -4954,3 +4955,37 @@
     nodes 从 2 回到 7，但没有 `.apollo-tree-treenode-motion` 包装（antd 有）。
     初步怀疑 `NodeList` 的 expand diff / MOTION_KEY 哨兵分支（**H，未确认**）；
     阶段 1 先做逐帧探针，别直接重写 2026-10-17 已修过的 Tree motion。
+
+386. 🚨 **`useMotionStatus` 的 `onVisibleChanged` 不能在 setup 期 `immediate` 回调**：
+    appear 尚未开始时 `snapshot.status` 仍是 `none`，提前回调 `true` 会被 Tree 的
+    `MotionTreeNode` 判成「appear 已结束」（`targetVisible === true`）⇒ 刚插入的
+    MOTION_KEY 哨兵立即摘除，展开动效一帧都留不下（收起方向因 `targetVisible=false`
+    不匹配而侥幸正常）。修法：首帧判断放到 `onMounted`（`driver.mount()` 之后），
+    只有「确实无动画」时才立即回调。实测证据：重新展开 `-treenode-motion` 从 0 → 出现
+    appear-start/active，高度 `0 → 140px`。
+387. 🚨 **Vue 的 style 对象不会像 React 那样给数值长度补 `px`**：
+    `el.style.height = 140` 在标准模式浏览器里被 CSSOM **静默丢弃**（保留旧值），
+    而 antd 的 collapse 预设返回的正是数字（`height: node.scrollHeight`）⇒
+    Collapse / Tree / Alert 的高度过渡只剩 opacity 在动。修法：在 `useMotionStatus`
+    交给 Vue 前统一 `normalizeMotionStyle()`（React 的 unitless 白名单，0 保持 0）。
+    jsdom 同样拒绝无单位长度，所以单测必须 mock `scrollHeight` 才能断言 `height: 140px`。
+388. 🚨 **`Form.List` 的 render props 不能按 React 的位置参数直接喂给 Vue slot**：
+    模板 scoped slot 只接收**一个** props 对象，`slots.default(fields, operations, meta)`
+    会让 `operations` / `meta` 在模板里恒为 `undefined` ⇒ 动态增删移动不可用。
+    改为单对象 `{ fields, operations, meta }`（类型 `FormListSlotProps`，D137）；
+    渲染函数消费者需解构。回归：`form.test.ts`「Form.List 插槽载荷」。
+389. 🚨 **L7 构建门禁在 Windows 上用 `/bin/sh` 且 PATH 用 `;` 拼接 ⇒ 全部包 exit 1、stderr 为空**：
+    Git Bash/MSYS 拿到 `;` 分隔的 Windows PATH 会当成一条路径，所有命令解析失败。
+    修法：`process.platform === 'win32'` 时走 `cmd.exe`（`execSync(script, { shell: true })`），
+    POSIX 才用 `/bin/sh`；PATH 继续用 `path.delimiter`。修后 151 项 / FAIL 0。
+390. 🚨 **站点语言初始化只在独立示例页调用过**：`initSiteLocale()` 未接到 `main.ts`，
+    刷新后 localStorage / `?lang=` 全部失效（导航仍中文），而 demo 的
+    `ConfigProvider` 又依赖 `useSiteLocale()` ⇒ 日期面板出现 `2026年Oct / 今天` 混排。
+    必须在客户端 setup 期、`provideSiteLocale(app)` 之前调用一次。
+391. 🚨 **不要用 `node -e "…"` 双引号包脚本，尤其内容含 `$(` / 反引号**：
+    bash 会先做命令替换，曾把 `$('.site-search-input')` 展开成命令执行并把测试文件
+    写成乱码（只能 `git checkout` 恢复）。批量改文件一律写临时 `.mjs` 或改用单引号。
+392. ⚠️ **Windows 上 `pnpm lint:format` 全仓会报 3000+ 条错误**：检出是 CRLF，
+    Biome 默认要求 LF；这是环境噪声，不是新改动。收口用
+    `biome check <git 改动的代码文件>`，CI（Linux）再跑全量。文档/测试计数等
+    仍需同步更新，但不要把全仓 `--write` 当成修复。
