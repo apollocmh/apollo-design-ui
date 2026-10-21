@@ -166,6 +166,13 @@ if (globalThis.Element !== undefined && !Element.prototype.scrollTo) {
   Element.prototype.scrollTo = function scrollTo() {};
 }
 
+// jsdom 同样不实现 scrollIntoView（docs 的搜索面板键盘导航会调到它）。
+// docs 自己的 setup 已补；根 unit project 也会跑 `packages/docs/tests/**`，
+// 两处环境必须一致，否则 coverage 作业会报「unhandled error」整轮失败。
+if (globalThis.Element !== undefined && !Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = function scrollIntoView() {};
+}
+
 if (!globalThis.requestAnimationFrame) {
   globalThis.requestAnimationFrame = (cb: FrameRequestCallback) =>
     setTimeout(() => cb(Date.now()), 0) as unknown as number;
