@@ -4,6 +4,7 @@
  * 三栏：分类侧栏（SiteLayout）+ 中央内容 + 本页目录（TocNav，经共享状态挂到布局右栏）。
  * 页面数据（文档 HTML、demo 元数据与源码）按组件懒加载，离开页面即释放。
  */
+import { Segmented } from '@apollo-design/ui';
 import { computed, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import DemoPreview from '../components/demo/DemoPreview.vue';
@@ -21,7 +22,13 @@ const { setToc } = useTocState();
 
 const page = shallowRef<ComponentPageData | null>(null);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
-const fullWidth = ref(false);
+/** V3：默认按容器宽度自动排布；仅保留「单列」这一真正有价值的模式。 */
+const layoutMode = ref<string>('auto');
+const layoutOptions = computed(() => [
+  { label: t('autoLayout'), value: 'auto' },
+  { label: t('fullscreen'), value: 'full' },
+]);
+const fullWidth = computed(() => layoutMode.value === 'full');
 const requestGuard = createRequestGuard();
 
 async function load(name: string): Promise<void> {
@@ -123,25 +130,8 @@ useSeo(
 
       <section id="demos" class="demos-section">
         <h2 class="demos-section-title">{{ t('groupDemo') }}</h2>
-        <div class="demos-toolbar" role="group" :aria-label="t('groupDemo')">
-          <button
-            type="button"
-            class="demos-mode-btn"
-            :class="{ active: !fullWidth }"
-            :aria-pressed="!fullWidth"
-            @click="fullWidth = false"
-          >
-            {{ t('split') }}
-          </button>
-          <button
-            type="button"
-            class="demos-mode-btn"
-            :class="{ active: fullWidth }"
-            :aria-pressed="fullWidth"
-            @click="fullWidth = true"
-          >
-            {{ t('fullscreen') }}
-          </button>
+        <div class="demos-toolbar">
+          <Segmented v-model:value="layoutMode" :options="layoutOptions" size="small" />
         </div>
         <div class="demos-grid" :class="{ 'full-width': fullWidth }">
           <DemoPreview
@@ -238,22 +228,6 @@ useSeo(
   display: flex;
   gap: 6px;
   margin-bottom: 14px;
-}
-
-.demos-mode-btn {
-  border: 1px solid var(--site-border);
-  background: var(--site-bg);
-  color: var(--site-text-secondary);
-  font-size: 12.5px;
-  padding: 3px 12px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.demos-mode-btn.active {
-  color: var(--site-brand);
-  border-color: var(--site-brand);
-  background: color-mix(in srgb, var(--site-brand) 8%, transparent);
 }
 
 /*

@@ -64,7 +64,8 @@ const DICT = {
     switchToEnglish: '切换到英文',
     switchToChinese: '切换到中文',
     searchError: '搜索索引加载失败',
-    fullscreen: '全宽',
+    fullscreen: '单列',
+    autoLayout: '自动布局',
     split: '双列',
   },
   'en-US': {
@@ -117,7 +118,8 @@ const DICT = {
     switchToEnglish: 'Switch to English',
     switchToChinese: 'Switch to Chinese',
     searchError: 'Failed to load search index',
-    fullscreen: 'Full width',
+    fullscreen: 'Single column',
+    autoLayout: 'Auto layout',
     split: 'Split',
   },
 } as const;

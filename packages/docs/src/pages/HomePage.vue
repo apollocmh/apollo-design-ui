@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@apollo-design/ui';
 import { onMounted, ref } from 'vue';
 import { useSiteLocale } from '../composables/locale';
 import { siteManifest } from '../composables/manifest';
@@ -38,20 +39,24 @@ onMounted(async () => {
         }}
       </p>
       <div class="home-cta">
-        <RouterLink class="home-cta-primary" to="/guide/getting-started">
-          {{ locale === 'zh-CN' ? '快速开始' : 'Get Started' }}
+        <RouterLink v-slot="{ href, navigate }" custom to="/guide/getting-started">
+          <Button type="primary" size="large" :href="href" @click="navigate">
+            {{ locale === 'zh-CN' ? '快速开始' : 'Get Started' }}
+          </Button>
         </RouterLink>
-        <RouterLink class="home-cta-secondary" to="/components">
-          {{ locale === 'zh-CN' ? '组件总览' : 'Components' }}
+        <RouterLink v-slot="{ href, navigate }" custom to="/components">
+          <Button size="large" :href="href" @click="navigate">
+            {{ locale === 'zh-CN' ? '组件总览' : 'Components' }}
+          </Button>
         </RouterLink>
-        <a
-          class="home-cta-secondary"
+        <Button
+          size="large"
           :href="siteManifest.repoUrl"
           target="_blank"
           rel="noopener noreferrer"
         >
           GitHub
-        </a>
+        </Button>
       </div>
       <div class="home-meta">
         <span class="site-badge">v{{ siteManifest.apolloVersion }}</span>
@@ -146,35 +151,6 @@ onMounted(async () => {
   flex-wrap: wrap;
 }
 
-.home-cta-primary,
-.home-cta-secondary {
-  display: inline-block;
-  padding: 8px 26px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.home-cta-primary {
-  background: var(--site-brand);
-  color: #fff;
-}
-
-.home-cta-primary:hover {
-  background: var(--site-brand-hover);
-  color: #fff;
-}
-
-.home-cta-secondary {
-  border: 1px solid var(--site-border-strong);
-  color: var(--site-text);
-}
-
-.home-cta-secondary:hover {
-  border-color: var(--site-brand);
-  color: var(--site-brand);
-}
-
 .home-meta {
   display: flex;
   justify-content: center;
@@ -185,7 +161,7 @@ onMounted(async () => {
   margin: 44px auto;
   padding: 30px 20px;
   border: 1px solid var(--site-border);
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   background: var(--site-bg-soft);
 }
 
@@ -205,7 +181,7 @@ onMounted(async () => {
 
 .home-feature {
   border: 1px solid var(--site-border);
-  border-radius: 12px;
+  border-radius: var(--site-radius);
   padding: 20px;
   background: var(--site-bg);
 }
