@@ -1,0 +1,158 @@
+﻿
+[select open +0] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-slide-up-appear apollo-slide-up-appear-start apollo-slide-up apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 120px; transition: none;","rect":[24,102,0,0],"display":"block","opacity":"0.000","transform":"matrix(0, 0, 0, 0, 0, 0)","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[select open +50] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-slide-up-appear apollo-slide-up-appear-active apollo-slide-up apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 120px;","rect":[24,102,120,109],"display":"block","opacity":"0.000","transform":"matrix(1, 0, 0, 0.8, 0, 0)","animationName":"apollo-slide-up-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-in","state":"running","t":0}]}]
+
+[select open +150] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-slide-up-appear apollo-slide-up-appear-active apollo-slide-up apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 120px;","rect":[24,102,120,136],"display":"block","opacity":"0.999","transform":"matrix(1, 0, 0, 0.999863, 0, 0)","animationName":"apollo-slide-up-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-in","state":"running","t":167}]}]
+
+[select open +350] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 120px;","rect":[24,102,120,136],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[select open +700] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 120px;","rect":[24,102,120,136],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[select close +0] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-slide-up-leave apollo-slide-up-leave-start apollo-slide-up apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 120px; pointer-events: none;","rect":[-14400,-9000,120,136],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[select close +50] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-slide-up-leave apollo-slide-up-leave-active apollo-slide-up apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 120px; pointer-events: none;","rect":[-14400,-9000,120,136],"display":"block","opacity":"0.988","transform":"matrix(1, 0, 0, 0.997692, 0, 0)","animationName":"apollo-slide-up-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-out","state":"running","t":33}]}]
+
+[select close +150] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-slide-up-leave apollo-slide-up-leave-active apollo-slide-up apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 120px; pointer-events: none;","rect":[-14400,-9000,120,121],"display":"block","opacity":"0.446","transform":"matrix(1, 0, 0, 0.889101, 0, 0)","animationName":"apollo-slide-up-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-out","state":"running","t":183}]}]
+
+[select close +350] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-select-dropdown-hidden apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 120px; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[select close +700] .apollo-select-dropdown (1)
+[{"cls":"apollo-select-dropdown apollo-select-dropdown-hidden apollo-select-css-var css-var-root apollo-select-dropdown-placement-bottomLeft","style":"--arrow-x: 60px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 120px; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[date open +0] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-slide-up-appear apollo-slide-up-appear-prepare apollo-slide-up css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 149px;","rect":[24,102,288,348],"display":"block","opacity":"0.000","transform":"matrix(1, 0, 0, 1, 0, 0)","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[date open +50] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-slide-up-appear apollo-slide-up-appear-active apollo-slide-up css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 149px;","rect":[24,102,288,278],"display":"block","opacity":"0.000","transform":"matrix(1, 0, 0, 0.8, 0, 0)","animationName":"apollo-slide-up-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-in","state":"running","t":0}]}]
+
+[date open +150] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-slide-up-appear apollo-slide-up-appear-active apollo-slide-up css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 149px;","rect":[24,102,288,348],"display":"block","opacity":"0.999","transform":"matrix(1, 0, 0, 0.999864, 0, 0)","animationName":"apollo-slide-up-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-in","state":"running","t":167}]}]
+
+[date open +350] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 149px;","rect":[24,102,288,348],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[date open +700] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 102px auto auto 24px; box-sizing: border-box; min-width: 149px;","rect":[24,102,288,348],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[date close +0] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-slide-up-leave apollo-slide-up-leave-active apollo-slide-up css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[-14400,-9000,149,0],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 0, 0)","animationName":"apollo-slide-up-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-out","state":"running","t":0}]}]
+
+[date close +50] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-slide-up-leave apollo-slide-up-leave-active apollo-slide-up css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[-14400,-9000,149,0],"display":"block","opacity":"0.982","transform":"matrix(1, 0, 0, 0.996327, 0, 0)","animationName":"apollo-slide-up-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-out","state":"running","t":50}]}]
+
+[date close +150] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-slide-up-leave apollo-slide-up-leave-active apollo-slide-up css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[-14400,-9000,149,0],"display":"block","opacity":"0.001","transform":"matrix(1, 0, 0, 0.80022, 0, 0)","animationName":"apollo-slide-up-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-slide-up-out","state":"running","t":200}]}]
+
+[date close +350] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-picker-dropdown-hidden css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[date close +700] .apollo-picker-dropdown (1)
+[{"cls":"apollo-picker-dropdown apollo-picker-dropdown-hidden css-var-root apollo-picker-css-var apollo-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[pop open +0] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-zoom-big-appear apollo-zoom-big-appear-prepare apollo-zoom-big apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: auto auto 686px 0px; box-sizing: border-box;","rect":[0,110,244,104],"display":"block","opacity":"0.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[pop open +50] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-zoom-big-appear apollo-zoom-big-appear-active apollo-zoom-big apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: auto auto 686px 0px; box-sizing: border-box;","rect":[12,109,195,83],"display":"block","opacity":"0.000","transform":"matrix(0.8, 0, 0, 0.8, 0, 0)","animationName":"apollo-menu-zoom-big-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-menu-zoom-big-in","state":"running","t":0}]}]
+
+[pop open +150] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-zoom-big-appear apollo-zoom-big-appear-active apollo-zoom-big apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: auto auto 686px 0px; box-sizing: border-box;","rect":[0,110,243,104],"display":"block","opacity":"0.997","transform":"matrix(0.999417, 0, 0, 0.999417, 0, 0)","animationName":"apollo-menu-zoom-big-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-menu-zoom-big-in","state":"running","t":167}]}]
+
+[pop open +350] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: auto auto 686px 0px; box-sizing: border-box;","rect":[0,110,244,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[pop open +700] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: auto auto 686px 0px; box-sizing: border-box;","rect":[0,110,244,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[pop close +0] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-zoom-big-leave apollo-zoom-big-leave-start apollo-zoom-big apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; pointer-events: none;","rect":[-14400,-9000,244,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[pop close +50] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-zoom-big-leave apollo-zoom-big-leave-active apollo-zoom-big apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; pointer-events: none;","rect":[-14399,-9000,241,103],"display":"block","opacity":"0.954","transform":"matrix(0.990766, 0, 0, 0.990766, 0, 0)","animationName":"apollo-menu-zoom-big-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-menu-zoom-big-out","state":"running","t":33}]}]
+
+[pop close +150] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-zoom-big-leave apollo-zoom-big-leave-active apollo-zoom-big apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; pointer-events: none;","rect":[-14388,-9001,196,84],"display":"block","opacity":"0.017","transform":"matrix(0.803326, 0, 0, 0.803326, 0, 0)","animationName":"apollo-menu-zoom-big-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-menu-zoom-big-out","state":"running","t":183}]}]
+
+[pop close +350] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-popover-hidden apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[pop close +700] .apollo-popover (1)
+[{"cls":"apollo-popover apollo-popover-hidden apollo-popconfirm apollo-popover-placement-top","style":"--arrow-x: 59.9609375px; --arrow-y: -6px; inset: -1000vh auto auto -1000vw; box-sizing: border-box; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+notice count: 1
+
+[notice open] .apollo-notification-notice (1)
+[{"cls":"apollo-notification-notice apollo-notification-notice-closable apollo-notification-notice-stack-in-threshold","style":"--notification-index: 0; --notification-y: 0px;","rect":[1032,24,384,138],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 0, 0)","animationName":"none","animationPlayState":"running","transitionDuration":"0.2s, 0.2s, 0.2s, 0.2s","animations":[]}]
+
+[notice close +0] .apollo-notification-notice (0)
+[]
+
+[notice close +50] .apollo-notification-notice (0)
+[]
+
+[notice close +150] .apollo-notification-notice (0)
+[]
+
+[notice close +350] .apollo-notification-notice (0)
+[]
+
+[notice close +700] .apollo-notification-notice (0)
+[]
+
+[tree before] .apollo-tree-treenode (4)
+[{"cls":"apollo-tree-treenode","style":"position: absolute; pointer-events: none; visibility: hidden; height: 0px; overflow: hidden; border: 0px; padding: 0px;","rect":[24,67,24,0],"display":"flex","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]},{"cls":"apollo-tree-treenode apollo-tree-treenode-switcher-open apollo-tree-treenode-checkbox-checked apollo-tree-treenode-leaf-last","style":null,"rect":[24,67,116,24],"display":"flex","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]},{"cls":"apollo-tree-treenode apollo-tree-treenode-disabled apollo-tree-treenode-switcher-open apollo-tree-treenode-checkbox-checked","style":null,"rect":[24,95,153,24],"display":"flex","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]},{"cls":"apollo-tree-treenode apollo-tree-treenode-switcher-close apollo-tree-treenode-leaf","style":null,"rect":[24,123,134,24],"display":"flex","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[tree collapse +0] .apollo-tree-treenode-motion (1)
+[{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-start apollo-motion-collapse","style":null,"rect":[24,123,134,56],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0.2s, 0.2s","animations":[]}]
+
+[tree collapse +50] .apollo-tree-treenode-motion (1)
+[{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-active apollo-motion-collapse","style":"height: 0px; opacity: 0;","rect":[24,123,134,0],"display":"block","opacity":"0.961","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0.2s, 0.2s","animations":[{"name":"opacity","state":"running","t":33}]}]
+
+[tree collapse +150] .apollo-tree-treenode-motion (1)
+[{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-active apollo-motion-collapse","style":"height: 0px; opacity: 0;","rect":[24,123,134,0],"display":"block","opacity":"0.006","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0.2s, 0.2s","animations":[{"name":"opacity","state":"running","t":183}]}]
+
+[tree collapse +350] .apollo-tree-treenode-motion (0)
+[]
+
+[tree collapse +700] .apollo-tree-treenode-motion (0)
+[]
+
+[modal open +0] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-fade-appear apollo-fade-appear-start apollo-fade apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]},{"cls":"apollo-modal apollo-zoom-appear apollo-zoom-appear-prepare apollo-zoom","style":"width: 520px;","rect":[460,100,520,212],"display":"block","opacity":"0.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[modal open +50] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-fade-appear apollo-fade-appear-active apollo-fade apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.167","transform":"none","animationName":"apollo-modal-fade-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-fade-in","state":"running","t":33}]},{"cls":"apollo-modal apollo-zoom-appear apollo-zoom-appear-active apollo-zoom","style":"width: 520px;","rect":[668,185,104,42],"display":"block","opacity":"0.000","transform":"matrix(0.2, 0, 0, 0.2, 0, 0)","animationName":"apollo-modal-zoom-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-zoom-in","state":"running","t":0}]}]
+
+[modal open +150] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-fade-appear apollo-fade-appear-active apollo-fade apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.917","transform":"none","animationName":"apollo-modal-fade-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-fade-in","state":"running","t":183}]},{"cls":"apollo-modal apollo-zoom-appear apollo-zoom-appear-active apollo-zoom","style":"width: 520px;","rect":[469,104,502,205],"display":"block","opacity":"0.958","transform":"matrix(0.966317, 0, 0, 0.966317, 0, 0)","animationName":"apollo-modal-zoom-in","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-zoom-in","state":"running","t":150}]}]
+
+[modal open +350] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]},{"cls":"apollo-modal","style":"width: 520px;","rect":[460,100,520,212],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[modal open +700] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]},{"cls":"apollo-modal","style":"width: 520px;","rect":[460,100,520,212],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+modal cancel count: 1
+
+[modal close +0] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-fade-leave apollo-fade-leave-start apollo-fade apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]},{"cls":"apollo-modal apollo-zoom-leave apollo-zoom-leave-start apollo-zoom","style":"width: 520px;","rect":[460,100,520,212],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[modal close +50] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-fade-leave apollo-fade-leave-active apollo-fade apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.833","transform":"none","animationName":"apollo-modal-fade-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-fade-out","state":"running","t":33}]},{"cls":"apollo-modal apollo-zoom-leave apollo-zoom-leave-active apollo-zoom","style":"width: 520px;","rect":[470,104,501,204],"display":"block","opacity":"0.954","transform":"matrix(0.96297, 0, 0, 0.96297, 0, 0)","animationName":"apollo-modal-zoom-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-zoom-out","state":"running","t":33}]}]
+
+[modal close +150] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (2)
+[{"cls":"apollo-fade-leave apollo-fade-leave-active apollo-fade apollo-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.000","transform":"none","animationName":"apollo-modal-fade-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-fade-out","state":"running","t":200}]},{"cls":"apollo-modal apollo-zoom-leave apollo-zoom-leave-active apollo-zoom","style":"width: 520px;","rect":[668,185,104,42],"display":"block","opacity":"0.000","transform":"matrix(0.200024, 0, 0, 0.200024, 0, 0)","animationName":"apollo-modal-zoom-out","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"apollo-modal-zoom-out","state":"running","t":200}]}]
+
+[modal close +350] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (1)
+[{"cls":"apollo-modal","style":"width: 520px; display: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[modal close +700] .apollo-modal-root .apollo-modal, .apollo-modal-root .apollo-modal-mask (1)
+[{"cls":"apollo-modal","style":"width: 520px; display: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]

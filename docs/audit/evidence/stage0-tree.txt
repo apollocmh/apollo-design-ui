@@ -1,0 +1,20 @@
+
+[apollo] switchers=6 nodes=7
+[apollo] collapse +0 nodes=7 motion=1 [{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-start apollo-motion-collapse","style":null,"h":140,"o":"1.00"}]
+[apollo] collapse +30 nodes=7 motion=1 [{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-active apollo-motion-collapse","style":"height: 0px; opacity: 0;","h":0,"o":"0.99"}]
+[apollo] collapse +80 nodes=7 motion=1 [{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-active apollo-motion-collapse","style":"height: 0px; opacity: 0;","h":0,"o":"0.28"}]
+[apollo] collapse +150 nodes=7 motion=1 [{"cls":"apollo-tree-treenode-motion apollo-motion-collapse-leave apollo-motion-collapse-leave-active apollo-motion-collapse","style":"height: 0px; opacity: 0;","h":0,"o":"0.00"}]
+[apollo] collapse +300 nodes=2 motion=0 []
+[apollo] reopen +0 nodes=7 motion=0
+[apollo] reopen +80 nodes=7 motion=0
+[apollo] reopen +300 nodes=7 motion=0
+
+[antd] switchers=6 nodes=7
+[antd] collapse +0 nodes=7 motion=1 [{"cls":"ant-tree-treenode-motion ant-motion-collapse-leave ant-motion-collapse-leave-start ant-motion-collapse","style":"height: 140px;","h":140,"o":"1.00"}]
+[antd] collapse +30 nodes=7 motion=1 [{"cls":"ant-tree-treenode-motion ant-motion-collapse-leave ant-motion-collapse-leave-active ant-motion-collapse","style":"height: 0px; opacity: 0;","h":138,"o":"0.99"}]
+[antd] collapse +80 nodes=7 motion=1 [{"cls":"ant-tree-treenode-motion ant-motion-collapse-leave ant-motion-collapse-leave-active ant-motion-collapse","style":"height: 0px; opacity: 0;","h":39,"o":"0.28"}]
+[antd] collapse +150 nodes=2 motion=0 []
+[antd] collapse +300 nodes=2 motion=0 []
+[antd] reopen +0 nodes=7 motion=1
+[antd] reopen +80 nodes=7 motion=1
+[antd] reopen +300 nodes=7 motion=0

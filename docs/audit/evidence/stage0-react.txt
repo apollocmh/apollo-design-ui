@@ -1,0 +1,85 @@
+
+[react modal open +0] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-appear ant-fade-appear-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.083","transform":"none","animationName":"css-19u5a7b-antFadeIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antFadeIn","state":"running","t":17}]},{"cls":"ant-modal css-19u5a7b ant-zoom-appear ant-zoom-appear-active ant-zoom","style":"width: 400px;","rect":[680,170,80,35],"display":"block","opacity":"0.000","transform":"matrix(0.2, 0, 0, 0.2, 0, 0)","animationName":"css-19u5a7b-antZoomIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antZoomIn","state":"running","t":0}]}]
+
+[react modal open +50] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-appear ant-fade-appear-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.417","transform":"none","animationName":"css-19u5a7b-antFadeIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antFadeIn","state":"running","t":83}]},{"cls":"ant-modal css-19u5a7b ant-zoom-appear ant-zoom-appear-active ant-zoom","style":"width: 400px;","rect":[562,118,316,139],"display":"block","opacity":"0.739","transform":"matrix(0.791242, 0, 0, 0.791242, 0, 0)","animationName":"css-19u5a7b-antZoomIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antZoomIn","state":"running","t":50}]}]
+
+[react modal open +100] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-appear ant-fade-appear-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.917","transform":"none","animationName":"css-19u5a7b-antFadeIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antFadeIn","state":"running","t":183}]},{"cls":"ant-modal css-19u5a7b ant-zoom-appear ant-zoom-appear-active ant-zoom","style":"width: 400px;","rect":[527,103,387,170],"display":"block","opacity":"0.958","transform":"matrix(0.966336, 0, 0, 0.966336, 0, 0)","animationName":"css-19u5a7b-antZoomIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antZoomIn","state":"running","t":150}]}]
+
+[react modal open +200] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]},{"cls":"ant-modal css-19u5a7b","style":"width: 400px;","rect":[520,100,400,176],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[react select open +0] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-slide-up-appear ant-slide-up-appear-prepare ant-slide-up css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px;","rect":[32,68,220,104],"display":"block","opacity":"0.000","transform":"matrix(1, 0, 0, 1, 0, 0)","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[react select open +50] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-slide-up-appear ant-slide-up-appear-active ant-slide-up css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px;","rect":[32,68,220,83],"display":"block","opacity":"0.000","transform":"matrix(1, 0, 0, 0.8, 0, 0)","animationName":"css-19u5a7b-antSlideUpIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpIn","state":"running","t":0}]}]
+
+[react select open +150] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-slide-up-appear ant-slide-up-appear-active ant-slide-up css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px;","rect":[32,68,220,104],"display":"block","opacity":"0.993","transform":"matrix(1, 0, 0, 0.99856, 0, 0)","animationName":"css-19u5a7b-antSlideUpIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpIn","state":"running","t":133}]}]
+
+[react select open +350] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px;","rect":[32,68,220,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[react select close +0] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-slide-up-leave ant-slide-up-leave-start ant-slide-up css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px; pointer-events: none;","rect":[32,68,220,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[react select close +50] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-slide-up-leave ant-slide-up-leave-active ant-slide-up css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px; pointer-events: none;","rect":[32,68,220,104],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 0, 0)","animationName":"css-19u5a7b-antSlideUpOut","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpOut","state":"running","t":0}]}]
+
+[react select close +150] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-slide-up-leave ant-slide-up-leave-active ant-slide-up css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px; pointer-events: none;","rect":[32,68,220,98],"display":"block","opacity":"0.689","transform":"matrix(1, 0, 0, 0.937703, 0, 0)","animationName":"css-19u5a7b-antSlideUpOut","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpOut","state":"running","t":167}]}]
+
+[react select close +350] .ant-select-dropdown (1)
+[{"cls":"ant-select-dropdown ant-select-dropdown-hidden css-var-_r_0_ ant-select-css-var css-19u5a7b ant-select-dropdown-placement-bottomLeft","style":"--arrow-x: 110px; --arrow-y: -2px; inset: 68px auto auto 32px; box-sizing: border-box; width: 220px; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[react date open +0] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-slide-up-appear ant-slide-up-appear-start ant-slide-up css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px; transition: none;","rect":[192,76,0,0],"display":"block","opacity":"0.000","transform":"matrix(0, 0, 0, 0, 0, 0)","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[react date open +50] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-slide-up-appear ant-slide-up-appear-active ant-slide-up css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px;","rect":[192,76,288,302],"display":"block","opacity":"0.338","transform":"matrix(1, 0, 0, 0.867625, 0, 0)","animationName":"css-19u5a7b-antSlideUpIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpIn","state":"running","t":17}]}]
+
+[react date open +150] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-slide-up-appear ant-slide-up-appear-active ant-slide-up css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px;","rect":[192,76,288,348],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 0.999985, 0, 0)","animationName":"css-19u5a7b-antSlideUpIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpIn","state":"running","t":183}]}]
+
+[react date open +350] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px;","rect":[192,76,288,348],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[react date close +0] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-slide-up-leave ant-slide-up-leave-start ant-slide-up css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[192,76,288,348],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"paused","transitionDuration":"0s","animations":[]}]
+
+[react date close +50] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-slide-up-leave ant-slide-up-leave-active ant-slide-up css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[192,76,288,347],"display":"block","opacity":"0.988","transform":"matrix(1, 0, 0, 0.997688, 0, 0)","animationName":"css-19u5a7b-antSlideUpOut","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpOut","state":"running","t":33}]}]
+
+[react date close +150] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-slide-up-leave ant-slide-up-leave-active ant-slide-up css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[192,76,288,309],"display":"block","opacity":"0.444","transform":"matrix(1, 0, 0, 0.888899, 0, 0)","animationName":"css-19u5a7b-antSlideUpOut","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antSlideUpOut","state":"running","t":183}]}]
+
+[react date close +350] .ant-picker-dropdown (1)
+[{"cls":"ant-picker-dropdown ant-picker-dropdown-hidden css-19u5a7b css-var-_r_0_ ant-picker-css-var ant-picker-dropdown-placement-bottomLeft","style":"--arrow-x: 74.5px; --arrow-y: -2px; inset: 76px auto auto 192px; box-sizing: border-box; min-width: 149px; pointer-events: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+tree switchers: 4
+
+[react tree collapse +0] .ant-tree-treenode-motion (0)
+[]
+
+[react tree collapse +50] .ant-tree-treenode-motion (0)
+[]
+
+[react tree collapse +150] .ant-tree-treenode-motion (0)
+[]
+
+[react tree collapse +350] .ant-tree-treenode-motion (0)
+[]
+
+[react pop open +0] .ant-popover (1)
+[{"cls":"ant-popover ant-zoom-big-appear ant-zoom-big-appear-active ant-zoom-big ant-popover-css-var css-19u5a7b css-var-_r_0_ css-19u5a7b css-var-_r_0_ ant-popconfirm ant-popover-placement-top","style":"--arrow-x: 75.9609375px; --arrow-y: 110px; inset: auto auto 752px 0px; box-sizing: border-box;","rect":[15,66,195,83],"display":"block","opacity":"0.000","transform":"matrix(0.8, 0, 0, 0.8, 0, 0)","animationName":"css-19u5a7b-antZoomBigIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antZoomBigIn","state":"running","t":0}]}]
+
+[react pop open +50] .ant-popover (1)
+[{"cls":"ant-popover ant-zoom-big-appear ant-zoom-big-appear-active ant-zoom-big ant-popover-css-var css-19u5a7b css-var-_r_0_ css-19u5a7b css-var-_r_0_ ant-popconfirm ant-popover-placement-top","style":"--arrow-x: 75.9609375px; --arrow-y: 110px; inset: auto auto 752px 0px; box-sizing: border-box;","rect":[2,46,238,102],"display":"block","opacity":"0.896","transform":"matrix(0.979214, 0, 0, 0.979214, 0, 0)","animationName":"css-19u5a7b-antZoomBigIn","animationPlayState":"running","transitionDuration":"0s","animations":[{"name":"css-19u5a7b-antZoomBigIn","state":"running","t":67}]}]
+
+[react pop open +150] .ant-popover (1)
+[{"cls":"ant-popover ant-popover-css-var css-19u5a7b css-var-_r_0_ css-19u5a7b css-var-_r_0_ ant-popconfirm ant-popover-placement-top","style":"--arrow-x: 75.9609375px; --arrow-y: 110px; inset: auto auto 752px 0px; box-sizing: border-box;","rect":[0,44,244,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]
+
+[react pop open +350] .ant-popover (1)
+[{"cls":"ant-popover ant-popover-css-var css-19u5a7b css-var-_r_0_ css-19u5a7b css-var-_r_0_ ant-popconfirm ant-popover-placement-top","style":"--arrow-x: 75.9609375px; --arrow-y: 110px; inset: auto auto 752px 0px; box-sizing: border-box;","rect":[0,44,244,104],"display":"block","opacity":"1.000","transform":"none","animationName":"none","animationPlayState":"running","transitionDuration":"0s","animations":[]}]

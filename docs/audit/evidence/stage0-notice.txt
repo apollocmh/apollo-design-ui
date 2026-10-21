@@ -1,0 +1,29 @@
+after open notices: 1
+close buttons: 1
+events after open: [
+  {
+    "t": 39,
+    "type": "attr",
+    "cls": "apollo-notification-notice apollo-notification-fade-appear apollo-notification-fade-appear-start apollo-notification-fade apollo-notification-notice-closable apollo-notification-notice-stack-in-threshold",
+    "attr": "class"
+  },
+  {
+    "t": 51,
+    "type": "attr",
+    "cls": "apollo-notification-notice apollo-notification-fade-appear apollo-notification-fade-appear-active apollo-notification-fade apollo-notification-notice-closable apollo-notification-notice-stack-in-threshold",
+    "attr": "class"
+  },
+  {
+    "t": 67,
+    "type": "attr",
+    "cls": "apollo-notification-notice apollo-notification-notice-closable apollo-notification-notice-stack-in-threshold",
+    "attr": "class"
+  }
+]
+close +0: 0 []
+close +30: 0 []
+close +80: 0 []
+close +150: 0 []
+close +300: 0 []
+close +600: 0 []
+events after close: []

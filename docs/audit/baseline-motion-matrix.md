@@ -28,8 +28,8 @@
   → `docs/audit/evidence/stage0-motion.json`。
 - antd 对照：仓库 `node_modules/antd@6.6.4`，临时 Vite playground 使用
   `components/{modal,notification,select,date-picker,tree,popconfirm}` 的原生交互；
-  原始采样见 `docs/audit/evidence/stage0-react*.log` 与
-  `docs/audit/evidence/stage0-standalone.log`。
+  原始采样见 `docs/audit/evidence/stage0-react*.txt` 与
+  `docs/audit/evidence/stage0-standalone.txt`。
 - 截图：
   - `select-close-apollo-80ms.png` / `select-close-antd-80ms.png`
   - `notification-close-apollo-20ms.png` / `notification-close-antd-60ms.png`

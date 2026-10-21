@@ -1,0 +1,14 @@
+✅ 阶段 0 探针完成：D:\Code\apollocmh\apollo-design-ui\docs\audit\evidence\stage0-motion.json
+  select.open: 4 samples
+  select.close: 5 samples
+  date-picker.open: 4 samples
+  date-picker.close: 5 samples
+  popconfirm.open: 4 samples
+  popconfirm.close: 5 samples
+  notification.open: 1 samples
+  notification.close: 1 samples
+  tree.collapse: 4 samples
+  tree.reopen: {"nodes":7,"motion":0}
+  modal.open: 2 samples
+  modal.open.timeline: 4 samples
+  modal.close: 4 samples

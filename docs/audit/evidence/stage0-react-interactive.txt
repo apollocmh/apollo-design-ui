@@ -1,0 +1,48 @@
+
+[antd modal open +0] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-appear ant-fade-appear-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.083","transform":"none","transformOrigin":"720px 450px","animationName":"css-dev-only-do-not-override-19u5a7b-antFadeIn","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antFadeIn","state":"running","t":17}]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b ant-zoom-appear ant-zoom-appear-active ant-zoom","style":"width: 520px; transform-origin: -398px -76px;","rect":[142,39,104,44],"display":"block","opacity":"0.000","transform":"matrix(0.2, 0, 0, 0.2, 0, 0)","transformOrigin":"-398px -76px","animationName":"css-dev-only-do-not-override-19u5a7b-antZoomIn","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antZoomIn","state":"running","t":0}]}]
+
+[antd modal open +50] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-appear ant-fade-appear-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.500","transform":"none","transformOrigin":"720px 450px","animationName":"css-dev-only-do-not-override-19u5a7b-antFadeIn","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antFadeIn","state":"running","t":100}]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b ant-zoom-appear ant-zoom-appear-active ant-zoom","style":"width: 520px; transform-origin: -398px -76px;","rect":[377,84,412,173],"display":"block","opacity":"0.740","transform":"matrix(0.791644, 0, 0, 0.791644, 0, 0)","transformOrigin":"-398px -76px","animationName":"css-dev-only-do-not-override-19u5a7b-antZoomIn","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antZoomIn","state":"running","t":50}]}]
+
+[antd modal open +150] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","transformOrigin":"720px 450px","animationName":"none","animationPlayState":"running","animations":[]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b ant-zoom-appear ant-zoom-appear-active ant-zoom","style":"width: 520px; transform-origin: -398px -76px;","rect":[457,99,516,216],"display":"block","opacity":"0.991","transform":"matrix(0.992546, 0, 0, 0.992546, 0, 0)","transformOrigin":"-398px -76px","animationName":"css-dev-only-do-not-override-19u5a7b-antZoomIn","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antZoomIn","state":"running","t":217}]}]
+
+[antd modal open +350] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","transformOrigin":"720px 450px","animationName":"none","animationPlayState":"running","animations":[]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b","style":"width: 520px; transform-origin: -398px -76px;","rect":[460,100,520,218],"display":"block","opacity":"1.000","transform":"none","transformOrigin":"-398px -76px","animationName":"none","animationPlayState":"running","animations":[]}]
+
+[antd modal open +700] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","transformOrigin":"720px 450px","animationName":"none","animationPlayState":"running","animations":[]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b","style":"width: 520px; transform-origin: -398px -76px;","rect":[460,100,520,218],"display":"block","opacity":"1.000","transform":"none","transformOrigin":"-398px -76px","animationName":"none","animationPlayState":"running","animations":[]}]
+
+[antd modal close +0] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-leave ant-fade-leave-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"1.000","transform":"none","transformOrigin":"720px 450px","animationName":"css-dev-only-do-not-override-19u5a7b-antFadeOut","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antFadeOut","state":"running","t":0}]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b ant-zoom-leave ant-zoom-leave-active ant-zoom","style":"width: 520px; transform-origin: -398px -76px;","rect":[460,100,520,218],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 0, 0)","transformOrigin":"-398px -76px","animationName":"css-dev-only-do-not-override-19u5a7b-antZoomOut","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antZoomOut","state":"running","t":0}]}]
+
+[antd modal close +50] .ant-modal, .ant-modal-mask (2)
+[{"cls":"ant-modal-mask ant-fade-leave ant-fade-leave-active ant-fade","style":null,"rect":[0,0,1440,900],"display":"block","opacity":"0.666","transform":"none","transformOrigin":"720px 450px","animationName":"css-dev-only-do-not-override-19u5a7b-antFadeOut","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antFadeOut","state":"running","t":67}]},{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b ant-zoom-leave ant-zoom-leave-active ant-zoom","style":"width: 520px; transform-origin: -398px -76px;","rect":[410,90,455,191],"display":"block","opacity":"0.844","transform":"matrix(0.874974, 0, 0, 0.874974, 0, 0)","transformOrigin":"-398px -76px","animationName":"css-dev-only-do-not-override-19u5a7b-antZoomOut","animationPlayState":"running","animations":[{"name":"css-dev-only-do-not-override-19u5a7b-antZoomOut","state":"running","t":67}]}]
+
+[antd modal close +150] .ant-modal, .ant-modal-mask (1)
+[{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b","style":"width: 520px; transform-origin: -398px -76px; display: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","transformOrigin":"-398px -76px","animationName":"none","animationPlayState":"running","animations":[]}]
+
+[antd modal close +350] .ant-modal, .ant-modal-mask (1)
+[{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b","style":"width: 520px; transform-origin: -398px -76px; display: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","transformOrigin":"-398px -76px","animationName":"none","animationPlayState":"running","animations":[]}]
+
+[antd modal close +700] .ant-modal, .ant-modal-mask (1)
+[{"cls":"ant-modal css-dev-only-do-not-override-19u5a7b","style":"width: 520px; transform-origin: -398px -76px; display: none;","rect":[0,0,0,0],"display":"none","opacity":"1.000","transform":"none","transformOrigin":"-398px -76px","animationName":"none","animationPlayState":"running","animations":[]}]
+
+[antd notice open] .ant-notification-notice (1)
+[{"cls":"ant-notification-notice ant-notification-notice-closable ant-notification-notice-stack-in-threshold","style":"--notification-index: 0; --notification-y: 0px;","rect":[1032,24,384,94],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 0, 0)","transformOrigin":"192px 94px","animationName":"none","animationPlayState":"running","animations":[{"name":"transform","state":"running","t":100}]}]
+
+[antd notice close +0] .ant-notification-notice (1)
+[{"cls":"ant-notification-notice ant-notification-fade-leave ant-notification-fade-leave-start ant-notification-fade ant-notification-notice-closable","style":"--notification-index: 0; --notification-y: 0px;","rect":[1032,24,384,94],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 0, 0)","transformOrigin":"192px 94px","animationName":"none","animationPlayState":"running","animations":[{"name":"transform","state":"running","t":0}]}]
+
+[antd notice close +50] .ant-notification-notice (1)
+[{"cls":"ant-notification-notice ant-notification-fade-leave ant-notification-fade-leave-active ant-notification-fade ant-notification-notice-closable","style":"--notification-index: 0; --notification-y: 0px;","rect":[1034,24,384,94],"display":"block","opacity":"1.000","transform":"matrix(1, 0, 0, 1, 2.4737, 0)","transformOrigin":"192px 94px","animationName":"none","animationPlayState":"running","animations":[{"name":"opacity","state":"running","t":0},{"name":"transform","state":"running","t":33}]}]
+
+[antd notice close +150] .ant-notification-notice (0)
+[]
+
+[antd notice close +350] .ant-notification-notice (0)
+[]
+
+[antd notice close +700] .ant-notification-notice (0)
+[]
