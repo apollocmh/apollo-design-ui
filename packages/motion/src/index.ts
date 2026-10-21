@@ -75,6 +75,7 @@ export {
   getTransitionName,
   isActiveStep,
   nextStepInQueue,
+  normalizeMotionStyle,
   pickRenderMode,
   pickStatus,
   SIMPLE_STEP_QUEUE,

@@ -21,6 +21,19 @@ const flush = async () => {
 
 const notices = () => document.body.querySelectorAll('[role="alert"]');
 
+/** 等离场节点真正移除（`destroy()` 先播 leave；jsdom 无 transition ⇒ 500ms deadline）。 */
+async function waitForNoticeCount(count: number, timeout = 2000): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    if (notices().length === count) return;
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 16);
+    });
+    await flush();
+  }
+  expect(notices()).toHaveLength(count);
+}
+
 beforeEach(() => {
   actDestroy();
   document.body.innerHTML = '';
@@ -76,6 +89,7 @@ describe('Message · Issue #43 actDestroy 必须卸载根应用', () => {
 
     message.destroy();
     await flush();
-    expect(notices().length).toBe(0);
+    // 离场动画是异步的：先 leave，再按 500ms deadline 摘除
+    await waitForNoticeCount(0);
   });
 });

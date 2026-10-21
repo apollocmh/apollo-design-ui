@@ -493,6 +493,12 @@ describe('Tree · 展开/收起的动效收尾', () => {
     // 第二次点击若被 listChanging 吞掉，这里就还是收起状态
     await w.find('.apollo-tree-switcher').trigger('click');
     await waitFrames(6);
+    // ⭐ 重新展开同样要挂哨兵容器：`useMotionStatus` 的 onVisibleChanged 曾在
+    //    setup 期就回调 true ⇒ MotionTreeNode 误判 appear 已结束 ⇒ 刚插入的
+    //    哨兵立即被摘掉（只有收起方向因为 targetVisible=false 而侥幸正常）。
+    expect(w.find('.apollo-tree-treenode-motion').exists()).toBe(true);
+    expect(items(w).map((n) => n.text())).toContain('leaf-0');
+    await finishMotion(w);
     expect(items(w).map((n) => n.text())).toContain('leaf-0');
     w.unmount();
   });

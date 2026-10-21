@@ -482,8 +482,10 @@ export const Trigger = defineComponent({
     const offsetStyle = computed<Record<string, string | number>>(() => {
       const AUTO = 'auto';
       const info = offsetInfo.value;
-      // 未就绪：先甩到屏外（rc useOffsetStyle 的占位）
-      if (!info.ready) {
+      // rc `useOffsetStyle`：`if (!isMobile && (ready || !open))` 才使用 offset。
+      // 关闭时必须沿用**最后一次** offset，否则离场动画会在 -1000vw/-1000vh
+      // 的屏外位置播放（2026-10-21 阶段 0 实测）。只有「打开但尚未对齐」才占位。
+      if (!info.ready && mergedOpen.value) {
         return { left: '-1000vw', top: '-1000vh', right: AUTO, bottom: AUTO };
       }
       const points = info.align.points ?? '';

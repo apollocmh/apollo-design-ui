@@ -1,0 +1,5 @@
+# 上游固化副本（gen-locale 的 sha256 台账）按 LF 记账。
+# Windows 上 core.autocrlf=true 会把检出改成 CRLF，导致内容哈希与
+# registry/source/locale-rc/provenance.json 对不上（2026-10-21 本地实测）。
+# 这些文件只作为「上游原文」被哈希/比对，不属于要参与平台行尾转换的源码。
+registry/source/locale-rc/** -text

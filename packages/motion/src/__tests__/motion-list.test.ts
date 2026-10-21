@@ -121,6 +121,46 @@ describe('离场与摘除', () => {
     wrapper.unmount();
   });
 
+  it('移除时把 key 对象的额外字段带给 slot（Notification 的 config 载荷）', async () => {
+    const Host = defineComponent({
+      data: () => ({
+        keys: [
+          { key: 'a', config: { title: 'A' } },
+          { key: 'b', config: { title: 'B' } },
+        ],
+      }),
+      render() {
+        return h(
+          MotionList,
+          {
+            keys: this.keys,
+            supportMotion: true,
+            motionName: 'apollo-fade',
+            motionDeadline: 1,
+          },
+          {
+            default: (slotProps: Record<string, unknown>) => {
+              const config = slotProps.config as { title?: string } | undefined;
+              return h('div', { 'data-key': String(slotProps.itemKey) }, config?.title ?? '');
+            },
+          },
+        );
+      },
+    });
+    const wrapper = mount(Host);
+    await nextTick();
+    expect(wrapper.text()).toContain('B');
+
+    (wrapper.vm as unknown as { keys: unknown[] }).keys = [{ key: 'a', config: { title: 'A' } }];
+    await nextTick();
+    // leave 期间 b 仍须能拿到 config，否则 NoticeList 会返回 null、立即卸载。
+    expect(wrapper.text()).toContain('B');
+
+    await settle();
+    expect(wrapper.text()).not.toContain('B');
+    wrapper.unmount();
+  });
+
   it('所有 key 都移除并播完 ⇒ 触发 allRemoved', async () => {
     let allRemoved = 0;
     const Host = defineComponent({

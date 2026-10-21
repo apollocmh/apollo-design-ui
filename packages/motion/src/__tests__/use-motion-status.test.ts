@@ -341,6 +341,38 @@ describe('CSSMotion 组件', () => {
     expect(wrapper.html()).toContain('opacity: 1');
     wrapper.unmount();
   });
+
+  it('⭐ 数值高度必须补 px 落到内联样式（标准模式浏览器丢弃无单位长度）', async () => {
+    const { initCollapseMotion } = await import('../presets');
+    const preset = initCollapseMotion('apollo');
+    // jsdom 没有布局，scrollHeight 恒 0 ⇒ 模拟真实浏览器展开态的内容高度
+    Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+      configurable: true,
+      get: () => 140,
+    });
+    try {
+      const wrapper = mountMotion({
+        visible: true,
+        motionName: preset.motionName,
+        motionDeadline: preset.motionDeadline,
+        hooks: {
+          onAppearStart: preset.onAppearStart,
+          onAppearActive: preset.onAppearActive,
+          onAppearEnd: preset.onAppearEnd,
+        },
+      });
+      await nextTick();
+      await nextTick();
+      await waitFrames(2);
+      // ⚠️ Vue 的 style 对象不像 React 那样自动补单位；无单位 `140` 会被
+      //    CSSOM 静默丢弃（内联样式停在 height: 0px），高度过渡等于没播。
+      expect(wrapper.html()).toContain('height: 140px');
+      expect(wrapper.html()).toContain(`${preset.motionName}-appear-active`);
+      wrapper.unmount();
+    } finally {
+      delete (HTMLElement.prototype as unknown as Record<string, unknown>).scrollHeight;
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -440,7 +472,7 @@ describe('onVisibleChanged', () => {
   /** 只暴露 `onVisibleChanged` 与 status 的最小宿主，帧用注入的帧泵。 */
   function createSpyHost(
     pump: FramePump,
-    opts: { motionAppear?: boolean; motionLeave?: boolean } = {},
+    opts: { motionAppear?: boolean; motionLeave?: boolean; motionDeadline?: number } = {},
   ) {
     const calls: boolean[] = [];
     const Host = defineComponent({
@@ -453,6 +485,7 @@ describe('onVisibleChanged', () => {
           motionAppear: opts.motionAppear ?? true,
           motionEnter: true,
           motionLeave: opts.motionLeave ?? true,
+          motionDeadline: opts.motionDeadline ?? 0,
           scheduler: pump.scheduler,
           onVisibleChanged: (v: boolean) => {
             calls.push(v);
@@ -469,6 +502,23 @@ describe('onVisibleChanged', () => {
     });
     return { Host, calls };
   }
+
+  it('⭐ appear 未播完 ⇒ 绝不提前回调 true；播完才回调（Tree 展开哨兵根因）', async () => {
+    const pump = createFramePump();
+    const { Host, calls } = createSpyHost(pump, { motionAppear: true, motionDeadline: 1 });
+    const wrapper = mount(Host, { props: { visible: true } });
+    await nextTick();
+    // setup 期 status 还是 NONE，但 appear 只是「尚未开始」——此时回调 true
+    // 会被 Tree 的 MotionTreeNode 当成 appear 已结束 ⇒ 展开哨兵一帧就被摘掉。
+    expect(calls).toEqual([]);
+
+    pump.tickFrames(4);
+    pump.fireDeadline();
+    await nextTick();
+    await nextTick();
+    expect(calls).toEqual([true]);
+    wrapper.unmount();
+  });
 
   it('⭐ 无动画且首帧可见 ⇒ 挂载后立刻回调 true（rc：asyncVisible 为真可绕过守卫）', async () => {
     const pump = createFramePump();

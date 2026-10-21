@@ -283,6 +283,82 @@ export function getMotionStyle(input: {
   return handlerStyle;
 }
 
+/**
+ * React 的 `isUnitlessNumber` 白名单（`react-dom/src/shared/CSSProperty.js`）。
+ * 数值加到内联样式上时，除这些属性外都要补 `px` —— 与 React 的 style 语义一致。
+ * ⚠️ 这是**兼容性**要求，不是审美选择：Vue 的 `style` 对象**不会**像 React
+ * 那样自动补单位，而标准模式的浏览器又不接受无单位长度（`el.style.height = 140`
+ * 会被 CSSOM 直接丢弃、保留旧值）。antd 的 collapse 预设返回的就是数字
+ * （`height: node.scrollHeight`）⇒ 不补 px 的话，Collapse / Tree / Alert 的
+ * 高度过渡在标准模式页面里全部静默失效（2026-10-21 实测：Tree 展开时
+ * 内联样式停在 `height: 0px`，只有 opacity 在动）。
+ */
+const UNITLESS_STYLE_KEYS = new Set([
+  'animationIterationCount',
+  'aspectRatio',
+  'borderImageOutset',
+  'borderImageSlice',
+  'borderImageWidth',
+  'boxFlex',
+  'boxFlexGroup',
+  'boxOrdinalGroup',
+  'columnCount',
+  'columns',
+  'flex',
+  'flexGrow',
+  'flexPositive',
+  'flexShrink',
+  'flexNegative',
+  'flexOrder',
+  'gridArea',
+  'gridRow',
+  'gridRowEnd',
+  'gridRowSpan',
+  'gridRowStart',
+  'gridColumn',
+  'gridColumnEnd',
+  'gridColumnSpan',
+  'gridColumnStart',
+  'fontWeight',
+  'lineClamp',
+  'lineHeight',
+  'opacity',
+  'order',
+  'orphans',
+  'scale',
+  'tabSize',
+  'widows',
+  'zIndex',
+  'zoom',
+  'fillOpacity',
+  'floodOpacity',
+  'stopOpacity',
+  'strokeDasharray',
+  'strokeDashoffset',
+  'strokeMiterlimit',
+  'strokeOpacity',
+  'strokeWidth',
+]);
+
+/** 数值长度补 `px`（把 antd/React 的 style 语义搬进 Vue 内联样式）。 */
+export function normalizeMotionStyle(style: MotionStyle | null): MotionStyle | null {
+  if (!style) return style;
+  let next: MotionStyle | null = null;
+  for (const key of Object.keys(style)) {
+    const value = style[key];
+    if (
+      typeof value === 'number' &&
+      value !== 0 &&
+      !key.startsWith('--') &&
+      !UNITLESS_STYLE_KEYS.has(key)
+    ) {
+      next ??= { ...style };
+      next[key] = `${value}px`;
+    }
+  }
+  return next ?? style;
+}
+
 // ---------------------------------------------------------------------------
 // 渲染分支
 // ---------------------------------------------------------------------------

@@ -24,6 +24,19 @@ async function flush(times = 6): Promise<void> {
 
 const notices = () => Array.from(document.querySelectorAll('.apollo-message-notice'));
 
+/** 等离场节点真正移除（关闭现在先播 leave；jsdom 无 transition ⇒ 500ms deadline）。 */
+async function waitForNoticeCount(count: number, timeout = 2000): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    if (notices().length === count) return;
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 16);
+    });
+    await flush(1);
+  }
+  expect(notices()).toHaveLength(count);
+}
+
 beforeEach(() => {
   actDestroy();
   document.body.innerHTML = '';
@@ -87,12 +100,12 @@ describe('message · 命令式 API', () => {
 
     message.destroy('a');
     await flush();
-    expect(notices()).toHaveLength(1);
+    await waitForNoticeCount(1);
     expect(document.body.textContent).toContain('b');
 
     message.destroy();
     await flush();
-    expect(notices()).toHaveLength(0);
+    await waitForNoticeCount(0);
   });
 
   it('返回值可调用（调用即关闭）；promise 在**自然关闭**后 resolve true', async () => {
@@ -100,10 +113,10 @@ describe('message · 命令式 API', () => {
     await flush();
     expect(notices()).toHaveLength(1);
 
-    // 手动关闭：notice 消失
+    // 手动关闭：notice 播完离场后消失
     result();
     await flush();
-    expect(notices()).toHaveLength(0);
+    await waitForNoticeCount(0);
   });
 
   it('promise / then 在计时到点（自然关闭）后 resolve true', async () => {
@@ -116,7 +129,8 @@ describe('message · 命令式 API', () => {
       resolved = true;
     });
 
-    await vi.advanceTimersByTimeAsync(1200);
+    // 1s 到点关闭 + leave 的 500ms deadline；promise 在离场收尾后才 resolve
+    await vi.advanceTimersByTimeAsync(2000);
     await flush();
     expect(resolved).toBe(true);
     await expect(result.promise).resolves.toBe(true);
@@ -128,7 +142,8 @@ describe('message · 命令式 API', () => {
     await flush();
     expect(notices()).toHaveLength(1);
 
-    await vi.advanceTimersByTimeAsync(1200);
+    // 1s 到点关闭 + leave 的 500ms deadline（jsdom 无 transition 事件）
+    await vi.advanceTimersByTimeAsync(2000);
     await flush();
     expect(notices()).toHaveLength(0);
   });
@@ -256,7 +271,7 @@ describe('message · useMessage()', () => {
 
     api().destroy();
     await flush();
-    expect(notices()).toHaveLength(0);
+    await waitForNoticeCount(0);
     wrapper.unmount();
   });
 

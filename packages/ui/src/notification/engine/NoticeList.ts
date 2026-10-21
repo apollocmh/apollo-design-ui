@@ -232,20 +232,29 @@ export default defineComponent({
                   MotionList,
                   {
                     component: false,
-                    keys: keys.value.map((item) => item.key),
+                    // ⚠️ 必须把 `{ key, config }` **整个对象**交给 MotionList：
+                    //    MotionList 的 removed entity 会保留这份 eventProps，离场中的
+                    //    notice 才能继续渲染。只传 key 字符串时，slot 回查实时的
+                    //    `keys` 找不到已删除项 ⇒ 返回 null ⇒ 通知立即卸载、
+                    //    没有 -fade-leave-*（2026-10-21 阶段 0 实测）。
+                    keys: keys.value,
                     motionAppear: true,
                     motionName: placementMotion.value?.motionName,
+                    // 样式表未加载 / jsdom 无 transition 时的兜底；正常浏览器在
+                    // transitionend 先到，deadline 会被清掉，不改变 0.2s 动画行为。
+                    motionDeadline: 500,
                     onAllRemoved: () => {
                       if (props.placement) props.onAllRemoved?.(props.placement);
                     },
                   },
                   {
                     default: (slotProps: Record<string, unknown>) => {
-                      const itemKey = String(slotProps.itemKey);
-                      const item = keys.value.find((entry) => entry.key === itemKey);
-                      if (!item) return null;
+                      const config =
+                        (slotProps.config as NoticeListConfig | undefined) ??
+                        keys.value.find((entry) => entry.key === String(slotProps.itemKey))?.config;
+                      if (!config) return null;
                       return renderItem(
-                        item.config,
+                        config,
                         slotProps.className as string | undefined,
                         slotProps.style as Record<string, unknown> | null,
                       );

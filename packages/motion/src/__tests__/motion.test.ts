@@ -21,6 +21,7 @@ import {
   getTransitionName,
   isActiveStep,
   nextStepInQueue,
+  normalizeMotionStyle,
   pickRenderMode,
   pickStatus,
   SIMPLE_STEP_QUEUE,
@@ -333,6 +334,42 @@ describe('getMotionStyle（useStatus.js:225-231）', () => {
     ).toEqual({
       height: 1,
     });
+  });
+});
+
+describe('normalizeMotionStyle（React style 的数值补单位语义）', () => {
+  it('数值长度补 px；无单位属性保持数字；0 保持 0', () => {
+    expect(
+      normalizeMotionStyle({
+        height: 140,
+        maxHeight: 32,
+        marginTop: 8,
+        opacity: 0.5,
+        lineHeight: 1.5,
+        zIndex: 10,
+        flexGrow: 2,
+        '--custom-size': 12,
+        heightZero: 0,
+        width: 0,
+      }),
+    ).toEqual({
+      height: '140px',
+      maxHeight: '32px',
+      marginTop: '8px',
+      opacity: 0.5,
+      lineHeight: 1.5,
+      zIndex: 10,
+      flexGrow: 2,
+      '--custom-size': 12,
+      heightZero: 0,
+      width: 0,
+    });
+  });
+
+  it('null 原样返回；无可补单位的对象保持引用不变', () => {
+    expect(normalizeMotionStyle(null)).toBeNull();
+    const style = { opacity: 0.2 };
+    expect(normalizeMotionStyle(style)).toBe(style);
   });
 });
 

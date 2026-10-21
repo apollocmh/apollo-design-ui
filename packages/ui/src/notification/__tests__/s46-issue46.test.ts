@@ -21,6 +21,19 @@ const flush = async () => {
 
 const notices = () => document.body.querySelectorAll('.apollo-notification-notice, [role="alert"]');
 
+/** 等被 maxCount 挤掉的那条播完 leave 再消失（jsdom 无 transition ⇒ 500ms deadline）。 */
+async function waitForNoticeCount(count: number, timeout = 1500): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    if (notices().length === count) return;
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 16);
+    });
+    await flush();
+  }
+  expect(notices()).toHaveLength(count);
+}
+
 beforeEach(() => {
   actDestroy();
   document.body.innerHTML = '';
@@ -51,8 +64,8 @@ describe('Notification · Issue #46 Holder 配置更新必须传导到内核', (
     notification.success({ message: 'two' });
     await flush();
 
-    // 超出 maxCount ⇒ 只保留最后一条
-    expect(notices().length).toBe(1);
+    // 超出 maxCount ⇒ 只保留最后一条（被挤掉的那条要先播完 leave）
+    await waitForNoticeCount(1);
     expect(document.body.textContent).toContain('two');
     expect(document.body.textContent).not.toContain('one');
   });
@@ -64,7 +77,7 @@ describe('Notification · Issue #46 Holder 配置更新必须传导到内核', (
     notification.success({ message: 'two' });
     await flush();
 
-    expect(notices().length).toBe(1);
+    await waitForNoticeCount(1);
     expect(document.body.textContent).toContain('two');
   });
 });

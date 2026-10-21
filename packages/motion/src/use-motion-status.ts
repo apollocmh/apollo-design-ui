@@ -28,7 +28,7 @@ import {
 import type { MotionDomAdapter, MotionHooks, MotionScheduler } from './driver';
 import { createMotionDriver } from './driver';
 import type { MotionEndEventLike, MotionStatus, RenderMode, StepStatus } from './status';
-import { getMotionClassName, pickRenderMode, STATUS_NONE } from './status';
+import { getMotionClassName, normalizeMotionStyle, pickRenderMode, STATUS_NONE } from './status';
 import { detectSupportMotion } from './support';
 
 export interface UseMotionStatusOptions {
@@ -200,25 +200,39 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     //    React 版 `[asyncVisible, currentStatus]` 是逐项 Object.is 比较，等价于此。
     let lastKey = '';
 
+    const notify = (nextVisible: boolean, status: MotionStatus): void => {
+      const key = `${nextVisible}|${status}`;
+      if (key === lastKey) return;
+      lastKey = key;
+
+      asyncVisible.value = nextVisible;
+      if (nextVisible) firstMountChange = true;
+
+      if (asyncVisible.value !== undefined && status === STATUS_NONE) {
+        if (firstMountChange || asyncVisible.value) {
+          onVisibleChanged(asyncVisible.value);
+        }
+        firstMountChange = true;
+      }
+    };
+
     watch(
       () => [visible(), snapshot.value.status] as const,
-      ([nextVisible, status]) => {
-        const key = `${nextVisible}|${status}`;
-        if (key === lastKey) return;
-        lastKey = key;
-
-        asyncVisible.value = nextVisible;
-        if (nextVisible) firstMountChange = true;
-
-        if (asyncVisible.value !== undefined && status === STATUS_NONE) {
-          if (firstMountChange || asyncVisible.value) {
-            onVisibleChanged(asyncVisible.value);
-          }
-          firstMountChange = true;
-        }
-      },
-      { immediate: true, flush: 'post' },
+      ([nextVisible, status]) => notify(nextVisible, status),
+      { flush: 'post' },
     );
+
+    // ⚠️ 首帧判断必须放在 `onMounted`（且在本组件 `driver.mount` 之后执行），
+    //    不能用 `immediate: true`（2026-10-21 修，Tree 展开动效根因）：
+    //    setup 期 `snapshot.status` 仍是 NONE，而带 appear 的节点此刻只是
+    //    「还没开始动」——立即回调 `true` 会被 Tree 的 `MotionTreeNode`
+    //    当成 appear 已结束（`targetVisible === true`）⇒ 哨兵容器刚渲染就被摘掉，
+    //    `-treenode-motion` 一帧都留不下。挂载后 `driver.mount()` 已把状态同步
+    //    推进到 appear，此时 status !== NONE，自然不回调；只有真正无动画
+    //    （motionAppear=false / 不支持动效）时才会命中 NONE 并立即补发。
+    onMounted(() => {
+      notify(visible(), snapshot.value.status);
+    });
   }
 
   onUnmounted(() => {
@@ -249,7 +263,12 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     status: computed(() => snapshot.value.status),
     step: computed(() => snapshot.value.step),
     className,
-    style: computed(() => snapshot.value.style),
+    // ⚠️ 必须补 px 再交给 Vue：Vue 的 style 对象不像 React 那样自动补单位，
+    //    标准模式浏览器会**静默丢弃**无单位长度（`style.height = 140` 无效），
+    //    而 antd 的 collapse 预设返回的是数字（`height: node.scrollHeight`）。
+    //    不补的后果：Collapse / Tree / Alert 的高度过渡只剩 opacity 在动
+    //    （2026-10-21 实测，Tree 展开内联样式停在 height: 0px）。
+    style: computed(() => normalizeMotionStyle(snapshot.value.style)),
     renderMode,
     onMotionEnd: (event: MotionEndEventLike) => driver.notifyEnd(event),
   };

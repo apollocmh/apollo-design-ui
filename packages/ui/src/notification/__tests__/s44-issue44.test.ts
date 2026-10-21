@@ -22,6 +22,19 @@ const flush = async () => {
 
 const notices = () => document.body.querySelectorAll('.apollo-notification-notice, [role="alert"]');
 
+/** 等离场节点真正移除（`destroy()` 现在先播 leave，jsdom 无 transition 时走 500ms deadline）。 */
+async function waitForNoticeCount(count: number, timeout = 1500): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    if (notices().length === count) return;
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 16);
+    });
+    await flush();
+  }
+  expect(notices()).toHaveLength(count);
+}
+
 beforeEach(() => {
   actDestroy();
   document.body.innerHTML = '';
@@ -77,6 +90,7 @@ describe('Notification · Issue #44 actDestroy 必须卸载根应用', () => {
 
     notification.destroy();
     await flush();
-    expect(notices().length).toBe(0);
+    // 离场动效是异步的（先 leave 再摘除），不能再用「一次 flush 后立即为 0」。
+    await waitForNoticeCount(0);
   });
 });

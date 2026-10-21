@@ -25,6 +25,19 @@ async function flush(times = 6): Promise<void> {
 
 const notices = () => Array.from(document.querySelectorAll('.apollo-notification-notice'));
 
+/** 等离场节点真正移除（DOM 无 CSS transition ⇒ 走 500ms motionDeadline）。 */
+async function waitForNoticeCount(count: number, timeout = 1500): Promise<void> {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    if (notices().length === count) return;
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 16);
+    });
+    await flush(1);
+  }
+  expect(notices()).toHaveLength(count);
+}
+
 beforeEach(() => {
   actDestroy();
   document.body.innerHTML = '';
@@ -60,6 +73,7 @@ describe('notification · 命令式 API', () => {
 
     notification.destroy();
     await flush();
+    await waitForNoticeCount(0);
     notification.open({ description: 'only-desc' });
     await flush();
     expect(notices()[0]?.querySelector('.apollo-notification-notice-section')).toBeNull();
@@ -99,6 +113,7 @@ describe('notification · 命令式 API', () => {
 
     notification.destroy();
     await flush();
+    await waitForNoticeCount(0);
     // ⚠️ 上游语义：`closeIcon: null` 也走「强制关闭」分支（`computeClosableConfig` 的第一条）
     notification.open({ title: 'b', closeIcon: null });
     await flush();
@@ -106,6 +121,7 @@ describe('notification · 命令式 API', () => {
 
     notification.destroy();
     await flush();
+    await waitForNoticeCount(0);
     notification.open({ title: 'c', closable: { closeIcon: null } });
     await flush();
     const close = notices()[0]?.querySelector('.apollo-notification-notice-close');
@@ -121,11 +137,11 @@ describe('notification · 命令式 API', () => {
 
     notification.destroy('a');
     await flush();
-    expect(notices()).toHaveLength(1);
+    await waitForNoticeCount(1);
 
     notification.destroy();
     await flush();
-    expect(notices()).toHaveLength(0);
+    await waitForNoticeCount(0);
   });
 
   it('open() 返回 void（没有 thenable 句柄 —— 与 message 的差异）', async () => {
@@ -142,7 +158,7 @@ describe('notification · 命令式 API', () => {
     await flush();
     expect(notices()).toHaveLength(2);
 
-    await vi.advanceTimersByTimeAsync(1500);
+    await vi.advanceTimersByTimeAsync(2500);
     await flush();
     expect(notices()).toHaveLength(1);
     expect(document.body.textContent).toContain('sticky');
@@ -267,7 +283,7 @@ describe('notification · useNotification()', () => {
 
     api().destroy();
     await flush();
-    expect(notices()).toHaveLength(0);
+    await waitForNoticeCount(0);
     wrapper.unmount();
   });
 

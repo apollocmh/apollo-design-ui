@@ -80,6 +80,26 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+describe('Modal · 点击位置 zoom 原点', () => {
+  it('打开前 100ms 内的 document click ⇒ transform-origin 取点击位置', async () => {
+    const click = new MouseEvent('click', { bubbles: true });
+    Object.defineProperty(click, 'pageX', { value: 100 });
+    Object.defineProperty(click, 'pageY', { value: 50 });
+    document.documentElement.dispatchEvent(click);
+
+    const wrapper = await mountModal({ title: 'origin' });
+    await waitFor(() =>
+      (wrapper.find('.apollo-modal').attributes('style') ?? '').includes('transform-origin'),
+    );
+    expect(wrapper.find('.apollo-modal').attributes('style')).toContain(
+      'transform-origin: 100px 50px',
+    );
+    wrapper.unmount();
+    // 让模块级 100ms 失效定时器跑完，避免污染后续用例。
+    await new Promise((resolve) => setTimeout(resolve, 120));
+  });
+});
+
 describe('Modal · 结构与默认值', () => {
   it('root > (mask, wrap > panel > container > header/title/body/footer)', async () => {
     const wrapper = await mountModal({ title: 'hello', closable: true }, { footer: () => 'F' });

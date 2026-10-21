@@ -30,7 +30,14 @@
 import { CloseOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { useZIndex } from '@apollo-design/portal';
-import { isEmptyVNode, isNumber, isPlainObject, omit, pickAttrs } from '@apollo-design/utils';
+import {
+  canUseDom,
+  isEmptyVNode,
+  isNumber,
+  isPlainObject,
+  omit,
+  pickAttrs,
+} from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -67,6 +74,33 @@ const DEFAULT_WIDTH = 520;
 /** 语义槽的默认空对象（稳定引用，避免 computed 每次都新建）。 */
 const EMPTY_CLASS_NAMES: ModalSemanticType['classNames'] = {};
 const EMPTY_STYLES: ModalSemanticType['styles'] = {};
+
+/**
+ * 最近一次点击位置 —— antd `Modal` 的 zoom 入场原点来源。
+ *
+ * 上游在 `es/modal/Modal.js:24-41` 用模块级 capture click 记录 `pageX/pageY`，
+ * 100ms 内打开 Modal 就用它作为 `transform-origin`；否则回退到面板中心。
+ * 这是**行为契约**（同一操作下 antd 从点击点放大），不是要复制 React 实现。
+ *
+ * 放在模块级是为了覆盖「点击后才条件挂载 Modal」的用法：事件发生在组件 setup
+ * 之前，组件内部监听来不及捕获。`canUseDom()` 保护 SSR；顶层菜单/弹窗都只依赖
+ * 一次全局监听，不需要每个实例重复绑定。
+ */
+let lastClickPosition: MousePosition | null = null;
+let clickPositionTimer: ReturnType<typeof setTimeout> | null = null;
+
+function recordClickPosition(event: MouseEvent): void {
+  lastClickPosition = { x: event.pageX, y: event.pageY };
+  if (clickPositionTimer) clearTimeout(clickPositionTimer);
+  clickPositionTimer = setTimeout(() => {
+    lastClickPosition = null;
+    clickPositionTimer = null;
+  }, 100);
+}
+
+if (canUseDom()) {
+  document.documentElement.addEventListener('click', recordClickPosition, true);
+}
 
 export default defineComponent({
   name: 'AModal',
@@ -521,7 +555,7 @@ export default defineComponent({
           modalRender: mergedModalRender.value,
           width: numWidth.value,
           height: props.height,
-          mousePosition: props.mousePosition,
+          mousePosition: props.mousePosition ?? lastClickPosition,
           focusTriggerAfterClose: mergedFocusable.value.focusTriggerAfterClose,
           focusTrap: mergedFocusable.value.trap,
         } as never,

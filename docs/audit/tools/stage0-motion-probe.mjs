@@ -122,10 +122,12 @@ try {
   await timeline('tree.collapse', '.apollo-tree-treenode-motion', [0, 50, 150, 350]);
   await page.waitForTimeout(300);
   await switcher.click();
-  await page.waitForTimeout(300);
-  report['tree.reopen'] = {
+  // ⚠️ 必须在 appear 进行中采样：等 300ms 再数时 0.2s 的入场已经收尾，
+  //    容器被摘掉是「动效正常结束」，不是「没有动效」（2026-10-21 修正判据）。
+  await timeline('tree.reopen', '.apollo-tree-treenode-motion', [0, 50, 100, 200, 400]);
+  report['tree.reopen.result'] = {
     nodes: await page.locator('.apollo-tree-treenode').count(),
-    motion: await page.locator('.apollo-tree-treenode-motion').count(),
+    motionSeen: report['tree.reopen'].some((step) => step.nodes.length > 0),
   };
 
   // ── Modal：点击打开的原点与入场曲线 ──────────────────────────────────────

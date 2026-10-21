@@ -84,12 +84,21 @@ export default defineComponent({
     //    ⇒ TS2589（Type instantiation is excessively deep）。`shallowRef` 不展开，
     //    且这里每次都是整体替换对象，不需要深层响应式。
     const placements = shallowRef<PlacementGroups>({});
+    /** 仍在渲染树里的 placement（含离场中的空列表）；删除只在 onAllNoticeRemoved。 */
+    const retainedPlacements = new Set<Placement>();
     watchEffect(() => {
       const next: PlacementGroups = {};
       for (const config of configList.value) {
         const placement = (config.placement ?? 'topRight') as Placement;
+        retainedPlacements.add(placement);
         if (!next[placement]) next[placement] = [];
         next[placement].push(config);
+      }
+      // ⚠️ 保留**已存在的空 placement**：最后一条 notice 关闭时，NoticeList
+      //    必须继续挂载到 MotionList 播完离场动画；否则整个列表容器立刻卸载，
+      //    看起来就是「通知瞬间消失」。删除由 `onAllNoticeRemoved` 负责。
+      for (const placement of retainedPlacements) {
+        if (!(placement in next)) next[placement] = [];
       }
       placements.value = next;
     });
@@ -119,8 +128,11 @@ export default defineComponent({
     };
 
     const onAllNoticeRemoved = (placement: Placement): void => {
+      retainedPlacements.delete(placement);
       const clone = { ...placements.value };
       if (!(clone[placement] ?? []).length) delete clone[placement];
+      // ⚠️ 必须整体替换 shallowRef，否则空 placement 永远留在渲染树里。
+      placements.value = clone;
     };
 
     // 曾非空 → 变空：通知一次（onAllRemoved）。⚠️ 必须在 watch 里做（rc 也是 effect）——

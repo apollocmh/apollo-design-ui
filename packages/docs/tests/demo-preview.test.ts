@@ -97,7 +97,8 @@ describe('DemoRenderer —— 加载 / 失败 / 重试', () => {
     wrapper.unmount();
   });
 
-  it('加载中给出 aria-busy 的占位（不是空白）', async () => {
+  // 冷启动时 Vite 要现场转换 button 的整棵 demo 模块图，Windows 上可能 >5s
+  it('加载中给出 aria-busy 的占位（不是空白）', { timeout: 20_000 }, async () => {
     const wrapper = mount(DemoRenderer, {
       props: { component: 'button', demo: 'basic' },
       attachTo: document.body,
@@ -109,7 +110,7 @@ describe('DemoRenderer —— 加载 / 失败 / 重试', () => {
     wrapper.unmount();
   });
 
-  it('真实示例渲染出组件库的 DOM（不是占位层）', async () => {
+  it('真实示例渲染出组件库的 DOM（不是占位层）', { timeout: 20_000 }, async () => {
     const wrapper = mount(DemoRenderer, {
       props: { component: 'button', demo: 'basic' },
       attachTo: document.body,
@@ -119,7 +120,7 @@ describe('DemoRenderer —— 加载 / 失败 / 重试', () => {
     wrapper.unmount();
   });
 
-  it('resetToken 变化 ⇒ 重新加载，且重建后仍然渲染真实组件', async () => {
+  it('resetToken 变化 ⇒ 重新加载，且重建后仍然渲染真实组件', { timeout: 20_000 }, async () => {
     const wrapper = mount(DemoRenderer, {
       props: { component: 'button', demo: 'basic' },
       attachTo: document.body,

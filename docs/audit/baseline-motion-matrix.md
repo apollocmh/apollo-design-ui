@@ -237,3 +237,31 @@ capture + 100ms 失效 + 卸载清理），不能照搬 React 模块级副作用
   basic 开/关；阶段 1 补齐。
 
 > 本阶段未修改任何组件源码；`registry/*.json` 未变动。
+
+## 7. 阶段 1 修复记录（2026-10-21）
+
+> 验证：`node docs/audit/tools/stage0-motion-probe.mjs` → `docs/audit/evidence/stage0-motion.json`
+> （生产预览 `http://127.0.0.1:4477/apollo-design-ui/`，Playwright Chromium）。
+
+| ID | 状态 | 根因 | 修复 | 回归测试 | 浏览器证据 |
+|---|---|---|---|---|---|
+| MOT-01/02/03 | ✅ 已修 | Trigger 关闭时把 `ready` 置 false，`offsetStyle` 立刻回退到 `-1000vw/-1000vh` | `_internal/trigger.ts`：关闭但已有过测量时继续用最后一次 offset（对齐上游 `ready \|\| !open`） | `_internal/__tests__/trigger.test.ts`：关闭不得重置为 `-1000vw/-1000vh` | Select 关闭 `inset: 102px auto auto 24px` 保持原位；Popconfirm 关闭 `inset: auto auto 686px 0px` 保持原位；动画结束才 hidden |
+| MOT-04 | ✅ 已修 | ① `MotionList` 只拿到 key 字符串，removed entity 的 slot 查不到 config；② `Notifications` 在 placement 变空时立即删组，容器先于 leave 卸载 | `NoticeList` 传 `{key, config}` 对象 + `motionDeadline: 500`；`Notifications` 用 `retainedPlacements` 保留空组，leave 完再删 | `notification/__tests__/index.test.ts`（等待离场）、`motion-list.test.ts`（removed 保留 payload）、`s44/s46` | `close +37ms leave-start → +62ms leave-active → +277ms removed` |
+| MOT-05 | ✅ 已修 | 不是 diff 分支：`useMotionStatus` 的 `onVisibleChanged` 用 `immediate` 在 **setup 期**回调 `true`（`status` 仍 NONE），`MotionTreeNode` 误判 appear 已结束，哨兵刚插入就被摘掉 | `use-motion-status.ts`：首帧判断移到 `onMounted`（`driver.mount` 之后），appear 未完成不回调；仅无动画时立即回调 | `motion/use-motion-status.test.ts`（appear 未播完不回调）、`tree/index.test.ts`（重新展开必须存在 `-treenode-motion`） | 重新展开 `motionSeen: true`；appear-start → active；`height: 0 → 140px`，rect `0 → 136 → 140`；约 200ms 收尾 |
+| MOT-05b（新发现） | ✅ 已修 | Vue 的 `style` 对象不像 React 自动补 `px`；标准模式浏览器丢弃无单位 `height: 140`，高度过渡只有 opacity 生效 | `status.ts` 新增 `normalizeMotionStyle`（对齐 React 的 unitless 白名单），由 `use-motion-status` 的 `style` computed 统一补单位 | `motion.test.ts`（纯函数）、`use-motion-status.test.ts`（DOM 内联样式 `height: 140px`） | Tree 收起 `140 → 0`、展开 `0 → 140px` 均真实过渡 |
+| MOT-06 | ✅ 已修 | `Modal.ts` 只传 `props.mousePosition`，没有 antd 的「最近 100ms 点击点」捕获 | `Modal.ts`：document capture click 记录 `pageX/pageY`，100ms 过期；传给 Dialog | `modal/__tests__/index.test.ts`：点击打开时 `transform-origin: 100px 50px` | 点击打开 `transform-origin: -382px -18px`（点击点相对面板），不再是中心 |
+
+**附带修复**：`message` 复用 notification 内核，关闭/超时同样改为异步离场；
+`message` 的 `destroy()`/`maxCount` 相关测试改为等待离场收尾（未放宽断言）。
+
+**验证命令与结果**
+
+```bash
+pnpm test:unit     # 7022 passed, 3 skipped（唯一失败为 locale 行尾问题，已用 .gitattributes 固化）
+pnpm test          # unit + dom-contract + a11y + theme
+pnpm lint:types    # 通过
+```
+
+> 注：`registry/source/locale-rc/**` 的 sha256 台账按 LF 记账；Windows
+> `core.autocrlf=true` 会改检出为 CRLF。已新增 `.gitattributes` 标记
+> `-text` 并本地规范化为 LF，`generator.test.ts` 通过。

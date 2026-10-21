@@ -124,6 +124,19 @@ describe('Trigger · L1 开合与渲染', () => {
     //    定位样式停在屏外占位 —— 几何正确性由 position 包 oracle 与 L6 负责。
   });
 
+  it('关闭时沿用最后 offset，不回落到屏外占位（rc useOffsetStyle: ready || !open）', async () => {
+    const wrapper = mountTrigger({ open: true });
+    await vi.waitFor(() => expect(popup()).not.toBeNull());
+    await wrapper.setProps({ open: false });
+    await vi.waitFor(() => expect(popup()).not.toBeNull());
+    const root = popup();
+    if (!root) throw new Error('popup residue not rendered');
+    // 修复前：close 时 ready=false ⇒ left/top 被改成 -1000vw/-1000vh，
+    // 离场动画在屏幕外播放。修复后：关闭但 !ready 仍使用最后一次 offset。
+    expect(root.style.left).not.toBe('-1000vw');
+    expect(root.style.top).not.toBe('-1000vh');
+  });
+
   it('arrow：传入 arrow ⇒ 渲染 {p}-arrow 与 content；undefined ⇒ 不渲染', async () => {
     mountTrigger({
       open: true,

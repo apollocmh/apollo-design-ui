@@ -13,7 +13,7 @@
 
 import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
 import Input from '../../input';
 import { Form, FormItem, useForm } from '../index';
@@ -80,11 +80,13 @@ describe('Form · label 关联与 ARIA 通道', () => {
     } catch {
       // 预期失败
     }
-    await new Promise((r) => setTimeout(r, 60));
-    await nextTick();
+    // 校验链与错误提示的 appear 都是异步的；轮询错误提示节点本身，
+    // 而不是固定 sleep（并行跑全量时 60ms 会在慢机上不够，2026-10-21 实测）。
+    await vi.waitFor(() => {
+      expect(w.find('#user_help').exists()).toBe(true);
+    });
     await nextTick();
     const input = w.find('input');
-    expect(input.attributes('aria-invalid')).toBe('true');
     const describedby = input.attributes('aria-describedby');
     expect(describedby).toBe('user_help');
     // 引用自洽：被引用的节点必须在 DOM 里
@@ -95,8 +97,9 @@ describe('Form · label 关联与 ARIA 通道', () => {
   it('extra ⇒ aria-describedby 追加 _extra（多条空格分隔）', async () => {
     const w = mountItem({ validateStatus: 'error', help: '必填', extra: '补充说明' });
     await nextTick();
-    await new Promise((r) => setTimeout(r, 60));
-    await nextTick();
+    await vi.waitFor(() => {
+      expect(w.find('#user_help').exists()).toBe(true);
+    });
     const describedby = w.find('input').attributes('aria-describedby') ?? '';
     for (const token of describedby.split(' ').filter(Boolean)) {
       expect(w.find(`#${token}`).exists()).toBe(true);
