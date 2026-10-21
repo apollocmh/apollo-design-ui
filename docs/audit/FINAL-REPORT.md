@@ -124,6 +124,8 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
 
 ## 7. 补遗（2026-10-21 第二轮：Demo 余量 + Menu/选择器交互缺陷）
 
+> 文档站 V3 视觉重构不在本报告范围，见 `docs/audit/visual-v3/V3-FINAL-REPORT.md`。
+
 ### 7.1 Demo 补齐
 
 - 总 demo：**881 → 989**（+108），`demo.test.ts` / `a11y.test.ts` / `theme.test.ts`

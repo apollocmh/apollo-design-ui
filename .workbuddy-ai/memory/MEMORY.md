@@ -38,6 +38,7 @@ Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库�
 - 📌 **手动发 Pages**（用户 2026-10-20 要求）：`gh-pages` 分支根就是 `packages/docs/dist`；workflow `deploy-docs.yml` 只在 master 触发。做法：`git worktree add -b gh-pages /tmp/ghp origin/gh-pages` → 清内容 → 拷 dist（保留 `.nojekyll`）→ commit → `git -c http.proxy=… push origin HEAD:gh-pages`。站点 https://apollocmh.github.io/apollo-design-ui/ 。
 
 ## §5 进度
+- 2026-10-22 文档站 V3（分支 `feature/docs-site-visual-v3`，P4 `e1f872c1`）：Token 自举、2560 内容 2008、Demo Canvas 优先 + 稳定 Grid、自举 8→3 原生按钮；verify 20/20、docs 150、smoke 36、visual 9/9；各阶段截图在 `docs/audit/visual-v3/screenshots-p*`。
 foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 PNG）。Issue 台账 `/tmp/issues/ledger.md`，**#1–#56 全部关闭（#22 于 2026-10-21 收口），仓库当前 0 个开放 issue**。
 - ✅ `test:build` 151 项 / FAIL 0（`d152fd32`）。
 - 📌 推送授权 2026-10-15 恢复：用户要求统一推送并关闭已完成 Issue。

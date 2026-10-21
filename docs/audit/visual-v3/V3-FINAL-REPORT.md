@@ -1,7 +1,7 @@
 # Apollo Design 文档站 V3 · 最终报告
 
 > 分支：`feature/docs-site-visual-v3`
-> Apollo 基线：`master` @ `95029b9d` → P0 `31a04044` → P1 `8714ec90` → P2 `5bd9ba59` → P3 `5087d91b` → P4（本提交）
+> Apollo 基线：`master` @ `95029b9d` → P0 `31a04044` → P1 `8714ec90` → P2 `5bd9ba59` → P3 `5087d91b` → P4 `e1f872c1`
 > Ant 对照：官方站点 **6.6.7**（API 兼容目标仍为 **6.6.4**）
 > 证据：`docs/audit/visual-v3/`（P0–P4 分阶段截图与 metrics）
 
@@ -53,7 +53,7 @@
 | P1 | `8714ec90` | `screenshots-p1/`、`metrics-p1.*`、`P1-REPORT.md` |
 | P2 | `5bd9ba59` | `screenshots-p2/`、`metrics-p2.*`、`P2-REPORT.md` |
 | P3 | `5087d91b` | `screenshots-p3/`、`metrics-p3.*`、`P3-SELF-BOOTSTRAP.md` |
-| P4 | 本提交 | `screenshots-p4/`、`metrics-p4.*`、`verify.mjs` |
+| P4 | `e1f872c1` | `screenshots-p4/`、`metrics-p4.*`、`verify.mjs` |
 
 ## 3. 验收门禁（P4 实测）
 

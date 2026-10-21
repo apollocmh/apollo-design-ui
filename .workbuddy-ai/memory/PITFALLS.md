@@ -34,6 +34,7 @@
 - **流程**：🚨 **收口判据是「扫代码」不是「看 `auditStatus`」** —— 只筛 `todo` 会漏掉 `analyzing` 档里的活（本次漏 6 个组件、两次误报完成）(355)
 - **流程**：🚨 **本仓禁用 `git stash push -u`** —— 会让索引失同步（6352 条 staged-deleted，文件其实完好）；恢复用 `git reset`（mixed）；要留副本用 `git show HEAD:<path>`(357)
 - **测试/视觉**：⚠️ **L6 全量有抖动用例** ⇒ 报红先 `--component X --no-build --mode compare` 孤立重跑（~19s）；判据「L6 红但 L4 绿 ⇒ 大概率不是类名字符串问题」；别把测量噪声登记成平台差异(356)
+- **文档站/V3**：站点自举先做 Token 别名、删暗色手填块(399) · Demo 列表禁用 CSS columns，改用稳定 Grid(400) · Playwright 采 Ant 暗色要点菜单项、Apollo 用 addInitScript(401) · 阶段证据分目录、metrics JSON 忽略 biome(402) · 官网版本 ≠ API 兼容目标(403)
 - **测试**：🚨 Overflow 的 raw item ref 是组件实例 ⇒ 必须解 `$el`(394) · Menu measure 子树必须渲染 children(395) · `expectCount` 多组/子集要按运行时实际 glob 核对(397) · 新增 demo 致视觉基线整页重排，先核对再 update(398)
 - **测试**：🚨 **`unit + dom-contract` 全量也会抖**（实测 8 处失败 ⇒ 复跑 0 ⇒ 第三次 675/675）⇒ 报红先 `git show --stat` 自查有没有碰别的文件，再复跑判性质；**别顺着第一次的红改代码**(359)
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
@@ -5019,3 +5020,25 @@
 398. ⚠️ **新增 demo 会让文档视觉基线全页 diff**：`.demos-grid` 是 CSS columns，新增示例后整列重排，
     diff 看起来像大面积回归；先打开 current 截图确认组件本身没坏，再用 `--update` 重生成基线。
     与「组件源码改动后先 build:ui」同属基线维护流程（327）。
+
+399. 🚨 **文档站自举的第一刀是 Token，不是换组件**：`site.css` 维护一套 `--site-*` 硬编码
+    （含手填暗色块）时，即使把 `<button>` 换成 Apollo Button，暗色/状态色仍会分叉。
+    正确形态：`--site-*` 只保留布局与语义别名，值一律 `var(--apollo-*)`；暗色块删除，
+    由 tokens.css 的 `[data-apollo-theme]` 切换。静态审计：`:root` 里不得出现 `--apollo-*`
+    声明（读取允许），`--site-brand` 必须 `var(--apollo-color-primary)`。
+    另：媒体查询里的 `.site-github-link { display:none }` 会被**后面**同特异性的
+    `.site-icon-btn { display:inline-flex }` 顶掉 —— 删掉自绘按钮样式后才能真正隐藏。
+400. 🚨 **Demo 列表不能用 CSS `columns` 做两列**：它按列填充（DOM 顺序 ≠ 视觉/阅读/Tab 顺序），
+    展开源码时整列重新平衡 ⇒ 其它卡片跳列、锚点位置漂移。改为行优先 CSS Grid；
+    验收判据不是「看起来两列」，而是展开前后**所有卡片 x 坐标列表全等**。
+    宽度档位由容器决定（≤1080 单列、≥2200 三列），宽内容（Table/Form）用 `span` 占满整行。
+401. 🚨 **Playwright 采 Ant 官网暗色**：顶栏 Theme 按钮只是打开菜单，必须再点
+    `[role=menuitem]` 里的 “Dark theme”，并等 `html[data-prefers-color=dark]`；
+    直接点按钮只会拍到菜单。Apollo 主题必须在 `context.addInitScript` 里写 localStorage
+    （先 `evaluate` 再 `reload` 会被 init script 重置回 light）。
+402. ⚠️ **阶段证据要分目录**：`capture.mjs --out=p1` → `screenshots-p1/ + metrics-p1.json`；
+    否则后一阶段覆盖前一阶段，无法做 before/after。生成的 `metrics*.json` 是机器产物，
+    加入 biome 的 `files.includes` 忽略列表，避免格式噪声（与 `docs/audit/evidence` 同判）。
+403. ⚠️ **Ant 官网 ≠ 组件 API 目标**：站点采样版本会变（本次 6.6.7），API 兼容目标固定 6.6.4；
+    对照报告必须写明两者，禁止把官网新版行为当兼容依据。移动端 Ant 无顶栏主题入口，
+    390 暗色不可采，必须显式登记而不是用浅色冒充。
