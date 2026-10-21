@@ -85,3 +85,11 @@
 - `SearchModal` 容器与 `DemoSource` tabs 未迁移到 Modal/Tabs：前者涉及焦点陷阱、SSR 与搜索速度，
   后者涉及源码面板 DOM 契约；保留原生语义并在 P3 清单中登记。
 - 本次未修改 72 个 UI 组件的功能兼容性与 MOT 动效。
+
+## 6. 发布
+
+- 分支：`feature/docs-site-visual-v3` → PR **#57** → master `15e1d2d0`。
+- 记忆提交 `63beb259`；标签 **`v0.1.3`**。
+- CI `39655514566` 全绿（lint/L7/types/coverage/registry + L6 四 shard）；
+  Deploy Docs `39655514632` 全绿，gh-pages `974126fe`。
+- 线上 `https://apollocmh.github.io/apollo-design-ui/` 运行 `verify.mjs`：**20/20**。
