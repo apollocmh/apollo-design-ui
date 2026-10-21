@@ -166,12 +166,13 @@ useSeo(
 
 <style scoped>
 .component-header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .component-title {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   margin: 0 0 12px;
   display: flex;
   align-items: baseline;
@@ -213,12 +214,21 @@ useSeo(
   display: flex;
   gap: 14px;
   font-size: 12.5px;
+  color: var(--site-text-tertiary);
+}
+
+.component-links a {
+  color: var(--site-text-tertiary);
+}
+
+.component-links a:hover {
+  color: var(--site-brand);
 }
 
 .demos-section-title {
   font-size: 22px;
   font-weight: 600;
-  margin: 44px 0 16px;
+  margin: 48px 0 18px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--site-border);
   scroll-margin-top: 76px;

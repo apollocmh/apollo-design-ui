@@ -12,6 +12,22 @@
   word-break: break-word;
 }
 
+/*
+ * V3 三类宽度：prose 限行宽、Demo 与 API 用满内容栏。
+ * 只限制「文字流」节点；table / pre 保持整栏可用宽度（表格可局部横滚）。
+ */
+.doc-markdown > h1,
+.doc-markdown > h2,
+.doc-markdown > h3,
+.doc-markdown > h4,
+.doc-markdown > p,
+.doc-markdown > ul,
+.doc-markdown > ol,
+.doc-markdown > blockquote,
+.doc-markdown > hr {
+  max-width: var(--site-prose-max);
+}
+
 .doc-markdown h1 {
   font-size: 30px;
   font-weight: 600;
