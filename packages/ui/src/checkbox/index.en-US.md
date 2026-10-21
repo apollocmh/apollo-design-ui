@@ -13,7 +13,7 @@ Select one or more from a set of options.
 
 ## Examples
 
-See [`demo/`](./demo) (8, one-to-one with antd non-debug demos).
+See [`demo/`](./demo) (8, covering the main antd scenarios.
 
 ## API
 

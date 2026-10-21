@@ -43,6 +43,19 @@ export interface SourceFile {
   main: boolean;
 }
 
+/** 示例预览模式（见 `DemoMeta.preview`）。 */
+export type DemoPreviewMode = 'inline' | 'isolated' | 'viewport';
+
+export interface DemoPreviewConfig {
+  mode: DemoPreviewMode;
+  /** viewport 模式下的画布高度（px）。默认 320。 */
+  viewportHeight?: number;
+  /** viewport 模式下是否允许视口内滚动（固定定位组件必须为 true）。 */
+  scrollable?: boolean;
+  /** 画布最小高度（px）。 */
+  minHeight?: number;
+}
+
 export interface DemoMeta {
   id: string;
   component: string;
@@ -53,6 +66,15 @@ export interface DemoMeta {
   descHtml: Bilingual;
   /** 元数据显式声明：该 demo 用 iframe 隔离（全局样式/全局状态场景）。 */
   iframe: boolean;
+  /**
+   * 预览模式（DOC-01 / DOC-11）：
+   *  - `inline`：在页面原位渲染（默认）
+   *  - `isolated`：独立 document（iframe 自适应高度，限定来源与消息）
+   *  - `viewport`：模拟独立浏览器视口（固定尺寸 + 视口内滚动）
+   *
+   * `iframe: true` 等价于 `preview.mode: isolated`，为兼容旧 frontmatter 保留。
+   */
+  preview: DemoPreviewConfig;
   sources: SourceFile[];
   /** GitHub 上对应源文件的仓库相对路径。 */
   githubPath: string;

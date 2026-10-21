@@ -15,7 +15,7 @@ Display global feedback messages. Imperative API (`message.success(...)`), the o
 
 ## Demos
 
-See [`demo/`](./demo) (11 demos, one-to-one with antd): component-token / duration / hooks /
+See [`demo/`](./demo) (11 demos, covering the main antd scenarios
 info / loading / other / render-panel / stack / style-class / thenable / update.
 
 ## API
@@ -87,7 +87,7 @@ list / listContent              // list level
 root / wrapper / icon / title   // notice level
 ```
 
-> ⚠️ Only the **object form** is supported (function form is PENDING, same as D36).
+> ⚠️ Only the **object form** is supported (function form is PENDING).
 
 ### Slots (C8-R2, only the `_InternalPanelDoNotUseOrYouWillBeFired` static panel)
 

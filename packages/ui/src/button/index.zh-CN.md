@@ -13,7 +13,7 @@ subtitle: 按钮
 
 ## 代码演示
 
-见 [`demo/`](./demo)（12 个，覆盖 type / size / loading / disabled / danger / ghost /
+见 [`demo/`](./demo)（17 个，覆盖 type / size / loading / disabled / danger / ghost /
 block / icon / shape / color-variant / href / semantic）。
 
 | demo | 内容 |
@@ -78,11 +78,10 @@ block / icon / shape / color-variant / href / semantic）。
 | default | 按钮内容 |
 | icon | 图标。`icon` prop 优先于插槽 |
 
-> **关于 `icon` 传组件**（平台差异，与 `Empty` 的 `image` 同一裁决）
+> **关于 `icon` 传组件**
 >
-> antd 的 `icon` 是 `React.ReactNode`，官方示例写 `icon={<SearchOutlined />}` ——
-> 在 React 里那是**已求值的元素**。Vue 没有「元素」这一形态，对应物是**组件本身**，
-> 所以这里额外接受 `Component`：
+> Vue 没有「已求值元素」这一形态，对应物是**组件本身**，因此 `icon` 额外接受
+> `Component`：
 >
 > ```vue
 > <!-- ✅ 与 antd 示例等价的写法 -->
@@ -149,12 +148,12 @@ ConfigProvider.button.classNames/styles
 只给其中一个不生效（会落到兜底 `default` / `outlined`）。
 ⚠️ `filled` 在 `ButtonTypeMap` 里没有映射 ⇒ 只能由 `variant` 显式传入。
 
-### 类名上的两处不一致（上游真实行为）
+### 类名约定
 
-- `-dangerous` 用**原始 `danger` prop**
-- `-color-{x}` 里 `danger` 被改写成 `dangerous`
+- `-dangerous` 由 `danger` prop 产生
+- `-color-{x}` 中的 `danger` 写作 `dangerous`
 
-所以 `color="danger"` 而不传 `danger` ⇒ 只有 `-color-dangerous`，没有 `-dangerous`。
+因此 `color="danger"` 而不传 `danger` 时，只有 `-color-dangerous`，没有 `-dangerous`。
 
 ### `loading` 的两种形态
 
@@ -172,8 +171,7 @@ ConfigProvider.button.classNames/styles
 （并加上 `-two-chinese-chars` 类名）。判据是 `textContent` 匹配 `/^[\u4E00-\u9FA5]{2}$/`。
 
 ⚠️ `text` / `link` 变体不插；有图标时不插；`loading` 时不插。
-⚠️ 实现形态与 antd 不同（antd 把 `确定` 拼成 `确 定`，我们用 `::first-letter` 的
-`letter-spacing`）—— 视觉等价，DOM 文本不同。登记为差异 D7。
+视觉间距由样式实现，DOM 文本保持 `确定` 两个连续字符（便于可访问名与复制）。
 
 ### `<a>` 与 `<button>` 的禁用**不对称**
 
@@ -187,7 +185,7 @@ ConfigProvider.button.classNames/styles
 ### 无障碍
 
 - icon-only 按钮**必须**自己传 `aria-label` —— 组件不会凭空猜一个。
-- `loading` 不产出 `aria-busy` / `aria-live`（上游同样没有），登记为缺口。
+- `loading` 不产出 `aria-busy` / `aria-live`；需要时请由业务侧补充。
 
 ### 组件 Token
 

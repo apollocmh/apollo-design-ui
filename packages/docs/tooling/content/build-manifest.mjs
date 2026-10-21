@@ -133,6 +133,32 @@ function parseDemo(componentName, demoMdPath) {
   const zhDesc = sectionOf('zh-CN') || body.replace(/```[\s\S]*?```/g, '').trim();
   const enDesc = sectionOf('en-US');
 
+  // ── 预览模式（DOC-01 / DOC-11）─────────────────────────────────────────
+  // 新写法：frontmatter `preview: { mode: viewport, viewportHeight: 320, scrollable: true }`
+  // 旧写法：`iframe: true` ⇒ isolated（兼容存量 demo，不做批量迁移）。
+  const previewRaw = meta.preview && typeof meta.preview === 'object' ? meta.preview : {};
+  const allowedModes = new Set(['inline', 'isolated', 'viewport']);
+  const previewMode = allowedModes.has(previewRaw.mode)
+    ? previewRaw.mode
+    : meta.iframe === true
+      ? 'isolated'
+      : 'inline';
+  if (previewRaw.mode !== undefined && !allowedModes.has(previewRaw.mode)) {
+    throw new Error(
+      `${componentName}/demo/${name}：preview.mode 必须是 inline / isolated / viewport，实际「${previewRaw.mode}」`,
+    );
+  }
+  const positive = (value) => {
+    const n = Number(value);
+    return Number.isFinite(n) && n > 0 ? n : undefined;
+  };
+  const preview = {
+    mode: previewMode,
+    viewportHeight: positive(previewRaw.viewportHeight),
+    scrollable: previewRaw.scrollable === true,
+    minHeight: positive(previewRaw.minHeight),
+  };
+
   return {
     id: `${componentName}-demo-${name}`,
     component: componentName,
@@ -140,7 +166,8 @@ function parseDemo(componentName, demoMdPath) {
     order,
     title: bilingualOf(meta, 'title', name, name),
     desc: { zh: zhDesc, en: enDesc || zhDesc, enFallback: !enDesc },
-    iframe: meta.iframe === true,
+    iframe: previewMode !== 'inline',
+    preview,
     vuePath,
     relVuePath: nodePath.relative(REPO_ROOT, vuePath).split(nodePath.sep).join('/'),
   };
@@ -504,6 +531,7 @@ export async function buildManifest({ write = true } = {}) {
           en: await renderText(d.desc.en || '', '../'),
         },
         iframe: d.iframe,
+        preview: d.preview,
         sources: await Promise.all(
           collectDemoSources(d.vuePath).map(async (s) => ({
             ...s,

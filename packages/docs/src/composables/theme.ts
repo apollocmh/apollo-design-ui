@@ -4,7 +4,7 @@
  * 实现完全复用组件库的令牌作用域机制：`<html data-apollo-theme="dark">`。
  * 站点不引入任何自己的亮暗变量体系 —— 示例与官网同步切换，见 guide/styles。
  */
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -54,6 +54,23 @@ export function useThemeMode() {
     if (typeof localStorage === 'object') localStorage.setItem(STORAGE_KEY, next);
   };
   return { mode, setMode };
+}
+
+/**
+ * 解析后的实际主题（light / dark）。
+ *
+ * ⚠️ 不读 `document.documentElement.dataset`：iframe 的 `src` 在 SSR / setup
+ * 期就要算出来，直接碰 `document` 会在预渲染时炸掉（DOC-04）。这里只用
+ * `mode` + 客户端 media query；SSR 下 `matchMedia` 不存在 ⇒ `system` 解析为 light，
+ * 客户端水合后再按真实偏好更新。
+ */
+export function useResolvedTheme() {
+  return computed<'light' | 'dark'>(() => {
+    if (mode.value === 'system') {
+      return typeof matchMedia === 'function' && systemPrefersDark() ? 'dark' : 'light';
+    }
+    return mode.value;
+  });
 }
 
 /** 尊重「减少动效」设置（CSS 侧用 media query，JS 动画用这里）。 */

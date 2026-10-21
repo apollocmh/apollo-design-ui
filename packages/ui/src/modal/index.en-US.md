@@ -112,6 +112,6 @@ value sets under the `wireframe` theme.
 ## Known differences from antd
 
 See the deviation table in `COMPATIBILITY.md`. In short: no `ContextIsolator`
-(form / space isolation, D36); no cssinjs hash / `-css-var` classes; the imperative path
+(form / space isolation); no cssinjs hash / `-css-var` classes; the imperative path
 mounts a Vue app into a detached `div` (React uses a `DocumentFragment`); `holderRender`
 is not implemented.

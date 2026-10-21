@@ -16,6 +16,7 @@ import DemoProvider from './DemoProvider.vue';
 import DemoRenderer from './DemoRenderer.vue';
 import DemoSource from './DemoSource.vue';
 import DemoToolbar from './DemoToolbar.vue';
+import DemoViewport from './DemoViewport.vue';
 
 const props = defineProps<{ demo: DemoMeta; fullWidth?: boolean }>();
 
@@ -26,10 +27,24 @@ const resetToken = ref(0);
 const boundaryKey = ref(0);
 
 const instanceId = `${props.demo.component}-${props.demo.name}`;
-const standaloneHref = `/components/${props.demo.component}/demo/${props.demo.name}`;
+
+/**
+ * ⚠️ 不能硬编码 `/components/...`（DOC-02）：站点部署在 GitHub Pages 子路径
+ * `/apollo-design-ui/` 下时，根路径链接会 404。用 `BASE_URL` 拼接，SSR 可用；
+ * 不用 `router.resolve()` 是为了让没有 router 的单元测试也能挂载本组件。
+ */
+const standaloneHref = computed(() => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}/components/${props.demo.component}/demo/${props.demo.name}`;
+});
 
 const title = computed(() => pick(props.demo.title));
 const desc = computed(() => pick(props.demo.descHtml));
+
+/** 兼容旧元数据（没有 `preview` 字段时按 `iframe` 推断）。 */
+const previewMode = computed(
+  () => props.demo.preview?.mode ?? (props.demo.iframe ? 'isolated' : 'inline'),
+);
 
 function reset(): void {
   resetToken.value += 1;
@@ -53,12 +68,11 @@ function reset(): void {
       <p v-if="locale === 'en-US' && desc.fallback" class="site-fallback-hint">
         {{ t('fallbackHint') }}
       </p>
-      <!-- 描述为构建期 markdown-it 渲染产物（第一方内容，非用户输入） -->
-      <div class="demo-preview-desc" v-html="desc.text" />
     </header>
 
-    <div class="demo-canvas">
-      <DemoFrame v-if="demo.iframe" :demo="demo" />
+    <div class="demo-canvas" :class="{ 'demo-canvas-viewport': previewMode === 'viewport' }">
+      <DemoViewport v-if="previewMode === 'viewport'" :demo="demo" />
+      <DemoFrame v-else-if="previewMode === 'isolated'" :demo="demo" />
       <DemoProvider v-else :instance-id="instanceId">
         <DemoErrorBoundary :key="boundaryKey" @retry="reset">
           <DemoRenderer
@@ -70,6 +84,10 @@ function reset(): void {
         </DemoErrorBoundary>
       </DemoProvider>
     </div>
+
+    <!-- 画布优先（DOC-07）：描述放在预览之后，先把示例本身推到首屏。 -->
+    <!-- 描述为构建期 markdown-it 渲染产物（第一方内容，非用户输入） -->
+    <div class="demo-preview-desc" v-html="desc.text" />
 
     <DemoToolbar
       :demo="demo"
@@ -128,6 +146,7 @@ function reset(): void {
 }
 
 .demo-preview-desc {
+  padding: 10px 18px 2px;
   color: var(--site-text-secondary);
   font-size: 13.5px;
 }
@@ -163,5 +182,11 @@ function reset(): void {
   /* 示例画布 = 组件库令牌作用域（--apollo-* 来自 html 上的 tokens.css）；
      站点令牌不进入这里，组件视觉与发布产物一致 */
   color: var(--apollo-color-text, rgba(0, 0, 0, 0.88));
+}
+
+/* 独立视口画布：窗口自身带边框，外边距收一点 */
+.demo-canvas-viewport {
+  padding: 16px;
+  background: var(--site-bg-soft);
 }
 </style>

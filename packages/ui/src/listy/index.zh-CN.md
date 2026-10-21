@@ -13,7 +13,7 @@ subtitle: 轻量列表
 
 ## 代码演示
 
-见 [`demo/`](./demo)（4 个：basic / group / virtual / scroll-to）。
+见 [`demo/`](./demo)（8 个示例，覆盖基础、分组、虚拟滚动、滚动定位与语义槽等场景）。
 
 ## API
 
@@ -68,4 +68,4 @@ subtitle: 轻量列表
 **虚拟模式与 antd 的 DOM 有差异吗？**
 
 有：本仓虚拟滚动由 `@apollo-design/virtual-list` 提供（原生滚动、无自绘滚动条），
-与 rc-virtual-list 的 DOM 不同（foundation 已登记 PLATFORM）。滚动行为与吸顶语义对齐。
+与 rc-virtual-list 的 DOM 不同。滚动行为与吸顶语义对齐。

@@ -13,7 +13,7 @@ subtitle: 浮动按钮
 
 ## 代码演示
 
-见 [`demo/`](./demo)（12 个，与 antd 用户可见 demo 一一对应；`draggable` 为用户级
+见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景；`draggable` 为用户级
 dnd 组合不对外、`render-panel` / `badge-debug` 为调试不对外）。
 
 ## API
@@ -68,5 +68,4 @@ dnd 组合不对外、`render-panel` / `badge-debug` 为调试不对外）。
   （circle ⇒ Flex、square ⇒ Space.Compact）+ BackTop（滚动监听复用 back-top 基建）。
 - **showProgress** 进度环经 CSS 变量 `--{prefix}-float-btn-progress`（`${x}turn`）
   喂 conic-gradient。
-- **差异**：antd 的 icon-only 类在 Button 根不落（React 空子节点计数怪癖，D113
-  UPSTREAM）；Group 的 trigger 系语义以 listContext 承担（Vue provide 时机限制）。
+- Button 根节点不落 icon-only 类；Group 的 trigger 系语义由 listContext 承担。

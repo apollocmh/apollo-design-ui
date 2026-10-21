@@ -31,8 +31,23 @@ const allDemos: Array<{ component: string; demo: DemoMeta }> = manifest.componen
 );
 
 describe('全量 demo 审计', () => {
-  it('数量与管线口径一致（758）', () => {
-    expect(allDemos.length).toBe(758);
+  // 阶段 2 补齐后从 758 → 881；新增 demo 时同步更新此数（它是管线重复/漏收的哨兵）。
+  it('数量与管线口径一致（881）', () => {
+    expect(allDemos.length).toBe(881);
+  });
+
+  it('预览模式合法；FloatButton / BackTop 的 fixed 场景使用 viewport', () => {
+    const modes = new Set(['inline', 'isolated', 'viewport']);
+    for (const { component, demo } of allDemos) {
+      expect(demo.preview, `${component}/${demo.name}`).toBeTruthy();
+      expect(modes.has(demo.preview.mode), `${component}/${demo.name}`).toBe(true);
+    }
+    const viewportDemos = allDemos
+      .filter(({ demo }) => demo.preview.mode === 'viewport')
+      .map(({ component, demo }) => `${component}/${demo.name}`);
+    expect(viewportDemos).toContain('float-button/basic');
+    expect(viewportDemos).toContain('float-button/group');
+    expect(viewportDemos).toContain('back-top/basic');
   });
 
   it('每个 demo 的 .vue 文件真实存在（渲染器 glob 一定命中）', () => {
@@ -158,10 +173,13 @@ describe('iframe 隔离预览', () => {
     await new Promise((r) => setTimeout(r, 0));
     expect(el.style.height).toBe(before);
 
+    // DOC-03：同源之外还必须核对「消息来自当前 iframe」+ frameId。
+    const frameId = new URL(el.src, location.href).searchParams.get('frameId') ?? '';
     window.dispatchEvent(
       new MessageEvent('message', {
-        data: { type: 'apollo-demo:resize', height: 320 },
+        data: { type: 'apollo-demo:resize', height: 320, frameId },
         origin: location.origin,
+        source: el.contentWindow,
       }),
     );
     await new Promise((r) => setTimeout(r, 0));

@@ -13,7 +13,7 @@ Alert component for feedback.
 
 ## Examples
 
-See [`demo/`](./demo) (13, one-to-one with antd non-debug demos).
+See [`demo/`](./demo) (13, covering the main antd scenarios.
 
 ## API
 

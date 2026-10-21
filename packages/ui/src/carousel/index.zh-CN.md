@@ -13,7 +13,7 @@ subtitle: 走马灯
 
 ## 代码演示
 
-见 [`demo/`](./demo)（7 个，与 antd 非 debug demo 一一对应）。
+见 [`demo/`](./demo)（9 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -84,7 +84,7 @@ subtitle: 走马灯
 | goTo | `(slide: number, dontAnimate?: boolean) => void` |
 | next / prev | `() => void` |
 | autoPlay | `(playType?: 'update' \| 'leave' \| 'blur') => void` |
-| innerSlider | 引擎状态对象（⚠️ PLATFORM：React 侧是 slick 实例） |
+| innerSlider | 引擎状态对象（引擎状态对象） |
 
 ## Theme（Component Token）
 
@@ -111,7 +111,7 @@ subtitle: 走马灯
 }
 ```
 
-## 与 antd 的差异（INTENDED 摘要）
+## 与 antd 的差异（摘要）
 
 - **自建引擎**：antd 基于 react-slick；本仓按用户裁决自建（embla 无法对齐 slick 的
   DOM 契约，见 `docs/analysis/carousel.md` §7）。DOM 与行为逐条对拍 react-slick@2.0.0。

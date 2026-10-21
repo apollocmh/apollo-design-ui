@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-10-21T13:24:26.554Z",
+  "pages": [
+    {
+      "name": "button-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "button-dark",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "float-button-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "date-picker-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "select-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "modal-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "upload-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "form-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    },
+    {
+      "name": "icon-light",
+      "verdict": "PASS",
+      "diffRatio": 0,
+      "reason": "exact",
+      "message": "逐像素完全一致。"
+    }
+  ]
+}

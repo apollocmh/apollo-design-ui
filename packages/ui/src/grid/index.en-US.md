@@ -13,7 +13,7 @@ subtitle: Grid System
 
 ## Examples
 
-See [`demo/`](./demo) (13 demos, one-to-one with antd).
+See [`demo/`](./demo) (13 demos, covering the main antd scenarios.
 
 ## API
 

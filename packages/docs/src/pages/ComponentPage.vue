@@ -198,6 +198,9 @@ useSeo(
 }
 
 .component-import code {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
   font-family: var(--site-font-code);
   font-size: 13px;
   background: var(--site-code-bg);
@@ -243,19 +246,28 @@ useSeo(
   background: color-mix(in srgb, var(--site-brand) 8%, transparent);
 }
 
+/*
+ * 独立列流（DOC-08）：两列 CSS Grid 会按**行**对齐 —— 左侧一张高卡片会
+ * 把右侧同行的下一张也压低，留下大片空白。改用 CSS columns 让两列各自
+ * 堆叠；`break-inside: avoid` 保证单张 demo 不被截断。
+ * 展开源码后高度变化由浏览器重新平衡列，不需要 JS 计算。
+ */
 .demos-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 20px;
+  columns: 2;
+  column-gap: 20px;
+}
+
+.demos-grid :deep(.demo-preview) {
+  break-inside: avoid;
 }
 
 .demos-grid.full-width {
-  grid-template-columns: 1fr;
+  columns: 1;
 }
 
 @media (max-width: 1080px) {
   .demos-grid {
-    grid-template-columns: 1fr;
+    columns: 1;
   }
 }
 

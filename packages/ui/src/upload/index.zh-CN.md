@@ -15,7 +15,7 @@ subtitle: 上传
 
 ## 代码演示
 
-见 [`demo/`](./demo)（3 个）。
+见 [`demo/`](./demo)（15 个）。
 
 | demo | 内容 |
 |---|---|
@@ -23,9 +23,8 @@ subtitle: 上传
 | `dragger` | 拖拽上传：`UploadDragger` 的虚线区 + `-drag-hover` 态 |
 | `picture-card` | 照片墙：`listType="picture-card"` 缩略图 + 悬浮操作层 |
 
-⚠️ antd 另有 9 个 demo 依赖本仓尚未落地的组件（`Message`/`Progress`/`Tooltip`/
-自定义请求库等），按 `README.md` §2 的 demo 替换约定暂不提供，落点见
-[`README.md`](./README.md) §6。
+裁剪图片、外部 OSS、自定义进度条等场景依赖外部服务或额外能力，暂不提供；上传生命周期、
+校验、拖拽/照片墙、手动上传与自定义请求等高频场景均已覆盖。
 
 ## API
 
@@ -68,7 +67,7 @@ subtitle: 上传
 |---|---|---|
 | `update:fileList` | 受控更新（`v-model:fileList`） | `fileList` |
 | `change` | 每次状态推进（uploading / done / error / removed）触发一次；batchStart 时**逐文件**触发 | `{ file, fileList, event? }` |
-| `drop` | 拖拽释放（⚠️ 只走事件通道，见 `COMPATIBILITY.md` D71） | `DragEvent` |
+| `drop` | 拖拽释放（只走事件通道） | `DragEvent` |
 | `preview` / `download` | 预览 / 下载回调（`onPreview` / `onDownload` prop 形态） | `file` |
 | `remove` | 删除回调（`onRemove` prop 形态）。返回 `false` 或 `Promise<false>` 可**阻止**删除 | `file` |
 
@@ -102,14 +101,10 @@ subtitle: 上传
 
 ## 设计说明
 
-- **上传引擎自建**：`engine/` 下 5 个模块是 `@rc-component/upload` 的等价实现
-  （H5 禁止依赖 rc 包）。`customRequest` 是唯一的替换点，默认走 XHR + FormData。
-- **列表动效**：非 picture 族用 collapse motion（height `0 ↔ scrollHeight` +
-  `onXxxEnd` 被 omit），picture 族只做 fade；`motionName = {p}-animate[-inline]`，
-  `motionDeadline: 2000`。handler 经 `CSSMotion` 的 `hooks` 对象传入（D76）。
-- **Progress / Tooltip 未落地**：进度条内联 `MiniProgress`（DOM 逐条对齐
-  antd line-small 产物）、错误提示用原生 `title`。两者都是**待换回**的临时实现，
-  见 [`README.md`](./README.md) §6 P1 / P2。
+- **自定义请求**：`customRequest` 是替换上传实现的入口；默认使用 XHR + FormData。
+- **列表动效**：非 picture 族使用高度展开/收起动效，picture 族使用淡入淡出；
+  `motionName = {p}-animate[-inline]`，并带 2000ms 兜底。
+- **进度与错误提示**：列表内联轻量进度条，错误信息通过原生 `title` 提示。
 - **全局基础样式不注入**：名字为裸 `<a>`、触发区里放原生 `<button>` 时，
-  链接色与表单控件归一化取决于使用者自己的全局样式（D75）—— 建议配合
+  链接色与表单控件归一化取决于使用者自己的全局样式—— 建议配合
   任意 CSS reset 使用，或直接用组件库内的 `Button` / `Link`。

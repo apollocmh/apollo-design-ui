@@ -17,7 +17,7 @@ flip / switching inside a group.
 
 ## Demos
 
-See [`demo/`](./demo) (14 demos, one-to-one with antd): basic / component-token /
+See [`demo/`](./demo) (14 demos, covering the main antd scenarios
 controlled-preview / cover-placement / fallback / image-render / nested /
 placeholder / preview-group / preview-group-top-progress / preview-group-visible /
 preview-img-info / preview-mask / preview-src.
@@ -157,7 +157,7 @@ class, so the equivalent is to attach the declaration block to both `.apollo-ima
 `.apollo-image-preview`: the preview overlay is teleported to `body`, i.e. **outside** the
 `.apollo-image` subtree, so attaching it only to the latter breaks every
 `var(--apollo-image-preview-*)` (the close button font-size falls back from 18px to the
-inherited 16px). Same as D69 for `input`.
+inherited 16px). Same as `input`.
 
 ### The preview overlay is portaled
 

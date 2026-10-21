@@ -14,7 +14,7 @@ A panel that slides in from the edge of the screen.
 
 ## Demos
 
-See [`demo/`](./demo) (18 demos, one-to-one with antd).
+See [`demo/`](./demo) (18 demos, covering the main antd scenarios.
 
 ## API
 

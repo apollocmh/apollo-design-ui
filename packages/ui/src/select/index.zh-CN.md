@@ -14,7 +14,7 @@ subtitle: 选择器
 
 ## 代码演示
 
-见 [`demo/`](./demo)（35 个，与 antd 用户可见 demo 一一对应）。
+见 [`demo/`](./demo)（35 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -83,5 +83,5 @@ subtitle: 选择器
 ## 设计说明
 
 - **rc-select 1.10.1 内核的 Vue 自建**（engine/ 五层）；DOM 无 `-selector` 包裹层（v6）。
-- **差异**：D106–D110（COMPATIBILITY §9.2）；ReactNode props → slot 全量迁移（C8-R2）；缺口见 [`README.md`](./README.md) §5。
+- 与 antd 的已知差异见组件 README。
 - ⚠️ 搜索默认按 `value` 匹配 —— 按 label 搜请传 `showSearch: { optionFilterProp: 'label' }`。

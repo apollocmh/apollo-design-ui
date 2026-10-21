@@ -13,7 +13,7 @@ subtitle: 瀑布流
 
 ## 代码演示
 
-见 [`demo/`](./demo)（6 个，与 antd 的 demo 一一对应）。
+见 [`demo/`](./demo)（6 个，覆盖 antd 的主要用户场景）。
 
 | demo | 内容 |
 |---|---|

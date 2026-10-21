@@ -13,7 +13,7 @@ A navigation bar that guides users through the steps of a task.
 
 ## Examples
 
-See [`demo/`](./demo) (20 demos, one-to-one with antd's user-visible demos).
+See [`demo/`](./demo) (20 demos, covering the main antd scenarios.
 
 ## API
 
@@ -58,4 +58,4 @@ See [`demo/`](./demo) (20 demos, one-to-one with antd's user-visible demos).
   distance priority; non-contiguous ranges render as disabled ellipsis steps.
 - **rail semantics**: the connector's status is **nextStatus** (leading to the next step).
 - **Differences**: Wave ripple not implemented (no wave infra), `components` injection
-  not wired — see `COMPATIBILITY.md` D111 / README §3.
+  not wired — see the component README.

@@ -16,7 +16,7 @@ Upload files by selecting or dragging.
 
 ## Examples
 
-See [`demo/`](./demo) (3 demos).
+See [`demo/`](./demo) (15 demos).
 
 | demo | Content |
 |---|---|
@@ -24,9 +24,9 @@ See [`demo/`](./demo) (3 demos).
 | `dragger` | Drag area (`UploadDragger`) with the `-drag-hover` state |
 | `picture-card` | Picture wall: thumbnails plus the hover action layer |
 
-⚠️ antd ships 9 further demos that depend on components not yet implemented in this
-repo (Message / Progress / Tooltip / custom request libs). They are intentionally
-omitted; see [`README.md`](./README.md) §6 for the landing points.
+Scenarios such as image cropping, external OSS uploads and custom progress bars need
+external services or extra capabilities and are not provided. The upload lifecycle,
+validation, drag / picture wall, manual upload and custom request paths are covered.
 
 ## API
 
@@ -69,7 +69,7 @@ omitted; see [`README.md`](./README.md) §6 for the landing points.
 |---|---|---|
 | `update:fileList` | Controlled update (`v-model:fileList`) | `fileList` |
 | `change` | Emitted once per state transition (uploading / done / error / removed); emitted **per file** on batch start | `{ file, fileList, event? }` |
-| `drop` | Drop event (⚠️ event channel only, see `COMPATIBILITY.md` D71) | `DragEvent` |
+| `drop` | Drop event (event channel only) | `DragEvent` |
 | `preview` / `download` | Preview / download callbacks (`onPreview` / `onDownload` prop form) | `file` |
 | `remove` | Remove callback (`onRemove` prop form). Return `false` or `Promise<false>` to **prevent** removal | `file` |
 
@@ -106,13 +106,12 @@ omitted; see [`README.md`](./README.md) §6 for the landing points.
 - **Self-built upload engine**: the five modules under `engine/` are equivalents of
   `@rc-component/upload` (depending on rc packages is forbidden). `customRequest`
   is the single replacement point; the default goes through XHR + FormData.
-- **List motion**: non-picture styles use the collapse motion (height
-  `0 ↔ scrollHeight`, `onXxxEnd` omitted), the picture family only fades;
-  `motionName = {p}-animate[-inline]`, `motionDeadline: 2000`. Handlers are passed
-  through `CSSMotion`'s `hooks` object (D76).
-- **Progress / Tooltip not implemented yet**: an inline `MiniProgress` (DOM aligned
-  with antd's line-small output) and a native `title`. Both are temporary and will be
-  swapped back — see [`README.md`](./README.md) §6 P1 / P2.
+- **Custom requests**: `customRequest` is the replacement point; the default uses
+  XHR + FormData.
+- **List motion**: non-picture styles expand/collapse by height, picture styles fade;
+  `motionName = {p}-animate[-inline]` with a 2000ms fallback.
+- **Progress and errors**: a lightweight inline progress bar, with native `title`
+  tooltips for error messages.
 - **No global base styles**: for a bare `<a>` name or a native `<button>` trigger, the
-  link color and form-control normalization come from your own global CSS (D75).
+  link color and form-control normalization come from your own global CSS.
   Pair the library with any CSS reset, or use the bundled `Button` / `Link`.

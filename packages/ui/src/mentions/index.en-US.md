@@ -13,7 +13,7 @@ Used to mention someone or something in an input, commonly seen in publishing, c
 
 ## Examples
 
-See [`demo/`](./demo) (16 demos, one-to-one with antd's user-facing demos).
+See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 
 | demo | Content |
 |---|---|

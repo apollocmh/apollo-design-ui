@@ -8,6 +8,7 @@
  * 性能约束：848 个图标只按当前页（120 个/页）动态 import；
  * 搜索与风格筛选只读构建期 manifest，不加载任何图标组件。
  */
+import { Button, Input, Select } from '@apollo-design/ui';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import IconTile from '../components/icons/IconTile.vue';
 import {
@@ -31,6 +32,11 @@ const query = ref('');
 const styleFilter = ref<IconStyleFilter>('all');
 const visibleCount = ref(120);
 const copyMode = ref<IconCopyMode>('import');
+const copyOptions = computed(() => [
+  { value: 'import', label: txt('import 语句', 'import statement') },
+  { value: 'name', label: txt('图标名称', 'icon name') },
+  { value: 'tag', label: txt('Vue 标签', 'Vue tag') },
+]);
 const copied = ref('');
 const copyFailed = ref(false);
 
@@ -142,37 +148,43 @@ onBeforeUnmount(() => {
 
       <div class="icon-toolbar">
         <label class="icon-search-wrap">
-          <span class="site-sr-only">{{ txt('搜索图标', 'Search icons') }}</span>
-          <input
-            v-model="query"
+          <span id="icon-search-label" class="site-sr-only">
+            {{ txt('搜索图标', 'Search icons') }}
+          </span>
+          <Input
+            id="icon-search"
+            v-model:value="query"
             class="icon-search"
             type="search"
             :placeholder="txt('搜索图标名称…', 'Search icon names…')"
+            aria-labelledby="icon-search-label"
           />
         </label>
 
         <div class="icon-style-tabs" role="group" :aria-label="txt('图标风格', 'Icon style')">
-          <button
+          <Button
             v-for="tab in styleTabs"
             :key="tab.value"
-            type="button"
+            type="text"
+            size="small"
             class="icon-style-tab"
             :class="{ active: styleFilter === tab.value }"
             :aria-pressed="styleFilter === tab.value"
             @click="styleFilter = tab.value"
           >
             {{ tab.label }} <span class="icon-style-count">{{ tab.count }}</span>
-          </button>
+          </Button>
         </div>
 
-        <label class="icon-copy-mode">
+        <div class="icon-copy-mode">
           <span>{{ txt('点击复制', 'Click copies') }}</span>
-          <select v-model="copyMode">
-            <option value="import">{{ txt('import 语句', 'import statement') }}</option>
-            <option value="name">{{ txt('图标名称', 'icon name') }}</option>
-            <option value="tag">{{ txt('Vue 标签', 'Vue tag') }}</option>
-          </select>
-        </label>
+          <Select
+            v-model:value="copyMode"
+            :options="copyOptions"
+            size="small"
+            :aria-label="txt('复制内容', 'Copy content')"
+          />
+        </div>
       </div>
 
       <p class="icon-status" :class="{ error: copyFailed }" role="status" aria-live="polite">
@@ -193,9 +205,9 @@ onBeforeUnmount(() => {
       <p v-else class="icon-empty">{{ txt('没有匹配的图标。', 'No icons match.') }}</p>
 
       <div v-if="hasMore" class="icon-more">
-        <button type="button" class="icon-more-btn" @click="visibleCount += 120">
+        <Button class="icon-more-btn" @click="visibleCount += 120">
           {{ txt(`加载更多（剩余 ${filtered.length - visibleCount} 个）`, `Load more (${filtered.length - visibleCount} remaining)`) }}
-        </button>
+        </Button>
       </div>
     </section>
 
@@ -303,11 +315,9 @@ onBeforeUnmount(() => {
 
 .icon-search {
   width: min(280px, 100%);
-  padding: 7px 12px;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
-  background: var(--site-bg);
-  color: var(--site-text);
+}
+
+.icon-search :deep(input) {
   font-size: 13px;
 }
 
@@ -318,6 +328,7 @@ onBeforeUnmount(() => {
 }
 
 .icon-style-tab {
+  height: auto;
   border: 1px solid var(--site-border);
   background: var(--site-bg);
   color: var(--site-text-secondary);
@@ -325,6 +336,7 @@ onBeforeUnmount(() => {
   padding: 4px 12px;
   font-size: 12.5px;
   cursor: pointer;
+  box-shadow: none;
 }
 
 .icon-style-tab.active {
@@ -348,13 +360,8 @@ onBeforeUnmount(() => {
   font-size: 12px;
 }
 
-.icon-copy-mode select {
-  border: 1px solid var(--site-border);
-  border-radius: 6px;
-  background: var(--site-bg);
-  color: var(--site-text);
-  padding: 4px 6px;
-  font-size: 12px;
+.icon-copy-mode :deep(.apollo-select) {
+  min-width: 132px;
 }
 
 .icon-status {

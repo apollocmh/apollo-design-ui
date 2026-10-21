@@ -14,7 +14,7 @@ Select a single option from a set.
 
 ## Examples
 
-See [`demo/`](./demo) (14 demos, one-to-one with antd's non-debug demos).
+See [`demo/`](./demo) (14 demos, covering the main antd scenarios.
 
 ## API
 
@@ -89,7 +89,7 @@ The Group ref is an `HTMLDivElement`. `Radio.Button`'s ref is forwarded to the i
 
 ## Theme (Component Token)
 
-16 tokens, one-to-one with antd's `ComponentToken` interface (exposed as `--apollo-radio-*`).
+16 tokens, covering the main antd scenarios.
 
 | Token | Description | Default |
 |---|---|---|

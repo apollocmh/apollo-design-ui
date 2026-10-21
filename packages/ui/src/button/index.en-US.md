@@ -174,9 +174,8 @@ gets a gap between them (plus the `-two-chinese-chars` class). The test is
 `textContent` matching `/^[\u4E00-\u9FA5]{2}$/`.
 
 ⚠️ Not applied to `text` / `link` variants, when an icon is present, or while loading.
-⚠️ The implementation differs from antd (antd joins `确定` into `确 定`; we use
-`letter-spacing` on `::first-letter`) — visually equivalent, different DOM text.
-Registered as deviation D7.
+The gap is produced by styles; the DOM text stays the two characters `确定` so the
+accessible name and copy behavior remain clean.
 
 ### `<a>` and `<button>` express `disabled` **asymmetrically**
 
@@ -191,7 +190,7 @@ Registered as deviation D7.
 
 - Icon-only buttons **must** be given an `aria-label` by the caller — the component never
   invents one.
-- `loading` emits no `aria-busy` / `aria-live` (antd does not either); registered as a gap.
+- `loading` emits no `aria-busy` / `aria-live`; add them in your application if needed.
 
 ### Component Token
 

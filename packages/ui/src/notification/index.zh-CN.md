@@ -15,7 +15,7 @@ subtitle: 通知提醒框
 
 ## 代码演示
 
-见 [`demo/`](./demo)（14 个，与 antd 一一对应）：basic / component-token / custom-icon /
+见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景）：basic / component-token / custom-icon /
 duration / hooks / placement / progress-color / render-panel / show-with-progress /
 stack / style-class / update / with-btn / with-icon。
 
@@ -87,7 +87,7 @@ list / listContent                                    // 列表级
 wrapper / root / title / description / actions / icon / section / close / progress   // 单条级
 ```
 
-> ⚠️ 本仓只支持**对象形态**（函数式语义槽 PENDING，D36 同判）。
+> ⚠️ 只支持**对象形态**（函数式语义槽尚未支持）。
 
 ### 类型导出
 

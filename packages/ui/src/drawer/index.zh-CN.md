@@ -14,7 +14,7 @@ subtitle: 抽屉
 
 ## 代码演示
 
-见 [`demo/`](./demo)（18 个，与 antd 一一对应）。
+见 [`demo/`](./demo)（18 个，覆盖 antd 的主要用户场景）。
 
 ## API
 

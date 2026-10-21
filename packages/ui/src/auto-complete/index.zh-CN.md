@@ -13,7 +13,7 @@ subtitle: 自动完成
 
 ## 代码演示
 
-见 [`demo/`](./demo)（10 个，与 antd 用户可见 demo 一一对应；`custom`（自定义输入元素）
+见 [`demo/`](./demo)（13 个，覆盖 antd 的主要用户场景；`custom`（自定义输入元素）
 v1 未实现，见 README §5）。
 
 ## API

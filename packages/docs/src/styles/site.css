@@ -20,9 +20,11 @@
   --site-code-bg: #f6f7f9;
   --site-pre-bg: #fafbfc;
   --site-header-height: 60px;
-  --site-sidebar-width: 248px;
-  --site-toc-width: 208px;
-  --site-content-max: 1096px;
+  --site-sidebar-width: 232px;
+  --site-toc-width: 184px;
+  /* 中央内容随宽屏增长：1366 及以下保持 1096；1920 约 1305；上限 1320。
+     用 clamp 而不是 100vw，避免超宽行影响阅读。 */
+  --site-content-max: clamp(1096px, 68vw, 1320px);
   --site-radius: 8px;
   --site-font:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
@@ -108,8 +110,8 @@ a:hover {
   width: 100%;
   max-width: calc(var(--site-content-max) + var(--site-sidebar-width) + var(--site-toc-width));
   margin: 0 auto;
-  padding: 0 16px;
-  gap: 32px;
+  padding: 0 clamp(16px, 2vw, 32px);
+  gap: clamp(24px, 2vw, 36px);
 }
 
 .site-sidebar {
@@ -241,11 +243,19 @@ a:hover {
   .site-search-trigger {
     min-width: 0;
   }
-  .site-search-trigger kbd {
+  .site-search-trigger kbd,
+  .site-search-trigger span:not([aria-hidden='true']) {
     display: none;
   }
   .site-topbar-nav {
     display: none;
+  }
+  /* 移动端顶栏只保留搜索 / 语言 / 主题：GitHub 入口在侧栏与页脚仍有 */
+  .site-github-link {
+    display: none;
+  }
+  .site-topbar-actions {
+    gap: 4px;
   }
 }
 
@@ -315,6 +325,19 @@ a:hover {
 .site-side-link.active .site-side-link-desc {
   color: inherit;
   opacity: 0.72;
+}
+
+/* 图标数量用计数标签表达（DOC-09），不要复用组件副标题样式 */
+.site-side-link-count {
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--site-border);
+  border-radius: 999px;
+  background: var(--site-bg-soft);
+  color: var(--site-text-tertiary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 18px;
 }
 
 /* ── TOC ──────────────────────────────────────────────────────────────── */

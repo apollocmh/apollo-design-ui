@@ -13,7 +13,7 @@ Hyperlinks to scroll on one page.
 
 ## Examples
 
-See [`demo/`](./demo) (**8**, mirroring antd's user-visible demos).
+See [`demo/`](./demo) (**10**, mirroring antd's user-visible demos).
 
 | demo | Description |
 |---|---|

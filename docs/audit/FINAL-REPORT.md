@@ -1,0 +1,105 @@
+# Apollo Design · 文档与交互质量整改 · 最终报告
+
+> 执行日期：2026-10-21
+> 分支：`fix/docs-motion-demo-quality`（基线 `master` @ `7eeab161`）
+> 输入报告：`docs/audit/Apollo-Design-master-文档与交互质量-综合整改报告-2026-10-21.md`
+
+## 0. 结论
+
+| 阶段 | 状态 | 关键结果 |
+|---|---|---|
+| 阶段 0 · 复现与基线 | ✅ 完成 | 六类动效真实浏览器矩阵 + 72 组件 Demo 覆盖矩阵 + DOC/I18N 源码证据 |
+| 阶段 1 · 动效与交互 | ✅ 完成（`eda548e2`） | Trigger / Notification / Tree / Modal 全部修复；message 同路径；高度过渡补单位 |
+| 阶段 2 · 功能 Demo | ✅ 完成 | 758 → **881** demo；可比对覆盖率 71.1% → **82.7%**；场景重合度 67.2% → **74.1%** |
+| 阶段 3 · 文档站产品化 | ✅ 完成 | viewport/isolated/inline 三模式；BASE_URL；iframe 安全；SSR 主题；语言同步；布局/卡片/侧栏；内部文字清理 |
+| 阶段 4 · 回归与发布 | ✅ 完成 | unit/dom/a11y/theme、L3、L7、docs smoke、功能 probe、文档视觉基线均通过（见 §4） |
+
+## 1. 阶段 0
+
+- `baseline-motion-matrix.md`：MOT-01～06 的期望 / 实际 / 根因 / 证据。
+- `demo-coverage-matrix.md`：72 组件 × 上游 1060 demo 文件与场景名对照。
+- `stage0-static-findings.md`：DOC-01～12、I18N-01 的源码坐标。
+- `tools/stage0-motion-probe.mjs` + `evidence/`：Chromium 采样 JSON、antd 对照、截图。
+
+## 2. 阶段 1（提交 `eda548e2`）
+
+| 问题 | 根因 | 修复 | 回归 |
+|---|---|---|---|
+| Select / DatePicker / Popconfirm 关闭瞬移 | Trigger 关闭时 `ready=false`，offsetStyle 立刻返回 `-1000vw/-1000vh` | 关闭但已有测量时继续用最后一次 offset（对齐上游 `ready \|\| !open`） | `trigger.test.ts`；浏览器：关闭 `inset:102px/686px` 保持原位 |
+| Notification 立即卸载 | MotionList slot 用实时 keys 查不到 removed config；空 placement 立即删组 | 传 `{key, config}` + `motionDeadline:500`；`retainedPlacements` 保留空组到 leave 结束 | `notification/index.test.ts`、`motion-list.test.ts`、s44/s46 |
+| Tree 重新展开无 appear | `useMotionStatus.onVisibleChanged` 在 **setup 期**提前回调 `true` | 首帧判断移到 `onMounted`（driver.mount 之后） | `use-motion-status.test.ts`、`tree/index.test.ts`；浏览器 appear + 高度 0→140px |
+| 高度过渡只有 opacity | Vue style 对象不补 `px`，标准模式浏览器丢弃无单位长度 | `normalizeMotionStyle()`（React unitless 白名单）在 `useMotionStatus.style` 统一补单位 | 纯函数 + DOM 内联样式用例 |
+| Modal zoom 原点固定中心 | 未实现「最近 100ms 点击点」捕获 | document capture click + 100ms 过期 + 挂载/卸载清理 | `modal/index.test.ts`；浏览器 `transform-origin` 等于点击点 |
+| message 关闭是异步的 | 复用 notification 内核 | 测试改为等待离场收尾（未放宽断言） | message 全套 |
+| locale 固化副本 sha256 在 Windows 误报 | `core.autocrlf=true` 把 LF 改 CRLF | `.gitattributes` 标记 `registry/source/locale-rc/** -text` + 规范化为 LF | `locale/generator.test.ts` |
+
+## 3. 阶段 2（Demo）
+
+**核心组件**
+
+| 组件 | 之前 | 之后 | 覆盖 |
+|---|---:|---:|---|
+| DatePicker | 2 | 18 | 禁用日期、上下界、时间/12h/步长、presets、受控、format、multiple、cellRender、needConfirm、extraFooter、range time、panelRender、placement、allowEmpty |
+| Upload | 3 | 15 | 库 Button 基础、拖拽、照片墙/圆形、maxCount、accept、beforeUpload false/LIST_IGNORE、进度/失败、受控、目录、粘贴、手动上传、列表动作、头像；全部本地 mock / data URL |
+| Form | 5 | 15 | Form.List（含嵌套）、useWatch、dependencies、异步校验、initialValues/reset、finishFailed+scroll、set/getFieldsValue、disabled/size、scrollToField、validateTrigger |
+
+**全组件**：另补 23 组组件共 85 个 demo（splitter / cascader / descriptions / skeleton /
+input / input-number / button / typography / table / tree-select / tabs / anchor /
+list / listy / auto-complete / transfer / float-button / carousel / tree / tooltip 等）。
+
+**同时修复**：`Form.List` 的 scoped slot 改为单对象 `{ fields, operations, meta }`
+（位置参数在 Vue 模板里无法拿到 operations）；所有组件 `demo.test.ts` 的 `expectCount`
+与实际文件同步；`demo-audit.test.ts` / `manifest.test.ts` 总量更新为 **881**。
+
+**覆盖复算**：`tools/demo-coverage-refresh.mjs` → `evidence/demo-coverage-stage2.json`。
+
+## 4. 阶段 3（文档站）
+
+- **3A 预览模式**：`DemoMeta.preview = { mode: inline | isolated | viewport, viewportHeight, scrollable }`。
+  `float-button` / `back-top` 的 fixed 示例使用 **viewport**（320px 独立窗口，视口内滚动），
+  不改组件 `position: fixed`。旧 `iframe: true` 兼容为 `isolated`。
+- **3B iframe**：`standaloneHref` 用 `BASE_URL`；`DemoFrame` 同时校验 `origin`、`event.source === iframe.contentWindow`、`frameId`、type 白名单、高度范围；iframe `src` 计算不再直接读 `document`（`useResolvedTheme()`）。
+- **3C 语言**：`main.ts` 客户端 initSiteLocale；`DemoProvider` 用站点语言驱动
+  `ConfigProvider.locale`；`DemoStandalonePage` 消费 `?theme` / `?lang` / `?frameId`。
+  实测：`?lang=en-US` 下导航英文、DatePicker 面板 `Oct2026 / Today`。
+- **3D 自举**：TopBar / SearchModal / IconPage 的按钮、输入框、下拉改用 `Button` /
+  `Input` / `Select`；移动端顶栏隐藏 GitHub 入口，图标数量改为计数标签。
+- **3E 布局**：Demo 描述移到画布之后；`.demos-grid` 改为两列独立列流（CSS columns）；
+  `--site-content-max: clamp(1096px, 68vw, 1320px)`；侧栏 232 / TOC 184 / gap clamp；
+  390px 无横向溢出。
+- **3F 文案**：清理公开文档中的 D 编号 / INTENDED / PLATFORM / PITFALLS / Issue 编号；
+  Button / FloatButton / Upload 的实现过程文字改为用户语言；component-token 参数说明保留。
+- **3G 稳定性**：TOC `withDemoAnchor` 单测、manifest 预览模式断言、iframe 消息单测。
+
+## 5. 阶段 4（验收证据）
+
+| 门禁 | 结果 |
+|---|---|
+| `pnpm test`（unit + dom-contract + a11y + theme） | **7147 passed** / 3 skipped（manifest 计数随后单独复跑 28/28） |
+| `pnpm test:types` | **2213 passed / 170 files / no errors** |
+| `pnpm lint:types` | 0 errors |
+| `node tests/build/run.mjs`（L7） | **151 项 / FAIL 0**（同时修复 Windows `/bin/sh` PATH 门禁缺陷） |
+| `pnpm registry:check` | **19 checks passed / 0 warnings** |
+| `packages/docs/tests/smoke-browser.mjs` | **36/36**（SSR / demo / 搜索 / 图标 / 移动端） |
+| `docs/audit/tools/stage2-demo-probe.mjs` | **全部断言通过**（Upload 库 Button + done、disabledDate、Form.List 增删/提交、异步校验、语言同步、viewport、链接 BASE_URL） |
+| `docs/audit/tools/stage0-motion-probe.mjs` | 六类动效时间线：Trigger 原位离场、Notification leave、Tree appear 0→140px、Modal 点击原点 |
+| `tools/docs-visual-diff.mjs` | **9 张基线 / 全部 0.000%**（button 明暗、float-button、date-picker、select、modal、upload、form、icon） |
+
+**已知环境限制（非本轮回归）**
+
+- L6 组件视觉基线由 **macOS** 生成（入库 PNG）；Windows 经典滚动条使 `#stage` 从 1440→1425 / 375→360，
+  触发 `size-mismatch`。仓库 `PITFALLS` 377 已登记「不要用 Windows 覆盖 mac 基线」。
+  本轮以文档站自建视觉基线（同机生成）作为像素门禁，组件 L6 由 CI 的 macOS/Linux 基线环境执行。
+- Windows 全仓 `pnpm lint:format` 会把检出 CRLF 报成 3000+ 格式错误；收口使用
+  `biome check <改动文件>`（0 error）。CI Linux 跑全量。
+- 英文 demo 说明仍有 `## en-US` 缺失时回退中文并显示提示；组件内置文案已随
+  `ConfigProvider.locale` 切换。剩余英文正文翻译属于内容翻译批次。
+- Demo 仍未追平的高价值缺口：Form 15/44、Table 30/53、DatePicker 18/32、
+  Upload 15/24、Cascader 14/23（依赖裁剪、拖拽、外部 OSS 等能力）；已记录在
+  `demo-coverage-matrix.md` §7。
+
+## 6. 发布
+
+- 分支：`fix/docs-motion-demo-quality` → `master`。
+- 标签：`v0.1.1`（打在合并后的 `master`），触发 CI 与 Deploy Docs。
+- 见证：GitHub Actions run 链接见推送后回填。

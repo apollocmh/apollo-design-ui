@@ -129,7 +129,7 @@ import { TreeSelect, SHOW_ALL, SHOW_PARENT, SHOW_CHILD } from '@apollo-design/ui
 | notFoundContent | 空态内容 | VNodeChild | - |
 | disabled / size / status / variant | 表单态 | - | - |
 | maxTagCount / maxTagTextLength / maxTagPlaceholder | 多选 tag 裁剪 | - | - |
-| placement / direction / getPopupContainer / popupRender / open / defaultOpen | 浮层。⚠️ `direction` / `getPopupContainer` **局部优先、回退 ConfigProvider**；`getPopupContainer` 局部没给时走全局（Issue #13.4） | - | - |
+| placement / direction / getPopupContainer / popupRender / open / defaultOpen | 浮层。⚠️ `direction` / `getPopupContainer` **局部优先、回退 ConfigProvider**；`getPopupContainer` 局部没给时走全局 | - | - |
 | classNames / styles | 语义槽（root/prefix/input/suffix/content/placeholder/item/itemContent/itemRemove/popup） | object | - |
 
 ### 事件（Emits）

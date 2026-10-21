@@ -13,7 +13,7 @@ Rate component.
 
 ## Examples
 
-See [`demo/`](./demo) (9 demos, one-to-one with antd's user-visible demos).
+See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
 
 ## API
 
@@ -59,4 +59,4 @@ See [`demo/`](./demo) (9 demos, one-to-one with antd's user-visible demos).
   guard `nextHoverValue !== cleanedValue` prevents flicker when hovering the same value.
 - **tooltips × characterRender composition**: in antd a user characterRender **overrides**
   the tooltip wrapping (JSX spread order); here slots compose (Tooltip inside, user slot
-  outside) — registered as INTENDED.
+  outside).

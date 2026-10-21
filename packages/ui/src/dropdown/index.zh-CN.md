@@ -13,7 +13,7 @@ subtitle: 下拉菜单
 
 ## 代码演示
 
-见 [`demo/`](./demo)（19 个，与 antd 用户可见 demo 一一对应）。
+见 [`demo/`](./demo)（19 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -44,5 +44,5 @@ subtitle: 下拉菜单
 
 ## 设计说明
 
-- **Trigger 第 4 消费者**；stretch='minWidth'（浮层不窄于触发元素，D92）。
-- **差异**：D91–D93（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。
+- **Trigger 第 4 消费者**；stretch='minWidth'（浮层不窄于触发元素）。
+- 与 antd 的已知差异见组件 README。

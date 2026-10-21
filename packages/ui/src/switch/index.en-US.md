@@ -14,7 +14,7 @@ A switch selector.
 
 ## Examples
 
-See [`demo/`](./demo) (7 demos, one-to-one with antd's non-debug demos).
+See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 
 ## API
 
@@ -63,7 +63,7 @@ See [`demo/`](./demo) (7 demos, one-to-one with antd's non-debug demos).
 
 ## Theme (Component Token)
 
-13 tokens, one-to-one with antd's `ComponentToken` interface (exposed as `--apollo-switch-*`).
+13 tokens, covering the main antd scenarios.
 
 | Token | Description | Default |
 |---|---|---|

@@ -156,7 +156,7 @@ Measured against antd 6.6.4:
 
 **Only case ② differs.** The reason is that **Vue props have no notion of "key exists"**
 (when not passed, the value is also `undefined`, so the two are indistinguishable)
-⇒ this is a **platform-inherent difference** (PLATFORM), not a bug.
+⇒ this is a **platform-inherent difference**, not a bug.
 This implementation uses `loading !== false`, i.e. "not passed = show skeleton".
 
 ### The three blocks derive their props from each other

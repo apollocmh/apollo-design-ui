@@ -22,7 +22,7 @@
  *   node tests/build/run.mjs --json          # 机器可读
  */
 
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -244,15 +244,24 @@ function checkBuild(dir, name) {
     }
   }
   try {
-    execFileSync('/bin/sh', ['-c', script], {
-      cwd: dir,
-      encoding: 'utf8',
-      stdio: 'pipe',
-      env: {
-        ...process.env,
-        PATH: [localBinDir, binDir, process.env.PATH].filter(Boolean).join(path.delimiter),
-      },
-    });
+    const env = {
+      ...process.env,
+      PATH: [localBinDir, binDir, process.env.PATH].filter(Boolean).join(path.delimiter),
+    };
+    // ⚠️ Windows 上不能无条件用 `/bin/sh`：Git Bash 拿到的是 `;` 分隔的 Windows
+    //    PATH，MSYS 会把它当成一条路径 ⇒ 所有包都以「退出码 1、stderr 为空」失败
+    //    （2026-10-21 本机实测，15/15 包全红）。cmd.exe 则与 path.delimiter 一致，
+    //    `.bin/unbuild.cmd` / `vite-ssg.cmd` 也能按真实 `npm run` 的方式解析。
+    if (process.platform === 'win32') {
+      execSync(script, { cwd: dir, encoding: 'utf8', stdio: 'pipe', env, shell: true });
+    } else {
+      execFileSync('/bin/sh', ['-c', script], {
+        cwd: dir,
+        encoding: 'utf8',
+        stdio: 'pipe',
+        env,
+      });
+    }
     add(name, 'B1', 'PASS', `\`${script}\` 退出码 0`);
     return true;
   } catch (err) {

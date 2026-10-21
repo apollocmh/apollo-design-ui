@@ -15,7 +15,7 @@ subtitle: 全局提示
 
 ## 代码演示
 
-见 [`demo/`](./demo)（11 个，与 antd 一一对应）：component-token / duration / hooks /
+见 [`demo/`](./demo)（11 个，覆盖 antd 的主要用户场景）：component-token / duration / hooks /
 info / loading / other / render-panel / stack / style-class / thenable / update。
 
 ## API
@@ -87,7 +87,7 @@ list / listContent        // 列表级
 root / wrapper / icon / title   // 单条级
 ```
 
-> ⚠️ 本仓只支持**对象形态**（函数式语义槽 PENDING，D36 同判）。
+> ⚠️ 只支持**对象形态**（函数式语义槽尚未支持）。
 
 ### Slots（C8-R2，仅 `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板）
 

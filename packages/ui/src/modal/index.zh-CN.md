@@ -14,7 +14,7 @@ subtitle: 对话框
 
 ## 代码演示
 
-见 [`demo/`](./demo)（23 个，与 antd 的 demo 清单一一对应）。
+见 [`demo/`](./demo)（23 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -107,5 +107,5 @@ root / container / wrapper / mask / header / title / body / footer / close
 ## 与 antd 的已知差异
 
 见 `COMPATIBILITY.md` 的差异登记表。要点：无 `ContextIsolator`（form / space 隔离，
-D36）；无 cssinjs 的 hash / `-css-var` 类；命令式路径用游离 `div` 承载 Vue 应用
+）；无 cssinjs 的 hash / `-css-var` 类；命令式路径用游离 `div` 承载 Vue 应用
 （React 用 `DocumentFragment`）；不实现 `holderRender`。

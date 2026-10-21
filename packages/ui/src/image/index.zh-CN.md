@@ -14,7 +14,7 @@ subtitle: 图片
 
 ## 代码演示
 
-见 [`demo/`](./demo)（14 个，与 antd 一一对应）：basic / component-token /
+见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景）：basic / component-token /
 controlled-preview / cover-placement / fallback / image-render / nested /
 placeholder / preview-group / preview-group-top-progress / preview-group-visible /
 preview-img-info / preview-mask / preview-src。
@@ -149,7 +149,7 @@ antd 把组件变量声明在每个 `-css-var` 根上，预览浮层的根同样
 `mergedRootClassName`）。本仓没有 `-css-var` 类，等价做法是让声明块同时挂
 `.apollo-image` 与 `.apollo-image-preview`：预览浮层经 Teleport 挂在 `body` 上，
 **不在** `.apollo-image` 子树内，只挂前者会让 `var(--apollo-image-preview-*)` 全部失效
-（关闭按钮字号由 18px 回退成继承的 16px）。同 `input` 的 D69。
+（关闭按钮字号由 18px 回退成继承的 16px）。与 `input` 相同。
 
 ### 预览浮层走 portal
 

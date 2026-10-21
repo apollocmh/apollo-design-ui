@@ -44,7 +44,7 @@ const activeName = computed(() =>
         @click="$emit('navigate')"
       >
         <span class="site-side-link-name">{{ t('iconGallery') }}</span>
-        <span class="site-side-link-desc">{{ siteManifest.icons.total }}</span>
+        <span class="site-side-link-count" aria-hidden="true">{{ siteManifest.icons.total }}</span>
       </RouterLink>
     </div>
 

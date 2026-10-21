@@ -17,7 +17,7 @@ Basic text formatting.
 
 ## Examples
 
-See [`demo/`](./demo) (7 demos, one-to-one with antd's **user-facing** demo topics).
+See [`demo/`](./demo) (11 demos, covering the main antd scenarios.
 
 | demo | What it shows |
 |---|---|

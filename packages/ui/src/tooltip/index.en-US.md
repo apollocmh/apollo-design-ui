@@ -52,4 +52,4 @@ subtitle: Tooltip
 - **trigger 基建**：`_internal/trigger.ts` 组装 overlay + position + portal +
   motion（见 [`docs/analysis/tooltip.md`](../../../../docs/analysis/tooltip.md) §8）。
 - **noTitle 抑制**：`title` 与 `overlay` 均未传（`title=0` 除外）⇒ 强制关闭且不发回调。
-- **差异**：D77–D82（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。
+- 与 antd 的已知差异见组件 README。

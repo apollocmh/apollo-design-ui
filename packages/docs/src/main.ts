@@ -6,7 +6,7 @@
  */
 import { ViteSSG } from 'vite-ssg';
 import App from './App.vue';
-import { provideSiteLocale } from './composables/locale';
+import { initSiteLocale, provideSiteLocale } from './composables/locale';
 import { setupTheme } from './composables/theme';
 import { routes, stripHtmlGuard } from './router';
 
@@ -35,6 +35,9 @@ export const createApp = ViteSSG(
   ({ app, router, isClient }) => {
     app.provide('is-client', isClient);
     if (isClient) {
+      // 语言必须在 provide 之前初始化：读取 localStorage / ?lang=…
+      // 否则刷新后语言选择丢失（只有独立示例页调用过它 —— 2026-10-21 修）。
+      initSiteLocale();
       setupTheme();
       router.afterEach(() => {
         // 锚点跳转交给 scrollBehavior；这里只负责回顶后的焦点复位（无障碍）

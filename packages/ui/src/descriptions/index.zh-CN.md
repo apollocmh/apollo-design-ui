@@ -13,7 +13,7 @@ subtitle: 描述列表
 
 ## 代码演示
 
-见 [`demo/`](./demo)（6 个，与 antd 非 debug demo 对应）。
+见 [`demo/`](./demo)（11 个，与 antd 非 debug demo 对应）。
 
 ## API
 

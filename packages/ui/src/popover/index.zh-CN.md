@@ -13,7 +13,7 @@ subtitle: 气泡卡片
 
 ## 代码演示
 
-见 [`demo/`](./demo)（12 个，与 antd 用户可见 demo 一一对应；Segmented 未落地 ⇒
+见 [`demo/`](./demo)（12 个，覆盖 antd 的主要用户场景；Segmented 未落地 ⇒
 原生 select 替换，见各文件头）。
 
 ## API
@@ -45,4 +45,4 @@ subtitle: 气泡卡片
 
 - **薄包装**：主体逻辑全部在 Tooltip / `_internal/trigger.ts`，本组件只做内容
   与语义槽扩展（[`docs/analysis/popover.md`](../../../../docs/analysis/popover.md)）。
-- **差异**：D83–D86（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。
+- 与 antd 的已知差异见组件 README。

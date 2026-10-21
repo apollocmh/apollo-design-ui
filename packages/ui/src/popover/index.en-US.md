@@ -39,4 +39,4 @@ subtitle: Popover
 
 - **薄包装**：主体逻辑全部在 Tooltip / `_internal/trigger.ts`，本组件只做内容
   与语义槽扩展（[`docs/analysis/popover.md`](../../../../docs/analysis/popover.md)）。
-- **差异**：D83–D86（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。
+- 与 antd 的已知差异见组件 README。

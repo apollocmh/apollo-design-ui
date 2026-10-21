@@ -17,7 +17,7 @@ the overlay is portaled.
 
 ## Demos
 
-See [`demo/`](./demo) (14 demos, one-to-one with antd): basic / component-token / custom-icon /
+See [`demo/`](./demo) (14 demos, covering the main antd scenarios
 duration / hooks / placement / progress-color / render-panel / show-with-progress /
 stack / style-class / update / with-btn / with-icon.
 
@@ -87,7 +87,7 @@ list / listContent                                                              
 wrapper / root / title / description / actions / icon / section / close / progress    // notice level
 ```
 
-> ⚠️ Only the **object form** is supported (function form is PENDING, same as D36).
+> ⚠️ Only the **object form** is supported (function form is PENDING).
 
 ### Type exports
 

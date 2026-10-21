@@ -55,4 +55,4 @@ Static sub-components `AMenuItem` / `AMenu.SubMenu` use slots for rich content (
 
 - **rc-menu 内核自建**：items 解析 / key↔path 登记 / 键盘导航三件 engine，
   Overflow 溢出折叠为新基建（`_internal/overflow.ts`）。
-- **差异**：D87–D90（COMPATIBILITY §9.2）；已知缺口见 [`README.md`](./README.md) §3。
+- 与 antd 的已知差异见组件 README。

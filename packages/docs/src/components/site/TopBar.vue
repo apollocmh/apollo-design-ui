@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@apollo-design/ui';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { type SiteTextKey, useSiteLocale } from '../../composables/locale';
@@ -89,16 +90,16 @@ function toggleLocale(): void {
 
 <template>
   <header class="site-topbar">
-    <button
+    <Button
       class="site-icon-btn site-mobile-toggle"
-      type="button"
+      type="text"
       :aria-label="t('menu')"
       :aria-expanded="menuOpen === true"
       aria-controls="site-mobile-drawer"
       @click="$emit('toggleMenu')"
     >
       ☰
-    </button>
+    </Button>
 
     <RouterLink to="/" class="site-logo">
       <img :src="logoSrc" alt="" />
@@ -117,34 +118,34 @@ function toggleLocale(): void {
     </nav>
 
     <div class="site-topbar-actions">
-      <button class="site-search-trigger" type="button" @click="openSearch">
+      <Button class="site-search-trigger" type="text" @click="openSearch">
         <span aria-hidden="true">⌕</span>
         <span>{{ t('search') }}</span>
         <kbd>/</kbd>
-      </button>
+      </Button>
 
-      <button
+      <Button
         class="site-icon-btn site-lang-toggle"
-        type="button"
+        type="text"
         :aria-label="locale === 'zh-CN' ? t('switchToEnglish') : t('switchToChinese')"
         :title="locale === 'zh-CN' ? 'English' : '中文'"
         @click="toggleLocale"
       >
         <span style="font-size: 12.5px; font-weight: 600">{{ locale === 'zh-CN' ? 'En' : '中' }}</span>
-      </button>
+      </Button>
 
-      <button
+      <Button
         class="site-icon-btn site-theme-toggle"
-        type="button"
+        type="text"
         :aria-label="`${t('theme')}: ${t(currentTheme.labelKey)}`"
         :title="t(currentTheme.labelKey)"
         @click="cycleTheme"
       >
         {{ currentTheme.icon }}
-      </button>
+      </Button>
 
       <a
-        class="site-icon-btn"
+        class="site-icon-btn site-github-link"
         :href="siteManifest.repoUrl"
         target="_blank"
         rel="noopener noreferrer"

@@ -102,7 +102,8 @@ describe('SearchModal —— 键盘与 ARIA', () => {
     const items = $$('.site-search-item');
     expect(items.length).toBeGreaterThan(1);
 
-    const input = $('.site-search-input')!;
+    // 搜索框已换成组件库 Input：class 在根节点，role/aria 与键盘事件在原生 input 上
+    const input = $('.site-search-panel input')!;
     press(input, 'ArrowDown');
     await nextTick();
     expect($$('.site-search-item').findIndex((i) => i.classList.contains('active'))).toBe(1);
@@ -121,7 +122,7 @@ describe('SearchModal —— 键盘与 ARIA', () => {
   it('Esc 关闭', async () => {
     const wrapper = mount(SearchModal, { attachTo: document.body });
     await nextTick();
-    press($('.site-search-input')!, 'Escape');
+    press($('.site-search-panel input')!, 'Escape');
     expect(wrapper.emitted('close')).toBeTruthy();
     wrapper.unmount();
   });
@@ -158,7 +159,7 @@ describe('SearchModal —— 键盘与 ARIA', () => {
     await nextTick();
     const wrapper = mount(SearchModal, { attachTo: document.body });
     await nextTick();
-    const input = $('.site-search-input')!;
+    const input = $('.site-search-panel input')!;
     expect(input.getAttribute('role')).toBe('combobox');
     expect(input.getAttribute('aria-controls')).toBe('site-search-listbox');
     expect(input.getAttribute('aria-activedescendant')).toBe('search-opt-0');

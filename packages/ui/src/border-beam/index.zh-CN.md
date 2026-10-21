@@ -12,7 +12,7 @@ subtitle: 边框流光
 
 ## 代码演示
 
-见 [`demo/`](./demo)（8 个，与 antd 非 debug demo 一一对应）。
+见 [`demo/`](./demo)（8 个，覆盖 antd 的主要用户场景）。
 
 ## API
 

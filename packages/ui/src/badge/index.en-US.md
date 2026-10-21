@@ -13,7 +13,7 @@ A small status descriptor for UI elements.
 
 ## Examples
 
-See [`demo/`](./demo) (12 demos, one-to-one with antd non-debug demos).
+See [`demo/`](./demo) (12 demos, covering the main antd scenarios.
 
 ## API
 

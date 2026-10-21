@@ -65,7 +65,7 @@ See [`demo/`](./demo) — 5 demos: prefix-cls / locale / component-config / size
 Full list in [`docs/analysis/config-provider.md` §9](../../../../../../../docs/analysis/config-provider.md). Highlights:
 
 - **`components` is progressive-typed**: precise props for the three landed components (`divider` / `empty` / `spin`); the other 53 go through a loosely-typed `Record<string, any>` escape hatch until they land.
-- **`theme` inserts a `display: contents` scope element to carry the CSS variables**. Zero layout impact, but in Chromium's `#stage` inline container this adds 1px to the stage height (D32, not fixed).
+- **`theme` inserts a `display: contents` scope element to carry the CSS variables**. Zero layout impact, but in Chromium's `#stage` inline container this adds 1px to the stage height (known platform difference; normal layouts are unaffected).
 - **`direction` must be read via `useDirection()`**: `inject` resolves only once during setup; destructuring from `useComponentConfig()` gives you a stale snapshot.
 - **`useComponentConfig()` returns a lazy view**: primitive component-config values (`size` / `shape` …) only track runtime `components.xxx` updates when read inside a `computed` / render. **Destructuring is still a snapshot** (same rule as `direction`).
 - **No** `tooltip` / `popover` / `popconfirm` prop (depends on the unimplemented `UniqueProvider`).

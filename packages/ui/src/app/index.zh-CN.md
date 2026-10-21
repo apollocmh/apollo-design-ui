@@ -14,7 +14,7 @@ subtitle: 包裹组件
 
 ## 代码演示
 
-见 [`demo/`](./demo)（2 个，与 antd 用户可见 demo 一一对应）。
+见 [`demo/`](./demo)（2 个，覆盖 antd 的主要用户场景）。
 
 ## API
 

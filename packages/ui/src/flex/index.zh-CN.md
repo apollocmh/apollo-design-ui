@@ -18,7 +18,7 @@ subtitle: 弹性布局
 
 ## 代码演示
 
-见 [`demo/`](./demo)（6 个，与 antd 的 demo 一一对应，含 `debug` 调试 demo）。
+见 [`demo/`](./demo)（6 个，覆盖 antd 的主要用户场景，含 `debug` 调试 demo）。
 
 | demo | 内容 |
 |---|---|

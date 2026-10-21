@@ -29,11 +29,11 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 
 <code src="./demo/basic.vue"></code>
 
-<!-- TODO(G11 · examples): antd ships 30+ demos for date-picker; this repo currently only
-     has `basic`. The rest will land together with the panel capabilities of
-     `@apollo-design/picker`.
-     ⚠️ **Do not reference demos that do not exist** — a broken link is worse than a
-     missing section. -->
+<!-- Examples are collected automatically from `demo/*.md` (title / order / description)
+     and `demo/*.vue`. Covered: basic, range, disabled date, min/max, date & time,
+     12-hour clock and steps, presets, controlled, format, size/status/variant,
+     multiple, cell render, need confirm, extra footer, range with time, panel render,
+     placement, allow empty. -->
 
 ## API
 

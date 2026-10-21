@@ -13,7 +13,7 @@ subtitle: 步骤条
 
 ## 代码演示
 
-见 [`demo/`](./demo)（20 个，与 antd 用户可见 demo 一一对应）。
+见 [`demo/`](./demo)（20 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -57,4 +57,4 @@ subtitle: 步骤条
   距离优先补位；非连续区段渲染为禁用省略步（status 反映区段内 error/进度）。
 - **rail 语义**：连线 status 取 **nextStatus**（通向下一步）。
 - **差异**：Wave 点击波纹未实现（wave 基建缺失）、`components` 注入未接（app 壳），
-  见 `COMPATIBILITY.md` D111 / README §3。
+  见组件 README。

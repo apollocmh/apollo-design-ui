@@ -13,7 +13,7 @@ Placeholder shown when there is no data.
 
 ## Demos
 
-See [`demo/`](./demo) (6 demos, one-to-one with antd).
+See [`demo/`](./demo) (6 demos, covering the main antd scenarios.
 
 ## API
 

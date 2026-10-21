@@ -13,7 +13,7 @@ subtitle: 折叠面板
 
 ## 代码演示
 
-见 [`demo/`](./demo)（4 个：basic / accordion / borderless / extra）。
+见 [`demo/`](./demo)（9 个：basic / accordion / borderless / extra）。
 
 ## API
 

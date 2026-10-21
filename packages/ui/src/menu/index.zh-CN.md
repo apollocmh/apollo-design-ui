@@ -13,7 +13,7 @@ subtitle: 导航菜单
 
 ## 代码演示
 
-见 [`demo/`](./demo)（13 个，与 antd 用户可见 demo 一一对应）。
+见 [`demo/`](./demo)（13 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -60,4 +60,4 @@ subtitle: 导航菜单
 
 - **rc-menu 内核自建**：items 解析 / key↔path 登记 / 键盘导航三件 engine，
   Overflow 溢出折叠为新基建（`_internal/overflow.ts`）。
-- **差异**：D87–D90（COMPATIBILITY §9.2）；已知缺口见 [`README.md`](./README.md) §3。
+- 与 antd 的已知差异见组件 README。

@@ -1,0 +1,41 @@
+{
+  "upload.basic": {
+    "usesLibraryButton": 1,
+    "rawButtonCount": 0,
+    "listBefore": 1,
+    "doneAfter": 2,
+    "names": [
+      "demo.png",
+      "probe.png"
+    ]
+  },
+  "date-picker.disabled-date": {
+    "dropdownVisible": true,
+    "disabledCells": 12,
+    "afterClose": {
+      "hiddenClass": 1
+    }
+  },
+  "form.form-list": {
+    "rowsBefore": 1,
+    "rowsAfterAdd": 2,
+    "rowsAfterRemove": 1,
+    "message": "提交成功"
+  },
+  "form.async-validation": {
+    "errorText": [
+      "用户名 admin 已被占用"
+    ],
+    "hasErrorClass": 1
+  },
+  "float-button.viewport": {
+    "viewportCount": 2,
+    "frameHeight": 320,
+    "floats": 1,
+    "standaloneHref": "/apollo-design-ui/components/float-button/demo/basic"
+  },
+  "i18n.date-picker": {
+    "navEnglish": true,
+    "panelEnglish": true
+  }
+}

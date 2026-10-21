@@ -13,7 +13,7 @@ subtitle: 徽标数
 
 ## 代码演示
 
-见 [`demo/`](./demo)（12 个，与 antd 非 debug demo 一一对应）。
+见 [`demo/`](./demo)（12 个，覆盖 antd 的主要用户场景）。
 
 | demo | 内容 |
 |---|---|

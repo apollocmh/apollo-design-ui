@@ -14,7 +14,7 @@ Select component to select a value from options.
 
 ## Examples
 
-See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
+See [`demo/`](./demo) (35 demos, covering the main antd scenarios.
 
 ## API
 
@@ -85,6 +85,6 @@ See [`demo/`](./demo) (35 demos, one-to-one with antd's user-visible demos).
 
 - **Vue-native rebuild of the rc-select 1.10.1 core** (engine/, five layers); no
   `-selector` wrapper in the v6 DOM.
-- **Differences**: D106–D110 (COMPATIBILITY §9.2); ReactNode props fully migrated to slots (C8-R2); gaps see [`README.md`](./README.md) §5.
+- Known differences from antd are listed in the component README.
 - ⚠️ Filtering matches by `value` by default — pass
   `showSearch: { optionFilterProp: 'label' }` to match by label.

@@ -18,7 +18,7 @@ A flexbox layout container for alignment and spacing.
 
 ## Examples
 
-See [`demo/`](./demo) (6 demos, one-to-one with antd, including the `debug` demo).
+See [`demo/`](./demo) (6 demos, covering the main antd scenarios.
 
 ## API
 

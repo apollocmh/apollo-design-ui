@@ -151,7 +151,7 @@ antd 的判据是 `loading || !('loading' in props)` —— **看的是「键是
 | ④ `loading={false}` | 渲染 children | 渲染 children ✅ |
 
 **只有 ② 不同**，原因是 **Vue 的 prop 没有「键存在」这个概念**（未传时值同样是 `undefined`，
-两者不可区分）⇒ 属**平台固有差异**（PLATFORM），不是实现错误。
+两者不可区分）⇒ 属**平台固有差异**，不是实现错误。
 本实现取 `loading !== false`，即「未传 = 显示骨架」。
 
 ### 三个块的基础 props 是**互锁推导**的

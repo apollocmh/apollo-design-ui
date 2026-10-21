@@ -36,6 +36,8 @@
     "test:coverage": "vitest run --coverage --maxWorkers=2 --project unit --project dom-contract --project a11y --project theme",
     "test:visual:check": "node tests/visual/run.mjs --check-baselines",
     "test:visual": "node tests/visual/run.mjs",
+    "visual:docs": "node docs/audit/tools/docs-visual-diff.mjs",
+    "visual:docs:update": "node docs/audit/tools/docs-visual-diff.mjs --update",
     "test:compat": "node tests/compat/runner/index.mjs",
     "test:compat:baseline": "node tests/compat/runner/index.mjs --baseline",
     "test:build": "node tests/build/run.mjs",

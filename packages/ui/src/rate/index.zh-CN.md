@@ -13,7 +13,7 @@ subtitle: 评分
 
 ## 代码演示
 
-见 [`demo/`](./demo)（9 个，与 antd 用户可见 demo 一一对应）。
+见 [`demo/`](./demo)（9 个，覆盖 antd 的主要用户场景）。
 
 ## API
 
@@ -58,5 +58,5 @@ subtitle: 评分
 - **cleanedValue**：allowClear 重置后记录被清的值，hover 判据 `nextHoverValue !== cleanedValue`
   防止清零后 hover 回同一值闪烁。
 - **tooltips × characterRender 组合**：antd 里用户 characterRender 会覆盖 tooltip 包装
-  （JSX spread 在后）；本仓为 slot 组合（先 Tooltip 再用户插槽），登记 INTENDED。
+  （JSX spread 在后）；本仓为 slot 组合（先 Tooltip 再用户插槽）。
 - hover 时整条星星按 `hoverValue ?? value` 重算类名（rc 语义）。

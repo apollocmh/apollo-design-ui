@@ -13,7 +13,7 @@ subtitle: 文字提示
 
 ## 代码演示
 
-见 [`demo/`](./demo)（14 个，与 antd 用户可见 demo 一一对应；Segmented/Select
+见 [`demo/`](./demo)（15 个，覆盖 antd 的主要用户场景；Segmented/Select
 未落地 ⇒ 原生 select 替换，见各文件头）。
 
 ## API
@@ -58,4 +58,4 @@ subtitle: 文字提示
   motion（见 [`docs/analysis/tooltip.md`](../../../../docs/analysis/tooltip.md) §8）。
 - **C8-R2**：`overlay` 与 render-fn `title` 已删除 —— 内容走 `#title` 插槽（slot 优先）。
 - **noTitle 抑制**：`#title` 与 `title` 均为空（`title=0` 除外）⇒ 强制关闭且不发回调。
-- **差异**：D77–D82（COMPATIBILITY §9.2）；缺口见 [`README.md`](./README.md) §4。
+- 与 antd 的已知差异见组件 README。

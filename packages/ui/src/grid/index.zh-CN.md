@@ -13,7 +13,7 @@ subtitle: 栅格
 
 ## 代码演示
 
-见 [`demo/`](./demo)（13 个，与 antd 一一对应）。
+见 [`demo/`](./demo)（13 个，覆盖 antd 的主要用户场景）。
 
 | demo | 内容 |
 |---|---|
@@ -68,7 +68,7 @@ Row 与 Col 均**无 Component Token**（与 antd 逐字一致）。栅格常量
 ## 设计说明
 
 - gutter 双半规则：Row `margin-inline: -g/2`、Col `padding-inline: +g/2`；纵向走 `row-gap`。
-- 数字补 px（`0 → '0'`）、字符串走 `calc(x / ±2)`；Vue 侧数字必须手动补 px（PITFALLS 32）。
+- 数字补 px（`0 → '0'`）、字符串走 `calc(x / ±2)`；Vue 侧数字必须手动补 px。
 - 响应式 size 类**全量渲染**（xs…xxxl 同时在 DOM 上），由 CSS media query 裁决 —— SSR 天然一致。
 - 响应式 flex 走 CSS 变量：内联 `--apollo-col-{size}-flex` + 规则 `flex: var(...)`。
 - `flex === 0` 与 `wrap === false`（补 `min-width: 0`，Firefox hack）逐字对齐 antd。

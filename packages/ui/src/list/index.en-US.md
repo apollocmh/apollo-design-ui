@@ -18,7 +18,7 @@ General list.
 
 ## Examples
 
-See [`demo/`](./demo) (**8**, mirroring antd's user-visible demos).
+See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
 
 | demo | Description |
 |---|---|

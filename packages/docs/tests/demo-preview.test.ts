@@ -7,6 +7,7 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
+import DemoFrame from '../src/components/demo/DemoFrame.vue';
 import DemoPreview from '../src/components/demo/DemoPreview.vue';
 import DemoRenderer from '../src/components/demo/DemoRenderer.vue';
 import DemoSource from '../src/components/demo/DemoSource.vue';
@@ -42,6 +43,7 @@ const demoMeta: DemoMeta = {
   desc: { zh: '最简单的用法', en: 'The simplest usage', enFallback: true },
   descHtml: { zh: '<p>最简单的用法</p>', en: '<p>最简单的用法</p>', enFallback: true },
   iframe: false,
+  preview: { mode: 'inline' },
   sources,
   githubPath: 'packages/ui/src/button/demo/basic.vue',
 } as unknown as DemoMeta;
@@ -255,6 +257,59 @@ describe('DemoPreview —— 卡片编排', () => {
     useSiteLocale().setLocale('en-US');
     await nextTick();
     expect(wrapper.find('.site-fallback-hint').exists()).toBe(true);
+    wrapper.unmount();
+  });
+});
+
+describe('DemoPreview —— 预览模式与 iframe 通信（DOC-01/03/04/11）', () => {
+  it('viewport 模式 ⇒ 独立视口画布 + iframe，而不是内联渲染', async () => {
+    const viewportDemo: DemoMeta = {
+      ...demoMeta,
+      preview: { mode: 'viewport', viewportHeight: 300, scrollable: true },
+    };
+    const wrapper = mount(DemoPreview, {
+      props: { demo: viewportDemo },
+      attachTo: document.body,
+    });
+    await flushPromises();
+    expect(wrapper.find('.demo-viewport').exists()).toBe(true);
+    expect(wrapper.find('.demo-provider').exists()).toBe(false);
+    const frame = wrapper.find('.demo-frame');
+    expect(frame.exists()).toBe(true);
+    const src = frame.attributes('src') ?? '';
+    expect(src).toContain('/components/button/demo/basic');
+    expect(src).toContain('embed=1');
+    expect(src).toContain('theme=');
+    // 固定视口高度，不跟随内容测量
+    expect(frame.attributes('style')).toContain('height: 300px');
+    wrapper.unmount();
+  });
+
+  it('standalone 链接带 BASE_URL（子路径部署不丢前缀）', async () => {
+    const wrapper = mount(DemoPreview, { props: { demo: demoMeta }, attachTo: document.body });
+    await flushPromises();
+    const href = wrapper.find('a[target="_blank"]').attributes('href') ?? '';
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    expect(href.startsWith(`${base}/components/button/demo/basic`)).toBe(true);
+    wrapper.unmount();
+  });
+
+  it('⭐ 同源但 source 不是当前 iframe 的消息必须忽略', async () => {
+    const wrapper = mount(DemoFrame, {
+      props: { demo: demoMeta },
+      attachTo: document.body,
+    });
+    await nextTick();
+    const before = wrapper.find('iframe').attributes('style');
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        origin: location.origin,
+        source: null,
+        data: { type: 'apollo-demo:resize', height: 900, frameId: 'other-frame' },
+      }),
+    );
+    await nextTick();
+    expect(wrapper.find('iframe').attributes('style')).toBe(before);
     wrapper.unmount();
   });
 });

@@ -13,7 +13,7 @@ subtitle: 布局
 
 ## 代码演示
 
-见 [`demo/`](./demo)（11 个，与 antd 非 debug demo 一一对应）。
+见 [`demo/`](./demo)（11 个，覆盖 antd 的主要用户场景）。
 
 > 本仓 `Menu` / `Breadcrumb` 尚未落地，演示里的导航用等价的原生结构。
 

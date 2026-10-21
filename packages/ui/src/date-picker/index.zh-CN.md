@@ -28,9 +28,10 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 
 <code src="./demo/basic.vue"></code>
 
-<!-- TODO(G11 · demo 部分)：antd 的 date-picker 有 30+ 个 demo；本仓当前只有 `basic`。
-     其余待与 `@apollo-design/picker` 的面板能力一起补齐。
-     ⚠️ **不写不存在的 demo 引用** —— 那会造成坏链，比缺一节更糟。 -->
+<!-- 代码演示由 `demo/*.md`（标题 / 顺序 / 说明）+ `demo/*.vue` 自动收录。
+     当前覆盖：基本、范围、禁用日期、上下界、日期时间、12 小时制与步长、预设范围、
+     受控、格式化、尺寸/状态/变体、多选、自定义单元格、确认、面板底部、范围时间、
+     自定义面板、弹层位置、允许空值。 -->
 
 ## API
 

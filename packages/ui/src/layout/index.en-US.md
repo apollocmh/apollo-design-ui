@@ -14,7 +14,7 @@ Handle the overall layout of a page.
 
 ## Examples
 
-See [`demo/`](./demo) (11, one-to-one with antd non-debug demos).
+See [`demo/`](./demo) (11, covering the main antd scenarios.
 
 > `Menu` / `Breadcrumb` are not landed yet — the demos use equivalent native structures.
 

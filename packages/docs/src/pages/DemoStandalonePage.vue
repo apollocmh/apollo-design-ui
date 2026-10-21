@@ -32,6 +32,19 @@ const state = ref<'loading' | 'ready' | 'error'>('loading');
 
 const embed = computed(() => route.query.embed === '1');
 
+// ── iframe 内的语言/主题对齐（DOC-04）────────────────────────────────────
+// 必须在 setup 期（客户端）就应用：等到 onMounted 再切，预渲染的默认主题会先闪一帧。
+// SSR 下没有 window，保持文档站默认语言/主题。
+if (typeof window !== 'undefined') {
+  initSiteLocale();
+  const theme = new URLSearchParams(window.location.search).get('theme');
+  if (theme === 'dark') {
+    document.documentElement.dataset.apolloTheme = 'dark';
+  } else if (theme === 'light') {
+    delete document.documentElement.dataset.apolloTheme;
+  }
+}
+
 const demo = computed<DemoMeta | null>(
   () => page.value?.demos.find((d) => d.name === route.params.demo) ?? null,
 );
@@ -68,11 +81,15 @@ const rootEl = ref<HTMLElement | null>(null);
 function reportHeight(): void {
   if (!embed.value || typeof window.parent === 'undefined') return;
   const height = document.documentElement.scrollHeight;
-  window.parent.postMessage({ type: 'apollo-demo:resize', height }, window.location.origin);
+  // frameId 让父页面能区分「哪个 iframe」的消息（DOC-03）。
+  const frameId = typeof route.query.frameId === 'string' ? route.query.frameId : undefined;
+  window.parent.postMessage(
+    { type: 'apollo-demo:resize', height, frameId },
+    window.location.origin,
+  );
 }
 
 onMounted(() => {
-  initSiteLocale();
   if (typeof ResizeObserver === 'function' && rootEl.value) {
     observer = new ResizeObserver(() => reportHeight());
     observer.observe(rootEl.value);

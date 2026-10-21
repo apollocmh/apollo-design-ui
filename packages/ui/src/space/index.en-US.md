@@ -15,7 +15,7 @@ Set the spacing between components.
 
 ## Examples
 
-See [`demo/`](./demo) (15 demos, one-to-one with antd's **user-facing** demos).
+See [`demo/`](./demo) (15 demos, covering the main antd scenarios.
 
 | demo | What it shows |
 |---|---|

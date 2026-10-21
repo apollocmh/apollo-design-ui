@@ -13,7 +13,7 @@ Carousel component.
 
 ## Examples
 
-See [`demo/`](./demo) (7 demos, one-to-one with antd non-debug demos).
+See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
 
 ## API
 
@@ -71,7 +71,7 @@ See [`demo/`](./demo) (7 demos, one-to-one with antd non-debug demos).
 | goTo | `(slide: number, dontAnimate?: boolean) => void` |
 | next / prev | `() => void` |
 | autoPlay | `(playType?: 'update' \| 'leave' \| 'blur') => void` |
-| innerSlider | Engine state object (⚠️ PLATFORM: slick instance on React side) |
+| innerSlider | Engine state object (engine state object) |
 
 ## Theme (Component Token)
 

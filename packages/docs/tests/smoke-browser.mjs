@@ -178,6 +178,7 @@ try {
   const countText = await page.locator('.icon-count').innerText();
   check('图标总数（848）', countText.includes('848'), countText.trim());
 
+  // 搜索框已换成组件库 Input（根节点就是原生 input）
   await page.locator('.icon-search').fill('search');
   await page.waitForTimeout(300);
   const filteredCount = await page.locator('.icon-tile').count();

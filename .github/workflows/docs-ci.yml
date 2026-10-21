@@ -94,3 +94,8 @@ jobs:
           fi
           DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
             node packages/docs/tests/smoke-browser.mjs
+
+          # L8+: 功能性 Demo + 语言同步 + viewport 画布（DatePicker / Upload / Form /
+          # FloatButton）。脚本内置断言，失败即非零退出。
+          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
+            node docs/audit/tools/stage2-demo-probe.mjs

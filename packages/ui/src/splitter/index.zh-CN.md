@@ -13,7 +13,7 @@ subtitle: 分割面板
 
 ## 代码演示
 
-见 [`demo/`](./demo)（4 个：basic / vertical / collapsible / multiple）。
+见 [`demo/`](./demo)（10 个：basic / vertical / collapsible / multiple）。
 
 ## API
 

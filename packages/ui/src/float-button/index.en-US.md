@@ -13,7 +13,7 @@ A button that floats at the edge of the page.
 
 ## Examples
 
-See [`demo/`](./demo) (12 demos, one-to-one with antd's user-visible demos).
+See [`demo/`](./demo) (14 demos, covering the main antd scenarios.
 
 ## API
 
@@ -64,6 +64,5 @@ See [`demo/`](./demo) (12 demos, one-to-one with antd's user-visible demos).
   square ⇒ Space.Compact) + BackTop (scroll infra reused from back-top).
 - **showProgress** feeds the conic-gradient progress ring via the CSS variable
   `--{prefix}-float-btn-progress`.
-- **Difference**: antd does not emit the icon-only class on the Button root (React
-  empty-children counting quirk, D113 UPSTREAM); Group trigger-level semantics fall
-  back to listContext (Vue provide timing).
+- The icon-only class is not emitted on the Button root; Group trigger-level semantics
+  are provided through list context.

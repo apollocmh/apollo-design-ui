@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button, Input } from '@apollo-design/ui';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 import { useSearch } from '../../composables/search';
@@ -8,7 +9,7 @@ const emit = defineEmits<{ close: []; navigate: [path: string] }>();
 const { query, grouped, ensureIndex, loading, error } = useSearch();
 const { t, pick, locale } = useSiteLocale();
 
-const input = ref<HTMLInputElement | null>(null);
+const input = ref<{ nativeElement: HTMLElement | null } | null>(null);
 const panel = ref<HTMLElement | null>(null);
 const activeIndex = ref(0);
 let previousFocus: HTMLElement | null = null;
@@ -86,7 +87,7 @@ async function retry(): Promise<void> {
 
 onMounted(() => {
   previousFocus = document.activeElement as HTMLElement | null;
-  input.value?.focus();
+  (input.value?.nativeElement as HTMLInputElement | null)?.focus();
   void retry();
 });
 
@@ -113,9 +114,10 @@ const GROUP_LABEL = {
         :aria-label="t('search')"
         @keydown="onKeydown"
       >
-        <input
+        <Input
+          id="site-search-input"
           ref="input"
-          v-model="query"
+          v-model:value="query"
           class="site-search-input"
           type="text"
           role="combobox"
@@ -128,7 +130,7 @@ const GROUP_LABEL = {
         />
         <div v-if="error" class="site-search-empty" role="alert">
           {{ t('searchError') }}
-          <button type="button" class="site-search-retry" @click="retry">{{ t('retry') }}</button>
+          <Button size="small" class="site-search-retry" @click="retry">{{ t('retry') }}</Button>
         </div>
         <div v-else-if="loading" class="site-search-empty">{{ t('loading') }}</div>
         <div v-else-if="flatResults.length === 0" class="site-search-empty">
@@ -187,6 +189,8 @@ const GROUP_LABEL = {
 }
 
 .site-search-input {
+  display: block;
+  width: 100%;
   border: none;
   outline: none;
   padding: 14px 18px;
@@ -194,6 +198,13 @@ const GROUP_LABEL = {
   background: transparent;
   color: var(--site-text);
   border-bottom: 1px solid var(--site-border);
+}
+
+.site-search-input :deep(input) {
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 15px;
 }
 
 .site-search-list {
