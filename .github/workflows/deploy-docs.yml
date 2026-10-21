@@ -50,6 +50,11 @@ jobs:
       # 发布前先跑文档站自己的门禁（2026-10-21 审计 A04）。
       - name: 内容管线校验
         run: pnpm --filter @apollo-design/docs run content:check
+      # `content:check` 只校验、不落盘，而 `src/composables/manifest.ts` 与多个测试
+      # 直接 import `.generated/*.json` ⇒ 类型检查前必须先生成产物，否则干净 checkout
+      # 上必报 TS2307（2026-10-21 首次 Deploy Docs 实测）。
+      - name: 生成内容管线产物
+        run: pnpm --filter @apollo-design/docs run content:build
       - name: 文档站类型检查
         run: pnpm --filter @apollo-design/docs run typecheck
       - name: 文档站单元测试

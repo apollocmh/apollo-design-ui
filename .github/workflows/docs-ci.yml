@@ -34,6 +34,10 @@ jobs:
       - name: 内容管线校验（frontmatter / demo 配对 / 路由）
         run: pnpm --filter @apollo-design/docs run content:check
 
+      # `content:check` 不落盘；manifest.ts / 测试直接 import `.generated/*.json`。
+      - name: 生成内容管线产物
+        run: pnpm --filter @apollo-design/docs run content:build
+
       - name: 文档站类型检查
         run: pnpm --filter @apollo-design/docs run typecheck
 

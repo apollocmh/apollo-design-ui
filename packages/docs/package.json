@@ -9,6 +9,7 @@
     "build": "node tooling/content/build-manifest.mjs && vite-ssg build",
     "preview": "vite preview",
     "content:check": "node tooling/content/build-manifest.mjs --check",
+    "content:build": "node tooling/content/build-manifest.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "test": "node tooling/content/build-manifest.mjs --if-missing && vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts"
