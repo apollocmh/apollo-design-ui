@@ -106,6 +106,7 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
 | `d352984f` | 阶段 2：Demo 758→881、覆盖矩阵、a11y 可访问名与计数同步 |
 | `ca5859ba` | 阶段 3/4：预览模式、语言同步、布局、视觉基线、L7 门禁修复 |
 | `813d1bfe` | Form.List 单对象插槽运行时与类型导出 |
+| `9691d36c` | 补遗：Demo 881→989；Menu measure/折叠/嵌套弹层/Tooltip、Overflow `$el`、BaseSelect hover 泄漏修复；文档视觉基线重生成 |
 | `chore(memory)` | 记忆交接（根提交，可用 `git log --grep 'chore(memory)'` 定位） |
 
 - 分支：`fix/docs-motion-demo-quality` → `master`（`cc8af285`）。

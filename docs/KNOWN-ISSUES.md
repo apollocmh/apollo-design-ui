@@ -49,7 +49,7 @@ export CODEBUDDY_SAFE_DELETE_ENABLED=0
 
 ## §1 仍开放的问题
 
-> 📌 **2026-10-21**：§1.6 / §1.7（menu popup / 语义通道 / measure 注销）已由 `7b00b40c` 收口；
+> 📌 **2026-10-21**：§1.6 / §1.7（menu popup / 语义通道 / measure 注销 / tooltip）已由 `7b00b40c` + `9691d36c` 收口；
 > 本轮审计整改（A01–A13）与验证记录见 `docs/audit/2026-10-21-remediation.md`。
 > 当前真正仍开放的是 §1.2–§1.5。
 
@@ -217,33 +217,6 @@ const itemPrefixCls = `${props.prefixCls}-item`;   // ← setup 期求值一次
 `.value`（transfer/Section 的改法可直接抄，`s15-issue15.test.ts` 有对应用例）；改完需跑 form
 全量用例 + L4/L6（form 是已完成组件，按惯例单独一轮）。
 
-### §1.6 menu：SubMenu 的 popup 恒为 `visibility:hidden`（2026-10-14 登记 · Issue #22.1，未修）
-
-**根因**：`SubMenu.ts` 的 popup 节点（`Teleport` 到 body）样式写死
-`{ position: 'absolute', visibility: 'hidden' }`，且**没有任何对齐/定位实现** —— 文件头已注明
-「popup 的精确对齐（rc `PopupTrigger` 的 offset 计算）PENDING」。
-
-**为什么本轮不直接翻成 visible**：
-1. 只改可见性而不补定位 ⇒ 浮层会以 body 为原点绝对定位乱飞，**比隐藏更糟**；
-2. 现有 **L6 视觉基线（menu/vertical、horizontal…）与 DOM 契约都编码了「popup 不可见」**
-   （React 侧在静态渲染里 Trigger 的浮层本就不产出）⇒ 单独翻可见性会让 menu 的 L6/L4 变红，
-   需要连带重拍基线——属于「实现 popup 定位」这项工程的一部分，不是本 Issue 的补丁范围。
-
-**正确修法**（单独一轮）：移植 rc `PopupTrigger`（placements + `getPopupContainer` + motion），
-浮层只在**测量阶段**隐藏，对齐完成后置为可见；同时重拍 menu 的 L6 基线并复核 Tabs/Dropdown 的
-组合用例。
-
-### §1.7 menu：公开类型与运行时 props 的逐字段对照未完成（2026-10-14 登记 · Issue #22.6/#22.8）
-
-- **#22.6**（P1）：`classNames` / `styles` / `expandIcon` / `tooltip` 等公开 API 与运行时消费
-  的对照表未做完 —— 已确认的是：`expandIcon` 走 `#expandIcon`/OverrideProvider；`classNames/styles`
-  在 Menu 上尚未接入语义通道（与 §1「menu 无语义通道」同族）。
-- **#22.8**（P2）：`MenuItem` / `SubMenu` 的 measure 路径只 `registerPath`、**缺对称的
-  `unregisterPath`**（`context.ts` 的 `PathRegister` 只有 register 被用）⇒ 动态移除/重建同 key
-  节点后，旧 keyPath 映射可能残留。
-
-两项都不影响当前已交付行为（无用例因它们变红），按「不制造无意义提交」留待专项一轮。
-
 ## §2 「不要再排查」清单（已修 / 已证伪，防止重复劳动）
 
 | 问题 | 结论 |
@@ -267,6 +240,7 @@ const itemPrefixCls = `${props.prefixCls}-item`;   // ← setup 期求值一次
 
 | commit | 内容 |
 |---|---|
+| `9691d36c` | **menu #22.1/#22.6/#22.7/#22.8 全部收口**（原 §1.6/§1.7）。popup 定位按 title rect 实现并跟随 mode 重算；`classNames`/`styles` 语义通道、measure 路径对称注销已在 `7b00b40c` 等落地；本轮补 `tooltip` 实现（antd MenuItem 折叠态同款）。同时修掉本轮新发现：measure 子树的 SubMenu/Group 不再返回 null（嵌套子项 registerPath ⇒ 父级 selected 恢复）、折叠 openKeys 缓存/回放、嵌套弹层只取消祖先 closeTimer。回归：`menu/__tests__/index.test.ts`（20 例） |
 | `4b30300c` | **time-picker：`*Expose` 落地 + `ok` 事件接线**（Issue #6.1/#6.3）。① `DatePickerExpose` / `RangePickerExpose` 此前是**纯装饰**（内层没有 `defineExpose`）⇒ `ref.value.focus` 恒 `undefined`；两个薄壳也无从转发。⇒ 内层按 `DatePickerRef` / `RangePickerRef` 暴露（`nativeElement` 用 **getter** —— 暴露对象被 `proxyRefs` 包一层，字面量会定格成 `null`），薄壳转一手。② `useRangeValue` 的 `triggerOk`（rc `useRangeValue.js:119-120`）在本仓**没有任何调用点** ⇒ `ok` / `@ok` 从头到尾不发出；且载荷恒为 `dates.filter(Boolean)` 的数组，与 `TimePickerProps['onSelect'] = (v: Dayjs) => void` 相反。⇒ 页脚 `OK` 里按上游 `onFooterSubmit` 顺序接上，载荷走 `pickerParam`。 |
 | （2026-10-13） | **time-picker：顶层时间配置贯通 + `defaultOpenValue` 锚定**（Issue #6.2/#6.5，即本条原 §1.4 的两项）。**两条根因缺一不可**：① 14 个顶层键不在 `PickerCommonProps` 上 ⇒ 落进 `attrs`、`getTimeProps` 的 `pickProps(props, showTimeKeys)` 取不到 ⇒ 补声明并**逐键下发**给 `PickerPanel`（面板自己也会跑一遍 `getTimeProps`，只折进 `showTime` 不够）；② 其中 7 个是 **Boolean** ⇒ Vue 未传时强制 `false`，而 `existShowConfig` 把「显式 `false`」判成「用户关了这三列」⇒ `fillShowConfig` 的「全空即全开」兜底失效 ⇒ **一列都不渲染**（24h 从 3 列变 0 列）⇒ 四个文件都在 `withDefaults` 里显式给 `undefined`（**薄壳也要给** —— 它整包转发 `props`）。⚠️ **本条原 §1.4 写的「纯 time 面板在 jsdom 里渲染为空」是错的**：那是探针口径问题（`attachTo` + `document.querySelector` 串到上一个实例的残留节点）。正确口径是 `wrapper.element.querySelectorAll`。实测：12h 4 列（12/60/60/2）、`hourStep: 15` → 小时列 `[00,15]`（`generateUnits(0,23,step)` 上界 23）、`minuteStep: 30` → `[00,30]`、`disabledTime` 3 格禁用、`hideDisabledOptions` 21 格；`defaultOpenValue` 让空值面板三列停在它那一刻且不发 `change`、确定按钮可点。 |
 | （2026-10-07） | **裁决 `button-children-wrapper` = A：Button 改为与 antd 结构对齐**（本仓最后一个结构性分叉）。起因：修 dropdown 死规则时为验证「改对了没有」加了能触发它的 L6 变体，它**红了**；量两侧计算样式发现 **Button 在 children 含文字时比 antd 多包一层 `<span>`**（React 侧 `SPAN.anticon-down → BUTTON` 直接子 ⇒ font-size 12px；Vue 侧多一层 ⇒ 14px 继承）⇒ 把所有从 antd 移植的 **`>` 直接子选择器全部打断**。落地：`Button.vue` 新增 `contentNodes`，对应 antd `buttonHelpers.js:66` `spaceChildren` → `splitCNCharsBySpace` —— **字符串/数字包 span、Fragment 包 span、元素 vnode 只 cloneVNode 合并 class/style 不包**；纯文本仍走模板既有 wrapper 路径（已被 L4 夹具与 27 张 L6 基线覆盖）。`<a>`（href）分支同样处理。⚠️ **踩到的坑**：改完源码直接跑 L6，差异率与改前**一模一样** —— 因为 **L6 解析的是 `packages/ui/dist`**，源码改动必须先重建 ui 才进产物，否则是「改了但看起来没生效」的假象。验证：`dropdown/buttonIcon` 变体**改前红 → 改后 9/9 exact**，并**永久保留**为那条 CSS 唯一的执行证据（它此前从没被 L6 覆盖过）；L4 dom-contract **1736** 全过、unit 6356、test:types 无错误。 |

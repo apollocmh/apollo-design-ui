@@ -11,7 +11,7 @@
 - **根别名迁移**（`className`/`rootClassName`/`style` → 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232）：🚨 消费者扫描要覆盖**模板 `:class-name=`** 与**同目录内部件**（把被迁组件自己也放进列表）(350) · 🚨 组件可能**半迁移**（classString 里 props 与 attrs 并存）⇒ 判据是「扫代码」不是「看状态」(354,355) · 🚨 **「查哪些组件还有根别名」要按公开导出枚举，不是按目录**（漏了 `StatisticTimer` / `PopconfirmPurePanel`）(358) · 🚨 **L4 两侧各用各的词汇是既有约定，别改基线**(353) · 📌 **上游自己就在废弃 `rootClassName` → `classNames.root`**（4 处 `.d.ts`）⇒ 但**非根目标**不能一刀切改名（C3）(360)
 - **样式**：🚨 **E10 的 `box-shadow` 正则不认 `inset` 前缀** —— 只放行 `var(`/`${`/`none`/`0` 开头 ⇒ `box-shadow:inset 0 0 1px 0 var(--apollo-…)` 会被判「硬编码阴影」；对策是把这条阴影**声明成组件变量**（322）
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
-- **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180)
+- **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180) · 🚨 Trigger 默认 hover 会被选择类浮层继承 ⇒ BaseSelect 必须 `action: []` 且只留一条 click 通道(393) · 🚨 嵌套 Teleport 弹层要取消祖先 closeTimer(396)
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
 - **模板**：🚨 **HTML 注释不能插在「标签的属性列表里」**（`<Comp\n <!-- … -->\n :a="1" />`）—— 报一串 `TS1005: ':' expected`（本轮连踩两次：ColorSteppers 与 card/demo/tabs.vue）（332）
 - **模板**：🚨 **`v-if` 与 `v-else` 之间**不能插 HTML 注释 —— 会让 `v-else` 失去配对（症状是**整条分支静默渲染错**，本轮一次红了 **28** 条用例）（331）
@@ -34,6 +34,7 @@
 - **流程**：🚨 **收口判据是「扫代码」不是「看 `auditStatus`」** —— 只筛 `todo` 会漏掉 `analyzing` 档里的活（本次漏 6 个组件、两次误报完成）(355)
 - **流程**：🚨 **本仓禁用 `git stash push -u`** —— 会让索引失同步（6352 条 staged-deleted，文件其实完好）；恢复用 `git reset`（mixed）；要留副本用 `git show HEAD:<path>`(357)
 - **测试/视觉**：⚠️ **L6 全量有抖动用例** ⇒ 报红先 `--component X --no-build --mode compare` 孤立重跑（~19s）；判据「L6 红但 L4 绿 ⇒ 大概率不是类名字符串问题」；别把测量噪声登记成平台差异(356)
+- **测试**：🚨 Overflow 的 raw item ref 是组件实例 ⇒ 必须解 `$el`(394) · Menu measure 子树必须渲染 children(395) · `expectCount` 多组/子集要按运行时实际 glob 核对(397) · 新增 demo 致视觉基线整页重排，先核对再 update(398)
 - **测试**：🚨 **`unit + dom-contract` 全量也会抖**（实测 8 处失败 ⇒ 复跑 0 ⇒ 第三次 675/675）⇒ 报红先 `git show --stat` 自查有没有碰别的文件，再复跑判性质；**别顺着第一次的红改代码**(359)
 - **流程**：⚠️「旧写法有测试、新写法没有」最易长期潜伏(18,252) · 🚨BSD `grep` 不支持 `\|`、会**静默返回空**(277) —— 搜代码用 Grep 工具。
 - **写法**：🚨 **JSDoc 里禁止出现 `/*`** —— 它里面的 `*/` 会提前闭合块注释，症状是**行号漂移 200 行**的一串无关语法错（314）。
@@ -4989,3 +4990,32 @@
     Biome 默认要求 LF；这是环境噪声，不是新改动。收口用
     `biome check <git 改动的代码文件>`，CI（Linux）再跑全量。文档/测试计数等
     仍需同步更新，但不要把全仓 `--write` 当成修复。
+
+393. 🚨 **`_internal/trigger` 的默认 `action = 'hover'` 是给 Tooltip 用的，选择类浮层绝不能继承**：
+    `BaseSelect` 建在 Trigger 上却没传 `action` ⇒ Select / TreeSelect / Cascader / AutoComplete
+    （以及 Pagination 的 sizeChanger）**鼠标一划过就弹层**；同时 `openOnTriggerClick` 注入的
+    onClick 与 Selector 的 mousedown 各 toggle 一次、互相抵消 ⇒ TreeSelect/Cascader **点击反而不开**。
+    判据：选择类（combobox/listbox）只允许 click——Trigger 显式 `action: []`（或 rc-select 的
+    `showAction/hideAction: ['click']`），开合切换只留**一条**通道（Selector mousedown / raw onClick）。
+    回归：`select/__tests__/index.test.ts`「hover 不开层；mousedown 开层」、`overflow`/`menu` 不受影响。
+394. 🚨 **`renderRawItem` / `renderRawRest` 返回的是组件 VNode 时，ref 拿到的是组件实例不是 DOM**：
+    Overflow 里 `el instanceof HTMLElement` 恒 false ⇒ 每项宽度从未登记 ⇒ `calcDisplayCount`
+    返回 `displayCount=-1` ⇒ horizontal Menu 全部项被当作 overflow（`height:0;position:absolute`），
+    **整条菜单不可见**。修法：统一 `resolveElement(el)` 解 `ComponentPublicInstance.$el`（item 与 rest 两处）。
+    回归：`_internal/__tests__/overflow.test.ts` 组件 VNode + 手动触发 MockRO。
+395. 🚨 **Menu measure 子树里的 `SubMenu` / `MenuItemGroup` 不能 `return null`**：
+    rc `SubMenu/index.js:273-287` 在 measure 模式返回 **childList** 并继续 provide PathTracker。
+    本仓早期只登记自身就返回 null ⇒ 嵌套子项从未 `registerPath` ⇒ `isSubPathKey` 恒 false
+    （选中子项后父级 `-submenu-selected` 不出现）、`getSubPathKeys`/键盘路径也不完整。
+    修法：measure 分支 register 自身 + provide pathTracker + 渲染 childrenNodes。
+396. 🚨 **嵌套弹层 Teleport 到 body 后，「父层 mouseleave」不等于「离开整个菜单」**：
+    指针从父弹层移入三级弹层时父层先启动 closeTimer，100ms 后父层连同三级一起消失。
+    修法：在 Menu context 登记各层 closeTimer，后代弹层 mouseenter 时取消所有**祖先**计时器
+    （只按路径前缀判断；兄弟弹层不互相取消，否则前一个 popup 永驻）。
+397. ⚠️ **批量同步 `expectCount` 不能按目录文件数盲改**：a11y/theme 测试大量使用 brace 子集、
+    多组 glob、按路径分组的 allow（豁免必须恰好命中）；还有注释里出现 `expectCount` 的文档头。
+    正确做法：以 vitest 报的「实际 N 条」为准逐组核对；多组文件（cascader/slider/tooltip/
+    input-number/qr-code）拆组时按**路径**分类，而不是按文件名子串（`render-panel.vue` 不是独立 Panel）。
+398. ⚠️ **新增 demo 会让文档视觉基线全页 diff**：`.demos-grid` 是 CSS columns，新增示例后整列重排，
+    diff 看起来像大面积回归；先打开 current 截图确认组件本身没坏，再用 `--update` 重生成基线。
+    与「组件源码改动后先 build:ui」同属基线维护流程（327）。
