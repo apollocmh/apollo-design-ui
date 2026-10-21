@@ -46,13 +46,25 @@ export interface SourceFile {
 /** 示例预览模式（见 `DemoMeta.preview`）。 */
 export type DemoPreviewMode = 'inline' | 'isolated' | 'viewport';
 
+/**
+ * 示例画布档位（V3 §4.3）：
+ * - compact：小控件（Button/Tag/Badge…），低留白，按内容高度；
+ * - interactive：Select/DatePicker/Form 等交互控件（默认）；
+ * - full：Table/复杂 Form/布局类，始终占满一行。
+ */
+export type DemoPreviewSize = 'compact' | 'interactive' | 'full';
+
 export interface DemoPreviewConfig {
   mode: DemoPreviewMode;
+  /** 画布档位；缺省时由文档站按组件类别推断（见 composables/demo-layout.ts）。 */
+  size?: DemoPreviewSize;
+  /** 栅格跨度：1 / 2 / 'full'；缺省时 full 档占满一行，其余 1。 */
+  span?: 1 | 2 | 'full';
   /** viewport 模式下的画布高度（px）。默认 320。 */
   viewportHeight?: number;
   /** viewport 模式下是否允许视口内滚动（固定定位组件必须为 true）。 */
   scrollable?: boolean;
-  /** 画布最小高度（px）。 */
+  /** 画布最小高度（px）。仅在 demo 显式声明时生效（避免统一空白）。 */
   minHeight?: number;
 }
 

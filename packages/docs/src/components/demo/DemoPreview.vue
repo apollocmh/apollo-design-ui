@@ -8,6 +8,7 @@
  * 重置语义：递增 resetToken ⇒ DemoRenderer 重建组件子树 ⇒ 只影响当前示例。
  */
 import { computed, ref } from 'vue';
+import { resolveDemoLayout } from '../../composables/demo-layout';
 import { useSiteLocale } from '../../composables/locale';
 import type { DemoMeta } from '../../types/manifest';
 import DemoErrorBoundary from './DemoErrorBoundary.vue';
@@ -46,6 +47,13 @@ const previewMode = computed(
   () => props.demo.preview?.mode ?? (props.demo.iframe ? 'isolated' : 'inline'),
 );
 
+/** V3：画布档位 / 跨度（默认按组件类别推断，demo frontmatter 可覆盖）。 */
+const layout = computed(() => resolveDemoLayout(props.demo));
+const canvasStyle = computed(() => {
+  const minHeight = props.demo.preview?.minHeight;
+  return minHeight ? { minHeight: `${minHeight}px` } : undefined;
+});
+
 function reset(): void {
   resetToken.value += 1;
   boundaryKey.value += 1;
@@ -56,21 +64,19 @@ function reset(): void {
   <section
     :id="`demo-${demo.name}`"
     class="demo-preview"
-    :class="{ 'full-width': fullWidth }"
+    :class="[
+      `demo-preview--${layout.size}`,
+      `demo-preview--span-${layout.span}`,
+      { 'full-width': fullWidth },
+    ]"
     :aria-labelledby="`demo-${demo.name}-title`"
   >
-    <header class="demo-preview-head">
-      <h4 :id="`demo-${demo.name}-title`" class="demo-preview-title">
-        {{ title.text }}
-        <a class="demo-anchor" :href="`#demo-${demo.name}`" aria-label="#">#</a>
-        <span v-if="locale === 'en-US' && demo.title.enFallback" class="demo-lang-badge">zh</span>
-      </h4>
-      <p v-if="locale === 'en-US' && desc.fallback" class="site-fallback-hint">
-        {{ t('fallbackHint') }}
-      </p>
-    </header>
-
-    <div class="demo-canvas" :class="{ 'demo-canvas-viewport': previewMode === 'viewport' }">
+    <!-- V3：预览优先 —— Canvas 是卡片第一视觉，标题/说明在画布之后。 -->
+    <div
+      class="demo-canvas"
+      :class="{ 'demo-canvas-viewport': previewMode === 'viewport' }"
+      :style="canvasStyle"
+    >
       <DemoViewport v-if="previewMode === 'viewport'" :demo="demo" />
       <DemoFrame v-else-if="previewMode === 'isolated'" :demo="demo" />
       <DemoProvider v-else :instance-id="instanceId">
@@ -85,7 +91,17 @@ function reset(): void {
       </DemoProvider>
     </div>
 
-    <!-- 画布优先（DOC-07）：描述放在预览之后，先把示例本身推到首屏。 -->
+    <header class="demo-preview-head">
+      <h4 :id="`demo-${demo.name}-title`" class="demo-preview-title">
+        {{ title.text }}
+        <a class="demo-anchor" :href="`#demo-${demo.name}`" aria-label="#">#</a>
+        <span v-if="locale === 'en-US' && demo.title.enFallback" class="demo-lang-badge">zh</span>
+      </h4>
+      <p v-if="locale === 'en-US' && desc.fallback" class="site-fallback-hint">
+        {{ t('fallbackHint') }}
+      </p>
+    </header>
+
     <!-- 描述为构建期 markdown-it 渲染产物（第一方内容，非用户输入） -->
     <div class="demo-preview-desc" v-html="desc.text" />
 
@@ -105,18 +121,51 @@ function reset(): void {
 .demo-preview {
   border: 1px solid var(--site-border);
   border-radius: var(--site-radius);
-  margin: 0 0 20px;
+  margin: 0;
   overflow: hidden;
   background: var(--site-bg);
 }
 
+/*
+ * V3 画布档位：
+ * - compact：小控件的留白下限（18–20px），不制造空高；
+ * - interactive：默认交互控件（24px）；
+ * - full：宽内容（24px）+ 占满栅格行。
+ * 画布不再画虚线装饰边，卡片边界由外框承担。
+ */
+.demo-canvas {
+  padding: 24px 20px;
+  /* 示例画布 = 组件库令牌作用域（--apollo-* 来自 html 上的 tokens.css）；
+     站点令牌不进入这里，组件视觉与发布产物一致 */
+  color: var(--apollo-color-text, rgba(0, 0, 0, 0.88));
+}
+
+.demo-preview--compact .demo-canvas {
+  padding: 18px 20px;
+}
+
+.demo-preview--full .demo-canvas {
+  padding: 24px;
+}
+
+/* 独立视口画布：窗口自身带边框，外边距收一点 */
+.demo-canvas-viewport {
+  padding: 16px;
+  background: var(--site-bg-soft);
+}
+
 .demo-preview-head {
-  padding: 14px 18px 4px;
+  padding: 14px 18px 0;
+  border-top: 1px solid var(--site-border);
+}
+
+.demo-preview--compact .demo-preview-head {
+  padding: 12px 16px 0;
 }
 
 .demo-preview-title {
   margin: 0;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--site-text);
   display: flex;
@@ -146,9 +195,14 @@ function reset(): void {
 }
 
 .demo-preview-desc {
-  padding: 10px 18px 2px;
+  padding: 8px 18px 2px;
   color: var(--site-text-secondary);
-  font-size: 13.5px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.demo-preview--compact .demo-preview-desc {
+  padding: 6px 16px 2px;
 }
 
 .demo-preview-desc :deep(p) {
@@ -176,17 +230,12 @@ function reset(): void {
   padding: 0 4px;
 }
 
-.demo-canvas {
-  padding: 28px;
-  border-top: 1px dashed var(--site-border);
-  /* 示例画布 = 组件库令牌作用域（--apollo-* 来自 html 上的 tokens.css）；
-     站点令牌不进入这里，组件视觉与发布产物一致 */
-  color: var(--apollo-color-text, rgba(0, 0, 0, 0.88));
+/* 栅格跨度（V3）：full 档占满一行；数字跨度由父级 grid 解释。 */
+.demo-preview--span-full {
+  grid-column: 1 / -1;
 }
 
-/* 独立视口画布：窗口自身带边框，外边距收一点 */
-.demo-canvas-viewport {
-  padding: 16px;
-  background: var(--site-bg-soft);
+.demo-preview--span-2 {
+  grid-column: span 2;
 }
 </style>

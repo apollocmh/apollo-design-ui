@@ -257,27 +257,37 @@ useSeo(
 }
 
 /*
- * 独立列流（DOC-08）：两列 CSS Grid 会按**行**对齐 —— 左侧一张高卡片会
- * 把右侧同行的下一张也压低，留下大片空白。改用 CSS columns 让两列各自
- * 堆叠；`break-inside: avoid` 保证单张 demo 不被截断。
- * 展开源码后高度变化由浏览器重新平衡列，不需要 JS 计算。
+ * V3：稳定 CSS Grid（行优先，DOM 顺序 = 阅读顺序 = Tab 顺序）。
+ * - 默认两列；宽度不足时单列；超宽（≥2200）才评估三列。
+ * - 展开源码只改变当前行高度，不再触发 CSS columns 的整列重排。
+ * - `full` 档 demo 由 `.demo-preview--span-full` 占满一行。
  */
 .demos-grid {
-  columns: 2;
-  column-gap: 20px;
-}
-
-.demos-grid :deep(.demo-preview) {
-  break-inside: avoid;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 1.5vw, 24px);
+  align-items: start;
 }
 
 .demos-grid.full-width {
-  columns: 1;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @media (max-width: 1080px) {
   .demos-grid {
-    columns: 1;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 2200px) {
+  .demos-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .demos-grid.full-width {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .demos-grid :deep(.demo-preview--span-2) {
+    grid-column: span 2;
   }
 }
 
