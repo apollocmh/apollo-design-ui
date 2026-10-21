@@ -115,6 +115,13 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
 - **Deploy Docs `39610060088` 全绿**：构建 + 发布 `gh-pages`（`60b26152`）。
 - 线上入口：`https://apollocmh.github.io/apollo-design-ui/`（GitHub Pages）。
 
+### 7.4 第二轮发布（`v0.1.2`）
+
+- master `c081508c`（代码 `9691d36c` + 记忆 `c081508c`）；annotated tag `v0.1.2`（`819cd0d2`）。
+- **CI `39628929380` 全绿**：lint / L7 / types / coverage / registry 全 success，L6 四 shard 全 success。
+- **Deploy Docs `39628929319` 全绿**：gh-pages `a0a4ded3`。
+- 线上入口：`https://apollocmh.github.io/apollo-design-ui/`。
+
 ## 7. 补遗（2026-10-21 第二轮：Demo 余量 + Menu/选择器交互缺陷）
 
 ### 7.1 Demo 补齐
