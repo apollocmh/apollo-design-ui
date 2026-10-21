@@ -111,6 +111,11 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
+      # root vitest 的 unit project 也包含 `packages/docs/tests/**` ⇒ 同 lint / test，
+      # 先落盘 `.generated`（2026-10-21 CI 实测：5 个 docs 测试因缺 manifest 失败）。
+      - name: 生成文档站内容管线产物
+        run: pnpm --filter @apollo-design/docs run content:build
+
       # 阈值是 **ratchet（棘轮）**（见 `vitest.config.ts` 的 `packages/ui/src/**`）：
       # 锁住 2026-10-04 的实测基线 **84.76 / 73.8 / 84.38**，**只许升不许降**；
       # **90 / 85 / 90 是长期目标**，不是现在的门禁。
