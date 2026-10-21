@@ -74,7 +74,9 @@ jobs:
         shell: bash
         run: |
           set -eu
-          pnpm --filter @apollo-design/docs run preview -- --host 127.0.0.1 --port 4477 \
+          # ⚠️ 不能用 `pnpm run preview -- --host …`：pnpm 12 会把 `--` 原样传给
+          # vite，vite 忽略后续参数并退回 4173（2026-10-21 CI 实测）。直接 exec。
+          pnpm --filter @apollo-design/docs exec vite preview --host 127.0.0.1 --port 4477 \
             > /tmp/docs-preview.log 2>&1 &
           PREVIEW_PID=$!
           trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
