@@ -12,6 +12,7 @@
  * 「离开视口」不销毁实例 ⇒ 用户在示例里的操作状态（表单输入、展开的面板）保留。
  */
 
+import { Button } from '@apollo-design/ui';
 import type { Component } from 'vue';
 import { onMounted, ref, shallowRef, watch } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
@@ -80,7 +81,7 @@ defineExpose({ state });
     </div>
     <div v-else class="demo-renderer-error" role="alert">
       ⚠️ {{ t('demoError') }} ({{ component }}/{{ demo }})
-      <button type="button" @click="load">{{ t('retry') }}</button>
+      <Button size="small" @click="load">{{ t('retry') }}</Button>
     </div>
   </div>
 </template>

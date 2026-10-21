@@ -8,6 +8,7 @@
  *    官网导航和其它文档内容照常可用；
  *  - 重试 = 清空错误 + 通知父级换 resetToken 重建子树（不是简单刷新页面）。
  */
+import { Button } from '@apollo-design/ui';
 import { onErrorCaptured, ref } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 
@@ -35,16 +36,16 @@ defineExpose({ error });
   <div v-else class="demo-error" role="alert">
     <p class="demo-error-title">⚠️ {{ t('demoError') }}</p>
     <pre class="demo-error-detail">{{ error.message }}</pre>
-    <button type="button" class="demo-error-retry" @click="retry">{{ t('retry') }}</button>
+    <Button class="demo-error-retry" size="small" @click="retry">{{ t('retry') }}</Button>
   </div>
 </template>
 
 <style scoped>
 .demo-error {
   padding: 24px;
-  border: 1px dashed #ff4d4f66;
+  border: 1px dashed color-mix(in srgb, var(--apollo-color-error) 40%, transparent);
   border-radius: var(--site-radius);
-  background: color-mix(in srgb, #ff4d4f 6%, transparent);
+  background: color-mix(in srgb, var(--apollo-color-error) 6%, transparent);
 }
 
 .demo-error-title {

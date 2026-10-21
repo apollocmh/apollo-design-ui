@@ -4,6 +4,7 @@
  * 三栏：分类侧栏（SiteLayout）+ 中央内容 + 本页目录（TocNav，经共享状态挂到布局右栏）。
  * 页面数据（文档 HTML、demo 元数据与源码）按组件懒加载，离开页面即释放。
  */
+import { Segmented } from '@apollo-design/ui';
 import { computed, onBeforeUnmount, onServerPrefetch, ref, shallowRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import DemoPreview from '../components/demo/DemoPreview.vue';
@@ -21,7 +22,13 @@ const { setToc } = useTocState();
 
 const page = shallowRef<ComponentPageData | null>(null);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
-const fullWidth = ref(false);
+/** V3：默认按容器宽度自动排布；仅保留「单列」这一真正有价值的模式。 */
+const layoutMode = ref<string>('auto');
+const layoutOptions = computed(() => [
+  { label: t('autoLayout'), value: 'auto' },
+  { label: t('fullscreen'), value: 'full' },
+]);
+const fullWidth = computed(() => layoutMode.value === 'full');
 const requestGuard = createRequestGuard();
 
 async function load(name: string): Promise<void> {
@@ -123,25 +130,8 @@ useSeo(
 
       <section id="demos" class="demos-section">
         <h2 class="demos-section-title">{{ t('groupDemo') }}</h2>
-        <div class="demos-toolbar" role="group" :aria-label="t('groupDemo')">
-          <button
-            type="button"
-            class="demos-mode-btn"
-            :class="{ active: !fullWidth }"
-            :aria-pressed="!fullWidth"
-            @click="fullWidth = false"
-          >
-            {{ t('split') }}
-          </button>
-          <button
-            type="button"
-            class="demos-mode-btn"
-            :class="{ active: fullWidth }"
-            :aria-pressed="fullWidth"
-            @click="fullWidth = true"
-          >
-            {{ t('fullscreen') }}
-          </button>
+        <div class="demos-toolbar">
+          <Segmented v-model:value="layoutMode" :options="layoutOptions" size="small" />
         </div>
         <div class="demos-grid" :class="{ 'full-width': fullWidth }">
           <DemoPreview
@@ -166,12 +156,13 @@ useSeo(
 
 <style scoped>
 .component-header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .component-title {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   margin: 0 0 12px;
   display: flex;
   align-items: baseline;
@@ -213,12 +204,21 @@ useSeo(
   display: flex;
   gap: 14px;
   font-size: 12.5px;
+  color: var(--site-text-tertiary);
+}
+
+.component-links a {
+  color: var(--site-text-tertiary);
+}
+
+.component-links a:hover {
+  color: var(--site-brand);
 }
 
 .demos-section-title {
   font-size: 22px;
   font-weight: 600;
-  margin: 44px 0 16px;
+  margin: 48px 0 18px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--site-border);
   scroll-margin-top: 76px;
@@ -230,44 +230,38 @@ useSeo(
   margin-bottom: 14px;
 }
 
-.demos-mode-btn {
-  border: 1px solid var(--site-border);
-  background: var(--site-bg);
-  color: var(--site-text-secondary);
-  font-size: 12.5px;
-  padding: 3px 12px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-.demos-mode-btn.active {
-  color: var(--site-brand);
-  border-color: var(--site-brand);
-  background: color-mix(in srgb, var(--site-brand) 8%, transparent);
-}
-
 /*
- * 独立列流（DOC-08）：两列 CSS Grid 会按**行**对齐 —— 左侧一张高卡片会
- * 把右侧同行的下一张也压低，留下大片空白。改用 CSS columns 让两列各自
- * 堆叠；`break-inside: avoid` 保证单张 demo 不被截断。
- * 展开源码后高度变化由浏览器重新平衡列，不需要 JS 计算。
+ * V3：稳定 CSS Grid（行优先，DOM 顺序 = 阅读顺序 = Tab 顺序）。
+ * - 默认两列；宽度不足时单列；超宽（≥2200）才评估三列。
+ * - 展开源码只改变当前行高度，不再触发 CSS columns 的整列重排。
+ * - `full` 档 demo 由 `.demo-preview--span-full` 占满一行。
  */
 .demos-grid {
-  columns: 2;
-  column-gap: 20px;
-}
-
-.demos-grid :deep(.demo-preview) {
-  break-inside: avoid;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 1.5vw, 24px);
+  align-items: start;
 }
 
 .demos-grid.full-width {
-  columns: 1;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @media (max-width: 1080px) {
   .demos-grid {
-    columns: 1;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 2200px) {
+  .demos-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .demos-grid.full-width {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .demos-grid :deep(.demo-preview--span-2) {
+    grid-column: span 2;
   }
 }
 

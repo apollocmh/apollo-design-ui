@@ -3,6 +3,15 @@
  * DemoToolbar —— 示例操作入口。
  * 纯展示 + 事件上报，不持有业务状态（状态归 DemoPreview）。
  */
+import {
+  CheckOutlined,
+  CodeOutlined,
+  CopyOutlined,
+  ExportOutlined,
+  GithubOutlined,
+  ReloadOutlined,
+} from '@apollo-design/icons';
+import { Button, Tooltip } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 import type { DemoMeta } from '../../types/manifest';
@@ -58,25 +67,54 @@ async function copy(): Promise<void> {
 
 <template>
   <div class="demo-toolbar" role="toolbar" :aria-label="t('api')">
-    <button
-      type="button"
+    <Button
       class="demo-tool-btn"
+      type="text"
+      size="small"
       :aria-expanded="expanded"
       @click="emit('toggleCode')"
     >
+      <template #icon><CodeOutlined /></template>
       {{ expanded ? t('collapseCode') : t('expandCode') }}
-    </button>
+    </Button>
     <span class="demo-toolbar-spacer" />
-    <button type="button" class="demo-tool-btn" @click="copy">
-      {{ copied ? `✓ ${t('copied')}` : t('copy') }}
-    </button>
-    <button type="button" class="demo-tool-btn" @click="emit('reset')">{{ t('reset') }}</button>
-    <a class="demo-tool-btn" :href="standaloneHref" target="_blank" rel="noopener">
-      {{ t('openStandalone') }} ↗
-    </a>
-    <a class="demo-tool-btn" :href="githubHref" target="_blank" rel="noopener noreferrer">
-      {{ t('editOnGithub') }} ↗
-    </a>
+    <Button class="demo-tool-btn" type="text" size="small" @click="copy">
+      <template #icon>
+        <CheckOutlined v-if="copied" />
+        <CopyOutlined v-else />
+      </template>
+      {{ copied ? t('copied') : t('copy') }}
+    </Button>
+    <Button class="demo-tool-btn" type="text" size="small" @click="emit('reset')">
+      <template #icon><ReloadOutlined /></template>
+      {{ t('reset') }}
+    </Button>
+    <Tooltip :title="t('openStandalone')">
+      <Button
+        class="demo-tool-btn demo-tool-btn-icon"
+        type="text"
+        size="small"
+        :href="standaloneHref"
+        target="_blank"
+        rel="noopener"
+        :aria-label="t('openStandalone')"
+      >
+        <template #icon><ExportOutlined /></template>
+      </Button>
+    </Tooltip>
+    <Tooltip :title="t('editOnGithub')">
+      <Button
+        class="demo-tool-btn demo-tool-btn-icon"
+        type="text"
+        size="small"
+        :href="githubHref"
+        target="_blank"
+        rel="noopener noreferrer"
+        :aria-label="t('editOnGithub')"
+      >
+        <template #icon><GithubOutlined /></template>
+      </Button>
+    </Tooltip>
   </div>
 </template>
 
@@ -84,9 +122,9 @@ async function copy(): Promise<void> {
 .demo-toolbar {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   border-top: 1px solid var(--site-border);
-  padding: 5px 12px;
+  padding: 4px 10px;
   flex-wrap: wrap;
 }
 
@@ -94,19 +132,15 @@ async function copy(): Promise<void> {
   flex: 1;
 }
 
-.demo-tool-btn {
-  border: none;
-  background: transparent;
-  color: var(--site-text-secondary);
+/*
+ * V3：工具栏不再自绘按钮视觉 —— 颜色 / 焦点 / hover / disabled 全部由
+ * Apollo Button（text / small）承担。这里只保留布局类名（测试与旧样式锚点）。
+ */
+.demo-toolbar :deep(.demo-tool-btn) {
   font-size: 12.5px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
 }
 
-.demo-tool-btn:hover {
-  color: var(--site-brand);
-  background: var(--site-bg-soft);
+.demo-toolbar :deep(.demo-tool-btn-icon) {
+  padding-inline: 8px;
 }
 </style>

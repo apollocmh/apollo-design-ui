@@ -152,8 +152,25 @@ function parseDemo(componentName, demoMdPath) {
     const n = Number(value);
     return Number.isFinite(n) && n > 0 ? n : undefined;
   };
+  // V3：画布档位 / 栅格跨度是**展示元数据**（不改变组件本身）。非法值直接报错，
+  // 避免拼写错误静默退回默认档位、看起来「声明了但没生效」。
+  const allowedSizes = new Set(['compact', 'interactive', 'full']);
+  if (previewRaw.size !== undefined && !allowedSizes.has(previewRaw.size)) {
+    throw new Error(
+      `${componentName}/demo/${name}：preview.size 必须是 compact / interactive / full，实际「${previewRaw.size}」`,
+    );
+  }
+  const spanRaw = previewRaw.span;
+  const allowedSpans = new Set([1, 2, 'full']);
+  if (spanRaw !== undefined && !allowedSpans.has(spanRaw)) {
+    throw new Error(
+      `${componentName}/demo/${name}：preview.span 必须是 1 / 2 / full，实际「${spanRaw}」`,
+    );
+  }
   const preview = {
     mode: previewMode,
+    size: previewRaw.size,
+    span: spanRaw,
     viewportHeight: positive(previewRaw.viewportHeight),
     scrollable: previewRaw.scrollable === true,
     minHeight: positive(previewRaw.minHeight),

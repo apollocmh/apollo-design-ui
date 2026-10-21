@@ -12,6 +12,22 @@
   word-break: break-word;
 }
 
+/*
+ * V3 三类宽度：prose 限行宽、Demo 与 API 用满内容栏。
+ * 只限制「文字流」节点；table / pre 保持整栏可用宽度（表格可局部横滚）。
+ */
+.doc-markdown > h1,
+.doc-markdown > h2,
+.doc-markdown > h3,
+.doc-markdown > h4,
+.doc-markdown > p,
+.doc-markdown > ul,
+.doc-markdown > ol,
+.doc-markdown > blockquote,
+.doc-markdown > hr {
+  max-width: var(--site-prose-max);
+}
+
 .doc-markdown h1 {
   font-size: 30px;
   font-weight: 600;
@@ -66,17 +82,20 @@
 /* 表格（API 表为主） */
 .doc-markdown table {
   width: 100%;
-  margin: 0 0 18px;
+  max-width: 100%;
+  margin: 0 0 20px;
   border-collapse: collapse;
-  font-size: 13.5px;
+  font-size: 13px;
   display: block;
   overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .doc-markdown th,
 .doc-markdown td {
   border: 1px solid var(--site-border);
-  padding: 9px 14px;
+  padding: 10px 16px;
   text-align: left;
   vertical-align: top;
 }
@@ -85,6 +104,7 @@
   background: var(--site-bg-soft);
   font-weight: 600;
   white-space: nowrap;
+  color: var(--site-text);
 }
 
 .doc-markdown td code,

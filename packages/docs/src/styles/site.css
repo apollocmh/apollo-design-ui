@@ -7,53 +7,37 @@
  */
 
 :root {
-  --site-brand: #1677ff;
-  --site-brand-hover: #4096ff;
-  --site-bg: #ffffff;
-  --site-bg-soft: #f7f8fa;
-  --site-bg-elevated: #ffffff;
-  --site-border: #e5e7eb;
-  --site-border-strong: #d1d5db;
-  --site-text: rgba(0, 0, 0, 0.88);
-  --site-text-secondary: rgba(0, 0, 0, 0.65);
-  --site-text-tertiary: rgba(0, 0, 0, 0.45);
-  --site-code-bg: #f6f7f9;
-  --site-pre-bg: #fafbfc;
-  --site-header-height: 60px;
-  --site-sidebar-width: 232px;
+  /*
+   * V3：站点 chrome 只保留「布局变量 + 语义别名」。
+   * 颜色 / 圆角 / 字体 / 阴影一律来自 @apollo-design/theme 的 --apollo-* 产物
+   * （tokens.css 已按 [data-apollo-theme] 切换亮暗）—— 站点不再维护第二套色板。
+   */
+  --site-brand: var(--apollo-color-primary);
+  --site-brand-hover: var(--apollo-color-primary-hover);
+  --site-bg: var(--apollo-color-bg-container);
+  --site-bg-soft: var(--apollo-color-fill-alter);
+  --site-bg-elevated: var(--apollo-color-bg-elevated);
+  --site-border: var(--apollo-color-border-secondary);
+  --site-border-strong: var(--apollo-color-border);
+  --site-text: var(--apollo-color-text);
+  --site-text-secondary: var(--apollo-color-text-secondary);
+  --site-text-tertiary: var(--apollo-color-text-tertiary);
+  --site-code-bg: var(--apollo-color-fill-tertiary);
+  --site-pre-bg: var(--apollo-color-bg-layout);
+  --site-header-height: 64px;
+  --site-sidebar-width: 224px;
   --site-toc-width: 184px;
-  /* 中央内容随宽屏增长：1366 及以下保持 1096；1920 约 1305；上限 1320。
-     用 clamp 而不是 100vw，避免超宽行影响阅读。 */
-  --site-content-max: clamp(1096px, 68vw, 1320px);
-  --site-radius: 8px;
-  --site-font:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --site-font-code: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  --site-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12);
+  --site-prose-max: 960px;
+  --site-radius: var(--apollo-border-radius-lg);
+  --site-font: var(--apollo-font-family);
+  --site-font-code: var(--apollo-font-family-code);
+  --site-shadow: var(--apollo-box-shadow);
   --site-topbar-z: 100;
 
   /* 断点（JS 侧同步引用；⚠️ media query 里不能用 var()，改这里时两处同步） */
   --site-break-tablet: 900px;
   --site-break-mobile: 640px;
 }
-
-[data-apollo-theme="dark"] {
-  --site-brand: #1668dc;
-  --site-brand-hover: #3c89e8;
-  --site-bg: #0d0d0d;
-  --site-bg-soft: #141414;
-  --site-bg-elevated: #1b1b1f;
-  --site-border: #2b2b30;
-  --site-border-strong: #3a3a40;
-  --site-text: rgba(255, 255, 255, 0.88);
-  --site-text-secondary: rgba(255, 255, 255, 0.65);
-  --site-text-tertiary: rgba(255, 255, 255, 0.45);
-  --site-code-bg: #1a1a1e;
-  --site-pre-bg: #161618;
-  --site-shadow: 0 6px 16px rgba(0, 0, 0, 0.32), 0 3px 6px -4px rgba(0, 0, 0, 0.4);
-}
-
 /* ── 全局基础 ─────────────────────────────────────────────────────────── */
 
 * {
@@ -108,10 +92,11 @@ a:hover {
   display: flex;
   flex: 1;
   width: 100%;
-  max-width: calc(var(--site-content-max) + var(--site-sidebar-width) + var(--site-toc-width));
-  margin: 0 auto;
-  padding: 0 clamp(16px, 2vw, 32px);
-  gap: clamp(24px, 2vw, 36px);
+  /* V3：取消总内容宽度封顶 —— 超宽屏由三栏自然铺满；正文行长由 --site-prose-max 限制。 */
+  max-width: none;
+  margin: 0;
+  padding: 0 clamp(20px, 2vw, 32px);
+  gap: clamp(24px, 2vw, 40px);
 }
 
 .site-sidebar {
@@ -128,7 +113,7 @@ a:hover {
 .site-content {
   flex: 1;
   min-width: 0;
-  padding: 28px 0 96px;
+  padding: 32px 0 104px;
 }
 
 .site-toc {
@@ -142,13 +127,12 @@ a:hover {
   padding: 32px 0 48px;
 }
 
-@media (max-width: 1080px) {
+/* V3：768–1199 收起左导航与 TOC，改由顶栏抽屉承载导航。 */
+@media (max-width: 1199px) {
   .site-toc {
     display: none;
   }
-}
 
-@media (max-width: 900px) {
   .site-sidebar {
     display: none;
   }
@@ -164,7 +148,7 @@ a:hover {
   align-items: center;
   gap: 20px;
   height: var(--site-header-height);
-  padding: 0 24px;
+  padding: 0 clamp(20px, 2vw, 28px);
   background: var(--site-bg);
   border-bottom: 1px solid var(--site-border);
 }
@@ -217,17 +201,20 @@ a:hover {
 }
 
 .site-search-trigger {
-  display: flex;
-  align-items: center;
+  min-width: 220px;
+  justify-content: flex-start;
   gap: 8px;
-  min-width: 200px;
-  padding: 5px 10px;
-  border: 1px solid var(--site-border);
-  border-radius: 6px;
-  background: var(--site-bg-soft);
   color: var(--site-text-tertiary);
-  font-size: 13px;
-  cursor: pointer;
+  font-weight: 400;
+}
+
+.site-search-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .site-search-trigger kbd {
@@ -237,14 +224,23 @@ a:hover {
   border: 1px solid var(--site-border);
   border-radius: 4px;
   padding: 0 4px;
+  color: var(--site-text-tertiary);
 }
 
+.site-lang-text {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* 顶栏行动区全部使用 Apollo Button（text / circle）；这里只保留尺寸与响应式。 */
 @media (max-width: 640px) {
   .site-search-trigger {
     min-width: 0;
+    width: 32px;
+    padding: 0;
   }
   .site-search-trigger kbd,
-  .site-search-trigger span:not([aria-hidden="true"]) {
+  .site-search-label {
     display: none;
   }
   .site-topbar-nav {
@@ -259,44 +255,29 @@ a:hover {
   }
 }
 
-.site-icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--site-text-secondary);
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.site-icon-btn:hover {
-  background: var(--site-bg-soft);
-  color: var(--site-text);
-}
-
 /* ── 侧栏 ─────────────────────────────────────────────────────────────── */
 
 .site-side-group-title {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--site-text);
-  margin: 18px 8px 6px;
+  letter-spacing: 0.01em;
+  color: var(--site-text-tertiary);
+  margin: 20px 8px 8px;
 }
 
 .site-side-link {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 5px 8px 5px 12px;
+  gap: 8px;
+  min-height: 34px;
+  padding: 7px 8px 7px 12px;
   margin: 1px 0;
   border-left: 2px solid transparent;
   color: var(--site-text-secondary);
   font-size: 13.5px;
-  border-radius: 0 6px 6px 0;
+  line-height: 20px;
+  border-radius: 0 var(--apollo-border-radius-sm) var(--apollo-border-radius-sm) 0;
 }
 
 .site-side-link:hover {
@@ -313,12 +294,21 @@ a:hover {
 
 .site-side-link-name {
   color: inherit;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .site-side-link-desc {
   color: var(--site-text-tertiary);
-  font-size: 12px;
+  font-size: 11.5px;
+  line-height: 18px;
   margin-left: 6px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .site-side-link:hover .site-side-link-desc,
@@ -377,7 +367,7 @@ a:hover {
   display: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1199px) {
   .site-mobile-toggle {
     display: inline-flex;
   }
@@ -386,7 +376,7 @@ a:hover {
     position: fixed;
     inset: 0;
     top: var(--site-header-height);
-    background: rgba(0, 0, 0, 0.45);
+    background: var(--apollo-color-bg-mask);
     z-index: 90;
   }
 
@@ -433,8 +423,8 @@ a:hover {
   margin: 8px 0;
   padding: 6px 12px;
   border-radius: 6px;
-  background: color-mix(in srgb, #faad14 12%, transparent);
-  border: 1px solid color-mix(in srgb, #faad14 45%, transparent);
+  background: color-mix(in srgb, var(--apollo-color-warning) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--apollo-color-warning) 45%, transparent);
   color: var(--site-text-secondary);
   font-size: 12.5px;
 }
