@@ -75,7 +75,7 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
 
 | 门禁 | 结果 |
 |---|---|
-| `pnpm test`（unit + dom-contract + a11y + theme） | **7147 passed** / 3 skipped（manifest 计数随后单独复跑 28/28） |
+| `pnpm test`（unit + dom-contract + a11y + theme） | **全项目通过**：unit 7147、a11y 1274、theme 890（最终一轮无失败） |
 | `pnpm test:types` | **2213 passed / 170 files / no errors** |
 | `pnpm lint:types` | 0 errors |
 | `node tests/build/run.mjs`（L7） | **151 项 / FAIL 0**（同时修复 Windows `/bin/sh` PATH 门禁缺陷） |
@@ -98,7 +98,15 @@ list / listy / auto-complete / transfer / float-button / carousel / tree / toolt
   Upload 15/24、Cascader 14/23（依赖裁剪、拖拽、外部 OSS 等能力）；已记录在
   `demo-coverage-matrix.md` §7。
 
-## 6. 发布
+## 6. 提交与发布
+
+| 提交 | 内容 |
+|---|---|
+| `eda548e2` | 阶段 1：动效与浮层离场修复（MOT-01..06） |
+| `d352984f` | 阶段 2：Demo 758→881、覆盖矩阵、a11y 可访问名与计数同步 |
+| `ca5859ba` | 阶段 3/4：预览模式、语言同步、布局、视觉基线、L7 门禁修复 |
+| `813d1bfe` | Form.List 单对象插槽运行时与类型导出 |
+| `chore(memory)` | 记忆交接（根提交，可用 `git log --grep 'chore(memory)'` 定位） |
 
 - 分支：`fix/docs-motion-demo-quality` → `master`。
 - 标签：`v0.1.1`（打在合并后的 `master`），触发 CI 与 Deploy Docs。
