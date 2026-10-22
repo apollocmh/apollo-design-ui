@@ -78,7 +78,7 @@ const TYPE_COLOR: Record<string, string> = {
 
 <style scoped>
 .changelog-title {
-  font-size: 28px;
+  font-size: var(--site-title-size);
   font-weight: 600;
   margin: 4px 0 8px;
 }

@@ -84,6 +84,7 @@ const showNav = computed(() => route.name !== 'home');
         <slot />
       </div>
       <TocNav :items="items" />
+      <aside v-if="showNav && items.length === 0" class="site-toc site-toc-placeholder" aria-hidden="true" />
     </main>
     <SiteFooter />
 

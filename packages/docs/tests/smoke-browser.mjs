@@ -174,7 +174,23 @@ try {
   await page.goto(`${BASE}/components/icon`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.icon-tile', { timeout: 15000 });
   const iconCount = await page.locator('.icon-tile').count();
-  check('图标目录渲染（首屏 120）', iconCount === 120, `${iconCount}`);
+  const grid = page.locator('.virtual-icon-grid');
+  const rows = Number(await grid.getAttribute('aria-rowcount'));
+  const columns = Number(await grid.getAttribute('aria-colcount'));
+  check(
+    '图标目录渲染（全量范围 + 窗口虚拟化）',
+    iconCount > 0 && iconCount < 150 && rows === Math.ceil(848 / columns),
+    `${iconCount} 个已挂载瓦片 / ${rows} 行 × ${columns} 列`,
+  );
+  const catalogBox = await grid.boundingBox();
+  if (!catalogBox) throw new Error('图标虚拟目录没有布局尺寸');
+  await page.evaluate(
+    (top) => window.scrollTo({ top, behavior: 'instant' }),
+    catalogBox.y + catalogBox.height - 500,
+  );
+  await page.waitForSelector('.icon-tile[title="ZoomOutOutlined"]');
+  check('完整目录末项可达', await page.locator('.icon-tile[title="ZoomOutOutlined"]').isVisible());
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   const countText = await page.locator('.icon-count').innerText();
   check('图标总数（848）', countText.includes('848'), countText.trim());
 
@@ -186,14 +202,17 @@ try {
   await page.locator('.icon-search').fill('');
   await page.waitForTimeout(300);
 
-  await page.locator('.icon-style-tab:has-text("TwoTone")').click();
+  await page
+    .locator('.icon-style-tabs')
+    .getByRole('button', { name: /双色风格|TwoTone/ })
+    .click();
   await page.waitForTimeout(300);
   const twoToneCountText = await page.locator('.icon-count').innerText();
-  // TwoTone 共 150 个 > 单页 120，所以首屏瓦片数仍是 120；用计数文本断言更准确。
+  // 虚拟挂载数取决于窗口尺寸；计数文本应始终反映所选风格的完整目录。
   check('图标风格筛选', twoToneCountText.includes('150'), twoToneCountText.trim());
   check(
     '风格 tab 激活',
-    (await page.locator('.icon-style-tab.active').innerText()).includes('TwoTone'),
+    /双色风格|TwoTone/.test(await page.locator('.icon-style-tab.active').innerText()),
   );
   await page.locator('.icon-style-tab:has-text("全部")').click();
   await page.waitForTimeout(300);

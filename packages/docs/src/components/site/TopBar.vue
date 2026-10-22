@@ -115,6 +115,12 @@ function toggleLocale(): void {
       <span>Apollo Design</span>
     </RouterLink>
 
+    <Button class="site-search-trigger" type="text" @click="openSearch">
+      <template #icon><SearchOutlined /></template>
+      <span class="site-search-label">{{ t('search') }}</span>
+      <kbd>/</kbd>
+    </Button>
+
     <nav class="site-topbar-nav" :aria-label="t('mainNav')">
       <RouterLink to="/components" :class="{ 'router-link-active': $route.path.startsWith('/components') }">
         {{ t('components') }}
@@ -127,11 +133,7 @@ function toggleLocale(): void {
     </nav>
 
     <div class="site-topbar-actions">
-      <Button class="site-search-trigger" type="default" @click="openSearch">
-        <template #icon><SearchOutlined /></template>
-        <span class="site-search-label">{{ t('search') }}</span>
-        <kbd>/</kbd>
-      </Button>
+      <span class="site-version">v{{ siteManifest.apolloVersion }}</span>
 
       <Button
         class="site-icon-btn site-lang-toggle"

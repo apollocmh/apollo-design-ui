@@ -160,7 +160,7 @@ useSeo(
 }
 
 .component-title {
-  font-size: 32px;
+  font-size: var(--site-title-size);
   font-weight: 600;
   letter-spacing: -0.01em;
   margin: 0 0 12px;
@@ -170,9 +170,9 @@ useSeo(
 }
 
 .component-subtitle {
-  font-size: 14px;
-  color: var(--site-text-tertiary);
-  font-weight: 400;
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
 }
 
 .component-import {
@@ -216,11 +216,9 @@ useSeo(
 }
 
 .demos-section-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin: 48px 0 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--site-border);
+  font-size: var(--site-section-size);
+  font-weight: 500;
+  margin: var(--apollo-margin-xxl) 0 var(--apollo-margin-lg);
   scroll-margin-top: 76px;
 }
 

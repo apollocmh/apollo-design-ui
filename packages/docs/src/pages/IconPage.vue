@@ -5,12 +5,12 @@
  * 这是 `@apollo-design/icons` 的资源文档，**不是**第 73 个 UI 组件：
  * 不进 registry/components.json，不伪造 packages/ui/src/icon 目录。
  *
- * 性能约束：848 个图标只按当前页（120 个/页）动态 import；
+ * 性能约束：848 个图标通过窗口滚动虚拟行按需动态 import；
  * 搜索与风格筛选只读构建期 manifest，不加载任何图标组件。
  */
 import { Button, Input, Select } from '@apollo-design/ui';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import IconTile from '../components/icons/IconTile.vue';
+import VirtualIconGrid from '../components/icons/VirtualIconGrid.vue';
 import {
   filterIcons,
   type IconCopyMode,
@@ -30,7 +30,6 @@ const txt = (zh: string, en: string): string => (isZh.value ? zh : en);
 const icons = siteManifest.icons.items;
 const query = ref('');
 const styleFilter = ref<IconStyleFilter>('all');
-const visibleCount = ref(120);
 const copyMode = ref<IconCopyMode>('import');
 const copyOptions = computed(() => [
   { value: 'import', label: txt('import 语句', 'import statement') },
@@ -41,23 +40,25 @@ const copied = ref('');
 const copyFailed = ref(false);
 
 const filtered = computed(() => filterIcons(icons, query.value, styleFilter.value));
-const visible = computed(() => filtered.value.slice(0, visibleCount.value));
-const hasMore = computed(() => visibleCount.value < filtered.value.length);
 
 const styleTabs = computed(() => [
   { value: 'all' as const, label: txt('全部', 'All'), count: siteManifest.icons.total },
   {
     value: 'outlined' as const,
-    label: 'Outlined',
+    label: txt('线框风格', 'Outlined'),
     count: siteManifest.icons.byStyle.outlined,
   },
-  { value: 'filled' as const, label: 'Filled', count: siteManifest.icons.byStyle.filled },
-  { value: 'twoTone' as const, label: 'TwoTone', count: siteManifest.icons.byStyle.twoTone },
+  {
+    value: 'filled' as const,
+    label: txt('实底风格', 'Filled'),
+    count: siteManifest.icons.byStyle.filled,
+  },
+  {
+    value: 'twoTone' as const,
+    label: txt('双色风格', 'TwoTone'),
+    count: siteManifest.icons.byStyle.twoTone,
+  },
 ]);
-
-watch([query, styleFilter], () => {
-  visibleCount.value = 120;
-});
 
 let copiedTimer: ReturnType<typeof setTimeout> | null = null;
 async function copy(name: string): Promise<void> {
@@ -110,7 +111,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="icon-page">
     <header class="icon-header">
-      <h1 class="icon-title">{{ txt('图标', 'Icons') }}</h1>
+      <h1 class="icon-title">{{ txt('Icon 图标', 'Icon') }}</h1>
       <p class="icon-lead">
         {{
           txt(
@@ -193,22 +194,8 @@ onBeforeUnmount(() => {
         </template>
       </p>
 
-      <div v-if="visible.length > 0" class="icon-grid">
-        <IconTile
-          v-for="icon in visible"
-          :key="icon.name"
-          :name="icon.name"
-          :copy-label="txt('复制', 'Copy')"
-          @copy="copy"
-        />
-      </div>
+      <VirtualIconGrid v-if="filtered.length > 0" :items="filtered" :copy-label="txt('复制', 'Copy')" :label="txt('图标目录', 'Icon catalog')" @copy="copy" />
       <p v-else class="icon-empty">{{ txt('没有匹配的图标。', 'No icons match.') }}</p>
-
-      <div v-if="hasMore" class="icon-more">
-        <Button class="icon-more-btn" @click="visibleCount += 120">
-          {{ txt(`加载更多（剩余 ${filtered.length - visibleCount} 个）`, `Load more (${filtered.length - visibleCount} remaining)`) }}
-        </Button>
-      </div>
     </section>
 
     <section id="icon-api" class="icon-section">
@@ -251,183 +238,134 @@ onBeforeUnmount(() => {
 .icon-page {
   min-width: 0;
 }
-
-.icon-header {
-  margin-bottom: 8px;
-}
-
 .icon-title {
-  font-size: 30px;
+  font-size: var(--site-title-size);
   font-weight: 600;
-  margin: 0 0 10px;
+  margin: 0 0 var(--apollo-margin-lg);
+  line-height: 1.4;
 }
-
 .icon-lead,
 .icon-section-lead {
-  color: var(--site-text-secondary);
-  line-height: 1.7;
+  line-height: 2;
 }
-
 .icon-section {
-  margin-top: 38px;
-  scroll-margin-top: 76px;
+  margin-top: var(--apollo-margin-xl);
+  scroll-margin-top: calc(var(--site-header-height) + var(--apollo-margin-lg));
 }
-
 .icon-section-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin: 0 0 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--site-border);
+  font-size: var(--site-section-size);
+  font-weight: 500;
+  margin: 0 0 var(--apollo-margin-lg);
 }
-
 .icon-code {
-  margin: 12px 0;
-  padding: 14px 16px;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
+  margin: var(--apollo-margin) 0;
+  padding: var(--apollo-padding) var(--apollo-padding-lg);
+  border-radius: var(--apollo-border-radius);
   background: var(--site-code-bg);
   overflow-x: auto;
   font-family: var(--site-font-code);
-  font-size: 12.5px;
-  line-height: 1.6;
+  font-size: var(--apollo-font-size-sm);
+  line-height: 1.8;
 }
-
 .icon-catalog-head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
+  gap: var(--apollo-margin-sm);
 }
-
 .icon-count {
   color: var(--site-text-tertiary);
-  font-size: 12.5px;
+  font-size: var(--apollo-font-size-sm);
 }
-
 .icon-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  margin: 14px 0 6px;
+  gap: var(--apollo-margin);
+  margin: var(--apollo-margin) 0 var(--apollo-margin-xs);
 }
-
+.icon-search-wrap {
+  order: 1;
+  flex: 1;
+  min-width: 180px;
+}
 .icon-search {
-  width: min(280px, 100%);
+  width: 100%;
 }
-
-.icon-search :deep(input) {
-  font-size: 13px;
-}
-
 .icon-style-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: var(--apollo-margin-xxs);
+  padding: var(--apollo-padding-xxs);
+  background: var(--site-bg-soft);
+  border-radius: var(--apollo-border-radius);
 }
-
 .icon-style-tab {
   height: auto;
-  border: 1px solid var(--site-border);
-  background: var(--site-bg);
+  border: 0;
+  background: transparent;
   color: var(--site-text-secondary);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 12.5px;
-  cursor: pointer;
+  border-radius: var(--apollo-border-radius-sm);
+  padding: var(--apollo-padding-xs) var(--apollo-padding-sm);
+  font-size: var(--apollo-font-size);
   box-shadow: none;
 }
-
 .icon-style-tab.active {
-  color: var(--site-brand);
-  border-color: var(--site-brand);
-  background: color-mix(in srgb, var(--site-brand) 8%, transparent);
+  color: var(--site-text);
+  background: var(--site-bg);
+  box-shadow: var(--apollo-box-shadow-tertiary);
 }
-
 .icon-style-count {
-  margin-left: 4px;
+  margin-left: var(--apollo-margin-xxs);
   color: var(--site-text-tertiary);
-  font-size: 11px;
+  font-size: var(--apollo-font-size-sm);
 }
-
 .icon-copy-mode {
+  order: 2;
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: auto;
+  gap: var(--apollo-margin-xs);
   color: var(--site-text-tertiary);
-  font-size: 12px;
+  font-size: var(--apollo-font-size-sm);
 }
-
 .icon-copy-mode :deep(.apollo-select) {
   min-width: 132px;
 }
-
 .icon-status {
-  min-height: 20px;
-  margin: 2px 0 10px;
+  min-height: var(--apollo-font-size-heading-3);
+  margin: var(--apollo-margin-xxs) 0 var(--apollo-margin-sm);
   color: var(--site-brand);
-  font-size: 12px;
+  font-size: var(--apollo-font-size-sm);
 }
-
 .icon-status.error {
-  color: var(--site-danger, #d4380d);
+  color: var(--apollo-color-error);
 }
-
-.icon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 10px;
-}
-
 .icon-empty {
-  padding: 40px 0;
+  padding: var(--apollo-padding-xl) 0;
   text-align: center;
   color: var(--site-text-tertiary);
 }
-
-.icon-more {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.icon-more-btn {
-  border: 1px solid var(--site-border);
-  background: var(--site-bg);
-  color: var(--site-brand);
-  border-radius: 8px;
-  padding: 7px 18px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
 .icon-api-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--apollo-font-size);
 }
-
 .icon-api-table th,
 .icon-api-table td {
-  border-bottom: 1px solid var(--site-border);
-  padding: 9px 10px;
+  border-bottom: var(--apollo-line-width) solid var(--site-border);
+  padding: var(--apollo-padding-sm);
   text-align: left;
   vertical-align: top;
 }
-
 .icon-api-table th {
-  color: var(--site-text-tertiary);
+  background: var(--site-bg-soft);
   font-weight: 500;
-  font-size: 12px;
 }
-
 .icon-api-table code {
   font-family: var(--site-font-code);
-  font-size: 12px;
+  font-size: var(--apollo-font-size-sm);
+  overflow-wrap: anywhere;
 }
-
 .site-sr-only {
   position: absolute;
   width: 1px;
@@ -439,10 +377,20 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   border: 0;
 }
-
-@media (max-width: 720px) {
-  .icon-copy-mode {
-    margin-left: 0;
+@media (max-width: 640px) {
+  .icon-style-tabs {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .icon-style-tab {
+    padding-inline: var(--apollo-padding-xs);
+    font-size: var(--apollo-font-size-sm);
+  }
+  .icon-style-count {
+    display: none;
+  }
+  .icon-api-table {
+    font-size: var(--apollo-font-size-sm);
   }
 }
 </style>

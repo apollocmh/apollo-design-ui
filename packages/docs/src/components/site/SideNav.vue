@@ -18,6 +18,12 @@ const activeName = computed(() =>
 
 <template>
   <nav :aria-label="t('componentNav')">
+    <RouterLink class="site-side-link" :class="{ active: route.name === 'overview' }" to="/components" @click="$emit('navigate')">
+      {{ t('overview') }}
+    </RouterLink>
+    <RouterLink class="site-side-link" :class="{ active: route.name === 'changelog' }" to="/changelog" @click="$emit('navigate')">
+      {{ t('changelog') }}
+    </RouterLink>
     <div v-for="group in siteManifest.categories" :key="group.name" class="site-side-group">
       <div class="site-side-group-title">{{ categoryLabel(group.name, locale) }}</div>
       <RouterLink
@@ -33,18 +39,9 @@ const activeName = computed(() =>
           {{ pick(item.subtitle).text }}
         </span>
       </RouterLink>
-    </div>
-
-    <div class="site-side-group">
-      <div class="site-side-group-title">{{ t('resources') }}</div>
-      <RouterLink
-        class="site-side-link"
-        :class="{ active: route.name === 'icon' }"
-        to="/components/icon"
-        @click="$emit('navigate')"
-      >
-        <span class="site-side-link-name">{{ t('iconGallery') }}</span>
-        <span class="site-side-link-count" aria-hidden="true">{{ siteManifest.icons.total }}</span>
+      <RouterLink v-if="group.name === '通用'" class="site-side-link" :class="{ active: route.name === 'icon' }" to="/components/icon" @click="$emit('navigate')">
+        <span class="site-side-link-name">Icon</span>
+        <span class="site-side-link-desc">{{ locale === 'zh-CN' ? '图标' : '' }}</span>
       </RouterLink>
     </div>
 

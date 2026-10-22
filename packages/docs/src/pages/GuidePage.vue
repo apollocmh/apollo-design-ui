@@ -70,7 +70,7 @@ onBeforeUnmount(() => setToc([]));
 
 <style scoped>
 .guide-title {
-  font-size: 28px;
+  font-size: var(--site-title-size);
   font-weight: 600;
   margin: 4px 0 24px;
 }

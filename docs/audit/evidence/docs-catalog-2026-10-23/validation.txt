@@ -1,0 +1,145 @@
+Docs unit tests
+
+> @apollo-design/docs@0.1.0 test /Users/nanren/Code/apollo-design-ui/packages/docs
+> node tooling/content/build-manifest.mjs --if-missing && vitest run --config vitest.config.ts
+
+ℹ️ .generated/ 已存在，--if-missing 跳过重建
+
+ RUN  v5.0.1 /Users/nanren/Code/apollo-design-ui/packages/docs
+
+
+ Test Files  14 passed (14)
+      Tests  154 passed (154)
+   Start at  06:28:17
+   Duration  19.44s (transform 46%, environment 42%, import 7%, tests 5%, setup 1%)
+
+  Transform  transforming modules took 41.50s · 46% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+Observed process exit: 0
+
+Root types
+
+> @apollo-design/monorepo@0.0.0 lint:types /Users/nanren/Code/apollo-design-ui
+> vue-tsc --noEmit -p tsconfig.json
+
+
+Observed process exit: 0
+
+Docs final types
+
+> @apollo-design/docs@0.1.0 typecheck /Users/nanren/Code/apollo-design-ui/packages/docs
+> vue-tsc --noEmit -p tsconfig.json
+
+
+Observed process exit: 0
+
+Full format check (tail)
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 21.
+Checked 3288 files in 6s. No fixes applied.
+Found 37 warnings.
+Found 4 infos.
+Observed process exit: 0
+
+Final production build (excerpts)
+✅ 内容管线：72 组件 / 989 demo / 7 指南 → .generated/
+[vite-ssg] Rendering Pages... (84)
+[vite-ssg] Build finished.
+Observed process exit: 0
+
+Production catalog browser
+PASS All 72 UI links plus the independent icon resource: 73
+PASS Overview links match the manifest: {"length":73}
+PASS Every card has a code-drawn preview: 73
+PASS Uniform preview height: [176]
+PASS Desktop uses four columns: 4
+PASS Desktop overview does not overflow: true
+PASS Desktop sidebar width: 300
+PASS Desktop article starts at x=348: 348
+PASS Page title size: "32px"
+PASS Chinese component search: 1
+PASS Search selects Typography: "/apollo-design-ui/components/typography"
+PASS Overview empty state: true
+PASS Overview icon opens the independent page: "Icon 图标"
+PASS Full icon count: true
+PASS No load-more pagination: 0
+PASS All icon rows occupy the scroll extent: 122
+PASS Window scrolling reaches every icon: {"length":848}
+PASS Mounted tile count stays below 150: true
+PASS Last icon is reachable: 1
+PASS Ctrl+End focuses the final icon: "ZoomOutOutlined"
+PASS Ctrl+Home returns to the first icon: "AccountBookFilled"
+PASS Arrow navigation changes focus: "AccountBookOutlined"
+PASS Name substring search includes FileSearchOutlined and SearchOutlined: ["FileSearchOutlined","SearchOutlined"]
+PASS Click copies a valid Vue import: "import { SearchOutlined } from '@apollo-design/icons';"
+PASS Copy mode changes the snippet: "<SearchOutlined />"
+PASS 线框风格 filters the entire dataset: "共 447 个"
+PASS 实底风格 filters the entire dataset: "共 251 个"
+PASS 双色风格 filters the entire dataset: "共 150 个"
+PASS Icon empty state: true
+PASS 768px overview does not overflow: true
+PASS 768px overview columns: 3
+PASS 768px navigation drawer: true
+PASS 768px icon page does not overflow: true
+PASS 768px last-icon search: "ZoomOutOutlined"
+PASS 768px virtual last row: 1
+PASS 390px overview does not overflow: true
+PASS 390px overview columns: 2
+PASS 390px navigation drawer: true
+PASS 390px icon page does not overflow: true
+PASS 390px last-icon search: "ZoomOutOutlined"
+PASS 390px virtual last row: 1
+PASS Overview English title: "Components Overview"
+PASS Icon English title: "Icon"
+PASS Dark theme: "dark"
+PASS Ordinary component demos still render: true
+PASS No runtime or hydration errors: []
+PASS 46 catalog checks; evidence: docs/audit/evidence/docs-catalog-2026-10-23
+
+Observed process exit: 0
+
+Production site smoke browser
+✅ 首页标题 — Apollo Design - Vue 3 原生实现的 Ant Design 兼容组件库
+✅ 首页 hero
+✅ 组件标题 SSR
+✅ 正文 SSR（何时使用锚点）
+✅ 源码高亮 SSR（shiki）
+✅ 组件标题可见
+✅ demo 真实渲染（apollo-btn） — 81 个按钮
+✅ 源码展示（import 已改写） — import { Button, Space } from '@apollo-design/ui';
+✅ 复制反馈
+✅ 重置后 demo 仍渲染
+✅ 分类侧栏
+✅ 本页目录
+✅ Search demo 渲染
+✅ OTP demo 渲染
+✅ 英文文档
+✅ 英文导航
+✅ 切回中文文档
+✅ 可切到暗色 — dark
+✅ 可切回亮色 — undefined
+✅ 搜索结果分组 — 2 组
+✅ 搜索高亮首项
+✅ 搜索跳转 — http://127.0.0.1:4477/apollo-design-ui/components/table
+✅ table 页 demo 渲染
+✅ 组件总览卡片（72 组件 + 图标资源） — 73
+✅ 总览含图标入口
+✅ 兼容性指南（真源注入）
+✅ 404 页
+✅ 独立示例页渲染
+✅ 图标目录渲染（全量范围 + 窗口虚拟化） — 28 个已挂载瓦片 / 122 行 × 7 列
+✅ 完整目录末项可达
+✅ 图标总数（848） — 共 848 个
+✅ 图标搜索过滤 — 2
+✅ 图标风格筛选 — 共 150 个
+✅ 风格 tab 激活
+✅ 移动端抽屉按钮
+✅ 移动端抽屉展开
+✅ 移动端抽屉 Esc 关闭
+
+—— 浏览器冒烟：37/37 通过 ——
+
+Observed process exit: 0

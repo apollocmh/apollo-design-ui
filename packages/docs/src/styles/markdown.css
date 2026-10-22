@@ -6,7 +6,7 @@
  */
 
 .doc-markdown {
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.8;
   color: var(--site-text);
   word-break: break-word;
@@ -29,18 +29,17 @@
 }
 
 .doc-markdown h1 {
-  font-size: 30px;
+  font-size: var(--site-title-size);
   font-weight: 600;
   line-height: 1.35;
   margin: 8px 0 20px;
 }
 
 .doc-markdown h2 {
-  font-size: 22px;
+  font-size: var(--site-section-size);
   font-weight: 600;
   margin: 44px 0 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--site-border);
+  padding-bottom: 0;
   scroll-margin-top: calc(var(--site-header-height) + 16px);
 }
 

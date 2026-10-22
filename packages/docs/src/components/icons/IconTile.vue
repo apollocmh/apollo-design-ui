@@ -3,7 +3,7 @@
  * 单个图标瓦片：按需加载对应的生成组件（848 个模块，不在首屏全量 import）。
  */
 import type { Component } from 'vue';
-import { onMounted, shallowRef, watch } from 'vue';
+import { onBeforeUnmount, onMounted, shallowRef, watch } from 'vue';
 
 const props = defineProps<{
   name: string;
@@ -35,6 +35,9 @@ async function load(): Promise<void> {
   }
 }
 
+onBeforeUnmount(() => {
+  token++;
+});
 onMounted(() => {
   void load();
 });
@@ -66,52 +69,51 @@ watch(
 .icon-tile {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--apollo-margin-sm);
+  width: 100%;
+  height: 100%;
   min-width: 0;
-  padding: 14px 6px 10px;
-  border: 1px solid var(--site-border);
-  border-radius: 10px;
-  background: var(--site-bg);
+  padding: var(--apollo-padding-sm) var(--apollo-padding-xs);
+  border: 0;
+  border-radius: var(--apollo-border-radius);
+  background: transparent;
   color: var(--site-text);
   cursor: pointer;
   transition:
-    border-color 0.15s,
-    box-shadow 0.15s,
-    transform 0.15s;
+    background var(--apollo-motion-duration-mid),
+    color var(--apollo-motion-duration-mid);
 }
-
-.icon-tile:hover,
+.icon-tile:hover {
+  background: var(--site-brand);
+  color: var(--apollo-color-text-light-solid);
+}
 .icon-tile:focus-visible {
-  border-color: var(--site-brand);
-  box-shadow: var(--site-shadow);
-  transform: translateY(-1px);
-  outline: none;
+  outline: var(--apollo-line-width-bold) solid var(--site-brand);
+  outline-offset: calc(-1 * var(--apollo-line-width-bold));
+  background: var(--site-preview-fill);
 }
-
 .icon-tile-glyph {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  font-size: 24px;
+  width: var(--apollo-control-height-lg);
+  height: var(--apollo-control-height-lg);
+  font-size: var(--apollo-font-size-heading-2);
 }
-
 .icon-tile-placeholder {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
+  width: var(--apollo-font-size-heading-3);
+  height: var(--apollo-font-size-heading-3);
+  border-radius: var(--apollo-border-radius-sm);
   background: var(--site-bg-soft);
 }
-
 .icon-tile-name {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: var(--site-font-code);
-  font-size: 11px;
-  color: var(--site-text-tertiary);
+  font-family: var(--site-font);
+  font-size: var(--apollo-font-size-sm);
 }
 </style>
