@@ -104,3 +104,11 @@ jobs:
           # 自举控件、Token 别名、390 无溢出、暗色。失败即非零退出。
           DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
             node docs/audit/visual-v3/verify.mjs
+
+          # 2026-10-22 专项审计：Menu 的 hover 开合 / 弹层几何与离场 /
+          # overflow / Sider iframe；Notification 与 Message 的入离场时间线、
+          # 堆叠展开收起、hover 关闭生命周期。这些是 L6 静态截图看不见的事件流。
+          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
+            node packages/docs/tests/menu-browser.mjs
+          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
+            node packages/docs/tests/notification-motion-browser.mjs

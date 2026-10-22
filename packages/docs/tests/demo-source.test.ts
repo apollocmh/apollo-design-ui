@@ -112,10 +112,13 @@ describe('collectDemoSources', () => {
 });
 
 describe('展示源码的可用性红线', () => {
+  // 全量扫描 989 个 demo（读盘 + 解析）。5s 默认超时在本机全量并行跑时会被挤爆
+  // （2026-10-22 实测：单跑 1.3s，全量 suite 下偶发 >5s）；这里只放宽**等待时间**，
+  // 断言本身不变。
   it('全量示例源码里不得出现 workspace: 协议', () => {
     const offenders = allDemoSources().filter((s) => s.code.includes('workspace:*'));
     expect(offenders.map((s) => s.path)).toEqual([]);
-  });
+  }, 20000);
 
   it('全量示例源码里不得残留指向仓库内部的深层相对导入', () => {
     const offenders = allDemoSources().filter((s) =>
@@ -125,14 +128,14 @@ describe('展示源码的可用性红线', () => {
       offenders.slice(0, 5).map((s) => s.path),
       `残留 ${offenders.length} 处`,
     ).toEqual([]);
-  });
+  }, 20000);
 
   it('引用组件库时一律用 @apollo-design/ui（不是相对路径）', () => {
     const offenders = allDemoSources().filter(
       (s) => /@apollo-design\/ui/.test(s.code) === false && /from\s+['"]\.\.\/\.\.\//.test(s.code),
     );
     expect(offenders.map((s) => s.path)).toEqual([]);
-  });
+  }, 20000);
 });
 
 /** 全量示例源码（754 个主文件 + 辅助文件）。 */
