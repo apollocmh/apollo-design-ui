@@ -97,18 +97,43 @@ try {
     .locator('.demo-renderer[data-demo="notification-basic"] .apollo-btn')
     .first();
   await basicButton.scrollIntoViewIfNeeded();
+  // 入场 class 只有 200ms；Playwright 的 click actionability 可能就花掉这段时间。
+  // 用 rAF 逐帧记录「曾经出现过」，不要用 click 后的单点采样。
+  await page.evaluate(() => {
+    window.__classLog = [];
+    const deadline = performance.now() + 800;
+    const tick = () => {
+      const node = document.querySelector('.apollo-notification-list .apollo-notification-notice');
+      if (node) window.__classLog.push(node.className);
+      if (performance.now() < deadline) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
   await basicButton.click();
-  await page.waitForTimeout(60);
-  const appearClass = (await notice(0).getAttribute('class')) ?? '';
-  check('MN-04 入场存在 appear/enter class', /fade-(appear|enter)/.test(appearClass), appearClass);
-  await page.waitForTimeout(350);
+  await page.waitForTimeout(300);
+  const classLog = await page.evaluate(() => window.__classLog);
+  const appearSeen = classLog.some((className) => /fade-(appear|enter)/.test(className));
   const settledClass = (await notice(0).getAttribute('class')) ?? '';
+  check('MN-04 入场存在 appear/enter class', appearSeen, settledClass);
   check('MN-04 入场动画结束后移除 fade class', !/fade-(appear|enter)/.test(settledClass));
 
   const closeButton = notice(0).locator('.apollo-notification-notice-close');
-  const closeAt = Date.now();
   await closeButton.click();
-  await page.waitForTimeout(30);
+  // ⚠️ 时长必须从「leave class 出现」量到「节点移除」，不能用 Date.now() 包住
+  //    Playwright 的 click（actionability / hit-test 本身可能花 100–300ms，
+  //    会把测量污染成接近 500ms 的假象）。
+  await page.waitForFunction(
+    () => {
+      const node = document.querySelector('.apollo-notification-list .apollo-notification-notice');
+      if (!(node instanceof HTMLElement) || !node.className.includes('fade-leave')) {
+        return false;
+      }
+      window.__leaveAt = performance.now();
+      return true;
+    },
+    null,
+    { timeout: 1000 },
+  );
   const leaveClass = (await notice(0).getAttribute('class')) ?? '';
   check('MN-04 离场存在 fade-leave class', leaveClass.includes('fade-leave'), leaveClass);
   await page.waitForFunction(
@@ -118,11 +143,11 @@ try {
     null,
     { timeout: 1000 },
   );
-  const removedAfter = Date.now() - closeAt;
+  const removedAfter = await page.evaluate(() => performance.now() - window.__leaveAt);
   check(
     'MN-05 离场在 transition 时间线内完成（非 500ms 兜底）',
-    removedAfter < 450,
-    `${removedAfter}ms`,
+    removedAfter < 400,
+    `${Math.round(removedAfter)}ms`,
   );
   const motionEnds = await page.evaluate(() => window.__motionEnds);
   check(
