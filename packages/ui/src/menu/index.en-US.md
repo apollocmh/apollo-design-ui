@@ -12,6 +12,10 @@ subtitle: Menu
 
 ## API
 
+Inline submenus expand and collapse with a height transition when activated by click or keyboard.
+Closing keeps the list hidden after the transition; changing mode or enabling `inlineCollapsed`
+removes the inline list after its leave transition. The initial menu mount does not animate.
+
 ### Props
 
 | 参数 | 说明 | 类型 | 默认值 |

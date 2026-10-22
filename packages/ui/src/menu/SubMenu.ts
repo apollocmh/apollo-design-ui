@@ -34,11 +34,13 @@ import {
   Text,
   type VNode,
   type VNodeChild,
+  watch,
 } from 'vue';
 
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import {
+  inheritMenuContext,
   isSubPathKeyKey,
   type MenuContextData,
   menuContextKey,
@@ -50,6 +52,7 @@ import {
 } from './context';
 import type { ParsedNode } from './engine/parse-items';
 import { getMenuId } from './engine/use-accessibility';
+import InlineSubMenuList from './InlineSubMenuList';
 import type { MenuHoverEventHandler, MenuTheme, RenderIconType } from './interface';
 
 /**
@@ -166,12 +169,11 @@ const SubMenu = defineComponent({
 
     const ctx = useMenuContext();
     // 子级 context 继承（rc InheritableContextProvider：popup 内容恒 vertical）
-    const subCtx: MenuContextData = {
-      ...ctx,
+    const subCtx: MenuContextData = inheritMenuContext(ctx, {
       mode: computed(() => (ctx.mode.value === 'horizontal' ? 'vertical' : ctx.mode.value)),
       firstLevel: false,
       overflowDisabled: false,
-    };
+    });
     provide(menuContextKey, subCtx);
     // 子项 keyPath = [...connectedPath, childKey]（rc PathTrackerContext 同构）
     provide(pathTrackerKey, connectedPath);
@@ -239,6 +241,8 @@ const SubMenu = defineComponent({
       openTimer = null;
       closeTimer = null;
     };
+    watch(ctx.mode, clearTimers);
+    onUnmounted(clearTimers);
     /**
      * ⭐ inline 模式**只**通过 click / 键盘展开（rc `onPopupVisibleChange` 的
      * `if (mode !== 'inline')` 判据）。这是 M-03 的根因判据，不要退回「看
@@ -472,19 +476,11 @@ const SubMenu = defineComponent({
             )
           : titleNode;
 
-      const inlineListNode =
-        isInline && open.value
-          ? h(
-              'ul',
-              {
-                id: popupId,
-                class: [ctx.prefixCls, `${ctx.prefixCls}-sub`, `${ctx.prefixCls}-inline`],
-                role: 'menu',
-                'data-menu-list': true,
-              },
-              renderChildren(),
-            )
-          : null;
+      const inlineListNode = h(
+        InlineSubMenuList,
+        { id: popupId, open: open.value, mode, depth: connectedPath.value.length },
+        { default: renderChildren },
+      );
 
       return h(
         'li',

@@ -288,6 +288,7 @@ describe('Menu · L1 openKeys 与子菜单', () => {
   });
 
   it('inlineCollapsed 切换：折叠清空 openKeys，展开回放折叠前的展开项', async () => {
+    vi.useFakeTimers();
     const wrapper = mountMenu({ mode: 'inline', openKeys: ['sub1'] });
     await nextTick();
     expect(wrapper.element.querySelector('.apollo-menu-inline')).not.toBeNull();
@@ -296,8 +297,15 @@ describe('Menu · L1 openKeys 与子菜单', () => {
     await nextTick();
     // rc：离开 inline 模式 ⇒ triggerOpenKeys([])
     expect(wrapper.emitted('update:openKeys')?.at(-1)).toEqual([[]]);
-    // 折叠态不再渲染内联子列表
-    expect(wrapper.element.querySelector('.apollo-menu-inline')).toBeNull();
+    // inline 退出必须先执行 leave，结束后才销毁（rc InlineSubMenuList 契约）。
+    const leaving = wrapper.element.querySelector('.apollo-menu-sub.apollo-menu-inline');
+    expect(leaving?.className).toContain('collapse-leave');
+    await vi.advanceTimersByTimeAsync(100);
+    const end = new Event('transitionend', { bubbles: true });
+    Object.defineProperty(end, 'propertyName', { value: 'height' });
+    leaving?.dispatchEvent(end);
+    await nextTick();
+    expect(wrapper.element.querySelector('.apollo-menu-sub.apollo-menu-inline')).toBeNull();
 
     await wrapper.setProps({ inlineCollapsed: false });
     await nextTick();

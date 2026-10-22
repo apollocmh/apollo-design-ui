@@ -20,6 +20,8 @@ import {
 import type { MenuMode, RenderIconType, TriggerSubMenuAction } from './interface';
 
 export interface MenuContextData {
+  /** 首次整棵菜单挂载时不播 appear，后续进入 inline 才启用。 */
+  mounted: Ref<boolean>;
   prefixCls: string;
   /** ConfigProvider 的**根前缀**（无组件后缀），弹层 motion 类名用它（如 `apollo-zoom-big`）。 */
   rootPrefixCls: string;
@@ -85,6 +87,20 @@ export interface MenuContextData {
 }
 
 export const menuContextKey: InjectionKey<MenuContextData> = Symbol('menuContext');
+
+/** 继承上下文时保留 getter；对象展开会把运行期配置冻结成 setup 快照。 */
+export function inheritMenuContext(
+  context: MenuContextData,
+  overrides: Partial<MenuContextData>,
+): MenuContextData {
+  return Object.defineProperties(
+    {},
+    {
+      ...Object.getOwnPropertyDescriptors(context),
+      ...Object.getOwnPropertyDescriptors(overrides),
+    },
+  ) as MenuContextData;
+}
 export const pathTrackerKey: InjectionKey<Ref<string[]>> = Symbol('pathTracker');
 export interface PathRegister {
   registerPath: (key: string, keyPath: string[]) => void;

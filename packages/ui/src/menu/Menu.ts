@@ -24,6 +24,7 @@ import {
   Fragment,
   h,
   inject,
+  onMounted,
   type PropType,
   provide,
   ref,
@@ -348,7 +349,12 @@ const Menu = defineComponent({
       }
     };
 
+    const mounted = ref(false);
+    onMounted(() => {
+      mounted.value = true;
+    });
     const menuContext: MenuContextData = {
+      mounted,
       prefixCls,
       rootPrefixCls,
       menuId,
