@@ -112,3 +112,4 @@ jobs:
             node packages/docs/tests/menu-browser.mjs
           DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
             node packages/docs/tests/notification-motion-browser.mjs
+          node packages/docs/tests/motion-review-browser.mjs

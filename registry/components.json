@@ -1477,7 +1477,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。L4 改用 Vue SSR 与 React SSR 基线对账，不新增差异豁免。",
       "layerNotes": {
         "interaction": "click（scrollTo + onClick）与 scroll（target 容器 → visible 切换）双事件；L2 用 mock target 形状钉监听/节流/scrollTo 参数。卸载必须 cancel（raf 待执行回调捕获组件状态）。",
         "type": "3 例（正例 + 2 负例）。target 返回 HTMLElement|Window|Document 精确断言。",
@@ -2401,7 +2401,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": null
+      "layerNotes": "2026-10-22 复审 002：InlineSubMenuList 接入完整高度 enter/leave、hidden 保留、模式退出后销毁与嵌套 context；首挂载不 appear。Playwright 同机 React/Vue 动态门禁 60/60；menu L6 9/9 exact。详见 docs/audit/2026-10-22-motion-review-002.md。"
     },
     {
       "name": "dropdown",
@@ -2468,7 +2468,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
       "layerNotes": null
     },
     {
@@ -2657,7 +2657,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": "L4: baselines/message.dom.json 4 用例（静态面板路径；命令式路径走 portal 不可 SSR）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact。L7(theme): 11 用例。差异登记 D96/D97。附带落地 notification 内核（notification/engine/）。"
+      "layerNotes": "L4: baselines/message.dom.json 4 用例（静态面板路径；命令式路径走 portal 不可 SSR）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact。L7(theme): 11 用例。差异登记 D96/D97。附带落地 notification 内核（notification/engine/）。\n2026-10-22 复审 002：公共 Motion 首帧 NONE 与 DOM 提交时序修复；Playwright 验证新条 -56→8、旧条 8→64，逐帧 CSS 事件与 React 对照通过。证据 docs/audit/evidence/review-002-motion.json。"
     },
     {
       "name": "notification",
@@ -2719,7 +2719,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": "L4: baselines/notification.dom.json 4 用例（静态面板路径）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact（含 bottomRight 定位与 actions 区）。L7(theme): 16 用例。差异登记 D96/D98。复用上一轮为 message 建的通知内核。"
+      "layerNotes": "L4: baselines/notification.dom.json 4 用例（静态面板路径）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact（含 bottomRight 定位与 actions 区）。L7(theme): 16 用例。差异登记 D96/D98。复用上一轮为 message 建的通知内核。\n2026-10-22 复审 002：公共 Motion 首帧 NONE 与 DOM 提交时序修复；Playwright 验证旧条 24→134，测量高度 94，逐帧 CSS 事件与 React 对照通过。当前采样场景未发现第二个 NoticeList 布局根因。详见 docs/audit/2026-10-22-motion-review-002.md。"
     },
     {
       "name": "app",
@@ -4461,7 +4461,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "颜色引擎在 packages/ui/src/color-picker/engine/（rc 判 in-ui）：Color 子类 + 纯几何。L4 只覆盖触发器 —— 面板在 Popover 的 Portal 里、SSR 不渲染（上游告警 Portal only work in client side），PurePanel 在 SSR 下也不渲染面板 ⇒ 面板的 DOM 契约由 L6（真浏览器，27/27 exact）承担，这是有意的分工。已知差异：① 传自定义 children 时本仓多包一层 span —— **已修**（改为经渲染函数宿主组件转交，见 PITFALLS 330）；② 9 个 mergeToken 派生值本仓声明成 --apollo-color-picker-*（上游内联字面量，有意差异，计算值逐位相同）。L6 抓到的真 bug：use-mode-color 的 watch 漏 immediate ⇒ 初始为渐变时渐变条不渲染（已修，回归哨兵在 fixtures/color-picker/gradient.json）。",
+      "notes": "颜色引擎在 packages/ui/src/color-picker/engine/（rc 判 in-ui）：Color 子类 + 纯几何。L4 只覆盖触发器 —— 面板在 Popover 的 Portal 里、SSR 不渲染（上游告警 Portal only work in client side），PurePanel 在 SSR 下也不渲染面板 ⇒ 面板的 DOM 契约由 L6（真浏览器，27/27 exact）承担，这是有意的分工。已知差异：① 传自定义 children 时本仓多包一层 span —— **已修**（改为经渲染函数宿主组件转交，见 PITFALLS 330）；② 9 个 mergeToken 派生值本仓声明成 --apollo-color-picker-*（上游内联字面量，有意差异，计算值逐位相同）。L6 抓到的真 bug：use-mode-color 的 watch 漏 immediate ⇒ 初始为渐变时渐变条不渲染（已修，回归哨兵在 fixtures/color-picker/gradient.json）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
       "layerNotes": null
     },
     {
@@ -4522,7 +4522,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。核心成本在 rc 的 PickerInput（4290 行、未 Vue 化），不是 antd 薄壳（非 locale 2650 行）。G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，决策 id `date-picker-input-kernel`。S1 功能 + 样式已落地（257 规则 / 45 声明）。**S2 全部落地（2026-10-01）**：`format` 的**补齐层**（rc `useLocale`→`fillLocale`，PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）+ **提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，`hooks/picker-value-change.ts`）。⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；**S3 掩码模式已落地（2026-10-01）**（`components/mask-format.ts` + `components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，随 S5 的 RangePicker 一起做。**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。**G9 L6 二轮（2026-10-01）**：从 **3/21 → 12/21 exact**。修掉三处（都是真 bug，不是调阈值）：① 表头导航图标 —— `PickerPanel` **少声明 4 个图标 props**（PITFALLS 250，属 picker 包）；② 🚨 浮层**缺 `-panel-container` / `-panel-layout` 两层**⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 + `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。**G9 L6 三轮（同日）：→ 21/21 exact**。补上浮层**页脚**（`components/Footer.ts` = 上游`Popup/Footer.js` 逐字移植 + `getShowNow` = `useShowNow.js` + 接线），`renderExtraFooter` 一并生效（PITFALLS 255；⚠️ 页脚样式早在 257 条规则里，缺的只是组件 + 接线）。顺带修掉**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**，收敛回 `@apollo-design/utils`（PITFALLS 254，含「修正把错规格钉住的测试」）。**S5 剩余：范围两端（`RangePicker`）与 `presets`**；`panelRender` / 浮层焦点事件 / `isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。与 G12/G13/G14。⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。**✅ S5 全部落地（2026-10-01 下午）—— 组件判 completed。**范围两端：`RangePicker.vue`（≈1150 行）= 上游 `generateRangePicker.js`(234) + `PickerInput/RangePicker.js`(574) + `RangeSelector.js`(209) + `Popup/*` 的 Vue 化；`presets` 全链路（`hooks/picker-presets.ts` + `components/PresetPanel.ts`，单值另接**悬停即预览**：`hoverValue` / `selectorValues` / `Selector` 的 `-input-placeholder`）。🚨 **架构差异（PITFALLS 256）**：本仓 `PickerPanel` **自己** `providePanelHack`⇒ 外层注入被「最近的赢」遮蔽 ⇒ 双面板的 `hidePrev` / `hideNext` / `onCellDblClick`改走 **props**（已加回归哨兵）。同批关闭三条欠账（README §5.5(b′) #1/#3/#4）：`useInvalidate` 全量（`isValidate` + `showTime.disabledTime` / legacy 三兄弟）、`onCellDblClick`、`hideHeader`；面板与页脚改拿**合并了 min/max 的** `disabledDate`。🚨 **编译期根因修复（PITFALLS 257/258/261/262/263）**：`picker` 包新增 `TimeConfigShowTime`（范围的 `showTime.disabledTime` 是**三参**，单值一参）；`Selector.onSelectorClick` 放宽成收事件；`toDateArray` 收范围元组（元素 `undefined → null`）；`fieldCount` 范围下改传 getter；`RangePickerProps` 上**没有** `multiple` / `removeIcon`。🚨 **L6 抓到的两个真 bug（PITFALLS 264/265）**：① 浮层 vnode 在**渲染期之外**创建 ⇒ `ref:` 的 owner 是 `null` ⇒ 生产构建抛 `Cannot read properties of null (reading refs)`（dev 只 `warn`，jsdom 与 dev 页面全绿）⇒ 改用 vnode 钩子；② `hoverValues` / `showWeakHover` / `activeHoverValue` **算了但从没传给面板** ⇒ `-cell-in-range` 的浅蓝底永远不出现（`range` 空值三视口 0.000% exact、一有值就 block-diff，正是它）。**G9 L6：21/21 → 27/27 exact**（新增 `range` / `range-value` 两个变体 × 3 视口，React 基线已入库）。L4 契约 16 → **21 用例**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态），L5 a11y 24 → **36 条**（含上游两条 separator 的 `aria-hidden` 测试），新增 `__tests__/s5-presets.test.ts` **15 条**。⚠️ 仍未做：`panelRender` / 浮层焦点事件（README §5.5(g)）/ `BASE_CSS` 的 `a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。",
+      "notes": "【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。核心成本在 rc 的 PickerInput（4290 行、未 Vue 化），不是 antd 薄壳（非 locale 2650 行）。G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，决策 id `date-picker-input-kernel`。S1 功能 + 样式已落地（257 规则 / 45 声明）。**S2 全部落地（2026-10-01）**：`format` 的**补齐层**（rc `useLocale`→`fillLocale`，PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）+ **提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，`hooks/picker-value-change.ts`）。⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；**S3 掩码模式已落地（2026-10-01）**（`components/mask-format.ts` + `components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，随 S5 的 RangePicker 一起做。**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。**G9 L6 二轮（2026-10-01）**：从 **3/21 → 12/21 exact**。修掉三处（都是真 bug，不是调阈值）：① 表头导航图标 —— `PickerPanel` **少声明 4 个图标 props**（PITFALLS 250，属 picker 包）；② 🚨 浮层**缺 `-panel-container` / `-panel-layout` 两层**⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 + `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。**G9 L6 三轮（同日）：→ 21/21 exact**。补上浮层**页脚**（`components/Footer.ts` = 上游`Popup/Footer.js` 逐字移植 + `getShowNow` = `useShowNow.js` + 接线），`renderExtraFooter` 一并生效（PITFALLS 255；⚠️ 页脚样式早在 257 条规则里，缺的只是组件 + 接线）。顺带修掉**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**，收敛回 `@apollo-design/utils`（PITFALLS 254，含「修正把错规格钉住的测试」）。**S5 剩余：范围两端（`RangePicker`）与 `presets`**；`panelRender` / 浮层焦点事件 / `isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。与 G12/G13/G14。⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。**✅ S5 全部落地（2026-10-01 下午）—— 组件判 completed。**范围两端：`RangePicker.vue`（≈1150 行）= 上游 `generateRangePicker.js`(234) + `PickerInput/RangePicker.js`(574) + `RangeSelector.js`(209) + `Popup/*` 的 Vue 化；`presets` 全链路（`hooks/picker-presets.ts` + `components/PresetPanel.ts`，单值另接**悬停即预览**：`hoverValue` / `selectorValues` / `Selector` 的 `-input-placeholder`）。🚨 **架构差异（PITFALLS 256）**：本仓 `PickerPanel` **自己** `providePanelHack`⇒ 外层注入被「最近的赢」遮蔽 ⇒ 双面板的 `hidePrev` / `hideNext` / `onCellDblClick`改走 **props**（已加回归哨兵）。同批关闭三条欠账（README §5.5(b′) #1/#3/#4）：`useInvalidate` 全量（`isValidate` + `showTime.disabledTime` / legacy 三兄弟）、`onCellDblClick`、`hideHeader`；面板与页脚改拿**合并了 min/max 的** `disabledDate`。🚨 **编译期根因修复（PITFALLS 257/258/261/262/263）**：`picker` 包新增 `TimeConfigShowTime`（范围的 `showTime.disabledTime` 是**三参**，单值一参）；`Selector.onSelectorClick` 放宽成收事件；`toDateArray` 收范围元组（元素 `undefined → null`）；`fieldCount` 范围下改传 getter；`RangePickerProps` 上**没有** `multiple` / `removeIcon`。🚨 **L6 抓到的两个真 bug（PITFALLS 264/265）**：① 浮层 vnode 在**渲染期之外**创建 ⇒ `ref:` 的 owner 是 `null` ⇒ 生产构建抛 `Cannot read properties of null (reading refs)`（dev 只 `warn`，jsdom 与 dev 页面全绿）⇒ 改用 vnode 钩子；② `hoverValues` / `showWeakHover` / `activeHoverValue` **算了但从没传给面板** ⇒ `-cell-in-range` 的浅蓝底永远不出现（`range` 空值三视口 0.000% exact、一有值就 block-diff，正是它）。**G9 L6：21/21 → 27/27 exact**（新增 `range` / `range-value` 两个变体 × 3 视口，React 基线已入库）。L4 契约 16 → **21 用例**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态），L5 a11y 24 → **36 条**（含上游两条 separator 的 `aria-hidden` 测试），新增 `__tests__/s5-presets.test.ts` **15 条**。⚠️ 仍未做：`panelRender` / 浮层焦点事件（README §5.5(g)）/ `BASE_CSS` 的 `a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
       "layerNotes": null
     },
     {
@@ -4581,7 +4581,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
       "layerNotes": {
         "token": "本组件**没有 Component Token，也没有样式表**：antd 的 `es/time-picker/` 只有 `index.js` / `index.d.ts` / `locale/`（138 个「文件」里 136 个是 dayjs 语言包），没有一句样式代码 ⇒ `tokenCount = 0` 是判据不是遗漏。照 `watermark` 先例置 n/a。",
         "style": "同上：`es/time-picker/` 没有 `style/` 目录 ⇒ 本仓也不建 `style/`，`COMPONENT_STYLES` 不加行（加了会产出 0 条规则的空文件）。观感 100% 来自 `date-picker` 的 `-picker-*` 样式与全局 Token。",

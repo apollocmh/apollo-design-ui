@@ -1,0 +1,77 @@
+Initial full scan (before all test-timing repairs): pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme --maxWorkers=2
+Test Files  13 failed | 565 passed (578)
+      Tests  67 failed | 11215 passed | 3 skipped (11285)
+   Start at  23:30:16
+   Duration  931.72s (environment 36%, tests 21%, import 20%, setup 13%, transform 10%)
+
+All failed files revalidated: pnpm exec vitest run --project unit --project dom-contract --maxWorkers=4 packages/motion packages/ui/src/back-top packages/ui/src/date-picker packages/ui/src/dropdown packages/ui/src/color-picker
+✓ |unit| packages/motion/src/__tests__/presets.test.ts (16 tests) 27ms
+ ✓ |unit| packages/ui/src/back-top/__tests__/demo.test.ts (3 tests) 46ms
+
+ Test Files  37 passed (37)
+      Tests  634 passed (634)
+   Start at  23:46:41
+   Duration  41.38s (environment 31%, transform 27%, tests 17%, setup 13%, import 12%)
+
+JSON report written to /tmp/review-002-recovery.json
+
+Failure-list recovery audit
+Recovery audit: 13/13 failed files passed; 0 unresolved; 634/634 tests passed
+
+pnpm run lint:types (exit 0)
+> @apollo-design/monorepo@0.0.0 lint:types /Users/nanren/Code/apollo-design-ui
+> vue-tsc --noEmit -p tsconfig.json
+
+pnpm run test:types (exit 0)
+RUN  v5.0.1 /Users/nanren/Code/apollo-design-ui
+
+
+ Test Files  170 passed (170)
+      Tests  2213 passed (2213)
+Type Errors  no errors
+   Start at  23:48:16
+   Duration  126.39s (environment 52%, typecheck 18%, setup 18%, transform 9%, import 2%, tests 1%)
+
+pnpm exec biome check . (exit 0)
+Diagnostics not shown: 21.
+Checked 3283 files in 5s. No fixes applied.
+Found 37 warnings.
+Found 4 infos.
+
+node registry/tools/validate-registry.mjs (exit 0)
+registry validate: OK (19 checks passed, 0 warnings)
+
+pnpm run test:build (exit 0)
+检查项 151  |  FAIL 0  |  PENDING 0  |  n/a 67
+
+node tests/visual/run.mjs --component menu --mode both
+✅ 基线自检通过（0 组重复，均有登记）
+
+报告：tests/visual/report.html
+通过 9 / 9
+
+node tests/visual/run.mjs --component notification --mode both --no-build
+✅ 基线自检通过（0 组重复，均有登记）
+
+报告：tests/visual/report.html
+通过 9 / 9
+
+node tests/visual/run.mjs --component message --mode both --no-build
+✅ 基线自检通过（0 组重复，均有登记）
+
+报告：tests/visual/report.html
+通过 9 / 9
+
+node packages/docs/tests/motion-review-browser.mjs (exit 0)
+PASS message: 起终位置与 React 一致 
+PASS notice: 起终位置与 React 一致 
+[motion-review-browser] 60/60 passed
+
+node packages/docs/tests/menu-browser.mjs (production preview, exit 0)
+[menu-browser] 28/28 通过
+
+node packages/docs/tests/notification-motion-browser.mjs (production preview, exit 0)
+[notification-motion-browser] 21/21 通过
+
+node docs/audit/tools/review-002-assertion-audit.mjs
+Assertion audit: 14 files, 457 original assertions unchanged
