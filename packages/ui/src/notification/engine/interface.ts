@@ -10,6 +10,7 @@
  * 逐文件对应：`Notifications.js` / `NotificationList/{index,Content}.js` /
  * `Notification.js` / `NotificationProvider.js` / `Progress.js` / `hooks/*`。
  */
+import type { MotionHooks } from '@apollo-design/motion';
 import type { Component, CSSProperties } from 'vue';
 
 export type Placement = 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight';
@@ -118,6 +119,27 @@ export interface NotificationStyles extends NoticeStyles {
   listContent?: CSSProperties;
 }
 
+/**
+ * 通知列表的 motion 配置。
+ *
+ * rc 2.0.8 把 `placementMotion` **整个展开**进 CSSMotionList；本仓同样只映射
+ * MotionList 真正接受的字段（白名单），避免把 `keys/component/onAllRemoved`
+ * 这类内核控制字段让调用方覆盖。字段语义见 `packages/motion/src/motion-list.ts`。
+ */
+export interface NoticeMotionConfig {
+  motionName?: string;
+  motionAppear?: boolean;
+  motionEnter?: boolean;
+  motionLeave?: boolean;
+  motionLeaveImmediately?: boolean;
+  motionDeadline?: number;
+  removeOnLeave?: boolean;
+  forceRender?: boolean;
+  leavedClassName?: string;
+  hooks?: MotionHooks;
+  supportMotion?: boolean;
+}
+
 export interface NoticeListProps {
   configList?: NoticeListConfig[];
   prefixCls?: string;
@@ -127,7 +149,7 @@ export interface NoticeListProps {
   styles?: NotificationStyles;
   components?: ComponentsType;
   stack?: boolean | StackConfig;
-  motion?: { motionName?: string } | ((placement: Placement) => { motionName?: string });
+  motion?: NoticeMotionConfig | ((placement: Placement) => NoticeMotionConfig);
   className?: string;
   style?: CSSProperties;
   onNoticeClose?: (key: string | number) => void;

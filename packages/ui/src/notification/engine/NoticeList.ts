@@ -15,7 +15,17 @@
  *      `-notice-stack-in-threshold` 类（折叠时它们是被盖住的那几条）。
  */
 import { MotionList } from '@apollo-design/motion';
-import { computed, defineComponent, h, nextTick, onMounted, type PropType, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  type PropType,
+  ref,
+  watch,
+} from 'vue';
 import { clsx } from '../../_internal/clsx';
 import { useListPosition } from './hooks/useListPosition';
 import { useStack } from './hooks/useStack';
@@ -118,6 +128,98 @@ export default defineComponent({
       gap,
     );
 
+    /**
+     * 尺寸测量通道。
+     *
+     * ⭐ 两个 Vue 侧必须补的点（MN-03）：
+     *   1. **按 key 稳定的函数 ref**：上游 `useCallback([setNodeSize, strKey])` 保证
+     *      引用稳定；Vue 若在每次渲染都新建函数 ref，patch 会先以 `null` 调用旧 ref、
+     *      再以元素调用新 ref ⇒ `sizeMap` 被「先删后测」，布局在过渡帧里短暂变成
+     *      height=0，产生 y 突跳。
+     *   2. **ResizeObserver 重测**：调用方用同一个 key 更新文案（尤其是变高/换行）时，
+     *      稳定 ref 不会再触发测量；上游 2.0.8 同样不重测，但那会让 `--notification-y`
+     *      停在旧高度。这里补一个观察器，仅在元素 border-box 变化时重测。
+     */
+    const elementByKey = new Map<string, HTMLElement>();
+    const elementKeys = new WeakMap<Element, string>();
+    const noticeRefs = new Map<string, (inst: unknown) => void>();
+    let resizeObserver: ResizeObserver | null = null;
+
+    const getResizeObserver = (): ResizeObserver | null => {
+      if (typeof ResizeObserver === 'undefined') return null;
+      if (!resizeObserver) {
+        resizeObserver = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            const el = entry.target;
+            if (!(el instanceof HTMLElement)) continue;
+            const key = elementKeys.get(el);
+            if (key !== undefined) setNodeSize(key, el);
+          }
+        });
+      }
+      return resizeObserver;
+    };
+
+    const getNoticeRef = (key: string): ((inst: unknown) => void) => {
+      let fn = noticeRefs.get(key);
+      if (fn) return fn;
+      fn = (inst: unknown) => {
+        const el = ((inst as { $el?: HTMLElement } | null)?.$el ?? null) as HTMLElement | null;
+        const prev = elementByKey.get(key);
+        if (!el) {
+          if (prev) {
+            resizeObserver?.unobserve(prev);
+            elementByKey.delete(key);
+            elementKeys.delete(prev);
+          }
+          noticeRefs.delete(key);
+          setNodeSize(key, null);
+          return;
+        }
+        if (prev && prev !== el) {
+          resizeObserver?.unobserve(prev);
+          elementKeys.delete(prev);
+        }
+        elementByKey.set(key, el);
+        elementKeys.set(el, key);
+        getResizeObserver()?.observe(el);
+        setNodeSize(key, el);
+      };
+      noticeRefs.set(key, fn);
+      return fn;
+    };
+
+    onBeforeUnmount(() => {
+      resizeObserver?.disconnect();
+      resizeObserver = null;
+      elementByKey.clear();
+      noticeRefs.clear();
+    });
+
+    /**
+     * rc 2.0.8：`{...placementMotion}` 整个展开进 CSSMotionList。
+     * 这里用白名单显式映射，避免调用方覆盖 keys/component/onAllRemoved。
+     * `motionDeadline` 的 500ms 是本仓为「样式表未加载 / transitionend 丢失」
+     * 保留的兜底；真实浏览器 transitionend 先到时它不会生效（浏览器门禁会采样
+     * 每次离场的实际结束路径）。
+     */
+    const motionProps = computed(() => {
+      const motion = placementMotion.value ?? {};
+      return {
+        motionName: motion.motionName,
+        motionAppear: motion.motionAppear ?? true,
+        motionEnter: motion.motionEnter,
+        motionLeave: motion.motionLeave,
+        motionLeaveImmediately: motion.motionLeaveImmediately,
+        motionDeadline: motion.motionDeadline ?? 500,
+        removeOnLeave: motion.removeOnLeave,
+        forceRender: motion.forceRender,
+        leavedClassName: motion.leavedClassName,
+        hooks: motion.hooks,
+        supportMotion: motion.supportMotion,
+      };
+    });
+
     const getIndex = (key: string): number | undefined => {
       const index = keys.value.findIndex((item) => item.key === key);
       return index === -1 ? undefined : keys.value.length - index - 1;
@@ -162,10 +264,9 @@ export default defineComponent({
 
       return h(Notice, {
         ...(noticeConfig as Record<string, unknown>),
-        ref: (inst: unknown) => {
-          const el = (inst as { $el?: HTMLElement } | null)?.$el ?? null;
-          setNodeSize(key, el as { offsetWidth: number; offsetHeight: number } | null);
-        },
+        // ⚠️ 必须按 key 复用同一个函数 ref（MN-03）：每次渲染新建会让 Vue 在 patch
+        //    时先 null 后 element，把 sizeMap 清掉再测，布局瞬态归零。
+        ref: getNoticeRef(key),
         prefixCls: props.prefixCls,
         className: clsx(contextNotice, config.className, motionClassName),
         style: { ...(motionStyle ?? {}), ...(config.style ?? {}) },
@@ -238,11 +339,8 @@ export default defineComponent({
                     //    `keys` 找不到已删除项 ⇒ 返回 null ⇒ 通知立即卸载、
                     //    没有 -fade-leave-*（2026-10-21 阶段 0 实测）。
                     keys: keys.value,
-                    motionAppear: true,
-                    motionName: placementMotion.value?.motionName,
-                    // 样式表未加载 / jsdom 无 transition 时的兜底；正常浏览器在
-                    // transitionend 先到，deadline 会被清掉，不改变 0.2s 动画行为。
-                    motionDeadline: 500,
+                    // rc 2.0.8：`{...placementMotion}`（白名单见 motionProps 注释）
+                    ...motionProps.value,
                     onAllRemoved: () => {
                       if (props.placement) props.onAllRemoved?.(props.placement);
                     },
