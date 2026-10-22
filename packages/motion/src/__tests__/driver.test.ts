@@ -57,6 +57,57 @@ afterEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('首帧', () => {
+  it('DOM 提交后才测量；快速切换或销毁会取消旧的待提交队列', () => {
+    const commits: (() => void)[] = [];
+    const seen: string[] = [];
+    const rig = createRig({
+      scheduleRender: (callback) => commits.push(callback),
+      hooks: {
+        onAppearStart: () => {
+          seen.push('appear');
+          return {};
+        },
+        onLeaveStart: () => {
+          seen.push('leave');
+          return {};
+        },
+      },
+    });
+    rig.driver.mount(true);
+    expect(rig.driver.getSnapshot().step).toBe('prepare');
+    expect(seen).toEqual([]);
+    rig.driver.setVisible(false);
+    commits[0]?.();
+    expect(seen).toEqual([]);
+    commits[1]?.();
+    expect(seen).toEqual(['leave']);
+    rig.driver.setVisible(true);
+    rig.driver.destroy();
+    commits[2]?.();
+    expect(seen).toEqual(['leave']);
+  });
+
+  it('旧 prepare Promise resolve 不能推进新一轮 leave', async () => {
+    let release = () => {};
+    const rig = createRig({
+      hooks: {
+        onAppearPrepare: () =>
+          new Promise<void>((resolve) => {
+            release = resolve;
+          }),
+      },
+    });
+    rig.driver.mount(true);
+    rig.pump.tickFrames(2);
+    rig.driver.setVisible(false);
+    expect(rig.driver.getSnapshot().step).toBe('start');
+    release();
+    await flush();
+    expect(rig.driver.getSnapshot().status).toBe('leave');
+    expect(rig.driver.getSnapshot().step).toBe('start');
+    rig.driver.destroy();
+  });
+
   it('mount 之前 styleReady 是 "NONE" —— 支持动画且开了 appear 时首帧不渲染', () => {
     const rig = createRig();
     expect(rig.driver.getSnapshot().styleReady).toBe('NONE');

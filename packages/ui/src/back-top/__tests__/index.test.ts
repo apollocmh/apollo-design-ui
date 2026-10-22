@@ -11,7 +11,7 @@
 import { throttleByAnimationFrame } from '@apollo-design/utils';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { h } from 'vue';
+import { h, nextTick } from 'vue';
 import { easeInOutCubic, scrollTo } from '../../_internal/scroll-to';
 import { BackTop } from '../index';
 
@@ -28,19 +28,21 @@ const makeTarget = (scrollTop: number) => {
 };
 
 describe('BackTop · 结构', () => {
-  it('根类名 + 默认元素（-content > -icon > 图标）', () => {
+  it('根类名 + 默认元素（-content > -icon > 图标）', async () => {
     const w = mount(BackTop, { props: { visibilityHeight: 0 } });
+    await nextTick();
     expect(w.find(`.${P}`).exists()).toBe(true);
     expect(w.find(`.${P}-content`).exists()).toBe(true);
     expect(w.find(`.${P}-icon`).exists()).toBe(true);
     expect(w.find('.apollo-icon').exists()).toBe(true);
   });
 
-  it('children 走克隆分支（自定义内容替换默认元素；motionClassName 经 cloneVNode 注入）', () => {
+  it('children 走克隆分支（自定义内容替换默认元素；motionClassName 经 cloneVNode 注入）', async () => {
     const w = mount(BackTop, {
       props: { visibilityHeight: 0 },
       slots: { default: () => h('div', { class: 'my-content' }, 'custom') },
     });
+    await nextTick();
     // 自定义内容渲染、默认元素不渲染
     expect(w.find('.my-content').exists()).toBe(true);
     expect(w.find(`.${P}-content`).exists()).toBe(false);

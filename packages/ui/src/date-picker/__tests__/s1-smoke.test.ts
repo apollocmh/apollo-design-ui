@@ -106,8 +106,9 @@ describe('DatePicker · S1 冒烟（结构 / 受控值 / 开合 / 清除）', ()
     w.unmount();
   });
 
-  it('受控 `open` ⇒ 初始就是打开的（`defaultOpen` 同理）', () => {
+  it('受控 `open` ⇒ 挂载提交后就是打开的（`defaultOpen` 同理）', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await w.vm.$nextTick();
     expect(w.find(`.${P}-dropdown`).exists()).toBe(true);
     w.unmount();
   });

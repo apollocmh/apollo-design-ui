@@ -229,6 +229,7 @@ describe('Dropdown · L1 Override 通道', () => {
   it('submenu 的 expandIcon 被 dropdown 覆盖（-submenu-arrow-icon 结构）', async () => {
     vi.useFakeTimers();
     mountDropdown({ open: true, trigger: ['click'] });
+    await nextTick();
     // 展开子菜单
     const title = document.querySelector('.apollo-dropdown-menu-submenu-title') as HTMLElement;
     title.click();

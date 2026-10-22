@@ -1,3 +1,4 @@
+// 初始 open 的浮层需等待 CSSMotion prepare 节点提交；原有断言不变。
 /**
  * L2 / L4 · 预设与悬停预览（S5）—— DatePicker（单值）
  *
@@ -31,6 +32,7 @@
 import { mount } from '@vue/test-utils';
 import dayjs, { type Dayjs } from 'dayjs';
 import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import DatePicker from '../DatePicker.vue';
 
 const P = 'apollo-picker';
@@ -48,25 +50,28 @@ const isHelped = (w: ReturnType<typeof mount>) =>
   inputClasses(w).includes(`${P}-input-placeholder`);
 
 describe('DatePicker · 预设列表（S5）', () => {
-  it('🚨 没给 `presets` ⇒ **连 `-presets` 节点都没有**（空列表整块不渲染）', () => {
+  it('🚨 没给 `presets` ⇒ **连 `-presets` 节点都没有**（空列表整块不渲染）', async () => {
     const w = mountOpen();
+    await nextTick();
     expect(w.find(`.${P}-presets`).exists()).toBe(false);
     w.unmount();
   });
 
-  it('🚨 `presets: []` ⇒ 同样**不渲染**（`.length` 判空，不是 `undefined` 判空）', () => {
+  it('🚨 `presets: []` ⇒ 同样**不渲染**（`.length` 判空，不是 `undefined` 判空）', async () => {
     const w = mountOpen({ presets: [] });
+    await nextTick();
     expect(w.find(`.${P}-presets`).exists()).toBe(false);
     w.unmount();
   });
 
-  it('`presets` 非空 ⇒ `-presets > ul > li`，`li` 的文本 = `label`', () => {
+  it('`presets` 非空 ⇒ `-presets > ul > li`，`li` 的文本 = `label`', async () => {
     const w = mountOpen({
       presets: [
         { label: '上周', value: D('2026-09-24') },
         { label: '本周', value: D('2026-10-01') },
       ],
     });
+    await nextTick();
     expect(w.find(`.${P}-presets`).exists()).toBe(true);
     const items = presetItems(w);
     expect(items).toHaveLength(2);
@@ -80,6 +85,7 @@ describe('DatePicker · 预设列表（S5）', () => {
 
   it('点一个预设 ⇒ 发 `change`（值是预设值）并**关闭浮层**', async () => {
     const w = mountOpen({ presets: [{ label: 'A', value: D('2026-09-10') }] });
+    await nextTick();
     await presetItems(w)[0]!.trigger('click');
 
     const emitted = w.emitted('change');
@@ -97,6 +103,7 @@ describe('DatePicker · 预设列表（S5）', () => {
       return D('2026-09-10');
     };
     const w = mountOpen({ presets: [{ label: 'A', value }] });
+    await nextTick();
     const li = presetItems(w)[0]!;
 
     await li.trigger('mouseenter');
@@ -120,6 +127,7 @@ describe('DatePicker · 悬停即预览（S5）', () => {
       defaultValue: D('2026-09-01'),
       presets: [{ label: 'A', value: D('2026-09-10') }],
     });
+    await nextTick();
     // 预览前：显示已选值，且不是 placeholder 态
     expect(inputValue(w)).toBe('2026-09-01');
     expect(isHelped(w)).toBe(false);
@@ -135,6 +143,7 @@ describe('DatePicker · 悬停即预览（S5）', () => {
       defaultValue: D('2026-09-01'),
       presets: [{ label: 'A', value: D('2026-09-10') }],
     });
+    await nextTick();
     const li = presetItems(w)[0]!;
     await li.trigger('mouseenter');
     await li.trigger('mouseleave');
@@ -149,6 +158,7 @@ describe('DatePicker · 悬停即预览（S5）', () => {
       defaultValue: D('2026-09-10'),
       defaultPickerValue: D('2026-09-01'),
     });
+    await nextTick();
     expect(inputValue(w)).toBe('2026-09-10');
 
     const cell = w.findAll(`.${P}-cell-in-view`).find((c) => c.text() === '15');
@@ -169,6 +179,7 @@ describe('DatePicker · 悬停即预览（S5）', () => {
       defaultValue: D('2026-09-01'),
       presets: [{ label: 'A', value: D('2026-09-10') }],
     });
+    await nextTick();
     await presetItems(w)[0]!.trigger('mouseenter');
 
     expect(inputValue(w)).toBe('2026-09-01');
@@ -181,6 +192,7 @@ describe('DatePicker · 悬停即预览（S5）', () => {
       defaultPickerValue: D('2026-09-01'),
       presets: [{ label: 'A', value: D('2026-09-10') }],
     });
+    await nextTick();
     expect(w.findAll(`.${P}-cell-hover`)).toHaveLength(0);
 
     await presetItems(w)[0]!.trigger('mouseenter');
@@ -198,6 +210,7 @@ describe('DatePicker · 悬停即预览（S5）', () => {
         presets: [{ label: 'A', value: D('2026-09-10') }],
       },
     });
+    await nextTick();
     await presetItems(w)[0]!.trigger('mouseenter');
     expect(isHelped(w)).toBe(true);
 
@@ -210,14 +223,16 @@ describe('DatePicker · 悬停即预览（S5）', () => {
 });
 
 describe('DatePicker · 面板的两个 hack 面（S5）', () => {
-  it("🚨 `picker: time` ⇒ 面板**没有表头**（`hideHeader = picker === 'time'`）", () => {
+  it("🚨 `picker: time` ⇒ 面板**没有表头**（`hideHeader = picker === 'time'`）", async () => {
     const w = mountOpen({ picker: 'time' });
+    await nextTick();
     expect(w.find(`.${P}-header`).exists()).toBe(false);
     w.unmount();
   });
 
-  it('`picker: date` ⇒ 有表头（反向哨兵：别把 `hideHeader` 写成恒真）', () => {
+  it('`picker: date` ⇒ 有表头（反向哨兵：别把 `hideHeader` 写成恒真）', async () => {
     const w = mountOpen();
+    await nextTick();
     expect(w.find(`.${P}-header`).exists()).toBe(true);
     w.unmount();
   });
@@ -228,6 +243,7 @@ describe('DatePicker · 面板的两个 hack 面（S5）', () => {
       defaultValue: D('2026-09-10'),
       defaultPickerValue: D('2026-09-01'),
     });
+    await nextTick();
     expect(w.emitted('change')).toBeUndefined();
 
     /**
@@ -256,6 +272,7 @@ describe('DatePicker · 面板的两个 hack 面（S5）', () => {
       defaultValue: D('2026-09-10'),
       defaultPickerValue: D('2026-09-01'),
     });
+    await nextTick();
     const cell = w.findAll(`.${P}-cell-in-view`).find((c) => c.text() === '15');
     expect(cell).toBeTruthy();
     // ⚠️ 只派发 `dblclick`（不派发前置的 `click`）⇒ 命中的只可能是 `onCellDblClick`

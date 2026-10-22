@@ -1,3 +1,4 @@
+// 初始 open 的浮层需等待 CSSMotion prepare 节点提交；原有断言不变。
 /**
  * L1 单元 + L2 交互（G5/G6）—— **上游 testCases 的镜像**。
  *
@@ -68,7 +69,7 @@ const inputEl = (w: ReturnType<typeof mount>) =>
   w.find(`.${P}-input input`).element as HTMLInputElement;
 
 describe('DatePicker · locale 与 placeholder（上游 testCases）', () => {
-  it('`prop locale` 生效：`lang.placeholder` 与 `lang.clear` 都取自它', () => {
+  it('`prop locale` 生效：`lang.placeholder` 与 `lang.clear` 都取自它', async () => {
     // 上游 `prop locale should works` 只做快照；本仓改成两条**语义**断言
     // （快照「变了就红、不看差在哪」，结构已由 L4 的逐属性契约覆盖）
     const locale = {
@@ -76,6 +77,7 @@ describe('DatePicker · locale 与 placeholder（上游 testCases）', () => {
     } as unknown as PickerLocale;
 
     const w = mountPicker({ locale, defaultValue: dayjs('2000-01-01') });
+    await nextTick();
 
     expect(inputEl(w).placeholder).toBe('Избери дата');
     // 🚨 清除按钮的可访问名取 **`locale.clear`**（不是字面量 "Clear"）
@@ -83,22 +85,25 @@ describe('DatePicker · locale 与 placeholder（上游 testCases）', () => {
     w.unmount();
   });
 
-  it('`placeholder`：默认取 locale 的 `Select date`，自定义优先', () => {
+  it('`placeholder`：默认取 locale 的 `Select date`，自定义优先', async () => {
     const a = mountPicker();
+    await nextTick();
     expect(inputEl(a).placeholder).toBe('Select date');
     a.unmount();
 
     const b = mountPicker({ placeholder: '自定义' });
+    await nextTick();
     expect(inputEl(b).placeholder).toBe('自定义');
     b.unmount();
   });
 
-  it('`locale` 是**深合并**：只给 `shortWeekDays` 时其余字段保留默认', () => {
+  it('`locale` 是**深合并**：只给 `shortWeekDays` 时其余字段保留默认', async () => {
     // 上游 `should support deep merge locale with partial fields`
     const w = mountPicker({
       open: true,
       locale: { lang: { shortWeekDays: ['一', '二', '三', '四', '五', '六', '日'] } } as never,
     });
+    await nextTick();
 
     // ① 面板表头用了自定义的短星期
     expect(w.find(`.${P}-content thead`).text()).toContain('一二三四五六日');
@@ -109,7 +114,7 @@ describe('DatePicker · locale 与 placeholder（上游 testCases）', () => {
 });
 
 describe('DatePicker · disabledDate（上游 testCases）', () => {
-  it('`disabledDate` 生效：早于锚点的格子被禁用，之后的没有', () => {
+  it('`disabledDate` 生效：早于锚点的格子被禁用，之后的没有', async () => {
     // ⚠️ 上游用 `MockDate.set('2016-11-22')` 让 `dayjs()` 固定；
     //    本仓改用 `defaultValue` **锚定面板显示的月份** + 固定的比较基准
     //    ⇒ 判据与运行时刻无关。
@@ -119,6 +124,7 @@ describe('DatePicker · disabledDate（上游 testCases）', () => {
       defaultValue: anchor,
       disabledDate: (current: dayjs.Dayjs) => current.isBefore(anchor.endOf('day')),
     });
+    await nextTick();
 
     expect(getCell(w, '21')?.classes()).toContain(`${P}-cell-disabled`);
     expect(getCell(w, '23')?.classes()).not.toContain(`${P}-cell-disabled`);
@@ -161,13 +167,14 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
   ];
 
   for (const { title, showTime, expected } of cases) {
-    it(`\`showTime=${title}\` ⇒ ${expected.length} 列，每列 ${expected.join('/')} 项`, () => {
+    it(`\`showTime=${title}\` ⇒ ${expected.length} 列，每列 ${expected.join('/')} 项`, async () => {
       const w = mountPicker({
         defaultValue: dayjs('2016-11-22'),
         showTime,
         format: 'YYYY-MM-DD',
         open: true,
       });
+      await nextTick();
 
       expect(columns(w)).toHaveLength(expected.length);
       expected.forEach((count, index) => {
@@ -177,7 +184,7 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
     });
   }
 
-  it('`showTime={{}}`（一个 show 都没给）⇒ 三段全开（3 列）', () => {
+  it('`showTime={{}}`（一个 show 都没给）⇒ 三段全开（3 列）', async () => {
     // 上游 `showTime={{ }} (no true args)`
     const w = mountPicker({
       defaultValue: dayjs('2016-11-22'),
@@ -185,11 +192,12 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
       format: 'YYYY-MM-DD',
       open: true,
     });
+    await nextTick();
     expect(columns(w)).toHaveLength(3);
     w.unmount();
   });
 
-  it('`use12Hours`（基准格式里有 `A`）⇒ 小时列 12 项 + 上午/下午列 2 项', () => {
+  it('`use12Hours`（基准格式里有 `A`）⇒ 小时列 12 项 + 上午/下午列 2 项', async () => {
     // 上游 `12 hours`
     const w = mountPicker({
       defaultValue: dayjs('2016-11-22'),
@@ -197,6 +205,7 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
       format: 'YYYY-MM-DD HH:mm:ss A',
       open: true,
     });
+    await nextTick();
     expect(columns(w)).toHaveLength(4);
     expect(cellsIn(w, 0)).toHaveLength(12);
     expect(cellsIn(w, 1)).toHaveLength(60);
@@ -205,7 +214,7 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
     w.unmount();
   });
 
-  it('24 小时制 ⇒ 3 列 24/60/60（没有上午/下午列）', () => {
+  it('24 小时制 ⇒ 3 列 24/60/60（没有上午/下午列）', async () => {
     // 上游 `24 hours`
     const w = mountPicker({
       defaultValue: dayjs('2016-11-22'),
@@ -213,6 +222,7 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
       format: 'YYYY-MM-DD HH:mm:ss',
       open: true,
     });
+    await nextTick();
     expect(columns(w)).toHaveLength(3);
     expect(cellsIn(w, 0)).toHaveLength(24);
     expect(cellsIn(w, 1)).toHaveLength(60);
@@ -222,7 +232,7 @@ describe('DatePicker · showTime 的列数与格式推导（上游 testCases）'
 });
 
 describe('DatePicker · format 的形态（上游 testCases）', () => {
-  it('🚨 `format` 是**函数**时聚焦 / 按下不抛（S2 的函数形态）', () => {
+  it('🚨 `format` 是**函数**时聚焦 / 按下不抛（S2 的函数形态）', async () => {
     // 上游 `showTime should work correctly when format is custom function`。
     // 上游只断言「不抛」；本仓额外钉住「值仍能格式化出来」。
     const w = mountPicker({
@@ -231,6 +241,7 @@ describe('DatePicker · format 的形态（上游 testCases）', () => {
       format: (value: dayjs.Dayjs) => value.format('YYYY-MM-DD'),
       open: true,
     });
+    await nextTick();
 
     expect(() => inputEl(w).dispatchEvent(new FocusEvent('focus'))).not.toThrow();
     expect(() =>
@@ -241,7 +252,7 @@ describe('DatePicker · format 的形态（上游 testCases）', () => {
     w.unmount();
   });
 
-  it('`format` 是**数组**时聚焦 / 按下不抛', () => {
+  it('`format` 是**数组**时聚焦 / 按下不抛', async () => {
     // 上游 `showTime should work correctly when format is Array`
     const w = mountPicker({
       defaultValue: dayjs('2016-11-22'),
@@ -249,6 +260,7 @@ describe('DatePicker · format 的形态（上游 testCases）', () => {
       format: ['YYYY-MM-DD HH:mm'],
       open: true,
     });
+    await nextTick();
 
     expect(() => inputEl(w).dispatchEvent(new FocusEvent('focus'))).not.toThrow();
     expect(() =>
@@ -257,7 +269,7 @@ describe('DatePicker · format 的形态（上游 testCases）', () => {
     w.unmount();
   });
 
-  it('`kk:mm` ⇒ 2 列 24/60（`k` 也推出 `showHour`）', () => {
+  it('`kk:mm` ⇒ 2 列 24/60（`k` 也推出 `showHour`）', async () => {
     // 上游 `kk:mm format`：`checkShow` 的关键字表里有 `'k'`
     const w = mountPicker({
       defaultValue: dayjs('2016-11-22'),
@@ -265,6 +277,7 @@ describe('DatePicker · format 的形态（上游 testCases）', () => {
       showTime: true,
       open: true,
     });
+    await nextTick();
     expect(columns(w)).toHaveLength(2);
     expect(cellsIn(w, 0)).toHaveLength(24);
     expect(cellsIn(w, 1)).toHaveLength(60);
@@ -304,6 +317,7 @@ describe('DatePicker · multiple（上游 testCases）', () => {
     });
 
     const w = mount(Host);
+    await nextTick();
     // 早于锚点的那个标签**没有**删除按钮
     expect(w.find('[data-testid="tag-2016-11-20"] button').exists()).toBe(false);
 
@@ -316,29 +330,33 @@ describe('DatePicker · multiple（上游 testCases）', () => {
 });
 
 describe('DatePicker · suffixIcon（上游 testCases）', () => {
-  it('默认渲染图标；`false` / `null` ⇒ 整块不渲染；字符串 ⇒ 原样显示', () => {
+  it('默认渲染图标；`false` / `null` ⇒ 整块不渲染；字符串 ⇒ 原样显示', async () => {
     // 上游 `suffixIcon`
     const a = mountPicker();
+    await nextTick();
     expect(a.find(`.${P}-suffix`).exists()).toBe(true);
     a.unmount();
 
     for (const value of [false, null]) {
       const w = mountPicker({ suffixIcon: value });
+      await nextTick();
       expect(w.find(`.${P}-suffix`).exists()).toBe(false);
       w.unmount();
     }
 
     const c = mountPicker({ suffixIcon: '123' });
+    await nextTick();
     expect(c.find(`.${P}-suffix`).text()).toBe('123');
     c.unmount();
   });
 
-  it('`suffixIcon` 走 ConfigProvider 的 `components.datePicker`，且 **prop 优先**', () => {
+  it('`suffixIcon` 走 ConfigProvider 的 `components.datePicker`，且 **prop 优先**', async () => {
     // 上游 `suffixIcon` describe 的前三条
     const viaContext = mount(ConfigProvider, {
       props: { components: { datePicker: { suffixIcon: 'foobar' } } },
       slots: { default: () => h(DatePicker) },
     });
+    await nextTick();
     expect(viaContext.find(`.${P}-suffix`).text()).toBe('foobar');
     viaContext.unmount();
 
@@ -346,6 +364,7 @@ describe('DatePicker · suffixIcon（上游 testCases）', () => {
       props: { components: { datePicker: { suffixIcon: 'foobar' } } },
       slots: { default: () => h(DatePicker, { suffixIcon: 'bamboo' }) },
     });
+    await nextTick();
     expect(preferProp.find(`.${P}-suffix`).text()).toBe('bamboo');
     preferProp.unmount();
   });
@@ -357,6 +376,7 @@ describe('DatePicker · allowClear / clearIcon（上游 testCases）', () => {
   it('`allowClear` 的四种形态', async () => {
     // 上游 `allows or prohibits clearing as applicable`
     const w = mountPicker({ value: somePoint });
+    await nextTick();
     expect(clearButton(w).exists()).toBe(true);
 
     await w.setProps({ allowClear: false });
@@ -371,11 +391,12 @@ describe('DatePicker · allowClear / clearIcon（上游 testCases）', () => {
     w.unmount();
   });
 
-  it('`allowClear` 走 ConfigProvider，且 **prop 优先**', () => {
+  it('`allowClear` 走 ConfigProvider，且 **prop 优先**', async () => {
     const viaContext = mount(ConfigProvider, {
       props: { components: { datePicker: { allowClear: false } } },
       slots: { default: () => h(DatePicker, { value: somePoint }) },
     });
+    await nextTick();
     expect(viaContext.find(`.${P}-clear`).exists()).toBe(false);
     viaContext.unmount();
 
@@ -385,11 +406,12 @@ describe('DatePicker · allowClear / clearIcon（上游 testCases）', () => {
         default: () => h(DatePicker, { value: somePoint, allowClear: { clearIcon: h('i') } }),
       },
     });
+    await nextTick();
     expect(preferProp.find(`.${P}-clear`).exists()).toBe(true);
     preferProp.unmount();
   });
 
-  it('`clearIcon` 走 ConfigProvider，且 **prop 优先**', () => {
+  it('`clearIcon` 走 ConfigProvider，且 **prop 优先**', async () => {
     const preferProp = mount(ConfigProvider, {
       props: {
         components: {
@@ -404,6 +426,7 @@ describe('DatePicker · allowClear / clearIcon（上游 testCases）', () => {
           }),
       },
     });
+    await nextTick();
     expect(preferProp.find('[data-testid="custom-clear"]').exists()).toBe(true);
     expect(preferProp.find('[data-testid="config-clear"]').exists()).toBe(false);
     preferProp.unmount();
@@ -412,6 +435,7 @@ describe('DatePicker · allowClear / clearIcon（上游 testCases）', () => {
   it('点清除按钮 ⇒ 发 `clear` 事件（上游 `onClear`）', async () => {
     // 上游 `should trigger onClear when click clear button`
     const w = mountPicker({ defaultValue: somePoint });
+    await nextTick();
     await clearButton(w).trigger('click');
     expect(w.emitted('clear')).toHaveLength(1);
     w.unmount();
@@ -425,11 +449,12 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     return vi.spyOn(console, 'error').mockImplementation(() => {});
   };
 
-  it('`dropdownClassName` / `popupClassName` ⇒ 告警 + 类名落到浮层', () => {
+  it('`dropdownClassName` / `popupClassName` ⇒ 告警 + 类名落到浮层', async () => {
     // 上游 `legacy dropdownClassName & popupClassName`
     for (const prop of ['dropdownClassName', 'popupClassName'] as const) {
       const spy = captureWarnings();
       const w = mountPicker({ open: true, [prop]: 'legacy' });
+      await nextTick();
 
       expect(spy.mock.calls.flat().join(' ')).toContain(
         `\`${prop}\` is deprecated. Please use \`classNames.popup.root\` instead.`,
@@ -440,10 +465,11 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     }
   });
 
-  it('`popupStyle` ⇒ 告警 + style 落到浮层', () => {
+  it('`popupStyle` ⇒ 告警 + style 落到浮层', async () => {
     // 上游 `legacy popupStyle`
     const spy = captureWarnings();
     const w = mountPicker({ open: true, popupStyle: { backgroundColor: 'red' } });
+    await nextTick();
 
     expect(spy.mock.calls.flat().join(' ')).toContain(
       '`popupStyle` is deprecated. Please use `styles.popup.root` instead.',
@@ -453,9 +479,10 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     spy.mockRestore();
   });
 
-  it('`bordered` ⇒ 告警（`variant` 取代它）', () => {
+  it('`bordered` ⇒ 告警（`variant` 取代它）', async () => {
     const spy = captureWarnings();
     const w = mountPicker({ bordered: true });
+    await nextTick();
     expect(spy.mock.calls.flat().join(' ')).toContain(
       '`bordered` is deprecated. Please use `variant` instead.',
     );
@@ -463,9 +490,10 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     spy.mockRestore();
   });
 
-  it('`onSelect` ⇒ 告警（`onCalendarChange` 取代它）', () => {
+  it('`onSelect` ⇒ 告警（`onCalendarChange` 取代它）', async () => {
     const spy = captureWarnings();
     const w = mountPicker({ onSelect: () => {} });
+    await nextTick();
     expect(spy.mock.calls.flat().join(' ')).toContain(
       '`onSelect` is deprecated. Please use `onCalendarChange` instead.',
     );
@@ -478,6 +506,7 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     // 后者在 Vue 里恒真 ⇒ 每条告警都会误报（恒假告警会淹掉真告警）。
     const spy = captureWarnings();
     const w = mountPicker({ open: true, defaultValue: dayjs('2023-08-01') });
+    await nextTick();
     await nextTick();
 
     const messages = spy.mock.calls.flat().join(' ');
@@ -509,6 +538,7 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
       attrs: { 'data-testid': 'dp', 'aria-describedby': 'hint' },
     });
     await nextTick();
+    await nextTick();
     // ⚠️ 落点是**选择器根元素**（外层还有 Trigger）—— 不是
     const root = w.find('.apollo-picker');
     expect(root.exists()).toBe(true);
@@ -523,6 +553,7 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
       attrs: { class: 'my-dp', style: 'width: 200px' },
     });
     await nextTick();
+    await nextTick();
     const root = w.find('.apollo-picker');
     expect(root.classes()).toContain('my-dp');
     expect(root.attributes('style')).toContain('width: 200px');
@@ -534,6 +565,7 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
       props: { defaultValue: dayjs('2016-11-22') },
       attrs: { id: 'user-id' },
     });
+    await nextTick();
     await nextTick();
     // `id` 是引擎自己的 prop（mergedId），不该被 attrs 覆盖。
     // 🚨 **这条断言目前是空转的** —— `id` 在本仓整条链路里被丢掉了（根与 input 都没有），
@@ -552,6 +584,7 @@ describe('RangePicker · 根 attrs 透传（§1.8）', () => {
       props: { defaultValue: [dayjs('2016-11-22'), dayjs('2016-11-23')] as never },
       attrs: { 'data-testid': 'rp', 'aria-describedby': 'hint2' },
     });
+    await nextTick();
     await nextTick();
     const root = w.find('.apollo-picker');
     expect(root.exists()).toBe(true);

@@ -13,12 +13,14 @@
  * 空根 div）—— 两条渲染路径平台一致，L2 的时序断言负责。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import { h } from 'vue';
+import { domContractTest } from '@apollo-design/test-utils';
+import { beforeAll } from 'vitest';
+import { createSSRApp, h, type VNode } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 import baseline from '../../../../../tests/compat/baselines/back-top.dom.json';
 import { BackTop } from '../index';
 
-const specs: Record<string, { render: () => DomRenderResult }> = {
+const specs: Record<string, { render: () => VNode }> = {
   'back-top:prefix-cls:no-props': { render: () => h(BackTop, { visibilityHeight: 0 }) },
   'back-top:basic': { render: () => h(BackTop, { visibilityHeight: 0 }) },
   'back-top:custom-children': {
@@ -37,6 +39,14 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 };
 
+// Oracle 来自 renderToStaticMarkup；Vue 侧也使用 SSR，而非读取 mount 的动画首帧。
+const markup = new Map<string, string>();
+beforeAll(async () => {
+  for (const [id, spec] of Object.entries(specs)) {
+    markup.set(id, await renderToString(createSSRApp({ render: spec.render })));
+  }
+});
+
 domContractTest('BackTop', {
   baseline,
   keepStyle: true,
@@ -45,6 +55,8 @@ domContractTest('BackTop', {
     const spec = specs[id];
     if (!spec)
       throw new Error(`[BackTop L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
-    return spec.render();
+    const html = markup.get(id);
+    if (html === undefined) throw new Error(`[BackTop L4] SSR markup missing: ${id}`);
+    return html;
   },
 });

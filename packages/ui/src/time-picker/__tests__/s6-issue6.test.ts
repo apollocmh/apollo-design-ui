@@ -30,6 +30,7 @@
 import { mount } from '@vue/test-utils';
 import dayjs from 'dayjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { nextTick } from 'vue';
 import DatePicker from '../../date-picker/DatePicker.vue';
 import TimePicker from '../TimePicker.vue';
 import TimeRangePicker from '../TimeRangePicker.vue';
@@ -41,11 +42,18 @@ afterEach(() => {
   document.body.innerHTML = '';
 });
 
-const mountTimePicker = (props: Record<string, unknown> = {}) =>
-  mount(TimePicker, { props, attachTo: document.body });
+// appear 首帧由 CSSMotion 拦截；等 prepare 节点提交后再读面板，断言保持不变。
+const mountTimePicker = async (props: Record<string, unknown> = {}) => {
+  const wrapper = mount(TimePicker, { props, attachTo: document.body });
+  await nextTick();
+  return wrapper;
+};
 
-const mountRange = (props: Record<string, unknown> = {}) =>
-  mount(TimeRangePicker, { props, attachTo: document.body });
+const mountRange = async (props: Record<string, unknown> = {}) => {
+  const wrapper = mount(TimeRangePicker, { props, attachTo: document.body });
+  await nextTick();
+  return wrapper;
+};
 
 /** 时间列（**查 `w.element`**，见文件头第 1 条）。 */
 const columns = (w: { element: HTMLElement }) =>
@@ -73,7 +81,7 @@ const okButton = (w: { element: HTMLElement }) =>
 
 describe('TimePicker · 命令面（Issue #6.1）', () => {
   it('★ `focus()` 把焦点交给 combobox input；`blur()` 交还', async () => {
-    const w = mountTimePicker();
+    const w = await mountTimePicker();
     await w.vm.$nextTick();
 
     const input = w.element.querySelector(`.${P}-input input`) as HTMLInputElement;
@@ -88,7 +96,7 @@ describe('TimePicker · 命令面（Issue #6.1）', () => {
   });
 
   it('★ `nativeElement` 是**选择器根**（getter ⇒ 每次访问都取最新的）', async () => {
-    const w = mountTimePicker();
+    const w = await mountTimePicker();
     await w.vm.$nextTick();
 
     const el = w.vm.nativeElement as HTMLElement | null;
@@ -100,7 +108,9 @@ describe('TimePicker · 命令面（Issue #6.1）', () => {
   });
 
   it('★ `TimeRangePicker` 额外暴露 `startInput` / `endInput`，`focus(1)` 聚焦第二端', async () => {
-    const w = mountRange({ defaultValue: [D('2026-09-15 10:00:00'), D('2026-09-16 11:00:00')] });
+    const w = await mountRange({
+      defaultValue: [D('2026-09-15 10:00:00'), D('2026-09-16 11:00:00')],
+    });
     await w.vm.$nextTick();
 
     const startInput = w.vm.startInput as HTMLInputElement | null;
@@ -137,8 +147,8 @@ describe('TimePicker · 顶层时间配置贯通到面板（Issue #6.2）', () =
   const mk = (props: Record<string, unknown> = {}) =>
     mountTimePicker({ open: true, defaultValue: VALUE, ...props });
 
-  it('★ 基线：不传 ⇒ 3 列 24 / 60 / 60（这条必须先绿，否则下面的对比没有意义）', () => {
-    const w = mk();
+  it('★ 基线：不传 ⇒ 3 列 24 / 60 / 60（这条必须先绿，否则下面的对比没有意义）', async () => {
+    const w = await mk();
     expect(columns(w)).toHaveLength(3);
     expect(labelsOf(w, 0)).toHaveLength(24);
     expect(labelsOf(w, 1)).toHaveLength(60);
@@ -146,29 +156,29 @@ describe('TimePicker · 顶层时间配置贯通到面板（Issue #6.2）', () =
     w.unmount();
   });
 
-  it('★ `use12Hours` ⇒ 4 列：小时列 12 项 + 上午下午列 2 项', () => {
-    const w = mk({ use12Hours: true });
+  it('★ `use12Hours` ⇒ 4 列：小时列 12 项 + 上午下午列 2 项', async () => {
+    const w = await mk({ use12Hours: true });
     expect(columns(w)).toHaveLength(4);
     expect(labelsOf(w, 0)).toHaveLength(12);
     expect(labelsOf(w, 3)).toEqual(['AM', 'PM']);
     w.unmount();
   });
 
-  it('★ `hourStep: 15` ⇒ 小时列只剩 `[00, 15]`（上界 23，见文件头第 4 条）', () => {
-    const w = mk({ hourStep: 15 });
+  it('★ `hourStep: 15` ⇒ 小时列只剩 `[00, 15]`（上界 23，见文件头第 4 条）', async () => {
+    const w = await mk({ hourStep: 15 });
     // 🚨 **不是 4 项** —— `generateUnits(0, 23, 15)` 只出 00 / 15
     expect(labelsOf(w, 0)).toEqual(['00', '15']);
     w.unmount();
   });
 
-  it('★ `minuteStep: 30` ⇒ 分钟列 `[00, 30]`', () => {
-    const w = mk({ minuteStep: 30 });
+  it('★ `minuteStep: 30` ⇒ 分钟列 `[00, 30]`', async () => {
+    const w = await mk({ minuteStep: 30 });
     expect(labelsOf(w, 1)).toEqual(['00', '30']);
     w.unmount();
   });
 
-  it('★ `disabledTime` ⇒ 那些档位被禁用（**格数不变**：这是禁用不是跳过）', () => {
-    const w = mk({ disabledTime: () => ({ disabledHours: () => [0, 1, 2] }) });
+  it('★ `disabledTime` ⇒ 那些档位被禁用（**格数不变**：这是禁用不是跳过）', async () => {
+    const w = await mk({ disabledTime: () => ({ disabledHours: () => [0, 1, 2] }) });
     expect(cellsOf(w, 0)).toHaveLength(24);
     expect(
       cellsOf(w, 0).filter((c) => c.classList.contains(`${P}-time-panel-cell-disabled`)),
@@ -176,8 +186,8 @@ describe('TimePicker · 顶层时间配置贯通到面板（Issue #6.2）', () =
     w.unmount();
   });
 
-  it('★ `hideDisabledOptions` ⇒ 直接**跳过**禁用档位（格数变少）', () => {
-    const w = mk({
+  it('★ `hideDisabledOptions` ⇒ 直接**跳过**禁用档位（格数变少）', async () => {
+    const w = await mk({
       hideDisabledOptions: true,
       disabledTime: () => ({ disabledHours: () => [0, 1, 2] }),
     });
@@ -185,24 +195,24 @@ describe('TimePicker · 顶层时间配置贯通到面板（Issue #6.2）', () =
     w.unmount();
   });
 
-  it('★ `showHour: false` ⇒ 小时列消失（**显式关**要真的关得掉）', () => {
-    const w = mk({ showHour: false });
+  it('★ `showHour: false` ⇒ 小时列消失（**显式关**要真的关得掉）', async () => {
+    const w = await mk({ showHour: false });
     // 显式关掉一列之后只剩分 / 秒（`fillShowConfig` 的 `existFalse` 分支）
     expect(labelsOf(w, 0)).toHaveLength(60);
     expect(columns(w)).toHaveLength(2);
     w.unmount();
   });
 
-  it('★ 深层透传：`TimePicker` → `DatePicker` 这条链不能把键吃掉', () => {
+  it('★ 深层透传：`TimePicker` → `DatePicker` 这条链不能把键吃掉', async () => {
     // 这两条一起给，验证的是「多键共存」而不是单键
-    const w = mk({ use12Hours: true, minuteStep: 30 });
+    const w = await mk({ use12Hours: true, minuteStep: 30 });
     expect(columns(w)).toHaveLength(4);
     expect(labelsOf(w, 1)).toEqual(['00', '30']);
     w.unmount();
   });
 
-  it('`TimeRangePicker` 同样吃到顶层配置（另一条合并路径）', () => {
-    const w = mountRange({
+  it('`TimeRangePicker` 同样吃到顶层配置（另一条合并路径）', async () => {
+    const w = await mountRange({
       open: true,
       use12Hours: true,
       defaultValue: [D('2016-11-22 12:30:45'), D('2016-11-22 13:45:00')],
@@ -225,7 +235,7 @@ describe('TimePicker · `onSelect` / `ok` 的载荷与发出（Issue #6.3）', (
 
   it('★ 点小时格 ⇒ `onSelect` 收到**单个 Dayjs**（不是数组）', async () => {
     const onSelect = vi.fn();
-    const w = mountTimePicker({
+    const w = await mountTimePicker({
       open: true,
       defaultValue: D('2016-11-22 12:30:45'),
       onSelect,
@@ -246,7 +256,7 @@ describe('TimePicker · `onSelect` / `ok` 的载荷与发出（Issue #6.3）', (
 
   it('★ 点 `OK` ⇒ `onOk` **真的被调到**，载荷是**单个 Dayjs**', async () => {
     const onOk = vi.fn();
-    const w = mountTimePicker({
+    const w = await mountTimePicker({
       open: true,
       needConfirm: true,
       defaultValue: D('2016-11-22 12:30:45'),
@@ -268,7 +278,7 @@ describe('TimePicker · `onSelect` / `ok` 的载荷与发出（Issue #6.3）', (
 
   it('★ `TimeRangePicker` 的 `ok` 载荷是**槽位列表**（范围约定不同）', async () => {
     const onOk = vi.fn();
-    const w = mountRange({
+    const w = await mountRange({
       open: true,
       needConfirm: true,
       defaultValue: [D('2016-11-22 12:30:45'), D('2016-11-22 13:45:00')],
@@ -293,21 +303,21 @@ describe('TimePicker · `onSelect` / `ok` 的载荷与发出（Issue #6.3）', (
 // ===========================================================================
 
 describe('TimePicker · `defaultOpenValue` 锚定面板（Issue #6.5）', () => {
-  it('★ 无值 + `defaultOpenValue` ⇒ 三列都停在它那一刻（而不是 `getNow()`）', () => {
-    const w = mountTimePicker({ open: true, defaultOpenValue: D('2016-11-22 00:00:00') });
+  it('★ 无值 + `defaultOpenValue` ⇒ 三列都停在它那一刻（而不是 `getNow()`）', async () => {
+    const w = await mountTimePicker({ open: true, defaultOpenValue: D('2016-11-22 00:00:00') });
     expect(selectedLabels(w)).toEqual(['00', '00', '00']);
     w.unmount();
   });
 
-  it('★ 锚定**不写入**值：不发 `change`，输入框仍为空', () => {
-    const w = mountTimePicker({ open: true, defaultOpenValue: D('2016-11-22 00:00:00') });
+  it('★ 锚定**不写入**值：不发 `change`，输入框仍为空', async () => {
+    const w = await mountTimePicker({ open: true, defaultOpenValue: D('2016-11-22 00:00:00') });
     expect(w.emitted('change')).toBeUndefined();
     expect((w.element.querySelector(`.${P}-input input`) as HTMLInputElement).value).toBe('');
     w.unmount();
   });
 
-  it('反向哨兵：有值时 `defaultOpenValue` **不生效**（面板跟随值）', () => {
-    const w = mountTimePicker({
+  it('反向哨兵：有值时 `defaultOpenValue` **不生效**（面板跟随值）', async () => {
+    const w = await mountTimePicker({
       open: true,
       defaultValue: D('2016-11-22 07:08:09'),
       defaultOpenValue: D('2016-11-22 00:00:00'),
@@ -316,8 +326,8 @@ describe('TimePicker · `defaultOpenValue` 锚定面板（Issue #6.5）', () => 
     w.unmount();
   });
 
-  it('★ 无值 + `defaultOpenValue` ⇒ 「确定」**可点**（`footerSubmitValue` 的同一条分支）', () => {
-    const w = mountTimePicker({
+  it('★ 无值 + `defaultOpenValue` ⇒ 「确定」**可点**（`footerSubmitValue` 的同一条分支）', async () => {
+    const w = await mountTimePicker({
       open: true,
       needConfirm: true,
       defaultOpenValue: D('2016-11-22 00:00:00'),
@@ -328,7 +338,7 @@ describe('TimePicker · `defaultOpenValue` 锚定面板（Issue #6.5）', () => 
 
   it('★ 点「确定」⇒ 落到 `defaultOpenValue`（上游 `onFooterSubmit` 的第一步）', async () => {
     const onOk = vi.fn();
-    const w = mountTimePicker({
+    const w = await mountTimePicker({
       open: true,
       needConfirm: true,
       defaultOpenValue: D('2016-11-22 06:07:08'),
@@ -347,8 +357,8 @@ describe('TimePicker · `defaultOpenValue` 锚定面板（Issue #6.5）', () => 
     w.unmount();
   });
 
-  it('反向哨兵：**没有** `defaultOpenValue` 的空值 picker ⇒ 确定按钮禁用', () => {
-    const w = mountTimePicker({ open: true, needConfirm: true });
+  it('反向哨兵：**没有** `defaultOpenValue` 的空值 picker ⇒ 确定按钮禁用', async () => {
+    const w = await mountTimePicker({ open: true, needConfirm: true });
     expect(okButton(w)?.disabled).toBe(true);
     w.unmount();
   });

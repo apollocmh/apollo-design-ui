@@ -383,3 +383,21 @@ jsdom 没有 rAF 的帧语义，也不跑 CSS 动画、不发 `transitionend`/`a
    那属于 §3.3 引自上游的结论，jsdom 复现不了。
 7. **没有覆盖 `motionName` 为对象形态**（`getTransitionName` 支持
    `{ enter, leave, ... }` 映射）。本轮按字符串形态实现，对象形态留到有组件用到时。
+
+## 10. 002 复审：Vue DOM 提交边界（2026-10-22）
+
+初始快照复用 `getStyleReady`：支持动画且启用 appear 时返回字符串 `NONE`，
+禁止先插入一个没有入场 class 的可见节点。无 appear / 无 motionName / SSR
+仍按原有同步渲染契约处理。
+SSR 以 Vue SSR context 为判据，避免在存在 window 的预渲染宿主里错误等待 appear。
+
+驱动新增可选 `scheduleRender(callback)` DOM 适配点（默认同步）。Vue 接线使用
+`nextTick`：先提交 prepare 节点并绑定 ref，再执行 start 高度测量。
+setVisible / destroy 会使旧的待提交回调、帧任务、prepare Promise 与 deadline 失效，
+避免快速反向后旧任务推进新一轮状态。
+
+`packages/docs/tests/motion-review-browser.mjs` 用 Chromium 逐 rAF 记录真实
+transform、opacity、height、rect、CSS 变量和结束事件；同机运行 React 与 Vue。
+覆盖 Message / Notification 新旧条位移、Inline Menu 高度与模式退出。
+原始采样位于 `docs/audit/evidence/review-002-motion.json`；该证据只覆盖这些具体场景，
+不代表 §9 的其余边界都已证明。

@@ -40,8 +40,9 @@ const nowBtn = (w: ReturnType<typeof mount>) => w.find(`.${P}-now-btn`);
 const okButton = (w: ReturnType<typeof mount>) => w.find(`.${P}-ok button`);
 
 describe('DatePicker · 浮层页脚 —— 出现条件', () => {
-  it('`picker: date` ⇒ 有页脚，`Today` 居中在 `-ranges` 里', () => {
+  it('`picker: date` ⇒ 有页脚，`Today` 居中在 `-ranges` 里', async () => {
     const w = mountOpen();
+    await nextTick();
     expect(footer(w).exists()).toBe(true);
     expect(w.find(`.${P}-ranges`).exists()).toBe(true);
     expect(nowBtn(w).text()).toBe('Today');
@@ -50,37 +51,42 @@ describe('DatePicker · 浮层页脚 —— 出现条件', () => {
     w.unmount();
   });
 
-  it('🚨 `picker: month` / `year` ⇒ **没有页脚**（`useShowNow` 的 `mode` 分支）', () => {
+  it('🚨 `picker: month` / `year` ⇒ **没有页脚**（`useShowNow` 的 `mode` 分支）', async () => {
     for (const picker of ['month', 'year'] as const) {
       const w = mountOpen({ picker });
+      await nextTick();
       expect(footer(w).exists()).toBe(false);
       w.unmount();
     }
   });
 
-  it('🚨 `multiple` ⇒ **没有页脚**（上游 `Popup` 的 `multiple ? false : showNow`）', () => {
+  it('🚨 `multiple` ⇒ **没有页脚**（上游 `Popup` 的 `multiple ? false : showNow`）', async () => {
     const w = mountOpen({ multiple: true, defaultValue: [D('2026-09-30')] });
+    await nextTick();
     expect(footer(w).exists()).toBe(false);
     w.unmount();
   });
 
-  it('`showToday: false` ⇒ 没有页脚（显式关闭要生效）', () => {
+  it('`showToday: false` ⇒ 没有页脚（显式关闭要生效）', async () => {
     const w = mountOpen({ showToday: false });
+    await nextTick();
     expect(footer(w).exists()).toBe(false);
     w.unmount();
   });
 
-  it('`showNow` 优先于 `showToday`（`!== undefined` 判据，不是 truthy）', () => {
+  it('`showNow` 优先于 `showToday`（`!== undefined` 判据，不是 truthy）', async () => {
     // `showToday: false` + `showNow: true` ⇒ 以 `showNow` 为准
     const w = mountOpen({ showToday: false, showNow: true });
+    await nextTick();
     expect(footer(w).exists()).toBe(true);
     w.unmount();
   });
 });
 
 describe('DatePicker · 浮层页脚 —— 文案与 OK', () => {
-  it('🚨 `showTime` ⇒ 文案是 `Now`（判据是 `internalMode` = `datetime`）', () => {
+  it('🚨 `showTime` ⇒ 文案是 `Now`（判据是 `internalMode` = `datetime`）', async () => {
     const w = mountOpen({ showTime: true });
+    await nextTick();
     expect(nowBtn(w).text()).toBe('Now');
     // `showTime` 让 `needConfirm` 默认为真 ⇒ 出现 OK
     expect(okButton(w).exists()).toBe(true);
@@ -88,18 +94,21 @@ describe('DatePicker · 浮层页脚 —— 文案与 OK', () => {
     w.unmount();
   });
 
-  it('`OK` 的禁用态：无值 ⇒ 禁用；有值 ⇒ 可用（上游 `disableSubmit`）', () => {
+  it('`OK` 的禁用态：无值 ⇒ 禁用；有值 ⇒ 可用（上游 `disableSubmit`）', async () => {
     const empty = mountOpen({ showTime: true });
+    await nextTick();
     expect(okButton(empty).attributes('disabled')).toBeDefined();
     empty.unmount();
 
     const filled = mountOpen({ showTime: true, defaultValue: D('2026-09-30') });
+    await nextTick();
     expect(okButton(filled).attributes('disabled')).toBeUndefined();
     filled.unmount();
   });
 
-  it('`needConfirm: false` + `showTime` ⇒ 没有 OK（但仍有时刻按钮）', () => {
+  it('`needConfirm: false` + `showTime` ⇒ 没有 OK（但仍有时刻按钮）', async () => {
     const w = mountOpen({ showTime: true, needConfirm: false });
+    await nextTick();
     expect(okButton(w).exists()).toBe(false);
     expect(footer(w).exists()).toBe(true);
     w.unmount();
@@ -109,6 +118,7 @@ describe('DatePicker · 浮层页脚 —— 文案与 OK', () => {
 describe('DatePicker · 浮层页脚 —— 交互与扩展', () => {
   it('点「此刻 / 今天」⇒ 提交该值并发 `change` / `update:value`', async () => {
     const w = mountOpen();
+    await nextTick();
     await nowBtn(w).trigger('click');
     await nextTick();
 
@@ -122,8 +132,9 @@ describe('DatePicker · 浮层页脚 —— 交互与扩展', () => {
     w.unmount();
   });
 
-  it('`renderExtraFooter` ⇒ 渲染 `-footer-extra`（在 `-ranges` 之前）', () => {
+  it('`renderExtraFooter` ⇒ 渲染 `-footer-extra`（在 `-ranges` 之前）', async () => {
     const w = mountOpen({ renderExtraFooter: () => 'EXTRA' });
+    await nextTick();
     const extra = w.find(`.${P}-footer-extra`);
     expect(extra.exists()).toBe(true);
     expect(extra.text()).toBe('EXTRA');
@@ -133,20 +144,22 @@ describe('DatePicker · 浮层页脚 —— 交互与扩展', () => {
     w.unmount();
   });
 
-  it('🚨 `renderExtraFooter` 返回空串 ⇒ **整个页脚不渲染**（`isRenderable` 判据）', () => {
+  it('🚨 `renderExtraFooter` 返回空串 ⇒ **整个页脚不渲染**（`isRenderable` 判据）', async () => {
     // 上游 `isReactRenderable('')` 是 **false**（`@rc-component/util` 的 `es/is.js`）。
     // 若误按 truthy / 「空串算可渲染」实现，这里会渲染出一个空的 `-footer`，
     // 把页脚凭空撑出来（L6 会立刻红）。
     const w = mountOpen({ showToday: false, renderExtraFooter: () => '' });
+    await nextTick();
     expect(footer(w).exists()).toBe(false);
     w.unmount();
   });
 
-  it('语义槽 `classNames.popup.footer` / `styles.popup.footer` 落到页脚上', () => {
+  it('语义槽 `classNames.popup.footer` / `styles.popup.footer` 落到页脚上', async () => {
     const w = mountOpen({
       classNames: { popup: { footer: 'c-footer' } },
       styles: { popup: { footer: { backgroundColor: 'red' } } },
     });
+    await nextTick();
     const el = footer(w);
     expect(el.classes()).toContain('c-footer');
     expect(el.attributes('style')).toContain('background-color: red');

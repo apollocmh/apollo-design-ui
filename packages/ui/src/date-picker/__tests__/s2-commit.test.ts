@@ -1,3 +1,4 @@
+// 初始 open 的浮层需等待 CSSMotion prepare 节点提交；原有断言不变。
 /**
  * L2 —— **提交时机**的接线（S2 收口）。
  *
@@ -28,6 +29,7 @@
 import { mount } from '@vue/test-utils';
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import DatePicker from '../DatePicker.vue';
 
 const P = 'apollo-picker';
@@ -48,6 +50,7 @@ const lastChangeText = (w: ReturnType<typeof mount>): string => {
 describe('DatePicker · 键入的提交时机（S2 收口）', () => {
   it('🚨 **键入本身不提交** —— 只写临时日历值，不发 `change`', async () => {
     const w = mount(DatePicker);
+    await nextTick();
     await input(w).setValue('2026-09-30');
 
     // 解析成功（`invalid` 回 false）但**没有** `change`
@@ -59,6 +62,7 @@ describe('DatePicker · 键入的提交时机（S2 收口）', () => {
 
   it('✅ 关浮层（`popupClose`）⇒ 提交：发 `change` + `update:value`（C11 双发）', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await input(w).setValue('2026-09-30');
     expect(w.emitted('change')).toBeUndefined();
 
@@ -72,6 +76,7 @@ describe('DatePicker · 键入的提交时机（S2 收口）', () => {
 
   it('✅ `Tab`（`keyboard-submit-weak`）⇒ **局部提交**：发 `change` 且关浮层', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await input(w).setValue('2026-09-30');
 
     await input(w).trigger('keydown', { key: 'Tab' });
@@ -83,6 +88,7 @@ describe('DatePicker · 键入的提交时机（S2 收口）', () => {
 
   it('🚨 键入**非法**后关浮层 ⇒ 丢弃临时值（`resetAll`），不发 `change`', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await input(w).setValue('完全不是日期');
     expect(input(w).attributes('aria-invalid')).toBe('true');
 
@@ -94,6 +100,7 @@ describe('DatePicker · 键入的提交时机（S2 收口）', () => {
 
   it('🚨 键入**合法**后按 `Escape`（`esc`）⇒ **回滚**，不发 `change`', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await input(w).setValue('2026-09-30');
 
     await input(w).trigger('keydown', { key: 'Escape' });
@@ -108,6 +115,7 @@ describe('DatePicker · 键入的提交时机（S2 收口）', () => {
     const w = mount(DatePicker, {
       props: { open: true, value: dayjs('2026-01-01') },
     });
+    await nextTick();
     await input(w).setValue('2026-09-30');
 
     await input(w).trigger('keydown', { key: 'Escape' });
@@ -120,6 +128,7 @@ describe('DatePicker · 键入的提交时机（S2 收口）', () => {
 
   it('受控 `value` + 关浮层提交 ⇒ 发 `change`（载荷是解析出的日期）', async () => {
     const w = mount(DatePicker, { props: { open: true, value: dayjs('2026-01-01') } });
+    await nextTick();
     await input(w).setValue('2026-09-30');
 
     await w.setProps({ open: false });
@@ -136,6 +145,7 @@ describe('DatePicker · 面板点选的提交时机（S2 收口）', () => {
 
   it('无 `showTime` ⇒ `panel-final`：点一格**立即提交**并关浮层', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     const cell = firstEnabledCell(w);
     expect(cell).toBeTruthy();
 
@@ -149,6 +159,7 @@ describe('DatePicker · 面板点选的提交时机（S2 收口）', () => {
   it('带 `showTime` ⇒ `panel-intermediate`：点一格**只改日历值**，等「确定」才提交', async () => {
     // `complexPicker` 为真（`datetime`）⇒ `panelFinished` 为假
     const w = mount(DatePicker, { props: { open: true, showTime: true } });
+    await nextTick();
     const cell = firstEnabledCell(w);
     expect(cell).toBeTruthy();
 
@@ -162,6 +173,7 @@ describe('DatePicker · 面板点选的提交时机（S2 收口）', () => {
     // 这条钉住 `panelFinished = !complexPicker && internalPicker === internalMode`
     // 的后半段：下钻到年面板后点一格**不该**把值提交掉。
     const w = mount(DatePicker, { props: { open: true, mode: 'year' } });
+    await nextTick();
     const cell = firstEnabledCell(w);
     expect(cell).toBeTruthy();
 
@@ -175,6 +187,7 @@ describe('DatePicker · 面板点选的提交时机（S2 收口）', () => {
 describe('DatePicker · 清除的完整链（S2 收口）', () => {
   it('点清除 ⇒ `clear` 事件 + 空值提交 + 关浮层', async () => {
     const w = mount(DatePicker, { props: { defaultValue: dayjs('2026-09-30') } });
+    await nextTick();
 
     await w.find(`.${P}-clear`).trigger('click');
 
@@ -186,6 +199,7 @@ describe('DatePicker · 清除的完整链（S2 收口）', () => {
 
   it('🚨 清除会**结束本轮交互的簿记**（`resetSingleValueChange`）—— 之后关浮层不再重复提交', async () => {
     const w = mount(DatePicker, { props: { defaultValue: dayjs('2026-09-30'), open: true } });
+    await nextTick();
 
     await w.find(`.${P}-clear`).trigger('click');
     const changesAfterClear = w.emitted('change')?.length ?? 0;

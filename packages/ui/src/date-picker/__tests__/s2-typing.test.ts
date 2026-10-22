@@ -160,6 +160,7 @@ describe('DatePicker · 键入接线（S2 · invalid 状态）', () => {
 describe('DatePicker · 键入接线（S2 · 键盘）', () => {
   it('`Escape` ⇒ 关浮层', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await w.vm.$nextTick();
     expect(w.find(`.${P}-dropdown`).exists()).toBe(true);
 
     await input(w).trigger('keydown', { key: 'Escape' });

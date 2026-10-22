@@ -49,6 +49,7 @@ const lastChange = (w: ReturnType<typeof mount>) => w.emitted('change')?.at(-1);
 describe('DatePicker · multiple 的 change 第二参（Issue #5.1）', () => {
   it('★ 删掉一个标签 ⇒ `([剩余日期], [剩余文本])` —— 整组文本，不是首项', async () => {
     const w = mount(DatePicker, { props: { multiple: true, defaultValue: TWO } });
+    await nextTick();
 
     await items(w)[0]?.find(`.${P}-selection-item-remove`).trigger('click');
 
@@ -61,6 +62,7 @@ describe('DatePicker · multiple 的 change 第二参（Issue #5.1）', () => {
 
   it('★ 两个都在 ⇒ 两个文本都在（`DatePicker.vue` 的 `onChange` 按模式分派）', async () => {
     const w = mount(DatePicker, { props: { multiple: true, defaultValue: TWO } });
+    await nextTick();
 
     // 追加第三个（点面板里的日期格 ⇒ 关浮层时提交）；直接改受控值更稳：
     // 这里用「移除再断言长度」避免依赖面板渲染细节。
@@ -74,6 +76,7 @@ describe('DatePicker · multiple 的 change 第二参（Issue #5.1）', () => {
 
   it('★ 多选清空 ⇒ `(null, null)`（上游 `pickerParam` 的 `null` 判断在最前）', async () => {
     const w = mount(DatePicker, { props: { multiple: true, defaultValue: TWO } });
+    await nextTick();
 
     await w.find(`.${P}-clear`).trigger('click');
 
@@ -88,6 +91,7 @@ describe('DatePicker · multiple 的 change 第二参（Issue #5.1）', () => {
 
   it('`update:value` 与 `change` 同值（C11）：多选清空两个都是 `null`', async () => {
     const w = mount(DatePicker, { props: { multiple: true, defaultValue: TWO } });
+    await nextTick();
     await w.find(`.${P}-clear`).trigger('click');
 
     expect(w.emitted('update:value')?.at(-1)?.[0]).toBeNull();
@@ -97,6 +101,7 @@ describe('DatePicker · multiple 的 change 第二参（Issue #5.1）', () => {
 
   it('反向哨兵：单选清空仍是 `(null, null)`（多选改动**没有**污染单值）', async () => {
     const w = mount(DatePicker, { props: { defaultValue: D('2026-09-30') } });
+    await nextTick();
 
     await w.find(`.${P}-clear`).trigger('click');
 
@@ -131,6 +136,7 @@ describe('DatePicker · getPopupContainer 回退到应用级（Issue #5.2）', (
     } as never);
     await nextTick();
     await nextTick();
+    await nextTick();
 
     expect(container.querySelector(`.${P}-dropdown`)).not.toBeNull();
     w.unmount();
@@ -144,6 +150,7 @@ describe('DatePicker · getPopupContainer 回退到应用级（Issue #5.2）', (
       slots: { default: () => h(RangePicker, { open: true }) },
       ...MOUNT,
     } as never);
+    await nextTick();
     await nextTick();
     await nextTick();
 
@@ -164,6 +171,7 @@ describe('DatePicker · getPopupContainer 回退到应用级（Issue #5.2）', (
     } as never);
     await nextTick();
     await nextTick();
+    await nextTick();
 
     expect(local.querySelector(`.${P}-dropdown`)).not.toBeNull();
     expect(global.querySelector(`.${P}-dropdown`)).toBeNull();
@@ -174,6 +182,7 @@ describe('DatePicker · getPopupContainer 回退到应用级（Issue #5.2）', (
 
   it('反向哨兵：两边都不给 ⇒ 落 `document.body`（不是「渲染不出来」）', async () => {
     const w = mount(DatePicker, { props: { open: true }, ...MOUNT } as never);
+    await nextTick();
     await nextTick();
     await nextTick();
 
@@ -271,6 +280,7 @@ describe('DatePicker / RangePicker · 只改 attrs 也要更新（Issue #5.3）'
     });
     const w = mount(Host);
     await nextTick();
+    await nextTick();
 
     // 引擎类名与用户类名并存
     expect(root(w).classes()).toContain(`${P}-outlined`);
@@ -299,31 +309,34 @@ describe('DatePicker / RangePicker · 只改 attrs 也要更新（Issue #5.3）'
 describe('DatePicker · 组件级 style 的合并路径（Issue #5.4）', () => {
   const styleOf = (w: ReturnType<typeof mount>) => (w.find(`.${P}`).element as HTMLElement).style;
 
-  it('★ `components.datePicker.style` 落到语义 `root`（走 `semanticRootStyle`）', () => {
+  it('★ `components.datePicker.style` 落到语义 `root`（走 `semanticRootStyle`）', async () => {
     const w = mount(ConfigProvider, {
       props: { components: { datePicker: { style: { color: 'red' } } } },
       slots: { default: () => h(DatePicker) },
     });
+    await nextTick();
     expect(styleOf(w).color).toBe('red');
     w.unmount();
   });
 
-  it('★ `components.rangePicker.style` 落到语义 `root`（此前传的是 `styles`，字段错了）', () => {
+  it('★ `components.rangePicker.style` 落到语义 `root`（此前传的是 `styles`，字段错了）', async () => {
     const w = mount(ConfigProvider, {
       props: { components: { rangePicker: { style: { color: 'blue' } } } },
       slots: { default: () => h(RangePicker) },
     });
+    await nextTick();
     expect(styleOf(w).color).toBe('blue');
     w.unmount();
   });
 
-  it('★ 优先级：`styles.root` prop 压过组件级 `style`', () => {
+  it('★ 优先级：`styles.root` prop 压过组件级 `style`', async () => {
     const w = mount(ConfigProvider, {
       props: { components: { datePicker: { style: { color: 'red', fontSize: '12px' } } } },
       slots: {
         default: () => h(DatePicker, { styles: { root: { color: 'green' } } }),
       },
     });
+    await nextTick();
     const style = styleOf(w);
     // prop 赢（`[contextStyles, contextStyleRoot, styles]` 后者覆盖前者）
     expect(style.color).toBe('green');
@@ -332,11 +345,12 @@ describe('DatePicker · 组件级 style 的合并路径（Issue #5.4）', () => 
     w.unmount();
   });
 
-  it('`components.datePicker.styles.root` 也生效（且被 prop 覆盖）', () => {
+  it('`components.datePicker.styles.root` 也生效（且被 prop 覆盖）', async () => {
     const w = mount(ConfigProvider, {
       props: { components: { datePicker: { styles: { root: { borderWidth: '3px' } } } } },
       slots: { default: () => h(DatePicker) },
     });
+    await nextTick();
     expect(styleOf(w).borderWidth).toBe('3px');
     w.unmount();
   });
@@ -357,10 +371,11 @@ describe('DatePicker · minDate / maxDate 的静态日期语义（Issue #5.5）'
    */
   const cell = (w: ReturnType<typeof mount>, iso: string) => w.find(`.${P}-cell[title="${iso}"]`);
 
-  it('★ `minDate` 是普通日期（不是函数）⇒ 早于它的格子被禁用', () => {
+  it('★ `minDate` 是普通日期（不是函数）⇒ 早于它的格子被禁用', async () => {
     const w = mount(DatePicker, {
       props: { open: true, defaultValue: D('2026-09-15'), minDate: D('2026-09-10') },
     });
+    await nextTick();
 
     expect(cell(w, '2026-09-09').classes()).toContain(`${P}-cell-disabled`);
     // 🚨 补一条上游特有的判据：`minDate` **当天本身可选**（`useDisabledBoundary` 的 `isSame` 例外）
@@ -369,10 +384,11 @@ describe('DatePicker · minDate / maxDate 的静态日期语义（Issue #5.5）'
     w.unmount();
   });
 
-  it('★ `maxDate` 同理（晚于它的被禁用；**`maxDate` 当天本身可选**）', () => {
+  it('★ `maxDate` 同理（晚于它的被禁用；**`maxDate` 当天本身可选**）', async () => {
     const w = mount(DatePicker, {
       props: { open: true, defaultValue: D('2026-09-15'), maxDate: D('2026-09-20') },
     });
+    await nextTick();
 
     // 🚨 与 `minDate` 同一条 `isSame` 例外：边界那天**可选**，边界之外才禁用
     expect(cell(w, '2026-09-21').classes()).toContain(`${P}-cell-disabled`);
@@ -381,7 +397,7 @@ describe('DatePicker · minDate / maxDate 的静态日期语义（Issue #5.5）'
     w.unmount();
   });
 
-  it('RangePicker：静态 `minDate` / `maxDate` 同样生效（按 `defaultValue` 锚定月份）', () => {
+  it('RangePicker：静态 `minDate` / `maxDate` 同样生效（按 `defaultValue` 锚定月份）', async () => {
     // ⚠️ 用 `defaultValue` 把面板月份从「今天」解耦（PITFALLS：别让用例依赖运行时刻）
     const w = mount(RangePicker, {
       props: {
@@ -391,6 +407,7 @@ describe('DatePicker · minDate / maxDate 的静态日期语义（Issue #5.5）'
         maxDate: D('2026-09-20'),
       },
     });
+    await nextTick();
 
     expect(cell(w, '2026-09-09').classes()).toContain(`${P}-cell-disabled`);
     expect(cell(w, '2026-09-21').classes()).toContain(`${P}-cell-disabled`);

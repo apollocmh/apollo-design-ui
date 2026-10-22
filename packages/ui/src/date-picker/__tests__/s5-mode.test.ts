@@ -38,6 +38,7 @@ const hasPanel = (w: ReturnType<typeof mount>, name: string) =>
 describe('DatePicker · 面板粒度的受控化与「打开即重置」（S5）', () => {
   it('点年份按钮 ⇒ 下钻到**年面板**（`onPanelChange` 回灌 `mode`）', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     expect(hasPanel(w, 'date')).toBe(true);
 
     await w.find(`.${P}-year-btn`).trigger('click');
@@ -52,6 +53,7 @@ describe('DatePicker · 面板粒度的受控化与「打开即重置」（S5）
 
   it('🚨 **关闭再打开 ⇒ 粒度重置回 `picker`**（`Reset for every active`）', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await w.find(`.${P}-year-btn`).trigger('click');
     await nextTick();
     expect(hasPanel(w, 'year')).toBe(true);
@@ -69,6 +71,7 @@ describe('DatePicker · 面板粒度的受控化与「打开即重置」（S5）
 
   it('🚨 重置**不**发 `onPanelChange`（上游 `triggerEvent = false`）', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await w.find(`.${P}-year-btn`).trigger('click');
     await nextTick();
     const countAfterDrill = w.emitted('panelChange')?.length ?? 0;
@@ -84,6 +87,7 @@ describe('DatePicker · 面板粒度的受控化与「打开即重置」（S5）
 
   it('⚠️ **受控 `mode`** ⇒ 打开时不重置（上游 `setMode` 在受控时不写内部状态）', async () => {
     const w = mount(DatePicker, { props: { open: true, mode: 'year' } });
+    await nextTick();
     expect(hasPanel(w, 'year')).toBe(true);
 
     await w.setProps({ open: false });
@@ -98,6 +102,7 @@ describe('DatePicker · 面板粒度的受控化与「打开即重置」（S5）
 
   it('下钻链：年 → 月（点年面板的一格 ⇒ 回灌下一档粒度）', async () => {
     const w = mount(DatePicker, { props: { open: true } });
+    await nextTick();
     await w.find(`.${P}-year-btn`).trigger('click');
     await nextTick();
 

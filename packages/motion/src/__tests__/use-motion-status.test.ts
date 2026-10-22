@@ -13,7 +13,8 @@
 
 import { mount, type VueWrapper } from '@vue/test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
-import { defineComponent, h, nextTick, type PropType } from 'vue';
+import { createSSRApp, defineComponent, h, nextTick, type PropType } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 
 import type { MotionHooks } from '../index';
 import { CSSMotion, useMotionStatus } from '../index';
@@ -106,6 +107,73 @@ async function mountHost(
 
 afterEach(() => {
   document.body.innerHTML = '';
+});
+
+describe('002 复审：首次渲染不能泄漏未初始化的可见节点', () => {
+  it('有 window 的 SSR 环境仍同步输出可见内容，不等待 appear 挂载', async () => {
+    const html = await renderToString(
+      createSSRApp({
+        render: () =>
+          h(
+            CSSMotion,
+            { visible: true, motionName: MOTION_NAME },
+            {
+              default: () => h('div', { 'data-ssr-motion': 'visible' }, 'SSR content'),
+            },
+          ),
+      }),
+    );
+    expect(html).toBe('<div data-ssr-motion="visible">SSR content</div>');
+  });
+
+  it.each([
+    { supportMotion: true, motionAppear: true, firstMode: 'null' },
+    { supportMotion: true, motionAppear: false, firstMode: 'children' },
+    { supportMotion: false, motionAppear: true, firstMode: 'children' },
+  ])('$supportMotion / appear=$motionAppear → $firstMode', async (options) => {
+    const pump = createFramePump();
+    const frames: { mode: string; step: string; className: string }[] = [];
+    const Host = defineComponent({
+      setup() {
+        const motion = useMotionStatus({
+          visible: () => true,
+          motionName: MOTION_NAME,
+          supportMotion: options.supportMotion,
+          motionAppear: options.motionAppear,
+          scheduler: pump.scheduler,
+          // 保留 prepare，逐步验证 prepare → start → active 的渲染契约。
+          hooks: { onAppearPrepare: () => undefined },
+        });
+        return () => {
+          frames.push({
+            mode: motion.renderMode.value,
+            step: motion.step.value,
+            className: motion.className.value,
+          });
+          return motion.renderMode.value === 'null'
+            ? null
+            : h('div', { ref: motion.elementRef, class: motion.className.value });
+        };
+      },
+    });
+    const wrapper = mount(Host);
+    expect(frames[0]?.mode).toBe(options.firstMode);
+    await nextTick();
+    if (options.supportMotion && options.motionAppear) {
+      expect(frames.at(-1)?.className).toContain('appear-prepare');
+      pump.tickFrames(2);
+      await nextTick();
+      await nextTick();
+      expect(frames.at(-1)?.className).toContain('appear-start');
+      pump.tickFrames(2);
+      await nextTick();
+      expect(frames.at(-1)?.className).toContain('appear-active');
+      expect(
+        frames.filter((frame) => frame.mode !== 'null').every((frame) => frame.className),
+      ).toBe(true);
+    }
+    wrapper.unmount();
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -262,7 +330,9 @@ describe('CSSMotion 组件', () => {
   it('动画中把 className 透传给 slot 根元素', async () => {
     const wrapper = mountMotion({ visible: true, motionName: MOTION_NAME });
     await nextTick();
-    // 首帧是 start（prepare 无 handler 被跳过）
+    // prepare 节点提交后，start 样式需再一次 Vue patch 才出现在 DOM。
+    expect(wrapper.html()).toContain(`${MOTION_NAME}-appear-prepare`);
+    await nextTick();
     expect(wrapper.html()).toContain(`${MOTION_NAME}-appear-start`);
     expect(wrapper.html()).toContain(`${MOTION_NAME}`);
     wrapper.unmount();

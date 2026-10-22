@@ -18,17 +18,27 @@
 import {
   type ComputedRef,
   computed,
+  inject,
+  nextTick,
   onMounted,
   onUnmounted,
   type Ref,
   shallowRef,
+  ssrContextKey,
   watch,
 } from 'vue';
 
 import type { MotionDomAdapter, MotionHooks, MotionScheduler } from './driver';
 import { createMotionDriver } from './driver';
 import type { MotionEndEventLike, MotionStatus, RenderMode, StepStatus } from './status';
-import { getMotionClassName, normalizeMotionStyle, pickRenderMode, STATUS_NONE } from './status';
+import {
+  getMotionClassName,
+  getStyleReady,
+  normalizeMotionStyle,
+  pickRenderMode,
+  STATUS_NONE,
+  STEP_NONE,
+} from './status';
 import { detectSupportMotion } from './support';
 
 export interface UseMotionStatusOptions {
@@ -130,7 +140,9 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   // appear/enter/leave 都同步完成、onVisibleChanged 立即触发）。
   // 之前只看环境探测 ⇒ Trigger 不传 motion（如 tour）时离场会等一个
   // jsdom/真实浏览器里都不存在的动画事件，`autoDestroy` 的卸载被无限推迟。
-  const envSupport = resolve(supportMotion, detectSupportMotion());
+  // SSR 可能运行在有 window 的预渲染环境中；此时也必须同步输出内容。
+  const isSSR = inject(ssrContextKey, null) !== null;
+  const envSupport = !isSSR && resolve(supportMotion, detectSupportMotion());
   const effectiveSupport = computed(() => {
     const name = resolve(motionName, undefined as string | undefined);
     return !!envSupport && !!name;
@@ -153,7 +165,14 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     status: STATUS_NONE as MotionStatus,
     step: 'none' as StepStatus,
     style: null as Record<string, string | number> | null,
-    styleReady: !(initialSupport && motionAppear && initialVisible) as 'NONE' | boolean,
+    styleReady: getStyleReady({
+      mounted: false,
+      status: STATUS_NONE,
+      supportMotion: initialSupport,
+      motionAppear,
+      step: STEP_NONE,
+      styleStep: null,
+    }),
     mergedVisible: initialVisible,
     rendered: false,
   });
@@ -166,6 +185,10 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     motionLeaveImmediately,
     motionDeadline,
     getElement: () => elementRef.value,
+    // 首帧为 null：先提交带 prepare class 的节点，ref 就绪后才能测量 start。
+    scheduleRender: (callback) => {
+      void nextTick(callback);
+    },
     hooks,
     ...(scheduler ? { scheduler } : {}),
     ...(dom ? { dom } : {}),

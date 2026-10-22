@@ -177,6 +177,8 @@ export interface MotionDriverOptions {
   hooks?: MotionHooks;
   scheduler?: MotionScheduler;
   dom?: MotionDomAdapter;
+  /** DOM 适配层提交 prepare 节点后，再执行测量与 start 回调。默认同步。 */
+  scheduleRender?: (callback: () => void) => void;
   onChange: (snapshot: MotionSnapshot) => void;
 }
 
@@ -241,6 +243,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
     hooks = {},
     scheduler = defaultScheduler,
     dom = defaultDomAdapter,
+    scheduleRender = (callback) => callback(),
     onChange,
   } = options;
 
@@ -258,6 +261,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
   let cancelFrame: (() => void) | null = null;
   let cancelDeadline: (() => void) | null = null;
   let attachedElement: Element | null = null;
+  let generation = 0;
 
   function handlers() {
     return pickHandlers(hooks, status);
@@ -413,10 +417,13 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       if (!next) return;
 
       const captured = next;
+      const queueGeneration = generation;
       cancelFrame?.();
       cancelFrame = scheduler.nextFrame(() => {
         cancelFrame = null;
-        const advance = () => setStepAndContinue(captured);
+        const advance = () => {
+          if (queueGeneration === generation) setStepAndContinue(captured);
+        };
         // `result === true` 时同步推进；其余（含 prepare 返回的 Promise）走微任务
         if (result === true) advance();
         else Promise.resolve(result).then(advance);
@@ -432,6 +439,10 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
 
   // ---- 对外 ----
   function applyVisible(nextVisible: boolean): void {
+    const currentGeneration = ++generation;
+    cancelFrame?.();
+    cancelFrame = null;
+    clearDeadline();
     const isMounted = mounted;
     visible = nextVisible;
     asyncVisible = nextVisible;
@@ -458,7 +469,9 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       handlerStyle = null;
       styleStep = null;
       emit();
-      runQueue();
+      scheduleRender(() => {
+        if (currentGeneration === generation) runQueue();
+      });
     } else {
       status = STATUS_NONE;
       emit();
@@ -482,6 +495,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       onDomEnd(event as MotionEndEventLike);
     },
     destroy() {
+      generation += 1;
       cancelFrame?.();
       cancelFrame = null;
       clearDeadline();

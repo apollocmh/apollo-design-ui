@@ -35,6 +35,7 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import DatePicker from '../DatePicker.vue';
 
 const P = 'apollo-picker';
@@ -44,8 +45,9 @@ const mountOpen = (props: Record<string, unknown> = {}) =>
   mount(DatePicker, { props: { open: true, ...props } });
 
 describe('DatePicker · 浮层外壳（`-panel-container` / `-panel-layout`）', () => {
-  it('逐层对应上游：dropdown > panel-container > panel-layout > panel', () => {
+  it('逐层对应上游：dropdown > panel-container > panel-layout > panel', async () => {
     const w = mountOpen();
+    await nextTick();
     const dropdown = w.find(`.${P}-dropdown`);
     expect(dropdown.exists()).toBe(true);
 
@@ -64,36 +66,40 @@ describe('DatePicker · 浮层外壳（`-panel-container` / `-panel-layout`）',
     w.unmount();
   });
 
-  it('容器后缀取 `internalMode`（`showTime` ⇒ `datetime`，不是面板当前粒度）', () => {
+  it('容器后缀取 `internalMode`（`showTime` ⇒ `datetime`，不是面板当前粒度）', async () => {
     // 上游 `Popup/index.js:150`：`${prefixCls}-${internalMode}-panel-container`
     const plain = mountOpen();
+    await nextTick();
     expect(plain.find(`.${P}-panel-container`).classes()).toContain(`${P}-date-panel-container`);
     plain.unmount();
 
     const withTime = mountOpen({ showTime: true });
+    await nextTick();
     expect(withTime.find(`.${P}-panel-container`).classes()).toContain(
       `${P}-datetime-panel-container`,
     );
     withTime.unmount();
   });
 
-  it('`classNames.popup.container` / `styles.popup.container` 落到容器上', () => {
+  it('`classNames.popup.container` / `styles.popup.container` 落到容器上', async () => {
     const w = mountOpen({
       classNames: { popup: { container: 'c-container' } },
       styles: { popup: { container: { backgroundColor: 'red' } } },
     });
+    await nextTick();
     const container = w.find(`.${P}-panel-container`);
     expect(container.classes()).toContain('c-container');
     expect(container.attributes('style')).toContain('background-color: red');
     w.unmount();
   });
 
-  it('🚨 新 API `classNames.popup.root` 也落到浮层（不只是 deprecated `popupClassName`）', () => {
+  it('🚨 新 API `classNames.popup.root` 也落到浮层（不只是 deprecated `popupClassName`）', async () => {
     // 上游 `SinglePicker.js:464`：`popupClassName: clsx(rootClassName, mergedClassNames.popup.root)`
     // ⇒ **合并后的** `popup.root` 才是落点；`popupClassName` 只是被 `fillPopupClassName`
     //   并进它的一个来源。此前本仓传的是原始 deprecated prop ⇒ 新 API 静默无效。
     for (const classNames of [{ popup: 'c-popup' }, { popup: { root: 'c-popup' } }] as const) {
       const w = mountOpen({ classNames });
+      await nextTick();
       expect(w.find(`.${P}-dropdown`).classes()).toContain('c-popup');
       w.unmount();
     }
