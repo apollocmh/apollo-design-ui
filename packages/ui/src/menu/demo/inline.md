@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 内嵌菜单
+  en-US: Inline menu
+---
+
 ## zh-CN
 
-Inline
+垂直菜单，子菜单内嵌在菜单区域。
 
 ## en-US
 
-垂直菜单，子菜单内嵌在菜单区域。
+Vertical menu with inline submenus.

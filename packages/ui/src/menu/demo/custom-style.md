@@ -5,6 +5,14 @@ title:
   en-US: Custom style
 ---
 
+## zh-CN
+
 通过根元素的 `--apollo-menu-*` 组件 Token 变量调整菜单项高度、圆角、选中背景与文字颜色，并用 `styles.itemContent` 设置菜单项内容的字重。
 
 点击菜单项可以切换选中状态。
+
+## en-US
+
+Adjust item height, border radius, selected background and text color through the root `--apollo-menu-*` component tokens, and set the content font weight via `styles.itemContent`.
+
+Click a menu item to toggle its selected state.

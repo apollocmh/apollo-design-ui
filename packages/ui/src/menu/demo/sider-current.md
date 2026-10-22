@@ -1,7 +1,17 @@
+---
+title:
+  zh-CN: 与 Layout.Sider 联动
+  en-US: With Layout.Sider
+preview:
+  mode: viewport
+  viewportHeight: 340
+  scrollable: true
+---
+
 ## zh-CN
 
-With Layout.Sider
+与 Layout.Sider 的折叠联动。
 
 ## en-US
 
-与 Layout.Sider 的折叠联动。
+Collapse linkage with Layout.Sider.

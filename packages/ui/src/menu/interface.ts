@@ -89,6 +89,8 @@ export interface SubMenuType {
   icon?: RenderIconType;
   itemIcon?: RenderIconType;
   expandIcon?: RenderIconType;
+  /** 该子菜单弹层的独立主题（antd `SubMenuType.theme`）。 */
+  theme?: MenuTheme;
   children: ItemType[];
   rootClassName?: string;
   popupClassName?: string;

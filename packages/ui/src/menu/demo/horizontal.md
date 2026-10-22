@@ -1,7 +1,16 @@
+---
+title:
+  zh-CN: 水平导航
+  en-US: Horizontal
+preview:
+  size: full
+  span: full
+---
+
 ## zh-CN
 
-Horizontal
+水平的顶部导航菜单。
 
 ## en-US
 
-水平的顶部导航菜单。
+Horizontal top navigation menu.

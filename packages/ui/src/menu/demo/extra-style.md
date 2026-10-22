@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 额外内容
+  en-US: Extra
+---
+
 ## zh-CN
 
-Extra
+items 的 extra 字段渲染右侧附加内容。
 
 ## en-US
 
-items 的 extra 字段渲染右侧附加内容。
+Render extra content on the right via the `extra` field of items.

@@ -382,30 +382,28 @@ describe('#22.1 SubMenu popup 可见性与定位', () => {
     { key: 'sub1', label: 'Sub', children: [{ key: 'c1', label: 'Child' }] },
   ] as never;
 
-  it('⭐ vertical：打开后 popup 必须 visible 且带 top/left', async () => {
+  it('⭐ vertical：打开后 popup 由 Trigger 渲染，带 rightTop 几何与 top/left', async () => {
     mountMenu({ items: subItems, mode: 'vertical', defaultOpenKeys: ['sub1'] });
     await nextTick();
-    // 定位是「rAF 双帧」后才写入的（首帧布局未稳定）⇒ 等两帧
-    await raf();
-    await raf();
 
     const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
     expect(popup).not.toBeNull();
-    expect(popup.style.visibility).toBe('visible');
-    expect(popup.style.position).toBe('absolute');
+    // 定位交给 `_internal/trigger`（placement 类来自 builtinPlacements 的初始 align）；
+    // jsdom 无布局 ⇒ 坐标为未对齐占位值，但 top/left 键必须存在（不是旧实现的 hidden）。
+    expect(popup.className).toContain('apollo-menu-submenu-placement-rightTop');
+    expect(popup.style.visibility).not.toBe('hidden');
     expect(popup.style.top).not.toBe('');
     expect(popup.style.left).not.toBe('');
   });
 
-  it('horizontal：popup 贴在 title 下方（同样 visible）', async () => {
+  it('horizontal：popup 带 bottomLeft placement（贴 title 下方）', async () => {
     mountMenu({ items: subItems, mode: 'horizontal', defaultOpenKeys: ['sub1'] });
     await nextTick();
-    await raf();
-    await raf();
 
     const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
     expect(popup).not.toBeNull();
-    expect(popup.style.visibility).toBe('visible');
+    expect(popup.className).toContain('apollo-menu-submenu-placement-bottomLeft');
+    expect(popup.style.visibility).not.toBe('hidden');
     expect(popup.style.top).not.toBe('');
   });
 

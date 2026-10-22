@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 主题
+  en-US: Theme
+---
+
 ## zh-CN
 
-Theme
+支持两种主题：light 与 dark。
 
 ## en-US
 
-支持两种主题：light 与 dark。
+Supports two themes: light and dark.

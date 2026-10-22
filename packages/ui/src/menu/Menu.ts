@@ -33,7 +33,7 @@ import {
 } from 'vue';
 import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
 import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useDirection } from '../config-provider/context';
+import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useSiderContext } from '../layout/context';
 import {
   isSubPathKeyKey,
@@ -139,9 +139,22 @@ const Menu = defineComponent({
   setup(props, { emit, expose, attrs }) {
     // rc OverrideProvider（dropdown 等包装者）的覆盖通道
     const override = inject<MenuOverrideData | null>(menuOverrideKey, null);
-    const prefixCls = override?.prefixCls ?? props.prefixCls ?? 'apollo-menu';
+    const menuConfig = useComponentConfig('menu');
+    const getPrefixCls = menuConfig.getPrefixCls;
+    // antd menu.js:76：`getPrefixCls('menu', customizePrefixCls || overrideObj.prefixCls)`
+    const prefixCls = getPrefixCls('menu', props.prefixCls || override?.prefixCls);
+    // antd menu.js:65：motion 类名前缀取自**根前缀**（默认 `apollo`），不是 `apollo-menu`。
+    const rootPrefixCls = getPrefixCls();
     const menuId = props.id ?? `apollo-menu-${uuid++}`;
     const containerRef = shallowRef<HTMLElement | null>(null);
+    /**
+     * 横向 Overflow 当前可见项数量。
+     *
+     * ⚠️ 必须在 setup 期创建：原先写在 render 函数体内，每次重渲染都重置为 0，
+     * 而 `onVisibleChange` 是本轮渲染后才写它 ⇒ 后续渲染期间 `overflowDisabled`
+     * 判定拿到的永远是 0（溢出区子项会被误当成可见项，出现重复/错位）。
+     */
+    const overflowIndex = ref(0);
 
     // ====================== Semantic ======================
     // Issue #22.6：`classNames` / `styles` 此前只在 interface 里声明、运行时零消费
@@ -337,6 +350,7 @@ const Menu = defineComponent({
 
     const menuContext: MenuContextData = {
       prefixCls,
+      rootPrefixCls,
       menuId,
       mode: mergedMode,
       get disabled() {
@@ -366,7 +380,9 @@ const Menu = defineComponent({
         return props.triggerSubMenuAction;
       },
       get getPopupContainer() {
-        return props.getPopupContainer;
+        // antd useComponentConfig('menu') 的 getPopupContainer 是 props 未传时的回退；
+        // 默认再回落到 ConfigProvider 顶层（antd `getPopupContainer` 契约）。
+        return props.getPopupContainer ?? menuConfig.getPopupContainer;
       },
       motion: null,
       defaultMotions: null,
@@ -468,6 +484,7 @@ const Menu = defineComponent({
               disabled: node.disabled,
               danger: node.danger,
               icon: node.icon,
+              itemIcon: node.itemIcon,
               // title/extra 经 slot 下发（items 的 VNodeChild 富内容；C8-R2）
               title: typeof node.title === 'string' ? node.title : undefined,
               labelText: typeof node.label === 'string' ? node.label : undefined,
@@ -494,12 +511,17 @@ const Menu = defineComponent({
               disabled: node.disabled,
               danger: node.danger,
               icon: node.icon,
+              itemIcon: node.itemIcon,
+              // antd SubMenuType.theme：该子菜单弹层独立主题（不改变根主题）
+              theme: node.theme,
               // title 经 slot 下发（items 的 VNodeChild 富内容；C8-R2）
               title:
                 typeof (node.title ?? node.label) === 'string'
                   ? (node.title ?? node.label)
                   : undefined,
               popupClassName: node.popupClassName,
+              popupOffset: node.popupOffset,
+              popupStyle: node.popupStyle,
               overflowDisabled,
               overflowCls,
               childrenNodes: node.children,
@@ -535,7 +557,6 @@ const Menu = defineComponent({
     return () => {
       const useOverflow = mergedMode.value === 'horizontal' && !props.disabledOverflow;
       const maxCount = useOverflow ? RESPONSIVE : INVALIDATE;
-      const overflowIndex = ref<number>(0);
 
       // ---- 可见子树 ----
       // menu root 的公共 attrs（horizontal 时由 Overflow 直接渲染 root ul ——

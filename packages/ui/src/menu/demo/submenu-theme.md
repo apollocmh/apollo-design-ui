@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 子菜单主题
+  en-US: Submenu theme
+---
+
 ## zh-CN
 
-Submenu theme
+为子菜单设置独立的主题。
 
 ## en-US
 
-为子菜单设置独立的主题。
+Set an independent theme for a submenu.

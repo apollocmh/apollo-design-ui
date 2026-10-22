@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 自定义样式
+  en-US: Custom style
+---
+
 ## zh-CN
 
-Custom style
+通过 styles 定制菜单项。
 
 ## en-US
 
-通过 styles 定制菜单项。
+Customize menu items via `styles`.

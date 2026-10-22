@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 垂直菜单
+  en-US: Vertical
+---
+
 ## zh-CN
 
-Vertical
+子菜单是弹出的形式。
 
 ## en-US
 
-子菜单是弹出的形式。
+Submenus appear as popups.

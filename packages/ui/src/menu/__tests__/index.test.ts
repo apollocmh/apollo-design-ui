@@ -306,19 +306,18 @@ describe('Menu · L1 openKeys 与子菜单', () => {
     wrapper.unmount();
   });
 
-  it('折叠态下 popup 定位在 mode 切换后同步（不会停在 visibility:hidden）', async () => {
+  it('折叠态下 popup 在 mode 切换后由 Trigger 接管（有 placement 类、不是隐藏态）', async () => {
     const wrapper = mountMenu({ mode: 'inline', openKeys: ['sub1'] });
     await nextTick();
     await wrapper.setProps({ inlineCollapsed: true });
     await nextTick();
     await nextTick();
-    // scheduleSync 是双 rAF；等待两帧
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
     const popup = wrapper.element.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
     expect(popup).not.toBeNull();
-    expect(popup.style.visibility).toBe('visible');
+    // 旧实现手写 style.visibility；现在由 Trigger 负责对齐与 placement 类。
+    // jsdom 无布局，但 placement 类来自 builtinPlacements 的初始 align，仍可断言。
+    expect(popup.className).toContain('apollo-menu-submenu-placement-rightTop');
+    expect(popup.style.visibility).not.toBe('hidden');
     wrapper.unmount();
   });
 });

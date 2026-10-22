@@ -35,11 +35,18 @@ function readSlot(slots: Record<string, unknown>, name: string): unknown {
 
 const MenuItem = defineComponent({
   name: 'AMenuItem',
+  // 根 li 显式合并 attrs（restAttrs / class / style）；默认继承会把 class 应用两次。
+  inheritAttrs: false,
   props: {
     eventKey: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
     danger: { type: Boolean, default: false },
     icon: {
+      type: [Object, String, Number, Function] as PropType<RenderIconType>,
+      default: undefined,
+    },
+    /** rc 的 itemIcon（items 数据字段；icon 未传时回退到它）。 */
+    itemIcon: {
       type: [Object, String, Number, Function] as PropType<RenderIconType>,
       default: undefined,
     },
@@ -130,7 +137,7 @@ const MenuItem = defineComponent({
         props.onMouseLeave?.({ key: eventKey, domEvent: e });
       };
 
-      const mergedItemIcon = props.icon ?? ctx.itemIcon;
+      const mergedItemIcon = props.icon ?? props.itemIcon ?? ctx.itemIcon;
       // rc renderItemChildren：折叠态 + firstLevel + 无 icon + 字符串 label ⇒
       // 渲染首字符的 {p}-inline-collapsed-noicon 块
       const collapsedNoIcon =
@@ -168,6 +175,7 @@ const MenuItem = defineComponent({
             !mergedItemIcon ? `${itemCls}-only-child` : undefined,
             props.overflowCls,
             semCls.item,
+            (restAttrs as { class?: string }).class,
           ],
           ...styleAttrs({
             // rc useDirectionStyle：inline 模式的缩进（level × inlineIndent，内联；
@@ -187,6 +195,23 @@ const MenuItem = defineComponent({
         collapsedNoIcon !== null
           ? [h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, collapsedNoIcon)]
           : [
+              // ⚠️ antd `MenuItem.tsx`：icon 在 title-content **之前**（cloneElement 的
+              //    icon 是第一个 child）。本仓原先写反了 ⇒ `.apollo-menu-item-icon + span`
+              //    的 margin-inline-start 永不命中，图标跑到文字右侧。
+              mergedItemIcon
+                ? h(
+                    'span',
+                    {
+                      class: [`${ctx.prefixCls}-item-icon`, semCls.itemIcon],
+                      ...styleAttrs(semStyle.itemIcon),
+                    },
+                    typeof mergedItemIcon === 'function'
+                      ? [mergedItemIcon({ isSelected: isSelected.value })].filter(
+                          (c) => c !== null && c !== undefined,
+                        )
+                      : [mergedItemIcon].filter((c) => c !== null && c !== undefined),
+                  )
+                : null,
               h(
                 'span',
                 {
@@ -203,20 +228,6 @@ const MenuItem = defineComponent({
                   })(),
                 ],
               ),
-              mergedItemIcon
-                ? h(
-                    'span',
-                    {
-                      class: [`${ctx.prefixCls}-item-icon`, semCls.itemIcon],
-                      ...styleAttrs(semStyle.itemIcon),
-                    },
-                    typeof mergedItemIcon === 'function'
-                      ? [mergedItemIcon({ isSelected: isSelected.value })].filter(
-                          (c) => c !== null && c !== undefined,
-                        )
-                      : [mergedItemIcon].filter((c) => c !== null && c !== undefined),
-                  )
-                : null,
             ].filter((n) => n !== null),
       );
 

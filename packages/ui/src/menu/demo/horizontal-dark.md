@@ -1,7 +1,16 @@
+---
+title:
+  zh-CN: 水平导航（暗色）
+  en-US: Horizontal (Dark)
+preview:
+  size: full
+  span: full
+---
+
 ## zh-CN
 
-Horizontal Dark
+暗色主题的水平导航菜单。
 
 ## en-US
 
-暗色主题的水平导航菜单。
+Horizontal navigation menu in dark theme.

@@ -21,6 +21,8 @@ import type { MenuMode, RenderIconType, TriggerSubMenuAction } from './interface
 
 export interface MenuContextData {
   prefixCls: string;
+  /** ConfigProvider 的**根前缀**（无组件后缀），弹层 motion 类名用它（如 `apollo-zoom-big`）。 */
+  rootPrefixCls: string;
   /** rc IdContext 的 uuid（data-menu-id={menuId}-{key}）。 */
   menuId: string;
   mode: ComputedRef<MenuMode>;
@@ -44,7 +46,7 @@ export interface MenuContextData {
   forceSubMenuRender?: boolean;
   builtinPlacements?: Record<string, unknown>;
   triggerSubMenuAction: TriggerSubMenuAction;
-  getPopupContainer?: (node: HTMLElement) => HTMLElement;
+  getPopupContainer?: (node: HTMLElement) => HTMLElement | ShadowRoot;
   // Icon
   itemIcon?: RenderIconType;
   expandIcon?: RenderIconType;

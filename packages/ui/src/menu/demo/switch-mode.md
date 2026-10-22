@@ -1,7 +1,13 @@
+---
+title:
+  zh-CN: 切换菜单类型
+  en-US: Switch mode
+---
+
 ## zh-CN
 
-Switch mode
+切换内嵌和弹出的菜单类型。
 
 ## en-US
 
-切换内嵌和弹出的菜单类型。
+Switch between inline and popup menu modes.
