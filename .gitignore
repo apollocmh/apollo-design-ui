@@ -70,3 +70,4 @@ node_modules/.cache/apollo/
 # VitePress dev cache（docs 包）
 packages/docs/.vitepress/cache/
 /.claude/settings.json
+/.codex/

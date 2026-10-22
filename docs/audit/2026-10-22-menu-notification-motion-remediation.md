@@ -144,13 +144,20 @@ forceRender/leavedClassName/hooks/supportMotion`，内核控制字段
 
 | 门禁 | 结果 |
 |---|---|
-| `menu-browser.mjs` | **28/28**（水平一行/图标顺序/group 只在 popup/ inline 不误关/弹层几何/滚动跟随/离场动画/getPopupContainer/主题/iframe/overflow/中英文） |
-| `notification-motion-browser.mjs` | **21/21**（appear/leave 时间线/transitionend/4 条折叠/hover 展开/移出收起/hover 关闭/同 key 更新/Message 默认与 stack） |
-| `pnpm test` | 7277 passed / 3 skipped；唯一失败为 `demo-source.test.ts` 的 5s 超时（单跑 15/15 通过，全量并行下偶发；已把三个全量扫描的等待时间放宽到 20s，断言不变） |
+| `menu-browser.mjs`（生产 preview） | **28/28**（水平一行/图标顺序/group 只在 popup/ inline 不误关/弹层几何/滚动跟随/离场动画/getPopupContainer/主题/iframe/overflow/中英文） |
+| `notification-motion-browser.mjs`（生产 preview） | **21/21**（appear/leave 时间线/transitionend/4 条折叠/hover 展开/移出收起/hover 关闭/同 key 更新/Message 默认与 stack） |
+| `pnpm test`（最终全量，exit 0） | unit **360 files / 7279 passed / 3 skipped**；dom-contract **74 / 1743**；a11y **74 / 1357**；theme **69 / 890** |
 | `pnpm test:types` | **170 files / 2213 tests / no errors** |
 | L6 `--mode both`（Windows 同环境 React vs Vue） | menu **9/9 exact**、notification **9/9 exact**、message **9/9 exact** |
 | L6 `--mode compare`（对 macOS 入库基线） | 全红，原因固定为 **15px 滚动条宽度**（React 1440×… vs Vue 1425×…），是已知的 Windows/macOS harness 平台差，不是组件差异 |
-| `pnpm test:build` | 见提交记录 / 最终报告 |
+| `pnpm test:build` | **151 项 / FAIL 0 / PENDING 0** |
+
+> 环境说明：本机曾同时残留 5 个上一轮会话的 Vite dev server（端口 4478 多实例）
+> 与十余个 `vite preview` 子进程，造成 a11y / theme 在全量并行时撞 5s 默认超时。
+> 清理残留进程后最终 `pnpm test` **exit 0**（上表四组全绿）；期间的单跑证据：
+> a11y **1357/1357（77s）**、theme **890/890（60s）**。
+> `demo-source.test.ts` 的三个全量扫描同样把等待时间放宽到 20s（断言未改）。
+> 这不是通过放宽断言换来的绿色。
 
 ### 未采用的做法（明确排除）
 
@@ -161,7 +168,22 @@ forceRender/leavedClassName/hooks/supportMotion`，内核控制字段
 
 ---
 
-## 6. 剩余边界（如实登记）
+## 6. 分阶段提交
+
+| # | commit | 内容 |
+|---|---|---|
+| 1 | `6049fcd6` | Trigger：window scroll 重对齐 + 视口外跳过（M-06 的共享底层） |
+| 2 | `350df99d` | Menu：inline hover / 图标顺序 / Trigger 弹层 / overflow / 子菜单主题 / Demo |
+| 3 | `c7f0ec2c` | Notification：稳定尺寸 ref + ResizeObserver + motion 透传 |
+| 4 | `4ddaf190` | Docs CI：Menu / Notification 真实浏览器门禁 |
+| 5 | `fc9a1b8e` | 门禁稳定性：入场 rAF 采样 + 离场时长精确测量 |
+| 6 | `a1e9cf28` | 审计报告 + COMPATIBILITY D138/D139 |
+| 7 | `649e0c5d` | Menu `popupStyle` 与语义槽合并（语义槽优先） |
+| 8 | （记忆提交） | 记忆/日志收口 + 最终门禁记录 + `.gitignore` |
+
+---
+
+## 7. 剩余边界（如实登记）
 
 1. **极窄视口（如 390px）下弹层可能落在视口外**：菜单 placement 只启用
    `adjustX/adjustY`（翻转），不启用 `shiftX/shiftY` —— 与 rc-menu 的

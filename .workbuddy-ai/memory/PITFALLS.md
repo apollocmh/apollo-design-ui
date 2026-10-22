@@ -11,15 +11,18 @@
 - **根别名迁移**（`className`/`rootClassName`/`style` → 原生 `class`/`style`，依据 `COMPATIBILITY.md` §228/§232）：🚨 消费者扫描要覆盖**模板 `:class-name=`** 与**同目录内部件**（把被迁组件自己也放进列表）(350) · 🚨 组件可能**半迁移**（classString 里 props 与 attrs 并存）⇒ 判据是「扫代码」不是「看状态」(354,355) · 🚨 **「查哪些组件还有根别名」要按公开导出枚举，不是按目录**（漏了 `StatisticTimer` / `PopconfirmPurePanel`）(358) · 🚨 **L4 两侧各用各的词汇是既有约定，别改基线**(353) · 📌 **上游自己就在废弃 `rootClassName` → `classNames.root`**（4 处 `.d.ts`）⇒ 但**非根目标**不能一刀切改名（C3）(360)
 - **样式**：🚨 **E10 的 `box-shadow` 正则不认 `inset` 前缀** —— 只放行 `var(`/`${`/`none`/`0` 开头 ⇒ `box-shadow:inset 0 0 1px 0 var(--apollo-…)` 会被判「硬编码阴影」；对策是把这条阴影**声明成组件变量**（322）
 - **样式**：进 `style` 必须 `toCssSize()`(7,D94) · 变量声明块覆盖**全部根形态**含浮层根(8,171,D95,248) · 驼峰转 kebab 用 `/([a-z0-9])([A-Z])/g`(16,228) · 产物 `NaN`/`undefined` 由 B11 兜(10) · 🚨 `genXxxStyle` 必须把 `genTokenDecls(p)` spread 进**组件根规则**(287) · 🚨 token **名**与 token→var 转换别混用 ⇒ `var(--apollo-var(--x))` 双包裹整条失效，而 `theme.test.ts` 与 B7 的正则**都看不见**，只有 L6 抓得到(305) · ⚠️ E10 的「硬编码圆角」是**文本**扫描 ⇒ `v('x')` 先存变量再插值会被误判(304) · 🚨 **跨组件同特异性覆盖靠 CSS 顺序决胜** ⇒ `COMPONENT_STYLES` 数组顺序就是级联顺序，覆盖方排在**被覆盖方之后**(313)
+- **浮层**：🚨 Trigger 必须把 `win` 列入滚动源 + 视口外不 align（粘滞 flip 记忆）(404)
 - **浮层**：🚨必须复刻 `-panel-container` 层（否则真机点不动，jsdom 测不出）(9,251) · 关闭异步⇒断言卸载要轮询(11,179) · 测几何前剥 motion 相位类(17,253) · 动效名前缀 `rootPrefixCls`(12,180) · 🚨 Trigger 默认 hover 会被选择类浮层继承 ⇒ BaseSelect 必须 `action: []` 且只留一条 click 通道(393) · 🚨 嵌套 Teleport 弹层要取消祖先 closeTimer(396)
 - **响应式**：🚨写状态→立刻比较恒假，**先取快照**(13,207) · `watch(immediate)` 在 `setup()` 同步跑且不补跑(14,211) · `setup()` 里不能建带 `ref` 的 vnode(11,178,264) · 深联合 `ref` 用 `shallowRef`(15,TS2589)
 - **模板**：🚨 **HTML 注释不能插在「标签的属性列表里」**（`<Comp\n <!-- … -->\n :a="1" />`）—— 报一串 `TS1005: ':' expected`（本轮连踩两次：ColorSteppers 与 card/demo/tabs.vue）（332）
 - **模板**：🚨 **`v-if` 与 `v-else` 之间**不能插 HTML 注释 —— 会让 `v-else` 失去配对（症状是**整条分支静默渲染错**，本轮一次红了 **28** 条用例）（331）
+- **Vue 化**：🚨 函数 ref 每轮重建 ⇒ Vue 先 null 后 element，sizeMap 先删后测；按 key 稳定 ref(405)
 - **Vue 化**：🚨 **值对象的字段一律 `public`** —— 类的 `private`/`protected` 成员会被 Vue 的 `UnwrapRef`（**映射类型**）丢掉 ⇒ 实例进 `ref()` / 组件 prop / 模板后**不再可赋值给原类**（`TS2345 … is missing …: getMax, getMin`）；对策：字段 `public` + `@internal` 标注，且类实例用 `shallowRef`（325）
 - **类型**：🚨 **运行时 prop 声明必须与公开类型「同源」** —— 写成宽松版（`(_e: unknown) => any` / `Record<string, unknown>`）会让「公开类型 → `$props`」因**函数参数逆变**失败 ⇒ 消费方转发时被迫 `as unknown as`。判据：`satisfies` 能过就说明同源（333）
 - **Vue 化**：🚨 复用组件的类名要传 **`className` prop**，`:class` 会被静默丢弃（本仓 Select/Input/InputNumber 都剥 `attrs.class`）（326，PITFALLS 309 的复发）
 - **Vue 化**：🚨 **继承一个「方法返回自身类型」的基类时，子类必须覆写该方法** —— `utils.Color` 的 `clone()`/`setAlpha()` 里 `new Color(...)` 是**词法基类** ⇒ 子类不覆写会掉回基类（`clone` 只错在**类型**、`setAlpha` **运行时也错**）（320）
 - **Vue 化**：🚨本仓把外层 Provider 挪进组件 ⇒ 外层 `provide` 不生效，hack 面走 **props**(20,256) · 类型比上游窄先问「上游是不是 JS」⇒ 补类型不改实现(21,257) · `Skeleton` `inheritAttrs:false` ⇒ 用 `className`(19,181) · `biome.json` 不能写注释(4,139) · `index.ts` 手工维护 / 重名用别名(6,158,168) · 🚨 biome 把「只在模板 + 类型位置用」的组件 import 改成 `import type`(299) · 透传另一组件的 props 常需过一次 `unknown`(301) · 既有 `onXxx` prop 又有 emit ⇒ **只 emit**(267) · 🚨 `Children.toArray(children).some(isString)` 在 Vue 侧**恒假**（`toArray` 归一成 Text vnode）⇒ 用 `isTextVNode`(306) · `withDefaults` 是编译器宏**不能 import**，默认 `true` 的布尔 prop 必须声明(307) · 🚨 `h(组件, props, 数组)` 会告警「非函数插槽」⇒ 组件 children 写成显式插槽函数(308) · 语义化槽（`classNames`/`styles`）支持函数形态 ⇒ prop 类型必须收 `[Object, Function]`
+- **Menu DOM**：图标必须在 title-content 前；`inheritAttrs:false` 后 attrs.class 只合并一次(406)
 - **事件名**：🚨 `h()` 里写 `onMouseDown`（大写 D）会被 Vue 规范化成 `mouse-down` ⇒ **永不触发且不报错**；必须写 `onMousedown` / `onTouchstart`（323）
 - **事件名**：🚨 **给这类 bug 加护栏不能用「全仓正则 + 逐条白名单」**（489 处对象键里绝大多数是合法的组件 prop）⇒ 用 AST 限定到 `h('<原生标签>')`（489 → 3）；且必守两条不误报判据：**① 先剥 `Once`/`Passive`/`Capture` 后缀**（`onPointerdownCapture` 是对的）· **② 只穿透 `computed`/`ref` 这类透明包装**（否则 `overlay.popupProps.value` 会误回溯到 `useOverlay({…})` 的配置实参）（338）
 - **测试/jsdom**：🚨 jsdom 的 cssstyle 把 `hsl()`/hex **规范化成** `rgb()`/`rgba()` ⇒ 断言内联样式要按规范化形态写（324）
@@ -5042,3 +5045,24 @@
 403. ⚠️ **Ant 官网 ≠ 组件 API 目标**：站点采样版本会变（本次 6.6.7），API 兼容目标固定 6.6.4；
     对照报告必须写明两者，禁止把官网新版行为当兼容依据。移动端 Ant 无顶栏主题入口，
     390 暗色不可采，必须显式登记而不是用浅色冒充。
+
+404. 🚨 **Trigger 的两个共享缺口（2026-10-22 Menu M-06 实测）**：
+    ① `window` 本身必须列入滚动源（上游 `useWatch.js` 的
+    `mergedList = new Set([win, ...collectScroller(target), ...collectScroller(popup)])`）。
+    只挂 popup 的 `collectScroller` 时，`html/body` 计算 overflow 是 `visible` ⇒ 整页滚动
+    不重新对齐，弹层停在旧位置。
+    ② 目标完全在视口外时**不要运行 alignPopup**：`isVisible()` 只判 display/visibility，
+    不判视口相交；此时 `alignPopup` 会因「浮层超出视口」写入**粘滞**的 `flip.bt`，
+    用户滚入视口后弹层永久偏移（实测 140px = popup 180 − title 40）。
+    回归：`_internal/__tests__/trigger.test.ts` 的 `isTargetOutsideArea` 穷举 +
+    window scroll 注册/注销。
+405. 🚨 **Vue 函数 ref 不能每轮渲染重建**（2026-10-22 Notification MN-03）：
+    `ref: (inst) => setNodeSize(key, inst?.$el ?? null)` 写在 render 里时，Vue patch 会先以
+    `null` 调旧 ref、再以元素调新 ref ⇒ `sizeMap` 被「先删后测」，布局瞬态归零。
+    上游用 `useCallback([setNodeSize, strKey])` 保持引用稳定。本仓按 key 缓存函数 ref，
+    并补 ResizeObserver 处理同 key 文案变高/换行（上游 2.0.8 不重测，登记 D138）。
+406. 🚨 **Menu 图标顺序与 attrs 双份**（2026-10-22 Menu M-04）：
+    antd 的 DOM 是 **icon → title-content → arrow**；本仓原先 title 在前且 SubMenu 不渲染
+    `icon` ⇒ `.apollo-menu-item-icon + span` 永不命中。排序修好后还要把根 `li` 设
+    `inheritAttrs: false` 并**只合并一次** `attrs.class` —— 默认继承 + 手动追加会让
+    Overflow 注入的 `-overflow-item` 类出现两份（L4 semantic 用例抓出）。
