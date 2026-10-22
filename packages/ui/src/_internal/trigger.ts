@@ -74,6 +74,25 @@ export interface TriggerArrow {
   content?: VNodeChild;
 }
 
+/**
+ * 目标矩形是否完全落在可视区外。
+ *
+ * 纯函数以便单测穷举：jsdom 无布局时矩形恒为 0，真实分支只能靠这里钉住。
+ * 零尺寸矩形返回 `false`（无法判定 ⇒ 仍然对齐，保持既有 jsdom 行为）。
+ */
+export function isTargetOutsideArea(
+  rect: { left: number; top: number; right: number; bottom: number; width: number; height: number },
+  area: { left: number; top: number; right: number; bottom: number },
+): boolean {
+  if (rect.width <= 0 || rect.height <= 0) return false;
+  return (
+    rect.right <= area.left ||
+    rect.left >= area.right ||
+    rect.bottom <= area.top ||
+    rect.top >= area.bottom
+  );
+}
+
 /** rc `useAlign` 的 offsetInfo。 */
 interface OffsetInfo {
   ready: boolean;
@@ -172,7 +191,7 @@ export const Trigger = defineComponent({
     /** 用户 align 浅合并到对应 placement 之上（rc 的 `popupAlign`）。 */
     popupAlign: { type: Object as PropType<TriggerAlign>, default: undefined },
     getPopupContainer: {
-      type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
+      type: Function as PropType<(triggerNode: HTMLElement) => HTMLElement | ShadowRoot | null>,
       default: undefined,
     },
     motion: { type: Object as PropType<TriggerMotion>, default: undefined },
@@ -323,6 +342,24 @@ export const Trigger = defineComponent({
       if (!result) {
         return;
       }
+      /**
+       * 🚨 目标完全在可视区外时**不要对齐**（2026-10-22 Menu 审计 M-06）。
+       *
+       * 页面刚加载时，下方菜单的 trigger 仍在视口外，但 `isVisible()` 只判
+       * display/visibility（不判视口相交）⇒ 会照常对齐；此时 `alignPopup` 判定
+       * 「浮层下边超出视口」并写下 `flip.bt`。**翻转记忆是粘滞的**：用户随后
+       * 滚动到菜单时，即使位置已经正确，也会保持翻转 ⇒ 弹层永久偏移
+       * （实测 140px = 180 - 40，正好是 popup 高度与 title 高度之差）。
+       *
+       * 修正：视口外不产生任何对齐结果，等滚动进视口后按**无记忆**的初始状态
+       * 重新对齐。jsdom 的矩形恒为 0 ⇒ 不触发该分支，既有单测不受影响。
+       */
+      if (
+        tgt instanceof HTMLElement &&
+        isTargetOutsideArea(tgt.getBoundingClientRect(), result.visible)
+      ) {
+        return;
+      }
       const outcome: AlignOutcome = alignPopup(
         {
           target: result.target,
@@ -424,10 +461,22 @@ export const Trigger = defineComponent({
         for (const scroller of scrollers) {
           scroller.addEventListener('scroll', onScroll, true);
         }
+        /**
+         * 🚨 上游 `useWatch.js` 的 `mergedList = new Set([win, ...targetScrollList,
+         * ...popupScrollList])` —— **window 本身也是一个滚动源**。
+         *
+         * 本仓原先只挂了 `collectScroller()` 的产物，而 `html` / `body` 的计算
+         * `overflow` 是 `visible` ⇒ 不在列表里 ⇒ 页面整页滚动（文档站最常见的情形）
+         * 不会触发重新对齐：弹层停在旧位置（2026-10-22 Menu 审计 M-06 实测，
+         * 垂直子菜单在 scrollIntoView 后偏移 140px）。
+         */
+        const win = popupEle.value?.ownerDocument?.defaultView ?? (canUseDom() ? window : null);
+        win?.addEventListener('scroll', onScroll, true);
         onCleanup(() => {
           for (const scroller of scrollers) {
             scroller.removeEventListener('scroll', onScroll, true);
           }
+          win?.removeEventListener('scroll', onScroll, true);
         });
       },
       { flush: 'post' },

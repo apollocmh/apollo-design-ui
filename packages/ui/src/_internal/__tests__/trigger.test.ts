@@ -13,7 +13,7 @@ import { getPlacements } from '@apollo-design/position';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-import { Trigger } from '../trigger';
+import { isTargetOutsideArea, Trigger } from '../trigger';
 
 /** 组件形态的触发器 —— Vue 的 ref 在这上面给的是**实例**，不是元素。 */
 const CompTrigger = defineComponent({
@@ -287,5 +287,56 @@ describe('Trigger · 生命周期清理', () => {
 
     addSpy.mockRestore();
     removeSpy.mockRestore();
+  });
+});
+
+describe('Trigger · 滚动跟随与视口外对齐（2026-10-22 Menu 审计 M-06）', () => {
+  it('浮层打开时把 window 也注册为滚动源（上游 useWatch 的 mergedList 含 win）', async () => {
+    const addSpy = vi.spyOn(window, 'addEventListener');
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
+    const wrapper = mountTrigger({ open: true });
+    await vi.waitFor(() => {
+      expect(popup()).not.toBeNull();
+    });
+
+    const addedScroll = addSpy.mock.calls
+      .filter(([type]) => type === 'scroll')
+      .map(([, handler]) => handler);
+    expect(addedScroll.length, 'window scroll listener 未挂载').toBeGreaterThan(0);
+
+    // 触发一次滚动不应抛错（真实几何由浏览器门禁断言）
+    window.dispatchEvent(new Event('scroll'));
+    await nextTick();
+
+    wrapper.unmount();
+    const removedScroll = removeSpy.mock.calls
+      .filter(([type]) => type === 'scroll')
+      .map(([, handler]) => handler);
+    for (const handler of addedScroll) {
+      expect(removedScroll, '卸载时应移除同一个 scroll handler').toContain(handler);
+    }
+    addSpy.mockRestore();
+    removeSpy.mockRestore();
+  });
+
+  it('isTargetOutsideArea：完全在视口外才跳过对齐，零尺寸不跳', () => {
+    const area = { left: 0, top: 0, right: 1000, bottom: 800 };
+    const rect = (left: number, top: number, width = 100, height = 40) => ({
+      left,
+      top,
+      width,
+      height,
+      right: left + width,
+      bottom: top + height,
+    });
+
+    expect(isTargetOutsideArea(rect(10, 10), area)).toBe(false);
+    expect(isTargetOutsideArea(rect(950, 10), area)).toBe(false); // 部分相交
+    expect(isTargetOutsideArea(rect(10, 2000), area)).toBe(true); // 下方视口外
+    expect(isTargetOutsideArea(rect(10, -200), area)).toBe(true); // 上方视口外
+    expect(isTargetOutsideArea(rect(2000, 10), area)).toBe(true); // 右侧视口外
+    expect(isTargetOutsideArea(rect(-200, 10), area)).toBe(true); // 左侧视口外
+    // jsdom：矩形恒为 0 ⇒ 无法判定 ⇒ 仍然对齐（不改变既有单测行为）
+    expect(isTargetOutsideArea(rect(0, 0, 0, 0), area)).toBe(false);
   });
 });
