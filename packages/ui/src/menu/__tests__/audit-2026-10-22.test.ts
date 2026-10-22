@@ -141,6 +141,28 @@ describe('Menu 审计 M-05 / M-06 / M-07：Trigger 弹层契约', () => {
     wrapper.unmount();
   });
 
+  it('popupStyle 与 styles.popup.root 合并（语义槽后写、优先）', async () => {
+    const wrapper = mountMenu({
+      items: [
+        {
+          key: 'sub1',
+          label: 'Sub',
+          popupStyle: { backgroundColor: 'rgb(1, 2, 3)' },
+          children: [{ key: '2', label: 'Two' }],
+        },
+      ] as never,
+      mode: 'vertical',
+      defaultOpenKeys: ['sub1'],
+      styles: { popup: { root: { color: 'rgb(4, 5, 6)' } } },
+    });
+    await nextTick();
+
+    const popup = document.querySelector('.apollo-menu-submenu-popup') as HTMLElement;
+    expect(popup.style.backgroundColor).toBe('rgb(1, 2, 3)');
+    expect(popup.style.color).toBe('rgb(4, 5, 6)');
+    wrapper.unmount();
+  });
+
   it('SubMenu.theme 只给弹层加主题类（根主题不变）', async () => {
     const wrapper = mountMenu({
       items: [

@@ -455,7 +455,11 @@ const SubMenu = defineComponent({
                   isRtl.value ? `${subMenuPrefixCls}-rtl` : undefined,
                   popupSemCls.root,
                 ].filter((c): c is string => typeof c === 'string' && c.length > 0),
-                popupStyle: popupSemStyle.root ?? props.popupStyle,
+                // antd：`{...props.popupStyle, ...styles.popup.root}`（语义槽后写、优先）
+                popupStyle: {
+                  ...(props.popupStyle ?? {}),
+                  ...(popupSemStyle.root ?? {}),
+                },
                 getPopupContainer: ctx.getPopupContainer,
                 motion: popupMotion.value,
                 fresh: true,
