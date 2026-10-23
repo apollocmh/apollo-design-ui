@@ -2,7 +2,7 @@
 
 > 复制到 `packages/ui/src/<component>/index.zh-CN.md` 与 `index.en-US.md`。
 >
-> **规则 R19**：文档必须重新撰写，禁止复制 antd 文档正文（`AGENTS.md` H2）。
+> 文档描述 Apollo 的公开契约；引用第三方内容需遵守许可。
 > 允许对齐的是：API 表结构、Prop 名、类型、默认值。
 > **规则 R20**：API 表从类型定义自动生成，避免手写漂移。
 
@@ -22,7 +22,7 @@ cover: https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*...
 
 ## 何时使用
 
-（**自写**，不复制 antd 文案。用 2-4 句说明这个组件解决什么问题、什么场景该用、什么场景不该用。）
+（用 2-4 句说明本组件解决的问题与适用场景。）
 
 标记一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。
 
@@ -102,9 +102,9 @@ cover: https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*...
 
 ### 为什么 `size` 的默认值不是 `medium` 而是 `middle`？
 
-为保持与 Ant Design 的 API 完全兼容，我们保留 `middle` 命名，未做「修正」。
+`middle` 是现有公开值，保留以兼容用户代码。
 
-### 与 Ant Design 有什么差异？
+### 如何兼容已有用法？
 
 （列出该组件在 `COMPATIBILITY.md` §9 中登记的差异项，若无则写「无」）
 
@@ -123,12 +123,12 @@ cover: https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*...
 
 ## 文档自检清单
 
-- [ ] `何时使用` 是自写的，不是 antd 文案的翻译
+- [ ] `何时使用` 描述实际场景
 - [ ] 每个 demo 都在 `demo/` 下有对应的 `.vue` 文件
 - [ ] 每个 demo 都被 `demoTest` 覆盖（能渲染且无 warning）
 - [ ] API 表包含 Props / Events / Slots / Methods 四节
 - [ ] `children` 不出现在 Props 表中（已移到 Slots）
 - [ ] Design Token 表来自 `registry/tokens.json`（自动生成，非手写）
-- [ ] 与 antd 的差异已在本组件文档中说明
+- [ ] 行为变更、弃用与迁移已在本组件文档中说明
 - [ ] 中英文两份都完成
 - [ ] API 表与 `interface.ts` 一致（由脚本校验）

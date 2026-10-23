@@ -1,3 +1,5 @@
+> 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
+
 # Checkbox —— antd 6.6.4 契约分析（G1）
 
 > 材料：`/tmp/antd-src/package/es/checkbox/` + antd v6.6.4 的 demo/测试

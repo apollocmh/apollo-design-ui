@@ -1,3 +1,5 @@
+> 适用范围更新：本 ADR 的历史理由保留；与当前独立契约冲突的要求由 [ADR 0005](0005-independent-apollo-contracts.md) 及根目录规范取代。
+
 # ADR 0004：发布包零 Ant Design 运行时依赖
 
 - **状态**：已接受

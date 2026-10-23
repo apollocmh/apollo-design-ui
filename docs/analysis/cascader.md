@@ -1,3 +1,5 @@
+> 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
+
 # antd Cascader 分析（v6.6.4 产物实测）
 
 > 契约来源：`/tmp/antd-src/package/es/cascader/*`（antd 6.6.4 npm 产物）+ `@rc-component/cascader@1.22.0` 的 `es/*`（node_modules 实测）。
