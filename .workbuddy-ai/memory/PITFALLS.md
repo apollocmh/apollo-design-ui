@@ -50,7 +50,7 @@
 - **动效 / 浮层（阶段 0）**：🚨 Trigger 关闭置 `ready=false` ⇒ 浮层瞬移 `-1000vw/-1000vh`，离场在屏外（382） · 🚨 Notification MotionList slot 回查实时 keys ⇒ removed key 拿不到 config，立即卸载（383） · 🚨 Modal 的 zoom 原点要跟随最近 100ms 点击，不是固定中心（384） · ⚠️ Tree 收起后再次展开无 appear（385，H）。
 - **L6 基线平台**：🚨 入库基线由 macOS 生成；Windows 经典滚动条让 `#stage` 从 1440 变 1425 ⇒ **不要用 `--mode baseline` 覆盖既有基线**（377）。
 - **阶段 1/2/3 实测（2026-10-21）**：🚨 `onVisibleChanged` 不能在 setup 期 immediate 回调（386） · 🚨 Vue style 数值不补 px ⇒ 高度过渡失效（387） · 🚨 Form.List 位置参数在模板不可达 ⇒ 单对象 payload（388） · 🚨 Windows L7 门禁 `/bin/sh` + `;` PATH 全红（389） · 🚨 站点语言未在 main 初始化 ⇒ 刷新丢语言 + 面板中英混排（390） · 🚨 双引号 `node -e` 遇 `$(` 会毁文件（391） · ⚠️ Windows 全仓 Biome 报 CRLF 噪声，收口只检查改动文件（392）
-- **CI / 发布**：🚨 `content:check` 不落盘，docs 类型检查/测试/coverage 前必须 `content:build`（378,379） · 🚨 `pnpm run preview -- --host` 的 `--` 会让 vite 退回 4173 ⇒ 用 `exec vite preview`（380） · 🚨 Pages legacy 源为 gh-pages + 环境仅允许 gh-pages ⇒ 部署推 gh-pages，不能用 deploy-pages（381）。
+- **CI / 发布**：🚨 `content:check` 不落盘，docs 类型检查/测试/coverage 前必须 `content:build`（378,379） · 🚨 `pnpm run preview -- --host` 的 `--` 会让 vite 退回 4173 ⇒ 用 `exec vite preview`（380） · ✅ Pages 已改为 GitHub Actions 源（2026-10-23，381）：产物不推分支，但环境策略必须放行触发 ref（`master` + `v*` 标签）。
 
 ## 工具 / 沙箱
 
@@ -4803,7 +4803,7 @@
 - ⚠️ **`interface` 没有隐式索引签名**（只有类型别名 / 推断出来的对象字面量有）⇒ `interface RecordType` 传给 `data-source`（收 `Record<string, unknown>[]`）报 `Index signature for type 'string' is missing` ⇒ 显式补 `[key: string]: unknown`（或干脆不标注，让 TS 推断，如既有 `sorter.vue`）。
 - ⚠️ **table 的内部类型在根出口统一加 `Table` 前缀**：根名是 `TableFilterDropdownProps`，不是 `FilterDropdownProps`（照 `table/index.ts` 的内部名引会报错）。批量自检：解析 `packages/ui/src/index.ts` 的 `export type {X as Y}` 建集合，再对 demo 的 `import type {…} from '@apollo-design/ui'` 逐名核对。
 - ⚠️ **展开含递归大类型会触发 TS2589**：`{ ...pagination.value }`（`TablePaginationConfig` 含 `showSizeChanger?: boolean | SelectProps`）⇒ `Type instantiation is excessively deep and possibly infinite` ⇒ 改成逐字段赋值。
-- 📌 **手动发 Pages**：`gh-pages` 分支根 = `packages/docs/dist`；`deploy-docs.yml` 只在 **master** 触发（feature 分支不会自动发）。流程：`git worktree add -b gh-pages /tmp/ghp origin/gh-pages` → `git rm -r .` → 拷 dist → `touch .nojekyll`（dist 不产这个文件，但没有它 Jekyll 会跳过 `_` 前缀目录）→ commit → `git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:gh-pages`。⚠️ 拷完记得剔掉 `.vite/` 缓存目录。发布后 `gh api repos/<owner>/<repo>/pages` 看 `status: building`，约 1 分钟生效；验证要**等水合后**（demo 只在客户端加载，SSR HTML 里没有示例标题）。
+- 📌 **发布 Pages**（2026-10-23 起）：`deploy-docs.yml` 用 GitHub Actions Pages（`build_type: workflow`），产物只作为 workflow artifact 交给 `deploy-pages`，**不再推任何分支**。手动发布 = `gh workflow run deploy-docs.yml --ref master`（或打 `v*` 标签）；`gh run watch` 看绿后，`gh api repos/<owner>/<repo>/pages` 应显示 `status: built`。验证要**等水合后**（demo 只在客户端加载，SSR HTML 里没有示例标题）。`github-pages` 环境的分支策略必须允许 `master` 和 `v*` 标签。
 
 ### Table 过滤弹层 token 继承（2026-10-20，340）
 - ❌ `.apollo-table-filter-dropdown` 的背景 / 阴影 / 圆角依赖
@@ -4929,11 +4929,15 @@
 380. 🚨 **`pnpm run preview -- --host … --port …` 在 pnpm 12 会把 `--` 原样传给 vite**：
     vite 看到 `--` 后停止解析，退回默认 **4173**，CI 冒烟连 4477 必失败。
     用 `pnpm --filter @apollo-design/docs exec vite preview --host … --port …`。
-381. 🚨 **本仓 Pages 是 legacy「Deploy from a branch」+ 环境规则只允许 `gh-pages`**：
-    `actions/deploy-pages` 需要 Pages source = GitHub Actions，必然被
-    `Branch "master" is not allowed to deploy to github-pages` 拒绝。
-    发布改成构建 artifact → checkout `gh-pages` → 替换内容（保留 `.nojekyll`）→ push；
-    `permissions: contents: write` 即可，不需要 `pages: write` / environment。
+381. ✅ **Pages 已于 2026-10-23 改为 GitHub Actions 源**（`build_type: workflow`）：
+    产物走 `configure-pages` → `upload-pages-artifact` → `deploy-pages`，不落任何 Git 分支；
+    远程 `gh-pages` 分支已删除。🚨 切源时**必须同步改 `github-pages` Environment 的
+    deployment branch policies**——`deploy-pages` 的部署 ref 就是触发 ref
+    （`master` / `v*` 标签），只留旧的 `gh-pages` 策略会报
+    `Branch "..." is not allowed to deploy to github-pages`。历史：2026-10-21 因
+    legacy 源 + 仅允许 `gh-pages` 曾被迫改用「构建产物推分支」。⚠️ 切换后
+    `GET /pages` 的 `source` 字段仍可能显示旧 `gh-pages`（legacy 残留），以
+    `build_type=workflow` 与 deployment 记录的 ref 为准。
 382. 🚨 **Trigger 关闭时把 `offsetInfo.ready` 置 false，浮层会瞬移到 `-1000vw/-1000vh`，离场动画在屏幕外播放**：
     `packages/ui/src/_internal/trigger.ts` 的 `watch(mergedOpen)` 在 `!open` 时
     `ready=false`，而 `offsetStyle` 只要 `!ready` 就返回屏外占位。上游
