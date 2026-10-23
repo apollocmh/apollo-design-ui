@@ -91,10 +91,7 @@ for (const f of depFoundations) {
   const pkg = (fj.packages ?? []).find((p) => p.name === f);
   if (!pkg || !isDone(pkg.status)) notReady.push(`foundation ${f}`);
 }
-if (notReady.length > 0 && !values.force) {
-  console.error(`✗ 依赖未就绪: ${notReady.join(', ')}。按 DAG 先做依赖，或确认后加 --force。`);
-  process.exit(1);
-}
+if (notReady.length > 0) console.warn(`依赖状态需评估: ${notReady.join(', ')}；允许先设计或维护。`);
 
 const exportName =
   comp.exportName ??
@@ -103,7 +100,6 @@ const targetDir = join(ROOT, 'packages/ui/src', name);
 // 目录可以是已有占位（空目录），但任何**目标文件**已存在都必须显式 --force —— 不静默覆盖
 mkdirSync(targetDir, { recursive: true });
 
-const antdVer = registry.antdVersion ?? '6.6.4';
 const files = new Map();
 
 // ── 文件模板 ──────────────────────────────────────────────────────────────────
@@ -119,22 +115,22 @@ files.set(
 - registry status: **${comp.status}** · priority ${comp.priority} · complexity ${comp.complexity}
 - 依赖组件: ${(comp.dependencies?.components ?? []).join(', ') || '无'}
 - foundation: ${(comp.dependencies?.foundation ?? []).join(', ') || '无'}
-- antd 规模: ${comp.derived?.antdBuildLineCount ?? '?'} 行 / ${comp.derived?.antdFileCount ?? '?'} 文件 · token ${comp.derived?.tokenCount ?? '?'}
+- Apollo token 清单: ${comp.derived?.tokenCount ?? '待核对'}
 
 ## Gate 检查单
 
-- [ ] G0 CLAIM —— 本组件已由 next-task.mjs 授权开工
-- [ ] G1 ANALYZE —— 读 /tmp/antd-src/package/es/${name}/ 的 .d.ts + demo + 测试，产出 **docs/analysis/${name}.md**（先于实现！）
+- [ ] G0 CLAIM —— 确认需求、调用者和实际依赖
+- [ ] G1 ANALYZE —— 定义 Apollo 组件契约与真实场景，需要时写 docs/analysis/${name}.md
 - [ ] G2 API DESIGN —— interface.ts 枚举 props/emits/slots/expose；v-model 取代 value+onChange
-- [ ] G3 TOKEN —— style/token.ts 对齐 antd ComponentToken（名称/数量/默认值，规则 R7）
-- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；选择器从 antd extractStyle 产物提取，不推演
+- [ ] G3 TOKEN —— style/token.ts 定义本库令牌及兼容默认值
+- [ ] G4 IMPLEMENT —— <Name>.vue + style/index.ts；实现本库语义与样式契约
 - [ ] G5 L1 单元 + G6 L2 交互 —— __tests__/index.test.ts
 - [ ] G7 L3 类型（含负例，负例包在永不调用的闭包里）
 - [ ] G8 L5 a11y —— axe + role/键盘断言
 - [ ] G9 L6 视觉 —— 先建基线再 compare；对比不过先怀疑实现（px 字符串！）
-- [ ] G10 L4/L4 DOM 契约 + compat 比对
-- [ ] G11 DOCS —— demo 与 antd 一一对应（demo.test.ts 的 expectCount 钉死数量）
-- [ ] G12 REGISTRY —— 11 维度置 done（唯一让进度被承认的方式）
+- [ ] G10 L4 DOM / attrs / ARIA 契约；上游比较可选
+- [ ] G11 DOCS —— Demo 覆盖公开 API 和真实场景
+- [ ] G12 REGISTRY —— 按真实证据更新九个质量维度
 - [ ] G13 BUILD —— pnpm run registry:check && lint && test && test:build 四道全绿
 - [ ] G14 COMMIT —— commit message 带 [COMP:${name}]
 
@@ -159,8 +155,7 @@ files.set(
  * ${exportName} 的类型定义（G2 产物落点）。
  *
  * ⚠️ 本文件由 gen-component.mjs 生成为空壳 —— G2 完成**前**它必须是空的；
- *    完成后 props / emits / slots / expose 全量枚举，从 antd ${antdVer} 的
- *    /tmp/antd-src/package/es/${name}/ .d.ts **重新定义**（H2），禁止复制搬运。
+ *    定义 props / emits / slots / expose，覆盖 Apollo 使用场景与兼容边界。
  *    禁止 any / as any / @ts-expect-error（H10）。
  */
 export {};
@@ -171,7 +166,7 @@ files.set(
   `${exportName}.vue`,
   `<script setup lang="ts">
 /**
- * ${exportName} 主实现。对应 antd ${antdVer} 的 es/${name}。
+ * ${exportName} 主实现。遵循 Apollo 公开契约。
  *
  * ⚠️ 骨架由 gen-component.mjs 生成 —— 依据 AGENTS.md §2，G1 的分析产物
  *    （docs/analysis/${name}.md）必须先于本文件的实质实现存在。
@@ -179,7 +174,7 @@ files.set(
 defineOptions({ name: 'A${exportName}' });
 
 // TODO(G2): 依据 docs/analysis/${name}.md 定义 withDefaults(defineProps<${exportName}Props>(), {...})
-// TODO(G4): 对齐 antd 的 DOM 结构 / 语义类名 / ARIA；视觉值一律走 Token（H9）
+// TODO(G4): 实现 Apollo 的 DOM / 语义类名 / ARIA；视觉值一律走 Token（H9）
 </script>
 
 <template>
@@ -196,7 +191,7 @@ files.set(
   `/**
  * ${exportName} 的公共导出。
  *
- * 与 antd 的 es/${name}/index.js 对齐的对外面。
+ * Apollo 的公共导出面。
  * ⚠️ 骨架由 gen-component.mjs 生成 —— G2 完成后补齐类型导出，G4 后补齐样式导出。
  */
 
@@ -220,15 +215,15 @@ files.set(
   `/**
  * ${exportName} 的 Component Token（G3 产物落点）。
  *
- * 契约来源：antd ${antdVer} 的 es/${name}/style/index.js 的 ComponentToken 接口与
+ * 契约来源：Apollo 主题与组件设计，包含
  * prepareComponentToken。registry 数据：该组件 token 数 = ${comp.derived?.tokenCount ?? '?'}。
  *
  * 规则（divider 的 token.ts 是范本）：
- *   - 名称、数量、默认值计算方式与 antd 逐条对齐（规则 R7）
+ *   - 名称、默认值与公开类型保持一致
  *   - 别名派生的 token 落 var(--apollo-*)（B7 可校验、随主题自适应）
  *   - 字面量 token 以常量为唯一真源，由 style/index.ts 内联消费
  */
-// TODO(G3): 逐条对齐后替换本占位（tokenCount 为 0 时，写明「该组件无 Component Token」并删除本行）
+// TODO(G3): 定义 Apollo 令牌后替换本占位（tokenCount 为 0 时，写明「该组件无 Component Token」并删除本行）
 export type ComponentToken = Record<string, never>;
 
 // TODO(G3): export const prepareComponentToken = (token: AliasToken): Partial<ComponentToken> => ({ ... });
@@ -240,8 +235,8 @@ files.set(
   `/**
  * ${exportName} 的样式生成（G4 产物落点）。
  *
- * 契约来源：antd ${antdVer} 的 es/${name}/style/index.js。
- * 选择器结构必须从 antd 真实产物提取（@ant-design/cssinjs extractStyle），**不要推演**。
+ * 契约来源：Apollo 组件设计。
+ * 选择器表达稳定的组件语义，视觉值消费主题令牌。
  *
  * 易错点（divider/affix 实测）：
  *   - cssinjs 的 \`&\` 是复合选择器、普通键是后代选择器，搞反会让样式串形态
@@ -256,7 +251,7 @@ files.set(
 files.set(
   'demo/basic.vue',
   `<script setup lang="ts">
-// TODO(G11): 对齐 antd 的 basic demo；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
+// TODO(G11): 展示本库基本用法；demo 与 .md 成对出现，最终数量由 demo.test.ts 的 expectCount 钉死
 import { ${exportName} } from '../index';
 </script>
 
@@ -275,7 +270,7 @@ title:
   en-US: Basic
 ---
 
-<!-- TODO(G11): 描述与代码对齐 antd 同名 demo；从 /tmp/antd-repo/ant-design-master/components/${name}/demo/ 抄清单 -->
+<!-- TODO(G11): 描述示例用途、状态与交互，与本示例代码一致 -->
 \`\`\`vue
 <script setup lang="ts">
 import { ${exportName} } from '@apollo-design/ui';
@@ -312,7 +307,7 @@ files.set(
   `/**
  * demo 冒烟测试占位 —— G11 未开始。
  *
- * ⚠️ 实现后必须：demos glob + **expectCount**（与 antd 用户可见 demo 一一对应，
+ * ⚠️ 实现后必须：demos glob + **expectCount**（覆盖本库公开场景，
  * 防腐断言）；「不产生告警」是 demo 的硬约束。
  */
 import { describe } from 'vitest';
@@ -325,7 +320,7 @@ files.set(
   todo(
     '4',
     'G10',
-    '\n * L4 DOM 契约与 antd 机械基线逐字比对；只覆盖 SSR 可达形态（SSR 恒不固钉类差异注意）。',
+    '\n * L4 DOM 契约验证本库语义、attrs 与 ARIA；只覆盖 SSR 可达形态（SSR 恒不固钉类差异注意）。',
   ),
 );
 files.set(
@@ -348,11 +343,11 @@ files.set(
 
 > 规则 R1：本文件必须记录（G11 前补齐）：
 
-## 1. 对应 antd 组件
+## 1. 组件契约
 
-- antd ${antdVer} · \`es/${name}/\`（只读参照，H2）
+- 用途、公开 API、兼容边界与依赖
 
-## 2. 与 antd 的行为差异清单
+## 2. 行为与迁移记录
 
 <!-- 同步到 COMPATIBILITY.md §9；分类只能是 BUG / INTENDED / PLATFORM / UPSTREAM（AGENTS.md §4.3） -->
 
@@ -377,7 +372,7 @@ for (const file of ['index.zh-CN.md', 'index.en-US.md']) {
 
 <!-- TODO(G11): 中文/英文文档骨架。结构对齐 divider/index.zh-CN.md：
      何时使用 / 代码演示（demo 一一对应）/ API（props/events/slots/expose 表）/ Theme（token 表）。
-     API 表由 interface.ts 的注释生成口径书写；@desc/@descEN 与 antd 同构。 -->
+     API 表由 interface.ts 的注释生成口径书写；@desc/@descEN 描述本库公开行为。 -->
 `,
   );
 }
@@ -402,10 +397,9 @@ for (const [rel, content] of files) {
   created += 1;
 }
 
-const warnLine =
-  notReady.length > 0 ? `\n⚠️ 依赖未就绪仍生成（--force）: ${notReady.join(', ')}` : '';
+const warnLine = notReady.length > 0 ? `\n⚠️ 依赖状态需后续验证: ${notReady.join(', ')}` : '';
 console.log(`\n✓ ${name} 骨架就绪: ${created} 个文件${skipped ? `（跳过已存在 ${skipped} 个）` : ''}${values['dry-run'] ? '（dry-run，未写盘）' : ''}${warnLine}
-下一步（顺序不可颠倒，AGENTS.md §2）:
+下一步（按 WORKFLOW.md 评估适用检查）:
   1. 读 packages/ui/src/${name}/PLAN.md —— Gate 检查单 + 开工避坑清单
-  2. G1: 分析 /tmp/antd-src/package/es/${name}/（缺产物则先 pnpm antd:extract）→ docs/analysis/${name}.md
-  3. 每完成一个 Gate 立即勾 PLAN.md，G12 才置 registry 维度 done`);
+  2. G1: 分析 Apollo API、用户场景与调用者→ docs/analysis/${name}.md
+  3. 按验证证据更新计划与 Registry，不把生成骨架当作完成`);

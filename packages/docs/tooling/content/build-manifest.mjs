@@ -318,7 +318,16 @@ function scanGuides() {
       const sourcePath = nodePath.resolve(GUIDE_SRC, meta.source);
       assert(fs.existsSync(sourcePath), `guide/${slug}：source 文件不存在：${meta.source}`);
       body = normalizeText(fs.readFileSync(sourcePath, 'utf8'))
-        .replace(/^# .*$/m, '') // 去掉源文件的一级标题（页面标题由 frontmatter 提供）
+        .replace(/^# .*$/m, '') // 页面标题由 frontmatter 提供。
+        // Repository-relative links in an injected policy must not become broken site routes.
+        .replace(/\]\((?!https?:|#|\/)([^)]+\.md(?:#[^)]*)?)\)/g, (_, href) => {
+          const [file, anchor = ''] = href.split('#');
+          const relative = nodePath.relative(
+            REPO_ROOT,
+            nodePath.resolve(nodePath.dirname(sourcePath), file),
+          );
+          return `](${REPO_URL}/blob/master/${relative.split(nodePath.sep).join('/')}${anchor ? `#${anchor}` : ''})`;
+        })
         .trim();
     }
     // 指南正文按 `## zh-CN` / `## en-US` 分节
@@ -607,7 +616,7 @@ export async function buildManifest({ write = true } = {}) {
     apolloVersion: JSON.parse(
       fs.readFileSync(nodePath.resolve(REPO_ROOT, 'packages/ui/package.json'), 'utf8'),
     ).version,
-    antdTarget: '6.6.4',
+    designSystem: 'Apollo Design',
     categories: nav,
     components: scanned.map((c) => ({
       name: c.name,

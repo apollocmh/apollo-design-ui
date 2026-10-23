@@ -22,7 +22,7 @@ order: 4
 
 ### 2. `ThemeProvider`（运行时派生）
 
-`@apollo-design/theme` 提供基于种子令牌的派生算法（对齐 antd 的 seed → map → alias 链路）与 Vue 绑定层：
+`@apollo-design/theme` 提供基于种子令牌的派生算法（seed → map → alias）与 Vue 绑定层：
 
 ```vue
 <script setup lang="ts">

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://apollo-design.dev/schemas/registry.json",
   "title": "Apollo Design Registry",
-  "description": "registry/ 下三个机器可读文件的 Schema。它们是 Agent 的任务来源与项目事实来源。",
+  "description": "Apollo 自有清单、状态与派生图；参考证据不约束项目范围。",
   "definitions": {
     "ComponentStatus": {
       "type": "string",
@@ -56,6 +56,10 @@
         "since": {
           "type": "string",
           "description": "ISO 日期"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -68,12 +72,9 @@
         "priority",
         "complexity",
         "status",
-        "antdVersion",
         "dependencies",
         "blockedBy",
         "apiStatus",
-        "antdApiStatus",
-        "compatStatus",
         "typeStatus",
         "tokenStatus",
         "styleStatus",
@@ -88,7 +89,7 @@
         "name": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9-]*$",
-          "description": "kebab-case，与 antd 的 components/<name> 目录名一致"
+          "description": "Apollo 组件目录的 kebab-case 名称"
         },
         "exportName": {
           "type": "string",
@@ -111,12 +112,9 @@
         "status": {
           "$ref": "#/definitions/ComponentStatus"
         },
-        "antdVersion": {
-          "type": "string"
-        },
         "derived": {
           "type": "object",
-          "description": "由 gen-registry.mjs 从 antd 事实推导，禁止手工编辑",
+          "description": "由 Apollo 清单推导的字段",
           "additionalProperties": false,
           "properties": {
             "dagLevel": {
@@ -125,15 +123,6 @@
             "unblocks": {
               "type": "integer",
               "description": "完成后能解锁的下游组件数（传递闭包）"
-            },
-            "antdBuildLineCount": {
-              "type": "integer"
-            },
-            "antdFileCount": {
-              "type": "integer"
-            },
-            "rcDepCount": {
-              "type": "integer"
             },
             "tokenCount": {
               "type": "integer"
@@ -161,25 +150,6 @@
               },
               "description": "仅类型引用，不阻塞实现"
             },
-            "leafModules": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "对叶子模块的依赖（如 config-provider/context）。在我们的架构中由 ui/src/_internal/ 承接"
-            },
-            "rcPackages": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "antdEcosystem": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "foundation": {
               "type": "array",
               "items": {
@@ -195,7 +165,7 @@
           "items": {
             "type": "string"
           },
-          "description": "尚未 completed 的依赖组件。非空时该组件不可被 next-task 选中"
+          "description": "当前未完成的已声明依赖；计划线索，不禁止维护任务"
         },
         "blockers": {
           "type": "array",
@@ -204,12 +174,6 @@
           }
         },
         "apiStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "antdApiStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "compatStatus": {
           "$ref": "#/definitions/DimensionStatus"
         },
         "typeStatus": {
@@ -242,6 +206,13 @@
         "layerNotes": {
           "type": ["string", "null"],
           "description": "分层证据（L4 基线用例数 / L6 张数等）。与 notes 一样是 Agent 写的，生成器跨运行保留"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
+        },
+        "visualBaseline": {
+          "enum": ["legacy-reference", "apollo", "pending", "n/a"]
         }
       }
     },
@@ -276,17 +247,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
     "ComponentsFile": {
       "type": "object",
-      "required": ["antdVersion", "generatedAt", "legend", "summary", "milestones", "components"],
+      "required": ["generatedAt", "legend", "summary", "milestones", "components"],
       "additionalProperties": true,
       "properties": {
-        "antdVersion": {
-          "type": "string"
-        },
         "generatedAt": {
           "type": "string"
         },
@@ -333,6 +305,10 @@
             "$ref": "#/definitions/Component"
           },
           "minItems": 1
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -376,6 +352,10 @@
         },
         "usedByCount": {
           "type": "integer"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -406,6 +386,10 @@
         },
         "readiness": {
           "type": "string"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -531,6 +515,10 @@
         "contract": {
           "type": ["string", "null"],
           "description": "契约文档路径，如 docs/foundation/rc-util-contract.md"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -564,6 +552,10 @@
         },
         "exportDeclarations": {
           "type": "integer"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -784,17 +776,18 @@
               "type": ["string", "null"]
             }
           }
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
     "FoundationFile": {
       "type": "object",
-      "required": ["antdVersion", "generatedAt", "legend", "summary", "packages"],
+      "required": ["generatedAt", "legend", "summary", "packages"],
       "additionalProperties": true,
       "properties": {
-        "antdVersion": {
-          "type": "string"
-        },
         "generatedAt": {
           "type": "string"
         },
@@ -855,6 +848,10 @@
             "$ref": "#/definitions/FoundationEntry"
           },
           "minItems": 1
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -929,13 +926,16 @@
         "note": {
           "type": ["string", "null"],
           "description": "人工追加的说明，不参与生成覆盖"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
     "DependenciesFile": {
       "type": "object",
       "required": [
-        "antdVersion",
         "generatedAt",
         "summary",
         "foundationPackages",
@@ -944,9 +944,6 @@
       ],
       "additionalProperties": true,
       "properties": {
-        "antdVersion": {
-          "type": "string"
-        },
         "generatedAt": {
           "type": "string"
         },
@@ -1009,17 +1006,18 @@
         },
         "cycleResolutions": {
           "type": "array"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
     "TokensFile": {
       "type": "object",
-      "required": ["antdVersion", "generatedAt", "cssVar", "summary", "layers", "algorithms"],
+      "required": ["generatedAt", "cssVar", "summary", "layers", "algorithms"],
       "additionalProperties": true,
       "properties": {
-        "antdVersion": {
-          "type": "string"
-        },
         "generatedAt": {
           "type": "string"
         },
@@ -1067,6 +1065,10 @@
               }
             }
           }
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -1074,7 +1076,6 @@
       "type": "object",
       "description": "registry/workstreams.json —— 可并行 Work Item 的编排。由 gen-workstreams.mjs 从 components/foundation + source/workstreams.mjs 推导，勿手工编辑 items。",
       "required": [
-        "antdVersion",
         "generatedAt",
         "summary",
         "conflictSets",
@@ -1088,9 +1089,6 @@
           "type": "string"
         },
         "$comment": {
-          "type": "string"
-        },
-        "antdVersion": {
           "type": "string"
         },
         "generatedAt": {
@@ -1123,6 +1121,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -1156,6 +1158,10 @@
         },
         "note": {
           "type": "string"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -1223,6 +1229,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -1293,6 +1303,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     },
@@ -1397,6 +1411,10 @@
         },
         "dimensions": {
           "type": "object"
+        },
+        "referenceEvidence": {
+          "type": "object",
+          "description": "带来源版本的历史证据；不参与完成条件"
         }
       }
     }

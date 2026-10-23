@@ -9,7 +9,7 @@ export interface BuildManifestResult {
     generatedAt: string;
     repoUrl: string;
     apolloVersion: string;
-    antdTarget: string;
+    designSystem: string;
     categories: Array<{ name: string; components: Array<{ name: string }> }>;
     components: Array<{ name: string }>;
     guides: Array<{ slug: string }>;

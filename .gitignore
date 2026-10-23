@@ -71,3 +71,6 @@ node_modules/.cache/apollo/
 packages/docs/.vitepress/cache/
 /.claude/settings.json
 /.codex/
+
+# Apollo visual candidates are unreviewed local artifacts.
+tests/visual/candidates/

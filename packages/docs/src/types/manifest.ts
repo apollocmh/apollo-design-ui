@@ -172,7 +172,7 @@ export interface SiteManifest {
   generatedAt: string;
   repoUrl: string;
   apolloVersion: string;
-  antdTarget: string;
+  designSystem: string;
   categories: NavCategory[];
   components: Array<{
     name: string;

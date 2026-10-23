@@ -1,21 +1,8 @@
 /**
- * matrix.mjs — 视觉回归的截图矩阵定义。
- *
- * 约定：`id = <component>/<variant>__<theme>__<viewport>`，两侧（react / vue）共用同一 id，
- * 因此一张 React 截图与一张 Vue 截图天然配对。
- *
- * ── 与其他层的关系 ──────────────────────────────────────────────────────────
- *
- * `tests/compat` 在 jsdom 里比 DOM 结构（`A9` 允许它 import antd）；本目录在真实
- * 浏览器里比**像素**。两者互补，不重叠。
- *
- * ── 关于 dark / compact ─────────────────────────────────────────────────────
- *
- * `TESTING.md` §9.1 把 dark / compact 列为必选。但我们的主题切换依赖
- * `ConfigProvider`，而 `ConfigProvider` **组件**尚未实现（只有 `context.ts`），
- * 且零运行时架构下 `tokens.css` 是**构建期产物** —— 运行时无法切换算法。
- * 所以本阶段 `THEMES` 只有 light。这不是「降低门槛」（`H8`），而是把不可比的部分
- * 显式登记在 `LIMITATIONS` 里，等 ConfigProvider 落地后补齐。
+ * Visual scenarios shared by the Apollo regression runner and optional upstream comparison.
+ * Current matrix coverage is light-theme static states. Dark/compact and interactive-state
+ * expansion remain tracked gaps, even though ConfigProvider already supports them.
+ * Historical per-case notes explain existing reference fixtures; they are not product policy.
  */
 
 /** viewport：`TESTING.md` §9.1 要求每个状态至少覆盖 3 个。 */

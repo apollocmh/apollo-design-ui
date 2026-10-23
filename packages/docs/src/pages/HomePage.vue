@@ -34,8 +34,8 @@ onMounted(async () => {
       <p class="home-subtitle">
         {{
           locale === 'zh-CN'
-            ? '以 Ant Design 6.6.4 为兼容规格，用 Vue 3 + TypeScript 原生重写的组件库。零 React 运行时，静态 CSS + CSS 变量。'
-            : 'A Vue 3 + TypeScript component library that treats Ant Design 6.6.4 as its compatibility spec. Zero React runtime, static CSS + CSS variables.'
+            ? '独立发展的 Vue 3 原生组件库。TypeScript、静态 CSS 与 CSS 变量，为业务应用提供一致的交互和主题。'
+            : 'An independent Vue 3 component library. TypeScript, static CSS and CSS variables for consistent interactions and themes.'
         }}
       </p>
       <div class="home-cta">
@@ -61,7 +61,7 @@ onMounted(async () => {
       <div class="home-meta">
         <span class="site-badge">v{{ siteManifest.apolloVersion }}</span>
         <span class="site-badge">
-          antd {{ siteManifest.antdTarget }} {{ locale === 'zh-CN' ? '兼容' : 'compatible' }}
+          Vue 3 Native
         </span>
         <span class="site-badge">
           {{ siteManifest.components.length }} {{ locale === 'zh-CN' ? '组件' : 'components' }}
@@ -89,11 +89,11 @@ onMounted(async () => {
 
     <section class="home-features">
       <div class="home-feature">
-        <h3>{{ locale === 'zh-CN' ? '对齐 antd，不依赖 React' : 'antd-aligned, React-free' }}</h3>
+        <h3>{{ locale === 'zh-CN' ? '一致的组件体验' : 'Consistent component experience' }}</h3>
         <p>{{
           locale === 'zh-CN'
-            ? '行为、DOM、ARIA 与视觉以 antd 6.6.4 为规格，七层门禁逐项对拍。'
-            : 'Behavior, DOM, ARIA and visuals are gated against antd 6.6.4 by a seven-layer test harness.'
+            ? '公开 API、真实使用场景与明确组件契约，共同驱动功能、无障碍与视觉回归。'
+            : 'Public APIs, user scenarios and explicit contracts guide behavior, accessibility and visual regression.'
         }}</p>
       </div>
       <div class="home-feature">
@@ -108,8 +108,8 @@ onMounted(async () => {
         <h3>{{ locale === 'zh-CN' ? 'Vue 原生' : 'Vue native' }}</h3>
         <p>{{
           locale === 'zh-CN'
-            ? 'v-model、插槽、语义化 classNames / styles 都是 Vue 的心智模型，不是 React 的翻译腔。'
-            : 'v-model, slots and semantic classNames / styles follow Vue idioms, not translated React patterns.'
+            ? '使用 v-model、插槽和语义化 classNames / styles，自然地组合 Vue 组件。'
+            : 'Compose Vue components with v-model, slots and semantic classNames / styles.'
         }}</p>
       </div>
     </section>

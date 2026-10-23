@@ -113,16 +113,11 @@ if (args.component) {
   console.log(`\n=== ${c.name} (${c.exportName}) ===`);
   console.log(`group       ${c.group}`);
   console.log(`priority    ${c.priority}  complexity ${c.complexity}  status ${c.status}`);
-  console.log(`antd        v${c.antdVersion}`);
-  console.log(
-    `规模        ${c.derived.antdBuildLineCount} 行构建产物 / ${c.derived.antdFileCount} 文件`,
-  );
+  console.log(`contract    Apollo Design`);
   console.log(`DAG         level ${c.derived.dagLevel}, unblocks ${c.derived.unblocks} 个下游组件`);
   console.log(`依赖组件    ${c.dependencies.components.join(', ') || '（无）'}`);
   console.log(`类型依赖    ${c.dependencies.typeOnly.join(', ') || '（无）'}`);
-  console.log(`叶子模块    ${c.dependencies.leafModules.join(', ') || '（无）'}`);
   console.log(`需要 foundation  ${c.dependencies.foundation.join(', ')}`);
-  console.log(`rc 依赖     ${c.dependencies.rcPackages.join(', ') || '（无）'}`);
   console.log(
     `Token       ${c.derived.tokenCount} 个${c.derived.tokenGroup ? ` (组: ${c.derived.tokenGroup})` : ''}`,
   );
@@ -158,7 +153,7 @@ if (args.foundation) {
     console.log(
       JSON.stringify(
         {
-          antdVersion: fdoc.antdVersion,
+          referenceEvidence: fdoc.referenceEvidence,
           summary: fdoc.summary,
           nextPackage: fdoc.summary.nextPackage,
           nextImplementable: fdoc.summary.nextImplementable,
@@ -191,7 +186,7 @@ if (args.foundation) {
     process.exit(0);
   }
 
-  console.log(`\n=== Foundation 包进度（antd v${fdoc.antdVersion}）===`);
+  console.log(`\n=== Foundation 包进度===`);
   console.log(
     `${fdoc.summary.completedCount}/${fdoc.summary.total} completed  |  已实测验证 ${fdoc.summary.verifiedCount}  |  构建通过 ${fdoc.summary.buildPassingCount}\n`,
   );
@@ -409,7 +404,7 @@ if (args.json) {
   console.log(
     JSON.stringify(
       {
-        antdVersion: componentsDoc.antdVersion,
+        referenceEvidence: componentsDoc.referenceEvidence,
         summary: componentsDoc.summary,
         next: candidates[0] ?? null,
         candidates: (args.all ? candidates : candidates.slice(0, 5)).map((c) => ({
@@ -432,7 +427,7 @@ if (args.json) {
   process.exit(0);
 }
 
-console.log(`\n@apollo-design/ui — 兼容目标 antd v${componentsDoc.antdVersion}`);
+console.log(`\n@apollo-design/ui — 任务建议；缺陷维护参见 docs/KNOWN-ISSUES.md`);
 console.log(
   `进度: ${completed.size}/${components.length} completed  |  ${ready.length} 可执行  |  ${blocked.length} 被阻塞`,
 );
@@ -458,11 +453,11 @@ if (args.explain || args.all) {
 }
 
 if (!candidates.length) {
-  console.log('\n⚠️  没有可执行的任务。');
+  console.log('\n没有新的组件实现建议；请继续检查用户任务与 KNOWN-ISSUES。');
   if (blocked.length) {
     console.log('所有未完成组件都被阻塞。请检查 blockedBy 链，或先完成 foundation 包。');
   } else {
-    console.log('全部组件已完成。');
+    console.log('组件都有历史完成记录；这不表示当前没有缺陷或后续工作。');
   }
   process.exit(0);
 }
@@ -475,22 +470,16 @@ console.log(
   `优先级      ${next.priority}  complexity=${next.complexity}  dagLevel=${next.derived.dagLevel}`,
 );
 console.log(`解锁下游    ${next.derived.unblocks} 个组件`);
-console.log(
-  `规模        antd 构建产物 ${next.derived.antdBuildLineCount} 行 / ${next.derived.antdFileCount} 文件`,
-);
 console.log(`依赖组件    ${next.dependencies.components.join(', ') || '（无）'}`);
 console.log(`需要 foundation  ${next.dependencies.foundation.join(', ')}`);
-console.log(`rc 依赖     ${next.dependencies.rcPackages.join(', ') || '（无）'}`);
 console.log(`Token       ${next.derived.tokenCount} 个`);
 if (next.notes) console.log(`备注        ${next.notes}`);
 
 const gap = foundationGapOf(next);
 if (gap.length) {
-  console.log(`\n⚠️  不要开始这个组件：它依赖的 foundation 包尚未就绪`);
+  console.log(`\n注意：foundation 状态尚未就绪，应评估实际影响，可先设计或修复`);
   for (const g of gap) console.log(`      ${g.name}  status=${g.status}`);
-  console.log(
-    `    在空地基上做组件会产出虚假进度 —— 组件可以 render，但 Token/行为无法与 antd 对齐。`,
-  );
+  console.log(`    验证实际依赖能力与场景，不以历史完成标记代替运行证据。`);
   if (foundationSummary?.nextPackage) {
     console.log(`\n    先做 foundation：node registry/tools/next-task.mjs --foundation`);
     console.log(`    下一个 foundation 包：${foundationSummary.nextPackage}`);
@@ -502,7 +491,7 @@ if (gap.length) {
   );
 }
 
-console.log(`\n执行流程    WORKFLOW.md G0 → G14（14 道 Gate 全部通过才能置 completed）`);
+console.log(`\n执行流程    WORKFLOW.md：按变更风险执行适用检查，完成需有证据`);
 console.log(`开始方式    node registry/tools/next-task.mjs --component ${next.name}`);
 console.log(`\n分析参考    /tmp/antd-repo/ant-design-master/components/${next.name}/`);
 console.log(`            /tmp/antd-src/package/es/${next.name}/`);

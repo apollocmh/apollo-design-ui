@@ -1,3 +1,4 @@
+/** Historical planning evidence. Not used by registry:gen; current policy is in AGENTS.md and ADR 0005. */
 /**
  * registry/source/rc-map.mjs
  *

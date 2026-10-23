@@ -24,12 +24,15 @@ on:
     # 只对「合入 master」的 PR 跑门禁（原先无过滤 ⇒ 任何 base 都跑）。
     branches: [master]
     paths-ignore:
-      - '**.md'
-      - 'docs/**'
       - '.workbuddy-ai/**'
       - '.workbuddy/**'
   # 手动跑完整 CI（不受 paths-ignore / 标签限制）—— 发布前的兜底手段。
   workflow_dispatch:
+    inputs:
+      reference_visual:
+        description: Run optional upstream visual diagnostics
+        type: boolean
+        default: false
 
 # 同一 ref 上的新推送取消旧运行：省 runner，也避免旧结果误导。
 concurrency:
@@ -47,6 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
+      - name: Registry 与基线治理回归
+        run: pnpm run test:tooling
       # 生成器是幂等的：任何「手改了派生 JSON 却忘了重跑生成器」都会在这里红。
       - name: registry:check
         run: pnpm run registry:check
@@ -164,6 +169,9 @@ jobs:
       - name: 产物 React 痕迹扫描（E11 需 dist 存在才执行）
         run: pnpm run registry:validate
 
+      - name: 文档站契约与构建
+        run: pnpm run verify:docs
+
       # 把 dist 传给 visual 的 4 个 shard —— 否则每个 shard 都要自己 `test:build` 一遍
       # （137s × 4 = 9 分钟纯重复）。只在本 run 内用，所以 retention 1 天。
       #
@@ -185,7 +193,9 @@ jobs:
           retention-days: 1
 
   visual:
-    name: L6 视觉回归（4-way shard，像素比对非阻塞）
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.reference_visual }}
+    continue-on-error: true
+    name: 上游视觉参考（4-way shard，非发布规格）
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # 复用 build job 的 dist（见下面「下载 build 产物」一步）。
@@ -215,8 +225,8 @@ jobs:
       # ② 确定性检查：不开浏览器、秒级 —— **阻塞**。
       #    它防的是「变体空转」这类假绿：两个变体逐字节相同 ⇒ 看着全绿、实际一格没测。
       #    它不依赖渲染环境，所以没有理由不阻塞。（每个 shard 都跑一遍，1s，无所谓。）
-      - name: L6 基线自检（阻塞）
-        run: pnpm run test:visual:check
+      - name: 历史参考基线完整性检查
+        run: pnpm run test:visual:reference:check
 
       # ③ 浏览器：`stabilize.mjs` 会先试系统 Chrome、失败再退回 Playwright Chromium。
       #    runner 镜像自带 Chrome，但那条兜底路径必须有 Chromium 才成立 ⇒ 装上。

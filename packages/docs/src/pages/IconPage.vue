@@ -115,8 +115,8 @@ onBeforeUnmount(() => {
       <p class="icon-lead">
         {{
           txt(
-            `@apollo-design/icons 提供 ${siteManifest.icons.total} 个与 Ant Design 图标集对齐的 Vue 图标组件，支持 Outlined / Filled / TwoTone 三种风格。`,
-            `@apollo-design/icons ships ${siteManifest.icons.total} Vue icon components aligned with the Ant Design icon set, in Outlined / Filled / TwoTone styles.`,
+            `@apollo-design/icons 提供 ${siteManifest.icons.total} 个基于 Ant Design 图标素材生成的 Vue 图标组件，支持 Outlined / Filled / TwoTone 三种风格。`,
+            `@apollo-design/icons ships ${siteManifest.icons.total} Vue icon components generated from Ant Design icon artwork, in Outlined / Filled / TwoTone styles.`,
           )
         }}
       </p>

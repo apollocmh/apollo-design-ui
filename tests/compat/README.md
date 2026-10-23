@@ -1,3 +1,5 @@
+> 当前用途：可选的上游参考实验与历史 DOM 回归证据；不是 Apollo 的唯一规格或发布判据。版本固定仅为复现。现行质量标准见根目录 TESTING.md，历史规则以 ADR 0005 为界。
+
 # tests/compat — React / Vue 双实现兼容性测试
 
 > 本目录是 `@apollo-design/ui` **持续兼容 Ant Design** 的核心机制。

@@ -1,31 +1,5 @@
 #!/usr/bin/env node
-/**
- * `ask` —— 把「读 registry 原文」这件事**机械化**。
- *
- * ── 为什么需要它 ──────────────────────────────────────────────────────────────
- *
- * `AGENTS.md` §5 的事实来源优先级是：
- *   **用户指令 > 仓库规范 > `registry/*.json` > antd 产物/源码 > 文档 > 模型先验**
- *
- * 但 2026-09-21 一个会话里连续三次**跳过 `registry/*.json` 直接凭记忆下结论**，
- * 三次都错（详见 `.workbuddy-ai/memory/2026-09-21.md`）：
- *   1. 「作用域 typecheck 快 22 倍」—— 单次异常测量
- *   2. 「a11y 只收集 2/9 个文件」—— 降级运行给的假绿灯
- *   3. 「skeleton 语义化与决策 B 不一致」—— 决策**从未裁决**，且我把 A/B 记反了
- *
- * ⇒ 与其反复叮嘱「要读原文」，不如让读原文**比凭记忆更省事**。
- *    本工具只做一件事：**把 registry 里的原始记录原样打出来**，不做解释、不做摘要。
- *
- * ── 用法 ──────────────────────────────────────────────────────────────────────
- *
- *   node registry/tools/ask.mjs decisions [--open|--decided]   # 决策清单
- *   node registry/tools/ask.mjs decision <id>                  # 单个决策全文
- *   node registry/tools/ask.mjs component <name>               # 组件状态 + 11 维度
- *   node registry/tools/ask.mjs progress                       # 组件 / foundation 进度
- *   node registry/tools/ask.mjs find <关键词>                   # 全 registry 搜关键词
- *
- * ⚠️ 输出是**原样转录**。若本工具的输出与你的记忆冲突，**以本工具为准**。
- */
+/** Read Registry records as evidence. Project policy lives in AGENTS.md and its domain documents. */
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -37,20 +11,8 @@ const readJson = (p) => JSON.parse(fs.readFileSync(path.join(ROOT, 'registry', p
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => rest.includes(name);
 
-/** 11 个维度（顺序即 `registry/components.json` 的约定）。 */
-const DIMS = [
-  'antdApi',
-  'api',
-  'token',
-  'style',
-  'unit',
-  'interaction',
-  'type',
-  'a11y',
-  'visual',
-  'compat',
-  'docs',
-];
+/** 九个质量维度（顺序即 `registry/components.json` 的约定）。 */
+const DIMS = ['api', 'token', 'style', 'unit', 'interaction', 'type', 'a11y', 'visual', 'docs'];
 
 function progress() {
   const comps = readJson('components.json').components;

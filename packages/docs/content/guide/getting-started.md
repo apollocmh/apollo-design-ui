@@ -7,7 +7,7 @@ order: 1
 
 ## zh-CN
 
-Apollo Design 是以 **Ant Design 6.6.4 为兼容规格**、用 Vue 3 + TypeScript 原生实现的组件库。行为、DOM 结构与视觉对齐 antd，但**不依赖 React**。
+Apollo Design 是独立发展的 **Vue 3 + TypeScript 原生组件库**，以公开 API、真实使用场景和一致的设计语言演进，提供静态 CSS 与 CSS 变量主题方案。
 
 ### 环境要求
 
@@ -73,7 +73,7 @@ import { Button, Space } from '@apollo-design/ui';
 
 ## en-US
 
-Apollo Design is a Vue 3 + TypeScript component library that treats **Ant Design 6.6.4 as its compatibility specification**. Behavior, DOM structure and visuals align with antd — with **zero React runtime**.
+Apollo Design is an **independent Vue 3 + TypeScript component library** with consistent interactions, static CSS and CSS-variable themes. Its public APIs and user scenarios define the component contracts.
 
 ### Requirements
 

@@ -10,7 +10,7 @@ import { useRoute } from 'vue-router';
 import DemoPreview from '../components/demo/DemoPreview.vue';
 import DocHtml from '../components/docs/DocHtml.vue';
 import { useSiteLocale } from '../composables/locale';
-import { findComponent, loadComponentPage, siteManifest } from '../composables/manifest';
+import { findComponent, loadComponentPage } from '../composables/manifest';
 import { createRequestGuard } from '../composables/request-guard';
 import { useSeo } from '../composables/seo';
 import { useTocState, withDemoAnchor } from '../composables/toc';
@@ -109,13 +109,6 @@ useSeo(
         </div>
         <div class="component-links">
           <a :href="page.githubDir" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <a
-            :href="`https://ant.design/components/${page.name}`"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            antd {{ siteManifest.antdTarget }} ↗
-          </a>
           <a
             :href="`https://github.com/apollocmh/apollo-design-ui/tree/master/packages/ui/src/${page.name}#readme`"
             target="_blank"

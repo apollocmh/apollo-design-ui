@@ -1,89 +1,30 @@
+# Runtime dependency versions and optional reference-tool versions are independent.
+# React/antd/rc packages below are used by existing dev-only reference harnesses.
+# Keep them until their consumers have an independently validated replacement.
 packages:
   - 'packages/*'
-# 注意：tests/compat 不是 workspace package。
-# 它的 runner 需要同时依赖 react + antd（参考侧）与 @apollo-design/ui（实现侧），
-# 这类"双实现"依赖关系放在根 devDependencies 中更清晰，也更容易在 E11 检查中
-# 明确界定"React 只允许出现在哪里"。
 
-# ---------------------------------------------------------------------------
-# 允许执行安装脚本的依赖（pnpm 12 默认全部阻止，需要显式放行）。
-# 只放真正需要 native/平台二进制的包 —— 白名单越短，供应链风险越小。
-# 注意：pnpm 12 的键名是 `allowBuilds`（pnpm 10 的 `onlyBuiltDependencies` 已废弃）。
-# ---------------------------------------------------------------------------
 allowBuilds:
   esbuild: true
 
-# ---------------------------------------------------------------------------
-# Catalogs: single source of truth for dependency versions across the monorepo.
-# Rule: a package must NEVER hardcode a version that is already in a catalog.
-# Add new shared deps here first, then reference as `catalog:` in package.json.
-# ---------------------------------------------------------------------------
 catalog:
-  # --- Runtime (framework) ---
   vue: ^3.5.42
 
-  # --- Runtime (framework-agnostic third-party) ---
-  # 可以进发布包的 dependencies。
   dayjs: ^1.11.23
   'scroll-into-view-if-needed': ^3.1.0
 
-  # ---------------------------------------------------------------------------
-  # --- Build-time / test-only (Ant Design ecosystem) ---
-  #
-  # 🚨 R7（ARCHITECTURE.md §3.1）：这三个包**只能**出现在 devDependencies，
-  #    用途限三种：① 构建期数据源（registry/tools/gen-*.mjs）
-  #              ② 测试 Oracle（*.oracle.test.ts / tests/compat/）
-  #              ③ 与移植实现做差分验证
-  #    任何发布包的 `dependencies` 出现它们 = `registry:validate` 的 E19 失败。
-  #
-  # 为什么曾经可以直接依赖、现在不行：它们是纯数据 / 纯算法、零框架耦合，
-  # 直接复用确实是最省成本的对齐路径 —— 但那会让每个 @apollo-design/* 用户
-  # 都被装上 antd 的包，与「Vue 原生实现」的定位冲突。
-  # 现在的做法：构建期固化数据（icons）/ 移植算法并差分验证（colors、fast-color）。
-  # ---------------------------------------------------------------------------
   '@ant-design/icons-svg': ^4.6.0
   '@ant-design/colors': ^8.0.1
   '@ant-design/fast-color': ^3.0.1
 
-  # `@rc-component/*` 不在 E19 的扫描范围（那条规则只针对 `@ant-design/*`），
-  # 但**放这里的原因完全相同**：它们是上游实现，只能进 devDependencies。
-  #
-  # 2026-09-18 加：form-core 的校验引擎是**纯 JS**（无 React 耦合），
-  # 所以可以直接拿上游做 Oracle 逐位差分 —— 这是比读源码更强的验证，
-  # 与 position/motion 同档。见 docs/foundation/form-core-contract.md §9 第 1 条。
   '@rc-component/async-validator': ^6.0.0
 
-  # 2026-09-18 加（form-core 批次②）：rc-form 的 `utils/valueUtil.js` /
-  # `utils/NameMap.js` / `utils/messages.js` **都不 import react**（已 grep 确认），
-  # 所以这三个文件可以单独拿来做 Oracle 逐位差分。
-  #
-  # ⚠️ 包本身声明了 peerDeps react / react-dom —— pnpm 会警告但不会失败，
-  #    而我们**不 import 那两个 peer**（只 import 那三个纯 JS 文件），所以不需要装 react。
   '@rc-component/form': ^1.8.6
 
-  # 2026-09-30 加（picker 面板批次）：`@rc-component/picker` 的 **PickerPanel**
-  # 是 `@apollo-design/picker` 面板层的**直接上游**，也是它 L4 DOM 契约的取数源
-  # （`tests/compat/baseline/picker.mjs` 用 `renderToStaticMarkup` 渲染它）。
-  #
-  # 为什么不沿用「固化 es/ 产物」那条路（`packages/picker/oracle/upstream/`）：
-  # 那条路只适用于**零 React 耦合**的文件，而面板组件全都 `import * as React`。
-  # 而 antd 自己的 `DatePicker` 在 SSR 下**不渲染面板**（浮层走 Portal，
-  # 2026-09-30 实测：`renderToStaticMarkup(<DatePicker open />)` 只有 889 字节、
-  # 无 `picker-panel`）⇒ 只能直接渲染上游的 `PickerPanel`。
-  #
-  # ⚠️ 精确锁版本（同 antd）：基线是**静态数据**，小版本漂移会让基线静默失真。
-  #    它只在 `tests/compat/baseline/` 与 `packages/picker/oracle/` 里被 import，
-  #    不进入任何发布包（R7 允许的第 ② 类用途）。
   '@rc-component/picker': 1.12.2
 
-  # --- Runtime (Vue ecosystem) ---
-  # ⚠️ 刻意不把 @vueuse/core 放进 L0（utils）：
-  #    utils 需要的是「单例 observer 复用」「批监听同一元素」这类与 rc-* 对齐的契约，
-  #    VueUse 的对应 composable 是「每次调用一个 observer」，语义不匹配。
-  #    因此 utils 全部原生实现。catalog 保留此项供 L1/L2 引擎包（trigger / picker）使用。
   '@vueuse/core': ^14.4.0
 
-  # --- Build ---
   typescript: ^5.9.2
   '@types/node': ^22.19.0
   vite: ^8.3.0
@@ -91,7 +32,6 @@ catalog:
   unbuild: ^3.6.1
   vue-tsc: ^3.3.11
 
-  # --- Test ---
   vitest: ^5.0.1
   '@vitest/browser': ^5.0.1
   '@vitest/coverage-v8': ^5.0.1
@@ -99,26 +39,19 @@ catalog:
   '@testing-library/jest-dom': ^6.9.1
   jsdom: ^30.0.1
   axe-core: ^4.13.0
-  # 1.59+ 起不支持 macOS 12 的 chromium 安装（本机环境）；1.58 = 最后可用版
   playwright: 1.58.0
   '@axe-core/playwright': ^4.13.0
 
-  # --- Visual regression ---
   pixelmatch: ^7.2.0
   pngjs: ^7.0.0
   sharp: ^0.35.4
 
-  # --- Compat harness (React reference side) ---
   react: ^19.3.0
   react-dom: ^19.3.0
   antd: 6.6.4
   '@testing-library/react': ^16.3.3
-  # `antd` 自身依赖 @ant-design/icons，但它的版本范围是 ^6.3.4 且会被 pnpm 解析到
-  # 各自的副本；`tests/compat` 的静态基线必须**固定**这个版本，否则基线会随
-  # 上游小版本静默漂移。所以这里显式入 catalog，不靠传递依赖。
   '@ant-design/icons': ^6.3.4
 
-  # --- Quality ---
   publint: ^0.3.24
   '@biomejs/biome': ^2.0.0
 

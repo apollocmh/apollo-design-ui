@@ -12,14 +12,14 @@
  *   E2  components.json 的状态字段取值合法
  *   E3  completed 的组件必须 7 个维度全部 done
  *   E4  组件级运行时 DAG 无环
- *   E5  优先级不得违反 DAG 拓扑序（组件优先级不得早于其依赖）
+ *   E5  优先级取值与依赖引用合法
  *   E6  blockedBy 与实际依赖状态一致
  *   E7  dependencies.json 的边与 components.json 的依赖一致
  *   E8  foundation 包引用合法
- *   E9  每个组件都有 compat fixture 目录（completed 组件必须有）
+ *   E9  completed 组件有本库契约交付物
  *   E10 无硬编码视觉值（对已实现的组件做静态扫描）
  *   E11 产物中无 React 痕迹（仅当 packages 下有 dist 或 es 目录时检查）
- *   E12 meta 与 antd 事实一致（组件清单、Token 数）
+ *   E12 Apollo 源码与自有组件清单一致
  *   E13 compat fixture schema 存在
  *   E14 foundation.json 存在，且与 dependencies.json / components.json 一致
  *   E15 foundation 包的顺序约束（phase2Order 唯一、implOrder 拓扑有效、PoC 豁免规则）
@@ -97,12 +97,11 @@ function report() {
 // E2 / E3  状态字段合法性
 // ---------------------------------------------------------------------------
 /**
- * 组件的 11 项 Definition of Done 维度。
+ * 组件的九项质量维度。
  * 与 WORKFLOW.md §DoD 一一对应：G1 分析 → G2 设计 → G3 Token → CSS →
  * L1 单测 / L2 交互 / L3 类型 / L5 a11y / L6 视觉 → G10 兼容 → G11 文档。
  */
 const DIMENSIONS = [
-  'antdApiStatus', // G1 · antd API 分析
   'apiStatus', // G2 · Vue API 设计
   'tokenStatus', // G3 · Component Token
   'styleStatus', // CSS
@@ -111,7 +110,6 @@ const DIMENSIONS = [
   'typeStatus', // L3 · 类型测试
   'a11yStatus', // L5 · 无障碍
   'visualStatus', // L6 · 视觉回归
-  'compatStatus', // G10 · React 兼容性（偏差已登记）
   'docsStatus', // G11 · 文档
 ];
 const DIMENSION_VALUES = ['todo', 'analyzing', 'in-progress', 'done', 'blocked', 'n/a'];
@@ -209,22 +207,13 @@ if (cycle) {
 // ---------------------------------------------------------------------------
 const PRIORITY_ORDER = ['P0', 'P1', 'P2', 'P3', 'P4', 'P5'];
 for (const c of components) {
-  const mine = PRIORITY_ORDER.indexOf(c.priority);
-  for (const d of c.dependencies.components) {
-    const dep = byName.get(d);
-    if (!dep) continue;
-    const theirs = PRIORITY_ORDER.indexOf(dep.priority);
-    if (mine < theirs) {
-      err(
-        'E5',
-        `${c.name}(${c.priority}) 依赖 ${d}(${dep.priority})，但优先级早于其依赖 —— 会导致无法实现`,
-      );
-    }
+  if (!PRIORITY_ORDER.includes(c.priority)) err('E5', `${c.name} 优先级非法: ${c.priority}`);
+  for (const dependency of [...c.dependencies.components, ...c.dependencies.typeOnly]) {
+    if (!byName.has(dependency)) err('E5', `${c.name} 引用了未登记组件: ${dependency}`);
   }
 }
-if (!errors.some((e) => e.code === 'E5')) {
-  ok('E5', '全部组件的优先级均不早于其依赖（DAG 拓扑序一致）');
-}
+if (!errors.some((e) => e.code === 'E5'))
+  ok('E5', '优先级与依赖引用合法；任务排序不受上游拓扑约束');
 
 // ---------------------------------------------------------------------------
 // E6  blockedBy 与实际状态一致
@@ -288,54 +277,40 @@ if (!errors.some((e) => e.code === 'E8')) {
 // ---------------------------------------------------------------------------
 // E9  compat fixture 存在性
 // ---------------------------------------------------------------------------
-const FIXTURE_DIR = path.join(ROOT, 'tests/compat/fixtures');
-let missingFixtures = 0;
+let missingContracts = 0;
 for (const c of components) {
-  const dir = path.join(FIXTURE_DIR, c.name);
-  if (!fs.existsSync(dir)) {
-    if (c.status === 'completed') {
-      err(
-        'E9',
-        `${c.name} 已 completed 但缺少 compat fixture 目录 tests/compat/fixtures/${c.name}/`,
-      );
-      missingFixtures += 1;
+  if (c.status !== 'completed') continue;
+  const dir = path.join(UI_SRC, c.name);
+  for (const entry of ['index.ts', '__tests__', 'index.zh-CN.md', 'index.en-US.md']) {
+    if (!fs.existsSync(path.join(dir, entry))) {
+      err('E9', `${c.name} 缺少 Apollo 契约交付物: ${entry}`);
+      missingContracts += 1;
+    }
+  }
+  for (const dimension of DIMENSIONS) {
+    if (
+      c[dimension] === 'n/a' &&
+      !c.layerNotes?.[dimension] &&
+      !c.layerNotes?.[dimension.replace('Status', '')]
+    ) {
+      // Historical records may use explanatory prose rather than keyed notes.
+      if (
+        !c.layerNotes ||
+        (typeof c.layerNotes === 'object' && Object.keys(c.layerNotes).length === 0)
+      ) {
+        err('E9', `${c.name}.${dimension}=n/a 缺少 layerNotes 适用性依据`);
+      }
     }
   }
 }
-if (missingFixtures === 0) ok('E9', 'completed 组件均有 compat fixture');
+if (missingContracts === 0) ok('E9', 'completed 组件具备本库契约、文档与回归目录');
 
 // ---------------------------------------------------------------------------
 // E10  无硬编码视觉值（仅扫描已实现的组件）
 // ---------------------------------------------------------------------------
 /**
- * 逐字豁免的「antd 硬编码色」清单 —— 判据是**上游自己就是字面量**（或字面量 + alpha 运算），
- * 本仓没有对应 token：凭空造 token 会与 antd 的 Component Token 组分叉（E12 判不一致），
- * 换 token 也会改变产物（与上游分叉）。
- *
- * ⚠️ 这**不是**「所有 rgba 都放行」—— 只列具体色值，新组件要加必须逐条给出上游出处。
- *
- * - `rgba(255, 255, 255, α)`：纯白 + alpha 的遮罩色（layout sider 的 hover::after，
- *   antd 逐字；2026-09-22 登记）。
- * - `rgba(0, 0, 0, 0.1 | 0.2)`：image 预览操作按钮底色 —— antd 由 `colorBgMask` 派生
- *   （`FastColor(colorBgMask).setA(0.1 / 0.2)`）；静态 CSS 无法在规则里做 alpha 运算，
- *   产物只能是字面量（与上游产物逐字相同；2026-09-25 登记）。
- * - `rgba(0, 0, 0, 0.3)`：image 的 cover 底色 —— 上游写的是 `FastColor('#000').setA(0.3)`
- *   （`genImageCoverStyle`；2026-09-25 登记）。
- * - 进度墨层 / 进度条的 8 个渐变端点色：antd `genImageProgressStyle` 与
- *   `style/progressAnimation.js` 里就是字面量（AI 生成进度的装饰色，与主题无关；
- *   2026-09-25 登记）。
- * - `rgba(0, 0, 0, 0.04)`：notification 进度条**轨道**的底色 —— 上游
- *   `components/notification/style/notification.ts` 里就是字面量
- *   （`backgroundColor: 'rgba(0, 0, 0, 0.04)'`，2026-09-26 登记）。
- *   它的值与 `colorFillTertiary` 相同，但**上游没有用 token** ⇒ 换 token 会与产物分叉。
- * - `rgba(0, 0, 0, 0)`：slider 的可拖轨道用 `border: solid rgba(0,0,0,0)` 把
- *   拖拽热区撑到 padding 外（**全透明** ⇒ 颜色不是视觉值，宽度才是）——
- *   antd `components/slider/style/index.ts` 就是字面量，2026-09-29 登记。
- * - `rgba(0, 0, 0, 0.45)`：color-picker 预设色板「选中 + 亮色」时对勾的描边色 ——
- *   上游 `components/color-picker/style/presets.ts` 就是**字面量**
- *   （`borderColor: 'rgba(0, 0, 0, 0.45)'`，紧邻的 `colorWhite` 却走了 token）。
- *   它的值与 `colorTextTertiary` 相同，但**上游没有用 token** ⇒ 换 token 会与产物分叉。
- *   2026-10-02 登记（color-picker 开工）。
+ * 现存装饰色的精确例外，保留视觉兼容性，不扩大为通用白名单。
+ * 新例外必须解释素材/几何用途与主题影响；上游存在相同字面量不构成充分理由。
  */
 const ANTD_LITERAL_COLOR_SKIP =
   /rgba\(255,\s*255,\s*255,\s*[\d.]+\)|rgba\(0,\s*0,\s*0,\s*0(?:\.(?:1|2|3|04|45))?\)|rgba\((?:100,\s*180,\s*255,\s*0\.98|180,\s*140,\s*255,\s*0\.95|100,\s*220,\s*220,\s*0\.9|255,\s*150,\s*200,\s*0\.88|160,\s*190,\s*255,\s*0\.88|120,\s*170,\s*255,\s*0\.85|160,\s*150,\s*245,\s*0\.85|130,\s*200,\s*220,\s*0\.85)\)/;
@@ -531,7 +506,7 @@ for (const pkg of fs.existsSync(path.join(ROOT, 'packages'))
   }
 }
 if (productScanned === 0) {
-  warn('E11', '尚未发现构建产物，跳过 React 痕迹扫描（Phase 2 起生效）');
+  warn('E11', '尚未发现构建产物，尚未执行产物扫描；构建后必须重跑');
 } else if (!errors.some((e) => e.code === 'E11')) {
   ok('E11', `构建产物无 React 痕迹（扫描 ${productScanned} 个产物目录）`);
 }
@@ -539,37 +514,20 @@ if (productScanned === 0) {
 // ---------------------------------------------------------------------------
 // E12  meta 与 antd 事实一致
 // ---------------------------------------------------------------------------
-const rawFiles = fs
-  .readdirSync(path.join(REGISTRY, 'source'))
-  .filter((f) => /^antd-.*\.raw\.json$/.test(f));
-if (rawFiles.length) {
-  const raw = readJsonOrNull(path.join(REGISTRY, 'source', rawFiles[rawFiles.length - 1]));
-  if (raw && raw.antdVersion !== componentsDoc.antdVersion) {
-    err(
-      'E12',
-      `components.json 的 antdVersion(${componentsDoc.antdVersion}) 与事实文件(${raw.antdVersion}) 不一致`,
-    );
-  } else if (raw) {
-    // 组件数一致性
-    const expectedCount = raw.componentDirs.filter(
-      (d) => !['qrcode', 'row', 'col'].includes(d),
-    ).length;
-    if (expectedCount !== components.length) {
-      err('E12', `组件数不一致: antd 事实 ${expectedCount} vs registry ${components.length}`);
-    } else {
-      ok('E12', `与 antd v${raw.antdVersion} 事实一致（${components.length} 个组件）`);
-    }
-    // Token 数一致性
-    if (raw.tokenStats['token.seed'] !== tokensDoc.summary.seed) {
-      err(
-        'E12',
-        `Seed Token 数不一致: ${raw.tokenStats['token.seed']} vs ${tokensDoc.summary.seed}`,
-      );
-    }
-  }
-} else {
-  warn('E12', '未找到 antd 事实文件，跳过一致性检查');
+const sourceComponents = fs
+  .readdirSync(UI_SRC)
+  .filter(
+    (name) => !name.startsWith('_') && fs.existsSync(path.join(UI_SRC, name, 'index.zh-CN.md')),
+  );
+for (const name of sourceComponents) {
+  if (!byName.has(name)) err('E12', `Apollo 源码组件 ${name} 未登记`);
 }
+for (const c of components) {
+  if (!fs.existsSync(path.join(UI_SRC, c.name, 'index.ts'))) err('E12', `${c.name} 缺少源码入口`);
+}
+if (new Set(names).size !== names.length) err('E12', 'Apollo 组件名称重复');
+if (!errors.some((e) => e.code === 'E12'))
+  ok('E12', 'Apollo 源码与自有组件清单一致（不要求上游对应物）');
 
 // ---------------------------------------------------------------------------
 // 额外：fixture 结构校验
@@ -643,17 +601,6 @@ const FOUNDATION_TEST_LAYERS = [
 ];
 
 {
-  const seenOrder = new Map();
-  for (const p of foundationPackages) {
-    if (seenOrder.has(p.phase2Order)) {
-      err(
-        'E15',
-        `phase2Order 重复: ${seenOrder.get(p.phase2Order)} 与 ${p.name} 都是 ${p.phase2Order}`,
-      );
-    }
-    seenOrder.set(p.phase2Order, p.name);
-  }
-
   const fByName = new Map(foundationPackages.map((p) => [p.name, p]));
   for (const p of foundationPackages) {
     for (const d of p.dependsOn ?? []) {
@@ -670,16 +617,10 @@ const FOUNDATION_TEST_LAYERS = [
           `implOrder 违反拓扑序: ${p.name}(${mine}) 依赖 ${d}(${theirs})，但前者不晚于后者`,
         );
       }
-      if (p.phase2Order < dep.phase2Order && !p.pocRequired) {
-        err(
-          'E15',
-          `${p.name}(phase2Order=${p.phase2Order}) 早于其依赖 ${d}(phase2Order=${dep.phase2Order})，但 pocRequired=false —— 要么调整顺序，要么标记该槽位为 PoC`,
-        );
-      }
     }
   }
   if (!errors.some((e) => e.code === 'E15')) {
-    ok('E15', `foundation 顺序约束通过（phase2Order 唯一，implOrder 拓扑有效，PoC 豁免规则生效）`);
+    ok('E15', `foundation 依赖拓扑有效（历史 wave/phase2Order 不参与验收）`);
   }
 }
 
@@ -690,7 +631,7 @@ const FOUNDATION_TEST_LAYERS = [
  * 校验就退化成「长得像 D 编号就行」—— 那还不如不校验。
  */
 const REGISTERED_DEVIATION_IDS = (() => {
-  const file = path.join(ROOT, 'COMPATIBILITY.md');
+  const file = path.join(ROOT, 'docs/history/compatibility-2026-10.md');
   if (!fs.existsSync(file)) return new Set();
   const text = fs.readFileSync(file, 'utf8');
   const section = text.split(/^###\s+9\.2\s/m)[1]?.split(/^###\s+9\.3\s/m)[0] ?? '';

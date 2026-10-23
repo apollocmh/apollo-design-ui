@@ -276,6 +276,13 @@ describe('指南', () => {
 
   it('兼容性指南注入的是仓库真源（不是副本）', () => {
     const data = readGuide('compatibility');
-    expect(String(data.doc.zh.html)).toMatch(/COMPATIBILITY|兼容性/);
+    const source = fs.readFileSync(path.resolve(HERE, '../../../COMPATIBILITY.md'), 'utf8');
+    const paragraph = source.split('\n').find((line) => line.startsWith('Apollo 对自身'));
+    expect(paragraph).toBeDefined();
+    expect(String(data.doc.zh.html)).toContain(`<p>${paragraph}</p>`);
+    expect(String(data.doc.zh.html)).toContain('/blob/master/docs/migrations/independence.md');
+    expect(String(data.doc.zh.html)).toContain(
+      '/blob/master/docs/history/compatibility-2026-10.md',
+    );
   });
 });
