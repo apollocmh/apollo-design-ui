@@ -1,63 +1,12 @@
 /**
- * React 合成事件名 → 原生 DOM 事件名。
+ * Compatibility event spelling helpers. Existing exports and mappings are retained.
+ * onKeyDown becomes onKeydown for Vue binding, or keydown for addEventListener.
+ * onDoubleClick maps to dblclick; onDragExit maps to dragleave.
  *
- * ===========================================================================
- * 为什么需要这个模块（这是 Phase 2 发现的最重要的跨组件风险，F1）
- * ===========================================================================
- *
- * antd 把 `onXxx` 通过 `pickAttrs` 透传给 React DOM，由 **React 的合成事件系统**做名称归一化：
- *
- *   React `onDoubleClick`  →  DOM `dblclick`
- *   React `onKeyDown`      →  DOM `keydown`
- *   React `onMouseEnter`   →  DOM `mouseenter`
- *
- * Vue 的 `runtime-dom` **不做这个归一化**。它对 `on*` 开头的键只做两件事：
- *   1. 用 `/^on[^a-z]/` 判断「这是不是事件监听」
- *   2. 对剩下的事件名调 `hyphenate()`（把大写字母变成 `-小写`）
- *
- * 于是：
- *
- *   `onKeyDown`    → 监听 `key-down`     → **永不触发**
- *   `onMouseEnter` → 监听 `mouse-enter`  → **永不触发**
- *   `onTouchStart` → 监听 `touch-start`  → **永不触发**
- *   `onDoubleClick`→ 监听 `double-click` → **永不触发**
- *
- * 这类 bug **不会报错、不会告警**，只会让事件静默失效 —— 是最难排查的一类。
- *
- * ⚠️ 修正后的输出形态必须是 **`onKeydown`**，不是裸的 `keydown`。
- *    第一版写成裸原生名（`onkeydown`）虽然也能触发，但走的是 DOM0 属性路径，
- *    有四条实质性缺陷 —— 实测表格与逐条理由见 `toVueEventName` 的注释。
- *    本模块因此提供两个函数：`toNativeEventName`（给 `addEventListener` 用）
- *    与 `toVueEventName`（给模板/`v-bind` 用，`pickAttrs` 用的是后者）。
- *
- * ===========================================================================
- * 规则（只需要两条，其余全靠小写化）
- * ===========================================================================
- *
- * 对 `@rc-component/util` 白名单里的全部 90 个事件名做过枚举验证（测试会锁定）：
- *
- *   1. 默认规则：`onXxxYyy` → `xxx yyy` 全部小写（`onKeyDown` → `keydown`）。
- *      这条规则覆盖 88/90。
- *   2. 例外只有 **2 个**，列在 `REACT_EVENT_OVERRIDES`：
- *      - `onDoubleClick` → `dblclick`（不是 `doubleclick`）
- *      - `onDragExit`    → `dragleave`（DOM **没有** `dragexit` 事件，React 是从 dragleave 合成的）
- *
- * 除这 2 个之外，全部 React 事件名小写化后恰好等于真实 DOM 事件名。
- * 这一点不显然（`onCompositionStart` → `compositionstart`、`onBeforeToggle` → `beforetoggle`、
- * `onGotPointerCapture` → `gotpointercapture`），所以用测试枚举锁定，而不是靠人记。
- *
- * ===========================================================================
- * ⚠️ 名字对得上 ≠ 语义对得上（无法在本模块修正，必须由组件显式处理）
- * ===========================================================================
- *
- *   | React 事件 | DOM 事件 | 语义差异 |
- *   |---|---|---|
- *   | `onChange` | `change` | React 在文本输入上等价于 **`input`**（每次击键）；原生 `change` 只在**失焦/提交**时触发 |
- *   | `onFocus`  | `focus`  | React 的 `onFocus` **冒泡**（等价 `focusin`）；原生 `focus` **不冒泡** |
- *   | `onBlur`   | `blur`   | 同上（等价 `focusout`） |
- *
- * 这三项列在 `SEMANTIC_MISMATCH_EVENTS`，供 `COMPONENT-RULES.md` 与 lint 检查引用。
- * **组件不得依赖透传来实现 onChange / onFocus / onBlur 的行为**，必须显式监听。
+ * These helpers do not emulate synthetic events: change/input and focus/focusin
+ * semantics must be handled by the consuming component. New Vue APIs should use
+ * native event names directly. Historical source: @rc-component/util's event list;
+ * the complete mapping and DOM0/DOM2 behavior remain covered by regression tests.
  */
 
 /** 需要改名的例外。除此之外，`onXxx` 小写化即为 DOM 事件名。 */

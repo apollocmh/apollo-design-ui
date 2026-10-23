@@ -91,7 +91,7 @@ It only consumes global aliases:
   column minus one vertical gutter. See the header of `hooks/positions.ts` for the three
   easy-to-get-wrong points.
 - **Heights are measured**: `item.height` is never read; the first measurement happens
-  after commit (mirroring upstream's `useEffect` timing).
+  after Vue has updated the DOM.
 - **`onLoad` / `onError` are dead listeners**: upstream attaches them to the root `div`,
   but React treats `load` as a non-delegated event bound to that element in the **bubble**
   phase, and `load` does not bubble ⇒ a child `<img>`'s event never reaches the root.

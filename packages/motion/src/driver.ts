@@ -249,7 +249,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
 
   const prepareOnly = !supportMotion;
 
-  // ---- 状态（原本是 React 的 useState / useRef）----
+  // ---- 动效状态 ----
   let visible = false;
   let mounted = false;
   let status: MotionStatus = STATUS_NONE;

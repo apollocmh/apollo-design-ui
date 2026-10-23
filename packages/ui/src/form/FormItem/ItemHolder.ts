@@ -1,5 +1,5 @@
 /**
- * ItemHolder —— Form.Item 的行布局（antd `es/form/FormItem/ItemHolder.js` 125 行）。
+ * ItemHolder —— Form.Item 的响应式行布局与校验状态。
  *
  * 判据：
  * 1. margin 联动：hasError 时实测 `-item` 的 marginBottom → `marginBottom` state →
@@ -51,12 +51,12 @@ const ItemHolder = defineComponent({
       type: Function as PropType<(meta: unknown, keys: unknown) => void>,
       required: true,
     },
-    /** `name`（StatusProvider 的 name 通道，antd 逐字透传）。 */
+    /** `name`（StatusProvider 的 name 通道）。 */
     name: { type: null as unknown as PropType<unknown>, default: undefined },
   },
   setup(props, { slots }) {
     const formContext = useFormContext();
-    const itemPrefixCls = `${props.prefixCls}-item`;
+    const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
     const layout = computed(() => props.layout ?? formContext.layout);
     const vertical = computed(() => layout.value === 'vertical');
 
@@ -77,7 +77,7 @@ const ItemHolder = defineComponent({
     };
     onMounted(measureMargin);
     watch([hasError, () => props.errors, () => props.warnings], measureMargin, { flush: 'post' });
-    /** ErrorList 的显隐回调（antd 逐字）：错误彻底消失后把 margin 占位清掉。 */
+    /** ErrorList 的显隐回调：错误彻底消失后把 margin 占位清掉。 */
     const onErrorVisibleChanged = (nextVisible: boolean): void => {
       if (!nextVisible && !hasError.value) {
         marginBottom.value = null;
@@ -106,17 +106,19 @@ const ItemHolder = defineComponent({
 
     const itemClassName = computed(() =>
       [
-        itemPrefixCls,
-        hasWithHelp.value ? `${itemPrefixCls}-with-help` : '',
+        itemPrefixCls.value,
+        hasWithHelp.value ? `${itemPrefixCls.value}-with-help` : '',
         // Status
-        mergedValidateStatus.value && props.hasFeedback ? `${itemPrefixCls}-has-feedback` : '',
-        ['success', 'warning', 'error'].includes(mergedValidateStatus.value)
-          ? `${itemPrefixCls}-has-${mergedValidateStatus.value}`
+        mergedValidateStatus.value && props.hasFeedback
+          ? `${itemPrefixCls.value}-has-feedback`
           : '',
-        mergedValidateStatus.value === 'validating' ? `${itemPrefixCls}-is-validating` : '',
-        props.hidden ? `${itemPrefixCls}-hidden` : '',
+        ['success', 'warning', 'error'].includes(mergedValidateStatus.value)
+          ? `${itemPrefixCls.value}-has-${mergedValidateStatus.value}`
+          : '',
+        mergedValidateStatus.value === 'validating' ? `${itemPrefixCls.value}-is-validating` : '',
+        props.hidden ? `${itemPrefixCls.value}-hidden` : '',
         // Layout
-        layout.value ? `${itemPrefixCls}-${layout.value}` : '',
+        layout.value ? `${itemPrefixCls.value}-${layout.value}` : '',
       ]
         .filter(Boolean)
         .join(' '),
@@ -156,7 +158,7 @@ const ItemHolder = defineComponent({
           labelCol: props.labelCol as never,
           wrapperCol: props.wrapperCol as never,
           label: props.label,
-          // antd 逐字：ErrorList 的显隐回调（margin 占位回收）
+          // ErrorList 的显隐回调回收 margin 占位。
           onVisibleChanged: onErrorVisibleChanged,
         },
         {
@@ -179,7 +181,7 @@ const ItemHolder = defineComponent({
 
       const row = h(
         Row as never,
-        { class: `${itemPrefixCls}-row` } as never,
+        { class: `${itemPrefixCls.value}-row` } as never,
         { default: () => [labelNode, inputNode] } as never,
       );
 
@@ -187,7 +189,7 @@ const ItemHolder = defineComponent({
         row,
         !!marginBottom.value &&
           h('div', {
-            class: `${itemPrefixCls}-margin-offset`,
+            class: `${itemPrefixCls.value}-margin-offset`,
             style: { marginBottom: `-${marginBottom.value}px` },
           }),
       ]);

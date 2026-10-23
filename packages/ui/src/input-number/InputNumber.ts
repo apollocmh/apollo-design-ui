@@ -569,7 +569,7 @@ export const InputNumberInternalComponent = defineComponent({
       }
     });
 
-    // rAF 句柄在组件卸载时清理（rc 的 useEffect 清理等价物）
+    // 组件卸载时清理 rAF 句柄。
     onScopeDispose(() => {
       if (frameId !== null) {
         cancelRaf(frameId);

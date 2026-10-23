@@ -102,7 +102,7 @@ const rootAttrs = computed(() => ({
   ...rootStyleAttrs.value,
 }));
 
-// provide（antd 的 useMemo(() => ({gutter, wrap}))) —— Vue 侧用 computed 包一层，
+// provide 的值通过 computed 派生，
 // gutter/wrap 变化时 Col 侧在 computed 里读 inject 值能重算。
 provideRowContext({
   gutter: gutters,

@@ -104,14 +104,9 @@ export interface UsePortalContainerReturn {
 /**
  * 容器解析 + 默认容器的创建/复用/卸载 + 嵌套入队。
  *
- * 五条必须照抄的时序（错一条就会出现顺序闪烁、SSR 崩溃或容器泄漏）：
- *   1. 默认容器在 **setup** 里就建（对齐 `useState(() => canUseDom() ? create : null)`），
- *      但 SSR 下 `canUseDom()` 为 false ⇒ 一个 div 都不许建；
- *   2. `innerContainer` 的**首次**解析在 setup（可能是 `undefined`），
- *      之后每次 commit 都要重解析一次并 `?? null`（antd 的 effect **没有依赖数组**）；
- *   3. `undefined`（未就绪）时**不渲染**，等下一次 commit；
- *   4. append 的门控是 `mergedRender && !innerContainer` —— 用了自定义容器就不 append 默认容器；
- *   5. 顶层立即 append，嵌套的把 append **交给祖先队列**（保证祖先先入 DOM）。
+ * 容器在 setup 解析，挂载/更新后重新解析以读取模板 ref。
+ * 未就绪（undefined）时不挂载内容；内联（false）时不挂默认容器；
+ * 仅默认容器（null）需要 append。嵌套 append 通过祖先队列保证顺序。
  */
 export function usePortalContainer(options: UsePortalContainerOptions): UsePortalContainerReturn {
   const { open, autoDestroy = true, getContainer, debug, doc } = options;
@@ -198,8 +193,8 @@ export function usePortalContainer(options: UsePortalContainerOptions): UsePorta
     appended.value = false;
   }
 
-  // `useLayoutEffect(..., [render])`，`render = mergedRender && !innerContainer`
-  const shouldAppend = computed(() => mergedRender.value && !innerContainer.value);
+  // 内联与未就绪状态不应在 body 留下未使用的默认容器。
+  const shouldAppend = computed(() => mergedRender.value && innerContainer.value === null);
 
   function runAppend(next: boolean): void {
     if (next) {

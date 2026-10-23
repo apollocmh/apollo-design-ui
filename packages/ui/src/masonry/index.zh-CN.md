@@ -85,7 +85,7 @@ Masonry **没有 Component Token**（与 antd 逐字一致：`ComponentToken` �
 
 - **排布算法**：按 `items` 顺序，每项落到**当前累计高度最小**的那一列（平局取**最左**）；
   容器高度 = 最高列 − 一个纵向间距。详见 `hooks/positions.ts` 的文件头（含三处易错点）。
-- **高度是实测的**：`item.height` 从不被读；首帧量测在 commit 之后（复刻上游 `useEffect` 的时机）。
+- **高度是实测的**：`item.height` 从不被读；首帧量测在 Vue 更新 DOM 之后。
 - **`onLoad` / `onError` 是死监听**：上游把它挂在根 `div` 上，但 React 的 `load` 是非委托事件、
   绑在该元素且**冒泡**阶段，而 `load` 不冒泡 ⇒ 子 `<img>` 的事件到不了根。本仓**照抄同样的绑定**
   （行为与 antd 一致）。需要「内容尺寸变化就重排」时请用 `fresh`。

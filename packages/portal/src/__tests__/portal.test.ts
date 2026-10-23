@@ -116,16 +116,23 @@ describe('Portal 的渲染分支', () => {
     expect(document.body.querySelector(CONTENT)).toBeNull();
   });
 
-  it('⭐ 内联时 antd 仍会 append 一个**空**默认容器 —— 照抄的噪音，别顺手删', async () => {
-    // `useDom(mergedRender && !innerContainer, ...)`：innerContainer 为 `false` 时
-    // `!innerContainer` 是 true ⇒ 仍然创建并 append 默认容器，尽管它根本不会被用到。
-    // 这是 antd 的真实行为。改成不 append 就会与上游产生 DOM 差异。
-    mountPlain({ open: true, getContainer: () => false });
+  it('inline mode leaves no unused default container and can switch to a portal and back', async () => {
+    const wrapper = mountPlain({ open: true, getContainer: false, debug: 'inline-contract' });
     await nextTick();
-    const empties = Array.from(document.body.children).filter(
-      (el) => el.tagName === 'DIV' && el.children.length === 0,
-    );
-    expect(empties.length).toBeGreaterThan(0);
+    expect(wrapper.find(CONTENT).exists()).toBe(true);
+    expect(document.body.querySelector('[data-debug="inline-contract"]')).toBeNull();
+
+    await wrapper.setProps({ getContainer: undefined });
+    await nextTick();
+    expect(
+      document.body.querySelector('[data-debug="inline-contract"]')?.querySelector(CONTENT),
+    ).not.toBeNull();
+    expect(wrapper.find(CONTENT).exists()).toBe(false);
+
+    await wrapper.setProps({ getContainer: false });
+    await nextTick();
+    expect(wrapper.find(CONTENT).exists()).toBe(true);
+    expect(document.body.querySelector('[data-debug="inline-contract"]')).toBeNull();
   });
 
   it('portalInlineMock(true) ⇒ 内联；reset 后恢复', async () => {

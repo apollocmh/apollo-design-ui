@@ -1,18 +1,7 @@
 /**
- * `Portal` 组件 —— `Portal.js` 的 Vue 版。
- *
- * 与 React 版的差异只有两处，且都是「同一个语义的另一种写法」：
- *
- * | React | Vue |
- * |---|---|
- * | `renderInline ? children : createPortal(children, container)` | `<Teleport :to="container" :disabled="inline">` |
- * | `OrderContext.Provider` 包在 createPortal 外面 | provide 在 `usePortalContainer` 里，组件不需要额外包一层 |
- *
- * ⚠️ 有一处是**照抄噪音、不要顺手优化**：`innerContainer === false` 时
- * `useDom` 的 render 判据是 `mergedRender && !innerContainer`，`!false` 为真
- * ⇒ antd 仍然会创建一个空的默认容器并 append 到 body，尽管此时走的是内联渲染、
- * 那个容器根本不会被用到。我们没有改它（改了就是与上游的 DOM 差异），
- * 但用 `portal.test.ts` 里的用例钉住，避免后人当 bug 修掉。
+ * Vue Teleport wrapper with explicit inline/container semantics, scroll locking and ESC handling.
+ * Historical source analysis: docs/foundation/portal-contract.md.
+ * Inline rendering leaves no unused default container in document.body.
  */
 
 import { canUseDom, devUseWarning, isDev } from '@apollo-design/utils';
@@ -60,7 +49,7 @@ export const Portal = defineComponent({
       // `Portal.js:40-42`
       devUseWarning('Portal')(
         canUseDom() || !props.open,
-        "Portal only work in client side. Please call 'useEffect' to show Portal instead default render in SSR.",
+        'Portal requires a client-side container. Open it after onMounted() when using SSR.',
       );
     }
 

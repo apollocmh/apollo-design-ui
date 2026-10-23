@@ -68,7 +68,7 @@ export interface DelayInvoker {
    * 不排队 —— 连续两次 `triggerOpen(true, 0.1)` 只有最后一次生效。
    */
   invoke: (callback: () => void, delay: number | undefined) => void;
-  /** 取消待执行的调用。卸载时必须调（rc 在 `useEffect` 的 cleanup 里做）。 */
+  /** 取消待执行的调用；作用域销毁时必须调用。 */
   clear: () => void;
   /** 是否有待执行的调用。测试用。 */
   readonly pending: boolean;
