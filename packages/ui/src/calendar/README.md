@@ -1,3 +1,5 @@
+> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+
 # Calendar 实现说明
 
 > 契约来源：antd **6.6.4** 的 `es/calendar/`（`generateCalendar.js` 445 行 +

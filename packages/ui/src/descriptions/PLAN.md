@@ -1,3 +1,5 @@
+> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+
 # Descriptions · G0-G14 执行计划
 
 - G1-G3：docs/analysis/descriptions.md（源码 685 行 + SSR 探针 13 用例）

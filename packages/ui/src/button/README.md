@@ -1,8 +1,10 @@
+> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+
 # button
 
 > 契约来源：antd 6.6.4 的 `es/button/` 与 `components/button/`。
 > 逐条行号记录在 [`docs/analysis/button.md`](../../../docs/analysis/button.md)。
-> **Ant Design 是"答案的判据"，不是"代码的来源"**（`AGENTS.md` §0）。
+> Ant Design 的历史对照仅作参考，不能覆盖 Apollo 的契约。
 
 ## 1. 职责
 

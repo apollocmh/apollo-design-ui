@@ -1,3 +1,5 @@
+> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+
 # Collapse · G0-G14 执行计划
 
 - G1-G3：docs/analysis/collapse.md（antd 440 行 + rc-collapse 619 行逐行对拍）
