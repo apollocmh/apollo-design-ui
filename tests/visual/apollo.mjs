@@ -22,6 +22,7 @@ const BASELINES = path.join(HERE, 'baselines/apollo');
 const CANDIDATES = path.join(HERE, 'candidates/apollo');
 const ARTIFACTS = path.join(HERE, '.artifacts');
 const { values } = parseArgs({
+  args: process.argv.slice(2).filter((arg) => arg !== '--'),
   options: {
     component: { type: 'string' },
     variant: { type: 'string' },

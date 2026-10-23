@@ -122,3 +122,9 @@ test('visual duplicates require a scenario explanation, without crossing theme o
     1,
   );
 });
+
+test('visual CLI accepts package-manager separators and rejects unknown options', () => {
+  const script = path.join(ROOT, 'tests/visual/apollo.mjs');
+  assert.equal(spawnSync(process.execPath, [script, '--', '--help']).status, 0);
+  assert.notEqual(spawnSync(process.execPath, [script, '--unknown-option']).status, 0);
+});

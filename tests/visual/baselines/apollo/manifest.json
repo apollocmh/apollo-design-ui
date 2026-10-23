@@ -1,0 +1,13 @@
+{
+  "entries": {
+    "button/type__light__desktop": {
+      "sha256": "e4b756aab91ee02563991fdf5fac26f64f47ed0a5695ab58fcb3914a66097ed2",
+      "environment": "darwin/arm64/155.0.8059.85/系统 Chrome",
+      "sourceCommit": "6867166a256fc4cef13580c8fe4c79243e00d4c6",
+      "dirty": false,
+      "capturedAt": "2026-10-23T08:54:33.179Z",
+      "reviewedAt": "2026-10-23T08:58:42.062Z",
+      "reviewNote": "Codex visual review: Apollo type variant at desktop/light. Primary, Default, Dashed, Text, Link and Chinese labels are legible; button heights, borders, spacing and stage bounds are intact. Reviewed generated Apollo pixels at commit 6867166a; this approves only this scenario, not other variants or states."
+    }
+  }
+}

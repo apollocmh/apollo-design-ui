@@ -1,16 +1,5 @@
-# CI — 本仓的四道门禁 + 一道非阻塞的视觉回归
-#
-# 设计原则：**CI 跑的就是本地 `verify:full` 跑的那几条命令**，一个字都不改。
-#   `verify:full` = registry:check && lint && test && test:build
-# 差别只有两处，都是「本地跑得动、CI 需要显式补」的：
-#   ① 覆盖率：本地 `pnpm test` 不带 `--coverage`，CI 用 `test:coverage` 把它变成硬门禁；
-#   ② 类型层：`verify:full` **不含** `test:types`（见 WORKFLOW.md），CI 显式补上 ⇒ 五 project 齐。
-#
-# 为什么拆成多个 job 而不是一个：不同门的失败含义完全不同（registry 漂移 / 类型退化 /
-# 行为回归 / 产物不可用），拆开后 GitHub 的检查列表能直接指出**是哪一类**问题。
-#
-# ⚠️ 关于 `CODEBUDDY_SAFE_DELETE_ENABLED=0` 之类的前缀：那是**本地 WorkBuddy 沙箱**才需要的
-#    （它把批量删文件拦下来）。CI runner 没有这个钩子，所以这里不写。
+# Apollo quality gates: registry, types, behavior/coverage, artifacts and docs.
+# Upstream visual comparison is an optional manually requested diagnostic.
 
 name: CI
 
@@ -52,6 +41,8 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Registry 与基线治理回归
         run: pnpm run test:tooling
+      - name: Apollo 已审阅基线完整性（渐进覆盖）
+        run: pnpm run test:visual:check -- --approved-only
       # 生成器是幂等的：任何「手改了派生 JSON 却忘了重跑生成器」都会在这里红。
       - name: registry:check
         run: pnpm run registry:check
@@ -153,12 +144,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
-      # 141 项产物检查：exports 指向真实子路径 / .d.ts 可解析 / 无 React 残留 等。
-      #
-      # ⚠️ 这里**不加** `--strict`：`ui` 包的 B6（体积预算 budget.json）目前是 **PENDING**
-      #    而非 FAIL（见 docs/KNOWN-ISSUES.md 与 `ui-style-output` 决策）。
-      #    `--strict` 会把 PENDING 当失败 ⇒ 从第一天起就是红的，门禁会立刻失去意义。
-      #    B6 落地后应改为 `pnpm run test:build -- --strict`，那时它才是真的「零豁免」。
+      # 校验 exports、类型、样式、依赖隔离、体积与 SSR 产物。
       - name: 构建全部包 + L7 产物校验
         run: pnpm run test:build
 

@@ -1,139 +1,24 @@
-# tests/visual — L6 视觉回归
+# Apollo 视觉回归
 
-> **已在 2026-09-18 由 Empty 落地时同步建立**（`registry/components.json` 的
-> `empty.visualStatus` 由 `blocked` 改为 `done`，21 组全部 `0.000% exact`）。
-> 设计细节见 [`TESTING.md`](../../TESTING.md) §9。
+`pnpm test:visual` 默认比较本库已审阅的截图，不使用 React PNG 作为隐式回退。
 
----
-
-## 机制
-
-```
-React 参考（antd 6.6.4）              Vue 实现（@apollo-design/ui）
-  渲染同一 fixture                        渲染同一 fixture
-        │ Playwright 截图                     │
-        ▼                                     ▼
-  react/<id>.png                        vue/<id>.png
-        └────────────────┬────────────────────┘
-                         ▼
-        sharp 归一化尺寸 → pixelmatch 逐像素比对
-                         ▼
-                差异率 + diff 图 + HTML 报告
+```bash
+# 先构建组件包，然后生成指定场景的候选
+node tests/visual/apollo.mjs --candidate --component button --variant type --viewport desktop
+# 查看 candidates/apollo/ 下 PNG，确认布局、内容、状态与主题
+node tests/visual/apollo.mjs --accept --component button --variant type --viewport desktop --review-note '审阅人、范围及结论'
+# 独立重拍，比较已接受基线
+pnpm test:visual -- --component button --variant type --viewport desktop
+# 渐进迁移时，只核对已接受子集的图片哈希与审阅记录
+pnpm test:visual:check -- --approved-only
+# 明确请求的上游诊断（不作为发布规格）
+pnpm test:visual:reference -- --mode compare --component button
 ```
 
-## 与 `tests/compat` 的关系
+候选生成不会覆盖已接受基线。接受动作要求完整渲染、文件未篡改、来源提交/环境和审阅说明；重复变体需解释。比较要求浏览器版本、平台与架构一致，不匹配会失败。`--approved-only` 会报告未验收数量，不代表全矩阵通过。
 
-| | `tests/compat` | `tests/visual` |
-|---|---|---|
-| 范围 | 5 层（API / DOM / ARIA / Behavior / Screenshot） | 只做 Screenshot（L4） |
-| 运行器 | jsdom（快） | 真实浏览器 Playwright（慢） |
-| 用途 | 每次提交都跑 | 组件完成时跑（G9 Gate） |
-| 截图来源 | 复用本目录的截图产物 | 产出截图 |
+当前仅 `button/type/light/desktop` 有 Apollo 试点基线，来自提交 `6867166a` 的 Vue 渲染，经实际查看后接受；矩阵其余 1,142 个场景尚未迁移。完整矩阵默认会因缺失基线失败。这是显式未完成，不通过复制旧 React PNG 或调低阈值隐藏。
 
-**分工**：`tests/visual` 负责**产出**两侧截图与像素比对；`tests/compat` 的 `screenshot` 断言复用它的结果。
+CI 校验已接受图片与记录的完整性；实际像素比较目前需要同环境本地运行。后续在固定 CI 镜像/字体/浏览器上重新生成并审阅平台基线，再将像素检查设为稳定门禁。旧两侧矩阵、分片完整性和渲染错误检查仍由手动参考工作流保留。
 
-## 计划交付
-
-| 文件 | 作用 |
-|---|---|
-| `run.mjs` | 入口：起本地页面 → Playwright 截图 → 比对 → 出报告 |
-| `matrix.mjs` | 截图矩阵定义（状态 × 主题 × viewport） |
-| `stabilize.mjs` | 稳定性处理：禁用动画、固定字体、隐藏 caret、固定随机值 |
-| `compare.mjs` | `sharp` 归一化 + `pixelmatch` 比对 + 差异分类 |
-| `report.mjs` | 生成 HTML 报告 |
-
-## 截图矩阵（最低要求）
-
-| 维度 | 取值 |
-|---|---|
-| 状态 | default / hover / active / focus / disabled / loading / dark / compact |
-| 组件特性追加 | open / selected / checked / error / warning / success / expanded / dragging / empty / readonly |
-| 主题 | light / dark / compact |
-| viewport | 375×667 / 768×1024 / 1440×900 |
-
-## 稳定性要求（缺一不可）
-
-- 注入 `prefers-reduced-motion` + 关闭 motion 开关
-- 打包测试字体（避免系统字体差异）
-- 固定 viewport / devicePixelRatio / 时区 / locale
-- 隐藏 caret
-- 固定随机 ID 与时间戳
-- 截图前 `await waitForFonts()` + 等一帧
-
-## 阈值
-
-| 差异率 | 判定 |
-|---|---|
-| 0% | ✅ 通过 |
-| ≤ 0.1% 且为抗锯齿噪声（分散单像素） | ✅ 自动通过 |
-| > 0.1% 或成块差异 | ❌ 必须人工确认并分类 |
-
-**禁止**为提高阈值让测试通过（`TESTING.md` T17）。
-
-## 待用户裁决
-
-无 —— `visual-baseline-in-git`（已裁决 = A：基线 `tests/visual/baselines/react/<component>/<id>.png`
-**直接入库**）、dark / compact（被 ConfigProvider 未实现阻塞，不影响本阶段）等开放决策已落地或显式登记在
-`matrix.mjs` 的 `LIMITATIONS`。
-
----
-
-## 关键技术决策（落地过程中暴露并修正）
-
-### macOS 12 + Playwright 1.63
-
-Playwright 1.63 不再为 macOS 12 提供 Chromium 构建（`playwright install chromium` 直接报
-`does not support chromium on mac12`）。`stabilize.mjs` 自动降级：先试系统 Chrome
-（`channel: 'chrome'`），失败再退回自带 Chromium。macOS 13+ 仍走自带 Chromium。
-
-### 基线生成平台（2026-10-21）
-
-- **既有的 `baselines/react/**` 由 macOS + 系统 Chrome 生成**（`#stage` 宽 1440/768/375）。
-  CI 的像素比对因此是**非阻塞**的（`assert-shard.mjs`：只把 render-error 当失败）。
-- ⚠️ Windows 的经典滚动条占 15px：`#stage { width:100% }` 会变成 **1425** 宽。这不是组件差异，
-  是平台差异；本地 `compare` 应与生成基线时同一平台运行。
-- 2026-10-21 新增的 `input/search__*` / `input/otp__*` 共 6 张基线在 **Windows** 上生成（1425 宽）。
-  既有 9 张 input 基线**未替换**（保持 macOS 原样）。在 canonical macOS 环境重生成后，
-  input 的 15 张应统一为 1440/768/375 宽：
-  `node tests/visual/run.mjs --mode baseline --component input`。
-
-### 占位 favicon
-
-`render/{react,vue}.html` 都有 `<link rel="icon" href="data:," />` —— 否则浏览器自动请求
-`/favicon.ico` 并记一条 404 `console.error`，被 `run.mjs` 的「渲染错误」捕获成假失败。
-
-### 必须防的假绿
-
-两侧都渲染失败（白屏 / JS 报错）→ 两张空白图逐像素**完全一致** → 差异率 0% → 按阈值 PASS。
-`run.mjs` 强制捕获 `pageerror` / `console.error`，任一侧出错直接判 `FAIL / render-error`，
-**不比像素**。
-
-### SVG 颜色直接 hex，不走 token
-
-Empty 插画的 `fill` 是 hex 字面量（`#f0f0f0` 等），不是 `var(--apollo-*)`。antd 在 SSR 阶段
-用 `getAsSolidColor(token, colorBgContainer)` 把半透明 token 在白底上合成为实色再写进 SVG；
-我们的 token 是 rgba 透明色，直接 `var()` 会得 `rgba(0,0,0,0.06)` → 视觉差异。
-
-主题切换不影响插画本身（切 dark 时插画颜色不变，靠外层主题背景接管）—— 与 antd **完全一致**，
-不是退让。`registry/tools/gen-empty-artwork.mjs` 用 `ROLE_TOKENS` 反查表作自检：新增颜色会
-立刻让生成器抛错。
-
-### 必须修的 cssinjs vs 静态 CSS 差异
-
-`packages/ui/src/empty/style/index.ts` 原 `const cls = `.${prefixCls}`` 漏了 `-empty` 后缀，
-CSS 写出来是 `.apollo { ... }` 而**根节点**的 class 是 `apollo-empty` → 选不中 → 默认左对齐。
-L6 在 antd 居中 vs 我们左对齐里立刻抓到，已修。同时把 `前缀 后代` 改成 antd 的顶级选择器写法。
-
-### theme 包缺 `./tokens.css` 导出（被仓库文档错引）
-
-`packages/ui/src/index.ts` 与 `empty/index.{zh-CN,en-US}.md` 都写
-`@apollo-design/theme/dist/tokens.css`，但 theme 包的 `exports` 只暴露 `.` —— 消费者按文档
-import 直接解析失败。已在 `scaffold-packages.mjs` 的 theme 定义里补 `extraExports:
-{ './tokens.css': './dist/tokens.css' }`（命名与 ui 的 `./style.css` 同构：不含 dist 前缀）。
-
-### 必须防的 base CSS 缺失
-
-`tokens.css` 声明了 `--apollo-font-family` 但没人把它应用到 `body` / `html` → 浏览器退回默认字体
-（macOS Chrome = **Times**），所有含描述文字的组件都被判 block-diff（0.03% ~ 0.75% 散点）。
-已在 `genAllStyles` 与 `genComponentStyleSheet` 头部注入 `BASE_CSS`（antd reset.css 的最小版：
-box-sizing + body font-family），同时嵌进汇总 CSS 与每个组件 CSS——不然只引单个组件 CSS 也会退回 Times。
+原双侧对照的机制和诊断背景保存在 [REFERENCE.md](REFERENCE.md)，按历史参考范围解释。

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * run.mjs — L6 视觉回归入口（`pnpm test:visual`）。
+ * run.mjs — 可选上游参考入口（`pnpm test:visual:reference`）。
+ * Apollo 自有回归入口是 apollo.mjs；此文件保留历史两侧对照和诊断能力。
  *
  * 流程：打包两侧 → 起静态服务器 → Playwright 截图 → pixelmatch 比对 → HTML 报告。
  *
