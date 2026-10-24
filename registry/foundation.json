@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T04:42:34.974Z",
+  "generatedAt": "2026-10-24T05:42:38.330Z",
   "sourceFacts": "dependencies.json（包定义） + scaffold-packages.mjs（dir/phase2Order/deps/poc/notDo） + components.json（消费者） + packages/*/src（规模度量）",
   "legend": {
     "status": "todo → analyzing → implementing → testing → verifying → completed（blocked 为旁路状态）",
@@ -1071,7 +1071,7 @@
       "layerNotes": "L4 n/a —— 本包不产出 DOM 结构，DOM 契约属组件层（motion-contract.md §4）；L5 n/a —— 无 ARIA 语义；注意 §7 原计划「prefers-reduced-motion 在 L2 断言」本轮未做，因为 MotionProvider 未实现（§8 P2 仍未裁决）；L6 n/a —— 需真实浏览器，动画观感未证明（§9）",
       "blockedBy": [],
       "blockers": [],
-      "notes": "⚠️ 三项遗留，都不是静默放过：(1) MotionProvider / 全局 prefers-reduced-motion 开关未实现（§8 P2 未裁决）；(2) measureAlign 式的消费验证同样没做 —— CSSMotion / useMotionStatus 尚未被 ui 层真实组件调用过，联调时若 API 形状不够用需要回来改；(3) 五类语义里只有 collapse 有 handler，fade/zoom/slide/move 的 keyframes 与 motionName 属 theme/ui，本包不产出（§4）。AR2 的两半（状态机内核 / 帧驱动外壳）均已落地，但「动画看起来对」仍未证明（§9）。\n2026-10-22 复审 002：初始快照复用 getStyleReady；scheduleRender + Vue nextTick 保证 prepare DOM 提交后才测量 start；代际取消保护快速反向与卸载。真实浏览器消费证据：packages/docs/tests/motion-review-browser.mjs（React/Vue 60/60），详见 docs/audit/2026-10-22-motion-review-002.md。",
+      "notes": "⚠️ 三项遗留，都不是静默放过：(1) MotionProvider / 全局 prefers-reduced-motion 开关未实现（§8 P2 未裁决）；(2) measureAlign 式的消费验证同样没做 —— CSSMotion / useMotionStatus 尚未被 ui 层真实组件调用过，联调时若 API 形状不够用需要回来改；(3) 五类语义里只有 collapse 有 handler，fade/zoom/slide/move 的 keyframes 与 motionName 属 theme/ui，本包不产出（§4）。AR2 的两半（状态机内核 / 帧驱动外壳）均已落地，但「动画看起来对」仍未证明（§9）。\n2026-10-22 复审 002：初始快照复用 getStyleReady；scheduleRender + Vue nextTick 保证 prepare DOM 提交后才测量 start；代际取消保护快速反向与卸载。真实浏览器消费证据：packages/docs/tests/motion-review-browser.mjs（React/Vue 60/60），详见 docs/audit/2026-10-22-motion-review-002.md。\n2026-10-24 F12：hydration 初始快照复用已有 SSR 节点，挂载后仍 appear，普通 client NONE 首帧不变。证据 docs/audit/2026-10-24-motion-hydration-remediation.md；保留历史 verification，未重标全包验收。",
       "verification": {
         "verifiedAt": "2026-10-04",
         "unit": {
@@ -1125,7 +1125,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 10,
-        "srcLines": 2069,
+        "srcLines": 2074,
         "exportDeclarations": 70
       }
     },

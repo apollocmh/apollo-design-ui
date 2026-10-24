@@ -201,6 +201,14 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ---
 
+### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
+
+F03 扩展测试发现：SSR 输出可见错误节点，客户端支持 appear 时首帧却按新挂载返回 null，造成 hydration mismatch 与 DOM 替换；forceRender 的隐藏分支也有复现。新增基础层 4 条回归，修前 3 失败 / 1 已通过。只在 Vue 已绑定服务端节点的 hydration setup 边界让初始快照匹配 SSR，onMounted 仍运行正常 appear；普通新挂载的 NONE/null、驱动和帧队列未变。
+
+基础单元、普通首帧矩阵、生产 SSR → Chromium 的原节点与预输入值、appear/leave/enter 及单次通知证据见 [F12 报告](audit/2026-10-24-motion-hydration-remediation.md)。不修改动画时长、图片阈值或既有 Message/Notification 验收结论。
+
+---
+
 ## 2. Registry、文档与基础包的清账
 
 ### H01 · P2 · 已修（历史清账）｜Vue-native 审计 Registry 的 Table open 已过期

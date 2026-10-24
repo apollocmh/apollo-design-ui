@@ -403,3 +403,10 @@ transform、opacity、height、rect、CSS 变量和结束事件；同机运行 R
 覆盖 Message / Notification 新旧条位移、Inline Menu 高度与模式退出。
 原始采样位于 `docs/audit/evidence/review-002-motion.json`；该证据只覆盖这些具体场景，
 不代表 §9 的其余边界都已证明。
+
+
+### 2026-10-24 · Vue SSR hydration 的首帧
+
+SSR 同步输出可见内容；hydration 的首次客户端渲染必须复用该节点，不能应用普通新挂载的首帧 null 规则。Vue 在 hydration setup 前已经把服务端节点放入组件 vnode.el；只在这个边界让初始快照匹配 SSR。随后 onMounted 仍按正常 supportMotion/motionAppear 启动 appear，未关闭动画、未改变 driver 或队列。
+
+普通客户端新挂载继续返回 NONE/null，保持 002 已验收的首帧防闪烁规则。SSR false/forceRender 的隐藏节点同样按服务端快照复用。证据见 [hydration 修复报告](../audit/2026-10-24-motion-hydration-remediation.md)。

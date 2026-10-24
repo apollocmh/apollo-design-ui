@@ -18,6 +18,7 @@
 import {
   type ComputedRef,
   computed,
+  getCurrentInstance,
   inject,
   nextTick,
   onMounted,
@@ -158,7 +159,11 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   //     由驱动接管）—— 与 rc-motion 的首帧行为一致。
   // driver.mount() 在 onMounted 里会再 emit 一次，快照随后以驱动为准。
   const initialVisible = visible();
-  const initialSupport = effectiveSupport.value;
+  // Vue attaches the existing server node to the component vnode before setup
+  // during hydration. Match that SSR snapshot first; driver.mount still starts
+  // the normal appear sequence after refs attach. Fresh client mounts keep NONE.
+  const isHydrating = !isSSR && getCurrentInstance()?.vnode.el != null;
+  const initialSupport = effectiveSupport.value && !isHydrating;
   // 快照整体替换而不是逐字段 ref：驱动每次 emit 都是**一组**状态，
   // 分开放会出现「class 已更新但 style 还没」的中间态。
   const snapshot = shallowRef({

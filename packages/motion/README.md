@@ -78,3 +78,6 @@ pnpm --filter @apollo-design/motion lint
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
 覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L1 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+
+
+SSR hydration 的首次客户端快照复用服务器 DOM；挂载后仍运行 appear。普通新挂载的初始 NONE/null 规则保持不变。覆盖可见、不可见、forceRender 与后续 enter/leave，见 [2026-10-24 验证](../../../docs/audit/2026-10-24-motion-hydration-remediation.md)。
