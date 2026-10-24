@@ -19,14 +19,15 @@ import {
   defineComponent,
   h,
   inject,
+  normalizeClass,
+  normalizeStyle,
   type PropType,
   provide,
   type VNodeChild,
-  watchEffect,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
-import { type SizeType, useSize } from '../config-provider/size-context';
+import { useSize } from '../config-provider/size-context';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
 import Tooltip from '../tooltip/Tooltip';
 import { stepsInternalContextKey, stepsUnstableContextKey } from './context';
@@ -50,10 +51,10 @@ export const Steps = defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     classNames: {
-      type: Object as PropType<StepsSemanticClassNames>,
+      type: [Object, Function] as PropType<StepsProps['classNames']>,
       default: undefined,
     },
-    styles: { type: Object as PropType<StepsSemanticStyles>, default: undefined },
+    styles: { type: [Object, Function] as PropType<StepsProps['styles']>, default: undefined },
 
     variant: { type: String as PropType<StepsProps['variant']>, default: 'filled' },
     size: { type: String as PropType<StepsProps['size']>, default: undefined },
@@ -84,15 +85,7 @@ export const Steps = defineComponent({
     },
   },
   setup(props, { attrs, slots }) {
-    const {
-      getPrefixCls,
-      // ⚠️ 组件级配置的**全部**四项 —— 原先只取了 `getPrefixCls`
-      //    ⇒ ConfigProvider 的 `components.steps.className/style/classNames/styles` 被静默忽略。
-      className: contextClassName,
-      style: contextStyle,
-      classNames: contextClassNames,
-      styles: contextStyles,
-    } = useComponentConfig<{
+    const config = useComponentConfig<{
       className?: string;
       style?: CSSProperties;
       classNames?: StepsSemanticClassNames;
@@ -101,8 +94,8 @@ export const Steps = defineComponent({
     const directionCtx = useDirection();
     const warning = useDevWarning('Steps');
 
-    const rootPrefixCls = getPrefixCls();
-    const prefixCls = computed(() => getPrefixCls('steps', props.prefixCls));
+    const rootPrefixCls = computed(() => config.getPrefixCls());
+    const prefixCls = computed(() => config.getPrefixCls('steps', props.prefixCls));
 
     // ---- deprecated / usage 告警 ----
     if (props.size === 'default') {
@@ -126,12 +119,17 @@ export const Steps = defineComponent({
 
     // ---- size ----
     // size 的 `default` 是 deprecated 别名（运行时告警后按 medium 处理）
-    const mergedSize = useSize<SizeType | undefined>((ctx) => {
-      const raw = props.size;
-      const normalized =
-        raw === 'default' ? ('medium' as const) : ((raw ?? ctx) as SizeType | undefined);
-      return normalized ?? ctx;
-    });
+    const contextSize = useSize((ctx) =>
+      props.size === 'default' ? 'medium' : (props.size ?? ctx),
+    );
+    // Steps has no large variant; the global large default resolves to medium.
+    const mergedSize = computed(() =>
+      contextSize.value === 'small'
+        ? 'small'
+        : contextSize.value === undefined
+          ? undefined
+          : 'medium',
+    );
 
     // ---- items ----
     const mergedItems = computed<StepItem[]>(() => (props.items ?? []).filter(Boolean));
@@ -175,12 +173,14 @@ export const Steps = defineComponent({
     const mergedPercent = computed(() => (isInline.value ? undefined : props.percent));
 
     // ---- maxCount 折叠 ----
-    const { canApplyMaxCount, displaySteps, mappedDisplayCurrent, displayItems } = useDisplaySteps(
-      mergedItems.value,
-      props.current ?? 0,
-      props.initial ?? 0,
-      props.maxCount,
-      prefixCls.value,
+    const display = computed(() =>
+      useDisplaySteps(
+        mergedItems.value,
+        props.current ?? 0,
+        props.initial ?? 0,
+        props.maxCount,
+        prefixCls.value,
+      ),
     );
 
     // ---- semantic merge ----
@@ -190,17 +190,15 @@ export const Steps = defineComponent({
      * 原先这里传的是 `{} as never` ⇒ `classNames: ({ props }) => \`dir-${props.orientation}\``
      * 恒拿到 `undefined`（实测渲染出 `dir-undefined`）。**是 L4 契约抓到的**。
      */
-    const semanticProps = { ...props } as StepsProps;
-    watchEffect(() => {
-      Object.assign(semanticProps, props, {
-        size: mergedSize.value as StepsProps['size'],
-        type: mergedType.value,
-        orientation: mergedOrientation.value,
-        titlePlacement: mergedTitlePlacement.value,
-        percent: mergedPercent.value,
-        variant: props.variant ?? 'filled',
-      });
-    });
+    const semanticProps = computed<StepsProps>(() => ({
+      ...props,
+      size: mergedSize.value,
+      type: mergedType.value,
+      orientation: mergedOrientation.value,
+      titlePlacement: mergedTitlePlacement.value,
+      percent: mergedPercent.value,
+      variant: props.variant ?? 'filled',
+    }));
 
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       StepsProps,
@@ -208,8 +206,8 @@ export const Steps = defineComponent({
       StepsSemanticStyles
     >(
       // ⚠️ 顺序 = 优先级（后者拼接在前者之后）：ConfigProvider → 组件自身
-      [() => contextClassNames, () => props.classNames],
-      [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
+      [() => config.classNames, () => props.classNames],
+      [() => config.styles, () => semanticRootStyle(config.style), () => props.styles],
       semanticProps,
     );
 
@@ -254,7 +252,7 @@ export const Steps = defineComponent({
 
     // ---- maxCount 的 ellipsis 步需要注入 EllipsisOutlined 图标 ----
     const displayItemsWithEllipsisIcon = computed<StepItem[]>(() =>
-      displayItems.map((item) =>
+      display.value.displayItems.map((item) =>
         item.className?.includes('-ellipsis') ? { ...item, icon: h(EllipsisOutlined) } : item,
       ),
     );
@@ -266,10 +264,10 @@ export const Steps = defineComponent({
       displayItemsWithEllipsisIcon.value.map((item, index) => {
         if (!item.status) {
           // ⚠️ useDisplaySteps 返回的是**数字**（非 ref）—— 不能 .value
-          if (index === mappedDisplayCurrent) {
+          if (index === display.value.mappedDisplayCurrent) {
             return props.status ?? 'process';
           }
-          if (index < mappedDisplayCurrent) {
+          if (index < display.value.mappedDisplayCurrent) {
             return 'finish';
           }
           return 'wait';
@@ -281,8 +279,8 @@ export const Steps = defineComponent({
     // ---- onChange（display 索引 → origin 索引）----
     const onStepClick = (displayIndex: number): void => {
       // 比较基准是 **display 索引的当前步**（mappedDisplayCurrent），不是原始 current
-      if (props.onChange && mappedDisplayCurrent !== displayIndex) {
-        const target = displaySteps[displayIndex];
+      if (props.onChange && display.value.mappedDisplayCurrent !== displayIndex) {
+        const target = display.value.displaySteps[displayIndex];
         if (target && target.originIndex >= 0) {
           props.onChange((props.initial ?? 0) + target.originIndex);
         }
@@ -296,8 +294,8 @@ export const Steps = defineComponent({
     //    现在那份 clsx 已搬到 `_internal/clsx.ts`（裁决 `early-extract-table-core-tree-core` = C），
     //    支持的形态是 string / number / array / object —— **包含**对象参数。
     //    这里仍然手写展开，是因为条件类本来就该显式展开（可读性，不是能力限制）。
-    const stepsClassName = computed(() =>
-      [
+    const stepsClassName = () =>
+      normalizeClass([
         prefixCls.value,
         // rc Steps 的 classString：orientation + titlePlacement 两个布局类
         `${prefixCls.value}-${mergedOrientation.value}`,
@@ -309,31 +307,23 @@ export const Steps = defineComponent({
         directionCtx.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
         isDot.value ? `${prefixCls.value}-dot` : '',
         props.ellipsis ? `${prefixCls.value}-ellipsis` : '',
-        canApplyMaxCount ? `${prefixCls.value}-max-count` : '',
+        display.value.canApplyMaxCount ? `${prefixCls.value}-max-count` : '',
         mergedPercent.value !== undefined ? `${prefixCls.value}-with-progress` : '',
         mergedSize.value === 'small' ? `${prefixCls.value}-small` : '',
-        contextClassName,
+        config.className,
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class as string | undefined,
+        attrs.class,
         mergedClassNames.value?.root,
         cssVarCls.value,
-      ]
-        .filter(Boolean)
-        .join(' '),
-    );
+      ]);
 
     // ---- root style ----
-    const rootStyle = computed(() => ({
-      // ⚠️ **恒写**（含 `offset: 0`）—— 上游 SSR 产物在 offset=0 时也有
-      //    `style="--ant-cmp-steps-items-offset:0"`（L4 基线逐条确认）。
-      //    原先只在 `offset !== 0` 时写 ⇒ 37 条契约用例全部差这一条。
-      [`--${rootPrefixCls}-cmp-steps-items-offset`]: String(props.offset),
-      // 根 style 是 Vue 原生 attrs：位置与原先的 props.style 一致（被语义 root 覆盖）。
-      // ⚠️ 这里用 `attrs.style` 而不是 render 里的 `_attrStyle` —— 本 computed 在
-      //    setup 期创建，看不到 render 函数内的局部解构。
-      ...((attrs.style as Record<string, unknown>) ?? {}),
-      ...mergedStyles.value?.root,
-    }));
+    const rootStyle = () =>
+      normalizeStyle([
+        { [`--${rootPrefixCls.value}-cmp-steps-items-offset`]: String(props.offset) },
+        attrs.style,
+        mergedStyles.value?.root,
+      ]);
 
     // 🚨 **内部上下文**（Timeline 用）：必须由 Steps **接住并转发** ——
     //    因为 Steps 自己也 provide 同族的键，外层 provide 会被「最近的赢」遮蔽
@@ -365,7 +355,7 @@ export const Steps = defineComponent({
         const itemStatus = statuses.value[index];
         const nextStatus = statuses.value[index + 1];
         const data: StepItem = { ...item, status: itemStatus };
-        const mappedIndex = displaySteps[index]?.originIndex;
+        const mappedIndex = display.value.displaySteps[index]?.originIndex;
         const realIndex =
           mappedIndex !== undefined && mappedIndex >= 0
             ? (props.initial ?? 0) + mappedIndex
@@ -382,7 +372,7 @@ export const Steps = defineComponent({
             nextStatus,
             // rc-steps 的 `UnstableContext.railFollowPrevStatus`：缺省 `false` ⇒ 恒取 nextStatus
             railFollowPrevStatus: unstableContext?.railFollowPrevStatus,
-            active: stepIndex === mappedDisplayCurrent,
+            active: stepIndex === display.value.mappedDisplayCurrent,
             index: stepIndex,
             last: displayItemsWithEllipsisIcon.value.length - 1 === index,
             onClick: props.onChange ? onStepClick : undefined,
@@ -399,7 +389,7 @@ export const Steps = defineComponent({
                 const replaced = slots.iconRender({
                   iconNode,
                   index: realIndex,
-                  active: stepIndex === mappedDisplayCurrent,
+                  active: stepIndex === display.value.mappedDisplayCurrent,
                   item: data,
                 }) as VNodeChild | undefined;
                 iconNode = replaced ?? iconNode;
@@ -430,7 +420,7 @@ export const Steps = defineComponent({
                   return (slots.itemRender as (p2: never) => unknown)({
                     itemNode: content,
                     index: realIndex,
-                    active: stepIndex === mappedDisplayCurrent,
+                    active: stepIndex === display.value.mappedDisplayCurrent,
                     item: data,
                   } as never);
                 }
@@ -460,8 +450,8 @@ export const Steps = defineComponent({
       return h(
         internalContext?.rootComponent ?? 'div',
         {
-          class: stepsClassName.value,
-          style: rootStyle.value,
+          class: stepsClassName(),
+          style: rootStyle(),
           ...restAttrs,
         },
         nodes,

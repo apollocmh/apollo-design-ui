@@ -147,3 +147,5 @@ L7 里值得单说的三条：① `dotSize` / `dotBg` **被引用但刻意不声
 
 **一处流程教训（本会话第三次）**：又一次带着 `lint:types` 红灯提交（PITFALLS 311）。
 另有一次**跑 L6 前忘了重建 `ui`** ⇒ 0/36 全红 + 误导性的 `size-mismatch`（PITFALLS 312）。
+
+2026-10-25：当前数据/布局/原生attrs/ConfigProvider与语义函数响应性已专项修复，见 [报告](../../../../docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md)。保留历史验收记录；Apollo基线缺失，Timeline富内容模板事项继续推进。

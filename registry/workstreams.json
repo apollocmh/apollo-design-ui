@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T15:56:13.714Z",
+  "generatedAt": "2026-10-24T16:13:27.559Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2724,7 +2724,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 1,
-      "why": "",
+      "why": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P4",
@@ -2874,7 +2874,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "",
+      "why": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",

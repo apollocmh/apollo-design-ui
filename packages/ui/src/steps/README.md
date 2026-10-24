@@ -71,3 +71,5 @@ registry 数据：token 数 = **13**。关键默认值（`prepareStepsComponentT
 
 - L1/L2 20 + demo 22 / L7(theme) 11；L6 **9/9 全 0.000% exact**
 - lint 0 错误 · registry:check 18/18
+
+2026-10-25：当前数据/布局/原生attrs/ConfigProvider与语义函数响应性已专项修复，见 [报告](../../../../docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md)。保留历史验收记录；Apollo基线缺失，Timeline富内容模板事项继续推进。

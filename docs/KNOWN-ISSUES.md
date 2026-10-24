@@ -216,6 +216,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-24 Masonry 后续增量**：泛型 #item / 当前数据与语义样式已直接迁移，见 [插槽报告](audit/2026-10-24-masonry-slots-remediation.md)。继续复现并修复 React effect 造成的 SSR 空首屏：服务端输出实际内容、测量前正常网格流、水合保留条目/输入身份和值；见 [SSR报告](audit/2026-10-24-masonry-ssr-remediation.md)。前阶段待办由此更新，全库F11与视觉验收仍开放。
 
+**2026-10-25 Timeline/Steps 响应性增量**：Timeline items/布局/原生属性/ConfigProvider 与 Steps 当前步骤/折叠索引存在 setup 快照，新增回归后修为当前值派生；支持已文档化的语义函数与原生字符串style。详见 [专项报告](audit/2026-10-25-timeline-steps-reactivity-remediation.md)。Timeline富内容作用域槽仍另行处理，不以本批响应性修复宣称F11全部完成。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -344,7 +346,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Breadcrumb | 10/10 | F11：itemRender 单对象槽和默认子组件更新/key已修复；24张Apollo基线缺失 |
 | Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
 | Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
-| Timeline | 14/14 | F11；富内容模板项 |
+| Timeline | 14/14 | 当前items/布局/原生attrs/配置快照已修；F11富内容模板项继续处理 |
 | Masonry | 6/6 | F10原生attrs/图片测量、F11泛型item槽及当前数据/语义样式已修复；SSR内容/网格首屏/水合已专项修复，Apollo基线仍缺失 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |

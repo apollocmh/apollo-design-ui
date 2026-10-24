@@ -10350,6 +10350,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/native-reactivity.test.ts",
           "packages/ui/src/steps/__tests__/semantic.test.ts"
         ]
       },
@@ -10534,6 +10535,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/native-reactivity.test.ts",
           "packages/ui/src/steps/__tests__/semantic.test.ts"
         ]
       },
@@ -12945,6 +12947,7 @@
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
           "packages/ui/src/timeline/__tests__/index.test.ts",
+          "packages/ui/src/timeline/__tests__/native-reactivity.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
       },
@@ -13057,6 +13060,7 @@
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
           "packages/ui/src/timeline/__tests__/index.test.ts",
+          "packages/ui/src/timeline/__tests__/native-reactivity.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
       },

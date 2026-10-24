@@ -100,3 +100,7 @@ they fall back to `Steps`' own size/background, and only take effect once set.
 **This is a rule, not an omission** (declaring them would break the fallback chain).
 
 Tune at runtime via CSS variables: `--apollo-timeline-tail-color`, `--apollo-timeline-dot-size`, …
+
+## Reactivity
+
+Changes to items, reverse, mode, orientation, titleSpan, prefixCls and ConfigProvider defaults update the current render. Same-key replacements and reordering preserve input nodes and values. Native class/style are read during render; Vue string/object/array styles are supported and override matching Timeline semantic root styles. Reactive prefixes do not imply static CSS for arbitrary custom prefixes.

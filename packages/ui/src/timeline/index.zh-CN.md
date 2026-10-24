@@ -97,3 +97,7 @@ subtitle: 时间轴
 设置后才生效。**这不是遗漏，是判据**（补一条声明会让回退链失效）。
 
 运行时调参用 CSS 变量：`--apollo-timeline-tail-color` / `--apollo-timeline-dot-size` 等。
+
+## 响应性
+
+items、reverse、mode、orientation、titleSpan、prefixCls 和 ConfigProvider 默认值更新后即时重新派生。相同 key 的数据替换/重排保留条目中的输入节点和值。class/style 在当前 render 中读取；字符串、对象、数组 style 按 Vue 规则处理，原生根样式覆盖同名 Timeline 语义 root 样式。前缀响应性不代表任意自定义前缀已有配套静态 CSS。

@@ -1,58 +1,13 @@
-/**
- * `Timeline` —— 时间轴。对应 antd 6.6.4 的 `es/timeline/Timeline.tsx`（303 行）。
- *
- * ── 🚨 本组件是 `Steps` 的**薄壳**（没有自己的 DOM）────────────────────────────
- *
- * 渲染体只有一个 `<Steps>`：
- *
- * ```jsx
- * <InternalContext.Provider value={{ rootComponent: 'ol', itemComponent: 'li' }}>
- *   <UnstableContext.Provider value={{ railFollowPrevStatus: reverse }}>
- *     <Steps type="dot" orientation items current={items.length - 1} classNames={…} />
- *   </UnstableContext.Provider>
- * </InternalContext.Provider>
- * ```
- *
- * 「时间轴」的观感全部来自：`type="dot"` + 一层 **classNames 映射**
- * （把 Steps 的 `-item-*` 换成 `timeline-*` 前缀）+ `Timeline` 自己的样式表
- * （大量覆盖 Steps 的 `--{p}-cmp-steps-*` 中间变量）。
- *
- * ── 十条必须复刻的判据 ───────────────────────────────────────────────────────
- *
- * 1. **`mergedMode`**：`'left' → 'start'`、`'right' → 'end'`；否则
- *    `['alternate','start','end'].includes(mode) ? mode : 'start'`（**默认 `'start'`**）。
- * 2. **`reverse`** ⇒ `[...items].reverse()`（在 `useItems` **之后**）。
- * 3. **`layoutAlternate`** = `mergedMode === 'alternate' ||
- *    (orientation === 'vertical' && items.some(i => i.title))` ⇒ 根类 `-layout-alternate`。
- * 4. **`current = items.length - 1`**（最后一项 active）。
- * 5. **`classNames` 的八键映射**（`item` / `itemTitle` / `itemIcon` / `itemContent` /
- *    `itemRail` / `itemWrapper` / `itemSection` / `itemHeader`）全部指向 `timeline` 前缀。
- * 6. **`titleSpan`**：`isNonNullable(titleSpan) && mode !== 'alternate'` 时写内联变量
- *    —— 数字 ⇒ `--{root}-timeline-head-span`；字符串 ⇒ `-head-span-ptg`。
- * 7. **`classString` 的顺序**：`prefixCls` → `contextClassName` → `className` →
- *    `-horizontal`（仅横向）→ `-layout-alternate` → `-rtl` → `cssVarCls`。
- * 8. **`restProps` 全量透传给 `Steps`**。
- * 9. **废弃告警 7 条**（见下方）。
- * 10. **`Timeline.Item` 是空壳**（上游 `(() => {})`）—— 只为「用了就告警」而存在。
- *
- * ── 🚨 三条平台差异（PLATFORM）────────────────────────────────────────────────
- *
- * - **两个 Context 走 `provide`**：本仓的 `steps` 已按上游结构加了
- *   `stepsInternalContextKey` / `stepsUnstableContextKey`（见 `steps/context.ts`）。
- *   ⚠️ 它们**不是** `stepsIconContextKey` —— 后者由 `Steps` 自己 provide，
- *   外层 provide 会被「最近的赢」遮蔽（PITFALLS 256）；本仓让 `Steps` **接住并转发**。
- * - **`children` 形态不支持**（上游读 `element.props`，Vue 插槽没有这个语义）
- *   ⇒ 只支持 `items`（`Timeline.Item` 本就是空壳）。
- * - **`ref`**：上游没有 ref（没有自己的根）；本仓暴露 `{ nativeElement }`
- *   = **Steps 的根元素**（`ol` 或 `div`）。
- */
-
-import { devUseWarning, isNonNullable, isNumber } from '@apollo-design/utils';
+/** Timeline renders Steps as ol/li. Keep data, layout, providers and semantic
+ * mappings reactive; read native attrs during render and preserve keyed content. */
+import { devUseWarning, getElement } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
   defineComponent,
   h,
+  normalizeClass,
+  normalizeStyle,
   type PropType,
   provide,
   shallowRef,
@@ -62,7 +17,6 @@ import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-sema
 import { useComponentConfig } from '../config-provider/context';
 import { Steps } from '../steps';
 import { stepsInternalContextKey, stepsUnstableContextKey } from '../steps/context';
-import type { StepItem } from '../steps/interface';
 import type {
   TimelineConfig,
   TimelineItemType,
@@ -92,8 +46,7 @@ const stepsClassNamesOf = (prefixCls: string): Record<string, string> => ({
 function mergeMode(mode?: TimelineMode): TimelineMode {
   if (mode === 'left') return 'start';
   if (mode === 'right') return 'end';
-  const modeList = ['alternate', 'start', 'end'];
-  return (modeList.includes(mode as string) ? mode : 'start') as TimelineMode;
+  return mode === 'alternate' || mode === 'start' || mode === 'end' ? mode : 'start';
 }
 
 const Timeline = defineComponent({
@@ -128,32 +81,29 @@ const Timeline = defineComponent({
     reverse: { type: Boolean, default: false },
   },
   setup(props, { attrs, expose }) {
-    const {
-      getPrefixCls,
-      direction,
-      className: contextClassName,
-      style: contextStyle,
-      classNames: contextClassNames,
-      styles: contextStyles,
-    } = useComponentConfig<TimelineConfig>('timeline');
+    const config = useComponentConfig<TimelineConfig>('timeline');
 
     // ---- 判据 1 / 2 / 3 / 4 ----
-    const mergedMode = mergeMode(props.mode);
-    const prefixCls = getPrefixCls('timeline', props.prefixCls);
-    const rootPrefixCls = getPrefixCls();
-
-    const rawItems = useItems(
-      { rootPrefixCls, prefixCls, mode: mergedMode },
-      props.items,
-      props.pending,
-      props.pendingDot,
+    const mergedMode = computed(() => mergeMode(props.mode));
+    const prefixCls = computed(() => config.getPrefixCls('timeline', props.prefixCls));
+    const rootPrefixCls = computed(() => config.getPrefixCls());
+    const rawItems = computed(() =>
+      useItems(
+        { rootPrefixCls: rootPrefixCls.value, prefixCls: prefixCls.value, mode: mergedMode.value },
+        props.items,
+        props.pending,
+        props.pendingDot,
+      ),
     );
-    const mergedItems = props.reverse ? [...rawItems].reverse() : rawItems;
-
-    const orientation = props.orientation ?? 'vertical';
-    const layoutAlternate =
-      mergedMode === 'alternate' ||
-      (orientation === 'vertical' && mergedItems.some((item) => item.title));
+    const mergedItems = computed(() =>
+      props.reverse ? [...rawItems.value].reverse() : rawItems.value,
+    );
+    const orientation = computed(() => props.orientation ?? 'vertical');
+    const layoutAlternate = computed(
+      () =>
+        mergedMode.value === 'alternate' ||
+        (orientation.value === 'vertical' && mergedItems.value.some((item) => item.title)),
+    );
 
     // ---- 判据 9：废弃告警（非生产环境）----
     if (import.meta.env?.DEV ?? true) {
@@ -187,55 +137,40 @@ const Timeline = defineComponent({
     }
 
     // ---- 判据 6：titleSpan → 内联 CSS 变量 ----
-    const stepStyle: Record<string, string | number> = {};
-    if (isNonNullable(props.titleSpan) && mergedMode !== 'alternate') {
-      if (isNumber(props.titleSpan)) {
-        stepStyle[`--${rootPrefixCls}-timeline-head-span`] = props.titleSpan;
-      } else {
-        stepStyle[`--${rootPrefixCls}-timeline-head-span-ptg`] = props.titleSpan as string;
+    const stepStyle = computed(() => {
+      const style: CSSProperties = {};
+      if (props.titleSpan !== undefined && mergedMode.value !== 'alternate') {
+        const name = typeof props.titleSpan === 'number' ? 'head-span' : 'head-span-ptg';
+        style[`--${rootPrefixCls.value}-timeline-${name}`] = props.titleSpan;
       }
-    }
+      return style;
+    });
 
-    // ---- 两个内部 Context：由 Steps 接住并转发（见文件头）----
     provide(stepsInternalContextKey, STEP_INTERNAL_CONTEXT);
-    provide(stepsUnstableContextKey, { railFollowPrevStatus: props.reverse });
+    provide(stepsUnstableContextKey, {
+      get railFollowPrevStatus() {
+        return props.reverse;
+      },
+    });
 
-    // ---- 判据 7：classString ----
-    const cssVarCls = `${prefixCls}-css-var`;
-    const classString = [
-      prefixCls,
-      contextClassName,
-      // 调用方原生 class（位置与原先的 props.className 一致）
-      attrs.class as string | undefined,
-      orientation === 'horizontal' ? `${prefixCls}-horizontal` : '',
-      layoutAlternate ? `${prefixCls}-layout-alternate` : '',
-      direction === 'rtl' ? `${prefixCls}-rtl` : '',
-      cssVarCls,
-    ]
-      .filter(Boolean)
-      .join(' ');
-
-    const stepsClassNames = stepsClassNamesOf(prefixCls);
-
-    // ---- 语义化槽的三路合并（判据 5）----
-    //
-    // 🚨 两处**必须**照上游：
-    //   1. `classNames` 是**拼接**不是替换（上游 `useMergeSemantic` 的 `mergeClassNames`
-    //      内部是 `clsx(prev, cur)`）⇒ 写成 `{...base, ...user}` 会让用户的 `classNames.item`
-    //      **盖掉** `apollo-timeline-item`（L4 契约实测：8 条差异）。
-    //   2. **用户的 `style` 不走 `style` prop，而是走 `styles.root` 语义槽**
-    //      （上游 `useSemanticRootStyle(style)`）⇒ 本仓对应 `semanticRootStyle`。
-    //      直接塞进 `style` 会被 Steps 的 `rootStyle` 覆盖（L4 实测：整条 style 丢失）。
-    // 根 style 是 Vue 原生 attrs；它必须走 styles.root 语义槽（见上）
-    const styleRoot = semanticRootStyle(attrs.style as CSSProperties);
-    const contextStyleRoot = semanticRootStyle(contextStyle);
+    // Native attrs must be read in render; useAttrs is not a computed dependency.
+    const classString = () =>
+      normalizeClass([
+        prefixCls.value,
+        config.className,
+        attrs.class,
+        orientation.value === 'horizontal' && `${prefixCls.value}-horizontal`,
+        layoutAlternate.value && `${prefixCls.value}-layout-alternate`,
+        config.direction === 'rtl' && `${prefixCls.value}-rtl`,
+        `${prefixCls.value}-css-var`,
+      ]);
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       TimelineProps,
       TimelineSemanticClassNames,
       TimelineSemanticStyles
     >(
-      [stepsClassNames, () => contextClassNames, () => props.classNames],
-      [() => contextStyles, contextStyleRoot, () => props.styles, styleRoot],
+      [() => stepsClassNamesOf(prefixCls.value), () => config.classNames, () => props.classNames],
+      [() => config.styles, () => semanticRootStyle(config.style), () => props.styles],
       props,
     );
 
@@ -244,10 +179,18 @@ const Timeline = defineComponent({
     //    「渲染期之外创建的 vnode 带 ref」会炸）。
     const stepsRef = shallowRef<{ $el?: unknown } | null>(null);
     expose({
-      nativeElement: computed(() => (stepsRef.value?.$el as HTMLElement | undefined) ?? null),
+      nativeElement: computed(() => {
+        const el = getElement(stepsRef.value);
+        return typeof HTMLElement !== 'undefined' && el instanceof HTMLElement ? el : null;
+      }),
     });
 
     return () => {
+      const nativeRootStyle = normalizeStyle([mergedStyles.value.root, attrs.style]);
+      const styles: TimelineSemanticStyles = {
+        ...mergedStyles.value,
+        ...(typeof nativeRootStyle === 'object' ? { root: nativeRootStyle } : {}),
+      };
       // ⚠️ `Steps` 是**组件** ⇒ children 走插槽路径；但这里不传 children
       //    （`Timeline` 的内容全在 `items` 里）。
       return h(Steps, {
@@ -259,18 +202,18 @@ const Timeline = defineComponent({
         //    `attrs.class`，并把 `class` 从 restAttrs 里摘掉）⇒ 这里必须传 **`class`**；
         //    继续传 `className` 会落进 attrs 变成 `classname` 属性、类名静默丢失。
         //    （2026-10-06 迁移 steps 时同步改的 —— 见 registry 里 steps 的迁移提示。）
-        class: classString,
+        class: classString(),
         // ⚠️ 只放 `titleSpan` 的内联变量 —— **用户的 `style` 走 `styles.root`**（见上）
-        style: stepStyle,
+        style: stepStyle.value,
         // 判据 5：八键映射 + 上下文 / 用户的语义化槽（**三路合并**）
         classNames: mergedClassNames.value,
-        styles: mergedStyles.value,
+        styles,
         variant: props.variant,
-        orientation,
+        orientation: orientation.value,
         // 判据 3 / 4
         type: 'dot',
-        items: mergedItems as StepItem[],
-        current: mergedItems.length - 1,
+        items: mergedItems.value,
+        current: mergedItems.value.length - 1,
       });
     };
   },

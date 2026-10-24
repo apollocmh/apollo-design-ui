@@ -23,6 +23,7 @@ import MasonryNative from './MasonryNative.vue';
 import NativeAttrs from './NativeAttrs.vue';
 import PaginationContainers from './PaginationContainers.vue';
 import SwitchEvents from './SwitchEvents.vue';
+import TimelineNative from './TimelineNative.vue';
 
 const Rows = defineComponent({
   setup() {
@@ -74,6 +75,7 @@ const Demo = {
   'pagination-slots': PaginationSlots,
   'pagination-containers': PaginationContainers,
   'masonry-native': MasonryNative,
+  'timeline-native': TimelineNative,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

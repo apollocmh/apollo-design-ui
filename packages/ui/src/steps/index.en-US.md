@@ -59,3 +59,7 @@ See [`demo/`](./demo) (20 demos, covering the main antd scenarios.
 - **rail semantics**: the connector's status is **nextStatus** (leading to the next step).
 - **Differences**: Wave ripple not implemented (no wave infra), `components` injection
   not wired — see the component README.
+
+## Reactivity
+
+Visible items, folding and active status update with items/current/initial/maxCount; click actions use the current index mapping. Native class/style are read during render and accept Vue string/object/array styles; matching styles.root values retain their existing priority. Documented classNames/styles functions receive current resolved props. Steps has no large variant, so a global large default resolves to medium.
