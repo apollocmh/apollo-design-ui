@@ -35,12 +35,15 @@ import type {
   ListItemMetaProps,
   ListItemMetaRef,
   ListItemMetaSlot,
+  ListItemMetaSlots,
   ListItemProps,
+  ListItemRef,
   ListItemSemanticClassNames,
   ListItemSemanticName,
   ListItemSemanticStyles,
   ListItemSlot,
   ListItemSlotProps,
+  ListItemSlots,
   ListLocale,
   ListProps,
   ListRef,
@@ -50,6 +53,14 @@ import type {
 } from '../interface';
 
 describe('List · Props 类型', () => {
+  it('Item/Meta content slots and the Item ref are explicitly typed', () => {
+    expectTypeOf<ListItemSlots['extra']>().toEqualTypeOf<ListItemSlot | undefined>();
+    expectTypeOf<ListItemSlots['actions']>().toEqualTypeOf<ListItemSlot | undefined>();
+    expectTypeOf<ListItemMetaSlots['avatar']>().toEqualTypeOf<ListItemMetaSlot | undefined>();
+    expectTypeOf<ListItemMetaSlots['title']>().toEqualTypeOf<ListItemMetaSlot | undefined>();
+    expectTypeOf<ListItemMetaSlots['description']>().toEqualTypeOf<ListItemMetaSlot | undefined>();
+    expectTypeOf<ListItemRef['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
+  });
   it('核心 props 的形态', () => {
     expectTypeOf<ListProps['prefixCls']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<ListProps['bordered']>().toEqualTypeOf<boolean | undefined>();

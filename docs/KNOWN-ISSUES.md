@@ -183,7 +183,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、490 行 owner/field 清单。内容候选 146、渲染候选 80、数据/配置 152、内部/废弃 112；只将七个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、496 行 owner/field 清单。内容候选 146、渲染候选 80、数据/配置 152、内部/废弃 118；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -197,7 +197,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **门禁**：能区分 slot“不传”、slot“传了但为空”、slot“异步出现”，能保证 `#foo` 优先级，所有 slot props 可通过 `vue-tsc` 推断类型，Vue SFC 消费 Demo 真正可运行。
 
-**2026-10-24 List 增量**：`renderItem` 已直接移除，12 个示例与单元/DOM/axe/视觉调用迁为泛型 `#item`；接通原先被忽略的 `header` / `footer` / `loadMore`，按 slot 存在性优先，空 slot 不回退。删除照搬上游的整组件废弃警告及 Demo 告警豁免；修复根 id 未透传、字符串 style 展开与 attrs-only 更新缓存。List 运行回归、SSR 与实际 Vue 模板类型推断等证据见 [List 报告](audit/2026-10-24-list-slots-remediation.md)；Item/Meta 其他内容字段、根 `extra` 无渲染落点和 List 拖拽示例继续开放，未宣称全库 F11 完成。
+**2026-10-24 List 增量**：`renderItem` 已直接移除，12 个示例与单元/DOM/axe/视觉调用迁为泛型 `#item`；接通原先被忽略的 `header` / `footer` / `loadMore`，按 slot 存在性优先，空 slot 不回退。删除照搬上游的整组件废弃警告及 Demo 告警豁免；修复根 id 未透传、字符串 style 展开与 attrs-only 更新缓存。List 运行回归、SSR 与实际 Vue 模板类型推断等证据见 [List 报告](audit/2026-10-24-list-slots-remediation.md)；Item/Meta 的 extra/actions/avatar/title/description 已在后续 [子组件批次](audit/2026-10-24-list-item-slots-remediation.md) 接通，包含空/动态插槽、keyed actions、SSR hydration 与类型回归。根 `extra` 无渲染落点和 List 拖拽示例继续开放，未宣称全库 F11 完成。
 
 ---
 
@@ -322,7 +322,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Timeline | 14/14 | F11；富内容模板项 |
 | Masonry | 6/6 | —；动态移除元素时 motion 数据 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
-| List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta、根 extra 和拖拽示例继续审查 |
+| List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
 | Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
 | Mentions | 16/16 | F11；dropdown item scoped slot |

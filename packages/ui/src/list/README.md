@@ -42,7 +42,7 @@ node tests/visual/debug/extract-list-css.mjs > /tmp/list-antd.css   # 62 条 ant
 | 5 | 🚨 **`-item-no-flex` 的判据换成了 vnode 层判定**：上游是 `toArray(children).some(isString)`，但 Vue 侧**拿不到原始字符串**（模板编译成 `createTextVNode`；本仓 `toArray` 也把原始值归一成 Text vnode）⇒ 本仓用 **`isTextVNode`**。⚠️ 唯一可观测分歧：**数字**子节点（`{{ 0 }}` 被 `toDisplayString` 变成 `'0'`；上游 `isString(0)` 判假、本仓判真）。 | PLATFORM |
 | 6 | List 使用 Vue 泛型 `#item`；`renderItem` 直接移除。header/footer/loadMore 插槽按存在性优先，空插槽不回退。见 [迁移记录](../../../../docs/migrations/list-slots.md)。 | INTENDED |
 | 7 | 🚨 **两条死选择器逐字保留**（UPSTREAM quirk，radio U7/U8 同类）：① `.apollo-list .apollo-list-item .apollo-list-action`（源码写 `${componentCls}-action`，真类名是 `-item-action`）；② `.apollo-list-loading .apollo-list-spin-nested-loading`（真类名是 `.apollo-spin-nested-loading`）。改掉会凭空多出上游没有的视觉差异。 | UPSTREAM |
-| 8 | header/footer/loadMore 接通原生内容插槽，简单 prop 保留；Item/Meta 其他内容字段继续单独审查。旧 D111 冲突记录已由现行规范与 ADR 0006 取代。 | INTENDED |
+| 8 | header/footer/loadMore 接通原生内容插槽，简单 prop 保留；Item 的 extra/actions 与 Meta 的 avatar/title/description 已有类型化原生插槽。旧 D111 冲突记录已由现行规范与 ADR 0006 取代。 | INTENDED |
 | 9 | 本仓无 `hashId`（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D5）。 | PLATFORM |
 | 10 | **`ListConfig` 比 card / empty 多一层 `item`**（`list.item.classNames` / `.styles` 是 `Item` 语义化槽的**底座**）—— 与上游一致，**不是**差异。 | — |
 
@@ -110,7 +110,7 @@ node tests/visual/debug/extract-list-css.mjs > /tmp/list-antd.css   # 62 条 ant
    （card / masonry / anchor / breadcrumb / date-picker / avatar）的差异都只写在各自的
    `README §2`，未登记进 §9.2（最后一号停在 **D118**）。本组件沿用同一先例；
    若要让 C24 名副其实，需要一次**统一补登记**（跨组件的独立工作）。
-5. F11 仍需审查 Item/Meta 内容字段；根 `extra` 仅有历史声明，没有渲染落点。
+5. Item/Meta 内容插槽已接通，证据见 `docs/audit/2026-10-24-list-item-slots-remediation.md`；根 `extra` 仅有历史声明，没有渲染落点，继续审查。
 6. **`NodeRenderer` 的落点**：住在 `ui/src/_internal/node-renderer.ts`。
    ✅ 2026-10-07 已按架构规则迁出组件目录（registry `VNA-RENDERER-01`）。
 

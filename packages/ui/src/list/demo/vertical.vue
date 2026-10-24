@@ -1,22 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 `vertical` demo。
 import { List, ListItem, ListItemMeta, Space } from '@apollo-design/ui';
-import { h } from 'vue';
-
-const icon = () =>
-  h('span', {
-    style: { display: 'inline-block', width: '1em', height: '1em', background: '#999' },
-  });
-const avatar = () =>
-  h('span', {
-    style: {
-      display: 'inline-block',
-      width: '32px',
-      height: '32px',
-      background: '#999',
-      borderRadius: '50%',
-    },
-  });
 
 const data = Array.from({ length: 6 }).map((_, i) => ({
   href: '#title',
@@ -25,15 +9,6 @@ const data = Array.from({ length: 6 }).map((_, i) => ({
   content:
     'We supply a series of design principles, practical patterns and high quality design resources.',
 }));
-
-/** 图标 + 文字（对齐上游的 `IconText`）。 */
-const iconText = (text: string) => h(Space, null, { default: () => [icon(), text] });
-
-/** extra 用**本地纯色块**（外网图片会污染 L6 基线）。 */
-const extra = () =>
-  h('span', {
-    style: { display: 'inline-block', width: '272px', height: '120px', background: '#eee' },
-  });
 </script>
 
 <template>
@@ -44,13 +19,23 @@ const extra = () =>
     :data-source="data"
   >
     <template #item="{ item }">
-      <ListItem :actions="[iconText('156'), iconText('156'), iconText('2')]" :extra="extra()">
-        <ListItemMeta
-          :avatar="avatar()"
-          :title="h('a', { href: item.href }, item.title)"
-          :description="item.description"
-        />
+      <ListItem>
+        <ListItemMeta :description="item.description">
+          <template #avatar>
+            <span style="display: inline-block; width: 32px; height: 32px; background: #999; border-radius: 50%" />
+          </template>
+          <template #title><a :href="item.href">{{ item.title }}</a></template>
+        </ListItemMeta>
         {{ item.content }}
+        <template #actions>
+          <Space v-for="(count, index) in ['156', '156', '2']" :key="index">
+            <span style="display: inline-block; width: 1em; height: 1em; background: #999" />
+            {{ count }}
+          </Space>
+        </template>
+        <template #extra>
+          <span style="display: inline-block; width: 272px; height: 120px; background: #eee" />
+        </template>
       </ListItem>
     </template>
     <template #footer>

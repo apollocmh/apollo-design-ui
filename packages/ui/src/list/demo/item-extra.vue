@@ -2,7 +2,7 @@
 // 对齐 antd 的 `itemLayout` / `extra` 用法：横向布局下 extra 位于右侧。
 import { LikeOutlined } from '@apollo-design/icons';
 import { Avatar, Button, List, ListItem, ListItemMeta, Text } from '@apollo-design/ui';
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const articles = ref([
   {
@@ -23,29 +23,6 @@ const articles = ref([
 ]);
 
 const totalLikes = computed(() => articles.value.reduce((sum, item) => sum + item.likes, 0));
-const extra = () =>
-  h('span', {
-    style: {
-      display: 'inline-block',
-      width: '120px',
-      height: '64px',
-      borderRadius: '8px',
-      background: 'linear-gradient(135deg, #1677ff 0%, #69b1ff 100%)',
-    },
-  });
-const actions = (article: (typeof articles.value)[number]) => [
-  h(
-    Button,
-    {
-      type: 'link',
-      size: 'small',
-      onClick: () => {
-        article.likes += 1;
-      },
-    },
-    () => [h(LikeOutlined), ` ${article.likes}`],
-  ),
-];
 </script>
 
 <template>
@@ -55,12 +32,18 @@ const actions = (article: (typeof articles.value)[number]) => [
     </Text>
     <List :data-source="articles" style="margin-top: 12px">
       <template #item="{ item: article }">
-        <ListItem :extra="extra()" :actions="actions(article)">
-          <ListItemMeta
-            :avatar="h(Avatar, { style: { backgroundColor: '#1677ff' } }, () => article.title.slice(0, 1))"
-            :title="article.title"
-            :description="article.description"
-          />
+        <ListItem>
+          <ListItemMeta :title="article.title" :description="article.description">
+            <template #avatar>
+              <Avatar style="background-color: #1677ff">{{ article.title.slice(0, 1) }}</Avatar>
+            </template>
+          </ListItemMeta>
+          <template #extra>
+            <span style="display: inline-block; width: 120px; height: 64px; border-radius: 8px; background: linear-gradient(135deg, #1677ff 0%, #69b1ff 100%)" />
+          </template>
+          <template #actions>
+            <Button type="link" size="small" @click="article.likes += 1"><LikeOutlined /> {{ article.likes }}</Button>
+          </template>
         </ListItem>
       </template>
     </List>

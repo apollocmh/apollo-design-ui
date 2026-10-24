@@ -87,6 +87,16 @@ The presence of `header` / `footer` / `loadMore` slots overrides their matching 
 | styles | Semantic styles (same slots) | `{ actions?: CSSProperties; extra?: CSSProperties }` |
 | colStyle | Inline style of the grid `Col` (passed by `List`) | `CSSProperties` |
 
+### List.Item slots
+
+| Slot | Description |
+|---|---|
+| default | Item body |
+| extra | Extra content; wrapped in vertical layout, a sibling of the body in horizontal layout |
+| actions | Arrays and fragments are flattened; each nonempty top-level node becomes one action, with separators between actions |
+
+Named slots take precedence over matching props, including empty slots. Actions skip comments and whitespace; use stable keys with `v-for`. Multiple buttons inside one wrapping element count as one action. The existing actions data array prop remains available.
+
 ### List.Item.Meta
 
 | Property | Description | Type |
@@ -94,6 +104,10 @@ The presence of `header` / `footer` / `loadMore` slots overrides their matching 
 | avatar | Avatar | `VNodeChild` |
 | title | Title (rendered as `<h4>`) | `VNodeChild` |
 | description | Description | `VNodeChild` |
+
+### List.Item.Meta slots
+
+`#avatar`, `#title` and `#description` have no scope arguments and override matching props, even when empty. Empty avatar/title slots create no avatar wrapper/heading. When both title and description are empty there is no content wrapper. Numeric zero remains visible. Dynamic content updates on render.
 
 ### Instance (ref)
 

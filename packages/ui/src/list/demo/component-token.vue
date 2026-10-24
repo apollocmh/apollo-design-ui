@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 `component-token` demo：通过 ConfigProvider 覆盖 List 的 Component Token。
 import { Avatar, ConfigProvider, List, ListItem, ListItemMeta } from '@apollo-design/ui';
-import { h } from 'vue';
 
 const data = Array.from({ length: 3 }, (_, i) => ({
   title: `Ant Design Title ${i + 1}`,
@@ -32,11 +31,9 @@ const data = Array.from({ length: 3 }, (_, i) => ({
     >
       <template #item="{ item }">
         <ListItem>
-          <ListItemMeta
-            :avatar="h(Avatar, { style: { backgroundColor: '#1677ff' } }, () => item.title.slice(0, 1))"
-            :title="item.title"
-            :description="item.description"
-          />
+          <ListItemMeta :title="item.title" :description="item.description">
+            <template #avatar><Avatar style="background-color: #1677ff">{{ item.title.slice(0, 1) }}</Avatar></template>
+          </ListItemMeta>
         </ListItem>
       </template>
     </List>

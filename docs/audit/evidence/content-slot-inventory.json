@@ -8,20 +8,20 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 490,
+    "rows": 496,
     "byCategory": {
       "data": 140,
       "component-content-candidate": 146,
       "deprecated": 53,
-      "internal": 59,
+      "internal": 65,
       "render-function-candidate": 80,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 152,
-      "review": 219,
-      "skip": 112,
-      "implemented-verified": 7
+      "review": 214,
+      "skip": 118,
+      "implemented-verified": 12
     }
   },
   "rows": [
@@ -6690,42 +6690,59 @@
       "owner": "ListItemMetaProps",
       "prop": "avatar",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:158",
+      "source": "packages/ui/src/list/interface.ts:170",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "verified",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ],
+        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/basic.vue",
+          "packages/ui/src/list/demo/component-token.vue",
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "list",
       "owner": "ListItemMetaProps",
       "prop": "description",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:160",
+      "source": "packages/ui/src/list/interface.ts:172",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "verified",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ],
+        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -6735,44 +6752,167 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "list",
       "owner": "ListItemMetaProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:164",
+      "source": "packages/ui/src/list/interface.ts:176",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "verified",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ],
+        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/list/demo/basic.vue"
+          "packages/ui/src/list/demo/basic.vue",
+          "packages/ui/src/list/demo/vertical.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts",
           "packages/ui/src/list/__tests__/slots.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemMetaSlots",
+      "prop": "avatar",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:180",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/basic.vue",
+          "packages/ui/src/list/demo/component-token.vue",
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemMetaSlots",
+      "prop": "description",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:182",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemMetaSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:181",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/basic.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts",
+          "packages/ui/src/list/__tests__/slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "list",
@@ -6781,27 +6921,37 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/list/interface.ts:150",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "verified",
+        "files": [
+          "packages/ui/src/list/Item.vue"
+        ],
+        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "list",
@@ -6810,12 +6960,94 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/list/interface.ts:148",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "verified",
+        "files": [
+          "packages/ui/src/list/Item.vue"
+        ],
+        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemSlots",
+      "prop": "actions",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:160",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/Item.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:157",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/Item.vue",
+          "packages/ui/src/list/List.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -6824,13 +7056,51 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/list/__tests__/a11y.test.ts",
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemSlots",
+      "prop": "extra",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:158",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/Item.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "list",
@@ -6867,22 +7137,31 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/list/interface.ts:59",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/Item.vue"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },
@@ -7030,6 +7309,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },

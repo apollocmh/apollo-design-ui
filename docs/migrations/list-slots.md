@@ -21,4 +21,29 @@ Apollo 没有废弃 List 的决定。本批移除照搬 antd 6.6.4 的整组件�
 
 本批同时修复根 `id` 被声明后未透传、原生字符串 style 被拆成字符键，以及 computed 缓存非响应式 attrs 的问题；根原生属性按渲染更新，实例 DOM 保持一致。
 
-本批不裁决 Item/Meta 的其他内容字段。根 `ListProps.extra` 有历史声明但无渲染落点，已如实标明待审查；不为补字段临时发明布局。List 拖拽示例与全库 F11 审查继续开放。验证证据见 [整改报告](../audit/2026-10-24-list-slots-remediation.md)。
+首批未裁决的 Item/Meta 内容字段已在下文增量中接通。根 `ListProps.extra` 有历史声明但无渲染落点，已如实标明待审查；不为补字段临时发明布局。List 拖拽示例与全库 F11 审查继续开放。验证证据见 [整改报告](../audit/2026-10-24-list-slots-remediation.md)。
+
+
+## List.Item / Meta 增量（2026-10-24）
+
+ListItem 的 `#extra` / `#actions`，ListItemMeta 的 `#avatar` / `#title` / `#description` 接通原生模板。简单内容 prop 和 actions 的 VNode 数组数据形态继续可用；本批没有函数适配层。
+
+```vue
+<ListItem>
+  <ListItemMeta>
+    <template #avatar><Avatar>{{ user.initial }}</Avatar></template>
+    <template #title><a :href="user.url">{{ user.name }}</a></template>
+    <template #description>{{ user.description }}</template>
+  </ListItemMeta>
+  <template #extra><img :src="user.image" :alt="user.name" /></template>
+  <template #actions>
+    <Button v-for="action in actions" :key="action.id" @click="action.run">{{ action.label }}</Button>
+  </template>
+</ListItem>
+```
+
+所有具名 slot 存在即优先，包括空 slot。extra 空内容不生成竖向 main/extra 两段布局；Meta 的头像、标题、描述独立判断，0 可显示。actions 展开数组/Fragment，跳过注释与纯空白，每个可见顶层节点包装一个 li 并自动分隔；一个包装元素视作一项。原有 actions prop 保留原数组项语义。稳定 key 用于在重排时保留按钮 DOM。
+
+默认内容与具名内容在 render 内各求值一次，共同决定布局与样式，移除 computed 中的默认插槽消费与跨帧缓存；Item/Meta 的 attrs-only 更新同步生效。`ListItemRef.nativeElement`（新增导出类型）保留原契约：普通模式是 li，grid 模式为外层 Col 根 div。布局从单段切到竖向两段时主体需要重新挂载；同一布局内内容更新和 keyed actions 重排保持 DOM 身份。
+
+见 [子组件整改证据](../audit/2026-10-24-list-item-slots-remediation.md)。

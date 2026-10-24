@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { List, ListItem } from '../../../index';
+import { List, ListItem, ListItemMeta } from '../../../index';
 
 type Row = { id: number; name: string };
 type Equal<A, B> =
@@ -15,7 +15,16 @@ const describe = (name: string, index: number) => `${index}:${name.toUpperCase()
 <template>
   <List :data-source="rows" row-key="id">
     <template #item="{ item, index }">
-      <ListItem>{{ describe(checkRow(item).name, checkIndex(index)) }}</ListItem>
+      <ListItem>
+        {{ describe(checkRow(item).name, checkIndex(index)) }}
+        <ListItemMeta>
+          <template #avatar>Avatar</template>
+          <template #title>{{ checkRow(item).name }}</template>
+          <template #description>Description</template>
+        </ListItemMeta>
+        <template #extra>Extra</template>
+        <template #actions><button>Edit</button><button>More</button></template>
+      </ListItem>
     </template>
     <template #header>Header</template>
     <template #footer>Footer</template>

@@ -13,6 +13,7 @@ import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
 import EventEmits from './EventEmits.vue';
 import ListContent from './ListContent.vue';
+import ListItemContent from './ListItemContent.vue';
 import NativeAttrs from './NativeAttrs.vue';
 
 const Rows = defineComponent({
@@ -63,6 +64,7 @@ const Demo = {
   'table-reorder': TableReorder,
   badge: BadgeSlots,
   'list-slots': ListContent,
+  'list-item-slots': ListItemContent,
   'list-loadmore': ListLoadMore,
   'list-pagination': ListPagination,
   'list-likes': ListLikes,

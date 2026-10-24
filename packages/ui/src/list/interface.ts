@@ -152,6 +152,18 @@ export interface ListItemProps {
   colStyle?: CSSProperties;
 }
 
+/** Item slots take precedence over corresponding content props, even when empty. */
+export interface ListItemSlots {
+  default?: ListItemSlot;
+  extra?: ListItemSlot;
+  /** Each nonempty top-level node is an action; fragments are flattened. */
+  actions?: ListItemSlot;
+}
+
+export interface ListItemRef {
+  nativeElement: HTMLElement | null;
+}
+
 /** `List.Item.Meta` 的 props。逐字段对齐 antd 的 `ListItemMetaProps`。 */
 export interface ListItemMetaProps {
   /** 头像。 */
@@ -164,6 +176,12 @@ export interface ListItemMetaProps {
   title?: VNodeChild;
 }
 
+export interface ListItemMetaSlots {
+  avatar?: ListItemMetaSlot;
+  title?: ListItemMetaSlot;
+  description?: ListItemMetaSlot;
+}
+
 /** `List.Item.Meta` 暴露的实例。 */
 export interface ListItemMetaRef {
   nativeElement: HTMLDivElement | null;
@@ -172,7 +190,7 @@ export interface ListItemMetaRef {
 /** `List.Item` 的默认插槽。 */
 export type ListItemSlot = () => VNodeChild;
 
-/** `List.Item.Meta` 的默认插槽。 */
+/** `List.Item.Meta` 的内容插槽函数类型。 */
 export type ListItemMetaSlot = () => VNodeChild;
 
 // ---------------------------------------------------------------------------

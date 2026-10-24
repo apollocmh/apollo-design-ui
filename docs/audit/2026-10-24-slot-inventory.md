@@ -6,9 +6,9 @@
 
 以 TypeScript AST/符号解析收集 **/interface.ts 的属性，追踪导入别名、类型别名、泛型实参和继承。每个 owner/field 一行；同一继承属性可能出现在多个 owner，故总行数不是独立公开 prop 数。函数只检查返回内容，不把接受 VNode 参数但返回 void 的业务回调当成 renderer；不将数据接口的内部 label 展开成调用者 items 的顶层内容。
 
-本次 73 个 interface.ts，共 490 行：内容候选 146、渲染函数候选 80、数据 140、内联配置 12、deprecated 53、内部/插槽协议 59。分类为调查分流，不是公共 API 决策；Props 后缀也不能证明它就是公开组件。
+本次 73 个 interface.ts，共 496 行：内容候选 146、渲染函数候选 80、数据 140、内联配置 12、deprecated 53、内部/插槽协议 65。分类为调查分流，不是公共 API 决策；Props 后缀也不能证明它就是公开组件。
 
-当前 Badge.count/text、InputNumber.prefix/suffix 与 List.header/footer/loadMore 七行关联具体运行报告而标 verified。List.renderItem 已移除，新 ListSlots 五个字段归内部插槽协议；迁移证据见 [List 报告](2026-10-24-list-slots-remediation.md)。其余 source-reference 只记录源码/类型/测试/Demo 的同名线索，**不等于已经实际消费或测试通过**；未命中也不直接等于缺少插槽，别名、动态键与其他组件的同名模板都需复核。152 行保持数据/配置，112 行因内部/协议/deprecated 跳过，219 行继续 review。
+当前 Badge.count/text、InputNumber.prefix/suffix 与 List.header/footer/loadMore、Item.extra/actions、Meta.avatar/title/description 十二行关联具体运行报告而标 verified。List.renderItem 已移除，新 ListSlots 五个字段及 Item/Meta 六个 slot 字段归内部插槽协议；迁移证据见 [List 报告](2026-10-24-list-slots-remediation.md) 和 [Item/Meta 报告](2026-10-24-list-item-slots-remediation.md)。其余 source-reference 只记录源码/类型/测试/Demo 的同名线索，**不等于已经实际消费或测试通过**；未命中也不直接等于缺少插槽，别名、动态键与其他组件的同名模板都需复核。152 行保持数据/配置，118 行因内部/协议/deprecated 跳过，214 行继续 review。
 
 本工具不覆盖单独 SFC/TS 文件中的内联 props；不会以“候选数”替代缺口数，也不将清单写入组件验收状态。F11 继续开放，下一步按真实组件、调用者和作用域逐项审查，渲染函数迁移遵循 ADR 0006。
 

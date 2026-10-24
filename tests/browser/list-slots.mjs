@@ -107,9 +107,52 @@ try {
   await page.waitForFunction(
     () => document.querySelector('.apollo-list-container > div')?.style.width === '25%',
   );
+  await page.goto(`${base}list-item-slots`);
+  await page.waitForFunction(() => document.querySelector('output')?.textContent === 'LI:false');
+  await page.getByRole('button', { name: 'Toggle child slots' }).click();
+  const heading = await page.locator('.apollo-list-item-meta-title').elementHandle();
+  const edit = await page.locator('[data-action="edit"]').elementHandle();
+  assert.equal(await page.locator('.apollo-list-item-meta-title a').textContent(), 'first');
+  assert.equal(await page.locator('.apollo-list-item-action > li').count(), 2);
+  assert.equal(await page.locator('.apollo-list-item-action-split').count(), 1);
+  await page.getByRole('button', { name: 'Reverse actions' }).click();
+  assert.deepEqual(await page.locator('.apollo-list-item-action button').allTextContents(), [
+    'more:first',
+    'edit:first',
+  ]);
+  assert.equal(
+    await page.evaluate((node) => node === document.querySelector('[data-action="edit"]'), edit),
+    true,
+  );
+  await page.getByRole('button', { name: 'Update child label' }).click();
+  assert.equal(await page.locator('.apollo-list-item-meta-title a').textContent(), 'second');
+  assert.equal(
+    await page.evaluate(
+      (node) => node === document.querySelector('.apollo-list-item-meta-title'),
+      heading,
+    ),
+    true,
+  );
+  await page.getByRole('button', { name: 'Toggle vertical' }).click();
+  assert.equal(await page.locator('.apollo-list-item-extra').count(), 0);
+  assert.equal(await page.locator('.apollo-list-item > aside').textContent(), 'extra:second');
+  await page.getByRole('button', { name: 'Toggle child empty' }).click();
+  assert.equal(
+    await page
+      .locator(
+        '.apollo-list-item-meta-content, .apollo-list-item-meta-avatar, .apollo-list-item-action, aside',
+      )
+      .count(),
+    0,
+  );
+  assert.doesNotMatch(await page.locator('.apollo-list').innerText(), /prop/);
+  await page.getByRole('button', { name: 'Toggle child slots' }).click();
+  assert.equal(await page.locator('.apollo-list-item-meta-title').textContent(), 'prop title');
+  await page.getByRole('button', { name: 'Toggle grid' }).click();
+  await page.waitForFunction(() => document.querySelector('output')?.textContent === 'DIV:true');
   assert.deepEqual(errors, []);
   console.log(
-    `PASS F11 List: conditional/empty/reactive slots, ref and keyed DOM identity, loadMore, pagination, likes, responsive grid; ${await browser.version()}; zero browser/Vue errors`,
+    `PASS F11 List: conditional/empty/reactive slots, ref and keyed DOM identity, loadMore, pagination, likes, responsive grid, Item/Meta conditional slots, keyed actions, headings, grid ref; ${await browser.version()}; zero browser/Vue errors`,
   );
 } finally {
   await browser?.close();

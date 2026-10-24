@@ -87,6 +87,16 @@ List 按 Apollo 的独立契约维护；逐项内容使用带类型的 Vue `#ite
 | styles | 语义化样式（同上） | `{ actions?: CSSProperties; extra?: CSSProperties }` |
 | colStyle | grid 模式下 `Col` 的内联样式（由 `List` 传入） | `CSSProperties` |
 
+### List.Item 插槽
+
+| 插槽 | 说明 |
+|---|---|
+| default | 列表项主体 |
+| extra | 额外内容；竖向布局中位于 extra 容器，横向与主体平级 |
+| actions | 操作项模板；数组和 Fragment 展开，每个非空顶层节点一个操作项，项间自动分隔 |
+
+具名插槽存在即优先于同名 prop，空插槽不回退。actions 忽略注释和纯空白，`v-for` 请提供稳定 key；同一包装元素内的多个按钮视作一个操作项。`actions` prop 的既有数组数据形态保留。
+
 ### List.Item.Meta
 
 | 参数 | 说明 | 类型 |
@@ -94,6 +104,10 @@ List 按 Apollo 的独立契约维护；逐项内容使用带类型的 Vue `#ite
 | avatar | 头像 | `VNodeChild` |
 | title | 标题（渲染成 `<h4>`） | `VNodeChild` |
 | description | 描述 | `VNodeChild` |
+
+### List.Item.Meta 插槽
+
+`#avatar`、`#title`、`#description` 均无作用域参数，存在时优先于同名内容 prop（含空内容）。空头像不生成头像容器，空标题不生成 `h4`；标题和描述都为空时不生成 content 容器。`0` 是可显示内容。动态内容随渲染更新。
 
 ### 实例方法（ref）
 

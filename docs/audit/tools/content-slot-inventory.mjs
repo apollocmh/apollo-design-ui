@@ -8,6 +8,11 @@ import { parse } from 'vue/compiler-sfc';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const VERIFIED = {
+  'list:ListItemProps:extra': 'docs/audit/2026-10-24-list-item-slots-remediation.md',
+  'list:ListItemProps:actions': 'docs/audit/2026-10-24-list-item-slots-remediation.md',
+  'list:ListItemMetaProps:avatar': 'docs/audit/2026-10-24-list-item-slots-remediation.md',
+  'list:ListItemMetaProps:title': 'docs/audit/2026-10-24-list-item-slots-remediation.md',
+  'list:ListItemMetaProps:description': 'docs/audit/2026-10-24-list-item-slots-remediation.md',
   'list:ListProps:header': 'docs/audit/2026-10-24-list-slots-remediation.md',
   'list:ListProps:footer': 'docs/audit/2026-10-24-list-slots-remediation.md',
   'list:ListProps:loadMore': 'docs/audit/2026-10-24-list-slots-remediation.md',
