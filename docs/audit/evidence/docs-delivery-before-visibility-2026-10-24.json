@@ -1,0 +1,341 @@
+{
+  "frameScope": "initialScripts includes active demo iframes; initialMainScripts records the main frame separately",
+  "initialMainScripts": [
+    "/apollo-design-ui/assets/app-BABV9Ed2.js",
+    "/apollo-design-ui/assets/runtime-core.esm-bundler-CNhQs8yq.js",
+    "/apollo-design-ui/assets/create-icon-BRhYGOul.js",
+    "/apollo-design-ui/assets/ComponentPage-D2bOMZ_y.js",
+    "/apollo-design-ui/assets/DocHtml-BZSrbcdL.js",
+    "/apollo-design-ui/assets/DemoRenderer-B-3rw_WR.js",
+    "/apollo-design-ui/assets/CodeOutlined-AOo260X9.js",
+    "/apollo-design-ui/assets/ExportOutlined-DgPQVRJa.js",
+    "/apollo-design-ui/assets/request-guard-B_a4Mt-3.js",
+    "/apollo-design-ui/assets/seo-BTSPcJ2a.js",
+    "/apollo-design-ui/assets/table-BQZH79uV.js",
+    "/apollo-design-ui/assets/basic-C7c4dTqc.js",
+    "/apollo-design-ui/assets/bordered-ClhzwTw6.js",
+    "/apollo-design-ui/assets/size-KO9XKtS3.js",
+    "/apollo-design-ui/assets/expand-CjmIXs30.js",
+    "/apollo-design-ui/assets/selection-CpPK3elk.js",
+    "/apollo-design-ui/assets/row-selection-and-operation-Cu9-lqhq.js",
+    "/apollo-design-ui/assets/radio-selection-CVGNm5kR.js",
+    "/apollo-design-ui/assets/nest-CztE5giJ.js",
+    "/apollo-design-ui/assets/sorter-DWRf00Mg.js",
+    "/apollo-design-ui/assets/multiple-sorter-C9rtTFAm.js",
+    "/apollo-design-ui/assets/filter-DMJLlypP.js",
+    "/apollo-design-ui/assets/filter-search-D5GSYtC9.js",
+    "/apollo-design-ui/assets/custom-filter-panel-BXJdtws8.js",
+    "/apollo-design-ui/assets/fixed-header-BUfElL8B.js",
+    "/apollo-design-ui/assets/fixed-columns-CqWq07Jc.js",
+    "/apollo-design-ui/assets/fixed-columns-header-CqHILNf8.js",
+    "/apollo-design-ui/assets/grouping-columns-6KDQ9vGZ.js",
+    "/apollo-design-ui/assets/colspan-rowspan-Dj8C-Uot.js",
+    "/apollo-design-ui/assets/summary-COA6oLa2.js",
+    "/apollo-design-ui/assets/custom-empty-DbBHiSDk.js",
+    "/apollo-design-ui/assets/ellipsis-DDHJbggP.js",
+    "/apollo-design-ui/assets/ajax-B-vYy5XP.js",
+    "/apollo-design-ui/assets/sticky-dVjC8XZM.js",
+    "/apollo-design-ui/assets/virtual-list-DzxgFtuU.js",
+    "/apollo-design-ui/assets/drag-reorder-D6ex2bRY.js",
+    "/apollo-design-ui/assets/column-defaults-D-n2s-Zv.js",
+    "/apollo-design-ui/assets/editable-cell-C73OEPCa.js",
+    "/apollo-design-ui/assets/tree-data-DtytKYRn.js",
+    "/apollo-design-ui/assets/filter-search-tree-C9nuW1Al.js",
+    "/apollo-design-ui/assets/sticky-container-D0xIgpYX.js",
+    "/apollo-design-ui/assets/pagination-placement-WpYyetRN.js",
+    "/apollo-design-ui/assets/component-token-BUNthleg.js",
+    "/apollo-design-ui/assets/dynamic-settings-BqF3Ofjm.js",
+    "/apollo-design-ui/assets/edit-row-QuTDYgbV.js",
+    "/apollo-design-ui/assets/ellipsis-custom-tooltip-DzzGYggv.js",
+    "/apollo-design-ui/assets/expand-sticky-Bo5DeSWJ.js",
+    "/apollo-design-ui/assets/head-CaIS0xU0.js",
+    "/apollo-design-ui/assets/hidden-columns-BDaS8Tt5.js",
+    "/apollo-design-ui/assets/nested-table-D97T1g_u.js",
+    "/apollo-design-ui/assets/pagination-CudtION3.js",
+    "/apollo-design-ui/assets/reset-filter-CCikjpBx.js",
+    "/apollo-design-ui/assets/row-selection-custom-DFG6KEGB.js",
+    "/apollo-design-ui/assets/style-class-BdgO5iBY.js",
+    "/apollo-design-ui/assets/tree-table-ellipsis-BHGgojtO.js"
+  ],
+  "initialScripts": [
+    {
+      "asset": "assets/app-BABV9Ed2.js",
+      "bytes": 2209807,
+      "gzipBytes": 509988
+    },
+    {
+      "asset": "assets/runtime-core.esm-bundler-CNhQs8yq.js",
+      "bytes": 65335,
+      "gzipBytes": 25491
+    },
+    {
+      "asset": "assets/create-icon-BRhYGOul.js",
+      "bytes": 9889,
+      "gzipBytes": 3892
+    },
+    {
+      "asset": "assets/ComponentPage-D2bOMZ_y.js",
+      "bytes": 11104,
+      "gzipBytes": 4434
+    },
+    {
+      "asset": "assets/DocHtml-BZSrbcdL.js",
+      "bytes": 742,
+      "gzipBytes": 462
+    },
+    {
+      "asset": "assets/DemoRenderer-B-3rw_WR.js",
+      "bytes": 171205,
+      "gzipBytes": 38191
+    },
+    {
+      "asset": "assets/CodeOutlined-AOo260X9.js",
+      "bytes": 696,
+      "gzipBytes": 466
+    },
+    {
+      "asset": "assets/ExportOutlined-DgPQVRJa.js",
+      "bytes": 695,
+      "gzipBytes": 450
+    },
+    {
+      "asset": "assets/request-guard-B_a4Mt-3.js",
+      "bytes": 93,
+      "gzipBytes": 97
+    },
+    {
+      "asset": "assets/seo-BTSPcJ2a.js",
+      "bytes": 507,
+      "gzipBytes": 332
+    },
+    {
+      "asset": "assets/table-BQZH79uV.js",
+      "bytes": 1014826,
+      "gzipBytes": 73031
+    },
+    {
+      "asset": "assets/basic-C7c4dTqc.js",
+      "bytes": 616,
+      "gzipBytes": 376
+    },
+    {
+      "asset": "assets/bordered-ClhzwTw6.js",
+      "bytes": 495,
+      "gzipBytes": 332
+    },
+    {
+      "asset": "assets/size-KO9XKtS3.js",
+      "bytes": 626,
+      "gzipBytes": 393
+    },
+    {
+      "asset": "assets/expand-CjmIXs30.js",
+      "bytes": 579,
+      "gzipBytes": 383
+    },
+    {
+      "asset": "assets/selection-CpPK3elk.js",
+      "bytes": 684,
+      "gzipBytes": 422
+    },
+    {
+      "asset": "assets/row-selection-and-operation-Cu9-lqhq.js",
+      "bytes": 1467,
+      "gzipBytes": 825
+    },
+    {
+      "asset": "assets/radio-selection-CVGNm5kR.js",
+      "bytes": 703,
+      "gzipBytes": 431
+    },
+    {
+      "asset": "assets/nest-CztE5giJ.js",
+      "bytes": 527,
+      "gzipBytes": 333
+    },
+    {
+      "asset": "assets/sorter-DWRf00Mg.js",
+      "bytes": 518,
+      "gzipBytes": 364
+    },
+    {
+      "asset": "assets/multiple-sorter-C9rtTFAm.js",
+      "bytes": 853,
+      "gzipBytes": 447
+    },
+    {
+      "asset": "assets/filter-DMJLlypP.js",
+      "bytes": 753,
+      "gzipBytes": 458
+    },
+    {
+      "asset": "assets/filter-search-D5GSYtC9.js",
+      "bytes": 953,
+      "gzipBytes": 485
+    },
+    {
+      "asset": "assets/custom-filter-panel-BXJdtws8.js",
+      "bytes": 1343,
+      "gzipBytes": 753
+    },
+    {
+      "asset": "assets/fixed-header-BUfElL8B.js",
+      "bytes": 513,
+      "gzipBytes": 371
+    },
+    {
+      "asset": "assets/fixed-columns-CqWq07Jc.js",
+      "bytes": 809,
+      "gzipBytes": 417
+    },
+    {
+      "asset": "assets/fixed-columns-header-CqHILNf8.js",
+      "bytes": 893,
+      "gzipBytes": 447
+    },
+    {
+      "asset": "assets/grouping-columns-6KDQ9vGZ.js",
+      "bytes": 1242,
+      "gzipBytes": 638
+    },
+    {
+      "asset": "assets/colspan-rowspan-Dj8C-Uot.js",
+      "bytes": 1100,
+      "gzipBytes": 530
+    },
+    {
+      "asset": "assets/summary-COA6oLa2.js",
+      "bytes": 795,
+      "gzipBytes": 456
+    },
+    {
+      "asset": "assets/custom-empty-DbBHiSDk.js",
+      "bytes": 562,
+      "gzipBytes": 407
+    },
+    {
+      "asset": "assets/ellipsis-DDHJbggP.js",
+      "bytes": 780,
+      "gzipBytes": 405
+    },
+    {
+      "asset": "assets/ajax-B-vYy5XP.js",
+      "bytes": 1090,
+      "gzipBytes": 606
+    },
+    {
+      "asset": "assets/sticky-dVjC8XZM.js",
+      "bytes": 695,
+      "gzipBytes": 417
+    },
+    {
+      "asset": "assets/virtual-list-DzxgFtuU.js",
+      "bytes": 1200,
+      "gzipBytes": 598
+    },
+    {
+      "asset": "assets/drag-reorder-D6ex2bRY.js",
+      "bytes": 3261,
+      "gzipBytes": 1520
+    },
+    {
+      "asset": "assets/column-defaults-D-n2s-Zv.js",
+      "bytes": 1262,
+      "gzipBytes": 728
+    },
+    {
+      "asset": "assets/editable-cell-C73OEPCa.js",
+      "bytes": 1580,
+      "gzipBytes": 923
+    },
+    {
+      "asset": "assets/tree-data-DtytKYRn.js",
+      "bytes": 1286,
+      "gzipBytes": 763
+    },
+    {
+      "asset": "assets/filter-search-tree-C9nuW1Al.js",
+      "bytes": 1536,
+      "gzipBytes": 819
+    },
+    {
+      "asset": "assets/sticky-container-D0xIgpYX.js",
+      "bytes": 1311,
+      "gzipBytes": 798
+    },
+    {
+      "asset": "assets/pagination-placement-WpYyetRN.js",
+      "bytes": 1512,
+      "gzipBytes": 888
+    },
+    {
+      "asset": "assets/component-token-BUNthleg.js",
+      "bytes": 1314,
+      "gzipBytes": 815
+    },
+    {
+      "asset": "assets/dynamic-settings-BqF3Ofjm.js",
+      "bytes": 2252,
+      "gzipBytes": 1048
+    },
+    {
+      "asset": "assets/edit-row-QuTDYgbV.js",
+      "bytes": 2711,
+      "gzipBytes": 1246
+    },
+    {
+      "asset": "assets/ellipsis-custom-tooltip-DzzGYggv.js",
+      "bytes": 1651,
+      "gzipBytes": 911
+    },
+    {
+      "asset": "assets/expand-sticky-Bo5DeSWJ.js",
+      "bytes": 1673,
+      "gzipBytes": 1024
+    },
+    {
+      "asset": "assets/head-CaIS0xU0.js",
+      "bytes": 1734,
+      "gzipBytes": 1035
+    },
+    {
+      "asset": "assets/hidden-columns-BDaS8Tt5.js",
+      "bytes": 1714,
+      "gzipBytes": 803
+    },
+    {
+      "asset": "assets/nested-table-D97T1g_u.js",
+      "bytes": 1988,
+      "gzipBytes": 1030
+    },
+    {
+      "asset": "assets/pagination-CudtION3.js",
+      "bytes": 1064,
+      "gzipBytes": 697
+    },
+    {
+      "asset": "assets/reset-filter-CCikjpBx.js",
+      "bytes": 1818,
+      "gzipBytes": 939
+    },
+    {
+      "asset": "assets/row-selection-custom-DFG6KEGB.js",
+      "bytes": 1920,
+      "gzipBytes": 1005
+    },
+    {
+      "asset": "assets/style-class-BdgO5iBY.js",
+      "bytes": 1934,
+      "gzipBytes": 1031
+    },
+    {
+      "asset": "assets/tree-table-ellipsis-BHGgojtO.js",
+      "bytes": 2225,
+      "gzipBytes": 1194
+    }
+  ],
+  "searchIndexRequests": [
+    "/apollo-design-ui/assets/search-Bt3AY7AP.js"
+  ],
+  "browser": "150.0.7871.125"
+}

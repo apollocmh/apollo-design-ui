@@ -2,15 +2,21 @@
  * 阶段 2 收口统计：以阶段 0 的上游清单为基线，重算本地 demo 文件与场景名重合度。
  *
  * 输入：docs/audit/evidence/demo-coverage.json（阶段 0，含每个组件的 upstreamNames）
- * 输出：docs/audit/evidence/demo-coverage-stage2.json
- * 运行：node docs/audit/tools/demo-coverage-refresh.mjs
+ * 默认输出：docs/audit/evidence/demo-coverage-stage2.json（保留旧 CLI 行为）
+ * 新审计请指定 --output，保留带日期的历史证据：
+ * node docs/audit/tools/demo-coverage-refresh.mjs --output docs/audit/evidence/demo-coverage-2026-10-24.json
  */
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve('.');
 const BASELINE = path.join(ROOT, 'docs/audit/evidence/demo-coverage.json');
-const OUT = path.join(ROOT, 'docs/audit/evidence/demo-coverage-stage2.json');
+const outputIndex = process.argv.indexOf('--output');
+if (outputIndex >= 0 && !process.argv[outputIndex + 1]) throw new Error('--output requires a path');
+const OUT =
+  outputIndex >= 0
+    ? path.resolve(process.argv[outputIndex + 1])
+    : path.join(ROOT, 'docs/audit/evidence/demo-coverage-stage2.json');
 const UI_SRC = path.join(ROOT, 'packages/ui/src');
 
 const norm = (name) => name.toLowerCase().replace(/[-_]/g, '');

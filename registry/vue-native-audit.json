@@ -6,7 +6,7 @@
   "overallStatus": "audit-complete",
   "phase": "shared-surfaces-complete",
   "startedAt": "2026-10-04T17:37:01.098Z",
-  "updatedAt": "2026-10-08",
+  "updatedAt": "2026-10-23",
   "currentBatch": "AUDIT-01",
   "scope": {
     "componentsSource": "registry/components.json",
@@ -55,13 +55,13 @@
       "total": 24,
       "bySeverity": {
         "P0": 1,
-        "P1": 5,
-        "P2": 8,
-        "P3": 3
+        "P1": 6,
+        "P2": 10,
+        "P3": 7
       },
       "byStatus": {
-        "fixed": 17,
-        "open": 1
+        "fixed": 24,
+        "open": 0
       }
     }
   },
@@ -4505,7 +4505,8 @@
       "id": "VNA-RECHECK-04",
       "component": "table",
       "files": [
-        "packages/ui/src/table/（无 index.zh-CN.md）"
+        "packages/ui/src/table/index.zh-CN.md",
+        "packages/ui/src/table/index.en-US.md"
       ],
       "category": "test",
       "severity": "P2",
@@ -4515,10 +4516,19 @@
       ],
       "currentImplementation": "table 是 72 组件里唯一没有 index.zh-CN.md/index.en-US.md 的（只有实现说明 README.md）。",
       "semanticDifference": "docs 站 table 页只能出 demo 演示块；AGENTS.md §6.1 的交付物清单含中英文档，且该组件 registry 标记 completed。",
-      "recommendation": "补齐 table 的 index.zh-CN.md / index.en-US.md（API 表 + demo 说明），补齐后文档站自动生成完整页。",
-      "tests": "无（文档债务）",
-      "status": "open",
-      "foundBy": "docs-site pre-wiring recheck"
+      "recommendation": "已确认原缺文档条目过期；保留原审计描述，持续校验双语 API 文件存在与非空 API 正文。",
+      "tests": "2026-10-23 本地复核：双语 API、公开类型/导出、Docs 内容清单与 SSG table 正文；可重复门禁见 registry/tools/vue-native-status.mjs 与 docs/audit/2026-10-23-vue-reactivity-remediation.md。",
+      "status": "fixed",
+      "foundBy": "docs-site pre-wiring recheck",
+      "fixedAt": "2026-10-23",
+      "documentationEvidence": {
+        "sourceFiles": [
+          "packages/ui/src/table/index.zh-CN.md",
+          "packages/ui/src/table/index.en-US.md"
+        ],
+        "route": "/components/table",
+        "report": "docs/audit/2026-10-23-vue-reactivity-remediation.md"
+      }
     }
   ],
   "batches": [
@@ -4954,6 +4964,11 @@
       "date": "2026-10-08",
       "action": "docs-site pre-wiring recheck",
       "summary": "文档站接入前按本 skill 机械化清单全量复核 72 组件：根别名声明/消费、监听器失衡、占位 keyframes、props.style 残留。修复 3（form 公开类型+ItemHolder 死消费；alert/segmented 死声明），新开 1（table 缺组件文档）。聚焦测试 176/176 + types 2175/2175。复核结论：Dropdown.rootClassName（popup 目标）、Carousel className/style（内层 slick）、BorderBeam className/style（@deprecated→classNames.effect/styles.effect）、skeleton 内层目标、数据标记组件（Option/OptGroup/DescriptionsItem/BreadcrumbItem items 配置）均为合法保留。"
+    },
+    {
+      "date": "2026-10-23",
+      "action": "H01 stale table documentation issue recheck",
+      "summary": "确认 Table 双语 API 文件、公开类型/导出和文档内容管线；VNA-RECHECK-04 标为 fixed。summary.issues 从实际 24 个 issue 重算，新增只读漂移/文档证据门禁。此为历史审计清账，不代表 KNOWN-ISSUES 的其他开放问题已关闭。"
     }
   ],
   "observations": [

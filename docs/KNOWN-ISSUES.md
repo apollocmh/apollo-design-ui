@@ -4,7 +4,7 @@
 > 审计范围：72 个 UI 组件及子组件、13 个基础包、`ui/_internal`、文档站、Demo、Registry、规范与验收门禁。  
 > **这是一份可执行的整改规格，不是“72/72 已完成”的重复声明。**  
 > 证据分级：**A = 在 master 代码中直接确认；B = 历史有复现且最新代码仍存在对应结构，必须在当前提交复现；C = 基于静态模式确认的架构/体验风险；D = 来源为带日期的既有审计数据，须在当前 HEAD 重算。**  
-> **限制**：本轮以 GitHub 连接直接读取 master 源码、Registry 和证据报告；未在本地克隆仓库、未执行 pnpm/Playwright、未真实操作页面。因此“源代码已确认”不等于“本轮已运行验证”。不得把 B/C/D 升级成已经通过或失败的运行时结果。
+> **初始远程审计的限制（不含下方本地整改证据）**：原审计以 GitHub 连接直接读取 master 源码、Registry 和证据报告；未在本地克隆仓库、未执行 pnpm/Playwright、未真实操作页面。因此“源代码已确认”不等于“本轮已运行验证”。不得把 B/C/D 升级成已经通过或失败的运行时结果。
 
 ## 2026-10-23 独立化衔接
 
@@ -12,14 +12,44 @@
 
 F03 本轮已建立 `packages/ui/src/form/__tests__/prefix-reactivity.test.ts`：修复前动态切换前缀失败；ItemHolder 改为 computed 派生后验证 f1→f2→f1、状态类、row 与节点身份。完整验证结果见本次独立化报告。其余事项保持未完成状态，不以治理变更关闭。
 
+## 2026-10-23 本地整改进展
+
+- **F01：功能修复已验证**。DatePicker / RangePicker / TimePicker / TimeRangePicker 的 `id`、Tab 顺序、输入 ARIA、name/required/autoComplete 接入实际 input；class/style/data 与鼠标事件留根。7 条初始回归修前全红，补充 autofocus 后 8 条通过；相关四层回归 27 文件 / 534 条通过，生产 dist 的真实 Chrome 四入口交互通过。SSR 水合、范围对象 id、禁用/只读、掩码/多选均有覆盖。完整发布验收仍需 Apollo 视觉基线，见本轮报告。
+- **D03：用户已明确裁决**。组件库尚在开发阶段且无现有用户，内容渲染函数 prop **直接改为 Vue 插槽，不保留函数兼容层或弃用期**。见 [ADR 0006](adr/0006-development-template-slots.md)；此授权不自动改变 D02 的点击事件载荷。
+- **F06：按 D03 直接迁移**。Transfer 采用 `#item/#footer/#list/#selectAllLabel`，旧函数 prop 与专用返回值类型移除；调用示例、公开类型、文档和历史 DOM 对照同步迁移。5 条插槽复现修前全红；运行时四层与超时单独复验通过；相关三个组件的 154 条类型测试、严格类型、L7 UI、tarball 消费端、文档 84 路由构建通过，证据在本轮报告汇总。其他组件按同一裁决逐项推进，未宣称全仓函数渲染接口已清零。
+
+证据与未完成验证见 [F01 / F06 本地整改报告](audit/2026-10-23-picker-transfer-remediation.md)。原审计源码描述保留为修前证据，不再作为这些修复后路径的实时描述。
+
+## 2026-10-23 持续整改进展（二）
+
+- **F02：功能修复已验证**。Select 的条件默认插槽、Fragment/Comment、分组与循环选项通过 render → 普通 Vue props 更新值、筛选和缓存链；AutoComplete 同步移除插槽分类 computed。7 条新回归通过；Select/AutoComplete/TreeSelect/Cascader 四层 30 文件 / 475 条通过。新增真实条件选项 Demo，验证不重挂载、最新 label/disabled、缓存、搜索、虚拟化和键盘。
+- **F04：已接入模板插槽**。InputNumber 外层/内部件均支持 typed #prefix/#suffix，空 slot 不回退，反馈图标与 Compact/addon/数字引擎保留；5 条修前失败、修后通过。示例改为真实可切换模板并带输入可访问名。
+- **F08：已消除渲染期状态写入**。Descriptions 的子项直接在当前 render 形成 rows，items 分支独立缓存，并跳过被覆盖的默认 slot；该未跳过路径已红灯复现。动态行/合并单元格/无关 attrs 单次更新/SSR 水合通过，**未复现死循环或额外更新**。InputNumber/Descriptions 四层合计 15 文件 / 216 条通过。
+- **H01：过期历史记录已清账**。Table 的双语 API 与文档管线实际存在，VNA-RECHECK-04 改 fixed；从实际 24 条历史 issue 重算汇总，修复旧 fixed=17/open=1 的陈旧计数。新增 registry:vue-native:check 与两条失败门禁测试，防文件/API 正文丢失和汇总漂移。历史审计零 open 不表示本台账全部关闭。
+
+严格类型、六组件 66 条类型测试、L7 UI 11 项和生产包 Chrome 三组交互通过，零页面错误。完整命令、Docs/消费端与视觉缺口见 [本批报告](audit/2026-10-23-vue-reactivity-remediation.md)。原组件 completed 与 legacy-reference 视觉标记未冒充新验收。
+
+## 2026-10-24 持续整改进展（三）
+
+- **F05：已补齐 Badge 模板内容**。新增 typed #count/#text，支持同传、空内容、条件出现/移除及更新；富内容走静态 indicator，数字 count 的 overflow、showZero 与 ScrollNumber 缓存继续保留。首批 6 条修前全红；扩展空计数/独立文本、SSR 水合与默认插槽切换后 9 条通过，完整四层 94 条通过。新增可操作 Demo，未以富内容替代数字 prop。
+- **F07：已统一内容 slot 优先**。Alert 的 title/description、CollapsePanel 的 header 以 slot 存在为准，包括空 slot；移除条件 slot 才恢复 prop。旧文档确有 prop-first 承诺，本次按未发布开发版直接变更并单独写 [迁移记录](migrations/content-slot-precedence.md)，不留兼容层。Collapse 每轮 render 仅收集一次当前面板子树，标题刷新保留输入状态。6 条修前全红；真实 Chrome 模板交互通过。
+- **F09：语义 change 已声明**。Switch 和 InputNumber 通过 typed emits 单次发送，onChange 注册同一事件；移除手调 attrs 通道，原生 DOM change 不混入语义事件。覆盖鼠标/键盘、监听器替换、禁用、v-model、stringMode/null 与类型负例。Switch click 载荷仍跟踪 D02，没有静默修改。
+- **F10：DOM 目标归一与原生事件已验证**。pickAttrs 保留 className 数据输出，接受已知 Vue 原生事件键与 Once/Passive/Capture 后缀；DOM 目标使用 toVueDomAttrs/mergeDomAttrs。修复 ColorPicker @mousedown 被过滤、Rate @keydown 丢失及字符串 style 的 SSR 无效 CSS，监听器数组按函数身份单次合并，Tree 正确的 fallthrough 保持。utils/Badge/Rate/ColorPicker/Tree 四层 59 文件 / 1168 条通过，Chrome 真实模板通过，见 [F10 报告](audit/2026-10-24-dom-attrs-remediation.md)。
+- **F11：当前来源清单已建立**。类型别名、继承及数据/配置/内部/deprecated 分流保留证据，仅四个字段引用具体运行报告，其余继续逐项复审；[清单与限制](audit/2026-10-24-slot-inventory.md)。
+- **H03：刷新数量并补实际能力场景**。新 Table 行/列原生拖放 Demo 提供等效键盘操作，96 条 Demo/axe 与真实浏览器通过；当前文件统计 990/1060，文档总量 994，不宣称能力矩阵已完成。
+- **H04：已消除无效动态导入并记录真实负载**。搜索代码导入统一；按需索引、单次下载/缓存、焦点返回与英文/暗色水合通过，首屏脚本原始/gzip 字节已留证。进一步改为视口附近加载示例并保留实例，Table 初始脚本 55→12、gzip 字节约减 4.35%；文档最终 157 条测试及真实滚动/iframe 截图准备通过。大 chunk 和元数据维护继续开放。
+- **H02：规范过期描述已清账**。核对现行规范与 ADR 0005/0006，use-id-test-env 的已裁决记录实际存在；更新台账陈旧描述，未重复立 ADR 或修改 AGENTS。
+
+F07/F09 的运行时、类型迁移、生产浏览器与文档证据见 [整改报告](audit/2026-10-24-content-events-remediation.md)；Badge 的数字缓存与富内容离场证据见 [F05 报告](audit/2026-10-24-badge-slots-remediation.md)。严格类型与 252 条类型测试、两包 L7 和 tarball Vite/Webpack 消费端均通过。视觉基线仍缺失，不以功能测试替代 L6。
+
 ## 0. 先给结论：删除旧 `docs/KNOWN-ISSUES.md` 前应该如何收口
 
 **不建议现在直接删掉旧文件而不迁移内容。** 先把本台账的 `FIX`、`VERIFY`、`DECIDE` 项分别迁入可追踪 Issue / `docs/audit/FINAL-GAP-AUDIT.md` / ADR，确保以后即使删旧文档，也不会丢失待办与裁决。旧文件的大部分 §2、§3 是历史记录；已修、已证伪事项不继续开单。
 
-- **FIX（已足以安排实现）**：F01 DatePicker 输入属性、F02 Select 条件插槽、F03 FormItem 前缀响应性、F04 Vue 内容插槽（先处理证据明确的组件）、F05 Alert / Collapse 插槽优先级、F06 Transfer 函数渲染接口的 Vue 化。
-- **VERIFY（先写可失败的用例，不许凭推测改）**：F07 Descriptions render 写 ref、F08 Vue 语义事件/React 回调冲突、F09 `pickAttrs` 的 DOM prop 偶然兼容、F10 其它 VNodeChild 插槽及动态响应性的完整复算。
-- **DECIDE（保留现状直到用户裁决）**：D01 不兼容变更边界、D02 `@click` 的 Vue DOM 语义、D03 函数渲染 prop 是否全部退场、D04 非默认 `prefixCls` 的 CSS 策略、D05 上游调试/依赖第三方服务的 Demo 是否纳入完成标准。
-- **HOUSEKEEPING**：H01 已解决但 Registry 仍标 open 的 Table 文档、H02 规范/台账陈旧矛盾、H03 Demo 覆盖矩阵更新与例外清单、H04 文档构建警告分类处理。
+- **FIX（编号以 §1 为准）**：F01 DatePicker 输入属性（本轮已修）、F02 Select 条件插槽（已修）、F03 FormItem 前缀响应性（此前已修）、F04 InputNumber 内容插槽（已修）、F05 Badge 富内容插槽（已补）、F06 Transfer 模板接口（本轮已迁移）、F07 Alert / Collapse 插槽优先级（已改）。
+- **VERIFY（先写可失败的用例，不许凭推测改）**：F08 Descriptions render 写 ref（已移除，未复现循环）、F09 Vue 语义事件/React 回调冲突、F10 `pickAttrs` 的 DOM prop/原生事件（已验证修复）、F11 其它 VNodeChild 插槽及动态响应性的完整复算。
+- **DECIDE（保留现状直到用户裁决）**：D01 不兼容变更边界、D02 `@click` 的 Vue DOM 语义、D03 已裁决（ADR 0006），其余包括 D04 非默认 `prefixCls` 的 CSS 策略、D05 上游调试/依赖第三方服务的 Demo 是否纳入完成标准。
+- **HOUSEKEEPING**：H01 Table 陈旧文档状态与汇总（已修）、H02 规范/台账陈旧矛盾（已清账）、H03 Demo 覆盖矩阵更新与例外清单、H04 文档构建警告分类处理。
 
 **本轮排除项**：Message / Notification 的进出场动画已由用户自主验收，不再以其动画为开放问题；Menu 的 Trigger 弹层整改、Icon 独立检索目录、文档站 V3 等已有实现及浏览器证据，不重复报“未做”。可保留 CI 回归，不重复返工。
 
@@ -31,7 +61,7 @@ P1 = 破坏用户常见行为/可访问性；P2 = Vue API/生命周期/响应式
 
 ## 1. 可落地问题与解决方案（逐条）
 
-### F01 · P1 · B｜DatePicker / RangePicker / TimePicker：`id` 与 `tabindex` 没有落到实际输入框
+### F01 · P1 · B → 本地功能修复已验证｜DatePicker / RangePicker / TimePicker：`id` 与 `tabindex` 没有落到实际输入框
 
 **源码**：[DatePicker.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/DatePicker.vue#L1480-L1513)；[RangePicker.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/RangePicker.vue#L1336-L1366)；[Selector.ts](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/components/Selector.ts#L668-L701)；[现有测试](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/date-picker/__tests__/index.test.ts#L528-L575)。
 
@@ -45,11 +75,13 @@ P1 = 破坏用户常见行为/可访问性；P2 = Vue API/生命周期/响应式
 
 **验收**：普通与范围 Picker、TimePicker；受控属性更新、disabled、readonly、键盘、SSR 水合、弹层开关、表单 `label for`。先验证原测试在修前真红；组件回归 + a11y + L4 DOM + L6 视觉。
 
-### F02 · P1 · B｜Select：条件默认插槽在首次无内容后无法补出选项
+### F02 · P1 · B → 本地功能修复已验证｜Select：条件默认插槽在首次无内容后无法补出选项
 
 **源码**：[Select.ts#L300-L320](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/select/Select.ts#L300-L320)。
 
 **根因**：`parsed = computed(() => parseOptions(... convertChildrenToData(slots.default?.()) ...))` 把当前插槽视为可跟踪的响应式依赖。但父组件动态增删 slot 函数本身不是 `computed` 的 reactive 依赖；旧文档 §1.4 已实测“首次无 slot，后来出现 slot，选项数仍为 0”。master 仍保留这条结构。
+
+**当前实现**：公开 render 边界读取并归一化当前 slot，使用普通 Vue props 交给私有值引擎；由真实数据 props 驱动 parse/filter/cache/display 的 computed 正常失效。没有 render 写 reactive ref、bump version 或更换 key。显式 options（包括 []）保持优先且不执行默认插槽；AutoComplete 的分类也在 render 完成。下面方案文字保留为修前调查路径，当前证据见本批报告。
 
 **推荐方案 A（首选、Vue 原生）**：**把 slot VNode 的读取和归一化放到组件 render 阶段**，props.options 数据通道继续 computed 缓存。不要在 `computed` getter 里依赖插槽引用是否变化，也不要靠 render 中递增 `ref` 版本号来强制 computed 失效。为了避免全链路重构，可抽 `resolveParsedOptions(options, children, fieldNames, filterProp, optionLabelProp)` 纯函数，在 render 开始获取 `slots.default?.()`，把结果经只读的 render-local 上下文给本轮 BaseSelect / OptionList / 过滤与缓存链消费；**不得**在 render 中写 reactive ref 造成更新自激。
 
@@ -80,7 +112,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 覆盖根、row、margin-offset、help/error、layout 和其他派生类名；使用动态切换 ConfigProvider `prefixCls: f1→f2→f1` 验收，无旧类残留。**避免扩大误修**：`StatusProvider.ts` 的同名局部变量在 `feedbackIcon` computed **内部**声明，会随 computed 更新，不是相同缺陷；可加明确注释/专项测试，不要无意义地改写它。前缀改变后对应 CSS 需由用户引入（见 D04），这里修的是组件 DOM 响应性，而不是偷偷引入运行时 CSS。
 
-### F04 · P2 · A｜InputNumber：Vue 具名 `#prefix` / `#suffix` 缺失
+### F04 · P2 · A → 已接入模板插槽｜InputNumber：Vue 具名 `#prefix` / `#suffix` 缺失
 
 **源码**：[InputNumber.ts#L142-L152](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L142-L152)、[L716-L765](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L716-L765)。
 
@@ -89,64 +121,76 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **推荐**：
 1. 给外层和内部件都增加明确的 `prefix/suffix` slots 类型，并通过**slot 函数转发**（不要在 setup 期执行并缓存 slot VNode）。
 2. 内容采用 `hasSlot('prefix') ? slots.prefix?.() : props.prefix`，有意允许空 slot 覆盖 prop；`hasSlot` 判断优先于 `??`，避免“明确提供空 slot 却回退旧 prop”。保持原有前后缀 wrapper、语义 class、`hasFeedback` 与动作按钮顺序。
-3. 保留旧 `prefix/suffix` prop 作为兼容后备，并为同时存在时给出**slot 优先**行为；新增 `v-if` 出现/消失与动态内容测试、SSR/类型测试；必要时更新 InputNumber 文档的优先用法。
+3. 简单内容值仍可使用 `prefix/suffix` prop，同时存在时**slot 优先**；这不是保留旧函数渲染接口；新增 `v-if` 出现/消失与动态内容测试、SSR/类型测试；必要时更新 InputNumber 文档的优先用法。
 
-### F05 · P2 · A｜Badge：`count/text` 富内容缺少具名插槽通道
+### F05 · P2 · 已补模板插槽｜Badge：`count/text` 富内容缺少具名插槽通道
 
-**源码**：[Badge.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/badge/Badge.vue#L92-L204)、[模板](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/badge/Badge.vue#L255-L290)。
+**修前源码**：[Badge.vue](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/badge/Badge.vue#L92-L204)、[模板](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/badge/Badge.vue#L255-L290)。
 
 组件只使用 `slots.default`，`count/text` 均是 VNodeChild prop。**不能**按 InputNumber 的办法直接把 count 改为 slot 结果：这里 `livingCount/displayCount/isDotCache` 缓存保证计数关闭时仍保持上一帧以播放 ScrollNumber 动画，普通 slot VNode 和数字计数的 overflow/滚动逻辑不同。
 
+**当前处理**：公开边界已在 render 消费并归一 #count/#text，私有指示器通过普通 props 跟踪当前内容；新增富内容分支不拆数字位，并保留离场最后可见内容。数字 prop 原有滚动状态不变，空 slot 不回退。以下方案保留为修前调查路径。
+
 **推荐**：先补 `#text`，提供 `#count` 的静态富内容分支（VNode 直接呈现，保留 indicator 语义/offset，但**不启动数字位滚动**），数字 `count` prop 原有滚动状态机保持不变。为 slot 动态显隐、`0`、`showZero`、`overflowCount`、status、离场、窄屏的结果分别建断言。确定是否完全替代 `count` 数字 prop 应单独裁决；默认**不替代**。
 
-### F06 · P2 · A｜Transfer：函数 render API 缺少 Vue scoped slots
+### F06 · P2 · A → 按用户裁决直接迁移｜Transfer：函数 render API 缺少 Vue scoped slots
 
 **源码**：[Transfer.ts#L45-L75](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/transfer/Transfer.ts#L45-L75)、[L430-L453](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/transfer/Transfer.ts#L430-L453)、[interface.ts](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/transfer/interface.ts#L90-L125)。
 
 `render`, `footer`, `renderList` 全通过函数 props 传递，主件 setup 不读取 `slots`；从 Vue 用户视角，列表项、底栏、自定义列表这些模板扩展点缺少作用域插槽。
 
-**推荐分批适配**：`#item="{ item, direction, selected, disabled }"` → 兼容 `render(item)`；`#footer="{ direction, selectedKeys, totalCount }"` → 兼容 `footer(props,info)`；`#list="{ direction, filteredItems, selectedKeys, onChange, onScroll }"` → 兼容 `renderList` / children。注意**只传真实可保障的字段**，优先从现有 Section/Transfer 内部契约获取，别为凑 API 虚构字段。slot 存在则胜出，保留函数 prop；自定义列表模式与内嵌 pagination 的原有限制不变。补类型、受控选择、左右移动、搜索、禁用、分页/自定义面板组合测试。此项比机械追求“全部 ReactNode 改 slot”价值更高。
+**当前处理**：用户已否决保留函数兼容的方案。组件内容扩展直接使用 typed scoped slots：`#item`、`#footer`、`#list`、`#selectAllLabel`；旧 `render/footer/renderList/children` 以及选择计数函数接口移除。作用域只提供可保障字段，使用插槽存在性判定，空 slot 不回退；自定义列表与内嵌分页的限制保留。默认条目显示数据 title/key，搜索使用数据文本与 filterOption。完整契约、调用迁移和类型移除见 [迁移记录](migrations/transfer-slots.md)。
 
-### F07 · P2 · A（模式）/ C（影响）｜Alert / Collapse：内容 prop 优先于具名 slot，与 Vue 契约不一致
+### F07 · P2 · 已迁移开发版内容优先级｜Alert / Collapse：内容 prop 优先于具名 slot，与 Vue 契约不一致
 
-**源码**：[Alert.ts#L253-L262](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/alert/Alert.ts#L253-L262)：`props.title ?? props.message ?? slots.title?.()`；`props.description ?? slots.description?.()`。 [Collapse.ts#L274-L290](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/collapse/Collapse.ts#L274-L290)：子面板 `header: cProps.header ?? headerSlot`。
+**修前源码**：[Alert.ts#L253-L262](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/alert/Alert.ts#L253-L262)：`props.title ?? props.message ?? slots.title?.()`；`props.description ?? slots.description?.()`。 [Collapse.ts#L274-L290](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/collapse/Collapse.ts#L274-L290)：子面板 `header: cProps.header ?? headerSlot`。
 
-**问题**：源代码确实把 prop 放在 slot 之前；但仓库 `COMPATIBILITY.md` §2 将“插槽优先”写成默认映射。模板同时传 `title` 与 `#title` 时，开发者提供的 slot 被忽略；这不是 Vue 推荐的内容分发心智。尤其 Vue 模板中的可切换富文本不能被静态字符串 prop 阻挡。
+**修前问题**：源代码确实把 prop 放在 slot 之前；但仓库 `COMPATIBILITY.md` §2 将“插槽优先”写成默认映射。模板同时传 `title` 与 `#title` 时，开发者提供的 slot 被忽略；这不是 Vue 推荐的内容分发心智。尤其 Vue 模板中的可切换富文本不能被静态字符串 prop 阻挡。
+
+**当前处理**：已按 [独立行为迁移](migrations/content-slot-precedence.md) 在开发版直接统一内容 slot 优先，并纠正旧 prop-first 文档/断言；空描述状态、prop-only 和面板输入身份均验证。以下文字保留为修前调查路径，不再作为待批准操作。
 
 **推荐**：内部统一 `resolveNode(slot, prop)`，先以**slot 是否存在**为准，再读 prop，**明确空 slot 不再回退**；`Alert` deprecated `message` 仅最后兜底，`Collapse.Panel` 也是同样顺序。先查已有 L4/测试是否刻意锁定 prop 优先、并向用户说明这是行为调整；若已被公共文档明确承诺 prop 优先，则先标 `DECIDE` 而非无声破坏。覆盖同传、空 slot、动态 slot 与旧 prop-only 兼容，避免改变样式层级。
 
-### F08 · P2 · A（反模式）/ C（用户可见影响）｜Descriptions：render 期间写 `shallowRef`
+### F08 · P2 · 反模式已移除，未复现死循环｜Descriptions：render 期间写 `shallowRef`
 
 **源码**：[Descriptions.ts#L182-L232](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/descriptions/Descriptions.ts#L182-L232)、[L462-L470](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/descriptions/Descriptions.ts#L462-L470)。
 
 `return () => { currentChildren.value = collectChildren(slots.default?.() ?? []); ... rows.value ... }`：render effect 在构建 VNode 时修改了被 `rows` computed 消费的响应式 ref，这是 Vue 值得避免的“渲染期副作用”，可能造成额外排队更新；**不据此臆断已经发生无限循环**。
 
+**本地复验结果**：渲染期 ref 已移除；props.items（包括 []）优先且不调用被覆盖的默认 slot，该调用路径修前失败、修后通过。其余行切分、单次更新与水合回归通过，未把静态模式推断成实际发生的死循环。
+
 **首选改法**：把 `normalizeItems` / `getCalcRows` 的纯计算改成接收当前 render 中的 children（`render-local`）并当轮直接返回 rows；`props.items` 存在时可以安全走独立 computed，不依赖 slot；完全删掉 render 阶段对 `currentChildren.value` 的写入。不要改为 `watchEffect` 读取 slots，也不要在 render 里 bump version。添加反向门禁：只改父级无关状态不应造成无故二次更新；动态新增/删除 Descriptions.Item 要当帧出现，SSR 无 hydration warning，复杂响应式 items 表/合并单元仍通过。
 
-### F09 · P2 · A（代码事实）/ C（API 决策）｜语义事件仍靠 React 回调式 `$attrs` 模拟
+### F09 · P2 · 语义 change 已声明，click 仍待 D02｜语义事件仍靠 React 回调式 `$attrs` 模拟
 
 **源码**：[Switch.ts#L91-L104](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/switch/Switch.ts#L91-L104)、[L158-L204](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/switch/Switch.ts#L158-L204)；[InputNumber.ts#L142-L154](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L142-L154)、[L345-L358](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L345-L358)。
 
-`Switch` 只声明 `update:checked` / `update:value`，把 `onChange/onClick` 留在 attrs 里并手动调用；`InputNumber` 同样只声明 `update:value`，手调 `attrs.onChange`。**Vue 模板的 `@change` 仍可能按同一个 `onChange` 键正常调用，因此不是“@change 整体失效”**；真实问题是“组件没有把语义事件声明为 emits，开发体验/类型契约不够 Vue 原生”，而 `Switch` 的 `@click` 会收到布尔结果而不是通常的原生 `MouseEvent`。
+**修前事实**：`Switch` 只声明 `update:checked` / `update:value`，把 `onChange/onClick` 留在 attrs 里并手动调用；`InputNumber` 同样只声明 `update:value`，手调 `attrs.onChange`。**Vue 模板的 `@change` 仍可能按同一个 `onChange` 键正常调用，因此不是“@change 整体失效”**；真实问题是“组件没有把语义事件声明为 emits，开发体验/类型契约不够 Vue 原生”，而 `Switch` 的 `@click` 会收到布尔结果而不是通常的原生 `MouseEvent`。
 
-**解决方向**：将**语义 change** 明确声明为 emits 并只通过 `emit('change', payload...)` 发送；回调仍能通过 Vue `onChange` 注册语法自动接收 emit，无需再双调手工回调。⚠️ 真正危险的是 `click`：Vue `@click` 与 legacy React `onClick(result,event)` 使用同一监听键，不能在不破坏兼容的情况下承诺两套不同 payload。应立 **D02 用户裁决**（本大版本保持，主推 `@change`，还是下个主版本改为原生点击事件）；不能简单同时 `emit('click')` + 手调 `attrs.onClick`，否则双触发。迁移时补负例断言“事件仅一次”，包括禁用、click、keyboard、v-model 和 TS 事件参数推断。
+**当前处理**：两组件已声明 typed change emits，所有发送都经 emit，InputNumber 包装层单次转发；移除手动 attrs.onChange 调用。原生 change 不混入语义事件，Switch 的 click 单独保持并跟踪 D02。
 
-### F10 · P3 · A/C｜`pickAttrs` 的 `className` 处理依赖 DOM 特例
+**解决方向（修前）**：将**语义 change** 明确声明为 emits 并只通过 `emit('change', payload...)` 发送；回调仍能通过 Vue `onChange` 注册语法自动接收 emit，无需再双调手工回调。⚠️ 真正危险的是 `click`：Vue `@click` 与 legacy React `onClick(result,event)` 使用同一监听键，不能在不破坏兼容的情况下承诺两套不同 payload。应立 **D02 用户裁决**（本大版本保持，主推 `@change`，还是下个主版本改为原生点击事件）；不能简单同时 `emit('click')` + 手调 `attrs.onClick`，否则双触发。迁移时补负例断言“事件仅一次”，包括禁用、click、keyboard、v-model 和 TS 事件参数推断。
+
+### F10 · P3 · 已验证 DOM 目标与事件修复｜`pickAttrs` 的 `className` 处理依赖 DOM 特例
 
 **源码**：[pick-attrs.ts#L80-L104](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/utils/src/pick-attrs.ts#L80-L104)；[vue-native-audit](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) `OBS-PICKATTRS-01`。
 
-当前只归一 `onKeyDown→onKeydown`，`className` 保留。Vue 在部分原生 DOM 上恰好能借 `el.className` 生效，但不代表可以视作原生 Vue class 合并策略。**不能直接把底层 utils 的 `className` 改为 `class`**，因为它是 rc 契约级函数，且下游消费点另有 attrs 合并逻辑。
+修前只归一旧事件拼写，未接受 Vue 模板事件键；`className` 保留。Vue 在部分原生 DOM 上恰好能借 `el.className` 生效，但不代表可以视作原生 Vue class 合并策略。**不能直接把底层 utils 的 `className` 改为 `class`**，因为它是 rc 契约级函数，且下游消费点另有 attrs 合并逻辑。
 
-**修法**：为真正的 Vue DOM 目标增加独立 `toVueDomAttrs` / `mergeDomAttrs` 适配层，归一 `className→class` 并以 `mergeProps` 保留内部类、外部 class、事件函数链；`pickAttrs` 的既有兼容路径继续保持。按 ColorPicker / Rate / Tree 现有消费点逐个迁移，验证不重复 class、无事件双调、SSR DOM 与已有 L4 一致。是否全局替换见 D01。
+**当前处理**：已新增独立 DOM 目标 helper，并保留 pickAttrs 的 className 数据契约。复现并修复 ColorPicker 的 @mousedown、Rate 的 @keydown 与字符串 style SSR；SSR class、Tree 唯一/动态 class 与 ColorPicker attrs-only 更新通过，未臆造这些路径的故障。原生事件选项及两种键同时注册的单次发送也有覆盖。以下为原调查方案。
 
-### F11 · P2 · D｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
+**修法（修前）**：为真正的 Vue DOM 目标增加独立 `toVueDomAttrs` / `mergeDomAttrs` 适配层，归一 `className→class` 并以 `mergeProps` 保留内部类、外部 class、事件函数链；`pickAttrs` 的既有兼容路径继续保持。按 ColorPicker / Rate / Tree 现有消费点逐个迁移，验证不重复 class、无事件双调、SSR DOM 与已有 L4 一致。是否全局替换见 D01。
+
+### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
+
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、486 行 owner/field 清单。内容候选 146、渲染候选 81、数据/配置 152、内部/废弃 107；只将四个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
 **推荐四类规则**：
 1. **组件顶层展示内容**（prefix/suffix/title/extra/icon/text/empty 等）：优先具名 slot，兼容 primitive prop；F04/F05 为可确认样本。
 2. **数据面配置**（items[].label、columns[].render、Menu items、Tree 节点等）：保留纯数据 + 可选作用域 item slot，不因字段类型是 VNodeChild 就机械增加同名 slot。
-3. **回调式渲染**（renderItem/footer 等）：优先作用域 slot，兼容 legacy 函数 prop，F06 为样本。
+3. **回调式渲染**（renderItem/footer 等）：直接使用作用域 slot，移除旧顶层内容函数 prop，不留兼容层或弃用期（D03、ADR 0006）；F06 为首批样本。
 4. **内部与废弃字段**：注明 `SKIP` 原因，绝不为了统计好看新增公共 API。
 
 **重算脚本要求**：从 `packages/ui/src/**/interface.ts` 收集字段定义，排除数据项/内部/deprecated；对应到实际组件运行时判断 `slots.xxx` / `<slot name>` / `defineSlots`，**类型声明和 Demo 出现不足以证明运行时支持**。输出每行 `{component, prop, category, slotRuntime, slotType, slotDemo, slotTest, decision, reason}`。优先检查 Badge、InputNumber、Transfer、Image、Typography、Pagination、Timeline、Tabs、Descriptions、Breadcrumb、List、Mentions、Drawer；**Steps/Switch/Alert/Collapse 等已存在部分 slot 消费路径，不要统一报“完全没有 slot”**。
@@ -157,27 +201,31 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ## 2. Registry、文档与基础包的清账
 
-### H01 · P2 · A｜Vue-native 审计 Registry 的 Table open 已过期
+### H01 · P2 · 已修（历史清账）｜Vue-native 审计 Registry 的 Table open 已过期
 
-`registry/vue-native-audit.json` 的唯一 `status=open` 条目 `VNA-RECHECK-04` 仍写“table 缺少 index.zh-CN.md/index.en-US.md”；但 master **两个文件均实际存在**：[中文](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/table/index.zh-CN.md)、[英文](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/table/index.en-US.md)。
+原 `VNA-RECHECK-04` 报缺 Table 双语 API，已在本地确认文件、主要 API/导出、内容管线与 SSG 页面实际存在。条目现为 fixed，保留原观察并补充真实文件、日期、路由及报告。
 
-**解决方案**：审文档是否完整、是否被文档内容管线正确索引，并验证 API 表与导出类型相符。满足后将 `VNA-RECHECK-04` 标记 fixed，写 commit/证据；**不能**再创建“补 Table 两个文件”的开发任务。Registry 的旧 `summary.issues.byStatus` 及完成时间也要由校验脚本重生成，避免显示 “audit-complete” 同时保留无效 open。与所有已完成事项一道做负向巡检：“文件确实存在、文档路由能打开、构建里有对应正文”。
+汇总由 `registry/tools/vue-native-status.mjs` 重算；旧 fixed=17/open=1 与实际 24 条 issue 不符，当前历史记录为 fixed=24/open=0。`pnpm run registry:vue-native:check` 已并入 registry:check，汇总漂移、已解决文档的文件/API 正文缺失均非零失败；覆盖 CLI 正反门禁。具体证据见 [本批报告](audit/2026-10-23-vue-reactivity-remediation.md)，不宣称完整 Table 重新验收。
 
-### H02 · P2 · A｜规范冲突和版本阶段声明需要人工统一
+### H02 · P2 · 已清账｜规范冲突和过期阶段声明
 
-`COMPATIBILITY.md` 头部明确 **Phase 2：React API 仅参考，Vue-native 优先，根 class/style 原生，非根语义 classNames**；但同文件 §1.2 `C3` 仍写“Props 名与 antd 完全一致”，`AGENTS.md` §0 仍写“antd 是答案判据”，`ARCHITECTURE.md` §0 仍有旧时代逐字对照定位；`COMPATIBILITY.md` §9.3 还列出 `use-id-test-env` 待裁决，而 `registry/foundation.json` 的 `openDecisions` 当前**没有未裁决项**。
+原审计所引 `C3`、AGENTS 的“antd 是答案”、ARCHITECTURE 的“逐字对照”和兼容规范 §9.3 的未决项均来自已被替代的规范。当前 AGENTS、ARCHITECTURE、COMPONENT-RULES、COMPATIBILITY 与 [ADR 0005](adr/0005-independent-apollo-contracts.md) 已明确职责、Apollo 独立契约及上游参考边界；历史差异表独立存入 docs/history，不再作为当前规范。
 
-**解决方案**：新增一份 *优先级明确* 的 `docs/adr/vue-native-phase2-contract.md`：公开 props/行为兼容为参考；模板使用 slot、v-model、emits、原生 attrs 为推荐通道；废弃适配层明确期限；“纯内部/协议/数据字段”例外要列举。不自动改 `AGENTS.md`（仓库规则要求由用户发起）；先把建议变更提交给用户裁决，再同步 `COMPATIBILITY.md`、`COMPONENT-RULES.md` 和 Registry 生成源。对过期未决条目核实原决策源后删除或重新登记，不能只改展示文本。
+开发阶段模板 API 的直接迁移另由 [ADR 0006](adr/0006-development-template-slots.md) 覆盖，无函数兼容层或弃用期。2026-10-24 再核实 Registry：`use-id-test-env` 已于 2026-10-07 裁决为仅在断言侧归一 id 并保留引用关系，生产实现不固定编号；生成后的决策列表无 open。未新增重复 ADR，未改 AGENTS，也未把本台账 D01/D02/D04/D05 自动视作已裁决。Registry 生成/检查的本批结果见整改报告。
 
-### H03 · P2 · D｜Demo 不能以文件数量代表完成
+### H03 · P2 · 已刷新快照并补行列重排，能力矩阵继续开放｜Demo 不能以文件数量代表完成
 
-**最后一次有全量矩阵的证据**：[demo-coverage-stage2.json](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/demo-coverage-stage2.json) 生成于 **2026-10-21**：71 个可比较组件，985 个本地 demo 对比 1060 个上游 demo；**文件数量覆盖 92.9%**；场景名重合 **83.8%**；31 个组件数量低于上游。2026-10-23 文档报告又确认文档构建处理 **989 个 demo（含 4 个不可直接对照项）**。
+**2026-10-24 当前刷新**：71 可比较组件 990/1060 个文件，93.4%，30 个较少；名称重合 83.8%。文档含 4 个不可直接比较的 QRCode Demo，共 994。历史 stage2 快照保留；本批 Table 行/列原生拖放、单元格对应关系、重置与键盘替代通过真实浏览器，Demo/axe 96 条通过。能力分流与未测项见 [H03 报告](audit/2026-10-24-demo-capabilities.md)，不是数量达标即验收。
+
+**原最后一次全量矩阵的证据**：[demo-coverage-stage2.json](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/demo-coverage-stage2.json) 生成于 **2026-10-21**：71 个可比较组件，985 个本地 demo 对比 1060 个上游 demo；**文件数量覆盖 92.9%**；场景名重合 **83.8%**；31 个组件数量低于上游。2026-10-23 文档报告又确认文档构建处理 **989 个 demo（含 4 个不可直接对照项）**。
 
 **解决方案**：对缺口建立“能力场景”表，不以凑同名 `.vue` 文件为目标；先区分 `supported+missing-demo`、`unsupported+requires-design`、`external-dependency`、`debug-only`、`intentionally-different`。必须给每个重要能力提供：可交互 Vue 示例、中文/英文说明、单元或浏览器断言。**高价值优先**：Table 拖拽/列重排（前提是能力已实现；否则不要做空 demo）、Form.List 动态交互和多表单、List 拖拽、Badge 富内容、DatePicker 不同输入/格式、Splitter 状态重置、Collapse 自定义 icon。OSS/外部裁剪服务、上游 `debug-*` 不强制迁移；本地 mock 可展示真实行为时优先本地 mock。
 
-### H04 · P3 · D｜文档构建 warning 需要分级，而非放行也非清零数字
+### H04 · P3 · 无效动态导入已修，其余分类继续开放｜文档构建 warning 需要分级，而非放行也非清零数字
 
-[文档站报告](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md) 记录已有大 chunk、静态/动态 import 混用及 Demo frontmatter 提示。**不是本轮证明的构建失败**。建议：采集完整 warning、定位来源和首次出现提交；分为实际影响 chunk 的优化项、仅开发时诊断项、内容元数据缺失；对真实影响首屏的警告按包分析、路由懒加载和图标动态导入优化，**不得**一律调高 chunkSizeWarningLimit 或删日志。测 gzip 产物、首屏请求链、路由按需加载、SSG 84 routes、暗色/语言 hydration。
+2026-10-24 已定位并修复 search.ts 的静态/动态混用（TopBar 原先的动态导入并不拆包），保留索引按需、并发/重试；生产浏览器验证首次零请求、打开一次、重开复用、焦点返回、英文/暗色与 SSR 水合，零页面错误。DemoRenderer 的 mounted 全量加载也已改为视口附近单次激活，保留滚动状态并清理卸载资源；Table 初始模块请求 55→12，gzip 字节 687345→657437。157 条文档测试、真实滚动和 inline/iframe 截图准备通过。大 app chunk（约 2.2MB 原始 / 510kB gzip）和 303 项 order 元数据提示仍明确开放，逐文件交付记录见 [H04 报告](audit/2026-10-24-docs-warnings.md)。未提高阈值或屏蔽日志。
+
+原 [文档站报告](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md) 记录已有大 chunk、静态/动态 import 混用及 Demo frontmatter 提示。**不是本轮证明的构建失败**。建议：采集完整 warning、定位来源和首次出现提交；分为实际影响 chunk 的优化项、仅开发时诊断项、内容元数据缺失；对真实影响首屏的警告按包分析、路由懒加载和图标动态导入优化，**不得**一律调高 chunkSizeWarningLimit 或删日志。测 gzip 产物、首屏请求链、路由按需加载、SSG 84 routes、暗色/语言 hydration。
 
 ### 13 个基础包：逐一关口
 
@@ -273,7 +321,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Masonry | 6/6 | —；动态移除元素时 motion 数据 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
 | List | 12/16 | F11；列表项 scoped slot / 拖拽排序示例 |
-| Table | 43/53 | **H01** Registry 陈旧；拖拽/虚拟/编辑 Demo 能力 |
+| Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
 | Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
 | Mentions | 16/16 | F11；dropdown item scoped slot |
 | ColorPicker | 16/16 | F10 消费 `pickAttrs`；颜色与 alpha/键盘 |
@@ -286,13 +334,13 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 
 ---
 
-## 4. 用户待裁决事项（保留明确推荐，不由实现者代替决定）
+## 4. 用户裁决与待裁决事项
 
 | 决策 | 选项 | 推荐及理由 |
 |---|---|---|
-| **D01：是否在当前版本改变已公开的 prop/slot 优先级** | A 保留现有且先文档化；B 立即统一 slot 优先；C 下个 minor/major 迁移 | **C**：新 slot 能力增量落地，但破坏性优先级调整先配迁移测试；已在兼容规范中明确 slot 优先的按具体证据酌情修 bug |
+| **D01：已公开 prop/slot 优先级的变更边界** | 逐组件核实旧契约、当前使用和行为影响 | F07 在当前未发布开发版直接统一内容 slot 优先，独立记录迁移与回归；不据此宣布所有未审查组件均已迁移 |
 | **D02：`Switch @click` 应是原生 `MouseEvent` 还是 React 的 `(checked,event)`** | A 当前版本保留旧载荷；B 立即改 DOM event；C 下个 major 改，并用 `@change` 表示状态 | **C**：Vue 自然预期 `@click` 为原生事件，但不能静默破坏现有回调 |
-| **D03：React `renderXxx` 函数 prop 退场强度** | A 保留所有；B 移除；C scoped slot 主推、函数兼容标废弃 | **C**：兼顾程序化数据渲染与模板；数据数组本身仍可保存函数 |
+| **D03：内容渲染函数 prop 的处理** | **已裁决：直接改为 Vue 插槽** | 用户 2026-10-23 明确要求当前开发阶段直接修改，不保留旧函数兼容层或弃用期；见 ADR 0006。业务/算法函数按职责保留，数据项渲染逐项评估 |
 | **D04：动态 `prefixCls` 与零运行时 CSS** | A 不支持动态前缀；B 允许 DOM 前缀变更但 CSS 需预生成/预加载；C 恢复运行时样式注入 | **B**：遵循已裁决零运行时原则；不得因为 F03 重新引入运行时 CSS-in-JS |
 | **D05：补齐上游 Demo 的口径** | A 逐个文件 100%；B 核心能力全覆盖、debug/外部依赖例外；C 停止补 Demo | **B**：把“支持 API 能否用 Vue 示例真实操作”作为验收判据，不做文件数量游戏 |
 
@@ -306,7 +354,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 
 1. **第一批 · 真实故障（P1）**：F01 → F02，各自先复现、单组件 PR、测试和构建门禁，再合并。
 2. **第二批 · 小型响应式/Vue 增量（P2）**：F03 → F04 → F05 → F07；F08 先写防自激门禁再调整。
-3. **第三批 · 公共 API 整理**：F06、F09/F10/F11；先落实 D01/D02/D03，再按组件分批，**不要全仓同一 PR 换掉所有回调与渲染器**。
+3. **第三批 · 公共 API 整理**：F06、F09/F10/F11；D03 已裁决直接迁移，D01/D02 按具体影响处理，再按组件分批，**不要全仓同一 PR 换掉所有回调与渲染器**。
 4. **第四批 · 交付清账**：H01/H02 → H03/H04 → 72/13 证据矩阵 → 全量门禁 → 删除旧文件。
 
 ### 必须复验的门禁（**下面是要执行的命令，不是本轮运行结果**）
@@ -358,4 +406,4 @@ node tests/visual/run.mjs --mode compare
 - [2026-10-22 Menu/Notification 动画整改](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-22-menu-notification-motion-remediation.md)、[Motion 逐帧复审](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-22-motion-review-002.md)：已有浏览器验证与 CI 门禁；用户已验收效果。
 - [2026-10-23 Docs/Icon 页面证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md)：72 组件总览、848 个 Icon、989 Demo、84 路由及浏览器检查。
 
-**核心原则**：最后一次审计不是重新模仿 Ant Design，而是确保 `@apollo-design/ui` 作为自己的 Vue 3.5+ 组件库，能用 `<template #slot>`、`v-model`、`@event`、原生 `class/style`、真实响应式、SSR 与可访问语义自然使用。凡为了保留 React 回调/DOM 形态而牺牲 Vue 公共用法的地方，要么修成双通道兼容，要么以明确的用户裁决登记边界。
+**核心原则**：最后一次审计不是重新模仿 Ant Design，而是确保 `@apollo-design/ui` 作为自己的 Vue 3.5+ 组件库，能用 `<template #slot>`、`v-model`、`@event`、原生 `class/style`、真实响应式、SSR 与可访问语义自然使用。顶层内容渲染函数按已裁决 D03 直接迁移，不留兼容层或弃用期；业务/算法函数按职责保留。已公开行为的调整单独留迁移记录，未裁决边界继续明确跟踪。

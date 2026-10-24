@@ -1,0 +1,83 @@
+{
+  "frameScope": "initialScripts includes active demo iframes; initialMainScripts records the main frame separately",
+  "initialMainScripts": [
+    "/apollo-design-ui/assets/app-V7pGEm8_.js",
+    "/apollo-design-ui/assets/runtime-core.esm-bundler-CNhQs8yq.js",
+    "/apollo-design-ui/assets/create-icon-BRhYGOul.js",
+    "/apollo-design-ui/assets/ComponentPage-C4sURS5a.js",
+    "/apollo-design-ui/assets/DocHtml-57dgBLUR.js",
+    "/apollo-design-ui/assets/DemoRenderer-gjU08a0J.js",
+    "/apollo-design-ui/assets/CodeOutlined-ZsQtIT-K.js",
+    "/apollo-design-ui/assets/ExportOutlined-DkrMagWQ.js",
+    "/apollo-design-ui/assets/request-guard-B_a4Mt-3.js",
+    "/apollo-design-ui/assets/seo-7GHT9XJ5.js",
+    "/apollo-design-ui/assets/table-BQZH79uV.js",
+    "/apollo-design-ui/assets/basic-IKkG3-Hb.js"
+  ],
+  "initialScripts": [
+    {
+      "asset": "assets/app-V7pGEm8_.js",
+      "bytes": 2209807,
+      "gzipBytes": 509985
+    },
+    {
+      "asset": "assets/runtime-core.esm-bundler-CNhQs8yq.js",
+      "bytes": 65335,
+      "gzipBytes": 25491
+    },
+    {
+      "asset": "assets/create-icon-BRhYGOul.js",
+      "bytes": 9889,
+      "gzipBytes": 3892
+    },
+    {
+      "asset": "assets/ComponentPage-C4sURS5a.js",
+      "bytes": 11104,
+      "gzipBytes": 4436
+    },
+    {
+      "asset": "assets/DocHtml-57dgBLUR.js",
+      "bytes": 742,
+      "gzipBytes": 461
+    },
+    {
+      "asset": "assets/DemoRenderer-gjU08a0J.js",
+      "bytes": 171528,
+      "gzipBytes": 38416
+    },
+    {
+      "asset": "assets/CodeOutlined-ZsQtIT-K.js",
+      "bytes": 696,
+      "gzipBytes": 467
+    },
+    {
+      "asset": "assets/ExportOutlined-DkrMagWQ.js",
+      "bytes": 695,
+      "gzipBytes": 450
+    },
+    {
+      "asset": "assets/request-guard-B_a4Mt-3.js",
+      "bytes": 93,
+      "gzipBytes": 97
+    },
+    {
+      "asset": "assets/seo-7GHT9XJ5.js",
+      "bytes": 507,
+      "gzipBytes": 332
+    },
+    {
+      "asset": "assets/table-BQZH79uV.js",
+      "bytes": 1014826,
+      "gzipBytes": 73031
+    },
+    {
+      "asset": "assets/basic-IKkG3-Hb.js",
+      "bytes": 616,
+      "gzipBytes": 379
+    }
+  ],
+  "searchIndexRequests": [
+    "/apollo-design-ui/assets/search-Bt3AY7AP.js"
+  ],
+  "browser": "150.0.7871.125"
+}

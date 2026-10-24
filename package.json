@@ -23,7 +23,7 @@
     "registry:workstreams:check": "node registry/tools/gen-workstreams.mjs --check",
     "registry:dag": "node registry/tools/gen-registry.mjs --print-dag",
     "registry:next:parallel": "node registry/tools/next-task.mjs --parallel",
-    "registry:check": "node registry/tools/gen-registry.mjs --check && pnpm run registry:foundation:check && pnpm run registry:workstreams:check && pnpm run registry:validate",
+    "registry:check": "node registry/tools/gen-registry.mjs --check && pnpm run registry:foundation:check && pnpm run registry:workstreams:check && pnpm run registry:validate && pnpm run registry:vue-native:check",
     "lint": "pnpm run lint:types && pnpm run lint:format",
     "lint:types": "vue-tsc --noEmit -p tsconfig.json",
     "lint:format": "biome check .",
@@ -54,10 +54,14 @@
     "typecheck:build": "node scripts/gen-tsconfig-refs.mjs && vue-tsc --build tsconfig.check.json",
     "typecheck:refs": "node scripts/gen-tsconfig-refs.mjs",
     "ask": "node registry/tools/ask.mjs",
+    "audit:content-slots": "node docs/audit/tools/content-slot-inventory.mjs",
+    "audit:content-slots:check": "node docs/audit/tools/content-slot-inventory.mjs --check",
     "test:tooling": "node --test tests/tooling/*.test.mjs",
     "verify:docs": "pnpm --filter @apollo-design/docs run content:check && pnpm --filter @apollo-design/docs run typecheck && pnpm --filter @apollo-design/docs run test && pnpm run build:docs",
     "test:visual:reference": "node tests/visual/run.mjs",
-    "test:visual:reference:check": "node tests/visual/run.mjs --check-baselines"
+    "test:visual:reference:check": "node tests/visual/run.mjs --check-baselines",
+    "registry:vue-native": "node registry/tools/vue-native-status.mjs",
+    "registry:vue-native:check": "node registry/tools/vue-native-status.mjs --check"
   },
   "devDependencies": {
     "@apollo-design/theme": "workspace:*",

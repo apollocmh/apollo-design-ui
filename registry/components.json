@@ -835,7 +835,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F05：typed #count/#text 与数字 prop 分支分离；空 slot、当前内容、原数字缓存及 SSR 水合覆盖，见 docs/audit/2026-10-24-badge-slots-remediation.md。历史 completed/视觉参考不作为本次 Apollo 基线验收。",
       "layerNotes": {
         "interaction": "Badge 无事件/受控/焦点。L2 适用面：props 更新→DOM（count/dot/status 切换）、值变化→数字滚动单元重渲染。motion zoom 时间线由 B8 SSR + L6 覆盖。",
         "type": "8 例（正例 + 3 负例 @ts-expect-error 永不调用闭包）。status 五枚举、size 三值、offset 二元组、Ribbon.placement 精确断言。",
@@ -904,7 +904,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
       "layerNotes": {
         "interaction": "L2：关闭按钮 click（onClose / closable.onClose 优先级）、afterClose 经 transitionend 驱动 leave 结束、根元素 mouseenter/leave/click、错误边界切换。",
         "type": "9 例（正例 + 4 负例）。AlertType/AlertVariant 联合、语义七槽、AlertClosable 三字段、Ref nativeElement 可空。",
@@ -1655,7 +1655,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
       "layerNotes": {
         "antdApi": "docs/analysis/switch.md：index.tsx 198 行 + style/index.ts 445 行 + rc-switch 1.0.3 的 es/index.js 逐条判据；§8 附与 extractStyle 产物的选择器集合对拍（完全一致、零属性差异）与两处实现缺陷的定位过程。",
         "api": "SwitchProps / SwitchRef / SwitchChangeEventHandler（`(checked, event)` 两参）/ SwitchSemanticType 三槽。⚠️ `value`/`defaultValue` 是 `checked`/`defaultChecked` 的别名（不是「选项值」）；`size` 保留废弃的 `default`。",
@@ -1811,7 +1811,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
       "layerNotes": "L1: index 19 + engine 13（Decimal/toFixed/decuple）。L3: 12（负例闭包）。L4: baselines/input-number.dom.json 24 用例（SSR，addon 升 Compact）。L5: axe 12 demo（label 豁免 U12）+ role=spinbutton/aria。L6: 3 variant × 3 viewport = 9 张。L7: token 契约 12。deprecated×3 告警；D66 两层组件/D67 onXxx 键名。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2200,7 +2200,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
       "layerNotes": "L4: baselines/collapse.dom.json 12 用例（SSR 路径）。L6: 3 variant × 3 viewport = 9 张。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2262,7 +2262,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
       "layerNotes": "L4: baselines/descriptions.dom.json 18 用例，keepStyle。L6: 4 variant × 3 viewport = 12 张（bordered 的色差由像素比对揪出）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3020,7 +3020,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "【trigger + virtual-list 的第一个消费者】。含 Select / Option / OptGroup 及 AutoComplete 复用的下拉渲染能力。",
+      "notes": "【trigger + virtual-list 的第一个消费者】。含 Select / Option / OptGroup 及 AutoComplete 复用的下拉渲染能力。\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3096,7 +3096,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3163,7 +3163,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-23 F02 消费者回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3241,7 +3241,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F10：已复现并修复 ColorPicker 的 Vue 原生事件键过滤和 Rate 的 @keydown 丢失；Tree 原生 class 保持 Vue fallthrough、无重复。DOM 目标归一与一次调用证据见 docs/audit/2026-10-24-dom-attrs-remediation.md，不变更历史完整验收状态。",
       "layerNotes": "G0-G14 收口（2026-09-29）。utils 纯函数层 31 L1 + Tree/DirectoryTree 冒烟 12 + index 26 + keyboard 9 + semantic 2+18 契约 + directory 4 + theme 11 + type 14 + a11y 24。契约基线 16 用例（tests/compat/baseline/tree.mjs，Tree 纯同步渲染 SSR 直达）。实现期关键判据：gDSFP 拆分 watch 对齐 rc needSync；MOTION_KEY 哨兵 motion diff；isLeaf prop undefined 语义（=== false 恒否决）；data 自有字段透传（rc {...restProps}）；switcher 类条件 !isLeaf prop（叶子也带 close，基线逐字）；语义合并拼接语义；DirectoryTree 受控初值含 selectedKeys。遗留：TreeNode children 形态不实现（v6 deprecated，UPSTREAM）；jsdom Space 键名规范化为 PLATFORM 差异（浏览器只发空格）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3314,7 +3314,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-23 F02 消费者回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
       "layerNotes": "收口（2026-09-29）。结构：BaseSelect 外壳（第二个 optionListRenderer 消费者，Cascader 同范式）+ 树型 OptionList 内嵌本仓 Tree。utils 纯函数 12 L1 + 主矩阵 18 （浮层树结构/值形状/级联/strategy/搜索/maxCount/clear）+ 契约 13（触发器 DOM，浮层 portal SSR 不可达同 Cascader）+ theme 12（0 自有 token 复用 tree 9 个）+ type 6 + a11y 5 + demo 15 组。关键判据：key===value（fillFieldNames）；conductCheck 在本层算、内嵌树恒 checkStrictly；内部值一律 LabeledValueType[]；BaseSelect onDisplayValuesChange 双参语义（clear 用第一参数）；listItemHeight 28；treeCheckable 包 -checkbox-inner span；样式=tree 规则+select 壳同前缀直通（shell 必须拼在树 reset 之后，dropdown 树压平嵌套 -dropdown 作用域）。遗留：TreeNode children 不实现（UPSTREAM）；Space.Compact 与 form hasFeedback 未接。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3752,7 +3752,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F10：已复现并修复 ColorPicker 的 Vue 原生事件键过滤和 Rate 的 @keydown 丢失；Tree 原生 class 保持 Vue fallthrough、无重复。DOM 目标归一与一次调用证据见 docs/audit/2026-10-24-dom-attrs-remediation.md，不变更历史完整验收状态。\n同批追加：字符串原生 style 的 SSR 字符下标 CSS 已红灯复现并修复，移除对象展开与强制样式断言；最后专项 6 文件 / 79 条通过。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4561,7 +4561,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。",
+      "notes": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4638,7 +4638,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-23 F01/F06 整改：见 docs/audit/2026-10-23-picker-transfer-remediation.md。局部回归与具体未验项单独记录，不改变 legacy-reference 的视觉含义。",
       "layerNotes": "收口（2026-10-04）。结构：Transfer（状态机：useData 拆分/useSelection 勾选/useMultipleSelect shift 区间多选）+ Section（头部三态 checkbox + 下拉菜单 + 过滤 + footer）+ ListBody（列表 + 内嵌 Pagination）+ ListItem（双形态：勾选/oneWay 删除）+ Actions（克隆自定义按钮）。样式：antd 产物机械移植 53 条 + 7 token（transferHeaderVerticalPadding 为派生第 7 个，变量名双 transfer 照抄）。测试：L2 index 33（结构/勾选/移动/oneWay/搜索/filterOption/分页/受控/rowKey/render/footer）+ L4 dom-contract 31（基线 30 用例 + 覆盖对拍；差异仅图标命名 D23 与 a11y 增强 aria-label）+ L5 a11y 19（demo axe + 8 配置 + 3 ARIA）+ theme 11 + types 32。差异：a11y 增强（checkbox aria-label，超出 antd）；rtl 未消费 direction（KNOWN-GAPS）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4787,7 +4787,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "颜色引擎在 packages/ui/src/color-picker/engine/（rc 判 in-ui）：Color 子类 + 纯几何。L4 只覆盖触发器 —— 面板在 Popover 的 Portal 里、SSR 不渲染（上游告警 Portal only work in client side），PurePanel 在 SSR 下也不渲染面板 ⇒ 面板的 DOM 契约由 L6（真浏览器，27/27 exact）承担，这是有意的分工。已知差异：① 传自定义 children 时本仓多包一层 span —— **已修**（改为经渲染函数宿主组件转交，见 PITFALLS 330）；② 9 个 mergeToken 派生值本仓声明成 --apollo-color-picker-*（上游内联字面量，有意差异，计算值逐位相同）。L6 抓到的真 bug：use-mode-color 的 watch 漏 immediate ⇒ 初始为渐变时渐变条不渲染（已修，回归哨兵在 fixtures/color-picker/gradient.json）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
+      "notes": "颜色引擎在 packages/ui/src/color-picker/engine/（rc 判 in-ui）：Color 子类 + 纯几何。L4 只覆盖触发器 —— 面板在 Popover 的 Portal 里、SSR 不渲染（上游告警 Portal only work in client side），PurePanel 在 SSR 下也不渲染面板 ⇒ 面板的 DOM 契约由 L6（真浏览器，27/27 exact）承担，这是有意的分工。已知差异：① 传自定义 children 时本仓多包一层 span —— **已修**（改为经渲染函数宿主组件转交，见 PITFALLS 330）；② 9 个 mergeToken 派生值本仓声明成 --apollo-color-picker-*（上游内联字面量，有意差异，计算值逐位相同）。L6 抓到的真 bug：use-mode-color 的 watch 漏 immediate ⇒ 初始为渐变时渐变条不渲染（已修，回归哨兵在 fixtures/color-picker/gradient.json）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。\n2026-10-24 F10：已复现并修复 ColorPicker 的 Vue 原生事件键过滤和 Rate 的 @keydown 丢失；Tree 原生 class 保持 Vue fallthrough、无重复。DOM 目标归一与一次调用证据见 docs/audit/2026-10-24-dom-attrs-remediation.md，不变更历史完整验收状态。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4860,7 +4860,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。核心成本在 rc 的 PickerInput（4290 行、未 Vue 化），不是 antd 薄壳（非 locale 2650 行）。G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，决策 id `date-picker-input-kernel`。S1 功能 + 样式已落地（257 规则 / 45 声明）。**S2 全部落地（2026-10-01）**：`format` 的**补齐层**（rc `useLocale`→`fillLocale`，PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）+ **提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，`hooks/picker-value-change.ts`）。⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；**S3 掩码模式已落地（2026-10-01）**（`components/mask-format.ts` + `components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，随 S5 的 RangePicker 一起做。**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。**G9 L6 二轮（2026-10-01）**：从 **3/21 → 12/21 exact**。修掉三处（都是真 bug，不是调阈值）：① 表头导航图标 —— `PickerPanel` **少声明 4 个图标 props**（PITFALLS 250，属 picker 包）；② 🚨 浮层**缺 `-panel-container` / `-panel-layout` 两层**⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 + `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。**G9 L6 三轮（同日）：→ 21/21 exact**。补上浮层**页脚**（`components/Footer.ts` = 上游`Popup/Footer.js` 逐字移植 + `getShowNow` = `useShowNow.js` + 接线），`renderExtraFooter` 一并生效（PITFALLS 255；⚠️ 页脚样式早在 257 条规则里，缺的只是组件 + 接线）。顺带修掉**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**，收敛回 `@apollo-design/utils`（PITFALLS 254，含「修正把错规格钉住的测试」）。**S5 剩余：范围两端（`RangePicker`）与 `presets`**；`panelRender` / 浮层焦点事件 / `isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。与 G12/G13/G14。⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。**✅ S5 全部落地（2026-10-01 下午）—— 组件判 completed。**范围两端：`RangePicker.vue`（≈1150 行）= 上游 `generateRangePicker.js`(234) + `PickerInput/RangePicker.js`(574) + `RangeSelector.js`(209) + `Popup/*` 的 Vue 化；`presets` 全链路（`hooks/picker-presets.ts` + `components/PresetPanel.ts`，单值另接**悬停即预览**：`hoverValue` / `selectorValues` / `Selector` 的 `-input-placeholder`）。🚨 **架构差异（PITFALLS 256）**：本仓 `PickerPanel` **自己** `providePanelHack`⇒ 外层注入被「最近的赢」遮蔽 ⇒ 双面板的 `hidePrev` / `hideNext` / `onCellDblClick`改走 **props**（已加回归哨兵）。同批关闭三条欠账（README §5.5(b′) #1/#3/#4）：`useInvalidate` 全量（`isValidate` + `showTime.disabledTime` / legacy 三兄弟）、`onCellDblClick`、`hideHeader`；面板与页脚改拿**合并了 min/max 的** `disabledDate`。🚨 **编译期根因修复（PITFALLS 257/258/261/262/263）**：`picker` 包新增 `TimeConfigShowTime`（范围的 `showTime.disabledTime` 是**三参**，单值一参）；`Selector.onSelectorClick` 放宽成收事件；`toDateArray` 收范围元组（元素 `undefined → null`）；`fieldCount` 范围下改传 getter；`RangePickerProps` 上**没有** `multiple` / `removeIcon`。🚨 **L6 抓到的两个真 bug（PITFALLS 264/265）**：① 浮层 vnode 在**渲染期之外**创建 ⇒ `ref:` 的 owner 是 `null` ⇒ 生产构建抛 `Cannot read properties of null (reading refs)`（dev 只 `warn`，jsdom 与 dev 页面全绿）⇒ 改用 vnode 钩子；② `hoverValues` / `showWeakHover` / `activeHoverValue` **算了但从没传给面板** ⇒ `-cell-in-range` 的浅蓝底永远不出现（`range` 空值三视口 0.000% exact、一有值就 block-diff，正是它）。**G9 L6：21/21 → 27/27 exact**（新增 `range` / `range-value` 两个变体 × 3 视口，React 基线已入库）。L4 契约 16 → **21 用例**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态），L5 a11y 24 → **36 条**（含上游两条 separator 的 `aria-hidden` 测试），新增 `__tests__/s5-presets.test.ts` **15 条**。⚠️ 仍未做：`panelRender` / 浮层焦点事件（README §5.5(g)）/ `BASE_CSS` 的 `a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
+      "notes": "【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。核心成本在 rc 的 PickerInput（4290 行、未 Vue 化），不是 antd 薄壳（非 locale 2650 行）。G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，决策 id `date-picker-input-kernel`。S1 功能 + 样式已落地（257 规则 / 45 声明）。**S2 全部落地（2026-10-01）**：`format` 的**补齐层**（rc `useLocale`→`fillLocale`，PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）+ **提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，`hooks/picker-value-change.ts`）。⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；**S3 掩码模式已落地（2026-10-01）**（`components/mask-format.ts` + `components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，随 S5 的 RangePicker 一起做。**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。**G9 L6 二轮（2026-10-01）**：从 **3/21 → 12/21 exact**。修掉三处（都是真 bug，不是调阈值）：① 表头导航图标 —— `PickerPanel` **少声明 4 个图标 props**（PITFALLS 250，属 picker 包）；② 🚨 浮层**缺 `-panel-container` / `-panel-layout` 两层**⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 + `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。**G9 L6 三轮（同日）：→ 21/21 exact**。补上浮层**页脚**（`components/Footer.ts` = 上游`Popup/Footer.js` 逐字移植 + `getShowNow` = `useShowNow.js` + 接线），`renderExtraFooter` 一并生效（PITFALLS 255；⚠️ 页脚样式早在 257 条规则里，缺的只是组件 + 接线）。顺带修掉**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**，收敛回 `@apollo-design/utils`（PITFALLS 254，含「修正把错规格钉住的测试」）。**S5 剩余：范围两端（`RangePicker`）与 `presets`**；`panelRender` / 浮层焦点事件 / `isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。与 G12/G13/G14。⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。**✅ S5 全部落地（2026-10-01 下午）—— 组件判 completed。**范围两端：`RangePicker.vue`（≈1150 行）= 上游 `generateRangePicker.js`(234) + `PickerInput/RangePicker.js`(574) + `RangeSelector.js`(209) + `Popup/*` 的 Vue 化；`presets` 全链路（`hooks/picker-presets.ts` + `components/PresetPanel.ts`，单值另接**悬停即预览**：`hoverValue` / `selectorValues` / `Selector` 的 `-input-placeholder`）。🚨 **架构差异（PITFALLS 256）**：本仓 `PickerPanel` **自己** `providePanelHack`⇒ 外层注入被「最近的赢」遮蔽 ⇒ 双面板的 `hidePrev` / `hideNext` / `onCellDblClick`改走 **props**（已加回归哨兵）。同批关闭三条欠账（README §5.5(b′) #1/#3/#4）：`useInvalidate` 全量（`isValidate` + `showTime.disabledTime` / legacy 三兄弟）、`onCellDblClick`、`hideHeader`；面板与页脚改拿**合并了 min/max 的** `disabledDate`。🚨 **编译期根因修复（PITFALLS 257/258/261/262/263）**：`picker` 包新增 `TimeConfigShowTime`（范围的 `showTime.disabledTime` 是**三参**，单值一参）；`Selector.onSelectorClick` 放宽成收事件；`toDateArray` 收范围元组（元素 `undefined → null`）；`fieldCount` 范围下改传 getter；`RangePickerProps` 上**没有** `multiple` / `removeIcon`。🚨 **L6 抓到的两个真 bug（PITFALLS 264/265）**：① 浮层 vnode 在**渲染期之外**创建 ⇒ `ref:` 的 owner 是 `null` ⇒ 生产构建抛 `Cannot read properties of null (reading refs)`（dev 只 `warn`，jsdom 与 dev 页面全绿）⇒ 改用 vnode 钩子；② `hoverValues` / `showWeakHover` / `activeHoverValue` **算了但从没传给面板** ⇒ `-cell-in-range` 的浅蓝底永远不出现（`range` 空值三视口 0.000% exact、一有值就 block-diff，正是它）。**G9 L6：21/21 → 27/27 exact**（新增 `range` / `range-value` 两个变体 × 3 视口，React 基线已入库）。L4 契约 16 → **21 用例**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态），L5 a11y 24 → **36 条**（含上游两条 separator 的 `aria-hidden` 测试），新增 `__tests__/s5-presets.test.ts` **15 条**。⚠️ 仍未做：`panelRender` / 浮层焦点事件（README §5.5(g)）/ `BASE_CSS` 的 `a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。\n2026-10-23 F01/F06 整改：见 docs/audit/2026-10-23-picker-transfer-remediation.md。局部回归与具体未验项单独记录，不改变 legacy-reference 的视觉含义。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4932,7 +4932,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
+      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。\n2026-10-23 F01/F06 整改：见 docs/audit/2026-10-23-picker-transfer-remediation.md。局部回归与具体未验项单独记录，不改变 legacy-reference 的视觉含义。",
       "layerNotes": {
         "token": "本组件**没有 Component Token，也没有样式表**：antd 的 `es/time-picker/` 只有 `index.js` / `index.d.ts` / `locale/`（138 个「文件」里 136 个是 dayjs 语言包），没有一句样式代码 ⇒ `tokenCount = 0` 是判据不是遗漏。照 `watermark` 先例置 n/a。",
         "style": "同上：`es/time-picker/` 没有 `style/` 目录 ⇒ 本仓也不建 `style/`，`COMPONENT_STYLES` 不加行（加了会产出 0 条规则的空文件）。观感 100% 来自 `date-picker` 的 `-picker-*` 样式与全局 Token。",
