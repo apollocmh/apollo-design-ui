@@ -19,6 +19,7 @@ import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
+import MasonryNative from './MasonryNative.vue';
 import NativeAttrs from './NativeAttrs.vue';
 import PaginationContainers from './PaginationContainers.vue';
 import SwitchEvents from './SwitchEvents.vue';
@@ -72,6 +73,7 @@ const Demo = {
   'breadcrumb-slots': BreadcrumbSlots,
   'pagination-slots': PaginationSlots,
   'pagination-containers': PaginationContainers,
+  'masonry-native': MasonryNative,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

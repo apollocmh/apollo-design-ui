@@ -4350,7 +4350,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F10/ADR0007：根原生attrs/class/style当前值透传，load/error捕获重测量，fresh=false图片尺寸变更可重新排布；7文件86条runtime及类型/浏览器/产物证据见 docs/audit/2026-10-24-masonry-native-media-remediation.md。itemRender模板迁移与SSR事项仍开放，保留历史验收状态。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

@@ -92,13 +92,8 @@ It only consumes global aliases:
   easy-to-get-wrong points.
 - **Heights are measured**: `item.height` is never read; the first measurement happens
   after Vue has updated the DOM.
-- **`onLoad` / `onError` are dead listeners**: upstream attaches them to the root `div`,
-  but React treats `load` as a non-delegated event bound to that element in the **bubble**
-  phase, and `load` does not bubble ⇒ a child `<img>`'s event never reaches the root.
-  We **replicate the same binding** (so behaviour matches antd). Use `fresh` when you need
-  re-layout on content resize.
+- **Image events trigger measurement**: native root capture listeners receive non-bubbling img load/error events and schedule a measured layout pass, including when fresh is false. Use fresh for general per-item ResizeObserver updates.
 - **Zero ARIA**: both the container and the items are plain `div`s (no `role`, no
   `tabindex`) — semantics are entirely up to `itemRender`. This is intentional upstream
   and is pinned by L5.
-- **Attrs are not forwarded**: upstream does not spread `...restProps` ⇒ we set
-  `inheritAttrs: false`.
+- **Native attrs are forwarded**: root id/title/events and Vue string/object/array class/style are read during render. Caller styles override matching semantic root styles; updates retain the root DOM. No role/ARIA is added by default; callers can provide appropriate native attrs.

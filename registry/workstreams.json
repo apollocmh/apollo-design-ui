@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T11:23:37.419Z",
+  "generatedAt": "2026-10-24T11:51:15.306Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2898,7 +2898,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "",
+      "why": "\n2026-10-24 F10/ADR0007：根原生attrs/class/style当前值透传，load/error捕获重测量，fresh=false图片尺寸变更可重新排布；7文件86条runtime及类型/浏览器/产物证据见 docs/audit/2026-10-24-masonry-native-media-remediation.md。itemRender模板迁移与SSR事项仍开放，保留历史验收状态。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",

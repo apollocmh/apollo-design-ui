@@ -10,10 +10,8 @@
  *    `useState([]) + useEffect` ⇒ **首帧渲染空列表**，第二帧才有 item。
  *    本仓用 `onMounted` + `watch(flush:'post')` 卡同一个时机。
  *    ⚠️ 不能用 `watch(..., { immediate: true })`（那是 `setup` 期同步跑 ⇒ 少一拍）。
- * 2. 🚨 **根 div 的 `onLoad` / `onError` 照抄**（`Masonry.tsx:250-252`）——
- *    实测这两条**是死监听**（React 把 `load` 当非委托事件直接绑在该元素上、冒泡阶段，
- *    而 `load` 不冒泡 ⇒ 子 `<img>` 的事件到不了根 div）。本仓同样绑在冒泡阶段，
- *    **不要**改成 `onLoadCapture`（理由见分析文档 §6.1）。
+ * 2. Native image load/error are captured at the root and schedule a measured
+ *    layout pass, including non-bubbling events when fresh is false.
  * 3. **排布算法**在 `hooks/positions.ts`（纯函数，三处易错点写在文件头）。
  *
  * ── 本仓的三处平台差异 ───────────────────────────────────────────────────────
@@ -25,9 +23,10 @@
  *   其余字段 + `itemKey` + `index`，见 `packages/motion/src/motion-list.ts`）。
  */
 import { MotionList } from '@apollo-design/motion';
-import { isEqual, observeResize } from '@apollo-design/utils';
+import { isEqual, mergeDomAttrs, observeResize } from '@apollo-design/utils';
 import {
   computed,
+  normalizeStyle,
   onMounted,
   onScopeDispose,
   ref,
@@ -57,12 +56,7 @@ import type {
 
 defineOptions({
   name: 'AMasonry',
-  /**
-   * 🚨 上游**不透传** `...restProps`（`Masonry.tsx:237-253` 的 div 只挂了
-   * `ref` / `className` / `style` / `onLoad` / `onError`）—— React 里没显式传的
-   * prop 不会落到 DOM 上。Vue 默认会把 `attrs` 全绑到根元素 ⇒ 必须关掉，
-   * 否则 `<Masonry data-x="1">` 会多出 `data-x`（Skeleton 同判，PITFALLS 181）。
-   */
+  // Route native attrs explicitly so class/style and internal listeners merge.
   inheritAttrs: false,
 });
 
@@ -202,7 +196,7 @@ const itemHeights = shallowRef<ItemHeightData[]>([]);
  * 量测所有 item 的高度（raf 去抖）。
  * 触发点四处（与上游 `collectItemSize` 的调用点一一对应）：
  * ① 挂载 / `mergedItems` / `columnCount` 变化；② 根上的 `ResizeObserver`；
- * ③ 根 div 的 `load` / `error`（**死监听**，见文件头第 2 条）；
+ * ③ 根上的原生 load/error 捕获事件；
  * ④ `fresh` 时每个 item 自己的 `ResizeObserver`。
  */
 const collectItemSize = useDelay(() => {
@@ -395,7 +389,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
 );
 
 // ============================== 类名 / 根样式 ==============================
-const rootClassNames = computed(() => [
+const rootClassNames = () => [
   prefixCls.value,
   context.className,
   mergedClassNames.value.root,
@@ -404,7 +398,7 @@ const rootClassNames = computed(() => [
   // 本仓无 hashId（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D5）
   `${prefixCls.value}-css-var`,
   direction.value === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
-]);
+];
 
 /**
  * 根高度。
@@ -423,9 +417,16 @@ const rootHeight = computed(() => (totalHeight.value === 0 ? '0' : toCssSize(tot
 const rootStyle = computed(() => ({
   height: rootHeight.value,
   ...mergedStyles.value.root,
-  // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
-  ...((attrs.style as Record<string, string | number>) ?? {}),
 }));
+
+/** Read attrs during render; useAttrs is not a computed dependency. */
+const rootDomAttrs = () => {
+  const { class: _class, style, ...nativeAttrs } = attrs;
+  return mergeDomAttrs(nativeAttrs, {
+    class: rootClassNames(),
+    style: normalizeStyle([rootStyle.value, style]),
+  });
+};
 
 /** `fresh` 时每个 item 各挂一个观察者；否则不挂（上游传 `null`，本仓用 `undefined`）。 */
 const itemResize = computed(() => (props.fresh ? collectItemSize : undefined));
@@ -434,10 +435,9 @@ const itemResize = computed(() => (props.fresh ? collectItemSize : undefined));
 <template>
   <div
     ref="rootEl"
-    :class="rootClassNames"
-    :style="rootStyle"
-    @load="collectItemSize"
-    @error="collectItemSize"
+    v-bind="rootDomAttrs()"
+    @load.capture="collectItemSize"
+    @error.capture="collectItemSize"
   >
     <MotionList
       :keys="motionKeys"

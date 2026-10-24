@@ -86,9 +86,7 @@ Masonry **没有 Component Token**（与 antd 逐字一致：`ComponentToken` �
 - **排布算法**：按 `items` 顺序，每项落到**当前累计高度最小**的那一列（平局取**最左**）；
   容器高度 = 最高列 − 一个纵向间距。详见 `hooks/positions.ts` 的文件头（含三处易错点）。
 - **高度是实测的**：`item.height` 从不被读；首帧量测在 Vue 更新 DOM 之后。
-- **`onLoad` / `onError` 是死监听**：上游把它挂在根 `div` 上，但 React 的 `load` 是非委托事件、
-  绑在该元素且**冒泡**阶段，而 `load` 不冒泡 ⇒ 子 `<img>` 的事件到不了根。本仓**照抄同样的绑定**
-  （行为与 antd 一致）。需要「内容尺寸变化就重排」时请用 `fresh`。
+- **图片事件参与测量**：根节点以原生捕获监听 load/error；非冒泡的 img 事件也会触发去抖量测与重排，fresh=false 同样有效。一般内容的尺寸变化仍可用 fresh 的逐项 ResizeObserver。
 - **本组件零 ARIA**：容器与条目都是普通 `div`（无 `role`、无 `tabindex`）——
   语义完全由 `itemRender` 的内容负责。这是上游的**有意**设计，已由 L5 钉住。
-- **不透传 attrs**：上游不展开 `...restProps` ⇒ 本仓设了 `inheritAttrs: false`。
+- **原生 attrs 透传**：id/title/事件以及字符串、对象、数组 class/style 按 Vue 规则路由到根节点。attrs 在 render 期读取，调用方 style 覆盖同名语义 root 样式，更新不替换根 DOM。默认不添加 role/ARIA，调用方可通过原生 attrs 提供必要语义。

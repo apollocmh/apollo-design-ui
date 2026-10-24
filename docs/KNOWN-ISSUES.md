@@ -212,6 +212,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-24 Pagination 增量**：直接移除三个渲染函数prop，页码/总数使用单对象槽，尺寸切换走原生槽。List/Table新增当前分页内容转发，修复动态槽缓存、根id/事件/string style丢失，补既有业务回调类型。详见 [Pagination 报告](audit/2026-10-24-pagination-slots-remediation.md)，全库F11仍开放。
 
+**2026-10-24 Masonry 原生底层增量**：复现并修复根 attrs 丢弃、string style 挂载异常和 attrs-only 缓存；原生 load/error 捕获能在 fresh=false 时重测量图片并去重布局通知。见 [Masonry 媒体报告](audit/2026-10-24-masonry-native-media-remediation.md)。itemRender/泛型槽和SSR首帧尚未在本批关闭。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -341,7 +343,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
 | Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
 | Timeline | 14/14 | F11；富内容模板项 |
-| Masonry | 6/6 | —；动态移除元素时 motion 数据 |
+| Masonry | 6/6 | F10原生attrs/图片事件测量本批修复；F11泛型item槽与SSR首帧继续处理 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |

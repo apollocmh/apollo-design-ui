@@ -22,7 +22,7 @@
 | D4 | `useCSSVarCls` 无对应 hook ⇒ 根类名直接拼 `${prefixCls}-css-var` | PLATFORM | `rate` 先例 |
 | D5 | `CSSMotionList` 的 render-prop ⇒ `MotionList` 的默认插槽（载荷多一个 `itemKey`/`index`） | PLATFORM | `motion-list.ts` 的文件头 |
 | D6 | `useLayoutEffect` ⇒ `onMounted` + `watch(flush:'post')` | PLATFORM | PITFALLS 211 |
-| D7 | 根 div 的 `onLoad` / `onError` 是**死监听**（上游同样无效）—— 本仓**照抄同样的绑定** | **UPSTREAM** | 分析文档 §6.1（React 的 `load` 是非委托事件 + 冒泡阶段） |
+| D7 | 原生 load/error 捕获触发量测，fresh=false 也能响应图片尺寸变化 | INTENDED | ADR0007；当前回归见 2026-10-24 native media 报告 |
 | D8 | `mergedItems` 的「一拍延迟」用 `onMounted` + `watch(flush:'post')` 精确复刻 | PLATFORM | 分析文档 §6.2 |
 | D9 | `columnCount === 0`（`columns={0}`）时上游会写出 `top: undefined` / `NaN` 传播；本仓收敛成 `0` | INTENDED | `positions.ts` 文件头（未定义行为不复制） |
 | D10 | 纵向间距非数字时上游退化成字符串拼接（`totalHeight` 变 `NaN`）；本仓收敛成「能转成有限数就用，否则 0」 | INTENDED | `Masonry.vue` 的 `verticalGutterPx` |
@@ -64,3 +64,5 @@
    取高度 —— 那会让每次渲染不同、demo 冒烟测试不可复现。本仓改用确定值并在 `.md` 里注明。
 3. **`item.height` 从不被读**（上游也如此）：高度一律**实测**
    （`getBoundingClientRect`）。类型上保留该字段只为对齐上游的对外面。
+
+2026-10-24：根原生attrs/当前class和style、非冒泡图片事件测量已修复，见 [专项报告](../../../../docs/audit/2026-10-24-masonry-native-media-remediation.md)。itemRender模板迁移与首帧/SSR事项另行推进，未宣称整组件重新验收。
