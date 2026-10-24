@@ -20,7 +20,7 @@
 | D49 | Wave 波纹不实现（Switch 的产物里**本来就没有** `ant-wave-target`） | PLATFORM | L4（20 用例与机械基线逐节点一致） |
 | D50 | **13 个 Component Token 是构建期算好的解析值**（`22px` / `44px` / `#fff` / `rgba(0,35,11,0.2)` …），不随主题缩放 | INTENDED | L7 `theme.test.ts` + L6 15/15 exact |
 | D51 | `ref` 暴露对象（`{ nativeElement, focus, blur }`）而非 `HTMLButtonElement` 本身 | PLATFORM | interface.ts 注释 |
-| D52 | 额外发出 `update:checked` / `update:value`（规则 C11 的 v-model 映射） | INTENDED | L1「告警与 v-model」四条 |
+| D52 | 声明 `update:checked` / `update:value` / `change`；`onChange` 监听同一语义事件，不另调 attrs 回调 | INTENDED | L1「告警与 v-model」及 `change-emits.test.ts` |
 | D53 | 两个 antd 字面量（`border-radius:100px`、loading 图标色 `rgba(0,0,0,opacityLoading)`）按 `CAPSULE_RADIUS_DECL` / `LOADING_ICON_COLOR_DECL` 收敛到 `token.ts` | INTENDED | L7「两个字面量声明」 |
 | — | `loading-icon` 选择器用 `.apollo-icon`（antd 产物是 `.anticon`） | INTENDED | D14/D15 |
 | — | demo `basic` / `disabled` / `loading` / `size` / `style-class` 加了 `aria-label`（axe 要求 `role="switch"` 有可访问名） | PLATFORM | demo 文件头 + L5 |

@@ -25,6 +25,7 @@ export type {
   InputNumberSemanticContext,
   InputNumberSemanticStyles,
   InputNumberSemanticStylesFn,
+  InputNumberSlots,
   InputNumberStepInfo,
   ValueType,
 } from './interface';

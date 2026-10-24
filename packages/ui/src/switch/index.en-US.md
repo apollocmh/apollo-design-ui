@@ -24,7 +24,7 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 | defaultChecked | Initial on/off state (uncontrolled) | `boolean` | `false` |
 | value | ⚠️ **Alias** for `checked` (antd `@since 5.12.0`) | `boolean` | — |
 | defaultValue | ⚠️ **Alias** for `defaultChecked` | `boolean` | — |
-| onChange | Callback when the state changes (**two arguments**; not fired when `disabled`) | `(checked: boolean, event: MouseEvent \| KeyboardEvent) => void` | — |
+| onChange | Listener for the `change` event (**two arguments**; not fired when `disabled`) | `(checked: boolean, event: MouseEvent \| KeyboardEvent) => void` | — |
 | onClick | Callback on click; ⚠️ receives the **resulting value** (not the native event) and **still fires when `disabled`** | `(checked: boolean, event) => void` | — |
 | checkedChildren | Content shown when on | `VNodeChild` | — |
 | unCheckedChildren | Content shown when off | `VNodeChild` | — |
@@ -42,6 +42,9 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 |---|---|---|
 | update:checked | `v-model:checked` channel (emitted together with `onChange`) | `boolean` |
 | update:value | `v-model:value` channel (the alias channel, same as above) | `boolean` |
+| change | Declared Vue event; emitted once per click or arrow-key update, suppressed when disabled | `(checked: boolean, event: MouseEvent \| KeyboardEvent)` |
+
+`@change` and `onChange` register the same event. They do not attach an additional native DOM `change` listener. `@click` retains the `(checked, event)` payload described above.
 
 ### Keyboard
 

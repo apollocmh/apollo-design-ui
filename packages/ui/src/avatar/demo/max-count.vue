@@ -29,7 +29,7 @@ const avatars = computed(() =>
         :max="10"
         :value="avatarCount"
         aria-label="Avatar count"
-        @update:value="(v) => v != null && (avatarCount = v)"
+        @update:value="(v) => typeof v === 'number' && (avatarCount = v)"
       />
     </Flex>
     <Flex :gap="8">

@@ -77,7 +77,7 @@ describe('Alert · 结构', () => {
     expect(w2.find('.apollo-alert').classes()).toContain('apollo-alert-filled');
   });
 
-  it('插槽双通道：title / description / action 插槽（prop 优先）', () => {
+  it('插槽双通道：title / description / action 插槽（F07: slot 优先）', () => {
     const w = mount(Alert, {
       props: { title: 'prop-title' },
       slots: {
@@ -86,7 +86,7 @@ describe('Alert · 结构', () => {
         action: () => 'slot-action',
       },
     });
-    expect(w.find('.apollo-alert-title').text()).toBe('prop-title');
+    expect(w.find('.apollo-alert-title').text()).toBe('slot-title');
     expect(w.find('.apollo-alert-description').text()).toBe('slot-description');
     expect(w.find('.apollo-alert-actions').text()).toBe('slot-action');
   });
@@ -236,12 +236,12 @@ describe('Alert · closable / 关闭', () => {
     errorSpy.mockRestore();
   });
 
-  it('message 插槽兜底（title prop 优先）', () => {
+  it('F07: title 插槽优先于 deprecated message prop', () => {
     const w = mount(Alert, {
       props: { message: 'legacy' },
       slots: { title: () => 'slot-title' },
     });
-    expect(w.find('.apollo-alert-title').text()).toBe('legacy');
+    expect(w.find('.apollo-alert-title').text()).toBe('slot-title');
   });
 
   it('closable.afterClose 优先于 afterClose prop（leave 结束触发）', async () => {

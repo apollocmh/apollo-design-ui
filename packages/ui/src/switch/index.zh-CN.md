@@ -23,7 +23,7 @@ subtitle: 开关
 | defaultChecked | 初始是否选中（非受控） | `boolean` | `false` |
 | value | ⚠️ `checked` 的**别名**（antd `@since 5.12.0`） | `boolean` | — |
 | defaultValue | ⚠️ `defaultChecked` 的**别名** | `boolean` | — |
-| onChange | 变化时回调（**两个参数**；`disabled` 时不触发） | `(checked: boolean, event: MouseEvent \| KeyboardEvent) => void` | — |
+| onChange | `change` 事件的监听器写法（**两个参数**；`disabled` 时不触发） | `(checked: boolean, event: MouseEvent \| KeyboardEvent) => void` | — |
 | onClick | 点击时回调；⚠️ 收到的是**结果值**（不是原生事件），且 `disabled` 时**仍会触发** | `(checked: boolean, event) => void` | — |
 | checkedChildren | 选中时的内容 | `VNodeChild` | — |
 | unCheckedChildren | 未选中时的内容 | `VNodeChild` | — |
@@ -41,6 +41,9 @@ subtitle: 开关
 |---|---|---|
 | update:checked | `v-model:checked` 通道（与 `onChange` 同时发出） | `boolean` |
 | update:value | `v-model:value` 通道（别名通道，同上） | `boolean` |
+| change | 声明的 Vue 语义事件；每次点击或方向键更新时发送一次，`disabled` 时不发送 | `(checked: boolean, event: MouseEvent \| KeyboardEvent)` |
+
+`@change` 与 `onChange` 注册同一事件，不会额外监听原生 DOM `change`。`@click` 的载荷仍按上表的 `(checked, event)`。
 
 ### 键盘
 

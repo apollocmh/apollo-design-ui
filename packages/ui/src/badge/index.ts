@@ -26,6 +26,7 @@ export type {
   BadgeSemanticClassNames,
   BadgeSemanticStyles,
   BadgeSlot,
+  BadgeSlots,
   PresetColorKey as BadgePresetColorKey,
   PresetStatusColorType as BadgePresetStatusColorType,
   RibbonProps,

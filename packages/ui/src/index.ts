@@ -92,6 +92,7 @@ export type {
   BadgePresetColorKey,
   BadgePresetStatusColorType,
   BadgeProps,
+  BadgeSlots,
   BadgeRef,
   BadgeSemanticClassNames,
   BadgeSemanticStyles,
@@ -1199,6 +1200,7 @@ export type {
   InputNumberSemanticClassNames,
   InputNumberSemanticContext,
   InputNumberSemanticStyles,
+  InputNumberSlots,
   InputNumberStepInfo,
 } from './input-number';
 export { InputNumber } from './input-number';

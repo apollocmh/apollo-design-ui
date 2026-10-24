@@ -39,6 +39,7 @@ import {
   onScopeDispose,
   type PropType,
   ref,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
   watch,
@@ -63,6 +64,7 @@ import type {
   InputNumberRef,
   InputNumberSemanticClassNames,
   InputNumberSemanticStyles,
+  InputNumberSlots,
   ValueType,
 } from './interface';
 
@@ -137,16 +139,20 @@ const inputNumberPropDefs = {
   addonAfter: { type: null as unknown as PropType<VNodeLike>, default: undefined },
 };
 
+const validateEventValue = (value: ValueType | null): boolean =>
+  value === null || typeof value === 'number' || typeof value === 'string';
+const inputNumberEmits = {
+  'update:value': validateEventValue,
+  change: validateEventValue,
+};
+
 export const InputNumberInternalComponent = defineComponent({
   name: 'AInputNumberInternal',
   inheritAttrs: false,
   props: inputNumberPropDefs,
-  /**
-   * ⚠️ 只声明 `update:value`（供 `v-model:value`）；`change` 是 antd 的 props
-   * 形态回调，走 attrs（PITFALLS 35）。两者同时发出（规则 C11）。
-   */
-  emits: ['update:value'],
-  setup(props, { attrs, emit, expose }) {
+  slots: Object as SlotsType<InputNumberSlots>,
+  emits: inputNumberEmits,
+  setup(props, { attrs, emit, expose, slots }) {
     const context = useComponentConfig('inputNumber');
     const direction = useDirection();
     const contextDisabled = useDisabled();
@@ -353,7 +359,7 @@ export const InputNumberInternalComponent = defineComponent({
             : getDecimalValue(props.stringMode === true, updateValue);
           // C11：v-model 与语义事件同时发出
           emit('update:value', next);
-          (attrs as { onChange?: (v: string | number | null) => void }).onChange?.(next);
+          emit('change', next);
 
           // 非受控时回写显示
           if (props.value === undefined) {
@@ -717,7 +723,7 @@ export const InputNumberInternalComponent = defineComponent({
       if (mode === 'spinner' && controlsEnabled) {
         children.push(downNode());
       }
-      if (props.prefix !== undefined) {
+      if (slots.prefix || props.prefix !== undefined) {
         children.push(
           h(
             'div',
@@ -726,7 +732,7 @@ export const InputNumberInternalComponent = defineComponent({
               class: [`${prefixCls.value}-prefix`, mergedClassNames.value.prefix],
               ...styleAttrs(mergedStyles.value.prefix),
             },
-            [asNode(props.prefix)],
+            [slots.prefix ? slots.prefix() : asNode(props.prefix)],
           ),
         );
       }
@@ -750,7 +756,7 @@ export const InputNumberInternalComponent = defineComponent({
           ...restInputAttrs(),
         }),
       );
-      if (props.suffix !== undefined || hasFeedback.value) {
+      if (slots.suffix || props.suffix !== undefined || hasFeedback.value) {
         children.push(
           h(
             'div',
@@ -760,7 +766,7 @@ export const InputNumberInternalComponent = defineComponent({
               ...styleAttrs(mergedStyles.value.suffix),
             },
             [
-              asNode(props.suffix),
+              slots.suffix ? slots.suffix() : asNode(props.suffix),
               hasFeedback.value ? asNode(formItemContext.value.feedbackIcon as never) : null,
             ].filter((node) => node !== null && node !== undefined),
           ),
@@ -894,8 +900,9 @@ export const InputNumberComponent = defineComponent({
   name: 'AInputNumber',
   inheritAttrs: false,
   props: inputNumberPropDefs,
-  emits: ['update:value'],
-  setup(props, { attrs, emit, expose }) {
+  slots: Object as SlotsType<InputNumberSlots>,
+  emits: inputNumberEmits,
+  setup(props, { attrs, emit, expose, slots }) {
     const devWarning = useDevWarning('InputNumber');
     const { getPrefixCls } = useComponentConfig('inputNumber');
     const formItemContext = useFormItemInputContext();
@@ -961,17 +968,22 @@ export const InputNumberComponent = defineComponent({
 
     return () => {
       // Internal：受控/非受控引擎 + 状态机（attrs 透传给 input，rc 的 restProps 语义）
-      const inner = h(InputNumberInternalComponent, {
-        ...props,
-        ...attrs,
-        ref: internalRef as never,
-        key: undefined,
-        prefixCls: prefixCls.value,
-        // 原生 `class` 转给内部件（有 legacy addon 时只落 SpaceCompact，与原先同判）
-        class: hasLegacyAddon.value ? undefined : (attrs.class as string | undefined),
-        status: mergedStatus.value,
-        'onUpdate:value': (v: string | number | null) => emit('update:value', v),
-      } as never);
+      const inner = h(
+        InputNumberInternalComponent,
+        {
+          ...props,
+          ...attrs,
+          ref: internalRef as never,
+          key: undefined,
+          prefixCls: prefixCls.value,
+          // 原生 `class` 转给内部件（有 legacy addon 时只落 SpaceCompact，与原先同判）
+          class: hasLegacyAddon.value ? undefined : (attrs.class as string | undefined),
+          status: mergedStatus.value,
+          'onUpdate:value': (v: string | number | null) => emit('update:value', v),
+          onChange: (value: ValueType | null) => emit('change', value),
+        } as never,
+        slots,
+      );
       if (hasLegacyAddon.value) {
         return h(
           SpaceCompact,

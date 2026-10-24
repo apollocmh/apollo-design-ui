@@ -13,7 +13,7 @@ subtitle: 徽标数
 
 ## 代码演示
 
-见 [`demo/`](./demo)（12 个，覆盖 antd 的主要用户场景）。
+见 [`demo/`](./demo)（13 个，包含数字计数与模板富内容场景）。
 
 | demo | 内容 |
 |---|---|
@@ -29,6 +29,7 @@ subtitle: 徽标数
 | `colorful` | 多彩徽标（13 预设色） |
 | `ribbon` | 缎带（Badge.Ribbon） |
 | `style-class` | 自定义语义结构的样式和类 |
+| `content-slots` | 可切换富内容、空插槽、数字计数与圆点 |
 
 ## API
 
@@ -47,6 +48,16 @@ subtitle: 徽标数
 | title | 原生 title（`null`/`false` 显式禁用；不传回落 count） | `string \| null \| false` | — |
 | offset | 偏移 `[x, y]`：x → `inset-inline-end`，y → `margin-top` | `[number \| string, number \| string]` | — |
 | classNames / styles | 语义槽位（root / indicator） | — | — |
+
+### Badge 插槽
+
+| 插槽 | 说明 |
+| --- | --- |
+| default | 被徽标包裹的内容 |
+| count | 静态富内容指示器；覆盖 count prop，不进行封顶或数字位滚动 |
+| text | 富文本状态文案；覆盖 text prop |
+
+插槽按存在性优先，空结果隐藏对应内容；条件插槽移除后恢复 prop。`#count` 中的文本 `0` 按静态内容展示，`showZero` 和 `overflowCount` 控制数字 prop 分支；`dot` 仍优先于两种计数内容。富内容保留 indicator 样式、offset 与离场缓存，未显式设置 title 时不从 VNode 生成标题。数字滚动继续使用 count prop。
 
 ### Badge.Ribbon
 

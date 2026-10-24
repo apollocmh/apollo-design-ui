@@ -20,11 +20,13 @@
 | — | offset 数字补 px：React 自动 / Vue 手动（L4 用数字对齐 + L1 钉数字路径） | PLATFORM | L1 offset 用例 |
 | — | ~~空间插入（spaceChildren）cloneElement 分支未实现~~ **已证伪关闭（2026-10-04）**：antd 6.6.4 Badge 已无 v4 的 spaceChildren 两字插入逻辑；两条真实 cloneElement 分支（Badge.js:122 displayNode 样式合并 / ScrollNumber.js:55 `-custom-component` 注入）我们均已实现并补 L1 钉住 | ~~已知缺口~~ 已闭合 | index.test.ts「count 为 VNode 的克隆分支」 |
 
-无 BUG 类差异（L6 全 exact）。
+以上 L6 为带日期的历史参考，不替代当前 Apollo 基线验收。
+
+2026-10-24 F05：公开 Badge.vue 在 render 中读取 typed #count/#text，按普通 props 交给私有 BadgeIndicator.vue。空 slot 覆盖 prop；静态富内容不用数字滚动，指示器保留语义样式、offset 与离场缓存。数字 prop 原有三组缓存及 ScrollNumber/SingleNumber 链路继续保留，真实示例为 content-slots。
 
 ## 3. .vue / .tsx 选择
 
-- `Badge.vue` / `Ribbon.vue` / `SingleNumber.vue`：SFC。
+- `Badge.vue` / 私有 `BadgeIndicator.vue` / `Ribbon.vue` / `SingleNumber.vue`：SFC。
 - `ScrollNumber.ts`：render 函数（children 分支要 cloneVNode，SFC 模板表达不了；spin/Indicator 范式）。
 - `parseFlex` 类纯函数：`isPresetColor` 抽到 `_internal/preset-color.ts`（共享层，三次法则）。
 

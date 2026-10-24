@@ -253,9 +253,19 @@ export default defineComponent({
     // ============================== Render ==============================
     return () => {
       const cls = prefixCls.value;
-      // 文本主导 prop 双通道（规则 #1）：prop 优先，同名 slot 兜底。
-      const mergedTitle: VNodeChild = props.title ?? props.message ?? slots.title?.();
-      const descriptionValue: VNodeChild = props.description ?? slots.description?.();
+      // Presence determines precedence; an explicitly empty slot suppresses its prop.
+      const titleSlot = slots.title?.();
+      const descriptionSlot = slots.description?.();
+      const mergedTitle: VNodeChild = slots.title
+        ? isEmptyVNode(titleSlot)
+          ? undefined
+          : titleSlot
+        : (props.title ?? props.message);
+      const descriptionValue: VNodeChild = slots.description
+        ? isEmptyVNode(descriptionSlot)
+          ? undefined
+          : descriptionSlot
+        : props.description;
       // action 已改为 slot（规则 #3）：内容一律走 `#action` slot。
       const actionValue: VNodeChild = slots.action?.();
 

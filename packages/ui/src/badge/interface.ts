@@ -130,3 +130,10 @@ export interface ScrollNumberProps {
 
 /** 默认插槽。 */
 export type BadgeSlot = () => VNodeChild;
+
+/** Content slots are evaluated in the public render boundary, including empty results. */
+export interface BadgeSlots {
+  default?: BadgeSlot;
+  count?: BadgeSlot;
+  text?: BadgeSlot;
+}

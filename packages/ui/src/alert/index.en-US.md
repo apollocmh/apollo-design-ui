@@ -17,13 +17,15 @@ See [`demo/`](./demo) (14, covering the main antd scenarios.
 
 ## API
 
+F07 development change: present `#title/#description` slots override props. Without a title slot, `title` falls back to `message`. Removing a conditional slot restores props. See `docs/migrations/content-slot-precedence.md` for the former prop-first behavior.
+
 | Prop | Description | Type | Default |
 |---|---|---|---|
 | type | Type of Alert | `'success' \| 'info' \| 'warning' \| 'error'` | `banner ? 'warning' : 'info'` |
 | variant | Variant (6.4.0+) | `'outlined' \| 'filled'` | `'outlined'` |
-| title | Content (prop or `#title` slot, prop first) | `string` | — |
+| title | Content (prop or `#title` slot, slot presence takes precedence, including empty content) | `string` | — |
 | message | **@deprecated** Use `title` | `string` | — |
-| description | Additional content (prop or `#description` slot, prop first) | `string` | — |
+| description | Additional content (prop or `#description` slot, slot presence takes precedence, including empty content) | `string` | — |
 | showIcon | Whether to show icon (banner defaults to true) | `boolean` | — |
 | banner | Display as banner | `boolean` | `false` |
 | closable | Closable (object form is always closable; carries closeIcon/onClose/afterClose and any aria-*/data-*) | `boolean \| AlertClosable` | ConfigProvider |
@@ -39,8 +41,8 @@ See [`demo/`](./demo) (14, covering the main antd scenarios.
 
 | Slot | Description |
 |---|---|
-| `#title` | Rich title content (prop first). |
-| `#description` | Rich description content (prop first). |
+| `#title` | Rich title content (slot presence takes precedence, including empty content). |
+| `#description` | Rich description content (slot presence takes precedence, including empty content). |
 | `#icon` | Custom icon, **overrides** the default type icon (replaces the removed `icon` prop). |
 | `#action` | Action area content (replaces the removed `action` prop). |
 

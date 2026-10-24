@@ -9,8 +9,8 @@
  *   - `React.CSSProperties` → Vue 的 `CSSProperties`
  *   - `React.ReactNode` → `VNodeChild`（组件对象按 D42 归一化渲染）
  *   - `ValueType = string | number`
- *   - `onChange` 拆成 `v-model:value`（emit `update:value`）**与** attrs 里的
- *     `onChange` 回调 —— 两者同时发出（规则 C11 / PITFALLS 35）
+ *   - `v-model:value`（`update:value`）与语义 `change` 均为声明的 Vue 事件；
+ *     `onChange` 是注册同一 `change` 监听器的写法，不另设 attrs 回调通道。
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
@@ -114,6 +114,8 @@ export interface InputNumberProps {
   autoFocus?: boolean;
   /** 字符值模式：开启高精度小数，`change` 返回 string。默认 `false`。 */
   stringMode?: boolean;
+  /** Semantic value change, also available as the typed `change` emit. */
+  onChange?: (value: ValueType | null) => void;
   /** 展示格式化（`info: { userTyping, input }`）。 */
   formatter?: (value: ValueType, info: { userTyping: boolean; input: string }) => string;
   /** 解析回数值（与 formatter 配对）。 */
@@ -161,4 +163,10 @@ export interface InputNumberRef {
   focus: (option?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => void;
   blur: () => void;
   nativeElement: HTMLDivElement | null;
+}
+
+/** Template content extensions, read during render; an empty slot suppresses its prop. */
+export interface InputNumberSlots {
+  prefix?: () => VNodeChild;
+  suffix?: () => VNodeChild;
 }

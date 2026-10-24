@@ -57,6 +57,15 @@ subtitle: 数字输入框
 | ~~addonBefore~~ | **Deprecated** 使用 `Space.Compact` 替代 | VNodeChild | - |
 | ~~addonAfter~~ | **Deprecated** 使用 `Space.Compact` 替代 | VNodeChild | - |
 
+### 插槽
+
+| 名称 | 说明 | 作用域 |
+| --- | --- | --- |
+| prefix | 前缀富内容；优先于 `prefix` prop | 无 |
+| suffix | 后缀富内容；优先于 `suffix` prop，反馈图标继续显示 | 无 |
+
+在渲染期读取插槽，支持条件出现/移除及动态内容；明确提供空 slot 不会回退 prop。无 slot 时保留内容 prop；不改变输入节点、数值格式化、步进和 v-model 行为。
+
 ### 事件
 
 | 事件 | 说明 | 回调参数 |
@@ -64,6 +73,8 @@ subtitle: 数字输入框
 | change | 变化回调（`v-model:value` 同步发出） | function(value: number \| string \| null) |
 | press-enter | 按下回车的回调 | function(e: KeyboardEvent) |
 | step | 点击上下箭头、键盘、滚轮的回调。⚠️ `value` 是 `string \| number` —— `stringMode` 下是**字符串** | function(value: string \| number, info: { offset, type: 'up' \| 'down', emitter: 'handler' \| 'keyboard' \| 'wheel' }) |
+
+`change` 为声明的 Vue 语义事件。`@change` 与 `onChange` 是同一监听器通道，接收数值、stringMode 字符串或空值 `null`；不会再收到原生 DOM `change`。外层包装与内部输入只向使用方发送一次。
 
 ### Ref
 

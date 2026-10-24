@@ -45,7 +45,6 @@ import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import type {
-  SwitchChangeEventHandler,
   SwitchClickEventHandler,
   SwitchEvent,
   SwitchProps,
@@ -88,18 +87,17 @@ export const SwitchComponent = defineComponent({
     },
     styles: { type: [Object, Function] as PropType<SwitchProps['styles']>, default: undefined },
   },
-  /**
-   * ⚠️ 只声明 `update:*`（供 `v-model:checked` / `v-model:value`），**不**声明 `change` /
-   * `click` —— antd 的 `onChange` / `onClick` 是 props 形态回调，声明成 emits 会被 Vue
-   * 从 attrs 摘掉（PITFALLS 35）。它们与语义事件**同时**发出（规则 C11）。
-   */
-  emits: ['update:checked', 'update:value'],
+  // Semantic change is a Vue event; legacy click remains separate pending D02.
+  emits: {
+    'update:checked': (checked: boolean) => typeof checked === 'boolean',
+    'update:value': (checked: boolean) => typeof checked === 'boolean',
+    change: (checked: boolean, event: SwitchEvent) => typeof checked === 'boolean' && !!event,
+  },
   setup(props, { attrs, emit, expose, slots }) {
     // ⚠️ `onKeyDown` **不在** `SwitchProps` 里（antd 的 `SwitchProps` 也没有它 ——
     //    它是 rc-switch 的 props，antd 靠 `{...restProps}` 透传）。所以这里不能写
     //    `Pick<SwitchProps, 'onKeyDown'>`（会 TS2344），必须显式列一遍。
     const callbacks = attrs as unknown as {
-      onChange?: SwitchChangeEventHandler;
       onClick?: SwitchClickEventHandler;
       onKeyDown?: (event: KeyboardEvent) => void;
     };
@@ -164,7 +162,7 @@ export const SwitchComponent = defineComponent({
         setInnerChecked(merged);
         emit('update:checked', merged);
         emit('update:value', merged);
-        callbacks.onChange?.(merged, event);
+        emit('change', merged, event);
       }
       return merged;
     };

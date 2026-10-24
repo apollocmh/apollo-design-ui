@@ -6,6 +6,7 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import type { VNodeChild } from 'vue';
 import type { Variant } from '../../config-provider/context';
+import type { InputNumber } from '../index';
 import type {
   InputNumberControls,
   InputNumberProps,
@@ -117,3 +118,20 @@ describe('InputNumber · L3 类型', () => {
     expectTypeOf(_negatives).toBeFunction();
   });
 });
+
+// F04: named prefix/suffix slots are exposed on the public component.
+expectTypeOf<InstanceType<typeof InputNumber>['$slots']['prefix']>().toBeCallableWith();
+expectTypeOf<InstanceType<typeof InputNumber>['$slots']['suffix']>().toBeCallableWith();
+
+// F09: exported props and component emits agree on number/string/null changes.
+expectTypeOf<InputNumberProps['onChange']>().toEqualTypeOf<
+  ((value: ValueType | null) => void) | undefined
+>();
+const checkSemanticNumberEmit = (vm: InstanceType<typeof InputNumber>) => {
+  vm.$emit('change', 1);
+  vm.$emit('change', '1');
+  vm.$emit('change', null);
+  // @ts-expect-error F09: semantic change carries a value, not a DOM event.
+  vm.$emit('change', new Event('change'));
+};
+void checkSemanticNumberEmit;

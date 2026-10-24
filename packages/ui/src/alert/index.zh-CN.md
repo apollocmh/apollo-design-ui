@@ -32,13 +32,15 @@ subtitle: 警告提示
 
 ## API
 
+F07 开发版行为调整：`#title/#description` 存在时覆盖 prop；没有标题 slot 时才按 `title → message` 兜底。移除条件 slot 后恢复 prop。旧版 prop 优先的迁移说明见 `docs/migrations/content-slot-precedence.md`。
+
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | type | 提示类型 | `'success' \| 'info' \| 'warning' \| 'error'` | `banner ? 'warning' : 'info'` |
 | variant | 形态（6.4.0+） | `'outlined' \| 'filled'` | `'outlined'` |
-| title | 标题（prop / `#title` 插槽，prop 优先） | `string` | — |
+| title | 标题（prop / `#title` 插槽，slot 存在则优先，空 slot 不回退） | `string` | — |
 | message | **@deprecated** 请用 `title` | `string` | — |
-| description | 辅助描述（prop / `#description` 插槽，prop 优先） | `string` | — |
+| description | 辅助描述（prop / `#description` 插槽，slot 存在则优先，空 slot 不回退） | `string` | — |
 | showIcon | 是否显示图标（banner 且未传 ⇒ true） | `boolean` | — |
 | banner | 顶部通告形态 | `boolean` | `false` |
 | closable | 可关闭（对象形态恒可关，可带 closeIcon/onClose/afterClose 与任意 aria-*/data-*） | `boolean \| AlertClosable` | ConfigProvider |
@@ -54,8 +56,8 @@ subtitle: 警告提示
 
 | 插槽 | 说明 |
 |---|---|
-| `#title` | 标题富内容（prop 优先）。 |
-| `#description` | 辅助描述富内容（prop 优先）。 |
+| `#title` | 标题富内容（slot 存在则优先，空 slot 不回退）。 |
+| `#description` | 辅助描述富内容（slot 存在则优先，空 slot 不回退）。 |
 | `#icon` | 自定义图标，**覆盖**默认类型图标（原 `icon` prop，已移除）。 |
 | `#action` | 操作区内容（原 `action` prop，已移除）。 |
 

@@ -43,7 +43,9 @@ const internalValue = ref<number | undefined>(0);
 /** 判据 1。 */
 const stepValue = computed(() => (!Number.isNaN(props.value) ? props.value : internalValue.value));
 
-const onInternalChange = (step: number | null): void => {
+const onInternalChange = (step: number | string | null): void => {
+  // This consumer uses numeric mode; stringMode values are outside its contract.
+  if (typeof step === 'string') return;
   // 判据 2
   internalValue.value = step || 0;
   props.onChange?.(step);

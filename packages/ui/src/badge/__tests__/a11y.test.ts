@@ -15,7 +15,7 @@ import { Badge, Ribbon } from '../index';
 
 a11yDemoTest('Badge', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 12,
+  expectCount: 13,
 });
 
 describe('Badge · 无 ARIA 契约', () => {

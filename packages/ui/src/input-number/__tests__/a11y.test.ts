@@ -3,8 +3,8 @@
  * 步进按钮 `role="button"` + aria-label（Increase/Decrease Value）+ aria-disabled。
  * axe 扫全部 12 个 demo。
  *
- * ⚠️ 拆成两组（qr-code 先例：豁免按次调用全局匹配，混组会互相判 stale）：
- * 有 placeholder 的 demo 不触发 axe 的 label 规则（可访问名由 placeholder 兜底），
+ * 按可访问名称分组，豁免仅限仍缺名称的 demo：
+ * 有 placeholder 或 aria-label 的 demo 不触发 axe 的 label 规则，
  * 无 placeholder 的 demo 触发 ⇒ 豁免只能挂在后者。
  *
  * 豁免登记（UPSTREAM）：input 无关联 label —— 组件本体与 antd 6.6.4 原样一致
@@ -22,16 +22,16 @@ const LABEL_ALLOWANCE = {
 
 a11yDemoTest('InputNumber（无 placeholder）', {
   demos: import.meta.glob(
-    '../demo/{basic,disabled,digit,formatter,keyboard,out-of-range,presuffix,spinner,style-class}.vue',
+    '../demo/{basic,disabled,digit,formatter,keyboard,out-of-range,spinner,style-class}.vue',
     {
       eager: true,
     },
   ),
-  expectCount: 9,
+  expectCount: 8,
   allow: [LABEL_ALLOWANCE],
 });
 
-a11yDemoTest('InputNumber（有 placeholder）', {
-  demos: import.meta.glob('../demo/{size,variant,status}.vue', { eager: true }),
-  expectCount: 3,
+a11yDemoTest('InputNumber（有可访问名称）', {
+  demos: import.meta.glob('../demo/{size,variant,status,presuffix}.vue', { eager: true }),
+  expectCount: 4,
 });

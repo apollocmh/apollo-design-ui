@@ -3,9 +3,22 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import type { VNodeChild } from 'vue';
+import type { BadgeSlots } from '../../index';
+import type { Badge } from '../index';
 import type { BadgeProps, RibbonProps } from '../interface';
 
 describe('Badge · Props 类型', () => {
+  it('content slots have public callable types and internal flags stay private', () => {
+    expectTypeOf<NonNullable<BadgeSlots['count']>>().toEqualTypeOf<() => VNodeChild>();
+    const check = (vm: InstanceType<typeof Badge>) => {
+      vm.$slots.count?.();
+      vm.$slots.text?.();
+      // @ts-expect-error customCount belongs to the private indicator engine
+      void vm.$props.customCount;
+    };
+    void check;
+  });
   it('status 是五个预设状态色', () => {
     expectTypeOf<BadgeProps['status']>().toEqualTypeOf<
       'success' | 'processing' | 'error' | 'default' | 'warning' | undefined

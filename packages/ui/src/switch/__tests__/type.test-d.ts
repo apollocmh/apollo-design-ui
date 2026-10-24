@@ -86,3 +86,14 @@ it('负例：checked 不能是字符串', () => {
   const badChecked: SwitchProps = { checked: 'yes' };
   void badChecked;
 });
+
+// F09: change is a typed component emit; legacy click remains a separate callback.
+const checkSemanticSwitchEmit = (vm: InstanceType<typeof Switch>, event: SwitchEvent) => {
+  vm.$emit('change', true, event);
+  vm.$emit('update:checked', false);
+  // @ts-expect-error F09: checked is boolean.
+  vm.$emit('change', 'true', event);
+  // @ts-expect-error F09: the triggering event is part of the change payload.
+  vm.$emit('change', true);
+};
+void checkSemanticSwitchEmit;

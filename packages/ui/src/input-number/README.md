@@ -2,6 +2,10 @@
 
 # InputNumber 实现说明
 
+## 2026-10-23 当前整改
+
+F04：外层及内部件支持有类型的 #prefix/#suffix，render 中按插槽存在性选择，空 slot 不回退 prop；保留反馈图标、Compact/addon 与数字引擎。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
+
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 · `es/input-number/` + `@rc-component/input-number@1.6.2` +
@@ -20,7 +24,7 @@
 
 | # | 差异 | 分类 |
 |---|---|---|
-| I1 | `value+onChange` ⇒ `v-model:value` + `onChange` 双通道（规则 C11） | INTENDED |
+| I1 | 声明 `update:value` 与 `change`；`onChange` 注册同一语义事件，内外两层只向外发送一次 | INTENDED |
 | I2 | `onInput` 不暴露（rc 内部通道，antd 文档未列） | INTENDED |
 | I3 | `ref` ⇒ `expose({ focus, blur, nativeElement })`（proxyObject 语义） | INTENDED |
 | I4 | `prefix` / `suffix` / `upIcon` / `downIcon` / addon ⇒ `VNodeChild`（组件对象按 D42 归一化） | PLATFORM |

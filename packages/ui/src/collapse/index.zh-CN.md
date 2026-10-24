@@ -45,6 +45,8 @@ subtitle: 折叠面板
 - `extra`：原 VNode prop 已移除，富内容走 `#extra` 插槽。
 - 面板内容：原 `children` React 遗留 prop 已移除，一律走**默认插槽**。
 
+`CollapsePanel #header` 存在时优先于 `header` prop，包括明确空 slot；移除条件 slot 才回退 prop。面板树在 render 中读取一次，标题、extra 和正文共用快照，支持动态插槽且保持面板状态。F07 开发版迁移说明见 `docs/migrations/content-slot-precedence.md`。
+
 ### Ref
 
 `{ nativeElement: HTMLDivElement | null }`

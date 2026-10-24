@@ -16,8 +16,8 @@ const renderSizeChanger = (info: {
     min: 1,
     style: { width: '100px' },
     value: info.value,
-    onChange: (next: number | null) => {
-      if (next !== null) info.onChange(next);
+    onChange: (next) => {
+      if (typeof next === 'number') info.onChange(next);
     },
   });
 </script>

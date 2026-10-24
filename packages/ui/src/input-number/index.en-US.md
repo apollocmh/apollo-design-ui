@@ -56,6 +56,15 @@ Enter a number within certain range with the mouse or keyboard.
 | ~~bordered~~ | **Deprecated** use `variant` | boolean | `true` |
 | ~~addonBefore / addonAfter~~ | **Deprecated** use `Space.Compact` | VNodeChild | - |
 
+### Slots
+
+| Name | Description | Scope |
+| --- | --- | --- |
+| prefix | Rich prefix content; takes precedence over the `prefix` prop | None |
+| suffix | Rich suffix content; takes precedence over `suffix`, retaining form feedback | None |
+
+Slots are read during rendering and support conditional insertion/removal and reactive content. An explicitly empty slot suppresses the prop. Without a slot, content props still apply. The native input, number formatting, stepping and v-model behavior stay intact.
+
 ### Events
 
 | Event | Description | Arguments |
@@ -63,6 +72,8 @@ Enter a number within certain range with the mouse or keyboard.
 | change | Value change (emitted together with `update:value`) | (value: number \| string \| null) |
 | press-enter | Enter key pressed | (e: KeyboardEvent) |
 | step | Step via button / keyboard / wheel | (value: number, info: { offset, type, emitter }) |
+
+`change` is a declared Vue event. `@change` and `onChange` register the same listener, receiving a number, a string in stringMode, or `null` for an empty value. Native DOM `change` does not reach this listener. The wrapper forwards each internal change once.
 
 ### Ref
 

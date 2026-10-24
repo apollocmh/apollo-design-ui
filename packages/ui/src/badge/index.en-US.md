@@ -13,7 +13,7 @@ A small status descriptor for UI elements.
 
 ## Examples
 
-See [`demo/`](./demo) (12 demos, covering the main antd scenarios.
+See [`demo/`](./demo) (13 demos, including numeric counts and rich template content).
 
 ## API
 
@@ -31,6 +31,16 @@ See [`demo/`](./demo) (12 demos, covering the main antd scenarios.
 | text | Status text | `VNodeChild` | — |
 | title | Native title (`null`/`false` disables; falls back to count) | `string \| null \| false` | — |
 | offset | Offset `[x, y]` | `[number \| string, number \| string]` | — |
+
+### Badge Slots
+
+| Slot | Description |
+| --- | --- |
+| default | Content wrapped by the badge |
+| count | Static rich indicator; overrides the count prop without overflow or digit rolling |
+| text | Rich status text; overrides the text prop |
+
+Slot presence determines precedence, including empty results. Removing a conditional slot restores its prop. Text `0` in #count is static content; showZero and overflowCount apply to numeric props. Dot mode overrides both count channels. Rich indicators retain indicator styles, offset and their previous visible content while leaving. VNodes do not generate an automatic title. Use the count prop for digit animation.
 
 ### Badge.Ribbon
 

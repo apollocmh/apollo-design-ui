@@ -28,6 +28,8 @@ A group of collapsible panels.
 | onChange | `(key: string[]) => void` | — | — |
 | classNames / styles | Semantic slots `{ root, header, title, body, icon }` | — | — |
 
+A present `CollapsePanel #header` slot overrides the `header` prop, including empty content; removing a conditional slot restores the prop. The panel tree is read once per render and shared by header/extra/body, preserving panel state across slot updates. See `docs/migrations/content-slot-precedence.md` for the F07 development change.
+
 ### Ref
 
 `{ nativeElement: HTMLDivElement | null }`

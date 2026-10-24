@@ -252,7 +252,7 @@ export const Collapse = defineComponent({
     }));
 
     // ======================== 面板数据（items 优先，children 兜底） ========================
-    const panelInfos = computed(() => {
+    const getPanelInfos = (children: VNodeChild[]) => {
       // items 优先（antd useItems：Array.isArray(items) ⇒ items 路径）
       if (Array.isArray(props.items)) {
         return buildPanelInfos(props.items, {
@@ -264,7 +264,6 @@ export const Collapse = defineComponent({
         });
       }
       // children 形态：从 Collapse.Panel vnode 的 props 读（getNewChild 对拍）
-      const children = collectChildren(slots.default?.() ?? []);
       const items: CollapseItemType[] = children.map((rawChild, index) => {
         // children 数组元素可能是 string/number/null —— 面板载体只可能是 vnode
         if (!rawChild || typeof rawChild !== 'object') {
@@ -273,7 +272,7 @@ export const Collapse = defineComponent({
         const child = rawChild as VNode;
         const cProps = ((child as { props?: Record<string, unknown> }).props ??
           {}) as CollapsePanelProps;
-        // 同名 slot（#header / #extra）兜底，prop 优先（规则 #1 文本 prop 收窄 string）
+        // F07: read header/extra slots in this render; empty headers remain empty.
         const childSlots =
           child.children && typeof child.children === 'object' && !Array.isArray(child.children)
             ? (child.children as Record<string, (() => VNodeChild) | undefined>)
@@ -284,8 +283,7 @@ export const Collapse = defineComponent({
         const extraSlot = childSlots?.extra ? (childSlots.extra as () => VNodeChild)() : undefined;
         return {
           key: (child as { key?: string | number | null }).key ?? cProps.key ?? String(index),
-          // header：prop（string）优先，#header 插槽兜底
-          header: cProps.header ?? headerSlot,
+          header: childSlots?.header ? headerSlot : cProps.header,
           className: cProps.className,
           style: cProps.style,
           showArrow: cProps.showArrow,
@@ -306,16 +304,16 @@ export const Collapse = defineComponent({
         activeKeys: activeKeys.value,
         onItemTrigger: onItemClick,
       });
-    });
+    };
 
     // Panel vnode 的 children（items 形态取 item.children；children 形态取 vnode children）
-    const childrenOf = (info: ReturnType<typeof buildPanelInfos>[number]): VNodeChild => {
+    const childrenOf = (
+      info: ReturnType<typeof buildPanelInfos>[number],
+      raw: VNodeChild | undefined,
+    ): VNodeChild => {
       if (Array.isArray(props.items)) {
         return info.item.children;
       }
-      const idx = panelInfos.value.findIndex((p) => p.key === info.key);
-      const raw = collectChildren(slots.default?.() ?? [])[idx];
-      const _cProps = (raw as { props?: CollapsePanelProps } | undefined)?.props;
       // `h(Panel, null, () => content)` ⇒ children 是槽函数/槽对象
       const c = raw
         ? ((raw as { children?: unknown }).children as
@@ -338,6 +336,9 @@ export const Collapse = defineComponent({
     };
 
     return () => {
+      // One render owns one panel tree, shared by title, extra and body parsing.
+      const children = Array.isArray(props.items) ? [] : collectChildren(slots.default?.() ?? []);
+      const panelInfos = getPanelInfos(children);
       const cls = prefixCls.value;
 
       const rootClassNames = [
@@ -362,7 +363,7 @@ export const Collapse = defineComponent({
           style: [mergedStyles.value.root, attrs.style],
           role: props.accordion ? 'tablist' : undefined,
         },
-        panelInfos.value.map((info) => {
+        panelInfos.map((info, index) => {
           const item = info.item;
           return h(CollapsePanelInner, {
             key: info.key,
@@ -374,7 +375,7 @@ export const Collapse = defineComponent({
             openMotion: openMotion.value,
             // antd 恒传 expandIcon 函数（默认 RightOutlined 在函数内部兜底）
             expandIcon: (p: CollapsePanelProps & { isActive?: boolean }) => renderExpandIcon(p),
-            children: childrenOf(info),
+            children: childrenOf(info, children[index]),
             onItemClick: info.onItemClick,
             destroyOnHidden: info.destroyOnHidden,
             forceRender: item.forceRender,
