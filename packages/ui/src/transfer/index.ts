@@ -30,16 +30,18 @@ export default Transfer;
 
 export type {
   PaginationType,
-  RenderResult,
-  RenderResultObject,
-  SelectAllLabelRender,
   TransferDirection,
+  TransferFooterSlotProps,
   TransferItem,
+  TransferItemSlotProps,
   TransferKey,
   TransferListBodyProps,
+  TransferListSlotProps,
   TransferLocale,
   TransferProps,
+  TransferSelectAllLabelSlotProps,
   TransferSemanticClassNames,
   TransferSemanticStyles,
+  TransferSlots,
 } from './interface';
 export { Actions, Search, Section, Transfer, TransferList, TransferOperation, TransferSearch };

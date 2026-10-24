@@ -1,6 +1,6 @@
 /**
- * Transfer 的类型契约 —— antd 6.6.4 `es/transfer/interface.d.ts` 的机械移植
- * （+ `ListBody` / `Section` 的内部 props 类型，合并在同一处以避免循环 import）。
+ * Transfer 的 Apollo 类型契约。内容扩展使用 Vue scoped slots（ADR 0006 / F06）。
+ * 包含 ListBody / Section 的内部类型；历史来源为 antd 6.6.4，当前 API 以本文件和公开文档为准。
  */
 import type { VNodeChild } from 'vue';
 
@@ -20,19 +20,6 @@ export type TransferDirection = 'left' | 'right';
 export type TransferItem = Record<string, unknown> & {
   key: TransferKey;
 };
-
-/** antd `render` prop：返回 `{ label, value }` 对象或直接返回节点。 */
-export interface RenderResultObject {
-  label?: VNodeChild;
-  value?: string;
-}
-
-export type RenderResult = VNodeChild | RenderResultObject;
-
-/** antd `selectAllLabels[i]`：字符串节点或 `(info) => 节点`。 */
-export type SelectAllLabelRender =
-  | VNodeChild
-  | ((info: { selectedCount: number; totalCount: number }) => VNodeChild);
 
 /** 语义结构（antd 6 语义化 classNames/styles，含 source/target 方向子结构）。 */
 export interface TransferSemanticClassNames {
@@ -99,7 +86,7 @@ export interface TransferProps {
   dataSource?: TransferItem[];
   targetKeys?: TransferKey[];
   selectedKeys?: TransferKey[];
-  selectAllLabels?: [SelectAllLabelRender?, SelectAllLabelRender?];
+  selectAllLabels?: [VNodeChild?, VNodeChild?];
   locale?: TransferLocale;
   titles?: VNodeChild[];
   disabled?: boolean;
@@ -111,11 +98,6 @@ export interface TransferProps {
   status?: 'error' | 'warning';
   selectionsIcon?: VNodeChild;
   filterOption?: (inputValue: string, item: TransferItem, direction: TransferDirection) => boolean;
-  /** 行渲染（非对象返回值按文本降级：`getTextFromRenderResult`）。 */
-  render?: (item: TransferItem) => RenderResult;
-  footer?: (props: Record<string, unknown>, info?: { direction: TransferDirection }) => VNodeChild;
-  /** 自定义列表面板（Transfer.List 的渲染入口；传入后根节点带 `-customize-list`）。 */
-  children?: (props: Record<string, unknown>) => VNodeChild;
   rowKey?: (record: TransferItem) => TransferKey;
   onScroll?: (direction: TransferDirection, e: Event) => void;
   onChange?: (
@@ -127,7 +109,45 @@ export interface TransferProps {
   onSelectChange?: (sourceSelectedKeys: TransferKey[], targetSelectedKeys: TransferKey[]) => void;
 }
 
-/** Section（Transfer.List）对外暴露的渲染入参（`renderList` 的调用面）。 */
+/** Template extension points; evaluated during rendering, including intentionally empty slots. */
+export interface TransferItemSlotProps {
+  item: TransferItem;
+  direction: TransferDirection;
+  selected: boolean;
+  disabled: boolean;
+}
+
+export interface TransferFooterSlotProps {
+  direction: TransferDirection;
+  selectedKeys: TransferKey[];
+  totalCount: number;
+}
+
+export interface TransferSelectAllLabelSlotProps {
+  direction: TransferDirection;
+  selectedCount: number;
+  totalCount: number;
+}
+
+export interface TransferListSlotProps {
+  direction: TransferDirection;
+  filteredItems: TransferItem[];
+  selectedKeys: TransferKey[];
+  disabled: boolean;
+  onItemSelect: (key: TransferKey, selected: boolean) => void;
+  onItemSelectAll: (keys: TransferKey[], selected: boolean | 'replace') => void;
+  onItemRemove: (keys: TransferKey[]) => void;
+  onScroll: (event: Event) => void;
+}
+
+export interface TransferSlots {
+  item?: (props: TransferItemSlotProps) => VNodeChild;
+  footer?: (props: TransferFooterSlotProps) => VNodeChild;
+  list?: (props: TransferListSlotProps) => VNodeChild;
+  selectAllLabel?: (props: TransferSelectAllLabelSlotProps) => VNodeChild;
+}
+
+/** Default list body props. */
 export interface TransferListBodyProps {
   prefixCls: string;
   filteredItems: TransferItem[];

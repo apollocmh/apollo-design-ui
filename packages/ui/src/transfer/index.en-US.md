@@ -73,11 +73,24 @@ import { Transfer } from '@apollo-design/ui';
 | oneWay | Hide the "move to left" action; right list renders remove buttons | `boolean` | `false` |
 | pagination | Paginate the list body | `boolean \| object` | - |
 | status | Validation status | `'error' \| 'warning'` | - |
-| render | Item renderer; `{ label, value }` enables search by value | `(item) => VNodeChild \| { label?, value? }` | - |
-| footer | Panel footer renderer | `(props, { direction }) => VNodeChild` | - |
 | filterOption | Custom filter | `(inputValue, item, direction) => boolean` | text includes |
 | rowKey | Key getter | `(record) => TransferKey` | `record.key` |
-| selectAllLabels | Per-direction header labels | `[SelectAllLabel?, SelectAllLabel?]` | count text |
+| selectAllLabels | Per-direction header labels | `[VNodeChild?, VNodeChild?]` | count text |
+
+### Slots
+
+| Name | Scope | Default |
+| --- | --- | --- |
+| item | `{ item, direction, selected, disabled }` | Data `title`, falling back to `key` for non-text titles |
+| footer | `{ direction, selectedKeys, totalCount }` | No footer; count includes all items on that side |
+| list | `{ direction, filteredItems, selectedKeys, disabled, onItemSelect, onItemSelectAll, onItemRemove, onScroll }` | Default list; internal pagination is disabled for a custom list |
+| selectAllLabel | `{ direction, selectedCount, totalCount }` | Static `selectAllLabels` or default counts, based on filtered items |
+
+Slots are read during rendering and support conditional insertion/removal. An explicitly empty slot stays empty. `direction` always denotes the data side (`left/right`), including RTL. Rich item content does not determine search text: search, row titles and checkbox names use data `title/key`; use `filterOption` for additional fields.
+
+`onItemSelect(key, selected)` selects one item; `onItemSelectAll(keys, selected)` accepts `true`, `false` or `'replace'`. Selection callbacks exclude disabled and unlisted keys. `onItemRemove(keys)` removes items from the one-way right panel; `onScroll(event)` forwards scrolling. Custom controls should also bind `disabled`.
+
+The current development version removes `render`, `footer`, `renderList` / `children` props and function entries in `selectAllLabels` directly. Use slots; there is no compatibility layer or deprecation period. See `docs/migrations/transfer-slots.md` (ADR 0006).
 
 ### Events
 

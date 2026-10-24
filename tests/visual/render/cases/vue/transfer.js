@@ -33,7 +33,6 @@ export default {
         dataSource: MOCK,
         targetKeys: TARGET,
         selectedKeys: SELECTED,
-        render: (item) => item.title,
       }),
     ),
 
@@ -43,7 +42,6 @@ export default {
         dataSource: MOCK,
         targetKeys: TARGET,
         showSearch: true,
-        render: (item) => item.title,
       }),
     ),
 
@@ -53,7 +51,6 @@ export default {
         dataSource: MOCK,
         targetKeys: TARGET,
         oneWay: true,
-        render: (item) => item.title,
       }),
     ),
 };

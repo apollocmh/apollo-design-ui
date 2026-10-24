@@ -17,15 +17,16 @@ import type { VNodeChild } from 'vue';
 import { h } from 'vue';
 import type {
   PaginationType,
-  RenderResult,
-  SelectAllLabelRender,
   TransferDirection,
   TransferItem,
+  TransferItemSlotProps,
   TransferKey,
+  TransferListSlotProps,
   TransferLocale,
   TransferProps,
   TransferSemanticClassNames,
   TransferSemanticStyles,
+  TransferSlots,
 } from '../index';
 import { Transfer, TransferList } from '../index';
 
@@ -89,14 +90,25 @@ describe('Transfer · Props 正例', () => {
     }>();
   });
 
-  it('render 返回节点或 { label, value }', () => {
-    expectTypeOf<TransferProps['render']>().toExtend<
-      ((item: TransferItem) => RenderResult) | undefined
+  it('F06: slots expose typed item and list context', () => {
+    expectTypeOf<TransferSlots['item']>().toEqualTypeOf<
+      ((props: TransferItemSlotProps) => VNodeChild) | undefined
     >();
+    expectTypeOf<TransferSlots['list']>().toEqualTypeOf<
+      ((props: TransferListSlotProps) => VNodeChild) | undefined
+    >();
+    expectTypeOf<InstanceType<typeof Transfer>['$slots']['item']>().toBeCallableWith({
+      item: { key: 'a' },
+      direction: 'left',
+      selected: false,
+      disabled: false,
+    });
   });
 
   it('selectAllLabels 是二元组', () => {
-    expectTypeOf<TransferProps['selectAllLabels']>().toExtend<SelectAllLabelRender[] | undefined>();
+    expectTypeOf<TransferProps['selectAllLabels']>().toExtend<
+      [VNodeChild?, VNodeChild?] | undefined
+    >();
   });
 });
 
@@ -166,3 +178,14 @@ describe('Transfer · 运行时形态', () => {
     expectTypeOf(node).toExtend<VNodeChild>();
   });
 });
+
+// D03: removed renderer props have no compatibility path.
+// @ts-expect-error F06: render was replaced by #item.
+const removedRender: TransferProps = { render: () => 'old' };
+// @ts-expect-error F06: footer is now a scoped slot.
+const removedFooter: TransferProps = { footer: () => 'old' };
+// @ts-expect-error F06: custom lists use #list.
+const removedList: TransferProps = { renderList: () => 'old' };
+// @ts-expect-error F06: selection count rendering uses #selectAllLabel.
+const removedCount: TransferProps = { selectAllLabels: [() => 'old'] };
+void [removedRender, removedFooter, removedList, removedCount];

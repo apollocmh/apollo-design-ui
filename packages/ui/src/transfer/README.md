@@ -5,6 +5,10 @@
 > P5 XL · 数据录入 · 2026-10-04 收口（**第 72/72 个组件**，全量收口完成）。
 > 契约来源：antd 6.6.4 `es/transfer/`（已内化，无 rc-transfer）。
 
+## 2026-10-23 当前模板契约
+
+用户已裁决开发阶段直接移除内容渲染函数 prop（ADR 0006）。公开扩展为 `#item`、`#footer`、`#list`、`#selectAllLabel`；默认显示数据 title/key。当前 API、作用域与迁移写法见双语文档及 `docs/migrations/transfer-slots.md`。下文上游移植、旧函数通道和数量描述属于历史实现记录，不能覆盖本节或当前接口。
+
 ## 1. 文件结构
 
 ```

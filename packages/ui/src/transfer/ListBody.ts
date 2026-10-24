@@ -12,12 +12,22 @@
  */
 
 import { isPlainObject, useControlledValue } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type SlotsType,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import Pagination from '../pagination/Pagination.vue';
 import type {
   PaginationType,
   RenderedItem,
   TransferItem,
+  TransferItemSlotProps,
   TransferKey,
   TransferSemanticClassNames,
   TransferSemanticStyles,
@@ -41,16 +51,25 @@ const parsePagination = (pagination: PaginationType) => {
 
 const ListBody = defineComponent({
   name: 'ATransferListBody',
+  slots: Object as SlotsType<{
+    item?: (props: Omit<TransferItemSlotProps, 'direction'>) => VNodeChild;
+  }>,
   props: {
     prefixCls: { type: String, required: true },
-    classNames: { type: Object as PropType<TransferSemanticClassNames>, default: undefined },
-    styles: { type: Object as PropType<TransferSemanticStyles>, default: undefined },
+    classNames: {
+      type: Object as PropType<TransferSemanticClassNames | undefined>,
+      default: undefined,
+    },
+    styles: { type: Object as PropType<TransferSemanticStyles | undefined>, default: undefined },
     filteredRenderItems: { type: Array as PropType<RenderedItem[]>, required: true },
     selectedKeys: { type: Array as PropType<TransferKey[]>, required: true },
-    disabled: { type: Boolean, default: undefined },
-    showRemove: { type: Boolean, default: undefined },
-    pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
-    remove: { type: String, default: undefined },
+    disabled: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+    showRemove: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+    pagination: {
+      type: [Boolean, Object] as PropType<PaginationType | undefined>,
+      default: undefined,
+    },
+    remove: { type: String as PropType<string | undefined>, default: undefined },
     onItemSelect: {
       type: Function as PropType<
         (key: TransferKey, check: boolean, e?: { shiftKey?: boolean }) => void
@@ -58,12 +77,12 @@ const ListBody = defineComponent({
       required: true,
     },
     onItemRemove: {
-      type: Function as PropType<(keys: TransferKey[]) => void>,
+      type: Function as PropType<((keys: TransferKey[]) => void) | undefined>,
       default: undefined,
     },
-    onScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
+    onScroll: { type: Function as PropType<((e: Event) => void) | undefined>, default: undefined },
   },
-  setup(props, { expose }) {
+  setup(props, { expose, slots }) {
     const current = ref(1);
 
     const mergedPagination = computed(() => {
@@ -137,7 +156,13 @@ const ListBody = defineComponent({
             styles: props.styles,
             item,
             renderedText,
-            renderedEl,
+            renderedEl: slots.item
+              ? slots.item({
+                  item,
+                  selected: props.selectedKeys.includes(item.key),
+                  disabled: !!props.disabled || !!item.disabled,
+                })
+              : renderedEl,
             showRemove: props.showRemove,
             onClick: onInternalClick,
             onRemove,

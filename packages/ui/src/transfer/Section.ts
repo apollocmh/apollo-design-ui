@@ -9,14 +9,22 @@
  *    计数文案（`selectedCount/totalCount unit`）+ 标题；
  *  - 搜索：`showSearch` 为对象时取 `defaultValue`/`placeholder`；
  *  - 过滤：`filterOption` 自定义，否则 `renderedText.includes(filterValue)`；
- *  - 主体：默认 ListBody / 自定义 renderList（函数 render prop）/ not-found 兜底
+ *  - 主体：默认 ListBody / 自定义 #list 插槽/ not-found 兜底
  *    （`notFoundContent` 支持数组按方向取值）；
- *  - footer：函数形态 `footer(props, { direction })`（旧签名 `footer(props)` 兼容）。
+ *  - footer：#footer 作用域插槽。
  */
 
 import { DownOutlined } from '@apollo-design/icons';
 import { isFunction, isNumber, isPlainObject, isString } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
 import Checkbox from '../checkbox/Checkbox';
 import Dropdown from '../dropdown/Dropdown';
 import type {
@@ -24,26 +32,16 @@ import type {
   RenderedItem,
   TransferDirection,
   TransferItem,
+  TransferItemSlotProps,
   TransferKey,
+  TransferListSlotProps,
   TransferLocale,
   TransferSemanticClassNames,
   TransferSemanticStyles,
+  TransferSlots,
 } from './interface';
 import ListBody from './ListBody';
 import Search from './Search';
-
-const defaultRender = () => null;
-
-function isRenderResultPlainObject(
-  result: unknown,
-): result is { label?: VNodeChild; value?: string } {
-  return (
-    result !== null &&
-    result !== undefined &&
-    isPlainObject(result) &&
-    !((result as { __v_isVNode?: boolean }).__v_isVNode === true)
-  );
-}
 
 function getEnabledItemKeys(items: TransferItem[]): TransferKey[] {
   return items.reduce<TransferKey[]>((keys, data) => {
@@ -54,22 +52,9 @@ function getEnabledItemKeys(items: TransferItem[]): TransferKey[] {
   }, []);
 }
 
-function getTextFromRenderResult(
-  renderResult: VNodeChild | { label?: VNodeChild; value?: string },
-  item: TransferItem,
-): string {
-  const candidates: unknown[] = [
-    isRenderResultPlainObject(renderResult) ? renderResult.value : renderResult,
-    item.title,
-    item.key,
-  ];
-  for (const value of candidates) {
-    if (isString(value)) {
-      return value;
-    }
-    if (isNumber(value)) {
-      return String(value);
-    }
+function getItemText(item: TransferItem): string {
+  for (const value of [item.title, item.key]) {
+    if (isString(value) || isNumber(value)) return String(value);
   }
   return '';
 }
@@ -93,6 +78,7 @@ const getShowSearchOption = (
 
 const Section = defineComponent({
   name: 'ATransferSection',
+  slots: Object as SlotsType<TransferSlots>,
   props: {
     prefixCls: { type: String, required: true },
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: undefined },
@@ -127,25 +113,9 @@ const Section = defineComponent({
     remove: { type: String, default: undefined },
     selectAllLabel: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     selectionsIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    footer: {
-      type: Function as PropType<
-        (props: Record<string, unknown>, info?: { direction: TransferDirection }) => VNodeChild
-      >,
-      default: undefined,
-    },
-    renderList: {
-      type: Function as PropType<(props: Record<string, unknown>) => VNodeChild>,
-      default: undefined,
-    },
     filterOption: {
       type: Function as PropType<
         (inputValue: string, item: TransferItem, direction: TransferDirection) => boolean
-      >,
-      default: undefined,
-    },
-    render: {
-      type: Function as PropType<
-        (item: TransferItem) => VNodeChild | { label?: VNodeChild; value?: string }
       >,
       default: undefined,
     },
@@ -170,7 +140,7 @@ const Section = defineComponent({
     handleClear: { type: Function as PropType<() => void>, required: true },
     onScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
     // 🚨 必须是 **computed**（Issue #15.3）：此前是 setup 期普通字符串，父级
     //    （Transfer）动态切 `prefixCls` 后这里仍是旧值 ⇒ Section/ListBody/ListItem
     //    整棵子树继续渲染旧前缀类名（实测：根 `custom` 已换、子级还挂 `apollo-section`）。
@@ -204,18 +174,8 @@ const Section = defineComponent({
     };
 
     const renderItem = (item: TransferItem): RenderedItem => {
-      const render = props.render ?? defaultRender;
-      const renderResult = render(item);
-      const isRenderResultPlain = isRenderResultPlainObject(renderResult);
-      const renderedEl = (isRenderResultPlain ? renderResult.label : renderResult) as VNodeChild;
-      const renderedText = isRenderResultPlain
-        ? ((renderResult.value ?? '') as string)
-        : getTextFromRenderResult(renderResult, item);
-      return {
-        item,
-        renderedEl,
-        renderedText,
-      };
+      const renderedText = getItemText(item);
+      return { item, renderedEl: renderedText, renderedText };
     };
 
     const notFoundContentEle = computed<VNodeChild>(() =>
@@ -276,49 +236,32 @@ const Section = defineComponent({
     );
 
     const getSelectAllLabel = (selectedCount: number, totalCount: number): VNodeChild => {
-      if (props.selectAllLabel) {
-        return isFunction(props.selectAllLabel)
-          ? (
-              props.selectAllLabel as unknown as (info: {
-                selectedCount: number;
-                totalCount: number;
-              }) => VNodeChild
-            )({
-              selectedCount,
-              totalCount,
-            })
-          : props.selectAllLabel;
+      if (slots.selectAllLabel) {
+        return slots.selectAllLabel({ direction: props.direction, selectedCount, totalCount });
       }
+      if (props.selectAllLabel !== undefined) return props.selectAllLabel;
       const unit = totalCount > 1 ? props.itemsUnit : props.itemUnit;
       return `${(selectedCount > 0 ? `${selectedCount}/` : '') + totalCount} ${unit}`;
     };
 
-    // Custom Layout
-    const footerDom = computed<VNodeChild | null>(() => {
-      const footer = props.footer;
-      if (!footer) return null;
-      const self = {
-        ...props,
-        prefixCls: sectionPrefixCls.value,
-      } as unknown as Record<string, unknown>;
-      return footer.length < 2 ? footer(self) : footer(self, { direction: props.direction });
-    });
-
-    const listFooter = computed(() =>
-      footerDom.value
+    // Content slots are read during render, never cached in computed.
+    const renderFooter = (): VNodeChild =>
+      slots.footer
         ? h(
             'div',
             {
-              class: [
-                `${listPrefixCls.value}-footer`,
-                props.classNames?.footer as string | undefined,
-              ],
+              class: [`${listPrefixCls.value}-footer`, props.classNames?.footer],
               style: props.styles?.footer,
             },
-            footerDom.value,
+            [
+              slots.footer({
+                direction: props.direction,
+                selectedKeys: props.checkedKeys,
+                totalCount: props.dataSource.length,
+              }),
+            ],
           )
-        : null,
-    );
+        : null;
 
     const renderListBody = () => {
       const search = showSearchBool.value
@@ -337,73 +280,68 @@ const Section = defineComponent({
           )
         : null;
 
-      const listProps: Record<string, unknown> = {
-        prefixCls: props.prefixCls,
-        dataSource: props.dataSource,
-        filteredItems: filteredItems.value,
-        filteredRenderItems: filteredRenderItems.value,
-        selectedKeys: props.checkedKeys,
-        checkedKeys: props.checkedKeys,
-        disabled: props.disabled,
+      const listProps: TransferListSlotProps = {
         direction: props.direction,
-        showRemove: props.showRemove,
-        showSearch: props.showSearch,
-        searchPlaceholder: props.searchPlaceholder,
-        notFoundContent: props.notFoundContent,
-        selectAll: props.selectAll,
-        deselectAll: props.deselectAll,
-        selectCurrent: props.selectCurrent,
-        selectInvert: props.selectInvert,
-        removeAll: props.removeAll,
-        removeCurrent: props.removeCurrent,
-        remove: props.remove,
-        itemUnit: props.itemUnit,
-        itemsUnit: props.itemsUnit,
-        pagination: props.pagination,
-        onItemSelect: props.onItemSelect,
-        onItemSelectAll: props.onItemSelectAll,
-        onItemRemove: props.onItemRemove,
-        render: props.render,
-        renderList: props.renderList,
-        footer: props.footer,
-        onScroll: props.onScroll,
-        handleFilter: props.handleFilter,
-        handleClear: props.handleClear,
-        filterOption: props.filterOption,
-        classNames: props.classNames,
-        styles: props.styles,
+        filteredItems: filteredItems.value,
+        selectedKeys: props.checkedKeys,
+        disabled: !!props.disabled,
+        onItemSelect: (key, selected) => {
+          if (
+            props.disabled ||
+            !filteredItems.value.some((item) => item.key === key && !item.disabled)
+          )
+            return;
+          props.onItemSelect?.(key, selected);
+        },
+        onItemSelectAll: (keys, selected) => {
+          if (props.disabled) return;
+          const enabled = new Set(getEnabledItemKeys(filteredItems.value));
+          props.onItemSelectAll?.(
+            keys.filter((key) => enabled.has(key)),
+            selected,
+          );
+        },
+        onItemRemove: (keys) => {
+          if (props.disabled || !props.showRemove) return;
+          const enabled = new Set(getEnabledItemKeys(filteredItems.value));
+          props.onItemRemove?.(keys.filter((key) => enabled.has(key)));
+        },
+        onScroll: (event) => props.onScroll?.(event),
       };
-
-      let bodyContent = props.renderList
-        ? props.renderList({
-            ...listProps,
-            onItemSelect: (key: TransferKey, check: boolean) =>
-              (listProps.onItemSelect as (k: TransferKey, c: boolean) => void)(key, check),
-          })
-        : null;
-      const customize = !!bodyContent;
+      const customize = !!slots.list;
+      let bodyContent = slots.list?.(listProps);
       if (!customize) {
         // ⚠️ ListBody 渲染 fragment（根是数组）⇒ attrs 无法继承 ⇒ 多余键会触发
         //    `Extraneous non-props attributes` 的 Vue warn（demoTest 对 warn 零容忍）。
         //    只传 ListBody **声明过**的 props，其余（dataSource/locale/搜索文案等）
-        //    留在 listProps 里供自定义 renderList 使用。
-        bodyContent = h(ListBody, {
-          ref: (el: unknown) => {
-            listBodyRef.value = el as { items?: RenderedItem[] } | null;
+        //    自定义列表的作用域只提供明确的 TransferListSlotProps。
+        bodyContent = h(
+          ListBody,
+          {
+            ref: (el: unknown) => {
+              listBodyRef.value = el as { items?: RenderedItem[] } | null;
+            },
+            prefixCls: listPrefixCls.value,
+            classNames: props.classNames,
+            styles: props.styles,
+            filteredRenderItems: filteredRenderItems.value,
+            selectedKeys: props.checkedKeys,
+            disabled: props.disabled,
+            showRemove: props.showRemove,
+            pagination: props.pagination,
+            remove: props.remove,
+            onItemSelect: (key: TransferKey, selected: boolean, event?: { shiftKey?: boolean }) =>
+              props.onItemSelect?.(key, selected, event),
+            onItemRemove: props.onItemRemove,
+            onScroll: props.onScroll,
           },
-          prefixCls: listPrefixCls.value,
-          classNames: props.classNames,
-          styles: props.styles,
-          filteredRenderItems: filteredRenderItems.value,
-          selectedKeys: props.checkedKeys,
-          disabled: props.disabled,
-          showRemove: props.showRemove,
-          pagination: props.pagination,
-          remove: props.remove,
-          onItemSelect: props.onItemSelect,
-          onItemRemove: props.onItemRemove,
-          onScroll: props.onScroll,
-        } as never);
+          slots.item
+            ? {
+                item: (scope: Omit<TransferItemSlotProps, 'direction'>) =>
+                  slots.item?.({ ...scope, direction: props.direction }),
+              }
+            : undefined,
+        );
       }
 
       let bodyNode: VNodeChild;
@@ -537,7 +475,7 @@ const Section = defineComponent({
             props.classNames?.section as string | undefined,
             {
               [`${sectionPrefixCls.value}-with-pagination`]: !!props.pagination,
-              [`${sectionPrefixCls.value}-with-footer`]: !!footerDom.value,
+              [`${sectionPrefixCls.value}-with-footer`]: !!slots.footer,
             },
           ],
           // 根 style 是 Vue 原生 attrs
@@ -580,7 +518,7 @@ const Section = defineComponent({
             ],
           ),
           renderListBody() as never,
-          listFooter.value as never,
+          renderFooter() as never,
         ],
       );
     };

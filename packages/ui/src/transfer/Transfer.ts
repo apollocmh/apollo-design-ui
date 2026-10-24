@@ -13,7 +13,15 @@
 
 import { useLocale } from '@apollo-design/locale';
 import { isFunction } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
 import { clsx } from '../_internal/clsx';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -23,11 +31,11 @@ import { getStatusClassNames } from '../space/statusUtils';
 import Actions from './Actions';
 import type {
   PaginationType,
-  SelectAllLabelRender,
   TransferDirection,
   TransferItem,
   TransferKey,
   TransferProps,
+  TransferSlots,
 } from './interface';
 import Section from './Section';
 import { useData } from './use-data';
@@ -37,6 +45,7 @@ import { useSelection } from './use-selection';
 const Transfer = defineComponent({
   name: 'ATransfer',
   inheritAttrs: false,
+  slots: Object as SlotsType<TransferSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     classNames: { type: Object as PropType<TransferProps['classNames']>, default: undefined },
@@ -51,7 +60,10 @@ const Transfer = defineComponent({
     dataSource: { type: Array as PropType<TransferItem[]>, default: undefined },
     targetKeys: { type: Array as PropType<TransferKey[]>, default: undefined },
     selectedKeys: { type: Array as PropType<TransferKey[]>, default: undefined },
-    selectAllLabels: { type: Array as PropType<SelectAllLabelRender[]>, default: () => [] },
+    selectAllLabels: {
+      type: Array as PropType<VNodeChild[]>,
+      default: () => [],
+    },
     locale: { type: Object as PropType<TransferProps['locale']>, default: undefined },
     titles: { type: Array as PropType<TransferProps['titles']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
@@ -68,9 +80,6 @@ const Transfer = defineComponent({
       default: undefined,
     },
     filterOption: { type: Function as PropType<TransferProps['filterOption']>, default: undefined },
-    render: { type: Function as PropType<TransferProps['render']>, default: undefined },
-    footer: { type: Function as PropType<TransferProps['footer']>, default: undefined },
-    renderList: { type: Function as PropType<TransferProps['children']>, default: undefined },
     rowKey: { type: Function as PropType<TransferProps['rowKey']>, default: undefined },
     onScroll: { type: Function as PropType<TransferProps['onScroll']>, default: undefined },
     onChange: { type: Function as PropType<TransferProps['onChange']>, default: undefined },
@@ -80,7 +89,7 @@ const Transfer = defineComponent({
       default: undefined,
     },
   },
-  setup(props, { attrs, expose }) {
+  setup(props, { attrs, expose, slots }) {
     const config = useComponentConfig('transfer') as unknown as {
       getPrefixCls: (suffix?: string, custom?: string) => string;
       className?: string;
@@ -312,11 +321,9 @@ const Transfer = defineComponent({
     };
 
     const mergedStatus = computed(() => props.status);
-    // ⚠️ 上游：`!children && pagination`（自定义列表面板不支持内嵌分页，dev 告警）；
-    //    本仓的自定义面板入口是 `renderList` 函数 prop。
-    const mergedPagination = computed<PaginationType | false>(
-      () => !props.renderList && !!props.pagination && props.pagination,
-    );
+    // Slot presence is checked in render; slots are not computed dependencies.
+    const mergedPagination = (): PaginationType | false =>
+      !slots.list && !!props.pagination && props.pagination;
 
     const leftActive = computed(() =>
       rightDataSource.value.some(
@@ -359,7 +366,6 @@ const Transfer = defineComponent({
         prefixCls.value,
         {
           [`${prefixCls.value}-disabled`]: mergedDisabled.value,
-          [`${prefixCls.value}-customize-list`]: !!props.renderList,
           [`${prefixCls.value}-rtl`]: isRtl.value,
         },
         getStatusClassNames(prefixCls.value, mergedStatus.value, false),
@@ -440,17 +446,14 @@ const Transfer = defineComponent({
         onItemSelect: listDirection === 'left' ? onLeftItemSelect : onRightItemSelect,
         onItemSelectAll: listDirection === 'left' ? onLeftItemSelectAll : onRightItemSelectAll,
         onItemRemove: onRightItemRemove,
-        render: props.render,
         showSearch: props.showSearch,
-        renderList: props.renderList,
-        footer: props.footer,
         onScroll: listDirection === 'left' ? handleLeftScroll : handleRightScroll,
         disabled: mergedDisabled.value,
-        direction: isRtl.value ? (listDirection === 'left' ? 'right' : 'left') : listDirection,
+        direction: listDirection,
         showSelectAll: props.showSelectAll,
         selectAllLabel: props.selectAllLabels?.[selectAllLabelIndex],
         showRemove: listDirection === 'right' ? !!props.oneWay : false,
-        pagination: mergedPagination.value,
+        pagination: mergedPagination(),
         selectionsIcon: props.selectionsIcon ?? config.selectionsIcon,
         titleText: getTitles(locale)[selectAllLabelIndex === 0 ? 0 : 1],
         searchPlaceholder: locale.searchPlaceholder,
@@ -473,11 +476,11 @@ const Transfer = defineComponent({
         {
           ref: nativeElementRef,
           ...(attrs as Record<string, unknown>),
-          class: cls.value,
+          class: [cls.value, { [`${prefixCls.value}-customize-list`]: !!slots.list }],
           style: (mergedSemantic.styles.value as Record<string, Record<string, string>>).root,
         },
         [
-          h(Section, sectionBind('left', 0)),
+          h(Section, sectionBind('left', 0), slots),
           h(Actions, {
             class: clsx(
               `${prefixCls.value}-actions`,
@@ -496,7 +499,7 @@ const Transfer = defineComponent({
             direction: direction.value,
             oneWay: props.oneWay,
           }),
-          h(Section, sectionBind('right', 1)),
+          h(Section, sectionBind('right', 1), slots),
         ],
       ),
     ];

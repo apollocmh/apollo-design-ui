@@ -15,10 +15,9 @@ const targetKeys = ref<string[]>(['2', '4']);
   <Transfer
     :data-source="mockData"
     :target-keys="targetKeys"
-    :select-all-labels="[
-      ({ selectedCount, totalCount }: { selectedCount: number; totalCount: number }) =>
-        `${selectedCount}/${totalCount} 条`,
-      '已选列表',
-    ]"
-  />
+  >
+    <template #selectAllLabel="{ direction, selectedCount, totalCount }">
+      {{ direction === 'left' ? `${selectedCount}/${totalCount} 条` : '已选列表' }}
+    </template>
+  </Transfer>
 </template>

@@ -57,6 +57,21 @@ function decided(id, spec) {
 }
 
 export const OPEN_DECISIONS = [
+  decided('development-template-slots', {
+    raisedAt: '2026-10-23',
+    question: '开发阶段的组件内容渲染函数 prop 是否保留兼容和弃用期？',
+    context: '组件库尚在开发阶段且无现有用户；KNOWN-ISSUES D03 原建议保留函数通道。',
+    options: [
+      { label: '直接迁移为 Vue 插槽', tradeoff: '接口明确；同步迁移所有当前调用者和测试。' },
+      { label: '插槽主推、旧函数标废弃', tradeoff: '保留两套内容通道和兼容成本。' },
+    ],
+    recommendation: '按用户裁决直接迁移，不保留旧函数通道或弃用期。',
+    impact: '顶层模板扩展 API；首批 Transfer 的 render/footer/renderList/selectAllLabels 函数。',
+    decidedAt: '2026-10-23',
+    decidedBy: '用户明确裁决 2026-10-23',
+    decision: '直接改为 Vue 具名/作用域插槽；不保留兼容层或弃用期；算法与事件函数按职责保留。',
+    note: 'ADR 0006；docs/migrations/transfer-slots.md；其他未裁决项不自动关闭。',
+  }),
   open('build-output-contract', {
     question: '包的构建产物契约是什么？exports 里声明 ./es/* 与 ./css/* 是否要真正落实？',
     context:

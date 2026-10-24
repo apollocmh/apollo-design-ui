@@ -15,7 +15,7 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import Transfer from '../index';
-import type { TransferItem } from '../interface';
+import type { TransferItem, TransferSlots } from '../interface';
 
 const DATA_SOURCE: TransferItem[] = Array.from({ length: 8 }, (_, i) => ({
   key: String(i),
@@ -23,9 +23,10 @@ const DATA_SOURCE: TransferItem[] = Array.from({ length: 8 }, (_, i) => ({
   disabled: i === 3,
 }));
 
-const mountTransfer = (props: Record<string, unknown> = {}) =>
+const mountTransfer = (props: Record<string, unknown> = {}, slots: TransferSlots = {}) =>
   mount(Transfer, {
     props: { dataSource: DATA_SOURCE, ...props },
+    slots,
     attachTo: document.body,
   });
 
@@ -300,11 +301,13 @@ describe('Transfer · 受控', () => {
     wrapper.unmount();
   });
 
-  it('render 定制行文本（搜索按 value 匹配）', async () => {
-    const wrapper = mountTransfer({
-      showSearch: true,
-      render: (item: TransferItem) => ({ label: `${item.title}！`, value: String(item.title) }),
-    });
+  it('F06: item 插槽定制行文本，搜索仍匹配数据 title', async () => {
+    const wrapper = mountTransfer(
+      {
+        showSearch: true,
+      },
+      { item: ({ item }) => `${item.title}！` },
+    );
     const items = leftItems(wrapper);
     expect(items[0]!.attributes('title')).toBe('content1');
     const input = wrapper.find(
@@ -318,9 +321,7 @@ describe('Transfer · 受控', () => {
   });
 
   it('footer 渲染', () => {
-    const wrapper = mountTransfer({
-      footer: () => 'footer-content',
-    });
+    const wrapper = mountTransfer({}, { footer: () => 'footer-content' });
     expect(wrapper.find('.apollo-transfer-list-footer').text()).toContain('footer-content');
     wrapper.unmount();
   });

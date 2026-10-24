@@ -1843,16 +1843,19 @@ export {
 } from './tour/style/token';
 export type {
   PaginationType as TransferPaginationType,
-  RenderResult as TransferRenderResult,
-  SelectAllLabelRender as TransferSelectAllLabel,
   TransferDirection,
+  TransferFooterSlotProps,
   TransferItem,
+  TransferItemSlotProps,
   TransferKey,
   TransferListBodyProps,
+  TransferListSlotProps,
   TransferLocale,
   TransferProps,
+  TransferSelectAllLabelSlotProps,
   TransferSemanticClassNames,
   TransferSemanticStyles,
+  TransferSlots,
 } from './transfer';
 export { Transfer, TransferList, TransferOperation, TransferSearch } from './transfer';
 export { genTokenDecls as genTransferTokenDecls, genTransferStyle } from './transfer/style';

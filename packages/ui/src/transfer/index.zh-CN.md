@@ -79,14 +79,27 @@ import { Transfer } from '@apollo-design/ui';
 | pagination | 列表分页 | `boolean \| { pageSize?: number; simple?: boolean; showSizeChanger?: boolean; showLessItems?: boolean }` | - |
 | status | 校验状态 | `'error' \| 'warning'` | - |
 | selectionsIcon | 头部下拉的图标 | `VNodeChild` | `DownOutlined` |
-| render | 条目渲染（返回 `{ label, value }` 时 value 参与搜索匹配） | `(item) => VNodeChild \| { label?: VNodeChild; value?: string }` | - |
-| footer | 面板底部渲染 | `(props, { direction }) => VNodeChild` | - |
 | filterOption | 自定义搜索匹配 | `(inputValue, item, direction) => boolean` | 文本包含 |
 | rowKey | 条目 key 取值器 | `(record) => TransferKey` | `record.key` |
-| selectAllLabels | 逐列头部文案 | `[SelectAllLabel?, SelectAllLabel?]` | 计数文案 |
+| selectAllLabels | 逐列头部文案 | `[VNodeChild?, VNodeChild?]` | 计数文案 |
 | listStyle | 面板外联样式（deprecated → `styles.section`） | `object \| ({ direction }) => object` | - |
 | operationStyle | 操作区样式（deprecated → `styles.actions`） | `object` | - |
 | classNames / styles | 语义化类名 / 样式（含 `source` / `target` 方向子结构） | `object` | - |
+
+### 插槽
+
+| 名称 | 作用域 | 默认行为 |
+| --- | --- | --- |
+| item | `{ item, direction, selected, disabled }` | 数据 `title`，非文本时回退 `key` |
+| footer | `{ direction, selectedKeys, totalCount }` | 无底栏；`totalCount` 是该侧全部条目数 |
+| list | `{ direction, filteredItems, selectedKeys, disabled, onItemSelect, onItemSelectAll, onItemRemove, onScroll }` | 默认列表；自定义列表不启用内嵌分页 |
+| selectAllLabel | `{ direction, selectedCount, totalCount }` | `selectAllLabels` 静态数据或默认计数；计数基于筛选后的列表 |
+
+插槽在渲染期读取，支持条件增删和动态内容；明确提供空 slot 不会回退。`direction` 是数据方向 `left/right`，RTL 不改变其含义。`#item` 的富内容不参与搜索解析；默认搜索、行 title 和 checkbox 名称取数据 `title/key`，其他搜索字段使用 `filterOption`。
+
+`onItemSelect(key, selected)` 选择单项；`onItemSelectAll(keys, selected)` 的第二参支持 `true`、`false` 和 `'replace'`。选择函数过滤禁用或不属于当前筛选列表的键。`onItemRemove(keys)` 用于右侧单向移除，`onScroll(event)` 转发滚动事件。自定义控件仍需绑定 `disabled`。
+
+当前开发版直接移除 `render`、`footer`、`renderList` / `children` 函数 props 及 `selectAllLabels` 函数项；使用以上插槽，没有旧函数兼容层或弃用期。完整变化见 `docs/migrations/transfer-slots.md`（ADR 0006）。
 
 ### 事件
 

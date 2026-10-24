@@ -17,7 +17,13 @@ const targetKeys = ref<string[]>(mockData.filter((item) => item.chosen).map((ite
   <Transfer
     :data-source="mockData"
     :target-keys="targetKeys"
-    :render="(item) => ({ label: `${item.title}（key: ${item.key}）`, value: String(item.title) })"
     @change="targetKeys = $event.map(String)"
-  />
+  >
+    <template #item="{ item, selected, disabled }">
+      <span :aria-disabled="disabled">{{ item.title }}（key: {{ item.key }}）{{ selected ? ' ✓' : '' }}</span>
+    </template>
+    <template #footer="{ direction, selectedKeys, totalCount }">
+      {{ direction === 'left' ? '来源' : '目标' }}：{{ selectedKeys.length }}/{{ totalCount }}
+    </template>
+  </Transfer>
 </template>

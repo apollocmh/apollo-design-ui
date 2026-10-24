@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd `advanced.tsx`。
-import type { TransferItem, TransferKey } from '@apollo-design/ui';
+import type { TransferKey } from '@apollo-design/ui';
 import { Transfer } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -32,7 +32,6 @@ const handleSelectChange = (
     :data-source="mockData"
     :target-keys="targetKeys"
     :selected-keys="selectedKeys"
-    :render="(item: TransferItem) => String(item.title)"
     @change="handleChange"
     @select-change="handleSelectChange"
   />

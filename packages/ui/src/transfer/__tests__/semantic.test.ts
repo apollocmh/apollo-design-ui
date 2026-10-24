@@ -15,11 +15,23 @@
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
-import { h } from 'vue';
+import { defineComponent, h, type SlotsType } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/transfer.dom.json';
 import { ConfigProvider } from '../../config-provider';
-import type { TransferItem } from '../interface';
-import Transfer from '../Transfer';
+import type { TransferItem, TransferItemSlotProps, TransferSlots } from '../interface';
+import ApolloTransfer from '../Transfer';
+
+// Historical reference fixtures intentionally omit labels when no renderer was supplied.
+// Keep those exact DOM assertions with an explicit empty slot; slots.test.ts covers
+// Apollo's default title labels and direct scoped-slot API. No baseline/threshold changes.
+const Transfer = defineComponent({
+  inheritAttrs: false,
+  slots: Object as SlotsType<TransferSlots>,
+  setup:
+    (_, { attrs, slots }) =>
+    () =>
+      h(ApolloTransfer, attrs, { item: () => null, ...slots }),
+});
 
 const DATA_SOURCE: TransferItem[] = Array.from({ length: 8 }, (_, i) => ({
   key: String(i),
@@ -131,29 +143,35 @@ const CASES: Record<string, () => DomRenderResult> = {
     ),
   'render:object': () =>
     h(
-      Transfer as never,
+      Transfer,
       {
         ...base,
         prefixCls: 'apollo',
-        render: (item: TransferItem) => ({
-          label: `${item.title}（label）`,
-          value: `value-${item.title}`,
-        }),
-      } as never,
+        dataSource: DATA_SOURCE.map((item) => ({
+          ...item,
+          displayTitle: item.title,
+          title: `value-${item.title}`,
+        })),
+      },
+      { item: ({ item }: TransferItemSlotProps) => `${item.displayTitle}（label）` },
     ),
   'render:string': () =>
     h(
-      Transfer as never,
-      { ...base, prefixCls: 'apollo', render: (item: TransferItem) => `r-${item.title}` } as never,
-    ),
-  footer: () =>
-    h(
-      Transfer as never,
+      Transfer,
       {
         ...base,
         prefixCls: 'apollo',
+        dataSource: DATA_SOURCE.map((item) => ({ ...item, title: `r-${item.title}` })),
+      },
+      { item: ({ item }: TransferItemSlotProps) => String(item.title) },
+    ),
+  footer: () =>
+    h(
+      Transfer,
+      { ...base, prefixCls: 'apollo' },
+      {
         footer: () => h('div', { class: 'my-footer' }, 'footer-content'),
-      } as never,
+      },
     ),
   'class:both': () =>
     h(Transfer as never, { ...base, prefixCls: 'apollo', class: ['a', 'b'] } as never),
@@ -183,8 +201,8 @@ const CASES: Record<string, () => DomRenderResult> = {
           footer: 'cn-footer',
           actions: 'cn-actions',
         },
-        footer: () => h('div', { class: 'my-footer' }, 'footer'),
       } as never,
+      { footer: () => h('div', { class: 'my-footer' }, 'footer') },
     ),
   'semantic:styles': () =>
     h(
@@ -205,8 +223,8 @@ const CASES: Record<string, () => DomRenderResult> = {
           footer: { borderTopWidth: '2px' },
           actions: { gap: '2px' },
         },
-        footer: () => h('div', { class: 'my-footer' }, 'footer'),
       } as never,
+      { footer: () => h('div', { class: 'my-footer' }, 'footer') },
     ),
   // rtl 由 ConfigProvider 注入（与基线的 withProvider 同构）
   'config:direction-rtl': () =>

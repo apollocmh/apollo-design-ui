@@ -5,7 +5,7 @@ title:
   en-US: Custom select all labels
 ---
 
-`selectAllLabels` 逐列定制头部文案：支持字符串或 `({ selectedCount, totalCount }) => 节点`。
+`#selectAllLabel` 用方向和当前计数渲染文案；静态逐列文案也可用 `selectAllLabels` 数组。
 
 ```vue
 <script setup lang="ts">
@@ -25,10 +25,10 @@ const targetKeys = ref<string[]>(['2', '4']);
   <Transfer
     :data-source="mockData"
     :target-keys="targetKeys"
-    :select-all-labels="[
-      ({ selectedCount, totalCount }) => `${selectedCount}/${totalCount} 条`,
-      '已选列表',
-    ]"
-  />
+  >
+    <template #selectAllLabel="{ direction, selectedCount, totalCount }">
+      {{ direction === 'left' ? `${selectedCount}/${totalCount} 条` : '已选列表' }}
+    </template>
+  </Transfer>
 </template>
 ```
