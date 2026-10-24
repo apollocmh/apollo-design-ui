@@ -99,7 +99,7 @@ P1 = 破坏用户常见行为/可访问性；P2 = Vue API/生命周期/响应式
 
 初始 `show=false` → `true` → `false` → `true`：选项数 0→1→0→1；更新 `value/label/disabled` 与替换整棵 slot 均必须生效。另测异步 options、options 与 slot 同时存在的优先级、筛选与虚拟滚动，不允许通过给整个 Select 加 `:key` 重挂载规避。
 
-### F03 · P2 · 源码已修并复核基础回归，扩展验证开放｜FormItem：动态 `prefixCls`
+### F03 · P2 · 已修并验证真实控件/测量/SSR｜FormItem：动态 `prefixCls`
 
 **源码**：[ItemHolder.ts#L59](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/form/FormItem/ItemHolder.ts#L59)；[StatusProvider.ts#L79-L106](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/form/FormItem/StatusProvider.ts#L79-L106)。
 
@@ -110,7 +110,12 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 // 在模板/渲染函数中使用 itemPrefixCls.value，拼接子类名时同理
 ```
 
-2026-10-24 已复跑 `prefix-reactivity.test.ts`（1 文件 1 条通过），覆盖 ConfigProvider `prefixCls: f1→f2→f1`，根、row、vertical、with-help、has-error、has-feedback 派生类，无旧前缀残留且 input DOM 身份不变。**扩展验证仍开放**：本批未补 margin-offset、真实 feedback 图标 DOM、完整 layout 矩阵与生产浏览器验收。证据见 [F03 复核记录](audit/2026-10-24-form-prefix-recheck.md)。**避免扩大误修**：`StatusProvider.ts` 的同名局部变量在 `feedbackIcon` computed **内部**声明，会随 computed 更新，不是相同缺陷；可加明确注释/专项测试，不要无意义地改写它。前缀改变后对应 CSS 需由用户引入（见 D04），这里修的是组件 DOM 响应性，而不是偷偷引入运行时 CSS。
+2026-10-24 第一阶段只复跑基础 1 条，见 [复核记录](audit/2026-10-24-form-prefix-recheck.md)。后续扩展使用真实 Input，新增 6 条先红后绿，发现 ErrorList 的前缀上下文缺失/快照冻结与 prefix/layout 切换后 margin 占位未重测两条遗漏，均已修复；另补 SSR hydration 并单独修复 F12 基础层问题。
+
+当前 prefix 回归共 8 条，覆盖三布局 f1→f2→f1、直接 Item prefix、真实反馈图标四状态、帮助/错误、独立及 Form.List ErrorList、margin-offset/additional min-height 与 SSR hydration。生产 Chrome 的对应矩阵、help 移除/恢复、用户输入值及 DOM 身份通过；相关 7 组组件的运行/DOM/axe/theme 共 48 文件 722 条通过。范围及所有命令见 [F03 整改报告](audit/2026-10-24-form-prefix-remediation.md)。
+
+**边界**：`StatusProvider.ts` 的局部变量仍位于 `feedbackIcon` computed 内，保持原实现。前缀对应 CSS 需预生成/加载（D04），本批不引入运行时 CSS。Form 视觉检查缺 21 张已批准基线，动态 Form.List/异步校验等其他能力不由 F03 关闭。
+
 
 ### F04 · P2 · A → 已接入模板插槽｜InputNumber：Vue 具名 `#prefix` / `#suffix` 缺失
 
@@ -317,7 +322,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Popconfirm | 10/11 | —；异步确认/键盘 |
 | Tour | 9/9 | —；定位/焦点/清理 |
 | FloatButton | 14/16 | 自定义浮层/拖动能力先定支持范围 |
-| Form | 35/44 | **F03**；动态 prefix、动态 Form.List、验证竞态、Demo |
+| Form | 35/44 | **F03 前缀/占位已验证**；动态 Form.List、验证竞态与 Demo 能力继续审查 |
 | Slider | 15/15 | —；键盘/范围 |
 | Rate | 9/9 | F10 消费 `pickAttrs`；class 和键盘 |
 | Segmented | 16/16 | —；受控 / 响应式选项 |

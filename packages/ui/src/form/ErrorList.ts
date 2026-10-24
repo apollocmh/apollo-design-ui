@@ -61,11 +61,12 @@ const ErrorList = defineComponent({
     },
   },
   setup(props) {
-    const { prefixCls } = useFormItemPrefixContext();
+    const prefixContext = useFormItemPrefixContext();
+    const prefixCls = computed(() => prefixContext.prefixCls);
     const formContext = useFormContext();
     /** 调用方原生 class（见下方 render：CSSMotion 不接力 fallthrough）。 */
     const attrs = useAttrs();
-    const baseClassName = `${prefixCls}-item-explain`;
+    const baseClassName = computed(() => `${prefixCls.value}-item-explain`);
 
     // antd useDebounce：延迟若干帧再更新（对拍 rc `useDebounce.js`；
     // 本仓实现是 setTimeout —— jsdom 里 rAF 不触发，见 use-debounce.ts）
@@ -100,7 +101,7 @@ const ErrorList = defineComponent({
 
     const visible = computed(() => filledKeyList.value.length > 0);
 
-    const rootPrefixCls = computed(() => prefixCls.replace(/-form$/, ''));
+    const rootPrefixCls = computed(() => prefixCls.value.replace(/-form$/, ''));
     const collapseMotion = computed(() => initCollapseMotion(rootPrefixCls.value));
     /** collapse 预设的 handler → CSSMotion 的 hooks（upload / collapse 同判）。 */
     const collapseHooks = computed<MotionHooks>(() => {
@@ -127,7 +128,7 @@ const ErrorList = defineComponent({
       return h(
         CSSMotion,
         {
-          motionName: `${prefixCls}-show-help`,
+          motionName: `${prefixCls.value}-show-help`,
           motionDeadline: collapseMotion.value.motionDeadline,
           visible: visible.value,
           hooks: {
@@ -143,7 +144,7 @@ const ErrorList = defineComponent({
               {
                 ...helpProps,
                 class: [
-                  baseClassName,
+                  baseClassName.value,
                   holderProps.className,
                   props.helpClassName ?? formContext.classNames?.help,
                   // 🚨 **调用方原生 class 必须在这里显式加**：本组件的根 vnode 是
@@ -163,7 +164,7 @@ const ErrorList = defineComponent({
                   {
                     keys: filledKeyList.value,
                     component: false,
-                    motionName: `${prefixCls}-show-help-item`,
+                    motionName: `${prefixCls.value}-show-help-item`,
                     motionDeadline: collapseMotion.value.motionDeadline,
                     hooks: collapseHooks.value,
                   },
@@ -184,7 +185,7 @@ const ErrorList = defineComponent({
                             itemProps.className,
                             props.helpItemClassName ?? formContext.classNames?.helpItem,
                             entity.errorStatus
-                              ? `${baseClassName}-${entity.errorStatus}`
+                              ? `${baseClassName.value}-${entity.errorStatus}`
                               : undefined,
                           ]
                             .filter(Boolean)

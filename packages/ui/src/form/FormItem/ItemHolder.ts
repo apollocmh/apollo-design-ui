@@ -15,7 +15,7 @@ import type { Meta } from '@apollo-design/form-core';
 import type { PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h, onMounted, provide, ref, watch } from 'vue';
 import { Row } from '../../grid';
-import { noStyleItemContextKey, useFormContext } from '../context';
+import { formItemPrefixContextKey, noStyleItemContextKey, useFormContext } from '../context';
 import FormItemInput from '../FormItemInput';
 import FormItemLabel from '../FormItemLabel';
 import { useDebounce } from '../hooks/use-debounce';
@@ -76,7 +76,13 @@ const ItemHolder = defineComponent({
       }
     };
     onMounted(measureMargin);
-    watch([hasError, () => props.errors, () => props.warnings], measureMargin, { flush: 'post' });
+    // Prefix/layout switches can select different preloaded static CSS margins.
+    // Measure after the new classes reach the DOM, even while the same help stays visible.
+    watch(
+      [hasError, () => props.errors, () => props.warnings, () => props.prefixCls, layout],
+      measureMargin,
+      { flush: 'post' },
+    );
     /** ErrorList 的显隐回调：错误彻底消失后把 margin 占位清掉。 */
     const onErrorVisibleChanged = (nextVisible: boolean): void => {
       if (!nextVisible && !hasError.value) {
@@ -99,6 +105,15 @@ const ItemHolder = defineComponent({
         props.validateStatus,
       ),
     );
+
+    provide(formItemPrefixContextKey, {
+      get prefixCls() {
+        return props.prefixCls;
+      },
+      get status() {
+        return mergedValidateStatus.value;
+      },
+    });
 
     const hasWithHelp = computed(
       () => hasHelp.value || debounceErrors.value.length > 0 || debounceWarnings.value.length > 0,

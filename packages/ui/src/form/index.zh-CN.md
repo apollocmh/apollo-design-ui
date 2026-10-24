@@ -85,6 +85,8 @@ props：`name`（NamePath）、`rules`、`dependencies`、`trigger`、`valueProp
 
 slots：`default`（子控件；有 name 时控件被注入 value 与事件）、`label` / `help` / `extra`。
 
+动态 `prefixCls` 与布局变更会更新派生类、真实控件的反馈图标、错误/帮助内容，并按已加载 CSS 重新测量 margin 占位。`Form.ErrorList` 独立使用时读取 ConfigProvider 前缀；在 Form.Item / Form.List 中使用最近的前缀上下文。动态前缀需要预先提供对应的静态 CSS，组件不会生成运行时样式。
+
 ### Form.List
 
 props：`name`。scoped slot `(fields, operation, meta)` —— `fields: { name, key, fieldKey }[]`、`operation: { add, remove, move }`、`meta: { errors, warnings }`。`Form.ErrorList` 用于展示 List 级错误。

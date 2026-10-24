@@ -1,17 +1,15 @@
-/**
- * 读取 `FormItemPrefixContext`（ErrorList / Form.List 内部的 prefix + 状态）。
- */
-
-import { type ComputedRef, computed, inject } from 'vue';
+/** Read the current Item/List prefix, with ConfigProvider fallback for standalone errors. */
+import { inject } from 'vue';
+import { useComponentConfig } from '../../config-provider/context';
 import { type FormItemPrefixContextValue, formItemPrefixContextKey } from '../context';
 
 export function useFormItemPrefixContext(): FormItemPrefixContextValue {
   const injected = inject(formItemPrefixContextKey, undefined);
   if (injected) return injected;
-  // 无 Provider（独立使用）时退化为 form 前缀默认值
-  const fallback: ComputedRef<FormItemPrefixContextValue> = computed(() => ({
-    prefixCls: 'apollo-form',
-    status: undefined,
-  }));
-  return fallback.value ?? { prefixCls: 'apollo-form' };
+  const config = useComponentConfig('form');
+  return {
+    get prefixCls() {
+      return config.getPrefixCls('form');
+    },
+  };
 }

@@ -12,6 +12,7 @@ import ListResponsive from '../../../packages/ui/src/list/demo/responsive.vue';
 import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-options.vue';
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
 import EventEmits from './EventEmits.vue';
+import FormPrefix from './FormPrefix.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import NativeAttrs from './NativeAttrs.vue';
@@ -60,6 +61,7 @@ const Demo = {
   descriptions: Rows,
   'content-slots': ContentSlots,
   events: EventEmits,
+  'form-prefix': FormPrefix,
   attrs: NativeAttrs,
   'table-reorder': TableReorder,
   badge: BadgeSlots,
