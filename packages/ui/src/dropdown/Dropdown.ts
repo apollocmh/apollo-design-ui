@@ -24,6 +24,7 @@ import {
   isVNode,
   type PropType,
   provide,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
   type VNode as VNodeLike,
@@ -212,21 +213,17 @@ const Dropdown = defineComponent({
 
     // C8-R2：render fn（popupRender(node) / deprecated dropdownRender）已删除 ——
     // 自定义浮层内容走 `#popupRender="{ originNode }"` 作用域插槽。
-    const popupRenderFn = slots.popupRender
-      ? (node: VNodeChild) =>
-          (slots.popupRender as (p: { originNode: VNodeChild }) => unknown)({
-            originNode: node,
-          })
-      : undefined;
-    const mergedPopupRender = popupRenderFn;
-
     const triggerActions = computed<DropdownTriggerAction[]>(() =>
       props.disabled ? [] : (props.trigger ?? ['hover']),
     );
 
+    const popupSlots: SlotsType<{
+      popupRender?: (props: { originNode: VNodeChild }) => VNodeChild;
+    }> = {};
     const OverlayRenderer = defineComponent({
       name: 'ADropdownOverlayRenderer',
-      setup() {
+      slots: popupSlots,
+      setup(_props, { slots: overlaySlots }) {
         // ⚠️ antd `dropdown.js:194-196`：`direction === 'rtl' ? LeftOutlined : RightOutlined`
         //    ⇒ 必须在**渲染函数**里选（放在 setup 里就是快照，切 direction 后箭头不翻，
         //    Issue #21.4）。
@@ -256,8 +253,8 @@ const Dropdown = defineComponent({
                 prefixCls: `${prefixCls}-menu`,
               } as never)
             : null;
-          if (mergedPopupRender) {
-            overlayNode = mergedPopupRender(overlayNode) as VNodeChild;
+          if (overlaySlots.popupRender) {
+            overlayNode = overlaySlots.popupRender({ originNode: overlayNode });
           }
           if (typeof overlayNode === 'string') {
             overlayNode = h('span', overlayNode);
@@ -327,7 +324,7 @@ const Dropdown = defineComponent({
             ...(props.overlayStyle as StyleLike | undefined),
           },
         },
-        [h(OverlayRenderer)],
+        [h(OverlayRenderer, null, slots.popupRender ? { popupRender: slots.popupRender } : {})],
       );
 
       return h(

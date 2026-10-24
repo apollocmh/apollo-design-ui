@@ -24,7 +24,7 @@
 | --- | --- | --- | --- |
 | 1 | `activeKey` + `onChange` → `v-model:activeKey`（同时发 `change`，C11） | INTENDED | —— |
 | 2 | `onTabClick` / `onEdit` / `onTabScroll` → **emits**（`tabClick` / `edit` / `tabScroll`） | INTENDED | ⚠️ **不要**同时声明成 props：`emit('tabClick')` 会去找 `props.onTabClick` ⇒ **回调触发两次**（本轮实测踩到） |
-| 3 | `renderTabBar`（**已移除**）/ `more.popupRender` / `tabBarExtraContent` → **scoped slot** | INTENDED | C8；槽名统一 `#tabBar` / `#popupRender` / `#extra`（`#morePopup` 是过时写法） |
+| 3 | `renderTabBar` / `more.popupRender`（**均已移除**）/ `tabBarExtraContent` → **scoped slot** | INTENDED | C8；槽名统一 `#tabBar` / `#popupRender` / `#extra`（`#morePopup` 是过时写法） |
 | 4 | `children`（`Tabs.TabPane` 兼容写法）**不实现**，只发告警 | UPSTREAM | 上游 v6 已 deprecated |
 | 5 | `onPrevClick` / `onNextClick` **不实现**，只发 breaking 告警 | UPSTREAM | 上游已移除 |
 | 6 | 面板 id 前缀是 `apollo-tabs-N`（上游是 `rc-tabs-N`） | PLATFORM | 上游用模块级 `uuid`；本仓用 `prefixCls` 使前缀随库 |
@@ -96,8 +96,8 @@ tabs/
     直接读 `item.destroyOnHidden` 会抛错（有 `filterItems` 的用例钉着）。
 14. 🚨 **根元素要合并 `mergedStyles.root`**（Issue #23.3）：语义样式槽合并出来却没落到根
     ⇒ `styles.root` / ConfigProvider 的样式整条丢失。顺序：语义 root → 原生 `attrs.style`。
-15. 🚨 **`#popupRender` 是全链路统一名**（签名 `(menu, { restTabs, onClose })`，
-    与 `TabsSlots['popupRender']` 一致）：Tabs 的插槽 → `more.popupRender` → Dropdown 的
+15. 🚨 **`#popupRender` 是全链路统一名**（签名 `{ originNode, restTabs, onClose }`，
+    与 `TabsSlots['popupRender']` 一致）：Tabs 的插槽 → TabNavList / OperationNode 的原生插槽 → Dropdown 的
     `#popupRender`；旧注释里的 `#morePopup` 已作废（Issue #23.2）。
 16. 🚨 **监听器解绑要用「绑定时的元素」**：`watch(target, …)` 回调里 `target.value` 已经是
     新元素 ⇒ `detach` 读当前值会漏删旧元素的 listener（`use-touch-move`，Issue #23.5）。
@@ -133,22 +133,8 @@ tabs/
    含 `<button>` 的 demo 上** ⇒ 无法表达。demo 的形态已由 `a11y.test.ts` 的 `cases` 表
    按用例 id **定向豁免**覆盖（含「额外内容里放 Button」这一条）。
 
-## 8. demo 覆盖登记
+## 8. 当前示例
 
-antd 6.6.4 的 `components/tabs/demo/` 有 **21 个** `.tsx`，本仓落 **13 个**
-（`demo.test.ts` 的 `expectCount` 钉死）。未落地的 8 个：
+20 个 Vue Demo 由 demo.test.ts 的 expectCount 校验。新增 popup-render 展示原始菜单、隐藏数量、关闭动作与条件/空内容，不依赖 Input.Search。其它示例保持原顺序。
 
-| demo | 原因 |
-| --- | --- |
-| `_semantic` | 上游内部语义调试页（`_` 前缀），不面向用户 |
-| `component-token` | 依赖 `antd-style` 的 `createStyles` 与 ConfigProvider 的 `theme.components` 覆盖；本仓零运行时 + 静态 CSS，且**该管线尚未接通**（见 §7.3） |
-| `style-class` | 同上（`styles` / `classNames` 的语义逃生口用法，依赖 antd-style 写法） |
-| `slide` | 上游演示自定义 tabBar 的**动效**（依赖 `@rc-component/motion` 的 `CSSMotion` 在自定义 tabBar 里的用法）；本仓的 `#tabBar` 槽已覆盖「替换导航区」，动效差异化留给使用者 |
-| `nest` | 演示「内层 Tabs 与外层 Tabs 的状态隔离」，依赖 `context` 里的嵌套跟踪；本仓 `activeKey` 是组件级状态、天然隔离，无需专门 demo |
-| `popupRender-Search` | 依赖**未落地**的 `Input.Search`（与 tree 的 search demo 同因，已在 §7 登记） |
-| `custom-tab-bar-node` | 依赖 rc 内部的 `renderWrapper` 通道（本仓明确**不实现**，见 `docs/analysis/tabs.md` §12） |
-| `card-top` | 与 `card` 的差异只是 `tabPlacement="top"` 的显式写法（已由 `placement` demo 覆盖） |
-
-13 个 demo 覆盖了全部**对外能力**：值域与受控、禁用、图标、三档尺寸、四向位置、卡片式、
-居中、可增删（含 `hideAdd` / 自定义图标）、两侧附加内容（两形态）、指示条（align / size /
-函数形态）、自定义导航区、动画三形态。
+2026-10-24 单对象插槽与动态渲染链修复见 [专项报告](../../../../docs/audit/2026-10-24-tabs-popup-remediation.md)。

@@ -41,7 +41,16 @@
  */
 
 import { useResizeObserver } from '@apollo-design/utils';
-import { computed, defineComponent, h, onMounted, type PropType, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  type PropType,
+  ref,
+  type SlotsType,
+  watch,
+} from 'vue';
 import { toCssSize } from '../_internal/to-css-size';
 import AddButton from './AddButton';
 import ExtraContent from './ExtraContent';
@@ -60,6 +69,7 @@ import type {
   TabsMoreProps,
   TabsSemanticClassNames,
   TabsSemanticStyles,
+  TabsSlots,
 } from './interface';
 import OperationNode from './OperationNode';
 import TabNode from './TabNode';
@@ -75,8 +85,11 @@ import {
   type TabSizeTuple,
 } from './util';
 
+const popupSlots: SlotsType<Pick<TabsSlots, 'popupRender'>> = {};
+
 export default defineComponent({
   name: 'ATabsNavList',
+  slots: popupSlots,
   props: {
     prefixCls: { type: String, required: true },
     id: { type: String, default: undefined },
@@ -122,7 +135,7 @@ export default defineComponent({
       default: undefined,
     },
   },
-  setup(props, { expose }) {
+  setup(props, { expose, slots }) {
     // ---- refs（测量用）----
     const containerRef = ref<HTMLElement | null>(null);
     // ⚠️ 只声明**用到的那一个方法**（`expose({ getElement })`），不写 `InstanceType` ——
@@ -625,27 +638,31 @@ export default defineComponent({
               ),
             ],
           ),
-          h(OperationNode as never, {
-            ref: operationsRef,
-            prefixCls,
-            id,
-            tabs: hiddenTabs.value,
-            locale,
-            mobile,
-            more,
-            editable,
-            tabBarGutter,
-            rtl: props.rtl,
-            removeAriaLabel: locale?.removeAriaLabel,
-            getPopupContainer: props.getPopupContainer,
-            removeClassName: semanticClassNames?.remove,
-            removeStyle: semanticStyles?.remove,
-            popupClassName: props.popupClassName,
-            popupStyle: props.popupStyle,
-            className: hasDropdown.value ? undefined : `${prefixCls}-nav-operations-hidden`,
-            style: props.style,
-            onTabClick: props.onTabClick,
-          }),
+          h(
+            OperationNode as never,
+            {
+              ref: operationsRef,
+              prefixCls,
+              id,
+              tabs: hiddenTabs.value,
+              locale,
+              mobile,
+              more,
+              editable,
+              tabBarGutter,
+              rtl: props.rtl,
+              removeAriaLabel: locale?.removeAriaLabel,
+              getPopupContainer: props.getPopupContainer,
+              removeClassName: semanticClassNames?.remove,
+              removeStyle: semanticStyles?.remove,
+              popupClassName: props.popupClassName,
+              popupStyle: props.popupStyle,
+              className: hasDropdown.value ? undefined : `${prefixCls}-nav-operations-hidden`,
+              style: props.style,
+              onTabClick: props.onTabClick,
+            },
+            slots.popupRender ? { popupRender: slots.popupRender } : {},
+          ),
           h(ExtraContent as never, { ref: extraRightRef, prefixCls, position: 'right', extra }),
         ],
       );

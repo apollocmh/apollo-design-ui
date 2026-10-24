@@ -28,6 +28,7 @@ export type {
   TabsLocale,
   TabsMorePopupInfo,
   TabsMoreProps,
+  TabsPopupSlotProps,
   TabsProps,
   TabsRef,
   TabsRenderTabBarProps,

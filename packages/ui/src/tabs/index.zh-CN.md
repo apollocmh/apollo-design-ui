@@ -93,7 +93,7 @@ import { Tabs } from '@apollo-design/ui';
 | tabBarExtraContent | 导航区两侧的附加内容 | `VNodeChild \| { left?, right? }` | —— |
 | addIcon / removeIcon | 「+」与删除按钮的图标 | `VNodeChild` | —— |
 | hideAdd | 隐藏「+」（仅 `editable-card` 有意义） | `boolean` | `false` |
-| more | 溢出下拉的配置（`icon` / `popupRender` / 浮层 props） | `TabsMoreProps` | —— |
+| more | 溢出下拉的配置（`icon` / `transitionName`） | `TabsMoreProps` | —— |
 | indicator | 指示条：`align`（`start`/`center`/`end`）与 `size`（数字 / `(origin) => number`） | `TabsIndicator` | `{ align: 'center' }` |
 | animated | 动画：`false` / `true` / 对象 | `boolean \| TabsAnimatedConfig` | `{ inkBar: true, tabPane: false }` |
 | destroyOnHidden | 隐藏时销毁面板（**组件级**默认，item 级可覆盖） | `boolean` | `false` |
@@ -133,7 +133,7 @@ import { Tabs } from '@apollo-design/ui';
 | 插槽 | 说明 | 参数 |
 | --- | --- | --- |
 | `tabBar` | 整体替换导航区（替代 `renderTabBar`） | `TabsRenderTabBarProps` |
-| `popupRender` | 自定义溢出下拉内容（替代 `more.popupRender`） | `(menu, { restTabs, onClose })` |
+| `popupRender` | 自定义溢出下拉内容（替代 `more.popupRender`） | `{ originNode, restTabs, onClose }` |
 | `extra` | 导航区两侧的附加内容（替代 `tabBarExtraContent`） | `({ position: 'left' \| 'right' })` |
 
 ### 键盘
@@ -173,3 +173,6 @@ import { Tabs } from '@apollo-design/ui';
 `tabsHorizontalItemMargin(-RTL)` —— 详见 `style/token.ts`。
 
 主题切换请用 `ConfigProvider` 的 `theme`；组件样式走静态 CSS + CSS 变量（零运行时）。
+
+
+`#popupRender` 使用单个具名对象参数，原始菜单通过 `originNode` 渲染；`restTabs` 为当前隐藏页签，`onClose` 可直接绑定关闭按钮。移除 `more.popupRender` 函数入口，不提供兼容层或弃用期。`more` 仅声明实际支持的 icon/transitionName，不再以任意键类型暗示浮层 props 均可透传。`#extra` 和 `#popupRender` 均支持挂载后的条件出现/移除及当前响应式内容；空插槽压住默认内容。

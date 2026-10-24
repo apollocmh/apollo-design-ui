@@ -31,7 +31,15 @@
  *    （PITFALLS 180 同族：写错只是静默没动画）。
  */
 
-import { defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import {
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type SlotsType,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { toCssSize } from '../_internal/to-css-size';
 import Dropdown from '../dropdown/Dropdown';
 import type { ItemType, MenuInfo } from '../menu/interface';
@@ -42,6 +50,7 @@ import type {
   TabsItem,
   TabsLocale,
   TabsMoreProps,
+  TabsSlots,
 } from './interface';
 import { getRemovable } from './util';
 
@@ -54,8 +63,11 @@ const KeyCode = {
   ESC: 27,
 } as const;
 
+const popupSlots: SlotsType<Pick<TabsSlots, 'popupRender'>> = {};
+
 export default defineComponent({
   name: 'ATabsOperationNode',
+  slots: popupSlots,
   props: {
     prefixCls: { type: String, required: true },
     id: { type: String, default: undefined },
@@ -89,7 +101,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, { expose }) {
+  setup(props, { expose, slots }) {
     const open = ref(false);
     const selectedKey = ref<string | null>(null);
     const containerRef = ref<HTMLElement | null>(null);
@@ -174,8 +186,7 @@ export default defineComponent({
       const { prefixCls, id, tabs, locale, mobile, editable, tabBarGutter, rtl, removeAriaLabel } =
         props;
       const moreProps = props.more ?? {};
-      const moreIcon = (moreProps.icon ?? 'More') as VNodeChild;
-      const popupRender = moreProps.popupRender;
+      const moreIcon = moreProps.icon ?? 'More';
       const dropdown = dropdownPrefix();
 
       const menuItems: ItemType[] = tabs.map((tab) => {
@@ -262,8 +273,8 @@ export default defineComponent({
               mouseEnterDelay: 0.1,
               mouseLeaveDelay: 0.1,
               getPopupContainer: props.getPopupContainer,
-              // ⚠️ 动效名由 antd 壳强制成 `{rootPrefixCls}-slide-up`
-              transitionName: moreProps.transitionName as string | undefined,
+              // Use the merged popup transition.
+              transitionName: moreProps.transitionName,
             },
             {
               default: () =>
@@ -281,11 +292,11 @@ export default defineComponent({
                   },
                   moreIcon as never,
                 ),
-              // `more.popupRender` 的逃生口 → Dropdown 的 `#popupRender` 槽
-              ...(popupRender
+              ...(slots.popupRender
                 ? {
                     popupRender: ({ originNode }: { originNode: VNodeChild }) =>
-                      popupRender(originNode as VNodeChild, {
+                      slots.popupRender?.({
+                        originNode,
                         restTabs: tabs,
                         onClose: () => {
                           open.value = false;

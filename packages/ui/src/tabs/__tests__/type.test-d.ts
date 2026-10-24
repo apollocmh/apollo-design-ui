@@ -36,6 +36,7 @@ import type {
   TabsLocale,
   TabsMorePopupInfo,
   TabsMoreProps,
+  TabsPopupSlotProps,
   TabsProps,
   TabsRef,
   TabsRenderTabBarProps,
@@ -120,7 +121,7 @@ describe('Tabs · L3 类型', () => {
       ((props: TabsRenderTabBarProps) => VNodeChild) | undefined
     >();
     expectTypeOf<TabsSlots['popupRender']>().toEqualTypeOf<
-      ((menu: VNodeChild, info: TabsMorePopupInfo) => VNodeChild) | undefined
+      ((props: TabsPopupSlotProps) => VNodeChild) | undefined
     >();
     expectTypeOf<TabsSlots['extra']>().toEqualTypeOf<
       ((props: { position: 'left' | 'right' }) => VNodeChild) | undefined
@@ -130,7 +131,7 @@ describe('Tabs · L3 类型', () => {
   });
 
   it('`TabsRenderTabBarProps` 的形状（= rc 的 RenderTabBarProps 的 Vue 化）', () => {
-    expectTypeOf<TabsRenderTabBarProps['activeKey']>().toEqualTypeOf<string>();
+    expectTypeOf<TabsRenderTabBarProps['activeKey']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<TabsRenderTabBarProps['rtl']>().toEqualTypeOf<boolean>();
     expectTypeOf<TabsRenderTabBarProps['more']>().toEqualTypeOf<TabsMoreProps>();
     expectTypeOf<TabsRenderTabBarProps['indicator']>().toEqualTypeOf<TabsIndicator | undefined>();
@@ -211,3 +212,13 @@ describe('Tabs · 运行时声明 ↔ 公开类型同源（KNOWN-ISSUES §2.3 / 
     expectTypeOf<RuntimeProps>().toExtend<TabsProps>();
   });
 });
+
+const checkRemovedPopupRender = () => {
+  // @ts-expect-error ADR0006/0007: renderer functions use the popupRender slot.
+  const more: TabsMoreProps = { popupRender: () => null };
+  // @ts-expect-error Vue slots receive one named object, not positional renderer arguments.
+  const slot: TabsSlots['popupRender'] = (_menu: VNodeChild, _info: TabsMorePopupInfo) => null;
+  void more;
+  void slot;
+};
+void checkRemovedPopupRender;

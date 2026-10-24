@@ -35,7 +35,7 @@
  * ── Vue 化差异（登记 README §2）────────────────────────────────────────────────
  *   - `v-model:activeKey`（C11：`update:activeKey` 与 `change` 同发）；
  *   - `renderTabBar` / `more.popupRender` / `tabBarExtraContent` → **scoped slot**
- *     （`#tabBar` / `#morePopup` / `#extra`，C8）；
+ *     （`#tabBar` / `#popupRender` / `#extra`，C8）；
  *   - `expose({ nativeElement })`（与上游 `TabsRef` 同形）；
  *   - `children`（`Tabs.TabPane` 兼容写法）**只发告警不实现**（上游 v6 已 deprecated）；
  *   - 面板 id 前缀是 `apollo-tabs-N`（上游是 `rc-tabs-N`）—— 平台差异，见 README §2。
@@ -50,6 +50,7 @@ import {
   h,
   onMounted,
   type PropType,
+  type SlotsType,
   ref,
   type VNodeChild,
   watch,
@@ -71,6 +72,7 @@ import type {
   TabsProps,
   TabsSemanticClassNames,
   TabsSemanticStyles,
+  TabsSlots,
   TabsType,
 } from './interface';
 import TabNavList from './TabNavList';
@@ -103,9 +105,12 @@ export interface TabsConfig {
   [key: string]: unknown;
 }
 
+const contentSlots: SlotsType<TabsSlots> = {};
+
 export default defineComponent({
   name: 'ATabs',
   inheritAttrs: false,
+  slots: contentSlots,
   props: {
     prefixCls: { type: String, default: undefined },
     type: { type: String as PropType<TabsType>, default: undefined },
@@ -337,24 +342,9 @@ export default defineComponent({
     // ======================== more 的三源合并 ========================
     const mergedMore = computed(() => ({
       icon: configTabs.more?.icon ?? configTabs.moreIcon ?? props.moreIcon ?? h(EllipsisOutlined),
-      // ⚠️ antd 强制这个动效名（**rootPrefixCls**，不是组件前缀；PITFALLS 180 同族）
+      // Default popup motion uses the root prefix; explicit more.transitionName may override it.
       transitionName: `${rootPrefixCls}-slide-up`,
       ...(props.more ?? {}),
-      // ⚠️ Vue 侧的统一入口：`#popupRender`（原名 `#morePopup` 只是 interface 注释里的
-      //    过时写法 —— 本轮的裁决是**统一成 `popupRender`**）。原来只认
-      //    `more.popupRender` 函数 prop，调用方的插槽被静默忽略（Issue #23.2）；
-      //    放在最后 ⇒ 插槽优先于 `props.more.popupRender`。
-      ...(slots.popupRender
-        ? {
-            // ⚠️ 签名与 `TabsSlots['popupRender']` 一致：`(menu, { restTabs, onClose })`
-            //    （`type.test-d.ts` 钉着），不另造 `{ originNode }` 形态。
-            popupRender: (menu: VNodeChild, info: Record<string, unknown>) =>
-              (slots.popupRender as (m: VNodeChild, i: Record<string, unknown>) => VNodeChild)(
-                menu,
-                info,
-              ),
-          }
-        : {}),
     }));
 
     // ======================== 状态机 ========================
@@ -412,7 +402,7 @@ export default defineComponent({
     };
 
     // `#extra` 槽（带 position 参数）与 `tabBarExtraContent` prop 两通道
-    const mergedExtra = computed<TabsExtraContent>(() => {
+    const resolveExtra = (): TabsExtraContent => {
       const slot = slots.extra;
       if (slot) {
         return {
@@ -421,10 +411,10 @@ export default defineComponent({
         };
       }
       return props.tabBarExtraContent;
-    });
+    };
 
     // ======================== 供 `#tabBar` 槽的参数（= rc 的 RenderTabBarProps）===========
-    const tabBarProps = computed<Record<string, unknown>>(() => ({
+    const tabBarProps = computed(() => ({
       id: mergedId.value,
       activeKey: mergedActiveKey.value,
       animated: mergedAnimated.value,
@@ -439,7 +429,6 @@ export default defineComponent({
       onTabScroll: (info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => {
         emit('tabScroll', info);
       },
-      extra: mergedExtra.value,
       style: props.tabBarStyle,
       getPopupContainer: props.getPopupContainer ?? contextGetPopupContainer,
       indicator: mergedIndicator.value,
@@ -473,9 +462,14 @@ export default defineComponent({
         mergedClassNames.value.root,
       ];
 
+      const navProps = { ...tabBarProps.value, extra: resolveExtra() };
       const navNode = slots.tabBar
-        ? slots.tabBar(tabBarProps.value as never)
-        : h(TabNavList as never, tabBarProps.value as never);
+        ? slots.tabBar(navProps)
+        : h(
+            TabNavList as never,
+            navProps as never,
+            slots.popupRender ? { popupRender: slots.popupRender } : {},
+          );
 
       const panelNode = h(
         TabPanelList as never,

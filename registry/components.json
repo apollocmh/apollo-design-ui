@@ -2540,7 +2540,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
-      "layerNotes": null,
+      "layerNotes": "2026-10-24 F11/ADR0006/0007：Tabs popupRender 改为单具名对象并移除函数prop，全链路原生槽转发；修复动态extra及Dropdown槽存在性快照。14文件261条runtime通过，迁移/真实浏览器/类型/产物证据见 docs/audit/2026-10-24-tabs-popup-remediation.md。Tabs20个Demo；保留历史视觉状态，Apollo基线未新验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4153,7 +4153,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": "收口（2026-09-30）。结构：Tabs.vue（壳+状态机）+ TabNavList（593 行的等价物）+ TabNode + OperationNode + AddButton/ExtraContent + TabPanelList/TabPane + util.ts + 5 个 hooks（几何全部抽成**纯函数**）。测试：L1 pure 33（getAnimateConfig 四分支 / getRemovable 四条件 / 三区间 / visibleRange 哨兵 / getTabOffsets「复用只递一层」/ getIndicatorStyle + **单位哨兵**）+ L2 index 46（结构与类名 / ARIA / **id 异步生成** / activeKey 自动重置四态 / change·tabClick 分流 / 键盘表 / editable 载荷改写 / 面板卸载轮询 / ConfigProvider 的 SizeContext 与 more.icon 四级优先 / 语义槽 + popup 展平 / #extra·#tabBar）+ L3 type 36 + L4 dom 26 用例 27/27（各恰好 1 条豁免 = **U15**；两侧都显式传 id）+ L5 a11y 26（16 配置 axe + role/ARIA + 键盘，`aria-required-children` 可自证豁免）+ theme 20（26 token 判定 + 4 主题 × 13 demo）+ demo 15 + 视觉 39/39 exact。关键判据：见 README §5 的 12 条。样式：128 条规则 + 26 条 token 声明。遗留：溢出下拉的「真溢出」只有单元级覆盖；26 个 token 无用户覆盖入口；demo 维度的 axe 刻意不接（allow 语义限制）。",
+      "layerNotes": "收口（2026-09-30）。结构：Tabs.vue（壳+状态机）+ TabNavList（593 行的等价物）+ TabNode + OperationNode + AddButton/ExtraContent + TabPanelList/TabPane + util.ts + 5 个 hooks（几何全部抽成**纯函数**）。测试：L1 pure 33（getAnimateConfig 四分支 / getRemovable 四条件 / 三区间 / visibleRange 哨兵 / getTabOffsets「复用只递一层」/ getIndicatorStyle + **单位哨兵**）+ L2 index 46（结构与类名 / ARIA / **id 异步生成** / activeKey 自动重置四态 / change·tabClick 分流 / 键盘表 / editable 载荷改写 / 面板卸载轮询 / ConfigProvider 的 SizeContext 与 more.icon 四级优先 / 语义槽 + popup 展平 / #extra·#tabBar）+ L3 type 36 + L4 dom 26 用例 27/27（各恰好 1 条豁免 = **U15**；两侧都显式传 id）+ L5 a11y 26（16 配置 axe + role/ARIA + 键盘，`aria-required-children` 可自证豁免）+ theme 20（26 token 判定 + 4 主题 × 13 demo）+ demo 15 + 视觉 39/39 exact。关键判据：见 README §5 的 12 条。样式：128 条规则 + 26 条 token 声明。遗留：溢出下拉的「真溢出」只有单元级覆盖；26 个 token 无用户覆盖入口；demo 维度的 axe 刻意不接（allow 语义限制）。 2026-10-24 F11/ADR0006/0007：Tabs popupRender 改为单具名对象并移除函数prop，全链路原生槽转发；修复动态extra及Dropdown槽存在性快照。14文件261条runtime通过，迁移/真实浏览器/类型/产物证据见 docs/audit/2026-10-24-tabs-popup-remediation.md。Tabs20个Demo；保留历史视觉状态，Apollo基线未新验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

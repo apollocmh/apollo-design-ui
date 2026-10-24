@@ -12,7 +12,7 @@
  * | `activeKey` + `onChange` | `v-model:activeKey`（同时发 `change`，C11） | §3 |
  * | `onTabClick` / `onEdit` / `onTabScroll` | **emits**（载荷与 antd 同形） | C5 |
  * | `renderTabBar` | **scoped slot** `#tabBar`（槽参数 = rc 的 `RenderTabBarProps`） | C8 |
- * | `more.popupRender` | **scoped slot** `#popupRender`（`(menu, { restTabs, onClose })`） | C8 |
+ * | `more.popupRender` | **scoped slot** `#popupRender`（`{ originNode, restTabs, onClose }`） | C8 |
  * | `tabBarExtraContent`（`ReactNode \| {left,right}`） | `#extra` 槽（带 `position` 参数）+ 同形 prop | C8 |
  * | `TabsRef.nativeElement` | `expose({ nativeElement })` | 同上游 |
  * | `Tabs.TabPane`（children 兼容写法） | **不实现**（v6 已 deprecated），只发告警 | UPSTREAM |
@@ -133,14 +133,13 @@ export interface TabsMorePopupInfo {
 /**
  * `more` 的配置。
  *
- * ⚠️ `transitionName` 由 antd **强制**为 `{rootPrefixCls}-slide-up`（不是组件前缀）——
- *    调用方给的同名值会被覆盖（PITFALLS 180 同族：动效名写错会静默失效）。
+ * `transitionName` 默认使用根前缀的 slide-up，调用方可显式覆盖。
+ * 仅声明实际消费的配置；内容通过 popupRender 插槽提供。
  */
 export interface TabsMoreProps {
   icon?: VNodeChild;
-  popupRender?: (menu: VNodeChild, info: TabsMorePopupInfo) => VNodeChild;
-  /** 浮层的其余 props（透传给本仓 Dropdown 家族）。 */
-  [key: string]: unknown;
+  /** Overflow popup transition name. */
+  transitionName?: string;
 }
 
 /** 指示条的合并后配置（`indicator` / `indicatorSize` / ConfigProvider 三源合并的结果）。 */
@@ -186,7 +185,7 @@ export interface TabsEditableConfig {
 /** `#tabBar` 槽 / `renderTabBar` 拿到的参数（= rc 的 `RenderTabBarProps` 的 Vue 化）。 */
 export interface TabsRenderTabBarProps {
   id: string | null;
-  activeKey: string;
+  activeKey: string | undefined;
   tabPosition: TabPosition;
   rtl: boolean;
   mobile: boolean;
@@ -306,11 +305,15 @@ export interface TabsEmits {
   edit: [target: TabsEditEvent | string, action: TabsEditAction];
 }
 
+export interface TabsPopupSlotProps extends TabsMorePopupInfo {
+  originNode: VNodeChild;
+}
+
 export interface TabsSlots {
   /** 自定义整条导航栏（替代 `renderTabBar`）。 */
   tabBar?: (props: TabsRenderTabBarProps) => VNodeChild;
   /** 自定义溢出下拉（替代 `more.popupRender`）。 */
-  popupRender?: (menu: VNodeChild, info: TabsMorePopupInfo) => VNodeChild;
+  popupRender?: (props: TabsPopupSlotProps) => VNodeChild;
   /** 导航栏两侧的附加内容（替代 `tabBarExtraContent`）。 */
   extra?: (props: { position: 'left' | 'right' }) => VNodeChild;
 }

@@ -4,7 +4,7 @@
  * 判据：
  *   1. 归一（`destroyInactiveTabPane` → `destroyOnHidden`）后的 items 必须是**渲染列表**的
  *      数据源（`TabPanelList` 的 `removeOnLeave = 组件级 ?? item 级`）；
- *   2. 更多菜单的自定义浮层要走 Vue 作用域插槽 `#popupRender`（签名 `(menu, info)`，
+ *   2. 更多菜单的自定义浮层要走 Vue 作用域插槽 `#popupRender`（签名 `{ originNode, restTabs, onClose }`，
  *      与 `TabsSlots['popupRender']` 一致；旧注释里的 `#morePopup` 是过时写法），
  *      Tabs → OperationNode → Dropdown 全链路；
  *   3. `useMergeSemantic` 产出的 `mergedStyles.root` 必须落到根元素（与 `root` 类名同判）。
@@ -15,6 +15,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { useTouchMove } from '../hooks/use-touch-move';
 import Tabs from '../index';
+import type { TabsPopupSlotProps } from '../interface';
+import OperationNode from '../OperationNode';
 
 const mounted: Array<{ unmount: () => void }> = [];
 
@@ -113,10 +115,8 @@ describe('Tabs · Issue #23', () => {
   });
 
   it('#23.2 #popupRender 作用域插槽接到「更多」浮层', async () => {
-    // ⚠️ jsdom 下「更多」的浮层**打不开**：OperationNode 的 `open` 被
-    //    `tabs.length ? open : false` 门住，而 jsdom 没有宽度测量 ⇒ 省略项为空
-    //    ⇒ 改为在**组件边界**验证链路：Tabs 的插槽 → OperationNode 的 more.popupRender
-    //    → 真实调用它以断言 originNode 透传。
+    // jsdom does not measure overflow. Consume the forwarded slot inside a
+    // render boundary; real overflow and menu interaction are covered in browser.
     const items = Array.from({ length: 8 }, (_, i) => ({
       key: `k${i}`,
       label: `Tab ${i}`,
@@ -125,33 +125,28 @@ describe('Tabs · Issue #23', () => {
     const w = mountTabs(
       { items },
       {
-        popupRender: (menu: unknown) =>
-          h('section', { 'data-custom-popup': 'yes' }, [menu as never]),
+        popupRender: ({ originNode }: TabsPopupSlotProps) =>
+          h('section', { 'data-custom-popup': 'yes' }, [originNode]),
       },
     );
     await nextTick();
 
-    const op = w.findComponent({ name: 'ATabsOperationNode' });
-    expect(op.exists()).toBe(true);
-    const more = (op.props() as Record<string, unknown>).more as
-      | Record<string, unknown>
-      | undefined;
-    const popupRender = (more as Record<string, unknown>).popupRender as
-      | ((menu: unknown, info: Record<string, unknown>) => unknown)
-      | undefined;
-    expect(typeof popupRender).toBe('function');
-
-    // 真实调用：应拿到插槽包出来的 section，且 originNode 在里面
-    // 插槽调用结果会被 Vue 归一成数组 ⇒ 取首元素
-    const nodes = popupRender!(h('div', { class: 'origin' }, 'orig'), {
-      restTabs: [],
-      onClose: () => {},
-    }) as unknown[];
-    const wrapperNode = nodes[0] as { props?: Record<string, unknown> };
-    expect(wrapperNode.props?.['data-custom-popup']).toBe('yes');
-    // originNode 应作为插槽内容被带上（不序列化整个 vnode —— 有循环引用）
-    const children = (wrapperNode as unknown as { children?: unknown }).children;
-    expect(String(Array.isArray(children) ? children.length : children)).toMatch(/1|origin/);
+    const op = w.getComponent(OperationNode);
+    const popup = mount(
+      defineComponent({
+        setup: () => () =>
+          h('div', null, [
+            op.vm.$slots.popupRender?.({
+              originNode: h('div', { class: 'origin' }, 'orig'),
+              restTabs: items,
+              onClose: () => {},
+            }),
+          ]),
+      }),
+    );
+    expect(popup.get('[data-custom-popup="yes"]').attributes('data-custom-popup')).toBe('yes');
+    expect(popup.get('.origin').text()).toBe('orig');
+    popup.unmount();
     w.unmount();
   });
 });

@@ -11,10 +11,10 @@
     "rows": 501,
     "byCategory": {
       "data": 140,
-      "component-content-candidate": 146,
+      "component-content-candidate": 147,
       "deprecated": 53,
       "internal": 70,
-      "render-function-candidate": 80,
+      "render-function-candidate": 79,
       "configuration": 12
     },
     "byDecision": {
@@ -11519,7 +11519,7 @@
       "owner": "TabsEditableConfig",
       "prop": "addIcon",
       "category": "data",
-      "source": "packages/ui/src/tabs/interface.ts:183",
+      "source": "packages/ui/src/tabs/interface.ts:182",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11544,7 +11544,7 @@
       "owner": "TabsEditableConfig",
       "prop": "removeIcon",
       "category": "data",
-      "source": "packages/ui/src/tabs/interface.ts:182",
+      "source": "packages/ui/src/tabs/interface.ts:181",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11591,7 +11591,8 @@
           "packages/ui/src/tabs/__tests__/a11y.test.ts",
           "packages/ui/src/tabs/__tests__/index.test.ts",
           "packages/ui/src/tabs/__tests__/s23-issue23.test.ts",
-          "packages/ui/src/tabs/__tests__/semantic.test.ts"
+          "packages/ui/src/tabs/__tests__/semantic.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -11674,7 +11675,8 @@
           "packages/ui/src/tabs/__tests__/index.test.ts",
           "packages/ui/src/tabs/__tests__/pure.test.ts",
           "packages/ui/src/tabs/__tests__/s23-issue23.test.ts",
-          "packages/ui/src/tabs/__tests__/semantic.test.ts"
+          "packages/ui/src/tabs/__tests__/semantic.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -11709,21 +11711,17 @@
     },
     {
       "component": "tabs",
-      "owner": "TabsMoreProps",
-      "prop": "popupRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/tabs/interface.ts:141",
+      "owner": "TabsPopupSlotProps",
+      "prop": "originNode",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/tabs/interface.ts:309",
       "slotRuntime": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/tabs/Tabs.vue"
-        ]
+        "status": "not-run",
+        "files": []
       },
       "slotType": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/tabs/interface.ts"
-        ]
+        "status": "not-found",
+        "files": []
       },
       "slotDemo": {
         "status": "not-found",
@@ -11743,7 +11741,7 @@
       "owner": "TabsProps",
       "prop": "addIcon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/tabs/interface.ts:266",
+      "source": "packages/ui/src/tabs/interface.ts:265",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11768,7 +11766,7 @@
       "owner": "TabsProps",
       "prop": "children",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/tabs/interface.ts:257",
+      "source": "packages/ui/src/tabs/interface.ts:256",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11787,7 +11785,8 @@
           "packages/ui/src/tabs/__tests__/a11y.test.ts",
           "packages/ui/src/tabs/__tests__/index.test.ts",
           "packages/ui/src/tabs/__tests__/s23-issue23.test.ts",
-          "packages/ui/src/tabs/__tests__/semantic.test.ts"
+          "packages/ui/src/tabs/__tests__/semantic.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "review",
@@ -11798,7 +11797,7 @@
       "owner": "TabsProps",
       "prop": "moreIcon",
       "category": "deprecated",
-      "source": "packages/ui/src/tabs/interface.ts:269",
+      "source": "packages/ui/src/tabs/interface.ts:268",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11825,7 +11824,7 @@
       "owner": "TabsProps",
       "prop": "removeIcon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/tabs/interface.ts:267",
+      "source": "packages/ui/src/tabs/interface.ts:266",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11853,7 +11852,7 @@
       "owner": "TabsProps",
       "prop": "tabBarExtraContent",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/tabs/interface.ts:280",
+      "source": "packages/ui/src/tabs/interface.ts:279",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11871,7 +11870,8 @@
         "files": [
           "packages/ui/src/tabs/__tests__/a11y.test.ts",
           "packages/ui/src/tabs/__tests__/index.test.ts",
-          "packages/ui/src/tabs/__tests__/semantic.test.ts"
+          "packages/ui/src/tabs/__tests__/semantic.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "review",
@@ -11882,7 +11882,7 @@
       "owner": "TabsRenderTabBarProps",
       "prop": "extra",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/tabs/interface.ts:199",
+      "source": "packages/ui/src/tabs/interface.ts:198",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -11902,7 +11902,8 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/tabs/__tests__/index.test.ts"
+          "packages/ui/src/tabs/__tests__/index.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "review",
@@ -11913,7 +11914,7 @@
       "owner": "TabsSlots",
       "prop": "extra",
       "category": "internal",
-      "source": "packages/ui/src/tabs/interface.ts:315",
+      "source": "packages/ui/src/tabs/interface.ts:318",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -11933,7 +11934,8 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/tabs/__tests__/index.test.ts"
+          "packages/ui/src/tabs/__tests__/index.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -11944,10 +11946,12 @@
       "owner": "TabsSlots",
       "prop": "popupRender",
       "category": "internal",
-      "source": "packages/ui/src/tabs/interface.ts:313",
+      "source": "packages/ui/src/tabs/interface.ts:316",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/tabs/OperationNode.ts",
+          "packages/ui/src/tabs/TabNavList.ts",
           "packages/ui/src/tabs/Tabs.vue"
         ]
       },
@@ -11958,13 +11962,16 @@
         ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tabs/demo/popup-render.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/tabs/__tests__/s23-issue23.test.ts"
+          "packages/ui/src/tabs/__tests__/s23-issue23.test.ts",
+          "packages/ui/src/tabs/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -11975,7 +11982,7 @@
       "owner": "TabsSlots",
       "prop": "tabBar",
       "category": "internal",
-      "source": "packages/ui/src/tabs/interface.ts:311",
+      "source": "packages/ui/src/tabs/interface.ts:314",
       "slotRuntime": {
         "status": "source-reference",
         "files": [

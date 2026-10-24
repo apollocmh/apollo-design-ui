@@ -11,6 +11,7 @@ import ListPagination from '../../../packages/ui/src/list/demo/pagination.vue';
 import ListResponsive from '../../../packages/ui/src/list/demo/responsive.vue';
 import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-options.vue';
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
+import TabsPopup from '../../../packages/ui/src/tabs/demo/popup-render.vue';
 import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
@@ -64,6 +65,7 @@ const Demo = {
   'content-slots': ContentSlots,
   events: EventEmits,
   'switch-events': SwitchEvents,
+  'tabs-popup': TabsPopup,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,
