@@ -1,3 +1,6 @@
+---
+order: 106
+---
 ## zh-CN
 
 `placement` 菜单弹出方向（top/left/right/bottom）。

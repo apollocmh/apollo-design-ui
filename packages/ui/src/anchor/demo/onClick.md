@@ -1,3 +1,6 @@
+---
+order: 206
+---
 ## zh-CN
 
 点击锚点不记录历史（回调里 `preventDefault()` 可以进一步阻止组件接管 history）。

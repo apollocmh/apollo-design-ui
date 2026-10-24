@@ -1,3 +1,6 @@
+---
+order: 0
+---
 ## zh-CN
 
 获取 `message`、`notification`、`modal` 实例。

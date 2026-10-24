@@ -1,3 +1,6 @@
+---
+order: 6
+---
 ## zh-CN
 
 `format` 自定义 indicator 内容。

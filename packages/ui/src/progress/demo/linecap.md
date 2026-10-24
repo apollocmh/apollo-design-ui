@@ -1,3 +1,6 @@
+---
+order: 11
+---
 ## zh-CN
 
 `strokeLinecap="butt"` 方角。

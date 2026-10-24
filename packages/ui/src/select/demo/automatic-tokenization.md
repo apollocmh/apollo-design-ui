@@ -1,3 +1,6 @@
+---
+order: 36
+---
 ## zh-CN
 
 `tokenSeparators`：输入 `,` 自动切分成标签。

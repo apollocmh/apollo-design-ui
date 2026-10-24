@@ -1,3 +1,6 @@
+---
+order: 110
+---
 ## zh-CN
 
 `tooltip` 数据 prop（string 或 TooltipProps 对象）。

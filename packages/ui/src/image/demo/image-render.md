@@ -1,3 +1,6 @@
+---
+order: 206
+---
 ## zh-CN
 
 自定义 `img` 元素的渲染（`imageRender`）。

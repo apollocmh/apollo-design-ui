@@ -1,3 +1,6 @@
+---
+order: 112
+---
 ## zh-CN
 
 平滑的过渡动画（shared popup 容器场景）。

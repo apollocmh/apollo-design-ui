@@ -1,3 +1,6 @@
+---
+order: 7
+---
 ## zh-CN
 
 暗色主题下的对话框（`darkAlgorithm`）。

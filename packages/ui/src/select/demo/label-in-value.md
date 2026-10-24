@@ -1,3 +1,6 @@
+---
+order: 50
+---
 ## zh-CN
 
 `labelInValue`：`onChange` 收到 `{ label, value }`。

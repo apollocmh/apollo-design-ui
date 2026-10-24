@@ -1,3 +1,6 @@
+---
+order: 7
+---
 ## zh-CN
 
 使用 PurePanel 渲染静态的气泡卡片。

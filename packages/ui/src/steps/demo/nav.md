@@ -1,3 +1,6 @@
+---
+order: 7
+---
 ## zh-CN
 
 导航类型的步骤条（`type="navigation"`）。

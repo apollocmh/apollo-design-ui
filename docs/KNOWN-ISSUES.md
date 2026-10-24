@@ -236,9 +236,9 @@ F03 扩展测试发现：SSR 输出可见错误节点，客户端支持 appear �
 
 **解决方案**：对缺口建立“能力场景”表，不以凑同名 `.vue` 文件为目标；先区分 `supported+missing-demo`、`unsupported+requires-design`、`external-dependency`、`debug-only`、`intentionally-different`。必须给每个重要能力提供：可交互 Vue 示例、中文/英文说明、单元或浏览器断言。**高价值优先**：Table 拖拽/列重排（前提是能力已实现；否则不要做空 demo）、Form.List 动态交互和多表单、List 拖拽、Badge 富内容、DatePicker 不同输入/格式、Splitter 状态重置、Collapse 自定义 icon。OSS/外部裁剪服务、上游 `debug-*` 不强制迁移；本地 mock 可展示真实行为时优先本地 mock。
 
-### H04 · P3 · 无效动态导入已修，其余分类继续开放｜文档构建 warning 需要分级，而非放行也非清零数字
+### H04 · P3 · 无效动态导入与 order 元数据已修，主包继续开放｜文档构建 warning 需要分级，而非放行也非清零数字
 
-2026-10-24 已定位并修复 search.ts 的静态/动态混用（TopBar 原先的动态导入并不拆包），保留索引按需、并发/重试；生产浏览器验证首次零请求、打开一次、重开复用、焦点返回、英文/暗色与 SSR 水合，零页面错误。DemoRenderer 的 mounted 全量加载也已改为视口附近单次激活，保留滚动状态并清理卸载资源；Table 初始模块请求 55→12，gzip 字节 687345→657437。157 条文档测试、真实滚动和 inline/iframe 截图准备通过。大 app chunk（约 2.2MB 原始 / 510kB gzip）和 303 项 order 元数据提示仍明确开放，逐文件交付记录见 [H04 报告](audit/2026-10-24-docs-warnings.md)。未提高阈值或屏蔽日志。
+2026-10-24 已定位并修复 search.ts 的静态/动态混用（TopBar 原先的动态导入并不拆包），保留索引按需、并发/重试；生产浏览器验证首次零请求、打开一次、重开复用、焦点返回、英文/暗色与 SSR 水合，零页面错误。DemoRenderer 的 mounted 全量加载也已改为视口附近单次激活，保留滚动状态并清理卸载资源；Table 初始模块请求 55→12，gzip 字节 687345→657437。157 条文档测试、真实滚动和 inline/iframe 截图准备通过。大 app chunk（约 2.2MB 原始 / 510kB gzip）的优化仍开放，首批交付记录见 [H04 报告](audit/2026-10-24-docs-warnings.md)。后续已补齐 21 个组件的 303 个 Demo order，72 组件 / 994 Demo 顺序哈希完全一致，同生成条件下除 order 外全部页面数据及搜索索引相等，元数据提示为 0；见 [order 整改](audit/2026-10-24-demo-order-remediation.md)。未提高阈值或屏蔽日志。另记录跨初始化状态的代码高亮 token 标签差异线索，本批未改高亮器，未宣称高亮确定性已经解决。
 
 原 [文档站报告](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md) 记录已有大 chunk、静态/动态 import 混用及 Demo frontmatter 提示。**不是本轮证明的构建失败**。建议：采集完整 warning、定位来源和首次出现提交；分为实际影响 chunk 的优化项、仅开发时诊断项、内容元数据缺失；对真实影响首屏的警告按包分析、路由懒加载和图标动态导入优化，**不得**一律调高 chunkSizeWarningLimit 或删日志。测 gzip 产物、首屏请求链、路由按需加载、SSG 84 routes、暗色/语言 hydration。
 

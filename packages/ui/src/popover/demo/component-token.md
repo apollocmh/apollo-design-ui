@@ -1,3 +1,6 @@
+---
+order: 3
+---
 ## zh-CN
 
 ConfigProvider 的组件级 token 覆盖不支持（D25/D83）。

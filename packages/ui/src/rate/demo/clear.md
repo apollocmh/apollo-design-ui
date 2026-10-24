@@ -1,3 +1,6 @@
+---
+order: 3
+---
 ## zh-CN
 
 再次点击同值可以清零（`allowClear` 默认为 true）。

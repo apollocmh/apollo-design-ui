@@ -1,3 +1,6 @@
+---
+order: 210
+---
 ## zh-CN
 
 组内预览可自定义工具栏（`actionsRender`）。

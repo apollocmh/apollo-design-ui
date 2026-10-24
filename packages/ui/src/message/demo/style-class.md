@@ -1,3 +1,6 @@
+---
+order: 8
+---
 ## zh-CN
 
 通过 `classNames` 和 `styles` 可以自定义消息的语义化结构样式。

@@ -1,3 +1,6 @@
+---
+order: 201
+---
 ## zh-CN
 
 `allowClear` 与自定义清除图标（`#clearIcon` 插槽）。

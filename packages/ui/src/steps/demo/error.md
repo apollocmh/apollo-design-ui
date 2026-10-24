@@ -1,3 +1,6 @@
+---
+order: 3
+---
 ## zh-CN
 
 使用 `status: 'error'` 指定某一步骤为错误状态。

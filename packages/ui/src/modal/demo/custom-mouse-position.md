@@ -1,3 +1,6 @@
+---
+order: 6
+---
 ## zh-CN
 
 通过 `mousePosition` 指定动画展开的原点。

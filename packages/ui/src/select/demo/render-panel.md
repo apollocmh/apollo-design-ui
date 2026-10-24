@@ -1,3 +1,6 @@
+---
+order: 58
+---
 ## zh-CN
 
 `Select._InternalPanelDoNotUseOrYouWillBeFired` 的对应物：静态面板。

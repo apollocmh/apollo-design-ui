@@ -1,3 +1,6 @@
+---
+order: 0
+---
 ## zh-CN
 
 设置 `onChange` 后，步骤条变为可点击状态（`role="button"` + 键盘可操作）。

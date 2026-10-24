@@ -1,3 +1,6 @@
+---
+order: 10
+---
 ## zh-CN
 
 通过 `classNames` 和 `styles` 可以自定义通知的语义化结构样式。

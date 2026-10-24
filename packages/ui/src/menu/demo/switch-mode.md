@@ -1,4 +1,5 @@
 ---
+order: 210
 title:
   zh-CN: 切换菜单类型
   en-US: Switch mode

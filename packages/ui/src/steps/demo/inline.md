@@ -1,3 +1,6 @@
+---
+order: 5
+---
 ## zh-CN
 
 行内步骤条（`type="inline"`，content 走 Tooltip）。

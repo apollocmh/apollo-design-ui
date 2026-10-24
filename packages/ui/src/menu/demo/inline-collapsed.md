@@ -1,4 +1,5 @@
 ---
+order: 206
 title:
   zh-CN: 折叠菜单
   en-US: Inline collapsed

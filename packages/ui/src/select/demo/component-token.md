@@ -1,3 +1,6 @@
+---
+order: 40
+---
 ## zh-CN
 
 通过 ConfigProvider 覆盖 Select 的 Component Token。

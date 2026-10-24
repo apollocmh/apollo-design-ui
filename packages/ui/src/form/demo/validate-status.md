@@ -1,1 +1,4 @@
+---
+order: 224
+---
 校验状态（`validateStatus` + `hasFeedback`）：错误/警告/校验中。\n

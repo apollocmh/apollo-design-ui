@@ -1,3 +1,6 @@
+---
+order: 2
+---
 ## zh-CN
 
 组件级 token。

@@ -1,3 +1,6 @@
+---
+order: 204
+---
 ## zh-CN
 
 `preview.cover.placement` 指定封面（hover 层）位置。

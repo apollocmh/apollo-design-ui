@@ -1,3 +1,6 @@
+---
+order: 17
+---
 ## zh-CN
 
 标题竖排（`titlePlacement="vertical"`；deprecated `labelPlacement` 同效）。

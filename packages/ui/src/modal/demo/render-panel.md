@@ -1,3 +1,6 @@
+---
+order: 18
+---
 ## zh-CN
 
 调试用面板（`_InternalPanelDoNotUseOrYouWillBeFired`），不 portal、不遮罩、不动效。

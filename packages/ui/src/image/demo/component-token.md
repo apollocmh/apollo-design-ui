@@ -1,3 +1,6 @@
+---
+order: 202
+---
 ## zh-CN
 
 组件级 token（本仓以默认主题渲染 —— ConfigProvider 主题覆盖 PENDING）。

@@ -1,3 +1,6 @@
+---
+order: 9
+---
 ## zh-CN
 
 `percent` 配合当前 `process` 步显示进度环。

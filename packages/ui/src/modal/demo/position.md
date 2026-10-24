@@ -1,3 +1,6 @@
+---
+order: 17
+---
 ## zh-CN
 
 通过 `style.top` 与 `centered` 控制对话框的垂直位置。

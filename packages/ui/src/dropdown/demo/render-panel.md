@@ -1,3 +1,6 @@
+---
+order: 13
+---
 ## zh-CN
 
 PurePanel 静态面板（Tooltip._InternalPanelDoNotUseOrYouWillBeFired 对应物）。

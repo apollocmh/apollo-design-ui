@@ -1,3 +1,6 @@
+---
+order: 51
+---
 ## zh-CN
 
 `maxCount` 限制最多可选 2 项（仅 multiple / tags）。

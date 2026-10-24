@@ -1,3 +1,6 @@
+---
+order: 13
+---
 ## zh-CN
 
 `size="small"` 小号步骤条。

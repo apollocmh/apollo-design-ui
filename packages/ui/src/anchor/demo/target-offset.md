@@ -1,3 +1,6 @@
+---
+order: 208
+---
 ## zh-CN
 
 锚点目标滚动到屏幕正中间（`targetOffset` 优先于 `offsetTop`）。

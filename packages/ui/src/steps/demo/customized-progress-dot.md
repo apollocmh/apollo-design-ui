@@ -1,3 +1,6 @@
+---
+order: 2
+---
 ## zh-CN
 
 `#progressDot` 作用域插槽自定义点状步骤点（接收 `index/status/title/content`）。

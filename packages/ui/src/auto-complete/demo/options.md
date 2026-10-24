@@ -1,3 +1,6 @@
+---
+order: 206
+---
 ## zh-CN
 
 `options` 数据源（deprecated `ASelectOption` 子组件形态见 `AutoComplete.Option`）。

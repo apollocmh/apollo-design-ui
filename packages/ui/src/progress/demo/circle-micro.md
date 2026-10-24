@@ -1,3 +1,6 @@
+---
+order: 1
+---
 ## zh-CN
 
 微型圆环（≤20px，indicator 经 Tooltip 展示）。

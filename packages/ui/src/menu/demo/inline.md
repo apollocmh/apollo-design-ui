@@ -1,4 +1,5 @@
 ---
+order: 205
 title:
   zh-CN: 内嵌菜单
   en-US: Inline menu

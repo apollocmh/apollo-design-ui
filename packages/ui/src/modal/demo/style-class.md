@@ -1,3 +1,6 @@
+---
+order: 20
+---
 ## zh-CN
 
 通过 `classNames` / `styles` 语义槽定制对话框的各个区域（支持函数形态）。

@@ -1,3 +1,6 @@
+---
+order: 212
+---
 ## zh-CN
 
 预览时保留原图的 `width`/`height`（`imageInfo`）。

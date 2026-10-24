@@ -1,3 +1,6 @@
+---
+order: 14
+---
 ## zh-CN
 
 通过 `classNames` 和 `styles` 传入对象/函数可以自定义 Mentions 的语义化结构样式，例如设置文本框可缩放。

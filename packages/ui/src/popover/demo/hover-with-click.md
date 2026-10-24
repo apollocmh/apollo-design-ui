@@ -1,3 +1,6 @@
+---
+order: 5
+---
 ## zh-CN
 
 同一次操作同时绑定 hover 与 click 触发。

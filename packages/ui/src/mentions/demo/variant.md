@@ -1,3 +1,6 @@
+---
+order: 15
+---
 ## zh-CN
 
 Mentions 形态变体，可选 `outlined` `filled` `borderless` `underlined` 四种形态。

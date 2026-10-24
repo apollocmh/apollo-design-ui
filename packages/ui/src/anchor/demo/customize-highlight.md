@@ -1,3 +1,6 @@
+---
+order: 203
+---
 ## zh-CN
 
 自定义锚点高亮（`getCurrentAnchor` **只改高亮**，`onChange` 收到的仍是原始 link）。

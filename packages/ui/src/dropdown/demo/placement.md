@@ -1,3 +1,6 @@
+---
+order: 12
+---
 ## zh-CN
 
 按钮有六个 placement 选项。

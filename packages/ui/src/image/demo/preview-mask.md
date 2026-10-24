@@ -1,3 +1,6 @@
+---
+order: 213
+---
 ## zh-CN
 
 自定义预览的遮罩（`preview.mask`）。

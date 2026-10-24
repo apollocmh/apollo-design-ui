@@ -1,1 +1,4 @@
+---
+order: 112
+---
 展示策略（`showCheckedStrategy`）：`SHOW_PARENT` 回显父节点 / `SHOW_ALL` 全量回显。\n

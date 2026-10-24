@@ -1,3 +1,6 @@
+---
+order: 8
+---
 ## zh-CN
 
 `percentPosition` 控制 indicator 位置（inner/outer × start/center/end）。

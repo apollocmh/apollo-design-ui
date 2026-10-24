@@ -1,3 +1,6 @@
+---
+order: 1
+---
 ## zh-CN
 
 对 `message`、`notification` 进行配置。

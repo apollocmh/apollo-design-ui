@@ -1,3 +1,6 @@
+---
+order: 4
+---
 ## zh-CN
 
 使用 popupRender 对菜单进行扩展。

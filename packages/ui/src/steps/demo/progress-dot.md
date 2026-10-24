@@ -1,3 +1,6 @@
+---
+order: 11
+---
 ## zh-CN
 
 点状步骤条（`type="dot"`；函数形态自定义渲染用 `#progressDot` 作用域插槽）。

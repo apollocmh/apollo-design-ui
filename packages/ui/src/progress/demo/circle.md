@@ -1,3 +1,6 @@
+---
+order: 0
+---
 ## zh-CN
 
 圆环进度条（exception/success 形态）。

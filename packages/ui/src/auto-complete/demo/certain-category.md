@@ -1,3 +1,6 @@
+---
+order: 204
+---
 ## zh-CN
 
 `showSearch.onSearch` 驱动候选更新（完成输入建议）。

@@ -1,1 +1,4 @@
+---
+order: 113
+---
 平铺数据建树（`treeDataSimpleMode`，id/pId 结构）。\n

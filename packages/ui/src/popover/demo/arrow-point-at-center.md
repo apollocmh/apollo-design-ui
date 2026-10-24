@@ -1,3 +1,6 @@
+---
+order: 1
+---
 ## zh-CN
 
 设置 `arrow.pointAtCenter` 后，箭头将指向目标元素中心。
