@@ -66,6 +66,7 @@ export type {
   TableScrollConfig,
   TableSemanticClassNames,
   TableSemanticStyles,
+  TableSlots,
   TableSticky,
 } from './interface';
 /** antd 的静态挂载（`Table.SELECTION_COLUMN` 等）—— Vue 侧以命名导出提供。 */

@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T10:49:01.228Z",
+  "generatedAt": "2026-10-24T11:23:37.419Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2776,7 +2776,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 3,
-      "why": "",
+      "why": "\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P5",
@@ -2946,7 +2946,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "",
+      "why": "\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",
@@ -2976,7 +2976,7 @@
       "decidedBy": [],
       "complexity": "XL",
       "unblocks": 0,
-      "why": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。",
+      "why": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",

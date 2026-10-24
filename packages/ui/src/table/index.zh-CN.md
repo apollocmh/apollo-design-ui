@@ -179,3 +179,5 @@ import { Table } from '@apollo-design/ui';
 - 支持通过 `classNames` / `styles` 对 `root` / `section` 等语义槽位进行定制；
 - 排序按钮带 `aria-sort`，展开按钮带 `aria-expanded` / `aria-label`（走 locale）；
 - `caption` 提供表格的可访问名。
+
+分页内容使用 `#paginationItemRender="{ page, type, element }"`、`#paginationTotal="{ total, range }"` 和 `#paginationSizeChanger="info"`。每个分页器接收当前作用域，支持顶部/底部及动态插槽；配置对象只放数据和业务事件，旧 itemRender/showTotal/sizeChangerRender 函数入口已移除。

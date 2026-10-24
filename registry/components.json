@@ -4018,7 +4018,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
       "layerNotes": "收口（2026-09-29）。结构：壳（antd）+ rc 状态机 + Pager/Options/getPagerList（页码算法抽成**纯函数**）+ useShowSizeChanger。测试：L1 pagers 227（**224 行页码列表判定表**用 antd SSR 产物穷举对拍：total × current × showLessItems × showPrevNextJumpers）+ L2 index 47（结构/值变化/showTotal/itemRender/简化模式/快速跳转/尺寸切换/ConfigProvider 合并）+ L3 type 28 + L4 dom 23（tests/compat/baselines/pagination.dom.json）+ L5 a11y 36（12 demo 的 axe + 10 真实配置 + role/ARIA + 键盘 Enter）+ theme 14（12 token 判定 + 4 主题 × 12 demo）+ demo 14 + 视觉 30/30 exact。关键判据：页码列表 6 处边界（pageBufferSize / current!==1+2 / current!==allPages-2 / !showLessItems 挤位 / ±5 与 ±3 / 补类位置）；current 三重钳制；changePageSize 必须先取旧 current；快速跳转要先取值再清空；输入过滤要把 DOM 值按回去；prev/next 的 hasPrev 守卫；simple 仍渲染 prev/next。样式：108 条规则 + 2 媒体查询 + 32 条 token 声明。遗留：getPopupContainer 的浮层位置不在 L4 基线（portal）；responsive 的 xs 分支 jsdom 不可命中；demo 12/16（README §8）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4484,7 +4484,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
       "layerNotes": "2026-10-24 F11：renderItem 直接迁移为泛型 #item，接通 header/footer/loadMore 插槽并移除继承的整组件废弃警告。证据 docs/audit/2026-10-24-list-slots-remediation.md；Item/Meta 内容字段、根 extra 与拖拽示例继续审查，不宣称完整重新验收。\n后续 F11：Item.extra/actions 与 Meta.avatar/title/description 接通原生插槽，移除默认槽跨帧缓存，覆盖动态/空内容、keyed 操作、heading 与 grid ref。证据 docs/audit/2026-10-24-list-item-slots-remediation.md；根 extra 与拖拽示例继续开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4561,7 +4561,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。",
+      "notes": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

@@ -3,7 +3,12 @@
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { Breakpoint } from '../_internal/responsive-observer';
 import type { Gutter } from '../grid/interface';
-import type { PaginationConfig } from '../pagination/interface';
+import type {
+  PaginationConfig,
+  PaginationItemSlotProps,
+  PaginationSizeChangerInfo,
+  PaginationTotalSlotProps,
+} from '../pagination/interface';
 import type { SpinProps } from '../spin/interface';
 
 // ---------------------------------------------------------------------------
@@ -105,6 +110,9 @@ export interface ListSlots<T = unknown> {
   header?: ListSlot;
   footer?: ListSlot;
   loadMore?: ListSlot;
+  paginationItemRender?: (props: PaginationItemSlotProps) => VNodeChild;
+  paginationTotal?: (props: PaginationTotalSlotProps) => VNodeChild;
+  paginationSizeChanger?: (props: PaginationSizeChangerInfo) => VNodeChild;
 }
 
 /** `ListContext` 的值（由 `List` 注入给 `List.Item`）。与上游一致。 */

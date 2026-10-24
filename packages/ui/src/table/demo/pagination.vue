@@ -26,7 +26,6 @@ const pagination = computed<TablePaginationConfig>(() => ({
   showSizeChanger: true,
   pageSizeOptions: [5, 10, 20],
   showQuickJumper: true,
-  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条 / 共 ${total} 条`,
 }));
 
 const onTableChange: TableProps['onChange'] = (nextPagination) => {
@@ -46,6 +45,8 @@ const onTableChange: TableProps['onChange'] = (nextPagination) => {
       :data-source="data"
       :pagination="pagination"
       @change="onTableChange"
-    />
+    >
+      <template #paginationTotal="{ total, range }">第 {{ range[0] }}-{{ range[1] }} 条 / 共 {{ total }} 条</template>
+    </Table>
   </div>
 </template>

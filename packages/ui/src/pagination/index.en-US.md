@@ -89,9 +89,6 @@ import { Pagination } from '@apollo-design/ui';
 | showPrevNextJumpers | 是否显示跳页项 | `boolean` | `true` |
 | showLessItems | 每页显示更少的页码（buffer 2→1、跳页步长 5→3） | `boolean` | `false` |
 | showTitle | 是否给 `li` 加 `title` | `boolean` | `true` |
-| showTotal | 展示总数：`(total, range) => VNodeChild` | `function` | —— |
-| itemRender | 自定义每一项：`(page, type, element) => VNodeChild` | `function` | —— |
-| sizeChangerRender | 自定义尺寸切换器 | `(info) => VNodeChild` | —— |
 | simple | 简化模式；`{ readOnly: true }` 时页码不可输入 | `boolean \| { readOnly?: boolean }` | `false` |
 | hideOnSinglePage | 只有一页时隐藏 | `boolean` | `false` |
 | disabled | 禁用 | `boolean` | `false` |
@@ -116,8 +113,8 @@ import { Pagination } from '@apollo-design/ui';
 
 | Slot | Description | Arguments |
 | --- | --- | --- |
-| `itemRender` | 自定义每一项（替代 `itemRender` prop） | `(page, type, element)` |
-| `total` | 自定义总数展示（替代 `showTotal` prop） | `(total, range)` |
+| `itemRender` | 自定义每一项（替代 `itemRender` prop） | `{ page, type, element }` |
+| `total` | 自定义总数展示（替代 `showTotal` prop） | `{ total, range }` |
 | `sizeChanger` | 自定义尺寸切换器（替代 `sizeChangerRender` / antd 的 `components.sizeChanger`） | `{ value, onSizeChange, onChange, disabled, className, options, 'aria-label' }` |
 
 ### Keyboard
@@ -147,3 +144,5 @@ import { Pagination } from '@apollo-design/ui';
 Select 与快速跳转的 input 消费它们），后者的 `itemSizeActual` 是 **var 套 var**。
 
 Switch themes through `ConfigProvider`'s `theme`; component styles are static CSS + CSS variables (zero runtime).
+
+Content uses native #itemRender/#total/#sizeChanger slots. The three renderer props are removed directly without compatibility or deprecation layers. Item slots cover page/prev/next/jump-prev/jump-next. Empty slots suppress defaults; conditional addition/removal and reactive updates work after mount. PaginationItemSlotProps/PaginationTotalSlotProps/PaginationSlots export the contracts. Native root id/title/events and string/object/array styles are forwarded and merged with semantic root styles using Vue rules.

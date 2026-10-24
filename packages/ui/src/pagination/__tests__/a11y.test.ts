@@ -25,6 +25,7 @@ import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
 import { h, nextTick } from 'vue';
+import type { PaginationSlots } from '../interface';
 import Pagination from '../Pagination.vue';
 
 const P = 'apollo-pagination';
@@ -41,8 +42,8 @@ a11yDemoTest('Pagination', {
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 /** 挂到真实文档（axe 与 `.focus()` 都要求元素在文档里）。 */
-const mountA11y = (props: Record<string, unknown> = {}) =>
-  mount(h(Pagination as never, { total: 500, ...props } as never), { attachTo: document.body });
+const mountA11y = (props: Record<string, unknown> = {}, slots: PaginationSlots = {}) =>
+  mount(h(Pagination, { total: 500, ...props }, { ...slots }), { attachTo: document.body });
 
 /** jsdom 的 `keyCode` 是只读 getter ⇒ 必须 defineProperty（组件按 rc 读 `e.keyCode`）。 */
 const fireKey = (el: Element, keyCode: number, type: 'keydown' | 'keyup' = 'keydown'): void => {
@@ -55,7 +56,7 @@ const fireKey = (el: Element, keyCode: number, type: 'keydown' | 'keyup' = 'keyd
 describe('Pagination · axe 扫描（真实配置，0 violation）', () => {
   const cases: Record<string, Record<string, unknown>> = {
     常规: { defaultCurrent: 3 },
-    带总数: { defaultCurrent: 3, showTotal: (t: number) => `共 ${t} 条` },
+    带总数: { defaultCurrent: 3 },
     简化: { defaultCurrent: 3, simple: true },
     快速跳转: { defaultCurrent: 3, showQuickJumper: true },
     快速跳转带按钮: { defaultCurrent: 3, showQuickJumper: { goButton: true } },
@@ -68,7 +69,10 @@ describe('Pagination · axe 扫描（真实配置，0 violation）', () => {
 
   for (const [name, props] of Object.entries(cases)) {
     it(`${name}：无 axe violation`, async () => {
-      const w = mountA11y(props);
+      const w = mountA11y(
+        props,
+        name === '带总数' ? { total: ({ total }) => `共 ${total} 条` } : {},
+      );
       await nextTick();
       const results = await axe.run(w.element as Element, {
         runOnly: { type: 'tag', values: TAGS },

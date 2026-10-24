@@ -19,14 +19,25 @@
  *    `#sizeChanger` 槽或 `sizeChangerRender` prop 提供；本组件只负责在正确位置渲染它。
  */
 
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
-import type { PaginationLocale, PaginationSizeChangerInfo } from './interface';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  ref,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
+import type { PaginationLocale, PaginationSlots } from './interface';
 
 /** rc 的默认选项。 */
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
+const contentSlots: SlotsType<Pick<PaginationSlots, 'sizeChanger'>> = {};
+
 export default defineComponent({
   name: 'APaginationOptions',
+  slots: contentSlots,
   props: {
     rootPrefixCls: { type: String, required: true },
     locale: { type: Object as PropType<PaginationLocale>, required: true },
@@ -38,18 +49,13 @@ export default defineComponent({
     quickGo: { type: Function as PropType<(page: number) => void>, default: undefined },
     /** `showQuickJumper.goButton` 的产物（节点或 `true` ⇒ 用 locale 文案）。 */
     goButton: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    /** 尺寸切换器的渲染函数（对应 rc 的 `sizeChangerRender`）。 */
-    sizeChangerRender: {
-      type: Function as PropType<(info: PaginationSizeChangerInfo) => VNodeChild>,
-      default: undefined,
-    },
     /** 切换 pageSize（父组件的 `changePageSize`）。 */
     onChangeSize: {
       type: Function as PropType<(size: number) => void>,
       default: undefined,
     },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const goInputText = ref('');
 
     /** 输入文本 → 合法页号（空 / 非数字 ⇒ `undefined`）。 */
@@ -117,11 +123,11 @@ export default defineComponent({
       const prefixCls = `${props.rootPrefixCls}-options`;
 
       let changeSelect: VNodeChild = null;
-      if (props.showSizeChanger && props.sizeChangerRender) {
+      if (props.showSizeChanger && slots.sizeChanger) {
         // ⚠️ 两个键给同一个函数：rc 口径 `onSizeChange` + antd `components.sizeChanger` 口径 `onChange`
         const commitSize = (nextValue: number | string): void =>
           props.onChangeSize?.(Number(nextValue));
-        changeSelect = props.sizeChangerRender({
+        changeSelect = slots.sizeChanger({
           disabled: props.disabled,
           value: props.pageSize,
           onSizeChange: commitSize,

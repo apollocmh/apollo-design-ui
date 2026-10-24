@@ -17,7 +17,7 @@ export type {
   PaginationAlign,
   PaginationConfig,
   PaginationEmits,
-  PaginationItemRender,
+  PaginationItemSlotProps,
   PaginationItemType,
   PaginationLocale,
   PaginationPosition,
@@ -27,10 +27,10 @@ export type {
   PaginationSemanticClassNames,
   PaginationSemanticStyles,
   PaginationSemanticValue,
-  PaginationShowTotal,
   PaginationSimple,
   PaginationSizeChangerInfo,
   PaginationSlots,
+  PaginationTotalSlotProps,
 } from './interface';
 export { genPaginationStyle, genTokenDecls as genPaginationTokenDecls } from './style';
 export type { ComponentToken as PaginationComponentToken } from './style/token';

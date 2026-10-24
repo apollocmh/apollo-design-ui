@@ -45,7 +45,6 @@ const pagination = computed<TablePaginationConfig>(() => ({
   total: data.length,
   showSizeChanger: true,
   pageSizeOptions: [5, 10],
-  showTotal: (total: number) => `共 ${total} 条`,
   placement: placement.value,
 }));
 
@@ -79,6 +78,8 @@ function onPlacementModeChange(value: unknown): void {
       :data-source="data"
       :pagination="pagination"
       @change="onTableChange"
-    />
+    >
+      <template #paginationTotal="{ total, range }">共 {{ total }} 条</template>
+    </Table>
   </div>
 </template>

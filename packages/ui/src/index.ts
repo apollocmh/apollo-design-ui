@@ -1462,7 +1462,7 @@ export type {
   PaginationAlign,
   PaginationConfig,
   PaginationEmits,
-  PaginationItemRender,
+  PaginationItemSlotProps,
   PaginationItemType,
   PaginationLocale,
   PaginationPosition,
@@ -1472,10 +1472,10 @@ export type {
   PaginationSemanticClassNames,
   PaginationSemanticStyles,
   PaginationSemanticValue,
-  PaginationShowTotal,
   PaginationSimple,
   PaginationSizeChangerInfo,
   PaginationSlots,
+  PaginationTotalSlotProps,
 } from './pagination';
 export { Pagination } from './pagination';
 export { genPaginationStyle, genTokenDecls as genPaginationTokenDecls } from './pagination/style';
@@ -1690,6 +1690,7 @@ export type {
   TableScrollConfig,
   TableSemanticClassNames,
   TableSemanticStyles,
+  TableSlots,
   TableSticky,
 } from './table';
 // ---------------------------------------------------------------------------

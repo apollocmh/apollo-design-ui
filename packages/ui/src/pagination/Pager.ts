@@ -10,11 +10,16 @@
  *    与 `prev` / `next` 的 `tabIndex = 可用 ? 0 : null` **不同**。
  */
 
-import type { CSSProperties } from 'vue';
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { isEmptyVNode } from '@apollo-design/utils';
+import type { CSSProperties, SlotsType } from 'vue';
+import { defineComponent, h, type PropType } from 'vue';
+import type { PaginationSlots } from './interface';
+
+const contentSlots: SlotsType<{ default?: PaginationSlots['itemRender'] }> = {};
 
 export default defineComponent({
   name: 'APaginationPager',
+  slots: contentSlots,
   props: {
     rootPrefixCls: { type: String, required: true },
     page: { type: Number, required: true },
@@ -32,12 +37,8 @@ export default defineComponent({
       >,
       default: undefined,
     },
-    itemRender: {
-      type: Function as PropType<(page: number, type: 'page', element: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
   },
-  setup(props) {
+  setup(props, { slots }) {
     return () => {
       const prefixCls = `${props.rootPrefixCls}-item`;
       const className = [
@@ -57,9 +58,11 @@ export default defineComponent({
       };
 
       const anchor = h('a', { rel: 'nofollow' }, String(props.page));
-      const content = props.itemRender ? props.itemRender(props.page, 'page', anchor) : anchor;
+      const content = slots.default
+        ? slots.default({ page: props.page, type: 'page', element: anchor })
+        : anchor;
 
-      if (!content) return null;
+      if (isEmptyVNode(content)) return null;
 
       return h(
         'li',

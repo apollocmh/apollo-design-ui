@@ -20,8 +20,7 @@
  * ⚠️ 本组件**没有** expose：antd 的 `Pagination` 是 `React.FC`（不是 forwardRef），
  *    rc 内部的 `paginationRef`（指向 `<ul>`）不是公开 API。
  *
- * ⚠️ 属性透传按 rc 的 `pickAttrs(props, { aria: true, data: true })`：只把 `aria-*` / `data-*`
- *    落到根 `<ul>`，其余未知属性**丢弃**（`class` / `style` 走各自的通道）。
+ * Native root attrs/events and Vue styles are forwarded to ul.
  */
 
 import type { PaginationLocale } from '@apollo-design/locale';
@@ -40,10 +39,10 @@ export type PaginationAlign = 'start' | 'center' | 'end';
 /** 简化模式：`{ readOnly: true }` 时页码只是文本，不可输入。 */
 export type PaginationSimple = boolean | { readOnly?: boolean };
 
-/** `itemRender` 的第二个参数（页码的类型）。 */
+/** Item slot type discriminator. */
 export type PaginationItemType = 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next';
 
-/** `showTotal(total, range)` 的第二个参数：`[起始项, 结束项]`。 */
+/** Total slot range: [first item, last item]. */
 export type PaginationRange = [number, number];
 
 /** ⚠️ 只在 `PaginationConfig`（给 table 之类的容器用）里出现，本组件不实现布局。 */
@@ -102,15 +101,16 @@ export interface PaginationSizeChangerInfo {
   'aria-label'?: string;
 }
 
-/** `itemRender` 的签名（antd 原样：收三个参数，返回节点）。 */
-export type PaginationItemRender = (
-  page: number,
-  type: PaginationItemType,
-  element: VNodeChild,
-) => VNodeChild;
+export interface PaginationItemSlotProps {
+  page: number;
+  type: PaginationItemType;
+  element: VNodeChild;
+}
 
-/** `showTotal` 的签名。 */
-export type PaginationShowTotal = (total: number, range: PaginationRange) => VNodeChild;
+export interface PaginationTotalSlotProps {
+  total: number;
+  range: PaginationRange;
+}
 
 // ---------------------------------------------------------------------------
 // props
@@ -164,21 +164,17 @@ export interface PaginationProps {
   align?: PaginationAlign;
   /** 覆盖默认语言包（与 ConfigProvider 的 `Pagination` 分片合并，**props 优先**）。 */
   locale?: PaginationLocale;
-  /** `itemRender(page, type, element)`。 */
-  itemRender?: PaginationItemRender;
-  /** `showTotal(total, range)`。 */
-  showTotal?: PaginationShowTotal;
   /** 根 `<ul>` 的 role。 */
   role?: string;
   classNames?: PaginationSemanticValue<PaginationSemanticClassNames>;
   styles?: PaginationSemanticValue<PaginationSemanticStyles>;
-  /** 自定义尺寸切换器（替代 antd 的 `components.sizeChanger`）。 */
-  sizeChangerRender?: (info: PaginationSizeChangerInfo) => VNodeChild;
 }
 
 /** 给容器（table 等）用的配置形状：⚠️ 本组件**只导出类型**，不实现 `position` 的布局。 */
-export interface PaginationConfig extends Omit<PaginationProps, 'rootClassName'> {
+export interface PaginationConfig extends PaginationProps {
   position?: PaginationPosition;
+  onChange?: (current: number, pageSize: number) => void;
+  onShowSizeChange?: (current: number, pageSize: number) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -198,9 +194,9 @@ export interface PaginationEmits {
 
 export interface PaginationSlots {
   /** 自定义页码 / 上下页 / 跳页的渲染（替代 `itemRender`）。 */
-  itemRender?: (page: number, type: PaginationItemType, element: VNodeChild) => VNodeChild;
+  itemRender?: (props: PaginationItemSlotProps) => VNodeChild;
   /** 自定义「共 x 条」的渲染（替代 `showTotal`）。 */
-  total?: (total: number, range: PaginationRange) => VNodeChild;
+  total?: (props: PaginationTotalSlotProps) => VNodeChild;
   /** 自定义尺寸切换器（替代 `components.sizeChanger` / `sizeChangerRender`）。 */
   sizeChanger?: (info: PaginationSizeChangerInfo) => VNodeChild;
 }

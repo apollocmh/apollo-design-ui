@@ -56,9 +56,9 @@ const triggerPaginationEvent =
     paginationSize.value = pageSize;
     const pagination = props.pagination;
     if (pagination) {
-      const handler = (pagination as unknown as Record<string, unknown>)[eventName];
+      const handler = pagination[eventName];
       if (isFunction(handler)) {
-        (handler as (p: number, s: number) => void)(page, pageSize);
+        handler(page, pageSize);
       }
     }
   };
@@ -174,6 +174,10 @@ function paginationContent(): VNode {
       align: 'end',
       onChange: onPaginationChange,
       onShowSizeChange: onPaginationShowSizeChange,
+    }, {
+      ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
+      ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
+      ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
     }),
   ]);
 }

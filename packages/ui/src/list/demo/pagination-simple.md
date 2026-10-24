@@ -5,4 +5,4 @@ title:
   en-US: Simple Pagination
 ---
 
-`pagination` 传入 `simple: true` 与 `showTotal`，列表按 `pageSize` 自动切片。
+`pagination` 传入 `simple: true`，总数使用原生 `#paginationTotal`，列表按 `pageSize` 自动切片。

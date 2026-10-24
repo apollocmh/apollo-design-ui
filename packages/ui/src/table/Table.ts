@@ -8,7 +8,16 @@
 
 import { useToken } from '@apollo-design/theme';
 import { isFunction, isNumber } from '@apollo-design/utils';
-import { type ComputedRef, computed, defineComponent, h, type PropType, type Ref, ref } from 'vue';
+import {
+  type ComputedRef,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  type Ref,
+  ref,
+  type SlotsType,
+} from 'vue';
 import { clsx } from '../_internal/clsx';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { defaultRenderEmpty } from '../config-provider/default-render-empty';
@@ -49,8 +58,11 @@ import type {
   TablePaginationConfig,
   TableProps,
   TableRowSelection,
+  TableSlots,
 } from './interface';
 import { getPaginationSize, normalizePlacement } from './util';
+
+const tableSlots: SlotsType<TableSlots> = {};
 
 const EMPTY_LIST: Record<string, unknown>[] = [];
 
@@ -76,6 +88,7 @@ export const DEFAULT_TABLE_LOCALE: TableLocale = {
 };
 
 const Table = defineComponent({
+  slots: tableSlots,
   name: 'ATable',
   props: {
     prefixCls: { type: String, default: undefined },
@@ -133,7 +146,7 @@ const Table = defineComponent({
   },
   // ⚠️ 不解构 `attrs` —— Table **没关** `inheritAttrs`（见下方 class/style 的说明），
   //    attrs 由 Vue 自动落根，这里读了也不用。
-  setup(props, { expose }) {
+  setup(props, { expose, slots }) {
     const {
       getPrefixCls,
       direction: contextDirection,
@@ -480,7 +493,7 @@ const Table = defineComponent({
     };
 
     // 分页节点
-    const topPaginationNode = computed(() => {
+    const topPaginationNode = () => {
       if (props.pagination !== false && mergedPagination.value.total) {
         const paginationSize = getPaginationSize(
           mergedPagination.value.size as never,
@@ -495,11 +508,19 @@ const Table = defineComponent({
           const { className: pgClassName, ...pgRest } = mergedPagination.value as unknown as {
             className?: string;
           };
-          return h(Pagination, {
-            ...pgRest,
-            class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
-            size: paginationSize,
-          } as never);
+          return h(
+            Pagination,
+            {
+              ...pgRest,
+              class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
+              size: paginationSize,
+            } as never,
+            {
+              ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
+              ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
+              ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
+            },
+          );
         };
         if (Array.isArray(mergedPlacement)) {
           const topPos = mergedPlacement.find((p) => p.includes('top'));
@@ -518,8 +539,8 @@ const Table = defineComponent({
         return null;
       }
       return null;
-    });
-    const bottomPaginationNode = computed(() => {
+    };
+    const bottomPaginationNode = () => {
       if (props.pagination !== false && mergedPagination.value.total) {
         const paginationSize = getPaginationSize(
           mergedPagination.value.size as never,
@@ -534,11 +555,19 @@ const Table = defineComponent({
           const { className: pgClassName, ...pgRest } = mergedPagination.value as unknown as {
             className?: string;
           };
-          return h(Pagination, {
-            ...pgRest,
-            class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
-            size: paginationSize,
-          } as never);
+          return h(
+            Pagination,
+            {
+              ...pgRest,
+              class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
+              size: paginationSize,
+            } as never,
+            {
+              ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
+              ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
+              ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
+            },
+          );
         };
         if (Array.isArray(mergedPlacement)) {
           const topPos = mergedPlacement.find((p) => p.includes('top'));
@@ -555,7 +584,7 @@ const Table = defineComponent({
         return renderPagination();
       }
       return null;
-    });
+    };
 
     // >>>>>>>>> Spinning
     const spinProps = useSpinProps(computed(() => props.loading));
@@ -652,7 +681,7 @@ const Table = defineComponent({
         [
           h(Spin, { spinning: false, ...spinProps.value } as never, {
             default: () => [
-              topPaginationNode.value,
+              topPaginationNode(),
               h(EngineTable, {
                 prefixCls,
                 class: tableClass.value,
@@ -695,7 +724,7 @@ const Table = defineComponent({
                 tailor: props.virtual,
                 ref: engineRef,
               } as never),
-              bottomPaginationNode.value,
+              bottomPaginationNode(),
             ],
           }),
         ],

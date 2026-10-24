@@ -10,6 +10,7 @@ import ListLikes from '../../../packages/ui/src/list/demo/item-extra.vue';
 import ListLoadMore from '../../../packages/ui/src/list/demo/loadmore.vue';
 import ListPagination from '../../../packages/ui/src/list/demo/pagination.vue';
 import ListResponsive from '../../../packages/ui/src/list/demo/responsive.vue';
+import PaginationSlots from '../../../packages/ui/src/pagination/demo/native-slots.vue';
 import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-options.vue';
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
 import TabsPopup from '../../../packages/ui/src/tabs/demo/popup-render.vue';
@@ -19,6 +20,7 @@ import FormPrefix from './FormPrefix.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import NativeAttrs from './NativeAttrs.vue';
+import PaginationContainers from './PaginationContainers.vue';
 import SwitchEvents from './SwitchEvents.vue';
 
 const Rows = defineComponent({
@@ -68,6 +70,8 @@ const Demo = {
   'switch-events': SwitchEvents,
   'tabs-popup': TabsPopup,
   'breadcrumb-slots': BreadcrumbSlots,
+  'pagination-slots': PaginationSlots,
+  'pagination-containers': PaginationContainers,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

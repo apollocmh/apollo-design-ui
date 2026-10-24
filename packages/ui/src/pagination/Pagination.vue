@@ -19,8 +19,7 @@
  * ── Vue 化差异（登记 COMPATIBILITY）──────────────────────────────────────────
  *   - `v-model:current` / `v-model:pageSize`（C11：`update:*` 与语义事件同发）；
  *   - `itemRender` / `showTotal` / `components.sizeChanger` → scoped slot（C8）；
- *   - ⚠️ 属性透传按 rc 的 `pickAttrs({aria, data})`：**只有 `aria-*` / `data-*` 落到根 `<ul>`**，
- *     其余未知属性丢弃（`class` / `style` 走各自的通道）；
+ *   - Native root attrs/events and Vue string/object/array styles are forwarded to ul;
  *   - 本组件**没有** expose（上游是 `React.FC`）。
  */
 
@@ -32,12 +31,15 @@ import {
   RightOutlined,
 } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
+import { mergeDomAttrs } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
   defineComponent,
   h,
+  normalizeStyle,
   type PropType,
+  type SlotsType,
   ref,
   useAttrs,
   type VNodeChild,
@@ -51,21 +53,24 @@ import { useBreakpoint } from '../grid/hooks/use-breakpoint';
 import Select from '../select';
 import { calculatePage, getPagerList } from './getPagerList';
 import type {
-  PaginationItemType,
   PaginationLocale,
   PaginationProps,
   PaginationRange,
   PaginationSemanticClassNames,
   PaginationSemanticStyles,
   PaginationSizeChangerInfo,
+  PaginationSlots,
 } from './interface';
 import Options from './Options';
 import Pager from './Pager';
 import { useShowSizeChanger } from './useShowSizeChanger';
 
+const contentSlots: SlotsType<PaginationSlots> = {};
+
 export default defineComponent({
   name: 'APagination',
   inheritAttrs: false,
+  slots: contentSlots,
   props: {
     prefixCls: { type: String, default: undefined },
     total: { type: Number, default: 0 },
@@ -93,8 +98,6 @@ export default defineComponent({
     responsive: { type: Boolean, default: undefined },
     align: { type: String as PropType<PaginationProps['align']>, default: undefined },
     locale: { type: Object as PropType<PaginationLocale>, default: undefined },
-    itemRender: { type: Function as PropType<PaginationProps['itemRender']>, default: undefined },
-    showTotal: { type: Function as PropType<PaginationProps['showTotal']>, default: undefined },
     role: { type: String, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<PaginationProps['classNames']>,
@@ -102,10 +105,6 @@ export default defineComponent({
     },
     styles: {
       type: [Object, Function] as PropType<PaginationProps['styles']>,
-      default: undefined,
-    },
-    sizeChangerRender: {
-      type: Function as PropType<PaginationProps['sizeChangerRender']>,
       default: undefined,
     },
   },
@@ -345,52 +344,37 @@ export default defineComponent({
       };
     });
 
-    // ---- itemRender 通道（slot 优先于 prop）----
-    const itemRenderer = computed(() => {
-      if (slots.itemRender) {
-        return (page: number, type: PaginationItemType, element: unknown) =>
-          slots.itemRender?.(page, type, element as never);
-      }
-      return props.itemRender;
-    });
-
-    /** 尺寸切换器的渲染函数（`sizeChangerRender` prop 优先，其次 `#sizeChanger` 槽，最后内置 Select）。 */
-    const sizeChangerRender = computed(() => {
-      if (props.sizeChangerRender) return props.sizeChangerRender;
-      if (slots.sizeChanger) {
-        return (info: PaginationSizeChangerInfo) => slots.sizeChanger?.(info);
-      }
-      return (info: PaginationSizeChangerInfo) => {
-        const selectProps = mergedSizeChangerSelectProps.value ?? {};
-        const p = prefixCls.value;
-        const selectedValue =
-          info.options.find((option) => String(option.value) === String(info.value))?.value ??
-          info.value;
-        return h(
-          Select as never,
-          {
-            ...(selectProps as Record<string, unknown>),
-            disabled: info.disabled,
-            showSearch: true,
-            popupMatchSelectWidth: false,
-            getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode as HTMLElement,
-            'aria-label': info['aria-label'],
-            options: info.options,
-            value: selectedValue,
-            size: mergedSize.value,
-            // ✅ Select 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
-            class: [
-              `${p}-options-size-changer-select`,
-              info.className,
-              (selectProps as { className?: string }).className,
-            ]
-              .filter(Boolean)
-              .join(' '),
-            onChange: (next: number) => (info.onSizeChange ?? info.onChange)?.(Number(next)),
-          } as never,
-        );
-      };
-    });
+    // Default Select renderer; caller content travels through native slots.
+    const renderDefaultSizeChanger = (info: PaginationSizeChangerInfo) => {
+      const selectProps = mergedSizeChangerSelectProps.value ?? {};
+      const p = prefixCls.value;
+      const selectedValue =
+        info.options.find((option) => String(option.value) === String(info.value))?.value ??
+        info.value;
+      return h(
+        Select as never,
+        {
+          ...(selectProps as Record<string, unknown>),
+          disabled: info.disabled,
+          showSearch: true,
+          popupMatchSelectWidth: false,
+          getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode as HTMLElement,
+          'aria-label': info['aria-label'],
+          options: info.options,
+          value: selectedValue,
+          size: mergedSize.value,
+          // ✅ Select 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+          class: [
+            `${p}-options-size-changer-select`,
+            info.className,
+            (selectProps as { className?: string }).className,
+          ]
+            .filter(Boolean)
+            .join(' '),
+          onChange: (next: number) => (info.onSizeChange ?? info.onChange)?.(Number(next)),
+        } as never,
+      );
+    };
 
     return () => {
       const p = prefixCls.value;
@@ -402,11 +386,8 @@ export default defineComponent({
       const classNames = mergedSemantic.classNames.value;
       const styles = mergedSemantic.styles.value;
 
-      // ---- 属性透传：只放行 aria-* / data-* ----
-      const passthrough: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(attrs)) {
-        if (key.startsWith('aria-') || key.startsWith('data-')) passthrough[key] = value;
-      }
+      const { class: _rootClass, style: rootStyle, ...rootAttrs } = attrs;
+      const mergedRootStyle = normalizeStyle([styles.root, rootStyle]);
 
       // ---- 「共 x 条」 ----
       const totalText = (() => {
@@ -418,10 +399,7 @@ export default defineComponent({
             : mergedCurrent.value * mergedPageSize.value,
         ];
         if (slots.total) {
-          return h('li', { class: `${p}-total-text` }, [slots.total(total, range)]);
-        }
-        if (props.showTotal) {
-          return h('li', { class: `${p}-total-text` }, [props.showTotal(total, range)]);
+          return h('li', { class: `${p}-total-text` }, [slots.total({ total, range })]);
         }
         return null;
       })();
@@ -483,8 +461,8 @@ export default defineComponent({
         const isPrev = which === 'prev';
         const page = isPrev ? jumpPages.value.prev : jumpPages.value.next;
         const icon = isPrev ? icons.value.prevIcon : icons.value.nextIcon;
-        const content = itemRenderer.value
-          ? (itemRenderer.value(page, isPrev ? 'prev' : 'next', icon) ?? icon)
+        const content = slots.itemRender
+          ? slots.itemRender({ page, type: isPrev ? 'prev' : 'next', element: icon })
           : icon;
 
         const disabledFlag = isPrev
@@ -556,10 +534,9 @@ export default defineComponent({
                 //    或跳页项相邻的补类
                 extraClass: item.disabled ? 'item-disabled' : item.extraClass,
                 showTitle: props.showTitle,
-                itemRender: itemRenderer.value as never,
                 onClick: (page: number) => changeCurrent(page),
                 onKeydown: runIfEnter as never,
-              }),
+              }, slots.itemRender ? { default: slots.itemRender } : {}),
             );
           } else {
             const isPrev = item.kind === 'jump-prev';
@@ -586,7 +563,7 @@ export default defineComponent({
                   onClick: () => changeCurrent(item.page),
                   onKeydown: (e: KeyboardEvent) => runIfEnter(e, () => changeCurrent(item.page)),
                 },
-                [icon],
+                [slots.itemRender ? slots.itemRender({ page: item.page, type: item.kind, element: icon }) : icon],
               ),
             );
           }
@@ -608,9 +585,9 @@ export default defineComponent({
               ? (page: number) => changeCurrent(page)
               : undefined,
             goButton: goButton.value,
-            sizeChangerRender: sizeChangerRender.value,
             onChangeSize: changePageSize,
           } as never,
+          { sizeChanger: slots.sizeChanger ?? renderDefaultSizeChanger },
         ),
       );
 
@@ -636,10 +613,10 @@ export default defineComponent({
       return h(
         'ul',
         {
-          ...passthrough,
+          ...mergeDomAttrs(rootAttrs),
           class: rootClassName,
           // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
-          style: { ...styles.root, ...((attrs.style as CSSProperties) ?? {}) },
+          style: mergedRootStyle,
           role: props.role,
         },
         items,

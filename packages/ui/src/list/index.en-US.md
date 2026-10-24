@@ -130,3 +130,5 @@ All three components expose `{ nativeElement }` (nullable). List / Meta use `HTM
 
 Tune at runtime via CSS variables: `--apollo-list-item-padding`, `--apollo-list-content-width`, …
 (11 of them, named after antd's `--ant-list-*`).
+
+Pagination content uses #paginationItemRender="{ page, type, element }", #paginationTotal="{ total, range }" and #paginationSizeChanger="info". Each pager receives its current scope, including top/bottom pagers and dynamic slots. Configuration holds data and business events; itemRender/showTotal/sizeChangerRender function entries are removed.

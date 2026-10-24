@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 1 | `current` + `onChange` → `v-model:current`（同时发 `change`，C11） | INTENDED | 同理 `pageSize` → `v-model:pageSize` |
 | 2 | `onChange` / `onShowSizeChange` → emits（`change` / `showSizeChange`） | INTENDED | 载荷与 antd 同形（`change` 是双参） |
-| 3 | `itemRender` / `showTotal` / `components.sizeChanger` → **scoped slot** | INTENDED | C8；`sizeChangerRender` prop 与 `#sizeChanger` 槽并存 |
+| 3 | `itemRender` / `showTotal` / `components.sizeChanger` → **scoped slot** | INTENDED | ADR0006/0007：直接移除函数prop，仅保留单对象原生槽 |
 | 4 | `selectComponentClass` **不实现** | UPSTREAM | antd 标注「非官方 API + v7 移除」 |
 | 5 | `pageSizeOptions` 只收数字 | INTENDED | 字符串形态 antd 标注「下个大版本移除」 |
 | 6 | 属性透传按 rc 的 `pickAttrs({aria, data})` | PLATFORM | 只有 `aria-*` / `data-*` 落到根 `<ul>`，其余未知属性**丢弃** |
@@ -118,3 +118,5 @@ antd 6.6.4 的 `components/pagination/demo/` 有 **16 个** `.tsx`，本仓落 *
 
 12 个 demo 覆盖了全部**对外能力**：值域与受控、总数、尺寸切换、快速跳转、简化模式、
 尺寸、对齐、每页更少页码、自定义页码、自定义切换器（InputNumber）。
+
+2026-10-24：函数入口直接迁为单对象槽，根原生attrs/style正常透传；List/Table新增分页槽转发。当前证据见 [专项报告](../../../../docs/audit/2026-10-24-pagination-slots-remediation.md)。历史位置参数和aria/data白名单描述不再是公共Vue契约。

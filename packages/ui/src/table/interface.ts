@@ -11,7 +11,12 @@ import type { VNodeChild } from 'vue';
 import type { Breakpoint } from '../_internal/responsive-observer';
 import type { CheckboxProps } from '../checkbox/interface';
 import type { SizeType } from '../config-provider/size-context';
-import type { PaginationProps } from '../pagination/interface';
+import type {
+  PaginationConfig,
+  PaginationItemSlotProps,
+  PaginationSizeChangerInfo,
+  PaginationTotalSlotProps,
+} from '../pagination/interface';
 import type { TooltipProps } from '../tooltip/interface';
 
 /** `React.Key` 的对应物（bigint 不支持，与 rc 的 `SafeKey` 同判）。 */
@@ -324,7 +329,7 @@ export type TablePaginationPosition =
   | 'bottomRight'
   | 'none';
 
-export interface TablePaginationConfig extends PaginationProps {
+export interface TablePaginationConfig extends Omit<PaginationConfig, 'position'> {
   placement?: TablePaginationPlacement[];
   /** @deprecated 用 `placement`。 */
   position?: TablePaginationPosition[];
@@ -472,4 +477,11 @@ export interface TableProps<RecordType = Record<string, unknown>> {
   tailor?: boolean;
   /** @private 透传给引擎（antd 层专用）。 */
   getContainerWidth?: (element: HTMLElement, width: number) => number;
+}
+
+/** Native content channels forwarded to each Table pagination instance. */
+export interface TableSlots {
+  paginationItemRender?: (props: PaginationItemSlotProps) => VNodeChild;
+  paginationTotal?: (props: PaginationTotalSlotProps) => VNodeChild;
+  paginationSizeChanger?: (props: PaginationSizeChangerInfo) => VNodeChild;
 }

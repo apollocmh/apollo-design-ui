@@ -22,13 +22,17 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h, nextTick } from 'vue';
-
+import type {
+  PaginationItemSlotProps,
+  PaginationSlots,
+  PaginationTotalSlotProps,
+} from '../interface';
 import Pagination from '../Pagination.vue';
 
 const P = 'apollo-pagination';
 
-const mountPg = (props: Record<string, unknown> = {}) =>
-  mount(h(Pagination as never, { total: 500, ...props } as never), { attachTo: document.body });
+const mountPg = (props: Record<string, unknown> = {}, slots: PaginationSlots = {}) =>
+  mount(h(Pagination, { total: 500, ...props }, { ...slots }), { attachTo: document.body });
 
 /** HTML 里的 `li` 类名列表。 */
 const itemClasses = (w: ReturnType<typeof mountPg>): string[] =>
@@ -39,7 +43,7 @@ const itemClasses = (w: ReturnType<typeof mountPg>): string[] =>
 // ---------------------------------------------------------------------------
 
 describe('Pagination 渲染（L2）', () => {
-  it('根是 ul，带 aria/data 透传，其余未知属性丢弃', () => {
+  it('根是 ul，原生 id/aria/data 属性透传', () => {
     const w = mount(
       h(
         Pagination as never,
@@ -49,7 +53,7 @@ describe('Pagination 渲染（L2）', () => {
     expect(w.element.tagName).toBe('UL');
     expect(w.attributes('data-x')).toBe('y');
     expect(w.attributes('aria-label')).toBe('分页');
-    expect(w.attributes('id')).toBeUndefined(); // ⚠️ pickAttrs 只放行 aria/data
+    expect(w.attributes('id')).toBe('nope'); // ADR0007: native Vue root attrs
   });
 
   it('align / size 落类名；disabled 落根类', () => {
@@ -193,77 +197,82 @@ describe('Pagination 值变化（L2）', () => {
 });
 
 // ---------------------------------------------------------------------------
-// L2 · showTotal / itemRender（prop 与 slot 两条通道）
+// L2 · native total / itemRender slots
 // ---------------------------------------------------------------------------
 
-describe('Pagination showTotal（L2）', () => {
-  it('prop 形态：range = [起始项, 结束项]，末页会截到 total', () => {
-    const w = mountPg({
-      defaultCurrent: 1,
-      showTotal: (t: number, r: number[]) => `${r[0]}-${r[1]} of ${t}`,
-    });
+describe('Pagination total slot（L2）', () => {
+  it('range = [start, end], clamped at the last page', () => {
+    const total = ({ total, range }: PaginationTotalSlotProps) =>
+      `${range[0]}-${range[1]} of ${total}`;
+    const w = mountPg({ defaultCurrent: 1 }, { total });
     expect(w.find(`.${P}-total-text`).text()).toBe('1-10 of 500');
-
-    const last = mountPg({
-      defaultCurrent: 50,
-      showTotal: (t: number, r: number[]) => `${r[0]}-${r[1]} of ${t}`,
-    });
+    const last = mountPg({ defaultCurrent: 50 }, { total });
     expect(last.find(`.${P}-total-text`).text()).toBe('491-500 of 500');
   });
 
-  it('total=0 时 range 的第一项是 0', () => {
-    const w = mountPg({ total: 0, showTotal: (_t: number, r: number[]) => `${r[0]}-${r[1]}` });
+  it('total=0 keeps the range at 0-0', () => {
+    const w = mountPg({ total: 0 }, { total: ({ range }) => `${range[0]}-${range[1]}` });
     expect(w.find(`.${P}-total-text`).text()).toBe('0-0');
   });
 
-  it('slot 形态（#total）优先，且同样拿到 (total, range)', () => {
-    const w = mount(h(Pagination as never, { total: 100, defaultCurrent: 2 } as never), {
-      slots: { total: (t: number, r: number[]) => h('em', {}, `${t}:${r[0]}-${r[1]}`) },
-    });
+  it('native rich total content receives a named object', () => {
+    const w = mountPg(
+      { total: 100, defaultCurrent: 2 },
+      {
+        total: ({ total, range }) => h('em', {}, `${total}:${range[0]}-${range[1]}`),
+      },
+    );
     expect(w.find(`.${P}-total-text em`).text()).toBe('100:11-20');
   });
 
-  it('simple 模式下也渲染 showTotal（上游用例）', () => {
-    const w = mountPg({
-      simple: true,
-      total: 100,
-      showTotal: (t: number, r: number[]) => `${r[0]}-${r[1]} of ${t} items`,
-    });
+  it('simple mode also renders total content', () => {
+    const w = mountPg(
+      { simple: true, total: 100 },
+      {
+        total: ({ total, range }) => `${range[0]}-${range[1]} of ${total} items`,
+      },
+    );
     expect(w.find(`.${P}-total-text`).text()).toBe('1-10 of 100 items');
   });
 });
 
-describe('Pagination itemRender（L2）', () => {
-  it('prop 形态：拿到 (page, type, element)，可替换节点', () => {
-    const w = mountPg({
-      defaultCurrent: 3,
-      itemRender: (page: number, type: string, element: unknown) =>
-        type === 'page' ? h('b', {}, `p${page}`) : (element as never),
-    });
+describe('Pagination itemRender slot（L2）', () => {
+  it('named page/type/element replaces a page node', () => {
+    const w = mountPg(
+      { defaultCurrent: 3 },
+      {
+        itemRender: ({ page, type, element }) =>
+          type === 'page' ? h('b', {}, `p${page}`) : element,
+      },
+    );
     expect(w.find(`.${P}-item-3 b`).text()).toBe('p3');
   });
 
-  it('prev/next 的 type 是 prev / next', () => {
+  it('previous and next retain their distinct types', () => {
     const types: string[] = [];
-    mountPg({
-      defaultCurrent: 3,
-      itemRender: (_page: number, type: string, element: unknown) => {
-        types.push(type);
-        return element as never;
+    mountPg(
+      { defaultCurrent: 3 },
+      {
+        itemRender: ({ type, element }) => {
+          types.push(type);
+          return element;
+        },
       },
-    });
+    );
     expect(types).toContain('prev');
     expect(types).toContain('next');
   });
 
-  it('slot 形态（#itemRender）优先于 prop', () => {
-    const w = mount(h(Pagination as never, { total: 100, defaultCurrent: 2 } as never), {
-      slots: {
-        itemRender: (page: number, type: string) =>
+  it('empty content suppresses individual controls without falling back', () => {
+    const w = mountPg(
+      { total: 100, defaultCurrent: 2 },
+      {
+        itemRender: ({ page, type }: PaginationItemSlotProps) =>
           type === 'page' ? h('i', {}, `s${page}`) : null,
       },
-    });
+    );
     expect(w.find(`.${P}-item-2 i`).text()).toBe('s2');
+    expect(w.find(`.${P}-prev button`).exists()).toBe(false);
   });
 });
 
@@ -486,15 +495,10 @@ describe('Pagination 尺寸切换器（L2）', () => {
     expect(options).toEqual([10, 15, 50]); // 追加 + 升序
   });
 
-  it('sizeChangerRender prop 优先于槽', () => {
-    const w = mount(h(Pagination as never, { total: 500, showSizeChanger: true } as never), {
-      props: {
-        sizeChangerRender: () => h('div', { class: 'prop-changer' }),
-      } as never,
-      slots: { sizeChanger: () => h('div', { class: 'slot-changer' }) },
-    });
-    expect(w.find('.prop-changer').exists()).toBe(true);
-    expect(w.find('.slot-changer').exists()).toBe(false);
+  it('an empty sizeChanger slot suppresses the built-in Select', () => {
+    const w = mountPg({ total: 500, showSizeChanger: true }, { sizeChanger: () => [] });
+    expect(w.find(`.${P}-options`).exists()).toBe(true);
+    expect(w.find('.apollo-select').exists()).toBe(false);
   });
 });
 

@@ -1,32 +1,13 @@
 <script setup lang="ts">
-// 对齐 antd `components.tsx`：把尺寸切换器换成 InputNumber。
 import { InputNumber, Pagination } from '@apollo-design/ui';
-import { h } from 'vue';
-
-const renderSizeChanger = (info: {
-  value: number;
-  onChange: (v: number) => void;
-  disabled: boolean;
-  className: string;
-}) =>
-  h(InputNumber, {
-    'aria-label': 'Page Size',
-    class: info.className,
-    disabled: info.disabled,
-    min: 1,
-    style: { width: '100px' },
-    value: info.value,
-    onChange: (next) => {
-      if (typeof next === 'number') info.onChange(next);
-    },
-  });
 </script>
 
 <template>
-  <Pagination
-    show-size-changer
-    :default-current="3"
-    :total="500"
-    :size-changer-render="renderSizeChanger"
-  />
+  <Pagination show-size-changer :default-current="3" :total="500">
+    <template #sizeChanger="{ value, onSizeChange, disabled, className }">
+      <InputNumber aria-label="Page Size" :class="className" :disabled="disabled" :min="1"
+        style="width: 100px" :value="value"
+        @change="next => { if (typeof next === 'number') onSizeChange(next); }" />
+    </template>
+  </Pagination>
 </template>

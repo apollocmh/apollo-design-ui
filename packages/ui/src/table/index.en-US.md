@@ -142,3 +142,5 @@ Extends all `Pagination` props, plus:
 | hideOnSinglePage | Hide the pagination when there is a single page | boolean | false |
 
 > Set `pagination: false` to hide the pagination. Default page size is 10.
+
+Pagination content uses #paginationItemRender="{ page, type, element }", #paginationTotal="{ total, range }" and #paginationSizeChanger="info". Each pager receives its current scope, including top/bottom pagers and dynamic slots. Configuration holds data and business events; itemRender/showTotal/sizeChangerRender function entries are removed.

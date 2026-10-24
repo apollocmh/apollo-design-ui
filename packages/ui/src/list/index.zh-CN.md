@@ -130,3 +130,5 @@ List 按 Apollo 的独立契约维护；逐项内容使用带类型的 Vue `#ite
 
 运行时调参用 CSS 变量：`--apollo-list-item-padding` / `--apollo-list-content-width` 等
 （11 个，变量名与 antd 的 `--ant-list-*` 同构）。
+
+分页内容使用 `#paginationItemRender="{ page, type, element }"`、`#paginationTotal="{ total, range }"` 和 `#paginationSizeChanger="info"`。每个分页器接收当前作用域，支持顶部/底部及动态插槽；配置对象只放数据和业务事件，旧 itemRender/showTotal/sizeChangerRender 函数入口已移除。

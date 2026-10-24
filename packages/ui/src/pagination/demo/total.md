@@ -5,15 +5,16 @@ title:
   en-US: Total
 ---
 
-通过 `showTotal` 展示总数（`#total` 插槽是等价通道）。
+通过 `#total="{ total, range }"` 展示总数与当前范围。
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd `total.tsx`。
 import { Pagination } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Pagination :total="85" :show-total="(total: number) => `Total ${total} items`" />
+  <Pagination :total="85">
+    <template #total="{ total }">Total {{ total }} items</template>
+  </Pagination>
 </template>
 ```

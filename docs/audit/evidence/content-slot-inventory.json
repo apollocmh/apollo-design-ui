@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 501,
+    "rows": 499,
     "byCategory": {
-      "data": 140,
-      "component-content-candidate": 147,
+      "data": 134,
+      "component-content-candidate": 148,
       "deprecated": 53,
-      "internal": 71,
-      "render-function-candidate": 78,
+      "internal": 77,
+      "render-function-candidate": 75,
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 152,
-      "review": 213,
-      "skip": 124,
+      "keep-data": 146,
+      "review": 211,
+      "skip": 130,
       "implemented-verified": 12
     }
   },
@@ -6888,7 +6888,7 @@
       "owner": "ListItemMetaProps",
       "prop": "avatar",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:170",
+      "source": "packages/ui/src/list/interface.ts:178",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -6928,7 +6928,7 @@
       "owner": "ListItemMetaProps",
       "prop": "description",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:172",
+      "source": "packages/ui/src/list/interface.ts:180",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -6964,7 +6964,7 @@
       "owner": "ListItemMetaProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:176",
+      "source": "packages/ui/src/list/interface.ts:184",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7004,7 +7004,7 @@
       "owner": "ListItemMetaSlots",
       "prop": "avatar",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:180",
+      "source": "packages/ui/src/list/interface.ts:188",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7043,7 +7043,7 @@
       "owner": "ListItemMetaSlots",
       "prop": "description",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:182",
+      "source": "packages/ui/src/list/interface.ts:190",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7078,7 +7078,7 @@
       "owner": "ListItemMetaSlots",
       "prop": "title",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:181",
+      "source": "packages/ui/src/list/interface.ts:189",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7117,7 +7117,7 @@
       "owner": "ListItemProps",
       "prop": "actions",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:150",
+      "source": "packages/ui/src/list/interface.ts:158",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7156,7 +7156,7 @@
       "owner": "ListItemProps",
       "prop": "extra",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:148",
+      "source": "packages/ui/src/list/interface.ts:156",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7195,7 +7195,7 @@
       "owner": "ListItemSlots",
       "prop": "actions",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:160",
+      "source": "packages/ui/src/list/interface.ts:168",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7233,7 +7233,7 @@
       "owner": "ListItemSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:157",
+      "source": "packages/ui/src/list/interface.ts:165",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7267,7 +7267,7 @@
       "owner": "ListItemSlots",
       "prop": "extra",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:158",
+      "source": "packages/ui/src/list/interface.ts:166",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7305,7 +7305,7 @@
       "owner": "ListLocale",
       "prop": "emptyText",
       "category": "data",
-      "source": "packages/ui/src/list/interface.ts:41",
+      "source": "packages/ui/src/list/interface.ts:46",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -7333,7 +7333,7 @@
       "owner": "ListProps",
       "prop": "extra",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:59",
+      "source": "packages/ui/src/list/interface.ts:64",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7371,7 +7371,7 @@
       "owner": "ListProps",
       "prop": "footer",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:83",
+      "source": "packages/ui/src/list/interface.ts:88",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7410,7 +7410,7 @@
       "owner": "ListProps",
       "prop": "header",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:81",
+      "source": "packages/ui/src/list/interface.ts:86",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7448,7 +7448,7 @@
       "owner": "ListProps",
       "prop": "loadMore",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:69",
+      "source": "packages/ui/src/list/interface.ts:74",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7485,7 +7485,7 @@
       "owner": "ListSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:103",
+      "source": "packages/ui/src/list/interface.ts:108",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7519,7 +7519,7 @@
       "owner": "ListSlots",
       "prop": "footer",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:106",
+      "source": "packages/ui/src/list/interface.ts:111",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7557,7 +7557,7 @@
       "owner": "ListSlots",
       "prop": "header",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:105",
+      "source": "packages/ui/src/list/interface.ts:110",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7594,7 +7594,7 @@
       "owner": "ListSlots",
       "prop": "item",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:104",
+      "source": "packages/ui/src/list/interface.ts:109",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7642,7 +7642,7 @@
       "owner": "ListSlots",
       "prop": "loadMore",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:107",
+      "source": "packages/ui/src/list/interface.ts:112",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7669,6 +7669,95 @@
           "packages/ui/src/list/__tests__/semantic.test.ts",
           "packages/ui/src/list/__tests__/slots.test.ts"
         ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListSlots",
+      "prop": "paginationItemRender",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:113",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/List.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListSlots",
+      "prop": "paginationSizeChanger",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:115",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/List.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListSlots",
+      "prop": "paginationTotal",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:114",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/List.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/pagination-simple.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
       },
       "decision": "skip",
       "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
@@ -9105,38 +9194,6 @@
     {
       "component": "pagination",
       "owner": "PaginationConfig",
-      "prop": "itemRender",
-      "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:168",
-      "slotRuntime": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/Pagination.vue"
-        ]
-      },
-      "slotType": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/interface.ts"
-        ]
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/__tests__/index.test.ts",
-          "packages/ui/src/pagination/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "pagination",
-      "owner": "PaginationConfig",
       "prop": "showQuickJumper",
       "category": "data",
       "source": "packages/ui/src/pagination/interface.ts:147",
@@ -9165,10 +9222,10 @@
     },
     {
       "component": "pagination",
-      "owner": "PaginationConfig",
-      "prop": "showTotal",
-      "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:170",
+      "owner": "PaginationItemSlotProps",
+      "prop": "element",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/pagination/interface.ts:107",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -9182,71 +9239,8 @@
         "files": []
       },
       "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/__tests__/a11y.test.ts",
-          "packages/ui/src/pagination/__tests__/index.test.ts",
-          "packages/ui/src/pagination/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "pagination",
-      "owner": "PaginationConfig",
-      "prop": "sizeChangerRender",
-      "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:176",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
         "status": "not-found",
         "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/__tests__/index.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "pagination",
-      "owner": "PaginationProps",
-      "prop": "itemRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/pagination/interface.ts:168",
-      "slotRuntime": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/Pagination.vue"
-        ]
-      },
-      "slotType": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/interface.ts"
-        ]
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/__tests__/index.test.ts",
-          "packages/ui/src/pagination/__tests__/semantic.test.ts"
-        ]
       },
       "decision": "review",
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
@@ -9282,66 +9276,10 @@
     },
     {
       "component": "pagination",
-      "owner": "PaginationProps",
-      "prop": "showTotal",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/pagination/interface.ts:170",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/__tests__/a11y.test.ts",
-          "packages/ui/src/pagination/__tests__/index.test.ts",
-          "packages/ui/src/pagination/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
-    },
-    {
-      "component": "pagination",
-      "owner": "PaginationProps",
-      "prop": "sizeChangerRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/pagination/interface.ts:176",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/pagination/__tests__/index.test.ts"
-        ]
-      },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
-    },
-    {
-      "component": "pagination",
       "owner": "PaginationSizeChangerInfo",
       "prop": "options",
       "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:101",
+      "source": "packages/ui/src/pagination/interface.ts:100",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -9366,7 +9304,7 @@
       "owner": "PaginationSlots",
       "prop": "itemRender",
       "category": "internal",
-      "source": "packages/ui/src/pagination/interface.ts:201",
+      "source": "packages/ui/src/pagination/interface.ts:197",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9380,14 +9318,18 @@
         ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/pagination/demo/itemRender.vue",
+          "packages/ui/src/pagination/demo/native-slots.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/pagination/__tests__/index.test.ts",
-          "packages/ui/src/pagination/__tests__/semantic.test.ts"
+          "packages/ui/src/pagination/__tests__/semantic.test.ts",
+          "packages/ui/src/pagination/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -9398,10 +9340,11 @@
       "owner": "PaginationSlots",
       "prop": "sizeChanger",
       "category": "internal",
-      "source": "packages/ui/src/pagination/interface.ts:205",
+      "source": "packages/ui/src/pagination/interface.ts:201",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/pagination/Options.ts",
           "packages/ui/src/pagination/Pagination.vue"
         ]
       },
@@ -9412,13 +9355,17 @@
         ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/pagination/demo/components.vue",
+          "packages/ui/src/pagination/demo/native-slots.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/pagination/__tests__/index.test.ts"
+          "packages/ui/src/pagination/__tests__/index.test.ts",
+          "packages/ui/src/pagination/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -9429,7 +9376,7 @@
       "owner": "PaginationSlots",
       "prop": "total",
       "category": "internal",
-      "source": "packages/ui/src/pagination/interface.ts:203",
+      "source": "packages/ui/src/pagination/interface.ts:199",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9443,8 +9390,12 @@
         ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/pagination/demo/all.vue",
+          "packages/ui/src/pagination/demo/native-slots.vue",
+          "packages/ui/src/pagination/demo/total.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
@@ -9452,7 +9403,8 @@
           "packages/ui/src/pagination/__tests__/a11y.test.ts",
           "packages/ui/src/pagination/__tests__/index.test.ts",
           "packages/ui/src/pagination/__tests__/s18-issue18.test.ts",
-          "packages/ui/src/pagination/__tests__/semantic.test.ts"
+          "packages/ui/src/pagination/__tests__/semantic.test.ts",
+          "packages/ui/src/pagination/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -10642,7 +10594,7 @@
       "owner": "ColumnFilterItem",
       "prop": "text",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:63",
+      "source": "packages/ui/src/table/interface.ts:68",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10671,7 +10623,7 @@
       "owner": "ColumnType",
       "prop": "filterDropdown",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:152",
+      "source": "packages/ui/src/table/interface.ts:157",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10698,7 +10650,7 @@
       "owner": "ColumnType",
       "prop": "filterIcon",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:157",
+      "source": "packages/ui/src/table/interface.ts:162",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10725,7 +10677,7 @@
       "owner": "ColumnType",
       "prop": "sortIcon",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:148",
+      "source": "packages/ui/src/table/interface.ts:153",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10750,7 +10702,7 @@
       "owner": "ColumnType",
       "prop": "title",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:143",
+      "source": "packages/ui/src/table/interface.ts:148",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10780,7 +10732,7 @@
       "owner": "ExpandableConfig",
       "prop": "columnTitle",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:276",
+      "source": "packages/ui/src/table/interface.ts:281",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10805,7 +10757,7 @@
       "owner": "ExpandableConfig",
       "prop": "expandIcon",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:278",
+      "source": "packages/ui/src/table/interface.ts:283",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10830,7 +10782,7 @@
       "owner": "ExpandableConfig",
       "prop": "expandedRowRender",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:274",
+      "source": "packages/ui/src/table/interface.ts:279",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10858,7 +10810,7 @@
       "owner": "RcColumnType",
       "prop": "title",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:136",
+      "source": "packages/ui/src/table/interface.ts:141",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10888,7 +10840,7 @@
       "owner": "SelectionItem",
       "prop": "text",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:191",
+      "source": "packages/ui/src/table/interface.ts:196",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10917,7 +10869,7 @@
       "owner": "TableComponents",
       "prop": "body",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:363",
+      "source": "packages/ui/src/table/interface.ts:368",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10942,7 +10894,7 @@
       "owner": "TableLocale",
       "prop": "emptyText",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:31",
+      "source": "packages/ui/src/table/interface.ts:36",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10967,7 +10919,7 @@
       "owner": "TableLocale",
       "prop": "filterCheckAll",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:29",
+      "source": "packages/ui/src/table/interface.ts:34",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -10992,7 +10944,7 @@
       "owner": "TableLocale",
       "prop": "filterCheckall",
       "category": "deprecated",
-      "source": "packages/ui/src/table/interface.ts:28",
+      "source": "packages/ui/src/table/interface.ts:33",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11017,7 +10969,7 @@
       "owner": "TableLocale",
       "prop": "filterConfirm",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:24",
+      "source": "packages/ui/src/table/interface.ts:29",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11042,7 +10994,7 @@
       "owner": "TableLocale",
       "prop": "filterEmptyText",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:26",
+      "source": "packages/ui/src/table/interface.ts:31",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11067,7 +11019,7 @@
       "owner": "TableLocale",
       "prop": "filterReset",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:25",
+      "source": "packages/ui/src/table/interface.ts:30",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11092,7 +11044,7 @@
       "owner": "TableLocale",
       "prop": "selectAll",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:32",
+      "source": "packages/ui/src/table/interface.ts:37",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11117,7 +11069,7 @@
       "owner": "TableLocale",
       "prop": "selectInvert",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:34",
+      "source": "packages/ui/src/table/interface.ts:39",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11142,7 +11094,7 @@
       "owner": "TableLocale",
       "prop": "selectNone",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:33",
+      "source": "packages/ui/src/table/interface.ts:38",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11167,32 +11119,7 @@
       "owner": "TableLocale",
       "prop": "selectionAll",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:35",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "table",
-      "owner": "TablePaginationConfig",
-      "prop": "itemRender",
-      "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:168",
+      "source": "packages/ui/src/table/interface.ts:40",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11239,60 +11166,10 @@
     },
     {
       "component": "table",
-      "owner": "TablePaginationConfig",
-      "prop": "showTotal",
-      "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:170",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "table",
-      "owner": "TablePaginationConfig",
-      "prop": "sizeChangerRender",
-      "category": "data",
-      "source": "packages/ui/src/pagination/interface.ts:176",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "table",
       "owner": "TableProps",
       "prop": "caption",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/table/interface.ts:455",
+      "source": "packages/ui/src/table/interface.ts:460",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11319,7 +11196,7 @@
       "owner": "TableProps",
       "prop": "emptyText",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/table/interface.ts:461",
+      "source": "packages/ui/src/table/interface.ts:466",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11344,7 +11221,7 @@
       "owner": "TableProps",
       "prop": "expandIcon",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/table/interface.ts:442",
+      "source": "packages/ui/src/table/interface.ts:447",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11369,7 +11246,7 @@
       "owner": "TableProps",
       "prop": "expandedRowRender",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/table/interface.ts:444",
+      "source": "packages/ui/src/table/interface.ts:449",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11397,7 +11274,7 @@
       "owner": "TableProps",
       "prop": "footer",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/table/interface.ts:453",
+      "source": "packages/ui/src/table/interface.ts:458",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11424,7 +11301,7 @@
       "owner": "TableProps",
       "prop": "summary",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/table/interface.ts:454",
+      "source": "packages/ui/src/table/interface.ts:459",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11451,7 +11328,7 @@
       "owner": "TableProps",
       "prop": "title",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/table/interface.ts:452",
+      "source": "packages/ui/src/table/interface.ts:457",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11481,7 +11358,7 @@
       "owner": "TableRowSelection",
       "prop": "columnTitle",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:227",
+      "source": "packages/ui/src/table/interface.ts:232",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11506,7 +11383,7 @@
       "owner": "TableRowSelection",
       "prop": "renderCell",
       "category": "data",
-      "source": "packages/ui/src/table/interface.ts:231",
+      "source": "packages/ui/src/table/interface.ts:236",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -11525,6 +11402,96 @@
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "table",
+      "owner": "TableSlots",
+      "prop": "paginationItemRender",
+      "category": "internal",
+      "source": "packages/ui/src/table/interface.ts:484",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/Table.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "table",
+      "owner": "TableSlots",
+      "prop": "paginationSizeChanger",
+      "category": "internal",
+      "source": "packages/ui/src/table/interface.ts:486",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/Table.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "table",
+      "owner": "TableSlots",
+      "prop": "paginationTotal",
+      "category": "internal",
+      "source": "packages/ui/src/table/interface.ts:485",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/Table.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/table/demo/pagination-placement.vue",
+          "packages/ui/src/table/demo/pagination.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "tabs",

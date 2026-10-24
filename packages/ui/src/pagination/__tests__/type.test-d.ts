@@ -14,12 +14,14 @@
 import type { PaginationLocale } from '@apollo-design/locale';
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
+import type { ListSlots } from '../../list';
 import type { SelectProps } from '../../select';
+import type { TableSlots } from '../../table';
 import type {
   PaginationAlign,
   PaginationConfig,
   PaginationEmits,
-  PaginationItemRender,
+  PaginationItemSlotProps,
   PaginationItemType,
   PaginationPosition,
   PaginationProps,
@@ -28,13 +30,30 @@ import type {
   PaginationSemanticClassNames,
   PaginationSemanticStyles,
   PaginationSemanticValue,
-  PaginationShowTotal,
   PaginationSimple,
   PaginationSizeChangerInfo,
   PaginationSlots,
+  PaginationTotalSlotProps,
 } from '../interface';
 
 describe('Pagination · L3 类型', () => {
+  it('container slots preserve the native pagination payloads', () => {
+    expectTypeOf<ListSlots['paginationTotal']>().toEqualTypeOf<PaginationSlots['total']>();
+    expectTypeOf<ListSlots['paginationItemRender']>().toEqualTypeOf<
+      PaginationSlots['itemRender']
+    >();
+    expectTypeOf<ListSlots['paginationSizeChanger']>().toEqualTypeOf<
+      PaginationSlots['sizeChanger']
+    >();
+    expectTypeOf<TableSlots['paginationTotal']>().toEqualTypeOf<PaginationSlots['total']>();
+    expectTypeOf<TableSlots['paginationItemRender']>().toEqualTypeOf<
+      PaginationSlots['itemRender']
+    >();
+    expectTypeOf<TableSlots['paginationSizeChanger']>().toEqualTypeOf<
+      PaginationSlots['sizeChanger']
+    >();
+  });
+
   it('值域：这些都是 number', () => {
     expectTypeOf<PaginationProps['total']>().toEqualTypeOf<number | undefined>();
     expectTypeOf<PaginationProps['current']>().toEqualTypeOf<number | undefined>();
@@ -76,19 +95,16 @@ describe('Pagination · L3 类型', () => {
     >();
   });
 
-  it('itemRender / showTotal 的签名与 antd 同形', () => {
+  it('native item/total slots use one named object', () => {
     expectTypeOf<PaginationItemType>().toEqualTypeOf<
       'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next'
     >();
     expectTypeOf<PaginationRange>().toEqualTypeOf<[number, number]>();
-    // ⚠️ 用 `toEqualTypeOf<Fn>()` 而不是 `.parameters`：后者对**类型别名**形态的
-    //    函数签名会报「Expected 1 arguments, but got 0」（vitest 的 `.parameters` 只对
-    //    泛型推断出的函数类型稳定）。
-    expectTypeOf<PaginationItemRender>().toEqualTypeOf<
-      (page: number, type: PaginationItemType, element: VNodeChild) => VNodeChild
+    expectTypeOf<PaginationSlots['itemRender']>().toEqualTypeOf<
+      ((props: PaginationItemSlotProps) => VNodeChild) | undefined
     >();
-    expectTypeOf<PaginationShowTotal>().toEqualTypeOf<
-      (total: number, range: PaginationRange) => VNodeChild
+    expectTypeOf<PaginationSlots['total']>().toEqualTypeOf<
+      ((props: PaginationTotalSlotProps) => VNodeChild) | undefined
     >();
   });
 
@@ -114,18 +130,24 @@ describe('Pagination · L3 类型', () => {
 
   it('slots：三个通道的槽参数', () => {
     expectTypeOf<PaginationSlots['total']>().toEqualTypeOf<
-      ((total: number, range: PaginationRange) => VNodeChild) | undefined
+      ((props: PaginationTotalSlotProps) => VNodeChild) | undefined
     >();
     expectTypeOf<PaginationSlots['sizeChanger']>().toEqualTypeOf<
       ((info: PaginationSizeChangerInfo) => VNodeChild) | undefined
     >();
     expectTypeOf<PaginationSlots['itemRender']>().toEqualTypeOf<
-      ((page: number, type: PaginationItemType, element: VNodeChild) => VNodeChild) | undefined
+      ((props: PaginationItemSlotProps) => VNodeChild) | undefined
     >();
   });
 
-  it('PaginationConfig 只多一个 position（给容器用，本组件不实现布局）', () => {
+  it('PaginationConfig adds placement and typed business callbacks for containers', () => {
     expectTypeOf<PaginationConfig['position']>().toEqualTypeOf<PaginationPosition | undefined>();
+    expectTypeOf<PaginationConfig['onChange']>().toEqualTypeOf<
+      ((current: number, pageSize: number) => void) | undefined
+    >();
+    expectTypeOf<PaginationConfig['onShowSizeChange']>().toEqualTypeOf<
+      ((current: number, pageSize: number) => void) | undefined
+    >();
     // ⚠️ `rootClassName` 被 Omit 掉
     expectTypeOf<PaginationConfig>().not.toHaveProperty('rootClassName');
   });
@@ -165,3 +187,19 @@ describe('Pagination · L3 负例', () => {
     expectTypeOf(bad).not.toBeNever();
   });
 });
+
+const checkRemovedRendererProps = () => {
+  // @ts-expect-error ADR0006/0007: item rendering uses the native scoped slot.
+  const item: PaginationProps = { itemRender: () => null };
+  // @ts-expect-error ADR0006/0007: total content uses #total.
+  const total: PaginationProps = { showTotal: () => null };
+  // @ts-expect-error ADR0006/0007: size selection content uses #sizeChanger.
+  const size: PaginationProps = { sizeChangerRender: () => null };
+  // @ts-expect-error Vue slots accept one object rather than positional arguments.
+  const slot: PaginationSlots['itemRender'] = (_page: number, _type: PaginationItemType) => null;
+  void item;
+  void total;
+  void size;
+  void slot;
+};
+void checkRemovedRendererProps;

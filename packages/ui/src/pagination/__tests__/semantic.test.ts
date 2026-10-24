@@ -43,8 +43,8 @@ const CASES: Record<string, () => DomRenderResult> = {
       {
         total: 500,
         defaultCurrent: 3,
-        showTotal: (t: number) => `共 ${t} 条`,
       } as never,
+      { total: ({ total }: { total: number }) => `共 ${total} 条` },
     ),
   'pagination:simple': () =>
     h(Pagination as never, { total: 500, defaultCurrent: 3, simple: true } as never),
@@ -87,13 +87,12 @@ const CASES: Record<string, () => DomRenderResult> = {
     h(Pagination as never, { total: 5, hideOnSinglePage: true } as never),
   'pagination:item-render': () =>
     h(
-      Pagination as never,
+      Pagination,
+      { total: 30, defaultCurrent: 2 },
       {
-        total: 30,
-        defaultCurrent: 2,
-        itemRender: (page: number, type: string, el: unknown) =>
-          type === 'page' ? h('b', null, `p${page}`) : (el as never),
-      } as never,
+        itemRender: ({ page, type, element }: import('../interface').PaginationItemSlotProps) =>
+          type === 'page' ? h('b', null, `p${page}`) : element,
+      },
     ),
   'pagination:role': () =>
     h(Pagination as never, { total: 500, defaultCurrent: 3, role: 'navigation' } as never),
