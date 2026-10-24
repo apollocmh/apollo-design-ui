@@ -49,6 +49,7 @@ export const MasonryItem = defineComponent({
      * ⚠️ 它是 **`String()` 化**过的（`parseKeys` 的行为，上游同款）。
      */
     itemKey: { type: String, required: true },
+    measured: { type: Boolean, default: false },
     /** 落在第几列（0 基）。父组件按 key 查表给出，缺省 `0`。 */
     columnIndex: { type: Number, default: 0 },
     /** 纵向偏移（px）。未量测时 `undefined` ⇒ 不写 `top`。 */
@@ -137,11 +138,15 @@ export const MasonryItem = defineComponent({
         //    （自定义属性对内联样式**同元素**可见 —— 与上游 genCssVar 的用法一致）
         [props.itemWidthVar]: `calc((100% + ${props.horizontalGutter}px) / ${props.columnCount})`,
         // ② 横向：列偏移 + 宽度（宽度要减掉一个水平间距）
-        insetInlineStart: `calc(var(${props.itemWidthVar}) * ${columnIndex})`,
-        width: `calc(var(${props.itemWidthVar}) - ${props.horizontalGutter}px)`,
+        insetInlineStart: props.measured
+          ? `calc(var(${props.itemWidthVar}) * ${columnIndex})`
+          : undefined,
+        width: props.measured
+          ? `calc(var(${props.itemWidthVar}) - ${props.horizontalGutter}px)`
+          : undefined,
         // ③ 纵向：🚨 数字必须过 `toCssSize()`（Vue 的 patchStyle 不补 px，PITFALLS 170）
-        top: toCssSize(top),
-        position: 'absolute',
+        top: props.measured ? toCssSize(top) : undefined,
+        position: props.measured ? 'absolute' : 'relative',
       };
 
       return h(

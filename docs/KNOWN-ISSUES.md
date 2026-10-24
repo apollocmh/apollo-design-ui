@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、499 行 owner/field 清单。内容候选 148、渲染候选 75、数据/配置 146、内部/废弃 130；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、499 行 owner/field 清单。内容候选 148、渲染候选 74、数据/配置 146、内部/废弃 131；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -213,6 +213,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **2026-10-24 Pagination 增量**：直接移除三个渲染函数prop，页码/总数使用单对象槽，尺寸切换走原生槽。List/Table新增当前分页内容转发，修复动态槽缓存、根id/事件/string style丢失，补既有业务回调类型。详见 [Pagination 报告](audit/2026-10-24-pagination-slots-remediation.md)，全库F11仍开放。
 
 **2026-10-24 Masonry 原生底层增量**：复现并修复根 attrs 丢弃、string style 挂载异常和 attrs-only 缓存；原生 load/error 捕获能在 fresh=false 时重测量图片并去重布局通知。见 [Masonry 媒体报告](audit/2026-10-24-masonry-native-media-remediation.md)。itemRender/泛型槽和SSR首帧尚未在本批关闭。
+
+**2026-10-24 Masonry 后续增量**：泛型 #item / 当前数据与语义样式已直接迁移，见 [插槽报告](audit/2026-10-24-masonry-slots-remediation.md)。继续复现并修复 React effect 造成的 SSR 空首屏：服务端输出实际内容、测量前正常网格流、水合保留条目/输入身份和值；见 [SSR报告](audit/2026-10-24-masonry-ssr-remediation.md)。前阶段待办由此更新，全库F11与视觉验收仍开放。
 
 ---
 
@@ -343,7 +345,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
 | Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
 | Timeline | 14/14 | F11；富内容模板项 |
-| Masonry | 6/6 | F10原生attrs/图片测量、F11泛型item槽及当前数据/语义样式已修复；SSR首帧继续处理 |
+| Masonry | 6/6 | F10原生attrs/图片测量、F11泛型item槽及当前数据/语义样式已修复；SSR内容/网格首屏/水合已专项修复，Apollo基线仍缺失 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |

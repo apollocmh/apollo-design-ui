@@ -14,4 +14,4 @@
 
 显式 item 插槽优先于 item.children，包括返回空内容的槽。移除槽恢复 children 回退；旧 children 优先于 renderer 的规则不再保留。条件槽和内容更新在当前 Vue render 中生成，再交给 MotionList；不缓存 setup 时的槽存在性。相同 key 的新数组会更新数据并保留 keyed DOM。classNames/styles 函数读取当前 props 和已解析列数。
 
-组件更新、根 ResizeObserver、图片 load/error 捕获事件会调度测量，未挂载齐全的 DOM 不发布零高度占位。fresh 继续观察条目持续变化（例如 CSS 高度过渡）。本阶段未改变首帧延迟与 SSR 行为，另行整改。
+组件更新、根 ResizeObserver、图片 load/error 捕获事件会调度测量，未挂载齐全的 DOM 不发布零高度占位。fresh 继续观察条目持续变化（例如 CSS 高度过渡）。该插槽阶段未改变首帧延迟与 SSR；随后已按[首屏迁移记录](masonry-ssr.md)直接修复为空容器的问题。

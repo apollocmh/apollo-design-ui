@@ -1,35 +1,10 @@
-/**
- * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）
- *
- * ── 基准是什么 ────────────────────────────────────────────────────────────────
- *
- * `tests/compat/baselines/masonry.dom.json`，由 `tests/compat/baseline/masonry.mjs`
- * 直接调用 `react-dom/server.renderToStaticMarkup` 渲染 antd 的 `Masonry` 产出。
- * 机械 oracle，不是「我们读了源码之后写下的期望值」。
- *
- * ── 🚨 这个契约**几乎是空的**，而那正是上游的真实行为 ─────────────────────────
- *
- * antd 的 SSR 产物是 `<div class="apollo …" style="height:0"></div>` —— **一个条目都没有**。
- * 原因是 `mergedItems` 的一拍延迟（`useState([]) + useEffect`）：`useEffect` 在服务端
- * **不跑** ⇒ 服务端永远渲染空容器。本仓用 `onMounted` 复刻同一时机，所以同样为空 ✓
- * （这正是「一拍延迟必须复刻」那条判据的**可观测后果**）。
- *
- * ⇒ 本文件钉的是**结构**：根类名 / 根内联样式 / 语义化槽 / RTL。
- * **条目的类名与内联样式模板由 L2（`index.test.ts`）钉，排布结果由 L1 纯函数 + L6 钉。**
- *
- * ── 类名不做「事后归一化」──────────────────────────────────────────────────────
- *
- * 两侧传**同一个** `prefixCls`（`apollo`）。注意它是**完整前缀**：
- * `getPrefixCls('masonry', 'apollo')` 直接返回 `apollo`，根类名**没有** `-masonry` 段。
- * 默认前缀单独由 `prefix-cls:no-props` 用例覆盖（allow 登记为 D1）。
- *
- * ── 这个测试没有证明什么 ─────────────────────────────────────────────────────
- *   - 没证明**像素**一致（那是 L6，见 `tests/visual`）
- *   - 没证明排布正确（SSR 没有布局，`positions` 恒为空）
- */
-
+/** Historical CSR pre-appear root snapshots plus native SSR content contracts.
+ * The dated React SSR empty-container evidence remains unchanged. domContractTest
+ * mounts synchronously on the client; it does not test Vue SSR content. */
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import { defineComponent, h, provide, type VNodeChild } from 'vue';
+import { describe, expect, it } from 'vitest';
+import { createSSRApp, defineComponent, h, provide, type VNodeChild } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 import baseline from '../../../../../tests/compat/baselines/masonry.dom.json';
 import {
   type ConfigContextValue,
@@ -37,7 +12,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Masonry } from '../index';
-import type { MasonryItemSlotProps, MasonryItemType, MasonryProps } from '../interface';
+import type { MasonryItemSlotProps, MasonryProps } from '../interface';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/masonry.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -66,7 +41,7 @@ const HEIGHTS = [150, 30, 90, 70, 110];
 const buildItems = (heights = HEIGHTS) =>
   heights.map((height, index) => ({ key: `item-${index}`, data: height }));
 
-/** 所有用例都带 `itemRender` + `items`（与基线一致）。 */
+/** Shared source data; render adapters supply the native item slot. */
 const base = { items: buildItems() };
 
 /**
@@ -75,6 +50,15 @@ const base = { items: buildItems() };
  * ⚠️ 必须覆盖基线里的**每一个**用例（`domContractTest` 会校验）。键名与
  * `tests/compat/baseline/masonry.mjs` 的 `push` 一一对应，缺一条即红。
  */
+function buildUnkeyedItems() {
+  const items = [
+    { key: 'a', data: 10 },
+    { key: 'b', data: 20 },
+  ];
+  for (const item of items) Reflect.deleteProperty(item, 'key');
+  return items;
+}
+
 const specs: Record<
   string,
   { props: MasonryProps & Record<string, unknown>; ctx?: Partial<ConfigContextValue> }
@@ -111,7 +95,7 @@ const specs: Record<
       ],
     },
   },
-  // 两者都没有 ⇒ 条目是空的（`itemRender: undefined`）
+  // Neither fallback children nor an item slot: keep an empty item wrapper.
   'masonry:item-no-content': {
     props: { prefixCls: PREFIX, items: [{ key: 'a', data: 10 }] },
   },
@@ -153,33 +137,15 @@ const specs: Record<
     props: {
       ...base,
       prefixCls: PREFIX,
-      /**
-       * ⚠️ 故意**不给 `key`**：上游运行时用 `item.key ?? index` 兜底（JS 可达路径，
-       * 基线生成器同样是 JS 侧产物）。
-       * 但类型上 `MasonryItemType.key` 是**必填**（上游 `.d.ts` 也如此）⇒ 这里只能绕过类型。
-       * 这条差异本身是**有意**的：类型严于运行时，是上游的原始形态。
-       */
-      items: [{ data: 10 }, { data: 20 }] as unknown as MasonryItemType[],
+      // Exercise JavaScript callers without weakening the public required-key type.
+      items: buildUnkeyedItems(),
     },
   },
 };
 
 domContractTest('Masonry', {
   baseline,
-  /**
-   * `keepStyle: false` —— **与 date-picker 同判**。
-   *
-   * 根的内联样式在 SSR 下**恒为 `height:0`**（没有布局 ⇒ `totalHeight` 恒 0）
-   * ⇒ 这条声明在本契约里**零信息量**；而保留它反而会引入一条纯序列化差异：
-   * React 的 SSR 是字符串（对数字 0 不补 px ⇒ `height:0`），Vue 侧经 jsdom 的**真实 DOM**
-   * 读回，CSSOM 把长度序列化成带单位的 `0px`（与 flex 的 `gap:0 → gap:0px` 同一现象）。
-   *
-   * ⚠️ 那条差异**能对齐**（`Masonry.vue` 的 `rootHeight` 已经让我们的 SSR 产物与上游逐字一致），
-   * 但 L4 比的是「React 字符串 vs Vue DOM」⇒ 仍会差一个单位。
-   * 与其为 20 个用例各登记一条 `[height:0] vs [height:0px]`（把可对齐的东西伪装成平台限制），
-   * 不如**不把这条无信息量的声明纳入契约**，改在 L2 里钉真正有意义的
-   * 「用户 `styles.root` 排在 `height` 之后」（`index.test.ts` 的语义化用例）。
-   */
+  // Preserve the historical class/ARIA projection; real SSR styles are asserted below.
   keepStyle: false,
   allow: {
     // 默认前缀不同（裁决 `prefix-cls-default` = A）：antd `ant-masonry` vs 我们 `apollo-masonry`。
@@ -205,4 +171,66 @@ domContractTest('Masonry', {
     const result: DomRenderResult = spec.ctx ? withConfig(spec.ctx, () => vnode) : vnode;
     return result;
   },
+});
+
+describe('Masonry native SSR for every historical root scenario', () => {
+  it.each(Object.entries(specs))('%s renders current content before mount', async (id, spec) => {
+    const vnode = h(
+      Masonry,
+      spec.props,
+      id === 'masonry:item-no-content' || id === 'masonry:item-children'
+        ? {}
+        : { item: renderBamboo },
+    );
+    const App = spec.ctx
+      ? withConfig(spec.ctx, () => vnode)
+      : defineComponent({ render: () => vnode });
+    const container = document.createElement('div');
+    container.innerHTML = await renderToString(createSSRApp(App));
+    const root = container.firstElementChild;
+    if (!(root instanceof HTMLDivElement)) throw new Error('Masonry SSR root must be a div');
+    const prefix =
+      id === 'masonry:prefix-cls:no-props'
+        ? 'apollo-masonry'
+        : id === 'masonry:prefix-cls:custom'
+          ? 'custom'
+          : 'apollo';
+    expect(root.classList.contains(prefix)).toBe(true);
+    expect(root.classList.contains(`${prefix}-css-var`)).toBe(true);
+    expect(root.hasAttribute('role')).toBe(false);
+    const tiles = root.querySelectorAll(`.${prefix}-item`);
+    expect(tiles).toHaveLength(spec.props.items?.length ?? 0);
+    for (const tile of tiles) expect(tile.getAttribute('style')).toContain('position:relative');
+    if (tiles.length > 0) {
+      expect(root.style.display).toBe('grid');
+      expect(root.style.height).toBe('');
+      const columns =
+        id === 'masonry:columns-1' || id.startsWith('masonry:columns-responsive')
+          ? 1
+          : id === 'masonry:columns-4' || id === 'masonry:class-names-fn'
+            ? 4
+            : 3;
+      expect(root.style.gridTemplateColumns).toBe(`repeat(${columns}, minmax(0, 1fr))`);
+    } else expect(root.style.height).toBe('0px');
+    if (id === 'masonry:item-children') {
+      expect(tiles[0]?.textContent).toBe('A');
+      expect(tiles[1]?.textContent).toBe('');
+    } else if (id === 'masonry:item-no-content') expect(tiles[0]?.textContent).toBe('');
+    else
+      expect([...tiles].map((tile) => tile.textContent)).toEqual(
+        spec.props.items?.map((_, index) => String(index + 1)) ?? [],
+      );
+    if (id === 'masonry:rtl') expect(root.classList.contains('apollo-rtl')).toBe(true);
+    if (id === 'masonry:class-names' || id === 'masonry:styles')
+      expect(root.classList.contains('custom-root')).toBe(true);
+    if (id === 'masonry:class-names-fn') expect(root.classList.contains('cols-4')).toBe(true);
+    if (id === 'masonry:styles') {
+      expect(root.style.border).toBe('2px solid red');
+      for (const tile of tiles) expect(tile.getAttribute('style')).toContain('padding:10px');
+    }
+    if (id === 'masonry:gutter-number' || id === 'masonry:gutter-array') {
+      expect(root.style.columnGap).toBe(id === 'masonry:gutter-array' ? '8px' : '16px');
+      expect(root.style.rowGap).toBe('16px');
+    }
+  });
 });

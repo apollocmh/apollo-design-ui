@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8"><link rel="icon" href="data:," /><title>Masonry hydration</title></head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import '@apollo-design/theme/tokens.css';
+      import '@apollo-design/ui/masonry/style.css';
+      import { createSSRApp } from 'vue';
+      import App from './MasonryHydration.mjs';
+      createSSRApp(App).mount('#app');
+    </script>
+  </body>
+</html>

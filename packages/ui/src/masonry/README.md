@@ -23,12 +23,12 @@
 | D5 | `CSSMotionList` 的 render-prop ⇒ `MotionList` 的默认插槽（载荷多一个 `itemKey`/`index`） | PLATFORM | `motion-list.ts` 的文件头 |
 | D6 | `useLayoutEffect` ⇒ `onMounted` + `watch(flush:'post')` | PLATFORM | PITFALLS 211 |
 | D7 | 原生 load/error 捕获触发量测，fresh=false 也能响应图片尺寸变化 | INTENDED | ADR0007；当前回归见 2026-10-24 native media 报告 |
-| D8 | `mergedItems` 的「一拍延迟」用 `onMounted` + `watch(flush:'post')` 精确复刻 | PLATFORM | 分析文档 §6.2 |
+| D8 | 初始 items 同步渲染，SSR 使用正常网格流；挂载后实测并切换最短列定位，不复制 React effect 空首屏 | INTENDED | ADR0007；SSR 专项回归 |
 | D9 | `columnCount === 0`（`columns={0}`）时上游会写出 `top: undefined` / `NaN` 传播；本仓收敛成 `0` | INTENDED | `positions.ts` 文件头（未定义行为不复制） |
 | D10 | 纵向间距非数字时上游退化成字符串拼接（`totalHeight` 变 `NaN`）；本仓收敛成「能转成有限数就用，否则 0」 | INTENDED | `Masonry.vue` 的 `verticalGutterPx` |
-| D11 | 根高为 0 时输出 `height:0`（**与 React 的 `dangerousStyleValue` 一致**，不补 `px`） | 一致 | `Masonry.vue` 的 `rootHeight` |
+| D11 | 测量前使用自然高度，空列表高度 0；测量后使用实测容器高度，不按 React 序列化格式限制 Vue | INTENDED | SSR/尺寸回归 |
 | D12 | 内部 prop `onResize` 用 `undefined` 而不是上游的 `null` | PLATFORM | 内部 prop，不可观测 |
-| D13 | `items` **更新契约**：上游 `useEffect([items])` 是**引用比较** ⇒ 原地 `push`/`splice`/`swap`/改 `column` **完全不更新**。本仓用「依赖探针（逐条读 `length`/`key`/`column`）+ 赋值浅拷贝」把响应式数组（`ref`/`reactive` 持有）的**原地变更也变成完整更新路径**（量测 + 重排 + `onLayoutChange` 三条通道同步）。⚠️ 修复前本仓是「**DOM 更新了、布局没更新**」的半更新态（比上游更糟：新 item 无位置 ⇒ 堆在左上角，且 `collectLayout` 要求全部有位置 ⇒ 回调停在旧载荷）。保留边界：① **普通（非响应式）数组**没有数据源 ⇒ 物理上不可追踪（请给新数组）；② `children`/`data` 变化 ⇒ 走 `fresh`（item 级 `ResizeObserver`），上游同判 | INTENDED | L1 `s52-issue52`（Issue #52） |
+| D13 | `items` **更新契约**：上游 `useEffect([items])` 是**引用比较** ⇒ 原地 `push`/`splice`/`swap`/改 `column` **完全不更新**。本仓用「依赖探针（逐条读 `length`/`key`/`column`）+ 赋值浅拷贝」把响应式数组（`ref`/`reactive` 持有）的**原地变更也变成完整更新路径**（量测 + 重排 + `onLayoutChange` 三条通道同步）。⚠️ 修复前本仓是「**DOM 更新了、布局没更新**」的半更新态（比上游更糟：新 item 无位置 ⇒ 堆在左上角，且 `collectLayout` 要求全部有位置 ⇒ 回调停在旧载荷）。保留边界：① **普通（非响应式）数组**没有数据源 ⇒ 物理上不可追踪（请给新数组）；② 组件更新重测量；持续过渡/独立后代尺寸变化使用 fresh 的逐项 ResizeObserver | INTENDED | L1 `s52-issue52`（Issue #52） |
 
 ## 3. `.vue` / `.ts` 选择
 
@@ -68,3 +68,5 @@
 2026-10-24：根原生attrs/当前class和style、非冒泡图片事件测量已修复，见 [专项报告](../../../../docs/audit/2026-10-24-masonry-native-media-remediation.md)。itemRender模板迁移与首帧/SSR事项另行推进，未宣称整组件重新验收。
 
 2026-10-24：直接迁移为泛型原生 #item，修复同 key 数据替换、当前语义样式与插槽更新测量；见 [迁移说明](../../../../docs/migrations/masonry-slots.md) 与 [专项报告](../../../../docs/audit/2026-10-24-masonry-slots-remediation.md)。首帧/SSR仍继续整改，保留历史验收记录。
+
+2026-10-24：SSR直接输出当前内容、测量前正常网格流、水合节点与输入值保留已修复，见 [SSR专项报告](../../../../docs/audit/2026-10-24-masonry-ssr-remediation.md)。以上先前阶段的待办由本条更新；Apollo视觉基线仍缺失。

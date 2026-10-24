@@ -4350,7 +4350,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "\n2026-10-24 F10/ADR0007：根原生attrs/class/style当前值透传，load/error捕获重测量，fresh=false图片尺寸变更可重新排布；7文件86条runtime及类型/浏览器/产物证据见 docs/audit/2026-10-24-masonry-native-media-remediation.md。itemRender模板迁移与SSR事项仍开放，保留历史验收状态。\n2026-10-24 F11/ADR0006/0007：移除itemRender/MasonryItemRenderInfo，原生泛型#item及槽优先/空槽规则；同key新数组更新、当前语义props、组件更新重测量。专项证据见 docs/audit/2026-10-24-masonry-slots-remediation.md；SSR首帧与21张Apollo基线仍待处理，未重新声明整组件验收。",
+      "notes": "\n2026-10-24 F10/ADR0007：根原生attrs/class/style当前值透传，load/error捕获重测量，fresh=false图片尺寸变更可重新排布；7文件86条runtime及类型/浏览器/产物证据见 docs/audit/2026-10-24-masonry-native-media-remediation.md。itemRender模板迁移与SSR事项仍开放，保留历史验收状态。\n2026-10-24 F11/ADR0006/0007：移除itemRender/MasonryItemRenderInfo，原生泛型#item及槽优先/空槽规则；同key新数组更新、当前语义props、组件更新重测量。专项证据见 docs/audit/2026-10-24-masonry-slots-remediation.md；SSR首帧与21张Apollo基线仍待处理，未重新声明整组件验收。\n2026-10-24 ADR0007：SSR直接输出当前items/#item，测量前正常网格流/自然高度，挂载实测后切换瀑布流；水合保留条目和输入身份/预输入值。见 docs/audit/2026-10-24-masonry-ssr-remediation.md；前阶段SSR待办由此更新，21张Apollo基线仍缺失，保留历史验收记录。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

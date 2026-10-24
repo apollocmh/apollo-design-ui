@@ -1,27 +1,6 @@
 <script setup lang="ts" generic="T = unknown">
-/**
- * Masonry —— 瀑布流。对应 antd 6.6.4 的 `es/masonry/`。
- *
- * 契约全文见 `docs/analysis/masonry.md`（G1 产物）；下面只留**实现期最容易写错的判据**。
- *
- * ── 三条必须复刻的上游行为 ──────────────────────────────────────────────────
- *
- * 1. 🚨 **`mergedItems` 的一拍延迟**（`Masonry.tsx:120-124`）：上游用
- *    `useState([]) + useEffect` ⇒ **首帧渲染空列表**，第二帧才有 item。
- *    本仓用 `onMounted` + `watch(flush:'post')` 卡同一个时机。
- *    ⚠️ 不能用 `watch(..., { immediate: true })`（那是 `setup` 期同步跑 ⇒ 少一拍）。
- * 2. Native image load/error are captured at the root and schedule a measured
- *    layout pass, including non-bubbling events when fresh is false.
- * 3. **排布算法**在 `hooks/positions.ts`（纯函数，三处易错点写在文件头）。
- *
- * ── 本仓的三处平台差异 ───────────────────────────────────────────────────────
- *
- * - `useLayoutEffect` → `onMounted` + `watch(flush:'post')`（DOM 无响应式，PITFALLS 211）。
- * - `genCssVar(root,'masonry')` → 手写 `--{rootPrefixCls}-masonry-item-width`。
- * - `useCSSVarCls` → 根类名里直接拼 `${prefixCls}-css-var`。
- * - `CSSMotionList` 的 render-prop → `MotionList` 的默认插槽（载荷含 key 对象的
- *   其余字段 + `itemKey` + `index`，见 `packages/motion/src/motion-list.ts`）。
- */
+/** Native Vue masonry: render initial items on the server and progressively
+ * replace the measurable grid with absolute shortest-column positioning. */
 import { MotionList } from '@apollo-design/motion';
 import { isEqual, mergeDomAttrs, observeResize } from '@apollo-design/utils';
 import {
@@ -98,12 +77,12 @@ const rootPrefixCls = computed(() => context.getPrefixCls());
 /** 组件作用域 CSS 变量（上游 `genCssVar(rootPrefixCls, 'masonry')`）。 */
 const itemWidthVar = computed(() => `--${rootPrefixCls.value}-masonry-item-width`);
 
-// ============================== 数据（一拍延迟） ==============================
+// ============================== 当前数据 ==============================
 /**
  * ⚠️ `shallowRef`：item 里的 `data` 是**用户对象**，深度代理既没必要也可能很贵
  * （`reactive` 会递归代理）。上游也只是 `setState(items)`。
  */
-const mergedItems = shallowRef<MasonryItemType<T>[]>([]);
+const mergedItems = shallowRef<MasonryItemType<T>[]>(props.items ? [...props.items] : []);
 
 /**
  * 🚨 **`items` 的依赖探针**（Issue #52）。
@@ -153,10 +132,7 @@ const syncItems = (): void => {
   mergedItems.value = props.items ? [...props.items] : [];
 };
 
-onMounted(syncItems);
-
-// 见文件头第 1 条：`flush: 'post'` 复刻 `useEffect` 的「commit 之后」
-watch([() => props.items, itemsSignature], syncItems, { flush: 'post' });
+watch([() => props.items, itemsSignature], syncItems, { flush: 'sync' });
 
 // ============================== 列数 / 间距 ==============================
 const screens = useBreakpoint();
@@ -190,6 +166,7 @@ const verticalGutterPx = computed<number>(() => {
 const itemEls = new Map<string, HTMLDivElement | null>();
 const setItemRef = (key: string, el: HTMLDivElement | null): void => {
   itemEls.set(key, el);
+  if (el) collectItemSize();
 };
 
 const itemHeights = shallowRef<ItemHeightData[]>([]);
@@ -217,20 +194,8 @@ const collectItemSize = useDelay(() => {
   }
 });
 
-/**
- * ⚠️ **不要额外加 `onMounted(collectItemSize)`**。
- *
- * 上游的 `useEffect(collectItemSize, [mergedItems, columnCount])` 在挂载时也会跑一次，
- * 但那时 `mergedItems` 还是 `[]` ⇒ 量到空数组 ⇒ `isEqual([], [])` 直接短路，**是个空转**。
- *
- * 本仓如果照抄成 `onMounted(collectItemSize)`，它会跑在**同一个 `onMounted` 里
- * 刚赋完值的 `mergedItems` 之后、而 DOM 还没重渲染**的位置 ⇒ 量到 15 个「元素不存在 ⇒
- * 高度 0」⇒ 算出一版**全 0 列号**的位置并写进 `itemColumns` ⇒ **`layoutChange` 会先发
- * 一次错的、再发一次对的**（2026-10-01 L2 实测抓到）。
- *
- * 下面这个 `flush: 'post'` 的 watcher 已经覆盖了首次量测：`mergedItems` 由 `[]` 变非空
- * 本身就是一次变化 ⇒ 重渲染之后触发 ⇒ 那时 DOM 已就绪 ✓。
- */
+// Measure only after DOM refs exist; setItemRef also covers delayed motion mounts.
+onMounted(collectItemSize);
 watch([mergedItems, columnCount], collectItemSize, { flush: 'post' });
 onUpdated(collectItemSize);
 
@@ -267,6 +232,9 @@ const motionKeys = computed(() =>
     };
   }),
 );
+
+/** Use normal grid flow until every current item has a measured position. */
+const layoutReady = computed(() => motionKeys.value.every(({ position }) => position !== undefined));
 
 /**
  * key（`String()` 化）→ **最近一次**的渲染数据。
@@ -393,22 +361,17 @@ const rootClassNames = () => [
   direction.value === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
 ];
 
-/**
- * 根高度。
- *
- * 🚨 **`0` 要单独处理**：React 的 `dangerousStyleValue` 是
- * `typeof value === 'number' && value !== 0 ? value + 'px' : …` ——
- * 即**数字 0 不补 `px`**（上游 SSR 产物实测是 `style="height:0"`）。
- * 本仓的 `toCssSize()` 一律补 `px`（`0px`），CSS 语义完全等价，
- * 但 L4 是**逐字**比对 ⇒ 20 个用例会全部多出一条 `height:0 vs height:0px`。
- *
- * ⇒ 这里显式对齐上游的序列化（而不是登记 19 条 PLATFORM 豁免 —— 那会把
- *   一个「我们自己能对齐的差异」伪装成平台限制）。
- */
-const rootHeight = computed(() => (totalHeight.value === 0 ? '0' : toCssSize(totalHeight.value)));
-
+/** SSR and pre-measurement content stays in flow with a natural container height. */
 const rootStyle = computed(() => ({
-  height: rootHeight.value,
+  ...(layoutReady.value
+    ? { height: toCssSize(totalHeight.value) }
+    : {
+        display: 'grid',
+        alignItems: 'start',
+        gridTemplateColumns: `repeat(${columnCount.value}, minmax(0, 1fr))`,
+        columnGap: toCssSize(horizontalGutter.value),
+        rowGap: toCssSize(verticalGutter.value),
+      }),
   ...mergedStyles.value.root,
 }));
 
@@ -442,6 +405,7 @@ const itemResize = computed(() => (props.fresh ? collectItemSize : undefined));
       <template #default="slot">
         <MasonryItem
           :prefix-cls="prefixCls"
+          :measured="layoutReady"
           :item-key="slot.itemKey"
           :column-index="layoutOf(slot.itemKey).columnIndex"
           :top="layoutOf(slot.itemKey).top"

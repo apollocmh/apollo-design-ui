@@ -88,6 +88,7 @@ Masonry **没有 Component Token**（与 antd 逐字一致：`ComponentToken` �
 
 - **排布算法**：按 `items` 顺序，每项落到**当前累计高度最小**的那一列（平局取**最左**）；
   容器高度 = 最高列 − 一个纵向间距。详见 `hooks/positions.ts` 的文件头（含三处易错点）。
+- **SSR 直接输出内容**：初始 items 与 #item 在服务端渲染；测量前采用正常网格流和自然高度，客户端挂载后按实际高度切换为瀑布流定位。网格按行排列，测量后才采用最短列算法。水合保留条目、输入节点和输入值，不再复制 React effect 的空首屏。
 - **高度是实测的**：`item.height` 从不被读；首帧量测在 Vue 更新 DOM 之后。
 - **图片事件参与测量**：根节点以原生捕获监听 load/error；非冒泡的 img 事件也会触发去抖量测与重排，fresh=false 同样有效。一般内容的尺寸变化仍可用 fresh 的逐项 ResizeObserver。
 - **本组件零 ARIA**：容器与条目都是普通 `div`（无 `role`、无 `tabindex`）——

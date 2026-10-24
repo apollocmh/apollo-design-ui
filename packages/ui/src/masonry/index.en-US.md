@@ -92,6 +92,7 @@ It only consumes global aliases:
   accumulated height** (ties go to the **leftmost**); the container height is the tallest
   column minus one vertical gutter. See the header of `hooks/positions.ts` for the three
   easy-to-get-wrong points.
+- **SSR renders content immediately**: initial items and #item render on the server in a normal grid with natural height. After mounting, measured heights enable shortest-column positioning. The initial grid flows by rows; masonry positioning starts after measurement. Hydration retains item/input nodes and entered values.
 - **Heights are measured**: `item.height` is never read; the first measurement happens
   after Vue has updated the DOM.
 - **Image events trigger measurement**: native root capture listeners receive non-bubbling img load/error events and schedule a measured layout pass, including when fresh is false. Use fresh for general per-item ResizeObserver updates.
