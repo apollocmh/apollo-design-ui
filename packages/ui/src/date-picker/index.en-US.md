@@ -81,7 +81,9 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | getPopupContainer | Popup mount container | `(node) => HTMLElement` | `document.body` |
 | transitionName | Popup motion name | `string` | `${rootPrefixCls}-slide-up` |
 | required | Native `required` (forwarded to `input[required]` and `aria-required`) | `boolean` | —— |
-| name / autoComplete / id | Forwarded to the native `input` | `string` | —— |
+| name / autoComplete / id | Bound to the native `input`; pair `id` with `label for` | `string` | `autoComplete: 'off'` |
+| tabIndex / tabindex | Native input Tab order; `tabindex` is also accepted as a Vue attr | `number` | —— |
+| autoFocus | Focus the first enabled input on mount | `boolean` | `false` |
 | prefixCls | Class prefix. ⚠️ Defaults to **`apollo-picker`** (not `apollo-date-picker`) | `string` | —— |
 | class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | —— |
 | classNames / styles | Semantic class names / styles (**4 flat + 7 nested `popup`**). `popup` accepts a **string** (= `popup.root`). `classNames.root` / `styles.root` land on the **selector root** (merged with native `class` / `style`; native wins) | `DatePickerSemanticAllType` | —— |
@@ -144,6 +146,7 @@ They apply to both the date and the time panel.
 | --- | --- |
 | `value` / `defaultValue` | Tuple `[start, end]`. ⚠️ **`null` and `undefined` mean different things**: `null` = "clear this end", `undefined` = "not picked yet" |
 | `placeholder` | Tuple `[string, string]` |
+| `id` | `string \| { start?: string; end?: string }`; a string identifies only the start input; an object identifies each endpoint, without generated ids |
 | `separator` | Separator between the two ends. **The default one carries `aria-hidden`; a custom one drops it** |
 | `allowEmpty` | Allow one end to be empty (`boolean` or a tuple) |
 | `disabled` | `boolean` or a tuple. ⚠️ The `-disabled` root class is added only when **both ends** are disabled |
@@ -152,6 +155,12 @@ They apply to both the date and the time panel.
 | `onSelect` | **deprecated**, and only effective when `picker === 'time'` |
 | `focus` | Different signature: `(index?) => void` |
 | `startInput` / `endInput` | The two native inputs |
+
+### Native attribute targets
+
+`class`, `style`, `data-*` and native mouse listeners target the selector root. `id`, `tabIndex` / `tabindex`, `name`, `required`, `autoComplete`, `autoFocus` and `aria-*` target the actual inputs. Shared range attributes apply to both endpoints. Input validation controls `aria-invalid`; `aria-required` follows `required` unless explicitly supplied. The component owns the controlled value, input handlers and refs.
+
+F01 moves input ARIA and Tab order from the root to the input. Update DOM queries for these attributes accordingly. Use object ids and two `label for` elements to label range endpoints separately.
 
 ## Theme
 

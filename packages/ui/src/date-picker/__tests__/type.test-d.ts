@@ -423,3 +423,14 @@ describe('DatePicker · L3 负例', () => {
     expectTypeOf(bad).not.toBeNever();
   });
 });
+
+// F01: native input metadata is typed on date and range pickers.
+expectTypeOf<PickerCommonProps['autoFocus']>().toEqualTypeOf<boolean | undefined>();
+expectTypeOf<PickerCommonProps['tabIndex']>().toEqualTypeOf<number | undefined>();
+expectTypeOf<DatePickerProps['id']>().toEqualTypeOf<string | undefined>();
+expectTypeOf<RangePickerProps['id']>().toEqualTypeOf<
+  string | { start?: string; end?: string } | undefined
+>();
+// @ts-expect-error F01: Tab order accepts a number, not a label.
+const invalidTabOrder: PickerCommonProps = { tabIndex: 'first' };
+void invalidTabOrder;

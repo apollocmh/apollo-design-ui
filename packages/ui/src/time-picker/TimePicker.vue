@@ -75,6 +75,7 @@ const props = withDefaults(defineProps<TimePickerProps>(), {
   disabled: undefined,
   bordered: undefined,
   required: undefined,
+  autoFocus: undefined,
   prefix: undefined,
   suffixIcon: undefined,
   clearIcon: undefined,

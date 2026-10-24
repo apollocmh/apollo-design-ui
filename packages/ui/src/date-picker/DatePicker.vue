@@ -53,6 +53,7 @@
  * - **`onSelectorFocus` 的 `inherit: true`**（`triggerOpen(true, { inherit: true })`）
  *   在本仓的 `Trigger` 上没有对应选项 ⇒ 当前等价于普通打开。
  */
+
 import { CloseCircleFilled, CloseOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import {
@@ -91,6 +92,7 @@ import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
 import { Footer } from './components/Footer';
+import { splitPickerAttrs } from './components/input-attrs';
 import { PresetPanel } from './components/PresetPanel';
 import { getFormatLength, getMergedNeedConfirm, getShowNow } from './components/picker-shared';
 import { getRootClassNames } from './components/root-class';
@@ -152,6 +154,7 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
   disabled: undefined,
   bordered: undefined,
   required: undefined,
+  autoFocus: undefined,
   prefix: undefined,
   suffixIcon: undefined,
   clearIcon: undefined,
@@ -1501,15 +1504,8 @@ const slots = useSlots();
  *    `prefix-cls` / `value-texts` 显式写出来（值与这里返回的完全一致，重复无害）。
  */
 const selectorBindings = (): Record<string, unknown> => {
-  // ⚠️ **渲染期**读 `attrs`（`useAttrs()` 的对象不参与依赖追踪；包成 `computed`
-  //    会让「只改 class/style/aria/data」的更新读到旧快照，Issue #5.3）。
-  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
-  void _attrsClass;
-  void _attrsStyle;
-  // ⚠️ 不要加 `as never`：`Selector` 有必填 prop（`prefixCls` / `valueTexts`），
-  //    而 `vue-tsc` 要靠这里的**推断类型**去满足它们（`as never` 会让整条 `v-bind`
-  //    变成 `never` ⇒ 报「missing prefixCls / valueTexts」）。
-  return { ...rest, ...selectorProps.value };
+  const { rootAttrs, inputAttrsByIndex } = splitPickerAttrs(attrs, props);
+  return { ...rootAttrs, ...selectorProps.value, inputAttrsByIndex };
 };
 
 /** Trigger 的浮层容器：局部优先，回退 ConfigProvider 的全局设置（Issue #5.2）。 */

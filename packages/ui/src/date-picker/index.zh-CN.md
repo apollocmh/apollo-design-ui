@@ -79,7 +79,9 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | getPopupContainer | 浮层挂载容器 | `(node) => HTMLElement` | `document.body` |
 | transitionName | 浮层动效名 | `string` | `${rootPrefixCls}-slide-up` |
 | required | 原生 `required`（透传 `input[required]` 与 `aria-required`） | `boolean` | —— |
-| name / autoComplete / id | 透传到原生 `input`。⚠️ **`id` 当前会整个丢失**（`docs/KNOWN-ISSUES.md` §1.3），未修 | `string` | —— |
+| name / autoComplete / id | 绑定原生 `input`；`id` 可与 `label for` 关联 | `string` | `autoComplete: 'off'` |
+| tabIndex / tabindex | 原生输入框的 Tab 顺序；`tabindex` 可作为 Vue attr 传入 | `number` | —— |
+| autoFocus | 挂载时聚焦第一个未禁用的输入框 | `boolean` | `false` |
 | prefixCls | 类名前缀。⚠️ 默认是 **`apollo-picker`**（不是 `apollo-date-picker`） | `string` | —— |
 | class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | —— |
 | classNames / styles | 语义化类名 / 样式（**4 个平铺 + 7 个嵌套 `popup`**）。`popup` 允许 **string**（= `popup.root`）。`classNames.root` / `styles.root` 落**选择器根元素**（与原生 `class` / `style` 合并，原生胜） | `DatePickerSemanticAllType` | —— |
@@ -141,6 +143,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | --- | --- |
 | `value` / `defaultValue` | 元组 `[start, end]`。⚠️ **`null` 与 `undefined` 语义不同**：`null` = 「清空该端」，`undefined` = 「尚未选」 |
 | `placeholder` | 元组 `[string, string]` |
+| `id` | `string \| { start?: string; end?: string }`；字符串只绑定起点，对象分别绑定两端，不生成额外 id |
 | `separator` | 两端之间的分隔符。**默认分隔符带 `aria-hidden`；自定义的会去掉它** |
 | `allowEmpty` | 允许某一端为空（`boolean` 或两端元组） |
 | `disabled` | `boolean` 或两端元组。⚠️ 根类名 `-disabled` 只在**两端都禁**时加 |
@@ -149,6 +152,12 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | `onSelect` | **deprecated**，且只在 `picker === 'time'` 时生效 |
 | `focus` | 签名不同：`(index?) => void`，可指定聚焦哪一端 |
 | `startInput` / `endInput` | 两个原生输入框 |
+
+### 原生属性落点
+
+`class`、`style`、`data-*` 和原生鼠标事件留在选择器根。`id`、`tabIndex` / `tabindex`、`name`、`required`、`autoComplete`、`autoFocus` 以及 `aria-*` 绑定实际输入框；范围选择器的共享属性应用到两端。`aria-invalid` 由内部输入校验维护，`aria-required` 默认随 `required`，可显式覆盖。受控值、输入事件和 ref 由组件维护。
+
+修复 F01 后，原先根上的输入 ARIA 和 Tab 顺序移到 input；请将针对这些属性的 DOM 查询指向 input。范围两端需要不同标签时使用对象 `id` 与两个 `label for`。
 
 ## Theme
 

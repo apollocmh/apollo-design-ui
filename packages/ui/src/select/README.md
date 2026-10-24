@@ -8,6 +8,10 @@
 > + `@rc-component/select@1.10.1`（es 产物 **2815 行 / 24 文件**）。
 > 上游是**兼容性规格**，不是代码来源。
 
+## 2026-10-23 当前整改
+
+F02：公开 render 边界读取默认选项插槽并归一化，结果经普通 Vue props 进入内部计算/缓存链；纯数据 options 不执行默认插槽。Fragment/Comment 按 Vue 控制流处理，input 不重挂载。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
+
 ## 1. 职责
 
 下拉选择器：值语义（受控/非受控/`labelInValue`）、搜索过滤（`showSearch` 对象形态）、

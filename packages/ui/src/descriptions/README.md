@@ -2,6 +2,10 @@
 
 # Descriptions 实现说明
 
+## 2026-10-23 当前整改
+
+F08：slot 子项直接形成当前 render 的 rows，不再通过 shallowRef 写回；items 数据使用独立 computed，包括 [] 时均不执行被忽略的默认插槽。未复现无限更新，保留单次更新和 SSR 水合回归。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
+
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 · `es/descriptions/`（index 141 + Row 143 + Cell 87 + hooks 93 + style 205 行，只读参照，H2）

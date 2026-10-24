@@ -21,17 +21,12 @@
  *    ⚠️ 混有 VNode 项时整条 dataSource 走 children-as-data 通道（结构化项转成
  *    Option vnode）—— Select 的 `childrenAsData = !options` 是全有全无开关，
  *    `options=[]` 会把默认插槽整条堵死（#14.1：仅 VNode dataSource ⇒ 零选项）。
- * 6. **默认插槽始终下传**：Select 的 `parsed` 是 computed，只在「上次求值读到的
- *    reactive 依赖」变化时重算。某个渲染周期**不下传** default slot ⇒ 那次求值
- *    什么都不 track ⇒ 之后插槽再回来时 computed 是干净的 ⇒ 选项永远停在上一个
- *    周期（#14.3 实测：自定义输入结构切回 Option 列表后候选不恢复）。
- *    ⇒ 包装函数读 `optionInfo` / `hasVNodeItems` / `dataSource`（均 reactive）
- *    ⇒ `parsed` 间接跟踪分类态，任何插槽结构/内容变化都能穿透。
+ * 6. F02：默认插槽在 render 读取并分类；Select 的公开 render 边界将 VNode
+ *    转为选项数据，再经 Vue props 更新内层 computed 与缓存，不能缓存 slot 身份。
  */
 
 import { isPlainObject, useDevWarning } from '@apollo-design/utils';
 import {
-  Comment,
   type ComponentPublicInstance,
   computed,
   defineComponent,
@@ -39,13 +34,12 @@ import {
   isVNode,
   type PropType,
   ref,
-  type VNode,
   watchEffect,
 } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useConfigContext } from '../config-provider/context';
 import { SelectOption } from '../select';
-import { OPTION_MARK } from '../select/engine/valueUtil';
+import { collectSelectChildren, isSelectOptionNode } from '../select/engine/valueUtil';
 import type { DefaultOptionType } from '../select/interface';
 import Select from '../select/Select';
 import type {
@@ -204,35 +198,14 @@ const AutoCompleteComponent = defineComponent({
     // =========================== Options ===============================
     // antd 的 children 三分支。本仓 v1：自定义输入元素未实现（usage 告警，
     // 见渲染期的 `warnCustomInputIfNeeded`）。
-    const optionInfo = computed(() => {
-      const nodes = (slots.default?.() ?? []) as VNode[];
-      const realNodes = nodes.filter((n) => n && n.type !== Comment);
-
-      // 1) 首个 child 是 SelectOption/OptGroup ⇒ 透传 default slot
-      // ⚠️ 先提成局部变量：`isVNode(realNodes[0])` 收窄不了索引访问
-      const firstNode = realNodes[0];
-      if (
-        realNodes.length &&
-        isVNode(firstNode) &&
-        (firstNode.type as Record<string, unknown>)?.[OPTION_MARK]
-      ) {
-        return { kind: 'children' as const };
-      }
-
-      // 2) 单个非 Option 元素 ⇒ 自定义输入元素（v1 未实现）
-      if (realNodes.length === 1 && isVNode(realNodes[0])) {
-        return { kind: 'children' as const, dropCustomInput: true };
-      }
-
+    const classifyChildren = (nodes: ReturnType<typeof collectSelectChildren>) => {
+      const firstNode = nodes[0];
+      if (firstNode && isSelectOptionNode(firstNode)) return { kind: 'children' as const };
+      if (nodes.length === 1) return { kind: 'children' as const, dropCustomInput: true };
       return { kind: 'none' as const };
-    });
+    };
 
-    // 「自定义输入元素」usage 告警（antd 逐字文案）。
-    // ⚠️ 放在**渲染期**而不是 `optionInfo` computed 里：computed 惰性求值 ——
-    // 仅传 `options` 时 `mergedOptions` 首行短路、default 包装也不会被 Select
-    // 调用（`childrenAsData = !options` = false）⇒ optionInfo 永不求值 ⇒
-    // 告警消失（#14 修复时的回归实测）。沿对比触发 ⇒ 与旧代码「每个求值
-    // 周期一次」等价，不会每个渲染周期刷屏。
+    // Custom inputs remain unsupported; warn once per active unsupported state.
     let warnedCustomInput = false;
     const warnCustomInputIfNeeded = (info: { dropCustomInput?: boolean }): void => {
       if (info.dropCustomInput) {
@@ -254,12 +227,14 @@ const AutoCompleteComponent = defineComponent({
     // ① children 首项是 Option/OptGroup ⇒ optionChildren = children，dataSource 整条忽略；
     // ② 否则 dataSource.map：string ⇒ Option{value,label}；{value,text} ⇒ Option{value,label:text}；
     //    VNode 项原样作为 option children（走默认插槽通道）。
-    const mergedOptions = computed<DefaultOptionType[] | undefined>(() => {
+    const getOptions = (
+      info: ReturnType<typeof classifyChildren>,
+    ): DefaultOptionType[] | undefined => {
       if (props.options) return props.options;
       // antd：childNodes[0] 是 Option/OptGroup ⇒ dataSource 不再参与。否则
       // options 非空会把 Select 的 children-as-data 通道整条堵死（#14.1 实测：
       // Option children 与 dataSource 同传 ⇒ children 反被丢）。
-      if (optionInfo.value.kind === 'children' && !optionInfo.value.dropCustomInput) {
+      if (info.kind === 'children' && !info.dropCustomInput) {
         return undefined;
       }
       const ds = props.dataSource;
@@ -277,7 +252,7 @@ const AutoCompleteComponent = defineComponent({
         }
         return [];
       });
-    });
+    };
 
     // ====================== Merged props（antd 逐字）===================
     const mergedPopupMatchSelectWidth = computed(
@@ -346,10 +321,9 @@ const AutoCompleteComponent = defineComponent({
 
     // ============================ Render ===============================
     return () => {
-      // 渲染期读一次分类态：① 驱动 `warnCustomInputIfNeeded`（告警时机）；
-      // ② 让本组件的渲染效应跟踪 `optionInfo` —— 插槽结构变化 ⇒ 重新渲染
-      //    ⇒ 下传新的 default 包装（旧代码在这里做分支判断，天然每渲染期求值）。
-      const info = optionInfo.value;
+      // F02: classify this render’s slot, including conditional slot functions.
+      const children = collectSelectChildren(slots.default?.());
+      const info = classifyChildren(children);
       warnCustomInputIfNeeded(info);
 
       // 透传给 Select 的插槽：default（Option 列表 / dataSource 派生）+ 其余具名插槽；
@@ -379,22 +353,11 @@ const AutoCompleteComponent = defineComponent({
         selectSlots.suffixIcon = () => null;
       }
 
-      // 默认插槽**始终**下传（内容按分类/数据源三分支，空内容也传一个返回 [] 的 fn）：
-      // ① Option children（首项是 Option/OptGroup）⇒ 透传 slots.default；
-      // ② dataSource 含 VNode 项 ⇒ 整条 dataSource 走 children-as-data 通道
-      //    （antd 的 optionChildren = dataSource.map：string/object 转 Option
-      //    vnode，VNode 项原样透传）；
-      // ③ 其余（无 children / 自定义输入元素被丢弃）⇒ 空列表。
-      // ⚠️ 为什么必须始终下传：Select 的 `parsed` 是 **computed**，只在「上次求值
-      // 读到的 reactive 依赖」变化时重算。某个渲染周期不下传 default slot ⇒ 那次
-      // 求值 `slots.default?.()` 为 undefined、什么都不 track ⇒ 之后插槽再回来时
-      // computed 是干净的 ⇒ 选项永远停在上一个周期（#14.3 实测：从自定义输入结构
-      // 切回 Option 列表后候选不恢复，即使 Select 重渲染了）。
-      // ⇒ 包装函数显式读 `optionInfo` / `hasVNodeItems` / `dataSource`（均 reactive）
-      //    ⇒ `parsed` 间接跟踪分类态，插槽结构/内容变化都能穿透到选项列表。
+      // The current render owns the slot snapshot. Forward its VNodes as data;
+      // never classify slot identity or content inside a computed.
       selectSlots.default = () => {
-        if (optionInfo.value.kind === 'children' && !optionInfo.value.dropCustomInput) {
-          return (slots.default as () => unknown)();
+        if (info.kind === 'children' && !info.dropCustomInput) {
+          return children;
         }
         if (hasVNodeItems.value) {
           return (props.dataSource ?? []).map((item) => {
@@ -429,7 +392,7 @@ const AutoCompleteComponent = defineComponent({
           prefixCls: prefixCls.value,
           value: props.value,
           defaultValue: props.defaultValue,
-          options: mergedOptions.value,
+          options: getOptions(info),
           placeholder: props.placeholder,
           disabled: props.disabled,
           size: props.size,

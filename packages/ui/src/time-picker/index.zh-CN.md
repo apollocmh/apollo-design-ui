@@ -23,6 +23,8 @@ subtitle: 时间选择框
 
 ## API
 
+原生属性与 DatePicker 共用契约：`id`、`tabIndex` / `tabindex`、`name`、`required`、`autoComplete`、`autoFocus` 和 `aria-*` 绑定实际输入框；`class/style/data-*` 留在根。范围 `id` 字符串只绑定起点，`{ start, end }` 分别绑定两端；`autoFocus` 聚焦第一个未禁用端。详见 DatePicker「原生属性落点」。
+
 ### TimePicker
 
 | 参数 | 说明 | 类型 | 默认值 |

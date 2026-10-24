@@ -7,6 +7,10 @@
 > 契约来源：antd `components/auto-complete/`（AutoComplete.tsx 245 + index.tsx 33 行）。
 > 上游是**兼容性规格**，不是代码来源。
 
+## 2026-10-23 当前整改
+
+F02：选项分类与插槽读取移至当前 render，不再依靠始终转发 default 包装函数来间接使 computed 失效。支持条件插槽、分组及 VNode 数据源的已有行为。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
+
 ## 1. 职责
 
 输入自动完成：Select 的 combobox 薄包装。数据通道三选一（options /

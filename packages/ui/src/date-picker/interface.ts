@@ -559,6 +559,10 @@ export interface PickerCommonProps {
   // ----------------------------------------------------------------
   /** 原生 `required`（会透传成 `input[required]` 与 `aria-required`）。 */
   required?: boolean;
+  /** 原生输入框的 Tab 顺序；也支持 Vue 原生 `tabindex` attr。 */
+  tabIndex?: number;
+  /** 挂载时聚焦第一个未禁用的输入框。 */
+  autoFocus?: boolean;
   /** 原生 `name`。 */
   name?: string;
   /** 原生 `autoComplete`。⚠️ 实测默认渲染成 `autocomplete="off"`（大写 O 的 React 写法在 DOM 里被规范化）。 */
@@ -669,7 +673,7 @@ export interface RangePickerProps
   defaultValue?: RangeValue;
 
   // ---------------------------------------------------------------- 标识
-  /** 输入框的 `id`（对象形态用于给两端不同的 id，上游 `SelectorIdType`）。 */
+  /** 输入框的 `id`；字符串只绑定起点，对象形态分别绑定两端，不生成额外 id。 */
   id?: string | { start?: string; end?: string };
 
   // ---------------------------------------------------------------- 面板

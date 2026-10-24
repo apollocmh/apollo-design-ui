@@ -527,12 +527,11 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
 /**
  * 根 attrs 透传（`docs/KNOWN-ISSUES.md` §1.8）。
  *
- * 上游把 `...restProps` spread 给**内层 picker**（`generateSinglePicker.js:180` /
- * `generateRangePicker.js:165`）⇒ `data-*` / `aria-*` 落到选择器根元素上。
+ * F01: 按 Apollo 输入语义分流；data/class/style 留在根，ARIA 连接实际 input。
  * 本仓此前 `inheritAttrs: false` 且**从不读 attrs** ⇒ 这些属性**全部静默丢弃**。
  */
 describe('DatePicker · 根 attrs 透传（§1.8）', () => {
-  it('data-* / aria-* 落到选择器根元素上', async () => {
+  it('F01: data-* 留在根，输入描述落到 input', async () => {
     const w = mount(DatePicker, {
       props: { defaultValue: dayjs('2016-11-22') },
       attrs: { 'data-testid': 'dp', 'aria-describedby': 'hint' },
@@ -543,7 +542,8 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
     const root = w.find('.apollo-picker');
     expect(root.exists()).toBe(true);
     expect(root.attributes('data-testid')).toBe('dp');
-    expect(root.attributes('aria-describedby')).toBe('hint');
+    expect(root.attributes('aria-describedby')).toBeUndefined();
+    expect(w.get('input').attributes('aria-describedby')).toBe('hint');
     w.unmount();
   });
 
@@ -560,26 +560,17 @@ describe('DatePicker · 根 attrs 透传（§1.8）', () => {
     w.unmount();
   });
 
-  it('引擎自己的 props 不被调用方 attrs 顶掉（顺序：attrs 在前、引擎在后）', async () => {
-    const w = mount(DatePicker, {
-      props: { defaultValue: dayjs('2016-11-22') },
-      attrs: { id: 'user-id' },
-    });
-    await nextTick();
-    await nextTick();
-    // `id` 是引擎自己的 prop（mergedId），不该被 attrs 覆盖。
-    // 🚨 **这条断言目前是空转的** —— `id` 在本仓整条链路里被丢掉了（根与 input 都没有），
-    //    而不落任何元素的 `getAttribute('id')` 也满足 `not.toBe('user-id')`。
-    //    真实的判据（`id` 必须落到 combobox input，与上游一致）见
-    //    `docs/KNOWN-ISSUES.md` §1.3；修好之后这里的断言要一起改成可证伪的形态。
-    expect(w.element.getAttribute('id')).not.toBe('user-id');
+  it('F01: id 正向绑定实际 input，根不重复 id', () => {
+    const w = mount(DatePicker, { attrs: { id: 'user-id' } });
+    expect(w.get('input').attributes('id')).toBe('user-id');
+    expect(w.get('.apollo-picker').attributes('id')).toBeUndefined();
     w.unmount();
   });
 });
 
 /** 范围（RangePicker）也要透传 —— 它走 `Selector` 的另一个根分支。 */
 describe('RangePicker · 根 attrs 透传（§1.8）', () => {
-  it('data-* / aria-* 落到范围选择器根元素上', async () => {
+  it('F01: data-* 留在范围根，输入描述落到两端', async () => {
     const w = mount(RangePicker, {
       props: { defaultValue: [dayjs('2016-11-22'), dayjs('2016-11-23')] as never },
       attrs: { 'data-testid': 'rp', 'aria-describedby': 'hint2' },
@@ -589,7 +580,10 @@ describe('RangePicker · 根 attrs 透传（§1.8）', () => {
     const root = w.find('.apollo-picker');
     expect(root.exists()).toBe(true);
     expect(root.attributes('data-testid')).toBe('rp');
-    expect(root.attributes('aria-describedby')).toBe('hint2');
+    expect(root.attributes('aria-describedby')).toBeUndefined();
+    for (const input of w.findAll('input')) {
+      expect(input.attributes('aria-describedby')).toBe('hint2');
+    }
     w.unmount();
   });
 });

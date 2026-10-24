@@ -5,7 +5,7 @@
  * `commonUtil.js`（31 行）。逐函数对拍，**不搬运实现**（H2/H3）。
  */
 
-import { Comment, isVNode, Text, type VNode, type VNodeChild } from 'vue';
+import { Comment, Fragment, isVNode, Text, type VNode, type VNodeChild } from 'vue';
 import type { DefaultOptionType, FieldNames, RawValueType } from '../interface';
 
 // ---------------------------------------------------------------------------
@@ -239,24 +239,32 @@ function convertNodeToOption(node: VNode): DefaultOptionType {
   } as DefaultOptionType;
 }
 
-/** rc `convertChildrenToData` 的 Vue 版（`children` = 默认插槽的 vnode 列表）。 */
-export function convertChildrenToData(nodes: VNodeChild): DefaultOptionType[] {
-  return toArray(nodes as VNode[])
-    .map((node, index) => {
-      if (!isVNode(node) || !node.type) return null;
-      const isGroup = isComponent(node, OPTGROUP_MARK);
-      const key = node.key;
-      const props = (node.props ?? {}) as Record<string, unknown>;
-      const { children, ...restProps } = props;
-      if (!isGroup) {
-        return convertNodeToOption(node);
-      }
-      return {
+/** Flatten Vue control-flow containers without treating comments as options. */
+export function collectSelectChildren(nodes: unknown): VNode[] {
+  if (Array.isArray(nodes)) return nodes.flatMap(collectSelectChildren);
+  if (!isVNode(nodes) || nodes.type === Comment) return [];
+  if (nodes.type === Fragment) return collectSelectChildren(nodes.children);
+  return [nodes];
+}
+
+export function isSelectOptionNode(node: VNode): boolean {
+  return isComponent(node, OPTION_MARK) || isComponent(node, OPTGROUP_MARK);
+}
+
+/** Only Option/OptGroup VNodes carry option data; Fragments and comments do not. */
+export function convertChildrenToData(nodes: unknown): DefaultOptionType[] {
+  return collectSelectChildren(nodes).flatMap((node, index) => {
+    if (!isSelectOptionNode(node)) return [];
+    if (!isComponent(node, OPTGROUP_MARK)) return [convertNodeToOption(node)];
+    const { children, ...restProps } = node.props ?? {};
+    const key = node.key;
+    return [
+      {
         key: `__RC_SELECT_GRP__${key === null || key === undefined ? index : String(key)}__`,
-        label: key as unknown,
+        label: key,
         ...restProps,
-        options: convertChildrenToData((slotChildren(node) ?? children) as never),
-      } as DefaultOptionType;
-    })
-    .filter((data): data is DefaultOptionType => data !== null);
+        options: convertChildrenToData(slotChildren(node) ?? children),
+      },
+    ];
+  });
 }

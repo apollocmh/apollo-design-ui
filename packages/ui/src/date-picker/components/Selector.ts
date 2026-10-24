@@ -73,6 +73,8 @@ import {
   computed,
   defineComponent,
   h,
+  mergeProps,
+  onMounted,
   onScopeDispose,
   type PropType,
   ref,
@@ -81,6 +83,7 @@ import {
 } from 'vue';
 import Overflow from '../../_internal/overflow';
 import type { CustomTagProps } from '../interface';
+import type { PickerInputAttrs } from './input-attrs';
 import { useMaskInput } from './mask-input';
 import {
   getInputSize,
@@ -135,6 +138,12 @@ export const Selector = defineComponent({
      * ⇒ 求值（`firstFormat(getNow())`）由 `.vue` 侧用 `getFormatLength` 完成。
      */
     firstFormatLength: { type: Number as PropType<number | undefined>, default: undefined },
+
+    /** Native metadata, split by the public picker entry during render. */
+    inputAttrsByIndex: {
+      type: Array as PropType<PickerInputAttrs[]>,
+      default: () => [],
+    },
 
     // ---------------------------------------------------------- 值 / 文本
     /** 已格式化的值文本（单值 1 项；范围 2 项）。 */
@@ -381,6 +390,20 @@ export const Selector = defineComponent({
      */
     const getInput = (index: number | null | undefined): HTMLInputElement | null =>
       inputEls[index ?? 0] ?? null;
+
+    onMounted(() => {
+      const index = props.inputAttrsByIndex.findIndex(
+        (inputAttrs, i) => inputAttrs.autofocus && !disabledPair.value[i],
+      );
+      if (index >= 0) getInput(index)?.focus();
+    });
+
+    const nativeInputAttrs = (index: number): PickerInputAttrs => ({
+      ...props.inputAttrsByIndex[index],
+      autofocus: props.inputAttrsByIndex[index]?.autofocus
+        ? !disabledPair.value[index] && (index === 0 || disabledPair.value[0])
+        : undefined,
+    });
 
     /**
      * 上游 `SingleSelector` / `RangeSelector` 的命令面（`useImperativeHandle`）。
@@ -646,6 +669,12 @@ export const Selector = defineComponent({
     /** 多选：只读输入（只为表单 / 无障碍保留，视觉上由标签承担）。 */
     const renderMultipleInput = (): VNodeChild =>
       h('input', {
+        ...nativeInputAttrs(0),
+        ref: inputElRefs[0],
+        disabled: disabledPair.value[0] || undefined,
+        onFocus: (e: FocusEvent) => props.onInputFocus?.(0, e),
+        onBlur: (e: FocusEvent) => props.onInputBlur?.(0, e),
+        onKeydown: (e: KeyboardEvent) => props.onInputKeydown?.(0, e),
         class: `${props.prefixCls}-multiple-input`,
         value: props.valueTexts.join(','),
         readOnly: true,
@@ -669,13 +698,13 @@ export const Selector = defineComponent({
       const maskBind = maskInput.enabled.value ? maskInput.bind(index) : undefined;
 
       const inputNode = h('input', {
+        ...nativeInputAttrs(index),
         // `ref`：两个 field 各一个（`expose.focus` 用 `[0]`，掩码的选择同步用各自的）
         ref: inputElRefs[index],
         // 🚨 两个通道别混（见 `invalid` prop 的说明）：
         //   - `props.status`（antd）**不改**这里 —— 实测 `status="error"` 时它仍是 `"false"`；
         //   - `props.invalid`（rc，**键入解析不出日期**）才把它变 `"true"`。
         'aria-invalid': props.invalid ? 'true' : 'false',
-        autoComplete: 'off',
         size: inputSize.value,
         ...(isRange ? { 'date-range': index === 0 ? 'start' : 'end' } : {}),
         placeholder: ph,
@@ -745,7 +774,7 @@ export const Selector = defineComponent({
         : [props.prefixCls, ...(props.range ? [`${props.prefixCls}-range`] : [])];
 
       /**
-       * 调用方透传的**其它 attrs**（`data-*` / `aria-*` / 事件…），铺到选择器根元素上。
+       * 调用方透传的**其它 attrs**（`data-*` / 原生根事件…；输入 ARIA 走 inputAttrsByIndex），铺到选择器根元素上。
        *
        * ⚠️ 本组件是 `inheritAttrs: false` ⇒ 不显式铺就**全丢**（`KNOWN-ISSUES` §1.8）。
        * ⚠️ `class` / `style` 排除 —— 它们走 `rootClass` / `rootStyle`（调用方已组装）。
@@ -761,8 +790,7 @@ export const Selector = defineComponent({
       if (!props.range) {
         return h(
           'div',
-          {
-            ...passthroughAttrs,
+          mergeProps(passthroughAttrs, {
             ref: rootElRef,
             // 🚨 语义 `root` 槽（`mergedClassNames.root` / `mergedStyles.root`）落在这里。
             //    此前**从不落根** ⇒ `classNames.root` / `styles.root` 两个公开 API
@@ -778,7 +806,7 @@ export const Selector = defineComponent({
             //    顺序仍是「语义 root 在前、原生 style 在后」（后者胜，同上游）。
             style: [props.styles.root, props.rootStyle],
             onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
-          },
+          }),
           // 🚨 多选**不渲染 `-input` 包裹层**（上游 `SingleSelector` 的 `selectorNode` 分支）
           props.multiple
             ? [
@@ -794,8 +822,7 @@ export const Selector = defineComponent({
 
       return h(
         'div',
-        {
-          ...passthroughAttrs,
+        mergeProps(passthroughAttrs, {
           ref: rootElRefWithResize,
           // 与单值分支同判：语义 `root` 槽（`classNames.root` / `styles.root`）落根。
           class: [rootClass, props.classNames.root],
@@ -818,7 +845,7 @@ export const Selector = defineComponent({
             }
             props.onSelectorMouseDown?.(event);
           },
-        },
+        }),
         [
           renderPrefix(),
           renderInput(0),

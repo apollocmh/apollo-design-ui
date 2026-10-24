@@ -16,7 +16,7 @@ import type {
   SearchConfig,
 } from '../interface';
 import type { ResolvedFieldNames } from './valueUtil';
-import { convertChildrenToData, isValidCount, toArray } from './valueUtil';
+import { isValidCount, toArray } from './valueUtil';
 
 // ---------------------------------------------------------------------------
 // useOptions（rc hooks/useOptions.js，46 行）
@@ -77,8 +77,8 @@ export function parseOptions(
 
 export interface UseOptionsInput {
   options: () => DefaultOptionType[] | undefined;
-  /** 默认插槽的 vnode（`options` 缺省时才解析）。 */
-  children: () => unknown;
+  /** 在渲染期归一化的默认选项，通过响应式数据 getter 读取。 */
+  childrenData: () => DefaultOptionType[];
   fieldNames: () => ResolvedFieldNames;
   optionFilterProp: () => string[];
   optionLabelProp: () => string | undefined;
@@ -88,7 +88,7 @@ export function useOptions(input: UseOptionsInput): ComputedRef<ParsedOptions> {
   return computed(() => {
     const options = input.options();
     const childrenAsData = !options;
-    const childrenData = childrenAsData ? convertChildrenToData(input.children() as never) : [];
+    const childrenData = childrenAsData ? input.childrenData() : [];
     return parseOptions(
       options,
       childrenAsData,

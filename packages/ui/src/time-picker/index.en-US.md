@@ -24,6 +24,8 @@ See [`demo/`](./demo) (**16** demos). ⚠️ Differences from antd are listed in
 
 ## API
 
+Native attributes share the DatePicker contract: `id`, `tabIndex` / `tabindex`, `name`, `required`, `autoComplete`, `autoFocus` and `aria-*` target the actual inputs; `class/style/data-*` remain on the root. A range string id identifies only the start input; `{ start, end }` identifies both endpoints. `autoFocus` focuses the first enabled endpoint. See DatePicker “Native attribute targets”.
+
 ### TimePicker
 
 | Property | Description | Type | Default |

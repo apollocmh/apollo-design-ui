@@ -234,7 +234,7 @@ describe('DatePicker / RangePicker · 只改 attrs 也要更新（Issue #5.3）'
     await nextTick();
 
     expect(root(w).attributes('data-marker')).toBe('m1');
-    expect(root(w).attributes('aria-describedby')).toBe('hint-1');
+    expect(w.get('input').attributes('aria-describedby')).toBe('hint-1');
     expect(root(w).classes()).toContain('cls-a');
     expect((root(w).element as HTMLElement).style.width).toBe('200px');
 
@@ -245,7 +245,7 @@ describe('DatePicker / RangePicker · 只改 attrs 也要更新（Issue #5.3）'
     await nextTick();
 
     expect(root(w).attributes('data-marker')).toBe('m2');
-    expect(root(w).attributes('aria-describedby')).toBe('hint-2');
+    expect(w.get('input').attributes('aria-describedby')).toBe('hint-2');
     expect(root(w).classes()).toContain('cls-b');
     expect(root(w).classes()).not.toContain('cls-a');
     expect((root(w).element as HTMLElement).style.width).toBe('321px');
@@ -257,7 +257,7 @@ describe('DatePicker / RangePicker · 只改 attrs 也要更新（Issue #5.3）'
     await nextTick();
 
     expect(root(w).attributes('data-marker')).toBe('m1');
-    expect(root(w).attributes('aria-describedby')).toBe('hint-1');
+    expect(w.get('input').attributes('aria-describedby')).toBe('hint-1');
     expect(root(w).classes()).toContain('cls-a');
 
     marker.value = 'm2';
@@ -266,7 +266,7 @@ describe('DatePicker / RangePicker · 只改 attrs 也要更新（Issue #5.3）'
     await nextTick();
 
     expect(root(w).attributes('data-marker')).toBe('m2');
-    expect(root(w).attributes('aria-describedby')).toBe('hint-2');
+    expect(w.get('input').attributes('aria-describedby')).toBe('hint-2');
     expect(root(w).classes()).toContain('cls-b');
     w.unmount();
   });

@@ -32,6 +32,8 @@ Display multiple read-only fields in groups.
 | title | Rich title (equivalent to the `title` text prop, slot first) | — |
 | extra | Extra content (empty slot = hidden) | — |
 
+Default-slot `DescriptionsItem` nodes are normalized into rows within the current render, without writing reactive state during rendering. `items`, including an empty array, take precedence and do not evaluate the ignored default slot. Dynamic children, columns and spans update the merged cells.
+
 ### Ref
 
 `{ nativeElement: HTMLDivElement \| null }`

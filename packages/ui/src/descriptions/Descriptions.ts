@@ -179,9 +179,6 @@ export const DescriptionsComponent = defineComponent({
       walk(nodes);
       return out;
     };
-    // ⚠️ slot 只能在 render 内消费 → shallowRef 承载，让 rows 的 computed 可追踪
-    const currentChildren = shallowRef<VNode[]>([]);
-
     // =============================== Size ===============================
     // ⚠️ 函数形态（PITFALLS 163：useSize(props.size) 非响应式）
     const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
@@ -223,13 +220,14 @@ export const DescriptionsComponent = defineComponent({
     );
 
     // ============================== Rows ================================
-    const rows = computed(() => {
-      // antd：`items || transChildren2Items(children)` —— items 优先
-      const items = normalizeItems(screens.value, props.items, currentChildren.value);
+    const resolveRows = (children: VNode[]) => {
+      const items = normalizeItems(screens.value, props.items, children);
       const [calcRows, exceed] = getCalcRows(items, mergedColumn.value);
       devWarning(!exceed, 'Sum of column `span` in a line not match `column` of Descriptions.');
       return calcRows;
-    });
+    };
+    // Pure-data inputs can be cached; slot VNodes belong only to the current render.
+    const dataRows = computed(() => resolveRows([]));
 
     // ============================ Ref / Expose ==========================
     const rootRef = shallowRef<HTMLDivElement | null>(null);
@@ -463,8 +461,10 @@ export const DescriptionsComponent = defineComponent({
 
     // ============================== Render ==============================
     return () => {
-      // slot 只在 render 里消费
-      currentChildren.value = collectChildren((slots.default?.() ?? []) as VNodeChild[]);
+      const rows =
+        props.items !== undefined
+          ? dataRows.value
+          : resolveRows(collectChildren(slots.default?.() ?? []));
       const cls = prefixCls.value;
       const size = mergedSize.value;
 
@@ -534,7 +534,7 @@ export const DescriptionsComponent = defineComponent({
               h(
                 'tbody',
                 null,
-                rows.value.flatMap((row, index) => renderRow(row, index)),
+                rows.flatMap((row, index) => renderRow(row, index)),
               ),
             ]),
           ]),

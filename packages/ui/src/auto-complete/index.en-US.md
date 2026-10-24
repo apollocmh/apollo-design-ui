@@ -18,6 +18,8 @@ See [`demo/`](./demo) (14 demos, covering the main antd scenarios
 
 ## API
 
+Default option slots are read and classified during rendering, supporting conditional slots and dynamic option groups. Explicit `options` keep precedence over slot options.
+
 ### Props
 
 | Prop | Description | Type | Default |

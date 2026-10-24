@@ -33,7 +33,7 @@ import {
 import { useZIndex } from '@apollo-design/portal';
 import { isEmptyVNode, useControlledValue, useDevWarning, useId } from '@apollo-design/utils';
 import type { CSSProperties, PropType } from 'vue';
-import { computed, defineComponent, h, provide, type Ref, ref, shallowRef, watch } from 'vue';
+import { computed, defineComponent, h, provide, ref, shallowRef, watch } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
 import { defaultRenderEmpty } from '../config-provider/default-render-empty';
@@ -67,6 +67,7 @@ import type {
   SearchConfig,
   SelectCommonPlacement,
   SelectProps,
+  SelectRef,
   SelectSemanticClassNames,
   SelectSemanticStyles,
   SelectValue,
@@ -84,97 +85,104 @@ const DEPRECATIONS: Array<[string, string]> = [
   ['bordered', 'variant'],
 ];
 
-export const Select = defineComponent({
-  name: 'ASelect',
+const selectProps = {
+  id: { type: String, default: undefined },
+  prefixCls: { type: String, default: undefined },
+  value: { type: null as unknown as PropType<SelectValue>, default: undefined },
+  defaultValue: { type: null as unknown as PropType<SelectValue>, default: undefined },
+  labelInValue: { type: Boolean, default: undefined },
+  optionLabelProp: { type: String, default: undefined },
+  fieldNames: { type: Object as PropType<SelectProps['fieldNames']>, default: undefined },
+  mode: { type: String as PropType<InternalSelectMode | undefined>, default: undefined },
+  options: { type: Array as PropType<DefaultOptionType[]>, default: undefined },
+  listHeight: { type: Number, default: undefined },
+  listItemHeight: { type: Number, default: undefined },
+  virtual: { type: Boolean, default: undefined },
+  defaultActiveFirstOption: { type: Boolean, default: undefined },
+  showSearch: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
+  searchValue: { type: String, default: undefined },
+  autoClearSearchValue: { type: Boolean, default: undefined },
+  filterOption: {
+    type: [Boolean, Function] as PropType<boolean | FilterFunc<DefaultOptionType>>,
+    default: undefined,
+  },
+  filterSort: { type: Function as PropType<SelectProps['filterSort']>, default: undefined },
+  optionFilterProp: { type: [String, Array] as PropType<string | string[]>, default: undefined },
+  size: { type: String as PropType<SizeType>, default: undefined },
+  variant: { type: String as PropType<SelectVariant>, default: undefined },
+  bordered: { type: Boolean, default: undefined },
+  status: { type: String as PropType<SelectProps['status']>, default: undefined },
+  disabled: { type: Boolean, default: undefined },
+  loading: { type: Boolean, default: undefined },
+  placeholder: { type: String, default: undefined },
+  showArrow: { type: Boolean, default: undefined },
+  allowClear: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
+  maxLength: { type: Number, default: undefined },
+  maxCount: { type: Number, default: undefined },
+  maxTagCount: { type: Number, default: undefined },
+  maxTagTextLength: { type: Number, default: undefined },
+  tokenSeparators: {
+    type: [Array, Function] as PropType<string[] | ((input: string) => string[])>,
+    default: undefined,
+  },
+  open: { type: Boolean, default: undefined },
+  defaultOpen: { type: Boolean, default: undefined },
+  placement: { type: String as PropType<SelectCommonPlacement>, default: undefined },
+  direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
+  popupMatchSelectWidth: { type: [Boolean, Number], default: undefined },
+  getPopupContainer: {
+    type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+    default: undefined,
+  },
+  transitionName: { type: String, default: undefined },
+  popupClassName: { type: String, default: undefined },
+  dropdownClassName: { type: String, default: undefined },
+  dropdownStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  dropdownMatchSelectWidth: { type: [Boolean, Number], default: undefined },
+  popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+  classNames: { type: Object as PropType<SelectSemanticClassNames>, default: undefined },
+  styles: { type: Object as PropType<SelectSemanticStyles>, default: undefined },
+  tabIndex: { type: Number, default: undefined },
+  autoFocus: { type: Boolean, default: undefined },
+  title: { type: String, default: undefined },
+  role: { type: String, default: undefined },
+  // ---- 事件（prop 形态；emits 同名同发）----
+  onChange: {
+    type: Function as PropType<(value: SelectValue, option: unknown) => void>,
+    default: undefined,
+  },
+  onSelect: {
+    type: Function as PropType<(value: RawValueType, option: DefaultOptionType) => void>,
+    default: undefined,
+  },
+  onDeselect: {
+    type: Function as PropType<(value: RawValueType, option: DefaultOptionType) => void>,
+    default: undefined,
+  },
+  onSearch: { type: Function as PropType<(value: string) => void>, default: undefined },
+  onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
+  onDropdownVisibleChange: {
+    type: Function as PropType<(open: boolean) => void>,
+    default: undefined,
+  },
+  onFocus: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
+  onBlur: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
+  onClear: { type: Function as PropType<() => void>, default: undefined },
+  onPopupScroll: { type: Function as PropType<(event: Event) => void>, default: undefined },
+  onInputKeyDown: {
+    type: Function as PropType<(event: KeyboardEvent) => void>,
+    default: undefined,
+  },
+};
+
+// The public render boundary normalizes option VNodes. Ordinary child props then
+// invalidate the value/filter/cache chain without writing reactive state in render.
+const SelectEngine = defineComponent({
+  name: 'ApolloSelectEngine',
   inheritAttrs: false,
   props: {
-    id: { type: String, default: undefined },
-    prefixCls: { type: String, default: undefined },
-    value: { type: null as unknown as PropType<SelectValue>, default: undefined },
-    defaultValue: { type: null as unknown as PropType<SelectValue>, default: undefined },
-    labelInValue: { type: Boolean, default: undefined },
-    optionLabelProp: { type: String, default: undefined },
-    fieldNames: { type: Object as PropType<SelectProps['fieldNames']>, default: undefined },
-    mode: { type: String as PropType<InternalSelectMode | undefined>, default: undefined },
-    options: { type: Array as PropType<DefaultOptionType[]>, default: undefined },
-    listHeight: { type: Number, default: undefined },
-    listItemHeight: { type: Number, default: undefined },
-    virtual: { type: Boolean, default: undefined },
-    defaultActiveFirstOption: { type: Boolean, default: undefined },
-    showSearch: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
-    searchValue: { type: String, default: undefined },
-    autoClearSearchValue: { type: Boolean, default: undefined },
-    filterOption: {
-      type: [Boolean, Function] as PropType<boolean | FilterFunc<DefaultOptionType>>,
-      default: undefined,
-    },
-    filterSort: { type: Function as PropType<SelectProps['filterSort']>, default: undefined },
-    optionFilterProp: { type: [String, Array] as PropType<string | string[]>, default: undefined },
-    size: { type: String as PropType<SizeType>, default: undefined },
-    variant: { type: String as PropType<SelectVariant>, default: undefined },
-    bordered: { type: Boolean, default: undefined },
-    status: { type: String as PropType<SelectProps['status']>, default: undefined },
-    disabled: { type: Boolean, default: undefined },
-    loading: { type: Boolean, default: undefined },
-    placeholder: { type: String, default: undefined },
-    showArrow: { type: Boolean, default: undefined },
-    allowClear: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
-    maxLength: { type: Number, default: undefined },
-    maxCount: { type: Number, default: undefined },
-    maxTagCount: { type: Number, default: undefined },
-    maxTagTextLength: { type: Number, default: undefined },
-    tokenSeparators: {
-      type: [Array, Function] as PropType<string[] | ((input: string) => string[])>,
-      default: undefined,
-    },
-    open: { type: Boolean, default: undefined },
-    defaultOpen: { type: Boolean, default: undefined },
-    placement: { type: String as PropType<SelectCommonPlacement>, default: undefined },
-    direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
-    popupMatchSelectWidth: { type: [Boolean, Number], default: undefined },
-    getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
-      default: undefined,
-    },
-    transitionName: { type: String, default: undefined },
-    popupClassName: { type: String, default: undefined },
-    dropdownClassName: { type: String, default: undefined },
-    dropdownStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    dropdownMatchSelectWidth: { type: [Boolean, Number], default: undefined },
-    popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
-    classNames: { type: Object as PropType<SelectSemanticClassNames>, default: undefined },
-    styles: { type: Object as PropType<SelectSemanticStyles>, default: undefined },
-    tabIndex: { type: Number, default: undefined },
-    autoFocus: { type: Boolean, default: undefined },
-    title: { type: String, default: undefined },
-    role: { type: String, default: undefined },
-    // ---- 事件（prop 形态；emits 同名同发）----
-    onChange: {
-      type: Function as PropType<(value: SelectValue, option: unknown) => void>,
-      default: undefined,
-    },
-    onSelect: {
-      type: Function as PropType<(value: RawValueType, option: DefaultOptionType) => void>,
-      default: undefined,
-    },
-    onDeselect: {
-      type: Function as PropType<(value: RawValueType, option: DefaultOptionType) => void>,
-      default: undefined,
-    },
-    onSearch: { type: Function as PropType<(value: string) => void>, default: undefined },
-    onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-    onDropdownVisibleChange: {
-      type: Function as PropType<(open: boolean) => void>,
-      default: undefined,
-    },
-    onFocus: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
-    onBlur: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
-    onClear: { type: Function as PropType<() => void>, default: undefined },
-    onPopupScroll: { type: Function as PropType<(event: Event) => void>, default: undefined },
-    onInputKeyDown: {
-      type: Function as PropType<(event: KeyboardEvent) => void>,
-      default: undefined,
-    },
+    ...selectProps,
+    optionChildren: { type: Array as PropType<DefaultOptionType[]>, default: () => [] },
   },
   /**
    * ⚠️ 只声明 `update:*`（供 `v-model:value` / `v-model:open`），**不**声明
@@ -309,7 +317,7 @@ export const Select = defineComponent({
       parseOptions(
         props.options,
         childrenAsData.value,
-        childrenAsData.value ? convertChildrenToData(slots.default?.() as never) : [],
+        props.optionChildren,
         mergedFieldNames.value,
         normalizedOptionFilterProp.value,
         props.optionLabelProp,
@@ -361,7 +369,7 @@ export const Select = defineComponent({
     });
 
     const [mergedValues, getMixedOption] = useCache(
-      rawLabeledValues as unknown as Ref<LabelInValueType[]>,
+      rawLabeledValues,
       computed(() => parsed.value.valueOptions),
     );
 
@@ -938,6 +946,42 @@ export const Select = defineComponent({
         {},
       );
     };
+  },
+});
+
+/** Vue render boundary: slot identity and VNodes are consumed on every render. */
+export const Select = defineComponent({
+  name: 'ASelect',
+  inheritAttrs: false,
+  props: selectProps,
+  emits: ['update:value', 'update:open'],
+  setup(props, { attrs, slots, emit, expose }) {
+    const engine = shallowRef<SelectRef | null>(null);
+    const noOptionChildren: DefaultOptionType[] = [];
+    expose({
+      focus: (options?: FocusOptions) => engine.value?.focus(options),
+      blur: () => engine.value?.blur(),
+      scrollTo: (arg?: ScrollToArg) => engine.value?.scrollTo(arg),
+      get nativeElement(): HTMLElement | null {
+        return engine.value?.nativeElement ?? null;
+      },
+    });
+    return () =>
+      h(
+        SelectEngine,
+        {
+          ...attrs,
+          ...props,
+          ref: engine,
+          optionChildren:
+            props.options === undefined
+              ? convertChildrenToData(slots.default?.())
+              : noOptionChildren,
+          'onUpdate:value': (value: SelectValue) => emit('update:value', value),
+          'onUpdate:open': (open: boolean) => emit('update:open', open),
+        },
+        slots,
+      );
   },
 });
 

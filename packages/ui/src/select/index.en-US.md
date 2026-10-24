@@ -16,6 +16,10 @@ Select component to select a value from options.
 
 See [`demo/`](./demo) (35 demos, covering the main antd scenarios.
 
+## Conditional options
+
+Default-slot `SelectOption` / `SelectOptGroup` nodes are normalized during rendering, supporting conditional slots, `v-if`, `v-for` and reactive values/labels/disabled state. Explicit `options` take precedence, including `options=[]`; use `undefined` to restore the slot channel. A temporarily removed selected option keeps its cached label and refreshes when it returns. No component key/remount is required; the input and selection state persist.
+
 ## API
 
 ### Props

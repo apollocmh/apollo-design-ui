@@ -35,6 +35,7 @@
  * 6. **`type` 传给用户 `disabledDate` 的是原始 `picker`**（同单值，见
  *    `hooks/picker-invalidate.ts` 的文件头）。
  */
+
 import { CloseCircleFilled, SwapRightOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import {
@@ -78,6 +79,7 @@ import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
 import { Footer } from './components/Footer';
+import { splitPickerAttrs } from './components/input-attrs';
 import { PresetPanel } from './components/PresetPanel';
 import {
   getFormatLength,
@@ -141,6 +143,7 @@ const props = withDefaults(defineProps<RangePickerProps>(), {
   disabled: undefined,
   bordered: undefined,
   required: undefined,
+  autoFocus: undefined,
   prefix: undefined,
   suffixIcon: undefined,
   clearIcon: undefined,
@@ -1351,14 +1354,8 @@ const selectorProps = computed(() => ({
  *    `prefix-cls` / `value-texts` 显式写出来（值与这里返回的完全一致，重复无害）。
  */
 const selectorBindings = (): Record<string, unknown> => {
-  // ⚠️ 渲染期读 attrs（与 DatePicker 同判，Issue #5.3）。
-  const { class: _attrsClass, style: _attrsStyle, ...rest } = attrs as Record<string, unknown>;
-  void _attrsClass;
-  void _attrsStyle;
-  // ⚠️ 不要加 `as never`：`Selector` 有必填 prop（`prefixCls` / `valueTexts`），
-  //    而 `vue-tsc` 要靠这里的**推断类型**去满足它们（`as never` 会让整条 `v-bind`
-  //    变成 `never` ⇒ 报「missing prefixCls / valueTexts」）。
-  return { ...rest, ...selectorProps.value };
+  const { rootAttrs, inputAttrsByIndex } = splitPickerAttrs(attrs, props, true);
+  return { ...rootAttrs, ...selectorProps.value, inputAttrsByIndex };
 };
 
 /** Trigger 的浮层容器：局部优先，回退 ConfigProvider 的全局设置（Issue #5.2）。 */

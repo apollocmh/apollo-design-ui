@@ -16,6 +16,10 @@ subtitle: 选择器
 
 见 [`demo/`](./demo)（35 个，覆盖 antd 的主要用户场景）。
 
+## 条件选项
+
+默认插槽中的 `SelectOption` / `SelectOptGroup` 在渲染期解析，支持条件 slot、`v-if`、`v-for` 和动态 value/label/disabled。显式 `options` 优先于默认插槽，包括 `options=[]`；切回 `undefined` 才使用插槽。临时移除已选项时保留其标签缓存，选项恢复后使用最新标签。无需更换组件 key，输入节点和选择状态保持。
+
 ## API
 
 ### Props

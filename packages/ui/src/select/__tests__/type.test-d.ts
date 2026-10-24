@@ -85,3 +85,8 @@ describe('Select · size 类型（Issue #4.3）', () => {
     expectTypeOf(medium).toEqualTypeOf<SelectProps>();
   });
 });
+
+// F02: normalized option children are an internal implementation detail.
+// @ts-expect-error F02: callers use options or the default slot, not optionChildren.
+const internalOptionChildren: SelectProps = { optionChildren: [] };
+void internalOptionChildren;
