@@ -144,6 +144,7 @@ export default defineComponent({
         return h(
           'div',
           {
+            key: 'header',
             style: { ...st.header, ...props.headerStyle },
             class: clsx(`${prefixCls}-header`, cn.header, {
               [`${prefixCls}-header-close-only`]: closableResult.closable && !hasTitle && !hasExtra,
@@ -182,6 +183,7 @@ export default defineComponent({
           ? h(
               'div',
               {
+                key: 'footer',
                 class: clsx(`${prefixCls}-footer`, cn.footer),
                 style: { ...st.footer, ...props.footerStyle },
               },
@@ -193,7 +195,11 @@ export default defineComponent({
         renderHeader(),
         h(
           'div',
-          { class: clsx(`${prefixCls}-body`, cn.body), style: { ...st.body, ...props.bodyStyle } },
+          {
+            key: 'body',
+            class: clsx(`${prefixCls}-body`, cn.body),
+            style: { ...st.body, ...props.bodyStyle },
+          },
           props.loading
             ? h(Skeleton, {
                 active: true,

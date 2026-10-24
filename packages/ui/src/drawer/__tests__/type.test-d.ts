@@ -1,14 +1,27 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里）。 */
+import type { GetContainer } from '@apollo-design/portal';
 import { describe, expectTypeOf } from 'vitest';
+import type { VNodeChild } from 'vue';
 import type {
   DrawerPlacement,
   DrawerProps,
   DrawerSemanticType,
   DrawerSize,
+  DrawerSlots,
   MaskType,
 } from '../interface';
 
 describe('Drawer · 类型', () => {
+  it('getContainer matches the native Portal contract, including inline false', () => {
+    expectTypeOf<DrawerProps['getContainer']>().toEqualTypeOf<GetContainer>();
+  });
+
+  it('content slots expose native no-argument Vue contracts', () => {
+    expectTypeOf<DrawerSlots['title']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
+    expectTypeOf<DrawerSlots['footer']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
+    expectTypeOf<DrawerSlots['extra']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
+    expectTypeOf<DrawerSlots['closeIcon']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
+  });
   it('DrawerPlacement 是 4 值联合', () => {
     expectTypeOf<DrawerPlacement>().toEqualTypeOf<'top' | 'right' | 'bottom' | 'left'>();
   });

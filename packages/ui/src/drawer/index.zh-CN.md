@@ -9,7 +9,7 @@ subtitle: 抽屉
 ## 何时使用
 
 - 需要从屏幕边缘滑出、承载较多内容或表单的场景。
-- 需要在**当前节点内**渲染（`getContainer={false}`）而不是挂到 body。
+- 需要在**当前节点内**渲染（`:get-container="false"`）而不是挂到 body。
 - 需要可拖拽改尺寸（`resizable`）或多层嵌套（子抽屉推挤父级）。
 
 ## 代码演示
@@ -34,7 +34,7 @@ subtitle: 抽屉
 | maskClosable | 点遮罩关闭（⚠️ deprecated ⇒ `mask.closable`） | `boolean` | `true` |
 | push | 推挤：`true` / `{ distance }`（**只有子抽屉会真的推**） | `boolean \| PushState` | `{ distance: 180 }` |
 | resizable | 可拖拽改尺寸 | `boolean \| { onResize?, onResizeStart?, onResizeEnd? }` | — |
-| getContainer | 容器；`false` ⇒ **内联渲染**（不 portal） | `false \| string \| () => HTMLElement` | `document.body` |
+| getContainer | 容器；false 为内联渲染，其他值由 Portal 解析 | `GetContainer` | 默认 body 内的容器 |
 | destroyOnHidden | 关闭后卸载 | `boolean` | `false` |
 | focusable | 焦点行为 | `{ focusTriggerAfterClose?, trap? }` | — |
 | keyboard | ESC 可关 | `boolean` | `true` |
@@ -63,6 +63,10 @@ root / mask / wrapper / section / header / header-title? / title / extra / body 
 | footer | 页脚（空 slot 等价隐藏） | — |
 | extra | 标题栏右侧额外内容 | — |
 | closeIcon | 自定义关闭图标 | — |
+
+内容插槽通过 `DrawerSlots` 导出类型；存在即优先（含空内容）。标题在每次 Drawer 渲染中求值一次，面板内容与自动 `aria-labelledby` 共用同一快照；显式 `aria-labelledby` 指向外部标题时保留调用方值。头尾内容显隐不重挂载正文，保留输入状态和 DOM 身份。
+
+`getContainer` 使用 Portal 的完整 `GetContainer` 类型，包括 `false`、选择器、元素与容器函数；Vue 模板可直接传 `:get-container="false"`。PurePanel 的原生 `class` / `style` / id / 事件作为根 attrs 透传，不截获为旧 `className` / 对象 style prop。
 
 ## Theme（Component Token）
 

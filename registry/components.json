@@ -2685,7 +2685,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": "L4: baselines/drawer.dom.json 4 用例（PurePanel 路径；打开的 Drawer 走 portal 不可 SSR）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact（受控 open + getContainer:false 内联）。L7(theme): 16 用例。差异登记 D99（closeLabel 注入点在 button）。附带把 portal 的 autoLock/onEsc 补齐（21 用例）。",
+      "layerNotes": "L4: baselines/drawer.dom.json 4 用例（PurePanel 路径；打开的 Drawer 走 portal 不可 SSR）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact（受控 open + getContainer:false 内联）。L7(theme): 16 用例。差异登记 D99（closeLabel 注入点在 button）。附带把 portal 的 autoLock/onEsc 补齐（21 用例）。 2026-10-24 F11/ADR0007：修复 title 重复求值、外部 ARIA、动态空头尾正文身份与 PurePanel 原生 attrs；Drawer/Modal 15 文件225条回归、生产浏览器及类型/构建证据见 docs/audit/2026-10-24-drawer-vue-remediation.md。Apollo 自有9张基线缺失，未重新宣称视觉验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

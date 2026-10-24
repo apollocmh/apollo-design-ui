@@ -1054,6 +1054,7 @@ export type {
   DrawerResizableConfig,
   DrawerSemanticType,
   DrawerSize,
+  DrawerSlots,
   FocusableConfig as DrawerFocusableConfig,
   MaskType as DrawerMaskType,
   PushState as DrawerPushState,

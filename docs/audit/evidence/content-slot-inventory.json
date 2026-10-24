@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 496,
+    "rows": 501,
     "byCategory": {
       "data": 140,
       "component-content-candidate": 146,
       "deprecated": 53,
-      "internal": 65,
+      "internal": 70,
       "render-function-candidate": 80,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 152,
       "review": 214,
-      "skip": 118,
+      "skip": 123,
       "implemented-verified": 12
     }
   },
@@ -4167,7 +4167,7 @@
       "owner": "DrawerPanelProps",
       "prop": "closable",
       "category": "configuration",
-      "source": "packages/ui/src/drawer/interface.ts:111",
+      "source": "packages/ui/src/drawer/interface.ts:121",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -4196,22 +4196,26 @@
       "owner": "DrawerPanelProps",
       "prop": "closeIcon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/drawer/interface.ts:119",
+      "source": "packages/ui/src/drawer/interface.ts:129",
       "slotRuntime": {
         "status": "not-run",
         "files": []
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
         "files": []
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
+        ]
       },
       "decision": "review",
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
@@ -4221,14 +4225,16 @@
       "owner": "DrawerPanelProps",
       "prop": "extra",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/drawer/interface.ts:105",
+      "source": "packages/ui/src/drawer/interface.ts:115",
       "slotRuntime": {
         "status": "not-run",
         "files": []
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "source-reference",
@@ -4240,7 +4246,8 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/drawer/__tests__/index.test.ts",
-          "packages/ui/src/drawer/__tests__/semantic.test.ts"
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
         ]
       },
       "decision": "review",
@@ -4251,14 +4258,16 @@
       "owner": "DrawerPanelProps",
       "prop": "footer",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/drawer/interface.ts:103",
+      "source": "packages/ui/src/drawer/interface.ts:113",
       "slotRuntime": {
         "status": "not-run",
         "files": []
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -4268,7 +4277,8 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/drawer/__tests__/index.test.ts",
-          "packages/ui/src/drawer/__tests__/semantic.test.ts"
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
         ]
       },
       "decision": "review",
@@ -4279,14 +4289,19 @@
       "owner": "DrawerPanelProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/drawer/interface.ts:101",
+      "source": "packages/ui/src/drawer/interface.ts:111",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/Drawer.ts",
+          "packages/ui/src/drawer/PurePanel.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -4298,7 +4313,8 @@
           "packages/ui/src/drawer/__tests__/a11y.test.ts",
           "packages/ui/src/drawer/__tests__/index.test.ts",
           "packages/ui/src/drawer/__tests__/s20-issue20.test.ts",
-          "packages/ui/src/drawer/__tests__/semantic.test.ts"
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
         ]
       },
       "decision": "review",
@@ -4309,7 +4325,7 @@
       "owner": "DrawerProps",
       "prop": "closable",
       "category": "configuration",
-      "source": "packages/ui/src/drawer/interface.ts:111",
+      "source": "packages/ui/src/drawer/interface.ts:121",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -4338,7 +4354,7 @@
       "owner": "DrawerPurePanelProps",
       "prop": "closable",
       "category": "configuration",
-      "source": "packages/ui/src/drawer/interface.ts:111",
+      "source": "packages/ui/src/drawer/interface.ts:121",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -4361,6 +4377,176 @@
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "drawer",
+      "owner": "DrawerSlots",
+      "prop": "closeIcon",
+      "category": "internal",
+      "source": "packages/ui/src/drawer/interface.ts:29",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "drawer",
+      "owner": "DrawerSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/drawer/interface.ts:25",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/Drawer.ts",
+          "packages/ui/src/drawer/DrawerPanel.ts",
+          "packages/ui/src/drawer/PurePanel.ts",
+          "packages/ui/src/drawer/engine/Drawer.ts",
+          "packages/ui/src/drawer/engine/DrawerPopup.ts",
+          "packages/ui/src/drawer/engine/DrawerSection.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/__tests__/a11y.test.ts",
+          "packages/ui/src/drawer/__tests__/engine.test.ts",
+          "packages/ui/src/drawer/__tests__/index.test.ts",
+          "packages/ui/src/drawer/__tests__/s20-issue20.test.ts",
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "drawer",
+      "owner": "DrawerSlots",
+      "prop": "extra",
+      "category": "internal",
+      "source": "packages/ui/src/drawer/interface.ts:28",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/demo/extra.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/__tests__/index.test.ts",
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "drawer",
+      "owner": "DrawerSlots",
+      "prop": "footer",
+      "category": "internal",
+      "source": "packages/ui/src/drawer/interface.ts:27",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/__tests__/index.test.ts",
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "drawer",
+      "owner": "DrawerSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/drawer/interface.ts:26",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/Drawer.ts",
+          "packages/ui/src/drawer/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/drawer/__tests__/a11y.test.ts",
+          "packages/ui/src/drawer/__tests__/index.test.ts",
+          "packages/ui/src/drawer/__tests__/s20-issue20.test.ts",
+          "packages/ui/src/drawer/__tests__/semantic.test.ts",
+          "packages/ui/src/drawer/__tests__/slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "dropdown",

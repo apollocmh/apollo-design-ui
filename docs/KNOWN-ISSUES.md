@@ -35,7 +35,7 @@ F03 本轮已建立 `packages/ui/src/form/__tests__/prefix-reactivity.test.ts`�
 - **F07：已统一内容 slot 优先**。Alert 的 title/description、CollapsePanel 的 header 以 slot 存在为准，包括空 slot；移除条件 slot 才恢复 prop。旧文档确有 prop-first 承诺，本次按未发布开发版直接变更并单独写 [迁移记录](migrations/content-slot-precedence.md)，不留兼容层。Collapse 每轮 render 仅收集一次当前面板子树，标题刷新保留输入状态。6 条修前全红；真实 Chrome 模板交互通过。
 - **F09：语义 change 已声明**。Switch 和 InputNumber 通过 typed emits 单次发送，onChange 注册同一事件；移除手调 attrs 通道，原生 DOM change 不混入语义事件。覆盖鼠标/键盘、监听器替换、禁用、v-model、stringMode/null 与类型负例。Switch click 载荷仍跟踪 D02，没有静默修改。
 - **F10：DOM 目标归一与原生事件已验证**。pickAttrs 保留 className 数据输出，接受已知 Vue 原生事件键与 Once/Passive/Capture 后缀；DOM 目标使用 toVueDomAttrs/mergeDomAttrs。修复 ColorPicker @mousedown 被过滤、Rate @keydown 丢失及字符串 style 的 SSR 无效 CSS，监听器数组按函数身份单次合并，Tree 正确的 fallthrough 保持。utils/Badge/Rate/ColorPicker/Tree 四层 59 文件 / 1168 条通过，Chrome 真实模板通过，见 [F10 报告](audit/2026-10-24-dom-attrs-remediation.md)。
-- **F11：当前来源清单已建立**。类型别名、继承及数据/配置/内部/deprecated 分流保留证据，仅四个字段引用具体运行报告，其余继续逐项复审；[清单与限制](audit/2026-10-24-slot-inventory.md)。
+- **F11：当前来源清单已建立**。类型别名、继承及数据/配置/内部/deprecated 分流保留证据，十二个字段引用具体运行报告，其余继续逐项复审；[清单与限制](audit/2026-10-24-slot-inventory.md)。
 - **H03：刷新数量并补实际能力场景**。新 Table 行/列原生拖放 Demo 提供等效键盘操作，96 条 Demo/axe 与真实浏览器通过；当前文件统计 990/1060，文档总量 994，不宣称能力矩阵已完成。
 - **H04：已消除无效动态导入并记录真实负载**。搜索代码导入统一；按需索引、单次下载/缓存、焦点返回与英文/暗色水合通过，首屏脚本原始/gzip 字节已留证。进一步改为视口附近加载示例并保留实例，Table 初始脚本 55→12、gzip 字节约减 4.35%；文档最终 157 条测试及真实滚动/iframe 截图准备通过。大 chunk 和元数据维护继续开放。
 - **H02：规范过期描述已清账**。核对现行规范与 ADR 0005/0006，use-id-test-env 的已裁决记录实际存在；更新台账陈旧描述，未重复立 ADR 或修改 AGENTS。
@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、496 行 owner/field 清单。内容候选 146、渲染候选 80、数据/配置 152、内部/废弃 118；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、501 行 owner/field 清单。内容候选 146、渲染候选 80、数据/配置 152、内部/废弃 123；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -203,6 +203,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **门禁**：能区分 slot“不传”、slot“传了但为空”、slot“异步出现”，能保证 `#foo` 优先级，所有 slot props 可通过 `vue-tsc` 推断类型，Vue SFC 消费 Demo 真正可运行。
 
 **2026-10-24 List 增量**：`renderItem` 已直接移除，12 个示例与单元/DOM/axe/视觉调用迁为泛型 `#item`；接通原先被忽略的 `header` / `footer` / `loadMore`，按 slot 存在性优先，空 slot 不回退。删除照搬上游的整组件废弃警告及 Demo 告警豁免；修复根 id 未透传、字符串 style 展开与 attrs-only 更新缓存。List 运行回归、SSR 与实际 Vue 模板类型推断等证据见 [List 报告](audit/2026-10-24-list-slots-remediation.md)；Item/Meta 的 extra/actions/avatar/title/description 已在后续 [子组件批次](audit/2026-10-24-list-item-slots-remediation.md) 接通，包含空/动态插槽、keyed actions、SSR hydration 与类型回归。根 `extra` 无渲染落点和 List 拖拽示例继续开放，未宣称全库 F11 完成。
+
+**2026-10-24 Drawer 增量**：四个具名内容槽已存在，未误报为新补齐。复现并修复标题重复求值、显式 `aria-labelledby` 被忽略、空头尾切换重建正文，以及 PurePanel 原生 attrs/style 被旧形态截获；导出 DrawerSlots 并对齐 Portal 容器类型。真实浏览器保留正文 DOM/输入值，详见 [Drawer 报告](audit/2026-10-24-drawer-vue-remediation.md)。未宣称 F11 或 Drawer 新视觉验收完成。
 
 ---
 
@@ -309,7 +311,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Menu | 14/18 | 已整改 Trigger；`custom-popup-render` 能力按真实 API 核实 |
 | Dropdown | 19/21 | —；菜单容器滚动和键盘 |
 | Modal | 23/23 | —；focus/关闭/SSR motion 门禁 |
-| Drawer | 18/18 | F11；footer/extra Vue 插槽专项 |
+| Drawer | 18/18 | F11：四个现有内容槽已验证动态/空内容、ARIA 和正文身份；9 张 Apollo 基线仍缺失 |
 | Message | 11/11 | **用户已验收动画**；保持回归即可 |
 | Notification | 14/14 | **用户已验收动画**；保持回归即可 |
 | App | 2/2 | —；上下文 API、静态方法隔离 |

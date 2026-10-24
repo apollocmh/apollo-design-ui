@@ -15,9 +15,19 @@
  *   写在下面，并在注释里标明它们来自 rc 侧。
  */
 
+import type { GetContainer } from '@apollo-design/portal';
 import type { CSSProperties, VNodeChild } from 'vue';
 
 import type { MaskType } from '../_internal/use-merged-mask';
+
+/** Native content slots; presence takes precedence, including empty content. */
+export interface DrawerSlots {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+  footer?: () => VNodeChild;
+  extra?: () => VNodeChild;
+  closeIcon?: () => VNodeChild;
+}
 
 /** 四个方位（rc-drawer 的 `Placement`）。 */
 export const DrawerPlacements = ['top', 'right', 'bottom', 'left'] as const;
@@ -162,7 +172,7 @@ export interface DrawerProps
   mask?: MaskType;
   /** @deprecated 请用 `mask.closable`。 */
   maskClosable?: boolean;
-  getContainer?: false | (() => HTMLElement);
+  getContainer?: GetContainer;
   /** 即使没开也渲染（配合 `destroyOnHidden`）。 */
   forceRender?: boolean;
   /** 动效结束后的回调。 */

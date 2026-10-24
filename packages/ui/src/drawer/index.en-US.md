@@ -9,7 +9,7 @@ A panel that slides in from the edge of the screen.
 ## When to use
 
 - When a large amount of content (or a form) should slide in from an edge.
-- When it must render **inside the current node** (`getContainer={false}`) instead of body.
+- When it must render **inside the current node** (`:get-container="false"`) instead of body.
 - When a resizable (`resizable`) or nested (child pushes parent) drawer is needed.
 
 ## Demos
@@ -34,7 +34,7 @@ See [`demo/`](./demo) (18 demos, covering the main antd scenarios.
 | maskClosable | Close on mask click (⚠️ deprecated ⇒ `mask.closable`) | `boolean` | `true` |
 | push | Push: `true` / `{ distance }` (**only a child drawer actually pushes**) | `boolean \| PushState` | `{ distance: 180 }` |
 | resizable | Drag to resize | `boolean \| {...}` | — |
-| getContainer | Container; `false` ⇒ **inline render** (no portal) | `false \| string \| () => HTMLElement` | `document.body` |
+| getContainer | Container; false renders inline, other values follow Portal | `GetContainer` | Default container under body |
 | destroyOnHidden | Unmount when closed | `boolean` | `false` |
 | focusable | Focus behavior | `{ focusTriggerAfterClose?, trap? }` | — |
 | keyboard | Close on ESC | `boolean` | `true` |
@@ -46,6 +46,10 @@ See [`demo/`](./demo) (18 demos, covering the main antd scenarios.
 **Deprecated (9, dev warnings)**: `headerStyle` / `bodyStyle` / `footerStyle` → `styles.*`;
 `contentWrapperStyle` → `styles.wrapper`; `maskStyle` → `styles.mask`; `drawerStyle` →
 `styles.section`; `destroyOnClose` → `destroyOnHidden`; `width` / `height` → `size`.
+
+Content slots are typed through `DrawerSlots` and take precedence when present, including empty content. Each Drawer render evaluates the title once; panel content and automatic `aria-labelledby` share that snapshot. An explicit external `aria-labelledby` is preserved. Header/footer visibility changes preserve the body DOM and input state.
+
+`getContainer` uses Portal’s full `GetContainer` contract, including `false`, selectors, elements and container functions. Vue templates can use `:get-container="false"` directly. PurePanel forwards native root class/style/id/events as attrs, without React-shaped className or object-only style props intercepting them.
 
 ## Theme (Component Token)
 

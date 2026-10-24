@@ -20,9 +20,9 @@
  *      contentWrapperStyle / maskStyle / drawerStyle / destroyInactivePanel / width / height
  *      （+ `classNames.content`/`styles.content` ⇒ `section`、`style.position: absolute` 的 breaking 提示）。
  */
-import { useZIndex } from '@apollo-design/portal';
+import { type GetContainer, useZIndex } from '@apollo-design/portal';
 import { isEmptyVNode, isNumber, isRenderable, useId } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType } from 'vue';
+import { computed, defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
 
 import { type MaskType, useMergedMask } from '../_internal/use-merged-mask';
 import { useComponentConfig } from '../config-provider/context';
@@ -32,6 +32,7 @@ import type {
   DrawerPlacement,
   DrawerResizableConfig,
   DrawerSize,
+  DrawerSlots,
   FocusableConfig,
   PushState,
 } from './interface';
@@ -45,9 +46,12 @@ const MOTION_CONFIG = {
   motionDeadline: 500,
 } as const;
 
+const contentSlots: SlotsType<DrawerSlots> = {};
+
 export default defineComponent({
   name: 'ADrawer',
   inheritAttrs: false,
+  slots: contentSlots,
   props: {
     prefixCls: { type: String, default: undefined },
     open: { type: Boolean, default: false },
@@ -66,7 +70,7 @@ export default defineComponent({
     afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     onClose: { type: Function as PropType<(e: Event) => void>, default: undefined },
     getContainer: {
-      type: [String, Boolean, Function, Object] as PropType<unknown>,
+      type: [String, Boolean, Function, Object] as PropType<GetContainer>,
       default: undefined,
     },
     panelRef: { type: [Object, Function] as PropType<unknown>, default: null },
@@ -77,7 +81,7 @@ export default defineComponent({
     },
     focusable: { type: Object as PropType<FocusableConfig>, default: undefined },
     zIndex: { type: Number, default: undefined },
-    'aria-labelledby': { type: String, default: undefined },
+    ariaLabelledby: { type: String, default: undefined },
     // 面板侧
     // ⚠️ C8-R2：原 `footer` / `extra` / `closeIcon` 是 React 式 VNode prop，已删除改为
     //    同名 slot（`#footer` / `#extra` / `#closeIcon`，slot 在前，空 slot 等价隐藏）；
@@ -119,35 +123,19 @@ export default defineComponent({
      * undefined。判空必须走 `isEmptyVNode` —— Vue 会把 slot 返回的 null / 空数组
      * 归一成 comment vnode，不能比 `null` / `length`（is.ts §空渲染判据）。
      */
-    const readSlot = (name: string): unknown => {
-      const fn = (slots as Record<string, unknown>)[name];
-      if (typeof fn !== 'function') return undefined;
-      const nodes = (fn as (...args: unknown[]) => unknown)();
-      if (nodes === undefined) return undefined;
+    const readSlot = (name: keyof DrawerSlots): VNodeChild => {
+      const slot = slots[name];
+      if (!slot) return undefined;
+      const nodes = slot();
       return isEmptyVNode(nodes) ? null : nodes;
     };
 
-    // title：slot 优先，未提供才回退 String prop
-    const mergedTitle = (): unknown => {
-      const t = readSlot('title');
-      if (t !== undefined) return t;
-      return props.title;
-    };
-    const mergedFooter = (): unknown => readSlot('footer');
-    const mergedExtra = (): unknown => readSlot('extra');
-    const mergedCloseIcon = (): unknown => readSlot('closeIcon');
-
-    // 标题（来自 slot 或 String prop）存在才挂 aria-labelledby
-    //
-    // ⚠️ 必须在**渲染期**判定：写在 setup 里是快照 ⇒ 标题由「有」变「无」后
-    //    `aria-labelledby` 还指向已不存在的节点（Issue #20.3）。另外 slot 的「有无」变化
-    //    不会让 computed 失效（computed 调 slot 在「无 slot」那次不 track 任何依赖）⇒
-    //    这里用普通函数每渲染现读，而不是 computed。
-    const resolveAriaId = (): string | undefined => {
-      const titleSlot = readSlot('title');
-      const hasTitle = titleSlot !== undefined ? titleSlot !== null : isRenderable(props.title);
-      return hasTitle ? id : undefined;
-    };
+    // Read the title once in the wrapper render; the panel and ARIA target use
+    // that same snapshot even when the engine renders its content slot later.
+    const mergedTitle = (): VNodeChild => (slots.title ? readSlot('title') : props.title);
+    const mergedFooter = (): VNodeChild => readSlot('footer');
+    const mergedExtra = (): VNodeChild => readSlot('extra');
+    const mergedCloseIcon = (): VNodeChild => readSlot('closeIcon');
 
     const getContainer = computed<unknown>(() =>
       props.getContainer === undefined && config.getPopupContainer
@@ -237,8 +225,8 @@ export default defineComponent({
       void _attrsClass;
       void _attrsStyle;
 
-      // 标题是否可渲染 ⇒ 决定 aria-labelledby 的目标（渲染期现读，见 resolveAriaId）
-      const ariaId = resolveAriaId();
+      const title = mergedTitle();
+      const ariaId = isRenderable(title) ? id : undefined;
 
       return h(
         RcDrawer,
@@ -287,7 +275,7 @@ export default defineComponent({
             wrapper: { ...st.wrapper, ...props.contentWrapperStyle },
             dragger: st.dragger,
           },
-          'aria-labelledby': props['aria-labelledby'] ?? ariaId,
+          'aria-labelledby': props.ariaLabelledby ?? ariaId,
           focusTrap: focusTrapEnabled.value,
           focusTriggerAfterClose: mergedFocusable.value.focusTriggerAfterClose,
           autoLock: mask.enabled.value,
@@ -299,7 +287,7 @@ export default defineComponent({
               {
                 prefixCls,
                 ariaId,
-                title: mergedTitle() as never,
+                title,
                 footer: mergedFooter() as never,
                 extra: mergedExtra() as never,
                 closable: props.closable as never,
