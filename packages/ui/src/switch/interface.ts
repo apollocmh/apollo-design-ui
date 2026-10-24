@@ -1,20 +1,4 @@
-/**
- * Switch 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/switch/index.d.ts`（源码 `components/switch/index.tsx`）
- * + `@rc-component/switch@1.0.3` 的 `es/index.d.ts`。**逐字段对齐**。
- *
- * 差异（`React.*` → Vue，规则 C16 / C18）：
- *   - `React.CSSProperties` → Vue 的 `CSSProperties`
- *   - `React.ReactNode` → `VNodeChild`（⚠️ 见下）
- *   - rc-switch 的 `SwitchProps extends Omit<React.HTMLAttributes<HTMLButtonElement>, …>`
- *     —— React 的 `HTMLAttributes` 没有 Vue 对应物，那部分（`title` / `tabIndex` /
- *     其余 `on*`）在 Vue 侧是**声明过的 prop + `$attrs` 透传**的组合
- *
- * ⚠️ `checkedChildren` / `unCheckedChildren` 是 `VNodeChild`：运行时 prop 声明必须
- *    用 `type: null as unknown as PropType<VNodeChild>` + 显式 `default: undefined`
- *    （规则 D21 —— 含 `Boolean` 的运行时类型会把「未传」转成 `false`，让内容整块消失）。
- */
+/** Vue Switch public contracts. State change and native click have distinct payloads. */
 
 import type { CSSProperties, VNodeChild } from 'vue';
 
@@ -35,8 +19,8 @@ export type SwitchEvent = MouseEvent | KeyboardEvent;
  */
 export type SwitchChangeEventHandler = (checked: boolean, event: SwitchEvent) => void;
 
-/** antd：`SwitchClickEventHandler = SwitchChangeEventHandler`（同一签名）。 */
-export type SwitchClickEventHandler = SwitchChangeEventHandler;
+/** Native button click, including browser-generated keyboard activation. */
+export type SwitchClickEventHandler = (event: MouseEvent) => void;
 
 // ============================== 语义化 ==============================
 
@@ -78,10 +62,7 @@ export interface SwitchProps {
   /** `defaultChecked` 的别名（antd `@since 5.12.0`）。 */
   defaultValue?: boolean;
   onChange?: SwitchChangeEventHandler;
-  /**
-   * ⚠️ 收到的是**结果值**（不是原生事件），且 disabled 时**仍会触发**
-   *    —— rc-switch 的 legacy 行为，逐字对齐。
-   */
+  /** Native click event; checked state is delivered by change/update events. */
   onClick?: SwitchClickEventHandler;
   /** 选中时的内容。 */
   checkedChildren?: VNodeChild;

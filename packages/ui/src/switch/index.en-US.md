@@ -25,7 +25,7 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 | value | ⚠️ **Alias** for `checked` (antd `@since 5.12.0`) | `boolean` | — |
 | defaultValue | ⚠️ **Alias** for `defaultChecked` | `boolean` | — |
 | onChange | Listener for the `change` event (**two arguments**; not fired when `disabled`) | `(checked: boolean, event: MouseEvent \| KeyboardEvent) => void` | — |
-| onClick | Callback on click; ⚠️ receives the **resulting value** (not the native event) and **still fires when `disabled`** | `(checked: boolean, event) => void` | — |
+| onClick | Native click event listener; read state from change / v-model | `(event: MouseEvent) => void` | — |
 | checkedChildren | Content shown when on | `VNodeChild` | — |
 | unCheckedChildren | Content shown when off | `VNodeChild` | — |
 | disabled | Disabled state | `boolean` | — |
@@ -43,8 +43,11 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 | update:checked | `v-model:checked` channel (emitted together with `onChange`) | `boolean` |
 | update:value | `v-model:value` channel (the alias channel, same as above) | `boolean` |
 | change | Declared Vue event; emitted once per click or arrow-key update, suppressed when disabled | `(checked: boolean, event: MouseEvent \| KeyboardEvent)` |
+| click | Native button click, including keyboard activation; arrows do not synthesize click | `MouseEvent` |
 
-`@change` and `onChange` register the same event. They do not attach an additional native DOM `change` listener. `@click` retains the `(checked, event)` payload described above.
+`@change` and `onChange` register the same event. They do not attach an additional native DOM `change` listener. `@click` receives only the native `MouseEvent`, supporting `.stop`, `.prevent` and `.once`. The old `(checked, event)` callback is removed directly, without a compatibility layer or deprecation period. Read state from `@change` or `v-model:checked`.
+
+Native root `style` accepts strings, objects and arrays, merged with semantic root styles using Vue rules; caller styles take precedence.
 
 ### Keyboard
 
@@ -53,6 +56,8 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 | `ArrowLeft` | Turn off (no effect when `disabled`) |
 | `ArrowRight` | Turn on (no effect when `disabled`) |
 | `Space` / `Enter` | Native `<button>` activation (same as click) |
+
+Arrow keys use standard `KeyboardEvent.key` and prevent scrolling. Space/Enter use native button activation, producing one click and state change.
 
 ## Ref
 
@@ -97,10 +102,8 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 
 ## FAQ
 
-**Why does `onClick` still fire when `disabled`?**
-That is rc-switch's legacy semantics (`onClick` receives the resulting value instead of
-the event) and we mirror it verbatim. Note that browsers suppress click dispatch on
-disabled buttons, so real user interaction never observes it.
+**Can disabled switches emit click?**
+Browsers suppress real user activation and native button `.click()`, so neither click nor change/update fires. Explicit `dispatchEvent` remains a normal DOM dispatch: listeners receive the native event, while disabled state and change/update remain unchanged.
 
 **What is the difference between `value` and `checked`?**
 None — `value` / `defaultValue` are aliases for `checked` / `defaultChecked` (added by

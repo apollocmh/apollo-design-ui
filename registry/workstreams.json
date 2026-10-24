@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T05:42:38.622Z",
+  "generatedAt": "2026-10-24T10:18:49.606Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1884,7 +1884,7 @@
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 0,
-      "why": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
+      "why": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-24 后续 D02/ADR0007：原生 click 已直接迁移，旧结果值回调移除；当前证据见 docs/audit/2026-10-24-switch-native-events-remediation.md，旧批次未改 click 的描述保留为历史。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P2",

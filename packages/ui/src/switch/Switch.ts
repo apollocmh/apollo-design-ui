@@ -1,35 +1,16 @@
 /**
- * Switch —— 开关。
- *
- * 契约来源：antd 6.6.4 的 `es/switch/index.js`（源码 `components/switch/index.tsx`，198 行）
- * + `@rc-component/switch@1.0.3`（DOM 的真正生产者）。判据逐条对齐 G1 分析
- * （`docs/analysis/switch.md`）。
- *
- * ── 八条最容易写错的判据 ─────────────────────────────────────────────────────
- *
- * 1. **受控 / 非受控是「双别名」**：`useControlledState(defaultChecked ?? defaultValue ?? false,
- *    checked ?? value)` —— `value` / `defaultValue` 是 `checked` / `defaultChecked` 的别名
- *    （`@since 5.12.0`），**不是** Radio/Checkbox 那种「选项值」。
- * 2. **`loading` 强制 disabled**：`mergedDisabled = (props.disabled ?? DisabledContext) || loading`
- *    —— 是 `||` 不是 `??`，所以 `loading` 时 `disabled` 恒真（`-disabled` 类也会出现）。
- * 3. **`onChange` 是 `(checked, event)` 两个参数**（与 Radio/Checkbox 的事件对象形状不同）。
- * 4. **`onClick` 收到的是「结果值」不是原生事件**，且 **disabled 时仍会触发**
- *    —— rc-switch 的 legacy 行为，逐字对齐。
- * 5. **disabled 时不改状态、不发 onChange**（rc-switch 的 `triggerChange` 里 `if (!disabled)`）。
- * 6. **左右方向键**：`ArrowLeft` ⇒ false、`ArrowRight` ⇒ true；判据是 `e.which`
- *    （rc-util 的 `KeyCode`，**不是** `e.key`）。
- * 7. **DOM 三层恒存在**：`-handle` 的 div 与 `-inner-checked` / `-inner-unchecked` 两个 span
- *    **都无条件渲染**（前者只有图标是条件渲染，后者靠负 margin 轮换）—— 不是 `v-if` 二选一。
- * 8. **`size="default"` 发 deprecation 告警**（提示改用 `"medium"`）。
+ * Vue native Switch: semantic change/update carry state, click carries the native
+ * MouseEvent. Arrow keys use KeyboardEvent.key; Space/Enter use button activation.
+ * DOM class structure and static theme styles remain independent of event payloads.
  */
 
 import { LoadingOutlined } from '@apollo-design/icons';
-import { KeyCode, useControlledValue, useDevWarning } from '@apollo-design/utils';
+import { mergeDomAttrs, useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
-  type CSSProperties,
   computed,
   defineComponent,
   h,
+  normalizeStyle,
   type PropType,
   shallowRef,
   type VNodeChild,
@@ -45,7 +26,6 @@ import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import type {
-  SwitchClickEventHandler,
   SwitchEvent,
   SwitchProps,
   SwitchRef,
@@ -87,21 +67,14 @@ export const SwitchComponent = defineComponent({
     },
     styles: { type: [Object, Function] as PropType<SwitchProps['styles']>, default: undefined },
   },
-  // Semantic change is a Vue event; legacy click remains separate pending D02.
+  // Native click and semantic change use distinct, typed Vue events.
   emits: {
+    click: (event: MouseEvent) => !!event,
     'update:checked': (checked: boolean) => typeof checked === 'boolean',
     'update:value': (checked: boolean) => typeof checked === 'boolean',
     change: (checked: boolean, event: SwitchEvent) => typeof checked === 'boolean' && !!event,
   },
   setup(props, { attrs, emit, expose, slots }) {
-    // ⚠️ `onKeyDown` **不在** `SwitchProps` 里（antd 的 `SwitchProps` 也没有它 ——
-    //    它是 rc-switch 的 props，antd 靠 `{...restProps}` 透传）。所以这里不能写
-    //    `Pick<SwitchProps, 'onKeyDown'>`（会 TS2344），必须显式列一遍。
-    const callbacks = attrs as unknown as {
-      onClick?: SwitchClickEventHandler;
-      onKeyDown?: (event: KeyboardEvent) => void;
-    };
-
     const context = useComponentConfig('switch');
     const { getPrefixCls, direction } = context;
     const contextDisabled = useDisabled();
@@ -168,34 +141,16 @@ export const SwitchComponent = defineComponent({
     };
 
     const onInternalKeyDown = (event: KeyboardEvent) => {
-      // ⚠️ 判据是 `which`（rc-util 的 KeyCode），不是 `key`（key-code.ts 文件头）
-      if (event.which === KeyCode.LEFT) {
-        triggerChange(false, event);
-      } else if (event.which === KeyCode.RIGHT) {
-        triggerChange(true, event);
+      if (mergedDisabled.value || event.defaultPrevented) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        triggerChange(event.key === 'ArrowRight', event);
       }
-      /**
-       * 🚨 **两种拼写都要认**（Issue #11.1）。
-       *
-       * antd 的 props 名是 `onKeyDown`（rc-switch 透传），而 Vue 模板的 `@keydown`
-       * 编译出的键是 **`onKeydown`**（全小写 d）。此前只读 camelCase ⇒ 模板写法
-       * **一次都不调**，而且它还会被 `onKeydown: onInternalKeyDown` 覆盖
-       * ⇒ 连「落成 DOM 属性」这条退路也没有（静默丢失）。
-       *
-       * ⚠️ 与 `useBubbleLock` 同判：**触发时现读** `attrs`（它在 setup 期不参与
-       *    依赖追踪，早读会锁死首帧回调）。camelCase（antd 名）优先。
-       */
-      const rawAttrs = attrs as {
-        onKeyDown?: (e: KeyboardEvent) => void;
-        onKeydown?: (e: KeyboardEvent) => void;
-      };
-      (rawAttrs.onKeyDown ?? rawAttrs.onKeydown)?.(event);
     };
 
     const onInternalClick = (event: MouseEvent) => {
-      const ret = triggerChange(!innerChecked.value, event);
-      // ⚠️ legacy：传的是**结果值**，且 disabled 时也照常调用（判据 4）
-      callbacks.onClick?.(ret, event);
+      triggerChange(!innerChecked.value, event);
+      emit('click', event);
     };
 
     // ============================== Refs ===============================
@@ -231,33 +186,21 @@ export const SwitchComponent = defineComponent({
         },
       ];
 
-      // 除被 rc-switch 消费的三个事件与 class/style 外的 attrs 全部落 button
-      const {
-        class: _attrClass,
-        style: _attrStyle,
-        // ⚠️ **两种拼写都要摘**（Issue #11.1）：只摘 camelCase 的话，Vue 模板产出的
-        //    `onKeydown` 会留在 `restAttrs` 里被铺上 button，随即被
-        //    `onKeydown: onInternalKeyDown` 覆盖 —— 调用方回调就此静默丢失。
-        onKeyDown: _onKeyDown,
-        onKeydown: _onKeydownLower,
-        onClick: _onClick,
-        ...restAttrs
-      } = attrs as Record<string, unknown>;
+      const { class: _attrClass, style: attrStyle, ...restAttrs } = attrs;
+      // Merge native listeners rather than replacing or manually invoking attrs.
+      const rootAttrs = mergeDomAttrs({ onKeydown: onInternalKeyDown }, restAttrs);
+      const rootStyle = normalizeStyle([mergedStyles.value.root, attrStyle]);
 
       return h(
         'button',
         {
-          ...restAttrs,
+          ...rootAttrs,
           type: 'button',
           role: 'switch',
           'aria-checked': String(innerChecked.value),
           disabled: mergedDisabled.value,
           class: classString,
-          // 根 `style` 是 Vue 原生 attrs（`_attrStyle` 已从 restAttrs 里摘出）
-          ...styleAttrs({
-            ...mergedStyles.value.root,
-            ...((_attrStyle as CSSProperties | undefined) ?? {}),
-          }),
+          ...(typeof rootStyle === 'string' ? { style: rootStyle } : styleAttrs(rootStyle)),
           ref: buttonRef,
           // ⚠️ 这四个是**声明过的 prop**（不在 attrs 里），antd 的 `{...restProps}` 会把它们
           //    透传到 button —— 我们必须显式落一遍，否则静默丢失。
@@ -265,7 +208,6 @@ export const SwitchComponent = defineComponent({
           id: props.id,
           tabindex: props.tabIndex,
           autofocus: props.autoFocus || undefined,
-          onKeydown: onInternalKeyDown,
           onClick: onInternalClick,
         },
         [

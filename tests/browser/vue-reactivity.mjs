@@ -178,7 +178,7 @@ try {
     numberChanges: 0,
     lastSwitch: 'true:click',
     lastNumber: '',
-    clickPayload: 'boolean',
+    clickPayload: 'click',
   });
   await toggle.press('ArrowLeft');
   assert.equal((await state()).switchChanges, 2);

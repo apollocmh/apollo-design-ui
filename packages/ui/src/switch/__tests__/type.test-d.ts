@@ -34,15 +34,12 @@ it('SwitchSize 保留废弃的 default（与 antd 的枚举一致）', () => {
   expectTypeOf<SwitchSize>().toEqualTypeOf<'small' | 'medium' | 'middle' | 'default'>();
 });
 
-it('onChange / onClick 是 `(checked, event)` 两个参数', () => {
-  const onChange: SwitchChangeEventHandler = (checked, event) => {
-    expectTypeOf(checked).toBeBoolean();
-    expectTypeOf(event).toEqualTypeOf<SwitchEvent>();
-  };
-  // antd：`SwitchClickEventHandler = SwitchChangeEventHandler`
-  const onClick: SwitchClickEventHandler = onChange;
-  expectTypeOf(onChange).toEqualTypeOf<SwitchClickEventHandler>();
-  void onClick;
+it('change carries state and click carries one native MouseEvent', () => {
+  expectTypeOf<SwitchChangeEventHandler>().toEqualTypeOf<
+    (checked: boolean, event: SwitchEvent) => void
+  >();
+  expectTypeOf<SwitchClickEventHandler>().toEqualTypeOf<(event: MouseEvent) => void>();
+  expectTypeOf<SwitchProps['onClick']>().toEqualTypeOf<SwitchClickEventHandler | undefined>();
 });
 
 it('语义化支持对象与函数两态', () => {
@@ -87,9 +84,12 @@ it('负例：checked 不能是字符串', () => {
   void badChecked;
 });
 
-// F09: change is a typed component emit; legacy click remains a separate callback.
+// F09 / D02: native click and semantic state change have independent typed emits.
 const checkSemanticSwitchEmit = (vm: InstanceType<typeof Switch>, event: SwitchEvent) => {
   vm.$emit('change', true, event);
+  vm.$emit('click', new MouseEvent('click'));
+  // @ts-expect-error D02: native click no longer carries a checked result.
+  vm.$emit('click', true, event);
   vm.$emit('update:checked', false);
   // @ts-expect-error F09: checked is boolean.
   vm.$emit('change', 'true', event);
@@ -97,3 +97,12 @@ const checkSemanticSwitchEmit = (vm: InstanceType<typeof Switch>, event: SwitchE
   vm.$emit('change', true);
 };
 void checkSemanticSwitchEmit;
+
+const checkNativeClickProps = () => {
+  // @ts-expect-error D02: legacy two-argument click callback is not accepted.
+  const props: SwitchProps = { onClick: (_checked: boolean, _event: MouseEvent) => {} };
+  // @ts-expect-error D02: the component's inferred onClick also requires a native event.
+  h(Switch, { onClick: (_checked: boolean, _event: MouseEvent) => {} });
+  void props;
+};
+void checkNativeClickProps;

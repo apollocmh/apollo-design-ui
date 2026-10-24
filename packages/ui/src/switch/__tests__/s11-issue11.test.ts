@@ -22,8 +22,11 @@ import { Switch } from '../index';
 const findButton = (w: ReturnType<typeof mount>) => w.find('button');
 
 const keydown = async (el: Element, which: number) => {
-  const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true });
-  Object.defineProperty(event, 'which', { value: which });
+  const event = new KeyboardEvent('keydown', {
+    key: which === 37 ? 'ArrowLeft' : which === 39 ? 'ArrowRight' : 'Enter',
+    bubbles: true,
+    cancelable: true,
+  });
   el.dispatchEvent(event);
   await nextTick();
 };

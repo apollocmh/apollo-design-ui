@@ -33,7 +33,7 @@ F03 本轮已建立 `packages/ui/src/form/__tests__/prefix-reactivity.test.ts`�
 
 - **F05：已补齐 Badge 模板内容**。新增 typed #count/#text，支持同传、空内容、条件出现/移除及更新；富内容走静态 indicator，数字 count 的 overflow、showZero 与 ScrollNumber 缓存继续保留。首批 6 条修前全红；扩展空计数/独立文本、SSR 水合与默认插槽切换后 9 条通过，完整四层 94 条通过。新增可操作 Demo，未以富内容替代数字 prop。
 - **F07：已统一内容 slot 优先**。Alert 的 title/description、CollapsePanel 的 header 以 slot 存在为准，包括空 slot；移除条件 slot 才恢复 prop。旧文档确有 prop-first 承诺，本次按未发布开发版直接变更并单独写 [迁移记录](migrations/content-slot-precedence.md)，不留兼容层。Collapse 每轮 render 仅收集一次当前面板子树，标题刷新保留输入状态。6 条修前全红；真实 Chrome 模板交互通过。
-- **F09：语义 change 已声明**。Switch 和 InputNumber 通过 typed emits 单次发送，onChange 注册同一事件；移除手调 attrs 通道，原生 DOM change 不混入语义事件。覆盖鼠标/键盘、监听器替换、禁用、v-model、stringMode/null 与类型负例。Switch click 载荷仍跟踪 D02，没有静默修改。
+- **F09：语义 change 已声明**。Switch 和 InputNumber 通过 typed emits 单次发送，onChange 注册同一事件；移除手调 attrs 通道，原生 DOM change 不混入语义事件。覆盖鼠标/键盘、监听器替换、禁用、v-model、stringMode/null 与类型负例。Switch click 已按 ADR 0007 直接改为原生 MouseEvent；修饰符、单次发送、键盘激活与迁移见 [D02 报告](audit/2026-10-24-switch-native-events-remediation.md)。
 - **F10：DOM 目标归一与原生事件已验证**。pickAttrs 保留 className 数据输出，接受已知 Vue 原生事件键与 Once/Passive/Capture 后缀；DOM 目标使用 toVueDomAttrs/mergeDomAttrs。修复 ColorPicker @mousedown 被过滤、Rate @keydown 丢失及字符串 style 的 SSR 无效 CSS，监听器数组按函数身份单次合并，Tree 正确的 fallthrough 保持。utils/Badge/Rate/ColorPicker/Tree 四层 59 文件 / 1168 条通过，Chrome 真实模板通过，见 [F10 报告](audit/2026-10-24-dom-attrs-remediation.md)。
 - **F11：当前来源清单已建立**。类型别名、继承及数据/配置/内部/deprecated 分流保留证据，十二个字段引用具体运行报告，其余继续逐项复审；[清单与限制](audit/2026-10-24-slot-inventory.md)。
 - **H03：刷新数量并补实际能力场景**。新 Table 行/列原生拖放 Demo 提供等效键盘操作，96 条 Demo/axe 与真实浏览器通过；当前文件统计 990/1060，文档总量 994，不宣称能力矩阵已完成。
@@ -48,7 +48,7 @@ F07/F09 的运行时、类型迁移、生产浏览器与文档证据见 [整改�
 
 - **FIX（编号以 §1 为准）**：F01 DatePicker 输入属性（本轮已修）、F02 Select 条件插槽（已修）、F03 FormItem 前缀响应性（此前已修）、F04 InputNumber 内容插槽（已修）、F05 Badge 富内容插槽（已补）、F06 Transfer 模板接口（本轮已迁移）、F07 Alert / Collapse 插槽优先级（已改）。
 - **VERIFY（先写可失败的用例，不许凭推测改）**：F08 Descriptions render 写 ref（已移除，未复现循环）、F09 Vue 语义事件/React 回调冲突、F10 `pickAttrs` 的 DOM prop/原生事件（已验证修复）、F11 其它 VNodeChild 插槽及动态响应性的完整复算。
-- **DECIDE（保留现状直到用户裁决）**：D01 不兼容变更边界、D02 `@click` 的 Vue DOM 语义、D03 已裁决（ADR 0006），其余包括 D04 非默认 `prefixCls` 的 CSS 策略、D05 上游调试/依赖第三方服务的 Demo 是否纳入完成标准。
+- **DECIDE**：D01 不兼容变更边界；D02 原生 click 已按 ADR 0007 裁决实施、D03 已裁决（ADR 0006）；仍开放的包括 D04 非默认 `prefixCls` 的 CSS 策略、D05 上游调试/依赖第三方服务的 Demo 是否纳入完成标准。
 - **HOUSEKEEPING**：H01 Table 陈旧文档状态与汇总（已修）、H02 规范/台账陈旧矛盾（已清账）、H03 Demo 覆盖矩阵更新与例外清单、H04 文档构建警告分类处理。
 
 **本轮排除项**：Message / Notification 的进出场动画已由用户自主验收，不再以其动画为开放问题；Menu 的 Trigger 弹层整改、Icon 独立检索目录、文档站 V3 等已有实现及浏览器证据，不重复报“未做”。可保留 CI 回归，不重复返工。
@@ -172,7 +172,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **修前事实**：`Switch` 只声明 `update:checked` / `update:value`，把 `onChange/onClick` 留在 attrs 里并手动调用；`InputNumber` 同样只声明 `update:value`，手调 `attrs.onChange`。**Vue 模板的 `@change` 仍可能按同一个 `onChange` 键正常调用，因此不是“@change 整体失效”**；真实问题是“组件没有把语义事件声明为 emits，开发体验/类型契约不够 Vue 原生”，而 `Switch` 的 `@click` 会收到布尔结果而不是通常的原生 `MouseEvent`。
 
-**当前处理**：两组件已声明 typed change emits，所有发送都经 emit，InputNumber 包装层单次转发；移除手动 attrs.onChange 调用。原生 change 不混入语义事件，Switch 的 click 当前仍是旧载荷；2026-10-24 用户已通过 ADR 0007 要求直接修正为原生事件，D02 已裁决，具体迁移与单次发送/键盘覆盖待落实。
+**当前处理**：两组件已声明 typed change emits，所有发送都经 emit，InputNumber 包装层单次转发；移除手动 attrs.onChange 调用。原生 change 不混入语义事件。Switch 的 click 已按 ADR 0007 直接改为 typed 原生 MouseEvent，移除手调 attrs 与旧布尔首参；Vue 修饰符、监听器数组/once、标准方向键和原生 Space/Enter 激活已有回归。另修复原生字符串/数组 style 的错误展开。详见 [D02 报告](audit/2026-10-24-switch-native-events-remediation.md) 与 [迁移记录](migrations/switch-native-events.md)。
 
 **解决方向（修前）**：将**语义 change** 明确声明为 emits 并只通过 `emit('change', payload...)` 发送；回调仍能通过 Vue `onChange` 注册语法自动接收 emit，无需再双调手工回调。⚠️ 真正危险的是 `click`：Vue `@click` 与 legacy React `onClick(result,event)` 使用同一监听键，不能在不破坏兼容的情况下承诺两套不同 payload。该段为修前调查；**D02 现已由 ADR 0007 裁决直接改为原生事件，无兼容层/弃用期**；不能简单同时 `emit('click')` + 手调 `attrs.onClick`，否则双触发。迁移时补负例断言“事件仅一次”，包括禁用、click、keyboard、v-model 和 TS 事件参数推断。
 
@@ -296,7 +296,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | BackTop | 1/1 | —；嵌入预览 viewport 已实现 |
 | Checkbox | 8/11 | —；Group / v-model / disabled 表单事件 |
 | Radio | 14/16 | —；Group / 键盘交互 |
-| Switch | 7/7 | **F09、D02**；区分 `@change` / `@click` 语义 |
+| Switch | 7/7 | **F09、D02** 已专项修复；原生 click 与语义 change 分离，15 张 Apollo 已批准图仍缺失 |
 | Input | 24/27 | —；Search/OTP 已实现，不重复报缺 |
 | InputNumber | 20/22 | **F04、F09**；前后缀 Vue slot、更新事件 |
 | Listy | 8/8 | 虚拟无限/拖拽类功能按支持范围决定 |
@@ -356,7 +356,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | 决策 | 选项 | 推荐及理由 |
 |---|---|---|
 | **D01：已公开 prop/slot 优先级的变更边界** | 逐组件核实旧契约、当前使用和行为影响 | F07 在当前未发布开发版直接统一内容 slot 优先，独立记录迁移与回归；不据此宣布所有未审查组件均已迁移 |
-| **D02：Switch @click 事件载荷** | **已裁决：直接使用原生 DOM 事件；实现迁移待执行** | 用户 2026-10-24 要求不得为 React 回调/DOM 形态牺牲 Vue 公共用法，见 ADR 0007；状态仍由 change/update 表达，键盘行为与迁移须单独验证，不保留旧载荷兼容 |
+| **D02：Switch @click 事件载荷** | **已裁决并实施：直接使用原生 DOM 事件** | 用户 2026-10-24 要求不得为 React 回调/DOM 形态牺牲 Vue 公共用法，见 ADR 0007；状态由 change/update 表达，修饰符、单次发送与键盘激活已专项验证；无旧载荷兼容，见 D02 报告 |
 | **D03：内容渲染函数 prop 的处理** | **已裁决：直接改为 Vue 插槽** | 用户 2026-10-23 明确要求当前开发阶段直接修改，不保留旧函数兼容层或弃用期；2026-10-24 再扩展到妨碍 Vue 用法的 React 回调/DOM 形态，见 ADR 0006 / 0007。业务/算法函数按职责保留，数据项渲染逐项评估 |
 | **D04：动态 `prefixCls` 与零运行时 CSS** | A 不支持动态前缀；B 允许 DOM 前缀变更但 CSS 需预生成/预加载；C 恢复运行时样式注入 | **B**：遵循已裁决零运行时原则；不得因为 F03 重新引入运行时 CSS-in-JS |
 | **D05：补齐上游 Demo 的口径** | A 逐个文件 100%；B 核心能力全覆盖、debug/外部依赖例外；C 停止补 Demo | **B**：把“支持 API 能否用 Vue 示例真实操作”作为验收判据，不做文件数量游戏 |

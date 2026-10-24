@@ -17,6 +17,7 @@ import FormPrefix from './FormPrefix.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import NativeAttrs from './NativeAttrs.vue';
+import SwitchEvents from './SwitchEvents.vue';
 
 const Rows = defineComponent({
   setup() {
@@ -62,6 +63,7 @@ const Demo = {
   descriptions: Rows,
   'content-slots': ContentSlots,
   events: EventEmits,
+  'switch-events': SwitchEvents,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

@@ -24,7 +24,7 @@ subtitle: 开关
 | value | ⚠️ `checked` 的**别名**（antd `@since 5.12.0`） | `boolean` | — |
 | defaultValue | ⚠️ `defaultChecked` 的**别名** | `boolean` | — |
 | onChange | `change` 事件的监听器写法（**两个参数**；`disabled` 时不触发） | `(checked: boolean, event: MouseEvent \| KeyboardEvent) => void` | — |
-| onClick | 点击时回调；⚠️ 收到的是**结果值**（不是原生事件），且 `disabled` 时**仍会触发** | `(checked: boolean, event) => void` | — |
+| onClick | 原生 click 事件监听器；状态从 change / v-model 获取 | `(event: MouseEvent) => void` | — |
 | checkedChildren | 选中时的内容 | `VNodeChild` | — |
 | unCheckedChildren | 未选中时的内容 | `VNodeChild` | — |
 | disabled | 失效状态 | `boolean` | — |
@@ -42,8 +42,11 @@ subtitle: 开关
 | update:checked | `v-model:checked` 通道（与 `onChange` 同时发出） | `boolean` |
 | update:value | `v-model:value` 通道（别名通道，同上） | `boolean` |
 | change | 声明的 Vue 语义事件；每次点击或方向键更新时发送一次，`disabled` 时不发送 | `(checked: boolean, event: MouseEvent \| KeyboardEvent)` |
+| click | 原生按钮点击，含键盘激活；方向键不合成点击 | `MouseEvent` |
 
-`@change` 与 `onChange` 注册同一事件，不会额外监听原生 DOM `change`。`@click` 的载荷仍按上表的 `(checked, event)`。
+`@change` 与 `onChange` 注册同一事件，不会额外监听原生 DOM `change`。`@click` 只接收原生 `MouseEvent`，支持 `.stop` / `.prevent` / `.once`；不再传旧 `(checked, event)`，无兼容层或弃用期。迁移状态读取到 `@change` 或 `v-model:checked`。
+
+原生根 `style` 支持字符串、对象和数组，与语义 root 样式按 Vue 规则合并；调用方样式优先。
 
 ### 键盘
 
@@ -52,6 +55,8 @@ subtitle: 开关
 | `ArrowLeft` | 置为未选中（`disabled` 时不生效） |
 | `ArrowRight` | 置为选中（`disabled` 时不生效） |
 | `Space` / `Enter` | 原生 `<button>` 的激活行为（等价点击） |
+
+方向键使用标准 `KeyboardEvent.key` 并阻止滚动；Space/Enter 交由按钮原生激活，只产生一次 click 和状态变更。
 
 ## Ref
 
@@ -95,9 +100,8 @@ subtitle: 开关
 
 ## FAQ
 
-**为什么 `disabled` 时 `onClick` 还会触发？**
-这是 rc-switch 的 legacy 语义（`onClick` 收到「结果值」而不是事件），我们逐字对齐。
-注意浏览器本身会抑制 `disabled` 按钮的 click 派发，所以正常用户交互下观察不到。
+**禁用时点击会触发吗？**
+真实用户交互及按钮的原生 `.click()` 由浏览器抑制，不发 click/change/update。显式 `dispatchEvent` 仍是普通 DOM 派发：监听器收到原生事件，但不会改变禁用状态或发送 change/update。
 
 **`value` 和 `checked` 有什么区别？**
 没有区别 —— `value` / `defaultValue` 是 `checked` / `defaultChecked` 的别名

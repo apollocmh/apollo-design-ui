@@ -1,4 +1,4 @@
-/** F09: semantic change uses Vue emits once; legacy click payload remains separate (D02). */
+/** F09: semantic change uses Vue emits once; native click is distinct from state change (D02). */
 import { mount } from '@vue/test-utils';
 import { expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
@@ -24,7 +24,7 @@ it('F09: Switch click emits one change and does not leak native change events to
   expect(w.emitted('update:value')).toEqual([[true]]);
   expect(change).toHaveBeenCalledTimes(1);
   expect(click).toHaveBeenCalledTimes(1);
-  expect(click.mock.calls[0]?.[0]).toBe(true);
+  expect(click.mock.calls[0]).toEqual([expect.any(MouseEvent)]);
   await w.get('button').trigger('change');
   expect(change).toHaveBeenCalledTimes(1);
   w.unmount();

@@ -10564,7 +10564,7 @@
       "owner": "SwitchProps",
       "prop": "checkedChildren",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/switch/interface.ts:87",
+      "source": "packages/ui/src/switch/interface.ts:68",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -10597,7 +10597,7 @@
       "owner": "SwitchProps",
       "prop": "unCheckedChildren",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/switch/interface.ts:89",
+      "source": "packages/ui/src/switch/interface.ts:70",
       "slotRuntime": {
         "status": "source-reference",
         "files": [

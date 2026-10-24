@@ -21,14 +21,17 @@ afterEach(() => {
 const findButton = (w: ReturnType<typeof mount>) => w.find('button');
 
 /**
- * 派发一个带 `which` 的键盘事件并等待 Vue 的重渲染。
+ * 派发一个带标准 `key` 的键盘事件并等待 Vue 的重渲染。
  *
  * ⚠️ 必须 `await nextTick()`：`dispatchEvent` 是同步的，但 `aria-checked` 的更新要等
  *    Vue 的调度器冲刷（用 `trigger()` 时它内部会 await，手写 dispatch 不会）。
  */
 const keydown = async (el: Element, which: number) => {
-  const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true });
-  Object.defineProperty(event, 'which', { value: which });
+  const event = new KeyboardEvent('keydown', {
+    key: which === 37 ? 'ArrowLeft' : which === 39 ? 'ArrowRight' : 'Enter',
+    bubbles: true,
+    cancelable: true,
+  });
   el.dispatchEvent(event);
   await nextTick();
 };
@@ -179,21 +182,21 @@ describe('Switch · 键盘与点击', () => {
     expect(onKeyDown).toHaveBeenCalledTimes(1);
   });
 
-  it('onClick 收到的是**结果值**（不是原生事件），且 disabled 时仍触发', async () => {
+  it('onClick receives only a native event, including explicit dispatch on disabled buttons', async () => {
     const onClick = vi.fn();
     const w = mount(Switch, { attrs: { onClick } });
     await findButton(w).trigger('click');
     expect(onClick).toHaveBeenCalledTimes(1);
-    expect(onClick.mock.calls[0]?.[0]).toBe(true);
-    expect(onClick.mock.calls[0]?.[1]).toBeInstanceOf(Event);
+    expect(onClick.mock.calls[0]).toEqual([expect.any(MouseEvent)]);
 
     // ⚠️ disabled 的 button 由浏览器**抑制** click 的派发，所以要走 `dispatchEvent`
-    //    才能观测到「处理器本身是无条件的」这条 rc-switch 语义。
+    //    验证显式 DOM 派发仍传原生事件，不更改 disabled 状态。
     const onClickDisabled = vi.fn();
     const w2 = mount(Switch, { attrs: { onClick: onClickDisabled }, props: { disabled: true } });
     findButton(w2).element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(onClickDisabled).toHaveBeenCalledTimes(1);
-    expect(onClickDisabled.mock.calls[0]?.[0]).toBe(false);
+    expect(onClickDisabled.mock.calls[0]).toEqual([expect.any(MouseEvent)]);
+    expect(w2.emitted('change')).toBeUndefined();
   });
 });
 

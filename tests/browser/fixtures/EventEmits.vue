@@ -10,8 +10,8 @@ const numberChanges = ref(0);
 const lastSwitch = ref('');
 const lastNumber = ref('');
 const clickPayload = ref('');
-const onLegacyClick = (value: boolean) => {
-  clickPayload.value = typeof value;
+const onClick = (event: MouseEvent) => {
+  clickPayload.value = event instanceof MouseEvent ? event.type : 'invalid';
 };
 const onSwitch = (value: boolean, event: MouseEvent | KeyboardEvent) => {
   switchChanges.value++;
@@ -26,7 +26,7 @@ const onNumber = (value: number | string | null) => {
 <template>
   <Button @click="disabled = !disabled">Toggle disabled</Button>
   <Switch v-model:checked="checked" :disabled="disabled" aria-label="Semantic switch"
-    @change="onSwitch" @click="onLegacyClick" />
+    @change="onSwitch" @click="onClick" />
   <InputNumber v-model:value="amount" :disabled="disabled" aria-label="Semantic number" @change="onNumber" />
   <output id="event-state">{{ JSON.stringify({ checked, amount, switchChanges, numberChanges, lastSwitch, lastNumber, clickPayload }) }}</output>
 </template>

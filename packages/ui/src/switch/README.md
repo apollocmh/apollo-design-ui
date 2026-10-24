@@ -32,12 +32,9 @@
   - DOM 是**三层固定结构**（`-handle` / `-inner` / 两个 `-inner-*` span），
     且 `-handle` 与两个 inner span **恒存在**（只有图标是条件渲染）—— 模板里写
     `v-if` 二选一反而会写错；
-  - attrs 需要**按目标拆分**：`onKeyDown` / `onClick` 被 rc-switch 包装（不是直接绑定），
-    其余才原样落到 `<button>`。
-    ⚠️ 两个键**各自有两种拼写**，都要摘、都要认（Issue #11.1）：
-    `onKeyDown`（antd 名）与 **`onKeydown`**（Vue 模板 `@keydown` 编译产物）。
-    只摘 camelCase 会让模板写法留在 `restAttrs` 里、随即被内部 `onKeydown` **覆盖**
-    ⇒ 调用方回调**一次都不调**（静默，连 DOM 属性这条退路都没有）。
+  - 原生 attrs 落到 button；内部 keydown 与外部监听器通过 Vue 原生合并，
+    不覆盖模板 `@keydown`、选项监听器或监听器数组。click 使用 typed emit，
+    只发送原生 MouseEvent；状态通过 change/update 表达。
   - `checkedChildren` / `unCheckedChildren` 的运行时类型必须是
     `null as unknown as PropType<VNodeChild>`（规则 D21）—— 写成 `String` 时传 VNode
     会报 `Invalid prop: type check failed`（Issue #11.2）。
@@ -86,11 +83,10 @@
 - **`loading` 强制 disabled**：`(props.disabled ?? DisabledContext) || loading`
   —— `||` 判据，所以 loading 时 `-disabled` 类也出现、`disabled` 属性也为真。
 - **`onChange` 是 `(checked, event)` 两个参数**（不是事件对象）；**disabled 时不发**。
-- **`onClick` 收到「结果值」**（不是原生事件），且 **disabled 时仍会触发**
-  （rc-switch 的 legacy 语义；⚠️ 浏览器会抑制 disabled 按钮的 click 派发，
-  所以 L1 用 `dispatchEvent` 才能观测到）。
-- **左右方向键**：`ArrowRight` ⇒ true、`ArrowLeft` ⇒ false；判据是 **`e.which`**
-  （rc-util 的 `KeyCode`，不是 `e.key`）。
+- **`onClick` 只收到原生 MouseEvent**，支持 Vue 修饰符；真实禁用按钮不激活。
+  显式 dispatchEvent 仍传事件，但不改状态或发送 change/update。见 ADR0007。
+- **左右方向键**：使用标准 `event.key`，ArrowRight ⇒ true、ArrowLeft ⇒ false，
+  阻止滚动且不合成 click；Space/Enter 交给按钮原生激活，不重复切换。
 - **`size` 走 `useSize` 的「函数形态」**：`useSize((ctx) => props.size ?? ctx)`
   —— 写成 `useSize(props.size)` 只在 setup 期读一次，受控切换 size 会静默失效
   （PITFALLS 163，radio 同源已修）。
@@ -99,7 +95,9 @@
 - **5 处 `@media (prefers-reduced-motion: reduce)`**，且**没有** hover media query
   —— 与 radio 同侧、与 checkbox 相反。
 
-## 6. 验证证据
+2026-10-24 原生事件整改与当前证据见 [专项报告](../../../../docs/audit/2026-10-24-switch-native-events-remediation.md)。
+
+## 6. 历史验证证据
 
 | 层 | 结果 |
 |---|---|

@@ -7,7 +7,7 @@
  *   都无条件渲染（前者只有图标是条件渲染）—— 基线把这条钉死。
  * - `checked` / `disabled` / `aria-checked` 里的**布尔**是 `contract` 档的投影对象
  *   （`aria-checked` 是 aria-*，进契约；`checked` / `disabled` 是原生属性，不进）。
- * - 左右方向键 / 点击的 legacy 语义（`onClick` 收到结果值）是运行时行为 —— L1。
+ * - 左右方向键 / 原生 click 与语义 change 的区分是运行时行为 —— L1；见 ADR0007。
  * - 覆盖：尺寸三档（含废弃的 `default`）、loading（含强制 disabled）、children 各形态、
  *   `value` / `defaultValue` 别名、attrs 透传、语义化。
  *
