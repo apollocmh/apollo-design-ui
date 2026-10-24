@@ -1315,7 +1315,7 @@ export { genListyStyle, genTokenDecls as genListyTokenDecls } from './listy/styl
 export type {
   MasonryEmits,
   MasonryExpose,
-  MasonryItemRenderInfo,
+  MasonryItemSlotProps,
   MasonryItemType,
   MasonryKey,
   MasonryLayoutItem,
@@ -1323,6 +1323,7 @@ export type {
   MasonryRef,
   MasonrySemanticClassNames,
   MasonrySemanticStyles,
+  MasonrySlots,
 } from './masonry';
 export { Masonry } from './masonry';
 export { genMasonryStyle } from './masonry/style';

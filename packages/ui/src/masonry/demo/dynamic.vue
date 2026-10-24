@@ -4,10 +4,17 @@
 import {
   Button,
   Masonry,
-  type MasonryItemRenderInfo,
   type MasonryLayoutItem,
 } from '@apollo-design/ui';
-import { h, ref } from 'vue';
+import { ref } from 'vue';
+
+const tileStyle = {
+  padding: '8px',
+  background: '#fff',
+  border: '1px solid #f0f0f0',
+  borderRadius: '8px',
+  boxSizing: 'border-box',
+} as const;
 
 const heights = [150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 70, 50, 80];
 
@@ -35,35 +42,7 @@ const addItem = (): void => {
   ];
 };
 
-const renderItem = ({ data, key }: MasonryItemRenderInfo<unknown>) =>
-  h(
-    'div',
-    {
-      style: {
-        position: 'relative',
-        height: `${Number(data)}px`,
-        padding: '8px',
-        background: '#fff',
-        border: '1px solid #f0f0f0',
-        borderRadius: '8px',
-        boxSizing: 'border-box',
-      },
-    },
-    [
-      String(Number(key) + 1),
-      h(
-        Button,
-        {
-          size: 'small',
-          style: { position: 'absolute', top: '8px', right: '8px' },
-          onClick: () => removeItem(Number(key)),
-        },
-        () => '×',
-      ),
-    ],
-  );
-
-const onLayoutChange = (sortedItems: MasonryLayoutItem<unknown>[]): void => {
+const onLayoutChange = (sortedItems: MasonryLayoutItem<number>[]): void => {
   items.value = items.value.map((item) => {
     const match = sortedItems.find((sorted) => sorted.key === item.key);
     return match ? { ...item, column: match.column } : item;
@@ -73,13 +52,18 @@ const onLayoutChange = (sortedItems: MasonryLayoutItem<unknown>[]): void => {
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 16px">
-    <Masonry
-      :columns="4"
-      :gutter="16"
-      :items="items"
-      :item-render="renderItem"
-      :on-layout-change="onLayoutChange"
-    />
+    <Masonry :columns="4" :gutter="16" :items="items" @layout-change="onLayoutChange">
+      <template #item="{ data, key }">
+        <div :style="{ ...tileStyle, height: `${data}px`, position: 'relative' }">
+          {{ Number(key) + 1 }}
+          <Button
+            size="small"
+            style="position: absolute; top: 8px; right: 8px"
+            @click="removeItem(Number(key))"
+          >×</Button>
+        </div>
+      </template>
+    </Masonry>
     <Button block @click="addItem">Add Item</Button>
   </div>
 </template>

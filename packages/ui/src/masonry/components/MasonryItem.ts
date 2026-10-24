@@ -4,7 +4,7 @@
  * ⚠️ 为什么是 `.ts` 而不是 `.vue`（`COMPONENT-RULES.md` §2 的**条件 1**：
  *    「组件是**纯渲染函数型**内部件」）：
  * 它的全部工作是把**三个来源**的 class / style 按固定顺序合成，再渲染一个由外部
- * 传入的 `content` vnode（内容由父组件按 `item.children ?? itemRender(...)` 生成 ——
+ * 传入的 `content` vnode（内容由父组件按 `当前 #item 或 item.children 回退` 生成 ——
  * 那里才有泛型）。模板表达不了「按 key 查表 + 三源定序合并」，而 `v-bind` 一个
  * 无类型对象会丢掉绑定检查。理由同步登记在 `README.md` §3。
  *
@@ -68,7 +68,7 @@ export const MasonryItem = defineComponent({
       default: undefined,
     },
     /**
-     * 已渲染好的内容（`item.children ?? itemRender({...item, index, column})`）。
+     * 已渲染好的内容（`当前 #item 或 item.children 回退`）。
      *
      * ⚠️ 用 `type: null` 关掉运行期校验 —— `VNodeChild` 里既有 vnode 又有
      * 字符串 / 数组，没有合适的构造器（picker-panel 同判）。

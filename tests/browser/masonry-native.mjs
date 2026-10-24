@@ -91,9 +91,32 @@ try {
   assert.equal(await masonry.evaluate((current, old) => current === old, element), true);
   assert.equal(await input.inputValue(), 'kept state');
   assert.equal(await input.evaluate((current, old) => current === old, inputNode), true);
+  const scoped = page.locator('[data-slot-masonry]');
+  assert.deepEqual(await scoped.locator('.apollo-masonry-item').allTextContents(), [
+    'fallback',
+    'fallback',
+  ]);
+  await page.getByRole('button', { name: 'Toggle item slot', exact: true }).click();
+  const slotInput = scoped.getByRole('textbox', { name: 'Slot a', exact: true });
+  await slotInput.fill('slot state');
+  const slotNode = await slotInput.elementHandle();
+  await page.getByRole('button', { name: 'Replace same keys', exact: true }).click();
+  await page.waitForFunction(() =>
+    document.querySelector('[data-slot-masonry] b')?.textContent?.startsWith('BETA!:0:'),
+  );
+  assert.equal(await slotInput.inputValue(), 'slot state');
+  assert.equal(await slotInput.evaluate((current, old) => current === old, slotNode), true);
+  assert.match(await scoped.innerText(), /ALPHA!:1:/);
+  await page.getByRole('button', { name: 'Toggle empty slot', exact: true }).click();
+  assert.equal(await scoped.innerText(), '');
+  await page.getByRole('button', { name: 'Toggle item slot', exact: true }).click();
+  assert.deepEqual(await scoped.locator('.apollo-masonry-item').allTextContents(), [
+    'fallback',
+    'fallback',
+  ]);
   assert.deepEqual(errors, []);
   console.log(
-    `PASS F10 Masonry: native/current attrs/style/click, natural non-bubbling image load, explicit non-bubbling error, measured column changes without fresh, single layout callbacks and root/input identity; ${await browser.version()}; zero browser/Vue errors`,
+    `PASS F10/F11 Masonry: typed native slots, conditional/empty/removal, same-key replacement/reorder and input preservation; native/current attrs/style/click, natural non-bubbling image load, explicit non-bubbling error, measured column changes without fresh, single layout callbacks and root/input identity; ${await browser.version()}; zero browser/Vue errors`,
   );
 } finally {
   await browser?.close();

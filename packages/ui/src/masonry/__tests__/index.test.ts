@@ -22,7 +22,7 @@ import { defineComponent, h, nextTick } from 'vue';
 import { ConfigProvider } from '../../config-provider';
 import { DEFAULT_COLUMN_COUNT, resolveColumnCount } from '../hooks/column-count';
 import { computeItemPositions, type ItemHeightData } from '../hooks/positions';
-import type { MasonryItemRenderInfo } from '../interface';
+import type { MasonryItemSlotProps } from '../interface';
 import Masonry from '../Masonry.vue';
 
 const P = 'apollo-masonry';
@@ -215,14 +215,11 @@ const mountMasonry = async (props: Record<string, unknown> = {}) => {
     props: {
       columns: 3,
       items: buildItems(HEIGHTS),
-      /**
-       * ⚠️ 入参类型必须是 `MasonryItemRenderInfo<unknown>` —— 组件的 props 用
-       * **非泛型默认实例化**（`unknown`），而函数参数是**逆变**的：
-       * 写窄成 `{ data: number }` 会编译不过（TS2322）。要窄化就在函数体里 `Number(...)`。
-       */
-      itemRender: (info: MasonryItemRenderInfo<unknown>) =>
-        h(Bamboo, { height: Number(info.data), label: String(info.index + 1) }),
       ...props,
+    },
+    slots: {
+      item: (info: MasonryItemSlotProps) =>
+        h(Bamboo, { height: Number(info.data), label: String(info.index + 1) }),
     },
     attachTo: document.body,
   });
@@ -259,7 +256,7 @@ describe('Masonry（L2）', () => {
     w.unmount();
   });
 
-  it('每个 item 一个 `.apollo-masonry-item`，且**内容优先于 `itemRender`**', async () => {
+  it('每个 item 一个 `.apollo-masonry-item`，且 item 插槽优先于 children', async () => {
     const w = await mountMasonry({
       items: [
         { key: 'a', data: 1, children: h('div', { class: 'from-children' }) },
@@ -268,9 +265,9 @@ describe('Masonry（L2）', () => {
     });
 
     expect(w.findAll(`.${P}-item`)).toHaveLength(2);
-    // 第一个有 children ⇒ 不调 itemRender
-    expect(w.find('.from-children').exists()).toBe(true);
-    expect(w.findAll('.bamboo')).toHaveLength(1);
+    // 显式插槽覆盖两项，包括带 fallback children 的第一项
+    expect(w.find('.from-children').exists()).toBe(false);
+    expect(w.findAll('.bamboo')).toHaveLength(2);
     w.unmount();
   });
 

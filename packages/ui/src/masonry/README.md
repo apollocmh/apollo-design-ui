@@ -38,7 +38,7 @@
   它的全部工作是把**三个来源**的 class / style 按**固定顺序**合成
   （`{...motionStyle, ...mergedStyles.item, ...itemStyle}` /
   `[itemCls, mergedClassNames.item, motionClassName]`），再渲染一个由外部传入的
-  `content` vnode（内容由父组件按 `item.children ?? itemRender(...)` 生成 —— 泛型在那边）。
+  `content` vnode（内容由父组件按 `当前 #item 或 item.children 回退` 生成 —— 泛型在那边）。
   模板表达不了「三源定序合并 + 按 key 查表」，而 `v-bind` 一个无类型对象会丢掉绑定检查。
   上游 `MasonryItem.tsx` 也是同一形态。
 
@@ -66,3 +66,5 @@
    （`getBoundingClientRect`）。类型上保留该字段只为对齐上游的对外面。
 
 2026-10-24：根原生attrs/当前class和style、非冒泡图片事件测量已修复，见 [专项报告](../../../../docs/audit/2026-10-24-masonry-native-media-remediation.md)。itemRender模板迁移与首帧/SSR事项另行推进，未宣称整组件重新验收。
+
+2026-10-24：直接迁移为泛型原生 #item，修复同 key 数据替换、当前语义样式与插槽更新测量；见 [迁移说明](../../../../docs/migrations/masonry-slots.md) 与 [专项报告](../../../../docs/audit/2026-10-24-masonry-slots-remediation.md)。首帧/SSR仍继续整改，保留历史验收记录。

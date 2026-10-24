@@ -6,7 +6,7 @@
  *
  * ── 本文件钉的四类判据 ───────────────────────────────────────────────────────
  *
- * 1. **两个「展开」类型**（`MasonryItemRenderInfo` / `MasonryLayoutItem`）的
+ * 1. **两个「展开」类型**（`MasonryItemSlotProps` / `MasonryLayoutItem`）的
  *    `column` 是**非可选 `number`** —— 上游传的是 `{...item, index, column}`，
  *    即把解析出来的列号**覆盖**回 item 上。写窄（可选）会让消费者到处判空。
  * 2. **泛型 `ItemDataType` 的流向**：`MasonryItemType<T>['data']` 与
@@ -23,7 +23,7 @@ import type { Gutter } from '../../grid/interface';
 import type {
   MasonryEmits,
   MasonryExpose,
-  MasonryItemRenderInfo,
+  MasonryItemSlotProps,
   MasonryItemType,
   MasonryKey,
   MasonryLayoutItem,
@@ -31,6 +31,7 @@ import type {
   MasonryRef,
   MasonrySemanticClassNames,
   MasonrySemanticStyles,
+  MasonrySlots,
 } from '../interface';
 
 describe('Masonry · Props 类型', () => {
@@ -63,6 +64,7 @@ describe('Masonry · Props 类型', () => {
   });
 
   it('🚨 本组件**没有** `value` / `onChange` / `multiple`（无 v-model、无多选）', () => {
+    expectTypeOf<MasonryProps>().not.toHaveProperty('itemRender');
     expectTypeOf<MasonryProps>().not.toHaveProperty('value');
     expectTypeOf<MasonryProps>().not.toHaveProperty('onChange');
     expectTypeOf<MasonryProps>().not.toHaveProperty('multiple');
@@ -76,21 +78,21 @@ describe('Masonry · 泛型与「展开」类型', () => {
     expectTypeOf<MasonryItemType>().toMatchTypeOf<MasonryItemType<unknown>>();
   });
 
-  it('🚨 `MasonryItemRenderInfo` / `MasonryLayoutItem` 的 `column` 是**非可选 number**', () => {
-    expectTypeOf<MasonryItemRenderInfo<number>['column']>().toEqualTypeOf<number>();
+  it('🚨 `MasonryItemSlotProps` / `MasonryLayoutItem` 的 `column` 是**非可选 number**', () => {
+    expectTypeOf<MasonryItemSlotProps<number>['column']>().toEqualTypeOf<number>();
     expectTypeOf<MasonryLayoutItem<number>['column']>().toEqualTypeOf<number>();
     // `index` 只出现在 itemRender 的入参里
-    expectTypeOf<MasonryItemRenderInfo<number>['index']>().toEqualTypeOf<number>();
+    expectTypeOf<MasonryItemSlotProps<number>['index']>().toEqualTypeOf<number>();
     expectTypeOf<MasonryLayoutItem<number>>().not.toHaveProperty('index');
   });
 
   it('两个「展开」类型都保留了 item 本体（`key` / `data` 还在）', () => {
-    expectTypeOf<MasonryItemRenderInfo<string>['key']>().toEqualTypeOf<MasonryKey>();
+    expectTypeOf<MasonryItemSlotProps<string>['key']>().toEqualTypeOf<MasonryKey>();
     expectTypeOf<MasonryLayoutItem<string>['data']>().toEqualTypeOf<string>();
   });
 
   it('`itemRender` 的返回值是 `VNodeChild`', () => {
-    expectTypeOf<NonNullable<MasonryProps['itemRender']>>().returns.toEqualTypeOf<VNodeChild>();
+    expectTypeOf<NonNullable<MasonrySlots['item']>>().returns.toEqualTypeOf<VNodeChild>();
   });
 });
 

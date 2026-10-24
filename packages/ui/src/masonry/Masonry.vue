@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T = unknown">
 /**
  * Masonry —— 瀑布流。对应 antd 6.6.4 的 `es/masonry/`。
  *
@@ -29,6 +29,7 @@ import {
   normalizeStyle,
   onMounted,
   onScopeDispose,
+  onUpdated,
   ref,
   shallowRef,
   useAttrs,
@@ -52,6 +53,7 @@ import type {
   MasonryProps,
   MasonrySemanticClassNames,
   MasonrySemanticStyles,
+  MasonrySlots,
 } from './interface';
 
 defineOptions({
@@ -60,7 +62,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const props = withDefaults(defineProps<MasonryProps>(), {
+const props = withDefaults(defineProps<MasonryProps<T>>(), {
   // ⚠️ 可选项一律显式 `undefined`（Boolean prop 未传 ≠ false）
   prefixCls: undefined,
   classNames: undefined,
@@ -68,7 +70,6 @@ const props = withDefaults(defineProps<MasonryProps>(), {
   columns: undefined,
   fresh: undefined,
   items: undefined,
-  itemRender: undefined,
   onLayoutChange: undefined,
   /** 上游 `gutter = 0`。 */
   gutter: 0,
@@ -77,7 +78,8 @@ const props = withDefaults(defineProps<MasonryProps>(), {
 /** 根 `class` / `style` 是 Vue 原生 attrs（上游也把它们挂在根 div 上）。 */
 const attrs = useAttrs();
 
-const emit = defineEmits<MasonryEmits>();
+const emit = defineEmits<MasonryEmits<T>>();
+const slots = defineSlots<MasonrySlots<T>>();
 
 // ============================== 上下文 ==============================
 /** ConfigProvider 的 `components.masonry` 配置（本仓把 antd 的顶层键收在 `components` 下）。 */
@@ -101,7 +103,7 @@ const itemWidthVar = computed(() => `--${rootPrefixCls.value}-masonry-item-width
  * ⚠️ `shallowRef`：item 里的 `data` 是**用户对象**，深度代理既没必要也可能很贵
  * （`reactive` 会递归代理）。上游也只是 `setState(items)`。
  */
-const mergedItems = shallowRef<MasonryItemType[]>([]);
+const mergedItems = shallowRef<MasonryItemType<T>[]>([]);
 
 /**
  * 🚨 **`items` 的依赖探针**（Issue #52）。
@@ -122,7 +124,7 @@ const mergedItems = shallowRef<MasonryItemType[]>([]);
  *
  * ⚠️ 刻意**不用** `{ deep: true }`：`item.children` 是 `VNodeChild`（递归类型，且含
  *    `el` / `component` 等成环引用），深遍历既贵又危险。`children` / `data` 变化
- *    ⇒ 走 `fresh`（item 级 `ResizeObserver`），上游同判。
+ *    ⇒ 组件更新会重测量；持续尺寸变化可用 `fresh`。
  */
 const itemsSignature = (): string => {
   const items = props.items;
@@ -154,7 +156,7 @@ const syncItems = (): void => {
 onMounted(syncItems);
 
 // 见文件头第 1 条：`flush: 'post'` 复刻 `useEffect` 的「commit 之后」
-watch(itemsSignature, syncItems, { flush: 'post' });
+watch([() => props.items, itemsSignature], syncItems, { flush: 'post' });
 
 // ============================== 列数 / 间距 ==============================
 const screens = useBreakpoint();
@@ -194,17 +196,20 @@ const itemHeights = shallowRef<ItemHeightData[]>([]);
 
 /**
  * 量测所有 item 的高度（raf 去抖）。
- * 触发点四处（与上游 `collectItemSize` 的调用点一一对应）：
+ * 组件更新后及以下事件调度测量：
  * ① 挂载 / `mergedItems` / `columnCount` 变化；② 根上的 `ResizeObserver`；
  * ③ 根上的原生 load/error 捕获事件；
  * ④ `fresh` 时每个 item 自己的 `ResizeObserver`。
  */
 const collectItemSize = useDelay(() => {
-  const next = mergedItems.value.map<ItemHeightData>((item, index) => {
+  const next: ItemHeightData[] = [];
+  for (const [index, item] of mergedItems.value.entries()) {
     const itemKey = item.key ?? index;
-    const rect = itemEls.get(String(itemKey))?.getBoundingClientRect();
-    return [itemKey, rect ? rect.height : 0, item.column];
-  });
+    const el = itemEls.get(String(itemKey));
+    // Motion may not have mounted every node yet; never publish zero placeholders.
+    if (!el) return;
+    next.push([itemKey, el.getBoundingClientRect().height, item.column]);
+  }
 
   // 上游用 `isEqual` 去重：高度没变就不 setState（防重排循环）
   if (!isEqual(itemHeights.value, next)) {
@@ -227,6 +232,7 @@ const collectItemSize = useDelay(() => {
  * 本身就是一次变化 ⇒ 重渲染之后触发 ⇒ 那时 DOM 已就绪 ✓。
  */
 watch([mergedItems, columnCount], collectItemSize, { flush: 'post' });
+onUpdated(collectItemSize);
 
 // 根元素尺寸变化 ⇒ 重算（`ResizeObserver` 不产生 DOM，等价于上游包一层）
 const rootEl = ref<HTMLDivElement | null>(null);
@@ -269,10 +275,10 @@ const motionKeys = computed(() =>
  * 还要跑 —— 那时 `itemContent()` 必须还能拿到内容与布局。
  * 上游靠 `diffKeys` 保留的 key 对象达到同一效果（`MotionList` 现在也会把 key 对象的
  * 其余字段透传给插槽，但插槽载荷是无类型的，所以本仓在**父组件**按 key 查表，
- * 好处是 `itemRender` 的调用点是**有类型**的）。
+ * 好处是 item 槽的调用点是**有类型**的）。
  */
 interface MasonryRenderEntry {
-  item: MasonryItemType;
+  item: MasonryItemType<T>;
   itemIndex: number;
   layout: MasonryItemLayout;
 }
@@ -298,24 +304,23 @@ watch(
 const layoutOf = (itemKey: string): MasonryItemLayout =>
   entryByKey.get(itemKey)?.layout ?? DEFAULT_ITEM_LAYOUT;
 
-/** 按 key 渲染内容：`item.children ?? itemRender({...item, index, column})`。 */
+/** Evaluate the current native slot during render; an empty slot suppresses fallback. */
 const itemContent = (itemKey: string): VNodeChild => {
   const entry = entryByKey.get(itemKey);
   if (!entry) return undefined;
   const { item, itemIndex, layout } = entry;
-  return (
-    item.children ??
-    props.itemRender?.({
-      ...item,
-      index: itemIndex,
-      column: layout.columnIndex,
-    })
-  );
+  return slots.item
+    ? slots.item({ ...item, index: itemIndex, column: layout.columnIndex })
+    : item.children;
 };
+
+/** Snapshot native slot content in the owner render, then pass it through MotionList. */
+const renderKeys = () =>
+  motionKeys.value.map((entry) => ({ ...entry, content: itemContent(String(entry.key)) }));
 
 // ============================== onLayoutChange ==============================
 /** 已排布的 `[item, column]`（上游 `itemColumns`）。 */
-const itemColumns = shallowRef<readonly [MasonryItemType, number][]>([]);
+const itemColumns = shallowRef<readonly [MasonryItemType<T>, number][]>([]);
 
 /** 上游第一段 `useLayoutEffect`：全部有位置时写 `itemColumns`（`isEqual` 去重）。 */
 const collectLayout = (): void => {
@@ -323,7 +328,7 @@ const collectLayout = (): void => {
   const next = motionKeys.value;
   if (!next.every(({ position }) => position)) return;
 
-  const mapped = next.map<[MasonryItemType, number]>(({ item, position }) => [
+  const mapped = next.map<[MasonryItemType<T>, number]>(({ item, position }) => [
     item,
     position?.column ?? 0,
   ]);
@@ -342,10 +347,10 @@ watch(
     if (!props.onLayoutChange) return;
     if (!props.items || props.items.length !== itemColumns.value.length) return;
 
-    const sortInfo = itemColumns.value.map(([item, column]) => ({
+    const sortInfo: MasonryLayoutItem<T>[] = itemColumns.value.map(([item, column]) => ({
       ...item,
       column,
-    })) as MasonryLayoutItem[];
+    }));
     /**
      * ⚠️ **只 `emit`，不要额外再调 `props.onLayoutChange`。**
      *
@@ -363,23 +368,11 @@ watch(
 );
 
 // ============================== 语义化 ==============================
-/**
- * ⚠️ 与 Spin / Result 同法：`useMergeSemantic` 在 `setup` 期捕获 props 对象，
- * 所以这里传一个**身份稳定、内容会变**的普通对象（函数式变体读到的 `props.columns`
- * 必须是**解析后的列数** —— 上游传的是 `mergedProps = {...props, columns: columnCount}`）。
- */
-const semanticProps: MasonryProps = { ...props };
-
-watch(
-  [() => props.columns, columnCount],
-  () => {
-    Object.assign(semanticProps, props, { columns: columnCount.value });
-  },
-  { immediate: true, flush: 'sync' },
-);
+/** Semantic callbacks read the current props and resolved column count. */
+const semanticProps = computed<MasonryProps<T>>(() => ({ ...props, columns: columnCount.value }));
 
 const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-  MasonryProps,
+  MasonryProps<T>,
   MasonrySemanticClassNames,
   MasonrySemanticStyles
 >(
@@ -440,7 +433,7 @@ const itemResize = computed(() => (props.fresh ? collectItemSize : undefined));
     @error.capture="collectItemSize"
   >
     <MotionList
-      :keys="motionKeys"
+      :keys="renderKeys()"
       :component="false"
       :motion-name="`${prefixCls}-item-fade`"
       motion-appear
@@ -456,7 +449,7 @@ const itemResize = computed(() => (props.fresh ? collectItemSize : undefined));
           :motion-style="slot.style"
           :item-class-name="mergedClassNames.item"
           :item-style="mergedStyles.item"
-          :content="itemContent(slot.itemKey)"
+          :content="slot.content"
           :column-count="columnCount"
           :horizontal-gutter="horizontalGutter"
           :item-width-var="itemWidthVar"

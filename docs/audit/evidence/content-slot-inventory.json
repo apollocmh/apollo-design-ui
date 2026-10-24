@@ -13,14 +13,14 @@
       "data": 134,
       "component-content-candidate": 148,
       "deprecated": 53,
-      "internal": 77,
-      "render-function-candidate": 75,
+      "internal": 78,
+      "render-function-candidate": 74,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
-      "review": 211,
-      "skip": 130,
+      "review": 210,
+      "skip": 131,
       "implemented-verified": 12
     }
   },
@@ -7840,6 +7840,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/masonry/__tests__/index.test.ts",
+          "packages/ui/src/masonry/__tests__/item-slots.test.ts",
           "packages/ui/src/masonry/__tests__/semantic.test.ts"
         ]
       },
@@ -7848,33 +7849,46 @@
     },
     {
       "component": "masonry",
-      "owner": "MasonryProps",
-      "prop": "itemRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/masonry/interface.ts:129",
+      "owner": "MasonrySlots",
+      "prop": "item",
+      "category": "internal",
+      "source": "packages/ui/src/masonry/interface.ts:63",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/masonry/Masonry.vue"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/masonry/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/masonry/demo/basic.vue",
+          "packages/ui/src/masonry/demo/dynamic.vue",
+          "packages/ui/src/masonry/demo/fresh.vue",
+          "packages/ui/src/masonry/demo/image.vue",
+          "packages/ui/src/masonry/demo/responsive.vue",
+          "packages/ui/src/masonry/demo/style-class.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/masonry/__tests__/a11y.test.ts",
+          "packages/ui/src/masonry/__tests__/fixtures/MasonrySlots.vue",
           "packages/ui/src/masonry/__tests__/index.test.ts",
+          "packages/ui/src/masonry/__tests__/item-slots.test.ts",
           "packages/ui/src/masonry/__tests__/native-attrs.test.ts",
           "packages/ui/src/masonry/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "mentions",

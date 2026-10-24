@@ -18,7 +18,7 @@
  * - **没有 `v-model`**：上游没有 `value` / `onChange` ⇒ 无 C11 双发可言。
  * - **没有默认插槽**：`Masonry.tsx` 从不读 `props.children`
  *   （类型上的 `PropsWithChildren` 是 `forwardRef` 写法的顺带产物），
- *   内容一律走 `items` + `itemRender` / `item.children`。
+ *   内容走 `items` + `#item` / `item.children`。
  * - **没有 Component Token**：上游 `ComponentToken` 是**空接口**（registry `tokenCount: 0`）。
  */
 
@@ -43,26 +43,25 @@ export interface MasonryItemType<ItemDataType = unknown> {
   column?: number | undefined;
   /** @see 上面的说明：上游从不读它。 */
   height?: number | undefined;
-  /** 内容。🚨 **优先于 `itemRender`**（上游 `item.children ?? itemRender?.(…)`）。 */
+  /** Fallback content when the item slot is absent. */
   children?: VNodeChild | undefined;
-  /** 业务数据，原样透传给 `itemRender`。 */
+  /** 业务数据，原样透传给 `#item`。 */
   data: ItemDataType;
 }
 
-/**
- * `itemRender` 的入参（上游 `itemRender?: (itemInfo: MasonryItemType & { index }) => …`
- * 的展开形态）。
- *
- * ⚠️ `column` 是**最终列号**（`number`，非可选）—— 上游传的是
- * `{...item, index, column}`，即把解析出来的列号**覆盖**回 item 上。
- */
-export type MasonryItemRenderInfo<ItemDataType = unknown> = Omit<
+/** Current item scope. Column is provisional (0) before the first measurement. */
+export type MasonryItemSlotProps<ItemDataType = unknown> = Omit<
   MasonryItemType<ItemDataType>,
   'column'
 > & {
   index: number;
   column: number;
 };
+
+/** Native scoped slots. A present item slot overrides item.children, even when empty. */
+export interface MasonrySlots<ItemDataType = unknown> {
+  item?: (props: MasonryItemSlotProps<ItemDataType>) => VNodeChild;
+}
 
 /**
  * `onLayoutChange` 的载荷元素（上游 `onLayoutChange?: (sortInfo: { key; column }[]) => void`）。
@@ -125,8 +124,6 @@ export interface MasonryProps<ItemDataType = unknown> {
 
   // ---------------------------------------------------------------- 数据
   items?: MasonryItemType<ItemDataType>[] | undefined;
-  /** 单项渲染。🚨 优先级**低于** `item.children`。 */
-  itemRender?: ((itemInfo: MasonryItemRenderInfo<ItemDataType>) => VNodeChild) | undefined;
 
   // ---------------------------------------------------------------- 回调
   /**

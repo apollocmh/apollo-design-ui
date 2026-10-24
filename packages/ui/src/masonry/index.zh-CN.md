@@ -31,7 +31,6 @@ subtitle: 瀑布流
 | 参数 | 说明 | 类型 | 默认值 | 全局配置 |
 |---|---|---|---|---|
 | items | 数据源。每项 `{ key, data, column?, height?, children? }` | `MasonryItemType<T>[]` | — | × |
-| itemRender | 单项渲染。**优先级低于** `item.children` | `(info: MasonryItemRenderInfo<T>) => VNodeChild` | — | × |
 | columns | 列数。对象形态按断点解析（从大到小取第一个已配置的断点；都没命中 ⇒ `columns.xs ?? 1`） | `number \| Partial<Record<Breakpoint, number>>` | `3` | × |
 | gutter | 间距。复用 Grid 的 `Gutter`（数字 / 字符串 / 断点对象 / `[水平, 纵向]`） | `Gutter` | `0` | × |
 | fresh | 为**每个条目**各挂一个 `ResizeObserver`（内容高度会变时用）。⚠️ **不改变 DOM 结构** | `boolean` | `false` | × |
@@ -47,10 +46,10 @@ subtitle: 瀑布流
 | 字段 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | key | 唯一标识（数字会内部 `String()` 化） | `string \| number` | — |
-| data | 业务数据，原样透传给 `itemRender` | `T` | — |
+| data | 业务数据，泛型 T 由 items 推导并传给 #item | `T` | — |
 | column | 指定落在第几列（0 基）。超界会夹到最后一列 | `number` | 自动选最矮列 |
 | height | ⚠️ **上游声明了但从不读** —— 高度一律实测 | `number` | — |
-| children | 内容。**优先于** `itemRender` | `VNodeChild` | — |
+| children | 未提供 #item 时使用的回退内容 | `VNodeChild` | — |
 
 ### Events
 
@@ -66,7 +65,11 @@ subtitle: 瀑布流
 
 ### Slots
 
-**没有插槽** —— 上游从不读 `children`，内容一律走 `items` + `itemRender` / `item.children`。
+| 名称 | 参数 | 说明 |
+|---|---|---|
+| item | `MasonryItemSlotProps<T>`：`{ key, data, index, column, children?, height? }` | 当前条目；优先于 item.children，空槽也覆盖回退内容 |
+
+column 为当前测量列号，首次测量前暂为 0。条件插槽、同 key 替换数据和语义样式函数均读取当前输入；组件更新后会重测量。CSS 过渡或后代独立尺寸变化可用 fresh 持续观察。泛型也传给 layoutChange。旧 itemRender prop 已移除，见[迁移说明](../../../../docs/migrations/masonry-slots.md)。
 
 ## Theme
 
@@ -88,5 +91,5 @@ Masonry **没有 Component Token**（与 antd 逐字一致：`ComponentToken` �
 - **高度是实测的**：`item.height` 从不被读；首帧量测在 Vue 更新 DOM 之后。
 - **图片事件参与测量**：根节点以原生捕获监听 load/error；非冒泡的 img 事件也会触发去抖量测与重排，fresh=false 同样有效。一般内容的尺寸变化仍可用 fresh 的逐项 ResizeObserver。
 - **本组件零 ARIA**：容器与条目都是普通 `div`（无 `role`、无 `tabindex`）——
-  语义完全由 `itemRender` 的内容负责。这是上游的**有意**设计，已由 L5 钉住。
+  语义由 #item 内容和调用方的原生 attrs 提供。
 - **原生 attrs 透传**：id/title/事件以及字符串、对象、数组 class/style 按 Vue 规则路由到根节点。attrs 在 render 期读取，调用方 style 覆盖同名语义 root 样式，更新不替换根 DOM。默认不添加 role/ARIA，调用方可通过原生 attrs 提供必要语义。

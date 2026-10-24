@@ -84,8 +84,10 @@ it('F10: non-bubbling image load/error remeasure without fresh and notify each l
       columns: 2,
       fresh: false,
       items: [0, 1, 2].map((index) => ({ key: String(index), data: index })),
-      itemRender: ({ index }) => h('img', { 'data-row': index, alt: `Tile ${index}` }),
       onLayoutChange: layout,
+    },
+    slots: {
+      item: ({ index }: { index: number }) => h('img', { 'data-row': index, alt: `Tile ${index}` }),
     },
     attrs: { onLoadCapture: loadCapture, onLoad: loadBubble, onErrorCapture: errorCapture },
   });

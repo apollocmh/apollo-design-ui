@@ -59,9 +59,9 @@ const mountA11y = async (props: Record<string, unknown> = {}) => {
   const wrapper = mount(Masonry, {
     props: {
       items: buildItems(),
-      itemRender: ({ data }: { data: unknown }) => h(Bamboo, { height: Number(data) }),
       ...props,
     },
+    slots: { item: ({ data }: { data: unknown }) => h(Bamboo, { height: Number(data) }) },
     attachTo: document.body,
   });
   // 跑完「一拍延迟」：`onMounted` 里赋值 `mergedItems` ⇒ 下一拍重渲染出条目
@@ -97,7 +97,7 @@ describe('Masonry · role / ARIA 契约（L5）', () => {
     w.unmount();
   });
 
-  it('组件自身不产生任何 `aria-*`（语义完全由 `itemRender` 的内容负责）', async () => {
+  it('组件自身不产生任何 `aria-*`（语义完全由 `#item` 的内容负责）', async () => {
     const w = await mountA11y();
     const html = w.html();
 

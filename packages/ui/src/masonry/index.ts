@@ -16,7 +16,7 @@ export default Masonry;
 export type {
   MasonryEmits,
   MasonryExpose,
-  MasonryItemRenderInfo,
+  MasonryItemSlotProps,
   MasonryItemType,
   MasonryKey,
   MasonryLayoutItem,
@@ -24,6 +24,7 @@ export type {
   MasonryRef,
   MasonrySemanticClassNames,
   MasonrySemanticStyles,
+  MasonrySlots,
 } from './interface';
 
 // ---------------------------------------------------------------- 样式（G4 产物）

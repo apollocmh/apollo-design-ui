@@ -37,7 +37,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Masonry } from '../index';
-import type { MasonryItemRenderInfo, MasonryItemType, MasonryProps } from '../interface';
+import type { MasonryItemSlotProps, MasonryItemType, MasonryProps } from '../interface';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/masonry.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -54,7 +54,7 @@ function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeCh
 }
 
 /** 与 `tests/compat/baseline/masonry.mjs` 的 `renderBamboo` **逐字对应**。 */
-const renderBamboo = ({ data, index, column }: MasonryItemRenderInfo<unknown>): VNodeChild =>
+const renderBamboo = ({ data, index, column }: MasonryItemSlotProps<unknown>): VNodeChild =>
   h(
     'div',
     { class: 'bamboo', 'data-height': String(data), 'data-column': String(column) },
@@ -67,7 +67,7 @@ const buildItems = (heights = HEIGHTS) =>
   heights.map((height, index) => ({ key: `item-${index}`, data: height }));
 
 /** 所有用例都带 `itemRender` + `items`（与基线一致）。 */
-const base = { itemRender: renderBamboo, items: buildItems() };
+const base = { items: buildItems() };
 
 /**
  * 用例规格表：id → Vue 侧的 props / ctx。
@@ -113,7 +113,7 @@ const specs: Record<
   },
   // 两者都没有 ⇒ 条目是空的（`itemRender: undefined`）
   'masonry:item-no-content': {
-    props: { prefixCls: PREFIX, itemRender: undefined, items: [{ key: 'a', data: 10 }] },
+    props: { prefixCls: PREFIX, items: [{ key: 'a', data: 10 }] },
   },
 
   'masonry:class-names': {
@@ -195,7 +195,13 @@ domContractTest('Masonry', {
     if (!spec) {
       throw new Error(`[Masonry L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     }
-    const vnode = h(Masonry, spec.props as never);
+    const vnode = h(
+      Masonry,
+      spec.props,
+      id === 'masonry:item-no-content' || id === 'masonry:item-children'
+        ? {}
+        : { item: renderBamboo },
+    );
     const result: DomRenderResult = spec.ctx ? withConfig(spec.ctx, () => vnode) : vnode;
     return result;
   },

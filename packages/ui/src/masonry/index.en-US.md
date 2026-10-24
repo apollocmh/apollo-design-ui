@@ -33,7 +33,6 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 | Property | Description | Type | Default | Global Config |
 |---|---|---|---|---|
 | items | Data source. Each entry is `{ key, data, column?, height?, children? }` | `MasonryItemType<T>[]` | — | × |
-| itemRender | Renders a single item. **Lower priority than** `item.children` | `(info: MasonryItemRenderInfo<T>) => VNodeChild` | — | × |
 | columns | Column count. The object form resolves per breakpoint (first configured one, from largest to smallest; if none matches ⇒ `columns.xs ?? 1`) | `number \| Partial<Record<Breakpoint, number>>` | `3` | × |
 | gutter | Spacing. Reuses Grid's `Gutter` (number / string / breakpoint object / `[horizontal, vertical]`) | `Gutter` | `0` | × |
 | fresh | Attaches a `ResizeObserver` to **each item** (for content that resizes). ⚠️ Does **not** change the DOM structure | `boolean` | `false` | × |
@@ -49,10 +48,10 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 | Field | Description | Type | Default |
 |---|---|---|---|
 | key | Unique identifier (numbers are stringified internally) | `string \| number` | — |
-| data | Business data, passed through to `itemRender` | `T` | — |
+| data | Business data; T is inferred from items and passed to #item | `T` | — |
 | column | Pins the item to a column (0-based). Out-of-range values are clamped to the last column | `number` | the shortest column |
 | height | ⚠️ **Declared upstream but never read** — heights are always measured | `number` | — |
-| children | Content. **Takes priority over** `itemRender` | `VNodeChild` | — |
+| children | Fallback content when #item is absent | `VNodeChild` | — |
 
 ### Events
 
@@ -68,8 +67,11 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 
 ### Slots
 
-**None** — upstream never reads `children`; content always goes through
-`items` + `itemRender` / `item.children`.
+| Name | Parameters | Description |
+|---|---|---|
+| item | `MasonryItemSlotProps<T>`: `{ key, data, index, column, children?, height? }` | Current item; a present slot overrides item.children, including an empty slot |
+
+Column is the current measured column, provisionally 0 before measurement. Conditional slots, same-key data replacements and semantic callbacks read current inputs. Component updates schedule measurement; use fresh to observe transitions and independent descendant resizes. T also flows into layoutChange. The itemRender prop has been removed; see the [migration guide](../../../../docs/migrations/masonry-slots.md).
 
 ## Theme
 
@@ -94,6 +96,5 @@ It only consumes global aliases:
   after Vue has updated the DOM.
 - **Image events trigger measurement**: native root capture listeners receive non-bubbling img load/error events and schedule a measured layout pass, including when fresh is false. Use fresh for general per-item ResizeObserver updates.
 - **Zero ARIA**: both the container and the items are plain `div`s (no `role`, no
-  `tabindex`) — semantics are entirely up to `itemRender`. This is intentional upstream
-  and is pinned by L5.
+  `tabindex`); supply semantics through #item and native attrs.
 - **Native attrs are forwarded**: root id/title/events and Vue string/object/array class/style are read during render. Caller styles override matching semantic root styles; updates retain the root DOM. No role/ARIA is added by default; callers can provide appropriate native attrs.

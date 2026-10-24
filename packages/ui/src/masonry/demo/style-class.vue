@@ -5,36 +5,20 @@
 // ⚠️ antd 的 demo 用 `antd-style` 的 `createStaticStyles` 生成 CSS 类 ——
 // 本仓没有这个依赖 ⇒ 用**普通类名**替换（真正的样式在 `styles` 里给），
 // 缺口登记在 README §7。`Flex` / `Divider` / `Typography` 换成原生元素。
-import { Masonry, type MasonryItemRenderInfo, type MasonryProps } from '@apollo-design/ui';
-import { h } from 'vue';
+import { Masonry, type MasonryProps } from '@apollo-design/ui';
 
 const heights = [120, 80, 100, 60, 140, 90, 110, 70];
 
 const items = heights.map((height, index) => ({ key: `item-${index}`, data: height }));
 
-const renderItem = ({ data, index }: MasonryItemRenderInfo<unknown>) =>
-  h(
-    'div',
-    {
-      style: {
-        height: `${Number(data)}px`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#fff',
-      },
-    },
-    String(index + 1),
-  );
-
 /** 对象形态。 */
-const styles: MasonryProps['styles'] = {
+const styles: MasonryProps<number>['styles'] = {
   root: { borderRadius: 12, padding: 20, height: 260, backgroundColor: 'rgba(250,250,250,0.5)' },
   item: { border: '1px solid #ccc', borderRadius: 12, overflow: 'hidden' },
 };
 
 /** 函数形态：入参的 `props.columns` 是**解析后的列数**。 */
-const stylesFn: MasonryProps['styles'] = ({ props }) => ({
+const stylesFn: MasonryProps<number>['styles'] = ({ props }) => ({
   root: {
     border: `2px solid ${typeof props.columns === 'number' && props.columns > 2 ? '#1890ff' : '#52c41a'}`,
     padding: 20,
@@ -46,18 +30,30 @@ const stylesFn: MasonryProps['styles'] = ({ props }) => ({
 
 const classNames = { root: 'masonry-demo-root', item: 'masonry-demo-item' };
 
-const base = { items, itemRender: renderItem, columns: 4, gutter: 16 } as const;
+const base = { items, columns: 4, gutter: 16 } as const;
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 24px">
     <section>
       <h4 style="margin: 0 0 8px">classNames + styles（对象）</h4>
-      <Masonry v-bind="base" :class-names="classNames" :styles="styles" />
+      <Masonry v-bind="base" :class-names="classNames" :styles="styles">
+        <template #item="{ data, index }">
+          <div :style="{ height: `${data}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }">
+            {{ index + 1 }}
+          </div>
+        </template>
+      </Masonry>
     </section>
     <section>
       <h4 style="margin: 0 0 8px">styles（函数式，按解析后的 columns 分支）</h4>
-      <Masonry v-bind="base" :class-names="classNames" :styles="stylesFn" />
+      <Masonry v-bind="base" :class-names="classNames" :styles="stylesFn">
+        <template #item="{ data, index }">
+          <div :style="{ height: `${data}px`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }">
+            {{ index + 1 }}
+          </div>
+        </template>
+      </Masonry>
     </section>
   </div>
 </template>

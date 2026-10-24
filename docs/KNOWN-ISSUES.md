@@ -343,7 +343,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
 | Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
 | Timeline | 14/14 | F11；富内容模板项 |
-| Masonry | 6/6 | F10原生attrs/图片事件测量本批修复；F11泛型item槽与SSR首帧继续处理 |
+| Masonry | 6/6 | F10原生attrs/图片测量、F11泛型item槽及当前数据/语义样式已修复；SSR首帧继续处理 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
