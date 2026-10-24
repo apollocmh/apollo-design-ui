@@ -23,6 +23,8 @@ import { Table } from '@apollo-design/ui';
 
 ## 代码演示
 
+`drag-reorder` 使用现有 onRow/onHeaderCell 钩子组合原生行/列拖放，受控更新数据和列顺序，并提供键盘可用的移动/重置按钮；不增加 Table 内建拖拽 API。
+
 ## API
 
 ### Table

@@ -135,6 +135,103 @@ describe('DemoRenderer —— 加载 / 失败 / 重试', () => {
   });
 });
 
+describe('H04: DemoRenderer visibility loading', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  function observeDemo() {
+    const holder: { current: TestObserver | null } = { current: null };
+    class TestObserver implements IntersectionObserver {
+      readonly root = null;
+      readonly rootMargin = '200px 0px';
+      readonly thresholds = [0];
+      observe = vi.fn((_target: Element) => {});
+      unobserve = vi.fn((_target: Element) => {});
+      disconnect = vi.fn();
+      takeRecords = (): IntersectionObserverEntry[] => [];
+      constructor(private callback: IntersectionObserverCallback) {
+        holder.current = this;
+      }
+      notify(target: Element, visible: boolean) {
+        const rect = new DOMRectReadOnly();
+        this.callback(
+          [
+            {
+              target,
+              isIntersecting: visible,
+              intersectionRatio: visible ? 1 : 0,
+              time: 0,
+              boundingClientRect: rect,
+              intersectionRect: rect,
+              rootBounds: null,
+            },
+          ],
+          this,
+        );
+      }
+    }
+    vi.stubGlobal('IntersectionObserver', TestObserver);
+    return () => {
+      if (!holder.current) throw new Error('DemoRenderer did not create its observer');
+      return holder.current;
+    };
+  }
+
+  it('defers lookup until visible and reads the latest demo props', async () => {
+    const observer = observeDemo();
+    const wrapper = mount(DemoRenderer, { props: { component: 'button', demo: 'missing-before' } });
+    expect(wrapper.vm.state).toBe('loading');
+    await wrapper.setProps({ demo: 'missing-after' });
+    expect(wrapper.vm.state).toBe('loading');
+    observer().notify(wrapper.element, false);
+    expect(wrapper.vm.state).toBe('loading');
+    observer().notify(wrapper.element, true);
+    await flushPromises();
+    expect(wrapper.find('.demo-renderer-error').text()).toContain('missing-after');
+    expect(observer().disconnect).toHaveBeenCalledTimes(1);
+    observer().notify(wrapper.element, true);
+    expect(observer().disconnect).toHaveBeenCalledTimes(1);
+    wrapper.unmount();
+  });
+
+  it('disconnects on unmount and ignores queued visibility and module completions', async () => {
+    const observer = observeDemo();
+    const wrapper = mount(DemoRenderer, { props: { component: 'button', demo: 'missing-demo' } });
+    const element = wrapper.element;
+    const vm = wrapper.vm;
+    expect(vm.state).toBe('loading');
+    wrapper.unmount();
+    expect(observer().disconnect).toHaveBeenCalledTimes(1);
+    observer().notify(element, true);
+    await flushPromises();
+    expect(vm.state).toBe('loading');
+
+    const active = mount(DemoRenderer, { props: { component: 'button', demo: 'basic' } });
+    observer().notify(active.element, true);
+    const activeVm = active.vm;
+    expect(activeVm.state).toBe('loading');
+    active.unmount();
+    await flushPromises();
+    expect(activeVm.state).toBe('loading');
+  });
+
+  it('retains a loaded demo instance when it leaves and reenters the viewport', async () => {
+    const observer = observeDemo();
+    const wrapper = mount(DemoRenderer, {
+      props: { component: 'button', demo: 'basic' },
+      attachTo: document.body,
+    });
+    expect(wrapper.find('.apollo-btn').exists()).toBe(false);
+    observer().notify(wrapper.element, true);
+    await waitUntil(() => wrapper.find('.apollo-btn').exists());
+    const button = wrapper.find('.apollo-btn').element;
+    observer().notify(wrapper.element, false);
+    observer().notify(wrapper.element, true);
+    await nextTick();
+    expect(wrapper.find('.apollo-btn').element).toBe(button);
+    wrapper.unmount();
+  });
+});
+
 describe('DemoToolbar —— 复制反馈', () => {
   it('复制成功：按钮变成「✓ 复制成功」并上报 copied=true', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);

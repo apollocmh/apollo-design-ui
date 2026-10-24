@@ -12,8 +12,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
-
 import { comparePair, MAX_DIFF_RATIO } from '../../../tests/visual/compare.mjs';
+import { materializeDemos } from './materialize-demos.mjs';
 
 const BASE = process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui';
 const ROOT = path.resolve('tests/visual');
@@ -48,56 +48,50 @@ const context = await browser.newContext({
 const page = await context.newPage();
 const report = { generatedAt: new Date().toISOString(), pages: [] };
 
-for (const item of PAGES) {
-  await page.goto(`${BASE}/${item.url}`, { waitUntil: 'networkidle' });
-  if (item.theme === 'dark') {
-    await page.evaluate(() => {
-      document.documentElement.dataset.apolloTheme = 'dark';
-    });
-  } else {
-    await page.evaluate(() => {
-      delete document.documentElement.dataset.apolloTheme;
+try {
+  for (const item of PAGES) {
+    await page.goto(`${BASE}/${item.url}`, { waitUntil: 'networkidle' });
+    if (item.theme === 'dark') {
+      await page.evaluate(() => {
+        document.documentElement.dataset.apolloTheme = 'dark';
+      });
+    } else {
+      await page.evaluate(() => {
+        delete document.documentElement.dataset.apolloTheme;
+      });
+    }
+    await page.addStyleTag({ content: DISABLE_ANIM });
+    // Whole-page captures must enter each demo's viewport before waiting for its module.
+    await materializeDemos(page);
+    await page.waitForTimeout(300);
+
+    // 组件页与图标页共有的内容容器（图标页没有 `.component-page`）
+    const target = page.locator('.site-content').first();
+    const baselinePath = path.join(BASELINE, `${item.name}.png`);
+    const currentPath = path.join(CURRENT, `${item.name}.png`);
+    const diffPath = path.join(DIFF, `${item.name}.png`);
+    fs.mkdirSync(path.dirname(currentPath), { recursive: true });
+
+    if (UPDATE) {
+      fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
+      await target.screenshot({ path: baselinePath, animations: 'disabled' });
+      report.pages.push({ name: item.name, mode: 'update' });
+      continue;
+    }
+
+    await target.screenshot({ path: currentPath, animations: 'disabled' });
+    const result = await comparePair(baselinePath, currentPath, diffPath);
+    report.pages.push({
+      name: item.name,
+      verdict: result.verdict,
+      diffRatio: 'diffRatio' in result ? result.diffRatio : undefined,
+      reason: result.reason,
+      message: result.message,
     });
   }
-  await page.addStyleTag({ content: DISABLE_ANIM });
-  // 等示例真正渲染完（动态 import 的占位消失），再固定 300ms 让布局稳定。
-  await page
-    .waitForFunction(
-      () =>
-        document.querySelectorAll('.demo-renderer-loading').length === 0 &&
-        !document.querySelector('.page-loading'),
-      undefined,
-      { timeout: 30_000 },
-    )
-    .catch(() => {});
-  await page.waitForTimeout(300);
-
-  // 组件页与图标页共有的内容容器（图标页没有 `.component-page`）
-  const target = page.locator('.site-content').first();
-  const baselinePath = path.join(BASELINE, `${item.name}.png`);
-  const currentPath = path.join(CURRENT, `${item.name}.png`);
-  const diffPath = path.join(DIFF, `${item.name}.png`);
-  fs.mkdirSync(path.dirname(currentPath), { recursive: true });
-
-  if (UPDATE) {
-    fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
-    await target.screenshot({ path: baselinePath, animations: 'disabled' });
-    report.pages.push({ name: item.name, mode: 'update' });
-    continue;
-  }
-
-  await target.screenshot({ path: currentPath, animations: 'disabled' });
-  const result = await comparePair(baselinePath, currentPath, diffPath);
-  report.pages.push({
-    name: item.name,
-    verdict: result.verdict,
-    diffRatio: 'diffRatio' in result ? result.diffRatio : undefined,
-    reason: result.reason,
-    message: result.message,
-  });
+} finally {
+  await browser.close();
 }
-
-await browser.close();
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, `${JSON.stringify(report, null, 2)}\n`);
 

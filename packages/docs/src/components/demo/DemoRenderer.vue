@@ -4,7 +4,7 @@
  *
  * 加载策略（与 vite-ssg SSR 兼容的关键）：
  *  - `import.meta.glob` 是**懒加载**清单，构建期不执行任何示例模块；
- *  - 真正的模块加载只在客户端 onMounted 里发生 ⇒ 浏览器 API / window 访问
+ *  - 真正的模块加载在客户端进入视口附近后发生 ⇒ 浏览器 API / window 访问
  *    不会进入 SSR 渲染路径（这是旧 VitePress DemoPreview 的设计约束，原样继承）；
  *  - 加载失败（chunk 404 / 模块抛错）进入 error 态，可重试。
  *
@@ -14,7 +14,7 @@
 
 import { Button } from '@apollo-design/ui';
 import type { Component } from 'vue';
-import { onMounted, ref, shallowRef, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 import { useSiteLocale } from '../../composables/locale';
 import { createRequestGuard } from '../../composables/request-guard';
 
@@ -32,7 +32,18 @@ const Comp = shallowRef<Component | null>(null);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
 const { t } = useSiteLocale();
 const requestGuard = createRequestGuard();
+const target = shallowRef<HTMLElement | null>(null);
 let mounted = false;
+let activated = false;
+let observer: IntersectionObserver | null = null;
+
+function activate(): void {
+  if (!mounted || activated) return;
+  activated = true;
+  observer?.disconnect();
+  observer = null;
+  void load();
+}
 
 async function load(): Promise<void> {
   const token = requestGuard.next();
@@ -57,13 +68,30 @@ async function load(): Promise<void> {
 
 onMounted(() => {
   mounted = true;
-  void load();
+  if (typeof IntersectionObserver === 'undefined' || !target.value) {
+    activate();
+    return;
+  }
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) activate();
+    },
+    { rootMargin: '200px 0px' },
+  );
+  observer.observe(target.value);
+});
+
+onBeforeUnmount(() => {
+  mounted = false;
+  observer?.disconnect();
+  observer = null;
+  requestGuard.next();
 });
 
 watch(
   () => [props.component, props.demo, props.resetToken],
   () => {
-    if (mounted) void load();
+    if (mounted && activated) void load();
   },
 );
 
@@ -71,7 +99,7 @@ defineExpose({ state });
 </script>
 
 <template>
-  <div class="demo-renderer" :data-demo="`${component}-${demo}`">
+  <div ref="target" class="demo-renderer" :data-demo="`${component}-${demo}`">
     <template v-if="state === 'ready' && Comp">
       <component :is="Comp" />
     </template>

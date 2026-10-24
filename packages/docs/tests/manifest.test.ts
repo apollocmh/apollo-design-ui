@@ -155,8 +155,13 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（989 个）', () => {
-    expect(allDemos.length).toBe(989);
+  it('demo 全量可枚举（994 个）', () => {
+    expect(allDemos.length).toBe(994);
+    expect(allDemos.some((demo) => demo.id === 'date-picker-demo-input-attrs')).toBe(true);
+    expect(allDemos.some((demo) => demo.id === 'select-demo-conditional-options')).toBe(true);
+    expect(allDemos.some((demo) => demo.id === 'alert-demo-content-slots')).toBe(true);
+    expect(allDemos.some((demo) => demo.id === 'badge-demo-content-slots')).toBe(true);
+    expect(allDemos.some((demo) => demo.id === 'table-demo-drag-reorder')).toBe(true);
   });
 
   it('demo id 全局唯一 —— id 同时是锚点与搜索主键', () => {

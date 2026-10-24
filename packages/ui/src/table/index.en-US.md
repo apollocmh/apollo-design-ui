@@ -23,6 +23,8 @@ import { Table } from '@apollo-design/ui';
 
 ## API
 
+The `drag-reorder` example combines existing onRow/onHeaderCell hooks with native row/header drag events, controlled ordering, and keyboard-accessible move/reset buttons. Table gains no built-in drag API.
+
 ### Table
 
 | Property | Description | Type | Default |

@@ -12,6 +12,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { type SiteTextKey, useSiteLocale } from '../../composables/locale';
 import { siteManifest } from '../../composables/manifest';
+import { useSearch } from '../../composables/search';
 import { type ThemeMode, useThemeMode } from '../../composables/theme';
 import SearchModal from './SearchModal.vue';
 
@@ -38,7 +39,6 @@ async function useSearchOnce(): Promise<void> {
   if (searchIndexReady || searchIndexLoading) return;
   searchIndexLoading = true;
   try {
-    const { useSearch } = await import('../../composables/search');
     await useSearch().ensureIndex();
     searchIndexReady = true;
   } catch {
