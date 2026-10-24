@@ -40,6 +40,8 @@ See [`demo/`](./demo) (13 demos, covering the main antd scenarios.
 
 `useBreakpoint(refreshOnChange?, defaultScreens?)` — subscribes to breakpoints, returns hit state per breakpoint.
 
+refreshOnChange accepts a boolean or a boolean getter. False pauses publication and retains the last value; when a getter becomes true, the latest observed viewport is published immediately without a resize. Media changes are cached while paused. SSR preserves defaultScreens without matchMedia access; observation starts after mount and is disposed on unmount. Use `() => enabled.value` for a dynamic switch.
+
 ## Theme
 
 ### Component Token

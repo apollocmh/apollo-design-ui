@@ -149,7 +149,7 @@ export const Steps = defineComponent({
 
     // ---- orientation / titlePlacement ----
     // responsive 断点：antd useBreakpoint(responsive).xs；SSR/挂载前恒 false
-    const xs = useBreakpointXs(props.responsive !== false);
+    const xs = useBreakpointXs(() => props.responsive !== false);
     const mergedOrientation = computed<StepsProps['orientation']>(() => {
       const nextOrientation = props.orientation ?? props.direction;
       if (mergedType.value === 'panel') {
@@ -460,12 +460,9 @@ export const Steps = defineComponent({
   },
 });
 
-/** useBreakpoint 的 xs 切片（responsive=false ⇒ 恒 false，不订阅）。 */
-function useBreakpointXs(responsive: boolean): ComputedRef<boolean> {
-  if (!responsive) {
-    return computed(() => false);
-  }
-  const screens = useBreakpoint();
+/** Keep the current viewport available when responsive is enabled later. */
+function useBreakpointXs(responsive: () => boolean): ComputedRef<boolean> {
+  const screens = useBreakpoint(responsive);
   return computed(() => Boolean(screens.value?.xs));
 }
 

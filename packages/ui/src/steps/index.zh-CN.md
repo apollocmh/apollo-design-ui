@@ -62,3 +62,5 @@ subtitle: 步骤条
 ## 响应性
 
 items、current、initial 和 maxCount 变化后重新派生可见项、折叠和当前状态，点击动作使用当前索引。class/style 在 render 中读取，支持 Vue 字符串、对象和数组 style；同名 styles.root 仍按既有顺序覆盖原生 style。classNames/styles 支持文档化的函数形态，读取当前解析后的 props。Steps 没有 large 尺寸，全局 large 默认值按 medium 解析。
+
+responsive 可在挂载后由 false 切为 true，立即按当前视口调整方向，无需等待 resize；再关闭时恢复显式/默认方向。

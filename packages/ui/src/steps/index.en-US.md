@@ -63,3 +63,5 @@ See [`demo/`](./demo) (20 demos, covering the main antd scenarios.
 ## Reactivity
 
 Visible items, folding and active status update with items/current/initial/maxCount; click actions use the current index mapping. Native class/style are read during render and accept Vue string/object/array styles; matching styles.root values retain their existing priority. Documented classNames/styles functions receive current resolved props. Steps has no large variant, so a global large default resolves to medium.
+
+responsive can change from false to true after mount and immediately uses the current viewport, without waiting for a resize. Disabling it restores the explicit/default orientation.

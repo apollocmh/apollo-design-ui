@@ -222,6 +222,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Timeline 条目语义增量**：纯转换遗漏已声明的项级classNames/styles，三条回归先红后绿后补齐转发，验证当前DOM、样式优先级、原生槽共用/输入保持与SSR，见 [报告](audit/2026-10-25-timeline-item-semantics-remediation.md)。
 
+**2026-10-25 断点响应性增量**：Steps固化初始responsive选择，共享useBreakpoint恢复发布时遗漏当前快照；三条回归修前全失败。修复getter/暂停缓存与立即恢复，扩展SSR/卸载、Avatar数值转响应式尺寸、List静态转响应式列与输入保持，见 [专项报告](audit/2026-10-25-breakpoint-reactivity-remediation.md)。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

@@ -59,6 +59,8 @@ subtitle: 栅格
 
 `useBreakpoint(refreshOnChange?, defaultScreens?)` —— 订阅断点，返回各断点命中状态。
 
+refreshOnChange 接受布尔值或返回布尔值的 getter。false 暂停发布并保留上次值；getter 重新变为 true 时立即发布当前已观察到的视口，无需 resize。暂停期间仍缓存最新媒体状态。SSR保持 defaultScreens，不访问matchMedia，挂载后订阅并在卸载时清理。动态开关请传 `() => enabled.value`，不要传 setup 时读取的布尔快照。
+
 ## Theme
 
 ### Component Token

@@ -15,6 +15,7 @@ import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
 import TabsPopup from '../../../packages/ui/src/tabs/demo/popup-render.vue';
 import TimelineSlots from '../../../packages/ui/src/timeline/demo/native-slots.vue';
+import BreakpointNative from './BreakpointNative.vue';
 import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
@@ -77,6 +78,7 @@ const Demo = {
   'pagination-containers': PaginationContainers,
   'masonry-native': MasonryNative,
   'timeline-native': TimelineNative,
+  'breakpoint-native': BreakpointNative,
   'timeline-slots': TimelineSlots,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
