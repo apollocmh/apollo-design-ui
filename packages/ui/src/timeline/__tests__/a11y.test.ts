@@ -93,7 +93,7 @@ describe('Timeline · role / ARIA 契约（L5）', () => {
     expect(w.find('.apollo-timeline-item-content').text()).toBe('content A');
   });
 
-  it('`Timeline.Item` 是空壳 ⇒ 渲染成注释节点、不产生可聚焦元素', async () => {
+  it('legacy pending appends one non-interactive list item', async () => {
     const w = await mountA11y({ pending: 'pending' });
     // `pending` 追加的一项**没有** placement 类（上游同判）
     expect(w.findAll('li.apollo-timeline-item')).toHaveLength(3);

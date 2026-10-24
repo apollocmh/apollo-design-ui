@@ -4285,7 +4285,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。",
+      "notes": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25 F11/ADR0006/0007：原生itemTitle/itemContent/itemIcon单对象作用域槽，当前/空/移除/SSR与keyed输入保持；直接移除Timeline.Item/TimelineItemComponent/TimelineSlot空壳面及普通items误告警。迁移与证据见 docs/audit/2026-10-25-timeline-slots-remediation.md；新增原生Demo为15个，36张Apollo基线仍缺失。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

@@ -1784,23 +1784,24 @@ export { TimePicker, TimePickerWithRange, TimeRangePicker } from './time-picker'
 //    —— `dotSize` / `dotBg` 上游刻意不声明（`prepareComponentToken` 返回 `undefined`，
 //    保住 `var(custom, origin)` 的两层回退链）。
 //    ⚠️ 组件实现是 **`.ts`**（不是 `.vue`）：它没有自己的 DOM，模板价值为零。
-//    ⚠️ `Timeline.Item` 是**空壳**（上游同判）—— 只为「用了就发废弃告警」而存在。
+//    逐项内容使用 itemTitle/itemContent/itemIcon 单对象作用域槽。
 // ---------------------------------------------------------------------------
 export type {
   ItemPlacement,
   ItemPosition,
   TimelineColor,
   TimelineConfig,
+  TimelineItemSlotProps,
   TimelineItemType,
   TimelineMode,
   TimelineProps,
   TimelineRef,
   TimelineSemanticClassNames,
   TimelineSemanticStyles,
-  TimelineSlot,
+  TimelineSlots,
   UseItemsContext,
 } from './timeline';
-export { Timeline, TimelineItemComponent, useItems } from './timeline';
+export { Timeline, useItems } from './timeline';
 export { genTimelineStyle, genTokenDecls as genTimelineTokenDecls } from './timeline/style';
 export type { ComponentToken as TimelineComponentToken } from './timeline/style/token';
 export { prepareComponentToken as prepareTimelineComponentToken } from './timeline/style/token';

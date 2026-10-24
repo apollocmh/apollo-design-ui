@@ -18,11 +18,8 @@
  *
  * ── 与上游的两处**平台差异**（PLATFORM）───────────────────────────────────────
  *
- * - 🚨 **`children` 形态不支持**：上游是 `toArray(children).map(ele => ({...ele.props}))`
- *   —— 读的是 **React 元素的 props**。Vue 的插槽给的是 vnode，`vnode.props` 语义不同
- *   （class/style 被归一、事件名被转换）⇒ 本仓**只支持 `items`**。
- *   ⚠️ `Timeline.Item` 上游本就是**空壳**（`(() => {})`），所以「不支持」的可见后果只有
- *   「废弃告警仍然发」。
+ * - Native content slots are evaluated by Timeline during render after this
+ *   pure data conversion. No React element/children parsing or empty Item shell.
  * - **`pending` 的默认图标**：上游用 `@ant-design/icons` 的 `LoadingOutlined`；
  *   本仓用 `@apollo-design/icons` 的同名组件（形状一致，D14 家族）。
  */

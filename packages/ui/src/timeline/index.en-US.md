@@ -18,7 +18,7 @@ Vertical display timeline.
 
 ## Examples
 
-See [`demo/`](./demo) (**14**, mirroring antd's user-visible demos).
+See [`demo/`](./demo) (**15**, including native Vue item slots).
 
 | demo | Description |
 |---|---|
@@ -35,6 +35,7 @@ See [`demo/`](./demo) (**14**, mirroring antd's user-visible demos).
 | `title` | items with `title` ⇒ vertical **auto-alternates** |
 | `style-class` | the **function form** of `styles` + `classNames.root` |
 | `semantic` | **item-level** semantic slots (`items[i].styles`) |
+| `native-slots` | Native title/content/icon slots, conditional/empty content, reverse and input state |
 
 ⚠️ **1 antd demo is not ported** (see `README.md` §5): `component-token`
 (zero-runtime: tokens are build-time artifacts).
@@ -45,7 +46,7 @@ See [`demo/`](./demo) (**14**, mirroring antd's user-visible demos).
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| items | Item list (**the only content entry**) | `TimelineItemType[]` | — |
+| items | Item data; use the scoped slots below for rich content | `TimelineItemType[]` | — |
 | mode | Mode. `'left'` / `'right'` are **deprecated** ⇒ normalized to `'start'` / `'end'` | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'start'` |
 | orientation | Direction. `'horizontal'` adds `-horizontal` | `'horizontal' \| 'vertical'` | `'vertical'` |
 | titleSpan | Title column ratio: a **number** is in 24-grid units, a **string** is a CSS length | `number \| string` | — |
@@ -80,6 +81,16 @@ See [`demo/`](./demo) (**14**, mirroring antd's user-visible demos).
 
 Exposes `{ nativeElement }` — ⚠️ it is the **inner `Steps` root element**
 (`HTMLDivElement` or `HTMLOListElement`), because `Timeline` has no root DOM of its own.
+
+### Content slots
+
+| Name | Parameters | Description |
+|---|---|---|
+| itemTitle | `{ item, index }: TimelineItemSlotProps` | Item title |
+| itemContent | `{ item, index }: TimelineItemSlotProps` | Item body |
+| itemIcon | `{ item, index }: TimelineItemSlotProps` | Item icon |
+
+Item is the current original source item; index is its display index after reverse, including any legacy pending position. A present slot overrides matching data and alias fallback, even when empty; removing it restores data content. Slots also render during SSR. The synthetic legacy pending entry has no item scope. The empty Timeline.Item / TimelineItemComponent and unused TimelineSlot type have been removed directly; see the [migration guide](../../../../docs/migrations/timeline-item-slots.md).
 
 ## Theme
 

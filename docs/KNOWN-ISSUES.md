@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、499 行 owner/field 清单。内容候选 148、渲染候选 74、数据/配置 146、内部/废弃 131；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、502 行 owner/field 清单。内容候选 148、渲染候选 74、数据/配置 146、内部/废弃 134；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -217,6 +217,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **2026-10-24 Masonry 后续增量**：泛型 #item / 当前数据与语义样式已直接迁移，见 [插槽报告](audit/2026-10-24-masonry-slots-remediation.md)。继续复现并修复 React effect 造成的 SSR 空首屏：服务端输出实际内容、测量前正常网格流、水合保留条目/输入身份和值；见 [SSR报告](audit/2026-10-24-masonry-ssr-remediation.md)。前阶段待办由此更新，全库F11与视觉验收仍开放。
 
 **2026-10-25 Timeline/Steps 响应性增量**：Timeline items/布局/原生属性/ConfigProvider 与 Steps 当前步骤/折叠索引存在 setup 快照，新增回归后修为当前值派生；支持已文档化的语义函数与原生字符串style。详见 [专项报告](audit/2026-10-25-timeline-steps-reactivity-remediation.md)。Timeline富内容作用域槽仍另行处理，不以本批响应性修复宣称F11全部完成。
+
+**2026-10-25 Timeline 插槽增量**：新增单个 { item, index } 作用域的 itemTitle/itemContent/itemIcon，覆盖当前/空/条件/移除、反转显示索引和SSR，移除React空壳Item与无效默认槽类型，不留兼容层。见 [专项报告](audit/2026-10-25-timeline-slots-remediation.md) 与 [迁移说明](migrations/timeline-item-slots.md)。原生示例增至15个；不宣称全库F11或新视觉验收完成。
 
 ---
 
@@ -346,7 +348,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Breadcrumb | 10/10 | F11：itemRender 单对象槽和默认子组件更新/key已修复；24张Apollo基线缺失 |
 | Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
 | Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
-| Timeline | 14/14 | 当前items/布局/原生attrs/配置快照已修；F11富内容模板项继续处理 |
+| Timeline | 15/14 | 原生itemTitle/itemContent/itemIcon与当前作用域、空槽、SSR/输入保持已修；Apollo基线仍缺失 |
 | Masonry | 6/6 | F10原生attrs/图片测量、F11泛型item槽及当前数据/语义样式已修复；SSR内容/网格首屏/水合已专项修复，Apollo基线仍缺失 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |

@@ -6,7 +6,7 @@
  *
  * ── 本文件钉的六类判据 ───────────────────────────────────────────────────────
  *
- * 1. **本组件「没有」的东西**：`children` prop（Vue 侧是默认插槽，规则 C19）；
+ * 1. **本组件「没有」的东西**：`children` prop（内容由具名条目槽提供）；
  *    `Timeline` **没有** `emits`（全部回调都在 `items` 里或走 `attrs`）。
  * 2. **`ref` 的形状**：`{ nativeElement: HTMLElement | null }` —— ⚠️ 上游**没有 ref**
  *    （它没有自己的 DOM）；本仓取 **`Steps` 的根元素**，所以类型是 `HTMLElement` 而不是
@@ -15,18 +15,19 @@
  * 4. **语义化槽是 `Steps` 的十槽去掉 `itemSubtitle`**（用 `Omit`，与 D36 同判）。
  * 5. **`TimelineConfig` = `ComponentStyleConfig & Pick<TimelineProps,'classNames'|'styles'>`**
  *    （与 `card` 同判）。
- * 6. **复合组件**：`Timeline.Item` 在**类型层**可见（`Object.assign` 的交叉类型）。
+ * 6. **原生条目槽**：当前item/index类型与空壳具名导出移除。
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { StepsVariant } from '../../steps/interface';
-import type { Timeline, TimelineItemComponent } from '../index';
+import type { Timeline } from '../index';
 import type {
   ItemPlacement,
   ItemPosition,
   TimelineColor,
   TimelineConfig,
+  TimelineItemSlotProps,
   TimelineItemType,
   TimelineMode,
   TimelineProps,
@@ -34,7 +35,7 @@ import type {
   TimelineSemanticClassNames,
   TimelineSemanticStyles,
   TimelineSemanticValue,
-  TimelineSlot,
+  TimelineSlots,
 } from '../interface';
 
 describe('Timeline · Props 类型', () => {
@@ -111,18 +112,25 @@ describe('Timeline · Props 类型', () => {
     expectTypeOf<TimelineRef['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
   });
 
-  it('判据 1：`children` 不在 `TimelineProps` 里（Vue 侧是默认插槽）', () => {
+  it('native item scopes are typed; children is not a prop', () => {
     expectTypeOf<TimelineProps>().not.toHaveProperty('children');
-    expectTypeOf<TimelineSlot>().toEqualTypeOf<() => VNodeChild>();
+    expectTypeOf<NonNullable<TimelineSlots['itemContent']>>().parameters.toEqualTypeOf<
+      [props: TimelineItemSlotProps]
+    >();
+    expectTypeOf<NonNullable<TimelineSlots['itemTitle']>>().returns.toEqualTypeOf<VNodeChild>();
+    expectTypeOf<NonNullable<TimelineSlots['itemIcon']>>().returns.toEqualTypeOf<VNodeChild>();
   });
 });
 
-describe('Timeline · 复合组件（类型层）', () => {
-  it('判据 6：`Timeline.Item` 可见，且两个组件都带 `install`', () => {
-    expectTypeOf<typeof Timeline>().toHaveProperty('Item');
+describe('Timeline · native exports', () => {
+  it('installs Timeline and removes the empty Item export', () => {
     expectTypeOf<typeof Timeline>().toHaveProperty('install');
-    expectTypeOf<typeof TimelineItemComponent>().toHaveProperty('install');
-    expectTypeOf<(typeof Timeline)['Item']>().toEqualTypeOf<typeof TimelineItemComponent>();
+    // Vue's ComponentOptionsBase has an open index signature; static Item absence
+    // is checked at runtime, while named-export absence is checked below.
+    expectTypeOf<typeof import('../index')>().not.toHaveProperty('TimelineItemComponent');
+    expectTypeOf<keyof TimelineSlots>().toEqualTypeOf<'itemTitle' | 'itemContent' | 'itemIcon'>();
+    expectTypeOf<TimelineItemSlotProps['item']>().toEqualTypeOf<TimelineItemType>();
+    expectTypeOf<TimelineItemSlotProps['index']>().toEqualTypeOf<number>();
   });
 });
 

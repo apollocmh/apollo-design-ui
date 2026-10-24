@@ -1,31 +1,4 @@
-/**
- * Timeline 的类型面（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/timeline/Timeline.d.ts`。
- * **逐字段对齐**（名称、可选性、`@deprecated` 标记）。有意差异见
- * `packages/ui/src/timeline/README.md` §2 与 `docs/analysis/timeline.md` §5。
- *
- * ── 🚨 本组件的类型面**继承自 `Steps`** ────────────────────────────────────────
- *
- * `Timeline` 是 `Steps` 的薄壳（见分析 §0），所以它的三处类型直接复用 Steps 的：
- *
- * | 上游 | 本仓 |
- * |---|---|
- * | `StepsProps['variant']` | `StepsVariant` |
- * | `GetProp<StepsProps, 'items'>[number]['classNames']` | `StepItem['classNames']` |
- * | `StepsSemanticType` 去掉 `itemSubtitle` | `Omit<StepsSemanticClassNames, 'itemSubtitle'>` |
- *
- * ── 与 antd 类型面的三处**有据可查**的差异 ────────────────────────────────────
- *
- * 1. `children` 不在 `TimelineProps` 里（规则 C19）—— antd 的 `React.ReactNode` 在 Vue 侧
- *    是默认插槽 `TimelineSlot`。⚠️ 且本仓**不支持** `children` 形态的内容（上游读
- *    `element.props`，Vue 插槽没有这个语义）⇒ 见 README §2 的 PLATFORM 差异。
- * 2. `React.Key` → `string | number`；`React.ReactNode` → `VNodeChild`；
- *    `React.CSSProperties` → Vue 的 `CSSProperties`（规则 C16 / C18）。
- * 3. `TimelineRef.nativeElement` 声明为**可空**（上游无 ref —— 它没有自己的根 DOM；
- *    本仓取 **`Steps` 的根元素**，因此类型是 `HTMLElement | null`）。
- */
-
+/** Timeline data, native item slots and semantic style contracts. */
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 import type {
@@ -129,8 +102,7 @@ export type TimelineSemanticValue<T> = T | ((info: { props: TimelineProps }) => 
 /**
  * `Timeline` 的 props。逐字段对齐上游 `TimelineProps`。
  *
- * ⚠️ 上游的 `children?: React.ReactNode` 在 Vue 侧是**默认插槽**（`TimelineSlot`）；
- *    但本仓**不支持** children 形态的**内容**（见文件头差异 1）。
+ * Native itemTitle/itemContent/itemIcon slots customize item data.
  */
 export interface TimelineProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-timeline`。 */
@@ -149,7 +121,7 @@ export interface TimelineProps {
   /** 标题栏占比。数字 ⇒ 24 栅格的格数；字符串 ⇒ 百分比。 */
   titleSpan?: string | number;
 
-  /** 项列表。**唯一的内容入口**。 */
+  /** Item data; customize content with native scoped item slots. */
   items?: TimelineItemType[];
 
   /** @deprecated 请直接在 `items` 里加一项 pending 节点。 */
@@ -170,8 +142,18 @@ export interface TimelineRef {
   nativeElement: HTMLElement | null;
 }
 
-/** `Timeline` 的默认插槽。⚠️ 本仓**不支持** children 形态的内容（见文件头差异 1）。 */
-export type TimelineSlot = () => VNodeChild;
+/** Current source item and display index (after reverse, including pending position). */
+export interface TimelineItemSlotProps {
+  item: TimelineItemType;
+  index: number;
+}
+
+/** Present slots override matching item data, including empty slots. */
+export interface TimelineSlots {
+  itemTitle?: (props: TimelineItemSlotProps) => VNodeChild;
+  itemContent?: (props: TimelineItemSlotProps) => VNodeChild;
+  itemIcon?: (props: TimelineItemSlotProps) => VNodeChild;
+}
 
 // ---------------------------------------------------------------------------
 // ConfigProvider 上的配置

@@ -17,7 +17,7 @@ subtitle: 时间轴
 
 ## 代码演示
 
-见 [`demo/`](./demo)（**14 个**，覆盖 antd 的主要用户场景）。
+见 [`demo/`](./demo)（**15 个**，覆盖 antd 的主要用户场景）。
 
 | demo | 内容 |
 |---|---|
@@ -34,6 +34,7 @@ subtitle: 时间轴
 | `title` | 带 `title` 的项 ⇒ 纵向**自动交错** |
 | `style-class` | `styles` 的**函数形态** + `classNames.root` |
 | `semantic` | **项级**语义化槽（`items[i].styles`） |
+| `native-slots` | 原生标题/正文/图标槽，动态/空内容、反转与输入状态 |
 
 ⚠️ 与 antd 的 **1 个 demo 未移植**（缺口见 `README.md` §5）：`component-token`
 （零运行时架构下 token 是构建期产物）。
@@ -44,7 +45,7 @@ subtitle: 时间轴
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| items | 项列表（**唯一的内容入口**） | `TimelineItemType[]` | — |
+| items | 条目数据；富内容使用下列作用域槽 | `TimelineItemType[]` | — |
 | mode | 模式。`'left'` / `'right'` **已废弃** ⇒ 归一为 `'start'` / `'end'` | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'start'` |
 | orientation | 方向。`'horizontal'` 落 `-horizontal` 类 | `'horizontal' \| 'vertical'` | `'vertical'` |
 | titleSpan | 标题栏占比：**数字**按 24 栅格、**字符串**按 CSS 长度 | `number \| string` | — |
@@ -78,6 +79,16 @@ subtitle: 时间轴
 
 暴露 `{ nativeElement }` —— ⚠️ 取的是**内部 `Steps` 的根元素**（`HTMLDivElement` 或
 `HTMLOListElement`），因为 `Timeline` 没有自己的根 DOM。
+
+### 内容插槽
+
+| 名称 | 参数 | 说明 |
+|---|---|---|
+| itemTitle | `{ item, index }: TimelineItemSlotProps` | 条目标题 |
+| itemContent | `{ item, index }: TimelineItemSlotProps` | 条目正文 |
+| itemIcon | `{ item, index }: TimelineItemSlotProps` | 条目图标 |
+
+item 是当前原始数据项，index 是反转后的显示索引（含旧 pending 节点占位）。存在的槽覆盖对应 title/content/icon 数据及别名回退，空槽同样覆盖；移除槽恢复数据内容。SSR也调用这些槽。旧 pending 合成节点不提供item作用域。空壳 Timeline.Item / TimelineItemComponent 和无运行落点的 TimelineSlot 类型已直接移除，见[迁移说明](../../../../docs/migrations/timeline-item-slots.md)。
 
 ## Theme
 

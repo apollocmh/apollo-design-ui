@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 499,
+    "rows": 502,
     "byCategory": {
       "data": 134,
       "component-content-candidate": 148,
       "deprecated": 53,
-      "internal": 78,
+      "internal": 81,
       "render-function-candidate": 74,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
       "review": 210,
-      "skip": 131,
+      "skip": 134,
       "implemented-verified": 12
     }
   },
@@ -12901,7 +12901,7 @@
       "owner": "TimelineItemType",
       "prop": "children",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:93",
+      "source": "packages/ui/src/timeline/interface.ts:66",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -12929,7 +12929,7 @@
       "owner": "TimelineItemType",
       "prop": "content",
       "category": "data",
-      "source": "packages/ui/src/timeline/interface.ts:89",
+      "source": "packages/ui/src/timeline/interface.ts:62",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -12946,7 +12946,9 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
+          "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/index.test.ts",
+          "packages/ui/src/timeline/__tests__/item-slots.test.ts",
           "packages/ui/src/timeline/__tests__/native-reactivity.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
@@ -12959,7 +12961,7 @@
       "owner": "TimelineItemType",
       "prop": "dot",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:98",
+      "source": "packages/ui/src/timeline/interface.ts:71",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -12987,7 +12989,7 @@
       "owner": "TimelineItemType",
       "prop": "icon",
       "category": "data",
-      "source": "packages/ui/src/timeline/interface.ts:96",
+      "source": "packages/ui/src/timeline/interface.ts:69",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13003,6 +13005,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/timeline/__tests__/item-slots.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
       },
@@ -13014,7 +13017,7 @@
       "owner": "TimelineItemType",
       "prop": "label",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:91",
+      "source": "packages/ui/src/timeline/interface.ts:64",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13042,7 +13045,7 @@
       "owner": "TimelineItemType",
       "prop": "title",
       "category": "data",
-      "source": "packages/ui/src/timeline/interface.ts:87",
+      "source": "packages/ui/src/timeline/interface.ts:60",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13059,7 +13062,9 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
+          "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/index.test.ts",
+          "packages/ui/src/timeline/__tests__/item-slots.test.ts",
           "packages/ui/src/timeline/__tests__/native-reactivity.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
@@ -13072,7 +13077,7 @@
       "owner": "TimelineProps",
       "prop": "pending",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:156",
+      "source": "packages/ui/src/timeline/interface.ts:128",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13101,7 +13106,7 @@
       "owner": "TimelineProps",
       "prop": "pendingDot",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:158",
+      "source": "packages/ui/src/timeline/interface.ts:130",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13122,6 +13127,109 @@
       },
       "decision": "skip",
       "reason": "@deprecated 字段不新增内容通道。"
+    },
+    {
+      "component": "timeline",
+      "owner": "TimelineSlots",
+      "prop": "itemContent",
+      "category": "internal",
+      "source": "packages/ui/src/timeline/interface.ts:154",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/Timeline.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
+          "packages/ui/src/timeline/__tests__/item-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "timeline",
+      "owner": "TimelineSlots",
+      "prop": "itemIcon",
+      "category": "internal",
+      "source": "packages/ui/src/timeline/interface.ts:155",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/Timeline.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
+          "packages/ui/src/timeline/__tests__/item-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "timeline",
+      "owner": "TimelineSlots",
+      "prop": "itemTitle",
+      "category": "internal",
+      "source": "packages/ui/src/timeline/interface.ts:153",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/Timeline.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
+          "packages/ui/src/timeline/__tests__/item-slots.test.ts",
+          "packages/ui/src/timeline/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "tooltip",

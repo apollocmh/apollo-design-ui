@@ -14,7 +14,7 @@
 |---|---|---|---|
 | `Timeline.tsx` | 303 | `Timeline.ts` | **`.ts` 渲染函数**（见 §3） |
 | `useItems.tsx` | 99 | `use-items.ts` | 纯函数 |
-| `index.tsx` | 5 | `index.ts` | 导出 + `Timeline.Item`（**空壳**） |
+| `index.tsx` | 5 | `index.ts` | 原生Timeline与item槽类型导出（旧空壳已移除） |
 | `style/index.ts` | 275 | `style/index.ts` + `style/horizontal.ts` + `style/context.ts` | **38 条规则** |
 
 **产物交叉验证**（可复现）：
@@ -42,7 +42,7 @@ node tests/visual/debug/extract-timeline-css.mjs > /tmp/timeline-antd.css   # 44
 
 | # | 差异 | 分类 |
 |---|---|---|
-| 1 | 🚨 **`children` 形态不支持**：上游是 `toArray(children).map(ele => ({...ele.props}))` —— 读的是 **React 元素的 props**。Vue 的插槽给的是 **vnode**，`vnode.props` 语义不同（class/style 被归一、事件名被转换）⇒ 本仓**只支持 `items`**。⚠️ 可见后果只有「`Timeline.Item` 的废弃告警仍会发」（它上游本就是**空壳** `(() => {})`，不渲染任何东西）。 | PLATFORM |
+| 1 | 🚨 **`children` 形态不支持**：上游是 `toArray(children).map(ele => ({...ele.props}))` —— 读的是 **React 元素的 props**。Vue 的插槽给的是 **vnode**，`vnode.props` 语义不同（class/style 被归一、事件名被转换）⇒ 本仓**只支持 `items`**。当前支持 items + itemTitle/itemContent/itemIcon 原生作用域槽，空壳Item及误告警已直接移除。 | PLATFORM |
 | 2 | `Timeline` 上游**没有 ref**（没有自己的根 DOM）。本仓按「可观测的根元素」定义：`ref.nativeElement` = **`Steps` 的根元素**，类型是 `HTMLElement \| null`（`ol` / `div` 都可能）—— **不是** `HTMLDivElement`。 | PLATFORM |
 | 3 | 🚨 **`--{p}-cmp-steps-*` 这些内部变量的前缀是固定 `apollo`**，不随类前缀变。判据：`genStepsStyle(prefixCls)` **只重命名 `.apollo-steps` 选择器**（`cssText.split('.apollo-steps').join('.' + prefixCls + '-steps')`），**不重命名变量名** ⇒ 两个前缀的产物里它们都是 `--apollo-`。⚠️ 写成 `--${p}-cmp-steps-*` 会让 `ant` 变体引用到**不存在**的 `--ant-cmp-steps-*` ⇒ `var()` 全失效 + B7 报未声明变量（实测 3 个）。 | PLATFORM |
 | 4 | 🚨 **`variant` 的默认值是 `'outlined'`**（上游解构默认），**不是** `Steps` 自己的 `'filled'` ⇒ 必须显式声明，否则整份 Steps 样式分叉。 | INTENDED（跟随上游） |
@@ -51,7 +51,7 @@ node tests/visual/debug/extract-timeline-css.mjs > /tmp/timeline-antd.css   # 44
 | 7 | 🚨 **`classNames` / `styles` 的 prop 类型必须收 `[Object, Function]`** —— 两者都支持**函数形态**（`(info) => styles`）。只写 `Object` 会触发 `Invalid prop: type check failed` 的 Vue 告警（demo 冒烟抓到）。 | PLATFORM |
 | 8 | `devUseWarning` 上游是**三参** `(valid, 'deprecated', msg)`，本仓是**两参** `(valid, message)` + `.deprecated(valid, oldProp, newProp, message?)` ⇒ 调用点做了映射。 | PLATFORM |
 | 9 | 本仓无 `hashId`（D2）；`-css-var` 直接拼（D5 家族）。 | PLATFORM |
-| 10 | **`Timeline.Item` 是空壳**（上游同判）—— 只为「用了就发废弃告警」而存在。 | 与上游一致 |
+| 10 | **`Timeline.Item` / TimelineItemComponent 已移除**；模板内容走原生item槽，不保留空壳入口。 | ADR0007 |
 
 ## 3. `.vue` / `.ts` 选择
 
@@ -149,3 +149,5 @@ L7 里值得单说的三条：① `dotSize` / `dotBg` **被引用但刻意不声
 另有一次**跑 L6 前忘了重建 `ui`** ⇒ 0/36 全红 + 误导性的 `size-mismatch`（PITFALLS 312）。
 
 2026-10-25：当前数据/布局/原生attrs/ConfigProvider与语义函数响应性已专项修复，见 [报告](../../../../docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md)。保留历史验收记录；Apollo基线缺失，Timeline富内容模板事项继续推进。
+
+2026-10-25：原生itemTitle/itemContent/itemIcon及当前作用域、空槽/移除、SSR、keyed输入保持已接通；无兼容层。旧空壳Item/无效TimelineSlot类型已移除，普通items不再误告警。见 [迁移说明](../../../../docs/migrations/timeline-item-slots.md) 与 [专项报告](../../../../docs/audit/2026-10-25-timeline-slots-remediation.md)。Demo增至15，保留历史验收数据。

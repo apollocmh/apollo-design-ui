@@ -15,7 +15,7 @@
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
-import { Timeline, TimelineItemComponent } from '../index';
+import { Timeline } from '../index';
 import type { TimelineItemType } from '../interface';
 
 let errorSpy: ReturnType<typeof vi.spyOn>;
@@ -168,21 +168,17 @@ describe('Timeline · L1 titleSpan（判据 6）', () => {
 });
 
 describe('Timeline · L2 复合组件与告警', () => {
-  it('`Timeline.Item` 是**空壳**（上游同判）—— 静态属性与具名导出同一对象', () => {
-    expect(Timeline.Item).toBe(TimelineItemComponent);
-    // ⚠️ 渲染函数返回 `null` ⇒ Vue 渲染成**注释节点**；VTU 的 `html()` 对它返回空串
-    const w = mount(TimelineItemComponent, { slots: { default: () => 'x' } });
-    expect(w.html()).toBe('');
-    expect(w.text()).toBe('');
+  it('does not expose the legacy empty Item component', () => {
+    expect(Timeline).not.toHaveProperty('Item');
   });
 
-  it('🚨 废弃告警：`Timeline.Item` / `pending` / `pendingDot` / `mode=left|right`', async () => {
+  it('🚨 废弃告警：normal items stay silent; legacy mode still warns', async () => {
     const hits = () =>
       errorSpy.mock.calls
         .map((c: unknown[]) => String(c[0]))
         .filter((m: string) => m.includes('deprecated'));
     mountTimeline();
-    expect(hits().length).toBeGreaterThan(0);
+    expect(hits()).toHaveLength(0);
 
     errorSpy.mockClear();
     mountTimeline({ mode: 'left' });

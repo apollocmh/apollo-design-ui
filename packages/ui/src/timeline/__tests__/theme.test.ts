@@ -100,15 +100,15 @@ const referencedNames = (source: string, ns: string): Set<string> =>
 // ── 四态渲染（light / dark / compact / token-override）────────────────────────
 themeTest('Timeline', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 14,
-  // 🚨 与 `demo.test.ts` 同一豁免：上游把 `Timeline.Item` / `pending` / `pendingDot` /
-  //    `mode=left|right` 与四个项级字段都废弃了 ⇒ 挂载即发多条 `console.error`。
+  expectCount: 15,
+  // 🚨 与 `demo.test.ts` 同一豁免：上游把 `pending` / `pendingDot` /
+  //    `mode=left|right` 与四个项级字段都废弃了 ⇒ 使用这些数据别名时发出 `console.error`。
   //    这是**有意的**（`pending-legacy` demo 的存在就是为了演示废弃 API）。
   allow: [
     {
       match: 'is deprecated',
       reason:
-        'D91 家族：上游废弃了 `Timeline.Item` / `pending` / `pendingDot` / `mode=left|right` 与四个项级字段；本仓保留同款告警，demo 用到即有。',
+        'D91 家族：上游废弃了 `pending` / `pendingDot` / `mode=left|right` 与四个项级字段；本仓保留同款告警，demo 用到即有。',
     },
   ],
 });

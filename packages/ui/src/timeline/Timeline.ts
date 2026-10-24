@@ -1,6 +1,6 @@
 /** Timeline renders Steps as ol/li. Keep data, layout, providers and semantic
  * mappings reactive; read native attrs during render and preserve keyed content. */
-import { devUseWarning, getElement } from '@apollo-design/utils';
+import { devUseWarning, getElement, isEmptyVNode } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -10,6 +10,7 @@ import {
   normalizeStyle,
   type PropType,
   provide,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
 } from 'vue';
@@ -24,6 +25,7 @@ import type {
   TimelineProps,
   TimelineSemanticClassNames,
   TimelineSemanticStyles,
+  TimelineSlots,
 } from './interface';
 import { useItems } from './use-items';
 
@@ -80,7 +82,8 @@ const Timeline = defineComponent({
     pendingDot: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     reverse: { type: Boolean, default: false },
   },
-  setup(props, { attrs, expose }) {
+  slots: Object as SlotsType<TimelineSlots>,
+  setup(props, { attrs, expose, slots }) {
     const config = useComponentConfig<TimelineConfig>('timeline');
 
     // ---- 判据 1 / 2 / 3 / 4 ----
@@ -99,19 +102,12 @@ const Timeline = defineComponent({
       props.reverse ? [...rawItems.value].reverse() : rawItems.value,
     );
     const orientation = computed(() => props.orientation ?? 'vertical');
-    const layoutAlternate = computed(
-      () =>
-        mergedMode.value === 'alternate' ||
-        (orientation.value === 'vertical' && mergedItems.value.some((item) => item.title)),
-    );
-
     // ---- 判据 9：废弃告警（非生产环境）----
     if (import.meta.env?.DEV ?? true) {
       const warning = devUseWarning('Timeline');
       const pendingMessage = 'You can create a `item` as pending node directly.';
       // ⚠️ 本仓的 `deprecated` 是四参 `(valid, oldProp, newProp, message?)`；
       //    上游的三参 `(valid, 'deprecated', message)` 形态由它承载。
-      warning.deprecated(props.items === undefined, 'Timeline.Item', 'items');
       warning.deprecated(!props.pending, 'pending', 'items', pendingMessage);
       warning.deprecated(!props.pendingDot, 'pendingDot', 'items', pendingMessage);
       warning.deprecated(
@@ -154,13 +150,13 @@ const Timeline = defineComponent({
     });
 
     // Native attrs must be read in render; useAttrs is not a computed dependency.
-    const classString = () =>
+    const classString = (alternate: boolean) =>
       normalizeClass([
         prefixCls.value,
         config.className,
         attrs.class,
         orientation.value === 'horizontal' && `${prefixCls.value}-horizontal`,
-        layoutAlternate.value && `${prefixCls.value}-layout-alternate`,
+        alternate && `${prefixCls.value}-layout-alternate`,
         config.direction === 'rtl' && `${prefixCls.value}-rtl`,
         `${prefixCls.value}-css-var`,
       ]);
@@ -186,6 +182,23 @@ const Timeline = defineComponent({
     });
 
     return () => {
+      // Snapshot native slots in their owner render, once per field and item.
+      const items = mergedItems.value.map((entry, index) => {
+        const sourceIndex = props.reverse ? mergedItems.value.length - 1 - index : index;
+        const item = props.items?.[sourceIndex];
+        // The synthetic legacy pending entry has no source item or item-slot scope.
+        if (!item) return entry;
+        const scope = { item, index };
+        return {
+          ...entry,
+          title: slots.itemTitle ? slots.itemTitle(scope) : entry.title,
+          content: slots.itemContent ? slots.itemContent(scope) : entry.content,
+          icon: slots.itemIcon ? slots.itemIcon(scope) : entry.icon,
+        };
+      });
+      const alternate =
+        mergedMode.value === 'alternate' ||
+        (orientation.value === 'vertical' && items.some((item) => !isEmptyVNode(item.title)));
       const nativeRootStyle = normalizeStyle([mergedStyles.value.root, attrs.style]);
       const styles: TimelineSemanticStyles = {
         ...mergedStyles.value,
@@ -202,7 +215,7 @@ const Timeline = defineComponent({
         //    `attrs.class`，并把 `class` 从 restAttrs 里摘掉）⇒ 这里必须传 **`class`**；
         //    继续传 `className` 会落进 attrs 变成 `classname` 属性、类名静默丢失。
         //    （2026-10-06 迁移 steps 时同步改的 —— 见 registry 里 steps 的迁移提示。）
-        class: classString(),
+        class: classString(alternate),
         // ⚠️ 只放 `titleSpan` 的内联变量 —— **用户的 `style` 走 `styles.root`**（见上）
         style: stepStyle.value,
         // 判据 5：八键映射 + 上下文 / 用户的语义化槽（**三路合并**）
@@ -212,20 +225,11 @@ const Timeline = defineComponent({
         orientation: orientation.value,
         // 判据 3 / 4
         type: 'dot',
-        items: mergedItems.value,
-        current: mergedItems.value.length - 1,
+        items,
+        current: items.length - 1,
       });
     };
   },
 });
 
-/** `Timeline.Item` 是**空壳**（判据 10）—— 只为「用了就发废弃告警」而存在。 */
-const TimelineItem = defineComponent({
-  name: 'ATimelineItem',
-  setup() {
-    return () => null;
-  },
-});
-
 export default Timeline;
-export { TimelineItem };

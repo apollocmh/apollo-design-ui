@@ -23,6 +23,18 @@ try {
     path.join(root, 'tests/browser/fixtures/TimelineNative.vue'),
     path.join(temp, 'Consumer.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/timeline/demo/native-slots.vue'),
+    path.join(temp, 'Slots.vue'),
+  );
+  const exactSlots = fs.readFileSync(
+    path.join(root, 'packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ExactSlots.vue'),
+    exactSlots.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
     JSON.stringify(
@@ -55,7 +67,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Timeline declarations: current Timeline/Steps props and typed semantic functions; no test fixtures shipped',
+    'PASS published Timeline declarations: current Timeline/Steps props, typed semantic functions and all three native item slots; no test fixtures shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

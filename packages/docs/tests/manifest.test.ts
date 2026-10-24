@@ -155,8 +155,9 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（997 个）', () => {
-    expect(allDemos.length).toBe(997);
+  it('demo 全量可枚举（998 个）', () => {
+    expect(allDemos.length).toBe(998);
+    expect(allDemos.some((demo) => demo.id === 'timeline-demo-native-slots')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'pagination-demo-native-slots')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'breadcrumb-demo-scoped-item')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'tabs-demo-popup-render')).toBe(true);
