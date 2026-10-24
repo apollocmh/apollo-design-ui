@@ -4485,7 +4485,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": null,
+      "layerNotes": "2026-10-24 F11：renderItem 直接迁移为泛型 #item，接通 header/footer/loadMore 插槽并移除继承的整组件废弃警告。证据 docs/audit/2026-10-24-list-slots-remediation.md；Item/Meta 内容字段、根 extra 与拖拽示例继续审查，不宣称完整重新验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

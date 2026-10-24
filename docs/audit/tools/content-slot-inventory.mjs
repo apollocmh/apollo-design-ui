@@ -8,6 +8,9 @@ import { parse } from 'vue/compiler-sfc';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const VERIFIED = {
+  'list:ListProps:header': 'docs/audit/2026-10-24-list-slots-remediation.md',
+  'list:ListProps:footer': 'docs/audit/2026-10-24-list-slots-remediation.md',
+  'list:ListProps:loadMore': 'docs/audit/2026-10-24-list-slots-remediation.md',
   'badge:BadgeProps:count': 'docs/audit/2026-10-24-badge-slots-remediation.md',
   'badge:BadgeProps:text': 'docs/audit/2026-10-24-badge-slots-remediation.md',
   'input-number:InputNumberProps:prefix': 'docs/audit/2026-10-23-vue-reactivity-remediation.md',

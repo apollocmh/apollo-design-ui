@@ -177,13 +177,13 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 修前只归一旧事件拼写，未接受 Vue 模板事件键；`className` 保留。Vue 在部分原生 DOM 上恰好能借 `el.className` 生效，但不代表可以视作原生 Vue class 合并策略。**不能直接把底层 utils 的 `className` 改为 `class`**，因为它是 rc 契约级函数，且下游消费点另有 attrs 合并逻辑。
 
-**当前处理**：已新增独立 DOM 目标 helper，并保留 pickAttrs 的 className 数据契约。复现并修复 ColorPicker 的 @mousedown、Rate 的 @keydown 与字符串 style SSR；SSR class、Tree 唯一/动态 class 与 ColorPicker attrs-only 更新通过，未臆造这些路径的故障。原生事件选项及两种键同时注册的单次发送也有覆盖。以下为原调查方案。
+**当前处理**：已新增独立 DOM 目标 helper，并保留 pickAttrs 的 className 数据契约。复现并修复 ColorPicker 的 @mousedown、Rate 的 @keydown 与字符串 style SSR；SSR class、Tree 唯一/动态 class 与 ColorPicker attrs-only 更新通过，未臆造这些路径的故障。原生事件选项及两种键同时注册的单次发送也有覆盖。List 根 id、字符串 style 与 attrs-only 更新已在 [F11 List 批次](audit/2026-10-24-list-slots-remediation.md) 追加复现和修复。以下为原调查方案。
 
 **修法（修前）**：为真正的 Vue DOM 目标增加独立 `toVueDomAttrs` / `mergeDomAttrs` 适配层，归一 `className→class` 并以 `mergeProps` 保留内部类、外部 class、事件函数链；`pickAttrs` 的既有兼容路径继续保持。按 ColorPicker / Rate / Tree 现有消费点逐个迁移，验证不重复 class、无事件双调、SSR DOM 与已有 L4 一致。是否全局替换见 D01。
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、486 行 owner/field 清单。内容候选 146、渲染候选 81、数据/配置 152、内部/废弃 107；只将四个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、490 行 owner/field 清单。内容候选 146、渲染候选 80、数据/配置 152、内部/废弃 112；只将七个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -196,6 +196,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **重算脚本要求**：从 `packages/ui/src/**/interface.ts` 收集字段定义，排除数据项/内部/deprecated；对应到实际组件运行时判断 `slots.xxx` / `<slot name>` / `defineSlots`，**类型声明和 Demo 出现不足以证明运行时支持**。输出每行 `{component, prop, category, slotRuntime, slotType, slotDemo, slotTest, decision, reason}`。优先检查 Badge、InputNumber、Transfer、Image、Typography、Pagination、Timeline、Tabs、Descriptions、Breadcrumb、List、Mentions、Drawer；**Steps/Switch/Alert/Collapse 等已存在部分 slot 消费路径，不要统一报“完全没有 slot”**。
 
 **门禁**：能区分 slot“不传”、slot“传了但为空”、slot“异步出现”，能保证 `#foo` 优先级，所有 slot props 可通过 `vue-tsc` 推断类型，Vue SFC 消费 Demo 真正可运行。
+
+**2026-10-24 List 增量**：`renderItem` 已直接移除，12 个示例与单元/DOM/axe/视觉调用迁为泛型 `#item`；接通原先被忽略的 `header` / `footer` / `loadMore`，按 slot 存在性优先，空 slot 不回退。删除照搬上游的整组件废弃警告及 Demo 告警豁免；修复根 id 未透传、字符串 style 展开与 attrs-only 更新缓存。List 运行回归、SSR 与实际 Vue 模板类型推断等证据见 [List 报告](audit/2026-10-24-list-slots-remediation.md)；Item/Meta 其他内容字段、根 `extra` 无渲染落点和 List 拖拽示例继续开放，未宣称全库 F11 完成。
 
 ---
 
@@ -320,7 +322,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Timeline | 14/14 | F11；富内容模板项 |
 | Masonry | 6/6 | —；动态移除元素时 motion 数据 |
 | Anchor | 12/12 | —；滚动观察器/动态路由 |
-| List | 12/16 | F11；列表项 scoped slot / 拖拽排序示例 |
+| List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta、根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
 | Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
 | Mentions | 16/16 | F11；dropdown item scoped slot |
