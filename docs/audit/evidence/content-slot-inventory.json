@@ -13,14 +13,14 @@
       "data": 140,
       "component-content-candidate": 147,
       "deprecated": 53,
-      "internal": 70,
-      "render-function-candidate": 79,
+      "internal": 71,
+      "render-function-candidate": 78,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 152,
-      "review": 214,
-      "skip": 123,
+      "review": 213,
+      "skip": 124,
       "implemented-verified": 12
     }
   },
@@ -837,7 +837,7 @@
       "owner": "BreadcrumbItemProps",
       "prop": "dropdownIcon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:219",
+      "source": "packages/ui/src/breadcrumb/interface.ts:213",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -864,7 +864,7 @@
       "owner": "BreadcrumbItemProps",
       "prop": "separator",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:224",
+      "source": "packages/ui/src/breadcrumb/interface.ts:218",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -893,7 +893,7 @@
       "owner": "BreadcrumbItemSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:230",
+      "source": "packages/ui/src/breadcrumb/interface.ts:224",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -917,7 +917,8 @@
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
-          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -946,7 +947,8 @@
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
-          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -1003,7 +1005,8 @@
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
-          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -1015,33 +1018,6 @@
       "prop": "dropdownIcon",
       "category": "component-content-candidate",
       "source": "packages/ui/src/breadcrumb/interface.ts:162",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
-    },
-    {
-      "component": "breadcrumb",
-      "owner": "BreadcrumbProps",
-      "prop": "itemRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:171",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -1097,7 +1073,7 @@
       "owner": "BreadcrumbSeparatorSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:252",
+      "source": "packages/ui/src/breadcrumb/interface.ts:246",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1121,7 +1097,8 @@
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
-          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",
@@ -1161,7 +1138,7 @@
       "owner": "BreadcrumbSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:191",
+      "source": "packages/ui/src/breadcrumb/interface.ts:184",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1185,7 +1162,42 @@
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
-          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbSlots",
+      "prop": "itemRender",
+      "category": "internal",
+      "source": "packages/ui/src/breadcrumb/interface.ts:185",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/scoped-item.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
         ]
       },
       "decision": "skip",

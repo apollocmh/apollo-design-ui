@@ -4087,7 +4087,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": null,
-      "layerNotes": null,
+      "layerNotes": " 2026-10-24 F11/ADR0006/0007：itemRender函数已移除，改为具名对象槽，保留逐项paths/href；默认子组件按Vue渲染/key更新且无整组件弃用告警。6文件94条runtime通过、10个Demo；当前类型/浏览器/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md，Apollo24张批准基线缺失，不升级历史视觉状态。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

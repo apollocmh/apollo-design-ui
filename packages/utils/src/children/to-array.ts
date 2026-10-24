@@ -39,7 +39,15 @@
  * `keepEmpty` 的语义对应：保留空占位（Comment vnode / 补出来的占位）。
  */
 
-import { Comment, createTextVNode, createVNode, Fragment, isVNode, type VNode } from 'vue';
+import {
+  Comment,
+  createTextVNode,
+  createVNode,
+  Fragment,
+  isVNode,
+  type VNode,
+  type VNodeChild,
+} from 'vue';
 
 export interface ToArrayOptions {
   /** 为 `true` 时保留空占位（Comment vnode）。 */
@@ -55,15 +63,8 @@ export interface ToArrayOptions {
  *    用 `Slot` 声明会把这些合法用法挡在类型层之外 —— 声明比运行时窄是纯粹的损失。
  *    `Slot` 是它的子集（`VNode[]` 可赋给 `readonly ChildrenInput[]`），所以仍然接受插槽。
  */
-export type ChildrenInput =
-  | VNode
-  | (() => ChildrenInput)
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | readonly ChildrenInput[];
+// Reuse Vue's recursive child contract, including nested void values.
+export type ChildrenInput = VNodeChild | (() => ChildrenInput) | readonly ChildrenInput[];
 
 function createEmptyPlaceholder(): VNode {
   // 与 Vue 对 `null` / `undefined` / `false` 的归一化结果一致：一个 Comment vnode

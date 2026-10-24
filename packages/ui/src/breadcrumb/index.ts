@@ -2,7 +2,7 @@
  * Breadcrumb 的公共导出。
  *
  * 与 antd 的 `es/breadcrumb/index.js` 对齐的对外面：它是**复合组件**
- * （`Breadcrumb.Item` / `Breadcrumb.Separator`，**两个都已废弃**）。
+ * （`Breadcrumb.Item` / `Breadcrumb.Separator`，原生组合组件）。
  * ⚠️ 复合挂载照 `anchor/index.ts` / `splitter/index.ts` 的既有写法
  * （`Object.assign` + `withInstall`）。
  *
@@ -18,7 +18,7 @@ import { BreadcrumbSeparator as BreadcrumbSeparatorComponent } from './Breadcrum
 /**
  * 复合组件：挂上 `Item` / `Separator`（antd 的 `CompoundedComponent`）。
  *
- * ⚠️ 两个子组件都**已废弃**（上游用 `devUseWarning().deprecated` 告警，本仓同判）。
+ * Native child composition remains supported alongside data items.
  */
 export const BreadcrumbWithSub = Object.assign(BreadcrumbComponent, {
   Item: BreadcrumbItemComponent,
@@ -42,6 +42,7 @@ export type {
   BreadcrumbItemInput,
   BreadcrumbItemMenu,
   BreadcrumbItemProps,
+  BreadcrumbItemSlotProps,
   BreadcrumbItemSlots,
   BreadcrumbItemType,
   BreadcrumbKey,

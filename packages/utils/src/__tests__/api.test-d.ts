@@ -347,6 +347,10 @@ describe('ref 工具', () => {
 });
 
 describe('toArray / toList / capitalize / KeyCode / get', () => {
+  it('toArray accepts the full native Vue child type, including nested void', () => {
+    expectTypeOf<import('vue').VNodeChild>().toMatchTypeOf<Parameters<typeof toArray>[0]>();
+  });
+
   it('toArray 恒返回 VNode[]', () => {
     expectTypeOf(toArray(null)).toEqualTypeOf<VNode[]>();
     expectTypeOf(toArray([1, 'a', true])).toEqualTypeOf<VNode[]>();

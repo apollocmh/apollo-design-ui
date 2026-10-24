@@ -4,6 +4,7 @@ import { Button, Descriptions, DescriptionsItem } from '@apollo-design/ui';
 import { createApp, defineComponent, h, ref } from 'vue';
 import ContentSlots from '../../../packages/ui/src/alert/demo/content-slots.vue';
 import BadgeSlots from '../../../packages/ui/src/badge/demo/content-slots.vue';
+import BreadcrumbSlots from '../../../packages/ui/src/breadcrumb/demo/scoped-item.vue';
 import PrefixSuffix from '../../../packages/ui/src/input-number/demo/presuffix.vue';
 import ListLikes from '../../../packages/ui/src/list/demo/item-extra.vue';
 import ListLoadMore from '../../../packages/ui/src/list/demo/loadmore.vue';
@@ -66,6 +67,7 @@ const Demo = {
   events: EventEmits,
   'switch-events': SwitchEvents,
   'tabs-popup': TabsPopup,
+  'breadcrumb-slots': BreadcrumbSlots,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

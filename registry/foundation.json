@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T05:42:38.330Z",
+  "generatedAt": "2026-10-24T10:49:00.896Z",
   "sourceFacts": "dependencies.json（包定义） + scaffold-packages.mjs（dir/phase2Order/deps/poc/notDo） + components.json（消费者） + packages/*/src（规模度量）",
   "legend": {
     "status": "todo → analyzing → implementing → testing → verifying → completed（blocked 为旁路状态）",
@@ -721,7 +721,7 @@
       "layerNotes": "无 DOM 产物、无视觉语义（R3）；焦点工具的正确性由 L1/L4 覆盖",
       "blockedBy": [],
       "blockers": [],
-      "notes": "本仓库第一个 completed 的 foundation 包。L7 由 tests/build/run.mjs 门禁覆盖（B1/B2/B3/B4/B9/B10 实测通过；B5/B7 n/a 因本包不产 CSS，B6/B8 n/a 因裁决 A 下单文件产物且不含组件）。\n2026-10-24 F10：保留 pickAttrs 原 className 数据输出，补 Vue 原生事件/后缀识别与 DOM 目标归一、监听器单次合并；本批验证见 docs/audit/2026-10-24-dom-attrs-remediation.md。历史 completed 不等同于新的全量验收。",
+      "notes": "本仓库第一个 completed 的 foundation 包。L7 由 tests/build/run.mjs 门禁覆盖（B1/B2/B3/B4/B9/B10 实测通过；B5/B7 n/a 因本包不产 CSS，B6/B8 n/a 因裁决 A 下单文件产物且不含组件）。\n2026-10-24 F10：保留 pickAttrs 原 className 数据输出，补 Vue 原生事件/后缀识别与 DOM 目标归一、监听器单次合并；本批验证见 docs/audit/2026-10-24-dom-attrs-remediation.md。历史 completed 不等同于新的全量验收。\n2026-10-24 F11 Breadcrumb依赖：ChildrenInput复用原生VNodeChild，接受嵌套void；修正声明比运行时窄的问题，无算法改变，类型正例/既有展平回归/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md。保留历史验证状态。",
       "verification": {
         "verifiedAt": "2026-10-04",
         "unit": {
@@ -786,7 +786,7 @@
           "@apollo-design/virtual-list"
         ],
         "srcFiles": 44,
-        "srcLines": 4672,
+        "srcLines": 4673,
         "exportDeclarations": 147
       }
     },

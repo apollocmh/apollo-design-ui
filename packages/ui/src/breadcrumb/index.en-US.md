@@ -35,12 +35,12 @@ See [`demo/`](./demo) (**9** demos, mirroring antd's user-visible demos).
 
 | Property | Description | Type | Default | Global config |
 |---|---|---|---|---|
-| items | The route stack (**recommended**). Legacy code uses `routes` or `Breadcrumb.Item` children | `BreadcrumbItemInput[]` | — | × |
+| items | Route data; native child composition is also supported | `BreadcrumbItemInput[]` | — | × |
 | routes | ⚠️ **Deprecated**, use `items` | `BreadcrumbItemInput[]` | — | × |
 | params | Route params, used to replace `:key` in `title` / `path` | `Record<string, unknown>` | `{}` | × |
 | separator | Customize the separator | `VNodeChild` | `/` | ✅ (`breadcrumb.separator`) |
 | dropdownIcon | Customize the dropdown icon | `VNodeChild` | `<DownOutlined />` | ✅ (`breadcrumb.dropdownIcon`) |
-| itemRender | Customize each item's rendering (for use with react-router). ⚠️ **Receives only 4 arguments, no `href`** | `(route, params, routes, paths) => VNodeChild` | — | × |
+
 | classNames | Semantic class names (`root` / `item` / `separator`), function form supported | `BreadcrumbSemanticClassNames \| ((info) => …)` | — | ✅ (`breadcrumb.classNames`) |
 | styles | Semantic styles (three slots), function form supported | `BreadcrumbSemanticStyles \| ((info) => …)` | — | ✅ (`breadcrumb.styles`) |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-breadcrumb` | × |
@@ -97,33 +97,19 @@ type BreadcrumbItemInput = Partial<BreadcrumbItemType & BreadcrumbSeparatorType>
 | `item` | Each item's `<li>` (**excluding** separators) |
 | `separator` | The separator's `<li>` |
 
-### Using with `itemRender`
+### #itemRender
 
-`itemRender` receives `(route, params, routes, paths)` — ⚠️ **no `href`** (upstream behavior).
-Build the path yourself from `paths.join('/')`:
+Use `#itemRender="{ route, params, routes, paths, href }"`. Paths and href belong to the current route and include parameter substitution. An empty slot suppresses default content; removing the slot restores the default link renderer. The function prop is removed directly, without a compatibility layer or deprecation period.
 
 ```vue
-<script setup lang="ts">
-import { Breadcrumb, type BreadcrumbItemInput } from '@apollo-design/ui';
-import { h } from 'vue';
-
-const items: BreadcrumbItemInput[] = [
-  { path: '/index', title: 'home' },
-  { path: '/first', title: 'first' },
-];
-
-const itemRender = (
-  route: BreadcrumbItemInput,
-  _params: unknown,
-  _routes: BreadcrumbItemInput[],
-  paths: string[],
-) => h('a', { href: `/${paths.join('/')}` }, route.title);
-</script>
-
-<template>
-  <Breadcrumb :items="items" :item-render="itemRender" />
-</template>
+<Breadcrumb :items="items" :params="params">
+  <template #itemRender="{ route, href }">
+    <a :href="href">{{ route.title }}</a>
+  </template>
+</Breadcrumb>
 ```
+
+`BreadcrumbSlots` / `BreadcrumbItemSlotProps` expose the slot contract. BreadcrumbItem/BreadcrumbSeparator and the default slot are supported native Vue composition, with no component deprecation warning. Default children are read once per render and retain caller keys during reorder. Data items take precedence over the default slot.
 
 ## Design Token
 

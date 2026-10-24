@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、501 行 owner/field 清单。内容候选 147、渲染候选 79、数据/配置 152、内部/废弃 123；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、501 行 owner/field 清单。内容候选 147、渲染候选 78、数据/配置 152、内部/废弃 124；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -207,6 +207,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **2026-10-24 Drawer 增量**：四个具名内容槽已存在，未误报为新补齐。复现并修复标题重复求值、显式 `aria-labelledby` 被忽略、空头尾切换重建正文，以及 PurePanel 原生 attrs/style 被旧形态截获；导出 DrawerSlots 并对齐 Portal 容器类型。真实浏览器保留正文 DOM/输入值，详见 [Drawer 报告](audit/2026-10-24-drawer-vue-remediation.md)。未宣称 F11 或 Drawer 新视觉验收完成。
 
 **2026-10-24 Tabs 增量**：移除 more.popupRender 函数入口，`#popupRender` 改为单个 `{ originNode, restTabs, onClose }` 参数；Tabs/TabNavList/OperationNode/Dropdown 全链路按原生 slot 转发。复现并修复 extra computed 与 Dropdown setup 的槽存在性快照，新增实际窄容器 Demo。详见 [Tabs 报告](audit/2026-10-24-tabs-popup-remediation.md)，全库 F11 继续开放。
+
+**2026-10-24 Breadcrumb 增量**：移除四参数 itemRender 函数prop，直接提供含逐项paths/href的具名对象槽；修复默认插槽终身缓存和cloneVNode覆盖调用方key，原生子组件组合不再沿用整组件弃用警告。见 [Breadcrumb 报告](audit/2026-10-24-breadcrumb-slots-remediation.md)。
 
 ---
 
@@ -333,7 +335,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Steps | 20/20 | 部分 scoped slots 已实现，不重报全无；F11 数据/模板边界 |
 | Progress | 17/17 | —；aria 值/动画 |
 | Pagination | 14/16 | F11；itemRender Vue slot / 快捷跳转 |
-| Breadcrumb | 9/9 | F11；item 渲染能力与动态路由 |
+| Breadcrumb | 10/10 | F11：itemRender 单对象槽和默认子组件更新/key已修复；24张Apollo基线缺失 |
 | Tabs | 20/20 | F11：popupRender 单对象槽、动态 extra / Dropdown 链已整改，Apollo 基线仍待验收 |
 | Card | 12/14 | 已有 header/extra slots；旧调试项非必补 |
 | Timeline | 14/14 | F11；富内容模板项 |

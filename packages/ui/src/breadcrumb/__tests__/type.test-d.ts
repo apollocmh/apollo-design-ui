@@ -25,6 +25,7 @@ import type {
   BreadcrumbItemInput,
   BreadcrumbItemMenu,
   BreadcrumbItemProps,
+  BreadcrumbItemSlotProps,
   BreadcrumbItemType,
   BreadcrumbKey,
   BreadcrumbMenuItem,
@@ -34,6 +35,7 @@ import type {
   BreadcrumbSemanticClassNames,
   BreadcrumbSemanticStyles,
   BreadcrumbSeparatorType,
+  BreadcrumbSlots,
 } from '../interface';
 
 describe('Breadcrumb · Props 类型', () => {
@@ -70,16 +72,12 @@ describe('Breadcrumb · Props 类型', () => {
     expectTypeOf<BreadcrumbParams>().toEqualTypeOf<Record<string, unknown>>();
   });
 
-  it('🚨 `itemRender` **只收 4 个实参**（没有 `href`）', () => {
-    expectTypeOf<NonNullable<BreadcrumbProps['itemRender']>>().parameters.toEqualTypeOf<
-      [
-        route: BreadcrumbItemInput,
-        params: BreadcrumbParams,
-        routes: BreadcrumbItemInput[],
-        paths: string[],
-      ]
+  it('itemRender slot accepts one named object including resolved paths/href', () => {
+    expectTypeOf<NonNullable<BreadcrumbSlots['itemRender']>>().parameters.toEqualTypeOf<
+      [BreadcrumbItemSlotProps]
     >();
-    expectTypeOf<NonNullable<BreadcrumbProps['itemRender']>>().returns.toEqualTypeOf<VNodeChild>();
+    expectTypeOf<NonNullable<BreadcrumbSlots['itemRender']>>().returns.toEqualTypeOf<VNodeChild>();
+    expectTypeOf<BreadcrumbItemSlotProps['href']>().toEqualTypeOf<string | undefined>();
   });
 
   it('语义化槽是**三个**（root / item / separator），且都支持**函数形态**', () => {
@@ -193,7 +191,7 @@ describe('Breadcrumb · 负例（永不调用的闭包内）', () => {
   it('`itemRender` 的返回值必须是 `VNodeChild`', () => {
     const _never = () => {
       // @ts-expect-error 返回 `Symbol` 不是 `VNodeChild`
-      const bad: BreadcrumbProps = { itemRender: () => Symbol('x') };
+      const bad: BreadcrumbSlots = { itemRender: () => Symbol('x') };
       return bad;
     };
     void _never;
@@ -213,3 +211,16 @@ describe('Breadcrumb · 负例（永不调用的闭包内）', () => {
     void _never;
   });
 });
+
+const checkRemovedRenderer = () => {
+  // @ts-expect-error ADR0006/0007: custom content uses native slots, not function props.
+  const props: BreadcrumbProps = { itemRender: () => null };
+  // @ts-expect-error The scoped slot accepts one named object, not positional callback arguments.
+  const slot: BreadcrumbSlots['itemRender'] = (
+    _route: BreadcrumbItemInput,
+    _params: BreadcrumbParams,
+  ) => null;
+  void props;
+  void slot;
+};
+void checkRemovedRenderer;

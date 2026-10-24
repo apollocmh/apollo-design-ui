@@ -25,7 +25,7 @@
  *    **被覆盖**成 `#/${paths.join('/')}`（不是拼在 item 的 `href` 后面）。
  * 4. **最后一项的 `separator` 是 `''`** ⇒ `isRenderable('')` 为假 ⇒
  *    **不渲染**分隔符 `<li>`（已实测 rc-util 语义，见分析 §6.1）。
- * 5. **`itemRender` 只收 4 个实参**（没有 `href`）。
+ * 5. Native #itemRender receives one named object, including per-route paths/href.
  * 6. **`children` 分支只 `cloneVNode` 两个 prop**（`separator` / `key`），
  *    不 pickAttrs、不注入 `prefixCls`。
  * 7. **`-rtl` 落在根 `<nav>` 上**；`ref` 暴露的是 `{ nativeElement }` 而不是元素本身。
@@ -51,6 +51,7 @@ import {
   provide,
   reactive,
   ref,
+  type SlotsType,
   type VNode,
   type VNodeChild,
   watchEffect,
@@ -66,8 +67,9 @@ import type {
   BreadcrumbProps,
   BreadcrumbSemanticClassNames,
   BreadcrumbSemanticStyles,
+  BreadcrumbSlots,
 } from './interface';
-import { useItemRender } from './useItemRender';
+import { getBreadcrumbName, renderItem } from './useItemRender';
 import { useItems } from './useItems';
 
 /**
@@ -88,9 +90,12 @@ function getPath(params: BreadcrumbParams, path?: string): string | undefined {
   return mergedPath;
 }
 
+const contentSlots: SlotsType<BreadcrumbSlots> = {};
+
 export const Breadcrumb = defineComponent({
   name: 'ABreadcrumb',
   inheritAttrs: false,
+  slots: contentSlots,
   props: {
     prefixCls: { type: String as PropType<string | undefined>, default: undefined },
     separator: {
@@ -119,10 +124,6 @@ export const Breadcrumb = defineComponent({
     },
     params: {
       type: Object as PropType<BreadcrumbParams | undefined>,
-      default: undefined,
-    },
-    itemRender: {
-      type: Function as PropType<BreadcrumbProps['itemRender']>,
       default: undefined,
     },
   },
@@ -175,35 +176,15 @@ export const Breadcrumb = defineComponent({
       () => props.routes,
     );
 
-    /**
-     * 🚨 **告警必须在 `render` 里做，不能在 `watchEffect` 里做**：
-     * Vue 的插槽函数只允许在渲染期调用，在 render 之外调用会打
-     * `Slot "default" invoked outside of the render function` 的 dev 告警
-     * （实测：它会把真正的 usage 告警淹没在控制台里）。
-     * 上游是 React 函数组件 —— 函数体每次渲染都跑，本来就等于「渲染期」。
-     *
-     * ⚠️ 同时**只取一次**插槽（`getChildList` 惰性缓存）：`items` 存在时上游**不读**
-     * children，本仓也不读（读一次会白跑用户的插槽函数）。
-     */
-    let childListCache: VNode[] | null = null;
-    const getChildList = (): VNode[] => {
-      if (childListCache === null) {
-        childListCache = slots.default ? toArray(slots.default()) : [];
-      }
-      return childListCache;
-    };
-
-    /** 在渲染期跑上游 `:170-196` 的三条告警。 */
-    const runDevWarnings = (mergedItems: BreadcrumbItemInput[] | null): void => {
+    // The caller resolves default children once per render. Data items do not
+    // evaluate the default slot, and valid native child composition is supported.
+    const runDevWarnings = (
+      mergedItems: BreadcrumbItemInput[] | null,
+      childList: VNode[],
+    ): void => {
       devWarning.deprecated(!props.routes, 'routes', 'items');
 
       if (!mergedItems || mergedItems.length === 0) {
-        const childList = getChildList();
-        devWarning.deprecated(
-          childList.length === 0,
-          'Breadcrumb.Item and Breadcrumb.Separator',
-          'items',
-        );
         // 上游用 `element.type.__ANT_BREADCRUMB_ITEM`（函数组件上的标记属性）；
         // Vue 的对应物是**组件身份比较**（vnode.type 就是组件对象）。
         childList.forEach((element) => {
@@ -220,11 +201,6 @@ export const Breadcrumb = defineComponent({
     };
 
     // ======================= 渲染 =======================
-    const itemRender = useItemRender(
-      () => prefixCls.value,
-      () => props.itemRender,
-    );
-
     const nativeElementRef = ref<HTMLElement | null>(null);
     expose({ nativeElement: nativeElementRef });
 
@@ -253,7 +229,8 @@ export const Breadcrumb = defineComponent({
 
     return () => {
       const mergedItems = items.value;
-      runDevWarnings(mergedItems);
+      const childList = !mergedItems?.length && slots.default ? toArray(slots.default() ?? []) : [];
+      runDevWarnings(mergedItems, childList);
 
       let crumbs: VNodeChild = null;
 
@@ -286,6 +263,13 @@ export const Breadcrumb = defineComponent({
             href = `#/${paths.join('/')}`;
           }
 
+          const scope = {
+            route: item,
+            params: params.value,
+            routes: itemRoutes,
+            paths: [...paths],
+            href,
+          };
           return h(
             InternalBreadcrumbItem,
             {
@@ -301,12 +285,14 @@ export const Breadcrumb = defineComponent({
               prefixCls: prefixCls.value,
             },
             {
-              default: () => itemRender(item, params.value, itemRoutes, paths, href),
+              default: () =>
+                slots.itemRender
+                  ? slots.itemRender(scope)
+                  : renderItem(prefixCls.value, item, getBreadcrumbName(item, params.value), href),
             },
           );
         });
       } else if (slots.default) {
-        const childList = getChildList();
         const childrenLength = childList.length;
 
         crumbs = childList.map((element, index) => {
@@ -318,7 +304,7 @@ export const Breadcrumb = defineComponent({
 
           return cloneVNode(element, {
             separator: isLastItem ? '' : mergedSeparator.value,
-            key: index,
+            key: element.key ?? index,
           });
         });
       }

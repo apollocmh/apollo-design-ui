@@ -9,7 +9,7 @@
 - antd 6.6.4 · `es/breadcrumb/`（只读参照，H2）
 - 规模 **805 行源码 / 518 行产物 / 16 文件**；上游测试 **667 行 / 5 文件**
 - 复合组件：`Breadcrumb.Item`（`BreadcrumbItem`）/ `Breadcrumb.Separator`（`BreadcrumbSeparator`），
-  **两个都已废弃**（上游用 `devUseWarning().deprecated` 告警）
+  两者都是受支持的 Vue 原生组合组件，不沿用上游整组件弃用告警
 
 | 上游文件 | 本仓 | 形态 |
 |---|---|---|
@@ -39,7 +39,7 @@
 （`COMPONENT-RULES.md` §2 **条件 2**：「渲染树深度动态、由数据驱动的分支远超模板表达能力」）：
 
 1. **根的孩子是异构的**：`BreadcrumbItem` / `BreadcrumbSeparator` 由 `items` 里的
-   `type === 'separator'` 混排，而每一项的**内容**是 `itemRender` 的返回值（`VNodeChild`）。
+   `type === 'separator'` 混排，而每一项的**内容**由原生 `#itemRender` 插槽提供（未提供时用默认链接）（`VNodeChild`）。
    模板里渲染一个 `VNodeChild` 只能靠 `<component :is="() => vnode" />` ——
    那会**每次换一个组件类型** ⇒ Vue 走「卸载 + 重挂」（`tour/demo/actions-render.vue`
    的既有陷阱，`anchor/AnchorLink.ts` 的文件头也记了同一条）。
@@ -90,3 +90,5 @@
    **没有 style 属性**。归属 **UPSTREAM quirk**（照抄）。
 4. **`menu` 的浮层内容不在 L4 契约里**：Dropdown 默认不展开 ⇒ SSR 产物里没有 popup
    （触发层 `.{p}-overlay-link` 在，由 L4 的 `breadcrumb:menu` 覆盖；浮层本体归 L6 / Dropdown 自己）。
+
+2026-10-24：公开 itemRender 函数已按 ADR0006/0007 移除，改用单具名对象槽（含逐项 paths/href）；默认子组件为正常 Vue 组合，修复首次节点缓存与重排 key 覆盖。迁移与当前证据见 [专项报告](../../../../docs/audit/2026-10-24-breadcrumb-slots-remediation.md)。旧 React 对照描述不再决定公共槽参数或弃用政策。

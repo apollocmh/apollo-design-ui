@@ -152,7 +152,7 @@ export interface BreadcrumbProps {
   /**
    * ⚠️ **本仓没有 `children` prop**（规则 C19）：上游的 `children` 在 Vue 侧是
    * **默认插槽**（`BreadcrumbSlots.default`），塞进 `BreadcrumbProps` 等于声明一个
-   * 永远 `undefined` 的键（`spin` / `anchor` 同判）。它仍然**已废弃**。
+   * 永远 `undefined` 的键（`spin` / `anchor` 同判）。该原生组合方式继续受支持。
    */
 
   // ---------------------------------------------------------------- 分隔符
@@ -160,22 +160,6 @@ export interface BreadcrumbProps {
   separator?: VNodeChild;
   /** 下拉箭头图标。三级兜底：`dropdownIcon ?? context.dropdownIcon ?? <DownOutlined />`。 */
   dropdownIcon?: VNodeChild;
-
-  // ---------------------------------------------------------------- 渲染
-  /**
-   * 自定义每一项的渲染。
-   *
-   * ⚠️ 上游只传 **4 个实参**（`item, params, routes, path`）—— **没有 `href`**。
-   * 默认实现（`renderItem`）拿得到 `href`，自定义渲染拿不到，这是上游的既有形状。
-   */
-  itemRender?:
-    | ((
-        route: BreadcrumbItemInput,
-        params: BreadcrumbParams,
-        routes: BreadcrumbItemInput[],
-        paths: string[],
-      ) => VNodeChild)
-    | undefined;
 }
 
 /**
@@ -186,9 +170,19 @@ export interface BreadcrumbProps {
  * `noBannedTypes` 拦下，而且「声明了但永远不触发」比不声明更容易误导）。
  */
 
-/** `Breadcrumb` 的插槽（只有默认插槽 —— 对应废弃的 `children` 通道）。 */
+/** Native item rendering context. Paths and href belong to this route. */
+export interface BreadcrumbItemSlotProps {
+  route: BreadcrumbItemInput;
+  params: BreadcrumbParams;
+  routes: BreadcrumbItemInput[];
+  paths: string[];
+  href?: string;
+}
+
+/** Native child composition and data-item content slots. */
 export interface BreadcrumbSlots {
   default?: () => VNodeChild;
+  itemRender?: (props: BreadcrumbItemSlotProps) => VNodeChild;
 }
 
 /** `expose` 出来的东西（上游 `useImperativeHandle` 的形状）。 */
@@ -207,7 +201,7 @@ export interface BreadcrumbExpose {
 export type BreadcrumbRef = BreadcrumbExpose;
 
 // ---------------------------------------------------------------------------
-// Breadcrumb.Item（deprecated）
+// Breadcrumb.Item native composition
 // ---------------------------------------------------------------------------
 
 /** `Breadcrumb.Item` 的 props（上游 `BreadcrumbItemProps`）。 */
@@ -231,7 +225,7 @@ export interface BreadcrumbItemSlots {
 }
 
 // ---------------------------------------------------------------------------
-// Breadcrumb.Separator（deprecated）
+// Breadcrumb.Separator native composition
 // ---------------------------------------------------------------------------
 
 /**

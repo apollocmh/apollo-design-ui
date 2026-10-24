@@ -10,7 +10,7 @@
  *    `href !== undefined` ⇒ `<a class="{p}-link {item.className}" href>`，
  *    否则 `<span class="{p}-link {item.className}">`；
  *    透传 `pickAttrs(item 去掉 className/onClick, {data,aria})` + `onClick`。
- * 3. 自定义 `itemRender` 只收 **4 个实参**（没有 `href`）—— 上游的既有形状。
+ * Public custom content uses the native #itemRender slot; these helpers only render defaults.
  *
  * ── 🚨 三条容易写错的地方 ──────────────────────────────────────────────────
  *
@@ -28,14 +28,6 @@
 import { isPlainObject, isRenderable, pickAttrs } from '@apollo-design/utils';
 import { h, type VNodeChild } from 'vue';
 import type { BreadcrumbItemInput, BreadcrumbParams } from './interface';
-
-/** `itemRender` 的签名（上游 `NonNullable<BreadcrumbProps['itemRender']>`）。 */
-export type BreadcrumbItemRender = (
-  route: BreadcrumbItemInput,
-  params: BreadcrumbParams,
-  routes: BreadcrumbItemInput[],
-  paths: string[],
-) => VNodeChild;
 
 /**
  * 取一项的显示名（含 `:param` 替换）。
@@ -88,33 +80,4 @@ export function renderItem(
   }
 
   return h('span', { ...passedProps, class: [`${prefixCls}-link`, className] }, [children]);
-}
-
-/**
- * 造出「合并后的 item 渲染器」。
- *
- * @param prefixCls 取**当前**前缀的 getter（`prefixCls` 是 computed，渲染期才求值）。
- * @param itemRender 用户传入的自定义渲染器（**只收 4 个实参**）。
- */
-export function useItemRender(
-  prefixCls: () => string,
-  itemRender?: () => BreadcrumbItemRender | undefined,
-): (
-  item: BreadcrumbItemInput,
-  params: BreadcrumbParams,
-  routes: BreadcrumbItemInput[],
-  paths: string[],
-  href?: string,
-) => VNodeChild {
-  return (item, params, routes, path, href) => {
-    const custom = itemRender?.();
-    if (custom) {
-      // ⚠️ 上游只传 4 个实参 —— **没有 `href`**
-      return custom(item, params, routes, path);
-    }
-
-    const name = getBreadcrumbName(item, params);
-
-    return renderItem(prefixCls(), item, name, href);
-  };
 }

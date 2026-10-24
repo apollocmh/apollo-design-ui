@@ -232,15 +232,17 @@ describe('Breadcrumb · path / params / href', () => {
 });
 
 describe('Breadcrumb · itemRender / 语义化 / rtl / expose', () => {
-  it('🚨 自定义 `itemRender` **只收 4 个实参**（没有 `href`）', () => {
+  it('itemRender is a single-object native slot and replaces default link content', () => {
     const itemRender = vi.fn(() => 'X');
-    const w = mountBreadcrumb({
-      items: [{ title: 'A', path: 'a' }],
-      itemRender,
-    });
+    const w = mountBreadcrumb(
+      {
+        items: [{ title: 'A', path: 'a' }],
+      },
+      { itemRender },
+    );
 
     expect(itemRender).toHaveBeenCalledTimes(1);
-    expect(itemRender.mock.calls[0]).toHaveLength(4);
+    expect(itemRender.mock.calls[0]).toHaveLength(1);
     // ⚠️ 自定义渲染**不走** `renderItem` ⇒ 没有 `-link` 元素，内容直接进 `<li>`
     expect(w.find(`.${P}-item`).text()).toBe('X');
     expect(w.find(`.${P}-link`).exists()).toBe(false);

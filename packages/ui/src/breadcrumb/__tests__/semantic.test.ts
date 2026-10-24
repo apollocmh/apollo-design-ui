@@ -36,7 +36,12 @@ import {
 import { Breadcrumb } from '../Breadcrumb';
 import { BreadcrumbItem } from '../BreadcrumbItem';
 import { BreadcrumbSeparator } from '../BreadcrumbSeparator';
-import type { BreadcrumbItemInput, BreadcrumbProps } from '../interface';
+import type {
+  BreadcrumbItemInput,
+  BreadcrumbItemSlotProps,
+  BreadcrumbProps,
+  BreadcrumbSlots,
+} from '../interface';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/breadcrumb.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -67,7 +72,7 @@ const specs: Record<
   {
     props: BreadcrumbProps & Record<string, unknown>;
     /** ⚠️ 本仓的 `children` 是**默认插槽**（规则 C19）⇒ 单独一个字段，不能塞进 props */
-    slots?: Record<string, () => VNodeChild>;
+    slots?: BreadcrumbSlots;
     ctx?: Partial<ConfigContextValue>;
     /** 不包 ConfigProvider（用来钉「默认根前缀」的差异 D1）。 */
     bare?: boolean;
@@ -166,13 +171,13 @@ const specs: Record<
   },
 
   'breadcrumb:item-render': {
-    props: {
-      ...base,
-      itemRender: (item: BreadcrumbItemInput, params, routes, paths) =>
+    props: { ...base },
+    slots: {
+      itemRender: ({ route, params, routes, paths }: BreadcrumbItemSlotProps) =>
         h(
           'span',
           { class: 'custom-render' },
-          `${String(item.title)}|${Object.keys(params).length}|${routes.length}|${paths.join(',')}`,
+          `${String(route.title)}|${Object.keys(params).length}|${routes.length}|${paths.join(',')}`,
         ),
     },
   },

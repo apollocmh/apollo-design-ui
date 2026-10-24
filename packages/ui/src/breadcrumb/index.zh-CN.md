@@ -40,7 +40,7 @@ subtitle: 面包屑
 | params | 路由参数，用于替换 `title` / `path` 里的 `:key` | `Record<string, unknown>` | `{}` | × |
 | separator | 分隔符自定义 | `VNodeChild` | `/` | ✅（`breadcrumb.separator`） |
 | dropdownIcon | 自定义下拉图标 | `VNodeChild` | `<DownOutlined />` | ✅（`breadcrumb.dropdownIcon`） |
-| itemRender | 自定义每一项的渲染（与 react-router 配合用）。⚠️ **只收 4 个实参，没有 `href`** | `(route, params, routes, paths) => VNodeChild` | — | × |
+
 | classNames | 语义化类名（`root` / `item` / `separator`），支持函数形态 | `BreadcrumbSemanticClassNames \| ((info) => …)` | — | ✅（`breadcrumb.classNames`） |
 | styles | 语义化样式（三个槽），支持函数形态 | `BreadcrumbSemanticStyles \| ((info) => …)` | — | ✅（`breadcrumb.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-breadcrumb` | × |
@@ -96,33 +96,19 @@ type BreadcrumbItemInput = Partial<BreadcrumbItemType & BreadcrumbSeparatorType>
 | `item` | 每一项的 `<li>`（**不含**分隔符） |
 | `separator` | 分隔符的 `<li>` |
 
-### 和 `itemRender` 配合
+### #itemRender
 
-`itemRender` 的入参是 `(route, params, routes, paths)` —— ⚠️ **没有 `href`**（上游如此）。
-路径可以用 `paths.join('/')` 自己拼：
+使用 `#itemRender="{ route, params, routes, paths, href }"`。`paths` 和 `href` 对应当前项，包含参数替换。存在的空 slot 压住默认内容；移除 slot 恢复默认链接渲染。函数 prop 已直接移除，无兼容层或弃用期。
 
 ```vue
-<script setup lang="ts">
-import { Breadcrumb, type BreadcrumbItemInput } from '@apollo-design/ui';
-import { h } from 'vue';
-
-const items: BreadcrumbItemInput[] = [
-  { path: '/index', title: 'home' },
-  { path: '/first', title: 'first' },
-];
-
-const itemRender = (
-  route: BreadcrumbItemInput,
-  _params: unknown,
-  _routes: BreadcrumbItemInput[],
-  paths: string[],
-) => h('a', { href: `/${paths.join('/')}` }, route.title);
-</script>
-
-<template>
-  <Breadcrumb :items="items" :item-render="itemRender" />
-</template>
+<Breadcrumb :items="items" :params="params">
+  <template #itemRender="{ route, href }">
+    <a :href="href">{{ route.title }}</a>
+  </template>
+</Breadcrumb>
 ```
+
+`BreadcrumbSlots` / `BreadcrumbItemSlotProps` 提供槽类型。`BreadcrumbItem` / `BreadcrumbSeparator` 和默认插槽是受支持的 Vue 原生组合方式，不发整组件弃用警告；子节点每帧读取一次，保留调用方 key，重排时输入状态跟随对应节点。items 存在时不消费默认槽。
 
 ## 主题变量（Design Token）
 

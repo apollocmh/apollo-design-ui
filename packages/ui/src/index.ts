@@ -135,6 +135,7 @@ export type {
   BreadcrumbItemInput,
   BreadcrumbItemMenu,
   BreadcrumbItemProps,
+  BreadcrumbItemSlotProps,
   BreadcrumbItemSlots,
   BreadcrumbItemType,
   BreadcrumbKey,
