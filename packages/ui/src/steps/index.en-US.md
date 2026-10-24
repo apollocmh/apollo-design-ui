@@ -13,7 +13,7 @@ A navigation bar that guides users through the steps of a task.
 
 ## Examples
 
-See [`demo/`](./demo) (20 demos, covering the main antd scenarios.
+See [`demo/`](./demo) (21 demos, including native scoped slots).
 
 ## API
 
@@ -49,6 +49,8 @@ See [`demo/`](./demo) (20 demos, covering the main antd scenarios.
 > ⚠️ C8-R2: antd's `iconRender` / `itemRender` / `itemWrapperRender` / `progressDot(fn)`
 > are **scoped slots only** in this library. `items` fields (`icon` etc.) are the data
 > API — programmatic VNodes via `h()` are fine.
+
+All four slots receive one named object with precise inference in native Vue templates and return VNodeChild. A present empty slot overrides the matching node; removing it restores the default. Items supply data; there is no default content slot, and the unused StepsSlots.default declaration has been removed directly. Inline content has its default Tooltip even without itemRender; custom itemRender can safely render itemNode. See the [native slot notes](../../../../docs/migrations/steps-native-slots.md).
 
 ## Design notes
 

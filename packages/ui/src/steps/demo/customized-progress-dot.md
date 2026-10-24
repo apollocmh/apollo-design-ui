@@ -8,3 +8,5 @@ order: 2
 ## en-US
 
 Customize dots via the `#progressDot` scoped slot.
+
+使用原生 span 模板直接读取 index/status，无需 h 或额外渲染函数。

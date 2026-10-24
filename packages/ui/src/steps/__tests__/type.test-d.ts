@@ -1,6 +1,15 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。 */
 import { describe, expectTypeOf, it } from 'vitest';
-import type { StepItem, StepsProps, StepsSize, StepsStatus, StepsType } from '../interface';
+import type { VNodeChild } from 'vue';
+import type {
+  StepItem,
+  StepsItemRenderSlotProps,
+  StepsProps,
+  StepsSize,
+  StepsSlots,
+  StepsStatus,
+  StepsType,
+} from '../interface';
 
 describe('Steps · 类型', () => {
   it('Status 是 4 值联合', () => {
@@ -31,6 +40,16 @@ describe('Steps · 类型', () => {
       responsive: false,
     };
     expectTypeOf(sample).not.toBeNever();
+  });
+
+  it('native renderer slots have explicit scopes and renderable return values', () => {
+    expectTypeOf<keyof StepsSlots>().toEqualTypeOf<
+      'iconRender' | 'itemRender' | 'itemWrapperRender' | 'progressDot'
+    >();
+    expectTypeOf<NonNullable<StepsSlots['itemRender']>>().parameters.toEqualTypeOf<
+      [props: StepsItemRenderSlotProps]
+    >();
+    expectTypeOf<NonNullable<StepsSlots['itemRender']>>().returns.toEqualTypeOf<VNodeChild>();
   });
 
   it('负例（永不调用的闭包）', () => {

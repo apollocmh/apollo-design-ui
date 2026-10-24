@@ -7,7 +7,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { h } from 'vue';
-import type { StepItem } from '../interface';
+import type { StepItem, StepsProps, StepsSlots } from '../interface';
 import Steps from '../Steps';
 import { getCollapsedIndexes } from '../useDisplaySteps';
 
@@ -18,13 +18,10 @@ const BASIC_ITEMS: StepItem[] = [
 ];
 const P = 'apollo-steps';
 
-const mountSteps = (
-  props: Record<string, unknown> = {},
-  slots: Record<string, (...args: unknown[]) => unknown> = {},
-) =>
+const mountSteps = (props: StepsProps = {}, slots: StepsSlots = {}) =>
   mount(Steps, {
-    props: { items: BASIC_ITEMS, ...props } as never,
-    slots: slots as never,
+    props: { items: BASIC_ITEMS, ...props },
+    slots,
     attachTo: document.body,
     global: { stubs: { teleport: false } },
   });
@@ -112,8 +109,8 @@ describe('Steps · C8-R2 插槽（render fn → scoped slot，无同名 prop）'
     const w = mountSteps(
       { current: 1 },
       {
-        iconRender: (info: unknown) => {
-          const { index, item } = info as { index: number; item: StepItem };
+        iconRender: (info) => {
+          const { index, item } = info;
           return h('span', { class: 'my-icon' }, `${index}-${String(item.title)}`);
         },
       },
@@ -130,8 +127,7 @@ describe('Steps · C8-R2 插槽（render fn → scoped slot，无同名 prop）'
     const w = mountSteps(
       {},
       {
-        itemRender: (p: unknown) =>
-          h('div', { class: 'wrapped' }, [(p as { itemNode: never }).itemNode]),
+        itemRender: (p) => h('div', { class: 'wrapped' }, [p.itemNode]),
       },
     );
     await flush();
@@ -143,8 +139,7 @@ describe('Steps · C8-R2 插槽（render fn → scoped slot，无同名 prop）'
     const w = mountSteps(
       {},
       {
-        itemWrapperRender: (p: unknown) =>
-          h('div', { class: 'wrapper-wrap' }, [(p as { itemNode: never }).itemNode]),
+        itemWrapperRender: (p) => h('div', { class: 'wrapper-wrap' }, [p.itemNode]),
       },
     );
     await flush();
@@ -165,8 +160,8 @@ describe('Steps · C8-R2 插槽（render fn → scoped slot，无同名 prop）'
     const w = mountSteps(
       { type: 'dot', current: 1 },
       {
-        progressDot: (p: unknown) => {
-          const { index, status } = p as { index: number; status: string };
+        progressDot: (p) => {
+          const { index, status } = p;
           return h('i', { class: 'dot-render' }, `${index}-${String(status)}`);
         },
       },

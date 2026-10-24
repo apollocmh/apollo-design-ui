@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、502 行 owner/field 清单。内容候选 148、渲染候选 74、数据/配置 146、内部/废弃 134；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、506 行 owner/field 清单。内容候选 148、渲染候选 74、数据/配置 146、内部/废弃 138；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -223,6 +223,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **2026-10-25 Timeline 条目语义增量**：纯转换遗漏已声明的项级classNames/styles，三条回归先红后绿后补齐转发，验证当前DOM、样式优先级、原生槽共用/输入保持与SSR，见 [报告](audit/2026-10-25-timeline-item-semantics-remediation.md)。
 
 **2026-10-25 断点响应性增量**：Steps固化初始responsive选择，共享useBreakpoint恢复发布时遗漏当前快照；三条回归修前全失败。修复getter/暂停缓存与立即恢复，扩展SSR/卸载、Avatar数值转响应式尺寸、List静态转响应式列与输入保持，见 [专项报告](audit/2026-10-25-breakpoint-reactivity-remediation.md)。
+
+**2026-10-25 Steps 原生槽增量**：四个已实现的槽补齐组件声明与精确模板推断，移除never/unknown桥接及未消费的默认槽类型；inline itemRender递归挂载Tooltip、无itemRender时默认提示缺失均已独立复现并修复，见 [专项报告](audit/2026-10-25-steps-native-slots-remediation.md)。新增原生Demo，未保留函数prop兼容层。
 
 ---
 
@@ -346,7 +348,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Slider | 15/15 | —；键盘/范围 |
 | Rate | 9/9 | F10 消费 `pickAttrs`；class 和键盘 |
 | Segmented | 16/16 | —；受控 / 响应式选项 |
-| Steps | 20/20 | 部分 scoped slots 已实现，不重报全无；F11 数据/模板边界 |
+| Steps | 21/20 | 四个原生槽已接精确类型，inline提示递归/缺失已修；Apollo基线仍缺失 |
 | Progress | 17/17 | —；aria 值/动画 |
 | Pagination | 15/16 | F11/F10：原生item/total/size槽及List/Table转发已专项修复；Apollo基线仍待验收 |
 | Breadcrumb | 10/10 | F11：itemRender 单对象槽和默认子组件更新/key已修复；24张Apollo基线缺失 |

@@ -6,9 +6,17 @@
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
-import { computed, defineComponent, h, inject, type PropType } from 'vue';
+import { computed, defineComponent, h, inject, type PropType, type SlotsType } from 'vue';
 import { clsx } from '../_internal/clsx';
-import type { StepItem, StepsRenderInfo, StepsStatus } from './interface';
+import type {
+  StepItem,
+  StepsItemRenderSlotProps,
+  StepsItemWrapperRenderSlotProps,
+  StepsRenderInfo,
+  StepsSemanticClassNames,
+  StepsSemanticStyles,
+  StepsStatus,
+} from './interface';
 import Rail from './Rail';
 import StepIcon, {
   provideStepIconSemantic,
@@ -30,16 +38,22 @@ export interface StepProps {
   onClick?: (next: number) => void;
 }
 
+interface StepSlots {
+  icon?: () => VNodeChild;
+  itemRender?: (props: StepsItemRenderSlotProps) => VNodeChild;
+  itemWrapperRender?: (props: StepsItemWrapperRenderSlotProps) => VNodeChild;
+}
+
 const Step = defineComponent({
   name: 'AStepsStep',
   props: {
     prefixCls: { type: String, required: true },
     classNames: {
-      type: Object as PropType<Record<string, string | undefined>>,
+      type: Object as PropType<StepsSemanticClassNames>,
       default: undefined,
     },
     styles: {
-      type: Object as PropType<Record<string, CSSProperties | undefined>>,
+      type: Object as PropType<StepsSemanticStyles>,
       default: undefined,
     },
     data: { type: Object as PropType<StepItem>, required: true },
@@ -54,8 +68,9 @@ const Step = defineComponent({
       default: undefined,
     },
   },
+  slots: Object as SlotsType<StepSlots>,
   setup(props, { slots }) {
-    const { ItemComponent = 'div' } = inject<Record<string, unknown>>(stepsIconContextKey, {});
+    const context = inject(stepsIconContextKey, undefined);
 
     // rc 的 StepIconSemanticContext.Provider：item 级 icon 类名/样式 → StepIcon
     const iconSemantic = computed<StepIconSemantic>(() => ({
@@ -84,7 +99,7 @@ const Step = defineComponent({
         styles: itemStylesRaw,
         key: _itemKey,
         ...restItemProps
-      } = data as StepItem & Record<string, unknown>;
+      } = data;
       const itemClassNames = itemClassNamesRaw ?? {};
       const itemStyles = itemStylesRaw ?? {};
 
@@ -135,10 +150,10 @@ const Step = defineComponent({
       // ---- icon ----
       // C8-R2：icon 内容由 Steps 的 `#icon` 插槽提供**完整的 StepIcon 节点**
       //（含 status 图标/序号/进度环），Step 只在 #iconRender 插槽存在时替换。
-      const iconNode: VNodeChild = (slots.icon?.() as VNodeChild) ?? h(StepIcon);
+      const iconNode: VNodeChild = slots.icon?.() ?? h(StepIcon);
 
       // ---- wrapper ----
-      let wrapperNode = h(
+      let wrapperNode: VNodeChild = h(
         'div',
         {
           class: clsx(`${itemCls}-wrapper`, props.classNames?.itemWrapper, itemClassNames.wrapper),
@@ -253,14 +268,12 @@ const Step = defineComponent({
       );
 
       if (slots.itemWrapperRender) {
-        const replaced = slots.itemWrapperRender({ itemNode: wrapperNode }) as
-          | VNodeChild
-          | undefined;
-        wrapperNode = (replaced ?? wrapperNode) as typeof wrapperNode;
+        const replaced = slots.itemWrapperRender({ itemNode: wrapperNode });
+        wrapperNode = replaced ?? wrapperNode;
       }
 
-      let stepNode = h(
-        ItemComponent as never,
+      let stepNode: VNodeChild = h(
+        context?.ItemComponent ?? 'div',
         {
           ...restItemProps,
           ...accessibilityProps,
@@ -280,8 +293,8 @@ const Step = defineComponent({
           index: renderInfo.index,
           active: renderInfo.active,
           item: renderInfo.item,
-        }) as VNodeChild | undefined;
-        stepNode = (replaced || null) as typeof stepNode;
+        });
+        stepNode = replaced ?? null;
       }
 
       return stepNode;

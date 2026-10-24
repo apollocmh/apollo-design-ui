@@ -3881,7 +3881,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25：断点getter重新启用立即发布当前快照；Steps响应性开关不固定setup初值，Avatar/List动态转响应式复用同一修复。证据见 docs/audit/2026-10-25-breakpoint-reactivity-remediation.md；保留历史验收状态，未宣称新视觉验收。",
+      "notes": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25：断点getter重新启用立即发布当前快照；Steps响应性开关不固定setup初值，Avatar/List动态转响应式复用同一修复。证据见 docs/audit/2026-10-25-breakpoint-reactivity-remediation.md；保留历史验收状态，未宣称新视觉验收。\n2026-10-25 F11/ADR0007：四槽SlotsType与精确SFC作用域接通，移除never/unknown桥接和未消费default类型；inline itemRender Tooltip自引用与默认inline提示缺失分别先红后绿。报告 docs/audit/2026-10-25-steps-native-slots-remediation.md；21个Demo，9张Apollo基线仍缺失，未重新声明整组件验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

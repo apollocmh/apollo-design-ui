@@ -6,17 +6,20 @@
  * + 使用者 className。
  */
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, InjectionKey } from 'vue';
 import { computed, defineComponent, h, inject, type PropType, provide, type Ref, unref } from 'vue';
+
+import type { StepsSemanticClassNames, StepsSemanticStyles } from './interface';
 
 /** StepIcon 的三层合并上下文（rc 的 StepsContext 相关切片）。 */
 export interface StepsIconContextValue {
   prefixCls: string;
-  classNames?: Record<string, string | undefined>;
-  styles?: Record<string, CSSProperties | undefined>;
+  classNames?: StepsSemanticClassNames;
+  styles?: StepsSemanticStyles;
+  ItemComponent?: string;
 }
 
-export const stepsIconContextKey = Symbol('stepsIconContext');
+export const stepsIconContextKey: InjectionKey<StepsIconContextValue> = Symbol('stepsIconContext');
 
 export const stepIconSemanticContextKey = Symbol('stepIconSemanticContext');
 

@@ -12,6 +12,7 @@ import ListPagination from '../../../packages/ui/src/list/demo/pagination.vue';
 import ListResponsive from '../../../packages/ui/src/list/demo/responsive.vue';
 import PaginationSlots from '../../../packages/ui/src/pagination/demo/native-slots.vue';
 import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-options.vue';
+import StepsNativeSlots from '../../../packages/ui/src/steps/demo/native-slots.vue';
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
 import TabsPopup from '../../../packages/ui/src/tabs/demo/popup-render.vue';
 import TimelineSlots from '../../../packages/ui/src/timeline/demo/native-slots.vue';
@@ -80,6 +81,7 @@ const Demo = {
   'timeline-native': TimelineNative,
   'breakpoint-native': BreakpointNative,
   'timeline-slots': TimelineSlots,
+  'steps-native-slots': StepsNativeSlots,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

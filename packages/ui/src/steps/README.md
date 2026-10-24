@@ -73,3 +73,5 @@ registry 数据：token 数 = **13**。关键默认值（`prepareStepsComponentT
 - lint 0 错误 · registry:check 18/18
 
 2026-10-25：当前数据/布局/原生attrs/ConfigProvider与语义函数响应性已专项修复，见 [报告](../../../../docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md)。保留历史验收记录；Apollo基线缺失，Timeline富内容模板事项继续推进。
+
+2026-10-25：四个具名槽接入真实SlotsType，移除桥接never/unknown断言和未消费的default类型；修复inline itemRender自引用Tooltip与无itemRender默认Tooltip缺失。原生Demo增至21，见 [迁移说明](../../../../docs/migrations/steps-native-slots.md) 与 [报告](../../../../docs/audit/2026-10-25-steps-native-slots-remediation.md)，不宣称新视觉验收。

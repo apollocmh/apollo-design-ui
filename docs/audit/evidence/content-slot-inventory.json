@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 502,
+    "rows": 506,
     "byCategory": {
       "data": 134,
       "component-content-candidate": 148,
       "deprecated": 53,
-      "internal": 81,
+      "internal": 85,
       "render-function-candidate": 74,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
       "review": 210,
-      "skip": 134,
+      "skip": 138,
       "implemented-verified": 12
     }
   },
@@ -10237,7 +10237,9 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
           "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/inline-slot.test.ts",
           "packages/ui/src/steps/__tests__/semantic.test.ts"
         ]
       },
@@ -10285,8 +10287,10 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Step.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -10349,7 +10353,9 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
           "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/inline-slot.test.ts",
           "packages/ui/src/steps/__tests__/native-reactivity.test.ts",
           "packages/ui/src/steps/__tests__/semantic.test.ts"
         ]
@@ -10453,7 +10459,9 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
           "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/inline-slot.test.ts",
           "packages/ui/src/steps/__tests__/semantic.test.ts"
         ]
       },
@@ -10534,13 +10542,158 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
           "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/inline-slot.test.ts",
           "packages/ui/src/steps/__tests__/native-reactivity.test.ts",
           "packages/ui/src/steps/__tests__/semantic.test.ts"
         ]
       },
       "decision": "review",
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "steps",
+      "owner": "StepsSlots",
+      "prop": "iconRender",
+      "category": "internal",
+      "source": "packages/ui/src/steps/interface.ts:181",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Steps.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
+          "packages/ui/src/steps/__tests__/index.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "steps",
+      "owner": "StepsSlots",
+      "prop": "itemRender",
+      "category": "internal",
+      "source": "packages/ui/src/steps/interface.ts:182",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Step.ts",
+          "packages/ui/src/steps/Steps.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Step.ts",
+          "packages/ui/src/steps/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
+          "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/inline-slot.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "steps",
+      "owner": "StepsSlots",
+      "prop": "itemWrapperRender",
+      "category": "internal",
+      "source": "packages/ui/src/steps/interface.ts:183",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Step.ts",
+          "packages/ui/src/steps/Steps.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Step.ts",
+          "packages/ui/src/steps/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
+          "packages/ui/src/steps/__tests__/index.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "steps",
+      "owner": "StepsSlots",
+      "prop": "progressDot",
+      "category": "internal",
+      "source": "packages/ui/src/steps/interface.ts:184",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/Steps.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/demo/customized-progress-dot.vue",
+          "packages/ui/src/steps/demo/native-slots.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
+          "packages/ui/src/steps/__tests__/index.test.ts",
+          "packages/ui/src/steps/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "switch",

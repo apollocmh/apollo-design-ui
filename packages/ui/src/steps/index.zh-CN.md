@@ -13,7 +13,7 @@ subtitle: 步骤条
 
 ## 代码演示
 
-见 [`demo/`](./demo)（20 个，覆盖 antd 的主要用户场景）。
+见 [`demo/`](./demo)（21 个，包含原生作用域槽场景）。
 
 ## API
 
@@ -49,6 +49,8 @@ subtitle: 步骤条
 > ⚠️ C8-R2：antd 的 `iconRender` / `itemRender` / `itemWrapperRender` /
 > `progressDot(fn)` 在本仓**一律是作用域插槽**，不保留同名 prop。`items` 数组字段
 > （`icon` 等）是数据 API，`h()` 程序化传 VNode 合法。
+
+四个槽均接收表中单个具名对象，组件声明与原生Vue模板可精确推断作用域；返回值为VNodeChild。显式空槽覆盖对应节点，动态移除恢复默认渲染。items提供条目数据，不提供未实现的默认内容槽；之前StepsSlots.default的空声明已直接移除。内联模式有正文时默认显示Tooltip，无需额外itemRender；自定义itemRender也能安全渲染itemNode。详见[原生槽记录](../../../../docs/migrations/steps-native-slots.md)。
 
 ## 设计说明
 

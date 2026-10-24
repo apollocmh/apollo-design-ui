@@ -178,9 +178,8 @@ export interface StepsProps {
 // ---------------------------------------------------------------------------
 
 export interface StepsSlots {
-  default?: () => unknown;
-  iconRender?: (props: StepsIconRenderSlotProps) => unknown;
-  itemRender?: (props: StepsItemRenderSlotProps) => unknown;
-  itemWrapperRender?: (props: StepsItemWrapperRenderSlotProps) => unknown;
-  progressDot?: (props: StepsProgressDotSlotProps) => unknown;
+  iconRender?: (props: StepsIconRenderSlotProps) => VNodeChild;
+  itemRender?: (props: StepsItemRenderSlotProps) => VNodeChild;
+  itemWrapperRender?: (props: StepsItemWrapperRenderSlotProps) => VNodeChild;
+  progressDot?: (props: StepsProgressDotSlotProps) => VNodeChild;
 }

@@ -23,6 +23,7 @@ import {
   normalizeStyle,
   type PropType,
   provide,
+  type SlotsType,
   type VNodeChild,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -36,6 +37,7 @@ import type {
   StepsProps,
   StepsSemanticClassNames,
   StepsSemanticStyles,
+  StepsSlots,
   StepsStatus,
   StepsType,
 } from './interface';
@@ -84,6 +86,7 @@ export const Steps = defineComponent({
       default: undefined,
     },
   },
+  slots: Object as SlotsType<StepsSlots>,
   setup(props, { attrs, slots }) {
     const config = useComponentConfig<{
       className?: string;
@@ -345,14 +348,14 @@ export const Steps = defineComponent({
       get ItemComponent() {
         return internalContext?.itemComponent;
       },
-    } as never);
+    });
 
     return () => {
       const itemCls = prefixCls.value;
 
       const renderStep = (item: StepItem, index: number): VNodeChild => {
         const stepIndex = index;
-        const itemStatus = statuses.value[index];
+        const itemStatus = statuses.value[index] ?? 'wait';
         const nextStatus = statuses.value[index + 1];
         const data: StepItem = { ...item, status: itemStatus };
         const mappedIndex = display.value.displaySteps[index]?.originIndex;
@@ -361,10 +364,15 @@ export const Steps = defineComponent({
             ? (props.initial ?? 0) + mappedIndex
             : (props.initial ?? 0) + index;
 
+        const renderItem = slots.itemRender;
+        const inlineContent = data.content ?? data.description;
+        const hasInlineContent =
+          isInline.value && inlineContent !== undefined && inlineContent !== null;
+
         return h(
           Step,
           {
-            key: (item.key as string | number) ?? stepIndex,
+            key: item.key ?? stepIndex,
             prefixCls: itemCls,
             classNames: mergedClassNames.value,
             styles: mergedStyles.value,
@@ -391,49 +399,52 @@ export const Steps = defineComponent({
                   index: realIndex,
                   active: stepIndex === display.value.mappedDisplayCurrent,
                   item: data,
-                }) as VNodeChild | undefined;
+                });
                 iconNode = replaced ?? iconNode;
               } else if (slots.progressDot && isDot.value) {
                 const replaced = slots.progressDot({
                   iconNode,
                   index: realIndex,
                   status: itemStatus,
-                  title: (data.title ?? null) as VNodeChild,
-                  description: (data.description ?? null) as VNodeChild,
-                  content: (data.content ?? null) as VNodeChild,
-                }) as VNodeChild | undefined;
+                  title: data.title ?? null,
+                  description: data.description ?? null,
+                  content: data.content ?? null,
+                });
                 iconNode = replaced ?? iconNode;
               }
               return iconNode;
             },
-            itemRender: slots.itemRender
-              ? (p: { itemNode: VNodeChild }) => {
-                  // antd：inline 且有 content ⇒ 包 Tooltip；外层 Wave（本仓 v1 无 wave 基建，降级）
-                  let content: VNodeChild = p.itemNode;
-                  if (isInline.value && data.content !== undefined && data.content !== null) {
-                    content = h(
-                      Tooltip,
-                      { destroyOnHidden: true, title: data.content as never },
-                      { default: () => content },
-                    );
+            itemRender:
+              renderItem || hasInlineContent
+                ? (p: { itemNode: VNodeChild }) => {
+                    // Capture the original before wrapping; a closure over the
+                    // assigned Tooltip node recursively mounts that Tooltip itself.
+                    const originNode = p.itemNode;
+                    const content = hasInlineContent
+                      ? h(
+                          Tooltip,
+                          { destroyOnHidden: true },
+                          { default: () => originNode, title: () => inlineContent },
+                        )
+                      : originNode;
+                    return renderItem
+                      ? renderItem({
+                          itemNode: content,
+                          index: realIndex,
+                          active: stepIndex === display.value.mappedDisplayCurrent,
+                          item: data,
+                        })
+                      : content;
                   }
-                  return (slots.itemRender as (p2: never) => unknown)({
-                    itemNode: content,
-                    index: realIndex,
-                    active: stepIndex === display.value.mappedDisplayCurrent,
-                    item: data,
-                  } as never);
-                }
-              : undefined,
+                : undefined,
             // antd：panel 类型在 wrapper 后追加 PanelArrow（用户 #itemWrapperRender 插槽优先）
             itemWrapperRender:
               slots.itemWrapperRender ??
               (mergedType.value === 'panel'
-                ? (p: { itemNode: VNodeChild }) =>
-                    [
-                      p.itemNode,
-                      h(PanelArrow, { prefixCls: prefixCls.value }),
-                    ] as unknown as VNodeChild
+                ? (p: { itemNode: VNodeChild }) => [
+                    p.itemNode,
+                    h(PanelArrow, { prefixCls: prefixCls.value }),
+                  ]
                 : undefined),
           },
         );
