@@ -166,15 +166,15 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **首选改法**：把 `normalizeItems` / `getCalcRows` 的纯计算改成接收当前 render 中的 children（`render-local`）并当轮直接返回 rows；`props.items` 存在时可以安全走独立 computed，不依赖 slot；完全删掉 render 阶段对 `currentChildren.value` 的写入。不要改为 `watchEffect` 读取 slots，也不要在 render 里 bump version。添加反向门禁：只改父级无关状态不应造成无故二次更新；动态新增/删除 Descriptions.Item 要当帧出现，SSR 无 hydration warning，复杂响应式 items 表/合并单元仍通过。
 
-### F09 · P2 · 语义 change 已声明，click 仍待 D02｜语义事件仍靠 React 回调式 `$attrs` 模拟
+### F09 · P2 · 语义 change 已声明，原生 click 已裁决待迁移｜语义事件仍靠 React 回调式 `$attrs` 模拟
 
 **源码**：[Switch.ts#L91-L104](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/switch/Switch.ts#L91-L104)、[L158-L204](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/switch/Switch.ts#L158-L204)；[InputNumber.ts#L142-L154](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L142-L154)、[L345-L358](https://github.com/apollocmh/apollo-design-ui/blob/master/packages/ui/src/input-number/InputNumber.ts#L345-L358)。
 
 **修前事实**：`Switch` 只声明 `update:checked` / `update:value`，把 `onChange/onClick` 留在 attrs 里并手动调用；`InputNumber` 同样只声明 `update:value`，手调 `attrs.onChange`。**Vue 模板的 `@change` 仍可能按同一个 `onChange` 键正常调用，因此不是“@change 整体失效”**；真实问题是“组件没有把语义事件声明为 emits，开发体验/类型契约不够 Vue 原生”，而 `Switch` 的 `@click` 会收到布尔结果而不是通常的原生 `MouseEvent`。
 
-**当前处理**：两组件已声明 typed change emits，所有发送都经 emit，InputNumber 包装层单次转发；移除手动 attrs.onChange 调用。原生 change 不混入语义事件，Switch 的 click 单独保持并跟踪 D02。
+**当前处理**：两组件已声明 typed change emits，所有发送都经 emit，InputNumber 包装层单次转发；移除手动 attrs.onChange 调用。原生 change 不混入语义事件，Switch 的 click 当前仍是旧载荷；2026-10-24 用户已通过 ADR 0007 要求直接修正为原生事件，D02 已裁决，具体迁移与单次发送/键盘覆盖待落实。
 
-**解决方向（修前）**：将**语义 change** 明确声明为 emits 并只通过 `emit('change', payload...)` 发送；回调仍能通过 Vue `onChange` 注册语法自动接收 emit，无需再双调手工回调。⚠️ 真正危险的是 `click`：Vue `@click` 与 legacy React `onClick(result,event)` 使用同一监听键，不能在不破坏兼容的情况下承诺两套不同 payload。应立 **D02 用户裁决**（本大版本保持，主推 `@change`，还是下个主版本改为原生点击事件）；不能简单同时 `emit('click')` + 手调 `attrs.onClick`，否则双触发。迁移时补负例断言“事件仅一次”，包括禁用、click、keyboard、v-model 和 TS 事件参数推断。
+**解决方向（修前）**：将**语义 change** 明确声明为 emits 并只通过 `emit('change', payload...)` 发送；回调仍能通过 Vue `onChange` 注册语法自动接收 emit，无需再双调手工回调。⚠️ 真正危险的是 `click`：Vue `@click` 与 legacy React `onClick(result,event)` 使用同一监听键，不能在不破坏兼容的情况下承诺两套不同 payload。该段为修前调查；**D02 现已由 ADR 0007 裁决直接改为原生事件，无兼容层/弃用期**；不能简单同时 `emit('click')` + 手调 `attrs.onClick`，否则双触发。迁移时补负例断言“事件仅一次”，包括禁用、click、keyboard、v-model 和 TS 事件参数推断。
 
 ### F10 · P3 · 已验证 DOM 目标与事件修复｜`pickAttrs` 的 `className` 处理依赖 DOM 特例
 
@@ -354,8 +354,8 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | 决策 | 选项 | 推荐及理由 |
 |---|---|---|
 | **D01：已公开 prop/slot 优先级的变更边界** | 逐组件核实旧契约、当前使用和行为影响 | F07 在当前未发布开发版直接统一内容 slot 优先，独立记录迁移与回归；不据此宣布所有未审查组件均已迁移 |
-| **D02：`Switch @click` 应是原生 `MouseEvent` 还是 React 的 `(checked,event)`** | A 当前版本保留旧载荷；B 立即改 DOM event；C 下个 major 改，并用 `@change` 表示状态 | **C**：Vue 自然预期 `@click` 为原生事件，但不能静默破坏现有回调 |
-| **D03：内容渲染函数 prop 的处理** | **已裁决：直接改为 Vue 插槽** | 用户 2026-10-23 明确要求当前开发阶段直接修改，不保留旧函数兼容层或弃用期；见 ADR 0006。业务/算法函数按职责保留，数据项渲染逐项评估 |
+| **D02：Switch @click 事件载荷** | **已裁决：直接使用原生 DOM 事件；实现迁移待执行** | 用户 2026-10-24 要求不得为 React 回调/DOM 形态牺牲 Vue 公共用法，见 ADR 0007；状态仍由 change/update 表达，键盘行为与迁移须单独验证，不保留旧载荷兼容 |
+| **D03：内容渲染函数 prop 的处理** | **已裁决：直接改为 Vue 插槽** | 用户 2026-10-23 明确要求当前开发阶段直接修改，不保留旧函数兼容层或弃用期；2026-10-24 再扩展到妨碍 Vue 用法的 React 回调/DOM 形态，见 ADR 0006 / 0007。业务/算法函数按职责保留，数据项渲染逐项评估 |
 | **D04：动态 `prefixCls` 与零运行时 CSS** | A 不支持动态前缀；B 允许 DOM 前缀变更但 CSS 需预生成/预加载；C 恢复运行时样式注入 | **B**：遵循已裁决零运行时原则；不得因为 F03 重新引入运行时 CSS-in-JS |
 | **D05：补齐上游 Demo 的口径** | A 逐个文件 100%；B 核心能力全覆盖、debug/外部依赖例外；C 停止补 Demo | **B**：把“支持 API 能否用 Vue 示例真实操作”作为验收判据，不做文件数量游戏 |
 
