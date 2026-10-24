@@ -33,7 +33,10 @@ subtitle: 评分
 | direction | 文本方向（rtl 时半星/方向键反向） | `'ltr' \| 'rtl'` | `'ltr'` |
 | autoFocus | 挂载后自动聚焦 | `boolean` | `false` |
 | tabIndex | 根元素的 tabIndex | `number` | `0` |
-| onChange / onHoverChange / onFocus / onBlur / onKeyDown | 回调（props 形态） | — | — |
+| onChange / onHoverChange / onFocus / onBlur | 语义回调 | — | — |
+| onKeyDown / onMouseLeave | 原生监听器的兼容拼写；模板可使用 `@keydown` / `@mouseleave` | — | — |
+
+原生监听器与内部状态处理经 Vue 属性合并，两种拼写注册同一函数时只调用一次；键盘事件先更新评分再通知监听器。disabled 时抑制键盘处理与通知。
 
 ### Slots
 

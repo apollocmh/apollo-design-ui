@@ -41,6 +41,8 @@ See [`demo/`](./demo) (**16** demos, mirroring antd's user-visible demos).
 
 ## API
 
+Native class, id, ARIA and mouse listeners target the trigger. Known Vue event keys such as `@mousedown` retain their Once/Passive/Capture suffixes. Attr-only updates read current values and listener replacement does not duplicate calls.
+
 ### Props
 
 | Property | Description | Type | Default | Global config |

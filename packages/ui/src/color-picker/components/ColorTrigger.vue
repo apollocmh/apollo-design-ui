@@ -26,7 +26,7 @@
  */
 
 import { useLocale } from '@apollo-design/locale';
-import { isFunction, pickAttrs } from '@apollo-design/utils';
+import { isFunction, pickAttrs, toVueDomAttrs } from '@apollo-design/utils';
 import { type CSSProperties, computed, h, useAttrs, type VNodeChild } from 'vue';
 import { NodeRenderer } from '../../_internal/node-renderer';
 import type { AggregationColor } from '../color';
@@ -143,7 +143,7 @@ const container = computed(() =>
 );
 
 /** 判据 5。 */
-const forwardedAttrs = computed(() => pickAttrs(attrs as Record<string, unknown>));
+const forwardedAttrs = computed(() => toVueDomAttrs(pickAttrs(attrs)));
 
 /** 判据 4。 */
 const rootStyle = computed(() => ({ ...props.styles.root, ...props.style }));

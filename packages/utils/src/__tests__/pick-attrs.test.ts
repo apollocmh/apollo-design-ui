@@ -61,6 +61,18 @@ describe('pickAttrs 白名单匹配', () => {
 });
 
 describe('★ pickAttrs 的事件键改写（与 rc-util 的有意差异）', () => {
+  it('F10: accepts Vue template event keys and their modifiers without lowercasing the suffix', () => {
+    const handler = () => {};
+    expect(
+      pickAttrs({
+        onMousedown: handler,
+        onKeydownOnce: handler,
+        onClickCapture: handler,
+        onUnknownCapture: handler,
+      }),
+    ).toEqual({ onMousedown: handler, onKeydownOnce: handler, onClickCapture: handler });
+  });
+
   it('默认把 React 事件名改写为 Vue 的规范事件键', () => {
     const props = { onClick: 'a', onKeyDown: 'b', onDoubleClick: 'c', onMouseEnter: 'd' };
     expect(pickAttrs(props, { attr: true })).toEqual({

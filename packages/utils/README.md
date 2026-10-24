@@ -29,7 +29,7 @@
 - DOM：canUseDom / contains / isVisible / isStyleSupport / getScroll / getElement / isDOM
 - 调度：raf / cancelRaf / throttleByAnimationFrame / throttle / debounce
 - ref 工具：fillRef / composeRef / useComposeRef / supportRef / supportNodeRef / getNodeRef
-- 属性工具：pickAttrs / toNativeEventName（React 合成事件名 → DOM 事件名）
+- 属性工具：pickAttrs / toNativeEventName / toVueDomAttrs / mergeDomAttrs
 - 对象工具：omit / mergeProps / isEqual / get / set / merge / mergeWith
 - 子节点工具：toArray（展平 slot / 数组 / Fragment）
 - 键盘：KeyCode
@@ -50,7 +50,8 @@
 ## 必须遵守的契约
 
 - warning 的输出格式必须与 antd 一致（含组件名前缀），因为测试会断言 warning
-- pickAttrs 的白名单逐字复刻，且必须做 React 事件名 → DOM 事件名的转换（见 docs/foundation/rc-util-contract.md §6.1）
+- pickAttrs 保留既有属性白名单与 className 数据输出，识别已知 Vue 模板事件键及 Once/Passive/Capture 后缀；旧事件拼写转为 Vue 键，两种拼写的监听器按函数身份单次合并。未知业务事件仍过滤。
+- 真正落 DOM 时使用 toVueDomAttrs / mergeDomAttrs：className 归一为 class，class/style 按 Vue 规则合并，监听器数组按函数身份去重，不修改输入记录。Vue 事件后缀保持大小写，原生 change 与业务事件的语义由组件明确路由。
 - isEqual 的共享引用 quirk 必须保留（见同文档 §6.2）
 - raf 的 cancel 对已完成的 id 必须幂等且不抛错
 - useResizeObserver 必须支持批量监听同一元素（单例 observer 复用）

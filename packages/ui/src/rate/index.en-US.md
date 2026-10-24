@@ -33,7 +33,10 @@ See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
 | direction | Text direction (rtl flips half-star/arrow logic) | `'ltr' \| 'rtl'` | `'ltr'` |
 | autoFocus | Auto focus after mount | `boolean` | `false` |
 | tabIndex | tabIndex of the root ul | `number` | `0` |
-| onChange / onHoverChange / onFocus / onBlur / onKeyDown | Callbacks (prop-form) | — | — |
+| onChange / onHoverChange / onFocus / onBlur | Semantic callbacks | — | — |
+| onKeyDown / onMouseLeave | Alternate spellings of native listeners; templates use `@keydown` / `@mouseleave` | — | — |
+
+Native listeners are merged with internal handling. Registering the same function under both spellings invokes it once. Keyboard handling updates the rating before notifying listeners; disabled ratings suppress both.
 
 ### Slots
 

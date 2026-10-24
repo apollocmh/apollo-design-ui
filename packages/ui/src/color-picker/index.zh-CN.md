@@ -40,6 +40,8 @@ subtitle: 颜色选择器
 
 ## API
 
+原生 `class`、`id`、ARIA 和鼠标监听器落在触发器；Vue 模板的 `@mousedown` 等已知原生事件及 Once/Passive/Capture 后缀保留。仅更新 attrs 时也会读取当前值，监听器替换不重复调用。
+
 ### Props
 
 | 参数 | 说明 | 类型 | 默认值 | 全局配置 |

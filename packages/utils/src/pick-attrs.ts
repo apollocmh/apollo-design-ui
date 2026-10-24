@@ -37,8 +37,17 @@
  *   `{...}`         → 原样展开（未给的键为 `undefined` → falsy）
  */
 
+import { mergeDomAttrs } from './dom-attrs';
 import { isReactEventName, toVueEventName } from './event-name';
 import { PICK_ATTRS_ALL } from './pick-attrs-allowlist';
+
+const VUE_EVENT_NAMES = new Set(
+  [...PICK_ATTRS_ALL].map(toVueEventName).filter((name): name is string => name !== null),
+);
+
+/** Vue event option suffixes stay case-sensitive for runtime-dom. */
+const isVueEventKey = (key: string): boolean =>
+  VUE_EVENT_NAMES.has(key.replace(/(?:Once|Passive|Capture)+$/, ''));
 
 export interface PickConfig {
   /** 是否挑 `role` 与 `aria-*`。 */
@@ -86,19 +95,21 @@ export default function pickAttrs(
       // Data
       (config.data && hasPrefix(key, DATA_PREFIX)) ||
       // Attr / 事件
-      (config.attr && PICK_ATTRS_ALL.has(key));
+      (config.attr && (PICK_ATTRS_ALL.has(key) || isVueEventKey(key)));
 
     if (!matched) continue;
 
-    if (!rawEventNames && isReactEventName(key)) {
-      const vueName = toVueEventName(key);
-      if (vueName) {
-        attrs[vueName] = (props as Record<string, unknown>)[key];
-        continue;
-      }
+    const target =
+      !rawEventNames && PICK_ATTRS_ALL.has(key) && isReactEventName(key)
+        ? (toVueEventName(key) ?? key)
+        : key;
+    const value = (props as Record<string, unknown>)[key];
+    if (!rawEventNames && isVueEventKey(target)) {
+      // Preserve both spellings' listeners, deduplicating the same function.
+      attrs[target] = mergeDomAttrs({ [target]: attrs[target] }, { [target]: value })[target];
+    } else {
+      attrs[target] = value;
     }
-
-    attrs[key] = (props as Record<string, unknown>)[key];
   }
 
   return attrs;

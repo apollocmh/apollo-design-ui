@@ -24,6 +24,7 @@ import { StarFilled } from '@apollo-design/icons';
 import {
   isPlainObject,
   KeyCode,
+  mergeDomAttrs,
   pickAttrs,
   useControlledValue,
   useDevWarning,
@@ -87,7 +88,7 @@ const RateComponent = defineComponent({
   setup(props, { attrs, emit, expose, slots }) {
     const callbacks = attrs as unknown as Pick<
       RateProps,
-      'onChange' | 'onHoverChange' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onMouseLeave'
+      'onChange' | 'onHoverChange' | 'onFocus' | 'onBlur'
     >;
 
     const context = useComponentConfig<RateConfig>('rate');
@@ -177,14 +178,11 @@ const RateComponent = defineComponent({
       callbacks.onHoverChange?.(nextHoverValue);
     };
 
-    const onMouseLeaveCallback = (event?: MouseEvent): void => {
+    const onMouseLeaveCallback = (): void => {
       if (!mergedDisabled.value) {
         hoverValue.value = null;
         cleanedValue.value = null;
         callbacks.onHoverChange?.(undefined);
-      }
-      if (event) {
-        callbacks.onMouseLeave?.(event);
       }
     };
 
@@ -219,7 +217,6 @@ const RateComponent = defineComponent({
           event.preventDefault();
         }
       }
-      callbacks.onKeyDown?.(event);
     };
 
     // =========================== Ref =============================
@@ -323,48 +320,45 @@ const RateComponent = defineComponent({
         .join(' ');
 
       // antd：restProps 经 pickAttrs({aria,data,attr}) 落根 ul。本仓的手工回调
-      // （onFocus/onBlur/onKeyDown/onMouseLeave/onChange/onHoverChange）已内联处理，
-      // 从 attrs 剔除避免重复绑定。
+      // 语义 focus/blur/change/hover 已内联处理，剔除后再合并原生 DOM 监听器。
       const {
         onFocus: _f,
         onBlur: _b,
-        onKeydown: _k,
-        onKeyDown: _k2,
-        onMouseleave: _ml,
-        onMouseLeave: _ml2,
         onChange: _c,
         onHoverChange: _h,
         ...restAttrs
       } = attrs as Record<string, unknown>;
       void _f;
       void _b;
-      void _k;
-      void _k2;
-      void _ml;
-      void _ml2;
       void _c;
       void _h;
 
-      // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
-      const rootStyle = {
-        ...(context.style as CSSProperties),
-        ...((attrs.style as CSSProperties) ?? {}),
-      };
+      // Native style values stay intact until mergeDomAttrs combines them with context style.
+      const domAttrs = mergeDomAttrs(pickAttrs(restAttrs, { aria: true, data: true, attr: true }));
+      if (mergedDisabled.value) {
+        for (const key of Object.keys(domAttrs)) {
+          if (/^onKeydown(?:Once|Passive|Capture)*$/.test(key)) delete domAttrs[key];
+        }
+      }
 
       return h(
         'ul',
-        {
-          ...pickAttrs(restAttrs, { aria: true, data: true, attr: true }),
-          class: classString,
-          style: rootStyle,
-          id: props.id,
-          tabIndex: mergedDisabled.value ? -1 : (props.tabIndex ?? 0),
-          onFocus: mergedDisabled.value ? null : onInternalFocus,
-          onBlur: mergedDisabled.value ? null : onInternalBlur,
-          onKeydown: mergedDisabled.value ? null : onInternalKeyDown,
-          onMouseleave: onMouseLeaveCallback,
-          ref: rootRef,
-        },
+        mergeDomAttrs(
+          {
+            class: classString,
+            style: context.style,
+            onFocus: mergedDisabled.value ? null : onInternalFocus,
+            onBlur: mergedDisabled.value ? null : onInternalBlur,
+            onKeydown: mergedDisabled.value ? null : onInternalKeyDown,
+            onMouseleave: onMouseLeaveCallback,
+          },
+          domAttrs,
+          {
+            id: props.id,
+            tabIndex: mergedDisabled.value ? -1 : (props.tabIndex ?? 0),
+            ref: rootRef,
+          },
+        ),
         starNodes,
       );
     };
