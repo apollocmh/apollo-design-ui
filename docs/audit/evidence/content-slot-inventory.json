@@ -12948,6 +12948,7 @@
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
           "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/index.test.ts",
+          "packages/ui/src/timeline/__tests__/item-semantics.test.ts",
           "packages/ui/src/timeline/__tests__/item-slots.test.ts",
           "packages/ui/src/timeline/__tests__/native-reactivity.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
@@ -13064,6 +13065,7 @@
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
           "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/index.test.ts",
+          "packages/ui/src/timeline/__tests__/item-semantics.test.ts",
           "packages/ui/src/timeline/__tests__/item-slots.test.ts",
           "packages/ui/src/timeline/__tests__/native-reactivity.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
@@ -13156,6 +13158,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
+          "packages/ui/src/timeline/__tests__/item-semantics.test.ts",
           "packages/ui/src/timeline/__tests__/item-slots.test.ts"
         ]
       },

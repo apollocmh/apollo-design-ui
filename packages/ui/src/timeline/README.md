@@ -151,3 +151,5 @@ L7 里值得单说的三条：① `dotSize` / `dotBg` **被引用但刻意不声
 2026-10-25：当前数据/布局/原生attrs/ConfigProvider与语义函数响应性已专项修复，见 [报告](../../../../docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md)。保留历史验收记录；Apollo基线缺失，Timeline富内容模板事项继续推进。
 
 2026-10-25：原生itemTitle/itemContent/itemIcon及当前作用域、空槽/移除、SSR、keyed输入保持已接通；无兼容层。旧空壳Item/无效TimelineSlot类型已移除，普通items不再误告警。见 [迁移说明](../../../../docs/migrations/timeline-item-slots.md) 与 [专项报告](../../../../docs/audit/2026-10-25-timeline-slots-remediation.md)。Demo增至15，保留历史验收数据。
+
+2026-10-25：修复useItems遗漏项级classNames/styles的转换；纯转换、当前DOM/插槽共用与SSR三条先红后绿，见 [报告](../../../../docs/audit/2026-10-25-timeline-item-semantics-remediation.md)。不将过去的语义demo/状态当成功能证据。

@@ -62,7 +62,7 @@ export function useItems(
   /** Steps 的中间变量名（与 `style/context.ts` 的 `sv` 同一套命名）。 */
   const varName = (name: string): string => `--${rootPrefixCls}-cmp-steps-${name}`;
 
-  const mergedItems: StepItem[] = (items ?? []).map((item, index) => {
+  const mergedItems: StepItem[] = (items ?? []).map<StepItem>((item, index) => {
     const {
       label,
       children,
@@ -70,6 +70,8 @@ export function useItems(
       content,
       color,
       className,
+      classNames,
+      styles,
       style,
       icon,
       dot,
@@ -110,10 +112,12 @@ export function useItems(
       content: content ?? children,
       style: mergedStyle,
       className: mergedClassName,
+      classNames,
+      styles,
       icon: mergedIcon,
       // 判据 5：恒有 status
       status: loading ? 'process' : 'finish',
-    } as StepItem;
+    };
   });
 
   // 废弃的 `pending` ⇒ 追加一项（⚠️ 这一项**没有** className / placement）
@@ -122,7 +126,7 @@ export function useItems(
       icon: pendingDot ?? h(LoadingOutlined),
       content: pending,
       status: 'process',
-    } as StepItem);
+    });
   }
 
   return mergedItems;

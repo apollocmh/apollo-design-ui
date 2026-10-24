@@ -3,7 +3,9 @@ import { ConfigProvider, Steps, Timeline, type StepsProps, type TimelineItemType
 import { h, ref, shallowRef } from 'vue';
 
 const rows = shallowRef<TimelineItemType[]>([
-  { key: 'a', title: 'Alpha', content: h('input', { 'aria-label': 'Timeline native input' }) },
+  { key: 'a', title: 'Alpha', content: h('input', { 'aria-label': 'Timeline native input' }),
+    classNames: { root: 'timeline-data-root', content: 'timeline-data-content' },
+    styles: { root: { minHeight: '80px' }, content: { opacity: 0.45 }, rail: { borderStyle: 'dashed' } } },
   { key: 'b', title: 'Beta', content: 'Second' },
 ]);
 const reverse = ref(false);
@@ -18,12 +20,17 @@ const maxCount = ref<number | undefined>(3);
 const stepItems = ref(Array.from({ length: 8 }, (_, index) => ({ key: index, title: `Step ${index}` })));
 const classNames: StepsProps['classNames'] = ({ props }) => ({ root: `step-current-${props.current}` });
 const styles: StepsProps['styles'] = ({ props }) => ({ root: { opacity: props.current === 0 ? 1 : 0.5 } });
+const updateSemantics = () => { rows.value = rows.value.map(row => row.key === 'a' ? {
+  ...row, classNames: { root: 'timeline-data-new', content: 'timeline-content-new' },
+  styles: { root: { minHeight: '120px' }, content: { opacity: 0.7 }, rail: { borderStyle: 'dotted' } },
+} : row); };
 const replaceRows = () => { rows.value = [...rows.value].reverse().map(row => ({ ...row, title: row.key === 'a' ? 'Alpha updated' : 'Beta updated' })); };
 const layout = () => { reverse.value = true; horizontal.value = true; titleSpan.value = '35%'; };
 const onChange = (value: number) => { changes.value++; current.value = value; };
 </script>
 
 <template>
+  <button @click="updateSemantics">Update item semantics</button>
   <button @click="replaceRows">Update timeline data</button>
   <button @click="layout">Change timeline layout</button>
   <button @click="alternate = !alternate">Toggle timeline alternate</button>

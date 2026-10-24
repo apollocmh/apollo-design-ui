@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-24T16:29:36.343Z",
+  "generatedAt": "2026-10-24T16:42:08.432Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2874,7 +2874,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25 F11/ADR0006/0007：原生itemTitle/itemContent/itemIcon单对象作用域槽，当前/空/移除/SSR与keyed输入保持；直接移除Timeline.Item/TimelineItemComponent/TimelineSlot空壳面及普通items误告警。迁移与证据见 docs/audit/2026-10-25-timeline-slots-remediation.md；新增原生Demo为15个，36张Apollo基线仍缺失。",
+      "why": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25 F11/ADR0006/0007：原生itemTitle/itemContent/itemIcon单对象作用域槽，当前/空/移除/SSR与keyed输入保持；直接移除Timeline.Item/TimelineItemComponent/TimelineSlot空壳面及普通items误告警。迁移与证据见 docs/audit/2026-10-25-timeline-slots-remediation.md；新增原生Demo为15个，36张Apollo基线仍缺失。\n2026-10-25：useItems补齐已声明的项级classNames/styles转发，移除两处StepItem强制断言；纯转换/当前DOM与原生槽/SSR三条修前失败，证据见 docs/audit/2026-10-25-timeline-item-semantics-remediation.md。保留历史状态，36张Apollo基线仍缺失。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",

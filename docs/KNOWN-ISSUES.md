@@ -220,6 +220,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Timeline 插槽增量**：新增单个 { item, index } 作用域的 itemTitle/itemContent/itemIcon，覆盖当前/空/条件/移除、反转显示索引和SSR，移除React空壳Item与无效默认槽类型，不留兼容层。见 [专项报告](audit/2026-10-25-timeline-slots-remediation.md) 与 [迁移说明](migrations/timeline-item-slots.md)。原生示例增至15个；不宣称全库F11或新视觉验收完成。
 
+**2026-10-25 Timeline 条目语义增量**：纯转换遗漏已声明的项级classNames/styles，三条回归先红后绿后补齐转发，验证当前DOM、样式优先级、原生槽共用/输入保持与SSR，见 [报告](audit/2026-10-25-timeline-item-semantics-remediation.md)。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

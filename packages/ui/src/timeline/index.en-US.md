@@ -82,6 +82,8 @@ See [`demo/`](./demo) (**15**, including native Vue item slots).
 Exposes `{ nativeElement }` — ⚠️ it is the **inner `Steps` root element**
 (`HTMLDivElement` or `HTMLOListElement`), because `Timeline` has no root DOM of its own.
 
+Item classNames/styles are preserved for root, title, icon, content, rail and other semantic targets, including with native content slots. Root styles merge in this order: component styles.item → item styles.root → item.style; content merges component styles.itemContent → item styles.content. Updating item semantics preserves same-key content nodes.
+
 ### Content slots
 
 | Name | Parameters | Description |

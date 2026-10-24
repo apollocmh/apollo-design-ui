@@ -75,6 +75,8 @@ subtitle: 时间轴
 | className / style / classNames / styles | 项级落点（`styles` 支持 `root` / `rail` / `content` 等项级槽） | |
 | label / children / dot / position | ⚠️ **都已废弃** ⇒ 用 `title` / `content` / `icon` / `placement` | |
 
+项级 classNames/styles 会保留并传入条目，作用于 root、title、icon、content、rail 等语义位置，也可与原生内容槽共用。root 样式按组件 styles.item → 项 styles.root → 项 style 合并；正文按组件 styles.itemContent → 项 styles.content 合并。更新项级语义值会保留同 key 内容节点。
+
 ### 实例方法（ref）
 
 暴露 `{ nativeElement }` —— ⚠️ 取的是**内部 `Steps` 的根元素**（`HTMLDivElement` 或

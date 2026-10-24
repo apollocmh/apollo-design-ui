@@ -50,6 +50,37 @@ try {
   const rootNode = await timeline.elementHandle();
   const inputNode = await input.elementHandle();
   await input.fill('kept timeline input');
+  assert.equal(
+    await timeline.locator('.timeline-data-root').evaluate((node) => node.style.minHeight),
+    '80px',
+  );
+  assert.equal(
+    await timeline.locator('.timeline-data-content').evaluate((node) => node.style.opacity),
+    '0.45',
+  );
+  assert.equal(
+    await timeline
+      .locator('.timeline-data-root .apollo-timeline-item-rail')
+      .evaluate((node) => node.style.borderStyle),
+    'dashed',
+  );
+  await page.getByRole('button', { name: 'Update item semantics', exact: true }).click();
+  assert.equal(await timeline.locator('.timeline-data-root').count(), 0);
+  assert.equal(
+    await timeline.locator('.timeline-data-new').evaluate((node) => node.style.minHeight),
+    '120px',
+  );
+  assert.equal(
+    await timeline.locator('.timeline-content-new').evaluate((node) => node.style.opacity),
+    '0.7',
+  );
+  assert.equal(
+    await timeline
+      .locator('.timeline-data-new .apollo-timeline-item-rail')
+      .evaluate((node) => node.style.borderStyle),
+    'dotted',
+  );
+
   await page.getByRole('button', { name: 'Update timeline data', exact: true }).click();
   assert.deepEqual(await timeline.locator('.apollo-timeline-item-title').allTextContents(), [
     'Beta updated',
@@ -103,7 +134,7 @@ try {
   assert.match(await steps.getAttribute('class'), /step-current-2/);
   assert.deepEqual(errors, []);
   console.log(
-    `PASS Timeline/Steps native reactivity: current data/reverse/orientation/mode/titleSpan/attrs/provider defaults, keyed input and root identity, step current/collapse/semantic functions/controlled click once; ${await browser.version()}; zero browser/Vue errors`,
+    `PASS Timeline/Steps native reactivity and item semantic updates: current data/reverse/orientation/mode/titleSpan/attrs/provider defaults, keyed input and root identity, step current/collapse/semantic functions/controlled click once; ${await browser.version()}; zero browser/Vue errors`,
   );
 } finally {
   await browser?.close();
