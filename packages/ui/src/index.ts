@@ -92,10 +92,10 @@ export type {
   BadgePresetColorKey,
   BadgePresetStatusColorType,
   BadgeProps,
-  BadgeSlots,
   BadgeRef,
   BadgeSemanticClassNames,
   BadgeSemanticStyles,
+  BadgeSlots,
   RibbonProps,
   RibbonRef,
   RibbonSemanticClassNames,
@@ -1239,8 +1239,7 @@ export { genLayoutStyle, genSiderStyle } from './layout/style';
 export type { ComponentToken as LayoutComponentToken } from './layout/style/token';
 export { prepareComponentToken as prepareLayoutComponentToken } from './layout/style/token';
 // ---------------------------------------------------------------------------
-// List —— 列表（⚠️ antd 6.6.4 已整体 deprecated，保留同款 console.error；
-// 替代品是 Listy）
+// List —— Vue 泛型列表，逐项内容使用 #item 作用域插槽。
 //
 // ⚠️ 类名前缀 `apollo-list`；**11 个 Component Token** + 2 个 `mergeToken` 派生
 //    （`listBorderedCls` / `minHeight`）。⚠️ css-var 声明块覆盖**两个根**：
@@ -1262,11 +1261,13 @@ export type {
   ListItemSemanticName,
   ListItemSemanticStyles,
   ListItemSlot,
+  ListItemSlotProps,
   ListLocale,
   ListProps,
   ListRef,
   ListSize,
   ListSlot,
+  ListSlots,
 } from './list';
 export { List, ListItem, ListItemMeta } from './list';
 export { genListStyle, genTokenDecls as genListTokenDecls } from './list/style';

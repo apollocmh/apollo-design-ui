@@ -1,60 +1,12 @@
-<script setup lang="ts">
-/**
- * `List` —— 列表。对应 antd 6.6.4 的 `es/list/index.tsx`（349 行）。
- *
- * 🚨 **本组件在 antd 6.6.4 里整体 deprecated** —— 源码无条件发
- * `warning(false, 'deprecated', "The \`List\` component is deprecated and will be removed in
- * the next major version. If you're using version 6.6.0 or later, please use \`Listy\` instead.")`
- * ⇒ 本仓保留同款告警（先例：dropdown 的 `DropdownButton`，D91）。
- * ⚠️ `rc-util` 的 `warning` **不去重**（已核对 `@rc-component/util/es/warning.js`）⇒
- *    与上游一样是**每次渲染都打印**。
- *
- * ── 十条必须复刻的判据 ───────────────────────────────────────────────────────
- *
- * 1. **`isSomethingAfterLastItem = !!(loadMore || pagination || footer)`**（三个**原始 prop**的真值）
- *    ⇒ `-something-after-last-item` 类。
- * 2. **`loading`**：`boolean` ⇒ 包成 `{ spinning }`；`isLoading = !!loadingProp?.spinning`。
- * 3. 🚨 **空态判据是「`splitDataSource.length === 0` **且** 无默认插槽 **且** 非 loading」**，
- *    回退链 `locale?.emptyText || renderEmpty?.('List') || <DefaultRenderEmpty/>`（`||` 不是 `??`）。
- *    ⚠️ `isLoading` 时 `childrenContent` 先被置成 `<div style="min-height:53px">`。
- * 4. **分页**：`pagination === false`（默认）不渲染；对象时
- *    `mergeProps({current:1,total:0,position:'bottom'}, {total,current,pageSize}, pagination)`。
- *    🚨 `current = Math.min(current, Math.ceil(total / pageSize))`。
- * 5. 🚨 **切片条件是 `dataSource.length > (current-1)*pageSize`** —— 不满足时**不切片**。
- * 6. 🚨 **`paginationContent` 在 top/bottom 两处使用** ⇒ Vue 侧**每次新建 vnode**；
- *    `position === 'both'` 时**两处都渲染**（顶部那条不能写 `v-else-if`）。
- * 7. **`size`**：`large→'lg'` / `small→'sm'`，其余**不加类**（`'default'` / `'medium'` 都不落类）。
- * 8. **`grid`**：`needResponsive` 由 `responsiveArray` 成员判定；`useBreakpoint(needResponsive)`；
- *    `currentBreakpoint` 取 `responsiveArray`（**从大到小**）**首个**为真的断点；
- *    `columnCount = (currentBreakpoint && grid[currentBreakpoint]) ?? grid.column`；
- *    `colStyle = { width: \`${100/n}%\`, maxWidth: \`${100/n}%\` }`（**字符串**）。
- * 9. **grid 模式的 DOM**：`<Row class={containerCls + cssVarCls} gutter>` >
- *    `<div style={colStyle}>` > `Item`（`Item` 自己再包一层 `Col`）——
- *    ⚠️ 那个 `<div>` **不是** `Col`，是 antd 就有的冗余层，逐字复刻。
- * 10. **`classString` 的顺序**：`prefixCls` → 条件类 → `contextClassName` → `className` →
- *     `rootClassName` → `cssVarCls`（`-rtl` 在条件类里）。
- *
- * ── 平台差异（PLATFORM）──────────────────────────────────────────────────────
- *
- * - **无 `hashId`**（D2）；**无 `useCSSVarCls`** ⇒ 直接拼 `${prefixCls}-css-var`（rate/card 同判）。
- * - **`ListContext` 注入 `ComputedRef`**（见 `context.ts`）。
- * - **`<Spin>` 的 `{...loadingProp}`** 直接 `v-bind`。
- * - **`ref` 归一成 `{ nativeElement }`**（可空）。
- */
-
-import { devUseWarning, isFunction, isPlainObject, mergeProps } from '@apollo-design/utils';
+<script setup lang="ts" generic="T = unknown">
 import {
-  type CSSProperties,
-  computed,
-  Fragment,
-  h,
-  provide,
-  ref,
-  useAttrs,
-  useSlots,
-  type VNode,
-  type VNodeChild,
-} from 'vue';
+  isEmptyVNode,
+  isFunction,
+  isPlainObject,
+  mergeDomAttrs,
+  mergeProps,
+} from '@apollo-design/utils';
+import { computed, Fragment, h, provide, ref, useAttrs, type VNode, type VNodeChild } from 'vue';
 import { NodeRenderer } from '../_internal/node-renderer';
 import { type Breakpoint, responsiveArray } from '../_internal/responsive-observer';
 import { useComponentConfig, useDirection } from '../config-provider/context';
@@ -64,7 +16,7 @@ import { Row, useBreakpoint } from '../grid';
 import { Pagination } from '../pagination';
 import { Spin } from '../spin';
 import { listContextKey } from './context';
-import type { ListConfig, ListProps } from './interface';
+import type { ListConfig, ListProps, ListSlots } from './interface';
 
 defineOptions({ name: 'AList', inheritAttrs: false });
 
@@ -73,11 +25,14 @@ defineOptions({ name: 'AList', inheritAttrs: false });
  * 其余布尔 prop（`bordered` / `loading`）的默认值是 `false`，`undefined` 已是 falsy，
  * 不需要声明（声明了反而会与「未传」不可区分）。
  */
-const props = withDefaults(defineProps<ListProps>(), {
+const props = withDefaults(defineProps<ListProps<T>>(), {
   split: true,
+  header: undefined,
+  footer: undefined,
+  loadMore: undefined,
 });
 const attrs = useAttrs();
-const slots = useSlots();
+const slots = defineSlots<ListSlots<T>>();
 
 const config = useComponentConfig<ListConfig>('list');
 const direction = useDirection();
@@ -136,14 +91,10 @@ const sizeCls = computed(() => {
   }
 });
 
-const isSomethingAfterLastItem = computed(
-  () => !!(props.loadMore || props.pagination || props.footer),
-);
-
 const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
 const containerCls = computed(() => `${prefixCls.value}-container`);
 
-const classString = computed(() => {
+function classString(hasContentAfterItems: boolean) {
   const p = prefixCls.value;
   return [
     p,
@@ -154,7 +105,7 @@ const classString = computed(() => {
       [`${p}-bordered`]: props.bordered,
       [`${p}-loading`]: isLoading.value,
       [`${p}-grid`]: !!props.grid,
-      [`${p}-something-after-last-item`]: isSomethingAfterLastItem.value,
+      [`${p}-something-after-last-item`]: hasContentAfterItems,
       [`${p}-rtl`]: direction.value === 'rtl',
     },
     config.className,
@@ -162,7 +113,7 @@ const classString = computed(() => {
     attrs.class,
     cssVarCls.value,
   ];
-});
+}
 
 // ---------------------------------------------------------------------------
 // 分页 props（判据 4 / 5 / 6）
@@ -262,22 +213,20 @@ const colStyle = computed(() => {
 // 逐项渲染（判据 1 的 key 解析链）
 // ---------------------------------------------------------------------------
 
-function renderInternalItem(item: unknown, index: number): VNode | null {
-  if (!props.renderItem) return null;
-  let key: unknown;
+function renderInternalItem(item: T, index: number): VNode | null {
+  if (!slots.item) return null;
   const rowKey = props.rowKey;
-  if (isFunction(rowKey)) {
-    key = (rowKey as (i: unknown) => unknown)(item);
-  } else if (rowKey) {
-    key = (item as Record<string, unknown>)[rowKey as string];
-  } else {
-    key = (item as Record<string, unknown>)?.key;
+  let key: unknown;
+  if (typeof rowKey === 'function') {
+    key = rowKey(item);
+  } else if (rowKey !== undefined) {
+    key = item?.[rowKey];
+  } else if (item !== null && typeof item === 'object' && 'key' in item) {
+    key = item.key;
   }
-  // ⚠️ `??=` —— `0` / `''` 是**有效 key**，只有 null/undefined 才回退
-  key ??= `list-item-${index}`;
-  return h(Fragment, { key: key as string }, [
-    props.renderItem(item as never, index) as VNodeChild,
-  ]);
+  const resolvedKey =
+    typeof key === 'string' || typeof key === 'number' ? key : `list-item-${index}`;
+  return h(Fragment, { key: resolvedKey }, [slots.item({ item, index })]);
 }
 
 // ---------------------------------------------------------------------------
@@ -355,44 +304,50 @@ const contextValue = computed(() => ({
 
 provide(listContextKey, contextValue);
 
-if (import.meta.env?.DEV ?? true) {
-  const warning = devUseWarning('List');
-  warning(
-    false,
-    'The `List` component is deprecated and will be removed in the next major version. ' +
-      "If you're using version 6.6.0 or later, please use `Listy` instead.",
-  );
-}
-
-const rootAttrs = computed(() => {
-  // ⚠️ `class` 已被 classString 显式消费；留在 rootAttrs 里会被 `v-bind` 二次合并（重复）。
+// Vue attrs update the render, but are not reactive dependencies of computed.
+// Merge during render so native string styles and attrs-only updates remain valid.
+function rootAttrs() {
   const { class: _attrsClass, ...restAttrs } = attrs;
-  void _attrsClass;
-  return {
-    ...restAttrs,
-    // 根 style 是 Vue 原生 attrs（位置与原先的 props.style 一致：覆盖 config.style）
-    style: { ...config.style, ...((attrs.style as CSSProperties) ?? {}) },
-  };
-});
+  return mergeDomAttrs({ style: config.style }, restAttrs, { id: props.id });
+}
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });
+
+// Slot functions run in this render call. Resolve once so visibility, borders and
+// fallback decisions all use the same content (including intentionally empty slots).
+function renderList(): VNode {
+  const header = slots.header ? slots.header() : props.header;
+  const footer = slots.footer ? slots.footer() : props.footer;
+  const loadMore = slots.loadMore ? slots.loadMore() : props.loadMore;
+  const hasHeader = !isEmptyVNode(header);
+  const hasFooter = !isEmptyVNode(footer);
+  const hasLoadMore = !isEmptyVNode(loadMore);
+  const replacesBottomPagination = !!slots.loadMore || hasLoadMore;
+  const content = childrenContent();
+  return h(
+    'div',
+    {
+      ...rootAttrs(),
+      ref: rootRef,
+      class: classString(
+        hasFooter ||
+          hasLoadMore ||
+          showTopPagination.value ||
+          (showBottomPagination.value && !replacesBottomPagination),
+      ),
+    },
+    [
+      showTopPagination.value ? paginationContent() : null,
+      hasHeader ? h('div', { class: `${prefixCls.value}-header` }, [header]) : null,
+      h(Spin, loadingProp.value, { default: () => [content, slots.default?.()] }),
+      hasFooter ? h('div', { class: `${prefixCls.value}-footer` }, [footer]) : null,
+      replacesBottomPagination ? loadMore : showBottomPagination.value ? paginationContent() : null,
+    ],
+  );
+}
 </script>
 
 <template>
-  <div ref="rootRef" :class="classString" v-bind="rootAttrs">
-    <NodeRenderer v-if="showTopPagination" :node="paginationContent()" />
-    <div v-if="props.header" :class="`${prefixCls}-header`">
-      <NodeRenderer :node="props.header" />
-    </div>
-    <Spin v-bind="loadingProp">
-      <NodeRenderer :node="childrenContent()" />
-      <slot />
-    </Spin>
-    <div v-if="props.footer" :class="`${prefixCls}-footer`">
-      <NodeRenderer :node="props.footer" />
-    </div>
-    <NodeRenderer v-if="props.loadMore" :node="props.loadMore" />
-    <NodeRenderer v-else-if="showBottomPagination" :node="paginationContent()" />
-  </div>
+  <NodeRenderer :node="renderList()" />
 </template>

@@ -16,7 +16,6 @@
  * 组件不该再叠 `role="list"` / `aria-live` 之类（上游没有）。钉住它们才能防止后来者
  * 「顺手加个 role」而改变读屏行为。
  *
- * ⚠️ **本组件的废弃告警**（每次挂载一条 `console.error`）会污染输出 ⇒ 本文件统一 spy 掉。
  * ⚠️ **`axe.run()` 不能与 `vi.useFakeTimers()` 共存**（PITFALLS 268）⇒ 本文件不用假定时器。
  */
 
@@ -25,6 +24,7 @@ import axe from 'axe-core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
 import { List, ListItem, ListItemMeta } from '../index';
+import type { ListSlots } from '../interface';
 
 /** 与 test-utils 的 `DEFAULT_TAGS` 同源：WCAG 2.0/2.1/2.2 的 A + AA。 */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
@@ -39,7 +39,7 @@ async function runAxe(): Promise<axe.Result[]> {
 
 const mountA11y = async (
   props: Record<string, unknown> = {},
-  slots?: Record<string, () => unknown>,
+  slots?: ListSlots<string>,
 ): Promise<VueWrapper> => {
   const wrapper = mount(List, { props, slots, attachTo: document.body });
   await nextTick();
@@ -54,6 +54,7 @@ beforeEach(() => {
 
 afterEach(() => {
   document.body.innerHTML = '';
+  expect(errorSpy).not.toHaveBeenCalled();
   errorSpy.mockRestore();
 });
 
@@ -69,8 +70,8 @@ describe('List · role / ARIA 契约（L5）', () => {
 
   it('非 grid：`-items` 是**真 `<ul>`**，子项是**真 `<li>`**', async () => {
     const w = await mountA11y(
-      { dataSource: ['A', 'B'], renderItem: (item: string) => h(ListItem, null, () => item) },
-      undefined,
+      { dataSource: ['A', 'B'] },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
     );
     const ul = w.find('ul.apollo-list-items');
     expect(ul.exists()).toBe(true);
@@ -79,11 +80,13 @@ describe('List · role / ARIA 契约（L5）', () => {
   });
 
   it('grid：**没有** `<ul>` ⇒ 不声明列表语义（上游同判）', async () => {
-    const w = await mountA11y({
-      dataSource: ['A'],
-      grid: { column: 2 },
-      renderItem: (item: string) => h(ListItem, null, () => item),
-    });
+    const w = await mountA11y(
+      {
+        dataSource: ['A'],
+        grid: { column: 2 },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     expect(w.find('ul.apollo-list-items').exists()).toBe(false);
     expect(w.find('.apollo-row').exists()).toBe(true);
   });
@@ -92,10 +95,11 @@ describe('List · role / ARIA 契约（L5）', () => {
     const w = await mountA11y(
       {
         dataSource: ['A'],
-        renderItem: (item: string) =>
+      },
+      {
+        item: ({ item }: { item: string }) =>
           h(ListItem, { actions: [h('a', 'edit'), h('a', 'more')] }, () => item),
       },
-      undefined,
     );
     const actionUl = w.find('ul.apollo-list-item-action');
     expect(actionUl.exists()).toBe(true);
@@ -106,9 +110,8 @@ describe('List · role / ARIA 契约（L5）', () => {
     const w = await mountA11y(
       {
         dataSource: ['A'],
-        renderItem: () => h(ListItem, null, () => h(ListItemMeta, { title: 'T' })),
       },
-      undefined,
+      { item: () => h(ListItem, null, () => h(ListItemMeta, { title: 'T' })) },
     );
     const title = w.find('.apollo-list-item-meta-title');
     expect(title.element.tagName).toBe('H4');
@@ -129,10 +132,11 @@ describe('List · role / ARIA 契约（L5）', () => {
         footer: 'F',
         bordered: true,
         dataSource: ['A'],
-        renderItem: (item: string) =>
+      },
+      {
+        item: ({ item }: { item: string }) =>
           h(ListItem, { actions: [h('a', 'edit')] }, () => h(ListItemMeta, { title: item })),
       },
-      undefined,
     );
     // ⚠️ **不能断言「全树零 aria-*」** —— 内层 `<Spin>`（依赖组件）自带
     //    `aria-live="polite" aria-busy="false"`。这里只钉 **List 自己产出的元素**。
@@ -156,7 +160,7 @@ describe('List · role / ARIA 契约（L5）', () => {
 interface A11yScanCase {
   name: string;
   props: Record<string, unknown>;
-  slots?: Record<string, () => unknown>;
+  slots?: ListSlots<string>;
 }
 
 const items = (n: number) => Array.from({ length: n }, (_, i) => `item-${i}`);
@@ -166,14 +170,16 @@ const SCAN_CASES: A11yScanCase[] = [
     name: 'basic（有数据的字符列表）',
     props: {
       dataSource: items(3),
-      renderItem: (item: string) => h(ListItem, null, () => item),
     },
+    slots: { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
   },
   {
     name: 'meta（Item.Meta 的 h4 + 描述）',
     props: {
       dataSource: items(2),
-      renderItem: (item: string) =>
+    },
+    slots: {
+      item: ({ item }: { item: string }) =>
         h(ListItem, null, () => h(ListItemMeta, { title: item, description: 'desc' })),
     },
   },
@@ -181,7 +187,9 @@ const SCAN_CASES: A11yScanCase[] = [
     name: 'actions（嵌套 ul/li）',
     props: {
       dataSource: items(2),
-      renderItem: (item: string) =>
+    },
+    slots: {
+      item: ({ item }: { item: string }) =>
         h(ListItem, { actions: [h('a', { href: '#' }, 'edit')] }, () => item),
     },
   },
@@ -192,32 +200,32 @@ const SCAN_CASES: A11yScanCase[] = [
       header: 'Header',
       footer: 'Footer',
       dataSource: items(2),
-      renderItem: (item: string) => h(ListItem, null, () => item),
     },
+    slots: { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
   },
   {
     name: 'vertical + extra',
     props: {
       itemLayout: 'vertical',
       dataSource: items(2),
-      renderItem: (item: string) => h(ListItem, { extra: 'E' }, () => item),
     },
+    slots: { item: ({ item }: { item: string }) => h(ListItem, { extra: 'E' }, () => item) },
   },
   {
     name: 'grid（无列表语义）',
     props: {
       grid: { column: 2, gutter: 16 },
       dataSource: items(3),
-      renderItem: (item: string) => h(ListItem, null, () => item),
     },
+    slots: { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
   },
   {
     name: 'pagination',
     props: {
       pagination: { pageSize: 2 },
       dataSource: items(4),
-      renderItem: (item: string) => h(ListItem, null, () => item),
     },
+    slots: { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
   },
   { name: 'loading', props: { loading: true, dataSource: items(2) } },
   { name: 'empty（默认空态）', props: {} },

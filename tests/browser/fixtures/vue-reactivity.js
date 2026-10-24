@@ -5,9 +5,14 @@ import { createApp, defineComponent, h, ref } from 'vue';
 import ContentSlots from '../../../packages/ui/src/alert/demo/content-slots.vue';
 import BadgeSlots from '../../../packages/ui/src/badge/demo/content-slots.vue';
 import PrefixSuffix from '../../../packages/ui/src/input-number/demo/presuffix.vue';
+import ListLikes from '../../../packages/ui/src/list/demo/item-extra.vue';
+import ListLoadMore from '../../../packages/ui/src/list/demo/loadmore.vue';
+import ListPagination from '../../../packages/ui/src/list/demo/pagination.vue';
+import ListResponsive from '../../../packages/ui/src/list/demo/responsive.vue';
 import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-options.vue';
 import TableReorder from '../../../packages/ui/src/table/demo/drag-reorder.vue';
 import EventEmits from './EventEmits.vue';
+import ListContent from './ListContent.vue';
 import NativeAttrs from './NativeAttrs.vue';
 
 const Rows = defineComponent({
@@ -57,5 +62,10 @@ const Demo = {
   attrs: NativeAttrs,
   'table-reorder': TableReorder,
   badge: BadgeSlots,
+  'list-slots': ListContent,
+  'list-loadmore': ListLoadMore,
+  'list-pagination': ListPagination,
+  'list-likes': ListLikes,
+  'list-responsive': ListResponsive,
 }[name];
 createApp({ render: () => h('main', { style: 'padding: 32px' }, [h(Demo)]) }).mount('#app');

@@ -6,10 +6,7 @@ subtitle: List
 
 General list.
 
-> 🚨 **`List` is deprecated by antd**: since `antd` 6.6.4, use [`Listy`](./listy) instead
-> (`List` will be removed in the next major version). This library still implements it and
-> keeps the same `console.error` warning (precedent: `Dropdown.Button`) so existing code
-> can migrate smoothly.
+List follows Apollo’s independent lifecycle and uses a typed Vue `#item` slot for item content.
 
 ## When To Use
 
@@ -31,10 +28,8 @@ See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
 | `pagination` | `position: 'both'` (top + bottom) |
 | `spin-debug` | The two `loading` shapes |
 
-⚠️ **8 antd demos are not ported** (see `README.md` §5): `component-token`
-(zero-runtime: tokens are build-time artifacts), `drag-sorting` / `drag-sorting-handler` /
-`grid-drag-sorting` / `grid-drag-sorting-handler` (require `dnd-kit`), `infinite-load`,
-`virtual-list` (covered by `Listy`), `grid-test` (internal debug demo).
+Additional examples cover `component-token`, `pagination-simple`, `empty` and `item-extra`.
+See `Listy` for virtual lists. A List drag-reordering example remains under review.
 
 ## API
 
@@ -44,7 +39,7 @@ See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
 |---|---|---|---|
 | bordered | Toggles rendering of the border around the list | `boolean` | `false` |
 | dataSource | Data source | `T[]` | — |
-| extra | Content on the far right of the list | `VNodeChild` | — |
+| extra | Historical declaration; rendering is not connected and remains under F11 review | `VNodeChild` | — |
 | grid | Grid config (`gutter` / `column` / `xs`…`xxxl`) | `ListGridType` | — |
 | id | Root element id | `string` | — |
 | itemLayout | Item layout | `'horizontal' \| 'vertical'` | `'horizontal'` |
@@ -52,7 +47,6 @@ See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
 | loadMore | Load-more content (**replaces** the bottom pagination) | `VNodeChild` | — |
 | pagination | Pagination config; `false` renders nothing | `PaginationConfig \| false` | `false` |
 | rowKey | Row key (function or field name) | `((item: T) => string \| number) \| keyof T` | — |
-| renderItem | Per-item renderer. ⚠️ **when omitted the item renders as `null`** | `(item: T, index: number) => VNodeChild` | — |
 | size | Size. `'large'` / `'small'` add `-lg` / `-sm`; `'default'` adds nothing | `'small' \| 'default' \| 'large'` | — |
 | split | Toggles rendering of the split under each item | `boolean` | `true` |
 | header | List header | `VNodeChild` | — |
@@ -60,6 +54,28 @@ See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
 | locale | Empty text override (**plain prop**) | `{ emptyText: VNodeChild }` | — |
 | prefixCls | Class name prefix | | — |
 | class / style | **Native root attrs** (not Props) | | — |
+
+### List slots
+
+| Slot | Scope | Description |
+|---|---|---|
+| default | — | Manually composed content; suppresses the default empty state |
+| item | `{ item: T, index: number }` | Items on the current page; `T` is inferred from `dataSource`, `index` starts at 0 on each page; absent slot renders no data items |
+| header | — | List header |
+| footer | — | List footer |
+| loadMore | — | Replaces bottom pagination; top pagination remains |
+
+The presence of `header` / `footer` / `loadMore` slots overrides their matching content props, even when the slot is empty. Empty header/footer slots create no wrapper. Use the exact `loadMore` casing. Simple content props remain available.
+`renderItem` has been removed directly; see the [List slot migration](../../../../docs/migrations/list-slots.md).
+
+```vue
+<List :data-source="users" row-key="id">
+  <template #item="{ item, index }">
+    <ListItem>{{ index + 1 }}. {{ item.name }}</ListItem>
+  </template>
+  <template #footer>{{ users.length }} users</template>
+</List>
+```
 
 ### List.Item
 
@@ -81,7 +97,7 @@ See [`demo/`](./demo) (**12**, mirroring antd's user-visible demos).
 
 ### Instance (ref)
 
-All three components expose `{ nativeElement }` (`HTMLDivElement`, nullable).
+All three components expose `{ nativeElement }` (nullable). List / Meta use `HTMLDivElement`; Item uses `HTMLLIElement` outside a grid and `HTMLDivElement` in a grid.
 
 ## Theme
 

@@ -2,14 +2,13 @@
  * L1/L2 · `List` 的单元与交互测试。
  *
  * 每一条都对应 `docs/analysis/list.md` §2 的一条判据（编号即判据号）。
- * ⚠️ 本组件的**告警**是「每次渲染都发」的 `console.error`（上游 deprecated，D91 先例）
- *    ⇒ 每个用例都要 `vi.spyOn(console, 'error')` 兜住，否则测试输出会被刷屏。
  */
 
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
 import { List, ListItem, ListItemMeta } from '../index';
+import type { ListSlots } from '../interface';
 
 let errorSpy: ReturnType<typeof vi.spyOn>;
 
@@ -21,11 +20,9 @@ afterEach(() => {
   errorSpy.mockRestore();
 });
 
-/** 用 `dataSource` + `renderItem` 造一个最简列表。 */
-const mountList = (
-  props: Record<string, unknown> = {},
-  slots: Record<string, () => unknown> = {},
-) => mount(List, { props, slots });
+/** 用 `dataSource` + #item 造一个最简列表。 */
+const mountList = (props: Record<string, unknown> = {}, slots: ListSlots<string> = {}) =>
+  mount(List, { props, slots });
 
 describe('List · L1 结构与类名（判据 1 / 2 / 7 / 10）', () => {
   it('默认渲染 `apollo-list` + `-split` + `-css-var`，不渲染分页/页头/页脚', () => {
@@ -81,11 +78,13 @@ describe('List · L1 结构与类名（判据 1 / 2 / 7 / 10）', () => {
     // **随后被 `if (splitDataSource.length > 0)` 覆盖** ⇒ 占位块只在
     // 「isLoading 且 splitDataSource 为空」时可见。
     // ⚠️ 这条是 L4 契约抓出的真 bug 的**回归哨兵**（写成「先判 isLoading 就 return」会挂）。
-    const withData = mountList({
-      loading: true,
-      dataSource: ['A', 'B'],
-      renderItem: (item: string) => h(ListItem, null, () => item),
-    });
+    const withData = mountList(
+      {
+        loading: true,
+        dataSource: ['A', 'B'],
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     expect(withData.findAll('.apollo-list-items > li')).toHaveLength(2);
     expect(withData.find('.apollo-spin-container > div[style]').exists()).toBe(false);
 
@@ -110,20 +109,22 @@ describe('List · L1 结构与类名（判据 1 / 2 / 7 / 10）', () => {
   });
 });
 
-describe('List · L1 dataSource / renderItem（判据 1 的 key 解析链）', () => {
-  it('渲染成 `ul.-items.-container.-css-var`，逐项调用 renderItem', () => {
-    const renderItem = vi.fn((item: string) => h(ListItem, null, () => item));
-    const w = mountList({ dataSource: ['A', 'B'], renderItem });
-    expect(renderItem).toHaveBeenCalledTimes(2);
-    expect(renderItem).toHaveBeenNthCalledWith(1, 'A', 0);
-    expect(renderItem).toHaveBeenNthCalledWith(2, 'B', 1);
+describe('List · L1 dataSource / #item（判据 1 的 key 解析链）', () => {
+  it('渲染成 `ul.-items.-container.-css-var`，逐项调用 item 插槽', () => {
+    const itemSlot = vi.fn(({ item }: { item: string; index: number }) =>
+      h(ListItem, null, () => item),
+    );
+    const w = mountList({ dataSource: ['A', 'B'] }, { item: itemSlot });
+    expect(itemSlot).toHaveBeenCalledTimes(2);
+    expect(itemSlot).toHaveBeenNthCalledWith(1, { item: 'A', index: 0 });
+    expect(itemSlot).toHaveBeenNthCalledWith(2, { item: 'B', index: 1 });
     const ul = w.find('ul');
     expect(ul.classes()).toContain('apollo-list-items');
     expect(ul.classes()).toContain('apollo-list-container');
     expect(ul.findAll('li')).toHaveLength(2);
   });
 
-  it('⚠️ `renderItem` 未传时**不渲染任何项**（但 `<ul>` 仍在 —— 上游同判）', () => {
+  it('⚠️ #item 未传时**不渲染任何项**（但 `<ul>` 仍在 —— 上游同判）', () => {
     const w = mountList({ dataSource: ['A', 'B'] });
     // 上游是 `splitDataSource.length > 0` ⇒ 渲染 <ul>，但 items 全是 null
     expect(w.find('ul').exists()).toBe(true);
@@ -160,11 +161,13 @@ describe('List · L1 分页（判据 4 / 5 / 6）', () => {
   });
 
   it('判据 5：切片按 current / pageSize，且 `position` 默认 bottom', () => {
-    const w = mountList({
-      dataSource: data,
-      renderItem: (item: string) => h(ListItem, null, () => item),
-      pagination: { pageSize: 2 },
-    });
+    const w = mountList(
+      {
+        dataSource: data,
+        pagination: { pageSize: 2 },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     // ⚠️ Pagination 自己也渲染 <li> ⇒ 必须限定到列表项
     expect(w.findAll('.apollo-list-items > li')).toHaveLength(2);
     expect(w.text()).toContain('A');
@@ -173,29 +176,35 @@ describe('List · L1 分页（判据 4 / 5 / 6）', () => {
   });
 
   it('判据 6：`position: "both"` 时**两处**都渲染分页', () => {
-    const w = mountList({
-      dataSource: data,
-      renderItem: (item: string) => h(ListItem, null, () => item),
-      pagination: { pageSize: 2, position: 'both' },
-    });
+    const w = mountList(
+      {
+        dataSource: data,
+        pagination: { pageSize: 2, position: 'both' },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     expect(w.findAll('.apollo-list-pagination')).toHaveLength(2);
   });
 
   it('判据 6：`position: "top"` 时只在顶部', () => {
-    const w = mountList({
-      dataSource: data,
-      renderItem: (item: string) => h(ListItem, null, () => item),
-      pagination: { pageSize: 2, position: 'top' },
-    });
+    const w = mountList(
+      {
+        dataSource: data,
+        pagination: { pageSize: 2, position: 'top' },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     expect(w.findAll('.apollo-list-pagination')).toHaveLength(1);
   });
 
   it('判据 5：`current` 超过最大页时被夹到最大页（不切片成空）', () => {
-    const w = mountList({
-      dataSource: data,
-      renderItem: (item: string) => h(ListItem, null, () => item),
-      pagination: { pageSize: 2, current: 99 },
-    });
+    const w = mountList(
+      {
+        dataSource: data,
+        pagination: { pageSize: 2, current: 99 },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     // 5 条 / 每页 2 ⇒ 最大 3 页 ⇒ 第 3 页是第 5 条
     expect(w.findAll('.apollo-list-items > li')).toHaveLength(1);
     expect(w.text()).toContain('E');
@@ -204,11 +213,13 @@ describe('List · L1 分页（判据 4 / 5 / 6）', () => {
 
 describe('List · L1 grid（判据 8 / 9）', () => {
   it('判据 9：grid 模式是 `Row > div[style] > Col > div.-item`，根加 `-grid`', () => {
-    const w = mountList({
-      dataSource: ['A'],
-      grid: { column: 3, gutter: 16 },
-      renderItem: (item: string) => h(ListItem, null, () => item),
-    });
+    const w = mountList(
+      {
+        dataSource: ['A'],
+        grid: { column: 3, gutter: 16 },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     expect(w.classes()).toContain('apollo-list-grid');
     const row = w.find('.apollo-row');
     expect(row.exists()).toBe(true);
@@ -221,11 +232,13 @@ describe('List · L1 grid（判据 8 / 9）', () => {
   });
 
   it('判据 8：`column` 转成内联百分比（**字符串**，不是裸数字）', () => {
-    const w = mountList({
-      dataSource: ['A'],
-      grid: { column: 4 },
-      renderItem: (item: string) => h(ListItem, null, () => item),
-    });
+    const w = mountList(
+      {
+        dataSource: ['A'],
+        grid: { column: 4 },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     const div = w.find('.apollo-row > div');
     const style = div.attributes('style') ?? '';
     expect(style).toContain('width: 25%');
@@ -241,12 +254,14 @@ describe('List · L1 页头 / 页脚 / loadMore', () => {
   });
 
   it('`loadMore` 优先于底部分页（二者互斥）', () => {
-    const w = mountList({
-      dataSource: ['A'],
-      renderItem: (item: string) => h(ListItem, null, () => item),
-      loadMore: 'MORE',
-      pagination: { pageSize: 1 },
-    });
+    const w = mountList(
+      {
+        dataSource: ['A'],
+        loadMore: 'MORE',
+        pagination: { pageSize: 1 },
+      },
+      { item: ({ item }: { item: string }) => h(ListItem, null, () => item) },
+    );
     expect(w.text()).toContain('MORE');
     expect(w.find('.apollo-list-pagination').exists()).toBe(false);
   });
@@ -343,18 +358,9 @@ describe('List · L2 ref 与告警', () => {
     expect(w.vm.$.exposed?.nativeElement).toBeDefined();
   });
 
-  it('🚨 deprecated 告警：挂载时发一次（上游每次渲染都发；本仓按 D91 先例收成一次）', async () => {
+  it('挂载与更新不产生告警', async () => {
     const w = mountList();
-    const hits = () =>
-      errorSpy.mock.calls.filter((c: unknown[]) =>
-        String(c[0]).includes('is deprecated and will be removed'),
-      );
-    expect(hits().length).toBeGreaterThan(0);
-    // ⚠️ **平台差异**：上游把告警写在渲染体里 ⇒ 每次渲染都发；
-    //    本仓按 D91（DropdownButton）的既有先例放在 setup ⇒ 每个实例一次。
-    //    这是 dev-only 的提示频率差异，不影响 DOM / 行为（登记在 README §2）。
-    errorSpy.mockClear();
     await w.setProps({ bordered: true });
-    expect(hits()).toHaveLength(0);
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 });

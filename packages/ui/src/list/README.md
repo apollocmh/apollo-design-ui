@@ -2,6 +2,8 @@
 
 # List 实现说明
 
+2026-10-24：当前实现与迁移证据见 [F11 报告](../../../../docs/audit/2026-10-24-list-slots-remediation.md)。下列上游对照与阶段记录保留历史含义；内容 API 以双语组件文档为准。
+
 > 规则 R1：本文件记录「仓库文档里没有的」—— 差异、选型理由、Token 落点、已知缺口。
 
 ## 1. 对应 antd 组件
@@ -34,13 +36,13 @@ node tests/visual/debug/extract-list-css.mjs > /tmp/list-antd.css   # 62 条 ant
 | # | 差异 | 分类 |
 |---|---|---|
 | 1 | `List` / `List.Item` / `Item.Meta` 的 `ref` 统一成 `{ nativeElement }`（可空）。上游 `List` 是 `forwardRef<HTMLDivElement>`（ref 就是 DOM）。 | PLATFORM |
-| 2 | 🚨 **`List` 在 antd 6.6.4 里整体 deprecated**（上游发 `console.error`，指向 `Listy`）⇒ 本仓保留同款告警（先例：dropdown 的 `DropdownButton`，D91）。⚠️ 上游写在渲染体里 ⇒ **每次渲染都发**；本仓按 D91 先例放在 `setup` ⇒ **每个实例一次**（dev-only 的提示频率差异，不影响 DOM / 行为）。 | UPSTREAM |
+| 2 | Apollo 未废弃 List。2026-10-24 删除直接继承的上游废弃告警；组件生命周期由 Apollo 独立决定。 | INTENDED |
 | 3 | `useStyle(prefixCls, rootCls)` 的 `useCSSVarCls` 产物 ⇒ 本仓直接拼 `${prefixCls}-css-var`（无对应 hook，与 card / rate / avatar 同判）。 | PLATFORM |
 | 4 | 🚨 **css-var 声明块覆盖两个根**：`.{p}-list` **与** `.{p}-list-container`（上游 `extraCssVarPrefixCls`）⇒ D95 家族（image 两根 / input 三根同判）。⚠️ 今天 `-container` **总是** `.apollo-list` 的后代，变量靠继承已可达 —— 这条规则是**逐字对齐产物** + 防未来形态变化。 | PLATFORM |
 | 5 | 🚨 **`-item-no-flex` 的判据换成了 vnode 层判定**：上游是 `toArray(children).some(isString)`，但 Vue 侧**拿不到原始字符串**（模板编译成 `createTextVNode`；本仓 `toArray` 也把原始值归一成 Text vnode）⇒ 本仓用 **`isTextVNode`**。⚠️ 唯一可观测分歧：**数字**子节点（`{{ 0 }}` 被 `toDisplayString` 变成 `'0'`；上游 `isString(0)` 判假、本仓判真）。 | PLATFORM |
-| 6 | `devUseWarning` 上游是**三参** `(valid, 'deprecated', msg)`，本仓是**两参** `(valid, message)` ⇒ 把 `'deprecated'` 并进消息（slider / avatar 已踩过同一条）。 | PLATFORM |
+| 6 | List 使用 Vue 泛型 `#item`；`renderItem` 直接移除。header/footer/loadMore 插槽按存在性优先，空插槽不回退。见 [迁移记录](../../../../docs/migrations/list-slots.md)。 | INTENDED |
 | 7 | 🚨 **两条死选择器逐字保留**（UPSTREAM quirk，radio U7/U8 同类）：① `.apollo-list .apollo-list-item .apollo-list-action`（源码写 `${componentCls}-action`，真类名是 `-item-action`）；② `.apollo-list-loading .apollo-list-spin-nested-loading`（真类名是 `.apollo-spin-nested-loading`）。改掉会凭空多出上游没有的视觉差异。 | UPSTREAM |
-| 8 | **内容类 prop 保持 `VNodeChild`**（`header` / `footer` / `loadMore` / `extra` / `title` / `description` / `avatar` / `emptyText`），数组类保持 `VNodeChild[]`（`actions`）—— 与 `card`（同组、最接近的先例）一致。⚠️ `COMPATIBILITY.md` **D111** 的字面是「全部改为 slot」，与 card 的落地**不一致**；本组件取「与最近先例一致」这一侧。**这条不一致待统一**。 | PLATFORM |
+| 8 | header/footer/loadMore 接通原生内容插槽，简单 prop 保留；Item/Meta 其他内容字段继续单独审查。旧 D111 冲突记录已由现行规范与 ADR 0006 取代。 | INTENDED |
 | 9 | 本仓无 `hashId`（D2）；`-css-var` 与上游 `useCSSVarCls` 同名（D5）。 | PLATFORM |
 | 10 | **`ListConfig` 比 card / empty 多一层 `item`**（`list.item.classNames` / `.styles` 是 `Item` 语义化槽的**底座**）—— 与上游一致，**不是**差异。 | — |
 
@@ -108,7 +110,7 @@ node tests/visual/debug/extract-list-css.mjs > /tmp/list-antd.css   # 62 条 ant
    （card / masonry / anchor / breadcrumb / date-picker / avatar）的差异都只写在各自的
    `README §2`，未登记进 §9.2（最后一号停在 **D118**）。本组件沿用同一先例；
    若要让 C24 名副其实，需要一次**统一补登记**（跨组件的独立工作）。
-5. **`COMPATIBILITY.md` D111 与 card 的落地不一致**（见 §2 第 8 条）。
+5. F11 仍需审查 Item/Meta 内容字段；根 `extra` 仅有历史声明，没有渲染落点。
 6. **`NodeRenderer` 的落点**：住在 `ui/src/_internal/node-renderer.ts`。
    ✅ 2026-10-07 已按架构规则迁出组件目录（registry `VNA-RENDERER-01`）。
 

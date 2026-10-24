@@ -1,3 +1,5 @@
+> 历史实施计划：2026-10-24 已直接迁移为 `#item`，接通 header/footer/loadMore 插槽并移除继承的 List 废弃告警。现行契约见双语 API 和 `docs/migrations/list-slots.md`。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # List · 开发计划（G0–G14）

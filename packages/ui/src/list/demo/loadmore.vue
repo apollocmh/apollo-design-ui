@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 `loadmore` demo。
 import { Button, List, ListItem } from '@apollo-design/ui';
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const ALL = [
   'Racing car sprays burning fuel into crowd.',
@@ -23,13 +23,12 @@ const loadMore = () => {
     loading.value = false;
   }, 500);
 };
-
-const renderItem = (item: unknown) => h(ListItem, null, { default: () => String(item) });
 </script>
 
 <template>
-  <List :loading="loading" :data-source="data" :render-item="renderItem">
-    <template #load-more>
+  <List :loading="loading" :data-source="data">
+    <template #item="{ item }"><ListItem>{{ item }}</ListItem></template>
+    <template #loadMore>
       <div style="text-align: center; margin-top: 12px">
         <Button v-if="data.length < ALL.length" :loading="loading" @click="loadMore">
           loading more

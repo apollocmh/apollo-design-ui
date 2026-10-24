@@ -57,65 +57,80 @@ const actionItem = (item) =>
 
 export default {
   /** `-split` 的默认分割线 + item padding。 */
-  basic: () => box(h(List, { dataSource: LIST_DATA, renderItem: textItem })),
+  basic: () => box(h(List, { dataSource: LIST_DATA }, { item: ({ item }) => textItem(item) })),
 
   /** `Item.Meta` 的三段（avatar / title / description）+ `h4` 标题。 */
-  meta: () => box(h(List, { dataSource: LIST_DATA, renderItem: metaItem })),
+  meta: () => box(h(List, { dataSource: LIST_DATA }, { item: ({ item }) => metaItem(item) })),
 
   /** `-item-action` 的 `<ul>` + `<li>` + 中间那条 `-item-action-split`。 */
-  actions: () => box(h(List, { dataSource: LIST_DATA, renderItem: actionItem })),
+  actions: () => box(h(List, { dataSource: LIST_DATA }, { item: ({ item }) => actionItem(item) })),
 
   /** `-bordered` 的外框 + header/footer 的**内圆角** + `padding-inline`。 */
   bordered: () =>
     box(
-      h(List, {
-        bordered: true,
-        header: 'Header',
-        footer: 'Footer',
-        dataSource: LIST_DATA,
-        renderItem: textItem,
-      }),
+      h(
+        List,
+        {
+          bordered: true,
+          header: 'Header',
+          footer: 'Footer',
+          dataSource: LIST_DATA,
+        },
+        { item: ({ item }) => textItem(item) },
+      ),
     ),
 
   /** `-vertical` + `-item-main` / `-item-extra` 两段式 + `-item-extra` 的 margin。 */
   vertical: () =>
     box(
-      h(List, {
-        itemLayout: 'vertical',
-        dataSource: LIST_DATA,
-        renderItem: (item) =>
-          h(
-            ListItem,
-            { key: item, extra: h('span', 'extra') },
-            {
-              default: () => h(ListItemMeta, { title: item, description: LIST_DESC }),
-            },
-          ),
-      }),
+      h(
+        List,
+        {
+          itemLayout: 'vertical',
+          dataSource: LIST_DATA,
+        },
+        {
+          item: ({ item }) =>
+            h(
+              ListItem,
+              { key: item, extra: h('span', 'extra') },
+              {
+                default: () => h(ListItemMeta, { title: item, description: LIST_DESC }),
+              },
+            ),
+        },
+      ),
     ),
 
   /** grid：`Row` + `Col` + `-grid .{antCls}-col > -item` 的 `margin-block-end`。 */
   grid: () =>
     box(
-      h(List, {
-        grid: { column: 2, gutter: 16 },
-        dataSource: LIST_DATA_LONG,
-        renderItem: textItem,
-      }),
+      h(
+        List,
+        {
+          grid: { column: 2, gutter: 16 },
+          dataSource: LIST_DATA_LONG,
+        },
+        { item: ({ item }) => textItem(item) },
+      ),
     ),
 
   /** 分页 + `-something-after-last-item` 的 `:last-child` 下边框。 */
   pagination: () =>
     box(
-      h(List, {
-        pagination: { pageSize: 2 },
-        dataSource: LIST_DATA_LONG,
-        renderItem: textItem,
-      }),
+      h(
+        List,
+        {
+          pagination: { pageSize: 2 },
+          dataSource: LIST_DATA_LONG,
+        },
+        { item: ({ item }) => textItem(item) },
+      ),
     ),
 
   /** `-loading` + Spin 的嵌套容器 + 53px 占位块。 */
-  loading: () => box(h(List, { loading: true, dataSource: LIST_DATA, renderItem: textItem })),
+  loading: () =>
+    box(h(List, { loading: true, dataSource: LIST_DATA }, { item: ({ item }) => textItem(item) })),
 
   /** `-empty-text`（默认空态）。 */
   empty: () => box(h(List)),
@@ -123,8 +138,8 @@ export default {
   /** `-lg` / `-sm` 的 item padding。 */
   size: () =>
     box([
-      h(List, { size: 'large', dataSource: LIST_DATA, renderItem: textItem }),
-      h(List, { size: 'small', dataSource: LIST_DATA, renderItem: textItem }),
+      h(List, { size: 'large', dataSource: LIST_DATA }, { item: ({ item }) => textItem(item) }),
+      h(List, { size: 'small', dataSource: LIST_DATA }, { item: ({ item }) => textItem(item) }),
     ]),
 
   /** `-rtl`（逻辑属性 `margin-inline-start` 随之翻转）。 */
@@ -135,20 +150,25 @@ export default {
       {
         default: () =>
           box(
-            h(List, {
-              itemLayout: 'vertical',
-              dataSource: LIST_DATA,
-              renderItem: (item) =>
-                h(
-                  ListItem,
-                  {
-                    key: item,
-                    actions: [h('a', { key: 'edit', href: '#edit' }, 'edit')],
-                    extra: h('span', 'extra'),
-                  },
-                  { default: () => item },
-                ),
-            }),
+            h(
+              List,
+              {
+                itemLayout: 'vertical',
+                dataSource: LIST_DATA,
+              },
+              {
+                item: ({ item }) =>
+                  h(
+                    ListItem,
+                    {
+                      key: item,
+                      actions: [h('a', { key: 'edit', href: '#edit' }, 'edit')],
+                      extra: h('span', 'extra'),
+                    },
+                    { default: () => item },
+                  ),
+              },
+            ),
           ),
       },
     ),

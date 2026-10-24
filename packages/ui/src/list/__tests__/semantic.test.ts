@@ -32,7 +32,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { List, ListItem, ListItemMeta } from '../index';
-import type { ListItemProps, ListProps } from '../interface';
+import type { ListItemProps, ListProps, ListSlots } from '../interface';
 
 /** 在指定的 ConfigProvider 上下文下渲染（Vue 侧对应物是 `provide`）。 */
 function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeChild) {
@@ -48,8 +48,6 @@ function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeCh
 const DATA = ['Alpha', 'Beta', 'Gamma'];
 const DATA6 = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
 
-// ⚠️ 参数必须收 `unknown` —— `renderItem` 的签名是 `(item: unknown, index: number) => VNodeChild`，
-//    函数参数**逆变** ⇒ 写成 `(item: string)` 会 TS2322（与 button 的 `itemRender` 同判）。
 const textItem = (item: unknown) =>
   h(ListItem, { key: String(item) }, { default: () => String(item) });
 
@@ -86,20 +84,25 @@ const specs: Record<
   {
     props?: ListProps & Record<string, unknown>;
     /** ⚠️ 本仓的 `children` 是**默认插槽**（规则 C19）⇒ 单独一个字段，不能塞进 props */
-    slots?: Record<string, () => VNodeChild>;
+    slots?: ListSlots<string>;
     ctx?: Partial<ConfigContextValue>;
     /** 不包 ConfigProvider（用来钉「默认根前缀」的差异 D1）。 */
     bare?: boolean;
   }
 > = {
-  'list:basic': { props: { dataSource: DATA, renderItem: textItem } },
+  'list:basic': {
+    props: { dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
   // ⚠️ **不包 ConfigProvider** ⇒ 根前缀回落各家默认值（antd `ant` vs 我们 `apollo`）⇒ D1
   'list:prefix-cls:no-props': {
-    props: { dataSource: DATA, renderItem: textItem },
+    props: { dataSource: DATA },
     bare: true,
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:prefix-cls:custom': {
-    props: { prefixCls: 'custom', dataSource: DATA, renderItem: textItem },
+    props: { prefixCls: 'custom', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 
   'list:empty': { props: {} },
@@ -108,17 +111,34 @@ const specs: Record<
   'list:empty-locale': { props: { locale: { emptyText: 'no data' } } },
 
   'list:header-footer': {
-    props: { header: 'Header', footer: 'Footer', dataSource: DATA, renderItem: textItem },
+    props: { header: 'Header', footer: 'Footer', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:loadmore': {
-    props: { loadMore: h('div', 'more'), dataSource: DATA, renderItem: textItem },
+    props: { loadMore: h('div', 'more'), dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
-  'list:split-false': { props: { split: false, dataSource: DATA, renderItem: textItem } },
+  'list:split-false': {
+    props: { split: false, dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
 
-  'list:size-large': { props: { size: 'large', dataSource: DATA, renderItem: textItem } },
-  'list:size-small': { props: { size: 'small', dataSource: DATA, renderItem: textItem } },
-  'list:size-default': { props: { size: 'default', dataSource: DATA, renderItem: textItem } },
-  'list:bordered': { props: { bordered: true, dataSource: DATA, renderItem: textItem } },
+  'list:size-large': {
+    props: { size: 'large', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
+  'list:size-small': {
+    props: { size: 'small', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
+  'list:size-default': {
+    props: { size: 'default', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
+  'list:bordered': {
+    props: { bordered: true, dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
   'list:bordered-sm': {
     props: {
       bordered: true,
@@ -126,8 +146,8 @@ const specs: Record<
       header: 'H',
       footer: 'F',
       dataSource: DATA,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:bordered-lg': {
     props: {
@@ -136,23 +156,33 @@ const specs: Record<
       header: 'H',
       footer: 'F',
       dataSource: DATA,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 
-  'list:item-meta': { props: { dataSource: DATA, renderItem: metaItem } },
-  'list:item-actions': { props: { dataSource: DATA, renderItem: actionItem } },
+  'list:item-meta': {
+    props: { dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => metaItem(item) },
+  },
+  'list:item-actions': {
+    props: { dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => actionItem(item) },
+  },
   'list:item-no-flex': {
     props: {
       dataSource: DATA,
-      renderItem: (item: unknown) =>
+    },
+    slots: {
+      item: ({ item }: { item: unknown }) =>
         h(ListItem, { key: String(item) }, { default: () => [String(item), '-more'] }),
     },
   },
   'list:item-extra': {
     props: {
       dataSource: DATA,
-      renderItem: (item: unknown) =>
+    },
+    slots: {
+      item: ({ item }: { item: unknown }) =>
         h(ListItem, { key: String(item), extra: h('span', 'E') } as ListItemProps, {
           default: () => String(item),
         }),
@@ -163,80 +193,92 @@ const specs: Record<
     props: {
       itemLayout: 'vertical',
       dataSource: DATA,
-      renderItem: (item: unknown) =>
+    },
+    slots: {
+      item: ({ item }: { item: unknown }) =>
         h(ListItem, { key: String(item), extra: h('span', 'E') } as ListItemProps, {
           default: () => h(ListItemMeta, { title: String(item), description: 'desc' }),
         }),
     },
   },
   'list:vertical-no-extra': {
-    props: { itemLayout: 'vertical', dataSource: DATA, renderItem: textItem },
+    props: { itemLayout: 'vertical', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 
   'list:grid': {
-    props: { grid: { column: 2, gutter: 16 }, dataSource: DATA6, renderItem: textItem },
+    props: { grid: { column: 2, gutter: 16 }, dataSource: DATA6 },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:grid-responsive': {
     props: {
       grid: { column: 3, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6, xxxl: 7 },
       dataSource: DATA6,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:grid-no-column': {
-    props: { grid: { gutter: 16 }, dataSource: DATA, renderItem: textItem },
+    props: { grid: { gutter: 16 }, dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 
   'list:pagination': {
-    props: { pagination: { pageSize: 2 }, dataSource: DATA6, renderItem: textItem },
+    props: { pagination: { pageSize: 2 }, dataSource: DATA6 },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:pagination-top': {
     props: {
       pagination: { pageSize: 2, position: 'top' },
       dataSource: DATA6,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:pagination-both': {
     props: {
       pagination: { pageSize: 2, position: 'both' },
       dataSource: DATA6,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:pagination-clamp': {
     props: {
       pagination: { pageSize: 2, current: 99 },
       dataSource: DATA6,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 
-  'list:loading': { props: { loading: true, dataSource: DATA, renderItem: textItem } },
+  'list:loading': {
+    props: { loading: true, dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
+  },
   'list:loading-spin-props': {
-    props: { loading: { spinning: true }, dataSource: DATA, renderItem: textItem },
+    props: { loading: { spinning: true }, dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 
   'list:className': {
     props: {
       class: ['my-cls', 'my-root'],
       dataSource: DATA,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:style': {
     props: {
       style: { backgroundColor: '#fde3cf', color: '#f56a00' },
       dataSource: DATA,
-      renderItem: textItem,
     },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:attrs': {
-    props: { id: 'my-id', 'data-x': 'y', dataSource: DATA, renderItem: textItem },
+    props: { id: 'my-id', 'data-x': 'y', dataSource: DATA },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
   'list:rtl': {
-    props: { dataSource: DATA, renderItem: textItem },
+    props: { dataSource: DATA },
     ctx: { direction: 'rtl' },
+    slots: { item: ({ item }: { item: string }) => textItem(item) },
   },
 };
 
@@ -274,7 +316,7 @@ domContractTest('List', {
     if (!spec) {
       throw new Error(`[List L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     }
-    const vnode = h(List, spec.props as never, spec.slots as never);
+    const vnode = h(List, spec.props, { ...spec.slots });
     if (spec.bare) return vnode;
     const result: DomRenderResult = spec.ctx ? withConfig(spec.ctx, () => vnode) : vnode;
     return result;

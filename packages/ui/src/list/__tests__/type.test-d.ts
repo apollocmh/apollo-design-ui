@@ -40,11 +40,13 @@ import type {
   ListItemSemanticName,
   ListItemSemanticStyles,
   ListItemSlot,
+  ListItemSlotProps,
   ListLocale,
   ListProps,
   ListRef,
   ListSize,
   ListSlot,
+  ListSlots,
 } from '../interface';
 
 describe('List · Props 类型', () => {
@@ -63,7 +65,7 @@ describe('List · Props 类型', () => {
     expectTypeOf<ListProps['locale']>().toEqualTypeOf<ListLocale | undefined>();
   });
 
-  it('内容类 prop 是 `VNodeChild`（**不是**插槽 —— 与 card 同判）', () => {
+  it('简单内容 prop 保持 `VNodeChild`，具名插槽优先', () => {
     expectTypeOf<ListProps['header']>().toEqualTypeOf<VNodeChild>();
     expectTypeOf<ListProps['footer']>().toEqualTypeOf<VNodeChild>();
     expectTypeOf<ListProps['loadMore']>().toEqualTypeOf<VNodeChild>();
@@ -74,11 +76,17 @@ describe('List · Props 类型', () => {
     expectTypeOf<ListItemMetaProps['avatar']>().toEqualTypeOf<VNodeChild>();
   });
 
-  it('`dataSource` / `renderItem` / `rowKey` 是泛型默认实例化（`unknown`）', () => {
+  it('数据、item 插槽与 rowKey 共享泛型', () => {
     expectTypeOf<ListProps['dataSource']>().toEqualTypeOf<unknown[] | undefined>();
-    expectTypeOf<ListProps['renderItem']>().toEqualTypeOf<
-      ((item: unknown, index: number) => VNodeChild) | undefined
+    expectTypeOf<ListProps>().not.toHaveProperty('renderItem');
+    expectTypeOf<ListItemSlotProps<{ id: number }>['item']>().toEqualTypeOf<{ id: number }>();
+    expectTypeOf<ListItemSlotProps['index']>().toEqualTypeOf<number>();
+    expectTypeOf<ListSlots<string>['item']>().toEqualTypeOf<
+      ((props: ListItemSlotProps<string>) => VNodeChild) | undefined
     >();
+    expectTypeOf<ListSlots['header']>().toEqualTypeOf<ListSlot | undefined>();
+    expectTypeOf<ListSlots['footer']>().toEqualTypeOf<ListSlot | undefined>();
+    expectTypeOf<ListSlots['loadMore']>().toEqualTypeOf<ListSlot | undefined>();
     // ⚠️ `rowKey` 是「函数 | 字段名」的四元联合：`toEqualTypeOf` 的约束检查
     //    在「联合里含函数」时会退化成 `Expected X, Actual never` ⇒ 用 `toMatchTypeOf`。
     expectTypeOf<ListProps['rowKey']>().toMatchTypeOf<
@@ -174,6 +182,9 @@ describe('List · 复合组件（类型层）', () => {
 describe('List · 负例（永不调用的闭包内）', () => {
   it('非法的 `size` / `itemLayout` / `grid` 必须被拒绝', () => {
     const _never = () => {
+      // @ts-expect-error F11: item templates use a scoped slot; the renderer prop is removed.
+      const oldRenderer: ListProps<string> = { renderItem: (item: string) => item };
+      void oldRenderer;
       // @ts-expect-error `children` 不是 prop（Vue 侧是默认插槽，规则 C19）
       const badChildren: ListProps = { children: 'x' };
       // @ts-expect-error `size` 只有 `'small' | 'default' | 'large'`

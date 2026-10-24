@@ -1,38 +1,4 @@
-/**
- * List 的类型面（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/list/index.d.ts` / `Item.d.ts` / `context.d.ts`。
- * **逐字段对齐**（名称、可选性、默认值）。有意差异见
- * `packages/ui/src/list/README.md` §2 与 `docs/analysis/list.md` §5。
- *
- * ── 与 antd 类型面的四处**有据可查**的差异 ────────────────────────────────────
- *
- * 1. `children` 不在任何 Props 里（规则 C19）—— antd 的 `React.ReactNode` 在 Vue 侧是
- *    默认插槽：`List` 的 `ListSlot`、`List.Item` 的 `ListItemSlot`、
- *    `List.Item.Meta` 的 `ListItemMetaSlot`。
- * 2. `React.CSSProperties` → Vue 的 `CSSProperties`，`React.ReactNode` → `VNodeChild`
- *    （规则 C16 / C18）。`React.HTMLAttributes<HTMLDivElement>`（`ListItemProps extends …`）
- *    在 Vue 侧是 **attrs**（`inheritAttrs`），不进本接口。
- * 3. `React.Key` → `string | number`（规则 C16）。
- * 4. `ListRef` / `ListItemMetaRef` 的 `nativeElement` 声明为**可空**（上游声明非空，
- *    但首帧前同样是 `null`，与 `AvatarRef` / `CardRef` 同一条理由）。
- *
- * ── 两处**刻意保留**的上游形状 ────────────────────────────────────────────────
- *
- * - **内容类 prop 保持 `VNodeChild`**（`header` / `footer` / `loadMore` / `extra` /
- *   `title` / `description` / `avatar` / `emptyText`），数组类保持 `VNodeChild[]`
- *   （`actions`）—— 与 `card`（同组、最接近的先例）一致。
- *   ⚠️ `COMPATIBILITY.md` D111 的字面是「全部改为 slot」，与 card 的落地**不一致**；
- *   本组件取「与最近先例一致」这一侧，并登记进 `README §5`。
- * - `ListLocale.emptyText` 是**必填**（上游 `emptyText: React.ReactNode` 非可选）。
- *   ⚠️ 上游**没有** `useLocale('List')` —— `locale` 是纯 prop 覆盖，
- *   回退链是 `locale?.emptyText || renderEmpty?.('List') || <DefaultRenderEmpty/>`。
- *
- * ── 泛型（规则：SFC 泛型在本仓不用）──────────────────────────────────────────
- *
- * 上游 `ListProps<T>` / `InternalList<T>` 是泛型。本仓**组件实现**用非泛型默认实例化
- * （`T = unknown`），泛型只留在**类型导出**里（与 `listy` 同判）。
- */
+/** Apollo List contracts. Content uses Vue slots; data and pagination remain props. */
 
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { Breakpoint } from '../_internal/responsive-observer';
@@ -80,7 +46,7 @@ export interface ListLocale {
 // ---------------------------------------------------------------------------
 
 /**
- * `List` 的 props。逐字段对齐 antd 的 `ListProps<T>`。
+ * `List` 的数据与布局 props。逐项模板使用 `#item`。
  *
  * ⚠️ 上游的 `children?: React.ReactNode` 在 Vue 侧是**默认插槽**（`ListSlot`）。
  */
@@ -107,8 +73,6 @@ export interface ListProps<T = unknown> {
   prefixCls?: string;
   /** 行 key 的取值方式（函数或字段名）。 */
   rowKey?: ((item: T) => string | number) | keyof T;
-  /** 逐项渲染。⚠️ **未传时该项渲染为 `null`**。 */
-  renderItem?: (item: T, index: number) => VNodeChild;
   /** 尺寸。`'large'` / `'small'` 落 `-lg` / `-sm` 类名。 */
   size?: ListSize;
   /** 列表项之间是否显示分割线（默认 `true`）。 */
@@ -128,6 +92,20 @@ export interface ListRef {
 
 /** `List` 的默认插槽。antd 的 `children` 在 Vue 侧即此插槽。 */
 export type ListSlot = () => VNodeChild;
+
+/** The index is relative to the current page. */
+export interface ListItemSlotProps<T = unknown> {
+  item: T;
+  index: number;
+}
+
+export interface ListSlots<T = unknown> {
+  default?: ListSlot;
+  item?: (props: ListItemSlotProps<T>) => VNodeChild;
+  header?: ListSlot;
+  footer?: ListSlot;
+  loadMore?: ListSlot;
+}
 
 /** `ListContext` 的值（由 `List` 注入给 `List.Item`）。与上游一致。 */
 export interface ListConsumerProps {

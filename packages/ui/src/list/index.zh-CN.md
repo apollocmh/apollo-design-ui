@@ -6,8 +6,7 @@ subtitle: 列表
 
 通用列表。
 
-> 🚨 **`List` 已被 antd 废弃**：`antd` 6.6.4 起建议改用 [`Listy`](./listy)（`List` 会在下一个大版本移除）。
-> 本仓**照实现并保留同款 `console.error` 告警**（先例：`Dropdown.Button`），以便存量代码平滑迁移。
+List 按 Apollo 的独立契约维护；逐项内容使用带类型的 Vue `#item` 插槽。
 
 ## 何时使用
 
@@ -29,10 +28,8 @@ subtitle: 列表
 | `pagination` | `position: 'both'` 的上下双分页 |
 | `spin-debug` | `loading` 的两种形态 |
 
-⚠️ 与 antd 的 **8 个 demo 未移植**（缺口见 `README.md` §5）：
-`component-token`（零运行时架构下 token 是构建期产物）、
-`drag-sorting` / `drag-sorting-handler` / `grid-drag-sorting` / `grid-drag-sorting-handler`
-（依赖 `dnd-kit`）、`infinite-load`、`virtual-list`（本仓由 `Listy` 承担）、`grid-test`（内部调试）。
+其他示例还包括 `component-token`、`pagination-simple`、`empty`、`item-extra`。
+虚拟列表能力见 `Listy`；拖拽排序示例仍在能力清单中待审查。
 
 ## API
 
@@ -42,7 +39,7 @@ subtitle: 列表
 |---|---|---|---|
 | bordered | 是否展示边框 | `boolean` | `false` |
 | dataSource | 数据源 | `T[]` | — |
-| extra | 列表最外层右侧的内容 | `VNodeChild` | — |
+| extra | 历史声明，当前未接通渲染；待 F11 审查 | `VNodeChild` | — |
 | grid | 栅格配置（`gutter` / `column` / `xs`…`xxxl`） | `ListGridType` | — |
 | id | 根元素 id | `string` | — |
 | itemLayout | 列表项布局 | `'horizontal' \| 'vertical'` | `'horizontal'` |
@@ -50,7 +47,6 @@ subtitle: 列表
 | loadMore | 加载更多的内容（**取代**底部分页的位置） | `VNodeChild` | — |
 | pagination | 分页配置；`false` 不渲染 | `PaginationConfig \| false` | `false` |
 | rowKey | 行 key（函数或字段名） | `((item: T) => string \| number) \| keyof T` | — |
-| renderItem | 逐项渲染。⚠️ **未传时该项渲染为 `null`** | `(item: T, index: number) => VNodeChild` | — |
 | size | 尺寸。`'large'` / `'small'` 落 `-lg` / `-sm`；`'default'` 不落类 | `'small' \| 'default' \| 'large'` | — |
 | split | 列表项之间是否显示分割线 | `boolean` | `true` |
 | header | 列表头部 | `VNodeChild` | — |
@@ -58,6 +54,28 @@ subtitle: 列表
 | locale | 空态文案覆盖（**纯 prop**） | `{ emptyText: VNodeChild }` | — |
 | prefixCls | 类名前缀 | | — |
 | class / style | **根元素原生 attrs**（不是 Props） | | — |
+
+### List 插槽
+
+| 插槽 | 参数 | 说明 |
+|---|---|---|
+| default | — | 手动编排内容；存在时不显示默认空态 |
+| item | `{ item: T, index: number }` | 渲染当前页的每项；`T` 从 `dataSource` 推断，`index` 从当前页的 0 开始；不传则不渲染数据项 |
+| header | — | 列表头部 |
+| footer | — | 列表底部 |
+| loadMore | — | 替换底部分页，顶部的分页仍保留 |
+
+`header` / `footer` / `loadMore` 按插槽是否存在决定优先级；空插槽也压住同名 prop，且不生成空头尾容器。`loadMore` 大小写需保持一致。简单内容仍可通过同名 prop 传入。
+`renderItem` 已直接移除，迁移见 [List 插槽迁移](../../../../docs/migrations/list-slots.md)。
+
+```vue
+<List :data-source="users" row-key="id">
+  <template #item="{ item, index }">
+    <ListItem>{{ index + 1 }}. {{ item.name }}</ListItem>
+  </template>
+  <template #footer>共 {{ users.length }} 人</template>
+</List>
+```
 
 ### List.Item
 
@@ -79,7 +97,7 @@ subtitle: 列表
 
 ### 实例方法（ref）
 
-三个组件都暴露 `{ nativeElement }`（`List` / `List.Item` / `List.Item.Meta` 都是 `HTMLDivElement`，可空）。
+三个组件都暴露 `{ nativeElement }`（可空）：List / Meta 为 `HTMLDivElement`；Item 非 grid 时为 `HTMLLIElement`，grid 时为 `HTMLDivElement`。
 
 ## Theme
 

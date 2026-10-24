@@ -34,29 +34,6 @@ const extra = () =>
   h('span', {
     style: { display: 'inline-block', width: '272px', height: '120px', background: '#eee' },
   });
-
-const renderItem = (item: unknown) => {
-  // ⚠️ 参数必须收 `unknown`（函数参数**逆变**）
-  const it = item as (typeof data)[number];
-  return h(
-    ListItem,
-    {
-      key: it.title,
-      actions: [iconText('156'), iconText('156'), iconText('2')],
-      extra: extra(),
-    },
-    {
-      default: () => [
-        h(ListItemMeta, {
-          avatar: avatar(),
-          title: h('a', { href: it.href }, it.title),
-          description: it.description,
-        }),
-        it.content,
-      ],
-    },
-  );
-};
 </script>
 
 <template>
@@ -65,8 +42,17 @@ const renderItem = (item: unknown) => {
     size="large"
     :pagination="{ pageSize: 3 }"
     :data-source="data"
-    :render-item="renderItem"
   >
+    <template #item="{ item }">
+      <ListItem :actions="[iconText('156'), iconText('156'), iconText('2')]" :extra="extra()">
+        <ListItemMeta
+          :avatar="avatar()"
+          :title="h('a', { href: item.href }, item.title)"
+          :description="item.description"
+        />
+        {{ item.content }}
+      </ListItem>
+    </template>
     <template #footer>
       <div><b>ant design</b> footer part</div>
     </template>

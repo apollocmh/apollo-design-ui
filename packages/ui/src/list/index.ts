@@ -55,11 +55,13 @@ export type {
   ListItemSemanticName,
   ListItemSemanticStyles,
   ListItemSlot,
+  ListItemSlotProps,
   ListLocale,
   ListProps,
   ListRef,
   ListSize,
   ListSlot,
+  ListSlots,
 } from './interface';
 export { genListStyle, genTokenDecls as genListTokenDecls } from './style';
 export type { ComponentToken as ListComponentToken } from './style/token';
