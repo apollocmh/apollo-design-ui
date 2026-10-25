@@ -78,6 +78,11 @@ describe('useScrollLocker', () => {
     const body = document.body;
     const spy = vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(100);
     const spyWidth = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(800);
+    const probeWidth = vi
+      .spyOn(HTMLElement.prototype, 'offsetWidth', 'get')
+      .mockImplementation(function (this: HTMLElement) {
+        return this.id.startsWith('apollo-scrollbar-measure') ? 20 : 0;
+      });
     Object.defineProperty(body, 'scrollHeight', { value: 500, configurable: true });
     Object.defineProperty(body, 'offsetWidth', { value: 700, configurable: true });
 
@@ -85,10 +90,29 @@ describe('useScrollLocker', () => {
     scope.run(() => useScrollLocker(ref(true)));
     await nextTick();
 
-    expect(locks()[0]?.textContent).toContain('width: calc(100% -');
+    expect(locks()[0]?.textContent).toContain('width: calc(100% - 20px)');
 
     scope.stop();
     spy.mockRestore();
     spyWidth.mockRestore();
+    probeWidth.mockRestore();
+  });
+
+  it('overlay scrollbars lock overflow without expanding the existing body width', async () => {
+    const height = vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(100);
+    const width = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(800);
+    Object.defineProperty(document.body, 'scrollHeight', { value: 500, configurable: true });
+    Object.defineProperty(document.body, 'offsetWidth', { value: 700, configurable: true });
+    const scope = effectScope();
+    try {
+      scope.run(() => useScrollLocker(true));
+      await nextTick();
+      expect(locks()[0]?.textContent).toContain('overflow-y: hidden');
+      expect(locks()[0]?.textContent).not.toContain('width:');
+    } finally {
+      scope.stop();
+      height.mockRestore();
+      width.mockRestore();
+    }
   });
 });

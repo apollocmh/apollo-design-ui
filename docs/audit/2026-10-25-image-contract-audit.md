@@ -225,3 +225,27 @@ ConfigProvider的可选display:contents作用域通过同一份原生Teleport内
 | Docs build → test → typecheck → content:check | 全部退出0；14文件/157测试、72组件/1002 Demo。component-token不再为PENDING假例，双语API/Provider说明/集中迁移同步；`/tmp/apollo-image-theme-docs-*.log` |
 
 当前仍未统一验收：模态滚动锁、富缩略图交互控件、motion偏好/零时长、Provider合法ShadowRoot容器下的焦点/副作用链路、最终组合回归与Apollo视觉。ShadowRoot是Provider已声明容器类型，须在本单元补实测，不把它当新能力延后。局部主题的本组证据不替代其他组件的主题审计，也不代表ConfigProvider、theme基础包全部入口重新验收；后续完整单元按实际范围继续盘点。
+
+### 剩余交互链路的实施前清单
+
+以a41aeec3源码为准：Image富内容由imageRender与cover数据传入实际根，根无条件button角色并接管所有冒泡click/Enter/Space；空cover绝对定位覆盖输入。Progress的render允许任意VNode，需核验进度语义与交互控件。Preview的Portal未传autoLock；CSSMotion固定500ms deadline，未消费motion=false/reduced-motion；私有Escape绕过Portal的IME保护，分组方向键未检查修饰键。Portal的容器支持Element/ShadowRoot/inline，但滚动锁与Escape副作用使用全局document/window。utils焦点锁及Preview读取document.activeElement，ShadowRoot返回host；document观察器不跨ShadowRoot。以上均为现有公开链路的必修/待复现项，无新增公共能力。
+
+验收范围：两入口、富缩略图/封面/进度VNode、原生取消/IME/修饰键、所属文档/ShadowRoot、滚动锁关闭动画/重开/多实例/卸载、motion=false及动态reduced-motion，结合真实浏览器、axe与共享消费者回归。独立根因可分提交；Image清单仍整体开放，不切换其他组件。先运行新复现记录红灯，再集中修复；不以设置preview=false或要求调用者.stop作为修复。
+
+### 容器副作用根因组（2026-10-26）
+
+初始三个专项文件21条中11失败/10已有通过（`/tmp/apollo-image-interaction-baseline.log`）；motion复现最初误用嵌套wrapper.setProps，修为父级真实ref后7条Image交互仍全失败（`/tmp/apollo-image-interaction-baseline-corrected.log`），没有把测试工具错误当产品缺陷。Portal的两条所属文档/原生取消复现，以及Chrome中锁定body从284px扩至300px的复现均先失败再修复。其余Image与ShadowRoot焦点红灯继续同一单元，未用本组绿灯覆盖。
+
+已实现：Portal滚动锁与Escape栈读取实际目标ownerDocument/defaultView，inline读取源锚点；仅活动副作用观察所属文档及全部已知祖先ShadowRoot，跟踪稳定resolver、同节点/祖先原生搬迁，并在关闭/卸载释放。每个窗口独立IME计时和层栈；子控件preventDefault优先；分发快照固定原始top，仍通知所有原始层。utils在目标文档测量滚动条，isBodyOverflowing新增可选Document/null参数，原composable签名与默认值保持。只有实测宽度>0才补偿body；原非零补偿测试提供明确20px探针并加强精确断言，新增零宽度断言，没有删除场景。
+
+| 本组已执行证据 | 实际结果与边界 |
+|---|---|
+| `vitest run --project unit --project dom-contract --project a11y packages/portal/src packages/utils/src/__tests__/scrollbar-owner.test.ts packages/utils/src/dom/__tests__ packages/a11y/src packages/ui/src/modal packages/ui/src/drawer packages/ui/src/image/__tests__/preview-focus.test.ts --maxWorkers=1 --no-file-parallelism` | 最终30文件/437条通过；`/tmp/apollo-portal-owner-consumers-final.log`。含Portal全部运行回归、所属文档/窗口/取消/IME/当前回调、utils几何及CSS、a11y、Modal、Drawer和原Image焦点回归；不是Image全量验收 |
+| 根严格；`vitest run --project types packages/portal/src packages/utils/src` | 根严格退出0，4文件/126类型条通过、0类型错误；`/tmp/apollo-portal-owner-strict-final.log`、`-types.log` |
+| utils/portal build及各自L7 `--no-build` | 全部通过，各11检查/0FAIL/0PENDING（5项明确n/a）；`/tmp/apollo-portal-{utils-build-final,build-final}.log`、`/tmp/apollo-portal-owner-{utils-l7,l7}.log` |
+| `node tests/consumer/portal-ssr.mjs` | 真实无DOM生产Node通过；滚动锁/Escape composable安全、关闭Portal不求值插槽、几何默认值安全；`/tmp/apollo-portal-owner-ssr.log` |
+| `node tests/browser/portal-owner.mjs` | Chrome150.0.7871.125通过、零页面/控制台/Vue错误；实际滚轮、原节点/输入保持、iframe/inline/开闭及嵌套ShadowRoot、容器/源/封闭树中宿主原生搬迁、独立窗口层栈、原始top、取消、IME隔离、当前回调、重开/卸载。持久化[证据](evidence/portal-owner-browser.json)含源码指纹。原生验证为覆盖式滚动条，非零宽度由明确单元几何覆盖，未宣称实测其他平台原生滚动条 |
+| 原生产浏览器 `image-preview-focus.mjs`、`drawer-slots.mjs` | 全部通过；原Image/Group堆叠、焦点/选择区、拒绝关闭、父先卸载及Drawer实际富内容/ARIA均保留；`/tmp/apollo-portal-owner-{image,drawer}-browser.log` |
+| Registry、内容与格式 | Registry19检查/0warning；Docs内容检查及显式文件Biome、git diff --check通过。未因共享层修改提升历史verification或Image状态 |
+
+此为同一Image单元内的共享根因里程碑。Image自身模态锁定接入、富内容、ShadowRoot焦点、motion及最终视觉仍未完成；下一步继续这些既有失败复现，不切换组件，不宣称Image或全库通过。

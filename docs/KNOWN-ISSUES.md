@@ -297,6 +297,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 源主题/Token组随后验证56文件1059条（完整串行，未改5秒阈值）、严格/生产构建/模板消费/L7及Docs全检查通过；真实Node SSR和服务端输入水合通过。生产浏览器盘点现23场景全部通过，含两个实际Demo、全部7个Token及主题移除/恢复下的原节点、输入和焦点。Image仍未统一完成：滚动锁、富缩略图交互、motion偏好与最终视觉继续，详见同一清单。
 
+剩余交互已补红灯复现。Portal共享层正按实际ownerDocument/defaultView迁移滚动锁与Escape栈，覆盖稳定resolver、原生搬迁、inline及开/闭ShadowRoot；真实浏览器还复现覆盖式滚动条导致body由284px扩至300px，纳入同组修复。当前证据、提交及未验收的Image锁定接入/富内容/ShadowRoot焦点/motion统一记在同一清单，不另建逐字段完成报告。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

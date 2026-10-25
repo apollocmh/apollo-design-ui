@@ -204,14 +204,13 @@ return renderInline ? reffedChildren : createPortal(reffedChildren, mergedContai
 `inlineMock()` 是测试用的全局开关（`mock.js`：一个模块级 `let inline`，只在测试里被置 true）。
 antd 的测试靠它把浮层渲染在原地，便于断言。
 
-### 3.6 ❌ 不在这个包里的东西
+### 3.6 当前副作用职责（2026-10-26）
 
-`Portal.js` 里还调用了 `useScrollLocker` 与 `useEscKeyDown` —— **这两条不属于本包**。
-依据 `dependencies.json` 里 Modal 的 rationale：
+当前源码已提供Portal.autoLock/onEsc及独立useScrollLocker/useEscKeyDown（2026-09-26引入），旧版“不属于本包”的分析已过期。Portal按实际目标所属文档管理滚动锁，按所属窗口管理Escape栈与200ms IME保护；inline读取Teleport源锚点，ShadowRoot使用ownerDocument。响应式目标与原生DOM搬迁均迁移副作用，最后关闭/卸载清理。独立composable的默认文档/窗口及原公开签名保留。
 
-> 其中「挂载与层级」由 portal 承接；「焦点陷阱 + 滚动锁定 + Esc」属交互语义，留在 ui 内。
+Escape子控件preventDefault优先，每次分发快照固定原始top，仍从顶至底通知所有原始层。滚动条在所属文档实测，仅在body溢出且宽度大于0时补偿；覆盖式滚动条不改变body宽度。isBodyOverflowing可传所属Document/null，省略时仍使用当前document，SSR安全。
 
-再加 `portal` 自己的 `notDo`：不实现浮层定位（position）、焦点陷阱（a11y）、触发时机与显隐延迟（overlay）。
+焦点陷阱（utils/a11y）、浮层定位（position）、触发时机与显隐延迟（overlay）仍不属于本包。此次仅验收Image实际调用的容器副作用路径，未重标本包所有历史能力。
 
 ---
 
@@ -224,7 +223,6 @@ antd 的测试靠它把浮层渲染在原地，便于断言。
 - 浮层定位（`position`）
 - 焦点陷阱 / 焦点恢复（`a11y`）
 - 触发动作与显隐延迟（`overlay`）
-- **滚动锁定与 Esc**（rc-portal 有，但按 Modal 的 rationale 属 ui 交互语义）
 - 不依赖 `theme`（`zIndexPopupBase` 由调用方给）
 
 ---

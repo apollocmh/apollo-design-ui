@@ -9,9 +9,10 @@ import { computed, defineComponent, h, type PropType, Teleport } from 'vue';
 
 import type { GetContainer } from './container';
 import { portalInlineMock } from './mock';
-import { type EscInfo, useEscKeyDown } from './use-esc-key-down';
+import { type EscInfo, useWindowEscKeyDown } from './use-esc-key-down';
 import { usePortalContainer } from './use-portal';
-import { useScrollLocker } from './use-scroll-locker';
+import { usePortalDocument } from './use-portal-document';
+import { useDocumentScrollLocker } from './use-scroll-locker';
 
 export const Portal = defineComponent({
   name: 'Portal',
@@ -53,16 +54,6 @@ export const Portal = defineComponent({
       );
     }
 
-    // `Portal.js` 的两个全局副作用：滚动锁 + ESC 层栈
-    // ⚠️ `onEsc` 只在传了的时候才挂栈（不传就不参与 ESC 层栈 —— 与上游一致：
-    //    上游把 `onEsc` 直接交给 hook，未传时 `stack[i].onEsc` 会抛，所以上游的调用方
-    //    （rc-drawer）恒传一个函数；本仓这里做**防御性**判空，语义不变）
-    useScrollLocker(() => props.autoLock && props.open);
-    useEscKeyDown(
-      () => props.open && !!props.onEsc,
-      (info) => props.onEsc?.(info),
-    );
-
     const { container, shouldRender } = usePortalContainer({
       open: () => props.open,
       autoDestroy: props.autoDestroy,
@@ -75,6 +66,17 @@ export const Portal = defineComponent({
 
     /** `Portal.js:83` —— `mergedContainer === false || inlineMock()` */
     const inline = computed(() => container.value === false || portalInlineMock());
+    const ownerDocument = usePortalDocument(
+      () => container.value,
+      () => inline.value,
+      () => props.open && (props.autoLock || !!props.onEsc),
+    );
+    useDocumentScrollLocker(() => props.autoLock && props.open, ownerDocument);
+    useWindowEscKeyDown(
+      () => props.open && !!props.onEsc,
+      (info) => props.onEsc?.(info),
+      () => ownerDocument.value?.defaultView ?? null,
+    );
 
     /**
      * Vue 的 `to` 声明为 `RendererElement`（DOM 下即 `Element`），但 Teleport 在运行时

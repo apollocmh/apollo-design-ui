@@ -26,11 +26,30 @@
 - ContextIsolator（切断 provider 传递）
 - **全局副作用**（2026-09-26 为 drawer 补入，modal 同用）：
   - `useScrollLocker(lock)` + Portal 的 `autoLock` prop —— 锁 `html body` 滚动，
-    body 本来有滚动条时补 `width: calc(100% - Npx)`；
-  - `useEscKeyDown(open, onEsc)` + Portal 的 `onEsc` prop —— 全局 ESC **层栈**，
+    body 溢出且实测滚动条宽度大于0时补 `width: calc(100% - Npx)`，覆盖式滚动条不改宽度；
+  - `useEscKeyDown(open, onEsc)` + Portal 的 `onEsc` prop —— ESC **层栈**，
     回调拿到 `{ top, event }`（`top` = 自己是不是最上层），带 IME 保护
     （`compositionend` 后 200ms 内的 ESC 忽略）。
-  两者都移植自 `@rc-component/portal@2.2.1` 的同名 hook（契约逐条对齐，差异见文件头）。
+  Portal副作用跟随实际容器的ownerDocument/defaultView；iframe相互隔离，ShadowRoot使用其所属文档，inline使用Teleport源锚点。稳定resolver、原生容器或源节点搬迁后迁移锁与监听；关闭/卸载释放。Escape保留子控件preventDefault优先，分发时固定原始top，不因关闭顶层而在同一事件提升下一层。独立composable仍默认当前全局文档/窗口，公开签名保持不变。
+
+  ```vue
+  <script setup lang="ts">
+  import { Portal } from '@apollo-design/portal';
+  import { ref } from 'vue';
+  const opened = ref(true);
+  const frame = ref<HTMLIFrameElement>();
+  </script>
+  <template>
+    <iframe ref="frame" title="Preview document" />
+    <Portal :open="opened" :auto-lock="true"
+      :get-container="() => frame?.contentDocument?.body"
+      :on-esc="({ top }) => { if (top) opened = false; }">
+      <input aria-label="Frame draft" />
+    </Portal>
+  </template>
+  ```
+
+  生产包浏览器验证：`node tests/browser/portal-owner.mjs`（真实iframe、开/闭ShadowRoot、原生滚轮、搬迁、IME、窗口层栈、重开和卸载）。这不代表焦点陷阱或Image整体已验收。
 
 ## 明确不做（边界）
 

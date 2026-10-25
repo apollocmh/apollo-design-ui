@@ -21,11 +21,11 @@
 /** 探针元素的 id 前缀（与上游同形，便于对照）。 */
 const MEASURE_PREFIX = 'apollo-scrollbar-measure';
 
-function measureScrollbarSize(): { width: number; height: number } {
-  if (typeof document === 'undefined') return { width: 0, height: 0 };
+function measureScrollbarSize(doc: Document): { width: number; height: number } {
+  if (!doc.body) return { width: 0, height: 0 };
 
   const id = `${MEASURE_PREFIX}-${Math.random().toString(36).slice(7)}`;
-  const measureEle = document.createElement('div');
+  const measureEle = doc.createElement('div');
   measureEle.id = id;
 
   const style = measureEle.style;
@@ -36,27 +36,42 @@ function measureScrollbarSize(): { width: number; height: number } {
   style.height = '100px';
   style.overflow = 'scroll';
 
-  document.body.appendChild(measureEle);
+  doc.body.appendChild(measureEle);
   const width = measureEle.offsetWidth - measureEle.clientWidth;
   const height = measureEle.offsetHeight - measureEle.clientHeight;
-  document.body.removeChild(measureEle);
+  doc.body.removeChild(measureEle);
 
   return { width, height };
 }
 
-/** 实测滚动条尺寸（⚠️ 非元素目标或 SSR 下返回 `{0, 0}` —— 与上游同判）。 */
+function isElement(target: unknown): target is Element {
+  return (
+    !!target &&
+    typeof target === 'object' &&
+    'nodeType' in target &&
+    target.nodeType === 1 &&
+    'ownerDocument' in target &&
+    !!target.ownerDocument &&
+    'getAttribute' in target &&
+    typeof target.getAttribute === 'function'
+  );
+}
+/** Measure in the target's own document, including native foreign-realm elements. */
 export function getTargetScrollBarSize(target?: unknown): { width: number; height: number } {
-  if (typeof document === 'undefined' || !target || !(target instanceof Element)) {
+  if (!isElement(target)) {
     return { width: 0, height: 0 };
   }
-  return measureScrollbarSize();
+  return measureScrollbarSize(target.ownerDocument);
 }
 
-/** body 是否「纵向溢出且出现了纵向滚动条」（上游逐字）。 */
-export function isBodyOverflowing(): boolean {
-  if (typeof document === 'undefined' || typeof window === 'undefined') return false;
+/** Body overflow in the requested document; omitted/null is current document/SSR-safe false. */
+export function isBodyOverflowing(
+  doc: Document | null = typeof document === 'undefined' ? null : document,
+): boolean {
+  const view = doc?.defaultView;
+  if (!doc?.body || !view) return false;
   return (
-    document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight) &&
-    window.innerWidth > document.body.offsetWidth
+    doc.body.scrollHeight > (view.innerHeight || doc.documentElement.clientHeight) &&
+    view.innerWidth > doc.body.offsetWidth
   );
 }

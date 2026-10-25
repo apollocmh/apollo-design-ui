@@ -1,0 +1,36 @@
+{
+  "browser": "150.0.7871.125",
+  "result": "passed",
+  "checks": [
+    "owner-lock-and-native-wheel",
+    "stable-container-and-node",
+    "open-and-closed-shadow",
+    "native-container-and-source-adoption",
+    "independent-window-stacks",
+    "snapshot-top-flags",
+    "native-cancellation",
+    "IME-window-isolation",
+    "live-callback",
+    "reopen-and-unmount"
+  ],
+  "issues": [],
+  "command": "node tests/browser/portal-owner.mjs",
+  "baseCommit": "a41aeec307742a48136b3a6875faa0cfc61b3ab7",
+  "candidate": "Portal actual-container side effects; Image unit remains open",
+  "productionFiles": [
+    "packages/portal/src/container.ts",
+    "packages/portal/src/index.ts",
+    "packages/portal/src/mock.ts",
+    "packages/portal/src/portal.ts",
+    "packages/portal/src/use-esc-key-down.ts",
+    "packages/portal/src/use-portal-document.ts",
+    "packages/portal/src/use-portal.ts",
+    "packages/portal/src/use-scroll-locker.ts",
+    "packages/utils/src/dom/get-scroll-bar-size.ts"
+  ],
+  "productionSourceSha256": "ce298af53e773d56b8c3c2826f242239aa901e8b52045bf2aa79529c0ba3ac11",
+  "bounds": [
+    "ShadowRoot ownership and locks only; Image focus remains a separate failing probe in the same unit",
+    "Native overlay scrollbars; nonzero scrollbar compensation additionally tested with explicit jsdom geometry"
+  ]
+}
