@@ -62,7 +62,7 @@ registry 数据：token 数 = 6（+ 派生 1）。
 
 | # | 缺口 | 说明 |
 |---|---|---|
-| P1 | focusTrap | rc 的 `useLockFocus`；v1 简化为 ESC + 初始聚焦 |
+| P1 | 焦点管理（2026-10-25 已修） | 真实弹层挂载后入焦，Tab 循环、外部焦点约束、Esc 及关闭/卸载归还；见下方当前证据 |
 | P2 | 触摸手势 | rc 的 `useTouchEvent`（双指缩放/拖拽）未落地，鼠标拖拽/滚轮已实现 |
 | P3 | 语义槽函数式形态 | D36 同判 |
 | P4 | `emits` 声明 | `update:open` / `update:current` 是运行时 `emit()`，未写进 `emits` 选项（`switch`/`radio` 的惯例是声明；声明会把监听器从 attrs 摘掉，本组件 `inheritAttrs: false` 影响面小，待统一） |
@@ -91,3 +91,5 @@ Image/Group前缀由computed读取当前prop与Provider，Group的mask-hidden名
 Image的click/error/keydown与已有update:open通知使用typed emits。根属性、原生事件及Vue修饰符按真实DOM落点处理，Progress保持事件隔离；开合模型见下一段。见 [事件报告](../../../../docs/audit/2026-10-25-image-native-events-remediation.md) 与 [迁移](../../../../docs/migrations/image-native-events.md)。
 
 顶层open/defaultOpen与typed openChange/update:open兑现Image的Vue模型承诺，Group同名模型与current事件统一。旧preview状态字段直接移除，控态移除保留最近同步值；见 [模型迁移](../../../../docs/migrations/image-open-model.md) 和 [验证报告](../../../../docs/audit/2026-10-25-image-open-model-remediation.md)。
+
+预览在真实Portal根挂载后移动焦点，约束Tab/Shift+Tab和外部焦点；Esc请求关闭，受控父级拒绝时继续持焦。关闭动画结束或整个预览卸载后归还原触发器，触发器已移除时安全清理。关闭/上一张/下一张按钮有独立名称，不依赖自定义图标提供文字。见 [焦点报告](../../../../docs/audit/2026-10-25-image-preview-focus-remediation.md)。

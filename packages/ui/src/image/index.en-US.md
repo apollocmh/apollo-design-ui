@@ -93,6 +93,8 @@ With preview=false, native role/tabindex/aria-label survive. Preview triggers ow
 
 Open state has one public Vue entrypoint. Without open, internal state applies; removing control resumes the last synchronized value. Interaction emits openChange before update:open, and the parent may decline a request. Legacy preview state fields are removed; non-state business hooks remain in preview. See the [model migration](../../../../docs/migrations/image-open-model.md).
 
+Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape requests closing. A controlled parent declining that request keeps focus inside. Focus returns to the original trigger after the closing animation or when the whole preview unmounts. Close and group navigation buttons have their own accessible names, including with decorative custom icons.
+
 ### Image.PreviewGroup · Props
 
 | Property | Description | Type | Default |

@@ -5562,8 +5562,10 @@
         "files": []
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/preview-focus.test.ts"
+        ]
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
@@ -5637,8 +5639,10 @@
         "files": []
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/preview-focus.test.ts"
+        ]
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
@@ -5662,8 +5666,10 @@
         "files": []
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/preview-focus.test.ts"
+        ]
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"

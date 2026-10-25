@@ -7,11 +7,11 @@
  *
  * v1 边界（登记于 README §4）：
  * - 手势：滚轮缩放 + 鼠标拖拽 + 双击（触摸双指缩放 PENDING）；
- * - `focusTrap`：仅做「打开时聚焦根 + 关闭时还原焦点」（rc 的完整焦点循环
- *   PENDING —— 与 modal/message 的 focus 基建一起回归）；
+ * - 焦点：真实弹层挂载后入焦，Tab 循环与外部焦点约束，关闭/卸载后归还；
  * - 变换内核在 `hooks/useImageTransform.ts`（纯逻辑，oracle 单测覆盖）。
  */
 
+import { getFocusNodeList, useFocusRestore, useLockFocus } from '@apollo-design/a11y';
 import {
   CloseOutlined,
   LeftOutlined,
@@ -24,7 +24,16 @@ import {
 } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
 import { Portal, useZIndex } from '@apollo-design/portal';
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  onScopeDispose,
+  type PropType,
+  ref,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { useImageTransform } from './hooks/useImageTransform';
 import { useStatus } from './hooks/useStatus';
 import type { ImageCommonProps, PreviewConfig, PreviewIcons, TransformInfo } from './interface';
@@ -102,6 +111,28 @@ const Preview = defineComponent({
     onTransform: { type: Function as PropType<(info: TransformInfo) => void>, default: undefined },
   },
   setup(props) {
+    const previewElement = ref<HTMLElement | null>(null);
+    useLockFocus(() => props.open, previewElement);
+    // Vue scope cleanup runs in registration order: release the lock, restore its
+    // opener, then let useFocusRestore discard the saved element. Unmounting an
+    // open preview must follow the same order as completing a normal close.
+    onScopeDispose(() => focusRestore.restore());
+    const focusRestore = useFocusRestore(() => previewElement.value);
+    const focusPreview = (): void => {
+      const element = previewElement.value;
+      if (props.open && element && !element.contains(element.ownerDocument.activeElement)) {
+        element.focus({ preventScroll: true });
+      }
+    };
+    watch(
+      () => props.open,
+      (open) => {
+        if (open) focusRestore.save();
+      },
+      { immediate: true },
+    );
+    watch([() => props.open, previewElement], focusPreview, { flush: 'post' });
+
     const zIndex = useZIndex('ImagePreview', () => props.zIndex, {
       zIndexPopupBase: imageTokenValues().zIndexPopup,
     });
@@ -192,9 +223,26 @@ const Preview = defineComponent({
 
     // ------------------------------ 键盘 ------------------------------
     const onKeyDown = (e: KeyboardEvent): void => {
-      if (!props.open) return;
+      if (!props.open || e.defaultPrevented) return;
       const key = e.key;
+      if (key === 'Tab' && !e.altKey && !e.ctrlKey && !e.metaKey) {
+        const element = previewElement.value;
+        if (!element) return;
+        const focusable = getFocusNodeList(element);
+        const first = focusable[0];
+        const last = focusable.at(-1);
+        const active = element.ownerDocument.activeElement;
+        const boundary = e.shiftKey ? active === first || active === element : active === last;
+        if (!first || boundary) {
+          e.preventDefault();
+          (e.shiftKey ? last : first)?.focus({ preventScroll: true });
+          if (!first) element.focus({ preventScroll: true });
+        }
+        return;
+      }
       if (key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
         props.onClose?.();
         return;
       }
@@ -204,6 +252,8 @@ const Preview = defineComponent({
     };
 
     const onVisibleChanged = (next: boolean): void => {
+      if (next) focusPreview();
+      else if (!props.open) focusRestore.restore();
       props.afterOpenChange?.(next);
     };
 
@@ -293,7 +343,9 @@ const Preview = defineComponent({
         h(
           'button',
           {
+            type: 'button',
             class: [cls, `${cls}-prev`, prevDisabled ? `${cls}-disabled` : undefined],
+            'aria-label': 'Previous image',
             onClick: () => props.onActive?.(-1),
             disabled: prevDisabled,
           },
@@ -304,6 +356,7 @@ const Preview = defineComponent({
           {
             type: 'button',
             class: [cls, `${cls}-next`, nextDisabled ? `${cls}-disabled` : undefined],
+            'aria-label': 'Next image',
             onClick: () => props.onActive?.(1),
             disabled: nextDisabled,
           },
@@ -358,6 +411,9 @@ const Preview = defineComponent({
                   h(
                     'div',
                     {
+                      ref: (element: unknown) => {
+                        previewElement.value = element instanceof HTMLElement ? element : null;
+                      },
                       class: [
                         props.prefixCls,
                         props.rootClassName,
@@ -394,7 +450,9 @@ const Preview = defineComponent({
                       h(
                         'button',
                         {
+                          type: 'button',
                           class: [`${props.prefixCls}-close`, props.classNames?.close],
+                          'aria-label': 'Close preview',
                           style: props.styles?.close,
                           onClick: () => props.onClose?.(),
                         },

@@ -267,6 +267,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image/Group Vue开合模型增量（F11/ADR0007）**：兑现旧文档v-model:open承诺，真实SFC隔离8红2绿、正式最小2全红；直接顶层open/defaultOpen和typed请求，删preview内5个状态字段，无第二来源。模型初值/外部驱动/内部回写、Group受控拒绝、default只初始化与prev捕获均修复，29状态条及迁移6文件91通过；见 [报告](audit/2026-10-25-image-open-model-remediation.md) 和 [迁移](migrations/image-open-model.md)。Group current/开合统一Vue通知，原非状态业务选项保留。
 
+**2026-10-25 Image/Group预览焦点增量**：真实Portal/CSSMotion正式13条修前10失败/3已有通过；弹层晚挂载入焦、外部焦点约束、Tab边界、Esc与关闭/卸载归还直接修正，自定义装饰图标保留按钮名称。局部13条通过，完整门禁与真实浏览器记录见 [报告](audit/2026-10-25-image-preview-focus-remediation.md)。其他预览配置扩展与当前视觉验收继续开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

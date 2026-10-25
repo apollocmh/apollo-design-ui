@@ -90,6 +90,8 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 
 开合只有顶层Vue状态入口。open省略使用内态，移除控制接续最后同步值；交互先openChange再update:open，父级可以拒绝请求。旧preview状态字段直接移除，afterOpenChange/onTransform等非状态业务配置保持，见 [模型迁移](../../../../docs/migrations/image-open-model.md)。
 
+预览打开后焦点进入弹层，Tab/Shift+Tab在其中循环，Esc请求关闭。受控父级拒绝关闭时保留焦点；关闭动画结束或整个预览卸载后归还原触发器。关闭与组内切换按钮自带可访问名称，自定义装饰图标不会移除名称。
+
 ### Image.PreviewGroup · Props
 
 | 参数 | 说明 | 类型 | 默认值 |
