@@ -93,6 +93,8 @@ subtitle: 提及
 | pressEnter | 按下 Enter 且**不在**候选态 | `(e: KeyboardEvent)` |
 | resize | 尺寸变化（`autoSize` 时） | `({ width, height })` |
 
+`change` / `select` / `search` 使用 typed emits，支持 `@change.once` 等 Vue 监听语法及当前监听器数组；一次原生 input 只发送一次值更新。原生 DOM change/select 不触发这些语义事件。旧 `:on-search="handler"` 等函数 prop 绑定改为 `@search="handler"`；渲染函数的 `onSearch` 是标准 Vue 监听器注册。见 [迁移记录](../../../../docs/migrations/mentions-core-events.md)。
+
 ### Slots
 
 | 名称 | 说明 | 参数 |

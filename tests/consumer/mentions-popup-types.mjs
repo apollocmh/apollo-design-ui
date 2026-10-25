@@ -31,6 +31,18 @@ try {
     path.join(temp, 'ExactPopup.vue'),
     fixture.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  const core = fs.readFileSync(
+    path.join(root, 'packages/ui/src/mentions/__tests__/fixtures/CoreEvents.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'CoreEvents.vue'),
+    core.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/MentionsEvents.vue'),
+    path.join(temp, 'MentionsEvents.vue'),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { MentionsProps } from '@apollo-design/ui';
@@ -70,7 +82,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Mentions popup scope: exact single-object VNode context, native template, unknown-slot and old-renderer rejection; no source aliases or test declarations shipped',
+    'PASS published Mentions contracts: exact popup context, unknown-slot/old-renderer rejection, StyleValue bindings, exact core emit payloads and native listener templates; no source aliases or test declarations shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

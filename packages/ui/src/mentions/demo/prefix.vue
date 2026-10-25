@@ -20,7 +20,7 @@ const onSearch = (_: string, newPrefix: string) => {
     style="width: 100%"
     placeholder="input @ to mention people, # to mention tag"
     :prefix="['@', '#']"
-    :on-search="onSearch"
+    @search="onSearch"
     :options="(MOCK_DATA[prefix] ?? []).map((value) => ({ key: value, value, label: value }))"
   />
 </template>

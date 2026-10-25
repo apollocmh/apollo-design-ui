@@ -116,9 +116,6 @@ export const MentionsComponent = defineComponent({
       default: undefined,
     },
     // ---- 事件 ----
-    onChange: { type: Function as PropType<MentionsProps['onChange']>, default: undefined },
-    onSelect: { type: Function as PropType<MentionsProps['onSelect']>, default: undefined },
-    onSearch: { type: Function as PropType<MentionsProps['onSearch']>, default: undefined },
     // ---- 从 TextArea 继承、需要显式转发的 ----
     maxLength: { type: Number, default: undefined },
     rows: { type: Number, default: undefined },
@@ -133,7 +130,12 @@ export const MentionsComponent = defineComponent({
     onPressEnter: { type: Function as PropType<MentionsProps['onPressEnter']>, default: undefined },
     onResize: { type: Function as PropType<MentionsProps['onResize']>, default: undefined },
   },
-  emits: ['update:value'],
+  emits: {
+    'update:value': (_value: string) => true,
+    change: (_value: string) => true,
+    select: (_option: MentionsOptionProps, _prefix: string) => true,
+    search: (_text: string, _prefix: string) => true,
+  },
   setup(props, { attrs, emit, expose, slots }) {
     const devWarning = useDevWarning('Mentions');
     // ⚠️ 判据是「有 children 才告警」（上游 `warning.deprecated(!children, ...)`）
@@ -340,10 +342,10 @@ export const MentionsComponent = defineComponent({
           // ---- 显式转发（声明过的 prop 不会落进 attrs）----
           onChange: (nextValue: string) => {
             emit('update:value', nextValue);
-            props.onChange?.(nextValue);
+            emit('change', nextValue);
           },
-          onSelect: props.onSelect,
-          onSearch: props.onSearch,
+          onSelect: (option: MentionsOptionProps, prefix: string) => emit('select', option, prefix),
+          onSearch: (text: string, prefix: string) => emit('search', text, prefix),
           onPopupScroll: props.onPopupScroll,
           onPressEnter: props.onPressEnter,
           onResize: props.onResize,

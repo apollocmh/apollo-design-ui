@@ -598,20 +598,7 @@ export const InternalMentions = defineComponent({
         rows: props.rows,
         id: props.id,
         onChange: onInternalChange,
-        /**
-         * 🚨 **本仓必须显式处理 `onChange`**（`docs/foundation/rc-util-contract.md` §6.1）：
-         * React 的 `onChange` 在文本输入上等价于原生 **`input`**（每次击键），
-         * 而 Vue 的 `onChange` 监听的是原生 **`change`**（失焦才触发）。
-         *
-         * 上游只写 `onChange`（React 语义）⇒ 本仓若只照抄，`mergedValue` 会**停在失焦前的旧值**，
-         * 而 `selectOption` 用 `mergedValue` 调 `replaceWithMeasure`
-         * ⇒ **回填会基于旧文本**（jsdom 测得出、类型与结构断言都抓不到）。
-         *
-         * `onInput` 不在 `RcTextArea` 的 props 里 ⇒ 落进它的 `attrs` 并被摊到 `<textarea>` 上
-         * （单段名不会被 hyphenate，实测 `input` 事件正常）。保留 `onChange` 是因为
-         * 它同时覆盖「失焦提交」这条路径（值相同时幂等）。
-         */
-        onInput: onInternalChange,
+        // RcTextArea 已将原生 input 归一到 onChange；额外 onInput 会重复提交。
         onKeyDown: onInternalKeyDown,
         onKeyUp: onInternalKeyUp,
         onPressEnter: onInternalPressEnter,

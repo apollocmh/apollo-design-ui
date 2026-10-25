@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-25T01:44:36.912Z",
+  "generatedAt": "2026-10-25T02:04:42.844Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -3031,7 +3031,7 @@
       "decidedBy": [],
       "complexity": "XL",
       "unblocks": 0,
-      "why": "2026-10-25 F11：popupRender函数prop直接迁为单对象原生槽，四层当前函数转发，render边界向Trigger传VNode，支持条件/空/移除、当前菜单数据与编辑器状态/键盘选择；类名边界移除as never并归一，原示例补可访问名且移除旧label豁免。范围与证据见 docs/audit/2026-10-25-mentions-popup-slot-remediation.md，不表示其余内容/attrs或Apollo视觉已验收。\n2026-10-25：8条包装层绑定回归修前6失败/2裸形态通过，修复clear/Form反馈外层根style丢失与显式silent被忽略。CSR/SSR、编辑器状态、三形态生产浏览器及发布消费端见 docs/audit/2026-10-25-mentions-native-bindings-remediation.md，不升级历史视觉验收。",
+      "why": "2026-10-25 F11：popupRender函数prop直接迁为单对象原生槽，四层当前函数转发，render边界向Trigger传VNode，支持条件/空/移除、当前菜单数据与编辑器状态/键盘选择；类名边界移除as never并归一，原示例补可访问名且移除旧label豁免。范围与证据见 docs/audit/2026-10-25-mentions-popup-slot-remediation.md，不表示其余内容/attrs或Apollo视觉已验收。\n2026-10-25：8条包装层绑定回归修前6失败/2裸形态通过，修复clear/Form反馈外层根style丢失与显式silent被忽略。CSR/SSR、编辑器状态、三形态生产浏览器及发布消费端见 docs/audit/2026-10-25-mentions-native-bindings-remediation.md，不升级历史视觉验收。\n2026-10-25 F09增量：Mentions change/select/search改typed emits并移除重复input通道，支持.once、监听器数组和当前替换，两个Demo改@search。证据见 docs/audit/2026-10-25-mentions-core-events-remediation.md，其余事件仍待复审。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P5",

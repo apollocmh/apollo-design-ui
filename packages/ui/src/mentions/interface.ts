@@ -19,7 +19,7 @@
  *
  * ── React → Vue 的四处固定映射（规则 C16 / C18 / D21 / D42）────────────────────
  *   `React.Key` → `string | number` · `React.ReactNode` → `VNodeChild` ·
- *   `React.CSSProperties` → Vue 的 `CSSProperties` · 事件走回调 prop（不声明 emits）。
+ *   `React.CSSProperties` → Vue 的 `CSSProperties`；值/选择/搜索事件使用 typed emits。
  *
  * ⚠️ `suffix` **不在**公开面里（上游 Omit 掉了它，改由 `Form.Item` 的 `hasFeedback`
  *    注入）—— 但引擎层需要它，所以它只出现在 `engine/Mentions.ts` 的 props 上。

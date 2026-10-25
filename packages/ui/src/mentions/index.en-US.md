@@ -93,6 +93,8 @@ Native class/style apply to the outer root in bare, allowClear and Form feedback
 | pressEnter | Enter pressed while **not** measuring | `(e: KeyboardEvent)` |
 | resize | Size changed (with `autoSize`) | `({ width, height })` |
 
+`change`, `select` and `search` use typed emits, including Vue `.once`, listener arrays and current listener replacement. Each native input sends one value update. Native DOM change/select events do not trigger semantic events. Replace callback-prop bindings such as `:on-search="handler"` with `@search="handler"`; render-function `onSearch` remains standard Vue listener registration. See the [migration](../../../../docs/migrations/mentions-core-events.md).
+
 ### Slots
 
 | Name | Description | Arguments |

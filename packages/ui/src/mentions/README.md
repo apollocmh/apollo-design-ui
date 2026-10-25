@@ -46,7 +46,7 @@ mentions/
 | D7 | `suffix`/`allowClear` 存在时根 div 消失、`-disabled/-focused/-rtl` 三个类**不渲染** | UPSTREAM（怪癖，逐字保留） | 实测 DOM（analysis §3.1）；不要「修好」 |
 | D8 | `DropdownMenu` **自建**（不复用本仓 `menu/Menu`） | PLATFORM | 三条硬证据见 `engine/DropdownMenu.ts` 文件头（`-light` / per-item hover / `findItem`） |
 | D9 | `data-menu-id` 的 uuid 段用 `apollo-mentions-menu-{n}`（上游 `rc-menu-uuid-{useId}`） | PLATFORM | L4 的 dom-contract 归一为 `{iN}` token（对称） |
-| D10 | 值同步走**原生 `input` 事件**（额外接 `onInput`），不只 `onChange` | PLATFORM | `docs/foundation/rc-util-contract.md` §6.1：React 的 `onChange` 在文本输入上等价 `input`，Vue 的是原生 `change` |
+| D10 | RcTextArea 将原生 input 归一为内部 onChange，Mentions 仅订阅一次并发送 typed change/model emits | PLATFORM | 2026-10-25 回归证明额外 onInput 导致双发，已移除；见 core-emits.test.ts |
 | D11 | `options` / `value` / `class` **显式**在两层之间传递（上游靠 `BaseInput` 的 `cloneElement` 注入） | PLATFORM | `engine/Mentions.ts` 内注释（本仓 `BaseInput` 只对原生元素子节点做合并） |
 | D12 | `<Mentions.Option>` 的 children 在**外层 render** 里归一成 `options` 数据 | PLATFORM | Vue 的插槽只能在渲染期求值（在 `computed` 里读会告警） |
 | D13 | 文本框没有可访问名（axe 的 `label` 规则） | UPSTREAM | antd 自测 `accessibilityDemoTest('mentions', { disabledRules: ['label'] })`；R13 |

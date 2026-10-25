@@ -63,5 +63,5 @@ const options = computed(() =>
 </script>
 
 <template>
-  <Mentions style="width: 100%" :loading="loading" :on-search="onSearch" :options="options" />
+  <Mentions style="width: 100%" :loading="loading" @search="onSearch" :options="options" />
 </template>
