@@ -58,6 +58,10 @@ try {
       './ImageStyleDemo.vue',
     ),
   );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/ImagePrefix.vue'),
+    path.join(temp, 'ImagePrefix.vue'),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig } from '@apollo-design/ui';

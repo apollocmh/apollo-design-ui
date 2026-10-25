@@ -25,7 +25,7 @@ preview-img-info / preview-mask / preview-src。
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo` |
+| prefixCls | 完整根前缀；响应当前prop，移除覆盖后回到当前ConfigProvider命名空间 | `string` | `apollo-image` |
 | src | 图片地址 | `string` | — |
 | width / height | 宽高。数字会归一化成 `px`（见「设计说明」） | `number \| string` | — |
 | alt | 可访问名。可预览时也是根元素的 `aria-label` | `string` | — |
@@ -95,7 +95,7 @@ preview-img-info / preview-mask / preview-src。
 | preview | 同 `Image` 的 `preview`，额外支持 `onVisibleChange(visible, prev, current)` | `boolean \| GroupPreviewConfig` | `true` |
 | current | 受控当前索引 | `number` | — |
 | defaultCurrent | 非受控初始索引 | `number` | `0` |
-| previewPrefixCls | 预览层前缀 | `string` | `${prefixCls}-preview` |
+| previewPrefixCls | 完整预览前缀；当前prop优先，移除后使用当前Provider派生值 | `string` | `${prefixCls}-preview` |
 | onChange | 切换 | `(current, prevCurrent) => void` | — |
 | classNames / styles | 同 `Image` | — | — |
 
@@ -172,14 +172,13 @@ antd 把组件变量声明在每个 `-css-var` 根上，预览浮层的根同样
 ### 样式引入
 
 ```ts
-import '@apollo-design/theme/dist/tokens.css'; // 主题变量，必须先引
+import '@apollo-design/theme/tokens.css'; // 主题变量，必须先引
 import '@apollo-design/ui/image/style.css';    // 按需
 // 或
 import '@apollo-design/ui/style.css';          // 汇总
 ```
 
-自定义 `prefixCls`（如 `my-app`）时用 `genImageStyle('my-app')` 自行产出 CSS ——
-静态产物只覆盖 `apollo` 与 `ant` 两套前缀。
+默认发布CSS使用apollo命名空间。`ConfigProvider.prefixCls="my-app"` 对应Image根 `my-app-image` 和预览 `my-app-image-preview`；在应用构建中用 `genImageStyle('my-app')` 预生成并加载对应CSS。Image.prefixCls与Group.previewPrefixCls接受完整前缀。动态更新改变DOM命名，所用命名空间的CSS需预先加载，组件运行时不生成样式。已打开预览和同结构富节点保留状态，见 [前缀证据](../../../../docs/audit/2026-10-25-image-prefix-remediation.md)；D04整体策略继续独立追踪。
 
 ## FAQ
 

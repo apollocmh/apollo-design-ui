@@ -85,3 +85,5 @@ registry 数据：token 数 = 6（+ 派生 1）。
 原生根style现按Vue字符串/对象/数组合并，不复制到img；Progress与纯占位复用现有单根接收attrs，保留内部状态ARIA。嵌套placeholder.progress按对象schema合并。范围与实际检查见 [样式报告](../../../../docs/audit/2026-10-25-image-native-styles-remediation.md)。
 
 组件级classNames/styles合并保留当前Provider对象读取，替换字段、整个配置、晚加载和移除不再固定setup快照；静态对象契约及优先级保持。见 [配置报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)。
+
+Image/Group前缀由computed读取当前prop与Provider，Group的mask-hidden名称基于实际预览前缀。自定义CSS在消费构建前预加载，默认产物为apollo。DOM响应性与D04整体CSS策略的边界见 [前缀报告](../../../../docs/audit/2026-10-25-image-prefix-remediation.md)。

@@ -21,6 +21,7 @@ import BreakpointNative from './BreakpointNative.vue';
 import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
+import ImagePrefix from './ImagePrefix.vue';
 import ImageProvider from './ImageProvider.vue';
 import ImageRender from './ImageRender.vue';
 import ImageStyles from './ImageStyles.vue';
@@ -109,6 +110,7 @@ const Demo = {
   'typography-provider': TypographyProvider,
   'image-render': ImageRender,
   'image-provider': ImageProvider,
+  'image-prefix': ImagePrefix,
   'image-styles': ImageStyles,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,

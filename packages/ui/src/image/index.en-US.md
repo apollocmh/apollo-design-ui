@@ -28,7 +28,7 @@ preview-img-info / preview-mask / preview-src.
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| prefixCls | Class name prefix | `string` | from ConfigProvider, falls back to `apollo` |
+| prefixCls | Full root prefix; follows the current prop and falls back to the current ConfigProvider namespace when removed | `string` | `apollo-image` |
 | src | Image source | `string` | — |
 | width / height | Size. Numbers are normalized to `px` (see Design notes) | `number \| string` | — |
 | alt | Accessible name; also the root `aria-label` when previewable | `string` | — |
@@ -98,7 +98,7 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | preview | Same as `Image`, plus `onVisibleChange(visible, prev, current)` | `boolean \| GroupPreviewConfig` | `true` |
 | current | Controlled current index | `number` | — |
 | defaultCurrent | Uncontrolled initial index | `number` | `0` |
-| previewPrefixCls | Preview layer prefix | `string` | `${prefixCls}-preview` |
+| previewPrefixCls | Full preview prefix; current override first, then the current Provider-derived value | `string` | `${prefixCls}-preview` |
 | onChange | Current index changed | `(current, prevCurrent) => void` | — |
 | classNames / styles | Same as `Image` | — | — |
 
@@ -182,14 +182,13 @@ component is not mounted at all.
 ### Style imports
 
 ```ts
-import '@apollo-design/theme/dist/tokens.css'; // theme variables, required first
+import '@apollo-design/theme/tokens.css'; // theme variables, required first
 import '@apollo-design/ui/image/style.css';    // on demand
 // or
 import '@apollo-design/ui/style.css';          // all-in-one
 ```
 
-With a custom `prefixCls` (e.g. `my-app`), emit the CSS yourself via
-`genImageStyle('my-app')` — the static artifacts only cover the `apollo` and `ant` prefixes.
+The default published CSS uses the apollo namespace. `ConfigProvider.prefixCls="my-app"` produces `my-app-image` and `my-app-image-preview`; generate and load matching CSS with `genImageStyle('my-app')` during the application build. Image.prefixCls and Group.previewPrefixCls accept full prefixes. Dynamic updates change DOM names and require the corresponding CSS to be preloaded; the component generates no runtime styles. Open previews and stable rich nodes retain state; see the [prefix evidence](../../../../docs/audit/2026-10-25-image-prefix-remediation.md). The broader D04 strategy remains separate.
 
 ## FAQ
 
