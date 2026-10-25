@@ -5,6 +5,7 @@ import { createApp, defineComponent, h, ref } from 'vue';
 import ContentSlots from '../../../packages/ui/src/alert/demo/content-slots.vue';
 import BadgeSlots from '../../../packages/ui/src/badge/demo/content-slots.vue';
 import BreadcrumbSlots from '../../../packages/ui/src/breadcrumb/demo/scoped-item.vue';
+import ImagePreviewClose from '../../../packages/ui/src/image/demo/preview-close.vue';
 import PrefixSuffix from '../../../packages/ui/src/input-number/demo/presuffix.vue';
 import ListLikes from '../../../packages/ui/src/list/demo/item-extra.vue';
 import ListLoadMore from '../../../packages/ui/src/list/demo/loadmore.vue';
@@ -118,6 +119,7 @@ const Demo = {
   'typography-styles': TypographyStyles,
   'typography-provider': TypographyProvider,
   'image-render': ImageRender,
+  'image-preview-close': ImagePreviewClose,
   'image-provider': ImageProvider,
   'image-popup-provider': ImagePopupProvider,
   'image-direction': ImageDirection,

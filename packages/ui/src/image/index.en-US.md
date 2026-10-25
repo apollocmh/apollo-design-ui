@@ -17,10 +17,11 @@ flip / switching inside a group.
 
 ## Demos
 
-See [`demo/`](./demo) (15 demos, covering the main antd scenarios
+See [`demo/`](./demo) (18 native demos): basic / component-token /
 controlled-preview / cover-placement / fallback / image-render / nested /
 placeholder / preview-group / preview-group-top-progress / preview-group-visible /
-preview-img-info / preview-mask / preview-src.
+preview-img-info / preview-mask / preview-src / style-class / transform-events /
+popup-provider / preview-close.
 
 ## API
 
@@ -51,6 +52,7 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | imageRender | Customize thumbnail content; an empty slot suppresses the default img | One `ImageRenderInfo` object; details below |
 | previewImage | Customize the preview image area | One PreviewImageInfo object |
 | previewActions | Customize the preview toolbar | One PreviewActionsInfo object |
+| previewCloseIcon | Customize the close icon; empty slots take priority and the button keeps its name | No arguments |
 
 `originNode` is a real VNode carrying the original ref, load/error handling, native attributes and styles. Render it with `<component :is="originNode" />`. `src` is the current raw img src, including fallback, or undefined when absent. alt/width/height reflect current props, title comes from a string native attr, and classNames.image is the merged semantic image class. A present slot takes precedence, including an intentionally empty result; removing it restores the default img. Stable images/rich nodes retain identity within the same structure. Progress/standalone-placeholder branches do not invoke this slot.
 
@@ -58,7 +60,7 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 
 ### Preview slot scopes
 
-Image and PreviewGroup support previewImage/previewActions; Group also supports previewCount. Current slot functions run when preview content actually renders. Empty slots suppress defaults, and removing them restores defaults. Closed/SSR previews and the Progress early branch do not eagerly invoke them. Only Group owns grouped preview extensions; a child Image's imageRender remains its thumbnail slot.
+Image and PreviewGroup support previewImage/previewActions/previewCloseIcon; Group also supports previewCount. Current slot functions run when preview content actually renders. Empty slots suppress defaults, and removing them restores defaults. Closed/SSR previews and the Progress early branch do not eagerly invoke them. Only Group owns grouped preview extensions; a child Image's imageRender remains its thumbnail slot.
 
 | Type | Fields |
 |---|---|
@@ -89,6 +91,8 @@ These types, PreviewActions and PreviewGroupSlots are exported from the root ent
 | rootClassName | ⚠️ Deprecated, use `classNames.root` | `string` | — |
 | maskClassName | ⚠️ Deprecated, use `classNames.cover` | `string` | — |
 | forceRender / destroyOnClose | Removed (no longer supported by antd); ignored when passed | — | — |
+
+Close icon priority is the current `#previewCloseIcon` → explicit `preview.closeIcon` (including null/false/0) → `preview.icons.close` → built-in icon. `closable=false` hides only the close button and skips its icon slot; Escape, maskClosable and the toolbar close action retain their behavior. Live visibility/content updates retain preview identity, editors and transforms. The button keeps an independent accessible name. See the [close-control regression](../../../../docs/audit/2026-10-25-image-preview-close-remediation.md).
 
 Image/Group read the current minScale/maxScale for zoom, wheel, double-click and non-reset transforms. Replacing/removing limits applies on the next operation; changing the configuration retains the current scale and preview identity without emitting transform. At or above the current maximum, both the zoom-in button and previewActions.disabled.zoomIn are disabled. Reset/close still return to scale 1. See the [bounds regression](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md).
 
@@ -130,6 +134,7 @@ Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape 
 |---|---|
 | default | Child `Image`s (collected in registration order when `items` is omitted) |
 | previewImage / previewActions | Same native preview slots as Image |
+| previewCloseIcon | Same no-argument close icon slot as Image; only Group owns grouped content |
 | previewCount | Native counter slot receiving one PreviewCountInfo object; current is zero-based |
 | openChange / update:open | Same open requests/model notifications as Image; supports `v-model:open` |
 | change | Index request `(current: number, prevCurrent: number)` |

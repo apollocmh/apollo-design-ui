@@ -287,6 +287,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image当前缩放边界增量**：双入口6条修前全失败，确认变换内核固定setup的minScale/maxScale；改当前getter后另复现上限收紧的按钮/槽禁用2失败/12通过，改>=后14条通过。配置本身不变换/通知，下一次操作读当前限制并保持默认复位；运行、手势、编辑器身份与Demo证据见 [报告](audit/2026-10-25-image-scale-bounds-remediation.md)。其他预览配置与视觉验收继续开放。
 
+**2026-10-25 Image关闭控件增量（F11）**：双入口14条修前10失败/4已有通过，确认closable/closeIcon未接入及原生关闭图标槽缺失。补当前转发与previewCloseIcon原生槽后扩展18条通过，覆盖空/移除/显式数据、稳定编辑器、按钮移除的焦点修复、Esc、Progress/SSR及Group所有权。新增实际Demo，详见 [报告](audit/2026-10-25-image-preview-close-remediation.md)。mask/容器、局部主题及视觉验收继续开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -396,7 +398,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Message | 11/11 | **用户已验收动画**；保持回归即可 |
 | Notification | 14/14 | **用户已验收动画**；保持回归即可 |
 | App | 2/2 | —；上下文 API、静态方法隔离 |
-| Image | 15/17 | F11；mask/关闭/容器配置与局部弹层主题复审 |
+| Image | 15/18 | F11；mask/容器配置与局部弹层主题复审 |
 | Select | 35/35 | **F02**；动态 slot、options、虚拟列表 |
 | AutoComplete | 14/17 | F02 消费者；条件 default slot / 自定义 clear |
 | Cascader | 23/23 | F02 消费者；异步加载/slot |

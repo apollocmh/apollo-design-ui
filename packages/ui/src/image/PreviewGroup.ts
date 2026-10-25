@@ -210,6 +210,8 @@ const PreviewGroup = defineComponent({
               count: mergedItems.value.length,
               movable: previewConfig.value.movable,
               maskClosable: previewConfig.value.maskClosable,
+              closable: previewConfig.value.closable,
+              closeIcon: previewConfig.value.closeIcon,
               minScale: previewConfig.value.minScale,
               maxScale: previewConfig.value.maxScale,
               scaleStep: previewConfig.value.scaleStep,
@@ -230,6 +232,9 @@ const PreviewGroup = defineComponent({
                 : {}),
               ...(slots.previewActions
                 ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
+                : {}),
+              ...(slots.previewCloseIcon
+                ? { previewCloseIcon: () => slots.previewCloseIcon?.() }
                 : {}),
               ...(slots.previewCount
                 ? { previewCount: (info: PreviewCountInfo) => slots.previewCount?.(info) }

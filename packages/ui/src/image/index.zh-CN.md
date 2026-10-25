@@ -14,10 +14,11 @@ subtitle: 图片
 
 ## 代码演示
 
-见 [`demo/`](./demo)（15 个，覆盖 antd 的主要用户场景）：basic / component-token /
+见 [`demo/`](./demo)（18 个原生示例）：basic / component-token /
 controlled-preview / cover-placement / fallback / image-render / nested /
 placeholder / preview-group / preview-group-top-progress / preview-group-visible /
-preview-img-info / preview-mask / preview-src。
+preview-img-info / preview-mask / preview-src / style-class / transform-events /
+popup-provider / preview-close。
 
 ## API
 
@@ -48,6 +49,7 @@ preview-img-info / preview-mask / preview-src。
 | imageRender | 自定义缩略图区域；空槽抑制默认img | 单对象 `ImageRenderInfo`，见下文 |
 | previewImage | 自定义预览大图区域 | 单对象 `PreviewImageInfo` |
 | previewActions | 自定义预览工具栏 | 单对象 `PreviewActionsInfo` |
+| previewCloseIcon | 自定义关闭图标；空槽也优先，按钮名称独立保留 | 无参数 |
 
 `originNode` 是带原始ref、加载/错误处理、原生属性与样式的真实VNode，建议用 `<component :is="originNode" />` 渲染。`src` 是当前原图的原始src属性（含fallback，缺省undefined）；alt/width/height来自当前props，title来自字符串原生attr，classNames.image是已合并的语义image类名。槽存在则使用其内容（含有意为空），移除恢复默认img；同一结构下的原图和稳定富节点保持身份。Progress/纯占位提前分支不调用此槽。
 
@@ -55,7 +57,7 @@ preview-img-info / preview-mask / preview-src。
 
 ### 预览槽作用域
 
-Image与PreviewGroup均支持previewImage/previewActions；Group另支持previewCount。所有槽只在实际预览内容渲染时读取当前函数，空槽抑制默认内容，移除槽恢复默认；闭合/SSR及Progress提前分支不急求值。Group内只有Group负责预览扩展，子Image的imageRender仍只作用于缩略图。
+Image与PreviewGroup均支持previewImage/previewActions/previewCloseIcon；Group另支持previewCount。所有槽只在实际预览内容渲染时读取当前函数，空槽抑制默认内容，移除槽恢复默认；闭合/SSR及Progress提前分支不急求值。Group内只有Group负责预览扩展，子Image的imageRender仍只作用于缩略图。
 
 | 类型 | 字段 |
 |---|---|
@@ -86,6 +88,8 @@ current为零基索引，与Group模型相同，显示序号时加1；单图curr
 | rootClassName | ⚠️ 已废弃，请用 `classNames.root` | `string` | — |
 | maskClassName | ⚠️ 已废弃，请用 `classNames.cover` | `string` | — |
 | forceRender / destroyOnClose | 已移除（antd 不再支持），传入被忽略 | — | — |
+
+关闭图标优先级为当前 `#previewCloseIcon` → 显式 `preview.closeIcon`（含 null/false/0）→ `preview.icons.close` → 默认图标。`closable=false` 只隐藏关闭按钮且不求值图标槽；Esc、maskClosable 与工具栏 close 动作仍各自生效。显示/隐藏和内容替换保留预览身份、编辑器与变换，按钮始终有独立名称。见 [关闭控件回归](../../../../docs/audit/2026-10-25-image-preview-close-remediation.md)。
 
 Image/Group 每次缩放、滚轮、双击及非复位变换读取当前 minScale/maxScale；替换或移除配置会作用于下一次操作。更改配置本身保留现有比例与预览身份，不发 transform。比例达到或超过当前上限时，放大按钮与 previewActions.disabled.zoomIn 同时禁用；复位/关闭仍回到比例 1。见 [边界回归](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md)。
 
@@ -125,6 +129,7 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 |---|---|
 | default | 子 `Image`（`items` 未传时按注册顺序收集） |
 | previewImage / previewActions | 同Image原生预览槽 |
+| previewCloseIcon | 同Image无参数关闭图标槽；组内只消费Group自己的槽 |
 | previewCount | 原生计数槽，单对象PreviewCountInfo，current为零基索引 |
 | openChange / update:open | 同Image开合请求/模型通知，可用 `v-model:open` |
 | change | 索引请求 `(current: number, prevCurrent: number)` |

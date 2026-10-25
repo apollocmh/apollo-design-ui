@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 518,
+    "rows": 520,
     "byCategory": {
       "data": 126,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 106,
+      "internal": 108,
       "render-function-candidate": 67,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 138,
       "review": 202,
-      "skip": 159,
+      "skip": 161,
       "implemented-verified": 19
     }
   },
@@ -5279,6 +5279,7 @@
           "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
+          "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
@@ -5291,7 +5292,7 @@
       "owner": "ImageRenderInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:233",
+      "source": "packages/ui/src/image/interface.ts:235",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5375,6 +5376,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/demo/popup-provider.vue",
+          "packages/ui/src/image/demo/preview-close.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue",
           "packages/ui/src/image/demo/transform-events.vue"
         ]
@@ -5385,6 +5387,41 @@
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/scale-bounds.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "ImageSlots",
+      "prop": "previewCloseIcon",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:180",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-close.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/preview-close.test.ts"
         ]
       },
       "decision": "skip",
@@ -5413,6 +5450,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/demo/preview-close.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue"
         ]
       },
@@ -5421,6 +5459,7 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
+          "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/provider-direction.test.ts",
           "packages/ui/src/image/__tests__/scale-bounds.test.ts"
@@ -5434,7 +5473,7 @@
       "owner": "PreviewActionsInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:208",
+      "source": "packages/ui/src/image/interface.ts:209",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5473,8 +5512,10 @@
         "files": []
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/preview-close.test.ts"
+        ]
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
@@ -5542,7 +5583,7 @@
       "owner": "PreviewCountInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:219",
+      "source": "packages/ui/src/image/interface.ts:220",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5567,7 +5608,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:226",
+      "source": "packages/ui/src/image/interface.ts:227",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5591,6 +5632,7 @@
           "packages/ui/src/image/__tests__/index.test.ts",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
+          "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-focus.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/preview-state.test.ts",
@@ -5609,7 +5651,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "previewActions",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:228",
+      "source": "packages/ui/src/image/interface.ts:229",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5628,6 +5670,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/demo/popup-provider.vue",
+          "packages/ui/src/image/demo/preview-close.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue",
           "packages/ui/src/image/demo/transform-events.vue"
         ]
@@ -5646,9 +5689,44 @@
     {
       "component": "image",
       "owner": "PreviewGroupSlots",
+      "prop": "previewCloseIcon",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:230",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-close.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/preview-close.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewGroupSlots",
       "prop": "previewCount",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:229",
+      "source": "packages/ui/src/image/interface.ts:231",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5683,7 +5761,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "previewImage",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:227",
+      "source": "packages/ui/src/image/interface.ts:228",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5701,6 +5779,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/demo/preview-close.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue"
         ]
       },
@@ -5709,6 +5788,7 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
+          "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/provider-direction.test.ts",
           "packages/ui/src/image/__tests__/scale-bounds.test.ts"
@@ -5739,6 +5819,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
+          "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-focus.test.ts"
         ]
       },
@@ -5960,7 +6041,7 @@
       "owner": "PreviewImageInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:189",
+      "source": "packages/ui/src/image/interface.ts:190",
       "slotRuntime": {
         "status": "not-run",
         "files": []

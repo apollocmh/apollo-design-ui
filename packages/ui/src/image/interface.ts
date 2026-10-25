@@ -177,6 +177,7 @@ export interface ImageSlots {
   imageRender?: (info: ImageRenderInfo) => VNodeChild;
   previewImage?: (info: PreviewImageInfo) => VNodeChild;
   previewActions?: (info: PreviewActionsInfo) => VNodeChild;
+  previewCloseIcon?: () => VNodeChild;
 }
 
 export interface PreviewImageData {
@@ -226,6 +227,7 @@ export interface PreviewGroupSlots {
   default?: () => VNodeChild;
   previewImage?: (info: PreviewImageInfo) => VNodeChild;
   previewActions?: (info: PreviewActionsInfo) => VNodeChild;
+  previewCloseIcon?: () => VNodeChild;
   previewCount?: (info: PreviewCountInfo) => VNodeChild;
 }
 

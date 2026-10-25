@@ -80,6 +80,11 @@ const Preview = defineComponent({
     open: { type: Boolean, default: false },
     movable: { type: Boolean, default: true },
     maskClosable: { type: Boolean, default: true },
+    closable: { type: Boolean, default: true },
+    closeIcon: {
+      type: [Object, String, Number, Boolean, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     minScale: { type: Number, default: 1 },
     maxScale: { type: Number, default: 50 },
     scaleStep: { type: Number, default: 0.5 },
@@ -494,17 +499,25 @@ const Preview = defineComponent({
                             : imgNode,
                         ],
                       ),
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          class: [`${props.prefixCls}-close`, props.classNames?.close],
-                          'aria-label': 'Close preview',
-                          style: props.styles?.close,
-                          onClick: () => props.onClose?.(),
-                        },
-                        [icons.value.close].filter((c) => c !== null && c !== undefined),
-                      ),
+                      props.closable
+                        ? h(
+                            'button',
+                            {
+                              type: 'button',
+                              class: [`${props.prefixCls}-close`, props.classNames?.close],
+                              'aria-label': 'Close preview',
+                              style: props.styles?.close,
+                              onClick: () => props.onClose?.(),
+                            },
+                            slots.previewCloseIcon
+                              ? [slots.previewCloseIcon()]
+                              : [
+                                  props.closeIcon !== undefined
+                                    ? props.closeIcon
+                                    : icons.value.close,
+                                ].filter((c) => c !== null && c !== undefined),
+                          )
+                        : null,
                       renderSwitch(),
                       renderFooter(),
                     ],

@@ -16,6 +16,10 @@ try {
     path.join(root, 'packages/ui/src/image/demo/image-render.vue'),
     path.join(temp, 'ImageDemo.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/preview-close.vue'),
+    path.join(temp, 'PreviewCloseDemo.vue'),
+  );
   const exact = fs.readFileSync(
     path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImageSlot.vue'),
     'utf8',

@@ -12,6 +12,25 @@ import type {
   TransformInfo,
 } from '../../index';
 
+it('preview close icons are native content slots with no positional arguments', () => {
+  expectTypeOf<Parameters<NonNullable<ImageSlots['previewCloseIcon']>>>().toEqualTypeOf<[]>();
+  expectTypeOf<Parameters<NonNullable<PreviewGroupSlots['previewCloseIcon']>>>().toEqualTypeOf<
+    []
+  >();
+  expectTypeOf<
+    ReturnType<NonNullable<ImageSlots['previewCloseIcon']>>
+  >().toEqualTypeOf<VNodeChild>();
+  type ImagePublic = InstanceType<typeof Image>['$slots'];
+  type GroupPublic = InstanceType<typeof ImagePreviewGroup>['$slots'];
+  expectTypeOf<Parameters<NonNullable<ImagePublic['previewCloseIcon']>>>().toEqualTypeOf<[]>();
+  expectTypeOf<Parameters<NonNullable<GroupPublic['previewCloseIcon']>>>().toEqualTypeOf<[]>();
+  const invalid: ImageSlots = {
+    // @ts-expect-error Close icon content slots do not receive a made-up scope object.
+    previewCloseIcon: (_info: PreviewImageInfo) => null,
+  };
+  void invalid;
+});
+
 it('preview slots use one exact info object and real origin VNodes', () => {
   expectTypeOf<Parameters<NonNullable<ImageSlots['previewImage']>>>().toEqualTypeOf<
     [PreviewImageInfo]

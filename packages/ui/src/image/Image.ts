@@ -420,6 +420,8 @@ const Image = defineComponent({
                   open: previewOpen.value,
                   movable: previewConfig.value?.movable,
                   maskClosable: previewConfig.value?.maskClosable,
+                  closable: previewConfig.value?.closable,
+                  closeIcon: previewConfig.value?.closeIcon,
                   minScale: previewConfig.value?.minScale,
                   maxScale: previewConfig.value?.maxScale,
                   scaleStep: previewConfig.value?.scaleStep,
@@ -439,6 +441,9 @@ const Image = defineComponent({
                     : {}),
                   ...(slots.previewActions
                     ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
+                    : {}),
+                  ...(slots.previewCloseIcon
+                    ? { previewCloseIcon: () => slots.previewCloseIcon?.() }
                     : {}),
                 },
               )

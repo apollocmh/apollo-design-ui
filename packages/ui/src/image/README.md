@@ -105,3 +105,5 @@ Group导航图标读取当前Provider方向，默认与单侧自定义先合并�
 默认组计数增加 `colorBgSpotlight` 背景，修复白色页面上 2.33:1 的文字对比度；操作颜色继承和自定义计数槽不变。实际全局亮/暗/紧凑主题、遮罩与页面背景矩阵见 [对比度报告](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md)。
 
 变换内核在每次操作读取当前 minScale/maxScale，收紧上限时默认按钮与槽禁用标志一致；配置更新本身不变换或通知，默认复位语义保留。双入口、手势及实际 Demo 证据见 [缩放边界报告](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md)。
+
+关闭按钮兑现当前 preview.closable/closeIcon，补无参数原生 previewCloseIcon 槽。槽优先且空槽不回退，显式空/0 数据保持，Group 只消费自己的图标槽；隐藏按钮不阻断 Esc 或其他关闭请求。见 [关闭控件报告](../../../../docs/audit/2026-10-25-image-preview-close-remediation.md)。
