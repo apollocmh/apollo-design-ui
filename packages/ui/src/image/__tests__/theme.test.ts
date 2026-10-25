@@ -67,6 +67,21 @@ describe('Image · token 契约', () => {
 });
 
 describe('Image · prepareComponentToken 判据', () => {
+  it.each([
+    ['#abcd', 'rgba(170, 187, 204, 0.65)'],
+    ['hsl(0, 100%, 50%)', 'rgba(255, 0, 0, 0.65)'],
+    ['white', 'color-mix(in srgb, white 65%, transparent)'],
+    ['var(--custom-light)', 'color-mix(in srgb, var(--custom-light) 65%, transparent)'],
+  ])('derives operation alpha from the current supported color %s', (color, expected) => {
+    expect(
+      prepareComponentToken({
+        zIndexPopupBase: 1000,
+        colorTextLightSolid: color,
+        fontSizeIcon: 12,
+        controlHeightLG: 40,
+      }).previewOperationColor,
+    ).toBe(expected);
+  });
   it('zIndexPopup = zIndexPopupBase + 80；operationSize = fontSizeIcon * 1.5', () => {
     const t = prepareComponentToken({
       zIndexPopupBase: 1000,

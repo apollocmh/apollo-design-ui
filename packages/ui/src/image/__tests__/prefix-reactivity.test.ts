@@ -1,10 +1,19 @@
-import { mount } from '@vue/test-utils';
-import { afterEach, describe, expect, it } from 'vitest';
+import { config, mount } from '@vue/test-utils';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick, type Ref, ref } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { ConfigProvider, Image, ImagePreviewGroup, type ImageProps } from '../../index';
 
 type ImageMode = 'normal' | 'progress' | 'placeholder';
+// ConfigProvider now preserves its content through a native Teleport. Exercise
+// that renderer for identity assertions; VTU's builtin stub rebuilds its slots.
+const previousStubs = config.global.stubs;
+beforeAll(() => {
+  config.global.stubs = { teleport: false };
+});
+afterAll(() => {
+  config.global.stubs = previousStubs;
+});
 const imageModes: Record<ImageMode, Pick<ImageProps, 'src' | 'placeholder'>> = {
   normal: { src: 'prefix.png', placeholder: 'Loading image' },
   progress: { placeholder: { progress: { percent: 40 } } },

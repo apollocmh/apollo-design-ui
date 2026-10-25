@@ -35,17 +35,21 @@ import {
   type ThemeContext,
   ThemeContextKey,
 } from '@apollo-design/theme';
-import { isPlainObject, useDevWarning, warningContextKey } from '@apollo-design/utils';
+import { getDOM, isPlainObject, useDevWarning, warningContextKey } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
+  Fragment,
   h,
   inject,
+  onBeforeUpdate,
   onScopeDispose,
+  onUpdated,
   type PropType,
   provide,
   reactive,
   ref,
+  Teleport,
   toValue,
   type VNode,
   watchEffect,
@@ -129,6 +133,7 @@ export const ConfigProvider = defineComponent({
   props: configProviderProps,
   setup(props, { slots }) {
     const parentContext = useConfigContext();
+    const parentThemeContext = inject(ThemeContextKey, undefined);
     const parentSize = inject(sizeContextKey, undefined);
     const parentDisabled = inject(disabledContextKey, undefined);
     const parentWarning = inject(warningContextKey, undefined);
@@ -179,7 +184,7 @@ export const ConfigProvider = defineComponent({
     // 3. theme（`hooks/useTheme.ts`，见 hooks/use-theme.ts 的三条合并语义）
     // -----------------------------------------------------------------------
     const mergedTheme = computed<ConfigProviderThemeConfig | undefined>(() =>
-      useTheme(props.theme, parentContext.theme),
+      useTheme(props.theme, parentContext.theme ?? parentThemeContext?.config.value),
     );
 
     // -----------------------------------------------------------------------
@@ -274,7 +279,7 @@ export const ConfigProvider = defineComponent({
     // mergedTheme 里完成）。
     // -----------------------------------------------------------------------
     const themeContext: ThemeContext = {
-      config: computed(() => mergedTheme.value ?? {}) as never,
+      config: computed(() => mergedTheme.value ?? {}),
       token: computed(() =>
         getDesignToken({
           token: mergedTheme.value?.token,
@@ -357,7 +362,43 @@ export const ConfigProvider = defineComponent({
     //    不产生布局盒，对下游布局零影响）。差异登记为 **D26**。
     // -----------------------------------------------------------------------
     const themeScopeEl = ref<HTMLElement | null>(null);
+    let contentTeleport: VNode | undefined;
+    let focusedBeforeUpdate: Element | null = null;
+    onBeforeUpdate(() => {
+      const start: unknown = contentTeleport?.el;
+      const end: unknown = contentTeleport?.anchor;
+      const owner =
+        themeScopeEl.value?.ownerDocument ?? (start instanceof Node ? start.ownerDocument : null);
+      const active = owner?.activeElement ?? null;
+      // Clearing the scope ref can queue another render before updated hooks.
+      // Keep the first owned target through that DOM-move interval.
+      if (active === owner?.body && focusedBeforeUpdate) return;
+      focusedBeforeUpdate = null;
+      if (!active) return;
+      if (themeScopeEl.value?.contains(active)) {
+        focusedBeforeUpdate = active;
+        return;
+      }
+      if (!(start instanceof Node) || !(end instanceof Node)) return;
+      for (let node = start.nextSibling; node && node !== end; node = node.nextSibling) {
+        if (node.contains(active)) {
+          focusedBeforeUpdate = active;
+          return;
+        }
+      }
+    });
+    onUpdated(() => {
+      const previous = getDOM(focusedBeforeUpdate);
+      focusedBeforeUpdate = null;
+      if (
+        previous?.isConnected &&
+        previous.ownerDocument.activeElement === previous.ownerDocument.body
+      ) {
+        previous.focus({ preventScroll: true });
+      }
+    });
     let cssVarScope: ReturnType<typeof createCSSVarScope> | undefined;
+    let cssVarScopePrefix: string | undefined;
 
     watchEffect(() => {
       const el = themeScopeEl.value;
@@ -365,6 +406,7 @@ export const ConfigProvider = defineComponent({
       if (!el || !props.theme) {
         cssVarScope?.remove();
         cssVarScope = undefined;
+        cssVarScopePrefix = undefined;
         return;
       }
 
@@ -373,10 +415,12 @@ export const ConfigProvider = defineComponent({
         algorithm: mergedTheme.value?.algorithm,
       });
 
-      cssVarScope ??= createCSSVarScope(
-        el,
-        mergedTheme.value?.cssVarPrefix ?? DEFAULT_CSS_VAR_PREFIX,
-      );
+      const prefix = mergedTheme.value?.cssVarPrefix ?? DEFAULT_CSS_VAR_PREFIX;
+      if (!cssVarScope || cssVarScopePrefix !== prefix) {
+        cssVarScope?.remove();
+        cssVarScope = createCSSVarScope(el, prefix);
+        cssVarScopePrefix = prefix;
+      }
       cssVarScope.apply(token);
     });
 
@@ -410,20 +454,23 @@ export const ConfigProvider = defineComponent({
         children = h(LocaleProvider, { locale: mergedLocale, _ANT_MARK__: ANT_MARK }, () => inner);
       }
 
-      if (props.theme) {
-        children = h(
-          'div',
-          {
-            ref: themeScopeEl,
-            // ⚠️ 必须是字符串 `'contents'`：Vue 只在模板编译期补单位，渲染函数里
-            //    传数字会被静默丢掉（PITFALLS 32）。
-            style: { display: 'contents' },
-          },
-          children,
-        );
-      }
-
-      return children;
+      // Keep one logical content subtree while its optional CSS scope appears
+      // or disappears. Native Teleport moves DOM; it does not remount slots.
+      contentTeleport = h(
+        Teleport,
+        {
+          key: 'config-content',
+          to: themeScopeEl.value ?? 'body',
+          disabled: !props.theme || !themeScopeEl.value,
+        },
+        children ? (Array.isArray(children) ? children : [children]) : [],
+      );
+      return h(Fragment, null, [
+        props.theme
+          ? h('div', { key: 'theme-scope', ref: themeScopeEl, style: { display: 'contents' } })
+          : null,
+        contentTeleport,
+      ]);
     };
   },
 });

@@ -1,0 +1,613 @@
+{
+  "command": "node tests/browser/image-contract-audit.mjs",
+  "baseCommit": "ee9c2e10",
+  "testedSource": "theme group working tree before milestone commit",
+  "productionSourceSha256": "9d23fb9bdadece5ab1658c4b6521f6ea70efa929165e13e5a1a0afad72d630f0",
+  "sourceFiles": [
+    "packages/ui/src/config-provider/ConfigProvider.ts",
+    "packages/ui/src/config-provider/context.ts",
+    "packages/ui/src/config-provider/default-render-empty.ts",
+    "packages/ui/src/config-provider/demo/component-config.vue",
+    "packages/ui/src/config-provider/demo/component-size.vue",
+    "packages/ui/src/config-provider/demo/direction.vue",
+    "packages/ui/src/config-provider/demo/locale.vue",
+    "packages/ui/src/config-provider/demo/prefix-cls.vue",
+    "packages/ui/src/config-provider/demo/size-disabled.vue",
+    "packages/ui/src/config-provider/demo/theme.vue",
+    "packages/ui/src/config-provider/demo/use-config.vue",
+    "packages/ui/src/config-provider/disabled-context.ts",
+    "packages/ui/src/config-provider/global-config.ts",
+    "packages/ui/src/config-provider/hooks/use-theme.ts",
+    "packages/ui/src/config-provider/index.ts",
+    "packages/ui/src/config-provider/interface.ts",
+    "packages/ui/src/config-provider/size-context.ts",
+    "packages/ui/src/config-provider/use-config.ts",
+    "packages/ui/src/image/Image.ts",
+    "packages/ui/src/image/Preview.ts",
+    "packages/ui/src/image/PreviewGroup.ts",
+    "packages/ui/src/image/Progress.ts",
+    "packages/ui/src/image/context.ts",
+    "packages/ui/src/image/demo/basic.vue",
+    "packages/ui/src/image/demo/component-token.vue",
+    "packages/ui/src/image/demo/controlled-preview.vue",
+    "packages/ui/src/image/demo/cover-placement.vue",
+    "packages/ui/src/image/demo/fallback.vue",
+    "packages/ui/src/image/demo/image-render.vue",
+    "packages/ui/src/image/demo/nested.vue",
+    "packages/ui/src/image/demo/placeholder.vue",
+    "packages/ui/src/image/demo/popup-provider.vue",
+    "packages/ui/src/image/demo/preview-close.vue",
+    "packages/ui/src/image/demo/preview-group-top-progress.vue",
+    "packages/ui/src/image/demo/preview-group-visible.vue",
+    "packages/ui/src/image/demo/preview-group.vue",
+    "packages/ui/src/image/demo/preview-img-info.vue",
+    "packages/ui/src/image/demo/preview-mask.vue",
+    "packages/ui/src/image/demo/preview-src.vue",
+    "packages/ui/src/image/demo/style-class.vue",
+    "packages/ui/src/image/demo/transform-events.vue",
+    "packages/ui/src/image/hooks/useImageTheme.ts",
+    "packages/ui/src/image/hooks/useImageTransform.ts",
+    "packages/ui/src/image/hooks/useStatus.ts",
+    "packages/ui/src/image/index.ts",
+    "packages/ui/src/image/interface.ts",
+    "packages/ui/src/image/style/index.ts",
+    "packages/ui/src/image/style/token.ts",
+    "packages/ui/src/image/util.ts"
+  ],
+  "browser": "150.0.7871.125",
+  "results": [
+    {
+      "target": "image",
+      "scenario": "default",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "mask",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask apollo-image-preview-mask-blur audit-mask-object",
+        "maskBorder": "7px",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "container",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": true,
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "step",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true,
+        "scales": [
+          1.5,
+          1.875
+        ]
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "theme",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "31px",
+        "spotlight": "#123456",
+        "scopeSpotlight": "#123456",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "fallback",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true,
+        "thumbnail": {
+          "width": 240,
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+          "srcSet": null
+        }
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "srcset-fallback",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true,
+        "thumbnail": {
+          "width": 240,
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+          "srcSet": null
+        }
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "no-alt",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "",
+        "name": "Image preview",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": false,
+        "focusInside": true,
+        "axe": [],
+        "triggerName": "Preview image"
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "cross-document",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "insideFrame": true,
+        "focusInside": true,
+        "trappedAfterOutsideFocus": true,
+        "documentMoves": [
+          {
+            "same": true,
+            "focused": true,
+            "value": "Kept document draft",
+            "selection": [
+              2,
+              5
+            ]
+          },
+          {
+            "same": true,
+            "focused": true,
+            "value": "Kept document draft",
+            "selection": [
+              2,
+              5
+            ]
+          },
+          {
+            "same": true,
+            "focused": true,
+            "value": "Kept document draft",
+            "selection": [
+              2,
+              5
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "target": "utils-focus",
+      "scenario": "focus-foundation",
+      "failures": [],
+      "measure": {
+        "trapped": true
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "default",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "mask",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask apollo-image-preview-mask-blur audit-mask-object",
+        "maskBorder": "7px",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "container",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": true,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "step",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true,
+        "scales": [
+          1.5,
+          1.875
+        ]
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "theme",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "31px",
+        "spotlight": "#123456",
+        "scopeSpotlight": "#123456",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "fallback",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true,
+        "thumbnail": {
+          "width": 240,
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+          "srcSet": null
+        }
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "srcset-fallback",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true,
+        "thumbnail": {
+          "width": 240,
+          "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+          "srcSet": null
+        }
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "no-alt",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "",
+        "name": "Image preview",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": false,
+        "focusInside": true,
+        "axe": [],
+        "triggerName": "Preview image"
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "cross-document",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group",
+        "groupBorder": "",
+        "insideFrame": true,
+        "focusInside": true,
+        "trappedAfterOutsideFocus": true,
+        "documentMoves": [
+          {
+            "same": true,
+            "focused": true,
+            "value": "Kept document draft",
+            "selection": [
+              2,
+              5
+            ]
+          },
+          {
+            "same": true,
+            "focused": true,
+            "value": "Kept document draft",
+            "selection": [
+              2,
+              5
+            ]
+          },
+          {
+            "same": true,
+            "focused": true,
+            "value": "Kept document draft",
+            "selection": [
+              2,
+              5
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "semantics",
+      "failures": [],
+      "measure": {
+        "src": "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22240%22%20height%3D%22140%22%3E%3Crect%20width%3D%22240%22%20height%3D%22140%22%20fill%3D%22%2338598b%22%2F%3E%3C%2Fsvg%3E",
+        "srcSet": null,
+        "width": 240,
+        "alt": "Contract audit first",
+        "name": "Contract audit first",
+        "zIndex": "1080",
+        "size": "18px",
+        "spotlight": "#000000d9",
+        "scopeSpotlight": "#000000d9",
+        "maskClass": "apollo-image-preview-mask",
+        "maskBorder": "",
+        "insideContainer": false,
+        "groupClass": "apollo-image-preview-group audit-group-root",
+        "groupBorder": "9px",
+        "insideFrame": false,
+        "focusInside": true
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "public-mask-demo",
+      "failures": [],
+      "measure": {
+        "phases": 3,
+        "container": true,
+        "axe": true,
+        "stableDialog": true
+      }
+    },
+    {
+      "target": "image",
+      "scenario": "public-token-demo",
+      "failures": [],
+      "measure": {
+        "phases": 3,
+        "axe": true,
+        "currentAllTokens": true,
+        "stableEditor": true
+      }
+    },
+    {
+      "target": "group",
+      "scenario": "public-token-demo",
+      "failures": [],
+      "measure": {
+        "phases": 3,
+        "axe": true,
+        "currentAllTokens": true,
+        "stableEditor": true
+      }
+    }
+  ],
+  "issues": []
+}

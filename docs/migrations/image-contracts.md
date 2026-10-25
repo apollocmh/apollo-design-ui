@@ -27,3 +27,7 @@
 Group 移除 current 控制后接续最近同步值；无控态列表缩减安全选择仍有效项，不回声外部数据赋值。没有可展示项时不打开空预览，保留模型含义；条件恢复按当前模型处理。禁用 Group 不再留下无法操作的子按钮语义。
 
 主题使用源组件的响应式上下文，跨 Portal 仍得到同一 alias/component Token；原生 style 优先级保留，未向全局写入 Image 专用补丁。容器与所属文档的焦点/拖动监听必须正确，不能用默认 body 场景替代跨容器验证。共享层修改须补其使用者回归；最终证据和未验证项统一记在整改单元清单中。
+
+Image全部7个Token现在由源Vue主题上下文消费；Group切换按钮从原先由图标和padding凑出的42px改为公开派生值40px，并支持imagePreviewSwitchSize覆盖，CSS变量为 `--apollo-image-preview-switch-size`。preview.zIndex优先于popup根style，后者优先于派生层级与组件变量。
+
+ConfigProvider的主题作用域用原生Teleport保持同一份插槽子树：theme晚出现、移除和恢复不会重新挂载子组件；未给theme时没有额外包装元素，只保留Vue内部锚点。SSR首帧内联渲染，客户端水合后进入display:contents作用域，保留原节点与编辑状态。局部CSS变量前缀替换会清理旧前缀。相关测试使用真实Teleport验证身份，VTU内建stub不作为节点身份的最终判据；没有删除原来的前缀/Provider回归断言。

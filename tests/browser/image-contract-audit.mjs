@@ -335,6 +335,101 @@ try {
     failures: [],
     measure: { phases: 3, container: true, axe: true, stableDialog: true },
   });
+  await page.goto(
+    `${server.resolvedUrls.local[0]}vue-reactivity.html?demo=image-contract-audit&case=public-token-demo`,
+  );
+  await page.addScriptTag({ content: axe.source });
+  for (const target of ['image', 'group']) {
+    await page.locator(`[data-token-${target}]`).click({ position: { x: 6, y: 6 } });
+    const popup = page.getByRole('dialog');
+    await popup.waitFor({ state: 'visible' });
+    const original = await popup.elementHandle();
+    await page.waitForFunction((node) => getComputedStyle(node).opacity === '1', original);
+    const editor = popup.getByRole('textbox', { name: 'Token preview note', exact: true });
+    await editor.fill('Kept token draft');
+    await editor.evaluate((node) => node.setSelectionRange(2, 5));
+    const originalEditor = await editor.elementHandle();
+    for (let phase = 0; phase < 3; phase++) {
+      await page.waitForFunction(
+        (size) =>
+          getComputedStyle(document.querySelector('[role="dialog"] .apollo-image-preview-close'))
+            .fontSize === size,
+        ['31px', '27px', '18px'][phase],
+      );
+      assert.equal(
+        await popup.evaluate((node) => getComputedStyle(node).zIndex),
+        ['2000', '2100', '1080'][phase],
+      );
+      assert.equal(
+        await popup
+          .locator('.apollo-image-preview-close')
+          .evaluate((node) => getComputedStyle(node).fontSize),
+        ['31px', '27px', '18px'][phase],
+      );
+      assert.equal(
+        await page
+          .locator('[data-image-token-demo] .apollo-image-progress-ink-1')
+          .evaluate((node) => getComputedStyle(node).animationDuration),
+        ['4s', '2s', '3s'][phase],
+      );
+      if (target === 'group')
+        assert.equal(
+          await popup
+            .getByRole('button', { name: 'Next image', exact: true })
+            .evaluate((node) => getComputedStyle(node).width),
+          ['52px', '64px', '40px'][phase],
+        );
+      const operation = popup.getByRole('button', { name: 'rotateRight', exact: true });
+      const operationNode = await operation.elementHandle();
+      const normalColor = phase < 2 ? 'rgb(255, 255, 255)' : 'rgba(255, 255, 255, 0.65)';
+      const hoverColor = phase < 2 ? 'rgb(250, 219, 20)' : 'rgba(255, 255, 255, 0.85)';
+      await page.waitForFunction(({ node, color }) => getComputedStyle(node).color === color, {
+        node: operationNode,
+        color: normalColor,
+      });
+      assert.equal(
+        await popup
+          .getByRole('button', { name: 'zoomOut', exact: true })
+          .evaluate((node) => getComputedStyle(node).color),
+        phase < 2 ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.25)',
+      );
+      await operation.hover();
+      await page.waitForFunction(({ node, color }) => getComputedStyle(node).color === color, {
+        node: operationNode,
+        color: hoverColor,
+      });
+      await editor.hover();
+      await page.waitForFunction(({ node, color }) => getComputedStyle(node).color === color, {
+        node: operationNode,
+        color: normalColor,
+      });
+      assert.deepEqual(
+        await popup.evaluate(async (node) => (await window.axe.run(node)).violations),
+        [],
+        `actual token demo ${target}/${phase}: full axe`,
+      );
+      await popup.getByRole('button', { name: 'Cycle component tokens', exact: true }).click();
+      assert.equal(await popup.evaluate((node, before) => node === before, original), true);
+      assert.equal(await editor.evaluate((node, before) => node === before, originalEditor), true);
+      assert.equal(await editor.inputValue(), 'Kept token draft');
+      assert.deepEqual(
+        await editor.evaluate((node) => [node.selectionStart, node.selectionEnd]),
+        [2, 5],
+      );
+      assert.equal(
+        await editor.evaluate((node) => node.ownerDocument.activeElement === node),
+        true,
+      );
+    }
+    await popup.getByRole('button', { name: 'Close preview', exact: true }).click();
+    await popup.waitFor({ state: 'hidden' });
+    results.push({
+      target,
+      scenario: 'public-token-demo',
+      failures: [],
+      measure: { phases: 3, axe: true, currentAllTokens: true, stableEditor: true },
+    });
+  }
   console.log(JSON.stringify({ browser: browser.version(), results, issues }, null, 2));
   assert.deepEqual(
     results.filter(({ failures }) => failures.length),

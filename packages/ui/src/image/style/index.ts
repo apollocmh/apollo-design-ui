@@ -16,7 +16,7 @@
  *   5. Preview 的样式随组件一起注册（antd 的 useStyle 注册整份组件样式 ——
  *      portal 浮层在 SSR 不可见但样式已产出），本仓同样全量保留。
  */
-const DECLS = `--apollo-image-z-index-popup:1080;--apollo-image-preview-operation-color:rgba(255,255,255,0.65);--apollo-image-preview-operation-hover-color:rgba(255,255,255,0.85);--apollo-image-preview-operation-color-disabled:rgba(255,255,255,0.25);--apollo-image-preview-operation-size:18px;--apollo-image-progress-animation-duration:3s;`;
+const DECLS = `--apollo-image-z-index-popup:1080;--apollo-image-preview-operation-color:rgba(255,255,255,0.65);--apollo-image-preview-operation-hover-color:rgba(255,255,255,0.85);--apollo-image-preview-operation-color-disabled:rgba(255,255,255,0.25);--apollo-image-preview-operation-size:18px;--apollo-image-progress-animation-duration:3s;--apollo-image-preview-switch-size:40px;`;
 
 /** 组件变量声明（对拍 antd 的 .ant-image-css-var 块，原序字面量）。 */
 export function genImageTokenDecls(): string {
@@ -69,7 +69,7 @@ const RULES = `
 .apollo-image-preview .apollo-image-preview-close:hover{background-color:rgba(0,0,0,0.2);}
 .apollo-image-preview .apollo-image-preview-close:active{background-color:rgba(0,0,0,0.1);}
 .apollo-image-preview .apollo-image-preview-close:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}
-.apollo-image-preview .apollo-image-preview-switch{position:absolute;color:var(--apollo-color-text-light-solid);background-color:rgba(0,0,0,0.1);border-radius:50%;padding:var(--apollo-padding-sm);outline:0;border:0;cursor:pointer;transition:all var(--apollo-motion-duration-slow);display:flex;font-size:var(--apollo-image-preview-operation-size);top:50%;transform:translateY(-50%);}
+.apollo-image-preview .apollo-image-preview-switch{position:absolute;color:var(--apollo-color-text-light-solid);background-color:rgba(0,0,0,0.1);border-radius:50%;width:var(--apollo-image-preview-switch-size);height:var(--apollo-image-preview-switch-size);padding:0;box-sizing:border-box;outline:0;border:0;cursor:pointer;transition:all var(--apollo-motion-duration-slow);display:flex;align-items:center;justify-content:center;font-size:var(--apollo-image-preview-operation-size);top:50%;transform:translateY(-50%);}
 .apollo-image-preview .apollo-image-preview-switch:hover{background-color:rgba(0,0,0,0.2);}
 .apollo-image-preview .apollo-image-preview-switch:active{background-color:rgba(0,0,0,0.1);}
 .apollo-image-preview .apollo-image-preview-switch:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}

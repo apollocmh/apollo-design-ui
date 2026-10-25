@@ -27,6 +27,8 @@
 并以**零运行时 CSS 变量**的方式注入主题（裁决 B，`ARCHITECTURE.md` §5.2）：
 `theme` 给出时渲染一个 `display: contents` 的作用域元素承载 `--apollo-*`。
 
+插槽内容通过同一份原生Teleport子树，在内联位置和主题作用域之间移动。theme晚出现、移除和恢复保留子组件、用户输入、选择区与焦点；未给theme时无额外包装元素。SSR先内联输出，水合后进入主题作用域。主题上下文继承外层ThemeProvider；当前cssVarPrefix替换时清除旧变量。证据见 [Image统一整改清单](../../../../docs/audit/2026-10-25-image-contract-audit.md)。
+
 ## 2. 文件布局
 
 ```

@@ -4,6 +4,7 @@ import { ConfigProvider, Image, ImagePreviewGroup, type PreviewConfig } from '@a
 import { computed, defineComponent, h, onMounted, ref } from 'vue';
 import { useLockFocus } from '../../../packages/a11y/dist/index.mjs';
 import { Portal } from '../../../packages/portal/dist/index.mjs';
+import TokenDemo from '../../../packages/ui/src/image/demo/component-token.vue';
 import MaskDemo from '../../../packages/ui/src/image/demo/preview-mask.vue';
 
 const query = new URLSearchParams(location.search);
@@ -96,7 +97,8 @@ const errors = ref(0);
     <iframe v-if="scenario === 'cross-document' || scenario === 'focus-foundation'" ref="frame" title="Audit target document" data-image-audit-frame srcdoc="<!doctype html><html lang='en'><head><title>Audit target</title></head><body><button data-frame-outside>Frame outside</button></body></html>" style="width: 700px; height: 480px" @load="installFrameStyles" />
     <FocusFoundation v-if="scenario === 'focus-foundation' && frameReady" />
     <MaskDemo v-if="scenario === 'public-mask-demo'" />
-    <ConfigProvider v-if="scenario !== 'focus-foundation' && scenario !== 'public-mask-demo'" :theme="theme">
+    <TokenDemo v-if="scenario === 'public-token-demo'" />
+    <ConfigProvider v-if="scenario !== 'focus-foundation' && scenario !== 'public-mask-demo' && scenario !== 'public-token-demo'" :theme="theme">
       <section data-image-audit-theme>
         <ImagePreviewGroup v-if="group" :preview="preview" :class-names="scenario === 'semantics' ? { root: 'audit-group-root' } : undefined" :styles="scenario === 'semantics' ? { root: { borderTopWidth: '9px' } } : undefined" @transform="transformed = $event" @open-change="opened++">
           <Image :src="imageSource" :fallback="useFallback ? source : undefined" :src-set="scenario === 'srcset-fallback' ? '/audit-broken-candidate.png 1x' : undefined" :alt="alt" :width="180" :height="105" data-image-audit-trigger @error="errors++" />

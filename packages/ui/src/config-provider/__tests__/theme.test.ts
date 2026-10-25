@@ -38,8 +38,13 @@ function mountTheme(theme: ConfigProviderThemeConfig) {
   return wrapper;
 }
 
+function themeScope(wrapper: ReturnType<typeof mountTheme>): HTMLElement {
+  const el = wrapper.get('div[style*="display: contents"]').element;
+  if (!(el instanceof HTMLElement)) throw new Error('Expected the actual theme scope');
+  return el;
+}
 function varsOf(wrapper: ReturnType<typeof mountTheme>): Record<string, string> {
-  const el = wrapper.element as HTMLElement;
+  const el = themeScope(wrapper);
   const out: Record<string, string> = {};
   for (const name of el.style) {
     if (name.startsWith('--')) out[name] = el.style.getPropertyValue(name);
@@ -136,7 +141,7 @@ describe('ConfigProvider · 主题矩阵', () => {
       attachTo: host,
     });
     await nextTick();
-    const el = w.element as HTMLElement;
+    const el = themeScope(w);
     const darkText = el.style.getPropertyValue('--apollo-color-text');
     expect(darkText).toBeTruthy();
 
@@ -153,7 +158,7 @@ describe('ConfigProvider · 主题矩阵', () => {
       attachTo: host,
     });
     await nextTick();
-    const el = w.element as HTMLElement;
+    const el = themeScope(w);
     expect(el.style.getPropertyValue('--apollo-color-primary')).toBe('#ff0000');
 
     await w.setProps({ theme: undefined });

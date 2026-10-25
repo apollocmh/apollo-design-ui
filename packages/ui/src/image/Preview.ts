@@ -39,6 +39,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { useImageTheme } from './hooks/useImageTheme';
 import { useImageTransform } from './hooks/useImageTransform';
 import { useStatus } from './hooks/useStatus';
 import type {
@@ -50,7 +51,6 @@ import type {
   PreviewIcons,
   TransformInfo,
 } from './interface';
-import { imageTokenValues } from './style/token';
 
 export const DEFAULT_ICONS: Required<PreviewIcons> = {
   rotateLeft: h(RotateLeftOutlined),
@@ -135,6 +135,7 @@ const Preview = defineComponent({
     onActive: { type: Function as PropType<(offset: number) => void>, default: undefined },
   },
   setup(props, { emit, slots }) {
+    const theme = useImageTheme();
     const mounted = ref(false);
     onMounted(() => {
       mounted.value = true;
@@ -193,9 +194,7 @@ const Preview = defineComponent({
     );
     watch([() => props.open, previewElement], focusPreview, { flush: 'post' });
 
-    const zIndex = useZIndex('ImagePreview', () => props.zIndex, {
-      zIndexPopupBase: imageTokenValues().zIndexPopup,
-    });
+    const zIndex = useZIndex('ImagePreview', () => props.zIndex);
 
     const { transform, limits, updateTransform, dispatchZoomChange, resetTransform } =
       useImageTransform(
@@ -520,9 +519,10 @@ const Preview = defineComponent({
                         moving.value ? `${props.prefixCls}-moving` : undefined,
                       ],
                       style: {
+                        ...theme.styles.value,
                         ...(props.styles?.root ?? {}),
                         ...(motion.style ?? {}),
-                        zIndex: zIndex.value,
+                        zIndex: props.zIndex ?? props.styles?.root?.zIndex ?? zIndex.value,
                       },
                       role: 'dialog',
                       'aria-modal': 'true',

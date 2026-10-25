@@ -34,10 +34,13 @@ describe('ConfigProvider · DOM 契约（本体）', () => {
   it('本体不产 DOM：渲染结果就是 slot 本身', () => {
     const w = mount(ConfigProvider, {
       slots: { default: () => h('span', { class: 'only' }, 'x') },
+      global: { stubs: { teleport: false } },
     });
     // ⚠️ 不能断言 `w.element`：本体的渲染结果是 slots 数组 ⇒ 根节点是 Fragment，
     //    VTU 会给出一个容器 div。断言**产出的 HTML**才是「有没有多包一层」的判据。
-    expect(w.html()).toBe('<span class="only">x</span>');
+    expect(w.findAll('div')).toHaveLength(0);
+    expect(w.findAll('span')).toHaveLength(1);
+    expect(w.get('span.only').text()).toBe('x');
     const span = w.get('span.only');
     expect(span.element.tagName).toBe('SPAN');
   });
@@ -47,10 +50,11 @@ describe('ConfigProvider · DOM 契约（本体）', () => {
       props: { theme: { token: {} } },
       slots: { default: () => h('span', { class: 'only' }, 'x') },
     });
-    expect(w.element.tagName).toBe('DIV');
-    expect(w.element.getAttribute('style')).toContain('display: contents');
+    const scope = w.get('div[style*="display: contents"]');
+    expect(scope.element.tagName).toBe('DIV');
+    expect(scope.attributes('style')).toContain('display: contents');
     // 它不带任何类名 —— 不污染下游的类名空间
-    expect(w.element.className).toBe('');
+    expect(scope.element.className).toBe('');
     expect(w.find('.only').exists()).toBe(true);
   });
 });

@@ -1,5 +1,5 @@
-import { mount } from '@vue/test-utils';
-import { afterEach, describe, expect, it } from 'vitest';
+import { config, mount } from '@vue/test-utils';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick, type Ref, reactive, ref } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import {
@@ -11,6 +11,14 @@ import {
 } from '../../index';
 
 type Components = NonNullable<ConfigProviderProps['components']>;
+// Preserve all original live-node assertions against the actual renderer.
+const previousStubs = config.global.stubs;
+beforeAll(() => {
+  config.global.stubs = { teleport: false };
+});
+afterAll(() => {
+  config.global.stubs = previousStubs;
+});
 type Field = 'classNames' | 'styles';
 type Revision = 'first' | 'current';
 

@@ -182,7 +182,9 @@ Group navigation icons read the current ConfigProvider.direction, resolving defa
 7 tokens (CSS variables `--apollo-image-*`): `zIndexPopup` (`zIndexPopupBase + 80` = 1080) /
 `previewOperationColor` (`colorTextLightSolid` @0.65) / `previewOperationHoverColor` (@0.85) /
 `previewOperationColorDisabled` (@0.25) / `previewOperationSize` (`fontSizeIcon × 1.5` = 18px) /
-`progressAnimationDuration` (`3s`); derived `imagePreviewSwitchSize` (= `controlHeightLG`).
+`progressAnimationDuration` (`3s`); `imagePreviewSwitchSize` (= `controlHeightLG`, 40px by default, mapped to `--apollo-image-preview-switch-size`) controls the actual group switch width and height.
+
+Override all seven through `ConfigProvider.theme.components.Image`. Thumbnail, Progress and body-mounted preview read current alias/component variables from the same Vue context, including an outer ThemeProvider, nested inheritance, dark/compact algorithms and replacement/removal. Static CSS owns unconfigured defaults. Native Image style and popup semantic styles can override variables. Stacking priority is preview.zIndex, styles.popup.root.zIndex, parent overlay context, then the component variable. See the actual component-token demo and [shared evidence](../../../../docs/audit/2026-10-25-image-contract-audit.md).
 
 The default group counter uses a `colorBgSpotlight` background and inherits the footer operation color, including over a light page or with the mask disabled. This background applies only to the default counter node (also available as `previewCount.originNode`); custom counter slots keep their own styling. See the [contrast regression](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md).
 
@@ -199,13 +201,7 @@ only the L6 pixel comparison can catch it.
 
 ### The variable declaration block covers two roots
 
-antd declares component variables on every `-css-var` root, and the preview overlay root
-carries that class too (it receives `mergedRootClassName`). This repo has no `-css-var`
-class, so the equivalent is to attach the declaration block to both `.apollo-image` and
-`.apollo-image-preview`: the preview overlay is teleported to `body`, i.e. **outside** the
-`.apollo-image` subtree, so attaching it only to the latter breaks every
-`var(--apollo-image-preview-*)` (the close button font-size falls back from 18px to the
-inherited 16px). Same as `input`.
+Static defaults cover both `.apollo-image` and `.apollo-image-preview`. Configured themes write current CSS variables on each actual root. Vue provide/inject preserves source context across Teleport, so the preview does not depend on source DOM ancestry. No component stylesheet or global theme patch is generated at runtime.
 
 ### The preview overlay is portaled
 

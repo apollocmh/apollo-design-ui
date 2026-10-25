@@ -177,7 +177,9 @@ Group导航图标读取当前ConfigProvider.direction，ltr/rtl切换时先合�
 7 个（CSS 变量 `--apollo-image-*`）：`zIndexPopup`(`zIndexPopupBase + 80` = 1080) /
 `previewOperationColor`(`colorTextLightSolid` @0.65) / `previewOperationHoverColor`(@0.85) /
 `previewOperationColorDisabled`(@0.25) / `previewOperationSize`(`fontSizeIcon × 1.5` = 18px) /
-`progressAnimationDuration`(`3s`)；派生 `imagePreviewSwitchSize`(= `controlHeightLG`)。
+`progressAnimationDuration`(`3s`)；`imagePreviewSwitchSize`(= `controlHeightLG`，默认40px，对应 `--apollo-image-preview-switch-size`)，控制分组切换按钮实际宽高。
+
+通过 `ConfigProvider.theme.components.Image` 覆盖全部7个Token。缩略图、Progress和body中的预览从同一个Vue主题上下文读取当前alias/组件变量；支持外层ThemeProvider、嵌套继承、暗色/紧凑算法、配置替换和移除。未配置主题时由静态CSS负责默认值；Image原生style和popup语义style可覆盖对应变量。层级优先级为preview.zIndex、styles.popup.root.zIndex、父浮层层级、组件变量。见实际component-token示例及 [统一证据](../../../../docs/audit/2026-10-25-image-contract-audit.md)。
 
 Group 默认计数使用 `colorBgSpotlight` 背景，文字继续继承 footer 的操作颜色；在亮色页面及关闭遮罩时仍有独立的对比背景。该背景只作用于默认计数节点（也包括 `previewCount.originNode`），自定义计数槽保留自身样式。见 [对比度回归](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md)。
 
@@ -192,11 +194,7 @@ Vue 的 `style` **不会**给数字自动补 `px`（那是 React 的行为），
 
 ### 组件变量声明块挂在两个根上
 
-antd 把组件变量声明在每个 `-css-var` 根上，预览浮层的根同样带这个类（它拿到的是
-`mergedRootClassName`）。本仓没有 `-css-var` 类，等价做法是让声明块同时挂
-`.apollo-image` 与 `.apollo-image-preview`：预览浮层经 Teleport 挂在 `body` 上，
-**不在** `.apollo-image` 子树内，只挂前者会让 `var(--apollo-image-preview-*)` 全部失效
-（关闭按钮字号由 18px 回退成继承的 16px）。与 `input` 相同。
+静态默认声明同时挂在 `.apollo-image` 与 `.apollo-image-preview`。配置了主题时，两者在自己的实际根写当前CSS变量；Vue的provide/inject跨Teleport保持同一上下文，所以预览不依赖源DOM的变量继承。不生成组件样式表或向全局写入局部主题。
 
 ### 预览浮层走 portal
 

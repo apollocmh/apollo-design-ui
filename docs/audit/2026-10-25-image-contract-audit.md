@@ -203,3 +203,25 @@ GroupPreviewConfig 当前是 PreviewConfig 的完整别名。Image 专属字段�
 | `node tests/browser/drawer-slots.mjs` | 退出0；实际Drawer富内容/输入/ARIA保留、零Vue/页面错误；`/tmp/apollo-focus-drawer-browser.log` |
 
 基础包已核对实际消费者为Image、Modal、Drawer和a11y再导出；本组不宣称其他基础包能力全量通过。共享主题/全部组件Token、模态滚动锁、富缩略图交互、完整水合与最终视觉仍继续本单元处理。
+
+### 源主题、组件Token及Provider状态结果（2026-10-26）
+
+共享焦点组对应 `ee9c2e10`，已推送。本组仍属于同一Image单元，集中处理源主题读取、全部7个Token、实际CSS消费和Provider结构状态；不把23个浏览器场景通过当作Image完整验收。
+
+首批主题专项5条全部失败；接通上下文后3条通过，2条暴露theme移除会卸载整棵子树。进一步以真实Teleport验证Provider反复出现/移除的子组件计数、编辑器、值、选择区及焦点；旧虚拟TeleportStub在2份身份专项中制造重挂，改为真实Teleport后完整保留29条原断言。popup根zIndex被undefined覆盖的2条，以及当前cssVarPrefix未替换的1条，均有失败复现后纳入同组修复。
+
+已实现：Image/Progress/Group/Preview从同一Vue上下文读取当前alias和Image组件变量；继承外层ThemeProvider，支持inherit=false、暗/紧凑算法、字段修改/对象替换/移除和多实例隔离；没有配置时保留静态CSS默认值和原生style优先级。全部7个Token实际消费，包括原先未使用的分组切换尺寸（默认40px）。颜色派生复用已有框架无关Color算法，命名色/变量保留原生CSS合成。zIndex优先级和默认尺寸变化已写入集中迁移。
+
+ConfigProvider的可选display:contents作用域通过同一份原生Teleport内容子树切换，不再重挂插槽；未配置theme时无包装元素，保留Vue锚点。SSR初始内联（有效body目标），客户端水合后移动已有节点；主题变量前缀改变时清理旧前缀。未扩展公开Props/Slots/Emits或添加兼容接口。
+
+| 本组验收命令/证据 | 实际结果 |
+|---|---|
+| `vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/image packages/ui/src/config-provider packages/ui/src/empty packages/ui/src/button packages/ui/src/modal packages/ui/src/drawer --maxWorkers=1 --no-file-parallelism` | 最终56文件/1059条通过，`/tmp/apollo-image-theme-runtime-serial.log`。并发构建/类型检查与双worker时曾有2个主题用例撞5秒；空闲独立17条及整组串行均通过，未改超时、断言、主题或Demo范围 |
+| 根严格；UI build；发布包模板消费；UI L7 | 全部退出0。真实声明+69份CSS；实际Token Demo加入无源码别名消费端；L7 11检查/0FAIL/0PENDING。日志 `/tmp/apollo-image-theme-strict-final.log`、`-build-final.log`、`-consumer-types.log`、`-l7.log` |
+| `node tests/consumer/image-ssr.mjs` | 无DOM Node通过；补ConfigProvider下两入口开/关、主题变量及真实插槽内容，预览仍惰性。`/tmp/apollo-image-theme-node-ssr.log` |
+| `node tests/browser/image-theme-hydration.mjs` | Chrome150.0.7871.125通过；保留服务端原输入、预输入值/焦点/选择区；两入口预览在移除/恢复主题后保留编辑器与身份，零Vue/页面错误。`/tmp/apollo-image-theme-hydration-final.log` |
+| `node tests/browser/image-contract-audit.mjs` | 23场景全部通过，零Vue/控制台/页面错误。真实Token Demo覆盖3阶段、7个Token实际字号/宽高/层级/动画时长/普通、hover和disabled颜色、稳定编辑器和完整axe。待CSS过渡结束后读取最终计算值。持久化 [浏览器证据](evidence/image-contract-browser.json) 含测试命令、生产源码指纹与全部测量 |
+| 原有 `image-prefix.mjs` / `image-provider.mjs` / `image-popup-provider.mjs` | 全部退出0；真实前缀、Provider字段/对象/Map/晚出现/移除、原生/局部优先级、Progress及弹层6节点、身份/焦点/选择区/旋转与原有Demo均保留 |
+| Docs build → test → typecheck → content:check | 全部退出0；14文件/157测试、72组件/1002 Demo。component-token不再为PENDING假例，双语API/Provider说明/集中迁移同步；`/tmp/apollo-image-theme-docs-*.log` |
+
+当前仍未统一验收：模态滚动锁、富缩略图交互控件、motion偏好/零时长、Provider合法ShadowRoot容器下的焦点/副作用链路、最终组合回归与Apollo视觉。ShadowRoot是Provider已声明容器类型，须在本单元补实测，不把它当新能力延后。局部主题的本组证据不替代其他组件的主题审计，也不代表ConfigProvider、theme基础包全部入口重新验收；后续完整单元按实际范围继续盘点。

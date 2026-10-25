@@ -24,6 +24,7 @@ import {
   providePreviewGroup,
   type RegisteredImage,
 } from './context';
+import { useImageTheme } from './hooks/useImageTheme';
 import type {
   GroupPreviewConfig,
   ImageSemanticType,
@@ -64,6 +65,7 @@ const PreviewGroup = defineComponent({
   },
   setup(props, { slots, emit }) {
     const config = useComponentConfig<ImageSemanticType>('image');
+    const theme = useImageTheme();
     const element = shallowRef<HTMLElement | null>(null);
     const triggerElement = shallowRef<HTMLElement | null>(null);
     const prefixCls = computed(() => config.getPrefixCls('image'));
@@ -211,7 +213,7 @@ const PreviewGroup = defineComponent({
         'div',
         {
           class: [`${prefixCls.value}-preview-group`, mergedGroupClassNames.value.root],
-          style: mergedGroupStyles.value.root,
+          style: [theme.styles.value, mergedGroupStyles.value.root],
           ref: (node: unknown) => {
             element.value = node instanceof HTMLElement ? node : null;
           },

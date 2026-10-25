@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><link rel="icon" href="data:," /><title>Image theme hydration</title></head><body>
+<div id="app"></div>
+<script type="module">
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/style.css';
+import { createSSRApp, nextTick } from 'vue';
+import App from './ImageThemeHydration.mjs';
+createSSRApp(App).mount('#app');
+await nextTick(); await nextTick();
+window.__imageThemeHydrated = true;
+</script>
+<style>.theme-hydration-editor { display:flex; flex-direction:column; align-items:center; margin:0; }.theme-hydration-editor input { color:var(--apollo-color-text); background:var(--apollo-color-bg-container); }</style>
+</body></html>

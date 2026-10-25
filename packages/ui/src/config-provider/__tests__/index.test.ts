@@ -478,19 +478,27 @@ describe('ConfigProvider · theme', () => {
     });
   });
 
-  it('L2 · 给了 theme 才渲染作用域元素；没给则不产任何包裹 DOM', () => {
+  it('L2 · 给了 theme 才渲染作用域元素；没给则不产任何包裹 DOM', async () => {
     const plain = mount(ConfigProvider, {
       slots: { default: () => h('span', { class: 'text-probe' }, 'probe') },
+      global: { stubs: { teleport: false } },
     });
-    expect(plain.html()).toBe('<span class="text-probe">probe</span>');
+    expect(plain.findAll('div')).toHaveLength(0);
+    expect(plain.findAll('span')).toHaveLength(1);
+    expect(plain.get('span.text-probe').text()).toBe('probe');
 
     const themed = mount(ConfigProvider, {
       props: { theme: { token: { colorPrimary: '#f00' } } },
       slots: { default: () => h('span', { class: 'text-probe' }, 'probe') },
+      global: { stubs: { teleport: false } },
     });
     // 多了一层 display:contents 的作用域元素（D26），文本探针仍在里面
     expect(themed.html()).toContain('display: contents');
     expect(themed.html()).toContain('<span class="text-probe">probe</span>');
+    await nextTick();
+    expect(themed.get('div[style*="display: contents"]').get('span.text-probe').text()).toBe(
+      'probe',
+    );
   });
 
   it('L2 · theme 会把 CSS 变量写到作用域元素上（零运行时的落地点）', async () => {
@@ -501,7 +509,8 @@ describe('ConfigProvider · theme', () => {
     });
     await nextTick();
 
-    const scope = wrapper.element as HTMLElement;
+    const scope = wrapper.get('div[style*="display: contents"]').element;
+    if (!(scope instanceof HTMLElement)) throw new Error('Expected the actual theme scope');
     // token 经过 seed → map → alias 派生后是归一化的 hex，不是原样字符串
     expect(scope.style.getPropertyValue('--apollo-color-primary')).toBe('#ff0000');
     wrapper.unmount();
@@ -517,7 +526,8 @@ describe('ConfigProvider · theme', () => {
     });
     await nextTick();
 
-    const scope = wrapper.element as HTMLElement;
+    const scope = wrapper.get('div[style*="display: contents"]').element;
+    if (!(scope instanceof HTMLElement)) throw new Error('Expected the actual theme scope');
     expect(scope.style.getPropertyValue('--apollo-color-primary')).toBe('#ff0000');
 
     wrapper.unmount();
@@ -742,8 +752,11 @@ describe('ConfigProvider · DOM 包裹', () => {
   it('本体不产 DOM：只有一个 slot', () => {
     const wrapper = mount(ConfigProvider, {
       slots: { default: () => h('span', { class: 'only' }, 'x') },
+      global: { stubs: { teleport: false } },
     });
-    expect(wrapper.html()).toBe('<span class="only">x</span>');
+    expect(wrapper.findAll('div')).toHaveLength(0);
+    expect(wrapper.findAll('span')).toHaveLength(1);
+    expect(wrapper.get('span.only').text()).toBe('x');
   });
 
   it('inheritAttrs:false ⇒ 多余的 attrs 不会挂到 children 上', () => {

@@ -24,6 +24,10 @@ try {
     path.join(root, 'packages/ui/src/image/demo/preview-mask.vue'),
     path.join(temp, 'PreviewMaskDemo.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/component-token.vue'),
+    path.join(temp, 'ImageTokenDemo.vue'),
+  );
   fs.writeFileSync(
     path.join(temp, 'ContractTypes.ts'),
     `

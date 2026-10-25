@@ -28,6 +28,7 @@ import {
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { nextImageId, type RegisteredImage, usePreviewGroup } from './context';
+import { useImageTheme } from './hooks/useImageTheme';
 import { useStatus } from './hooks/useStatus';
 import type {
   CoverPlacement,
@@ -116,6 +117,7 @@ const Image = defineComponent({
     // antd 逐字（image/index.js:33-41）：ConfigProvider 组件级 `classNames` /
     // `styles`（`components.image.*`）是语义合并的**最外层**来源（2026-10-04 接上）。
     const config = useComponentConfig<ImageSemanticType>('image');
+    const theme = useImageTheme();
     const element = shallowRef<HTMLElement | null>(null);
     const groupContext = usePreviewGroup();
     const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('image'));
@@ -309,7 +311,7 @@ const Image = defineComponent({
           classNames: mergedClassNames.value?.placeholder?.progress,
           styles: mergedStyles.value?.placeholder?.progress,
           class: [attrs.class, mergedClassNames.value?.root],
-          rootStyle: mergedStyles.value?.root,
+          rootStyle: { ...theme.styles.value, ...mergedStyles.value?.root },
           width: props.width,
           height: props.height,
           onClick: (event: MouseEvent) => emit('click', event),
@@ -369,6 +371,7 @@ const Image = defineComponent({
             isError ? `${prefixCls.value}-error` : undefined,
           ],
           style: [
+            theme.styles.value,
             { width: toCssSize(props.width), height: toCssSize(props.height) },
             mergedStyles.value?.root,
             attrs.style,
