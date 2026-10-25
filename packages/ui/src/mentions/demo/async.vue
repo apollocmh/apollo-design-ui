@@ -17,11 +17,19 @@ const USERS = [
   { login: 'yesmeck', avatar: AVATAR },
 ];
 
+const value = ref('');
+const query = ref('');
+const showEmpty = ref(true);
+const empty = ref(false);
+const revision = ref(0);
+const selections = ref(0);
+const fallback = computed(() => `Default empty message for ${query.value || 'all users'}`);
 const loading = ref(false);
 const users = ref<{ login: string; avatar: string }[]>([]);
 let timer: ReturnType<typeof setTimeout> | undefined;
 
 const onSearch = (search: string) => {
+  query.value = search;
   if (timer !== undefined) {
     clearTimeout(timer);
   }
@@ -63,5 +71,20 @@ const options = computed(() =>
 </script>
 
 <template>
-  <Mentions style="width: 100%" :loading="loading" @search="onSearch" :options="options" />
+  <div>
+    <p>
+      <button type="button" @mousedown.prevent @click="showEmpty = !showEmpty">Toggle custom empty message</button>
+      <button type="button" @mousedown.prevent @click="empty = !empty">Empty custom message</button>
+      <button type="button" @mousedown.prevent @click="revision++">Update empty message</button>
+    </p>
+    <Mentions v-model:value="value" aria-label="Search mention users" style="width: 100%"
+      :loading="loading" :options="options" :not-found-content="fallback" allow-clear
+      @search="onSearch" @select="selections++">
+      <template v-if="showEmpty" #notFoundContent>
+        <span v-if="!empty" data-native-empty-message>No users for {{ query || 'all users' }} · {{ revision }}</span>
+      </template>
+    </Mentions>
+    <output data-async-mention-value>{{ value }}</output>
+    <output data-async-mention-selections>Selections: {{ selections }}</output>
+  </div>
 </template>

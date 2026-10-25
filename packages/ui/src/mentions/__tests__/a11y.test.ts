@@ -54,7 +54,6 @@ const LABEL_ALLOWED = new Set([
   'autoSize',
   'placement',
   'allowClear',
-  'async',
   'status',
   'component-token',
   'render-panel',

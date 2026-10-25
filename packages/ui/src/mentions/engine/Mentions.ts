@@ -149,7 +149,7 @@ export function mentionsChildrenToOptions(nodes: readonly unknown[]): MentionsOp
 export const InternalMentions = defineComponent({
   name: 'AMentionsInternal',
   inheritAttrs: false,
-  slots: Object as SlotsType<Pick<MentionsSlots, 'popupRender'>>,
+  slots: Object as SlotsType<Pick<MentionsSlots, 'popupRender' | 'notFoundContent'>>,
   props: {
     prefixCls: { type: String, required: true },
     /**
@@ -639,6 +639,7 @@ export const InternalMentions = defineComponent({
               {
                 default: () => [h('span', null, mergedMeasurePrefix.value)],
                 popupRender: slots.popupRender,
+                notFoundContent: slots.notFoundContent,
               },
             ),
             (mergedValue.value ?? '').slice(
@@ -796,7 +797,7 @@ export const RcMentions = defineComponent({
                  */
                 value: mergedValue.value,
               } as never,
-              { popupRender: slots.popupRender },
+              { popupRender: slots.popupRender, notFoundContent: slots.notFoundContent },
             ),
           ],
         },

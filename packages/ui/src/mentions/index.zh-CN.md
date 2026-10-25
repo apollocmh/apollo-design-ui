@@ -108,9 +108,12 @@ subtitle: 提及
 | 名称 | 说明 | 参数 |
 |---|---|---|
 | default | `Mentions.Option` 形式的候选项（**已 deprecated**，用 `options`） | — |
+| notFoundContent | 无候选时的当前内容；存在且为空也抑制回退 | — |
 | popupRender | 自定义浮层；槽存在则使用其内容，空槽不恢复默认菜单 | `{ originNode: VNode }` |
 
 `MentionsSlots` / `MentionsPopupRenderSlotProps` 已导出并接入组件。槽按当前 render 沿包装与引擎转发；条件移除后恢复菜单，保留 textarea 节点、当前值、焦点及默认菜单的选择行为。旧 popupRender 函数 prop 已直接移除，无兼容层，见 [迁移记录](../../../../docs/migrations/mentions-popup-slot.md)。
+
+空内容优先级为 `#notFoundContent`（含有意为空）→ `notFoundContent` prop → `ConfigProvider.components.mentions.notFoundContent` → `renderEmpty('Select')` → 默认空状态。插槽只在实际空菜单 render 时调用，关闭/SSR、已有候选或 loading 不提前执行；存在时不调用回退渲染函数。移除后恢复当前回退数据。`false` 保持空白，`0`、VNode 及数组按 Vue 内容规则渲染，不增加额外包装元素。
 
 ### Expose（模板 ref）
 

@@ -39,10 +39,11 @@ import {
   nextTick,
   type PropType,
   ref,
+  type SlotsType,
   type VNodeChild,
   watch,
 } from 'vue';
-import type { MentionsOptionProps } from '../interface';
+import type { MentionsOptionProps, MentionsSlots } from '../interface';
 import { mentionsContextKey } from './context';
 
 /** 归一化后的候选项（引擎的 `getOptions` 产物）。 */
@@ -64,6 +65,7 @@ function nextMenuId(): string {
 export const DropdownMenu = defineComponent({
   name: 'AMentionsDropdownMenu',
   inheritAttrs: false,
+  slots: Object as SlotsType<Pick<MentionsSlots, 'notFoundContent'>>,
   props: {
     /** **完整**前缀：`${dropdownPrefix}-menu`（如 `apollo-mentions-dropdown-menu`）。 */
     prefixCls: { type: String, required: true },
@@ -71,7 +73,7 @@ export const DropdownMenu = defineComponent({
     /** 浮层是否已展开（由 `afterOpenChange` 置位）—— 未展开时不做滚动入视口。 */
     opened: { type: Boolean, default: false },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const context = inject(mentionsContextKey, null);
     const menuId = nextMenuId();
     const listRef = ref<HTMLElement | null>(null);
@@ -140,7 +142,7 @@ export const DropdownMenu = defineComponent({
               context?.value.selectOption(option);
             },
           },
-          option.label as never,
+          [option.label],
         );
       });
 
@@ -155,7 +157,8 @@ export const DropdownMenu = defineComponent({
               'data-menu-id': itemId('tmp_key-0'),
               'aria-disabled': 'true',
             },
-            context?.value.notFoundContent as never,
+            // children 数组按 Vue 规则归一 false/嵌套数组，避免原位改写响应式内容数组。
+            [slots.notFoundContent ? slots.notFoundContent() : context?.value.notFoundContent],
           ),
         );
       }

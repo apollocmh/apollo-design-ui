@@ -88,11 +88,15 @@ export const KeywordTrigger = defineComponent({
     });
 
     const renderDropdown = (): VNode =>
-      h(DropdownMenu, {
-        prefixCls: `${props.prefixCls}-menu`,
-        options: props.options,
-        opened: opened.value,
-      });
+      h(
+        DropdownMenu,
+        {
+          prefixCls: `${props.prefixCls}-menu`,
+          options: props.options,
+          opened: opened.value,
+        },
+        { notFoundContent: slots.notFoundContent },
+      );
 
     return () => {
       const originNode = renderDropdown();

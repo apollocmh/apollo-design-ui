@@ -149,6 +149,7 @@ export const MentionsComponent = defineComponent({
       classNames?: MentionsSemanticClassNames | MentionsSemanticClassNamesFn;
       styles?: MentionsSemanticStyles | MentionsSemanticStylesFn;
       allowClear?: boolean | { clearIcon?: VNodeChild; disabled?: boolean };
+      notFoundContent?: VNodeChild;
     }>('mentions');
     const { getPrefixCls } = context;
     const direction = useDirection();
@@ -213,6 +214,9 @@ export const MentionsComponent = defineComponent({
     const notFoundContentEle = computed<VNodeChild>(() => {
       if (props.notFoundContent !== undefined) {
         return props.notFoundContent;
+      }
+      if (context.notFoundContent !== undefined) {
+        return context.notFoundContent;
       }
       const fromContext = context.renderEmpty?.('Select') as VNodeChild;
       return fromContext ?? h(DefaultRenderEmpty, { componentName: 'Select' });
@@ -326,7 +330,7 @@ export const MentionsComponent = defineComponent({
           ref: innerRef,
           silent: props.loading || props.silent,
           prefixCls: p,
-          notFoundContent: notFoundContentEle.value,
+          notFoundContent: slots.notFoundContent ? undefined : notFoundContentEle.value,
           className: mergedClassName,
           disabled: mergedDisabled.value,
           allowClear: mergedAllowClear.value,
@@ -372,6 +376,7 @@ export const MentionsComponent = defineComponent({
         } as never,
         {
           popupRender: slots.popupRender,
+          notFoundContent: slots.notFoundContent,
           default: () => {
             if (props.loading) {
               return [

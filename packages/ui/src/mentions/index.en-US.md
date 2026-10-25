@@ -108,9 +108,12 @@ Candidate navigation uses standard `KeyboardEvent.key`: arrows skip disabled opt
 | Name | Description | Arguments |
 |---|---|---|
 | default | Candidates in `Mentions.Option` form (**deprecated**, use `options`) | — |
+| notFoundContent | Current empty-menu content; a present empty slot suppresses fallbacks | — |
 | popupRender | Custom popup; a present slot overrides the default menu, including empty content | `{ originNode: VNode }` |
 
 `MentionsSlots` and `MentionsPopupRenderSlotProps` are exported and attached to the component. Slots are forwarded through the current render across wrapper and engine layers. Removing the slot restores the menu; editor nodes, current value, focus and the original menu's selection behavior are preserved. The render-function prop is removed directly without a compatibility channel; see the [migration](../../../../docs/migrations/mentions-popup-slot.md).
+
+Empty content precedence is `#notFoundContent` (including an intentionally empty slot), the `notFoundContent` prop, `ConfigProvider.components.mentions.notFoundContent`, `renderEmpty('Select')`, then the default empty state. The slot runs only when an empty menu renders; closed/SSR, candidate and loading states do not evaluate it eagerly. A present slot also skips fallback rendering. Removing it restores current fallback data. `false` stays blank; `0`, VNodes and arrays follow Vue child normalization without extra wrapper elements.
 
 ### Expose (template ref)
 

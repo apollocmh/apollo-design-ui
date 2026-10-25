@@ -36,6 +36,7 @@ export interface MentionsPopupRenderSlotProps {
 }
 
 export interface MentionsSlots {
+  notFoundContent?: () => VNodeChild;
   default?: () => VNodeChild;
   popupRender?: (info: MentionsPopupRenderSlotProps) => VNodeChild;
 }

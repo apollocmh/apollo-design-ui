@@ -120,3 +120,8 @@ registry 数据：`tokenCount = 3`（`zIndexPopup` / `dropdownHeight` / `control
 3. 🚨 **`input/engine/TextArea.ts` 缺 `${prefixCls}-disabled`**
    （rc `ResizableTextArea.js` 有）—— `input.dom.json` 里没有 disabled 的 textarea 用例，
    此前无人踩到。mentions 的 disabled 形态首次暴露。
+
+
+## 原生空内容（2026-10-25）
+
+`#notFoundContent` 按当前函数沿包装与浮层层级转发，只在 DropdownMenu 的空菜单 render 中求值。存在（含空返回）优先于 prop、组件配置和 renderEmpty；移除恢复当前回退。回退与候选 label 的 VNodeChild 放入 children 数组交给 Vue 归一，避免 false 被字符串化、响应式数组被 renderer 原位改写。新增类型、真实模板、CSR/SSR/未挂载守卫、ConfigProvider 当前回退及生产浏览器证据见 `docs/audit/2026-10-25-mentions-empty-content-remediation.md`。

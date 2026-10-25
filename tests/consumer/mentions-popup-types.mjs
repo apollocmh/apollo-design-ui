@@ -31,6 +31,18 @@ try {
     path.join(temp, 'ExactPopup.vue'),
     fixture.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  const empty = fs.readFileSync(
+    path.join(root, 'packages/ui/src/mentions/__tests__/fixtures/EmptySlot.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'EmptySlot.vue'),
+    empty.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/mentions/demo/async.vue'),
+    path.join(temp, 'AsyncConsumer.vue'),
+  );
   const core = fs.readFileSync(
     path.join(root, 'packages/ui/src/mentions/__tests__/fixtures/CoreEvents.vue'),
     'utf8',
@@ -98,7 +110,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Mentions contracts: exact popup context, unknown-slot/old-renderer rejection, StyleValue bindings, exact core emit payloads and native listener templates; no source aliases or test declarations shipped',
+    'PASS published Mentions contracts: exact popup context, unknown-slot/old-renderer rejection, StyleValue bindings, exact emit payloads, native listeners and empty content slots; no source aliases or test declarations shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

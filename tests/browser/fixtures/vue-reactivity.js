@@ -25,6 +25,7 @@ import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
 import MentionsBindings from './MentionsBindings.vue';
+import MentionsEmpty from './MentionsEmpty.vue';
 import MentionsEvents from './MentionsEvents.vue';
 import MentionsKeyboard from './MentionsKeyboard.vue';
 import MentionsNativeEvents from './MentionsNativeEvents.vue';
@@ -96,6 +97,7 @@ const Demo = {
   'mentions-events': MentionsEvents,
   'mentions-native-events': MentionsNativeEvents,
   'mentions-keyboard': MentionsKeyboard,
+  'mentions-empty': MentionsEmpty,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,
