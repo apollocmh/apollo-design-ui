@@ -217,3 +217,8 @@ import '@apollo-design/ui/style.css';          // 汇总样式（含 typography�
    [`README.md`](./README.md) §7.3（G7）。
 5. 其余缺口（`h1~h6`/`p` 的 margin reset、表单控件字体 reset、dark/compact 未做视觉比对等）
    逐条登记在 [`README.md`](./README.md) §7.3。
+
+
+### 默认插槽与编辑名称
+
+默认插槽支持条件出现、替换和移除，正文同步当前父组件渲染结果；纯文本的复制回退、编辑初值和省略内容同步当前正文。同一正文模式中稳定的富节点会保留输入值与焦点。原生 `aria-label` 在进入编辑态后传给 textarea，名称的更新或移除不重置编辑草稿。未配置编辑文本时仍只把纯文本正文作为编辑初值。

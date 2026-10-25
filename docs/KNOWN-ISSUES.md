@@ -249,6 +249,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Mentions空内容增量**：9条修前5失败/4已有通过，新增原生notFoundContent槽，并修复组件全局配置被忽略、false字符串化和VNode数组递归；追加复现后抑制slot存在时的急切renderEmpty调用，追加候选label同源复现2失败/11通过后修正数据归一并保留单次选择；当前函数只在空菜单render求值，数据prop保留；具体范围及检查见 [报告](audit/2026-10-25-mentions-empty-content-remediation.md)。option模板用法评估、完整IME和其他F11继续复审。
 
+**2026-10-25 Typography默认内容增量**：真实入口14条修前12失败/2已有通过，确认四个子组件缓存旧默认槽及CSS省略路径渲染外求槽。公开render→私有数据组件修正当前值、复制/编辑与量测边界；另有编辑名称漏传独立复现并修正，最终15条局部通过。容器与直接ref槽原已正常；范围和检查见 [报告](audit/2026-10-25-typography-native-content-remediation.md)。其余配置/富内容扩展继续复审。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -324,7 +326,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Flex | 6/6 | —；gap/RTL |
 | Grid | 13/13 | —；断点/SSR |
 | Divider | 9/9 | —；语义 attrs |
-| Typography | 14/14 | F11：富内容 slot 与复制/省略交互专项 |
+| Typography | 14/14 | F11：四子入口当前默认槽、复制/编辑回退、CSS求槽告警及编辑名称已修；其他内容/交互继续复审 |
 | Layout | 11/12 | 固定布局；`custom-trigger-debug` 非强制 |
 | Tag | 12/12 | —；close emit 与动画 |
 | Badge | 12/17 | **F05**；富内容、数字滚动、status、Demo |

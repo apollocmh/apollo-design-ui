@@ -81,6 +81,7 @@ import {
   type CSSProperties,
   computed,
   defineComponent,
+  type ExtractPropTypes,
   h,
   onUpdated,
   type PropType,
@@ -209,60 +210,70 @@ function wrapperDecorations(props: BlockProps, content: RenderableChild[]): Rend
   return currentContent;
 }
 
-export const Base = defineComponent({
-  name: 'ATypographyBase',
+const baseProps = {
+  // ---------------------------- 来自 TypographyProps ----------------------------
+  /** 不传则从 ConfigProvider 解析（`apollo-typography`）。 */
+  prefixCls: { type: String, default: undefined },
+  /** 用户传的标签名。`Text`→`span`、`Paragraph`→`div`、`Link`→`a`、`Title`→`h1..h5`。 */
+  component: { type: String, default: undefined },
+  direction: { type: String as PropType<DirectionType>, default: undefined },
+  classNames: {
+    type: [Object, Function] as PropType<BlockProps['classNames']>,
+    default: undefined,
+  },
+  styles: {
+    type: [Object, Function] as PropType<BlockProps['styles']>,
+    default: undefined,
+  },
+
+  // ---------------------------- 来自 BlockProps ----------------------------
+  actions: { type: Object as PropType<ActionsConfig>, default: undefined },
+  title: { type: String, default: undefined },
+  editable: {
+    type: [Boolean, Object] as PropType<boolean | EditConfig>,
+    default: undefined,
+  },
+  copyable: {
+    type: [Boolean, Object] as PropType<boolean | CopyConfig>,
+    default: undefined,
+  },
+  type: { type: String as PropType<BaseType>, default: undefined },
+  disabled: { type: Boolean, default: undefined },
+  ellipsis: {
+    type: [Boolean, Object] as PropType<boolean | EllipsisConfig>,
+    default: undefined,
+  },
+
+  // 七个装饰开关。⚠️ `default: undefined` 不是冗余的（PITFALLS 46）：
+  // 运行时类型含 `Boolean` 时，未传的 prop 会被 Vue 强制成 `false`。
+  code: { type: Boolean, default: undefined },
+  mark: { type: Boolean, default: undefined },
+  underline: { type: Boolean, default: undefined },
+  delete: { type: Boolean, default: undefined },
+  strong: { type: Boolean, default: undefined },
+  keyboard: { type: Boolean, default: undefined },
+  italic: { type: Boolean, default: undefined },
+
+  // ⚠️ 事件名必须全小写（PITFALLS 61）。声明成 prop 是为了把它们**从 `$attrs` 里摘出来**：
+  //    antd 把 `onMouseEnter` / `onMouseLeave` 解构掉，再包一层自己的逻辑往下传；
+  //    留在 `$attrs` 里会被 `{...attrs}` 原样覆盖掉这层逻辑。
+  onMouseenter: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
+  onMouseleave: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
+};
+
+const BaseContent = defineComponent({
+  name: 'ATypographyContent',
   inheritAttrs: false,
   props: {
-    // ---------------------------- 来自 TypographyProps ----------------------------
-    /** 不传则从 ConfigProvider 解析（`apollo-typography`）。 */
-    prefixCls: { type: String, default: undefined },
-    /** 用户传的标签名。`Text`→`span`、`Paragraph`→`div`、`Link`→`a`、`Title`→`h1..h5`。 */
-    component: { type: String, default: undefined },
-    direction: { type: String as PropType<DirectionType>, default: undefined },
-    classNames: {
-      type: [Object, Function] as PropType<BlockProps['classNames']>,
-      default: undefined,
+    contentProps: {
+      type: Object as PropType<Readonly<ExtractPropTypes<typeof baseProps>>>,
+      required: true,
     },
-    styles: {
-      type: [Object, Function] as PropType<BlockProps['styles']>,
-      default: undefined,
-    },
-
-    // ---------------------------- 来自 BlockProps ----------------------------
-    actions: { type: Object as PropType<ActionsConfig>, default: undefined },
-    title: { type: String, default: undefined },
-    editable: {
-      type: [Boolean, Object] as PropType<boolean | EditConfig>,
-      default: undefined,
-    },
-    copyable: {
-      type: [Boolean, Object] as PropType<boolean | CopyConfig>,
-      default: undefined,
-    },
-    type: { type: String as PropType<BaseType>, default: undefined },
-    disabled: { type: Boolean, default: undefined },
-    ellipsis: {
-      type: [Boolean, Object] as PropType<boolean | EllipsisConfig>,
-      default: undefined,
-    },
-
-    // 七个装饰开关。⚠️ `default: undefined` 不是冗余的（PITFALLS 46）：
-    // 运行时类型含 `Boolean` 时，未传的 prop 会被 Vue 强制成 `false`。
-    code: { type: Boolean, default: undefined },
-    mark: { type: Boolean, default: undefined },
-    underline: { type: Boolean, default: undefined },
-    delete: { type: Boolean, default: undefined },
-    strong: { type: Boolean, default: undefined },
-    keyboard: { type: Boolean, default: undefined },
-    italic: { type: Boolean, default: undefined },
-
-    // ⚠️ 事件名必须全小写（PITFALLS 61）。声明成 prop 是为了把它们**从 `$attrs` 里摘出来**：
-    //    antd 把 `onMouseEnter` / `onMouseLeave` 解构掉，再包一层自己的逻辑往下传；
-    //    留在 `$attrs` 里会被 `{...attrs}` 原样覆盖掉这层逻辑。
-    onMouseenter: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onMouseleave: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
+    contentNodes: { type: Array as PropType<TypographyNode[]>, required: true },
   },
-  setup(props, { attrs, slots, expose }) {
+  setup(content, { attrs, expose }) {
+    // 公开 props 对象由外层 setup 持有，身份稳定，值始终保持 Vue 响应性。
+    const props = content.contentProps;
     const [textLocale] = useLocale('Text');
 
     const typographyRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
@@ -281,20 +292,8 @@ export const Base = defineComponent({
       () => props.direction,
     );
 
-    /**
-     * 默认插槽的**归一化**节点列表。
-     *
-     * ⚠️ 这不是「顺手多包一层」。antd 的 `children` 是一个**字符串 / React 元素 /
-     *    数组**；Vue 的插槽返回的却总是一个 **vnode 数组**，纯文字被包成 `Text`
-     *    vnode、单子节点还可能被包成 `Fragment`。凡是用到「`children` 是不是字符串」
-     *    的判据（`topAriaLabel`、`copyable` 的兜底文案、`Editable` 的初始值）都会因此
-     *    失准。归一化规则与理由见 `_util/nodes.ts` 的文件头。
-     *
-     * ⚠️ 它是 `computed`（而不是在渲染函数里现取现用），因为 `Ellipsis` 需要一份
-     *    **引用稳定**的内容来喂给它的 `watch`。每次渲染都新建数组会让测量依赖
-     *    每帧都「变了」，进而把二分裁剪打成死循环。
-     */
-    const nodeList = computed<TypographyNode[]>(() => toNodeList(slots.default?.() ?? null));
+    // 当前默认内容在外层 render 归一后传入；内部状态更新不会重建测量数组。
+    const nodeList = computed(() => content.contentNodes);
 
     /** 有没有可渲染的内容。对应 antd 的 `isReactRenderable(children)`（`copyable` 的图标模式）。 */
     const hasContent = computed(() => nodeList.value.length > 0);
@@ -782,6 +781,7 @@ export const Base = defineComponent({
       if (editing.value) {
         return h(Editable, {
           value: editConfig.value.text ?? childrenText.value ?? '',
+          ariaLabel: typeof attrs['aria-label'] === 'string' ? attrs['aria-label'] : undefined,
           onSave: onEditChange,
           onCancel: onEditCancel,
           onEnd: editConfig.value.onEnd,
@@ -875,6 +875,24 @@ export const Base = defineComponent({
           ),
       );
     };
+  },
+});
+
+/** 默认插槽只在这一层 render 求值，状态与量测层消费当前 VNode 数据。 */
+export const Base = defineComponent({
+  name: 'ATypographyBase',
+  inheritAttrs: false,
+  props: baseProps,
+  setup(props, { attrs, slots, expose }) {
+    const contentRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
+    expose({ nativeElement: computed(() => contentRef.value?.nativeElement ?? null) });
+    return () =>
+      h(BaseContent, {
+        ...attrs,
+        ref: contentRef,
+        contentProps: props,
+        contentNodes: toNodeList(slots.default?.() ?? null),
+      });
   },
 });
 

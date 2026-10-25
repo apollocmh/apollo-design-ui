@@ -35,6 +35,7 @@ import OverlayContent from './OverlayContent.vue';
 import PaginationContainers from './PaginationContainers.vue';
 import SwitchEvents from './SwitchEvents.vue';
 import TimelineNative from './TimelineNative.vue';
+import TypographySlots from './TypographySlots.vue';
 
 const Rows = defineComponent({
   setup() {
@@ -98,6 +99,7 @@ const Demo = {
   'mentions-native-events': MentionsNativeEvents,
   'mentions-keyboard': MentionsKeyboard,
   'mentions-empty': MentionsEmpty,
+  'typography-slots': TypographySlots,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,
