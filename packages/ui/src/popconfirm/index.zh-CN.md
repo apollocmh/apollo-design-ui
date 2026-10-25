@@ -97,6 +97,10 @@ import { Popconfirm } from '@apollo-design/ui';
 
 导出 `PopconfirmSlots`。四个内容槽也适用于 `PopconfirmPurePanel`；空槽不回退，移除槽才恢复 prop 或 locale。条件槽在当前 render 读取。内容函数 prop 已直接移除；异步确认等业务回调保留，见 [迁移记录](../../../../docs/migrations/overlay-content-slots.md)。
 
+### 原生 class/style
+
+原生 `class/style` 作用于浮层根，style 支持字符串、对象和混合数组，优先于语义根样式。PopconfirmPurePanel 转发 root/container/arrow 的 classNames/styles 给静态面板，icon/title/content 给确认正文；原生 style 只作用于面板根，不覆盖 styles.container。
+
 ### Ref
 
 `Popconfirm` 与 `Popover` 同物：`forceAlign` / `nativeElement` / `popupElement`。
@@ -106,3 +110,5 @@ import { Popconfirm } from '@apollo-design/ui';
 | Token | 说明 | 默认值 |
 | --- | --- | --- |
 | zIndexPopup | 浮层 z-index | zIndexPopupBase + 60 |
+
+[静态面板原生 style 迁移](../../../../docs/migrations/overlay-native-styles.md)。

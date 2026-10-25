@@ -46,6 +46,10 @@ subtitle: Tooltip
 
 `TooltipSlots` is exported. `TooltipPurePanel` accepts the same title data and named slot. Conditional slots are read during each render.
 
+### Native class/style
+
+`TooltipPurePanel` applies native class/style to the panel root. Styles accept strings, objects and mixed arrays, overriding matching semantic root styles. Removing the native style restores semantic values; CSS variables follow Vue merging rules.
+
 ### Expose
 
 `forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef`）。

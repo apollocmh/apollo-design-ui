@@ -14,3 +14,5 @@ title:
 ## en-US
 
 Native title, description and button slots support conditional presence, updates and empty content. Only removing a slot restores the prop or locale.
+
+原生字符串 style 与语义样式在面板根合并。 / Native string styles merge with semantic panel styles.

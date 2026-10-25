@@ -2329,7 +2329,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "【trigger 的第一个消费者】用于验证 ARCHITECTURE.md AR1（浮层定位像素级一致性）。必须先通过 PoC 验证再继续。\n2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。",
+      "notes": "【trigger 的第一个消费者】用于验证 ARCHITECTURE.md AR1（浮层定位像素级一致性）。必须先通过 PoC 验证再继续。\n2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2400,7 +2400,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。",
+      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3398,7 +3398,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。",
+      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

@@ -92,8 +92,14 @@ A simple and compact dialog used for asking confirmation of an action from the u
 
 `PopconfirmSlots` is exported. The four content slots also work in `PopconfirmPurePanel`. Present slots override all fallbacks, including empty content; removing a slot restores the prop or locale. Slots are read during render. Render-function props are removed directly; async confirmation callbacks remain supported. See the [migration](../../../../docs/migrations/overlay-content-slots.md).
 
+### Native class/style
+
+Native class/style apply to the popup root. Style accepts strings, objects and mixed arrays, overriding matching semantic root styles. PopconfirmPurePanel routes root/container/arrow classNames/styles to its static panel and icon/title/content to the confirmation body; native style applies only to the panel root and does not override styles.container.
+
 ### Theme Variables
 
 | Token | Description | Default |
 | --- | --- | --- |
 | zIndexPopup | z-index of the popup | zIndexPopupBase + 60 |
+
+[Native panel style migration](../../../../docs/migrations/overlay-native-styles.md).

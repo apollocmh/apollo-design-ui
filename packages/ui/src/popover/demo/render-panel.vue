@@ -28,7 +28,7 @@ const count = ref(0);
         data-native-popover-panel
         title="Title"
         placement="bottomLeft"
-        :style="{ width: '250px' }"
+        style="width: 250px"
       >
         <template v-if="show" #title>
           <strong v-if="!empty">Native popover {{ count }}</strong>

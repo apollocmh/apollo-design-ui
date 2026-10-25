@@ -9746,6 +9746,7 @@
         "files": [
           "packages/ui/src/popover/__tests__/a11y.test.ts",
           "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/native-attrs.test.ts",
           "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
@@ -9783,6 +9784,7 @@
         "files": [
           "packages/ui/src/popover/__tests__/a11y.test.ts",
           "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/native-attrs.test.ts",
           "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
@@ -9828,6 +9830,7 @@
         "files": [
           "packages/ui/src/popover/__tests__/a11y.test.ts",
           "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/native-attrs.test.ts",
           "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
@@ -9862,6 +9865,7 @@
         "files": [
           "packages/ui/src/popover/__tests__/a11y.test.ts",
           "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/native-attrs.test.ts",
           "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
@@ -9899,6 +9903,7 @@
         "files": [
           "packages/ui/src/popover/__tests__/a11y.test.ts",
           "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/native-attrs.test.ts",
           "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]

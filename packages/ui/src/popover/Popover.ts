@@ -18,6 +18,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  normalizeStyle,
   type PropType,
   type SlotsType,
   shallowRef,
@@ -197,10 +198,10 @@ const Popover = defineComponent({
         attrs.class as string | undefined,
       ),
     );
-    const rootStyles = computed<StyleLike>(() => ({
-      ...(mergedStyles.value.root ?? {}),
-      ...((attrs.style as StyleLike | undefined) ?? {}),
-    }));
+    const rootStyles = computed<StyleLike>(() => {
+      const style = normalizeStyle([mergedStyles.value.root, attrs.style]);
+      return typeof style === 'object' ? style : {};
+    });
 
     // ============================ Overlay ============================
     // antd：title/content 双双不可渲染 ⇒ overlay=null ⇒ Tooltip 的 noTitle 生效。

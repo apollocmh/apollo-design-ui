@@ -239,11 +239,7 @@ const PurePanel = defineComponent({
       // 确认树通过当前 content 槽传给静态 Popover 面板。
       // ⚠️ 末尾的 `...restAttrs` 会**覆盖** `class` / `style`（对象展开后者胜）
       //    ⇒ 先把它们摘掉，否则整条 `class: [prefixCls, …]` 被顶掉。
-      const {
-        class: _attrsClass,
-        style: _attrsStyle,
-        ...restAttrs
-      } = attrs as Record<string, unknown>;
+      const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs;
       void _attrsClass;
       void _attrsStyle;
 
@@ -254,8 +250,18 @@ const PurePanel = defineComponent({
           // 调用方原生 class / style（位置与原先的 props.className / props.style 一致）
           class: [prefixCls, attrs.class],
           style: attrs.style,
+          classNames: {
+            root: props.classNames?.root,
+            container: props.classNames?.container,
+            arrow: props.classNames?.arrow,
+          },
+          styles: {
+            root: props.styles?.root,
+            container: props.styles?.container,
+            arrow: props.styles?.arrow,
+          },
           ...restAttrs,
-        } as never,
+        },
         {
           content: () =>
             h(
@@ -277,7 +283,7 @@ const PurePanel = defineComponent({
                 onCancel: props.onCancel,
                 classNames: props.classNames,
                 styles: props.styles,
-              } as never,
+              },
               {
                 title: slots.title ? () => slots.title?.() : undefined,
                 description: slots.description ? () => slots.description?.() : undefined,
@@ -285,7 +291,7 @@ const PurePanel = defineComponent({
                 cancelText: slots.cancelText ? () => slots.cancelText?.() : undefined,
               },
             ),
-        } as never,
+        },
       );
     };
   },

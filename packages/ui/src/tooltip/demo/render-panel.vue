@@ -16,7 +16,7 @@ const count = ref(0);
     </p>
     <TooltipPurePanel title="Hello, Pink Pure Panel!" color="pink" />
     <TooltipPurePanel title="Hello, Customize Color Pure Panel!" color="#f50" />
-    <TooltipPurePanel data-native-tooltip-panel title="Hello, Pure Panel!" placement="bottomLeft" :style="{ width: '200px' }">
+    <TooltipPurePanel data-native-tooltip-panel title="Hello, Pure Panel!" placement="bottomLeft" style="width: 200px">
       <template v-if="show" #title><strong v-if="!empty">Native tooltip {{ count }}</strong></template>
     </TooltipPurePanel>
   </div>

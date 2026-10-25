@@ -33,6 +33,10 @@ subtitle: Popover
 
 `PopoverSlots` is exported. Both Popover and PopoverPurePanel read current slots during render, including conditional additions, removals and content updates. Render-function props are removed directly; see the [migration](../../../../docs/migrations/overlay-content-slots.md).
 
+### Native class/style
+
+Popover applies native class/style to the popup root, without adding them to the trigger. Style accepts strings, objects and mixed arrays, overriding matching styles.root values until removed. PopoverPurePanel applies native class/style only to its root, without duplicating styles on the container. Use styles.container/arrow and matching classNames for individual sections.
+
 ### Expose
 
 `forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef` 同形）。
@@ -42,3 +46,5 @@ subtitle: Popover
 - **薄包装**：主体逻辑全部在 Tooltip / `_internal/trigger.ts`，本组件只做内容
   与语义槽扩展（[`docs/analysis/popover.md`](../../../../docs/analysis/popover.md)）。
 - 与 antd 的已知差异见组件 README。
+
+[Native panel style migration](../../../../docs/migrations/overlay-native-styles.md).

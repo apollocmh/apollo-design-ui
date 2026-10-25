@@ -229,6 +229,9 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 浮层内容增量**：Tooltip / Popover / Popconfirm 及三种PurePanel统一当前槽优先，空槽不回退；移除内容函数prop，保留VNode/0数据和异步确认回调。9条首批回归修前8失败/1通过，补SSR水合、正文状态保持及kebab-case回调复现后共13条；六入口类型、模板及生产浏览器证据见 [专项报告](audit/2026-10-25-overlay-content-slots-remediation.md)。浮层原生attrs与其他F11候选继续复审，不把本批视作全库验收。
 
+
+**2026-10-25 浮层原生style增量**：三种PurePanel、Popover及Popconfirm的字符串style导致挂载异常/SSR无效CSS，首批14条中10失败/4通过；补齐面板外层语义转发，并另以两条失败回归直接移除React路径的根/container原生style重复落点。现根style与styles.container分工明确，见 [专项报告](audit/2026-10-25-overlay-native-styles-remediation.md) 与 [迁移记录](migrations/overlay-native-styles.md)。未把原本通过的attrs-only更新报作computed故障；其他attrs与图标槽继续复审。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -329,8 +332,8 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Carousel | 9/7 | —；自动切换计时器、键盘/触控 |
 | Collapse | 9/13 | **F07**；header slot 优先、动态图标/混合模式 |
 | Descriptions | 13/13 | **F08**；render 期间写 ref；复杂 slot 子项 |
-| Tooltip | 15/15 | F11：当前/空标题槽、VNode/0数据与类型已整改；原生attrs和Apollo视觉继续复审 |
-| Popover | 12/12 | F11：内容函数迁为原生槽、优先级/当前值/正文状态已修；原生attrs继续复审 |
+| Tooltip | 15/15 | F11：当前/空标题槽、VNode/0数据与类型、静态面板原生style已整改；其他attrs和Apollo视觉继续复审 |
+| Popover | 12/12 | F11：内容函数迁为原生槽、优先级/当前值/正文状态及原生style已修；其他attrs继续复审 |
 | Menu | 14/18 | 已整改 Trigger；`custom-popup-render` 能力按真实 API 核实 |
 | Dropdown | 19/21 | —；菜单容器滚动和键盘 |
 | Modal | 23/23 | —；focus/关闭/SSR motion 门禁 |
@@ -344,7 +347,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Cascader | 23/23 | F02 消费者；异步加载/slot |
 | Tree | 19/19 | —；虚拟/拖拽/键盘 |
 | TreeSelect | 19/15 | F02 消费者；`checkable` / renderPanel 类型与 Demo |
-| Popconfirm | 10/11 | F11：四内容槽及kebab-case业务回调/Promise链已修；原生attrs/图标槽与视觉继续复审 |
+| Popconfirm | 10/11 | F11：四内容槽、kebab-case业务回调/Promise链及面板style/语义已修；其他attrs/图标槽与视觉继续复审 |
 | Tour | 9/9 | —；定位/焦点/清理 |
 | FloatButton | 14/16 | 自定义浮层/拖动能力先定支持范围 |
 | Form | 35/44 | **F03 前缀/占位已验证**；动态 Form.List、验证竞态与 Demo 能力继续审查 |

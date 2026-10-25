@@ -37,6 +37,10 @@ try {
     path.join(temp, 'ConfirmCallbacks.vue'),
     callbacks.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/OverlayAttrs.vue'),
+    path.join(temp, 'NativeAttrs.vue'),
+  );
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
     JSON.stringify(

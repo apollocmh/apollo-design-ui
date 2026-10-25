@@ -39,6 +39,10 @@ subtitle: 气泡卡片
 
 导出 `PopoverSlots`。主组件与 `PopoverPurePanel` 均在当前 render 读取槽，支持条件出现、移除与内容更新。内容函数 prop 已直接移除，见 [迁移记录](../../../../docs/migrations/overlay-content-slots.md)。
 
+### 原生 class/style
+
+Popover 的原生 `class/style` 作用于浮层根，不传到触发元素。style 接受字符串、对象和混合数组，优先于 `styles.root`，移除后恢复语义值。PopoverPurePanel 的 class/style 只作用于面板根；不再把原生 style 重复应用到 container。分区样式使用 `styles.container/arrow` 与对应 classNames。
+
 ### Expose
 
 `forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef` 同形）。
@@ -48,3 +52,5 @@ subtitle: 气泡卡片
 - **薄包装**：主体逻辑全部在 Tooltip / `_internal/trigger.ts`，本组件只做内容
   与语义槽扩展（[`docs/analysis/popover.md`](../../../../docs/analysis/popover.md)）。
 - 与 antd 的已知差异见组件 README。
+
+[静态面板原生 style 迁移](../../../../docs/migrations/overlay-native-styles.md)。

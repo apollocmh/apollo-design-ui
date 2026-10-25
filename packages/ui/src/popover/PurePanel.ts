@@ -71,24 +71,20 @@ const PurePanel = defineComponent({
             `${prefixCls}-placement-${placement}`,
             mergedClassNames.value.root,
           ),
-          style: {
-            ...(mergedStyles.value.root ?? {}),
-            ...((attrs.style as StyleLike | undefined) ?? {}),
-          },
+          style: [mergedStyles.value.root, attrs.style],
           ...stripClassStyle(attrs),
         },
         [
-          h('div', { class: `${prefixCls}-arrow` }),
+          h('div', {
+            class: [`${prefixCls}-arrow`, mergedClassNames.value.arrow],
+            style: mergedStyles.value.arrow,
+          }),
           h(
             'div',
             {
               class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
-              // antd 事实契约：PurePanel 的 style 经 {...props} 摊进 rc Popup ⇒
-              // 在 root 与 container **双落点**（覆盖 styles.container）。L6 钉住。
-              style: {
-                ...(mergedStyles.value.container as StyleLike | undefined),
-                ...((attrs.style as StyleLike | undefined) ?? {}),
-              },
+              // 原生 style 只作用于根；容器保持独立的语义样式。
+              style: mergedStyles.value.container,
               role: 'tooltip',
             },
             [

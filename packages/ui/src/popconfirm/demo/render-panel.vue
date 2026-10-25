@@ -15,7 +15,7 @@ const count = ref(0);
       <button @click="empty = !empty">Empty popconfirm slots</button>
       <button @click="count++">Update popconfirm slots</button>
     </p>
-    <PopconfirmPurePanel data-native-popconfirm-panel title="Delete the task" description="Are you sure to delete this task?" ok-text="Confirm" cancel-text="Cancel">
+    <PopconfirmPurePanel data-native-popconfirm-panel title="Delete the task" description="Are you sure to delete this task?" ok-text="Confirm" cancel-text="Cancel" style="max-width: 360px" :styles="{ root: { minHeight: '80px' }, arrow: { opacity: 0.6 } }">
       <template v-if="show" #title><strong v-if="!empty">Native confirmation {{ count }}</strong></template>
       <template v-if="show" #description><span v-if="!empty">Current details {{ count }}</span></template>
       <template v-if="show" #okText><b v-if="!empty">Proceed {{ count }}</b></template>

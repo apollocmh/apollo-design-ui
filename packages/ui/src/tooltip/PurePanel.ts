@@ -57,11 +57,7 @@ const PurePanel = defineComponent({
             colorInfo.className,
             mergedClassNames.value.root,
           ),
-          style: {
-            ...(colorInfo.arrowStyle as StyleLike),
-            ...(mergedStyles.value.root ?? {}),
-            ...((attrs.style as StyleLike | undefined) ?? {}),
-          },
+          style: [colorInfo.arrowStyle, mergedStyles.value.root, attrs.style],
           ...stripClassStyle(attrs),
         },
         [

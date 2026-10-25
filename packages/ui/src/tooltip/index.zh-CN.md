@@ -51,6 +51,10 @@ subtitle: 文字提示
 
 `TooltipSlots` 已导出。`TooltipPurePanel` 支持同样的 title 数据与具名槽；条件槽每轮渲染读取。
 
+### 原生 class/style
+
+`TooltipPurePanel` 的原生 `class/style` 作用于面板根；style 支持字符串、对象及混合数组，优先于语义根样式。移除原生 style 后恢复语义值，CSS 变量按 Vue 规则合并。
+
 ### Expose
 
 `forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef`）。
