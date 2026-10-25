@@ -12,7 +12,9 @@ Progress与纯占位实际根原来丢失native class/style/id/data/名称ARIA�
 
 ## 检查
 
-根严格检查通过。新增测试的StyleValue使用浅引用，ARIA更新通过真实父级attrs，语义/placeholder对象保持同一引用，未新增公共prop或忽略类型诊断。文档顺序build → test → typecheck → content:check全部通过：84路由、999个Demo、14文件157条测试及72组件检查。Registry检查19项、内容清单检查及tooling8条通过；消费端与浏览器执行中。保留既有completed及视觉历史含义，不因本批样式修复宣称完整Image验收。
+根严格检查通过。新增测试的StyleValue使用浅引用，ARIA更新通过真实父级attrs，语义/placeholder对象保持同一引用，未新增公共prop或忽略类型诊断。文档顺序build → test → typecheck → content:check全部通过：84路由、999个Demo、14文件157条测试及72组件检查。Registry检查19项、内容清单检查及tooling8条通过。保留既有completed及视觉历史含义，不因本批样式修复宣称完整Image验收。
+
+发布消费端复制实际样式Demo及ImageStyles.vue，严格vue-tsc通过，无源码alias或测试声明。Chrome150.0.7871.125生产包验证四种根形态的字符串/数组/对象/移除循环、纯attrs更新、root/img独立padding与inline变量、稳定富节点/草稿/焦点，以及进度三态ARIA/事件和真实Demo，零Vue/page错误；原image-render脚本含无结束事件预览关闭也复跑通过。新增浏览器/消费代码Biome3文件通过；此前源代码/回归Biome4文件通过，git diff检查通过。日志分别为 `/tmp/apollo-image-styles-browser.log`、`/tmp/apollo-image-native-style-render-browser.log`、`/tmp/apollo-image-native-style-consumer.log`。
 
 UI构建已生成声明和69份CSS；L7复用本次产物，11项0FAIL/0PENDING。视觉检查仍失败，缺9张Apollo批准基线，未更新或复制旧参考图作为批准图。公共类型未变，保留上一阶段4文件10条类型门禁证据；本批以根严格检查及复制真实Demo/浏览器fixture的发布包vue-tsc验证新增消费代码。
 

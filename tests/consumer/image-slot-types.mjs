@@ -32,6 +32,21 @@ try {
     path.join(temp, 'ImageRender.vue'),
     fixture.replace('../../../packages/ui/src/image/demo/image-render.vue', './ImageDemo.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/style-class.vue'),
+    path.join(temp, 'ImageStyleDemo.vue'),
+  );
+  const styleFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageStyles.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageStyles.vue'),
+    styleFixture.replace(
+      '../../../packages/ui/src/image/demo/style-class.vue',
+      './ImageStyleDemo.vue',
+    ),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig } from '@apollo-design/ui';
@@ -72,7 +87,7 @@ void [slots, old, preview];`,
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Image: exact native slot info, VNode origin/optional src, current templates, unknown-slot/old-function rejection and untouched preview config type; no source aliases/test declarations',
+    'PASS published Image: exact native slot info, VNode origin/optional src, current templates and native root style demo/fixture, unknown-slot/old-function rejection and untouched preview config type; no source aliases/test declarations',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });
