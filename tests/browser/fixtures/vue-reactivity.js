@@ -24,6 +24,7 @@ import FormPrefix from './FormPrefix.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
+import MentionsBindings from './MentionsBindings.vue';
 import NativeAttrs from './NativeAttrs.vue';
 import OverlayAttrs from './OverlayAttrs.vue';
 import OverlayContent from './OverlayContent.vue';
@@ -88,6 +89,7 @@ const Demo = {
   'overlay-content': OverlayContent,
   'overlay-attrs': OverlayAttrs,
   'mentions-popup': MentionsPopup,
+  'mentions-bindings': MentionsBindings,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

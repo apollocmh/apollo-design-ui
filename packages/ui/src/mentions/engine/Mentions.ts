@@ -680,6 +680,7 @@ export const RcMentions = defineComponent({
   props: {
     prefixCls: { type: String, default: 'rc-mentions' },
     className: { type: [String, Array, Object] as PropType<unknown>, default: undefined },
+    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     suffix: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     defaultValue: { type: String as PropType<string | undefined>, default: undefined },
     value: { type: String as PropType<string | undefined>, default: undefined },
@@ -755,6 +756,7 @@ export const RcMentions = defineComponent({
         {
           prefixCls: props.prefixCls,
           suffix: props.suffix,
+          style: props.style,
           value: mergedValue.value,
           allowClear: props.allowClear,
           className: [
@@ -778,6 +780,7 @@ export const RcMentions = defineComponent({
                 ...attrs,
                 ref: innerRef,
                 className: props.classNames?.mentions,
+                style: props.style,
                 styles: props.styles,
                 classNames: props.classNames,
                 prefixCls: props.prefixCls,

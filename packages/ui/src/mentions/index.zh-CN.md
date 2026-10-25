@@ -49,7 +49,7 @@ subtitle: 提及
 | validateSearch | 搜索串是否合法 | `(text, split) => boolean` | 不含 `split` | × |
 | notFoundContent | 无候选时的内容 | `VNodeChild` | `renderEmpty('Select')` | ✅（`mentions.notFoundContent`） |
 | loading | 候选加载中（面板显示 Spin，且 **Enter 不选中**） | `boolean` | `false` | × |
-| silent | 静默（`loading` 时自动置真）—— 置真后 Enter 不选中 | `boolean` | `false` | × |
+| silent | 显式静默，Enter 不选中；独立于 loading，loading 时始终禁止选择 | `boolean` | `false` | × |
 | placement | 浮层方位 | `'top' \| 'bottom'` | `'bottom'` | × |
 | getPopupContainer | 浮层挂载点 | `() => HTMLElement` | — | ✅ |
 | popupClassName | 浮层额外类名 | `string` | — | × |
@@ -66,7 +66,9 @@ subtitle: 提及
 | classNames | 语义化类名（`root` / `textarea` / `popup` / `suffix`），支持函数形态 | `MentionsSemanticClassNames \| ((info) => …)` | — | ✅（`mentions.classNames`） |
 | styles | 语义化样式（同上 4 键），支持函数形态 | `MentionsSemanticStyles \| ((info) => …)` | — | ✅（`mentions.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-mentions` | × |
-| class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | — | × |
+| class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `StyleValue` | — | × |
+
+原生 class/style 在裸形态、allowClear 及 Form 反馈三种形态中都落到最外层根。style 支持字符串、对象、混合数组和 CSS 变量，优先于 styles.root，移除后恢复语义值；id/ARIA 继续属于 textarea。样式与 silent/loading 的当前值更新不会重挂编辑器。
 
 #### MentionsOptionProps
 

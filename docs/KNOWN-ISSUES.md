@@ -238,6 +238,9 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Mentions浮层增量**：旧popupRender函数prop直接迁为单对象原生槽，四层当前转发，末端在render向Trigger传VNode数据。两条条件/空/当前数据与键盘回归修前失败，SSR守卫原已通过；保留单次选择与编辑器状态，修正类名数组的as never警告，并移除已补可访问名Demo的label豁免，见 [专项报告](audit/2026-10-25-mentions-popup-slot-remediation.md) 与 [迁移记录](migrations/mentions-popup-slot.md)。其余Mentions内容/attrs问题不由本批关闭。
 
+
+**2026-10-25 Mentions包装绑定增量**：8条回归修前6失败/2裸形态通过，确认clear/Form反馈外层根style漏传、显式silent被loading值替代；四行修复支持三形态当前根样式/恢复、SSR及silent/loading独立控制，见 [专项报告](audit/2026-10-25-mentions-native-bindings-remediation.md)。class原本正常，未误报为全部attrs丢弃；其他内容/事件继续复审。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -372,7 +375,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
 | Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
-| Mentions | 16/16 | F11：popupRender已直接迁为当前单对象槽；option/notFound内容、原生attrs及其他契约继续复审 |
+| Mentions | 16/16 | F11：popupRender已直接迁为当前单对象槽；clear/反馈根style及silent已修；option/notFound内容、原生事件及其他契约继续复审 |
 | ColorPicker | 16/16 | F10 消费 `pickAttrs`；颜色与 alpha/键盘 |
 | DatePicker | 28/32 | **F01**；实际 input 属性与可访问性 |
 | TimePicker | 16/17 | **F01** 消费者；`render-panel` 场景按 API 决定 |

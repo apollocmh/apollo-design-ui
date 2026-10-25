@@ -19,6 +19,10 @@ try {
     path.join(root, 'packages/ui/src/mentions/demo/popupRender.vue'),
     path.join(temp, 'Consumer.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/MentionsBindings.vue'),
+    path.join(temp, 'NativeBindings.vue'),
+  );
   const fixture = fs.readFileSync(
     path.join(root, 'packages/ui/src/mentions/__tests__/fixtures/PopupSlot.vue'),
     'utf8',

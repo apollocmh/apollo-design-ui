@@ -320,7 +320,7 @@ export const MentionsComponent = defineComponent({
         {
           ...restAttrs,
           ref: innerRef,
-          silent: props.loading,
+          silent: props.loading || props.silent,
           prefixCls: p,
           notFoundContent: notFoundContentEle.value,
           className: mergedClassName,

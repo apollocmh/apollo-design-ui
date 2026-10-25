@@ -49,7 +49,7 @@ See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 | validateSearch | Whether the search text is valid | `(text, split) => boolean` | Does not contain `split` | × |
 | notFoundContent | Content shown when there is no candidate | `VNodeChild` | `renderEmpty('Select')` | ✅ (`mentions.notFoundContent`) |
 | loading | Candidates are loading (shows a Spin and **Enter does not select**) | `boolean` | `false` | × |
-| silent | Silent (forced true while `loading`) — Enter does not select | `boolean` | `false` | × |
+| silent | Explicitly suppress selection on Enter, independently of loading; loading always suppresses selection | `boolean` | `false` | × |
 | placement | Popup placement | `'top' \| 'bottom'` | `'bottom'` | × |
 | getPopupContainer | Popup mount point | `() => HTMLElement` | — | ✅ |
 | popupClassName | Extra class name for the popup | `string` | — | × |
@@ -66,7 +66,9 @@ See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 | classNames | Semantic class names (`root` / `textarea` / `popup` / `suffix`), function supported | `MentionsSemanticClassNames \| ((info) => …)` | — | ✅ (`mentions.classNames`) |
 | styles | Semantic styles (same 4 keys), function supported | `MentionsSemanticStyles \| ((info) => …)` | — | ✅ (`mentions.styles`) |
 | prefixCls | Class name prefix | `string` | From ConfigProvider, fallback `apollo-mentions` | × |
-| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | — | × |
+| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `StyleValue` | — | × |
+
+Native class/style apply to the outer root in bare, allowClear and Form feedback modes. Style accepts strings, objects, mixed arrays and CSS variables, overrides matching styles.root values, and restores them when removed. id/ARIA remain on the textarea. Current style and silent/loading updates preserve the editor node.
 
 #### MentionsOptionProps
 
