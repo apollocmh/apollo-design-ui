@@ -53,6 +53,7 @@ try {
   assert.equal(await tooltip.innerText(), 'Tooltip fallback');
   assert.match(await popover.innerText(), /Popover fallback/);
   assert.match(await confirm.innerText(), /Confirm fallback/);
+  assert.equal(await confirm.locator('[aria-label="exclamation-circle"]').count(), 1);
   const input = page.getByRole('textbox', { name: 'Popover popup note', exact: true });
   await input.fill('kept in popup');
   const inputNode = await input.elementHandle();
@@ -60,20 +61,24 @@ try {
   assert.equal(await tooltip.innerText(), 'Tooltip 0');
   assert.match(await popover.innerText(), /Popover 0/);
   assert.match(await confirm.innerText(), /Confirm 0/);
+  assert.equal(await confirm.locator('[data-popup-icon]').getAttribute('data-count'), '0');
   assert.equal(await confirm.getByRole('button', { name: 'Proceed 0', exact: true }).count(), 1);
   await page.getByRole('button', { name: 'Update popup slots', exact: true }).click();
   assert.equal(await tooltip.innerText(), 'Tooltip 1');
   assert.match(await popover.innerText(), /Popover 1/);
   assert.match(await confirm.innerText(), /Description 1/);
+  assert.equal(await confirm.locator('[data-popup-icon]').getAttribute('data-count'), '1');
   assert.equal(await input.inputValue(), 'kept in popup');
   assert.equal(await input.evaluate((current, old) => current === old, inputNode), true);
   await page.getByRole('button', { name: 'Empty popup slots', exact: true }).click();
   assert.equal(await tooltip.innerText(), '');
   assert.equal(await popover.locator('.apollo-popover-title').innerText(), '');
   assert.equal((await confirm.innerText()).trim(), '');
+  assert.equal(await confirm.locator('.apollo-popconfirm-message-icon').count(), 0);
   await page.getByRole('button', { name: 'Toggle popup slots', exact: true }).click();
   assert.equal(await tooltip.innerText(), 'Tooltip fallback');
   assert.match(await confirm.innerText(), /Confirm prop/);
+  assert.equal(await confirm.locator('[aria-label="exclamation-circle"]').count(), 1);
   await page.getByRole('button', { name: 'Empty popup slots', exact: true }).click();
   await page.getByRole('button', { name: 'Toggle popup slots', exact: true }).click();
 
@@ -99,6 +104,22 @@ try {
     await page.getByRole('button', { name: `Toggle ${name} ${button}`, exact: true }).click();
     assert.equal(await panel.innerText(), fallback);
   }
+  const iconPanel = page.locator('[data-native-icon-panel]');
+  const note = iconPanel.getByRole('textbox', { name: 'Native icon note', exact: true });
+  await note.fill('kept across icon slots');
+  const noteNode = await note.elementHandle();
+  assert.equal(await iconPanel.locator('[data-native-icon-count]').innerText(), '0');
+  await page.getByRole('button', { name: 'Update native icon', exact: true }).click();
+  assert.equal(await iconPanel.locator('[data-native-icon-count]').innerText(), '1');
+  await page.getByRole('button', { name: 'Empty native icon slot', exact: true }).click();
+  assert.equal(await iconPanel.locator('.apollo-popconfirm-message-icon').count(), 0);
+  await page.getByRole('button', { name: 'Toggle native icon slot', exact: true }).click();
+  assert.equal(await iconPanel.locator('.apollo-popconfirm-message-icon').count(), 0);
+  await page.getByRole('button', { name: 'Empty native icon slot', exact: true }).click();
+  await page.getByRole('button', { name: 'Toggle native icon slot', exact: true }).click();
+  assert.equal(await iconPanel.locator('[data-native-icon-count]').innerText(), '1');
+  assert.equal(await note.inputValue(), 'kept across icon slots');
+  assert.equal(await note.evaluate((node, old) => node === old, noteNode), true);
   const ok = confirm.locator('.apollo-popconfirm-buttons button').last();
   assert.equal(await ok.innerText(), 'Proceed 1');
   await ok.click();
@@ -110,7 +131,7 @@ try {
   await confirm.waitFor({ state: 'hidden' });
   assert.deepEqual(errors, []);
   console.log(
-    `PASS Chrome ${browser.version()}: six native overlay components, current/empty/removed slots, stable input, and Promise confirmation without duplicate submission; zero Vue/page errors`,
+    `PASS Chrome ${browser.version()}: six native overlay components including native icon slots, current/empty/removed content, stable input, and Promise confirmation without duplicate submission; zero Vue/page errors`,
   );
 } finally {
   await browser?.close();

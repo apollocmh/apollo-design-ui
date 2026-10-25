@@ -18,7 +18,7 @@
 
 import { ExclamationCircleFilled } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
-import { isRenderable } from '@apollo-design/utils';
+import { isEmptyVNode, isRenderable } from '@apollo-design/utils';
 import { defineComponent, h, type PropType, type SlotsType } from 'vue';
 
 import ActionButton, { convertLegacyProps } from '../_internal/action-button';
@@ -96,7 +96,12 @@ export const Overlay = defineComponent({
     const [contextLocale] = useLocale('Popconfirm');
 
     return () => {
-      const icon = props.icon === undefined ? h(ExclamationCircleFilled) : props.icon;
+      const icon = slots.icon
+        ? slots.icon()
+        : props.icon === undefined
+          ? h(ExclamationCircleFilled)
+          : props.icon;
+      const hasIcon = icon !== '' && !isEmptyVNode(icon);
       const title = slots.title ? slots.title() : props.title;
       const description = slots.description ? slots.description() : props.description;
       // 只有未提供槽时才以字符串 prop / locale 兜底；空槽保持为空。
@@ -113,8 +118,7 @@ export const Overlay = defineComponent({
         },
         [
           h('div', { class: `${props.prefixCls}-message` }, [
-            // `icon` 显式 false 时不渲染（上游 `{icon && …}`）
-            icon
+            hasIcon
               ? h(
                   'span',
                   {
@@ -285,6 +289,7 @@ const PurePanel = defineComponent({
                 styles: props.styles,
               },
               {
+                icon: slots.icon ? () => slots.icon?.() : undefined,
                 title: slots.title ? () => slots.title?.() : undefined,
                 description: slots.description ? () => slots.description?.() : undefined,
                 okText: slots.okText ? () => slots.okText?.() : undefined,

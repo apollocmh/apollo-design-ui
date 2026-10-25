@@ -23,7 +23,6 @@
  *    icon/title/content 走 Overlay 的（且 description 用 `content` 槽）。
  */
 
-import { ExclamationCircleFilled } from '@apollo-design/icons';
 import { omit, useControlledValue } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, type SlotsType, shallowRef } from 'vue';
 import type { TriggerAlign } from '../_internal/trigger';
@@ -279,7 +278,7 @@ const Popconfirm = defineComponent({
             Overlay,
             {
               prefixCls: p,
-              icon: props.icon === undefined ? h(ExclamationCircleFilled) : props.icon,
+              icon: props.icon,
               okType: props.okType,
               okButtonProps: props.okButtonProps,
               cancelButtonProps: props.cancelButtonProps,
@@ -298,6 +297,7 @@ const Popconfirm = defineComponent({
             // ⚠️ C8：富内容走**插槽**（`#okText` / `#cancelText` / `#title` /
             //    `#description`）—— Overlay 内部是「slot 优先」（Issue #26.4）。
             {
+              icon: slots.icon ? () => slots.icon?.() : undefined,
               title: slots.title ? () => slots.title?.() : undefined,
               description: slots.description ? () => slots.description?.() : undefined,
               okText: slots.okText ? () => slots.okText?.() : undefined,

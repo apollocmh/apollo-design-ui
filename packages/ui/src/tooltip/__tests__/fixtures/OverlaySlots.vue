@@ -13,8 +13,8 @@ const oldRenderer = () => 'Old content';
   <TooltipPurePanel :title="tooltip.title"><template #title><b>Panel title</b></template></TooltipPurePanel>
   <Popover v-bind="popover"><button>Popover</button><template #title><b>Title</b></template><template #content><input aria-label="Note" /></template></Popover>
   <PopoverPurePanel :title="popover.title" :content="popover.content"><template #title /><template #content><b>Content</b></template></PopoverPurePanel>
-  <Popconfirm v-bind="popconfirm"><button>Confirm</button><template #title><b>Title</b></template><template #description><i>Details</i></template><template #okText><b>Proceed</b></template><template #cancelText>Back</template></Popconfirm>
-  <PopconfirmPurePanel :title="popconfirm.title" :description="popconfirm.description"><template #title /><template #description><b>Description</b></template><template #okText>Proceed</template><template #cancelText>Back</template></PopconfirmPurePanel>
+  <Popconfirm v-bind="popconfirm"><button>Confirm</button><template #icon><b>!</b></template><template #title><b>Title</b></template><template #description><i>Details</i></template><template #okText><b>Proceed</b></template><template #cancelText>Back</template></Popconfirm>
+  <PopconfirmPurePanel :title="popconfirm.title" :description="popconfirm.description"><template #icon /><template #title /><template #description><b>Description</b></template><template #okText>Proceed</template><template #cancelText>Back</template></PopconfirmPurePanel>
   <!-- @vue-expect-error Rendering functions are replaced by #title. -->
   <Tooltip :title="oldRenderer" />
   <!-- @vue-expect-error Rendering functions are replaced by #content. -->

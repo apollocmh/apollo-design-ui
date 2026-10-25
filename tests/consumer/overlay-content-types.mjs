@@ -9,7 +9,19 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-overlay-content-types-'));
 try {
-  fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
+  fs.mkdirSync(path.join(temp, 'node_modules/@apollo-design'), { recursive: true });
+  for (const name of ['ui', 'icons', 'theme']) {
+    fs.symlinkSync(
+      path.join(root, `packages/${name}`),
+      path.join(temp, `node_modules/@apollo-design/${name}`),
+      'dir',
+    );
+  }
+  fs.symlinkSync(
+    path.join(root, 'packages/ui/node_modules/vue'),
+    path.join(temp, 'node_modules/vue'),
+    'dir',
+  );
   for (const name of ['tooltip', 'popover', 'popconfirm']) {
     assert.ok(
       fs.existsSync(path.join(root, `packages/ui/dist/${name}/interface.d.ts`)),
@@ -40,6 +52,10 @@ try {
   fs.copyFileSync(
     path.join(root, 'tests/browser/fixtures/OverlayAttrs.vue'),
     path.join(temp, 'NativeAttrs.vue'),
+  );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/popconfirm/demo/icon.vue'),
+    path.join(temp, 'NativeIcon.vue'),
   );
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
@@ -72,7 +88,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS six published overlay components: native slots, VNode/zero data, renderer rejection and three interactive template demos',
+    'PASS six published overlay components: native content/icon slots, VNode/zero data, renderer rejection, four template demos and native styles through package exports',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

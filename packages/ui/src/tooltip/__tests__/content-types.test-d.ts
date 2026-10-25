@@ -22,6 +22,7 @@ it('content data and native slots share VNodeChild, without render-function prop
   expectTypeOf<NonNullable<TooltipSlots['title']>>().toEqualTypeOf<() => VNodeChild>();
   expectTypeOf<NonNullable<PopoverSlots['content']>>().toEqualTypeOf<() => VNodeChild>();
   expectTypeOf<NonNullable<PopconfirmSlots['description']>>().toEqualTypeOf<() => VNodeChild>();
+  expectTypeOf<NonNullable<PopconfirmSlots['icon']>>().toEqualTypeOf<() => VNodeChild>();
   expectTypeOf<NonNullable<PopconfirmSlots['okText']>>().toEqualTypeOf<() => VNodeChild>();
   const tooltip: TooltipProps = { title: 0 };
   const popover: PopoverProps = { title: h('b', 'Title'), content: ['Body', 0] };

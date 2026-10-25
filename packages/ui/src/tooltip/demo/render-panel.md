@@ -3,11 +3,11 @@ order: 110
 ---
 ## zh-CN
 
-静态面板无需触发元素。切换、更新或清空原生 `#title`，验证空槽覆盖 prop，移除槽才恢复标题数据。
+静态面板无需触发元素。切换、更新或清空原生 `#title`，验证空槽覆盖 prop，移除槽才恢复标题数据。原生字符串 style 与语义根样式按 Vue 规则合并。
 
 ## en-US
 
-Static panels need no trigger. Toggle, update or empty the native title slot. Empty slots override the prop; removing the slot restores the title data.
+Static panels need no trigger. Toggle, update or empty the native title slot. Empty slots override the prop; removing the slot restores the title data. Native string styles merge with semantic root styles.
 
 ```vue
 <script setup lang="ts">
@@ -35,5 +35,3 @@ const count = ref(0);
 </template>
 
 ```
-
-原生字符串 style 与语义样式在面板根合并。 / Native string styles merge with semantic panel styles.

@@ -23,6 +23,7 @@ export interface PopconfirmSlots {
   default?: () => VNodeChild;
   title?: () => VNodeChild;
   description?: () => VNodeChild;
+  icon?: () => VNodeChild;
   okText?: () => VNodeChild;
   cancelText?: () => VNodeChild;
 }

@@ -8,20 +8,20 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 516,
+    "rows": 517,
     "byCategory": {
       "data": 134,
       "component-content-candidate": 153,
       "deprecated": 53,
-      "internal": 95,
+      "internal": 96,
       "render-function-candidate": 69,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
-      "review": 210,
-      "skip": 148,
-      "implemented-verified": 12
+      "review": 204,
+      "skip": 149,
+      "implemented-verified": 18
     }
   },
   "rows": [
@@ -9432,13 +9432,14 @@
       "owner": "PopconfirmProps",
       "prop": "description",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/popconfirm/interface.ts:80",
+      "source": "packages/ui/src/popconfirm/interface.ts:81",
       "slotRuntime": {
-        "status": "source-reference",
+        "status": "verified",
         "files": [
           "packages/ui/src/popconfirm/Popconfirm.ts",
           "packages/ui/src/popconfirm/PurePanel.ts"
-        ]
+        ],
+        "report": "docs/audit/2026-10-25-overlay-content-slots-remediation.md"
       },
       "slotType": {
         "status": "source-reference",
@@ -9449,60 +9450,72 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/popconfirm/demo/icon.vue",
           "packages/ui/src/popconfirm/demo/render-panel.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
           "packages/ui/src/popconfirm/__tests__/index.test.ts",
           "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "popconfirm",
       "owner": "PopconfirmProps",
       "prop": "icon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/popconfirm/interface.ts:104",
+      "source": "packages/ui/src/popconfirm/interface.ts:105",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "verified",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts",
+          "packages/ui/src/popconfirm/PurePanel.ts"
+        ],
+        "report": "docs/audit/2026-10-25-popconfirm-icon-slot-remediation.md"
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/icon.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
           "packages/ui/src/popconfirm/__tests__/index.test.ts",
           "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
           "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "popconfirm",
       "owner": "PopconfirmProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/popconfirm/interface.ts:78",
+      "source": "packages/ui/src/popconfirm/interface.ts:79",
       "slotRuntime": {
-        "status": "source-reference",
+        "status": "verified",
         "files": [
           "packages/ui/src/popconfirm/Popconfirm.ts",
           "packages/ui/src/popconfirm/PurePanel.ts"
-        ]
+        ],
+        "report": "docs/audit/2026-10-25-overlay-content-slots-remediation.md"
       },
       "slotType": {
         "status": "source-reference",
@@ -9520,20 +9533,21 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
           "packages/ui/src/popconfirm/__tests__/index.test.ts",
           "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
           "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "popconfirm",
       "owner": "PopconfirmSlots",
       "prop": "cancelText",
       "category": "internal",
-      "source": "packages/ui/src/popconfirm/interface.ts:27",
+      "source": "packages/ui/src/popconfirm/interface.ts:28",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9591,6 +9605,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
           "packages/ui/src/popconfirm/__tests__/index.test.ts",
           "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
           "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
@@ -9621,13 +9636,52 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/popconfirm/demo/icon.vue",
           "packages/ui/src/popconfirm/demo/render-panel.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
           "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popconfirm",
+      "owner": "PopconfirmSlots",
+      "prop": "icon",
+      "category": "internal",
+      "source": "packages/ui/src/popconfirm/interface.ts:26",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts",
+          "packages/ui/src/popconfirm/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/icon.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
+          "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
           "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
         ]
       },
@@ -9639,7 +9693,7 @@
       "owner": "PopconfirmSlots",
       "prop": "okText",
       "category": "internal",
-      "source": "packages/ui/src/popconfirm/interface.ts:26",
+      "source": "packages/ui/src/popconfirm/interface.ts:27",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9700,6 +9754,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
           "packages/ui/src/popconfirm/__tests__/index.test.ts",
           "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
           "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
@@ -9715,11 +9770,12 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/popover/interface.ts:61",
       "slotRuntime": {
-        "status": "source-reference",
+        "status": "verified",
         "files": [
           "packages/ui/src/popover/Popover.ts",
           "packages/ui/src/popover/PurePanel.ts"
-        ]
+        ],
+        "report": "docs/audit/2026-10-25-overlay-content-slots-remediation.md"
       },
       "slotType": {
         "status": "source-reference",
@@ -9751,8 +9807,8 @@
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "popover",
@@ -9761,11 +9817,12 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/popover/interface.ts:59",
       "slotRuntime": {
-        "status": "source-reference",
+        "status": "verified",
         "files": [
           "packages/ui/src/popover/Popover.ts",
           "packages/ui/src/popover/PurePanel.ts"
-        ]
+        ],
+        "report": "docs/audit/2026-10-25-overlay-content-slots-remediation.md"
       },
       "slotType": {
         "status": "source-reference",
@@ -9789,8 +9846,8 @@
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "popover",
@@ -13709,11 +13766,12 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/tooltip/interface.ts:83",
       "slotRuntime": {
-        "status": "source-reference",
+        "status": "verified",
         "files": [
           "packages/ui/src/tooltip/PurePanel.ts",
           "packages/ui/src/tooltip/Tooltip.ts"
-        ]
+        ],
+        "report": "docs/audit/2026-10-25-overlay-content-slots-remediation.md"
       },
       "slotType": {
         "status": "source-reference",
@@ -13740,8 +13798,8 @@
           "packages/ui/src/tooltip/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "tooltip",

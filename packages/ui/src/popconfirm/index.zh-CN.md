@@ -77,7 +77,7 @@ import { Popconfirm } from '@apollo-design/ui';
 | okButtonProps | 确认按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
 | cancelButtonProps | 取消按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
 | showCancel | 是否显示取消按钮 | boolean | true |
-| icon | 自定义图标；`false` 时不显示 | VNode \| false | ExclamationCircleFilled |
+| icon | 图标数据；`false` 时不显示。模板组合使用 `#icon` | VNode \| string \| false | ExclamationCircleFilled |
 | onOpenChange | 展开状态变化 | (open: boolean) => void | - |
 | onConfirm | 点击确认 | (e?: MouseEvent) => void \| Promise | - |
 | onCancel | 点击取消 | (e?: MouseEvent) => void | - |
@@ -93,9 +93,10 @@ import { Popconfirm } from '@apollo-design/ui';
 | --- | --- |
 | default | 触发元素（仅 Popconfirm） |
 | title / description | 标题 / 描述，优先于同名 prop |
+| icon | 图标内容，优先于 icon 数据或默认图标；空槽不渲染包裹 |
 | okText / cancelText | 按钮内容，优先于字符串 prop 和 locale |
 
-导出 `PopconfirmSlots`。四个内容槽也适用于 `PopconfirmPurePanel`；空槽不回退，移除槽才恢复 prop 或 locale。条件槽在当前 render 读取。内容函数 prop 已直接移除；异步确认等业务回调保留，见 [迁移记录](../../../../docs/migrations/overlay-content-slots.md)。
+导出 `PopconfirmSlots`。五个内容槽也适用于 `PopconfirmPurePanel`；空槽不回退，移除槽才恢复 prop、默认图标或 locale。条件槽在当前 render 读取，图标切换保持正文节点与输入状态。内容函数 prop 已直接移除；异步确认等业务回调保留，见 [迁移记录](../../../../docs/migrations/overlay-content-slots.md)。
 
 ### 原生 class/style
 

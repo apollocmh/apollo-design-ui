@@ -9,10 +9,8 @@ title:
 
 ## zh-CN
 
-使用原生标题、描述及按钮内容槽；切换、更新和清空后，只有移除槽才恢复 prop / locale。
+使用原生标题、描述及按钮内容槽；切换、更新和清空后，只有移除槽才恢复 prop / locale。原生字符串 style 与语义根样式按 Vue 规则合并。
 
 ## en-US
 
-Native title, description and button slots support conditional presence, updates and empty content. Only removing a slot restores the prop or locale.
-
-原生字符串 style 与语义样式在面板根合并。 / Native string styles merge with semantic panel styles.
+Native title, description and button slots support conditional presence, updates and empty content. Only removing a slot restores the prop or locale. Native string styles merge with semantic root styles.

@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、516 行 owner/field 清单。内容候选 153、渲染候选 69、数据/配置 146、内部/废弃 148；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、517 行 owner/field 清单。内容候选 153、渲染候选 69、数据/配置 146、内部/废弃 149；只将十八个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -231,6 +231,9 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 
 **2026-10-25 浮层原生style增量**：三种PurePanel、Popover及Popconfirm的字符串style导致挂载异常/SSR无效CSS，首批14条中10失败/4通过；补齐面板外层语义转发，并另以两条失败回归直接移除React路径的根/container原生style重复落点。现根style与styles.container分工明确，见 [专项报告](audit/2026-10-25-overlay-native-styles-remediation.md) 与 [迁移记录](migrations/overlay-native-styles.md)。未把原本通过的attrs-only更新报作computed故障；其他attrs与图标槽继续复审。
+
+
+**2026-10-25 Popconfirm图标槽增量**：六条回归修前全失败，补原生#icon并按当前函数转发，空槽不保留图标间距、移除槽恢复默认/VNode/false数据；正文输入与焦点、SSR及类型验证见 [专项报告](audit/2026-10-25-popconfirm-icon-slot-remediation.md)。清单按具体报告关联六个浮层字段，verified18/review204，不代表剩余缺陷数。
 
 ---
 
@@ -347,7 +350,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Cascader | 23/23 | F02 消费者；异步加载/slot |
 | Tree | 19/19 | —；虚拟/拖拽/键盘 |
 | TreeSelect | 19/15 | F02 消费者；`checkable` / renderPanel 类型与 Demo |
-| Popconfirm | 10/11 | F11：四内容槽、kebab-case业务回调/Promise链及面板style/语义已修；其他attrs/图标槽与视觉继续复审 |
+| Popconfirm | 10/11 | F11：四内容槽、kebab-case业务回调/Promise链及面板style/语义已修；原生图标槽已补；其他attrs与视觉继续复审 |
 | Tour | 9/9 | —；定位/焦点/清理 |
 | FloatButton | 14/16 | 自定义浮层/拖动能力先定支持范围 |
 | Form | 35/44 | **F03 前缀/占位已验证**；动态 Form.List、验证竞态与 Demo 能力继续审查 |

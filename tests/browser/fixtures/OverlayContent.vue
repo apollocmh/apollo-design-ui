@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Popconfirm, Popover, Tooltip } from '@apollo-design/ui';
 import { ref } from 'vue';
+import NativeIcon from '../../../packages/ui/src/popconfirm/demo/icon.vue';
 import ConfirmPanel from '../../../packages/ui/src/popconfirm/demo/render-panel.vue';
 import PopoverPanel from '../../../packages/ui/src/popover/demo/render-panel.vue';
 import TooltipPanel from '../../../packages/ui/src/tooltip/demo/render-panel.vue';
@@ -40,6 +41,7 @@ const onConfirmOpenChange = (next: boolean) => {
       </Popover>
       <Popconfirm :open="confirmOpen" :on-open-change="onConfirmOpenChange" id="native-confirm-main" title="Confirm fallback" description="Description fallback" ok-text="Confirm prop" cancel-text="Cancel prop" :on-confirm="confirm">
         <button>Confirm target</button>
+        <template v-if="show" #icon><span v-if="!empty" data-popup-icon :data-count="count">!</span></template>
         <template v-if="show" #title><strong v-if="!empty">Confirm {{ count }}</strong></template>
         <template v-if="show" #description>
           <span v-if="!empty">Description {{ count }}</span>
@@ -52,5 +54,6 @@ const onConfirmOpenChange = (next: boolean) => {
     <TooltipPanel />
     <PopoverPanel />
     <ConfirmPanel />
+    <NativeIcon />
   </div>
 </template>

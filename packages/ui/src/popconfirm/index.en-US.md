@@ -74,7 +74,7 @@ A simple and compact dialog used for asking confirmation of an action from the u
 | okButtonProps | Props of the OK button; use Vue-native `class` for root styling | PopconfirmButtonProps | - |
 | cancelButtonProps | Props of the Cancel button; use Vue-native `class` for root styling | PopconfirmButtonProps | - |
 | showCancel | Whether to show the Cancel button | boolean | true |
-| icon | Custom icon; `false` hides it | VNode \| false | ExclamationCircleFilled |
+| icon | Icon data; `false` hides it. Template composition uses `#icon` | VNode \| string \| false | ExclamationCircleFilled |
 | onOpenChange | Called when the open state changes | (open: boolean) => void | - |
 | onConfirm | Called when OK is clicked; a returned Promise delays closing | (e?: MouseEvent) => void \| Promise | - |
 | onCancel | Called when Cancel is clicked | (e?: MouseEvent) => void | - |
@@ -88,9 +88,10 @@ A simple and compact dialog used for asking confirmation of an action from the u
 | --- | --- |
 | default | Trigger element (Popconfirm only) |
 | title / description | Title / description, taking precedence over the matching prop |
+| icon | Icon content, overriding icon data or the default; empty slots omit the wrapper |
 | okText / cancelText | Button content, taking precedence over the string prop and locale |
 
-`PopconfirmSlots` is exported. The four content slots also work in `PopconfirmPurePanel`. Present slots override all fallbacks, including empty content; removing a slot restores the prop or locale. Slots are read during render. Render-function props are removed directly; async confirmation callbacks remain supported. See the [migration](../../../../docs/migrations/overlay-content-slots.md).
+`PopconfirmSlots` is exported. All five content slots also work in `PopconfirmPurePanel`. Present slots override all fallbacks, including empty content; removing a slot restores the prop, default icon or locale. Slots are read during render, and icon changes preserve the body nodes and input state. Render-function props are removed directly; async confirmation callbacks remain supported. See the [migration](../../../../docs/migrations/overlay-content-slots.md).
 
 ### Native class/style
 
