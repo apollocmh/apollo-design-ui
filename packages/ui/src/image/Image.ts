@@ -99,12 +99,8 @@ const Image = defineComponent({
   setup(props, { attrs, emit, slots }) {
     // antd 逐字（image/index.js:33-41）：ConfigProvider 组件级 `classNames` /
     // `styles`（`components.image.*`）是语义合并的**最外层**来源（2026-10-04 接上）。
-    const {
-      getPrefixCls,
-      classNames: contextClassNames,
-      styles: contextStyles,
-    } = useComponentConfig('image');
-    const prefixCls = props.prefixCls ?? getPrefixCls('image');
+    const config = useComponentConfig<ImageSemanticType>('image');
+    const prefixCls = props.prefixCls ?? config.getPrefixCls('image');
 
     // ============================ Preview =============================
     const previewConfig = computed<PreviewConfig | null>(() => {
@@ -213,12 +209,12 @@ const Image = defineComponent({
       SemanticStyles
     >(
       [
-        () => contextClassNames as Record<string, never>,
+        () => config.classNames,
         () => props.classNames,
         () => ({ root: props.wrapperStyle ? undefined : undefined }),
       ],
       [
-        () => contextStyles as Record<string, never>,
+        () => config.styles,
         () => props.styles,
         () => (props.wrapperStyle ? { root: props.wrapperStyle } : undefined),
       ],

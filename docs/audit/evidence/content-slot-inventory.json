@@ -5358,7 +5358,8 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
-          "packages/ui/src/image/__tests__/native-style.test.ts"
+          "packages/ui/src/image/__tests__/native-style.test.ts",
+          "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -5529,7 +5530,8 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
-          "packages/ui/src/image/__tests__/native-style.test.ts"
+          "packages/ui/src/image/__tests__/native-style.test.ts",
+          "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]
       },
       "decision": "skip",
@@ -5668,7 +5670,8 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
-          "packages/ui/src/image/__tests__/native-style.test.ts"
+          "packages/ui/src/image/__tests__/native-style.test.ts",
+          "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]
       },
       "decision": "keep-data",
