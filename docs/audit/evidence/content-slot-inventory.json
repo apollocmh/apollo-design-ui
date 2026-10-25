@@ -5359,6 +5359,7 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]
@@ -5470,6 +5471,7 @@
           "packages/ui/src/image/__tests__/a11y.test.ts",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
@@ -5483,7 +5485,7 @@
       "owner": "ImageRenderInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:205",
+      "source": "packages/ui/src/image/interface.ts:208",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5508,7 +5510,7 @@
       "owner": "ImageSlots",
       "prop": "imageRender",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:201",
+      "source": "packages/ui/src/image/interface.ts:204",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5533,6 +5535,7 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]
@@ -5674,6 +5677,7 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]

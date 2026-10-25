@@ -38,8 +38,6 @@ preview-img-info / preview-mask / preview-src.
 | class / style | Native root attrs. Style accepts Vue strings, objects and arrays, overrides `styles.root`, and stays on the root; use `styles.image` for the img | `string \| array \| object` / `StyleValue` | — |
 | wrapperStyle | ⚠️ Deprecated, use `styles.root` | `CSSProperties` | — |
 | classNames / styles | Semantic class names / styles, see "Semantic slots" | — | — |
-| onClick | Click (internal preview opens first, then this runs) | `(e: MouseEvent) => void` | — |
-| onError | `<img>` load error | `(e: Event) => void` | — |
 | crossOrigin / decoding / loading / referrerPolicy / sizes / srcSet / useMap / draggable | Native attributes forwarded to `<img>` | — | — |
 
 Progress/standalone-placeholder branches forward native attrs to the existing Progress root and merge Image root and placeholder.progress semantics, with native style last. ID/data and naming/description ARIA stay current; progress owns its role, range and busy state. Removing an explicit aria-label restores the percentage name. Root click notifies once without opening preview; img errors stay on the img. See the [native style correction](../../../../docs/migrations/image-native-styles.md).
@@ -88,7 +86,12 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 
 | Name | Description |
 |---|---|
-| update:open | Emitted when the preview open state changes (**together with** `preview.onOpenChange`); supports `v-model:open` |
+| click | Original MouseEvent, after the internal preview request; supports Vue modifiers and listener arrays |
+| error | Original img Event; placeholder roots do not receive image errors, and error.once belongs to the component |
+| keydown | Original KeyboardEvent before built-in Enter/Space handling; preventDefault cancels that keyboard action |
+| update:open | Existing standalone open-request notification, boolean; state remains configured through preview, with model-contract remediation tracked separately |
+
+With preview=false, native role/tabindex/aria-label survive. Preview triggers own button/0 and use an explicit aria-label before the alt fallback. Progress only notifies click/keydown without opening a latent preview. Bind with `@click`, `@error` and `@keydown`; onXxx in h()/ImageProps registers Vue listeners. See the [migration](../../../../docs/migrations/image-native-events.md) and [evidence](../../../../docs/audit/2026-10-25-image-native-events-remediation.md).
 
 ### Image.PreviewGroup · Props
 

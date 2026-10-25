@@ -62,6 +62,25 @@ try {
     path.join(root, 'tests/browser/fixtures/ImagePrefix.vue'),
     path.join(temp, 'ImagePrefix.vue'),
   );
+  const nativeEventFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageNativeEvents.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageNativeEvents.vue'),
+    nativeEventFixture.replace(
+      '../../../packages/ui/src/image/demo/image-render.vue',
+      './ImageDemo.vue',
+    ),
+  );
+  const exactNativeEvents = fs.readFileSync(
+    path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImageNativeEvents.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ExactNativeEvents.vue'),
+    exactNativeEvents.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig } from '@apollo-design/ui';

@@ -263,6 +263,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image/Group前缀增量（F11）**：14条修前10失败/4初始CSR/SSR已有通过，前缀由computed现读prop/Provider，覆盖移除后使用当前值；Group自定义预览mask-hidden按实际previewPrefix派生。局部14及全量17文件239条通过，见 [报告](audit/2026-10-25-image-prefix-remediation.md)。仅修DOM命名，消费端预生成/预加载CSS，D04整体策略保持独立。
 
+**2026-10-25 Image原生事件增量（F11/ADR0007）**：正式最小7条修前6失败/1已有通过；click/error/keydown及update:open改typed emits，DOM原事件/数组/once及Root ARIA路由直接修正，Progress不打开潜在预览或接收img error。扩展20条通过，见 [报告](audit/2026-10-25-image-native-events-remediation.md) 和 [迁移](migrations/image-native-events.md)。公开文档v-model:open与顶层open缺失存在契约冲突，默认/受控Group/prev状态已有额外失败复现，后续独立整改，未以文案降级宣称完成。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

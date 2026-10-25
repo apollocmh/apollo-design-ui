@@ -35,8 +35,6 @@ preview-img-info / preview-mask / preview-src。
 | class / style | 根元素原生attrs；style支持Vue字符串/对象/数组，优先于 `styles.root`，不复制到img；图片样式用 `styles.image` | `string \| array \| object` / `StyleValue` | — |
 | wrapperStyle | ⚠️ 已废弃，请用 `styles.root` | `CSSProperties` | — |
 | classNames / styles | 语义化类名/样式，见「语义化槽位」 | — | — |
-| onClick | 点击（先走内部打开预览，再调它） | `(e: MouseEvent) => void` | — |
-| onError | `<img>` 加载失败 | `(e: Event) => void` | — |
 | crossOrigin / decoding / loading / referrerPolicy / sizes / srcSet / useMap / draggable | 透传给 `<img>` 的原生属性 | — | — |
 
 进度/纯占位分支的原生attrs落在现有Progress根，合并Image根与placeholder.progress语义，style仍优先。id/data及名称/描述ARIA保持当前值；role、范围和busy状态由进度控制。移除显式aria-label恢复百分比默认名称。根click通知一次且不打开预览，img error不改挂到占位根。详见 [原生样式修正](../../../../docs/migrations/image-native-styles.md)。
@@ -85,7 +83,12 @@ preview-img-info / preview-mask / preview-src。
 
 | 名称 | 说明 |
 |---|---|
-| update:open | 预览开合变化时发出（与 `preview.onOpenChange` **同时**发出），可写 `v-model:open` |
+| click | 原MouseEvent；可预览时内部打开请求后通知，支持Vue修饰符和监听器数组 |
+| error | 原img的Event；占位根不接收图片error，error.once正确归于组件事件 |
+| keydown | 原KeyboardEvent；监听器先于内置Enter/Space，preventDefault可阻止内置键盘动作 |
+| update:open | 现有单图开合请求通知，boolean；本批声明类型，状态仍通过preview配置控制，模型契约另行整改 |
+
+preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0，显式aria-label优先alt默认名。Progress只通知click/keydown，不打开潜在预览。以 `@click` / `@error` / `@keydown` 绑定；h()/ImageProps中的onXxx是Vue监听器注册。详见 [迁移](../../../../docs/migrations/image-native-events.md) 和 [证据](../../../../docs/audit/2026-10-25-image-native-events-remediation.md)。
 
 ### Image.PreviewGroup · Props
 

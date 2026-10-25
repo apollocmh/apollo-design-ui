@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-25T07:27:19.929Z",
+  "generatedAt": "2026-10-25T07:58:09.836Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2371,7 +2371,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。\n2026-10-25 F11/ADR0007：修复native字符串style崩溃和根样式误复制到img；Progress/纯占位在原单根转发attrs，保护受控ARIA并补placeholder.progress嵌套schema。首批3条修前全失败、修后通过；证据见 docs/audit/2026-10-25-image-native-styles-remediation.md，保留历史验收含义与9张Apollo视觉基线缺口。\n2026-10-25 F11：组件级classNames/styles setup快照过期改为当前getter；15条修前12失败/3已有通过、修后全通过，保持静态对象契约、优先级与富节点状态。见 docs/audit/2026-10-25-image-provider-remediation.md；PreviewGroup/预览全局样式与前缀另行复审。\n2026-10-25 F11：Image/PreviewGroup当前prop/Provider前缀改computed，Group mask-hidden改实际previewPrefix派生；14条修前10失败/4已有通过，修后全过，Image/ConfigProvider17文件239条及strict通过。见 docs/audit/2026-10-25-image-prefix-remediation.md；自定义CSS需预生成/预加载，D04不由本批关闭。",
+      "why": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。\n2026-10-25 F11/ADR0007：修复native字符串style崩溃和根样式误复制到img；Progress/纯占位在原单根转发attrs，保护受控ARIA并补placeholder.progress嵌套schema。首批3条修前全失败、修后通过；证据见 docs/audit/2026-10-25-image-native-styles-remediation.md，保留历史验收含义与9张Apollo视觉基线缺口。\n2026-10-25 F11：组件级classNames/styles setup快照过期改为当前getter；15条修前12失败/3已有通过、修后全通过，保持静态对象契约、优先级与富节点状态。见 docs/audit/2026-10-25-image-provider-remediation.md；PreviewGroup/预览全局样式与前缀另行复审。\n2026-10-25 F11：Image/PreviewGroup当前prop/Provider前缀改computed，Group mask-hidden改实际previewPrefix派生；14条修前10失败/4已有通过，修后全过，Image/ConfigProvider17文件239条及strict通过。见 docs/audit/2026-10-25-image-prefix-remediation.md；自定义CSS需预生成/预加载，D04不由本批关闭。\n2026-10-25 F11/ADR0007：click/error/keydown及update:open声明typed emits，移除DOM事件Function prop；修复数组/.once、keydown与显式ARIA丢失，Progress事件隔离保留。最小7条修前6失败/1已有通过，扩展20通过；见 docs/audit/2026-10-25-image-native-events-remediation.md。Vue模型/预览状态矛盾独立开放，不由typed通知关闭。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P3",

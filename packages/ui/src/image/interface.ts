@@ -193,8 +193,11 @@ export interface ImageProps extends ImageCommonProps {
   wrapperStyle?: Record<string, string | number>;
   classNames?: ImageSemanticType['classNames'];
   styles?: ImageSemanticType['styles'];
+  /** 标准Vue事件监听器注册，对应emits。 */
   onClick?: (e: MouseEvent) => void;
   onError?: (e: Event) => void;
+  onKeydown?: (e: KeyboardEvent) => void;
+  'onUpdate:open'?: (open: boolean) => void;
 }
 
 export interface ImageSlots {

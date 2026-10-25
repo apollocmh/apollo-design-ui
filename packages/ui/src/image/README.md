@@ -87,3 +87,5 @@ registry 数据：token 数 = 6（+ 派生 1）。
 组件级classNames/styles合并保留当前Provider对象读取，替换字段、整个配置、晚加载和移除不再固定setup快照；静态对象契约及优先级保持。见 [配置报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)。
 
 Image/Group前缀由computed读取当前prop与Provider，Group的mask-hidden名称基于实际预览前缀。自定义CSS在消费构建前预加载，默认产物为apollo。DOM响应性与D04整体CSS策略的边界见 [前缀报告](../../../../docs/audit/2026-10-25-image-prefix-remediation.md)。
+
+Image的click/error/keydown与已有update:open通知使用typed emits。根属性、原生事件及Vue修饰符按真实DOM落点处理，Progress保持事件隔离；状态模型契约仍单独整改。见 [事件报告](../../../../docs/audit/2026-10-25-image-native-events-remediation.md) 与 [迁移](../../../../docs/migrations/image-native-events.md)。

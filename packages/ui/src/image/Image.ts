@@ -72,6 +72,12 @@ const Image = defineComponent({
   name: 'AImage',
   inheritAttrs: false,
   slots: Object as SlotsType<ImageSlots>,
+  emits: {
+    click: (_event: MouseEvent) => true,
+    error: (_event: Event) => true,
+    keydown: (_event: KeyboardEvent) => true,
+    'update:open': (_open: boolean) => true,
+  },
   props: {
     prefixCls: { type: String, default: undefined },
     src: { type: String, default: undefined },
@@ -84,8 +90,6 @@ const Image = defineComponent({
     wrapperStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     classNames: { type: Object as PropType<SemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<SemanticStyles>, default: undefined },
-    onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onError: { type: Function as PropType<(e: Event) => void>, default: undefined },
     // img 透传（COMMON_PROPS 子集）
     crossOrigin: { type: String as PropType<ImageProps['crossOrigin']>, default: undefined },
     decoding: { type: String as PropType<ImageProps['decoding']>, default: undefined },
@@ -173,8 +177,8 @@ const Image = defineComponent({
     }
 
     /** 组内：交给 group 统一开预览；组外：自己开。 */
-    const openPreviewAt = (target: HTMLElement | null): void => {
-      if (target?.getBoundingClientRect) {
+    const openPreviewAt = (target: Element | null): void => {
+      if (target) {
         const rect = target.getBoundingClientRect();
         mousePosition.value = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
       }
@@ -262,19 +266,16 @@ const Image = defineComponent({
     const coverInfo = computed(() => normalizeCover(previewConfig.value?.cover as MaskNode));
 
     const onInternalClick = (e: MouseEvent): void => {
-      if (!canPreview.value) {
-        props.onClick?.(e);
-        return;
-      }
-      openPreviewAt(e.target as HTMLElement | null);
-      props.onClick?.(e);
+      if (canPreview.value) openPreviewAt(e.target instanceof Element ? e.target : null);
+      emit('click', e);
     };
 
     const onKeyDown = (e: KeyboardEvent): void => {
-      if (!canPreview.value) return;
+      emit('keydown', e);
+      if (!canPreview.value || e.defaultPrevented) return;
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openPreviewAt(e.target as HTMLElement | null);
+        openPreviewAt(e.target instanceof Element ? e.target : null);
       }
     };
 
@@ -315,7 +316,8 @@ const Image = defineComponent({
           rootStyle: mergedStyles.value?.root,
           width: props.width,
           height: props.height,
-          onClick: props.onClick,
+          onClick: (event: MouseEvent) => emit('click', event),
+          onKeydown: (event: KeyboardEvent) => emit('keydown', event),
         });
       }
 
@@ -337,7 +339,7 @@ const Image = defineComponent({
         height: props.height,
         ref: (el: unknown) => getImgRef(el as HTMLImageElement | null),
         ...(srcAndOnload.value as Record<string, unknown>),
-        onError: props.onError,
+        onError: (event: Event) => emit('error', event),
       });
       const imageContent = slots.imageRender
         ? slots.imageRender({
@@ -369,11 +371,15 @@ const Image = defineComponent({
             mergedStyles.value?.root,
             attrs.style,
           ],
-          role: canPreview.value ? 'button' : undefined,
-          tabindex: canPreview.value ? 0 : undefined,
-          'aria-label': canPreview.value ? (props.alt ?? undefined) : undefined,
-          onClick: canPreview.value ? onInternalClick : props.onClick,
-          onKeydown: canPreview.value ? onKeyDown : undefined,
+          ...(canPreview.value
+            ? {
+                role: 'button',
+                tabindex: 0,
+                'aria-label': attrs['aria-label'] ?? props.alt,
+              }
+            : {}),
+          onClick: onInternalClick,
+          onKeydown: onKeyDown,
         },
         [
           imageContent,
