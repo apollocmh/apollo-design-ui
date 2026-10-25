@@ -53,9 +53,10 @@ const PreviewGroup = defineComponent({
     styles: { type: Object as PropType<SemanticStyles>, default: undefined },
   },
   setup(props, { slots, emit }) {
-    const { getPrefixCls, direction } = useComponentConfig('image');
-    const prefixCls = getPrefixCls('image');
-    const previewPrefixCls = props.previewPrefixCls ?? `${prefixCls}-preview`;
+    const config = useComponentConfig('image');
+    const { direction } = config;
+    const prefixCls = computed(() => config.getPrefixCls('image'));
+    const previewPrefixCls = computed(() => props.previewPrefixCls ?? `${prefixCls.value}-preview`);
 
     const previewConfig = computed<GroupPreviewConfig | null>(() => {
       if (props.preview === false) return null;
@@ -143,7 +144,7 @@ const PreviewGroup = defineComponent({
           [
             p?.mask,
             cfg?.maskClassName,
-            mask === false ? `${prefixCls}-preview-mask-hidden` : undefined,
+            mask === false ? `${previewPrefixCls.value}-mask-hidden` : undefined,
           ]
             .filter(Boolean)
             .join(' ') || undefined,
@@ -174,11 +175,11 @@ const PreviewGroup = defineComponent({
 
       return h(
         'div',
-        { class: `${prefixCls}-preview-group` },
+        { class: `${prefixCls.value}-preview-group` },
         [
           children,
           h(Preview, {
-            prefixCls: previewPrefixCls,
+            prefixCls: previewPrefixCls.value,
             src: currentItem.value?.data.src,
             alt: currentItem.value?.data.alt,
             imageInfo: {

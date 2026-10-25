@@ -261,6 +261,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image全局配置增量（F11）**：15条修前12失败/3已有通过，确认setup解构捕获旧classNames/styles，字段对象、image/整map替换、晚出现和移除过期。合并getter现读当前typed配置，去两处Record<string, never>断言，静态对象契约与优先级保持，15条局部通过；见 [报告](audit/2026-10-25-image-provider-remediation.md)。预览全局样式、PreviewGroup及前缀继续独立推进。
 
+**2026-10-25 Image/Group前缀增量（F11）**：14条修前10失败/4初始CSR/SSR已有通过，前缀由computed现读prop/Provider，覆盖移除后使用当前值；Group自定义预览mask-hidden按实际previewPrefix派生。局部14及全量17文件239条通过，见 [报告](audit/2026-10-25-image-prefix-remediation.md)。仅修DOM命名，消费端预生成/预加载CSS，D04整体策略保持独立。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

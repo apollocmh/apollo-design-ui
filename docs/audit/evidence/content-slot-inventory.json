@@ -5322,6 +5322,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5386,6 +5387,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5469,6 +5471,7 @@
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
+          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5634,6 +5637,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5698,6 +5702,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },

@@ -100,7 +100,7 @@ const Image = defineComponent({
     // antd 逐字（image/index.js:33-41）：ConfigProvider 组件级 `classNames` /
     // `styles`（`components.image.*`）是语义合并的**最外层**来源（2026-10-04 接上）。
     const config = useComponentConfig<ImageSemanticType>('image');
-    const prefixCls = props.prefixCls ?? config.getPrefixCls('image');
+    const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('image'));
 
     // ============================ Preview =============================
     const previewConfig = computed<PreviewConfig | null>(() => {
@@ -249,7 +249,7 @@ const Image = defineComponent({
       return {
         root: [p?.root, previewConfig.value?.rootClassName].filter(Boolean).join(' ') || undefined,
         mask:
-          [p?.mask, mask === false ? `${prefixCls}-preview-mask-hidden` : undefined]
+          [p?.mask, mask === false ? `${prefixCls.value}-preview-mask-hidden` : undefined]
             .filter(Boolean)
             .join(' ') || undefined,
         body: p?.body,
@@ -304,7 +304,7 @@ const Image = defineComponent({
         if (progressAttrs['aria-label'] === undefined) delete progressAttrs['aria-label'];
         return h(Progress, {
           ...progressAttrs,
-          prefixCls,
+          prefixCls: prefixCls.value,
           percent: (cfg as { percent?: number }).percent,
           render: shouldRenderPlaceholderOverlay.value
             ? ((() => placeholderNode.value) as never)
@@ -322,8 +322,8 @@ const Image = defineComponent({
       const originNode = h('img', {
         ...commonProps,
         class: [
-          `${prefixCls}-img`,
-          props.placeholder === true ? `${prefixCls}-img-placeholder` : undefined,
+          `${prefixCls.value}-img`,
+          props.placeholder === true ? `${prefixCls.value}-img-placeholder` : undefined,
           mergedClassNames.value?.image,
         ],
         style: {
@@ -358,11 +358,11 @@ const Image = defineComponent({
         {
           ...attrs,
           class: [
-            prefixCls,
+            prefixCls.value,
             // 调用方原生 class（位置与原先的 props.rootClassName 一致）
             attrs.class,
             mergedClassNames.value?.root,
-            isError ? `${prefixCls}-error` : undefined,
+            isError ? `${prefixCls.value}-error` : undefined,
           ],
           style: [
             { width: toCssSize(props.width), height: toCssSize(props.height) },
@@ -380,7 +380,7 @@ const Image = defineComponent({
           status.value === 'loading'
             ? h(
                 'div',
-                { 'aria-hidden': 'true', class: `${prefixCls}-placeholder` },
+                { 'aria-hidden': 'true', class: `${prefixCls.value}-placeholder` },
                 [placeholderNode.value as VNodeChild].filter((c) => c !== null && c !== undefined),
               )
             : null,
@@ -389,9 +389,9 @@ const Image = defineComponent({
                 'div',
                 {
                   class: [
-                    `${prefixCls}-cover`,
+                    `${prefixCls.value}-cover`,
                     mergedClassNames.value?.cover,
-                    `${prefixCls}-cover-${coverInfo.value.placement}`,
+                    `${prefixCls.value}-cover-${coverInfo.value.placement}`,
                   ],
                   style: mergedStyles.value?.cover,
                 },
@@ -402,7 +402,7 @@ const Image = defineComponent({
             : null,
           canPreview.value && !groupContext
             ? h(Preview, {
-                prefixCls: `${prefixCls}-preview`,
+                prefixCls: `${prefixCls.value}-preview`,
                 src: previewSrc.value,
                 alt: props.alt,
                 imageInfo: { width: props.width, height: props.height },
