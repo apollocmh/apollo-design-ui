@@ -22,7 +22,7 @@ subtitle: 文字提示
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| title | 提示内容（`0` 合法） | `VNodeChild \| (() => VNodeChild)` | — |
+| title | 提示内容数据（`0` 合法）；模板富内容使用 `#title` | `VNodeChild` | — |
 | open / defaultOpen | 受控开合（`v-model:open` 等价）/ 非受控初值 | `boolean` | `false` |
 | onOpenChange | 开合回调（与 `update:open` 同时发出） | `(open: boolean) => void` | — |
 | afterOpenChange | 动画结束回调 | `(open: boolean) => void` | — |
@@ -47,6 +47,9 @@ subtitle: 文字提示
 | 名称 | 说明 |
 |---|---|
 | default | 触发元素（组件也可；事件与 ref 需透传到根元素） |
+| title | 提示内容；存在则覆盖 title prop，空槽不回退 |
+
+`TooltipSlots` 已导出。`TooltipPurePanel` 支持同样的 title 数据与具名槽；条件槽每轮渲染读取。
 
 ### Expose
 
@@ -57,5 +60,5 @@ subtitle: 文字提示
 - **trigger 基建**：`_internal/trigger.ts` 组装 overlay + position + portal +
   motion（见 [`docs/analysis/tooltip.md`](../../../../docs/analysis/tooltip.md) §8）。
 - **C8-R2**：`overlay` 与 render-fn `title` 已删除 —— 内容走 `#title` 插槽（slot 优先）。
-- **noTitle 抑制**：`#title` 与 `title` 均为空（`title=0` 除外）⇒ 强制关闭且不发回调。
+- **noTitle 抑制**：当前内容为空时，非受控浮层不打开且不发开合回调。受控 `open` 保留调用方状态，`0` 是有效内容；空 `#title` 不回退 prop。
 - 与 antd 的已知差异见组件 README。

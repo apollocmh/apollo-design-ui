@@ -19,22 +19,17 @@
 import { ExclamationCircleFilled } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { isRenderable } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, type SlotsType } from 'vue';
 
 import ActionButton, { convertLegacyProps } from '../_internal/action-button';
 import Button from '../button/Button.vue';
 import { useComponentConfig } from '../config-provider/context';
 import { PopoverPurePanel } from '../popover';
-import type { PopconfirmProps, PopconfirmSemanticType } from './interface';
+import type { PopconfirmProps, PopconfirmSemanticType, PopconfirmSlots } from './interface';
 
 /** 语义槽（合并后的形态）。 */
 type MergedClassNames = NonNullable<PopconfirmSemanticType['classNames']>;
 type MergedStyles = NonNullable<PopconfirmSemanticType['styles']>;
-
-/** antd `getRenderPropValue`：惰性求值（title/description 可为函数）。 */
-function getRenderPropValue(value: unknown): VNodeChild {
-  return typeof value === 'function' ? (value as () => VNodeChild)() : (value as VNodeChild);
-}
 
 export interface OverlayProps
   extends Pick<
@@ -62,6 +57,7 @@ export interface OverlayProps
 export const Overlay = defineComponent({
   name: 'APopconfirmOverlay',
   inheritAttrs: false,
+  slots: Object as SlotsType<Omit<PopconfirmSlots, 'default'>>,
   props: {
     prefixCls: { type: String, required: true },
     icon: {
@@ -81,11 +77,11 @@ export const Overlay = defineComponent({
     okType: { type: String as PropType<PopconfirmProps['okType']>, default: 'primary' },
     showCancel: { type: Boolean, default: true },
     title: {
-      type: [Object, String, Number, Function] as PropType<PopconfirmProps['title']>,
+      type: [Object, String, Number, Boolean, Array] as PropType<PopconfirmProps['title']>,
       default: undefined,
     },
     description: {
-      type: [Object, String, Number, Function] as PropType<PopconfirmProps['description']>,
+      type: [Object, String, Number, Boolean, Array] as PropType<PopconfirmProps['description']>,
       default: undefined,
     },
     onPopupClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
@@ -99,37 +95,15 @@ export const Overlay = defineComponent({
     // ⚠️ useLocale 返回的是**普通对象**（不是 ref）—— 别写 `.value`（empty 同判）
     const [contextLocale] = useLocale('Popconfirm');
 
-    const titleNode = computed<VNodeChild>(() =>
-      getRenderPropValue(props.title ?? slots.title?.()),
-    );
-    const descriptionNode = computed<VNodeChild>(() =>
-      getRenderPropValue(props.description ?? slots.description?.()),
-    );
-
-    /**
-     * 判据 3：falsy（含空串）回退 locale。
-     * ⚠️ C8-R2：**插槽优先** —— `#okText` / `#cancelText` 是富内容通道（可在文案里
-     *    插 icon + text），字符串 prop 只作普通文案入口（Issue #26.4）。
-     */
-    const mergedOkText = computed<VNodeChild>(
-      () => (slots.okText?.() ?? props.okText) || (contextLocale.okText as string),
-    );
-    const mergedCancelText = computed<VNodeChild>(
-      () => (slots.cancelText?.() ?? props.cancelText) || (contextLocale.cancelText as string),
-    );
-
-    /**
-     * 默认图标（antd：`icon = <ExclamationCircleFilled />`）。
-     * 只有显式传 `false` 才不渲染 —— undefined 走默认。
-     */
-    const mergedIcon = computed<VNodeChild>(() =>
-      props.icon === undefined ? h(ExclamationCircleFilled) : (props.icon as VNodeChild),
-    );
-
     return () => {
-      const icon = mergedIcon.value;
-      const title = titleNode.value;
-      const description = descriptionNode.value;
+      const icon = props.icon === undefined ? h(ExclamationCircleFilled) : props.icon;
+      const title = slots.title ? slots.title() : props.title;
+      const description = slots.description ? slots.description() : props.description;
+      // 只有未提供槽时才以字符串 prop / locale 兜底；空槽保持为空。
+      const okText = slots.okText ? slots.okText() : props.okText || contextLocale.okText;
+      const cancelText = slots.cancelText
+        ? slots.cancelText()
+        : props.cancelText || contextLocale.cancelText;
 
       return h(
         'div',
@@ -148,7 +122,7 @@ export const Overlay = defineComponent({
                     class: [`${props.prefixCls}-message-icon`, props.classNames?.icon],
                     style: props.styles?.icon,
                   },
-                  (icon as VNodeChild) ?? undefined,
+                  [icon],
                 )
               : null,
             h('div', { key: 'text', class: `${props.prefixCls}-message-text` }, [
@@ -160,7 +134,7 @@ export const Overlay = defineComponent({
                       class: [`${props.prefixCls}-title`, props.classNames?.title],
                       style: props.styles?.title,
                     },
-                    (title as VNodeChild) ?? undefined,
+                    [title],
                   )
                 : null,
               isRenderable(description)
@@ -172,7 +146,7 @@ export const Overlay = defineComponent({
                       class: [`${props.prefixCls}-description`, props.classNames?.content],
                       style: props.styles?.content,
                     },
-                    (description as VNodeChild) ?? undefined,
+                    [description],
                   )
                 : null,
             ]),
@@ -187,7 +161,7 @@ export const Overlay = defineComponent({
                     ...props.cancelButtonProps,
                     onClick: props.onCancel,
                   } as never,
-                  { default: () => mergedCancelText.value },
+                  { default: () => cancelText },
                 )
               : null,
             h(
@@ -204,7 +178,7 @@ export const Overlay = defineComponent({
                   ...props.okButtonProps,
                 },
               } as never,
-              { default: () => mergedOkText.value },
+              { default: () => okText },
             ),
           ]),
         ],
@@ -220,15 +194,16 @@ export interface PurePanelProps extends Omit<OverlayProps, 'prefixCls'> {
 const PurePanel = defineComponent({
   name: 'APopconfirmPurePanel',
   inheritAttrs: false,
+  slots: Object as SlotsType<Omit<PopconfirmSlots, 'default'>>,
   props: {
     prefixCls: { type: String, default: undefined },
     placement: { type: String as PropType<PopconfirmProps['placement']>, default: undefined },
     title: {
-      type: [Object, String, Number, Function] as PropType<PopconfirmProps['title']>,
+      type: [Object, String, Number, Boolean, Array] as PropType<PopconfirmProps['title']>,
       default: undefined,
     },
     description: {
-      type: [Object, String, Number, Function] as PropType<PopconfirmProps['description']>,
+      type: [Object, String, Number, Boolean, Array] as PropType<PopconfirmProps['description']>,
       default: undefined,
     },
     icon: {
@@ -261,8 +236,7 @@ const PurePanel = defineComponent({
     const { getPrefixCls } = useComponentConfig('popconfirm');
     return () => {
       const prefixCls = getPrefixCls('popconfirm', props.prefixCls);
-      // ⚠️ content 走 **slot** 而不是 prop：`Popover.PurePanel` 的 `content`
-      //    prop 按 C8-R2 收窄为 String（富内容走同名 slot），Overlay 是 VNode。
+      // 确认树通过当前 content 槽传给静态 Popover 面板。
       // ⚠️ 末尾的 `...restAttrs` 会**覆盖** `class` / `style`（对象展开后者胜）
       //    ⇒ 先把它们摘掉，否则整条 `class: [prefixCls, …]` 被顶掉。
       const {

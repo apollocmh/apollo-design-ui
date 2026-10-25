@@ -13,7 +13,7 @@
 
 | # | 差异 | 分类 | 说明 |
 | --- | --- | --- | --- |
-| 1 | `onConfirm` / `onCancel` / `onOpenChange` / `onPopupClick` 走 attrs 不进 emits | INTENDED | PITFALLS 35（Vue 会把 props 回调摘进 emits） |
+| 1 | 业务回调显式声明为 props，状态同步使用 update:open | Vue 原生契约 | 支持 kebab-case 绑定、当前处理器与 Promise 返回值；旧 attrs 通道已修正 |
 | 2 | `open` 支持 `v-model:open` | INTENDED | 与 `onOpenChange` 同时发出（规则 C11） |
 | 3 | `data-popover-inject` 不渲染 | INTENDED | React 注入标记（D85，与 popover 同判） |
 | 4 | `onOpenChange` 第二参数告警不移植 | INTENDED | Vue 回调本就单参，无 usage 语义 |
@@ -33,7 +33,7 @@
 6. **description 的语义槽是 `content`**（上游 `classNames?.content` / `styles?.content`）。
 7. **okText / cancelText falsy（含空串）回退 locale**；`title` 为 `0` 仍渲染。
 8. **`useLocale` 返回普通对象不是 ref** —— 别写 `.value`（empty 同判）。
-9. **`Popover.PurePanel` 的 `content` prop 按 C8-R2 收窄为 String** → Overlay 必须走 `content` **slot** 传，不能走 prop。
+9. **Overlay 通过当前 `content` slot 传给 PopoverPurePanel**；内容数据 prop 保留 VNodeChild，模板富内容优先使用原生槽。
 
 ## 4.5 Issue #26 的四条判据
 

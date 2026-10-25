@@ -64,8 +64,8 @@ import { Popconfirm } from '@apollo-design/ui';
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| title | 标题（`0` 合法；可为惰性函数） | ReactNode / () => ReactNode | - |
-| description | 描述文案（可为惰性函数） | ReactNode / () => ReactNode | - |
+| title | 标题数据（`0` 合法）；模板内容使用 `#title` | VNodeChild | - |
+| description | 描述数据；模板内容使用 `#description` | VNodeChild | - |
 | disabled | 是否禁用（禁用后不展开，也不发 `onOpenChange`） | boolean | false |
 | open | 是否展开（受控） | boolean | - |
 | defaultOpen | 默认是否展开 | boolean | false |
@@ -85,7 +85,17 @@ import { Popconfirm } from '@apollo-design/ui';
 | classNames | 语义化类名（root / container / arrow / icon / title / content） | 对象或函数 | - |
 | styles | 语义化样式（同上） | 对象或函数 | - |
 
-> 回调类（`onConfirm` / `onCancel` / `onOpenChange` / `onPopupClick`）作为 props 传入（`on-confirm` / `:onConfirm`），不经过 emits 声明。
+> 业务回调显式声明为 props，支持 `:on-confirm` / `:onConfirm` 等 Vue 绑定；确认回调的返回值用于等待 Promise。状态同步通过 `update:open` / `v-model:open`。
+
+### 插槽
+
+| 名称 | 说明 |
+| --- | --- |
+| default | 触发元素（仅 Popconfirm） |
+| title / description | 标题 / 描述，优先于同名 prop |
+| okText / cancelText | 按钮内容，优先于字符串 prop 和 locale |
+
+导出 `PopconfirmSlots`。四个内容槽也适用于 `PopconfirmPurePanel`；空槽不回退，移除槽才恢复 prop 或 locale。条件槽在当前 render 读取。内容函数 prop 已直接移除；异步确认等业务回调保留，见 [迁移记录](../../../../docs/migrations/overlay-content-slots.md)。
 
 ### Ref
 

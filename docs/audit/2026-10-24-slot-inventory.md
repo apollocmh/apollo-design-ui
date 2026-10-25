@@ -6,9 +6,9 @@
 
 以 TypeScript AST/符号解析收集 **/interface.ts 的属性，追踪导入别名、类型别名、泛型实参和继承。每个 owner/field 一行；同一继承属性可能出现在多个 owner，故总行数不是独立公开 prop 数。函数只检查返回内容，不把接受 VNode 参数但返回 void 的业务回调当成 renderer；不将数据接口的内部 label 展开成调用者 items 的顶层内容。
 
-本次 73 个 interface.ts，共 506 行：内容候选 148、渲染函数候选 74、数据 134、内联配置 12、deprecated 53、内部/插槽协议 85。分类为调查分流，不是公共 API 决策；Props 后缀也不能证明它就是公开组件。
+本次 73 个 interface.ts，共 516 行：内容候选 153、渲染函数候选 69、数据 134、内联配置 12、deprecated 53、内部/插槽协议 95。分类为调查分流，不是公共 API 决策；Props 后缀也不能证明它就是公开组件。
 
-当前 Badge.count/text、InputNumber.prefix/suffix 与 List.header/footer/loadMore、Item.extra/actions、Meta.avatar/title/description 十二行关联具体运行报告而标 verified。List.renderItem 已移除，新 ListSlots 五个字段及 Item/Meta 六个 slot 字段归内部插槽协议；迁移证据见 [List 报告](2026-10-24-list-slots-remediation.md) 和 [Item/Meta 报告](2026-10-24-list-item-slots-remediation.md)。其余 source-reference 只记录源码/类型/测试/Demo 的同名线索，**不等于已经实际消费或测试通过**；未命中也不直接等于缺少插槽，别名、动态键与其他组件的同名模板都需复核。146 行保持数据/配置，138 行因内部/协议/deprecated 跳过，210 行继续 review。
+当前 Badge.count/text、InputNumber.prefix/suffix 与 List.header/footer/loadMore、Item.extra/actions、Meta.avatar/title/description 十二行关联具体运行报告而标 verified。List.renderItem 已移除，新 ListSlots 五个字段及 Item/Meta 六个 slot 字段归内部插槽协议；迁移证据见 [List 报告](2026-10-24-list-slots-remediation.md) 和 [Item/Meta 报告](2026-10-24-list-item-slots-remediation.md)。其余 source-reference 只记录源码/类型/测试/Demo 的同名线索，**不等于已经实际消费或测试通过**；未命中也不直接等于缺少插槽，别名、动态键与其他组件的同名模板都需复核。146 行保持数据/配置，148 行因内部/协议/deprecated 跳过，210 行继续 review。
 
 Drawer 已存在的四个内容槽补充动态、空内容、ARIA 与正文身份验证，新增 DrawerSlots 五个字段归内部插槽协议；未将内部 DrawerPanel 字段升级为 verified，见 [Drawer 报告](2026-10-24-drawer-vue-remediation.md)。
 
@@ -29,3 +29,5 @@ Masonry 的 itemRender 直接移除，新增 MasonrySlots.item 归内部插槽�
 Timeline新增的三个item槽归内部插槽协议，清单增至502行，见 [Timeline原生槽报告](2026-10-25-timeline-slots-remediation.md)。静态分类不等于动态/SSR/类型验收。
 
 Steps的四槽返回值明确为VNodeChild后进入内部协议清单，当前506行；先前unknown返回无法提供可靠内容协议线索。实际类型推断、inline修复和运行证据见 [Steps报告](2026-10-25-steps-native-slots-remediation.md)。
+
+Tooltip/Popover/Popconfirm移除共享内容别名中的函数分支，五个内容字段转为数据候选，三个Slots协议新增十行内部字段；当前516行，review仍210行，均不是剩余缺陷数。实际六入口优先级、响应性、SSR及发布类型验证见 [浮层内容报告](2026-10-25-overlay-content-slots-remediation.md)。

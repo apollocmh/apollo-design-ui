@@ -24,8 +24,8 @@ subtitle: 气泡卡片
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| title | 标题内容（`0` 合法；可为函数） | `TooltipContent` | — |
-| content | 正文内容（`0` 合法；可为函数） | `TooltipContent` | — |
+| title | 标题数据（`0` 合法）；模板内容使用 `#title` | `TooltipContent`（VNodeChild） | — |
+| content | 正文数据（`0` 合法）；模板内容使用 `#content` | `TooltipContent`（VNodeChild） | — |
 | classNames / styles | 语义槽 `root / container / arrow / title / content`（含函数式） | — | — |
 
 ⚠️ 受控 `open` 时不做 noTitle 压制（antd 口径）：title/content 均空仍会开空浮层。
@@ -35,7 +35,9 @@ subtitle: 气泡卡片
 | 名称 | 说明 |
 |---|---|
 | default | 触发元素 |
-| title / content | 标题 / 正文（props 未传时生效） |
+| title / content | 标题 / 正文；存在则覆盖同名 prop，空槽不回退 |
+
+导出 `PopoverSlots`。主组件与 `PopoverPurePanel` 均在当前 render 读取槽，支持条件出现、移除与内容更新。内容函数 prop 已直接移除，见 [迁移记录](../../../../docs/migrations/overlay-content-slots.md)。
 
 ### Expose
 

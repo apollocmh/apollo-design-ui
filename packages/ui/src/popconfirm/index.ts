@@ -27,6 +27,7 @@ export type {
   PopconfirmProps,
   PopconfirmRef,
   PopconfirmSemanticType,
+  PopconfirmSlots,
   PopconfirmStyles,
   TooltipPlacement as PopconfirmPlacement,
 } from './interface';

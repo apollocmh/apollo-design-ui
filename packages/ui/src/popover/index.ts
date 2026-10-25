@@ -21,6 +21,7 @@ export type {
   PopoverProps,
   PopoverRef,
   PopoverSemanticType,
+  PopoverSlots,
   PopoverStyles,
   TooltipArrow,
   TooltipContent,

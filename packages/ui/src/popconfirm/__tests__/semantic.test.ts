@@ -50,11 +50,14 @@ const CASES: Record<string, () => DomRenderResult> = {
   'popconfirm:pure-panel-placement': () =>
     h(PopconfirmPurePanel, { ...BP, title: 'Title', placement: 'bottomLeft' }),
   'popconfirm:pure-panel-render-fn': () =>
-    h(PopconfirmPurePanel, {
-      ...BP,
-      title: () => 'lazy-title',
-      description: () => 'lazy-description',
-    }),
+    h(
+      PopconfirmPurePanel,
+      { ...BP },
+      {
+        title: () => 'lazy-title',
+        description: () => 'lazy-description',
+      },
+    ),
   'popconfirm:pure-panel-class-name': () =>
     // ⚠️ 两侧各用各的词汇（仓库既有约定，见 button 的 `class:className`）：
     //    React 生成器传 `className` / `style`，Vue 侧传原生 `class` / `style`。

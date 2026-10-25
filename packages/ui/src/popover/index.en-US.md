@@ -18,8 +18,8 @@ subtitle: Popover
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| title | 标题内容（`0` 合法；可为函数） | `TooltipContent` | — |
-| content | 正文内容（`0` 合法；可为函数） | `TooltipContent` | — |
+| title | Title data (`0` is valid); template content uses `#title` | `TooltipContent` (VNodeChild) | — |
+| content | Body data (`0` is valid); template content uses `#content` | `TooltipContent` (VNodeChild) | — |
 | classNames / styles | 语义槽 `root / container / arrow / title / content`（含函数式） | — | — |
 
 ⚠️ 受控 `open` 时不做 noTitle 压制（antd 口径）：title/content 均空仍会开空浮层。
@@ -29,7 +29,9 @@ subtitle: Popover
 | 名称 | 说明 |
 |---|---|
 | default | 触发元素 |
-| title / content | 标题 / 正文（props 未传时生效） |
+| title / content | Title / body; a present slot overrides its prop, including empty content |
+
+`PopoverSlots` is exported. Both Popover and PopoverPurePanel read current slots during render, including conditional additions, removals and content updates. Render-function props are removed directly; see the [migration](../../../../docs/migrations/overlay-content-slots.md).
 
 ### Expose
 

@@ -25,7 +25,7 @@
 
 import { ExclamationCircleFilled } from '@apollo-design/icons';
 import { omit, useControlledValue } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, shallowRef, type VNodeChild } from 'vue';
+import { computed, defineComponent, h, type PropType, type SlotsType, shallowRef } from 'vue';
 import type { TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
@@ -36,6 +36,7 @@ import type {
   PopconfirmClassNames,
   PopconfirmProps,
   PopconfirmSemanticType,
+  PopconfirmSlots,
   PopconfirmStyles,
 } from './interface';
 import { Overlay } from './PurePanel';
@@ -45,14 +46,15 @@ type StyleLike = Record<string, string | number>;
 const Popconfirm = defineComponent({
   name: 'APopconfirm',
   inheritAttrs: false,
+  slots: Object as SlotsType<PopconfirmSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     title: {
-      type: [Object, String, Number, Function] as PropType<PopconfirmProps['title']>,
+      type: [Object, String, Number, Boolean, Array] as PropType<PopconfirmProps['title']>,
       default: undefined,
     },
     description: {
-      type: [Object, String, Number, Function] as PropType<PopconfirmProps['description']>,
+      type: [Object, String, Number, Boolean, Array] as PropType<PopconfirmProps['description']>,
       default: undefined,
     },
     disabled: { type: Boolean, default: false },
@@ -107,15 +109,20 @@ const Popconfirm = defineComponent({
     fresh: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     id: { type: String, default: undefined },
+    onConfirm: { type: Function as PropType<PopconfirmProps['onConfirm']>, default: undefined },
+    onCancel: { type: Function as PropType<PopconfirmProps['onCancel']>, default: undefined },
+    onOpenChange: {
+      type: Function as PropType<PopconfirmProps['onOpenChange']>,
+      default: undefined,
+    },
+    onPopupClick: {
+      type: Function as PropType<PopconfirmProps['onPopupClick']>,
+      default: undefined,
+    },
   },
-  /** 只声明 `update:open`（供 `v-model:open`）；回调类一律走 attrs（PITFALLS 35）。 */
+  /** v-model 状态经 emits；返回值有意义的业务回调声明为 props。 */
   emits: ['update:open'],
   setup(props, { attrs, emit, expose, slots }) {
-    const callbacks = attrs as unknown as Pick<
-      PopconfirmProps,
-      'onOpenChange' | 'onConfirm' | 'onCancel' | 'onPopupClick'
-    >;
-
     const context = useComponentConfig('popconfirm');
     const { getPrefixCls } = context;
     const contextSemantic = context as {
@@ -149,7 +156,7 @@ const Popconfirm = defineComponent({
       defaultValue: () => props.defaultOpen ?? false,
       getValue: () => props.open,
       onChange: (next: boolean) => {
-        callbacks.onOpenChange?.(next);
+        props.onOpenChange?.(next);
         emit('update:open', next);
       },
     });
@@ -166,11 +173,11 @@ const Popconfirm = defineComponent({
      *    `{ …; }` 会吞掉返回值，ActionButton 的 Promise 链就断了
      *    （Promise 用例会表现为「点 OK 立刻关闭」）。
      */
-    const onConfirm = (e?: MouseEvent): unknown => callbacks.onConfirm?.(e);
+    const onConfirm = (e?: MouseEvent): unknown => props.onConfirm?.(e);
     // 判据 4：先关，再回调
     const onCancel = (e?: MouseEvent): void => {
       settingOpen(false);
-      callbacks.onCancel?.(e);
+      props.onCancel?.(e);
     };
     // 判据 2：disabled 时连 onOpenChange 都不发
     const onInternalOpenChange = (nextOpen: boolean): void => {
@@ -281,7 +288,7 @@ const Popconfirm = defineComponent({
               showCancel: props.showCancel,
               title: props.title,
               description: props.description,
-              onPopupClick: callbacks.onPopupClick,
+              onPopupClick: props.onPopupClick,
               close,
               onConfirm,
               onCancel,
@@ -291,7 +298,6 @@ const Popconfirm = defineComponent({
             // ⚠️ C8：富内容走**插槽**（`#okText` / `#cancelText` / `#title` /
             //    `#description`）—— Overlay 内部是「slot 优先」（Issue #26.4）。
             {
-              default: slots.default ? () => slots.default?.() : undefined,
               title: slots.title ? () => slots.title?.() : undefined,
               description: slots.description ? () => slots.description?.() : undefined,
               okText: slots.okText ? () => slots.okText?.() : undefined,
@@ -299,7 +305,7 @@ const Popconfirm = defineComponent({
             },
           ),
         } as never,
-        { default: () => slots.default?.() as VNodeChild },
+        { default: () => slots.default?.() },
       );
     };
   },

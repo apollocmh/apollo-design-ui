@@ -11,7 +11,7 @@ describe('Popover · 类型', () => {
       'title' | 'content' | 'placement' | 'arrow' | 'classNames' | 'styles'
     > = {
       title: 't',
-      content: () => 'c',
+      content: 'c',
       placement: 'topLeft',
       arrow: { pointAtCenter: true },
       classNames: { root: 'r', title: 't', content: 'c' },

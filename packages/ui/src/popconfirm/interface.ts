@@ -5,11 +5,11 @@
  * 按 AGENTS.md H3 重新定义 —— 不复制上游源码。
  *
  * 与 antd 的差异（INTENDED / PITFALLS 35）：
- *   - `onConfirm` / `onCancel` / `onOpenChange` / `onPopupClick` 走 attrs 而不进 emits；
+ *   - 业务回调显式声明为 props，支持 Vue kebab-case 绑定并保留确认返回值；
  *   - `open` 支持 `v-model:open`（emits `update:open`）。
  */
 
-import type { ClassValue, CSSProperties, VNode } from 'vue';
+import type { ClassValue, CSSProperties, VNode, VNodeChild } from 'vue';
 import type { LegacyButtonType } from '../_internal/action-button';
 import type { TriggerAlign } from '../_internal/trigger';
 import type {
@@ -18,6 +18,14 @@ import type {
   TooltipPlacement,
   TooltipRef,
 } from '../tooltip/interface';
+
+export interface PopconfirmSlots {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+  description?: () => VNodeChild;
+  okText?: () => VNodeChild;
+  cancelText?: () => VNodeChild;
+}
 
 /** Button 配置属性；根节点 class/style 采用 Vue 原生 attrs。 */
 export interface PopconfirmButtonProps extends Record<string, unknown> {
@@ -66,9 +74,9 @@ export interface PopconfirmProps {
   overlayClassName?: string;
   /** 浮层内联样式。 */
   overlayStyle?: Record<string, string | number>;
-  /** 标题（可为惰性函数；`0` 合法）。 */
+  /** 标题数据（`0` 合法）；富内容优先使用 #title。 */
   title?: TooltipContent;
-  /** 描述文案（可为惰性函数）。 */
+  /** 描述数据；富内容优先使用 #description。 */
   description?: TooltipContent;
   /** 禁用：不打开浮层。 */
   disabled?: boolean;
@@ -106,8 +114,8 @@ export interface PopconfirmProps {
   styles?: PopconfirmStyles;
   /** 打开状态变化回调。 */
   onOpenChange?: (open: boolean) => void;
-  /** 确认回调。 */
-  onConfirm?: (e?: MouseEvent) => void;
+  /** 确认回调；Promise 返回值用于等待完成后关闭。 */
+  onConfirm?: (e?: MouseEvent) => unknown;
   /** 取消回调。 */
   onCancel?: (e?: MouseEvent) => void;
   /** 浮层内容点击回调。 */

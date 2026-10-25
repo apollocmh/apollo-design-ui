@@ -24,6 +24,7 @@ import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
 import NativeAttrs from './NativeAttrs.vue';
+import OverlayContent from './OverlayContent.vue';
 import PaginationContainers from './PaginationContainers.vue';
 import SwitchEvents from './SwitchEvents.vue';
 import TimelineNative from './TimelineNative.vue';
@@ -82,6 +83,7 @@ const Demo = {
   'breakpoint-native': BreakpointNative,
   'timeline-slots': TimelineSlots,
   'steps-native-slots': StepsNativeSlots,
+  'overlay-content': OverlayContent,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

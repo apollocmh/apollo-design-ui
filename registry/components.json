@@ -2329,7 +2329,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "【trigger 的第一个消费者】用于验证 ARCHITECTURE.md AR1（浮层定位像素级一致性）。必须先通过 PoC 验证再继续。",
+      "notes": "【trigger 的第一个消费者】用于验证 ARCHITECTURE.md AR1（浮层定位像素级一致性）。必须先通过 PoC 验证再继续。\n2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2400,7 +2400,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3398,7 +3398,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

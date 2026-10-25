@@ -25,8 +25,13 @@ export type TooltipPlacement =
   | 'rightTop'
   | 'rightBottom';
 
-/** 内容：`title` / `overlay` 同形（ReactNode | RenderFunction）。 */
-export type TooltipContent = VNodeChild | (() => VNodeChild);
+/** 内容数据；模板扩展使用具名插槽，不接受渲染函数。 */
+export type TooltipContent = VNodeChild;
+
+export interface TooltipSlots {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+}
 
 /** `arrow` 三形态（useMergedArrow 消费）。 */
 export type TooltipArrow = boolean | { pointAtCenter?: boolean };

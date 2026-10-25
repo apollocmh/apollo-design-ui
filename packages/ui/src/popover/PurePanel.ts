@@ -5,11 +5,11 @@
  * 与 tooltip PurePanel 的结构差异（antd 源逐条对齐）：root 额外带
  * `{p}-placement-{placement}` 类；内容是 Overlay（title + content 两块）。
  */
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, type SlotsType } from 'vue';
 import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import type { PopoverSemanticType } from './interface';
+import type { PopoverProps, PopoverSemanticType, PopoverSlots } from './interface';
 
 type StyleLike = Record<string, string | number>;
 
@@ -28,14 +28,19 @@ function isRenderable(value: unknown): boolean {
 const PurePanel = defineComponent({
   name: 'APopoverPurePanel',
   inheritAttrs: false,
+  slots: Object as SlotsType<Omit<PopoverSlots, 'default'>>,
   props: {
     prefixCls: { type: String, default: undefined },
     color: { type: String, default: undefined },
     placement: { type: String, default: 'top' },
-    // ⚠️ C8-R2：title / content 收窄为 String（富内容走同名 slot，slot 读取见下）；
-    //    公开 `Popover` 本体已同构（title/content 双通道），此处仅收窄 PurePanel 的 prop 类型。
-    title: { type: String, default: undefined },
-    content: { type: String, default: undefined },
+    title: {
+      type: [Object, String, Number, Boolean, Array] as PropType<PopoverProps['title']>,
+      default: undefined,
+    },
+    content: {
+      type: [Object, String, Number, Boolean, Array] as PropType<PopoverProps['content']>,
+      default: undefined,
+    },
     classNames: {
       type: Object as PropType<PopoverSemanticType['classNames']>,
       default: undefined,
@@ -53,9 +58,8 @@ const PurePanel = defineComponent({
     return () => {
       const prefixCls = props.prefixCls ?? getPrefixCls('popover');
       const placement = props.placement ?? 'top';
-      // props 优先，插槽兜底（与 Popover 主体的 title/content 双通道同构）
-      const title = props.title !== undefined ? props.title : slots.title?.();
-      const content = props.content !== undefined ? props.content : slots.content?.();
+      const title = slots.title ? slots.title() : props.title;
+      const content = slots.content ? slots.content() : props.content;
 
       return h(
         'div',
@@ -92,20 +96,22 @@ const PurePanel = defineComponent({
                 ? h(
                     'div',
                     {
+                      key: 'title',
                       class: clsx(`${prefixCls}-title`, mergedClassNames.value.title),
                       style: mergedStyles.value.title as StyleLike | undefined,
                     },
-                    [title as VNodeChild].filter((c) => c !== null && c !== undefined),
+                    [title],
                   )
                 : null,
               isRenderable(content)
                 ? h(
                     'div',
                     {
+                      key: 'content',
                       class: clsx(`${prefixCls}-content`, mergedClassNames.value.content),
                       style: mergedStyles.value.content as StyleLike | undefined,
                     },
-                    [content as VNodeChild].filter((c) => c !== null && c !== undefined),
+                    [content],
                   )
                 : null,
             ],

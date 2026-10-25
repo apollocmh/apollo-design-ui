@@ -1491,6 +1491,7 @@ export type {
   PopconfirmProps,
   PopconfirmRef,
   PopconfirmSemanticType,
+  PopconfirmSlots,
   PopconfirmStyles,
 } from './popconfirm';
 export { Popconfirm, PopconfirmPurePanel } from './popconfirm';
@@ -1502,6 +1503,7 @@ export type {
   PopoverProps,
   PopoverRef,
   PopoverSemanticType,
+  PopoverSlots,
   PopoverStyles,
 } from './popover';
 export { Popover, PopoverPurePanel } from './popover';
@@ -1814,6 +1816,7 @@ export type {
   TooltipProps,
   TooltipRef,
   TooltipSemanticType,
+  TooltipSlots,
   TooltipStyles,
 } from './tooltip';
 export { Tooltip, TooltipPurePanel } from './tooltip';

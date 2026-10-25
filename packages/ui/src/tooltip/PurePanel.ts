@@ -2,11 +2,11 @@
  * PurePanel —— antd `components/tooltip/PurePanel.tsx` 的 Vue 版。
  * `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板（demo / 文档用）。
  */
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, type SlotsType } from 'vue';
 import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import type { TooltipSemanticType } from './interface';
+import type { TooltipContent, TooltipSemanticType, TooltipSlots } from './interface';
 import { parseTooltipColor } from './util';
 
 type StyleLike = Record<string, string | number>;
@@ -21,12 +21,15 @@ function stripClassStyle(attrs: Record<string, unknown>): Record<string, unknown
 const PurePanel = defineComponent({
   name: 'ATooltipPurePanel',
   inheritAttrs: false,
+  slots: Object as SlotsType<Pick<TooltipSlots, 'title'>>,
   props: {
     prefixCls: { type: String, default: undefined },
     color: { type: String, default: undefined },
     placement: { type: String, default: 'top' },
-    // C8-R2：title 收窄 String（富内容走 `#title` 插槽，slot 优先）
-    title: { type: String, default: undefined },
+    title: {
+      type: [String, Number, Boolean, Object, Array] as PropType<TooltipContent>,
+      default: undefined,
+    },
     classNames: { type: Object as PropType<TooltipSemanticType['classNames']>, default: undefined },
     styles: { type: Object as PropType<TooltipSemanticType['styles']>, default: undefined },
   },
@@ -82,7 +85,7 @@ const PurePanel = defineComponent({
             },
             [
               // C8-R2：slot 优先
-              (slots.title?.() ?? props.title) as VNodeChild,
+              slots.title ? slots.title() : props.title,
             ].filter((c) => c !== null && c !== undefined),
           ),
         ],

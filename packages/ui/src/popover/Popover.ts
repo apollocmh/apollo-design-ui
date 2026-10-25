@@ -19,9 +19,8 @@ import {
   Fragment,
   h,
   type PropType,
+  type SlotsType,
   shallowRef,
-  type VNode,
-  type VNodeChild,
 } from 'vue';
 import { clsx } from '../_internal/clsx';
 import type { TriggerAlign } from '../_internal/trigger';
@@ -34,6 +33,7 @@ import type {
   PopoverClassNames,
   PopoverProps,
   PopoverSemanticType,
+  PopoverSlots,
   PopoverStyles,
 } from './interface';
 import PurePanel from './PurePanel';
@@ -45,16 +45,12 @@ function isRenderable(value: unknown): boolean {
   return value !== null && value !== undefined && typeof value !== 'boolean';
 }
 
-/** 惰性求值（antd `getRenderPropValue`）。 */
-function getRenderPropValue(value: TooltipContentLike): VNodeChild {
-  return typeof value === 'function' ? (value as () => VNodeChild)() : (value as VNodeChild);
-}
-
 type TooltipContentLike = PopoverProps['title'];
 
 const Popover = defineComponent({
   name: 'APopover',
   inheritAttrs: false,
+  slots: Object as SlotsType<PopoverSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     open: { type: Boolean, default: undefined },
@@ -65,11 +61,11 @@ const Popover = defineComponent({
       default: undefined,
     },
     title: {
-      type: [Object, String, Number, Function] as PropType<TooltipContentLike>,
+      type: [Object, String, Number, Boolean, Array] as PropType<TooltipContentLike>,
       default: undefined,
     },
     content: {
-      type: [Object, String, Number, Function] as PropType<TooltipContentLike>,
+      type: [Object, String, Number, Boolean, Array] as PropType<TooltipContentLike>,
       default: undefined,
     },
     trigger: { type: [String, Array] as PropType<string | string[]>, default: undefined },
@@ -88,7 +84,7 @@ const Popover = defineComponent({
     fresh: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     autoAdjustOverflow: {
-      type: [Boolean, Object] as PropType<boolean | { adjustX?: boolean; adjustY?: boolean }>,
+      type: [Boolean, Object] as PropType<PopoverProps['autoAdjustOverflow']>,
       default: undefined,
     },
     classNames: {
@@ -163,16 +159,6 @@ const Popover = defineComponent({
       setOpen(nextOpen);
     };
 
-    // ============================ Content ============================
-    const titleNode = computed(() =>
-      props.title === undefined && slots.title ? slots.title() : getRenderPropValue(props.title),
-    );
-    const contentNode = computed(() =>
-      props.content === undefined && slots.content
-        ? slots.content()
-        : getRenderPropValue(props.content),
-    );
-
     // ======================== Merged Semantic ========================
     const mergedProps = computed<PopoverProps>(() => ({
       ...props,
@@ -218,9 +204,9 @@ const Popover = defineComponent({
 
     // ============================ Overlay ============================
     // antd：title/content 双双不可渲染 ⇒ overlay=null ⇒ Tooltip 的 noTitle 生效。
-    const overlay = computed<VNode | null>(() => {
-      const title = titleNode.value;
-      const content = contentNode.value;
+    const renderOverlay = () => {
+      const title = slots.title ? slots.title() : props.title;
+      const content = slots.content ? slots.content() : props.content;
       if (!isRenderable(title) && !isRenderable(content)) return null;
       // ⚠️ antd 的 Overlay 是 **Fragment** ⇒ `-container` 的直接子元素就是
       //    title / content；包一层 div 会破坏 `container > .title` 这类规则
@@ -230,30 +216,26 @@ const Popover = defineComponent({
           ? h(
               'div',
               {
-                class: [`${prefixCls}-title`, mergedClassNames.value.title] as unknown as Record<
-                  string,
-                  unknown
-                >,
+                key: 'title',
+                class: [`${prefixCls}-title`, mergedClassNames.value.title],
                 style: mergedStyles.value.title as StyleLike | undefined,
               },
-              [title as VNodeChild].filter((c) => c !== null && c !== undefined),
+              [title],
             )
           : null,
         isRenderable(content)
           ? h(
               'div',
               {
-                class: [
-                  `${prefixCls}-content`,
-                  mergedClassNames.value.content,
-                ] as unknown as Record<string, unknown>,
+                key: 'content',
+                class: [`${prefixCls}-content`, mergedClassNames.value.content],
                 style: mergedStyles.value.content as StyleLike | undefined,
               },
-              [content as VNodeChild].filter((c) => c !== null && c !== undefined),
+              [content],
             )
           : null,
       ]);
-    });
+    };
 
     // ============================ Expose =============================
     const tooltipRef = shallowRef<TooltipRef | null>(null);
@@ -264,6 +246,7 @@ const Popover = defineComponent({
     });
 
     return () => {
+      const overlay = renderOverlay();
       const children = slots.default?.();
       return h(
         Tooltip,
@@ -315,7 +298,7 @@ const Popover = defineComponent({
         },
         // C8-R2：Tooltip 的内容通道只剩 `#title` 插槽 —— Popover 的 overlay
         // （title/content 双槽结构）整体经它下发。
-        { default: () => children, title: () => overlay.value },
+        { default: () => children, title: () => overlay },
       );
     };
   },

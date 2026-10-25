@@ -15,13 +15,7 @@ import type { OverlayActionInput } from '@apollo-design/overlay';
 import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { getDesignToken } from '@apollo-design/theme';
-import {
-  devUseWarning,
-  isDev,
-  isEmptyVNode,
-  isRenderable,
-  useControlledValue,
-} from '@apollo-design/utils';
+import { devUseWarning, isDev, isEmptyVNode, useControlledValue } from '@apollo-design/utils';
 import {
   Comment,
   type CSSProperties,
@@ -35,6 +29,7 @@ import {
   normalizeClass,
   type PropType,
   provide,
+  type SlotsType,
   shallowRef,
   Text,
   useId,
@@ -51,6 +46,7 @@ import type {
   TooltipProps,
   TooltipRef,
   TooltipSemanticType,
+  TooltipSlots,
   TooltipStyles,
 } from './interface';
 import { tooltipTokenValues } from './style/token';
@@ -97,14 +93,17 @@ function cloneWithProps(child: VNode, extra: Record<string, unknown>): VNode {
 const Tooltip = defineComponent({
   name: 'ATooltip',
   inheritAttrs: false,
+  slots: Object as SlotsType<TooltipSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
     onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-    // C8-R2：title 收窄 String（富内容 / 0 值走 `#title` 插槽）；deprecated overlay 删除
-    title: { type: String, default: undefined },
+    title: {
+      type: [String, Number, Boolean, Object, Array] as PropType<TooltipProps['title']>,
+      default: undefined,
+    },
     trigger: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     placement: { type: String as PropType<TooltipPlacement>, default: undefined },
     arrow: {
@@ -224,23 +223,8 @@ const Tooltip = defineComponent({
     // destroyTooltipOnHide 的 keepParent 对象形态：antd 只告警不拦截（warning 非
     // boolean 即告警）。这里合并进 mergedDestroyOnHidden 的 !! 已足够。
 
-    // #title 插槽（C8-R2）：空渲染归一为 undefined ⇒ 视为未提供。
-    const titleSlot = computed<unknown>(() => {
-      const fn = slots.title;
-      if (typeof fn !== 'function') return undefined;
-      const nodes = fn();
-      if (nodes === undefined) return undefined;
-      return isEmptyVNode(nodes) ? undefined : nodes;
-    });
-
-    // antd：noTitle = !title && !overlay && title !== 0（title=0 合法内容）。
-    // C8-R2 后：内容 = `#title` 插槽 ?? title 文本 prop；「有内容」判据是
-    // isRenderable（0 / '0' 有内容，'' / null / false 没有 —— 与 antd 逐字同义）。
-    const mergedContent = computed<VNodeChild>(() => {
-      if (titleSlot.value !== undefined) return titleSlot.value as VNodeChild;
-      return props.title ?? '';
-    });
-    const noTitle = computed(() => !isRenderable(mergedContent.value));
+    // DOM 事件只消费最近一次 render 的内容判定，不在事件或 computed 中执行槽。
+    let noTitle = true;
 
     // ============================ Open ===============================
     // ⚠️ noTitle 抑制在 onChange 里：antd 的 onInternalOpenChange 是
@@ -249,7 +233,7 @@ const Tooltip = defineComponent({
       defaultValue: () => props.defaultOpen ?? false,
       getValue: () => props.open,
       onChange: (next: boolean) => {
-        if (noTitle.value) {
+        if (noTitle) {
           return;
         }
         props.onOpenChange?.(next);
@@ -260,7 +244,7 @@ const Tooltip = defineComponent({
     //    `onOpenChange` + `update:open`；这里再调一次就会**双通知**（Issue #24.1）。
     //    noTitle 的「不回调」语义由 onChange 里的早退保证。
     const onInternalOpenChange = (nextOpen: boolean): void => {
-      setOpen(noTitle.value ? false : nextOpen);
+      setOpen(noTitle ? false : nextOpen);
     };
 
     // ============================ Id =================================
@@ -295,9 +279,6 @@ const Tooltip = defineComponent({
     const zIndex = useZIndex('Tooltip', () => props.zIndex, {
       zIndexPopupBase: tooltipTokenValues().zIndexPopup,
     });
-
-    // =========================== Content =============================
-    const memoOverlay = computed<VNodeChild>(() => mergedContent.value);
 
     // ======================== Merged Semantic ========================
     const colorInfo = computed(() => parseTooltipColor(prefixCls, props.color));
@@ -357,13 +338,6 @@ const Tooltip = defineComponent({
     //   if (!('open' in props) && noTitle || inTableMeasureRow) tempOpen = false;`
     // —— 受控时**不做** noTitle 压制（受控方自己负责；Popover 传 open ⇒ 受控），
     // 只有非受控 + noTitle 才强制关。
-    const tempOpen = computed(() => {
-      if (props.open !== undefined) {
-        return props.open;
-      }
-      return mergedOpen.value && !noTitle.value;
-    });
-
     // =========================== Expose ==============================
     const triggerRef = shallowRef<TooltipRef | null>(null);
     expose({
@@ -374,6 +348,9 @@ const Tooltip = defineComponent({
     });
 
     return () => {
+      const content = slots.title ? slots.title() : props.title;
+      noTitle = content === '' || isEmptyVNode(content);
+      const tempOpen = props.open ?? (mergedOpen.value && !noTitle);
       // 触发元素：default slot 的**全部**节点。
       // ⚠️ 原来写 `children[0]` ⇒ 多节点默认插槽会静默丢掉其余兄弟（Issue #24.3）。
       //    rc 的 `Children.only` 语义在 Vue 侧的等价处理：单「真实元素」直接用，
@@ -404,14 +381,11 @@ const Tooltip = defineComponent({
       //    嵌套）都正确合并，且**不覆写**用户 class（Issue #24.7）。
       const childProps = (child.props ?? {}) as { class?: unknown; 'aria-describedby'?: string };
       const openCls =
-        tempOpen.value || (props.openClassName !== undefined && mergedOpen.value)
+        tempOpen || (props.openClassName !== undefined && mergedOpen.value)
           ? (props.openClassName ?? `${prefixCls}-open`)
           : '';
       const childClass = normalizeClass([childProps.class, openCls]);
-      const describedBy = [
-        childProps['aria-describedby'],
-        tempOpen.value ? mergedId.value : undefined,
-      ]
+      const describedBy = [childProps['aria-describedby'], tempOpen ? mergedId.value : undefined]
         .filter(Boolean)
         .join(' ');
 
@@ -444,7 +418,7 @@ const Tooltip = defineComponent({
           role: 'tooltip',
           onClick: props.onPopupClick ? (e: MouseEvent) => props.onPopupClick?.(e) : undefined,
         },
-        [memoOverlay.value as VNodeChild].filter((c) => c !== null && c !== undefined),
+        [content],
       );
 
       return h(
@@ -456,7 +430,7 @@ const Tooltip = defineComponent({
           // antd 的 ActionType 是 string，本仓只认 5 种动作 —— 未知动作在
           // resolveActions 里静默 no-op（语义安全），窄化 cast 登记 COMPATIBILITY
           action: mergedTrigger.value as OverlayActionInput,
-          open: tempOpen.value,
+          open: tempOpen,
           onOpenChange: onInternalOpenChange,
           afterOpenChange: props.afterOpenChange,
           disabled: props.disabled,

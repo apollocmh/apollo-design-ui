@@ -7,7 +7,7 @@
  */
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { h, nextTick, type VNodeChild } from 'vue';
 import Popover from '../Popover';
 
 const popup = () => document.querySelector<HTMLElement>('.apollo-popover');
@@ -16,7 +16,11 @@ const title = () => document.querySelector<HTMLElement>('.apollo-popover-title')
 const content = () => document.querySelector<HTMLElement>('.apollo-popover-content');
 const triggerEl = () => document.querySelector<HTMLElement>('.popover-target');
 
-function mountPopover(props: Record<string, unknown>, contentText = 'content') {
+function mountPopover(
+  props: Record<string, unknown>,
+  contentText = 'content',
+  slots: Record<string, () => VNodeChild> = {},
+) {
   return mount(Popover, {
     attachTo: document.body,
     global: { stubs: { teleport: false } },
@@ -27,7 +31,7 @@ function mountPopover(props: Record<string, unknown>, contentText = 'content') {
       mouseLeaveDelay: 0,
       ...props,
     },
-    slots: { default: () => h('button', { class: 'popover-target' }, 'target') },
+    slots: { default: () => h('button', { class: 'popover-target' }, 'target'), ...slots },
   });
 }
 
@@ -92,9 +96,9 @@ describe('Popover · L1 开合与内容', () => {
     expect(title()?.textContent).toBe('0');
   });
 
-  it('title/content 可为惰性函数', async () => {
+  it('title/content 使用原生具名槽', async () => {
     vi.useFakeTimers();
-    mountPopover({ title: () => 'lazy-title', content: () => 'lazy-content' }, '');
+    mountPopover({}, '', { title: () => 'lazy-title', content: () => 'lazy-content' });
     await triggerEl()?.dispatchEvent(new Event('mouseenter'));
     await vi.runAllTimersAsync();
     expect(title()?.textContent).toBe('lazy-title');

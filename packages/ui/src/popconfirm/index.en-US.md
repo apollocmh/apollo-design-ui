@@ -61,8 +61,8 @@ A simple and compact dialog used for asking confirmation of an action from the u
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| title | Title of the confirmation (`0` is renderable; lazy function allowed) | ReactNode / () => ReactNode | - |
-| description | Description of the confirmation | ReactNode / () => ReactNode | - |
+| title | Title data (`0` is valid); template content uses `#title` | VNodeChild | - |
+| description | Description data; template content uses `#description` | VNodeChild | - |
 | disabled | Whether the popconfirm is disabled (never opens, never emits `onOpenChange`) | boolean | false |
 | open | Whether the floating layer is open (controlled) | boolean | - |
 | defaultOpen | Whether the floating layer is open by default | boolean | false |
@@ -81,6 +81,16 @@ A simple and compact dialog used for asking confirmation of an action from the u
 | onPopupClick | Called when the popup content is clicked | (e: MouseEvent) => void | - |
 | classNames | Semantic class names (root / container / arrow / icon / title / content) | object or function | - |
 | styles | Semantic styles (same slots) | object or function | - |
+
+### Slots
+
+| Name | Content |
+| --- | --- |
+| default | Trigger element (Popconfirm only) |
+| title / description | Title / description, taking precedence over the matching prop |
+| okText / cancelText | Button content, taking precedence over the string prop and locale |
+
+`PopconfirmSlots` is exported. The four content slots also work in `PopconfirmPurePanel`. Present slots override all fallbacks, including empty content; removing a slot restores the prop or locale. Slots are read during render. Render-function props are removed directly; async confirmation callbacks remain supported. See the [migration](../../../../docs/migrations/overlay-content-slots.md).
 
 ### Theme Variables
 

@@ -74,12 +74,10 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
         Popover,
         {
           ...BP,
-          title: () => 'lazy-title',
-          content: () => 'lazy-content',
           open: true,
           id: 'pop-7',
         } as never,
-        { default: () => 'target' },
+        { default: () => 'target', title: () => 'lazy-title', content: () => 'lazy-content' },
       ),
   },
   'popover:existing-describedby': {

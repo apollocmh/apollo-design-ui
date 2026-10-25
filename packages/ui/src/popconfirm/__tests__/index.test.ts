@@ -10,7 +10,7 @@
 
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { h, nextTick, type VNodeChild } from 'vue';
 import { PopconfirmPurePanel } from '../index';
 import Popconfirm from '../Popconfirm';
 
@@ -23,7 +23,10 @@ const buttons = () =>
   Array.from(document.querySelectorAll<HTMLElement>('.apollo-popconfirm-buttons button'));
 const triggerEl = () => document.querySelector<HTMLElement>('.popconfirm-target');
 
-function mountPopconfirm(props: Record<string, unknown> = {}) {
+function mountPopconfirm(
+  props: Record<string, unknown> = {},
+  slots: Record<string, () => VNodeChild> = {},
+) {
   return mount(Popconfirm, {
     attachTo: document.body,
     global: { stubs: { teleport: false } },
@@ -33,7 +36,7 @@ function mountPopconfirm(props: Record<string, unknown> = {}) {
       mouseLeaveDelay: 0,
       ...props,
     },
-    slots: { default: () => h('button', { class: 'popconfirm-target' }, 'target') },
+    slots: { default: () => h('button', { class: 'popconfirm-target' }, 'target'), ...slots },
   });
 }
 
@@ -120,12 +123,14 @@ describe('Popconfirm · Overlay 结构', () => {
     expect(btns[1]?.textContent).toContain('OK');
   });
 
-  it('惰性函数 title / description（getRenderPropValue）', async () => {
-    mountPopconfirm({
-      open: true,
-      title: () => 'lazy-title',
-      description: () => 'lazy-description',
-    });
+  it('title / description 使用原生具名槽', async () => {
+    mountPopconfirm(
+      { open: true },
+      {
+        title: () => 'lazy-title',
+        description: () => 'lazy-description',
+      },
+    );
     await vi.waitUntil(() => popup() !== null, { timeout: 2000 }).catch(() => {});
     expect(titleEl()?.textContent).toBe('lazy-title');
     expect(descriptionEl()?.textContent).toBe('lazy-description');

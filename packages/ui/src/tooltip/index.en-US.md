@@ -16,7 +16,7 @@ subtitle: Tooltip
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| title | 提示内容（`0` 合法） | `VNodeChild \| (() => VNodeChild)` | — |
+| title | Content data (`0` is valid); use `#title` for template content | `VNodeChild` | — |
 | — | ~~`overlay`~~ **已移除**（C8-R2）：富内容走 `#title` 插槽 | — | — |
 | open / defaultOpen | 受控开合（`v-model:open` 等价）/ 非受控初值 | `boolean` | `false` |
 | onOpenChange | 开合回调（与 `update:open` 同时发出） | `(open: boolean) => void` | — |
@@ -42,6 +42,9 @@ subtitle: Tooltip
 | 名称 | 说明 |
 |---|---|
 | default | 触发元素（组件也可；事件与 ref 需透传到根元素） |
+| title | Content; takes precedence over the title prop, including an empty slot |
+
+`TooltipSlots` is exported. `TooltipPurePanel` accepts the same title data and named slot. Conditional slots are read during each render.
 
 ### Expose
 
@@ -51,5 +54,5 @@ subtitle: Tooltip
 
 - **trigger 基建**：`_internal/trigger.ts` 组装 overlay + position + portal +
   motion（见 [`docs/analysis/tooltip.md`](../../../../docs/analysis/tooltip.md) §8）。
-- **noTitle 抑制**：`title` 与 `overlay` 均未传（`title=0` 除外）⇒ 强制关闭且不发回调。
+- **Empty content**: an uncontrolled tooltip stays closed and sends no open-change notification. Controlled `open` remains authoritative. `0` is valid; an empty title slot never falls back to the prop.
 - 与 antd 的已知差异见组件 README。

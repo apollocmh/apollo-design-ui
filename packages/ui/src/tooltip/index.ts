@@ -23,6 +23,7 @@ export type {
   TooltipProps,
   TooltipRef,
   TooltipSemanticType,
+  TooltipSlots,
   TooltipStyles,
 } from './interface';
 export { genTooltipStyle } from './style';

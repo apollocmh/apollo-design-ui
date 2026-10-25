@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 506,
+    "rows": 516,
     "byCategory": {
       "data": 134,
-      "component-content-candidate": 148,
+      "component-content-candidate": 153,
       "deprecated": 53,
-      "internal": 85,
-      "render-function-candidate": 74,
+      "internal": 95,
+      "render-function-candidate": 69,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
       "review": 210,
-      "skip": 138,
+      "skip": 148,
       "implemented-verified": 12
     }
   },
@@ -9431,8 +9431,8 @@
       "component": "popconfirm",
       "owner": "PopconfirmProps",
       "prop": "description",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/popconfirm/interface.ts:72",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/popconfirm/interface.ts:80",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9441,12 +9441,16 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/render-panel.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
@@ -9463,7 +9467,7 @@
       "owner": "PopconfirmProps",
       "prop": "icon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/popconfirm/interface.ts:96",
+      "source": "packages/ui/src/popconfirm/interface.ts:104",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -9491,8 +9495,8 @@
       "component": "popconfirm",
       "owner": "PopconfirmProps",
       "prop": "title",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/popconfirm/interface.ts:70",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/popconfirm/interface.ts:78",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9501,12 +9505,16 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/render-panel.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
@@ -9521,11 +9529,191 @@
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
     },
     {
+      "component": "popconfirm",
+      "owner": "PopconfirmSlots",
+      "prop": "cancelText",
+      "category": "internal",
+      "source": "packages/ui/src/popconfirm/interface.ts:27",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts",
+          "packages/ui/src/popconfirm/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
+          "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popconfirm",
+      "owner": "PopconfirmSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/popconfirm/interface.ts:23",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
+          "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popconfirm",
+      "owner": "PopconfirmSlots",
+      "prop": "description",
+      "category": "internal",
+      "source": "packages/ui/src/popconfirm/interface.ts:25",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts",
+          "packages/ui/src/popconfirm/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popconfirm",
+      "owner": "PopconfirmSlots",
+      "prop": "okText",
+      "category": "internal",
+      "source": "packages/ui/src/popconfirm/interface.ts:26",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts",
+          "packages/ui/src/popconfirm/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
+          "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popconfirm",
+      "owner": "PopconfirmSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/popconfirm/interface.ts:24",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/Popconfirm.ts",
+          "packages/ui/src/popconfirm/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+          "packages/ui/src/popconfirm/__tests__/index.test.ts",
+          "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
+          "packages/ui/src/popconfirm/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
       "component": "popover",
       "owner": "PopoverProps",
       "prop": "content",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/popover/interface.ts:54",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/popover/interface.ts:61",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9534,8 +9722,10 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "source-reference",
@@ -9567,8 +9757,8 @@
       "component": "popover",
       "owner": "PopoverProps",
       "prop": "title",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/popover/interface.ts:52",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/popover/interface.ts:59",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -9577,8 +9767,91 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/__tests__/a11y.test.ts",
+          "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
+          "packages/ui/src/popover/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "review",
+      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "popover",
+      "owner": "PopoverSlots",
+      "prop": "content",
+      "category": "internal",
+      "source": "packages/ui/src/popover/interface.ts:26",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/Popover.ts",
+          "packages/ui/src/popover/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/demo/arrow.vue",
+          "packages/ui/src/popover/demo/basic.vue",
+          "packages/ui/src/popover/demo/component-token.vue",
+          "packages/ui/src/popover/demo/control.vue",
+          "packages/ui/src/popover/demo/hover-with-click.vue",
+          "packages/ui/src/popover/demo/placement.vue",
+          "packages/ui/src/popover/demo/render-panel.vue",
+          "packages/ui/src/popover/demo/triggerType.vue",
+          "packages/ui/src/popover/demo/wireframe.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/__tests__/a11y.test.ts",
+          "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
+          "packages/ui/src/popover/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popover",
+      "owner": "PopoverSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/popover/interface.ts:24",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/Popover.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -9593,8 +9866,45 @@
           "packages/ui/src/popover/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "popover",
+      "owner": "PopoverSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/popover/interface.ts:25",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/Popover.ts",
+          "packages/ui/src/popover/PurePanel.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/popover/__tests__/a11y.test.ts",
+          "packages/ui/src/popover/__tests__/index.test.ts",
+          "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
+          "packages/ui/src/popover/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "progress",
@@ -13391,8 +13701,8 @@
       "component": "tooltip",
       "owner": "TooltipProps",
       "prop": "title",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/tooltip/interface.ts:78",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/tooltip/interface.ts:83",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -13401,20 +13711,25 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/tooltip/demo/debug.vue"
+          "packages/ui/src/tooltip/demo/debug.vue",
+          "packages/ui/src/tooltip/demo/render-panel.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/tooltip/__tests__/a11y.test.ts",
+          "packages/ui/src/tooltip/__tests__/content-slots.test.ts",
           "packages/ui/src/tooltip/__tests__/dbg.test.ts",
+          "packages/ui/src/tooltip/__tests__/fixtures/OverlaySlots.vue",
           "packages/ui/src/tooltip/__tests__/index.test.ts",
           "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
           "packages/ui/src/tooltip/__tests__/semantic.test.ts"
@@ -13422,6 +13737,83 @@
       },
       "decision": "review",
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "tooltip",
+      "owner": "TooltipSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/tooltip/interface.ts:32",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/Tooltip.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/__tests__/a11y.test.ts",
+          "packages/ui/src/tooltip/__tests__/content-slots.test.ts",
+          "packages/ui/src/tooltip/__tests__/dbg.test.ts",
+          "packages/ui/src/tooltip/__tests__/index.test.ts",
+          "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
+          "packages/ui/src/tooltip/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "tooltip",
+      "owner": "TooltipSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/tooltip/interface.ts:33",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/PurePanel.ts",
+          "packages/ui/src/tooltip/Tooltip.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/demo/debug.vue",
+          "packages/ui/src/tooltip/demo/render-panel.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tooltip/__tests__/a11y.test.ts",
+          "packages/ui/src/tooltip/__tests__/content-slots.test.ts",
+          "packages/ui/src/tooltip/__tests__/dbg.test.ts",
+          "packages/ui/src/tooltip/__tests__/fixtures/OverlaySlots.vue",
+          "packages/ui/src/tooltip/__tests__/index.test.ts",
+          "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
+          "packages/ui/src/tooltip/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "tour",

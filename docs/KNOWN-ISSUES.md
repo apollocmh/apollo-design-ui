@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、506 行 owner/field 清单。内容候选 148、渲染候选 74、数据/配置 146、内部/废弃 138；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、516 行 owner/field 清单。内容候选 153、渲染候选 69、数据/配置 146、内部/废弃 148；只将十二个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -225,6 +225,9 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 **2026-10-25 断点响应性增量**：Steps固化初始responsive选择，共享useBreakpoint恢复发布时遗漏当前快照；三条回归修前全失败。修复getter/暂停缓存与立即恢复，扩展SSR/卸载、Avatar数值转响应式尺寸、List静态转响应式列与输入保持，见 [专项报告](audit/2026-10-25-breakpoint-reactivity-remediation.md)。
 
 **2026-10-25 Steps 原生槽增量**：四个已实现的槽补齐组件声明与精确模板推断，移除never/unknown桥接及未消费的默认槽类型；inline itemRender递归挂载Tooltip、无itemRender时默认提示缺失均已独立复现并修复，见 [专项报告](audit/2026-10-25-steps-native-slots-remediation.md)。新增原生Demo，未保留函数prop兼容层。
+
+
+**2026-10-25 浮层内容增量**：Tooltip / Popover / Popconfirm 及三种PurePanel统一当前槽优先，空槽不回退；移除内容函数prop，保留VNode/0数据和异步确认回调。9条首批回归修前8失败/1通过，补SSR水合、正文状态保持及kebab-case回调复现后共13条；六入口类型、模板及生产浏览器证据见 [专项报告](audit/2026-10-25-overlay-content-slots-remediation.md)。浮层原生attrs与其他F11候选继续复审，不把本批视作全库验收。
 
 ---
 
@@ -326,8 +329,8 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Carousel | 9/7 | —；自动切换计时器、键盘/触控 |
 | Collapse | 9/13 | **F07**；header slot 优先、动态图标/混合模式 |
 | Descriptions | 13/13 | **F08**；render 期间写 ref；复杂 slot 子项 |
-| Tooltip | 15/15 | —；Trigger 共用回归 |
-| Popover | 12/12 | —；位置与嵌套交互 |
+| Tooltip | 15/15 | F11：当前/空标题槽、VNode/0数据与类型已整改；原生attrs和Apollo视觉继续复审 |
+| Popover | 12/12 | F11：内容函数迁为原生槽、优先级/当前值/正文状态已修；原生attrs继续复审 |
 | Menu | 14/18 | 已整改 Trigger；`custom-popup-render` 能力按真实 API 核实 |
 | Dropdown | 19/21 | —；菜单容器滚动和键盘 |
 | Modal | 23/23 | —；focus/关闭/SSR motion 门禁 |
@@ -341,7 +344,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Cascader | 23/23 | F02 消费者；异步加载/slot |
 | Tree | 19/19 | —；虚拟/拖拽/键盘 |
 | TreeSelect | 19/15 | F02 消费者；`checkable` / renderPanel 类型与 Demo |
-| Popconfirm | 10/11 | —；异步确认/键盘 |
+| Popconfirm | 10/11 | F11：四内容槽及kebab-case业务回调/Promise链已修；原生attrs/图标槽与视觉继续复审 |
 | Tour | 9/9 | —；定位/焦点/清理 |
 | FloatButton | 14/16 | 自定义浮层/拖动能力先定支持范围 |
 | Form | 35/44 | **F03 前缀/占位已验证**；动态 Form.List、验证竞态与 Demo 能力继续审查 |

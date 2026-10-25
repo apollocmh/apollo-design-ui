@@ -9,6 +9,7 @@
  * 内容通道（title + content 双通道）与语义槽（title/content）上扩展。
  */
 
+import type { VNodeChild } from 'vue';
 import type {
   TooltipArrow,
   TooltipContent,
@@ -18,6 +19,12 @@ import type {
 } from '../tooltip/interface';
 
 export type { TooltipArrow, TooltipContent, TooltipPlacement };
+
+export interface PopoverSlots {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+  content?: () => VNodeChild;
+}
 
 /** 语义槽位（D36 同判：手写接口，不做条件类型）。 */
 export interface PopoverSemanticType {
@@ -48,9 +55,9 @@ export type PopoverStyles =
   | ((info: { props: PopoverProps }) => PopoverSemanticType['styles']);
 
 export interface PopoverProps extends Omit<TooltipProps, 'classNames' | 'styles' | 'title'> {
-  /** 标题内容（`0` 合法；可为惰性函数）。 */
+  /** 标题数据（`0` 合法）；富内容优先使用 #title。 */
   title?: TooltipContent;
-  /** 正文内容（`0` 合法；可为惰性函数）。 */
+  /** 正文数据（`0` 合法）；富内容优先使用 #content。 */
   content?: TooltipContent;
   /** 语义化类名（比 Tooltip 多 title / content 两槽）。 */
   classNames?: PopoverClassNames;
