@@ -10,6 +10,7 @@ import ListLikes from '../../../packages/ui/src/list/demo/item-extra.vue';
 import ListLoadMore from '../../../packages/ui/src/list/demo/loadmore.vue';
 import ListPagination from '../../../packages/ui/src/list/demo/pagination.vue';
 import ListResponsive from '../../../packages/ui/src/list/demo/responsive.vue';
+import MentionsPopup from '../../../packages/ui/src/mentions/demo/popupRender.vue';
 import PaginationSlots from '../../../packages/ui/src/pagination/demo/native-slots.vue';
 import ConditionalSelect from '../../../packages/ui/src/select/demo/conditional-options.vue';
 import StepsNativeSlots from '../../../packages/ui/src/steps/demo/native-slots.vue';
@@ -86,6 +87,7 @@ const Demo = {
   'steps-native-slots': StepsNativeSlots,
   'overlay-content': OverlayContent,
   'overlay-attrs': OverlayAttrs,
+  'mentions-popup': MentionsPopup,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

@@ -103,7 +103,7 @@ registry 数据：`tokenCount = 3`（`zIndexPopup` / `dropdownHeight` / `control
 | `async` | `lodash/debounce` | `setTimeout`（120ms） | 本仓无 `lodash` |
 | `async` | GitHub 真实头像（外网图片） | 本地 `data:image/svg+xml` | 外网图片会污染视觉基线 |
 | `async` | JSX fragment 作 `label` | 渲染函数 `h(...)` | `label` 收 `VNodeChild`，对象不渲染 |
-| `popupRender` | `theme.useToken()` | 等值字面量（`8px 12px` / `600` / `rgba(0,0,0,0.45)`） | 与默认主题的解析值一致 |
+| `popupRender` | `theme.useToken()` | Vue原生作用域槽 + CSS变量 | 间距、字重和文本颜色随Apollo主题变量更新 |
 | `style-class` | `antd-style` 的 `createStyles` | 静态类名 + `<style scoped>` | 同上 |
 | `form` | `Form.useForm()` | `useForm()` + `:form` | 本仓 Form 的既有 API（`form/demo/basic.vue`） |
 | `size` / `variant` | `Flex vertical gap` | 同（本仓 Flex 支持） | — |

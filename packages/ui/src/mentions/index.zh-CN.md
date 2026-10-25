@@ -53,7 +53,6 @@ subtitle: 提及
 | placement | 浮层方位 | `'top' \| 'bottom'` | `'bottom'` | × |
 | getPopupContainer | 浮层挂载点 | `() => HTMLElement` | — | ✅ |
 | popupClassName | 浮层额外类名 | `string` | — | × |
-| popupRender | 自定义浮层渲染（收默认菜单，返回新节点） | `(menu) => VNodeChild` | — | × |
 | size | 尺寸 | `'large' \| 'middle' \| 'small'` | 从 ConfigProvider 取 | ✅ |
 | disabled | 禁用 | `boolean` | 从 `DisabledContext` 取 | ✅ |
 | readOnly | 只读（**不加类名**，只给 textarea 加 `readonly`） | `boolean` | `false` | × |
@@ -97,6 +96,9 @@ subtitle: 提及
 | 名称 | 说明 | 参数 |
 |---|---|---|
 | default | `Mentions.Option` 形式的候选项（**已 deprecated**，用 `options`） | — |
+| popupRender | 自定义浮层；槽存在则使用其内容，空槽不恢复默认菜单 | `{ originNode: VNode }` |
+
+`MentionsSlots` / `MentionsPopupRenderSlotProps` 已导出并接入组件。槽按当前 render 沿包装与引擎转发；条件移除后恢复菜单，保留 textarea 节点、当前值、焦点及默认菜单的选择行为。旧 popupRender 函数 prop 已直接移除，无兼容层，见 [迁移记录](../../../../docs/migrations/mentions-popup-slot.md)。
 
 ### Expose（模板 ref）
 

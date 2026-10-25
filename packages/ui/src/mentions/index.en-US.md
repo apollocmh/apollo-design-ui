@@ -53,7 +53,6 @@ See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 | placement | Popup placement | `'top' \| 'bottom'` | `'bottom'` | × |
 | getPopupContainer | Popup mount point | `() => HTMLElement` | — | ✅ |
 | popupClassName | Extra class name for the popup | `string` | — | × |
-| popupRender | Customize the popup (receives the default menu) | `(menu) => VNodeChild` | — | × |
 | size | Size | `'large' \| 'middle' \| 'small'` | From ConfigProvider | ✅ |
 | disabled | Disabled | `boolean` | From `DisabledContext` | ✅ |
 | readOnly | Read only (**no class name**, only `readonly` on the textarea) | `boolean` | `false` | × |
@@ -97,6 +96,9 @@ See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 | Name | Description | Arguments |
 |---|---|---|
 | default | Candidates in `Mentions.Option` form (**deprecated**, use `options`) | — |
+| popupRender | Custom popup; a present slot overrides the default menu, including empty content | `{ originNode: VNode }` |
+
+`MentionsSlots` and `MentionsPopupRenderSlotProps` are exported and attached to the component. Slots are forwarded through the current render across wrapper and engine layers. Removing the slot restores the menu; editor nodes, current value, focus and the original menu's selection behavior are preserved. The render-function prop is removed directly without a compatibility channel; see the [migration](../../../../docs/migrations/mentions-popup-slot.md).
 
 ### Expose (template ref)
 

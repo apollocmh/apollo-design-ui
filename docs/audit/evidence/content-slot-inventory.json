@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 517,
+    "rows": 519,
     "byCategory": {
       "data": 134,
-      "component-content-candidate": 153,
+      "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 96,
-      "render-function-candidate": 69,
+      "internal": 98,
+      "render-function-candidate": 68,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
       "review": 204,
-      "skip": 149,
+      "skip": 151,
       "implemented-verified": 18
     }
   },
@@ -7897,7 +7897,7 @@
       "owner": "MentionsOptionProps",
       "prop": "label",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/mentions/interface.ts:44",
+      "source": "packages/ui/src/mentions/interface.ts:53",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -7913,9 +7913,36 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/mentions/__tests__/fixtures/PopupSlot.vue",
           "packages/ui/src/mentions/__tests__/index.test.ts",
+          "packages/ui/src/mentions/__tests__/popup-slot.test.ts",
           "packages/ui/src/mentions/__tests__/semantic.test.ts"
         ]
+      },
+      "decision": "review",
+      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "mentions",
+      "owner": "MentionsPopupRenderSlotProps",
+      "prop": "originNode",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/mentions/interface.ts:35",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
       },
       "decision": "review",
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
@@ -7942,6 +7969,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/mentions/__tests__/index.test.ts",
+          "packages/ui/src/mentions/__tests__/popup-slot.test.ts",
           "packages/ui/src/mentions/__tests__/semantic.test.ts"
         ]
       },
@@ -7980,7 +8008,7 @@
       "owner": "MentionsProps",
       "prop": "notFoundContent",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/mentions/interface.ts:133",
+      "source": "packages/ui/src/mentions/interface.ts:142",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -8004,17 +8032,24 @@
     },
     {
       "component": "mentions",
-      "owner": "MentionsProps",
-      "prop": "popupRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/mentions/interface.ts:150",
+      "owner": "MentionsSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/mentions/interface.ts:39",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/mentions/Mentions.ts",
+          "packages/ui/src/mentions/engine/KeywordTrigger.ts",
+          "packages/ui/src/mentions/engine/Mentions.ts",
+          "packages/ui/src/mentions/engine/context.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/mentions/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -8026,15 +8061,52 @@
           "packages/ui/src/mentions/__tests__/index.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "mentions",
+      "owner": "MentionsSlots",
+      "prop": "popupRender",
+      "category": "internal",
+      "source": "packages/ui/src/mentions/interface.ts:40",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/mentions/Mentions.ts",
+          "packages/ui/src/mentions/engine/KeywordTrigger.ts",
+          "packages/ui/src/mentions/engine/Mentions.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/mentions/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/mentions/demo/popupRender.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/mentions/__tests__/fixtures/PopupSlot.vue",
+          "packages/ui/src/mentions/__tests__/index.test.ts",
+          "packages/ui/src/mentions/__tests__/popup-slot.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "mentions",
       "owner": "OptionProps",
       "prop": "children",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/mentions/interface.ts:61",
+      "source": "packages/ui/src/mentions/interface.ts:70",
       "slotRuntime": {
         "status": "not-run",
         "files": []

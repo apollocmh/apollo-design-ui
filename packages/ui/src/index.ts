@@ -1346,6 +1346,7 @@ export type {
   MentionsConfig,
   MentionsEntity,
   MentionsOptionProps,
+  MentionsPopupRenderSlotProps,
   MentionsProps,
   MentionsRef,
   MentionsSemanticClassNames,
@@ -1353,6 +1354,7 @@ export type {
   MentionsSemanticContext,
   MentionsSemanticStyles,
   MentionsSemanticStylesFn,
+  MentionsSlots,
   OptionProps as MentionsOptionPropsDeprecated,
 } from './mentions';
 export { Mentions, MentionsOption } from './mentions';

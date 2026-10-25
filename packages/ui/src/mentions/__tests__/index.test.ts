@@ -24,7 +24,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
 import { MentionsOption } from '../engine/Mentions';
 import Mentions from '../index';
-import type { MentionsProps } from '../interface';
+import type { MentionsPopupRenderSlotProps, MentionsProps } from '../interface';
 
 const OPTIONS = [
   { value: 'afc163', label: 'afc163' },
@@ -449,12 +449,14 @@ describe('Mentions · expose / popupRender / 语义槽', () => {
     wrapper.unmount();
   });
 
-  it('popupRender 能改面板内容', async () => {
+  it('popupRender 原生槽能改面板内容', async () => {
     const wrapper = mount(Mentions, {
       props: {
         options: OPTIONS,
-        popupRender: (menu: unknown) =>
-          h('div', { class: 'custom-popup' }, [h('span', null, 'HEADER'), menu as never]),
+      },
+      slots: {
+        popupRender: ({ originNode }: MentionsPopupRenderSlotProps) =>
+          h('div', { class: 'custom-popup' }, [h('span', 'HEADER'), originNode]),
       },
       attachTo: document.body,
     });

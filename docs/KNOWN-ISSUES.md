@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、517 行 owner/field 清单。内容候选 153、渲染候选 69、数据/配置 146、内部/废弃 149；只将十八个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、519 行 owner/field 清单。内容候选 154、渲染候选 68、数据/配置 146、内部/废弃 151；只将十八个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -234,6 +234,9 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 
 **2026-10-25 Popconfirm图标槽增量**：六条回归修前全失败，补原生#icon并按当前函数转发，空槽不保留图标间距、移除槽恢复默认/VNode/false数据；正文输入与焦点、SSR及类型验证见 [专项报告](audit/2026-10-25-popconfirm-icon-slot-remediation.md)。清单按具体报告关联六个浮层字段，verified18/review204，不代表剩余缺陷数。
+
+
+**2026-10-25 Mentions浮层增量**：旧popupRender函数prop直接迁为单对象原生槽，四层当前转发，末端在render向Trigger传VNode数据。两条条件/空/当前数据与键盘回归修前失败，SSR守卫原已通过；保留单次选择与编辑器状态，修正类名数组的as never警告，并移除已补可访问名Demo的label豁免，见 [专项报告](audit/2026-10-25-mentions-popup-slot-remediation.md) 与 [迁移记录](migrations/mentions-popup-slot.md)。其余Mentions内容/attrs问题不由本批关闭。
 
 ---
 
@@ -369,7 +372,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
 | Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
-| Mentions | 16/16 | F11；dropdown item scoped slot |
+| Mentions | 16/16 | F11：popupRender已直接迁为当前单对象槽；option/notFound内容、原生attrs及其他契约继续复审 |
 | ColorPicker | 16/16 | F10 消费 `pickAttrs`；颜色与 alpha/键盘 |
 | DatePicker | 28/32 | **F01**；实际 input 属性与可访问性 |
 | TimePicker | 16/17 | **F01** 消费者；`render-panel` 场景按 API 决定 |

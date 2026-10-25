@@ -25,11 +25,20 @@
  *    注入）—— 但引擎层需要它，所以它只出现在 `engine/Mentions.ts` 的 props 上。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties, VNode, VNodeChild } from 'vue';
 import type { Variant } from '../config-provider/context';
 import type { SizeType } from '../config-provider/size-context';
 import type { TextAreaProps } from '../input/interface';
 import type { InputStatus } from '../space/statusUtils';
+
+export interface MentionsPopupRenderSlotProps {
+  originNode: VNode;
+}
+
+export interface MentionsSlots {
+  default?: () => VNodeChild;
+  popupRender?: (info: MentionsPopupRenderSlotProps) => VNodeChild;
+}
 
 /** 浮层方位（antd 只暴露这两个，内部的 right/left 由 direction 推导）。 */
 export type MentionPlacement = 'top' | 'bottom';
@@ -146,8 +155,6 @@ export interface MentionsProps extends MentionsBaseTextareaAttrs {
    * ⇒ 引擎层做一层适配（见 `engine/KeywordTrigger.ts`）。
    */
   getPopupContainer?: () => HTMLElement;
-  /** 自定义浮层渲染（收默认菜单，返回新节点）。 */
-  popupRender?: (menu: VNodeChild) => VNodeChild;
   /** 浮层滚动回调。 */
   onPopupScroll?: (event: Event) => void;
   /** 值变化（**收字符串，不是事件**）。 */

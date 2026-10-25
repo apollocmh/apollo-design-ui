@@ -56,7 +56,6 @@ const LABEL_ALLOWED = new Set([
   'allowClear',
   'async',
   'status',
-  'popupRender',
   'component-token',
   'render-panel',
 ]);

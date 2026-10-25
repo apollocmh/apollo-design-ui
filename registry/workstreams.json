@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-25T01:01:30.535Z",
+  "generatedAt": "2026-10-25T01:19:28.756Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -3031,7 +3031,7 @@
       "decidedBy": [],
       "complexity": "XL",
       "unblocks": 0,
-      "why": "",
+      "why": "2026-10-25 F11：popupRender函数prop直接迁为单对象原生槽，四层当前函数转发，render边界向Trigger传VNode，支持条件/空/移除、当前菜单数据与编辑器状态/键盘选择；类名边界移除as never并归一，原示例补可访问名且移除旧label豁免。范围与证据见 docs/audit/2026-10-25-mentions-popup-slot-remediation.md，不表示其余内容/attrs或Apollo视觉已验收。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P5",

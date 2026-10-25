@@ -31,6 +31,7 @@ import {
   h,
   type PropType,
   ref,
+  type SlotsType,
   type VNodeChild,
 } from 'vue';
 import { useAllowClear } from '../_internal/use-allow-clear';
@@ -52,6 +53,7 @@ import type {
   MentionsSemanticClassNamesFn,
   MentionsSemanticStyles,
   MentionsSemanticStylesFn,
+  MentionsSlots,
 } from './interface';
 
 /** loading 时的过滤函数：恒真（候选只有「加载中」那一条）。 */
@@ -62,6 +64,7 @@ function loadingFilterOption(): boolean {
 export const MentionsComponent = defineComponent({
   name: 'AMentions',
   inheritAttrs: false,
+  slots: Object as SlotsType<MentionsSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     classNames: {
@@ -108,7 +111,6 @@ export const MentionsComponent = defineComponent({
       default: undefined,
     },
     popupClassName: { type: String, default: undefined },
-    popupRender: { type: Function as PropType<MentionsProps['popupRender']>, default: undefined },
     onPopupScroll: {
       type: Function as PropType<MentionsProps['onPopupScroll']>,
       default: undefined,
@@ -326,7 +328,6 @@ export const MentionsComponent = defineComponent({
           allowClear: mergedAllowClear.value,
           direction: direction.value,
           style: ms.root,
-          popupRender: props.popupRender,
           filterOption: mentionsFilterOption.value,
           onFocus,
           onBlur,
@@ -362,6 +363,7 @@ export const MentionsComponent = defineComponent({
           getPopupContainer: props.getPopupContainer,
         } as never,
         {
+          popupRender: slots.popupRender,
           default: () => {
             if (props.loading) {
               return [

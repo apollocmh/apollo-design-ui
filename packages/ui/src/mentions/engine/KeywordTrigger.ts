@@ -23,10 +23,10 @@
  * `placement='top'` ⇒ `-topRight`；`direction='rtl'` ⇒ 取 `Left` 侧（实测见 analysis §3.1）。
  */
 
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild } from 'vue';
+import { computed, defineComponent, h, type PropType, ref, type SlotsType, type VNode } from 'vue';
 import type { TriggerAlign } from '../../_internal/trigger';
 import { Trigger } from '../../_internal/trigger';
-import type { MentionPlacement } from '../interface';
+import type { MentionPlacement, MentionsSlots } from '../interface';
 import { DropdownMenu, type NormalizedOption } from './DropdownMenu';
 
 /**
@@ -59,6 +59,7 @@ export const BUILT_IN_PLACEMENTS: Record<string, TriggerAlign> = {
 export const KeywordTrigger = defineComponent({
   name: 'AMentionsKeywordTrigger',
   inheritAttrs: false,
+  slots: Object as SlotsType<MentionsSlots>,
   props: {
     /** **浮层**前缀：`${mentionsPrefixCls}-dropdown`。 */
     prefixCls: { type: String, required: true },
@@ -74,10 +75,6 @@ export const KeywordTrigger = defineComponent({
     },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
     placement: { type: String as PropType<MentionPlacement>, default: undefined },
-    popupRender: {
-      type: Function as PropType<(menu: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
   },
   setup(props, { slots }) {
     /** `afterOpenChange` 置位 ⇒ `DropdownMenu` 才开始做「滚动入视口」。 */
@@ -90,20 +87,22 @@ export const KeywordTrigger = defineComponent({
       return props.placement === 'top' ? 'topRight' : 'bottomRight';
     });
 
-    const renderDropdown = (): VNodeChild =>
+    const renderDropdown = (): VNode =>
       h(DropdownMenu, {
         prefixCls: `${props.prefixCls}-menu`,
         options: props.options,
         opened: opened.value,
       });
 
-    return () =>
-      h(
+    return () => {
+      const originNode = renderDropdown();
+      const popup = slots.popupRender ? slots.popupRender({ originNode }) : originNode;
+      return h(
         Trigger,
         {
           prefixCls: props.prefixCls,
           open: props.visible,
-          popup: () => (props.popupRender ? props.popupRender(renderDropdown()) : renderDropdown()),
+          popup,
           placement: dropdownPlacement.value,
           builtinPlacements: BUILT_IN_PLACEMENTS,
           motion: { motionName: props.transitionName },
@@ -118,5 +117,6 @@ export const KeywordTrigger = defineComponent({
         },
         { default: () => slots.default?.() },
       );
+    };
   },
 });

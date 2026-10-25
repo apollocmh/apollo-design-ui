@@ -31,9 +31,11 @@ import {
   h,
   inject,
   isVNode,
+  normalizeClass,
   type PropType,
   provide,
   ref,
+  type SlotsType,
   shallowRef,
   type VNode,
   type VNodeChild,
@@ -41,7 +43,7 @@ import {
 } from 'vue';
 import { BaseInput } from '../../input/engine/BaseInput';
 import { RcTextArea } from '../../input/engine/TextArea';
-import type { MentionsOptionProps } from '../interface';
+import type { MentionsOptionProps, MentionsSlots } from '../interface';
 import {
   type MentionsContextValue,
   mentionsContextKey,
@@ -146,6 +148,7 @@ export function mentionsChildrenToOptions(nodes: readonly unknown[]): MentionsOp
 export const InternalMentions = defineComponent({
   name: 'AMentionsInternal',
   inheritAttrs: false,
+  slots: Object as SlotsType<Pick<MentionsSlots, 'popupRender'>>,
   props: {
     prefixCls: { type: String, required: true },
     /**
@@ -208,12 +211,8 @@ export const InternalMentions = defineComponent({
     popupClassName: { type: String, default: undefined },
     rows: { type: Number, default: 1 },
     onPopupScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
-    popupRender: {
-      type: Function as PropType<(menu: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
   },
-  setup(props, { attrs, expose }) {
+  setup(props, { attrs, expose, slots }) {
     // =============================== Refs ===============================
     const containerRef = ref<HTMLElement | null>(null);
     const measureRef = ref<HTMLElement | null>(null);
@@ -638,11 +637,13 @@ export const InternalMentions = defineComponent({
                 //    `classNames.popup` 里带着 `{p}-css-var`（组件 token 的声明块挂在那上面，
                 //    而**浮层不在 `.mentions` 的子树里**）⇒ 漏了它，浮层里的
                 //    `var(--{p}-mentions-*)` 全部失效（padding 回退 0，L6 实测红）。
-                popupClassName: [props.popupClassName, props.classNames?.popup] as never,
+                popupClassName: normalizeClass([props.popupClassName, props.classNames?.popup]),
                 popupStyle: props.styles?.popup,
-                popupRender: props.popupRender,
               },
-              { default: () => [h('span', null, mergedMeasurePrefix.value)] },
+              {
+                default: () => [h('span', null, mergedMeasurePrefix.value)],
+                popupRender: slots.popupRender,
+              },
             ),
             (mergedValue.value ?? '').slice(
               mergedMeasureLocation.value + mergedMeasurePrefix.value.length,
@@ -675,6 +676,7 @@ export const InternalMentions = defineComponent({
 export const RcMentions = defineComponent({
   name: 'AMentionsRc',
   inheritAttrs: false,
+  slots: Object as SlotsType<MentionsSlots>,
   props: {
     prefixCls: { type: String, default: 'rc-mentions' },
     className: { type: [String, Array, Object] as PropType<unknown>, default: undefined },
@@ -770,27 +772,31 @@ export const RcMentions = defineComponent({
         } as never,
         {
           default: () => [
-            h(InternalMentions, {
-              ...attrs,
-              ref: innerRef,
-              className: props.classNames?.mentions,
-              styles: props.styles,
-              classNames: props.classNames,
-              prefixCls: props.prefixCls,
-              id: props.id,
-              onChange: triggerChange,
-              disabled: props.disabled,
-              hasWrapper: hasSuffix.value,
-              options: normalizedOptions,
-              /**
-               * ⚠️ **必须显式传 `value`**：上游靠 `BaseInput` 的
-               * `cloneElement(inputElement, { value, className })` 把值注入内层；
-               * 本仓 `input/engine/BaseInput.ts` 只对**原生元素**子节点做类名/样式合并，
-               * 不传 `value`（它的既有消费者都是原生 `<input>` / `<textarea>`，各自带值）
-               * ⇒ 组件子节点拿不到值，textarea 会**恒空**。
-               */
-              value: mergedValue.value,
-            } as never),
+            h(
+              InternalMentions,
+              {
+                ...attrs,
+                ref: innerRef,
+                className: props.classNames?.mentions,
+                styles: props.styles,
+                classNames: props.classNames,
+                prefixCls: props.prefixCls,
+                id: props.id,
+                onChange: triggerChange,
+                disabled: props.disabled,
+                hasWrapper: hasSuffix.value,
+                options: normalizedOptions,
+                /**
+                 * ⚠️ **必须显式传 `value`**：上游靠 `BaseInput` 的
+                 * `cloneElement(inputElement, { value, className })` 把值注入内层；
+                 * 本仓 `input/engine/BaseInput.ts` 只对**原生元素**子节点做类名/样式合并，
+                 * 不传 `value`（它的既有消费者都是原生 `<input>` / `<textarea>`，各自带值）
+                 * ⇒ 组件子节点拿不到值，textarea 会**恒空**。
+                 */
+                value: mergedValue.value,
+              } as never,
+              { popupRender: slots.popupRender },
+            ),
           ],
         },
       );

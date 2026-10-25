@@ -1,35 +1,46 @@
 <script setup lang="ts">
-// 对齐 antd demo/popupRender.tsx
-// ⚠️ demo 级替换：antd 用 `theme.useToken()` 取 paddingXS/paddingSM/fontWeightStrong/
-//    colorTextDescription/marginXXS ⇒ 本仓用等值字面量（与默认主题的解析值一致，
-//    见 README §5）。
-import { Divider, Mentions } from '@apollo-design/ui';
-import { h } from 'vue';
+import { Divider, Mentions, type MentionsOptionProps } from '@apollo-design/ui';
+import { ref } from 'vue';
 
-const options = [
+const show = ref(true);
+const empty = ref(false);
+const revision = ref(0);
+const value = ref('');
+const options = ref<MentionsOptionProps[]>([
   { value: 'afc163', label: 'afc163' },
   { value: 'zombieJ', label: 'zombieJ' },
   { value: 'yesmeck', label: 'yesmeck' },
-];
-
-const popupRender = (menu: unknown) =>
-  h('div', null, [
-    h(
-      'div',
-      {
-        style: {
-          padding: '8px 12px',
-          fontWeight: 600,
-          color: 'rgba(0,0,0,0.45)',
-        },
-      },
-      'Custom Header',
-    ),
-    h(Divider, { style: { margin: '4px 0' } }),
-    menu as never,
-  ]);
+]);
+const updateOptions = () => {
+  options.value = options.value.map((option) => ({ ...option, label: `${option.value} updated` }));
+};
 </script>
 
 <template>
-  <Mentions style="width: 100%" :popup-render="popupRender" :options="options" />
+  <div>
+    <p>
+      <button @mousedown.prevent @click="show = !show">Toggle mention popup slot</button>
+      <button @mousedown.prevent @click="empty = !empty">Empty mention popup slot</button>
+      <button @mousedown.prevent @click="revision++">Update mention header</button>
+      <button @mousedown.prevent @click="updateOptions">Update mention options</button>
+    </p>
+    <Mentions v-model:value="value" aria-label="Custom mention editor" style="width: 100%" :options="options" allow-clear>
+      <template v-if="show" #popupRender="{ originNode }">
+        <section v-if="!empty" data-native-mentions-popup>
+          <header class="native-mentions-header">Custom Header {{ revision }}</header>
+          <Divider style="margin: var(--apollo-margin-xxs) 0" />
+          <component :is="originNode" />
+        </section>
+      </template>
+    </Mentions>
+    <output data-mention-value>{{ value }}</output>
+  </div>
 </template>
+
+<style scoped>
+.native-mentions-header {
+  padding: var(--apollo-padding-xs) var(--apollo-padding-sm);
+  font-weight: var(--apollo-font-weight-strong);
+  color: var(--apollo-color-text-description);
+}
+</style>
