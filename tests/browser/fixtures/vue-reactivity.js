@@ -21,6 +21,7 @@ import BreakpointNative from './BreakpointNative.vue';
 import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
+import ImageDirection from './ImageDirection.vue';
 import ImageNativeEvents from './ImageNativeEvents.vue';
 import ImageOpenModel from './ImageOpenModel.vue';
 import ImagePopupProvider from './ImagePopupProvider.vue';
@@ -117,6 +118,7 @@ const Demo = {
   'image-render': ImageRender,
   'image-provider': ImageProvider,
   'image-popup-provider': ImagePopupProvider,
+  'image-direction': ImageDirection,
   'image-prefix': ImagePrefix,
   'image-native-events': ImageNativeEvents,
   'image-open-model': ImageOpenModel,

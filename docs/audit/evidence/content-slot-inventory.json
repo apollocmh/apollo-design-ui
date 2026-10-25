@@ -5419,7 +5419,8 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
-          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
+          "packages/ui/src/image/__tests__/provider-direction.test.ts"
         ]
       },
       "decision": "skip",
@@ -5591,6 +5592,7 @@
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/preview-state.test.ts",
           "packages/ui/src/image/__tests__/preview-transform.test.ts",
+          "packages/ui/src/image/__tests__/provider-direction.test.ts",
           "packages/ui/src/image/__tests__/provider-reactivity.test.ts",
           "packages/ui/src/image/__tests__/registration-order.test.ts"
         ]
@@ -5701,7 +5703,8 @@
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
-          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
+          "packages/ui/src/image/__tests__/provider-direction.test.ts"
         ]
       },
       "decision": "skip",
@@ -5810,7 +5813,8 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/image/__tests__/preview-focus.test.ts"
+          "packages/ui/src/image/__tests__/preview-focus.test.ts",
+          "packages/ui/src/image/__tests__/provider-direction.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -5837,7 +5841,8 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/image/__tests__/preview-focus.test.ts"
+          "packages/ui/src/image/__tests__/preview-focus.test.ts",
+          "packages/ui/src/image/__tests__/provider-direction.test.ts"
         ]
       },
       "decision": "keep-data",

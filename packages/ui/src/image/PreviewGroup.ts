@@ -25,7 +25,7 @@ import type {
   PreviewImageInfo,
   TransformInfo,
 } from './interface';
-import Preview from './Preview';
+import Preview, { DEFAULT_ICONS } from './Preview';
 
 type SemanticClassNames = NonNullable<ImageSemanticType['classNames']>;
 type SemanticStyles = NonNullable<ImageSemanticType['styles']>;
@@ -65,7 +65,6 @@ const PreviewGroup = defineComponent({
   },
   setup(props, { slots, emit }) {
     const config = useComponentConfig<ImageSemanticType>('image');
-    const { direction } = config;
     const prefixCls = computed(() => config.getPrefixCls('image'));
     const previewPrefixCls = computed(() => props.previewPrefixCls ?? `${prefixCls.value}-preview`);
 
@@ -169,10 +168,10 @@ const PreviewGroup = defineComponent({
       };
     });
 
-    // rtl：left/right 互换（antd 同款）
+    // Resolve defaults before mirroring the current provider's navigation icons.
     const icons = computed(() => {
-      const base = previewConfig.value?.icons ?? {};
-      if (direction !== 'rtl') return base;
+      const base = { ...DEFAULT_ICONS, ...previewConfig.value?.icons };
+      if (config.direction !== 'rtl') return base;
       const { left, right, ...rest } = base;
       return { ...rest, left: right, right: left };
     });

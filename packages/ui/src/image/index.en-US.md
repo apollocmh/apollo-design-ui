@@ -148,6 +148,8 @@ popup: root / mask / body / footer / actions / close
 
 Provider/local classes concatenate through the nested schema before existing preview class aliases are added. Popup style fields merge shallowly: a local popup.root replaces the Provider's whole root style object, while other fields remain. Native class/style stay on the actual Image/Group root and are not copied to the popup. Native Image root style still overrides styles.root. The shared merge rules and static configuration shape are unchanged.
 
+Group navigation icons read the current ConfigProvider.direction, resolving defaults and custom icons before mirroring for ltr/rtl. A one-sided custom icon retains the other default, and explicit null stays empty. Replacing/removing icons updates the open preview while retaining image, transform and editor state. Previous/Next still request adjacent indices and keep their names. See the [direction regression](../../../../docs/audit/2026-10-25-image-provider-direction-remediation.md).
+
 ### Static properties / named exports
 
 | Name | Description |

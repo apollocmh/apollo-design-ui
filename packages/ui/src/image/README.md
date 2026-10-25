@@ -99,3 +99,5 @@ Image的click/error/keydown与已有update:open通知使用typed emits。根属�
 原预览大图/工具栏/计数renderer直接迁为previewImage/previewActions/Group previewCount原生单对象槽，toolbarRender别名一并移除。Origin VNode、可选原始src、当前零基索引/总数和typed动作从当前render提供，空/移除及SSR守卫明确；见 [迁移](../../../../docs/migrations/image-preview-slots.md) 与 [报告](../../../../docs/audit/2026-10-25-image-preview-slots-remediation.md)。
 
 Image和Group弹层共同读取当前Provider的popup类名/样式对象，字段/整配置/整map替换及移除不重挂预览。局部popup样式按字段覆盖，原生class/style留实际根；见 [弹层配置报告](../../../../docs/audit/2026-10-25-image-popup-provider-remediation.md)。
+
+Group导航图标读取当前Provider方向，默认与单侧自定义先合并再镜像，显式空图标与相邻索引语义保持。见 [方向报告](../../../../docs/audit/2026-10-25-image-provider-direction-remediation.md)。

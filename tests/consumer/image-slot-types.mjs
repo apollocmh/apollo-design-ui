@@ -178,6 +178,17 @@ try {
       './PopupProviderDemo.vue',
     ),
   );
+  const directionFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageDirection.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageDirection.vue'),
+    directionFixture.replace(
+      '../../../packages/ui/src/image/demo/popup-provider.vue',
+      './PopupProviderDemo.vue',
+    ),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig, PreviewGroupProps, PreviewGroupSlots, TransformInfo } from '@apollo-design/ui';

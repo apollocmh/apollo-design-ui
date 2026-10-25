@@ -143,6 +143,8 @@ popup: root / mask / body / footer / actions / close
 
 Provider/局部classNames通过嵌套schema拼接，再追加现有预览类名配置。styles.popup按字段浅合并：局部popup.root替换Provider的整个root样式对象，其他未覆盖字段保留。原生class/style留在Image或Group实际根，不复制到弹层；Image根style仍优先于styles.root。本批不改变共享合并规则或增加函数式配置。
 
+Group导航图标读取当前ConfigProvider.direction，ltr/rtl切换时先合并默认与自定义图标再镜像。单侧自定义保留另一侧默认图标；显式null保持为空。当前icons对象替换/移除会更新，已打开的图片、变换和编辑器保持；Previous/Next按钮继续请求相邻索引并保留名称，见 [方向回归](../../../../docs/audit/2026-10-25-image-provider-direction-remediation.md)。
+
 ### 静态属性 / 具名导出
 
 | 名称 | 说明 |

@@ -281,6 +281,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image/Group全局弹层语义增量（F11）**：18条修前14失败/4已有通过，确认Image丢全局popup样式、Group未接全局类名/样式；统一当前getter合并后18条通过，完整363条运行回归及62条类型通过。六个弹层节点、局部浅覆盖、根attrs隔离与打开时编辑器/焦点/旋转的生产证据见 [报告](audit/2026-10-25-image-popup-provider-remediation.md)。其他预览配置与视觉验收继续开放。
 
+**2026-10-25 Image Group方向图标增量**：4条修前3失败/1已有通过，确认初始RTL默认图标消失及动态方向快照过期。当前方向getter与默认/自定义先合并再镜像后8条通过，保留单侧/显式空图标、当前替换、编辑器/焦点/旋转与相邻索引语义；见 [报告](audit/2026-10-25-image-provider-direction-remediation.md)。其他RTL布局、预览配置与视觉验收独立开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
