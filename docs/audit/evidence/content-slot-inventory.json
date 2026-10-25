@@ -7919,6 +7919,7 @@
           "packages/ui/src/mentions/__tests__/index.test.ts",
           "packages/ui/src/mentions/__tests__/native-bindings.test.ts",
           "packages/ui/src/mentions/__tests__/native-events.test.ts",
+          "packages/ui/src/mentions/__tests__/native-keyboard.test.ts",
           "packages/ui/src/mentions/__tests__/popup-slot.test.ts",
           "packages/ui/src/mentions/__tests__/semantic.test.ts"
         ]

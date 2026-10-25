@@ -101,6 +101,8 @@ subtitle: 提及
 
 其他公开事件也通过 typed emits 发送，支持监听器数组、替换和 `.once`。`@keydown.stop.prevent` 等修饰符作用于原生事件；`@press-enter` 仅在非候选态发送。组件卸载会取消待处理 blur，浮层内部焦点协调不伪造 FocusEvent。旧 `:on-press-enter` / `:on-popup-scroll` / `:on-resize` 函数 prop 直接改为 `@press-enter` / `@popup-scroll` / `@resize`，见 [迁移记录](../../../../docs/migrations/mentions-native-events.md)。
 
+候选键盘使用标准 `KeyboardEvent.key`：↑/↓ 跳过禁用项，Enter 单次选择，Escape 关闭；这些键的 keyup 不重复搜索或重开。IME `isComposing` 期间方向键和 Enter 留给输入法，仍向公开键盘监听器发送原始事件。手动构造键盘事件时请提供 `key`，不再依赖废弃的 `which`。见 [标准键盘迁移](../../../../docs/migrations/mentions-keyboard.md)。
+
 ### Slots
 
 | 名称 | 说明 | 参数 |

@@ -101,6 +101,8 @@ Native class/style apply to the outer root in bare, allowClear and Form feedback
 
 The other public events also use typed emits, including listener arrays, replacement and `.once`. Modifiers such as `@keydown.stop.prevent` operate on native events; `@press-enter` fires only outside candidate measurement. Unmount cancels pending blur callbacks; popup focus coordination does not fabricate FocusEvents. Replace `:on-press-enter`, `:on-popup-scroll` and `:on-resize` function props with `@press-enter`, `@popup-scroll` and `@resize`; see the [migration](../../../../docs/migrations/mentions-native-events.md).
 
+Candidate navigation uses standard `KeyboardEvent.key`: arrows skip disabled options, Enter selects once and Escape closes. Their keyup events do not repeat search or reopen the popup. While `isComposing` is true, arrows and Enter remain with the IME and public keyboard listeners still receive the original events. Provide `key` when constructing keyboard events; deprecated `which` no longer drives navigation. See the [keyboard migration](../../../../docs/migrations/mentions-keyboard.md).
+
 ### Slots
 
 | Name | Description | Arguments |

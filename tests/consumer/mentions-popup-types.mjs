@@ -39,6 +39,10 @@ try {
     path.join(temp, 'CoreEvents.vue'),
     core.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/MentionsKeyboard.vue'),
+    path.join(temp, 'MentionsKeyboard.vue'),
+  );
   const native = fs.readFileSync(
     path.join(root, 'packages/ui/src/mentions/__tests__/fixtures/NativeEvents.vue'),
     'utf8',

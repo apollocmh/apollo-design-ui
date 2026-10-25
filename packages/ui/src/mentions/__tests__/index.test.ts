@@ -32,12 +32,8 @@ const OPTIONS = [
   { value: 'yesmeck', label: 'yesmeck' },
 ];
 
-/** 派发一个原生事件（`which` 只能走 `KeyboardEventInit`，见 cascader/menu 的先例）。 */
-function fire(
-  el: Element,
-  type: string,
-  init: EventInit & { key?: string; which?: number } = {},
-): void {
+/** 派发使用标准 key 的原生键盘事件。 */
+function fire(el: Element, type: string, init: KeyboardEventInit = {}): void {
   if (type.startsWith('key')) {
     el.dispatchEvent(new KeyboardEvent(type, { bubbles: true, cancelable: true, ...init }));
     return;
@@ -52,7 +48,7 @@ async function typeInto(wrapper: ReturnType<typeof mount>, text: string): Promis
   ta.setSelectionRange(text.length, text.length);
   fire(ta, 'input');
   await nextTick();
-  fire(ta, 'keyup', { key: text.slice(-1), which: text.charCodeAt(text.length - 1) });
+  fire(ta, 'keyup', { key: text.slice(-1) });
   await nextTick();
 }
 
@@ -193,10 +189,10 @@ describe('Mentions · 键盘', () => {
     const ta = wrapper.find('textarea').element as HTMLTextAreaElement;
 
     expect(menuItems()[0]?.className).toContain('-active');
-    fire(ta, 'keydown', { which: 40 }); // ArrowDown
+    fire(ta, 'keydown', { key: 'ArrowDown' }); // ArrowDown
     await nextTick();
     expect(menuItems()[2]?.className).toContain('-active');
-    fire(ta, 'keydown', { which: 40 });
+    fire(ta, 'keydown', { key: 'ArrowDown' });
     await nextTick();
     expect(menuItems()[0]?.className).toContain('-active');
     wrapper.unmount();
@@ -205,7 +201,7 @@ describe('Mentions · 键盘', () => {
   it('ESC 关闭面板并清掉 measure 层', async () => {
     const wrapper = mount(Mentions, { props: { options: OPTIONS }, attachTo: document.body });
     await typeInto(wrapper, '@');
-    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { which: 27 });
+    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { key: 'Escape' });
     await nextTick();
     expect(document.querySelector('.apollo-mentions-measure')).toBeNull();
     wrapper.unmount();
@@ -220,7 +216,7 @@ describe('Mentions · 键盘', () => {
     await typeInto(wrapper, '@');
     expect(menuItems()).toHaveLength(1); // 只有「加载中」那一条
     onChange.mockClear();
-    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { which: 13 });
+    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { key: 'Enter' });
     await nextTick();
     expect(onChange).not.toHaveBeenCalled();
     wrapper.unmount();
@@ -241,7 +237,7 @@ describe('Mentions · 选中候选（🚨 抓「回填基于旧文本」）', ()
     expect(menuItems()).toHaveLength(1);
     // ⚠️ 打字本身就会调 onChange（React 语义：每次 input 一次）⇒ 先清掉再断言回填
     onChange.mockClear();
-    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { which: 13 });
+    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { key: 'Enter' });
     await nextTick();
     await nextTick();
 
@@ -305,7 +301,7 @@ describe('Mentions · 受控值（🚨 抓 onChange 语义差）', () => {
       attachTo: document.body,
     });
     await typeInto(wrapper, 'x @afc');
-    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { which: 13 });
+    fire(wrapper.find('textarea').element as HTMLElement, 'keydown', { key: 'Enter' });
     await nextTick();
     await nextTick();
     // 若 mergedValue 停在 ''，回填会是 '@afc163 '（丢掉 'x '）

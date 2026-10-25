@@ -23,7 +23,7 @@
  * 完整版（含 `onKeyUp` 的分支表）见 `docs/analysis/mentions.md` §2。
  */
 
-import { KeyCode, toArray, useControlledValue } from '@apollo-design/utils';
+import { toArray, useControlledValue } from '@apollo-design/utils';
 import {
   Comment,
   computed,
@@ -402,26 +402,26 @@ export const InternalMentions = defineComponent({
 
     // ============================= KeyEvent =============================
     const onInternalKeyDown = (event: KeyboardEvent): void => {
-      const { which } = event;
+      const { key } = event;
       props.onKeyDown?.(event);
 
-      if (!mergedMeasuring.value) {
+      if (event.isComposing || !mergedMeasuring.value) {
         return;
       }
-      if (which === KeyCode.UP || which === KeyCode.DOWN) {
+      if (key === 'ArrowUp' || key === 'ArrowDown') {
         const optionLen = mergedOptions.value.length;
         if (!optionLen) {
           return;
         }
-        const offset = which === KeyCode.UP ? -1 : 1;
+        const offset = key === 'ArrowUp' ? -1 : 1;
         const newActiveIndex = getEnabledActiveIndex(activeIndex.value + offset, offset);
         if (newActiveIndex !== -1) {
           activeIndex.value = newActiveIndex;
         }
         event.preventDefault();
-      } else if (which === KeyCode.ESC) {
+      } else if (key === 'Escape') {
         stopMeasure();
-      } else if (which === KeyCode.ENTER) {
+      } else if (key === 'Enter') {
         event.preventDefault();
         // loading 时跳过（`silent`）
         if (props.silent) {
@@ -448,10 +448,10 @@ export const InternalMentions = defineComponent({
     /**
      * 开始 / 停止测量的**唯一入口**（判据逐条见 analysis §2.2）。
      *
-     * ⚠️ `onKeyUp?.(event)` 在**白名单 return 之前** —— 上游如此，逐字保留。
+     * 公开 keyup 监听器先收到事件；方向键、Escape 和 Enter 不重新测量或搜索。
      */
     const onInternalKeyUp = (event: KeyboardEvent): void => {
-      const { key, which } = event;
+      const { key } = event;
       const target = event.target as HTMLTextAreaElement;
       const selectionStartText = getBeforeSelectionText(target);
       const { location: measureIndex, prefix: nextMeasurePrefix } = getLastMeasureIndex(
@@ -461,7 +461,7 @@ export const InternalMentions = defineComponent({
 
       props.onKeyUp?.(event);
 
-      if ([KeyCode.ESC, KeyCode.UP, KeyCode.DOWN, KeyCode.ENTER].indexOf(which) !== -1) {
+      if (['Escape', 'ArrowUp', 'ArrowDown', 'Enter'].includes(key)) {
         return;
       }
       if (measureIndex !== -1) {
@@ -475,7 +475,7 @@ export const InternalMentions = defineComponent({
           if (
             key === nextMeasurePrefix ||
             key === 'Shift' ||
-            which === KeyCode.ALT ||
+            key === 'Alt' ||
             key === 'AltGraph' ||
             mergedMeasuring.value ||
             (nextMeasureText !== mergedMeasureText.value && matchOption)

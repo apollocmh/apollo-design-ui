@@ -15,3 +15,5 @@
 标准渲染函数 onXxx 注册和 Vue v-on 对象监听器数组支持当前替换及.once；不额外手调回调。原生键盘名称使用 `@keydown` / `@keyup`；MentionsProps 的对应字段是 Vue `onKeydown` / `onKeyup`。候选状态机的标准 key / 旧 which 判定仍需独立复审，本批保证监听器转发，不由此宣称所有键盘交互完成。
 
 另修复带清空/反馈包装时已有根状态类漏传；focused 状态现在落到实际外层根，未添加额外包装DOM。证据见 [专项报告](../audit/2026-10-25-mentions-native-events-remediation.md)。
+
+后续候选状态机的标准 key 与 IME 控制键修正见 [标准键盘记录](mentions-keyboard.md)，完整组合输入与其他内容仍需继续验证。
