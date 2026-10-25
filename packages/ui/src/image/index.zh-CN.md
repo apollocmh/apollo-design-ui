@@ -29,7 +29,7 @@ popup-provider / preview-close。
 | prefixCls | 完整根前缀；响应当前prop，移除覆盖后回到当前ConfigProvider命名空间 | `string` | `apollo-image` |
 | src | 图片地址 | `string` | — |
 | width / height | 宽高。数字会归一化成 `px`（见「设计说明」） | `number \| string` | — |
-| alt | 可访问名。可预览时也是根元素的 `aria-label` | `string` | — |
+| alt | 图片替代文本；非空时用作预览触发器及弹层的默认名称。省略时img使用空alt，触发器/弹层保留通用名称 | `string` | `''` |
 | fallback | 加载失败时的兜底图 | `string` | — |
 | placeholder | 占位内容；`{ progress: true \| { percent, render } }` 时渲染进度层 | `VNodeChild \| { progress }` | — |
 | preview | `false` 关闭预览；对象形态见下表 | `boolean \| PreviewConfig` | `true` |
@@ -75,23 +75,26 @@ current为零基索引，与Group模型相同，显示序号时加1；单图curr
 |---|---|---|---|
 | src | 预览用大图（默认取 `src`） | `string` | — |
 | afterOpenChange | 开合动画结束后 | `(open) => void` | — |
-| cover | 封面（hover 层）。`false` 不渲染；`{ placement: 'center' \| 'top' \| 'bottom', coverNode }` | `MaskNode` | — |
-| mask | 遮罩。`false` ⇒ 根元素加 `-preview-mask-hidden` | `MaskNode` | — |
+| cover | 缩略图封面；`false` 隐藏，null或省略使用默认内容；配置对象可只指定placement | `VNodeChild \| { placement?: 'center' \| 'top' \| 'bottom', coverNode?: VNodeChild }` | — |
+| mask | 预览遮罩外观；false隐藏遮罩；对象支持blur/className/style，语义styles.popup.mask优先 | `boolean \| { blur?: boolean, className?: string, style?: Record<string, string \| number> }` | `true` |
 | maskClosable | 点遮罩关闭 | `boolean` | `true` |
 | closable | 显示关闭按钮 | `boolean` | `true` |
 | closeIcon | 自定义关闭图标 | `VNodeChild` | — |
 | movable | 可拖拽 | `boolean` | `true` |
 | minScale / maxScale / scaleStep | 缩放边界与步长 | `number` | `1` / `50` / `0.5` |
 | zIndex | 浮层层级 | `number` | `1080`（`zIndexPopupBase + 80`） |
-| getContainer | 浮层挂载容器 | `() => HTMLElement` | `document.body` |
+| getContainer | 当前浮层挂载容器；未指定时使用ConfigProvider.getPopupContainer，再回到body | `() => HTMLElement` | `document.body` |
 | icons | 图标槽（rotateLeft/rotateRight/zoomIn/zoomOut/close/left/right/flipX/flipY） | `PreviewIcons` | 内置图标 |
-| rootClassName | ⚠️ 已废弃，请用 `classNames.root` | `string` | — |
-| maskClassName | ⚠️ 已废弃，请用 `classNames.cover` | `string` | — |
-| forceRender / destroyOnClose | 已移除（antd 不再支持），传入被忽略 | — | — |
+| rootClassName | 浮层根附加类；语义入口为classNames.popup.root | `string` | — |
+| maskClassName | 浮层遮罩附加类；语义入口为classNames.popup.mask | `string` | — |
 
 关闭图标优先级为当前 `#previewCloseIcon` → 显式 `preview.closeIcon`（含 null/false/0）→ `preview.icons.close` → 默认图标。`closable=false` 只隐藏关闭按钮且不求值图标槽；Esc、maskClosable 与工具栏 close 动作仍各自生效。显示/隐藏和内容替换保留预览身份、编辑器与变换，按钮始终有独立名称。见 [关闭控件回归](../../../../docs/audit/2026-10-25-image-preview-close-remediation.md)。
 
 Image/Group 每次缩放、滚轮、双击及非复位变换读取当前 minScale/maxScale；替换或移除配置会作用于下一次操作。更改配置本身保留现有比例与预览身份，不发 transform。比例达到或超过当前上限时，放大按钮与 previewActions.disabled.zoomIn 同时禁用；复位/关闭仍回到比例 1。见 [边界回归](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md)。
+
+scaleStep是比例增量：放大乘以1+step，缩小除以1+step；默认0.5使1放大为1.5，当前值也用于滚轮及从1开始的双击放大。step/min/max须为有限正数，无效值使用默认值；max小于min时按min处理。容器、资源加载、分组类型和步长集中修正见 [本轮迁移](../../../../docs/migrations/image-contracts.md)；forceRender/destroyOnClose已从类型移除。
+
+加载状态只由实际img的原生事件和缓存完成状态驱动，不额外构造Image或发起校验请求。fallback启用时移除失败的srcSet/sizes，避免候选图覆盖兜底；src/srcSet/sizes更新后重新尝试当前资源。拖拽仅接受主键，关闭、禁用movable、失去主键、窗口失焦及卸载均释放原窗口监听器。
 
 ### Image · Events
 
@@ -114,14 +117,16 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| items | 图片列表（首选）；字符串或 `{ src, alt, ... }` | `Array<string \| object>` | — |
-| preview | 静态预览内容/行为选项，同Image | `boolean \| GroupPreviewConfig` | `true` |
+| items | 图片列表（首选）；原生图片属性加src/width/height/fallback，可附带业务元数据 | `Array<string \| PreviewGroupItem>` | — |
+| preview | 预览行为配置；不含Image专属src/cover，分别配置items/子Image | `boolean \| GroupPreviewConfig` | `true` |
 | open | 顶层受控开合，可用 `v-model:open` | `boolean` | — |
 | defaultOpen | 非控初值，后续变更不重置状态 | `boolean` | `false` |
 | current | 受控当前索引 | `number` | — |
 | defaultCurrent | 非受控初始索引 | `number` | `0` |
 | previewPrefixCls | 完整预览前缀；当前prop优先，移除后使用当前Provider派生值 | `string` | `${prefixCls}-preview` |
-| classNames / styles | 同 `Image` | — | — |
+| classNames / styles | 分组实际root及共享popup的语义配置；子Image语义在子组件或Provider配置 | `PreviewGroupSemanticType` 对应字段 | — |
+
+移除current控制后接续最后同步索引；非受控列表缩短时归一到可用范围。空列表不挂载空弹层；preview=false或空列表的子Image不提供无效预览按钮语义。items和注册数据均透传尺寸及fallback，只将原生图片属性传给实际img。
 
 ### Image.PreviewGroup · 插槽与 Events
 
@@ -165,7 +170,7 @@ Group导航图标读取当前ConfigProvider.direction，ltr/rtl切换时先合�
 
 `ImageProps`、`PreviewConfig`、`PreviewGroupProps`、`GroupPreviewConfig`、`PreviewIcons`、
 `PlaceholderType`、`ImageProgressConfig`、`ImageStatus`、`CoverPlacement`、`MaskType`、
-`TransformInfo`、`ImageSemanticType`、`ProgressClassNames`、`ProgressStyles`。
+`TransformInfo`、`ImageSemanticType`、`PreviewGroupSemanticType`、`PreviewGroupItem`、`ProgressClassNames`、`ProgressStyles`。Image.PreviewGroup与具名ImagePreviewGroup使用相同的完整声明类型。
 
 ## Theme（Component Token）
 

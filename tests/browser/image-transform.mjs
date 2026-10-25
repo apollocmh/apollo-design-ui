@@ -138,7 +138,7 @@ try {
     await waitState('enabled', true);
     await dialog().getByRole('button', { name: 'zoomIn', exact: true }).click();
     await waitEntries(7);
-    expected = [...expected, ...eventRows({ ...initial, scale: 1.1, flipX: true }, 1)];
+    expected = [...expected, ...eventRows({ ...initial, scale: 1.5, flipX: true }, 1)];
     assert.deepEqual((await state()).entries, expected);
     await sameImage(originalImage);
 

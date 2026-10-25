@@ -23,13 +23,14 @@ import {
   ZoomOutOutlined,
 } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
-import { Portal, useZIndex } from '@apollo-design/portal';
+import { type GetContainer, Portal, useZIndex } from '@apollo-design/portal';
 import { KeyCode } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
   onBeforeUpdate,
+  onMounted,
   onScopeDispose,
   onUpdated,
   type PropType,
@@ -42,6 +43,7 @@ import { useImageTransform } from './hooks/useImageTransform';
 import { useStatus } from './hooks/useStatus';
 import type {
   ImageCommonProps,
+  MaskType,
   PreviewActions,
   PreviewConfig,
   PreviewGroupSlots,
@@ -80,6 +82,11 @@ const Preview = defineComponent({
     open: { type: Boolean, default: false },
     movable: { type: Boolean, default: true },
     maskClosable: { type: Boolean, default: true },
+    mask: { type: [Boolean, Object] as PropType<MaskType>, default: true },
+    getContainer: {
+      type: [String, Boolean, Function, Object] as PropType<GetContainer>,
+      default: undefined,
+    },
     closable: { type: Boolean, default: true },
     closeIcon: {
       type: [Object, String, Number, Boolean, Array] as PropType<VNodeChild>,
@@ -128,7 +135,33 @@ const Preview = defineComponent({
     onActive: { type: Function as PropType<(offset: number) => void>, default: undefined },
   },
   setup(props, { emit, slots }) {
+    const mounted = ref(false);
+    onMounted(() => {
+      mounted.value = true;
+    });
     const previewElement = ref<HTMLElement | null>(null);
+    const moving = ref(false);
+    let dragWindow: Window | null = null;
+    let startX = 0;
+    let startY = 0;
+    let startTX = 0;
+    let startTY = 0;
+    const stopDrag = (): void => {
+      moving.value = false;
+      const owner = dragWindow;
+      dragWindow = null;
+      if (!owner) return;
+      owner.removeEventListener('mousemove', onMouseMove);
+      owner.removeEventListener('mouseup', stopDrag);
+      owner.removeEventListener('blur', stopDrag);
+    };
+    onScopeDispose(stopDrag);
+    watch(
+      [() => props.open, () => props.movable, () => previewElement.value?.ownerDocument],
+      ([open, movable, doc]) => {
+        if (!open || !movable || (dragWindow && doc?.defaultView !== dragWindow)) stopDrag();
+      },
+    );
     useLockFocus(() => props.open, previewElement);
     // Vue scope cleanup runs in registration order: release the lock, restore its
     // opener, then let useFocusRestore discard the saved element. Unmounting an
@@ -164,15 +197,22 @@ const Preview = defineComponent({
       zIndexPopupBase: imageTokenValues().zIndexPopup,
     });
 
-    const { transform, updateTransform, dispatchZoomChange, resetTransform } = useImageTransform(
-      () => props.minScale,
-      () => props.maxScale,
-      (info) => emit('transform', info),
+    const { transform, limits, updateTransform, dispatchZoomChange, resetTransform } =
+      useImageTransform(
+        () => props.minScale,
+        () => props.maxScale,
+        (info) => emit('transform', info),
+      );
+    const step = computed(() =>
+      Number.isFinite(props.scaleStep) && props.scaleStep > 0 ? props.scaleStep : 0.5,
     );
+    const zoomOutRatio = () => 1 / (1 + step.value) - 1;
 
     const { status, getImgRef, srcAndOnload } = useStatus({
       src: () => props.src,
       fallback: () => props.fallback,
+      srcSet: () => props.imgCommonProps?.srcSet,
+      sizes: () => props.imgCommonProps?.sizes,
     });
 
     // 打开时 portal 才渲染（rc 的 portalRender 语义）
@@ -206,49 +246,47 @@ const Preview = defineComponent({
       flipY: () => updateTransform({ flipY: !transform.value.flipY }),
       rotateLeft: () => updateTransform({ rotate: transform.value.rotate - 90 }),
       rotateRight: () => updateTransform({ rotate: transform.value.rotate + 90 }),
-      zoomIn: () => dispatchZoomChange(0.1, 'zoomIn'),
-      zoomOut: () => dispatchZoomChange(-0.1, 'zoomOut'),
+      zoomIn: () => dispatchZoomChange(step.value, 'zoomIn'),
+      zoomOut: () => dispatchZoomChange(zoomOutRatio(), 'zoomOut'),
       reset: () => resetTransform(),
       close: () => props.onClose?.(),
     };
     const currentImage = () => ({ src: srcAndOnload.value.src, alt: props.alt });
 
     // ---------------------- 手势（v1：滚轮 + 拖拽 + 双击） ----------------------
-    const moving = ref(false);
-    let startX = 0;
-    let startY = 0;
-    let startTX = 0;
-    let startTY = 0;
-
     const onWheel = (e: WheelEvent): void => {
       if (!props.open) return;
+      if (e.deltaY === 0) return;
       e.preventDefault();
-      const ratio = e.deltaY > 0 ? -0.1 : 0.1;
+      const ratio = e.deltaY > 0 ? zoomOutRatio() : step.value;
       dispatchZoomChange(ratio, 'wheel', e.clientX, e.clientY);
     };
 
     const onMouseDown = (e: MouseEvent): void => {
-      if (!props.open || !props.movable) return;
+      if (!props.open || !props.movable || e.button !== 0) return;
+      const owner = previewElement.value?.ownerDocument.defaultView;
+      if (!owner) return;
+      stopDrag();
       e.preventDefault();
+      dragWindow = owner;
       moving.value = true;
       startX = e.clientX;
       startY = e.clientY;
       startTX = transform.value.x;
       startTY = transform.value.y;
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
+      owner.addEventListener('mousemove', onMouseMove);
+      owner.addEventListener('mouseup', stopDrag);
+      owner.addEventListener('blur', stopDrag);
     };
     const onMouseMove = (e: MouseEvent): void => {
-      if (!moving.value) return;
+      if (!moving.value || !props.open || !props.movable || (e.buttons & 1) === 0) {
+        stopDrag();
+        return;
+      }
       updateTransform({
         x: startTX + (e.clientX - startX),
         y: startTY + (e.clientY - startY),
       });
-    };
-    const onMouseUp = (): void => {
-      moving.value = false;
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
     };
 
     const onDoubleClick = (e: MouseEvent): void => {
@@ -256,7 +294,7 @@ const Preview = defineComponent({
       if (transform.value.scale !== 1) {
         updateTransform({ x: 0, y: 0, scale: 1 });
       } else {
-        dispatchZoomChange(0.1 + props.scaleStep, 'zoomIn', e.clientX, e.clientY);
+        dispatchZoomChange(step.value, 'zoomIn', e.clientX, e.clientY);
       }
     };
 
@@ -297,7 +335,7 @@ const Preview = defineComponent({
     };
 
     const onMaskClick = (): void => {
-      if (props.maskClosable) props.onClose?.();
+      if (props.mask !== false && props.maskClosable) props.onClose?.();
     };
 
     // ------------------------------ 渲染 ------------------------------
@@ -340,8 +378,18 @@ const Preview = defineComponent({
           renderAction('flipX', icons.value.flipX, actions.flipX),
           renderAction('rotateLeft', icons.value.rotateLeft, actions.rotateLeft),
           renderAction('rotateRight', icons.value.rotateRight, actions.rotateRight),
-          renderAction('zoomOut', icons.value.zoomOut, actions.zoomOut, scale <= props.minScale),
-          renderAction('zoomIn', icons.value.zoomIn, actions.zoomIn, scale >= props.maxScale),
+          renderAction(
+            'zoomOut',
+            icons.value.zoomOut,
+            actions.zoomOut,
+            scale <= limits.value.minScale,
+          ),
+          renderAction(
+            'zoomIn',
+            icons.value.zoomIn,
+            actions.zoomIn,
+            scale >= limits.value.maxScale,
+          ),
         ],
       );
 
@@ -362,7 +410,10 @@ const Preview = defineComponent({
             current: props.current,
             total: props.count,
             image: currentImage(),
-            disabled: { zoomIn: scale >= props.maxScale, zoomOut: scale <= props.minScale },
+            disabled: {
+              zoomIn: scale >= limits.value.maxScale,
+              zoomOut: scale <= limits.value.minScale,
+            },
           })
         : actionsNode;
 
@@ -419,7 +470,7 @@ const Preview = defineComponent({
         class: `${props.prefixCls}-img`,
         width: props.imageInfo?.width,
         height: props.imageInfo?.height,
-        alt: props.alt,
+        alt: props.alt ?? '',
         style: {
           transform: `translate3d(${t.x}px, ${t.y}px, 0) scale3d(${t.flipX ? '-' : ''}${t.scale}, ${t.flipY ? '-' : ''}${t.scale}, 1) rotate(${t.rotate}deg)`,
         },
@@ -434,7 +485,11 @@ const Preview = defineComponent({
 
       return h(
         Portal,
-        { open: portalRender.value && props.open, autoDestroy: false },
+        {
+          open: mounted.value && portalRender.value && props.open,
+          autoDestroy: false,
+          getContainer: props.getContainer,
+        },
         {
           default: () =>
             h(
@@ -471,14 +526,25 @@ const Preview = defineComponent({
                       },
                       role: 'dialog',
                       'aria-modal': 'true',
-                      'aria-label': props.alt,
+                      'aria-label': props.alt?.trim() || 'Image preview',
                       tabindex: -1,
                       onKeydown: onKeyDown,
                     },
                     [
                       h('div', {
-                        class: [`${props.prefixCls}-mask`, props.classNames?.mask],
-                        style: props.styles?.mask,
+                        class: [
+                          `${props.prefixCls}-mask`,
+                          props.mask === false ? `${props.prefixCls}-mask-hidden` : undefined,
+                          typeof props.mask === 'object' && props.mask?.blur
+                            ? `${props.prefixCls}-mask-blur`
+                            : undefined,
+                          props.classNames?.mask,
+                          typeof props.mask === 'object' ? props.mask?.className : undefined,
+                        ],
+                        style: [
+                          typeof props.mask === 'object' ? props.mask?.style : undefined,
+                          props.styles?.mask,
+                        ],
                         onClick: onMaskClick,
                       }),
                       h(

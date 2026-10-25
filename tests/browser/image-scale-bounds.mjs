@@ -80,7 +80,7 @@ try {
         JSON.stringify(
           JSON.parse(document.querySelector('[data-image-scale-state]').textContent).preview,
         ) === JSON.stringify(limits),
-      limits,
+      { scaleStep: 0.1, ...limits },
     );
     assert.deepEqual(
       (await state()).events,
@@ -132,7 +132,7 @@ try {
     await zoom('zoomOut', 1.15);
     assert.equal(await action('zoomOut').isDisabled(), true);
     await change('Remove scale limits', {});
-    await zoom('zoomOut', 1.035);
+    await zoom('zoomOut', 1.15 / 1.1);
     await zoom('Reset scale', 1);
     await change('Use tight bounds', { minScale: 1, maxScale: 1.05 });
     await image().hover();
@@ -169,10 +169,10 @@ try {
     await action('Cycle preview bounds').click();
     assert.equal((await demoState())[`${kind}Changes`], before);
     await action('zoomIn').click();
-    assert.ok(Math.abs((await demoState()).last.transform.scale - 1.155) < 1e-8);
+    assert.ok(Math.abs((await demoState()).last.transform.scale - 1.575) < 1e-8);
     await action('Cycle preview bounds').click();
     await action('zoomOut').click();
-    assert.ok(Math.abs((await demoState()).last.transform.scale - 1.0395) < 1e-8);
+    assert.ok(Math.abs((await demoState()).last.transform.scale - 1.05) < 1e-8);
     const violations = await dialog().evaluate(
       async (node) => (await window.axe.run(node)).violations,
     );

@@ -61,6 +61,25 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
 
 domContractTest('Image', {
   baseline,
+  // These reference fixtures omit alt. Apollo requires a named preview trigger;
+  // the exact single difference stays asserted for every affected case.
+  allow: Object.fromEntries(
+    [
+      'image:cover-placement',
+      'image:cover-false',
+      'image:placeholder-true',
+      'image:preview-src',
+      'image:preview-mask',
+    ].map((id) => [
+      id,
+      {
+        reason:
+          'Apollo Image optional-alt contract: a preview trigger retains a generic accessible name; see docs/migrations/image-contracts.md.',
+        deviationId: 'image-optional-alt-accessible-name',
+        diff: ['$/div[0]: 我们多出属性 aria-label="Preview image"'],
+      },
+    ]),
+  ),
   render: (id) => {
     const spec = specs[id];
     if (!spec) throw new Error(`semantic.test: 基线用例 ${id} 缺少 Vue 侧 spec`);

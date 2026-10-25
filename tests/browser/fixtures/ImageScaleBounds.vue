@@ -1,15 +1,27 @@
 <script setup lang="ts">
-import { Image, ImagePreviewGroup, type PreviewConfig, type TransformInfo } from '@apollo-design/ui';
+import {
+  Image,
+  ImagePreviewGroup,
+  type PreviewConfig,
+  type TransformInfo,
+} from '@apollo-design/ui';
 import { ref, shallowRef } from 'vue';
 import TransformDemo from '../../../packages/ui/src/image/demo/transform-events.vue';
 
 const kind = ref<'image' | 'group'>('image');
 const epoch = ref(0);
-const preview = shallowRef<PreviewConfig>({});
+// Explicit 10% steps isolate clamp boundaries from the public 50% default.
+const preview = shallowRef<PreviewConfig>({ scaleStep: 0.1 });
 const events = ref<TransformInfo[]>([]);
 const note = ref('Initial scale note');
 const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="#38598b"/></svg>')}`;
-function mountTarget(next: 'image' | 'group') { kind.value = next; epoch.value++; preview.value = {}; events.value = []; note.value = 'Initial scale note'; }
+function mountTarget(next: 'image' | 'group') {
+  kind.value = next;
+  epoch.value++;
+  preview.value = { scaleStep: 0.1 };
+  events.value = [];
+  note.value = 'Initial scale note';
+}
 </script>
 
 <template>
@@ -17,10 +29,10 @@ function mountTarget(next: 'image' | 'group') { kind.value = next; epoch.value++
     <nav data-image-scale-controls aria-label="Scale bounds controls">
       <button type="button" @mousedown.prevent @click="mountTarget('image')">Mount scale image</button>
       <button type="button" @mousedown.prevent @click="mountTarget('group')">Mount scale group</button>
-      <button type="button" @mousedown.prevent @click="preview = { minScale: 1, maxScale: 1.05 }">Use tight bounds</button>
-      <button type="button" @mousedown.prevent @click="preview = { minScale: 1, maxScale: 2 }">Use expanded bounds</button>
-      <button type="button" @mousedown.prevent @click="preview = { minScale: 1.15, maxScale: 2 }">Use higher minimum</button>
-      <button type="button" @mousedown.prevent @click="preview = {}">Remove scale limits</button>
+      <button type="button" @mousedown.prevent @click="preview = { scaleStep: 0.1, minScale: 1, maxScale: 1.05 }">Use tight bounds</button>
+      <button type="button" @mousedown.prevent @click="preview = { scaleStep: 0.1, minScale: 1, maxScale: 2 }">Use expanded bounds</button>
+      <button type="button" @mousedown.prevent @click="preview = { scaleStep: 0.1, minScale: 1.15, maxScale: 2 }">Use higher minimum</button>
+      <button type="button" @mousedown.prevent @click="preview = { scaleStep: 0.1 }">Remove scale limits</button>
     </nav>
     <section data-image-scale-target>
       <Image v-if="kind === 'image'" :key="epoch" :src="source" alt="Scale preview image" :width="180" :height="105" :preview="preview" data-scale-trigger @transform="events.push($event)">

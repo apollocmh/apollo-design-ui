@@ -32,7 +32,7 @@ popup-provider / preview-close.
 | prefixCls | Full root prefix; follows the current prop and falls back to the current ConfigProvider namespace when removed | `string` | `apollo-image` |
 | src | Image source | `string` | — |
 | width / height | Size. Numbers are normalized to `px` (see Design notes) | `number \| string` | — |
-| alt | Accessible name; also the root `aria-label` when previewable | `string` | — |
+| alt | Image alternative text; a nonempty value also names the trigger/dialog. Omission produces empty img alt and generic trigger/dialog names | `string` | `''` |
 | fallback | Image shown when loading fails | `string` | — |
 | placeholder | Placeholder content; `{ progress: true \| { percent, render } }` renders the progress layer | `VNodeChild \| { progress }` | — |
 | preview | `false` disables preview; object form see below | `boolean \| PreviewConfig` | `true` |
@@ -78,23 +78,26 @@ These types, PreviewActions and PreviewGroupSlots are exported from the root ent
 |---|---|---|---|
 | src | Large image used by the preview (defaults to `src`) | `string` | — |
 | afterOpenChange | Called after the open/close motion | `(open) => void` | — |
-| cover | Cover (hover layer). `false` renders nothing; `{ placement: 'center' \| 'top' \| 'bottom', coverNode }` | `MaskNode` | — |
-| mask | Mask. `false` ⇒ root gets `-preview-mask-hidden` | `MaskNode` | — |
+| cover | Thumbnail cover; false hides it, null/omission uses default content; placement-only objects are supported | `VNodeChild \| { placement?: 'center' \| 'top' \| 'bottom', coverNode?: VNodeChild }` | — |
+| mask | Preview mask appearance; false hides it. Object fields are blur/className/style; semantic styles.popup.mask takes priority | `boolean \| { blur?: boolean, className?: string, style?: Record<string, string \| number> }` | `true` |
 | maskClosable | Close when the mask is clicked | `boolean` | `true` |
 | closable | Show the close button | `boolean` | `true` |
 | closeIcon | Custom close icon | `VNodeChild` | — |
 | movable | Allow dragging | `boolean` | `true` |
 | minScale / maxScale / scaleStep | Zoom bounds and step | `number` | `1` / `50` / `0.5` |
 | zIndex | Overlay z-index | `number` | `1080` (`zIndexPopupBase + 80`) |
-| getContainer | Overlay container | `() => HTMLElement` | `document.body` |
+| getContainer | Current overlay container; falls back to ConfigProvider.getPopupContainer, then body | `() => HTMLElement` | `document.body` |
 | icons | Icon slots (rotateLeft/rotateRight/zoomIn/zoomOut/close/left/right/flipX/flipY) | `PreviewIcons` | built-in icons |
-| rootClassName | ⚠️ Deprecated, use `classNames.root` | `string` | — |
-| maskClassName | ⚠️ Deprecated, use `classNames.cover` | `string` | — |
-| forceRender / destroyOnClose | Removed (no longer supported by antd); ignored when passed | — | — |
+| rootClassName | Additional popup root class; semantic entry is classNames.popup.root | `string` | — |
+| maskClassName | Additional popup mask class; semantic entry is classNames.popup.mask | `string` | — |
 
 Close icon priority is the current `#previewCloseIcon` → explicit `preview.closeIcon` (including null/false/0) → `preview.icons.close` → built-in icon. `closable=false` hides only the close button and skips its icon slot; Escape, maskClosable and the toolbar close action retain their behavior. Live visibility/content updates retain preview identity, editors and transforms. The button keeps an independent accessible name. See the [close-control regression](../../../../docs/audit/2026-10-25-image-preview-close-remediation.md).
 
 Image/Group read the current minScale/maxScale for zoom, wheel, double-click and non-reset transforms. Replacing/removing limits applies on the next operation; changing the configuration retains the current scale and preview identity without emitting transform. At or above the current maximum, both the zoom-in button and previewActions.disabled.zoomIn are disabled. Reset/close still return to scale 1. See the [bounds regression](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md).
+
+scaleStep is a proportional increment: zoom-in multiplies by 1+step, zoom-out divides by it. The default 0.5 changes 1 to 1.5 and applies to wheel and double-click zoom from 1. Step/min/max must be finite positive numbers; invalid values use defaults, and max below min is normalized to min. See the consolidated [migration](../../../../docs/migrations/image-contracts.md) for resources, containers, Group types and zoom behavior. Ineffective forceRender/destroyOnClose fields are removed from the type.
+
+Loading uses actual img events and cached completion, with no extra Image constructor or validation request. Fallback removes failed srcSet/sizes so candidates cannot override it; changing src/srcSet/sizes retries the current resource. Drag accepts the primary button and releases its owning-window listeners on close, movable=false, lost button, window blur and unmount.
 
 ### Image · Events
 
@@ -119,14 +122,16 @@ Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape 
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| items | Image list (preferred); a string or `{ src, alt, ... }` | `Array<string \| object>` | — |
-| preview | Static preview content/behavior options, as in Image | `boolean \| GroupPreviewConfig` | `true` |
+| items | Preferred image list; native image attributes plus src/width/height/fallback and optional business metadata | `Array<string \| PreviewGroupItem>` | — |
+| preview | Preview behavior; excludes Image-specific src/cover, which belong to items/child Images | `boolean \| GroupPreviewConfig` | `true` |
 | open | Top-level controlled open state; supports `v-model:open` | `boolean` | — |
 | defaultOpen | Uncontrolled initial state; later changes do not reset it | `boolean` | `false` |
 | current | Controlled current index | `number` | — |
 | defaultCurrent | Uncontrolled initial index | `number` | `0` |
 | previewPrefixCls | Full preview prefix; current override first, then the current Provider-derived value | `string` | `${prefixCls}-preview` |
-| classNames / styles | Same as `Image` | — | — |
+| classNames / styles | Actual group root and shared popup semantics; child Image semantics belong to the child/Provider | Corresponding PreviewGroupSemanticType fields | — |
+
+Removing current control resumes the last synchronized index; shrinking an uncontrolled list normalizes it into range. Empty lists mount no blank dialog. Disabled/empty groups leave no inert preview button semantics on children. Both items and registered data carry dimensions/fallback and forward only native image attributes to img.
 
 ### Image.PreviewGroup · Slots & Events
 
@@ -170,7 +175,7 @@ Group navigation icons read the current ConfigProvider.direction, resolving defa
 
 `ImageProps`, `PreviewConfig`, `PreviewGroupProps`, `GroupPreviewConfig`, `PreviewIcons`,
 `PlaceholderType`, `ImageProgressConfig`, `ImageStatus`, `CoverPlacement`, `MaskType`,
-`TransformInfo`, `ImageSemanticType`, `ProgressClassNames`, `ProgressStyles`.
+`TransformInfo`, `ImageSemanticType`, `PreviewGroupSemanticType`, `PreviewGroupItem`, `ProgressClassNames`, `ProgressStyles`. Image.PreviewGroup has the same complete declaration type as the named ImagePreviewGroup export.
 
 ## Theme (Component Token)
 

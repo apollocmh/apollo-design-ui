@@ -18,7 +18,10 @@ function action(name: string) {
   return node;
 }
 async function host(group: boolean, maximum = 50) {
-  const preview = ref<Pick<PreviewConfig, 'minScale' | 'maxScale'>>({
+  // Keep these clamp/identity scenarios at a deliberate 10% step. The public
+  // default and live step replacement are covered by contract-audit.test.ts.
+  const preview = ref<Pick<PreviewConfig, 'minScale' | 'maxScale' | 'scaleStep'>>({
+    scaleStep: 0.1,
     minScale: 1,
     maxScale: maximum,
   });
@@ -137,7 +140,7 @@ describe.each([false, true])('Current preview scale bounds (group=%s)', (group) 
   it('restores the default upper bound when preview limits are removed', async () => {
     const current = await host(group, 1.05);
     await current.step('zoomIn');
-    current.preview.value = {};
+    current.preview.value = { scaleStep: 0.1 };
     await nextTick();
     await nextTick();
     await current.step('zoomIn');

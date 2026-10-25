@@ -13,17 +13,29 @@ import { type InjectionKey, inject, provide, type Ref, ref, shallowRef } from 'v
 import type { ImageCommonProps } from './interface';
 
 export interface RegisteredImage {
-  data: ImageCommonProps & { src?: string };
+  data: ImageCommonProps & {
+    src?: string;
+    width?: number | string;
+    height?: number | string;
+    fallback?: string;
+  };
   canPreview: boolean;
   id?: string;
 }
 
 export interface PreviewGroupContextValue {
   register: (id: string, data: RegisteredImage) => () => void;
-  onPreview: (id: string, src: string | undefined, left: number, top: number) => void;
+  onPreview: (
+    id: string,
+    src: string | undefined,
+    left: number,
+    top: number,
+    trigger?: HTMLElement | null,
+  ) => void;
   isPreviewOpen: Ref<boolean>;
   mousePosition: Ref<{ x: number; y: number } | null>;
   current: Ref<number>;
+  canPreview: Ref<boolean>;
 }
 
 export const previewGroupContextKey: InjectionKey<PreviewGroupContextValue> =
@@ -47,11 +59,36 @@ export function nextImageId(): string {
 /** rc 的 usePreviewItems：`Map<string, RegisteredImage>`（插入序）。 */
 export function createImageRegistry() {
   const images = shallowRef(new Map<string, RegisteredImage>());
+  const dataKeys: readonly (keyof RegisteredImage['data'])[] = [
+    'src',
+    'alt',
+    'width',
+    'height',
+    'fallback',
+    'crossOrigin',
+    'decoding',
+    'loading',
+    'referrerPolicy',
+    'sizes',
+    'srcSet',
+    'useMap',
+    'draggable',
+  ];
 
   const register = (id: string, data: RegisteredImage): (() => void) => {
-    const clone = new Map(images.value);
-    clone.set(id, data);
-    images.value = clone;
+    const current = images.value.get(id);
+    // A group render can reevaluate a slot that supplies a fresh preview object.
+    // Publish only changed image data, so equivalent registrations cannot feed
+    // that render back into itself.
+    if (
+      !current ||
+      current.canPreview !== data.canPreview ||
+      dataKeys.some((key) => current.data[key] !== data.data[key])
+    ) {
+      const clone = new Map(images.value);
+      clone.set(id, data);
+      images.value = clone;
+    }
     return () => {
       const next = new Map(images.value);
       next.delete(id);

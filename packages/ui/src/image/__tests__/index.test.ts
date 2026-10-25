@@ -67,15 +67,13 @@ describe('Image · L1 渲染结构', () => {
     expect(root(wrapper).querySelector('img')!.className).toContain('apollo-image-img-placeholder');
   });
 
-  it('error 态 ⇒ 根带 -error 类（src 校验失败）', async () => {
+  it('error 态 ⇒ 原生图片失败后根带 -error 类', async () => {
     const wrapper = mount(Image, { props: { src: 'bad.png' } });
-    // 触发 img error ⇒ isImageValid 的 onerror
+    // 实际渲染图像的原生 error 驱动状态。
     const img = root(wrapper).querySelector('img') as HTMLImageElement;
     img.dispatchEvent(new Event('error'));
-    // isImageValid 走的是内部 new Image()，这里直接断言 fallback 通道：
-    // 手动置 error 后 src 若给了 fallback 会切换（由 useStatus 的 computed 保证）
     await nextTick();
-    expect(root(wrapper).className).toContain('apollo-image');
+    expect(root(wrapper).className).toContain('apollo-image-error');
   });
 });
 

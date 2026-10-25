@@ -45,7 +45,9 @@ it('Image and PreviewGroup expose top-level Boolean models and exact state event
 });
 
 it('state configuration moves directly out of PreviewConfig while the motion callback remains', () => {
-  expectTypeOf<GroupPreviewConfig>().toEqualTypeOf<PreviewConfig>();
+  expectTypeOf<GroupPreviewConfig>().toEqualTypeOf<Omit<PreviewConfig, 'src' | 'cover'>>();
+  expectTypeOf<GroupPreviewConfig>().not.toHaveProperty('src');
+  expectTypeOf<GroupPreviewConfig>().not.toHaveProperty('cover');
   expectTypeOf<PreviewConfig>().not.toHaveProperty('open');
   expectTypeOf<PreviewConfig>().not.toHaveProperty('defaultOpen');
   expectTypeOf<PreviewConfig>().not.toHaveProperty('onOpenChange');

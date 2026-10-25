@@ -8,13 +8,13 @@ import { withInstall } from '../_internal/with-install';
 import ImageComponent from './Image';
 import PreviewGroupComponent from './PreviewGroup';
 
-/** Image 组件。注册名 `AImage`（COMPONENT-RULES.md 规则 R2）。 */
-export const Image = withInstall(ImageComponent);
-
 /** 预览分组（`Image.PreviewGroup` 的对应物）。 */
 export const ImagePreviewGroup = withInstall(PreviewGroupComponent);
 
-Image.PreviewGroup = ImagePreviewGroup as never;
+/** Preserve the real Group type on both the static and named public exports. */
+export const Image = withInstall(
+  Object.assign(ImageComponent, { PreviewGroup: ImagePreviewGroup }),
+);
 
 export type {
   CoverPlacement,
@@ -31,7 +31,9 @@ export type {
   PreviewActionsInfo,
   PreviewConfig,
   PreviewCountInfo,
+  PreviewGroupItem,
   PreviewGroupProps,
+  PreviewGroupSemanticType,
   PreviewGroupSlots,
   PreviewIcons,
   PreviewImageData,

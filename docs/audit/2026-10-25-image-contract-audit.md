@@ -10,9 +10,9 @@
 
 当前整改单元未完成。不得依据 Registry completed、历史上游快照或 405 条局部运行测试宣称完整契约验收。
 
-## 公开 Props 与数据链路
+## 盘点基线：公开 Props 与数据链路
 
-声明统一来自 `packages/ui/src/image/interface.ts`；Image 与 Group 的运行时声明分别在 Image.ts / PreviewGroup.ts。下表逐项列出传递与消费，公共监听器在事件表单列。
+声明统一来自 `packages/ui/src/image/interface.ts`；Image 与 Group 的运行时声明分别在 Image.ts / PreviewGroup.ts。以下盘点表保留动手前基线事实（不是修复后状态），当前修复与证据统一记录在文末；公共监听器在事件表单列。
 
 | 对象/字段 | 当前传递 → 消费 | 分类与证据状态 |
 |---|---|---|
@@ -127,11 +127,24 @@ GroupPreviewConfig 当前是 PreviewConfig 的完整别名。Image 专属字段�
 
 ## 根因分组与动手前的集中评估
 
+公开入口盘点已扩展至真实 Chrome 20 个场景（含独立 Portal/useLockFocus 跨文档场景）：17 失败/3 已有通过，零 Vue/控制台/页面错误。默认 z-index=1080 和单图普通 fallback 正常；mask/container/scaleStep/Provider、srcSet fallback、Group fallback/root 语义、缺省可访问名称及跨文档链路的失败均纳入本轮。日志 `/tmp/apollo-image-contract-audit-browser-full-baseline.log`。跨文档焦点失败来自 utils 的全局 document/window 状态，已用实际 iframe 独立复现，不能仅在 Image 层掩盖。
+
 1. **声明与消费不一致**：mask 全形态、getContainer、scaleStep、Group 支持字段、别名推荐目标和重复转发、Token 实际落点。先用同一组公开入口矩阵复现，再集中确定类型与数据边界；不为遗漏字段引入无关能力。
 2. **状态与生命周期**：真实 Node SSR、真实 img load/error/fallback/source 更新、校验清理、拖动关闭/卸载/禁用、Group current 移除控制和 items/注册切换。按根因决定实现，覆盖重复开关、重挂及多实例。
 3. **Vue 公共用法和归一化**：静态子组件精确类型；合法 VNode/null/0/数组、条件插槽和可访问名称。已有有效的配置数据与业务回调不按字符串批量迁移；确需 API 修正时在本轮集中记录旧/新写法。
 4. **Provider/样式共享链路**：局部主题跨 Portal、组件 Token、主题 z-index/尺寸/颜色、容器与焦点。先确认共享层契约和其他消费者，再确定修复所在层，不能只让 Image 默认主题变绿。
 5. **文档与证据收口**：移除当前范围的 PENDING 假示例/过期完成声明，保留历史来源；每项关联源码、复现、提交与最终验证日志。9 张已批准 Apollo 基线缺失单独记录为受阻，不能复制 React 快照或降低阈值。
+
+### 集中方案与 API 边界（实施前记录）
+
+- 状态/资源：使用真实 img 的 load/error 和 Vue ref/响应式驱动状态，消除渲染前无条件 new Image 对 SSR 和生命周期的依赖；fallback 激活时关闭原 srcSet/sizes，换源恢复；注册数据完整携带 fallback 与尺寸，避免单图/分组链路分叉。原生 error 仍按公开归属通知，不另添重复事件。
+- 生命周期/模型：拖动监听绑定实际所属窗口，在 mouseup、关闭、movable 禁用和 scope dispose 成对释放；Group current 移除控制保留最近同步值，无控态列表缩减安全归一，不回声外部数据赋值；空数据不打开空预览，禁用 Group 的子触发器保持真实语义，默认索引待注册完成后处理，避免首个子项覆盖 defaultCurrent。
+- 数据归一化：统一区分合法 VNode/数组/0/空值与配置对象；cover 位置对象不作为文本渲染，null 不抛错；Progress renderer 是已实现的嵌套数据配置，保留并验证当前函数/空内容/百分比，不额外加同义新槽。afterOpenChange 同样保留已有效的业务回调，不重复迁移已裁决接口。
+- 配置契约：一次修正 MaskType（布尔/遮罩配置）与封面 VNode 的职责，接入全部遮罩字段和显式容器；GroupPreviewConfig 去除只适用于单图的 src/cover，Group 语义类型只描述实际根与 popup，根配置落实在根上，Provider 的图片根样式不误复制到 Group 包装层。旧别名的有效数据行为保留并纠正文档落点/重复 class；已明示删除却仍留在类型的 forceRender/destroyOnClose 一次移除。
+- 缩放：兑现现有 scaleStep 默认 0.5 的公开承诺，统一当前 zoom-in/wheel/double-click 因子为 1+step，zoom-out 使用逆因子，避免硬编码 0.1 及双击额外 0.1；旧比例行为是未消费步长的实现错误，集中迁移记录影响，保留原来的锚点/边界/编辑器场景并对正确输入和期望补覆盖，不删场景。
+- 导出：用真实静态子组件交集类型替换 as never 赋值，保留导出/安装名和运行时身份，同时让 Image.PreviewGroup 的 props/slots/emits 获得与具名 Group 相同的约束。
+- 主题/共享链路：主题上下文继承不能丢失外层 ThemeProvider；Image 源根与 Portal 预览使用同一响应式 alias/component Token，原生 style 优先级保留，用户样式不写入全局。组件 Token/默认/暗/紧凑与多实例都须实际验证，不能只把默认数值写入 CSS 变量。跨文档焦点修复归属 utils，补查其使用者及 a11y/Portal，而不模拟 DOM 事件或添加 Image 专用全局补丁。
+- 全部 API 修正集中写入一份迁移说明；新增独立能力（例如触摸双指缩放、为每个图标增加同义槽）不纳入本轮。以上方案不是验收结论，实现后仍需按整份清单统一验证。
 
 ## 验收标准与证据账
 
@@ -151,4 +164,23 @@ GroupPreviewConfig 当前是 PreviewConfig 的完整别名。Image 专属字段�
 | 其他待核实矩阵 | 未执行，禁止标已验证 |
 | Apollo 视觉批准基线 | 已验证缺失 9 张；受阻，不算通过 |
 
-下次代码修复前，补齐以上待核实项的复现与集中 API 决定；实施后在本表更新修复提交和统一验收结果。
+## 2026-10-26 成组实施与当前证据
+
+本节是当前状态；上面的盘点基线不自动升级为通过。集中API边界见 [迁移记录](../migrations/image-contracts.md)。整个Image单元仍开放。
+
+已实现资源状态、配置消费和分组模型三组修复：去除离屏Image校验；fallback抑制失败候选；分组透传尺寸/fallback；完整消费mask和当前容器；统一当前scaleStep和数值约束；修正合法VNode/0/数组/空配置；移除无效声明、精确Group语义及静态导出；默认可访问名称；拖动全生命周期清理。注册表仅在实际数据变化时发布，避免Group插槽中新对象触发循环更新。
+
+| 已执行证据 | 结果与边界 |
+|---|---|
+| Image运行/DOM/a11y/theme（`vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/image --maxWorkers=2`） | 最终21文件/351条通过，含57条公开入口回归（含默认索引、列表缩减/清空/恢复）。日志 `/tmp/apollo-image-core-runtime-commit.log` |
+| Image类型（`vitest run --project types packages/ui/src/image`） | 14文件/34条通过，无类型错误；新增正/负例覆盖Group精确类型和已移除配置。日志 `/tmp/apollo-image-core-types-accepted.log` |
+| 无DOM Node生产SSR（`node tests/consumer/image-ssr.mjs`） | 通过；两入口开/关状态、空alt、原生候选资源、占位数据及预览槽惰性。日志 `/tmp/apollo-image-core-node-ssr.log` |
+| Chrome生产包完整盘点与新增实际Demo（`node tests/browser/image-contract-audit.mjs`） | Chrome150.0.7871.125，最终21场景16通过/5仍失败，零Vue/控制台/页面错误。实际遮罩Demo三阶段的当前mask/step、本地容器、节点保持及完整axe通过（等待实际动画稳定后取证）。余项为双入口局部主题、双入口跨文档焦点、独立utils跨文档焦点；没有跳过失败。日志 `/tmp/apollo-image-core-browser-audit-demo-final.log` |
+| 原有生产浏览器（`node tests/browser/image-scale-bounds.mjs`、`image-preview-slots.mjs`、`image-transform.mjs`） | 三组全部通过；保留锚点、当前边界、原生手势、编辑器/选择区/焦点/节点身份、模型拒绝与实际Demo及完整axe。边界专项目标显式step=0.1，实际Demo使用公开默认0.5，未删除场景 |
+| 根严格（`pnpm exec vue-tsc --noEmit -p tsconfig.json`） | 通过，退出0；`/tmp/apollo-image-core-strict-final.log` |
+| UI构建/发布包消费（`pnpm --filter @apollo-design/ui run build`、`node tests/consumer/image-slot-types.mjs`、`node tests/build/run.mjs --package ui --no-build`） | 全部退出0；真实SFC声明+69份CSS；消费端无源码别名、静态Group非any及正/负例通过；L7 11检查/0FAIL/0PENDING。保留unbuild既有产物预检查告警，声明与CSS在afterBuild真实生成 |
+| 文档（build → test → typecheck → content:check） | Demo/API构建完成，14文件/157测试通过、类型与内容检查通过；1002个Demo。日志 `/tmp/apollo-image-core-docs-*-final.log` |
+| Registry与内容盘点 | 19检查/0warning；内容清单519条，keep-data137/review202/skip161/implemented-verified19，未把类型修正当新增完整验收 |
+| 上游DOM参考差异 | 保留全部9个用例，5个缺省alt场景精确断言新增通用aria-label。依据COMPATIBILITY.md的image-optional-alt-accessible-name，未改参考快照或忽略全部ARIA |
+
+尚未统一验收：共享主题及全部7个组件Token、跨文档焦点、模态滚动锁、富缩略图内交互控件、完整SSR水合/快速重开/多实例组合与最终视觉。滚动锁及富内容交互是本单元新增核实项，先建立复现再修复，不归入无关新能力。其余组件与基础包独立范围、触摸双指等未声明新能力另案。

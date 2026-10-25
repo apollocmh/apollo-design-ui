@@ -1,24 +1,10 @@
 import { mount } from '@vue/test-utils';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, isVNode, nextTick, ref } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { Image, ImagePreviewGroup } from '../../index';
 import type { ImageRenderInfo } from '../interface';
 
-// jsdom has no image decoding. Exercise the real status hook through its browser API.
-class ValidationImage {
-  onload: (() => void) | null = null;
-  onerror: (() => void) | null = null;
-  set src(value: string) {
-    queueMicrotask(() => {
-      if (value === 'bad.png') this.onerror?.();
-      else this.onload?.();
-    });
-  }
-}
-beforeEach(() => {
-  vi.stubGlobal('Image', ValidationImage);
-});
 afterEach(() => {
   document.body.replaceChildren();
   vi.restoreAllMocks();
@@ -170,6 +156,8 @@ describe('F11 Image native imageRender slot', () => {
     await flushRender();
     expect(slot).toHaveBeenCalled();
     const image = nativeImage(wrapper);
+    image.dispatchEvent(new Event('error'));
+    await flushRender();
     expect(image.getAttribute('src')).toBe('fallback.png');
     expect(latest(slot.mock.calls).src).toBe('fallback.png');
     expect(wrapper.classes()).toContain('apollo-image-error');

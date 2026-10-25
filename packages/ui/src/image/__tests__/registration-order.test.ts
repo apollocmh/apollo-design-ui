@@ -103,6 +103,16 @@ afterEach(() => {
 });
 
 describe('Image PreviewGroup stable registration order', () => {
+  it('does not publish equivalent same-id registrations but still publishes changed data', () => {
+    const { images, register } = createImageRegistry();
+    register('stable', { data: { src: 'same.png', width: 100 }, canPreview: true });
+    const initial = images.value;
+    register('stable', { data: { src: 'same.png', width: 100 }, canPreview: true });
+    expect(images.value).toBe(initial);
+    register('stable', { data: { src: 'same.png', width: 200 }, canPreview: true });
+    expect(images.value).not.toBe(initial);
+    expect(images.value.get('stable')?.data.width).toBe(200);
+  });
   for (const count of [2, 3]) {
     for (const field of ['src', 'alt'] as const) {
       it(`${count} images: replacing first ${field} refreshes the selected image without reordering navigation`, async () => {

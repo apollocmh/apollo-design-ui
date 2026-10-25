@@ -1140,18 +1140,29 @@ export { genFormStyle, genTokenDecls as genFormTokenDecls } from './form/style';
 export type { ComponentToken as FormComponentToken } from './form/style/token';
 export { prepareComponentToken as prepareFormComponentToken } from './form/style/token';
 export type {
+  CoverPlacement,
+  GroupPreviewConfig,
+  ImageProgressConfig,
   ImageProps,
   ImageRenderInfo,
   ImageSemanticType,
   ImageSlots,
+  ImageStatus,
+  MaskType,
+  PlaceholderType,
   PreviewActions,
   PreviewActionsInfo,
   PreviewConfig,
   PreviewCountInfo,
+  PreviewGroupItem,
   PreviewGroupProps,
+  PreviewGroupSemanticType,
   PreviewGroupSlots,
+  PreviewIcons,
   PreviewImageData,
   PreviewImageInfo,
+  ProgressClassNames,
+  ProgressStyles,
   TransformInfo,
 } from './image';
 export { Image, ImagePreviewGroup } from './image';

@@ -20,6 +20,26 @@ try {
     path.join(root, 'packages/ui/src/image/demo/preview-close.vue'),
     path.join(temp, 'PreviewCloseDemo.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/preview-mask.vue'),
+    path.join(temp, 'PreviewMaskDemo.vue'),
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ContractTypes.ts'),
+    `
+import { Image, ImagePreviewGroup, type GroupPreviewConfig, type MaskType, type PreviewGroupItem } from '@apollo-design/ui';
+type IsAny<T> = 0 extends (1 & T) ? true : false;
+const exactStaticType: IsAny<typeof Image.PreviewGroup> = false;
+const sameGroup: typeof ImagePreviewGroup = Image.PreviewGroup;
+const mask: MaskType = { blur: true, style: { opacity: 0.8 } };
+const item: PreviewGroupItem = { src: 'image.png', width: 240, fallback: 'fallback.png' };
+// @ts-expect-error A Group source belongs to items or child Image.preview.src.
+const source: GroupPreviewConfig = { src: 'ignored.png' };
+// @ts-expect-error A mask is appearance configuration, not content.
+const invalidMask: MaskType = 'ignored text';
+void [exactStaticType, sameGroup, mask, item, source, invalidMask];
+`,
+  );
   const exact = fs.readFileSync(
     path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImageSlot.vue'),
     'utf8',

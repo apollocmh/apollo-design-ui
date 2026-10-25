@@ -16,10 +16,12 @@ import {
   computed,
   defineComponent,
   h,
+  isVNode,
   onBeforeUnmount,
   type PropType,
   ref,
   type SlotsType,
+  shallowRef,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -29,10 +31,10 @@ import { nextImageId, type RegisteredImage, usePreviewGroup } from './context';
 import { useStatus } from './hooks/useStatus';
 import type {
   CoverPlacement,
+  ImageProgressConfig,
   ImageProps,
   ImageSemanticType,
   ImageSlots,
-  MaskNode,
   PlaceholderType,
   PreviewActionsInfo,
   PreviewConfig,
@@ -41,34 +43,34 @@ import type {
 } from './interface';
 import Preview from './Preview';
 import Progress from './Progress';
-import { toCssSize } from './util';
+import { getImageCommonProps, toCssSize } from './util';
 
 type SemanticClassNames = NonNullable<ImageSemanticType['classNames']>;
 type SemanticStyles = NonNullable<ImageSemanticType['styles']>;
 
 /** antd 的 isPlaceholderConfig（plain object 且不是 VNode）。 */
-function isPlaceholderConfig(placeholder: unknown): boolean {
+function isPlaceholderConfig(
+  placeholder: unknown,
+): placeholder is { progress?: boolean | ImageProgressConfig } {
   if (!placeholder || typeof placeholder !== 'object') return false;
-  const obj = placeholder as Record<string, unknown>;
-  // VNode 有 __v_isVNode / type / props 等标记
-  return !('__v_isVNode' in obj) && !('type' in obj && 'props' in obj);
+  return !Array.isArray(placeholder) && !isVNode(placeholder);
 }
 
-function normalizeCover(cover: MaskNode | undefined): {
+function normalizeCover(cover: PreviewConfig['cover']): {
   placement: CoverPlacement;
   coverNode: VNodeChild;
   isFalse: boolean;
 } {
   if (cover === false) return { placement: 'center', coverNode: undefined, isFalse: true };
-  if (cover === undefined || cover === true) {
+  if (cover === undefined || cover === null || cover === true) {
     return { placement: 'center', coverNode: undefined, isFalse: false };
   }
   if (typeof cover === 'boolean')
     return { placement: 'center', coverNode: undefined, isFalse: false };
-  const obj = cover as Record<string, unknown>;
-  const placement = (obj.placement as CoverPlacement) || 'center';
-  const coverNode = (obj.coverNode as VNodeChild) ?? (cover as VNodeChild);
-  return { placement, coverNode, isFalse: false };
+  if (typeof cover === 'object' && !Array.isArray(cover) && !isVNode(cover)) {
+    return { placement: cover.placement ?? 'center', coverNode: cover.coverNode, isFalse: false };
+  }
+  return { placement: 'center', coverNode: cover, isFalse: false };
 }
 
 const Image = defineComponent({
@@ -90,7 +92,10 @@ const Image = defineComponent({
     height: { type: [Number, String] as PropType<number | string>, default: undefined },
     alt: { type: String, default: undefined },
     fallback: { type: String, default: undefined },
-    placeholder: { type: [Object, String] as PropType<PlaceholderType>, default: undefined },
+    placeholder: {
+      type: [Object, String, Number, Boolean, Array] as PropType<PlaceholderType>,
+      default: undefined,
+    },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: false },
     preview: { type: [Boolean, Object] as PropType<boolean | PreviewConfig>, default: true },
@@ -111,6 +116,8 @@ const Image = defineComponent({
     // antd 逐字（image/index.js:33-41）：ConfigProvider 组件级 `classNames` /
     // `styles`（`components.image.*`）是语义合并的**最外层**来源（2026-10-04 接上）。
     const config = useComponentConfig<ImageSemanticType>('image');
+    const element = shallowRef<HTMLElement | null>(null);
+    const groupContext = usePreviewGroup();
     const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('image'));
 
     // ============================ Preview =============================
@@ -119,7 +126,14 @@ const Image = defineComponent({
       if (props.preview === true || props.preview === undefined) return {};
       return props.preview;
     });
-    const canPreview = computed(() => previewConfig.value !== null);
+    const canPreview = computed(
+      () => previewConfig.value !== null && (groupContext?.canPreview.value ?? true),
+    );
+    const getPreviewContainer = computed(() => {
+      if (previewConfig.value?.getContainer) return previewConfig.value.getContainer;
+      const provider = config.getPopupContainer;
+      return provider ? () => provider(element.value ?? undefined) : undefined;
+    });
 
     const innerOpen = ref(props.defaultOpen);
     const previewOpen = computed(() => props.open ?? innerOpen.value);
@@ -145,24 +159,18 @@ const Image = defineComponent({
     const previewSrc = computed(() => previewConfig.value?.src ?? props.src);
 
     // ======================= PreviewGroup 注册 ========================
-    const groupContext = usePreviewGroup();
     const imageId = nextImageId();
     let unregister: (() => void) | undefined;
 
     const registerData = computed<RegisteredImage>(() => ({
       data: {
-        alt: props.alt,
-        crossOrigin: props.crossOrigin,
-        decoding: props.decoding,
-        loading: props.loading,
-        referrerPolicy: props.referrerPolicy,
-        sizes: props.sizes,
-        srcSet: props.srcSet,
-        useMap: props.useMap,
-        draggable: props.draggable,
+        ...getImageCommonProps(props),
         src: previewSrc.value,
+        width: props.width,
+        height: props.height,
+        fallback: props.fallback,
       },
-      canPreview: canPreview.value,
+      canPreview: previewConfig.value !== null,
     }));
 
     if (groupContext) {
@@ -189,6 +197,7 @@ const Image = defineComponent({
           previewSrc.value,
           mousePosition.value?.x ?? 0,
           mousePosition.value?.y ?? 0,
+          element.value,
         );
         return;
       }
@@ -198,12 +207,14 @@ const Image = defineComponent({
     // ============================ Status ==============================
     const isCustomPlaceholder = computed(() => {
       const p = props.placeholder;
-      return Boolean(p) && p !== true;
+      return p !== undefined && p !== null && p !== false && p !== true;
     });
     const { status, getImgRef, srcAndOnload } = useStatus({
       src: () => props.src,
       isCustomPlaceholder: () => isCustomPlaceholder.value,
       fallback: () => props.fallback,
+      srcSet: () => props.srcSet,
+      sizes: () => props.sizes,
     });
 
     // =========================== Semantic =============================
@@ -213,35 +224,35 @@ const Image = defineComponent({
       SemanticClassNames,
       SemanticStyles
     >(
-      [
-        () => config.classNames,
-        () => props.classNames,
-        () => ({ root: props.wrapperStyle ? undefined : undefined }),
-      ],
+      [() => config.classNames, () => props.classNames],
       [
         () => config.styles,
         () => props.styles,
         () => (props.wrapperStyle ? { root: props.wrapperStyle } : undefined),
       ],
-      {} as ImageProps,
+      () => props,
       { popup: { _default: 'root' }, placeholder: { progress: {} } },
     );
 
     // ========================== Placeholder ===========================
-    const progressConfig = computed<{ percent?: number; render?: unknown } | undefined>(() => {
+    const progressConfig = computed<ImageProgressConfig | undefined>(() => {
       const p = props.placeholder;
       if (!p || !isPlaceholderConfig(p)) return undefined;
-      const cfg = (p as { progress?: boolean | { percent?: number; render?: unknown } }).progress;
+      const cfg = p.progress;
       if (typeof cfg === 'boolean') return cfg ? {} : undefined;
       return cfg;
     });
     const showProgressOverlay = computed(() => progressConfig.value !== undefined);
 
     const placeholderNode = computed<VNodeChild>(() =>
-      isPlaceholderConfig(props.placeholder) ? undefined : (props.placeholder as VNodeChild),
+      isPlaceholderConfig(props.placeholder) ? undefined : props.placeholder,
     );
     const shouldRenderPlaceholderOverlay = computed(
-      () => Boolean(placeholderNode.value) && !props.src,
+      () =>
+        placeholderNode.value !== undefined &&
+        placeholderNode.value !== null &&
+        placeholderNode.value !== false &&
+        !props.src,
     );
 
     // ============================ Render ==============================
@@ -250,13 +261,9 @@ const Image = defineComponent({
     // 归到 `popup.root`，这里只读合并结果；`previewConfig` 的两条是本仓既有的附加项。
     const popupClassNames = computed(() => {
       const p = mergedClassNames.value.popup;
-      const mask = previewConfig.value?.mask;
       return {
-        root: [p?.root, previewConfig.value?.rootClassName].filter(Boolean).join(' ') || undefined,
-        mask:
-          [p?.mask, mask === false ? `${prefixCls.value}-preview-mask-hidden` : undefined]
-            .filter(Boolean)
-            .join(' ') || undefined,
+        root: p?.root,
+        mask: [p?.mask, previewConfig.value?.maskClassName].filter(Boolean).join(' ') || undefined,
         body: p?.body,
         footer: p?.footer,
         actions: p?.actions,
@@ -264,7 +271,7 @@ const Image = defineComponent({
       };
     });
 
-    const coverInfo = computed(() => normalizeCover(previewConfig.value?.cover as MaskNode));
+    const coverInfo = computed(() => normalizeCover(previewConfig.value?.cover));
 
     const onInternalClick = (e: MouseEvent): void => {
       if (canPreview.value) openPreviewAt(e.target instanceof Element ? e.target : null);
@@ -281,17 +288,7 @@ const Image = defineComponent({
     };
 
     return () => {
-      const commonProps = {
-        alt: props.alt,
-        crossOrigin: props.crossOrigin,
-        decoding: props.decoding,
-        loading: props.loading,
-        referrerPolicy: props.referrerPolicy,
-        sizes: props.sizes,
-        srcSet: props.srcSet,
-        useMap: props.useMap,
-        draggable: props.draggable,
-      };
+      const commonProps = { ...getImageCommonProps(props), alt: props.alt ?? '' };
 
       // 进度层 / 纯占位 overlay：只渲染 Progress（带尺寸）
       if (showProgressOverlay.value || shouldRenderPlaceholderOverlay.value) {
@@ -307,10 +304,8 @@ const Image = defineComponent({
         return h(Progress, {
           ...progressAttrs,
           prefixCls: prefixCls.value,
-          percent: (cfg as { percent?: number }).percent,
-          render: shouldRenderPlaceholderOverlay.value
-            ? ((() => placeholderNode.value) as never)
-            : ((cfg as { render?: never }).render ?? undefined),
+          percent: cfg.percent,
+          render: shouldRenderPlaceholderOverlay.value ? () => placeholderNode.value : cfg.render,
           classNames: mergedClassNames.value?.placeholder?.progress,
           styles: mergedStyles.value?.placeholder?.progress,
           class: [attrs.class, mergedClassNames.value?.root],
@@ -338,9 +333,12 @@ const Image = defineComponent({
         },
         width: props.width,
         height: props.height,
-        ref: (el: unknown) => getImgRef(el as HTMLImageElement | null),
-        ...(srcAndOnload.value as Record<string, unknown>),
-        onError: (event: Event) => emit('error', event),
+        ref: (el: unknown) => getImgRef(el instanceof HTMLImageElement ? el : null),
+        ...srcAndOnload.value,
+        onError: (event: Event) => {
+          srcAndOnload.value.onError();
+          emit('error', event);
+        },
       });
       const imageContent = slots.imageRender
         ? slots.imageRender({
@@ -360,6 +358,9 @@ const Image = defineComponent({
         'div',
         {
           ...attrs,
+          ref: (node: unknown) => {
+            element.value = node instanceof HTMLElement ? node : null;
+          },
           class: [
             prefixCls.value,
             // 调用方原生 class（位置与原先的 props.rootClassName 一致）
@@ -376,7 +377,7 @@ const Image = defineComponent({
             ? {
                 role: 'button',
                 tabindex: 0,
-                'aria-label': attrs['aria-label'] ?? props.alt,
+                'aria-label': attrs['aria-label'] ?? (props.alt?.trim() || 'Preview image'),
               }
             : {}),
           onClick: onInternalClick,
@@ -388,7 +389,7 @@ const Image = defineComponent({
             ? h(
                 'div',
                 { 'aria-hidden': 'true', class: `${prefixCls.value}-placeholder` },
-                [placeholderNode.value as VNodeChild].filter((c) => c !== null && c !== undefined),
+                [placeholderNode.value].filter((c) => c !== null && c !== undefined),
               )
             : null,
           !coverInfo.value.isFalse && canPreview.value
@@ -402,9 +403,7 @@ const Image = defineComponent({
                   ],
                   style: mergedStyles.value?.cover,
                 },
-                [coverInfo.value.coverNode as VNodeChild].filter(
-                  (c) => c !== null && c !== undefined,
-                ),
+                [coverInfo.value.coverNode].filter((c) => c !== null && c !== undefined),
               )
             : null,
           canPreview.value && !groupContext
@@ -420,6 +419,8 @@ const Image = defineComponent({
                   open: previewOpen.value,
                   movable: previewConfig.value?.movable,
                   maskClosable: previewConfig.value?.maskClosable,
+                  mask: previewConfig.value?.mask,
+                  getContainer: getPreviewContainer.value,
                   closable: previewConfig.value?.closable,
                   closeIcon: previewConfig.value?.closeIcon,
                   minScale: previewConfig.value?.minScale,

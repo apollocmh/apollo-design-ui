@@ -211,7 +211,7 @@ describe('Image/Group native preview slots', () => {
       expect(previewImage().style.transform).toContain('rotate(0deg)');
       control('Custom zoom').click();
       await settle();
-      expect(transformed).toHaveBeenLastCalledWith(expect.objectContaining({ scale: 1.1 }));
+      expect(transformed).toHaveBeenLastCalledWith(expect.objectContaining({ scale: 1.5 }));
       control('Custom close').click();
       await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), {
         timeout: 1500,

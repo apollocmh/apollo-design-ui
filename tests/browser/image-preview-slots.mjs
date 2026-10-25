@@ -151,7 +151,7 @@ try {
     );
     assert.equal(await rich.textContent(), 'Rich draft');
     await image().dblclick();
-    await waitTransform('scale', 1.6);
+    await waitTransform('scale', 1.5);
     await image().dblclick();
     await waitTransform('scale', 1);
     await action('Slot rotate').click();
@@ -230,7 +230,7 @@ try {
     'Demo draft',
   );
   await action('Custom preview zoom').click();
-  assert.equal((await demoState()).transformed.scale, 1.1);
+  assert.equal((await demoState()).transformed.scale, 1.5);
   await action('Reset preview transform').click();
   assert.equal((await demoState()).transformed.scale, 1);
   await close(demoOpener);

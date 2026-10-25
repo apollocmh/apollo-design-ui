@@ -291,6 +291,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image整改单元完整盘点（进行中）**：按当前源码建立 [统一契约清单](audit/2026-10-25-image-contract-audit.md)，覆盖两公开入口、全部配置、Slots/Emits/模型/导出、Progress、状态/注册/变换、Provider/样式及关联基础包。真实无DOM Node发布包SSR已复现 `Image is not defined`（退出1），属于本轮必修；其余待核实项先补齐证据并集中评估API，再按根因成组修复和统一验收。前述独立增量均不表示Image或全库已完成。
 
+**2026-10-26 集中修复进行中**：资源状态/SSR/fallback候选、mask/当前容器/步长、分组模型与尺寸/兜底、精确类型已实施；351条四层运行回归（含57条入口回归）和34条类型通过，生产Node SSR及原有缩放/插槽/变换Chrome检查通过。全量浏览器盘点仍有主题和跨文档焦点5个失败，继续同一单元修复；迁移与其余未验证边界集中记录在上述统一清单，未标Image完成。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

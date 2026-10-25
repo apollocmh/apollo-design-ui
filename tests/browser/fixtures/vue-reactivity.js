@@ -22,6 +22,7 @@ import BreakpointNative from './BreakpointNative.vue';
 import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
+import ImageContractAudit from './ImageContractAudit.vue';
 import ImageCounterContrast from './ImageCounterContrast.vue';
 import ImageDirection from './ImageDirection.vue';
 import ImageNativeEvents from './ImageNativeEvents.vue';
@@ -120,6 +121,7 @@ const Demo = {
   'typography-provider': TypographyProvider,
   'image-render': ImageRender,
   'image-preview-close': ImagePreviewClose,
+  'image-contract-audit': ImageContractAudit,
   'image-provider': ImageProvider,
   'image-popup-provider': ImagePopupProvider,
   'image-direction': ImageDirection,

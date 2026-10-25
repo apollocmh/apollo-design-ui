@@ -8,9 +8,9 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 520,
+    "rows": 519,
     "byCategory": {
-      "data": 126,
+      "data": 125,
       "component-content-candidate": 154,
       "deprecated": 53,
       "internal": 108,
@@ -18,7 +18,7 @@
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 138,
+      "keep-data": 137,
       "review": 202,
       "skip": 161,
       "implemented-verified": 19
@@ -5230,7 +5230,7 @@
       "owner": "ImageProgressConfig",
       "prop": "render",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:46",
+      "source": "packages/ui/src/image/interface.ts:43",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5246,6 +5246,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5257,7 +5258,7 @@
       "owner": "ImageProps",
       "prop": "placeholder",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/image/interface.ts:159",
+      "source": "packages/ui/src/image/interface.ts:152",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5274,6 +5275,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/a11y.test.ts",
+          "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
           "packages/ui/src/image/__tests__/native-events.test.ts",
@@ -5292,7 +5294,7 @@
       "owner": "ImageRenderInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:235",
+      "source": "packages/ui/src/image/interface.ts:228",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5317,7 +5319,7 @@
       "owner": "ImageSlots",
       "prop": "imageRender",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:177",
+      "source": "packages/ui/src/image/interface.ts:170",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5357,7 +5359,7 @@
       "owner": "ImageSlots",
       "prop": "previewActions",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:179",
+      "source": "packages/ui/src/image/interface.ts:172",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5378,6 +5380,7 @@
           "packages/ui/src/image/demo/popup-provider.vue",
           "packages/ui/src/image/demo/preview-close.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue",
+          "packages/ui/src/image/demo/preview-mask.vue",
           "packages/ui/src/image/demo/transform-events.vue"
         ]
       },
@@ -5397,7 +5400,7 @@
       "owner": "ImageSlots",
       "prop": "previewCloseIcon",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:180",
+      "source": "packages/ui/src/image/interface.ts:173",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5432,7 +5435,7 @@
       "owner": "ImageSlots",
       "prop": "previewImage",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:178",
+      "source": "packages/ui/src/image/interface.ts:171",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5473,7 +5476,7 @@
       "owner": "PreviewActionsInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:209",
+      "source": "packages/ui/src/image/interface.ts:202",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5498,7 +5501,7 @@
       "owner": "PreviewConfig",
       "prop": "closeIcon",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:77",
+      "source": "packages/ui/src/image/interface.ts:74",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5525,7 +5528,7 @@
       "owner": "PreviewConfig",
       "prop": "cover",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:73",
+      "source": "packages/ui/src/image/interface.ts:70",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5541,36 +5544,8 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
-          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
-          "packages/ui/src/image/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "PreviewConfig",
-      "prop": "mask",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:74",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
@@ -5583,7 +5558,7 @@
       "owner": "PreviewCountInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:220",
+      "source": "packages/ui/src/image/interface.ts:213",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5608,7 +5583,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:227",
+      "source": "packages/ui/src/image/interface.ts:220",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5628,6 +5603,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
@@ -5651,7 +5627,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "previewActions",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:229",
+      "source": "packages/ui/src/image/interface.ts:222",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5672,6 +5648,7 @@
           "packages/ui/src/image/demo/popup-provider.vue",
           "packages/ui/src/image/demo/preview-close.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue",
+          "packages/ui/src/image/demo/preview-mask.vue",
           "packages/ui/src/image/demo/transform-events.vue"
         ]
       },
@@ -5691,7 +5668,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "previewCloseIcon",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:230",
+      "source": "packages/ui/src/image/interface.ts:223",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5726,7 +5703,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "previewCount",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:231",
+      "source": "packages/ui/src/image/interface.ts:224",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5761,7 +5738,7 @@
       "owner": "PreviewGroupSlots",
       "prop": "previewImage",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:228",
+      "source": "packages/ui/src/image/interface.ts:221",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5802,7 +5779,7 @@
       "owner": "PreviewIcons",
       "prop": "close",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:61",
+      "source": "packages/ui/src/image/interface.ts:58",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5831,7 +5808,7 @@
       "owner": "PreviewIcons",
       "prop": "flipX",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:64",
+      "source": "packages/ui/src/image/interface.ts:61",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5858,7 +5835,7 @@
       "owner": "PreviewIcons",
       "prop": "flipY",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:65",
+      "source": "packages/ui/src/image/interface.ts:62",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5885,7 +5862,7 @@
       "owner": "PreviewIcons",
       "prop": "left",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:62",
+      "source": "packages/ui/src/image/interface.ts:59",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5913,7 +5890,7 @@
       "owner": "PreviewIcons",
       "prop": "right",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:63",
+      "source": "packages/ui/src/image/interface.ts:60",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5941,7 +5918,7 @@
       "owner": "PreviewIcons",
       "prop": "rotateLeft",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:57",
+      "source": "packages/ui/src/image/interface.ts:54",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5966,7 +5943,7 @@
       "owner": "PreviewIcons",
       "prop": "rotateRight",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:58",
+      "source": "packages/ui/src/image/interface.ts:55",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5991,7 +5968,7 @@
       "owner": "PreviewIcons",
       "prop": "zoomIn",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:59",
+      "source": "packages/ui/src/image/interface.ts:56",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -6016,7 +5993,7 @@
       "owner": "PreviewIcons",
       "prop": "zoomOut",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:60",
+      "source": "packages/ui/src/image/interface.ts:57",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -6041,7 +6018,7 @@
       "owner": "PreviewImageInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:190",
+      "source": "packages/ui/src/image/interface.ts:183",
       "slotRuntime": {
         "status": "not-run",
         "files": []

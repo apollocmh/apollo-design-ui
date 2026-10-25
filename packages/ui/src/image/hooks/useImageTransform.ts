@@ -11,7 +11,7 @@
  *   （见 §「以指针为锚的缩放」）；`action` 为 `zoomIn/zoomOut` 时以**视口中心**
  *   为锚（rc 传 undefined 的鼠标坐标）。
  */
-import { type MaybeRefOrGetter, type Ref, ref, toValue } from 'vue';
+import { type ComputedRef, computed, type MaybeRefOrGetter, type Ref, ref, toValue } from 'vue';
 
 import type { TransformInfo } from '../interface';
 
@@ -20,6 +20,7 @@ export const BASE_SCALE_RATIO = 0.1;
 
 export interface UseImageTransformResult {
   transform: Ref<TransformInfo>;
+  limits: ComputedRef<{ minScale: number; maxScale: number }>;
   updateTransform: (next: Partial<TransformInfo>) => void;
   dispatchZoomChange: (
     ratio: number,
@@ -45,8 +46,15 @@ export function useImageTransform(
   onTransform?: (info: TransformInfo) => void,
 ): UseImageTransformResult {
   const transform = ref<TransformInfo>(initialTransform());
+  const limits = computed(() => {
+    const rawMin = toValue(minScale);
+    const rawMax = toValue(maxScale);
+    const min = Number.isFinite(rawMin) && rawMin > 0 ? rawMin : 1;
+    const max = Number.isFinite(rawMax) && rawMax > 0 ? rawMax : 50;
+    return { minScale: min, maxScale: Math.max(min, max) };
+  });
   const clampScale = (scale: number): number =>
-    Math.max(toValue(minScale), Math.min(toValue(maxScale), scale));
+    Math.max(limits.value.minScale, Math.min(limits.value.maxScale, scale));
 
   const emit = (): void => {
     onTransform?.({ ...transform.value });
@@ -95,5 +103,5 @@ export function useImageTransform(
     emit();
   };
 
-  return { transform, updateTransform, dispatchZoomChange, resetTransform };
+  return { transform, limits, updateTransform, dispatchZoomChange, resetTransform };
 }

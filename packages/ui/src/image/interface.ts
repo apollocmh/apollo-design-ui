@@ -13,17 +13,14 @@ export type ImageStatus = 'normal' | 'loading' | 'error';
 
 export type CoverPlacement = 'center' | 'top' | 'bottom';
 
-/** antd 的 MaskType（preview.mask 的形态）。 */
+/** Preview overlay appearance; image/cover content belongs to its own data/slots. */
 export type MaskType =
   | boolean
   | {
       blur?: boolean;
-      /** 其余 antd 的 mask 配置（v1 结构占位）。 */
       style?: Record<string, string | number>;
       className?: string;
     };
-
-export type MaskNode = MaskType | VNodeChild;
 
 /** Progress 的语义槽（antd Progress.tsx）。 */
 export interface ProgressClassNames {
@@ -70,19 +67,15 @@ export interface PreviewConfig {
   src?: string;
   afterOpenChange?: (open: boolean) => void;
   /** 封面（hover 层）；`false` ⇒ 不渲染。 */
-  cover?: MaskNode | { placement?: CoverPlacement; coverNode?: VNodeChild };
-  mask?: MaskNode;
+  cover?: VNodeChild | { placement?: CoverPlacement; coverNode?: VNodeChild };
+  mask?: MaskType;
   maskClosable?: boolean;
   closable?: boolean;
   closeIcon?: VNodeChild;
-  /** ⚠️ deprecated：用 `classNames.root`。 */
+  /** 浮层根附加类；语义配置使用 `classNames.popup.root`。 */
   rootClassName?: string;
-  /** ⚠️ deprecated：用 `classNames.cover`。 */
+  /** 浮层遮罩附加类；语义配置使用 `classNames.popup.mask`。 */
   maskClassName?: string;
-  /** ⚠️ 已移除（antd 不再支持）：预览始终在展示后渲染。 */
-  forceRender?: boolean;
-  /** ⚠️ 已移除：同上。 */
-  destroyOnClose?: boolean;
   movable?: boolean;
   minScale?: number;
   maxScale?: number;
@@ -102,7 +95,7 @@ export interface TransformInfo {
   y: number;
 }
 
-export type GroupPreviewConfig = PreviewConfig;
+export type GroupPreviewConfig = Omit<PreviewConfig, 'src' | 'cover'>;
 
 /** antd 的 ImageSemanticType（5 组；popup/placeholder 是嵌套组）。 */
 export interface ImageSemanticType {
@@ -242,9 +235,22 @@ export interface ImageRenderInfo {
   classNames: { image?: string };
 }
 
+export interface PreviewGroupSemanticType {
+  classNames?: Pick<NonNullable<ImageSemanticType['classNames']>, 'root' | 'popup'>;
+  styles?: Pick<NonNullable<ImageSemanticType['styles']>, 'root' | 'popup'>;
+}
+
+export interface PreviewGroupItem extends ImageCommonProps {
+  src: string;
+  width?: number | string;
+  height?: number | string;
+  fallback?: string;
+  [key: string]: unknown;
+}
+
 export interface PreviewGroupProps {
   previewPrefixCls?: string;
-  items?: Array<string | { src: string; [key: string]: unknown }>;
+  items?: Array<string | PreviewGroupItem>;
   preview?: boolean | GroupPreviewConfig;
   open?: boolean;
   defaultOpen?: boolean;
@@ -255,6 +261,6 @@ export interface PreviewGroupProps {
   onTransform?: (info: TransformInfo) => void;
   'onUpdate:open'?: (open: boolean) => void;
   'onUpdate:current'?: (current: number) => void;
-  classNames?: ImageSemanticType['classNames'];
-  styles?: ImageSemanticType['styles'];
+  classNames?: PreviewGroupSemanticType['classNames'];
+  styles?: PreviewGroupSemanticType['styles'];
 }

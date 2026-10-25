@@ -5,7 +5,17 @@
  * 组内只挂**一个** Preview（portal），切换 `current` 时更新 src 与 mousePosition；
  * `items` 优先，其次用注册收集到的 Image。
  */
-import { computed, defineComponent, h, type PropType, ref, type SlotsType, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  type PropType,
+  ref,
+  type SlotsType,
+  shallowRef,
+  watch,
+} from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import {
@@ -16,31 +26,20 @@ import {
 } from './context';
 import type {
   GroupPreviewConfig,
-  ImageCommonProps,
   ImageSemanticType,
   PreviewActionsInfo,
   PreviewCountInfo,
   PreviewGroupProps,
+  PreviewGroupSemanticType,
   PreviewGroupSlots,
   PreviewImageInfo,
   TransformInfo,
 } from './interface';
 import Preview, { DEFAULT_ICONS } from './Preview';
+import { getImageCommonProps } from './util';
 
-type SemanticClassNames = NonNullable<ImageSemanticType['classNames']>;
-type SemanticStyles = NonNullable<ImageSemanticType['styles']>;
-
-const COMMON_KEYS: Array<keyof ImageCommonProps> = [
-  'alt',
-  'crossOrigin',
-  'decoding',
-  'loading',
-  'referrerPolicy',
-  'sizes',
-  'srcSet',
-  'useMap',
-  'draggable',
-];
+type SemanticClassNames = NonNullable<PreviewGroupSemanticType['classNames']>;
+type SemanticStyles = NonNullable<PreviewGroupSemanticType['styles']>;
 
 const PreviewGroup = defineComponent({
   name: 'AImagePreviewGroup',
@@ -65,6 +64,8 @@ const PreviewGroup = defineComponent({
   },
   setup(props, { slots, emit }) {
     const config = useComponentConfig<ImageSemanticType>('image');
+    const element = shallowRef<HTMLElement | null>(null);
+    const triggerElement = shallowRef<HTMLElement | null>(null);
     const prefixCls = computed(() => config.getPrefixCls('image'));
     const previewPrefixCls = computed(() => props.previewPrefixCls ?? `${prefixCls.value}-preview`);
 
@@ -72,6 +73,18 @@ const PreviewGroup = defineComponent({
       if (props.preview === false) return null;
       if (props.preview === true || props.preview === undefined) return {};
       return props.preview;
+    });
+    const getPreviewContainer = computed(() => {
+      if (previewConfig.value?.getContainer) return previewConfig.value.getContainer;
+      const provider = config.getPopupContainer;
+      return provider
+        ? () =>
+            provider(
+              triggerElement.value?.isConnected
+                ? triggerElement.value
+                : (element.value ?? undefined),
+            )
+        : undefined;
     });
 
     const { images, register } = createImageRegistry();
@@ -81,12 +94,13 @@ const PreviewGroup = defineComponent({
       if (props.items) {
         return props.items.map((item) => {
           if (typeof item === 'string') return { data: { src: item }, canPreview: true };
-          const data: ImageCommonProps & { src?: string } = {};
-          for (const key of COMMON_KEYS) {
-            const v = (item as Record<string, unknown>)[key];
-            if (v !== undefined) (data as Record<string, unknown>)[key] = v;
-          }
-          if (item.src !== undefined) data.src = item.src;
+          const data: RegisteredImage['data'] = {
+            ...getImageCommonProps(item),
+            src: item.src,
+            width: item.width,
+            height: item.height,
+            fallback: item.fallback,
+          };
           return { data, canPreview: true };
         });
       }
@@ -94,9 +108,29 @@ const PreviewGroup = defineComponent({
     });
 
     const innerCurrent = ref(props.defaultCurrent ?? 0);
-    const current = computed(() => props.current ?? innerCurrent.value);
+    const current = computed(() => {
+      if (props.current !== undefined) return props.current;
+      if (!mergedItems.value.length) return innerCurrent.value;
+      const value = Number.isInteger(innerCurrent.value) ? innerCurrent.value : 0;
+      return Math.max(0, Math.min(mergedItems.value.length - 1, value));
+    });
+    watch(
+      () => props.current,
+      (value) => {
+        if (value !== undefined) innerCurrent.value = value;
+      },
+      { immediate: true },
+    );
+    const normalizeCurrent = () => {
+      if (props.current === undefined && mergedItems.value.length)
+        innerCurrent.value = current.value;
+    };
+    onMounted(normalizeCurrent);
+    watch([() => props.current, () => mergedItems.value.length], normalizeCurrent, {
+      flush: 'post',
+    });
     const setCurrent = (next: number, prev: number): void => {
-      if (next < 0 || next > mergedItems.value.length - 1) return;
+      if (!Number.isInteger(next) || next < 0 || next > mergedItems.value.length - 1) return;
       if (props.current === undefined) innerCurrent.value = next;
       emit('change', next, prev);
       emit('update:current', next);
@@ -121,11 +155,14 @@ const PreviewGroup = defineComponent({
 
     providePreviewGroup({
       register,
-      onPreview: (id, _src, left, top) => {
-        if (!previewConfig.value) return;
+      canPreview: computed(() => previewConfig.value !== null && mergedItems.value.length > 0),
+      onPreview: (id, _src, left, top, trigger) => {
+        if (!previewConfig.value || !mergedItems.value.length) return;
+        triggerElement.value = trigger ?? null;
         mousePosition.value = { x: left, y: top };
         const index = mergedItems.value.findIndex((item) => item.id === id);
         if (index >= 0) setCurrent(index, current.value);
+        else if (!mergedItems.value[current.value]) setCurrent(0, current.value);
         setOpen(true);
       },
       isPreviewOpen,
@@ -142,25 +179,17 @@ const PreviewGroup = defineComponent({
       SemanticClassNames,
       SemanticStyles
     >(
-      [() => config.classNames, () => props.classNames],
-      [() => config.styles, () => props.styles],
+      [() => ({ popup: config.classNames?.popup }), () => props.classNames],
+      [() => ({ popup: config.styles?.popup }), () => props.styles],
       () => props,
-      { popup: { _default: 'root' }, placeholder: { progress: {} } },
+      { popup: { _default: 'root' } },
     );
     const popupClassNames = computed(() => {
       const p = mergedGroupClassNames.value.popup;
       const cfg = previewConfig.value;
-      const mask = cfg?.mask;
       return {
-        root: [p?.root, cfg?.rootClassName].filter(Boolean).join(' ') || undefined,
-        mask:
-          [
-            p?.mask,
-            cfg?.maskClassName,
-            mask === false ? `${previewPrefixCls.value}-mask-hidden` : undefined,
-          ]
-            .filter(Boolean)
-            .join(' ') || undefined,
+        root: p?.root,
+        mask: [p?.mask, cfg?.maskClassName].filter(Boolean).join(' ') || undefined,
         body: p?.body,
         footer: p?.footer,
         actions: p?.actions,
@@ -178,69 +207,70 @@ const PreviewGroup = defineComponent({
 
     return () => {
       const children = slots.default?.();
-      if (!previewConfig.value) {
-        return h(
-          'div',
-          null,
-          [children].filter((c) => c !== null && c !== undefined),
-        );
-      }
-
       return h(
         'div',
-        { class: `${prefixCls.value}-preview-group` },
+        {
+          class: [`${prefixCls.value}-preview-group`, mergedGroupClassNames.value.root],
+          style: mergedGroupStyles.value.root,
+          ref: (node: unknown) => {
+            element.value = node instanceof HTMLElement ? node : null;
+          },
+        },
         [
           children,
-          h(
-            Preview,
-            {
-              prefixCls: previewPrefixCls.value,
-              src: currentItem.value?.data.src,
-              alt: currentItem.value?.data.alt,
-              imageInfo: {
-                width: (currentItem.value?.data as Record<string, unknown> | undefined)
-                  ?.width as never,
-                height: (currentItem.value?.data as Record<string, unknown> | undefined)
-                  ?.height as never,
-              },
-              imgCommonProps: currentItem.value?.data,
-              open: isPreviewOpen.value,
-              inGroup: true,
-              current: current.value,
-              count: mergedItems.value.length,
-              movable: previewConfig.value.movable,
-              maskClosable: previewConfig.value.maskClosable,
-              closable: previewConfig.value.closable,
-              closeIcon: previewConfig.value.closeIcon,
-              minScale: previewConfig.value.minScale,
-              maxScale: previewConfig.value.maxScale,
-              scaleStep: previewConfig.value.scaleStep,
-              zIndex: previewConfig.value.zIndex,
-              mousePosition: mousePosition.value,
-              icons: icons.value,
-              rootClassName: previewConfig.value.rootClassName,
-              classNames: popupClassNames.value,
-              styles: mergedGroupStyles.value.popup,
-              onClose: () => setOpen(false),
-              afterOpenChange: previewConfig.value.afterOpenChange,
-              onTransform: (info: TransformInfo) => emit('transform', info),
-              onActive: (offset: number) => setCurrent(current.value + offset, current.value),
-            },
-            {
-              ...(slots.previewImage
-                ? { previewImage: (info: PreviewImageInfo) => slots.previewImage?.(info) }
-                : {}),
-              ...(slots.previewActions
-                ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
-                : {}),
-              ...(slots.previewCloseIcon
-                ? { previewCloseIcon: () => slots.previewCloseIcon?.() }
-                : {}),
-              ...(slots.previewCount
-                ? { previewCount: (info: PreviewCountInfo) => slots.previewCount?.(info) }
-                : {}),
-            },
-          ),
+          previewConfig.value && currentItem.value
+            ? h(
+                Preview,
+                {
+                  prefixCls: previewPrefixCls.value,
+                  src: currentItem.value?.data.src,
+                  alt: currentItem.value?.data.alt,
+                  imageInfo: {
+                    width: currentItem.value.data.width,
+                    height: currentItem.value.data.height,
+                  },
+                  imgCommonProps: getImageCommonProps(currentItem.value.data),
+                  fallback: currentItem.value.data.fallback,
+                  open: isPreviewOpen.value,
+                  inGroup: true,
+                  current: current.value,
+                  count: mergedItems.value.length,
+                  movable: previewConfig.value.movable,
+                  maskClosable: previewConfig.value.maskClosable,
+                  mask: previewConfig.value.mask,
+                  getContainer: getPreviewContainer.value,
+                  closable: previewConfig.value.closable,
+                  closeIcon: previewConfig.value.closeIcon,
+                  minScale: previewConfig.value.minScale,
+                  maxScale: previewConfig.value.maxScale,
+                  scaleStep: previewConfig.value.scaleStep,
+                  zIndex: previewConfig.value.zIndex,
+                  mousePosition: mousePosition.value,
+                  icons: icons.value,
+                  rootClassName: previewConfig.value.rootClassName,
+                  classNames: popupClassNames.value,
+                  styles: mergedGroupStyles.value.popup,
+                  onClose: () => setOpen(false),
+                  afterOpenChange: previewConfig.value.afterOpenChange,
+                  onTransform: (info: TransformInfo) => emit('transform', info),
+                  onActive: (offset: number) => setCurrent(current.value + offset, current.value),
+                },
+                {
+                  ...(slots.previewImage
+                    ? { previewImage: (info: PreviewImageInfo) => slots.previewImage?.(info) }
+                    : {}),
+                  ...(slots.previewActions
+                    ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
+                    : {}),
+                  ...(slots.previewCloseIcon
+                    ? { previewCloseIcon: () => slots.previewCloseIcon?.() }
+                    : {}),
+                  ...(slots.previewCount
+                    ? { previewCount: (info: PreviewCountInfo) => slots.previewCount?.(info) }
+                    : {}),
+                },
+              )
+            : null,
         ].filter((c) => c !== null && c !== undefined),
       );
     };
