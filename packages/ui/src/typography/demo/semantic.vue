@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Paragraph, Text, type TypographyProps } from '@apollo-design/ui';
+import { ConfigProvider, Paragraph, Text, type ConfigProviderProps, type TypographyConfig, type TypographyProps } from '@apollo-design/ui';
 import { computed, ref, type StyleValue } from 'vue';
 
 /** 对象式：直接给槽位类名 / 样式。 */
@@ -39,6 +39,35 @@ const nativeStyle = computed<StyleValue>(() => {
 const nativeSemanticStyles: TypographyProps['styles'] = {
   root: { color: 'var(--apollo-color-text-secondary)', paddingInlineStart: 'var(--apollo-padding-xxs)', '--semantic-demo-root': 'kept' },
 };
+
+const providerPhase = ref(0);
+const makeProviderConfig = (phase: number): TypographyConfig => {
+  const marker = phase === 0 ? 'first' : phase === 1 ? 'second' : 'function';
+  const classes = { root: `demo-provider-root-${marker}`, actions: `demo-provider-actions-${marker}`, action: `demo-provider-action-${marker}`, textarea: `demo-provider-textarea-${marker}` };
+  const semanticStyles = {
+    root: { paddingBlockStart: 'var(--apollo-padding-xxs)', '--provider-demo-semantic': marker },
+    actions: { paddingInlineEnd: phase === 0 ? 'var(--apollo-padding-xxs)' : phase === 1 ? 'var(--apollo-padding-xs)' : 'var(--apollo-padding-sm)' },
+    action: { color: phase === 0 ? 'var(--apollo-color-primary)' : phase === 1 ? 'var(--apollo-color-success)' : 'var(--apollo-color-warning)' },
+    textarea: { fontSize: phase === 0 ? 'var(--apollo-font-size-sm)' : phase === 1 ? 'var(--apollo-font-size)' : 'var(--apollo-font-size-lg)' },
+  };
+  return {
+    className: `demo-provider-class-${marker}`,
+    style: { color: 'var(--apollo-color-primary)', paddingBlockStart: phase === 0 ? 'var(--apollo-padding-xs)' : phase === 1 ? 'var(--apollo-padding-sm)' : 'var(--apollo-padding-md)', paddingBlockEnd: 'var(--apollo-padding-xxs)', '--provider-demo-style': marker },
+    classNames: phase === 2 ? ({ props }) => ({ ...classes, root: `${classes.root} ${props.prefixCls === 'apollo-typography' ? 'demo-provider-prefix-resolved' : 'demo-provider-prefix-missing'}` }) : classes,
+    styles: phase === 2 ? ({ props }) => ({ ...semanticStyles, root: { ...semanticStyles.root, '--provider-demo-prefix': props.prefixCls ?? 'missing' } }) : semanticStyles,
+  };
+};
+const providerComponents = ref<NonNullable<ConfigProviderProps['components']>>({ typography: { ...makeProviderConfig(0) } });
+const replaceProvider = () => {
+  providerPhase.value = (providerPhase.value + 1) % 4;
+  providerComponents.value = providerPhase.value === 3 ? {} : { typography: { ...makeProviderConfig(providerPhase.value) } };
+};
+const providerLocalStyles: TypographyProps['styles'] = {
+  root: { color: 'var(--apollo-color-text-secondary)', paddingBlockEnd: 'var(--apollo-padding-xs)' },
+  actions: { marginInlineStart: 'var(--apollo-margin-sm)' },
+  action: { fontWeight: 'var(--apollo-font-weight-strong)' },
+  textarea: { lineHeight: 'var(--apollo-line-height)' },
+};
 </script>
 
 <template>
@@ -55,5 +84,20 @@ const nativeSemanticStyles: TypographyProps['styles'] = {
       Native style: {{ ['string', 'array', 'object', 'removed'][phase] }}
       <input aria-label="Semantic typography draft" />
     </Text>
+  </section>
+  <section data-typography-provider-demo>
+    <p><button type="button" @mousedown.prevent @click="replaceProvider">Replace typography provider</button></p>
+    <ConfigProvider :components="providerComponents">
+      <Paragraph data-provider-demo-rich class="demo-native-provider-root" :style="{ color: 'var(--apollo-color-text)' }"
+        :class-names="{ root: 'demo-local-provider-root' }" :styles="providerLocalStyles" copyable>
+        Current provider: {{ ['first object', 'new object', 'function', 'removed'][providerPhase] }}
+        <input aria-label="Provider typography draft" />
+      </Paragraph>
+      <div data-provider-demo-editor>
+        <Text aria-label="Provider typography editor" :editable="{ editing: true }"
+          class="demo-native-provider-root" :style="{ color: 'var(--apollo-color-text)' }"
+          :class-names="{ root: 'demo-local-provider-root' }" :styles="providerLocalStyles">Current provider draft</Text>
+      </div>
+    </ConfigProvider>
   </section>
 </template>

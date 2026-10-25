@@ -40,10 +40,8 @@
  * ── 这个模块没有证明什么 ──────────────────────────────────────────────────────
  *   - 没证明各组件的合并顺序声明是对的。顺序由 compat 用例与 antd 对照
  *     （见 `__tests__/semantic.test.ts`）。
- *   - `contextClassName` / `contextStyle` 是**快照**（`useComponentConfig` 的
- *     `Object.assign` 把字符串/对象值复制进了新对象）。ConfigProvider 之后改
- *     `components.typography.className` 不会触发更新 —— 与 Empty 同一处限制，
- *     登记在 README §7。`direction` 走 `useDirection()` 避开了这一点（差异 D27）。
+ *   - ConfigProvider 配置在 computed/getter 中现读；整体对象替换、函数替换和移除
+ *     都由 Vue 追踪。方向继续使用 useDirection 的响应式注入。
  */
 
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
@@ -85,24 +83,18 @@ export function useTypographySemantic<P extends BaseTypographyProps>(
   styles: MaybeRefOrGetter<TypographySemanticValue<TypographySemanticStyles, P> | undefined>,
   typographyDirection: MaybeRefOrGetter<DirectionType | undefined>,
 ): UseTypographySemanticResult {
-  const {
-    getPrefixCls,
-    className: contextClassName,
-    style: contextStyle,
-    classNames: contextClassNames,
-    styles: contextStyles,
-  } = useComponentConfig<TypographyConfig>('typography');
+  const config = useComponentConfig<TypographyConfig>('typography');
 
-  // ⚠️ 不用 `useComponentConfig()` 返回的 `direction`：它是 setup 期的快照，
-  //    ConfigProvider 之后改 `direction` 不会更新（差异 D27）。antd 的
-  //    `useContext` 每次渲染都重读，`useDirection()` 才是它的等价物。
+  // 组件自身 direction 优先于 provide/inject 的当前方向。
   const contextDirection = useDirection();
 
-  const prefixCls = computed(() => getPrefixCls('typography', toValue(customizePrefixCls)));
+  const prefixCls = computed(() => config.getPrefixCls('typography', toValue(customizePrefixCls)));
   const direction = computed(() => toValue(typographyDirection) ?? contextDirection.value);
 
   // ConfigProvider 的 `components.typography.className` 落在 `root` 槽位（见文件头第 1 条）。
-  const contextClassNamesObject: TypographySemanticClassNames = { root: contextClassName };
+  const contextClassNamesObject = computed<TypographySemanticClassNames>(() => ({
+    root: config.className,
+  }));
 
   /**
    * `info.props`：`props` 的响应式视图，其中 `prefixCls` / `direction` 换成**解析后**的值。
@@ -122,8 +114,8 @@ export function useTypographySemantic<P extends BaseTypographyProps>(
     TypographySemanticClassNames,
     TypographySemanticStyles
   >(
-    [() => contextClassNamesObject, () => contextClassNames, () => toValue(classNames)],
-    [() => contextStyles, () => semanticRootStyle(contextStyle), () => toValue(styles)],
+    [() => contextClassNamesObject.value, () => config.classNames, () => toValue(classNames)],
+    [() => config.styles, () => semanticRootStyle(config.style), () => toValue(styles)],
     semanticProps,
   );
 

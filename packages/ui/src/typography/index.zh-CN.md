@@ -225,3 +225,6 @@ import '@apollo-design/ui/style.css';          // 汇总样式（含 typography�
 
 
 原生 `class` / `style` 应用于实际外层根（包括编辑态）。`style` 支持动态字符串、对象和混合数组，覆盖同名 `styles.root`，移除后恢复语义根样式；编辑文本框的内部样式使用 `styles.textarea`。样式更新保留稳定输入节点的草稿和焦点。
+
+
+`ConfigProvider.components.typography` 的 `className`、`style`、`classNames`、`styles` 支持整体对象替换、语义函数替换及移除。类名按来源拼接；样式覆盖顺序为全局 `styles` → 全局 `style` → 组件 `styles` → 原生 `style`。函数配置使用当前解析后的 `props.prefixCls` / `props.direction`。更新配置保留稳定输入和编辑草稿、焦点。

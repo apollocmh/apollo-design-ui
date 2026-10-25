@@ -238,3 +238,6 @@ The default slot supports conditional presence, replacement and removal and foll
 
 
 Native `class` and `style` apply to the actual outer root, including edit mode. Style supports dynamic strings, objects and mixed arrays, overrides matching `styles.root` values and restores semantic root styles when removed. Editing textarea styles use `styles.textarea`. Style updates preserve drafts and focus in stable input nodes.
+
+
+`ConfigProvider.components.typography` supports replacing or removing `className`, `style`, `classNames` and `styles`, including semantic function replacement. Classes merge by source; style precedence is global `styles`, global `style`, component `styles`, then native `style`. Function configs receive the current resolved `props.prefixCls` and `props.direction`. Updates preserve drafts and focus in stable input/editor nodes.

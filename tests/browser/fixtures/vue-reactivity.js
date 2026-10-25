@@ -35,6 +35,7 @@ import OverlayContent from './OverlayContent.vue';
 import PaginationContainers from './PaginationContainers.vue';
 import SwitchEvents from './SwitchEvents.vue';
 import TimelineNative from './TimelineNative.vue';
+import TypographyProvider from './TypographyProvider.vue';
 import TypographySlots from './TypographySlots.vue';
 import TypographyStyles from './TypographyStyles.vue';
 
@@ -102,6 +103,7 @@ const Demo = {
   'mentions-empty': MentionsEmpty,
   'typography-slots': TypographySlots,
   'typography-styles': TypographyStyles,
+  'typography-provider': TypographyProvider,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

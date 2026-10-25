@@ -253,6 +253,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Typography样式线索验证（VERIFY）**：21条真实公开入口CSR/SSR、编辑及样式移除回退在原实现全部通过，生产Chrome也验证五入口/编辑/富内容与实际Demo。SFC v-bind的Vue mergeProps已在对象展开前归一style，静态字符串风险在该公开路径被证伪；本批保留实现、补回归和示例，并修正semantic Demo残留root-class-name为原生class，见 [验证报告](audit/2026-10-25-typography-style-verification.md)。
 
+**2026-10-25 Typography全局配置增量（F11）**：32条修前25失败/7已有通过，确认五入口setup解构捕获旧className/style/classNames/styles，导致整体对象和函数替换、晚加载及移除过期。合并层改在computed/getter现读当前配置，保留优先级与已有深字段/ref函数行为，32条局部通过；范围及检查见 [报告](audit/2026-10-25-typography-provider-remediation.md)。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

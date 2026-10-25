@@ -532,3 +532,8 @@ theme 的 `tokens.css` 有声明（B7）。
 ## 默认插槽当前值修正（2026-10-25）
 
 四个子入口在 Base 的公开 render 中读取并归一当前默认槽；内部 BaseContent 只消费响应式 props 对象和当前节点数据，不在 computed、watch、事件中调用用户槽。内部状态更新不会重建外层的测量数组，保留 Ellipsis 二分依赖稳定性；外层更新则传递新内容，复制/编辑读取当前数据。公开 props、nativeElement 和元素层级保留，语义函数不收到私有节点参数。原生 aria-label 另按编辑模式转给现有 Editable.ariaLabel。失败证据、对照和门禁见 `docs/audit/2026-10-25-typography-native-content-remediation.md`。
+
+
+## ConfigProvider 当前配置（2026-10-25）
+
+`useComponentConfig` 已提供live getter；Typography合并层保留该对象，在computed/getter内现读className/style/classNames/styles，避免setup解构捕获旧对象或旧函数。保留原地深字段变更、直接读取ref函数的既有行为，补齐整体替换、晚加载、函数替换和移除；仍通过一层getter把语义函数交给合并器接收props，不把它当无参数getter。源回归与生产检查见 `docs/audit/2026-10-25-typography-provider-remediation.md`。
