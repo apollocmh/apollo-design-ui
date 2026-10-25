@@ -39,6 +39,18 @@ try {
     path.join(temp, 'CoreEvents.vue'),
     core.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  const native = fs.readFileSync(
+    path.join(root, 'packages/ui/src/mentions/__tests__/fixtures/NativeEvents.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'NativeEvents.vue'),
+    native.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/MentionsNativeEvents.vue'),
+    path.join(temp, 'MentionsNativeEvents.vue'),
+  );
   fs.copyFileSync(
     path.join(root, 'tests/browser/fixtures/MentionsEvents.vue'),
     path.join(temp, 'MentionsEvents.vue'),

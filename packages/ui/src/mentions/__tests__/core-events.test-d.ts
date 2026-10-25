@@ -9,6 +9,23 @@ it('public component emits enforce semantic payloads', () => {
     emit('change', 'value');
     emit('select', option, '@');
     emit('search', 'query', '@');
+    emit('input', new Event('input'));
+    emit('focus', new FocusEvent('focus'));
+    emit('blur', new FocusEvent('blur'));
+    emit('keydown', new KeyboardEvent('keydown'));
+    emit('keyup', new KeyboardEvent('keyup'));
+    emit('pressEnter', new KeyboardEvent('keydown'));
+    emit('popupScroll', new Event('scroll'));
+    emit('resize', { width: 100, height: 20 });
+    emit('clear');
+    // @ts-expect-error Focus events require native FocusEvent data.
+    emit('focus', 'focus');
+    // @ts-expect-error Keyboard listeners receive KeyboardEvent.
+    emit('keydown', new Event('keydown'));
+    // @ts-expect-error Clear has no payload.
+    emit('clear', new Event('click'));
+    // @ts-expect-error Resize must include both dimensions.
+    emit('resize', { height: 20 });
     // @ts-expect-error Semantic change receives text, never a DOM event.
     emit('change', new Event('change'));
     // @ts-expect-error Selection requires an option, not its string value.

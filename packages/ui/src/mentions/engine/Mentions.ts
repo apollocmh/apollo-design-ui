@@ -32,6 +32,7 @@ import {
   inject,
   isVNode,
   normalizeClass,
+  onBeforeUnmount,
   type PropType,
   provide,
   ref,
@@ -502,10 +503,16 @@ export const InternalMentions = defineComponent({
     // ============================ Focus Blur ============================
     const focusRef = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-    const onInternalFocus = (event?: FocusEvent): void => {
+    const clearBlurTimer = (): void => {
       if (focusRef.value !== undefined) {
         clearTimeout(focusRef.value);
+        focusRef.value = undefined;
       }
+    };
+    onBeforeUnmount(clearBlurTimer);
+
+    const onInternalFocus = (event?: FocusEvent): void => {
+      clearBlurTimer();
       if (!isFocus.value && event && props.onFocus) {
         props.onFocus(event);
       }
@@ -513,7 +520,9 @@ export const InternalMentions = defineComponent({
     };
 
     const onInternalBlur = (event?: FocusEvent): void => {
+      clearBlurTimer();
       focusRef.value = setTimeout(() => {
+        focusRef.value = undefined;
         isFocus.value = false;
         stopMeasure();
         props.onBlur?.(event);
@@ -682,6 +691,7 @@ export const RcMentions = defineComponent({
       default: undefined,
     },
     disabled: { type: Boolean, default: undefined },
+    focused: { type: Boolean, default: undefined },
     /**
      * ⚠️ 上游靠 `...rest` 把 `options` 透传给内层；本仓外层要在 **render 期**
      * 把 `<Mentions.Option>` 的插槽归一成 `options`（见 `mentionsChildrenToOptions`）
@@ -749,6 +759,7 @@ export const RcMentions = defineComponent({
           className: [
             props.prefixCls,
             props.className,
+            { [`${props.prefixCls}-focused`]: hasSuffix.value && props.focused },
             { [`${props.prefixCls}-has-suffix`]: hasSuffix.value },
           ],
           classNames: props.classNames,

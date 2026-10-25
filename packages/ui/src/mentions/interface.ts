@@ -19,7 +19,7 @@
  *
  * ── React → Vue 的四处固定映射（规则 C16 / C18 / D21 / D42）────────────────────
  *   `React.Key` → `string | number` · `React.ReactNode` → `VNodeChild` ·
- *   `React.CSSProperties` → Vue 的 `CSSProperties`；值/选择/搜索事件使用 typed emits。
+ *   `React.CSSProperties` → Vue 的 `CSSProperties`；公开事件使用 typed emits；onXxx 字段描述 Vue 监听器签名。
  *
  * ⚠️ `suffix` **不在**公开面里（上游 Omit 掉了它，改由 `Form.Item` 的 `hasFeedback`
  *    注入）—— 但引擎层需要它，所以它只出现在 `engine/Mentions.ts` 的 props 上。
@@ -155,7 +155,15 @@ export interface MentionsProps extends MentionsBaseTextareaAttrs {
    * ⇒ 引擎层做一层适配（见 `engine/KeywordTrigger.ts`）。
    */
   getPopupContainer?: () => HTMLElement;
-  /** 浮层滚动回调。 */
+  /** 原生 textarea 事件，支持标准 Vue 监听语法。 */
+  onInput?: (event: Event) => void;
+  onFocus?: (event: FocusEvent) => void;
+  onBlur?: (event: FocusEvent) => void;
+  onKeydown?: (event: KeyboardEvent) => void;
+  onKeyup?: (event: KeyboardEvent) => void;
+  /** 清空后发送，不附加 DOM 事件。 */
+  onClear?: () => void;
+  /** 浮层滚动事件。 */
   onPopupScroll?: (event: Event) => void;
   /** 值变化（**收字符串，不是事件**）。 */
   onChange?: (value: string) => void;

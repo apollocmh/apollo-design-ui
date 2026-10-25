@@ -26,6 +26,7 @@ import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
 import MentionsBindings from './MentionsBindings.vue';
 import MentionsEvents from './MentionsEvents.vue';
+import MentionsNativeEvents from './MentionsNativeEvents.vue';
 import NativeAttrs from './NativeAttrs.vue';
 import OverlayAttrs from './OverlayAttrs.vue';
 import OverlayContent from './OverlayContent.vue';
@@ -92,6 +93,7 @@ const Demo = {
   'mentions-popup': MentionsPopup,
   'mentions-bindings': MentionsBindings,
   'mentions-events': MentionsEvents,
+  'mentions-native-events': MentionsNativeEvents,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

@@ -243,6 +243,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Mentions核心事件增量**：修前4条全失败，确认重复input处理导致model/change双发、DOM change/select误触发.once和函数prop不能接收监听器数组。移除重复通道，change/select/search直接改typed emits，两个Demo迁@search；其余原生事件仍待复审，见 [专项报告](audit/2026-10-25-mentions-core-events-remediation.md) 与 [迁移记录](migrations/mentions-core-events.md)。
 
+**2026-10-25 Mentions原生事件增量**：首批6条全失败，修正手调监听器数组、模板keydown/keyup丢失及卸载blur残留；公开原生/辅助事件走typed emits，追加复现并补齐包装根focused类。原生焦点协调、once和迁移边界见 [报告](audit/2026-10-25-mentions-native-events-remediation.md) 与 [迁移记录](migrations/mentions-native-events.md)。候选key/which状态机和其余内容继续复审。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -377,7 +379,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | List | 12/16 | F11；泛型 item 与 header/footer/loadMore 本批接通，Item/Meta 内容插槽随后补齐，根 extra 和拖拽示例继续审查 |
 | Table | 43/53 | **H01 已清账**；拖拽/虚拟/编辑 Demo 能力 |
 | Transfer | 14/13 | **F06**；函数 render → Vue slot，左右列表稳定性 |
-| Mentions | 16/16 | F11：popupRender已直接迁为当前单对象槽；clear/反馈根style及silent已修；change/select/search已改typed emits且去除input双发；option/notFound内容、其余原生事件及其他契约继续复审 |
+| Mentions | 16/16 | F11：popupRender已直接迁为当前单对象槽；clear/反馈根style及silent已修；change/select/search已改typed emits且去除input双发；公开原生/辅助事件及blur清理已修；option/notFound内容、候选键盘状态机及其他契约继续复审 |
 | ColorPicker | 16/16 | F10 消费 `pickAttrs`；颜色与 alpha/键盘 |
 | DatePicker | 28/32 | **F01**；实际 input 属性与可访问性 |
 | TimePicker | 16/17 | **F01** 消费者；`render-panel` 场景按 API 决定 |

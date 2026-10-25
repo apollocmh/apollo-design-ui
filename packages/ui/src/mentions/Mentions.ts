@@ -111,11 +111,6 @@ export const MentionsComponent = defineComponent({
       default: undefined,
     },
     popupClassName: { type: String, default: undefined },
-    onPopupScroll: {
-      type: Function as PropType<MentionsProps['onPopupScroll']>,
-      default: undefined,
-    },
-    // ---- 事件 ----
     // ---- 从 TextArea 继承、需要显式转发的 ----
     maxLength: { type: Number, default: undefined },
     rows: { type: Number, default: undefined },
@@ -127,14 +122,21 @@ export const MentionsComponent = defineComponent({
     hidden: { type: Boolean, default: undefined },
     placeholder: { type: String, default: undefined },
     count: { type: Object as PropType<MentionsProps['count']>, default: undefined },
-    onPressEnter: { type: Function as PropType<MentionsProps['onPressEnter']>, default: undefined },
-    onResize: { type: Function as PropType<MentionsProps['onResize']>, default: undefined },
   },
   emits: {
     'update:value': (_value: string) => true,
     change: (_value: string) => true,
     select: (_option: MentionsOptionProps, _prefix: string) => true,
     search: (_text: string, _prefix: string) => true,
+    input: (_event: Event) => true,
+    focus: (_event: FocusEvent) => true,
+    blur: (_event: FocusEvent) => true,
+    keydown: (_event: KeyboardEvent) => true,
+    keyup: (_event: KeyboardEvent) => true,
+    pressEnter: (_event: KeyboardEvent) => true,
+    popupScroll: (_event: Event) => true,
+    resize: (_size: { width: number; height: number }) => true,
+    clear: () => true,
   },
   setup(props, { attrs, emit, expose, slots }) {
     const devWarning = useDevWarning('Mentions');
@@ -236,13 +238,13 @@ export const MentionsComponent = defineComponent({
 
     // ============================= Focus ==============================
     const focused = ref(false);
-    const onFocus = (event: FocusEvent): void => {
-      (attrs as { onFocus?: (e: FocusEvent) => void }).onFocus?.(event);
+    const onFocus = (event?: FocusEvent): void => {
       focused.value = true;
+      if (event) emit('focus', event);
     };
-    const onBlur = (event: FocusEvent): void => {
-      (attrs as { onBlur?: (e: FocusEvent) => void }).onBlur?.(event);
+    const onBlur = (event?: FocusEvent): void => {
       focused.value = false;
+      if (event) emit('blur', event);
     };
 
     const innerRef = ref<MentionsRef | null>(null);
@@ -333,6 +335,7 @@ export const MentionsComponent = defineComponent({
           filterOption: mentionsFilterOption.value,
           onFocus,
           onBlur,
+          focused: focused.value,
           value: props.value,
           defaultValue: props.defaultValue,
           options: mergedOptions.value,
@@ -346,10 +349,13 @@ export const MentionsComponent = defineComponent({
           },
           onSelect: (option: MentionsOptionProps, prefix: string) => emit('select', option, prefix),
           onSearch: (text: string, prefix: string) => emit('search', text, prefix),
-          onPopupScroll: props.onPopupScroll,
-          onPressEnter: props.onPressEnter,
-          onResize: props.onResize,
-          onClear: (attrs as { onClear?: () => void }).onClear,
+          onInput: (event: Event) => emit('input', event),
+          onKeyDown: (event: KeyboardEvent) => emit('keydown', event),
+          onKeyUp: (event: KeyboardEvent) => emit('keyup', event),
+          onPopupScroll: (event: Event) => emit('popupScroll', event),
+          onPressEnter: (event: KeyboardEvent) => emit('pressEnter', event),
+          onResize: (size: { width: number; height: number }) => emit('resize', size),
+          onClear: () => emit('clear'),
           readOnly: props.readOnly,
           maxLength: props.maxLength,
           rows: props.rows,

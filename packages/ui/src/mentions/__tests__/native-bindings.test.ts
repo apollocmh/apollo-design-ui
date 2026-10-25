@@ -65,6 +65,7 @@ describe('Mentions native root bindings', () => {
       editor.value = 'kept mention';
       editor.dispatchEvent(new Event('input', { bubbles: true }));
       await nextTick();
+      expect(root.classList.contains('apollo-mentions-focused')).toBe(true);
       phase.value = 1;
       await nextTick();
       expect(wrapper.find('.apollo-mentions').element).toBe(root);

@@ -85,6 +85,10 @@ subtitle: 提及
 
 | 名称 | 说明 | 参数 |
 |---|---|---|
+| input | 原生文本输入 | `(event: Event)` |
+| focus / blur | 文本框焦点变化；blur 按浮层焦点协调延后发送 | `(event: FocusEvent)` |
+| keydown / keyup | 文本框键盘事件，支持 Vue 修饰符 | `(event: KeyboardEvent)` |
+| clear | 点击清空后发送，无参数 | `()` |
 | update:value | 值变化（配 `v-model:value`） | `(value: string)` |
 | change | 值变化（**收字符串，不是事件**） | `(value: string)` |
 | select | 选中候选项 | `(option: MentionsOptionProps, prefix: string)` |
@@ -94,6 +98,8 @@ subtitle: 提及
 | resize | 尺寸变化（`autoSize` 时） | `({ width, height })` |
 
 `change` / `select` / `search` 使用 typed emits，支持 `@change.once` 等 Vue 监听语法及当前监听器数组；一次原生 input 只发送一次值更新。原生 DOM change/select 不触发这些语义事件。旧 `:on-search="handler"` 等函数 prop 绑定改为 `@search="handler"`；渲染函数的 `onSearch` 是标准 Vue 监听器注册。见 [迁移记录](../../../../docs/migrations/mentions-core-events.md)。
+
+其他公开事件也通过 typed emits 发送，支持监听器数组、替换和 `.once`。`@keydown.stop.prevent` 等修饰符作用于原生事件；`@press-enter` 仅在非候选态发送。组件卸载会取消待处理 blur，浮层内部焦点协调不伪造 FocusEvent。旧 `:on-press-enter` / `:on-popup-scroll` / `:on-resize` 函数 prop 直接改为 `@press-enter` / `@popup-scroll` / `@resize`，见 [迁移记录](../../../../docs/migrations/mentions-native-events.md)。
 
 ### Slots
 

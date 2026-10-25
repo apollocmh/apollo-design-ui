@@ -85,6 +85,10 @@ Native class/style apply to the outer root in bare, allowClear and Form feedback
 
 | Name | Description | Arguments |
 |---|---|---|
+| input | Native text input | `(event: Event)` |
+| focus / blur | Textarea focus changes; blur is deferred for popup focus coordination | `(event: FocusEvent)` |
+| keydown / keyup | Textarea keyboard events with Vue modifiers | `(event: KeyboardEvent)` |
+| clear | Sent after clicking clear, without arguments | `()` |
 | update:value | Value changed (with `v-model:value`) | `(value: string)` |
 | change | Value changed (**receives a string, not an event**) | `(value: string)` |
 | select | A candidate is selected | `(option: MentionsOptionProps, prefix: string)` |
@@ -94,6 +98,8 @@ Native class/style apply to the outer root in bare, allowClear and Form feedback
 | resize | Size changed (with `autoSize`) | `({ width, height })` |
 
 `change`, `select` and `search` use typed emits, including Vue `.once`, listener arrays and current listener replacement. Each native input sends one value update. Native DOM change/select events do not trigger semantic events. Replace callback-prop bindings such as `:on-search="handler"` with `@search="handler"`; render-function `onSearch` remains standard Vue listener registration. See the [migration](../../../../docs/migrations/mentions-core-events.md).
+
+The other public events also use typed emits, including listener arrays, replacement and `.once`. Modifiers such as `@keydown.stop.prevent` operate on native events; `@press-enter` fires only outside candidate measurement. Unmount cancels pending blur callbacks; popup focus coordination does not fabricate FocusEvents. Replace `:on-press-enter`, `:on-popup-scroll` and `:on-resize` function props with `@press-enter`, `@popup-scroll` and `@resize`; see the [migration](../../../../docs/migrations/mentions-native-events.md).
 
 ### Slots
 
