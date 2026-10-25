@@ -165,7 +165,7 @@ const Image = defineComponent({
       watch(
         registerData,
         (data) => {
-          unregister?.();
+          // Updating the same id preserves its registration position; dispose only on unmount.
           unregister = groupContext.register(imageId, { ...data, id: imageId });
         },
         { immediate: true },

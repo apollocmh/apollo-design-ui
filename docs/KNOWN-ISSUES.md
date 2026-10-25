@@ -269,6 +269,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image/Group预览焦点增量**：真实Portal/CSSMotion正式13条修前10失败/3已有通过；弹层晚挂载入焦、外部焦点约束、Tab边界、Esc与关闭/卸载归还直接修正，自定义装饰图标保留按钮名称。局部13条通过，完整门禁与真实浏览器记录见 [报告](audit/2026-10-25-image-preview-focus-remediation.md)。其他预览配置扩展与当前视觉验收继续开放。
 
+**2026-10-25 Image组内注册顺序增量**：更新第一图src/alt会注销再注册，实际顺序移至末尾而current/计数不变。正式6条修前4失败/2已有通过，只保留同id upsert和卸载清理后6条通过；身份、通知及全序导航见 [报告](audit/2026-10-25-image-registration-order-remediation.md)。不改变公开状态或registry协议。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
