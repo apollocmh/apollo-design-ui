@@ -12,7 +12,7 @@ import Image from '../Image';
 
 a11yDemoTest('Image', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 15,
+  expectCount: 16,
   global: { stubs: { teleport: false } },
 });
 

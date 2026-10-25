@@ -35,6 +35,7 @@ import type {
   MaskNode,
   PlaceholderType,
   PreviewConfig,
+  TransformInfo,
 } from './interface';
 import Preview from './Preview';
 import Progress from './Progress';
@@ -77,6 +78,7 @@ const Image = defineComponent({
     error: (_event: Event) => true,
     keydown: (_event: KeyboardEvent) => true,
     openChange: (_open: boolean, _prevOpen: boolean) => true,
+    transform: (_info: TransformInfo) => true,
     'update:open': (_open: boolean) => true,
   },
   props: {
@@ -425,6 +427,7 @@ const Image = defineComponent({
                 styles: props.styles?.popup,
                 onClose: () => setPreviewOpen(false),
                 afterOpenChange: previewConfig.value?.afterOpenChange,
+                onTransform: (info: TransformInfo) => emit('transform', info),
               })
             : null,
         ].filter((c) => c !== null && c !== undefined),

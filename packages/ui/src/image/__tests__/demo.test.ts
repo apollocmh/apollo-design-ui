@@ -1,11 +1,10 @@
 /**
- * demo 冒烟 —— 14 个示例（与 antd 用户可见 demo 一一对应；图片用 data URI ——
- * 外网图片会污染 L6 基线，各 demo 文件头登记）。
+ * 当前 Apollo 示例冒烟；图片使用 data URI，避免外网资源影响回归。
  */
 import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Image', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 15,
+  expectCount: 16,
   global: { stubs: { teleport: false } },
 });

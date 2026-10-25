@@ -56,6 +56,7 @@ export const DEFAULT_ICONS: Required<PreviewIcons> = {
 const Preview = defineComponent({
   name: 'AImagePreview',
   inheritAttrs: false,
+  emits: { transform: (_info: TransformInfo) => true },
   props: {
     prefixCls: { type: String, required: true },
     src: { type: String, default: undefined },
@@ -110,9 +111,8 @@ const Preview = defineComponent({
     onClose: { type: Function as PropType<() => void>, default: undefined },
     afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     onActive: { type: Function as PropType<(offset: number) => void>, default: undefined },
-    onTransform: { type: Function as PropType<(info: TransformInfo) => void>, default: undefined },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const previewElement = ref<HTMLElement | null>(null);
     useLockFocus(() => props.open, previewElement);
     // Vue scope cleanup runs in registration order: release the lock, restore its
@@ -152,7 +152,7 @@ const Preview = defineComponent({
     const { transform, updateTransform, dispatchZoomChange, resetTransform } = useImageTransform(
       props.minScale,
       props.maxScale,
-      props.onTransform,
+      (info) => emit('transform', info),
     );
 
     const { status, getImgRef, srcAndOnload } = useStatus({

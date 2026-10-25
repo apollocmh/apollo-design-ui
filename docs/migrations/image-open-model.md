@@ -16,6 +16,8 @@
 
 PreviewConfig/GroupPreviewConfig移除open/defaultOpen/onOpenChange/visible/onVisibleChange。状态改用顶层open/defaultOpen和Vue事件；Group原onChange函数prop改typed change通知，h()中的onChange仍是标准Vue监听器注册。afterOpenChange/onTransform及内容、手势等非状态配置保持原职责。
 
+后续独立复审确认onTransform原未接线，现已直接迁为顶层typed transform事件，见 [后续迁移](image-transform-event.md)。该变化独立于本记录的开合状态迁移。
+
 open省略（undefined）时使用内态，defaultOpen只初始化一次。存在open时由父级控制，拒绝更新保持原值；移除控制接续最后同步值。父prop变更不回发模型请求，预览禁用期间的交互不排队打开请求。
 
 交互先捕获有效prevOpen，再按是否受控更新内态，依次通知openChange(next,prev)和update:open(next)。Group change(current,prevCurrent)与update:current(current)保持数字payload和原有顺序。请求通知不等于动画完成；afterOpenChange可观察后者。

@@ -275,6 +275,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image预览扩展复审（仍开放）**：源码公开入口隔离9条全部失败，严格类型通过。Image/Group各自imageRender/actionsRender/toolbarRender独立配置均未求值；Group countRender未求值；两个入口旋转实际生效但onTransform均未通知。探针为 `/tmp/apollo-image-preview-extension-repro/extensions.test.ts`，日志 `/tmp/apollo-image-preview-extension-red.log`。这些配置声明不能充当实现证据；渲染扩展按ADR0006直接迁原生作用域槽，通知按Vue公共契约独立整改，不夹带在焦点或注册修复内。
 
+**2026-10-25 Image变换事件增量**：上述两条通知缺陷直接改顶层typed transform事件，删preview.onTransform，无旧通道。正式11条修前9失败/2已有通过，扩展15条通过，包含数组/once/当前替换、快照、受控拒绝/复位、真实SFC和Group根DOM同名事件隔离；见 [报告](audit/2026-10-25-image-transform-event-remediation.md) 与 [迁移](migrations/image-transform-event.md)。其余7条renderer失败仍独立开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

@@ -93,3 +93,5 @@ Image的click/error/keydown与已有update:open通知使用typed emits。根属�
 顶层open/defaultOpen与typed openChange/update:open兑现Image的Vue模型承诺，Group同名模型与current事件统一。旧preview状态字段直接移除，控态移除保留最近同步值；见 [模型迁移](../../../../docs/migrations/image-open-model.md) 和 [验证报告](../../../../docs/audit/2026-10-25-image-open-model-remediation.md)。
 
 预览在真实Portal根挂载后移动焦点，约束Tab/Shift+Tab和外部焦点；Esc请求关闭，受控父级拒绝时继续持焦。关闭动画结束或整个预览卸载后归还原触发器，触发器已移除时安全清理。关闭/上一张/下一张按钮有独立名称，不依赖自定义图标提供文字。见 [焦点报告](../../../../docs/audit/2026-10-25-image-preview-focus-remediation.md)。
+
+变换通知使用Image/Group顶层typed `@transform`。公开TransformInfo可从根入口导入，payload为当前六字段快照，支持Vue监听器数组、当前替换与once，Group只由Group通知。失效的preview.onTransform直接移除；见 [迁移](../../../../docs/migrations/image-transform-event.md) 和 [报告](../../../../docs/audit/2026-10-25-image-transform-event-remediation.md)。

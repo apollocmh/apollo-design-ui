@@ -1146,6 +1146,7 @@ export type {
   ImageSlots,
   PreviewConfig,
   PreviewGroupProps,
+  TransformInfo,
 } from './image';
 export { Image, ImagePreviewGroup } from './image';
 export { genImageStyle, genImageTokenDecls } from './image/style';

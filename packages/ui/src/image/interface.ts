@@ -95,7 +95,6 @@ export interface PreviewConfig {
   imageRender?: (info: { originNode: VNodeChild; src: string }) => VNodeChild;
   actionsRender?: ActionsRender;
   countRender?: (current: number, total: number) => VNodeChild;
-  onTransform?: (info: TransformInfo) => void;
 }
 
 export type ActionsRender = (
@@ -188,6 +187,7 @@ export interface ImageProps extends ImageCommonProps {
   onError?: (e: Event) => void;
   onKeydown?: (e: KeyboardEvent) => void;
   onOpenChange?: (open: boolean, prevOpen: boolean) => void;
+  onTransform?: (info: TransformInfo) => void;
   'onUpdate:open'?: (open: boolean) => void;
 }
 
@@ -216,6 +216,7 @@ export interface PreviewGroupProps {
   defaultCurrent?: number;
   onChange?: (current: number, prevCurrent: number) => void;
   onOpenChange?: (open: boolean, prevOpen: boolean) => void;
+  onTransform?: (info: TransformInfo) => void;
   'onUpdate:open'?: (open: boolean) => void;
   'onUpdate:current'?: (current: number) => void;
   classNames?: ImageSemanticType['classNames'];

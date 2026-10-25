@@ -73,7 +73,6 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | imageRender | Custom rendering of the preview image | `(info) => VNodeChild` | — |
 | actionsRender | Custom toolbar | `(originNode, info) => VNodeChild` | — |
 | countRender | Custom counter text inside a group | `(current, total) => VNodeChild` | — |
-| onTransform | Transform (rotate/scale/flip/x/y) changed | `(info: TransformInfo) => void` | — |
 | rootClassName | ⚠️ Deprecated, use `classNames.root` | `string` | — |
 | maskClassName | ⚠️ Deprecated, use `classNames.cover` | `string` | — |
 | toolbarRender | ⚠️ Deprecated, use `actionsRender` | `ActionsRender` | — |
@@ -88,10 +87,13 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | keydown | Original KeyboardEvent before built-in Enter/Space handling; preventDefault cancels that keyboard action |
 | openChange | Interaction request `(nextOpen: boolean, prevOpen: boolean)`, captured before writing state |
 | update:open | Boolean request for top-level `v-model:open`; prop changes do not echo events |
+| transform | Complete current TransformInfo snapshot (rotate/scale/flipX/flipY/x/y); an accepted close also emits its reset, while a refused close keeps the transform |
 
 With preview=false, native role/tabindex/aria-label survive. Preview triggers own button/0 and use an explicit aria-label before the alt fallback. Progress only notifies click/keydown without opening a latent preview. Bind with `@click`, `@error` and `@keydown`; onXxx in h()/ImageProps registers Vue listeners. See the [migration](../../../../docs/migrations/image-native-events.md) and [evidence](../../../../docs/audit/2026-10-25-image-native-events-remediation.md).
 
 Open state has one public Vue entrypoint. Without open, internal state applies; removing control resumes the last synchronized value. Interaction emits openChange before update:open, and the parent may decline a request. Legacy preview state fields are removed; non-state business hooks remain in preview. See the [model migration](../../../../docs/migrations/image-open-model.md).
+
+The ineffective preview.onTransform field moves directly to top-level `@transform`. Import TransformInfo from the root entrypoint. Listener arrays, replacement and `.once` follow Vue semantics; root DOM events with the same name do not enter this business event. See the [transform event migration](../../../../docs/migrations/image-transform-event.md).
 
 Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape requests closing. A controlled parent declining that request keeps focus inside. Focus returns to the original trigger after the closing animation or when the whole preview unmounts. Close and group navigation buttons have their own accessible names, including with decorative custom icons.
 
@@ -116,6 +118,7 @@ Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape 
 | openChange / update:open | Same open requests/model notifications as Image; supports `v-model:open` |
 | change | Index request `(current: number, prevCurrent: number)` |
 | update:current | Numeric model request after change; supports `v-model:current` |
+| transform | Same transform snapshot as Image; child Images do not duplicate group notifications |
 
 ### Semantic slots
 

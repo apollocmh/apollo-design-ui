@@ -44,7 +44,7 @@ it('Image and PreviewGroup expose top-level Boolean models and exact state event
   >();
 });
 
-it('state configuration moves directly out of PreviewConfig while other callbacks remain', () => {
+it('state configuration moves directly out of PreviewConfig while the motion callback remains', () => {
   expectTypeOf<GroupPreviewConfig>().toEqualTypeOf<PreviewConfig>();
   expectTypeOf<PreviewConfig>().not.toHaveProperty('open');
   expectTypeOf<PreviewConfig>().not.toHaveProperty('defaultOpen');
@@ -57,7 +57,8 @@ it('state configuration moves directly out of PreviewConfig while other callback
   expectTypeOf<GroupPreviewConfig>().not.toHaveProperty('visible');
   expectTypeOf<GroupPreviewConfig>().not.toHaveProperty('onVisibleChange');
   expectTypeOf<PreviewConfig>().toHaveProperty('afterOpenChange');
-  expectTypeOf<PreviewConfig>().toHaveProperty('onTransform');
+  // Transform notifications now use their own typed top-level event.
+  expectTypeOf<PreviewConfig>().not.toHaveProperty('onTransform');
   const check = () => {
     // @ts-expect-error Controlled state moves directly to the top-level open model.
     const oldOpen: PreviewConfig = { open: true };

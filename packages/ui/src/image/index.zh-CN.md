@@ -70,7 +70,6 @@ preview-img-info / preview-mask / preview-src。
 | imageRender | 预览大图的自定义渲染 | `(info) => VNodeChild` | — |
 | actionsRender | 自定义工具栏 | `(originNode, info) => VNodeChild` | — |
 | countRender | 自定义组内计数文案 | `(current, total) => VNodeChild` | — |
-| onTransform | 变换（rotate/scale/flip/x/y）变化 | `(info: TransformInfo) => void` | — |
 | rootClassName | ⚠️ 已废弃，请用 `classNames.root` | `string` | — |
 | maskClassName | ⚠️ 已废弃，请用 `classNames.cover` | `string` | — |
 | toolbarRender | ⚠️ 已废弃，请用 `actionsRender` | `ActionsRender` | — |
@@ -85,10 +84,11 @@ preview-img-info / preview-mask / preview-src。
 | keydown | 原KeyboardEvent；监听器先于内置Enter/Space，preventDefault可阻止内置键盘动作 |
 | openChange | 交互请求 `(nextOpen: boolean, prevOpen: boolean)`，写入前捕获前态 |
 | update:open | 顶层 `v-model:open` 的boolean请求；父prop变化不回发 |
+| transform | 当前变换的完整 `TransformInfo` 快照（rotate/scale/flipX/flipY/x/y）；接受关闭后也通知复位，拒绝关闭不复位 |
 
 preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0，显式aria-label优先alt默认名。Progress只通知click/keydown，不打开潜在预览。以 `@click` / `@error` / `@keydown` 绑定；h()/ImageProps中的onXxx是Vue监听器注册。详见 [迁移](../../../../docs/migrations/image-native-events.md) 和 [证据](../../../../docs/audit/2026-10-25-image-native-events-remediation.md)。
 
-开合只有顶层Vue状态入口。open省略使用内态，移除控制接续最后同步值；交互先openChange再update:open，父级可以拒绝请求。旧preview状态字段直接移除，afterOpenChange/onTransform等非状态业务配置保持，见 [模型迁移](../../../../docs/migrations/image-open-model.md)。
+开合只有顶层Vue状态入口。open省略使用内态，移除控制接续最后同步值；交互先openChange再update:open，父级可以拒绝请求。旧preview状态字段直接移除，afterOpenChange等业务配置保持，见 [模型迁移](../../../../docs/migrations/image-open-model.md)。失效的preview.onTransform直接迁到顶层 `@transform`，类型可从根入口导入；支持监听器数组、替换与 `.once`，不混入根DOM同名事件，见 [变换事件迁移](../../../../docs/migrations/image-transform-event.md)。
 
 预览打开后焦点进入弹层，Tab/Shift+Tab在其中循环，Esc请求关闭。受控父级拒绝关闭时保留焦点；关闭动画结束或整个预览卸载后归还原触发器。关闭与组内切换按钮自带可访问名称，自定义装饰图标不会移除名称。
 
@@ -113,6 +113,7 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 | openChange / update:open | 同Image开合请求/模型通知，可用 `v-model:open` |
 | change | 索引请求 `(current: number, prevCurrent: number)` |
 | update:current | change之后的数字模型请求，可用 `v-model:current` |
+| transform | 同Image变换快照；组内子Image不重复通知 |
 
 ### 语义化槽位
 

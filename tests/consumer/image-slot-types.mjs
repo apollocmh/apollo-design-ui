@@ -117,14 +117,44 @@ try {
     path.join(temp, 'ExactOpenModel.vue'),
     exactOpenModel.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/transform-events.vue'),
+    path.join(temp, 'ImageTransformDemo.vue'),
+  );
+  const transformFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageTransform.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageTransform.vue'),
+    transformFixture.replace(
+      '../../../packages/ui/src/image/demo/transform-events.vue',
+      './ImageTransformDemo.vue',
+    ),
+  );
+  const exactTransform = fs.readFileSync(
+    path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImageTransform.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ExactTransform.vue'),
+    exactTransform.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
-    `import type { ImageProps, ImageSlots, PreviewConfig } from '@apollo-design/ui';
+    `import type { ImageProps, ImageSlots, PreviewConfig, PreviewGroupProps, TransformInfo } from '@apollo-design/ui';
 const slots: ImageSlots = { imageRender: ({ originNode, src }) => src ? originNode : null };
 // @ts-expect-error Top-level function props migrate directly to native slots.
 const old: ImageProps = { imageRender: () => null };
 const preview: PreviewConfig = { imageRender: ({ originNode }) => originNode };
-void [slots, old, preview];`,
+const record = (info: TransformInfo): void => { void info.rotate; };
+const imageEvents: ImageProps = { onTransform: record };
+const groupEvents: PreviewGroupProps = { onTransform: record };
+// @ts-expect-error Transform notifications move directly from config to a typed Vue event.
+const oldTransform: PreviewConfig = { onTransform: record };
+// @ts-expect-error The event receives TransformInfo, not a DOM event.
+const wrongTransform: ImageProps = { onTransform: (_event: Event) => {} };
+void [slots, old, preview, imageEvents, groupEvents, oldTransform, wrongTransform];`,
   );
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
@@ -157,7 +187,7 @@ void [slots, old, preview];`,
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Image: exact native slot info, VNode origin/optional src, current templates and native root style demo/fixture, unknown-slot/old-function rejection and untouched preview config type; no source aliases/test declarations',
+    'PASS published Image: exact native slots, current templates/style demos, typed Image/Group transform events and root TransformInfo export, old callback/wrong payload rejection and remaining preview renderer type; no source aliases/test declarations',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

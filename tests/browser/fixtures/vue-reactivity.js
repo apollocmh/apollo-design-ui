@@ -28,6 +28,7 @@ import ImagePreviewFocus from './ImagePreviewFocus.vue';
 import ImageProvider from './ImageProvider.vue';
 import ImageRender from './ImageRender.vue';
 import ImageStyles from './ImageStyles.vue';
+import ImageTransform from './ImageTransform.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
@@ -118,6 +119,7 @@ const Demo = {
   'image-open-model': ImageOpenModel,
   'image-preview-focus': ImagePreviewFocus,
   'image-styles': ImageStyles,
+  'image-transform': ImageTransform,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

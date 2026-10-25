@@ -19,6 +19,7 @@ import type {
   ImageCommonProps,
   ImageSemanticType,
   PreviewGroupProps,
+  TransformInfo,
 } from './interface';
 import Preview from './Preview';
 
@@ -43,6 +44,7 @@ const PreviewGroup = defineComponent({
     change: (_current: number, _prevCurrent: number) => true,
     'update:current': (_current: number) => true,
     openChange: (_open: boolean, _prevOpen: boolean) => true,
+    transform: (_info: TransformInfo) => true,
     'update:open': (_open: boolean) => true,
   },
   props: {
@@ -213,6 +215,7 @@ const PreviewGroup = defineComponent({
             styles: props.styles?.popup,
             onClose: () => setOpen(false),
             afterOpenChange: previewConfig.value.afterOpenChange,
+            onTransform: (info: TransformInfo) => emit('transform', info),
             onActive: (offset: number) => setCurrent(current.value + offset, current.value),
           }),
         ].filter((c) => c !== null && c !== undefined),
