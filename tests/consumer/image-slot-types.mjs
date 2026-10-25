@@ -189,6 +189,21 @@ try {
       './PopupProviderDemo.vue',
     ),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/preview-group.vue'),
+    path.join(temp, 'PreviewGroupDemo.vue'),
+  );
+  const counterFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageCounterContrast.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageCounterContrast.vue'),
+    counterFixture.replace(
+      '../../../packages/ui/src/image/demo/preview-group.vue',
+      './PreviewGroupDemo.vue',
+    ),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig, PreviewGroupProps, PreviewGroupSlots, TransformInfo } from '@apollo-design/ui';

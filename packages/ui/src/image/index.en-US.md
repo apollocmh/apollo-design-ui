@@ -172,6 +172,8 @@ Group navigation icons read the current ConfigProvider.direction, resolving defa
 `previewOperationColorDisabled` (@0.25) / `previewOperationSize` (`fontSizeIcon × 1.5` = 18px) /
 `progressAnimationDuration` (`3s`); derived `imagePreviewSwitchSize` (= `controlHeightLG`).
 
+The default group counter uses a `colorBgSpotlight` background and inherits the footer operation color, including over a light page or with the mask disabled. This background applies only to the default counter node (also available as `previewCount.originNode`); custom counter slots keep their own styling. See the [contrast regression](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md).
+
 ## Design notes
 
 ### Numeric `width` / `height` are normalized to `px`

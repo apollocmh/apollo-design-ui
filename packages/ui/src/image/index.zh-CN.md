@@ -167,6 +167,8 @@ Group导航图标读取当前ConfigProvider.direction，ltr/rtl切换时先合�
 `previewOperationColorDisabled`(@0.25) / `previewOperationSize`(`fontSizeIcon × 1.5` = 18px) /
 `progressAnimationDuration`(`3s`)；派生 `imagePreviewSwitchSize`(= `controlHeightLG`)。
 
+Group 默认计数使用 `colorBgSpotlight` 背景，文字继续继承 footer 的操作颜色；在亮色页面及关闭遮罩时仍有独立的对比背景。该背景只作用于默认计数节点（也包括 `previewCount.originNode`），自定义计数槽保留自身样式。见 [对比度回归](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md)。
+
 ## 设计说明
 
 ### 数字型 `width` / `height` 会归一化成 `px`

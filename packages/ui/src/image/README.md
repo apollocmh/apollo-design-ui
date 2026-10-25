@@ -101,3 +101,5 @@ Image的click/error/keydown与已有update:open通知使用typed emits。根属�
 Image和Group弹层共同读取当前Provider的popup类名/样式对象，字段/整配置/整map替换及移除不重挂预览。局部popup样式按字段覆盖，原生class/style留实际根；见 [弹层配置报告](../../../../docs/audit/2026-10-25-image-popup-provider-remediation.md)。
 
 Group导航图标读取当前Provider方向，默认与单侧自定义先合并再镜像，显式空图标与相邻索引语义保持。见 [方向报告](../../../../docs/audit/2026-10-25-image-provider-direction-remediation.md)。
+
+默认组计数增加 `colorBgSpotlight` 背景，修复白色页面上 2.33:1 的文字对比度；操作颜色继承和自定义计数槽不变。实际全局亮/暗/紧凑主题、遮罩与页面背景矩阵见 [对比度报告](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md)。

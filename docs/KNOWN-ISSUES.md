@@ -283,6 +283,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image Group方向图标增量**：4条修前3失败/1已有通过，确认初始RTL默认图标消失及动态方向快照过期。当前方向getter与默认/自定义先合并再镜像后8条通过，保留单侧/显式空图标、当前替换、编辑器/焦点/旋转与相邻索引语义；见 [报告](audit/2026-10-25-image-provider-direction-remediation.md)。其他RTL布局、预览配置与视觉验收独立开放。
 
+**2026-10-25 Image默认计数对比度增量**：真实Chrome确认白色页面的默认计数仅2.33:1，关闭遮罩为1:1；增加主题colorBgSpotlight背景，保留操作颜色继承与默认节点/槽分工。复现、全局主题矩阵和实际Demo证据见 [报告](audit/2026-10-25-image-counter-contrast-remediation.md)。局部Provider主题跨Teleport的变量继承另行复审，不用其浅色回退冒充暗色覆盖；其他预览配置和视觉验收继续开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

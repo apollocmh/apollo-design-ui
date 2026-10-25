@@ -3,7 +3,7 @@
  *
  * 契约来源：antd 6.6.4 的 components/image/style（React SSR + extractStyle 产物
  * 逐条机械转换，提取脚本 tests/visual/debug/extract-image.mjs（括号配平提取）；
- * 57 条规则，原序）。
+ * 57 条原始规则，保留原序；默认计数背景为 Apollo 对比度修复）。
  *
  * 与 antd 产物的转换规则：
  *   1. 去掉 :where(.css-dev-only-…) hash 前缀（静态移植无 hashId）。
@@ -31,7 +31,7 @@ const KEYFRAMES = `
 @keyframes apollo-image-progress-active{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 `;
 
-/** antd 产物机械转换段（57 条，原序）。 */
+/** 原机械转换规则，追加 Apollo 默认计数对比度修复。 */
 const RULES = `
 .apollo-image-css-var{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-image-css-var::before,.apollo-image-css-var::after{box-sizing:border-box;}
@@ -77,6 +77,7 @@ const RULES = `
 .apollo-image-preview .apollo-image-preview-switch-prev{inset-inline-start:var(--apollo-margin-sm);}
 .apollo-image-preview .apollo-image-preview-switch-next{inset-inline-end:var(--apollo-margin-sm);}
 .apollo-image-preview .apollo-image-preview-footer{position:absolute;bottom:var(--apollo-margin-xl);left:50%;display:flex;flex-direction:column;align-items:center;color:var(--apollo-image-preview-operation-color);transform:translateX(-50%);gap:var(--apollo-margin);}
+.apollo-image-preview .apollo-image-preview-progress{background:var(--apollo-color-bg-spotlight);}
 .apollo-image-preview .apollo-image-preview-actions{display:flex;gap:var(--apollo-padding-sm);padding:0 var(--apollo-padding-lg);background-color:rgba(0,0,0,0.1);border-radius:100px;font-size:var(--apollo-image-preview-operation-size);}
 .apollo-image-preview .apollo-image-preview-actions-action{color:inherit;background:transparent;border:0;font:inherit;padding:var(--apollo-padding-sm);cursor:pointer;transition:all var(--apollo-motion-duration-slow);display:flex;}
 .apollo-image-preview .apollo-image-preview-actions-action:not(.apollo-image-preview-actions-action-disabled):hover{color:var(--apollo-image-preview-operation-hover-color);}
