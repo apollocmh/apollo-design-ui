@@ -132,6 +132,17 @@ try {
       './ImageTransformDemo.vue',
     ),
   );
+  const scaleFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageScaleBounds.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageScaleBounds.vue'),
+    scaleFixture.replace(
+      '../../../packages/ui/src/image/demo/transform-events.vue',
+      './ImageTransformDemo.vue',
+    ),
+  );
   const exactTransform = fs.readFileSync(
     path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImageTransform.vue'),
     'utf8',

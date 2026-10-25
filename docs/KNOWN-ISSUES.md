@@ -285,6 +285,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image默认计数对比度增量**：真实Chrome确认白色页面的默认计数仅2.33:1，关闭遮罩为1:1；增加主题colorBgSpotlight背景，保留操作颜色继承与默认节点/槽分工。复现、全局主题矩阵和实际Demo证据见 [报告](audit/2026-10-25-image-counter-contrast-remediation.md)。局部Provider主题跨Teleport的变量继承另行复审，不用其浅色回退冒充暗色覆盖；其他预览配置和视觉验收继续开放。
 
+**2026-10-25 Image当前缩放边界增量**：双入口6条修前全失败，确认变换内核固定setup的minScale/maxScale；改当前getter后另复现上限收紧的按钮/槽禁用2失败/12通过，改>=后14条通过。配置本身不变换/通知，下一次操作读当前限制并保持默认复位；运行、手势、编辑器身份与Demo证据见 [报告](audit/2026-10-25-image-scale-bounds-remediation.md)。其他预览配置与视觉验收继续开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -394,7 +396,7 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Message | 11/11 | **用户已验收动画**；保持回归即可 |
 | Notification | 14/14 | **用户已验收动画**；保持回归即可 |
 | App | 2/2 | —；上下文 API、静态方法隔离 |
-| Image | 15/17 | F11；toolbarRender / mask 模板适配专项 |
+| Image | 15/17 | F11；mask/关闭/容器配置与局部弹层主题复审 |
 | Select | 35/35 | **F02**；动态 slot、options、虚拟列表 |
 | AutoComplete | 14/17 | F02 消费者；条件 default slot / 自定义 clear |
 | Cascader | 23/23 | F02 消费者；异步加载/slot |

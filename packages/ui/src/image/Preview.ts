@@ -160,8 +160,8 @@ const Preview = defineComponent({
     });
 
     const { transform, updateTransform, dispatchZoomChange, resetTransform } = useImageTransform(
-      props.minScale,
-      props.maxScale,
+      () => props.minScale,
+      () => props.maxScale,
       (info) => emit('transform', info),
     );
 
@@ -336,7 +336,7 @@ const Preview = defineComponent({
           renderAction('rotateLeft', icons.value.rotateLeft, actions.rotateLeft),
           renderAction('rotateRight', icons.value.rotateRight, actions.rotateRight),
           renderAction('zoomOut', icons.value.zoomOut, actions.zoomOut, scale <= props.minScale),
-          renderAction('zoomIn', icons.value.zoomIn, actions.zoomIn, scale === props.maxScale),
+          renderAction('zoomIn', icons.value.zoomIn, actions.zoomIn, scale >= props.maxScale),
         ],
       );
 
@@ -357,7 +357,7 @@ const Preview = defineComponent({
             current: props.current,
             total: props.count,
             image: currentImage(),
-            disabled: { zoomIn: scale === props.maxScale, zoomOut: scale <= props.minScale },
+            disabled: { zoomIn: scale >= props.maxScale, zoomOut: scale <= props.minScale },
           })
         : actionsNode;
 

@@ -7,8 +7,12 @@ order: 204
 
 原来未生效的 `preview.onTransform` 直接移除此配置字段，改用顶层事件，没有兼容通道。`TransformInfo` 可从 `@apollo-design/ui` 导入。
 
+打开时可切换默认、窄范围和较高下限。更改边界不会主动发变换通知或重挂预览；下一次缩放、手势或其他非复位变换读取当前边界。当前比例达到或超过上限时，放大按钮及槽的 disabled.zoomIn 均为禁用；移除配置恢复默认边界，复位/关闭仍回到比例 1。
+
 ## en-US
 
 Receive the current rotation, scale, flips and translation through top-level `@transform="info => ..."`. Its `TransformInfo` payload is a snapshot, and `@transform.once` follows standard Vue event semantics. Image and PreviewGroup share this event; grouped child Images do not duplicate it. Closing resets the transform and emits that snapshot. A parent declining a close request keeps the transform.
 
 The ineffective `preview.onTransform` field is removed directly in favor of this event, without a compatibility channel. Import `TransformInfo` from `@apollo-design/ui`.
+
+Cycle the default, narrow and higher-minimum bounds while open. Changing bounds keeps the preview and emits no transform by itself; the next zoom, gesture or other non-reset transform reads the current limits. At or above the maximum, both the zoom-in button and slot disabled.zoomIn are disabled. Removing the limits restores their defaults; reset/close still return to scale 1.

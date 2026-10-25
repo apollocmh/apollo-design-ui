@@ -103,3 +103,5 @@ Image和Group弹层共同读取当前Provider的popup类名/样式对象，字�
 Group导航图标读取当前Provider方向，默认与单侧自定义先合并再镜像，显式空图标与相邻索引语义保持。见 [方向报告](../../../../docs/audit/2026-10-25-image-provider-direction-remediation.md)。
 
 默认组计数增加 `colorBgSpotlight` 背景，修复白色页面上 2.33:1 的文字对比度；操作颜色继承和自定义计数槽不变。实际全局亮/暗/紧凑主题、遮罩与页面背景矩阵见 [对比度报告](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md)。
+
+变换内核在每次操作读取当前 minScale/maxScale，收紧上限时默认按钮与槽禁用标志一致；配置更新本身不变换或通知，默认复位语义保留。双入口、手势及实际 Demo 证据见 [缩放边界报告](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md)。

@@ -87,6 +87,8 @@ current为零基索引，与Group模型相同，显示序号时加1；单图curr
 | maskClassName | ⚠️ 已废弃，请用 `classNames.cover` | `string` | — |
 | forceRender / destroyOnClose | 已移除（antd 不再支持），传入被忽略 | — | — |
 
+Image/Group 每次缩放、滚轮、双击及非复位变换读取当前 minScale/maxScale；替换或移除配置会作用于下一次操作。更改配置本身保留现有比例与预览身份，不发 transform。比例达到或超过当前上限时，放大按钮与 previewActions.disabled.zoomIn 同时禁用；复位/关闭仍回到比例 1。见 [边界回归](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md)。
+
 ### Image · Events
 
 | 名称 | 说明 |

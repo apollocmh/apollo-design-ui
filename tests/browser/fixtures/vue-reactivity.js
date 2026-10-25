@@ -31,6 +31,7 @@ import ImagePreviewFocus from './ImagePreviewFocus.vue';
 import ImagePreviewSlots from './ImagePreviewSlots.vue';
 import ImageProvider from './ImageProvider.vue';
 import ImageRender from './ImageRender.vue';
+import ImageScaleBounds from './ImageScaleBounds.vue';
 import ImageStyles from './ImageStyles.vue';
 import ImageTransform from './ImageTransform.vue';
 import ListContent from './ListContent.vue';
@@ -128,6 +129,7 @@ const Demo = {
   'image-preview-slots': ImagePreviewSlots,
   'image-styles': ImageStyles,
   'image-transform': ImageTransform,
+  'image-scale-bounds': ImageScaleBounds,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

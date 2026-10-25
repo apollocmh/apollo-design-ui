@@ -11,7 +11,7 @@
  *   （见 §「以指针为锚的缩放」）；`action` 为 `zoomIn/zoomOut` 时以**视口中心**
  *   为锚（rc 传 undefined 的鼠标坐标）。
  */
-import { type Ref, ref } from 'vue';
+import { type MaybeRefOrGetter, type Ref, ref, toValue } from 'vue';
 
 import type { TransformInfo } from '../interface';
 
@@ -40,11 +40,13 @@ const initialTransform = (): TransformInfo => ({
 });
 
 export function useImageTransform(
-  minScale = 1,
-  maxScale = 50,
+  minScale: MaybeRefOrGetter<number> = 1,
+  maxScale: MaybeRefOrGetter<number> = 50,
   onTransform?: (info: TransformInfo) => void,
 ): UseImageTransformResult {
   const transform = ref<TransformInfo>(initialTransform());
+  const clampScale = (scale: number): number =>
+    Math.max(toValue(minScale), Math.min(toValue(maxScale), scale));
 
   const emit = (): void => {
     onTransform?.({ ...transform.value });
@@ -52,7 +54,7 @@ export function useImageTransform(
 
   const updateTransform = (next: Partial<TransformInfo>): void => {
     const merged = { ...transform.value, ...next };
-    merged.scale = Math.max(minScale, Math.min(maxScale, merged.scale));
+    merged.scale = clampScale(merged.scale);
     transform.value = merged;
     emit();
   };
@@ -70,7 +72,7 @@ export function useImageTransform(
     mouseY?: number,
   ): void => {
     const { scale, x, y } = transform.value;
-    const nextScale = Math.max(minScale, Math.min(maxScale, scale * (1 + ratio)));
+    const nextScale = clampScale(scale * (1 + ratio));
 
     if (mouseX === undefined || mouseY === undefined) {
       transform.value = { ...transform.value, scale: nextScale };

@@ -5375,14 +5375,16 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/demo/popup-provider.vue",
-          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+          "packages/ui/src/image/demo/preview-group-top-progress.vue",
+          "packages/ui/src/image/demo/transform-events.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
-          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
+          "packages/ui/src/image/__tests__/scale-bounds.test.ts"
         ]
       },
       "decision": "skip",
@@ -5420,7 +5422,8 @@
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
-          "packages/ui/src/image/__tests__/provider-direction.test.ts"
+          "packages/ui/src/image/__tests__/provider-direction.test.ts",
+          "packages/ui/src/image/__tests__/scale-bounds.test.ts"
         ]
       },
       "decision": "skip",
@@ -5594,7 +5597,8 @@
           "packages/ui/src/image/__tests__/preview-transform.test.ts",
           "packages/ui/src/image/__tests__/provider-direction.test.ts",
           "packages/ui/src/image/__tests__/provider-reactivity.test.ts",
-          "packages/ui/src/image/__tests__/registration-order.test.ts"
+          "packages/ui/src/image/__tests__/registration-order.test.ts",
+          "packages/ui/src/image/__tests__/scale-bounds.test.ts"
         ]
       },
       "decision": "skip",
@@ -5624,14 +5628,16 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/demo/popup-provider.vue",
-          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+          "packages/ui/src/image/demo/preview-group-top-progress.vue",
+          "packages/ui/src/image/demo/transform-events.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
-          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
+          "packages/ui/src/image/__tests__/scale-bounds.test.ts"
         ]
       },
       "decision": "skip",
@@ -5704,7 +5710,8 @@
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
-          "packages/ui/src/image/__tests__/provider-direction.test.ts"
+          "packages/ui/src/image/__tests__/provider-direction.test.ts",
+          "packages/ui/src/image/__tests__/scale-bounds.test.ts"
         ]
       },
       "decision": "skip",

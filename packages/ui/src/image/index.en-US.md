@@ -90,6 +90,8 @@ These types, PreviewActions and PreviewGroupSlots are exported from the root ent
 | maskClassName | ⚠️ Deprecated, use `classNames.cover` | `string` | — |
 | forceRender / destroyOnClose | Removed (no longer supported by antd); ignored when passed | — | — |
 
+Image/Group read the current minScale/maxScale for zoom, wheel, double-click and non-reset transforms. Replacing/removing limits applies on the next operation; changing the configuration retains the current scale and preview identity without emitting transform. At or above the current maximum, both the zoom-in button and previewActions.disabled.zoomIn are disabled. Reset/close still return to scale 1. See the [bounds regression](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md).
+
 ### Image · Events
 
 | Name | Description |
