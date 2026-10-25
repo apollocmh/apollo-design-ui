@@ -24,6 +24,7 @@ import FormPrefix from './FormPrefix.vue';
 import ImageNativeEvents from './ImageNativeEvents.vue';
 import ImageOpenModel from './ImageOpenModel.vue';
 import ImagePrefix from './ImagePrefix.vue';
+import ImagePreviewFocus from './ImagePreviewFocus.vue';
 import ImageProvider from './ImageProvider.vue';
 import ImageRender from './ImageRender.vue';
 import ImageStyles from './ImageStyles.vue';
@@ -115,6 +116,7 @@ const Demo = {
   'image-prefix': ImagePrefix,
   'image-native-events': ImageNativeEvents,
   'image-open-model': ImageOpenModel,
+  'image-preview-focus': ImagePreviewFocus,
   'image-styles': ImageStyles,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,

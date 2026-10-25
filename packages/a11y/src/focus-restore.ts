@@ -9,7 +9,7 @@
  */
 
 import { contains } from '@apollo-design/utils';
-import { type MaybeRefOrGetter, onScopeDispose, toValue } from 'vue';
+import { type MaybeRefOrGetter, nextTick, onScopeDispose, toValue } from 'vue';
 
 export interface FocusRestoreOptions {
   /**
@@ -44,11 +44,44 @@ function focusElement(element: Element | null, options?: FocusOptions): void {
   (element as MaybeFocusable | null)?.focus?.(options);
 }
 
+interface RestoreEntry {
+  getContainer: () => HTMLElement | null;
+  targets: Element[];
+}
+
+interface DocumentRestores {
+  entries: Set<RestoreEntry>;
+  saveVersion: number;
+}
+
+// Entries exist only while a helper owns an actual outside return target. A weak
+// document key keeps independent documents isolated and never registers SSR scopes.
+const documentRestores = new WeakMap<Document, DocumentRestores>();
+
+function restoreConnectedTarget(targets: Element[]): Element | null {
+  const target = targets.find((element) => element.isConnected);
+  if (!target) return null;
+  try {
+    focusElement(target, { preventScroll: true });
+    return target;
+  } catch {
+    // A target may have become unusable since save(). Restoration stays best effort.
+    return null;
+  }
+}
+
 export function useFocusRestore(
   getContainer: () => HTMLElement | null,
   options: FocusRestoreOptions = {},
 ): FocusRestoreHandle {
-  let saved: Element | null = null;
+  const entry: RestoreEntry = { getContainer, targets: [] };
+  let registered: DocumentRestores | null = null;
+
+  const clearSaved = (): void => {
+    registered?.entries.delete(entry);
+    registered = null;
+    entry.targets = [];
+  };
 
   const getActiveElement = (): Element | null => {
     const container = getContainer();
@@ -60,9 +93,39 @@ export function useFocusRestore(
     const active = getActiveElement();
     // 门 1：焦点已在容器内 ⇒ 不覆盖。否则嵌套浮层会把「外层浮层内的元素」
     //      记成「外部焦点」，关闭内层时焦点跳到外层的某个控件上。
-    if (!contains(getContainer(), active)) {
-      saved = active;
+    if (contains(getContainer(), active)) return;
+    clearSaved();
+    if (!active) return;
+
+    const doc = active.ownerDocument;
+    let state = documentRestores.get(doc);
+    if (!state) {
+      state = { entries: new Set(), saveVersion: 0 };
+      documentRestores.set(doc, state);
     }
+    // Even a layer starting from body cancels older deferred restoration. It may
+    // receive its Portal content and initial focus on the following Vue tick.
+    state.saveVersion++;
+    if (!active.isConnected || active === doc.body || active === doc.documentElement) return;
+
+    let owner: RestoreEntry | undefined;
+    let ownerContainer: HTMLElement | null = null;
+    for (const candidate of state.entries) {
+      const container = candidate.getContainer();
+      if (
+        container &&
+        contains(container, active) &&
+        (!ownerContainer || contains(ownerContainer, container))
+      ) {
+        owner = candidate;
+        ownerContainer = container;
+      }
+    }
+    // Copy the nearest layer's chain now: its scope and DOM may disappear before
+    // this layer closes. No reference to the owning helper is retained.
+    entry.targets = [...new Set([active, ...(owner?.targets ?? [])])];
+    registered = state;
+    state.entries.add(entry);
   };
 
   const focusContent = (): void => {
@@ -79,24 +142,29 @@ export function useFocusRestore(
     const enabled = toValue(options.enabled) ?? true;
 
     // 门 3：无遮罩 ⇒ 不恢复。见 `FocusRestoreOptions.mask` 的注释。
-    if (!mask || !enabled || !saved) {
+    if (!mask || !enabled || !entry.targets.length) {
       return;
     }
 
-    try {
-      focusElement(saved, { preventScroll: true });
-    } catch {
-      // antd 原样吞掉异常：要恢复的元素可能已经被从文档里移除。
-      // 这里什么都不做 —— 焦点保持在 body 上是可接受的降级。
-    }
+    const targets = entry.targets;
+    const doc = targets[0]?.ownerDocument;
+    const state = registered;
+    const saveVersion = state?.saveVersion;
+    clearSaved();
+    const target = restoreConnectedTarget(targets);
+    if (!target || !doc || doc.activeElement === target) return;
 
-    // 只恢复一次。上游在 try/catch **之后**置 null，所以异常时同样会置。
-    saved = null;
+    // A later layer can synchronously redirect this attempt before its own scope
+    // releases its lock. Retry once after teardown only if focus fell to body;
+    // a user choice or a new opening layer always takes priority.
+    void nextTick(() => {
+      if (doc.activeElement === doc.body && state?.saveVersion === saveVersion) {
+        restoreConnectedTarget(targets);
+      }
+    });
   };
 
-  onScopeDispose(() => {
-    saved = null;
-  });
+  onScopeDispose(clearSaved);
 
   return { save, focusContent, restore };
 }

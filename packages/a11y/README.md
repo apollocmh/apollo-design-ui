@@ -20,7 +20,7 @@
 ## 公开 API
 
 - lockFocus / useLockFocus / getFocusNodeList / triggerFocus / resetFocusLock —— 焦点陷阱（再导出自 utils）
-- useFocusRestore —— 关闭后焦点恢复（Modal / Drawer / Image.Preview）
+- useFocusRestore —— 关闭后焦点恢复（Modal / Drawer / Image.Preview）；多层保存返回路径，移除目标回退与卸载锁释放后恢复见 [当前契约](../../docs/foundation/a11y-contract.md#351-apollo-多层焦点返回2026-10-25)
 - useRovingFocus + nextRovingIndex / moveRovingIndex / getRovingOffset / getRovingTabIndex —— roving tabindex 与方向键导航（Menu / Tabs / Radio.Group / Toolbar）
 - useActiveDescendant + getListboxId / getOptionId —— aria-activedescendant 的 id 方案（Select / Tree / Listbox 类）
 - useLiveRegion / announce / announceValues / formatLiveRegionText —— 屏幕阅读器播报（message / notification / upload / transfer）

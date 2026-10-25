@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { type EffectScope, effectScope, ref } from 'vue';
+import { type EffectScope, effectScope, nextTick, onScopeDispose, ref } from 'vue';
 import type { FocusRestoreHandle } from '../index';
 import { useFocusRestore } from '../index';
+
+const scopes: EffectScope[] = [];
 
 /**
  * `useFocusRestore` 用了 `onScopeDispose`，必须在 effectScope 里跑 ——
@@ -13,6 +15,7 @@ function withRestore<T>(
   run: (handle: FocusRestoreHandle) => T,
 ): { result: T; scope: EffectScope } {
   const scope = effectScope();
+  scopes.push(scope);
   const result = scope.run(() => run(useFocusRestore(() => container, options))) as T;
   return { result, scope };
 }
@@ -25,6 +28,7 @@ function makeButton(text: string): HTMLButtonElement {
 }
 
 afterEach(() => {
+  for (const scope of scopes.splice(0)) scope.stop();
   document.body.innerHTML = '';
 });
 
@@ -249,5 +253,200 @@ describe('useFocusRestore（rc-dialog Dialog/index.js:53-95）', () => {
     // 只断言「stop 不抛错」：saved 是闭包私有变量，外部观察不到，
     // 这里的价值是让「释放路径被执行」这件事进覆盖率。
     expect(() => scope.stop()).not.toThrow();
+  });
+});
+
+function layer(name: string) {
+  const container = document.createElement('div');
+  container.tabIndex = -1;
+  const button = document.createElement('button');
+  button.textContent = name;
+  container.appendChild(button);
+  document.body.appendChild(container);
+  return { container, button };
+}
+
+function restoringScope(container: HTMLElement, release: () => void = () => {}) {
+  const scope = effectScope();
+  scopes.push(scope);
+  let handle: FocusRestoreHandle | undefined;
+  scope.run(() => {
+    onScopeDispose(release);
+    onScopeDispose(() => handle?.restore());
+    handle = useFocusRestore(() => container);
+  });
+  if (!handle) throw new Error('Expected a focus restore handle');
+  return { scope, handle };
+}
+
+function nestedLayers() {
+  const opener = makeButton('external opener');
+  const first = layer('first close');
+  const second = layer('second close');
+  const outer = restoringScope(first.container);
+  const inner = restoringScope(second.container);
+  opener.focus();
+  outer.handle.save();
+  first.button.focus();
+  inner.handle.save();
+  second.button.focus();
+  return { opener, first, second, outer, inner };
+}
+
+describe('useFocusRestore nested teardown and deferred focus', () => {
+  it('restores the surviving opener after both scopes and their real DOM are removed', async () => {
+    const current = nestedLayers();
+    let locked = true;
+    const redirect = (event: FocusEvent) => {
+      if (
+        locked &&
+        event.target instanceof Node &&
+        !current.second.container.contains(event.target)
+      ) {
+        current.second.button.focus();
+      }
+    };
+    window.addEventListener('focusin', redirect);
+    const release = () => {
+      locked = false;
+      window.removeEventListener('focusin', redirect);
+    };
+    try {
+      current.outer.scope.stop();
+      current.first.container.remove();
+      expect(document.activeElement).toBe(current.second.button);
+      release();
+      current.inner.scope.stop();
+      current.second.container.remove();
+      await nextTick();
+      expect(document.activeElement).toBe(current.opener);
+    } finally {
+      release();
+    }
+  });
+
+  it('keeps the top layer focused when its parent disappears, then returns to the outer opener', async () => {
+    const current = nestedLayers();
+    const redirect = (event: FocusEvent) => {
+      if (event.target instanceof Node && !current.second.container.contains(event.target)) {
+        current.second.button.focus();
+      }
+    };
+    window.addEventListener('focusin', redirect);
+    try {
+      current.outer.scope.stop();
+      current.first.container.remove();
+      await nextTick();
+      expect(document.activeElement).toBe(current.second.button);
+    } finally {
+      window.removeEventListener('focusin', redirect);
+    }
+    current.inner.scope.stop();
+    current.second.container.remove();
+    await nextTick();
+    expect(document.activeElement).toBe(current.opener);
+  });
+
+  it('skips a removed immediate target and uses its captured outer opener', () => {
+    const current = nestedLayers();
+    current.first.button.remove();
+    current.inner.handle.restore();
+    expect(document.activeElement).toBe(current.opener);
+  });
+
+  it('captures the nearest owning layer when multiple registered containers contain focus', () => {
+    const opener = makeButton('outermost opener');
+    const first = layer('outer trigger');
+    const middle = layer('middle trigger');
+    first.container.appendChild(middle.container);
+    const child = layer('child close');
+    const outer = restoringScope(first.container);
+    const parent = restoringScope(middle.container);
+    const inner = restoringScope(child.container);
+    opener.focus();
+    outer.handle.save();
+    first.button.focus();
+    parent.handle.save();
+    middle.button.focus();
+    inner.handle.save();
+    child.button.focus();
+    middle.button.remove();
+    inner.handle.restore();
+    expect(document.activeElement).toBe(first.button);
+  });
+
+  it('copies the return chain before its parent saves a new target', () => {
+    const current = nestedLayers();
+    const different = makeButton('different parent opener');
+    different.focus();
+    current.outer.handle.save();
+    current.second.button.focus();
+    current.first.button.remove();
+    current.inner.handle.restore();
+    expect(document.activeElement).toBe(current.opener);
+  });
+
+  function redirectedRestore() {
+    const opener = makeButton('retry opener');
+    const temporary = layer('temporary focus lock');
+    const current = layer('current preview');
+    const restore = restoringScope(current.container);
+    opener.focus();
+    restore.handle.save();
+    current.button.focus();
+    const redirect = () => temporary.button.focus();
+    opener.addEventListener('focusin', redirect);
+    restore.handle.restore();
+    expect(document.activeElement).toBe(temporary.button);
+    opener.removeEventListener('focusin', redirect);
+    temporary.container.remove();
+    expect(document.activeElement).toBe(document.body);
+    return { opener, current, restore };
+  }
+
+  it('retries once after synchronous locks disappear and focus falls back to body', async () => {
+    const current = redirectedRestore();
+    await nextTick();
+    expect(document.activeElement).toBe(current.opener);
+    current.current.button.focus();
+    current.restore.handle.restore();
+    await nextTick();
+    expect(document.activeElement).toBe(current.current.button);
+  });
+
+  it('does not take focus back after the user focuses another control before nextTick', async () => {
+    redirectedRestore();
+    const chosen = makeButton('user chosen control');
+    chosen.focus();
+    await nextTick();
+    expect(document.activeElement).toBe(chosen);
+  });
+
+  it('does not retry when another layer starts opening before its content gains focus', async () => {
+    redirectedRestore();
+    const next = layer('next opening layer');
+    const restore = restoringScope(next.container);
+    restore.handle.save();
+    await nextTick();
+    expect(document.activeElement).toBe(document.body);
+    restore.handle.focusContent();
+    expect(document.activeElement).toBe(next.container);
+  });
+
+  it('a disposed helper no longer contributes an outer fallback to future layers', () => {
+    const opener = makeButton('disposed opener');
+    const first = layer('disposed layer');
+    const outer = withRestore(first.container, {}, (handle) => handle);
+    opener.focus();
+    outer.result.save();
+    outer.scope.stop();
+    first.button.focus();
+    const second = layer('later layer');
+    const inner = restoringScope(second.container);
+    inner.handle.save();
+    second.button.focus();
+    first.container.remove();
+    inner.handle.restore();
+    expect(document.activeElement).toBe(second.button);
   });
 });

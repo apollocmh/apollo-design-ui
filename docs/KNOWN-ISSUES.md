@@ -269,7 +269,11 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image/Group预览焦点增量**：真实Portal/CSSMotion正式13条修前10失败/3已有通过；弹层晚挂载入焦、外部焦点约束、Tab边界、Esc与关闭/卸载归还直接修正，自定义装饰图标保留按钮名称。局部13条通过，完整门禁与真实浏览器记录见 [报告](audit/2026-10-25-image-preview-focus-remediation.md)。其他预览配置扩展与当前视觉验收继续开放。
 
+浏览器追加复现禁用导航按钮失焦、双层整体卸载及先卸外层后关闭内层三条失败路径；Vue更新守护与共享原语返回链修复后，完整生产Chrome均通过。基础原语22条、相关35文件588条运行回归、146条类型及发布消费/文档门禁通过，证据与视觉缺口见同一报告。
+
 **2026-10-25 Image组内注册顺序增量**：更新第一图src/alt会注销再注册，实际顺序移至末尾而current/计数不变。正式6条修前4失败/2已有通过，只保留同id upsert和卸载清理后6条通过；身份、通知及全序导航见 [报告](audit/2026-10-25-image-registration-order-remediation.md)。不改变公开状态或registry协议。
+
+**2026-10-25 Image预览扩展复审（仍开放）**：源码公开入口隔离9条全部失败，严格类型通过。Image/Group各自imageRender/actionsRender/toolbarRender独立配置均未求值；Group countRender未求值；两个入口旋转实际生效但onTransform均未通知。探针为 `/tmp/apollo-image-preview-extension-repro/extensions.test.ts`，日志 `/tmp/apollo-image-preview-extension-red.log`。这些配置声明不能充当实现证据；渲染扩展按ADR0006直接迁原生作用域槽，通知按Vue公共契约独立整改，不夹带在焦点或注册修复内。
 
 ---
 

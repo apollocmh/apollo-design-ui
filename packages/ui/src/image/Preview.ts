@@ -28,7 +28,9 @@ import {
   computed,
   defineComponent,
   h,
+  onBeforeUpdate,
   onScopeDispose,
+  onUpdated,
   type PropType,
   ref,
   type VNodeChild,
@@ -124,6 +126,16 @@ const Preview = defineComponent({
         element.focus({ preventScroll: true });
       }
     };
+    let hadFocusBeforeUpdate = false;
+    onBeforeUpdate(() => {
+      const element = previewElement.value;
+      hadFocusBeforeUpdate = !!element?.contains(element.ownerDocument.activeElement);
+    });
+    onUpdated(() => {
+      // Disabling the focused navigation button can blur it to body without focusin.
+      // Only repair focus that this preview owned before its Vue update.
+      if (hadFocusBeforeUpdate) focusPreview();
+    });
     watch(
       () => props.open,
       (open) => {

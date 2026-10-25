@@ -225,6 +225,14 @@ if (mask && lastOutSideActiveElementRef.current && focusTriggerAfterClose) {
 3. `focus({ preventScroll: true })` 且**吞掉异常**（被恢复的元素可能已从文档移除）。
 4. 恢复后立刻置 `null` —— 保证只恢复一次。
 
+### 3.5.1 Apollo 多层焦点返回（2026-10-25）
+
+上面的单目标实现是历史对照。真实Image预览复现了两个问题：同时卸载多个焦点锁，先归还的焦点会被尚未释放的锁拉回；先卸载外层时，内层保存的外层按钮已离开文档。当前恢复原语在职责内记录返回路径：当前外部元素在另一已保存容器内时，同时复制该容器的返回链，恢复时选择仍连接文档的首个目标。
+
+有效restore同步尝试并消费这次保存；若仍被另一焦点锁阻挡，只允许在Vue本轮清理完成后、焦点仍为body且目标仍连接时补一次。用户或新浮层已经取得焦点时不抢回。保存新的外部焦点取消旧的延迟恢复；scope释放移除登记，SSR与无有效外部焦点不建立登记。mask/enabled门控、内部save不覆盖、一次恢复和不抛异常的既有语义保持。
+
+这属于框架无关焦点目标与Vue生命周期的协作，不新增组件props、恢复handle动作或第二套焦点锁。运行证据与边界见 [Image预览焦点报告](../audit/2026-10-25-image-preview-focus-remediation.md)。
+
 ### 3.6 roving 的索引算术（`rc-menu/es/hooks/useAccessibility.js:113-138`）
 
 ```js

@@ -62,6 +62,10 @@ try {
     path.join(root, 'tests/browser/fixtures/ImagePrefix.vue'),
     path.join(temp, 'ImagePrefix.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/ImagePreviewFocus.vue'),
+    path.join(temp, 'ImagePreviewFocus.vue'),
+  );
   const nativeEventFixture = fs.readFileSync(
     path.join(root, 'tests/browser/fixtures/ImageNativeEvents.vue'),
     'utf8',

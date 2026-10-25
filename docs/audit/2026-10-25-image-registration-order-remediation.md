@@ -10,4 +10,4 @@ PreviewGroup使用子Image时按注册顺序显示图片。更新第一张的src
 
 局部命令：`pnpm exec vitest run --project unit packages/ui/src/image/__tests__/registration-order.test.ts --maxWorkers=1`。Image/ConfigProvider四层完整21文件307条通过，没有排除文件：`pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/image packages/ui/src/config-provider --maxWorkers=2`，日志 `/tmp/apollo-image-registration-order-runtime.log`。Biome及diff检查通过。
 
-Registry19项、清单重新生成/check通过，分类/裁决数不变。类型及生产消费验证在本批补齐后记录。此修复兑现现有注册顺序契约，无新公开API或兼容通道；不替代其他扩展与Apollo视觉验收。
+Registry19项、清单重新生成/check通过，分类/裁决数不变。后续共享焦点补修门禁已包含本次Image源码：a11y/Image/ConfigProvider/Modal35文件588条、类型14文件146条、根strict及a11y→UI顺序生产构建通过，发布消费端和两包L7通过，见 [焦点报告](2026-10-25-image-preview-focus-remediation.md#追加修复门禁)。注册顺序的精确更新场景由本文件6条公开集成测试覆盖，未宣称增加独立浏览器注册更新场景。此修复兑现现有注册顺序契约，无新公开API或兼容通道；不替代其他扩展与Apollo视觉验收。
