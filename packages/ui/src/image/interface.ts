@@ -7,7 +7,7 @@
  * PENDING，D36 同判）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { VNode, VNodeChild } from 'vue';
 
 export type ImageStatus = 'normal' | 'loading' | 'error';
 
@@ -195,13 +195,16 @@ export interface ImageProps extends ImageCommonProps {
   styles?: ImageSemanticType['styles'];
   onClick?: (e: MouseEvent) => void;
   onError?: (e: Event) => void;
-  /** 自定义 img 渲染（antd demo/imageRender）。 */
+}
+
+export interface ImageSlots {
   imageRender?: (info: ImageRenderInfo) => VNodeChild;
 }
 
 export interface ImageRenderInfo {
-  originNode: VNodeChild;
-  src: string;
+  originNode: VNode;
+  /** 原图当前 src 属性，包含 fallback；未提供时为 undefined。 */
+  src?: string;
   alt?: string;
   width?: number | string;
   height?: number | string;

@@ -36,10 +36,19 @@ preview-img-info / preview-mask / preview-src。
 | style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
 | wrapperStyle | ⚠️ 已废弃，请用 `styles.root` | `CSSProperties` | — |
 | classNames / styles | 语义化类名/样式，见「语义化槽位」 | — | — |
-| imageRender | 自定义 `<img>` 渲染 | `(info: ImageRenderInfo) => VNodeChild` | — |
 | onClick | 点击（先走内部打开预览，再调它） | `(e: MouseEvent) => void` | — |
 | onError | `<img>` 加载失败 | `(e: Event) => void` | — |
 | crossOrigin / decoding / loading / referrerPolicy / sizes / srcSet / useMap / draggable | 透传给 `<img>` 的原生属性 | — | — |
+
+### Image · 插槽
+
+| 名称 | 说明 | 参数 |
+|---|---|---|
+| imageRender | 自定义缩略图区域；空槽抑制默认img | 单对象 `ImageRenderInfo`，见下文 |
+
+`originNode` 是带原始ref、加载/错误处理、原生属性与样式的真实VNode，建议用 `<component :is="originNode" />` 渲染。`src` 是当前原图的原始src属性（含fallback，缺省undefined）；alt/width/height来自当前props，title来自字符串原生attr，classNames.image是已合并的语义image类名。槽存在则使用其内容（含有意为空），移除恢复默认img；同一结构下的原图和稳定富节点保持身份。Progress/纯占位提前分支不调用此槽。
+
+`ImageSlots` / `ImageRenderInfo` 已从组件和包根导出。顶层函数prop直接移除，无兼容层或弃用期；详见 [迁移记录](../../../../docs/migrations/image-render-slot.md)。preview配置内同名字段及工具栏/计数扩展未由本批验收。
 
 ### Image · PreviewConfig（`preview` 的对象形态）
 

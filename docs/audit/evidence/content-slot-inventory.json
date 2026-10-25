@@ -13,14 +13,14 @@
       "data": 134,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 99,
-      "render-function-candidate": 68,
+      "internal": 100,
+      "render-function-candidate": 67,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 146,
-      "review": 203,
-      "skip": 152,
+      "review": 202,
+      "skip": 153,
       "implemented-verified": 19
     }
   },
@@ -5335,20 +5335,29 @@
       "category": "data",
       "source": "packages/ui/src/image/interface.ts:103",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/image-render.vue"
+        ]
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
+          "packages/ui/src/image/__tests__/image-slot.test.ts"
+        ]
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
@@ -5435,31 +5444,6 @@
     {
       "component": "image",
       "owner": "ImageProps",
-      "prop": "imageRender",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/image/interface.ts:199",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
-    },
-    {
-      "component": "image",
-      "owner": "ImageProps",
       "prop": "placeholder",
       "category": "component-content-candidate",
       "source": "packages/ui/src/image/interface.ts:190",
@@ -5479,6 +5463,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/a11y.test.ts",
+          "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
@@ -5491,7 +5476,7 @@
       "owner": "ImageRenderInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:203",
+      "source": "packages/ui/src/image/interface.ts:205",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5510,6 +5495,40 @@
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "image",
+      "owner": "ImageSlots",
+      "prop": "imageRender",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:201",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/image-render.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
+          "packages/ui/src/image/__tests__/image-slot.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "image",
@@ -5621,20 +5640,29 @@
       "category": "data",
       "source": "packages/ui/src/image/interface.ts:103",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/image-render.vue"
+        ]
       },
       "slotTest": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
+          "packages/ui/src/image/__tests__/image-slot.test.ts"
+        ]
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"

@@ -21,6 +21,7 @@ import BreakpointNative from './BreakpointNative.vue';
 import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
+import ImageRender from './ImageRender.vue';
 import ListContent from './ListContent.vue';
 import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
@@ -104,6 +105,7 @@ const Demo = {
   'typography-slots': TypographySlots,
   'typography-styles': TypographyStyles,
   'typography-provider': TypographyProvider,
+  'image-render': ImageRender,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,

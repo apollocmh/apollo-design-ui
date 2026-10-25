@@ -38,10 +38,19 @@ preview-img-info / preview-mask / preview-src.
 | class / style | **Native root attrs** (not Props; replacing upstream `className` / `rootClassName` / `style`). `style` **overrides `styles.root`** | `string \| array \| object` / `CSSProperties` | — |
 | wrapperStyle | ⚠️ Deprecated, use `styles.root` | `CSSProperties` | — |
 | classNames / styles | Semantic class names / styles, see "Semantic slots" | — | — |
-| imageRender | Custom `<img>` rendering | `(info: ImageRenderInfo) => VNodeChild` | — |
 | onClick | Click (internal preview opens first, then this runs) | `(e: MouseEvent) => void` | — |
 | onError | `<img>` load error | `(e: Event) => void` | — |
 | crossOrigin / decoding / loading / referrerPolicy / sizes / srcSet / useMap / draggable | Native attributes forwarded to `<img>` | — | — |
+
+### Image · Slots
+
+| Name | Description | Scope |
+|---|---|---|
+| imageRender | Customize thumbnail content; an empty slot suppresses the default img | One `ImageRenderInfo` object; details below |
+
+`originNode` is a real VNode carrying the original ref, load/error handling, native attributes and styles. Render it with `<component :is="originNode" />`. `src` is the current raw img src, including fallback, or undefined when absent. alt/width/height reflect current props, title comes from a string native attr, and classNames.image is the merged semantic image class. A present slot takes precedence, including an intentionally empty result; removing it restores the default img. Stable images/rich nodes retain identity within the same structure. Progress/standalone-placeholder branches do not invoke this slot.
+
+`ImageSlots` and `ImageRenderInfo` are exported from the component and package root. The top-level function prop is removed directly without a compatibility layer or deprecation period; see the [migration](../../../../docs/migrations/image-render-slot.md). Same-named preview config fields and toolbar/count extensions are not validated by this change.
 
 ### Image · PreviewConfig (object form of `preview`)
 

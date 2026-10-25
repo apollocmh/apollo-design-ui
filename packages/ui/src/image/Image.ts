@@ -18,6 +18,7 @@ import {
   onBeforeUnmount,
   type PropType,
   ref,
+  type SlotsType,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -29,6 +30,7 @@ import type {
   CoverPlacement,
   ImageProps,
   ImageSemanticType,
+  ImageSlots,
   MaskNode,
   PlaceholderType,
   PreviewConfig,
@@ -68,6 +70,7 @@ function normalizeCover(cover: MaskNode | undefined): {
 const Image = defineComponent({
   name: 'AImage',
   inheritAttrs: false,
+  slots: Object as SlotsType<ImageSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     src: { type: String, default: undefined },
@@ -92,7 +95,7 @@ const Image = defineComponent({
     useMap: { type: String, default: undefined },
     draggable: { type: Boolean, default: undefined },
   },
-  setup(props, { attrs, emit }) {
+  setup(props, { attrs, emit, slots }) {
     // antd 逐字（image/index.js:33-41）：ConfigProvider 组件级 `classNames` /
     // `styles`（`components.image.*`）是语义合并的**最外层**来源（2026-10-04 接上）。
     const {
@@ -311,6 +314,39 @@ const Image = defineComponent({
         });
       }
 
+      const originNode = h('img', {
+        ...commonProps,
+        class: [
+          `${prefixCls}-img`,
+          props.placeholder === true ? `${prefixCls}-img-placeholder` : undefined,
+          mergedClassNames.value?.image,
+        ],
+        style: {
+          // ⚠️ 必须 toCssSize：Vue 的 `style` 数字值**不会**自动补 px（rc 在 React
+          // 里靠这层自动补），`{height: 100}` 会被静默丢弃 ⇒ 落到 CSS 的
+          // `height:auto`，图片按原始比例撑成正方形（L6 才暴露，contract 档丢 style）。
+          height: toCssSize(props.height),
+          ...(mergedStyles.value?.image ?? {}),
+          ...((attrs.style as Record<string, string | number>) ?? {}),
+        },
+        width: props.width,
+        height: props.height,
+        ref: (el: unknown) => getImgRef(el as HTMLImageElement | null),
+        ...(srcAndOnload.value as Record<string, unknown>),
+        onError: props.onError,
+      });
+      const imageContent = slots.imageRender
+        ? slots.imageRender({
+            originNode,
+            src: srcAndOnload.value.src,
+            alt: props.alt,
+            width: props.width,
+            height: props.height,
+            title: typeof attrs.title === 'string' ? attrs.title : undefined,
+            classNames: { image: mergedClassNames.value?.image },
+          })
+        : originNode;
+
       const isError = status.value === 'error';
 
       return h(
@@ -338,27 +374,7 @@ const Image = defineComponent({
           onKeydown: canPreview.value ? onKeyDown : undefined,
         },
         [
-          h('img', {
-            ...commonProps,
-            class: [
-              `${prefixCls}-img`,
-              props.placeholder === true ? `${prefixCls}-img-placeholder` : undefined,
-              mergedClassNames.value?.image,
-            ],
-            style: {
-              // ⚠️ 必须 toCssSize：Vue 的 `style` 数字值**不会**自动补 px（rc 在 React
-              // 里靠这层自动补），`{height: 100}` 会被静默丢弃 ⇒ 落到 CSS 的
-              // `height:auto`，图片按原始比例撑成正方形（L6 才暴露，contract 档丢 style）。
-              height: toCssSize(props.height),
-              ...(mergedStyles.value?.image ?? {}),
-              ...((attrs.style as Record<string, string | number>) ?? {}),
-            },
-            width: props.width,
-            height: props.height,
-            ref: (el: unknown) => getImgRef(el as HTMLImageElement | null),
-            ...(srcAndOnload.value as Record<string, unknown>),
-            onError: props.onError,
-          }),
+          imageContent,
           status.value === 'loading'
             ? h(
                 'div',

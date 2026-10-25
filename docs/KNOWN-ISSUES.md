@@ -255,6 +255,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Typography全局配置增量（F11）**：32条修前25失败/7已有通过，确认五入口setup解构捕获旧className/style/classNames/styles，导致整体对象和函数替换、晚加载及移除过期。合并层改在computed/getter现读当前配置，保留优先级与已有深字段/ref函数行为，32条局部通过；范围及检查见 [报告](audit/2026-10-25-typography-provider-remediation.md)。
 
+**2026-10-25 Image缩略图增量（F11）**：顶层imageRender原只有类型/文档、实现未消费。13条修前8失败/5已有通过，直接迁原生单对象imageRender槽；当前VNode/optional实际src、空/移除、ref/load/error、预览/组注册与SSR局部13通过；真实浏览器另复现默认fade动画名不匹配CSS且关闭无兜底，同批修正前缀与500ms结束保护，保留正常及无结束事件的隐藏断言。见 [报告](audit/2026-10-25-image-render-slot-remediation.md) 与 [迁移记录](migrations/image-render-slot.md)；preview配置同名renderer及其他扩展继续独立复审。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

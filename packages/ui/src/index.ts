@@ -1141,7 +1141,9 @@ export type { ComponentToken as FormComponentToken } from './form/style/token';
 export { prepareComponentToken as prepareFormComponentToken } from './form/style/token';
 export type {
   ImageProps,
+  ImageRenderInfo,
   ImageSemanticType,
+  ImageSlots,
   PreviewConfig,
   PreviewGroupProps,
 } from './image';

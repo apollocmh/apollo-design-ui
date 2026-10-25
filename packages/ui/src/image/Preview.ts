@@ -67,7 +67,7 @@ const Preview = defineComponent({
     /** 组内模式（>1 时显示 prev/next 与计数）。 */
     inGroup: { type: Boolean, default: false },
     mousePosition: { type: Object as PropType<{ x: number; y: number } | null>, default: null },
-    motionName: { type: String, default: 'fade' },
+    motionName: { type: String, default: undefined },
     icons: { type: Object as PropType<PreviewIcons>, default: undefined },
     rootClassName: { type: String, default: undefined },
     classNames: {
@@ -345,7 +345,8 @@ const Preview = defineComponent({
             h(
               CSSMotion,
               {
-                motionName: props.motionName,
+                motionName: props.motionName ?? `${props.prefixCls}-fade`,
+                motionDeadline: 500,
                 visible: portalRender.value && props.open,
                 motionAppear: true,
                 motionEnter: true,
