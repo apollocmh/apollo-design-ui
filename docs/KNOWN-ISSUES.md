@@ -273,9 +273,11 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image组内注册顺序增量**：更新第一图src/alt会注销再注册，实际顺序移至末尾而current/计数不变。正式6条修前4失败/2已有通过，只保留同id upsert和卸载清理后6条通过；身份、通知及全序导航见 [报告](audit/2026-10-25-image-registration-order-remediation.md)。不改变公开状态或registry协议。
 
-**2026-10-25 Image预览扩展复审（仍开放）**：源码公开入口隔离9条全部失败，严格类型通过。Image/Group各自imageRender/actionsRender/toolbarRender独立配置均未求值；Group countRender未求值；两个入口旋转实际生效但onTransform均未通知。探针为 `/tmp/apollo-image-preview-extension-repro/extensions.test.ts`，日志 `/tmp/apollo-image-preview-extension-red.log`。这些配置声明不能充当实现证据；渲染扩展按ADR0006直接迁原生作用域槽，通知按Vue公共契约独立整改，不夹带在焦点或注册修复内。
+**2026-10-25 Image预览扩展原始复现（已分批整改，见后两条）**：源码公开入口隔离9条全部失败，严格类型通过。Image/Group各自imageRender/actionsRender/toolbarRender独立配置均未求值；Group countRender未求值；两个入口旋转实际生效但onTransform均未通知。探针为 `/tmp/apollo-image-preview-extension-repro/extensions.test.ts`，日志 `/tmp/apollo-image-preview-extension-red.log`。这些配置声明不能充当实现证据；渲染扩展按ADR0006直接迁原生作用域槽，通知按Vue公共契约独立整改，不夹带在焦点或注册修复内。
 
 **2026-10-25 Image变换事件增量**：上述两条通知缺陷直接改顶层typed transform事件，删preview.onTransform，无旧通道。正式11条修前9失败/2已有通过，扩展15条通过，包含数组/once/当前替换、快照、受控拒绝/复位、真实SFC和Group根DOM同名事件隔离；见 [报告](audit/2026-10-25-image-transform-event-remediation.md) 与 [迁移](migrations/image-transform-event.md)。其余7条renderer失败仍独立开放。
+
+**2026-10-25 Image预览槽增量（F11）**：其余7条renderer直接迁原生previewImage/previewActions/Group previewCount，删除四个旧配置字段与toolbar别名。正式13条修前11失败/2已有通过；扩展真实SFC、编辑器方向键与Progress CSR/SSR后19条通过。当前VNode/optional src、零基索引、typed动作、空/移除与稳定编辑器的证据见 [报告](audit/2026-10-25-image-preview-slots-remediation.md) 和 [迁移](migrations/image-preview-slots.md)。其他预览配置及视觉验收继续独立推进。
 
 ---
 

@@ -25,6 +25,7 @@ import ImageNativeEvents from './ImageNativeEvents.vue';
 import ImageOpenModel from './ImageOpenModel.vue';
 import ImagePrefix from './ImagePrefix.vue';
 import ImagePreviewFocus from './ImagePreviewFocus.vue';
+import ImagePreviewSlots from './ImagePreviewSlots.vue';
 import ImageProvider from './ImageProvider.vue';
 import ImageRender from './ImageRender.vue';
 import ImageStyles from './ImageStyles.vue';
@@ -118,6 +119,7 @@ const Demo = {
   'image-native-events': ImageNativeEvents,
   'image-open-model': ImageOpenModel,
   'image-preview-focus': ImagePreviewFocus,
+  'image-preview-slots': ImagePreviewSlots,
   'image-styles': ImageStyles,
   'image-transform': ImageTransform,
   'drawer-slots': DrawerSlots,

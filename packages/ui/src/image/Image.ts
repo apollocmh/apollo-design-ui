@@ -34,7 +34,9 @@ import type {
   ImageSlots,
   MaskNode,
   PlaceholderType,
+  PreviewActionsInfo,
   PreviewConfig,
+  PreviewImageInfo,
   TransformInfo,
 } from './interface';
 import Preview from './Preview';
@@ -406,29 +408,40 @@ const Image = defineComponent({
               )
             : null,
           canPreview.value && !groupContext
-            ? h(Preview, {
-                prefixCls: `${prefixCls.value}-preview`,
-                src: previewSrc.value,
-                alt: props.alt,
-                imageInfo: { width: props.width, height: props.height },
-                fallback: props.fallback,
-                imgCommonProps: commonProps,
-                open: previewOpen.value,
-                movable: previewConfig.value?.movable,
-                maskClosable: previewConfig.value?.maskClosable,
-                minScale: previewConfig.value?.minScale,
-                maxScale: previewConfig.value?.maxScale,
-                scaleStep: previewConfig.value?.scaleStep,
-                zIndex: previewConfig.value?.zIndex,
-                mousePosition: mousePosition.value,
-                icons: previewConfig.value?.icons,
-                rootClassName: previewConfig.value?.rootClassName,
-                classNames: popupClassNames.value,
-                styles: props.styles?.popup,
-                onClose: () => setPreviewOpen(false),
-                afterOpenChange: previewConfig.value?.afterOpenChange,
-                onTransform: (info: TransformInfo) => emit('transform', info),
-              })
+            ? h(
+                Preview,
+                {
+                  prefixCls: `${prefixCls.value}-preview`,
+                  src: previewSrc.value,
+                  alt: props.alt,
+                  imageInfo: { width: props.width, height: props.height },
+                  fallback: props.fallback,
+                  imgCommonProps: commonProps,
+                  open: previewOpen.value,
+                  movable: previewConfig.value?.movable,
+                  maskClosable: previewConfig.value?.maskClosable,
+                  minScale: previewConfig.value?.minScale,
+                  maxScale: previewConfig.value?.maxScale,
+                  scaleStep: previewConfig.value?.scaleStep,
+                  zIndex: previewConfig.value?.zIndex,
+                  mousePosition: mousePosition.value,
+                  icons: previewConfig.value?.icons,
+                  rootClassName: previewConfig.value?.rootClassName,
+                  classNames: popupClassNames.value,
+                  styles: props.styles?.popup,
+                  onClose: () => setPreviewOpen(false),
+                  afterOpenChange: previewConfig.value?.afterOpenChange,
+                  onTransform: (info: TransformInfo) => emit('transform', info),
+                },
+                {
+                  ...(slots.previewImage
+                    ? { previewImage: (info: PreviewImageInfo) => slots.previewImage?.(info) }
+                    : {}),
+                  ...(slots.previewActions
+                    ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
+                    : {}),
+                },
+              )
             : null,
         ].filter((c) => c !== null && c !== undefined),
       );

@@ -24,6 +24,7 @@ import {
 } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
 import { Portal, useZIndex } from '@apollo-design/portal';
+import { KeyCode } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -33,12 +34,20 @@ import {
   onUpdated,
   type PropType,
   ref,
+  type SlotsType,
   type VNodeChild,
   watch,
 } from 'vue';
 import { useImageTransform } from './hooks/useImageTransform';
 import { useStatus } from './hooks/useStatus';
-import type { ImageCommonProps, PreviewConfig, PreviewIcons, TransformInfo } from './interface';
+import type {
+  ImageCommonProps,
+  PreviewActions,
+  PreviewConfig,
+  PreviewGroupSlots,
+  PreviewIcons,
+  TransformInfo,
+} from './interface';
 import { imageTokenValues } from './style/token';
 
 export const DEFAULT_ICONS: Required<PreviewIcons> = {
@@ -56,6 +65,7 @@ export const DEFAULT_ICONS: Required<PreviewIcons> = {
 const Preview = defineComponent({
   name: 'AImagePreview',
   inheritAttrs: false,
+  slots: Object as SlotsType<Omit<PreviewGroupSlots, 'default'>>,
   emits: { transform: (_info: TransformInfo) => true },
   props: {
     prefixCls: { type: String, required: true },
@@ -112,7 +122,7 @@ const Preview = defineComponent({
     afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     onActive: { type: Function as PropType<(offset: number) => void>, default: undefined },
   },
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const previewElement = ref<HTMLElement | null>(null);
     useLockFocus(() => props.open, previewElement);
     // Vue scope cleanup runs in registration order: release the lock, restore its
@@ -186,6 +196,18 @@ const Preview = defineComponent({
     const showSwitch = computed(() => props.inGroup && props.count > 1);
     const showProgress = computed(() => props.inGroup && props.count >= 1);
 
+    const actions: PreviewActions = {
+      flipX: () => updateTransform({ flipX: !transform.value.flipX }),
+      flipY: () => updateTransform({ flipY: !transform.value.flipY }),
+      rotateLeft: () => updateTransform({ rotate: transform.value.rotate - 90 }),
+      rotateRight: () => updateTransform({ rotate: transform.value.rotate + 90 }),
+      zoomIn: () => dispatchZoomChange(0.1, 'zoomIn'),
+      zoomOut: () => dispatchZoomChange(-0.1, 'zoomOut'),
+      reset: () => resetTransform(),
+      close: () => props.onClose?.(),
+    };
+    const currentImage = () => ({ src: srcAndOnload.value.src, alt: props.alt });
+
     // ---------------------- 手势（v1：滚轮 + 拖拽 + 双击） ----------------------
     const moving = ref(false);
     let startX = 0;
@@ -258,7 +280,7 @@ const Preview = defineComponent({
         props.onClose?.();
         return;
       }
-      if (!showSwitch.value) return;
+      if (!showSwitch.value || KeyCode.isEditableTarget(e)) return;
       if (key === 'ArrowLeft') props.onActive?.(-1);
       if (key === 'ArrowRight') props.onActive?.(1);
     };
@@ -309,32 +331,35 @@ const Preview = defineComponent({
           style: props.styles?.actions,
         },
         [
-          renderAction('flipY', icons.value.flipY, () =>
-            updateTransform({ flipY: !transform.value.flipY }),
-          ),
-          renderAction('flipX', icons.value.flipX, () =>
-            updateTransform({ flipX: !transform.value.flipX }),
-          ),
-          renderAction('rotateLeft', icons.value.rotateLeft, () =>
-            updateTransform({ rotate: transform.value.rotate - 90 }),
-          ),
-          renderAction('rotateRight', icons.value.rotateRight, () =>
-            updateTransform({ rotate: transform.value.rotate + 90 }),
-          ),
-          renderAction(
-            'zoomOut',
-            icons.value.zoomOut,
-            () => dispatchZoomChange(-0.1, 'zoomOut'),
-            scale <= props.minScale,
-          ),
-          renderAction(
-            'zoomIn',
-            icons.value.zoomIn,
-            () => dispatchZoomChange(0.1, 'zoomIn'),
-            scale === props.maxScale,
-          ),
+          renderAction('flipY', icons.value.flipY, actions.flipY),
+          renderAction('flipX', icons.value.flipX, actions.flipX),
+          renderAction('rotateLeft', icons.value.rotateLeft, actions.rotateLeft),
+          renderAction('rotateRight', icons.value.rotateRight, actions.rotateRight),
+          renderAction('zoomOut', icons.value.zoomOut, actions.zoomOut, scale <= props.minScale),
+          renderAction('zoomIn', icons.value.zoomIn, actions.zoomIn, scale === props.maxScale),
         ],
       );
+
+      const progressContent =
+        progressNode && slots.previewCount
+          ? slots.previewCount({
+              originNode: progressNode,
+              current: props.current,
+              total: props.count,
+            })
+          : progressNode;
+      const actionsContent = slots.previewActions
+        ? slots.previewActions({
+            originNode: actionsNode,
+            icons: icons.value,
+            actions,
+            transform: { ...transform.value },
+            current: props.current,
+            total: props.count,
+            image: currentImage(),
+            disabled: { zoomIn: scale === props.maxScale, zoomOut: scale <= props.minScale },
+          })
+        : actionsNode;
 
       return h(
         'div',
@@ -342,7 +367,7 @@ const Preview = defineComponent({
           class: [`${props.prefixCls}-footer`, props.classNames?.footer],
           style: props.styles?.footer,
         },
-        [progressNode, actionsNode].filter((c) => c !== null),
+        [progressContent, actionsContent],
       );
     };
 
@@ -393,8 +418,8 @@ const Preview = defineComponent({
         style: {
           transform: `translate3d(${t.x}px, ${t.y}px, 0) scale3d(${t.flipX ? '-' : ''}${t.scale}, ${t.flipY ? '-' : ''}${t.scale}, 1) rotate(${t.rotate}deg)`,
         },
-        ref: (el: unknown) => getImgRef(el as HTMLImageElement | null),
-        ...(srcAndOnload.value as Record<string, unknown>),
+        ref: (el: unknown) => getImgRef(el instanceof HTMLImageElement ? el : null),
+        ...srcAndOnload.value,
         onWheel,
         onMousedown: onMouseDown,
         onDblclick: onDoubleClick,
@@ -457,7 +482,17 @@ const Preview = defineComponent({
                           class: [`${props.prefixCls}-body`, props.classNames?.body],
                           style: bodyStyle,
                         },
-                        [imgNode],
+                        [
+                          slots.previewImage
+                            ? slots.previewImage({
+                                originNode: imgNode,
+                                ...currentImage(),
+                                transform: { ...transform.value },
+                                current: props.current,
+                                total: props.count,
+                              })
+                            : imgNode,
+                        ],
                       ),
                       h(
                         'button',

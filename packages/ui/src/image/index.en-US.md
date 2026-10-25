@@ -49,10 +49,26 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | Name | Description | Scope |
 |---|---|---|
 | imageRender | Customize thumbnail content; an empty slot suppresses the default img | One `ImageRenderInfo` object; details below |
+| previewImage | Customize the preview image area | One PreviewImageInfo object |
+| previewActions | Customize the preview toolbar | One PreviewActionsInfo object |
 
 `originNode` is a real VNode carrying the original ref, load/error handling, native attributes and styles. Render it with `<component :is="originNode" />`. `src` is the current raw img src, including fallback, or undefined when absent. alt/width/height reflect current props, title comes from a string native attr, and classNames.image is the merged semantic image class. A present slot takes precedence, including an intentionally empty result; removing it restores the default img. Stable images/rich nodes retain identity within the same structure. Progress/standalone-placeholder branches do not invoke this slot.
 
-`ImageSlots` and `ImageRenderInfo` are exported from the component and package root. The top-level function prop is removed directly without a compatibility layer or deprecation period; see the [migration](../../../../docs/migrations/image-render-slot.md). Same-named preview config fields and toolbar/count extensions are not validated by this change.
+`ImageSlots` and `ImageRenderInfo` are exported from the component and package root. The top-level function prop is removed directly without a compatibility layer or deprecation period; see the [migration](../../../../docs/migrations/image-render-slot.md). Preview extensions use the distinct slots below.
+
+### Preview slot scopes
+
+Image and PreviewGroup support previewImage/previewActions; Group also supports previewCount. Current slot functions run when preview content actually renders. Empty slots suppress defaults, and removing them restores defaults. Closed/SSR previews and the Progress early branch do not eagerly invoke them. Only Group owns grouped preview extensions; a child Image's imageRender remains its thumbnail slot.
+
+| Type | Fields |
+|---|---|
+| PreviewImageInfo | originNode (actual img VNode), src (raw current src including fallback, possibly undefined), alt, transform, current, total |
+| PreviewActionsInfo | originNode (default toolbar VNode), icons, actions, transform, image (src/alt), current, total, disabled (zoomIn/zoomOut) |
+| PreviewCountInfo | originNode (default counter VNode), current, total; Group only |
+
+The current index is zero-based, matching the Group model; add one for display. A single image uses current=0/total=1. Transform is the current six-field snapshot. Actions provides zero-argument flipX/flipY/rotateLeft/rotateRight/zoomIn/zoomOut/reset/close callbacks using the same transform and close requests as default controls; disabled reports zoom button state. Arrow keys in inputs, textarea, select and contenteditable retain native editing behavior. Escape can still request closing, and child preventDefault takes priority.
+
+These types, PreviewActions and PreviewGroupSlots are exported from the root entrypoint. Render `<component :is="info.originNode" />` to preserve image refs/gestures or the default toolbar. See the [preview slot migration](../../../../docs/migrations/image-preview-slots.md).
 
 ### Image · PreviewConfig (object form of `preview`)
 
@@ -70,12 +86,8 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | zIndex | Overlay z-index | `number` | `1080` (`zIndexPopupBase + 80`) |
 | getContainer | Overlay container | `() => HTMLElement` | `document.body` |
 | icons | Icon slots (rotateLeft/rotateRight/zoomIn/zoomOut/close/left/right/flipX/flipY) | `PreviewIcons` | built-in icons |
-| imageRender | Custom rendering of the preview image | `(info) => VNodeChild` | — |
-| actionsRender | Custom toolbar | `(originNode, info) => VNodeChild` | — |
-| countRender | Custom counter text inside a group | `(current, total) => VNodeChild` | — |
 | rootClassName | ⚠️ Deprecated, use `classNames.root` | `string` | — |
 | maskClassName | ⚠️ Deprecated, use `classNames.cover` | `string` | — |
-| toolbarRender | ⚠️ Deprecated, use `actionsRender` | `ActionsRender` | — |
 | forceRender / destroyOnClose | Removed (no longer supported by antd); ignored when passed | — | — |
 
 ### Image · Events
@@ -115,6 +127,8 @@ Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape 
 | Name | Description |
 |---|---|
 | default | Child `Image`s (collected in registration order when `items` is omitted) |
+| previewImage / previewActions | Same native preview slots as Image |
+| previewCount | Native counter slot receiving one PreviewCountInfo object; current is zero-based |
 | openChange / update:open | Same open requests/model notifications as Image; supports `v-model:open` |
 | change | Index request `(current: number, prevCurrent: number)` |
 | update:current | Numeric model request after change; supports `v-model:current` |

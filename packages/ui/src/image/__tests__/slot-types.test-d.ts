@@ -10,7 +10,8 @@ it('thumbnail imageRender is a single-object native slot with a real VNode', () 
   expectTypeOf<ImageRenderInfo['originNode']>().toEqualTypeOf<VNode>();
   expectTypeOf<ImageRenderInfo['src']>().toEqualTypeOf<string | undefined>();
   expectTypeOf<ImageProps>().not.toHaveProperty('imageRender');
-  expectTypeOf<PreviewConfig>().toHaveProperty('imageRender');
+  // Preview rendering now has a distinct native previewImage slot too.
+  expectTypeOf<PreviewConfig>().not.toHaveProperty('imageRender');
   const check = () => {
     // @ts-expect-error Top-level content functions migrate directly to #imageRender.
     const old: ImageProps = { imageRender: () => null };

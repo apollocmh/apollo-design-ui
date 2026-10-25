@@ -1144,8 +1144,14 @@ export type {
   ImageRenderInfo,
   ImageSemanticType,
   ImageSlots,
+  PreviewActions,
+  PreviewActionsInfo,
   PreviewConfig,
+  PreviewCountInfo,
   PreviewGroupProps,
+  PreviewGroupSlots,
+  PreviewImageData,
+  PreviewImageInfo,
   TransformInfo,
 } from './image';
 export { Image, ImagePreviewGroup } from './image';

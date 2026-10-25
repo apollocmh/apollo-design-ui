@@ -46,10 +46,26 @@ preview-img-info / preview-mask / preview-src。
 | 名称 | 说明 | 参数 |
 |---|---|---|
 | imageRender | 自定义缩略图区域；空槽抑制默认img | 单对象 `ImageRenderInfo`，见下文 |
+| previewImage | 自定义预览大图区域 | 单对象 `PreviewImageInfo` |
+| previewActions | 自定义预览工具栏 | 单对象 `PreviewActionsInfo` |
 
 `originNode` 是带原始ref、加载/错误处理、原生属性与样式的真实VNode，建议用 `<component :is="originNode" />` 渲染。`src` 是当前原图的原始src属性（含fallback，缺省undefined）；alt/width/height来自当前props，title来自字符串原生attr，classNames.image是已合并的语义image类名。槽存在则使用其内容（含有意为空），移除恢复默认img；同一结构下的原图和稳定富节点保持身份。Progress/纯占位提前分支不调用此槽。
 
-`ImageSlots` / `ImageRenderInfo` 已从组件和包根导出。顶层函数prop直接移除，无兼容层或弃用期；详见 [迁移记录](../../../../docs/migrations/image-render-slot.md)。preview配置内同名字段及工具栏/计数扩展未由本批验收。
+`ImageSlots` / `ImageRenderInfo` 已从组件和包根导出。顶层函数prop直接移除，无兼容层或弃用期；详见 [迁移记录](../../../../docs/migrations/image-render-slot.md)。预览扩展使用下方独立命名的作用域槽。
+
+### 预览槽作用域
+
+Image与PreviewGroup均支持previewImage/previewActions；Group另支持previewCount。所有槽只在实际预览内容渲染时读取当前函数，空槽抑制默认内容，移除槽恢复默认；闭合/SSR及Progress提前分支不急求值。Group内只有Group负责预览扩展，子Image的imageRender仍只作用于缩略图。
+
+| 类型 | 字段 |
+|---|---|
+| PreviewImageInfo | originNode（真实img VNode）、src（原始src，含fallback，可能undefined）、alt、transform、current、total |
+| PreviewActionsInfo | originNode（默认工具栏VNode）、icons、actions、transform、image（src/alt）、current、total、disabled（zoomIn/zoomOut） |
+| PreviewCountInfo | originNode（默认计数VNode）、current、total；仅Group |
+
+current为零基索引，与Group模型相同，显示序号时加1；单图current=0/total=1。transform为当前六字段快照。actions提供flipX/flipY/rotateLeft/rotateRight/zoomIn/zoomOut/reset/close零参回调，与默认控件共用变换与关闭请求；disabled给出当前缩放按钮状态。输入、textarea、select和contenteditable内的方向键保留编辑行为，Esc仍可请求关闭，子控件preventDefault优先。
+
+上述类型、PreviewActions与PreviewGroupSlots均由根入口导出。通过 `<component :is="info.originNode" />` 保留原图的ref/手势或默认工具栏；迁移旧preview内renderer见 [预览槽迁移](../../../../docs/migrations/image-preview-slots.md)。
 
 ### Image · PreviewConfig（`preview` 的对象形态）
 
@@ -67,12 +83,8 @@ preview-img-info / preview-mask / preview-src。
 | zIndex | 浮层层级 | `number` | `1080`（`zIndexPopupBase + 80`） |
 | getContainer | 浮层挂载容器 | `() => HTMLElement` | `document.body` |
 | icons | 图标槽（rotateLeft/rotateRight/zoomIn/zoomOut/close/left/right/flipX/flipY） | `PreviewIcons` | 内置图标 |
-| imageRender | 预览大图的自定义渲染 | `(info) => VNodeChild` | — |
-| actionsRender | 自定义工具栏 | `(originNode, info) => VNodeChild` | — |
-| countRender | 自定义组内计数文案 | `(current, total) => VNodeChild` | — |
 | rootClassName | ⚠️ 已废弃，请用 `classNames.root` | `string` | — |
 | maskClassName | ⚠️ 已废弃，请用 `classNames.cover` | `string` | — |
-| toolbarRender | ⚠️ 已废弃，请用 `actionsRender` | `ActionsRender` | — |
 | forceRender / destroyOnClose | 已移除（antd 不再支持），传入被忽略 | — | — |
 
 ### Image · Events
@@ -110,6 +122,8 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 | 名称 | 说明 |
 |---|---|
 | default | 子 `Image`（`items` 未传时按注册顺序收集） |
+| previewImage / previewActions | 同Image原生预览槽 |
+| previewCount | 原生计数槽，单对象PreviewCountInfo，current为零基索引 |
 | openChange / update:open | 同Image开合请求/模型通知，可用 `v-model:open` |
 | change | 索引请求 `(current: number, prevCurrent: number)` |
 | update:current | change之后的数字模型请求，可用 `v-model:current` |

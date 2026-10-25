@@ -140,13 +140,45 @@ try {
     path.join(temp, 'ExactTransform.vue'),
     exactTransform.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/preview-group-top-progress.vue'),
+    path.join(temp, 'PreviewSlotsDemo.vue'),
+  );
+  const previewFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImagePreviewSlots.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImagePreviewSlots.vue'),
+    previewFixture.replace(
+      '../../../packages/ui/src/image/demo/preview-group-top-progress.vue',
+      './PreviewSlotsDemo.vue',
+    ),
+  );
+  const exactPreview = fs.readFileSync(
+    path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ExactPreviewSlots.vue'),
+    exactPreview.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
-    `import type { ImageProps, ImageSlots, PreviewConfig, PreviewGroupProps, TransformInfo } from '@apollo-design/ui';
+    `import type { ImageProps, ImageSlots, PreviewConfig, PreviewGroupProps, PreviewGroupSlots, TransformInfo } from '@apollo-design/ui';
 const slots: ImageSlots = { imageRender: ({ originNode, src }) => src ? originNode : null };
 // @ts-expect-error Top-level function props migrate directly to native slots.
 const old: ImageProps = { imageRender: () => null };
-const preview: PreviewConfig = { imageRender: ({ originNode }) => originNode };
+const previewSlots: ImageSlots = { previewImage: ({ originNode }) => originNode, previewActions: ({ originNode }) => originNode };
+const groupSlots: PreviewGroupSlots = { previewCount: ({ current, total }) => String(current + 1) + '/' + total };
+// @ts-expect-error Preview images use the native previewImage slot.
+const oldPreviewImage: PreviewConfig = { imageRender: () => null };
+// @ts-expect-error Preview toolbars use the native previewActions slot.
+const oldPreviewActions: PreviewConfig = { actionsRender: () => null };
+// @ts-expect-error The unused toolbarRender alias is removed directly.
+const oldPreviewToolbar: PreviewConfig = { toolbarRender: () => null };
+// @ts-expect-error Group counters use the native previewCount slot.
+const oldPreviewCount: PreviewConfig = { countRender: () => null };
 const record = (info: TransformInfo): void => { void info.rotate; };
 const imageEvents: ImageProps = { onTransform: record };
 const groupEvents: PreviewGroupProps = { onTransform: record };
@@ -154,7 +186,7 @@ const groupEvents: PreviewGroupProps = { onTransform: record };
 const oldTransform: PreviewConfig = { onTransform: record };
 // @ts-expect-error The event receives TransformInfo, not a DOM event.
 const wrongTransform: ImageProps = { onTransform: (_event: Event) => {} };
-void [slots, old, preview, imageEvents, groupEvents, oldTransform, wrongTransform];`,
+void [slots, old, previewSlots, groupSlots, oldPreviewImage, oldPreviewActions, oldPreviewToolbar, oldPreviewCount, imageEvents, groupEvents, oldTransform, wrongTransform];`,
   );
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
@@ -187,7 +219,7 @@ void [slots, old, preview, imageEvents, groupEvents, oldTransform, wrongTransfor
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Image: exact native slots, current templates/style demos, typed Image/Group transform events and root TransformInfo export, old callback/wrong payload rejection and remaining preview renderer type; no source aliases/test declarations',
+    'PASS published Image: exact thumbnail/preview slot scopes and typed actions, actual preview demo/templates, typed transform events, old renderer/callback and wrong payload rejection; no source aliases/test declarations',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

@@ -13,3 +13,5 @@
 - Chrome150.0.7871.125生产transform脚本首次通过，零Vue/console/page错误；数组/once/当前替换、移除恢复、原img与缩略图身份、实际transform、拒绝650ms（覆盖500ms离场deadline）、接受后复位与真实Demo均验证。既有完整focus脚本也通过，包括两种多层卸载，日志 `/tmp/apollo-image-transform-{browser,focus-browser}.log`。
 - 文档84路由构建通过，数量哨兵更新后14文件157条测试、typecheck和content:check通过；日志 `/tmp/apollo-image-transform-docs.log`（含初始数量失败）及 `/tmp/apollo-image-transform-docs-final.log`（复验通过）。Registry19项及内容清单生成/check通过，513行分类与裁决数不变；日志 `/tmp/apollo-image-transform-metadata.log`。
 - Biome与git diff检查通过。`node tests/visual/apollo.mjs --check --component image`仍exit1：缺9张Apollo批准基线，见 `/tmp/apollo-image-transform-visual.log`，没有计为视觉通过。其余7条预览renderer及其他配置仍开放，不升级历史验收维度。
+
+后续七条renderer已另迁原生预览槽，见 [后续报告](2026-10-25-image-preview-slots-remediation.md)；上面的门禁保留变换事件提交时的范围。

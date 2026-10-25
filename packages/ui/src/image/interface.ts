@@ -79,8 +79,6 @@ export interface PreviewConfig {
   rootClassName?: string;
   /** ⚠️ deprecated：用 `classNames.cover`。 */
   maskClassName?: string;
-  /** ⚠️ deprecated：用 `actionsRender`。 */
-  toolbarRender?: ActionsRender;
   /** ⚠️ 已移除（antd 不再支持）：预览始终在展示后渲染。 */
   forceRender?: boolean;
   /** ⚠️ 已移除：同上。 */
@@ -92,23 +90,7 @@ export interface PreviewConfig {
   zIndex?: number;
   getContainer?: () => HTMLElement;
   icons?: PreviewIcons;
-  imageRender?: (info: { originNode: VNodeChild; src: string }) => VNodeChild;
-  actionsRender?: ActionsRender;
-  countRender?: (current: number, total: number) => VNodeChild;
 }
-
-export type ActionsRender = (
-  originNode: VNodeChild,
-  info: {
-    icons: PreviewIcons;
-    actions: Record<string, unknown>;
-    transform: TransformInfo;
-    current: number;
-    total: number;
-    image: { src: string; width?: number | string; height?: number | string; alt?: string };
-    onAction: (action: unknown) => void;
-  },
-) => VNodeChild;
 
 /** rc 的 transform（useImageTransform）。 */
 export interface TransformInfo {
@@ -193,6 +175,58 @@ export interface ImageProps extends ImageCommonProps {
 
 export interface ImageSlots {
   imageRender?: (info: ImageRenderInfo) => VNodeChild;
+  previewImage?: (info: PreviewImageInfo) => VNodeChild;
+  previewActions?: (info: PreviewActionsInfo) => VNodeChild;
+}
+
+export interface PreviewImageData {
+  /** 当前预览img的原始src属性，包含fallback；未提供时为undefined。 */
+  src?: string;
+  alt?: string;
+}
+
+export interface PreviewImageInfo extends PreviewImageData {
+  originNode: VNode;
+  transform: TransformInfo;
+  /** 当前图片的零基索引，与Group current模型相同。 */
+  current: number;
+  total: number;
+}
+
+export interface PreviewActions {
+  flipX(): void;
+  flipY(): void;
+  rotateLeft(): void;
+  rotateRight(): void;
+  zoomIn(): void;
+  zoomOut(): void;
+  reset(): void;
+  close(): void;
+}
+
+export interface PreviewActionsInfo {
+  originNode: VNode;
+  icons: Readonly<Required<PreviewIcons>>;
+  actions: Readonly<PreviewActions>;
+  transform: TransformInfo;
+  current: number;
+  total: number;
+  image: PreviewImageData;
+  disabled: { zoomIn: boolean; zoomOut: boolean };
+}
+
+export interface PreviewCountInfo {
+  originNode: VNode;
+  /** 零基索引，显示序号时加1。 */
+  current: number;
+  total: number;
+}
+
+export interface PreviewGroupSlots {
+  default?: () => VNodeChild;
+  previewImage?: (info: PreviewImageInfo) => VNodeChild;
+  previewActions?: (info: PreviewActionsInfo) => VNodeChild;
+  previewCount?: (info: PreviewCountInfo) => VNodeChild;
 }
 
 export interface ImageRenderInfo {

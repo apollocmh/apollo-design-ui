@@ -5,7 +5,7 @@
  * 组内只挂**一个** Preview（portal），切换 `current` 时更新 src 与 mousePosition；
  * `items` 优先，其次用注册收集到的 Image。
  */
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import { computed, defineComponent, h, type PropType, ref, type SlotsType, watch } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import {
@@ -18,7 +18,11 @@ import type {
   GroupPreviewConfig,
   ImageCommonProps,
   ImageSemanticType,
+  PreviewActionsInfo,
+  PreviewCountInfo,
   PreviewGroupProps,
+  PreviewGroupSlots,
+  PreviewImageInfo,
   TransformInfo,
 } from './interface';
 import Preview from './Preview';
@@ -40,6 +44,7 @@ const COMMON_KEYS: Array<keyof ImageCommonProps> = [
 
 const PreviewGroup = defineComponent({
   name: 'AImagePreviewGroup',
+  slots: Object as SlotsType<PreviewGroupSlots>,
   emits: {
     change: (_current: number, _prevCurrent: number) => true,
     'update:current': (_current: number) => true,
@@ -173,7 +178,7 @@ const PreviewGroup = defineComponent({
     });
 
     return () => {
-      const children = slots.default?.() as VNodeChild;
+      const children = slots.default?.();
       if (!previewConfig.value) {
         return h(
           'div',
@@ -187,37 +192,51 @@ const PreviewGroup = defineComponent({
         { class: `${prefixCls.value}-preview-group` },
         [
           children,
-          h(Preview, {
-            prefixCls: previewPrefixCls.value,
-            src: currentItem.value?.data.src,
-            alt: currentItem.value?.data.alt,
-            imageInfo: {
-              width: (currentItem.value?.data as Record<string, unknown> | undefined)
-                ?.width as never,
-              height: (currentItem.value?.data as Record<string, unknown> | undefined)
-                ?.height as never,
+          h(
+            Preview,
+            {
+              prefixCls: previewPrefixCls.value,
+              src: currentItem.value?.data.src,
+              alt: currentItem.value?.data.alt,
+              imageInfo: {
+                width: (currentItem.value?.data as Record<string, unknown> | undefined)
+                  ?.width as never,
+                height: (currentItem.value?.data as Record<string, unknown> | undefined)
+                  ?.height as never,
+              },
+              imgCommonProps: currentItem.value?.data,
+              open: isPreviewOpen.value,
+              inGroup: true,
+              current: current.value,
+              count: mergedItems.value.length,
+              movable: previewConfig.value.movable,
+              maskClosable: previewConfig.value.maskClosable,
+              minScale: previewConfig.value.minScale,
+              maxScale: previewConfig.value.maxScale,
+              scaleStep: previewConfig.value.scaleStep,
+              zIndex: previewConfig.value.zIndex,
+              mousePosition: mousePosition.value,
+              icons: icons.value,
+              rootClassName: previewConfig.value.rootClassName,
+              classNames: popupClassNames.value,
+              styles: props.styles?.popup,
+              onClose: () => setOpen(false),
+              afterOpenChange: previewConfig.value.afterOpenChange,
+              onTransform: (info: TransformInfo) => emit('transform', info),
+              onActive: (offset: number) => setCurrent(current.value + offset, current.value),
             },
-            imgCommonProps: currentItem.value?.data,
-            open: isPreviewOpen.value,
-            inGroup: true,
-            current: current.value,
-            count: mergedItems.value.length,
-            movable: previewConfig.value.movable,
-            maskClosable: previewConfig.value.maskClosable,
-            minScale: previewConfig.value.minScale,
-            maxScale: previewConfig.value.maxScale,
-            scaleStep: previewConfig.value.scaleStep,
-            zIndex: previewConfig.value.zIndex,
-            mousePosition: mousePosition.value,
-            icons: icons.value,
-            rootClassName: previewConfig.value.rootClassName,
-            classNames: popupClassNames.value,
-            styles: props.styles?.popup,
-            onClose: () => setOpen(false),
-            afterOpenChange: previewConfig.value.afterOpenChange,
-            onTransform: (info: TransformInfo) => emit('transform', info),
-            onActive: (offset: number) => setCurrent(current.value + offset, current.value),
-          }),
+            {
+              ...(slots.previewImage
+                ? { previewImage: (info: PreviewImageInfo) => slots.previewImage?.(info) }
+                : {}),
+              ...(slots.previewActions
+                ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
+                : {}),
+              ...(slots.previewCount
+                ? { previewCount: (info: PreviewCountInfo) => slots.previewCount?.(info) }
+                : {}),
+            },
+          ),
         ].filter((c) => c !== null && c !== undefined),
       );
     };

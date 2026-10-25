@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 513,
+    "rows": 518,
     "byCategory": {
-      "data": 127,
+      "data": 126,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 100,
+      "internal": 106,
       "render-function-candidate": 67,
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 139,
+      "keep-data": 138,
       "review": 202,
-      "skip": 153,
+      "skip": 159,
       "implemented-verified": 19
     }
   },
@@ -5257,7 +5257,7 @@
       "owner": "ImageProps",
       "prop": "placeholder",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/image/interface.ts:177",
+      "source": "packages/ui/src/image/interface.ts:159",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5279,6 +5279,7 @@
           "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5290,7 +5291,7 @@
       "owner": "ImageRenderInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:199",
+      "source": "packages/ui/src/image/interface.ts:233",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5315,7 +5316,7 @@
       "owner": "ImageSlots",
       "prop": "imageRender",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:195",
+      "source": "packages/ui/src/image/interface.ts:177",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5338,10 +5339,12 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
           "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
         ]
       },
@@ -5350,10 +5353,82 @@
     },
     {
       "component": "image",
-      "owner": "PreviewConfig",
-      "prop": "actionsRender",
+      "owner": "ImageSlots",
+      "prop": "previewActions",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:179",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "ImageSlots",
+      "prop": "previewImage",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:178",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewActionsInfo",
+      "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:96",
+      "source": "packages/ui/src/image/interface.ts:208",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5379,31 +5454,6 @@
       "prop": "closeIcon",
       "category": "data",
       "source": "packages/ui/src/image/interface.ts:77",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "PreviewConfig",
-      "prop": "countRender",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:97",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5455,44 +5505,6 @@
     {
       "component": "image",
       "owner": "PreviewConfig",
-      "prop": "imageRender",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:95",
-      "slotRuntime": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/Image.ts"
-        ]
-      },
-      "slotType": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/interface.ts"
-        ]
-      },
-      "slotDemo": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/demo/image-render.vue",
-          "packages/ui/src/image/demo/style-class.vue"
-        ]
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
-          "packages/ui/src/image/__tests__/image-slot.test.ts",
-          "packages/ui/src/image/__tests__/native-events.test.ts",
-          "packages/ui/src/image/__tests__/native-style.test.ts",
-          "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "PreviewConfig",
       "prop": "mask",
       "category": "data",
       "source": "packages/ui/src/image/interface.ts:74",
@@ -5520,10 +5532,10 @@
     },
     {
       "component": "image",
-      "owner": "PreviewConfig",
-      "prop": "toolbarRender",
+      "owner": "PreviewCountInfo",
+      "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:83",
+      "source": "packages/ui/src/image/interface.ts:219",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5542,6 +5554,152 @@
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewGroupSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:226",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
+          "packages/ui/src/image/__tests__/preview-focus.test.ts",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts",
+          "packages/ui/src/image/__tests__/preview-state.test.ts",
+          "packages/ui/src/image/__tests__/preview-transform.test.ts",
+          "packages/ui/src/image/__tests__/provider-reactivity.test.ts",
+          "packages/ui/src/image/__tests__/registration-order.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewGroupSlots",
+      "prop": "previewActions",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:228",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewGroupSlots",
+      "prop": "previewCount",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:229",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewGroupSlots",
+      "prop": "previewImage",
+      "category": "internal",
+      "source": "packages/ui/src/image/interface.ts:227",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/Image.ts",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/PreviewGroup.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/preview-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "image",
@@ -5759,6 +5917,31 @@
       "prop": "zoomOut",
       "category": "data",
       "source": "packages/ui/src/image/interface.ts:60",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "keep-data",
+      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "image",
+      "owner": "PreviewImageInfo",
+      "prop": "originNode",
+      "category": "data",
+      "source": "packages/ui/src/image/interface.ts:189",
       "slotRuntime": {
         "status": "not-run",
         "files": []
