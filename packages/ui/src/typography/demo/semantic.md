@@ -5,39 +5,29 @@ title:
   en-US: Semantic classNames / styles
 ---
 
-四个语义槽位：`root`（根元素）、`actions`（操作区 `span`）、`action`（每个操作按钮）、
-`textarea`（**仅编辑态**的输入框）。
+## zh-CN
 
-`classNames` 是**拼接**，`styles` 是**覆盖**（后者与 `style` prop 的优先级见
-`README.md` 的 API 表）。函数式形态收到 `{ props }`，其中的 `prefixCls` / `direction`
-是**解析后**的值。
+四个语义槽位：`root`（根元素）、`actions`（操作区）、`action`（每个操作按钮）、`textarea`（仅编辑态的输入框）。`classNames` 拼接类名，`styles` 合并同名区域的样式。函数式配置收到 `{ props }`，其中 `prefixCls` / `direction` 是解析后的值。
+
+保留对象式、函数式和操作区示例，最后演示 Vue 原生 `class` / `style`：动态字符串 → 混合数组 → 对象 → 移除。原生 style 优先于 `styles.root`；移除后恢复语义根样式。输入草稿和焦点随样式切换保留。
 
 ```vue
 <script setup lang="ts">
-import type { TypographyProps } from '@apollo-design/ui';
-import { Paragraph, Text } from '@apollo-design/ui';
+import { ref, type StyleValue } from 'vue';
+import { Text } from '@apollo-design/ui';
 
-const classNamesObject: TypographyProps['classNames'] = {
-  root: 'demo-typography-root',
-  actions: 'demo-typography-actions',
-  action: 'demo-typography-action',
-};
-
-const stylesObject: TypographyProps['styles'] = {
-  root: { backgroundColor: '#fafafa' },
-  actions: { marginInlineStart: '8px' },
-};
-
-const classNamesFn: TypographyProps['classNames'] = (info) =>
-  info.props.disabled ? { root: 'demo-typography-root--disabled' } : { root: 'demo-typography-root' };
+const nativeStyle = ref<StyleValue>('color:var(--apollo-color-primary)');
 </script>
 
 <template>
-  <Paragraph :class-names="classNamesObject" :styles="stylesObject" :copyable="true">
-    Object form: classNames / styles
-  </Paragraph>
-  <Paragraph :class-names="classNamesFn">Function form: classNames</Paragraph>
-  <Paragraph :class-names="classNamesFn" disabled>Function form, disabled</Paragraph>
-  <Text :class-names="classNamesObject" :styles="stylesObject" :copyable="true" />
+  <Text :style="nativeStyle" :styles="{ root: { color: 'var(--apollo-color-text-secondary)' } }">
+    Native style overrides the semantic root; undefined restores it.
+  </Text>
 </template>
 ```
+
+## en-US
+
+The four semantic regions are `root`, `actions`, `action` and the editing-only `textarea`. `classNames` joins classes, while `styles` merges styles for the same region. Function configs receive `{ props }` with the resolved `prefixCls` and `direction`.
+
+The object, function and action examples are preserved. The final example cycles native Vue `class` / `style` through a dynamic string, mixed array, object and removal. Native style overrides `styles.root`; removing it restores the semantic root. Style updates preserve the input's draft and focus.

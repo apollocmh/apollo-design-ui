@@ -235,3 +235,6 @@ gap, registered in [`README.md`](./README.md) §7.3.
 ### Default slot and editor name
 
 The default slot supports conditional presence, replacement and removal and follows the current parent render. Plain-text copy fallbacks, edit defaults and ellipsis content use the current body. Stable rich nodes preserve input values and focus within the same display mode. Native `aria-label` reaches the editing textarea; updating or removing the name preserves the draft. Without explicit edit text, only a plain-text body supplies the edit default.
+
+
+Native `class` and `style` apply to the actual outer root, including edit mode. Style supports dynamic strings, objects and mixed arrays, overrides matching `styles.root` values and restores semantic root styles when removed. Editing textarea styles use `styles.textarea`. Style updates preserve drafts and focus in stable input nodes.

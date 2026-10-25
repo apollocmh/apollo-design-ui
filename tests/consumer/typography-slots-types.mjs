@@ -27,6 +27,18 @@ try {
     path.join(temp, 'TypographySlots.vue'),
     fixture.replace('../../../packages/ui/src/typography/demo/editable.vue', './EditableDemo.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/typography/demo/semantic.vue'),
+    path.join(temp, 'SemanticDemo.vue'),
+  );
+  const styles = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/TypographyStyles.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'TypographyStyles.vue'),
+    styles.replace('../../../packages/ui/src/typography/demo/semantic.vue', './SemanticDemo.vue'),
+  );
   fs.writeFileSync(
     path.join(temp, 'Refs.vue'),
     `<script setup lang="ts">
@@ -74,7 +86,7 @@ const show = ref(true);
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Typography: five entry templates, conditional default slots, current copy/edit/ellipsis bindings and nativeElement refs; no source aliases or test declarations shipped',
+    'PASS published Typography: five entry templates, conditional slots, current copy/edit/ellipsis, native StyleValue bindings and nativeElement refs; no source aliases or test declarations shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

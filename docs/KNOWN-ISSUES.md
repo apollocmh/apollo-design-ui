@@ -251,6 +251,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Typography默认内容增量**：真实入口14条修前12失败/2已有通过，确认四个子组件缓存旧默认槽及CSS省略路径渲染外求槽。公开render→私有数据组件修正当前值、复制/编辑与量测边界；另有编辑名称漏传独立复现并修正，最终15条局部通过。容器与直接ref槽原已正常；范围和检查见 [报告](audit/2026-10-25-typography-native-content-remediation.md)。其余配置/富内容扩展继续复审。
 
+**2026-10-25 Typography样式线索验证（VERIFY）**：21条真实公开入口CSR/SSR、编辑及样式移除回退在原实现全部通过，生产Chrome也验证五入口/编辑/富内容与实际Demo。SFC v-bind的Vue mergeProps已在对象展开前归一style，静态字符串风险在该公开路径被证伪；本批保留实现、补回归和示例，并修正semantic Demo残留root-class-name为原生class，见 [验证报告](audit/2026-10-25-typography-style-verification.md)。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

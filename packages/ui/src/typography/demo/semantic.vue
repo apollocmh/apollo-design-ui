@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TypographyProps } from '../../index';
-import { Paragraph, Text } from '../../index';
+import { Paragraph, Text, type TypographyProps } from '@apollo-design/ui';
+import { computed, ref, type StyleValue } from 'vue';
 
 /** 对象式：直接给槽位类名 / 样式。 */
 const classNamesObject: TypographyProps['classNames'] = {
@@ -27,6 +27,18 @@ const classNamesFn: TypographyProps['classNames'] = (info) =>
   info.props.prefixCls === 'apollo-typography-alt'
     ? { root: 'demo-typography-root--alt' }
     : { root: 'demo-typography-root' };
+
+const phase = ref(0);
+const nativeClass = computed(() => phase.value < 3 ? ['native-demo-root', `native-demo-phase-${phase.value}`] : undefined);
+const nativeStyle = computed<StyleValue>(() => {
+  if (phase.value === 0) return 'color:var(--apollo-color-primary);padding-inline-start:var(--apollo-padding-xs);--native-demo-phase:string';
+  if (phase.value === 1) return ['color:var(--apollo-color-success);--native-demo-phase:array', { paddingInlineStart: 'var(--apollo-padding-sm)', paddingInlineEnd: 'var(--apollo-padding-xs)' }];
+  if (phase.value === 2) return { color: 'var(--apollo-color-warning)', paddingInlineStart: 'var(--apollo-padding-md)', '--native-demo-phase': 'object' };
+  return undefined;
+});
+const nativeSemanticStyles: TypographyProps['styles'] = {
+  root: { color: 'var(--apollo-color-text-secondary)', paddingInlineStart: 'var(--apollo-padding-xxs)', '--semantic-demo-root': 'kept' },
+};
 </script>
 
 <template>
@@ -34,6 +46,14 @@ const classNamesFn: TypographyProps['classNames'] = (info) =>
     Object form: classNames / styles
   </Paragraph>
   <Paragraph :class-names="classNamesFn">Function form: classNames</Paragraph>
-  <Paragraph :class-names="classNamesFn" root-class-name="demo-alt">Function form, alt</Paragraph>
+  <Paragraph :class-names="classNamesFn" class="demo-alt">Function form, alt</Paragraph>
   <Text :class-names="classNamesObject" :styles="stylesObject" :copyable="true" />
+  <section data-native-typography-style-demo>
+    <p><button type="button" @mousedown.prevent @click="phase = (phase + 1) % 4">Cycle native typography styles</button></p>
+    <Text data-demo-native-style :class="nativeClass" :style="nativeStyle"
+      :class-names="{ root: 'semantic-demo-root' }" :styles="nativeSemanticStyles">
+      Native style: {{ ['string', 'array', 'object', 'removed'][phase] }}
+      <input aria-label="Semantic typography draft" />
+    </Text>
+  </section>
 </template>
