@@ -16,7 +16,9 @@ export default function isVisible(element: Element | null | undefined): boolean 
     return false;
   }
 
-  if (typeof Element !== 'undefined' && element instanceof Element) {
+  // Elements can belong to another window, or be adopted by Teleport. Their
+  // constructor identity need not match the calling window's Element.
+  if (element.nodeType === 1) {
     if ((element as HTMLElement).offsetParent) {
       return true;
     }

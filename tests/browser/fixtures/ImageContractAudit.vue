@@ -55,14 +55,23 @@ const broken = '/audit-broken-source.png';
 const useFallback = scenario.includes('fallback');
 const imageSource = useFallback ? broken : source;
 const alt = scenario === 'no-alt' ? undefined : 'Contract audit first';
+// Keep the resolver identity stable: the Portal must track its reactive result.
+const crossDocumentContainer = () =>
+  revision.value % 3 === 0
+    ? (frame.value?.contentDocument?.body ?? document.body)
+    : revision.value % 3 === 1
+      ? (container.value ?? document.body)
+      : document.body;
 const preview = computed<PreviewConfig>(() => {
   if (scenario === 'mask')
     return {
       mask: { blur: true, className: 'audit-mask-object', style: { borderTopWidth: '7px' } },
     };
-  if (scenario === 'container') return { getContainer: () => container.value ?? document.body };
-  if (scenario === 'cross-document')
-    return { getContainer: () => frame.value?.contentDocument?.body ?? document.body };
+  if (scenario === 'container')
+    return revision.value % 2
+      ? { getContainer: () => document.body }
+      : { getContainer: () => container.value ?? document.body };
+  if (scenario === 'cross-document') return { getContainer: crossDocumentContainer };
   if (scenario === 'step') return { scaleStep: revision.value ? 0.25 : 0.5 };
   return {};
 });
@@ -92,8 +101,11 @@ const errors = ref(0);
         <ImagePreviewGroup v-if="group" :preview="preview" :class-names="scenario === 'semantics' ? { root: 'audit-group-root' } : undefined" :styles="scenario === 'semantics' ? { root: { borderTopWidth: '9px' } } : undefined" @transform="transformed = $event" @open-change="opened++">
           <Image :src="imageSource" :fallback="useFallback ? source : undefined" :src-set="scenario === 'srcset-fallback' ? '/audit-broken-candidate.png 1x' : undefined" :alt="alt" :width="180" :height="105" data-image-audit-trigger @error="errors++" />
           <Image :src="source" alt="Contract audit second" :width="180" :height="105" />
+          <template v-if="scenario === 'cross-document' || scenario === 'container'" #previewImage="info"><figure class="image-audit-editor"><component :is="info.originNode" /><input aria-label="Cross document note" /></figure></template>
         </ImagePreviewGroup>
-        <Image v-else :src="imageSource" :fallback="useFallback ? source : undefined" :src-set="scenario === 'srcset-fallback' ? '/audit-broken-candidate.png 1x' : undefined" :alt="alt" :width="180" :height="105" :preview="preview" data-image-audit-trigger @transform="transformed = $event" @open-change="opened++" @error="errors++" />
+        <Image v-else :src="imageSource" :fallback="useFallback ? source : undefined" :src-set="scenario === 'srcset-fallback' ? '/audit-broken-candidate.png 1x' : undefined" :alt="alt" :width="180" :height="105" :preview="preview" data-image-audit-trigger @transform="transformed = $event" @open-change="opened++" @error="errors++">
+          <template v-if="scenario === 'cross-document' || scenario === 'container'" #previewImage="info"><figure class="image-audit-editor"><component :is="info.originNode" /><input aria-label="Cross document note" /></figure></template>
+        </Image>
       </section>
     </ConfigProvider>
     <output data-image-audit-state hidden>{{ JSON.stringify({ scenario, group, revision, transformed, opened, errors }) }}</output>
@@ -103,4 +115,6 @@ const errors = ref(0);
 <style>
 .image-audit-controls { position: fixed; z-index: 3000; top: 0; left: 0; background: var(--apollo-color-bg-container); }
 [data-image-audit-fixture] { padding-top: 70px; }
+.image-audit-editor { display: flex; flex-direction: column; align-items: center; margin: 0; }
+.image-audit-editor input { color: var(--apollo-color-text); background: var(--apollo-color-bg-container); }
 </style>

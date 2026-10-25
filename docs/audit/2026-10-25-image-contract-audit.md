@@ -184,3 +184,22 @@ GroupPreviewConfig 当前是 PreviewConfig 的完整别名。Image 专属字段�
 | 上游DOM参考差异 | 保留全部9个用例，5个缺省alt场景精确断言新增通用aria-label。依据COMPATIBILITY.md的image-optional-alt-accessible-name，未改参考快照或忽略全部ARIA |
 
 尚未统一验收：共享主题及全部7个组件Token、跨文档焦点、模态滚动锁、富缩略图内交互控件、完整SSR水合/快速重开/多实例组合与最终视觉。滚动锁及富内容交互是本单元新增核实项，先建立复现再修复，不归入无关新能力。其余组件与基础包独立范围、触摸双指等未声明新能力另案。
+
+### 共享焦点与容器结果（2026-10-26）
+
+资源/预览契约组对应提交 `0bee259d`，已推送。此后按同一清单整改实际调用的utils焦点与Portal容器链路；整个Image仍未统一验收。
+
+- 初始所属文档专项5条中3失败/2已有通过；静态生产浏览器3个焦点失败消除后，继续按原验收范围检查当前容器、同节点搬迁和作用域结束。稳定resolver只在React式更新后读取导致浏览器超时；同文档搬迁丢编辑焦点在Image/Group各复现1例；原生iframe末尾Tab离开文档、已停止作用域的重试重新挂锁均有失败证据。
+- 实现按ownerDocument管理锁栈、活动焦点、所属窗口监听器；每个活动文档一个原生MutationObserver跟踪真实DOM搬迁，保留编辑焦点并迁移锁，最后释放即清理；无Tab子项回到可编程聚焦容器。Tab在冒泡阶段同步循环，保留子控件preventDefault优先。作用域结束取消后续重试和忽略节点引用。isVisible支持所属其他窗口的真实Element。
+- Portal补watch读取resolver响应式结果，保持稳定函数及已有Teleport节点，不要求父级通过无关字段重渲染；现有挂载/更新后的DOM引用解析仍保留。没有新增公共API或兼容分支。
+
+| 本组验收命令/证据 | 实际结果 |
+|---|---|
+| `vitest run --project unit --project dom-contract --project a11y packages/utils/src packages/a11y/src packages/portal/src packages/ui/src/modal packages/ui/src/drawer packages/ui/src/image --maxWorkers=2` | 最终69文件/1348条通过，含新增10条文档归属/生命周期专项及稳定resolver回归；`/tmp/apollo-focus-final-runtime.log` |
+| `vue-tsc --noEmit -p tsconfig.json`；显式修改文件Biome | 全部退出0；`/tmp/apollo-focus-final-strict.log`、`/tmp/apollo-focus-format-final.log`。Portal新用例直接使用声明支持的函数返回值，内联false通过prop切换，没有强制断言或扩大接口 |
+| utils/portal真实build；各自L7 `--no-build` | 全部退出0；各11检查/0FAIL/0PENDING，5项有说明的n/a；未改变产物分层或发布依赖 |
+| 完整生产浏览器盘点 | 21场景19通过/2主题失败，命令仍退出1；`/tmp/apollo-focus-final-browser.log`。两入口稳定/替换resolver、iframe→本地→body→iframe，均保留同一编辑器、值、选择区及焦点；所属文档外焦点被约束。独立基础包真实外文档input及原生Tab循环通过，零Vue/控制台/页面错误 |
+| `node tests/browser/image-preview-focus.mjs` | 退出0；原有Image/Group受控拒绝、键盘/鼠标关闭、Tab/ShiftTab、整树卸载、堆叠和父先卸载归还全部保留；`/tmp/apollo-focus-original-browser.log` |
+| `node tests/browser/drawer-slots.mjs` | 退出0；实际Drawer富内容/输入/ARIA保留、零Vue/页面错误；`/tmp/apollo-focus-drawer-browser.log` |
+
+基础包已核对实际消费者为Image、Modal、Drawer和a11y再导出；本组不宣称其他基础包能力全量通过。共享主题/全部组件Token、模态滚动锁、富缩略图交互、完整水合与最终视觉仍继续本单元处理。

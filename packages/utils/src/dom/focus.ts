@@ -3,17 +3,17 @@
  *
  * 契约来源：`@rc-component/util/Dom/focus`。
  *
- * ⚠️ 模块级单例状态：`lockFocus` 用四个模块级变量协调「多层锁定」。
- *    这是 rc-util 的真实设计（后锁者生效），不是可以"优化"成 per-instance 的东西 ——
- *    因为它的目的是让**后打开的浮层**接管 Tab 循环，前一个浮层的监听仍然存在但不生效。
+ * 每个所属文档独立协调多层锁定：同文档后锁者生效，跨文档不争抢状态或监听。
  */
 
 import {
   getCurrentInstance,
   type MaybeRefOrGetter,
   nextTick,
+  onBeforeUpdate,
   onMounted,
   onScopeDispose,
+  onUpdated,
   toValue,
   watch,
 } from 'vue';
@@ -95,110 +95,177 @@ export function triggerFocus(element?: HTMLElement | null, option?: InputFocusOp
 // 焦点锁定
 // ===========================================================================
 
-/** 上一次被观察到的活动元素。Tab 循环用它决定"跳到队首还是队尾"。 */
-let lastFocusElement: Element | null = null;
-/** 锁定栈：末尾的元素生效。 */
-let focusElements: HTMLElement[] = [];
-/** 稳定 id → 锁定元素。 */
-const idToElementMap = new Map<string, HTMLElement>();
-/** 稳定 id → 允许逃逸的元素（如浮层内弹出的第二个浮层）。 */
+interface FocusEntry {
+  id: string;
+  element: HTMLElement;
+  state: FocusDocumentState;
+  parent: Node | null;
+}
+interface FocusDocumentState {
+  doc: Document;
+  view: NonNullable<Document['defaultView']>;
+  entries: FocusEntry[];
+  lastFocusElement: Element | null;
+  sync: () => void;
+  keydown: (event: KeyboardEvent) => void;
+  observer: MutationObserver;
+}
+
+const documentStates = new WeakMap<Document, FocusDocumentState>();
+// Only active locks retain their document until the final release/reset.
+const activeStates = new Set<FocusDocumentState>();
 const ignoredElementMap = new Map<string, HTMLElement>();
 
-function getLastElement(): HTMLElement | undefined {
-  return focusElements[focusElements.length - 1];
+function isIgnoredElement(state: FocusDocumentState, element: Element | null): boolean {
+  const entry = state.entries.at(-1);
+  const ignored = entry && ignoredElementMap.get(entry.id);
+  return !!element && !!ignored && (ignored === element || ignored.contains(element));
 }
 
-function isIgnoredElement(element: Element | null): boolean {
-  const lastElement = getLastElement();
-  if (!element || !lastElement) {
-    return false;
-  }
-  let lockId: string | undefined;
-  for (const [id, ele] of idToElementMap.entries()) {
-    if (ele === lastElement) {
-      lockId = id;
-      break;
-    }
-  }
-  const ignoredEle = lockId === undefined ? undefined : ignoredElementMap.get(lockId);
-  return !!ignoredEle && (ignoredEle === element || ignoredEle.contains(element));
-}
-
-function hasFocus(element: HTMLElement): boolean {
-  const { activeElement } = document;
-  return element === activeElement || element.contains(activeElement);
-}
-
-/** `focusin` 处理：焦点逃出锁定区域就拉回来。 */
-function syncFocus(): void {
-  const lastElement = getLastElement();
-  const { activeElement } = document;
-
-  if (isIgnoredElement(activeElement)) {
+function syncFocus(state: FocusDocumentState): void {
+  const entry = state.entries.at(-1);
+  const active = state.doc.activeElement;
+  if (!entry || isIgnoredElement(state, active)) return;
+  if (entry.element === active || entry.element.contains(active)) {
+    state.lastFocusElement = active;
     return;
   }
+  const nodes = getFocusNodeList(entry.element);
+  const target = nodes.find((node) => node === state.lastFocusElement) ?? nodes[0] ?? entry.element;
+  target.focus({ preventScroll: true });
+}
 
-  if (lastElement && !hasFocus(lastElement)) {
-    const focusableList = getFocusNodeList(lastElement);
-    // 优先回到"上次待过的"那个元素，否则回到队首
-    const matchElement = focusableList.includes(lastFocusElement as HTMLElement)
-      ? (lastFocusElement as HTMLElement)
-      : focusableList[0];
-    matchElement?.focus({ preventScroll: true });
-  } else {
-    lastFocusElement = activeElement;
+function onWindowKeyDown(state: FocusDocumentState, event: KeyboardEvent): void {
+  if (event.key !== 'Tab' || event.defaultPrevented) return;
+  const entry = state.entries.at(-1);
+  if (!entry || isIgnoredElement(state, state.doc.activeElement)) return;
+  const nodes = getFocusNodeList(entry.element);
+  const first = nodes[0];
+  const last = nodes.at(-1);
+  const target = !nodes.length
+    ? entry.element
+    : event.shiftKey && state.doc.activeElement === first
+      ? last
+      : !event.shiftKey && state.doc.activeElement === last
+        ? first
+        : undefined;
+  if (target) {
+    event.preventDefault();
+    state.lastFocusElement = target;
+    target.focus({ preventScroll: true });
   }
 }
 
-/** `keydown` 处理（capture）：在锁定区域的边界处循环 Tab。 */
-function onWindowKeyDown(e: KeyboardEvent): void {
-  if (e.key !== 'Tab') return;
+function getDocumentState(
+  doc: Document,
+  view: NonNullable<Document['defaultView']>,
+): FocusDocumentState {
+  let state = documentStates.get(doc);
+  if (!state) {
+    const created: FocusDocumentState = {
+      doc,
+      view,
+      entries: [],
+      lastFocusElement: null,
+      sync: () => syncFocus(created),
+      keydown: (event) => onWindowKeyDown(created, event),
+      observer: new view.MutationObserver((records) => {
+        const remembered = created.lastFocusElement;
+        for (const entry of [...created.entries]) {
+          const nextDocument = entry.element.ownerDocument;
+          const nextView = nextDocument.defaultView;
+          const moved =
+            entry.parent !== entry.element.parentNode ||
+            records.some((record) =>
+              [...record.removedNodes].some(
+                (node) => node === entry.element || node.contains(entry.element),
+              ),
+            );
+          entry.parent = entry.element.parentNode;
+          if (nextDocument === created.doc) {
+            if (
+              moved &&
+              entry.element.isConnected &&
+              created.entries.at(-1) === entry &&
+              created.doc.activeElement === created.doc.body
+            )
+              syncFocus(created);
+            continue;
+          }
+          if (!nextView) continue;
+          removeEntry(entry);
+          const next = getDocumentState(nextDocument, nextView);
+          entry.state = next;
+          addEntry(entry);
+          if (remembered && entry.element.contains(remembered)) {
+            next.lastFocusElement = remembered;
+            if (
+              next.doc.activeElement === next.doc.body ||
+              next.doc.activeElement === entry.element
+            ) {
+              getFocusNodeList(entry.element, true)
+                .find((node) => node === remembered)
+                ?.focus({ preventScroll: true });
+            }
+          }
+          syncFocus(next);
+        }
+      }),
+    };
+    state = created;
+    documentStates.set(doc, state);
+  }
+  return state;
+}
 
-  const { activeElement } = document;
-  const lastElement = getLastElement();
-  if (!lastElement) return;
+function detach(state: FocusDocumentState): void {
+  state.observer.disconnect();
+  state.view.removeEventListener('focusin', state.sync);
+  state.view.removeEventListener('keydown', state.keydown);
+  activeStates.delete(state);
+  if (documentStates.get(state.doc) === state) documentStates.delete(state.doc);
+}
 
-  const focusableList = getFocusNodeList(lastElement);
-  const last = focusableList[focusableList.length - 1];
+function removeEntry(entry: FocusEntry): void {
+  const state = entry.state;
+  state.entries = state.entries.filter((existing) => existing !== entry);
+  state.lastFocusElement = null;
+  if (!state.entries.length) detach(state);
+}
 
-  if (e.shiftKey && activeElement === focusableList[0]) {
-    // 队首反向 Tab → 跳到队尾
-    lastFocusElement = last ?? null;
-  } else if (!e.shiftKey && activeElement === last) {
-    // 队尾正向 Tab → 跳到队首
-    lastFocusElement = focusableList[0] ?? null;
+function addEntry(entry: FocusEntry): void {
+  const state = entry.state;
+  state.entries = state.entries.filter(
+    (existing) => existing.id !== entry.id && existing.element !== entry.element,
+  );
+  state.entries.push(entry);
+  if (!activeStates.has(state)) {
+    activeStates.add(state);
+    state.view.addEventListener('focusin', state.sync);
+    state.view.addEventListener('keydown', state.keydown);
+    // Teleport can adopt the same node without changing any Vue ref. One native
+    // observer per active document tracks ownership, including ancestor moves.
+    state.observer.observe(state.doc, { childList: true, subtree: true });
   }
 }
 
 /**
- * 把焦点锁定在 `element` 内。焦点离开时会被强制拉回。
- *
- * @param id 稳定 id（同一逻辑锁定多次调用时用同一个 id）
- * @returns 解除锁定的函数。**必须调用**，否则会残留全局监听。
+ * Lock focus in the element's own document. Later locks in that document take
+ * priority. Ownership follows native DOM adoption; the release always removes
+ * this registration from its current window, including after a Teleport move.
  */
 export function lockFocus(element: HTMLElement, id: string): () => void {
-  if (element) {
-    idToElementMap.set(id, element);
-
-    // 已在栈中则先移除再 push —— 保证"最后调用者生效"
-    focusElements = focusElements.filter((ele) => ele !== element);
-    focusElements.push(element);
-
-    // addEventListener 天然去重，重复添加同一个函数引用不会叠加
-    window.addEventListener('focusin', syncFocus);
-    window.addEventListener('keydown', onWindowKeyDown, true);
-    syncFocus();
-  }
+  const view = element.ownerDocument.defaultView;
+  if (!view) return () => {};
+  const state = getDocumentState(element.ownerDocument, view);
+  const entry: FocusEntry = { id, element, state, parent: element.parentNode };
+  addEntry(entry);
+  syncFocus(state);
 
   return () => {
-    lastFocusElement = null;
-    focusElements = focusElements.filter((ele) => ele !== element);
-    idToElementMap.delete(id);
+    if (!entry.state.entries.includes(entry)) return;
+    removeEntry(entry);
     ignoredElementMap.delete(id);
-    if (focusElements.length === 0) {
-      window.removeEventListener('focusin', syncFocus);
-      window.removeEventListener('keydown', onWindowKeyDown, true);
-    }
   };
 }
 
@@ -227,6 +294,7 @@ export function useLockFocus(
   const id = useId();
   let cleanup: (() => void) | undefined;
   let retried = false;
+  let disposed = false;
 
   const release = (): void => {
     cleanup?.();
@@ -234,6 +302,7 @@ export function useLockFocus(
   };
 
   const run = (): void => {
+    if (disposed) return;
     release();
     if (!toValue(lock)) return;
 
@@ -255,6 +324,30 @@ export function useLockFocus(
 
   // 首次在挂载后执行（此时 ref 已就绪）；非组件上下文则立即执行
   if (getCurrentInstance()) {
+    let focusedBeforeUpdate: HTMLElement | undefined;
+    onBeforeUpdate(() => {
+      const element = toValue(getElement);
+      focusedBeforeUpdate =
+        element && toValue(lock)
+          ? getFocusNodeList(element, true).find(
+              (node) => node === element.ownerDocument.activeElement,
+            )
+          : undefined;
+    });
+    onUpdated(() => {
+      const element = toValue(getElement);
+      const previous = focusedBeforeUpdate;
+      focusedBeforeUpdate = undefined;
+      if (
+        previous?.isConnected &&
+        element?.contains(previous) &&
+        toValue(lock) &&
+        (element.ownerDocument.activeElement === element.ownerDocument.body ||
+          element.ownerDocument.activeElement === element)
+      ) {
+        previous.focus({ preventScroll: true });
+      }
+    });
     onMounted(restart);
   } else {
     restart();
@@ -266,10 +359,14 @@ export function useLockFocus(
   watch(() => toValue(getElement), restart, { flush: 'post' });
 
   // ⚠️ 必须用 onScopeDispose 而不是 onUnmounted：composable 可能被用在 effectScope 里
-  onScopeDispose(release);
+  onScopeDispose(() => {
+    disposed = true;
+    release();
+    ignoredElementMap.delete(id);
+  });
 
   const ignoreElement = (ele: HTMLElement): void => {
-    if (ele) {
+    if (ele && !disposed) {
       // 每个锁定实例只能忽略一个元素，后写覆盖
       ignoredElementMap.set(id, ele);
     }
@@ -280,8 +377,10 @@ export function useLockFocus(
 
 /** 测试辅助：清空锁定状态。生产代码不应调用。 */
 export function resetFocusLock(): void {
-  lastFocusElement = null;
-  focusElements = [];
-  idToElementMap.clear();
+  for (const state of activeStates) {
+    state.entries = [];
+    state.lastFocusElement = null;
+    detach(state);
+  }
   ignoredElementMap.clear();
 }

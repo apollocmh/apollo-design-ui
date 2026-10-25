@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-25T09:40:23.500Z",
+  "generatedAt": "2026-10-25T20:16:47.279Z",
   "sourceFacts": "dependencies.json（包定义） + scaffold-packages.mjs（dir/phase2Order/deps/poc/notDo） + components.json（消费者） + packages/*/src（规模度量）",
   "legend": {
     "status": "todo → analyzing → implementing → testing → verifying → completed（blocked 为旁路状态）",
@@ -721,7 +721,7 @@
       "layerNotes": "无 DOM 产物、无视觉语义（R3）；焦点工具的正确性由 L1/L4 覆盖",
       "blockedBy": [],
       "blockers": [],
-      "notes": "本仓库第一个 completed 的 foundation 包。L7 由 tests/build/run.mjs 门禁覆盖（B1/B2/B3/B4/B9/B10 实测通过；B5/B7 n/a 因本包不产 CSS，B6/B8 n/a 因裁决 A 下单文件产物且不含组件）。\n2026-10-24 F10：保留 pickAttrs 原 className 数据输出，补 Vue 原生事件/后缀识别与 DOM 目标归一、监听器单次合并；本批验证见 docs/audit/2026-10-24-dom-attrs-remediation.md。历史 completed 不等同于新的全量验收。\n2026-10-24 F11 Breadcrumb依赖：ChildrenInput复用原生VNodeChild，接受嵌套void；修正声明比运行时窄的问题，无算法改变，类型正例/既有展平回归/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md。保留历史验证状态。",
+      "notes": "本仓库第一个 completed 的 foundation 包。L7 由 tests/build/run.mjs 门禁覆盖（B1/B2/B3/B4/B9/B10 实测通过；B5/B7 n/a 因本包不产 CSS，B6/B8 n/a 因裁决 A 下单文件产物且不含组件）。\n2026-10-24 F10：保留 pickAttrs 原 className 数据输出，补 Vue 原生事件/后缀识别与 DOM 目标归一、监听器单次合并；本批验证见 docs/audit/2026-10-24-dom-attrs-remediation.md。历史 completed 不等同于新的全量验收。\n2026-10-24 F11 Breadcrumb依赖：ChildrenInput复用原生VNodeChild，接受嵌套void；修正声明比运行时窄的问题，无算法改变，类型正例/既有展平回归/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md。保留历史验证状态。\n2026-10-26 Image整改单元共享链路：utils按ownerDocument管理焦点/原生Tab与DOM搬迁、作用域重试清理；Portal跟踪稳定resolver的响应式结果；a11y继续再导出同一实现。69文件1348运行/DOM/a11y回归、严格及实际Chrome焦点/搬迁/Drawer消费检查通过。生产完整盘点仍有2个Image主题失败，其他基础能力未据此重新验收；统一证据 docs/audit/2026-10-25-image-contract-audit.md。",
       "verification": {
         "verifiedAt": "2026-10-04",
         "unit": {
@@ -786,7 +786,7 @@
           "@apollo-design/virtual-list"
         ],
         "srcFiles": 44,
-        "srcLines": 4673,
+        "srcLines": 4774,
         "exportDeclarations": 147
       }
     },
@@ -1186,7 +1186,7 @@
       "layerNotes": "L4 判为 done：默认容器是本包唯一产出的 DOM 结构（裸 <div> + 可选 data-debug），\n其形状在 portal.test.ts 里钉住，否则 ui 层的 DOM 契约会漂移。\nL5 n/a：Portal 本身无 ARIA 语义，焦点陷阱与焦点恢复属 a11y。\nL6 n/a：z-index 的实际层叠效果要真实浏览器，jsdom 没有排版引擎。",
       "blockedBy": [],
       "blockers": [],
-      "notes": "三项遗留：\n1) Portal / usePortalContainer 尚未被任何 ui 层真实组件消费过（与 position 的 measureAlign 同类风险）；\n2) SSR 下「不建容器」只在 resolveContainer 的早退分支被覆盖，usePortalContainer 那条路径没有真实无 DOM 环境验证；\n3) 「挂载时机会不会闪一帧」属 L6，jsdom 回答不了 —— Vue 没有官方 layout-effect 钩子，目前用 onMounted 同步 append。\n\n一处照抄 antd 的噪音行为（不要优化）：innerContainer === false 时仍会 append 一个空默认容器，\n见契约文档 §6.2 与 portal.test.ts 的对应用例。\n\nAPI 形态有两层（getContainer 的 getter + spec 本体），原因见契约文档 §6.1；\n改动前务必先读，否则很容易把「未就绪」第三态压掉。",
+      "notes": "三项遗留：\n1) Portal / usePortalContainer 尚未被任何 ui 层真实组件消费过（与 position 的 measureAlign 同类风险）；\n2) SSR 下「不建容器」只在 resolveContainer 的早退分支被覆盖，usePortalContainer 那条路径没有真实无 DOM 环境验证；\n3) 「挂载时机会不会闪一帧」属 L6，jsdom 回答不了 —— Vue 没有官方 layout-effect 钩子，目前用 onMounted 同步 append。\n\n一处照抄 antd 的噪音行为（不要优化）：innerContainer === false 时仍会 append 一个空默认容器，\n见契约文档 §6.2 与 portal.test.ts 的对应用例。\n\nAPI 形态有两层（getContainer 的 getter + spec 本体），原因见契约文档 §6.1；\n改动前务必先读，否则很容易把「未就绪」第三态压掉。\n2026-10-26 Image整改单元共享链路：utils按ownerDocument管理焦点/原生Tab与DOM搬迁、作用域重试清理；Portal跟踪稳定resolver的响应式结果；a11y继续再导出同一实现。69文件1348运行/DOM/a11y回归、严格及实际Chrome焦点/搬迁/Drawer消费检查通过。生产完整盘点仍有2个Image主题失败，其他基础能力未据此重新验收；统一证据 docs/audit/2026-10-25-image-contract-audit.md。",
       "verification": {
         "verifiedAt": "2026-10-04",
         "unit": {
@@ -1239,7 +1239,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 7,
-        "srcLines": 956,
+        "srcLines": 965,
         "exportDeclarations": 37
       }
     },
@@ -1430,7 +1430,7 @@
       "layerNotes": "L4 判为 done：本包唯一的 DOM 产物是 live region 节点（span + role + aria-live + 隐藏样式）与\n  announce 的共享单例节点。「复用同一节点」是 README 写明的契约（换节点会让读屏丢掉前一条），\n  所以它是必须被断言的 DOM 契约，不是实现细节。\nL5 n/a：本包是**被** a11y 测试的对象，axe 扫描在 @apollo-design/test-utils 的 a11yDemoTest。\nL6 n/a：零视觉产物。隐藏样式的作用恰恰是「不可见」。\n⚠️ 焦点陷阱那一侧的 L1/L2 在 @apollo-design/utils 的测试里 —— 本包只再导出，不重复测别人的实现。",
       "blockedBy": [],
       "blockers": [],
-      "notes": "四类遗留：\n1) typeahead **没有任何上游可对齐** —— antd 与 rc-* 全量搜索 typeahead 零命中（契约文档 §3.9），\n   语义是本项目自定义的，只能保证内部一致；\n2) live region 选 1×1+clip 而不是上游另一套 0×0+opacity 是**基于通用实践的判断**，不是实测结论\n   （契约文档 §6 第 2 条）；\n3) useLiveRegion 用 onScopeDispose，被 keep-alive 缓存期间不会销毁节点 —— 与上游「渲染在组件树里」\n   是结构性差异，尚未验证是否有可观察后果（契约文档 §9 第 8 条）；\n4) 本包尚未被任何 ui 层真实组件消费过（与 position 的 measureAlign、motion 的 CSSMotion 同类风险）。\n\n⭐ 焦点陷阱**实现在 @apollo-design/utils（L0）**，本包只再导出 —— 见契约文档 §1.1。\n   这是开工前核实出来的职责重叠：README 原先写「useFocusTrap 由本包实现」是错的，已一并改正。\n   不要为了「名实相符」把 utils/src/dom/focus.ts 搬过来 —— 那会让 L0 反向依赖 L1。\n\nroving 的 getRovingOffset 用的是 **APG 的通用方向映射**，不是 rc-menu 的 getOffset 分派表\n（后者把 vertical 的左右键映射到父/子菜单层级，属 Menu 私有语义）。见契约文档 §3.6 与 §6。\n2026-10-25：Image真实多层预览复现共同父卸载/外层先卸载丢失返回目标，useFocusRestore内部保存同document返回链、nearest owner快照与body-only nextTick补偿，清理登记并保留现有API/门控。原13+新增9条修前6失败/16已有通过，修后22通过；见 docs/audit/2026-10-25-image-preview-focus-remediation.md。现有Modal与Image为真实消费者，不再沿用初建未消费的风险结论。",
+      "notes": "四类遗留：\n1) typeahead **没有任何上游可对齐** —— antd 与 rc-* 全量搜索 typeahead 零命中（契约文档 §3.9），\n   语义是本项目自定义的，只能保证内部一致；\n2) live region 选 1×1+clip 而不是上游另一套 0×0+opacity 是**基于通用实践的判断**，不是实测结论\n   （契约文档 §6 第 2 条）；\n3) useLiveRegion 用 onScopeDispose，被 keep-alive 缓存期间不会销毁节点 —— 与上游「渲染在组件树里」\n   是结构性差异，尚未验证是否有可观察后果（契约文档 §9 第 8 条）；\n4) 本包尚未被任何 ui 层真实组件消费过（与 position 的 measureAlign、motion 的 CSSMotion 同类风险）。\n\n⭐ 焦点陷阱**实现在 @apollo-design/utils（L0）**，本包只再导出 —— 见契约文档 §1.1。\n   这是开工前核实出来的职责重叠：README 原先写「useFocusTrap 由本包实现」是错的，已一并改正。\n   不要为了「名实相符」把 utils/src/dom/focus.ts 搬过来 —— 那会让 L0 反向依赖 L1。\n\nroving 的 getRovingOffset 用的是 **APG 的通用方向映射**，不是 rc-menu 的 getOffset 分派表\n（后者把 vertical 的左右键映射到父/子菜单层级，属 Menu 私有语义）。见契约文档 §3.6 与 §6。\n2026-10-25：Image真实多层预览复现共同父卸载/外层先卸载丢失返回目标，useFocusRestore内部保存同document返回链、nearest owner快照与body-only nextTick补偿，清理登记并保留现有API/门控。原13+新增9条修前6失败/16已有通过，修后22通过；见 docs/audit/2026-10-25-image-preview-focus-remediation.md。现有Modal与Image为真实消费者，不再沿用初建未消费的风险结论。\n2026-10-26 Image整改单元共享链路：utils按ownerDocument管理焦点/原生Tab与DOM搬迁、作用域重试清理；Portal跟踪稳定resolver的响应式结果；a11y继续再导出同一实现。69文件1348运行/DOM/a11y回归、严格及实际Chrome焦点/搬迁/Drawer消费检查通过。生产完整盘点仍有2个Image主题失败，其他基础能力未据此重新验收；统一证据 docs/audit/2026-10-25-image-contract-audit.md。",
       "verification": {
         "verifiedAt": "2026-10-04",
         "unit": {

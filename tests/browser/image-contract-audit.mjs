@@ -69,6 +69,28 @@ try {
         const frame = page.frameLocator('[data-image-audit-frame]');
         const root = frame.getByRole('dialog', { name: 'Foundation frame focus', exact: true });
         await root.waitFor({ state: 'visible' });
+        await root.evaluate((node) => {
+          const input = node.ownerDocument.createElement('input');
+          input.setAttribute('aria-label', 'Native frame editor');
+          node.append(input);
+          input.focus();
+        });
+        await frame.getByRole('button', { name: 'Frame outside', exact: true }).focus();
+        const retainedNativeEditor = await frame
+          .getByRole('textbox', { name: 'Native frame editor', exact: true })
+          .evaluate((node) => node.ownerDocument.activeElement === node);
+        assert.equal(
+          retainedNativeEditor,
+          true,
+          'a native foreign-realm input remains the remembered focus target',
+        );
+        await frame.getByRole('textbox', { name: 'Native frame editor', exact: true }).press('Tab');
+        assert.equal(
+          await root
+            .getByRole('button', { name: 'Foundation inside', exact: true })
+            .evaluate((node) => node.ownerDocument.activeElement === node),
+          true,
+        );
         await root.focus();
         await frame.getByRole('button', { name: 'Frame outside', exact: true }).focus();
         const trapped = await root.evaluate((node) =>
@@ -145,6 +167,33 @@ try {
       )
         failures.push('mask-object');
       if (scenario === 'container' && !measure.insideContainer) failures.push('container');
+      if (scenario === 'container') {
+        const editor = dialog.getByRole('textbox', { name: 'Cross document note', exact: true });
+        await editor.fill('Kept resolver draft');
+        await editor.evaluate((node) => node.setSelectionRange(2, 5));
+        const original = await editor.elementHandle();
+        for (let move = 0; move < 2; move++) {
+          await page
+            .getByRole('button', { name: 'Update audit configuration', exact: true })
+            .click();
+          const state = await editor.evaluate(
+            (node, original) => ({
+              same: node === original,
+              focused: node.ownerDocument.activeElement === node,
+              value: node.value,
+              selection: [node.selectionStart, node.selectionEnd],
+            }),
+            original,
+          );
+          if (
+            !state.same ||
+            !state.focused ||
+            state.value !== 'Kept resolver draft' ||
+            state.selection.join(',') !== '2,5'
+          )
+            failures.push(`replacement-resolver-focus-${move}`);
+        }
+      }
       if (scenario === 'fallback' || scenario === 'srcset-fallback') {
         const thumbnail = await trigger.locator('img').evaluate((img) => ({
           width: img.naturalWidth,
@@ -189,6 +238,52 @@ try {
           );
           if (!measure.focusInside || !measure.trappedAfterOutsideFocus)
             failures.push('cross-document-focus');
+          const editor = dialog.getByRole('textbox', { name: 'Cross document note', exact: true });
+          await editor.fill('Kept document draft');
+          await editor.evaluate((node) => node.setSelectionRange(2, 5));
+          const originalEditor = await editor.elementHandle();
+          measure.documentMoves = [];
+          for (let move = 1; move <= 3; move++) {
+            await page
+              .getByRole('button', { name: 'Update audit configuration', exact: true })
+              .click();
+            const moved =
+              move < 3
+                ? page.getByRole('dialog')
+                : page.frameLocator('[data-image-audit-frame]').getByRole('dialog');
+            await moved.waitFor({ state: 'visible' });
+            const movedEditor = moved.getByRole('textbox', {
+              name: 'Cross document note',
+              exact: true,
+            });
+            const snapshot = await movedEditor.evaluate(
+              (node, original) => ({
+                same: node === original,
+                focused: node.ownerDocument.activeElement === node,
+                value: node.value,
+                selection: [node.selectionStart, node.selectionEnd],
+              }),
+              originalEditor,
+            );
+            measure.documentMoves.push(snapshot);
+            if (
+              !snapshot.same ||
+              !snapshot.focused ||
+              snapshot.value !== 'Kept document draft' ||
+              snapshot.selection.join(',') !== '2,5'
+            )
+              failures.push(`cross-document-editor-move-${move}`);
+            const outside =
+              move < 3
+                ? page.getByRole('button', { name: 'Update audit configuration', exact: true })
+                : page
+                    .frameLocator('[data-image-audit-frame]')
+                    .getByRole('button', { name: 'Frame outside', exact: true });
+            await outside.focus();
+            if (!(await moved.evaluate((node) => node.contains(node.ownerDocument.activeElement))))
+              failures.push(`cross-document-lock-move-${move}`);
+            await movedEditor.focus();
+          }
         }
       }
       if (

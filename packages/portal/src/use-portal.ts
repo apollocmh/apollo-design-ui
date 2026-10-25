@@ -130,6 +130,15 @@ export function usePortalContainer(options: UsePortalContainerOptions): UsePorta
     if (!getContainer) return;
     innerContainer.value = resolveContainer(getContainer(), getDoc()) ?? null;
   }
+  // Track the resolver's reactive result as well as its function identity. A
+  // stable () => target.value need not cause the Portal's parent to rerender.
+  watch(
+    () => (getContainer ? resolveContainer(getContainer(), getDoc()) : null),
+    (target) => {
+      innerContainer.value = target ?? null;
+    },
+    { flush: 'post' },
+  );
 
   // ---- shouldRender：`mergedRender = shouldRender || open` ----
   const rendered = shallowRef(open());

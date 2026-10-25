@@ -72,6 +72,40 @@ function mountPlain(props: Record<string, unknown>) {
 }
 
 describe('Portal 的渲染分支', () => {
+  it('tracks a stable resolver result without requiring a parent rerender or replacing content', async () => {
+    const first = document.createElement('section');
+    const second = document.createElement('section');
+    document.body.append(first, second);
+    const target = ref<HTMLElement | undefined>(first);
+    const resolve = () => target.value;
+    const wrapper = mount(Portal, {
+      props: { open: true, getContainer: resolve },
+      slots: { default: () => h('input', { 'aria-label': 'Stable portal draft' }) },
+      ...NO_TELEPORT_STUB,
+    });
+    wrappers.push(wrapper);
+    try {
+      await nextTick();
+      const input = first.querySelector('input');
+      if (!input) throw new Error('Expected the actual portal input');
+      input.value = 'Kept portal draft';
+      target.value = second;
+      await nextTick();
+      await nextTick();
+      expect(second.querySelector('input')).toBe(input);
+      await wrapper.setProps({ getContainer: false });
+      expect(wrapper.get('input').element).toBe(input);
+      target.value = undefined;
+      await wrapper.setProps({ getContainer: resolve });
+      await nextTick();
+      await nextTick();
+      expect(input.parentElement?.parentElement).toBe(document.body);
+      expect(input.value).toBe('Kept portal draft');
+    } finally {
+      first.remove();
+      second.remove();
+    }
+  });
   it('open=false ⇒ 什么都不渲染', async () => {
     const wrapper = mountPlain({ open: false });
     await nextTick();

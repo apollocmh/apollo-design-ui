@@ -190,12 +190,12 @@ describe('lockFocus', () => {
     const release = lockFocus(container, 'lock-1');
 
     expect(addSpy).toHaveBeenCalledWith('focusin', expect.any(Function));
-    expect(addSpy).toHaveBeenCalledWith('keydown', expect.any(Function), true);
+    expect(addSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
 
     release();
 
     expect(removeSpy).toHaveBeenCalledWith('focusin', expect.any(Function));
-    expect(removeSpy).toHaveBeenCalledWith('keydown', expect.any(Function), true);
+    expect(removeSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
 
     addSpy.mockRestore();
     removeSpy.mockRestore();
@@ -459,9 +459,9 @@ describe('useLockFocus', () => {
 /**
  * `onWindowKeyDown` 的职责：在**锁定区域的边界**把 Tab 的落点改掉。
  *
- * 它自己不移动焦点（那是浏览器的活），只改 `lastFocusElement`；
- * 真正的效果体现在**下一次焦点逃逸**时 `syncFocus` 把焦点拉回哪里。
- * 所以这一组测试都是「按 Tab → 制造逃逸 → 断言落点」。
+ * 边界处直接取消默认动作并聚焦目标，避免iframe末尾直接离开所属文档。
+ * 保留原来的「按 Tab → 再制造逃逸」场景，继续断言记忆目标与循环一致；
+ * 新专项另验同步循环和子控件preventDefault优先。
  */
 describe('lockFocus 的 Tab 循环', () => {
   /** 造一个容器 + 两个输入框，并加锁。返回 [a, b]。 */
