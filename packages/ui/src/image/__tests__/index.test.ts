@@ -106,15 +106,15 @@ describe('Image · L1 预览开合', () => {
     wrapper.unmount();
   });
 
-  it('受控 preview.open ⇒ 跟随；onOpenChange(next, prev) 发出', async () => {
+  it('受控 open ⇒ 跟随；openChange(next, prev) 发出', async () => {
     const onOpenChange = vi.fn();
     const wrapper = mount(Image, {
       attachTo: document.body,
       global: { stubs: { teleport: false } },
-      props: { src: 'x.png', preview: { open: false, onOpenChange } },
+      props: { src: 'x.png', open: false, onOpenChange },
     });
     expect(document.querySelector('.apollo-image-preview')).toBeNull();
-    await wrapper.setProps({ preview: { open: true, onOpenChange } });
+    await wrapper.setProps({ open: true });
     await nextTick();
     expect(document.querySelector('.apollo-image-preview')).not.toBeNull();
 
@@ -128,7 +128,7 @@ describe('Image · L1 预览开合', () => {
     const wrapper = mount(Image, {
       attachTo: document.body,
       global: { stubs: { teleport: false } },
-      props: { src: 'small.png', preview: { src: 'big.png', open: true } },
+      props: { src: 'small.png', open: true, preview: { src: 'big.png' } },
     });
     await nextTick();
     const previewImg = document.querySelector('.apollo-image-preview-img') as HTMLImageElement;

@@ -76,6 +76,7 @@ const Image = defineComponent({
     click: (_event: MouseEvent) => true,
     error: (_event: Event) => true,
     keydown: (_event: KeyboardEvent) => true,
+    openChange: (_open: boolean, _prevOpen: boolean) => true,
     'update:open': (_open: boolean) => true,
   },
   props: {
@@ -86,6 +87,8 @@ const Image = defineComponent({
     alt: { type: String, default: undefined },
     fallback: { type: String, default: undefined },
     placeholder: { type: [Object, String] as PropType<PlaceholderType>, default: undefined },
+    open: { type: Boolean, default: undefined },
+    defaultOpen: { type: Boolean, default: false },
     preview: { type: [Boolean, Object] as PropType<boolean | PreviewConfig>, default: true },
     wrapperStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     classNames: { type: Object as PropType<SemanticClassNames>, default: undefined },
@@ -114,26 +117,20 @@ const Image = defineComponent({
     });
     const canPreview = computed(() => previewConfig.value !== null);
 
-    // deprecated：visible → open（antd 的 onVisibleChange 二参）
-    const previewOpenProp = computed(() => {
-      const cfg = previewConfig.value;
-      if (!cfg) return undefined;
-      return cfg.open ?? cfg.visible;
-    });
-
-    const innerOpen = ref(false);
-    const previewOpen = computed(() => previewOpenProp.value ?? innerOpen.value);
-
-    // 关闭时复位（受控方自己负责）
-    watch(previewOpenProp, (v) => {
-      if (v !== undefined) innerOpen.value = v;
-    });
+    const innerOpen = ref(props.defaultOpen);
+    const previewOpen = computed(() => props.open ?? innerOpen.value);
+    watch(
+      () => props.open,
+      (open) => {
+        if (open !== undefined) innerOpen.value = open;
+      },
+      { immediate: true },
+    );
 
     const setPreviewOpen = (next: boolean): void => {
-      const cfg = previewConfig.value;
-      if (previewOpenProp.value === undefined) innerOpen.value = next;
-      cfg?.onOpenChange?.(next, previewOpen.value);
-      cfg?.onVisibleChange?.(next, previewOpen.value);
+      const previous = previewOpen.value;
+      if (props.open === undefined) innerOpen.value = next;
+      emit('openChange', next, previous);
       emit('update:open', next);
     };
 

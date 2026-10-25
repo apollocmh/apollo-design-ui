@@ -22,6 +22,7 @@ import DrawerSlots from './DrawerSlots.vue';
 import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
 import ImageNativeEvents from './ImageNativeEvents.vue';
+import ImageOpenModel from './ImageOpenModel.vue';
 import ImagePrefix from './ImagePrefix.vue';
 import ImageProvider from './ImageProvider.vue';
 import ImageRender from './ImageRender.vue';
@@ -113,6 +114,7 @@ const Demo = {
   'image-provider': ImageProvider,
   'image-prefix': ImagePrefix,
   'image-native-events': ImageNativeEvents,
+  'image-open-model': ImageOpenModel,
   'image-styles': ImageStyles,
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,

@@ -88,4 +88,6 @@ registry 数据：token 数 = 6（+ 派生 1）。
 
 Image/Group前缀由computed读取当前prop与Provider，Group的mask-hidden名称基于实际预览前缀。自定义CSS在消费构建前预加载，默认产物为apollo。DOM响应性与D04整体CSS策略的边界见 [前缀报告](../../../../docs/audit/2026-10-25-image-prefix-remediation.md)。
 
-Image的click/error/keydown与已有update:open通知使用typed emits。根属性、原生事件及Vue修饰符按真实DOM落点处理，Progress保持事件隔离；状态模型契约仍单独整改。见 [事件报告](../../../../docs/audit/2026-10-25-image-native-events-remediation.md) 与 [迁移](../../../../docs/migrations/image-native-events.md)。
+Image的click/error/keydown与已有update:open通知使用typed emits。根属性、原生事件及Vue修饰符按真实DOM落点处理，Progress保持事件隔离；开合模型见下一段。见 [事件报告](../../../../docs/audit/2026-10-25-image-native-events-remediation.md) 与 [迁移](../../../../docs/migrations/image-native-events.md)。
+
+顶层open/defaultOpen与typed openChange/update:open兑现Image的Vue模型承诺，Group同名模型与current事件统一。旧preview状态字段直接移除，控态移除保留最近同步值；见 [模型迁移](../../../../docs/migrations/image-open-model.md) 和 [验证报告](../../../../docs/audit/2026-10-25-image-open-model-remediation.md)。

@@ -38,7 +38,7 @@ const errorHandlers = Object.fromEntries(kinds.map(kind => [kind, (event: Event)
   validEvents.value &&= event instanceof Event;
   errors.value[kind]++;
 }]));
-const preview = { onOpenChange: () => { previews.value++; } };
+const recordPreview = () => { previews.value++; };
 const nativeStyle = (): StyleValue => {
   if (phase.value === 0) return 'max-width:300px;padding-top:20px;--native-phase:string;--string-only:yes';
   if (phase.value === 1) return ['max-width:340px;--native-phase:array', { paddingBottom: '10px', '--array-only': 'yes' }];
@@ -61,7 +61,8 @@ const StyleTargets = defineComponent(() => () => h('div', { style: { display: 'f
   title: `Image attrs ${revision.value}`, 'data-image-style-kind': kind, 'data-live-revision': revision.value,
   'aria-describedby': 'image-style-fixture-help',
   ...(kind === 'normal' ? {} : {
-    preview, 'aria-label': labels.value ? `${kind} image progress ${revision.value}` : undefined,
+    preview: true, onOpenChange: recordPreview,
+    'aria-label': labels.value ? `${kind} image progress ${revision.value}` : undefined,
     role: 'button', 'aria-valuemin': 9, 'aria-valuemax': 9, 'aria-valuenow': 9, 'aria-busy': false,
   }),
   onClick: clickHandlers[kind], onError: errorHandlers[kind],

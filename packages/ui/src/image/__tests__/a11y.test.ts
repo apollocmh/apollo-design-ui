@@ -35,7 +35,7 @@ describe('Image · 语义断言', () => {
     const w = mount(Image, {
       attachTo: document.body,
       global: { stubs: { teleport: false } },
-      props: { src: 'x.png', alt: 'a', preview: { open: true } },
+      props: { src: 'x.png', alt: 'a', open: true },
     });
     await nextTick();
     const dialog = document.querySelector('.apollo-image-preview') as HTMLElement;

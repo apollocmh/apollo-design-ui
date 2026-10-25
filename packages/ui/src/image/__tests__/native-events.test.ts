@@ -142,7 +142,7 @@ describe('Image native events and root attrs', () => {
           stubs: { teleport: false },
           config: { errorHandler: (error) => errors.push(error) },
         },
-        props: { preview: preview ? { onOpenChange: () => order.push('preview') } : false },
+        props: { preview, onOpenChange: () => order.push('preview') },
         attrs: { onClick: [first, second] },
       });
       const event = new MouseEvent('click', { bubbles: true });
@@ -323,7 +323,7 @@ describe('Image native events and root attrs', () => {
       const open = vi.fn();
       const wrapper = mount(Image, {
         ...mountOptions,
-        props: { placeholder: placeholder.value, preview: { onOpenChange: open } },
+        props: { placeholder: placeholder.value, onOpenChange: open },
         attrs: {
           onClick: [click],
           onClickOnce: clickOnce,

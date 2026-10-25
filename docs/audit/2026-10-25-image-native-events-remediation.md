@@ -12,6 +12,8 @@ Image改typed emits(click/error/keydown/update:open)，移除两项Function运�
 
 原API文档称支持v-model:open，但Image公开props没有open且实现从preview.open读取，与公开状态承诺矛盾。顶层模型真实SFC已有10条8失败/2已有通过、两条精确open缺失模板诊断，保存在 `/tmp/apollo-image-open-model-repro/`；defaultOpen、Group受控初值/请求和prevOpen也有独立CSR证据。此批只修DOM事件并声明已有通知，不能通过改文案声称模型状态契约完成；后续须独立兑现Vue公共状态契约。
 
+此缺口随后由 [原生模型批次](2026-10-25-image-open-model-remediation.md) 直接迁移兑现，旧状态配置移除；本报告仍保留Native事件批次的原验证范围。
+
 ## 检查
 
 - Image/ConfigProvider运行回归18文件259条通过；Image类型6文件12条通过，无类型错误。根严格检查在真实Demo更新后再次通过。

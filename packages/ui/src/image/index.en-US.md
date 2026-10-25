@@ -35,6 +35,8 @@ preview-img-info / preview-mask / preview-src.
 | fallback | Image shown when loading fails | `string` | — |
 | placeholder | Placeholder content; `{ progress: true \| { percent, render } }` renders the progress layer | `VNodeChild \| { progress }` | — |
 | preview | `false` disables preview; object form see below | `boolean \| PreviewConfig` | `true` |
+| open | Top-level controlled open state; supports `v-model:open` | `boolean` | — |
+| defaultOpen | Uncontrolled initial state; later changes do not reset it | `boolean` | `false` |
 | class / style | Native root attrs. Style accepts Vue strings, objects and arrays, overrides `styles.root`, and stays on the root; use `styles.image` for the img | `string \| array \| object` / `StyleValue` | — |
 | wrapperStyle | ⚠️ Deprecated, use `styles.root` | `CSSProperties` | — |
 | classNames / styles | Semantic class names / styles, see "Semantic slots" | — | — |
@@ -57,9 +59,6 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | Property | Description | Type | Default |
 |---|---|---|---|
 | src | Large image used by the preview (defaults to `src`) | `string` | — |
-| open | Controlled open state | `boolean` | — |
-| defaultOpen | Uncontrolled initial open state | `boolean` | `false` |
-| onOpenChange | Open state changed | `(open, prevOpen) => void` | — |
 | afterOpenChange | Called after the open/close motion | `(open) => void` | — |
 | cover | Cover (hover layer). `false` renders nothing; `{ placement: 'center' \| 'top' \| 'bottom', coverNode }` | `MaskNode` | — |
 | mask | Mask. `false` ⇒ root gets `-preview-mask-hidden` | `MaskNode` | — |
@@ -75,8 +74,6 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | actionsRender | Custom toolbar | `(originNode, info) => VNodeChild` | — |
 | countRender | Custom counter text inside a group | `(current, total) => VNodeChild` | — |
 | onTransform | Transform (rotate/scale/flip/x/y) changed | `(info: TransformInfo) => void` | — |
-| visible | ⚠️ Deprecated, use `open` | `boolean` | — |
-| onVisibleChange | ⚠️ Deprecated, use `onOpenChange` | `(visible, prevVisible) => void` | — |
 | rootClassName | ⚠️ Deprecated, use `classNames.root` | `string` | — |
 | maskClassName | ⚠️ Deprecated, use `classNames.cover` | `string` | — |
 | toolbarRender | ⚠️ Deprecated, use `actionsRender` | `ActionsRender` | — |
@@ -89,20 +86,24 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 | click | Original MouseEvent, after the internal preview request; supports Vue modifiers and listener arrays |
 | error | Original img Event; placeholder roots do not receive image errors, and error.once belongs to the component |
 | keydown | Original KeyboardEvent before built-in Enter/Space handling; preventDefault cancels that keyboard action |
-| update:open | Existing standalone open-request notification, boolean; state remains configured through preview, with model-contract remediation tracked separately |
+| openChange | Interaction request `(nextOpen: boolean, prevOpen: boolean)`, captured before writing state |
+| update:open | Boolean request for top-level `v-model:open`; prop changes do not echo events |
 
 With preview=false, native role/tabindex/aria-label survive. Preview triggers own button/0 and use an explicit aria-label before the alt fallback. Progress only notifies click/keydown without opening a latent preview. Bind with `@click`, `@error` and `@keydown`; onXxx in h()/ImageProps registers Vue listeners. See the [migration](../../../../docs/migrations/image-native-events.md) and [evidence](../../../../docs/audit/2026-10-25-image-native-events-remediation.md).
+
+Open state has one public Vue entrypoint. Without open, internal state applies; removing control resumes the last synchronized value. Interaction emits openChange before update:open, and the parent may decline a request. Legacy preview state fields are removed; non-state business hooks remain in preview. See the [model migration](../../../../docs/migrations/image-open-model.md).
 
 ### Image.PreviewGroup · Props
 
 | Property | Description | Type | Default |
 |---|---|---|---|
 | items | Image list (preferred); a string or `{ src, alt, ... }` | `Array<string \| object>` | — |
-| preview | Same as `Image`, plus `onVisibleChange(visible, prev, current)` | `boolean \| GroupPreviewConfig` | `true` |
+| preview | Static preview content/behavior options, as in Image | `boolean \| GroupPreviewConfig` | `true` |
+| open | Top-level controlled open state; supports `v-model:open` | `boolean` | — |
+| defaultOpen | Uncontrolled initial state; later changes do not reset it | `boolean` | `false` |
 | current | Controlled current index | `number` | — |
 | defaultCurrent | Uncontrolled initial index | `number` | `0` |
 | previewPrefixCls | Full preview prefix; current override first, then the current Provider-derived value | `string` | `${prefixCls}-preview` |
-| onChange | Current index changed | `(current, prevCurrent) => void` | — |
 | classNames / styles | Same as `Image` | — | — |
 
 ### Image.PreviewGroup · Slots & Events
@@ -110,7 +111,9 @@ With preview=false, native role/tabindex/aria-label survive. Preview triggers ow
 | Name | Description |
 |---|---|
 | default | Child `Image`s (collected in registration order when `items` is omitted) |
-| update:current | Current index changed (**together with** `onChange`); supports `v-model:current` |
+| openChange / update:open | Same open requests/model notifications as Image; supports `v-model:open` |
+| change | Index request `(current: number, prevCurrent: number)` |
+| update:current | Numeric model request after change; supports `v-model:current` |
 
 ### Semantic slots
 

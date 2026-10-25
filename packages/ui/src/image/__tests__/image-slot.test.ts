@@ -222,7 +222,8 @@ describe('F11 Image native imageRender slot', () => {
         props: {
           src: 'thumbnail.png',
           alt: 'Preview original',
-          preview: { src: 'large.png', onOpenChange: open },
+          preview: { src: 'large.png' },
+          onOpenChange: open,
         },
         slots: custom ? { imageRender: slot } : {},
         attachTo: document.body,

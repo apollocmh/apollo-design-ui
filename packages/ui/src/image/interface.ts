@@ -65,13 +65,9 @@ export interface PreviewIcons {
   flipY?: VNodeChild;
 }
 
-/** rc-image 的 preview 配置（antd 的 OriginPreviewConfig + deprecated 面）。 */
+/** 预览内容与行为配置；开合状态通过顶层Vue模型表达。 */
 export interface PreviewConfig {
   src?: string;
-  /** 受控开合（`v-model` 等价走 onOpenChange）。 */
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean, prevOpen: boolean) => void;
   afterOpenChange?: (open: boolean) => void;
   /** 封面（hover 层）；`false` ⇒ 不渲染。 */
   cover?: MaskNode | { placement?: CoverPlacement; coverNode?: VNodeChild };
@@ -79,16 +75,12 @@ export interface PreviewConfig {
   maskClosable?: boolean;
   closable?: boolean;
   closeIcon?: VNodeChild;
-  /** ⚠️ deprecated：用 `open`。 */
-  visible?: boolean;
   /** ⚠️ deprecated：用 `classNames.root`。 */
   rootClassName?: string;
   /** ⚠️ deprecated：用 `classNames.cover`。 */
   maskClassName?: string;
   /** ⚠️ deprecated：用 `actionsRender`。 */
   toolbarRender?: ActionsRender;
-  /** ⚠️ deprecated：用 `onOpenChange`。 */
-  onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
   /** ⚠️ 已移除（antd 不再支持）：预览始终在展示后渲染。 */
   forceRender?: boolean;
   /** ⚠️ 已移除：同上。 */
@@ -129,11 +121,7 @@ export interface TransformInfo {
   y: number;
 }
 
-/** GroupPreviewConfig = PreviewConfig + 带 current 的回调。 */
-export interface GroupPreviewConfig extends Omit<PreviewConfig, 'onVisibleChange'> {
-  /** ⚠️ deprecated：用 `onOpenChange`。 */
-  onVisibleChange?: (visible: boolean, prevVisible: boolean, current: number) => void;
-}
+export type GroupPreviewConfig = PreviewConfig;
 
 /** antd 的 ImageSemanticType（5 组；popup/placeholder 是嵌套组）。 */
 export interface ImageSemanticType {
@@ -188,6 +176,8 @@ export interface ImageProps extends ImageCommonProps {
   /** 加载失败兜底图（也可以是 URL）。 */
   fallback?: string;
   placeholder?: PlaceholderType;
+  open?: boolean;
+  defaultOpen?: boolean;
   preview?: boolean | PreviewConfig;
   /** ⚠️ deprecated：用 `styles.root`。 */
   wrapperStyle?: Record<string, string | number>;
@@ -197,6 +187,7 @@ export interface ImageProps extends ImageCommonProps {
   onClick?: (e: MouseEvent) => void;
   onError?: (e: Event) => void;
   onKeydown?: (e: KeyboardEvent) => void;
+  onOpenChange?: (open: boolean, prevOpen: boolean) => void;
   'onUpdate:open'?: (open: boolean) => void;
 }
 
@@ -219,9 +210,14 @@ export interface PreviewGroupProps {
   previewPrefixCls?: string;
   items?: Array<string | { src: string; [key: string]: unknown }>;
   preview?: boolean | GroupPreviewConfig;
+  open?: boolean;
+  defaultOpen?: boolean;
   current?: number;
   defaultCurrent?: number;
   onChange?: (current: number, prevCurrent: number) => void;
+  onOpenChange?: (open: boolean, prevOpen: boolean) => void;
+  'onUpdate:open'?: (open: boolean) => void;
+  'onUpdate:current'?: (current: number) => void;
   classNames?: ImageSemanticType['classNames'];
   styles?: ImageSemanticType['styles'];
 }

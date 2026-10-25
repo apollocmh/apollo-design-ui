@@ -74,9 +74,9 @@ const Targets = defineComponent(() => () => {
             ? false
             : {
                 cover: false,
-                onOpenChange: (open) =>
-                  entries.value.push({ kind, listener: 'preview', revision: current, open }),
               },
+        onOpenChange: (open) =>
+          entries.value.push({ kind, listener: 'preview', revision: current, open }),
         styles: { root: { height: placeholder === undefined ? 'auto' : '110px' } },
       };
       const attrs =

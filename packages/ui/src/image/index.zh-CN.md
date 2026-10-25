@@ -32,6 +32,8 @@ preview-img-info / preview-mask / preview-src。
 | fallback | 加载失败时的兜底图 | `string` | — |
 | placeholder | 占位内容；`{ progress: true \| { percent, render } }` 时渲染进度层 | `VNodeChild \| { progress }` | — |
 | preview | `false` 关闭预览；对象形态见下表 | `boolean \| PreviewConfig` | `true` |
+| open | 顶层受控开合，可用 `v-model:open` | `boolean` | — |
+| defaultOpen | 非控初值，后续变更不重置状态 | `boolean` | `false` |
 | class / style | 根元素原生attrs；style支持Vue字符串/对象/数组，优先于 `styles.root`，不复制到img；图片样式用 `styles.image` | `string \| array \| object` / `StyleValue` | — |
 | wrapperStyle | ⚠️ 已废弃，请用 `styles.root` | `CSSProperties` | — |
 | classNames / styles | 语义化类名/样式，见「语义化槽位」 | — | — |
@@ -54,9 +56,6 @@ preview-img-info / preview-mask / preview-src。
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | src | 预览用大图（默认取 `src`） | `string` | — |
-| open | 受控开合 | `boolean` | — |
-| defaultOpen | 非受控初始开合 | `boolean` | `false` |
-| onOpenChange | 开合变化 | `(open, prevOpen) => void` | — |
 | afterOpenChange | 开合动画结束后 | `(open) => void` | — |
 | cover | 封面（hover 层）。`false` 不渲染；`{ placement: 'center' \| 'top' \| 'bottom', coverNode }` | `MaskNode` | — |
 | mask | 遮罩。`false` ⇒ 根元素加 `-preview-mask-hidden` | `MaskNode` | — |
@@ -72,8 +71,6 @@ preview-img-info / preview-mask / preview-src。
 | actionsRender | 自定义工具栏 | `(originNode, info) => VNodeChild` | — |
 | countRender | 自定义组内计数文案 | `(current, total) => VNodeChild` | — |
 | onTransform | 变换（rotate/scale/flip/x/y）变化 | `(info: TransformInfo) => void` | — |
-| visible | ⚠️ 已废弃，请用 `open` | `boolean` | — |
-| onVisibleChange | ⚠️ 已废弃，请用 `onOpenChange` | `(visible, prevVisible) => void` | — |
 | rootClassName | ⚠️ 已废弃，请用 `classNames.root` | `string` | — |
 | maskClassName | ⚠️ 已废弃，请用 `classNames.cover` | `string` | — |
 | toolbarRender | ⚠️ 已废弃，请用 `actionsRender` | `ActionsRender` | — |
@@ -86,20 +83,24 @@ preview-img-info / preview-mask / preview-src。
 | click | 原MouseEvent；可预览时内部打开请求后通知，支持Vue修饰符和监听器数组 |
 | error | 原img的Event；占位根不接收图片error，error.once正确归于组件事件 |
 | keydown | 原KeyboardEvent；监听器先于内置Enter/Space，preventDefault可阻止内置键盘动作 |
-| update:open | 现有单图开合请求通知，boolean；本批声明类型，状态仍通过preview配置控制，模型契约另行整改 |
+| openChange | 交互请求 `(nextOpen: boolean, prevOpen: boolean)`，写入前捕获前态 |
+| update:open | 顶层 `v-model:open` 的boolean请求；父prop变化不回发 |
 
 preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0，显式aria-label优先alt默认名。Progress只通知click/keydown，不打开潜在预览。以 `@click` / `@error` / `@keydown` 绑定；h()/ImageProps中的onXxx是Vue监听器注册。详见 [迁移](../../../../docs/migrations/image-native-events.md) 和 [证据](../../../../docs/audit/2026-10-25-image-native-events-remediation.md)。
+
+开合只有顶层Vue状态入口。open省略使用内态，移除控制接续最后同步值；交互先openChange再update:open，父级可以拒绝请求。旧preview状态字段直接移除，afterOpenChange/onTransform等非状态业务配置保持，见 [模型迁移](../../../../docs/migrations/image-open-model.md)。
 
 ### Image.PreviewGroup · Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
 | items | 图片列表（首选）；字符串或 `{ src, alt, ... }` | `Array<string \| object>` | — |
-| preview | 同 `Image` 的 `preview`，额外支持 `onVisibleChange(visible, prev, current)` | `boolean \| GroupPreviewConfig` | `true` |
+| preview | 静态预览内容/行为选项，同Image | `boolean \| GroupPreviewConfig` | `true` |
+| open | 顶层受控开合，可用 `v-model:open` | `boolean` | — |
+| defaultOpen | 非控初值，后续变更不重置状态 | `boolean` | `false` |
 | current | 受控当前索引 | `number` | — |
 | defaultCurrent | 非受控初始索引 | `number` | `0` |
 | previewPrefixCls | 完整预览前缀；当前prop优先，移除后使用当前Provider派生值 | `string` | `${prefixCls}-preview` |
-| onChange | 切换 | `(current, prevCurrent) => void` | — |
 | classNames / styles | 同 `Image` | — | — |
 
 ### Image.PreviewGroup · 插槽与 Events
@@ -107,7 +108,9 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 | 名称 | 说明 |
 |---|---|
 | default | 子 `Image`（`items` 未传时按注册顺序收集） |
-| update:current | 当前索引变化（与 `onChange` **同时**发出），可写 `v-model:current` |
+| openChange / update:open | 同Image开合请求/模型通知，可用 `v-model:open` |
+| change | 索引请求 `(current: number, prevCurrent: number)` |
+| update:current | change之后的数字模型请求，可用 `v-model:current` |
 
 ### 语义化槽位
 

@@ -8,9 +8,9 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 520,
+    "rows": 513,
     "byCategory": {
-      "data": 134,
+      "data": 127,
       "component-content-candidate": 154,
       "deprecated": 53,
       "internal": 100,
@@ -18,7 +18,7 @@
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 146,
+      "keep-data": 139,
       "review": 202,
       "skip": 153,
       "implemented-verified": 19
@@ -5227,201 +5227,6 @@
     },
     {
       "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "actionsRender",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:104",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "closeIcon",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:81",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "countRender",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:105",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "cover",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:77",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/__tests__/index.test.ts",
-          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
-          "packages/ui/src/image/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "imageRender",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:103",
-      "slotRuntime": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/Image.ts"
-        ]
-      },
-      "slotType": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/interface.ts"
-        ]
-      },
-      "slotDemo": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/demo/image-render.vue",
-          "packages/ui/src/image/demo/style-class.vue"
-        ]
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
-          "packages/ui/src/image/__tests__/image-slot.test.ts",
-          "packages/ui/src/image/__tests__/native-events.test.ts",
-          "packages/ui/src/image/__tests__/native-style.test.ts",
-          "packages/ui/src/image/__tests__/provider-reactivity.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "mask",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:78",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
-          "packages/ui/src/image/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
-      "owner": "GroupPreviewConfig",
-      "prop": "toolbarRender",
-      "category": "data",
-      "source": "packages/ui/src/image/interface.ts:89",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "not-found",
-        "files": []
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "image",
       "owner": "ImageProgressConfig",
       "prop": "render",
       "category": "data",
@@ -5452,7 +5257,7 @@
       "owner": "ImageProps",
       "prop": "placeholder",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/image/interface.ts:190",
+      "source": "packages/ui/src/image/interface.ts:178",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5485,7 +5290,7 @@
       "owner": "ImageRenderInfo",
       "prop": "originNode",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:208",
+      "source": "packages/ui/src/image/interface.ts:199",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5510,7 +5315,7 @@
       "owner": "ImageSlots",
       "prop": "imageRender",
       "category": "internal",
-      "source": "packages/ui/src/image/interface.ts:204",
+      "source": "packages/ui/src/image/interface.ts:195",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5548,7 +5353,7 @@
       "owner": "PreviewConfig",
       "prop": "actionsRender",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:104",
+      "source": "packages/ui/src/image/interface.ts:96",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5573,7 +5378,7 @@
       "owner": "PreviewConfig",
       "prop": "closeIcon",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:81",
+      "source": "packages/ui/src/image/interface.ts:77",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5598,7 +5403,7 @@
       "owner": "PreviewConfig",
       "prop": "countRender",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:105",
+      "source": "packages/ui/src/image/interface.ts:97",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5623,7 +5428,7 @@
       "owner": "PreviewConfig",
       "prop": "cover",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:77",
+      "source": "packages/ui/src/image/interface.ts:73",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5652,7 +5457,7 @@
       "owner": "PreviewConfig",
       "prop": "imageRender",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:103",
+      "source": "packages/ui/src/image/interface.ts:95",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -5690,7 +5495,7 @@
       "owner": "PreviewConfig",
       "prop": "mask",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:78",
+      "source": "packages/ui/src/image/interface.ts:74",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -5718,7 +5523,7 @@
       "owner": "PreviewConfig",
       "prop": "toolbarRender",
       "category": "data",
-      "source": "packages/ui/src/image/interface.ts:89",
+      "source": "packages/ui/src/image/interface.ts:83",
       "slotRuntime": {
         "status": "not-run",
         "files": []

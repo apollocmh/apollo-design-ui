@@ -39,16 +39,20 @@ const COMMON_KEYS: Array<keyof ImageCommonProps> = [
 
 const PreviewGroup = defineComponent({
   name: 'AImagePreviewGroup',
+  emits: {
+    change: (_current: number, _prevCurrent: number) => true,
+    'update:current': (_current: number) => true,
+    openChange: (_open: boolean, _prevOpen: boolean) => true,
+    'update:open': (_open: boolean) => true,
+  },
   props: {
     previewPrefixCls: { type: String, default: undefined },
     items: { type: Array as PropType<PreviewGroupProps['items']>, default: undefined },
     preview: { type: [Boolean, Object] as PropType<boolean | GroupPreviewConfig>, default: true },
+    open: { type: Boolean, default: undefined },
+    defaultOpen: { type: Boolean, default: false },
     current: { type: Number, default: undefined },
     defaultCurrent: { type: Number, default: 0 },
-    onChange: {
-      type: Function as PropType<(current: number, prev: number) => void>,
-      default: undefined,
-    },
     classNames: { type: Object as PropType<SemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<SemanticStyles>, default: undefined },
   },
@@ -88,37 +92,40 @@ const PreviewGroup = defineComponent({
     const setCurrent = (next: number, prev: number): void => {
       if (next < 0 || next > mergedItems.value.length - 1) return;
       if (props.current === undefined) innerCurrent.value = next;
-      props.onChange?.(next, prev);
+      emit('change', next, prev);
       emit('update:current', next);
     };
 
-    const isPreviewOpen = ref(false);
+    const innerOpen = ref(props.defaultOpen);
+    const isPreviewOpen = computed(() => props.open ?? innerOpen.value);
+    watch(
+      () => props.open,
+      (open) => {
+        if (open !== undefined) innerOpen.value = open;
+      },
+      { immediate: true },
+    );
+    const setOpen = (next: boolean): void => {
+      const previous = isPreviewOpen.value;
+      if (props.open === undefined) innerOpen.value = next;
+      emit('openChange', next, previous);
+      emit('update:open', next);
+    };
     const mousePosition = ref<{ x: number; y: number } | null>(null);
 
     providePreviewGroup({
       register,
       onPreview: (id, _src, left, top) => {
+        if (!previewConfig.value) return;
         mousePosition.value = { x: left, y: top };
         const index = mergedItems.value.findIndex((item) => item.id === id);
         if (index >= 0) setCurrent(index, current.value);
-        isPreviewOpen.value = true;
+        setOpen(true);
       },
       isPreviewOpen,
       mousePosition,
       current,
     });
-
-    // deprecated：visible（受控）
-    const openProp = computed(() => previewConfig.value?.open ?? previewConfig.value?.visible);
-    watch(openProp, (v) => {
-      if (v !== undefined) isPreviewOpen.value = v;
-    });
-
-    const setOpen = (next: boolean): void => {
-      if (openProp.value === undefined) isPreviewOpen.value = next;
-      previewConfig.value?.onOpenChange?.(next, isPreviewOpen.value);
-      previewConfig.value?.onVisibleChange?.(next, isPreviewOpen.value, current.value);
-    };
 
     const currentItem = computed(() => mergedItems.value[current.value]);
 

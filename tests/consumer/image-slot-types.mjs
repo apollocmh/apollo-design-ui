@@ -81,6 +81,38 @@ try {
     path.join(temp, 'ExactNativeEvents.vue'),
     exactNativeEvents.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/controlled-preview.vue'),
+    path.join(temp, 'ControlledImageDemo.vue'),
+  );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/preview-group-visible.vue'),
+    path.join(temp, 'ControlledGroupDemo.vue'),
+  );
+  const modelFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageOpenModel.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageOpenModel.vue'),
+    modelFixture
+      .replace(
+        '../../../packages/ui/src/image/demo/controlled-preview.vue',
+        './ControlledImageDemo.vue',
+      )
+      .replace(
+        '../../../packages/ui/src/image/demo/preview-group-visible.vue',
+        './ControlledGroupDemo.vue',
+      ),
+  );
+  const exactOpenModel = fs.readFileSync(
+    path.join(root, 'packages/ui/src/image/__tests__/fixtures/ImageOpenModel.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ExactOpenModel.vue'),
+    exactOpenModel.replace("from '../../../index'", "from '@apollo-design/ui'"),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig } from '@apollo-design/ui';

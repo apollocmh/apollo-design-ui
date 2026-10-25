@@ -20,7 +20,7 @@ describe('Image preview motion namespace', () => {
   ]) {
     it(`${scenario.name} Image prefix chooses its own preview fade namespace`, async () => {
       const wrapper = mount(Image, {
-        props: { prefixCls: scenario.prefixCls, alt: 'Motion preview', preview: { open: true } },
+        props: { prefixCls: scenario.prefixCls, alt: 'Motion preview', open: true },
         attachTo: document.body,
         global: { stubs: { teleport: false } },
       });

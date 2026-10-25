@@ -28,10 +28,11 @@ function imageHost(
               ...imageModes[mode],
               prefixCls: prefix.value,
               alt: 'Prefix image',
+              open,
               'data-prefix-image': '',
               preview:
                 mode === 'normal'
-                  ? { open, mask: false, cover: { placement: 'bottom', coverNode: 'Preview' } }
+                  ? { mask: false, cover: { placement: 'bottom', coverNode: 'Preview' } }
                   : false,
             }),
         },
