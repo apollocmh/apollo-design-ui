@@ -136,7 +136,7 @@ Opening moves focus into the preview. Tab/Shift+Tab cycle within it, and Escape 
 
 ### Semantic slots
 
-Image accepts static semantic objects through `ConfigProvider.components.image.classNames/styles`. Replacing a field, image config or entire components map, adding it later, and removing it use current values. Classes join local classes, local styles override global styles, and native root style comes last. Stable image/rich nodes retain input state. See the [evidence](../../../../docs/audit/2026-10-25-image-provider-remediation.md); global preview styles and PreviewGroup wiring remain under separate review.
+Image consumes static semantic objects from `ConfigProvider.components.image.classNames/styles`; both Image and PreviewGroup consume their popup group for the shared preview. Field/image/map replacement, late addition and removal read current values while retaining stable images, editors and open previews. See the [ordinary image report](../../../../docs/audit/2026-10-25-image-provider-remediation.md) and [popup provider report](../../../../docs/audit/2026-10-25-image-popup-provider-remediation.md).
 
 Slots of `classNames` / `styles` (`placeholder` and `popup` are **nested groups**):
 
@@ -146,13 +146,7 @@ placeholder.progress: root / content / rail / indicator
 popup: root / mask / body / footer / actions / close
 ```
 
-Merge priority (low → high): `classNames` → `preview.rootClassName` /
-`preview.maskClassName` (deprecated surface) → **native `class` / `style`**
-(applied to the root element).
-
-> ⚠️ `popup` is a nested semantic group: this repo's `useMergeSemantic` does not yet
-> implement antd's `schema` branch, and its `clsx` would collapse the object value into
-> `''`, so `popup` is merged by the component itself (both `Image` and `PreviewGroup`).
+Provider/local classes concatenate through the nested schema before existing preview class aliases are added. Popup style fields merge shallowly: a local popup.root replaces the Provider's whole root style object, while other fields remain. Native class/style stay on the actual Image/Group root and are not copied to the popup. Native Image root style still overrides styles.root. The shared merge rules and static configuration shape are unchanged.
 
 ### Static properties / named exports
 

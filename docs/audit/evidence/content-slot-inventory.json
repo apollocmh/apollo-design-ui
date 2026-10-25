@@ -5374,6 +5374,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/demo/popup-provider.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue"
         ]
       },
@@ -5417,6 +5418,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts"
         ]
       },
@@ -5523,6 +5525,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
@@ -5582,6 +5585,7 @@
         "files": [
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/preview-focus.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
@@ -5617,6 +5621,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/demo/popup-provider.vue",
           "packages/ui/src/image/demo/preview-group-top-progress.vue"
         ]
       },
@@ -5695,6 +5700,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts"
         ]
       },
@@ -5722,6 +5728,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-focus.test.ts"
         ]
       },

@@ -163,6 +163,21 @@ try {
     path.join(temp, 'ExactPreviewSlots.vue'),
     exactPreview.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/image/demo/popup-provider.vue'),
+    path.join(temp, 'PopupProviderDemo.vue'),
+  );
+  const popupProviderFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImagePopupProvider.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImagePopupProvider.vue'),
+    popupProviderFixture.replace(
+      '../../../packages/ui/src/image/demo/popup-provider.vue',
+      './PopupProviderDemo.vue',
+    ),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig, PreviewGroupProps, PreviewGroupSlots, TransformInfo } from '@apollo-design/ui';

@@ -131,7 +131,7 @@ preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0�
 
 ### 语义化槽位
 
-Image通过 `ConfigProvider.components.image.classNames/styles` 接收静态对象语义配置。对象、image或整个components map替换、晚出现和移除都会读取当前值；类名与局部拼接，样式由局部覆盖，原生根style最后应用。原图与富内容的同结构更新保持节点和输入状态。本批全局普通图/Progress配置证据见 [报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)，预览全局样式与PreviewGroup接线另行复审。
+Image通过 `ConfigProvider.components.image.classNames/styles` 接收静态对象语义配置；Image与PreviewGroup的共享预览均读取其中的popup组。字段、image或整个components map替换、晚出现和移除都会读取当前值，原图、富内容和已打开预览保持同结构节点与状态。普通图/Progress证据见 [报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)，弹层六个节点的当前配置见 [预览配置报告](../../../../docs/audit/2026-10-25-image-popup-provider-remediation.md)。
 
 `classNames` / `styles` 的槽位（`placeholder` 与 `popup` 是**嵌套组**）：
 
@@ -141,11 +141,7 @@ placeholder.progress: root / content / rail / indicator
 popup: root / mask / body / footer / actions / close
 ```
 
-合并优先级（低 → 高）：`classNames` → `preview.rootClassName` / `preview.maskClassName`
-（deprecated 面）→ **原生 `class` / `style`**（落在根元素）。
-
-> ⚠️ `popup` 是嵌套语义组：本仓的 `useMergeSemantic` 尚未实现 antd 的 `schema` 分支，
-> `clsx` 会把对象值压成 `''`，所以 `popup` 由组件单独合并（`Image` 与 `PreviewGroup` 同款）。
+Provider/局部classNames通过嵌套schema拼接，再追加现有预览类名配置。styles.popup按字段浅合并：局部popup.root替换Provider的整个root样式对象，其他未覆盖字段保留。原生class/style留在Image或Group实际根，不复制到弹层；Image根style仍优先于styles.root。本批不改变共享合并规则或增加函数式配置。
 
 ### 静态属性 / 具名导出
 

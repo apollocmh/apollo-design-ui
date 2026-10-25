@@ -249,7 +249,7 @@ const Image = defineComponent({
     //（`popup: { _default: 'root' }`，§1.7b 已补）：字符串形态 `popup = 'x'` 已被
     // 归到 `popup.root`，这里只读合并结果；`previewConfig` 的两条是本仓既有的附加项。
     const popupClassNames = computed(() => {
-      const p = (mergedClassNames.value as { popup?: Record<string, string | undefined> }).popup;
+      const p = mergedClassNames.value.popup;
       const mask = previewConfig.value?.mask;
       return {
         root: [p?.root, previewConfig.value?.rootClassName].filter(Boolean).join(' ') || undefined,
@@ -428,7 +428,7 @@ const Image = defineComponent({
                   icons: previewConfig.value?.icons,
                   rootClassName: previewConfig.value?.rootClassName,
                   classNames: popupClassNames.value,
-                  styles: props.styles?.popup,
+                  styles: mergedStyles.value.popup,
                   onClose: () => setPreviewOpen(false),
                   afterOpenChange: previewConfig.value?.afterOpenChange,
                   onTransform: (info: TransformInfo) => emit('transform', info),

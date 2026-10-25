@@ -5,6 +5,6 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Image', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 16,
+  expectCount: 17,
   global: { stubs: { teleport: false } },
 });

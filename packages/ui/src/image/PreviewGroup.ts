@@ -64,7 +64,7 @@ const PreviewGroup = defineComponent({
     styles: { type: Object as PropType<SemanticStyles>, default: undefined },
   },
   setup(props, { slots, emit }) {
-    const config = useComponentConfig('image');
+    const config = useComponentConfig<ImageSemanticType>('image');
     const { direction } = config;
     const prefixCls = computed(() => config.getPrefixCls('image'));
     const previewPrefixCls = computed(() => props.previewPrefixCls ?? `${prefixCls.value}-preview`);
@@ -136,20 +136,20 @@ const PreviewGroup = defineComponent({
 
     const currentItem = computed(() => mergedItems.value[current.value]);
 
-    // ⚠️ popup 是嵌套语义组 ⇒ 走 `useMergeSemantic` 的 schema 档
-    //（`popup: { _default: 'root' }`，§1.7b 已补）：字符串形态 `popup = 'x'` 归到
-    // `popup.root`，字符串 + 对象混用不再产垃圾键。
-    // 另：antd 的 PreviewGroup 还会把 `contextClassNames` / `contextStyles` 并入，
-    // 本仓库的 ConfigProvider 目前不提供组件级 classNames/styles（staged），
-    // 所以来源只有 props 与 previewConfig（`preview.rootClassName` / `maskClassName`）。
-    const { classNames: mergedGroupClassNames } = useMergeSemantic<
-      Record<string, unknown>,
+    // Read current provider objects; popup style fields keep the shared shallow
+    // precedence while class names merge through the nested semantic schema.
+    const { classNames: mergedGroupClassNames, styles: mergedGroupStyles } = useMergeSemantic<
+      PreviewGroupProps,
       SemanticClassNames,
-      Record<string, never>
-    >([() => props.classNames], [], {} as never, { popup: { _default: 'root' }, placeholder: {} });
+      SemanticStyles
+    >(
+      [() => config.classNames, () => props.classNames],
+      [() => config.styles, () => props.styles],
+      () => props,
+      { popup: { _default: 'root' }, placeholder: { progress: {} } },
+    );
     const popupClassNames = computed(() => {
-      const p = (mergedGroupClassNames.value as { popup?: Record<string, string | undefined> })
-        .popup;
+      const p = mergedGroupClassNames.value.popup;
       const cfg = previewConfig.value;
       const mask = cfg?.mask;
       return {
@@ -219,7 +219,7 @@ const PreviewGroup = defineComponent({
               icons: icons.value,
               rootClassName: previewConfig.value.rootClassName,
               classNames: popupClassNames.value,
-              styles: props.styles?.popup,
+              styles: mergedGroupStyles.value.popup,
               onClose: () => setOpen(false),
               afterOpenChange: previewConfig.value.afterOpenChange,
               onTransform: (info: TransformInfo) => emit('transform', info),

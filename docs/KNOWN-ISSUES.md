@@ -279,6 +279,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image预览槽增量（F11）**：其余7条renderer直接迁原生previewImage/previewActions/Group previewCount，删除四个旧配置字段与toolbar别名。正式13条修前11失败/2已有通过；扩展真实SFC、编辑器方向键与Progress CSR/SSR后19条通过。当前VNode/optional src、零基索引、typed动作、空/移除与稳定编辑器的证据见 [报告](audit/2026-10-25-image-preview-slots-remediation.md) 和 [迁移](migrations/image-preview-slots.md)。其他预览配置及视觉验收继续独立推进。
 
+**2026-10-25 Image/Group全局弹层语义增量（F11）**：18条修前14失败/4已有通过，确认Image丢全局popup样式、Group未接全局类名/样式；统一当前getter合并后18条通过，完整363条运行回归及62条类型通过。六个弹层节点、局部浅覆盖、根attrs隔离与打开时编辑器/焦点/旋转的生产证据见 [报告](audit/2026-10-25-image-popup-provider-remediation.md)。其他预览配置与视觉验收继续开放。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

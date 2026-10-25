@@ -32,8 +32,9 @@ const allDemos: Array<{ component: string; demo: DemoMeta }> = manifest.componen
 
 describe('全量 demo 审计', () => {
   // 阶段 2 补齐后 758 → 881，2026-10-21 余量补齐后 → 989；F01 新增标签/输入属性示例后 → 990，F02 条件选项示例后 → 991；新增 demo 时同步更新此数（它是管线重复/漏收的哨兵）。
-  it('数量与管线口径一致（1000）', () => {
-    expect(allDemos.length).toBe(1000);
+  it('数量与管线口径一致（1001）', () => {
+    expect(allDemos.length).toBe(1001);
+    expect(allDemos.some(({ demo }) => demo.id === 'image-demo-popup-provider')).toBe(true);
     expect(allDemos.some(({ demo }) => demo.id === 'image-demo-transform-events')).toBe(true);
     expect(allDemos.some(({ demo }) => demo.id === 'steps-demo-native-slots')).toBe(true);
     expect(allDemos.some(({ demo }) => demo.id === 'timeline-demo-native-slots')).toBe(true);

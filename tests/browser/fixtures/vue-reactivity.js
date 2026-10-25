@@ -23,6 +23,7 @@ import EventEmits from './EventEmits.vue';
 import FormPrefix from './FormPrefix.vue';
 import ImageNativeEvents from './ImageNativeEvents.vue';
 import ImageOpenModel from './ImageOpenModel.vue';
+import ImagePopupProvider from './ImagePopupProvider.vue';
 import ImagePrefix from './ImagePrefix.vue';
 import ImagePreviewFocus from './ImagePreviewFocus.vue';
 import ImagePreviewSlots from './ImagePreviewSlots.vue';
@@ -115,6 +116,7 @@ const Demo = {
   'typography-provider': TypographyProvider,
   'image-render': ImageRender,
   'image-provider': ImageProvider,
+  'image-popup-provider': ImagePopupProvider,
   'image-prefix': ImagePrefix,
   'image-native-events': ImageNativeEvents,
   'image-open-model': ImageOpenModel,
