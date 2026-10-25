@@ -289,6 +289,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image关闭控件增量（F11）**：双入口14条修前10失败/4已有通过，确认closable/closeIcon未接入及原生关闭图标槽缺失。补当前转发与previewCloseIcon原生槽后扩展18条通过，覆盖空/移除/显式数据、稳定编辑器、按钮移除的焦点修复、Esc、Progress/SSR及Group所有权。新增实际Demo，详见 [报告](audit/2026-10-25-image-preview-close-remediation.md)。mask/容器、局部主题及视觉验收继续开放。
 
+**2026-10-25 Image整改单元完整盘点（进行中）**：按当前源码建立 [统一契约清单](audit/2026-10-25-image-contract-audit.md)，覆盖两公开入口、全部配置、Slots/Emits/模型/导出、Progress、状态/注册/变换、Provider/样式及关联基础包。真实无DOM Node发布包SSR已复现 `Image is not defined`（退出1），属于本轮必修；其余待核实项先补齐证据并集中评估API，再按根因成组修复和统一验收。前述独立增量均不表示Image或全库已完成。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
