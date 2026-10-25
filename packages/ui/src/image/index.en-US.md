@@ -111,6 +111,8 @@ Progress/standalone-placeholder branches forward native attrs to the existing Pr
 
 ### Semantic slots
 
+Image accepts static semantic objects through `ConfigProvider.components.image.classNames/styles`. Replacing a field, image config or entire components map, adding it later, and removing it use current values. Classes join local classes, local styles override global styles, and native root style comes last. Stable image/rich nodes retain input state. See the [evidence](../../../../docs/audit/2026-10-25-image-provider-remediation.md); global preview styles and PreviewGroup wiring remain under separate review.
+
 Slots of `classNames` / `styles` (`placeholder` and `popup` are **nested groups**):
 
 ```

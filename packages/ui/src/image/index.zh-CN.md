@@ -108,6 +108,8 @@ preview-img-info / preview-mask / preview-src。
 
 ### 语义化槽位
 
+Image通过 `ConfigProvider.components.image.classNames/styles` 接收静态对象语义配置。对象、image或整个components map替换、晚出现和移除都会读取当前值；类名与局部拼接，样式由局部覆盖，原生根style最后应用。原图与富内容的同结构更新保持节点和输入状态。本批全局普通图/Progress配置证据见 [报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)，预览全局样式与PreviewGroup接线另行复审。
+
 `classNames` / `styles` 的槽位（`placeholder` 与 `popup` 是**嵌套组**）：
 
 ```

@@ -83,3 +83,5 @@ registry 数据：token 数 = 6（+ 派生 1）。
 公开 `ImageSlots` / `ImageRenderInfo` 与真实 Vue 模板、SSR、富内容身份及生产浏览器证据见 [本批报告](../../../../docs/audit/2026-10-25-image-render-slot-remediation.md)。上面的历史视觉结果不表示当前 Apollo 基线已验收；本批检查仍缺 9 张批准图。预览配置内同名 renderer 与其他扩展继续独立复审。
 
 原生根style现按Vue字符串/对象/数组合并，不复制到img；Progress与纯占位复用现有单根接收attrs，保留内部状态ARIA。嵌套placeholder.progress按对象schema合并。范围与实际检查见 [样式报告](../../../../docs/audit/2026-10-25-image-native-styles-remediation.md)。
+
+组件级classNames/styles合并保留当前Provider对象读取，替换字段、整个配置、晚加载和移除不再固定setup快照；静态对象契约及优先级保持。见 [配置报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)。

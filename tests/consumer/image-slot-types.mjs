@@ -47,6 +47,17 @@ try {
       './ImageStyleDemo.vue',
     ),
   );
+  const providerFixture = fs.readFileSync(
+    path.join(root, 'tests/browser/fixtures/ImageProvider.vue'),
+    'utf8',
+  );
+  fs.writeFileSync(
+    path.join(temp, 'ImageProvider.vue'),
+    providerFixture.replace(
+      '../../../packages/ui/src/image/demo/style-class.vue',
+      './ImageStyleDemo.vue',
+    ),
+  );
   fs.writeFileSync(
     path.join(temp, 'Types.ts'),
     `import type { ImageProps, ImageSlots, PreviewConfig } from '@apollo-design/ui';

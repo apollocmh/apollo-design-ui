@@ -10,6 +10,29 @@ Image setup解构捕获了初始语义对象。保留 `useComponentConfig<ImageS
 
 ## 检查
 
-核心里程碑已验证：Image/ConfigProvider四project共16文件225条通过，根严格检查通过，UI声明及69份CSS构建通过，L7复用本次产物11项0FAIL/0PENDING。Registry19项、内容清单检查与tooling8条通过。真实Demo/浏览器/消费端最终验证仍在执行，只记录本批证据，不升级历史completed或视觉维度。
+核心里程碑94f0b11a已验证：Image/ConfigProvider四project共16文件225条通过，根严格检查通过，UI声明及69份CSS构建通过，L7复用本次产物11项0FAIL/0PENDING。Registry19项、内容清单检查与tooling8条通过。只记录本批证据，不升级历史completed或视觉维度。
 
 Demo复核观测到既有浅合并边界：本地styles.placeholder.progress整组覆盖Provider同组样式，类名仍按schema拼接。这与getter快照修复不同；本批保留已有合并约定，浏览器须验证该局部覆盖，公开说明不能承诺被覆盖的Provider组内CSS变量仍保留。不修改共享合并层或据此宣称新的全局合并规范。
+
+新增Demo最初的过宽断言实际失败于progress根变量缺省，日志 `/tmp/apollo-image-provider-demo-boundary-red.log`。根据既有按键浅合并契约修正错误期待，替代覆盖明确验证4个Provider进度组变量缺省及indicator字段不叠加，同时保留Progress当前类名/公共根变量、普通root/img/cover动态/移除、局部/native优先级和节点/焦点断言；未删除原有正确回归或改源合并规则。
+
+最终Chrome150.0.7871.125生产包检查通过：对象字段/整image/整map替换、late/remove、deep对照、当前槽scope、根/图片/cover/input身份与草稿/焦点、真实Demo empty/A/B/移除及上述覆盖边界，零Vue/page错误，见 `/tmp/apollo-image-provider-browser.log`。这份产物对应getter里程碑，后续prefix源码变化未用于本次证据。
+
+发布消费端复制真实Demo及ImageProvider.vue，vue-tsc通过，无源码alias或测试声明。文档全流水线build/test/typecheck/content通过：84路由、999Demo、14文件157测试和72组件；仅修正最后的Demo解释文案后，重新build/content:check通过，类型及测试复用本批未变Vue/源码的已通过结果。日志 `/tmp/apollo-image-provider-docs.log`、`/tmp/apollo-image-provider-docs-final.log`、`/tmp/apollo-image-provider-consumer.log`。改动代码Biome通过，git diff检查通过。视觉仍明确缺9张Apollo批准基线，未更新批准图。
+
+```sh
+pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/image packages/ui/src/config-provider --maxWorkers=1
+pnpm run lint:types
+pnpm run build:ui
+node tests/consumer/image-slot-types.mjs
+node tests/build/run.mjs --package ui --no-build
+node tests/browser/image-provider.mjs
+pnpm --filter @apollo-design/docs run build
+pnpm --filter @apollo-design/docs run test
+pnpm --filter @apollo-design/docs run typecheck
+pnpm --filter @apollo-design/docs run content:check
+pnpm run registry:check
+pnpm run audit:content-slots:check
+pnpm run test:tooling
+node tests/visual/apollo.mjs --check --component image
+```
