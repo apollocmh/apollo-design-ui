@@ -5349,14 +5349,16 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/image/demo/image-render.vue"
+          "packages/ui/src/image/demo/image-render.vue",
+          "packages/ui/src/image/demo/style-class.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
-          "packages/ui/src/image/__tests__/image-slot.test.ts"
+          "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/native-style.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -5465,6 +5467,7 @@
           "packages/ui/src/image/__tests__/a11y.test.ts",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5517,14 +5520,16 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/image/demo/image-render.vue"
+          "packages/ui/src/image/demo/image-render.vue",
+          "packages/ui/src/image/demo/style-class.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
-          "packages/ui/src/image/__tests__/image-slot.test.ts"
+          "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/native-style.test.ts"
         ]
       },
       "decision": "skip",
@@ -5654,14 +5659,16 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/image/demo/image-render.vue"
+          "packages/ui/src/image/demo/image-render.vue",
+          "packages/ui/src/image/demo/style-class.vue"
         ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
-          "packages/ui/src/image/__tests__/image-slot.test.ts"
+          "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/native-style.test.ts"
         ]
       },
       "decision": "keep-data",

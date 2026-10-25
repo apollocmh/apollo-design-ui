@@ -35,12 +35,14 @@ preview-img-info / preview-mask / preview-src.
 | fallback | Image shown when loading fails | `string` | — |
 | placeholder | Placeholder content; `{ progress: true \| { percent, render } }` renders the progress layer | `VNodeChild \| { progress }` | — |
 | preview | `false` disables preview; object form see below | `boolean \| PreviewConfig` | `true` |
-| class / style | **Native root attrs** (not Props; replacing upstream `className` / `rootClassName` / `style`). `style` **overrides `styles.root`** | `string \| array \| object` / `CSSProperties` | — |
+| class / style | Native root attrs. Style accepts Vue strings, objects and arrays, overrides `styles.root`, and stays on the root; use `styles.image` for the img | `string \| array \| object` / `StyleValue` | — |
 | wrapperStyle | ⚠️ Deprecated, use `styles.root` | `CSSProperties` | — |
 | classNames / styles | Semantic class names / styles, see "Semantic slots" | — | — |
 | onClick | Click (internal preview opens first, then this runs) | `(e: MouseEvent) => void` | — |
 | onError | `<img>` load error | `(e: Event) => void` | — |
 | crossOrigin / decoding / loading / referrerPolicy / sizes / srcSet / useMap / draggable | Native attributes forwarded to `<img>` | — | — |
+
+Progress/standalone-placeholder branches forward native attrs to the existing Progress root and merge Image root and placeholder.progress semantics, with native style last. ID/data and naming/description ARIA stay current; progress owns its role, range and busy state. Removing an explicit aria-label restores the percentage name. Root click notifies once without opening preview; img errors stay on the img. See the [native style correction](../../../../docs/migrations/image-native-styles.md).
 
 ### Image · Slots
 

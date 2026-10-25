@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-25T06:28:17.292Z",
+  "generatedAt": "2026-10-25T06:52:17.583Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2371,7 +2371,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。",
+      "why": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。\n2026-10-25 F11/ADR0007：修复native字符串style崩溃和根样式误复制到img；Progress/纯占位在原单根转发attrs，保护受控ARIA并补placeholder.progress嵌套schema。首批3条修前全失败、修后通过；证据见 docs/audit/2026-10-25-image-native-styles-remediation.md，保留历史验收含义与9张Apollo视觉基线缺口。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P3",

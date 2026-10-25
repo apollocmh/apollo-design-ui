@@ -81,3 +81,5 @@ registry 数据：token 数 = 6（+ 派生 1）。
 顶层 `imageRender` 函数声明原先未被实现消费，现直接替换为 `#imageRender="{ originNode, src, ... }"`。槽在正常图片 render 中读取当前信息；存在但为空时抑制默认图片，移除后恢复。`originNode` 保留原图片的 ref、加载/错误处理与原生属性，适合通过 `<component :is="originNode" />` 渲染。Progress 提前返回时不求值图片槽。
 
 公开 `ImageSlots` / `ImageRenderInfo` 与真实 Vue 模板、SSR、富内容身份及生产浏览器证据见 [本批报告](../../../../docs/audit/2026-10-25-image-render-slot-remediation.md)。上面的历史视觉结果不表示当前 Apollo 基线已验收；本批检查仍缺 9 张批准图。预览配置内同名 renderer 与其他扩展继续独立复审。
+
+原生根style现按Vue字符串/对象/数组合并，不复制到img；Progress与纯占位复用现有单根接收attrs，保留内部状态ARIA。嵌套placeholder.progress按对象schema合并。范围与实际检查见 [样式报告](../../../../docs/audit/2026-10-25-image-native-styles-remediation.md)。

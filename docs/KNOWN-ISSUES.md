@@ -257,6 +257,8 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 **2026-10-25 Image缩略图增量（F11）**：顶层imageRender原只有类型/文档、实现未消费。13条修前8失败/5已有通过，直接迁原生单对象imageRender槽；当前VNode/optional实际src、空/移除、ref/load/error、预览/组注册与SSR局部13通过；真实浏览器另复现默认fade动画名不匹配CSS且关闭无兜底，同批修正前缀与500ms结束保护，保留正常及无结束事件的隐藏断言。见 [报告](audit/2026-10-25-image-render-slot-remediation.md) 与 [迁移记录](migrations/image-render-slot.md)；preview配置同名renderer及其他扩展继续独立复审。
 
+**2026-10-25 Image原生样式增量（F11/ADR0007）**：正式首批3条修前全失败，确认字符串style抛错、根样式覆盖img语义及Progress实际根丢attrs。按Vue数组合并根style、图片仅用styles.image；占位分支复用现有单根路由attrs并保护进度ARIA，补正确placeholder.progress嵌套schema。见 [报告](audit/2026-10-25-image-native-styles-remediation.md) 与 [迁移说明](migrations/image-native-styles.md)。Provider整体替换、前缀及预览配置扩展继续独立推进。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换

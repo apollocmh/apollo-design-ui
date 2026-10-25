@@ -32,13 +32,14 @@ preview-img-info / preview-mask / preview-src。
 | fallback | 加载失败时的兜底图 | `string` | — |
 | placeholder | 占位内容；`{ progress: true \| { percent, render } }` 时渲染进度层 | `VNodeChild \| { progress }` | — |
 | preview | `false` 关闭预览；对象形态见下表 | `boolean \| PreviewConfig` | `true` |
-| class / style | **根元素原生 attrs**（不是 Props；替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `CSSProperties` | — |
-| style | 根元素内联样式。**会覆盖 `styles.root`** | `CSSProperties` | — |
+| class / style | 根元素原生attrs；style支持Vue字符串/对象/数组，优先于 `styles.root`，不复制到img；图片样式用 `styles.image` | `string \| array \| object` / `StyleValue` | — |
 | wrapperStyle | ⚠️ 已废弃，请用 `styles.root` | `CSSProperties` | — |
 | classNames / styles | 语义化类名/样式，见「语义化槽位」 | — | — |
 | onClick | 点击（先走内部打开预览，再调它） | `(e: MouseEvent) => void` | — |
 | onError | `<img>` 加载失败 | `(e: Event) => void` | — |
 | crossOrigin / decoding / loading / referrerPolicy / sizes / srcSet / useMap / draggable | 透传给 `<img>` 的原生属性 | — | — |
+
+进度/纯占位分支的原生attrs落在现有Progress根，合并Image根与placeholder.progress语义，style仍优先。id/data及名称/描述ARIA保持当前值；role、范围和busy状态由进度控制。移除显式aria-label恢复百分比默认名称。根click通知一次且不打开预览，img error不改挂到占位根。详见 [原生样式修正](../../../../docs/migrations/image-native-styles.md)。
 
 ### Image · 插槽
 

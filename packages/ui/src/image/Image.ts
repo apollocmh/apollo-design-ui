@@ -11,6 +11,7 @@
  * ```
  * Preview 是 portal —— SSR 不可见（与 tooltip/popover 同判）。
  */
+import { omit } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -205,7 +206,7 @@ const Image = defineComponent({
     });
 
     // =========================== Semantic =============================
-    // ⚠️ antd 第四参 `{ popup: { _default: 'root' }, placeholder: {} }`（§1.7b 已补）。
+    // popup 与 placeholder.progress 是嵌套对象；progress 下的语义键不能当成类名叶子。
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       ImageProps,
       SemanticClassNames,
@@ -222,7 +223,7 @@ const Image = defineComponent({
         () => (props.wrapperStyle ? { root: props.wrapperStyle } : undefined),
       ],
       {} as ImageProps,
-      { popup: { _default: 'root' }, placeholder: {} },
+      { popup: { _default: 'root' }, placeholder: { progress: {} } },
     );
 
     // ========================== Placeholder ===========================
@@ -297,20 +298,28 @@ const Image = defineComponent({
       // 进度层 / 纯占位 overlay：只渲染 Progress（带尺寸）
       if (showProgressOverlay.value || shouldRenderPlaceholderOverlay.value) {
         const cfg = progressConfig.value ?? {};
+        const progressAttrs = omit(attrs, [
+          'role',
+          'aria-valuemin',
+          'aria-valuemax',
+          'aria-valuenow',
+          'aria-busy',
+        ]);
+        if (progressAttrs['aria-label'] === undefined) delete progressAttrs['aria-label'];
         return h(Progress, {
+          ...progressAttrs,
           prefixCls,
           percent: (cfg as { percent?: number }).percent,
           render: shouldRenderPlaceholderOverlay.value
             ? ((() => placeholderNode.value) as never)
             : ((cfg as { render?: never }).render ?? undefined),
           classNames: mergedClassNames.value?.placeholder?.progress,
-          styles: mergedStyles.value?.placeholder?.progress as never,
-          // Progress 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`。
-          // 调用方的 `class` 归**组件根**（见下方根 div）⇒ 这里不再重复下发。
-          class: undefined,
+          styles: mergedStyles.value?.placeholder?.progress,
+          class: [attrs.class, mergedClassNames.value?.root],
           rootStyle: mergedStyles.value?.root,
           width: props.width,
           height: props.height,
+          onClick: props.onClick,
         });
       }
 
@@ -327,7 +336,6 @@ const Image = defineComponent({
           // `height:auto`，图片按原始比例撑成正方形（L6 才暴露，contract 档丢 style）。
           height: toCssSize(props.height),
           ...(mergedStyles.value?.image ?? {}),
-          ...((attrs.style as Record<string, string | number>) ?? {}),
         },
         width: props.width,
         height: props.height,
@@ -360,13 +368,11 @@ const Image = defineComponent({
             mergedClassNames.value?.root,
             isError ? `${prefixCls}-error` : undefined,
           ],
-          style: {
-            width: toCssSize(props.width),
-            height: toCssSize(props.height),
-            ...(mergedStyles.value?.root ?? {}),
-            // 根 style 是 Vue 原生 attrs
-            ...((attrs.style as Record<string, string | number>) ?? {}),
-          },
+          style: [
+            { width: toCssSize(props.width), height: toCssSize(props.height) },
+            mergedStyles.value?.root,
+            attrs.style,
+          ],
           role: canPreview.value ? 'button' : undefined,
           tabindex: canPreview.value ? 0 : undefined,
           'aria-label': canPreview.value ? (props.alt ?? undefined) : undefined,
@@ -391,14 +397,7 @@ const Image = defineComponent({
                     mergedClassNames.value?.cover,
                     `${prefixCls}-cover-${coverInfo.value.placement}`,
                   ],
-                  style: {
-                    display:
-                      (attrs.style as Record<string, string | number> | undefined)?.display ===
-                      'none'
-                        ? 'none'
-                        : undefined,
-                    ...(mergedStyles.value?.cover ?? {}),
-                  },
+                  style: mergedStyles.value?.cover,
                 },
                 [coverInfo.value.coverNode as VNodeChild].filter(
                   (c) => c !== null && c !== undefined,

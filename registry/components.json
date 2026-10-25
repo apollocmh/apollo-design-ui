@@ -2948,7 +2948,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。",
+      "notes": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。\n2026-10-25 F11/ADR0007：修复native字符串style崩溃和根样式误复制到img；Progress/纯占位在原单根转发attrs，保护受控ARIA并补placeholder.progress嵌套schema。首批3条修前全失败、修后通过；证据见 docs/audit/2026-10-25-image-native-styles-remediation.md，保留历史验收含义与9张Apollo视觉基线缺口。",
       "layerNotes": "L4: baselines/image.dom.json 9 用例（SSR 路径）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact。L7(theme): 13 用例。差异登记 D94/D95（Vue style 数字不补 px / 声明块须覆盖 portal 根）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
