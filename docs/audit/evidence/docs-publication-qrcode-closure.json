@@ -1,0 +1,231 @@
+{
+  "status": "published-and-verified",
+  "sourceCommit": "ac6f40e0ea9c9551e22bfe2a39f01c11a32f931c",
+  "workflow": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40355255877",
+  "pages": {
+    "environment": "github-pages",
+    "id": 7336984824,
+    "sha": "ac6f40e0ea9c9551e22bfe2a39f01c11a32f931c"
+  },
+  "pagesStatus": {
+    "created_at": "2026-10-26T16:08:58Z",
+    "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+    "state": "success"
+  },
+  "ci": {
+    "docsFiles": 14,
+    "docsTests": 157,
+    "buildChecks": 151,
+    "failed": 0,
+    "pending": 0,
+    "notApplicable": 67
+  },
+  "online": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "ac6f40e0",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "ac6f40e0"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "actualQRCodeDemos": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "httpStatus": 404,
+        "passed": true
+      },
+      {
+        "demo": "custom",
+        "httpStatus": 404,
+        "passed": true
+      },
+      {
+        "demo": "status",
+        "httpStatus": 404,
+        "passed": true
+      },
+      {
+        "demo": "svg",
+        "httpStatus": 404,
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "httpStatus": 404,
+        "passed": true
+      },
+      {
+        "name": "repeated refresh expires again; native model survives status and conditional slots",
+        "passed": true
+      },
+      {
+        "name": "actual component token removal/restoration preserves the native editor",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/basic",
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/custom",
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/status",
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/svg",
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/component-token"
+    ]
+  },
+  "ssrGuide": {
+    "status": 200,
+    "claims": [
+      "QRCode完整清单已统一验收",
+      "36张自有视觉",
+      "全部0像素差异",
+      "201项候选",
+      "全库审计仍在进行"
+    ],
+    "passed": true,
+    "browser": "150.0.7871.125"
+  },
+  "screenshotsReviewed": [
+    "desktop home",
+    "mobile dark home"
+  ],
+  "routing": "Standalone demos use the existing Pages 404.html SPA fallback; five expected main-document 404s are explicitly recorded; only those exact navigation console errors are excluded.",
+  "remaining": [
+    "Other components/foundation audits and the final whole-library gate remain open.",
+    "Other browser engines and physical QR scanning were not verified."
+  ]
+}

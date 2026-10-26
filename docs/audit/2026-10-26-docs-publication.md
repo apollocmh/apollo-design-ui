@@ -68,3 +68,12 @@ List实现里程碑已提交并推送 `23de152079c096fccf34d0f3907a8f649276de2b`
 线上33项发布检查、10个Spin Demo及3组交互全部通过。SSR进展指南HTTP200，实际包含Spin完整清单已验收、45张和7组水合；可见源码与日志为8abe0f97。补查确认新版Spin减少动画规则已加载，旋转paused；Docs既有site.css全局!important将过渡统一为0.01ms，精确断言该宿主值通过，独立库水合验证仍为0s。两种环境分开记录，没有修改生产CSS或放宽阈值。
 
 [最终上线证据](evidence/docs-publication-spin-closure.json)记录Actions、Pages状态、真实页面/交互和CSS实际值。当前[进展页](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)已展示Image、List与Spin验收结果；全库剩余单元及最终同一提交门禁保持开放。
+
+
+## 后续发布：QRCode完整验收已上线
+
+已发布源码ac6f40e0，包含集中实现f4b82b4d及36张清洁提交自有视觉批准/完整清单收口。[Deploy Docs 40355255877](https://github.com/apollocmh/apollo-design-ui/actions/runs/40355255877)两个作业及Pages deployment7336984824成功（2026-10-26T16:08:58Z）。CI的14文件157条Docs测试、全部包构建、L7共151项通过，FAIL=0/PENDING=0、n/a=67。
+
+线上Chrome150通用33项通过，可见源码与更新日志为ac6f40e0；单独打开全部5个实际QRCode Demo及2组交互通过，重复刷新会再次到期，条件/空槽和Token移除恢复保留原生输入。五个独立Demo沿用既有Pages 404.html SPA回退，明确记录主文档404，其余页面/Vue错误为零。SSR进度指南HTTP200，已验收/36张0像素差异/201个待复核候选及全库仍开放均逐项核对；桌面/移动暗色首页截图已查看。
+
+[本次发布证据](evidence/docs-publication-qrcode-closure.json)分开记录33项发布检查与7项示例验证，不累加成唯一用例数。系统curl的LibreSSL连接失败后改用已成功的真实Chrome读取SSR正文，没有将网络工具错误归为站点缺陷。后续继续其他组件与基础包审计，最终同一提交全库门禁仍开放。

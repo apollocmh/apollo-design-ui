@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "a45a8c1e",
-  "status": "unit-verified-publication-pending",
+  "status": "unit-verified-published",
   "baselineSources": [
     {
       "file": "packages/ui/src/index.ts",
@@ -15110,7 +15110,6 @@
     }
   ],
   "remaining": [
-    "Publish final acceptance/progress documents and verify deployed commit, live demos and source marker.",
     "Other browser engines, physical scanning and the final whole-library gate remain outside this unit."
   ],
   "closureChecks": [
@@ -17150,5 +17149,7 @@
     "pnpm --filter @apollo-design/docs run typecheck",
     "pnpm --filter @apollo-design/docs run test",
     "pnpm --filter @apollo-design/docs run build"
-  ]
+  ],
+  "acceptanceCommit": "ac6f40e0ea9c9551e22bfe2a39f01c11a32f931c",
+  "publicationEvidence": "docs/audit/evidence/docs-publication-qrcode-closure.json"
 }
