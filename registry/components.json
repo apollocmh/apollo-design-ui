@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
-      "visual-review": 1
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -1916,7 +1915,7 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "visual-review",
+      "status": "completed",
       "derived": {
         "dagLevel": 1,
         "unblocks": 0,
@@ -1944,15 +1943,15 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-26 完整盘点后集中实现原生status槽/稳定refresh事件、当前语言/Provider/遮罩Token、根与图像样式、默认对比度及名称。75四层、92类型、44生产浏览器、10 SSR、6组水合、5实际Demo/两组交互及UI/L7/Docs通过。36张Apollo视觉与最终清单/发布仍开放；证据 docs/audit/2026-10-26-qrcode-contract-audit.md。",
+      "notes": "2026-10-26 完整清单统一验收：原生status槽/稳定refresh事件、当前语言/Provider/遮罩Token、根与图像样式、默认对比度及名称。75四层、92类型、44生产浏览器、10 SSR、6组水合、5实际Demo/两组交互及UI/L7/Docs通过。清洁f4b82b4d的36张Apollo视觉已逐张批准且全部exact；完整清单/指纹与边界见 docs/audit/2026-10-26-qrcode-contract-audit.md。不代表全库最终门禁。",
       "layerNotes": {
         "api": "开发版直接移除statusRender，typed #status完整单对象scope；refresh为稳定Vue事件操作，16个运行时Props与原生attrs/ref已核对。",
         "interaction": "当前语言/Provider与配置移除、原生编辑器身份/焦点、模式/状态往返、真实像素/DPR/绘制回退及Demo重复刷新/卸载通过。",
         "token": "唯一遮罩Token已消费当前源主题和Alias，原生变量优先；默认黑白图像配对保持，显式颜色由调用者负责对比度。",
         "a11y": "实际canvas/svg具备可访问名称；无名称上游豁免移除，默认刷新为文本按钮，真实浏览器axe与键盘通过。",
-        "visual": "待审阅36张Apollo自有图；不以旧React参考升级当前验收。",
+        "visual": "清洁f4b82b4d：12个自有状态×3视口共36张，逐张审阅批准后复验全部exact，0差异；环境darwin/x64 Chrome150，原127条批准记录未改。",
         "docs": "原四Demo保留，新增Token Demo；双语API/迁移/发布声明同步，5实际Demo与两组交互本地通过。",
         "referenceHistory": "L4: baselines/qr-code.dom.json 8 用例（SVG path byte 级；bg hex 的 CSSOM 规范化 PLATFORM allow）。L6: 3 variant × 3 viewport = 9 张（canvas 像素同源一致）。"
       },
@@ -1982,7 +1981,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "upload",

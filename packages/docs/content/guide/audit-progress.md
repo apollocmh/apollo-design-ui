@@ -22,7 +22,7 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 
 **Spin完整清单已统一验收。** 原生多节点指示器、当前进度scope、稳定加载层、确定进度首帧和4个有效Token已修复。15条根因复现、32项生产浏览器、160条类型、生产SSR与发布声明通过；899条相关断言保留分批通过证据。最终98条单元、13条主题、7组水合验收通过；45张自有视觉基线经清洁提交审阅批准后全部0像素差异，相关List57张保持一致。10个实际Demo与3组交互已在线验证；全库其余审计仍在继续。
 
-**QRCode已按完整清单集中实现，正在最终验收。** 状态函数改为原生槽，刷新采用稳定Vue事件，当前语言与遮罩Token生效，根样式不再复制到画布；默认白色背景和图像名称已补齐。75条四层、92条类型、44项真实浏览器、10项SSR、6组水合及全部5Demo通过；36张自有视觉与完整清单最终核对仍开放。
+**QRCode完整清单已统一验收。** 状态函数改为原生槽，刷新采用稳定Vue事件，当前语言与遮罩Token生效，根样式不再复制到画布；默认白色背景和图像名称已补齐。75条四层、92条类型、44项真实浏览器、10项SSR、6组水合及全部5Demo通过；36张自有视觉经清洁提交逐张审阅批准后，全部0像素差异。实现与验收证据已提交，全库其余审计继续进行。
 
 - [可编辑状态槽与重复刷新](/components/qr-code/demo/status)
 - [QRCode动态遮罩Token](/components/qr-code/demo/component-token)
@@ -81,7 +81,7 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 
 **The complete Spin checklist is verified.** Native multi-node indicators, current progress scope, stable loading hosts, immediate determinate progress and four effective tokens are fixed. Fifteen root-cause reproductions, 32 browser checks, 160 type tests, production SSR and published declarations passed; 899 related assertions retain passing evidence from split runs. Final acceptance includes 98 unit tests, 13 theme tests, seven hydration groups and 45 reviewed images from a clean commit, all with zero pixel differences; the 57 approved List images also remain exact. All ten real demos and three interaction groups passed online. Other library audits remain open.
 
-**QRCode grouped fixes are implemented; final acceptance is ongoing.** Native status slots, stable Vue refresh events, live locale/cover tokens, correct root/graphic sizing, neutral contrast and image names are implemented. Validation includes75 runtime/DOM/accessibility/theme tests,92 type tests,44 browser checks,10 SSR checks, six hydration groups and all five demos. The36 owned images and final checklist remain open.
+**The complete QRCode checklist is verified.** Native status slots, stable Vue refresh events, live locale/cover tokens, correct root/graphic sizing, neutral contrast and image names are implemented. Validation includes 75 runtime/DOM/accessibility/theme tests, 92 type tests, 44 browser checks, 10 SSR checks, six hydration groups and all five demos. All 36 owned images were individually reviewed from a clean commit and match exactly. Implementation and acceptance evidence are committed; other library audits remain open.
 
 [Native status and repeated refresh](/components/qr-code/demo/status) · [Live cover token](/components/qr-code/demo/component-token) · [QRCode checklist](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-qrcode-contract-audit.md)
 

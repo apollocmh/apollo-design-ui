@@ -543,9 +543,9 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 
 下一单元为Spin完整契约盘点；本轮共享修复不宣称Spin整单元完成。全库内容候选仍202项待核实，其他组件、基础包与最终同一提交全量门禁继续开放。
 
-## 2026-10-26 QRCode完整盘点与集中实现（验收进行中）
+## 2026-10-26 QRCode完整盘点、集中实现与统一验收（已收口）
 
-已成组修正statusRender→原生#status、稳定refresh事件操作、当前语言/Provider/遮罩Token、根与图像尺寸、暗色背景对比度及图像名称；SVG属性修正，8个原机械场景保留并加强到完整路径/属性检查。75条四层、92条类型、44项生产浏览器、10项SSR、6组水合及全部5Demo/两组交互通过。状态Demo定时器泄漏有原源码失败复现，重复刷新与卸载归零通过。UI/L7/Docs通过；36张自有视觉及最终清单/发布继续验收。见[完整清单](audit/2026-10-26-qrcode-contract-audit.md)、[统一证据](audit/evidence/qrcode-contract.json)和[集中迁移](migrations/qrcode-contracts.md)。
+已成组修正statusRender→原生#status、稳定refresh事件操作、当前语言/Provider/遮罩Token、根与图像尺寸、暗色背景对比度及图像名称；SVG属性修正，8个原机械场景保留并加强到完整路径/属性检查。75条四层、92条类型、44项生产浏览器、10项SSR、6组水合及全部5Demo/两组交互通过。状态Demo定时器泄漏有原源码失败复现，重复刷新与卸载归零通过。UI/L7/Docs通过。清洁实现f4b82b4d的12状态×3视口共36张自有视觉逐张审阅批准后全部exact，0像素差异；原127条批准记录保持不变。原始完整清单已核对，组件单元收口；进度页同步结果，最终发布回执另记，不以本轮局部验收宣称全库完成。见[完整清单](audit/2026-10-26-qrcode-contract-audit.md)、[统一证据](audit/evidence/qrcode-contract.json)和[集中迁移](migrations/qrcode-contracts.md)。
 
 ## 2026-10-26 Spin完整盘点、集中实现与统一验收（已收口）
 

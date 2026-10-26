@@ -1142,6 +1142,330 @@
       "capturedAt": "2026-10-26T11:21:57.814Z",
       "reviewedAt": "2026-10-26T11:24:18.574Z",
       "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "qr-code/basic__light__mobile": {
+      "sha256": "b8d24a6e576bb9b54b3d7b12a9b0b06d50dc2791f438eeea6f98fe1a17219454",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:34.769Z",
+      "reviewedAt": "2026-10-26T15:56:05.293Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/basic__light__tablet": {
+      "sha256": "62c175a30f7d01566342cec1abd8086900df91853e2e59fb2c3bcf15cb0108b4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:36.744Z",
+      "reviewedAt": "2026-10-26T15:56:05.294Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/basic__light__desktop": {
+      "sha256": "cb5122540124699387406d50132a1de66ad39b7c9e45e50648c7857f3d7791f8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:38.731Z",
+      "reviewedAt": "2026-10-26T15:56:05.294Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/svg__light__mobile": {
+      "sha256": "9deef96b11c398816bb23ee027e7296ec14cfbeaef20937a00a232aa541c256e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:40.660Z",
+      "reviewedAt": "2026-10-26T15:56:05.295Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/svg__light__tablet": {
+      "sha256": "26086700c5d4d5503103347665cd27778f0a5d7dd5fc5cb2d813323742230f46",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:42.610Z",
+      "reviewedAt": "2026-10-26T15:56:05.295Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/svg__light__desktop": {
+      "sha256": "eb0508bf6dc23db52ee829998cbce5b8fc11e301f4796630069b95abe5b63f52",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:44.546Z",
+      "reviewedAt": "2026-10-26T15:56:05.295Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/icon__light__mobile": {
+      "sha256": "845d7a597726190531ff31cb5edc8f91776a79cbf7feb7d23dbda56f13d1e390",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:46.531Z",
+      "reviewedAt": "2026-10-26T15:56:05.296Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/icon__light__tablet": {
+      "sha256": "828eb06afd58e3dbf0b9ec4b9133c3260341daa35068bdbf797c086e6605e7fa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:48.483Z",
+      "reviewedAt": "2026-10-26T15:56:05.296Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/icon__light__desktop": {
+      "sha256": "16141c69e4118dd744ab47eccfa7cc145ddcd4476962ce3545fb9dd5911be68d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:50.439Z",
+      "reviewedAt": "2026-10-26T15:56:05.297Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/expired__light__mobile": {
+      "sha256": "2540155b368d2d075b58d21074c222cb5cd0ee24c0f3e5cade1013f3ea77e6c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:52.426Z",
+      "reviewedAt": "2026-10-26T15:56:05.297Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/expired__light__tablet": {
+      "sha256": "45fb7ab642ef05e741ad508f662ea44e9677b0560a84bebda49e27b51260f14a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:54.415Z",
+      "reviewedAt": "2026-10-26T15:56:05.297Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/expired__light__desktop": {
+      "sha256": "3b9edda5f3a91e6202aa2c02e17a08d2b9a0b39a2823dc752b9f991810547fd9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:56.402Z",
+      "reviewedAt": "2026-10-26T15:56:05.298Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/loading__light__mobile": {
+      "sha256": "e2d0524f128954fe246ca3774a60703eff78ece3d26ba7e6e8e6b307de9db6cb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:51:58.330Z",
+      "reviewedAt": "2026-10-26T15:56:05.298Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/loading__light__tablet": {
+      "sha256": "d4cdf860dc48a62ea19cdb01090cd18c79f618f290f4582d0cd20372e6f5de65",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:00.297Z",
+      "reviewedAt": "2026-10-26T15:56:05.298Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/loading__light__desktop": {
+      "sha256": "8a7e001d549e0258d37e7eae368c172845327a8d15f465b4aa2e512525c0e555",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:02.247Z",
+      "reviewedAt": "2026-10-26T15:56:05.299Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/scanned__light__mobile": {
+      "sha256": "ea61342fa9ec5fd3cd066fecdbe71f52817c8099eb258e73c97158b50f91313b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:04.202Z",
+      "reviewedAt": "2026-10-26T15:56:05.299Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/scanned__light__tablet": {
+      "sha256": "684f093404eabbf07b25704d35c84883d8a35cd5a06401df5180bf034a660e92",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:06.136Z",
+      "reviewedAt": "2026-10-26T15:56:05.299Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/scanned__light__desktop": {
+      "sha256": "16745cd57dce0dd0b7a9252d013433e7f1394bcedfca2fb1c1632b8b94a46ef7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:08.089Z",
+      "reviewedAt": "2026-10-26T15:56:05.300Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/custom-status__light__mobile": {
+      "sha256": "43e8379b661dbf2889b0b9be64001ea96c72c8e0c0524e51a004a7574a2e8c15",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:10.069Z",
+      "reviewedAt": "2026-10-26T15:56:05.300Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/custom-status__light__tablet": {
+      "sha256": "03336e7b6f7a2a54735344f2933a0463868036c2cc47e47ce3c783ca6a79edb7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:12.056Z",
+      "reviewedAt": "2026-10-26T15:56:05.300Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/custom-status__light__desktop": {
+      "sha256": "5452bbd19f9c2bc32b25a36a095e82ec1e083a5822fae12161a71f30859c547e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:14.056Z",
+      "reviewedAt": "2026-10-26T15:56:05.301Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/tokens__light__mobile": {
+      "sha256": "79aadcbdcf51ff36072e6d99cef3f2c92111d6565413c064f13531164763a28e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:16.038Z",
+      "reviewedAt": "2026-10-26T15:56:05.301Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/tokens__light__tablet": {
+      "sha256": "a374e31a910aa1c578654be11256d116f74fa97e9da98fd1cca561d84949fb02",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:18.043Z",
+      "reviewedAt": "2026-10-26T15:56:05.301Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/tokens__light__desktop": {
+      "sha256": "307a401fe069f6950137e0acfdfe9682a6e94bf8e84f8726eae4031c89e3d4e0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:20.013Z",
+      "reviewedAt": "2026-10-26T15:56:05.301Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-dark__light__mobile": {
+      "sha256": "e32e0f9526f3e8fde50ebef6a77aaa02c701a76775118f0eda61bc22a2ef6dff",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:21.996Z",
+      "reviewedAt": "2026-10-26T15:56:05.302Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-dark__light__tablet": {
+      "sha256": "32c9e56070d966ee162f734f911065d517281911bb45faf02f15350fa4fe5e4f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:23.998Z",
+      "reviewedAt": "2026-10-26T15:56:05.302Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-dark__light__desktop": {
+      "sha256": "3217b354597eef2a5e19b902ef976fe176d84f72c2c3ee4a6546de088e8cb154",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:25.987Z",
+      "reviewedAt": "2026-10-26T15:56:05.303Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-compact__light__mobile": {
+      "sha256": "762ef3f68adf973f480574ad7369b843d29e3de4455e6ee89420e18d29da967d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:27.968Z",
+      "reviewedAt": "2026-10-26T15:56:05.303Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-compact__light__tablet": {
+      "sha256": "9d501dc4d6eff02353baa24a1425cb84538fb9158168170eb376bf5a161167c5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:29.957Z",
+      "reviewedAt": "2026-10-26T15:56:05.303Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-compact__light__desktop": {
+      "sha256": "1c6b7ad9467ca3e31cd963b4874008c084115451f3710c2126961028012aeffa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:31.949Z",
+      "reviewedAt": "2026-10-26T15:56:05.304Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-dark-compact__light__mobile": {
+      "sha256": "eca43e2ecba3bd156816f4dd524fa7b9b888af1a17c430ca30f00bbacb0f6b3c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:33.914Z",
+      "reviewedAt": "2026-10-26T15:56:05.304Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-dark-compact__light__tablet": {
+      "sha256": "01eb47e725ec52c036ca7a79a41f29ed159cae7f2bef034ac5d0de2234625548",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:35.899Z",
+      "reviewedAt": "2026-10-26T15:56:05.304Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/theme-dark-compact__light__desktop": {
+      "sha256": "bcaa2653dd3d1ee2ef889bf252779ff121834b5b39b4e7e8ee62b843382c0e8b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:37.891Z",
+      "reviewedAt": "2026-10-26T15:56:05.305Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/native-focus__light__mobile": {
+      "sha256": "8d8767fc4f17a661abf8024a9157afa3b794db7a59b557ca6c0cac6d4af7876d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:39.922Z",
+      "reviewedAt": "2026-10-26T15:56:05.305Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/native-focus__light__tablet": {
+      "sha256": "d8ad61e67f16c2ca6111a548125c8f6ab20f17f319d4016546f2e3485a9f8ca1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:41.930Z",
+      "reviewedAt": "2026-10-26T15:56:05.306Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "qr-code/native-focus__light__desktop": {
+      "sha256": "844355e065c1ee9ff3a0e68bc4738382220143b4a5e850e933efadf4f21e79d5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "f4b82b4d19abf73555c719654e2e8fa288dcb154",
+      "dirty": false,
+      "capturedAt": "2026-10-26T15:52:43.952Z",
+      "reviewedAt": "2026-10-26T15:56:05.306Z",
+      "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
     }
   }
 }

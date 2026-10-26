@@ -71,7 +71,7 @@ onMounted(async () => {
 
     <RouterLink class="home-progress" to="/guide/audit-progress">
       <strong>{{ locale === 'zh-CN' ? '2026-10-26 · 整改进展' : '2026-10-26 · Audit progress' }}</strong>
-      <span>{{ locale === 'zh-CN' ? 'Image、List与Spin已验收；QRCode集中整改正在验收。查看进展与示例 →' : 'Image, List and Spin verified; QRCode fixes under validation. See progress and live examples →' }}</span>
+      <span>{{ locale === 'zh-CN' ? 'Image、List、Spin与QRCode已验收。查看进展、证据与实际示例 →' : 'Image, List, Spin and QRCode verified. See progress, evidence and live examples →' }}</span>
     </RouterLink>
 
     <!-- 真实组件实时示例（客户端挂载） -->

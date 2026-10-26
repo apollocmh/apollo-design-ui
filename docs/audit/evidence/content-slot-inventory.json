@@ -10379,7 +10379,6 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/qr-code/__tests__/capture-expired.test.ts",
           "packages/ui/src/qr-code/__tests__/contract-audit.test.ts",
           "packages/ui/src/qr-code/__tests__/index.test.ts",
           "packages/ui/src/qr-code/__tests__/semantic.test.ts"

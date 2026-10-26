@@ -1,6 +1,6 @@
 # QRCode整改单元：完整清单与验收
 
-盘点基线：a45a8c1e。当前状态：**已按完整清单集中实现，统一验收进行中，尚未收口**。范围包含QrCode、编码/绘制工具与许可、静态CSS、根/深入口类型、17个运行时Props（接口另含onRefresh事件监听字段）、两个语义落点、Provider四字段/locale、四个Demo及双语文档。关联组件为Button、Spin、ReloadOutlined；不把历史59条相关通过当成本单元完成。
+盘点基线：a45a8c1e。当前状态：**完整清单已统一验收，组件单元收口；最终文档发布回执另记**。实现提交f4b82b4d19abf73555c719654e2e8fa288dcb154。盘点范围包含QrCode、编码/绘制工具与许可、静态CSS、根/深入口类型、原17个运行时Props（接口另含onRefresh事件监听字段）、两个语义落点、Provider四字段/locale、原四个Demo及双语文档。关联组件为Button、Spin、ReloadOutlined；不把历史59条相关通过当成本单元完成。
 
 ## 实施前完整清单
 
@@ -50,4 +50,32 @@ Chrome44项通过，覆盖三种style几何、源Token/暗色背景、真实模�
 
 测试环境修正单独记录：真实Teleport/DOM身份、附着元素的计算样式、不可变样式/config的shallowRef；没有强制断言或公共类型放宽。同URL图像可复用解码缓存，因此模式重挂检查实际像素，不要求多发HTTP请求。最初误选dom项目的运行只计实际三层，完整四层另用dom-contract真实执行。
 
-[统一证据](evidence/qrcode-contract.json)区分修前、修后及实际命令。仍开放：36张自有视觉的清洁提交审阅/批准/比较、原完整清单最终核对和发布/线上验证；没有把本实现阶段标为整单元完成。迁移统一见[QRCode契约](../migrations/qrcode-contracts.md)。
+[统一证据](evidence/qrcode-contract.json)保留修前、集中实现阶段及最终验收。迁移统一见[QRCode契约](../migrations/qrcode-contracts.md)。以下最终核对取代实现阶段的开放状态。
+
+## 原完整清单最终核对
+
+| 原清单范围 | 已实现、已验证的最终结论 |
+|---|---|
+| value / errorLevel / boostLevel / marginSize | 字符串与分段、空值恢复、当前矩阵/纠错/留白均通过；原8个机械场景保留，完整SVG路径和原生属性受回归保护；许可与3份引擎文件未变 |
+| type / size / icon / iconSize / color / bgColor | canvas/SVG往返、正有限尺寸/回退、部分图标宽高、迟到图片/失败/删除/重挂、真实模块/背景像素、DPR2和无Path2D回退通过；根几何与绘图缓冲职责分离 |
+| status / #status / refresh / locale | 三非active状态及active、完整多节点/条件空槽、当前scope/语言、同key监听替换/删除/once、原生键盘一次发出及稳定输入/焦点通过；status由调用者控制，无额外v-model |
+| title / prefixCls / attrs / Expose | 两模式实际图像命名、前缀更新/恢复、原生class/事件及三种style写法、尺寸优先级、root nativeElement卸载清理通过 |
+| bordered / classNames / styles / Provider | root/cover两落点、当前配置替换/移除、最近Provider和实例隔离通过；语义工厂在setup创建一次，精确CSS类型/原生attrs优先已同步 |
+| Component Token / 样式 / 主题 | 唯一遮罩Token源主题、动态删除/恢复、原生CSS变量优先和当前Alias通过；默认白纸/中性前景、暗色/紧凑/组合主题与完整axe通过 |
+| 生命周期 / SSR / 水合 / 多实例 | 10项生产Node SSR、6组浏览器水合保持服务器节点/值/选区/焦点；反复状态与模式切换、一次emit、卸载清理通过；加载动画组合沿用已验收Spin |
+| Demo / 文档 / 公开类型 / 发布图 | 原4Demo保留+1Token Demo；两组真实交互和定时器反复到期/卸载归零通过；双语16运行时Props/状态槽/事件/ref、迁移及根/深入口/发布声明/真实SFC一致；构建/dts/69CSS/L7通过 |
+| 关联组件 / 共享层 / 视觉 | Button/Spin/Provider/locale组合由本轮回归和生产浏览器覆盖，共享实现未改；12状态×3视口36张自有图全部逐张审阅，0像素差异，原127条批准记录未改 |
+
+统一验收包含9文件75条四层、6文件92条相关类型、44项生产浏览器、10项SSR、6组水合、全部5Demo与两组交互。各范围独立记录，不累加成全库唯一用例数。完整四层使用unit/dom-contract/a11y/theme实际项目；根严格类型与发布消费检查均通过。
+
+## 自有视觉与提交证据
+
+`node tests/visual/apollo.mjs --component qr-code --candidate`从清洁f4b82b4d采集36张，manifest均dirty=false；逐张查看全部basic/svg/icon/expired/loading/scanned/custom-status/tokens/theme-dark/theme-compact/theme-dark-compact/native-focus的手机/平板/桌面图。确认尺寸、遮罩文字对比度、图标、完整状态内容、主题和真实焦点无裁切/溢出后，附环境与审阅说明接受，未复制旧React PNG。
+
+`node tests/visual/apollo.mjs --component qr-code --no-build`实跑36项PASS、pending=0，逐项diffPixels=0。批准环境为darwin/x64、系统Chrome150.0.7871.125；所有哈希/来源提交/实际几何与比较结果写入同一[统一证据](evidence/qrcode-contract.json)。生产9文件指纹仍为990771758f7293130ef1d2fcd98d8d90a84607d95e7ba081c90594cb71353322。
+
+## 验收边界与交付状态
+
+本单元已实现、已验证，无未裁决或受阻的本轮缺陷。外部引擎容量、跨域图片的浏览器限制已在API记录；未声明其他浏览器引擎、实体扫码、任意超容量输入或无限组合已验收。未新增下载/扫描器/业务请求模型。本轮未运行全库最终门禁，须在剩余全部整改单元完成后对同一最终提交执行。
+
+实现f4b82b4d已提交、推送且文档部署40352956775成功；该部署对应实现阶段。最终验收清单、基线与进度页将在本次收口提交中推送；线上源码、5个实际Demo与发布回执由[文档发布记录](2026-10-26-docs-publication.md)后续明确记录，不能把推送等同上线。
