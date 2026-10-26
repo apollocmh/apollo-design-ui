@@ -8,6 +8,222 @@
       "capturedAt": "2026-10-23T08:54:33.179Z",
       "reviewedAt": "2026-10-23T08:58:42.062Z",
       "reviewNote": "Codex visual review: Apollo type variant at desktop/light. Primary, Default, Dashed, Text, Link and Chinese labels are legible; button heights, borders, spacing and stage bounds are intact. Reviewed generated Apollo pixels at commit 6867166a; this approves only this scenario, not other variants or states."
+    },
+    "image/basic__light__mobile": {
+      "sha256": "133757cb952fbd0082c86028df5de0eaa0278ab2b245a56cbf493902094f01cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:00.256Z",
+      "reviewedAt": "2026-10-26T03:02:10.829Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/basic__light__tablet": {
+      "sha256": "53d95404df13b0068948b1ae2ee7df0ca60e9d9f04fbced899b10bcbf031409e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:01.961Z",
+      "reviewedAt": "2026-10-26T03:02:10.830Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/basic__light__desktop": {
+      "sha256": "af4328668728c199832e0a5328b728d77cab2a06712fbbf68bb15aa511e4176c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:03.671Z",
+      "reviewedAt": "2026-10-26T03:02:10.830Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/cover__light__mobile": {
+      "sha256": "43c44165d14125a519605aff7272898a01f1fcb8a2a4d7c0cee17ddb8f998e2c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:05.420Z",
+      "reviewedAt": "2026-10-26T03:02:10.831Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/cover__light__tablet": {
+      "sha256": "8346bdd2ee0954d6487089d58872bf4aaaaa0ab37a5ece12f6e9194c2602a396",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:07.178Z",
+      "reviewedAt": "2026-10-26T03:02:10.831Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/cover__light__desktop": {
+      "sha256": "d637ef6504702b2419da11c0e2df6bdf751469833bd9d5c5b0f23b9dfb340fd0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:08.930Z",
+      "reviewedAt": "2026-10-26T03:02:10.831Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/preview__light__mobile": {
+      "sha256": "84586ea79219053b5db5ed26260eb8de00d0fe6d152ca8e10269c05d7d52046e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:10.649Z",
+      "reviewedAt": "2026-10-26T03:02:10.832Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/preview__light__tablet": {
+      "sha256": "5b4cdc23997b7ecafa95bca882f4e07b636a93693b0bc270d3f4a729d4301fe2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:12.382Z",
+      "reviewedAt": "2026-10-26T03:02:10.832Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/preview__light__desktop": {
+      "sha256": "0dd004fb8f470211b41e7e66beaf90e753c232a2f508bc8fba7ba915fe215c00",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:14.125Z",
+      "reviewedAt": "2026-10-26T03:02:10.832Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/rich__light__mobile": {
+      "sha256": "7a8c8e192cc2d55804a4b0113d1ab195d3b52dd29fe2999c356cce173547fce7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:15.855Z",
+      "reviewedAt": "2026-10-26T03:02:10.833Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/rich__light__tablet": {
+      "sha256": "eb5fd3455f0ed32e85976379d7973ff786eb52a19f7e53262d3b59d8fa4b8921",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:17.574Z",
+      "reviewedAt": "2026-10-26T03:02:10.833Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/rich__light__desktop": {
+      "sha256": "1a38aa7f891c6ebfebc7a227acb79d2eb7c044d767d01779bb5881d4b4bfb500",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:19.326Z",
+      "reviewedAt": "2026-10-26T03:02:10.833Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/progress__light__mobile": {
+      "sha256": "a96165b7b5b950c95c182cf570b9234058b2541bb78dabd1ee7dbdc64410fa42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:21.085Z",
+      "reviewedAt": "2026-10-26T03:02:10.834Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/progress__light__tablet": {
+      "sha256": "6bcb760a0bd65dc6886184b968992dac35ec31c5a4a79d9464120fb9cc752be0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:22.815Z",
+      "reviewedAt": "2026-10-26T03:02:10.834Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/progress__light__desktop": {
+      "sha256": "81b709e7c39e64c231ea8141caf172fe68eac77a2c75a605849bd37997f31a15",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:24.548Z",
+      "reviewedAt": "2026-10-26T03:02:10.835Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/group__light__mobile": {
+      "sha256": "39843ada0dda28ed9a65ff5bc9ad50be06fa6835f3d0751e0c26479a41029197",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:26.277Z",
+      "reviewedAt": "2026-10-26T03:02:10.835Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/group__light__tablet": {
+      "sha256": "231595260400da687a4f6b273d9b9dbd56b1df9133e041d30eb41667ae1513f6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:28.008Z",
+      "reviewedAt": "2026-10-26T03:02:10.835Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/group__light__desktop": {
+      "sha256": "2eba05789b2015cd1c61eaab8fc228bbf03dd3e2e462a11bd3da8ba928de80a9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:29.750Z",
+      "reviewedAt": "2026-10-26T03:02:10.836Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/theme-dark__light__mobile": {
+      "sha256": "0e83acd976a0436afc0abb5d68cd660dab0c66bb927c136a81695dd1d1587407",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:31.489Z",
+      "reviewedAt": "2026-10-26T03:02:10.836Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/theme-dark__light__tablet": {
+      "sha256": "b16e44103fb3cf294b4848d108f04c377200edc4d499908f5fc90b878c387003",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:33.251Z",
+      "reviewedAt": "2026-10-26T03:02:10.836Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/theme-dark__light__desktop": {
+      "sha256": "837e9c78672aa810e6064f399dc75012c63d1f7ce942b27356613c038b008c88",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:35.013Z",
+      "reviewedAt": "2026-10-26T03:02:10.837Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/theme-compact__light__mobile": {
+      "sha256": "83f5883f1af5b903b9c8e142dd8026526cb836525529ce2404b726f1d5e061aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:36.747Z",
+      "reviewedAt": "2026-10-26T03:02:10.837Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/theme-compact__light__tablet": {
+      "sha256": "0cca8a9e4c249637b498379d364f47c52d6d803f3b206d638513d8eb0c8290f8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:38.492Z",
+      "reviewedAt": "2026-10-26T03:02:10.837Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "image/theme-compact__light__desktop": {
+      "sha256": "143a4ac916fe441b071712ade6b2695d5ac5e5720a8f0449a638156f34094f30",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "dirty": false,
+      "capturedAt": "2026-10-26T03:01:40.253Z",
+      "reviewedAt": "2026-10-26T03:02:10.838Z",
+      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
     }
   }
 }

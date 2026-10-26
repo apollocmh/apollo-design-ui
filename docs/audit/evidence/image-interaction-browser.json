@@ -877,6 +877,6 @@
     "Earlier shared-consumer run: 278/279 files and 4531/4532 tests passed, with one old rich-root trigger assertion corrected; complete Image and then the frozen 69-file cohort passed. This is not one green 279-file run.",
     "Teleport opener-removal covers a deferred target in the same document; nested-group ownership is independently checked.",
     "This Image follow-up has 381 local runtime tests and 26 browser scenarios. Earlier shared and wider consumer evidence belongs to 5e14ad6b, not a new full-library run.",
-    "Image visual approval is the next milestone; final whole-library gates and existing global formatter debt remain open."
+    "Image visual acceptance is recorded separately in image-visual-browser.json; final whole-library gates and global formatter debt remain open."
   ]
 }

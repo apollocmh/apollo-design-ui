@@ -1,0 +1,651 @@
+{
+  "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+  "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+  "cleanCapture": true,
+  "productionSourceSha256": "7b71c0831303a82df779a79ba9264a2f6102a300e15aec4125f112cd86384c79",
+  "commands": [
+    {
+      "command": "node tests/visual/apollo.mjs --component image --candidate",
+      "exitCode": 0,
+      "log": "/tmp/apollo-image-visual-clean-candidates.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component image --accept --review-note (recorded in manifest)",
+      "exitCode": 0,
+      "log": "/tmp/apollo-image-visual-accept.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component image --check",
+      "exitCode": 0,
+      "log": "/tmp/apollo-image-visual-hash-check.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component image",
+      "exitCode": 0,
+      "log": "/tmp/apollo-image-visual-compare.log"
+    }
+  ],
+  "review": "All 24 original candidates individually inspected. Clean 798339f5 capture matched every reviewed SHA-256; approved manifest preserves provenance, review notes and hashes.",
+  "bounds": [
+    "Chrome 150 on darwin/x64 only.",
+    "Eight states at mobile/tablet/desktop: basic, hover cover, full open preview, rich controls, progress, group, local dark, local compact.",
+    "Dark/compact are scoped variants on the light canvas, not an expanded global theme matrix.",
+    "This closes the Image unit; it does not claim full-library or other-component visual acceptance."
+  ],
+  "expected": 24,
+  "pending": 0,
+  "results": [
+    {
+      "id": "image/basic__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 132000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/basic__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/basic__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 270336,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/basic__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/basic__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 506880,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/basic__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/cover__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 132000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/cover__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/cover__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 270336,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/cover__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/cover__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 506880,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/cover__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/preview__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 667
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 667
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 250125,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/preview__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 2,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/preview__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 786432,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/preview__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 2,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/preview__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 1296000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/preview__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 2,
+        "nativeActions": 0
+      }
+    },
+    {
+      "id": "image/rich__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 132000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/rich__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 1
+      }
+    },
+    {
+      "id": "image/rich__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 270336,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/rich__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 1
+      }
+    },
+    {
+      "id": "image/rich__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 506880,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/rich__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 1,
+        "nativeActions": 1
+      }
+    },
+    {
+      "id": "image/progress__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 132000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/progress__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 0,
+        "nativeActions": 0,
+        "progress": "65"
+      }
+    },
+    {
+      "id": "image/progress__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 270336,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/progress__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 0,
+        "nativeActions": 0,
+        "progress": "65"
+      }
+    },
+    {
+      "id": "image/progress__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 352
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 506880,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/progress__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 0,
+        "images": 0,
+        "nativeActions": 0,
+        "progress": "65"
+      }
+    },
+    {
+      "id": "image/group__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 667
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 667
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 250125,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/group__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "2 / 2"
+      }
+    },
+    {
+      "id": "image/group__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 786432,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/group__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "2 / 2"
+      }
+    },
+    {
+      "id": "image/group__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 1296000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/group__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "2 / 2"
+      }
+    },
+    {
+      "id": "image/theme-dark__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 667
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 667
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 250125,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/theme-dark__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "1 / 2"
+      }
+    },
+    {
+      "id": "image/theme-dark__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 786432,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/theme-dark__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "1 / 2"
+      }
+    },
+    {
+      "id": "image/theme-dark__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 1296000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/theme-dark__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "1 / 2"
+      }
+    },
+    {
+      "id": "image/theme-compact__light__mobile",
+      "reactSize": {
+        "width": 375,
+        "height": 667
+      },
+      "vueSize": {
+        "width": 375,
+        "height": 667
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 250125,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/theme-compact__light__mobile.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "1 / 2"
+      }
+    },
+    {
+      "id": "image/theme-compact__light__tablet",
+      "reactSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "vueSize": {
+        "width": 768,
+        "height": 1024
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 786432,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/theme-compact__light__tablet.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "1 / 2"
+      }
+    },
+    {
+      "id": "image/theme-compact__light__desktop",
+      "reactSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "vueSize": {
+        "width": 1440,
+        "height": 900
+      },
+      "sizeMismatch": false,
+      "diffPixels": 0,
+      "totalPixels": 1296000,
+      "diffRatio": 0,
+      "isolatedRatio": 1,
+      "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/image/theme-compact__light__desktop.png",
+      "verdict": "PASS",
+      "reason": "exact",
+      "message": "逐像素完全一致。",
+      "state": {
+        "dialogs": 1,
+        "images": 3,
+        "nativeActions": 0,
+        "counter": "1 / 2"
+      }
+    }
+  ]
+}

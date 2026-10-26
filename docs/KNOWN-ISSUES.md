@@ -305,6 +305,8 @@ Portal容器副作用组已随 `899eba64` 提交推送。随后Image交互组改
 
 2026-10-26 分组所有权收口：items/注册切换、嵌套/同级隔离和当前项删除补验通过；删除打开者后的焦点候选改由Vue注册关系提供，普通/富内容/嵌套/Teleport及真实Demo共26生产场景零错误。最终Image四层23文件381条，严格、UI L7、SSR/模板消费者与Docs类型/14文件157条/SSG构建通过。新增逻辑成本按用户明确要求调整Image单条预算77→78KB。视觉24张候选仍待清洁提交批准，不代表全库门禁。证据仍统一见image-contract-audit。
 
+**2026-10-26 Image整改单元已收口**：完整契约清单逐项验收完成；分组焦点修复 `8d99baae`、视觉源码 `2df25090`，清洁 `798339f5` 重拍24张均与逐张审查候选一致，批准后像素复验24/24全0差异。当前Image四层381条、Chrome26场景、严格/UI L7/SSR/发布类型消费与Docs均通过。Registry视觉来源改为Apollo，保留历史参考证据。具体命令、提交、已验/未验边界统一见[清单](audit/2026-10-25-image-contract-audit.md)；不是全库完成。
+
 **H05 · 全仓格式门禁存量**：本轮真实`lint:format`失败66错误/37警告；在独立detached原HEAD运行有67错误/37警告。本轮48个适用改动文件检查通过，未放宽Biome规则。memory工具及其他既有文件须另案完整盘点修复，仍阻止最终全仓格式绿灯；不能把局部通过当作全仓通过。命令和证据见同一Image清单，原全量诊断保留 `/tmp/apollo-image-format-head-baseline.log` 与 `/tmp/apollo-image-frozen-format.log`。
 
 ---
