@@ -143,10 +143,9 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   // jsdom/真实浏览器里都不存在的动画事件，`autoDestroy` 的卸载被无限推迟。
   // SSR 可能运行在有 window 的预渲染环境中；此时也必须同步输出内容。
   const isSSR = inject(ssrContextKey, null) !== null;
-  const envSupport = !isSSR && resolve(supportMotion, detectSupportMotion());
   const effectiveSupport = computed(() => {
     const name = resolve(motionName, undefined as string | undefined);
-    return !!envSupport && !!name;
+    return !isSSR && !!resolve(supportMotion, detectSupportMotion()) && !!name;
   });
 
   // ── 首帧语义（2026-09-22，badge 实测修复）──────────────────────────────────
@@ -183,7 +182,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   });
 
   const driver = createMotionDriver({
-    supportMotion: effectiveSupport.value,
+    supportMotion: () => effectiveSupport.value,
     motionAppear,
     motionEnter,
     motionLeave,
@@ -208,9 +207,12 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     driver.mount(visible());
   });
 
-  watch(visible, (next) => {
-    driver.setVisible(next);
-  });
+  watch(
+    () => [visible(), effectiveSupport.value] as const,
+    ([next, support], [previous, previousSupport]) => {
+      if (next !== previous || (!support && previousSupport)) driver.setVisible(next);
+    },
+  );
 
   // ── onVisibleChanged（rc `useStatus` 尾部 effect 的移植）──────────────────
   //

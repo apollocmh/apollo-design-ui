@@ -1,11 +1,21 @@
-import { mount } from '@vue/test-utils';
-import { afterEach, expect, it, vi } from 'vitest';
+import { config, mount } from '@vue/test-utils';
+import { afterAll, afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { createSSRApp, defineComponent, h, nextTick, ref } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { ConfigProvider } from '../../config-provider';
 import { Input } from '../../input';
 import { Form, FormItem } from '../index';
 import type { FormLayout, ValidateStatus } from '../interface';
+
+// Keep the native ConfigProvider Teleport for identity and hydration assertions.
+// VTU's builtin stub recreates its slot subtree when provider props update.
+const previousStubs = config.global.stubs;
+beforeAll(() => {
+  config.global.stubs = { teleport: false };
+});
+afterAll(() => {
+  config.global.stubs = previousStubs;
+});
 
 it('F03: updates FormItem classes when the provider prefix changes without remounting', async () => {
   const wrapper = mount(ConfigProvider, {

@@ -166,7 +166,7 @@ export interface MotionSnapshot {
 // ---------------------------------------------------------------------------
 
 export interface MotionDriverOptions {
-  supportMotion: boolean;
+  supportMotion: boolean | (() => boolean);
   motionAppear?: boolean;
   motionEnter?: boolean;
   motionLeave?: boolean;
@@ -247,7 +247,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
     onChange,
   } = options;
 
-  const prepareOnly = !supportMotion;
+  const getSupport = () => (typeof supportMotion === 'function' ? supportMotion() : supportMotion);
 
   // ---- 动效状态 ----
   let visible = false;
@@ -279,7 +279,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       styleReady: getStyleReady({
         mounted,
         status,
-        supportMotion,
+        supportMotion: getSupport(),
         motionAppear,
         step,
         styleStep,
@@ -404,7 +404,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
   function runQueue(): void {
     // `step !== NONE && step !== ACTIVATED` 才继续；SkipStep 会在同一轮里同步连锁
     while (step !== STEP_NONE && step !== 'end') {
-      const next = nextStepInQueue(step, prepareOnly);
+      const next = nextStepInQueue(step, !getSupport());
       const result = runStepCallback(step);
 
       if (result === false) {
@@ -460,7 +460,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
     if (
       shouldStartMotion({
         nextStatus,
-        supportMotion,
+        supportMotion: getSupport(),
         hasPrepare: Boolean(pickHandlers(hooks, nextStatus ?? STATUS_NONE).prepare),
       })
     ) {
@@ -474,6 +474,10 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       });
     } else {
       status = STATUS_NONE;
+      step = STEP_NONE;
+      handlerStyle = null;
+      styleStep = null;
+      detachEvents();
       emit();
       maybeEmitVisibleChanged();
     }

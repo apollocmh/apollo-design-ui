@@ -20,7 +20,7 @@
 // ---------------------------------------------------------------------------
 // 再导出：焦点陷阱（实现在 utils，见文件头）
 // ---------------------------------------------------------------------------
-export type { InputFocusOptions } from '@apollo-design/utils';
+export type { FocusNode, InputFocusOptions } from '@apollo-design/utils';
 export {
   getFocusNodeList,
   lockFocus,

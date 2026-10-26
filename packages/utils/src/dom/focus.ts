@@ -18,18 +18,28 @@ import {
   watch,
 } from 'vue';
 import { useId } from '../hooks/use-id';
+import { containsComposed, getActiveElement, isShadowRoot } from './active-element';
 import isVisible from './is-visible';
 
 /** 判定单个节点是否可被 Tab 聚焦。 */
-function focusable(node: HTMLElement, includePositive = false): boolean {
-  if (!isVisible(node)) {
+export type FocusNode = HTMLElement | SVGElement;
+
+function focusable(node: FocusNode, includePositive = false): boolean {
+  if (!isVisible(node) || node.matches(':disabled') || node.closest('[inert]')) {
     return false;
   }
+  const style = node.ownerDocument.defaultView?.getComputedStyle(node);
+  if (
+    style?.visibility === 'hidden' ||
+    style?.visibility === 'collapse' ||
+    style?.display === 'none'
+  )
+    return false;
 
   const nodeName = node.nodeName.toLowerCase();
   const isFocusableElement =
     ['input', 'select', 'textarea', 'button'].includes(nodeName) ||
-    node.isContentEditable ||
+    ('isContentEditable' in node && node.isContentEditable) ||
     (nodeName === 'a' && !!node.getAttribute('href'));
 
   const tabIndexAttr = node.getAttribute('tabindex');
@@ -43,7 +53,7 @@ function focusable(node: HTMLElement, includePositive = false): boolean {
   }
 
   // 被禁用的控件即使有 tabindex 也不可聚焦
-  if (isFocusableElement && (node as HTMLButtonElement).disabled) {
+  if (isFocusableElement && 'disabled' in node && node.disabled === true) {
     tabIndex = null;
   }
 
@@ -55,14 +65,47 @@ function focusable(node: HTMLElement, includePositive = false): boolean {
  *
  * 顺序很关键：`lockFocus` 的 Tab 循环依赖「第一个」和「最后一个」。
  */
-export function getFocusNodeList(node: HTMLElement, includePositive = false): HTMLElement[] {
-  const res = [...node.querySelectorAll('*')].filter((child) =>
-    focusable(child as HTMLElement, includePositive),
-  ) as HTMLElement[];
-  if (focusable(node, includePositive)) {
-    res.unshift(node);
-  }
+export function getFocusNodeList(node: HTMLElement, includePositive = false): FocusNode[] {
+  const res: FocusNode[] = [];
+  walkFocusTree(node, (child) => {
+    if (focusable(child, includePositive)) res.push(child);
+  });
   return res;
+}
+
+function isSlot(node: Element): node is HTMLSlotElement {
+  return (
+    node.localName === 'slot' &&
+    'assignedElements' in node &&
+    typeof node.assignedElements === 'function' &&
+    'assignedNodes' in node &&
+    typeof node.assignedNodes === 'function'
+  );
+}
+function isFocusNode(node: Element): node is FocusNode {
+  return (
+    (node.namespaceURI === 'http://www.w3.org/1999/xhtml' ||
+      node.namespaceURI === 'http://www.w3.org/2000/svg') &&
+    'focus' in node &&
+    typeof node.focus === 'function'
+  );
+}
+function walkFocusTree(
+  node: Element,
+  visit: (node: FocusNode) => void,
+  shadow?: (root: ShadowRoot) => void,
+): void {
+  if (isFocusNode(node)) visit(node);
+  if (node.shadowRoot) {
+    shadow?.(node.shadowRoot);
+    for (const child of node.shadowRoot.children) walkFocusTree(child, visit, shadow);
+  } else {
+    const children =
+      isSlot(node) && node.assignedNodes({ flatten: true }).length
+        ? node.assignedElements({ flatten: true })
+        : node.children;
+    for (const child of children) walkFocusTree(child, visit, shadow);
+  }
 }
 
 export interface InputFocusOptions extends FocusOptions {
@@ -100,15 +143,16 @@ interface FocusEntry {
   element: HTMLElement;
   state: FocusDocumentState;
   parent: Node | null;
+  lastFocusElement: Element | null;
 }
 interface FocusDocumentState {
   doc: Document;
   view: NonNullable<Document['defaultView']>;
   entries: FocusEntry[];
-  lastFocusElement: Element | null;
   sync: () => void;
   keydown: (event: KeyboardEvent) => void;
   observer: MutationObserver;
+  observedRoots: Node[];
 }
 
 const documentStates = new WeakMap<Document, FocusDocumentState>();
@@ -119,39 +163,48 @@ const ignoredElementMap = new Map<string, HTMLElement>();
 function isIgnoredElement(state: FocusDocumentState, element: Element | null): boolean {
   const entry = state.entries.at(-1);
   const ignored = entry && ignoredElementMap.get(entry.id);
-  return !!element && !!ignored && (ignored === element || ignored.contains(element));
+  return !!element && !!ignored && containsComposed(ignored, element);
 }
 
 function syncFocus(state: FocusDocumentState): void {
   const entry = state.entries.at(-1);
-  const active = state.doc.activeElement;
+  const active = getActiveElement(entry?.element ?? state.doc);
   if (!entry || isIgnoredElement(state, active)) return;
-  if (entry.element === active || entry.element.contains(active)) {
-    state.lastFocusElement = active;
+  if (containsComposed(entry.element, active)) {
+    entry.lastFocusElement = active;
     return;
   }
   const nodes = getFocusNodeList(entry.element);
-  const target = nodes.find((node) => node === state.lastFocusElement) ?? nodes[0] ?? entry.element;
+  const target = nodes.find((node) => node === entry.lastFocusElement) ?? nodes[0] ?? entry.element;
   target.focus({ preventScroll: true });
 }
 
 function onWindowKeyDown(state: FocusDocumentState, event: KeyboardEvent): void {
-  if (event.key !== 'Tab' || event.defaultPrevented) return;
+  if (
+    event.key !== 'Tab' ||
+    event.defaultPrevented ||
+    event.isComposing ||
+    event.altKey ||
+    event.ctrlKey ||
+    event.metaKey
+  )
+    return;
   const entry = state.entries.at(-1);
-  if (!entry || isIgnoredElement(state, state.doc.activeElement)) return;
+  const active = getActiveElement(entry?.element ?? state.doc);
+  if (!entry || isIgnoredElement(state, active)) return;
   const nodes = getFocusNodeList(entry.element);
   const first = nodes[0];
   const last = nodes.at(-1);
   const target = !nodes.length
     ? entry.element
-    : event.shiftKey && state.doc.activeElement === first
+    : event.shiftKey && active === first
       ? last
-      : !event.shiftKey && state.doc.activeElement === last
+      : !event.shiftKey && active === last
         ? first
         : undefined;
   if (target) {
     event.preventDefault();
-    state.lastFocusElement = target;
+    entry.lastFocusElement = target;
     target.focus({ preventScroll: true });
   }
 }
@@ -166,20 +219,18 @@ function getDocumentState(
       doc,
       view,
       entries: [],
-      lastFocusElement: null,
+      observedRoots: [],
       sync: () => syncFocus(created),
       keydown: (event) => onWindowKeyDown(created, event),
       observer: new view.MutationObserver((records) => {
-        const remembered = created.lastFocusElement;
         for (const entry of [...created.entries]) {
+          const remembered = entry.lastFocusElement;
           const nextDocument = entry.element.ownerDocument;
           const nextView = nextDocument.defaultView;
           const moved =
             entry.parent !== entry.element.parentNode ||
             records.some((record) =>
-              [...record.removedNodes].some(
-                (node) => node === entry.element || node.contains(entry.element),
-              ),
+              [...record.removedNodes].some((node) => containsComposed(node, entry.element)),
             );
           entry.parent = entry.element.parentNode;
           if (nextDocument === created.doc) {
@@ -187,7 +238,8 @@ function getDocumentState(
               moved &&
               entry.element.isConnected &&
               created.entries.at(-1) === entry &&
-              created.doc.activeElement === created.doc.body
+              (getActiveElement(entry.element) === created.doc.body ||
+                !containsComposed(entry.element, getActiveElement(entry.element)))
             )
               syncFocus(created);
             continue;
@@ -197,11 +249,11 @@ function getDocumentState(
           const next = getDocumentState(nextDocument, nextView);
           entry.state = next;
           addEntry(entry);
-          if (remembered && entry.element.contains(remembered)) {
-            next.lastFocusElement = remembered;
+          if (remembered && containsComposed(entry.element, remembered)) {
+            entry.lastFocusElement = remembered;
             if (
-              next.doc.activeElement === next.doc.body ||
-              next.doc.activeElement === entry.element
+              getActiveElement(entry.element) === next.doc.body ||
+              getActiveElement(entry.element) === entry.element
             ) {
               getFocusNodeList(entry.element, true)
                 .find((node) => node === remembered)
@@ -210,6 +262,7 @@ function getDocumentState(
           }
           syncFocus(next);
         }
+        observeRoots(created);
       }),
     };
     state = created;
@@ -220,6 +273,9 @@ function getDocumentState(
 
 function detach(state: FocusDocumentState): void {
   state.observer.disconnect();
+  for (const root of state.observedRoots)
+    if (isShadowRoot(root)) root.removeEventListener('focusin', state.sync);
+  state.observedRoots = [];
   state.view.removeEventListener('focusin', state.sync);
   state.view.removeEventListener('keydown', state.keydown);
   activeStates.delete(state);
@@ -229,8 +285,39 @@ function detach(state: FocusDocumentState): void {
 function removeEntry(entry: FocusEntry): void {
   const state = entry.state;
   state.entries = state.entries.filter((existing) => existing !== entry);
-  state.lastFocusElement = null;
   if (!state.entries.length) detach(state);
+  else observeRoots(state);
+}
+
+function observeRoots(state: FocusDocumentState): void {
+  if (!state.entries.length) return;
+  const roots = new Set<Node>([state.doc]);
+  for (const entry of state.entries) {
+    walkFocusTree(
+      entry.element,
+      () => {},
+      (root) => roots.add(root),
+    );
+    let root = entry.element.getRootNode();
+    while (root !== state.doc && !roots.has(root)) {
+      roots.add(root);
+      if (!isShadowRoot(root)) break;
+      root = root.host.getRootNode();
+    }
+  }
+  if (
+    roots.size === state.observedRoots.length &&
+    state.observedRoots.every((root) => roots.has(root))
+  )
+    return;
+  for (const root of state.observedRoots)
+    if (isShadowRoot(root) && !roots.has(root)) root.removeEventListener('focusin', state.sync);
+  for (const root of roots)
+    if (isShadowRoot(root) && !state.observedRoots.includes(root))
+      root.addEventListener('focusin', state.sync);
+  if (state.observedRoots.length) state.observer.disconnect();
+  state.observedRoots = [...roots];
+  for (const root of roots) state.observer.observe(root, { childList: true, subtree: true });
 }
 
 function addEntry(entry: FocusEntry): void {
@@ -245,8 +332,8 @@ function addEntry(entry: FocusEntry): void {
     state.view.addEventListener('keydown', state.keydown);
     // Teleport can adopt the same node without changing any Vue ref. One native
     // observer per active document tracks ownership, including ancestor moves.
-    state.observer.observe(state.doc, { childList: true, subtree: true });
   }
+  observeRoots(state);
 }
 
 /**
@@ -258,13 +345,20 @@ export function lockFocus(element: HTMLElement, id: string): () => void {
   const view = element.ownerDocument.defaultView;
   if (!view) return () => {};
   const state = getDocumentState(element.ownerDocument, view);
-  const entry: FocusEntry = { id, element, state, parent: element.parentNode };
+  const entry: FocusEntry = {
+    id,
+    element,
+    state,
+    parent: element.parentNode,
+    lastFocusElement: null,
+  };
   addEntry(entry);
   syncFocus(state);
 
   return () => {
     if (!entry.state.entries.includes(entry)) return;
     removeEntry(entry);
+    entry.lastFocusElement = null;
     ignoredElementMap.delete(id);
   };
 }
@@ -324,14 +418,12 @@ export function useLockFocus(
 
   // 首次在挂载后执行（此时 ref 已就绪）；非组件上下文则立即执行
   if (getCurrentInstance()) {
-    let focusedBeforeUpdate: HTMLElement | undefined;
+    let focusedBeforeUpdate: FocusNode | undefined;
     onBeforeUpdate(() => {
       const element = toValue(getElement);
       focusedBeforeUpdate =
         element && toValue(lock)
-          ? getFocusNodeList(element, true).find(
-              (node) => node === element.ownerDocument.activeElement,
-            )
+          ? getFocusNodeList(element, true).find((node) => node === getActiveElement(element))
           : undefined;
     });
     onUpdated(() => {
@@ -340,10 +432,10 @@ export function useLockFocus(
       focusedBeforeUpdate = undefined;
       if (
         previous?.isConnected &&
-        element?.contains(previous) &&
+        containsComposed(element, previous) &&
         toValue(lock) &&
-        (element.ownerDocument.activeElement === element.ownerDocument.body ||
-          element.ownerDocument.activeElement === element)
+        (getActiveElement(element) === element?.ownerDocument.body ||
+          getActiveElement(element) === element)
       ) {
         previous.focus({ preventScroll: true });
       }
@@ -378,8 +470,8 @@ export function useLockFocus(
 /** 测试辅助：清空锁定状态。生产代码不应调用。 */
 export function resetFocusLock(): void {
   for (const state of activeStates) {
+    for (const entry of state.entries) entry.lastFocusElement = null;
     state.entries = [];
-    state.lastFocusElement = null;
     detach(state);
   }
   ignoredElementMap.clear();

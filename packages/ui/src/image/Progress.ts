@@ -5,6 +5,7 @@
  * 有 percent ⇒ `role=progressbar` + aria-valuenow（clamp 0–100 四舍五入）；
  * 无 percent ⇒ `aria-busy=true` + `role=status` 的 "Loading"（视觉隐藏）。
  */
+import { isNonNullable } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
 import type { ImageProgressConfig, ProgressClassNames, ProgressStyles } from './interface';
@@ -46,7 +47,7 @@ const Progress = defineComponent({
   setup(props) {
     const hasPercent = computed(() => isNumber(props.percent));
     const percentValue = computed(() =>
-      hasPercent.value ? Math.max(0, Math.min(100, Math.round(props.percent as number))) : 0,
+      isNumber(props.percent) ? Math.max(0, Math.min(100, Math.round(props.percent))) : 0,
     );
 
     return () => {
@@ -103,9 +104,12 @@ const Progress = defineComponent({
             ...(props.rootStyle ?? {}),
             ...(props.styles?.root ?? {}),
           },
-          ...ariaProps,
+          ...(hasPercent.value && props.render ? { role: 'group', 'aria-busy': true } : ariaProps),
         },
         [
+          hasPercent.value && props.render
+            ? h('span', { ...ariaProps, style: VISUALLY_HIDDEN_STYLE })
+            : null,
           !hasPercent.value
             ? h(
                 'span',
@@ -122,9 +126,9 @@ const Progress = defineComponent({
               class: [`${percentCls}-content`, props.classNames?.content],
               style: props.styles?.content,
             },
-            [progressContent].filter((c) => c !== null && c !== undefined),
+            [progressContent].filter(isNonNullable),
           ),
-        ].filter((c) => c !== null && c !== undefined),
+        ].filter(isNonNullable),
       );
     };
   },

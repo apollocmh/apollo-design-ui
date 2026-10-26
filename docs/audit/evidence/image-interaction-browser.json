@@ -1,0 +1,700 @@
+{
+  "command": "node tests/browser/image-interactions.mjs",
+  "baseCommit": "899eba648441c93e65ca30b2674d8901ae94fed5",
+  "productionSourceSha256": "74b5b7cc7922a5e516a8609c7993fbe08db3f53d624b3e088b646cc881d6ccab",
+  "fingerprintAlgorithm": "SHA-256 over sorted UTF-8 path + NUL + file bytes + NUL for each sourceFiles entry",
+  "sourceFiles": [
+    "packages/a11y/src/combobox.ts",
+    "packages/a11y/src/focus-restore.ts",
+    "packages/a11y/src/index.ts",
+    "packages/a11y/src/live-region.ts",
+    "packages/a11y/src/roving.ts",
+    "packages/a11y/src/use-active-descendant.ts",
+    "packages/a11y/src/use-roving-focus.ts",
+    "packages/a11y/src/use-typeahead.ts",
+    "packages/motion/src/css-motion.ts",
+    "packages/motion/src/diff.ts",
+    "packages/motion/src/driver.ts",
+    "packages/motion/src/index.ts",
+    "packages/motion/src/motion-list.ts",
+    "packages/motion/src/next-frame.ts",
+    "packages/motion/src/presets.ts",
+    "packages/motion/src/status.ts",
+    "packages/motion/src/support.ts",
+    "packages/motion/src/use-motion-status.ts",
+    "packages/portal/src/container.ts",
+    "packages/portal/src/index.ts",
+    "packages/portal/src/mock.ts",
+    "packages/portal/src/portal.ts",
+    "packages/portal/src/use-esc-key-down.ts",
+    "packages/portal/src/use-portal-document.ts",
+    "packages/portal/src/use-portal.ts",
+    "packages/portal/src/use-scroll-locker.ts",
+    "packages/ui/src/config-provider/ConfigProvider.ts",
+    "packages/ui/src/config-provider/context.ts",
+    "packages/ui/src/config-provider/default-render-empty.ts",
+    "packages/ui/src/config-provider/demo/component-config.vue",
+    "packages/ui/src/config-provider/demo/component-size.vue",
+    "packages/ui/src/config-provider/demo/direction.vue",
+    "packages/ui/src/config-provider/demo/locale.vue",
+    "packages/ui/src/config-provider/demo/prefix-cls.vue",
+    "packages/ui/src/config-provider/demo/size-disabled.vue",
+    "packages/ui/src/config-provider/demo/theme.vue",
+    "packages/ui/src/config-provider/demo/use-config.vue",
+    "packages/ui/src/config-provider/disabled-context.ts",
+    "packages/ui/src/config-provider/global-config.ts",
+    "packages/ui/src/config-provider/hooks/use-theme.ts",
+    "packages/ui/src/config-provider/index.ts",
+    "packages/ui/src/config-provider/interface.ts",
+    "packages/ui/src/config-provider/size-context.ts",
+    "packages/ui/src/config-provider/use-config.ts",
+    "packages/ui/src/image/Image.ts",
+    "packages/ui/src/image/Preview.ts",
+    "packages/ui/src/image/PreviewGroup.ts",
+    "packages/ui/src/image/Progress.ts",
+    "packages/ui/src/image/context.ts",
+    "packages/ui/src/image/demo/basic.vue",
+    "packages/ui/src/image/demo/component-token.vue",
+    "packages/ui/src/image/demo/controlled-preview.vue",
+    "packages/ui/src/image/demo/cover-placement.vue",
+    "packages/ui/src/image/demo/fallback.vue",
+    "packages/ui/src/image/demo/image-render.vue",
+    "packages/ui/src/image/demo/nested.vue",
+    "packages/ui/src/image/demo/placeholder.vue",
+    "packages/ui/src/image/demo/popup-provider.vue",
+    "packages/ui/src/image/demo/preview-close.vue",
+    "packages/ui/src/image/demo/preview-group-top-progress.vue",
+    "packages/ui/src/image/demo/preview-group-visible.vue",
+    "packages/ui/src/image/demo/preview-group.vue",
+    "packages/ui/src/image/demo/preview-img-info.vue",
+    "packages/ui/src/image/demo/preview-mask.vue",
+    "packages/ui/src/image/demo/preview-src.vue",
+    "packages/ui/src/image/demo/style-class.vue",
+    "packages/ui/src/image/demo/transform-events.vue",
+    "packages/ui/src/image/hooks/useImageMotion.ts",
+    "packages/ui/src/image/hooks/useImageOpen.ts",
+    "packages/ui/src/image/hooks/useImageTheme.ts",
+    "packages/ui/src/image/hooks/useImageTransform.ts",
+    "packages/ui/src/image/hooks/useStatus.ts",
+    "packages/ui/src/image/index.ts",
+    "packages/ui/src/image/interface.ts",
+    "packages/ui/src/image/style/index.ts",
+    "packages/ui/src/image/style/token.ts",
+    "packages/ui/src/image/util.ts",
+    "packages/utils/src/brand.ts",
+    "packages/utils/src/children/to-array.ts",
+    "packages/utils/src/color/color.ts",
+    "packages/utils/src/color/generate.ts",
+    "packages/utils/src/color/index.ts",
+    "packages/utils/src/color/types.ts",
+    "packages/utils/src/dev-warning.ts",
+    "packages/utils/src/dom-attrs.ts",
+    "packages/utils/src/dom/active-element.ts",
+    "packages/utils/src/dom/can-use-dom.ts",
+    "packages/utils/src/dom/contains.ts",
+    "packages/utils/src/dom/focus.ts",
+    "packages/utils/src/dom/get-element.ts",
+    "packages/utils/src/dom/get-scroll-bar-size.ts",
+    "packages/utils/src/dom/get-scroll.ts",
+    "packages/utils/src/dom/index.ts",
+    "packages/utils/src/dom/is-editable-target.ts",
+    "packages/utils/src/dom/is-visible.ts",
+    "packages/utils/src/dom/style-checker.ts",
+    "packages/utils/src/dom/update-css.ts",
+    "packages/utils/src/env.ts",
+    "packages/utils/src/event-name.ts",
+    "packages/utils/src/hooks/index.ts",
+    "packages/utils/src/hooks/use-controlled-value.ts",
+    "packages/utils/src/hooks/use-delay-state.ts",
+    "packages/utils/src/hooks/use-id.ts",
+    "packages/utils/src/hooks/use-safe-state.ts",
+    "packages/utils/src/hooks/use-update-effect.ts",
+    "packages/utils/src/index.ts",
+    "packages/utils/src/is-equal.ts",
+    "packages/utils/src/is.ts",
+    "packages/utils/src/key-code.ts",
+    "packages/utils/src/merge-props.ts",
+    "packages/utils/src/object.ts",
+    "packages/utils/src/observers/index.ts",
+    "packages/utils/src/observers/use-mutation-observer.ts",
+    "packages/utils/src/observers/use-resize-observer.ts",
+    "packages/utils/src/omit.ts",
+    "packages/utils/src/pick-attrs-allowlist.ts",
+    "packages/utils/src/pick-attrs.ts",
+    "packages/utils/src/raf.ts",
+    "packages/utils/src/ref.ts",
+    "packages/utils/src/throttle-by-animation-frame.ts",
+    "packages/utils/src/throttle.ts",
+    "packages/utils/src/to-list.ts",
+    "packages/utils/src/warning.ts"
+  ],
+  "browser": "150.0.7871.125",
+  "results": [
+    {
+      "target": "image",
+      "scenario": "rich",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "image",
+      "scenario": "rich-no-origin",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "image",
+      "scenario": "cover",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "image",
+      "scenario": "progress",
+      "failures": []
+    },
+    {
+      "target": "image",
+      "scenario": "frame",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "image",
+      "scenario": "shadow-open",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "image",
+      "scenario": "shadow-closed",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+    },
+    {
+      "target": "image",
+      "scenario": "shadow-source",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+    },
+    {
+      "target": "image",
+      "scenario": "inline",
+      "failures": [],
+      "entry": "internal Preview inline (two layouts)",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "image",
+      "scenario": "motion",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "rich",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "rich-no-origin",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "cover",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "progress",
+      "failures": []
+    },
+    {
+      "target": "group",
+      "scenario": "frame",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "shadow-open",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "shadow-closed",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+    },
+    {
+      "target": "group",
+      "scenario": "shadow-source",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+    },
+    {
+      "target": "group",
+      "scenario": "inline",
+      "failures": [],
+      "entry": "internal Preview inline (two layouts)",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "motion",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "public-demo",
+      "scenario": "rich-preview-and-cover",
+      "failures": []
+    }
+  ],
+  "issues": [],
+  "validation": {
+    "strict": {
+      "command": "pnpm exec vue-tsc --noEmit",
+      "exitCode": 0
+    },
+    "runtime": {
+      "files": 69,
+      "tests": 1338,
+      "failed": 0
+    },
+    "types": {
+      "files": 28,
+      "tests": 352,
+      "errors": 0
+    },
+    "imageImportBytes": 78832,
+    "imageBudgetBytes": 78848,
+    "frozenGates": [
+      {
+        "gate": "runtime",
+        "command": [
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "--project",
+          "dom-contract",
+          "--project",
+          "a11y",
+          "--project",
+          "theme",
+          "packages/utils/src",
+          "packages/a11y/src",
+          "packages/motion/src",
+          "packages/portal/src",
+          "packages/ui/src/image",
+          "--maxWorkers=1",
+          "--no-file-parallelism"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-runtime.log"
+      },
+      {
+        "gate": "types",
+        "command": [
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "--project",
+          "types",
+          "packages/utils",
+          "packages/a11y",
+          "packages/motion",
+          "packages/portal",
+          "packages/ui/src/_internal",
+          "packages/ui/src/image",
+          "packages/ui/src/config-provider",
+          "packages/ui/src/modal",
+          "packages/ui/src/drawer",
+          "--maxWorkers=1",
+          "--no-file-parallelism"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-types.log"
+      },
+      {
+        "gate": "utils-L7",
+        "command": [
+          "node",
+          "tests/build/run.mjs",
+          "--package",
+          "utils",
+          "--no-build",
+          "--strict"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-utils-L7.log"
+      },
+      {
+        "gate": "a11y-L7",
+        "command": [
+          "node",
+          "tests/build/run.mjs",
+          "--package",
+          "a11y",
+          "--no-build",
+          "--strict"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-a11y-L7.log"
+      },
+      {
+        "gate": "motion-L7",
+        "command": [
+          "node",
+          "tests/build/run.mjs",
+          "--package",
+          "motion",
+          "--no-build",
+          "--strict"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-motion-L7.log"
+      },
+      {
+        "gate": "ui-L7",
+        "command": [
+          "node",
+          "tests/build/run.mjs",
+          "--package",
+          "ui",
+          "--no-build",
+          "--strict"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-ui-L7.log"
+      },
+      {
+        "gate": "utils-environment-consumer",
+        "command": [
+          "node",
+          "tests/consumer/utils-environment.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-utils-environment-consumer.log"
+      },
+      {
+        "gate": "image-ssr-consumer",
+        "command": [
+          "node",
+          "tests/consumer/image-ssr.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-ssr-consumer.log"
+      },
+      {
+        "gate": "image-slot-types-consumer",
+        "command": [
+          "node",
+          "tests/consumer/image-slot-types.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-slot-types-consumer.log"
+      },
+      {
+        "gate": "run-consumer",
+        "command": [
+          "node",
+          "tests/consumer/run.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-run-consumer.log"
+      },
+      {
+        "gate": "image-interactions-browser",
+        "command": [
+          "node",
+          "tests/browser/image-interactions.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-interactions-browser.log"
+      },
+      {
+        "gate": "image-contract-audit-browser",
+        "command": [
+          "node",
+          "tests/browser/image-contract-audit.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-contract-audit-browser.log"
+      },
+      {
+        "gate": "image-preview-focus-browser",
+        "command": [
+          "node",
+          "tests/browser/image-preview-focus.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-preview-focus-browser.log"
+      },
+      {
+        "gate": "image-native-events-browser",
+        "command": [
+          "node",
+          "tests/browser/image-native-events.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-native-events-browser.log"
+      },
+      {
+        "gate": "image-preview-slots-browser",
+        "command": [
+          "node",
+          "tests/browser/image-preview-slots.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-preview-slots-browser.log"
+      },
+      {
+        "gate": "image-transform-browser",
+        "command": [
+          "node",
+          "tests/browser/image-transform.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-transform-browser.log"
+      },
+      {
+        "gate": "image-scale-bounds-browser",
+        "command": [
+          "node",
+          "tests/browser/image-scale-bounds.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-scale-bounds-browser.log"
+      },
+      {
+        "gate": "image-theme-hydration-browser",
+        "command": [
+          "node",
+          "tests/browser/image-theme-hydration.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-theme-hydration-browser.log"
+      },
+      {
+        "gate": "image-render-browser",
+        "command": [
+          "node",
+          "tests/browser/image-render.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-render-browser.log"
+      },
+      {
+        "gate": "image-preview-close-browser",
+        "command": [
+          "node",
+          "tests/browser/image-preview-close.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-preview-close-browser.log"
+      },
+      {
+        "gate": "image-open-model-browser",
+        "command": [
+          "node",
+          "tests/browser/image-open-model.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-open-model-browser.log"
+      },
+      {
+        "gate": "image-styles-browser",
+        "command": [
+          "node",
+          "tests/browser/image-styles.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-styles-browser.log"
+      },
+      {
+        "gate": "image-provider-browser",
+        "command": [
+          "node",
+          "tests/browser/image-provider.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-provider-browser.log"
+      },
+      {
+        "gate": "image-popup-provider-browser",
+        "command": [
+          "node",
+          "tests/browser/image-popup-provider.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-popup-provider-browser.log"
+      },
+      {
+        "gate": "image-prefix-browser",
+        "command": [
+          "node",
+          "tests/browser/image-prefix.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-prefix-browser.log"
+      },
+      {
+        "gate": "image-direction-browser",
+        "command": [
+          "node",
+          "tests/browser/image-direction.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-direction-browser.log"
+      },
+      {
+        "gate": "image-counter-contrast-browser",
+        "command": [
+          "node",
+          "tests/browser/image-counter-contrast.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-image-counter-contrast-browser.log"
+      },
+      {
+        "gate": "form-prefix-browser",
+        "command": [
+          "node",
+          "tests/browser/form-prefix.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-form-prefix-browser.log"
+      },
+      {
+        "gate": "drawer-slots-browser",
+        "command": [
+          "node",
+          "tests/browser/drawer-slots.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-drawer-slots-browser.log"
+      },
+      {
+        "gate": "motion-hydration-browser",
+        "command": [
+          "node",
+          "tests/browser/motion-hydration.mjs"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-motion-hydration-browser.log"
+      },
+      {
+        "gate": "docs-content-build",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "content:build"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-docs-content-build.log"
+      },
+      {
+        "gate": "docs-content-check",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "content:check"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-docs-content-check.log"
+      },
+      {
+        "gate": "docs-typecheck",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-docs-typecheck.log"
+      },
+      {
+        "gate": "docs-test",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "test"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-docs-test.log"
+      },
+      {
+        "gate": "docs-build",
+        "command": [
+          "pnpm",
+          "--filter",
+          "@apollo-design/docs",
+          "run",
+          "build"
+        ],
+        "exitCode": 0,
+        "log": "/tmp/apollo-image-frozen-docs-build.log"
+      },
+      {
+        "gate": "format",
+        "command": [
+          "pnpm",
+          "run",
+          "lint:format"
+        ],
+        "exitCode": 1,
+        "log": "/tmp/apollo-image-frozen-format.log"
+      }
+    ],
+    "format": {
+      "changedFiles": 48,
+      "changedExitCode": 0,
+      "wholeRepositoryErrors": 66,
+      "originalHeadErrors": 67,
+      "wholeRepositoryExitCode": 1
+    }
+  },
+  "bounds": [
+    "Image.preview.getContainer retains () => HTMLElement; ShadowRoot cases use the existing ConfigProvider.getPopupContainer contract.",
+    "Inline cases exercise internal Preview/Portal only, not a new public Image container union.",
+    "Closed ShadowRoot axe context traversal is unsupported by the installed engine. Native Chrome AX checks cover dialog/name/textbox/close there; open mirrors retain full axe scans.",
+    "The real SFC caller is checked with vue-tsc before bundling; published declaration consumers are separate gates.",
+    "Earlier shared-consumer run: 278/279 files and 4531/4532 tests passed, with one old rich-root trigger assertion corrected; complete Image and then the frozen 69-file cohort passed. This is not one green 279-file run.",
+    "Image visual acceptance and final whole-library gates remain separate from this interaction milestone.",
+    "Explicit final ownership checks remain pending for items/registration switching, nested groups and removal of the selected registered item; the Image unit remains open."
+  ]
+}

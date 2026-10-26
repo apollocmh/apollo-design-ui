@@ -13,10 +13,9 @@
  * 因此判定顺序：import.meta.env → process.env → 兜底按 dev 处理。
  * 兜底选 dev 而不是 prod 的理由：多打一条告警只是噪音，少打一条会掩盖真实的用法错误。
  *
- * ⚠️ 已知取舍：`isDev` 是模块级常量，打包器**无法**据此做死代码消除。
- *    antd 能做到（它把判断内联在每个函数里）是以「必须用 process.env」为代价换来的。
- *    我们选择跨打包器正确性，代价是 dev 分支会进入产物。
- *    L7 构建测试会断言：`NODE_ENV=production` 下 `warning()` 静默。
+ * 直接读取可静态替换的 import.meta.env.DEV，让生产打包器移除开发分支；
+ * 没有该布尔信号时沿用完整解析/Node/裸浏览器回落，不裸读 process.env。
+ * 纯探测没有写入副作用，未被消费的标志可由打包器移除。
  *
  * ---------------------------------------------------------------------------
  * 为什么判定逻辑要拆成 `resolveDev` / `resolveTest` 两个纯函数
@@ -69,8 +68,7 @@ export function readImportMetaEnv(
   meta?: ImportMeta & { env?: ImportMetaEnvLike },
 ): ImportMetaEnvLike | undefined {
   try {
-    const source = meta ?? (import.meta as ImportMeta & { env?: ImportMetaEnvLike });
-    return source.env;
+    return meta ? meta.env : import.meta.env;
   } catch {
     return undefined;
   }
@@ -129,7 +127,8 @@ function detectTest(): boolean {
 }
 
 /** 当前是否处于开发（非生产）环境。模块加载时求值一次。 */
-export const isDev: boolean = detectDev();
+export const isDev: boolean =
+  typeof import.meta.env?.DEV === 'boolean' ? import.meta.env.DEV : /* @__PURE__ */ detectDev();
 
 /** 当前是否处于生产环境。 */
 export const isProd: boolean = !isDev;
@@ -141,4 +140,4 @@ export const isProd: boolean = !isDev;
  * 避免「同一个测试文件里的后续用例因为去重而看不到告警」。
  * 这是一个**测试便利**而非运行时契约，但保留它能让告警断言写法与 antd 一致。
  */
-export const isTest: boolean = detectTest();
+export const isTest: boolean = /* @__PURE__ */ detectTest();

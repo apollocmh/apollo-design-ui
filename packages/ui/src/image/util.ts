@@ -6,7 +6,25 @@
  */
 export { toCssSize } from '../_internal/to-css-size';
 
-import type { ImageCommonProps } from './interface';
+import type { ImageCommonProps, PreviewConfig } from './interface';
+
+/** Shared declared preview configuration; source/container/model ownership stays at each entry. */
+export function getPreviewProps(config: PreviewConfig | null) {
+  return {
+    movable: config?.movable,
+    maskClosable: config?.maskClosable,
+    mask: config?.mask,
+    closable: config?.closable,
+    closeIcon: config?.closeIcon,
+    minScale: config?.minScale,
+    maxScale: config?.maxScale,
+    scaleStep: config?.scaleStep,
+    zIndex: config?.zIndex,
+    icons: config?.icons,
+    rootClassName: config?.rootClassName,
+    afterOpenChange: config?.afterOpenChange,
+  };
+}
 
 /** Only native image attributes cross into imgCommonProps; source metadata stays separate. */
 export function getImageCommonProps(source: ImageCommonProps): ImageCommonProps {

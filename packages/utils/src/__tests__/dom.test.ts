@@ -6,6 +6,7 @@ import { getDOM, getElement, getElementFromVNode } from '../dom/get-element';
 import getScroll from '../dom/get-scroll';
 import isVisible from '../dom/is-visible';
 import { isStyleSupport } from '../dom/style-checker';
+import { isEditableTarget } from '../index';
 import KeyCode from '../key-code';
 
 describe('canUseDom', () => {
@@ -332,23 +333,54 @@ describe('KeyCode', () => {
   });
 
   describe('isEditableTarget', () => {
+    const keyboardFrom = (target: EventTarget | null) => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+        bubbles: true,
+        composed: true,
+      });
+      target?.dispatchEvent(event);
+      return event;
+    };
+    it('reads the actual editor from a composed event even when the listener sees its shadow host', () => {
+      expect(KeyCode.isEditableTarget).toBe(isEditableTarget);
+      const host = document.createElement('div');
+      const input = document.createElement('input');
+      host.attachShadow({ mode: 'open' }).append(input);
+      document.body.append(host);
+      let editable = false;
+      host.addEventListener(
+        'keydown',
+        (event) => {
+          expect(event.target).toBe(host);
+          editable = KeyCode.isEditableTarget(event);
+        },
+        { once: true },
+      );
+      try {
+        input.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, composed: true }),
+        );
+        expect(editable).toBe(true);
+      } finally {
+        host.remove();
+      }
+    });
     it('input / textarea / select / contentEditable 返回 true', () => {
       for (const tag of ['input', 'textarea', 'select']) {
         const el = document.createElement(tag);
-        expect(KeyCode.isEditableTarget({ target: el } as unknown as KeyboardEvent)).toBe(true);
+        expect(KeyCode.isEditableTarget(keyboardFrom(el))).toBe(true);
       }
       const editable = document.createElement('div');
       Object.defineProperty(editable, 'isContentEditable', { value: true, configurable: true });
-      expect(KeyCode.isEditableTarget({ target: editable } as unknown as KeyboardEvent)).toBe(true);
+      expect(KeyCode.isEditableTarget(keyboardFrom(editable))).toBe(true);
     });
 
     it('普通元素与非 HTMLElement 目标返回 false', () => {
       const div = document.createElement('div');
-      expect(KeyCode.isEditableTarget({ target: div } as unknown as KeyboardEvent)).toBe(false);
-      expect(KeyCode.isEditableTarget({ target: null } as unknown as KeyboardEvent)).toBe(false);
-      expect(KeyCode.isEditableTarget({ target: document } as unknown as KeyboardEvent)).toBe(
-        false,
-      );
+      expect(KeyCode.isEditableTarget(keyboardFrom(div))).toBe(false);
+      expect(KeyCode.isEditableTarget(keyboardFrom(null))).toBe(false);
+      expect(KeyCode.isEditableTarget(keyboardFrom(document))).toBe(false);
     });
   });
 });

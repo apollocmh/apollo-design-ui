@@ -107,7 +107,11 @@ scaleStep是比例增量：放大乘以1+step，缩小除以1+step；默认0.5�
 | update:open | 顶层 `v-model:open` 的boolean请求；父prop变化不回发 |
 | transform | 当前变换的完整 `TransformInfo` 快照（rotate/scale/flipX/flipY/x/y）；接受关闭后也通知复位，拒绝关闭不复位 |
 
-preview=false保留原生role/tabindex/aria-label；可预览根拥有button/0，显式aria-label优先alt默认名。Progress只通知click/keydown，不打开潜在预览。以 `@click` / `@error` / `@keydown` 绑定；h()/ImageProps中的onXxx是Vue监听器注册。详见 [迁移](../../../../docs/migrations/image-native-events.md) 和 [证据](../../../../docs/audit/2026-10-25-image-native-events-remediation.md)。
+preview=false保留原生role/tabindex/aria-label；普通可预览根拥有button/0。imageRender插槽或VNode封面使用group根，非空图片内容提供独立可见的原生预览按钮；originNode保持普通img，可放入调用者的原生控件。输入、按钮、label、可编辑内容及已取消事件不触发预览，无需.stop；图片及非交互封面可点击预览，说明文字可选择。富内容根自然展开，height仍作用于图片，显式root样式优先。按钮名称为“Preview image: 名称”，名称优先显式aria-label，其次alt；普通根的默认名称保持不变。Progress只通知click/keydown，不打开潜在预览。以 `@click` / `@error` / `@keydown` 绑定；h()/ImageProps中的onXxx是Vue监听器注册。详见 [集中迁移](../../../../docs/migrations/image-contracts.md)。
+
+预览锁定所属文档body滚动与焦点直到退场结束，mask=false仍为模态预览；多实例分别释放，关闭返回实际触发器。Escape使用所属窗口最上层及IME保护，子控件preventDefault优先；分组方向键仅在非编辑目标且无修饰/组合输入时切换。系统reduced-motion、主题motion=false或当前过渡零时长不等待500ms兜底；偏好/主题动态变化保留现有预览内容。
+
+imageRender完全替换originNode时，非空内容保留独立可见的原生预览按钮，不把表单包成按钮；空槽不补按钮。触发器在打开期间被替换时，关闭后优先归还仍有效的保存焦点，必要时回到当前可用预览入口。
 
 开合只有顶层Vue状态入口。open省略使用内态，移除控制接续最后同步值；交互先openChange再update:open，父级可以拒绝请求。旧preview状态字段直接移除，afterOpenChange等业务配置保持，见 [模型迁移](../../../../docs/migrations/image-open-model.md)。失效的preview.onTransform直接迁到顶层 `@transform`，类型可从根入口导入；支持监听器数组、替换与 `.once`，不混入根DOM同名事件，见 [变换事件迁移](../../../../docs/migrations/image-transform-event.md)。
 

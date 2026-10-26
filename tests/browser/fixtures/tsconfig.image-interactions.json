@@ -1,0 +1,5 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": ["ImageInteractionContracts.vue"],
+  "exclude": []
+}

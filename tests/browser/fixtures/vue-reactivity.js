@@ -25,6 +25,7 @@ import FormPrefix from './FormPrefix.vue';
 import ImageContractAudit from './ImageContractAudit.vue';
 import ImageCounterContrast from './ImageCounterContrast.vue';
 import ImageDirection from './ImageDirection.vue';
+import ImageInteractionContracts from './ImageInteractionContracts.vue';
 import ImageNativeEvents from './ImageNativeEvents.vue';
 import ImageOpenModel from './ImageOpenModel.vue';
 import ImagePopupProvider from './ImagePopupProvider.vue';
@@ -122,6 +123,7 @@ const Demo = {
   'image-render': ImageRender,
   'image-preview-close': ImagePreviewClose,
   'image-contract-audit': ImageContractAudit,
+  'image-interactions': ImageInteractionContracts,
   'image-provider': ImageProvider,
   'image-popup-provider': ImagePopupProvider,
   'image-direction': ImageDirection,

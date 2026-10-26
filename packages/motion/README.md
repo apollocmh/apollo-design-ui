@@ -19,10 +19,13 @@ CSSMotion 等价物：声明式 CSS 过渡/动画控制。替代 @rc-component/m
 
 ## 公开 API
 
-- CSSMotion 组件
-- MotionProvider / motion 全局开关
-- 语义预设：collapseMotion / fadeMotion / slideMotion / zoomMotion / moveMotion
-- composable：useMotion()
+- CSSMotion、MotionList组件
+
+CSSMotion/useMotionStatus的当前supportMotion和motionName参与状态更新：禁用时取消旧帧、监听、deadline及临时样式，按当前visible完成；关闭后重新启用不会重新创建退场节点。MotionDriverOptions.supportMotion可为boolean或getter，框架无关驱动在操作时读取；Vue层负责响应式监听。Image负责将系统reduced-motion、主题motion=false和零时长接入此已有能力；本次不声明通用MotionProvider已实现。
+- useMotionStatus、useNextFrame，以及框架无关createMotionDriver和状态/差异函数
+- 折叠几何预设initCollapseMotion及高度计算；fade/zoom等视觉参数由UI消费者提供
+
+旧规划中的MotionProvider、通用全局偏好订阅与useMotion()未导出，不能当成已实现API。本次只验收Image当前配置链路与受影响消费者，不冒充完整motion基础包重新验收。
 
 ## 明确不做（边界）
 

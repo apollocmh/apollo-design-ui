@@ -5247,6 +5247,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/contract-audit.test.ts",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
       },
@@ -5278,6 +5279,7 @@
           "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
@@ -5346,6 +5348,7 @@
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
           "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/native-events.test.ts",
           "packages/ui/src/image/__tests__/native-style.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
@@ -5464,6 +5467,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",
@@ -5549,6 +5553,7 @@
         "files": [
           "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/semantic.test.ts"
         ]
@@ -5609,6 +5614,7 @@
           "packages/ui/src/image/__tests__/contract-audit.test.ts",
           "packages/ui/src/image/__tests__/image-slot.test.ts",
           "packages/ui/src/image/__tests__/index.test.ts",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
           "packages/ui/src/image/__tests__/preview-close.test.ts",
@@ -5770,6 +5776,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+          "packages/ui/src/image/__tests__/interaction-contract.test.ts",
           "packages/ui/src/image/__tests__/popup-provider.test.ts",
           "packages/ui/src/image/__tests__/preview-close.test.ts",
           "packages/ui/src/image/__tests__/preview-slots.test.ts",

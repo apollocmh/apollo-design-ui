@@ -189,7 +189,8 @@ describe('焦点恢复', () => {
   it('useFocusRestore 返回三个动作', () => {
     const handle = useFocusRestore(() => null);
     expectTypeOf(handle).toEqualTypeOf<FocusRestoreHandle>();
-    expectTypeOf(handle.save).toEqualTypeOf<() => void>();
+    expectTypeOf(handle.save).toEqualTypeOf<(target?: Element | null) => void>();
+    expectTypeOf(handle.save).parameter(0).not.toExtend<number>();
     expectTypeOf(handle.focusContent).toEqualTypeOf<() => void>();
     expectTypeOf(handle.restore).toEqualTypeOf<() => void>();
   });

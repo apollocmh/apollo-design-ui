@@ -38,13 +38,15 @@ export type {
 export { Color, generatePalette } from './color';
 export type { DevWarning, WarningContextValue } from './dev-warning';
 export { devUseWarning, resetDevWarned, useDevWarning, warningContextKey } from './dev-warning';
-export type { InputFocusOptions, ScrollTarget } from './dom';
+export type { FocusNode, InputFocusOptions, ScrollTarget } from './dom';
 // ---------------------------------------------------------------------------
 // DOM
 // ---------------------------------------------------------------------------
 export {
   canUseDom,
   contains,
+  containsComposed,
+  getActiveElement,
   getDOM,
   getElement,
   getElementFromVNode,
@@ -62,6 +64,7 @@ export {
   updateCSS,
   useLockFocus,
 } from './dom';
+export { isEditableTarget } from './dom/is-editable-target';
 export { mergeDomAttrs, toVueDomAttrs } from './dom-attrs';
 // ---------------------------------------------------------------------------
 // 环境

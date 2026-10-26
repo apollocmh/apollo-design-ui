@@ -15,6 +15,7 @@
  */
 
 import canUseDom from './dom/can-use-dom';
+import { isEditableTarget } from './dom/is-editable-target';
 
 const KeyCode = {
   MAC_ENTER: 3,
@@ -213,22 +214,7 @@ const KeyCode = {
   },
 
   /** 事件目标是否是可编辑控件（输入框 / 文本域 / 下拉 / contentEditable）。 */
-  isEditableTarget(e: KeyboardEvent): boolean {
-    const { target } = e;
-    if (!(target instanceof HTMLElement)) {
-      return false;
-    }
-    const { tagName } = target;
-    if (
-      tagName === 'INPUT' ||
-      tagName === 'TEXTAREA' ||
-      tagName === 'SELECT' ||
-      target.isContentEditable
-    ) {
-      return true;
-    }
-    return false;
-  },
+  isEditableTarget,
 };
 
 export default KeyCode;

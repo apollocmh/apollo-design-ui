@@ -13,6 +13,7 @@ export interface UseStatusOptions {
 
 export interface UseStatusResult {
   status: Ref<ImageStatus>;
+  image: Ref<HTMLImageElement | null>;
   /** 绑到 img 的 ref（元素挂载/更新时调用）。 */
   getImgRef: (img: HTMLImageElement | null) => void;
   /** Owned source/events, including candidate suppression while displaying fallback. */
@@ -80,5 +81,5 @@ export function useStatus(options: UseStatusOptions): UseStatusResult {
     }
   };
 
-  return { status, getImgRef, srcAndOnload };
+  return { status, image, getImgRef, srcAndOnload };
 }

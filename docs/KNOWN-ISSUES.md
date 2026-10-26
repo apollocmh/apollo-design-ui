@@ -299,6 +299,12 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 剩余交互已补红灯复现。Portal共享层正按实际ownerDocument/defaultView迁移滚动锁与Escape栈，覆盖稳定resolver、原生搬迁、inline及开/闭ShadowRoot；真实浏览器还复现覆盖式滚动条导致body由284px扩至300px，纳入同组修复。当前证据、提交及未验收的Image锁定接入/富内容/ShadowRoot焦点/motion统一记在同一清单，不另建逐字段完成报告。
 
+Portal容器副作用组已随 `899eba64` 提交推送。随后Image交互组改为富内容group根与独立可见的原生预览按钮，originNode保持普通img；进度交互控件独立于progressbar，焦点按层记忆并跨已知ShadowRoot，模态锁贯穿退场，当前motion/系统偏好生效。完整Image四层23文件378条、直接补充消费者19文件350条及相关352条类型通过；生产交互21场景和原有契约23场景通过。共享组279文件曾有1条旧根点击测试失败，按明确迁移改用真实图片并完整复验，未改写为一次全绿。当前生产构建、原有浏览器、消费端及Docs继续统一验收，Image视觉仍未关闭；证据统一见上述清单。
+
+冻结生产源码后，69文件1338条、严格/352类型、20组Chrome专项、四包L7、SSR/模板/tarball与Docs全部通过。按需图还复现生产env误判dev，已接通真实DEV/PROD/MODE及Node回落；在不改77KB预算下Image为76.98KB。分组数据所有权的三个显式补验与24张候选图的最终批准仍继续，不标整个Image完成。
+
+**H05 · 全仓格式门禁存量**：本轮真实`lint:format`失败66错误/37警告；在独立detached原HEAD运行有67错误/37警告。本轮48个适用改动文件检查通过，未放宽Biome规则。memory工具及其他既有文件须另案完整盘点修复，仍阻止最终全仓格式绿灯；不能把局部通过当作全仓通过。命令和证据见同一Image清单，原全量诊断保留 `/tmp/apollo-image-format-head-baseline.log` 与 `/tmp/apollo-image-frozen-format.log`。
+
 ---
 
 ### F12 · P1 · hydration 首帧已修，实际检查见报告｜CSSMotion SSR 节点在客户端被替换
@@ -408,8 +414,8 @@ Registry `registry/foundation.json` 当前全部标记 `completed`，各 6 维�
 | Message | 11/11 | **用户已验收动画**；保持回归即可 |
 | Notification | 14/14 | **用户已验收动画**；保持回归即可 |
 | App | 2/2 | —；上下文 API、静态方法隔离 |
-| Image | 15/18 | F11；mask/容器配置与局部弹层主题复审 |
-| Select | 35/35 | **F02**；动态 slot、options、虚拟列表 |
+| Image | 18/18 | F11：配置/资源/主题组已修并验证；交互组统一验收及Apollo视觉继续 |
+| Select | 36/35 | **F02**；条件选项Demo完整axe无豁免，动态slot、options、虚拟列表 |
 | AutoComplete | 14/17 | F02 消费者；条件 default slot / 自定义 clear |
 | Cascader | 23/23 | F02 消费者；异步加载/slot |
 | Tree | 19/19 | —；虚拟/拖拽/键盘 |

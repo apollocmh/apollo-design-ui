@@ -48,6 +48,7 @@ export function useImageTheme() {
       '--apollo-image-preview-operation-size': `${token.previewOperationSize}px`,
       '--apollo-image-progress-animation-duration': token.progressAnimationDuration,
       '--apollo-image-preview-switch-size': `${token.imagePreviewSwitchSize}px`,
+      '--apollo-image-motion-play-state': theme.token.value.motion ? 'running' : 'paused',
     };
   });
   return { styles };

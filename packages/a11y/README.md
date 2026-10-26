@@ -21,6 +21,8 @@
 
 - lockFocus / useLockFocus / getFocusNodeList / triggerFocus / resetFocusLock —— 焦点陷阱（再导出自 utils）
 - useFocusRestore —— 关闭后焦点恢复（Modal / Drawer / Image.Preview）；多层保存返回路径，移除目标回退与卸载锁释放后恢复见 [当前契约](../../docs/foundation/a11y-contract.md#351-apollo-多层焦点返回2026-10-25)
+
+`save(target?: Element | null)`省略参数保存当前外部焦点；已知封闭源根可传实际Element，null明确不保存。容器的焦点判断使用其实际根，包含判断跨ShadowRoot宿主；恢复仍保留多层返回路径、目标移除回退与后续开层优先。Image通过私有源节点getter使用此能力，没有新增Image公开prop。
 - useRovingFocus + nextRovingIndex / moveRovingIndex / getRovingOffset / getRovingTabIndex —— roving tabindex 与方向键导航（Menu / Tabs / Radio.Group / Toolbar）
 - useActiveDescendant + getListboxId / getOptionId —— aria-activedescendant 的 id 方案（Select / Tree / Listbox 类）
 - useLiveRegion / announce / announceValues / formatLiveRegionText —— 屏幕阅读器播报（message / notification / upload / transfer）

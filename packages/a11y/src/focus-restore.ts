@@ -8,7 +8,7 @@
  * 本文件只补上游 dialog 里那三条**恢复**的门控判据。
  */
 
-import { contains } from '@apollo-design/utils';
+import { containsComposed as contains, getActiveElement } from '@apollo-design/utils';
 import { type MaybeRefOrGetter, nextTick, onScopeDispose, toValue } from 'vue';
 
 export interface FocusRestoreOptions {
@@ -25,8 +25,8 @@ export interface FocusRestoreOptions {
 }
 
 export interface FocusRestoreHandle {
-  /** 浮层**打开前**调用：记住当前焦点（仅当焦点不在容器内） */
-  save(): void;
+  /** 打开前保存当前外部焦点；已知封闭根可显式传目标，null表示不保存。 */
+  save(target?: Element | null): void;
   /** 浮层打开后调用：焦点若还在外面，就移到容器上 */
   focusContent(): void;
   /** 浮层关闭时调用：把焦点还给 `save()` 记住的元素（只生效一次） */
@@ -38,10 +38,8 @@ export interface FocusRestoreHandle {
  * 而 antd 直接对 `document.activeElement` 调 `.focus()`。
  * 这里做一次窄化 + 可选调用，避免在 SVG 元素上炸掉。
  */
-type MaybeFocusable = Element & { focus?: (options?: FocusOptions) => void };
-
 function focusElement(element: Element | null, options?: FocusOptions): void {
-  (element as MaybeFocusable | null)?.focus?.(options);
+  if (element && 'focus' in element && typeof element.focus === 'function') element.focus(options);
 }
 
 interface RestoreEntry {
@@ -83,14 +81,14 @@ export function useFocusRestore(
     entry.targets = [];
   };
 
-  const getActiveElement = (): Element | null => {
+  const getCurrentActiveElement = (): Element | null => {
     const container = getContainer();
     const doc = container?.ownerDocument ?? (typeof document !== 'undefined' ? document : null);
-    return doc?.activeElement ?? null;
+    return getActiveElement(container ?? doc);
   };
 
-  const save = (): void => {
-    const active = getActiveElement();
+  const save = (target?: Element | null): void => {
+    const active = target === undefined ? getCurrentActiveElement() : target;
     // 门 1：焦点已在容器内 ⇒ 不覆盖。否则嵌套浮层会把「外层浮层内的元素」
     //      记成「外部焦点」，关闭内层时焦点跳到外层的某个控件上。
     if (contains(getContainer(), active)) return;
@@ -129,7 +127,7 @@ export function useFocusRestore(
   };
 
   const focusContent = (): void => {
-    const active = getActiveElement();
+    const active = getCurrentActiveElement();
     // 门 2：与 save 同一个门 —— 焦点已在容器内就不动它（避免抢走用户刚点的东西）
     if (!contains(getContainer(), active)) {
       // 上游这里是裸的 `contentRef.current?.focus()`，没有 preventScroll
@@ -152,13 +150,13 @@ export function useFocusRestore(
     const saveVersion = state?.saveVersion;
     clearSaved();
     const target = restoreConnectedTarget(targets);
-    if (!target || !doc || doc.activeElement === target) return;
+    if (!target || !doc || getActiveElement(target) === target) return;
 
     // A later layer can synchronously redirect this attempt before its own scope
     // releases its lock. Retry once after teardown only if focus fell to body;
     // a user choice or a new opening layer always takes priority.
     void nextTick(() => {
-      if (doc.activeElement === doc.body && state?.saveVersion === saveVersion) {
+      if (getActiveElement(target) === doc.body && state?.saveVersion === saveVersion) {
         restoreConnectedTarget(targets);
       }
     });

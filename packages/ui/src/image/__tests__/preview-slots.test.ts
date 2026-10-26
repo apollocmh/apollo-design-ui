@@ -296,7 +296,8 @@ describe('Image/Group native preview slots', () => {
       },
     });
     expect(wrapper.find('[data-child-thumbnail]').exists()).toBe(true);
-    await wrapper.get('.apollo-image').trigger('click');
+    // Rich roots are groups; the actual thumbnail remains a preview trigger.
+    await wrapper.get('[data-child-thumbnail] img').trigger('click');
     await settle();
     expect(groupImage).toHaveBeenCalled();
     expect(childImage).not.toHaveBeenCalled();

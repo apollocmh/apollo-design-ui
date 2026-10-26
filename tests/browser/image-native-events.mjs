@@ -84,14 +84,17 @@ try {
     for (const kind of kinds) {
       const node = rootAt(kind);
       const isProgress = progress.includes(kind) && !(await state()).resolved;
-      const ownsButton = kind !== 'static' && !isProgress;
+      const ownsGroup = kind === 'preview' && !isProgress;
+      const ownsButton = kind !== 'static' && !isProgress && !ownsGroup;
       const ownRole = isProgress
         ? kind === 'percent'
           ? 'progressbar'
           : null
-        : ownsButton
-          ? 'button'
-          : null;
+        : ownsGroup
+          ? 'group'
+          : ownsButton
+            ? 'button'
+            : null;
       assert.equal(
         await node.getAttribute('role'),
         ownRole ?? (phase < 2 && !isProgress ? (phase === 0 ? 'img' : 'presentation') : null),
@@ -115,6 +118,15 @@ try {
       );
       if (isProgress && kind === 'percent')
         assert.equal(await node.getAttribute('aria-valuenow'), '50');
+      if (ownsGroup) {
+        assert.equal(await imageAt(kind).getAttribute('role'), null);
+        const action = node.locator('button[data-apollo-image-preview-trigger]');
+        assert.equal(await action.count(), 1);
+        assert.equal(
+          await action.getAttribute('aria-label'),
+          `Preview image: ${phase < 2 ? `${kind} explicit name ${phase}` : `${kind} fallback alt`}`,
+        );
+      }
     }
   };
   const inspectNative = async (kind, name, count, revision) => {
@@ -156,7 +168,7 @@ try {
     await noPreview();
   };
   const clickImage = async (kind) => {
-    await rootAt(kind).click({ position: { x: 5, y: 5 } });
+    await imageAt(kind).click({ position: { x: 5, y: 5 } });
     if (kind !== 'static') await closePreview(kind);
     else await noPreview();
   };
@@ -242,9 +254,10 @@ try {
     await inspectNative(kind, 'keydown', 3, 1);
     await inspectNative(kind, 'error', 3, 1);
   }
-  await rootAt('preview').press('Enter');
+  await rootAt('preview').locator('button[data-apollo-image-preview-trigger]').press('Enter');
   await closePreview('preview');
   await inspectNative('preview', 'keydown', 4, 1);
+  await inspectNative('preview', 'click', 4, 1);
 
   for (const kind of progress) {
     for (const key of ['Enter', 'Space']) {

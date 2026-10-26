@@ -451,6 +451,8 @@ const isDev = typeof process !== 'undefined' && process.env?.NODE_ENV !== 'produ
 并在 `import.meta.env` 存在时优先使用它（Vite 库模式下的更准确信号）。
 **禁止**在产出代码里直接裸写 `process.env.NODE_ENV`（CJS/ESM 双产物下会破坏 tree-shaking）。
 
+2026-10-26实际消费复核：间接`source.env`不能被Vite静态替换，导致生产包isDev=true；当前实现直接读取import.meta.env及DEV布尔信号，仍由既有解析规则处理PROD/MODE/Node回落。无副作用的探测调用可移除，生产静默/开发告警与Node环境分别实测；不删除开发告警、不放宽体积预算。具体范围和结果见[Image统一清单](../audit/2026-10-25-image-contract-audit.md)。本段修正旧实现事实，历史上游/CJS说明不改变当前发布ESM契约。
+
 ### 6.5 ⚠️ F5：`KeyCode.isCharacterKey` 无 DOM 守卫
 
 原实现直接读 `window.navigator.userAgent`。SSR / jsdom（`window` 存在但 `navigator` 可能被 mock 掉）下会抛错。

@@ -1,109 +1,34 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Image
 
-# image
+Vue 3原生图片、进度占位和模态预览。公开入口为Image、ImagePreviewGroup和具有同一精确类型的Image.PreviewGroup；发布运行时不依赖React或rc引擎。具体契约见[中文API](index.zh-CN.md)、[English API](index.en-US.md)和[集中迁移](../../../../docs/migrations/image-contracts.md)。
 
-> **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：M ｜ **antd 版本**：6.6.4
->
-> 契约来源：antd `components/image/`（index 325 行 / PreviewGroup 160 行 / Progress 147 行 /
-> style 508 + progressAnimation 37 行）+ `@rc-component/image@1.10.0`（es ~1480 行）。
-> 上游是**兼容性规格**，不是代码来源。
+## 当前结构
 
-## 1. 职责
+- Image.ts：真实img资源状态、缩略图内容/封面、原生事件和单图模型。
+- PreviewGroup.ts、context.ts：显式items或子图注册、当前项与组级预览。
+- Preview.ts：共享预览、变换操作、拖动及所属文档的模态生命周期。
+- Progress.ts：水彩背景、进度及合法VNode数据renderer。
+- hooks/useStatus.ts、useImageTransform.ts、useImageOpen.ts、useImageTheme.ts、useImageMotion.ts：真实资源、当前变换边界、两入口共同开合模型、源主题与动效偏好。
+- style/：静态CSS与组件Token，不生成运行时组件样式。
 
-可预览的图片：本体（`<img>` + 占位 + 封面）、portal 预览浮层（缩放/旋转/翻转/拖拽）、
-组内切换（`Image.PreviewGroup`）、生成进度占位（`Progress`，AI 墨层动效）。
+## Vue公共用法
 
-## 2. 文件布局与关键决策
+开合使用顶层v-model:open/defaultOpen，Group另有current/defaultCurrent。移除控制接续最近同步值；外部prop更新不回声通知。click/error/keydown、openChange/update:open、transform及组级change/update:current均已声明精确emits，支持Vue监听器数组、替换和.once；无效preview内状态/通知通道已直接移除。
 
-```
-image/
-├── Image.ts         # 本体：状态机 + cover + 键盘 + Preview 挂载点
-├── Preview.ts       # portal 浮层：结构 + 变换 + 键盘
-├── PreviewGroup.ts  # 注册收集 + 切换 + rtl 图标互换
-├── Progress.ts      # 占位进度（ink 墨层 + rail + indicator）
-├── context.ts       # 注册表 / provide-inject
-├── hooks/{useStatus,useImageTransform}.ts
-├── util.ts          # toCssSize（⚠️ 见下）
-└── style/{token.ts,index.ts}
-```
+内容使用imageRender、previewImage、previewActions、previewCloseIcon，Group另有previewCount。作用域为具名对象；originNode保留真实VNode、ref和图像事件。当前render读取条件插槽，存在但空时不恢复默认，移除后恢复。有效的cover/closeIcon VNode数据、progress.render及afterOpenChange业务回调保留，不因函数名称重复迁移。
 
-- **rc-image 内核自建**：发布包零 `@rc-component/*` 运行时依赖（R7/E19），
-  手势与变换按 rc 的 `useImageTransform` 逐字 Vue 化。
-- **`popup` 语义组单独手算**：本仓 `useMergeSemantic` 未实现 antd 的 `schema` 分支，
-  `clsx` 会把 `popup` 的对象值压成 `''`（`Image` 与 `PreviewGroup` 同款）。
-- **所有尺寸走 `toCssSize()`**：Vue 的 `style` **不给数字补 px**，裸数字被静默丢弃，
-  且会被 CSS 的 `height:auto` 兜住 ⇒ 「有图但尺寸错」，只有 L6 能发现（D94 / PITFALLS 170）。
-- **组件变量声明块挂两个根**（`.apollo-image` + `.apollo-image-preview`）：
-  浮层经 Teleport 挂在 `body` 上、不在 `.apollo-image` 子树内（D95 / PITFALLS 171）。
+普通缩略图根为预览按钮。imageRender或VNode封面允许交互内容，使用group根与独立可见的原生预览按钮；originNode保持普通img，可放在调用者的原生控件中。输入、按钮、label、编辑内容及已取消事件保留原生行为，不要求.stop/preview=false；图片及非交互封面仍可点击预览，说明文字可选择。富内容根高度自然展开，height仍作用于实际图片。根class/style仍在根；img使用styles.image，内部区域使用classNames/styles。Progress仅通知原生click/keydown，不打开预览；含自定义percent renderer时，进度ARIA独立于可交互内容。
 
-## 3. 与 antd 的差异
+完全替换originNode的非空内容保留独立可见的原生预览动作，空槽不补按钮；不以隐藏控件维持旧树形态。焦点记忆按每层保存，移除下层不覆盖上层编辑器。
 
-登记于 `COMPATIBILITY.md` §9.2：**D94**（Vue `style` 数字值不自动补 px，实为全局平台事实）、
-**D95**（无 `-css-var` 类 ⇒ 声明块必须覆盖 portal 根，同 input 的 D69）。两者都是 PLATFORM，
-产物与 antd 逐字对齐。
+## 状态、Provider与样式
 
-L6 视觉 9 张（3 variant × 3 viewport）**全部 0.000% exact**。
+加载/错误/fallback由实际img和Vue ref驱动，SSR不创建浏览器Image；失败候选不覆盖fallback，换源恢复候选。分组注册保持次序并完整携带图像属性/尺寸/fallback；空组不打开空预览，无控索引在当前列表内归一。
 
-## 4. Component Token 清单
+源Vue主题跨Teleport消费当前alias与全部7个Image Token：zIndexPopup、previewOperationColor、previewOperationHoverColor、previewOperationColorDisabled、previewOperationSize、progressAnimationDuration、imagePreviewSwitchSize。默认操作18px、组切换40px、动画3s、默认z-index1080；组件配置、暗/紧凑算法及移除均响应。原生style优先级保留，ConfigProvider主题作用域切换保留原子树。DOM前缀响应不等于运行时生成任意前缀CSS，D04策略仍独立追踪。
 
-registry 数据：token 数 = 6（+ 派生 1）。
+预览锁定所属body滚动及焦点直到退场结束，mask=false仍为模态；实际HTMLElement容器支持iframe，Provider的既有类型支持已知ShadowRoot。Preview内部inline路径另有覆盖，不额外扩展Image.getContainer的公开函数签名。Escape使用所属窗口层栈/IME保护，子控件preventDefault优先；方向键避开编辑器、修饰键和组合输入。关闭/卸载归还实际触发焦点；reduced-motion、motion=false及零过渡按当前值生效。未声明的触摸双指缩放另案处理。
 
-| token | 来源 |
-|---|---|
-| `zIndexPopup` | `zIndexPopupBase + 80` = 1080 |
-| `previewOperationColor` | `colorTextLightSolid` @0.65 |
-| `previewOperationHoverColor` | `colorTextLightSolid` @0.85 |
-| `previewOperationColorDisabled` | `colorTextLightSolid` @0.25 |
-| `previewOperationSize` | `fontSizeIcon × 1.5` = 18px |
-| `progressAnimationDuration` | `'3s'` |
-| `imagePreviewSwitchSize`（派生） | `controlHeightLG` |
+## 验收状态
 
-## 5. 已知缺口
-
-| # | 缺口 | 说明 |
-|---|---|---|
-| P1 | 焦点管理（2026-10-25 已修） | 真实弹层挂载后入焦，Tab 循环、外部焦点约束、Esc 及关闭/卸载归还；见下方当前证据 |
-| P2 | 触摸手势 | rc 的 `useTouchEvent`（双指缩放/拖拽）未落地，鼠标拖拽/滚轮已实现 |
-| P3 | 语义槽函数式形态 | D36 同判 |
-| P4 | `emits` 声明 | `update:open` / `update:current` 是运行时 `emit()`，未写进 `emits` 选项（`switch`/`radio` 的惯例是声明；声明会把监听器从 attrs 摘掉，本组件 `inheritAttrs: false` 影响面小，待统一） |
-| P5 | ~~ConfigProvider 组件级 `classNames` / `styles`~~ **已接线（2026-10-04）**：`components.image.*` 上下文经 `useComponentConfig('image')` 进语义合并（最外层来源，antd image/index.js:33-41 逐字）；用例钉在 index.test.ts「组件级语义」 | 已闭合 |
-
-## 6. 收口证据（G13）
-
-- L1+L2 27 / L3 8 / L4 9（基线 `tests/compat/baselines/image.dom.json`）/ L5 18 / L7(theme) 13 /
-  demo 14（`expectCount` 钉死）/ L6 **9/9 0.000% exact**
-- `registry:check` 18 项 ✅ ｜ `lint`（vue-tsc + biome）✅ ｜ `test` 四层 ✅ ｜
-  `test:build` **141 项 FAIL 0**（含新增 B11：产物 CSS 无 `NaN` / `undefined` / 未展开 `${`）
-- registry 11 维 done，`status: completed`
-
-## 7. 当前原生缩略图扩展（2026-10-25）
-
-顶层 `imageRender` 函数声明原先未被实现消费，现直接替换为 `#imageRender="{ originNode, src, ... }"`。槽在正常图片 render 中读取当前信息；存在但为空时抑制默认图片，移除后恢复。`originNode` 保留原图片的 ref、加载/错误处理与原生属性，适合通过 `<component :is="originNode" />` 渲染。Progress 提前返回时不求值图片槽。
-
-公开 `ImageSlots` / `ImageRenderInfo` 与真实 Vue 模板、SSR、富内容身份及生产浏览器证据见 [本批报告](../../../../docs/audit/2026-10-25-image-render-slot-remediation.md)。上面的历史视觉结果不表示当前 Apollo 基线已验收；本批检查仍缺 9 张批准图。预览配置内同名 renderer 与其他扩展继续独立复审。
-
-原生根style现按Vue字符串/对象/数组合并，不复制到img；Progress与纯占位复用现有单根接收attrs，保留内部状态ARIA。嵌套placeholder.progress按对象schema合并。范围与实际检查见 [样式报告](../../../../docs/audit/2026-10-25-image-native-styles-remediation.md)。
-
-组件级classNames/styles合并保留当前Provider对象读取，替换字段、整个配置、晚加载和移除不再固定setup快照；静态对象契约及优先级保持。见 [配置报告](../../../../docs/audit/2026-10-25-image-provider-remediation.md)。
-
-Image/Group前缀由computed读取当前prop与Provider，Group的mask-hidden名称基于实际预览前缀。自定义CSS在消费构建前预加载，默认产物为apollo。DOM响应性与D04整体CSS策略的边界见 [前缀报告](../../../../docs/audit/2026-10-25-image-prefix-remediation.md)。
-
-Image的click/error/keydown与已有update:open通知使用typed emits。根属性、原生事件及Vue修饰符按真实DOM落点处理，Progress保持事件隔离；开合模型见下一段。见 [事件报告](../../../../docs/audit/2026-10-25-image-native-events-remediation.md) 与 [迁移](../../../../docs/migrations/image-native-events.md)。
-
-顶层open/defaultOpen与typed openChange/update:open兑现Image的Vue模型承诺，Group同名模型与current事件统一。旧preview状态字段直接移除，控态移除保留最近同步值；见 [模型迁移](../../../../docs/migrations/image-open-model.md) 和 [验证报告](../../../../docs/audit/2026-10-25-image-open-model-remediation.md)。
-
-预览在真实Portal根挂载后移动焦点，约束Tab/Shift+Tab和外部焦点；Esc请求关闭，受控父级拒绝时继续持焦。关闭动画结束或整个预览卸载后归还原触发器，触发器已移除时安全清理。关闭/上一张/下一张按钮有独立名称，不依赖自定义图标提供文字。见 [焦点报告](../../../../docs/audit/2026-10-25-image-preview-focus-remediation.md)。
-
-变换通知使用Image/Group顶层typed `@transform`。公开TransformInfo可从根入口导入，payload为当前六字段快照，支持Vue监听器数组、当前替换与once，Group只由Group通知。失效的preview.onTransform直接移除；见 [迁移](../../../../docs/migrations/image-transform-event.md) 和 [报告](../../../../docs/audit/2026-10-25-image-transform-event-remediation.md)。
-
-原预览大图/工具栏/计数renderer直接迁为previewImage/previewActions/Group previewCount原生单对象槽，toolbarRender别名一并移除。Origin VNode、可选原始src、当前零基索引/总数和typed动作从当前render提供，空/移除及SSR守卫明确；见 [迁移](../../../../docs/migrations/image-preview-slots.md) 与 [报告](../../../../docs/audit/2026-10-25-image-preview-slots-remediation.md)。
-
-Image和Group弹层共同读取当前Provider的popup类名/样式对象，字段/整配置/整map替换及移除不重挂预览。局部popup样式按字段覆盖，原生class/style留实际根；见 [弹层配置报告](../../../../docs/audit/2026-10-25-image-popup-provider-remediation.md)。
-
-Group导航图标读取当前Provider方向，默认与单侧自定义先合并再镜像，显式空图标与相邻索引语义保持。见 [方向报告](../../../../docs/audit/2026-10-25-image-provider-direction-remediation.md)。
-
-默认组计数增加 `colorBgSpotlight` 背景，修复白色页面上 2.33:1 的文字对比度；操作颜色继承和自定义计数槽不变。实际全局亮/暗/紧凑主题、遮罩与页面背景矩阵见 [对比度报告](../../../../docs/audit/2026-10-25-image-counter-contrast-remediation.md)。
-
-变换内核在每次操作读取当前 minScale/maxScale，收紧上限时默认按钮与槽禁用标志一致；配置更新本身不变换或通知，默认复位语义保留。双入口、手势及实际 Demo 证据见 [缩放边界报告](../../../../docs/audit/2026-10-25-image-scale-bounds-remediation.md)。
-
-关闭按钮兑现当前 preview.closable/closeIcon，补无参数原生 previewCloseIcon 槽。槽优先且空槽不回退，显式空/0 数据保持，Group 只消费自己的图标槽；隐藏按钮不阻断 Esc 或其他关闭请求。见 [关闭控件报告](../../../../docs/audit/2026-10-25-image-preview-close-remediation.md)。
+完整Image整改单元仍开放，当前证据、对应提交、命令和未验证边界只在[统一清单](../../../../docs/audit/2026-10-25-image-contract-audit.md)维护。每个根因里程碑提交不表示Image或全库完成。上游历史截图与旧completed记录不是当前Apollo验收；自有视觉基线、组合回归和最终门禁须真实执行。原实现来源分析保留在git历史与docs/history，Ant Design是参考证据，不定义Apollo当前规格。

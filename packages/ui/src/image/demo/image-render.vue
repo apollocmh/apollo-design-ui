@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Image } from '@apollo-design/ui';
-import { computed, ref, shallowRef } from 'vue';
+import { computed, h, ref, shallowRef } from 'vue';
 
 const svgSource = (color: string, label: string) =>
   `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140" viewBox="0 0 240 140"><rect width="240" height="140" fill="${color}"/><text x="120" y="76" text-anchor="middle" font-family="sans-serif" font-size="22" fill="white">${label}</text></svg>`)}`;
@@ -17,11 +17,32 @@ const keydowns = ref(0);
 const keydownOnce = ref(0);
 const errorOnce = ref(0);
 const openUpdates = ref(0);
+const richOpened = ref(false);
+const richDraft = ref('Editable caption');
+const richSaved = ref(0);
+const richCover = ref(false);
+const artworkDraft = ref('Custom artwork note');
+const richPreview = computed(() => ({
+  cover: richCover.value
+    ? h(
+        'button',
+        {
+          type: 'button',
+          style: {
+            color: 'var(--apollo-color-text)',
+            backgroundColor: 'var(--apollo-color-bg-container)',
+          },
+          onClick: () => richSaved.value++,
+        },
+        'Save cover caption',
+      )
+    : undefined,
+}));
 const lastClick = shallowRef<MouseEvent>();
 const lastKeydown = shallowRef<KeyboardEvent>();
 const lastError = shallowRef<Event>();
 const lastOpen = ref<boolean>();
-const src = computed(() => revision.value % 2 === 0 ? firstSource : nextSource);
+const src = computed(() => (revision.value % 2 === 0 ? firstSource : nextSource));
 const alt = computed(() => `Custom image ${revision.value}`);
 const width = computed(() => 200 + revision.value * 20);
 const height = computed(() => 120 + revision.value * 10);
@@ -91,6 +112,30 @@ function onImageOpenUpdate(open: boolean) {
     <p>Clicks: <output data-image-event-clicks>{{ clicks }}</output> (<output data-image-event-click-once>{{ clickOnce }}</output> once); last event: <output data-image-event-click-type>{{ eventState.lastClickType }}</output>.</p>
     <p>Keydowns: <output data-image-event-keydowns>{{ keydowns }}</output> (<output data-image-event-keydown-once>{{ keydownOnce }}</output> once); last event: <output data-image-event-keydown-type>{{ eventState.lastKeydownType }}</output>, key: <output data-image-event-key>{{ eventState.lastKey }}</output>.</p>
     <p>Preview open updates: <output data-image-event-open-updates>{{ openUpdates }}</output>. Preview is disabled; the input keeps its own click and keyboard events.</p>
+    <section data-image-rich-preview>
+      <p><button type="button" @click="richCover = !richCover">Toggle interactive cover</button></p>
+      <Image v-model:open="richOpened" :src="firstSource" alt="Rich preview image" :width="200" :preview="richPreview">
+        <template #imageRender="{ originNode }">
+          <figure class="image-render-frame">
+            <component :is="originNode" />
+            <figcaption>Preview the image and edit its caption.</figcaption>
+            <input v-model="richDraft" aria-label="Preview thumbnail caption" />
+            <button type="button" @click="richSaved++">Save thumbnail caption</button>
+          </figure>
+        </template>
+      </Image>
+      <p>Saved: <output data-image-rich-saved>{{ richSaved }}</output>; preview open: <output data-image-rich-open>{{ richOpened }}</output>.</p>
+    </section>
+    <section data-image-custom-preview>
+      <Image :src="firstSource" alt="Custom artwork preview" :width="200">
+        <template #imageRender>
+          <div class="image-render-frame">
+            <p>Custom artwork replaces the thumbnail.</p>
+            <input v-model="artworkDraft" aria-label="Custom artwork note" />
+          </div>
+        </template>
+      </Image>
+    </section>
   </section>
 </template>
 
@@ -102,7 +147,7 @@ function onImageOpenUpdate(open: boolean) {
   margin: 0;
 }
 .image-render-frame figcaption {
-  color: var(--apollo-color-text-description);
+  color: var(--apollo-color-text-secondary);
 }
 .image-render-frame input {
   box-sizing: border-box;

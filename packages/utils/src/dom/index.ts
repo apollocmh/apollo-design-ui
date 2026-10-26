@@ -1,6 +1,7 @@
+export { containsComposed, getActiveElement } from './active-element';
 export { default as canUseDom } from './can-use-dom';
 export { default as contains } from './contains';
-export type { InputFocusOptions } from './focus';
+export type { FocusNode, InputFocusOptions } from './focus';
 export {
   getFocusNodeList,
   lockFocus,

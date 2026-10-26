@@ -249,3 +249,38 @@ ConfigProvider的可选display:contents作用域通过同一份原生Teleport内
 | Registry、内容与格式 | Registry19检查/0warning；Docs内容检查及显式文件Biome、git diff --check通过。未因共享层修改提升历史verification或Image状态 |
 
 此为同一Image单元内的共享根因里程碑。Image自身模态锁定接入、富内容、ShadowRoot焦点、motion及最终视觉仍未完成；下一步继续这些既有失败复现，不切换组件，不宣称Image或全库通过。
+
+容器副作用组对应已推送 `899eba64`。后续同一交互组集中API评估：富imageRender/VNode封面使用group根和独立可见的原生预览按钮，originNode保持普通img及VNode/ref/事件，允许调用者原生控件包裹；普通缩略图根按钮不变，不要求.stop/preview=false。非空富内容提供按钮，空槽不补；height作用于图片、根自然展开，图片/非交互封面保留点击，说明文字可选择。共享utils新增getActiveElement(node)与containsComposed，不改变原contains的原生语义；a11y.save可选显式Element/null保存已知封闭源根焦点，无参数保持原默认。这些是现有ShadowRoot链路的必要修正，不另加Image公开prop。motion driver的supportMotion支持getter，与已有composable当前配置声明一致，Vue层合并监听visible及当前support，禁用时取消旧帧/监听/样式；Image私有消费系统偏好和主题零动效。以上仍须实现后统一验收。
+
+浏览器fixture再次对照公开类型：Image.preview.getContainer保持现有 `() => HTMLElement`，ShadowRoot场景必须通过类型已允许的ConfigProvider.getPopupContainer；inline只验证内部Preview/Portal，不能把其内部GetContainer联合误报为Image新增公开能力。对应fixture按此拆清归属，并补显式SFC类型检查；首次fixture运行中未纳入根tsconfig的宽返回类型不能作为公开类型通过证据。
+
+共享消费者首轮为279文件4526条，12失败/4514通过（`/tmp/apollo-image-interactions-consumers-final.log`），不是全绿。真实产品缺陷包括移除下层时清掉上层编辑器的共享焦点记忆；现按每层保存。Form/Segmented的失败来自测试全局TeleportStub额外包裹，改为文件内启用原生Teleport并保留原断言；Form生产实现没有新增修改。Select已有条件选项Demo未计入旧35条数量，现保留原35条原有豁免，新Demo独立完整axe且无豁免；utils原伪造KeyboardEvent改为实际DOM事件并补ShadowRoot路径。相关5文件129条复验通过，仍须对最终源码重新执行整组。
+
+继续收敛后的专项：原生SVG焦点及disabled fieldset/inert/隐藏边界先红后绿，相关11文件220条通过；完全替换originNode缺少键盘入口和调用者原生button包裹img产生嵌套交互均独立复现。最终采用所有非空富内容统一独立原生按钮，img无按钮角色，空槽不补入口；最终4文件78条通过。Image完整整改单元、共享消费者最终回归与视觉尚未据这些局部结果收口。
+
+冻结生产实现后的共享组复跑：279文件中278通过/1失败，4532条中4531通过/1失败（`/tmp/apollo-image-interactions-consumers-current.log`）。余项是旧preview-slots测试点击整个富内容group根，与本轮明确的图片/独立原生按钮入口冲突；仅改为点击实际缩略图，全部原断言保留。随后完整Image四层23文件378条通过（`/tmp/apollo-image-current-image-complete.log`），其余直接焦点消费者Input/InputNumber/Rate四层19文件350条通过（`/tmp/apollo-image-current-additional-consumers.log`）。未将组合复验改写成一次全绿的279文件运行。相关28文件352条类型零错误，含FocusNode精确联合及HTML专属属性负例；生产源码严格vue-tsc退出0。构建、生产浏览器和Docs仍继续执行，视觉尚未验收。
+
+当前交互生产浏览器：Chrome150.0.7871.125的21场景全部通过，零Vue/控制台/页面错误（`/tmp/apollo-image-current-image-interactions-browser.log`）；实际SFC调用先通过vue-tsc，覆盖双入口富缩略图/完全替换图片、封面、含控件Progress、iframe、开/闭ShadowRoot、封闭源根、内部inline、系统偏好与主题motion/零时长及真实公开Demo。原生SVG焦点/Enter、原生Tab双向循环、实际外部抢焦和关闭归还均验证。持久化[交互证据](evidence/image-interaction-browser.json)含121个生产源码文件及确定算法指纹。封闭ShadowRoot的axe上下文遍历为引擎不支持，明确记录；使用Chrome原生AX检查该处dialog/名称/textbox/关闭控件，开放镜像和实际Demo保留完整axe。未将该边界记作“封闭树axe通过”。
+
+L7收口复现：utils/a11y/motion各11项无失败；UI的B6失败，Image单独引入82.4KB超过既有77KB预算（`/tmp/apollo-image-current-ui-L7.log`）。预算不改。模块分析确认编辑目标判断引入完整KeyCode对象；抽出同一原生函数供KeyCode字段与Image共享后约80.5KB，尚未过门禁。新按需函数不改变旧KeyCode字段的身份/行为，需同步类型与消费验证。
+
+继续追踪同一按需图的环境链：公开isDev/isProd/isTest为模块常量；warning/devUseWarning及Portal/useZIndex消费其值；readImportMetaEnv、resolveDev/Test为既有内部测试入口，优先级DEV→PROD→MODE→Node环境，裸浏览器无信号回落dev。现`meta ?? import.meta`后间接读env，Vite无法替换该写法；真实发布utils入口的生产Vite构建得到isDev=true（`/tmp/apollo-utils-environment-baseline-actual.log`），违反生产静默契约，不只是体积问题。前两次probe分别缺根workspace链接、未保留入口导出，已修正测试工具后才取得此真实失败。集中方案：保留已有纯解析/Node/裸浏览器回落，用可静态替换的直接DEV读取接通当前打包器；只为无副作用的探测调用标纯。生产/开发构建和Node环境、原有env/告警测试、全部L7与受影响消费者须复验；不删除开发告警或改预算。
+
+环境消费进一步保留DEV缺省的PROD/MODE回落，补充PROD-only失败后统一修正readImportMetaEnv的直接读取。最终`node tests/consumer/utils-environment.mjs`覆盖四种Vite信号、原生warning以及三个真实Node进程环境，退出0（`/tmp/apollo-utils-environment-final.log`）。共享组69文件1338条在配置/插槽转发合并后通过；后续Props声明归一与共同开合模型仍需对最终源码复验。可选非Boolean Props改等价Vue构造器声明，含Boolean的所有显式undefined/default保留；共同字段/模型只实现一次，原生槽直接传递，不改公开接口、控制移除、空槽或通知顺序。预算仍为77KB，源码指纹及浏览器证据将在最终构建后重新取证，不将修前捕获冒充最终源码验证。
+
+### 交互根因组：冻结生产源码验收
+
+最终生产指纹为`74b5b7cc7922a5e516a8609c7993fbe08db3f53d624b3e088b646cc881d6ccab`，123个文件；文件清单、算法、逐场景及逐命令结果已写入同一[交互证据](evidence/image-interaction-browser.json)。未改B6预算：Image实际78832字节，原预算78848字节；UI全部73个入口的预算与其余L7检查均通过。
+
+| 冻结源码检查 | 实际结果 |
+|---|---|
+| 严格`vue-tsc --noEmit` | 退出0；`/tmp/apollo-image-final-strict.log` |
+| utils/a11y/motion/portal/Image四层串行 | 69文件1338条通过；`/tmp/apollo-image-frozen-runtime.log` |
+| 相关类型 | 28文件352条，零类型错误；`/tmp/apollo-image-frozen-types.log` |
+| utils/a11y/motion/UI L7 `--no-build --strict` | 每包11项，0失败/0pending；前三包各5项有依据的n/a；实际生产构建均先执行 |
+| 无DOM SSR、真实SFC声明、环境与tarball消费者 | image-ssr、image-slot-types、utils-environment及完整`tests/consumer/run.mjs`均退出0；Vite/Webpack真实消费发布图 |
+| 生产Chrome | 20个脚本全部退出0，含交互21场景、原契约23场景、全部Image专项、Form前缀、Drawer富内容和Motion水合；无Vue/页面错误，axe边界仍按前文披露 |
+| Docs | content:build/check、typecheck、14文件157条及SSG构建均通过 |
+| 格式 | 本轮48个适用文件通过；全仓`lint:format`失败66错误，独立detached HEAD复跑原基线有67错误。原有memory工具/其他文件问题另案登记，没有放宽规则或假报全仓通过 |
+
+整改单元仍开放。最后对照原始盘点表，分组的items/注册模式切换、嵌套组隔离与选中注册项删除尚需显式所有权补验；不能仅以已有通用列表缩短或单图多实例替代。视觉已从旧9张静态场景扩为8类×3视口的24张候选：正常、hover封面、真正打开且完整入镜的预览、富缩略图、进度、分组、局部暗色/紧凑。旧preview.open导致三个视口均未打开的失败已通过新增实际状态守卫复现；24张初始候选已逐张查看，最终清洁提交重拍、批准及像素复验仍未完成。触摸双指手势及全局D04另案，不扩充本轮公共API。

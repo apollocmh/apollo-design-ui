@@ -59,6 +59,52 @@ function deliverMutations(doc: Document) {
 }
 
 describe('focus ownership across actual documents', () => {
+  it('preserves an editor in an open descendant shadow tree when outside focus is refused', () => {
+    const nodes = region(document);
+    const host = document.createElement('span');
+    nodes.root.insertBefore(host, nodes.last);
+    const shadow = host.attachShadow({ mode: 'open' });
+    const input = document.createElement('input');
+    shadow.append(input);
+    Object.defineProperty(input, 'offsetParent', { configurable: true, get: () => host });
+    const release = lockFocus(nodes.root, 'descendant-shadow');
+    try {
+      input.focus();
+      nodes.outside.focus();
+      expect(shadow.activeElement).toBe(input);
+    } finally {
+      release();
+    }
+  });
+  for (const mode of ['open', 'closed'] as const) {
+    it(`keeps the current control and cycles Tab inside an actual ${mode} ShadowRoot`, () => {
+      const host = document.createElement('div');
+      document.body.append(host);
+      ownedNodes.push(host);
+      const shadow = host.attachShadow({ mode });
+      const nodes = region(document);
+      shadow.append(nodes.root);
+      const release = lockFocus(nodes.root, `shadow-${mode}`);
+      try {
+        nodes.last.focus();
+        expect(shadow.activeElement).toBe(nodes.last);
+        const tab = new KeyboardEvent('keydown', {
+          key: 'Tab',
+          bubbles: true,
+          composed: true,
+          cancelable: true,
+        });
+        nodes.last.dispatchEvent(tab);
+        expect(tab.defaultPrevented).toBe(true);
+        expect(shadow.activeElement).toBe(nodes.first);
+        nodes.last.focus();
+        nodes.outside.focus();
+        expect(shadow.activeElement).toBe(nodes.last);
+      } finally {
+        release();
+      }
+    });
+  }
   it('shares one document observer while locks are active and disconnects after the last release', () => {
     const first = region(document);
     const second = region(document);
@@ -168,6 +214,7 @@ describe('focus ownership across actual documents', () => {
     const nested = region(doc);
     const releaseMain = lockFocus(main.root, 'main');
     const releaseFrame = lockFocus(frame.root, 'frame');
+    frame.last.focus();
     const releaseNested = lockFocus(nested.root, 'nested');
     main.outside.focus();
     expect(main.root.contains(document.activeElement)).toBe(true);
@@ -176,6 +223,7 @@ describe('focus ownership across actual documents', () => {
     releaseNested();
     nested.outside.focus();
     expect(frame.root.contains(doc.activeElement)).toBe(true);
+    expect(doc.activeElement).toBe(frame.last);
     releaseMain();
     frame.outside.focus();
     expect(frame.root.contains(doc.activeElement)).toBe(true);

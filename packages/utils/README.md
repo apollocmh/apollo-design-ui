@@ -32,8 +32,10 @@
 - 属性工具：pickAttrs / toNativeEventName / toVueDomAttrs / mergeDomAttrs
 - 对象工具：omit / mergeProps / isEqual / get / set / merge / mergeWith
 - 子节点工具：toArray（展平 slot / 数组 / Fragment）
-- 键盘：KeyCode
+- 键盘：KeyCode、isEditableTarget（与KeyCode.isEditableTarget为同一原生函数，可单独按需引入）
 - 焦点：getFocusNodeList / triggerFocus / lockFocus / useLockFocus
+
+`getActiveElement(node?)`读取已知节点所属根的焦点，支持封闭ShadowRoot和开放后代；省略节点使用当前文档。`containsComposed(root,node)`跨ShadowRoot宿主判断包含，原contains保留原生语义。getFocusNodeList按实际开放树及slot分发读取HTML/SVG焦点顺序，返回FocusNode[]（HTMLElement | SVGElement），使用HTML专属属性前须收窄；原生disabled fieldset、inert及隐藏控件不进入循环。锁同时监听已知根内的focusin，因为同一宿主内换焦可能不冒泡到window。最后释放移除所有根监听与观察，详见同一Image清单。
 
 `lockFocus` / `useLockFocus` 按元素所属文档协调锁栈，同文档后打开的锁优先；监听器绑定所属窗口。Tab在边界同步循环，子控件的preventDefault优先；无可Tab子项时保留可编程聚焦的容器。实际DOM搬迁保留记忆焦点，跨文档时迁移锁及监听器。每个活动文档共享一个原生MutationObserver，最后一个锁释放后清理。Vue作用域结束会取消待执行重试，卸载后不会重新注册。当前接口签名不变；Image/Modal/Drawer的验证范围见 [统一清单](../../docs/audit/2026-10-25-image-contract-audit.md)。
 - 观察器：useResizeObserver / useMutationObserver / useOverflow（单例复用）

@@ -11,23 +11,34 @@
  * ```
  * Preview 是 portal —— SSR 不可见（与 tooltip/popover 同判）。
  */
-import { omit } from '@apollo-design/utils';
+import {
+  containsComposed,
+  getActiveElement,
+  isNonNullable,
+  omit,
+  toArray,
+} from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
+  Fragment,
   h,
   isVNode,
   onBeforeUnmount,
+  onBeforeUpdate,
+  onUpdated,
   type PropType,
   ref,
   type SlotsType,
   shallowRef,
+  Text,
   type VNodeChild,
   watch,
 } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { nextImageId, type RegisteredImage, usePreviewGroup } from './context';
+import { useImageOpen } from './hooks/useImageOpen';
 import { useImageTheme } from './hooks/useImageTheme';
 import { useStatus } from './hooks/useStatus';
 import type {
@@ -37,14 +48,12 @@ import type {
   ImageSemanticType,
   ImageSlots,
   PlaceholderType,
-  PreviewActionsInfo,
   PreviewConfig,
-  PreviewImageInfo,
   TransformInfo,
 } from './interface';
 import Preview from './Preview';
 import Progress from './Progress';
-import { getImageCommonProps, toCssSize } from './util';
+import { getImageCommonProps, getPreviewProps, toCssSize } from './util';
 
 type SemanticClassNames = NonNullable<ImageSemanticType['classNames']>;
 type SemanticStyles = NonNullable<ImageSemanticType['styles']>;
@@ -62,12 +71,8 @@ function normalizeCover(cover: PreviewConfig['cover']): {
   coverNode: VNodeChild;
   isFalse: boolean;
 } {
-  if (cover === false) return { placement: 'center', coverNode: undefined, isFalse: true };
-  if (cover === undefined || cover === null || cover === true) {
-    return { placement: 'center', coverNode: undefined, isFalse: false };
-  }
-  if (typeof cover === 'boolean')
-    return { placement: 'center', coverNode: undefined, isFalse: false };
+  if (cover === undefined || cover === null || typeof cover === 'boolean')
+    return { placement: 'center', coverNode: undefined, isFalse: cover === false };
   if (typeof cover === 'object' && !Array.isArray(cover) && !isVNode(cover)) {
     return { placement: cover.placement ?? 'center', coverNode: cover.coverNode, isFalse: false };
   }
@@ -87,12 +92,12 @@ const Image = defineComponent({
     'update:open': (_open: boolean) => true,
   },
   props: {
-    prefixCls: { type: String, default: undefined },
-    src: { type: String, default: undefined },
-    width: { type: [Number, String] as PropType<number | string>, default: undefined },
-    height: { type: [Number, String] as PropType<number | string>, default: undefined },
-    alt: { type: String, default: undefined },
-    fallback: { type: String, default: undefined },
+    prefixCls: String,
+    src: String,
+    width: [Number, String] as PropType<number | string>,
+    height: [Number, String] as PropType<number | string>,
+    alt: String,
+    fallback: String,
     placeholder: {
       type: [Object, String, Number, Boolean, Array] as PropType<PlaceholderType>,
       default: undefined,
@@ -100,17 +105,17 @@ const Image = defineComponent({
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: false },
     preview: { type: [Boolean, Object] as PropType<boolean | PreviewConfig>, default: true },
-    wrapperStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
-    classNames: { type: Object as PropType<SemanticClassNames>, default: undefined },
-    styles: { type: Object as PropType<SemanticStyles>, default: undefined },
+    wrapperStyle: Object as PropType<Record<string, string | number>>,
+    classNames: Object as PropType<SemanticClassNames>,
+    styles: Object as PropType<SemanticStyles>,
     // img 透传（COMMON_PROPS 子集）
-    crossOrigin: { type: String as PropType<ImageProps['crossOrigin']>, default: undefined },
-    decoding: { type: String as PropType<ImageProps['decoding']>, default: undefined },
-    loading: { type: String as PropType<ImageProps['loading']>, default: undefined },
-    referrerPolicy: { type: String, default: undefined },
-    sizes: { type: String, default: undefined },
-    srcSet: { type: String, default: undefined },
-    useMap: { type: String, default: undefined },
+    crossOrigin: String as PropType<ImageProps['crossOrigin']>,
+    decoding: String as PropType<ImageProps['decoding']>,
+    loading: String as PropType<ImageProps['loading']>,
+    referrerPolicy: String,
+    sizes: String,
+    srcSet: String,
+    useMap: String,
     draggable: { type: Boolean, default: undefined },
   },
   setup(props, { attrs, emit, slots }) {
@@ -119,6 +124,8 @@ const Image = defineComponent({
     const config = useComponentConfig<ImageSemanticType>('image');
     const theme = useImageTheme();
     const element = shallowRef<HTMLElement | null>(null);
+    const previewTrigger = shallowRef<HTMLElement | null>(null);
+    const coverElement = shallowRef<HTMLElement | null>(null);
     const groupContext = usePreviewGroup();
     const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('image'));
 
@@ -137,22 +144,7 @@ const Image = defineComponent({
       return provider ? () => provider(element.value ?? undefined) : undefined;
     });
 
-    const innerOpen = ref(props.defaultOpen);
-    const previewOpen = computed(() => props.open ?? innerOpen.value);
-    watch(
-      () => props.open,
-      (open) => {
-        if (open !== undefined) innerOpen.value = open;
-      },
-      { immediate: true },
-    );
-
-    const setPreviewOpen = (next: boolean): void => {
-      const previous = previewOpen.value;
-      if (props.open === undefined) innerOpen.value = next;
-      emit('openChange', next, previous);
-      emit('update:open', next);
-    };
+    const { open: previewOpen, setOpen: setPreviewOpen } = useImageOpen(props, emit);
 
     const mousePosition = ref<{ x: number; y: number } | null>(null);
 
@@ -211,7 +203,7 @@ const Image = defineComponent({
       const p = props.placeholder;
       return p !== undefined && p !== null && p !== false && p !== true;
     });
-    const { status, getImgRef, srcAndOnload } = useStatus({
+    const { status, image, getImgRef, srcAndOnload } = useStatus({
       src: () => props.src,
       isCustomPlaceholder: () => isCustomPlaceholder.value,
       fallback: () => props.fallback,
@@ -274,18 +266,85 @@ const Image = defineComponent({
     });
 
     const coverInfo = computed(() => normalizeCover(previewConfig.value?.cover));
+    // Content slots and VNode data may contain native controls. In that case
+    // a separate native action owns preview semantics; originNode stays an img.
+    const hasRichContent = () =>
+      !!slots.imageRender ||
+      isVNode(coverInfo.value.coverNode) ||
+      Array.isArray(coverInfo.value.coverNode);
+    let previousSourceFocus: Element | null = null;
+    let ownedSourceFocus = false;
+    onBeforeUpdate(() => {
+      const active = getActiveElement(element.value);
+      previousSourceFocus =
+        canPreview.value && containsComposed(element.value, active) ? active : null;
+      ownedSourceFocus =
+        !!previousSourceFocus &&
+        (active === previewTrigger.value ||
+          (active === element.value && active?.getAttribute('role') === 'button'));
+    });
+    onUpdated(() => {
+      const previous = previousSourceFocus;
+      previousSourceFocus = null;
+      if (!previous || !canPreview.value) return;
+      const active = getActiveElement(element.value);
+      if (active !== previous && active !== element.value?.ownerDocument.body) return;
+      const target =
+        !ownedSourceFocus && previous.isConnected && containsComposed(element.value, previous)
+          ? previous
+          : hasRichContent()
+            ? previewTrigger.value
+            : element.value;
+      if (target && target !== active && 'focus' in target && typeof target.focus === 'function')
+        target.focus({ preventScroll: true });
+    });
+    const isChildInteraction = (event: Event): boolean => {
+      for (const node of event.composedPath()) {
+        if (node === element.value) break;
+        if (node === image.value) continue;
+        if (
+          node &&
+          typeof node === 'object' &&
+          'nodeType' in node &&
+          node.nodeType === 1 &&
+          'matches' in node &&
+          typeof node.matches === 'function' &&
+          node.matches(
+            'input,textarea,select,button,a[href],area[href],summary,label,audio[controls],video[controls],[contenteditable]:not([contenteditable="false"]),[tabindex],[role="button"],[role="link"],[role="textbox"],[role="combobox"],[role="checkbox"],[role="radio"],[role="switch"],[role="menuitem"],[role="slider"],[role="spinbutton"],[role="tab"],[role="treeitem"],[role="dialog"]',
+          )
+        )
+          return true;
+      }
+      return false;
+    };
 
     const onInternalClick = (e: MouseEvent): void => {
-      if (canPreview.value) openPreviewAt(e.target instanceof Element ? e.target : null);
+      const path = e.composedPath();
+      const previewRegion =
+        !hasRichContent() ||
+        (image.value && path.includes(image.value)) ||
+        (coverElement.value && path.includes(coverElement.value));
+      if (canPreview.value && previewRegion && !e.defaultPrevented && !isChildInteraction(e))
+        openPreviewAt(image.value ?? element.value);
       emit('click', e);
     };
 
     const onKeyDown = (e: KeyboardEvent): void => {
       emit('keydown', e);
-      if (!canPreview.value || e.defaultPrevented) return;
+      if (
+        !canPreview.value ||
+        e.defaultPrevented ||
+        e.isComposing ||
+        e.altKey ||
+        e.ctrlKey ||
+        e.metaKey ||
+        isChildInteraction(e) ||
+        hasRichContent()
+      )
+        return;
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openPreviewAt(e.target instanceof Element ? e.target : null);
+        openPreviewAt(image.value ?? element.value);
       }
     };
 
@@ -320,6 +379,7 @@ const Image = defineComponent({
       }
 
       const originNode = h('img', {
+        key: 'image-origin',
         ...commonProps,
         class: [
           `${prefixCls.value}-img`,
@@ -355,6 +415,12 @@ const Image = defineComponent({
         : originNode;
 
       const isError = status.value === 'error';
+      const needsPreviewAction =
+        canPreview.value &&
+        hasRichContent() &&
+        toArray(imageContent).some(
+          (node) => node.type !== Text || String(node.children ?? '').trim().length > 0,
+        );
 
       return h(
         'div',
@@ -365,6 +431,7 @@ const Image = defineComponent({
           },
           class: [
             prefixCls.value,
+            canPreview.value && hasRichContent() ? `${prefixCls.value}-rich` : undefined,
             // 调用方原生 class（位置与原先的 props.rootClassName 一致）
             attrs.class,
             mergedClassNames.value?.root,
@@ -372,27 +439,55 @@ const Image = defineComponent({
           ],
           style: [
             theme.styles.value,
-            { width: toCssSize(props.width), height: toCssSize(props.height) },
+            {
+              width: toCssSize(props.width),
+              height: hasRichContent() ? 'auto' : toCssSize(props.height),
+            },
             mergedStyles.value?.root,
             attrs.style,
           ],
           ...(canPreview.value
-            ? {
-                role: 'button',
-                tabindex: 0,
-                'aria-label': attrs['aria-label'] ?? (props.alt?.trim() || 'Preview image'),
-              }
+            ? hasRichContent()
+              ? { role: 'group' }
+              : {
+                  role: 'button',
+                  tabindex: 0,
+                  'aria-label': attrs['aria-label'] ?? (props.alt?.trim() || 'Preview image'),
+                }
             : {}),
           onClick: onInternalClick,
           onKeydown: onKeyDown,
         },
         [
-          imageContent,
+          h(
+            Fragment,
+            { key: 'image-content' },
+            Array.isArray(imageContent) ? imageContent : [imageContent],
+          ),
+          needsPreviewAction
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  class: `${prefixCls.value}-preview-trigger`,
+                  'data-apollo-image-preview-trigger': '',
+                  'aria-label':
+                    (attrs['aria-label'] ?? props.alt?.trim())
+                      ? `Preview image: ${attrs['aria-label'] ?? props.alt?.trim()}`
+                      : 'Preview image',
+                  ref: (node: unknown) => {
+                    previewTrigger.value = node instanceof HTMLElement ? node : null;
+                  },
+                  onClick: () => openPreviewAt(image.value ?? element.value),
+                },
+                'Preview image',
+              )
+            : null,
           status.value === 'loading'
             ? h(
                 'div',
                 { 'aria-hidden': 'true', class: `${prefixCls.value}-placeholder` },
-                [placeholderNode.value].filter((c) => c !== null && c !== undefined),
+                [placeholderNode.value].filter(isNonNullable),
               )
             : null,
           !coverInfo.value.isFalse && canPreview.value
@@ -405,14 +500,18 @@ const Image = defineComponent({
                     `${prefixCls.value}-cover-${coverInfo.value.placement}`,
                   ],
                   style: mergedStyles.value?.cover,
+                  ref: (node: unknown) => {
+                    coverElement.value = node instanceof HTMLElement ? node : null;
+                  },
                 },
-                [coverInfo.value.coverNode].filter((c) => c !== null && c !== undefined),
+                [coverInfo.value.coverNode].filter(isNonNullable),
               )
             : null,
           canPreview.value && !groupContext
             ? h(
                 Preview,
                 {
+                  ...getPreviewProps(previewConfig.value),
                   prefixCls: `${prefixCls.value}-preview`,
                   src: previewSrc.value,
                   alt: props.alt,
@@ -420,39 +519,22 @@ const Image = defineComponent({
                   fallback: props.fallback,
                   imgCommonProps: commonProps,
                   open: previewOpen.value,
-                  movable: previewConfig.value?.movable,
-                  maskClosable: previewConfig.value?.maskClosable,
-                  mask: previewConfig.value?.mask,
                   getContainer: getPreviewContainer.value,
-                  closable: previewConfig.value?.closable,
-                  closeIcon: previewConfig.value?.closeIcon,
-                  minScale: previewConfig.value?.minScale,
-                  maxScale: previewConfig.value?.maxScale,
-                  scaleStep: previewConfig.value?.scaleStep,
-                  zIndex: previewConfig.value?.zIndex,
+                  getTriggerElement: () => element.value,
                   mousePosition: mousePosition.value,
-                  icons: previewConfig.value?.icons,
-                  rootClassName: previewConfig.value?.rootClassName,
                   classNames: popupClassNames.value,
                   styles: mergedStyles.value.popup,
                   onClose: () => setPreviewOpen(false),
-                  afterOpenChange: previewConfig.value?.afterOpenChange,
                   onTransform: (info: TransformInfo) => emit('transform', info),
                 },
                 {
-                  ...(slots.previewImage
-                    ? { previewImage: (info: PreviewImageInfo) => slots.previewImage?.(info) }
-                    : {}),
-                  ...(slots.previewActions
-                    ? { previewActions: (info: PreviewActionsInfo) => slots.previewActions?.(info) }
-                    : {}),
-                  ...(slots.previewCloseIcon
-                    ? { previewCloseIcon: () => slots.previewCloseIcon?.() }
-                    : {}),
+                  previewImage: slots.previewImage,
+                  previewActions: slots.previewActions,
+                  previewCloseIcon: slots.previewCloseIcon,
                 },
               )
             : null,
-        ].filter((c) => c !== null && c !== undefined),
+        ].filter(isNonNullable),
       );
     };
   },

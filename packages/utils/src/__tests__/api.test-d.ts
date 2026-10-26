@@ -4,9 +4,13 @@ import {
   type ControlledUpdater,
   capitalize,
   composeRef,
+  type FocusNode,
   fillRef,
   get,
+  getActiveElement,
+  getFocusNodeList,
   getNodeRef,
+  isEditableTarget,
   isNonNullable,
   isReactEventName,
   isRenderable,
@@ -254,6 +258,20 @@ describe('useDelayState / useSafeState', () => {
 });
 
 describe('useUpdateEffect / useId / useLockFocus', () => {
+  it('focus traversal exposes HTML and SVG nodes, while active focus may be absent', () => {
+    expectTypeOf(isEditableTarget).parameters.toEqualTypeOf<[KeyboardEvent]>();
+    expectTypeOf(isEditableTarget).returns.toEqualTypeOf<boolean>();
+    expectTypeOf(getFocusNodeList).returns.toEqualTypeOf<FocusNode[]>();
+    expectTypeOf<FocusNode>().toEqualTypeOf<HTMLElement | SVGElement>();
+    expectTypeOf(getActiveElement).returns.toEqualTypeOf<Element | null>();
+    const inspect = (node: FocusNode) => {
+      node.focus({ preventScroll: true });
+      // @ts-expect-error Focus traversal may return SVG; narrow before using HTML-only properties.
+      const html: HTMLElement = node;
+      void html;
+    };
+    expectTypeOf(inspect).toBeFunction();
+  });
   it('deps 必须是 WatchSource 数组', () => {
     const dep = ref(0);
     useUpdateEffect(() => {}, [dep]);

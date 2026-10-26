@@ -45,7 +45,8 @@ try {
   });
   await page.goto(`${server.resolvedUrls.local[0]}vue-reactivity.html?demo=image-render`);
   const demo = page.locator('[data-image-render-demo]');
-  const rootImage = demo.locator('.apollo-image');
+  assert.equal(await demo.locator('.apollo-image').count(), 3);
+  const rootImage = demo.locator('[data-image-event-root]');
   const originalRoot = await rootImage.elementHandle();
   const figure = demo.locator('[data-native-image-render]');
   const image = () => rootImage.locator('img.apollo-image-img');

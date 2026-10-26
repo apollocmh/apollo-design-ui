@@ -12,8 +12,13 @@
 
 import { a11yDemoTest } from '@apollo-design/test-utils';
 
+const { '../demo/conditional-options.vue': conditionalOptions, ...legacyDemos } = import.meta.glob(
+  '../demo/*.vue',
+  { eager: true },
+);
+
 a11yDemoTest('Select', {
-  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  demos: legacyDemos,
   expectCount: 35,
   global: { stubs: { teleport: false } },
   allow: [
@@ -23,4 +28,12 @@ a11yDemoTest('Select', {
         'combobox 的可访问名由 role=combobox + aria-* 状态承担（antd a11y.test.ts 同款放行）。',
     },
   ],
+});
+
+// This existing demo labels both controls. Keep its complete axe scan without
+// the legacy label allowance; the original 35 demos retain their exact checks.
+a11yDemoTest('Select named conditional options', {
+  demos: { '../demo/conditional-options.vue': conditionalOptions },
+  expectCount: 1,
+  global: { stubs: { teleport: false } },
 });

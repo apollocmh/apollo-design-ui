@@ -70,6 +70,25 @@ afterEach(() => {
 });
 
 describe('getFocusNodeList', () => {
+  it('keeps a native SVG keyboard target in the focus order', () => {
+    const container = buildContainer('<button id="before">Before</button>');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('id', 'svg-action');
+    svg.setAttribute('tabindex', '0');
+    Object.defineProperty(svg, 'getBBox', {
+      configurable: true,
+      value: () => ({ width: 30, height: 20 }),
+    });
+    container.append(svg);
+    expect(getFocusNodeList(container).map((node) => node.id)).toEqual(['before', 'svg-action']);
+  });
+
+  it('excludes disabled fieldset controls, inert descendants and hidden controls', () => {
+    const container = buildContainer(
+      '<fieldset disabled><input id="disabled-field" /></fieldset><div inert><button id="inert-control">Inert</button></div><button id="hidden-control" style="visibility:hidden">Hidden</button><button id="available">Available</button>',
+    );
+    expect(getFocusNodeList(container).map((node) => node.id)).toEqual(['available']);
+  });
   it('返回可聚焦元素，顺序为「容器自身 → 文档顺序」', () => {
     const container = buildContainer('<input id="a" /><button id="b">x</button><div id="c"></div>');
     container.setAttribute('tabindex', '0');

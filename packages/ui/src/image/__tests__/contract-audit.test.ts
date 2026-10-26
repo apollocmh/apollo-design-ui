@@ -462,7 +462,9 @@ it('keeps the existing data-driven progress renderer current, clamps percent, an
     },
   });
   expect(wrapper.text()).toContain('Current 100');
-  expect(wrapper.attributes('aria-valuenow')).toBe('100');
+  // Rich progress content is a group; its separate progressbar preserves the
+  // percentage without making custom controls presentational descendants.
+  expect(wrapper.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('100');
   await wrapper.setProps({ placeholder: { progress: { percent: 130, render: () => null } } });
   expect(wrapper.find('.apollo-image-progress-content').text()).toBe('');
   await wrapper.setProps({ placeholder: { progress: { percent: Number.NaN } } });

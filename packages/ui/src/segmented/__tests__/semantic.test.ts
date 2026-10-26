@@ -10,6 +10,8 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { config } from '@vue/test-utils';
+import { afterAll, beforeAll } from 'vitest';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/segmented.dom.json';
 import { ConfigProvider } from '../../config-provider';
@@ -17,6 +19,15 @@ import { Segmented } from '../index';
 
 /** 两侧共用的完整前缀。与 `tests/compat/baseline/segmented.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo-segmented';
+// Compare the production DOM: ConfigProvider's stable native Teleport is not
+// represented by VTU's extra teleport-stub element.
+const previousStubs = config.global.stubs;
+beforeAll(() => {
+  config.global.stubs = { teleport: false };
+});
+afterAll(() => {
+  config.global.stubs = previousStubs;
+});
 
 const OPTIONS = ['Daily', 'Weekly', 'Monthly'];
 const OBJECT_OPTIONS = [
@@ -69,11 +80,9 @@ const CASES: Record<string, () => DomRenderResult> = {
       options: [{ label: 'A', value: 'a', icon: '★' }, 'B'],
     }),
   rtl: () =>
-    h(
-      ConfigProvider,
-      { direction: 'rtl' },
-      () => h(Segmented, { prefixCls: PREFIX, options: OPTIONS }) as never,
-    ) as never,
+    h(ConfigProvider, { direction: 'rtl' }, () =>
+      h(Segmented, { prefixCls: PREFIX, options: OPTIONS }),
+    ),
   'semantic:classNames': () =>
     h(Segmented, {
       prefixCls: PREFIX,

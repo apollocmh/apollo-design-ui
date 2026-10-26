@@ -44,6 +44,11 @@ const RULES = `
 .apollo-image .apollo-image-placeholder{position:absolute;inset:0;}
 .apollo-image .apollo-image-cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--apollo-color-text-light-solid);background:rgba(0,0,0,0.3);cursor:pointer;opacity:0;transition:opacity var(--apollo-motion-duration-slow);}
 .apollo-image:hover .apollo-image-cover,.apollo-image:focus-visible .apollo-image-cover{opacity:1;}
+.apollo-image-rich .apollo-image-cover{pointer-events:none;}
+.apollo-image-rich .apollo-image-cover >*{pointer-events:auto;}
+.apollo-image-rich:focus-within .apollo-image-cover{opacity:1;}
+.apollo-image .apollo-image-preview-trigger{position:relative;z-index:1;display:block;margin-block-start:var(--apollo-margin-xs);padding:0 var(--apollo-padding-xs);font:inherit;color:var(--apollo-color-text);background:var(--apollo-color-bg-container);border:var(--apollo-line-width) solid var(--apollo-color-border);border-radius:var(--apollo-border-radius-sm);cursor:pointer;}
+.apollo-image .apollo-image-preview-trigger:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;}
 .apollo-image .apollo-image-cover-top{inset:0 0 auto 0;justify-content:center;}
 .apollo-image .apollo-image-cover-bottom{inset:auto 0 0 0;justify-content:center;}
 .apollo-image-progress-wrapper{position:relative;display:inline-block;overflow:hidden;border-radius:inherit;background-color:var(--apollo-color-bg-base);backdrop-filter:blur(8px);}
@@ -90,7 +95,10 @@ const RULES = `
 .apollo-image-preview-fade-enter-active .apollo-image-preview-body,.apollo-image-preview-fade-appear-active .apollo-image-preview-body{transform:scale(1);transition:transform var(--apollo-motion-duration-slow);}
 .apollo-image-preview-fade-leave{opacity:1;}
 .apollo-image-preview-fade-leave-active{opacity:0;}
-.apollo-image-preview-fade-leave-active .apollo-image-preview-body{transform:scale(0);transition:transform var(--apollo-motion-duration-slow);}`;
+.apollo-image-preview-fade-leave-active .apollo-image-preview-body{transform:scale(0);transition:transform var(--apollo-motion-duration-slow);}
+.apollo-image-progress-wrapper .apollo-image-progress-ink-1,.apollo-image-progress-wrapper .apollo-image-progress-ink-1::before,.apollo-image-progress-wrapper .apollo-image-progress-ink-1::after,.apollo-image-progress-wrapper .apollo-image-progress-ink-2,.apollo-image-progress-wrapper .apollo-image-progress-ink-2::before,.apollo-image-progress-wrapper .apollo-image-progress-rail::before{animation-play-state:var(--apollo-image-motion-play-state,running);}
+@media (prefers-reduced-motion:reduce){.apollo-image-progress-wrapper .apollo-image-progress-ink-1,.apollo-image-progress-wrapper .apollo-image-progress-ink-1::before,.apollo-image-progress-wrapper .apollo-image-progress-ink-1::after,.apollo-image-progress-wrapper .apollo-image-progress-ink-2,.apollo-image-progress-wrapper .apollo-image-progress-ink-2::before,.apollo-image-progress-wrapper .apollo-image-progress-rail::before{animation:none;transition:none;}.apollo-image .apollo-image-cover,.apollo-image-preview,.apollo-image-preview .apollo-image-preview-body,.apollo-image-preview .apollo-image-preview-img,.apollo-image-preview .apollo-image-preview-close,.apollo-image-preview .apollo-image-preview-switch,.apollo-image-preview .apollo-image-preview-actions-action{transition:none;}}
+`;
 
 /** 生成单个前缀下的完整样式（约定出口：ant 前缀在出口替换类名段）。 */
 export function genImageStyle(prefixCls: string = 'apollo'): string {

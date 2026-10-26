@@ -14,7 +14,7 @@ Select component to select a value from options.
 
 ## Examples
 
-See [`demo/`](./demo) (35 demos, covering the main antd scenarios.
+See [`demo/`](./demo) (36 native Vue demos, including live conditional options, filtering and keyboard interaction).
 
 ## Conditional options
 

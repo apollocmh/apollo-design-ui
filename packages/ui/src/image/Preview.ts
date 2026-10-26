@@ -24,11 +24,17 @@ import {
 } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
 import { type GetContainer, Portal, useZIndex } from '@apollo-design/portal';
-import { KeyCode } from '@apollo-design/utils';
+import {
+  containsComposed,
+  getActiveElement,
+  isEditableTarget,
+  isNonNullable,
+} from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
+  nextTick,
   onBeforeUpdate,
   onMounted,
   onScopeDispose,
@@ -39,6 +45,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { useImageMotion } from './hooks/useImageMotion';
 import { useImageTheme } from './hooks/useImageTheme';
 import { useImageTransform } from './hooks/useImageTransform';
 import { useStatus } from './hooks/useStatus';
@@ -71,14 +78,11 @@ const Preview = defineComponent({
   emits: { transform: (_info: TransformInfo) => true },
   props: {
     prefixCls: { type: String, required: true },
-    src: { type: String, default: undefined },
-    alt: { type: String, default: undefined },
-    imageInfo: {
-      type: Object as PropType<{ width?: number | string; height?: number | string }>,
-      default: undefined,
-    },
-    fallback: { type: String, default: undefined },
-    imgCommonProps: { type: Object as PropType<ImageCommonProps>, default: undefined },
+    src: String,
+    alt: String,
+    imageInfo: Object as PropType<{ width?: number | string; height?: number | string }>,
+    fallback: String,
+    imgCommonProps: Object as PropType<ImageCommonProps>,
     open: { type: Boolean, default: false },
     movable: { type: Boolean, default: true },
     maskClosable: { type: Boolean, default: true },
@@ -95,52 +99,55 @@ const Preview = defineComponent({
     minScale: { type: Number, default: 1 },
     maxScale: { type: Number, default: 50 },
     scaleStep: { type: Number, default: 0.5 },
-    zIndex: { type: Number, default: undefined },
+    zIndex: Number,
     current: { type: Number, default: 0 },
     count: { type: Number, default: 1 },
     /** 组内模式（>1 时显示 prev/next 与计数）。 */
     inGroup: { type: Boolean, default: false },
     mousePosition: { type: Object as PropType<{ x: number; y: number } | null>, default: null },
-    motionName: { type: String, default: undefined },
-    icons: { type: Object as PropType<PreviewIcons>, default: undefined },
-    rootClassName: { type: String, default: undefined },
-    classNames: {
-      type: Object as PropType<
-        NonNullable<PreviewConfig['rootClassName']> extends never
-          ? Record<string, string>
-          : {
-              root?: string;
-              mask?: string;
-              body?: string;
-              footer?: string;
-              actions?: string;
-              close?: string;
-            }
-      >,
-      default: undefined,
-    },
-    styles: {
-      type: Object as PropType<{
-        root?: Record<string, string | number>;
-        mask?: Record<string, string | number>;
-        body?: Record<string, string | number>;
-        footer?: Record<string, string | number>;
-        actions?: Record<string, string | number>;
-        close?: Record<string, string | number>;
-      }>,
-      default: undefined,
-    },
-    onClose: { type: Function as PropType<() => void>, default: undefined },
-    afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-    onActive: { type: Function as PropType<(offset: number) => void>, default: undefined },
+    motionName: String,
+    icons: Object as PropType<PreviewIcons>,
+    rootClassName: String,
+    classNames: Object as PropType<
+      NonNullable<PreviewConfig['rootClassName']> extends never
+        ? Record<string, string>
+        : {
+            root?: string;
+            mask?: string;
+            body?: string;
+            footer?: string;
+            actions?: string;
+            close?: string;
+          }
+    >,
+    styles: Object as PropType<{
+      root?: Record<string, string | number>;
+      mask?: Record<string, string | number>;
+      body?: Record<string, string | number>;
+      footer?: Record<string, string | number>;
+      actions?: Record<string, string | number>;
+      close?: Record<string, string | number>;
+    }>,
+    onClose: Function as PropType<() => void>,
+    afterOpenChange: Function as PropType<(open: boolean) => void>,
+    getTriggerElement: Function as PropType<() => HTMLElement | null>,
+    onActive: Function as PropType<(offset: number) => void>,
   },
   setup(props, { emit, slots }) {
     const theme = useImageTheme();
+    const motionEnabled = useImageMotion();
     const mounted = ref(false);
     onMounted(() => {
       mounted.value = true;
     });
     const previewElement = ref<HTMLElement | null>(null);
+    const animatedVisible = ref(props.open);
+    watch(
+      () => props.open,
+      (open) => {
+        if (open) animatedVisible.value = true;
+      },
+    );
     const moving = ref(false);
     let dragWindow: Window | null = null;
     let startX = 0;
@@ -163,7 +170,7 @@ const Preview = defineComponent({
         if (!open || !movable || (dragWindow && doc?.defaultView !== dragWindow)) stopDrag();
       },
     );
-    useLockFocus(() => props.open, previewElement);
+    useLockFocus(() => props.open || animatedVisible.value, previewElement);
     // Vue scope cleanup runs in registration order: release the lock, restore its
     // opener, then let useFocusRestore discard the saved element. Unmounting an
     // open preview must follow the same order as completing a normal close.
@@ -171,14 +178,14 @@ const Preview = defineComponent({
     const focusRestore = useFocusRestore(() => previewElement.value);
     const focusPreview = (): void => {
       const element = previewElement.value;
-      if (props.open && element && !element.contains(element.ownerDocument.activeElement)) {
+      if (props.open && element && !containsComposed(element, getActiveElement(element))) {
         element.focus({ preventScroll: true });
       }
     };
     let hadFocusBeforeUpdate = false;
     onBeforeUpdate(() => {
       const element = previewElement.value;
-      hadFocusBeforeUpdate = !!element?.contains(element.ownerDocument.activeElement);
+      hadFocusBeforeUpdate = !!element && containsComposed(element, getActiveElement(element));
     });
     onUpdated(() => {
       // Disabling the focused navigation button can blur it to body without focusin.
@@ -188,7 +195,10 @@ const Preview = defineComponent({
     watch(
       () => props.open,
       (open) => {
-        if (open) focusRestore.save();
+        if (open)
+          focusRestore.save(
+            props.getTriggerElement ? getActiveElement(props.getTriggerElement()) : undefined,
+          );
       },
       { immediate: true },
     );
@@ -307,7 +317,7 @@ const Preview = defineComponent({
         const focusable = getFocusNodeList(element);
         const first = focusable[0];
         const last = focusable.at(-1);
-        const active = element.ownerDocument.activeElement;
+        const active = getActiveElement(element);
         const boundary = e.shiftKey ? active === first || active === element : active === last;
         if (!first || boundary) {
           e.preventDefault();
@@ -316,21 +326,46 @@ const Preview = defineComponent({
         }
         return;
       }
-      if (key === 'Escape') {
-        e.preventDefault();
-        e.stopPropagation();
-        props.onClose?.();
+      // Escape belongs to the owning Portal window stack, including IME and
+      // child cancellation. Group shortcuts apply only to unmodified keys.
+      if (
+        !showSwitch.value ||
+        e.isComposing ||
+        e.altKey ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.shiftKey ||
+        isEditableTarget(e)
+      )
         return;
-      }
-      if (!showSwitch.value || KeyCode.isEditableTarget(e)) return;
       if (key === 'ArrowLeft') props.onActive?.(-1);
       if (key === 'ArrowRight') props.onActive?.(1);
     };
 
     const onVisibleChanged = (next: boolean): void => {
-      if (next) focusPreview();
-      else if (!props.open) focusRestore.restore();
-      props.afterOpenChange?.(next);
+      if (next) {
+        focusPreview();
+        props.afterOpenChange?.(true);
+      } else if (!props.open) {
+        animatedVisible.value = false;
+        // Release the focus/scroll locks after the leaving DOM disappears,
+        // before restoring its opener or notifying the business callback.
+        void nextTick(() => {
+          if (props.open) return;
+          focusRestore.restore();
+          const source = props.getTriggerElement?.();
+          const action = source?.matches('button,[role="button"]')
+            ? source
+            : source
+              ? getFocusNodeList(source, true).find((node) =>
+                  node.hasAttribute('data-apollo-image-preview-trigger'),
+                )
+              : null;
+          if (action?.isConnected && getActiveElement(source) === action.ownerDocument.body)
+            action.focus({ preventScroll: true });
+          props.afterOpenChange?.(false);
+        });
+      }
     };
 
     const onMaskClick = (): void => {
@@ -354,7 +389,7 @@ const Preview = defineComponent({
           disabled,
           'aria-label': type,
         },
-        [icon].filter((c) => c !== null && c !== undefined),
+        [icon].filter(isNonNullable),
       );
     };
 
@@ -429,32 +464,25 @@ const Preview = defineComponent({
     const renderSwitch = (): VNodeChild => {
       if (!showSwitch.value) return null;
       const cls = `${props.prefixCls}-switch`;
-      const prevDisabled = props.current === 0;
-      const nextDisabled = props.current === props.count - 1;
-      return [
-        h(
+      return [-1, 1].map((offset) => {
+        const previous = offset === -1;
+        const disabled = previous ? props.current === 0 : props.current === props.count - 1;
+        return h(
           'button',
           {
             type: 'button',
-            class: [cls, `${cls}-prev`, prevDisabled ? `${cls}-disabled` : undefined],
-            'aria-label': 'Previous image',
-            onClick: () => props.onActive?.(-1),
-            disabled: prevDisabled,
+            class: [
+              cls,
+              `${cls}-${previous ? 'prev' : 'next'}`,
+              disabled ? `${cls}-disabled` : undefined,
+            ],
+            'aria-label': previous ? 'Previous image' : 'Next image',
+            onClick: () => props.onActive?.(offset),
+            disabled,
           },
-          [icons.value.left].filter((c) => c !== null && c !== undefined),
-        ),
-        h(
-          'button',
-          {
-            type: 'button',
-            class: [cls, `${cls}-next`, nextDisabled ? `${cls}-disabled` : undefined],
-            'aria-label': 'Next image',
-            onClick: () => props.onActive?.(1),
-            disabled: nextDisabled,
-          },
-          [icons.value.right].filter((c) => c !== null && c !== undefined),
-        ),
-      ];
+          [icons.value[previous ? 'left' : 'right']].filter(isNonNullable),
+        );
+      });
     };
 
     return () => {
@@ -485,9 +513,15 @@ const Preview = defineComponent({
       return h(
         Portal,
         {
-          open: mounted.value && portalRender.value && props.open,
+          open: mounted.value && portalRender.value && (props.open || animatedVisible.value),
           autoDestroy: false,
+          autoLock: true,
           getContainer: props.getContainer,
+          onEsc: ({ top, event }) => {
+            if (!top || !props.open) return;
+            event.preventDefault();
+            props.onClose?.();
+          },
         },
         {
           default: () =>
@@ -495,6 +529,7 @@ const Preview = defineComponent({
               CSSMotion,
               {
                 motionName: props.motionName ?? `${props.prefixCls}-fade`,
+                supportMotion: motionEnabled.value ? undefined : false,
                 motionDeadline: 500,
                 visible: portalRender.value && props.open,
                 motionAppear: true,
@@ -581,7 +616,7 @@ const Preview = defineComponent({
                                   props.closeIcon !== undefined
                                     ? props.closeIcon
                                     : icons.value.close,
-                                ].filter((c) => c !== null && c !== undefined),
+                                ].filter(isNonNullable),
                           )
                         : null,
                       renderSwitch(),
