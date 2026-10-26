@@ -60,3 +60,11 @@ List实现里程碑已提交并推送 `23de152079c096fccf34d0f3907a8f649276de2b`
 已发布源码57ab2894，[Deploy Docs 40311992155](https://github.com/apollocmh/apollo-design-ui/actions/runs/40311992155)和Pages deployment 7330236837成功（2026-10-26 11:07:58 UTC）。CI文档14文件157条、全部包构建及L7 151项通过，FAIL=0/PENDING=0、n/a=67。线上33项发布检查全部通过；另逐页核对10个Spin Demo，四个原生SVG/42%作用域、四Token动态开关保留输入、auto进度三组交互通过。既有独立Demo采用GitHub Pages的404.html SPA回退，明确记录主文档404；其他资源、页面及Vue错误为零。桌面/移动暗色首页截图已查看。
 
 [发布与线上证据](evidence/docs-publication-spin-update.json)只对应实现阶段57ab2894。后续afaea916补齐减少动画过渡，并完成45张自有视觉与统一清单；该最终结果的源码推送与文档内容更新不等于已上线，须以随后部署回执为准。
+
+## 后续发布：Spin完整验收已上线
+
+已发布源码8abe0f97，包含45张清洁afaea916自有视觉批准、完整清单收口与进展页更新。[Deploy Docs 40315960707](https://github.com/apollocmh/apollo-design-ui/actions/runs/40315960707)两个作业和Pages deployment 7330838740成功（2026-10-26 11:37:22 UTC）。CI的14文件157条Docs测试、全部包构建和L7 151项通过，FAIL=0/PENDING=0、n/a=67。
+
+线上33项发布检查、10个Spin Demo及3组交互全部通过。SSR进展指南HTTP200，实际包含Spin完整清单已验收、45张和7组水合；可见源码与日志为8abe0f97。补查确认新版Spin减少动画规则已加载，旋转paused；Docs既有site.css全局!important将过渡统一为0.01ms，精确断言该宿主值通过，独立库水合验证仍为0s。两种环境分开记录，没有修改生产CSS或放宽阈值。
+
+[最终上线证据](evidence/docs-publication-spin-closure.json)记录Actions、Pages状态、真实页面/交互和CSS实际值。当前[进展页](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)已展示Image、List与Spin验收结果；全库剩余单元及最终同一提交门禁保持开放。
