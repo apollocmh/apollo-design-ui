@@ -9,8 +9,12 @@ const items = ref([
   { key: 'a', title: 'Alpha', content: 'Alpha details' },
   { key: 'b', title: 'Beta', content: 'Beta details' },
 ]);
-const advance = () => { current.value = (current.value + 1) % items.value.length; };
-const update = () => { items.value = items.value.map(item => ({ ...item, title: `${item.title}!` })); };
+const advance = () => {
+  current.value = (current.value + 1) % items.value.length;
+};
+const update = () => {
+  items.value = items.value.map((item) => ({ ...item, title: `${item.title}!` }));
+};
 </script>
 
 <template>

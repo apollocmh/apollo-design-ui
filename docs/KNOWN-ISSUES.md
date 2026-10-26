@@ -188,7 +188,7 @@ const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
 ### F11 · P2 · 已重算来源清单，逐项复审中｜其余 `VNodeChild` 顶层 props 缺 slot：必须重算而非套用旧“154”
 
-**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、519 行 owner/field 清单。内容候选 154、渲染候选 68、数据/配置 146、内部/废弃 151；只将十八个有具体运行报告的字段标 verified，其余候选继续 review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
+**当前清单**：`pnpm run audit:content-slots` / `audit:content-slots:check` 已建立 73 个 interface.ts、519 行 owner/field 清单。内容候选154、渲染候选67、数据/配置137、内部/废弃161；19个有具体运行报告的字段标verified，其余202个候选继续review，不冒充缺失 slot 数。别名、继承与只读漂移有 tooling 覆盖。详见 [F11 清单报告](audit/2026-10-24-slot-inventory.md)。
 
 **旧文档 §1.2**：190 个 VNodeChild 属性、36 个有同名插槽、154 个缺失，这是 **2026-10-08** 数据；之后组件已改动，**不能当作 master 的实时数字**。尤其此口径把数据字段、deprecated 属性、真正的组件展示属性混杂，不能一次性“补 154 个 slot”。
 
@@ -307,7 +307,7 @@ Portal容器副作用组已随 `899eba64` 提交推送。随后Image交互组改
 
 **2026-10-26 Image整改单元已收口**：完整契约清单逐项验收完成；分组焦点修复 `8d99baae`、视觉源码 `2df25090`，清洁 `798339f5` 重拍24张均与逐张审查候选一致，批准后像素复验24/24全0差异。当前Image四层381条、Chrome26场景、严格/UI L7/SSR/发布类型消费与Docs均通过。Registry视觉来源改为Apollo，保留历史参考证据。具体命令、提交、已验/未验边界统一见[清单](audit/2026-10-25-image-contract-audit.md)；不是全库完成。
 
-**H05 · 全仓格式门禁存量**：本轮真实`lint:format`失败66错误/37警告；在独立detached原HEAD运行有67错误/37警告。本轮48个适用改动文件检查通过，未放宽Biome规则。memory工具及其他既有文件须另案完整盘点修复，仍阻止最终全仓格式绿灯；不能把局部通过当作全仓通过。命令和证据见同一Image清单，原全量诊断保留 `/tmp/apollo-image-format-head-baseline.log` 与 `/tmp/apollo-image-frozen-format.log`。
+**H05 · 已修｜全仓格式门禁存量**：基线9862a979的66错误集中在52个Vue/HTML文件，均为格式/导入排序；已集中修复，脚本与编译渲染结构等价，原样式内容保留。完整lint:format现退出0（3527文件/0错误），严格、61文件1246条四层回归、生产构建/L7、6组Chrome和Docs内容/157测试/SSG通过。现有37警告/5信息保持原规则与数量，另案核查；没有升级组件验收状态或重写Image视觉基线。完整范围、命令与边界见[H05清单](audit/2026-10-26-repository-format-audit.md)。原基线失败保留 `/tmp/apollo-h05-format-baseline.json`。
 
 ---
 

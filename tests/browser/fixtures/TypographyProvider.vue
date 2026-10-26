@@ -1,12 +1,26 @@
 <script setup lang="ts">
-import { ConfigProvider, Link, Paragraph, Text, Title, Typography, type ConfigProviderProps, type TypographyConfig } from '@apollo-design/ui';
+import {
+  ConfigProvider,
+  type ConfigProviderProps,
+  Link,
+  Paragraph,
+  Text,
+  Title,
+  Typography,
+  type TypographyConfig,
+} from '@apollo-design/ui';
 import { ref } from 'vue';
 import SemanticDemo from '../../../packages/ui/src/typography/demo/semantic.vue';
 
 const phase = ref(0);
 const makeConfig = (current: number): TypographyConfig => {
   const marker = current === 0 ? 'first' : current === 1 ? 'second' : 'function';
-  const classes = { root: `provider-root-${marker}`, actions: `provider-actions-${marker}`, action: `provider-action-${marker}`, textarea: `provider-textarea-${marker}` };
+  const classes = {
+    root: `provider-root-${marker}`,
+    actions: `provider-actions-${marker}`,
+    action: `provider-action-${marker}`,
+    textarea: `provider-textarea-${marker}`,
+  };
   const semanticStyles = {
     root: { paddingTop: '3px', borderTopWidth: `${current + 1}px`, '--provider-semantic': marker },
     actions: { paddingInlineEnd: `${current + 1}px` },
@@ -15,12 +29,31 @@ const makeConfig = (current: number): TypographyConfig => {
   };
   return {
     className: `provider-class-${marker}`,
-    style: { color: 'rgb(10,20,30)', paddingTop: `${current * 2 + 6}px`, paddingBottom: '5px', '--provider-style': marker },
-    classNames: current === 2 ? ({ props }) => ({ ...classes, root: `${classes.root} ${props.prefixCls === 'apollo-typography' ? 'provider-prefix-resolved' : 'provider-prefix-missing'}` }) : classes,
-    styles: current === 2 ? ({ props }) => ({ ...semanticStyles, root: { ...semanticStyles.root, '--provider-prefix': props.prefixCls ?? 'missing' } }) : semanticStyles,
+    style: {
+      color: 'rgb(10,20,30)',
+      paddingTop: `${current * 2 + 6}px`,
+      paddingBottom: '5px',
+      '--provider-style': marker,
+    },
+    classNames:
+      current === 2
+        ? ({ props }) => ({
+            ...classes,
+            root: `${classes.root} ${props.prefixCls === 'apollo-typography' ? 'provider-prefix-resolved' : 'provider-prefix-missing'}`,
+          })
+        : classes,
+    styles:
+      current === 2
+        ? ({ props }) => ({
+            ...semanticStyles,
+            root: { ...semanticStyles.root, '--provider-prefix': props.prefixCls ?? 'missing' },
+          })
+        : semanticStyles,
   };
 };
-const components = ref<NonNullable<ConfigProviderProps['components']>>({ typography: { ...makeConfig(0) } });
+const components = ref<NonNullable<ConfigProviderProps['components']>>({
+  typography: { ...makeConfig(0) },
+});
 const replace = () => {
   phase.value = (phase.value + 1) % 4;
   components.value = phase.value === 3 ? {} : { typography: { ...makeConfig(phase.value) } };
@@ -29,8 +62,18 @@ const mutate = () => {
   const config = components.value.typography;
   if (config?.style) config.style.paddingTop = '18px';
 };
-const classNames = { root: 'local-provider-root', actions: 'local-provider-actions', action: 'local-provider-action', textarea: 'local-provider-textarea' };
-const styles = { root: { color: 'rgb(70,80,90)', paddingBottom: '14px', '--local-root': 'kept' }, actions: { marginInlineStart: '18px' }, action: { paddingInlineStart: '2px' }, textarea: { lineHeight: '24px' } };
+const classNames = {
+  root: 'local-provider-root',
+  actions: 'local-provider-actions',
+  action: 'local-provider-action',
+  textarea: 'local-provider-textarea',
+};
+const styles = {
+  root: { color: 'rgb(70,80,90)', paddingBottom: '14px', '--local-root': 'kept' },
+  actions: { marginInlineStart: '18px' },
+  action: { paddingInlineStart: '2px' },
+  textarea: { lineHeight: '24px' },
+};
 const nativeStyle = { color: 'rgb(90,100,110)', paddingBottom: '16px', '--native-root': 'kept' };
 </script>
 

@@ -4,15 +4,41 @@ import { computed, ref, type StyleValue } from 'vue';
 import SemanticDemo from '../../../packages/ui/src/typography/demo/semantic.vue';
 
 const phase = ref(0);
-const nativeClass = computed(() => phase.value < 3 ? ['native-typography-root', { first: phase.value === 0, next: phase.value === 1, object: phase.value === 2 }] : undefined);
+const nativeClass = computed(() =>
+  phase.value < 3
+    ? [
+        'native-typography-root',
+        { first: phase.value === 0, next: phase.value === 1, object: phase.value === 2 },
+      ]
+    : undefined,
+);
 const nativeStyle = computed<StyleValue>(() => {
-  if (phase.value === 0) return 'color:rgb(10,20,30);padding-top:8px;padding-bottom:8px;--native-phase:string';
-  if (phase.value === 1) return ['color:rgb(30,40,50);padding-bottom:10px;--native-phase:array', { paddingLeft: '6px', '--array-only': 'yes' }];
-  if (phase.value === 2) return { color: 'rgb(50,60,70)', paddingBottom: '12px', paddingRight: '9px', '--native-phase': 'object' };
+  if (phase.value === 0)
+    return 'color:rgb(10,20,30);padding-top:8px;padding-bottom:8px;--native-phase:string';
+  if (phase.value === 1)
+    return [
+      'color:rgb(30,40,50);padding-bottom:10px;--native-phase:array',
+      { paddingLeft: '6px', '--array-only': 'yes' },
+    ];
+  if (phase.value === 2)
+    return {
+      color: 'rgb(50,60,70)',
+      paddingBottom: '12px',
+      paddingRight: '9px',
+      '--native-phase': 'object',
+    };
   return undefined;
 });
 const classNames = { root: 'semantic-typography-root', textarea: 'semantic-typography-textarea' };
-const styles = { root: { color: 'rgb(40,50,60)', paddingTop: '2px', paddingBottom: '4px', '--semantic-root': 'kept' }, textarea: { fontSize: '15px' } };
+const styles = {
+  root: {
+    color: 'rgb(40,50,60)',
+    paddingTop: '2px',
+    paddingBottom: '4px',
+    '--semantic-root': 'kept',
+  },
+  textarea: { fontSize: '15px' },
+};
 </script>
 
 <template>

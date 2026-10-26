@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Masonry, type MasonryLayoutItem } from '../../../index';
+
 type Row = { id: number; name: string };
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;

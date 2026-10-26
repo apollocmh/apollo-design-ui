@@ -8,8 +8,16 @@ const note = ref('Editable preview note');
 const imageOpen = ref(false);
 const groupOpen = ref(false);
 const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="#38598b"/></svg>')}`;
-const preview = computed<PreviewConfig>(() => ({ closable: phase.value !== 3, closeIcon: phase.value === 2 ? h('span', { 'aria-hidden': 'true', 'data-close-demo-icon': 'data' }, '×') : undefined }));
-function cycle() { phase.value = (phase.value + 1) % labels.length; }
+const preview = computed<PreviewConfig>(() => ({
+  closable: phase.value !== 3,
+  closeIcon:
+    phase.value === 2
+      ? h('span', { 'aria-hidden': 'true', 'data-close-demo-icon': 'data' }, '×')
+      : undefined,
+}));
+function cycle() {
+  phase.value = (phase.value + 1) % labels.length;
+}
 </script>
 
 <template>

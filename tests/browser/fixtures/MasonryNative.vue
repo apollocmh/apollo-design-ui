@@ -2,7 +2,8 @@
 import { Masonry } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const svg = (height: number) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="${height}"><rect width="160" height="${height}" fill="steelblue"/></svg>`)}`;
+const svg = (height: number) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="${height}"><rect width="160" height="${height}" fill="steelblue"/></svg>`)}`;
 const image = ref(svg(20));
 const updated = ref(false);
 const loads = ref(0);
@@ -10,12 +11,21 @@ const bubbles = ref(0);
 const errors = ref(0);
 const layouts = ref(0);
 const clicks = ref(0);
-const items = [0, 1, 2].map(index => ({ key: String(index), data: index }));
+const items = [0, 1, 2].map((index) => ({ key: String(index), data: index }));
 const showSlot = ref(false);
 const emptySlot = ref(false);
-const rows = ref([{ key: 'a', data: { title: 'Alpha' }, children: 'fallback' }, { key: 'b', data: { title: 'Beta' }, children: 'fallback' }]);
-const replaceRows = () => { rows.value = [...rows.value].reverse().map(row => ({ ...row, data: { title: row.data.title + '!' } })); };
-const reset = () => { loads.value = bubbles.value = errors.value = layouts.value = clicks.value = 0; };
+const rows = ref([
+  { key: 'a', data: { title: 'Alpha' }, children: 'fallback' },
+  { key: 'b', data: { title: 'Beta' }, children: 'fallback' },
+]);
+const replaceRows = () => {
+  rows.value = [...rows.value]
+    .reverse()
+    .map((row) => ({ ...row, data: { title: row.data.title + '!' } }));
+};
+const reset = () => {
+  loads.value = bubbles.value = errors.value = layouts.value = clicks.value = 0;
+};
 </script>
 
 <template>

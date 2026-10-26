@@ -7,13 +7,25 @@ const silent = ref(true);
 const loading = ref(false);
 const selections = ref(0);
 const values = reactive({ bare: '', clear: '', feedback: '' });
-const options: MentionsOptionProps[] = [{ value: 'alpha', label: 'Alpha' }, { value: 'beta', label: 'Beta' }];
-const style = computed<StyleValue>(() => phase.value === 0
-  ? 'max-width:300px; padding-top:8px; --native-phase:first'
-  : phase.value === 1 ? ['max-width:340px; --native-phase:next', { paddingBottom: '10px' }] : undefined);
-const classes = computed<ClassValue>(() => ['native-mention-root', { first: phase.value === 0, next: phase.value === 1 }]);
+const options: MentionsOptionProps[] = [
+  { value: 'alpha', label: 'Alpha' },
+  { value: 'beta', label: 'Beta' },
+];
+const style = computed<StyleValue>(() =>
+  phase.value === 0
+    ? 'max-width:300px; padding-top:8px; --native-phase:first'
+    : phase.value === 1
+      ? ['max-width:340px; --native-phase:next', { paddingBottom: '10px' }]
+      : undefined,
+);
+const classes = computed<ClassValue>(() => [
+  'native-mention-root',
+  { first: phase.value === 0, next: phase.value === 1 },
+]);
 const styles = { root: { minHeight: '62px', maxWidth: '240px' } };
-const select = () => { selections.value++; };
+const select = () => {
+  selections.value++;
+};
 </script>
 
 <template>

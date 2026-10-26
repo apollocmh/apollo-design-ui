@@ -7,11 +7,18 @@ defineProps<{
   selectOnce: (option: MentionsOptionProps, prefix: string) => void;
   searchOnce: (text: string, prefix: string) => void;
 }>();
-type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
+type Equal<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
 const exactString = <T>(value: T, ..._check: Equal<T, string> extends true ? [] : [never]) => value;
-const exactOption = <T>(value: T, ..._check: Equal<T, MentionsOptionProps> extends true ? [] : [never]) => value;
+const exactOption = <T>(
+  value: T,
+  ..._check: Equal<T, MentionsOptionProps> extends true ? [] : [never]
+) => value;
 const value = ref('');
-const options = [{ value: 'alpha', label: 'Alpha' }, { value: 'beta', label: 'Beta' }];
+const options = [
+  { value: 'alpha', label: 'Alpha' },
+  { value: 'beta', label: 'Beta' },
+];
 </script>
 
 <template>

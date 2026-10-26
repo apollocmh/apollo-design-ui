@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ConfigProvider, type ConfigProviderProps, Image, ImagePreviewGroup, type ImageSemanticType } from '@apollo-design/ui';
+import {
+  ConfigProvider,
+  type ConfigProviderProps,
+  Image,
+  ImagePreviewGroup,
+  type ImageSemanticType,
+} from '@apollo-design/ui';
 import { ref } from 'vue';
 import PopupProviderDemo from '../../../packages/ui/src/image/demo/popup-provider.vue';
 
@@ -11,16 +17,31 @@ const open = ref(false);
 const note = ref('Initial popup note');
 const local = ref(false);
 const parts = ['root', 'mask', 'body', 'footer', 'actions', 'close'] as const;
-type Part = typeof parts[number];
+type Part = (typeof parts)[number];
 const style = (part: Part, value: string) => ({ [`--popup-provider-${part}`]: value });
 function makeConfig(value: string): ImageSemanticType {
-  return { classNames: { popup: {
-    root: `popup-provider-${value}-root`, mask: `popup-provider-${value}-mask`, body: `popup-provider-${value}-body`,
-    footer: `popup-provider-${value}-footer`, actions: `popup-provider-${value}-actions`, close: `popup-provider-${value}-close`,
-  } }, styles: { popup: {
-    root: style('root', value), mask: style('mask', value), body: style('body', value),
-    footer: style('footer', value), actions: style('actions', value), close: style('close', value),
-  } } };
+  return {
+    classNames: {
+      popup: {
+        root: `popup-provider-${value}-root`,
+        mask: `popup-provider-${value}-mask`,
+        body: `popup-provider-${value}-body`,
+        footer: `popup-provider-${value}-footer`,
+        actions: `popup-provider-${value}-actions`,
+        close: `popup-provider-${value}-close`,
+      },
+    },
+    styles: {
+      popup: {
+        root: style('root', value),
+        mask: style('mask', value),
+        body: style('body', value),
+        footer: style('footer', value),
+        actions: style('actions', value),
+        close: style('close', value),
+      },
+    },
+  };
 }
 const imageConfig = ref({ ...makeConfig('first') });
 const components = ref<Components>({ image: imageConfig.value });
@@ -29,8 +50,13 @@ const localClasses = { popup: { root: 'popup-local-root', body: 'popup-local-bod
 const localStyles = { popup: { root: { '--popup-local-root': 'kept' } } };
 const nativeStyle = { paddingLeft: '9px' };
 function mountTarget(next: 'image' | 'group') {
-  kind.value = next; session.value++; open.value = false; note.value = 'Initial popup note'; local.value = false;
-  revision.value = 'first'; imageConfig.value = { ...makeConfig('first') };
+  kind.value = next;
+  session.value++;
+  open.value = false;
+  note.value = 'Initial popup note';
+  local.value = false;
+  revision.value = 'first';
+  imageConfig.value = { ...makeConfig('first') };
   components.value = { image: imageConfig.value };
 }
 function nextConfig() {
@@ -38,15 +64,32 @@ function nextConfig() {
   return makeConfig(revision.value);
 }
 function fields() {
-  const next = nextConfig(); imageConfig.value.classNames = next.classNames; imageConfig.value.styles = next.styles;
+  const next = nextConfig();
+  imageConfig.value.classNames = next.classNames;
+  imageConfig.value.styles = next.styles;
 }
-function replaceImage() { imageConfig.value = { ...nextConfig() }; components.value.image = imageConfig.value; }
-function replaceMap() { imageConfig.value = { ...nextConfig() }; components.value = { image: imageConfig.value }; }
-function removeFields() { delete imageConfig.value.classNames; delete imageConfig.value.styles; }
-function addProvider() { revision.value = 'first'; imageConfig.value = { ...makeConfig('first') }; components.value = { image: imageConfig.value }; }
+function replaceImage() {
+  imageConfig.value = { ...nextConfig() };
+  components.value.image = imageConfig.value;
+}
+function replaceMap() {
+  imageConfig.value = { ...nextConfig() };
+  components.value = { image: imageConfig.value };
+}
+function removeFields() {
+  delete imageConfig.value.classNames;
+  delete imageConfig.value.styles;
+}
+function addProvider() {
+  revision.value = 'first';
+  imageConfig.value = { ...makeConfig('first') };
+  components.value = { image: imageConfig.value };
+}
 function mutateMask() {
-  if (imageConfig.value.classNames?.popup) imageConfig.value.classNames.popup.mask = 'popup-provider-deep-mask';
-  if (imageConfig.value.styles?.popup?.mask) imageConfig.value.styles.popup.mask['--popup-provider-mask'] = 'deep';
+  if (imageConfig.value.classNames?.popup)
+    imageConfig.value.classNames.popup.mask = 'popup-provider-deep-mask';
+  if (imageConfig.value.styles?.popup?.mask)
+    imageConfig.value.styles.popup.mask['--popup-provider-mask'] = 'deep';
 }
 </script>
 

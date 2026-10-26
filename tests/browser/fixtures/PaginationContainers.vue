@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { List, ListItem, Table, type PaginationConfig, type TableProps } from '@apollo-design/ui';
+import { List, ListItem, type PaginationConfig, Table, type TableProps } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const show = ref(false);
@@ -12,11 +12,18 @@ const listPagination = computed<PaginationConfig>(() => ({
   current: listCurrent.value,
   pageSize: listSize.value,
   showSizeChanger: true,
-  onChange: (page, size) => { listCurrent.value = page; listSize.value = size; listChanges.value++; },
+  onChange: (page, size) => {
+    listCurrent.value = page;
+    listSize.value = size;
+    listChanges.value++;
+  },
 }));
-const onTableChange: TableProps['onChange'] = (next) => { tableSize.value = next.pageSize ?? 5; tableChanges.value++; };
+const onTableChange: TableProps['onChange'] = (next) => {
+  tableSize.value = next.pageSize ?? 5;
+  tableChanges.value++;
+};
 const rows = Array.from({ length: 12 }, (_, i) => ({ key: String(i), name: `Row ${i}` }));
-const items = rows.map(row => row.name);
+const items = rows.map((row) => row.name);
 const columns = [{ title: 'Name', dataIndex: 'name' }];
 </script>
 

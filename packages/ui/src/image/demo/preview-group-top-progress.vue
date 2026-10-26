@@ -9,8 +9,11 @@ const open = ref(false);
 const current = ref(0);
 const note = ref('A note that survives image changes');
 const transformed = shallowRef<TransformInfo>();
-const svg = (color: string, text: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="${color}"/><text x="120" y="76" text-anchor="middle" font-family="sans-serif" font-size="20" fill="white">${text}</text></svg>`)}`;
-const first = computed(() => svg(revision.value % 2 ? '#6b4b7a' : '#38598b', `First ${revision.value}`));
+const svg = (color: string, text: string) =>
+  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="${color}"/><text x="120" y="76" text-anchor="middle" font-family="sans-serif" font-size="20" fill="white">${text}</text></svg>`)}`;
+const first = computed(() =>
+  svg(revision.value % 2 ? '#6b4b7a' : '#38598b', `First ${revision.value}`),
+);
 const second = svg('#297373', 'Second');
 </script>
 

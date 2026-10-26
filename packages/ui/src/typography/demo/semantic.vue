@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { ConfigProvider, Paragraph, Text, type ConfigProviderProps, type TypographyConfig, type TypographyProps } from '@apollo-design/ui';
+import {
+  ConfigProvider,
+  type ConfigProviderProps,
+  Paragraph,
+  Text,
+  type TypographyConfig,
+  type TypographyProps,
+} from '@apollo-design/ui';
 import { computed, ref, type StyleValue } from 'vue';
 
 /** 对象式：直接给槽位类名 / 样式。 */
@@ -29,41 +36,117 @@ const classNamesFn: TypographyProps['classNames'] = (info) =>
     : { root: 'demo-typography-root' };
 
 const phase = ref(0);
-const nativeClass = computed(() => phase.value < 3 ? ['native-demo-root', `native-demo-phase-${phase.value}`] : undefined);
+const nativeClass = computed(() =>
+  phase.value < 3 ? ['native-demo-root', `native-demo-phase-${phase.value}`] : undefined,
+);
 const nativeStyle = computed<StyleValue>(() => {
-  if (phase.value === 0) return 'color:var(--apollo-color-primary);padding-inline-start:var(--apollo-padding-xs);--native-demo-phase:string';
-  if (phase.value === 1) return ['color:var(--apollo-color-success);--native-demo-phase:array', { paddingInlineStart: 'var(--apollo-padding-sm)', paddingInlineEnd: 'var(--apollo-padding-xs)' }];
-  if (phase.value === 2) return { color: 'var(--apollo-color-warning)', paddingInlineStart: 'var(--apollo-padding-md)', '--native-demo-phase': 'object' };
+  if (phase.value === 0)
+    return 'color:var(--apollo-color-primary);padding-inline-start:var(--apollo-padding-xs);--native-demo-phase:string';
+  if (phase.value === 1)
+    return [
+      'color:var(--apollo-color-success);--native-demo-phase:array',
+      {
+        paddingInlineStart: 'var(--apollo-padding-sm)',
+        paddingInlineEnd: 'var(--apollo-padding-xs)',
+      },
+    ];
+  if (phase.value === 2)
+    return {
+      color: 'var(--apollo-color-warning)',
+      paddingInlineStart: 'var(--apollo-padding-md)',
+      '--native-demo-phase': 'object',
+    };
   return undefined;
 });
 const nativeSemanticStyles: TypographyProps['styles'] = {
-  root: { color: 'var(--apollo-color-text-secondary)', paddingInlineStart: 'var(--apollo-padding-xxs)', '--semantic-demo-root': 'kept' },
+  root: {
+    color: 'var(--apollo-color-text-secondary)',
+    paddingInlineStart: 'var(--apollo-padding-xxs)',
+    '--semantic-demo-root': 'kept',
+  },
 };
 
 const providerPhase = ref(0);
 const makeProviderConfig = (phase: number): TypographyConfig => {
   const marker = phase === 0 ? 'first' : phase === 1 ? 'second' : 'function';
-  const classes = { root: `demo-provider-root-${marker}`, actions: `demo-provider-actions-${marker}`, action: `demo-provider-action-${marker}`, textarea: `demo-provider-textarea-${marker}` };
+  const classes = {
+    root: `demo-provider-root-${marker}`,
+    actions: `demo-provider-actions-${marker}`,
+    action: `demo-provider-action-${marker}`,
+    textarea: `demo-provider-textarea-${marker}`,
+  };
   const semanticStyles = {
     root: { paddingBlockStart: 'var(--apollo-padding-xxs)', '--provider-demo-semantic': marker },
-    actions: { paddingInlineEnd: phase === 0 ? 'var(--apollo-padding-xxs)' : phase === 1 ? 'var(--apollo-padding-xs)' : 'var(--apollo-padding-sm)' },
-    action: { color: phase === 0 ? 'var(--apollo-color-primary)' : phase === 1 ? 'var(--apollo-color-success)' : 'var(--apollo-color-warning)' },
-    textarea: { fontSize: phase === 0 ? 'var(--apollo-font-size-sm)' : phase === 1 ? 'var(--apollo-font-size)' : 'var(--apollo-font-size-lg)' },
+    actions: {
+      paddingInlineEnd:
+        phase === 0
+          ? 'var(--apollo-padding-xxs)'
+          : phase === 1
+            ? 'var(--apollo-padding-xs)'
+            : 'var(--apollo-padding-sm)',
+    },
+    action: {
+      color:
+        phase === 0
+          ? 'var(--apollo-color-primary)'
+          : phase === 1
+            ? 'var(--apollo-color-success)'
+            : 'var(--apollo-color-warning)',
+    },
+    textarea: {
+      fontSize:
+        phase === 0
+          ? 'var(--apollo-font-size-sm)'
+          : phase === 1
+            ? 'var(--apollo-font-size)'
+            : 'var(--apollo-font-size-lg)',
+    },
   };
   return {
     className: `demo-provider-class-${marker}`,
-    style: { color: 'var(--apollo-color-primary)', paddingBlockStart: phase === 0 ? 'var(--apollo-padding-xs)' : phase === 1 ? 'var(--apollo-padding-sm)' : 'var(--apollo-padding-md)', paddingBlockEnd: 'var(--apollo-padding-xxs)', '--provider-demo-style': marker },
-    classNames: phase === 2 ? ({ props }) => ({ ...classes, root: `${classes.root} ${props.prefixCls === 'apollo-typography' ? 'demo-provider-prefix-resolved' : 'demo-provider-prefix-missing'}` }) : classes,
-    styles: phase === 2 ? ({ props }) => ({ ...semanticStyles, root: { ...semanticStyles.root, '--provider-demo-prefix': props.prefixCls ?? 'missing' } }) : semanticStyles,
+    style: {
+      color: 'var(--apollo-color-primary)',
+      paddingBlockStart:
+        phase === 0
+          ? 'var(--apollo-padding-xs)'
+          : phase === 1
+            ? 'var(--apollo-padding-sm)'
+            : 'var(--apollo-padding-md)',
+      paddingBlockEnd: 'var(--apollo-padding-xxs)',
+      '--provider-demo-style': marker,
+    },
+    classNames:
+      phase === 2
+        ? ({ props }) => ({
+            ...classes,
+            root: `${classes.root} ${props.prefixCls === 'apollo-typography' ? 'demo-provider-prefix-resolved' : 'demo-provider-prefix-missing'}`,
+          })
+        : classes,
+    styles:
+      phase === 2
+        ? ({ props }) => ({
+            ...semanticStyles,
+            root: {
+              ...semanticStyles.root,
+              '--provider-demo-prefix': props.prefixCls ?? 'missing',
+            },
+          })
+        : semanticStyles,
   };
 };
-const providerComponents = ref<NonNullable<ConfigProviderProps['components']>>({ typography: { ...makeProviderConfig(0) } });
+const providerComponents = ref<NonNullable<ConfigProviderProps['components']>>({
+  typography: { ...makeProviderConfig(0) },
+});
 const replaceProvider = () => {
   providerPhase.value = (providerPhase.value + 1) % 4;
-  providerComponents.value = providerPhase.value === 3 ? {} : { typography: { ...makeProviderConfig(providerPhase.value) } };
+  providerComponents.value =
+    providerPhase.value === 3 ? {} : { typography: { ...makeProviderConfig(providerPhase.value) } };
 };
 const providerLocalStyles: TypographyProps['styles'] = {
-  root: { color: 'var(--apollo-color-text-secondary)', paddingBlockEnd: 'var(--apollo-padding-xs)' },
+  root: {
+    color: 'var(--apollo-color-text-secondary)',
+    paddingBlockEnd: 'var(--apollo-padding-xs)',
+  },
   actions: { marginInlineStart: 'var(--apollo-margin-sm)' },
   action: { fontWeight: 'var(--apollo-font-weight-strong)' },
   textarea: { lineHeight: 'var(--apollo-line-height)' },

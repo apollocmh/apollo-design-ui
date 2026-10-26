@@ -3,7 +3,10 @@ import { Image, ImagePreviewGroup, type TransformInfo } from '../../../index';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
-const exactTransform = <T>(value: T, ..._check: Equal<T, TransformInfo> extends true ? [] : [never]) => value;
+const exactTransform = <T>(
+  value: T,
+  ..._check: Equal<T, TransformInfo> extends true ? [] : [never]
+) => value;
 
 defineProps<{
   target: 'Image' | 'PreviewGroup';

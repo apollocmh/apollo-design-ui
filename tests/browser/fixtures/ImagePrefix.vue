@@ -12,15 +12,17 @@ const providerPrefix = ref<string | undefined>('p1');
 const imagePrefix = ref<string | undefined>('override-a-image');
 const groupPreviewPrefix = ref<string | undefined>('group-a-image-preview');
 const replaceImagePrefix = () => {
-  imagePrefix.value = imagePrefix.value === 'override-a-image' ? 'override-b-image' : 'override-a-image';
+  imagePrefix.value =
+    imagePrefix.value === 'override-a-image' ? 'override-b-image' : 'override-a-image';
 };
 const replaceProviderPrefix = () => {
   providerPrefix.value = providerPrefix.value === 'p1' ? 'p2' : 'p1';
 };
 const replaceGroupPreviewPrefix = () => {
-  groupPreviewPrefix.value = groupPreviewPrefix.value === 'group-a-image-preview'
-    ? 'group-b-image-preview'
-    : 'group-a-image-preview';
+  groupPreviewPrefix.value =
+    groupPreviewPrefix.value === 'group-a-image-preview'
+      ? 'group-b-image-preview'
+      : 'group-a-image-preview';
 };
 </script>
 

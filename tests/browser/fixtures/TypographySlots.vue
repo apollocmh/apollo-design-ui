@@ -14,17 +14,71 @@ const CurrentSlots = defineComponent(() => () => {
   const current = text.value;
   const longCurrent = Array(12).fill(current).join(' ');
   return h('div', [
-    h('section', { 'data-typography-entry': 'Text' }, [h(Text, { copyable: true, editable: true, 'aria-label': 'Text current editor' }, { default: () => current })]),
-    h('section', { 'data-typography-entry': 'Title' }, [h(Title, { level: 2, copyable: true, editable: true, 'aria-label': 'Title current editor' }, { default: () => current })]),
-    h('section', { 'data-typography-entry': 'Paragraph' }, [h(Paragraph, { copyable: true, editable: true, 'aria-label': 'Paragraph current editor' }, { default: () => current })]),
-    h('section', { 'data-typography-entry': 'Link' }, [h(Link, { href: '#typography-slot-target', copyable: true, editable: true, 'aria-label': 'Link current editor' }, { default: () => current })]),
-    h('section', { 'data-typography-entry': 'Typography' }, [h(Typography, {}, { default: () => current })]),
-    h('section', { 'data-typography-ellipsis': '' }, [h(Text, { ellipsis: true, style: { display: 'inline-block', width: '120px' } }, { default: () => current })]),
-    h('section', { 'data-typography-js-ellipsis': '' }, [h(Paragraph, { ellipsis: { rows: 2, expandable: 'collapsible' }, style: { width: '220px', lineHeight: '22px' } }, { default: () => longCurrent })]),
-    h('section', { 'data-typography-rich': '' }, [h(Paragraph, {}, { default: () => [
-      h('span', { key: 'label', 'data-typography-rich-label': '' }, current),
-      h('input', { key: 'draft', 'aria-label': 'Typography rich draft' }),
-    ] })]),
+    h('section', { 'data-typography-entry': 'Text' }, [
+      h(
+        Text,
+        { copyable: true, editable: true, 'aria-label': 'Text current editor' },
+        { default: () => current },
+      ),
+    ]),
+    h('section', { 'data-typography-entry': 'Title' }, [
+      h(
+        Title,
+        { level: 2, copyable: true, editable: true, 'aria-label': 'Title current editor' },
+        { default: () => current },
+      ),
+    ]),
+    h('section', { 'data-typography-entry': 'Paragraph' }, [
+      h(
+        Paragraph,
+        { copyable: true, editable: true, 'aria-label': 'Paragraph current editor' },
+        { default: () => current },
+      ),
+    ]),
+    h('section', { 'data-typography-entry': 'Link' }, [
+      h(
+        Link,
+        {
+          href: '#typography-slot-target',
+          copyable: true,
+          editable: true,
+          'aria-label': 'Link current editor',
+        },
+        { default: () => current },
+      ),
+    ]),
+    h('section', { 'data-typography-entry': 'Typography' }, [
+      h(Typography, {}, { default: () => current }),
+    ]),
+    h('section', { 'data-typography-ellipsis': '' }, [
+      h(
+        Text,
+        { ellipsis: true, style: { display: 'inline-block', width: '120px' } },
+        { default: () => current },
+      ),
+    ]),
+    h('section', { 'data-typography-js-ellipsis': '' }, [
+      h(
+        Paragraph,
+        {
+          ellipsis: { rows: 2, expandable: 'collapsible' },
+          style: { width: '220px', lineHeight: '22px' },
+        },
+        { default: () => longCurrent },
+      ),
+    ]),
+    h('section', { 'data-typography-rich': '' }, [
+      h(
+        Paragraph,
+        {},
+        {
+          default: () => [
+            h('span', { key: 'label', 'data-typography-rich-label': '' }, current),
+            h('input', { key: 'draft', 'aria-label': 'Typography rich draft' }),
+          ],
+        },
+      ),
+    ]),
   ]);
 });
 </script>

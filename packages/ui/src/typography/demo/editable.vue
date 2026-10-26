@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
 import { Text } from '@apollo-design/ui';
+import { ref } from 'vue';
 
 const editableText = ref('Click the icon to edit');
 const showContent = ref(false);

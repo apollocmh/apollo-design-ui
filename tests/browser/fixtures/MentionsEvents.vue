@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Mentions, type MentionsOptionProps } from '@apollo-design/ui';
 import { ref } from 'vue';
+
 const value = ref('');
 const changes = ref<string[]>([]);
 const searches = ref<string[]>([]);
@@ -11,9 +12,16 @@ const models = ref(0);
 const phase = ref(false);
 const old = ref(0);
 const current = ref(0);
-const first = (text: string) => { old.value++; changes.value.push(text); };
-const second = (text: string) => { current.value++; changes.value.push(text); };
-const select = (option: MentionsOptionProps, prefix: string) => selections.value.push(prefix + option.value);
+const first = (text: string) => {
+  old.value++;
+  changes.value.push(text);
+};
+const second = (text: string) => {
+  current.value++;
+  changes.value.push(text);
+};
+const select = (option: MentionsOptionProps, prefix: string) =>
+  selections.value.push(prefix + option.value);
 </script>
 <template>
   <button @mousedown.prevent @click="phase = !phase">Replace change listener</button>

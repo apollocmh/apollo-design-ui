@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Image, ImagePreviewGroup, type PreviewConfig, type TransformInfo } from '@apollo-design/ui';
+import {
+  Image,
+  ImagePreviewGroup,
+  type PreviewConfig,
+  type TransformInfo,
+} from '@apollo-design/ui';
 import { computed, ref, shallowRef } from 'vue';
 
 const imageChanges = ref(0);
@@ -8,9 +13,18 @@ const imageOnce = ref(0);
 const groupOnce = ref(0);
 const last = shallowRef<{ source: string; transform: TransformInfo } | null>(null);
 const boundsMode = ref(0);
-const preview = computed<PreviewConfig>(() => boundsMode.value === 1 ? { minScale: 1, maxScale: 1.05 } : boundsMode.value === 2 ? { minScale: 1.15, maxScale: 2 } : {});
-function cycleBounds() { boundsMode.value = (boundsMode.value + 1) % 3; }
-const source = (color: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="180" height="110"><rect width="180" height="110" fill="${color}"/></svg>`)}`;
+const preview = computed<PreviewConfig>(() =>
+  boundsMode.value === 1
+    ? { minScale: 1, maxScale: 1.05 }
+    : boundsMode.value === 2
+      ? { minScale: 1.15, maxScale: 2 }
+      : {},
+);
+function cycleBounds() {
+  boundsMode.value = (boundsMode.value + 1) % 3;
+}
+const source = (color: string) =>
+  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="180" height="110"><rect width="180" height="110" fill="${color}"/></svg>`)}`;
 const first = source('#38598b');
 const second = source('#297373');
 function recordImage(info: TransformInfo) {

@@ -1,10 +1,30 @@
 <script setup lang="ts">
-import { Image, ImagePreviewGroup, type PreviewActionsInfo, type PreviewCountInfo, type PreviewImageInfo } from '../../../index';
-type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
-const exactImage = <T>(info: T, ..._check: Equal<T, PreviewImageInfo> extends true ? [] : [never]) => info;
-const exactActions = <T>(info: T, ..._check: Equal<T, PreviewActionsInfo> extends true ? [] : [never]) => info;
-const exactCount = <T>(info: T, ..._check: Equal<T, PreviewCountInfo> extends true ? [] : [never]) => info;
-withDefaults(defineProps<{ target: 'Image' | 'PreviewGroup'; show?: boolean; empty?: boolean }>(), { show: true, empty: false });
+import {
+  Image,
+  ImagePreviewGroup,
+  type PreviewActionsInfo,
+  type PreviewCountInfo,
+  type PreviewImageInfo,
+} from '../../../index';
+
+type Equal<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
+const exactImage = <T>(
+  info: T,
+  ..._check: Equal<T, PreviewImageInfo> extends true ? [] : [never]
+) => info;
+const exactActions = <T>(
+  info: T,
+  ..._check: Equal<T, PreviewActionsInfo> extends true ? [] : [never]
+) => info;
+const exactCount = <T>(
+  info: T,
+  ..._check: Equal<T, PreviewCountInfo> extends true ? [] : [never]
+) => info;
+withDefaults(defineProps<{ target: 'Image' | 'PreviewGroup'; show?: boolean; empty?: boolean }>(), {
+  show: true,
+  empty: false,
+});
 </script>
 
 <template>

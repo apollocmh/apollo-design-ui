@@ -1,12 +1,22 @@
 <script setup lang="ts">
-import { compactAlgorithm, darkAlgorithm, defaultAlgorithm, ThemeProvider } from '@apollo-design/theme';
+import {
+  compactAlgorithm,
+  darkAlgorithm,
+  defaultAlgorithm,
+  ThemeProvider,
+} from '@apollo-design/theme';
 import { Image, ImagePreviewGroup } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 import PreviewGroupDemo from '../../../packages/ui/src/image/demo/preview-group.vue';
 
 const mask = ref(true);
 const current = ref(0);
-const algorithms = { light: defaultAlgorithm, dark: darkAlgorithm, compact: compactAlgorithm, 'dark-compact': [darkAlgorithm, compactAlgorithm] };
+const algorithms = {
+  light: defaultAlgorithm,
+  dark: darkAlgorithm,
+  compact: compactAlgorithm,
+  'dark-compact': [darkAlgorithm, compactAlgorithm],
+};
 type ThemeName = keyof typeof algorithms;
 const names = ['light', 'dark', 'compact', 'dark-compact'] as const;
 const themeName = ref<ThemeName>('light');

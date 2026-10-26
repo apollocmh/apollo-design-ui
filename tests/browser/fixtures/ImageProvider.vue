@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ConfigProvider, Image, type ConfigProviderProps, type ImageSemanticType } from '@apollo-design/ui';
+import {
+  ConfigProvider,
+  type ConfigProviderProps,
+  Image,
+  type ImageSemanticType,
+} from '@apollo-design/ui';
 import { ref } from 'vue';
 import ImageSemanticDemo from '../../../packages/ui/src/image/demo/style-class.vue';
 
@@ -24,7 +29,9 @@ const makeConfig = (current: number): ImageSemanticType => ({
 // Keep the inferred object shape indexable for the public component-config map.
 const createImageConfig = (current: number) => ({ ...makeConfig(current) });
 const imageConfig = ref(createImageConfig(0));
-const components = ref<NonNullable<ConfigProviderProps['components']>>({ image: imageConfig.value });
+const components = ref<NonNullable<ConfigProviderProps['components']>>({
+  image: imageConfig.value,
+});
 const replaceFields = () => {
   const next = makeConfig(++revision.value);
   imageConfig.value.classNames = next.classNames;
@@ -57,7 +64,11 @@ const mutateDeep = () => {
   styles.image.opacity = opacityAt(current);
   styles.cover.paddingLeft = `${current + 2}px`;
 };
-const classNames = { root: 'local-provider-root', image: 'local-provider-image', cover: 'local-provider-cover' };
+const classNames = {
+  root: 'local-provider-root',
+  image: 'local-provider-image',
+  cover: 'local-provider-cover',
+};
 const styles = {
   root: { maxWidth: '260px', minHeight: '31px' },
   image: { objectFit: 'contain' },

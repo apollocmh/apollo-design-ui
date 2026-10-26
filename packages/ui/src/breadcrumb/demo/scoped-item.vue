@@ -6,7 +6,10 @@ const custom = ref(false);
 const empty = ref(false);
 const id = ref(42);
 const order = ref(['a', 'b']);
-const items = [{ title: 'Apps', path: 'apps' }, { title: 'Detail', path: ':id' }];
+const items = [
+  { title: 'Apps', path: 'apps' },
+  { title: 'Detail', path: ':id' },
+];
 </script>
 
 <template>

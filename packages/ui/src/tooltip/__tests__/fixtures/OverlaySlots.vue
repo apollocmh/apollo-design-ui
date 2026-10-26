@@ -1,9 +1,23 @@
 <script setup lang="ts">
 import { h } from 'vue';
-import { Popconfirm, PopconfirmPurePanel, type PopconfirmProps, Popover, PopoverPurePanel, type PopoverProps, Tooltip, TooltipPurePanel, type TooltipProps } from '../../../index';
+import {
+  Popconfirm,
+  type PopconfirmProps,
+  PopconfirmPurePanel,
+  Popover,
+  type PopoverProps,
+  PopoverPurePanel,
+  Tooltip,
+  type TooltipProps,
+  TooltipPurePanel,
+} from '../../../index';
 
 const tooltip: TooltipProps = { title: 0 };
-const popover: PopoverProps = { title: h('b', 'Title'), content: ['Body', 0], autoAdjustOverflow: { adjustX: 1, shiftY: true } };
+const popover: PopoverProps = {
+  title: h('b', 'Title'),
+  content: ['Body', 0],
+  autoAdjustOverflow: { adjustX: 1, shiftY: true },
+};
 const popconfirm: PopconfirmProps = { title: 0, description: h('i', 'Details') };
 const oldRenderer = () => 'Old content';
 </script>

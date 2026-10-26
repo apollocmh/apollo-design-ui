@@ -11,7 +11,10 @@ const lastCurrentChange = ref('none');
 const src =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 const PreviewGroup = Image.PreviewGroup;
-const items = [src, src, src].map((source, index) => ({ src: source, alt: `Controlled group image ${index + 1}` }));
+const items = [src, src, src].map((source, index) => ({
+  src: source,
+  alt: `Controlled group image ${index + 1}`,
+}));
 
 function onOpenChange(next: boolean, prev: boolean) {
   openChanges.value++;

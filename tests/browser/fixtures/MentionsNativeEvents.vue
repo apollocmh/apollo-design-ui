@@ -1,21 +1,57 @@
 <script setup lang="ts">
 import { Mentions } from '@apollo-design/ui';
 import { ref } from 'vue';
+
 const value = ref('initial');
 const phase = ref(false);
-const state = ref({ focus: 0, blur: 0, currentFocus: 0, currentBlur: 0, focusOnce: 0, blurOnce: 0, input: 0, inputOnce: 0, down: 0, up: 0, enter: 0, enterOnce: 0, scroll: 0, scrollOnce: 0, resize: 0, resizeOnce: 0, clear: 0, clearOnce: 0, bubbles: 0, validFocus: true, validBlur: true, validKeys: true, validInput: true, validScroll: true, validResize: true, prevented: false });
+const state = ref({
+  focus: 0,
+  blur: 0,
+  currentFocus: 0,
+  currentBlur: 0,
+  focusOnce: 0,
+  blurOnce: 0,
+  input: 0,
+  inputOnce: 0,
+  down: 0,
+  up: 0,
+  enter: 0,
+  enterOnce: 0,
+  scroll: 0,
+  scrollOnce: 0,
+  resize: 0,
+  resizeOnce: 0,
+  clear: 0,
+  clearOnce: 0,
+  bubbles: 0,
+  validFocus: true,
+  validBlur: true,
+  validKeys: true,
+  validInput: true,
+  validScroll: true,
+  validResize: true,
+  prevented: false,
+});
 const focus = (event: FocusEvent) => {
-  state.value.validFocus &&= event instanceof FocusEvent && event.target instanceof HTMLTextAreaElement;
-  if (phase.value) state.value.currentFocus++; else state.value.focus++;
+  state.value.validFocus &&=
+    event instanceof FocusEvent && event.target instanceof HTMLTextAreaElement;
+  if (phase.value) state.value.currentFocus++;
+  else state.value.focus++;
 };
 const blur = (event: FocusEvent) => {
-  state.value.validBlur &&= event instanceof FocusEvent && event.target instanceof HTMLTextAreaElement;
-  if (phase.value) state.value.currentBlur++; else state.value.blur++;
+  state.value.validBlur &&=
+    event instanceof FocusEvent && event.target instanceof HTMLTextAreaElement;
+  if (phase.value) state.value.currentBlur++;
+  else state.value.blur++;
 };
 const down = (event: KeyboardEvent) => {
   state.value.down++;
-  state.value.validKeys &&= event instanceof KeyboardEvent && event.target instanceof HTMLTextAreaElement;
-  if (event.key === 'F2') { event.preventDefault(); state.value.prevented = event.defaultPrevented; }
+  state.value.validKeys &&=
+    event instanceof KeyboardEvent && event.target instanceof HTMLTextAreaElement;
+  if (event.key === 'F2') {
+    event.preventDefault();
+    state.value.prevented = event.defaultPrevented;
+  }
 };
 const input = (event: Event) => {
   state.value.input++;

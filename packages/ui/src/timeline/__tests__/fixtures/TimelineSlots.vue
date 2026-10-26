@@ -3,7 +3,8 @@ import { Timeline, type TimelineItemType } from '../../../index';
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
-const checkItem = <T>(item: T, ..._check: Equal<T, TimelineItemType> extends true ? [] : [never]) => item;
+const checkItem = <T>(item: T, ..._check: Equal<T, TimelineItemType> extends true ? [] : [never]) =>
+  item;
 const checkIndex = <T>(index: T, ..._check: Equal<T, number> extends true ? [] : [never]) => index;
 const items = [{ key: 'a', title: 'Alpha', content: 'Ready' }];
 </script>

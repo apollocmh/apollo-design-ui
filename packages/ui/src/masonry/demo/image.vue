@@ -12,7 +12,6 @@ const imageList = [
 ];
 
 const items = imageList.map((img, index) => ({ key: `item-${index}`, data: img }));
-
 </script>
 
 <template>

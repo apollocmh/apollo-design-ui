@@ -50,8 +50,8 @@ import {
   h,
   onMounted,
   type PropType,
-  type SlotsType,
   ref,
+  type SlotsType,
   type VNodeChild,
   watch,
 } from 'vue';

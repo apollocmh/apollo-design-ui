@@ -1,7 +1,12 @@
 <script setup lang="ts">
 // 语义化 classNames / styles：root / image / cover 三个槽位。
-import { ConfigProvider, Image, type ConfigProviderProps, type ImageSemanticType } from '@apollo-design/ui';
-import { computed, ref, shallowRef, type StyleValue } from 'vue';
+import {
+  ConfigProvider,
+  type ConfigProviderProps,
+  Image,
+  type ImageSemanticType,
+} from '@apollo-design/ui';
+import { computed, ref, type StyleValue, shallowRef } from 'vue';
 
 const src = `data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
@@ -38,11 +43,22 @@ const styles = {
 const preview = { cover: '点击预览' };
 
 const phase = ref(0);
-const nativeClass = computed(() => phase.value < 3 ? ['native-demo-root', `native-demo-phase-${phase.value}`] : undefined);
+const nativeClass = computed(() =>
+  phase.value < 3 ? ['native-demo-root', `native-demo-phase-${phase.value}`] : undefined,
+);
 const nativeStyle = computed<StyleValue>(() => {
   if (phase.value === 0) return 'padding-top:var(--apollo-padding-xs);--native-demo-phase:string';
-  if (phase.value === 1) return ['padding-top:var(--apollo-padding-sm);--native-demo-phase:array', { paddingInlineEnd: 'var(--apollo-padding-xs)' }];
-  if (phase.value === 2) return { paddingTop: 'var(--apollo-padding-md)', paddingInlineStart: 'var(--apollo-padding-xs)', '--native-demo-phase': 'object' };
+  if (phase.value === 1)
+    return [
+      'padding-top:var(--apollo-padding-sm);--native-demo-phase:array',
+      { paddingInlineEnd: 'var(--apollo-padding-xs)' },
+    ];
+  if (phase.value === 2)
+    return {
+      paddingTop: 'var(--apollo-padding-md)',
+      paddingInlineStart: 'var(--apollo-padding-xs)',
+      '--native-demo-phase': 'object',
+    };
   return undefined;
 });
 const nativeSemanticStyles = {
@@ -57,29 +73,60 @@ const progressSemanticStyles = {
 const providerStage = ref(0);
 const providerStateLabels = ['empty', 'A', 'B', 'removed'];
 const makeImageProvider = (variant: 'A' | 'B'): ImageSemanticType => {
-  const color = variant === 'A' ? 'var(--apollo-color-primary-border)' : 'var(--apollo-color-success-border)';
+  const color =
+    variant === 'A' ? 'var(--apollo-color-primary-border)' : 'var(--apollo-color-success-border)';
   return {
     classNames: {
       root: `provider-image-root-${variant}`,
       image: `provider-image-img-${variant}`,
       cover: `provider-image-cover-${variant}`,
-      placeholder: { progress: {
-        root: `provider-image-progress-root-${variant}`,
-        content: `provider-image-progress-content-${variant}`,
-        rail: `provider-image-progress-rail-${variant}`,
-        indicator: `provider-image-progress-indicator-${variant}`,
-      } },
+      placeholder: {
+        progress: {
+          root: `provider-image-progress-root-${variant}`,
+          content: `provider-image-progress-content-${variant}`,
+          rail: `provider-image-progress-rail-${variant}`,
+          indicator: `provider-image-progress-indicator-${variant}`,
+        },
+      },
     },
     styles: {
-      root: { '--provider-image-root': variant, outlineColor: color, outlineStyle: 'solid', outlineWidth: 'var(--apollo-line-width)', paddingTop: 'var(--apollo-padding-lg)' },
-      image: { '--provider-image-img': variant, outlineColor: color, outlineStyle: 'solid', outlineWidth: 'var(--apollo-line-width)', paddingTop: 'var(--apollo-padding-lg)' },
-      cover: { '--provider-image-cover': variant, outlineColor: color, outlineStyle: 'solid', outlineWidth: 'var(--apollo-line-width)' },
-      placeholder: { progress: {
-        root: { '--provider-image-progress-root': variant, outlineColor: color, outlineStyle: 'solid', outlineWidth: 'var(--apollo-line-width)', paddingTop: 'var(--apollo-padding-lg)' },
-        content: { '--provider-image-progress-content': variant },
-        rail: { '--provider-image-progress-rail': variant },
-        indicator: { '--provider-image-progress-indicator': variant, fontWeight: 'var(--apollo-font-weight-strong)' },
-      } },
+      root: {
+        '--provider-image-root': variant,
+        outlineColor: color,
+        outlineStyle: 'solid',
+        outlineWidth: 'var(--apollo-line-width)',
+        paddingTop: 'var(--apollo-padding-lg)',
+      },
+      image: {
+        '--provider-image-img': variant,
+        outlineColor: color,
+        outlineStyle: 'solid',
+        outlineWidth: 'var(--apollo-line-width)',
+        paddingTop: 'var(--apollo-padding-lg)',
+      },
+      cover: {
+        '--provider-image-cover': variant,
+        outlineColor: color,
+        outlineStyle: 'solid',
+        outlineWidth: 'var(--apollo-line-width)',
+      },
+      placeholder: {
+        progress: {
+          root: {
+            '--provider-image-progress-root': variant,
+            outlineColor: color,
+            outlineStyle: 'solid',
+            outlineWidth: 'var(--apollo-line-width)',
+            paddingTop: 'var(--apollo-padding-lg)',
+          },
+          content: { '--provider-image-progress-content': variant },
+          rail: { '--provider-image-progress-rail': variant },
+          indicator: {
+            '--provider-image-progress-indicator': variant,
+            fontWeight: 'var(--apollo-font-weight-strong)',
+          },
+        },
+      },
     },
   };
 };

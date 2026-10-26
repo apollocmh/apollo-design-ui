@@ -6,6 +6,7 @@ import '@apollo-design/theme/tokens.css';
 import '@apollo-design/ui/style.css';
 import { createSSRApp, nextTick } from 'vue';
 import App from './ImageThemeHydration.mjs';
+
 createSSRApp(App).mount('#app');
 await nextTick(); await nextTick();
 window.__imageThemeHydrated = true;

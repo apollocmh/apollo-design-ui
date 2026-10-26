@@ -11,13 +11,15 @@ const acceptClose = ref(true);
 const revision = ref(0);
 const entries = ref<Array<{ listener: string; revision: number; info: TransformInfo }>>([]);
 const completed = ref<boolean[]>([]);
-const source = (color: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="${color}"/></svg>`)}`;
+const source = (color: string) =>
+  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="${color}"/></svg>`)}`;
 const first = source('#38598b');
 const second = source('#297373');
 const preview = { afterOpenChange: (value: boolean) => completed.value.push(value) };
 const listeners = computed(() => {
   const currentRevision = revision.value;
-  const record = (listener: string) => (info: TransformInfo) => entries.value.push({ listener, revision: currentRevision, info });
+  const record = (listener: string) => (info: TransformInfo) =>
+    entries.value.push({ listener, revision: currentRevision, info });
   return {
     transform: enabled.value ? [record('first'), record('second')] : undefined,
     transformOnce: record('once'),

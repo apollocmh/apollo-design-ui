@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { Mentions, type MentionsPopupRenderSlotProps } from '../../../index';
 
-type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
-const checkPopup = <T>(info: T, ..._check: Equal<T, MentionsPopupRenderSlotProps> extends true ? [] : [never]) => info;
+type Equal<A, B> =
+  (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2 ? true : false;
+const checkPopup = <T>(
+  info: T,
+  ..._check: Equal<T, MentionsPopupRenderSlotProps> extends true ? [] : [never]
+) => info;
 const options = [{ value: 'alpha', label: 'Alpha' }];
 </script>
 

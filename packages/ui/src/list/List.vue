@@ -169,16 +169,20 @@ function paginationContent(): VNode {
     ...rest
   } = paginationProps.value as Record<string, unknown>;
   return h('div', { class: `${prefixCls.value}-pagination` }, [
-    h(Pagination, {
-      ...rest,
-      align: 'end',
-      onChange: onPaginationChange,
-      onShowSizeChange: onPaginationShowSizeChange,
-    }, {
-      ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
-      ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
-      ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
-    }),
+    h(
+      Pagination,
+      {
+        ...rest,
+        align: 'end',
+        onChange: onPaginationChange,
+        onShowSizeChange: onPaginationShowSizeChange,
+      },
+      {
+        ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
+        ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
+        ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
+      },
+    ),
   ]);
 }
 

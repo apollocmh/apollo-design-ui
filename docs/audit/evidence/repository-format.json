@@ -1,0 +1,597 @@
+{
+  "baseCommit": "9862a979",
+  "scope": "H05 fatal formatter/organizeImports errors only; no component API or behavior redesign.",
+  "before": {
+    "changed": 0,
+    "unchanged": 3527,
+    "matches": 0,
+    "duration": 4146393796,
+    "errors": 66,
+    "warnings": 37,
+    "infos": 5,
+    "skipped": 0,
+    "suggestedFixesSkipped": 0,
+    "diagnosticsNotPrinted": 0,
+    "scannerDuration": 22539997
+  },
+  "after": {
+    "changed": 0,
+    "unchanged": 3527,
+    "matches": 0,
+    "duration": 4179328128,
+    "errors": 0,
+    "warnings": 37,
+    "infos": 5,
+    "skipped": 0,
+    "suggestedFixesSkipped": 0,
+    "diagnosticsNotPrinted": 0,
+    "scannerDuration": 24268945
+  },
+  "remainingDiagnostics": [
+    {
+      "severity": "info",
+      "category": "lint/style/useNodejsImportProtocol",
+      "path": ".workbuddy-ai/memory/audit-vnode-props.cjs",
+      "count": 2
+    },
+    {
+      "severity": "info",
+      "category": "lint/style/useTemplate",
+      "path": ".workbuddy-ai/memory/docs-audit-recheck.mjs",
+      "count": 1
+    },
+    {
+      "severity": "info",
+      "category": "lint/style/useTemplate",
+      "path": "docs/audit/tools/sync-doc-demo-counts.mjs",
+      "count": 1
+    },
+    {
+      "severity": "info",
+      "category": "lint/style/useTemplate",
+      "path": "tests/browser/fixtures/MasonryNative.vue",
+      "count": 1
+    },
+    {
+      "severity": "warning",
+      "category": "lint/complexity/noImportantStyles",
+      "path": "packages/docs/src/styles/markdown.css",
+      "count": 5
+    },
+    {
+      "severity": "warning",
+      "category": "lint/complexity/noImportantStyles",
+      "path": "packages/docs/src/styles/site.css",
+      "count": 2
+    },
+    {
+      "severity": "warning",
+      "category": "lint/correctness/noUnusedFunctionParameters",
+      "path": "docs/audit/tools/sync-doc-demo-counts.mjs",
+      "count": 4
+    },
+    {
+      "severity": "warning",
+      "category": "lint/correctness/noUnusedFunctionParameters",
+      "path": "packages/docs/src/pages/DemoStandalonePage.vue",
+      "count": 1
+    },
+    {
+      "severity": "warning",
+      "category": "lint/correctness/noUnusedFunctionParameters",
+      "path": "packages/docs/tooling/content/markdown.mjs",
+      "count": 1
+    },
+    {
+      "severity": "warning",
+      "category": "lint/style/noDescendingSpecificity",
+      "path": "packages/docs/src/styles/markdown.css",
+      "count": 1
+    },
+    {
+      "severity": "warning",
+      "category": "lint/style/noNonNullAssertion",
+      "path": "packages/docs/tests/demo-audit.test.ts",
+      "count": 3
+    },
+    {
+      "severity": "warning",
+      "category": "lint/style/noNonNullAssertion",
+      "path": "packages/docs/tests/demo-preview.test.ts",
+      "count": 11
+    },
+    {
+      "severity": "warning",
+      "category": "lint/style/noNonNullAssertion",
+      "path": "packages/docs/tests/demo-source.test.ts",
+      "count": 3
+    },
+    {
+      "severity": "warning",
+      "category": "lint/style/noNonNullAssertion",
+      "path": "packages/docs/tests/manifest.test.ts",
+      "count": 2
+    },
+    {
+      "severity": "warning",
+      "category": "lint/style/noNonNullAssertion",
+      "path": "packages/docs/tests/search.test.ts",
+      "count": 4
+    }
+  ],
+  "unchangedBiomeConfigSha256": "dafed1082e7b9252b517f1995ca151fac2a24e2476932330579773327451c7e3",
+  "equivalence": {
+    "command": "node /tmp/apollo-h05-format-equivalence.mjs",
+    "exitCode": 0,
+    "files": 52,
+    "log": "/tmp/apollo-h05-equivalence-final.log",
+    "checks": [
+      "Script AST and imported module/binding sets compared; redundant parenthesis nodes and named-import ordering normalized.",
+      "Vue compiled template render AST compared.",
+      "Style blocks and non-script HTML markup preserved.",
+      "Side-effect import boundaries manually reviewed; production changes contain no runtime import reordering."
+    ]
+  },
+  "files": [
+    {
+      "path": "packages/ui/src/breadcrumb/demo/scoped-item.vue",
+      "beforeSha256": "0bbd1ffbb37a840b790e6879cfecfc993c04dbc09fa647d8f5d46c0145298ec2",
+      "afterSha256": "57e6126188efc56ad7785cad6740b78c9d28fb9de1afc48bead09f5645010fee"
+    },
+    {
+      "path": "packages/ui/src/image/__tests__/fixtures/ImagePreviewSlots.vue",
+      "beforeSha256": "1d8cc8c66a5102ee88b5039c6ee0ba403ec44596aac0068601e644d16b56bdf5",
+      "afterSha256": "47b949553764c4e47edb8eb68d89ed378cca249f7b408c500b6d52d4c34d1bcf"
+    },
+    {
+      "path": "packages/ui/src/image/__tests__/fixtures/ImageSlot.vue",
+      "beforeSha256": "b362e7bed92d7c33448178be6410d48e7b9c5d066f570781451d92b5f253a504",
+      "afterSha256": "8c074e8808c76de8d9df2a353978d0dade49b750cd973a3567b80b87315f63c5"
+    },
+    {
+      "path": "packages/ui/src/image/__tests__/fixtures/ImageTransform.vue",
+      "beforeSha256": "5e7e8d42584f8f3ed6d29013c3657b1817d8e43053e5da7d169c8a37cee2daf4",
+      "afterSha256": "d314a86fa8094c64a0c9c8bd146d981ba9cff2fb1a025ac5235a33875369ed1f"
+    },
+    {
+      "path": "packages/ui/src/image/demo/popup-provider.vue",
+      "beforeSha256": "c28b863c833091b036a128a9c1f275f17614a57732d4d8877955945b08bd926b",
+      "afterSha256": "d484237b20b527c5f8c8bd42d6022eb497b291b29e07ba89ae0bec7262037f10"
+    },
+    {
+      "path": "packages/ui/src/image/demo/preview-close.vue",
+      "beforeSha256": "cb149dbd65b5aaca8a2c168290594968919652c585e37bf51b88fa85a20a4e6b",
+      "afterSha256": "37d8db4a5e67046667bb8814f2b1d385068ee84208eb1da58a9324a906f3affa"
+    },
+    {
+      "path": "packages/ui/src/image/demo/preview-group-top-progress.vue",
+      "beforeSha256": "6d36cc8bbb86e8d1a2d190d45e29ea8d021da94ad815e16e65295b799bb0e0c7",
+      "afterSha256": "a94cbc62c778fa619eaeab96487193da4e42aaed6e435617ffe015f4c80aa59c"
+    },
+    {
+      "path": "packages/ui/src/image/demo/preview-group-visible.vue",
+      "beforeSha256": "74d2e6c2afe9823676755da88e0ab06a73c6aa6b89199ccf5092ebfae2c0ac73",
+      "afterSha256": "8207347ff471d199f225b9ebdac0f820139d891407bb5f98f25a6b795e7a7dc0"
+    },
+    {
+      "path": "packages/ui/src/image/demo/style-class.vue",
+      "beforeSha256": "de0a003e54da82e5e02adf3d51988620391dc844f6a0fa4599b456645c1244f2",
+      "afterSha256": "02a3367e63e99029f36651eb6cd51fa40f7a526ab1e7e8f5f7ecb014c06b48ac"
+    },
+    {
+      "path": "packages/ui/src/image/demo/transform-events.vue",
+      "beforeSha256": "e9f3747b02aecac62e08fdd43b102d97649af317fa39da72afbd3890e873d54a",
+      "afterSha256": "83d5932136167619f7c1ec6cc5d70016aa669aeb26525770176a5b7b146ff58a"
+    },
+    {
+      "path": "packages/ui/src/list/List.vue",
+      "beforeSha256": "0f8a21be7a3824292fe01fad7fdb9a5a68f7c9e89264452a098998ada83c65d7",
+      "afterSha256": "e2769473077773a1292c3f830854f3ec38205c5f0a14e8f9fc0382467b0a06ba"
+    },
+    {
+      "path": "packages/ui/src/masonry/Masonry.vue",
+      "beforeSha256": "d0f0e84f412704f502446243f600bce77ec3c737dcbbb177b27bdbf2d142ce10",
+      "afterSha256": "34ecd64f906bba44fbd1c0ee4f43492268875f508b778ea1c85604d15500274d"
+    },
+    {
+      "path": "packages/ui/src/masonry/__tests__/fixtures/MasonrySlots.vue",
+      "beforeSha256": "11baba567b7092436374d7f4b4d208009bb0055e6a19c3b01424655292c9d911",
+      "afterSha256": "e46f0b52aaaa61ba7099a7a08909c6d76ae66bc44742555efa168a1ebe4f0906"
+    },
+    {
+      "path": "packages/ui/src/masonry/demo/dynamic.vue",
+      "beforeSha256": "19cebceebcf0432bfbe31b0c9c5f4660acc7be39ac73f6bedb285a14b23c7c19",
+      "afterSha256": "3ec1766eac120d1d852148e16acf22fdbef02056ae0a87a6158a64aab66a13b1"
+    },
+    {
+      "path": "packages/ui/src/masonry/demo/image.vue",
+      "beforeSha256": "a3d756ee9d2c22ee9d7ffc3b7e172a409d09ce74df974420acdbf3b0c6f40119",
+      "afterSha256": "0db0ada689e8243e8105bc716f68b68e4cb95c8373381c8a6d959b8665c4a494"
+    },
+    {
+      "path": "packages/ui/src/mentions/__tests__/fixtures/CoreEvents.vue",
+      "beforeSha256": "3e7e4b0acc456ca258caf451d8aaba5af4539aab6c7d9e2337f0a94985b1dc6e",
+      "afterSha256": "12227c84310184d2690eedf70a1f0045a4bb9b0a21b5b1188601fe71e795726f"
+    },
+    {
+      "path": "packages/ui/src/mentions/__tests__/fixtures/EmptySlot.vue",
+      "beforeSha256": "9ca0db3d2784557c443aacdb2e555c9c5745fafbf46940bf7d9847ec303676ed",
+      "afterSha256": "98b696a9b8e691c9caca09157a3e97641f66c4fbf494a8663cb085d880a1c623"
+    },
+    {
+      "path": "packages/ui/src/mentions/__tests__/fixtures/NativeEvents.vue",
+      "beforeSha256": "42df3b5a561e554fa1fc40e467888534aad37bd874256155d1e52225f00a7f58",
+      "afterSha256": "ac5f34d0a1cdfd9d9bddbf9d927176dbf5a26af7d4c027cec0e7fb87498d8806"
+    },
+    {
+      "path": "packages/ui/src/mentions/__tests__/fixtures/PopupSlot.vue",
+      "beforeSha256": "400977b27086872034af4ad411679431dd042a14c47a230d0f5774adaf50d458",
+      "afterSha256": "2cf058d1b6c64f64285e65dc0319202be931586849e758b5d7b9a062b0e3b900"
+    },
+    {
+      "path": "packages/ui/src/pagination/Pagination.vue",
+      "beforeSha256": "43f69b1d58b63d45d5e51ce4bb64d7d9df109ccbb4ed0d56d17f8f726e456de5",
+      "afterSha256": "3e757a6c693413bdb38676f23e0b90df54f19ee380c2b5bcab0bf4ef2831994e"
+    },
+    {
+      "path": "packages/ui/src/steps/__tests__/fixtures/StepsSlots.vue",
+      "beforeSha256": "44e6f092d4eba0905a34b16bda22b990b7d2d58c838991e1322d011fb5bf9ed3",
+      "afterSha256": "0c613f2f6f4cad9d0ed81b91bfae7a47428b45b37defba5356ba8a344a591dca"
+    },
+    {
+      "path": "packages/ui/src/steps/demo/native-slots.vue",
+      "beforeSha256": "e121b0a2364ad173153028eb011cf5cb32625233e790cf7764ebf4eac3e23a44",
+      "afterSha256": "82c111776a377d597e1d6d4b017d88cda44cca4e8aaa338d04eb9e0f89366ffd"
+    },
+    {
+      "path": "packages/ui/src/tabs/Tabs.vue",
+      "beforeSha256": "1f9ce997b44ee0c97e085e1cb17be900274e2711ec0796f9bb4d4cfc177981c7",
+      "afterSha256": "3026569537e5363d624a89ea5d5392db6ef15e617ce90b030a8a642167708f75"
+    },
+    {
+      "path": "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
+      "beforeSha256": "dea7cf2909b3f5490c78ef24d172f3eb1c960053552b9074c2f55c4d753b1938",
+      "afterSha256": "578429c2c9f094de1747eb3b770e705667b45644a585d17a21e408316cf0b627"
+    },
+    {
+      "path": "packages/ui/src/timeline/demo/native-slots.vue",
+      "beforeSha256": "21b6ba7469dbffe095a70dbcb71806ecee3e0d1dafa6b1161677ac28a8ad41d7",
+      "afterSha256": "8dc4baee53854ded1a98fdbde83d1e10744f234e6bb2912acb8d80ee65d6e1c7"
+    },
+    {
+      "path": "packages/ui/src/tooltip/__tests__/fixtures/OverlaySlots.vue",
+      "beforeSha256": "7c2c4e37848029085eaab901119693cab5e994fa46d3e200cdefd396db6b7229",
+      "afterSha256": "9320d87afb183f8c5985a503ed14fc2c6d8cb24098534b2bc0f38aa593ed46d4"
+    },
+    {
+      "path": "packages/ui/src/typography/demo/editable.vue",
+      "beforeSha256": "36c84327840bfa6395d29c4c6a5b5f296ca2bc46f1e586bc67417190ac04cab9",
+      "afterSha256": "1c244de7a51abde24bdd276ac56dc877f0d411620711caf5af0f6cdf7c357fb2"
+    },
+    {
+      "path": "packages/ui/src/typography/demo/semantic.vue",
+      "beforeSha256": "f63711e2e11b2c644e1822c69064863dce93f04a418a46389f505073e8d2ff02",
+      "afterSha256": "acca92eb2ad54d1fc61a2f8f3f153f3d7446bee96bae88a636cc2e57ef73127d"
+    },
+    {
+      "path": "tests/browser/fixtures/ImageCounterContrast.vue",
+      "beforeSha256": "59e78d4334bdd9366374cd1b018dd44c296b456b7b5c70c9ba99f28d112938e5",
+      "afterSha256": "705477756fe80a0db5b2f170e84f4300e2f909779a0623f23d94187bfed238b7"
+    },
+    {
+      "path": "tests/browser/fixtures/ImageDirection.vue",
+      "beforeSha256": "139ea79bdac92782b37db1f169f36392e77f9339d69ca30a6f512763111f74b6",
+      "afterSha256": "2eb7f59d88e4d79749afcfa8af1f56b6e7d60927474dfa57bbab9c33b7695e0c"
+    },
+    {
+      "path": "tests/browser/fixtures/ImageOpenModel.vue",
+      "beforeSha256": "8d7411d297afb61a3b88a30b5129a91bb6e48890cb6e88b9249ed5c7b86aa205",
+      "afterSha256": "39a50f46ba4192b55eb70ce09cd1c581061ab76c310a253d6ad269d068ed26d5"
+    },
+    {
+      "path": "tests/browser/fixtures/ImagePopupProvider.vue",
+      "beforeSha256": "2e852a655576053e017831d302aa05d6dbc0cf8cd3dd222df50b97e4b9a717f4",
+      "afterSha256": "c3f498baf4e5fddcfc7f4bc32608f6d16bc4b4035f5ce64c87accabf926cdcff"
+    },
+    {
+      "path": "tests/browser/fixtures/ImagePrefix.vue",
+      "beforeSha256": "9990811a72b5abc106c71f52a6ae259fefe2d4e6a04dd07fefd53484f6f0c235",
+      "afterSha256": "3c52d8f0ab4c4cd0bc7f9c38f33469fc5399688d32dbbe35e5028f755250b7da"
+    },
+    {
+      "path": "tests/browser/fixtures/ImagePreviewSlots.vue",
+      "beforeSha256": "21c957a801ac89ec5b3f726cd42e0b90c460213d88c021ad0b12801b1202f4e3",
+      "afterSha256": "2bd7de1f5327758aef9347624d4252bc3b7ce356ae09c1773214b784ac5910ad"
+    },
+    {
+      "path": "tests/browser/fixtures/ImageProvider.vue",
+      "beforeSha256": "998d68b7c486d4eb4c9d7742f205c2bc741997b16abbc76ea7f05df5cd7d7d77",
+      "afterSha256": "088ae3b9d7ca8c0d601ec46992fa240a35c02a1cc53faf50432e60984a2a3405"
+    },
+    {
+      "path": "tests/browser/fixtures/ImageStyles.vue",
+      "beforeSha256": "d893f73a975d1b7c4f4bfb1f33b56562fb7194d65a8ed0f8dd62c31f7d9443a0",
+      "afterSha256": "7d446cf0f9f5b37f6fb51437f2f6bad1104e9af18d7f471d40f868ae4251458b"
+    },
+    {
+      "path": "tests/browser/fixtures/ImageTransform.vue",
+      "beforeSha256": "984c8236383faa83f511ee4e394c806af0202fdcdbda60dff1a76a15c05803ed",
+      "afterSha256": "7b05ceb023c7cee635f7c84379a7f25c9682b6d9bc45bd7a9161be0afd0b57ba"
+    },
+    {
+      "path": "tests/browser/fixtures/MasonryNative.vue",
+      "beforeSha256": "98322da3d15661007f243b8b924e7a54fdae850ed800b684b1a2c1b134f4ec7e",
+      "afterSha256": "276d49a3b3238e15845bcfe5abf578dbab0e76ad661d6534cec5df5893f24ac5"
+    },
+    {
+      "path": "tests/browser/fixtures/MentionsBindings.vue",
+      "beforeSha256": "7315602f0e52d029571e9a04946d2b53fc9d24e26db2dc7d1fdbc68775aa6721",
+      "afterSha256": "967f4b198a85e7af18896f0f1537a6df01fec25ca4fae0389dee8fae36e9d836"
+    },
+    {
+      "path": "tests/browser/fixtures/MentionsEvents.vue",
+      "beforeSha256": "233e9d29e815f89589e4e4ea9edf88bb35954f0830d1c1cb4abe57db4f231986",
+      "afterSha256": "d7bb4641ce9690d4a91b4844d0880802507c6777f825371cd87ec8d57696c642"
+    },
+    {
+      "path": "tests/browser/fixtures/MentionsKeyboard.vue",
+      "beforeSha256": "780b78bccc4f304fa940e1e65ff9280ac9a3b14763c0faa757169dd9054b7113",
+      "afterSha256": "768a17da9742562efa0b9a4f06702c365b04d2b0a3dd25a4f79823191c499928"
+    },
+    {
+      "path": "tests/browser/fixtures/MentionsNativeEvents.vue",
+      "beforeSha256": "f5c416b4fc76585c4cfbe8fd4a1a699cb23cb53085923b7273400b897a4283af",
+      "afterSha256": "6bcd3e346d35087306b26b39411ae2d67f84a5c079d6477bada1c630c2e1396a"
+    },
+    {
+      "path": "tests/browser/fixtures/OverlayAttrs.vue",
+      "beforeSha256": "0ca4b6bd969211df66f41cd66a01520cb0b27d379388850332409b4523922c23",
+      "afterSha256": "9487859226f43da9fa5052711aaf370b3a082d90a0a0d24734d0447f6c7e942a"
+    },
+    {
+      "path": "tests/browser/fixtures/OverlayContent.vue",
+      "beforeSha256": "5ef6443117af61096db19d6f34c2abd7fdfc2aeb218f72fb7b3ae590bc5fe69f",
+      "afterSha256": "1751f398c449763f8f73169a516ffad69171f6b4bfe18a968e8ef27a7b2edb68"
+    },
+    {
+      "path": "tests/browser/fixtures/PaginationContainers.vue",
+      "beforeSha256": "cb460270c389ffc216dba69e16bcca823b5d0897c1bd5c6e856ae711796f9671",
+      "afterSha256": "1faf697c393d72c30fb8aade7dd74e05877856ec91b44d75c8f0b8e0c76c90ae"
+    },
+    {
+      "path": "tests/browser/fixtures/TimelineNative.vue",
+      "beforeSha256": "ecfac1483d4d99a458c7f3dc6ca0470b5ef39254de1f827607260644eda857e5",
+      "afterSha256": "be2623d335993d7acbeb9af6a5c04f9ad61081a149039bc7367944c0780ce95a"
+    },
+    {
+      "path": "tests/browser/fixtures/TypographyProvider.vue",
+      "beforeSha256": "129ae599e4f67c898d71fe4b4049c11f96fe649ca6492f6020eb8289848675be",
+      "afterSha256": "04c75fcd8bbc164c0eafe0abd42aa40a71213c49b988c20da98ceb529f1e80b4"
+    },
+    {
+      "path": "tests/browser/fixtures/TypographySlots.vue",
+      "beforeSha256": "8dbce8088b84a4c7b2f626f12297664d8750e3818f6bacb5b93f329e2498d02e",
+      "afterSha256": "f1f8b11f452263c06e0e6f59b5303ef960be0d07d5fa0246dc1d9bcec6da9ef2"
+    },
+    {
+      "path": "tests/browser/fixtures/TypographyStyles.vue",
+      "beforeSha256": "330de5d23a5a7bb3add04327e9cf8ff10db9258619cab00daae3b53a366f6a26",
+      "afterSha256": "64475dea001d7245ab0df30404e7764204f6261a768087736a77d50a13f0447e"
+    },
+    {
+      "path": "tests/browser/fixtures/image-theme-hydration.html",
+      "beforeSha256": "c04e1365ad5d7eeda692eaab907e7e97a155d576aaac00d07760276f807137d9",
+      "afterSha256": "16263c84ecaa70ac85f342e7f8bbfe3604a611400f502e339b6d2a40695c6616"
+    },
+    {
+      "path": "tests/browser/fixtures/masonry-hydration.html",
+      "beforeSha256": "320f3d2da6807a729c8f5506b8fba5740be8ac0006547f977da29c68ce2a8700",
+      "afterSha256": "d4e2c77cd596b694620a1f658301ad3b241a0219e7e615409779a9858580a4aa"
+    },
+    {
+      "path": "tests/browser/fixtures/motion-hydration.html",
+      "beforeSha256": "7cc8b0bfd319037de8bea83052914d5a47f218495f6da7cbe0788bba7c6908d3",
+      "afterSha256": "92707f5a43897f9319acb8dad7a58f84b4bcee3229bfb96d465389b78168c4a4"
+    }
+  ],
+  "runtimeSummary": {
+    "files": 61,
+    "tests": 1246
+  },
+  "gates": [
+    {
+      "gate": "format",
+      "command": [
+        "pnpm",
+        "run",
+        "lint:format"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-format.log"
+    },
+    {
+      "gate": "strict",
+      "command": [
+        "pnpm",
+        "exec",
+        "vue-tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-strict.log"
+    },
+    {
+      "gate": "runtime",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "--project",
+        "dom-contract",
+        "--project",
+        "a11y",
+        "--project",
+        "theme",
+        "packages/ui/src/list",
+        "packages/ui/src/masonry",
+        "packages/ui/src/pagination",
+        "packages/ui/src/tabs",
+        "packages/ui/src/image",
+        "--maxWorkers=1",
+        "--no-file-parallelism"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-runtime.log"
+    },
+    {
+      "gate": "build",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/ui",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-build.log"
+    },
+    {
+      "gate": "ui-L7",
+      "command": [
+        "node",
+        "tests/build/run.mjs",
+        "--package",
+        "ui",
+        "--no-build",
+        "--strict"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-ui-L7.log"
+    },
+    {
+      "gate": "list-slots-browser",
+      "command": [
+        "node",
+        "tests/browser/list-slots.mjs"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-list-slots-browser.log"
+    },
+    {
+      "gate": "masonry-native-browser",
+      "command": [
+        "node",
+        "tests/browser/masonry-native.mjs"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-masonry-native-browser.log"
+    },
+    {
+      "gate": "pagination-slots-browser",
+      "command": [
+        "node",
+        "tests/browser/pagination-slots.mjs"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-pagination-slots-browser.log"
+    },
+    {
+      "gate": "tabs-popup-browser",
+      "command": [
+        "node",
+        "tests/browser/tabs-popup.mjs"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-tabs-popup-browser.log"
+    },
+    {
+      "gate": "image-provider-browser",
+      "command": [
+        "node",
+        "tests/browser/image-provider.mjs"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-image-provider-browser.log"
+    },
+    {
+      "gate": "image-preview-close-browser",
+      "command": [
+        "node",
+        "tests/browser/image-preview-close.mjs"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-image-preview-close-browser.log"
+    },
+    {
+      "gate": "docs-content-build",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "content:build"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-docs-content-build.log"
+    },
+    {
+      "gate": "docs-content-check",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "content:check"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-docs-content-check.log"
+    },
+    {
+      "gate": "docs-test",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "test"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-docs-test.log"
+    },
+    {
+      "gate": "docs-build",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-h05-docs-build.log"
+    }
+  ],
+  "registry": {
+    "command": "pnpm registry:check",
+    "exitCode": 0,
+    "checks": 19,
+    "warnings": 0,
+    "log": "/tmp/apollo-h05-registry-check.log"
+  },
+  "inventory": {
+    "command": "node docs/audit/tools/content-slot-inventory.mjs --check",
+    "exitCode": 0,
+    "rows": 519,
+    "scope": "Refresh adds the already implemented 8d99baae Group Demo references; classifications and acceptance decisions are unchanged."
+  },
+  "bounds": [
+    "37 existing warnings and 5 information diagnostics are unchanged, with no suppression or rule changes.",
+    "This verifies a formatting unit; no component Registry acceptance statuses are upgraded.",
+    "Six current Chrome regression scripts cover the affected production components and representative Demo chains; this is not a full-library browser run.",
+    "The previously accepted Image visual baselines retain their original clean 798339f5 provenance; this unit does not rewrite them.",
+    "Final whole-library gates remain required after all audit units finish."
+  ]
+}

@@ -5460,7 +5460,8 @@
         "files": [
           "packages/ui/src/image/demo/component-token.vue",
           "packages/ui/src/image/demo/preview-close.vue",
-          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+          "packages/ui/src/image/demo/preview-group-top-progress.vue",
+          "packages/ui/src/image/demo/preview-group.vue"
         ]
       },
       "slotTest": {
@@ -5769,7 +5770,8 @@
         "files": [
           "packages/ui/src/image/demo/component-token.vue",
           "packages/ui/src/image/demo/preview-close.vue",
-          "packages/ui/src/image/demo/preview-group-top-progress.vue"
+          "packages/ui/src/image/demo/preview-group-top-progress.vue",
+          "packages/ui/src/image/demo/preview-group.vue"
         ]
       },
       "slotTest": {

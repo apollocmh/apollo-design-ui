@@ -16,7 +16,9 @@ let finishPending: (() => void) | undefined;
 const confirm = () => {
   confirms.value++;
   pending.value = true;
-  return new Promise<void>((resolve) => { finishPending = resolve; });
+  return new Promise<void>((resolve) => {
+    finishPending = resolve;
+  });
 };
 const onConfirmOpenChange = (next: boolean) => {
   if (confirms.value > 0) confirmOpen.value = next;

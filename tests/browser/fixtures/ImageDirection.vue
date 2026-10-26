@@ -12,8 +12,23 @@ const note = ref('Initial direction note');
 const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="#38598b"/></svg>')}`;
 const left = h('span', { 'data-direction-icon': 'left', 'aria-hidden': 'true' }, 'L');
 const right = h('span', { 'data-direction-icon': 'right', 'aria-hidden': 'true' }, 'R');
-const preview = computed<PreviewConfig>(() => mode.value === 'custom' ? { icons: { left, right } } : mode.value === 'partial' ? { icons: { left } } : mode.value === 'empty' ? { icons: { left: null } } : {});
-function mountGallery(next: 'ltr' | 'rtl') { direction.value = next; mode.value = 'default'; epoch.value++; open.value = false; current.value = 0; note.value = 'Initial direction note'; }
+const preview = computed<PreviewConfig>(() =>
+  mode.value === 'custom'
+    ? { icons: { left, right } }
+    : mode.value === 'partial'
+      ? { icons: { left } }
+      : mode.value === 'empty'
+        ? { icons: { left: null } }
+        : {},
+);
+function mountGallery(next: 'ltr' | 'rtl') {
+  direction.value = next;
+  mode.value = 'default';
+  epoch.value++;
+  open.value = false;
+  current.value = 0;
+  note.value = 'Initial direction note';
+}
 </script>
 
 <template>

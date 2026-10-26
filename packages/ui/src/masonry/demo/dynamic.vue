@@ -1,11 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 dynamic demo：增删条目 + 用 `onLayoutChange` 把算出来的列号写回 items
 // （写回之后条目就「钉」在该列，后续不再被自动重排）。
-import {
-  Button,
-  Masonry,
-  type MasonryLayoutItem,
-} from '@apollo-design/ui';
+import { Button, Masonry, type MasonryLayoutItem } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const tileStyle = {

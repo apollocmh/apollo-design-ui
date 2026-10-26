@@ -9,7 +9,9 @@ const items = ref([
   { key: 'created', title: '2026-10-24', content: 'Created' },
   { key: 'reviewed', title: '2026-10-25', content: 'Reviewed' },
 ]);
-const update = () => { items.value = items.value.map(item => ({ ...item, content: `${item.content}!` })); };
+const update = () => {
+  items.value = items.value.map((item) => ({ ...item, content: `${item.content}!` }));
+};
 </script>
 
 <template>

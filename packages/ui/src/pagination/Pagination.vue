@@ -39,8 +39,8 @@ import {
   h,
   normalizeStyle,
   type PropType,
-  type SlotsType,
   ref,
+  type SlotsType,
   useAttrs,
   type VNodeChild,
   watch,
@@ -523,20 +523,24 @@ export default defineComponent({
         for (const item of pagerList.value) {
           if (item.kind === 'page') {
             items.push(
-              h(Pager, {
-                key: `page-${item.page}`,
-                rootPrefixCls: p,
-                page: item.page,
-                active: item.active,
-                itemClassName: classNames.item,
-                itemStyle: styles.item,
-                // ⚠️ 三选一：`allPages === 0` 的占位项（`-item-disabled`，rc 由外层传入）
-                //    或跳页项相邻的补类
-                extraClass: item.disabled ? 'item-disabled' : item.extraClass,
-                showTitle: props.showTitle,
-                onClick: (page: number) => changeCurrent(page),
-                onKeydown: runIfEnter as never,
-              }, slots.itemRender ? { default: slots.itemRender } : {}),
+              h(
+                Pager,
+                {
+                  key: `page-${item.page}`,
+                  rootPrefixCls: p,
+                  page: item.page,
+                  active: item.active,
+                  itemClassName: classNames.item,
+                  itemStyle: styles.item,
+                  // ⚠️ 三选一：`allPages === 0` 的占位项（`-item-disabled`，rc 由外层传入）
+                  //    或跳页项相邻的补类
+                  extraClass: item.disabled ? 'item-disabled' : item.extraClass,
+                  showTitle: props.showTitle,
+                  onClick: (page: number) => changeCurrent(page),
+                  onKeydown: runIfEnter as never,
+                },
+                slots.itemRender ? { default: slots.itemRender } : {},
+              ),
             );
           } else {
             const isPrev = item.kind === 'jump-prev';
@@ -563,7 +567,11 @@ export default defineComponent({
                   onClick: () => changeCurrent(item.page),
                   onKeydown: (e: KeyboardEvent) => runIfEnter(e, () => changeCurrent(item.page)),
                 },
-                [slots.itemRender ? slots.itemRender({ page: item.page, type: item.kind, element: icon }) : icon],
+                [
+                  slots.itemRender
+                    ? slots.itemRender({ page: item.page, type: item.kind, element: icon })
+                    : icon,
+                ],
               ),
             );
           }

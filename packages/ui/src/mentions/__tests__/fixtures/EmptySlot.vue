@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ConfigProvider, Mentions } from '../../../index';
+
 const present = ref(true);
 const blank = ref(false);
 const text = ref('Current empty message');

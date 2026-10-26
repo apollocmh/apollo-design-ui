@@ -234,7 +234,9 @@ const motionKeys = computed(() =>
 );
 
 /** Use normal grid flow until every current item has a measured position. */
-const layoutReady = computed(() => motionKeys.value.every(({ position }) => position !== undefined));
+const layoutReady = computed(() =>
+  motionKeys.value.every(({ position }) => position !== undefined),
+);
 
 /**
  * key（`String()` 化）→ **最近一次**的渲染数据。

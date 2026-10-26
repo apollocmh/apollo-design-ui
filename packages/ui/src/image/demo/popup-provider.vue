@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { ConfigProvider, type ConfigProviderProps, Image, ImagePreviewGroup, type ImageSemanticType } from '@apollo-design/ui';
+import {
+  ConfigProvider,
+  type ConfigProviderProps,
+  Image,
+  ImagePreviewGroup,
+  type ImageSemanticType,
+} from '@apollo-design/ui';
 import { ref, shallowRef } from 'vue';
 
 const phase = ref(0);
 const direction = ref<'ltr' | 'rtl'>('ltr');
-const toggleDirection = () => { direction.value = direction.value === 'ltr' ? 'rtl' : 'ltr'; };
+const toggleDirection = () => {
+  direction.value = direction.value === 'ltr' ? 'rtl' : 'ltr';
+};
 const labels = ['empty', 'A', 'B', 'removed'];
 const components = shallowRef<NonNullable<ConfigProviderProps['components']>>({});
 const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140"><rect width="240" height="140" fill="#38598b"/></svg>')}`;
@@ -12,12 +20,25 @@ function cycle() {
   phase.value = (phase.value + 1) % labels.length;
   const mode = phase.value === 1 ? 'A' : phase.value === 2 ? 'B' : undefined;
   const image: ImageSemanticType = {
-    classNames: { popup: { root: `popup-demo-${mode}`, mask: `popup-demo-${mode}-mask`, close: `popup-demo-${mode}-close` } },
-    styles: { popup: {
-      root: { '--popup-demo-mode': mode ?? '', boxShadow: `inset 0 0 0 var(--apollo-line-width-bold) var(--apollo-color-${mode === 'A' ? 'primary' : 'success'}-border)` },
-      mask: { '--popup-demo-mask': mode ?? '' },
-      close: { outline: `var(--apollo-line-width) solid var(--apollo-color-${mode === 'A' ? 'primary' : 'success'}-border)` },
-    } },
+    classNames: {
+      popup: {
+        root: `popup-demo-${mode}`,
+        mask: `popup-demo-${mode}-mask`,
+        close: `popup-demo-${mode}-close`,
+      },
+    },
+    styles: {
+      popup: {
+        root: {
+          '--popup-demo-mode': mode ?? '',
+          boxShadow: `inset 0 0 0 var(--apollo-line-width-bold) var(--apollo-color-${mode === 'A' ? 'primary' : 'success'}-border)`,
+        },
+        mask: { '--popup-demo-mask': mode ?? '' },
+        close: {
+          outline: `var(--apollo-line-width) solid var(--apollo-color-${mode === 'A' ? 'primary' : 'success'}-border)`,
+        },
+      },
+    },
   };
   components.value = mode ? { image: { ...image } } : {};
 }

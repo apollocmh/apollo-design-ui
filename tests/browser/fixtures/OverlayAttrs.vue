@@ -1,17 +1,28 @@
 <script setup lang="ts">
-import { Popconfirm, PopconfirmPurePanel, Popover, PopoverPurePanel, TooltipPurePanel } from '@apollo-design/ui';
+import {
+  Popconfirm,
+  PopconfirmPurePanel,
+  Popover,
+  PopoverPurePanel,
+  TooltipPurePanel,
+} from '@apollo-design/ui';
 import { type ClassValue, computed, ref, type StyleValue } from 'vue';
 
 const phase = ref(0);
 const attrs = computed<{ class: ClassValue; style: StyleValue }>(() => ({
   class: ['native-attrs', { first: phase.value === 0, next: phase.value === 1 }],
-  style: phase.value === 0
-    ? 'max-width: 310px; padding-top: 9px; --native-phase: first'
-    : phase.value === 1
-      ? ['max-width: 340px; --native-phase: second', { paddingBottom: '10px' }]
-      : undefined,
+  style:
+    phase.value === 0
+      ? 'max-width: 310px; padding-top: 9px; --native-phase: first'
+      : phase.value === 1
+        ? ['max-width: 340px; --native-phase: second', { paddingBottom: '10px' }]
+        : undefined,
 }));
-const styles = { root: { minHeight: '70px', maxWidth: '220px' }, container: { borderRadius: '14px', paddingTop: '6px' }, arrow: { opacity: 0.4 } };
+const styles = {
+  root: { minHeight: '70px', maxWidth: '220px' },
+  container: { borderRadius: '14px', paddingTop: '6px' },
+  arrow: { opacity: 0.4 },
+};
 </script>
 
 <template>
