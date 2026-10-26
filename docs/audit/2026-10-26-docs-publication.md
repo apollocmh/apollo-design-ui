@@ -46,3 +46,11 @@ List实现里程碑已提交并推送 `23de152079c096fccf34d0f3907a8f649276de2b`
 线上通用发布检查33项、List实际示例检查14项分别通过，均零页面/Vue错误，未累加为唯一场景数：SSR指南含本阶段数据；主题覆盖/移除/恢复保持行DOM，点赞更新整表extra；更新日志和可见构建源码都为23de1520。移动/暗色截图再次查看通过；Image原有分组删除/焦点与富缩略图交互仍通过。完整作业、Pages状态、线上实际值见 [本次发布证据](evidence/docs-publication-list-update.json)。
 
 线上入口：[整改进展](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)、[List](https://apollocmh.github.io/apollo-design-ui/components/list.html)、[Image](https://apollocmh.github.io/apollo-design-ui/components/image.html)、[更新日志](https://apollocmh.github.io/apollo-design-ui/changelog.html)。后续里程碑继续同步本页和进度入口，不以后台提交数量代替可见交付。
+
+## 后续发布：List完整验收已上线
+
+已发布源码 `c5c92e1b297324dfb5bb344e0d4bcfdc527cf96b`，包含实现5336ff77与57张List视觉批准/完整清单收口。采用既有手动入口的 [Deploy Docs 40294762494](https://github.com/apollocmh/apollo-design-ui/actions/runs/40294762494) 两个作业均success；Pages deployment **7327707725**成功。CI的14文件157条Docs测试、全部包构建和L7共151项通过，FAIL=0/PENDING=0、n/a=67。
+
+线上Chrome150通用33项通过，源码标记与日志均为c5c92e1b；独立脚本逐页打开全部12个List实际Demo和Spin全屏Demo，共13页通过、零Vue/页面错误。全屏计时开关保留原生编辑器身份、值和正文位置，覆盖层几何/关闭inert正确。SSR进度指南实际包含List完整清单收口、57张、512条与下一单元Spin完整盘点。手机暗色截图已再次查看，无横向溢出；原有Image真实交互保持通过。
+
+本次 [持久化发布证据](evidence/docs-publication-list-closure.json) 分开记录Actions、Pages、线上33检查、13实际Demo与未验范围，不把重叠场景累加为唯一检查数。当前站点已展示List收口和后续边界；Spin完整审计及最终同一提交全库门禁继续开放。

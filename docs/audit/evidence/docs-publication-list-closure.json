@@ -1,0 +1,285 @@
+{
+  "sourceCommit": "c5c92e1b297324dfb5bb344e0d4bcfdc527cf96b",
+  "workflow": {
+    "id": 40294762494,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40294762494",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "构建文档站",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-26T08:47:51Z",
+        "completedAt": "2026-10-26T08:53:37Z"
+      },
+      {
+        "name": "发布到 GitHub Pages",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-10-26T08:53:41Z",
+        "completedAt": "2026-10-26T08:53:50Z"
+      }
+    ]
+  },
+  "pages": {
+    "deploymentId": 7327707725,
+    "status": "success",
+    "createdAt": "2026-10-26T08:53:51Z",
+    "environmentUrl": "https://apollocmh.github.io/apollo-design-ui/"
+  },
+  "ciChecks": {
+    "docsFiles": 14,
+    "docsTests": 157,
+    "l7Checks": 151,
+    "fail": 0,
+    "pending": 0,
+    "notApplicable": 67,
+    "log": "/tmp/apollo-list-docs-deploy-c5.log"
+  },
+  "onlineGuide": {
+    "status": 200,
+    "assertedContent": [
+      "完整清单已收口",
+      "57张",
+      "512",
+      "Spin完整契约盘点"
+    ]
+  },
+  "online": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "c5c92e1b",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "c5c92e1b"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "demos": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "passed": true,
+        "width": 1232,
+        "height": 291
+      },
+      {
+        "demo": "component-token",
+        "passed": true,
+        "width": 1232,
+        "height": 443.421875
+      },
+      {
+        "demo": "empty",
+        "passed": true,
+        "width": 1232,
+        "height": 162
+      },
+      {
+        "demo": "grid",
+        "passed": true,
+        "width": 1232,
+        "height": 286
+      },
+      {
+        "demo": "item-extra",
+        "passed": true,
+        "width": 1232,
+        "height": 284
+      },
+      {
+        "demo": "loadmore",
+        "passed": true,
+        "width": 1232,
+        "height": 138
+      },
+      {
+        "demo": "pagination-simple",
+        "passed": true,
+        "width": 1232,
+        "height": 291
+      },
+      {
+        "demo": "pagination",
+        "passed": true,
+        "width": 1232,
+        "height": 229
+      },
+      {
+        "demo": "responsive",
+        "passed": true,
+        "width": 1232,
+        "height": 286
+      },
+      {
+        "demo": "simple",
+        "passed": true,
+        "width": 1232,
+        "height": 330
+      },
+      {
+        "demo": "spin-debug",
+        "passed": true,
+        "width": 1232,
+        "height": 140
+      },
+      {
+        "demo": "vertical",
+        "passed": true,
+        "width": 1232,
+        "height": 603
+      },
+      {
+        "demo": "spin/fullscreen",
+        "passed": true,
+        "stableEditor": true,
+        "maskBox": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 900
+        }
+      }
+    ],
+    "issues": []
+  },
+  "visualReview": {
+    "image": "/tmp/apollo-docs-list-closure-online-mobile-dark.png",
+    "reviewed": true,
+    "observation": "Readable dark mobile homepage, intact progress link and native controls, no horizontal overflow; guide language and route checks recorded separately."
+  },
+  "boundary": "This publishes the closed List unit at c5c92e1b. Spin complete audit and whole-library runtime gates remain open."
+}
