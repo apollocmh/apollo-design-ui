@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useSiteLocale } from '../composables/locale';
 import { loadChangelog } from '../composables/manifest';
 import { useTocState } from '../composables/toc';
 import type { ChangelogDay } from '../types/manifest';
 
-const { t } = useSiteLocale();
+const { locale, t } = useSiteLocale();
 const { setToc } = useTocState();
 onMounted(() => setToc([]));
 
 const days = ref<ChangelogDay[]>([]);
 const state = ref<'loading' | 'ready' | 'error'>('loading');
+const latestCommit = computed(() => days.value[0]?.commits[0]);
 
 onMounted(async () => {
   try {
@@ -45,6 +46,14 @@ const TYPE_COLOR: Record<string, string> = {
           ? '按提交日期分组的仓库更新历史（git log 真源，构建期生成）。'
           : 'Repository history grouped by commit date (generated from git log at build time).'
       }}
+    </p>
+
+    <p class="changelog-lead">
+      <RouterLink to="/guide/audit-progress">{{ locale === 'zh-CN' ? '先看本轮已交付内容、可运行示例与剩余工作 →' : 'See delivered changes, live examples and remaining work →' }}</RouterLink>
+      <template v-if="latestCommit">
+        · {{ locale === 'zh-CN' ? '本站源码' : 'Site source' }}
+        <a :href="`https://github.com/apollocmh/apollo-design-ui/commit/${latestCommit.hash}`" target="_blank" rel="noopener noreferrer">{{ latestCommit.hash.slice(0, 8) }}</a>
+      </template>
     </p>
 
     <div v-if="state === 'loading'" class="changelog-state">{{ t('loading') }}</div>

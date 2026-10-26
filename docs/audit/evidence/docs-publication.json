@@ -1,0 +1,246 @@
+{
+  "baseCommit": "11926cc2",
+  "before": {
+    "status": 200,
+    "title": "Apollo Design - 独立发展的 Vue 3 原生组件库",
+    "commits": 1,
+    "firstCommit": "0ecf0f29",
+    "firstDate": "2026-10-24",
+    "progressLink": 0
+  },
+  "gates": [
+    {
+      "gate": "content:build",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "content:build"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-docs-publication-final-content-build.log"
+    },
+    {
+      "gate": "content:check",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "content:check"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-docs-publication-final-content-check.log"
+    },
+    {
+      "gate": "typecheck",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-docs-publication-final-typecheck.log"
+    },
+    {
+      "gate": "test",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "test"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-docs-publication-final-test.log"
+    },
+    {
+      "gate": "build",
+      "command": [
+        "pnpm",
+        "--filter",
+        "@apollo-design/docs",
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "log": "/tmp/apollo-docs-publication-final-build.log"
+    }
+  ],
+  "localBrowser": {
+    "base": "http://127.0.0.1:4477/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "11926cc2",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/deploy-docs.yml",
+      "sha256": "f0c23c7ef84febf3146628ce3d3a3df2c37ed81d6675ce56430684c030ae8f4e"
+    },
+    {
+      "path": "packages/docs/src/pages/HomePage.vue",
+      "sha256": "64b0d8c7416eed70b72c97623f191f3c39556f8901604f71cca92f0ac76cdcf7"
+    },
+    {
+      "path": "packages/docs/src/pages/ChangelogPage.vue",
+      "sha256": "2a7ea7780026adccc8bfbd52295792c9401c102117e3f6102d4157cb36438f91"
+    },
+    {
+      "path": "packages/docs/content/guide/audit-progress.md",
+      "sha256": "cd78079ed4c7deef6c936b7a2a5e5d5caea2476b92b15123689c7575127f63f4"
+    },
+    {
+      "path": "packages/docs/tests/manifest.test.ts",
+      "sha256": "f1b0c9ece9e55d76ddff7164f2fb332e011de6cabdce78eb2d3f11214b05587b"
+    }
+  ],
+  "review": [
+    "Desktop and mobile-dark home screenshots reviewed; no clipped progress entry or horizontal overflow.",
+    "Theme capture waits for the actual text-color update and animations to finish; initial in-flight colors were not treated as a product defect."
+  ],
+  "deployment": {
+    "status": "pending",
+    "workflow": "Deploy Docs",
+    "previousRun": 40047212448,
+    "previousSourceCommit": "0ecf0f29c76c403f1d40824372ed18269ece7ba4"
+  },
+  "bounds": [
+    "This publishes verified development milestones; whole-library remediation remains ongoing.",
+    "H05 warnings and infos remain recorded.",
+    "Local build/browser evidence is separate from deployment and online verification."
+  ]
+}

@@ -48,6 +48,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+        with:
+          # 更新日志读取最近600条提交；默认浅克隆只会显示发布提交。
+          fetch-depth: 0
       - uses: ./.github/actions/setup
 
       # 发布前先跑文档站自己的门禁（2026-10-21 审计 A04）。

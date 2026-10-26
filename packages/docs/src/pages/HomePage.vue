@@ -69,6 +69,11 @@ onMounted(async () => {
       </div>
     </section>
 
+    <RouterLink class="home-progress" to="/guide/audit-progress">
+      <strong>{{ locale === 'zh-CN' ? '2026-10-26 · 整改进展' : '2026-10-26 · Audit progress' }}</strong>
+      <span>{{ locale === 'zh-CN' ? 'Image完整审计已验收，格式门禁已修复。查看本轮改动与可运行示例 →' : 'Image audit verified; formatting gate repaired. See delivered changes and live examples →' }}</span>
+    </RouterLink>
+
     <!-- 真实组件实时示例（客户端挂载） -->
     <section v-if="hero.Button" class="home-demo" :aria-label="t('liveDemo')">
       <component :is="hero.Space" wrap align="center" style="row-gap: 12px">
@@ -155,6 +160,23 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   gap: 8px;
+}
+
+.home-progress {
+  display: grid;
+  gap: 8px;
+  margin: 32px auto 0;
+  padding: 18px 20px;
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  background: var(--site-bg-soft);
+  text-align: left;
+  color: var(--site-text);
+}
+
+.home-progress span {
+  color: var(--site-text-secondary);
+  font-size: 14px;
 }
 
 .home-demo {
