@@ -76,7 +76,11 @@ export default defineComponent({
       );
       const content = h(
         'div',
-        { class: [`${cls}-content`, classes.content], style: [props.valueStyle, styles.content] },
+        {
+          key: 'content',
+          class: [`${cls}-content`, classes.content],
+          style: [props.valueStyle, styles.content],
+        },
         [
           !isEmptyVNode(before)
             ? h(
@@ -119,6 +123,7 @@ export default defineComponent({
             onMouseleave: props.onMouseleave,
           },
           attrs,
+          props.loading ? { 'aria-busy': 'true' } : {},
         ),
         [
           !isEmptyVNode(title)
@@ -132,17 +137,11 @@ export default defineComponent({
                 ],
               )
             : null,
-          h(
-            Skeleton,
-            {
-              key: 'content',
-              paragraph: false,
-              loading: props.loading,
-              class: `${cls}-skeleton`,
-              active: true,
-            },
-            { default: () => content },
-          ),
+          props.loading
+            ? h('div', { key: 'loading', class: `${cls}-skeleton`, 'aria-hidden': 'true' }, [
+                h(Skeleton, { paragraph: false, loading: true, active: true }),
+              ])
+            : content,
         ],
       );
     };

@@ -38,7 +38,7 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 - [全屏加载与保留原生输入](/components/spin/demo/fullscreen)
 - [List 完整盘点、统一验收与边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
-**Statistic / Timer / Countdown已完成整组盘点并集中修复，正在统一验收。** 原生值槽、当前计时方向/事件、SSR与卸载清理、完整attrs/ref、Provider与两字号Token已实现。84条四层、94条相关类型、42项生产浏览器、5项SSR、6组水合及发布声明通过；原7Demo及两组实际交互通过，自有视觉和最终验收仍开放。
+**Statistic / Timer / Countdown已完成整组盘点并集中修复，正在统一验收。** 原生值槽、当前计时方向/事件、SSR与卸载清理、完整attrs/ref、Provider与两字号Token已实现。86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合及发布声明通过；原7Demo及两组实际交互通过，自有视觉和最终验收仍开放。
 
 - [可重启计时与稳定输入](/components/statistic/demo/timer)
 - [当前字号Token与原生覆盖](/components/statistic/demo/component-token)
@@ -95,7 +95,7 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 
 [List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Fullscreen with a native editor](/components/spin/demo/fullscreen) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
-**Statistic / Timer / Countdown are under unified acceptance after a complete inventory and grouped fixes.** Native value slots, live direction/events, safe SSR/cleanup, complete attrs/refs, current Provider and both font tokens are implemented. Passing evidence includes 84 runtime/DOM/accessibility/theme tests, 94 related type tests, 42 browser checks, five SSR checks, six hydration groups and published declarations. All seven actual demos and both interaction groups pass; owned visuals and final acceptance remain open.
+**Statistic / Timer / Countdown are under unified acceptance after a complete inventory and grouped fixes.** Native value slots, live direction/events, safe SSR/cleanup, complete attrs/refs, current Provider and both font tokens are implemented. Passing evidence includes 86 runtime/DOM/accessibility/theme tests, 94 related type tests, 46 browser checks, five SSR checks, six hydration groups and published declarations. All seven actual demos and both interaction groups pass; owned visuals and final acceptance remain open.
 
 [Restartable clocks and native editors](/components/statistic/demo/timer) · [Current font tokens](/components/statistic/demo/component-token) · [Statistic checklist](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
 

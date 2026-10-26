@@ -34,3 +34,5 @@ Timer移除原来声明但被内部格式化覆盖的formatter，以及对计时
 具名及Statistic.Timer/Countdown静态导出的类型同步；删除StatisticFormatter，新增StatisticSlots/StatisticValueSlotProps/StatisticTimerSlots/StatisticTimerValueSlotProps。SSR安全、原生槽与计时回归、类型正反例、真实SFC/发布声明和生产浏览器均列入[统一验收清单](../audit/2026-10-27-statistic-contract-audit.md)，具体已验结果以该记录为准。
 
 默认标题从低对比度colorTextDescription改为colorTextSecondary；生产浏览器修前测得3.36:1。默认字号以当前Alias为准，实际fontSizeHeading3为24，准备函数不再另设30的硬编码后备。
+
+加载时Statistic根明确aria-busy，装饰性骨架由本组件加载层aria-hidden排除；加载结束恢复真实正文。Skeleton本身不透传这些attrs，因此语义由Statistic自有层承接，不靠修改共享Skeleton或屏蔽axe规则。

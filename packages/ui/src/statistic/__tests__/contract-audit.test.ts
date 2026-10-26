@@ -483,3 +483,21 @@ it('keeps the nearest Provider and neighboring local styles independent during o
   ).toContain('green');
   expect(wrapper.get('input').element).toBe(editor);
 });
+
+it('marks the actual loading region busy, hides only decorative placeholders and restores accessible content', async () => {
+  const wrapper = track(
+    mount(Statistic, {
+      attrs: { 'aria-busy': 'false' },
+      slots: { value: () => h('button', 'Visible value action') },
+    }),
+  );
+  expect(wrapper.get('button').text()).toBe('Visible value action');
+  await wrapper.setProps({ loading: true });
+  expect(wrapper.get('.apollo-statistic').attributes('aria-busy')).toBe('true');
+  expect(wrapper.get('.apollo-statistic-skeleton').attributes('aria-hidden')).toBe('true');
+  expect(wrapper.find('button').exists()).toBe(false);
+  await wrapper.setProps({ loading: false });
+  expect(wrapper.get('.apollo-statistic').attributes('aria-busy')).toBe('false');
+  expect(wrapper.get('button').element.closest('[aria-hidden="true"]')).toBeNull();
+  expect(wrapper.find('.apollo-statistic-skeleton').exists()).toBe(false);
+});

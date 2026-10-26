@@ -20,7 +20,7 @@ All seven examples remain: basic/loading, units, card layout, formatted native v
 | precision | Truncate/pad decimal digits, negative to zero, fractions toward zero; ignore nonfinite values; no rounding | `number` | Preserve input decimals |
 | decimalSeparator | Literal decimal separator | `string` | `'.'` |
 | groupSeparator | Literal grouping text, including dollar replacement characters | `string` | `','` |
-| loading | Replace/unmount content with Skeleton; rebuild content when restored | `boolean` | `false` |
+| loading | Mark root busy and replace/unmount content with a decorative, aria-hidden Skeleton; rebuild when restored | `boolean` | `false` |
 | valueStyle | Existing deprecated content style alias; styles.content wins; existing setup-time warning retained | `CSSProperties` | — |
 | classNames / styles | Seven semantic targets; object or `({ props }) => object` using current props/Provider | Exported types | — |
 | onMouseenter / onMouseleave | Native root mouse listeners, also `@mouseenter`/`@mouseleave` | `(event: MouseEvent) => void` | — |

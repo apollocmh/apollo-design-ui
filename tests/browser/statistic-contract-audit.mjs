@@ -184,7 +184,21 @@ try {
       await main.locator('.apollo-statistic-content').count(),
       0,
     );
+    check('actual loading root is busy', await main.getAttribute('aria-busy'), 'true');
+    check(
+      'decorative loading layer is hidden from accessibility',
+      await main.locator('.apollo-statistic-skeleton').getAttribute('aria-hidden'),
+      'true',
+    );
+    await page.clock.resume();
+    check(
+      'actual loading content passes axe',
+      await main.evaluate(async (n) => (await window.axe.run(n)).violations.map((v) => v.id)),
+      [],
+    );
+    await page.clock.pauseAt(new Date((await page.evaluate(() => Date.now())) + 1000));
     await page.evaluate(() => window.statisticAudit.set({ loading: false }));
+    check('loaded root clears its own busy state', await main.getAttribute('aria-busy'), null);
     check(
       'loading restores controlled draft',
       await editor.inputValue(),

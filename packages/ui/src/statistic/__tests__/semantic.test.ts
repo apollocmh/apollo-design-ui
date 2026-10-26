@@ -14,11 +14,13 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { expect, it } from 'vitest';
 import { defineComponent, h, provide, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/statistic.dom.json';
 import type { ConfigContextValue } from '../../config-provider/context';
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { Statistic, StatisticTimer } from '../index';
+import differences from './native-contract-reference-diffs.json';
 
 /**
  * 在指定的 ConfigProvider 上下文下渲染（button/semantic 同范式）：
@@ -125,11 +127,23 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Statistic', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: {
+    'statistic:loading': {
+      reason:
+        'Statistic owns its busy loading region and decorative hidden layer; the skeleton appearance remains, while loaded native content is directly owned. These exact structural/ARIA changes fix the confirmed empty-heading browser failure. See docs/migrations/statistic-contracts.md.',
+      diff: differences['statistic:loading'],
+    },
+  },
   render: (id) => {
     const spec = specs[id];
     if (!spec)
       throw new Error(`[Statistic L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     return spec.render();
   },
+});
+
+it('retains every original reference scenario alongside the exact owned loading changes', () => {
+  expect(baseline.cases).toHaveLength(17);
+  expect(Object.keys(specs).sort()).toEqual(baseline.cases.map((c) => c.id).sort());
+  expect(Object.keys(differences)).toEqual(['statistic:loading']);
 });

@@ -353,7 +353,7 @@
     },
     {
       "file": "packages/ui/src/statistic/Statistic.ts",
-      "sha256": "af4bdc1bc2c038c244ff16125657c57a0b9a7869da82410b39fc5feb422f3631"
+      "sha256": "81f8b602fd4af1ff63ee650cc0fd72498d695908eda301248bd54dcfc42f1a5d"
     },
     {
       "file": "packages/ui/src/statistic/Timer.ts",
@@ -388,7 +388,7 @@
       "sha256": "e3a06c523f71a86351597b9fded27eb6c3ef0469cbf4bdf64d73b2bf3b53c7f6"
     }
   ],
-  "sourceSha256": "8d5a00715e34ae2e0c61db73d18816cab80d981c2ab7a004721464d0b825d763",
+  "sourceSha256": "d4dbe264547d00bdf6a00798d4e119dccf405550482b0a98df777bdcce5917e6",
   "browserAfter": {
     "browser": "150.0.7871.125",
     "results": [
@@ -537,6 +537,30 @@
         "passed": true
       },
       {
+        "name": "actual loading root is busy",
+        "actual": "true",
+        "expected": "true",
+        "passed": true
+      },
+      {
+        "name": "decorative loading layer is hidden from accessibility",
+        "actual": "true",
+        "expected": "true",
+        "passed": true
+      },
+      {
+        "name": "actual loading content passes axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "loaded root clears its own busy state",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
         "name": "loading restores controlled draft",
         "actual": "Persistent browser draft",
         "expected": "Persistent browser draft",
@@ -562,8 +586,8 @@
       },
       {
         "name": "native editor change is not a business duration",
-        "actual": 83,
-        "expected": 83,
+        "actual": 106,
+        "expected": 106,
         "passed": true
       },
       {
@@ -592,8 +616,8 @@
       },
       {
         "name": "completed timer has no further changes",
-        "actual": 203,
-        "expected": 203,
+        "actual": 226,
+        "expected": 226,
         "passed": true
       },
       {
@@ -610,14 +634,14 @@
       },
       {
         "name": "invalid target has no effects",
-        "actual": 234,
-        "expected": 234,
+        "actual": 257,
+        "expected": 257,
         "passed": true
       },
       {
         "name": "unmounted clock has no effects",
-        "actual": 234,
-        "expected": 234,
+        "actual": 257,
+        "expected": 257,
         "passed": true
       },
       {
@@ -673,10 +697,10 @@
     "events": []
   },
   "currentFourLayers": {
-    "total": 84,
-    "passed": 84,
-    "failed": 0,
     "files": 7,
+    "total": 86,
+    "passed": 86,
+    "failed": 0,
     "cases": [
       {
         "name": "Statistic complete contract uses complete current slots before text props, including intentional emptiness",
@@ -732,6 +756,10 @@
       },
       {
         "name": "keeps the nearest Provider and neighboring local styles independent during outer replacement",
+        "status": "passed"
+      },
+      {
+        "name": "marks the actual loading region busy, hides only decorative placeholders and restores accessible content",
         "status": "passed"
       },
       {
@@ -947,6 +975,10 @@
         "status": "passed"
       },
       {
+        "name": "retains every original reference scenario alongside the exact owned loading changes",
+        "status": "passed"
+      },
+      {
         "name": "Statistic · a11y（axe） demo 条数等于 expectCount（7）",
         "status": "passed"
       },
@@ -1095,7 +1127,12 @@
     "historicalMeasuredKB": 23.7,
     "failedBefore": "/tmp/apollo-statistic-l7-before-budget.log",
     "passedAfter": "/tmp/apollo-statistic-l7.log",
-    "reason": "Required current source-theme resolution and native content/clock contracts; bounded single-entry technical revision as authorized by the user and the budget policy. All other budgets, historical measurements and ratio guard unchanged."
+    "reason": "Required current source-theme resolution and native content/clock contracts; bounded single-entry technical revision as authorized by the user and the budget policy. All other budgets, historical measurements and ratio guard unchanged.",
+    "finalMeasurement": {
+      "bytes": 43649,
+      "kibibytes": 42.6259765625,
+      "budgetKB": 43
+    }
   },
   "currentTypes": {
     "total": 94,
@@ -1188,6 +1225,75 @@
       "command": "pnpm audit:content-slots:check",
       "result": "528 rows / 199 review candidates; source evidence only",
       "log": "/tmp/apollo-statistic-inventory.log"
+    },
+    {
+      "command": "loading correction: four layers, strict types, UI build, browser, hydration, SSR, published types and UI L7",
+      "result": "86 four-layer tests; 46 browser checks; six hydration groups; five SSR checks; strict types/build/published declarations/L7 pass",
+      "logs": [
+        "/tmp/apollo-statistic-loading-four-layers.log",
+        "/tmp/apollo-statistic-loading-types.log",
+        "/tmp/apollo-statistic-loading-build.log",
+        "/tmp/apollo-statistic-loading-browser.log",
+        "/tmp/apollo-statistic-loading-hydration.log",
+        "/tmp/apollo-statistic-loading-ssr.log",
+        "/tmp/apollo-statistic-loading-published-types.log",
+        "/tmp/apollo-statistic-loading-l7.log"
+      ]
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run build && node tests/browser/statistic-docs.mjs",
+      "result": "post-loading-fix SSG and all seven actual demos/two interactions pass",
+      "logs": [
+        "/tmp/apollo-statistic-loading-docs-content.log",
+        "/tmp/apollo-statistic-loading-docs-build.log",
+        "/tmp/apollo-statistic-loading-docs-browser.log"
+      ]
     }
-  ]
+  ],
+  "initialImplementationCommit": "111fa024edf42f7f4cfe4005b53c6cb59037b3bd",
+  "firstCleanVisualCapture": {
+    "sourceCommit": "111fa024edf42f7f4cfe4005b53c6cb59037b3bd",
+    "expected": 36,
+    "captured": 33,
+    "failed": [
+      {
+        "id": "statistic/loading__light__mobile",
+        "verdict": "FAIL",
+        "reason": "render-error",
+        "message": "actual statistic content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'empty-heading',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element does not have text that is visible to screen readers\\n' +\n+         '  aria-label attribute does not exist or is empty\\n' +\n+         '  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\\n' +\n+         '  Element has no title attribute'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "id": "statistic/loading__light__tablet",
+        "verdict": "FAIL",
+        "reason": "render-error",
+        "message": "actual statistic content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'empty-heading',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element does not have text that is visible to screen readers\\n' +\n+         '  aria-label attribute does not exist or is empty\\n' +\n+         '  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\\n' +\n+         '  Element has no title attribute'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "id": "statistic/loading__light__desktop",
+        "verdict": "FAIL",
+        "reason": "render-error",
+        "message": "actual statistic content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'empty-heading',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element does not have text that is visible to screen readers\\n' +\n+         '  aria-label attribute does not exist or is empty\\n' +\n+         '  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\\n' +\n+         '  Element has no title attribute'\n+     ]\n+   }\n+ ]\n- []\n"
+      }
+    ],
+    "approved": false
+  },
+  "loadingBefore": {
+    "failed": 1,
+    "cases": [
+      {
+        "name": "marks the actual loading region busy, hides only decorative placeholders and restores accessible content",
+        "status": "failed"
+      }
+    ]
+  },
+  "loadingReferenceDifferences": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[1]: 类名不同 [apollo-skeleton apollo-skeleton-active apollo-statistic-skeleton] vs [apollo-statistic-skeleton]",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]/div[0]: 类名不同 [apollo-skeleton-section] vs [apollo-skeleton apollo-skeleton-active]",
+    "$/div[0]/div[1]/div[0]/h3[0]: 标签不同 <h3> vs <div>",
+    "$/div[0]/div[1]/div[0]/h3[0]: 类名不同 [apollo-skeleton-title] vs [apollo-skeleton-section]",
+    "$/div[0]/div[1]/div[0]/h3[0]: 子节点数不同 0 vs 1"
+  ],
+  "runtimeFreezeBeforeLoadingFix": "8d5a00715e34ae2e0c61db73d18816cab80d981c2ab7a004721464d0b825d763"
 }

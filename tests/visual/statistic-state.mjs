@@ -29,6 +29,9 @@ export async function prepareStatisticVisual(page, variant) {
       text: value?.textContent ?? null,
       inputs: root.querySelectorAll('input').length,
       loading: !!root.querySelector('.apollo-skeleton'),
+      busy: root.getAttribute('aria-busy'),
+      decorativeHidden:
+        root.querySelector('.apollo-statistic-skeleton')?.getAttribute('aria-hidden') ?? null,
       prefix: root.querySelector('.apollo-statistic-content-prefix')?.textContent ?? null,
       suffix: root.querySelector('.apollo-statistic-content-suffix')?.textContent ?? null,
       background: getComputedStyle(n).backgroundColor,
@@ -45,6 +48,8 @@ export async function prepareStatisticVisual(page, variant) {
     variant.includes('dark') ? 'rgb(20, 20, 20)' : 'rgb(255, 255, 255)',
   );
   assert.equal(state.loading, variant === 'loading');
+  assert.equal(state.busy, variant === 'loading' ? 'true' : null);
+  assert.equal(state.decorativeHidden, variant === 'loading' ? 'true' : null);
   assert.equal(state.inputs, ['value-content', 'native-focus'].includes(variant) ? 1 : 0);
   assert.equal(state.prefix, variant === 'units' ? '↑' : null);
   assert.equal(state.suffix, variant === 'units' ? '%' : null);

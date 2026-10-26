@@ -556,6 +556,8 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 
 ## 2026-10-27 Statistic整组集中实现（统一验收进行中）
 
-Statistic / Timer / Countdown完整盘点后，集中修正原生#value业务作用域、当前方向/非负计时事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider和两字号Token；标题对比度3.36的真实缺陷已修，默认字号按实际Alias纠正文档与准备函数。84条四层、94条相关类型、42项生产浏览器、5项SSR、6组水合、7个实际Demo和两组交互通过。UI/发布声明/Docs157条及SSG通过；L7严格11项通过，依据技术原因仅Statistic预算41→43KB（实测43578字节），保留历史值/其他预算和占比门禁。
+Statistic / Timer / Countdown完整盘点后，集中修正原生#value业务作用域、当前方向/非负计时事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider和两字号Token；标题对比度3.36的真实缺陷已修，默认字号按实际Alias纠正文档与准备函数。86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合、7个实际Demo和两组交互通过。UI/发布声明/Docs157条及SSG通过；L7严格11项通过，依据技术原因仅Statistic预算41→43KB（最终实测43649字节），保留历史值/其他预算和占比门禁。
 
 自有36图与原完整清单最终核对、最终发布继续开放。内容来源清单当前528行、199项候选，候选不是已确认缺陷；全库最终同一提交门禁仍开放。见[完整清单](audit/2026-10-27-statistic-contract-audit.md)、[统一证据](audit/evidence/statistic-contract.json)、[集中迁移](migrations/statistic-contracts.md)。
+
+首次清洁实现111fa024的视觉采集有3个loading empty-heading失败，已纳入修复：Statistic自有加载层承接aria-hidden、根aria-busy，加载结束恢复正文。共享Skeleton未改；其独立契约进入后续完整盘点。新清洁提交36图仍待验收，原33候选未批准。

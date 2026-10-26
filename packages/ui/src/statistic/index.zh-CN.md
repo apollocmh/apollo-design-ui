@@ -20,7 +20,7 @@ subtitle: 统计数值
 | precision | 截取/补零的小数位，负数取0，小数向零取整，非有限数忽略；不执行四舍五入 | `number` | 保留原小数 |
 | decimalSeparator | 小数点文本 | `string` | `'.'` |
 | groupSeparator | 字面分组文本（包括`$`），不解释替换转义 | `string` | `','` |
-| loading | 骨架代替数值正文；正文卸载，恢复时重建 | `boolean` | `false` |
+| loading | 骨架代替数值正文；根为aria-busy，装饰性骨架不进可访问树；正文恢复时重建 | `boolean` | `false` |
 | valueStyle | 既有废弃别名；`styles.content`优先，初始化传入时保留既有开发警告 | `CSSProperties` | — |
 | classNames / styles | 七语义落点的对象或`({ props }) => 对象`；读取当前props与Provider | 见导出类型 | — |
 | onMouseenter / onMouseleave | 根元素原生鼠标监听，也可写`@mouseenter`/`@mouseleave` | `(event: MouseEvent) => void` | — |

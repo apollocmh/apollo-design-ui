@@ -1304,7 +1304,7 @@
       "a11yStatus": "done",
       "visualStatus": "in-progress",
       "docsStatus": "done",
-      "notes": "2026-10-27 完整盘点后集中实现原生#value、当前计时方向/事件、SSR/卸载清理、完整attrs/ref/Provider和两Token；标题对比度修正。84四层、94类型、42生产浏览器、5 SSR、6水合、7实际Demo/两组交互、发布声明及UI/L7/Docs通过。自有36图与最终清单/发布仍开放；见docs/audit/2026-10-27-statistic-contract-audit.md。",
+      "notes": "2026-10-27 完整盘点后集中实现原生#value、当前计时方向/事件、SSR/卸载清理、完整attrs/ref/Provider和两Token；标题对比度及加载busy/装饰骨架语义修正。86四层、94类型、46生产浏览器、5 SSR、6水合、7实际Demo/两组交互、发布声明及UI/L7/Docs通过。自有36图与最终清单/发布仍开放；见docs/audit/2026-10-27-statistic-contract-audit.md。",
       "layerNotes": {
         "referenceHistory": {
           "interaction": "L2：mouseenter/leave 落根元素；Timer onChange 每帧、onFinish 仅 countdown 且只一次（fake timers）；loading 切换骨架/内容。",
@@ -1315,7 +1315,7 @@
           "visual": "15/15 全 exact（5 variant × 3 viewport）。Timer format 只到「天」避免两侧秒级漂移。"
         },
         "currentAudit": "当前证据docs/audit/evidence/statistic-contract.json：14/13/12运行时Props、四个类型化槽、change/finish emits、7语义落点与两Token；完整清单统一验收中。",
-        "visual": "已定义12状态×3视口；两个脏区预检不可用作批准，等待清洁实现提交完整采集/审图/比较。"
+        "visual": "首次清洁111fa024采集33通过/3加载axe失败，未批准。已补自有busy/隐藏装饰层并通过46项浏览器；等待新清洁提交36图统一验收。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
