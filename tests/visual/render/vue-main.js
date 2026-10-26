@@ -16,12 +16,15 @@ import { SEMANTIC_INJECT_CSS } from './cases/shared.mjs';
 
 /** 组件用例注册表：文件名即组件名。 */
 const modules = import.meta.glob('./cases/vue/*.js', { eager: true });
+const apolloModules = import.meta.glob('./cases/apollo/*.js', { eager: true });
 
 const params = new URLSearchParams(location.search);
 const component = params.get('component') ?? 'empty';
 const variant = params.get('variant') ?? 'default';
 
-const mod = modules[`./cases/vue/${component}.js`];
+const mod =
+  (params.get('apollo') === '1' ? apolloModules[`./cases/apollo/${component}.js`] : undefined) ??
+  modules[`./cases/vue/${component}.js`];
 if (!mod) {
   throw new Error(
     `没有 Vue 用例文件：./cases/vue/${component}.js（已有：${Object.keys(modules).join(', ')}）`,

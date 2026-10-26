@@ -14,6 +14,7 @@ import {
   imagePath,
   readManifest,
 } from './baseline-store.mjs';
+import { prepareImageVisual } from './image-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -54,6 +55,7 @@ Upstream comparison: pnpm test:visual:reference -- --mode compare`);
 
 async function main() {
   const selected = buildCases({
+    apollo: true,
     component: values.component,
     variants: values.variant ? [values.variant] : undefined,
   }).filter((item) => !values.viewport || item.viewport === values.viewport);
@@ -172,6 +174,7 @@ async function main() {
       });
       try {
         const query = new URLSearchParams({
+          apollo: '1',
           component: item.component,
           variant: item.variant,
           theme: item.theme,
@@ -183,6 +186,8 @@ async function main() {
           timeout: 20000,
         });
         await stabilizePage(page);
+        const state =
+          item.component === 'image' ? await prepareImageVisual(page, item.variant) : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));
@@ -194,14 +199,14 @@ async function main() {
             dirty,
             capturedAt: new Date().toISOString(),
           };
-          results.push({ id: item.id, verdict: 'CANDIDATE' });
+          results.push({ id: item.id, verdict: 'CANDIDATE', state });
         } else {
           const comparison = await comparePair(
             imagePath(BASELINES, item.id),
             output,
             imagePath(path.join(HERE, 'diff/apollo'), item.id),
           );
-          results.push({ id: item.id, ...comparison });
+          results.push({ id: item.id, ...comparison, state });
         }
       } catch (error) {
         results.push({

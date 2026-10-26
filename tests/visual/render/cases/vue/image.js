@@ -32,7 +32,8 @@ export default {
         width: 96,
         height: 96,
         src: PX,
-        preview: { open: true, src: PX },
+        open: true,
+        preview: { src: PX },
       }),
     ]),
 };

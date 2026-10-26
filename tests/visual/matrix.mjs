@@ -427,6 +427,18 @@ export const COMPONENTS = {
     ],
   },
   image: {
+    // Apollo adds its own current API, native controls and local theme states.
+    // The optional reference harness keeps the original three variants.
+    apolloVariants: [
+      'basic',
+      'cover',
+      'preview',
+      'rich',
+      'progress',
+      'group',
+      'theme-dark',
+      'theme-compact',
+    ],
     // 3 个 variant × 3 个 viewport = 9 张
     // ⚠️ 全部 data URI 图片（外网图片会污染基线）；preview 为 open 受控静态帧。
     variants: [
@@ -1210,19 +1222,20 @@ export const LIMITATIONS = [
 ];
 
 /** 展开成截图任务列表。 */
-export function buildCases({ component, variants } = {}) {
+export function buildCases({ component, variants, apollo = false } = {}) {
   const names = component ? [component] : Object.keys(COMPONENTS);
   const cases = [];
 
   for (const name of names) {
     const def = COMPONENTS[name];
     if (!def) throw new Error(`组件 ${name} 未在 matrix.mjs 的 COMPONENTS 中登记`);
-    const useVariants = variants ?? def.variants;
+    const available = apollo ? (def.apolloVariants ?? def.variants) : def.variants;
+    const useVariants = variants ?? available;
 
     for (const variant of useVariants) {
-      if (!def.variants.includes(variant)) {
+      if (!available.includes(variant)) {
         throw new Error(
-          `组件 ${name} 没有 variant「${variant}」（已登记：${def.variants.join(', ')}）`,
+          `组件 ${name} 没有 variant「${variant}」（已登记：${available.join(', ')}）`,
         );
       }
       for (const theme of THEMES) {
