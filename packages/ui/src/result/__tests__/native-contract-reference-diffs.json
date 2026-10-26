@@ -1,0 +1,5 @@
+{
+  "result:403": ["$/div[0]/div[0]/svg[0]: 我们多出属性 aria-hidden=\"true\""],
+  "result:404": ["$/div[0]/div[0]/svg[0]: 我们多出属性 aria-hidden=\"true\""],
+  "result:500": ["$/div[0]/div[0]/svg[0]: 我们多出属性 aria-hidden=\"true\""]
+}

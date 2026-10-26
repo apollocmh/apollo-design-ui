@@ -1,0 +1,50 @@
+# Result整改单元完整盘点
+
+盘点基线2cbadfc2b5abcf71df091c6b37e404ae2d557c6d。当前已完成完整盘点、核心实现及分层验证，完整验收被共享Button对比度缺陷阻塞；不得作为整单元完成。范围为Result、IconMap/ExceptionMap、三个静态插画组件、四Token/静态样式、根与深入口类型、十个原Demo及双语文档。九个本组生产文件和根类型入口纳入哈希记录；仓内无其他UI业务组件直接消费Result，样式聚合与公开导出是有效调用者。ConfigProvider、theme、原生attrs与语义合并工具只读复用；如需修改共享实现，先补充真实消费者范围。
+
+## 当前源码完整清单与分类
+
+| 声明→传递→消费→行为 | 分类与本轮验收标准 |
+|---|---|
+| prefixCls / status | status字符串/数字403/404/500与普通success/error/info/warning有实际图标/类分支，未传/undefined回退info。正常路径待复验；动态切换保持业务内容/根身份，当前Provider前缀与RTL、删除恢复须覆盖 |
+| icon / #icon | icon是boolean/null开关，普通状态false/null有效，异常状态却强制插画且忽略原生#icon；文档承诺槽覆盖默认图标没有异常豁免。必修：按Vue内容优先，存在槽覆盖默认（含空槽），无槽时false/null关闭默认，true/undefined使用状态图标或插画；不引入旧形态兼容。集中记录普通/异常与slot/开关的完整优先级 |
+| title / subTitle | 文本prop与已有具名槽优先、有意空槽不回退已有回归，保留。必修：去掉对非响应slots对象的computed缓存，动态添加/移除槽须读当前渲染；完整多节点/Fragment/注释/输入/文本0均保留，不拿第一节点代替内容 |
+| #extra / default | extra已迁移为槽，但类型extra?:never仍生成无用运行时prop；正文空槽被旧数组truthiness强制留下空body。必修：移除无效声明，完整槽一次求值、当前存在性、空容器与条件槽统一，稳定业务编辑器/焦点与反复切换复验 |
+| Emits / v-model / Expose | 无业务事件或模型，不新增；原生事件归真实根且仅触发一次。nativeElement必须指向当前根、卸载归null，重挂和多实例不串扰 |
+| attrs / class / style | inheritAttrs:false加pickAttrs只保留aria/data，丢id/tabindex/原生事件；对象展开style破坏Vue字符串/数组。必修：原生根attrs、三种style、删除/恢复、语义配置/Provider/原生覆盖合并优先级；不新增className兼容别名 |
+| Provider / 响应性 | setup解构class/style/classNames/styles/getPrefixCls/direction形成快照；semanticProps普通对象watch复制无法使语义computed可靠失效。必修：当前getter、响应式实际Props，替换/删除/恢复、最近Provider、相邻实例与真实DOM身份验证 |
+| 六语义落点 | root/title/subTitle/body/extra/icon对象路径实际存在，运行时接受函数且Demo宣称支持，但公开类型只允许对象。必修：同步类型和有效函数API，工厂读取当前Props/默认status，各目标合并、局部隔离、动态配置和样式覆盖均覆盖 |
+| 四Component Token / Alias | titleFontSize/subtitleFontSize/iconFontSize支持number/string，extraMargin为string；静态变量有效，theme.components.Result完全未消费。必修：当前源主题/四Token、有效长度/0与非法数值回退、删除恢复/原生变量优先；保留既有变量名称与默认几何，不新增Token |
+| 样式 / 无障碍 / RTL | 静态RTL规则存在，方向快照失效属本轮。默认图标为装饰，静态插画带title但缺明确装饰语义；自定义图标可能是真实可交互内容，不能整体隐藏。副标题当前colorTextDescription须真实浏览器axe复验，低对比度若复现即修；保留插画颜色/路径/许可，不顺带重做插画 |
+| 静态导出 / 三个插画 | PRESENTED_IMAGE_403/404/500与ExceptionMap同一组件身份、IconMap四项现有公开导出保留。插画setup只返回静态SVG，没有额外公开Props/Slots/Emits/模型/Expose/Provider；直接复用仍可接原生SVG attrs，多个实例/SSR不共享VNode或重复ID |
+| SSR / 水合 / 生命周期 | 当前无浏览器调度副作用；生产ESM需验证源码主题、实际插槽/根与SVG语义。水合保留根/预输入值/焦点/选区，动态状态/条件槽/卸载重挂通过；无计时器、业务请求或受控模型可测，不创造无意义场景 |
+| 十个实际Demo / 文档 | success/info/warning/403/404/500/error/custom-icon/style-class/component-token全部已读。保留十场景；style-class仅声明六目标但缺body且硬编码extra浅色背景，Token Demo只静态CSS无当前源主题。必修：真实完整槽/条件切换与主题移除恢复、当前全部语义落点，亮暗/紧凑/组合实际axe；双语API补齐缺失Props/槽/事件/ref/Provider/Token契约，旧README错误规范改为当前事实 |
+| 回归 / 参考 / 视觉 / 发布 | 原15机械场景和9张上游参考保留；必要ARIA/颜色等差异逐项审查，不改原始参考、不忽略attrs或降低阈值。按适用状态建立自有视觉矩阵，清洁提交采集/逐张审阅/比较；发布声明、根严格/真实SFC、UI/L7、Docs/Registry/来源/格式统一验收 |
+
+## 集中方案与范围边界
+
+围绕完整Vue内容、当前根配置/主题两组根因成组整改。先建立可失败的源码行为与真实生产浏览器复现，再集中更新实现、类型、测试、十个原Demo、双语API与迁移说明。Slots每轮渲染只求值一次，有意空槽不回退，默认图标与真实自定义内容分别拥有语义；不保留为了上游图形分支而牺牲Vue插槽的兼容层。普通boolean/null开关含义仍明确保留，默认状态/静态导出/插画几何路径不改。
+
+验收覆盖本组四层/类型正反例、当前Provider/最近作用域/多实例、三种原生样式、原生事件、条件槽/Fragment/空槽/重复开关、实际输入焦点与卸载重挂、生产SSR/水合、实际四主题几何与axe、十Demo及可操作示例、自有视觉、发布声明/UI/L7与Docs门禁。修复后冻结生产文件统一验证，完整清单逐项复核后切换；最终全库同一提交全量门禁仍须在所有单元结束后执行。
+
+本轮不新增导航/业务请求、异步状态、自动重试、计时器、角色/自动live公告或新状态，不把无关能力加入范围。任意自定义前缀CSS生成仍按D04另案；实体设备/其他浏览器与未列出的组合不宣称验证。暂未发现须用户裁决或受阻的事项；图标优先级矛盾按已授权的Vue公共契约规则直接修正并记录迁移。
+
+
+## 集中修正与验收阶段发现
+
+修前21条源码行为中18条失败，旧发布产物24项浏览器中14项失败；全部保留在结构化证据，生产文件哈希确认复现发生在源码修改前。首次核心实现后21条行为全通过；后续补充每槽一次求值、非法Token回退、真实SFC/发布声明等完整清单验收。
+
+首次扩展生产浏览器87项中83项通过，四个真实交互内容axe均由图标区的状态颜色泄漏到普通文本引起：浅色14px文本4.1:1、暗色3.55:1，均不足4.5。按完整Vue内容根因纳入修复，把状态色限定在直接状态图标元素，保留已有图标颜色和尺寸，真实label/尾随文本继承普通文字色；不在夹具添加颜色特例或关闭axe。普通IconMap仍保留有名称图像，异常默认插画在Result内明确隐藏，自定义内容保持可访问。
+
+原15机械场景保留；初次差异登记误把focusable加入现有contract投影（该档只保留ARIA等属性），导致三项元数据断言失败。逐项核对既有投影后精确登记每个异常SVG唯一aria-hidden差异；focusable=false由直接源码与生产浏览器断言继续覆盖，共享投影及原始基线未改。完整重跑结果随后记录，不把首次94/97宣称全部通过。
+
+
+## 当前里程碑及明确阻塞
+
+Result核心实现当前99条四层、48相关类型、87项生产浏览器、8项生产SSR、5组水合、UI完整构建与严格L7 11项通过，预算没有修改。根严格类型通过；真实SFC中的递归StyleValue不应深代理，夹具改为符合顶层替换行为的shallowReactive后继续严格验收，不通过断言或忽略诊断绕过。
+
+Docs15文件161条、严格类型及SSG通过，实际Demo却没有全通过：原十Demo×四算法40组合20通过/20失败；实际Docs亮暗20页与三组交互23项13通过/10失败。失败均为共享Button primary的白字蓝底4.1:1，不是Result文档特例；三组真实交互通过，页面/Vue错误为零。完整失败数据保留，不更换按钮类型、加夹具颜色、关闭规则或降低阈值。
+
+因此Result的Registry记录为blocked，明确关联Button，不能宣称整单元验收完成。下一步先完整盘点关联Button并成组处理共享根因，再回到Result十Demo/主题、自有39图及原清单统一复验。39图矩阵和两个已查看的脏工作区预检不是批准基线。原15机械场景与9参考图不删除；内容来源533行、199候选，新增五个类型化槽记录，候选不等于缺陷。当前线上仍为已验收Skeleton提交2cbadfc2，未发布未验收的Result阶段结果。
+
+真实SFC严格类型与六组发布声明消费最终通过，未使用源码别名或携带测试；修正夹具顶层StyleValue状态后生产87项再次全部通过。Registry19检查零警告、根格式零错误（既有37警告/5信息保留）、当前533行/199候选来源清单与diff检查通过。完整阶段命令与失败边界均已持久化，后续先解决已记录的Button依赖。

@@ -5,4 +5,4 @@ title:
   en-US: Info
 ---
 
-无状态图标的信息提示（默认 status）。
+默认 `info` 状态使用信息图标。隐藏默认图形可设置 `:icon="false"`，自定义内容使用 `#icon`。

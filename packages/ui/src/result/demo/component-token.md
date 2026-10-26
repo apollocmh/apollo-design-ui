@@ -5,4 +5,10 @@ title:
   en-US: Component Token
 ---
 
-在根节点上覆盖 `--apollo-result-*` CSS 变量，调整标题/副标题字号、图标尺寸与操作区外边距。
+## zh-CN
+
+通过当前源主题配置四个 Token，移除与恢复配置保持原生输入。根 `--apollo-result-*` 变量优先于组件主题，移除后恢复当前主题值。
+
+## en-US
+
+Configure all four tokens through the current source theme. Removing/restoring configuration preserves native editors. Root `--apollo-result-*` variables override component tokens; removing them restores the current theme.

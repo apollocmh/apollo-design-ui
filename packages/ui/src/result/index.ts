@@ -1,9 +1,4 @@
-/**
- * Result 的公共导出。
- *
- * 与 antd 的 `es/result/index.js` 对齐的对外面（含 IconMap / ExceptionMap /
- * PRESENTED_IMAGE_* 静态插画常量）。
- */
+/** Public Result exports, semantic types and reusable static illustrations. */
 
 import { withInstall } from '../_internal/with-install';
 import { ExceptionMap, IconMap } from './maps';
@@ -28,6 +23,8 @@ export type {
   ResultRef,
   ResultSemanticClassNames,
   ResultSemanticStyles,
+  ResultSemanticValue,
+  ResultSlots,
   ResultStatusType,
 } from './interface';
 export { genResultStyle } from './style';

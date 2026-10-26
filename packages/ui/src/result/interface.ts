@@ -1,20 +1,15 @@
-/**
- * Result 的类型定义。
- *
- * 契约来源：antd 6.6.4 的 `es/result/index.d.ts`。
- * **逐字段对齐**（规则 R7）。差异：children 不在 Props（规则 C19，默认插槽）。
- */
+/** Native Vue Result props, semantic configuration and complete content slots. */
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 
-/** 异常状态（数字与字符串都收 —— antd 的 ExceptionStatusType 逐字）。 */
+/** 异常状态（数字与字符串均可）。 */
 export type ExceptionStatusType = 403 | 404 | 500 | '403' | '404' | '500';
 
 /** 全部合法状态。 */
 export type ResultStatusType = ExceptionStatusType | 'success' | 'error' | 'info' | 'warning';
 
-/** 语义槽位（六个，antd 的 ResultSemanticType 逐字）。 */
+/** 语义槽位（六个）。 */
 export interface ResultSemanticClassNames {
   root?: string;
   title?: string;
@@ -36,7 +31,7 @@ export interface ResultSemanticStyles {
 export interface ResultProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-result`。 */
   prefixCls?: string;
-  /** 自定义图标：null/false 显式禁用（undefined 走 IconMap）；富图标改 #icon slot。 */
+  /** false/null disables the default status graphic; an existing #icon slot takes priority. */
   icon?: boolean | null;
   /** 结果状态。 */
   status?: ResultStatusType;
@@ -44,25 +39,25 @@ export interface ResultProps {
   title?: string;
   /** 副标题（文本；富内容走 #subTitle slot，优先于 prop）。 */
   subTitle?: string;
-  /** 操作区：VNode 主导，已删除 prop，改 #extra slot。 */
-  extra?: never;
-  classNames?: ResultSemanticClassNames;
-  styles?: ResultSemanticStyles;
+  classNames?: ResultSemanticValue<ResultSemanticClassNames>;
+  styles?: ResultSemanticValue<ResultSemanticStyles>;
 }
 
-/** ConfigProvider 上的组件配置。与 antd 的 `ResultConfig` 逐字一致。 */
-export interface ResultConfig extends ComponentStyleConfig {
-  classNames?: ResultSemanticClassNames;
-  styles?: ResultSemanticStyles;
+export type ResultSemanticValue<T> = T | ((info: { props: ResultProps }) => T);
+
+/** Configuration applies to the owning Result, including all six semantic parts. */
+export type ResultConfig = ComponentStyleConfig & Pick<ResultProps, 'classNames' | 'styles'>;
+
+/** Slots render complete native Vue content; a present empty slot overrides fallback. */
+export interface ResultSlots {
+  default?: () => VNodeChild;
+  icon?: () => VNodeChild;
+  title?: () => VNodeChild;
+  subTitle?: () => VNodeChild;
+  extra?: () => VNodeChild;
 }
 
-/** ConfigProvider 上的组件配置。与 antd 的 `ResultConfig` 逐字一致。 */
-export interface ResultConfig extends ComponentStyleConfig {
-  classNames?: ResultSemanticClassNames;
-  styles?: ResultSemanticStyles;
-}
-
-/** 组件实例暴露（antd 的 ResultRef）。 */
+/** 组件实例暴露。 */
 export interface ResultRef {
   nativeElement: HTMLElement | null;
 }

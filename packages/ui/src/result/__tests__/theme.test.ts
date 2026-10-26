@@ -29,6 +29,10 @@ describe('Result · 主题无关性', () => {
     expect(css).toContain('.apollo-result-warning .apollo-result-icon');
     expect(css).toContain('var(--apollo-color-success)');
     expect(css).toContain('var(--apollo-color-error)');
+    for (const status of ['success', 'error', 'info', 'warning']) {
+      expect(css).toContain(`.apollo-result-${status} .apollo-result-icon>.apollo-icon{`);
+      expect(css).not.toContain(`.apollo-result-${status} .apollo-result-icon{`);
+    }
   });
 
   it('无硬编码视觉值（除插画 hex，插画在组件层）', () => {

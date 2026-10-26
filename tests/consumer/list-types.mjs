@@ -1,4 +1,4 @@
-/** Verify current List/Spin/QRCode/Statistic/Skeleton consumers against published declarations without source aliases. */
+/** Verify current List/Spin/QRCode/Statistic/Skeleton/Result consumers against published declarations without source aliases. */
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -49,6 +49,11 @@ try {
   );
   assert.equal(fs.existsSync(path.join(root, 'packages/ui/dist/skeleton/__tests__')), false);
   fs.writeFileSync(
+    path.join(temp, 'ResultConsumer.vue'),
+    fs.readFileSync(path.join(root, 'tests/browser/fixtures/ResultContractAudit.vue'), 'utf8'),
+  );
+  assert.equal(fs.existsSync(path.join(root, 'packages/ui/dist/result/__tests__')), false);
+  fs.writeFileSync(
     path.join(temp, 'CompoundConsumer.ts'),
     "import { Statistic, StatisticTimer, StatisticCountdown, Skeleton, SkeletonAvatar, SkeletonButton, SkeletonInput, SkeletonImage, SkeletonNode } from '@apollo-design/ui';\nconst timer: typeof StatisticTimer = Statistic.Timer;\nconst countdown: typeof StatisticCountdown = Statistic.Countdown;\nconst avatar: typeof SkeletonAvatar = Skeleton.Avatar;\nconst button: typeof SkeletonButton = Skeleton.Button;\nconst input: typeof SkeletonInput = Skeleton.Input;\nconst image: typeof SkeletonImage = Skeleton.Image;\nconst node: typeof SkeletonNode = Skeleton.Node;\nvoid timer; void countdown; void avatar; void button; void input; void image; void node;\n",
   );
@@ -74,6 +79,7 @@ try {
           'QRCodeConsumer.vue',
           'StatisticConsumer.vue',
           'SkeletonConsumer.vue',
+          'ResultConsumer.vue',
           'CompoundConsumer.ts',
         ],
       },
@@ -91,7 +97,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published List/Spin/QRCode/Statistic/Skeleton declarations: exact scopes, current tokens, native styles and compound exports; no test fixtures shipped',
+    'PASS published List/Spin/QRCode/Statistic/Skeleton/Result declarations: exact scopes, current tokens, native styles and compound exports; no test fixtures shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

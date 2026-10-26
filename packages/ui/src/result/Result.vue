@@ -1,233 +1,168 @@
-<script setup lang="ts">
-/**
- * Result —— 结果页。
- *
- * 契约来源：antd 6.6.4 的 `es/result/index.js`。DOM 结构、类名、分支判据逐条对齐，
- * 有意差异登记在 `packages/ui/src/result/README.md` 与 `COMPATIBILITY.md` §9。
- *
- * 四条最容易写错的判据（G1 分析 §2）：
- *
- *   1. **双分支图标**。`403/404/500`（数字也收）→ 渲染静态插画组件（hex 字面量、
- *      不随主题），且**忽略 `icon` prop**；其余状态走 `icon ?? IconMap[status]`，
- *      其中 `icon === null || icon === false` 显式禁用（连容器 div 都不渲染）。
- *   2. **`-image` 类只跟着异常状态走**（与 `-icon` 同一个 div）。
- *   3. **用户 `style` 折进 `styles.root`**（antd 的 useSemanticRootStyle）——
- *      root 样式只来自语义合并（`style` 在 `styles.root` 之后、覆盖之），
- *      不再单独拼 `props.style`。
- *   4. **渲染守卫是 `isRenderable`**：`''` / `false` 的 title/subTitle/extra/children
- *      连容器 div 都不渲染（不是渲染空 div）。
- */
-
-import { isEmptyVNode, isRenderable, pickAttrs } from '@apollo-design/utils';
+<script lang="ts">
+import { transformToken, useTheme } from '@apollo-design/theme';
+import { isEmptyVNode, mergeDomAttrs } from '@apollo-design/utils';
 import {
-  type CSSProperties,
+  type Component,
   computed,
-  isVNode,
-  ref,
-  Text,
-  useAttrs,
-  useSlots,
+  defineComponent,
+  h,
+  type PropType,
+  type SlotsType,
+  shallowRef,
   type VNodeChild,
-  watchEffect,
 } from 'vue';
 import { NodeRenderer } from '../_internal/node-renderer';
-import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { useComponentConfig, useDirection } from '../config-provider/context';
 import type {
   ResultConfig,
   ResultProps,
-  ResultRef,
   ResultSemanticClassNames,
   ResultSemanticStyles,
+  ResultSlots,
+  ResultStatusType,
 } from './interface';
-import { ExceptionMap as MapsExceptionMap, IconMap as MapsIconMap } from './maps';
+import { ExceptionMap, IconMap } from './maps';
+import { prepareResultComponentToken } from './style/token';
 
-defineOptions({ name: 'AResult', inheritAttrs: false });
-
-const props = withDefaults(defineProps<ResultProps>(), {
-  // 自定义图标：null/false 显式禁用（undefined 走 IconMap）；VNode 改 #icon slot
-  icon: undefined,
-  title: undefined,
-  subTitle: undefined,
-});
-
-defineSlots<{
-  default?: () => unknown;
-  icon?: () => unknown;
-  title?: () => unknown;
-  subTitle?: () => unknown;
-  extra?: () => unknown;
-}>();
-
-const slots = useSlots();
-const attrs = useAttrs();
-
-const {
-  getPrefixCls,
-  direction,
-  className: contextClassName,
-  style: contextStyle,
-  classNames: contextClassNames,
-  styles: contextStyles,
-} = useComponentConfig<ResultConfig>('result');
-
-const prefixCls = computed(() => getPrefixCls('result', props.prefixCls));
-
-// ---------------------------------------------------------------------------
-// IconMap / ExceptionMap（antd 具名导出的契约，从 index.ts 再导出；
-// ExceptionStatus 由 keys 派生 —— 与 antd 逐字）
-// ---------------------------------------------------------------------------
-
-const IconMap = MapsIconMap;
-const ExceptionMap = MapsExceptionMap;
-
-const isException = computed(() => Object.keys(ExceptionMap).includes(`${props.status}`));
-
-// ---------------------------------------------------------------------------
-// 语义合并（合并顺序是契约：styles 侧 [contextStyles, contextStyleRoot, styles,
-// styleRoot] —— 用户 style 折进 root 后最后覆盖，与 antd 逐字同构）
-// ---------------------------------------------------------------------------
-
-// ⚠️ 身份稳定的普通对象（Spin 范式，不用 reactive —— VNodeChild 深度代理会触发
-//    TS2589）；mergedProps 里的 `status` 与 antd 的 `mergedProps = {...props, status}` 同构。
-const semanticProps: ResultProps = { ...props };
-watchEffect(() => {
-  Object.assign(semanticProps, props, { status: props.status ?? 'info' });
-});
-
-const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-  ResultProps,
-  ResultSemanticClassNames,
-  ResultSemanticStyles
->(
-  [() => contextClassNames, () => props.classNames],
-  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
-  semanticProps,
-);
-
-const rootClass = computed(() => [
-  prefixCls.value,
-  `${prefixCls.value}-${props.status ?? 'info'}`,
-  contextClassName,
-  // 调用方原生 `class`（位置与原先的 props.className 一致）
-  attrs.class,
-  { [`${prefixCls.value}-rtl`]: direction === 'rtl' },
-  mergedClassNames.value.root,
-]);
-
-const iconClass = computed(() => [
-  `${prefixCls.value}-icon`,
-  { [`${prefixCls.value}-image`]: isException.value },
-  mergedClassNames.value.icon,
-]);
-
-const titleClass = computed(() => [`${prefixCls.value}-title`, mergedClassNames.value.title]);
-const subTitleClass = computed(() => [
-  `${prefixCls.value}-subtitle`,
-  mergedClassNames.value.subTitle,
-]);
-const extraClass = computed(() => [`${prefixCls.value}-extra`, mergedClassNames.value.extra]);
-const bodyClass = computed(() => [`${prefixCls.value}-body`, mergedClassNames.value.body]);
-
-// ---------------------------------------------------------------------------
-// 渲染守卫（antd 的 isReactRenderable → 我们的 isRenderable）
-// ---------------------------------------------------------------------------
-
-/**
- * 读具名 slot；无 slot 返回 `undefined`，空 slot（comment / null / false / 空串）返回
- * `null`。单元素数组 / Text VNode 解包（Vue 把 string slot 归一为 Text VNode），
- * 便于判字符串。
- *
- * ⚠️ `undefined` 与 `null` **必须区分**：前者是「没给插槽」（回退同名 prop），
- *    后者是「给了但渲染为空」（显式覆盖，**不回退**）。
- */
-function readNamedSlot(name: string): unknown {
-  const fn = slots[name];
-  if (typeof fn !== 'function') return undefined;
-  const nodes = fn();
-  if (nodes === undefined) return undefined;
-  let r: unknown = nodes;
-  if (Array.isArray(r) && r.length === 1) r = (r as unknown[])[0];
-  if (isVNode(r) && r.type === Text) r = (r.children as string) ?? '';
-  return isEmptyVNode(r) ? null : r;
+function statusIcon(status: ResultStatusType): { component: Component; exception: boolean } {
+  switch (status) {
+    case 403:
+    case '403':
+      return { component: ExceptionMap[403], exception: true };
+    case 404:
+    case '404':
+      return { component: ExceptionMap[404], exception: true };
+    case 500:
+    case '500':
+      return { component: ExceptionMap[500], exception: true };
+    case 'success':
+      return { component: IconMap.success, exception: false };
+    case 'error':
+      return { component: IconMap.error, exception: false };
+    case 'warning':
+      return { component: IconMap.warning, exception: false };
+    default:
+      return { component: IconMap.info, exception: false };
+  }
 }
+const length = (value: unknown, fallback: number | string): string => {
+  const current =
+    (typeof value === 'number' && Number.isFinite(value) && value >= 0) ||
+    (typeof value === 'string' && value.trim())
+      ? value
+      : fallback;
+  return typeof current === 'number' ? `${current}px` : current;
+};
 
-/**
- * 插槽覆盖同名 prop（Issue #34）。
- *
- * ⚠️ **不能**写 `readNamedSlot('title') ?? props.title`：`??` 对 `null` 也回退 ⇒
- *    显式空插槽（`<template #title><span v-if="show"/></template>`，show 转 false）
- *    反而显示回旧标题。只认 `undefined` 才是「没给插槽」。
- */
-function mergeSlotWithProp(slotNode: unknown, propValue: unknown): VNodeChild | null {
-  return (slotNode === undefined ? propValue : slotNode) as VNodeChild | null;
-}
-
-const mergedTitle = computed(() => mergeSlotWithProp(readNamedSlot('title'), props.title));
-const mergedSubTitle = computed(() => mergeSlotWithProp(readNamedSlot('subTitle'), props.subTitle));
-const mergedExtra = computed(() => readNamedSlot('extra') as VNodeChild | null);
-const iconSlotNode = computed(() => readNamedSlot('icon') as VNodeChild | null);
-
-const showTitle = computed(() => isRenderable(mergedTitle.value));
-const showSubTitle = computed(() => isRenderable(mergedSubTitle.value));
-const showExtra = computed(() => isRenderable(mergedExtra.value));
-const showBody = computed(() => isRenderable(slots.default?.()));
-
-/**
- * 默认图标节点：`icon || IconMap[status]` 逐字 ——
- * `null`/`false` 显式禁用（undefined 走 IconMap）；`#icon` slot 优先覆盖默认图标。
- */
-const iconNode = computed<VNodeChild | undefined>(() => {
-  if (isException.value) return undefined;
-  if (props.icon === null || props.icon === false) return undefined;
-  if (iconSlotNode.value !== undefined) return (iconSlotNode.value ?? undefined) as VNodeChild;
-  return IconMap[(props.status ?? 'info') as keyof typeof IconMap] as unknown as VNodeChild;
+/** Complete Vue slots and current root configuration; exception illustrations remain decoration. */
+export default defineComponent({
+  name: 'AResult',
+  inheritAttrs: false,
+  expose: ['nativeElement'],
+  props: {
+    prefixCls: String,
+    status: { type: [String, Number] as PropType<ResultStatusType>, default: 'info' },
+    icon: { type: Boolean as PropType<boolean | null>, default: undefined },
+    title: String,
+    subTitle: String,
+    classNames: { type: [Object, Function] as PropType<ResultProps['classNames']> },
+    styles: { type: [Object, Function] as PropType<ResultProps['styles']> },
+  },
+  slots: Object as SlotsType<ResultSlots>,
+  setup(props, { attrs, slots }) {
+    const context = useComponentConfig<ResultConfig>('result');
+    const direction = useDirection();
+    const prefix = computed(() => context.getPrefixCls('result', props.prefixCls));
+    const theme = useTheme();
+    const themeStyle = computed<Record<string, string>>(() => {
+      if (!Object.keys(theme.config.value).length) return {};
+      const base = prepareResultComponentToken(theme.token.value);
+      const custom = theme.config.value.components?.Result ?? {};
+      const cls = prefix.value;
+      return {
+        ...transformToken(theme.token.value).vars,
+        [`--${cls}-title-font-size`]: length(custom.titleFontSize, base.titleFontSize),
+        [`--${cls}-subtitle-font-size`]: length(custom.subtitleFontSize, base.subtitleFontSize),
+        [`--${cls}-icon-font-size`]: length(custom.iconFontSize, base.iconFontSize),
+        [`--${cls}-extra-margin`]:
+          typeof custom.extraMargin === 'string' && custom.extraMargin.trim()
+            ? custom.extraMargin
+            : base.extraMargin,
+      };
+    });
+    const root = shallowRef<HTMLDivElement | null>(null);
+    const semantic = useMergeSemantic<ResultProps, ResultSemanticClassNames, ResultSemanticStyles>(
+      [() => context.classNames, () => props.classNames],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
+      props,
+    );
+    const renderResult = () => {
+      const cls = prefix.value,
+        classes = semantic.classNames.value,
+        styles = semantic.styles.value;
+      const title = slots.title ? slots.title() : props.title;
+      const subTitle = slots.subTitle ? slots.subTitle() : props.subTitle;
+      const extra = slots.extra?.();
+      const body = slots.default?.();
+      const customIcon = slots.icon?.();
+      const fallback = statusIcon(props.status);
+      const showDefaultIcon = !slots.icon && props.icon !== false && props.icon !== null;
+      const icon = slots.icon
+        ? customIcon
+        : showDefaultIcon
+          ? h(
+              fallback.component,
+              fallback.exception ? { 'aria-hidden': 'true', focusable: 'false' } : undefined,
+            )
+          : undefined;
+      const section = (key: keyof ResultSemanticClassNames, suffix: string, content: VNodeChild) =>
+        isEmptyVNode(content)
+          ? null
+          : h(
+              'div',
+              {
+                key,
+                class: [
+                  `${cls}-${suffix}`,
+                  key === 'icon' && showDefaultIcon && fallback.exception
+                    ? `${cls}-image`
+                    : undefined,
+                  classes[key],
+                ],
+                style: styles[key],
+              },
+              [h(NodeRenderer, { node: content })],
+            );
+      return h(
+        'div',
+        mergeDomAttrs(
+          {
+            ref: root,
+            class: [
+              cls,
+              `${cls}-${props.status}`,
+              { [`${cls}-rtl`]: direction.value === 'rtl' },
+              context.className,
+              classes.root,
+            ],
+            style: [themeStyle.value, styles.root],
+          },
+          attrs,
+        ),
+        [
+          section('icon', 'icon', icon),
+          section('title', 'title', title),
+          section('subTitle', 'subtitle', subTitle),
+          section('extra', 'extra', extra),
+          section('body', 'body', body),
+        ],
+      );
+    };
+    return { nativeElement: root, renderResult };
+  },
+  render() {
+    return this.renderResult();
+  },
 });
-
-/** restProps：antd `pickAttrs(rest, { aria: true, data: true })` 的 Vue 等价。 */
-const rootAttrs = computed(() => pickAttrs(attrs, { aria: true, data: true }));
-
-// ---------------------------------------------------------------------------
-// 暴露（antd 的 useImperativeHandle → { nativeElement }）
-// ---------------------------------------------------------------------------
-
-const rootRef = ref<HTMLElement | null>(null);
-defineExpose({ nativeElement: rootRef });
 </script>
-
-<template>
-  <div
-    ref="rootRef"
-    :class="rootClass"
-    v-bind="{
-      ...rootAttrs,
-      ...styleAttrs({ ...mergedStyles.root, ...((attrs.style as CSSProperties) ?? {}) }),
-    }"
-  >
-    <!-- 异常分支：-icon -image > 静态插画（忽略 icon prop，antd 逐字） -->
-    <div v-if="isException" :class="iconClass" v-bind="styleAttrs(mergedStyles.icon)">
-      <component :is="ExceptionMap[status as unknown as keyof typeof ExceptionMap]" />
-    </div>
-    <!-- 普通分支：#icon slot 覆盖或 IconMap 默认图标；null/false 连容器都不渲染 -->
-    <div v-else-if="iconNode !== undefined" :class="iconClass" v-bind="styleAttrs(mergedStyles.icon)">
-      <NodeRenderer v-if="iconSlotNode !== undefined" :node="iconNode" />
-      <component v-else :is="iconNode" />
-    </div>
-
-    <div v-if="showTitle" :class="titleClass" v-bind="styleAttrs(mergedStyles.title)">
-      <NodeRenderer :node="mergedTitle" />
-    </div>
-
-    <div v-if="showSubTitle" :class="subTitleClass" v-bind="styleAttrs(mergedStyles.subTitle)">
-      <NodeRenderer :node="mergedSubTitle" />
-    </div>
-
-    <div v-if="showExtra" :class="extraClass" v-bind="styleAttrs(mergedStyles.extra)">
-      <NodeRenderer :node="mergedExtra" />
-    </div>
-
-    <div v-if="showBody" :class="bodyClass" v-bind="styleAttrs(mergedStyles.body)">
-      <slot />
-    </div>
-  </div>
-</template>

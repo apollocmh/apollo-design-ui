@@ -1,18 +1,4 @@
-/**
- * Result 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `es/result/style/index.js`（genBaseStyle +
- * genStatusIconStyle + prepareComponentToken），选择器/属性/取值逐条对齐。
- *
- * ── 与 antd 产物的有意差异 ────────────────────────────────────────────────────
- *
- * 1. 无 hash 包裹（D5）。
- * 2. Component Token 的 4 个 CSS 变量声明在 `.apollo-result` 上（antd 声明在
- *    `.css-var-root.*`；语义等价，badge 范式）。`iconFontSize` 的派生乘除用
- *    `calc(var(--apollo-font-size-heading-3) * 3)` 表达 —— 与上游
- *    `isNumber ? n*3 : calc(...)` 的数字路径同构。
- * 3. genCommonStyle（font-family/font-size）必须组件级提供（清单 §六.6）。
- */
+/** Static Result CSS with scoped aliases and four overridable component variables. */
 
 import { token2CSSVar } from '@apollo-design/theme';
 
@@ -80,7 +66,7 @@ export function genResultStyle(rootPrefixCls: string): string {
 
     // ---- 副标题 ----
     `${cls} ${cls}-subtitle{`,
-    `  color:${v('colorTextDescription')};`,
+    `  color:${v('colorTextSecondary')};`,
     `  font-size:${t('subtitle-font-size')};`,
     `  line-height:${v('lineHeight')};`,
     `  text-align:center;`,
@@ -106,16 +92,16 @@ export function genResultStyle(rootPrefixCls: string): string {
     `}`,
 
     // ---- 状态图标色（genStatusIconStyle）----
-    `${cls}-success ${cls}-icon{`,
+    `${cls}-success ${cls}-icon>.apollo-icon{`,
     `  color:${v('colorSuccess')};`,
     `}`,
-    `${cls}-error ${cls}-icon{`,
+    `${cls}-error ${cls}-icon>.apollo-icon{`,
     `  color:${v('colorError')};`,
     `}`,
-    `${cls}-info ${cls}-icon{`,
+    `${cls}-info ${cls}-icon>.apollo-icon{`,
     `  color:${v('colorInfo')};`,
     `}`,
-    `${cls}-warning ${cls}-icon{`,
+    `${cls}-warning ${cls}-icon>.apollo-icon{`,
     `  color:${v('colorWarning')};`,
     `}`,
   ];

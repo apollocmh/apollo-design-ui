@@ -1,58 +1,11 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Result
 
-# Result 实现说明
+Vue 3结果页。完整公共契约见[index.zh-CN.md](index.zh-CN.md)与[index.en-US.md](index.en-US.md)。
 
-## 1. 对应 antd 组件
+- 七个Props、五个无参数完整插槽、六个语义落点、四个组件Token。
+- 根attrs/class/style与原生事件由Vue处理；当前Provider、方向、语义工厂和源主题响应更新。
+- 普通/异常状态均优先使用`#icon`，有意空槽不回退；无槽时icon控制默认图形。
+- nativeElement指向根，卸载归null；没有业务模型、请求、计时或自动公告。
+- 三个静态插画及其路径/来源保留，默认使用时是装饰；具名导出仍可独立复用。
 
-- antd 6.6.4 · `es/result/`（只读参照，H2）
-- 分析产物：`docs/analysis/result.md`（G1，先于实现存在）
-
-## 2. 与 antd 的行为差异清单
-
-| # | 差异 | 分类 | 证据 |
-|---|---|---|---|
-| D6 | 前缀 `apollo-result`；IconMap 图标类 `apollo-icon`（基线侧经 ConfigProvider iconPrefixCls 对齐） | INTENDED | L4 `*:prefix-cls:no-props` |
-| D5 | 无 hash 包裹；Component Token 4 变量声明在根类 | INTENDED | L4 全部 |
-| — | 插画（403/404/500）hex 字面量不随主题 —— **antd 亦如此**（与 Empty 的 token 化插画不同源） | 平台一致 | L4 逐字节对齐 |
-| — | `icon` 的 SSR dev 告警（v4 字符串命名废弃）未实现（devUseWarning 场景） | 已知缺口 | README §7 |
-| — | `children=''` 的守卫：antd 不渲染 body；Vue 空插槽归一化成数组 → 渲染空 body | PLATFORM（同 Empty footer 契约） | L1 body 守卫用例 |
-
-## 3. .vue / .tsx 选择
-
-- `Result.vue`：SFC（结构与 spin 同构）。
-- `components/NoFound.ts` 等：**机械转换**（脚本把 antd 的 React.createElement 链转成
-  h 链：变长子节点折数组、camelCase SVG 属性转 kebab），hex 字面量逐字节保留。
-- `maps.ts`：IconMap / ExceptionMap 单源（Result.vue 与 barrel 的 PRESENTED_IMAGE_* 共用）。
-
-## 4. Component Token 清单（4 个）
-
-`titleFontSize(=fontSizeHeading3) / subtitleFontSize(=fontSize) / iconFontSize(=heading3×3) /
-extraMargin(=paddingLG 0 0 0)`。CSS 变量声明在 `.apollo-result`，`iconFontSize` 的乘法用
-`calc(var(--apollo-font-size-heading-3) * 3)` 表达（主题缩放自适应）。
-
-## 5. 关键判据（G1 §2 的落地）
-
-1. **双分支图标**：异常状态忽略 `icon` prop；普通状态 `icon ?? IconMap[status]`，
-   `null`/`false` 连容器都不渲染。
-2. **`style` prop 折进 `styles.root`** 且**覆盖**之（`useMergeSemantic` 的顺序契约）。
-3. **`pickAttrs(attrs, { aria: true, data: true })`** —— id/class 等不透传。
-4. **`nativeElement`** 经 `defineExpose` 暴露。
-5. **具名插槽覆盖同名 prop 时，`undefined` 与 `null` 必须区分**（Issue #34）：
-   `readNamedSlot()` 用 `undefined` = 没给插槽（回退 `props.title` / `props.subTitle`）、
-   `null` = 给了但渲染为空（comment / `null` / `false` / 空串，**显式覆盖、不回退**）。
-   ⇒ 回退只能写 `slot === undefined ? prop : slot`，**不能**用 `??`
-   （`??` 对 `null` 也回退 ⇒ `<template #title><span v-if="show"/></template>`
-   在 `show` 转 false 时会重新显示回旧标题）。
-
-## 6. 连带修复：图标基线进全局
-
-result 是第二个被 `.anticon` 基线缺失咬到的组件（button 期自保过一次；result 的
-图标 86.8 vs 72 确认这是集成缺口）。按三次法则把 `@apollo-design/icons` 的
-`getIconStyle()` 接进 `ui/style/index.ts` 的 `BASE_CSS`（每份组件 CSS 自带）。
-
-## 7. 已知缺口
-
-- `children=''`（字符串空子节点）在 Vue 侧无法与「空插槽」区分（插槽归一化），
-  渲染空 body —— 与 Empty 的 footer 契约同一条 PLATFORM 差异。
-- devOnly 告警（icon 字符串命名废弃）未实现。
-- L4 基线用 ConfigProvider（prefixCls+iconPrefixCls）包裹对齐 antd 的 anticon 输出。
+完整范围、修前失败、验证与剩余边界见[本轮清单](../../../../docs/audit/2026-10-27-result-contract-audit.md)，公共行为变化集中见[迁移](../../../../docs/migrations/result-contracts.md)。原15机械场景和9张上游参考保留，不作为Apollo自有视觉批准。

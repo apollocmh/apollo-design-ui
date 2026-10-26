@@ -138,6 +138,21 @@ export const COMPONENTS = {
   result: {
     // 3 个 variant × 3 个 viewport = 9 张
     variants: ['basic', 'exception', 'semantic'],
+    apolloVariants: [
+      'info-success',
+      'warning-error',
+      'exception-403',
+      'exception-404',
+      'exception-500',
+      'complete-content',
+      'empty-slots',
+      'tokens',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
   },
   'back-top': {
     // 1 个 variant × 3 个 viewport = 3 张（fixed 定位；visibilityHeight=0 恒显）

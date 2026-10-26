@@ -14,10 +14,12 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { expect, it } from 'vitest';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/result.dom.json';
 import { Button } from '../../button';
 import { Result } from '../index';
+import differences from './native-contract-reference-diffs.json';
 
 // 与基线一致：antd Button（prefixCls apollo-btn）的 SSR 产物
 const Btn = () => h(Button, { prefixCls: 'apollo-btn' }, () => 'Go Console');
@@ -85,11 +87,29 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Result', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: Object.fromEntries(
+    Object.entries(differences).map(([id, diff]) => [
+      id,
+      {
+        reason:
+          'Default exception illustrations are decoration; the existing contract projection sees only added SVG aria-hidden; direct regressions also verify focusable=false. Complete Vue content and all original scenarios remain. See docs/migrations/result-contracts.md.',
+        diff,
+      },
+    ]),
+  ),
   render: (id) => {
     const spec = specs[id];
     if (!spec)
       throw new Error(`[Result L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     return spec.render();
   },
+});
+
+it('retains every original reference scenario and only reviewed decorative SVG additions', () => {
+  expect(baseline.cases).toHaveLength(15);
+  expect(Object.keys(specs).sort()).toEqual(baseline.cases.map((c) => c.id).sort());
+  expect(Object.keys(differences).sort()).toEqual(['result:403', 'result:404', 'result:500']);
+  for (const diff of Object.values(differences)) {
+    expect(diff).toEqual(['$/div[0]/div[0]/svg[0]: 我们多出属性 aria-hidden="true"']);
+  }
 });

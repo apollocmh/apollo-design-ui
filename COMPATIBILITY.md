@@ -42,3 +42,5 @@ QRCode的statusRender直接替换为#status、稳定refresh事件操作、根/�
 Statistic/Timer/Countdown的原生#value业务作用域、当前计时方向/非负事件、SSR/清理、attrs/ref及两字号Token修正集中见[Statistic契约迁移](docs/migrations/statistic-contracts.md)；不新增旧内容函数兼容层。
 
 Skeleton及五个子组件的原生根attrs/style、嵌套块配置、Image默认槽、当前八Token和装饰占位语义修正集中见[Skeleton契约迁移](docs/migrations/skeleton-contracts.md)；直接修正开发期错误形态，不新增兼容通道。
+
+Result全部状态的完整图标槽/默认图形开关、条件内容、原生根attrs/style、当前Provider/四Token和装饰语义修正集中见[Result契约迁移](docs/migrations/result-contracts.md)；开发期直接修正，不为旧React图形分支增加兼容通道。

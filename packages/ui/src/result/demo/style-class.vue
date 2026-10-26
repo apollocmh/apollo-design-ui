@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// 对齐 antd 的 style-class demo（语义槽位对象式；函数式由 L1 覆盖）。C8-R2：extra 走插槽。
-import { Button, Result } from '@apollo-design/ui';
+import { Button, Result, type ResultProps, type ResultStatusType } from '@apollo-design/ui';
+import { ref } from 'vue';
 
+const status = ref<ResultStatusType>('success');
 const classNamesObject = {
   root: 'demo-result-root',
   title: 'demo-result-title',
@@ -10,24 +11,20 @@ const classNamesObject = {
   extra: 'demo-result-extra',
   body: 'demo-result-body',
 };
-
-const stylesObject = {
+const styles = ({ props }: { props: ResultProps }) => ({
   root: { borderWidth: '2px', borderStyle: 'dashed', padding: '16px' },
-  icon: { opacity: 0.8 },
-  extra: { backgroundColor: '#f0f0f0', padding: '8px' },
-};
+  icon: { opacity: props.status === 'success' ? 0.8 : 1 },
+  extra: {
+    backgroundColor: 'var(--apollo-color-fill-alter)',
+    color: 'var(--apollo-color-text)',
+    padding: '8px',
+  },
+});
 </script>
-
 <template>
-  <Result
-    status="success"
-    title="Successfully Purchased Cloud Server ECS!"
-    sub-title="Order number: 2017182818828182881"
-    :class-names="classNamesObject"
-    :styles="stylesObject"
-  >
-    <template #extra>
-      <Button type="primary">Go Console</Button>
-    </template>
+  <Button aria-label="Toggle Result semantic status" @click="status = status === 'success' ? 'warning' : 'success'">切换结果状态</Button>
+  <Result :status="status" title="Successfully Purchased Cloud Server ECS!" sub-title="Order number: 2017182818828182881" :class-names="classNamesObject" :styles="styles">
+    <template #extra><Button type="primary">Go Console</Button></template>
+    <p>六个语义落点均可配置，样式工厂读取当前结果状态。</p>
   </Result>
 </template>

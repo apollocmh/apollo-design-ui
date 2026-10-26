@@ -49,10 +49,11 @@ describe('Result · 结构', () => {
     }
   });
 
-  it('异常状态忽略 icon prop（恒渲染插画）', () => {
+  it('异常状态的具名图标槽覆盖默认插画', () => {
     const w = mountResult({ status: '404' }, { icon: () => h(SmileOutlined) });
     expect(w.find(`.${P}-icon svg`).exists()).toBe(true);
-    expect(w.find(`.${P}-icon .apollo-icon`).exists()).toBe(false);
+    expect(w.find(`.${P}-icon .apollo-icon`).exists()).toBe(true);
+    expect(w.find(`.${P}-image`).exists()).toBe(false);
   });
 
   it('icon === null / false 显式禁用（连容器都不渲染）', () => {
@@ -78,12 +79,9 @@ describe('Result · 结构', () => {
     expect(w2.find(`.${P}-subtitle`).exists()).toBe(true);
   });
 
-  it("body 守卫：antd children='' 在 Vue 侧是 PLATFORM（空插槽归一为数组仍渲染空容器，与 Empty 契约一致）", () => {
-    // ⚠️ antd 的 isReactRenderable('') 为假 → 不渲染 body；但 Vue 的插槽函数返回
-    //    `''` 会被归一化成 [textVNode]（truthy）—— 与 `<Empty></Empty>` 渲染空 footer
-    //    是同一条平台差异（README §7 登记）。判据与 Empty 逐字同构，不在本组件「顺手修」。
+  it('body 守卫：空Vue插槽不留下正文容器，0由完整原生回归覆盖', () => {
     const w = mountResult({ title: 'T' }, { default: () => '' });
-    expect(w.find(`.${P}-body`).exists()).toBe(true);
+    expect(w.find(`.${P}-body`).exists()).toBe(false);
   });
 
   it('body 渲染 children（有插槽才有容器）', () => {
@@ -104,7 +102,7 @@ describe('Result · 结构', () => {
     expect(w.find(`.${P}-body`).text()).toBe('body');
   });
 
-  it('restProps 只透传 aria / data attrs', () => {
+  it('原生根同时保留 aria/data 与普通id', () => {
     const w = mountResult({
       title: 'T',
       'aria-label': 'result',
@@ -113,8 +111,7 @@ describe('Result · 结构', () => {
     } as never);
     expect(w.find(`.${P}`).attributes('aria-label')).toBe('result');
     expect(w.find(`.${P}`).attributes('data-testid')).toBe('r1');
-    // id 不在 aria/data 白名单
-    expect(w.find(`.${P}`).attributes('id')).toBeUndefined();
+    expect(w.find(`.${P}`).attributes('id')).toBe('kept-id-not-picked');
   });
 
   it('nativeElement 指向根元素', () => {

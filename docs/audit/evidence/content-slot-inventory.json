@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 528,
+    "rows": 533,
     "byCategory": {
       "data": 123,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 121,
+      "internal": 126,
       "render-function-candidate": 65,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 135,
       "review": 199,
-      "skip": 174,
+      "skip": 179,
       "implemented-verified": 20
     }
   },
@@ -10386,6 +10386,187 @@
           "packages/ui/src/qr-code/__tests__/contract-audit.test.ts",
           "packages/ui/src/qr-code/__tests__/index.test.ts",
           "packages/ui/src/qr-code/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "result",
+      "owner": "ResultSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/result/interface.ts:53",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/Result.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/__tests__/contract-audit.test.ts",
+          "packages/ui/src/result/__tests__/index.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "result",
+      "owner": "ResultSlots",
+      "prop": "extra",
+      "category": "internal",
+      "source": "packages/ui/src/result/interface.ts:57",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/Result.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/demo/403.vue",
+          "packages/ui/src/result/demo/404.vue",
+          "packages/ui/src/result/demo/500.vue",
+          "packages/ui/src/result/demo/component-token.vue",
+          "packages/ui/src/result/demo/custom-icon.vue",
+          "packages/ui/src/result/demo/error.vue",
+          "packages/ui/src/result/demo/info.vue",
+          "packages/ui/src/result/demo/style-class.vue",
+          "packages/ui/src/result/demo/success.vue",
+          "packages/ui/src/result/demo/warning.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/__tests__/contract-audit.test.ts",
+          "packages/ui/src/result/__tests__/index.test.ts",
+          "packages/ui/src/result/__tests__/s34-issue34.test.ts",
+          "packages/ui/src/result/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "result",
+      "owner": "ResultSlots",
+      "prop": "icon",
+      "category": "internal",
+      "source": "packages/ui/src/result/interface.ts:54",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/Result.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/demo/custom-icon.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/__tests__/contract-audit.test.ts",
+          "packages/ui/src/result/__tests__/index.test.ts",
+          "packages/ui/src/result/__tests__/s34-issue34.test.ts",
+          "packages/ui/src/result/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "result",
+      "owner": "ResultSlots",
+      "prop": "subTitle",
+      "category": "internal",
+      "source": "packages/ui/src/result/interface.ts:56",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/Result.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/__tests__/contract-audit.test.ts",
+          "packages/ui/src/result/__tests__/index.test.ts",
+          "packages/ui/src/result/__tests__/s34-issue34.test.ts",
+          "packages/ui/src/result/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "result",
+      "owner": "ResultSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/result/interface.ts:55",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/Result.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/result/__tests__/contract-audit.test.ts",
+          "packages/ui/src/result/__tests__/index.test.ts",
+          "packages/ui/src/result/__tests__/s34-issue34.test.ts",
+          "packages/ui/src/result/__tests__/semantic.test.ts"
         ]
       },
       "decision": "skip",

@@ -378,6 +378,8 @@ export type {
   ResultRef,
   ResultSemanticClassNames,
   ResultSemanticStyles,
+  ResultSemanticValue,
+  ResultSlots,
   ResultStatusType,
 } from './result';
 export {

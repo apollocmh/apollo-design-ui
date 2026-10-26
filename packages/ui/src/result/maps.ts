@@ -1,9 +1,4 @@
-/**
- * IconMap / ExceptionMap —— antd `es/result/index.js` 具名导出的契约。
- *
- * 单独成模块：Result.vue 与 barrel（index.ts 的 PRESENTED_IMAGE_*）都要消费，
- * 避免「两处各写一份」漂移。
- */
+/** Shared status-to-component maps; illustration exports retain component identity. */
 
 import {
   CheckCircleFilled,
