@@ -32,3 +32,5 @@ Vue 3原生图片、进度占位和模态预览。公开入口为Image、ImagePr
 ## 验收状态
 
 完整Image整改单元仍开放，当前证据、对应提交、命令和未验证边界只在[统一清单](../../../../docs/audit/2026-10-25-image-contract-audit.md)维护。每个根因里程碑提交不表示Image或全库完成。上游历史截图与旧completed记录不是当前Apollo验收；自有视觉基线、组合回归和最终门禁须真实执行。原实现来源分析保留在git历史与docs/history，Ant Design是参考证据，不定义Apollo当前规格。
+
+Group的关闭焦点候选来自Vue注册关系，包含Teleport子图并隔离嵌套Provider；删除打开者后只回到本组仍可用的图片动作。显式items/注册切换、删除无控当前项与嵌套/同级多组均有行为覆盖，数据更新不回声模型事件。

@@ -90,7 +90,12 @@ try {
       'shadow-source',
       'inline',
       'motion',
+      'remove-trigger',
+      'remove-trigger-rich',
+      'remove-trigger-nested',
+      'remove-trigger-teleport',
     ]) {
+      if (scenario.startsWith('remove-trigger') && target !== 'group') continue;
       const failures = [];
       try {
         await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -145,22 +150,34 @@ try {
         const triggerHandle = await page.evaluateHandle(
           () =>
             window.imageInteractionSource?.querySelector(
-              '[data-apollo-image-preview-trigger], [role="button"]',
+              'button[aria-label="Preview image: Interaction first"],[role="button"][aria-label="Interaction first"],button[aria-label="Interaction first"]',
             ) ||
             document.querySelector(
-              '[data-apollo-image-preview-trigger], [aria-label="Interaction first"][role="button"],button[aria-label="Interaction first"]',
+              'button[aria-label="Preview image: Interaction first"],[role="button"][aria-label="Interaction first"],button[aria-label="Interaction first"]',
             ),
         );
         const trigger = triggerHandle.asElement();
         assert.ok(trigger);
         const triggerBox = await trigger.boundingBox();
         assert.ok(triggerBox);
+        if (scenario.startsWith('remove-trigger')) await trigger.focus();
         await page.mouse.click(triggerBox.x + 6, triggerBox.y + 6);
         const dialog = await findDialog();
         const editor = await dialog.$('input[aria-label="Preview caption"]');
         assert.ok(editor);
         await editor.fill('Preview draft');
         await editor.evaluate((node) => node.setSelectionRange(2, 5));
+        if (scenario.startsWith('remove-trigger')) {
+          await page
+            .getByRole('button', { name: 'Remove original thumbnail', exact: true })
+            .click();
+          await page.waitForFunction(
+            () => !document.querySelector('[aria-label="Interaction first"][role="button"]'),
+          );
+          assert.equal(await trigger.evaluate((node) => node.isConnected), false);
+          assert.equal(await editor.inputValue(), 'Preview draft');
+          assert.equal(await page.getByRole('dialog').count(), 1);
+        }
         assert.equal(
           await dialog.evaluate((node) =>
             node.contains(node.getRootNode().activeElement ?? node.ownerDocument.activeElement),
@@ -345,7 +362,15 @@ try {
           false,
           'inline close must not reopen through its thumbnail ancestor',
         );
-        if (scenario !== 'motion')
+        if (scenario.startsWith('remove-trigger'))
+          assert.equal(
+            await page
+              .getByRole('button', { name: 'Interaction second', exact: true })
+              .evaluate((node) => node.ownerDocument.activeElement === node),
+            true,
+            'removing the opener returns focus to an available registered thumbnail',
+          );
+        else if (scenario !== 'motion')
           assert.equal(
             await trigger.evaluate(
               (node) =>
@@ -444,6 +469,48 @@ try {
       failures.push(error.message);
     }
     results.push({ target: 'public-demo', scenario: 'rich-preview-and-cover', failures });
+  }
+  {
+    const failures = [];
+    try {
+      await page.goto(
+        `${server.resolvedUrls.local[0]}vue-reactivity.html?demo=image-interactions&case=public-group`,
+      );
+      const scope = page.locator('[data-image-group-ownership]');
+      const opener = scope.getByRole('button', { name: 'Group image 2', exact: true });
+      await opener.focus();
+      await opener.press('Enter');
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: 'Remove current thumbnail', exact: true })
+        .click();
+      await opener.waitFor({ state: 'detached' });
+      assert.equal(await page.getByRole('dialog').count(), 1);
+      assert.equal(await page.locator('.apollo-image-preview-progress').textContent(), '2 / 2');
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: 'Close preview', exact: true })
+        .click();
+      await page.getByRole('dialog').waitFor({ state: 'detached' });
+      assert.equal(
+        await scope
+          .getByRole('button', { name: 'Group image 1', exact: true })
+          .evaluate((node) => node === node.ownerDocument.activeElement),
+        true,
+      );
+      await scope.getByRole('button', { name: 'Reset group', exact: true }).click();
+      assert.equal(await scope.locator('[role="button"]').count(), 3);
+      await page.addScriptTag({ content: axe.source });
+      assert.deepEqual(
+        await scope.evaluate(async (node) =>
+          (await window.axe.run(node)).violations.map((issue) => issue.id),
+        ),
+        [],
+      );
+    } catch (error) {
+      failures.push(error.message);
+    }
+    results.push({ target: 'public-demo', scenario: 'group-opener-removal-and-reset', failures });
   }
   console.log(JSON.stringify({ browser: browser.version(), results, issues }, null, 2));
   assert.deepEqual(issues, []);

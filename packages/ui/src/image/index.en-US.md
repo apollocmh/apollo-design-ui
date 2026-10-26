@@ -240,3 +240,5 @@ The default published CSS uses the apollo namespace. `ConfigProvider.prefixCls="
 **Is the overlay re-created when switching inside a group?**
 
 No. A group mounts exactly **one** `Preview` and updates `src` / `mousePosition` on switch.
+
+Group ownership follows Vue registration: nested groups stay isolated and Teleport retains the owning group. Explicit items take priority; removing items restores registered children. If the opener is removed, closing returns focus to an available action in the same group. Uncontrolled selection is normalized after deletion; data changes do not echo change/update:current.

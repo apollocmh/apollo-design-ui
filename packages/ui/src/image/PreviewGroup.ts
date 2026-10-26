@@ -5,6 +5,7 @@
  * 组内只挂**一个** Preview（portal），切换 `current` 时更新 src 与 mousePosition；
  * `items` 优先，其次用注册收集到的 Image。
  */
+import { getFocusNodeList } from '@apollo-design/a11y';
 import { isNonNullable } from '@apollo-design/utils';
 import {
   computed,
@@ -36,7 +37,7 @@ import type {
   TransformInfo,
 } from './interface';
 import Preview, { DEFAULT_ICONS } from './Preview';
-import { getImageCommonProps, getPreviewProps } from './util';
+import { getImageCommonProps, getPopupClassNames, getPreviewProps } from './util';
 
 type SemanticClassNames = NonNullable<PreviewGroupSemanticType['classNames']>;
 type SemanticStyles = NonNullable<PreviewGroupSemanticType['styles']>;
@@ -89,6 +90,16 @@ const PreviewGroup = defineComponent({
     });
 
     const { images, register } = createImageRegistry();
+    const getTriggerElement = () => {
+      if (triggerElement.value?.isConnected) return triggerElement.value;
+      // Vue registration owns the group, including Teleports and nested providers.
+      // DOM descendants cannot identify which group an available action belongs to.
+      for (const item of filterPreviewable(images.value)) {
+        const action = item.getTriggerElement?.();
+        if (action?.isConnected && getFocusNodeList(action, true).includes(action)) return action;
+      }
+      return element.value;
+    };
 
     // items 模式优先（rc 的 mergedItems）
     const mergedItems = computed<Array<RegisteredImage & { id?: string }>>(() => {
@@ -171,18 +182,9 @@ const PreviewGroup = defineComponent({
       () => props,
       { popup: { _default: 'root' } },
     );
-    const popupClassNames = computed(() => {
-      const p = mergedGroupClassNames.value.popup;
-      const cfg = previewConfig.value;
-      return {
-        root: p?.root,
-        mask: [p?.mask, cfg?.maskClassName].filter(Boolean).join(' ') || undefined,
-        body: p?.body,
-        footer: p?.footer,
-        actions: p?.actions,
-        close: p?.close,
-      };
-    });
+    const popupClassNames = computed(() =>
+      getPopupClassNames(mergedGroupClassNames.value.popup, previewConfig.value),
+    );
 
     // Resolve defaults before mirroring the current provider's navigation icons.
     const icons = computed(() => {
@@ -224,8 +226,7 @@ const PreviewGroup = defineComponent({
                   current: current.value,
                   count: mergedItems.value.length,
                   getContainer: getPreviewContainer.value,
-                  getTriggerElement: () =>
-                    triggerElement.value?.isConnected ? triggerElement.value : element.value,
+                  getTriggerElement,
                   mousePosition: mousePosition.value,
                   icons: icons.value,
                   classNames: popupClassNames.value,

@@ -1,16 +1,30 @@
 <script setup lang="ts">
-// 对齐 antd demo/preview-group.tsx
 import { Image } from '@apollo-design/ui';
-import { h } from 'vue';
+import { ref } from 'vue';
 
 const src =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 const PreviewGroup = Image.PreviewGroup;
-void h;
+const images = ref([1, 2, 3]);
+const current = ref(0);
+const removeCurrent = () => {
+  images.value.splice(current.value, 1);
+};
+const reset = () => {
+  images.value = [1, 2, 3];
+  current.value = 0;
+};
 </script>
 
 <template>
-  <PreviewGroup>
-    <Image alt="demo image" v-for="i in 3" :key="i" :width="200" :src="src" />
-  </PreviewGroup>
+  <section data-image-group-ownership>
+    <button type="button" @click="reset">Reset group</button>
+    <PreviewGroup v-model:current="current">
+      <Image v-for="i in images" :key="i" :alt="`Group image ${i}`" :width="200" :src="src" />
+      <template #previewImage="{ originNode }">
+        <component :is="originNode" />
+        <button type="button" :disabled="images.length < 2" @click="removeCurrent">Remove current thumbnail</button>
+      </template>
+    </PreviewGroup>
+  </section>
 </template>

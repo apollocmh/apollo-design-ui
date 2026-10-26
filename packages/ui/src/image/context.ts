@@ -8,7 +8,7 @@
  * - 顺序由「Object.keys(images)」的插入顺序保证（JS 对象对整数键会按数值序，
  *   对字符串键按插入序 —— rc 用的是字符串 uid ⇒ 插入序，本仓同样用字符串）。
  */
-import { type InjectionKey, inject, provide, type Ref, ref, shallowRef } from 'vue';
+import { type InjectionKey, inject, provide, type Ref, shallowRef } from 'vue';
 
 import type { ImageCommonProps } from './interface';
 
@@ -20,6 +20,7 @@ export interface RegisteredImage {
     fallback?: string;
   };
   canPreview: boolean;
+  getTriggerElement?: () => HTMLElement | null;
   id?: string;
 }
 
@@ -83,6 +84,7 @@ export function createImageRegistry() {
     if (
       !current ||
       current.canPreview !== data.canPreview ||
+      current.getTriggerElement !== data.getTriggerElement ||
       dataKeys.some((key) => current.data[key] !== data.data[key])
     ) {
       const clone = new Map(images.value);
@@ -96,9 +98,7 @@ export function createImageRegistry() {
     };
   };
 
-  const list = ref<RegisteredImage[]>([]);
-
-  return { images, register, list };
+  return { images, register };
 }
 
 /** 从 images Map 里筛出可预览项（rc 的 mergedItems 的注册分支）。 */

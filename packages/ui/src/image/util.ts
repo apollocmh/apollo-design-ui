@@ -6,7 +6,7 @@
  */
 export { toCssSize } from '../_internal/to-css-size';
 
-import type { ImageCommonProps, PreviewConfig } from './interface';
+import type { ImageCommonProps, ImageSemanticType, PreviewConfig } from './interface';
 
 /** Shared declared preview configuration; source/container/model ownership stays at each entry. */
 export function getPreviewProps(config: PreviewConfig | null) {
@@ -38,5 +38,20 @@ export function getImageCommonProps(source: ImageCommonProps): ImageCommonProps 
     srcSet: source.srcSet,
     useMap: source.useMap,
     draggable: source.draggable,
+  };
+}
+
+/** Apply the same semantic mask alias once for both public preview entries. */
+export function getPopupClassNames(
+  popup: NonNullable<ImageSemanticType['classNames']>['popup'],
+  config: PreviewConfig | null,
+) {
+  return {
+    root: popup?.root,
+    mask: [popup?.mask, config?.maskClassName].filter(Boolean).join(' ') || undefined,
+    body: popup?.body,
+    footer: popup?.footer,
+    actions: popup?.actions,
+    close: popup?.close,
   };
 }

@@ -9,6 +9,7 @@ import {
 } from '@apollo-design/ui';
 import { computed, defineComponent, h, onMounted, ref, shallowRef, Teleport } from 'vue';
 import RichDemo from '../../../packages/ui/src/image/demo/image-render.vue';
+import GroupDemo from '../../../packages/ui/src/image/demo/preview-group.vue';
 import Preview from '../../../packages/ui/src/image/Preview';
 
 declare global {
@@ -27,6 +28,7 @@ const saved = ref(0);
 const phase = ref(0);
 const rich = ref(true);
 const mounted = ref(true);
+const sourceRemoved = ref(false);
 const root = shallowRef<HTMLElement | ShadowRoot | null>(null);
 const sourceRoot = shallowRef<ShadowRoot | null>(null);
 const host = ref<HTMLElement | null>(null);
@@ -60,6 +62,18 @@ const previewImage = ({ originNode }: PreviewImageInfo) =>
     originNode,
     h('input', { 'aria-label': 'Preview caption' }),
     h('button', { type: 'button' }, 'Preview custom last'),
+    scenario.startsWith('remove-trigger')
+      ? h(
+          'button',
+          {
+            type: 'button',
+            onClick: () => {
+              sourceRemoved.value = true;
+            },
+          },
+          'Remove original thumbnail',
+        )
+      : null,
     h(
       'svg',
       {
@@ -82,7 +96,10 @@ const previewImage = ({ originNode }: PreviewImageInfo) =>
 const Source = defineComponent({
   setup() {
     const slots = () =>
-      (scenario === 'rich' || scenario === 'rich-no-origin') && rich.value
+      (scenario === 'rich' ||
+        scenario === 'rich-no-origin' ||
+        scenario === 'remove-trigger-rich') &&
+      rich.value
         ? {
             imageRender: (info: ImageRenderInfo) =>
               scenario === 'rich-no-origin' ? thumbnail(info).slice(1) : thumbnail(info),
@@ -140,18 +157,49 @@ const Source = defineComponent({
               },
               {
                 default: () => [
-                  h(
-                    Image,
-                    {
-                      src: source,
-                      alt: 'Interaction first',
-                      width: 200,
-                      styles: { root: { height: 'auto' } },
-                      preview: { cover: preview.value.cover },
-                    },
-                    slots(),
-                  ),
-                  h(Image, { src: `${source}#2`, alt: 'Interaction second', width: 100 }),
+                  !sourceRemoved.value
+                    ? h(
+                        Image,
+                        {
+                          src: source,
+                          key: 'first',
+                          alt: 'Interaction first',
+                          width: 200,
+                          styles: { root: { height: 'auto' } },
+                          preview: { cover: preview.value.cover },
+                        },
+                        slots(),
+                      )
+                    : null,
+                  scenario === 'remove-trigger-nested'
+                    ? h(
+                        ImagePreviewGroup,
+                        {},
+                        {
+                          default: () =>
+                            h(Image, { src: source, alt: 'Nested thumbnail', width: 100 }),
+                        },
+                      )
+                    : null,
+                  scenario === 'remove-trigger-teleport'
+                    ? h(
+                        Teleport,
+                        { key: 'teleported', to: '[data-teleported-thumbnail]', defer: true },
+                        [
+                          h(Image, {
+                            key: 'second',
+                            src: `${source}#2`,
+                            alt: 'Interaction second',
+                            width: 100,
+                          }),
+                        ],
+                      )
+                    : h(Image, {
+                        key: 'second',
+                        src: `${source}#2`,
+                        alt: 'Interaction second',
+                        width: 100,
+                      }),
                 ],
                 previewImage,
               },
@@ -212,15 +260,17 @@ const setupFrame = () => {
     <button type="button" data-interaction-outside>Outside focus</button>
     <output data-interaction-state>{{ JSON.stringify({ opened, current, changes, saved, phase }) }}</output>
     <section ref="host" />
+    <section data-teleported-thumbnail />
     <iframe v-if="scenario === 'frame'" ref="frame" title="Interaction target" srcdoc="<!doctype html><html lang='en'><head><title>Interaction target</title></head><body style='min-height:3000px'><button data-frame-outside>Frame outside</button></body></html>" style="width:800px;height:500px" @load="setupFrame" />
     <ConfigProvider :theme="theme" :get-popup-container="popupContainer">
-      <template v-if="scenario !== 'public-rich'">
+      <template v-if="scenario !== 'public-rich' && scenario !== 'public-group'">
         <Teleport v-if="sourceRoot" :to="sourceRoot"><Source v-if="mounted" /></Teleport>
         <Source v-else-if="mounted" />
         <Image v-if="scenario === 'motion'" :width="200" :height="120" :placeholder="{ progress: { percent: 30 } }" />
         <Image v-if="scenario === 'progress'" :width="200" :height="140" :placeholder="{ progress: { percent: 30, render: (originNode) => h('div', [originNode, h('input', { 'aria-label': 'Progress note' }), h('button', { type: 'button', onClick: () => saved++ }, 'Cancel loading')]) } }" />
       </template>
-      <RichDemo v-else />
+      <RichDemo v-else-if="scenario === 'public-rich'" />
+      <GroupDemo v-else />
     </ConfigProvider>
   </section>
 </template>

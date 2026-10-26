@@ -18,10 +18,10 @@ const PX =
 
 const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   'image:basic': {
-    render: () => h(Image, { ...BP, src: PX, alt: 'a', width: 200, height: 100 } as never),
+    render: () => h(Image, { ...BP, src: PX, alt: 'a', width: 200, height: 100 }),
   },
   'image:no-preview': {
-    render: () => h(Image, { ...BP, src: PX, alt: 'b', width: 96, preview: false } as never),
+    render: () => h(Image, { ...BP, src: PX, alt: 'b', width: 96, preview: false }),
   },
   'image:cover-placement': {
     render: () =>
@@ -30,13 +30,13 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
         src: PX,
         width: 96,
         preview: { cover: { placement: 'top', coverNode: 'top' } },
-      } as never),
+      }),
   },
   'image:cover-false': {
-    render: () => h(Image, { ...BP, src: PX, width: 96, preview: { cover: false } } as never),
+    render: () => h(Image, { ...BP, src: PX, width: 96, preview: { cover: false } }),
   },
   'image:placeholder-true': {
-    render: () => h(Image, { ...BP, src: PX, width: 96, placeholder: true } as never),
+    render: () => h(Image, { ...BP, src: PX, width: 96, placeholder: true }),
   },
   'image:progress': {
     render: () =>
@@ -45,17 +45,16 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
         width: 200,
         height: 200,
         placeholder: { progress: { percent: 50 } },
-      } as never),
+      }),
   },
   'image:progress-busy': {
-    render: () => h(Image, { ...BP, width: 100, placeholder: { progress: true } } as never),
+    render: () => h(Image, { ...BP, width: 100, placeholder: { progress: true } }),
   },
   'image:preview-src': {
-    render: () => h(Image, { ...BP, src: PX, width: 96, preview: { src: PX } } as never),
+    render: () => h(Image, { ...BP, src: PX, width: 96, preview: { src: PX } }),
   },
   'image:preview-mask': {
-    render: () =>
-      h(Image, { ...BP, src: PX, width: 96, preview: { mask: { blur: true } } } as never),
+    render: () => h(Image, { ...BP, src: PX, width: 96, preview: { mask: { blur: true } } }),
   },
 };
 

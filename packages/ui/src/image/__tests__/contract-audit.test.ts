@@ -1,6 +1,15 @@
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createApp, defineComponent, h, nextTick, ref, shallowRef } from 'vue';
+import {
+  createApp,
+  defineComponent,
+  h,
+  nextTick,
+  type Ref,
+  ref,
+  shallowRef,
+  type VNodeChild,
+} from 'vue';
 import { ConfigProvider, type ConfigProviderProps } from '../../index';
 import {
   Image,
@@ -379,6 +388,112 @@ it('retains the last controlled Group current when the control is removed', asyn
     'audit-second.png',
   );
   current.wrapper.unmount();
+});
+it('switches explicit items and registered sources, preserving available previews and clearing empty ownership', async () => {
+  const current = host(true);
+  const changed = vi.fn();
+  try {
+    current.groupProps.value = {
+      items: ['explicit-first.png', 'explicit-second.png'],
+      current: 1,
+      onChange: changed,
+    };
+    current.open.value = true;
+    await settle();
+    const image = required('.apollo-image-preview-img', HTMLImageElement);
+    expect(image.getAttribute('src')).toBe('explicit-second.png');
+    current.groupProps.value = { onChange: changed };
+    await settle();
+    expect(required('.apollo-image-preview-img', HTMLImageElement)).toBe(image);
+    expect(image.getAttribute('src')).toBe('audit-second.png');
+    current.groupProps.value = { items: ['replacement.png'], onChange: changed };
+    await settle();
+    expect(required('.apollo-image-preview-img', HTMLImageElement)).toBe(image);
+    expect(image.getAttribute('src')).toBe('replacement.png');
+    current.groupProps.value = { items: [], onChange: changed };
+    await settle();
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    expect(image.isConnected).toBe(false);
+    current.groupProps.value = { onChange: changed };
+    await settle();
+    expect(required('.apollo-image-preview-img', HTMLImageElement).getAttribute('src')).toBe(
+      'audit-first.png',
+    );
+    expect(changed).not.toHaveBeenCalled();
+    expect(current.opened).not.toHaveBeenCalled();
+  } finally {
+    current.wrapper.unmount();
+  }
+});
+
+it('keeps nested and sibling group registrations and models isolated through inner remounts', async () => {
+  const outer = ref(false);
+  const inner = ref(false);
+  const sibling = ref(false);
+  const showInner = ref(true);
+  const thumb = (name: string) =>
+    h(Image, { key: name, src: `${name}.png`, alt: name, 'data-ownership-thumb': name });
+  const group = (open: Ref<boolean>, children: () => VNodeChild) =>
+    h(
+      ImagePreviewGroup,
+      {
+        open: open.value,
+        'onUpdate:open': (next: boolean) => {
+          open.value = next;
+        },
+      },
+      { default: children },
+    );
+  const wrapper = mount(
+    {
+      setup: () => () =>
+        h('section', [
+          group(outer, () => [
+            thumb('outer-first'),
+            showInner.value
+              ? group(inner, () => [thumb('inner-first'), thumb('inner-second')])
+              : null,
+            thumb('outer-second'),
+          ]),
+          group(sibling, () => [thumb('sibling-first'), thumb('sibling-second')]),
+        ]),
+    },
+    { attachTo: document.body, global: { stubs: { teleport: false } } },
+  );
+  const close = async () => {
+    required('[aria-label="Close preview"]', HTMLButtonElement).click();
+    await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+  };
+  try {
+    await settle();
+    for (const [name, state, counter] of [
+      ['outer-second', outer, '2 / 2'],
+      ['inner-second', inner, '2 / 2'],
+      ['sibling-first', sibling, '1 / 2'],
+    ] satisfies Array<[string, Ref<boolean>, string]>) {
+      await wrapper.get(`[data-ownership-thumb="${name}"]`).trigger('click');
+      await settle();
+      expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(1);
+      expect(required('.apollo-image-preview-img', HTMLImageElement).getAttribute('src')).toBe(
+        `${name}.png`,
+      );
+      expect(document.querySelector('.apollo-image-preview-progress')?.textContent).toBe(counter);
+      expect([outer, inner, sibling].filter((value) => value.value)).toEqual([state]);
+      await close();
+    }
+    await wrapper.get('[data-ownership-thumb="outer-first"]').trigger('click');
+    await settle();
+    const image = required('.apollo-image-preview-img', HTMLImageElement);
+    for (const visible of [false, true]) {
+      showInner.value = visible;
+      await settle();
+      expect(required('.apollo-image-preview-img', HTMLImageElement)).toBe(image);
+      expect(image.getAttribute('src')).toBe('outer-first.png');
+      expect(document.querySelector('.apollo-image-preview-progress')?.textContent).toBe('1 / 2');
+    }
+  } finally {
+    wrapper.unmount();
+  }
 });
 it('does not open an empty Group preview from registered children', async () => {
   const current = host(true);

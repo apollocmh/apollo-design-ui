@@ -53,7 +53,7 @@ import type {
 } from './interface';
 import Preview from './Preview';
 import Progress from './Progress';
-import { getImageCommonProps, getPreviewProps, toCssSize } from './util';
+import { getImageCommonProps, getPopupClassNames, getPreviewProps, toCssSize } from './util';
 
 type SemanticClassNames = NonNullable<ImageSemanticType['classNames']>;
 type SemanticStyles = NonNullable<ImageSemanticType['styles']>;
@@ -156,6 +156,13 @@ const Image = defineComponent({
     const imageId = nextImageId();
     let unregister: (() => void) | undefined;
 
+    // Resolve the current owned action lazily: slot shape and preview availability
+    // can change without replacing the registered image or its position.
+    const getTriggerElement = () =>
+      canPreview.value
+        ? (previewTrigger.value ??
+          (element.value?.getAttribute('role') === 'button' ? element.value : null))
+        : null;
     const registerData = computed<RegisteredImage>(() => ({
       data: {
         ...getImageCommonProps(props),
@@ -165,6 +172,7 @@ const Image = defineComponent({
         fallback: props.fallback,
       },
       canPreview: previewConfig.value !== null,
+      getTriggerElement,
     }));
 
     if (groupContext) {
@@ -253,17 +261,9 @@ const Image = defineComponent({
     // ⚠️ popup 是**嵌套语义组** —— 合并结果来自 useMergeSemantic 的 schema 档
     //（`popup: { _default: 'root' }`，§1.7b 已补）：字符串形态 `popup = 'x'` 已被
     // 归到 `popup.root`，这里只读合并结果；`previewConfig` 的两条是本仓既有的附加项。
-    const popupClassNames = computed(() => {
-      const p = mergedClassNames.value.popup;
-      return {
-        root: p?.root,
-        mask: [p?.mask, previewConfig.value?.maskClassName].filter(Boolean).join(' ') || undefined,
-        body: p?.body,
-        footer: p?.footer,
-        actions: p?.actions,
-        close: p?.close,
-      };
-    });
+    const popupClassNames = computed(() =>
+      getPopupClassNames(mergedClassNames.value.popup, previewConfig.value),
+    );
 
     const coverInfo = computed(() => normalizeCover(previewConfig.value?.cover));
     // Content slots and VNode data may contain native controls. In that case
@@ -349,6 +349,7 @@ const Image = defineComponent({
     };
 
     return () => {
+      const prefix = prefixCls.value;
       const commonProps = { ...getImageCommonProps(props), alt: props.alt ?? '' };
 
       // 进度层 / 纯占位 overlay：只渲染 Progress（带尺寸）
@@ -364,7 +365,7 @@ const Image = defineComponent({
         if (progressAttrs['aria-label'] === undefined) delete progressAttrs['aria-label'];
         return h(Progress, {
           ...progressAttrs,
-          prefixCls: prefixCls.value,
+          prefixCls: prefix,
           percent: cfg.percent,
           render: shouldRenderPlaceholderOverlay.value ? () => placeholderNode.value : cfg.render,
           classNames: mergedClassNames.value?.placeholder?.progress,
@@ -382,8 +383,8 @@ const Image = defineComponent({
         key: 'image-origin',
         ...commonProps,
         class: [
-          `${prefixCls.value}-img`,
-          props.placeholder === true ? `${prefixCls.value}-img-placeholder` : undefined,
+          `${prefix}-img`,
+          props.placeholder === true ? `${prefix}-img-placeholder` : undefined,
           mergedClassNames.value?.image,
         ],
         style: {
@@ -430,12 +431,12 @@ const Image = defineComponent({
             element.value = node instanceof HTMLElement ? node : null;
           },
           class: [
-            prefixCls.value,
-            canPreview.value && hasRichContent() ? `${prefixCls.value}-rich` : undefined,
+            prefix,
+            canPreview.value && hasRichContent() ? `${prefix}-rich` : undefined,
             // 调用方原生 class（位置与原先的 props.rootClassName 一致）
             attrs.class,
             mergedClassNames.value?.root,
-            isError ? `${prefixCls.value}-error` : undefined,
+            isError ? `${prefix}-error` : undefined,
           ],
           style: [
             theme.styles.value,
@@ -469,7 +470,7 @@ const Image = defineComponent({
                 'button',
                 {
                   type: 'button',
-                  class: `${prefixCls.value}-preview-trigger`,
+                  class: `${prefix}-preview-trigger`,
                   'data-apollo-image-preview-trigger': '',
                   'aria-label':
                     (attrs['aria-label'] ?? props.alt?.trim())
@@ -486,7 +487,7 @@ const Image = defineComponent({
           status.value === 'loading'
             ? h(
                 'div',
-                { 'aria-hidden': 'true', class: `${prefixCls.value}-placeholder` },
+                { 'aria-hidden': 'true', class: `${prefix}-placeholder` },
                 [placeholderNode.value].filter(isNonNullable),
               )
             : null,
@@ -495,9 +496,9 @@ const Image = defineComponent({
                 'div',
                 {
                   class: [
-                    `${prefixCls.value}-cover`,
+                    `${prefix}-cover`,
                     mergedClassNames.value?.cover,
-                    `${prefixCls.value}-cover-${coverInfo.value.placement}`,
+                    `${prefix}-cover-${coverInfo.value.placement}`,
                   ],
                   style: mergedStyles.value?.cover,
                   ref: (node: unknown) => {
@@ -512,7 +513,7 @@ const Image = defineComponent({
                 Preview,
                 {
                   ...getPreviewProps(previewConfig.value),
-                  prefixCls: `${prefixCls.value}-preview`,
+                  prefixCls: `${prefix}-preview`,
                   src: previewSrc.value,
                   alt: props.alt,
                   imageInfo: { width: props.width, height: props.height },

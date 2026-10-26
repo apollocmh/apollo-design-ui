@@ -230,3 +230,5 @@ import '@apollo-design/ui/style.css';          // 汇总
 **组内切换时浮层会重建吗？**
 
 不会。组内只挂**一个** `Preview`，切换时更新 `src` 与 `mousePosition`。
+
+Group通过Vue注册关系维护归属，嵌套组相互隔离，Teleport不会改变图片所属组；显式items优先，移除items后恢复子图注册。打开者被删除后，关闭归还本组仍可用的预览入口，不选择嵌套组或业务控件。删除无控当前项会归一到有效索引，数据更新不回声change/update:current。

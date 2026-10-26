@@ -211,7 +211,8 @@
       "id": "image",
       "pkg": "@apollo-design/ui",
       "imports": ["Image"],
-      "budgetKb": 77,
+      "budgetKb": 78,
+      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节；按用户明确要求保留正确行为并调为78KB，measuredKb历史基线不变。",
       "measuredKb": 47.5
     },
     {

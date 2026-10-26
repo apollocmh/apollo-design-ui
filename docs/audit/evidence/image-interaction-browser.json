@@ -1,7 +1,7 @@
 {
   "command": "node tests/browser/image-interactions.mjs",
-  "baseCommit": "899eba648441c93e65ca30b2674d8901ae94fed5",
-  "productionSourceSha256": "74b5b7cc7922a5e516a8609c7993fbe08db3f53d624b3e088b646cc881d6ccab",
+  "baseCommit": "5e14ad6b262af4c35aa6fb348eae1a6bf10dbb6f",
+  "productionSourceSha256": "7b71c0831303a82df779a79ba9264a2f6102a300e15aec4125f112cd86384c79",
   "fingerprintAlgorithm": "SHA-256 over sorted UTF-8 path + NUL + file bytes + NUL for each sourceFiles entry",
   "sourceFiles": [
     "packages/a11y/src/combobox.ts",
@@ -267,118 +267,85 @@
       "accessibility": "full axe and real interaction"
     },
     {
+      "target": "group",
+      "scenario": "remove-trigger",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "remove-trigger-rich",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "remove-trigger-nested",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
+      "target": "group",
+      "scenario": "remove-trigger-teleport",
+      "failures": [],
+      "entry": "public Image/PreviewGroup through declared container types",
+      "accessibility": "full axe and real interaction"
+    },
+    {
       "target": "public-demo",
       "scenario": "rich-preview-and-cover",
+      "failures": []
+    },
+    {
+      "target": "public-demo",
+      "scenario": "group-opener-removal-and-reset",
       "failures": []
     }
   ],
   "issues": [],
   "validation": {
-    "strict": {
-      "command": "pnpm exec vue-tsc --noEmit",
-      "exitCode": 0
-    },
     "runtime": {
-      "files": 69,
-      "tests": 1338,
-      "failed": 0
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/image --maxWorkers=1 --no-file-parallelism",
+      "files": 23,
+      "tests": 381,
+      "failed": 0,
+      "log": "/tmp/apollo-image-ownership-runtime-final.log"
     },
     "types": {
-      "files": 28,
-      "tests": 352,
-      "errors": 0
+      "command": "pnpm exec vitest run --project types packages/ui/src/image --maxWorkers=1 --no-file-parallelism",
+      "files": 14,
+      "tests": 34,
+      "errors": 0,
+      "log": "/tmp/apollo-image-ownership-types.log",
+      "scope": "Public Image types; run before equivalent private popup-class utility consolidation. Final root strict and published SFC consumers cover the frozen source."
     },
-    "imageImportBytes": 78832,
-    "imageBudgetBytes": 78848,
-    "frozenGates": [
+    "imageBudgetBytes": 79872,
+    "gates": [
       {
-        "gate": "runtime",
+        "gate": "strict",
         "command": [
           "pnpm",
           "exec",
-          "vitest",
-          "run",
-          "--project",
-          "unit",
-          "--project",
-          "dom-contract",
-          "--project",
-          "a11y",
-          "--project",
-          "theme",
-          "packages/utils/src",
-          "packages/a11y/src",
-          "packages/motion/src",
-          "packages/portal/src",
-          "packages/ui/src/image",
-          "--maxWorkers=1",
-          "--no-file-parallelism"
+          "vue-tsc",
+          "--noEmit"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-runtime.log"
+        "log": "/tmp/apollo-image-ownership-final-strict.log"
       },
       {
-        "gate": "types",
+        "gate": "build",
         "command": [
           "pnpm",
-          "exec",
-          "vitest",
+          "--filter",
+          "@apollo-design/ui",
           "run",
-          "--project",
-          "types",
-          "packages/utils",
-          "packages/a11y",
-          "packages/motion",
-          "packages/portal",
-          "packages/ui/src/_internal",
-          "packages/ui/src/image",
-          "packages/ui/src/config-provider",
-          "packages/ui/src/modal",
-          "packages/ui/src/drawer",
-          "--maxWorkers=1",
-          "--no-file-parallelism"
+          "build"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-types.log"
-      },
-      {
-        "gate": "utils-L7",
-        "command": [
-          "node",
-          "tests/build/run.mjs",
-          "--package",
-          "utils",
-          "--no-build",
-          "--strict"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-utils-L7.log"
-      },
-      {
-        "gate": "a11y-L7",
-        "command": [
-          "node",
-          "tests/build/run.mjs",
-          "--package",
-          "a11y",
-          "--no-build",
-          "--strict"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-a11y-L7.log"
-      },
-      {
-        "gate": "motion-L7",
-        "command": [
-          "node",
-          "tests/build/run.mjs",
-          "--package",
-          "motion",
-          "--no-build",
-          "--strict"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-motion-L7.log"
+        "log": "/tmp/apollo-image-ownership-final-build.log"
       },
       {
         "gate": "ui-L7",
@@ -391,247 +358,34 @@
           "--strict"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-ui-L7.log"
+        "log": "/tmp/apollo-image-ownership-final-ui-L7.log"
       },
       {
-        "gate": "utils-environment-consumer",
-        "command": [
-          "node",
-          "tests/consumer/utils-environment.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-utils-environment-consumer.log"
-      },
-      {
-        "gate": "image-ssr-consumer",
-        "command": [
-          "node",
-          "tests/consumer/image-ssr.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-ssr-consumer.log"
-      },
-      {
-        "gate": "image-slot-types-consumer",
-        "command": [
-          "node",
-          "tests/consumer/image-slot-types.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-slot-types-consumer.log"
-      },
-      {
-        "gate": "run-consumer",
-        "command": [
-          "node",
-          "tests/consumer/run.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-run-consumer.log"
-      },
-      {
-        "gate": "image-interactions-browser",
+        "gate": "browser",
         "command": [
           "node",
           "tests/browser/image-interactions.mjs"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-interactions-browser.log"
+        "log": "/tmp/apollo-image-ownership-final-browser.log"
       },
       {
-        "gate": "image-contract-audit-browser",
+        "gate": "image-ssr",
         "command": [
           "node",
-          "tests/browser/image-contract-audit.mjs"
+          "tests/consumer/image-ssr.mjs"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-contract-audit-browser.log"
+        "log": "/tmp/apollo-image-ownership-final-image-ssr.log"
       },
       {
-        "gate": "image-preview-focus-browser",
+        "gate": "image-slot-types",
         "command": [
           "node",
-          "tests/browser/image-preview-focus.mjs"
+          "tests/consumer/image-slot-types.mjs"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-preview-focus-browser.log"
-      },
-      {
-        "gate": "image-native-events-browser",
-        "command": [
-          "node",
-          "tests/browser/image-native-events.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-native-events-browser.log"
-      },
-      {
-        "gate": "image-preview-slots-browser",
-        "command": [
-          "node",
-          "tests/browser/image-preview-slots.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-preview-slots-browser.log"
-      },
-      {
-        "gate": "image-transform-browser",
-        "command": [
-          "node",
-          "tests/browser/image-transform.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-transform-browser.log"
-      },
-      {
-        "gate": "image-scale-bounds-browser",
-        "command": [
-          "node",
-          "tests/browser/image-scale-bounds.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-scale-bounds-browser.log"
-      },
-      {
-        "gate": "image-theme-hydration-browser",
-        "command": [
-          "node",
-          "tests/browser/image-theme-hydration.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-theme-hydration-browser.log"
-      },
-      {
-        "gate": "image-render-browser",
-        "command": [
-          "node",
-          "tests/browser/image-render.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-render-browser.log"
-      },
-      {
-        "gate": "image-preview-close-browser",
-        "command": [
-          "node",
-          "tests/browser/image-preview-close.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-preview-close-browser.log"
-      },
-      {
-        "gate": "image-open-model-browser",
-        "command": [
-          "node",
-          "tests/browser/image-open-model.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-open-model-browser.log"
-      },
-      {
-        "gate": "image-styles-browser",
-        "command": [
-          "node",
-          "tests/browser/image-styles.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-styles-browser.log"
-      },
-      {
-        "gate": "image-provider-browser",
-        "command": [
-          "node",
-          "tests/browser/image-provider.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-provider-browser.log"
-      },
-      {
-        "gate": "image-popup-provider-browser",
-        "command": [
-          "node",
-          "tests/browser/image-popup-provider.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-popup-provider-browser.log"
-      },
-      {
-        "gate": "image-prefix-browser",
-        "command": [
-          "node",
-          "tests/browser/image-prefix.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-prefix-browser.log"
-      },
-      {
-        "gate": "image-direction-browser",
-        "command": [
-          "node",
-          "tests/browser/image-direction.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-direction-browser.log"
-      },
-      {
-        "gate": "image-counter-contrast-browser",
-        "command": [
-          "node",
-          "tests/browser/image-counter-contrast.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-image-counter-contrast-browser.log"
-      },
-      {
-        "gate": "form-prefix-browser",
-        "command": [
-          "node",
-          "tests/browser/form-prefix.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-form-prefix-browser.log"
-      },
-      {
-        "gate": "drawer-slots-browser",
-        "command": [
-          "node",
-          "tests/browser/drawer-slots.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-drawer-slots-browser.log"
-      },
-      {
-        "gate": "motion-hydration-browser",
-        "command": [
-          "node",
-          "tests/browser/motion-hydration.mjs"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-motion-hydration-browser.log"
-      },
-      {
-        "gate": "docs-content-build",
-        "command": [
-          "pnpm",
-          "--filter",
-          "@apollo-design/docs",
-          "run",
-          "content:build"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-docs-content-build.log"
-      },
-      {
-        "gate": "docs-content-check",
-        "command": [
-          "pnpm",
-          "--filter",
-          "@apollo-design/docs",
-          "run",
-          "content:check"
-        ],
-        "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-docs-content-check.log"
+        "log": "/tmp/apollo-image-ownership-final-image-slot-types.log"
       },
       {
         "gate": "docs-typecheck",
@@ -643,7 +397,7 @@
           "typecheck"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-docs-typecheck.log"
+        "log": "/tmp/apollo-image-ownership-final-docs-typecheck.log"
       },
       {
         "gate": "docs-test",
@@ -655,7 +409,7 @@
           "test"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-docs-test.log"
+        "log": "/tmp/apollo-image-ownership-final-docs-test.log"
       },
       {
         "gate": "docs-build",
@@ -667,26 +421,444 @@
           "build"
         ],
         "exitCode": 0,
-        "log": "/tmp/apollo-image-frozen-docs-build.log"
-      },
-      {
-        "gate": "format",
-        "command": [
-          "pnpm",
-          "run",
-          "lint:format"
-        ],
-        "exitCode": 1,
-        "log": "/tmp/apollo-image-frozen-format.log"
+        "log": "/tmp/apollo-image-ownership-final-docs-build.log"
       }
     ],
+    "tooling": {
+      "command": "pnpm run test:tooling",
+      "tests": 10,
+      "failed": 0
+    },
+    "registry": {
+      "command": "pnpm registry:check",
+      "checks": 19,
+      "warnings": 0
+    },
     "format": {
-      "changedFiles": 48,
-      "changedExitCode": 0,
-      "wholeRepositoryErrors": 66,
-      "originalHeadErrors": 67,
-      "wholeRepositoryExitCode": 1
+      "command": "pnpm exec biome check (18 changed source/test/tooling paths)",
+      "files": 18,
+      "errors": 0
     }
+  },
+  "previousMilestone": {
+    "commit": "5e14ad6b",
+    "productionSourceSha256": "74b5b7cc7922a5e516a8609c7993fbe08db3f53d624b3e088b646cc881d6ccab",
+    "validation": {
+      "strict": {
+        "command": "pnpm exec vue-tsc --noEmit",
+        "exitCode": 0
+      },
+      "runtime": {
+        "files": 69,
+        "tests": 1338,
+        "failed": 0
+      },
+      "types": {
+        "files": 28,
+        "tests": 352,
+        "errors": 0
+      },
+      "imageImportBytes": 78832,
+      "imageBudgetBytes": 78848,
+      "frozenGates": [
+        {
+          "gate": "runtime",
+          "command": [
+            "pnpm",
+            "exec",
+            "vitest",
+            "run",
+            "--project",
+            "unit",
+            "--project",
+            "dom-contract",
+            "--project",
+            "a11y",
+            "--project",
+            "theme",
+            "packages/utils/src",
+            "packages/a11y/src",
+            "packages/motion/src",
+            "packages/portal/src",
+            "packages/ui/src/image",
+            "--maxWorkers=1",
+            "--no-file-parallelism"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-runtime.log"
+        },
+        {
+          "gate": "types",
+          "command": [
+            "pnpm",
+            "exec",
+            "vitest",
+            "run",
+            "--project",
+            "types",
+            "packages/utils",
+            "packages/a11y",
+            "packages/motion",
+            "packages/portal",
+            "packages/ui/src/_internal",
+            "packages/ui/src/image",
+            "packages/ui/src/config-provider",
+            "packages/ui/src/modal",
+            "packages/ui/src/drawer",
+            "--maxWorkers=1",
+            "--no-file-parallelism"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-types.log"
+        },
+        {
+          "gate": "utils-L7",
+          "command": [
+            "node",
+            "tests/build/run.mjs",
+            "--package",
+            "utils",
+            "--no-build",
+            "--strict"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-utils-L7.log"
+        },
+        {
+          "gate": "a11y-L7",
+          "command": [
+            "node",
+            "tests/build/run.mjs",
+            "--package",
+            "a11y",
+            "--no-build",
+            "--strict"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-a11y-L7.log"
+        },
+        {
+          "gate": "motion-L7",
+          "command": [
+            "node",
+            "tests/build/run.mjs",
+            "--package",
+            "motion",
+            "--no-build",
+            "--strict"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-motion-L7.log"
+        },
+        {
+          "gate": "ui-L7",
+          "command": [
+            "node",
+            "tests/build/run.mjs",
+            "--package",
+            "ui",
+            "--no-build",
+            "--strict"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-ui-L7.log"
+        },
+        {
+          "gate": "utils-environment-consumer",
+          "command": [
+            "node",
+            "tests/consumer/utils-environment.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-utils-environment-consumer.log"
+        },
+        {
+          "gate": "image-ssr-consumer",
+          "command": [
+            "node",
+            "tests/consumer/image-ssr.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-ssr-consumer.log"
+        },
+        {
+          "gate": "image-slot-types-consumer",
+          "command": [
+            "node",
+            "tests/consumer/image-slot-types.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-slot-types-consumer.log"
+        },
+        {
+          "gate": "run-consumer",
+          "command": [
+            "node",
+            "tests/consumer/run.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-run-consumer.log"
+        },
+        {
+          "gate": "image-interactions-browser",
+          "command": [
+            "node",
+            "tests/browser/image-interactions.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-interactions-browser.log"
+        },
+        {
+          "gate": "image-contract-audit-browser",
+          "command": [
+            "node",
+            "tests/browser/image-contract-audit.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-contract-audit-browser.log"
+        },
+        {
+          "gate": "image-preview-focus-browser",
+          "command": [
+            "node",
+            "tests/browser/image-preview-focus.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-preview-focus-browser.log"
+        },
+        {
+          "gate": "image-native-events-browser",
+          "command": [
+            "node",
+            "tests/browser/image-native-events.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-native-events-browser.log"
+        },
+        {
+          "gate": "image-preview-slots-browser",
+          "command": [
+            "node",
+            "tests/browser/image-preview-slots.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-preview-slots-browser.log"
+        },
+        {
+          "gate": "image-transform-browser",
+          "command": [
+            "node",
+            "tests/browser/image-transform.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-transform-browser.log"
+        },
+        {
+          "gate": "image-scale-bounds-browser",
+          "command": [
+            "node",
+            "tests/browser/image-scale-bounds.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-scale-bounds-browser.log"
+        },
+        {
+          "gate": "image-theme-hydration-browser",
+          "command": [
+            "node",
+            "tests/browser/image-theme-hydration.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-theme-hydration-browser.log"
+        },
+        {
+          "gate": "image-render-browser",
+          "command": [
+            "node",
+            "tests/browser/image-render.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-render-browser.log"
+        },
+        {
+          "gate": "image-preview-close-browser",
+          "command": [
+            "node",
+            "tests/browser/image-preview-close.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-preview-close-browser.log"
+        },
+        {
+          "gate": "image-open-model-browser",
+          "command": [
+            "node",
+            "tests/browser/image-open-model.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-open-model-browser.log"
+        },
+        {
+          "gate": "image-styles-browser",
+          "command": [
+            "node",
+            "tests/browser/image-styles.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-styles-browser.log"
+        },
+        {
+          "gate": "image-provider-browser",
+          "command": [
+            "node",
+            "tests/browser/image-provider.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-provider-browser.log"
+        },
+        {
+          "gate": "image-popup-provider-browser",
+          "command": [
+            "node",
+            "tests/browser/image-popup-provider.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-popup-provider-browser.log"
+        },
+        {
+          "gate": "image-prefix-browser",
+          "command": [
+            "node",
+            "tests/browser/image-prefix.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-prefix-browser.log"
+        },
+        {
+          "gate": "image-direction-browser",
+          "command": [
+            "node",
+            "tests/browser/image-direction.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-direction-browser.log"
+        },
+        {
+          "gate": "image-counter-contrast-browser",
+          "command": [
+            "node",
+            "tests/browser/image-counter-contrast.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-image-counter-contrast-browser.log"
+        },
+        {
+          "gate": "form-prefix-browser",
+          "command": [
+            "node",
+            "tests/browser/form-prefix.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-form-prefix-browser.log"
+        },
+        {
+          "gate": "drawer-slots-browser",
+          "command": [
+            "node",
+            "tests/browser/drawer-slots.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-drawer-slots-browser.log"
+        },
+        {
+          "gate": "motion-hydration-browser",
+          "command": [
+            "node",
+            "tests/browser/motion-hydration.mjs"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-motion-hydration-browser.log"
+        },
+        {
+          "gate": "docs-content-build",
+          "command": [
+            "pnpm",
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "content:build"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-docs-content-build.log"
+        },
+        {
+          "gate": "docs-content-check",
+          "command": [
+            "pnpm",
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "content:check"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-docs-content-check.log"
+        },
+        {
+          "gate": "docs-typecheck",
+          "command": [
+            "pnpm",
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "typecheck"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-docs-typecheck.log"
+        },
+        {
+          "gate": "docs-test",
+          "command": [
+            "pnpm",
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "test"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-docs-test.log"
+        },
+        {
+          "gate": "docs-build",
+          "command": [
+            "pnpm",
+            "--filter",
+            "@apollo-design/docs",
+            "run",
+            "build"
+          ],
+          "exitCode": 0,
+          "log": "/tmp/apollo-image-frozen-docs-build.log"
+        },
+        {
+          "gate": "format",
+          "command": [
+            "pnpm",
+            "run",
+            "lint:format"
+          ],
+          "exitCode": 1,
+          "log": "/tmp/apollo-image-frozen-format.log"
+        }
+      ],
+      "format": {
+        "changedFiles": 48,
+        "changedExitCode": 0,
+        "wholeRepositoryErrors": 66,
+        "originalHeadErrors": 67,
+        "wholeRepositoryExitCode": 1
+      }
+    },
+    "scope": "Shared foundation and wider consumer verification at the previous milestone; not rerun or relabeled as final whole-library gates by this Image-only follow-up."
   },
   "bounds": [
     "Image.preview.getContainer retains () => HTMLElement; ShadowRoot cases use the existing ConfigProvider.getPopupContainer contract.",
@@ -694,7 +866,8 @@
     "Closed ShadowRoot axe context traversal is unsupported by the installed engine. Native Chrome AX checks cover dialog/name/textbox/close there; open mirrors retain full axe scans.",
     "The real SFC caller is checked with vue-tsc before bundling; published declaration consumers are separate gates.",
     "Earlier shared-consumer run: 278/279 files and 4531/4532 tests passed, with one old rich-root trigger assertion corrected; complete Image and then the frozen 69-file cohort passed. This is not one green 279-file run.",
-    "Image visual acceptance and final whole-library gates remain separate from this interaction milestone.",
-    "Explicit final ownership checks remain pending for items/registration switching, nested groups and removal of the selected registered item; the Image unit remains open."
+    "Teleport opener-removal covers a deferred target in the same document; nested-group ownership is independently checked.",
+    "This Image follow-up has 381 local runtime tests and 26 browser scenarios. Earlier shared and wider consumer evidence belongs to 5e14ad6b, not a new full-library run.",
+    "Image visual approval is the next milestone; final whole-library gates and existing global formatter debt remain open."
   ]
 }

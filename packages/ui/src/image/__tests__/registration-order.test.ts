@@ -40,7 +40,7 @@ async function move(direction: 'next' | 'prev') {
   button.click();
   await settle();
 }
-async function groupWith(initial: Picture[]) {
+async function groupWith(initial: Picture[], controlled = true) {
   const entries = ref(initial);
   const current = ref(0);
   const open = ref(false);
@@ -55,7 +55,7 @@ async function groupWith(initial: Picture[]) {
         ImagePreviewGroup,
         {
           open: open.value,
-          current: current.value,
+          current: controlled ? current.value : undefined,
           onChange: changed,
           onOpenChange: opened,
           'onUpdate:current': updated,
@@ -103,6 +103,28 @@ afterEach(() => {
 });
 
 describe('Image PreviewGroup stable registration order', () => {
+  it('normalizes deletion of the selected uncontrolled registration without replacing the preview or echoing a request', async () => {
+    const all = pictures().slice(0, 2);
+    const { entries, changed, updated, wrapper } = await groupWith(all, false);
+    try {
+      await move('next');
+      const image = previewImage();
+      const second = all[1];
+      if (!second) throw new Error('Expected the selected second registration');
+      assertImage(image, second);
+      changed.mockClear();
+      updated.mockClear();
+      entries.value.pop();
+      await settle();
+      expect(previewImage()).toBe(image);
+      assertImage(image, firstPicture(all));
+      expect(progress()).toBe('1 / 1');
+      expect(changed).not.toHaveBeenCalled();
+      expect(updated).not.toHaveBeenCalled();
+    } finally {
+      wrapper.unmount();
+    }
+  });
   it('does not publish equivalent same-id registrations but still publishes changed data', () => {
     const { images, register } = createImageRegistry();
     register('stable', { data: { src: 'same.png', width: 100 }, canPreview: true });
