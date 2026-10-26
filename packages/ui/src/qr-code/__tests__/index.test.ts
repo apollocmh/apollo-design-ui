@@ -116,13 +116,15 @@ describe('QrCode · 组件', () => {
     expect(loading.find('.apollo-spin').exists()).toBe(true);
   });
 
-  it('statusRender 完全接管覆盖层', () => {
+  it('原生status槽完整接管覆盖层', () => {
     const w = mount(
-      h(QrCode, {
-        value: 'x',
-        status: 'expired',
-        statusRender: () => h('div', { class: 'custom-render' }, 'CUSTOM'),
-      }),
+      h(
+        QrCode,
+        { value: 'x', status: 'expired' },
+        {
+          status: () => h('div', { class: 'custom-render' }, 'CUSTOM'),
+        },
+      ),
     );
     expect(w.find('.custom-render').text()).toBe('CUSTOM');
     expect(w.find('.apollo-qrcode-expired').exists()).toBe(false);

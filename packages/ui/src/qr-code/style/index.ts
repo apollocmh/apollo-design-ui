@@ -5,14 +5,11 @@
  *
  * ── 与 antd 产物的有意差异 ────────────────────────────────────────────────────
  *
- * 1. 无 hash / css-var 包裹类（D5）；1 个 Component Token
- *    （QRCodeCoverBackgroundColor = FastColor(colorBgContainer).setA(0.96)）
- *    是**构建期解析值**（switch 的 handleShadow 同判：utils `Color` 算出逐字节
- *    相同的 rgba 串）。
+ * 1. 静态CSS以当前Alias派生遮罩默认色；源主题在拥有者投射唯一Component Token。
  * 2. `QRCodeTextColor` 是 mergeToken 注入的别名（= colorText）⇒ 直接 `var()`。
  */
 
-import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
+import { token2CSSVar } from '@apollo-design/theme';
 import { Color } from '@apollo-design/utils';
 
 /** token 名 → `var(--apollo-*)`。 */
@@ -22,10 +19,11 @@ const v = (token: string): string => `var(${token2CSSVar(token)})`;
 const sv = (rootPrefixCls: string, name: string): string =>
   `var(--${rootPrefixCls}-qrcode-${name})`;
 
-/** antd 的 `prepareComponentToken`（1 个字段，FastColor ⇒ utils Color 同判）。 */
-export function prepareComponentToken(token: { colorBgContainer: string }): {
+/** Public shape of the existing cover token. */
+export interface QRCodeComponentToken {
   QRCodeCoverBackgroundColor: string;
-} {
+}
+export function prepareComponentToken(token: { colorBgContainer: string }): QRCodeComponentToken {
   const base = new Color(token.colorBgContainer).toRgb();
   return {
     QRCodeCoverBackgroundColor: new Color({
@@ -37,19 +35,11 @@ export function prepareComponentToken(token: { colorBgContainer: string }): {
   };
 }
 
-let tokenCache: { QRCodeCoverBackgroundColor: string } | null = null;
-
-function qrcodeTokenValues(): { QRCodeCoverBackgroundColor: string } {
-  if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken());
-  }
-  return tokenCache;
-}
-
 export function genTokenDecls(rootPrefixCls: string): string[] {
   const p = rootPrefixCls;
-  const t = qrcodeTokenValues();
-  return [`  --${p}-qrcode-cover-background-color:${t.QRCodeCoverBackgroundColor};`];
+  return [
+    `  --${p}-qrcode-cover-background-color:color-mix(in srgb,${v('colorBgContainer')} 96%,transparent);`,
+  ];
 }
 
 export function genQrCodeStyle(rootPrefixCls: string): string {
@@ -98,10 +88,15 @@ export function genQrCodeStyle(rootPrefixCls: string): string {
     `${cls} > ${cls}-cover > ${cls}-scanned{`,
     `  color:${v('colorText')};`,
     `}`,
-    `${cls} > canvas{`,
+    `${cls} > canvas,${cls} > svg{`,
+    `  display:block;`,
+    `  width:100%;`,
+    `  height:100%;`,
+    `  object-fit:contain;`,
     `  align-self:stretch;`,
     `  flex:auto;`,
     `  min-width:0;`,
+    `  min-height:0;`,
     `}`,
     `${cls}-icon{`,
     `  margin-block-end:${v('marginXS')};`,

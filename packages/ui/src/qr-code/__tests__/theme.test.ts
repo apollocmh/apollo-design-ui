@@ -13,7 +13,9 @@ describe('QrCode · 样式', () => {
   it('唯一 Component Token：cover 背景色 = colorBgContainer 透明到 0.96（FastColor 同判）', () => {
     // antd: new FastColor(colorBgContainer).setA(0.96).toRgbString()
     // colorBgContainer 默认 #ffffff ⇒ rgba(255,255,255,0.96)
-    expect(decls).toContain('  --apollo-qrcode-cover-background-color:rgba(255,255,255,0.96);');
+    expect(decls).toContain(
+      '  --apollo-qrcode-cover-background-color:color-mix(in srgb,var(--apollo-color-bg-container) 96%,transparent);',
+    );
     // prepareComponentToken 的输入输出契约
     expect(prepareComponentToken({ colorBgContainer: '#ffffff' }).QRCodeCoverBackgroundColor).toBe(
       'rgba(255,255,255,0.96)',
@@ -42,7 +44,8 @@ describe('QrCode · 样式', () => {
   });
 
   it('canvas / borderless 段', () => {
-    expect(css).toContain('.apollo-qrcode > canvas{');
+    expect(css).toContain('.apollo-qrcode > canvas,.apollo-qrcode > svg{');
+    expect(css).toContain('  object-fit:contain;');
     expect(css).toContain('  align-self:stretch;');
     expect(css).toContain('  flex:auto;');
     expect(css).toContain('.apollo-qrcode-borderless{');

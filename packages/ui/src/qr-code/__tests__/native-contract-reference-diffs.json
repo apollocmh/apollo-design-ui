@@ -1,0 +1,40 @@
+{
+  "qr-code:basic": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/canvas[0]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:borderless": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/canvas[0]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:svg": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/svg[0]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:svg-color": [
+    "$/div[0]: style 不同 [background-color:#f0f5ff;height:160px;width:160px] vs [background-color:rgb(240,245,255);height:160px;width:160px]",
+    "$/div[0]/svg[0]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:status-expired": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/div[0]/button[1]: 类名不同 [apollo-btn apollo-btn-color-link apollo-btn-link apollo-btn-variant-link] vs [apollo-btn apollo-btn-color-default apollo-btn-text apollo-btn-variant-text]",
+    "$/div[0]/canvas[1]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:status-scanned": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/canvas[1]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:status-loading": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/div[0]/div[0]: 类名不同 [apollo-spin apollo-spin-section apollo-spin-spinning] vs [apollo-spin apollo-spin-spinning]",
+    "$/div[0]/div[0]/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/div[0]/div[0]/span[0]: 类名不同 [apollo-spin-dot-holder] vs [apollo-spin-section]",
+    "$/div[0]/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-spin-dot apollo-spin-dot-spin] vs [apollo-spin-indicator]",
+    "$/div[0]/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1",
+    "$/div[0]/canvas[1]: 我们多出属性 aria-label=\"QR code\""
+  ],
+  "qr-code:semantic": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;padding:8px;width:160px] vs [height:160px;padding:8px;width:160px]",
+    "$/div[0]/canvas[0]: 我们多出属性 aria-label=\"QR code\""
+  ]
+}

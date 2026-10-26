@@ -159,9 +159,10 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（1003 个，含Spin组件Token示例）', () => {
-    expect(allDemos.length).toBe(1003);
+  it('demo 全量可枚举（1004 个，含QRCode组件Token示例）', () => {
+    expect(allDemos.length).toBe(1004);
     expect(allDemos.some((demo) => demo.id === 'spin-demo-component-token')).toBe(true);
+    expect(allDemos.some((demo) => demo.id === 'qr-code-demo-component-token')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'image-demo-preview-close')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'image-demo-popup-provider')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'image-demo-transform-events')).toBe(true);

@@ -4,7 +4,14 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import { QrCode } from '../index';
-import type { QRCodeProps, QRCodeRef, QrcodeStatusType } from '../interface';
+import type {
+  QRCodeProps,
+  QRCodeRef,
+  QRCodeSlots,
+  QRCodeStatusSlotProps,
+  QrcodeStatusType,
+} from '../interface';
+import type { QRCodeComponentToken } from '../style';
 
 describe('QrCode · 类型', () => {
   it('QrCode 是组件，nativeElement ref 可达', () => {
@@ -32,5 +39,23 @@ describe('QrCode · 类型', () => {
     expectTypeOf<NonNullable<QRCodeProps['iconSize']>>().toEqualTypeOf<
       number | { width?: number | undefined; height?: number | undefined }
     >();
+  });
+
+  it('status is a named Vue scope with current data and a stable emit action', () => {
+    expectTypeOf<
+      Parameters<NonNullable<QRCodeSlots['status']>>[0]
+    >().toEqualTypeOf<QRCodeStatusSlotProps>();
+    expectTypeOf<QRCodeStatusSlotProps['status']>().toEqualTypeOf<QrcodeStatusType>();
+    expectTypeOf<QRCodeStatusSlotProps['refresh']>().toEqualTypeOf<() => void>();
+    expectTypeOf<QRCodeComponentToken['QRCodeCoverBackgroundColor']>().toEqualTypeOf<string>();
+    const valid: QRCodeProps = {
+      value: ['Current', ' segments'],
+      onRefresh: () => {},
+      styles: { root: { width: '200px' } },
+    };
+    expectTypeOf(valid).toMatchTypeOf<QRCodeProps>();
+    // @ts-expect-error Development migration replaces the content function with #status.
+    const removed: QRCodeProps = { statusRender: () => 'old content' };
+    void removed;
   });
 });

@@ -9,9 +9,11 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { expect, it } from 'vitest';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/qr-code.dom.json';
 import { QrCode } from '../index';
+import differences from './native-contract-reference-diffs.json';
 
 /** 用例规格表：id → Vue 侧渲染产物。必须覆盖基线里的每一个用例。 */
 const specs: Record<string, { render: () => DomRenderResult }> = {
@@ -54,40 +56,31 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 };
 
-/**
- * CSSOM 管线噪声（PLATFORM，carousel 的 left:0 同族）：React SSR 把用户传入的
- * `bgColor: '#f0f5ff'` 原样输出，本管线（jsdom mount）经 CSSOM 规范化为
- * `rgb(240,245,255)`。计算值完全一致，差异只在原始属性字符串。
- */
-const CSSOM_BG_COLOR = {
-  reason:
-    "用户传入的 bgColor '#f0f5ff' 在 React SSR 是原始 hex 字符串，本管线（jsdom mount）经 CSSOM 规范化为 rgb(240,245,255)。计算值一致 —— 渲染管线差异，非实现缺陷。登记 COMPATIBILITY §9.1（PLATFORM）。",
-  diff: [
-    '$/div[0]: style 不同 [background-color:#f0f5ff;height:160px;width:160px] vs [background-color:rgb(240,245,255);height:160px;width:160px]',
-  ],
-} as const;
+/** Exact owned differences; full projection also checks SVG paths and native attributes. */
+it('retains all eight reference cases and verifies their complete native SVG attributes', () => {
+  expect(baseline.cases).toHaveLength(8);
+  const ids = baseline.cases.map((item) => item.id).sort();
+  expect(Object.keys(specs).sort()).toEqual(ids);
+  expect(Object.keys(differences).sort()).toEqual(ids);
+});
 
 domContractTest('QrCode', {
   baseline,
+  profile: 'full',
   keepStyle: true,
-  allow: {
-    'qr-code:svg-color': CSSOM_BG_COLOR,
-    'qr-code:status-loading': {
-      reason:
-        'The shared Spin uses stable section/indicator hosts and native content; see docs/migrations/spin-contracts.md.',
-      diff: [
-        '$/div[0]/div[0]/div[0]: 类名不同 [apollo-spin apollo-spin-section apollo-spin-spinning] vs [apollo-spin apollo-spin-spinning]',
-        '$/div[0]/div[0]/div[0]/span[0]: 标签不同 <span> vs <div>',
-        '$/div[0]/div[0]/div[0]/span[0]: 类名不同 [apollo-spin-dot-holder] vs [apollo-spin-section]',
-        '$/div[0]/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-spin-dot apollo-spin-dot-spin] vs [apollo-spin-indicator]',
-        '$/div[0]/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1',
-      ],
-    },
-  },
+  allow: Object.fromEntries(
+    Object.entries(differences).map(([id, diff]) => [
+      id,
+      {
+        reason:
+          'Apollo uses named native images and a default white host; explicit backgrounds retain CSSOM color normalization. The loading case retains the reviewed native Spin differences. All eight original cases and SVG paths are checked in full; see docs/migrations/qrcode-contracts.md.',
+        diff,
+      },
+    ]),
+  ),
   render: (id) => {
     const spec = specs[id];
-    if (!spec)
-      throw new Error(`[QrCode L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
+    if (!spec) throw new Error(`[QrCode L4] Missing retained case ${id}`);
     return spec.render();
   },
 });

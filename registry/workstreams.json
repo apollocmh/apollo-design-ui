@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-26T11:29:30.027Z",
+  "generatedAt": "2026-10-26T15:43:27.551Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 91,
-      "ready": 1
+      "done": 90,
+      "ready": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,10 +35,11 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 1,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 1,
+    "currentBatchSize": 2,
     "currentBatchIds": [
+      "COMP:qr-code",
       "X:docs-site"
     ],
     "hardBlockingDecisionCount": 0,
@@ -378,8 +379,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 22,
-      "readyCount": 0,
+      "doneCount": 21,
+      "readyCount": 1,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -655,11 +656,11 @@
         "3 个组件 11 维度 completed"
       ],
       "itemCount": 4,
-      "doneCount": 4,
-      "readyCount": 0,
+      "doneCount": 3,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:config-provider",
         "COMP:qr-code",
@@ -1981,16 +1982,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "",
+      "why": "2026-10-26 完整盘点后集中实现原生status槽/稳定refresh事件、当前语言/Provider/遮罩Token、根与图像样式、默认对比度及名称。75四层、92类型、44生产浏览器、10 SSR、6组水合、5实际Demo/两组交互及UI/L7/Docs通过。36张Apollo视觉与最终清单/发布仍开放；证据 docs/audit/2026-10-26-qrcode-contract-audit.md。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P2",
       "dagLevel": 1,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:upload",
@@ -3358,6 +3361,7 @@
     }
   ],
   "currentBatch": [
+    "COMP:qr-code",
     "X:docs-site"
   ]
 }

@@ -1557,12 +1557,15 @@ export { Progress } from './progress';
 // QrCode —— 二维码（引擎 vendored：Nayuki qrcodegen，MIT；strategy=reuse 落定）
 //
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **1** 个
-//    （QRCodeCoverBackgroundColor，构建期解析值）。type=canvas|svg 双形态；
+//    （QRCodeCoverBackgroundColor，当前源主题/CSS变量）。type=canvas|svg 双形态；
 //    status != 'active' ⇒ -cover 覆盖层（expired/loading/scanned）。
 // ---------------------------------------------------------------------------
 export type {
+  QRCodeComponentToken,
   QRCodeProps,
   QRCodeRef,
+  QRCodeSlots,
+  QRCodeStatusSlotProps,
   QrCodeSemanticClassNames,
   QrCodeSemanticStyles,
   QrcodeLocale,

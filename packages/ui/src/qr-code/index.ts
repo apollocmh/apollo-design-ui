@@ -5,9 +5,12 @@
 export type {
   QRCodeProps,
   QRCodeRef,
+  QRCodeSlots,
+  QRCodeStatusSlotProps,
   QrCodeSemanticClassNames,
   QrCodeSemanticStyles,
   QrcodeLocale,
   QrcodeStatusType,
 } from './interface';
 export { default as QrCode } from './QrCode';
+export type { QRCodeComponentToken } from './style';

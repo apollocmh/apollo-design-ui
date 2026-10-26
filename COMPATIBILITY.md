@@ -29,6 +29,8 @@ List 当前配置、稳定内容结构、嵌套样式与分页修正，以及共
 
 Spin的完整Vue内容、显式indicator scope、稳定section/indicator、SSR确定进度（含0）与4个有效Token集中见 [Spin契约迁移](docs/migrations/spin-contracts.md)。这按ADR0007直接修正旧DOM/首帧形态，不恢复已移除indicator prop或增加兼容通道。
 
+QRCode的statusRender直接替换为#status、稳定refresh事件操作、根/图像样式拥有关系、默认白色宿主与可访问名称、当前遮罩Token和语言，集中见 [QRCode契约迁移](docs/migrations/qrcode-contracts.md)。原编码引擎与合法输入的矩阵/路径保留。
+
 `tests/compat`、Oracle 与 `tests/visual/baselines/react` 保留来源版本以便复现；版本固定只约束这组参考实验。上游对照默认不决定新组件完成或发布验收。现有 DOM 回归测试仍执行，必要差异必须根据 Apollo 契约审查，不允许无依据放宽。
 
 ## 9. 历史差异登记

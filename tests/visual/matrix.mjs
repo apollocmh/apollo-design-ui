@@ -363,6 +363,20 @@ export const COMPONENTS = {
     ],
   },
   'qr-code': {
+    apolloVariants: [
+      'basic',
+      'svg',
+      'icon',
+      'expired',
+      'loading',
+      'scanned',
+      'custom-status',
+      'tokens',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 3 个 variant × 3 个 viewport = 9 张（canvas 绘制两侧矩阵同源 ⇒ 像素一致）
     variants: [
       'basic', // 默认 canvas + 边框

@@ -3,7 +3,7 @@
  * `@rc-component/qrcode` 的 interface **重新定义**，不复制）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 
 /** 二维码状态（非 active 时渲染覆盖层）。 */
 export type QrcodeStatusType = 'active' | 'expired' | 'loading' | 'scanned';
@@ -20,8 +20,8 @@ export interface QrCodeSemanticClassNames {
 }
 
 export interface QrCodeSemanticStyles {
-  root?: Record<string, string | number> | undefined;
-  cover?: Record<string, string | number> | undefined;
+  root?: CSSProperties;
+  cover?: CSSProperties;
 }
 
 export interface QRCodeProps {
@@ -44,16 +44,9 @@ export interface QRCodeProps {
   bgColor?: string | undefined;
   /** 模块静默区（覆盖 includeMargin 语义）。 */
   marginSize?: number | undefined;
-  statusRender?:
-    | ((info: {
-        status: QrcodeStatusType;
-        locale: QrcodeLocale;
-        onRefresh?: () => void;
-      }) => VNodeChild)
-    | undefined;
   /** 5.28.0+：提升纠错级别以增强容错。 */
   boostLevel?: boolean | undefined;
-  /** 仅 svg 形态：`<title>`。 */
+  /** 图像可访问名称；svg还输出title。缺省名称为QR code。 */
   title?: string | undefined;
   classNames?: QrCodeSemanticClassNames | undefined;
   styles?: QrCodeSemanticStyles | undefined;
@@ -62,4 +55,15 @@ export interface QRCodeProps {
 /** ref 形状（antd 的 `QRCodeRef`）。 */
 export interface QRCodeRef {
   nativeElement: HTMLDivElement | null;
+}
+
+export interface QRCodeStatusSlotProps {
+  status: QrcodeStatusType;
+  locale: QrcodeLocale;
+  /** 稳定的Vue操作；调用只发出refresh事件，不依赖父级监听存在性。 */
+  refresh: () => void;
+}
+export interface QRCodeSlots {
+  /** 非active时读取；有意为空的槽抑制默认内容。 */
+  status?: (scope: QRCodeStatusSlotProps) => VNodeChild;
 }

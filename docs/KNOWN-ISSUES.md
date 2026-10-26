@@ -543,6 +543,10 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 
 下一单元为Spin完整契约盘点；本轮共享修复不宣称Spin整单元完成。全库内容候选仍202项待核实，其他组件、基础包与最终同一提交全量门禁继续开放。
 
+## 2026-10-26 QRCode完整盘点与集中实现（验收进行中）
+
+已成组修正statusRender→原生#status、稳定refresh事件操作、当前语言/Provider/遮罩Token、根与图像尺寸、暗色背景对比度及图像名称；SVG属性修正，8个原机械场景保留并加强到完整路径/属性检查。75条四层、92条类型、44项生产浏览器、10项SSR、6组水合及全部5Demo/两组交互通过。状态Demo定时器泄漏有原源码失败复现，重复刷新与卸载归零通过。UI/L7/Docs通过；36张自有视觉及最终清单/发布继续验收。见[完整清单](audit/2026-10-26-qrcode-contract-audit.md)、[统一证据](audit/evidence/qrcode-contract.json)和[集中迁移](migrations/qrcode-contracts.md)。
+
 ## 2026-10-26 Spin完整盘点、集中实现与统一验收（已收口）
 
 按11个Props、3个槽、7个语义落点、Provider/attrs/ref/程序化默认内容、4个Token及9个原Demo完整盘点后，集中修正原生内容/显式scope、稳定加载层、SSR确定进度、主题Token与嵌套/动画；新增1个Token Demo，原场景保留。15条失败复现修后全部通过；32项自身浏览器、160类型、生产ESM SSR/发布声明、UI/L7、Docs157条/SSG及97项List共享浏览器通过。相关899条断言以冻结生产源码分批取得通过证据，36个共享机械差异逐项更新而未改旧基线或共享归一化。
