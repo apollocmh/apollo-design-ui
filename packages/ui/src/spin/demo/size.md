@@ -5,23 +5,10 @@ title:
   en-US: Size
 ---
 
-`size` 取 `small` / `large` 时会在根元素上追加 `-sm` / `-lg`，
-加载图标的大小由 Component Token 的 `dotSizeSM` / `dotSize` / `dotSizeLG` 决定。
+## zh-CN
 
-`medium` / `middle` 是默认尺寸（不追加类名），`default` 是 `medium` 的旧写法且已废弃。
+三档图标尺寸来自当前dotSizeSM、dotSize和dotSizeLG。嵌套实例拥有自己的尺寸。
 
-```vue
-<script setup lang="ts">
-import { Spin } from '@apollo-design/ui';
+## en-US
 
-const rowStyle = { display: 'flex', alignItems: 'center', gap: '16px' };
-</script>
-
-<template>
-  <div :style="rowStyle">
-    <Spin size="small" />
-    <Spin />
-    <Spin size="large" />
-  </div>
-</template>
-```
+The three sizes consume current dotSizeSM, dotSize and dotSizeLG. Nested instances own their sizes.

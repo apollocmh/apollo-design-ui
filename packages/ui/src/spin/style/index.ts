@@ -1,36 +1,4 @@
-/**
- * Spin 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `components/spin/style/index.ts`（`genSpinStyle` +
- * `genIndicatorStyle` + `genSizeStyle`）。选择器结构、属性、取值来源**逐条对齐**。
- *
- * ── 选择器结构是从 antd 的**真实产物**提取的，不是推演的 ─────────────────────────
- *
- * 用 `@ant-design/cssinjs` 的 `extractStyle` 渲染 antd 6.6.4 的 Spin（basic / sm / lg /
- * percent / nested / fullscreen 六个形态）并提取 CSS，去掉 CSS-in-JS 的
- * `:where(.css-dev-only-...)` hash 包裹层后即下面这份。
- *
- * 提取时发现的一条**上游事实**（不是笔误）：`--ant-spin-content-height` 被声明了，
- * 但**没有任何规则引用它** —— `contentHeight` 在 6.6.4 是个不会被消费的 token。
- * 我们不产它的 CSS（没有规则可产），但 token 本身照常声明（见 `style/token.ts`）。
- *
- * ── 与 antd 产物的两处**有意**差异 ──────────────────────────────────────────────
- *
- * 1. 没有 CSS-in-JS 的 `:where(.css-dev-only-...)` hash 包裹（差异 D5），
- *    keyframes 名字也不带 hash —— 改用前缀派生（`apollo-spin-*` / `ant-spin-*`），
- *    否则同一份 CSS 里 `apollo` 与 `ant` 两套规则会互相覆盖同名 keyframes。
- * 2. 三个 dot 尺寸不落地成组件级 CSS 变量，而是把 `calc()` 在使用点展开
- *    （`-sm` / `-lg` 各展开一份）。原因见 `style/token.ts` 文件头：B7 只认
- *    theme 的 `tokens.css` 里声明过的 `--apollo-*`。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
- *   - 没证明变量名存在。`var(--apollo-*)` 写错不会报错、只会静默失效 ——
- *     由 `tests/build/run.mjs` 的 B7 校验。
- *   - 没证明动画的**观感**一致：keyframes 的定义与 antd 逐字相同，但
- *     L6 在 `prefers-reduced-motion` + `animation: none` 下截图，动画本身不在比对面里。
- */
-
+/** Static Spin styles. Default dot geometry retains the existing licensed artwork. */
 import { token2CSSVar } from '@apollo-design/theme';
 
 /** token 名 → `var(--apollo-*)`。变量名由 theme 包的命名函数给出，不手写字面量。 */
@@ -52,15 +20,15 @@ export function genSpinStyle(prefixCls: string): string {
   const description = `${cls}-description`;
   const rotateName = `${prefixCls}-spin-rotate`;
   const moveName = `${prefixCls}-spin-move`;
+  const variable = (name: string) => `--${prefixCls}-spin-${name}`;
+  const cv = (name: string) => `var(${variable(name)})`;
 
   // 三个 dot 尺寸（Component Token，表达式形态 —— 见 style/token.ts 文件头）。
   // -sm / -lg 各自展开一份，代替 antd 的「组件级 CSS 变量 + 尺寸类覆盖」。
   const CONTROL_LG = v('controlHeightLG');
   const CONTROL = v('controlHeight');
   const MARGIN_XXS = v('marginXXS');
-  const dotSize = `calc(${CONTROL_LG} / 2)`;
-  const dotSizeSM = `calc(${CONTROL_LG} * 0.35)`;
-  const dotSizeLG = CONTROL;
+  const dotSize = cv('dot-holder-size');
   /** antd：`calc((dot-holder-size - marginXXS / 2) / 2)`。 */
   const itemSize = (holder: string): string => `calc((${holder} - ${MARGIN_XXS} / 2) / 2)`;
 
@@ -76,6 +44,13 @@ export function genSpinStyle(prefixCls: string): string {
     //    `[class^="apollo-spin"]{box-sizing}` 两条 —— 它们被 `packages/ui/src/style/index.ts`
     //    的 `BASE_CSS`（`*{box-sizing:border-box}`）覆盖，产出它们只是重复体积。
     `${cls}{`,
+    `  ${variable('content-height')}:400px;`,
+    `  ${variable('dot-size')}:calc(${CONTROL_LG} / 2);`,
+    `  ${variable('dot-size-sm')}:calc(${CONTROL_LG} * 0.35);`,
+    `  ${variable('dot-size-lg')}:${CONTROL};`,
+    `  ${variable('dot-holder-size')}:${cv('dot-size')};`,
+    `  ${variable('animation-play-state')}:running;`,
+    `  display:inline-flex;`,
     `  box-sizing:border-box;`,
     `  margin:0;`,
     `  padding:0;`,
@@ -86,28 +61,31 @@ export function genSpinStyle(prefixCls: string): string {
     `  font-family:${v('fontFamily')};`,
     `  position:relative;`,
     `}`,
+    `${cls}-nested{display:grid;grid-template-columns:minmax(0,1fr);}`,
+    `${cls}-sm{${variable('dot-holder-size')}:${cv('dot-size-sm')};}`,
+    `${cls}-lg{${variable('dot-holder-size')}:${cv('dot-size-lg')};}`,
     `${cls}-rtl{`,
     `  direction:rtl;`,
     `}`,
     '',
     // ---- Section ------------------------------------------------------------
-    // ⚠️ `&${sectionCls}` 是**复合**（非嵌套时根元素自己带 -section），
-    //    `> ${sectionCls}` 是**子代**（嵌套模式的浮动层）。两条语义不同，不能合并。
-    `${cls}${section},${cls} >${section}{`,
+    // One stable section owns loading content in every mode.
+    `${cls} >${section}{`,
     `  display:flex;`,
     `  align-items:center;`,
     `  flex-direction:column;`,
     `  gap:${v('paddingSM')};`,
     `  color:${v('colorPrimary')};`,
     `}`,
-    `${cls}${section}{`,
-    `  display:inline-flex;`,
-    `}`,
-    `${cls} >${section}{`,
-    `  position:absolute;`,
-    `  top:50%;`,
-    `  left:50%;`,
-    `  transform:translate(-50%, -50%);`,
+    `${cls}-nested >${section}{`,
+    `  position:relative;`,
+    `  grid-area:1/1;`,
+    `  top:0;`,
+    `  left:0;`,
+    `  width:100%;`,
+    `  height:100%;`,
+    `  max-height:${cv('content-height')};`,
+    `  justify-content:center;`,
     `  z-index:1;`,
     `}`,
     `${cls} ${description}{`,
@@ -117,11 +95,13 @@ export function genSpinStyle(prefixCls: string): string {
     `}`,
     '',
     // ---- Container ----------------------------------------------------------
-    `${cls} ${container}{`,
+    `${cls} >${container}{`,
+    `  grid-area:1/1;`,
+    `  min-width:0;`,
     `  position:relative;`,
     `  transition:opacity ${v('motionDurationSlow')};`,
     `}`,
-    `${cls} ${container}::after{`,
+    `${cls} >${container}::after{`,
     `  position:absolute;`,
     `  top:0;`,
     `  inset-inline-end:0;`,
@@ -141,13 +121,13 @@ export function genSpinStyle(prefixCls: string): string {
     `${cls}-spinning ${description}{`,
     `  text-shadow:0 0px 5px ${v('colorBgContainer')};`,
     `}`,
-    `${cls}-spinning ${container}{`,
+    `${cls}-spinning >${container}{`,
     `  clear:both;`,
     `  opacity:0.5;`,
     `  user-select:none;`,
     `  pointer-events:none;`,
     `}`,
-    `${cls}-spinning ${container}::after{`,
+    `${cls}-spinning >${container}::after{`,
     `  opacity:0.4;`,
     `  pointer-events:auto;`,
     `}`,
@@ -156,6 +136,9 @@ export function genSpinStyle(prefixCls: string): string {
     `${cls}-fullscreen >${section}{`,
     `  position:fixed;`,
     `  inset:0;`,
+    `  width:100%;`,
+    `  height:100%;`,
+    `  max-height:none;`,
     `  display:flex;`,
     `  flex-direction:column;`,
     `  align-items:center;`,
@@ -183,6 +166,14 @@ export function genSpinStyle(prefixCls: string): string {
     `}`,
     '',
     // ---- genIndicatorStyle --------------------------------------------------
+    `${cls} >${section} >${cls}-indicator{`,
+    `  position:relative;`,
+    `  display:inline-flex;`,
+    `  align-items:center;`,
+    `  justify-content:center;`,
+    `  font-size:${dotSize};`,
+    `  line-height:1;`,
+    `}`,
     `${cls} ${dot}{`,
     `  position:relative;`,
     `  display:inline-block;`,
@@ -209,6 +200,7 @@ export function genSpinStyle(prefixCls: string): string {
     `  animation-duration:1.2s;`,
     `  animation-iteration-count:infinite;`,
     `  animation-timing-function:linear;`,
+    `  animation-play-state:${cv('animation-play-state')};`,
     `}`,
     `${cls} ${dot}-item{`,
     `  position:absolute;`,
@@ -225,6 +217,7 @@ export function genSpinStyle(prefixCls: string): string {
     `  animation-iteration-count:infinite;`,
     `  animation-timing-function:linear;`,
     `  animation-direction:alternate;`,
+    `  animation-play-state:${cv('animation-play-state')};`,
     `}`,
     `${cls} ${dot}-item:nth-child(1){top:0;inset-inline-start:0;animation-delay:0s}`,
     `${cls} ${dot}-item:nth-child(2){top:0;inset-inline-end:0;animation-delay:0.4s}`,
@@ -246,23 +239,7 @@ export function genSpinStyle(prefixCls: string): string {
     `  stroke:${v('colorFillSecondary')};`,
     `}`,
     '',
-    // ---- genSizeStyle -------------------------------------------------------
-    // ⚠️ 尺寸类在**根元素**上，dot 在后代 —— 选择器是后代而不是复合，
-    //    与 antd 的「变量覆盖」等价（antd 靠变量继承，我们靠选择器特异性 + 顺序）。
-    `${cls}-sm ${dot}-holder,${cls}-sm ${dot}{`,
-    `  font-size:${dotSizeSM};`,
-    `}`,
-    `${cls}-sm ${dot}-item{`,
-    `  width:${itemSize(dotSizeSM)};`,
-    `  height:${itemSize(dotSizeSM)};`,
-    `}`,
-    `${cls}-lg ${dot}-holder,${cls}-lg ${dot}{`,
-    `  font-size:${dotSizeLG};`,
-    `}`,
-    `${cls}-lg ${dot}-item{`,
-    `  width:${itemSize(dotSizeLG)};`,
-    `  height:${itemSize(dotSizeLG)};`,
-    `}`,
+    `@media(prefers-reduced-motion:reduce){${cls}{${variable('animation-play-state')}:paused;}}`,
     '',
   ].join('\n');
 }

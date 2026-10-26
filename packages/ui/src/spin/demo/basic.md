@@ -5,14 +5,10 @@ title:
   en-US: Basic
 ---
 
-最简单的用法：`spinning` 默认为 `true`，不传就是在转。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-import { Spin } from '@apollo-design/ui';
-</script>
+spinning默认为true。内置四点图表示不定进度。
 
-<template>
-  <Spin />
-</template>
-```
+## en-US
+
+spinning defaults to true. The built-in four dots indicate indeterminate loading.

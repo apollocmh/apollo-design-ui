@@ -18,7 +18,13 @@ order: 0
 | 预览共享链路 | 已验证本轮相关的Portal所属文档、分层焦点、原生SVG控件与动态motion；其他基础包能力继续审计 | 弹层不再误锁其他窗口；输入与焦点在动态切换中保留 |
 | H05 全仓格式门禁 | 66个错误已清零；52文件的脚本/渲染结构等价；相关1,246条回归、6组浏览器及文档构建通过 | 原有37个警告和5条信息保留，另案核查；规则未放宽 |
 
-List验收还修复了关联的全屏加载正文错位、遮罩语义和文案对比度，以及暗色作用域中原生控件的颜色配对。共享消费者与既有Image场景已回归；List57张与Image24张最终同次像素复验全部exact。下一单元为 **Spin完整契约盘点**，会逐项核对全部入口和Token；本阶段关联修复不代表Spin整单元已完成。
+List验收还修复了关联的全屏加载正文错位、遮罩语义和文案对比度，以及暗色作用域中原生控件的颜色配对。共享消费者与既有Image场景已回归；List57张与Image24张最终同次像素复验全部exact。
+
+**Spin已完成完整盘点与集中实现，整单元仍在验收。** 15条行为复现、32项生产浏览器、160条类型、生产SSR与发布声明消费已通过。Spin/ConfigProvider及List/Table/QRCode/Mentions的899条相关断言分批取得通过证据；原参考场景保留。完整原生指示器槽、当前进度scope、稳定加载层、确定进度首帧和4个有效Token已实现；自有视觉矩阵、独立水合及最终清单仍开放。
+
+- [原生多节点与进度作用域](/components/spin/demo/custom-indicator)
+- [Spin动态组件Token](/components/spin/demo/component-token)
+- [Spin统一清单与阶段证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-spin-contract-audit.md)
 
 - [List 当前 API 与示例](/components/list)
 - [动态主题开关](/components/list/demo/component-token)
@@ -65,7 +71,11 @@ This is a development snapshot. The library-wide audit is ongoing; results below
 | Shared preview behavior | Owning-document Portal effects, per-layer focus, native SVG controls and live motion verified for this scope | Modal effects follow the owning window; editors retain focus and state |
 | H05 formatting gate | 66 errors resolved; equivalent script/render structures in 52 files; 1,246 regression tests, six browser scripts and Docs build passed | Existing 37 warnings and five information diagnostics remain recorded for separate review |
 
-List acceptance also fixed fullscreen loading flow, actual mask semantics, readable descriptions and native control foreground/background pairing in dark scopes. Named shared consumers and existing Image scenarios passed regression checks. All 57 List and 24 Image images matched exactly in the final run. **The next unit is a complete Spin contract inventory**, including its public entry points and tokens; the related fixes above do not close the whole Spin unit.
+List acceptance also fixed fullscreen loading flow, actual mask semantics, readable descriptions and native control foreground/background pairing in dark scopes. Named shared consumers and existing Image scenarios passed regression checks. All 57 List and 24 Image images matched exactly in the final run.
+
+**Spin inventory and grouped implementation are complete; unit acceptance is ongoing.** Fifteen behavior reproductions, 32 browser checks, 160 type tests, production SSR and published declarations passed. All 899 related assertions across Spin/ConfigProvider/List/Table/QRCode/Mentions have passing evidence from split runs, with original reference scenarios retained. Native multi-node indicator slots, current progress scope, stable loading hosts, immediate determinate progress and four effective tokens are implemented. Owned visuals, standalone hydration and final checklist acceptance remain open.
+
+[Native indicator scope](/components/spin/demo/custom-indicator) · [Live Spin tokens](/components/spin/demo/component-token) · [Spin inventory and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-spin-contract-audit.md)
 
 [List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Fullscreen with a native editor](/components/spin/demo/fullscreen) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 

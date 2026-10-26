@@ -71,7 +71,7 @@ onMounted(async () => {
 
     <RouterLink class="home-progress" to="/guide/audit-progress">
       <strong>{{ locale === 'zh-CN' ? '2026-10-26 · 整改进展' : '2026-10-26 · Audit progress' }}</strong>
-      <span>{{ locale === 'zh-CN' ? 'Image完整审计已验收，格式门禁已修复。查看本轮改动与可运行示例 →' : 'Image audit verified; formatting gate repaired. See delivered changes and live examples →' }}</span>
+      <span>{{ locale === 'zh-CN' ? 'Image与List完整审计已验收，Spin集中整改正在验收。查看改动与可运行示例 →' : 'Image and List audits verified; Spin fixes under validation. See progress and live examples →' }}</span>
     </RouterLink>
 
     <!-- 真实组件实时示例（客户端挂载） -->

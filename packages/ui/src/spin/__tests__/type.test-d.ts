@@ -21,6 +21,7 @@ import type {
   SpinComponentToken,
   SpinConfig,
   SpinIndicator,
+  SpinIndicatorSlotProps,
   SpinPercent,
   SpinProps,
   SpinRef,
@@ -31,8 +32,9 @@ import type {
   SpinSemanticValue,
   SpinSize,
   SpinSlot,
+  SpinSlots,
 } from '../index';
-import { Spin, type setDefaultIndicator } from '../index';
+import { type prepareSpinComponentToken, Spin, type setDefaultIndicator } from '../index';
 
 describe('Spin · 基础枚举', () => {
   it('★ `SpinSize` 含两个已废弃取值 `middle` / `default`（存量代码在传，不能删）', () => {
@@ -184,6 +186,27 @@ describe('Spin · ref / config / slot / 静态方法', () => {
     expectTypeOf<SpinSlot>().toBeFunction();
   });
 
+  it('indicator scope is one named object with current optional progress', () => {
+    expectTypeOf<Parameters<NonNullable<SpinSlots['indicator']>>>().toEqualTypeOf<
+      [SpinIndicatorSlotProps]
+    >();
+    expectTypeOf<SpinIndicatorSlotProps['percent']>().toEqualTypeOf<number | undefined>();
+    const slots: SpinSlots = {
+      indicator: ({ percent }) => h('output', String(percent)),
+      default: () => 0,
+      description: () => null,
+    };
+    expectTypeOf(slots).toMatchTypeOf<SpinSlots>();
+    const negatives = () => {
+      // @ts-expect-error indicator takes a named scope, never a positional number
+      const positional: SpinSlots = { indicator: (percent: number) => h('span', String(percent)) };
+      // @ts-expect-error the old indicator prop is removed even for a valid VNode
+      const legacy: SpinProps = { indicator: h('span') };
+      return [positional, legacy];
+    };
+    expectTypeOf(negatives).toBeFunction();
+  });
+
   it('`Spin` 上挂着静态方法 `setDefaultIndicator`（对应 antd 的 `SpinType`）', () => {
     // ⚠️ 这里只能断言「有这个属性」，不能断言它的签名：
     //    `Spin.vue` 在纯 `tsc` 下解析不到（`Cannot find module './Spin.vue'`，
@@ -204,6 +227,9 @@ describe('Spin · ref / config / slot / 静态方法', () => {
   });
 
   it('Component Token 类型可从包入口取到（R7：四个键与 antd 同名）', () => {
+    expectTypeOf<
+      ReturnType<typeof prepareSpinComponentToken>
+    >().toEqualTypeOf<SpinComponentToken>();
     expectTypeOf<SpinComponentToken>().toHaveProperty('contentHeight');
     expectTypeOf<SpinComponentToken>().toHaveProperty('dotSize');
     expectTypeOf<SpinComponentToken>().toHaveProperty('dotSizeSM');

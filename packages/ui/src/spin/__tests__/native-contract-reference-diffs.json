@@ -1,0 +1,290 @@
+{
+  "plain": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "prefix-cls:custom": [
+    "$/div[0]: 类名不同 [custom custom-section custom-spinning] vs [custom custom-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [custom-dot-holder] vs [custom-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [custom-dot custom-dot-spin] vs [custom-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "prefix-cls:no-props": [
+    "$/div[0]: 类名不同 [ant-spin ant-spin-section ant-spin-spinning] vs [apollo-spin apollo-spin-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [ant-spin-dot-holder] vs [apollo-spin-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [ant-spin-dot ant-spin-dot-spin] vs [apollo-spin-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "spinning:false": ["$/div[0]: 类名不同 [apollo apollo-section] vs [apollo]"],
+  "spinning:true": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "spinning:true+delay": ["$/div[0]: 类名不同 [apollo apollo-section] vs [apollo]"],
+  "size:small": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-sm apollo-spinning] vs [apollo apollo-sm apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "size:medium": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "size:middle": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "size:large": [
+    "$/div[0]: 类名不同 [apollo apollo-lg apollo-section apollo-spinning] vs [apollo apollo-lg apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "description": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]: 子节点数不同 2 vs 1"
+  ],
+  "description:tip": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]: 子节点数不同 2 vs 1"
+  ],
+  "description:both": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]: 子节点数不同 2 vs 1"
+  ],
+  "nested": [
+    "$/div[0]: 类名不同 [apollo apollo-spinning] vs [apollo apollo-nested apollo-spinning]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "nested:spinning-false": ["$/div[0]: 类名不同 [apollo] vs [apollo apollo-nested]"],
+  "nested:description": [
+    "$/div[0]: 类名不同 [apollo apollo-spinning] vs [apollo apollo-nested apollo-spinning]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "nested:wrapper-class-name": [
+    "$/div[0]: 类名不同 [apollo apollo-spinning my-wrapper] vs [apollo apollo-nested apollo-spinning my-wrapper]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "fullscreen": [
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "fullscreen:spinning-false": ["$/div[0]: 子节点数不同 0 vs 1"],
+  "fullscreen:children": [
+    "$/div[0]: 类名不同 [apollo apollo-fullscreen apollo-spinning] vs [apollo apollo-fullscreen apollo-nested apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "fullscreen:description": [
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "percent:30": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder apollo-dot-holder-hidden] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 2"
+  ],
+  "percent:auto": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 2"
+  ],
+  "percent:negative": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 2"
+  ],
+  "percent:over": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder apollo-dot-holder-hidden] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 2"
+  ],
+  "indicator:custom": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [custom-indicator] vs [apollo-section]",
+    "$/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "indicator:custom-element": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [apollo-dot custom-indicator] vs [apollo-section]",
+    "$/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "indicator:custom-element+semantic": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [apollo-dot cn-indicator custom-indicator] vs [apollo-section]",
+    "$/div[0]/div[0]: style 不同 [color:red] vs []",
+    "$/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "indicator:custom+percent": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [custom-indicator] vs [apollo-section]",
+    "$/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "indicator:custom+nested": [
+    "$/div[0]: 类名不同 [apollo apollo-spinning] vs [apollo apollo-nested apollo-spinning]",
+    "$/div[0]/div[0]/div[0]: 标签不同 <div> vs <span>",
+    "$/div[0]/div[0]/div[0]: 类名不同 [custom-indicator] vs [apollo-indicator]",
+    "$/div[0]/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "indicator:null": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]: 子节点数不同 1 vs 0"
+  ],
+  "semantic:classNames-all": [
+    "$/div[0]: 类名不同 [apollo apollo-spinning cn-root] vs [apollo apollo-nested apollo-spinning cn-root]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder cn-indicator] vs [apollo-indicator cn-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "semantic:classNames-mask": [
+    "$/div[0]: 类名不同 [apollo apollo-fullscreen apollo-spinning cn-mask] vs [apollo apollo-fullscreen apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section cn-mask]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "semantic:classNames-tip": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]: 子节点数不同 2 vs 1"
+  ],
+  "semantic:styles-all": [
+    "$/div[0]: 类名不同 [apollo apollo-spinning] vs [apollo apollo-nested apollo-spinning]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "semantic:styles-mask": [
+    "$/div[0]: style 不同 [background:green] vs []",
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]",
+    "$/div[0]/div[0]: style 不同 [] vs [background:green]",
+    "$/div[0]/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-indicator]",
+    "$/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-dot-holder]",
+    "$/div[0]/div[0]/span[0]/span[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "semantic:classNames-fn": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-sm apollo-spinning fn-small-true] vs [apollo apollo-sm apollo-spinning fn-small-true]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "class:className": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning my-class] vs [apollo apollo-spinning my-class]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "class:rootClassName": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning root-class] vs [apollo apollo-spinning root-class]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "class:both": [
+    "$/div[0]: 类名不同 [a apollo apollo-section apollo-spinning b] vs [a apollo apollo-spinning b]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "attrs:passthrough": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "style:style-over-root": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "style:section-on-root": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]: style 不同 [margin:4px] vs []",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]: style 不同 [] vs [margin:4px]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "config:indicator": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning] vs [apollo apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [custom-indicator] vs [apollo-section]",
+    "$/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "config:className": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning cfg-class] vs [apollo apollo-spinning cfg-class]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "config:classNames": [
+    "$/div[0]: 类名不同 [apollo apollo-section apollo-spinning cfg-root] vs [apollo apollo-spinning cfg-root]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ],
+  "direction:rtl": [
+    "$/div[0]: 类名不同 [apollo apollo-rtl apollo-section apollo-spinning] vs [apollo apollo-rtl apollo-spinning]",
+    "$/div[0]/span[0]: 标签不同 <span> vs <div>",
+    "$/div[0]/span[0]: 类名不同 [apollo-dot-holder] vs [apollo-section]",
+    "$/div[0]/span[0]/span[0]: 类名不同 [apollo-dot apollo-dot-spin] vs [apollo-indicator]",
+    "$/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1"
+  ]
+}

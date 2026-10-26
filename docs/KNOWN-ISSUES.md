@@ -542,3 +542,9 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 清洁实现 `5336ff77` 的57张List和24张Image重新捕获，全部匹配审图哈希；批准List57张及6张有意颜色变化Image后，81张真实像素复验全部exact、0差异。12个List Demo和实际Spin全屏Demo逐页浏览器通过，UI构建/L7、13包tarball Vite/Webpack、Docs157条/SSG、Registry/来源和格式检查通过。完整逐项结论、实际命令和边界见同一 [List统一报告](audit/2026-10-26-list-contract-audit.md) 与 [结构化证据](audit/evidence/list-visual-contract.json)。
 
 下一单元为Spin完整契约盘点；本轮共享修复不宣称Spin整单元完成。全库内容候选仍202项待核实，其他组件、基础包与最终同一提交全量门禁继续开放。
+
+## 2026-10-26 Spin完整盘点与集中实现（整单元仍开放）
+
+按11个Props、3个槽、7个语义落点、Provider/attrs/ref/程序化默认内容、4个Token及9个原Demo完整盘点后，集中修正原生内容/显式scope、稳定加载层、SSR确定进度、主题Token与嵌套/动画；新增1个Token Demo，原场景保留。15条失败复现修后全部通过；32项自身浏览器、160类型、生产ESM SSR/发布声明、UI/L7、Docs157条/SSG及97项List共享浏览器通过。相关899条断言以冻结生产源码分批取得通过证据，36个共享机械差异逐项更新而未改旧基线或共享归一化。
+
+当前阶段不是Spin整单元完成：自有视觉、独立源主题水合及完整清单最终收口仍继续。统一范围、命令、体积增长原因与边界见 [Spin统一报告](audit/2026-10-26-spin-contract-audit.md)，公开改动见 [集中迁移](migrations/spin-contracts.md)。

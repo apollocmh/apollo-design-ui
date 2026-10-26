@@ -33,6 +33,7 @@ export { getDefaultIndicator, setDefaultIndicator } from './defaultIndicator';
 export type {
   SpinConfig,
   SpinIndicator,
+  SpinIndicatorSlotProps,
   SpinPercent,
   SpinProps,
   SpinRef,
@@ -43,6 +44,7 @@ export type {
   SpinSemanticValue,
   SpinSize,
   SpinSlot,
+  SpinSlots,
 } from './interface';
 export { genSpinStyle } from './style';
 export type { ComponentToken as SpinComponentToken } from './style/token';

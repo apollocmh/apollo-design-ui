@@ -518,6 +518,7 @@ export type {
   SpinComponentToken,
   SpinConfig,
   SpinIndicator,
+  SpinIndicatorSlotProps,
   SpinPercent,
   SpinProps,
   SpinRef,
@@ -528,6 +529,7 @@ export type {
   SpinSemanticValue,
   SpinSize,
   SpinSlot,
+  SpinSlots,
 } from './spin';
 export { getDefaultIndicator, Spin, setDefaultIndicator } from './spin';
 // ---------------------------------------------------------------------------

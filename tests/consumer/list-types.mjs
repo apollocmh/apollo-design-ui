@@ -1,4 +1,4 @@
-/** Verify the generic List template against published declarations, without source aliases. */
+/** Verify List and its Spin loading consumer against published declarations without source aliases. */
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -29,6 +29,11 @@ try {
     source.replace("from '../../../index'", "from '@apollo-design/ui'"),
   );
   fs.writeFileSync(
+    path.join(temp, 'SpinConsumer.vue'),
+    fs.readFileSync(path.join(root, 'tests/browser/fixtures/SpinContractAudit.vue'), 'utf8'),
+  );
+  assert.equal(fs.existsSync(path.join(root, 'packages/ui/dist/spin/__tests__')), false);
+  fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
     JSON.stringify(
       {
@@ -44,7 +49,7 @@ try {
           baseUrl: temp,
           paths: {},
         },
-        include: ['Consumer.vue'],
+        include: ['Consumer.vue', 'SpinConsumer.vue'],
       },
       null,
       2,
@@ -60,7 +65,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published List declarations: exact item/index inference, content slots, compound exports; no test fixtures shipped',
+    'PASS published List/Spin declarations: exact item/index inference, scoped indicators, current tokens and compound exports; no test fixtures shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

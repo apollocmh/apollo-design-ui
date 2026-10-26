@@ -1,0 +1,5 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": ["SpinContractAudit.vue"],
+  "exclude": []
+}

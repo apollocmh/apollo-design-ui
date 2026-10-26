@@ -72,6 +72,17 @@ domContractTest('QrCode', {
   keepStyle: true,
   allow: {
     'qr-code:svg-color': CSSOM_BG_COLOR,
+    'qr-code:status-loading': {
+      reason:
+        'The shared Spin uses stable section/indicator hosts and native content; see docs/migrations/spin-contracts.md.',
+      diff: [
+        '$/div[0]/div[0]/div[0]: 类名不同 [apollo-spin apollo-spin-section apollo-spin-spinning] vs [apollo-spin apollo-spin-spinning]',
+        '$/div[0]/div[0]/div[0]/span[0]: 标签不同 <span> vs <div>',
+        '$/div[0]/div[0]/div[0]/span[0]: 类名不同 [apollo-spin-dot-holder] vs [apollo-spin-section]',
+        '$/div[0]/div[0]/div[0]/span[0]/span[0]: 类名不同 [apollo-spin-dot apollo-spin-dot-spin] vs [apollo-spin-indicator]',
+        '$/div[0]/div[0]/div[0]/span[0]/span[0]: 子节点数不同 4 vs 1',
+      ],
+    },
   },
   render: (id) => {
     const spec = specs[id];

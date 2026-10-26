@@ -50,30 +50,30 @@ import {
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { setDefaultIndicator } from '../defaultIndicator';
 import { Spin } from '../index';
-import type { SpinPercent } from '../interface';
+import type { SpinPercent, SpinSlots } from '../interface';
 import { AUTO_INTERVAL, usePercent } from '../usePercent';
 
 /** 兜底前缀 —— 不传 `prefixCls` 时 `getPrefixCls('spin')` 的结果。 */
 const P = 'apollo-spin';
 
-const mountSpin = (props: Record<string, unknown> = {}, slots?: Record<string, () => unknown>) =>
+const mountSpin = (props: Record<string, unknown> = {}, slots?: SpinSlots) =>
   mount(Spin, {
     props,
-    ...(slots ? { slots } : {}),
+    ...(slots ? { slots: { ...slots } } : {}),
   });
 
-const withChildren = (props: Record<string, unknown> = {}, node: unknown = 'content') =>
-  mountSpin(props, { default: () => node as never });
+const withChildren = (props: Record<string, unknown> = {}, node: VNodeChild = 'content') =>
+  mountSpin(props, { default: () => node });
 
 /** 带 ConfigProvider 上下文挂载（Vue 侧对应物是 `provide`）。 */
 const mountWithConfig = (
   componentConfig: Record<string, unknown>,
   props: Record<string, unknown> = {},
-  slots?: Record<string, () => unknown>,
+  slots?: SpinSlots,
 ) =>
   mount(Spin, {
     props,
-    ...(slots ? { slots } : {}),
+    ...(slots ? { slots: { ...slots } } : {}),
     global: {
       provide: {
         [configContextKey as unknown as string]: {
@@ -119,13 +119,13 @@ afterEach(() => {
 });
 
 describe('Spin · 基本结构', () => {
-  it('默认渲染：`spinning` 默认为 true，非嵌套时根元素自己就是 section', () => {
+  it('默认加载保留独立root与真实section', () => {
     const w = mountSpin();
     expect(w.element.tagName).toBe('DIV');
     expect(w.classes()).toContain(P);
     expect(w.classes()).toContain(`${P}-spinning`);
-    // isNested = false ⇒ `-section` 落在根上
-    expect(w.classes()).toContain(`${P}-section`);
+    expect(w.classes()).not.toContain(`${P}-section`);
+    expect(w.get(`.${P}-section`).element.parentElement).toBe(w.element);
     expect(w.attributes('aria-live')).toBe('polite');
     expect(w.attributes('aria-busy')).toBe('true');
   });
@@ -236,22 +236,24 @@ describe('Spin · 基本结构', () => {
 });
 
 describe('Spin · 指示器', () => {
-  it('自定义指示器：VNode 被克隆并追加 `-dot` 与语义化类名', () => {
+  it('自定义指示器保留原生属性并由独立语义容器承载', () => {
     // C8-R2：indicator 走 `#indicator` 插槽
     const w = mountSpin({}, { indicator: () => h('div', { class: 'custom-indicator' }) });
     const el = w.find('.custom-indicator');
     expect(el.exists()).toBe(true);
-    expect(el.classes()).toContain(`${P}-dot`);
+    expect(el.classes()).toEqual(['custom-indicator']);
+    expect(w.get(`.${P}-indicator`).find('.custom-indicator').exists()).toBe(true);
     // 用了自定义指示器就不该再出现默认的四点
     expect(w.find(`.${P}-dot-holder`).exists()).toBe(false);
   });
 
-  it('★ 空插槽回落到默认 Looper（isEmptyVNode 归一 —— 与 prop 时代 `indicator: null` 的 `??` 回落同义）', () => {
+  it('存在的空指示器槽抑制默认内容', () => {
     const w = mountSpin({}, { indicator: () => null });
-    expect(w.findAll(`.${P}-dot-item`)).toHaveLength(4);
+    expect(w.findAll(`.${P}-dot-item`)).toHaveLength(0);
+    expect(w.find(`.${P}-indicator`).exists()).toBe(false);
   });
 
-  it('★ 自定义指示器能收到 percent（把它声明成 prop 而不是靠 attrs 继承）', () => {
+  it('自定义指示器通过具名scope显式绑定当前percent', () => {
     const MyIndicator = defineComponent({
       name: 'MyIndicator',
       props: { percent: { type: Number, default: undefined } },
@@ -259,11 +261,14 @@ describe('Spin · 指示器', () => {
         return () => h('div', { class: 'custom-indicator' }, String(props.percent));
       },
     });
-    const w = mountSpin({ percent: 23 }, { indicator: () => h(MyIndicator) });
+    const w = mountSpin(
+      { percent: 23 },
+      { indicator: ({ percent }) => h(MyIndicator, { percent }) },
+    );
     expect(w.find('.custom-indicator').text()).toBe('23');
   });
 
-  it('★ setDefaultIndicator 是**非响应式**的：只影响之后挂载的实例', async () => {
+  it('setDefaultIndicator不主动调度更新，新挂载实例读取当前默认值', async () => {
     const before = mountSpin();
     expect(before.find('.custom-spinner').exists()).toBe(false);
 
@@ -310,14 +315,12 @@ describe('Spin · 语义化 classNames / styles', () => {
     expect(w.find('.custom-indicator').exists()).toBe(true);
   });
 
-  it('★ styles.indicator 落在 **dot-holder** 上（不是内层 -dot），styles.root 落在根', () => {
+  it('styles.indicator落在完整指示器容器，styles.root落在根', () => {
     const w = mountSpin({
       styles: { root: { background: 'rgb(255, 0, 0)' }, indicator: { color: 'rgb(0, 0, 255)' } },
     });
     expect(w.attributes('style')).toContain('background: rgb(255, 0, 0)');
-    // 上游 `Looper` 把 `style` 写在 holder 上（`classNames.indicator` 同理）—
-    // 用 `.apollo-spin-dot` 去断言会拿到 `undefined`，那是**选择器错**不是实现错。
-    expect(w.find(`.${P}-dot-holder`).attributes('style')).toContain('color: rgb(0, 0, 255)');
+    expect(w.find(`.${P}-indicator`).attributes('style')).toContain('color: rgb(0, 0, 255)');
     expect(w.find(`.${P}-dot`).attributes('style')).toBeUndefined();
   });
 
@@ -331,10 +334,11 @@ describe('Spin · 语义化 classNames / styles', () => {
     });
   });
 
-  it('★ styles.section：非嵌套落在根上，嵌套落在内层 div 上（根不吃）', () => {
+  it('styles.section在普通和嵌套模式均作用于真实加载层', () => {
     const style = { section: { background: 'rgb(1, 2, 3)' } };
     const flat = mountSpin({ styles: style });
-    expect(flat.attributes('style') ?? '').toContain('rgb(1, 2, 3)');
+    expect(flat.attributes('style') ?? '').not.toContain('rgb(1, 2, 3)');
+    expect(flat.get(`.${P}-section`).attributes('style')).toContain('rgb(1, 2, 3)');
 
     const nested = withChildren({ styles: style });
     expect(nested.attributes('style') ?? '').not.toContain('rgb(1, 2, 3)');
@@ -347,9 +351,9 @@ describe('Spin · 语义化 classNames / styles', () => {
         ? { indicator: { color: 'rgb(114, 46, 209)' } }
         : { indicator: { color: 'rgb(0, 212, 255)' } };
     expect(
-      mountSpin({ size: 'small', styles: stylesFn }).find(`.${P}-dot-holder`).attributes('style'),
+      mountSpin({ size: 'small', styles: stylesFn }).find(`.${P}-indicator`).attributes('style'),
     ).toContain('rgb(114, 46, 209)');
-    expect(mountSpin({ styles: stylesFn }).find(`.${P}-dot-holder`).attributes('style')).toContain(
+    expect(mountSpin({ styles: stylesFn }).find(`.${P}-indicator`).attributes('style')).toContain(
       'rgb(0, 212, 255)',
     );
   });
@@ -428,13 +432,12 @@ describe('L2 · 交互 · spinning 受控', () => {
     vi.useRealTimers();
   });
 
-  it('★ false → true：prop 变了 DOM 不会同步变，要等一个宏任务（delay=0 也要）', async () => {
+  it('无正delay时false→true在Vue更新中立即显示', async () => {
     const w = mountSpin({ spinning: false });
     expect(w.classes()).not.toContain(`${P}-spinning`);
 
     await w.setProps({ spinning: true });
-    // 此刻 watchEffect 已跑、debounce(0) 已注册，但定时器还没触发
-    expect(w.classes()).not.toContain(`${P}-spinning`);
+    expect(w.classes()).toContain(`${P}-spinning`);
 
     await advance(0);
     expect(w.classes()).toContain(`${P}-spinning`);
@@ -546,19 +549,19 @@ describe('L2 · 交互 · percent', () => {
     vi.useRealTimers();
   });
 
-  it('★ percent=0 时**永不**渲染进度环（连 svg 都不出现）', async () => {
+  it('显式percent=0渲染可访问的0%圆环', async () => {
     const w = mountSpin({ percent: 0 });
     await flushAll();
-    expect(w.find('[role="progressbar"]').exists()).toBe(false);
+    expect(w.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('0');
   });
 
-  it('★ percent 非 0：挂载后的第二帧才补上 svg（与 React 的 useLayoutEffect 同构）', async () => {
+  it('确定进度在首帧直接呈现并在后续flush保留原节点', async () => {
     const w = mountSpin({ percent: 23 });
-    // 首帧没有 —— 这一条是 L4 里「子节点数不同 1 vs 2」的根因，从实现层对齐，没加豁免
-    expect(w.find('[role="progressbar"]').exists()).toBe(false);
+    const original = w.get('[role="progressbar"]').element;
     await flushAll();
     const bar = w.find('[role="progressbar"]');
     expect(bar.exists()).toBe(true);
+    expect(bar.element).toBe(original);
     expect(Number(bar.attributes('aria-valuenow'))).toBe(23);
   });
 
@@ -580,8 +583,7 @@ describe('L2 · 交互 · percent', () => {
   it('★ percent="auto"：每 200ms 渐近推进，永远到不了 100', async () => {
     const w = mountSpin({ percent: 'auto' });
     await flushAll();
-    // 起点是 0 ⇒ 首帧不渲染（与 percent=0 同判据）
-    expect(w.find('[role="progressbar"]').exists()).toBe(false);
+    expect(w.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('0');
 
     await advance(AUTO_INTERVAL);
     const first = Number(w.find('[role="progressbar"]').attributes('aria-valuenow'));
@@ -614,8 +616,8 @@ describe('L2 · 交互 · percent', () => {
     await advance(AUTO_INTERVAL);
     await w.setProps({ spinning: true });
     await advance(AUTO_INTERVAL - 1);
-    // 重置后重新计时：不足一个 AUTO_INTERVAL 时仍是 0 ⇒ 进度环尚未出现
-    expect(w.find('[role="progressbar"]').exists()).toBe(false);
+    // 重置后重新计时，不足一个AUTO_INTERVAL时呈现确定的0%。
+    expect(w.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('0');
     await advance(1);
     expect(Number(w.find('[role="progressbar"]').attributes('aria-valuenow'))).toBeGreaterThan(0);
   });
@@ -664,13 +666,28 @@ describe('L2 · 交互 · percent', () => {
 });
 
 describe('L2 · 交互 · 其它状态切换', () => {
-  it('fullscreen 切换会改变 isNested，从而改变 -section 的落点', async () => {
-    const w = mountSpin();
-    expect(w.classes()).toContain(`${P}-section`);
-    await w.setProps({ fullscreen: true });
-    expect(w.classes()).toContain(`${P}-fullscreen`);
-    expect(w.classes()).not.toContain(`${P}-section`);
-    expect(w.find(`.${P}-section`).element).not.toBe(w.element);
+  it('fullscreen切换保持section和自定义指示器输入的身份、值与焦点', async () => {
+    const w = mount(Spin, {
+      slots: { indicator: () => h('input', { 'aria-label': 'Mode draft' }) },
+      attachTo: document.body,
+    });
+    try {
+      const section = w.get(`.${P}-section`).element;
+      const editor = w.get('input').element;
+      editor.value = 'Current mode draft';
+      editor.focus();
+      for (const fullscreen of [true, false, true]) {
+        await w.setProps({ fullscreen });
+        expect(w.classes().includes(`${P}-fullscreen`)).toBe(fullscreen);
+        expect(w.classes()).not.toContain(`${P}-section`);
+        expect(w.get(`.${P}-section`).element).toBe(section);
+        expect(w.get('input').element).toBe(editor);
+        expect(editor.value).toBe('Current mode draft');
+        expect(document.activeElement).toBe(editor);
+      }
+    } finally {
+      w.unmount();
+    }
   });
 
   it('description 从无到有、从有到无', async () => {
@@ -693,7 +710,7 @@ describe('L2 · 交互 · 其它状态切换', () => {
   it('indicator 从默认切到自定义（插槽内容的响应式切换）', async () => {
     const custom = shallowRef<VNodeChild>(undefined);
     const w = mountSpin({}, { indicator: () => custom.value });
-    expect(w.findAll(`.${P}-dot-item`)).toHaveLength(4);
+    expect(w.findAll(`.${P}-dot-item`)).toHaveLength(0);
     custom.value = h('div', { class: 'custom-indicator' });
     await nextTick();
     expect(w.findAll(`.${P}-dot-item`)).toHaveLength(0);

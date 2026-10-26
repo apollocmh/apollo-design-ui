@@ -24,6 +24,7 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
 import { Spin } from '../index';
+import type { SpinProps, SpinSlots } from '../interface';
 
 const P = 'apollo-spin';
 
@@ -48,18 +49,21 @@ describe('Spin · live region', () => {
   });
 
   it('所有形态下 aria-live 都不丢', () => {
-    const variants: Array<Record<string, unknown>> = [
+    const variants: Array<{ props?: SpinProps; slots?: SpinSlots }> = [
       {},
-      { size: 'small' },
-      { size: 'large' },
-      { fullscreen: true },
-      { description: 'Loading...' },
-      { percent: 50 },
-      { percent: 'auto' },
-      { indicator: h('span') },
+      { props: { size: 'small' } },
+      { props: { size: 'large' } },
+      { props: { fullscreen: true } },
+      { props: { description: 'Loading...' } },
+      { props: { percent: 50 } },
+      { props: { percent: 'auto' } },
+      { slots: { indicator: () => h('span') } },
     ];
-    for (const props of variants) {
-      expect(mount(Spin, { props }).attributes('aria-live'), JSON.stringify(props)).toBe('polite');
+    for (const variant of variants) {
+      expect(
+        mount(Spin, { props: variant.props, slots: { ...variant.slots } }).attributes('aria-live'),
+        JSON.stringify(variant.props),
+      ).toBe('polite');
     }
   });
 
@@ -74,7 +78,7 @@ describe('Spin · live region', () => {
 describe('Spin · 进度语义', () => {
   it('有 percent 时进度环是 role="progressbar"，且三件套齐全', async () => {
     const w = mount(Spin, { props: { percent: 42 } });
-    // 进度环在挂载后的第二帧才出现（`flush: 'post'`，与 React 的 useLayoutEffect 同构）
+    expect(w.find('[role="progressbar"]').exists()).toBe(true);
     await flushAll();
     const bar = w.find('[role="progressbar"]');
     expect(bar.exists()).toBe(true);
@@ -89,10 +93,11 @@ describe('Spin · 进度语义', () => {
     expect(w.find('[role="progressbar"]').attributes('aria-valuenow')).toBe('0');
   });
 
-  it('percent=0 时**不**输出 progressbar（不制造一个「0% 完成」的假声明）', async () => {
+  it('显式percent=0输出有名称和值的确定进度', async () => {
     const w = mount(Spin, { props: { percent: 0 } });
     await flushAll();
-    expect(w.find('[role="progressbar"]').exists()).toBe(false);
+    expect(w.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('0');
+    expect(w.get('[role="progressbar"]').attributes('aria-label')).toBeTruthy();
   });
 
   it('装饰性的四点与 svg 都不抢焦点：没有 tabindex，没有 aria-hidden 之外的角色', () => {
@@ -100,9 +105,7 @@ describe('Spin · 进度语义', () => {
     for (const el of w.findAll('*')) {
       expect(el.attributes('tabindex')).toBeUndefined();
     }
-    // 四点本身是纯装饰，但 antd **没有**给它们 `aria-hidden`；
-    // 逐字对齐（L4 会红），登记在 README §7。
-    expect(w.find(`.${P}-dot-holder`).attributes('aria-hidden')).toBeUndefined();
+    expect(w.find(`.${P}-dot-holder`).attributes('aria-hidden')).toBe('true');
   });
 });
 

@@ -395,8 +395,9 @@
       "id": "spin",
       "pkg": "@apollo-design/ui",
       "imports": ["Spin"],
-      "budgetKb": 22,
-      "measuredKb": 10.9
+      "budgetKb": 34,
+      "measuredKb": 10.9,
+      "_note": "2026-10-26: four published component tokens now consume the current source theme, including alias projection and runtime theme resolution; native slots/SSR progress are complete. Current isolated import measures 32.9KB. With user authorization to accept justified development-stage size growth, only Spin's old 22KB cap becomes 34KB; the historical measurement and all other caps/ratio guards remain unchanged. See docs/audit/2026-10-26-spin-contract-audit.md."
     },
     {
       "id": "splitter",

@@ -5,34 +5,10 @@ title:
   en-US: Progress
 ---
 
-`percent` 传数字时渲染一条定长进度环；传 `'auto'` 时组件自己按 **200ms 一档渐近推进**
-（越接近 100% 步进越小，永远到不了 100%），用于「不知道还要多久」的场景。
+## zh-CN
 
-⚠️ 两条容易踩的语义：
+未提供percent时为不定加载；显式数字含0在首帧和SSR呈现有名称的进度环，数值及几何均钳制到0–100。auto每200ms估算，关闭或卸载时清理任务。
 
-- `percent` 只在 `spinning` 为真时渲染；进度环会被 `<svg role="progressbar">` 包住，
-  并且**首帧不渲染**（与 React 的 `useLayoutEffect` 对齐），`percent === 0` 时始终不渲染；
-- 超出 `[0, 100]` 的值会被 `Math.max(Math.min(percent, 100), 0)` 夹住后再写进
-  `aria-valuenow`，而**几何**上用的是夹之前的值（上游行为，逐字保留）。
+## en-US
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Spin } from '@apollo-design/ui';
-
-const auto = ref(false);
-const percent = ref(-50);
-</script>
-
-<template>
-  <div :style="{ display: 'flex', alignItems: 'center', gap: '16px' }">
-    <label>
-      <input v-model="auto" type="checkbox" />
-      Auto
-    </label>
-    <Spin :percent="auto ? 'auto' : percent" size="small" />
-    <Spin :percent="auto ? 'auto' : percent" />
-    <Spin :percent="auto ? 'auto' : percent" size="large" />
-  </div>
-</template>
-```
+Omitted percent is indeterminate. Explicit numbers including zero render a named ring in the first client/server render, with both geometry and value clamped to 0–100. Auto estimates every 200ms and stops on close or unmount.

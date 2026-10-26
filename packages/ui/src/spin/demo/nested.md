@@ -5,26 +5,10 @@ title:
   en-US: Nested
 ---
 
-**有 children 就进入嵌套模式**（`isNested = hasChildren || fullscreen`）：
+## zh-CN
 
-- 根元素不再带 `-section`，改由内层 `-section` 承担指示器与文案（绝对居中浮在内容之上）；
-- children 被包进 `-container`，转起来时它变半透明且不可交互（`pointer-events: none`）；
-- 已废弃的 `wrapperClassName` 会落在根元素上（替代 `-section` 的位置）。
+默认槽承载正文。稳定加载层与正文共享布局区域，加载时正文变淡且不响应指针；空正文也为真实加载内容留出空间。
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Spin } from '@apollo-design/ui';
+## en-US
 
-const loading = ref(false);
-</script>
-
-<template>
-  <Spin :spinning="loading">
-    <div>Alert message title</div>
-  </Spin>
-  <p>
-    加载状态：<input v-model="loading" type="checkbox" />
-  </p>
-</template>
-```
+The default slot owns the body. A stable loading layer shares its layout area; busy content dims and ignores pointer input. Empty content still reserves space for the loader.

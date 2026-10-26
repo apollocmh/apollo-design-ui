@@ -294,7 +294,7 @@ domContractTest('List', {
       id,
       {
         reason:
-          'Apollo List contract audit: stable content and nearest-List presentation; docs/migrations/list-contracts.md',
+          'Apollo List contract audit: stable content and nearest-List presentation; shared Spin now owns stable section/indicator hosts. See docs/migrations/list-contracts.md and docs/migrations/spin-contracts.md.',
         diff,
       },
     ]),

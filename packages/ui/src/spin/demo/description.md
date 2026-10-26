@@ -5,31 +5,10 @@ title:
   en-US: Description
 ---
 
-`description` 是加载文案。**只在有 children（嵌套模式）或 `fullscreen` 之外也渲染** ——
-它跟着指示器一起出现，因此受 `spinning` 控制。
+## zh-CN
 
-⚠️ `tip` 是 `description` 的旧名，已废弃（会输出开发期告警）。两者同时传时以
-`description` 为准（`description ?? tip`）。
+description或#description提供当前文案，数字0有效。存在的空槽抑制prop且不创建空包装，关闭加载时不消费文案槽。
 
-```vue
-<script setup lang="ts">
-import { Spin } from '@apollo-design/ui';
+## en-US
 
-const rowStyle = { display: 'flex', alignItems: 'center', gap: '16px' };
-const contentStyle = { padding: '50px', background: 'rgba(0, 0, 0, 0.05)', borderRadius: '4px' };
-</script>
-
-<template>
-  <div :style="rowStyle">
-    <Spin description="Loading" size="small">
-      <div :style="contentStyle" />
-    </Spin>
-    <Spin description="Loading">
-      <div :style="contentStyle" />
-    </Spin>
-    <Spin description="Loading" size="large">
-      <div :style="contentStyle" />
-    </Spin>
-  </div>
-</template>
-```
+Use description or #description for current content, including zero. An empty existing slot suppresses the prop without creating an empty wrapper. Inactive loading does not consume it.

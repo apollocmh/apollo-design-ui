@@ -5,39 +5,10 @@ title:
   en-US: Custom spinning indicator
 ---
 
-`indicator` 接收一个 **VNode**（antd 侧是 `React.ReactElement`），用来替换默认的四点转圈。
-它的优先级是 `indicator` > ConfigProvider 的 `spin.indicator` > `Spin.setDefaultIndicator()`。
+## zh-CN
 
-⚠️ 类型是 `VNode` 而不是「组件」：要传 `h(...)` 的**调用结果**，传函数式组件是类型错误。
-上游 demo 用的 `<LoadingOutlined />` 来自图标库，这里用等价的内联 SVG 代替。
+使用#indicator直接渲染SVG、组件、多节点或原生控件；作用域为{ percent }。内容保持原生属性，样式作用于独立指示器容器；空槽抑制默认值。
 
-```vue
-<script setup lang="ts">
-import { h } from 'vue';
-import { Spin } from '@apollo-design/ui';
+## en-US
 
-const indicator = h(
-  'svg',
-  { width: '1em', height: '1em', viewBox: '0 0 24 24', fill: 'none' },
-  [
-    h('circle', {
-      cx: '12',
-      cy: '12',
-      r: '9',
-      stroke: 'currentColor',
-      'stroke-width': '3',
-      'stroke-linecap': 'round',
-      'stroke-dasharray': '42 14',
-    }),
-  ],
-);
-</script>
-
-<template>
-  <div :style="{ display: 'flex', alignItems: 'center', gap: '16px' }">
-    <Spin :indicator="indicator" size="small" />
-    <Spin :indicator="indicator" />
-    <Spin :indicator="indicator" size="large" />
-  </div>
-</template>
-```
+Render SVG, components, multiple nodes or native controls through #indicator with a { percent } scope. Child attributes remain native, semantic styles target the host, and empty slots suppress defaults.

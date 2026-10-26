@@ -5,26 +5,10 @@ title:
   en-US: Fullscreen
 ---
 
-`fullscreen` 会加一层半透明遮罩并把转圈居中，非常适合做整页加载器。
+## zh-CN
 
-⚠️ 两条容易忽略的语义：
+实际mask为固定全屏覆盖层，正文和原生输入留在文档流中。切换模式保留section与内容身份；styles.mask作用于覆盖层，关闭时隐藏且inert。
 
-- `fullscreen` 会让 `isNested` 恒为真 —— 即使**没有** children，`-section` 也会
-  下移到内层 div（根元素只留下遮罩）；
-- 因此 `styles.section` 落在内层 div 上，**不**进根元素；而 `styles.mask`
-  只在 `fullscreen` 时并入根元素。
+## en-US
 
-```vue
-<script setup lang="ts">
-import { ref } from 'vue';
-import { Spin } from '@apollo-design/ui';
-
-const spinning = ref(false);
-const percent = ref(0);
-</script>
-
-<template>
-  <button type="button" @click="spinning = true">Show fullscreen</button>
-  <Spin :spinning="spinning" :percent="percent" fullscreen />
-</template>
-```
+The actual mask is a fixed fullscreen cover while body and native editors remain in flow. Mode changes preserve section/content identity. styles.mask targets the cover, which is hidden and inert while inactive.

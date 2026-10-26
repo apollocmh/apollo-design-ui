@@ -52,6 +52,7 @@ import NativeControlColors from './NativeControlColors.vue';
 import OverlayAttrs from './OverlayAttrs.vue';
 import OverlayContent from './OverlayContent.vue';
 import PaginationContainers from './PaginationContainers.vue';
+import SpinContractAudit from './SpinContractAudit.vue';
 import SwitchEvents from './SwitchEvents.vue';
 import TimelineNative from './TimelineNative.vue';
 import TypographyProvider from './TypographyProvider.vue';
@@ -147,6 +148,7 @@ const Demo = {
   badge: BadgeSlots,
   'list-slots': ListContent,
   'list-contract-audit': ListContractAudit,
+  'spin-contract-audit': SpinContractAudit,
   'list-item-slots': ListItemContent,
   'list-loadmore': ListLoadMore,
   'list-pagination': ListPagination,

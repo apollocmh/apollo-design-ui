@@ -14,6 +14,7 @@
  */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { getDesignToken } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { Spin } from '../index';
@@ -63,7 +64,7 @@ describe('Spin · 主题无关性', () => {
     expect(css.match(/#[0-9a-f]{3,8}\b|rgba?\(/g) ?? []).toEqual([]);
   });
 
-  it('★ 三个尺寸各自展开一份 calc（代替 antd 的组件级 CSS 变量）', () => {
+  it('三档尺寸在各自根变量定义，保留Alias尺寸计算', () => {
     const css = genSpinStyle('apollo');
     const lg = 'var(--apollo-control-height-lg)';
     expect(css).toContain(`calc(${lg} / 2)`); // dotSize
@@ -84,8 +85,7 @@ describe('Spin · Component Token', () => {
     //     dotSizeSM: controlHeightLG * 0.35,
     //     dotSizeLG: controlHeight,
     //   })
-    const alias = { controlHeightLG: 40, controlHeight: 32 };
-    const prepared = prepareComponentToken(alias as never);
+    const prepared = prepareComponentToken(getDesignToken());
     expect(prepared).toEqual({
       contentHeight: 400,
       dotSize: 20,
@@ -101,10 +101,11 @@ describe('Spin · Component Token', () => {
     ]);
   });
 
-  it('★ `contentHeight` 声明但**不产 CSS** —— antd 6.6.4 也没有任何规则引用它', () => {
-    // 由 `@ant-design/cssinjs` 的 `extractStyle` 提取的真实产物确认：
-    // `--ant-spin-content-height` 被声明、从未被 `var()` 消费。
+  it('contentHeight真实限制嵌套加载层，默认400且全屏不限高', () => {
     expect(CONTENT_HEIGHT).toBe(400);
-    expect(genSpinStyle('apollo')).not.toContain('400');
+    const css = genSpinStyle('apollo');
+    expect(css).toContain('--apollo-spin-content-height:400px');
+    expect(css).toContain('max-height:var(--apollo-spin-content-height)');
+    expect(css).toContain('max-height:none');
   });
 });

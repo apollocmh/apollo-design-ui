@@ -1,0 +1,1966 @@
+{
+  "inventoryCommit": "d513d828",
+  "productionBaseline": "c5c92e1b297324dfb5bb344e0d4bcfdc527cf96b",
+  "status": "implementation-verified-unit-open",
+  "baselineSources": [
+    {
+      "file": "packages/ui/src/spin/Spin.vue",
+      "sha256": "48f420dd7ee5493a80b091772786e480c0c7316edfd12908b1590b82920f787c"
+    },
+    {
+      "file": "packages/ui/src/spin/interface.ts",
+      "sha256": "6834b18bab8847ee280a811e96d927c39557a0a8179902e70ff384d689b1b45f"
+    },
+    {
+      "file": "packages/ui/src/spin/index.ts",
+      "sha256": "ddd5832d2b160dc222827b073d0af22373ebce49093aadb7916bb809a0731288"
+    },
+    {
+      "file": "packages/ui/src/spin/defaultIndicator.ts",
+      "sha256": "07d9755c124b036aa433601be7993ea48e4f5f35859d2987aad705e46a63750a"
+    },
+    {
+      "file": "packages/ui/src/spin/usePercent.ts",
+      "sha256": "01027550bddc3539348bd5005efbc80caebfccb4b98a43bdf01d693019506f8f"
+    },
+    {
+      "file": "packages/ui/src/spin/components/Indicator.ts",
+      "sha256": "5102d84d9d0ce81bda1cf2bfadfac2332b271aa9f69fc54a9c35c6bd539b1c2f"
+    },
+    {
+      "file": "packages/ui/src/spin/components/Looper.ts",
+      "sha256": "79cc1cdce7060c04b8f0fee24743b22e85b3065e43663b5ed10bb0552db2d3cf"
+    },
+    {
+      "file": "packages/ui/src/spin/components/Progress.ts",
+      "sha256": "86eeaeaf7d9e59a77f21ccbe05dcd72419f0acc398c45bc8b6b6db607583409a"
+    },
+    {
+      "file": "packages/ui/src/spin/style/index.ts",
+      "sha256": "b2e0a4e55664432e18014fc80bb3f10224a5c69a78940d37681bc2a6259eae09"
+    },
+    {
+      "file": "packages/ui/src/spin/style/token.ts",
+      "sha256": "618ff24d073153ebfa20e193dcf72187c56a3c7bb323ce8552b1bcf81701d7de"
+    }
+  ],
+  "unitBefore": {
+    "total": 15,
+    "passed": 1,
+    "failed": 14,
+    "cases": [
+      {
+        "name": "renders all indicator nodes after conditional empty content and preserves native editors",
+        "status": "failed",
+        "failure": "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:2137:20)\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:1934:14)\n    at Proxy.methodWrapper (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1700:25)\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:42:38\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anon"
+      },
+      {
+        "name": "an existing empty indicator slot suppresses Provider and global defaults",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:65:58\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3314:10)\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3299:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vi"
+      },
+      {
+        "name": "passes current progress as a named indicator slot scope without cloning child attributes",
+        "status": "failed",
+        "failure": "AssertionError: expected 'undefined' to be '37' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:87:42\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3314:10)\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3299:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20"
+      },
+      {
+        "name": "does not create an empty description wrapper or fall back to its prop",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:102:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3314:10)\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3299:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@v"
+      },
+      {
+        "name": "indicator semantics own the visible progress ring as well as the four dots",
+        "status": "failed",
+        "failure": "AssertionError: expected false to be true // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:117:83\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "consumes the declared global VNodeChild value Global text",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be 'Global text' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:124:28\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3314:10)\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_js"
+      },
+      {
+        "name": "consumes the declared global VNodeChild value 0",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '0' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:124:28\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3314:10)\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._"
+      },
+      {
+        "name": "reads the current global default on the next actual render",
+        "status": "failed",
+        "failure": "Error: Cannot call text on an empty DOMWrapper.\n    at Object.get (/Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/@vue+test-utils@2.5.0_@vue+compiler-dom@3.5.42_@vue+server-renderer@3.5.42_vue@3.5.42_typescript@5.9.3_/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:1479:27)\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:133:43\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "reacts to the addition and removal of an entire default slot",
+        "status": "failed",
+        "failure": "AssertionError: expected false to be true // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:155:67\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "consumes all four component tokens and removes overrides with the current theme",
+        "status": "failed",
+        "failure": "AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:2067:15)\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:1934:14)\n    at Proxy.methodWrapper (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1700:25)\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:195:22\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+"
+      },
+      {
+        "name": "shows a zero-delay change by the Vue update without a synthetic extra timer",
+        "status": "failed",
+        "failure": "AssertionError: expected [ Array(2) ] to include 'apollo-spin-spinning'\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:2067:15)\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:1934:14)\n    at Proxy.methodWrapper (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1700:25)\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:208:31\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "retains positive delay cancellation, immediate closing and unmount cleanup",
+        "status": "passed"
+      },
+      {
+        "name": "renders the explicit 0 percent in SSR with a progress name",
+        "status": "failed",
+        "failure": "AssertionError: expected '<div class=\"apollo-spin apollo-spin-s…' to contain 'role=\"progressbar\"'\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:235:20\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "renders the explicit 42 percent in SSR with a progress name",
+        "status": "failed",
+        "failure": "AssertionError: expected '<div class=\"apollo-spin apollo-spin-s…' to contain 'role=\"progressbar\"'\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:235:20\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "keeps undefined progress indeterminate and nonfinite input out of ARIA",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/spin/__tests__/contract-audit.test.ts:246:59\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      }
+    ]
+  },
+  "browserBefore": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "#token-normal actual owned size",
+        "actual": "20px",
+        "expected": "31px",
+        "passed": false
+      },
+      {
+        "name": "#token-small actual owned size",
+        "actual": "14px",
+        "expected": "13px",
+        "passed": false
+      },
+      {
+        "name": "#token-large actual owned size",
+        "actual": "32px",
+        "expected": "47px",
+        "passed": false
+      },
+      {
+        "name": "#native-variable actual owned size",
+        "actual": "20px",
+        "expected": "35px",
+        "passed": false
+      },
+      {
+        "name": "#nested-normal actual owned size",
+        "actual": "14px",
+        "expected": "20px",
+        "passed": false
+      },
+      {
+        "name": "contentHeight caps the nested loading layer",
+        "actual": 20,
+        "expected": 96,
+        "passed": false
+      },
+      {
+        "name": "contentHeight does not resize native body",
+        "actual": 300,
+        "expected": 300,
+        "passed": true
+      },
+      {
+        "name": "theme removal restores native default size",
+        "actual": "20px",
+        "expected": "20px",
+        "passed": true
+      },
+      {
+        "name": "theme removal restores the loading area",
+        "actual": 20,
+        "expected": 300,
+        "passed": false
+      },
+      {
+        "name": "theme restoration uses the current override",
+        "actual": "20px",
+        "expected": "31px",
+        "passed": false
+      },
+      {
+        "name": "empty indicator slot suppresses Provider content",
+        "actual": 1,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "description prop starts visible",
+        "actual": "Prop description",
+        "expected": "Prop description",
+        "passed": true
+      },
+      {
+        "name": "empty current description creates no wrapper",
+        "actual": 1,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "removed description slot restores prop",
+        "actual": "Prop description",
+        "expected": "Prop description",
+        "passed": true
+      },
+      {
+        "name": "new native indicator slot keeps input",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "new native indicator slot keeps all nodes",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "scope includes initial numeric zero",
+        "actual": null,
+        "expected": "0",
+        "passed": false
+      },
+      {
+        "name": "scope includes current progress",
+        "actual": null,
+        "expected": "17",
+        "passed": false
+      },
+      {
+        "name": "removed indicator slot restores current Provider",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "late body slot creates its content container",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "fullscreen native editor was available for identity checks",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "theme motion=false stops library animations",
+        "actual": 5,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "reduced-motion preference stops library animations",
+        "actual": 5,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "explicit zero has a determinate progressbar",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "progress passes full browser axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "global VNodeChild zero renders",
+        "actual": "0",
+        "expected": "00",
+        "passed": false
+      },
+      {
+        "name": "global command waits for the next actual render",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "next actual render reads current global default",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "no page or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "issues": []
+  },
+  "templateTypesBefore": {
+    "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.spin-contracts.json",
+    "result": "failed",
+    "diagnostics": "tests/browser/fixtures/SpinContractAudit.vue(44,44): error TS2493: Tuple type '[]' of length '0' has no element at index '0'.\ntests/browser/fixtures/SpinContractAudit.vue(47,61): error TS2339: Property 'percent' does not exist on type 'never'.\n"
+  },
+  "remaining": [
+    "Spin owned default/dark/compact/combined visual matrix and clean-commit baseline acceptance",
+    "Standalone source-theme SSR hydration and the remaining full-checklist boundaries before unit closure",
+    "Shared List approved pixel regression against its 57 existing baselines",
+    "Final whole-library gates only after all remediation"
+  ],
+  "firstImplementationBrowser": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "#token-normal actual owned size",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "#token-small actual owned size",
+        "actual": "13px",
+        "expected": "13px",
+        "passed": true
+      },
+      {
+        "name": "#token-large actual owned size",
+        "actual": "47px",
+        "expected": "47px",
+        "passed": true
+      },
+      {
+        "name": "#native-variable actual owned size",
+        "actual": "35px",
+        "expected": "35px",
+        "passed": true
+      },
+      {
+        "name": "#nested-normal actual owned size",
+        "actual": "20px",
+        "expected": "20px",
+        "passed": true
+      },
+      {
+        "name": "contentHeight caps the nested loading layer",
+        "actual": 96,
+        "expected": 96,
+        "passed": true
+      },
+      {
+        "name": "contentHeight does not resize native body",
+        "actual": 300,
+        "expected": 300,
+        "passed": true
+      },
+      {
+        "name": "theme removal restores native default size",
+        "actual": "20px",
+        "expected": "20px",
+        "passed": true
+      },
+      {
+        "name": "theme removal restores the loading area",
+        "actual": 300,
+        "expected": 300,
+        "passed": true
+      },
+      {
+        "name": "theme restoration uses the current override",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "empty indicator slot suppresses Provider content",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "description prop starts visible",
+        "actual": "Prop description",
+        "expected": "Prop description",
+        "passed": true
+      },
+      {
+        "name": "empty current description creates no wrapper",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "removed description slot restores prop",
+        "actual": "Prop description",
+        "expected": "Prop description",
+        "passed": true
+      },
+      {
+        "name": "new native indicator slot keeps input",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "new native indicator slot keeps all nodes",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "scope includes initial numeric zero",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "scope includes current progress",
+        "actual": "17",
+        "expected": "17",
+        "passed": true
+      },
+      {
+        "name": "removed indicator slot restores current Provider",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "late body slot creates its content container",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "fullscreen keeps original body and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen preserves native model",
+        "actual": "Preserved native draft",
+        "expected": "Preserved native draft",
+        "passed": true
+      },
+      {
+        "name": "empty native body reserves room for actual loading content",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "theme motion=false stops library animations",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "reduced-motion preference stops library animations",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "explicit zero has a determinate progressbar",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "explicit zero has actual accessible value",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "progress passes full browser axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "global VNodeChild zero renders",
+        "actual": "00",
+        "expected": "00",
+        "passed": true
+      },
+      {
+        "name": "global command waits for the next actual render",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "next actual render reads current global default",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "no page or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "issues": [],
+    "note": "31/32 passed. Added empty-body geometry reproduced an existing zero-height loading host; fix remains in the same native layout group."
+  },
+  "unitAfter": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "testHarnessNotes": [
+    "Theme handoff uses real Teleport, with the global VTU Teleport stub disabled; stub remounts do not prove a production defect",
+    "NativeElement and DOM identity are compared; repeated VTU getComponent().vm proxy objects are not instance-identity evidence"
+  ],
+  "productionSources": [
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "72bd7254ed3035af439899938d01aeaec592b2d4a017832882507cc2ed4d9767"
+    },
+    {
+      "file": "packages/ui/src/spin/Spin.vue",
+      "sha256": "54420169cb3a156ede40b14734a3912faf6dc0f74c5fb273859cf78ec99d554c"
+    },
+    {
+      "file": "packages/ui/src/spin/components/Indicator.ts",
+      "sha256": "83812497590957d2f6dd18000d29c8c6835c6334550e95a85dc831b801a69809"
+    },
+    {
+      "file": "packages/ui/src/spin/components/Looper.ts",
+      "sha256": "b4f6cb5400da168082100a6200f1e1fb2c631b0d0ce0b3cb4090d87c85ef1147"
+    },
+    {
+      "file": "packages/ui/src/spin/components/Progress.ts",
+      "sha256": "ea7d889b883fe25fe5e626eb03d5fe247ffa4dfccae1e81e5f6d00f3614b38c2"
+    },
+    {
+      "file": "packages/ui/src/spin/defaultIndicator.ts",
+      "sha256": "2141604a88d7ad9fd9467e6eaa3dc33414df97728582e25b6f42b6d7b5b15f5c"
+    },
+    {
+      "file": "packages/ui/src/spin/index.ts",
+      "sha256": "240160acce14f839249692065c49e5aedc087efbd6b847faca452f52ef63e61e"
+    },
+    {
+      "file": "packages/ui/src/spin/interface.ts",
+      "sha256": "8d895f74904427457089fd57c5570a3362d1804bdcc74c77db4b574d2130555e"
+    },
+    {
+      "file": "packages/ui/src/spin/style/index.ts",
+      "sha256": "4646a143e7eb5e7a76a4cc5bb5b8c3e30959e73eb452ee964c7b8faab2394e56"
+    },
+    {
+      "file": "packages/ui/src/spin/style/token.ts",
+      "sha256": "c6c5e9eeae8bdd8a2dcab6a4d3239ac31d56ef56f992fa7817f5dc2b5b15864f"
+    },
+    {
+      "file": "packages/ui/src/spin/use-spin-theme.ts",
+      "sha256": "bd83a37b29656c39be8134ffd0ae57119731a7502b513fe7041048f09b196b37"
+    },
+    {
+      "file": "packages/ui/src/spin/usePercent.ts",
+      "sha256": "01027550bddc3539348bd5005efbc80caebfccb4b98a43bdf01d693019506f8f"
+    }
+  ],
+  "sourceSha256": "b2fe21bdf22aa81f1fccd7a888681ae84cd35d5d67be9615c87f0258b52d825e",
+  "browserAfter": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "#token-normal actual owned size",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "#token-small actual owned size",
+        "actual": "13px",
+        "expected": "13px",
+        "passed": true
+      },
+      {
+        "name": "#token-large actual owned size",
+        "actual": "47px",
+        "expected": "47px",
+        "passed": true
+      },
+      {
+        "name": "#native-variable actual owned size",
+        "actual": "35px",
+        "expected": "35px",
+        "passed": true
+      },
+      {
+        "name": "#nested-normal actual owned size",
+        "actual": "20px",
+        "expected": "20px",
+        "passed": true
+      },
+      {
+        "name": "contentHeight caps the nested loading layer",
+        "actual": 96,
+        "expected": 96,
+        "passed": true
+      },
+      {
+        "name": "contentHeight does not resize native body",
+        "actual": 300,
+        "expected": 300,
+        "passed": true
+      },
+      {
+        "name": "theme removal restores native default size",
+        "actual": "20px",
+        "expected": "20px",
+        "passed": true
+      },
+      {
+        "name": "theme removal restores the loading area",
+        "actual": 300,
+        "expected": 300,
+        "passed": true
+      },
+      {
+        "name": "theme restoration uses the current override",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "empty indicator slot suppresses Provider content",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "description prop starts visible",
+        "actual": "Prop description",
+        "expected": "Prop description",
+        "passed": true
+      },
+      {
+        "name": "empty current description creates no wrapper",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "removed description slot restores prop",
+        "actual": "Prop description",
+        "expected": "Prop description",
+        "passed": true
+      },
+      {
+        "name": "new native indicator slot keeps input",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "new native indicator slot keeps all nodes",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "scope includes initial numeric zero",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "scope includes current progress",
+        "actual": "17",
+        "expected": "17",
+        "passed": true
+      },
+      {
+        "name": "removed indicator slot restores current Provider",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "late body slot creates its content container",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "fullscreen keeps original body and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen preserves native model",
+        "actual": "Preserved native draft",
+        "expected": "Preserved native draft",
+        "passed": true
+      },
+      {
+        "name": "empty native body reserves room for actual loading content",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "theme motion=false stops library animations",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "reduced-motion preference stops library animations",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "explicit zero has a determinate progressbar",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "explicit zero has actual accessible value",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "progress passes full browser axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "global VNodeChild zero renders",
+        "actual": "00",
+        "expected": "00",
+        "passed": true
+      },
+      {
+        "name": "global command waits for the next actual render",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "next actual render reads current global default",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "no page or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "issues": []
+  },
+  "relatedListBrowser": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "theme padding inherits into data container",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "small component token",
+        "actual": "7px 11px",
+        "expected": "7px 11px",
+        "passed": true
+      },
+      {
+        "name": "large component token",
+        "actual": "25px 27px",
+        "expected": "25px 27px",
+        "passed": true
+      },
+      {
+        "name": "header component token",
+        "actual": "rgb(221, 238, 255)",
+        "expected": "rgb(221, 238, 255)",
+        "passed": true
+      },
+      {
+        "name": "footer component token",
+        "actual": "rgb(238, 221, 255)",
+        "expected": "rgb(238, 221, 255)",
+        "passed": true
+      },
+      {
+        "name": "empty component token",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "meta component token",
+        "actual": "17px",
+        "expected": "17px",
+        "passed": true
+      },
+      {
+        "name": "avatar component token",
+        "actual": "19px",
+        "expected": "19px",
+        "passed": true
+      },
+      {
+        "name": "title component token",
+        "actual": "13px",
+        "expected": "13px",
+        "passed": true
+      },
+      {
+        "name": "description component token",
+        "actual": "18px",
+        "expected": "18px",
+        "passed": true
+      },
+      {
+        "name": "native variable precedence and inheritance",
+        "actual": "33px 35px",
+        "expected": "33px 35px",
+        "passed": true
+      },
+      {
+        "name": "Provider RTL reaches actual direction",
+        "actual": "rtl",
+        "expected": "rtl",
+        "passed": true
+      },
+      {
+        "name": "bordered rows honor the full component token",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "bordered rows honor native variable precedence",
+        "actual": "33px 35px",
+        "expected": "33px 35px",
+        "passed": true
+      },
+      {
+        "name": "bordered fallback keeps its default spacing",
+        "actual": "12px 24px",
+        "expected": "12px 24px",
+        "passed": true
+      },
+      {
+        "name": "bordered theme can be restored",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "raw true does not create a header",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "raw true does not create a heading",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "numeric description survives shared normalization",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "numeric empty text survives fallback selection",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "RTL no-flex actions float to inline end",
+        "actual": "inline-end",
+        "expected": "inline-end",
+        "passed": true
+      },
+      {
+        "name": "nested size is owned by nearest List",
+        "actual": "16px 24px",
+        "expected": "16px 24px",
+        "passed": true
+      },
+      {
+        "name": "nested vertical layout does not leak",
+        "actual": "0px",
+        "expected": "0px",
+        "passed": true
+      },
+      {
+        "name": "nested title size does not leak",
+        "actual": "14px",
+        "expected": "14px",
+        "passed": true
+      },
+      {
+        "name": "nested split false does not inherit parent border",
+        "actual": "0px",
+        "expected": "0px",
+        "passed": true
+      },
+      {
+        "name": "loading region has room for its indicator",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "numeric loading description is visible",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "top-only pagination is not content after rows",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "native keyboard target",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native focus indicator is retained",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native keyboard action invokes the current handler",
+        "actual": "1",
+        "expected": "1",
+        "passed": true
+      },
+      {
+        "name": "native List passes real browser axe",
+        "actual": "[]",
+        "expected": "[]",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 375",
+        "actual": "100%",
+        "expected": "100%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 900",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 1300",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 1700",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "root extra stacks below content on mobile",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "content width component token",
+        "actual": "min(100%, 180px)",
+        "expected": "min(100%, 180px)",
+        "passed": true
+      },
+      {
+        "name": "narrow action margin targets actual DOM",
+        "actual": "12px",
+        "expected": "12px",
+        "passed": true
+      },
+      {
+        "name": "root extra sits beside content on desktop",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "responsive configuration can be disabled",
+        "actual": "50%",
+        "expected": "50%",
+        "passed": true
+      },
+      {
+        "name": "responsive configuration resumes current breakpoint",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-layout",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-extra",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-layout",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-extra",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "root extra is rendered",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "horizontal extra semantics are rendered",
+        "actual": "rgb(12, 34, 56)",
+        "expected": "rgb(12, 34, 56)",
+        "passed": true
+      },
+      {
+        "name": "theme removal restores static defaults",
+        "actual": "12px 0px",
+        "expected": "12px 0px",
+        "passed": true
+      },
+      {
+        "name": "theme restoration updates current content",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask accessibility",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0.6)",
+        "expected": "rgba(0, 0, 0, 0.6)",
+        "passed": true
+      },
+      {
+        "name": "full overlay covers body hit testing",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "full overlay prevents clicking body controls",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask accessibility",
+        "actual": "true",
+        "expected": "true",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0)",
+        "expected": "rgba(0, 0, 0, 0)",
+        "passed": true
+      },
+      {
+        "name": "idle mask is inert",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask accessibility",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0.6)",
+        "expected": "rgba(0, 0, 0, 0.6)",
+        "passed": true
+      },
+      {
+        "name": "full overlay covers body hit testing",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "full overlay prevents clicking body controls",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask accessibility",
+        "actual": "true",
+        "expected": "true",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0)",
+        "expected": "rgba(0, 0, 0, 0)",
+        "passed": true
+      },
+      {
+        "name": "idle mask is inert",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false overlay presence",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "idle mode true retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode true retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode true retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode true overlay presence",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "no Vue or browser errors",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      }
+    ]
+  },
+  "relatedDocsBrowser": {
+    "base": "http://127.0.0.1:4477/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "passed": true,
+        "width": 1232,
+        "height": 291
+      },
+      {
+        "demo": "component-token",
+        "passed": true,
+        "width": 1232,
+        "height": 443.421875
+      },
+      {
+        "demo": "empty",
+        "passed": true,
+        "width": 1232,
+        "height": 162
+      },
+      {
+        "demo": "grid",
+        "passed": true,
+        "width": 1232,
+        "height": 286
+      },
+      {
+        "demo": "item-extra",
+        "passed": true,
+        "width": 1232,
+        "height": 284
+      },
+      {
+        "demo": "loadmore",
+        "passed": true,
+        "width": 1232,
+        "height": 138
+      },
+      {
+        "demo": "pagination-simple",
+        "passed": true,
+        "width": 1232,
+        "height": 291
+      },
+      {
+        "demo": "pagination",
+        "passed": true,
+        "width": 1232,
+        "height": 229
+      },
+      {
+        "demo": "responsive",
+        "passed": true,
+        "width": 1232,
+        "height": 286
+      },
+      {
+        "demo": "simple",
+        "passed": true,
+        "width": 1232,
+        "height": 330
+      },
+      {
+        "demo": "spin-debug",
+        "passed": true,
+        "width": 1232,
+        "height": 140
+      },
+      {
+        "demo": "vertical",
+        "passed": true,
+        "width": 1232,
+        "height": 603
+      },
+      {
+        "demo": "spin/fullscreen",
+        "passed": true,
+        "stableEditor": true,
+        "maskBox": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 900
+        }
+      }
+    ],
+    "issues": []
+  },
+  "sharedVerification": {
+    "scope": "Spin/ConfigProvider/List/Table/QRCode/Mentions; four runtime/DOM/a11y/theme layers; same production source, split verification",
+    "initial": {
+      "files": 55,
+      "total": 899,
+      "passed": 863,
+      "failed": 36,
+      "log": "/tmp/apollo-spin-shared-first.log"
+    },
+    "exactSharedDiffFix": {
+      "files": 3,
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "log": "/tmp/apollo-spin-shared-dom-fixed.log"
+    },
+    "uniqueOriginalAssertionsWithPassingEvidence": 899,
+    "missingPassingEvidence": [],
+    "fileResults": [
+      {
+        "file": "packages/ui/src/config-provider/__tests__/demo.test.ts",
+        "tests": 10,
+        "passed": 10,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/index.test.ts",
+        "tests": 61,
+        "passed": 61,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/s39-issue39.test.ts",
+        "tests": 6,
+        "passed": 6,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/s48-issue48.test.ts",
+        "tests": 3,
+        "passed": 3,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/theme-state.test.ts",
+        "tests": 3,
+        "passed": 3,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/contract-audit.test.ts",
+        "tests": 22,
+        "passed": 22,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/demo.test.ts",
+        "tests": 14,
+        "passed": 14,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/index.test.ts",
+        "tests": 33,
+        "passed": 33,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/item-slots.test.ts",
+        "tests": 8,
+        "passed": 8,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/slots.test.ts",
+        "tests": 9,
+        "passed": 9,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/listy/__tests__/demo.test.ts",
+        "tests": 10,
+        "passed": 10,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/listy/__tests__/index.test.ts",
+        "tests": 19,
+        "passed": 19,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/listy/__tests__/s38-issue38.test.ts",
+        "tests": 6,
+        "passed": 6,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/core-emits.test.ts",
+        "tests": 4,
+        "passed": 4,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/demo.test.ts",
+        "tests": 18,
+        "passed": 18,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/empty-slot.test.ts",
+        "tests": 13,
+        "passed": 13,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/engine.test.ts",
+        "tests": 16,
+        "passed": 16,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/index.test.ts",
+        "tests": 29,
+        "passed": 29,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/native-bindings.test.ts",
+        "tests": 8,
+        "passed": 8,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/native-events.test.ts",
+        "tests": 7,
+        "passed": 7,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/native-keyboard.test.ts",
+        "tests": 6,
+        "passed": 6,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/popup-slot.test.ts",
+        "tests": 3,
+        "passed": 3,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/demo.test.ts",
+        "tests": 6,
+        "passed": 6,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/index.test.ts",
+        "tests": 15,
+        "passed": 15,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/s36-issue36.test.ts",
+        "tests": 8,
+        "passed": 8,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/s37-issue37.test.ts",
+        "tests": 7,
+        "passed": 7,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/contract-audit.test.ts",
+        "tests": 15,
+        "passed": 15,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/demo.test.ts",
+        "tests": 12,
+        "passed": 12,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/fullscreen-flow.test.ts",
+        "tests": 3,
+        "passed": 3,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/index.test.ts",
+        "tests": 57,
+        "passed": 57,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/s35-issue35.test.ts",
+        "tests": 9,
+        "passed": 9,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/table/__tests__/demo.test.ts",
+        "tests": 46,
+        "passed": 46,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/table/__tests__/index.test.ts",
+        "tests": 41,
+        "passed": 41,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+        "tests": 8,
+        "passed": 8,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/table/__tests__/util.test.ts",
+        "tests": 29,
+        "passed": 29,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/table/__tests__/virtual.test.ts",
+        "tests": 9,
+        "passed": 9,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/semantic.test.ts",
+        "tests": 12,
+        "passed": 12,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/listy/__tests__/semantic.test.ts",
+        "tests": 7,
+        "passed": 7,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/semantic.test.ts",
+        "tests": 35,
+        "passed": 0,
+        "failed": [
+          "List · DOM 契约 list:basic",
+          "List · DOM 契约 list:prefix-cls:no-props",
+          "List · DOM 契约 list:prefix-cls:custom",
+          "List · DOM 契约 list:empty",
+          "List · DOM 契约 list:children",
+          "List · DOM 契约 list:no-render-item",
+          "List · DOM 契约 list:empty-locale",
+          "List · DOM 契约 list:header-footer",
+          "List · DOM 契约 list:loadmore",
+          "List · DOM 契约 list:split-false",
+          "List · DOM 契约 list:size-large",
+          "List · DOM 契约 list:size-small",
+          "List · DOM 契约 list:size-default",
+          "List · DOM 契约 list:bordered",
+          "List · DOM 契约 list:bordered-sm",
+          "List · DOM 契约 list:bordered-lg",
+          "List · DOM 契约 list:item-meta",
+          "List · DOM 契约 list:item-actions",
+          "List · DOM 契约 list:item-no-flex",
+          "List · DOM 契约 list:item-extra",
+          "List · DOM 契约 list:vertical",
+          "List · DOM 契约 list:vertical-no-extra",
+          "List · DOM 契约 list:grid",
+          "List · DOM 契约 list:grid-responsive",
+          "List · DOM 契约 list:grid-no-column",
+          "List · DOM 契约 list:pagination",
+          "List · DOM 契约 list:pagination-top",
+          "List · DOM 契约 list:pagination-both",
+          "List · DOM 契约 list:pagination-clamp",
+          "List · DOM 契约 list:loading",
+          "List · DOM 契约 list:loading-spin-props",
+          "List · DOM 契约 list:className",
+          "List · DOM 契约 list:style",
+          "List · DOM 契约 list:attrs",
+          "List · DOM 契约 list:rtl"
+        ]
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/semantic.test.ts",
+        "tests": 20,
+        "passed": 20,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/semantic.test.ts",
+        "tests": 8,
+        "passed": 7,
+        "failed": [
+          "QrCode · DOM 契约 qr-code:status-loading"
+        ]
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/semantic.test.ts",
+        "tests": 48,
+        "passed": 48,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/a11y.test.ts",
+        "tests": 12,
+        "passed": 12,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/a11y.test.ts",
+        "tests": 16,
+        "passed": 16,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/a11y.test.ts",
+        "tests": 17,
+        "passed": 17,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/listy/__tests__/a11y.test.ts",
+        "tests": 9,
+        "passed": 9,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/a11y.test.ts",
+        "tests": 6,
+        "passed": 6,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/a11y.test.ts",
+        "tests": 20,
+        "passed": 20,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/table/__tests__/a11y.test.ts",
+        "tests": 50,
+        "passed": 50,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/config-provider/__tests__/theme.test.ts",
+        "tests": 8,
+        "passed": 8,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/list/__tests__/theme.test.ts",
+        "tests": 16,
+        "passed": 16,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/listy/__tests__/theme.test.ts",
+        "tests": 9,
+        "passed": 9,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/mentions/__tests__/theme.test.ts",
+        "tests": 11,
+        "passed": 11,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/qr-code/__tests__/theme.test.ts",
+        "tests": 9,
+        "passed": 9,
+        "failed": []
+      },
+      {
+        "file": "packages/ui/src/spin/__tests__/theme.test.ts",
+        "tests": 13,
+        "passed": 13,
+        "failed": []
+      }
+    ]
+  },
+  "referenceChanges": {
+    "spinCases": 47,
+    "listCases": 35,
+    "qrLoadingCases": 1,
+    "reviewed": true,
+    "classification": "INTENDED",
+    "normalizerChanged": false,
+    "baselineChanged": false,
+    "reason": "Stable root/section/indicator ownership, native full-slot content and determinate progress; List deltas only add owned nested class and the two loading host changes, QR changes only its loading child. All case ids and unrelated QR color normalization retained."
+  },
+  "bundleBudget": {
+    "beforeCapKb": 22,
+    "currentImportKb": 32.9,
+    "afterCapKb": 34,
+    "historicalMeasuredKb": 10.9,
+    "otherCapsUnchanged": true,
+    "reason": "Current source theme/token resolution and alias projection replace four nonfunctional published tokens; user accepts justified development-stage size growth.",
+    "log": "/tmp/apollo-spin-frozen-l7.log"
+  },
+  "checks": [
+    {
+      "command": "pnpm lint:types",
+      "result": "pass",
+      "log": "/tmp/apollo-spin-frozen-types.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project types packages/ui/src/spin packages/ui/src/config-provider packages/ui/src/list packages/ui/src/table packages/ui/src/qr-code packages/ui/src/mentions --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 18,
+      "tests": 160,
+      "typeErrors": 0,
+      "log": "/tmp/apollo-spin-frozen-type-suite.log"
+    },
+    {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.spin-contracts.json",
+      "result": "pass",
+      "log": "/tmp/apollo-spin-frozen-sfc-types.log"
+    },
+    {
+      "command": "node tests/consumer/list-types.mjs",
+      "result": "pass",
+      "scope": "Published List and real Spin SFC declarations, no source aliases",
+      "log": "/tmp/apollo-spin-frozen-published-types.log"
+    },
+    {
+      "command": "node tests/consumer/spin-ssr.mjs",
+      "result": "pass",
+      "tests": 9,
+      "scope": "Production ESM without window/document",
+      "log": "/tmp/apollo-spin-production-ssr.log"
+    },
+    {
+      "command": "pnpm build:ui",
+      "result": "pass",
+      "scope": "Includes dts and 69 CSS outputs",
+      "log": "/tmp/apollo-spin-grid-build.log"
+    },
+    {
+      "command": "node tests/build/run.mjs --no-build --package ui --strict",
+      "result": "pass",
+      "checks": 11,
+      "fail": 0,
+      "pending": 0,
+      "log": "/tmp/apollo-spin-frozen-l7.log"
+    },
+    {
+      "command": "node tests/browser/spin-contract-audit.mjs",
+      "result": "pass",
+      "checks": 32,
+      "log": "/tmp/apollo-spin-browser-fixed.log"
+    },
+    {
+      "command": "node tests/browser/list-contract-audit.mjs",
+      "result": "pass",
+      "checks": 97,
+      "log": "/tmp/apollo-spin-list-browser.log"
+    },
+    {
+      "command": "node tests/browser/list-docs.mjs",
+      "result": "pass",
+      "cases": 13,
+      "log": "/tmp/apollo-spin-list-docs-browser.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run content:check && pnpm --filter @apollo-design/docs run test && pnpm --filter @apollo-design/docs run build",
+      "result": "pass",
+      "files": 14,
+      "tests": 157,
+      "actualDemos": 1003,
+      "log": "/tmp/apollo-spin-milestone-docs.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run typecheck",
+      "result": "pass",
+      "log": "/tmp/apollo-spin-milestone-docs-types.log"
+    },
+    {
+      "command": "pnpm registry:check",
+      "result": "pass",
+      "log": "/tmp/apollo-spin-milestone-registry.log"
+    },
+    {
+      "command": "pnpm audit:content-slots:check",
+      "result": "pass",
+      "rows": 524,
+      "review": 202,
+      "implementedVerified": 20,
+      "log": "/tmp/apollo-spin-milestone-inventory.log"
+    },
+    {
+      "command": "pnpm lint:format",
+      "result": "pass",
+      "errors": 0,
+      "existingWarnings": 37,
+      "existingInfos": 5,
+      "log": "/tmp/apollo-spin-milestone-format-final.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run content:check",
+      "result": "pass",
+      "scope": "Updated progress guide and homepage copy; fresh SSG/online publication remains required",
+      "log": "/tmp/apollo-spin-progress-content.log"
+    }
+  ]
+}

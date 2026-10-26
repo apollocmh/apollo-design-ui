@@ -27,6 +27,8 @@ List 当前配置、稳定内容结构、嵌套样式与分页修正，以及共
 
 共享reset的原生控件颜色配对修正见 [颜色迁移](docs/migrations/native-control-colors.md)。Spin全屏模式保留正文文档流，root为内容外壳，mask为实际覆盖层；相关落点变更与验证也见List契约迁移。
 
+Spin的完整Vue内容、显式indicator scope、稳定section/indicator、SSR确定进度（含0）与4个有效Token集中见 [Spin契约迁移](docs/migrations/spin-contracts.md)。这按ADR0007直接修正旧DOM/首帧形态，不恢复已移除indicator prop或增加兼容通道。
+
 `tests/compat`、Oracle 与 `tests/visual/baselines/react` 保留来源版本以便复现；版本固定只约束这组参考实验。上游对照默认不决定新组件完成或发布验收。现有 DOM 回归测试仍执行，必要差异必须根据 Apollo 契约审查，不允许无依据放宽。
 
 ## 9. 历史差异登记

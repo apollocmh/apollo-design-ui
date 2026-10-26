@@ -23,5 +23,5 @@ import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Spin', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 9,
+  expectCount: 10,
 });
