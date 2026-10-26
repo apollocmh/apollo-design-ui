@@ -432,7 +432,16 @@
     "registry": {
       "command": "pnpm registry:check",
       "checks": 19,
-      "warnings": 0
+      "warnings": 0,
+      "lateSnapshotFailure": {
+        "commit": "8d99baae",
+        "exitCode": 1,
+        "reason": "workstreams input digest became stale after registry notes changed",
+        "log": "/tmp/apollo-image-ownership-registry-stale.log"
+      },
+      "refreshCommand": "pnpm registry:workstreams && pnpm registry:check",
+      "exitCode": 0,
+      "log": "/tmp/apollo-image-ownership-registry-check.log"
     },
     "format": {
       "command": "pnpm exec biome check (18 changed source/test/tooling paths)",
