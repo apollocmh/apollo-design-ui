@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "ac6f40e0ea9c9551e22bfe2a39f01c11a32f931c",
-  "status": "unit-closed-verified-publication-pending",
+  "status": "unit-closed-published-and-verified",
   "baselineSources": [
     {
       "file": "packages/ui/src/index.ts",
@@ -45,9 +45,7 @@
   ],
   "baselineSha256": "0f1ba76774f7c004731a116186f40a7f1643ded73618e4188b4d90d475e01da0",
   "scope": "Statistic/Timer/Countdown, seven semantics, seven original demos; shared UI implementations unchanged; related Docs host audited separately",
-  "remaining": [
-    "Publish final closure commit and verify online source marker, actual demos and shared Docs themes."
-  ],
+  "remaining": [],
   "unitBefore": {
     "total": 12,
     "passed": 0,
@@ -3500,5 +3498,11 @@
     "Shared Skeleton implementation remains unchanged and requires its own complete audit.",
     "Final whole-library same-commit gates remain open until all remaining units finish."
   ],
-  "sharedDocsThemeCommit": "39d94dd4"
+  "sharedDocsThemeCommit": "39d94dd4",
+  "publication": {
+    "sourceCommit": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
+    "evidence": "docs/audit/evidence/docs-publication-statistic-closure.json",
+    "workflow": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40382135401",
+    "pagesId": 7340908562
+  }
 }

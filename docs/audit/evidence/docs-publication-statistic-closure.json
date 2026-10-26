@@ -1,0 +1,426 @@
+{
+  "status": "published-and-verified",
+  "sourceCommit": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
+  "implementationCommits": [
+    "111fa024edf42f7f4cfe4005b53c6cb59037b3bd",
+    "633c219bdd21857a562fb5758e1677915b11b87b"
+  ],
+  "docsThemeCommit": "39d94dd4",
+  "workflow": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40382135401",
+  "pages": {
+    "id": 7340908562,
+    "sha": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
+    "environment": "github-pages"
+  },
+  "pagesStatus": {
+    "created_at": "2026-10-26T19:02:30Z",
+    "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+    "state": "success"
+  },
+  "ci": {
+    "docsFiles": 15,
+    "docsTests": 161,
+    "buildChecks": 151,
+    "failed": 0,
+    "pending": 0,
+    "notApplicable": 67,
+    "htmlPages": 86
+  },
+  "online": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "c6fff66e",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "c6fff66e"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "actualStatisticDemos": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "httpStatus": 404,
+        "roots": 3,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "unit",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "card",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "animated",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "timer",
+        "httpStatus": 404,
+        "roots": 6,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "style-class",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "name": "two real expiry cycles finish once each; direction switch retains the native editor and controlled draft",
+        "passed": true
+      },
+      {
+        "name": "source tokens remove/restore, keyboard slider updates and native variables override without replacing the editor",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/basic",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/unit",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/card",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/animated",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/timer",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/style-class",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/component-token"
+    ]
+  },
+  "sharedDocsThemes": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "consumerChecks": [
+      {
+        "component": "image",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "image",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "list",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "list",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "spin",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "spin",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "qr-code",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "qr-code",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "statistic",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "statistic",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "leaving the dark query restores the saved light mode without persisting the override",
+        "passed": true
+      },
+      {
+        "name": "repeated inline host theme changes preserve the same native editor, focus and controlled value",
+        "passed": true
+      },
+      {
+        "name": "system preference changes update both source theme and the live page while preserving editors",
+        "passed": true
+      }
+    ],
+    "componentSmoke": [],
+    "errors": [],
+    "networkDiagnostics": [
+      {
+        "route": "image/component-token/light",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/image/demo/component-token?theme=light"
+      },
+      {
+        "route": "image/component-token/dark",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/image/demo/component-token?theme=dark"
+      },
+      {
+        "route": "list/component-token/light",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/list/demo/component-token?theme=light"
+      },
+      {
+        "route": "list/component-token/dark",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/list/demo/component-token?theme=dark"
+      },
+      {
+        "route": "spin/component-token/light",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/component-token?theme=light"
+      },
+      {
+        "route": "spin/component-token/dark",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/component-token?theme=dark"
+      },
+      {
+        "route": "qr-code/component-token/light",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/component-token?theme=light"
+      },
+      {
+        "route": "qr-code/component-token/dark",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/component-token?theme=dark"
+      },
+      {
+        "route": "statistic/component-token/light",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/component-token?theme=light"
+      },
+      {
+        "route": "statistic/component-token/dark",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/component-token?theme=dark"
+      },
+      {
+        "route": "statistic/component-token/dark",
+        "message": "Failed to load resource: the server responded with a status of 404 ()",
+        "url": "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/component-token?theme=dark"
+      }
+    ],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/image/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/image/demo/component-token?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/list/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/list/demo/component-token?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/component-token?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/qr-code/demo/component-token?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/statistic/demo/component-token?theme=dark"
+    ]
+  },
+  "ssrGuide": {
+    "status": 200,
+    "claims": [
+      "Statistic / Timer / Countdown完整清单已统一验收",
+      "36张自有视觉",
+      "全部0像素差异",
+      "28组实际Demo主题",
+      "199项候选",
+      "全库审计仍在进行",
+      "文档示例的主题链路已修正",
+      "Docs161条测试通过"
+    ],
+    "passed": true,
+    "browser": "150.0.7871.125"
+  },
+  "screenshotsReviewed": [
+    {
+      "name": "desktop home",
+      "file": "/tmp/apollo-docs-statistic-online-desktop.png",
+      "sha256": "42abeff68d3ec55436085f528ae4ceb409e7e4033de1a869c1a6051d73b2da08",
+      "reviewed": true
+    },
+    {
+      "name": "mobile dark home",
+      "file": "/tmp/apollo-docs-statistic-online-mobile-dark.png",
+      "sha256": "ef1735a18f803ad1581d0e9a82d2c484c634dd383f458b9ff9e52ada241660a8",
+      "reviewed": true
+    }
+  ],
+  "routing": "Standalone demos use existing Pages 404.html fallback. Seven Statistic navigation URLs and ten themed consumer URLs are explicitly recorded; all eleven themed resource diagnostics match those expected navigation URLs. No unexpected resource or page/Vue errors.",
+  "boundaries": [
+    "144 representative light/dark renders were verified locally; online theme verification intentionally covers 13 named consumer/lifecycle checks, not those 144 renders again.",
+    "Other components/foundation audits and the final whole-library same-commit gate remain open.",
+    "Other browser engines, physical devices and iframe input preservation across navigation were not claimed."
+  ]
+}

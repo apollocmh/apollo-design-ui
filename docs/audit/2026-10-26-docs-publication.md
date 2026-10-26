@@ -77,3 +77,12 @@ List实现里程碑已提交并推送 `23de152079c096fccf34d0f3907a8f649276de2b`
 线上Chrome150通用33项通过，可见源码与更新日志为ac6f40e0；单独打开全部5个实际QRCode Demo及2组交互通过，重复刷新会再次到期，条件/空槽和Token移除恢复保留原生输入。五个独立Demo沿用既有Pages 404.html SPA回退，明确记录主文档404，其余页面/Vue错误为零。SSR进度指南HTTP200，已验收/36张0像素差异/201个待复核候选及全库仍开放均逐项核对；桌面/移动暗色首页截图已查看。
 
 [本次发布证据](evidence/docs-publication-qrcode-closure.json)分开记录33项发布检查与7项示例验证，不累加成唯一用例数。系统curl的LibreSSL连接失败后改用已成功的真实Chrome读取SSR正文，没有将网络工具错误归为站点缺陷。后续继续其他组件与基础包审计，最终同一提交全库门禁仍开放。
+
+
+## 后续发布：Statistic完整验收与共享Demo主题已上线
+
+已发布源码c6fff66e，包含实现111fa024/633c219b、36张清洁提交自有视觉批准/完整清单收口，以及39d94dd4的Docs源主题同步与水合修复。[Deploy Docs 40382135401](https://github.com/apollocmh/apollo-design-ui/actions/runs/40382135401)两个作业及Pages deployment7340908562成功。CI的15文件161条Docs测试、全部包构建和L7 151项通过，FAIL=0/PENDING=0、n/a=67，共86个HTML页面。
+
+线上Chrome150通用33项通过，可见源码与更新日志为c6fff66e；全部七个Statistic实际Demo逐页axe及两组交互通过，重复到期、方向切换、Token删除恢复和键盘Slider保留原生编辑器。共享主题线上13项通过，涵盖Image/List/Spin/QRCode/Statistic五个Token消费者明暗、query离开恢复、内联/系统偏好切换时的原生值与焦点。SSR指南八条精确结论通过，包含Statistic已验收/36图0差异/28主题组合/199候选与全库仍开放；桌面、手机暗色首页截图已查看。
+
+独立Demo沿用Pages的404.html SPA导航回退。Statistic七个导航URL及共享主题十个URL分别记录，共享主题十一条资源诊断全部属于这些明确导航；无额外资源、页面或Vue错误。72组件代表页×亮暗144次渲染已在本地通过，线上没有重复声明这144次完整验证。各范围分开记录于[最终发布证据](evidence/docs-publication-statistic-closure.json)，不相加为唯一用例数。当前[进展页](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)、[Statistic](https://apollocmh.github.io/apollo-design-ui/components/statistic.html)和[更新日志](https://apollocmh.github.io/apollo-design-ui/changelog.html)已更新；Skeleton等剩余单元及最终同一提交全库门禁继续推进。

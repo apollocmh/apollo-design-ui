@@ -558,9 +558,9 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 
 Statistic / Timer / Countdown实现111fa024/633c219b，已集中修正原生#value、当前方向/非负事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider/两字号Token及标题/加载可访问语义。最终86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合、原7实际Demo/两组交互及28主题组合通过；UI/发布声明/Docs161条及SSG通过。严格L7通过，必要的单项预算修订及最终43649字节实测另有技术记录。
 
-清洁633c219b的36张自有视觉逐张审阅批准后全部exact、0像素差异，原163条批准记录未改。原17机械场景保留，加载态7项有意结构/ARIA变化另有精确记录；首次111fa024的33候选未批准。原完整清单逐项核对完成，无受阻或待裁决的本轮缺陷，最终发布及线上核验回执另记。见[完整清单](audit/2026-10-27-statistic-contract-audit.md)、[统一证据](audit/evidence/statistic-contract.json)、[集中迁移](migrations/statistic-contracts.md)。
+清洁633c219b的36张自有视觉逐张审阅批准后全部exact、0像素差异，原163条批准记录未改。原17机械场景保留，加载态7项有意结构/ARIA变化另有精确记录；首次111fa024的33候选未批准。原完整清单逐项核对完成，无受阻或待裁决的本轮缺陷，最终c6fff66e文档已上线，33项发布检查、九项实际Demo及13项共享主题检查通过，[发布回执](audit/evidence/docs-publication-statistic-closure.json)另记。见[完整清单](audit/2026-10-27-statistic-contract-audit.md)、[统一证据](audit/evidence/statistic-contract.json)、[集中迁移](migrations/statistic-contracts.md)。
 
-## 2026-10-27 Docs共享示例主题链路（已收口，待发布核验）
+## 2026-10-27 Docs共享示例主题链路（已上线并核验）
 
 完整盘点后修正CSS暗色与Vue源主题失配、非响应的系统偏好、临时query未清理及iframe水合src不一致；同树主题变化保留原生输入身份/值/焦点。实际暗色发现的List/QRCode Token示例浅底文字配色已同步修正，不新增公共接口。Docs161条、严格类型/SSG、五个Token消费者亮/暗及三组生命周期共13项、72组件代表页亮/暗144次生产渲染通过，零页面/Vue/资源错误；代表页渲染不等同所有Demo交互验收。范围、修前复现和未验边界见[清单](audit/2026-10-27-docs-demo-theme-audit.md)及[证据](audit/evidence/docs-demo-theme.json)。
 

@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
-  "status": "implemented-verified-publication-pending",
+  "status": "unit-closed-published-and-verified",
   "scope": "Docs theme mode/system media/temporary query → CSS + DemoProvider source theme → DemoFrame URL; no shared UI implementation change",
   "sources": [
     {
@@ -1259,5 +1259,10 @@
     "Native inline editor identity/focus/value is verified; iframe URL changes still navigate/reload the isolated document.",
     "Other browser engines and arbitrary nested theme combinations are not claimed."
   ],
-  "publication": "pending final source-marker and online actual-demo checks"
+  "publication": {
+    "sourceCommit": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
+    "evidence": "docs/audit/evidence/docs-publication-statistic-closure.json",
+    "workflow": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40382135401",
+    "pagesId": 7340908562
+  }
 }
