@@ -38,3 +38,5 @@ QRCode的statusRender直接替换为#status、稳定refresh事件操作、根/�
 `image-optional-alt-accessible-name`：Image省略alt时，实际img使用空替代文本；预览触发器使用“Preview image”，弹层使用“Image preview”作为通用名称，避免公开可选prop产生无名称控件。旧React对照缺少触发器名称的5个场景保留，精确断言仅此差异，并以Apollo原生回归及实际浏览器axe验证。集中迁移与当前验证边界见 [Image契约修正](docs/migrations/image-contracts.md)。
 
 原 D 编号及逐组件迁移证据完整保存在 [2026-10 历史兼容记录](docs/history/compatibility-2026-10.md)。旧链接/脚本引用该表时按历史记录解释；其中的 Phase、逐字同构和强制对拍要求已被本文取代。不要删除已有问题复现或第三方来源说明。
+
+Statistic/Timer/Countdown的原生#value业务作用域、当前计时方向/非负事件、SSR/清理、attrs/ref及两字号Token修正集中见[Statistic契约迁移](docs/migrations/statistic-contracts.md)；不新增旧内容函数兼容层。

@@ -3,16 +3,20 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties } from 'vue';
+import type { Statistic, StatisticCountdown, StatisticTimer } from '../index';
 import type {
   CountdownProps,
   StatisticFormatConfig,
-  StatisticFormatter,
   StatisticProps,
   StatisticRef,
   StatisticSemanticClassNames,
   StatisticSemanticStyles,
+  StatisticSlots,
   StatisticTimerProps,
+  StatisticTimerSlots,
+  StatisticTimerValueSlotProps,
+  StatisticValueSlotProps,
   TimerType,
   ValueType,
 } from '../interface';
@@ -53,7 +57,7 @@ describe('Statistic · Props 类型', () => {
     expectTypeOf<StatisticTimerProps['format']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<StatisticTimerProps['onFinish']>().toEqualTypeOf<(() => void) | undefined>();
     expectTypeOf<StatisticTimerProps['onChange']>().toEqualTypeOf<
-      ((value?: number | string) => void) | undefined
+      ((duration: number) => void) | undefined
     >();
   });
 
@@ -69,16 +73,30 @@ describe('Statistic · Props 类型', () => {
       const badType: StatisticTimerProps = { type: 'stopwatch' };
       // @ts-expect-error value 不接受布尔
       const badValue: StatisticProps = { value: true };
-      // @ts-expect-error formatter 的字符串枚举不含 'custom'
+      // @ts-expect-error formatter内容回调已移除，使用#value
       const badFormatter: StatisticFormatConfig = { formatter: 'custom' };
-      return [badSlot, badType, badValue, badFormatter];
+      // @ts-expect-error Timer uses format, not ineffective numeric precision
+      const badPrecision: StatisticTimerProps = { type: 'countdown', precision: 2 };
+      // @ts-expect-error The VNode wrapper callback was removed outright
+      const badWrapper: StatisticTimerProps = { type: 'countdown', valueRender: () => 'x' };
+      return [badSlot, badType, badValue, badFormatter, badPrecision, badWrapper];
     };
     void _never;
   });
 
-  it('formatter 函数形态返回 VNodeChild', () => {
-    const fn: StatisticFormatter = (value) => `v=${value}`;
-    expectTypeOf(fn).parameter(0).toEqualTypeOf<ValueType>();
-    expectTypeOf(fn('x')).toEqualTypeOf<VNodeChild>();
+  it('数值槽提供业务值与文本，计时槽增加当前duration/type', () => {
+    expectTypeOf<StatisticValueSlotProps>().toEqualTypeOf<{ value: ValueType; text: string }>();
+    expectTypeOf<StatisticTimerValueSlotProps['duration']>().toEqualTypeOf<number | null>();
+    expectTypeOf<StatisticTimerValueSlotProps['type']>().toEqualTypeOf<TimerType>();
+    expectTypeOf<keyof StatisticSlots>().toEqualTypeOf<'title' | 'prefix' | 'suffix' | 'value'>();
+    expectTypeOf<keyof StatisticTimerSlots>().toEqualTypeOf<keyof StatisticSlots>();
+    expectTypeOf<StatisticValueSlotProps>().not.toHaveProperty('node');
+    expectTypeOf<typeof Statistic.Timer>().toEqualTypeOf<typeof StatisticTimer>();
+    expectTypeOf<typeof Statistic.Countdown>().toEqualTypeOf<typeof StatisticCountdown>();
+    expectTypeOf<StatisticProps>().not.toHaveProperty('formatter');
+    expectTypeOf<StatisticTimerProps>().not.toHaveProperty('valueRender');
+    expectTypeOf<StatisticTimerProps>().not.toHaveProperty('precision');
+    expectTypeOf<StatisticTimerProps>().not.toHaveProperty('groupSeparator');
+    expectTypeOf<StatisticTimerProps>().not.toHaveProperty('decimalSeparator');
   });
 });

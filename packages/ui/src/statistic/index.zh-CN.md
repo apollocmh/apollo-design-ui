@@ -4,66 +4,76 @@ title: Statistic
 subtitle: 统计数值
 ---
 
-统计数值展示。
-
-## 何时使用
-
-- 当需要突出展示某个数值（统计、余额、倒计时等）时使用。
+展示统计数值；Timer按目标时间计时。内容通过Vue插槽表达，数值与计时由调用者传入，没有v-model或内置数字动画。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（7 个，覆盖 antd 的主要用户场景）。
+原7个示例包含基本值/骨架、单位、卡片布局、原生值格式化、可重启/切换方向的计时、语义样式和当前组件Token。`animated`保留原链接，实际演示自定义数值格式；不声称内置动画。
 
-| demo | 内容 |
-|---|---|
-| `basic` | 基本用法（含 loading 骨架） |
-| `unit` | 前缀 / 后缀 |
-| `card` | 卡片内使用（Card 组件落地前的等价容器） |
-| `animated` | 自定义 formatter（antd 版本用 react-countup） |
-| `timer` | `Statistic.Timer` 倒计时 / 正计时 |
-| `style-class` | 语义化 classNames / styles（对象与函数形态） |
-
-## API
+## Statistic Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| value | 数值 | `number \| string` | `0` |
-| title | 标题（prop / `#title` 插槽） | `VNodeChild` | — |
-| prefix | 前缀（prop / `#prefix` 插槽） | `VNodeChild` | — |
-| suffix | 后缀（prop / `#suffix` 插槽） | `VNodeChild` | — |
-| precision | 小数位（负数 ⇒ 无小数） | `number` | — |
-| decimalSeparator | 小数分隔符 | `string` | `'.'` |
-| groupSeparator | 千分位分隔符 | `string` | `','` |
-| formatter | 自定义格式化（只消费函数形态） | `(value, config?) => VNodeChild` | — |
-| loading | 骨架屏 | `boolean` | `false` |
-| valueStyle | **@deprecated** 请用 `styles.content` | `CSSProperties` | — |
-| valueRender | 包裹数值节点 | `(node: VNode) => VNodeChild` | — |
-| classNames / styles | 语义槽位（root / header / title / content / value / prefix / suffix），对象或函数 | — | — |
-| onMouseenter / onMouseleave | 根元素鼠标事件 | `(e: MouseEvent) => void` | — |
+| prefixCls | 当前类名前缀；任意自定义前缀需自行提供对应静态CSS | `string` | Provider前缀+`-statistic` |
+| value | 原始数值；非数字文本原样显示 | `number \| string` | `0` |
+| title / prefix / suffix | 文本后备；同名槽存在时优先，空槽也压制后备 | `string` | — |
+| precision | 截取/补零的小数位，负数取0，小数向零取整，非有限数忽略；不执行四舍五入 | `number` | 保留原小数 |
+| decimalSeparator | 小数点文本 | `string` | `'.'` |
+| groupSeparator | 字面分组文本（包括`$`），不解释替换转义 | `string` | `','` |
+| loading | 骨架代替数值正文；正文卸载，恢复时重建 | `boolean` | `false` |
+| valueStyle | 既有废弃别名；`styles.content`优先，初始化传入时保留既有开发警告 | `CSSProperties` | — |
+| classNames / styles | 七语义落点的对象或`({ props }) => 对象`；读取当前props与Provider | 见导出类型 | — |
+| onMouseenter / onMouseleave | 根元素原生鼠标监听，也可写`@mouseenter`/`@mouseleave` | `(event: MouseEvent) => void` | — |
 
-### Statistic.Timer
+### Slots
 
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| type | 计时方向 | `'countdown' \| 'countup'` | — |
-| format | 展示格式（`[...]` 转义，`X+` 按位数补零） | `string` | `'HH:mm:ss'` |
-| value | 目标时刻（countdown 为未来、countup 为过去） | `number \| string` | `0` |
-| onFinish | 倒计时结束回调（仅 countdown，只触发一次） | `() => void` | — |
-| onChange | 每帧回调（入参为时间差） | `(value?) => void` | — |
-
-### Statistic.Countdown
-
-> @deprecated 请使用 `<Statistic.Timer type="countdown" />`。
-
-## Ref
-
-| 名称 | 类型 |
-|---|---|
-| nativeElement | `HTMLDivElement \| null` |
-
-## Theme（Component Token）
-
-| token | 说明 | 默认值 |
+| 插槽 | 作用域 | 说明 |
 |---|---|---|
-| titleFontSize | 标题字号 | `fontSize`（14） |
-| contentFontSize | 数值字号 | `fontSizeHeading3`（30） |
+| title / prefix / suffix | 无 | 完整Vue内容；有意为空不会回退文本prop |
+| value | `{ value: number \| string, text: string }` | 原始值和按当前精度/分隔符格式化的文本；直接使用模板/原生控件，不传内部VNode |
+
+```vue
+<Statistic :value="balance" :precision="2">
+  <template #value="{ value, text }">
+    <strong>{{ text }}</strong><small>{{ currency }}</small>
+  </template>
+</Statistic>
+```
+
+数值槽保留`value`语义容器及其class/style；空槽得到空容器。变化的value、格式和相邻槽不替换槽内原生输入；切换loading会卸载正文。
+
+## Statistic.Timer / StatisticTimer
+
+共用上述展示字段、三个文本槽和七语义落点；不接受数值专属的precision/decimalSeparator/groupSeparator。计时文本使用format，自定义内容使用`#value`。
+
+| 参数 | 说明 | 类型 | 默认值 |
+|---|---|---|---|
+| type | 必填方向，可动态切换 | `'countdown' \| 'countup'` | — |
+| value | 目标时间戳或Date可解析字符串；倒计时传未来、正计时传过去 | `number \| string` | `0` |
+| format | Y/M/D/H/m/s/S单位、重复字母补零、`[字面文本]`转义；年/月按固定365/30天计算 | `string` | `'HH:mm:ss'` |
+
+| 事件 | 载荷 | 时机 |
+|---|---|---|
+| change | 非负毫秒`number` | 挂载后立即及每帧（约1000/60ms）更新；无效目标和SSR不触发 |
+| finish | 无 | countdown到0时每周期一次，在change(0)之后停止；修改目标或方向开启新周期 |
+
+Timer的`#value`作用域为`{ value, text, duration, type }`。value为目标原值，duration为当前非负毫秒；挂载前或日期无效时为null，text为`'-'`。其它三个槽直接转发。
+
+SSR与客户端水合首帧均为`'-'`，挂载后使用当前Date.now启动定时器；无效日期不调度，恢复有效目标后重新启动，卸载清理。format变化不重新触发已结束周期。后台标签页可能降低回调频率，每次读实际时间，不累计帧误差。
+
+### Statistic.Countdown / StatisticCountdown
+
+既有固定倒计时导出，支持相同的展示字段、format、槽、事件及ref；无需传type。保留既有开发废弃提示，不新增兼容函数通道。具名导出和静态子组件引用相同实现，均有真实类型。
+
+## Attrs、Ref、Provider与主题
+
+三个组件的class/style、id/tabindex、ARIA/data及普通原生监听均落实际根div；style支持字符串、数组和对象。Timer的change/finish是业务事件，内部原生输入的change不会冒充时长通知。`nativeElement: HTMLDivElement | null`返回实际根，卸载后为null。
+
+七落点为root/header/title/content/value/prefix/suffix。Provider使用`components.statistic`的className/style/classNames/styles；当前配置替换或删除即时生效，局部语义配置优先，原生attrs样式最后覆盖。源主题使用`theme.components.Statistic`；最近Provider、RTL与相邻实例保持隔离。
+
+| Component Token | 默认值 | CSS变量 |
+|---|---|---|
+| titleFontSize | 当前fontSize（默认14） | `--apollo-statistic-title-font-size` |
+| contentFontSize | 当前fontSizeHeading3（默认24） | `--apollo-statistic-content-font-size` |
+
+两Token接受非负有限数字，动态删除后恢复当前Alias。原生CSS变量优先，源主题变化不替换编辑器。自定义色值的对比度由调用者负责；没有默认60Hz aria-live播报，调用者可按业务选择通知方式。

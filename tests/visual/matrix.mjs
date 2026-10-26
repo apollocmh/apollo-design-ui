@@ -241,6 +241,20 @@ export const COMPONENTS = {
     ],
   },
   statistic: {
+    apolloVariants: [
+      'basic',
+      'units',
+      'loading',
+      'value-content',
+      'empty-slot',
+      'timer-countdown',
+      'timer-countup',
+      'tokens',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 5 个 variant × 3 个 viewport = 15 张
     variants: [
       'basic', // title/value/precision/prefix/suffix（含千分位与小数）

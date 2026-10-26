@@ -1,0 +1,1193 @@
+{
+  "inventoryCommit": "ac6f40e0ea9c9551e22bfe2a39f01c11a32f931c",
+  "status": "implementation-verified-unit-open",
+  "baselineSources": [
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "c340a06d240919a0c89b369ffb31fcaee2f080538792aa4de4d5c21be968dd12"
+    },
+    {
+      "file": "packages/ui/src/statistic/Countdown.ts",
+      "sha256": "7442af4234211ad98634e130a2bc2a866e07aae683c49865ea86d997dc0ba043"
+    },
+    {
+      "file": "packages/ui/src/statistic/Number.ts",
+      "sha256": "763302b562b1264fa6d6b8816e2bda55cbd4450616b5cb0d4295e77c379fabc1"
+    },
+    {
+      "file": "packages/ui/src/statistic/Statistic.ts",
+      "sha256": "fe3cbfffcb7cfda9962ad56fed4bccc20dd84d42eed74cec6de0eb5c98c31677"
+    },
+    {
+      "file": "packages/ui/src/statistic/Timer.ts",
+      "sha256": "f50327e4167e71f27492144c59f3560704767b5fed68ca3133fa355de97b6e48"
+    },
+    {
+      "file": "packages/ui/src/statistic/index.ts",
+      "sha256": "bee8dc56b56855986c5e340ae188d234914b4d3d0f7143147379abaab95c6c27"
+    },
+    {
+      "file": "packages/ui/src/statistic/interface.ts",
+      "sha256": "bc0125cdaacecbb9b2246eeb0434bf1eedfc480076a977abcea9df57398b0b19"
+    },
+    {
+      "file": "packages/ui/src/statistic/style/index.ts",
+      "sha256": "d1ffaa17d980bf0affaea28ed58954a69fa302c52fcef17a8b6dfd230537fcc8"
+    },
+    {
+      "file": "packages/ui/src/statistic/style/token.ts",
+      "sha256": "11a0523249c76b6c41f396a4a865a8fae2a4124981abbaa33ae0298bccf7344c"
+    },
+    {
+      "file": "packages/ui/src/statistic/utils.ts",
+      "sha256": "f4d4e9dd81afb92f8000cc2138b895f79411acf28b158e5a3f604c72a1b877df"
+    }
+  ],
+  "baselineSha256": "0f1ba76774f7c004731a116186f40a7f1643ded73618e4188b4d90d475e01da0",
+  "scope": "Statistic/Timer/Countdown, seven semantics, seven original demos; shared implementations unchanged",
+  "remaining": [
+    "36 owned images require clean-commit capture, individual review, approval and exact comparison.",
+    "Reconcile original full checklist, publish final progress and verify online demos/source marker."
+  ],
+  "unitBefore": {
+    "total": 12,
+    "passed": 0,
+    "failed": 12,
+    "cases": [
+      {
+        "name": "uses complete current slots before text props, including intentional emptiness",
+        "status": "failed",
+        "failure": "AssertionError: expected 'fallback title' to be 'Current titletail' // Object.is equality"
+      },
+      {
+        "name": "provides business values and formatted text without replacing native value content",
+        "status": "failed",
+        "failure": "Error: Unable to get input within: <div class=\"apollo-statistic\">"
+      },
+      {
+        "name": "keeps current Provider configuration, semantic props, prefix and direction",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'custom-statistic', …(1) ] to deeply equal ArrayContaining{…}"
+      },
+      {
+        "name": "merges native attrs and every Vue style form on the root with one native event",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "consumes both source tokens, removes them and retains independent native overrides",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '18px' // Object.is equality"
+      },
+      {
+        "name": "treats group separators literally and ignores nonfinite precision without throwing",
+        "status": "failed",
+        "failure": "AssertionError: expected '1234.50' to be '1$&234.50' // Object.is equality"
+      },
+      {
+        "name": "uses the current direction, restarts the cycle and preserves scoped native editors",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-statistic-title within: <div class=\"apollo-statistic\">"
+      },
+      {
+        "name": "does not schedule invalid dates and resumes immediately with one finish at zero",
+        "status": "failed",
+        "failure": "AssertionError: expected 1 to be +0 // Object.is equality"
+      },
+      {
+        "name": "forwards Countdown slots, actual native ref, attrs and exactly one business event",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-statistic-title within: <div class=\"apollo-statistic\">"
+      },
+      {
+        "name": "changes the existing timer direction without depending on custom slots",
+        "status": "failed",
+        "failure": "AssertionError: expected '00' to be '02' // Object.is equality"
+      },
+      {
+        "name": "ignores infinite precision as invalid configuration",
+        "status": "failed",
+        "failure": "RangeError: Invalid string length"
+      },
+      {
+        "name": "exposes the actual Timer root independently of content slots",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be <div class=\"apollo-statistic\">…(1)</div> // Object.is equality"
+      }
+    ]
+  },
+  "ssrBefore": {
+    "results": [
+      {
+        "name": "number",
+        "passed": false,
+        "error": "The expression evaluated to a falsy value:"
+      },
+      {
+        "name": "countdown",
+        "passed": false,
+        "error": "window is not defined"
+      },
+      {
+        "name": "countup",
+        "passed": false,
+        "error": "window is not defined"
+      },
+      {
+        "name": "Countdown export",
+        "passed": false,
+        "error": "window is not defined"
+      },
+      {
+        "name": "current source token SSR",
+        "passed": false,
+        "error": "The expression evaluated to a falsy value:"
+      }
+    ],
+    "events": []
+  },
+  "initialUnitBefore": {
+    "total": 12,
+    "passed": 0,
+    "failed": 12,
+    "cases": [
+      {
+        "name": "uses complete current slots before text props, including intentional emptiness",
+        "status": "failed",
+        "failure": "AssertionError: expected 'fallback title' to be 'Current titletail' // Object.is equality"
+      },
+      {
+        "name": "provides business values and formatted text without replacing native value content",
+        "status": "failed",
+        "failure": "Error: Unable to get input within: <div class=\"apollo-statistic\">"
+      },
+      {
+        "name": "keeps current Provider configuration, semantic props, prefix and direction",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'custom-statistic', …(1) ] to deeply equal ArrayContaining{…}"
+      },
+      {
+        "name": "merges native attrs and every Vue style form on the root with one native event",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "consumes both source tokens, removes them and retains independent native overrides",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '18px' // Object.is equality"
+      },
+      {
+        "name": "treats group separators literally and ignores nonfinite precision without throwing",
+        "status": "failed",
+        "failure": "AssertionError: expected '1234.50' to be '1$&234.50' // Object.is equality"
+      },
+      {
+        "name": "uses the current direction, restarts the cycle and preserves scoped native editors",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-statistic-title within: <div class=\"apollo-statistic\">"
+      },
+      {
+        "name": "does not schedule invalid dates and resumes immediately with one finish at zero",
+        "status": "failed",
+        "failure": "AssertionError: expected 1 to be +0 // Object.is equality"
+      },
+      {
+        "name": "forwards Countdown slots, actual native ref, attrs and exactly one business event",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-statistic-title within: <div class=\"apollo-statistic\">"
+      },
+      {
+        "name": "changes the existing timer direction without depending on custom slots",
+        "status": "failed",
+        "failure": "AssertionError: expected '00' to be '02' // Object.is equality"
+      },
+      {
+        "name": "ignores infinite precision as invalid configuration",
+        "status": "failed",
+        "failure": "RangeError: Invalid string length"
+      },
+      {
+        "name": "exposes the actual Timer root independently of content slots",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be <div class=\"apollo-statistic\">…(1)</div> // Object.is equality"
+      }
+    ]
+  },
+  "harnessNotes": [
+    "Provider configuration uses the actual components.statistic API. The first fixture used a nonexistent top-level statistic prop; it was corrected and all 12 reproductions were rerun against exact baseline source copies, all failing.",
+    "Baseline copies and temporary reproduction test were removed after capture; production files were never reverted during concurrent verification.",
+    "Browser axe requires a running clock; pausing all browser timers while awaiting axe stalls the harness. Axe now runs before the clock pause and after resume; real clock assertions still use controlled browser time.",
+    "The fixture now serves an explicit empty data favicon instead of masking the initial missing-favicon 404.",
+    "Default fontSizeHeading3 is 24 in the actual theme, while old docs/preparation fallback claimed 30. The corrected browser default assertion follows the actual Alias; source token override assertions remain exact.",
+    "Only root type-export ordering changed after runtime freeze. All eleven component/runtime source hashes are unchanged; emitted root JavaScript equals the inventory root index. Final strict types and published declarations are checked again.",
+    "Nested-provider VTU selectors use get(root).get(child) with real Teleport, preserving the real node assertions."
+  ],
+  "browserBefore": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "native root id",
+        "actual": null,
+        "expected": "statistic-main",
+        "passed": false
+      },
+      {
+        "name": "native root tabindex",
+        "actual": null,
+        "expected": "0",
+        "passed": false
+      },
+      {
+        "name": "complete native value slot",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "default production typography passes axe",
+        "actual": [
+          {
+            "id": "color-contrast",
+            "nodes": [
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "current source title font",
+        "actual": "14px",
+        "expected": "18px",
+        "passed": false
+      },
+      {
+        "name": "current source content font",
+        "actual": "24px",
+        "expected": "42px",
+        "passed": false
+      },
+      {
+        "name": "current source alias color",
+        "actual": "rgb(34, 85, 119)",
+        "expected": "rgb(34, 85, 119)",
+        "passed": true
+      },
+      {
+        "name": "current Provider class",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "current Provider native style",
+        "actual": "0px",
+        "expected": "9px",
+        "passed": false
+      },
+      {
+        "name": "current RTL class",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "Timer forwards native value slot",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "Countdown forwards suffix slot",
+        "actual": null,
+        "expected": "Remaining",
+        "passed": false
+      },
+      {
+        "name": "complete current browser content passes axe",
+        "actual": [
+          {
+            "id": "color-contrast",
+            "nodes": [
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "zero browser and Vue errors",
+        "actual": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "expected": [],
+        "passed": false
+      }
+    ],
+    "errors": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ]
+  },
+  "tokenDefaultsBefore": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  },
+  "productionSources": [
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "75b5cb84b5ef06db1366fb16c1a215a1e359943018829a37b4322ce8961a2a04"
+    },
+    {
+      "file": "packages/ui/src/statistic/Countdown.ts",
+      "sha256": "f40095352e79ea43f1e75bb7844fe12ea00682ef66223902e8a5e376f4bc7d11"
+    },
+    {
+      "file": "packages/ui/src/statistic/Number.ts",
+      "sha256": "298ffb17b262744e25229a49eed8c1d168ec9dce5d26b58b0cb282343f355fa0"
+    },
+    {
+      "file": "packages/ui/src/statistic/Statistic.ts",
+      "sha256": "af4bdc1bc2c038c244ff16125657c57a0b9a7869da82410b39fc5feb422f3631"
+    },
+    {
+      "file": "packages/ui/src/statistic/Timer.ts",
+      "sha256": "96f9c1765f0af609b04b761fce74a1a826cdc1de49aa4d228cef9fd061875c59"
+    },
+    {
+      "file": "packages/ui/src/statistic/index.ts",
+      "sha256": "10f8000ed7a7a497440982aeadf43cf8daac749aa5cf3849794eec1f7327c918"
+    },
+    {
+      "file": "packages/ui/src/statistic/interface.ts",
+      "sha256": "df0ae98328ff9146b172b7dfaedaab0eae34b93e19ccf265a09c4af1962777f4"
+    },
+    {
+      "file": "packages/ui/src/statistic/props.ts",
+      "sha256": "c7bfc7b432e1c82068491a6bdaa11b1d88ffd45ec60e4c3d5e7fdfe4459d49f7"
+    },
+    {
+      "file": "packages/ui/src/statistic/style/index.ts",
+      "sha256": "4ed26f116a9053fc7af55e43fb7fae6b3a3cec441415a048a92a84d432cf8fbf"
+    },
+    {
+      "file": "packages/ui/src/statistic/style/token.ts",
+      "sha256": "18099f76b0655b4cfd30a90ef439699d1b4f070dc289bd4d9616814c0055fd8b"
+    },
+    {
+      "file": "packages/ui/src/statistic/use-statistic-theme.ts",
+      "sha256": "2b35d7ceb84c5c93c6cabcd04dac5cdae0fbc4463a0bed047d19f9819949e423"
+    },
+    {
+      "file": "packages/ui/src/statistic/utils.ts",
+      "sha256": "e3a06c523f71a86351597b9fded27eb6c3ef0469cbf4bdf64d73b2bf3b53c7f6"
+    }
+  ],
+  "sourceSha256": "8d5a00715e34ae2e0c61db73d18816cab80d981c2ab7a004721464d0b825d763",
+  "browserAfter": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "native root id",
+        "actual": "statistic-main",
+        "expected": "statistic-main",
+        "passed": true
+      },
+      {
+        "name": "native root tabindex",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "complete native value slot",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "default production typography passes axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "current source title font",
+        "actual": "18px",
+        "expected": "18px",
+        "passed": true
+      },
+      {
+        "name": "current source content font",
+        "actual": "42px",
+        "expected": "42px",
+        "passed": true
+      },
+      {
+        "name": "current source alias color",
+        "actual": "rgb(34, 85, 119)",
+        "expected": "rgb(34, 85, 119)",
+        "passed": true
+      },
+      {
+        "name": "current Provider class",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider native style",
+        "actual": "9px",
+        "expected": "9px",
+        "passed": true
+      },
+      {
+        "name": "current RTL class",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "formatted business scope",
+        "actual": "42.125|42.1",
+        "expected": "42.125|42.1",
+        "passed": true
+      },
+      {
+        "name": "complete current title slot",
+        "actual": "Native title tail",
+        "expected": "Native title tail",
+        "passed": true
+      },
+      {
+        "name": "numeric edits and adjacent slots preserve native node",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "numeric edits preserve native focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "intentional empty title suppresses text",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "theme removal returns current defaults",
+        "actual": "24px",
+        "expected": "24px",
+        "passed": true
+      },
+      {
+        "name": "Provider class removed",
+        "actual": false,
+        "expected": false,
+        "passed": true
+      },
+      {
+        "name": "theme and adjacent content removal preserve node/value",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native style width 251px",
+        "actual": "251px",
+        "expected": "251px",
+        "passed": true
+      },
+      {
+        "name": "native style width 261px",
+        "actual": "261px",
+        "expected": "261px",
+        "passed": true
+      },
+      {
+        "name": "native style width 271px",
+        "actual": "271px",
+        "expected": "271px",
+        "passed": true
+      },
+      {
+        "name": "native token overrides source token",
+        "actual": "47px",
+        "expected": "47px",
+        "passed": true
+      },
+      {
+        "name": "root click fires once",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "loading removes actual content",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "loading restores controlled draft",
+        "actual": "Persistent browser draft",
+        "expected": "Persistent browser draft",
+        "passed": true
+      },
+      {
+        "name": "Timer forwards native value slot",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "countup current scope",
+        "actual": "countup|05|5000",
+        "expected": "countup|05|5000",
+        "passed": true
+      },
+      {
+        "name": "dynamic countdown direction",
+        "actual": "countdown|02|2000",
+        "expected": "countdown|02|2000",
+        "passed": true
+      },
+      {
+        "name": "native editor change is not a business duration",
+        "actual": 83,
+        "expected": 83,
+        "passed": true
+      },
+      {
+        "name": "countdown completes at zero",
+        "actual": "countdown|00|0",
+        "expected": "countdown|00|0",
+        "passed": true
+      },
+      {
+        "name": "finish once",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "final duration is zero",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "clock ticks retain original focused editor",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "completed timer has no further changes",
+        "actual": 203,
+        "expected": 203,
+        "passed": true
+      },
+      {
+        "name": "rearmed target completes second cycle",
+        "actual": 2,
+        "expected": 2,
+        "passed": true
+      },
+      {
+        "name": "invalid target has explicit null duration",
+        "actual": "countdown|-|",
+        "expected": "countdown|-|",
+        "passed": true
+      },
+      {
+        "name": "invalid target has no effects",
+        "actual": 234,
+        "expected": 234,
+        "passed": true
+      },
+      {
+        "name": "unmounted clock has no effects",
+        "actual": 234,
+        "expected": 234,
+        "passed": true
+      },
+      {
+        "name": "remounted clock renders current controlled draft",
+        "actual": "Persistent clock draft",
+        "expected": "Persistent clock draft",
+        "passed": true
+      },
+      {
+        "name": "Countdown forwards suffix slot",
+        "actual": "Remaining",
+        "expected": "Remaining",
+        "passed": true
+      },
+      {
+        "name": "complete current browser content passes axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "zero browser and Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "ssrAfter": {
+    "results": [
+      {
+        "name": "number",
+        "passed": true
+      },
+      {
+        "name": "countdown",
+        "passed": true
+      },
+      {
+        "name": "countup",
+        "passed": true
+      },
+      {
+        "name": "Countdown export",
+        "passed": true
+      },
+      {
+        "name": "current source token SSR",
+        "passed": true
+      }
+    ],
+    "events": []
+  },
+  "currentFourLayers": {
+    "total": 84,
+    "passed": 84,
+    "failed": 0,
+    "files": 7,
+    "cases": [
+      {
+        "name": "Statistic complete contract uses complete current slots before text props, including intentional emptiness",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic complete contract provides business values and formatted text without replacing native value content",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic complete contract keeps current Provider configuration, semantic props, prefix and direction",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic complete contract merges native attrs and every Vue style form on the root with one native event",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic complete contract consumes both source tokens, removes them and retains independent native overrides",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic complete contract treats group separators literally and ignores nonfinite precision without throwing",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic timer lifecycle contract uses the current direction, restarts the cycle and preserves scoped native editors",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic timer lifecycle contract does not schedule invalid dates and resumes immediately with one finish at zero",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic timer lifecycle contract forwards Countdown slots, actual native ref, attrs and exactly one business event",
+        "status": "passed"
+      },
+      {
+        "name": "changes the existing timer direction without depending on custom slots",
+        "status": "passed"
+      },
+      {
+        "name": "ignores infinite precision as invalid configuration",
+        "status": "passed"
+      },
+      {
+        "name": "exposes the actual Timer root independently of content slots",
+        "status": "passed"
+      },
+      {
+        "name": "isolates multiple clocks, consumes Vue once listeners and never mistakes input events for durations",
+        "status": "passed"
+      },
+      {
+        "name": "keeps the nearest Provider and neighboring local styles independent during outer replacement",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo demo 条数等于 expectCount（7）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/animated.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/basic.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/card.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/component-token.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/style-class.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/timer.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 渲染 ../demo/unit.vue",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · demo 全部豁免都被用到（防腐烂）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 根类名 + 默认 value=0",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 title / value / precision / prefix / suffix 的完整结构",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 千分位 + 自定义 groupSeparator / decimalSeparator",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 非法数值原样输出；`-` 不是数字",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 负数与负 precision（decimal 不渲染）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 title/prefix/suffix 经插槽传 0 也渲染（isRenderable 判据；C8-R2 后 0 只能走 slot）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 空插槽与空串都不渲染（空 slot 经 isEmptyVNode / isRenderable 判空）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 自定义数值使用原生value槽，scope只包含业务值与文本",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 title / prefix / suffix 槽优先于文本prop",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 loading：骨架出现、content 消失",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 原生ARIA与data透传到根元素",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 valueStyle：并入 content 且被语义化 styles.content 覆盖",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 nativeElement expose",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 L2 · mouseenter / mouseleave 落在根元素",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 结构 direction=rtl ⇒ 根元素 -rtl 类",
+        "status": "passed"
+      },
+      {
+        "name": "StatisticNumber · 内部 fallback groupSeparator 兜底空串（直连 Number 不分组）",
+        "status": "passed"
+      },
+      {
+        "name": "StatisticNumber · 内部 fallback 空整数部分兜底 0（.5 → 0.5）",
+        "status": "passed"
+      },
+      {
+        "name": "formatTimeStr · 转义 `[...]` 转义文本不参与占位替换",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Timer countdown：初值、onChange、onFinish 只触发一次、结束停在 00:00:00",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Timer countup：从过去时刻累加",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Timer format 支持转义与按位数补零",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Timer aria/data 透传（Timer → Statistic）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Timer 首帧渲染 `-`（showTime 置位之前）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Countdown（deprecated） 转发 Timer 并固定 type=countdown",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic.Countdown（deprecated） 发废弃告警（setup 期一次）",
+        "status": "passed"
+      },
+      {
+        "name": "derives both prepared defaults from the actual default Alias tokens",
+        "status": "passed"
+      },
+      {
+        "name": "handles invalid duration/target and negative elapsed time explicitly",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:no-props",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:basic",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:prefix-suffix",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:group-separator",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:decimal-separator",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:precision-negative",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:illegal-value",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:dash-value",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:zero-title-prefix-suffix",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:formatter-fn",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:aria-data",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:semantic",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:value-style",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:loading",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:rtl",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:timer-ssr",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · DOM 契约 statistic:timer-title",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） demo 条数等于 expectCount（7）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/animated.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/basic.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/card.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/component-token.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/style-class.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/timer.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · a11y（axe） ../demo/unit.vue 无 axe violation",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · theme 四态的 ThemeConfig 互不相同（防「测了四遍同一个态」）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · theme light 态下渲染",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · theme dark 态下渲染",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · theme compact 态下渲染",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · theme token-override 态下渲染",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 主题无关性 Component Token 2 个 CSS 变量声明在根类",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 主题无关性 规则侧消费组件变量（不直接引用 alias token）",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 主题无关性 title / skeleton / content / value / prefix / suffix 全覆盖",
+        "status": "passed"
+      },
+      {
+        "name": "Statistic · 主题无关性 ant 前缀产物同构",
+        "status": "passed"
+      }
+    ]
+  },
+  "runtimeFreezeSha256": "9f3efec0e1834c37d4d3f9ffa440e03352c890352dc620d4af2bee2ae922a31b",
+  "hydration": {
+    "browser": "150.0.7871.125",
+    "checks": [
+      "all three exports render current source tokens and deterministic clock placeholders without browser effects",
+      "hydration retains all server roots/editors, pretyped values, focus and selection while starting the real clocks",
+      "source theme removal/restoration changes current variables without replacing any editor",
+      "numeric formatting updates during hydration without consuming or replacing the native input",
+      "repeated target/direction changes preserve hydrated clock identity and focus",
+      "countdown zero finishes exactly once and unmount stops effects with zero browser/Vue errors"
+    ],
+    "errors": []
+  },
+  "actualDemos": {
+    "base": "http://127.0.0.1:4477/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "httpStatus": 200,
+        "roots": 3,
+        "passed": true
+      },
+      {
+        "demo": "unit",
+        "httpStatus": 200,
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "demo": "card",
+        "httpStatus": 200,
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "demo": "animated",
+        "httpStatus": 200,
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "demo": "timer",
+        "httpStatus": 200,
+        "roots": 6,
+        "passed": true
+      },
+      {
+        "demo": "style-class",
+        "httpStatus": 200,
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "httpStatus": 200,
+        "roots": 1,
+        "passed": true
+      },
+      {
+        "name": "two real expiry cycles finish once each; direction switch retains the native editor and controlled draft",
+        "passed": true
+      },
+      {
+        "name": "source tokens remove/restore, keyboard slider updates and native variables override without replacing the editor",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": []
+  },
+  "budget": {
+    "bytes": 43578,
+    "kibibytes": 42.556640625,
+    "oldBudgetKB": 41,
+    "newBudgetKB": 43,
+    "historicalMeasuredKB": 23.7,
+    "failedBefore": "/tmp/apollo-statistic-l7-before-budget.log",
+    "passedAfter": "/tmp/apollo-statistic-l7.log",
+    "reason": "Required current source-theme resolution and native content/clock contracts; bounded single-entry technical revision as authorized by the user and the budget policy. All other budgets, historical measurements and ratio guard unchanged."
+  },
+  "currentTypes": {
+    "total": 94,
+    "passed": 94,
+    "failed": 0,
+    "files": 6
+  },
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/statistic --maxWorkers=1 --no-file-parallelism",
+      "result": "7 files / 84 passed / zero failed",
+      "log": "/tmp/apollo-statistic-four-layers-final.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project types packages/ui/src/statistic packages/ui/src/config-provider packages/ui/src/skeleton --maxWorkers=1 --no-file-parallelism",
+      "result": "6 files / 94 passed / zero failed",
+      "log": "/tmp/apollo-statistic-type-suite.log"
+    },
+    {
+      "command": "pnpm lint:types",
+      "result": "pass",
+      "log": "/tmp/apollo-statistic-types-final.log"
+    },
+    {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.statistic-contracts.json",
+      "result": "pass",
+      "log": "/tmp/apollo-statistic-sfc.log"
+    },
+    {
+      "command": "node tests/consumer/list-types.mjs",
+      "result": "published List/Spin/QRCode/Statistic SFCs and typed static exports pass; no source aliases/test fixtures",
+      "log": "/tmp/apollo-statistic-published-types.log"
+    },
+    {
+      "command": "pnpm build:ui",
+      "result": "dts and 69 CSS complete",
+      "log": "/tmp/apollo-statistic-ui-build.log"
+    },
+    {
+      "command": "node tests/consumer/statistic-ssr.mjs",
+      "result": "5 checks; no window/document; zero events",
+      "log": "/tmp/apollo-statistic-ssr.log"
+    },
+    {
+      "command": "node tests/browser/statistic-contract-audit.mjs",
+      "result": "42/42 passed; zero errors",
+      "log": "/tmp/apollo-statistic-browser.log"
+    },
+    {
+      "command": "node tests/browser/statistic-theme-hydration.mjs",
+      "result": "6 groups passed; zero errors",
+      "log": "/tmp/apollo-statistic-hydration.log"
+    },
+    {
+      "command": "node tests/browser/statistic-docs.mjs",
+      "result": "all seven actual demos + two interaction groups passed; zero errors",
+      "log": "/tmp/apollo-statistic-docs-browser.log"
+    },
+    {
+      "command": "node tests/build/run.mjs --package ui --no-build --strict",
+      "result": "11 checks; FAIL=0/PENDING=0 after documented single-entry budget revision",
+      "log": "/tmp/apollo-statistic-l7.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run content:check",
+      "result": "72 components / 1004 demos / eight guides",
+      "log": "/tmp/apollo-statistic-docs-content.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run typecheck && pnpm --filter @apollo-design/docs run test && pnpm --filter @apollo-design/docs run build",
+      "result": "strict types, 14 files/157 tests and SSG pass; final progress copy changes require publishing build",
+      "log": "/tmp/apollo-statistic-docs-build.log"
+    },
+    {
+      "command": "node --test tests/tooling/statistic-visual.test.mjs",
+      "result": "36 current cases; 15 historical references preserved",
+      "log": "/tmp/apollo-statistic-tooling.log"
+    },
+    {
+      "command": "pnpm lint:format",
+      "result": "zero errors; existing 37 warnings/five infos",
+      "log": "/tmp/apollo-statistic-format-final.log"
+    },
+    {
+      "command": "pnpm registry:check",
+      "result": "19 checks; zero warnings",
+      "log": "/tmp/apollo-statistic-registry.log"
+    },
+    {
+      "command": "pnpm audit:content-slots:check",
+      "result": "528 rows / 199 review candidates; source evidence only",
+      "log": "/tmp/apollo-statistic-inventory.log"
+    }
+  ]
+}

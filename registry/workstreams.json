@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-26T15:59:19.677Z",
+  "generatedAt": "2026-10-26T17:08:09.392Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 91,
-      "ready": 1
+      "done": 90,
+      "ready": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,11 +35,12 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 1,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 1,
+    "currentBatchSize": 2,
     "currentBatchIds": [
-      "X:docs-site"
+      "X:docs-site",
+      "COMP:statistic"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -378,8 +379,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 22,
-      "readyCount": 0,
+      "doneCount": 21,
+      "readyCount": 1,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -737,11 +738,11 @@
         "17 个组件 11 维度 completed"
       ],
       "itemCount": 17,
-      "doneCount": 17,
-      "readyCount": 0,
+      "doneCount": 16,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:auto-complete",
         "COMP:calendar",
@@ -1757,16 +1758,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 0,
-      "why": "",
+      "why": "2026-10-27 完整盘点后集中实现原生#value、当前计时方向/事件、SSR/卸载清理、完整attrs/ref/Provider和两Token；标题对比度修正。84四层、94类型、42生产浏览器、5 SSR、6水合、7实际Demo/两组交互、发布声明及UI/L7/Docs通过。自有36图与最终清单/发布仍开放；见docs/audit/2026-10-27-statistic-contract-audit.md。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
       "dagLevel": 3,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:affix",
@@ -3358,6 +3361,7 @@
     }
   ],
   "currentBatch": [
-    "X:docs-site"
+    "X:docs-site",
+    "COMP:statistic"
   ]
 }

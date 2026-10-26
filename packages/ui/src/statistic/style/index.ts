@@ -45,7 +45,7 @@ export function genStatisticStyle(rootPrefixCls: string): string {
     `  padding-bottom:${v('marginXXS')};`,
     `}`,
     `${cls} ${cls}-title{`,
-    `  color:${v('colorTextDescription')};`,
+    `  color:${v('colorTextSecondary')};`,
     `  font-size:var(--${rootPrefixCls}-statistic-title-font-size);`,
     `}`,
 

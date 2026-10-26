@@ -14,7 +14,7 @@ import StatisticComponent from './Statistic';
 import TimerComponent from './Timer';
 
 /** Statistic 组件。注册名 `AStatistic`（COMPONENT-RULES.md 规则 R2）。 */
-export const Statistic = withInstall(StatisticComponent);
+const StatisticBase = withInstall(StatisticComponent);
 
 /** `Statistic.Timer`（antd 6.x 的新计时形态）。注册名 `AStatisticTimer`。 */
 export const StatisticTimer = withInstall(TimerComponent);
@@ -26,7 +26,10 @@ export const StatisticCountdown = withInstall(CountdownComponent);
  * antd 的静态属性形态（`Statistic.Timer` / `Statistic.Countdown`）逐字保留 ——
  * 两处引用同一定义。
  */
-Object.assign(Statistic, { Timer: StatisticTimer, Countdown: StatisticCountdown });
+export const Statistic = Object.assign(StatisticBase, {
+  Timer: StatisticTimer,
+  Countdown: StatisticCountdown,
+});
 
 export default Statistic;
 
@@ -34,14 +37,17 @@ export type {
   CountdownProps,
   CountdownValueType,
   StatisticFormatConfig,
-  StatisticFormatter,
   StatisticProps,
   StatisticRef,
   StatisticSemanticAllType,
   StatisticSemanticClassNames,
   StatisticSemanticStyles,
   StatisticSemanticValue,
+  StatisticSlots,
   StatisticTimerProps,
+  StatisticTimerSlots,
+  StatisticTimerValueSlotProps,
+  StatisticValueSlotProps,
   TimerType,
   ValueType,
 } from './interface';

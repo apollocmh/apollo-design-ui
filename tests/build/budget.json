@@ -410,8 +410,9 @@
       "id": "statistic",
       "pkg": "@apollo-design/ui",
       "imports": ["Statistic"],
-      "budgetKb": 41,
-      "measuredKb": 23.7
+      "budgetKb": 43,
+      "measuredKb": 23.7,
+      "_note": "2026-10-27: current source-theme resolution for both published font tokens, complete native value slots, reactive clock direction/SSR cleanup and typed compound exports now measure 42.6KB. Following the authorized development-stage allowance for necessary size growth, only the old Statistic 41KB cap becomes 43KB. Historical 23.7KB measurement, all other caps and the 30% full-import guard remain unchanged. Technical cause and failing/passing L7 evidence: docs/audit/2026-10-27-statistic-contract-audit.md."
     },
     {
       "id": "steps",

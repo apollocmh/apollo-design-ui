@@ -552,3 +552,10 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 按11个Props、3个槽、7个语义落点、Provider/attrs/ref/程序化默认内容、4个Token及9个原Demo完整盘点后，集中修正原生内容/显式scope、稳定加载层、SSR确定进度、主题Token与嵌套/动画；新增1个Token Demo，原场景保留。15条失败复现修后全部通过；32项自身浏览器、160类型、生产ESM SSR/发布声明、UI/L7、Docs157条/SSG及97项List共享浏览器通过。相关899条断言以冻结生产源码分批取得通过证据，36个共享机械差异逐项更新而未改旧基线或共享归一化。
 
 后续已统一收口：实现57ab2894，验收afaea916补齐减少动画过渡；最终98条Spin单元、13主题、7组生产SSR水合通过；45张自有视觉经清洁提交批准并全部exact，相关List57张保持exact。完整清单、当前生产指纹、命令及未验边界见 [Spin统一报告](audit/2026-10-26-spin-contract-audit.md) 与 [最终证据](audit/evidence/spin-acceptance.json)，公开改动见 [集中迁移](migrations/spin-contracts.md)。全库最终门禁仍待全部单元完成后执行。
+
+
+## 2026-10-27 Statistic整组集中实现（统一验收进行中）
+
+Statistic / Timer / Countdown完整盘点后，集中修正原生#value业务作用域、当前方向/非负计时事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider和两字号Token；标题对比度3.36的真实缺陷已修，默认字号按实际Alias纠正文档与准备函数。84条四层、94条相关类型、42项生产浏览器、5项SSR、6组水合、7个实际Demo和两组交互通过。UI/发布声明/Docs157条及SSG通过；L7严格11项通过，依据技术原因仅Statistic预算41→43KB（实测43578字节），保留历史值/其他预算和占比门禁。
+
+自有36图与原完整清单最终核对、最终发布继续开放。内容来源清单当前528行、199项候选，候选不是已确认缺陷；全库最终同一提交门禁仍开放。见[完整清单](audit/2026-10-27-statistic-contract-audit.md)、[统一证据](audit/evidence/statistic-contract.json)、[集中迁移](migrations/statistic-contracts.md)。

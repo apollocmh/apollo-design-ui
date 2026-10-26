@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 524,
+    "rows": 528,
     "byCategory": {
-      "data": 125,
+      "data": 123,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 113,
-      "render-function-candidate": 67,
+      "internal": 121,
+      "render-function-candidate": 65,
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 137,
-      "review": 201,
-      "skip": 166,
+      "keep-data": 135,
+      "review": 199,
+      "skip": 174,
       "implemented-verified": 20
     }
   },
@@ -10950,71 +10950,92 @@
     },
     {
       "component": "statistic",
-      "owner": "CountdownFormatConfig",
-      "prop": "formatter",
-      "category": "data",
-      "source": "packages/ui/src/statistic/interface.ts:60",
+      "owner": "StatisticSlots",
+      "prop": "prefix",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:70",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/demo/card.vue",
+          "packages/ui/src/statistic/demo/unit.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
           "packages/ui/src/statistic/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "statistic",
-      "owner": "StatisticFormatConfig",
-      "prop": "formatter",
-      "category": "data",
-      "source": "packages/ui/src/statistic/interface.ts:60",
+      "owner": "StatisticSlots",
+      "prop": "suffix",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:71",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/demo/card.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
           "packages/ui/src/statistic/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "statistic",
-      "owner": "StatisticProps",
-      "prop": "formatter",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/statistic/interface.ts:60",
+      "owner": "StatisticSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:69",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -11023,25 +11044,140 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
           "packages/ui/src/statistic/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "statistic",
-      "owner": "StatisticTimerProps",
-      "prop": "formatter",
-      "category": "render-function-candidate",
-      "source": "packages/ui/src/statistic/interface.ts:60",
+      "owner": "StatisticSlots",
+      "prop": "value",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:72",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts",
+          "packages/ui/src/statistic/Timer.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/demo/animated.vue",
+          "packages/ui/src/statistic/demo/component-token.vue",
+          "packages/ui/src/statistic/demo/timer.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
+          "packages/ui/src/statistic/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "statistic",
+      "owner": "StatisticTimerSlots",
+      "prop": "prefix",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:70",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/demo/card.vue",
+          "packages/ui/src/statistic/demo/unit.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
+          "packages/ui/src/statistic/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "statistic",
+      "owner": "StatisticTimerSlots",
+      "prop": "suffix",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:71",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/demo/card.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
+          "packages/ui/src/statistic/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "statistic",
+      "owner": "StatisticTimerSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:69",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -11050,11 +11186,51 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
           "packages/ui/src/statistic/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "statistic",
+      "owner": "StatisticTimerSlots",
+      "prop": "value",
+      "category": "internal",
+      "source": "packages/ui/src/statistic/interface.ts:95",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/Statistic.ts",
+          "packages/ui/src/statistic/Timer.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/demo/animated.vue",
+          "packages/ui/src/statistic/demo/component-token.vue",
+          "packages/ui/src/statistic/demo/timer.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/statistic/__tests__/contract-audit.test.ts",
+          "packages/ui/src/statistic/__tests__/index.test.ts",
+          "packages/ui/src/statistic/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "steps",

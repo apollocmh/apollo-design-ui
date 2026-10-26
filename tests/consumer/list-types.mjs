@@ -1,4 +1,4 @@
-/** Verify current List/Spin/QRCode consumers against published declarations without source aliases. */
+/** Verify current List/Spin/QRCode/Statistic consumers against published declarations without source aliases. */
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -39,6 +39,15 @@ try {
   );
   assert.equal(fs.existsSync(path.join(root, 'packages/ui/dist/qr-code/__tests__')), false);
   fs.writeFileSync(
+    path.join(temp, 'StatisticConsumer.vue'),
+    fs.readFileSync(path.join(root, 'tests/browser/fixtures/StatisticContractAudit.vue'), 'utf8'),
+  );
+  assert.equal(fs.existsSync(path.join(root, 'packages/ui/dist/statistic/__tests__')), false);
+  fs.writeFileSync(
+    path.join(temp, 'CompoundConsumer.ts'),
+    "import { Statistic, StatisticTimer, StatisticCountdown } from '@apollo-design/ui';\nconst timer: typeof StatisticTimer = Statistic.Timer;\nconst countdown: typeof StatisticCountdown = Statistic.Countdown;\nvoid timer; void countdown;\n",
+  );
+  fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
     JSON.stringify(
       {
@@ -54,7 +63,13 @@ try {
           baseUrl: temp,
           paths: {},
         },
-        include: ['Consumer.vue', 'SpinConsumer.vue', 'QRCodeConsumer.vue'],
+        include: [
+          'Consumer.vue',
+          'SpinConsumer.vue',
+          'QRCodeConsumer.vue',
+          'StatisticConsumer.vue',
+          'CompoundConsumer.ts',
+        ],
       },
       null,
       2,
@@ -70,7 +85,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published List/Spin/QRCode declarations: exact scopes, current tokens and compound exports; no test fixtures shipped',
+    'PASS published List/Spin/QRCode/Statistic declarations: exact scopes, current tokens and compound exports; no test fixtures shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

@@ -86,20 +86,20 @@ describe('Statistic · 结构', () => {
     expect(w.find('.apollo-statistic-content-suffix').exists()).toBe(false);
   });
 
-  it('自定义 formatter：整个 valueNode 由 formatter 产出', () => {
-    const formatter = vi.fn((v: number | string) => `*${v}*`);
-    const w = mount(() => h(Statistic, { value: 1128, formatter }));
-    expect(formatter).toHaveBeenCalledWith(1128);
+  it('自定义数值使用原生value槽，scope只包含业务值与文本', () => {
+    const value = vi.fn((scope: { value: number | string; text: string }) => `*${scope.value}*`);
+    const w = mount(Statistic, { props: { value: 1128 }, slots: { value } });
+    expect(value).toHaveBeenCalledWith({ value: 1128, text: '1,128' });
     expect(w.find('.apollo-statistic-content-value').text()).toBe('*1128*');
     expect(w.find('.apollo-statistic-content-value-int').exists()).toBe(false);
   });
 
-  it('插槽双通道：title / prefix / suffix 插槽（prop 优先）', () => {
+  it('title / prefix / suffix 槽优先于文本prop', () => {
     const w = mount(Statistic, {
       props: { title: 'prop-title' },
       slots: { title: () => 'slot-title', prefix: () => 'slot-prefix' },
     });
-    expect(w.find('.apollo-statistic-title').text()).toBe('prop-title');
+    expect(w.find('.apollo-statistic-title').text()).toBe('slot-title');
     expect(w.find('.apollo-statistic-content-prefix').text()).toBe('slot-prefix');
   });
 
@@ -112,10 +112,8 @@ describe('Statistic · 结构', () => {
     expect(w.find('.apollo-statistic-content').exists()).toBe(false);
   });
 
-  it('aria/data 透传到根元素；未知 attrs 不透传', () => {
-    const w = mount(() =>
-      h(Statistic, { 'data-abc': '1', 'aria-label': 'label', role: 'status' } as never),
-    );
+  it('原生ARIA与data透传到根元素', () => {
+    const w = mount(() => h(Statistic, { 'data-abc': '1', 'aria-label': 'label', role: 'status' }));
     const root = w.find('.apollo-statistic');
     expect(root.attributes('data-abc')).toBe('1');
     expect(root.attributes('aria-label')).toBe('label');
@@ -137,10 +135,8 @@ describe('Statistic · 结构', () => {
 
   it('nativeElement expose', () => {
     const w = mount(Statistic);
-    const exposed = (w.getCurrentComponent().exposed ?? {}) as { nativeElement?: unknown };
-    expect((exposed.nativeElement as HTMLElement)?.classList.contains('apollo-statistic')).toBe(
-      true,
-    );
+    const exposed = w.getCurrentComponent().exposed;
+    expect(exposed?.nativeElement).toBe(w.get('.apollo-statistic').element);
   });
 
   it('L2 · mouseenter / mouseleave 落在根元素', async () => {
@@ -254,7 +250,7 @@ describe('Statistic.Timer', () => {
         'data-xyz': 'x',
         'aria-label': 'y',
         role: 'contentinfo',
-      } as never),
+      }),
     );
     const root = w.find('.apollo-statistic');
     expect(root.attributes('data-xyz')).toBe('x');

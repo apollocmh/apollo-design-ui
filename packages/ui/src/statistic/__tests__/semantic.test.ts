@@ -66,7 +66,12 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
     render: () => h(Statistic, {}, { title: () => 0, prefix: () => 0, suffix: () => 0 }),
   },
   'statistic:formatter-fn': {
-    render: () => h(Statistic, { value: 1128, formatter: (v: number | string) => `*${v}*` }),
+    render: () =>
+      h(
+        Statistic,
+        { value: 1128 },
+        { value: ({ value }: { value: number | string }) => `*${value}*` },
+      ),
   },
   'statistic:aria-data': {
     render: () => h(Statistic, { 'data-abc': '1', 'aria-label': 'label', role: 'status' }),

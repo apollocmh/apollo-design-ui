@@ -1,29 +1,38 @@
 <script setup lang="ts">
-// 对齐 antd 的 timer demo（components/statistic/demo/timer.tsx）
-import { Statistic } from '@apollo-design/ui';
+import { Statistic, type TimerType } from '@apollo-design/ui';
+import { ref } from 'vue';
 
 const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // 两天后
 const before = Date.now() - 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // 两天前
-const tenSecondsLater = Date.now() + 10 * 1000;
-
+const shortTarget = ref(Date.now() + 10_000);
+const type = ref<TimerType>('countdown');
+const finishes = ref(0),
+  draft = ref('Saved clock draft');
 const onFinish = () => {
-  console.log('finished!');
+  finishes.value++;
 };
-
-const onChange = (val?: number | string) => {
-  if (typeof val === 'number' && !Number.isNaN(val) && 4.95 * 1000 < val && val < 5 * 1000) {
-    console.log('changed!');
-  }
+const restart = () => {
+  type.value = 'countdown';
+  shortTarget.value = Date.now() + 1500;
+};
+const switchDirection = () => {
+  type.value = type.value === 'countdown' ? 'countup' : 'countdown';
+  shortTarget.value = Date.now() + (type.value === 'countdown' ? 5000 : -5000);
 };
 </script>
 
 <template>
+  <div style="margin-bottom:16px">
+    <button type="button" @click="restart">Restart short countdown</button>
+    <button type="button" @click="switchDirection">Switch clock direction</button>
+    <output aria-label="Completed countdowns">{{ finishes }}</output>
+  </div>
   <div class="demo-statistic-timer">
     <Statistic.Timer
       type="countdown"
       :value="deadline"
       :class-names="{ content: 'demo-statistic-tabular' }"
-      :on-finish="onFinish"
+      @finish="onFinish"
     />
     <Statistic.Timer
       type="countdown"
@@ -33,17 +42,22 @@ const onChange = (val?: number | string) => {
       :class-names="{ content: 'demo-statistic-tabular' }"
     />
     <Statistic.Timer
-      type="countdown"
-      title="Countdown"
-      :value="tenSecondsLater"
-      :on-change="onChange"
+      :type="type"
+      title="Interactive clock"
+      :value="shortTarget"
+      @finish="onFinish"
       :class-names="{ content: 'demo-statistic-tabular' }"
-    />
+    >
+      <template #value="{ text, duration }">
+        <span data-clock-text>{{ text }}</span>
+        <input v-model="draft" aria-label="Clock draft" style="display:block;width:150px;font-size:14px" />
+        <small data-clock-duration style="font-size:12px">{{ duration === null ? 'Starting' : 'Running' }}</small>
+      </template>
+    </Statistic.Timer>
     <Statistic.Timer
       type="countup"
       title="Countup"
       :value="before"
-      :on-change="onChange"
       :class-names="{ content: 'demo-statistic-tabular' }"
     />
     <div class="demo-statistic-timer-row">

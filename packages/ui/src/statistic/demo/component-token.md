@@ -5,4 +5,4 @@ title:
   en-US: Component Token
 ---
 
-通过 `--apollo-statistic-title-font-size` / `--apollo-statistic-content-font-size` 覆盖标题与数值字号；拖动滑块可实时看到数值字号变化。
+源主题`components.Statistic`控制两种字号；切换主题可移除/恢复，滑块更新当前字号，原生CSS变量覆盖优先。观察原生输入在配置切换中保持。

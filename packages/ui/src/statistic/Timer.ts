@@ -1,174 +1,102 @@
-/**
- * StatisticTimer —— `Statistic.Timer`（antd 的 `es/statistic/Timer.js`）。
- *
- * 契约来源逐条（G1 §2.8–2.9）：
- *
- * 1. **interval = `1000/60`**（≈16.67ms，逐帧节奏）—— 数值逐字保留。
- * 2. **update()**：`timeDiff = down ? timestamp - now : now - timestamp` →
- *    `onChange(timeDiff)`；**onFinish 仅 countdown 且 timestamp < now**，
- *    返回 false ⇒ clearInterval（onFinish 只触发一次 —— 测试钉住）。
- * 3. **首帧渲染 `'-'`**：React 的 `showTime` state 初始 null，formatter 在
- *    showTime 置位前返回 `'-'`（SSR 测试钉住）。置位发生在 **onMounted**
- *    （React 的 `useEffect(() => setShowTime({}), [])`）—— 不能在 setup 期同步
- *    置位，否则 SSR 首帧就不是 `'-'` 了。
- * 4. **valueRender 克隆 valueNode 去掉 title**：`cloneVNode(node, {title: undefined})`
- *    —— 上游 `cloneElement(node, {title: undefined})` 逐字对应（Number 不消费
- *    title，克隆是防御性的，保留）。
- * 5. **value 用 `new Date(value).getTime()`**：countdown 传未来时刻、countup 传
- *    过去时刻；`Date.now()` 每帧重取。
- *
- * ⚠️ effect 依赖 `[value, down]`：value 变化要重启 interval —— Vue 用
- *    `watch(..., {immediate})` + `onCleanup` 清理（对应组件卸载与重跑）。
- *
- * ⚠️ attrs 透传（PLATFORM）：antd 用 `{...rest}` 转发 className/style 到 Statistic
- *    的同名 prop；Vue 的 `class` / `style` 恒落 attrs 且会被 Statistic 的
- *    pickAttrs 过滤 —— 这里显式映射 `class→className`、`style→style`，
- *    其余 attrs（aria/data/…）原样转发。
- */
-
+/** Native clock effects begin after mounting and stop at each completed countdown. */
 import {
-  cloneVNode,
+  computed,
   defineComponent,
   h,
+  onBeforeUnmount,
   onMounted,
   type PropType,
   ref,
-  type VNode,
+  type SlotsType,
+  shallowRef,
   watch,
 } from 'vue';
-import type { StatisticTimerProps, TimerType } from './interface';
+import type { StatisticRef, StatisticTimerSlots, TimerType } from './interface';
+import { statisticPresentationProps, statisticTimerEmits } from './props';
 import Statistic from './Statistic';
-import { formatCounter } from './utils';
-
-/** 与 antd 的 UPDATE_INTERVAL 逐字一致。 */
-const UPDATE_INTERVAL = 1000 / 60;
-
-function getTime(value: NonNullable<StatisticTimerProps['value']>): number {
-  return new Date(value).getTime();
-}
+import { formatTimeStr } from './utils';
 
 export default defineComponent({
   name: 'AStatisticTimer',
   inheritAttrs: false,
   props: {
-    /* --- Statistic 全量 props（转发） --- */
-    prefixCls: { type: String, default: undefined },
-    value: { type: [Number, String], default: 0 },
-    valueStyle: {
-      type: Object as PropType<Record<string, string | number>>,
-      default: undefined,
-    },
-    valueRender: { type: Function, default: undefined },
-    title: { type: null, default: undefined },
-    prefix: { type: null, default: undefined },
-    suffix: { type: null, default: undefined },
-    loading: { type: Boolean, default: false },
-    formatter: { type: [Boolean, String, Function], default: undefined },
-    precision: { type: Number, default: undefined },
-    decimalSeparator: { type: String, default: '.' },
-    groupSeparator: { type: String, default: ',' },
-    onMouseenter: { type: Function, default: undefined },
-    onMouseleave: { type: Function, default: undefined },
-    classNames: { type: [Object, Function], default: undefined },
-    styles: { type: [Object, Function], default: undefined },
-    /* --- Timer 专属 --- */
+    ...statisticPresentationProps,
     type: { type: String as PropType<TimerType>, required: true },
     format: { type: String, default: 'HH:mm:ss' },
-    onFinish: { type: Function as PropType<() => void>, default: undefined },
-    onChange: {
-      type: Function as PropType<StatisticTimerProps['onChange']>,
-      default: undefined,
-    },
   },
-  setup(props, { attrs }) {
-    const down = props.type === 'countdown';
-
-    // React 复用 state 做 forceUpdate：null ⇒ 首帧（含 SSR）渲染 '-'
-    const showTime = ref<object | null>(null);
-
-    const update = (): boolean => {
-      const now = Date.now();
-      const timestamp = getTime(props.value);
-      showTime.value = {};
-      const timeDiff = !down ? now - timestamp : timestamp - now;
-      props.onChange?.(timeDiff);
-      // Only countdown will trigger `onFinish`
-      if (down && timestamp < now) {
-        props.onFinish?.();
+  slots: Object as SlotsType<StatisticTimerSlots>,
+  emits: statisticTimerEmits,
+  setup(props, { attrs, slots, emit, expose }) {
+    const root = shallowRef<StatisticRef | null>(null);
+    expose({
+      get nativeElement() {
+        return root.value?.nativeElement ?? null;
+      },
+    });
+    const now = ref<number | null>(null);
+    const target = computed(() => new Date(props.value).getTime());
+    const duration = computed(() =>
+      now.value === null || !Number.isFinite(target.value)
+        ? null
+        : Math.max(
+            props.type === 'countdown' ? target.value - now.value : now.value - target.value,
+            0,
+          ),
+    );
+    const text = computed(() =>
+      duration.value === null ? '-' : formatTimeStr(duration.value, props.format),
+    );
+    let mounted = false,
+      timer: number | undefined,
+      owner: Window | null | undefined;
+    const stop = () => {
+      if (timer !== undefined) owner?.clearInterval(timer);
+      timer = undefined;
+    };
+    const tick = () => {
+      now.value = Date.now();
+      const current = duration.value;
+      if (current === null) {
+        stop();
         return false;
       }
-      return true;
+      const finished = props.type === 'countdown' && current === 0;
+      if (finished) stop();
+      emit('change', current);
+      if (finished) emit('finish');
+      return !finished;
     };
-
-    // Effect trigger（React useEffect [value, down]）
-    watch(
-      () => [props.value, down] as const,
-      (_, __, onCleanup) => {
-        let intervalId: number | undefined;
-        const tick = () => {
-          if (!update()) {
-            window.clearInterval(intervalId);
-          }
-        };
-        const startTimer = () => {
-          intervalId = window.setInterval(tick, UPDATE_INTERVAL);
-        };
-        startTimer();
-        onCleanup(() => {
-          window.clearInterval(intervalId);
-        });
-      },
-      { immediate: true },
-    );
-
-    // React useEffect []：挂载后立即置位 showTime（首帧渲染在置位之前）
+    const restart = () => {
+      stop();
+      if (!mounted) return;
+      if (tick()) timer = owner?.setInterval(tick, 1000 / 60);
+    };
+    watch(() => [props.value, props.type], restart, { flush: 'post' });
     onMounted(() => {
-      showTime.value = {};
+      owner = root.value?.nativeElement?.ownerDocument.defaultView;
+      mounted = true;
+      restart();
     });
-
-    // ======================== Format ========================
-    const formatter = (
-      formatValue: number | string,
-      config: Parameters<typeof formatCounter>[1],
-    ) =>
-      showTime.value ? formatCounter(formatValue, { ...config, format: props.format }, down) : '-';
-
-    // ======================== Render ========================
+    onBeforeUnmount(() => {
+      mounted = false;
+      stop();
+    });
     return () => {
-      const { class: attrClass, style: attrStyle, ...restAttrs } = attrs;
+      const { type: _type, format: _format, ...presentation } = props;
       return h(
         Statistic,
+        { ...presentation, ...attrs, ref: root },
         {
-          ...restAttrs,
-          /* --- Statistic 全量 props 逐字转发（antd 的 {...rest}） --- */
-          prefixCls: props.prefixCls,
-          title: props.title,
-          prefix: props.prefix,
-          suffix: props.suffix,
-          loading: props.loading,
-          precision: props.precision,
-          decimalSeparator: props.decimalSeparator,
-          groupSeparator: props.groupSeparator,
-          valueStyle: props.valueStyle,
-          classNames: props.classNames,
-          styles: props.styles,
-          onMouseenter: props.onMouseenter,
-          onMouseleave: props.onMouseleave,
-          /* --- 根 class / style 走 Vue 原生 attrs（`Statistic` 已迁移 ⇒ 这里也只转发 attrs）--- */
-          class: (attrClass as string | undefined) || undefined,
-          style: attrStyle as never,
-          /* --- Timer 注入 --- */
-          value: props.value,
-          formatter: formatter as NonNullable<StatisticTimerProps['formatter']>,
-        } as never,
-        {
-          // C8-R2：Statistic 的 valueRender prop 已删 —— 注入改走 `#valueRender`
-          // 作用域插槽：先 clone 去掉 title（antd cloneElement 逐字），再交给
-          // 用户（若传了已废弃的 valueRender fn prop）。
-          valueRender: ({ node }: { node: VNode }) => {
-            const cloned = cloneVNode(node, { title: undefined });
-            return props.valueRender ? props.valueRender(cloned) : cloned;
-          },
+          ...slots,
+          value: () =>
+            slots.value
+              ? slots.value({
+                  value: props.value,
+                  text: text.value,
+                  duration: duration.value,
+                  type: props.type,
+                })
+              : text.value,
         },
       );
     };

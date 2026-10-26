@@ -1,8 +1,8 @@
 ---
 order: 3
 title:
-  zh-CN: 动画展示
-  en-US: Custom formatter
+  zh-CN: 数值格式
+  en-US: Formatted value
 ---
 
-通过自定义 `formatter` 展示格式化后的数值（antd 版本使用 react-countup 做数字滚动）。
+通过原生`#value="{ value, text }"`插槽展示格式化数值。数值仍来自响应式value，模板不需要包装内部VNode。

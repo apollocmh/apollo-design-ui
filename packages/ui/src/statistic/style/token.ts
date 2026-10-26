@@ -6,7 +6,7 @@
  * —— 随主题自适应，不需要 seed 常量。
  */
 
-import type { AliasToken } from '@apollo-design/theme';
+import { type AliasToken, getDesignToken } from '@apollo-design/theme';
 
 export interface ComponentToken {
   /** 标题字号（= fontSize）。 */
@@ -16,7 +16,9 @@ export interface ComponentToken {
 }
 
 /** 与 antd 的 `prepareComponentToken` 逐字对应（默认值以 CSS 变量声明落地）。 */
-export const prepareComponentToken = (token?: AliasToken): Partial<ComponentToken> => ({
-  titleFontSize: token?.fontSize ?? 14,
-  contentFontSize: token?.fontSizeHeading3 ?? 30,
+export const prepareComponentToken = (
+  token: AliasToken = getDesignToken(),
+): Required<ComponentToken> => ({
+  titleFontSize: token.fontSize,
+  contentFontSize: token.fontSizeHeading3,
 });

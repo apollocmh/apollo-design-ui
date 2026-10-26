@@ -25,7 +25,8 @@ const TIME_UNITS: [string, number][] = [
  * 按占位符位数对数值补零（`HH:mm:ss` → `59:28:09`）。
  */
 export function formatTimeStr(duration: number, format: string): string {
-  let leftDuration = duration;
+  if (!Number.isFinite(duration)) return '-';
+  let leftDuration = Math.max(duration, 0);
   const escapeRegex = /\[[^\]]*]/g;
   const keepList = (format.match(escapeRegex) || []).map((str) => str.slice(1, -1));
   const templateText = format.replace(escapeRegex, '[]');
@@ -57,6 +58,7 @@ export function formatCounter(
 ): string {
   const { format = '' } = config;
   const target = new Date(value).getTime();
+  if (!Number.isFinite(target)) return '-';
   const current = Date.now();
   const diff = down ? Math.max(target - current, 0) : Math.max(current - target, 0);
   return formatTimeStr(diff, format);

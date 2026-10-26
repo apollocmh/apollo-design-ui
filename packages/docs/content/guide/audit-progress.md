@@ -38,6 +38,12 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 - [全屏加载与保留原生输入](/components/spin/demo/fullscreen)
 - [List 完整盘点、统一验收与边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
+**Statistic / Timer / Countdown已完成整组盘点并集中修复，正在统一验收。** 原生值槽、当前计时方向/事件、SSR与卸载清理、完整attrs/ref、Provider与两字号Token已实现。84条四层、94条相关类型、42项生产浏览器、5项SSR、6组水合及发布声明通过；原7Demo及两组实际交互通过，自有视觉和最终验收仍开放。
+
+- [可重启计时与稳定输入](/components/statistic/demo/timer)
+- [当前字号Token与原生覆盖](/components/statistic/demo/component-token)
+- [Statistic完整清单](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
+
 ## 直接试这些示例
 
 - [可编辑缩略图与原生预览按钮](/components/image/demo/image-render)：编辑文本、点击业务按钮，再打开预览。
@@ -53,7 +59,7 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有201项候选待逐项复核，候选不等于缺陷。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -89,6 +95,10 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 
 [List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Fullscreen with a native editor](/components/spin/demo/fullscreen) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
+**Statistic / Timer / Countdown are under unified acceptance after a complete inventory and grouped fixes.** Native value slots, live direction/events, safe SSR/cleanup, complete attrs/refs, current Provider and both font tokens are implemented. Passing evidence includes 84 runtime/DOM/accessibility/theme tests, 94 related type tests, 42 browser checks, five SSR checks, six hydration groups and published declarations. All seven actual demos and both interaction groups pass; owned visuals and final acceptance remain open.
+
+[Restartable clocks and native editors](/components/statistic/demo/timer) · [Current font tokens](/components/statistic/demo/component-token) · [Statistic checklist](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
+
 ## Try the changes
 
 - [Editable thumbnails and native preview actions](/components/image/demo/image-render)
@@ -102,6 +112,6 @@ Use top-level `v-model:open`, group `v-model:current`, named content slots and `
 
 ## Remaining work
 
-Other components and foundation packages still require their complete audits. The content inventory has 201 candidates awaiting review; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
+Other components and foundation packages still require their complete audits. The content inventory has 199 candidates awaiting review; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 
 [Image audit and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-25-image-contract-audit.md) · [H05 evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-repository-format-audit.md) · [Ongoing issues](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/KNOWN-ISSUES.md) · [Build-time Git history](/changelog)
