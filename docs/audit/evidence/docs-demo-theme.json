@@ -1,0 +1,1263 @@
+{
+  "inventoryCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+  "status": "implemented-verified-publication-pending",
+  "scope": "Docs theme mode/system media/temporary query → CSS + DemoProvider source theme → DemoFrame URL; no shared UI implementation change",
+  "sources": [
+    {
+      "file": "packages/docs/src/components/demo/DemoFrame.vue",
+      "sha256": "7f777b9a38e8dfb926fcc0aec22a2bd034332f5ae150495dc6288dc29f907f0b"
+    },
+    {
+      "file": "packages/docs/src/components/demo/DemoProvider.vue",
+      "sha256": "aa54a2be638f190cda22fa095f30b8b50d04f149eeb42af209f88dfe9c079304"
+    },
+    {
+      "file": "packages/docs/src/composables/theme.ts",
+      "sha256": "572f30bc2c2b080582713ebfcab55eac7395ef9a80dad62edb8f4c3844167d41"
+    },
+    {
+      "file": "packages/docs/src/pages/DemoStandalonePage.vue",
+      "sha256": "a086b47481390445aae0903398a149614a6956bc9f7806c6f93abb05dd848c4c"
+    },
+    {
+      "file": "packages/ui/src/list/demo/component-token.vue",
+      "sha256": "48d8298b6491d6f0b6a155b66b92f7a15c7bc955eec46ef775e75ac393dad7e5"
+    },
+    {
+      "file": "packages/ui/src/qr-code/demo/component-token.vue",
+      "sha256": "9fd250fa2663d0a1e3815fdc56be3622ab210982ace8304e4112aa77fcd3c524"
+    }
+  ],
+  "beforeBrowser": {
+    "theme": "dark",
+    "foreground": "rgba(0, 0, 0, 0.88)",
+    "background": "rgb(20, 20, 20)",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "html": "<div class=\"apollo-statistic-title\">Active Users</div>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 1.09 (foreground color: #070707, background color: #141414, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "html": "<span data-token-value=\"\">112,893</span>",
+            "failure": "Fix any of the following:\n  Element has insufficient color contrast of 1.12 (foreground color: #020202, background color: #141414, font size: 27.0pt (36px), font weight: normal). Expected contrast ratio of 3:1"
+          }
+        ]
+      }
+    ]
+  },
+  "beforeUnit": {
+    "total": 3,
+    "passed": 0,
+    "failed": 3,
+    "cases": [
+      {
+        "name": "Docs source theme context keeps source theme, CSS and the original native editor in sync",
+        "status": "failed",
+        "failure": "AssertionError: expected '#ffffff' to be '#141414' // Object.is equality"
+      },
+      {
+        "name": "Docs source theme context makes resolved system preference reactive without changing the selected mode",
+        "status": "failed",
+        "failure": "AssertionError: expected 'light' to be 'dark' // Object.is equality"
+      },
+      {
+        "name": "hydrates the server frame before applying the stored dark theme",
+        "status": "failed",
+        "failure": "AssertionError: expected [ …(2) ] to deeply equal []"
+      }
+    ]
+  },
+  "beforeFrameHydrationWarnings": [
+    "Hydration attribute mismatch on[object HTMLIFrameElement]\n  - rendered on server: src=\"/components/button/demo/basic?lang=zh-CN&theme=light&embed=1&frameId=v-0\"\n  - expected on client: src=\"/components/button/demo/basic?lang=zh-CN&theme=dark&embed=1&frameId=v-0\"\n  Note: this mismatch is check-only. The DOM will not be rectified in production due to performance overhead.\n  You should fix the source of the mismatch."
+  ],
+  "afterFocusedUnit": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "cases": [
+      {
+        "name": "Docs source theme context keeps source theme, CSS and the original native editor in sync",
+        "status": "passed"
+      },
+      {
+        "name": "Docs source theme context makes resolved system preference reactive without changing the selected mode",
+        "status": "passed"
+      },
+      {
+        "name": "hydrates the server frame before applying the stored dark theme",
+        "status": "passed"
+      },
+      {
+        "name": "keeps temporary query overrides separate from the saved mode and restores it on clear",
+        "status": "passed"
+      }
+    ]
+  },
+  "demoPaletteBefore": {
+    "listDark": [
+      {
+        "component": "list",
+        "theme": "dark",
+        "passed": false,
+        "violations": [
+          {
+            "id": "color-contrast",
+            "nodes": [
+              {
+                "html": "<div class=\"apollo-list-header\">Component token header</div>",
+                "failure": "Fix any of the following:\n  Element has insufficient color contrast of 1.09 (foreground color: #fbfdff, background color: #e6f4ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+              },
+              {
+                "html": "<div class=\"apollo-list-footer\">Component token footer</div>",
+                "failure": "Fix any of the following:\n  Element has insufficient color contrast of 1.03 (foreground color: #fffefb, background color: #fffbe6, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "reason": "Explicit light header/footer and cover backgrounds require matching foregrounds in dark scopes. List uses native header/footer slots; QrCode uses its declared cover styles."
+  },
+  "browserAfter": {
+    "base": "http://127.0.0.1:4477/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "consumerChecks": [
+      {
+        "component": "image",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "image",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "list",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "list",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "spin",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "spin",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "qr-code",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "qr-code",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "statistic",
+        "theme": "light",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "component": "statistic",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "leaving the dark query restores the saved light mode without persisting the override",
+        "passed": true
+      },
+      {
+        "name": "repeated inline host theme changes preserve the same native editor, focus and controlled value",
+        "passed": true
+      },
+      {
+        "name": "system preference changes update both source theme and the live page while preserving editors",
+        "passed": true
+      }
+    ],
+    "componentSmoke": [
+      {
+        "component": "affix",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "affix",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "alert",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "alert",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "anchor",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 14,
+        "passed": true
+      },
+      {
+        "component": "anchor",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 14,
+        "passed": true
+      },
+      {
+        "component": "app",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 11,
+        "passed": true
+      },
+      {
+        "component": "app",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 11,
+        "passed": true
+      },
+      {
+        "component": "auto-complete",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 11,
+        "passed": true
+      },
+      {
+        "component": "auto-complete",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 11,
+        "passed": true
+      },
+      {
+        "component": "avatar",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 35,
+        "passed": true
+      },
+      {
+        "component": "avatar",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 35,
+        "passed": true
+      },
+      {
+        "component": "back-top",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 27,
+        "passed": true
+      },
+      {
+        "component": "back-top",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 27,
+        "passed": true
+      },
+      {
+        "component": "badge",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "badge",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "border-beam",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "border-beam",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "breadcrumb",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "breadcrumb",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "button",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 19,
+        "passed": true
+      },
+      {
+        "component": "button",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 19,
+        "passed": true
+      },
+      {
+        "component": "calendar",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 213,
+        "passed": true
+      },
+      {
+        "component": "calendar",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 213,
+        "passed": true
+      },
+      {
+        "component": "card",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 23,
+        "passed": true
+      },
+      {
+        "component": "card",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 23,
+        "passed": true
+      },
+      {
+        "component": "carousel",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 31,
+        "passed": true
+      },
+      {
+        "component": "carousel",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 31,
+        "passed": true
+      },
+      {
+        "component": "cascader",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "cascader",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "checkbox",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 6,
+        "passed": true
+      },
+      {
+        "component": "checkbox",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 6,
+        "passed": true
+      },
+      {
+        "component": "collapse",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 22,
+        "passed": true
+      },
+      {
+        "component": "collapse",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 22,
+        "passed": true
+      },
+      {
+        "component": "color-picker",
+        "demo": "base",
+        "theme": "light",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "color-picker",
+        "demo": "base",
+        "theme": "dark",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "config-provider",
+        "demo": "prefix-cls",
+        "theme": "light",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "config-provider",
+        "demo": "prefix-cls",
+        "theme": "dark",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "date-picker",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 36,
+        "passed": true
+      },
+      {
+        "component": "date-picker",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 36,
+        "passed": true
+      },
+      {
+        "component": "descriptions",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 22,
+        "passed": true
+      },
+      {
+        "component": "descriptions",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 22,
+        "passed": true
+      },
+      {
+        "component": "divider",
+        "demo": "horizontal",
+        "theme": "light",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "divider",
+        "demo": "horizontal",
+        "theme": "dark",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "drawer",
+        "demo": "basic-right",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "drawer",
+        "demo": "basic-right",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "dropdown",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 4,
+        "passed": true
+      },
+      {
+        "component": "dropdown",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 4,
+        "passed": true
+      },
+      {
+        "component": "empty",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "empty",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 15,
+        "passed": true
+      },
+      {
+        "component": "flex",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 9,
+        "passed": true
+      },
+      {
+        "component": "flex",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 9,
+        "passed": true
+      },
+      {
+        "component": "float-button",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "float-button",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "form",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "form",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "grid",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "grid",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "image",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "image",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "input-number",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 12,
+        "passed": true
+      },
+      {
+        "component": "input-number",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 12,
+        "passed": true
+      },
+      {
+        "component": "input",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "input",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "layout",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 12,
+        "passed": true
+      },
+      {
+        "component": "layout",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 12,
+        "passed": true
+      },
+      {
+        "component": "list",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 40,
+        "passed": true
+      },
+      {
+        "component": "list",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 40,
+        "passed": true
+      },
+      {
+        "component": "listy",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 12,
+        "passed": true
+      },
+      {
+        "component": "listy",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 12,
+        "passed": true
+      },
+      {
+        "component": "masonry",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 31,
+        "passed": true
+      },
+      {
+        "component": "masonry",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 31,
+        "passed": true
+      },
+      {
+        "component": "mentions",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "mentions",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "menu",
+        "demo": "custom-style",
+        "theme": "light",
+        "elements": 10,
+        "passed": true
+      },
+      {
+        "component": "menu",
+        "demo": "custom-style",
+        "theme": "dark",
+        "elements": 10,
+        "passed": true
+      },
+      {
+        "component": "message",
+        "demo": "component-token",
+        "theme": "light",
+        "elements": 17,
+        "passed": true
+      },
+      {
+        "component": "message",
+        "demo": "component-token",
+        "theme": "dark",
+        "elements": 17,
+        "passed": true
+      },
+      {
+        "component": "modal",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "modal",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "notification",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "notification",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "pagination",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 21,
+        "passed": true
+      },
+      {
+        "component": "pagination",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 21,
+        "passed": true
+      },
+      {
+        "component": "popconfirm",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "popconfirm",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "popover",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "popover",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "progress",
+        "demo": "circle",
+        "theme": "light",
+        "elements": 28,
+        "passed": true
+      },
+      {
+        "component": "progress",
+        "demo": "circle",
+        "theme": "dark",
+        "elements": 28,
+        "passed": true
+      },
+      {
+        "component": "qr-code",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "qr-code",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "radio",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 4,
+        "passed": true
+      },
+      {
+        "component": "radio",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 4,
+        "passed": true
+      },
+      {
+        "component": "rate",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 53,
+        "passed": true
+      },
+      {
+        "component": "rate",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 53,
+        "passed": true
+      },
+      {
+        "component": "result",
+        "demo": "success",
+        "theme": "light",
+        "elements": 13,
+        "passed": true
+      },
+      {
+        "component": "result",
+        "demo": "success",
+        "theme": "dark",
+        "elements": 13,
+        "passed": true
+      },
+      {
+        "component": "segmented",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 17,
+        "passed": true
+      },
+      {
+        "component": "segmented",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 17,
+        "passed": true
+      },
+      {
+        "component": "select",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 7,
+        "passed": true
+      },
+      {
+        "component": "select",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 7,
+        "passed": true
+      },
+      {
+        "component": "skeleton",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 7,
+        "passed": true
+      },
+      {
+        "component": "skeleton",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 7,
+        "passed": true
+      },
+      {
+        "component": "slider",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 18,
+        "passed": true
+      },
+      {
+        "component": "slider",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 18,
+        "passed": true
+      },
+      {
+        "component": "space",
+        "demo": "base",
+        "theme": "light",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "space",
+        "demo": "base",
+        "theme": "dark",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "spin",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 9,
+        "passed": true
+      },
+      {
+        "component": "spin",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 9,
+        "passed": true
+      },
+      {
+        "component": "splitter",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "splitter",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "statistic",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "statistic",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "steps",
+        "demo": "simple",
+        "theme": "light",
+        "elements": 29,
+        "passed": true
+      },
+      {
+        "component": "steps",
+        "demo": "simple",
+        "theme": "dark",
+        "elements": 29,
+        "passed": true
+      },
+      {
+        "component": "switch",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "switch",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 5,
+        "passed": true
+      },
+      {
+        "component": "table",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 41,
+        "passed": true
+      },
+      {
+        "component": "table",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 41,
+        "passed": true
+      },
+      {
+        "component": "tabs",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 19,
+        "passed": true
+      },
+      {
+        "component": "tabs",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 19,
+        "passed": true
+      },
+      {
+        "component": "tag",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 13,
+        "passed": true
+      },
+      {
+        "component": "tag",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 13,
+        "passed": true
+      },
+      {
+        "component": "time-picker",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "time-picker",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "timeline",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 28,
+        "passed": true
+      },
+      {
+        "component": "timeline",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 28,
+        "passed": true
+      },
+      {
+        "component": "tooltip",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "tooltip",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 2,
+        "passed": true
+      },
+      {
+        "component": "tour",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 16,
+        "passed": true
+      },
+      {
+        "component": "tour",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 16,
+        "passed": true
+      },
+      {
+        "component": "transfer",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 136,
+        "passed": true
+      },
+      {
+        "component": "transfer",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 136,
+        "passed": true
+      },
+      {
+        "component": "tree-select",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "tree-select",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 8,
+        "passed": true
+      },
+      {
+        "component": "tree",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 67,
+        "passed": true
+      },
+      {
+        "component": "tree",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 67,
+        "passed": true
+      },
+      {
+        "component": "typography",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 7,
+        "passed": true
+      },
+      {
+        "component": "typography",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 7,
+        "passed": true
+      },
+      {
+        "component": "upload",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "upload",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 24,
+        "passed": true
+      },
+      {
+        "component": "watermark",
+        "demo": "basic",
+        "theme": "light",
+        "elements": 3,
+        "passed": true
+      },
+      {
+        "component": "watermark",
+        "demo": "basic",
+        "theme": "dark",
+        "elements": 3,
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "networkDiagnostics": [],
+    "fallbackDocuments": []
+  },
+  "checks": [
+    {
+      "command": "pnpm --filter @apollo-design/docs run test",
+      "result": "15 files / 161 passed / zero failed",
+      "log": "/tmp/apollo-docs-theme-tests-final.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run typecheck",
+      "result": "pass",
+      "log": "/tmp/apollo-docs-theme-types-final.log"
+    },
+    {
+      "command": "pnpm lint:types",
+      "result": "pass",
+      "log": "/tmp/apollo-statistic-docs-closure-types.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run content:check",
+      "result": "72 components / 1004 demos / eight guides",
+      "log": "/tmp/apollo-docs-theme-content-final.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run build",
+      "result": "SSG pass after final List/QRCode palette fix; subsequent progress copy is checked/generated and rebuilt in publication CI",
+      "log": "/tmp/apollo-docs-theme-build-final.log"
+    },
+    {
+      "command": "node tests/browser/docs-demo-theme.mjs",
+      "result": "13 consumer checks and 144 representative renders passed; zero page/Vue/resource diagnostics",
+      "log": "/tmp/apollo-docs-demo-theme-final.log"
+    },
+    {
+      "command": "pnpm lint:format",
+      "result": "3595 files / zero errors / existing 37 warnings and five infos",
+      "log": "/tmp/apollo-statistic-closure-format.log"
+    }
+  ],
+  "harnessNotes": [
+    "Original frame hydration fixture omitted the site-locale provider. It was corrected; the retained old-frame reproduction contains the actual src light/dark mismatch only. Temporary fixtures were removed.",
+    "An attempted List styles attr had no declared List target. The retained failing browser report led to native header/footer slot foregrounds; no new API was added."
+  ],
+  "boundaries": [
+    "Representative 72×2 renders prove module/host rendering only, not full interaction or accessibility coverage for all 1004 demos.",
+    "Axe checks cover the five named token consumers in both modes.",
+    "Native inline editor identity/focus/value is verified; iframe URL changes still navigate/reload the isolated document.",
+    "Other browser engines and arbitrary nested theme combinations are not claimed."
+  ],
+  "publication": "pending final source-marker and online actual-demo checks"
+}

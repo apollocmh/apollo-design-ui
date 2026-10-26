@@ -10,11 +10,14 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 
 const STORAGE_KEY = 'apollo-site-theme';
 const mode = ref<ThemeMode>('system');
+const systemDark = ref(false);
+const themeOverride = ref<'light' | 'dark' | null>(null);
+const resolvedTheme = computed<'light' | 'dark'>(
+  () =>
+    themeOverride.value ??
+    (mode.value === 'system' ? (systemDark.value ? 'dark' : 'light') : mode.value),
+);
 let started = false;
-
-function systemPrefersDark(): boolean {
-  return typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches;
-}
 
 /** 客户端启动时调用一次（SSR 分支不执行）。 */
 export function setupTheme(): void {
@@ -24,15 +27,16 @@ export function setupTheme(): void {
   if (saved === 'light' || saved === 'dark' || saved === 'system') mode.value = saved;
 
   const media = matchMedia('(prefers-color-scheme: dark)');
+  systemDark.value = media.matches;
   media.addEventListener('change', () => {
-    if (mode.value === 'system') apply();
+    systemDark.value = media.matches;
   });
 
-  watchEffect(apply);
+  watchEffect(apply, { flush: 'sync' });
 }
 
 function apply(): void {
-  const dark = mode.value === 'dark' || (mode.value === 'system' && systemPrefersDark());
+  const dark = resolvedTheme.value === 'dark';
   if (dark) {
     document.documentElement.dataset.apolloTheme = 'dark';
   } else {
@@ -65,12 +69,12 @@ export function useThemeMode() {
  * 客户端水合后再按真实偏好更新。
  */
 export function useResolvedTheme() {
-  return computed<'light' | 'dark'>(() => {
-    if (mode.value === 'system') {
-      return typeof matchMedia === 'function' && systemPrefersDark() ? 'dark' : 'light';
-    }
-    return mode.value;
-  });
+  return resolvedTheme;
+}
+
+/** A standalone query overrides this document without changing the saved preference. */
+export function setThemeOverride(theme: 'light' | 'dark' | null): void {
+  themeOverride.value = theme;
 }
 
 /** 尊重「减少动效」设置（CSS 侧用 media query，JS 动画用这里）。 */

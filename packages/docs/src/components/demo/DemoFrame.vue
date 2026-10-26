@@ -22,6 +22,7 @@ const props = defineProps<{ demo: DemoMeta; mode?: 'isolated' | 'viewport' }>();
 
 const { locale, pick } = useSiteLocale();
 const resolvedTheme = useResolvedTheme();
+const themeReady = ref(false);
 const frameId = useId();
 const height = ref(160);
 const frameEl = ref<HTMLIFrameElement | null>(null);
@@ -40,7 +41,7 @@ const src = computed(() => {
   // ⚠️ 必须拼上 base：站点部署在 GitHub Pages 子路径 /apollo-design-ui/ 下，
   //    src 写成 `/components/...` 会指向站点根目录之外的地址 ⇒ iframe 直接 404。
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  return `${base}/components/${props.demo.component}/demo/${props.demo.name}?lang=${lang}&theme=${resolvedTheme.value}&embed=1&frameId=${encodeURIComponent(frameId)}`;
+  return `${base}/components/${props.demo.component}/demo/${props.demo.name}?lang=${lang}&theme=${themeReady.value ? resolvedTheme.value : 'light'}&embed=1&frameId=${encodeURIComponent(frameId)}`;
 });
 
 function onMessage(e: MessageEvent): void {
@@ -55,7 +56,10 @@ function onMessage(e: MessageEvent): void {
   height.value = Math.max(60, Math.min(data.height, 4000));
 }
 
-onMounted(() => window.addEventListener('message', onMessage));
+onMounted(() => {
+  themeReady.value = true;
+  window.addEventListener('message', onMessage);
+});
 onBeforeUnmount(() => window.removeEventListener('message', onMessage));
 </script>
 

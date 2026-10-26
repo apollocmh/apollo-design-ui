@@ -22,6 +22,7 @@ import DemoProvider from '../components/demo/DemoProvider.vue';
 import DemoRenderer from '../components/demo/DemoRenderer.vue';
 import { initSiteLocale, useSiteLocale } from '../composables/locale';
 import { loadComponentPage } from '../composables/manifest';
+import { setThemeOverride } from '../composables/theme';
 import type { ComponentPageData, DemoMeta } from '../types/manifest';
 
 const route = useRoute();
@@ -37,13 +38,19 @@ const embed = computed(() => route.query.embed === '1');
 // SSR 下没有 window，保持文档站默认语言/主题。
 if (typeof window !== 'undefined') {
   initSiteLocale();
-  const theme = new URLSearchParams(window.location.search).get('theme');
-  if (theme === 'dark') {
-    document.documentElement.dataset.apolloTheme = 'dark';
-  } else if (theme === 'light') {
-    delete document.documentElement.dataset.apolloTheme;
-  }
 }
+
+watch(
+  () => route.query.theme,
+  (theme) => {
+    if (typeof window !== 'undefined')
+      setThemeOverride(theme === 'dark' || theme === 'light' ? theme : null);
+  },
+  { immediate: true },
+);
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') setThemeOverride(null);
+});
 
 const demo = computed<DemoMeta | null>(
   () => page.value?.demos.find((d) => d.name === route.params.demo) ?? null,

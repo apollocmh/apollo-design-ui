@@ -29,10 +29,10 @@ const data = Array.from({ length: 3 }, (_, i) => ({
     <List
       bordered
       size="large"
-      header="Component token header"
-      footer="Component token footer"
       :data-source="data"
     >
+      <template #header><span :style="themed ? { color: '#1f1f1f' } : undefined">Component token header</span></template>
+      <template #footer><span :style="themed ? { color: '#1f1f1f' } : undefined">Component token footer</span></template>
       <template #item="{ item }">
         <ListItem>
           <ListItemMeta :title="item.title" :description="item.description">
