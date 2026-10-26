@@ -26,3 +26,12 @@ Docs内容生成/检查、类型、现有测试和生产SSG；生产Chrome打开
 已实现：中英进展指南、首页可发现入口、日志中的进展入口/本站源码链接，以及发布checkout完整历史。原7指南数量断言按新增能力改为精确8，并断言新指南slug/中英标题/order；所有原测试保留。最终content:build/check、typecheck、14文件157条和SSG构建全部退出0。生产Chrome32检查通过：SSR正文、正常路由、中英文、实际Group删除/关闭焦点/重置、富缩略图编辑与预览、其余3个示例、完整日志、移动/暗色/无横向溢出及零错误。桌面与移动暗色截图已查看；主题切换须等实际样式与动画稳定，不以过渡中截图判断最终颜色。
 
 根格式退出0（原37警告/5信息保留），Registry19检查0warning，diff检查通过。[持久化证据](evidence/docs-publication.json)记录修前线上、当前本地、源文件哈希与各命令。发布及上线核验仍待执行，不以本地通过冒充已上线。
+
+
+## 发布与线上验收收口
+
+已发布源码 `07dab65f80ea9eee22a8a71623406f0752f55868`。手动触发[Deploy Docs 40266130608](https://github.com/apollocmh/apollo-design-ui/actions/runs/40266130608)，构建文档站与发布Pages两个作业均success，Pages deployment 7323739146状态success；没有更改发布触发策略、打标签或发布npm。
+
+线上Chrome150真实33项检查全部通过、零页面/控制台/Vue错误：普通首页入口与SSR指南HTTP200，中英文、手机/暗色且无横向溢出，实际Group删除/关闭焦点/重置、富缩略图编辑及预览、其余3个实际示例均可操作；日志不再只有一条历史提交，本站源码与最新日志均为07dab65f。桌面和手机暗色截图已查看。本地32项与线上33项分开保存在同一[证据](evidence/docs-publication.json)，新增一项为线上明确发布提交校验。
+
+用户入口：[整改进展](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)、[Image](https://apollocmh.github.io/apollo-design-ui/components/image.html)、[更新日志](https://apollocmh.github.io/apollo-design-ui/changelog.html)。本单元已实现/已验证/已上线；全库审计、其他组件验收及原有质量债务保持各自状态，不以文档发布宣称全库完成。后续整改单元结果同步进展页。

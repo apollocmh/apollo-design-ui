@@ -233,14 +233,202 @@
     "Theme capture waits for the actual text-color update and animations to finish; initial in-flight colors were not treated as a product defect."
   ],
   "deployment": {
-    "status": "pending",
-    "workflow": "Deploy Docs",
-    "previousRun": 40047212448,
-    "previousSourceCommit": "0ecf0f29c76c403f1d40824372ed18269ece7ba4"
+    "status": "success",
+    "sourceCommit": "07dab65f80ea9eee22a8a71623406f0752f55868",
+    "workflowRun": 40266130608,
+    "workflowUrl": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40266130608",
+    "event": "workflow_dispatch",
+    "createdAt": "2026-10-26T03:51:46Z",
+    "updatedAt": "2026-10-26T03:57:29Z",
+    "pagesDeploymentId": 7323739146,
+    "pagesStatuses": [
+      {
+        "created_at": "2026-10-26T03:57:29Z",
+        "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+        "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40266130608/job/121390179772",
+        "state": "success"
+      },
+      {
+        "created_at": "2026-10-26T03:57:20Z",
+        "environment_url": "",
+        "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40266130608/job/121390179772",
+        "state": "in_progress"
+      },
+      {
+        "created_at": "2026-10-26T03:57:17Z",
+        "environment_url": "",
+        "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40266130608/job/121390179772",
+        "state": "queued"
+      },
+      {
+        "created_at": "2026-10-26T03:57:16Z",
+        "environment_url": "",
+        "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40266130608/job/121390179772",
+        "state": "waiting"
+      }
+    ],
+    "jobs": [
+      {
+        "name": "构建文档站",
+        "databaseId": 121388863301,
+        "conclusion": "success",
+        "startedAt": "2026-10-26T03:51:51Z",
+        "completedAt": "2026-10-26T03:57:15Z"
+      },
+      {
+        "name": "发布到 GitHub Pages",
+        "databaseId": 121390179772,
+        "conclusion": "success",
+        "startedAt": "2026-10-26T03:57:19Z",
+        "completedAt": "2026-10-26T03:57:28Z"
+      }
+    ]
   },
   "bounds": [
     "This publishes verified development milestones; whole-library remediation remains ongoing.",
     "H05 warnings and infos remain recorded.",
-    "Local build/browser evidence is separate from deployment and online verification."
-  ]
+    "Deployment success and online verification are both recorded; package release and final whole-library acceptance are separate."
+  ],
+  "onlineBrowser": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "07dab65f",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "07dab65f"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "onlineVerifiedAt": "2026-10-26T04:03:06.364726+00:00",
+  "onlineReview": "Desktop and mobile-dark home screenshots reviewed; published entry and real demos match the verified local build."
 }
