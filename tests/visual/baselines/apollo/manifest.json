@@ -91,58 +91,58 @@
       "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
     },
     "image/rich__light__mobile": {
-      "sha256": "7a8c8e192cc2d55804a4b0113d1ab195d3b52dd29fe2999c356cce173547fce7",
+      "sha256": "d14e12d1d7333b6a8006a698c03ee1a2a32e7010ed809eae0e29c51f1be196cf",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
       "dirty": false,
-      "capturedAt": "2026-10-26T03:01:15.855Z",
-      "reviewedAt": "2026-10-26T03:02:10.833Z",
-      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+      "capturedAt": "2026-10-26T08:17:02.942Z",
+      "reviewedAt": "2026-10-26T08:19:19.605Z",
+      "reviewNote": "Reviewed before/after rich images individually at all three viewports. INTENDED shared native-control reset fix removes unpaired color:inherit: native input/button text uses the browser foreground with its existing background. Only text color changes; image content, geometry and controls are preserved. Clean 5336ff77 hashes match reviewed pixels; native-control and Image interaction regressions passed. Other Image approvals retained."
     },
     "image/rich__light__tablet": {
-      "sha256": "eb5fd3455f0ed32e85976379d7973ff786eb52a19f7e53262d3b59d8fa4b8921",
+      "sha256": "e5789a4dc3e2ca49cb9470caf00b4a84ee8a87278c75f73845f5b24c86c60d3c",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
       "dirty": false,
-      "capturedAt": "2026-10-26T03:01:17.574Z",
-      "reviewedAt": "2026-10-26T03:02:10.833Z",
-      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+      "capturedAt": "2026-10-26T08:17:04.683Z",
+      "reviewedAt": "2026-10-26T08:19:19.607Z",
+      "reviewNote": "Reviewed before/after rich images individually at all three viewports. INTENDED shared native-control reset fix removes unpaired color:inherit: native input/button text uses the browser foreground with its existing background. Only text color changes; image content, geometry and controls are preserved. Clean 5336ff77 hashes match reviewed pixels; native-control and Image interaction regressions passed. Other Image approvals retained."
     },
     "image/rich__light__desktop": {
-      "sha256": "1a38aa7f891c6ebfebc7a227acb79d2eb7c044d767d01779bb5881d4b4bfb500",
+      "sha256": "00d1d477c6010bccf3acc513045e658d05b513c7ba227e3f86990f2f858c6965",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
       "dirty": false,
-      "capturedAt": "2026-10-26T03:01:19.326Z",
-      "reviewedAt": "2026-10-26T03:02:10.833Z",
-      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+      "capturedAt": "2026-10-26T08:17:06.422Z",
+      "reviewedAt": "2026-10-26T08:19:19.607Z",
+      "reviewNote": "Reviewed before/after rich images individually at all three viewports. INTENDED shared native-control reset fix removes unpaired color:inherit: native input/button text uses the browser foreground with its existing background. Only text color changes; image content, geometry and controls are preserved. Clean 5336ff77 hashes match reviewed pixels; native-control and Image interaction regressions passed. Other Image approvals retained."
     },
     "image/progress__light__mobile": {
-      "sha256": "a96165b7b5b950c95c182cf570b9234058b2541bb78dabd1ee7dbdc64410fa42",
+      "sha256": "c24289181a6a230dd0bc2663a3d7e3c5b9517c7f93a2c1443dc33f00f8c4ec8e",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
       "dirty": false,
-      "capturedAt": "2026-10-26T03:01:21.085Z",
-      "reviewedAt": "2026-10-26T03:02:10.834Z",
-      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+      "capturedAt": "2026-10-26T08:17:08.202Z",
+      "reviewedAt": "2026-10-26T08:19:19.717Z",
+      "reviewNote": "Reviewed before/after progress images individually at all three viewports. INTENDED shared native-control reset fix restores browser foreground/background pairing in native editor and cancel button. Only text color changes, with progress artwork, layout and controls preserved. Clean 5336ff77 hashes match reviewed pixels; actual native-control and Image interaction/axe regressions passed. Other Image approvals retained."
     },
     "image/progress__light__tablet": {
-      "sha256": "6bcb760a0bd65dc6886184b968992dac35ec31c5a4a79d9464120fb9cc752be0",
+      "sha256": "c5a3cd928f2a3c7b03f1d55c07477bd0f97ce16a1226dd42b9457378f33ddca3",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
       "dirty": false,
-      "capturedAt": "2026-10-26T03:01:22.815Z",
-      "reviewedAt": "2026-10-26T03:02:10.834Z",
-      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+      "capturedAt": "2026-10-26T08:17:09.949Z",
+      "reviewedAt": "2026-10-26T08:19:19.719Z",
+      "reviewNote": "Reviewed before/after progress images individually at all three viewports. INTENDED shared native-control reset fix restores browser foreground/background pairing in native editor and cancel button. Only text color changes, with progress artwork, layout and controls preserved. Clean 5336ff77 hashes match reviewed pixels; actual native-control and Image interaction/axe regressions passed. Other Image approvals retained."
     },
     "image/progress__light__desktop": {
-      "sha256": "81b709e7c39e64c231ea8141caf172fe68eac77a2c75a605849bd37997f31a15",
+      "sha256": "76b7b638726255a2ebeb03a5dc248fdea63a46c6a32f22fd2263733ab6d4a1aa",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "798339f573fc0479a29e2d0f50f6d5c68f851c0a",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
       "dirty": false,
-      "capturedAt": "2026-10-26T03:01:24.548Z",
-      "reviewedAt": "2026-10-26T03:02:10.835Z",
-      "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+      "capturedAt": "2026-10-26T08:17:11.672Z",
+      "reviewedAt": "2026-10-26T08:19:19.720Z",
+      "reviewNote": "Reviewed before/after progress images individually at all three viewports. INTENDED shared native-control reset fix restores browser foreground/background pairing in native editor and cancel button. Only text color changes, with progress artwork, layout and controls preserved. Clean 5336ff77 hashes match reviewed pixels; actual native-control and Image interaction/axe regressions passed. Other Image approvals retained."
     },
     "image/group__light__mobile": {
       "sha256": "39843ada0dda28ed9a65ff5bc9ad50be06fa6835f3d0751e0c26479a41029197",
@@ -224,6 +224,519 @@
       "capturedAt": "2026-10-26T03:01:40.253Z",
       "reviewedAt": "2026-10-26T03:02:10.838Z",
       "reviewNote": "Reviewed all 24 Image PNGs individually at mobile/tablet/desktop: loaded local artwork, hover cover, full open modal and controls, rich native controls, progress, group 2/2, local dark and compact. Clean source 798339f5 recapture matches every reviewed SHA-256. Chrome 150 darwin/x64; dark/compact are local variants on the light canvas. Touch and other browsers are outside this matrix."
+    },
+    "list/basic__light__mobile": {
+      "sha256": "80d0cfa5122fb1ade5a50ce1d492a248475a7a62930ce0086c0f07835b3c83cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:14:51.961Z",
+      "reviewedAt": "2026-10-26T08:19:19.438Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/basic__light__tablet": {
+      "sha256": "99a2bb7d4ff61b3c88eac3c2b4ffa3259fe783d2b2d4232541dbf7332a1b24ea",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:14:53.956Z",
+      "reviewedAt": "2026-10-26T08:19:19.439Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/basic__light__desktop": {
+      "sha256": "6338b2f39bc8e9eed34973c5836d866cc90d7fecef481c46256b9369b47ec1e0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:14:55.912Z",
+      "reviewedAt": "2026-10-26T08:19:19.440Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/meta__light__mobile": {
+      "sha256": "6da0ff12289b1ea2e94a06aa64f1aa19074f0ac32597fe4e6f61908cafaded73",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:14:57.912Z",
+      "reviewedAt": "2026-10-26T08:19:19.440Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/meta__light__tablet": {
+      "sha256": "d67daf930bb0afe85802cebd8e04d41329ddbfc575345b621a9b6bdb804e33c1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:14:59.899Z",
+      "reviewedAt": "2026-10-26T08:19:19.440Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/meta__light__desktop": {
+      "sha256": "36537816c868de41a36d2e376117d224db4cb99e78fb4f025da472eebee8d89a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:01.923Z",
+      "reviewedAt": "2026-10-26T08:19:19.441Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/actions__light__mobile": {
+      "sha256": "f5fc9dda3a54fe35849639f8174b4f3d12f97f34c76c64a65605ac010962803b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:03.959Z",
+      "reviewedAt": "2026-10-26T08:19:19.441Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/actions__light__tablet": {
+      "sha256": "aef7a589dad7b8bb4de3109ff750482bcd1bed1877c77bc6dd8ef283d865736d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:05.998Z",
+      "reviewedAt": "2026-10-26T08:19:19.441Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/actions__light__desktop": {
+      "sha256": "a3db503fc1d8fc1e30f61b2dec10293af0c60392f9a7d82bf3d6dbb61cd51821",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:08.017Z",
+      "reviewedAt": "2026-10-26T08:19:19.442Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/bordered__light__mobile": {
+      "sha256": "fb1a5639cead268ad8ba2638cb560cf75ad27b3325243e8340acfe87d748ced5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:10.003Z",
+      "reviewedAt": "2026-10-26T08:19:19.442Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/bordered__light__tablet": {
+      "sha256": "cee4a06166a8cd88992dc10b0eca44b4a2390cdf1e1abcb002000c7d49bb978b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:11.953Z",
+      "reviewedAt": "2026-10-26T08:19:19.442Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/bordered__light__desktop": {
+      "sha256": "4e2b6463ec604a5278b85e3e7efb5122e4e1d058aaf5f683bd8c6e821169d875",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:13.911Z",
+      "reviewedAt": "2026-10-26T08:19:19.443Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/vertical__light__mobile": {
+      "sha256": "7fcb50d198d44cec8d59817f9037381b67bb5cbde2372b21c93b2fb5ed107eaf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:15.945Z",
+      "reviewedAt": "2026-10-26T08:19:19.443Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/vertical__light__tablet": {
+      "sha256": "419fde67bcf03e00f0f1f123f08cb5d983a185b790bd740dda0349f8ff47aa6f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:17.956Z",
+      "reviewedAt": "2026-10-26T08:19:19.443Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/vertical__light__desktop": {
+      "sha256": "9c051f329f31431fee31ad1839d613c579963dc1533bf9e0bb203f9c95b49a71",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:20.005Z",
+      "reviewedAt": "2026-10-26T08:19:19.444Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/grid__light__mobile": {
+      "sha256": "3e262aef0a1b1b97957c364925407cca1878ec5aabe3def71ffd059286d20884",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:22.060Z",
+      "reviewedAt": "2026-10-26T08:19:19.444Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/grid__light__tablet": {
+      "sha256": "159f8d58e99365d6f38d1f553b21b6374ff664a0c1b65cea4b8ab68628f460f5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:24.077Z",
+      "reviewedAt": "2026-10-26T08:19:19.444Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/grid__light__desktop": {
+      "sha256": "81f6a572a06711f51e0ce023aa4120d732866b6982bcd20033077c535badaece",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:26.143Z",
+      "reviewedAt": "2026-10-26T08:19:19.445Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/pagination__light__mobile": {
+      "sha256": "2cf4af3c706546c61fceff56e19c37a71bdd9afd74c0e58e31b5d27cc5904bad",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:28.187Z",
+      "reviewedAt": "2026-10-26T08:19:19.445Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/pagination__light__tablet": {
+      "sha256": "1402d3edb7e0bae3bd829fc601a7afa031a12cd8618d917c998af4e4551c4cf2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:30.219Z",
+      "reviewedAt": "2026-10-26T08:19:19.445Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/pagination__light__desktop": {
+      "sha256": "52a5c8513942a19bee81e10c31d2220009000322022373e3e321c0ca8d83e3ef",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:32.254Z",
+      "reviewedAt": "2026-10-26T08:19:19.446Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/loading__light__mobile": {
+      "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:34.271Z",
+      "reviewedAt": "2026-10-26T08:19:19.446Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/loading__light__tablet": {
+      "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:36.235Z",
+      "reviewedAt": "2026-10-26T08:19:19.446Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/loading__light__desktop": {
+      "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:38.222Z",
+      "reviewedAt": "2026-10-26T08:19:19.447Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/loading-fullscreen__light__mobile": {
+      "sha256": "1828971d7f5eedfc9fcb4f34dec8120c12893f15816e6eefdd0607812f46ef58",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:40.225Z",
+      "reviewedAt": "2026-10-26T08:19:19.447Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/loading-fullscreen__light__tablet": {
+      "sha256": "bcd3c9befdc8743d1ad706f87f060140c85f66d75356bc42cdc42f3cf7ddfe8a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:42.240Z",
+      "reviewedAt": "2026-10-26T08:19:19.448Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/loading-fullscreen__light__desktop": {
+      "sha256": "c020d7f76d2a1753f6f7bb33e1dbda067f58c85bbb1ccdf1876c35d86781077e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:44.250Z",
+      "reviewedAt": "2026-10-26T08:19:19.448Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/empty__light__mobile": {
+      "sha256": "2db09c6334a0d0c7fb4a31b83e17229a2c06f34f96bb69799ce37cf1210add42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:46.231Z",
+      "reviewedAt": "2026-10-26T08:19:19.448Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/empty__light__tablet": {
+      "sha256": "827d50457c99c06814ca0fefc194d3b8b9c8db7a5fd69219ce17854b6478e400",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:48.180Z",
+      "reviewedAt": "2026-10-26T08:19:19.449Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/empty__light__desktop": {
+      "sha256": "b2e268aa48f68f33375c13de4fbdf45e8c0670406ef4b31ed482e6b122e9b642",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:50.124Z",
+      "reviewedAt": "2026-10-26T08:19:19.449Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/size__light__mobile": {
+      "sha256": "9b1810a96cc4960ae5147da7cfb5e4fc9e48faae4cd02d13def424853aee3202",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:52.124Z",
+      "reviewedAt": "2026-10-26T08:19:19.450Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/size__light__tablet": {
+      "sha256": "1c496ccaf8a0a039437fbfe3c2436c52ede9ea9e1f5a736497c61235f1883c37",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:54.115Z",
+      "reviewedAt": "2026-10-26T08:19:19.450Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/size__light__desktop": {
+      "sha256": "b748e9c1654e3f27540656f01c9f2d3763ac3cfe40c314aef0ab4d677321bae2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:56.112Z",
+      "reviewedAt": "2026-10-26T08:19:19.451Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/rtl__light__mobile": {
+      "sha256": "a4e9f4040d35a42d0204e477c6388dd2755af5acdef3b4e69b08577f7ec14b3a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:15:58.159Z",
+      "reviewedAt": "2026-10-26T08:19:19.451Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/rtl__light__tablet": {
+      "sha256": "82e62072269ce10adbd82f8546556758db54a04a4be12d56a1d6a246059c3f90",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:00.241Z",
+      "reviewedAt": "2026-10-26T08:19:19.451Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/rtl__light__desktop": {
+      "sha256": "1ca29895c592992834f97a1f869c8ada1faf02b86031f04e5dcfd48ecf1c9c4f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:02.271Z",
+      "reviewedAt": "2026-10-26T08:19:19.452Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/extra__light__mobile": {
+      "sha256": "a6dfff47869b22b3f8706da233ddec120e92820575cb58d6941dc9050bba5290",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:04.342Z",
+      "reviewedAt": "2026-10-26T08:19:19.452Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/extra__light__tablet": {
+      "sha256": "23e4aebbc4c09a669f369aa8923dcf93ffa5b1b416b9b8bd57f53ad7999ee4b0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:06.404Z",
+      "reviewedAt": "2026-10-26T08:19:19.453Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/extra__light__desktop": {
+      "sha256": "44c8e6da36a98865a6bc2612c68150392680790a3b700e1119bcfd1b7dc0046e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:08.477Z",
+      "reviewedAt": "2026-10-26T08:19:19.453Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/nested__light__mobile": {
+      "sha256": "7997191ac120ab2f9e56ce918836231742006681bcc07ecbd3b54e4c1e802ffc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:10.470Z",
+      "reviewedAt": "2026-10-26T08:19:19.454Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/nested__light__tablet": {
+      "sha256": "be707cf0b15fa6933e2a9ef94fd07242800cae8fdf59e1557c716949a99d888f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:12.472Z",
+      "reviewedAt": "2026-10-26T08:19:19.454Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/nested__light__desktop": {
+      "sha256": "a659629ec41c8fd53e353056cf312b3af517eaed9fac1b3b5f5228c1b762e8c0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:14.506Z",
+      "reviewedAt": "2026-10-26T08:19:19.454Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/tokens__light__mobile": {
+      "sha256": "504549b02516c83ed8cbd6289ac5b1fae1600bed5ce42b96b5f9d77600452d15",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:16.565Z",
+      "reviewedAt": "2026-10-26T08:19:19.455Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/tokens__light__tablet": {
+      "sha256": "717e84a5e6f42905874f8c2346b3e40ffc05313bac424fbd716797e20dda97c5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:18.628Z",
+      "reviewedAt": "2026-10-26T08:19:19.455Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/tokens__light__desktop": {
+      "sha256": "831c4e12eb12504475cdd029a6b5b7f91d73ab9186379c1b36933427d0a0fa0b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:20.723Z",
+      "reviewedAt": "2026-10-26T08:19:19.456Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-dark__light__mobile": {
+      "sha256": "8d2d4a430703f8f2d7383e4564b2331e6ccd08d8ce6e94a9923d37813e31cd97",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:22.773Z",
+      "reviewedAt": "2026-10-26T08:19:19.456Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-dark__light__tablet": {
+      "sha256": "481e3dedf77a927590dd69128fcb3d5f37bb5418ac9262c5bb36689bf4f2efc3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:24.882Z",
+      "reviewedAt": "2026-10-26T08:19:19.456Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-dark__light__desktop": {
+      "sha256": "36c8cbf522416a1927b93544eb3748120c39d90adfea819b93ba751cdd1ae5c7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:26.975Z",
+      "reviewedAt": "2026-10-26T08:19:19.457Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-compact__light__mobile": {
+      "sha256": "3abef60675d7e1a6646407832ddc60bed42b0d8c7ea69ed5a36849d2a55a9c96",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:29.037Z",
+      "reviewedAt": "2026-10-26T08:19:19.457Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-compact__light__tablet": {
+      "sha256": "15de68fe275b24fe3a79a92610d47a863b97b9b7b3f442001d527e2934ccb36e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:31.125Z",
+      "reviewedAt": "2026-10-26T08:19:19.457Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-compact__light__desktop": {
+      "sha256": "6522564ec07835ac895fd38ec36a6e12e8fe99016101e094381f86ae74db1cf4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:33.238Z",
+      "reviewedAt": "2026-10-26T08:19:19.458Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-dark-compact__light__mobile": {
+      "sha256": "9077ec132be6f4b943807d4d93349cd2d559169b2898b3009876d232f46502e1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:35.290Z",
+      "reviewedAt": "2026-10-26T08:19:19.458Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-dark-compact__light__tablet": {
+      "sha256": "ef252b6d0ac390075b16d9ed0a4720319508d4fcff1d5726ce7aa15f9db37914",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:37.372Z",
+      "reviewedAt": "2026-10-26T08:19:19.459Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/theme-dark-compact__light__desktop": {
+      "sha256": "a4da9ad4ed119a2a64d0678f6cd92413225e17c210e928f87b8faf27c6339e11",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:39.478Z",
+      "reviewedAt": "2026-10-26T08:19:19.459Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/native-focus__light__mobile": {
+      "sha256": "24a086e82c1ad76bc4ed8cb2852168ed8972696431f859d04bd2069b2f2ef7c9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:41.527Z",
+      "reviewedAt": "2026-10-26T08:19:19.460Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/native-focus__light__tablet": {
+      "sha256": "442077525891d8110f200fb4b38bfe6ef1ccac416b103d2c6137923e4cea5360",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:43.543Z",
+      "reviewedAt": "2026-10-26T08:19:19.460Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "list/native-focus__light__desktop": {
+      "sha256": "1d078c40bc6fd750da650d6240f8dd6e4dce7f813368869fce71881897ceb518",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "capturedAt": "2026-10-26T08:16:45.572Z",
+      "reviewedAt": "2026-10-26T08:19:19.460Z",
+      "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
     }
   }
 }

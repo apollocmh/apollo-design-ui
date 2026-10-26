@@ -1,7 +1,7 @@
 {
   "inventoryBaseline": "0148b962",
   "continuationBaseline": "56df56e8c5ff2b5ff5ab6428313e17848611f4d2",
-  "status": "implementation-and-candidates-verified-baseline-acceptance-pending",
+  "status": "verified-unit-closed",
   "sourceFingerprint": {
     "algorithm": "SHA256(concat(sorted file + NUL + SHA256(file bytes) + newline))",
     "sha256": "ddecab25196b7f2c4896488188d2da36ad54bbd61ca153881f3a8dfbbde52167",
@@ -2559,7 +2559,7 @@
       }
     ],
     "review": "All 57 List images reviewed at mobile/tablet/desktop: native layout and focus, full-screen flow, real loading/empty/pagination, nested isolation, explicit tokens and scoped dark/compact/combined themes. The prior 3 fullscreen layout candidates were rejected. Image rich/progress before-and-after reviewed at all viewports: only native control text color changes; geometry and content preserved.",
-    "approval": "pending clean implementation commit recapture; dirty candidates are review evidence only"
+    "approval": "57 List and 6 intended Image changes accepted after clean-source recapture matched all 81 reviewed hashes; existing 18 Image and 1 Button review records preserved byte-for-byte"
   },
   "imageSharedResetComparison": {
     "results": [
@@ -3208,13 +3208,65 @@
       "command": "pnpm --filter @apollo-design/docs run build",
       "result": "pass",
       "log": "/tmp/apollo-list-final-docs.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component list --component image --candidate",
+      "result": "pass",
+      "cases": 81,
+      "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "dirty": false,
+      "matchedReviewedHashes": 81,
+      "log": "/tmp/apollo-list-image-clean-candidates.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component list --component image --check",
+      "result": "pass",
+      "reviewedImageHashes": 81,
+      "log": "/tmp/apollo-list-final-visual-integrity.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component list --component image --no-build",
+      "result": "pass",
+      "cases": 81,
+      "exact": 81,
+      "diffPixels": 0,
+      "log": "/tmp/apollo-list-image-final-visual-compare.log"
+    },
+    {
+      "command": "node tests/browser/list-docs.mjs",
+      "result": "pass",
+      "scope": "All 12 actual List demos rendered, plus real Spin fullscreen flow, mask and stable native editor",
+      "cases": 13,
+      "log": "/tmp/apollo-list-docs-complete-browser-final.log"
+    },
+    {
+      "command": "pnpm registry:check",
+      "result": "pass",
+      "scope": "Final List Apollo registry state",
+      "log": "/tmp/apollo-list-closed-registry.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run content:check && pnpm --filter @apollo-design/docs run build",
+      "result": "pass",
+      "scope": "Final closed-unit progress guide and current API pages",
+      "log": "/tmp/apollo-list-closed-docs.log"
+    },
+    {
+      "command": "pnpm lint:format",
+      "result": "pass",
+      "scope": "Final List closure, visual review records and reusable Docs browser script",
+      "errors": 0,
+      "existingWarnings": 37,
+      "existingInfos": 5,
+      "log": "/tmp/apollo-list-closed-format.log"
     }
   ],
   "remaining": [
-    "Clean source recapture and approved 57 List / 6 intentionally changed Image baselines, followed by pixel comparison",
-    "Complete standalone Spin audit is the next unit; conditional indicator/description content and all 4 tokens require their own complete inventory",
-    "Whole-library final gates remain required on one final commit after all remediation; this record is limited to the List unit and named shared regressions",
-    "The List checklist requires a final reviewed acceptance record after clean-source pixel verification; standalone Spin and whole-library gates remain open"
+    "No unresolved defect, decision or blocker remains within this List/Item/Meta inventory",
+    "Spin complete public API/token inventory and the other components/foundation audits continue separately",
+    "Drag/drop, network infinite loading and new virtualization are separate capabilities outside the existing List contract",
+    "Visuals verified on Chrome 150 darwin/x64; the existing Button approval is integrity-checked only because it was captured on arm64/Chrome155",
+    "Whole-library final gates remain required on one final commit after all remediation"
   ],
   "sharedImageBrowserEvidence": {
     "browser": "150.0.7871.125",
@@ -3392,6 +3444,1249 @@
         "target": "public-demo",
         "scenario": "group-opener-removal-and-reset",
         "failures": []
+      }
+    ],
+    "issues": []
+  },
+  "implementationCommits": [
+    "23de152079c096fccf34d0f3907a8f649276de2b",
+    "5336ff77fa753085955425c48d3b286f17722e0e"
+  ],
+  "cleanCapture": {
+    "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+    "dirty": false,
+    "expected": 81,
+    "matchedReviewedHashes": 81,
+    "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+    "entries": {
+      "list/basic__light__mobile": {
+        "sha256": "80d0cfa5122fb1ade5a50ce1d492a248475a7a62930ce0086c0f07835b3c83cc",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:14:51.961Z"
+      },
+      "list/basic__light__tablet": {
+        "sha256": "99a2bb7d4ff61b3c88eac3c2b4ffa3259fe783d2b2d4232541dbf7332a1b24ea",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:14:53.956Z"
+      },
+      "list/basic__light__desktop": {
+        "sha256": "6338b2f39bc8e9eed34973c5836d866cc90d7fecef481c46256b9369b47ec1e0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:14:55.912Z"
+      },
+      "list/meta__light__mobile": {
+        "sha256": "6da0ff12289b1ea2e94a06aa64f1aa19074f0ac32597fe4e6f61908cafaded73",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:14:57.912Z"
+      },
+      "list/meta__light__tablet": {
+        "sha256": "d67daf930bb0afe85802cebd8e04d41329ddbfc575345b621a9b6bdb804e33c1",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:14:59.899Z"
+      },
+      "list/meta__light__desktop": {
+        "sha256": "36537816c868de41a36d2e376117d224db4cb99e78fb4f025da472eebee8d89a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:01.923Z"
+      },
+      "list/actions__light__mobile": {
+        "sha256": "f5fc9dda3a54fe35849639f8174b4f3d12f97f34c76c64a65605ac010962803b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:03.959Z"
+      },
+      "list/actions__light__tablet": {
+        "sha256": "aef7a589dad7b8bb4de3109ff750482bcd1bed1877c77bc6dd8ef283d865736d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:05.998Z"
+      },
+      "list/actions__light__desktop": {
+        "sha256": "a3db503fc1d8fc1e30f61b2dec10293af0c60392f9a7d82bf3d6dbb61cd51821",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:08.017Z"
+      },
+      "list/bordered__light__mobile": {
+        "sha256": "fb1a5639cead268ad8ba2638cb560cf75ad27b3325243e8340acfe87d748ced5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:10.003Z"
+      },
+      "list/bordered__light__tablet": {
+        "sha256": "cee4a06166a8cd88992dc10b0eca44b4a2390cdf1e1abcb002000c7d49bb978b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:11.953Z"
+      },
+      "list/bordered__light__desktop": {
+        "sha256": "4e2b6463ec604a5278b85e3e7efb5122e4e1d058aaf5f683bd8c6e821169d875",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:13.911Z"
+      },
+      "list/vertical__light__mobile": {
+        "sha256": "7fcb50d198d44cec8d59817f9037381b67bb5cbde2372b21c93b2fb5ed107eaf",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:15.945Z"
+      },
+      "list/vertical__light__tablet": {
+        "sha256": "419fde67bcf03e00f0f1f123f08cb5d983a185b790bd740dda0349f8ff47aa6f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:17.956Z"
+      },
+      "list/vertical__light__desktop": {
+        "sha256": "9c051f329f31431fee31ad1839d613c579963dc1533bf9e0bb203f9c95b49a71",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:20.005Z"
+      },
+      "list/grid__light__mobile": {
+        "sha256": "3e262aef0a1b1b97957c364925407cca1878ec5aabe3def71ffd059286d20884",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:22.060Z"
+      },
+      "list/grid__light__tablet": {
+        "sha256": "159f8d58e99365d6f38d1f553b21b6374ff664a0c1b65cea4b8ab68628f460f5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:24.077Z"
+      },
+      "list/grid__light__desktop": {
+        "sha256": "81f6a572a06711f51e0ce023aa4120d732866b6982bcd20033077c535badaece",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:26.143Z"
+      },
+      "list/pagination__light__mobile": {
+        "sha256": "2cf4af3c706546c61fceff56e19c37a71bdd9afd74c0e58e31b5d27cc5904bad",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:28.187Z"
+      },
+      "list/pagination__light__tablet": {
+        "sha256": "1402d3edb7e0bae3bd829fc601a7afa031a12cd8618d917c998af4e4551c4cf2",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:30.219Z"
+      },
+      "list/pagination__light__desktop": {
+        "sha256": "52a5c8513942a19bee81e10c31d2220009000322022373e3e321c0ca8d83e3ef",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:32.254Z"
+      },
+      "list/loading__light__mobile": {
+        "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:34.271Z"
+      },
+      "list/loading__light__tablet": {
+        "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:36.235Z"
+      },
+      "list/loading__light__desktop": {
+        "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:38.222Z"
+      },
+      "list/loading-fullscreen__light__mobile": {
+        "sha256": "1828971d7f5eedfc9fcb4f34dec8120c12893f15816e6eefdd0607812f46ef58",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:40.225Z"
+      },
+      "list/loading-fullscreen__light__tablet": {
+        "sha256": "bcd3c9befdc8743d1ad706f87f060140c85f66d75356bc42cdc42f3cf7ddfe8a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:42.240Z"
+      },
+      "list/loading-fullscreen__light__desktop": {
+        "sha256": "c020d7f76d2a1753f6f7bb33e1dbda067f58c85bbb1ccdf1876c35d86781077e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:44.250Z"
+      },
+      "list/empty__light__mobile": {
+        "sha256": "2db09c6334a0d0c7fb4a31b83e17229a2c06f34f96bb69799ce37cf1210add42",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:46.231Z"
+      },
+      "list/empty__light__tablet": {
+        "sha256": "827d50457c99c06814ca0fefc194d3b8b9c8db7a5fd69219ce17854b6478e400",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:48.180Z"
+      },
+      "list/empty__light__desktop": {
+        "sha256": "b2e268aa48f68f33375c13de4fbdf45e8c0670406ef4b31ed482e6b122e9b642",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:50.124Z"
+      },
+      "list/size__light__mobile": {
+        "sha256": "9b1810a96cc4960ae5147da7cfb5e4fc9e48faae4cd02d13def424853aee3202",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:52.124Z"
+      },
+      "list/size__light__tablet": {
+        "sha256": "1c496ccaf8a0a039437fbfe3c2436c52ede9ea9e1f5a736497c61235f1883c37",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:54.115Z"
+      },
+      "list/size__light__desktop": {
+        "sha256": "b748e9c1654e3f27540656f01c9f2d3763ac3cfe40c314aef0ab4d677321bae2",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:56.112Z"
+      },
+      "list/rtl__light__mobile": {
+        "sha256": "a4e9f4040d35a42d0204e477c6388dd2755af5acdef3b4e69b08577f7ec14b3a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:15:58.159Z"
+      },
+      "list/rtl__light__tablet": {
+        "sha256": "82e62072269ce10adbd82f8546556758db54a04a4be12d56a1d6a246059c3f90",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:00.241Z"
+      },
+      "list/rtl__light__desktop": {
+        "sha256": "1ca29895c592992834f97a1f869c8ada1faf02b86031f04e5dcfd48ecf1c9c4f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:02.271Z"
+      },
+      "list/extra__light__mobile": {
+        "sha256": "a6dfff47869b22b3f8706da233ddec120e92820575cb58d6941dc9050bba5290",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:04.342Z"
+      },
+      "list/extra__light__tablet": {
+        "sha256": "23e4aebbc4c09a669f369aa8923dcf93ffa5b1b416b9b8bd57f53ad7999ee4b0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:06.404Z"
+      },
+      "list/extra__light__desktop": {
+        "sha256": "44c8e6da36a98865a6bc2612c68150392680790a3b700e1119bcfd1b7dc0046e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:08.477Z"
+      },
+      "list/nested__light__mobile": {
+        "sha256": "7997191ac120ab2f9e56ce918836231742006681bcc07ecbd3b54e4c1e802ffc",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:10.470Z"
+      },
+      "list/nested__light__tablet": {
+        "sha256": "be707cf0b15fa6933e2a9ef94fd07242800cae8fdf59e1557c716949a99d888f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:12.472Z"
+      },
+      "list/nested__light__desktop": {
+        "sha256": "a659629ec41c8fd53e353056cf312b3af517eaed9fac1b3b5f5228c1b762e8c0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:14.506Z"
+      },
+      "list/tokens__light__mobile": {
+        "sha256": "504549b02516c83ed8cbd6289ac5b1fae1600bed5ce42b96b5f9d77600452d15",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:16.565Z"
+      },
+      "list/tokens__light__tablet": {
+        "sha256": "717e84a5e6f42905874f8c2346b3e40ffc05313bac424fbd716797e20dda97c5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:18.628Z"
+      },
+      "list/tokens__light__desktop": {
+        "sha256": "831c4e12eb12504475cdd029a6b5b7f91d73ab9186379c1b36933427d0a0fa0b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:20.723Z"
+      },
+      "list/theme-dark__light__mobile": {
+        "sha256": "8d2d4a430703f8f2d7383e4564b2331e6ccd08d8ce6e94a9923d37813e31cd97",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:22.773Z"
+      },
+      "list/theme-dark__light__tablet": {
+        "sha256": "481e3dedf77a927590dd69128fcb3d5f37bb5418ac9262c5bb36689bf4f2efc3",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:24.882Z"
+      },
+      "list/theme-dark__light__desktop": {
+        "sha256": "36c8cbf522416a1927b93544eb3748120c39d90adfea819b93ba751cdd1ae5c7",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:26.975Z"
+      },
+      "list/theme-compact__light__mobile": {
+        "sha256": "3abef60675d7e1a6646407832ddc60bed42b0d8c7ea69ed5a36849d2a55a9c96",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:29.037Z"
+      },
+      "list/theme-compact__light__tablet": {
+        "sha256": "15de68fe275b24fe3a79a92610d47a863b97b9b7b3f442001d527e2934ccb36e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:31.125Z"
+      },
+      "list/theme-compact__light__desktop": {
+        "sha256": "6522564ec07835ac895fd38ec36a6e12e8fe99016101e094381f86ae74db1cf4",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:33.238Z"
+      },
+      "list/theme-dark-compact__light__mobile": {
+        "sha256": "9077ec132be6f4b943807d4d93349cd2d559169b2898b3009876d232f46502e1",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:35.290Z"
+      },
+      "list/theme-dark-compact__light__tablet": {
+        "sha256": "ef252b6d0ac390075b16d9ed0a4720319508d4fcff1d5726ce7aa15f9db37914",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:37.372Z"
+      },
+      "list/theme-dark-compact__light__desktop": {
+        "sha256": "a4da9ad4ed119a2a64d0678f6cd92413225e17c210e928f87b8faf27c6339e11",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:39.478Z"
+      },
+      "list/native-focus__light__mobile": {
+        "sha256": "24a086e82c1ad76bc4ed8cb2852168ed8972696431f859d04bd2069b2f2ef7c9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:41.527Z"
+      },
+      "list/native-focus__light__tablet": {
+        "sha256": "442077525891d8110f200fb4b38bfe6ef1ccac416b103d2c6137923e4cea5360",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:43.543Z"
+      },
+      "list/native-focus__light__desktop": {
+        "sha256": "1d078c40bc6fd750da650d6240f8dd6e4dce7f813368869fce71881897ceb518",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:45.572Z"
+      },
+      "image/basic__light__mobile": {
+        "sha256": "133757cb952fbd0082c86028df5de0eaa0278ab2b245a56cbf493902094f01cd",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:47.290Z"
+      },
+      "image/basic__light__tablet": {
+        "sha256": "53d95404df13b0068948b1ae2ee7df0ca60e9d9f04fbced899b10bcbf031409e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:48.990Z"
+      },
+      "image/basic__light__desktop": {
+        "sha256": "af4328668728c199832e0a5328b728d77cab2a06712fbbf68bb15aa511e4176c",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:50.714Z"
+      },
+      "image/cover__light__mobile": {
+        "sha256": "43c44165d14125a519605aff7272898a01f1fcb8a2a4d7c0cee17ddb8f998e2c",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:52.480Z"
+      },
+      "image/cover__light__tablet": {
+        "sha256": "8346bdd2ee0954d6487089d58872bf4aaaaa0ab37a5ece12f6e9194c2602a396",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:54.250Z"
+      },
+      "image/cover__light__desktop": {
+        "sha256": "d637ef6504702b2419da11c0e2df6bdf751469833bd9d5c5b0f23b9dfb340fd0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:56.025Z"
+      },
+      "image/preview__light__mobile": {
+        "sha256": "84586ea79219053b5db5ed26260eb8de00d0fe6d152ca8e10269c05d7d52046e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:57.745Z"
+      },
+      "image/preview__light__tablet": {
+        "sha256": "5b4cdc23997b7ecafa95bca882f4e07b636a93693b0bc270d3f4a729d4301fe2",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:16:59.465Z"
+      },
+      "image/preview__light__desktop": {
+        "sha256": "0dd004fb8f470211b41e7e66beaf90e753c232a2f508bc8fba7ba915fe215c00",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:01.211Z"
+      },
+      "image/rich__light__mobile": {
+        "sha256": "d14e12d1d7333b6a8006a698c03ee1a2a32e7010ed809eae0e29c51f1be196cf",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:02.942Z"
+      },
+      "image/rich__light__tablet": {
+        "sha256": "e5789a4dc3e2ca49cb9470caf00b4a84ee8a87278c75f73845f5b24c86c60d3c",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:04.683Z"
+      },
+      "image/rich__light__desktop": {
+        "sha256": "00d1d477c6010bccf3acc513045e658d05b513c7ba227e3f86990f2f858c6965",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:06.422Z"
+      },
+      "image/progress__light__mobile": {
+        "sha256": "c24289181a6a230dd0bc2663a3d7e3c5b9517c7f93a2c1443dc33f00f8c4ec8e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:08.202Z"
+      },
+      "image/progress__light__tablet": {
+        "sha256": "c5a3cd928f2a3c7b03f1d55c07477bd0f97ce16a1226dd42b9457378f33ddca3",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:09.949Z"
+      },
+      "image/progress__light__desktop": {
+        "sha256": "76b7b638726255a2ebeb03a5dc248fdea63a46c6a32f22fd2263733ab6d4a1aa",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:11.672Z"
+      },
+      "image/group__light__mobile": {
+        "sha256": "39843ada0dda28ed9a65ff5bc9ad50be06fa6835f3d0751e0c26479a41029197",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:13.417Z"
+      },
+      "image/group__light__tablet": {
+        "sha256": "231595260400da687a4f6b273d9b9dbd56b1df9133e041d30eb41667ae1513f6",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:15.167Z"
+      },
+      "image/group__light__desktop": {
+        "sha256": "2eba05789b2015cd1c61eaab8fc228bbf03dd3e2e462a11bd3da8ba928de80a9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:16.943Z"
+      },
+      "image/theme-dark__light__mobile": {
+        "sha256": "0e83acd976a0436afc0abb5d68cd660dab0c66bb927c136a81695dd1d1587407",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:18.718Z"
+      },
+      "image/theme-dark__light__tablet": {
+        "sha256": "b16e44103fb3cf294b4848d108f04c377200edc4d499908f5fc90b878c387003",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:20.502Z"
+      },
+      "image/theme-dark__light__desktop": {
+        "sha256": "837e9c78672aa810e6064f399dc75012c63d1f7ce942b27356613c038b008c88",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:22.262Z"
+      },
+      "image/theme-compact__light__mobile": {
+        "sha256": "83f5883f1af5b903b9c8e142dd8026526cb836525529ce2404b726f1d5e061aa",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:24.019Z"
+      },
+      "image/theme-compact__light__tablet": {
+        "sha256": "0cca8a9e4c249637b498379d364f47c52d6d803f3b206d638513d8eb0c8290f8",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:25.766Z"
+      },
+      "image/theme-compact__light__desktop": {
+        "sha256": "143a4ac916fe441b071712ade6b2695d5ac5e5720a8f0449a638156f34094f30",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+        "dirty": false,
+        "capturedAt": "2026-10-26T08:17:27.544Z"
+      }
+    }
+  },
+  "finalPixelComparison": {
+    "expected": 81,
+    "pending": 0,
+    "results": [
+      {
+        "id": "list/basic__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/basic__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/basic__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/meta__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/meta__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/meta__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/actions__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/actions__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/actions__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/bordered__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/bordered__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/bordered__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/vertical__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/vertical__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/vertical__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/grid__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/grid__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/grid__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/pagination__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/pagination__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/pagination__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/loading__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/loading__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/loading__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/loading-fullscreen__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/loading-fullscreen__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/loading-fullscreen__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/empty__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/empty__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/empty__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/size__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/size__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/size__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/rtl__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/rtl__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/rtl__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/extra__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/extra__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/extra__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/nested__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/nested__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/nested__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/tokens__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/tokens__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/tokens__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-dark__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-dark__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-dark__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-compact__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-compact__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-compact__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-dark-compact__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-dark-compact__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/theme-dark-compact__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/native-focus__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/native-focus__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "list/native-focus__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/basic__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/basic__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/basic__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/cover__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/cover__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/cover__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/preview__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/preview__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/preview__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/rich__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/rich__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/rich__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/progress__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/progress__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/progress__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/group__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/group__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/group__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/theme-dark__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/theme-dark__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/theme-dark__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/theme-compact__light__mobile",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/theme-compact__light__tablet",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      },
+      {
+        "id": "image/theme-compact__light__desktop",
+        "verdict": "PASS",
+        "reason": "exact",
+        "diffPixels": 0,
+        "sizeMismatch": false
+      }
+    ]
+  },
+  "docsDemoBrowserEvidence": {
+    "base": "http://127.0.0.1:4477/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "passed": true,
+        "width": 1232,
+        "height": 291
+      },
+      {
+        "demo": "component-token",
+        "passed": true,
+        "width": 1232,
+        "height": 443.421875
+      },
+      {
+        "demo": "empty",
+        "passed": true,
+        "width": 1232,
+        "height": 162
+      },
+      {
+        "demo": "grid",
+        "passed": true,
+        "width": 1232,
+        "height": 286
+      },
+      {
+        "demo": "item-extra",
+        "passed": true,
+        "width": 1232,
+        "height": 284
+      },
+      {
+        "demo": "loadmore",
+        "passed": true,
+        "width": 1232,
+        "height": 138
+      },
+      {
+        "demo": "pagination-simple",
+        "passed": true,
+        "width": 1232,
+        "height": 291
+      },
+      {
+        "demo": "pagination",
+        "passed": true,
+        "width": 1232,
+        "height": 229
+      },
+      {
+        "demo": "responsive",
+        "passed": true,
+        "width": 1232,
+        "height": 286
+      },
+      {
+        "demo": "simple",
+        "passed": true,
+        "width": 1232,
+        "height": 330
+      },
+      {
+        "demo": "spin-debug",
+        "passed": true,
+        "width": 1232,
+        "height": 140
+      },
+      {
+        "demo": "vertical",
+        "passed": true,
+        "width": 1232,
+        "height": 603
+      },
+      {
+        "demo": "spin/fullscreen",
+        "passed": true,
+        "stableEditor": true,
+        "maskBox": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 900
+        }
       }
     ],
     "issues": []

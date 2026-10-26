@@ -1,7 +1,7 @@
 /**
  * Visual scenarios shared by the Apollo regression runner and optional upstream comparison.
- * Current matrix coverage is light-theme static states. Dark/compact and interactive-state
- * expansion remain tracked gaps, even though ConfigProvider already supports them.
+ * The shared canvas is light. Apollo Image/List variants also exercise scoped dark/compact
+ * themes and prepared interaction states; other components still need that expansion.
  * Historical per-case notes explain existing reference fixtures; they are not product policy.
  */
 

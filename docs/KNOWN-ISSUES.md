@@ -534,3 +534,11 @@ node tests/visual/run.mjs --mode compare
 List / Item / Meta按完整清单集中修复：既有extra与语义样式、稳定正文、当前Provider/前缀、分页受控状态、11个Token、嵌套/RTL/断点以及默认正常文字对比度。29文件508条相关四层、99文件1788条共享消费者unit、152条类型、生产Chrome55项与真实Demo交互通过；两组运行回归有交集，不累加为全库数字。两包构建/L7、Docs157条及SSG、Registry和格式检查通过。
 
 仍需完成Apollo List自有视觉基线、默认/暗色/紧凑矩阵与整单元最终复核，未宣称全部收口。完整清单、精确命令和边界见 [List统一报告](audit/2026-10-26-list-contract-audit.md)；公开变更集中见 [迁移记录](migrations/list-contracts.md)。已更新文档站进度页，历史completed/legacy-reference不作为本轮整单元完成证据。
+
+## 2026-10-26 List统一验收收口（取代以上阶段开放状态）
+
+List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item Props、4个Meta Props、9/3/3个槽、attrs/ref/Provider/分页/11个Token及12个实际Demo。本阶段补修带边框Token、Spin文案对比度与全屏正文流/真实mask、当前语义工厂和共享原生控件颜色。30文件512条相关四层、152类型、97项List生产Chrome、19项共享原生控件及715+59条命名消费者回归通过；数字仅对应这些明确范围，不累加为全库通过。
+
+清洁实现 `5336ff77` 的57张List和24张Image重新捕获，全部匹配审图哈希；批准List57张及6张有意颜色变化Image后，81张真实像素复验全部exact、0差异。12个List Demo和实际Spin全屏Demo逐页浏览器通过，UI构建/L7、13包tarball Vite/Webpack、Docs157条/SSG、Registry/来源和格式检查通过。完整逐项结论、实际命令和边界见同一 [List统一报告](audit/2026-10-26-list-contract-audit.md) 与 [结构化证据](audit/evidence/list-visual-contract.json)。
+
+下一单元为Spin完整契约盘点；本轮共享修复不宣称Spin整单元完成。全库内容候选仍202项待核实，其他组件、基础包与最终同一提交全量门禁继续开放。

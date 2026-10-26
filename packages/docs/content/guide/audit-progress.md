@@ -14,15 +14,17 @@ order: 0
 | 范围 | 已完成与验证 | 可以看到的结果 |
 | --- | --- | --- |
 | Image / PreviewGroup | 完整契约审计已收口；381条组件回归、26个真实浏览器场景；24张自有视觉基线逐像素一致 | Vue原生插槽、可交互缩略图、预览关闭与焦点归还、分组动态删除、局部主题 |
+| List / ListItem / ListItemMeta | 完整清单已收口；512条相关四层、152条类型、97项生产浏览器检查；57张自有视觉基线全部0像素差异，12个Demo逐页打开通过 | 根extra、稳定编辑器、当前分页与Provider、11个Token、嵌套隔离、默认/暗色/紧凑及组合主题、原生焦点 |
 | 预览共享链路 | 已验证本轮相关的Portal所属文档、分层焦点、原生SVG控件与动态motion；其他基础包能力继续审计 | 弹层不再误锁其他窗口；输入与焦点在动态切换中保留 |
 | H05 全仓格式门禁 | 66个错误已清零；52文件的脚本/渲染结构等价；相关1,246条回归、6组浏览器及文档构建通过 | 原有37个警告和5条信息保留，另案核查；规则未放宽 |
 
-当前正在验收 **List / ListItem / ListItemMeta**。主链路已修正，99文件1,788条关联回归、152条类型检查和55项生产浏览器检查通过；根 extra、动态主题、嵌套样式、分页状态及原生焦点已经有证据。自有视觉基线、暗色/紧凑矩阵和整单元最终收口仍开放，不计为全部完成。
+List验收还修复了关联的全屏加载正文错位、遮罩语义和文案对比度，以及暗色作用域中原生控件的颜色配对。共享消费者与既有Image场景已回归；List57张与Image24张最终同次像素复验全部exact。下一单元为 **Spin完整契约盘点**，会逐项核对全部入口和Token；本阶段关联修复不代表Spin整单元已完成。
 
 - [List 当前 API 与示例](/components/list)
 - [动态主题开关](/components/list/demo/component-token)
 - [条目 extra、点赞与整表摘要](/components/list/demo/item-extra)
-- [List 完整盘点、阶段证据与剩余范围](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
+- [全屏加载与保留原生输入](/components/spin/demo/fullscreen)
+- [List 完整盘点、统一验收与边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
 ## 直接试这些示例
 
@@ -59,12 +61,13 @@ This is a development snapshot. The library-wide audit is ongoing; results below
 | Scope | Verified result | Visible changes |
 | --- | --- | --- |
 | Image / PreviewGroup | Complete contract audit closed; 381 component tests, 26 browser scenarios, 24 exact Apollo visual baselines | Native Vue slots, editable thumbnails, close focus, dynamic group deletion and scoped themes |
+| List / ListItem / ListItemMeta | Complete checklist closed; 512 related runtime/DOM/a11y/theme tests, 152 type tests, 97 browser checks; all 57 Apollo baselines exact and all 12 demos opened in the browser | Root extra content, stable editors, live pagination and Provider settings, 11 tokens, nested isolation, dark/compact/combined themes and native focus |
 | Shared preview behavior | Owning-document Portal effects, per-layer focus, native SVG controls and live motion verified for this scope | Modal effects follow the owning window; editors retain focus and state |
 | H05 formatting gate | 66 errors resolved; equivalent script/render structures in 52 files; 1,246 regression tests, six browser scripts and Docs build passed | Existing 37 warnings and five information diagnostics remain recorded for separate review |
 
-**List / ListItem / ListItemMeta are under acceptance.** Core fixes passed 1,788 affected regression tests in 99 files, 152 type tests and 55 production-browser checks. Root extra content, live themes, nested styles, pagination state and native focus are verified. Approved Apollo visuals, dark/compact coverage and final unit acceptance remain open.
+List acceptance also fixed fullscreen loading flow, actual mask semantics, readable descriptions and native control foreground/background pairing in dark scopes. Named shared consumers and existing Image scenarios passed regression checks. All 57 List and 24 Image images matched exactly in the final run. **The next unit is a complete Spin contract inventory**, including its public entry points and tokens; the related fixes above do not close the whole Spin unit.
 
-[List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
+[List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Fullscreen with a native editor](/components/spin/demo/fullscreen) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
 ## Try the changes
 

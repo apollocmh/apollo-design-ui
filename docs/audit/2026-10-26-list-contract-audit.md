@@ -4,9 +4,9 @@
 
 ## 范围与验收
 
-覆盖16个List Props、6个Item Props、4个Meta Props，现有8/3/3个内容槽，原生attrs、分页配置/回调与状态、三个nativeElement、复合导出/安装、响应式Provider、11个Component Token及静态CSS、12个实际Demo与双语API。关联链路包括Spin、Pagination、Row/Col/useBreakpoint、ConfigProvider及theme当前上下文；共享修改须复验实际消费者，但不据此宣称共享组件全部入口完成。
+覆盖16个List Props、6个Item Props、4个Meta Props，盘点时8/3/3个内容槽（修后9/3/3），原生attrs、分页配置/回调与状态、三个nativeElement、复合导出/安装、响应式Provider、11个Component Token及静态CSS、12个实际Demo与双语API。关联链路包括Spin、Pagination、Row/Col/useBreakpoint、ConfigProvider及theme当前上下文；共享修改须复验实际消费者，但不据此宣称共享组件全部入口完成。
 
-分类为“源码已核对/已有行为证据正常”“本轮必修或待失败复现”“需要集中设计”“另案”。下表保留动手前的源码盘点，修后状态见末尾阶段验收。本单元仍开放：主链路已集中整改，Apollo视觉矩阵与最终完整收口尚未完成。H05的61文件1246条（含List）是本单元前基线，不是修后验收。
+分类为“源码已核对/已有行为证据正常”“本轮必修或待失败复现”“需要集中设计”“另案”。下表保留动手前的源码盘点和各阶段记录，当前结论见末尾统一验收：本单元已收口。H05的61文件1246条（含List）是本单元前基线，不是修后验收。
 
 验收要求：完整清单逐项关闭；先有失败复现，再统一实现/类型/测试/Demo/双语文档；覆盖受控/无控与控制移除、配置延迟启用/替换/移除、条件和空槽、反复切换/卸载重挂、原生输入/焦点、嵌套与多实例、SSR/水合、RTL/断点和默认/暗色/紧凑。冻结实现后执行相关四层、类型/真实SFC消费、生产构建/L7、浏览器与Apollo自有视觉、Docs和派生状态检查；严格区分本单元、共享专项及最终全库门禁。
 
@@ -145,3 +145,25 @@ Docs内容检查、严格类型、14文件157条测试及SSG构建通过。Regis
 | 文档 | 内容生成/校验、严格类型、14文件157条及SSG构建通过；Spin全屏原生输入Demo、List/Spin双语API与共享原生控件迁移同步 |
 
 批准前仍需：清洁实现提交重新捕获并比对已审图哈希；只接受57张List和6张有意变化Image，保留18张未变Image及旧参考；执行最终像素比较与完整清单收口。候选已通过不等于批准基线，也不等于全库最终门禁通过。
+
+## 统一验收：List整改单元已收口
+
+实现提交为 `23de152079c096fccf34d0f3907a8f649276de2b` 与 `5336ff77fa753085955425c48d3b286f17722e0e`。最终16文件生产源码指纹与上表一致；以下结论取代本文件各阶段“仍开放”的当时状态。全部现有公开项均已沿实际消费链复核，范围内没有待裁决或受阻项。
+
+| 原完整清单 | 收口证据 |
+|---|---|
+| bordered、size、split、itemLayout | 当前配置切换、正常/大小间距、嵌套隔离和稳定main正文通过；新增bordered Token与原生变量切换/移除/恢复回归通过 |
+| dataSource、rowKey | 泛型条目、页面相对index、0/空字符串key、排序、空数据、控制状态和SSR水合覆盖保留；实际keyed原生节点与用户输入不重建 |
+| grid | gutter及各列配置传Row/Col；稀疏断点回退、首次启用/关闭恢复、四宽度、挂卸载与grid ref均验证；三视口自有网格图通过 |
+| extra、header、footer、loadMore、locale | 所有公开内容落点有效；9个List槽按存在性优先，空/条件/0/移除恢复通过；loadMore替换下分页而保留上分页，空态显式值与Provider回退有证据 |
+| pagination | 全量配置按精确类型传递，三个当前具名槽覆盖；独立受控current/pageSize、非受控、拒绝请求、控制移除、首次启用、缩短/恢复、远程total及两处布局通过；业务通知次数与数值保持 |
+| id、prefixCls、attrs、Expose、exports | 原生id/style/事件和attrs-only更新、当前局部前缀/Provider/最近上下文、三种nativeElement、卸载及grid切换通过；具名/默认/复合安装及发布泛型声明通过 |
+| loading及关联Spin | boolean/对象默认、当前Provider/attrs、正常/全屏可读文案、真实mask命中/阻挡点击、关闭inert及动态语义样式通过；反复模式切换保留root/ref/原生正文、输入与焦点 |
+| Item全部6 Props与3槽 | prefix、actions/extra两种布局的语义class/style、colStyle、稳定正文、keyed操作与空项分隔、条件/0/空/移除恢复及Provider替换通过 |
+| Meta全部4 Props与3槽 | avatar/title/description及prefix逐项消费；h4语义、0/空包装、当前槽、attrs/ref/SSR和最近父上下文覆盖保留 |
+| 11个Token及静态CSS | 每个Token真实值和原生变量优先已验证；默认/暗/紧凑/暗紧凑、RTL、根extra响应式、原生焦点及共享reset对比度实际浏览器与axe通过，未放宽阈值 |
+| Demo与双语文档 | 12个List实际Demo全数逐页浏览器打开，补真实Spin全屏Demo编辑/计时开关/原节点验证，均无Vue或页面错误；已有交互脚本仍验证请求/分页/点赞/主题/响应式；迁移、API、来源清单及Docs门禁同步 |
+
+视觉批准来自**清洁5336ff77**：57张List与24张Image同次重新捕获，81个SHA256全部匹配已审候选；接受57张List及6张有意变化Image，保留其他18张Image与1条旧Button批准记录。随后真实像素回归 **81/81 exact，全部0差异像素**；完整性/重复状态检查通过。旧33张List参考图及所有机械参考场景保留。旧Button只检查其批准记录/图像哈希完整性，其历史arm64/Chrome155平台与当前x64/Chrome150不同，本轮不冒充它的像素复验。
+
+本阶段四层、类型、共享消费者、生产浏览器、UI/L7/tarball、Docs及派生检查的命令/实际结果统一见 [最终结构化证据](evidence/list-visual-contract.json)。图像批准记录包含清洁源码提交、环境、时间与审查说明。本阶段不是最终全库门禁；其他组件和基础包仍需独立盘点验收。未公开的拖拽/无限网络/虚拟化新能力另案，不占用本轮验收；D04自定义前缀静态CSS要求仍适用。下一整改单元为Spin完整入口及Token审计，List关联修复不替代Spin整单元结论。
