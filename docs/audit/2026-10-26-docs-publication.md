@@ -35,3 +35,14 @@ Docs内容生成/检查、类型、现有测试和生产SSG；生产Chrome打开
 线上Chrome150真实33项检查全部通过、零页面/控制台/Vue错误：普通首页入口与SSR指南HTTP200，中英文、手机/暗色且无横向溢出，实际Group删除/关闭焦点/重置、富缩略图编辑及预览、其余3个实际示例均可操作；日志不再只有一条历史提交，本站源码与最新日志均为07dab65f。桌面和手机暗色截图已查看。本地32项与线上33项分开保存在同一[证据](evidence/docs-publication.json)，新增一项为线上明确发布提交校验。
 
 用户入口：[整改进展](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)、[Image](https://apollocmh.github.io/apollo-design-ui/components/image.html)、[更新日志](https://apollocmh.github.io/apollo-design-ui/changelog.html)。本单元已实现/已验证/已上线；全库审计、其他组件验收及原有质量债务保持各自状态，不以文档发布宣称全库完成。后续整改单元结果同步进展页。
+
+
+## 后续发布：List阶段结果已可见
+
+List实现里程碑已提交并推送 `23de152079c096fccf34d0f3907a8f649276de2b`。进度页同步99文件1788条关联回归、152条类型、55项生产浏览器证据；新增实际主题开关与整表摘要入口，明确List视觉矩阵/完整收口仍开放。对应 [List完整清单](2026-10-26-list-contract-audit.md)。
+
+已从该提交手动触发 [Deploy Docs 40277408976](https://github.com/apollocmh/apollo-design-ui/actions/runs/40277408976)，两个作业均success，Pages deployment **7325258163** 于2026-10-26 06:07:05 UTC成功。CI内容/类型/157条Docs测试与全部包构建通过；L7实测151项，FAIL=0、PENDING=0，67项有架构依据n/a。这是构建/发布门禁，不代表全库运行回归或全部组件审计完成。
+
+线上通用发布检查33项、List实际示例检查14项分别通过，均零页面/Vue错误，未累加为唯一场景数：SSR指南含本阶段数据；主题覆盖/移除/恢复保持行DOM，点赞更新整表extra；更新日志和可见构建源码都为23de1520。移动/暗色截图再次查看通过；Image原有分组删除/焦点与富缩略图交互仍通过。完整作业、Pages状态、线上实际值见 [本次发布证据](evidence/docs-publication-list-update.json)。
+
+线上入口：[整改进展](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)、[List](https://apollocmh.github.io/apollo-design-ui/components/list.html)、[Image](https://apollocmh.github.io/apollo-design-ui/components/image.html)、[更新日志](https://apollocmh.github.io/apollo-design-ui/changelog.html)。后续里程碑继续同步本页和进度入口，不以后台提交数量代替可见交付。

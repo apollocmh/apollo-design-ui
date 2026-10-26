@@ -1,0 +1,393 @@
+{
+  "publishedSource": "23de152079c096fccf34d0f3907a8f649276de2b",
+  "workflow": {
+    "conclusion": "success",
+    "createdAt": "2026-10-26T06:01:08Z",
+    "headSha": "23de152079c096fccf34d0f3907a8f649276de2b",
+    "jobs": [
+      {
+        "completedAt": "2026-10-26T06:06:49Z",
+        "conclusion": "success",
+        "databaseId": 121422968266,
+        "name": "构建文档站",
+        "startedAt": "2026-10-26T06:01:13Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-26T06:01:15Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-26T06:01:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:01:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-26T06:01:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:01:33Z",
+            "conclusion": "success",
+            "name": "Run ./.github/actions/setup",
+            "number": 3,
+            "startedAt": "2026-10-26T06:01:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:01:53Z",
+            "conclusion": "success",
+            "name": "内容管线校验",
+            "number": 4,
+            "startedAt": "2026-10-26T06:01:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:02:13Z",
+            "conclusion": "success",
+            "name": "生成内容管线产物",
+            "number": 5,
+            "startedAt": "2026-10-26T06:01:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:02:50Z",
+            "conclusion": "success",
+            "name": "文档站类型检查",
+            "number": 6,
+            "startedAt": "2026-10-26T06:02:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:03:06Z",
+            "conclusion": "success",
+            "name": "文档站单元测试",
+            "number": 7,
+            "startedAt": "2026-10-26T06:02:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:42Z",
+            "conclusion": "success",
+            "name": "构建全部包（拓扑序 + L7 产物检查）",
+            "number": 8,
+            "startedAt": "2026-10-26T06:03:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:42Z",
+            "conclusion": "success",
+            "name": "关键产物检查",
+            "number": 9,
+            "startedAt": "2026-10-26T06:06:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:42Z",
+            "conclusion": "success",
+            "name": "配置 Pages",
+            "number": 10,
+            "startedAt": "2026-10-26T06:06:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:45Z",
+            "conclusion": "success",
+            "name": "上传 Pages 产物",
+            "number": 11,
+            "startedAt": "2026-10-26T06:06:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:46Z",
+            "conclusion": "success",
+            "name": "Post Run ./.github/actions/setup",
+            "number": 21,
+            "startedAt": "2026-10-26T06:06:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:46Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 22,
+            "startedAt": "2026-10-26T06:06:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:06:46Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 23,
+            "startedAt": "2026-10-26T06:06:46Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40277408976/job/121422968266"
+      },
+      {
+        "completedAt": "2026-10-26T06:07:04Z",
+        "conclusion": "success",
+        "databaseId": 121424591241,
+        "name": "发布到 GitHub Pages",
+        "startedAt": "2026-10-26T06:06:53Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-26T06:06:55Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-26T06:06:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:07:02Z",
+            "conclusion": "success",
+            "name": "部署到 GitHub Pages",
+            "number": 2,
+            "startedAt": "2026-10-26T06:06:55Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T06:07:02Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 3,
+            "startedAt": "2026-10-26T06:07:02Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40277408976/job/121424591241"
+      }
+    ],
+    "status": "completed",
+    "updatedAt": "2026-10-26T06:07:05Z",
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40277408976"
+  },
+  "pagesDeployment": {
+    "id": 7325258163,
+    "state": "success",
+    "deployedAt": "2026-10-26T06:07:05Z",
+    "url": "https://apollocmh.github.io/apollo-design-ui/"
+  },
+  "buildGate": {
+    "checks": 151,
+    "fail": 0,
+    "pending": 0,
+    "notApplicable": 67,
+    "log": "/tmp/apollo-docs-list-actions-build.log"
+  },
+  "genericOnline": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "23de1520",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "23de1520"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "listOnline": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "source": "23de152079c096fccf34d0f3907a8f649276de2b",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "progress HTTP",
+        "actual": 200
+      },
+      {
+        "name": "List progress is prerendered",
+        "actual": true
+      },
+      {
+        "name": "verified work and open boundaries",
+        "actual": true
+      },
+      {
+        "name": "live component tokens",
+        "actual": "24px"
+      },
+      {
+        "name": "live token removal",
+        "actual": "16px 24px"
+      },
+      {
+        "name": "live theme preserves row identity",
+        "actual": true
+      },
+      {
+        "name": "live token restoration",
+        "actual": "24px"
+      },
+      {
+        "name": "progress HTTP",
+        "actual": 200
+      },
+      {
+        "name": "List progress is prerendered",
+        "actual": true
+      },
+      {
+        "name": "live root extra",
+        "actual": "列表总点赞：41"
+      },
+      {
+        "name": "live root extra reacts to business data",
+        "actual": "列表总点赞：42"
+      },
+      {
+        "name": "deployed source",
+        "actual": "23de1520"
+      },
+      {
+        "name": "history is complete",
+        "actual": true
+      },
+      {
+        "name": "no browser or Vue errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "screenshotsInspected": [
+    "/tmp/apollo-docs-publication-list-update-desktop.png",
+    "/tmp/apollo-docs-publication-list-update-mobile-dark.png"
+  ],
+  "remainingScope": "List Apollo visuals/dark/compact/final acceptance and final library-wide gates remain open."
+}

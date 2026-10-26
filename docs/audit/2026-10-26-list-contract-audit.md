@@ -80,6 +80,8 @@
 
 ## 阶段验收：主链路已验证，整单元仍开放
 
+对应实现提交：`23de152079c096fccf34d0f3907a8f649276de2b`（已推送）。文档站随后从该提交实际发布，部署与线上验收见 [站点发布记录](2026-10-26-docs-publication.md)。
+
 本阶段按根因集中修改，未切换其他组件单元。公开迁移集中见 [list-contracts.md](../migrations/list-contracts.md)，可复跑命令及55项浏览器实际值见 [结构化证据](evidence/list-contract.json)。验证源码指纹覆盖13个生产文件，SHA256为 `5482c6d1be29077c5b2221c1d4c18495faf3d35a938837f63d68ca340b89af89`。
 
 | 根因组 | 已实现与已验证 |

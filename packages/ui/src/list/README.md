@@ -2,6 +2,8 @@
 
 当前契约见 [中文 API](./index.zh-CN.md) / [English API](./index.en-US.md)。List 是独立维护的 Vue 3 组件，内容使用泛型 `#item` 和原生具名插槽。
 
+原始 Token 默认值与初版样式参考 Ant Design 6.6.4 `es/list/style/index.js`；来源、文件映射和历史对照保留于 [原始分析](../../../../docs/analysis/list.md)。当前 Vue 行为及修正以 Apollo 契约为准。
+
 - List、Item、Meta 均为 SFC；公开 ref 为可空 `nativeElement`。grid Item 暴露 Col 根，原生 attrs 落内层 Item；非 grid 暴露 li。
 - 最近的 computed List context 传递布局、前缀、尺寸、边框和分隔状态，Item 再给 Meta 提供所属布局。条件样式使用自身状态类，避免祖先 List 串样式。
 - Item 正文使用稳定 main 容器，横向 `display: contents`，竖向为正文列；extra 两种布局都有语义容器。切换布局或额外内容保留正文原生编辑状态。
