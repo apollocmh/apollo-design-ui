@@ -7567,6 +7567,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/demo/component-token.vue",
           "packages/ui/src/list/demo/simple.vue",
           "packages/ui/src/list/demo/vertical.vue"
         ]
@@ -7606,6 +7607,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/demo/component-token.vue",
           "packages/ui/src/list/demo/simple.vue"
         ]
       },
@@ -7756,6 +7758,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/demo/component-token.vue",
           "packages/ui/src/list/demo/simple.vue",
           "packages/ui/src/list/demo/vertical.vue"
         ]
@@ -7794,6 +7797,7 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/demo/component-token.vue",
           "packages/ui/src/list/demo/simple.vue"
         ]
       },

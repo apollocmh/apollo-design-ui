@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider, Slider, Statistic, Text } from '@apollo-design/ui';
+import { ConfigProvider, Slider, Statistic } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const contentFontSize = ref(36),
@@ -34,7 +34,7 @@ const tokenStyle = computed(() =>
       </Statistic>
     </ConfigProvider>
     <div style="max-width:320px;margin-top:24px">
-      <Text type="secondary">数值字号：{{ contentFontSize }}px</Text>
+      <span style="color:var(--apollo-color-text-secondary)">数值字号：{{ contentFontSize }}px</span>
       <Slider v-model:value="contentFontSize" :min="20" :max="64" aria-label-for-handle="Statistic content font size" />
     </div>
   </div>

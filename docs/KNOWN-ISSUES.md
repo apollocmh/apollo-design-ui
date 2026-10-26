@@ -554,10 +554,14 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 后续已统一收口：实现57ab2894，验收afaea916补齐减少动画过渡；最终98条Spin单元、13主题、7组生产SSR水合通过；45张自有视觉经清洁提交批准并全部exact，相关List57张保持exact。完整清单、当前生产指纹、命令及未验边界见 [Spin统一报告](audit/2026-10-26-spin-contract-audit.md) 与 [最终证据](audit/evidence/spin-acceptance.json)，公开改动见 [集中迁移](migrations/spin-contracts.md)。全库最终门禁仍待全部单元完成后执行。
 
 
-## 2026-10-27 Statistic整组集中实现（统一验收进行中）
+## 2026-10-27 Statistic整组完整清单统一验收（已收口）
 
-Statistic / Timer / Countdown完整盘点后，集中修正原生#value业务作用域、当前方向/非负计时事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider和两字号Token；标题对比度3.36的真实缺陷已修，默认字号按实际Alias纠正文档与准备函数。86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合、7个实际Demo和两组交互通过。UI/发布声明/Docs157条及SSG通过；L7严格11项通过，依据技术原因仅Statistic预算41→43KB（最终实测43649字节），保留历史值/其他预算和占比门禁。
+Statistic / Timer / Countdown实现111fa024/633c219b，已集中修正原生#value、当前方向/非负事件、SSR/卸载清理、完整槽/attrs/ref、当前Provider/两字号Token及标题/加载可访问语义。最终86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合、原7实际Demo/两组交互及28主题组合通过；UI/发布声明/Docs161条及SSG通过。严格L7通过，必要的单项预算修订及最终43649字节实测另有技术记录。
 
-自有36图与原完整清单最终核对、最终发布继续开放。内容来源清单当前528行、199项候选，候选不是已确认缺陷；全库最终同一提交门禁仍开放。见[完整清单](audit/2026-10-27-statistic-contract-audit.md)、[统一证据](audit/evidence/statistic-contract.json)、[集中迁移](migrations/statistic-contracts.md)。
+清洁633c219b的36张自有视觉逐张审阅批准后全部exact、0像素差异，原163条批准记录未改。原17机械场景保留，加载态7项有意结构/ARIA变化另有精确记录；首次111fa024的33候选未批准。原完整清单逐项核对完成，无受阻或待裁决的本轮缺陷，最终发布及线上核验回执另记。见[完整清单](audit/2026-10-27-statistic-contract-audit.md)、[统一证据](audit/evidence/statistic-contract.json)、[集中迁移](migrations/statistic-contracts.md)。
 
-首次清洁实现111fa024的视觉采集有3个loading empty-heading失败，已纳入修复：Statistic自有加载层承接aria-hidden、根aria-busy，加载结束恢复正文。共享Skeleton未改；其独立契约进入后续完整盘点。新清洁提交36图仍待验收，原33候选未批准。
+## 2026-10-27 Docs共享示例主题链路（已收口，待发布核验）
+
+完整盘点后修正CSS暗色与Vue源主题失配、非响应的系统偏好、临时query未清理及iframe水合src不一致；同树主题变化保留原生输入身份/值/焦点。实际暗色发现的List/QRCode Token示例浅底文字配色已同步修正，不新增公共接口。Docs161条、严格类型/SSG、五个Token消费者亮/暗及三组生命周期共13项、72组件代表页亮/暗144次生产渲染通过，零页面/Vue/资源错误；代表页渲染不等同所有Demo交互验收。范围、修前复现和未验边界见[清单](audit/2026-10-27-docs-demo-theme-audit.md)及[证据](audit/evidence/docs-demo-theme.json)。
+
+下一整改单元为Skeleton完整契约审计，共享实现尚未改。内容来源清单当前528行、199候选，候选不是已确认缺陷；全库其他组件、基础包及最终同一提交全量门禁继续开放。

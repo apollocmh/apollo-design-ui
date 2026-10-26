@@ -1466,6 +1466,330 @@
       "capturedAt": "2026-10-26T15:52:43.952Z",
       "reviewedAt": "2026-10-26T15:56:05.306Z",
       "reviewNote": "Reviewed all 36 PNGs individually: basic, SVG, local icons, expired, loading, scanned, custom native status content, cover token, dark, compact, dark+compact and real keyboard focus at mobile/tablet/desktop. Geometry, paper/cover contrast, text, icon placement and focus are clean. Captured from clean f4b82b4d19abf73555c719654e2e8fa288dcb154 on darwin/x64 Chrome 150.0.7871.125; no reference baselines replaced."
+    },
+    "statistic/basic__light__mobile": {
+      "sha256": "6f2598f5341dc80ea52c12ef8f48a1efb933b1cadc7f7f14e72b4f06074ee4f6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:25.276Z",
+      "reviewedAt": "2026-10-26T17:48:58.610Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/basic__light__tablet": {
+      "sha256": "a5d11c13ef8eda92f353d259a3cad3b80a93ee22b623eb75594169a906c45801",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:27.267Z",
+      "reviewedAt": "2026-10-26T17:48:58.612Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/basic__light__desktop": {
+      "sha256": "134bb2bb5828bf4492ee55e5c7fb306fbc4a948014bab99c0493405f5681aeb0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:29.241Z",
+      "reviewedAt": "2026-10-26T17:48:58.612Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/units__light__mobile": {
+      "sha256": "9459c494e35acfe9e327034f8b3173fbc6e2bd792b049fe72e47c6e55d4148a8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:31.206Z",
+      "reviewedAt": "2026-10-26T17:48:58.612Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/units__light__tablet": {
+      "sha256": "c9e036185d4585ea1d9ede520f1e2177dd99fa8e04bbf06ab1acb0f24638a209",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:33.189Z",
+      "reviewedAt": "2026-10-26T17:48:58.613Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/units__light__desktop": {
+      "sha256": "dd4848e54ab515471eb7cc7485269e6b94aab191350bc7ac0e91987f89704503",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:35.196Z",
+      "reviewedAt": "2026-10-26T17:48:58.613Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/loading__light__mobile": {
+      "sha256": "4028f603bae3090083765c8e4da49ac4ee2e8336f9bbceced0d6118203063a90",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:37.140Z",
+      "reviewedAt": "2026-10-26T17:48:58.613Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/loading__light__tablet": {
+      "sha256": "38bbd2e8b4ce9896ece0459fcdaaca6111c6306d059e862951d9a5b205872c0a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:39.087Z",
+      "reviewedAt": "2026-10-26T17:48:58.614Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/loading__light__desktop": {
+      "sha256": "eb59627f97ac07bfd0d0d7464b9d995a69cac7103ea4f7fbf0f72990db76493b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:41.049Z",
+      "reviewedAt": "2026-10-26T17:48:58.614Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/value-content__light__mobile": {
+      "sha256": "17112f9740a887380e833198fdd2d0e43120378cb8f88886383a325bb87a10f1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:43.013Z",
+      "reviewedAt": "2026-10-26T17:48:58.614Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/value-content__light__tablet": {
+      "sha256": "6c4321ff378fcbf2e984343761de2c9776f47d5c8b1a1a5ea5e3b6257d4f271a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:44.998Z",
+      "reviewedAt": "2026-10-26T17:48:58.615Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/value-content__light__desktop": {
+      "sha256": "c51e65de29a5d500d052423dc3a4b4e7a05e1c60ff40e7d46d79122ddbb21558",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:47.007Z",
+      "reviewedAt": "2026-10-26T17:48:58.615Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/empty-slot__light__mobile": {
+      "sha256": "4638ce598582a625309bbc585fc8b32653fdd6376df88d9bac25100f5d1427b2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:48.953Z",
+      "reviewedAt": "2026-10-26T17:48:58.615Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/empty-slot__light__tablet": {
+      "sha256": "081da7b8e186658e55baf58c5cbb136354e4c34d8d92e0fc7be77554a14cbc0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:50.871Z",
+      "reviewedAt": "2026-10-26T17:48:58.616Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/empty-slot__light__desktop": {
+      "sha256": "d52bf140c9d4a281d24f19e8104a1b4d0de19943558a144dd965241029b6e5ae",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:52.790Z",
+      "reviewedAt": "2026-10-26T17:48:58.616Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/timer-countdown__light__mobile": {
+      "sha256": "d8a720033d04f9692c61aa5fc435529530ed3b2379858a648a4968fc620a2954",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:54.747Z",
+      "reviewedAt": "2026-10-26T17:48:58.616Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/timer-countdown__light__tablet": {
+      "sha256": "9c10ff89af66dc0a0795360ac03d32a2ecf6867a44132846d80b9813d5dbab34",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:56.697Z",
+      "reviewedAt": "2026-10-26T17:48:58.617Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/timer-countdown__light__desktop": {
+      "sha256": "ca71592f3ce42c4b16d07784333fb09bdf348d7b01b50757acd742e852c16d35",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:35:58.673Z",
+      "reviewedAt": "2026-10-26T17:48:58.617Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/timer-countup__light__mobile": {
+      "sha256": "a5e4854d875810e415fdfbae8766c6b458835e75cbb4fe4501be0666f19ebebd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:00.624Z",
+      "reviewedAt": "2026-10-26T17:48:58.617Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/timer-countup__light__tablet": {
+      "sha256": "08a1da01359461806ccef418444b97e5de05ee5deee53ab4fb785b73acb7fdb2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:02.591Z",
+      "reviewedAt": "2026-10-26T17:48:58.618Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/timer-countup__light__desktop": {
+      "sha256": "ffd3d5df57e22583188b08ee78a0174cef09fc00c4df153ec38039485fba90ce",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:04.543Z",
+      "reviewedAt": "2026-10-26T17:48:58.619Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/tokens__light__mobile": {
+      "sha256": "7ba255b03ef3840a0c2b06be6e99d494f8c098f618ef5c5f626e4c3ce374b3c1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:06.494Z",
+      "reviewedAt": "2026-10-26T17:48:58.619Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/tokens__light__tablet": {
+      "sha256": "122ca13cbdbfc0ca63e6e0faa2f8c9d6fda42de1c9e6f730c69f6b982a20c7cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:08.481Z",
+      "reviewedAt": "2026-10-26T17:48:58.620Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/tokens__light__desktop": {
+      "sha256": "c444fc906da3fb7076e03685a4538f075aee3678be2a22c7e704e709e4ff352b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:10.473Z",
+      "reviewedAt": "2026-10-26T17:48:58.620Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-dark__light__mobile": {
+      "sha256": "5f0bf4f824d8a77e4c972fd23a0d8a86d4f1c159d0f4a8f425e3f10815c14dd6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:12.453Z",
+      "reviewedAt": "2026-10-26T17:48:58.621Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-dark__light__tablet": {
+      "sha256": "c3afff569494fc1e9aee8715d974e0bb14fae7c224ac35f72e2a2120e1bf7958",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:14.452Z",
+      "reviewedAt": "2026-10-26T17:48:58.621Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-dark__light__desktop": {
+      "sha256": "5d8dcf5e3d4f95b35a98e9ab6323ad13f2e97b9603f6fd7598f6ab8f9cee4983",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:16.443Z",
+      "reviewedAt": "2026-10-26T17:48:58.622Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-compact__light__mobile": {
+      "sha256": "47ae5814dc0d065e8d3ba0446813e6ecdaeda5c81e17248a23b928c0baa5aaf0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:18.392Z",
+      "reviewedAt": "2026-10-26T17:48:58.622Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-compact__light__tablet": {
+      "sha256": "3b3338b69b21071729dd077b763ee8e9fd8a994d12e8ff8b6fbf04eaa3a224d1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:20.378Z",
+      "reviewedAt": "2026-10-26T17:48:58.623Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-compact__light__desktop": {
+      "sha256": "dcf5d2fa5564932c038f03b409d729b95cfd987d5ab639c46ec1647c8b67b6cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:22.346Z",
+      "reviewedAt": "2026-10-26T17:48:58.623Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-dark-compact__light__mobile": {
+      "sha256": "a22961fd07be936da52ef112cc554ce29f27ac84ed3f667ce92e7082867108f8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:24.294Z",
+      "reviewedAt": "2026-10-26T17:48:58.624Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-dark-compact__light__tablet": {
+      "sha256": "7a366c4af7fff8eb7b88d53d951a6add0ab4302c1d604de4162ed40347e06dbf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:26.295Z",
+      "reviewedAt": "2026-10-26T17:48:58.624Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/theme-dark-compact__light__desktop": {
+      "sha256": "225cb5eb02c67c5bd5ac24bc2915d362f727f295097e900c9d0a5d0141f1cb40",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:28.279Z",
+      "reviewedAt": "2026-10-26T17:48:58.624Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/native-focus__light__mobile": {
+      "sha256": "dd044e028e61da636084b96fbd6dd0abb77708c322e2c1087b0a9ed39a9bb657",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:30.331Z",
+      "reviewedAt": "2026-10-26T17:48:58.625Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/native-focus__light__tablet": {
+      "sha256": "ff130a3a8d5ec1d224ea56becc3758c945c5ba80f5114f352412cc63e050fe5e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:32.352Z",
+      "reviewedAt": "2026-10-26T17:48:58.625Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "statistic/native-focus__light__desktop": {
+      "sha256": "baffbb966f614ca10a1c02f993b7bb8761a4d72a5619930a1142a5162cb7b5d3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "633c219bdd21857a562fb5758e1677915b11b87b",
+      "dirty": false,
+      "capturedAt": "2026-10-26T17:36:34.375Z",
+      "reviewedAt": "2026-10-26T17:48:58.626Z",
+      "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
     }
   }
 }

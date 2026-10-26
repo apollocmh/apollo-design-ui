@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 style-class demo（components/statistic/demo/style-class.tsx）
-// ⚠️ antd 用 antd-style 的 createStaticStyles —— 我们直接传对象/函数形态的
-//    classNames / styles（同一 API 面的本体），差异登记在 README §5。
+// 对象与函数语义样式；标题跟随当前主题，数值色块使用成对的前景/背景。
 import { Statistic } from '@apollo-design/ui';
 
 const classNames = { root: 'demo-statistic-root' };
@@ -11,10 +9,11 @@ const styleFn = ({ props }: { props: { value?: number | string } }) => {
   const isNegative = Number.isFinite(numValue) && numValue < 0;
   if (isNegative) {
     return {
-      title: { color: '#ff4d4f' },
-      content: { color: '#ff7875' },
+      title: { color: 'var(--apollo-color-text-heading)' },
+      content: { color: 'var(--apollo-color-text-heading)' },
       value: {
         backgroundColor: '#fff1f0',
+        color: '#a8071a',
         borderRadius: '4px',
         paddingInline: '6px',
         userSelect: 'none' as const,
@@ -34,7 +33,7 @@ const styleFn = ({ props }: { props: { value?: number | string } }) => {
       prefix="↑"
       suffix="users"
       :styles="{
-        title: { color: '#1890ff', fontWeight: 600 },
+        title: { color: 'var(--apollo-color-text-heading)', fontWeight: 600 },
         content: { fontSize: '24px' },
         value: {
           backgroundColor: '#e6f4ff',

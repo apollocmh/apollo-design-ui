@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
-      "visual-review": 1
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -1276,7 +1275,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "visual-review",
+      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -1302,9 +1301,9 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-27 完整盘点后集中实现原生#value、当前计时方向/事件、SSR/卸载清理、完整attrs/ref/Provider和两Token；标题对比度及加载busy/装饰骨架语义修正。86四层、94类型、46生产浏览器、5 SSR、6水合、7实际Demo/两组交互、发布声明及UI/L7/Docs通过。自有36图与最终清单/发布仍开放；见docs/audit/2026-10-27-statistic-contract-audit.md。",
+      "notes": "2026-10-27 完整契约清单统一验收收口；实现111fa024/633c219b。86四层、94相关类型、46生产浏览器、5 SSR、6水合、7实际Demo/两组交互及28主题组合、发布声明/UI/L7通过；清洁633c219b的36图逐张审阅批准并全部exact，原163批准记录不变。Docs主题关联单元13+144项及161测试通过。最终发布回执单列，不代表全库完成；见docs/audit/2026-10-27-statistic-contract-audit.md。",
       "layerNotes": {
         "referenceHistory": {
           "interaction": "L2：mouseenter/leave 落根元素；Timer onChange 每帧、onFinish 仅 countdown 且只一次（fake timers）；loading 切换骨架/内容。",
@@ -1314,8 +1313,8 @@
           "compat": "17 条机械基线（Skeleton loading 分支、Timer SSR '-'、zero title/prefix/suffix、aria/data、valueStyle 合并）。17/17，keepStyle。Timer/Countdown 仅 SSR 形态。",
           "visual": "15/15 全 exact（5 variant × 3 viewport）。Timer format 只到「天」避免两侧秒级漂移。"
         },
-        "currentAudit": "当前证据docs/audit/evidence/statistic-contract.json：14/13/12运行时Props、四个类型化槽、change/finish emits、7语义落点与两Token；完整清单统一验收中。",
-        "visual": "首次清洁111fa024采集33通过/3加载axe失败，未批准。已补自有busy/隐藏装饰层并通过46项浏览器；等待新清洁提交36图统一验收。"
+        "currentAudit": "docs/audit/evidence/statistic-contract.json：14/13/12运行时Props、四个类型化槽、change/finish emits、七语义落点与两Token；原完整清单逐项核对完成，当前生产指纹d4dbe264547d00bdf6a00798d4e119dccf405550482b0a98df777bdcce5917e6。",
+        "visual": "Apollo 12状态×3视口36张，清洁633c219bdd21857a562fb5758e1677915b11b87b采集、逐张审阅批准；最终比较36 PASS/pending=0/diffPixels=0。旧15参考与首次加载态失败证据保留，首次33图没有批准。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1337,7 +1336,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "affix",

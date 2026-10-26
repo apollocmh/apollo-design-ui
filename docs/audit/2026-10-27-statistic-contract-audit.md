@@ -1,6 +1,6 @@
 # Statistic / Timer / Countdown整改单元
 
-盘点提交ac6f40e0。当前阶段：按完整盘点集中实现，统一验收进行中；尚未收口。原始盘点与分类保留如下，最终证据附后。范围为Statistic、内部Number、Timer、Countdown、格式化工具、根/深入口、7个语义落点、Provider与主题、原7Demo和双语文档。关联Skeleton只验证实际组合，共享实现暂不调整。
+盘点提交ac6f40e0。当前状态：**完整清单已统一验收，组件单元收口；最终文档待本次提交发布核验**。实现111fa024，加载语义633c219b。原始盘点与分类保留如下，各阶段开放状态由末尾最终验收取代。范围为Statistic、内部Number、Timer、Countdown、格式化工具、根/深入口、7个语义落点、Provider与主题、原7Demo和双语文档。关联Skeleton只验证实际组合，共享实现未改。
 
 ## 实施前完整清单与分类
 
@@ -37,7 +37,7 @@
 
 12条修前行为复现全部失败，真实Node SSR有3条window未定义崩溃；另有默认准备字号30与实际Alias24不符的独立失败。实现直接改为#value业务scope、当前计时方向/非负事件、挂载/卸载效果、完整槽/attrs/ref与当前Provider/两Token，保留原7Demo和17个机械场景。三个公开组件现为14/13/12个运行时Props，Timer/Countdown声明change/finish emits；具名及静态子组件导出均有真实类型。
 
-最终7文件84条unit/dom-contract/a11y/theme通过，6文件94条相关类型通过；根严格类型、真实SFC和发布声明消费通过。生产Chrome42项、Node SSR5项、浏览器水合6组通过：当前源主题/别名、模板/原生输入、方向/目标反复更新、恰好一次finish、原生change与业务事件隔离、无效目标/卸载/重挂、值/焦点/选区和多实例已覆盖。全部7个实际Demo及两组交互9项本地浏览器通过，零错误。最近Provider/相邻局部样式和工具非有限/负值边界纳入完整清单验收。
+实现阶段7文件84条unit/dom-contract/a11y/theme通过，6文件94条相关类型通过；根严格类型、真实SFC和发布声明消费通过。生产Chrome42项、Node SSR5项、浏览器水合6组通过：当前源主题/别名、模板/原生输入、方向/目标反复更新、恰好一次finish、原生change与业务事件隔离、无效目标/卸载/重挂、值/焦点/选区和多实例已覆盖。全部7个实际Demo及两组交互9项本地浏览器通过，零错误。最近Provider/相邻局部样式和工具非有限/负值边界纳入完整清单验收。
 
 浏览器修前14项中12项失败；其中缺失favicon的404是夹具问题，现提供显式data图标且保留零错误断言。默认标题实测3.36:1，已用colorTextSecondary修正并通过真实axe；没有降低对比度要求。冻结浏览器时钟时axe会等待自身计时器，夹具改为axe前保持运行/最后恢复，计时行为仍用受控真实浏览器时钟验收。Provider夹具修正为实际components.statistic API，旧源码副本重放失败后删除；VTU嵌套根使用分步选择，未放宽DOM身份断言。
 
@@ -55,3 +55,33 @@ UI L7首轮11项中仅B6失败：Statistic隔离import实测43578字节（42.6KB
 清洁实现111fa024首次完整采集实际33项通过/3项加载态失败；manifest未完成、没有批准任何图。三个视口均由Skeleton的空h3触发真实axe empty-heading，属于本轮必修。修前新增生命周期断言失败，修后Statistic自有加载层aria-hidden、根aria-busy，结束恢复正文；不把不透传attrs的共享Skeleton误当作承接层，也不屏蔽规则。Skeleton共享实现未改；其独立公共契约仍需后续完整审计。
 
 原17个机械场景全部保留；只对loading逐条核定7个结构/ARIA变化，实际骨架样式留在内部组件，间距由自有层承接。当前7文件86条四层、46项生产浏览器、6组水合/5项SSR、根严格类型、完整UI构建/发布声明与L7通过，94条相关类型的公开签名未改变；最终实际Demo/视觉复验继续执行。不能把首次33张候选或之前84条结果当作本次加载修正后的最终验收。
+
+## 原完整清单最终核对
+
+| 原清单范围 | 已实现、已验证的最终结论 |
+|---|---|
+| value / precision / separators / utils / Number | 默认格式、有效数值字符串、截取/补零/负precision和时间转义保留；美元分组符按字面、非有限精度/时长与无效目标明确回退，准备字号取实际Alias；许可未改 |
+| formatter / valueRender / 四个槽 | 旧内容函数与内部VNode通道直接移除；四个类型化Vue槽完整渲染，槽优先且有意空槽不回退；value提供业务值/text，计时另有duration/type；动态内容/编辑器身份和焦点通过 |
+| loading / Skeleton / valueStyle | 自有busy与隐藏装饰层解决真实空标题缺陷，反复开关恢复正文，卸载清理通过；保留既有有效valueStyle优先级和告警；共享Skeleton未修改 |
+| attrs / 原生事件 / Expose | 三个导出的id/tabindex/原生监听、字符串/数组/对象样式与优先级、真实nativeElement及卸载归null通过；业务change不消费原生change |
+| prefixCls / direction / Provider | 当前替换/删除/恢复、最近Provider、相邻多实例、RTL和前缀均通过；无setup配置快照或React生命周期模拟 |
+| classNames / styles / Component Token | 七个语义落点、对象/函数配置及两字号Token当前源主题/Alias、删除/恢复和原生变量优先通过；默认/暗色/紧凑/组合真实axe与几何通过 |
+| Timer type / value / format / 数值继承 | 当前方向与目标切换重置周期，format只改显示；移除不消费的数值格式字段；未就绪/无效显示'-'，未增加暂停或动画能力 |
+| change / finish / 生命周期 / SSR / 水合 | 挂载后非负change，到0先change(0)再每周期finish一次并停止；无效目标不调度/不发事件，恢复、重复到期、多实例与卸载重挂通过；5项生产SSR与6组水合保留节点/值/焦点/选区 |
+| Countdown / 导出 / 类型 | 有效历史别名告警保留；完整props/槽/事件/ref与固定countdown通过；具名及静态子组件类型、94条相关类型、真实SFC与发布声明消费一致 |
+| 七Demo / 双语文档 / 迁移 | 原七场景保留；方向/重复到期和Token开关可操作，全部七实际页面含axe及两组交互通过；七Demo×四算法28组真实axe通过，修正三Demo的实际暗色/紧凑配色 |
+| 实际调用者 / 共享影响 / 构建 | 共享UI实现未改，Skeleton/Provider实际组合由上述回归覆盖；UI dts/69CSS与严格L7通过；Docs宿主主题失配另按完整关联单元修复，见下述报告 |
+
+最终四层7文件86条、相关类型6文件94条、Chrome46项、Node SSR5项、水合6组、七实际Demo及两组交互、28组Demo主题分别通过；数字对应各自范围，不合并成全库唯一用例数。严格类型、发布声明、UI构建/L7、Docs15文件161条及SSG、来源/Registry/格式检查结果统一保存在[证据](evidence/statistic-contract.json)。
+
+## 自有视觉与关联Docs验收
+
+清洁633c219bdd21857a562fb5758e1677915b11b87b采集12状态×3视口36图，逐张查看全部手机/平板/桌面的数值、单位、加载、业务槽、空槽、双向计时、Token、暗色、紧凑、组合与原生焦点。确认字号、对比度、忙碌语义、完整内容和焦点无裁切后批准；`node tests/visual/apollo.mjs --component statistic --no-build`实跑36/36 PASS、pending=0、每项diffPixels=0。原163条批准记录逐项保持相同，总批准记录199条；旧15个参考场景保留。环境为darwin/x64、系统Chrome150.0.7871.125。
+
+最终生产12文件指纹仍为d4dbe264547d00bdf6a00798d4e119dccf405550482b0a98df777bdcce5917e6。后续Demo配色和Docs宿主变更未修改该生产实现。实际Docs暗色验证发现CSS已暗但Vue源主题仍浅，按[共享Demo主题完整清单](2026-10-27-docs-demo-theme-audit.md)修正；当前CSS/Provider共用解析状态，媒体偏好与临时query更新，水合首帧一致。命名的五个Token消费者亮/暗、内联输入身份/焦点和72组件代表页亮/暗验收分别记录，不冒称所有Demo完整交互通过。
+
+## 验收边界与交付
+
+本单元已实现、已验证，无未裁决或受阻的本轮缺陷。其他浏览器/实体设备、后台定时器频率、无限输入资源和未列出的组合未验证；iframe跨文档导航维持现有重载边界。暂停/服务端时钟同步/动画引擎未新增。Skeleton独立完整审计为下一单元；全库其他组件、基础包及最终同一提交全量门禁继续开放。
+
+实现111fa024和633c219b已推送；本次提交交付最终清单、36图批准、实际Demo配色与证据。最终文档发布与线上源码/示例核验随后写入[发布记录](2026-10-26-docs-publication.md)，未将本地通过或推送当作已上线。

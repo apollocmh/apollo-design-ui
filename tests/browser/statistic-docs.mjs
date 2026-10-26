@@ -1,6 +1,7 @@
 /** Exercise every actual Statistic demo and the original clock/token controls. */
 import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { launchBrowser } from '../visual/stabilize.mjs';
 
 const base = (process.env.DOCS_URL ?? 'http://127.0.0.1:4477/apollo-design-ui').replace(/\/$/, '');
@@ -46,8 +47,24 @@ try {
     const roots = page.locator('.standalone-body .apollo-statistic');
     await roots.first().waitFor({ state: 'visible' });
     assert.equal(await roots.count(), count);
-    assert.equal(await page.locator('.demo-error').count(), 0);
-    results.push({ demo, httpStatus: response.status(), roots: count, passed: true });
+    assert.equal(await page.locator('.demo-renderer-error').count(), 0);
+    await page.addScriptTag({
+      path: createRequire(import.meta.url).resolve('axe-core/axe.min.js'),
+    });
+    const violations = await page.locator('.standalone-body').evaluate(async (n) =>
+      (await window.axe.run(n)).violations.map((v) => ({
+        id: v.id,
+        nodes: v.nodes.map((x) => x.failureSummary),
+      })),
+    );
+    assert.deepEqual(violations, []);
+    results.push({
+      demo,
+      httpStatus: response.status(),
+      roots: count,
+      axe: violations,
+      passed: true,
+    });
   }
   await page.goto(`${base}/components/statistic/demo/timer`, { waitUntil: 'domcontentloaded' });
   const editor = page.getByRole('textbox', { name: 'Clock draft', exact: true });

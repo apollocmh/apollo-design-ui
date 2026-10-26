@@ -7,7 +7,7 @@ order: 0
 
 ## zh-CN
 
-## 2026-10-26：这一轮已经交付什么
+## 2026-10-27：这一轮已经交付什么
 
 当前为开发阶段快照。全库审计仍在进行，这里按已验收的单元记录进展。
 
@@ -38,11 +38,13 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 - [全屏加载与保留原生输入](/components/spin/demo/fullscreen)
 - [List 完整盘点、统一验收与边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
-**Statistic / Timer / Countdown已完成整组盘点并集中修复，正在统一验收。** 原生值槽、当前计时方向/事件、SSR与卸载清理、完整attrs/ref、Provider与两字号Token已实现。86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合及发布声明通过；原7Demo及两组实际交互通过，自有视觉和最终验收仍开放。
+**Statistic / Timer / Countdown完整清单已统一验收。** 原生值槽、当前计时方向/非负事件、SSR与卸载清理、完整attrs/ref、当前Provider与两字号Token已修复。86条四层、94条相关类型、46项生产浏览器、5项SSR、6组水合及发布声明通过；原7Demo及两组实际交互、28组实际Demo主题通过。清洁实现的36张自有视觉逐张审阅批准后全部0像素差异；全库其余审计继续进行。
 
 - [可重启计时与稳定输入](/components/statistic/demo/timer)
 - [当前字号Token与原生覆盖](/components/statistic/demo/component-token)
 - [Statistic完整清单](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
+
+**文档示例的主题链路已修正。** 明暗CSS与Vue源主题同步，系统偏好实时更新，独立示例的theme参数只临时覆盖，水合首帧保持一致；切换内联主题保留输入值和焦点。五个Token消费者亮/暗及72组件代表页亮/暗共144次实际渲染通过，Docs161条测试通过。iframe地址变更仍会导航重载。[完整范围与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-docs-demo-theme-audit.md)。
 
 ## 直接试这些示例
 
@@ -72,7 +74,7 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 
 ## en-US
 
-## Delivered on 2026-10-26
+## Delivered on 2026-10-27
 
 This is a development snapshot. The library-wide audit is ongoing; results below belong to verified units.
 
@@ -95,9 +97,11 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 
 [List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Fullscreen with a native editor](/components/spin/demo/fullscreen) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
-**Statistic / Timer / Countdown are under unified acceptance after a complete inventory and grouped fixes.** Native value slots, live direction/events, safe SSR/cleanup, complete attrs/refs, current Provider and both font tokens are implemented. Passing evidence includes 86 runtime/DOM/accessibility/theme tests, 94 related type tests, 46 browser checks, five SSR checks, six hydration groups and published declarations. All seven actual demos and both interaction groups pass; owned visuals and final acceptance remain open.
+**The complete Statistic / Timer / Countdown checklist is verified.** Native value slots, live direction/nonnegative events, safe SSR/cleanup, complete attrs/refs, current Provider and both font tokens are fixed. Passing evidence includes 86 runtime/DOM/accessibility/theme tests, 94 related type tests, 46 browser checks, five SSR checks, six hydration groups and published declarations. All seven actual demos, both interaction groups and 28 demo/theme combinations pass. All 36 owned images from a clean commit were individually reviewed and match with zero pixel differences. Other library audits remain open.
 
 [Restartable clocks and native editors](/components/statistic/demo/timer) · [Current font tokens](/components/statistic/demo/component-token) · [Statistic checklist](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
+
+**The Docs demo theme pipeline is fixed.** CSS and Vue source themes stay synchronized, system preferences update live, standalone theme queries remain temporary, and hydration starts consistently. Inline theme changes preserve native editor values and focus. Five named token consumers pass in light/dark; representative pages from all 72 components pass 144 light/dark render checks. All 161 Docs tests pass. Iframe URL changes retain their existing navigation/reload boundary. [Scope and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-docs-demo-theme-audit.md).
 
 ## Try the changes
 

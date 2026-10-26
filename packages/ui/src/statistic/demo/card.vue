@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 card demo（components/statistic/demo/card.tsx）
-// ⚠️ Card 组件尚未落地（registry 中 card 未实现）—— 用等价的 borderless 卡片
-//    div 模拟其布局容器（padding + 无边框），差异登记在 README §5。
+// 两种轻量卡片布局，突出统计数值与方向。
 import { ArrowDownOutlined, ArrowUpOutlined } from '@apollo-design/icons';
 import { Col, Row, Statistic } from '@apollo-design/ui';
 </script>
@@ -14,7 +12,7 @@ import { Col, Row, Statistic } from '@apollo-design/ui';
           title="Active"
           :value="11.28"
           :precision="2"
-          :styles="{ content: { color: '#3f8600' } }"
+          :styles="{ content: { color: '#3f8600', fontWeight: 700 } }"
         >
           <template #prefix>
             <ArrowUpOutlined />
@@ -29,7 +27,7 @@ import { Col, Row, Statistic } from '@apollo-design/ui';
           title="Idle"
           :value="9.3"
           :precision="2"
-          :styles="{ content: { color: '#cf1322' } }"
+          :styles="{ content: { color: '#cf1322', fontWeight: 700 } }"
         >
           <template #prefix>
             <ArrowDownOutlined />

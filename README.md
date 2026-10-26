@@ -9,7 +9,7 @@
 
 组件的可用范围以组件文档为准，尚未解决的缺陷见 [已知问题](docs/KNOWN-ISSUES.md)。Registry 的完成标记不代表不存在缺陷。
 
-Image、List、Spin与QRCode已按完整清单完成本轮验收；全库审计继续进行。查看[整改进展与实际示例](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)及对应提交证据。
+Image、List、Spin、QRCode与Statistic已按完整清单完成本轮验收；全库审计继续进行。查看[整改进展与实际示例](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)及对应提交证据。
 
 ## 安装
 
