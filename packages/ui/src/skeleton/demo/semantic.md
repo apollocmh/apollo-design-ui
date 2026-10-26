@@ -8,8 +8,7 @@ title:
 `classNames` / `styles` 各支持 6 个键，与 DOM 结构一一对应：
 `root` / `header` / `section` / `avatar` / `title` / `paragraph`。
 
-⚠️ 本组件的语义化**支持函数式**（`classNames={(info) => ...}`），
-这一点比 divider / button / typography 宽 —— 差异登记在 README §7.4。
+主组件同时支持对象与函数，函数读取当前`{ props }`；原生`class/style`作用于根，区块配置的class/style与对应语义配置合并。
 
 ```vue
 <script setup lang="ts">

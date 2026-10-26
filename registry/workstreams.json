@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-26T18:53:53.636Z",
+  "generatedAt": "2026-10-26T20:41:08.820Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 91,
-      "ready": 1
+      "done": 90,
+      "ready": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,11 +35,12 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 1,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 1,
+    "currentBatchSize": 2,
     "currentBatchIds": [
-      "X:docs-site"
+      "X:docs-site",
+      "COMP:skeleton"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -414,8 +415,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 10,
-      "doneCount": 10,
-      "readyCount": 0,
+      "doneCount": 9,
+      "readyCount": 1,
       "itemIds": [
         "COMP:alert",
         "COMP:drawer",
@@ -683,8 +684,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 25,
-      "readyCount": 1,
+      "doneCount": 24,
+      "readyCount": 2,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1638,16 +1639,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 4,
-      "why": "",
+      "why": "2026-10-27 原始完整清单后集中修正Vue根attrs/style、当前Provider/块配置/完整槽、八Token、真实RTL和减少动画。26条修前行为失败、旧发布浏览器67项失败已复现；当前关联360条四层、128相关类型、生产Chrome92项、Node SSR18项、水合6组、严格/SFC/发布声明、UI构建/L7通过。实际九Demo亮暗及五交互23项、36主题组合已通过；39图自有视觉与最终清单验收继续开放；详见docs/audit/2026-10-27-skeleton-contract-audit.md。",
       "doneWhen": [],
       "group": "反馈",
       "priority": "P1",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:spin",
@@ -1753,6 +1756,7 @@
       "workstream": "WS-5",
       "wave": "W7",
       "dependsOn": [
+        "COMP:skeleton",
         "FND:theme",
         "FND:utils"
       ],
@@ -2229,6 +2233,7 @@
       "workstream": "WS-6",
       "wave": "W7",
       "dependsOn": [
+        "COMP:skeleton",
         "FND:a11y",
         "FND:icons",
         "FND:locale",
@@ -2257,6 +2262,7 @@
       "workstream": "WS-6",
       "wave": "W7",
       "dependsOn": [
+        "COMP:skeleton",
         "FND:a11y",
         "FND:motion",
         "FND:portal",
@@ -2841,6 +2847,7 @@
       "workstream": "WS-5",
       "wave": "W7",
       "dependsOn": [
+        "COMP:skeleton",
         "FND:form-core",
         "FND:theme",
         "FND:utils"
@@ -3358,6 +3365,7 @@
     }
   ],
   "currentBatch": [
-    "X:docs-site"
+    "X:docs-site",
+    "COMP:skeleton"
   ]
 }

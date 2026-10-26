@@ -1,35 +1,7 @@
-/**
- * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）
- *
- * ── 基准是什么 ────────────────────────────────────────────────────────────────
- *
- * `tests/compat/baselines/skeleton.dom.json`（48 个用例），由
- * `tests/compat/baseline/skeleton.mjs` **直接调用 `react-dom/server.renderToStaticMarkup`
- * 渲染 antd 的 `Skeleton`** 产出。是机械 oracle，不是「我们读了源码之后写下的期望值」。
- *
- * ── 归一化 ───────────────────────────────────────────────────────────────────
- *
- * 两侧都走 `@apollo-design/test-utils` 的 `parse → project` 流水线，且**对称**：
- * 属性按名排序、类名按名排序、`style` 归一化为声明集合、剔除 CSS-in-JS 的
- * `css-dev-only-do-not-override-*` / `css-var-*` 类名（D5）。
- *
- * 这里用 **`keepStyle: true`**：`width` 的落地形态（title 的 38%/50%、
- * paragraph 的逐行宽度数组）是本组件最容易写错的地方，只投影 class 会让它测不到。
- *
- * ── 两侧传同一个 prefixCls ────────────────────────────────────────────────────
- *
- * `PREFIX = 'apollo'`，与基线生成器里的常量必须一致。
- * ⚠️ 传 `prefixCls="apollo"` 时 `getPrefixCls('skeleton','apollo')` **直接返回** `apollo`
- * （不加 `-skeleton` 后缀）—— 所以基线里的类名是 `apollo` / `apollo-title` 这种形态。
- *
- * ── 这个测试没有证明什么 ─────────────────────────────────────────────────────
- *   - 没证明**像素**一致（那是 L6：`tests/visual`，24/24 exact）
- *   - 没证明**行为**（`loading` 的切换、用户对象覆盖）—— 那是 L1
- *   - ⚠️ 基线**没有覆盖** `Skeleton.Avatar` / `.Button` / `.Input` / `.Image` / `.Node`
- *     五个子组件的独立渲染（它们是复合组件，走各自 props）。这条缺口登记在 README §7。
- */
+/** All original mechanical scenarios remain; exact native ARIA/attrs changes are reviewed separately. */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { expect, it } from 'vitest';
 import { defineComponent, h, provide, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/skeleton.dom.json';
 import {
@@ -38,6 +10,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Skeleton } from '../index';
+import differences from './native-contract-reference-diffs.json';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/skeleton.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -232,5 +205,31 @@ domContractTest('Skeleton', {
     return build();
   },
   keepStyle: true,
-  allow: ALLOW,
+  allow: Object.fromEntries(
+    Object.entries(differences).map(([id, diff]) => [
+      id,
+      {
+        reason:
+          'Apollo owns loading busy and hidden decorative blocks, and forwards native attrs. Original prefix/undefined differences remain; all other structure/styles are retained. See docs/migrations/skeleton-contracts.md.',
+        diff,
+      },
+    ]),
+  ),
+});
+
+it('retains all 48 reference scenarios with only the reviewed native attribute additions', () => {
+  expect(baseline.cases).toHaveLength(48);
+  expect(Object.keys(CASES).sort()).toEqual(baseline.cases.map((c) => c.id).sort());
+  expect(Object.keys(differences)).toHaveLength(46);
+  const legacy = new Map(Object.entries(ALLOW));
+  for (const [id, diff] of Object.entries(differences)) {
+    const previous = legacy.get(id)?.diff ?? [];
+    for (const item of previous) expect(diff).toContain(item);
+    for (const item of diff.filter((item) => !previous.some((old) => old === item))) {
+      expect(
+        /: 我们多出属性 aria-(busy|hidden)="true"$/.test(item) ||
+          (id === 'attrs:passthrough' && item === '$/div[0]: 我们多出属性 data-testid="x"'),
+      ).toBe(true);
+    }
+  }
 });

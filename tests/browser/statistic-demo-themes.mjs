@@ -56,6 +56,14 @@ try {
       await page.evaluate(
         () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
       );
+      await page.evaluate(async () => {
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((animation) => Number.isFinite(animation.effect?.getTiming().iterations ?? 1))
+            .map((animation) => animation.finished.catch(() => {})),
+        );
+      });
       const violations = await page.locator('main').evaluate(async (n) =>
         (await window.axe.run(n)).violations.map((v) => ({
           id: v.id,

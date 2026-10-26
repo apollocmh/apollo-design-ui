@@ -4,8 +4,10 @@
     "$/div[0]/div[1]: 类名不同 [apollo-skeleton apollo-skeleton-active apollo-statistic-skeleton] vs [apollo-statistic-skeleton]",
     "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\"",
     "$/div[0]/div[1]/div[0]: 类名不同 [apollo-skeleton-section] vs [apollo-skeleton apollo-skeleton-active]",
+    "$/div[0]/div[1]/div[0]: 我们多出属性 aria-busy=\"true\"",
     "$/div[0]/div[1]/div[0]/h3[0]: 标签不同 <h3> vs <div>",
     "$/div[0]/div[1]/div[0]/h3[0]: 类名不同 [apollo-skeleton-title] vs [apollo-skeleton-section]",
+    "$/div[0]/div[1]/div[0]/h3[0]: 我们多出属性 aria-hidden=\"true\"",
     "$/div[0]/div[1]/div[0]/h3[0]: 子节点数不同 0 vs 1"
   ]
 }

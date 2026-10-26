@@ -564,4 +564,11 @@ Statistic / Timer / Countdown实现111fa024/633c219b，已集中修正原生#val
 
 完整盘点后修正CSS暗色与Vue源主题失配、非响应的系统偏好、临时query未清理及iframe水合src不一致；同树主题变化保留原生输入身份/值/焦点。实际暗色发现的List/QRCode Token示例浅底文字配色已同步修正，不新增公共接口。Docs161条、严格类型/SSG、五个Token消费者亮/暗及三组生命周期共13项、72组件代表页亮/暗144次生产渲染通过，零页面/Vue/资源错误；代表页渲染不等同所有Demo交互验收。范围、修前复现和未验边界见[清单](audit/2026-10-27-docs-demo-theme-audit.md)及[证据](audit/evidence/docs-demo-theme.json)。
 
-下一整改单元为Skeleton完整契约审计，共享实现尚未改。内容来源清单当前528行、199候选，候选不是已确认缺陷；全库其他组件、基础包及最终同一提交全量门禁继续开放。
+Skeleton已进入整组契约整改，当前实现与未验边界见后续阶段记录。内容来源清单当前528行、199候选，候选不是已确认缺陷；全库其他组件、基础包及最终同一提交全量门禁继续开放。
+
+
+## 2026-10-27 Skeleton整组实现里程碑（完整验收继续）
+
+完整盘点Skeleton与五子组件后，集中修正根attrs/style、当前配置与语义Props、块配置丢失、Image默认槽、八Token及实际RTL/减少动画；无根的非loading分支保留。26条源码行为失败和旧发布89项中的67失败已复现。当前关联360条四层、128相关类型、92项生产浏览器、18项SSR、6组水合及根/SFC/发布声明消费通过；UI完整构建及严格L7通过。必要源主题成本按技术原因只将Skeleton预算27→36KB，历史测量及其他预算/占比不变。
+
+原48机械场景保留并精确核对新增原生ARIA/attrs；Card/Statistic相关回归通过，原React参考未改。原八Demo与新增Token Demo的实际亮/暗及五组交互23项、四算法36组合已通过；自有39图、相关像素和完整清单最终收口仍开放，不代表全库完成。见[完整清单](audit/2026-10-27-skeleton-contract-audit.md)、[统一证据](audit/evidence/skeleton-contract.json)与[迁移](migrations/skeleton-contracts.md)。

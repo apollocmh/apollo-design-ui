@@ -1,0 +1,10 @@
+{
+  "card:loading": [
+    "$/div[0]/div[1]/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[1]/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "card:loading-no-title": [
+    "$/div[0]/div[0]/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ]
+}

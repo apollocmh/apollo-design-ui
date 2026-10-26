@@ -14,7 +14,7 @@ const toggle = () => {
 <template>
   <Button @click="toggle">{{ active ? '关闭微光动画' : '开启微光动画' }}</Button>
   <div style="display: flex; gap: 16px; margin-top: 16px">
-    <Skeleton.Node :active="active" :style="{ width: '160px', height: '120px' }">
+    <Skeleton.Node :active="active" :styles="{ content: { width: '160px', height: '120px' } }">
       <PictureOutlined style="font-size: 40px; color: #bfbfbf" />
     </Skeleton.Node>
     <Skeleton :active="active" avatar :paragraph="{ rows: 3 }" style="flex: 1" />

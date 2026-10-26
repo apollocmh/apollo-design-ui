@@ -1,16 +1,4 @@
-/**
- * Vue 侧（@apollo-design/ui）的 Skeleton 视觉用例。
- *
- * 与 `render/cases/react/skeleton.jsx` **逐条对应**。用 `h()` 而不是 SFC：
- * 用例是「一份 props 组合」，写成函数调用才能与 React 侧一一对照，
- * 也不会被 SFC 编译器对 `VNodeChild` 的处理干扰（见 COMPATIBILITY.md D21）。
- *
- * ⚠️ 子组件一律用**复合形态**（`Skeleton.Button` / `Skeleton.Input` /
- *    `Skeleton.Avatar` / `Skeleton.Node` / `Skeleton.Image`），与 React 侧逐字同形 ——
- *    这同时验证了 `Object.assign(Skeleton, {...})` 那份静态挂载。
- *
- * ⚠️ `style` 值全部写成字符串，理由见 React 侧的文件头（单位补全的平台差异）。
- */
+/** Historical eight-scenario reference. Current Vue content dimensions use styles.content; root style remains native. Original React snapshots stay unchanged. */
 
 import { Skeleton } from '@apollo-design/ui';
 import { h } from 'vue';
@@ -113,7 +101,7 @@ export default {
         h(Skeleton.Node, { active: true }, { default: nodeChild }),
         h(Skeleton.Image),
       ]),
-      h(Skeleton.Image, { style: { width: '200px', height: '200px' } }),
+      h(Skeleton.Image, { styles: { content: { width: '200px', height: '200px' } } }),
     ]),
 
   // ---- 8. 语义化 classNames / styles -------------------------------------

@@ -374,8 +374,9 @@
       "id": "skeleton",
       "pkg": "@apollo-design/ui",
       "imports": ["Skeleton"],
-      "budgetKb": 27,
-      "measuredKb": 14.5
+      "budgetKb": 36,
+      "measuredKb": 14.5,
+      "_note": "2026-10-27: all six Skeleton forms now resolve current source themes and eight published tokens, route native root attrs/styles, preserve complete slots and own decorative loading semantics. Necessary theme resolution changes the isolated Skeleton import to 35.9KB (full UI 2067.2KB, about 1.74%). Following the user-authorized development-stage allowance for justified growth, only Skeleton cap changes 27→36KB. Historical measuredKb, every other cap and the 30% full-import guard remain unchanged. See docs/audit/2026-10-27-skeleton-contract-audit.md."
     },
     {
       "id": "slider",

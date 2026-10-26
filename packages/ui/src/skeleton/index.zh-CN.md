@@ -6,203 +6,111 @@ subtitle: 骨架屏
 
 # Skeleton 骨架屏
 
-在需要等待加载内容的位置提供一个占位图形组合。
-
-## 何时使用
-
-- 网络较慢，需要长时间等待加载，且**只知道大致结构**时；
-- 加载过程中需要给用户一个「正在准备」的视觉预期，避免白屏。
+按预期结构显示加载占位。`loading`由调用者控制；组件不发请求，也不自动完成加载。
 
 ## 代码演示
 
-> ⚠️ 本组件的 `demo/` 目录**尚未落地**（见 `README.md` §7 的缺口清单）。
-> 下面的示例是**可直接运行**的最小片段，等 demo 补齐后会替换成 `<demo>` 引用。
-
-### 基础
+原八个示例保留，并新增可切换主题与原生变量的示例。查看加载开关、独立元素、完整内容和当前组件Token。
 
 ```vue
-<template>
-  <ASkeleton />
-</template>
-
 <script setup lang="ts">
-import { Skeleton as ASkeleton } from '@apollo-design/ui';
-</script>
-```
-
-### 只显示标题（不显示段落）
-
-```vue
-<ASkeleton :paragraph="false" />
-```
-
-### 带头像
-
-```vue
-<ASkeleton avatar :paragraph="false" />
-```
-
-### 加载完成前显示骨架，完成后显示真实内容
-
-```vue
-<template>
-  <ASkeleton :loading="loading">
-    <div>真实内容</div>
-  </ASkeleton>
-</template>
-
-<script setup lang="ts">
-import { Skeleton as ASkeleton } from '@apollo-design/ui';
+import { ref } from 'vue';
+import { Skeleton } from '@apollo-design/ui';
 const loading = ref(true);
+const draft = ref('保留业务数据');
 </script>
-```
-
-### 动画与圆角
-
-```vue
-<ASkeleton active round />
+<template>
+  <button type="button" @click="loading = !loading">切换加载</button>
+  <Skeleton :loading="loading" avatar>
+    <input v-model="draft" aria-label="业务输入" />
+  </Skeleton>
+</template>
 ```
 
 ## API
 
-### Props
+### Skeleton Props
 
 | 属性 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| `active` | 是否显示动画 | `boolean` | `false` |
-| `loading` | 是否显示骨架。**未传与 `true` 都显示骨架，只有 `false` 显示子内容**（见下） | `boolean` | — |
-| `avatar` | 是否显示头像占位。传对象可覆盖推导值 | `boolean \| SkeletonAvatarProps` | `false` |
-| `title` | 是否显示标题占位。传对象可覆盖推导值 | `boolean \| SkeletonTitleProps` | `true` |
-| `paragraph` | 是否显示段落占位。传对象可覆盖推导值 | `boolean \| SkeletonParagraphProps` | `true` |
-| `round` | 是否显示圆角 | `boolean` | `false` |
-| `prefixCls` | 类名前缀 | `string` | `apollo-skeleton` |
-| `class` / `style` | **根元素原生 attrs**（不是 Props）；`style` 覆盖 `styles.root`。⚠️ 其余多余属性仍按上游丢弃 | `string \| array \| object` / `CSSProperties` | — |
-| `classNames` | 语义化类名，见「语义化槽位」 | `SkeletonSemanticClassNames` | — |
-| `styles` | 语义化样式，见「语义化槽位」 | `SkeletonSemanticStyles` | — |
+| active | 微光动画，遵守减少动画与源motion:false | boolean | false |
+| loading | 只有false显示真实内容；未传/undefined均显示骨架 | boolean | — |
+| prefixCls | 当前类名前缀 | string | apollo-skeleton |
+| avatar | 头像块及单元素配置 | boolean / SkeletonAvatarProps | false |
+| title | 标题块配置 | boolean / SkeletonTitleProps | true |
+| paragraph | 段落块配置 | boolean / SkeletonParagraphProps | true |
+| round | 标题与段落使用胶囊圆角 | boolean | false |
+| classNames | 六语义落点的类；函数读取当前`{ props }` | SkeletonSemanticValue&lt;SkeletonSemanticClassNames&gt; | — |
+| styles | 六语义落点的样式；函数读取当前`{ props }` | SkeletonSemanticValue&lt;SkeletonSemanticStyles&gt; | — |
 
-`avatar` / `title` / `paragraph` 的对象形态：
+### 独立子组件 Props
 
-| 键 | 适用 | 说明 |
+具名`SkeletonAvatar/SkeletonButton/SkeletonInput/SkeletonImage/SkeletonNode`与静态`Skeleton.Avatar/Button/Input/Image/Node`指向同一组件。
+
+| 属性 | 适用 | 说明 |
 |---|---|---|
-| `width` | title / paragraph | 宽度。paragraph 下可为**数组**（逐行）；单值时**只有最后一行**生效 |
-| `rows` | paragraph | 行数 |
-| `size` | avatar | 尺寸 |
-| `shape` | avatar | `'circle' \| 'square' \| 'round' \| 'default'` |
-| `active` / `className` / `style` | 三者 | 覆盖 |
+| prefixCls | 全部 | 当前前缀 |
+| active | 全部 | 微光动画，默认false |
+| classNames / styles | 全部 | 对象形式，root为外层div，content为内层占位/内容 |
+| size | Avatar | small / medium / middle / large / 既有default别名 / 非负有限像素数；默认取Provider componentSize |
+| shape | Avatar | circle（默认）/ square |
+| size | Button / Input | small / medium / middle / large / 既有default别名；默认取Provider componentSize |
+| shape | Button | circle / square / round / default；缺省不加形状类 |
+| block | Button / Input | 撑满一行，默认false |
+| internalClassName | Node | 已有内容类覆盖；空值使用默认node类，Image内部用它选择image类 |
 
-### 事件
+`size="default"`仍保留既有废弃告警，使用medium。根className别名已移除；内层尺寸/样式使用`styles.content`。
 
-无。Skeleton 不产生任何事件。
+### 块配置
 
-### 插槽
+avatar/title/paragraph配置中的`prefixCls/className/style`是数据字段，保留并与对应语义合并；语义样式最后覆盖配置style，类拼接。
 
-| 名称 | 说明 |
-|---|---|
-| `default` | 真实内容。**仅在 `loading === false` 时渲染**，且**不套任何包裹元素** |
-
-### 语义化槽位
-
-`classNames` / `styles` 各支持 6 个键，与 DOM 结构一一对应：
-
-| 键 | 落到 |
-|---|---|
-| `root` | 根 `div` |
-| `header` | `-header` 容器（**仅在有 avatar 时存在**） |
-| `section` | `-section` 容器（**仅在有 title 或 paragraph 时存在**） |
-| `avatar` | 头像元素 |
-| `title` | 标题元素 |
-| `paragraph` | 段落元素 |
-
-> ⚠️ 本组件**不支持函数式** `classNames` / `styles`（与 divider / button / typography 一致，
-> 依据 `empty-semantic-fn` 决策的建议 B）。
-
-### 类型导出
-
-`SkeletonProps`、`SkeletonRef`、`SkeletonConfig`、`SkeletonSlot`、
-`SkeletonSemanticClassNames`、`SkeletonSemanticStyles`、`SkeletonSemanticType`、
-`SkeletonSemanticAllType`、`SkeletonSemanticValue`、
-`SkeletonAvatarProps`、`SkeletonAvatarOwnProps`、`SkeletonTitleProps`、`SkeletonParagraphProps`、
-`SkeletonButtonProps`、`SkeletonInputProps`、`SkeletonImageProps`、`SkeletonNodeProps`、`SkeletonNodeSlot`、
-`SkeletonElementProps`、`SkeletonElementSemanticClassNames`、`SkeletonElementSemanticStyles`、
-`SkeletonElementSemanticType`、`SkeletonElementSize`、`SkeletonShape`、`SkeletonWidthUnit`。
-
-### ref
-
-```ts
-const skeletonRef = ref<{ nativeElement: HTMLDivElement | null }>();
-```
-
-### 复合组件
-
-`Skeleton.Avatar` / `Skeleton.Button` / `Skeleton.Input` / `Skeleton.Image` / `Skeleton.Node`
-与主组件同包导出，用法与 antd 一致。
-
-## 设计说明
-
-### `loading` 的四态（⚠️ 唯一的兼容性差异）
-
-antd 的判据是 `loading || !('loading' in props)` —— **看的是「键是否存在」**。实测四态：
-
-| 情形 | antd 6.6.4 | 本实现 |
+| 字段 | 适用 | 说明 |
 |---|---|---|
-| ① **不传**（键不存在） | 渲染骨架 | 渲染骨架 ✅ |
-| ② **显式传 `loading={undefined}`** | **渲染 children** | 渲染骨架 ❌ |
-| ③ `loading={true}` | 渲染骨架 | 渲染骨架 ✅ |
-| ④ `loading={false}` | 渲染 children | 渲染 children ✅ |
+| size / shape | avatar | 尺寸与circle/square；默认large，存在title且无paragraph时为square，否则circle |
+| width | title | 数字像素或CSS字符串；无头像且有段落时38%，两者都有时50%，否则不设 |
+| rows | paragraph | 默认无头像且有title时3，否则2；非有限/负值为空，有限正小数截断 |
+| width | paragraph | 数组逐行，单值只作用最后一行；无头像或无title时默认末行61% |
 
-**只有 ② 不同**，原因是 **Vue 的 prop 没有「键存在」这个概念**（未传时值同样是 `undefined`，
-两者不可区分）⇒ 属**平台固有差异**，不是实现错误。
-本实现取 `loading !== false`，即「未传 = 显示骨架」。
+非有限数值长度忽略，0保留。avatar是单个占位元素，使用主`classNames.avatar/styles.avatar`，不接受独立双层组件的classNames/styles配置。
 
-### 三个块的基础 props 是**互锁推导**的
+### 原生 attrs、Provider与优先级
 
-`avatar` / `title` / `paragraph` 各自的 `width` / `rows` / `shape` 由**另外两项是否存在**决定：
+六组件的id/data/ARIA/tabindex/原生事件均落真实根。Vue字符串、数组、对象class/style有效；原生样式最后覆盖，子组件content使用独立语义落点。主`loading=false`没有根，attrs不会复制到业务槽；需要持久宿主时自行包裹。
 
-| 推导 | 规则 |
+主组件读取当前`components.skeleton`的className/style/classNames/styles，配置替换、删除和恢复即时生效。五个子组件消费全局前缀、适用尺寸和源主题；主六槽配置不套入子组件两槽。最近Provider与实例隔离，RTL即时更新。任意自定义前缀仍需对应静态CSS。
+
+### Slots / Emits / v-model
+
+| 组件 / 槽 | 说明 |
 |---|---|
-| avatar `shape` | `hasTitle && !hasParagraph` ⇒ `'square'`，否则 `'circle'`（`size` 恒为 `'large'`） |
-| title `width` | `!hasAvatar && hasParagraph` ⇒ `'38%'`；`hasAvatar && hasParagraph` ⇒ `'50%'`；否则不设 |
-| paragraph `width` | `!hasAvatar \|\| !hasTitle` ⇒ `'61%'`；否则不设 |
-| paragraph `rows` | `!hasAvatar && hasTitle` ⇒ `3`，否则 `2` |
+| Skeleton default | loading=false时直接渲染完整真实内容，无包裹 |
+| SkeletonNode default | 当前完整自定义内容，原生编辑器不会因周边样式/主题改变重挂 |
+| SkeletonImage default | 有槽时优先，含有意空槽；无槽显示原内置SVG |
 
-传入对象时**对象覆盖推导值**（`{ ...基础推导, ...用户对象 }`）。
+无业务emits或v-model，loading受控。原生监听收到DOM事件。主六语义落点为root/header/section/avatar/title/paragraph；子组件为root/content。
 
-### DOM 结构：`-header` 与 `-section` 是**并列**的
+### Expose
 
-```html
-<div class="apollo-skeleton [-with-avatar] [-active] [-rtl] [-round]">
-  <div class="apollo-skeleton-header"><!-- 仅在有 avatar 时 --></div>
-  <div class="apollo-skeleton-section"><!-- 仅在有 title 或 paragraph 时 -->
-    <h3 class="apollo-skeleton-title"></h3>
-    <ul class="apollo-skeleton-paragraph"><li></li>…</ul>
-  </div>
-</div>
-```
+仅主Skeleton公开`nativeElement: HTMLDivElement | null`。loading=false或卸载后为null。正文loading开关时会卸载，数据应保存在调用者响应状态中；不承诺卸载后的节点或焦点身份。
 
-标题是 `<h3>`、段落是 `<ul>` + `rows` 个 `<li>`（与上游一致）。
-`loading === false` 时**根元素不存在**，直接渲染 children。
+### 组件Token
 
-### 无障碍
+全部形态读取当前`theme.components.Skeleton`，移除/恢复响应；现代渐变字段优先既有别名，再回退当前Alias。对应`--apollo-skeleton-*`变量可在根原生style覆盖。
 
-⚠️ **antd 的 Skeleton 完全没有 ARIA**（实测 `aria-*` / `role` 出现次数为 **0**）——
-没有 `aria-busy`、没有 `aria-live`、没有 `role="status"`。屏幕阅读器不会播报「正在加载」。
-**我们逐字对齐**，不擅自补（否则 L4 的 DOM 契约会与机械基线不一致）。
+| Token | 类型 | 默认来源 |
+|---|---|---|
+| gradientFromColor | string | colorFillContent |
+| gradientToColor | string | colorFill |
+| color（既有deprecated别名）| string | gradientFromColor |
+| colorGradientEnd（既有deprecated别名）| string | gradientToColor |
+| titleHeight | number / CSS长度string | controlHeight / 2 |
+| blockRadius | number | borderRadiusSM |
+| paragraphMarginTop | number | marginLG + marginXXS |
+| paragraphLiHeight | number | controlHeight / 2 |
 
-⚠️ **一处例外（我们比上游更严格，已登记）**：`Skeleton.Image` 的 `<svg>` 上我们加了
-`aria-hidden="true"` + `focusable="false"`（antd 的 `Image.js` 没有）。
-这是有意为之的改进——装饰性占位图对读屏器无意义。由 `__tests__/a11y.test.ts` 钉住。
+### 无障碍、SSR与样式
 
-### 组件 Token
+加载根为aria-busy=true，header/section装饰内容aria-hidden，空占位标题不进入可访问树；可通过原生attrs提供role/名称。Node/Image真实槽内容保持可访问，内置SVG为装饰图。active遵守prefers-reduced-motion与源motion:false，不自动加live播报。
 
-见 `style/token.ts`。零运行时架构下：
-**别名派生的走 `var(--apollo-*)`**（随主题自适应、由构建门禁 B7 校验）；
-**字面量的**由 `token.ts` 给出唯一真源，由 `style/index.ts` 内联消费。
-
-### 样式引入
-
-```ts
-import '@apollo-design/ui/skeleton/style.css';
-```
-
-> ⚠️ 按需样式子路径目前**缺失**（`packages/ui/package.json` 的 `exports` 未声明），
-> 属全库级基建议题，影响 `skeleton` / `divider` / `spin` 三家。见 `README.md` §7。
+SSR不依赖window；默认槽和当前主题在服务端可渲染，水合与生产浏览器验收状态以完整清单为准。样式入口：`@apollo-design/ui/skeleton/style.css`。破坏性变更和旧/新写法见仓库`docs/migrations/skeleton-contracts.md`；本轮实际命令、证据与未验边界见`docs/audit/2026-10-27-skeleton-contract-audit.md`。

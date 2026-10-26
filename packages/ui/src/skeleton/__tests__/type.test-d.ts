@@ -1,26 +1,10 @@
-/**
- * L3 · 类型测试（含**负例**）
- *
- * 规则 T7：只有正例的类型测试是没有价值的。下面每个 `describe` 都同时给出
- * 「应当通过」与「应当报错」两侧。
- *
- * ⚠️ 负例必须包在**永不调用**的闭包里 —— 本文件会被 vitest 真的执行
- *    （`--project types` 开了 typecheck，但仍然跑运行时）。裸写一行错误用法会直接崩。
- *
- * `@ts-expect-error` 在本仓库**只允许**出现在这里（`AGENTS.md` H10）：
- * 它的语义是「此处应当报错」，一旦 TS 不再报错，`@ts-expect-error` 本身会变成错误。
- *
- * ── 与 antd 类型面的登记差异（见 `interface.ts` 的文件头）──────────────────────
- *   1. `children` 不在 Props 里（Vue 侧是默认插槽，规则 C19）
- *   2. `SizeType` → `SkeletonElementSize`（避免与 config-provider 重名）
- *   3. `React.CSSProperties` → Vue `CSSProperties`
- *   4. 语义化**不支持函数式**（决策 `empty-semantic-fn` 的建议 B）
- */
+/** Public Vue contracts with positive and negative cases. Root attrs and block data have separate types. */
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
 import {
   Skeleton,
+  type SkeletonAvatarOwnProps,
   type SkeletonAvatarProps,
   type SkeletonButtonProps,
   type SkeletonConfig,
@@ -199,5 +183,41 @@ describe('Skeleton · Config', () => {
     const styles = c.styles;
     if (typeof styles === 'function') throw new Error('本用例断言的是对象分支');
     expectTypeOf(styles?.root).toEqualTypeOf<CSSProperties | undefined>();
+  });
+});
+
+describe('Skeleton native root and block configuration types', () => {
+  it('keeps root class/style outside every standalone props interface', () => {
+    type Aliases<P> = Extract<keyof P, 'className' | 'style'>;
+    expectTypeOf<
+      [
+        Aliases<SkeletonAvatarOwnProps>,
+        Aliases<SkeletonButtonProps>,
+        Aliases<SkeletonInputProps>,
+        Aliases<SkeletonImageProps>,
+        Aliases<SkeletonNodeProps>,
+      ]
+    >().toEqualTypeOf<[never, never, never, never, never]>();
+    const content: SkeletonNodeProps = {
+      styles: { root: { padding: '12px' }, content: { width: '160px' } },
+    };
+    expectTypeOf(content).toMatchTypeOf<SkeletonNodeProps>();
+  });
+  it('retains real block configuration styles and rejects nonexistent nested targets', () => {
+    const avatar: SkeletonAvatarProps = {
+      size: 40,
+      shape: 'square',
+      className: 'configured-avatar',
+      style: { opacity: 0.7 },
+    };
+    expectTypeOf(avatar.style).toEqualTypeOf<CSSProperties | undefined>();
+    const _never = () => {
+      // @ts-expect-error Native root class uses Vue attrs; the obsolete duplicate is removed.
+      const badRoot: SkeletonNodeProps = { className: 'root' };
+      // @ts-expect-error The avatar block is one element, not a standalone two-target component.
+      const badBlock: SkeletonAvatarProps = { styles: { content: { color: 'red' } } };
+      return [badRoot, badBlock];
+    };
+    void _never;
   });
 });

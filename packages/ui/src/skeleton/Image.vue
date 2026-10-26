@@ -1,85 +1,36 @@
 <script setup lang="ts">
-/**
- * Image —— `Skeleton.Image`，一个「图片占位」的骨架块。
- *
- * 契约来源：antd 6.6.4 的 `es/skeleton/Image.js`（全文 25 行）。
- *
- * ── 它**没有自己的 DOM 结构** ──────────────────────────────────────────────────
- *
- * 整个组件就是「把 `Skeleton.Node` 的内层类名换成 `${prefixCls}-image`，
- * 再塞一幅固定尺寸的 SVG 占位图」。所以：
- *
- * ```html
- * <div class="{prefixCls} {prefixCls}-element [-active] [className] [rootClassName]">
- *   <div class="{prefixCls}-image">          ← internalClassName 换掉默认的 -node
- *     <svg viewBox="0 0 1098 1024" …>
- *   </div>
- * </div>
- * ```
- *
- * ── 两条必须逐字保留的判据 ───────────────────────────────────────────────────
- *
- * 1. **`viewBox` / `d` 是交付物本身**，不是装饰。`d` 是上游 1098×1024 占位图的
- *    原始路径（一条 `M…q…` 复合路径），逐字复制 —— 手改一个数字就是画错图。
- * 2. **`aria-hidden="true"` + `focusable="false"`**：占位图对读屏器无意义，
- *    且 `focusable` 是 IE/Edge 时代的 Tab 焦点开关（SVG 默认可聚焦）。
- *    两者都在上游代码里，不是我们加的。
- *
- * ── 关于 `prefixCls` 的解析（容易误判的一处）─────────────────────────────────
- *
- * `Skeleton.Image` 自己算 `getPrefixCls('skeleton', props.prefixCls)`，
- * 然后把 `internalClassName` 交给 `Node`，**同时把 `prefixCls` 也透传下去**。
- * `Node` 会**再算一次** `getPrefixCls('skeleton', props.prefixCls)` —— 结果相同。
- *
- * ⚠️ 不传 `prefixCls` 时结果是 `apollo-skeleton`（不是 `apollo-skeleton-skeleton`）：
- *    `getPrefixCls(suffix, customize)` 在 `customize` 为真时**直接返回 customize**，
- *    只有 `customize` 为空时才拼 `${defaultPrefixCls}-${suffix}`。
- *    实测上游：不传 → `ant-skeleton ant-skeleton-element`。
- *
- * ── 与 antd 的平台差异 ────────────────────────────────────────────────────────
- *
- *   - `children` 在 antd 里是 `<svg>` 这个 ReactNode；Vue 侧走 `Node` 的默认插槽
- *     （规则 C19）—— 对用户不可见（`SkeletonImageProps` 把 `children` omit 掉了）。
- *   - 无 CSS-in-JS 的 hashId / cssVarCls（D5）。
- */
-
+// Default SVG path retained from the existing Ant Design 6.6.4 illustration.
 import { computed, useAttrs } from 'vue';
 import { useConfigContext } from '../config-provider/context';
-import type { SkeletonImageProps } from './interface';
+import type { SkeletonImageProps, SkeletonNodeSlot } from './interface';
 import Node from './Node.vue';
 
 defineOptions({ name: 'ASkeletonImage', inheritAttrs: false });
-
 const props = withDefaults(defineProps<SkeletonImageProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  style: undefined,
   active: undefined,
   classNames: undefined,
   styles: undefined,
 });
-
-const { getPrefixCls } = useConfigContext();
-
+defineSlots<{ default?: SkeletonNodeSlot }>();
+const config = useConfigContext();
 const attrs = useAttrs();
-const prefixCls = computed(() => getPrefixCls('skeleton', props.prefixCls));
+const prefixCls = computed(() => config.getPrefixCls('skeleton', props.prefixCls));
 const imageCls = computed(() => `${prefixCls.value}-image`);
 const svgCls = computed(() => `${prefixCls.value}-image-svg`);
 const pathCls = computed(() => `${prefixCls.value}-image-path`);
 </script>
-
 <template>
   <Node
     :prefix-cls="props.prefixCls"
-    :class-name="props.className"
-    :class="attrs.class"
-    :style="props.style"
     :active="props.active"
     :class-names="props.classNames"
     :styles="props.styles"
     :internal-class-name="imageCls"
+    v-bind="attrs"
   >
-    <svg
+    <template v-if="$slots.default"><slot /></template>
+    <svg v-else
       viewBox="0 0 1098 1024"
       xmlns="http://www.w3.org/2000/svg"
       :class="svgCls"

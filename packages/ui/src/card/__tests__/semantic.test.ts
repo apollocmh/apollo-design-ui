@@ -39,6 +39,7 @@ import {
 } from '../../config-provider/context';
 import { Card, CardGrid, CardMeta } from '../index';
 import type { CardProps } from '../interface';
+import loadingDifferences from './loading-reference-diffs.json';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/card.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -332,6 +333,16 @@ domContractTest('Card', {
   baseline,
   keepStyle: true,
   allow: {
+    ...Object.fromEntries(
+      Object.entries(loadingDifferences).map(([id, diff]) => [
+        id,
+        {
+          reason:
+            'Shared Skeleton now owns busy and hides decorative paragraph content. Only these two ARIA attributes change; Card geometry and every reference scenario remain. See docs/migrations/skeleton-contracts.md.',
+          diff,
+        },
+      ]),
+    ),
     // 默认前缀不同（裁决 `prefix-cls-default` = A）：`bare` 用例下两侧的根前缀分别是
     // antd 的 `ant` 与我们的 `apollo` ⇒ **每一层带前缀的元素**都不同。
     // ⚠️ `-css-var` 由投影的 `CSSINJS_VAR_CLS` 对称剔除，**不算差异**。

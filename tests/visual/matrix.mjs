@@ -178,6 +178,21 @@ export const COMPONENTS = {
     variants: ['basic', 'checkable', 'semantic'],
   },
   skeleton: {
+    apolloVariants: [
+      'basic',
+      'avatar',
+      'paragraph',
+      'loaded-content',
+      'elements',
+      'image-content',
+      'node-content',
+      'tokens',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [
       'basic', // 默认：title（38%）+ 3 行 paragraph（末行 61%）

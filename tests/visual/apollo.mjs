@@ -18,6 +18,7 @@ import { prepareImageVisual } from './image-state.mjs';
 import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
 import { prepareQRCodeVisual } from './qrcode-state.mjs';
+import { prepareSkeletonVisual } from './skeleton-state.mjs';
 import { prepareSpinVisual } from './spin-state.mjs';
 import { prepareStatisticVisual } from './statistic-state.mjs';
 
@@ -197,7 +198,7 @@ async function main() {
         });
         await stabilizePage(page, {
           preserveFocus:
-            ['list', 'spin', 'qr-code', 'statistic'].includes(item.component) &&
+            ['list', 'spin', 'qr-code', 'statistic', 'skeleton'].includes(item.component) &&
             item.variant === 'native-focus',
         });
         const state =
@@ -211,7 +212,9 @@ async function main() {
                   ? await prepareQRCodeVisual(page, item.variant)
                   : item.component === 'statistic'
                     ? await prepareStatisticVisual(page, item.variant)
-                    : undefined;
+                    : item.component === 'skeleton'
+                      ? await prepareSkeletonVisual(page, item.variant)
+                      : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

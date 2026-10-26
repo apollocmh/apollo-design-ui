@@ -35,4 +35,4 @@ Timer移除原来声明但被内部格式化覆盖的formatter，以及对计时
 
 默认标题从低对比度colorTextDescription改为colorTextSecondary；生产浏览器修前测得3.36:1。默认字号以当前Alias为准，实际fontSizeHeading3为24，准备函数不再另设30的硬编码后备。
 
-加载时Statistic根明确aria-busy，装饰性骨架由本组件加载层aria-hidden排除；加载结束恢复真实正文。Skeleton本身不透传这些attrs，因此语义由Statistic自有层承接，不靠修改共享Skeleton或屏蔽axe规则。
+加载时Statistic根明确aria-busy，装饰性骨架由本组件加载层aria-hidden排除；加载结束恢复真实正文。该外壳继续拥有本组件的加载生命周期；随后Skeleton完整审计补齐其原生attrs及自身busy/装饰语义，组合只增加内部两项ARIA属性，未改Statistic外壳、正文或视觉。见Skeleton契约迁移，不屏蔽axe规则。

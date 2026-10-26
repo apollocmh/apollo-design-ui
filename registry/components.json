@@ -32,7 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 72
+      "completed": 71,
+      "visual-review": 1
     },
     "byPriority": {
       "P0": 8,
@@ -51,8 +52,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 72,
-    "remainingCount": 0
+    "completedCount": 71,
+    "remainingCount": 1
   },
   "milestones": [],
   "components": [
@@ -947,7 +948,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
+      "status": "visual-review",
       "derived": {
         "dagLevel": 2,
         "unblocks": 4,
@@ -973,11 +974,16 @@
       "interactionStatus": "n/a",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "done",
+      "visualStatus": "in-progress",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-27 原始完整清单后集中修正Vue根attrs/style、当前Provider/块配置/完整槽、八Token、真实RTL和减少动画。26条修前行为失败、旧发布浏览器67项失败已复现；当前关联360条四层、128相关类型、生产Chrome92项、Node SSR18项、水合6组、严格/SFC/发布声明、UI构建/L7通过。实际九Demo亮暗及五交互23项、36主题组合已通过；39图自有视觉与最终清单验收继续开放；详见docs/audit/2026-10-27-skeleton-contract-audit.md。",
       "layerNotes": {
-        "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。"
+        "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。",
+        "currentAudit": "docs/audit/evidence/skeleton-contract.json；主与五子组件Props 9/6/7/6/5/4，Vue原生根样式，完整Node/Image槽、主六语义/子两语义和八Token。当前实现已验证运行/类型/生产行为，组件单元尚未收口。",
+        "visual": "保留旧8场景×3视口24参考；Vue counterpart中Image200px内容尺寸迁移到styles.content，未改React基线。Apollo新矩阵与相关Statistic36图待最终验收，不将历史done冒充当前验收。",
+        "referenceHistory": {
+          "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。"
+        }
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1292,7 +1298,9 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
+      "blockedBy": [
+        "skeleton"
+      ],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2617,7 +2625,9 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
+      "blockedBy": [
+        "skeleton"
+      ],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2688,7 +2698,9 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
+      "blockedBy": [
+        "skeleton"
+      ],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4224,7 +4236,9 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
+      "blockedBy": [
+        "skeleton"
+      ],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",

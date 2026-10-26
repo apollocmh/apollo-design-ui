@@ -159,8 +159,26 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（1004 个，含QRCode组件Token示例）', () => {
-    expect(allDemos.length).toBe(1004);
+  it('demo 全量可枚举（1005 个，含QRCode与Skeleton组件Token示例）', () => {
+    expect(allDemos.length).toBe(1005);
+    expect(
+      allDemos
+        .map((demo) => demo.id)
+        .filter((id) => id.startsWith('skeleton-demo-'))
+        .sort(),
+    ).toEqual(
+      [
+        'skeleton-demo-basic',
+        'skeleton-demo-avatar',
+        'skeleton-demo-loading',
+        'skeleton-demo-active',
+        'skeleton-demo-semantic',
+        'skeleton-demo-children',
+        'skeleton-demo-complex',
+        'skeleton-demo-element',
+        'skeleton-demo-component-token',
+      ].sort(),
+    );
     expect(allDemos.some((demo) => demo.id === 'spin-demo-component-token')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'qr-code-demo-component-token')).toBe(true);
     expect(allDemos.some((demo) => demo.id === 'image-demo-preview-close')).toBe(true);

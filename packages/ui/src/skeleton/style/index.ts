@@ -1,67 +1,4 @@
-/**
- * Skeleton 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `es/skeleton/style/index.js`。选择器结构、属性、取值来源
- * **逐条对齐**。
- *
- * ── 选择器结构是从 antd 的**真实产物**提取的，不是推演的 ─────────────────────────
- *
- * 用 `@ant-design/cssinjs` 的 `extractStyle` 渲染 antd 6.6.4 的 Skeleton（含
- * `Skeleton.Button` / `Avatar` / `Input` / `Node` / `Image` 五个子组件）并提取 CSS，
- * 得到的就是下面这份（去掉 cssinjs 的 hash 包裹层后）。几个**只有看产物才能确定**
- * 的点：
- *
- * ```css
- * .ant-skeleton.ant-skeleton-element .ant-skeleton-button.ant-skeleton-button-circle{...}
- * .ant-skeleton.ant-skeleton-element .ant-skeleton-image .ant-skeleton-image-svg.ant-skeleton-image-svg-circle{...}
- * .ant-skeleton.ant-skeleton-element .ant-skeleton-node{width:calc(calc(var(--ant-control-height) * 1.5) * 2);...}
- * .ant-skeleton-round 会把标题/段落的圆角拉到「胶囊」级别（antd 用的是一个很大的圆角值）。
- *
- * ⚠️⚠️ 本文件的注释里**不要出现「圆角属性名 + 冒号 + 数字」**这样的片段：
- *     `validate-registry` 的 E10 扫描源码时**不剥注释**，注释里的这种片段会被判成
- *     硬编码圆角（假阳性）。E19 那边早就要求 `stripComments()`，E10 没有 ——
- *     本轮就是被自己写的注释坑了一次。要举例就只写属性名，别带冒号和数字。
- * ```
- *
- * ⚠️ 前两条**看着像上游的字符串拼接 bug**（源码里写作
- *    `` `${buttonCls}${skeletonButtonCls}-circle` ``），实测**不是**：
- *    `componentCls` 在 cssinjs 里带前导点（`.ant-skeleton`），所以
- *    `skeletonButtonCls = '.ant-skeleton-button'`，拼出来正好是
- *    `.ant-skeleton-button.ant-skeleton-button-circle` —— 一个**复合选择器**。
- *    照着「修掉这个 bug」会得到一个永远不生效的规则，且视觉上表现为
- *    「圆形的按钮骨架屏是方的」。这条是本次分析里最容易误判的一处。
- *
- * ⚠️ 第三条的**嵌套 `calc`** 也是上游原样：`imageSizeBase` 本身是
- *    `calc(controlHeight * 1.5)`，再被 `* 2` / `* 4` 包一层。视觉上与
- *    `calc(controlHeight * 3)` 等价，但逐字保留才能让「两边 CSS 是否同构」可比。
- *
- * ── 与 antd 产物的三处**有意**差异 ─────────────────────────────────────────────
- *
- * 1. 没有 CSS-in-JS 的 hash 包裹（差异 D5）。antd 的每条规则都带一个
- *    `.css-dev-only-do-not-override-xxxx` 前置类；我们只有裸选择器。
- * 2. 关键帧名不同：antd 是 `css-<hash>-ant-skeleton-loading`（`Keyframes` 名固定为
- *    `ant-skeleton-loading`，再由 cssinjs 加 hash）。我们零运行时没有 hash 可加，
- *    直接用 `${prefixCls}-skeleton-loading`。**有意**让它带前缀：静态 CSS 同时为
- *    `apollo` 与 `ant` 两个前缀生成一份，固定名会让两份产物声明同名关键帧。
- * 3. `genCommonStyle` 的 `::before` / `::after` 与两条 `[class^="…"]` 的
- *    `box-sizing` 规则**不产出** —— `packages/ui/src/style/index.ts` 的 `BASE_CSS`
- *    已经用 `*{box-sizing:border-box}` 覆盖，重复产出只是体积
- *    （与 spin 同一条理由，见 `spin/style/index.ts` 的文件头注释）。
- *    保留的是 `genCommonStyle` 在根元素上的三行（font-family / font-size / box-sizing）。
- *
- * ── 取值来源 ──────────────────────────────────────────────────────────────────
- *
- * 别名 token 一律走 `var(--apollo-*)`（随主题自适应、且被 B7 校验变量存在）；
- * 组件级的**字面量**（圆角 `50%` / `100px`、占位图填充色、动画时长）由
- * `style/token.ts` 给出唯一真源 —— 见那个文件的说明。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
- *   - 没证明变量名存在。`var(--apollo-*)` 写错不会报错、只会静默失效 ——
- *     由 `tests/build/run.mjs` 的 B7 校验。
- *   - 没证明**层叠结果**与 antd 一致：这里只保证「选择器 + 声明」同构。
- *     `-block` 与 `-active` 这类靠特异性取胜的规则，其最终效果由 L6 裁决。
- */
+/** Static Skeleton CSS: current component variables and Alias fallbacks preserve the original geometry. */
 
 import { token2CSSVar } from '@apollo-design/theme';
 import {
@@ -112,17 +49,18 @@ export function genSkeletonStyle(prefixCls: string): string {
   const CONTROL_LG = v('controlHeightLG');
   const CONTROL_SM = v('controlHeightSM');
   const CONTROL_XS = v('controlHeightXS');
-  const GRADIENT_FROM = v('colorFillContent');
-  const GRADIENT_TO = v('colorFill');
+  const tv = (name: string) => `var(--${prefixCls}-skeleton-${name})`;
+  const GRADIENT_FROM = tv('gradient-from-color');
+  const GRADIENT_TO = tv('gradient-to-color');
   const PADDING = v('padding');
   const MARGIN_SM = v('marginSM');
 
   /** `titleHeight` = `controlHeight / 2`（antd 的 `prepareComponentToken`）。 */
-  const TITLE_HEIGHT = `calc(${CONTROL} / 2)`;
+  const TITLE_HEIGHT = tv('title-height');
   /** `paragraphLiHeight` 与 `titleHeight` 同式。 */
-  const PARAGRAPH_LI_HEIGHT = TITLE_HEIGHT;
+  const PARAGRAPH_LI_HEIGHT = tv('paragraph-li-height');
   /** `paragraphMarginTop` = `marginLG + marginXXS`。 */
-  const PARAGRAPH_MARGIN_TOP = `calc(${v('marginLG')} + ${v('marginXXS')})`;
+  const PARAGRAPH_MARGIN_TOP = tv('paragraph-margin-top');
   /** `imageSizeBase` = `controlHeight * 1.5`。 */
   const IMAGE_BASE = `calc(${CONTROL} * ${IMAGE_SIZE_BASE_MULTIPLIER})`;
 
@@ -145,11 +83,13 @@ export function genSkeletonStyle(prefixCls: string): string {
     `  justify-content:center;`,
     `  vertical-align:middle;`,
     `  background:${GRADIENT_FROM};`,
-    `  border-radius:${v('borderRadiusSM')};`,
+    `  border-radius:var(--${prefixCls}-skeleton-block-radius);`,
     `  width:calc(${IMAGE_BASE} * 2);`,
     `  height:calc(${IMAGE_BASE} * 2);`,
-    `  line-height:calc(${IMAGE_BASE} * 2);`,
+    `  line-height:${v('lineHeight')};`,
   ];
+
+  const animated = `${cls}${cls}-active ${title},${cls}${cls}-active ${paragraph}>li,${cls}${cls}-active ${avatar},${cls}${cls}-active ${button},${cls}${cls}-active ${input},${cls}${cls}-active ${node},${cls}${cls}-active ${image}`;
 
   return [
     // ---- 关键帧（antd 的 `skeletonClsLoading` Keyframes）------------------------
@@ -164,10 +104,21 @@ export function genSkeletonStyle(prefixCls: string): string {
     // `genCommonStyle` 而非 `resetComponent` —— 所以只有这三行（没有 margin / padding /
     // color / line-height / list-style）。逐字保留。
     `${cls}{`,
+    `  --${prefixCls}-skeleton-color:${v('colorFillContent')};`,
+    `  --${prefixCls}-skeleton-color-gradient-end:${v('colorFill')};`,
+    `  --${prefixCls}-skeleton-gradient-from-color:${tv('color')};`,
+    `  --${prefixCls}-skeleton-gradient-to-color:${tv('color-gradient-end')};`,
+    `  --${prefixCls}-skeleton-title-height:calc(${CONTROL} / 2);`,
+    `  --${prefixCls}-skeleton-block-radius:${v('borderRadiusSM')};`,
+    `  --${prefixCls}-skeleton-paragraph-margin-top:calc(${v('marginLG')} + ${v('marginXXS')});`,
+    `  --${prefixCls}-skeleton-paragraph-li-height:calc(${CONTROL} / 2);`,
     `  font-family:${v('fontFamily')};`,
     `  font-size:${v('fontSize')};`,
     `  box-sizing:border-box;`,
     `}`,
+    '',
+
+    `${cls}-rtl{direction:rtl;}`,
     '',
 
     // ---- genBaseStyle · 根 -----------------------------------------------------
@@ -213,7 +164,7 @@ export function genSkeletonStyle(prefixCls: string): string {
     `  width:100%;`,
     `  height:${TITLE_HEIGHT};`,
     `  background:${GRADIENT_FROM};`,
-    `  border-radius:${v('borderRadiusSM')};`,
+    `  border-radius:var(--${prefixCls}-skeleton-block-radius);`,
     `}`,
     `${cls} ${section} ${title} +${paragraph}{`,
     `  margin-block-start:${CONTROL_SM};`,
@@ -226,7 +177,7 @@ export function genSkeletonStyle(prefixCls: string): string {
     `  height:${PARAGRAPH_LI_HEIGHT};`,
     `  list-style:none;`,
     `  background:${GRADIENT_FROM};`,
-    `  border-radius:${v('borderRadiusSM')};`,
+    `  border-radius:var(--${prefixCls}-skeleton-block-radius);`,
     `}`,
     `${cls} ${section} ${paragraph}>li +li{`,
     `  margin-block-start:${CONTROL_XS};`,
@@ -265,7 +216,7 @@ export function genSkeletonStyle(prefixCls: string): string {
     `  display:inline-block;`,
     `  vertical-align:top;`,
     `  background:${GRADIENT_FROM};`,
-    `  border-radius:${v('borderRadiusSM')};`,
+    `  border-radius:var(--${prefixCls}-skeleton-block-radius);`,
     blockBox(CONTROL, BUTTON_WIDTH_MULTIPLIER),
     `}`,
     `${cls}${element} ${button}${button}-circle{`,
@@ -323,7 +274,7 @@ export function genSkeletonStyle(prefixCls: string): string {
     `  display:inline-block;`,
     `  vertical-align:top;`,
     `  background:${GRADIENT_FROM};`,
-    `  border-radius:${v('borderRadiusSM')};`,
+    `  border-radius:var(--${prefixCls}-skeleton-block-radius);`,
     blockBox(CONTROL, INPUT_WIDTH_MULTIPLIER),
     `}`,
     `${cls}${element} ${input}-lg{`,
@@ -375,14 +326,18 @@ export function genSkeletonStyle(prefixCls: string): string {
     '',
 
     // ---- Active（微光动画）----------------------------------------------------
-    `${cls}${cls}-active ${title},${cls}${cls}-active ${paragraph}>li,${cls}${cls}-active ${avatar},${cls}${cls}-active ${button},${cls}${cls}-active ${input},${cls}${cls}-active ${node},${cls}${cls}-active ${image}{`,
+    `${animated}{`,
     `  background:linear-gradient(90deg, ${GRADIENT_FROM} ${LOADING_GRADIENT_STOPS.from}, ${GRADIENT_TO} ${LOADING_GRADIENT_STOPS.to}, ${GRADIENT_FROM} ${LOADING_GRADIENT_STOPS.back});`,
     `  background-size:${LOADING_BACKGROUND_SIZE};`,
     `  animation-name:${loadingName};`,
     `  animation-duration:${LOADING_MOTION_DURATION};`,
     `  animation-timing-function:ease;`,
     `  animation-iteration-count:infinite;`,
+    `  animation-play-state:var(--${prefixCls}-skeleton-animation-play-state,running);`,
     `}`,
     '',
+    `@media (prefers-reduced-motion:reduce){`,
+    `  ${animated}{animation:none;}`,
+    `}`,
   ].join('\n');
 }

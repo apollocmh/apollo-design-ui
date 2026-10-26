@@ -32,8 +32,26 @@ const allDemos: Array<{ component: string; demo: DemoMeta }> = manifest.componen
 
 describe('全量 demo 审计', () => {
   // 阶段 2 补齐后 758 → 881，2026-10-21 余量补齐后 → 989；F01 新增标签/输入属性示例后 → 990，F02 条件选项示例后 → 991；新增 demo 时同步更新此数（它是管线重复/漏收的哨兵）。
-  it('数量与管线口径一致（1004，含QRCode组件Token示例）', () => {
-    expect(allDemos.length).toBe(1004);
+  it('数量与管线口径一致（1005，含QRCode与Skeleton组件Token示例）', () => {
+    expect(allDemos.length).toBe(1005);
+    expect(
+      allDemos
+        .map(({ demo }) => demo.id)
+        .filter((id) => id.startsWith('skeleton-demo-'))
+        .sort(),
+    ).toEqual(
+      [
+        'skeleton-demo-basic',
+        'skeleton-demo-avatar',
+        'skeleton-demo-loading',
+        'skeleton-demo-active',
+        'skeleton-demo-semantic',
+        'skeleton-demo-children',
+        'skeleton-demo-complex',
+        'skeleton-demo-element',
+        'skeleton-demo-component-token',
+      ].sort(),
+    );
     expect(allDemos.some(({ demo }) => demo.id === 'spin-demo-component-token')).toBe(true);
     expect(allDemos.some(({ demo }) => demo.id === 'qr-code-demo-component-token')).toBe(true);
     expect(allDemos.some(({ demo }) => demo.id === 'image-demo-preview-close')).toBe(true);

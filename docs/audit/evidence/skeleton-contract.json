@@ -1,0 +1,3585 @@
+{
+  "inventoryCommit": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
+  "status": "grouped-implementation-under-acceptance",
+  "baselineSources": [
+    {
+      "file": "packages/ui/src/skeleton/Avatar.vue",
+      "sha256": "c6956ac79cd7362c97b81877085e5fb648b141f940a73393517a8495a2c543d5"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Button.vue",
+      "sha256": "313068c6fd56643b55d7ea6b4775ad482e0aa3c5eedebf15d5c89fd3a53c6cd6"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Element.vue",
+      "sha256": "6ec557b80af9ca2e310be916a02e6072ac15684f0dc8f1f72be394f6dd7f26b9"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Image.vue",
+      "sha256": "b0699aa4850660d0bffcc519e9a50251e14b830227a64bf3707aefd602820a35"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Input.vue",
+      "sha256": "c2a4e42e5182c919a2f504811a32b9f9398093c17c57b45198d248e6d5426f9b"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Node.vue",
+      "sha256": "a2315ae5389cf895a948dc2e616eee1f8021f3866d98ba866f3b5c659442eec0"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Paragraph.vue",
+      "sha256": "2123efee5fb89f3ace0ffbd36469e420652cff0d85bf54ff902a62e0649002b2"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Skeleton.vue",
+      "sha256": "8a38e3151dbddb3354ac55679858bf33576b5930ad655f4a0f4a4e9b6ffd697e"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Title.vue",
+      "sha256": "d04dd985530078defba0b70d5d75ce3fbadea5d3f8a8328d08898a18db34773c"
+    },
+    {
+      "file": "packages/ui/src/skeleton/index.ts",
+      "sha256": "5661043a5ec0bf286fa2a5bb74bf6fc7e25c4f2d3ad0f00da08687dbac647905"
+    },
+    {
+      "file": "packages/ui/src/skeleton/interface.ts",
+      "sha256": "3bc8fcf7b7ac959c22258d8079eae3d8c0875dd554386acb038c4ea63b592a0c"
+    },
+    {
+      "file": "packages/ui/src/skeleton/style/index.ts",
+      "sha256": "19c449fd744a7547e73533e2c6daf5a20414afc31ac13366b0eae72faa7ed6e8"
+    },
+    {
+      "file": "packages/ui/src/skeleton/style/token.ts",
+      "sha256": "e5e888040a16a1ac82d2dcf958b1603faeb20f07c71e041b7766e780410a55ee"
+    },
+    {
+      "file": "packages/ui/src/skeleton/styleLength.ts",
+      "sha256": "e8311bb297f48d753643dfb0ef4226f6f1d739dd3a02602bedbb8ae2993a51e3"
+    },
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "75b5cb84b5ef06db1366fb16c1a215a1e359943018829a37b4322ce8961a2a04"
+    }
+  ],
+  "scope": "Skeleton and five standalone children, internal geometry, eight tokens, eight original demos; Card and Statistic consumers",
+  "remaining": [
+    "39 owned visuals need clean-source capture, individual review, approval and exact comparison; affected Statistic 36 pixels need comparison.",
+    "Original checklist final reconciliation, progress/Registry closure and final publication/online source verification."
+  ],
+  "before": {
+    "total": 27,
+    "passed": 1,
+    "failed": 26,
+    "cases": [
+      {
+        "name": "Skeleton complete public-boundary regressions main routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-main' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions avatar routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-avatar' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions button routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-button' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions input routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-input' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions image routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-image' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions node routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-node' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions main keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions avatar keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions button keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions input keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions image keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions node keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions reads the current Provider configuration after replacement, removal and restoration",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'apollo-skeleton', …(1) ] to include 'first'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions evaluates semantic functions against the current reactive props",
+        "status": "failed",
+        "failure": "AssertionError: expected '17px' to be '29px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions merges every nested block class/style instead of discarding them",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'apollo-skeleton-avatar', …(3) ] to include 'semantic-avatar'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions main consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions avatar consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions button consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions input consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions image consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions node consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions keeps Image default content complete and respects an intentionally empty slot",
+        "status": "failed",
+        "failure": "AssertionError: expected [] to have a length of 1 but got +0"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions preserves a Node native editor while surrounding configuration changes",
+        "status": "passed"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions does not expose decorative headings and explicitly owns the loading state",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'true' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions ignores nonfinite row counts without throwing",
+        "status": "failed",
+        "failure": "AssertionError: expected [Function] to not throw an error but 'RangeError: Invalid array length' was thrown"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions omits nonfinite lengths while retaining zero and valid CSS lengths",
+        "status": "failed",
+        "failure": "AssertionError: expected 'NaNpx' to be undefined"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions cleans up the actual children demo timer on unmount",
+        "status": "failed",
+        "failure": "AssertionError: expected 1 to be +0 // Object.is equality"
+      }
+    ]
+  },
+  "providerIdentityBefore": {
+    "failed": true,
+    "log": "/tmp/apollo-skeleton-provider-before.json",
+    "note": "A class-only check passed while replacing the DOM; the added exact identity assertion exposes the missing ownership guarantee. Investigate fixture and current implementation before attributing it."
+  },
+  "initialHarnessBefore": {
+    "total": 27,
+    "passed": 2,
+    "failed": 25,
+    "cases": [
+      {
+        "name": "Skeleton complete public-boundary regressions main routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-main' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions avatar routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-avatar' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions button routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-button' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions input routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-input' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions image routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-image' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions node routes native attributes and events to its actual root",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'native-node' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions main keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions avatar keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions button keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions input keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions image keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions node keeps all Vue style forms on the root and content styles separate",
+        "status": "failed",
+        "failure": "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions reads the current Provider configuration after replacement, removal and restoration",
+        "status": "passed"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions evaluates semantic functions against the current reactive props",
+        "status": "failed",
+        "failure": "AssertionError: expected '17px' to be '29px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions merges every nested block class/style instead of discarding them",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'apollo-skeleton-avatar', …(3) ] to include 'semantic-avatar'"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions main consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions avatar consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions button consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions input consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions image consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions node consumes current source aliases and component tokens",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '23px' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions keeps Image default content complete and respects an intentionally empty slot",
+        "status": "failed",
+        "failure": "AssertionError: expected [] to have a length of 1 but got +0"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions preserves a Node native editor while surrounding configuration changes",
+        "status": "passed"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions does not expose decorative headings and explicitly owns the loading state",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'true' // Object.is equality"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions ignores nonfinite row counts without throwing",
+        "status": "failed",
+        "failure": "AssertionError: expected [Function] to not throw an error but 'RangeError: Invalid array length' was thrown"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions omits nonfinite lengths while retaining zero and valid CSS lengths",
+        "status": "failed",
+        "failure": "AssertionError: expected 'NaNpx' to be undefined"
+      },
+      {
+        "name": "Skeleton complete public-boundary regressions cleans up the actual children demo timer on unmount",
+        "status": "failed",
+        "failure": "AssertionError: expected 1 to be +0 // Object.is equality"
+      }
+    ]
+  },
+  "harnessNotes": [
+    "Global Teleport stubbing remounted the Provider subtree and hid a configuration snapshot bug behind fresh setup. The corrected fixtures use real Teleport, preserve DOM identity and reproduce 26 failures out of 27, before source changes.",
+    "A temporary reference-difference capture was removed after checking every delta against exact permitted busy/hidden/native data additions and the two original historical differences. Original reference baseline files are unchanged.",
+    "The first implementation test run failed to collect due to an accidental SVG/comment extraction; it was corrected, was never counted as passing, and the original SVG path was retained.",
+    "First rebuilt browser run passed 85/90: native attrs revealed an invalid fixture aria-label on a generic div without a role. The fixture supplies its own region role and preserves the label, native-attrs assertion and every axe rule. The rerun passes 90/90 without adding an implicit component role.",
+    "Actual demo theme transition was sampled at a fractional 12.9651px font, producing one transient contrast failure. Both Skeleton and Statistic demo runners now await finite CSS transitions without stopping infinite shimmer or disabling axe rules; all 36 and 28 final combinations pass."
+  ],
+  "referenceDifferences": {
+    "skeleton": {
+      "loading:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "loading:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "loading:explicit-undefined": [
+        "$/span[0]: 标签不同 <span> vs <div>",
+        "$/span[0]: 类名不同 [] vs [apollo]",
+        "$/span[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/span[0]: 子节点数不同 0 vs 1"
+      ],
+      "blocks:avatar:unset+title:unset+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:unset+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:unset+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:false+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:false+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\""
+      ],
+      "blocks:avatar:unset+title:false+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:true+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:true+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:unset+title:true+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:unset+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:unset+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:unset+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:false+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:false+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\""
+      ],
+      "blocks:avatar:false+title:false+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:true+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:true+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:false+title:true+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:unset+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:unset+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:unset+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:false+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:false+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:false+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:true+paragraph:unset": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:true+paragraph:false": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "blocks:avatar:true+title:true+paragraph:true": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "override:avatar-shape": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "override:title-width": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "override:paragraph-rows": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "override:paragraph-width-array": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "override:paragraph-width-scalar": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "class:active": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "class:round": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "class:active+round": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "class:className": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "class:rootClassName": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "prefix-cls:no-props": [
+        "$/div[0]: 类名不同 [ant-skeleton] vs [apollo-skeleton]",
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 类名不同 [ant-skeleton-section] vs [apollo-skeleton-section]",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+        "$/div[0]/div[0]/h3[0]: 类名不同 [ant-skeleton-title] vs [apollo-skeleton-title]",
+        "$/div[0]/div[0]/ul[1]: 类名不同 [ant-skeleton-paragraph] vs [apollo-skeleton-paragraph]"
+      ],
+      "attrs:passthrough": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]: 我们多出属性 data-testid=\"x\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "semantic:classNames-root": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "semantic:classNames-all": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "semantic:styles-all": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "config:className": [
+        "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ]
+    },
+    "statistic": {
+      "previousSevenRetained": true,
+      "added": [
+        "$/div[0]/div[1]/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[1]/div[0]/h3[0]: 我们多出属性 aria-hidden=\"true\""
+      ]
+    },
+    "card": {
+      "card:loading": [
+        "$/div[0]/div[1]/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[1]/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ],
+      "card:loading-no-title": [
+        "$/div[0]/div[0]/div[0]: 我们多出属性 aria-busy=\"true\"",
+        "$/div[0]/div[0]/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+      ]
+    }
+  },
+  "browserBefore": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "main native id",
+        "actual": null,
+        "expected": "skeleton-main",
+        "passed": false
+      },
+      {
+        "name": "main native data",
+        "actual": null,
+        "expected": "main",
+        "passed": false
+      },
+      {
+        "name": "main native root geometry",
+        "actual": "6px",
+        "expected": "6px",
+        "passed": true
+      },
+      {
+        "name": "avatar native id",
+        "actual": null,
+        "expected": "skeleton-avatar",
+        "passed": false
+      },
+      {
+        "name": "avatar native data",
+        "actual": null,
+        "expected": "avatar",
+        "passed": false
+      },
+      {
+        "name": "avatar native root geometry",
+        "actual": "0px",
+        "expected": "6px",
+        "passed": false
+      },
+      {
+        "name": "button native id",
+        "actual": null,
+        "expected": "skeleton-button",
+        "passed": false
+      },
+      {
+        "name": "button native data",
+        "actual": null,
+        "expected": "button",
+        "passed": false
+      },
+      {
+        "name": "button native root geometry",
+        "actual": "0px",
+        "expected": "6px",
+        "passed": false
+      },
+      {
+        "name": "input native id",
+        "actual": null,
+        "expected": "skeleton-input",
+        "passed": false
+      },
+      {
+        "name": "input native data",
+        "actual": null,
+        "expected": "input",
+        "passed": false
+      },
+      {
+        "name": "input native root geometry",
+        "actual": "0px",
+        "expected": "6px",
+        "passed": false
+      },
+      {
+        "name": "image native id",
+        "actual": null,
+        "expected": "skeleton-image",
+        "passed": false
+      },
+      {
+        "name": "image native data",
+        "actual": null,
+        "expected": "image",
+        "passed": false
+      },
+      {
+        "name": "image native root geometry",
+        "actual": "0px",
+        "expected": "6px",
+        "passed": false
+      },
+      {
+        "name": "node native id",
+        "actual": null,
+        "expected": "skeleton-node",
+        "passed": false
+      },
+      {
+        "name": "node native data",
+        "actual": null,
+        "expected": "node",
+        "passed": false
+      },
+      {
+        "name": "node native root geometry",
+        "actual": "0px",
+        "expected": "6px",
+        "passed": false
+      },
+      {
+        "name": "main native ref",
+        "actual": "",
+        "expected": "skeleton-main",
+        "passed": false
+      },
+      {
+        "name": "default title geometry",
+        "actual": "16px",
+        "expected": "16px",
+        "passed": true
+      },
+      {
+        "name": "default complete content and consumers pass actual axe",
+        "actual": [
+          {
+            "id": "empty-heading",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+              }
+            ]
+          },
+          {
+            "id": "heading-order",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Heading order invalid"
+              }
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "one native root click",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "loading root owns busy",
+        "actual": null,
+        "expected": "true",
+        "passed": false
+      },
+      {
+        "name": "decorative title has a hidden owner",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "nested avatar configuration and semantic classes combine",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "nested avatar style is consumed",
+        "actual": "1",
+        "expected": "0.7",
+        "passed": false
+      },
+      {
+        "name": "current component title height",
+        "actual": "22px",
+        "expected": "28px",
+        "passed": false
+      },
+      {
+        "name": "current paragraph height",
+        "actual": "22px",
+        "expected": "19px",
+        "passed": false
+      },
+      {
+        "name": "current paragraph margin",
+        "actual": "28px",
+        "expected": "34px",
+        "passed": false
+      },
+      {
+        "name": "current block radius",
+        "actual": "100px",
+        "expected": "100px",
+        "passed": true
+      },
+      {
+        "name": "current source gradient colors",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "current Provider class",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "current Provider style",
+        "actual": "0px",
+        "expected": "13px",
+        "passed": false
+      },
+      {
+        "name": "current semantic props",
+        "actual": "1",
+        "expected": "0.65",
+        "passed": false
+      },
+      {
+        "name": "source and Provider changes retain editor, model and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "main actual RTL",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "avatar actual RTL",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "button actual RTL",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "input actual RTL",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "image actual RTL",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "node actual RTL",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "component block radius without round override",
+        "actual": "4px",
+        "expected": "8px",
+        "passed": false
+      },
+      {
+        "name": "native variable overrides component height",
+        "actual": "22px",
+        "expected": "35px",
+        "passed": false
+      },
+      {
+        "name": "removing native override restores current token",
+        "actual": "22px",
+        "expected": "28px",
+        "passed": false
+      },
+      {
+        "name": "all six root styles support 13px",
+        "actual": [
+          "13px",
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px"
+        ],
+        "expected": [
+          "13px",
+          "13px",
+          "13px",
+          "13px",
+          "13px",
+          "13px"
+        ],
+        "passed": false
+      },
+      {
+        "name": "Node content style stays independent at 13px",
+        "actual": "13px",
+        "expected": "12px",
+        "passed": false
+      },
+      {
+        "name": "all six root styles support 17px",
+        "actual": [
+          "17px",
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px"
+        ],
+        "expected": [
+          "17px",
+          "17px",
+          "17px",
+          "17px",
+          "17px",
+          "17px"
+        ],
+        "passed": false
+      },
+      {
+        "name": "Node content style stays independent at 17px",
+        "actual": "17px",
+        "expected": "12px",
+        "passed": false
+      },
+      {
+        "name": "all six root styles support 19px",
+        "actual": [
+          "19px",
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px"
+        ],
+        "expected": [
+          "19px",
+          "19px",
+          "19px",
+          "19px",
+          "19px",
+          "19px"
+        ],
+        "passed": false
+      },
+      {
+        "name": "Node content style stays independent at 19px",
+        "actual": "19px",
+        "expected": "12px",
+        "passed": false
+      },
+      {
+        "name": "all six root styles support 0px",
+        "actual": [
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px"
+        ],
+        "expected": [
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px",
+          "0px"
+        ],
+        "passed": true
+      },
+      {
+        "name": "Node content style stays independent at 0px",
+        "actual": "12px",
+        "expected": "12px",
+        "passed": true
+      },
+      {
+        "name": "theme false preserves original editor and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "theme false restores exact title default/current",
+        "actual": "16px",
+        "expected": "16px",
+        "passed": true
+      },
+      {
+        "name": "theme true preserves original editor and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "theme true restores exact title default/current",
+        "actual": "22px",
+        "expected": "28px",
+        "passed": false
+      },
+      {
+        "name": "theme false preserves original editor and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "theme false restores exact title default/current",
+        "actual": "16px",
+        "expected": "16px",
+        "passed": true
+      },
+      {
+        "name": "removed Provider class clears",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "main source motion false pauses shimmer",
+        "actual": "running",
+        "expected": "paused",
+        "passed": false
+      },
+      {
+        "name": "avatar source motion false pauses shimmer",
+        "actual": "running",
+        "expected": "paused",
+        "passed": false
+      },
+      {
+        "name": "button source motion false pauses shimmer",
+        "actual": "running",
+        "expected": "paused",
+        "passed": false
+      },
+      {
+        "name": "input source motion false pauses shimmer",
+        "actual": "running",
+        "expected": "paused",
+        "passed": false
+      },
+      {
+        "name": "image source motion false pauses shimmer",
+        "actual": "running",
+        "expected": "paused",
+        "passed": false
+      },
+      {
+        "name": "node source motion false pauses shimmer",
+        "actual": "running",
+        "expected": "paused",
+        "passed": false
+      },
+      {
+        "name": "main reduced motion stops shimmer",
+        "actual": "apollo-skeleton-loading",
+        "expected": "none",
+        "passed": false
+      },
+      {
+        "name": "avatar reduced motion stops shimmer",
+        "actual": "apollo-skeleton-loading",
+        "expected": "none",
+        "passed": false
+      },
+      {
+        "name": "button reduced motion stops shimmer",
+        "actual": "apollo-skeleton-loading",
+        "expected": "none",
+        "passed": false
+      },
+      {
+        "name": "input reduced motion stops shimmer",
+        "actual": "apollo-skeleton-loading",
+        "expected": "none",
+        "passed": false
+      },
+      {
+        "name": "image reduced motion stops shimmer",
+        "actual": "apollo-skeleton-loading",
+        "expected": "none",
+        "passed": false
+      },
+      {
+        "name": "node reduced motion stops shimmer",
+        "actual": "apollo-skeleton-loading",
+        "expected": "none",
+        "passed": false
+      },
+      {
+        "name": "Image exposes its complete public default slot",
+        "actual": 0,
+        "expected": 1,
+        "passed": false
+      },
+      {
+        "name": "intentional empty Image slot suppresses fallback",
+        "actual": 1,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "absent Image slot restores original SVG",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "loaded branch has no placeholder root",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "loaded native ref is null",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "loading cycle 0 retains caller model",
+        "actual": "Persistent loaded model",
+        "expected": "Persistent loaded model",
+        "passed": true
+      },
+      {
+        "name": "loading cycle 1 retains caller model",
+        "actual": "Persistent loaded model",
+        "expected": "Persistent loaded model",
+        "passed": true
+      },
+      {
+        "name": "negative paragraph rows are empty",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "fractional paragraph rows are finite integers",
+        "actual": 2,
+        "expected": 2,
+        "passed": true
+      },
+      {
+        "name": "default complete real content and consumers pass axe",
+        "actual": [
+          {
+            "id": "empty-heading",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+              }
+            ]
+          },
+          {
+            "id": "heading-order",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Heading order invalid"
+              }
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "dark complete real content and consumers pass axe",
+        "actual": [
+          {
+            "id": "empty-heading",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+              }
+            ]
+          },
+          {
+            "id": "heading-order",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Heading order invalid"
+              }
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "compact complete real content and consumers pass axe",
+        "actual": [
+          {
+            "id": "empty-heading",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+              }
+            ]
+          },
+          {
+            "id": "heading-order",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Heading order invalid"
+              }
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "both complete real content and consumers pass axe",
+        "actual": [
+          {
+            "id": "empty-heading",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+              }
+            ]
+          },
+          {
+            "id": "heading-order",
+            "nodes": [
+              {
+                "html": "<h3 class=\"apollo-skeleton-title configured-title\" style=\"width: 50%; opacity: 1;\"></h3>",
+                "failure": "Fix any of the following:\n  Heading order invalid"
+              }
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "unmount 0 clears the public ref",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "remount 0 restores the actual native root",
+        "actual": "",
+        "expected": "skeleton-main",
+        "passed": false
+      },
+      {
+        "name": "unmount 1 clears the public ref",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "remount 1 restores the actual native root",
+        "actual": "",
+        "expected": "skeleton-main",
+        "passed": false
+      },
+      {
+        "name": "no page, console or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "productionSources": [
+    {
+      "file": "packages/ui/src/skeleton/Avatar.vue",
+      "sha256": "47493714b97071f514ac4d566b93dfcb0981caab5f3bcbeb4d304d468e9c1b84"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Button.vue",
+      "sha256": "6bb5ebbc54288ada73b2da2c6dca328b4bacce63dd1642a26a817def1200db05"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Element.vue",
+      "sha256": "69a5833fa6c31f568b843492964a869ffc324dd58a212641f8b91859bbe05851"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Image.vue",
+      "sha256": "5aba70a9827efe9892ca05324124cb45b1093a73c25bb6806de852aaa0c87571"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Input.vue",
+      "sha256": "0d63da2d257b721aa2d8e9b78a1407d13f65b8499ad5c7828eb670c7a9971212"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Node.vue",
+      "sha256": "70d6c86ff0dceb835b2371a91b6fb9d9117661b400b6d879beaab26097d05f94"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Paragraph.vue",
+      "sha256": "a6203835c25d7dbac10d5f6a0eea13a3cc59af5131edd5d69e0952f3b93f15f2"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Skeleton.vue",
+      "sha256": "5b962d43cea650d4d479c1fe6cea94572bb51a842a613940920cba8410f03b2d"
+    },
+    {
+      "file": "packages/ui/src/skeleton/Title.vue",
+      "sha256": "d04dd985530078defba0b70d5d75ce3fbadea5d3f8a8328d08898a18db34773c"
+    },
+    {
+      "file": "packages/ui/src/skeleton/index.ts",
+      "sha256": "5661043a5ec0bf286fa2a5bb74bf6fc7e25c4f2d3ad0f00da08687dbac647905"
+    },
+    {
+      "file": "packages/ui/src/skeleton/interface.ts",
+      "sha256": "f8ec2fc01ddbdfd01f10bf60c363cd9c1bf39c1b0023660d74aaa8d7ceff493b"
+    },
+    {
+      "file": "packages/ui/src/skeleton/style/index.ts",
+      "sha256": "2baa01f9254acd217435cac72704823c2de437cf07f9294c6b719aa75a6ea538"
+    },
+    {
+      "file": "packages/ui/src/skeleton/style/token.ts",
+      "sha256": "9a8f849f2f3cda755ec5b4dee6cc0f9c00fd55ddcc425879e42a5bc11e831c2e"
+    },
+    {
+      "file": "packages/ui/src/skeleton/styleLength.ts",
+      "sha256": "7cb1b3275f33ad666ea11f2081dfc566c2064a4bea6ba0aa5ed1a1f0a6815250"
+    },
+    {
+      "file": "packages/ui/src/skeleton/use-skeleton-root.ts",
+      "sha256": "914cbcb10359a826dc62f33b4f42fb45bde74917f19345c13e1a3d93a6f6b804"
+    },
+    {
+      "file": "packages/ui/src/skeleton/use-skeleton-theme.ts",
+      "sha256": "fc5905b30925d4a22a373e69abfcdedf634c29effa04cd5c5610c2d4ac6f33a7"
+    },
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "75b5cb84b5ef06db1366fb16c1a215a1e359943018829a37b4322ce8961a2a04"
+    }
+  ],
+  "sourceSha256": "ceeed7df2f651b235c43a1af6e8ebd5e17fb44bf69e5435fc4640ed252bf650d",
+  "fingerprintAlgorithm": "sha256 of compact JSON of productionSources in recorded order",
+  "implementationStage": {
+    "relatedFourLayers": {
+      "files": 17,
+      "total": 360,
+      "passed": 360,
+      "failed": 0,
+      "byComponent": {
+        "card": 145,
+        "skeleton": 129,
+        "statistic": 86
+      }
+    },
+    "relatedTypes": {
+      "files": 8,
+      "total": 128,
+      "passed": 128,
+      "failed": 0,
+      "byComponent": {
+        "card": 30,
+        "config-provider": 36,
+        "skeleton": 44,
+        "statistic": 18
+      }
+    },
+    "currentContract": {
+      "total": 28,
+      "passed": 28,
+      "failed": 0
+    },
+    "strictTypes": "/tmp/apollo-skeleton-types-final.log",
+    "realSfcTypes": "/tmp/apollo-skeleton-sfc.log",
+    "uiBuild": "/tmp/apollo-skeleton-ui-build.log",
+    "browser": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "name": "main native id",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "main native data",
+          "actual": "main",
+          "expected": "main",
+          "passed": true
+        },
+        {
+          "name": "main native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "avatar native id",
+          "actual": "skeleton-avatar",
+          "expected": "skeleton-avatar",
+          "passed": true
+        },
+        {
+          "name": "avatar native data",
+          "actual": "avatar",
+          "expected": "avatar",
+          "passed": true
+        },
+        {
+          "name": "avatar native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "button native id",
+          "actual": "skeleton-button",
+          "expected": "skeleton-button",
+          "passed": true
+        },
+        {
+          "name": "button native data",
+          "actual": "button",
+          "expected": "button",
+          "passed": true
+        },
+        {
+          "name": "button native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "input native id",
+          "actual": "skeleton-input",
+          "expected": "skeleton-input",
+          "passed": true
+        },
+        {
+          "name": "input native data",
+          "actual": "input",
+          "expected": "input",
+          "passed": true
+        },
+        {
+          "name": "input native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "image native id",
+          "actual": "skeleton-image",
+          "expected": "skeleton-image",
+          "passed": true
+        },
+        {
+          "name": "image native data",
+          "actual": "image",
+          "expected": "image",
+          "passed": true
+        },
+        {
+          "name": "image native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "node native id",
+          "actual": "skeleton-node",
+          "expected": "skeleton-node",
+          "passed": true
+        },
+        {
+          "name": "node native data",
+          "actual": "node",
+          "expected": "node",
+          "passed": true
+        },
+        {
+          "name": "node native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "main native ref",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "default title geometry",
+          "actual": "16px",
+          "expected": "16px",
+          "passed": true
+        },
+        {
+          "name": "default complete content and consumers pass actual axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "one native root click",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "loading root owns busy",
+          "actual": "true",
+          "expected": "true",
+          "passed": true
+        },
+        {
+          "name": "decorative title has a hidden owner",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "nested avatar configuration and semantic classes combine",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "nested avatar style is consumed",
+          "actual": "0.7",
+          "expected": "0.7",
+          "passed": true
+        },
+        {
+          "name": "Node native editor uses normal text geometry",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "current component title height",
+          "actual": "28px",
+          "expected": "28px",
+          "passed": true
+        },
+        {
+          "name": "current paragraph height",
+          "actual": "19px",
+          "expected": "19px",
+          "passed": true
+        },
+        {
+          "name": "current paragraph margin",
+          "actual": "34px",
+          "expected": "34px",
+          "passed": true
+        },
+        {
+          "name": "current block radius",
+          "actual": "100px",
+          "expected": "100px",
+          "passed": true
+        },
+        {
+          "name": "current source gradient colors",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "current Provider class",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "current Provider style",
+          "actual": "13px",
+          "expected": "13px",
+          "passed": true
+        },
+        {
+          "name": "current semantic props",
+          "actual": "0.65",
+          "expected": "0.65",
+          "passed": true
+        },
+        {
+          "name": "source and Provider changes retain editor, model and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "main actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "avatar actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "button actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "input actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "image actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "node actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "component block radius without round override",
+          "actual": "8px",
+          "expected": "8px",
+          "passed": true
+        },
+        {
+          "name": "native variable overrides component height",
+          "actual": "35px",
+          "expected": "35px",
+          "passed": true
+        },
+        {
+          "name": "removing native override restores current token",
+          "actual": "28px",
+          "expected": "28px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 13px",
+          "actual": [
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px"
+          ],
+          "expected": [
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 13px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 17px",
+          "actual": [
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px"
+          ],
+          "expected": [
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 17px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 19px",
+          "actual": [
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px"
+          ],
+          "expected": [
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 19px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 0px",
+          "actual": [
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "expected": [
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 0px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "theme false preserves original editor and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "theme false restores exact title default/current",
+          "actual": "16px",
+          "expected": "16px",
+          "passed": true
+        },
+        {
+          "name": "theme true preserves original editor and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "theme true restores exact title default/current",
+          "actual": "28px",
+          "expected": "28px",
+          "passed": true
+        },
+        {
+          "name": "theme false preserves original editor and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "theme false restores exact title default/current",
+          "actual": "16px",
+          "expected": "16px",
+          "passed": true
+        },
+        {
+          "name": "removed Provider class clears",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "main source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "avatar source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "button source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "input source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "image source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "node source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "main reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "avatar reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "button reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "input reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "image reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "node reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "Image exposes its complete public default slot",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "Image native editor uses normal text geometry",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "intentional empty Image slot suppresses fallback",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "absent Image slot restores original SVG",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "restored Image slot retains caller-owned model",
+          "actual": "Persistent image model",
+          "expected": "Persistent image model",
+          "passed": true
+        },
+        {
+          "name": "loaded branch has no placeholder root",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "loaded native ref is null",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "loading cycle 0 retains caller model",
+          "actual": "Persistent loaded model",
+          "expected": "Persistent loaded model",
+          "passed": true
+        },
+        {
+          "name": "loading cycle 1 retains caller model",
+          "actual": "Persistent loaded model",
+          "expected": "Persistent loaded model",
+          "passed": true
+        },
+        {
+          "name": "negative paragraph rows are empty",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "fractional paragraph rows are finite integers",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "default complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "dark complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "compact complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "both complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "unmount 0 clears the public ref",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "remount 0 restores the actual native root",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "unmount 1 clears the public ref",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "remount 1 restores the actual native root",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "no page, console or Vue errors",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "ssr": {
+      "results": [
+        {
+          "name": "main native SSR root and string style",
+          "passed": true
+        },
+        {
+          "name": "main current source tokens before mount",
+          "passed": true
+        },
+        {
+          "name": "avatar native SSR root and string style",
+          "passed": true
+        },
+        {
+          "name": "avatar current source tokens before mount",
+          "passed": true
+        },
+        {
+          "name": "button native SSR root and string style",
+          "passed": true
+        },
+        {
+          "name": "button current source tokens before mount",
+          "passed": true
+        },
+        {
+          "name": "input native SSR root and string style",
+          "passed": true
+        },
+        {
+          "name": "input current source tokens before mount",
+          "passed": true
+        },
+        {
+          "name": "image native SSR root and string style",
+          "passed": true
+        },
+        {
+          "name": "image current source tokens before mount",
+          "passed": true
+        },
+        {
+          "name": "node native SSR root and string style",
+          "passed": true
+        },
+        {
+          "name": "node current source tokens before mount",
+          "passed": true
+        },
+        {
+          "name": "loading owns busy and all decoration has hidden owners",
+          "passed": true
+        },
+        {
+          "name": "nonloading content is complete and has no copied root attrs",
+          "passed": true
+        },
+        {
+          "name": "nested block configuration classes and styles are consumed",
+          "passed": true
+        },
+        {
+          "name": "Image complete native content wins over its SVG fallback",
+          "passed": true
+        },
+        {
+          "name": "intentional empty Image content suppresses the fallback",
+          "passed": true
+        },
+        {
+          "name": "nonfinite rows render an empty paragraph without exceptions",
+          "passed": true
+        }
+      ],
+      "browserGlobals": false
+    },
+    "hydration": {
+      "browser": "150.0.7871.125",
+      "checks": [
+        "all six exports SSR current source tokens, native roots and decoration semantics without browser globals",
+        "hydration retains every server root, both uncontrolled pretyped editors, focus and selection",
+        "source configuration removal, replacement and restoration update all six roots without replacing editors",
+        "conditional adjacent native content preserves the original editor nodes and selection",
+        "controlled loading keeps its unwrapped-content boundary and clears/restores the native ref",
+        "unmount/remount clears real roots and refs with zero hydration, page or Vue errors"
+      ],
+      "errors": []
+    },
+    "publishedTypes": "/tmp/apollo-skeleton-published-types.log",
+    "textGeometryBefore": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "name": "main native id",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "main native data",
+          "actual": "main",
+          "expected": "main",
+          "passed": true
+        },
+        {
+          "name": "main native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "avatar native id",
+          "actual": "skeleton-avatar",
+          "expected": "skeleton-avatar",
+          "passed": true
+        },
+        {
+          "name": "avatar native data",
+          "actual": "avatar",
+          "expected": "avatar",
+          "passed": true
+        },
+        {
+          "name": "avatar native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "button native id",
+          "actual": "skeleton-button",
+          "expected": "skeleton-button",
+          "passed": true
+        },
+        {
+          "name": "button native data",
+          "actual": "button",
+          "expected": "button",
+          "passed": true
+        },
+        {
+          "name": "button native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "input native id",
+          "actual": "skeleton-input",
+          "expected": "skeleton-input",
+          "passed": true
+        },
+        {
+          "name": "input native data",
+          "actual": "input",
+          "expected": "input",
+          "passed": true
+        },
+        {
+          "name": "input native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "image native id",
+          "actual": "skeleton-image",
+          "expected": "skeleton-image",
+          "passed": true
+        },
+        {
+          "name": "image native data",
+          "actual": "image",
+          "expected": "image",
+          "passed": true
+        },
+        {
+          "name": "image native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "node native id",
+          "actual": "skeleton-node",
+          "expected": "skeleton-node",
+          "passed": true
+        },
+        {
+          "name": "node native data",
+          "actual": "node",
+          "expected": "node",
+          "passed": true
+        },
+        {
+          "name": "node native root geometry",
+          "actual": "6px",
+          "expected": "6px",
+          "passed": true
+        },
+        {
+          "name": "main native ref",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "default title geometry",
+          "actual": "16px",
+          "expected": "16px",
+          "passed": true
+        },
+        {
+          "name": "default complete content and consumers pass actual axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "one native root click",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "loading root owns busy",
+          "actual": "true",
+          "expected": "true",
+          "passed": true
+        },
+        {
+          "name": "decorative title has a hidden owner",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "nested avatar configuration and semantic classes combine",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "nested avatar style is consumed",
+          "actual": "0.7",
+          "expected": "0.7",
+          "passed": true
+        },
+        {
+          "name": "Node native editor uses normal text geometry",
+          "actual": false,
+          "expected": true,
+          "passed": false
+        },
+        {
+          "name": "current component title height",
+          "actual": "28px",
+          "expected": "28px",
+          "passed": true
+        },
+        {
+          "name": "current paragraph height",
+          "actual": "19px",
+          "expected": "19px",
+          "passed": true
+        },
+        {
+          "name": "current paragraph margin",
+          "actual": "34px",
+          "expected": "34px",
+          "passed": true
+        },
+        {
+          "name": "current block radius",
+          "actual": "100px",
+          "expected": "100px",
+          "passed": true
+        },
+        {
+          "name": "current source gradient colors",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "current Provider class",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "current Provider style",
+          "actual": "13px",
+          "expected": "13px",
+          "passed": true
+        },
+        {
+          "name": "current semantic props",
+          "actual": "0.65",
+          "expected": "0.65",
+          "passed": true
+        },
+        {
+          "name": "source and Provider changes retain editor, model and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "main actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "avatar actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "button actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "input actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "image actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "node actual RTL",
+          "actual": "rtl",
+          "expected": "rtl",
+          "passed": true
+        },
+        {
+          "name": "component block radius without round override",
+          "actual": "8px",
+          "expected": "8px",
+          "passed": true
+        },
+        {
+          "name": "native variable overrides component height",
+          "actual": "35px",
+          "expected": "35px",
+          "passed": true
+        },
+        {
+          "name": "removing native override restores current token",
+          "actual": "28px",
+          "expected": "28px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 13px",
+          "actual": [
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px"
+          ],
+          "expected": [
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px",
+            "13px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 13px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 17px",
+          "actual": [
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px"
+          ],
+          "expected": [
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px",
+            "17px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 17px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 19px",
+          "actual": [
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px"
+          ],
+          "expected": [
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px",
+            "19px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 19px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "all six root styles support 0px",
+          "actual": [
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "expected": [
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Node content style stays independent at 0px",
+          "actual": "12px",
+          "expected": "12px",
+          "passed": true
+        },
+        {
+          "name": "theme false preserves original editor and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "theme false restores exact title default/current",
+          "actual": "16px",
+          "expected": "16px",
+          "passed": true
+        },
+        {
+          "name": "theme true preserves original editor and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "theme true restores exact title default/current",
+          "actual": "28px",
+          "expected": "28px",
+          "passed": true
+        },
+        {
+          "name": "theme false preserves original editor and focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "theme false restores exact title default/current",
+          "actual": "16px",
+          "expected": "16px",
+          "passed": true
+        },
+        {
+          "name": "removed Provider class clears",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "main source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "avatar source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "button source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "input source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "image source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "node source motion false pauses shimmer",
+          "actual": "paused",
+          "expected": "paused",
+          "passed": true
+        },
+        {
+          "name": "main reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "avatar reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "button reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "input reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "image reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "node reduced motion stops shimmer",
+          "actual": "none",
+          "expected": "none",
+          "passed": true
+        },
+        {
+          "name": "Image exposes its complete public default slot",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "Image native editor uses normal text geometry",
+          "actual": false,
+          "expected": true,
+          "passed": false
+        },
+        {
+          "name": "intentional empty Image slot suppresses fallback",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "absent Image slot restores original SVG",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "restored Image slot retains caller-owned model",
+          "actual": "Persistent image model",
+          "expected": "Persistent image model",
+          "passed": true
+        },
+        {
+          "name": "loaded branch has no placeholder root",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "loaded native ref is null",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "loading cycle 0 retains caller model",
+          "actual": "Persistent loaded model",
+          "expected": "Persistent loaded model",
+          "passed": true
+        },
+        {
+          "name": "loading cycle 1 retains caller model",
+          "actual": "Persistent loaded model",
+          "expected": "Persistent loaded model",
+          "passed": true
+        },
+        {
+          "name": "negative paragraph rows are empty",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "fractional paragraph rows are finite integers",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "default complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "dark complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "compact complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "both complete real content and consumers pass axe",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "unmount 0 clears the public ref",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "remount 0 restores the actual native root",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "unmount 1 clears the public ref",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "remount 1 restores the actual native root",
+          "actual": "skeleton-main",
+          "expected": "skeleton-main",
+          "passed": true
+        },
+        {
+          "name": "no page, console or Vue errors",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "actualDemos": {
+      "base": "http://127.0.0.1:4477/apollo-design-ui",
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "avatar",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "avatar",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "loading",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "loading",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "active",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 2,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "active",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 2,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 1,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "children",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 0,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "children",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 0,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "complex",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 2,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "complex",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 2,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "element",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 6,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "element",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 6,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "light",
+          "httpStatus": 200,
+          "roots": 6,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "httpStatus": 200,
+          "roots": 6,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "name": "actual controlled loading switches repeatedly between busy decoration and unwrapped content",
+          "passed": true
+        },
+        {
+          "name": "actual children demo completes two real reload cycles with caller-owned state",
+          "passed": true
+        },
+        {
+          "name": "complex native content keeps identity and intended content dimensions across active changes",
+          "passed": true
+        },
+        {
+          "name": "all six standalone demo roots update and keyboard activation restores shimmer",
+          "passed": true
+        },
+        {
+          "name": "current source tokens and native variable removal/restoration retain model, editor and focus",
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "fallbackDocuments": []
+    },
+    "demoThemes": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        }
+      ],
+      "errors": []
+    },
+    "relatedStatisticDemoThemes": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "unit",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "unit",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "unit",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "unit",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "card",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "card",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "card",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "card",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "animated",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "animated",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "animated",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "animated",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "timer",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "timer",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "timer",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "timer",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "style-class",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "style-class",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "style-class",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "style-class",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        }
+      ],
+      "errors": []
+    },
+    "demoTransitionBefore": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "avatar",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "loading",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "active",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "children",
+          "theme": "both",
+          "passed": false,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "nodes": [
+                {
+                  "html": "<span>重新加载</span>",
+                  "failure": "Fix any of the following:\n  Element has insufficient color contrast of 3.17 (foreground color: #a9a9a9, background color: #555555, font size: 9.7pt (12.9651px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "demo": "complex",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "complex",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "element",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        }
+      ],
+      "errors": []
+    }
+  },
+  "budget": {
+    "oldBudgetKB": 27,
+    "newBudgetKB": 36,
+    "actualKB": 35.9,
+    "fullUIKB": 2067.2,
+    "historicalMeasuredKB": 14.5,
+    "reason": "Necessary current source-theme resolution for all six forms and eight existing tokens; only one entry revised, as authorized by the user and budget policy.",
+    "failedBefore": "/tmp/apollo-skeleton-l7.log",
+    "afterLog": "/tmp/apollo-skeleton-l7-final.log"
+  },
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/skeleton packages/ui/src/statistic packages/ui/src/card --maxWorkers=1 --no-file-parallelism",
+      "result": "17 files / 360 passed / zero failed after normal text geometry fix",
+      "log": "/tmp/apollo-skeleton-final-four-layers.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project types packages/ui/src/skeleton packages/ui/src/statistic packages/ui/src/card packages/ui/src/config-provider --maxWorkers=1 --no-file-parallelism",
+      "result": "128 passed / zero failed; subsequent change is CSS-only",
+      "log": "/tmp/apollo-skeleton-types.log"
+    },
+    {
+      "command": "pnpm lint:types && pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.skeleton-contracts.json",
+      "result": "pass",
+      "logs": [
+        "/tmp/apollo-skeleton-types-final.log",
+        "/tmp/apollo-skeleton-sfc.log"
+      ]
+    },
+    {
+      "command": "pnpm build:ui && node tests/browser/skeleton-contract-audit.mjs && node tests/consumer/skeleton-ssr.mjs && node tests/browser/skeleton-theme-hydration.mjs && node tests/build/run.mjs --package ui --no-build --strict",
+      "result": "dts/69CSS, 92 browser checks, 18 SSR checks, six hydration groups, strict L7 11 checks PASS/FAIL0/PENDING0",
+      "logs": [
+        "/tmp/apollo-skeleton-text-ui-build.log",
+        "/tmp/apollo-skeleton-text-browser.log",
+        "/tmp/apollo-skeleton-text-ssr.log",
+        "/tmp/apollo-skeleton-text-hydration.log",
+        "/tmp/apollo-skeleton-text-l7.log"
+      ]
+    },
+    {
+      "command": "node tests/consumer/list-types.mjs",
+      "result": "published five consumer SFC groups and compound exports pass; no source aliases or shipped tests",
+      "log": "/tmp/apollo-skeleton-published-types.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run test && pnpm --filter @apollo-design/docs run typecheck && pnpm --filter @apollo-design/docs run build",
+      "result": "15 files / 161 tests, strict types, SSG pass. Final CSS rebuilt before actual demos. Exact total now 1005 with all nine Skeleton IDs; no old cases removed.",
+      "logs": [
+        "/tmp/apollo-skeleton-docs-tests.log",
+        "/tmp/apollo-skeleton-docs-types.log",
+        "/tmp/apollo-skeleton-text-docs-build.log"
+      ]
+    },
+    {
+      "command": "node tests/browser/skeleton-docs.mjs && node tests/browser/skeleton-demo-themes.mjs",
+      "result": "all nine actual demos × light/dark plus five interaction groups = 23 passes; 36 actual source demo/theme combinations pass; zero errors",
+      "logs": [
+        "/tmp/apollo-skeleton-text-docs-browser.log",
+        "/tmp/apollo-skeleton-text-demo-themes.log"
+      ]
+    },
+    {
+      "command": "node tests/browser/statistic-demo-themes.mjs",
+      "result": "all 28 related actual Statistic demo/theme combinations pass after waiting finite transitions",
+      "log": "/tmp/apollo-statistic-skeleton-demo-themes.log"
+    },
+    {
+      "command": "pnpm registry:check",
+      "result": "19 checks / zero warnings; existing legacy evidence preserved",
+      "log": "/tmp/apollo-skeleton-registry.log"
+    },
+    {
+      "command": "pnpm lint:format",
+      "result": "zero errors / existing 37 warnings / five infos",
+      "log": "/tmp/apollo-skeleton-format-final.log"
+    },
+    {
+      "command": "pnpm audit:content-slots && pnpm audit:content-slots:check",
+      "result": "528 rows / 199 candidates; refreshed current source references",
+      "log": "/tmp/apollo-skeleton-inventory.log"
+    },
+    {
+      "command": "node --test tests/tooling/skeleton-visual.test.mjs",
+      "result": "39 owned cases and all 24 historical references retained",
+      "log": "/tmp/apollo-skeleton-visual-tooling.log"
+    }
+  ]
+}

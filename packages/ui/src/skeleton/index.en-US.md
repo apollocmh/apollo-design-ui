@@ -9,210 +9,111 @@ group:
 
 # Skeleton
 
-Provide a placeholder while you wait for content to load.
+Display a placeholder matching the expected content structure. The caller owns loading; Skeleton does not fetch data or finish loading automatically.
 
-## When to use
+## Examples
 
-- When a resource takes a long time to load and you **only know the rough structure** in advance;
-- When you want to give a visual hint that content is being prepared, instead of a blank screen.
-
-## Code examples
-
-> ⚠️ The `demo/` directory for this component **is not in place yet** (see `README.md` §7).
-> The snippets below are **runnable** minimal examples and will be replaced by `<demo>` blocks later.
-
-### Basic
+All eight original demos remain, plus a live component-token example with native variable overrides and a persistent editor.
 
 ```vue
-<template>
-  <ASkeleton />
-</template>
-
 <script setup lang="ts">
-import { Skeleton as ASkeleton } from '@apollo-design/ui';
-</script>
-```
-
-### Title only (no paragraph)
-
-```vue
-<ASkeleton :paragraph="false" />
-```
-
-### With avatar
-
-```vue
-<ASkeleton avatar :paragraph="false" />
-```
-
-### Show skeleton while loading, then real content
-
-```vue
-<template>
-  <ASkeleton :loading="loading">
-    <div>Real content</div>
-  </ASkeleton>
-</template>
-
-<script setup lang="ts">
-import { Skeleton as ASkeleton } from '@apollo-design/ui';
+import { ref } from 'vue';
+import { Skeleton } from '@apollo-design/ui';
 const loading = ref(true);
+const draft = ref('Persistent data');
 </script>
-```
-
-### Active animation and rounded corners
-
-```vue
-<ASkeleton active round />
+<template>
+  <button type="button" @click="loading = !loading">Toggle loading</button>
+  <Skeleton :loading="loading" avatar>
+    <input v-model="draft" aria-label="Business draft" />
+  </Skeleton>
+</template>
 ```
 
 ## API
 
-### Props
+### Skeleton Props
 
-| Property | Description | Type | Default |
+| Property | Behavior | Type | Default |
 |---|---|---|---|
-| `active` | Show the animation effect | `boolean` | `false` |
-| `loading` | Show the skeleton. **Both "not passed" and `true` show the skeleton; only `false` renders children** (see below) | `boolean` | — |
-| `avatar` | Show an avatar placeholder. Pass an object to override the derived props | `boolean \| SkeletonAvatarProps` | `false` |
-| `title` | Show a title placeholder. Pass an object to override | `boolean \| SkeletonTitleProps` | `true` |
-| `paragraph` | Show a paragraph placeholder. Pass an object to override | `boolean \| SkeletonParagraphProps` | `true` |
-| `round` | Show rounded corners | `boolean` | `false` |
-| `prefixCls` | Class name prefix | `string` | `apollo-skeleton` |
-| `class` / `style` | **Native root attrs** (not Props); `style` overrides `styles.root`. ⚠️ Other extra attrs are still dropped, matching upstream | `string \| array \| object` / `CSSProperties` | — |
-| `classNames` | Semantic class names, see "Semantic slots" | `SkeletonSemanticClassNames` | — |
-| `styles` | Semantic styles, see "Semantic slots" | `SkeletonSemanticStyles` | — |
+| active | Shimmer; respects reduced motion and source motion:false | boolean | false |
+| loading | Only false shows content; omitted/undefined show placeholders | boolean | — |
+| prefixCls | Current class prefix | string | apollo-skeleton |
+| avatar | Avatar block and single-element configuration | boolean / SkeletonAvatarProps | false |
+| title | Title block configuration | boolean / SkeletonTitleProps | true |
+| paragraph | Paragraph block configuration | boolean / SkeletonParagraphProps | true |
+| round | Capsule title and paragraph lines | boolean | false |
+| classNames | Six semantic targets; functions receive current `{ props }` | SkeletonSemanticValue&lt;SkeletonSemanticClassNames&gt; | — |
+| styles | Six semantic targets; functions receive current `{ props }` | SkeletonSemanticValue&lt;SkeletonSemanticStyles&gt; | — |
 
-Object form of `avatar` / `title` / `paragraph`:
+### Standalone child props
 
-| Key | Applies to | Description |
+Named SkeletonAvatar/SkeletonButton/SkeletonInput/SkeletonImage/SkeletonNode exports are identical to Skeleton.Avatar/Button/Input/Image/Node.
+
+| Property | Components | Behavior |
 |---|---|---|
-| `width` | title / paragraph | Width. For `paragraph` it may be an **array** (per row); as a single value **only the last row** gets it |
-| `rows` | paragraph | Number of rows |
-| `size` | avatar | Size |
-| `shape` | avatar | `'circle' \| 'square' \| 'round' \| 'default'` |
-| `active` / `className` / `style` | all three | Overrides |
+| prefixCls | All | Current prefix |
+| active | All | Shimmer, false by default |
+| classNames / styles | All | Objects with root (outer div) and content (inner shape/content) |
+| size | Avatar | small / medium / middle / large / existing default alias / finite nonnegative pixel number; defaults to Provider componentSize |
+| shape | Avatar | circle (default) / square |
+| size | Button / Input | small / medium / middle / large / existing default alias; defaults to Provider componentSize |
+| shape | Button | circle / square / round / default; omitted means no shape class |
+| block | Button / Input | Full-width, false by default |
+| internalClassName | Node | Existing content-class override; empty uses the node class; Image uses the image class internally |
 
-### Events
+The existing size="default" warning remains; prefer medium. Root className aliases were removed. Inner dimensions/styles use styles.content.
 
-None. Skeleton emits no events.
+### Block configuration
 
-### Slots
+avatar/title/paragraph prefixCls/className/style are configuration data. Classes combine; matching semantic styles override configuration styles.
 
-| Name | Description |
-|---|---|
-| `default` | The real content. **Rendered only when `loading === false`**, and **with no wrapper element** |
-
-### Semantic slots
-
-`classNames` / `styles` each accept 6 keys, matching the DOM structure one-to-one:
-
-| Key | Applies to |
-|---|---|
-| `root` | The root `div` |
-| `header` | The `-header` container (**only present when `avatar` is set**) |
-| `section` | The `-section` container (**only present when `title` or `paragraph` is set**) |
-| `avatar` | The avatar element |
-| `title` | The title element |
-| `paragraph` | The paragraph element |
-
-> ⚠️ Function-style `classNames` / `styles` are **not supported** (consistent with
-> divider / button / typography, per the `empty-semantic-fn` decision, option B).
-
-### Type exports
-
-`SkeletonProps`, `SkeletonRef`, `SkeletonConfig`, `SkeletonSlot`,
-`SkeletonSemanticClassNames`, `SkeletonSemanticStyles`, `SkeletonSemanticType`,
-`SkeletonSemanticAllType`, `SkeletonSemanticValue`,
-`SkeletonAvatarProps`, `SkeletonAvatarOwnProps`, `SkeletonTitleProps`, `SkeletonParagraphProps`,
-`SkeletonButtonProps`, `SkeletonInputProps`, `SkeletonImageProps`, `SkeletonNodeProps`, `SkeletonNodeSlot`,
-`SkeletonElementProps`, `SkeletonElementSemanticClassNames`, `SkeletonElementSemanticStyles`,
-`SkeletonElementSemanticType`, `SkeletonElementSize`, `SkeletonShape`, `SkeletonWidthUnit`.
-
-### ref
-
-```ts
-const skeletonRef = ref<{ nativeElement: HTMLDivElement | null }>();
-```
-
-### Compound components
-
-`Skeleton.Avatar` / `Skeleton.Button` / `Skeleton.Input` / `Skeleton.Image` / `Skeleton.Node`
-are exported from the same package and used exactly like antd's.
-
-## Design notes
-
-### The four states of `loading` (⚠️ the only compatibility difference)
-
-antd's check is `loading || !('loading' in props)` — it looks at **whether the key exists**.
-Measured against antd 6.6.4:
-
-| Case | antd 6.6.4 | This implementation |
+| Field | Block | Behavior |
 |---|---|---|
-| ① **Not passed** (key absent) | renders skeleton | renders skeleton ✅ |
-| ② **Explicitly `loading={undefined}`** | **renders children** | renders skeleton ❌ |
-| ③ `loading={true}` | renders skeleton | renders skeleton ✅ |
-| ④ `loading={false}` | renders children | renders children ✅ |
+| size / shape | avatar | Size and circle/square; defaults to large, square when title exists without paragraph, otherwise circle |
+| width | title | Pixel number or CSS string; 38% without avatar and with paragraph, 50% with both, otherwise unset |
+| rows | paragraph | Three without avatar and with title, otherwise two; nonfinite/negative means zero, positive fractions truncate |
+| width | paragraph | Array applies per line; scalar applies to the last line; default last width 61% without avatar or title |
 
-**Only case ② differs.** The reason is that **Vue props have no notion of "key exists"**
-(when not passed, the value is also `undefined`, so the two are indistinguishable)
-⇒ this is a **platform-inherent difference**, not a bug.
-This implementation uses `loading !== false`, i.e. "not passed = show skeleton".
+Nonfinite numeric lengths are ignored; zero remains valid. The nested avatar is one shape: use main classNames.avatar/styles.avatar rather than standalone two-layer classNames/styles configuration.
 
-### The three blocks derive their props from each other
+### Native attrs, Provider and priority
 
-`width` / `rows` / `shape` for `avatar` / `title` / `paragraph` depend on
-**whether the other two are present**:
+All six components route id/data/ARIA/tabindex/native events to their real root. Vue string/array/object class/style work; native styles win. Child content has its own semantic target. Skeleton has no root when loading=false, so attrs are not copied to business slots; add your own persistent host when needed.
 
-| Derivation | Rule |
+The main component consumes current components.skeleton className/style/classNames/styles, including replacement/removal/restoration. Standalone children consume the global prefix, applicable size and source theme; they do not reinterpret the main six-target configuration as their two-target configuration. Nearest Provider scope, instance isolation and live RTL apply. Arbitrary custom prefixes still need matching static CSS.
+
+### Slots, events and models
+
+| Component / default slot | Behavior |
 |---|---|
-| avatar `shape` | `hasTitle && !hasParagraph` ⇒ `'square'`, otherwise `'circle'` (`size` is always `'large'`) |
-| title `width` | `!hasAvatar && hasParagraph` ⇒ `'38%'`; `hasAvatar && hasParagraph` ⇒ `'50%'`; otherwise unset |
-| paragraph `width` | `!hasAvatar \|\| !hasTitle` ⇒ `'61%'`; otherwise unset |
-| paragraph `rows` | `!hasAvatar && hasTitle` ⇒ `3`, otherwise `2` |
+| Skeleton | Complete unwrapped content when loading=false |
+| SkeletonNode | Complete native custom content; surrounding style/theme changes retain editors |
+| SkeletonImage | An existing slot wins, including intentional emptiness; absent slot uses the original SVG |
 
-Passing an object **overrides** the derived value (`{ ...derived, ...userObject }`).
+No business emits or v-model; the caller controls loading. Native listeners receive DOM events. Main semantic targets are root/header/section/avatar/title/paragraph; children use root/content.
 
-### DOM structure: `-header` and `-section` are siblings
+### Expose
 
-```html
-<div class="apollo-skeleton [-with-avatar] [-active] [-rtl] [-round]">
-  <div class="apollo-skeleton-header"><!-- only when avatar is set --></div>
-  <div class="apollo-skeleton-section"><!-- only when title or paragraph is set -->
-    <h3 class="apollo-skeleton-title"></h3>
-    <ul class="apollo-skeleton-paragraph"><li></li>…</ul>
-  </div>
-</div>
-```
-
-The title is an `<h3>` and the paragraph is a `<ul>` with `rows` `<li>` children
-(matching upstream). When `loading === false` the **root element does not exist at all** —
-children are rendered directly.
-
-### Accessibility
-
-⚠️ **antd's Skeleton has no ARIA at all** (measured: `aria-*` / `role` occurrences are **0**) —
-no `aria-busy`, no `aria-live`, no `role="status"`. Screen readers do not announce "loading".
-**We match it verbatim** and do not add attributes on our own (doing so would break the
-mechanical DOM-contract baseline in L4).
-
-⚠️ **One exception (we are stricter than upstream; registered)**: on `Skeleton.Image`'s `<svg>`
-we add `aria-hidden="true"` + `focusable="false"` (antd's `Image.js` has neither).
-This is a deliberate improvement — a decorative placeholder is meaningless to screen readers.
-It is pinned by `__tests__/a11y.test.ts`.
+Only the main component exposes nativeElement: HTMLDivElement | null. It is null while loading=false and after unmount. Loading switches intentionally unmount business content: keep data in caller-owned reactive state; DOM identity/focus do not survive intentional removal.
 
 ### Component tokens
 
-See `style/token.ts`. Under the zero-runtime architecture:
-**alias-derived tokens go through `var(--apollo-*)`** (theme-adaptive, validated by build gate B7);
-**literal tokens** have their single source of truth in `token.ts` and are inlined by `style/index.ts`.
+All shapes consume current theme.components.Skeleton and respond to removal/restoration. Current gradient names win over existing aliases, then current Alias defaults. Root native style can override corresponding --apollo-skeleton-* variables.
 
-### Importing styles
+| Token | Type | Default source |
+|---|---|---|
+| gradientFromColor | string | colorFillContent |
+| gradientToColor | string | colorFill |
+| color (existing deprecated alias) | string | gradientFromColor |
+| colorGradientEnd (existing deprecated alias) | string | gradientToColor |
+| titleHeight | number / CSS length string | controlHeight / 2 |
+| blockRadius | number | borderRadiusSM |
+| paragraphMarginTop | number | marginLG + marginXXS |
+| paragraphLiHeight | number | controlHeight / 2 |
 
-```ts
-import '@apollo-design/ui/skeleton/style.css';
-```
+### Accessibility, SSR and styles
 
-> ⚠️ The per-component style subpath is currently **missing** (`packages/ui/package.json`'s
-> `exports` does not declare it). This is a repo-wide infrastructure issue affecting
-> `skeleton` / `divider` / `spin`. See `README.md` §7.
+The loading root owns aria-busy=true. Decorative header/section blocks are aria-hidden, keeping empty placeholder headings out of the accessible tree. Native attrs may supply a role/name. Node/Image business slots remain accessible; the built-in SVG is decorative. Active animation respects prefers-reduced-motion and source motion:false; no live announcement is added automatically.
+
+SSR does not depend on window; native slots and current source themes render on the server. Exact hydration/browser acceptance is recorded in the complete audit. Import @apollo-design/ui/skeleton/style.css. Development migration details: docs/migrations/skeleton-contracts.md; executed checks, evidence and unverified boundaries: docs/audit/2026-10-27-skeleton-contract-audit.md.

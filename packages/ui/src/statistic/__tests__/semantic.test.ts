@@ -130,7 +130,7 @@ domContractTest('Statistic', {
   allow: {
     'statistic:loading': {
       reason:
-        'Statistic owns its busy loading region and decorative hidden layer; the skeleton appearance remains, while loaded native content is directly owned. These exact structural/ARIA changes fix the confirmed empty-heading browser failure. See docs/migrations/statistic-contracts.md.',
+        'Statistic owns its busy loading region and decorative hidden layer; shared Skeleton also owns busy/hidden decoration after its full audit. The original seven structural differences remain with exactly two additional shared ARIA attributes. See docs/migrations/statistic-contracts.md and skeleton-contracts.md.',
       diff: differences['statistic:loading'],
     },
   },

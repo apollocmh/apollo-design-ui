@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { Skeleton } from '@apollo-design/ui';
 import { ref } from 'vue';
-import { Skeleton } from '../../index';
 
 const loading = ref(true);
 </script>

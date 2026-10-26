@@ -1,0 +1,196 @@
+{
+  "loading:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "loading:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "loading:explicit-undefined": [
+    "$/span[0]: 标签不同 <span> vs <div>",
+    "$/span[0]: 类名不同 [] vs [apollo]",
+    "$/span[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/span[0]: 子节点数不同 0 vs 1"
+  ],
+  "blocks:avatar:unset+title:unset+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:unset+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:unset+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:false+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:false+paragraph:false": ["$/div[0]: 我们多出属性 aria-busy=\"true\""],
+  "blocks:avatar:unset+title:false+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:true+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:true+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:unset+title:true+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:unset+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:unset+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:unset+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:false+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:false+paragraph:false": ["$/div[0]: 我们多出属性 aria-busy=\"true\""],
+  "blocks:avatar:false+title:false+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:true+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:true+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:false+title:true+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:unset+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:unset+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:unset+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:false+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:false+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:false+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:true+paragraph:unset": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:true+paragraph:false": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "blocks:avatar:true+title:true+paragraph:true": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "override:avatar-shape": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[1]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "override:title-width": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "override:paragraph-rows": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "override:paragraph-width-array": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "override:paragraph-width-scalar": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "class:active": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "class:round": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "class:active+round": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "class:className": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "class:rootClassName": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "prefix-cls:no-props": [
+    "$/div[0]: 类名不同 [ant-skeleton] vs [apollo-skeleton]",
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 类名不同 [ant-skeleton-section] vs [apollo-skeleton-section]",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[0]/h3[0]: 类名不同 [ant-skeleton-title] vs [apollo-skeleton-title]",
+    "$/div[0]/div[0]/ul[1]: 类名不同 [ant-skeleton-paragraph] vs [apollo-skeleton-paragraph]"
+  ],
+  "attrs:passthrough": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]: 我们多出属性 data-testid=\"x\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "semantic:classNames-root": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "semantic:classNames-all": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "semantic:styles-all": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ],
+  "config:className": [
+    "$/div[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/div[0]/div[0]: 我们多出属性 aria-hidden=\"true\""
+  ]
+}

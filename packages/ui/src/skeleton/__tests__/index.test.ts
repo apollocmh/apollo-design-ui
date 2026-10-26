@@ -1,18 +1,4 @@
-/**
- * Skeleton · L1 单元测试（+ 部分 L4 DOM 契约）。
- *
- * 断言的来源**全部**是 `docs/analysis/skeleton.md` 里逐条记录的上游行号，
- * 不是「看实现反推的期望值」。
- *
- * ── 这份测试真正要钉住的三件事 ──────────────────────────────────────────────
- *
- *   1. `loading` 的**三态**（`Skeleton.js:105`）—— 尤其是「未传」要渲染骨架。
- *      ⚠️ 上游判据 `!('loading' in props)` 在 Vue 里无法照抄，实现改写成
- *      `loading !== false`；这里用三态表把**语义**钉住，而不是钉实现细节。
- *   2. avatar / title / paragraph 的**互锁推导**（`:23-62`）—— 8 种存在性组合。
- *   3. DOM 结构：`-header` 与 `-section` 是**并列**（`:157-161`），
- *      Title 是 `<h3>`、Paragraph 是 `<ul>` + `<li>`。
- */
+/** Retained loading, block geometry and DOM scenarios; valid historical behavior remains covered. */
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
