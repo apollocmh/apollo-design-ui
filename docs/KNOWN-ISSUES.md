@@ -572,3 +572,10 @@ Skeleton已进入整组契约整改，当前实现与未验边界见后续阶段
 完整盘点Skeleton与五子组件后，集中修正根attrs/style、当前配置与语义Props、块配置丢失、Image默认槽、八Token及实际RTL/减少动画；无根的非loading分支保留。26条源码行为失败和旧发布89项中的67失败已复现。当前关联360条四层、128相关类型、92项生产浏览器、18项SSR、6组水合及根/SFC/发布声明消费通过；UI完整构建及严格L7通过。必要源主题成本按技术原因只将Skeleton预算27→36KB，历史测量及其他预算/占比不变。
 
 原48机械场景保留并精确核对新增原生ARIA/attrs；Card/Statistic相关回归通过，原React参考未改。原八Demo与新增Token Demo的实际亮/暗及五组交互23项、四算法36组合已通过；自有39图、相关像素和完整清单最终收口仍开放，不代表全库完成。见[完整清单](audit/2026-10-27-skeleton-contract-audit.md)、[统一证据](audit/evidence/skeleton-contract.json)与[迁移](migrations/skeleton-contracts.md)。
+
+
+## 2026-10-27 Skeleton及五子组件完整清单统一验收（已收口）
+
+实现e6be1625已推送。根attrs/style、当前Provider/块配置、完整Image/Node槽、八Token、实际RTL/减少动画及原生文本行高均已修正；原完整清单逐项复核完成。关联360条四层、128相关类型、92项生产浏览器、18项SSR、6组水合、发布声明/UI/严格L7通过；九实际Demo亮暗及五交互23项、四算法36组合通过。
+
+清洁实现的39张自有视觉逐张审阅批准后，与相关Statistic36图同次75项全部exact、0像素差异。原199条批准记录/PNG不变，原48机械场景和24参考图保留。Registry记录本单元completed/Apollo；历史其他completed不代表本轮全库审计完成。最终站点发布与线上回执另记；199内容候选、其他组件/基础包及最终同一提交全量门禁继续开放。见[完整清单](audit/2026-10-27-skeleton-contract-audit.md)与[结构化证据](audit/evidence/skeleton-contract.json)。

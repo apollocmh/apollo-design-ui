@@ -44,6 +44,12 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 - [当前字号Token与原生覆盖](/components/statistic/demo/component-token)
 - [Statistic完整清单](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
 
+**Skeleton及五个子组件完整清单已统一验收。** 根attrs/style使用Vue原生语义，当前Provider、块配置、完整Image/Node插槽、八个Token、实际RTL与减少动画均已修正。关联360条四层、128条类型、92项生产浏览器、18项SSR、6组水合及发布声明通过；全部九Demo亮暗及五组交互23项、四算法36组合通过。清洁实现的39张自有视觉已逐张审阅批准并全部0像素差异，关联Statistic36张保持一致。全库其余审计继续进行。
+
+- [重复加载与真实内容](/components/skeleton/demo/children)
+- [六种形态与当前Token](/components/skeleton/demo/component-token)
+- [Skeleton完整清单与迁移](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-skeleton-contract-audit.md)
+
 **文档示例的主题链路已修正。** 明暗CSS与Vue源主题同步，系统偏好实时更新，独立示例的theme参数只临时覆盖，水合首帧保持一致；切换内联主题保留输入值和焦点。五个Token消费者亮/暗及72组件代表页亮/暗共144次实际渲染通过，Docs161条测试通过。iframe地址变更仍会导航重载。[完整范围与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-docs-demo-theme-audit.md)。
 
 ## 直接试这些示例
@@ -100,6 +106,10 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 **The complete Statistic / Timer / Countdown checklist is verified.** Native value slots, live direction/nonnegative events, safe SSR/cleanup, complete attrs/refs, current Provider and both font tokens are fixed. Passing evidence includes 86 runtime/DOM/accessibility/theme tests, 94 related type tests, 46 browser checks, five SSR checks, six hydration groups and published declarations. All seven actual demos, both interaction groups and 28 demo/theme combinations pass. All 36 owned images from a clean commit were individually reviewed and match with zero pixel differences. Other library audits remain open.
 
 [Restartable clocks and native editors](/components/statistic/demo/timer) · [Current font tokens](/components/statistic/demo/component-token) · [Statistic checklist](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-statistic-contract-audit.md)
+
+**The complete Skeleton checklist, including all five children, is verified.** Native root attrs/styles, live Provider and block configuration, complete Image/Node slots, eight tokens, actual RTL and reduced motion are fixed. Passing evidence includes 360 related runtime/DOM/accessibility/theme tests, 128 type tests, 92 browser checks, 18 SSR checks, six hydration groups and published declarations. All nine demos in light/dark plus five interaction groups pass 23 checks; all 36 demo/theme combinations pass. All 39 owned images from a clean implementation commit were individually reviewed and match with zero pixel differences; all 36 related Statistic images remain exact. Other library audits remain open.
+
+[Repeated loading and real content](/components/skeleton/demo/children) · [Six forms and live tokens](/components/skeleton/demo/component-token) · [Skeleton checklist and migration](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-skeleton-contract-audit.md)
 
 **The Docs demo theme pipeline is fixed.** CSS and Vue source themes stay synchronized, system preferences update live, standalone theme queries remain temporary, and hydration starts consistently. Inline theme changes preserve native editor values and focus. Five named token consumers pass in light/dark; representative pages from all 72 components pass 144 light/dark render checks. All 161 Docs tests pass. Iframe URL changes retain their existing navigation/reload boundary. [Scope and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-docs-demo-theme-audit.md).
 

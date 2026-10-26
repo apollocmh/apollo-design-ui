@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
-      "visual-review": 1
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -948,7 +947,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "visual-review",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 4,
@@ -974,13 +973,13 @@
       "interactionStatus": "n/a",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-27 原始完整清单后集中修正Vue根attrs/style、当前Provider/块配置/完整槽、八Token、真实RTL和减少动画。26条修前行为失败、旧发布浏览器67项失败已复现；当前关联360条四层、128相关类型、生产Chrome92项、Node SSR18项、水合6组、严格/SFC/发布声明、UI构建/L7通过。实际九Demo亮暗及五交互23项、36主题组合已通过；39图自有视觉与最终清单验收继续开放；详见docs/audit/2026-10-27-skeleton-contract-audit.md。",
+      "notes": "2026-10-27 原始完整清单逐项统一验收收口；实现e6be1625。关联360条四层、128相关类型、生产Chrome92项、Node SSR18项、水合6组、严格/SFC/发布声明、UI构建/L7通过。全部九Demo亮暗及五组交互23项、36主题组合通过；清洁实现39图逐张审阅批准并全部exact，关联Statistic36图保持一致，原199批准记录不变。最终发布回执单列，不代表全库完成；详见docs/audit/2026-10-27-skeleton-contract-audit.md。",
       "layerNotes": {
         "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。",
-        "currentAudit": "docs/audit/evidence/skeleton-contract.json；主与五子组件Props 9/6/7/6/5/4，Vue原生根样式，完整Node/Image槽、主六语义/子两语义和八Token。当前实现已验证运行/类型/生产行为，组件单元尚未收口。",
-        "visual": "保留旧8场景×3视口24参考；Vue counterpart中Image200px内容尺寸迁移到styles.content，未改React基线。Apollo新矩阵与相关Statistic36图待最终验收，不将历史done冒充当前验收。",
+        "currentAudit": "docs/audit/evidence/skeleton-contract.json；主与五子组件Props 9/6/7/6/5/4、主六语义/子两语义、八Token及原生attrs/槽/样式均核对完成。17生产文件指纹ceeed7df2f651b235c43a1af6e8ebd5e17fb44bf69e5435fc4640ed252bf650d。",
+        "visual": "Apollo 13状态×3视口39张，清洁e6be16258145f11c7dd79c9549564b8e17b8eda3采集并逐张审阅批准，39 PASS/pending0/diffPixels0；关联Statistic36张同次全部exact，原199批准记录不变。旧8场景24参考保留，未将其伪称为本轮像素验收。",
         "referenceHistory": {
           "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。"
         }
@@ -1006,7 +1005,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "spin",
@@ -1298,9 +1297,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "skeleton"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2625,9 +2622,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "skeleton"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2698,9 +2693,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "skeleton"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4236,9 +4229,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "skeleton"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",

@@ -1790,6 +1790,357 @@
       "capturedAt": "2026-10-26T17:36:34.375Z",
       "reviewedAt": "2026-10-26T17:48:58.626Z",
       "reviewNote": "Individually reviewed all 36 PNGs from clean 633c219bdd21857a562fb5758e1677915b11b87b: numeric values/units, decorative busy loading, full and intentional empty value content, both clock directions, two source font tokens, dark/compact/combined themes and native keyboard focus at mobile/tablet/desktop. Typography, contrast, geometry and focus are clean. darwin/x64 system Chrome150.0.7871.125; all frame axe/ARIA assertions pass; no historical reference images replaced."
+    },
+    "skeleton/basic__light__mobile": {
+      "sha256": "b95d032f8933aa38ab2ebcaadda7a8ba3ecdaaf39baa2402464cbc059535ba7d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:03.168Z",
+      "reviewedAt": "2026-10-26T20:46:40.856Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/basic__light__tablet": {
+      "sha256": "d4f29ec25835bf3c8a570cd895dbf89195b4a3f392c03bb41c395b7c78586dd7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:05.149Z",
+      "reviewedAt": "2026-10-26T20:46:40.857Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/basic__light__desktop": {
+      "sha256": "bbcd86425d772693c2f5b14bf57654afb27bb577bea540fb7f0da8830ffb851a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:07.126Z",
+      "reviewedAt": "2026-10-26T20:46:40.858Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/avatar__light__mobile": {
+      "sha256": "725b764cb3f1c98aa16696fd7e9fd97fec7acf33c8cca8083037479baac8499e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:09.097Z",
+      "reviewedAt": "2026-10-26T20:46:40.858Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/avatar__light__tablet": {
+      "sha256": "7b40c4ffd8aadd304b2120624aa890d0177a488024060c5e2197260081cf6508",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:11.064Z",
+      "reviewedAt": "2026-10-26T20:46:40.858Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/avatar__light__desktop": {
+      "sha256": "762dddb35e11cb9273d8c12a29f318e7e3df2b5e8c6f452a91b5a452d39ab43a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:13.026Z",
+      "reviewedAt": "2026-10-26T20:46:40.859Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/paragraph__light__mobile": {
+      "sha256": "9be94889d996c519bc9b8f3957d2f953cafaa804c120f9e89e953c04546a94e0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:14.958Z",
+      "reviewedAt": "2026-10-26T20:46:40.859Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/paragraph__light__tablet": {
+      "sha256": "04b079913db46bfd828fda6e563d5ccc84cc66b59f2567b7c6e5dd9689720aa0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:16.885Z",
+      "reviewedAt": "2026-10-26T20:46:40.859Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/paragraph__light__desktop": {
+      "sha256": "7398da28d7beed762c4e1193d3b53c0b78c021bc039681e65504b41efec76f28",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:18.876Z",
+      "reviewedAt": "2026-10-26T20:46:40.860Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/loaded-content__light__mobile": {
+      "sha256": "2fbfb6697428bf08294542b0fd81b9933fd799a6db2551d7dee6059b57d4620d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:20.839Z",
+      "reviewedAt": "2026-10-26T20:46:40.860Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/loaded-content__light__tablet": {
+      "sha256": "aa1eb405d73d54b8961458d5e71318ea7f3134c2094ec9890c4896725a7ddb0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:22.823Z",
+      "reviewedAt": "2026-10-26T20:46:40.860Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/loaded-content__light__desktop": {
+      "sha256": "c4ca5e693617aeba98a91a5fce72e7bd198a895b88d240fa7d4b4b5491474764",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:24.813Z",
+      "reviewedAt": "2026-10-26T20:46:40.861Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/elements__light__mobile": {
+      "sha256": "e49b3e01c5b9cca69d8c415dc6e0a967765ba24bb289d1926eb8149fb0d216d3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:26.771Z",
+      "reviewedAt": "2026-10-26T20:46:40.861Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/elements__light__tablet": {
+      "sha256": "7b4a98e098bd5b5cd36b04ad16d0a7a13bb82e078b3010bbfe51e4d3df2fc8cf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:28.720Z",
+      "reviewedAt": "2026-10-26T20:46:40.861Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/elements__light__desktop": {
+      "sha256": "6bdd940738d79ad61ee706adf7b9193f8f1aa4efbb6828b180696a42da8396a5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:30.673Z",
+      "reviewedAt": "2026-10-26T20:46:40.861Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/image-content__light__mobile": {
+      "sha256": "8cd85f3dd7678e34fb42f503efcf2e179866880e02010cf2e1d1e07a8ab17682",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:32.634Z",
+      "reviewedAt": "2026-10-26T20:46:40.862Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/image-content__light__tablet": {
+      "sha256": "8251aedd540266d31a02bd7f21c12f3ccde3240cb18c6ec1b1d02da5acbee2ac",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:34.634Z",
+      "reviewedAt": "2026-10-26T20:46:40.862Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/image-content__light__desktop": {
+      "sha256": "19ea25005dd23060f260afe8deacc3e92c1d1cea3e8c36fa82152f4ebc4fba02",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:36.640Z",
+      "reviewedAt": "2026-10-26T20:46:40.862Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/node-content__light__mobile": {
+      "sha256": "c9ceb89f76a01b46913c64b8a1530d7d00206c13c899b91f0cbd53bf13a8afa5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:38.630Z",
+      "reviewedAt": "2026-10-26T20:46:40.863Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/node-content__light__tablet": {
+      "sha256": "ce34ca1dacd82c8293334142814ab433ab85c1cb5d28a8f147bec8fdad537066",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:40.611Z",
+      "reviewedAt": "2026-10-26T20:46:40.863Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/node-content__light__desktop": {
+      "sha256": "cb73ee4a423c249710156c8ab53f615f5c9d208229afb170e2b0900c209e26c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:42.597Z",
+      "reviewedAt": "2026-10-26T20:46:40.863Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/tokens__light__mobile": {
+      "sha256": "3bdb06572412253cf6a6431f64810521121d7c97bd126c65aaa526a2f2396752",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:44.582Z",
+      "reviewedAt": "2026-10-26T20:46:40.864Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/tokens__light__tablet": {
+      "sha256": "2e6263f6a51c19fbfb20afc9d205868b72585ae4b4c8a4955b6f7ee3dfc8e7aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:46.544Z",
+      "reviewedAt": "2026-10-26T20:46:40.864Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/tokens__light__desktop": {
+      "sha256": "f19a4e8037bb661c09d1589e0f4447f435322901ab781184be1a2fba211ea703",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:48.499Z",
+      "reviewedAt": "2026-10-26T20:46:40.865Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/rtl__light__mobile": {
+      "sha256": "abf941befbee4e58938ac341b1cda85c038093ff05b527cdc7af9c75bceb573a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:50.460Z",
+      "reviewedAt": "2026-10-26T20:46:40.865Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/rtl__light__tablet": {
+      "sha256": "f532894f4aae23756200149398265a05e76859ade79dcdca0a69086fa3cadbd9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:52.422Z",
+      "reviewedAt": "2026-10-26T20:46:40.866Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/rtl__light__desktop": {
+      "sha256": "355ff1c26f283a36483f27cce985c46a8cfd4efc52fdc4f7d47d443d326c0203",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:54.377Z",
+      "reviewedAt": "2026-10-26T20:46:40.866Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-dark__light__mobile": {
+      "sha256": "a45313552f21c467364e05d7b22ffccb574e77a999399cbd5729b226274b55ff",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:56.358Z",
+      "reviewedAt": "2026-10-26T20:46:40.867Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-dark__light__tablet": {
+      "sha256": "812a9c7e1e3a24de8f795d7a49f880715200c908a1a48e714ce37aca6a814e5b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:45:58.323Z",
+      "reviewedAt": "2026-10-26T20:46:40.867Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-dark__light__desktop": {
+      "sha256": "46b5e4e8ba380903317dbd9a16010fb9278e866be0b929ef59bb124bb8c9450d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:00.291Z",
+      "reviewedAt": "2026-10-26T20:46:40.867Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-compact__light__mobile": {
+      "sha256": "770faeefb8b0274c92cb572177a92a5a98ad4cb3a36f57b86dc54f61bc878a80",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:02.290Z",
+      "reviewedAt": "2026-10-26T20:46:40.868Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-compact__light__tablet": {
+      "sha256": "b36061400ad6f8f829aecbe9e25bdcf6b14f4be3866d571d912d522424e3977b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:04.250Z",
+      "reviewedAt": "2026-10-26T20:46:40.868Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-compact__light__desktop": {
+      "sha256": "b6571841073ea8ed954f93880ca333fa70727470b93dc849644d20825caeae76",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:06.217Z",
+      "reviewedAt": "2026-10-26T20:46:40.868Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-dark-compact__light__mobile": {
+      "sha256": "527d488bea4bd38d32bbeac81c59d92e2030c6ddef72dd7c7698ac2a8a7d9e0c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:08.161Z",
+      "reviewedAt": "2026-10-26T20:46:40.869Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-dark-compact__light__tablet": {
+      "sha256": "a096c0d37d8a6900042468385a39cfda0786d5d53d466206ad00b27d63404445",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:10.140Z",
+      "reviewedAt": "2026-10-26T20:46:40.869Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/theme-dark-compact__light__desktop": {
+      "sha256": "b12137f9368c8963c2653ded32a2a373fcf260250fc41b26a4bb95f3374209e8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:12.109Z",
+      "reviewedAt": "2026-10-26T20:46:40.869Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/native-focus__light__mobile": {
+      "sha256": "67d869889f6f637db45e405818c40adebb452773a75ac89dc4efd9f3f31fcec2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:14.123Z",
+      "reviewedAt": "2026-10-26T20:46:40.870Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/native-focus__light__tablet": {
+      "sha256": "714f717963e04528256ab9a4f015efe8d567913a1a36ebd3ccab59c8ed4ee1ee",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:16.143Z",
+      "reviewedAt": "2026-10-26T20:46:40.870Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "skeleton/native-focus__light__desktop": {
+      "sha256": "d16aa693235d8daf969c02d369c069781ac13a53fd3978e31bac7d1ddb8c877f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+      "dirty": false,
+      "capturedAt": "2026-10-26T20:46:18.131Z",
+      "reviewedAt": "2026-10-26T20:46:40.871Z",
+      "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
     }
   }
 }

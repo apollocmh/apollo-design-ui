@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
-  "status": "grouped-implementation-under-acceptance",
+  "status": "complete-unit-verified-publication-pending",
   "baselineSources": [
     {
       "file": "packages/ui/src/skeleton/Avatar.vue",
@@ -65,8 +65,7 @@
   ],
   "scope": "Skeleton and five standalone children, internal geometry, eight tokens, eight original demos; Card and Statistic consumers",
   "remaining": [
-    "39 owned visuals need clean-source capture, individual review, approval and exact comparison; affected Statistic 36 pixels need comparison.",
-    "Original checklist final reconciliation, progress/Registry closure and final publication/online source verification."
+    "Final Docs publication and online source/demo verification; other library units and final same-commit whole-library gates remain open."
   ],
   "before": {
     "total": 27,
@@ -3580,6 +3579,4211 @@
       "command": "node --test tests/tooling/skeleton-visual.test.mjs",
       "result": "39 owned cases and all 24 historical references retained",
       "log": "/tmp/apollo-skeleton-visual-tooling.log"
+    },
+    {
+      "command": "node tests/visual/apollo.mjs --component skeleton --candidate; individual review; --accept --review-note; node tests/visual/apollo.mjs --component skeleton --component statistic --no-build",
+      "result": "39 clean-source Skeleton candidates individually reviewed and approved; all 75 Skeleton/Statistic comparisons PASS/pending0/diffPixels0. All original 199 approval records and PNG bytes unchanged.",
+      "logs": [
+        "/tmp/apollo-skeleton-clean-candidates.log",
+        "/tmp/apollo-skeleton-related-visual.log"
+      ]
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build && pnpm --filter @apollo-design/docs run content:check && pnpm --filter @apollo-design/docs run typecheck && pnpm --filter @apollo-design/docs run test && pnpm --filter @apollo-design/docs run build",
+      "result": "final progress/home content: 72 components, 1005 demos, eight guides; strict types, 15 files/161 tests and SSG pass",
+      "logs": [
+        "/tmp/apollo-skeleton-closure-docs-content.log",
+        "/tmp/apollo-skeleton-closure-docs-types.log",
+        "/tmp/apollo-skeleton-closure-docs-tests.log",
+        "/tmp/apollo-skeleton-closure-docs-build.log"
+      ]
+    },
+    {
+      "command": "pnpm registry:check && node --test tests/tooling/skeleton-visual.test.mjs tests/tooling/statistic-visual.test.mjs && pnpm lint:format && git diff --check",
+      "result": "Registry 19 checks/zero warnings; both matrix tests pass; format zero errors with existing 37 warnings/five infos; diff clean",
+      "logs": [
+        "/tmp/apollo-skeleton-closure-registry.log",
+        "/tmp/apollo-skeleton-closure-tooling.log",
+        "/tmp/apollo-skeleton-closure-format.log"
+      ]
+    },
+    {
+      "command": "local production publication browser and prerendered Skeleton guide checks",
+      "result": "33 publication and nine specific SSR claims pass; desktop/mobile-dark screenshots individually viewed; no horizontal overflow or page/Vue/console errors",
+      "logs": [
+        "/tmp/apollo-skeleton-publication-local.log",
+        "/tmp/apollo-skeleton-guide-local.log"
+      ]
     }
-  ]
+  ],
+  "implementationCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+  "visual": {
+    "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+    "dirty": false,
+    "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+    "reviewedIndividually": 39,
+    "approved": 39,
+    "relatedStatistic": 36,
+    "priorApprovalsUnchanged": 199,
+    "totalApprovals": 238,
+    "candidateCapture": {
+      "expected": 39,
+      "pending": 39,
+      "results": [
+        {
+          "id": "skeleton/basic__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/basic__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/basic__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/avatar__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 2,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/avatar__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 2,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/avatar__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 2,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/paragraph__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/paragraph__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/paragraph__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/loaded-content__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 0,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": null,
+            "rootWidth": null,
+            "rootHeight": null,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/loaded-content__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 0,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": null,
+            "rootWidth": null,
+            "rootHeight": null,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/loaded-content__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 0,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": null,
+            "rootWidth": null,
+            "rootHeight": null,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/elements__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 6,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 40,
+            "rootHeight": 40,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/elements__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 6,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 40,
+            "rootHeight": 40,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/elements__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 6,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 40,
+            "rootHeight": 40,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/image-content__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 3,
+            "inputs": 1,
+            "svgs": 1,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 96,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/image-content__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 3,
+            "inputs": 1,
+            "svgs": 1,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 96,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/image-content__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 3,
+            "inputs": 1,
+            "svgs": 1,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 96,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/node-content__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/node-content__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/node-content__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/tokens__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "24px",
+            "lineHeight": "18px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/tokens__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "24px",
+            "lineHeight": "18px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/tokens__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "24px",
+            "lineHeight": "18px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/rtl__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "rtl",
+            "rootWidth": 311,
+            "rootHeight": 118,
+            "rightAvatar": true,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/rtl__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "rtl",
+            "rootWidth": 704,
+            "rootHeight": 118,
+            "rightAvatar": true,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/rtl__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "rtl",
+            "rootWidth": 1376,
+            "rootHeight": 118,
+            "rightAvatar": true,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-compact__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-compact__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-compact__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark-compact__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark-compact__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark-compact__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/native-focus__light__mobile",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/native-focus__light__tablet",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/native-focus__light__desktop",
+          "verdict": "CANDIDATE",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        }
+      ]
+    },
+    "comparison": {
+      "expected": 75,
+      "pending": 0,
+      "results": [
+        {
+          "id": "skeleton/basic__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/basic__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/basic__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/basic__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/basic__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/basic__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/avatar__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 388
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 388
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 145500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/avatar__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 2,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/avatar__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 388
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 388
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 297984,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/avatar__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 2,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/avatar__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 388
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 388
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 558720,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/avatar__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 2,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/paragraph__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/paragraph__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/paragraph__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/paragraph__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/paragraph__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/paragraph__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 3,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/loaded-content__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/loaded-content__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 0,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": null,
+            "rootWidth": null,
+            "rootHeight": null,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/loaded-content__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/loaded-content__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 0,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": null,
+            "rootWidth": null,
+            "rootHeight": null,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/loaded-content__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/loaded-content__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 0,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": null,
+            "rootWidth": null,
+            "rootHeight": null,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/elements__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/elements__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 6,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 40,
+            "rootHeight": 40,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/elements__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/elements__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 6,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 40,
+            "rootHeight": 40,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/elements__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/elements__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 6,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 40,
+            "rootHeight": 40,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/image-content__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 350
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 350
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 131250,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/image-content__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "inputs": 1,
+            "svgs": 1,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 96,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/image-content__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/image-content__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "inputs": 1,
+            "svgs": 1,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 96,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/image-content__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/image-content__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "inputs": 1,
+            "svgs": 1,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 96,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/node-content__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/node-content__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/node-content__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/node-content__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/node-content__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/node-content__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/tokens__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/tokens__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "24px",
+            "lineHeight": "18px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/tokens__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/tokens__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "24px",
+            "lineHeight": "18px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/tokens__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/tokens__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "24px",
+            "lineHeight": "18px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 134,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/rtl__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/rtl__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "rtl",
+            "rootWidth": 311,
+            "rootHeight": 118,
+            "rightAvatar": true,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/rtl__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/rtl__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "rtl",
+            "rootWidth": 704,
+            "rootHeight": 118,
+            "rightAvatar": true,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/rtl__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/rtl__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "rtl",
+            "rootWidth": 1376,
+            "rootHeight": 118,
+            "rightAvatar": true,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-dark__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-dark__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-dark__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "16px",
+            "lineHeight": "16px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 118,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-compact__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-compact__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-compact__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-compact__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-compact__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-compact__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark-compact__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-dark-compact__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark-compact__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-dark-compact__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/theme-dark-compact__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/theme-dark-compact__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 0,
+            "svgs": 0,
+            "busy": "true",
+            "hidden": "true",
+            "titleHeight": "14px",
+            "lineHeight": "14px",
+            "paragraphRows": 2,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 96,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(20, 20, 20)"
+          }
+        },
+        {
+          "id": "skeleton/native-focus__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/native-focus__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 311,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 343,
+            "scrollWidth": 343,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/native-focus__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/native-focus__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 704,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 736,
+            "scrollWidth": 736,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "skeleton/native-focus__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/skeleton/native-focus__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "inputs": 1,
+            "svgs": 0,
+            "busy": null,
+            "hidden": null,
+            "titleHeight": null,
+            "lineHeight": null,
+            "paragraphRows": 0,
+            "direction": "ltr",
+            "rootWidth": 1376,
+            "rootHeight": 90,
+            "rightAvatar": false,
+            "width": 1408,
+            "scrollWidth": 1408,
+            "background": "rgb(255, 255, 255)"
+          }
+        },
+        {
+          "id": "statistic/basic__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/basic__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/basic__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/basic__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/basic__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/basic__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/units__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/units__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": "↑",
+            "suffix": "%",
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/units__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/units__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": "↑",
+            "suffix": "%",
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/units__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/units__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": "↑",
+            "suffix": "%",
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/loading__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/loading__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": null,
+            "text": null,
+            "inputs": 0,
+            "loading": true,
+            "busy": "true",
+            "decorativeHidden": "true",
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/loading__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/loading__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": null,
+            "text": null,
+            "inputs": 0,
+            "loading": true,
+            "busy": "true",
+            "decorativeHidden": "true",
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/loading__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/loading__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": null,
+            "text": null,
+            "inputs": 0,
+            "loading": true,
+            "busy": "true",
+            "decorativeHidden": "true",
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/value-content__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/value-content__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 1,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/value-content__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/value-content__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 1,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/value-content__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/value-content__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 1,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/empty-slot__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/empty-slot__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": null,
+            "titleFont": null,
+            "contentFont": "24px",
+            "text": "",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/empty-slot__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/empty-slot__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": null,
+            "titleFont": null,
+            "contentFont": "24px",
+            "text": "",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/empty-slot__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/empty-slot__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": null,
+            "titleFont": null,
+            "contentFont": "24px",
+            "text": "",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/timer-countdown__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/timer-countdown__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Access expires in",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/timer-countdown__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/timer-countdown__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Access expires in",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/timer-countdown__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/timer-countdown__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Access expires in",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/timer-countup__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/timer-countup__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Elapsed time",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/timer-countup__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/timer-countup__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Elapsed time",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/timer-countup__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/timer-countup__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Elapsed time",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/tokens__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/tokens__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "18px",
+            "contentFont": "42px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/tokens__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/tokens__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "18px",
+            "contentFont": "42px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/tokens__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/tokens__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "18px",
+            "contentFont": "42px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/theme-dark__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-dark__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(20, 20, 20)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/theme-dark__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-dark__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(20, 20, 20)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/theme-dark__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-dark__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(20, 20, 20)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/theme-compact__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-compact__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "12px",
+            "contentFont": "20px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/theme-compact__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-compact__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "12px",
+            "contentFont": "20px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/theme-compact__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-compact__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "12px",
+            "contentFont": "20px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/theme-dark-compact__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-dark-compact__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "12px",
+            "contentFont": "20px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(20, 20, 20)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/theme-dark-compact__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-dark-compact__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "12px",
+            "contentFont": "20px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(20, 20, 20)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/theme-dark-compact__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/theme-dark-compact__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Current balance",
+            "titleFont": "12px",
+            "contentFont": "20px",
+            "text": "112,893.25",
+            "inputs": 0,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(20, 20, 20)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        },
+        {
+          "id": "statistic/native-focus__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 117000,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/native-focus__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Elapsed time",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 1,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 343,
+            "scrollWidth": 343,
+            "rootWidth": 311
+          }
+        },
+        {
+          "id": "statistic/native-focus__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 239616,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/native-focus__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Elapsed time",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 1,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 736,
+            "scrollWidth": 736,
+            "rootWidth": 704
+          }
+        },
+        {
+          "id": "statistic/native-focus__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 312
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 449280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/statistic/native-focus__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "title": "Elapsed time",
+            "titleFont": "14px",
+            "contentFont": "24px",
+            "text": "2 days",
+            "inputs": 1,
+            "loading": false,
+            "busy": null,
+            "decorativeHidden": null,
+            "prefix": null,
+            "suffix": null,
+            "background": "rgb(255, 255, 255)",
+            "width": 1408,
+            "scrollWidth": 1408,
+            "rootWidth": 1376
+          }
+        }
+      ]
+    },
+    "reviewRecords": {
+      "skeleton/basic__light__mobile": {
+        "sha256": "b95d032f8933aa38ab2ebcaadda7a8ba3ecdaaf39baa2402464cbc059535ba7d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:03.168Z",
+        "reviewedAt": "2026-10-26T20:46:40.856Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/basic__light__tablet": {
+        "sha256": "d4f29ec25835bf3c8a570cd895dbf89195b4a3f392c03bb41c395b7c78586dd7",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:05.149Z",
+        "reviewedAt": "2026-10-26T20:46:40.857Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/basic__light__desktop": {
+        "sha256": "bbcd86425d772693c2f5b14bf57654afb27bb577bea540fb7f0da8830ffb851a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:07.126Z",
+        "reviewedAt": "2026-10-26T20:46:40.858Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/avatar__light__mobile": {
+        "sha256": "725b764cb3f1c98aa16696fd7e9fd97fec7acf33c8cca8083037479baac8499e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:09.097Z",
+        "reviewedAt": "2026-10-26T20:46:40.858Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/avatar__light__tablet": {
+        "sha256": "7b40c4ffd8aadd304b2120624aa890d0177a488024060c5e2197260081cf6508",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:11.064Z",
+        "reviewedAt": "2026-10-26T20:46:40.858Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/avatar__light__desktop": {
+        "sha256": "762dddb35e11cb9273d8c12a29f318e7e3df2b5e8c6f452a91b5a452d39ab43a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:13.026Z",
+        "reviewedAt": "2026-10-26T20:46:40.859Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/paragraph__light__mobile": {
+        "sha256": "9be94889d996c519bc9b8f3957d2f953cafaa804c120f9e89e953c04546a94e0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:14.958Z",
+        "reviewedAt": "2026-10-26T20:46:40.859Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/paragraph__light__tablet": {
+        "sha256": "04b079913db46bfd828fda6e563d5ccc84cc66b59f2567b7c6e5dd9689720aa0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:16.885Z",
+        "reviewedAt": "2026-10-26T20:46:40.859Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/paragraph__light__desktop": {
+        "sha256": "7398da28d7beed762c4e1193d3b53c0b78c021bc039681e65504b41efec76f28",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:18.876Z",
+        "reviewedAt": "2026-10-26T20:46:40.860Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/loaded-content__light__mobile": {
+        "sha256": "2fbfb6697428bf08294542b0fd81b9933fd799a6db2551d7dee6059b57d4620d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:20.839Z",
+        "reviewedAt": "2026-10-26T20:46:40.860Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/loaded-content__light__tablet": {
+        "sha256": "aa1eb405d73d54b8961458d5e71318ea7f3134c2094ec9890c4896725a7ddb0d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:22.823Z",
+        "reviewedAt": "2026-10-26T20:46:40.860Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/loaded-content__light__desktop": {
+        "sha256": "c4ca5e693617aeba98a91a5fce72e7bd198a895b88d240fa7d4b4b5491474764",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:24.813Z",
+        "reviewedAt": "2026-10-26T20:46:40.861Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/elements__light__mobile": {
+        "sha256": "e49b3e01c5b9cca69d8c415dc6e0a967765ba24bb289d1926eb8149fb0d216d3",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:26.771Z",
+        "reviewedAt": "2026-10-26T20:46:40.861Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/elements__light__tablet": {
+        "sha256": "7b4a98e098bd5b5cd36b04ad16d0a7a13bb82e078b3010bbfe51e4d3df2fc8cf",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:28.720Z",
+        "reviewedAt": "2026-10-26T20:46:40.861Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/elements__light__desktop": {
+        "sha256": "6bdd940738d79ad61ee706adf7b9193f8f1aa4efbb6828b180696a42da8396a5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:30.673Z",
+        "reviewedAt": "2026-10-26T20:46:40.861Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/image-content__light__mobile": {
+        "sha256": "8cd85f3dd7678e34fb42f503efcf2e179866880e02010cf2e1d1e07a8ab17682",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:32.634Z",
+        "reviewedAt": "2026-10-26T20:46:40.862Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/image-content__light__tablet": {
+        "sha256": "8251aedd540266d31a02bd7f21c12f3ccde3240cb18c6ec1b1d02da5acbee2ac",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:34.634Z",
+        "reviewedAt": "2026-10-26T20:46:40.862Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/image-content__light__desktop": {
+        "sha256": "19ea25005dd23060f260afe8deacc3e92c1d1cea3e8c36fa82152f4ebc4fba02",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:36.640Z",
+        "reviewedAt": "2026-10-26T20:46:40.862Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/node-content__light__mobile": {
+        "sha256": "c9ceb89f76a01b46913c64b8a1530d7d00206c13c899b91f0cbd53bf13a8afa5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:38.630Z",
+        "reviewedAt": "2026-10-26T20:46:40.863Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/node-content__light__tablet": {
+        "sha256": "ce34ca1dacd82c8293334142814ab433ab85c1cb5d28a8f147bec8fdad537066",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:40.611Z",
+        "reviewedAt": "2026-10-26T20:46:40.863Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/node-content__light__desktop": {
+        "sha256": "cb73ee4a423c249710156c8ab53f615f5c9d208229afb170e2b0900c209e26c6",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:42.597Z",
+        "reviewedAt": "2026-10-26T20:46:40.863Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/tokens__light__mobile": {
+        "sha256": "3bdb06572412253cf6a6431f64810521121d7c97bd126c65aaa526a2f2396752",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:44.582Z",
+        "reviewedAt": "2026-10-26T20:46:40.864Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/tokens__light__tablet": {
+        "sha256": "2e6263f6a51c19fbfb20afc9d205868b72585ae4b4c8a4955b6f7ee3dfc8e7aa",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:46.544Z",
+        "reviewedAt": "2026-10-26T20:46:40.864Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/tokens__light__desktop": {
+        "sha256": "f19a4e8037bb661c09d1589e0f4447f435322901ab781184be1a2fba211ea703",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:48.499Z",
+        "reviewedAt": "2026-10-26T20:46:40.865Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/rtl__light__mobile": {
+        "sha256": "abf941befbee4e58938ac341b1cda85c038093ff05b527cdc7af9c75bceb573a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:50.460Z",
+        "reviewedAt": "2026-10-26T20:46:40.865Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/rtl__light__tablet": {
+        "sha256": "f532894f4aae23756200149398265a05e76859ade79dcdca0a69086fa3cadbd9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:52.422Z",
+        "reviewedAt": "2026-10-26T20:46:40.866Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/rtl__light__desktop": {
+        "sha256": "355ff1c26f283a36483f27cce985c46a8cfd4efc52fdc4f7d47d443d326c0203",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:54.377Z",
+        "reviewedAt": "2026-10-26T20:46:40.866Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-dark__light__mobile": {
+        "sha256": "a45313552f21c467364e05d7b22ffccb574e77a999399cbd5729b226274b55ff",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:56.358Z",
+        "reviewedAt": "2026-10-26T20:46:40.867Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-dark__light__tablet": {
+        "sha256": "812a9c7e1e3a24de8f795d7a49f880715200c908a1a48e714ce37aca6a814e5b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:45:58.323Z",
+        "reviewedAt": "2026-10-26T20:46:40.867Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-dark__light__desktop": {
+        "sha256": "46b5e4e8ba380903317dbd9a16010fb9278e866be0b929ef59bb124bb8c9450d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:00.291Z",
+        "reviewedAt": "2026-10-26T20:46:40.867Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-compact__light__mobile": {
+        "sha256": "770faeefb8b0274c92cb572177a92a5a98ad4cb3a36f57b86dc54f61bc878a80",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:02.290Z",
+        "reviewedAt": "2026-10-26T20:46:40.868Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-compact__light__tablet": {
+        "sha256": "b36061400ad6f8f829aecbe9e25bdcf6b14f4be3866d571d912d522424e3977b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:04.250Z",
+        "reviewedAt": "2026-10-26T20:46:40.868Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-compact__light__desktop": {
+        "sha256": "b6571841073ea8ed954f93880ca333fa70727470b93dc849644d20825caeae76",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:06.217Z",
+        "reviewedAt": "2026-10-26T20:46:40.868Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-dark-compact__light__mobile": {
+        "sha256": "527d488bea4bd38d32bbeac81c59d92e2030c6ddef72dd7c7698ac2a8a7d9e0c",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:08.161Z",
+        "reviewedAt": "2026-10-26T20:46:40.869Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-dark-compact__light__tablet": {
+        "sha256": "a096c0d37d8a6900042468385a39cfda0786d5d53d466206ad00b27d63404445",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:10.140Z",
+        "reviewedAt": "2026-10-26T20:46:40.869Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/theme-dark-compact__light__desktop": {
+        "sha256": "b12137f9368c8963c2653ded32a2a373fcf260250fc41b26a4bb95f3374209e8",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:12.109Z",
+        "reviewedAt": "2026-10-26T20:46:40.869Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/native-focus__light__mobile": {
+        "sha256": "67d869889f6f637db45e405818c40adebb452773a75ac89dc4efd9f3f31fcec2",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:14.123Z",
+        "reviewedAt": "2026-10-26T20:46:40.870Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/native-focus__light__tablet": {
+        "sha256": "714f717963e04528256ab9a4f015efe8d567913a1a36ebd3ccab59c8ed4ee1ee",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:16.143Z",
+        "reviewedAt": "2026-10-26T20:46:40.870Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      },
+      "skeleton/native-focus__light__desktop": {
+        "sha256": "d16aa693235d8daf969c02d369c069781ac13a53fd3978e31bac7d1ddb8c877f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "e6be16258145f11c7dd79c9549564b8e17b8eda3",
+        "dirty": false,
+        "capturedAt": "2026-10-26T20:46:18.131Z",
+        "reviewedAt": "2026-10-26T20:46:40.871Z",
+        "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+      }
+    }
+  },
+  "closure": {
+    "checklist": "all original rows reconciled",
+    "localPublicationBrowser": {
+      "base": "http://127.0.0.1:4477/apollo-design-ui",
+      "browser": "150.0.7871.125",
+      "latestCommit": "e6be1625",
+      "results": [
+        {
+          "name": "home HTTP",
+          "actual": 200
+        },
+        {
+          "name": "home entry",
+          "actual": true
+        },
+        {
+          "name": "client guide route",
+          "actual": true
+        },
+        {
+          "name": "verified delivery and remaining scope",
+          "actual": true
+        },
+        {
+          "name": "English guide",
+          "actual": true
+        },
+        {
+          "name": "guide HTTP",
+          "actual": 200
+        },
+        {
+          "name": "guide prerendered body",
+          "actual": true
+        },
+        {
+          "name": "live group retained",
+          "actual": 1
+        },
+        {
+          "name": "live group focus restored",
+          "actual": true
+        },
+        {
+          "name": "live group reset",
+          "actual": 3
+        },
+        {
+          "name": "guide HTTP",
+          "actual": 200
+        },
+        {
+          "name": "guide prerendered body",
+          "actual": true
+        },
+        {
+          "name": "native thumbnail edit",
+          "actual": "1"
+        },
+        {
+          "name": "native edit does not open preview",
+          "actual": "false"
+        },
+        {
+          "name": "rich preview focus restored",
+          "actual": true
+        },
+        {
+          "name": "guide HTTP",
+          "actual": 200
+        },
+        {
+          "name": "guide prerendered body",
+          "actual": true
+        },
+        {
+          "name": "rendered 关闭按钮与图标插槽",
+          "actual": true
+        },
+        {
+          "name": "guide HTTP",
+          "actual": 200
+        },
+        {
+          "name": "guide prerendered body",
+          "actual": true
+        },
+        {
+          "name": "rendered 局部主题与组件Token",
+          "actual": true
+        },
+        {
+          "name": "guide HTTP",
+          "actual": 200
+        },
+        {
+          "name": "guide prerendered body",
+          "actual": true
+        },
+        {
+          "name": "rendered Provider弹层配置",
+          "actual": true
+        },
+        {
+          "name": "changelog HTTP",
+          "actual": 200
+        },
+        {
+          "name": "full commit history",
+          "actual": true
+        },
+        {
+          "name": "published source commit",
+          "actual": "e6be1625"
+        },
+        {
+          "name": "visible site source",
+          "actual": true
+        },
+        {
+          "name": "mobile overflow",
+          "actual": true
+        },
+        {
+          "name": "dark theme",
+          "actual": "dark"
+        },
+        {
+          "name": "dark progress heading follows readable site text",
+          "actual": true
+        },
+        {
+          "name": "mobile guide overflow",
+          "actual": true
+        },
+        {
+          "name": "no page/Vue/console errors",
+          "actual": []
+        }
+      ],
+      "errors": []
+    },
+    "prerenderedGuide": {
+      "base": "http://127.0.0.1:4477/apollo-design-ui",
+      "browser": "150.0.7871.125",
+      "status": 200,
+      "results": [
+        {
+          "name": "complete Skeleton checklist",
+          "text": "Skeleton及五个子组件完整清单已统一验收",
+          "passed": true
+        },
+        {
+          "name": "related four layers",
+          "text": "关联360条四层",
+          "passed": true
+        },
+        {
+          "name": "related types and production browser",
+          "text": "128条类型、92项生产浏览器",
+          "passed": true
+        },
+        {
+          "name": "SSR and hydration",
+          "text": "18项SSR、6组水合",
+          "passed": true
+        },
+        {
+          "name": "actual demos and themes",
+          "text": "五组交互23项、四算法36组合",
+          "passed": true
+        },
+        {
+          "name": "39 individually reviewed exact images",
+          "text": "39张自有视觉已逐张审阅批准并全部0像素差异",
+          "passed": true
+        },
+        {
+          "name": "36 related Statistic images",
+          "text": "关联Statistic36张保持一致",
+          "passed": true
+        },
+        {
+          "name": "199 candidates remain candidates",
+          "text": "199项候选待逐项复核",
+          "passed": true
+        },
+        {
+          "name": "whole-library audit remains open",
+          "text": "全库审计仍在进行",
+          "passed": true
+        }
+      ]
+    },
+    "screenshotsReviewed": [
+      "/tmp/apollo-skeleton-publication-local-desktop.png",
+      "/tmp/apollo-skeleton-publication-local-mobile-dark.png"
+    ],
+    "globalAudit": "open; 199 content candidates are not confirmed defects; final same-commit full gates remain required"
+  }
 }
