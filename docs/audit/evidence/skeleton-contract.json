@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "c6fff66ecea8bb589f007241bc299f75ea4f58cd",
-  "status": "complete-unit-verified-publication-pending",
+  "status": "complete-unit-verified-published",
   "baselineSources": [
     {
       "file": "packages/ui/src/skeleton/Avatar.vue",
@@ -65,7 +65,7 @@
   ],
   "scope": "Skeleton and five standalone children, internal geometry, eight tokens, eight original demos; Card and Statistic consumers",
   "remaining": [
-    "Final Docs publication and online source/demo verification; other library units and final same-commit whole-library gates remain open."
+    "Other library units, 199 content candidates and final same-commit whole-library gates remain open; this unit has no remaining defects or blockers."
   ],
   "before": {
     "total": 27,
@@ -7785,5 +7785,11 @@
       "/tmp/apollo-skeleton-publication-local-mobile-dark.png"
     ],
     "globalAudit": "open; 199 content candidates are not confirmed defects; final same-commit full gates remain required"
+  },
+  "publication": {
+    "sourceCommit": "2cbadfc2b5abcf71df091c6b37e404ae2d557c6d",
+    "workflowRun": 40400050196,
+    "pagesDeployment": 7343506207,
+    "evidence": "docs/audit/evidence/docs-publication-skeleton-closure.json"
   }
 }

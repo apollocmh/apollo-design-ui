@@ -1,0 +1,612 @@
+{
+  "sourceCommit": "2cbadfc2b5abcf71df091c6b37e404ae2d557c6d",
+  "workflow": {
+    "conclusion": "success",
+    "headSha": "2cbadfc2b5abcf71df091c6b37e404ae2d557c6d",
+    "jobs": [
+      {
+        "completedAt": "2026-10-26T21:02:14Z",
+        "conclusion": "success",
+        "databaseId": 121843156033,
+        "name": "构建文档站",
+        "startedAt": "2026-10-26T20:56:22Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-26T20:56:24Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-26T20:56:23Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T20:56:28Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-26T20:56:24Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T20:56:38Z",
+            "conclusion": "success",
+            "name": "Run ./.github/actions/setup",
+            "number": 3,
+            "startedAt": "2026-10-26T20:56:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T20:56:59Z",
+            "conclusion": "success",
+            "name": "内容管线校验",
+            "number": 4,
+            "startedAt": "2026-10-26T20:56:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T20:57:20Z",
+            "conclusion": "success",
+            "name": "生成内容管线产物",
+            "number": 5,
+            "startedAt": "2026-10-26T20:56:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T20:57:59Z",
+            "conclusion": "success",
+            "name": "文档站类型检查",
+            "number": 6,
+            "startedAt": "2026-10-26T20:57:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T20:58:17Z",
+            "conclusion": "success",
+            "name": "文档站单元测试",
+            "number": 7,
+            "startedAt": "2026-10-26T20:57:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:10Z",
+            "conclusion": "success",
+            "name": "构建全部包（拓扑序 + L7 产物检查）",
+            "number": 8,
+            "startedAt": "2026-10-26T20:58:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:11Z",
+            "conclusion": "success",
+            "name": "关键产物检查",
+            "number": 9,
+            "startedAt": "2026-10-26T21:02:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:11Z",
+            "conclusion": "success",
+            "name": "配置 Pages",
+            "number": 10,
+            "startedAt": "2026-10-26T21:02:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:12Z",
+            "conclusion": "success",
+            "name": "上传 Pages 产物",
+            "number": 11,
+            "startedAt": "2026-10-26T21:02:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:13Z",
+            "conclusion": "success",
+            "name": "Post Run ./.github/actions/setup",
+            "number": 21,
+            "startedAt": "2026-10-26T21:02:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:13Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 22,
+            "startedAt": "2026-10-26T21:02:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:13Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 23,
+            "startedAt": "2026-10-26T21:02:13Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40400050196/job/121843156033"
+      },
+      {
+        "completedAt": "2026-10-26T21:02:48Z",
+        "conclusion": "success",
+        "databaseId": 121846148212,
+        "name": "发布到 GitHub Pages",
+        "startedAt": "2026-10-26T21:02:19Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-26T21:02:20Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-26T21:02:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:47Z",
+            "conclusion": "success",
+            "name": "部署到 GitHub Pages",
+            "number": 2,
+            "startedAt": "2026-10-26T21:02:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-26T21:02:47Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 3,
+            "startedAt": "2026-10-26T21:02:47Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40400050196/job/121846148212"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40400050196"
+  },
+  "pages": {
+    "id": 7343506207,
+    "sha": "2cbadfc2b5abcf71df091c6b37e404ae2d557c6d",
+    "status": {
+      "url": "https://api.github.com/repos/apollocmh/apollo-design-ui/deployments/7343506207/statuses/20665889502",
+      "id": 20665889502,
+      "node_id": "DES_kwDOUj3BFM8AAAAEz8hy3g",
+      "state": "success",
+      "creator": {
+        "login": "apollocmh",
+        "id": 86224771,
+        "node_id": "MDQ6VXNlcjg2MjI0Nzcx",
+        "avatar_url": "https://avatars.githubusercontent.com/u/86224771?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/apollocmh",
+        "html_url": "https://github.com/apollocmh",
+        "followers_url": "https://api.github.com/users/apollocmh/followers",
+        "following_url": "https://api.github.com/users/apollocmh/following{/other_user}",
+        "gists_url": "https://api.github.com/users/apollocmh/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/apollocmh/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/apollocmh/subscriptions",
+        "organizations_url": "https://api.github.com/users/apollocmh/orgs",
+        "repos_url": "https://api.github.com/users/apollocmh/repos",
+        "events_url": "https://api.github.com/users/apollocmh/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/apollocmh/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "description": "",
+      "environment": "github-pages",
+      "target_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40400050196/job/121846148212",
+      "created_at": "2026-10-26T21:02:49Z",
+      "updated_at": "2026-10-26T21:02:49Z",
+      "deployment_url": "https://api.github.com/repos/apollocmh/apollo-design-ui/deployments/7343506207",
+      "repository_url": "https://api.github.com/repos/apollocmh/apollo-design-ui",
+      "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+      "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40400050196/job/121846148212",
+      "performed_via_github_app": null
+    }
+  },
+  "ci": {
+    "docsFiles": 15,
+    "docsTests": 161,
+    "l7Checks": 151,
+    "fail": 0,
+    "pending": 0,
+    "notApplicable": 67,
+    "htmlPages": 86
+  },
+  "livePublication": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "2cbadfc2",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "2cbadfc2"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "liveSkeletonDemos": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "basic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "avatar",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "avatar",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "loading",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "loading",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "active",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "active",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "semantic",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "semantic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 1,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "children",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 0,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "children",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 0,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "complex",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "complex",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 2,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "element",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 6,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "element",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 6,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "theme": "light",
+        "httpStatus": 404,
+        "roots": 6,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "theme": "dark",
+        "httpStatus": 404,
+        "roots": 6,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "name": "actual controlled loading switches repeatedly between busy decoration and unwrapped content",
+        "passed": true
+      },
+      {
+        "name": "actual children demo completes two real reload cycles with caller-owned state",
+        "passed": true
+      },
+      {
+        "name": "complex native content keeps identity and intended content dimensions across active changes",
+        "passed": true
+      },
+      {
+        "name": "all six standalone demo roots update and keyboard activation restores shimmer",
+        "passed": true
+      },
+      {
+        "name": "current source tokens and native variable removal/restoration retain model, editor and focus",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/avatar?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/avatar?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/loading?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/loading?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/active?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/active?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/semantic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/semantic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/children?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/children?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/complex?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/complex?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/element?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/element?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/skeleton/demo/component-token?theme=dark"
+    ]
+  },
+  "prerenderedGuide": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "status": 200,
+    "results": [
+      {
+        "name": "complete Skeleton checklist",
+        "text": "Skeleton及五个子组件完整清单已统一验收",
+        "passed": true
+      },
+      {
+        "name": "related four layers",
+        "text": "关联360条四层",
+        "passed": true
+      },
+      {
+        "name": "related types and production browser",
+        "text": "128条类型、92项生产浏览器",
+        "passed": true
+      },
+      {
+        "name": "SSR and hydration",
+        "text": "18项SSR、6组水合",
+        "passed": true
+      },
+      {
+        "name": "actual demos and themes",
+        "text": "五组交互23项、四算法36组合",
+        "passed": true
+      },
+      {
+        "name": "39 individually reviewed exact images",
+        "text": "39张自有视觉已逐张审阅批准并全部0像素差异",
+        "passed": true
+      },
+      {
+        "name": "36 related Statistic images",
+        "text": "关联Statistic36张保持一致",
+        "passed": true
+      },
+      {
+        "name": "199 candidates remain candidates",
+        "text": "199项候选待逐项复核",
+        "passed": true
+      },
+      {
+        "name": "whole-library audit remains open",
+        "text": "全库审计仍在进行",
+        "passed": true
+      }
+    ]
+  },
+  "screenshotsIndividuallyReviewed": [
+    "/tmp/apollo-skeleton-publication-live-desktop.png",
+    "/tmp/apollo-skeleton-publication-live-mobile-dark.png"
+  ],
+  "scopeNotes": [
+    "33 publication, 23 demo and nine SSR checks are separate overlapping scopes, not unique additive cases.",
+    "All 18 light/dark independent Demo navigation URLs use existing Pages 404.html fallback; all remaining resource/page/Vue errors are zero.",
+    "36 demo/theme combinations were verified locally, not rerun online.",
+    "Other units, 199 content candidates and final same-commit library gates remain open."
+  ]
+}
