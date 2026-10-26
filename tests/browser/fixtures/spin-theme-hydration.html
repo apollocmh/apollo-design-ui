@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><link rel="icon" href="data:," /><title>Spin theme hydration</title></head><body>
+<div id="app"></div>
+<script type="module">
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/style.css';
+import { createSSRApp, nextTick } from 'vue';
+import App from './SpinThemeHydration.mjs';
+
+createSSRApp(App).mount('#app');
+await nextTick(); await nextTick();
+window.__spinThemeHydrated = true;
+</script>
+</body></html>

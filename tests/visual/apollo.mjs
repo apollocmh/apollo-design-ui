@@ -17,6 +17,7 @@ import {
 import { prepareImageVisual } from './image-state.mjs';
 import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
+import { prepareSpinVisual } from './spin-state.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
@@ -193,14 +194,17 @@ async function main() {
           timeout: 20000,
         });
         await stabilizePage(page, {
-          preserveFocus: item.component === 'list' && item.variant === 'native-focus',
+          preserveFocus:
+            ['list', 'spin'].includes(item.component) && item.variant === 'native-focus',
         });
         const state =
           item.component === 'image'
             ? await prepareImageVisual(page, item.variant)
             : item.component === 'list'
               ? await prepareListVisual(page, item.variant)
-              : undefined;
+              : item.component === 'spin'
+                ? await prepareSpinVisual(page, item.variant)
+                : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

@@ -239,7 +239,12 @@ export function genSpinStyle(prefixCls: string): string {
     `  stroke:${v('colorFillSecondary')};`,
     `}`,
     '',
-    `@media(prefers-reduced-motion:reduce){${cls}{${variable('animation-play-state')}:paused;}}`,
+    `@media(prefers-reduced-motion:reduce){`,
+    `  ${cls}{${variable('animation-play-state')}:paused;}`,
+    `  ${cls} >${section},${cls} >${container},${cls} >${container}::after,`,
+    `  ${cls} >${section} >${cls}-indicator >${dot}-holder,`,
+    `  ${cls} >${section} >${cls}-indicator >${dot}-progress ${dot}-circle{transition:none;}`,
+    `}`,
     '',
   ].join('\n');
 }

@@ -4,6 +4,7 @@ import { createCommentVNode, createSSRApp, defineComponent, h, nextTick, ref } f
 import { renderToString } from 'vue/server-renderer';
 import { ConfigProvider } from '../../config-provider';
 import { Spin, setDefaultIndicator } from '../index';
+import type { SpinConfig, SpinRef } from '../interface';
 
 const disposers: Array<() => void> = [];
 function track<T extends { unmount(): void }>(wrapper: T): T {
@@ -200,6 +201,123 @@ describe('Spin complete contract: native content and current configuration', () 
     expect(wrapper.getComponent(Spin).vm.nativeElement).toBe(nativeBefore);
     expect(root.attributes('style') ?? '').not.toContain('--apollo-spin-dot-size: 31px');
     expect(wrapper.get('input').element).toBe(editor);
+  });
+
+  it('keeps native attrs, once listeners and exposed root current through prefix and attrs-only updates', async () => {
+    const phase = ref(0);
+    const api = ref<SpinRef | null>(null);
+    const click = vi.fn();
+    const once = vi.fn();
+    const wrapper = track(
+      mount(
+        defineComponent(
+          () => () =>
+            h(Spin, {
+              ref: api,
+              prefixCls: phase.value === 1 ? 'owned-spin' : undefined,
+              class: ['native-root', { current: phase.value > 0 }],
+              style:
+                phase.value === 0
+                  ? 'color:red;padding:3px'
+                  : [{ color: 'blue' }, { padding: '7px' }],
+              'data-phase': String(phase.value),
+              'aria-live': phase.value ? 'off' : 'assertive',
+              onClick: click,
+              onClickOnce: once,
+            }),
+        ),
+        { attachTo: document.body },
+      ),
+    );
+    const root = wrapper.element;
+    expect(api.value?.nativeElement).toBe(root);
+    expect(wrapper.attributes('style')).toContain('padding: 3px');
+    await wrapper.trigger('click');
+    for (const value of [1, 2]) {
+      phase.value = value;
+      await nextTick();
+      expect(wrapper.element).toBe(root);
+      expect(api.value?.nativeElement).toBe(root);
+      expect(wrapper.attributes('data-phase')).toBe(String(value));
+      expect(wrapper.attributes('aria-live')).toBe('off');
+      expect(wrapper.attributes('style')).toContain('color: blue');
+      expect(wrapper.classes()).toContain(value === 1 ? 'owned-spin' : 'apollo-spin');
+      expect(
+        wrapper.find(value === 1 ? '.owned-spin-indicator' : '.apollo-spin-indicator').exists(),
+      ).toBe(true);
+      await wrapper.trigger('click');
+    }
+    expect(click).toHaveBeenCalledTimes(3);
+    expect(once).toHaveBeenCalledTimes(1);
+    wrapper.unmount();
+    expect(api.value).toBeNull();
+  });
+
+  it('reads replacement and removal of all five Provider fields while keeping local semantics and sibling ownership', async () => {
+    const config = ref<SpinConfig>({
+      className: 'provider-first',
+      style: { padding: '3px' },
+      classNames: { section: 'provider-section' },
+      styles: { indicator: { color: 'red' } },
+      indicator: h('em', 'First indicator'),
+    });
+    const wrapper = track(
+      mount(
+        defineComponent(
+          () => () =>
+            h('main', [
+              h(ConfigProvider, { components: { spin: config.value } }, () =>
+                h(Spin, {
+                  id: 'configured',
+                  percent: 37,
+                  classNames: ({ props }) => ({ root: `progress-${props.percent}` }),
+                  styles: { root: { margin: '5px' } },
+                }),
+              ),
+              h(Spin, { id: 'independent' }),
+            ]),
+        ),
+        { global: { stubs: { teleport: false } } },
+      ),
+    );
+    const root = wrapper.get('#configured').element;
+    expect(wrapper.get('#configured').classes()).toContain('provider-first');
+    expect(wrapper.get('#configured').classes()).toContain('progress-37');
+    expect(wrapper.find('#configured .provider-section').exists()).toBe(true);
+    expect(wrapper.get('#configured .apollo-spin-indicator').attributes('style')).toContain(
+      'color: red',
+    );
+    expect(wrapper.get('#configured em').text()).toBe('First indicator');
+    config.value = {
+      className: 'provider-current',
+      style: { padding: '7px' },
+      classNames: { section: 'current-section' },
+      styles: { indicator: { color: 'blue' } },
+      indicator: h('strong', 'Current indicator'),
+    };
+    await nextTick();
+    expect(wrapper.get('#configured').element).toBe(root);
+    expect(wrapper.get('#configured').classes()).toContain('provider-current');
+    expect(wrapper.get('#configured').classes()).not.toContain('provider-first');
+    expect(wrapper.get('#configured').attributes('style')).toContain('padding: 7px');
+    expect(wrapper.get('#configured').attributes('style')).toContain('margin: 5px');
+    expect(wrapper.find('#configured .current-section').exists()).toBe(true);
+    expect(wrapper.get('#configured .apollo-spin-indicator').attributes('style')).toContain(
+      'color: blue',
+    );
+    expect(wrapper.get('#configured strong').text()).toBe('Current indicator');
+    config.value = {};
+    await nextTick();
+    expect(wrapper.get('#configured').element).toBe(root);
+    expect(wrapper.get('#configured').classes()).toEqual(
+      expect.arrayContaining(['apollo-spin', 'progress-37']),
+    );
+    expect(wrapper.get('#configured').classes()).not.toContain('provider-current');
+    expect(wrapper.get('#configured').attributes('style')).toBe('margin: 5px;');
+    expect(wrapper.find('#configured .current-section').exists()).toBe(false);
+    expect(wrapper.get('#configured [role="progressbar"]').attributes('aria-valuenow')).toBe('37');
+    expect(wrapper.find('#independent [role="progressbar"]').exists()).toBe(false);
+    expect(wrapper.find('#independent strong').exists()).toBe(false);
   });
 });
 

@@ -265,6 +265,23 @@ export const COMPONENTS = {
     ],
   },
   spin: {
+    apolloVariants: [
+      'basic',
+      'size',
+      'nested',
+      'empty-body',
+      'custom-indicator',
+      'percent',
+      'fullscreen',
+      'fullscreen-idle',
+      'semantic',
+      'tokens',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [
       'basic', // 非嵌套：根元素自己就是 section
