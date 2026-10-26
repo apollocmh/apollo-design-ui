@@ -25,6 +25,7 @@ const VERIFIED = {
   'list:ListProps:header': 'docs/audit/2026-10-24-list-slots-remediation.md',
   'list:ListProps:footer': 'docs/audit/2026-10-24-list-slots-remediation.md',
   'list:ListProps:loadMore': 'docs/audit/2026-10-24-list-slots-remediation.md',
+  'list:ListProps:extra': 'docs/audit/2026-10-26-list-contract-audit.md',
   'badge:BadgeProps:count': 'docs/audit/2026-10-24-badge-slots-remediation.md',
   'badge:BadgeProps:text': 'docs/audit/2026-10-24-badge-slots-remediation.md',
   'input-number:InputNumberProps:prefix': 'docs/audit/2026-10-23-vue-reactivity-remediation.md',

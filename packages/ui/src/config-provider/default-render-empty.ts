@@ -87,6 +87,6 @@ export const DefaultRenderEmpty = defineComponent({
  * const node = (renderEmpty ?? defaultRenderEmpty)('Table');
  * ```
  */
-export function defaultRenderEmpty(componentName?: RenderEmptyComponentName): unknown {
+export function defaultRenderEmpty(componentName?: RenderEmptyComponentName) {
   return h(DefaultRenderEmpty, { componentName });
 }

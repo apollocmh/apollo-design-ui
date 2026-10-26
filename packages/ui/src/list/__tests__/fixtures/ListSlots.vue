@@ -27,6 +27,7 @@ const describe = (name: string, index: number) => `${index}:${name.toUpperCase()
       </ListItem>
     </template>
     <template #header>Header</template>
+    <template #extra><button type="button">List detail</button></template>
     <template #footer>Footer</template>
     <template #loadMore>More</template>
   </List>

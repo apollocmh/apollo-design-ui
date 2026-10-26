@@ -54,6 +54,7 @@ import type {
 
 describe('List · Props 类型', () => {
   it('Item/Meta content slots and the Item ref are explicitly typed', () => {
+    expectTypeOf<ListSlots['extra']>().toEqualTypeOf<ListSlot | undefined>();
     expectTypeOf<ListItemSlots['extra']>().toEqualTypeOf<ListItemSlot | undefined>();
     expectTypeOf<ListItemSlots['actions']>().toEqualTypeOf<ListItemSlot | undefined>();
     expectTypeOf<ListItemMetaSlots['avatar']>().toEqualTypeOf<ListItemMetaSlot | undefined>();

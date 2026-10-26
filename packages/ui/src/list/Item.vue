@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { isEmptyVNode, isTextVNode, toArray } from '@apollo-design/utils';
-import { computed, h, isVNode, ref, useAttrs, type VNode, type VNodeChild } from 'vue';
+import { computed, h, isVNode, provide, ref, useAttrs, type VNode, type VNodeChild } from 'vue';
 import { NodeRenderer } from '../_internal/node-renderer';
 import { useComponentConfig } from '../config-provider/context';
 import { Col } from '../grid';
-import { useListContext } from './context';
+import { listContextKey, useListContext } from './context';
 import type { ListConfig, ListItemProps, ListItemSemanticName, ListItemSlots } from './interface';
 
 defineOptions({ name: 'AListItem', inheritAttrs: false });
@@ -13,7 +13,17 @@ const slots = defineSlots<ListItemSlots>();
 const attrs = useAttrs();
 const listContext = useListContext();
 const config = useComponentConfig<ListConfig>('list');
-const prefixCls = computed(() => config.getPrefixCls('list', props.prefixCls));
+const prefixCls = computed(() =>
+  config.getPrefixCls('list', props.prefixCls || listContext.value.prefixCls),
+);
+provide(
+  listContextKey,
+  computed(() => ({
+    ...listContext.value,
+    prefixCls: prefixCls.value,
+    inItem: true,
+  })),
+);
 const cls = computed(() => `${prefixCls.value}-item`);
 
 const moduleClass = (name: ListItemSemanticName) => [
@@ -32,7 +42,7 @@ const nativeElement = computed(() =>
 );
 defineExpose({ nativeElement });
 
-function renderActions(actions: VNodeChild[], keyed: boolean): VNode | null {
+function renderActions(actions: VNodeChild[]): VNode | null {
   if (actions.length === 0) return null;
   const actionCls = `${cls.value}-action`;
   return h(
@@ -42,10 +52,7 @@ function renderActions(actions: VNodeChild[], keyed: boolean): VNode | null {
       h(
         'li',
         {
-          key:
-            keyed && isVNode(action)
-              ? (action.key ?? `${actionCls}-${index}`)
-              : `${actionCls}-${index}`,
+          key: isVNode(action) ? (action.key ?? `${actionCls}-${index}`) : `${actionCls}-${index}`,
         },
         [
           h(NodeRenderer, { node: action }),
@@ -66,35 +73,47 @@ function renderItem(): VNode {
   const children = flattenContent(slots.default?.());
   const extra = slots.extra ? slots.extra() : props.extra;
   const hasExtra = !isEmptyVNode(extra);
-  const actions = slots.actions
-    ? flattenContent(slots.actions()).filter(
+  const actions = (slots.actions ? flattenContent(slots.actions()) : (props.actions ?? [])).filter(
+    (action) =>
+      flattenContent(action).some(
         (node) =>
           !isEmptyVNode(node) &&
           !(isTextVNode(node) && typeof node.children === 'string' && node.children.trim() === ''),
-      )
-    : (props.actions ?? []);
-  const actionsNode = renderActions(actions, !!slots.actions);
+      ),
+  );
+  const actionsNode = renderActions(actions);
   const vertical = listContext.value.itemLayout === 'vertical';
   const noFlex = vertical ? !hasExtra : children.length > 1 && children.some(isTextVNode);
-  const content =
-    vertical && hasExtra
-      ? [
-          h('div', { class: `${cls.value}-main`, key: 'content' }, [...children, actionsNode]),
-          h(
-            'div',
-            {
-              class: [`${cls.value}-extra`, moduleClass('extra')],
-              key: 'extra',
-              style: moduleStyle('extra'),
-            },
-            [h(NodeRenderer, { node: extra })],
-          ),
-        ]
-      : [...children, actionsNode, h(NodeRenderer, { node: extra, key: 'extra' })];
+  const content = [
+    h('div', { class: `${cls.value}-main`, key: 'content' }, [...children, actionsNode]),
+    hasExtra
+      ? h(
+          'div',
+          {
+            class: [`${cls.value}-extra`, moduleClass('extra')],
+            key: 'extra',
+            style: moduleStyle('extra'),
+          },
+          [h(NodeRenderer, { node: extra })],
+        )
+      : null,
+  ];
   const { class: attrsClass, ...restAttrs } = attrs;
   const itemAttrs = {
     ...restAttrs,
-    class: [cls.value, { [`${cls.value}-no-flex`]: noFlex }, attrsClass],
+    class: [
+      cls.value,
+      {
+        [`${cls.value}-no-flex`]: noFlex,
+        [`${cls.value}-vertical`]: vertical,
+        [`${cls.value}-grid`]: !!listContext.value.grid,
+        [`${cls.value}-bordered`]: listContext.value.bordered,
+        [`${cls.value}-split`]: listContext.value.split,
+        [`${cls.value}-sm`]: listContext.value.size === 'small',
+        [`${cls.value}-lg`]: listContext.value.size === 'large',
+      },
+      attrsClass,
+    ],
   };
   if (listContext.value.grid) {
     return h(

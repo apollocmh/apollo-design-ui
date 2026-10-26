@@ -39,7 +39,7 @@ See `Listy` for virtual lists. A List drag-reordering example remains under revi
 |---|---|---|---|
 | bordered | Toggles rendering of the border around the list | `boolean` | `false` |
 | dataSource | Data source | `T[]` | — |
-| extra | Historical declaration; rendering is not connected and remains under F11 review | `VNodeChild` | — |
+| extra | Content beside the list; moves below it on narrow screens. Also available as a slot | `VNodeChild` | — |
 | grid | Grid config (`gutter` / `column` / `xs`…`xxxl`) | `ListGridType` | — |
 | id | Root element id | `string` | — |
 | itemLayout | Item layout | `'horizontal' \| 'vertical'` | `'horizontal'` |
@@ -61,11 +61,12 @@ See `Listy` for virtual lists. A List drag-reordering example remains under revi
 |---|---|---|
 | default | — | Manually composed content; suppresses the default empty state |
 | item | `{ item: T, index: number }` | Items on the current page; `T` is inferred from `dataSource`, `index` starts at 0 on each page; absent slot renders no data items |
+| extra | — | Content beside the list; below it on narrow screens |
 | header | — | List header |
 | footer | — | List footer |
 | loadMore | — | Replaces bottom pagination; top pagination remains |
 
-The presence of `header` / `footer` / `loadMore` slots overrides their matching content props, even when the slot is empty. Empty header/footer slots create no wrapper. Use the exact `loadMore` casing. Simple content props remain available.
+The presence of `header` / `footer` / `loadMore` / `extra` slots overrides their matching content props, even when the slot is empty. Empty header/footer slots create no wrapper. Use the exact `loadMore` casing. Simple content props remain available.
 `renderItem` has been removed directly; see the [List slot migration](../../../../docs/migrations/list-slots.md).
 
 ```vue
@@ -77,25 +78,30 @@ The presence of `header` / `footer` / `loadMore` slots overrides their matching 
 </List>
 ```
 
+
+`pagination.current` and `pagination.pageSize` independently select controlled state. Uncontrolled defaults initialize when pagination is first enabled. External updates do not emit callbacks; removing control continues the last received value, without adopting rejected page requests. Shrinking data clamps uncontrolled state without reviving the old page on regrowth. Explicit `total` supports server pagination and preserves the current server result page. `align` reaches Pagination unchanged (default `end`); `position` only controls List placement.
+
+Grid columns use the largest active configured breakpoint, falling back to `column`. The nearest List/Item context supplies child prefixes; explicit child prefixes override it, following the library's static CSS generation policy. Nested List sizes, split lines, layouts and borders remain independent. Native `dir` overrides Provider direction.
+
 ### List.Item
 
 | Property | Description | Type |
 |---|---|---|
 | actions | Action area. One `<li>` each, with separators between. ⚠️ **an empty array renders nothing** | `VNodeChild[]` |
-| extra | Extra content. With `itemLayout="vertical"` it takes the whole `-item-extra` slot | `VNodeChild` |
+| extra | Extra content in a stable `-item-extra` wrapper in both layouts | `VNodeChild` |
 | classNames | Semantic class names (`actions` / `extra`) | `{ actions?: string; extra?: string }` |
 | styles | Semantic styles (same slots) | `{ actions?: CSSProperties; extra?: CSSProperties }` |
-| colStyle | Inline style of the grid `Col` (passed by `List`) | `CSSProperties` |
+| colStyle | User-supplied inline style on the grid Col root; does not set List column counts | `CSSProperties` |
 
 ### List.Item slots
 
 | Slot | Description |
 |---|---|
 | default | Item body |
-| extra | Extra content; wrapped in vertical layout, a sibling of the body in horizontal layout |
+| extra | Extra content in a stable semantic wrapper in both layouts |
 | actions | Arrays and fragments are flattened; each nonempty top-level node becomes one action, with separators between actions |
 
-Named slots take precedence over matching props, including empty slots. Actions skip comments and whitespace; use stable keys with `v-for`. Multiple buttons inside one wrapping element count as one action. The existing actions data array prop remains available.
+Named slots take precedence over matching props, including empty slots. Actions skip comments and whitespace; use stable keys with `v-for`. Multiple buttons inside one wrapping element count as one action. The actions data array prop uses the same empty-content filtering and preserves VNode keys. Numeric zero remains visible.
 
 ### List.Item.Meta
 
@@ -128,7 +134,7 @@ All three components expose `{ nativeElement }` (nullable). List / Meta use `HTM
 | `titleMarginBottom` | Margin bottom of title | `paddingSM` |
 | `descriptionFontSize` | Font size of description | `fontSize` |
 
-Tune at runtime via CSS variables: `--apollo-list-item-padding`, `--apollo-list-content-width`, …
-(11 of them, named after antd's `--ant-list-*`).
+Configure all 11 tokens through `ConfigProvider` `theme.components.List`, including updates, removal and restoration. Native root CSS variables can override them: `--apollo-list-item-padding`, `--apollo-list-content-width`, …
+(11 variables). Data containers inherit root values; native root styles take precedence over Provider configuration.
 
 Pagination content uses #paginationItemRender="{ page, type, element }", #paginationTotal="{ total, range }" and #paginationSizeChanger="info". Each pager receives its current scope, including top/bottom pagers and dynamic slots. Configuration holds data and business events; itemRender/showTotal/sizeChangerRender function entries are removed.

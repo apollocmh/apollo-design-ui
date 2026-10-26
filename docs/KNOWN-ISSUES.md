@@ -527,3 +527,10 @@ node tests/visual/run.mjs --mode compare
 - [2026-10-23 Docs/Icon 页面证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-23-docs-catalog-visual.md)：72 组件总览、848 个 Icon、989 Demo、84 路由及浏览器检查。
 
 **核心原则**：最后一次审计不是重新模仿 Ant Design，而是确保 `@apollo-design/ui` 作为自己的 Vue 3.5+ 组件库，能用 `<template #slot>`、`v-model`、`@event`、原生 `class/style`、真实响应式、SSR 与可访问语义自然使用。顶层内容渲染函数按已裁决 D03 直接迁移，不留兼容层或弃用期；业务/算法函数按职责保留。已公开行为的调整单独留迁移记录，未裁决边界继续明确跟踪。
+
+
+## 2026-10-26 List完整盘点后的阶段结果（整单元仍开放）
+
+List / Item / Meta按完整清单集中修复：既有extra与语义样式、稳定正文、当前Provider/前缀、分页受控状态、11个Token、嵌套/RTL/断点以及默认正常文字对比度。29文件508条相关四层、99文件1788条共享消费者unit、152条类型、生产Chrome55项与真实Demo交互通过；两组运行回归有交集，不累加为全库数字。两包构建/L7、Docs157条及SSG、Registry和格式检查通过。
+
+仍需完成Apollo List自有视觉基线、默认/暗色/紧凑矩阵与整单元最终复核，未宣称全部收口。完整清单、精确命令和边界见 [List统一报告](audit/2026-10-26-list-contract-audit.md)；公开变更集中见 [迁移记录](migrations/list-contracts.md)。已更新文档站进度页，历史completed/legacy-reference不作为本轮整单元完成证据。

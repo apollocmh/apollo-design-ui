@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd 的 `loadmore` demo。
 import { Button, List, ListItem } from '@apollo-design/ui';
-import { computed, ref } from 'vue';
+import { computed, onScopeDispose, ref } from 'vue';
 
 const ALL = [
   'Racing car sprays burning fuel into crowd.',
@@ -14,11 +14,14 @@ const ALL = [
 const loading = ref(false);
 const count = ref(2);
 const data = computed(() => ALL.slice(0, count.value));
+let pending: ReturnType<typeof setTimeout> | undefined;
+onScopeDispose(() => clearTimeout(pending));
 
 const loadMore = () => {
+  if (loading.value || count.value >= ALL.length) return;
   loading.value = true;
   // ⚠️ 上游 demo 用 `setTimeout` 模拟请求；这里保留同样的形态（固定 500ms，可复现）
-  setTimeout(() => {
+  pending = setTimeout(() => {
     count.value = Math.min(count.value + 2, ALL.length);
     loading.value = false;
   }, 500);

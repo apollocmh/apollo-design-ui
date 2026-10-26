@@ -2,6 +2,8 @@
 
 # Spin（`packages/ui/src/spin/`）
 
+2026-10-26 List 关联修正：Provider 的 direction、indicator 和语义样式读取当前配置，根原生 attrs 在 render 合并；数字 description=0 可显示。该共享回归不代表 Spin 所有公开入口完成本轮全局审计，范围见 [List 统一清单](../../../../docs/audit/2026-10-26-list-contract-audit.md)。
+
 ## 1. 这个组件是什么
 
 页面 / 区块的加载中状态。antd 6.6.4 的同名组件作为**兼容性规格**重写为 Vue 3 + TS 实现。

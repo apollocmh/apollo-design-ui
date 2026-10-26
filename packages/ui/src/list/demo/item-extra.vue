@@ -31,6 +31,7 @@ const totalLikes = computed(() => articles.value.reduce((sum, item) => sum + ite
       横向 `itemLayout` 的 `extra` 位于右侧；点击 Like 会即时更新，当前总点赞：{{ totalLikes }}
     </Text>
     <List :data-source="articles" style="margin-top: 12px">
+      <template #extra><Text>列表总点赞：{{ totalLikes }}</Text></template>
       <template #item="{ item: article }">
         <ListItem>
           <ListItemMeta :title="article.title" :description="article.description">

@@ -1,0 +1,322 @@
+{
+  "list:basic": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:prefix-cls:no-props": [
+    "$/div[0]: 类名不同 [ant-list ant-list-split] vs [apollo-list apollo-list-split]",
+    "$/div[0]/div[0]: 类名不同 [ant-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]: 类名不同 [ant-spin-container] vs [apollo-spin-container]",
+    "$/div[0]/div[0]/div[0]/ul[0]: 类名不同 [ant-list-container ant-list-items] vs [apollo-list-container apollo-list-items]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [ant-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [ant-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [ant-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:prefix-cls:custom": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-spin custom-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [custom-item custom-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [custom-item custom-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [custom-item custom-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:empty": [
+    "$/div[0]: 类名不同 [apollo-list apollo-list-split] vs [apollo-list apollo-list-empty apollo-list-split]",
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]"
+  ],
+  "list:children": ["$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]"],
+  "list:no-render-item": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]"
+  ],
+  "list:empty-locale": [
+    "$/div[0]: 类名不同 [apollo-list apollo-list-split] vs [apollo-list apollo-list-empty apollo-list-split]",
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]"
+  ],
+  "list:header-footer": [
+    "$/div[0]/div[1]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[1]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:loadmore": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]: 类名不同 [] vs [apollo-list-load-more]",
+    "$/div[0]/div[1]: 子节点数不同 0 vs 1"
+  ],
+  "list:split-false": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:size-large": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-lg apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-lg apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-lg apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:size-small": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-sm apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-sm apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-sm apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:size-default": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:bordered": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:bordered-sm": [
+    "$/div[0]/div[1]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[1]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-sm apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-sm apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-sm apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:bordered-lg": [
+    "$/div[0]/div[1]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[1]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-lg apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-lg apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-bordered apollo-list-item-lg apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:item-meta": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]/div[0]: 类名不同 [apollo-list-item-meta] vs [apollo-list-item-main]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]/div[0]: 子节点数不同 2 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]/div[0]: 类名不同 [apollo-list-item-meta] vs [apollo-list-item-main]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]/div[0]: 子节点数不同 2 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]/div[0]: 类名不同 [apollo-list-item-meta] vs [apollo-list-item-main]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]/div[0]: 子节点数不同 2 vs 1"
+  ],
+  "list:item-actions": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]/ul[0]: 标签不同 <ul> vs <div>",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]/ul[0]: 类名不同 [apollo-list-item-action] vs [apollo-list-item-main]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]/ul[0]: 子节点数不同 2 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]/ul[0]: 标签不同 <ul> vs <div>",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]/ul[0]: 类名不同 [apollo-list-item-action] vs [apollo-list-item-main]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]/ul[0]: 子节点数不同 2 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]/ul[0]: 标签不同 <ul> vs <div>",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]/ul[0]: 类名不同 [apollo-list-item-action] vs [apollo-list-item-main]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]/ul[0]: 子节点数不同 2 vs 1"
+  ],
+  "list:item-no-flex": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item apollo-list-item-no-flex] vs [apollo-list-item apollo-list-item-no-flex apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item apollo-list-item-no-flex] vs [apollo-list-item apollo-list-item-no-flex apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item apollo-list-item-no-flex] vs [apollo-list-item apollo-list-item-no-flex apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:item-extra": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 1 vs 2",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 1 vs 2",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 1 vs 2"
+  ],
+  "list:vertical": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split apollo-list-item-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]/div[0]/div[0]: 类名不同 [apollo-list-item-meta] vs [apollo-list-item-meta apollo-list-item-meta-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split apollo-list-item-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]/div[0]/div[0]: 类名不同 [apollo-list-item-meta] vs [apollo-list-item-meta apollo-list-item-meta-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split apollo-list-item-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]/div[0]/div[0]: 类名不同 [apollo-list-item-meta] vs [apollo-list-item-meta apollo-list-item-meta-vertical]"
+  ],
+  "list:vertical-no-extra": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item apollo-list-item-no-flex] vs [apollo-list-item apollo-list-item-no-flex apollo-list-item-split apollo-list-item-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item apollo-list-item-no-flex] vs [apollo-list-item apollo-list-item-no-flex apollo-list-item-split apollo-list-item-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item apollo-list-item-no-flex] vs [apollo-list-item apollo-list-item-no-flex apollo-list-item-split apollo-list-item-vertical]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:grid": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[2]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[2]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[3]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[3]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[4]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[4]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[5]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[5]/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "list:grid-responsive": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[2]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[2]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[3]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[3]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[4]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[4]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[5]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[5]/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "list:grid-no-column": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/div[0]/div[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/div[0]/div[2]/div[0]/div[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-grid apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[2]/div[0]/div[0]: 子节点数不同 0 vs 1"
+  ],
+  "list:pagination": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]: 类名不同 [apollo-list-pagination] vs [apollo-list-pagination apollo-list-pagination-bottom]"
+  ],
+  "list:pagination-top": [
+    "$/div[0]: 类名不同 [apollo-list apollo-list-something-after-last-item apollo-list-split] vs [apollo-list apollo-list-split]",
+    "$/div[0]/div[0]: 类名不同 [apollo-list-pagination] vs [apollo-list-pagination apollo-list-pagination-top]",
+    "$/div[0]/div[1]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1"
+  ],
+  "list:pagination-both": [
+    "$/div[0]/div[0]: 类名不同 [apollo-list-pagination] vs [apollo-list-pagination apollo-list-pagination-top]",
+    "$/div[0]/div[1]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[1]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[1]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[2]: 类名不同 [apollo-list-pagination] vs [apollo-list-pagination apollo-list-pagination-bottom]"
+  ],
+  "list:pagination-clamp": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]: 类名不同 [apollo-list-container apollo-list-items] vs [apollo-list-container apollo-list-items apollo-list-items-with-after]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[1]: 类名不同 [apollo-list-pagination] vs [apollo-list-pagination apollo-list-pagination-bottom]"
+  ],
+  "list:loading": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin apollo-spin-spinning] vs [apollo-list-spin apollo-spin apollo-spin-spinning]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:loading-spin-props": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin apollo-spin-spinning] vs [apollo-list-spin apollo-spin apollo-spin-spinning]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:className": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:style": [
+    "$/div[0]: style 不同 [background-color:#fde3cf;color:#f56a00] vs [background-color:rgb(253,227,207);color:rgb(245,106,0)]",
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:attrs": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin] vs [apollo-list-spin apollo-spin]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ],
+  "list:rtl": [
+    "$/div[0]/div[0]: 类名不同 [apollo-spin apollo-spin-rtl] vs [apollo-list-spin apollo-spin apollo-spin-rtl]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[0]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[1]: 子节点数不同 0 vs 1",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [apollo-list-item] vs [apollo-list-item apollo-list-item-split]",
+    "$/div[0]/div[0]/div[0]/ul[0]/li[2]: 子节点数不同 0 vs 1"
+  ]
+}

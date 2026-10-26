@@ -1,0 +1,524 @@
+{
+  "inventoryBaseline": "0148b962",
+  "status": "implementation-verified-unit-open",
+  "productionSources": [
+    "packages/ui/src/config-provider/context.ts",
+    "packages/ui/src/config-provider/default-render-empty.ts",
+    "packages/ui/src/list/Item.vue",
+    "packages/ui/src/list/ItemMeta.vue",
+    "packages/ui/src/list/List.vue",
+    "packages/ui/src/list/context.ts",
+    "packages/ui/src/list/index.ts",
+    "packages/ui/src/list/interface.ts",
+    "packages/ui/src/list/style/index.ts",
+    "packages/ui/src/list/style/token.ts",
+    "packages/ui/src/list/use-list-theme.ts",
+    "packages/ui/src/spin/Spin.vue",
+    "packages/utils/src/is.ts"
+  ],
+  "sourceSha256": "5482c6d1be29077c5b2221c1d4c18495faf3d35a938837f63d68ca340b89af89",
+  "browserEvidence": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "theme padding inherits into data container",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "small component token",
+        "actual": "7px 11px",
+        "expected": "7px 11px",
+        "passed": true
+      },
+      {
+        "name": "large component token",
+        "actual": "25px 27px",
+        "expected": "25px 27px",
+        "passed": true
+      },
+      {
+        "name": "header component token",
+        "actual": "rgb(221, 238, 255)",
+        "expected": "rgb(221, 238, 255)",
+        "passed": true
+      },
+      {
+        "name": "footer component token",
+        "actual": "rgb(238, 221, 255)",
+        "expected": "rgb(238, 221, 255)",
+        "passed": true
+      },
+      {
+        "name": "empty component token",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "meta component token",
+        "actual": "17px",
+        "expected": "17px",
+        "passed": true
+      },
+      {
+        "name": "avatar component token",
+        "actual": "19px",
+        "expected": "19px",
+        "passed": true
+      },
+      {
+        "name": "title component token",
+        "actual": "13px",
+        "expected": "13px",
+        "passed": true
+      },
+      {
+        "name": "description component token",
+        "actual": "18px",
+        "expected": "18px",
+        "passed": true
+      },
+      {
+        "name": "native variable precedence and inheritance",
+        "actual": "33px 35px",
+        "expected": "33px 35px",
+        "passed": true
+      },
+      {
+        "name": "Provider RTL reaches actual direction",
+        "actual": "rtl",
+        "expected": "rtl",
+        "passed": true
+      },
+      {
+        "name": "raw true does not create a header",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "raw true does not create a heading",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "numeric description survives shared normalization",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "numeric empty text survives fallback selection",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "RTL no-flex actions float to inline end",
+        "actual": "inline-end",
+        "expected": "inline-end",
+        "passed": true
+      },
+      {
+        "name": "nested size is owned by nearest List",
+        "actual": "16px 24px",
+        "expected": "16px 24px",
+        "passed": true
+      },
+      {
+        "name": "nested vertical layout does not leak",
+        "actual": "0px",
+        "expected": "0px",
+        "passed": true
+      },
+      {
+        "name": "nested title size does not leak",
+        "actual": "14px",
+        "expected": "14px",
+        "passed": true
+      },
+      {
+        "name": "nested split false does not inherit parent border",
+        "actual": "0px",
+        "expected": "0px",
+        "passed": true
+      },
+      {
+        "name": "loading region has room for its indicator",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "numeric loading description is visible",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "top-only pagination is not content after rows",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "native keyboard target",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native focus indicator is retained",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native keyboard action invokes the current handler",
+        "actual": "1",
+        "expected": "1",
+        "passed": true
+      },
+      {
+        "name": "native List passes real browser axe",
+        "actual": "[]",
+        "expected": "[]",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 375",
+        "actual": "100%",
+        "expected": "100%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 900",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 1300",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 1700",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "root extra stacks below content on mobile",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "content width component token",
+        "actual": "min(100%, 180px)",
+        "expected": "min(100%, 180px)",
+        "passed": true
+      },
+      {
+        "name": "narrow action margin targets actual DOM",
+        "actual": "12px",
+        "expected": "12px",
+        "passed": true
+      },
+      {
+        "name": "root extra sits beside content on desktop",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "responsive configuration can be disabled",
+        "actual": "50%",
+        "expected": "50%",
+        "passed": true
+      },
+      {
+        "name": "responsive configuration resumes current breakpoint",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-layout",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-extra",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-layout",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-extra",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "root extra is rendered",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "horizontal extra semantics are rendered",
+        "actual": "rgb(12, 34, 56)",
+        "expected": "rgb(12, 34, 56)",
+        "passed": true
+      },
+      {
+        "name": "theme removal restores static defaults",
+        "actual": "12px 0px",
+        "expected": "12px 0px",
+        "passed": true
+      },
+      {
+        "name": "theme restoration updates current content",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "no Vue or browser errors",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      }
+    ]
+  },
+  "initialRuntimeReproduction": {
+    "cases": 16,
+    "failed": 15,
+    "passed": 1,
+    "log": "/tmp/apollo-list-contract-baseline.log"
+  },
+  "initialBrowserReproduction": {
+    "cases": 47,
+    "failed": 41,
+    "passed": 6,
+    "log": "/tmp/apollo-list-browser-baseline.log"
+  },
+  "contrastReproduction": [
+    {
+      "name": "native List passes real browser axe",
+      "actual": "[{\"id\":\"color-contrast\",\"nodes\":[{\"html\":\"<button id=\\\"native-action\\\" type=\\\"button\\\">Native action</button>\",\"summary\":\"Fix any of the following:\\n  Element has insufficient color contrast of 3.29 (foreground color: #838383, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\"},{\"html\":\"<div class=\\\"apollo-list-item-meta-description\\\">Token description</div>\",\"summary\":\"Fix any of the following:\\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1\"},{\"html\":\"<div class=\\\"apollo-empty-description\\\">No data</div>\",\"summary\":\"Fix any of the following:\\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\"},{\"html\":\"<div class=\\\"apollo-list-item-meta-description\\\">Inner description</div>\",\"summary\":\"Fix any of the following:\\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\"},{\"html\":\"<div class=\\\"apollo-list-item-meta-description\\\">Inner description</div>\",\"summary\":\"Fix any of the following:\\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1\"}]}]",
+      "expected": "[]",
+      "passed": false
+    }
+  ],
+  "remaining": [
+    "Apollo List approved visual baselines and dark/compact matrix",
+    "Final complete List checklist acceptance",
+    "Final library-wide gates after every audit unit closes"
+  ],
+  "gates": [
+    {
+      "command": "pnpm run lint:types",
+      "result": "pass",
+      "log": "/tmp/apollo-list-strict-final.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/list packages/ui/src/spin packages/ui/src/config-provider packages/utils/src/__tests__/is.test.ts --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 29,
+      "tests": 508,
+      "log": "/tmp/apollo-list-four-layer-final.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project unit packages/ui/src/list packages/ui/src/spin packages/ui/src/config-provider packages/ui/src/grid packages/ui/src/pagination packages/ui/src/table packages/ui/src/qr-code packages/ui/src/alert packages/ui/src/badge packages/ui/src/descriptions packages/ui/src/drawer packages/ui/src/dropdown packages/ui/src/menu packages/ui/src/message packages/ui/src/modal packages/ui/src/notification packages/ui/src/popconfirm packages/ui/src/result packages/ui/src/select packages/ui/src/space packages/ui/src/tag packages/ui/src/timeline packages/ui/src/tooltip packages/utils/src/__tests__/is.test.ts --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 99,
+      "tests": 1788,
+      "scope": [
+        "list",
+        "spin",
+        "config-provider",
+        "grid",
+        "pagination",
+        "table",
+        "qr-code",
+        "alert",
+        "badge",
+        "descriptions",
+        "drawer",
+        "dropdown",
+        "menu",
+        "message",
+        "modal",
+        "notification",
+        "popconfirm",
+        "result",
+        "select",
+        "space",
+        "tag",
+        "timeline",
+        "tooltip"
+      ],
+      "log": "/tmp/apollo-list-affected-consumers.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project types packages/ui/src/list packages/ui/src/spin packages/ui/src/config-provider packages/ui/src/pagination --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 10,
+      "tests": 152,
+      "log": "/tmp/apollo-list-type-suite-final.log"
+    },
+    {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.list-contracts.json",
+      "result": "pass",
+      "log": "/tmp/apollo-list-sfc-types-verified.log"
+    },
+    {
+      "command": "node tests/consumer/list-types.mjs",
+      "result": "pass",
+      "log": "/tmp/apollo-list-published-types-final.log"
+    },
+    {
+      "command": "pnpm run build:ui",
+      "result": "pass",
+      "log": "/tmp/apollo-list-build-final.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/utils run build",
+      "result": "pass",
+      "log": "/tmp/apollo-list-utils-build.log"
+    },
+    {
+      "command": "node tests/build/run.mjs --no-build --package ui --strict",
+      "result": "pass",
+      "checks": 11,
+      "fail": 0,
+      "pending": 0,
+      "log": "/tmp/apollo-list-L7-final.log"
+    },
+    {
+      "command": "node tests/build/run.mjs --no-build --package utils --strict",
+      "result": "pass",
+      "checks": 11,
+      "fail": 0,
+      "pending": 0,
+      "notApplicable": 5,
+      "log": "/tmp/apollo-list-utils-L7.log"
+    },
+    {
+      "command": "node tests/browser/list-contract-audit.mjs",
+      "result": "pass",
+      "checks": 55,
+      "log": "/tmp/apollo-list-browser-final.log"
+    },
+    {
+      "command": "node tests/browser/list-slots.mjs",
+      "result": "pass",
+      "log": "/tmp/apollo-list-browser-slots-final.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run typecheck",
+      "result": "pass",
+      "log": "/tmp/apollo-list-docs-types.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run build",
+      "result": "pass",
+      "log": "/tmp/apollo-list-docs-build.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:check",
+      "result": "pass",
+      "log": "/tmp/apollo-list-docs-content-final-check.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run test",
+      "result": "pass",
+      "files": 14,
+      "tests": 157,
+      "log": "/tmp/apollo-list-docs-tests-final.log"
+    },
+    {
+      "command": "pnpm run registry:check",
+      "result": "pass",
+      "log": "/tmp/apollo-list-registry-check.log"
+    },
+    {
+      "command": "pnpm run lint:format",
+      "result": "pass",
+      "errors": 0,
+      "existingWarnings": 37,
+      "existingInfos": 5,
+      "log": "/tmp/apollo-list-root-format.log"
+    },
+    {
+      "command": "pnpm run audit:content-slots:check",
+      "result": "pass",
+      "rows": 521,
+      "review": 202,
+      "implementedVerified": 20,
+      "log": "/tmp/apollo-list-content-inventory-check.log"
+    }
+  ]
+}

@@ -31,7 +31,7 @@
  *     局部 `size` 覆盖）—— 见下方「尺寸」段。
  */
 
-import { debounce, isEmptyVNode, useDevWarning } from '@apollo-design/utils';
+import { debounce, isEmptyVNode, mergeDomAttrs, useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -91,17 +91,9 @@ defineSlots<{
   description?: () => VNodeChild;
 }>();
 
-const {
-  getPrefixCls,
-  direction,
-  indicator: contextIndicator,
-  className: contextClassName,
-  style: contextStyle,
-  classNames: contextClassNames,
-  styles: contextStyles,
-} = useComponentConfig<SpinConfig>('spin');
+const config = useComponentConfig<SpinConfig>('spin');
 
-const prefixCls = computed(() => getPrefixCls('spin', props.prefixCls));
+const prefixCls = computed(() => config.getPrefixCls('spin', props.prefixCls));
 const sectionCls = computed(() => `${prefixCls.value}-section`);
 const containerCls = computed(() => `${prefixCls.value}-container`);
 const descriptionCls = computed(() => `${prefixCls.value}-description`);
@@ -197,13 +189,10 @@ const mergedPercent = usePercent(spinning, () => props.percent);
  */
 const mergedDescription = computed<VNodeChild>(() => props.description ?? props.tip);
 
-/**
- * 是否渲染文案块。antd 的判据是 `mergedDescription && (...)`（**真值**判断）。
- *
- * ⚠️ 因此 `description={0}` 在 React 侧会渲染出裸文本 `0`（`0 && <div/>` → `0`），
- *    而我们渲染空 —— 这是上游的一个 quirk，登记在 README §7，**不**复刻。
- */
-const hasDescription = computed(() => !!mergedDescription.value || !!slots.description);
+/** Vue content semantics retain numeric zero and suppress empty boolean content. */
+const hasDescription = computed(
+  () => !isEmptyVNode(mergedDescription.value) || !!slots.description,
+);
 
 // ---------------------------------------------------------------------------
 // 指示器：indicator > ConfigProvider > setDefaultIndicator
@@ -222,7 +211,7 @@ const mergedIndicator = computed<VNodeChild>(() => {
     const first = Array.isArray(fromSlot) ? fromSlot[0] : fromSlot;
     return first as VNodeChild;
   }
-  return contextIndicator ?? getDefaultIndicator();
+  return config.indicator ?? getDefaultIndicator();
 });
 
 // ---------------------------------------------------------------------------
@@ -275,8 +264,8 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   SpinSemanticClassNames,
   SpinSemanticStyles
 >(
-  [() => contextClassNames, () => props.classNames],
-  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
+  [() => config.classNames, () => props.classNames],
+  [() => config.styles, () => semanticRootStyle(config.style), () => props.styles],
   semanticProps,
 );
 
@@ -290,7 +279,7 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-sm`]: mergedSize.value === 'small',
     [`${prefixCls.value}-lg`]: mergedSize.value === 'large',
     [`${prefixCls.value}-spinning`]: spinning.value,
-    [`${prefixCls.value}-rtl`]: direction === 'rtl',
+    [`${prefixCls.value}-rtl`]: config.direction === 'rtl',
     [`${prefixCls.value}-fullscreen`]: props.fullscreen,
   },
   mergedClassNames.value.root,
@@ -298,7 +287,7 @@ const rootClass = computed(() => [
   // ⚠️ 非嵌套时根元素自己就是 section（同时吃 section 的语义类名）；
   //    嵌套时根元素改吃（已废弃的）`wrapperClassName`，`-section` 下移到内层 div。
   isNested.value ? props.wrapperClassName : [sectionCls.value, mergedClassNames.value.section],
-  contextClassName,
+  config.className,
   // ⚠️ 调用方原生 `class` **不在这里**：模板的 `v-bind="rootAttrs"` 已带 `attrs.class`，
   //    由 Vue 的 mergeProps 与 `:class` 合并 —— 这里再加一次会渲染出两份类名。
 ]);
@@ -350,12 +339,12 @@ const rootStyleAttrs = computed(() => styleAttrs(rootStyle.value));
  * ⚠️ `$attrs` **在最后**：antd 的 `{...restProps}` 排在 `aria-live` / `aria-busy`
  *    之后，所以用户传的同名属性会覆盖它们 —— 这是上游行为，逐字保留。
  */
-const rootAttrs = computed(() => ({
-  ...rootStyleAttrs.value,
-  'aria-live': 'polite' as const,
-  'aria-busy': spinning.value,
-  ...attrs,
-}));
+function rootAttrs() {
+  return mergeDomAttrs(
+    { ...rootStyleAttrs.value, 'aria-live': 'polite', 'aria-busy': spinning.value },
+    attrs,
+  );
+}
 
 // ---------------------------------------------------------------------------
 // 开发期告警
@@ -393,7 +382,7 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs()">
     <template v-if="spinning">
       <div v-if="isNested" :class="innerSectionClass" v-bind="innerSectionStyleAttrs">
         <Indicator

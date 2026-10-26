@@ -323,13 +323,13 @@ describe('List · L2 复合组件与 Item 判据', () => {
     expect(w.find('.apollo-list-item-extra').exists()).toBe(true);
   });
 
-  it('判据 3（Item）：非 vertical 时 extra 与 children **平级**（不包 div）', () => {
+  it('horizontal content and extra keep stable semantic wrappers', () => {
     const w = mount(ListItem, {
       props: { extra: 'E' },
       slots: { default: () => 'body' },
     });
-    expect(w.find('.apollo-list-item-main').exists()).toBe(false);
-    expect(w.find('.apollo-list-item-extra').exists()).toBe(false);
+    expect(w.get('.apollo-list-item-main').text()).toBe('body');
+    expect(w.get('.apollo-list-item-extra').text()).toBe('E');
     expect(w.text()).toContain('E');
   });
 

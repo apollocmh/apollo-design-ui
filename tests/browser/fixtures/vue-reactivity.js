@@ -7,6 +7,7 @@ import BadgeSlots from '../../../packages/ui/src/badge/demo/content-slots.vue';
 import BreadcrumbSlots from '../../../packages/ui/src/breadcrumb/demo/scoped-item.vue';
 import ImagePreviewClose from '../../../packages/ui/src/image/demo/preview-close.vue';
 import PrefixSuffix from '../../../packages/ui/src/input-number/demo/presuffix.vue';
+import ListTokens from '../../../packages/ui/src/list/demo/component-token.vue';
 import ListLikes from '../../../packages/ui/src/list/demo/item-extra.vue';
 import ListLoadMore from '../../../packages/ui/src/list/demo/loadmore.vue';
 import ListPagination from '../../../packages/ui/src/list/demo/pagination.vue';
@@ -38,6 +39,7 @@ import ImageScaleBounds from './ImageScaleBounds.vue';
 import ImageStyles from './ImageStyles.vue';
 import ImageTransform from './ImageTransform.vue';
 import ListContent from './ListContent.vue';
+import ListContractAudit from './ListContractAudit.vue';
 import ListItemContent from './ListItemContent.vue';
 import MasonryNative from './MasonryNative.vue';
 import MentionsBindings from './MentionsBindings.vue';
@@ -142,10 +144,12 @@ const Demo = {
   'table-reorder': TableReorder,
   badge: BadgeSlots,
   'list-slots': ListContent,
+  'list-contract-audit': ListContractAudit,
   'list-item-slots': ListItemContent,
   'list-loadmore': ListLoadMore,
   'list-pagination': ListPagination,
   'list-likes': ListLikes,
+  'list-tokens': ListTokens,
   'list-responsive': ListResponsive,
 }[name];
 createApp({ render: () => h('main', { style: 'padding: 32px' }, [h(Demo)]) }).mount('#app');

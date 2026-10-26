@@ -8,20 +8,20 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 519,
+    "rows": 521,
     "byCategory": {
       "data": 125,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 108,
-      "render-function-candidate": 67,
+      "internal": 109,
+      "render-function-candidate": 68,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 137,
       "review": 202,
-      "skip": 161,
-      "implemented-verified": 19
+      "skip": 162,
+      "implemented-verified": 20
     }
   },
   "rows": [
@@ -2344,6 +2344,33 @@
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "config-provider",
+      "owner": "ConfigProviderProps",
+      "prop": "renderEmpty",
+      "category": "render-function-candidate",
+      "source": "packages/ui/src/config-provider/interface.ts:109",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/config-provider/__tests__/index.test.ts"
+        ]
+      },
+      "decision": "review",
+      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
     },
     {
       "component": "config-provider",
@@ -7025,46 +7052,6 @@
       "owner": "ListItemMetaProps",
       "prop": "avatar",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:178",
-      "slotRuntime": {
-        "status": "verified",
-        "files": [
-          "packages/ui/src/list/ItemMeta.vue"
-        ],
-        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
-      },
-      "slotType": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/list/interface.ts"
-        ]
-      },
-      "slotDemo": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/list/demo/basic.vue",
-          "packages/ui/src/list/demo/component-token.vue",
-          "packages/ui/src/list/demo/item-extra.vue",
-          "packages/ui/src/list/demo/vertical.vue"
-        ]
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
-          "packages/ui/src/list/__tests__/index.test.ts",
-          "packages/ui/src/list/__tests__/item-slots.test.ts",
-          "packages/ui/src/list/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "implemented-verified",
-      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
-    },
-    {
-      "component": "list",
-      "owner": "ListItemMetaProps",
-      "prop": "description",
-      "category": "component-content-candidate",
       "source": "packages/ui/src/list/interface.ts:180",
       "slotRuntime": {
         "status": "verified",
@@ -7080,6 +7067,46 @@
         ]
       },
       "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/basic.vue",
+          "packages/ui/src/list/demo/component-token.vue",
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
+    },
+    {
+      "component": "list",
+      "owner": "ListItemMetaProps",
+      "prop": "description",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/list/interface.ts:182",
+      "slotRuntime": {
+        "status": "verified",
+        "files": [
+          "packages/ui/src/list/ItemMeta.vue"
+        ],
+        "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
         "status": "not-found",
         "files": []
       },
@@ -7087,6 +7114,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7101,7 +7129,7 @@
       "owner": "ListItemMetaProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:184",
+      "source": "packages/ui/src/list/interface.ts:186",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7126,6 +7154,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7141,7 +7170,7 @@
       "owner": "ListItemMetaSlots",
       "prop": "avatar",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:188",
+      "source": "packages/ui/src/list/interface.ts:190",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7180,7 +7209,7 @@
       "owner": "ListItemMetaSlots",
       "prop": "description",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:190",
+      "source": "packages/ui/src/list/interface.ts:192",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7201,6 +7230,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7215,7 +7245,7 @@
       "owner": "ListItemMetaSlots",
       "prop": "title",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:189",
+      "source": "packages/ui/src/list/interface.ts:191",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7239,6 +7269,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7254,7 +7285,7 @@
       "owner": "ListItemProps",
       "prop": "actions",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:158",
+      "source": "packages/ui/src/list/interface.ts:160",
       "slotRuntime": {
         "status": "verified",
         "files": [
@@ -7279,6 +7310,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7293,11 +7325,12 @@
       "owner": "ListItemProps",
       "prop": "extra",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/list/interface.ts:156",
+      "source": "packages/ui/src/list/interface.ts:158",
       "slotRuntime": {
         "status": "verified",
         "files": [
-          "packages/ui/src/list/Item.vue"
+          "packages/ui/src/list/Item.vue",
+          "packages/ui/src/list/List.vue"
         ],
         "report": "docs/audit/2026-10-24-list-item-slots-remediation.md"
       },
@@ -7318,6 +7351,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7332,7 +7366,7 @@
       "owner": "ListItemSlots",
       "prop": "actions",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:168",
+      "source": "packages/ui/src/list/interface.ts:170",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7356,6 +7390,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7370,7 +7405,7 @@
       "owner": "ListItemSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:165",
+      "source": "packages/ui/src/list/interface.ts:167",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7391,6 +7426,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
@@ -7404,11 +7440,12 @@
       "owner": "ListItemSlots",
       "prop": "extra",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:166",
+      "source": "packages/ui/src/list/interface.ts:168",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/list/Item.vue"
+          "packages/ui/src/list/Item.vue",
+          "packages/ui/src/list/List.vue"
         ]
       },
       "slotType": {
@@ -7428,6 +7465,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
@@ -7458,6 +7496,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
@@ -7472,10 +7511,12 @@
       "category": "component-content-candidate",
       "source": "packages/ui/src/list/interface.ts:64",
       "slotRuntime": {
-        "status": "source-reference",
+        "status": "verified",
         "files": [
-          "packages/ui/src/list/Item.vue"
-        ]
+          "packages/ui/src/list/Item.vue",
+          "packages/ui/src/list/List.vue"
+        ],
+        "report": "docs/audit/2026-10-26-list-contract-audit.md"
       },
       "slotType": {
         "status": "source-reference",
@@ -7494,14 +7535,15 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "implemented-verified",
+      "reason": "本轮运行证据仅覆盖该具体字段，见报告。"
     },
     {
       "component": "list",
@@ -7571,6 +7613,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts",
@@ -7643,6 +7686,47 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
+          "packages/ui/src/list/__tests__/index.test.ts",
+          "packages/ui/src/list/__tests__/item-slots.test.ts",
+          "packages/ui/src/list/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "list",
+      "owner": "ListSlots",
+      "prop": "extra",
+      "category": "internal",
+      "source": "packages/ui/src/list/interface.ts:114",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/Item.vue",
+          "packages/ui/src/list/List.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/demo/item-extra.vue",
+          "packages/ui/src/list/demo/vertical.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
+          "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/item-slots.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts"
@@ -7717,6 +7801,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts",
@@ -7765,6 +7850,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/list/__tests__/a11y.test.ts",
+          "packages/ui/src/list/__tests__/contract-audit.test.ts",
           "packages/ui/src/list/__tests__/fixtures/ListSlots.vue",
           "packages/ui/src/list/__tests__/index.test.ts",
           "packages/ui/src/list/__tests__/semantic.test.ts",
@@ -7815,7 +7901,7 @@
       "owner": "ListSlots",
       "prop": "paginationItemRender",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:113",
+      "source": "packages/ui/src/list/interface.ts:115",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7844,7 +7930,7 @@
       "owner": "ListSlots",
       "prop": "paginationSizeChanger",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:115",
+      "source": "packages/ui/src/list/interface.ts:117",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -7873,7 +7959,7 @@
       "owner": "ListSlots",
       "prop": "paginationTotal",
       "category": "internal",
-      "source": "packages/ui/src/list/interface.ts:114",
+      "source": "packages/ui/src/list/interface.ts:116",
       "slotRuntime": {
         "status": "source-reference",
         "files": [

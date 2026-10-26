@@ -1,22 +1,27 @@
 <script setup lang="ts" generic="T = unknown">
+import { isEmptyVNode, mergeDomAttrs } from '@apollo-design/utils';
 import {
-  isEmptyVNode,
-  isFunction,
-  isPlainObject,
-  mergeDomAttrs,
-  mergeProps,
-} from '@apollo-design/utils';
-import { computed, Fragment, h, provide, ref, useAttrs, type VNode, type VNodeChild } from 'vue';
+  computed,
+  Fragment,
+  h,
+  provide,
+  ref,
+  useAttrs,
+  type VNode,
+  type VNodeChild,
+  watchEffect,
+} from 'vue';
 import { NodeRenderer } from '../_internal/node-renderer';
 import { type Breakpoint, responsiveArray } from '../_internal/responsive-observer';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { DefaultRenderEmpty } from '../config-provider/default-render-empty';
 import { useSize } from '../config-provider/size-context';
 import { Row, useBreakpoint } from '../grid';
-import { Pagination } from '../pagination';
+import { Pagination, type PaginationConfig } from '../pagination';
 import { Spin } from '../spin';
-import { listContextKey } from './context';
+import { type ListContextValue, listContextKey } from './context';
 import type { ListConfig, ListProps, ListSlots } from './interface';
+import { useListTheme } from './use-list-theme';
 
 defineOptions({ name: 'AList', inheritAttrs: false });
 
@@ -30,6 +35,7 @@ const props = withDefaults(defineProps<ListProps<T>>(), {
   header: undefined,
   footer: undefined,
   loadMore: undefined,
+  extra: undefined,
 });
 const attrs = useAttrs();
 const slots = defineSlots<ListSlots<T>>();
@@ -38,29 +44,56 @@ const config = useComponentConfig<ListConfig>('list');
 const direction = useDirection();
 
 const prefixCls = computed(() => config.getPrefixCls('list', props.prefixCls));
+const theme = useListTheme(() => prefixCls.value);
+const dataSource = computed(() => props.dataSource ?? []);
 
 // ---------------------------------------------------------------------------
 // 分页的内部状态（判据 4 / 5）
 // ---------------------------------------------------------------------------
 
-const paginationObj = computed(() =>
-  isPlainObject(props.pagination) ? (props.pagination as unknown as Record<string, unknown>) : {},
-);
+const paginationObj = computed<PaginationConfig>(() => props.pagination || {});
+const paginationCurrent = ref(1);
+const paginationSize = ref(10);
+let paginationInitialized = false;
 
-const paginationCurrent = ref((paginationObj.value.defaultCurrent as number) || 1);
-const paginationSize = ref((paginationObj.value.defaultPageSize as number) || 10);
+function positiveInteger(value: number | undefined, fallback: number): number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 1
+    ? Math.floor(value)
+    : fallback;
+}
+function pageCount(total: number, pageSize: number): number {
+  return Math.max(1, Math.ceil(total / pageSize));
+}
+function paginationTotal(): number {
+  const total = paginationObj.value.total;
+  return typeof total === 'number' && Number.isFinite(total) && total >= 0
+    ? Math.floor(total)
+    : dataSource.value.length;
+}
+
+watchEffect(() => {
+  if (!props.pagination) return;
+  const cfg = paginationObj.value;
+  if (!paginationInitialized) {
+    paginationCurrent.value = positiveInteger(cfg.defaultCurrent, 1);
+    paginationSize.value = positiveInteger(cfg.defaultPageSize, 10);
+    paginationInitialized = true;
+  }
+  if (cfg.pageSize !== undefined) paginationSize.value = positiveInteger(cfg.pageSize, 10);
+  if (cfg.current !== undefined) paginationCurrent.value = positiveInteger(cfg.current, 1);
+  else
+    paginationCurrent.value = Math.min(
+      paginationCurrent.value,
+      pageCount(paginationTotal(), paginationSize.value),
+    );
+});
 
 const triggerPaginationEvent =
   (eventName: 'onChange' | 'onShowSizeChange') => (page: number, pageSize: number) => {
-    paginationCurrent.value = page;
-    paginationSize.value = pageSize;
-    const pagination = props.pagination;
-    if (pagination) {
-      const handler = pagination[eventName];
-      if (isFunction(handler)) {
-        handler(page, pageSize);
-      }
-    }
+    const cfg = paginationObj.value;
+    if (cfg.current === undefined) paginationCurrent.value = page;
+    if (cfg.pageSize === undefined) paginationSize.value = pageSize;
+    cfg[eventName]?.(page, pageSize);
   };
 
 const onPaginationChange = triggerPaginationEvent('onChange');
@@ -70,12 +103,12 @@ const onPaginationShowSizeChange = triggerPaginationEvent('onShowSizeChange');
 // loading / size / 条件类（判据 1 / 2 / 7）
 // ---------------------------------------------------------------------------
 
-const loadingProp = computed<Record<string, unknown>>(() => {
+const loadingProp = computed(() => {
   const loading = props.loading;
-  return typeof loading === 'boolean' ? { spinning: loading } : { ...(loading ?? {}) };
+  return loading && typeof loading === 'object' ? loading : { spinning: !!loading };
 });
 
-const isLoading = computed(() => !!loadingProp.value.spinning);
+const isLoading = computed(() => loadingProp.value.spinning !== false);
 
 const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
 
@@ -94,7 +127,7 @@ const sizeCls = computed(() => {
 const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
 const containerCls = computed(() => `${prefixCls.value}-container`);
 
-function classString(hasContentAfterItems: boolean) {
+function classString(hasContentAfterItems: boolean, hasExtra: boolean) {
   const p = prefixCls.value;
   return [
     p,
@@ -107,6 +140,8 @@ function classString(hasContentAfterItems: boolean) {
       [`${p}-grid`]: !!props.grid,
       [`${p}-something-after-last-item`]: hasContentAfterItems,
       [`${p}-rtl`]: direction.value === 'rtl',
+      [`${p}-with-extra`]: hasExtra,
+      [`${p}-empty`]: !dataSource.value.length && !isLoading.value && !slots.default,
     },
     config.className,
     // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
@@ -119,28 +154,27 @@ function classString(hasContentAfterItems: boolean) {
 // 分页 props（判据 4 / 5 / 6）
 // ---------------------------------------------------------------------------
 
-const dataSource = computed(() => props.dataSource ?? []);
-
 const paginationProps = computed(() => {
-  const merged = mergeProps(
-    { current: 1, total: 0, position: 'bottom' },
-    {
-      total: dataSource.value.length,
-      current: paginationCurrent.value,
-      pageSize: paginationSize.value,
-    },
-    (props.pagination || {}) as unknown as Record<string, unknown>,
-  );
-  const pageSize = (merged.pageSize as number) || 1;
-  const largestPage = Math.ceil((merged.total as number) / pageSize);
-  merged.current = Math.min(merged.current as number, largestPage);
-  return merged;
+  const cfg = paginationObj.value;
+  const pageSize = positiveInteger(cfg.pageSize ?? paginationSize.value, 10);
+  const total = paginationTotal();
+  return {
+    ...cfg,
+    current: Math.min(
+      positiveInteger(cfg.current ?? paginationCurrent.value, 1),
+      pageCount(total, pageSize),
+    ),
+    pageSize,
+    total,
+    position: cfg.position ?? 'bottom',
+    align: cfg.align ?? 'end',
+  } satisfies PaginationConfig;
 });
 
 const splitDataSource = computed(() => {
   const source = [...dataSource.value];
   if (!props.pagination) return source;
-  const { current, pageSize } = paginationProps.value as { current: number; pageSize: number };
+  const { current, pageSize } = paginationProps.value;
   // 🚨 不满足条件时**不切片**（判据 5）
   if (source.length > (current - 1) * pageSize) {
     return source.splice((current - 1) * pageSize, pageSize);
@@ -148,7 +182,7 @@ const splitDataSource = computed(() => {
   return source;
 });
 
-const paginationPosition = computed(() => paginationProps.value.position as string | undefined);
+const paginationPosition = computed(() => paginationProps.value.position);
 
 const showTopPagination = computed(
   () =>
@@ -162,28 +196,35 @@ const showBottomPagination = computed(
 );
 
 /** ⚠️ **每次调用都新建 vnode**（判据 6：top/bottom 两处使用）。 */
-function paginationContent(): VNode {
+function paginationContent(placement: 'top' | 'bottom'): VNode {
   const {
     onChange: _onChange,
     onShowSizeChange: _onShowSizeChange,
+    position: _position,
     ...rest
-  } = paginationProps.value as Record<string, unknown>;
-  return h('div', { class: `${prefixCls.value}-pagination` }, [
-    h(
-      Pagination,
-      {
-        ...rest,
-        align: 'end',
-        onChange: onPaginationChange,
-        onShowSizeChange: onPaginationShowSizeChange,
-      },
-      {
-        ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
-        ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
-        ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
-      },
-    ),
-  ]);
+  } = paginationProps.value;
+  return h(
+    'div',
+    {
+      class: [`${prefixCls.value}-pagination`, `${prefixCls.value}-pagination-${placement}`],
+      key: `pagination-${placement}`,
+    },
+    [
+      h(
+        Pagination,
+        {
+          ...rest,
+          onChange: onPaginationChange,
+          onShowSizeChange: onPaginationShowSizeChange,
+        },
+        {
+          ...(slots.paginationItemRender ? { itemRender: slots.paginationItemRender } : {}),
+          ...(slots.paginationTotal ? { total: slots.paginationTotal } : {}),
+          ...(slots.paginationSizeChanger ? { sizeChanger: slots.paginationSizeChanger } : {}),
+        },
+      ),
+    ],
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -191,7 +232,7 @@ function paginationContent(): VNode {
 // ---------------------------------------------------------------------------
 
 const needResponsive = computed(() =>
-  Object.keys(props.grid ?? {}).some((key) => responsiveArray.includes(key as Breakpoint)),
+  responsiveArray.some((breakpoint) => props.grid?.[breakpoint] !== undefined),
 );
 
 // 🚨 取值函数（不是裸布尔）：后者会被订阅闭包捕获一次 ⇒ 永不随 props 变化（VNA-AVATAR-01 同族）
@@ -201,7 +242,9 @@ const currentBreakpoint = computed<Breakpoint | undefined>(() => {
   const s = screens.value;
   if (!s) return undefined;
   for (const breakpoint of responsiveArray) {
-    if (s[breakpoint]) return breakpoint;
+    const columns = props.grid?.[breakpoint];
+    if (s[breakpoint] && typeof columns === 'number' && Number.isFinite(columns) && columns > 0)
+      return breakpoint;
   }
   return undefined;
 });
@@ -211,7 +254,7 @@ const colStyle = computed(() => {
   if (!grid) return undefined;
   const bp = currentBreakpoint.value;
   const columnCount = bp && grid[bp] ? grid[bp] : grid.column;
-  if (columnCount) {
+  if (typeof columnCount === 'number' && Number.isFinite(columnCount) && columnCount > 0) {
     return { width: `${100 / columnCount}%`, maxWidth: `${100 / columnCount}%` };
   }
   return undefined;
@@ -241,14 +284,12 @@ function renderInternalItem(item: T, index: number): VNode | null {
 // 内容（判据 3 / 9）
 // ---------------------------------------------------------------------------
 
-/** 空态的三级回退（判据 3）。⚠️ `||` 不是 `??` ⇒ `''` 会走下一级。 */
+/** Explicit empty content is intentional; absence alone selects the next source. */
 function emptyNode(): VNodeChild {
-  return (
-    props.locale?.emptyText ||
-    // ⚠️ 上游 `renderEmpty` 的返回类型是 `unknown`（可返回任意可渲染值）⇒ 需要一次断言
-    (config.renderEmpty?.('List') as VNodeChild) ||
-    h(DefaultRenderEmpty, { componentName: 'List' })
-  );
+  if (props.locale?.emptyText !== undefined) return props.locale.emptyText;
+  return config.renderEmpty
+    ? config.renderEmpty('List')
+    : h(DefaultRenderEmpty, { componentName: 'List' });
 }
 
 /**
@@ -261,7 +302,7 @@ function emptyNode(): VNodeChild {
  * 占位块只在「`isLoading` 且 `splitDataSource` 为空」时才可见。
  * ⚠️ 写成「先判 isLoading 就 return」会让 `loading` + `dataSource` 的形态整个跑偏。
  */
-function childrenContent(): VNodeChild {
+function childrenContent(hasContentAfterItems: boolean): VNodeChild {
   let content: VNodeChild = isLoading.value
     ? // ⚠️ 数字必须转字符串（Vue 的 patchStyle 不补 px）
       h('div', { style: { minHeight: '53px' } })
@@ -290,7 +331,14 @@ function childrenContent(): VNodeChild {
     } else {
       content = h(
         'ul',
-        { class: [`${prefixCls.value}-items`, containerCls.value, cssVarCls.value] },
+        {
+          class: [
+            `${prefixCls.value}-items`,
+            containerCls.value,
+            cssVarCls.value,
+            { [`${prefixCls.value}-items-with-after`]: hasContentAfterItems },
+          ],
+        },
         items,
       );
     }
@@ -305,7 +353,11 @@ function childrenContent(): VNodeChild {
 // context / 告警 / ref
 // ---------------------------------------------------------------------------
 
-const contextValue = computed(() => ({
+const contextValue = computed<ListContextValue>(() => ({
+  prefixCls: prefixCls.value,
+  size: mergedSize.value === 'small' || mergedSize.value === 'large' ? mergedSize.value : undefined,
+  split: props.split,
+  bordered: props.bordered,
   grid: props.grid,
   itemLayout: props.itemLayout,
 }));
@@ -316,7 +368,11 @@ provide(listContextKey, contextValue);
 // Merge during render so native string styles and attrs-only updates remain valid.
 function rootAttrs() {
   const { class: _attrsClass, ...restAttrs } = attrs;
-  return mergeDomAttrs({ style: config.style }, restAttrs, { id: props.id });
+  return mergeDomAttrs(
+    { dir: direction.value, style: [theme.styles.value, config.style] },
+    restAttrs,
+    { id: props.id },
+  );
 }
 
 const rootRef = ref<HTMLDivElement | null>(null);
@@ -328,29 +384,39 @@ function renderList(): VNode {
   const header = slots.header ? slots.header() : props.header;
   const footer = slots.footer ? slots.footer() : props.footer;
   const loadMore = slots.loadMore ? slots.loadMore() : props.loadMore;
+  const extra = slots.extra ? slots.extra() : props.extra;
   const hasHeader = !isEmptyVNode(header);
   const hasFooter = !isEmptyVNode(footer);
   const hasLoadMore = !isEmptyVNode(loadMore);
+  const hasExtra = !isEmptyVNode(extra);
   const replacesBottomPagination = !!slots.loadMore || hasLoadMore;
-  const content = childrenContent();
+  const hasContentAfterItems =
+    hasFooter || hasLoadMore || (showBottomPagination.value && !replacesBottomPagination);
+  const content = childrenContent(hasContentAfterItems);
   return h(
     'div',
     {
       ...rootAttrs(),
       ref: rootRef,
-      class: classString(
-        hasFooter ||
-          hasLoadMore ||
-          showTopPagination.value ||
-          (showBottomPagination.value && !replacesBottomPagination),
-      ),
+      class: classString(hasContentAfterItems, hasExtra),
     },
     [
-      showTopPagination.value ? paginationContent() : null,
-      hasHeader ? h('div', { class: `${prefixCls.value}-header` }, [header]) : null,
-      h(Spin, loadingProp.value, { default: () => [content, slots.default?.()] }),
-      hasFooter ? h('div', { class: `${prefixCls.value}-footer` }, [footer]) : null,
-      replacesBottomPagination ? loadMore : showBottomPagination.value ? paginationContent() : null,
+      showTopPagination.value ? paginationContent('top') : null,
+      hasHeader ? h('div', { class: `${prefixCls.value}-header`, key: 'header' }, [header]) : null,
+      h(
+        Spin,
+        { ...loadingProp.value, class: `${prefixCls.value}-spin`, key: 'content' },
+        {
+          default: () => [content, slots.default?.()],
+        },
+      ),
+      hasFooter ? h('div', { class: `${prefixCls.value}-footer`, key: 'footer' }, [footer]) : null,
+      hasLoadMore
+        ? h('div', { class: `${prefixCls.value}-load-more`, key: 'load-more' }, [loadMore])
+        : !replacesBottomPagination && showBottomPagination.value
+          ? paginationContent('bottom')
+          : null,
+      hasExtra ? h('div', { class: `${prefixCls.value}-extra`, key: 'extra' }, [extra]) : null,
     ],
   );
 }

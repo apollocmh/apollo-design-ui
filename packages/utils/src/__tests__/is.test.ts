@@ -171,6 +171,13 @@ describe('VNode 判定', () => {
 });
 
 describe('★ isEmptyVNode（Vue 特有的判空层）', () => {
+  it('normalizes raw empty primitives like their Vue comment/text nodes without losing zero or spacing', () => {
+    expect(isEmptyVNode(true)).toBe(true);
+    expect(isEmptyVNode('')).toBe(true);
+    expect(isEmptyVNode([true, '', createTextVNode('')])).toBe(true);
+    expect(isEmptyVNode(0)).toBe(false);
+    expect(isEmptyVNode(' ')).toBe(false);
+  });
   it('null / undefined / false 为空', () => {
     expect(isEmptyVNode(null)).toBe(true);
     expect(isEmptyVNode(undefined)).toBe(true);

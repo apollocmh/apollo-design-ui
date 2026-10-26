@@ -17,14 +17,23 @@
 import { type ComputedRef, computed, type InjectionKey, inject } from 'vue';
 import type { ListConsumerProps } from './interface';
 
+/** Presentation belongs to the nearest List, not arbitrary DOM ancestors. */
+export interface ListContextValue extends ListConsumerProps {
+  prefixCls?: string;
+  size?: 'small' | 'large';
+  bordered?: boolean;
+  split?: boolean;
+  inItem?: boolean;
+}
+
 /** 无 Provider 时的兜底（与上游 `createContext({})` 的默认值一致）。 */
-const EMPTY_CONTEXT: ComputedRef<ListConsumerProps> = computed(() => ({}));
+const EMPTY_CONTEXT: ComputedRef<ListContextValue> = computed(() => ({}));
 
 /** `List` 注入、`List.Item` 消费。⚠️ 值是 `ComputedRef`，不是裸对象。 */
-export const listContextKey: InjectionKey<ComputedRef<ListConsumerProps>> =
+export const listContextKey: InjectionKey<ComputedRef<ListContextValue>> =
   Symbol('apolloListContext');
 
 /** 读 `ListContext`。无 Provider 时返回恒为 `{}` 的 `ComputedRef`。 */
-export function useListContext(): ComputedRef<ListConsumerProps> {
+export function useListContext(): ComputedRef<ListContextValue> {
   return inject(listContextKey, EMPTY_CONTEXT);
 }

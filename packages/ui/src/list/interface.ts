@@ -110,6 +110,8 @@ export interface ListSlots<T = unknown> {
   header?: ListSlot;
   footer?: ListSlot;
   loadMore?: ListSlot;
+  /** Content beside the list; an empty slot suppresses the matching prop. */
+  extra?: ListSlot;
   paginationItemRender?: (props: PaginationItemSlotProps) => VNodeChild;
   paginationTotal?: (props: PaginationTotalSlotProps) => VNodeChild;
   paginationSizeChanger?: (props: PaginationSizeChangerInfo) => VNodeChild;
@@ -152,11 +154,11 @@ export interface ListItemProps {
   classNames?: ListItemSemanticClassNames;
   /** 语义化样式（`actions` / `extra` 两个槽）。 */
   styles?: ListItemSemanticStyles;
-  /** 额外内容。⚠️ `itemLayout === 'vertical'` 时它会独占 `-item-extra` 一格。 */
+  /** 额外内容。两种布局都使用稳定的 `-item-extra` 语义容器。 */
   extra?: VNodeChild;
   /** 操作区。每项一个 `<li>`，项间有 `-item-action-split`。⚠️ 空数组不渲染。 */
   actions?: VNodeChild[];
-  /** grid 模式下 `Col` 的内联样式（由 `List` 传入）。 */
+  /** 用户配置的 grid 模式 `Col` 根内联样式；不改变根 List 的列数。 */
   colStyle?: CSSProperties;
 }
 

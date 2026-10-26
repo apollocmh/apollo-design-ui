@@ -14,11 +14,12 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { ComputedRef } from 'vue';
+import { type ComputedRef, h, type VNodeChild } from 'vue';
 import type { DividerConfig } from '../../divider/interface';
 import type { EmptyConfig } from '../../empty/interface';
 import type { SpinConfig } from '../../spin/interface';
 import type { ConfigContextValue } from '../context';
+import { defaultRenderEmpty } from '../default-render-empty';
 import type {
   ComponentConfigLike,
   ConfigProviderProps,
@@ -34,6 +35,21 @@ import type {
 } from '../index';
 
 describe('ConfigProvider · 枚举', () => {
+  it('renderEmpty returns actual Vue content, including intentional empty values', () => {
+    expectTypeOf<ReturnType<RenderEmptyHandler>>().toEqualTypeOf<VNodeChild>();
+    expectTypeOf(defaultRenderEmpty).toMatchTypeOf<RenderEmptyHandler>();
+    const empty: RenderEmptyHandler = () => null;
+    const zero: RenderEmptyHandler = () => 0;
+    const node: RenderEmptyHandler = () => h('span', 'Empty');
+    expectTypeOf(empty).toEqualTypeOf<RenderEmptyHandler>();
+    expectTypeOf(zero).toEqualTypeOf<RenderEmptyHandler>();
+    expectTypeOf(node).toEqualTypeOf<RenderEmptyHandler>();
+    () => {
+      // @ts-expect-error renderEmpty cannot render an arbitrary data record.
+      const invalid: RenderEmptyHandler = () => ({ record: 'not a VNode' });
+      void invalid;
+    };
+  });
   it('★ `SizeType` 含 `medium` 与 `middle` 两个别名（antd v6 未移除 `middle`）', () => {
     expectTypeOf<SizeType>().toEqualTypeOf<'small' | 'medium' | 'middle' | 'large'>();
   });

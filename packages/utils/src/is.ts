@@ -174,7 +174,8 @@ export function isCommentVNode(value: unknown): value is VNode & { type: typeof 
  *   descriptions title …）都会产出多余空节点，导致 DOM Contract 与视觉回归失败。
  *
  * 判定规则：
- *   - `null` / `undefined` / `false` → 空
+ *   - `null` / `undefined` / 布尔值 / 原始空字符串 → 空
+ *     （原始 `0` 和空格字符串保留，与原生 Vue 文本一致）
  *   - 注释 vnode → 空
  *   - 文本 vnode 且 children 为 `''` / `null` / `undefined` / `false` → 空
  *     （`0` 与 `'0'` **不算空**）
@@ -182,7 +183,7 @@ export function isCommentVNode(value: unknown): value is VNode & { type: typeof 
  *   - 其余 → 非空
  */
 export function isEmptyVNode(value: unknown): boolean {
-  if (!isNonNullable(value) || value === false) return true;
+  if (!isNonNullable(value) || typeof value === 'boolean' || value === '') return true;
   if (Array.isArray(value)) return value.every(isEmptyVNode);
   if (!isVNode(value)) return false;
 

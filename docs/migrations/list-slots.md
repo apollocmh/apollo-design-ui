@@ -1,5 +1,7 @@
 # List 内容插槽迁移（2026-10-24）
 
+2026-10-26 后续修正：根 extra 已接通；Item main 现在始终保留，extra 两种布局都有语义容器。下文保留首批迁移时的行为说明，当前用法见 [List 契约迁移](./list-contracts.md)。
+
 当前开发版按 ADR 0006 直接移除 `ListProps.renderItem`，使用泛型 `#item="{ item, index }"`。不保留旧函数 prop、别名或弃用期。仓库内 12 个示例、单元/DOM/axe/视觉用例同步迁移；参考侧的 React 基线保持原样。
 
 ```vue

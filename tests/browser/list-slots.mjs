@@ -98,6 +98,26 @@ try {
   await page.locator('.apollo-list-item-action button').first().click();
   assert.match(await page.locator('main').innerText(), /当前总点赞：42/);
   assert.match(await page.locator('.apollo-list-item-action button').first().innerText(), /13/);
+  assert.equal(
+    await page.locator('.apollo-list > .apollo-list-extra').textContent(),
+    '列表总点赞：42',
+  );
+  await page.goto(`${base}list-tokens`);
+  const tokenRow = await page.locator('.apollo-list-item').first().elementHandle();
+  const padding = () =>
+    page
+      .locator('.apollo-list-item')
+      .first()
+      .evaluate((node) => getComputedStyle(node).padding);
+  assert.equal(await padding(), '24px');
+  await page.getByRole('button', { name: '切换 List 主题' }).click();
+  assert.equal(await padding(), '16px 24px');
+  assert.equal(
+    await page.evaluate((node) => node === document.querySelector('.apollo-list-item'), tokenRow),
+    true,
+  );
+  await page.getByRole('button', { name: '切换 List 主题' }).click();
+  assert.equal(await padding(), '24px');
   await page.goto(`${base}list-responsive`);
   await page.setViewportSize({ width: 375, height: 812 });
   await page.waitForFunction(
@@ -134,8 +154,8 @@ try {
     true,
   );
   await page.getByRole('button', { name: 'Toggle vertical' }).click();
-  assert.equal(await page.locator('.apollo-list-item-extra').count(), 0);
-  assert.equal(await page.locator('.apollo-list-item > aside').textContent(), 'extra:second');
+  assert.equal(await page.locator('.apollo-list-item-extra').count(), 1);
+  assert.equal(await page.locator('.apollo-list-item-extra > aside').textContent(), 'extra:second');
   await page.getByRole('button', { name: 'Toggle child empty' }).click();
   assert.equal(
     await page

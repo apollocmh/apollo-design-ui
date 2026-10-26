@@ -138,15 +138,14 @@ describe('List · 声明 ↔ 引用（双向）', () => {
     }
   });
 
-  it('🚨 判据 4：声明块覆盖**两个根形态**（`.{p}-list` + `.{p}-list-container`）', () => {
-    // 上游的 `extraCssVarPrefixCls: ({ prefixCls }) => [`${prefixCls}-container`]`
-    // ⇒ css-var 块同时挂 `.ant-list` 与 `.ant-list-container`（D95 家族）。
-    const containerStart = css.indexOf(`${CLS}-container{`);
-    expect(containerStart).toBeGreaterThanOrEqual(0);
-    const containerRule = css.slice(containerStart, css.indexOf('}', containerStart));
+  it('data containers inherit root overrides instead of resetting component variables', () => {
+    const rootStart = css.indexOf(`${CLS}{`);
+    const rootRule = css.slice(rootStart, css.indexOf('}', rootStart));
     for (const decl of decls) {
-      expect(containerRule).toContain(decl.trim());
+      expect(rootRule).toContain(decl.trim());
     }
+    expect(css).not.toContain(`${CLS}-container{`);
+    expect(css.match(/--apollo-list-item-padding:/g)).toHaveLength(1);
   });
 
   it('🚨 规则引用的**自有**变量全部在 `genTokenDecls` 里（拼错 = 静默失效）', () => {
@@ -189,7 +188,7 @@ describe('List · 声明 ↔ 引用（双向）', () => {
   });
 });
 
-describe('List · 两处 `calc()` 与两条死选择器（逐字对齐产物）', () => {
+describe('List · expressions and selectors consumed by native Vue markup', () => {
   it('判据 5：`borderRadiusLG - lineWidth` 保留为 `calc()`（**不是** `7px`）', () => {
     expect(css).toContain(
       'border-radius:calc(var(--apollo-border-radius-lg) - var(--apollo-line-width)) calc(var(--apollo-border-radius-lg) - var(--apollo-line-width)) 0 0;',
@@ -200,20 +199,29 @@ describe('List · 两处 `calc()` 与两条死选择器（逐字对齐产物）'
     expect(css).toContain('height:calc(var(--apollo-font-height) - var(--apollo-margin-xxs) * 2);');
   });
 
-  it('🚨 两条**死选择器**逐字保留（UPSTREAM quirk，radio U7/U8 同类）', () => {
-    // ① `-action`（真类名是 `-item-action`）
-    expect(css).toContain('.apollo-list .apollo-list-item .apollo-list-action{');
-    // ② `-spin-nested-loading`（真类名是 `.apollo-spin-nested-loading`）
-    expect(css).toContain('.apollo-list-loading .apollo-list-spin-nested-loading{');
+  it('loading and narrow action selectors target actual managed elements', () => {
+    expect(css).toContain(
+      '.apollo-list-loading>.apollo-list-spin{min-height:var(--apollo-control-height-lg);',
+    );
+    expect(css).toContain(
+      '.apollo-list-item>.apollo-list-item-main>.apollo-list-item-action{margin-inline-start:var(--apollo-margin-sm);',
+    );
+    expect(css).not.toContain('.apollo-list-spin-nested-loading');
+    expect(css).not.toContain('.apollo-list-action{');
   });
 
-  it('🚨 两条 media 的**冒号后空格不同**（逐字保留上游写法）', () => {
+  it('responsive rules use valid literal breakpoints', () => {
     expect(css).toContain('@media screen and (max-width:768px){');
-    expect(css).toContain('@media screen and (max-width: 576px){');
+    expect(css).toContain('@media screen and (max-width:576px){');
+    expect(css).not.toMatch(/@media[^{]+var\(/);
   });
 
-  it('`genListStyle` 的规则条数 == 产物（56 条组件规则 + 1 条 `-container` 声明块 = 57）', () => {
-    const rules = css.split('\n').filter((line) => /^\.apollo-list[^{]*\{$/.test(line));
-    expect(rules).toHaveLength(57);
+  it('conditional styles use owned item state and preserve native keyboard outlines', () => {
+    for (const state of ['sm', 'lg', 'vertical', 'bordered', 'split', 'grid']) {
+      expect(css).toContain(`.apollo-list-item-${state}`);
+    }
+    expect(css).toContain('.apollo-list-item-meta-vertical>');
+    expect(css).not.toContain('.apollo-list *{');
+    expect(css).not.toContain('outline:none');
   });
 });

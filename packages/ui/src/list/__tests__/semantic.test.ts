@@ -33,6 +33,7 @@ import {
 } from '../../config-provider/context';
 import { List, ListItem, ListItemMeta } from '../index';
 import type { ListItemProps, ListProps, ListSlots } from '../interface';
+import reviewedDiffs from './list-reference-diffs.json';
 
 /** 在指定的 ConfigProvider 上下文下渲染（Vue 侧对应物是 `provide`）。 */
 function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeChild) {
@@ -285,32 +286,19 @@ const specs: Record<
 domContractTest('List', {
   baseline,
   keepStyle: true,
-  allow: {
-    // 默认前缀不同（裁决 `prefix-cls-default` = A）：`bare` 用例下两侧的根前缀分别是
-    // antd 的 `ant` 与我们的 `apollo` ⇒ **每一层带前缀的元素**都不同。
-    'list:prefix-cls:no-props': {
-      reason: 'D1 · 默认根前缀 apollo vs ant（bare 用例）',
-      deviationId: 'D1',
-      // ⚠️ 差异清单是**实测值**（L4 断言「恰好这些」）—— 含 Spin 的两层与**每一个** li。
-      diff: [
-        '$/div[0]: 类名不同 [ant-list ant-list-split] vs [apollo-list apollo-list-split]',
-        '$/div[0]/div[0]: 类名不同 [ant-spin] vs [apollo-spin]',
-        '$/div[0]/div[0]/div[0]: 类名不同 [ant-spin-container] vs [apollo-spin-container]',
-        '$/div[0]/div[0]/div[0]/ul[0]: 类名不同 [ant-list-container ant-list-items] vs [apollo-list-container apollo-list-items]',
-        '$/div[0]/div[0]/div[0]/ul[0]/li[0]: 类名不同 [ant-list-item] vs [apollo-list-item]',
-        '$/div[0]/div[0]/div[0]/ul[0]/li[1]: 类名不同 [ant-list-item] vs [apollo-list-item]',
-        '$/div[0]/div[0]/div[0]/ul[0]/li[2]: 类名不同 [ant-list-item] vs [apollo-list-item]',
-      ],
-    },
-    // CSSOM 把十六进制色规范化成 rgb()，语义等价（D114 家族）。
-    'list:style': {
-      reason: 'PLATFORM · CSSOM 把十六进制色规范化成 rgb()，语义等价',
-      deviationId: 'D114',
-      diff: [
-        '$/div[0]: style 不同 [background-color:#fde3cf;color:#f56a00] vs [background-color:rgb(253,227,207);color:rgb(245,106,0)]',
-      ],
-    },
-  },
+  // Every historical reference case remains active. The exact reviewed diffs
+  // describe stable Vue content wrappers, owned presentation classes and fixed
+  // prefix/pagination/empty behavior; no shared normalizer is weakened.
+  allow: Object.fromEntries(
+    Object.entries(reviewedDiffs).map(([id, diff]) => [
+      id,
+      {
+        reason:
+          'Apollo List contract audit: stable content and nearest-List presentation; docs/migrations/list-contracts.md',
+        diff,
+      },
+    ]),
+  ),
   render: (id) => {
     const spec = specs[id];
     if (!spec) {

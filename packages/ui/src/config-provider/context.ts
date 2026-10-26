@@ -12,7 +12,14 @@
  */
 
 import type { ThemeConfig } from '@apollo-design/theme';
-import { type ComputedRef, type CSSProperties, computed, type InjectionKey, inject } from 'vue';
+import {
+  type ComputedRef,
+  type CSSProperties,
+  computed,
+  type InjectionKey,
+  inject,
+  type VNodeChild,
+} from 'vue';
 
 /**
  * 默认前缀。已裁决（`prefix-cls-default` = A）：默认 `apollo`，可覆盖为 `ant`。
@@ -111,7 +118,7 @@ export type RenderEmptyComponentName =
  * 定义在本文件而不是 `defaultRenderEmpty.ts` —— 后者要 import `empty` 组件，
  * 反向依赖会形成环（见文件头）。
  */
-export type RenderEmptyHandler = (componentName?: RenderEmptyComponentName) => unknown;
+export type RenderEmptyHandler = (componentName?: RenderEmptyComponentName) => VNodeChild;
 
 /** context 里与具体组件无关的部分。 */
 export interface ConfigContextBase {

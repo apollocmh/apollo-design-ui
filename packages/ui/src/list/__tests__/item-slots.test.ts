@@ -104,7 +104,7 @@ it('F11: vertical extra slots drive layout and flex classes from current nonempt
   empty.value = true;
   await nextTick();
   expect(w.find('.apollo-list-item-extra').exists()).toBe(false);
-  expect(w.find('.apollo-list-item-main').exists()).toBe(false);
+  expect(w.get('.apollo-list-item-main input').element).toBe(input);
   expect(w.get('.apollo-list-item').classes()).toContain('apollo-list-item-no-flex');
   expect(w.text()).not.toContain('prop extra');
   show.value = false;
@@ -112,11 +112,14 @@ it('F11: vertical extra slots drive layout and flex classes from current nonempt
   expect(w.get('.apollo-list-item-extra').text()).toBe('prop extra');
 });
 
-it('F11: horizontal extra remains a sibling and semantic styles apply to vertical slot wrappers', () => {
+it('horizontal and vertical extra use the same semantic wrapper', () => {
   const horizontal = mount(ListItem, {
     slots: { default: () => h('b', 'Body'), extra: () => h('aside', 'Extra') },
   });
-  expect(horizontal.get('aside').element.parentElement).toBe(horizontal.element);
+  expect(horizontal.get('aside').element.parentElement).toBe(
+    horizontal.get('.apollo-list-item-extra').element,
+  );
+  expect(horizontal.get('.apollo-list-item-extra').element.parentElement).toBe(horizontal.element);
   const vertical = mount(
     defineComponent({
       setup: () => () =>

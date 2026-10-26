@@ -145,7 +145,13 @@ describe('List · role / ARIA 契约（L5）', () => {
     const own: HTMLElement[] = [
       rootEl,
       ...Array.from(rootEl.querySelectorAll<HTMLElement>('*')),
-    ].filter((el) => Array.from(el.classList).some((c) => c.startsWith('apollo-list')));
+    ].filter(
+      (el) =>
+        !el.classList.contains('apollo-spin') &&
+        Array.from(el.classList).some((c) => c.startsWith('apollo-list')),
+    );
+    expect(w.get('.apollo-list-spin').attributes('aria-live')).toBe('polite');
+    expect(w.get('.apollo-list-spin').attributes('aria-busy')).toBe('false');
     expect(own.length).toBeGreaterThan(3);
     for (const el of own) {
       expect(

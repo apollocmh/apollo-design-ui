@@ -17,6 +17,13 @@ order: 0
 | 预览共享链路 | 已验证本轮相关的Portal所属文档、分层焦点、原生SVG控件与动态motion；其他基础包能力继续审计 | 弹层不再误锁其他窗口；输入与焦点在动态切换中保留 |
 | H05 全仓格式门禁 | 66个错误已清零；52文件的脚本/渲染结构等价；相关1,246条回归、6组浏览器及文档构建通过 | 原有37个警告和5条信息保留，另案核查；规则未放宽 |
 
+当前正在验收 **List / ListItem / ListItemMeta**。主链路已修正，99文件1,788条关联回归、152条类型检查和55项生产浏览器检查通过；根 extra、动态主题、嵌套样式、分页状态及原生焦点已经有证据。自有视觉基线、暗色/紧凑矩阵和整单元最终收口仍开放，不计为全部完成。
+
+- [List 当前 API 与示例](/components/list)
+- [动态主题开关](/components/list/demo/component-token)
+- [条目 extra、点赞与整表摘要](/components/list/demo/item-extra)
+- [List 完整盘点、阶段证据与剩余范围](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
+
 ## 直接试这些示例
 
 - [可编辑缩略图与原生预览按钮](/components/image/demo/image-render)：编辑文本、点击业务按钮，再打开预览。
@@ -54,6 +61,10 @@ This is a development snapshot. The library-wide audit is ongoing; results below
 | Image / PreviewGroup | Complete contract audit closed; 381 component tests, 26 browser scenarios, 24 exact Apollo visual baselines | Native Vue slots, editable thumbnails, close focus, dynamic group deletion and scoped themes |
 | Shared preview behavior | Owning-document Portal effects, per-layer focus, native SVG controls and live motion verified for this scope | Modal effects follow the owning window; editors retain focus and state |
 | H05 formatting gate | 66 errors resolved; equivalent script/render structures in 52 files; 1,246 regression tests, six browser scripts and Docs build passed | Existing 37 warnings and five information diagnostics remain recorded for separate review |
+
+**List / ListItem / ListItemMeta are under acceptance.** Core fixes passed 1,788 affected regression tests in 99 files, 152 type tests and 55 production-browser checks. Root extra content, live themes, nested styles, pagination state and native focus are verified. Approved Apollo visuals, dark/compact coverage and final unit acceptance remain open.
+
+[List API](/components/list) · [Live theme example](/components/list/demo/component-token) · [Extra content and live summary](/components/list/demo/item-extra) · [Full List checklist and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md)
 
 ## Try the changes
 
