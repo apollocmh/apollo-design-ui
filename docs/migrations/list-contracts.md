@@ -19,6 +19,12 @@
 
 ## 关联共享修正
 
+后续视觉验收补修：带边框默认行的 `itemPadding` 现在完整覆盖横向与纵向；未覆盖时保留当前主题的标准缩进，仍为11个公开Token。
+
+全屏加载不再把正文变成fixed子树。Spin的root、原生attrs与nativeElement保持正文外壳；实际覆盖层由`classNames.mask` / `styles.mask`配置，mask不再标废弃。以前用root/class/style配置全屏遮罩外观的写法，应改到mask语义；不复制root样式到遮罩作兼容。旧mask键直接落到真实覆盖层，遮罩关闭后隐藏/inert，不消费关闭态描述槽；正文编辑器与ref在反复开关中保留。样式工厂上下文使用Vue响应式数据，读取当前fullscreen/spinning等值，不缓存挂载快照。
+
+普通加载文案使用colorText；全屏白字增加colorBgSpotlight背景，styles.description仍可覆盖。原生控件前景不再由共享reset强制继承，见 [原生控件颜色迁移](native-control-colors.md)。这些共享修复不代表Spin全部公开接口审计完成。
+
 ConfigProvider 的 `RenderEmptyHandler` 从 `unknown` 收窄为实际可渲染的 `VNodeChild`。返回任意业务对象会报类型错误；请显式创建 VNode、返回文本或空内容，不要用断言绕过。
 
 Spin 当前 Provider 配置和原生 attrs 不再缓存挂载快照，数字 description=0 显示在文案区。本轮只验收 List 关联路径及共享回归，不代表 Spin 所有 API 已完成全局审计。

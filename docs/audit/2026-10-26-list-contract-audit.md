@@ -111,3 +111,37 @@
 
 
 Docs内容检查、严格类型、14文件157条测试及SSG构建通过。Registry全套检查、来源清单检查通过；来源521项（154内容候选、68渲染候选、137数据/配置、162内部/废弃），其中20项implemented-verified、202项待复核。新对齐测试的类名最初误写为align-center，核对Pagination真实契约后改为center；未删除对齐场景，旧List强制end的消费链缺陷已修正。
+
+## 视觉与主题验收范围（实施前盘点）
+
+接续基线为56df56e8。旧视觉入口只有11个固定320px宽度的参考用例，33张React参考图；没有List自有批准图，也未检查当前主题、原生键盘焦点、根extra或嵌套隔离。旧参考矩阵及图片保留。
+
+本阶段起初规划18个Apollo状态、每态mobile/tablet/desktop，共54张；核对同一文案根因后补全屏loading，最终19态57张：basic/meta/actions/bordered/vertical/grid/pagination/loading/loading-fullscreen/empty/size/rtl，以及extra/nested/tokens/theme-dark/theme-compact/theme-dark-compact/native-focus。主题三态的主列表使用extra同一实际内容；字体、背景、间距读取当前主题，截图前检查状态与几何。候选必须真实非空、无横向溢出，实际DOM/主题/分页/焦点/axe断言通过后才可审阅。支持动态状态的交互仍保留已有55项浏览器与单元覆盖，不拿静态图代替交互。
+
+验收为：先生成候选并处理本单元内真实发现，再查看所有57张；固定同一生产与测试源码提交，重新捕获并核对哈希后接受为Apollo基线，重新比较57张且检查完整性/重复状态。默认、暗色、紧凑及组合态均需实际CSS和axe证据。最终复核完整清单及适用门禁，再决定是否关闭本单元；不承接新虚拟化/拖拽能力，不借本轮升级其他组件整单元状态。
+
+首轮54项中18失败，原始报告保存在阶段证据中。真实缺陷为：带边框默认行的padding-inline覆盖组件Token；Spin文案继承primary只有4.1:1；全局BASE_CSS强制原生控件color继承，使暗色按钮浅字配浅色UA背景，仅1.09:1。共享reset的调用方是汇总及各组件CSS；仅移除该color强制，保留字体/盒模型等归一化，让未自定义的原生控件保留浏览器前景/背景配对及禁用颜色，Apollo组件自己的主题色继续由组件CSS声明。受影响的Button/Input/原生input/select/textarea/disabled与既有Image批准图需要实际验证，未把它改称其他组件整单元已完成。
+
+另外9项为验收工具误报：compact的paddingLG实际16，原预期24错误；截图稳定器主动隐藏focus，不能用于原生焦点图。保留紧凑场景并按当前主题派生值修正；稳定器新增保留原生焦点的显式选项，只供focus状态使用，未给产品注入伪造焦点样式、未改变默认参考稳定化与阈值。Token修复把bordered默认间距放在根变量，显式组件Token/原生变量优先，仍保持11个公开Token和三档尺寸；新增控制切换与移除/恢复回归。
+
+同组检查实际复现全屏Spin白字与遮罩背景只有2.37:1（3个视口均红）。普通文案改用colorText，全屏文案在原白字下使用colorBgSpotlight及Token间距/圆角，显式styles.description仍优先；指示器主色和全屏遮罩Token不变。中间候选曾因全屏fixed根而零高度，只检查原根attached、覆盖层visible与完整截图；以下逐图审阅进一步确认布局缺陷后，已替换为根visible、正文位于标题下方和真实覆盖层几何断言。
+
+逐图审阅仍发现全屏正文跑到左上角，与页面标题重叠，拒绝这3张候选。新增共享Spin3条复现全红：root误fixed、mask落错元素、样式工厂缓存挂载值。集中修为root正文保留文档流、section/mask单独fixed、关闭mask隐藏/inert且不消费内容、语义工厂上下文shallowReactive。mask字段直接对应实际遮罩且取消错误弃用；不保留旧root遮罩样式复制。新增Root/ref/编辑器/当前样式与反复切换回归，所有47个Spin参考用例保留，仅6个已审阅全屏/遮罩差异精确登记。实际浏览器还检查覆盖层命中测试、阻止点击正文、关闭隔离和模式切换，不能只凭axe批准图。完整Spin条件indicator/description槽等未转发给List的入口不由此声明完成，后续Spin整单元继续复核。
+
+## 视觉整改实现验收（批准前记录）
+
+完整生产清单保持在本文件，新增修复只处理上述验收中实际复现的同组问题。当前16个生产文件源码指纹为 `ddecab25196b7f2c4896488188d2da36ad54bbd61ca153881f3a8dfbbde52167`，逐文件哈希、首轮18项失败、全屏对比度3项失败、修后实际值及审图哈希见 [结构化证据](evidence/list-visual-contract.json)。历史23de阶段证据保留。
+
+| 检查 | 本阶段实际结果 |
+|---|---|
+| List/Spin/ConfigProvider/空内容四层，单worker | 30文件512条通过，含3条全屏失败复现与带边框Token回归；35条List和47条Spin参考场景保留 |
+| 共享BASE_CSS消费者 | Button/Input/Table四层26文件715条，QRCode另7文件59条；均通过，不升级这些组件的整单元状态 |
+| 严格类型与消费端 | 根严格通过；List/Spin/ConfigProvider/Pagination10文件152条无类型错误；实际List与原生控件SFC、发布List声明通过 |
+| 发布产物 | UI构建含dts及69份CSS完成；L7 strict11项，fail=0/pending=0；13个tarball独立Vite与Webpack消费通过 |
+| 生产Chrome | List97项及原有插槽/真实Demo通过；原生控件明暗/禁用/组件颜色19项；picker四入口和五类overlay原生attrs回归通过 |
+| Image共享影响 | 富内容、进度、关闭、原生操作、焦点/分组删除等26场景与独立源主题SSR水合通过；旧24图中18张exact，6张rich/progress仅原生控件文字颜色有意变化，所有6张新旧图已逐张查看 |
+| Apollo候选 | 同一次冻结生产源码捕获57张List+24张Image，81项状态/几何/axe均通过；57张List全部逐张审阅，旧3张全屏错位图拒绝后重新验证；19态均有三视口，未改对比阈值 |
+| 工具与派生检查 | List/Image矩阵4条通过；Registry全套与来源清单通过，仍521行、202待复核；根格式0错误，37既有警告/5信息保留 |
+| 文档 | 内容生成/校验、严格类型、14文件157条及SSG构建通过；Spin全屏原生输入Demo、List/Spin双语API与共享原生控件迁移同步 |
+
+批准前仍需：清洁实现提交重新捕获并比对已审图哈希；只接受57张List和6张有意变化Image，保留18张未变Image及旧参考；执行最终像素比较与完整清单收口。候选已通过不等于批准基线，也不等于全库最终门禁通过。

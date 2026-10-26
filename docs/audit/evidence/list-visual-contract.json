@@ -1,0 +1,3399 @@
+{
+  "inventoryBaseline": "0148b962",
+  "continuationBaseline": "56df56e8c5ff2b5ff5ab6428313e17848611f4d2",
+  "status": "implementation-and-candidates-verified-baseline-acceptance-pending",
+  "sourceFingerprint": {
+    "algorithm": "SHA256(concat(sorted file + NUL + SHA256(file bytes) + newline))",
+    "sha256": "ddecab25196b7f2c4896488188d2da36ad54bbd61ca153881f3a8dfbbde52167",
+    "files": [
+      {
+        "file": "packages/ui/src/config-provider/context.ts",
+        "sha256": "dd203d114d52316b6ab92de0d84aba605107bedd3c8c30922d71f9dea4be45e8"
+      },
+      {
+        "file": "packages/ui/src/config-provider/default-render-empty.ts",
+        "sha256": "5f0953ebab1a745ec88fa005eb295a9cf03bfda883532ceaca20468ad88c4fef"
+      },
+      {
+        "file": "packages/ui/src/list/Item.vue",
+        "sha256": "e2218eae1abbb8f85512f7bf1bd1e68061f7e3bf46a83d14d43e0b8310b93550"
+      },
+      {
+        "file": "packages/ui/src/list/ItemMeta.vue",
+        "sha256": "303b6330ff69a998d1613c50e00bebe61a0309d825a93c08243d546db8076da7"
+      },
+      {
+        "file": "packages/ui/src/list/List.vue",
+        "sha256": "3b57c989745bf1ce6716104382a005dc2f910abcf686115f9ffd9e814864557b"
+      },
+      {
+        "file": "packages/ui/src/list/context.ts",
+        "sha256": "873049b2cf5f570e326e8d85f2d5b5ae8962be026923b9b2905bcce505feb71f"
+      },
+      {
+        "file": "packages/ui/src/list/index.ts",
+        "sha256": "d9f12b22f0eb1927087a9ae32b79e737f6556b248304645d5f95eb1f4662ad51"
+      },
+      {
+        "file": "packages/ui/src/list/interface.ts",
+        "sha256": "f9a62db9486fffa0a00c4690acf95f63e8fad268d25a9edf9939cc35b121b81e"
+      },
+      {
+        "file": "packages/ui/src/list/style/index.ts",
+        "sha256": "c1ce2d96526d7c10893da79f2df84b45479f9f1bb32bd3843e06f4c28a11562f"
+      },
+      {
+        "file": "packages/ui/src/list/style/token.ts",
+        "sha256": "5294eaf0480f76f66c16c1021343a39c402e56ac485198f18c4d7b1dabb3d4ea"
+      },
+      {
+        "file": "packages/ui/src/list/use-list-theme.ts",
+        "sha256": "582d0fc251ccf103c364dc2b58a8837c4122dcb8a7b324d151d6338eb83ca1de"
+      },
+      {
+        "file": "packages/ui/src/spin/Spin.vue",
+        "sha256": "48f420dd7ee5493a80b091772786e480c0c7316edfd12908b1590b82920f787c"
+      },
+      {
+        "file": "packages/ui/src/spin/interface.ts",
+        "sha256": "6834b18bab8847ee280a811e96d927c39557a0a8179902e70ff384d689b1b45f"
+      },
+      {
+        "file": "packages/ui/src/spin/style/index.ts",
+        "sha256": "b2e0a4e55664432e18014fc80bb3f10224a5c69a78940d37681bc2a6259eae09"
+      },
+      {
+        "file": "packages/ui/src/style/index.ts",
+        "sha256": "ac131a9124953eb5e5af0b41223815432b46bd27d3de3d99a6edcc4437ce4f0c"
+      },
+      {
+        "file": "packages/utils/src/is.ts",
+        "sha256": "0a432e8afce01cdc9af27630fa090d8d54ce185e6038117750b35b4326c4d93e"
+      }
+    ]
+  },
+  "environment": {
+    "node": "22.22.2",
+    "pnpm": "12.4.2",
+    "visual": "darwin/x64/150.0.7871.125/系统 Chrome"
+  },
+  "reproductions": {
+    "initialVisual": {
+      "expected": 54,
+      "verdicts": {
+        "CANDIDATE": 36,
+        "FAIL": 18
+      },
+      "failures": [
+        {
+          "id": "list/loading__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<div class=\"apollo-spin-description\">Updating queue</div>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 4.1 (foreground color: #1677ff, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/loading__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<div class=\"apollo-spin-description\">Updating queue</div>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 4.1 (foreground color: #1677ff, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/loading__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<div class=\"apollo-spin-description\">Updating queue</div>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 4.1 (foreground color: #1677ff, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/tokens__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '21px 24px'\n- '21px 23px'\n         ^\n"
+        },
+        {
+          "id": "list/tokens__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '21px 24px'\n- '21px 23px'\n         ^\n"
+        },
+        {
+          "id": "list/tokens__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '21px 24px'\n- '21px 23px'\n         ^\n"
+        },
+        {
+          "id": "list/theme-dark__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/theme-dark__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/theme-dark__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">Edit</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       },\n+       {\n+         html: '<button type=\"button\">More</button>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.09 (foreground color: #f9f9f9, background color: #efefef, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/theme-compact__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '8px 16px'\n- '8px 24px'\n       ^\n"
+        },
+        {
+          "id": "list/theme-compact__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '8px 16px'\n- '8px 24px'\n       ^\n"
+        },
+        {
+          "id": "list/theme-compact__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '8px 16px'\n- '8px 24px'\n       ^\n"
+        },
+        {
+          "id": "list/theme-dark-compact__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '8px 16px'\n- '8px 24px'\n       ^\n"
+        },
+        {
+          "id": "list/theme-dark-compact__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '8px 16px'\n- '8px 24px'\n       ^\n"
+        },
+        {
+          "id": "list/theme-dark-compact__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '8px 16px'\n- '8px 24px'\n       ^\n"
+        },
+        {
+          "id": "list/native-focus__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected \"actual\" to be strictly unequal to:\n\n'none'"
+        },
+        {
+          "id": "list/native-focus__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected \"actual\" to be strictly unequal to:\n\n'none'"
+        },
+        {
+          "id": "list/native-focus__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "Expected \"actual\" to be strictly unequal to:\n\n'none'"
+        }
+      ]
+    },
+    "fullscreenContrast": {
+      "expected": 3,
+      "verdicts": {
+        "FAIL": 3
+      },
+      "failures": [
+        {
+          "id": "list/loading-fullscreen__light__mobile",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<div class=\"apollo-spin-description\">Updating queue</div>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.37 (foreground color: #ffffff, background color: #a8a8a8, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/loading-fullscreen__light__tablet",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<div class=\"apollo-spin-description\">Updating queue</div>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.37 (foreground color: #ffffff, background color: #a8a8a8, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        },
+        {
+          "id": "list/loading-fullscreen__light__desktop",
+          "verdict": "FAIL",
+          "reason": "render-error",
+          "message": "actual List screenshot content must pass axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         html: '<div class=\"apollo-spin-description\">Updating queue</div>',\n+         summary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.37 (foreground color: #ffffff, background color: #a8a8a8, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+        }
+      ]
+    },
+    "fullscreenFlow": {
+      "command": "pnpm exec vitest run --project unit packages/ui/src/spin/__tests__/fullscreen-flow.test.ts --maxWorkers=1 --no-file-parallelism",
+      "before": {
+        "filesFailed": 1,
+        "testsFailed": 3,
+        "log": "/tmp/apollo-spin-fullscreen-flow-baseline-all.log"
+      },
+      "after": {
+        "testsPassed": 3,
+        "log": "/tmp/apollo-list-final-shared-tests.log"
+      },
+      "defects": [
+        "Fullscreen root took native content out of document flow",
+        "mask semantic classes/styles targeted the content host",
+        "semantic factory props were a nonreactive setup snapshot"
+      ]
+    }
+  },
+  "browserEvidence": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "theme padding inherits into data container",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "small component token",
+        "actual": "7px 11px",
+        "expected": "7px 11px",
+        "passed": true
+      },
+      {
+        "name": "large component token",
+        "actual": "25px 27px",
+        "expected": "25px 27px",
+        "passed": true
+      },
+      {
+        "name": "header component token",
+        "actual": "rgb(221, 238, 255)",
+        "expected": "rgb(221, 238, 255)",
+        "passed": true
+      },
+      {
+        "name": "footer component token",
+        "actual": "rgb(238, 221, 255)",
+        "expected": "rgb(238, 221, 255)",
+        "passed": true
+      },
+      {
+        "name": "empty component token",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "meta component token",
+        "actual": "17px",
+        "expected": "17px",
+        "passed": true
+      },
+      {
+        "name": "avatar component token",
+        "actual": "19px",
+        "expected": "19px",
+        "passed": true
+      },
+      {
+        "name": "title component token",
+        "actual": "13px",
+        "expected": "13px",
+        "passed": true
+      },
+      {
+        "name": "description component token",
+        "actual": "18px",
+        "expected": "18px",
+        "passed": true
+      },
+      {
+        "name": "native variable precedence and inheritance",
+        "actual": "33px 35px",
+        "expected": "33px 35px",
+        "passed": true
+      },
+      {
+        "name": "Provider RTL reaches actual direction",
+        "actual": "rtl",
+        "expected": "rtl",
+        "passed": true
+      },
+      {
+        "name": "bordered rows honor the full component token",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "bordered rows honor native variable precedence",
+        "actual": "33px 35px",
+        "expected": "33px 35px",
+        "passed": true
+      },
+      {
+        "name": "bordered fallback keeps its default spacing",
+        "actual": "12px 24px",
+        "expected": "12px 24px",
+        "passed": true
+      },
+      {
+        "name": "bordered theme can be restored",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "raw true does not create a header",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "raw true does not create a heading",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "numeric description survives shared normalization",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "numeric empty text survives fallback selection",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "RTL no-flex actions float to inline end",
+        "actual": "inline-end",
+        "expected": "inline-end",
+        "passed": true
+      },
+      {
+        "name": "nested size is owned by nearest List",
+        "actual": "16px 24px",
+        "expected": "16px 24px",
+        "passed": true
+      },
+      {
+        "name": "nested vertical layout does not leak",
+        "actual": "0px",
+        "expected": "0px",
+        "passed": true
+      },
+      {
+        "name": "nested title size does not leak",
+        "actual": "14px",
+        "expected": "14px",
+        "passed": true
+      },
+      {
+        "name": "nested split false does not inherit parent border",
+        "actual": "0px",
+        "expected": "0px",
+        "passed": true
+      },
+      {
+        "name": "loading region has room for its indicator",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "numeric loading description is visible",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "top-only pagination is not content after rows",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "native keyboard target",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native focus indicator is retained",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native keyboard action invokes the current handler",
+        "actual": "1",
+        "expected": "1",
+        "passed": true
+      },
+      {
+        "name": "native List passes real browser axe",
+        "actual": "[]",
+        "expected": "[]",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 375",
+        "actual": "100%",
+        "expected": "100%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 900",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 1300",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "sparse grid at 1700",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "root extra stacks below content on mobile",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "content width component token",
+        "actual": "min(100%, 180px)",
+        "expected": "min(100%, 180px)",
+        "passed": true
+      },
+      {
+        "name": "narrow action margin targets actual DOM",
+        "actual": "12px",
+        "expected": "12px",
+        "passed": true
+      },
+      {
+        "name": "root extra sits beside content on desktop",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "responsive configuration can be disabled",
+        "actual": "50%",
+        "expected": "50%",
+        "passed": true
+      },
+      {
+        "name": "responsive configuration resumes current breakpoint",
+        "actual": "33.3333%",
+        "expected": "33.3333%",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-layout",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-extra",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-layout",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-layout",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "native editor identity after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor focus after #toggle-extra",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native editor value after #toggle-extra",
+        "actual": "Native draft",
+        "expected": "Native draft",
+        "passed": true
+      },
+      {
+        "name": "root extra is rendered",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "horizontal extra semantics are rendered",
+        "actual": "rgb(12, 34, 56)",
+        "expected": "rgb(12, 34, 56)",
+        "passed": true
+      },
+      {
+        "name": "theme removal restores static defaults",
+        "actual": "12px 0px",
+        "expected": "12px 0px",
+        "passed": true
+      },
+      {
+        "name": "theme restoration updates current content",
+        "actual": "21px 23px",
+        "expected": "21px 23px",
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask accessibility",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0.6)",
+        "expected": "rgba(0, 0, 0, 0.6)",
+        "passed": true
+      },
+      {
+        "name": "full overlay covers body hit testing",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "full overlay prevents clicking body controls",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask accessibility",
+        "actual": "true",
+        "expected": "true",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0)",
+        "expected": "rgba(0, 0, 0, 0)",
+        "passed": true
+      },
+      {
+        "name": "idle mask is inert",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask accessibility",
+        "actual": null,
+        "expected": null,
+        "passed": true
+      },
+      {
+        "name": "fullscreen true mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0.6)",
+        "expected": "rgba(0, 0, 0, 0.6)",
+        "passed": true
+      },
+      {
+        "name": "full overlay covers body hit testing",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "full overlay prevents clicking body controls",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "fullscreen false retains editor value",
+        "actual": "Native fullscreen draft",
+        "expected": "Native fullscreen draft",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask accessibility",
+        "actual": "true",
+        "expected": "true",
+        "passed": true
+      },
+      {
+        "name": "fullscreen false mask styles use current state",
+        "actual": "rgba(0, 0, 0, 0)",
+        "expected": "rgba(0, 0, 0, 0)",
+        "passed": true
+      },
+      {
+        "name": "idle mask is inert",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode false overlay presence",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "idle mode true retains editor identity",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode true retains editor focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode true retains body flow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "idle mode true overlay presence",
+        "actual": 1,
+        "expected": 1,
+        "passed": true
+      },
+      {
+        "name": "no Vue or browser errors",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      }
+    ]
+  },
+  "nativeControlEvidence": {
+    "browser": "150.0.7871.125",
+    "checks": [
+      {
+        "name": "light button retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(239, 239, 239)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(239, 239, 239)"
+        }
+      },
+      {
+        "name": "light input retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "light select retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "light textarea retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "light disabled retains browser color pairing",
+        "actual": {
+          "color": "rgba(16, 16, 16, 0.3)",
+          "background": "rgba(239, 239, 239, 0.3)"
+        },
+        "expected": {
+          "color": "rgba(16, 16, 16, 0.3)",
+          "background": "rgba(239, 239, 239, 0.3)"
+        }
+      },
+      {
+        "name": "light explicit consumer color",
+        "actual": "rgb(10, 20, 30)",
+        "expected": "rgb(10, 20, 30)"
+      },
+      {
+        "name": "light Apollo Button keeps themed color",
+        "actual": "rgba(0, 0, 0, 0.88)",
+        "expected": "rgba(0, 0, 0, 0.88)"
+      },
+      {
+        "name": "light Apollo Input keeps themed color",
+        "actual": "rgba(0, 0, 0, 0.88)",
+        "expected": "rgba(0, 0, 0, 0.88)"
+      },
+      {
+        "name": "dark button retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(239, 239, 239)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(239, 239, 239)"
+        }
+      },
+      {
+        "name": "dark input retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "dark select retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "dark textarea retains browser color pairing",
+        "actual": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        },
+        "expected": {
+          "color": "rgb(0, 0, 0)",
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "dark disabled retains browser color pairing",
+        "actual": {
+          "color": "rgba(16, 16, 16, 0.3)",
+          "background": "rgba(239, 239, 239, 0.3)"
+        },
+        "expected": {
+          "color": "rgba(16, 16, 16, 0.3)",
+          "background": "rgba(239, 239, 239, 0.3)"
+        }
+      },
+      {
+        "name": "dark explicit consumer color",
+        "actual": "rgb(10, 20, 30)",
+        "expected": "rgb(10, 20, 30)"
+      },
+      {
+        "name": "dark Apollo Button keeps themed color",
+        "actual": "rgba(255, 255, 255, 0.85)",
+        "expected": "rgba(255, 255, 255, 0.85)"
+      },
+      {
+        "name": "dark Apollo Input keeps themed color",
+        "actual": "rgba(255, 255, 255, 0.85)",
+        "expected": "rgba(255, 255, 255, 0.85)"
+      },
+      {
+        "name": "component model and multiple instances still update",
+        "actual": "Current value",
+        "expected": "Current value"
+      },
+      {
+        "name": "native and component controls pass browser axe",
+        "actual": [],
+        "expected": []
+      },
+      {
+        "name": "no Vue/browser errors",
+        "actual": [],
+        "expected": []
+      }
+    ]
+  },
+  "visualCandidates": {
+    "expected": 81,
+    "list": 57,
+    "image": 24,
+    "failed": 0,
+    "results": [
+      {
+        "id": "list/basic__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/basic__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/basic__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/meta__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/meta__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/meta__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/actions__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/actions__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/actions__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/bordered__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/bordered__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/bordered__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/vertical__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/vertical__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/vertical__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/grid__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 6,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/grid__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 6,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/grid__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 6,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/pagination__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 2,
+          "pagers": 2,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/pagination__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 2,
+          "pagers": 2,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/pagination__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 2,
+          "pagers": 2,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/loading__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": true,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/loading__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": true,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/loading__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": true,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/loading-fullscreen__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": true,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/loading-fullscreen__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": true,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/loading-fullscreen__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": true,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/empty__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 0,
+          "pagers": 0,
+          "loading": false,
+          "empty": 1,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": null,
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/empty__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 0,
+          "pagers": 0,
+          "loading": false,
+          "empty": 1,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": null,
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/empty__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 0,
+          "pagers": 0,
+          "loading": false,
+          "empty": 1,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": null,
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/size__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/size__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/size__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "16px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/rtl__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "rtl",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/rtl__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "rtl",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/rtl__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "rtl",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/extra__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/extra__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/extra__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/nested__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 4,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "8px 16px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/nested__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 4,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "8px 16px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/nested__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 4,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "8px 16px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/tokens__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "21px 23px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/tokens__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "21px 23px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/tokens__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 2,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "21px 23px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/theme-dark__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(255, 255, 255, 0.85)",
+          "background": "rgb(20, 20, 20)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/theme-dark__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(255, 255, 255, 0.85)",
+          "background": "rgb(20, 20, 20)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/theme-dark__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(255, 255, 255, 0.85)",
+          "background": "rgb(20, 20, 20)",
+          "padding": "12px 24px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/theme-compact__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "8px 16px",
+          "fontSize": "12px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/theme-compact__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "8px 16px",
+          "fontSize": "12px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/theme-compact__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "8px 16px",
+          "fontSize": "12px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/theme-dark-compact__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(255, 255, 255, 0.85)",
+          "background": "rgb(20, 20, 20)",
+          "padding": "8px 16px",
+          "fontSize": "12px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/theme-dark-compact__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(255, 255, 255, 0.85)",
+          "background": "rgb(20, 20, 20)",
+          "padding": "8px 16px",
+          "fontSize": "12px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/theme-dark-compact__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 3,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 1,
+          "foreground": "rgba(255, 255, 255, 0.85)",
+          "background": "rgb(20, 20, 20)",
+          "padding": "8px 16px",
+          "fontSize": "12px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "list/native-focus__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 1,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 343,
+          "scrollWidth": 343
+        }
+      },
+      {
+        "id": "list/native-focus__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 1,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 736,
+          "scrollWidth": 736
+        }
+      },
+      {
+        "id": "list/native-focus__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "lists": 1,
+          "rows": 1,
+          "pagers": 0,
+          "loading": false,
+          "empty": 0,
+          "rootExtra": 0,
+          "foreground": "rgba(0, 0, 0, 0.88)",
+          "background": "rgb(255, 255, 255)",
+          "padding": "12px 0px",
+          "fontSize": "14px",
+          "direction": "ltr",
+          "width": 1408,
+          "scrollWidth": 1408
+        }
+      },
+      {
+        "id": "image/basic__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/basic__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/basic__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/cover__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/cover__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/cover__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/preview__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 2,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/preview__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 2,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/preview__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 2,
+          "nativeActions": 0
+        }
+      },
+      {
+        "id": "image/rich__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 1
+        }
+      },
+      {
+        "id": "image/rich__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 1
+        }
+      },
+      {
+        "id": "image/rich__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 1,
+          "nativeActions": 1
+        }
+      },
+      {
+        "id": "image/progress__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 0,
+          "nativeActions": 0,
+          "progress": "65"
+        }
+      },
+      {
+        "id": "image/progress__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 0,
+          "nativeActions": 0,
+          "progress": "65"
+        }
+      },
+      {
+        "id": "image/progress__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 0,
+          "images": 0,
+          "nativeActions": 0,
+          "progress": "65"
+        }
+      },
+      {
+        "id": "image/group__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "2 / 2"
+        }
+      },
+      {
+        "id": "image/group__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "2 / 2"
+        }
+      },
+      {
+        "id": "image/group__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "2 / 2"
+        }
+      },
+      {
+        "id": "image/theme-dark__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "1 / 2"
+        }
+      },
+      {
+        "id": "image/theme-dark__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "1 / 2"
+        }
+      },
+      {
+        "id": "image/theme-dark__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "1 / 2"
+        }
+      },
+      {
+        "id": "image/theme-compact__light__mobile",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "1 / 2"
+        }
+      },
+      {
+        "id": "image/theme-compact__light__tablet",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "1 / 2"
+        }
+      },
+      {
+        "id": "image/theme-compact__light__desktop",
+        "verdict": "CANDIDATE",
+        "state": {
+          "dialogs": 1,
+          "images": 3,
+          "nativeActions": 0,
+          "counter": "1 / 2"
+        }
+      }
+    ],
+    "reviewedImages": [
+      {
+        "id": "list/basic__light__mobile",
+        "sha256": "80d0cfa5122fb1ade5a50ce1d492a248475a7a62930ce0086c0f07835b3c83cc"
+      },
+      {
+        "id": "list/basic__light__tablet",
+        "sha256": "99a2bb7d4ff61b3c88eac3c2b4ffa3259fe783d2b2d4232541dbf7332a1b24ea"
+      },
+      {
+        "id": "list/basic__light__desktop",
+        "sha256": "6338b2f39bc8e9eed34973c5836d866cc90d7fecef481c46256b9369b47ec1e0"
+      },
+      {
+        "id": "list/meta__light__mobile",
+        "sha256": "6da0ff12289b1ea2e94a06aa64f1aa19074f0ac32597fe4e6f61908cafaded73"
+      },
+      {
+        "id": "list/meta__light__tablet",
+        "sha256": "d67daf930bb0afe85802cebd8e04d41329ddbfc575345b621a9b6bdb804e33c1"
+      },
+      {
+        "id": "list/meta__light__desktop",
+        "sha256": "36537816c868de41a36d2e376117d224db4cb99e78fb4f025da472eebee8d89a"
+      },
+      {
+        "id": "list/actions__light__mobile",
+        "sha256": "f5fc9dda3a54fe35849639f8174b4f3d12f97f34c76c64a65605ac010962803b"
+      },
+      {
+        "id": "list/actions__light__tablet",
+        "sha256": "aef7a589dad7b8bb4de3109ff750482bcd1bed1877c77bc6dd8ef283d865736d"
+      },
+      {
+        "id": "list/actions__light__desktop",
+        "sha256": "a3db503fc1d8fc1e30f61b2dec10293af0c60392f9a7d82bf3d6dbb61cd51821"
+      },
+      {
+        "id": "list/bordered__light__mobile",
+        "sha256": "fb1a5639cead268ad8ba2638cb560cf75ad27b3325243e8340acfe87d748ced5"
+      },
+      {
+        "id": "list/bordered__light__tablet",
+        "sha256": "cee4a06166a8cd88992dc10b0eca44b4a2390cdf1e1abcb002000c7d49bb978b"
+      },
+      {
+        "id": "list/bordered__light__desktop",
+        "sha256": "4e2b6463ec604a5278b85e3e7efb5122e4e1d058aaf5f683bd8c6e821169d875"
+      },
+      {
+        "id": "list/vertical__light__mobile",
+        "sha256": "7fcb50d198d44cec8d59817f9037381b67bb5cbde2372b21c93b2fb5ed107eaf"
+      },
+      {
+        "id": "list/vertical__light__tablet",
+        "sha256": "419fde67bcf03e00f0f1f123f08cb5d983a185b790bd740dda0349f8ff47aa6f"
+      },
+      {
+        "id": "list/vertical__light__desktop",
+        "sha256": "9c051f329f31431fee31ad1839d613c579963dc1533bf9e0bb203f9c95b49a71"
+      },
+      {
+        "id": "list/grid__light__mobile",
+        "sha256": "3e262aef0a1b1b97957c364925407cca1878ec5aabe3def71ffd059286d20884"
+      },
+      {
+        "id": "list/grid__light__tablet",
+        "sha256": "159f8d58e99365d6f38d1f553b21b6374ff664a0c1b65cea4b8ab68628f460f5"
+      },
+      {
+        "id": "list/grid__light__desktop",
+        "sha256": "81f6a572a06711f51e0ce023aa4120d732866b6982bcd20033077c535badaece"
+      },
+      {
+        "id": "list/pagination__light__mobile",
+        "sha256": "2cf4af3c706546c61fceff56e19c37a71bdd9afd74c0e58e31b5d27cc5904bad"
+      },
+      {
+        "id": "list/pagination__light__tablet",
+        "sha256": "1402d3edb7e0bae3bd829fc601a7afa031a12cd8618d917c998af4e4551c4cf2"
+      },
+      {
+        "id": "list/pagination__light__desktop",
+        "sha256": "52a5c8513942a19bee81e10c31d2220009000322022373e3e321c0ca8d83e3ef"
+      },
+      {
+        "id": "list/loading__light__mobile",
+        "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4"
+      },
+      {
+        "id": "list/loading__light__tablet",
+        "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba"
+      },
+      {
+        "id": "list/loading__light__desktop",
+        "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb"
+      },
+      {
+        "id": "list/loading-fullscreen__light__mobile",
+        "sha256": "1828971d7f5eedfc9fcb4f34dec8120c12893f15816e6eefdd0607812f46ef58"
+      },
+      {
+        "id": "list/loading-fullscreen__light__tablet",
+        "sha256": "bcd3c9befdc8743d1ad706f87f060140c85f66d75356bc42cdc42f3cf7ddfe8a"
+      },
+      {
+        "id": "list/loading-fullscreen__light__desktop",
+        "sha256": "c020d7f76d2a1753f6f7bb33e1dbda067f58c85bbb1ccdf1876c35d86781077e"
+      },
+      {
+        "id": "list/empty__light__mobile",
+        "sha256": "2db09c6334a0d0c7fb4a31b83e17229a2c06f34f96bb69799ce37cf1210add42"
+      },
+      {
+        "id": "list/empty__light__tablet",
+        "sha256": "827d50457c99c06814ca0fefc194d3b8b9c8db7a5fd69219ce17854b6478e400"
+      },
+      {
+        "id": "list/empty__light__desktop",
+        "sha256": "b2e268aa48f68f33375c13de4fbdf45e8c0670406ef4b31ed482e6b122e9b642"
+      },
+      {
+        "id": "list/size__light__mobile",
+        "sha256": "9b1810a96cc4960ae5147da7cfb5e4fc9e48faae4cd02d13def424853aee3202"
+      },
+      {
+        "id": "list/size__light__tablet",
+        "sha256": "1c496ccaf8a0a039437fbfe3c2436c52ede9ea9e1f5a736497c61235f1883c37"
+      },
+      {
+        "id": "list/size__light__desktop",
+        "sha256": "b748e9c1654e3f27540656f01c9f2d3763ac3cfe40c314aef0ab4d677321bae2"
+      },
+      {
+        "id": "list/rtl__light__mobile",
+        "sha256": "a4e9f4040d35a42d0204e477c6388dd2755af5acdef3b4e69b08577f7ec14b3a"
+      },
+      {
+        "id": "list/rtl__light__tablet",
+        "sha256": "82e62072269ce10adbd82f8546556758db54a04a4be12d56a1d6a246059c3f90"
+      },
+      {
+        "id": "list/rtl__light__desktop",
+        "sha256": "1ca29895c592992834f97a1f869c8ada1faf02b86031f04e5dcfd48ecf1c9c4f"
+      },
+      {
+        "id": "list/extra__light__mobile",
+        "sha256": "a6dfff47869b22b3f8706da233ddec120e92820575cb58d6941dc9050bba5290"
+      },
+      {
+        "id": "list/extra__light__tablet",
+        "sha256": "23e4aebbc4c09a669f369aa8923dcf93ffa5b1b416b9b8bd57f53ad7999ee4b0"
+      },
+      {
+        "id": "list/extra__light__desktop",
+        "sha256": "44c8e6da36a98865a6bc2612c68150392680790a3b700e1119bcfd1b7dc0046e"
+      },
+      {
+        "id": "list/nested__light__mobile",
+        "sha256": "7997191ac120ab2f9e56ce918836231742006681bcc07ecbd3b54e4c1e802ffc"
+      },
+      {
+        "id": "list/nested__light__tablet",
+        "sha256": "be707cf0b15fa6933e2a9ef94fd07242800cae8fdf59e1557c716949a99d888f"
+      },
+      {
+        "id": "list/nested__light__desktop",
+        "sha256": "a659629ec41c8fd53e353056cf312b3af517eaed9fac1b3b5f5228c1b762e8c0"
+      },
+      {
+        "id": "list/tokens__light__mobile",
+        "sha256": "504549b02516c83ed8cbd6289ac5b1fae1600bed5ce42b96b5f9d77600452d15"
+      },
+      {
+        "id": "list/tokens__light__tablet",
+        "sha256": "717e84a5e6f42905874f8c2346b3e40ffc05313bac424fbd716797e20dda97c5"
+      },
+      {
+        "id": "list/tokens__light__desktop",
+        "sha256": "831c4e12eb12504475cdd029a6b5b7f91d73ab9186379c1b36933427d0a0fa0b"
+      },
+      {
+        "id": "list/theme-dark__light__mobile",
+        "sha256": "8d2d4a430703f8f2d7383e4564b2331e6ccd08d8ce6e94a9923d37813e31cd97"
+      },
+      {
+        "id": "list/theme-dark__light__tablet",
+        "sha256": "481e3dedf77a927590dd69128fcb3d5f37bb5418ac9262c5bb36689bf4f2efc3"
+      },
+      {
+        "id": "list/theme-dark__light__desktop",
+        "sha256": "36c8cbf522416a1927b93544eb3748120c39d90adfea819b93ba751cdd1ae5c7"
+      },
+      {
+        "id": "list/theme-compact__light__mobile",
+        "sha256": "3abef60675d7e1a6646407832ddc60bed42b0d8c7ea69ed5a36849d2a55a9c96"
+      },
+      {
+        "id": "list/theme-compact__light__tablet",
+        "sha256": "15de68fe275b24fe3a79a92610d47a863b97b9b7b3f442001d527e2934ccb36e"
+      },
+      {
+        "id": "list/theme-compact__light__desktop",
+        "sha256": "6522564ec07835ac895fd38ec36a6e12e8fe99016101e094381f86ae74db1cf4"
+      },
+      {
+        "id": "list/theme-dark-compact__light__mobile",
+        "sha256": "9077ec132be6f4b943807d4d93349cd2d559169b2898b3009876d232f46502e1"
+      },
+      {
+        "id": "list/theme-dark-compact__light__tablet",
+        "sha256": "ef252b6d0ac390075b16d9ed0a4720319508d4fcff1d5726ce7aa15f9db37914"
+      },
+      {
+        "id": "list/theme-dark-compact__light__desktop",
+        "sha256": "a4da9ad4ed119a2a64d0678f6cd92413225e17c210e928f87b8faf27c6339e11"
+      },
+      {
+        "id": "list/native-focus__light__mobile",
+        "sha256": "24a086e82c1ad76bc4ed8cb2852168ed8972696431f859d04bd2069b2f2ef7c9"
+      },
+      {
+        "id": "list/native-focus__light__tablet",
+        "sha256": "442077525891d8110f200fb4b38bfe6ef1ccac416b103d2c6137923e4cea5360"
+      },
+      {
+        "id": "list/native-focus__light__desktop",
+        "sha256": "1d078c40bc6fd750da650d6240f8dd6e4dce7f813368869fce71881897ceb518"
+      },
+      {
+        "id": "image/rich__light__mobile",
+        "sha256": "d14e12d1d7333b6a8006a698c03ee1a2a32e7010ed809eae0e29c51f1be196cf"
+      },
+      {
+        "id": "image/rich__light__tablet",
+        "sha256": "e5789a4dc3e2ca49cb9470caf00b4a84ee8a87278c75f73845f5b24c86c60d3c"
+      },
+      {
+        "id": "image/rich__light__desktop",
+        "sha256": "00d1d477c6010bccf3acc513045e658d05b513c7ba227e3f86990f2f858c6965"
+      },
+      {
+        "id": "image/progress__light__mobile",
+        "sha256": "c24289181a6a230dd0bc2663a3d7e3c5b9517c7f93a2c1443dc33f00f8c4ec8e"
+      },
+      {
+        "id": "image/progress__light__tablet",
+        "sha256": "c5a3cd928f2a3c7b03f1d55c07477bd0f97ce16a1226dd42b9457378f33ddca3"
+      },
+      {
+        "id": "image/progress__light__desktop",
+        "sha256": "76b7b638726255a2ebeb03a5dc248fdea63a46c6a32f22fd2263733ab6d4a1aa"
+      }
+    ],
+    "review": "All 57 List images reviewed at mobile/tablet/desktop: native layout and focus, full-screen flow, real loading/empty/pagination, nested isolation, explicit tokens and scoped dark/compact/combined themes. The prior 3 fullscreen layout candidates were rejected. Image rich/progress before-and-after reviewed at all viewports: only native control text color changes; geometry and content preserved.",
+    "approval": "pending clean implementation commit recapture; dirty candidates are review evidence only"
+  },
+  "imageSharedResetComparison": {
+    "results": [
+      {
+        "id": "image/basic__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 132000,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/basic__light__mobile.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/basic__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 270336,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/basic__light__tablet.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/basic__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 506880,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/basic__light__desktop.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/cover__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 132000,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/cover__light__mobile.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/cover__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 270336,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/cover__light__tablet.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/cover__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 506880,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/cover__light__desktop.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/preview__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 667
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 667
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 250125,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/preview__light__mobile.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/preview__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 786432,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/preview__light__tablet.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/preview__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 1296000,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/preview__light__desktop.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/rich__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 249,
+        "totalPixels": 132000,
+        "diffRatio": 0.0018863636363636363,
+        "isolatedRatio": 0.5742971887550201,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/rich__light__mobile.png",
+        "verdict": "FAIL",
+        "reason": "block-diff",
+        "message": "差异率 0.1886%（阈值 0.1%），散点占比 57.4%（阈值 90%）。必须人工确认并分类。"
+      },
+      {
+        "id": "image/rich__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 249,
+        "totalPixels": 270336,
+        "diffRatio": 0.0009210759943181819,
+        "isolatedRatio": 0.5742971887550201,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/rich__light__tablet.png",
+        "verdict": "FAIL",
+        "reason": "block-diff",
+        "message": "差异率 0.0921%（阈值 0.1%），散点占比 57.4%（阈值 90%）。必须人工确认并分类。"
+      },
+      {
+        "id": "image/rich__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 249,
+        "totalPixels": 506880,
+        "diffRatio": 0.0004912405303030303,
+        "isolatedRatio": 0.5742971887550201,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/rich__light__desktop.png",
+        "verdict": "FAIL",
+        "reason": "block-diff",
+        "message": "差异率 0.0491%（阈值 0.1%），散点占比 57.4%（阈值 90%）。必须人工确认并分类。"
+      },
+      {
+        "id": "image/progress__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 248,
+        "totalPixels": 132000,
+        "diffRatio": 0.0018787878787878789,
+        "isolatedRatio": 0.5685483870967742,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/progress__light__mobile.png",
+        "verdict": "FAIL",
+        "reason": "block-diff",
+        "message": "差异率 0.1879%（阈值 0.1%），散点占比 56.9%（阈值 90%）。必须人工确认并分类。"
+      },
+      {
+        "id": "image/progress__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 248,
+        "totalPixels": 270336,
+        "diffRatio": 0.000917376893939394,
+        "isolatedRatio": 0.5685483870967742,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/progress__light__tablet.png",
+        "verdict": "FAIL",
+        "reason": "block-diff",
+        "message": "差异率 0.0917%（阈值 0.1%），散点占比 56.9%（阈值 90%）。必须人工确认并分类。"
+      },
+      {
+        "id": "image/progress__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 352
+        },
+        "sizeMismatch": false,
+        "diffPixels": 248,
+        "totalPixels": 506880,
+        "diffRatio": 0.0004892676767676768,
+        "isolatedRatio": 0.5685483870967742,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/progress__light__desktop.png",
+        "verdict": "FAIL",
+        "reason": "block-diff",
+        "message": "差异率 0.0489%（阈值 0.1%），散点占比 56.9%（阈值 90%）。必须人工确认并分类。"
+      },
+      {
+        "id": "image/group__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 667
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 667
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 250125,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/group__light__mobile.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/group__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 786432,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/group__light__tablet.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/group__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 1296000,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/group__light__desktop.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/theme-dark__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 667
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 667
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 250125,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/theme-dark__light__mobile.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/theme-dark__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 786432,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/theme-dark__light__tablet.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/theme-dark__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 1296000,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/theme-dark__light__desktop.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/theme-compact__light__mobile",
+        "reactSize": {
+          "width": 375,
+          "height": 667
+        },
+        "vueSize": {
+          "width": 375,
+          "height": 667
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 250125,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/theme-compact__light__mobile.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/theme-compact__light__tablet",
+        "reactSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "vueSize": {
+          "width": 768,
+          "height": 1024
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 786432,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/theme-compact__light__tablet.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      },
+      {
+        "id": "image/theme-compact__light__desktop",
+        "reactSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "vueSize": {
+          "width": 1440,
+          "height": 900
+        },
+        "sizeMismatch": false,
+        "diffPixels": 0,
+        "totalPixels": 1296000,
+        "diffRatio": 0,
+        "isolatedRatio": 1,
+        "diffPath": "/tmp/apollo-list-image-reset-diffs/image/theme-compact__light__desktop.png",
+        "verdict": "PASS",
+        "reason": "exact",
+        "message": "逐像素完全一致。"
+      }
+    ],
+    "classification": "INTENDED",
+    "reason": "6 images change only native input/button text color after removing the unpaired shared color:inherit reset; all 18 other Image cases remain exact. Existing thresholds and historical references are retained."
+  },
+  "checks": [
+    {
+      "command": "pnpm run lint:types",
+      "result": "pass",
+      "log": "/tmp/apollo-spin-flow-types.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/list packages/ui/src/spin packages/ui/src/config-provider packages/utils/src/__tests__/is.test.ts --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 30,
+      "tests": 512,
+      "log": "/tmp/apollo-list-final-shared-tests.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/button packages/ui/src/input packages/ui/src/table packages/ui/src/qrcode --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 26,
+      "tests": 715,
+      "log": "/tmp/apollo-list-shared-controls-tests.log",
+      "scope": "Button/Input/Table; the qrcode path argument matches no files, so QRCode is verified separately using its actual qr-code directory"
+    },
+    {
+      "command": "pnpm exec vitest run --project types packages/ui/src/list packages/ui/src/spin packages/ui/src/config-provider packages/ui/src/pagination --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 10,
+      "tests": 152,
+      "typeErrors": 0,
+      "log": "/tmp/apollo-list-final-types.log"
+    },
+    {
+      "command": "node tests/consumer/list-types.mjs",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-types.log"
+    },
+    {
+      "command": "pnpm run build:ui",
+      "result": "pass",
+      "log": "/tmp/apollo-spin-flow-build.log"
+    },
+    {
+      "command": "node tests/build/run.mjs --no-build --package ui --strict",
+      "result": "pass",
+      "checks": 11,
+      "fail": 0,
+      "pending": 0,
+      "log": "/tmp/apollo-list-final-l7.log"
+    },
+    {
+      "command": "pnpm verify:consumer",
+      "result": "pass",
+      "scope": "13 tarballs; independent Vite and Webpack; real CSS exports and runtime dependency scan",
+      "log": "/tmp/apollo-list-final-consumer.log"
+    },
+    {
+      "command": "node tests/browser/list-contract-audit.mjs",
+      "result": "pass",
+      "checks": 97,
+      "log": "/tmp/apollo-list-fullscreen-browser-fixed.log"
+    },
+    {
+      "command": "node tests/browser/native-control-colors.mjs",
+      "result": "pass",
+      "checks": 19,
+      "log": "/tmp/apollo-native-control-colors.json"
+    },
+    {
+      "command": "node tests/browser/picker-input-attrs.mjs",
+      "result": "pass",
+      "scope": "date/range/time/time-range native attrs, keyboard, disabled and popup autofocus",
+      "log": "/tmp/apollo-list-shared-picker.log"
+    },
+    {
+      "command": "node tests/browser/overlay-attrs.mjs",
+      "result": "pass",
+      "scope": "5 overlay consumers; native styles and stable editor",
+      "log": "/tmp/apollo-list-shared-overlay.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/qr-code --maxWorkers=1 --no-file-parallelism",
+      "result": "pass",
+      "files": 7,
+      "tests": 59,
+      "log": "/tmp/apollo-list-shared-qrcode-tests.log"
+    },
+    {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.list-contracts.json",
+      "result": "pass",
+      "scope": "ListContractAudit.vue and NativeControlColors.vue",
+      "log": "/tmp/apollo-list-final-sfc.log"
+    },
+    {
+      "command": "node tests/browser/list-slots.mjs",
+      "result": "pass",
+      "scope": "conditional slots and keyed DOM; actual loadMore, pagination, likes, live-theme and responsive examples; Item/Meta conditional content",
+      "log": "/tmp/apollo-list-final-slots.log"
+    },
+    {
+      "command": "node tests/browser/image-interactions.mjs",
+      "result": "pass",
+      "scenarios": 26,
+      "issues": [],
+      "log": "/tmp/apollo-list-final-image-interactions.log"
+    },
+    {
+      "command": "node tests/browser/image-theme-hydration.mjs",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-image-hydration.log"
+    },
+    {
+      "command": "node --test tests/tooling/list-visual.test.mjs tests/tooling/image-visual.test.mjs",
+      "result": "pass",
+      "tests": 4,
+      "log": "/tmp/apollo-list-final-tooling.log"
+    },
+    {
+      "command": "pnpm run registry:check",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-registry.log"
+    },
+    {
+      "command": "pnpm run audit:content-slots:check",
+      "result": "pass",
+      "rows": 521,
+      "review": 202,
+      "implementedVerified": 20,
+      "log": "/tmp/apollo-list-final-content-inventory.log"
+    },
+    {
+      "command": "pnpm run lint:format",
+      "result": "pass",
+      "errors": 0,
+      "warnings": 37,
+      "infos": 5,
+      "log": "/tmp/apollo-list-final-root-format.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:build",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-docs.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run content:check",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-docs.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run typecheck",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-docs.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run test",
+      "result": "pass",
+      "files": 14,
+      "tests": 157,
+      "log": "/tmp/apollo-list-final-docs.log"
+    },
+    {
+      "command": "pnpm --filter @apollo-design/docs run build",
+      "result": "pass",
+      "log": "/tmp/apollo-list-final-docs.log"
+    }
+  ],
+  "remaining": [
+    "Clean source recapture and approved 57 List / 6 intentionally changed Image baselines, followed by pixel comparison",
+    "Complete standalone Spin audit is the next unit; conditional indicator/description content and all 4 tokens require their own complete inventory",
+    "Whole-library final gates remain required on one final commit after all remediation; this record is limited to the List unit and named shared regressions",
+    "The List checklist requires a final reviewed acceptance record after clean-source pixel verification; standalone Spin and whole-library gates remain open"
+  ],
+  "sharedImageBrowserEvidence": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "target": "image",
+        "scenario": "rich",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "image",
+        "scenario": "rich-no-origin",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "image",
+        "scenario": "cover",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "image",
+        "scenario": "progress",
+        "failures": []
+      },
+      {
+        "target": "image",
+        "scenario": "frame",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "image",
+        "scenario": "shadow-open",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "image",
+        "scenario": "shadow-closed",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+      },
+      {
+        "target": "image",
+        "scenario": "shadow-source",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+      },
+      {
+        "target": "image",
+        "scenario": "inline",
+        "failures": [],
+        "entry": "internal Preview inline (two layouts)",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "image",
+        "scenario": "motion",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "rich",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "rich-no-origin",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "cover",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "progress",
+        "failures": []
+      },
+      {
+        "target": "group",
+        "scenario": "frame",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "shadow-open",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "shadow-closed",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+      },
+      {
+        "target": "group",
+        "scenario": "shadow-source",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+      },
+      {
+        "target": "group",
+        "scenario": "inline",
+        "failures": [],
+        "entry": "internal Preview inline (two layouts)",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "motion",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "remove-trigger",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "remove-trigger-rich",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "remove-trigger-nested",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "group",
+        "scenario": "remove-trigger-teleport",
+        "failures": [],
+        "entry": "public Image/PreviewGroup through declared container types",
+        "accessibility": "full axe and real interaction"
+      },
+      {
+        "target": "public-demo",
+        "scenario": "rich-preview-and-cover",
+        "failures": []
+      },
+      {
+        "target": "public-demo",
+        "scenario": "group-opener-removal-and-reset",
+        "failures": []
+      }
+    ],
+    "issues": []
+  }
+}

@@ -137,4 +137,6 @@ All three components expose `{ nativeElement }` (nullable). List / Meta use `HTM
 Configure all 11 tokens through `ConfigProvider` `theme.components.List`, including updates, removal and restoration. Native root CSS variables can override them: `--apollo-list-item-padding`, `--apollo-list-content-width`, …
 (11 variables). Data containers inherit root values; native root styles take precedence over Provider configuration.
 
+An explicit `itemPadding` also controls both axes of bordered default rows; without an override, their standard theme indentation remains. `loading.fullscreen` covers the viewport while content, native input state and refs stay in document flow. Use `loading.classNames.mask` / `loading.styles.mask` for the actual overlay.
+
 Pagination content uses #paginationItemRender="{ page, type, element }", #paginationTotal="{ total, range }" and #paginationSizeChanger="info". Each pager receives its current scope, including top/bottom pagers and dynamic slots. Configuration holds data and business events; itemRender/showTotal/sizeChangerRender function entries are removed.

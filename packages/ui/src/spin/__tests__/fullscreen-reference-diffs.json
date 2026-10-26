@@ -1,0 +1,19 @@
+{
+  "fullscreen": ["$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]"],
+  "fullscreen:spinning-false": ["$/div[0]: 子节点数不同 0 vs 1"],
+  "fullscreen:children": [
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]"
+  ],
+  "fullscreen:description": [
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]"
+  ],
+  "semantic:classNames-mask": [
+    "$/div[0]: 类名不同 [apollo apollo-fullscreen apollo-spinning cn-mask] vs [apollo apollo-fullscreen apollo-spinning]",
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section cn-mask]"
+  ],
+  "semantic:styles-mask": [
+    "$/div[0]: style 不同 [background:green] vs []",
+    "$/div[0]/div[0]: 类名不同 [apollo-section] vs [apollo-mask apollo-section]",
+    "$/div[0]/div[0]: style 不同 [] vs [background:green]"
+  ]
+}

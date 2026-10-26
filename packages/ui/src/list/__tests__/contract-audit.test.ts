@@ -56,6 +56,47 @@ function paginated(initial: PaginationConfig | false) {
 }
 
 describe('List complete contract audit: configuration and content', () => {
+  it('keeps explicit padding and recomputes bordered defaults through current theme and layout', async () => {
+    const bordered = ref(false);
+    const custom = ref(true);
+    const wrapper = track(
+      mount(
+        defineComponent(
+          () => () =>
+            h(
+              ConfigProvider,
+              {
+                theme: { components: { List: custom.value ? { itemPadding: '21px 23px' } : {} } },
+              },
+              () =>
+                h(
+                  List,
+                  { bordered: bordered.value, dataSource: [1] },
+                  {
+                    item: () =>
+                      h(ListItem, {}, () => h('input', { 'aria-label': 'Padding draft' })),
+                  },
+                ),
+            ),
+        ),
+        { attachTo: document.body, global: { stubs: { teleport: false } } },
+      ),
+    );
+    const editor = input('[aria-label="Padding draft"]');
+    const padding = () => wrapper.get('.apollo-list').attributes('style');
+    expect(padding()).toContain('--apollo-list-item-padding: 21px 23px');
+    bordered.value = true;
+    await settle();
+    expect(padding()).toContain('--apollo-list-item-padding: 21px 23px');
+    custom.value = false;
+    await settle();
+    expect(padding()).toContain('--apollo-list-item-padding: 12px 24px');
+    bordered.value = false;
+    await settle();
+    expect(padding()).toContain('--apollo-list-item-padding: 12px 0');
+    expect(input('[aria-label="Padding draft"]')).toBe(editor);
+  });
+
   it('keeps keyed data actions and filters conditional empty entries without phantom separators', async () => {
     const reversed = ref(false);
     const host = defineComponent(() => () => {

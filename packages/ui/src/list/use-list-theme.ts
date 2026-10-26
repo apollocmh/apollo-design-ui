@@ -12,14 +12,17 @@ const length = (value: unknown, fallback: string | number): string | number =>
 const unit = (value: string | number): string => (typeof value === 'number' ? `${value}px` : value);
 
 /** Static styles consume variables from the current source Vue theme. */
-export function useListTheme(getPrefixCls: () => string) {
+export function useListTheme(getPrefixCls: () => string, isBordered: () => boolean | undefined) {
   const theme = useTheme();
   const token = computed<ComponentToken>(() => {
     const base = prepareComponentToken(theme.token.value);
     const custom = theme.config.value.components?.List ?? {};
+    const itemPadding = isBordered()
+      ? `${unit(theme.token.value.paddingContentVertical)} ${unit(theme.token.value.paddingLG)}`
+      : base.itemPadding;
     return {
       contentWidth: length(custom.contentWidth, base.contentWidth),
-      itemPadding: text(custom.itemPadding, base.itemPadding),
+      itemPadding: text(custom.itemPadding, itemPadding),
       itemPaddingSM: text(custom.itemPaddingSM, base.itemPaddingSM),
       itemPaddingLG: text(custom.itemPaddingLG, base.itemPaddingLG),
       headerBg: text(custom.headerBg, base.headerBg),

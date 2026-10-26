@@ -42,6 +42,10 @@ import '@apollo-design/ui/style.css';
 
 站点（本文档站）自己另有一套 `--site-*` 令牌用于官网视觉，**不复用、也不污染** `--apollo-*`。组件示例永远渲染在组件库自己的令牌作用域内。
 
+### 原生表单控件
+
+共享样式保留原生控件的浏览器前景、背景和禁用颜色。Apollo 组件使用各自的主题色；自行给原生控件设置颜色时，请同时配置背景。例如 `style="color: inherit; background: transparent"` 可让原生按钮使用父级颜色，避免暗色作用域中的浅色文字落在浏览器浅色背景上。
+
 ## en-US
 
 Apollo Design uses **static CSS + CSS variables** — there is no CSS-in-JS runtime. Styles ship in two layers:
@@ -59,3 +63,7 @@ import '@apollo-design/ui/style.css';
 ### Dark & compact mode
 
 Toggle the scope via an attribute on `<html>`: `<html data-apollo-theme="dark">`.
+
+### Native form controls
+
+Shared styles preserve the browser's foreground, background and disabled colors for native controls. Apollo components declare their own theme colors. When styling a native control, set its foreground and background together. For example, `style="color: inherit; background: transparent"` lets a native button follow its parent without placing light text on the browser's light background in a dark scope.

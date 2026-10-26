@@ -4,6 +4,8 @@
 
 2026-10-26 List 关联修正：Provider 的 direction、indicator 和语义样式读取当前配置，根原生 attrs 在 render 合并；数字 description=0 可显示。该共享回归不代表 Spin 所有公开入口完成本轮全局审计，范围见 [List 统一清单](../../../../docs/audit/2026-10-26-list-contract-audit.md)。
 
+后续视觉验收：全屏覆盖层改为固定定位的 section/mask，root 与正文保持原有文档流、输入与 ref；mask 的语义类/样式落到实际覆盖层，不再废弃。关闭的覆盖层隐藏且 inert，不渲染描述/指示器；样式工厂读取响应式当前上下文。普通/全屏文案对比度修正见同一清单，迁移见 [List契约迁移](../../../../docs/migrations/list-contracts.md)。下列旧全屏根遮罩与mask弃用描述保留历史含义，不作为当前契约。
+
 ## 1. 这个组件是什么
 
 页面 / 区块的加载中状态。antd 6.6.4 的同名组件作为**兼容性规格**重写为 Vue 3 + TS 实现。

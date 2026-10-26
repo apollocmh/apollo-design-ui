@@ -10726,7 +10726,7 @@
       "owner": "SpinProps",
       "prop": "description",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/spin/interface.ts:135",
+      "source": "packages/ui/src/spin/interface.ts:134",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -10745,6 +10745,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/spin/__tests__/a11y.test.ts",
+          "packages/ui/src/spin/__tests__/fullscreen-flow.test.ts",
           "packages/ui/src/spin/__tests__/index.test.ts",
           "packages/ui/src/spin/__tests__/semantic.test.ts"
         ]
@@ -10757,7 +10758,7 @@
       "owner": "SpinProps",
       "prop": "tip",
       "category": "deprecated",
-      "source": "packages/ui/src/spin/interface.ts:133",
+      "source": "packages/ui/src/spin/interface.ts:132",
       "slotRuntime": {
         "status": "not-run",
         "files": []

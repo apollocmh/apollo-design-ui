@@ -1,5 +1,5 @@
 {
   "extends": "../../../tsconfig.json",
-  "include": ["ListContractAudit.vue"],
+  "include": ["ListContractAudit.vue", "NativeControlColors.vue"],
   "exclude": []
 }

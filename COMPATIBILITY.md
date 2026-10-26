@@ -25,6 +25,8 @@ Vue 公共语义与 React 回调/DOM 冲突的直接修正规则见 [ADR 0007](d
 
 List 当前配置、稳定内容结构、嵌套样式与分页修正，以及共享 `RenderEmptyHandler` 类型收窄，集中见 [List 契约迁移](docs/migrations/list-contracts.md)。
 
+共享reset的原生控件颜色配对修正见 [颜色迁移](docs/migrations/native-control-colors.md)。Spin全屏模式保留正文文档流，root为内容外壳，mask为实际覆盖层；相关落点变更与验证也见List契约迁移。
+
 `tests/compat`、Oracle 与 `tests/visual/baselines/react` 保留来源版本以便复现；版本固定只约束这组参考实验。上游对照默认不决定新组件完成或发布验收。现有 DOM 回归测试仍执行，必要差异必须根据 Apollo 契约审查，不允许无依据放宽。
 
 ## 9. 历史差异登记

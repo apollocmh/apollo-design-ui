@@ -107,7 +107,7 @@ describe('Spin · Props', () => {
 });
 
 describe('Spin · 语义化 classNames / styles', () => {
-  it('对象式：六个槽位 + 两个已废弃的 tip / mask', () => {
+  it('object semantics include the fullscreen mask and the existing tip alias', () => {
     const classNames: SpinSemanticClassNames = {
       root: 'a',
       section: 'b',

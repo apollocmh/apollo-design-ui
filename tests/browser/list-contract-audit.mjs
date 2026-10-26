@@ -110,6 +110,30 @@ try {
     '33px 35px',
   );
   check('Provider RTL reaches actual direction', await css('#rtl', 'direction'), 'rtl');
+  await page.locator('#toggle-borders').click();
+  check(
+    'bordered rows honor the full component token',
+    await css('#tokens .apollo-list-item', 'padding'),
+    '21px 23px',
+  );
+  check(
+    'bordered rows honor native variable precedence',
+    await css('#native-token .apollo-list-item', 'padding'),
+    '33px 35px',
+  );
+  await page.locator('#toggle-theme').click();
+  check(
+    'bordered fallback keeps its default spacing',
+    await css('#tokens .apollo-list-item', 'padding'),
+    '12px 24px',
+  );
+  await page.locator('#toggle-theme').click();
+  check(
+    'bordered theme can be restored',
+    await css('#tokens .apollo-list-item', 'padding'),
+    '21px 23px',
+  );
+  await page.locator('#toggle-borders').click();
   check(
     'raw true does not create a header',
     await page.locator('#primitive-content .apollo-list-header').count(),
@@ -312,6 +336,107 @@ try {
     await css('#tokens .apollo-list-item', 'padding'),
     '21px 23px',
   );
+  const fullEditor = page.getByRole('textbox', { name: 'Fullscreen draft', exact: true });
+  await fullEditor.scrollIntoViewIfNeeded();
+  await fullEditor.fill('Native fullscreen draft');
+  await fullEditor.focus();
+  const fullEditorNode = await fullEditor.elementHandle();
+  const rootHeight = (await page.locator('#fullscreen-list').boundingBox()).height;
+  for (const flag of [true, false, true, false]) {
+    await page.locator('#toggle-fullscreen-busy').evaluate((node) => node.click());
+    await page.waitForFunction(
+      (flag) =>
+        document.querySelector('#fullscreen-list .spin-flow-host')?.getAttribute('aria-busy') ===
+        String(flag),
+      flag,
+    );
+    check(
+      `fullscreen ${flag} retains body flow`,
+      (await page.locator('#fullscreen-list').boundingBox()).height >= rootHeight,
+      true,
+    );
+    check(
+      `fullscreen ${flag} retains editor identity`,
+      await page.evaluate(
+        (node) => node === document.querySelector('[aria-label="Fullscreen draft"]'),
+        fullEditorNode,
+      ),
+      true,
+    );
+    check(
+      `fullscreen ${flag} retains editor focus`,
+      await fullEditor.evaluate((node) => node === document.activeElement),
+      true,
+    );
+    check(
+      `fullscreen ${flag} retains editor value`,
+      await fullEditor.inputValue(),
+      'Native fullscreen draft',
+    );
+    const mask = page.locator('#fullscreen-list .list-loading-mask');
+    await page.waitForFunction(
+      ({ flag }) =>
+        getComputedStyle(document.querySelector('#fullscreen-list .list-loading-mask'))
+          .backgroundColor === (flag ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0)'),
+      { flag },
+    );
+    check(
+      `fullscreen ${flag} mask accessibility`,
+      await mask.getAttribute('aria-hidden'),
+      flag ? null : 'true',
+    );
+    check(
+      `fullscreen ${flag} mask styles use current state`,
+      await mask.evaluate((node) => getComputedStyle(node).backgroundColor),
+      flag ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0)',
+    );
+    if (flag) {
+      const box = await fullEditor.boundingBox();
+      check(
+        'full overlay covers body hit testing',
+        await page.evaluate(
+          ({ x, y }) => !!document.elementFromPoint(x, y)?.closest('.list-loading-mask'),
+          { x: box.x + 2, y: box.y + 2 },
+        ),
+        true,
+      );
+      await page.mouse.click(box.x + 2, box.y + 2);
+      check(
+        'full overlay prevents clicking body controls',
+        await page.locator('#fullscreen-clicks').textContent(),
+        '0',
+      );
+      // A deliberate cover click blurs focus; restore it before checking the
+      // following external prop change, whose focus assertion runs first.
+      await fullEditor.focus();
+    } else check('idle mask is inert', await mask.evaluate((node) => node.inert), true);
+  }
+  for (const mode of [false, true]) {
+    await page.locator('#toggle-fullscreen-mode').evaluate((node) => node.click());
+    check(
+      `idle mode ${mode} retains editor identity`,
+      await page.evaluate(
+        (node) => node === document.querySelector('[aria-label="Fullscreen draft"]'),
+        fullEditorNode,
+      ),
+      true,
+    );
+    check(
+      `idle mode ${mode} retains editor focus`,
+      await fullEditor.evaluate((node) => node === document.activeElement),
+      true,
+    );
+    check(
+      `idle mode ${mode} retains body flow`,
+      (await page.locator('#fullscreen-list').boundingBox()).height >= rootHeight,
+      true,
+    );
+    check(
+      `idle mode ${mode} overlay presence`,
+      await page.locator('#fullscreen-list .list-loading-mask').count(),
+      mode ? 1 : 0,
+    );
+  }
   check('no Vue or browser errors', errors.join('\n'), '');
   await page.locator('#tokens').screenshot({ path: '/tmp/apollo-list-tokens-desktop.png' });
   await page.locator('#stable').screenshot({ path: '/tmp/apollo-list-extra-desktop.png' });

@@ -15,6 +15,7 @@ import {
   readManifest,
 } from './baseline-store.mjs';
 import { prepareImageVisual } from './image-state.mjs';
+import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -25,7 +26,7 @@ const ARTIFACTS = path.join(HERE, '.artifacts');
 const { values } = parseArgs({
   args: process.argv.slice(2).filter((arg) => arg !== '--'),
   options: {
-    component: { type: 'string' },
+    component: { type: 'string', multiple: true },
     variant: { type: 'string' },
     viewport: { type: 'string' },
     candidate: { type: 'boolean' },
@@ -43,6 +44,7 @@ if ([values.candidate, values.accept, values.check].filter(Boolean).length > 1) 
 if (values.help) {
   console.log(`Apollo visual regression (default: compare selected cases to approved Apollo baselines)
   --component NAME --variant NAME --viewport mobile|tablet|desktop
+  Repeat --component to capture related components from one frozen source.
   --candidate             Render Vue candidates; never changes approved images
   --accept --review-note  Accept selected candidates after visual review
   --check                 Check selected baseline images and review records without a browser
@@ -54,11 +56,16 @@ Upstream comparison: pnpm test:visual:reference -- --mode compare`);
 }
 
 async function main() {
-  const selected = buildCases({
-    apollo: true,
-    component: values.component,
-    variants: values.variant ? [values.variant] : undefined,
-  }).filter((item) => !values.viewport || item.viewport === values.viewport);
+  const components = values.component ? [...new Set(values.component)] : [undefined];
+  const selected = components
+    .flatMap((component) =>
+      buildCases({
+        apollo: true,
+        component,
+        variants: values.variant ? [values.variant] : undefined,
+      }),
+    )
+    .filter((item) => !values.viewport || item.viewport === values.viewport);
   if (!selected.length) throw new Error('No matching cases');
   const baseline = readManifest(BASELINES);
   const pending = selected.filter((item) => !baseline.entries[item.id]).length;
@@ -185,9 +192,15 @@ async function main() {
         await page.waitForFunction(() => window.__VISUAL_READY__ === true, null, {
           timeout: 20000,
         });
-        await stabilizePage(page);
+        await stabilizePage(page, {
+          preserveFocus: item.component === 'list' && item.variant === 'native-focus',
+        });
         const state =
-          item.component === 'image' ? await prepareImageVisual(page, item.variant) : undefined;
+          item.component === 'image'
+            ? await prepareImageVisual(page, item.variant)
+            : item.component === 'list'
+              ? await prepareListVisual(page, item.variant)
+              : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

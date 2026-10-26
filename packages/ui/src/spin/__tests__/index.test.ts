@@ -321,13 +321,13 @@ describe('Spin · 语义化 classNames / styles', () => {
     expect(w.find(`.${P}-dot`).attributes('style')).toBeUndefined();
   });
 
-  it('★ styles.mask 只在 fullscreen 时并入根元素', async () => {
+  it('styles.mask applies to the fullscreen overlay and leaves root styling independent', async () => {
     const mask = { mask: { background: 'rgb(0, 255, 0)' } };
     await warningsOf(() => {
       expect(mountSpin({ styles: mask }).attributes('style') ?? '').not.toContain('rgb(0, 255, 0)');
-      expect(mountSpin({ styles: mask, fullscreen: true }).attributes('style') ?? '').toContain(
-        'rgb(0, 255, 0)',
-      );
+      const full = mountSpin({ styles: mask, fullscreen: true });
+      expect(full.attributes('style') ?? '').not.toContain('rgb(0, 255, 0)');
+      expect(full.get(`.${P}-mask`).attributes('style') ?? '').toContain('rgb(0, 255, 0)');
     });
   });
 
@@ -372,11 +372,17 @@ describe('Spin · 废弃 API 告警', () => {
     expect(all).toContain('`classNames.tip and styles.tip` is deprecated');
   });
 
-  it('classNames.mask / styles.mask', async () => {
+  it('mask semantics remain available without a deprecation warning', async () => {
     const texts = await warningsOf(() => {
       mountSpin({ classNames: { mask: 'custom-mask' }, styles: { mask: { background: 'red' } } });
     });
-    expect(texts.join('\n')).toContain('`classNames.mask and styles.mask` is deprecated');
+    expect(texts.join('\n')).not.toContain('`classNames.mask and styles.mask` is deprecated');
+    const full = mountSpin({
+      fullscreen: true,
+      classNames: { mask: 'actual-mask' },
+      styles: { mask: { background: 'red' } },
+    });
+    expect(full.get(`.${P}-mask.actual-mask`).attributes('style')).toContain('background: red');
   });
 
   it('wrapperClassName', async () => {

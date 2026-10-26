@@ -2,8 +2,8 @@
 /**
  * Spin —— 加载中。
  *
- * 契约来源：antd 6.6.4 的 `es/spin/index.js`。DOM 结构、类名、分支判据逐条对齐，
- * 有意差异登记在 `packages/ui/src/spin/README.md` 与 `COMPATIBILITY.md` §9。
+ * 初版参考 antd 6.6.4 的 `es/spin/index.js`；当前 Vue 全屏层与正文分别布局，
+ * 保留原生内容、ref 和语义样式。迁移见 docs/migrations/list-contracts.md。
  *
  * ── 六条最容易写错、且都已被 compat / 交互用例钉住的判据 ─────────────────────────
  *
@@ -36,6 +36,7 @@ import {
   type CSSProperties,
   computed,
   ref,
+  shallowReactive,
   useAttrs,
   useSlots,
   type VNodeChild,
@@ -247,7 +248,7 @@ const isNested = computed(() => hasChildren.value || props.fullscreen);
 //    代理类型推导，实测触发 TS2589「Type instantiation is excessively deep」。
 //    而这里需要的只是「一个身份稳定、内容会变的对象」（`useMergeSemantic` 在 setup
 //    期捕获它），响应式由外层的 `computed` 提供 —— 不需要深度代理。
-const semanticProps: SpinProps = { ...props };
+const semanticProps = shallowReactive<SpinProps>({ ...props });
 watchEffect(() => {
   Object.assign(semanticProps, props, {
     size: mergedSize.value,
@@ -283,7 +284,6 @@ const rootClass = computed(() => [
     [`${prefixCls.value}-fullscreen`]: props.fullscreen,
   },
   mergedClassNames.value.root,
-  props.fullscreen && mergedClassNames.value.mask,
   // ⚠️ 非嵌套时根元素自己就是 section（同时吃 section 的语义类名）；
   //    嵌套时根元素改吃（已废弃的）`wrapperClassName`，`-section` 下移到内层 div。
   isNested.value ? props.wrapperClassName : [sectionCls.value, mergedClassNames.value.section],
@@ -292,7 +292,11 @@ const rootClass = computed(() => [
   //    由 Vue 的 mergeProps 与 `:class` 合并 —— 这里再加一次会渲染出两份类名。
 ]);
 
-const innerSectionClass = computed(() => [sectionCls.value, mergedClassNames.value.section]);
+const innerSectionClass = computed(() => [
+  sectionCls.value,
+  mergedClassNames.value.section,
+  props.fullscreen && [`${prefixCls.value}-mask`, mergedClassNames.value.mask],
+]);
 
 const containerClass = computed(() => [containerCls.value, mergedClassNames.value.container]);
 
@@ -308,20 +312,24 @@ const indicatorClass = computed(() => mergedClassNames.value.indicator);
 // ---------------------------------------------------------------------------
 // 样式
 //
-// 三条合并顺序逐字来自 antd：
-//   根     = {...styles.root, ...(!isNested ? styles.section : {}), ...(fullscreen ? styles.mask : {}), ...style}
-//   内层 section = styles.section
+// Root remains the native content host; mask targets the real fixed overlay.
+//   根     = {...styles.root, ...(!isNested ? styles.section : {}), ...style}
+//   内层 section = {...styles.section, ...(fullscreen ? styles.mask : {})}
 //   description  = {...styles.tip, ...styles.description}
 // ---------------------------------------------------------------------------
 
 const rootStyle = computed<CSSProperties>(() => ({
   ...mergedStyles.value.root,
   ...(isNested.value ? {} : mergedStyles.value.section),
-  ...(props.fullscreen ? mergedStyles.value.mask : {}),
   // 根 `style` 是 Vue 原生 attrs：`rootAttrs` 把它排在 `rootStyleAttrs` 之后 ⇒ 最后胜出
 }));
 
-const innerSectionStyleAttrs = computed(() => styleAttrs(mergedStyles.value.section));
+const innerSectionStyleAttrs = computed(() =>
+  styleAttrs({
+    ...mergedStyles.value.section,
+    ...(props.fullscreen ? mergedStyles.value.mask : {}),
+  }),
+);
 
 const containerStyleAttrs = computed(() => styleAttrs(mergedStyles.value.container));
 
@@ -366,11 +374,6 @@ watchEffect(() => {
     'classNames.tip and styles.tip',
     'classNames.description and styles.description',
   );
-  warning.deprecated(
-    !(mergedClassNames.value.mask || mergedStyles.value.mask),
-    'classNames.mask and styles.mask',
-    'classNames.root and styles.root',
-  );
 });
 
 // ---------------------------------------------------------------------------
@@ -383,22 +386,30 @@ defineExpose({ nativeElement: rootRef });
 
 <template>
   <div ref="rootRef" :class="rootClass" v-bind="rootAttrs()">
-    <template v-if="spinning">
-      <div v-if="isNested" :class="innerSectionClass" v-bind="innerSectionStyleAttrs">
-        <Indicator
-          :prefix-cls="prefixCls"
-          :indicator="mergedIndicator"
-          :percent="mergedPercent"
-          :class-name="indicatorClass"
-          :style="mergedStyles.indicator"
-        />
-        <div
-          v-if="hasDescription || slots.description"
-          :class="descriptionClass"
-          v-bind="descriptionStyleAttrs"
-        >
-          <slot name="description"><NodeRenderer :node="mergedDescription" /></slot>
-        </div>
+    <template v-if="spinning || fullscreen">
+      <div
+        v-if="isNested"
+        :class="innerSectionClass"
+        v-bind="innerSectionStyleAttrs"
+        :aria-hidden="fullscreen && !spinning ? true : undefined"
+        :inert="fullscreen && !spinning"
+      >
+        <template v-if="spinning">
+          <Indicator
+            :prefix-cls="prefixCls"
+            :indicator="mergedIndicator"
+            :percent="mergedPercent"
+            :class-name="indicatorClass"
+            :style="mergedStyles.indicator"
+          />
+          <div
+            v-if="hasDescription || slots.description"
+            :class="descriptionClass"
+            v-bind="descriptionStyleAttrs"
+          >
+            <slot name="description"><NodeRenderer :node="mergedDescription" /></slot>
+          </div>
+        </template>
       </div>
       <template v-else>
         <Indicator

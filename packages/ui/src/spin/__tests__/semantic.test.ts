@@ -42,6 +42,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Spin } from '../index';
+import fullscreenDiffs from './fullscreen-reference-diffs.json';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/spin.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -314,7 +315,19 @@ domContractTest('Spin', {
     return build();
   },
   keepStyle: true,
-  allow: ALLOW,
+  allow: {
+    ...ALLOW,
+    ...Object.fromEntries(
+      Object.entries(fullscreenDiffs).map(([id, diff]) => [
+        id,
+        {
+          reason:
+            'Vue fullscreen overlay keeps the content host in flow; mask semantics target the actual cover. See docs/migrations/list-contracts.md.',
+          diff,
+        },
+      ]),
+    ),
+  },
 });
 
 /** `CASES` 里多出来的 id 会让「少测一条」表现为「测试通过」，所以反向也校验一次。 */

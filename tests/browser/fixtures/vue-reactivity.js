@@ -48,6 +48,7 @@ import MentionsEvents from './MentionsEvents.vue';
 import MentionsKeyboard from './MentionsKeyboard.vue';
 import MentionsNativeEvents from './MentionsNativeEvents.vue';
 import NativeAttrs from './NativeAttrs.vue';
+import NativeControlColors from './NativeControlColors.vue';
 import OverlayAttrs from './OverlayAttrs.vue';
 import OverlayContent from './OverlayContent.vue';
 import PaginationContainers from './PaginationContainers.vue';
@@ -141,6 +142,7 @@ const Demo = {
   'drawer-slots': DrawerSlots,
   'form-prefix': FormPrefix,
   attrs: NativeAttrs,
+  'native-control-colors': NativeControlColors,
   'table-reorder': TableReorder,
   badge: BadgeSlots,
   'list-slots': ListContent,

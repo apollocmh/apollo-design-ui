@@ -137,4 +137,6 @@ List 按 Apollo 的独立契约维护；逐项内容使用带类型的 Vue `#ite
 运行时通过 `ConfigProvider` 的 `theme.components.List` 配置上述 11 项，支持更新、移除和恢复；也可在 List 根元素使用 CSS 变量覆盖：`--apollo-list-item-padding` / `--apollo-list-content-width` 等
 （11 个）。数据容器继承根变量；根原生 style 优先于 Provider 配置。
 
+`itemPadding` 的显式覆盖在带边框默认行中也完整生效；不覆盖时，带边框行保留当前主题的标准缩进。`loading.fullscreen` 只把遮罩铺满视口，正文、输入状态与 ref 留在文档流中；通过 `loading.classNames.mask` / `loading.styles.mask` 定制实际遮罩。
+
 分页内容使用 `#paginationItemRender="{ page, type, element }"`、`#paginationTotal="{ total, range }"` 和 `#paginationSizeChanger="info"`。每个分页器接收当前作用域，支持顶部/底部及动态插槽；配置对象只放数据和业务事件，旧 itemRender/showTotal/sizeChangerRender 函数入口已移除。

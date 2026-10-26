@@ -44,7 +44,10 @@ const config = useComponentConfig<ListConfig>('list');
 const direction = useDirection();
 
 const prefixCls = computed(() => config.getPrefixCls('list', props.prefixCls));
-const theme = useListTheme(() => prefixCls.value);
+const theme = useListTheme(
+  () => prefixCls.value,
+  () => props.bordered,
+);
 const dataSource = computed(() => props.dataSource ?? []);
 
 // ---------------------------------------------------------------------------

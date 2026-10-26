@@ -145,7 +145,11 @@ describe('List · 声明 ↔ 引用（双向）', () => {
       expect(rootRule).toContain(decl.trim());
     }
     expect(css).not.toContain(`${CLS}-container{`);
-    expect(css.match(/--apollo-list-item-padding:/g)).toHaveLength(1);
+    expect(css.match(/--apollo-list-item-padding:/g)).toHaveLength(2);
+    expect(css).toContain(
+      '.apollo-list-bordered{--apollo-list-item-padding:var(--apollo-padding-content-vertical) var(--apollo-padding-lg);',
+    );
+    expect(css).not.toContain('.apollo-list-item-bordered{padding-inline:');
   });
 
   it('🚨 规则引用的**自有**变量全部在 `genTokenDecls` 里（拼错 = 静默失效）', () => {

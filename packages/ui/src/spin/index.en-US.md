@@ -54,6 +54,8 @@ Common props ref：[Common props](https://ant.design/docs/react/common-props)
 
 ## Semantic DOM
 
+`root` always hosts content in document flow; native attrs and `nativeElement` target that host. In fullscreen mode, `mask` is the actual fixed cover, customized through `classNames.mask` / `styles.mask` without a deprecation warning. Switching modes preserves content; an inactive cover is hidden and inert. Regular descriptions use text color and fullscreen descriptions have a readable background; `styles.description` can override them.
+
 | Slot | Description |
 |---|---|
 | `root` | Root element |
@@ -62,7 +64,7 @@ Common props ref：[Common props](https://ant.design/docs/react/common-props)
 | `description` | Description text div |
 | `container` | Container that holds the wrapped content when nested |
 | ~~`tip`~~ | Deprecated, use `description` |
-| ~~`mask`~~ | Deprecated, use `root` (only effective when `fullscreen`) |
+| `mask` | Actual fullscreen cover; only used when `fullscreen` |
 
 ## Design Token
 

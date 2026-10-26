@@ -53,6 +53,8 @@ demo:
 
 ## Semantic DOM
 
+`root` 始终是保持正文文档流的外壳，原生 attrs 与 `nativeElement` 指向它；全屏时 `mask` 是实际固定覆盖层，使用 `classNames.mask` / `styles.mask` 定制，不再标为废弃。切换全屏不重挂正文，关闭时覆盖层隐藏且 inert。普通文案使用正文色，全屏文案有可读背景，均可通过 `styles.description` 覆盖。
+
 | 槽位 | 说明 |
 |---|---|
 | `root` | 根元素 |
@@ -61,7 +63,7 @@ demo:
 | `description` | 描述文案 div |
 | `container` | 嵌套时被遮罩的内容容器 |
 | ~~`tip`~~ | 已废弃，请使用 `description` |
-| ~~`mask`~~ | 已废弃，请使用 `root`（仅 `fullscreen` 时生效） |
+| `mask` | 实际全屏覆盖层，仅 `fullscreen` 时生效 |
 
 ## 主题变量（Design Token）{#design-token}
 

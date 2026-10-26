@@ -56,8 +56,7 @@ export type SpinPercent = number | 'auto';
 /**
  * 语义化类名的七个槽位。与 antd 的 `SpinSemanticType['classNames']` 一致。
  *
- * ⚠️ `tip` / `mask` 是**已废弃**的槽位，但必须保留类型 —— 用户传了要能被识别
- *    并告警（见 `Spin.vue` 的 `warning.deprecated`），删掉类型会让存量代码编译失败。
+ * `tip` 为旧文案别名；`mask` 是全屏覆盖层，与保持文档流的 root 分开。
  */
 export interface SpinSemanticClassNames {
   root?: string;
@@ -67,7 +66,7 @@ export interface SpinSemanticClassNames {
   container?: string;
   /** @deprecated Please use `description` instead */
   tip?: string;
-  /** @deprecated Please use `root` instead */
+  /** Fullscreen overlay; content remains in the root container. */
   mask?: string;
 }
 
@@ -80,7 +79,7 @@ export interface SpinSemanticStyles {
   container?: CSSProperties;
   /** @deprecated Please use `description` instead */
   tip?: CSSProperties;
-  /** @deprecated Please use `root` instead */
+  /** Fullscreen overlay styles. */
   mask?: CSSProperties;
 }
 

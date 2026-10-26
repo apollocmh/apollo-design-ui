@@ -15,7 +15,7 @@
 import { chromium } from 'playwright';
 
 /** 注入到每个页面的稳定化 CSS。 */
-export const STABILIZE_CSS = `
+const STABLE_RENDER_CSS = `
 /* 1. 禁动画：任何 transition / animation 都会让截图取决于「何时按下的快门」 */
 *, *::before, *::after {
   transition: none !important;
@@ -30,9 +30,9 @@ input, textarea, [contenteditable] { caret-color: transparent !important; }
 /* 3. 抹平滚动条在有无内容时的宽度差 */
 html { scrollbar-gutter: stable; }
 
-/* 4. 去掉焦点环 —— focus 状态由 fixture 显式触发，不受上一次交互残留影响 */
-:focus { outline: none !important; }
 `;
+const HIDE_FOCUS_CSS = ':focus { outline: none !important; }';
+export const STABILIZE_CSS = `${STABLE_RENDER_CSS}\n${HIDE_FOCUS_CSS}`;
 
 /** 稳定化 initScript：固定随机源与时间，保证两次渲染完全一致。 */
 export const STABILIZE_INIT = () => {
@@ -109,8 +109,8 @@ export async function newStablePage(browser, { width, height }) {
 /**
  * 页面加载后调用：注入稳定化 CSS → 等字体 → 等两帧 → 禁 GIF 动画。
  */
-export async function stabilizePage(page) {
-  await page.addStyleTag({ content: STABILIZE_CSS });
+export async function stabilizePage(page, { preserveFocus = false } = {}) {
+  await page.addStyleTag({ content: preserveFocus ? STABLE_RENDER_CSS : STABILIZE_CSS });
   await waitForFonts(page);
   // 等两个 rAF：确保 layout + paint 都完成（含 antd cssinjs 的运行时注入）
   await page.evaluate(

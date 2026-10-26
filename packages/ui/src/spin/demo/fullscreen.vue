@@ -6,12 +6,12 @@ import { Spin } from '../../index';
  * 全屏。`fullscreen` 会加一层半透明遮罩并把转圈居中。
  *
  * ⚠️ 两条容易忽略的语义：
- *   1. `fullscreen` 会让 `isNested` 恒为真 —— 即使**没有** children，
- *      `-section` 也会下移到内层 div（根元素只留下遮罩）；
- *   2. `styles.section` 在嵌套时落在内层 div 上，**不**进根元素。
+ *   1. 全屏覆盖层与正文分别布局，原生输入不会移位或重新挂载；
+ *   2. `styles.mask` 配置覆盖层，root 仍是正文的原生外壳。
  */
 const spinning = ref(false);
 const percent = ref(0);
+const draft = ref('Edit before loading');
 
 let interval: ReturnType<typeof setInterval> | null = null;
 
@@ -44,5 +44,7 @@ onUnmounted(stop);
 
 <template>
   <button type="button" @click="showLoader">Show fullscreen</button>
-  <Spin :spinning="spinning" :percent="percent" fullscreen />
+  <Spin :spinning="spinning" :percent="percent" fullscreen description="Updating">
+    <input v-model="draft" aria-label="Fullscreen loading draft" />
+  </Spin>
 </template>

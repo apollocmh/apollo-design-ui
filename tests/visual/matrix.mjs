@@ -362,6 +362,27 @@ export const COMPONENTS = {
     ],
   },
   list: {
+    apolloVariants: [
+      'basic',
+      'meta',
+      'actions',
+      'bordered',
+      'vertical',
+      'grid',
+      'pagination',
+      'loading',
+      'loading-fullscreen',
+      'empty',
+      'size',
+      'rtl',
+      'extra',
+      'nested',
+      'tokens',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 11 个 variant × 3 个 viewport = 33 张
     //
     // ⚠️ List **没有浮层**（分页不带下拉时不开浮层；`-item-action` 是行内 `<ul>`）

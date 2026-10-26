@@ -339,7 +339,9 @@ export const BASE_CSS = [
   'caption{padding-top:0.75em;padding-bottom:0.3em;text-align:left;caption-side:bottom}',
   'hr{box-sizing:content-box;height:0;overflow:visible}',
   // ---- 表单控件归一化（`getActionButtonFontReset` 补偿的就是这一条）----
-  'input,button,select,optgroup,textarea{margin:0;color:inherit;font-size:inherit;font-family:inherit;line-height:inherit}',
+  // Native controls keep their UA foreground/background pairing, including disabled
+  // text and dark scopes. Apollo components declare their own themed colors.
+  'input,button,select,optgroup,textarea{margin:0;font-size:inherit;font-family:inherit;line-height:inherit}',
   'button,input{overflow:visible}',
   'button,select{text-transform:none}',
   "button,html [type='button'],[type='reset'],[type='submit']{-webkit-appearance:button}",

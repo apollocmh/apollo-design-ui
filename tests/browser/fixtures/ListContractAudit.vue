@@ -6,7 +6,11 @@ const grid = ref<ListGridType>({ column: 2, xs: 1, md: 3 });
 const layout = ref<'horizontal' | 'vertical'>('horizontal');
 const extra = ref(true);
 const themed = ref(true);
+const bordered = ref(false);
 const actionCount = ref(0);
+const fullscreenBusy = ref(false);
+const fullscreenMode = ref(true);
+const fullscreenClicks = ref(0);
 const tokens = {
   contentWidth: 180,
   itemPadding: '21px 23px',
@@ -41,7 +45,7 @@ const tokens = {
   </List>
   <List id="zero-empty" :locale="{ emptyText: 0 }" />
   <ConfigProvider :theme="themed ? { components: { List: tokens } } : undefined">
-    <List id="tokens" item-layout="vertical" :data-source="[1]" header="Header" footer="Footer">
+    <List id="tokens" item-layout="vertical" :bordered="bordered" :data-source="[1]" header="Header" footer="Footer">
       <template #item>
         <ListItem>
           <ListItemMeta title="Token title" description="Token description">
@@ -59,11 +63,12 @@ const tokens = {
       <template #item><ListItem>Large</ListItem></template>
     </List>
     <List id="tokens-empty" />
-    <List id="native-token" :data-source="[1]" style="--apollo-list-item-padding: 33px 35px">
+    <List id="native-token" :bordered="bordered" :data-source="[1]" style="--apollo-list-item-padding: 33px 35px">
       <template #item><ListItem>Native override</ListItem></template>
     </List>
   </ConfigProvider>
   <button id="toggle-theme" type="button" @click="themed = !themed">Toggle theme</button>
+  <button id="toggle-borders" type="button" @click="bordered = !bordered">Toggle borders</button>
   <ConfigProvider direction="rtl">
     <List id="rtl" :data-source="[1]">
       <template #item>
@@ -103,6 +108,18 @@ const tokens = {
   <List id="thin-loading" :loading="{ description: 0 }" :data-source="[1]">
     <template #item><span /></template>
   </List>
+  <List id="fullscreen-list" :loading="{
+    spinning: fullscreenBusy,
+    fullscreen: fullscreenMode,
+    description: 'Syncing task',
+    classNames: { root: 'spin-flow-host', mask: 'list-loading-mask' },
+    styles: ({ props }) => ({ mask: { backgroundColor: props.spinning ? 'rgba(0, 0, 0, 0.6)' : 'transparent' } }),
+  }" :data-source="[1]">
+    <template #item><ListItem><input aria-label="Fullscreen draft" @click="fullscreenClicks += 1" /></ListItem></template>
+  </List>
+  <button id="toggle-fullscreen-busy" type="button" @click="fullscreenBusy = !fullscreenBusy">Toggle fullscreen busy</button>
+  <button id="toggle-fullscreen-mode" type="button" @click="fullscreenMode = !fullscreenMode">Toggle fullscreen mode</button>
+  <output id="fullscreen-clicks">{{ fullscreenClicks }}</output>
   <List id="top-pagination" :data-source="[1]" :pagination="{ position: 'top', total: 20 }">
     <template #item><ListItem>Top only</ListItem></template>
   </List>
