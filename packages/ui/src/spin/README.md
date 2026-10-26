@@ -6,4 +6,4 @@ Vue 3加载状态组件。公共数据与布局用props，正文、指示器和�
 
 4个Component Token读取当前主题：contentHeight约束嵌套加载层最大高度，三档dotSize控制对应尺寸。根原生CSS变量优先，最近Spin拥有尺寸与busy样式；内置动画尊重motion=false和系统减少动画偏好。源码不引入CSS-in-JS运行时。
 
-Provider当前配置与程序化全局默认内容仍可使用；setDefaultIndicator不主动调度更新，下次实际render读取新值。类型、9个原有Demo与新增Token Demo、双语API及 [集中迁移说明](../../../../docs/migrations/spin-contracts.md) 同步。本轮完整审计仍开放，阶段测试通过不等于全部视觉/共享/发布验收。
+Provider当前配置与程序化全局默认内容仍可使用；setDefaultIndicator不主动调度更新，下次实际render读取新值。类型、9个原有Demo与新增Token Demo、双语API及 [集中迁移说明](../../../../docs/migrations/spin-contracts.md) 同步。本轮完整清单已统一验收：45张自有视觉基线、生产SSR水合与相关消费者验证见审计清单；全库其他单元和最终门禁继续开放。

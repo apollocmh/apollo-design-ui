@@ -1,7 +1,7 @@
 {
   "inventoryCommit": "d513d828",
   "productionBaseline": "c5c92e1b297324dfb5bb344e0d4bcfdc527cf96b",
-  "status": "implementation-verified-unit-open",
+  "status": "unit-closed",
   "baselineSources": [
     {
       "file": "packages/ui/src/spin/Spin.vue",
@@ -310,12 +310,7 @@
     "result": "failed",
     "diagnostics": "tests/browser/fixtures/SpinContractAudit.vue(44,44): error TS2493: Tuple type '[]' of length '0' has no element at index '0'.\ntests/browser/fixtures/SpinContractAudit.vue(47,61): error TS2339: Property 'percent' does not exist on type 'never'.\n"
   },
-  "remaining": [
-    "Spin owned default/dark/compact/combined visual matrix and clean-commit baseline acceptance",
-    "Standalone source-theme SSR hydration and the remaining full-checklist boundaries before unit closure",
-    "Shared List approved pixel regression against its 57 existing baselines",
-    "Final whole-library gates only after all remediation"
-  ],
+  "remaining": [],
   "firstImplementationBrowser": {
     "browser": "150.0.7871.125",
     "results": [
@@ -1962,5 +1957,10 @@
       "scope": "Updated progress guide and homepage copy; fresh SSG/online publication remains required",
       "log": "/tmp/apollo-spin-progress-content.log"
     }
-  ]
+  ],
+  "finalAcceptance": {
+    "commit": "afaea91633c133882abea20b6b232ec72ed4f546",
+    "sourceSha256": "edaa996ebfbeadbea7070250b2ed8d9b092dffc1add66f0180302297b7a08daa",
+    "evidence": "spin-acceptance.json"
+  }
 }

@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-26T10:50:14.347Z",
+  "generatedAt": "2026-10-26T11:29:30.027Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1666,7 +1666,7 @@
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 4,
-      "why": "2026-10-26 完整盘点后集中实现原生内容/显式indicator scope、稳定语义层、SSR进度、当前4个Token、嵌套样式及动画。相同生产源码899条相关断言均取得通过证据（首次863通过、36参考差异整改后相关50条复验，分批记录）；160类型、32自身/97List浏览器、生产Node SSR、发布声明/UI/L7/Docs通过。Spin独立视觉与最终收口继续开放；统一证据 docs/audit/2026-10-26-spin-contract-audit.md。",
+      "why": "2026-10-26 Spin完整清单已收口：实现57ab2894、验收afaea916。899相关断言保留分批通过证据；最终98单元/13主题/7组生产水合，45张清洁提交自有视觉批准并exact，关联List57张exact。160类型、生产SSR/发布声明、UI/L7与10实际Demo/3组线上交互通过。范围、提交与未验边界见 docs/audit/2026-10-26-spin-contract-audit.md；全库门禁仍开放。",
       "doneWhen": [],
       "group": "反馈",
       "priority": "P1",

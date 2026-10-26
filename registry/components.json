@@ -1036,12 +1036,13 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-26 完整盘点后集中实现原生内容/显式indicator scope、稳定语义层、SSR进度、当前4个Token、嵌套样式及动画。相同生产源码899条相关断言均取得通过证据（首次863通过、36参考差异整改后相关50条复验，分批记录）；160类型、32自身/97List浏览器、生产Node SSR、发布声明/UI/L7/Docs通过。Spin独立视觉与最终收口继续开放；统一证据 docs/audit/2026-10-26-spin-contract-audit.md。",
+      "notes": "2026-10-26 Spin完整清单已收口：实现57ab2894、验收afaea916。899相关断言保留分批通过证据；最终98单元/13主题/7组生产水合，45张清洁提交自有视觉批准并exact，关联List57张exact。160类型、生产SSR/发布声明、UI/L7与10实际Demo/3组线上交互通过。范围、提交与未验边界见 docs/audit/2026-10-26-spin-contract-audit.md；全库门禁仍开放。",
       "layerNotes": {
-        "interaction": "2026-10-26 当前集中整改：无正delay随Vue更新显示，正delay可取消且关闭立即，auto清理保留；确定进度含0直接呈现SSR，动态原生槽保留完整内容/输入/焦点。15行为复现与32生产浏览器已通过，整单元最终清单/视觉仍开放。",
-        "token": "2026-10-26 四个既有Token已消费当前源主题与根CSS变量；contentHeight只限制嵌套加载层最大高度，三档dotSize按最近Spin拥有；空正文保留加载内容空间，motion与偏好已有指定浏览器证据。旧未消费Token的说明由本轮实现取代。",
-        "compat": "2026-10-26 保留47个原机械参考场景，稳定root/section/indicator、完整原生内容与确定进度的精确差异逐case登记；共享归一化和原基线未改。新的本库行为由15回归及32实际浏览器支持，尚未声明完整视觉验收。",
-        "listContractAudit": "2026-10-26 List关联整改：当前Spin Provider/attrs与renderEmpty精确VNode类型已修，相关共享回归通过；不代表本组件所有入口完成当前全局审计。证据 docs/audit/2026-10-26-list-contract-audit.md。\n2026-10-26 List视觉关联：全屏mask单独fixed，root/ref/正文与编辑器保留，mask语义对应真实覆盖层、关闭inert，语义工厂读取当前浅响应式props；3条失败复现已修，47个旧参考用例保留且6个精确差异登记。普通/全屏description对比度修复，迁移见 list-contracts.md；完整Spin其余入口和4个Token仍须独立盘点，本批不升级其视觉状态。"
+        "interaction": "已验证当前原生槽/显式scope、延迟与auto清理、Provider/attrs/prefix/ref当前性、多实例及稳定root/section/indicator。生产水合保留服务器节点、编辑值/焦点/选区，反复主题/全屏/加载切换通过；详见最终统一证据。",
+        "token": "四个既有Token消费当前源主题，contentHeight约束嵌套加载层；原生变量优先、嵌套尺寸/busy隔离、空正文几何均通过。motion=false与系统减少动画下旋转/过渡有实际浏览器证据；13条主题和默认/暗/紧凑/组合自有视觉通过。",
+        "compat": "保留47个原机械场景及精确契约差异，不改原基线/共享归一化。开发期直接修正完整Vue槽、作用域进度与稳定语义容器，迁移见 docs/migrations/spin-contracts.md。",
+        "listContractAudit": "2026-10-26 List关联整改：当前Spin Provider/attrs与renderEmpty精确VNode类型已修，相关共享回归通过；不代表本组件所有入口完成当前全局审计。证据 docs/audit/2026-10-26-list-contract-audit.md。\n2026-10-26 List视觉关联：全屏mask单独fixed，root/ref/正文与编辑器保留，mask语义对应真实覆盖层、关闭inert，语义工厂读取当前浅响应式props；3条失败复现已修，47个旧参考用例保留且6个精确差异登记。普通/全屏description对比度修复，迁移见 list-contracts.md；完整Spin其余入口和4个Token仍须独立盘点，本批不升级其视觉状态。",
+        "visual": "Apollo自有15状态×3视口=45张，清洁afaea916重拍与逐张审阅哈希相同，批准后45/45 exact、0 diffPixels；darwin/x64 Chrome150。真实几何和axe检查通过，相关List57张exact；其他平台/引擎未验。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1066,7 +1067,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "result",

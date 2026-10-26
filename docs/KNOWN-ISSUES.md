@@ -543,8 +543,8 @@ List / Item / Meta原始完整清单已逐项验收：16个根Props、6个Item P
 
 下一单元为Spin完整契约盘点；本轮共享修复不宣称Spin整单元完成。全库内容候选仍202项待核实，其他组件、基础包与最终同一提交全量门禁继续开放。
 
-## 2026-10-26 Spin完整盘点与集中实现（整单元仍开放）
+## 2026-10-26 Spin完整盘点、集中实现与统一验收（已收口）
 
 按11个Props、3个槽、7个语义落点、Provider/attrs/ref/程序化默认内容、4个Token及9个原Demo完整盘点后，集中修正原生内容/显式scope、稳定加载层、SSR确定进度、主题Token与嵌套/动画；新增1个Token Demo，原场景保留。15条失败复现修后全部通过；32项自身浏览器、160类型、生产ESM SSR/发布声明、UI/L7、Docs157条/SSG及97项List共享浏览器通过。相关899条断言以冻结生产源码分批取得通过证据，36个共享机械差异逐项更新而未改旧基线或共享归一化。
 
-当前阶段不是Spin整单元完成：自有视觉、独立源主题水合及完整清单最终收口仍继续。统一范围、命令、体积增长原因与边界见 [Spin统一报告](audit/2026-10-26-spin-contract-audit.md)，公开改动见 [集中迁移](migrations/spin-contracts.md)。
+后续已统一收口：实现57ab2894，验收afaea916补齐减少动画过渡；最终98条Spin单元、13主题、7组生产SSR水合通过；45张自有视觉经清洁提交批准并全部exact，相关List57张保持exact。完整清单、当前生产指纹、命令及未验边界见 [Spin统一报告](audit/2026-10-26-spin-contract-audit.md) 与 [最终证据](audit/evidence/spin-acceptance.json)，公开改动见 [集中迁移](migrations/spin-contracts.md)。全库最终门禁仍待全部单元完成后执行。

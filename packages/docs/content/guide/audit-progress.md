@@ -20,7 +20,7 @@ order: 0
 
 List验收还修复了关联的全屏加载正文错位、遮罩语义和文案对比度，以及暗色作用域中原生控件的颜色配对。共享消费者与既有Image场景已回归；List57张与Image24张最终同次像素复验全部exact。
 
-**Spin已完成完整盘点与集中实现，整单元仍在验收。** 15条行为复现、32项生产浏览器、160条类型、生产SSR与发布声明消费已通过。Spin/ConfigProvider及List/Table/QRCode/Mentions的899条相关断言分批取得通过证据；原参考场景保留。完整原生指示器槽、当前进度scope、稳定加载层、确定进度首帧和4个有效Token已实现；自有视觉矩阵、独立水合及最终清单仍开放。
+**Spin完整清单已统一验收。** 原生多节点指示器、当前进度scope、稳定加载层、确定进度首帧和4个有效Token已修复。15条根因复现、32项生产浏览器、160条类型、生产SSR与发布声明通过；899条相关断言保留分批通过证据。最终98条单元、13条主题、7组水合验收通过；45张自有视觉基线经清洁提交审阅批准后全部0像素差异，相关List57张保持一致。10个实际Demo与3组交互已在线验证；全库其余审计仍在继续。
 
 - [原生多节点与进度作用域](/components/spin/demo/custom-indicator)
 - [Spin动态组件Token](/components/spin/demo/component-token)
@@ -73,7 +73,7 @@ This is a development snapshot. The library-wide audit is ongoing; results below
 
 List acceptance also fixed fullscreen loading flow, actual mask semantics, readable descriptions and native control foreground/background pairing in dark scopes. Named shared consumers and existing Image scenarios passed regression checks. All 57 List and 24 Image images matched exactly in the final run.
 
-**Spin inventory and grouped implementation are complete; unit acceptance is ongoing.** Fifteen behavior reproductions, 32 browser checks, 160 type tests, production SSR and published declarations passed. All 899 related assertions across Spin/ConfigProvider/List/Table/QRCode/Mentions have passing evidence from split runs, with original reference scenarios retained. Native multi-node indicator slots, current progress scope, stable loading hosts, immediate determinate progress and four effective tokens are implemented. Owned visuals, standalone hydration and final checklist acceptance remain open.
+**The complete Spin checklist is verified.** Native multi-node indicators, current progress scope, stable loading hosts, immediate determinate progress and four effective tokens are fixed. Fifteen root-cause reproductions, 32 browser checks, 160 type tests, production SSR and published declarations passed; 899 related assertions retain passing evidence from split runs. Final acceptance includes 98 unit tests, 13 theme tests, seven hydration groups and 45 reviewed images from a clean commit, all with zero pixel differences; the 57 approved List images also remain exact. All ten real demos and three interaction groups passed online. Other library audits remain open.
 
 [Native indicator scope](/components/spin/demo/custom-indicator) · [Live Spin tokens](/components/spin/demo/component-token) · [Spin inventory and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-spin-contract-audit.md)
 

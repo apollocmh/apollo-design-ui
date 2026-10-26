@@ -737,6 +737,411 @@
       "capturedAt": "2026-10-26T08:16:45.572Z",
       "reviewedAt": "2026-10-26T08:19:19.460Z",
       "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+    },
+    "spin/basic__light__mobile": {
+      "sha256": "b25ab852e39406438dc10e7cdeeff288fe9a277d141a0603e90179a877fffd25",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:30.069Z",
+      "reviewedAt": "2026-10-26T11:24:18.557Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/basic__light__tablet": {
+      "sha256": "f8ec22174431b37cc90576a703d60b8f819b9963db6a13afce09864eb50b97d9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:32.042Z",
+      "reviewedAt": "2026-10-26T11:24:18.558Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/basic__light__desktop": {
+      "sha256": "1d0c0c24efd85f91e9ed877eb7e4734b50230f2ab03f49c0bb238271a50d0eae",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:33.959Z",
+      "reviewedAt": "2026-10-26T11:24:18.559Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/size__light__mobile": {
+      "sha256": "00a5ba0c24933bf6cf7c258b336c56fe0e9546a8329acc17cec28d00af039ed6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:35.903Z",
+      "reviewedAt": "2026-10-26T11:24:18.559Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/size__light__tablet": {
+      "sha256": "921d426f22706a1b48666e3ef8ce059adb837098bec599da79450d7f8a46451c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:37.888Z",
+      "reviewedAt": "2026-10-26T11:24:18.559Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/size__light__desktop": {
+      "sha256": "1efb290b5601ed77a7aa522bdc113f270092c2863e390086bc346b1cabdc46bd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:39.821Z",
+      "reviewedAt": "2026-10-26T11:24:18.560Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/nested__light__mobile": {
+      "sha256": "55345d958269caa7b1c26b3604003640164e05f8930295faeafcaf75a800decf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:41.803Z",
+      "reviewedAt": "2026-10-26T11:24:18.560Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/nested__light__tablet": {
+      "sha256": "971605317e77cc63f0cd33257beb829d0c2be27170fb324a99e2dc6ba669ca1e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:43.805Z",
+      "reviewedAt": "2026-10-26T11:24:18.560Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/nested__light__desktop": {
+      "sha256": "f140ff66b4c0e74c2ae9f7ad95f4efdc60542f9fdff5574065cd5a9d3506d538",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:45.821Z",
+      "reviewedAt": "2026-10-26T11:24:18.561Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/empty-body__light__mobile": {
+      "sha256": "ef73364c55d9927f9839a6227e3e8e1fff0829a140c131b6f2395926f73dda64",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:47.737Z",
+      "reviewedAt": "2026-10-26T11:24:18.561Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/empty-body__light__tablet": {
+      "sha256": "3644057041deb5477644d715918d55687c2b3b54ae8e5af887386f4dd715c933",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:49.691Z",
+      "reviewedAt": "2026-10-26T11:24:18.561Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/empty-body__light__desktop": {
+      "sha256": "7ae992c7c94b8401fe485543efd2064139b59de4c9cd7a04be1c3a46ed775d00",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:51.643Z",
+      "reviewedAt": "2026-10-26T11:24:18.562Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/custom-indicator__light__mobile": {
+      "sha256": "c876110a981c331546156c82a61b72c9d7d74b76d7d36fefc7d4ef7c6d9f12a7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:53.608Z",
+      "reviewedAt": "2026-10-26T11:24:18.562Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/custom-indicator__light__tablet": {
+      "sha256": "ff7d230308c208d7a62a685e9a5fb38a0a1dc411322737a6b4d181fb285e5ebc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:55.583Z",
+      "reviewedAt": "2026-10-26T11:24:18.562Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/custom-indicator__light__desktop": {
+      "sha256": "d20e82c9ebdd31038547f39b81e0dc7426a88099a32bc715a80c4200fb96378f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:57.536Z",
+      "reviewedAt": "2026-10-26T11:24:18.563Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/percent__light__mobile": {
+      "sha256": "ca362853b3e01da828c681377b7af4624cdd819fb78c808b3ef53ea509698902",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:20:59.529Z",
+      "reviewedAt": "2026-10-26T11:24:18.563Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/percent__light__tablet": {
+      "sha256": "7ca5a8f989547284e3a5a1cba3a4193d4ff72a94ebc5e30dca9f6d97c9db7b03",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:01.507Z",
+      "reviewedAt": "2026-10-26T11:24:18.563Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/percent__light__desktop": {
+      "sha256": "ef853ad51f6ca9ae51a6d8011fa1c8395c00a997c32d395a9ef67923bb2bdb54",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:03.506Z",
+      "reviewedAt": "2026-10-26T11:24:18.563Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/fullscreen__light__mobile": {
+      "sha256": "333f667bfd8953de2e02d4684e9762398babb4dfd22fcb6c8d88d5c2a2d636ba",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:05.491Z",
+      "reviewedAt": "2026-10-26T11:24:18.564Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/fullscreen__light__tablet": {
+      "sha256": "7ae4133e6d0a2f6b366970f0e692cab4f8b2ab75e6ed6c9366239e6c61448995",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:07.485Z",
+      "reviewedAt": "2026-10-26T11:24:18.564Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/fullscreen__light__desktop": {
+      "sha256": "1a1a573761926bbfc79f07154411ed4fdc734d6735c999553d82cdb0ea801f23",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:09.488Z",
+      "reviewedAt": "2026-10-26T11:24:18.564Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/fullscreen-idle__light__mobile": {
+      "sha256": "8d94cc1fbc18ac7daf77b12a4df73d3420db272795bb86867c2457cc0b0363ea",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:11.482Z",
+      "reviewedAt": "2026-10-26T11:24:18.565Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/fullscreen-idle__light__tablet": {
+      "sha256": "d4b707d7ef6c87568ce447f6f243d2d3de8a53218e172f0cb4f734bd7d0f20df",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:13.433Z",
+      "reviewedAt": "2026-10-26T11:24:18.565Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/fullscreen-idle__light__desktop": {
+      "sha256": "6780c014d2405dbe5283513a77ce49b9bb7d6363e7a34ee579b5fc401e2c08b3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:15.383Z",
+      "reviewedAt": "2026-10-26T11:24:18.566Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/semantic__light__mobile": {
+      "sha256": "54a9ca6fe82e5abb6a6ced953119a9660a11bebf7a76d3beb7c6234c5914f650",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:17.377Z",
+      "reviewedAt": "2026-10-26T11:24:18.566Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/semantic__light__tablet": {
+      "sha256": "44a15c828aa31ceb7a9daf1fe8c12c0164284ebe021fe70d950507184914a4b6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:19.377Z",
+      "reviewedAt": "2026-10-26T11:24:18.566Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/semantic__light__desktop": {
+      "sha256": "a78f6717b74a0fb321eeaa7c09fd6ded0eb1bb454fc13b784f35880a4a88eebd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:21.380Z",
+      "reviewedAt": "2026-10-26T11:24:18.567Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/tokens__light__mobile": {
+      "sha256": "e081ca7a08a95f7f212e61b909b839b67b012d55357e803ac65fad45a04cc0aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:23.397Z",
+      "reviewedAt": "2026-10-26T11:24:18.567Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/tokens__light__tablet": {
+      "sha256": "2a164c162432197891f61c0d641ab95f3e43707abf2e2122e286b9de48c1c4e1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:25.442Z",
+      "reviewedAt": "2026-10-26T11:24:18.568Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/tokens__light__desktop": {
+      "sha256": "9895a312edf3d16e531a691dab2fedb85df5122287c0a0846a72f2e185724c8b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:27.465Z",
+      "reviewedAt": "2026-10-26T11:24:18.568Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/rtl__light__mobile": {
+      "sha256": "5af11934ddf21e0beaea648efe03702e0e7c9cab94b3cee99c9c18a503c9b437",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:29.457Z",
+      "reviewedAt": "2026-10-26T11:24:18.568Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/rtl__light__tablet": {
+      "sha256": "3b066a87b648fea45f165c680e6932e1e69dd68a0d6df6a44a45d3c4f7ec4892",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:31.444Z",
+      "reviewedAt": "2026-10-26T11:24:18.569Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/rtl__light__desktop": {
+      "sha256": "c4b4dacbf745d3ca74dc6d10ce22d3401c113d057ecb3d5cb3237d01eab7ab5f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:33.431Z",
+      "reviewedAt": "2026-10-26T11:24:18.569Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-dark__light__mobile": {
+      "sha256": "bd5c4d1df998b2ce0fec67a2f740785b859a703e4b100259a0c97c6643a1b927",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:35.458Z",
+      "reviewedAt": "2026-10-26T11:24:18.569Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-dark__light__tablet": {
+      "sha256": "7625e3a8edfaf03387b96d2952443259b037748180f8c6d3e0bd1e13037132c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:37.514Z",
+      "reviewedAt": "2026-10-26T11:24:18.570Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-dark__light__desktop": {
+      "sha256": "9ecd91454c7e043666870306421b208271b69132a94f9de242fa85f36bae6d02",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:39.549Z",
+      "reviewedAt": "2026-10-26T11:24:18.570Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-compact__light__mobile": {
+      "sha256": "3109c1026c00859975fca4a6fff0faf885416be6cfa8b249bb15c5c02acc6a95",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:41.575Z",
+      "reviewedAt": "2026-10-26T11:24:18.571Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-compact__light__tablet": {
+      "sha256": "a3cca12fd28be3036e6c9eb453957b246f287d67b60b1162432328fb6d209a24",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:43.623Z",
+      "reviewedAt": "2026-10-26T11:24:18.571Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-compact__light__desktop": {
+      "sha256": "bc035dbbfdc98041a09ec79c5023e9a13842d26b69fe1b71cbe2108a5f963619",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:45.700Z",
+      "reviewedAt": "2026-10-26T11:24:18.572Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-dark-compact__light__mobile": {
+      "sha256": "ab773ca165932c5a6846650bc9cfa2abef0f9841ae9314f0fae78d22ac46edb0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:47.732Z",
+      "reviewedAt": "2026-10-26T11:24:18.572Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-dark-compact__light__tablet": {
+      "sha256": "979ccb77447fe9a04699090f939c8988c3ac52b466f428f32cb50d67e1b61b84",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:49.761Z",
+      "reviewedAt": "2026-10-26T11:24:18.572Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/theme-dark-compact__light__desktop": {
+      "sha256": "9fa4d3d744950b9f61f069e06de6561cdf6aea80ea1bc6fbf7be9ac54179c6f1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:51.799Z",
+      "reviewedAt": "2026-10-26T11:24:18.573Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/native-focus__light__mobile": {
+      "sha256": "a89930cfd5c9f2e2557383c339a4e12dcc0428f5f61bc4150354dc7a6a2020b3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:53.810Z",
+      "reviewedAt": "2026-10-26T11:24:18.573Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/native-focus__light__tablet": {
+      "sha256": "5e7066209d1d8535585d173d380b6bed9c8edc6c49e43d6035f8d16fd0fa4a19",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:55.813Z",
+      "reviewedAt": "2026-10-26T11:24:18.573Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
+    },
+    "spin/native-focus__light__desktop": {
+      "sha256": "ca02044b0c0fb1c377dd7f2298356d22b70be45dd95550396a3b2a71254be9e8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "dirty": false,
+      "capturedAt": "2026-10-26T11:21:57.814Z",
+      "reviewedAt": "2026-10-26T11:24:18.574Z",
+      "reviewNote": "Reviewed all 45 owned Spin images on darwin/x64 Chrome 150: native complete content and focus, percent 0/37/100, stable nested/empty-body/fullscreen/idle layout, semantic ownership, all four tokens, RTL, default/dark/compact/combined themes. Geometry and full axe checks passed. Clean afaea916 recapture hashes equal every reviewed candidate. Historical React references and pixel thresholds retained."
     }
   }
 }

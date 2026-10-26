@@ -54,3 +54,9 @@ List实现里程碑已提交并推送 `23de152079c096fccf34d0f3907a8f649276de2b`
 线上Chrome150通用33项通过，源码标记与日志均为c5c92e1b；独立脚本逐页打开全部12个List实际Demo和Spin全屏Demo，共13页通过、零Vue/页面错误。全屏计时开关保留原生编辑器身份、值和正文位置，覆盖层几何/关闭inert正确。SSR进度指南实际包含List完整清单收口、57张、512条与下一单元Spin完整盘点。手机暗色截图已再次查看，无横向溢出；原有Image真实交互保持通过。
 
 本次 [持久化发布证据](evidence/docs-publication-list-closure.json) 分开记录Actions、Pages、线上33检查、13实际Demo与未验范围，不把重叠场景累加为唯一检查数。当前站点已展示List收口和后续边界；Spin完整审计及最终同一提交全库门禁继续开放。
+
+## 后续发布：Spin实现阶段已上线
+
+已发布源码57ab2894，[Deploy Docs 40311992155](https://github.com/apollocmh/apollo-design-ui/actions/runs/40311992155)和Pages deployment 7330236837成功（2026-10-26 11:07:58 UTC）。CI文档14文件157条、全部包构建及L7 151项通过，FAIL=0/PENDING=0、n/a=67。线上33项发布检查全部通过；另逐页核对10个Spin Demo，四个原生SVG/42%作用域、四Token动态开关保留输入、auto进度三组交互通过。既有独立Demo采用GitHub Pages的404.html SPA回退，明确记录主文档404；其他资源、页面及Vue错误为零。桌面/移动暗色首页截图已查看。
+
+[发布与线上证据](evidence/docs-publication-spin-update.json)只对应实现阶段57ab2894。后续afaea916补齐减少动画过渡，并完成45张自有视觉与统一清单；该最终结果的源码推送与文档内容更新不等于已上线，须以随后部署回执为准。

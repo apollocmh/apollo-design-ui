@@ -1,0 +1,240 @@
+{
+  "status": "published-and-verified",
+  "sourceCommit": "57ab2894ee40d64f933a5efddc7b2279c7767180",
+  "workflow": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40311992155",
+  "pages": {
+    "deployment": 7330236837,
+    "state": "success",
+    "createdAt": "2026-10-26T11:07:58Z"
+  },
+  "ci": {
+    "docsFiles": 14,
+    "docsTests": 157,
+    "buildChecks": 151,
+    "failed": 0,
+    "pending": 0,
+    "notApplicable": 67
+  },
+  "online": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "latestCommit": "57ab2894",
+    "results": [
+      {
+        "name": "home HTTP",
+        "actual": 200
+      },
+      {
+        "name": "home entry",
+        "actual": true
+      },
+      {
+        "name": "client guide route",
+        "actual": true
+      },
+      {
+        "name": "verified delivery and remaining scope",
+        "actual": true
+      },
+      {
+        "name": "English guide",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "live group retained",
+        "actual": 1
+      },
+      {
+        "name": "live group focus restored",
+        "actual": true
+      },
+      {
+        "name": "live group reset",
+        "actual": 3
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "native thumbnail edit",
+        "actual": "1"
+      },
+      {
+        "name": "native edit does not open preview",
+        "actual": "false"
+      },
+      {
+        "name": "rich preview focus restored",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 关闭按钮与图标插槽",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered 局部主题与组件Token",
+        "actual": true
+      },
+      {
+        "name": "guide HTTP",
+        "actual": 200
+      },
+      {
+        "name": "guide prerendered body",
+        "actual": true
+      },
+      {
+        "name": "rendered Provider弹层配置",
+        "actual": true
+      },
+      {
+        "name": "changelog HTTP",
+        "actual": 200
+      },
+      {
+        "name": "full commit history",
+        "actual": true
+      },
+      {
+        "name": "published source commit",
+        "actual": "57ab2894"
+      },
+      {
+        "name": "visible site source",
+        "actual": true
+      },
+      {
+        "name": "mobile overflow",
+        "actual": true
+      },
+      {
+        "name": "dark theme",
+        "actual": "dark"
+      },
+      {
+        "name": "dark progress heading follows readable site text",
+        "actual": true
+      },
+      {
+        "name": "mobile guide overflow",
+        "actual": true
+      },
+      {
+        "name": "no page/Vue/console errors",
+        "actual": []
+      }
+    ],
+    "errors": []
+  },
+  "spinDemos": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "size",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "nested",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "description",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "delay-and-debounce",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "custom-indicator",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "percent",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "style-class",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "fullscreen",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "demo": "component-token",
+        "passed": true,
+        "httpStatus": 404
+      },
+      {
+        "name": "four native SVG indicators and explicit 42% scope render",
+        "passed": true
+      },
+      {
+        "name": "all four live tokens, removal/restoration and loading preserve native draft",
+        "passed": true
+      },
+      {
+        "name": "actual auto demo advances all three accessible progressbars",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/basic",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/size",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/nested",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/description",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/delay-and-debounce",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/custom-indicator",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/percent",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/style-class",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/fullscreen",
+      "https://apollocmh.github.io/apollo-design-ui/components/spin/demo/component-token"
+    ]
+  },
+  "boundary": "Published implementation milestone; final reduced-motion correction and visual closure are in a later source commit and require a later deployment."
+}
